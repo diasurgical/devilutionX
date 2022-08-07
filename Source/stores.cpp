@@ -13,7 +13,7 @@
 #include "cursor.h"
 #include "engine/load_cel.hpp"
 #include "engine/random.hpp"
-#include "engine/render/cl2_render.hpp"
+#include "engine/render/clx_render.hpp"
 #include "engine/render/text_render.hpp"
 #include "init.h"
 #include "minitext.h"
@@ -196,7 +196,7 @@ void CalculateLineHeights()
 void DrawSTextBack(const Surface &out)
 {
 	const Point uiPosition = GetUIRectangle().position;
-	Cl2Draw(out, { uiPosition.x + 320 + 24, 327 + uiPosition.y }, CelSprite { *pSTextBoxCels }, 0);
+	ClxDraw(out, { uiPosition.x + 320 + 24, 327 + uiPosition.y }, (*pSTextBoxCels)[0]);
 	DrawHalfTransparentRectTo(out, uiPosition.x + 347, uiPosition.y + 28, 265, 297);
 }
 
@@ -205,19 +205,18 @@ void DrawSSlider(const Surface &out, int y1, int y2)
 	const Point uiPosition = GetUIRectangle().position;
 	int yd1 = y1 * 12 + 44 + uiPosition.y;
 	int yd2 = y2 * 12 + 44 + uiPosition.y;
-	CelSprite sprite { *pSTextSlidCels };
 	if (stextscrlubtn != -1)
-		Cl2Draw(out, { uiPosition.x + 601, yd1 }, sprite, 11);
+		ClxDraw(out, { uiPosition.x + 601, yd1 }, (*pSTextSlidCels)[11]);
 	else
-		Cl2Draw(out, { uiPosition.x + 601, yd1 }, sprite, 9);
+		ClxDraw(out, { uiPosition.x + 601, yd1 }, (*pSTextSlidCels)[9]);
 	if (stextscrldbtn != -1)
-		Cl2Draw(out, { uiPosition.x + 601, yd2 }, sprite, 10);
+		ClxDraw(out, { uiPosition.x + 601, yd2 }, (*pSTextSlidCels)[10]);
 	else
-		Cl2Draw(out, { uiPosition.x + 601, yd2 }, sprite, 8);
+		ClxDraw(out, { uiPosition.x + 601, yd2 }, (*pSTextSlidCels)[8]);
 	yd1 += 12;
 	int yd3 = yd1;
 	for (; yd3 < yd2; yd3 += 12) {
-		Cl2Draw(out, { uiPosition.x + 601, yd3 }, sprite, 13);
+		ClxDraw(out, { uiPosition.x + 601, yd3 }, (*pSTextSlidCels)[13]);
 	}
 	if (stextsel == BackButtonLine())
 		yd3 = stextlhold;
@@ -227,7 +226,7 @@ void DrawSSlider(const Surface &out, int y1, int y2)
 		yd3 = 1000 * (stextsval + ((yd3 - stextup) / 4)) / (storenumh - 1) * (y2 * 12 - y1 * 12 - 24) / 1000;
 	else
 		yd3 = 0;
-	Cl2Draw(out, { uiPosition.x + 601, (y1 + 1) * 12 + 44 + uiPosition.y + yd3 }, sprite, 12);
+	ClxDraw(out, { uiPosition.x + 601, (y1 + 1) * 12 + 44 + uiPosition.y + yd3 }, (*pSTextSlidCels)[12]);
 }
 
 void AddSLine(size_t y)
@@ -932,7 +931,7 @@ void StartWitchRecharge()
 		stextscrl = false;
 
 		RenderGold = true;
-		AddSText(20, 1, _("You have nothing to recharge."), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
+		AddSText(20, 1, _("You have nothing to recharge."), UiFlags::ColorWhitegold, false);
 		AddSLine(3);
 		AddItemListBackButton(/*selectable=*/true);
 		return;
@@ -2174,13 +2173,13 @@ void DrawSelector(const Surface &out, const Rectangle &rect, string_view text, U
 	if (HasAnyOf(flags, UiFlags::AlignCenter))
 		x1 += (rect.size.width - lineWidth) / 2;
 
-	Cl2Draw(out, { x1, rect.position.y + 13 }, CelSprite { *pSPentSpn2Cels }, PentSpn2Spin());
+	ClxDraw(out, { x1, rect.position.y + 13 }, (*pSPentSpn2Cels)[PentSpn2Spin()]);
 
 	int x2 = rect.position.x + rect.size.width + 5;
 	if (HasAnyOf(flags, UiFlags::AlignCenter))
 		x2 = rect.position.x + (rect.size.width - lineWidth) / 2 + lineWidth + 5;
 
-	Cl2Draw(out, { x2, rect.position.y + 13 }, CelSprite { *pSPentSpn2Cels }, PentSpn2Spin());
+	ClxDraw(out, { x2, rect.position.y + 13 }, (*pSPentSpn2Cels)[PentSpn2Spin()]);
 }
 
 } // namespace

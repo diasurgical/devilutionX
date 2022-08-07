@@ -10,12 +10,12 @@
 
 #include "control.h"
 #include "engine.h"
-#include "engine/cel_sprite.hpp"
+#include "engine/clx_sprite.hpp"
 #include "engine/dx.h"
 #include "engine/load_cel.hpp"
-#include "engine/load_pcx.hpp"
+#include "engine/load_clx.hpp"
 #include "engine/palette.h"
-#include "engine/render/cl2_render.hpp"
+#include "engine/render/clx_render.hpp"
 #include "hwcursor.hpp"
 #include "init.h"
 #include "loadsave.h"
@@ -31,7 +31,7 @@ namespace {
 
 constexpr uint32_t MaxProgress = 534;
 
-OptionalOwnedCelSprite sgpBackCel;
+OptionalOwnedClxSpriteList sgpBackCel;
 
 bool IsProgress;
 uint32_t sgdwProgress;
@@ -42,7 +42,10 @@ const uint8_t BarColor[3] = { 138, 43, 254 };
 /** The screen position of the top left corner of the progress bar. */
 const int BarPos[3][2] = { { 53, 37 }, { 53, 421 }, { 53, 37 } };
 
-std::optional<OwnedCelSpriteWithFrameHeight> ArtCutsceneWidescreen;
+OptionalOwnedClxSpriteList ArtCutsceneWidescreen;
+
+uint32_t CustomEventsBegin = SDL_USEREVENT;
+constexpr uint32_t NumCustomEvents = WM_LAST - WM_FIRST + 1;
 
 Cutscenes PickCutscene(interface_mode uMsg)
 {
@@ -102,7 +105,7 @@ void LoadCutsceneBackground(interface_mode uMsg)
 
 	switch (PickCutscene(uMsg)) {
 	case CutStart:
-		ArtCutsceneWidescreen = LoadPcxAsCl2("gendata\\cutstartw.pcx");
+		ArtCutsceneWidescreen = LoadOptionalClx("gendata\\cutstartw.pcx");
 		celPath = "Gendata\\Cutstart.cel";
 		palPath = "Gendata\\Cutstart.pal";
 		progress_id = 1;
@@ -143,13 +146,13 @@ void LoadCutsceneBackground(interface_mode uMsg)
 		progress_id = 1;
 		break;
 	case CutPortal:
-		ArtCutsceneWidescreen = LoadPcxAsCl2("gendata\\cutportlw.pcx");
+		ArtCutsceneWidescreen = LoadOptionalClx("gendata\\cutportlw.pcx");
 		celPath = "Gendata\\Cutportl.cel";
 		palPath = "Gendata\\Cutportl.pal";
 		progress_id = 1;
 		break;
 	case CutPortalRed:
-		ArtCutsceneWidescreen = LoadPcxAsCl2("gendata\\cutportrw.pcx");
+		ArtCutsceneWidescreen = LoadOptionalClx("gendata\\cutportrw.pcx");
 		celPath = "Gendata\\Cutportr.cel";
 		palPath = "Gendata\\Cutportr.pal";
 		progress_id = 1;
@@ -162,7 +165,7 @@ void LoadCutsceneBackground(interface_mode uMsg)
 	}
 
 	assert(!sgpBackCel);
-	sgpBackCel = LoadCelAsCl2(celPath, 640);
+	sgpBackCel = LoadCel(celPath, 640);
 	LoadPalette(palPath);
 
 	sgdwProgress = 0;
@@ -179,10 +182,10 @@ void DrawCutsceneBackground()
 	const Rectangle &uiRectangle = GetUIRectangle();
 	const Surface &out = GlobalBackBuffer();
 	if (ArtCutsceneWidescreen) {
-		const CelFrameWithHeight sprite = ArtCutsceneWidescreen->sprite();
-		RenderCl2Sprite(out, sprite, { uiRectangle.position.x - (sprite.width() - uiRectangle.size.width) / 2, uiRectangle.position.y });
+		const ClxSprite sprite = (*ArtCutsceneWidescreen)[0];
+		RenderClxSprite(out, sprite, { uiRectangle.position.x - (sprite.width() - uiRectangle.size.width) / 2, uiRectangle.position.y });
 	}
-	Cl2Draw(out, { uiRectangle.position.x, 480 - 1 + uiRectangle.position.y }, CelSprite { *sgpBackCel }, 0);
+	ClxDraw(out, { uiRectangle.position.x, 480 - 1 + uiRectangle.position.y }, (*sgpBackCel)[0]);
 }
 
 void DrawCutsceneForeground()
@@ -204,13 +207,35 @@ void DrawCutsceneForeground()
 
 } // namespace
 
+void RegisterCustomEvents()
+{
+#ifndef USE_SDL1
+	CustomEventsBegin = SDL_RegisterEvents(NumCustomEvents);
+#endif
+}
+
+bool IsCustomEvent(uint32_t eventType)
+{
+	return eventType >= CustomEventsBegin && eventType < CustomEventsBegin + NumCustomEvents;
+}
+
+interface_mode GetCustomEvent(uint32_t eventType)
+{
+	return static_cast<interface_mode>(eventType - CustomEventsBegin);
+}
+
+uint32_t CustomEventToSdlEvent(interface_mode eventType)
+{
+	return CustomEventsBegin + eventType;
+}
+
 void interface_msg_pump()
 {
-	tagMSG msg;
-
-	while (FetchMessage(&msg)) {
-		if (msg.message != DVL_WM_QUIT) {
-			PushMessage(&msg);
+	SDL_Event event;
+	uint16_t modState;
+	while (FetchMessage(&event, &modState)) {
+		if (event.type != SDL_QUIT) {
+			HandleMessage(event, modState);
 		}
 	}
 }
@@ -341,6 +366,7 @@ void ShowProgress(interface_mode uMsg)
 		IncProgress();
 		setlevel = true;
 		leveltype = setlvltype;
+		currlevel = static_cast<uint8_t>(setlvlnum);
 		FreeGameMem();
 		IncProgress();
 		LoadGameLevel(false, ENTRY_SETLVL);

@@ -698,9 +698,8 @@ void Theme_Library(int t)
 	for (int yp = 1; yp < MAXDUNY - 1; yp++) {
 		for (int xp = 1; xp < MAXDUNX - 1; xp++) {
 			if (CheckThemeObj3({ xp, yp }, themes[t].ttval) && dMonster[xp][yp] == 0 && FlipCoin(librnd[leveltype - 1])) {
-				AddObject(OBJ_BOOKSTAND, { xp, yp });
+				Object *bookstand = AddObject(OBJ_BOOKSTAND, { xp, yp });
 				if (!FlipCoin(2 * librnd[leveltype - 1])) {
-					Object *bookstand = ObjectAtPosition({ xp, yp });
 					if (bookstand != nullptr) {
 						bookstand->_oSelFlag = 0;
 						bookstand->_oAnimFrame += 2;

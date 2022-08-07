@@ -4387,8 +4387,8 @@ msgstr "괴물에게 2배, 본인에게 1배의 피해"
 
 #: Source/items.cpp:3755
 #, no-c-format
-msgid "Random 0 - 500% damage"
-msgstr "0 - 500% 무작위 피해"
+msgid "Random 0 - 600% damage"
+msgstr "0 - 600% 무작위 피해"
 
 #: Source/items.cpp:3757
 #, no-c-format

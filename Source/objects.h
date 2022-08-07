@@ -7,6 +7,7 @@
 
 #include <cstdint>
 
+#include "engine/clx_sprite.hpp"
 #include "engine/point.hpp"
 #include "engine/rectangle.hpp"
 #include "itemdat.h"
@@ -20,44 +21,49 @@ namespace devilution {
 #define MAXOBJECTS 127
 
 struct Object {
-	_object_id _otype;
+	_object_id _otype = OBJ_NULL;
 	Point position;
-	bool _oLight;
-	uint32_t _oAnimFlag;
-	byte *_oAnimData;
-	int _oAnimDelay;      // Tick length of each frame in the current animation
-	int _oAnimCnt;        // Increases by one each game tick, counting how close we are to _pAnimDelay
-	uint32_t _oAnimLen;   // Number of frames in current animation
-	uint32_t _oAnimFrame; // Current frame of animation.
-	uint16_t _oAnimWidth;
-	bool _oDelFlag;
-	int8_t _oBreak;
-	bool _oSolidFlag;
+	bool _oLight = false;
+	uint32_t _oAnimFlag = 0;
+	OptionalClxSpriteList _oAnimData;
+	int _oAnimDelay = 0;      // Tick length of each frame in the current animation
+	int _oAnimCnt = 0;        // Increases by one each game tick, counting how close we are to _pAnimDelay
+	uint32_t _oAnimLen = 0;   // Number of frames in current animation
+	uint32_t _oAnimFrame = 0; // Current frame of animation.
+
+	// TODO: Remove this field, it is unused and always equal to:
+	// (*_oAnimData)[0].width()
+	uint16_t _oAnimWidth = 0;
+
+	bool _oDelFlag = false;
+	int8_t _oBreak = 0;
+	bool _oSolidFlag = false;
 	/** True if the object allows missiles to pass through, false if it collides with missiles */
-	bool _oMissFlag;
-	uint8_t _oSelFlag;
-	bool _oPreFlag;
-	bool _oTrapFlag;
-	bool _oDoorFlag;
-	int _olid;
+	bool _oMissFlag = false;
+	uint8_t _oSelFlag = 0;
+	bool _oPreFlag = false;
+	bool _oTrapFlag = false;
+	bool _oDoorFlag = false;
+	int _olid = 0;
 	/**
 	 * Saves the absolute value of the engine state (typically from a call to AdvanceRndSeed()) to later use when spawning items from a container object
 	 * This is an unsigned value to avoid implementation defined behaviour when reading from this variable.
 	 */
-	uint32_t _oRndSeed;
-	int _oVar1;
-	int _oVar2;
-	int _oVar3;
-	int _oVar4;
-	int _oVar5;
-	uint32_t _oVar6;
+	uint32_t _oRndSeed = 0;
+	int _oVar1 = 0;
+	int _oVar2 = 0;
+	int _oVar3 = 0;
+	int _oVar4 = 0;
+	int _oVar5 = 0;
+	uint32_t _oVar6 = 0;
 	/**
 	 * @brief ID of a quest message to play when this object is activated.
 	 *
 	 * Used by spell book objects which trigger quest progress for Halls of the Blind, Valor, or Warlord of Blood
 	 */
-	_speech_id bookMessage;
-	int _oVar8;
+	// TODO: Should be TEXT_NONE (timedemo save will need to be updated).
+	_speech_id bookMessage = TEXT_KING1;
+	int _oVar8 = 0;
 
 	/**
 	 * @brief Returns the network identifier for this object
@@ -118,16 +124,6 @@ struct Object {
 		InitializeBook(mapRange);
 		_oVar8 = leverID;
 		bookMessage = message;
-	}
-
-	/**
-	 * @brief Initializes this object as some form of door. Futher initialization of other game structures needs to be
-	 * performed separately, refer to the code in objects.cpp.
-	 */
-	constexpr void InitializeDoor()
-	{
-		_oDoorFlag = true;
-		_oVar4 = 0;
 	}
 
 	/**
@@ -226,7 +222,7 @@ struct Object {
 	 * @brief Check if this object is a door
 	 * @return True if the object is one of the door types (see _object_id)
 	 */
-	[[nodiscard]] constexpr bool IsDoor() const
+	[[nodiscard]] constexpr bool isDoor() const
 	{
 		return IsAnyOf(_otype, _object_id::OBJ_L1LDOOR, _object_id::OBJ_L1RDOOR, _object_id::OBJ_L2LDOOR, _object_id::OBJ_L2RDOOR, _object_id::OBJ_L3LDOOR, _object_id::OBJ_L3RDOOR, _object_id::OBJ_L5LDOOR, _object_id::OBJ_L5RDOOR);
 	}
@@ -265,7 +261,7 @@ extern bool LoadingMapObjects;
  *                             this param to false if you only want the object whose base position matches this tile
  * @return A pointer to the object or nullptr if no object exists at this location
  */
-Object *ObjectAtPosition(Point position, bool considerLargeObjects = true);
+Object *FindObjectAtPosition(Point position, bool considerLargeObjects = true);
 
 /**
  * @brief Check whether an item occupies this tile position
@@ -274,7 +270,19 @@ Object *ObjectAtPosition(Point position, bool considerLargeObjects = true);
  */
 inline bool IsObjectAtPosition(Point position)
 {
-	return ObjectAtPosition(position) != nullptr;
+	return FindObjectAtPosition(position) != nullptr;
+}
+
+/**
+ * @brief Get a reference to the object located at this tile
+ *
+ * This function is unchecked. Trying to access an invalid position will result in out of bounds memory access
+ * @param position The map coordinate of the object
+ * @return a reference to the object
+ */
+inline Object &ObjectAtPosition(Point position)
+{
+	return Objects[abs(dObject[position.x][position.y]) - 1];
 }
 
 /**
@@ -297,7 +305,8 @@ void SetMapObjects(const uint16_t *dunData, int startx, int starty);
  * @param objType Type specifier
  * @param objPos tile coordinates
  */
-void AddObject(_object_id objType, Point objPos);
+Object *AddObject(_object_id objType, Point objPos);
+bool UpdateTrapState(Object &trap);
 void OperateTrap(Object &trap);
 void ProcessObjects();
 void RedoPlayerVision();
@@ -305,11 +314,11 @@ void MonstCheckDoors(const Monster &monster);
 void ObjChangeMap(int x1, int y1, int x2, int y2);
 void ObjChangeMapResync(int x1, int y1, int x2, int y2);
 int ItemMiscIdIdx(item_misc_id imiscid);
-void OperateObject(Player &player, int i, bool TeleFlag);
+void OperateObject(Player &player, Object &object);
 void SyncOpObject(Player &player, int cmd, Object &object);
 void BreakObjectMissile(Object &object);
 void BreakObject(const Player &player, Object &object);
-void DeltaSyncOpObject(int cmd, Object &object);
+void DeltaSyncOpObject(Object &object);
 void DeltaSyncBreakObj(Object &object);
 void SyncBreakObj(const Player &player, Object &object);
 void SyncObjectAnim(Object &object);
@@ -319,6 +328,5 @@ void SyncObjectAnim(Object &object);
  */
 void GetObjectStr(const Object &object);
 void SyncNakrulRoom();
-void AddNakrulLeaver();
 
 } // namespace devilution

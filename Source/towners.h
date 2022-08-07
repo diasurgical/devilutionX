@@ -36,9 +36,9 @@ enum _talker_id : uint8_t {
 };
 
 struct Towner {
-	byte *_tNAnim[8];
-	std::unique_ptr<byte[]> data;
-	byte *_tAnimData;
+	OptionalOwnedClxSpriteList ownedAnim;
+	OptionalClxSpriteList anim;
+
 	/** Used to get a voice line and text related to active quests when the player speaks to a town npc */
 	int16_t seed;
 	/** Tile position of NPC */
@@ -60,9 +60,9 @@ struct Towner {
 	void (*talk)(Player &player, Towner &towner);
 	_talker_id _ttype;
 
-	CelSprite Sprite() const
+	ClxSprite currentSprite() const
 	{
-		return CelSprite { _tAnimData, _tAnimWidth };
+		return (*anim)[_tAnimFrame];
 	}
 };
 

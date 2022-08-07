@@ -1088,6 +1088,9 @@ void FixCornerTiles()
 			if (dungeon[i][j] == DirtCorner2 && dungeon[i + 1][j] == Floor && dungeon[i][j + 1] == VWall) {
 				dungeon[i][j] = HArchEnd;
 			}
+			if (dungeon[i][j] == DirtCorner2 && dungeon[i][j + 1] == Floor && dungeon[i + 1][j] == HWall) {
+				dungeon[i][j] = VArchEnd;
+			}
 		}
 	}
 }

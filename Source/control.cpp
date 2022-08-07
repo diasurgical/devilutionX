@@ -12,15 +12,13 @@
 
 #include <fmt/format.h>
 
-#include "DiabloUI/art.h"
-#include "DiabloUI/art_draw.h"
 #include "automap.h"
 #include "controls/modifier_hints.h"
 #include "controls/plrctrls.h"
 #include "cursor.h"
-#include "engine/cel_sprite.hpp"
+#include "engine/clx_sprite.hpp"
 #include "engine/load_cel.hpp"
-#include "engine/render/cl2_render.hpp"
+#include "engine/render/clx_render.hpp"
 #include "engine/render/text_render.hpp"
 #include "engine/trn.hpp"
 #include "error.h"
@@ -87,7 +85,7 @@ Rectangle MainPanel;
 Rectangle LeftPanel;
 Rectangle RightPanel;
 std::optional<OwnedSurface> pBtmBuff;
-OptionalOwnedCelSprite pGBoxBuff;
+OptionalOwnedClxSpriteList pGBoxBuff;
 
 const Rectangle &GetMainPanel()
 {
@@ -137,10 +135,10 @@ namespace {
 
 std::optional<OwnedSurface> pLifeBuff;
 std::optional<OwnedSurface> pManaBuff;
-OptionalOwnedCelSprite talkButtons;
-OptionalOwnedCelSprite pDurIcons;
-OptionalOwnedCelSprite multiButtons;
-OptionalOwnedCelSprite pPanelButtons;
+OptionalOwnedClxSpriteList talkButtons;
+OptionalOwnedClxSpriteList pDurIcons;
+OptionalOwnedClxSpriteList multiButtons;
+OptionalOwnedClxSpriteList pPanelButtons;
 
 bool PanelButtons[8];
 int PanelButtonIndex;
@@ -316,7 +314,7 @@ int DrawDurIcon4Item(const Surface &out, Item &pItem, int x, int c)
 	}
 	if (pItem._iDurability > 2)
 		c += 8;
-	Cl2Draw(out, { x, -17 + GetMainPanel().position.y }, CelSprite { *pDurIcons }, c);
+	ClxDraw(out, { x, -17 + GetMainPanel().position.y }, (*pDurIcons)[c]);
 	return x - 32 - 8;
 }
 
@@ -552,25 +550,25 @@ void InitControlPan()
 		LoadCharPanel();
 		LoadSpellIcons();
 		{
-			const OwnedCelSprite sprite = LoadCelAsCl2("CtrlPan\\Panel8.CEL", GetMainPanel().size.width);
-			Cl2Draw(*pBtmBuff, { 0, (GetMainPanel().size.height + 16) - 1 }, CelSprite { sprite }, 0);
+			const OwnedClxSpriteList sprite = LoadCel("CtrlPan\\Panel8.CEL", GetMainPanel().size.width);
+			ClxDraw(*pBtmBuff, { 0, (GetMainPanel().size.height + 16) - 1 }, sprite[0]);
 		}
 		{
 			const Point bulbsPosition { 0, 87 };
-			const OwnedCelSprite statusPanel = LoadCelAsCl2("CtrlPan\\P8Bulbs.CEL", 88);
-			Cl2Draw(*pLifeBuff, bulbsPosition, CelSprite { statusPanel }, 0);
-			Cl2Draw(*pManaBuff, bulbsPosition, CelSprite { statusPanel }, 1);
+			const OwnedClxSpriteList statusPanel = LoadCel("CtrlPan\\P8Bulbs.CEL", 88);
+			ClxDraw(*pLifeBuff, bulbsPosition, statusPanel[0]);
+			ClxDraw(*pManaBuff, bulbsPosition, statusPanel[1]);
 		}
 	}
 	talkflag = false;
 	if (IsChatAvailable()) {
 		if (!HeadlessMode) {
 			{
-				const OwnedCelSprite sprite = LoadCelAsCl2("CtrlPan\\TalkPanl.CEL", GetMainPanel().size.width);
-				Cl2Draw(*pBtmBuff, { 0, (GetMainPanel().size.height + 16) * 2 - 1 }, CelSprite { sprite }, 0);
+				const OwnedClxSpriteList sprite = LoadCel("CtrlPan\\TalkPanl.CEL", GetMainPanel().size.width);
+				ClxDraw(*pBtmBuff, { 0, (GetMainPanel().size.height + 16) * 2 - 1 }, sprite[0]);
 			}
-			multiButtons = LoadCelAsCl2("CtrlPan\\P8But2.CEL", 33);
-			talkButtons = LoadCelAsCl2("CtrlPan\\TalkButt.CEL", 61);
+			multiButtons = LoadCel("CtrlPan\\P8But2.CEL", 33);
+			talkButtons = LoadCel("CtrlPan\\TalkButt.CEL", 61);
 		}
 		sgbPlrTalkTbl = 0;
 		TalkMessage[0] = '\0';
@@ -583,10 +581,10 @@ void InitControlPan()
 	lvlbtndown = false;
 	if (!HeadlessMode) {
 		LoadMainPanel();
-		pPanelButtons = LoadCelAsCl2("CtrlPan\\Panel8bu.CEL", 71);
+		pPanelButtons = LoadCel("CtrlPan\\Panel8bu.CEL", 71);
 
 		static const uint16_t CharButtonsFrameWidths[9] { 95, 41, 41, 41, 41, 41, 41, 41, 41 };
-		pChrButtons = LoadCelAsCl2("Data\\CharBut.CEL", CharButtonsFrameWidths);
+		pChrButtons = LoadCel("Data\\CharBut.CEL", CharButtonsFrameWidths);
 	}
 	ClearPanBtn();
 	if (!IsChatAvailable())
@@ -594,7 +592,7 @@ void InitControlPan()
 	else
 		PanelButtonIndex = 8;
 	if (!HeadlessMode)
-		pDurIcons = LoadCelAsCl2("Items\\DurIcons.CEL", 32);
+		pDurIcons = LoadCel("Items\\DurIcons.CEL", 32);
 	for (bool &buttonEnabled : chrbtn)
 		buttonEnabled = false;
 	chrbtnactive = false;
@@ -609,8 +607,8 @@ void InitControlPan()
 
 	if (!HeadlessMode) {
 		InitSpellBook();
-		pQLogCel = LoadCelAsCl2("Data\\Quest.CEL", static_cast<uint16_t>(SidePanelSize.width));
-		pGBoxBuff = LoadCelAsCl2("CtrlPan\\Golddrop.cel", 261);
+		pQLogCel = LoadCel("Data\\Quest.CEL", static_cast<uint16_t>(SidePanelSize.width));
+		pGBoxBuff = LoadCel("CtrlPan\\Golddrop.cel", 261);
 	}
 	CloseGoldDrop();
 	dropGoldValue = 0;
@@ -637,17 +635,17 @@ void DrawCtrlBtns(const Surface &out)
 			DrawPanelBox(out, MakeSdlRect(PanBtnPos[i].x, PanBtnPos[i].y + 16, 71, 20), mainPanelPosition + Displacement { PanBtnPos[i].x, PanBtnPos[i].y });
 		} else {
 			Point position = mainPanelPosition + Displacement { PanBtnPos[i].x, PanBtnPos[i].y + 18 };
-			Cl2Draw(out, position, CelSprite { *pPanelButtons }, i);
-			DrawArt(out, position + Displacement { 4, -18 }, &PanelButtonDown, i);
+			ClxDraw(out, position, (*pPanelButtons)[i]);
+			RenderClxSprite(out, (*PanelButtonDown)[i], position + Displacement { 4, -18 });
 		}
 	}
+
 	if (PanelButtonIndex == 8) {
-		CelSprite sprite { *multiButtons };
-		Cl2Draw(out, mainPanelPosition + Displacement { 87, 122 }, sprite, PanelButtons[6] ? 1 : 0);
+		ClxDraw(out, mainPanelPosition + Displacement { 87, 122 }, (*multiButtons)[PanelButtons[6] ? 1 : 0]);
 		if (MyPlayer->friendlyMode)
-			Cl2Draw(out, mainPanelPosition + Displacement { 527, 122 }, sprite, PanelButtons[7] ? 3 : 2);
+			ClxDraw(out, mainPanelPosition + Displacement { 527, 122 }, (*multiButtons)[PanelButtons[7] ? 3 : 2]);
 		else
-			Cl2Draw(out, mainPanelPosition + Displacement { 527, 122 }, sprite, PanelButtons[7] ? 5 : 4);
+			ClxDraw(out, mainPanelPosition + Displacement { 527, 122 }, (*multiButtons)[PanelButtons[7] ? 5 : 4]);
 	}
 }
 
@@ -972,7 +970,7 @@ void DrawLevelUpIcon(const Surface &out)
 	if (IsLevelUpButtonVisible()) {
 		int nCel = lvlbtndown ? 2 : 1;
 		DrawString(out, _("Level Up"), { GetMainPanel().position + Displacement { 0, -62 }, { 120, 0 } }, UiFlags::ColorWhite | UiFlags::AlignCenter);
-		Cl2Draw(out, GetMainPanel().position + Displacement { 40, -17 }, CelSprite { *pChrButtons }, nCel);
+		ClxDraw(out, GetMainPanel().position + Displacement { 40, -17 }, (*pChrButtons)[nCel]);
 	}
 }
 
@@ -1074,7 +1072,7 @@ void DrawGoldSplit(const Surface &out, int amount)
 {
 	const int dialogX = 30;
 
-	Cl2Draw(out, GetPanelPosition(UiPanels::Inventory, { dialogX, 178 }), CelSprite { *pGBoxBuff }, 0);
+	ClxDraw(out, GetPanelPosition(UiPanels::Inventory, { dialogX, 178 }), (*pGBoxBuff)[0]);
 
 	const std::string description = fmt::format(
 	    fmt::runtime(ngettext(
@@ -1162,16 +1160,15 @@ void DrawTalkPan(const Surface &out)
 		const Point talkPanPosition = mainPanelPosition + Displacement { 172, 84 + 18 * talkBtn };
 		if (WhisperList[i]) {
 			if (TalkButtonsDown[talkBtn]) {
-				int nCel = talkBtn != 0 ? 3 : 2;
-				Cl2Draw(out, talkPanPosition, CelSprite { *talkButtons }, nCel);
-				DrawArt(out, talkPanPosition + Displacement { 4, -15 }, &TalkButton, 2);
+				ClxDraw(out, talkPanPosition, (*talkButtons)[talkBtn != 0 ? 3 : 2]);
+				RenderClxSprite(out, (*TalkButton)[2], talkPanPosition + Displacement { 4, -15 });
 			}
 		} else {
 			int nCel = talkBtn != 0 ? 1 : 0;
 			if (TalkButtonsDown[talkBtn])
 				nCel += 4;
-			Cl2Draw(out, talkPanPosition, CelSprite { *talkButtons }, nCel);
-			DrawArt(out, talkPanPosition + Displacement { 4, -15 }, &TalkButton, TalkButtonsDown[talkBtn] ? 1 : 0);
+			ClxDraw(out, talkPanPosition, (*talkButtons)[nCel]);
+			RenderClxSprite(out, (*TalkButton)[TalkButtonsDown[talkBtn] ? 1 : 0], talkPanPosition + Displacement { 4, -15 });
 		}
 		if (player.plractive) {
 			DrawString(out, player._pName, { { x, y + 60 + talkBtn * 18 }, { 204, 0 } }, color);

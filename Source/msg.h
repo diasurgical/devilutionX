@@ -266,12 +266,6 @@ enum _cmd_id : uint8_t {
 	//    int8_t x
 	//    int8_t y
 	CMD_OPERATEOBJ,
-	// Player operate object.
-	//
-	// body (TCmdLoc):
-	//    int8_t x
-	//    int8_t y
-	CMD_PLROPOBJ,
 	// Break object.
 	//
 	// body (TCmdLoc):
@@ -713,7 +707,6 @@ struct TBuffer {
 	byte bData[4096];
 };
 
-extern bool deltaload;
 extern uint8_t gbBufferMsgs;
 extern int dwRecCount;
 

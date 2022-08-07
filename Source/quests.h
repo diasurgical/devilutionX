@@ -8,7 +8,7 @@
 #include <cstdint>
 
 #include "engine.h"
-#include "engine/cel_sprite.hpp"
+#include "engine/clx_sprite.hpp"
 #include "engine/point.hpp"
 #include "levels/gendung.h"
 #include "monster.h"
@@ -73,7 +73,7 @@ struct QuestData {
 };
 
 extern bool QuestLogIsOpen;
-extern OptionalOwnedCelSprite pQLogCel;
+extern OptionalOwnedClxSpriteList pQLogCel;
 extern DVL_API_FOR_TEST Quest Quests[MAXQUESTS];
 extern Point ReturnLvlPosition;
 extern dungeon_type ReturnLevelType;

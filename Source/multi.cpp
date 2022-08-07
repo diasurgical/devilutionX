@@ -11,7 +11,6 @@
 
 #include "DiabloUI/diabloui.h"
 #include "diablo.h"
-#include "dthread.h"
 #include "engine/point.hpp"
 #include "engine/random.hpp"
 #include "engine/world_tile.hpp"
@@ -332,15 +331,12 @@ void ProcessTmsgs()
 
 void SendPlayerInfo(int pnum, _cmd_id cmd)
 {
-	static_assert(alignof(PlayerPack) == 1, "Fix pkplr alignment");
-	std::unique_ptr<byte[]> pkplr { new byte[sizeof(PlayerPack)] };
-
-	PlayerPack *pPack = reinterpret_cast<PlayerPack *>(pkplr.get());
+	PlayerPack pPack;
 	Player &myPlayer = *MyPlayer;
-	PackPlayer(pPack, myPlayer, true, true);
-	pPack->friendlyMode = myPlayer.friendlyMode ? 1 : 0;
-	pPack->isOnSetLevel = myPlayer.plrIsOnSetLevel;
-	dthread_send_delta(pnum, cmd, std::move(pkplr), sizeof(PlayerPack));
+	PackPlayer(&pPack, myPlayer, true, true);
+	pPack.friendlyMode = myPlayer.friendlyMode ? 1 : 0;
+	pPack.isOnSetLevel = myPlayer.plrIsOnSetLevel;
+	multi_send_zero_packet(pnum, cmd, reinterpret_cast<byte *>(&pPack), sizeof(PlayerPack));
 }
 
 void SetupLocalPositions()
@@ -386,7 +382,6 @@ void HandleEvents(_SNETEVENT *pEvt)
 			gbSomebodyWonGameKludge = true;
 
 		sgbSendDeltaTbl[pEvt->playerid] = false;
-		dthread_remove_player(pEvt->playerid);
 
 		if (gbDeltaSender == pEvt->playerid)
 			gbDeltaSender = MAX_PLRS;
@@ -699,7 +694,6 @@ void NetClose()
 
 	sgbNetInited = false;
 	nthread_cleanup();
-	DThreadCleanup();
 	tmsg_cleanup();
 	UnregisterNetEventHandlers();
 	SNetLeaveGame(3);
@@ -738,7 +732,6 @@ bool NetInit(bool bSinglePlayer)
 		gbShouldValidatePackage = false;
 		sync_init();
 		nthread_start(sgbPlayerTurnBitTbl[MyPlayerId]);
-		dthread_start();
 		tmsg_start();
 		sgdwGameLoops = 0;
 		sgbSentThisCycle = 0;

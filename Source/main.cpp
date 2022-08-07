@@ -1,3 +1,6 @@
+#if (defined(_WIN64) || defined(_WIN32)) && defined(__GNUC__)
+#define SDL_MAIN_HANDLED
+#endif
 #include <SDL.h>
 #include <SDL_main.h>
 

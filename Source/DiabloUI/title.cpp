@@ -3,6 +3,7 @@
 #include "controls/input.h"
 #include "controls/menu_controls.h"
 #include "discord/discord.h"
+#include "engine/load_clx.hpp"
 #include "engine/load_pcx.hpp"
 #include "utils/language.h"
 #include "utils/sdl_geometry.h"
@@ -11,7 +12,7 @@
 namespace devilution {
 namespace {
 
-std::optional<OwnedCelSpriteSheetWithFrameHeight> DiabloTitleLogo;
+OptionalOwnedClxSpriteList DiabloTitleLogo;
 
 std::vector<std::unique_ptr<UiItemBase>> vecTitleScreen;
 
@@ -19,10 +20,10 @@ void TitleLoad()
 {
 	if (gbIsHellfire) {
 		LoadBackgroundArt("ui_art\\hf_logo1.pcx", 16);
-		ArtBackgroundWidescreen = LoadPcxAsCl2("ui_art\\hf_titlew.pcx");
+		ArtBackgroundWidescreen = LoadOptionalClx("ui_art\\hf_titlew.clx");
 	} else {
 		LoadBackgroundArt("ui_art\\title.pcx");
-		DiabloTitleLogo = LoadPcxSpriteSheetAsCl2("ui_art\\logo.pcx", /*numFrames=*/15, /*transparentColor=*/250);
+		DiabloTitleLogo = LoadPcxSpriteList("ui_art\\logo.pcx", /*numFrames=*/15, /*transparentColor=*/250);
 	}
 }
 
@@ -44,13 +45,13 @@ void UiTitleDialog()
 	if (gbIsHellfire) {
 		SDL_Rect rect = MakeSdlRect(0, uiPosition.y, 0, 0);
 		if (ArtBackgroundWidescreen)
-			vecTitleScreen.push_back(std::make_unique<UiImageCl2>(ArtBackgroundWidescreen->sprite(), rect, UiFlags::AlignCenter));
-		vecTitleScreen.push_back(std::make_unique<UiImageAnimatedCl2>(ArtBackground->sheet(), rect, UiFlags::AlignCenter));
+			vecTitleScreen.push_back(std::make_unique<UiImageClx>((*ArtBackgroundWidescreen)[0], rect, UiFlags::AlignCenter));
+		vecTitleScreen.push_back(std::make_unique<UiImageAnimatedClx>(*ArtBackground, rect, UiFlags::AlignCenter));
 	} else {
 		UiAddBackground(&vecTitleScreen);
 
-		vecTitleScreen.push_back(std::make_unique<UiImageAnimatedCl2>(
-		    DiabloTitleLogo->sheet(), MakeSdlRect(0, uiPosition.y + 182, 0, 0), UiFlags::AlignCenter));
+		vecTitleScreen.push_back(std::make_unique<UiImageAnimatedClx>(
+		    *DiabloTitleLogo, MakeSdlRect(0, uiPosition.y + 182, 0, 0), UiFlags::AlignCenter));
 
 		SDL_Rect rect = MakeSdlRect(uiPosition.x, uiPosition.y + 410, 640, 26);
 		vecTitleScreen.push_back(std::make_unique<UiArtText>(_("Copyright © 1996-2001 Blizzard Entertainment").data(), rect, UiFlags::AlignCenter | UiFlags::FontSize24 | UiFlags::ColorUiSilver));

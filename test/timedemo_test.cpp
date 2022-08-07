@@ -52,7 +52,8 @@ void RunTimedemo(std::string timedemoFolderName)
 
 	StartGame(false, true);
 
-	ASSERT_EQ(pfile_compare_hero_demo(demoNumber), HeroCompareResult::Same);
+	HeroCompareResult result = pfile_compare_hero_demo(demoNumber, true);
+	ASSERT_EQ(result.status, HeroCompareResult::Same) << result.message;
 	ASSERT_FALSE(gbRunGame);
 	gbRunGame = false;
 	init_cleanup();

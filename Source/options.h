@@ -284,6 +284,14 @@ public:
 		return szCode;
 	}
 
+	OptionEntryLanguageCode &operator=(string_view code)
+	{
+		assert(code.size() < 6);
+		memcpy(szCode, code.data(), code.size());
+		szCode[code.size()] = '\0';
+		return *this;
+	}
+
 private:
 	/** @brief Language code (ISO-15897) for text. */
 	char szCode[6];
@@ -527,6 +535,8 @@ struct GameplayOptions : OptionCategoryBase {
 	OptionEntryBoolean autoGoldPickup;
 	/** @brief Auto-pickup elixirs */
 	OptionEntryBoolean autoElixirPickup;
+	/** @brief Auto-pickup oils */
+	OptionEntryBoolean autoOilPickup;
 	/** @brief Enable or Disable auto-pickup in town */
 	OptionEntryBoolean autoPickupInTown;
 	/** @brief Recover mana when talking to Adria. */

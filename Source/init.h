@@ -34,7 +34,7 @@ void LoadCoreArchives();
 void LoadLanguageArchive();
 void LoadGameArchives();
 void init_create_window();
-void MainWndProc(uint32_t Msg);
+void MainWndProc(const SDL_Event &event);
 EventHandler SetEventHandler(EventHandler NewProc);
 
 } // namespace devilution

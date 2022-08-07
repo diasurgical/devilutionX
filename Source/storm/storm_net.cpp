@@ -91,6 +91,8 @@ bool SNetUnregisterEventHandler(event_type evtype)
 #ifndef NONET
 	std::lock_guard<SdlMutex> lg(storm_net_mutex);
 #endif
+	if (dvlnet_inst == nullptr)
+		return true;
 	return dvlnet_inst->SNetUnregisterEventHandler(evtype);
 }
 

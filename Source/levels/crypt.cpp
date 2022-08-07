@@ -1,5 +1,6 @@
 #include "levels/crypt.h"
 
+#include "engine/load_file.hpp"
 #include "engine/point.hpp"
 #include "items.h"
 #include "levels/drlg_l1.h"
@@ -189,30 +190,6 @@ const Miniset CryptStar {
 	    { 0, 0, 0 },
 	    { 0, 172, 0 },
 	    { 0, 0, 0 },
-	}
-};
-
-const Miniset UberRoomPattern {
-	{ 4, 6 },
-	{},
-	{
-	    { 115, 130, 6, 13 },
-	    { 129, 108, 1, 13 },
-	    { 1, 107, 103, 13 },
-	    { 146, 106, 102, 13 },
-	    { 129, 168, 1, 13 },
-	    { 7, 2, 3, 13 },
-	}
-};
-const Miniset CornerstoneRoomPattern {
-	{ 5, 5 },
-	{},
-	{
-	    { 4, 2, 2, 2, 6 },
-	    { 1, 111, 172, 13, 1 },
-	    { 1, 172, 13, 13, 25 },
-	    { 1, 13, 13, 13, 1 },
-	    { 7, 2, 2, 2, 3 },
 	}
 };
 
@@ -707,18 +684,22 @@ void SetCryptRoom()
 	IsUberRoomOpened = false;
 	IsUberLeverActivated = false;
 
-	SetPiece = { position, UberRoomPattern.size };
+	auto dunData = LoadFileInMem<uint16_t>("NLevels\\L5Data\\uberroom.dun");
 
-	UberRoomPattern.place(position, true);
+	SetPiece = { position, { dunData[0], dunData[1] } };
+
+	PlaceDunTiles(dunData.get(), position, 0);
 }
 
 void SetCornerRoom()
 {
 	Point position = SelectChamber();
 
-	SetPiece = { position, CornerstoneRoomPattern.size };
+	auto dunData = LoadFileInMem<uint16_t>("NLevels\\L5Data\\cornerstone.dun");
 
-	CornerstoneRoomPattern.place(position, true);
+	SetPiece = { position, { dunData[0], dunData[1] } };
+
+	PlaceDunTiles(dunData.get(), position, 0);
 }
 
 void FixCryptDirtTiles()

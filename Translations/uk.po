@@ -4402,8 +4402,8 @@ msgstr "2х шкд монстрам, 1х шкд тобі"
 
 #: Source/items.cpp:3722
 #, no-c-format
-msgid "Random 0 - 500% damage"
-msgstr "Випадкова шкода 0 - 500%"
+msgid "Random 0 - 600% damage"
+msgstr "Випадкова шкода 0 - 600%"
 
 #: Source/items.cpp:3724
 #, no-c-format

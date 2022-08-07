@@ -126,7 +126,7 @@ void UiInitGameSelectionList(string_view search)
 	const Point uiPosition = GetUIRectangle().position;
 
 	SDL_Rect rectScrollbar = { (Sint16)(uiPosition.x + 590), (Sint16)(uiPosition.y + 244), 25, 178 };
-	vecSelGameDialog.push_back(std::make_unique<UiScrollbar>(ArtScrollBarBackground->sprite(), ArtScrollBarThumb->sprite(), ArtScrollBarArrow->sheet(), rectScrollbar));
+	vecSelGameDialog.push_back(std::make_unique<UiScrollbar>((*ArtScrollBarBackground)[0], (*ArtScrollBarThumb)[0], *ArtScrollBarArrow, rectScrollbar));
 
 	SDL_Rect rect1 = { (Sint16)(uiPosition.x + 24), (Sint16)(uiPosition.y + 161), 590, 35 };
 	vecSelGameDialog.push_back(std::make_unique<UiArtText>(_(ConnectionNames[provider]).data(), rect1, UiFlags::AlignCenter | UiFlags::FontSize30 | UiFlags::ColorUiSilver, 3));
@@ -613,6 +613,9 @@ void selgame_Password_Select(int /*value*/)
 
 	if (selgame_selectedGame > 1) {
 		if (provider == SELCONN_ZT) {
+			for (unsigned int i = 0; i < (sizeof(selgame_Ip) / sizeof(selgame_Ip[0])); i++) {
+				selgame_Ip[i] = (selgame_Ip[i] >= 'A' && selgame_Ip[i] <= 'Z') ? selgame_Ip[i] + 'a' - 'A' : selgame_Ip[i];
+			}
 			strcpy(sgOptions.Network.szPreviousZTGame, selgame_Ip);
 		} else {
 			strcpy(sgOptions.Network.szPreviousHost, selgame_Ip);

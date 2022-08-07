@@ -16,7 +16,6 @@
 #include <cstdint>
 #include <cstring>
 
-#include "engine/render/common_impl.h"
 #include "lighting.h"
 #include "movie.h"
 #include "options.h"

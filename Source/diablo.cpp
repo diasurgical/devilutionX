@@ -26,7 +26,7 @@
 #include "discord/discord.h"
 #include "doom.h"
 #include "encrypt.h"
-#include "engine/cel_sprite.hpp"
+#include "engine/clx_sprite.hpp"
 #include "engine/demomode.h"
 #include "engine/dx.h"
 #include "engine/load_cel.hpp"
@@ -472,7 +472,16 @@ void PressKey(SDL_Keycode vkey, uint16_t modState)
 		return;
 	}
 
-	if (sgnTimeoutCurs != CURSOR_NONE || dropGoldFlag || IsWithdrawGoldOpen) {
+	if (dropGoldFlag) {
+		control_drop_gold(vkey);
+		return;
+	}
+	if (IsWithdrawGoldOpen) {
+		WithdrawGoldKeyPress(vkey);
+		return;
+	}
+
+	if (sgnTimeoutCurs != CURSOR_NONE) {
 		return;
 	}
 
@@ -488,14 +497,6 @@ void PressKey(SDL_Keycode vkey, uint16_t modState)
 
 	if (DoomFlag) {
 		doom_close();
-		return;
-	}
-	if (dropGoldFlag) {
-		control_drop_gold(vkey);
-		return;
-	}
-	if (IsWithdrawGoldOpen) {
-		WithdrawGoldKeyPress(vkey);
 		return;
 	}
 
@@ -593,109 +594,78 @@ void PressKey(SDL_Keycode vkey, uint16_t modState)
 	}
 }
 
-void GetMousePos(uint32_t lParam)
+void GameEventHandler(const SDL_Event &event, uint16_t modState)
 {
-	MousePosition = { (std::int16_t)(lParam & 0xffff), (std::int16_t)((lParam >> 16) & 0xffff) };
-}
-
-void GameEventHandler(uint32_t uMsg, uint32_t wParam, uint16_t lParam)
-{
-	switch (uMsg) {
-	case DVL_WM_KEYDOWN:
-		PressKey(static_cast<SDL_Keycode>(wParam), lParam);
+	switch (event.type) {
+	case SDL_KEYDOWN:
+		PressKey(event.key.keysym.sym, modState);
 		return;
-	case DVL_WM_KEYUP:
-		ReleaseKey(static_cast<SDL_Keycode>(wParam));
+	case SDL_KEYUP:
+		ReleaseKey(event.key.keysym.sym);
 		return;
-	case DVL_WM_MOUSEMOVE:
-		GetMousePos(wParam);
+	case SDL_MOUSEMOTION:
+		MousePosition = { event.motion.x, event.motion.y };
 		gmenu_on_mouse_move();
 		return;
-	case DVL_WM_LBUTTONDOWN:
-		GetMousePos(wParam);
+	case SDL_MOUSEBUTTONDOWN:
+		MousePosition = { event.button.x, event.button.y };
 		if (sgbMouseDown == CLICK_NONE) {
-			sgbMouseDown = CLICK_LEFT;
-			LeftMouseDown(lParam);
+			switch (event.button.button) {
+			case SDL_BUTTON_LEFT:
+				sgbMouseDown = CLICK_LEFT;
+				LeftMouseDown(modState);
+				break;
+			case SDL_BUTTON_RIGHT:
+				sgbMouseDown = CLICK_RIGHT;
+				RightMouseDown((modState & KMOD_SHIFT) != 0);
+				break;
+			default:
+				sgOptions.Keymapper.KeyPressed(event.button.button | KeymapperMouseButtonMask);
+				break;
+			}
 		}
 		return;
-	case DVL_WM_LBUTTONUP:
-		GetMousePos(wParam);
-		if (sgbMouseDown == CLICK_LEFT) {
-			LastMouseButtonAction = MouseActionType::None;
-			sgbMouseDown = CLICK_NONE;
-			LeftMouseUp(lParam);
-		}
-		return;
-	case DVL_WM_RBUTTONDOWN:
-		GetMousePos(wParam);
-		if (sgbMouseDown == CLICK_NONE) {
-			sgbMouseDown = CLICK_RIGHT;
-			RightMouseDown((lParam & KMOD_SHIFT) != 0);
-		}
-		return;
-	case DVL_WM_RBUTTONUP:
-		GetMousePos(wParam);
-		if (sgbMouseDown == CLICK_RIGHT) {
-			LastMouseButtonAction = MouseActionType::None;
-			sgbMouseDown = CLICK_NONE;
-		}
-		return;
-	case DVL_WM_MBUTTONDOWN:
-		sgOptions.Keymapper.KeyPressed(SDL_BUTTON_MIDDLE | KeymapperMouseButtonMask);
-		return;
-	case DVL_WM_MBUTTONUP:
-		sgOptions.Keymapper.KeyReleased(SDL_BUTTON_MIDDLE | KeymapperMouseButtonMask);
-		return;
-	case DVL_WM_X1BUTTONDOWN:
-		sgOptions.Keymapper.KeyPressed(SDL_BUTTON_X1 | KeymapperMouseButtonMask);
-		return;
-	case DVL_WM_X1BUTTONUP:
-		sgOptions.Keymapper.KeyReleased(SDL_BUTTON_X1 | KeymapperMouseButtonMask);
-		return;
-	case DVL_WM_X2BUTTONDOWN:
-		sgOptions.Keymapper.KeyPressed(SDL_BUTTON_X2 | KeymapperMouseButtonMask);
-		return;
-	case DVL_WM_X2BUTTONUP:
-		sgOptions.Keymapper.KeyReleased(SDL_BUTTON_X2 | KeymapperMouseButtonMask);
-		return;
-	case DVL_WM_CAPTURECHANGED:
-		sgbMouseDown = CLICK_NONE;
-		LastMouseButtonAction = MouseActionType::None;
-		break;
-	case WM_DIABNEXTLVL:
-	case WM_DIABPREVLVL:
-	case WM_DIABRTNLVL:
-	case WM_DIABSETLVL:
-	case WM_DIABWARPLVL:
-	case WM_DIABTOWNWARP:
-	case WM_DIABTWARPUP:
-	case WM_DIABRETOWN:
-		if (gbIsMultiplayer)
-			pfile_write_hero();
-		nthread_ignore_mutex(true);
-		PaletteFadeOut(8);
-		sound_stop();
-		LastMouseButtonAction = MouseActionType::None;
-		sgbMouseDown = CLICK_NONE;
-		ShowProgress((interface_mode)uMsg);
-		force_redraw = 255;
-		DrawAndBlit();
-		LoadPWaterPalette();
-		if (gbRunGame)
-			PaletteFadeIn(8);
-		nthread_ignore_mutex(false);
-		gbGameLoopStartup = true;
-		return;
-	}
+	case SDL_MOUSEBUTTONUP:
+		MousePosition = { event.button.x, event.button.y };
 
-	MainWndProc(uMsg);
+		if (sgbMouseDown == CLICK_LEFT && event.button.button == SDL_BUTTON_LEFT) {
+			LastMouseButtonAction = MouseActionType::None;
+			sgbMouseDown = CLICK_NONE;
+			LeftMouseUp(modState);
+		} else if (sgbMouseDown == CLICK_RIGHT && event.button.button == SDL_BUTTON_RIGHT) {
+			LastMouseButtonAction = MouseActionType::None;
+			sgbMouseDown = CLICK_NONE;
+		} else {
+			sgOptions.Keymapper.KeyReleased(event.button.button | KeymapperMouseButtonMask);
+		}
+		return;
+	default:
+		if (IsCustomEvent(event.type)) {
+			if (gbIsMultiplayer)
+				pfile_write_hero();
+			nthread_ignore_mutex(true);
+			PaletteFadeOut(8);
+			sound_stop();
+			LastMouseButtonAction = MouseActionType::None;
+			sgbMouseDown = CLICK_NONE;
+			ShowProgress(GetCustomEvent(event.type));
+			force_redraw = 255;
+			DrawAndBlit();
+			LoadPWaterPalette();
+			if (gbRunGame)
+				PaletteFadeIn(8);
+			nthread_ignore_mutex(false);
+			gbGameLoopStartup = true;
+			return;
+		}
+		MainWndProc(event);
+		break;
+	}
 }
 
 void RunGameLoop(interface_mode uMsg)
 {
 	demo::NotifyGameLoopStart();
-
-	tagMSG msg;
 
 	nthread_ignore_mutex(true);
 	StartGame(uMsg);
@@ -729,13 +699,15 @@ void RunGameLoop(interface_mode uMsg)
 		}
 #endif
 
-		while (FetchMessage(&msg)) {
-			if (msg.message == DVL_WM_QUIT) {
+		SDL_Event event;
+		uint16_t modState;
+		while (FetchMessage(&event, &modState)) {
+			if (event.type == SDL_QUIT) {
 				gbRunGameResult = false;
 				gbRunGame = false;
 				break;
 			}
-			PushMessage(&msg);
+			HandleMessage(event, modState);
 		}
 		if (!gbRunGame)
 			break;
@@ -959,9 +931,6 @@ void DiabloInitScreen()
 	MousePosition = { gnScreenWidth / 2, gnScreenHeight / 2 };
 	if (ControlMode == ControlTypes::KeyboardAndMouse)
 		SetCursorPos(MousePosition);
-	ScrollInfo.tile = { 0, 0 };
-	ScrollInfo.offset = { 0, 0 };
-	ScrollInfo._sdir = ScrollDirection::None;
 
 	ClrDiabloMsg();
 }
@@ -970,6 +939,22 @@ void SetApplicationVersions()
 {
 	*BufCopy(gszProductName, PROJECT_NAME, " v", PROJECT_VERSION) = '\0';
 	*BufCopy(gszVersionNumber, "version ", PROJECT_VERSION) = '\0';
+}
+
+void CheckArchivesUpToDate()
+{
+	const bool devilutionxMpqOutOfDate = devilutionx_mpq && !devilutionx_mpq->HasFile("data\\charbg.clx");
+	const bool fontsMpqOutOfDate = font_mpq && !font_mpq->HasFile("fonts\\12-4e.clx");
+
+	if (devilutionxMpqOutOfDate && fontsMpqOutOfDate) {
+		app_fatal(_("Please update devilutionx.mpq and fonts.mpq to the latest version"));
+	} else if (devilutionxMpqOutOfDate) {
+		app_fatal(_("Failed to load UI resources.\n"
+		            "\n"
+		            "Make sure devilutionx.mpq is in the game folder and that it is up to date."));
+	} else if (fontsMpqOutOfDate) {
+		app_fatal(_("Please update fonts.mpq to the latest version"));
+	}
 }
 
 void DiabloInit()
@@ -1031,6 +1016,8 @@ void DiabloInit()
 
 	// Always available.
 	LoadSmallSelectionSpinner();
+
+	CheckArchivesUpToDate();
 }
 
 void DiabloSplash()
@@ -1090,37 +1077,37 @@ void LoadLvlGFX()
 			pDungeonCels = LoadFileInMem("Levels\\TownData\\Town.CEL");
 			pMegaTiles = LoadFileInMem<MegaTile>("Levels\\TownData\\Town.TIL");
 		}
-		pSpecialCels = LoadCelAsCl2("Levels\\TownData\\TownS.CEL", SpecialCelWidth);
+		pSpecialCels = LoadCel("Levels\\TownData\\TownS.CEL", SpecialCelWidth);
 		break;
 	case DTYPE_CATHEDRAL:
 		pDungeonCels = LoadFileInMem("Levels\\L1Data\\L1.CEL");
 		pMegaTiles = LoadFileInMem<MegaTile>("Levels\\L1Data\\L1.TIL");
-		pSpecialCels = LoadCelAsCl2("Levels\\L1Data\\L1S.CEL", SpecialCelWidth);
+		pSpecialCels = LoadCel("Levels\\L1Data\\L1S.CEL", SpecialCelWidth);
 		break;
 	case DTYPE_CATACOMBS:
 		pDungeonCels = LoadFileInMem("Levels\\L2Data\\L2.CEL");
 		pMegaTiles = LoadFileInMem<MegaTile>("Levels\\L2Data\\L2.TIL");
-		pSpecialCels = LoadCelAsCl2("Levels\\L2Data\\L2S.CEL", SpecialCelWidth);
+		pSpecialCels = LoadCel("Levels\\L2Data\\L2S.CEL", SpecialCelWidth);
 		break;
 	case DTYPE_CAVES:
 		pDungeonCels = LoadFileInMem("Levels\\L3Data\\L3.CEL");
 		pMegaTiles = LoadFileInMem<MegaTile>("Levels\\L3Data\\L3.TIL");
-		pSpecialCels = LoadCelAsCl2("Levels\\L1Data\\L1S.CEL", SpecialCelWidth);
+		pSpecialCels = LoadCel("Levels\\L1Data\\L1S.CEL", SpecialCelWidth);
 		break;
 	case DTYPE_HELL:
 		pDungeonCels = LoadFileInMem("Levels\\L4Data\\L4.CEL");
 		pMegaTiles = LoadFileInMem<MegaTile>("Levels\\L4Data\\L4.TIL");
-		pSpecialCels = LoadCelAsCl2("Levels\\L2Data\\L2S.CEL", SpecialCelWidth);
+		pSpecialCels = LoadCel("Levels\\L2Data\\L2S.CEL", SpecialCelWidth);
 		break;
 	case DTYPE_NEST:
 		pDungeonCels = LoadFileInMem("NLevels\\L6Data\\L6.CEL");
 		pMegaTiles = LoadFileInMem<MegaTile>("NLevels\\L6Data\\L6.TIL");
-		pSpecialCels = LoadCelAsCl2("Levels\\L1Data\\L1S.CEL", SpecialCelWidth);
+		pSpecialCels = LoadCel("Levels\\L1Data\\L1S.CEL", SpecialCelWidth);
 		break;
 	case DTYPE_CRYPT:
 		pDungeonCels = LoadFileInMem("NLevels\\L5Data\\L5.CEL");
 		pMegaTiles = LoadFileInMem<MegaTile>("NLevels\\L5Data\\L5.TIL");
-		pSpecialCels = LoadCelAsCl2("NLevels\\L5Data\\L5S.CEL", SpecialCelWidth);
+		pSpecialCels = LoadCel("NLevels\\L5Data\\L5S.CEL", SpecialCelWidth);
 		break;
 	default:
 		app_fatal("LoadLvlGFX");
@@ -1873,11 +1860,11 @@ bool TryIconCurs()
 
 	if (pcurs == CURSOR_TELEPORT) {
 		if (pcursmonst != -1)
-			NetSendCmdParam3(true, CMD_TSPELLID, pcursmonst, myPlayer._pTSpell, myPlayer.GetSpellLevel(myPlayer._pTSpell));
+			NetSendCmdParam4(true, CMD_TSPELLID, pcursmonst, myPlayer._pTSpell, myPlayer.GetSpellLevel(myPlayer._pTSpell), myPlayer.queuedSpell.spellFrom);
 		else if (pcursplr != -1)
-			NetSendCmdParam3(true, CMD_TSPELLPID, pcursplr, myPlayer._pTSpell, myPlayer.GetSpellLevel(myPlayer._pTSpell));
+			NetSendCmdParam4(true, CMD_TSPELLPID, pcursplr, myPlayer._pTSpell, myPlayer.GetSpellLevel(myPlayer._pTSpell), myPlayer.queuedSpell.spellFrom);
 		else
-			NetSendCmdLocParam2(true, CMD_TSPELLXY, cursPosition, myPlayer._pTSpell, myPlayer.GetSpellLevel(myPlayer._pTSpell));
+			NetSendCmdLocParam3(true, CMD_TSPELLXY, cursPosition, myPlayer._pTSpell, myPlayer.GetSpellLevel(myPlayer._pTSpell), myPlayer.queuedSpell.spellFrom);
 		NewCursor(CURSOR_HAND);
 		return true;
 	}
@@ -2014,41 +2001,31 @@ bool PressEscKey()
 	return rv;
 }
 
-void DisableInputEventHandler(uint32_t uMsg, uint32_t wParam, uint16_t /*lParam*/)
+void DisableInputEventHandler(const SDL_Event &event, uint16_t modState)
 {
-	switch (uMsg) {
-	case DVL_WM_KEYDOWN:
-	case DVL_WM_KEYUP:
+	switch (event.type) {
+	case SDL_MOUSEMOTION:
+		MousePosition = { event.motion.x, event.motion.y };
 		return;
-	case DVL_WM_MOUSEMOVE:
-		GetMousePos(wParam);
-		return;
-	case DVL_WM_LBUTTONDOWN:
+	case SDL_MOUSEBUTTONDOWN:
 		if (sgbMouseDown != CLICK_NONE)
 			return;
-		sgbMouseDown = CLICK_LEFT;
-		return;
-	case DVL_WM_LBUTTONUP:
-		if (sgbMouseDown != CLICK_LEFT)
+		switch (event.button.button) {
+		case SDL_BUTTON_LEFT:
+			sgbMouseDown = CLICK_LEFT;
 			return;
-		sgbMouseDown = CLICK_NONE;
-		return;
-	case DVL_WM_RBUTTONDOWN:
-		if (sgbMouseDown != CLICK_NONE)
+		case SDL_BUTTON_RIGHT:
+			sgbMouseDown = CLICK_RIGHT;
 			return;
-		sgbMouseDown = CLICK_RIGHT;
-		return;
-	case DVL_WM_RBUTTONUP:
-		if (sgbMouseDown != CLICK_RIGHT)
+		default:
 			return;
-		sgbMouseDown = CLICK_NONE;
-		return;
-	case DVL_WM_CAPTURECHANGED:
+		}
+	case SDL_MOUSEBUTTONUP:
 		sgbMouseDown = CLICK_NONE;
 		return;
 	}
 
-	MainWndProc(uMsg);
+	MainWndProc(event);
 }
 
 void LoadGameLevel(bool firstflag, lvl_entry lvldir)

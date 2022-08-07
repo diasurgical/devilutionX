@@ -2,7 +2,7 @@ name: Miyoo Mini Release Build
 
 on:
   release:
-    types: [created]
+    types: [published]
   workflow_dispatch:
 
 jobs:
@@ -28,23 +28,20 @@ jobs:
       if: ${{ !env.ACT }}
       uses: actions/upload-artifact@v2
       with:
-        name: devilutionx-onion-os.zip
-        path: build-miyoo-mini/devilutionx-onion-os.zip
+        name: devilutionx-miyoo-mini-onion-os.zip
+        path: build-miyoo-mini/devilutionx-miyoo-mini-onion-os.zip
 
     - name: Upload-miniUI-Package
       if: ${{ !env.ACT }}
       uses: actions/upload-artifact@v2
       with:
-        name: devilutionx-miniui.zip
-        path: build-miyoo-mini/devilutionx-miniui.zip
+        name: devilutionx-miyoo-mini-miniui.zip
+        path: build-miyoo-mini/devilutionx-miyoo-mini-miniui.zip
 
     - name: Update Release
-      if: ${{ github.event_name == 'release' && github.event.action == 'created' && !env.ACT }}
-      uses: ncipollo/release-action@v1
+      if: ${{ github.event_name == 'release' && !env.ACT }}
+      uses: svenstaro/upload-release-action@v2
       with:
-        artifacts: "build-miyoo-mini/devilutionx-onion-os.zip,build-miyoo-mini/devilutionx-miniui.zip"
-        allowUpdates: true
-        omitBody: true
-        omitName: true
-        omitPrereleaseDuringUpdate: true
-        token: ${{ secrets.GITHUB_TOKEN }}
+        file: "build-miyoo-mini/devilutionx-*.zip"
+        file_glob: true
+        overwrite: true

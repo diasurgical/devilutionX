@@ -4441,8 +4441,8 @@ msgstr "2x ζημ στους εχθρούς, 1x σε σένα"
 
 #: Source/items.cpp:3737
 #, no-c-format
-msgid "Random 0 - 500% damage"
-msgstr "Τυχαία ζημιά 0 - 500%"
+msgid "Random 0 - 600% damage"
+msgstr "Τυχαία ζημιά 0 - 600%"
 
 #: Source/items.cpp:3739
 #, no-c-format

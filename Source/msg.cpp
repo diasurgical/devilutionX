@@ -15,7 +15,6 @@
 #include "config.h"
 #include "control.h"
 #include "dead.h"
-#include "dthread.h"
 #include "encrypt.h"
 #include "engine/random.hpp"
 #include "engine/world_tile.hpp"
@@ -41,7 +40,6 @@
 
 namespace devilution {
 
-bool deltaload;
 uint8_t gbBufferMsgs;
 int dwRecCount;
 
@@ -73,7 +71,7 @@ struct DObjectStr {
 
 struct DLevel {
 	TCmdPItem item[MAXITEMS];
-	DObjectStr object[MAXOBJECTS];
+	std::unordered_map<WorldTilePosition, DObjectStr> object;
 	DMonsterStr monster[MaxMonsters];
 };
 
@@ -113,7 +111,10 @@ uint32_t sgdwRecvOffset;
 int sgnCurrMegaPlayer;
 std::unordered_map<uint8_t, DLevel> DeltaLevels;
 uint8_t sbLastCmd;
-byte sgRecvBuf[sizeof(DLevel) + 1];
+/**
+ * @brief buffer used to receive level deltas, size is the worst expected case assuming every object on a level was touched
+ */
+byte sgRecvBuf[1U + sizeof(DLevel::item) + sizeof(uint8_t) + (sizeof(WorldTilePosition) + sizeof(_cmd_id)) * MAXOBJECTS + sizeof(DLevel::monster)];
 _cmd_id sgbRecvCmd;
 std::unordered_map<uint8_t, LocalLevel> LocalLevels;
 DJunk sgJunk;
@@ -141,7 +142,8 @@ DLevel &GetDeltaLevel(uint8_t level)
 	auto emplaceRet = DeltaLevels.emplace(level, DLevel {});
 	assert(emplaceRet.second);
 	DLevel &deltaLevel = emplaceRet.first->second;
-	memset(&deltaLevel, 0xFF, sizeof(DLevel));
+	memset(&deltaLevel.item, 0xFF, sizeof(deltaLevel.item));
+	memset(&deltaLevel.monster, 0xFF, sizeof(deltaLevel.monster));
 	return deltaLevel;
 }
 
@@ -332,16 +334,32 @@ size_t DeltaImportItem(const byte *src, TCmdPItem *dst)
 	return size;
 }
 
-byte *DeltaExportObject(byte *dst, const DObjectStr *src)
+byte *DeltaExportObject(byte *dst, const std::unordered_map<WorldTilePosition, DObjectStr> &src)
 {
-	memcpy(dst, src, sizeof(DObjectStr) * MAXOBJECTS);
-	return dst + sizeof(DObjectStr) * MAXOBJECTS;
+	*dst++ = static_cast<byte>(src.size());
+	for (auto &pair : src) {
+		*dst++ = static_cast<byte>(pair.first.x);
+		*dst++ = static_cast<byte>(pair.first.y);
+		*dst++ = static_cast<byte>(pair.second.bCmd);
+	}
+
+	return dst;
 }
 
-size_t DeltaImportObject(const byte *src, DObjectStr *dst)
+const byte *DeltaImportObjects(const byte *src, std::unordered_map<WorldTilePosition, DObjectStr> &dst)
 {
-	memcpy(dst, src, sizeof(DObjectStr) * MAXOBJECTS);
-	return sizeof(DObjectStr) * MAXOBJECTS;
+	dst.clear();
+
+	uint8_t numDeltas = static_cast<uint8_t>(*src++);
+	dst.reserve(numDeltas);
+
+	for (unsigned i = 0; i < numDeltas; i++) {
+		WorldTilePosition objectPosition { static_cast<WorldTileCoord>(src[0]), static_cast<WorldTileCoord>(src[1]) };
+		src += 2;
+		dst[objectPosition] = DObjectStr { static_cast<_cmd_id>(*src++) };
+	}
+
+	return src;
 }
 
 byte *DeltaExportMonster(byte *dst, const DMonsterStr *src)
@@ -435,7 +453,7 @@ void DeltaImportData(_cmd_id cmd, uint32_t recvOffset)
 	if (sgRecvBuf[0] != byte { 0 })
 		PkwareDecompress(&sgRecvBuf[1], recvOffset, sizeof(sgRecvBuf) - 1);
 
-	byte *src = &sgRecvBuf[1];
+	const byte *src = &sgRecvBuf[1];
 	if (cmd == CMD_DLEVEL_JUNK) {
 		DeltaImportJunk(src);
 	} else if (cmd == CMD_DLEVEL) {
@@ -443,7 +461,7 @@ void DeltaImportData(_cmd_id cmd, uint32_t recvOffset)
 		src += sizeof(uint8_t);
 		DLevel &deltaLevel = GetDeltaLevel(i);
 		src += DeltaImportItem(src, deltaLevel.item);
-		src += DeltaImportObject(src, deltaLevel.object);
+		src = DeltaImportObjects(src, deltaLevel.object);
 		DeltaImportMonster(src, deltaLevel.monster);
 	} else {
 		app_fatal(StrCat("Unkown network message type: ", cmd));
@@ -537,16 +555,17 @@ void DeltaLeaveSync(uint8_t bLevel)
 	LocalLevels.insert_or_assign(bLevel, AutomapView);
 }
 
-void DeltaSyncObject(const Object &liveObject, _cmd_id bCmd, const Player &player)
+void DeltaSyncObject(WorldTilePosition position, _cmd_id bCmd, const Player &player)
 {
 	if (!gbIsMultiplayer)
 		return;
 
 	sgbDeltaChanged = true;
-
-	// object deltas are laid out in memory using the same relative offsets as the Objects array.
-	size_t deltaIndex = std::distance<const Object *>(&Objects[0], &liveObject);
-	GetDeltaLevel(player).object[deltaIndex].bCmd = bCmd;
+	auto &objectDeltas = GetDeltaLevel(player).object;
+	if (bCmd == _cmd_id::CMD_CLOSEDOOR)
+		objectDeltas.erase(position);
+	else
+		objectDeltas[position].bCmd = bCmd;
 }
 
 bool DeltaGetItem(const TCmdGItem &message, uint8_t bLevel)
@@ -1142,9 +1161,9 @@ size_t OnSpellWall(const TCmd *pCmd, Player &player)
 	player.destParam2 = position.y;
 	player.destParam3 = message.wParam3;
 	player.destParam4 = message.wParam4;
-	player._pSpell = spell;
-	player._pSplType = static_cast<spell_type>(message.wParam2);
-	player._pSplFrom = 0;
+	player.queuedSpell.spellId = spell;
+	player.queuedSpell.spellType = static_cast<spell_type>(message.wParam2);
+	player.queuedSpell.spellFrom = 0;
 
 	return sizeof(message);
 }
@@ -1180,15 +1199,15 @@ size_t OnSpellTile(const TCmd *pCmd, Player &player)
 	player.destParam1 = position.x;
 	player.destParam2 = position.y;
 	player.destParam3 = message.wParam3;
-	player._pSpell = spell;
-	player._pSplType = static_cast<spell_type>(message.wParam2);
+	player.queuedSpell.spellId = spell;
+	player.queuedSpell.spellType = static_cast<spell_type>(message.wParam2);
 
 	return sizeof(message);
 }
 
 size_t OnTargetSpellTile(const TCmd *pCmd, Player &player)
 {
-	const auto &message = *reinterpret_cast<const TCmdLocParam2 *>(pCmd);
+	const auto &message = *reinterpret_cast<const TCmdLocParam3 *>(pCmd);
 	const Point position { message.x, message.y };
 
 	if (gbBufferMsgs == 1)
@@ -1198,6 +1217,8 @@ size_t OnTargetSpellTile(const TCmd *pCmd, Player &player)
 	if (!InDungeonBounds(position))
 		return sizeof(message);
 	if (message.wParam1 > SPL_LAST)
+		return sizeof(message);
+	if (message.wParam3 > INVITEM_BELT_LAST)
 		return sizeof(message);
 
 	auto spell = static_cast<spell_id>(message.wParam1);
@@ -1211,9 +1232,9 @@ size_t OnTargetSpellTile(const TCmd *pCmd, Player &player)
 	player.destParam1 = position.x;
 	player.destParam2 = position.y;
 	player.destParam3 = message.wParam2;
-	player._pSpell = spell;
-	player._pSplType = RSPLTYPE_INVALID;
-	player._pSplFrom = 2;
+	player.queuedSpell.spellId = spell;
+	player.queuedSpell.spellType = RSPLTYPE_SCROLL;
+	player.queuedSpell.spellFrom = static_cast<int8_t>(message.wParam3);
 
 	return sizeof(message);
 }
@@ -1222,7 +1243,7 @@ size_t OnObjectTileAction(const TCmd &cmd, Player &player, action_id action, boo
 {
 	const auto &message = reinterpret_cast<const TCmdLoc &>(cmd);
 	const Point position { message.x, message.y };
-	const Object *object = ObjectAtPosition(position);
+	const Object *object = FindObjectAtPosition(position);
 
 	if (gbBufferMsgs != 1 && player.isOnActiveLevel() && object != nullptr) {
 		if (pathToObject)
@@ -1318,9 +1339,9 @@ size_t OnSpellMonster(const TCmd *pCmd, Player &player)
 	player.destAction = ACTION_SPELLMON;
 	player.destParam1 = message.wParam1;
 	player.destParam2 = message.wParam4;
-	player._pSpell = spell;
-	player._pSplType = static_cast<spell_type>(message.wParam3);
-	player._pSplFrom = 0;
+	player.queuedSpell.spellId = spell;
+	player.queuedSpell.spellType = static_cast<spell_type>(message.wParam3);
+	player.queuedSpell.spellFrom = 0;
 
 	return sizeof(message);
 }
@@ -1354,16 +1375,16 @@ size_t OnSpellPlayer(const TCmd *pCmd, Player &player)
 	player.destAction = ACTION_SPELLPLR;
 	player.destParam1 = message.wParam1;
 	player.destParam2 = message.wParam4;
-	player._pSpell = spell;
-	player._pSplType = static_cast<spell_type>(message.wParam3);
-	player._pSplFrom = 0;
+	player.queuedSpell.spellId = spell;
+	player.queuedSpell.spellType = static_cast<spell_type>(message.wParam3);
+	player.queuedSpell.spellFrom = 0;
 
 	return sizeof(message);
 }
 
 size_t OnTargetSpellMonster(const TCmd *pCmd, Player &player)
 {
-	const auto &message = *reinterpret_cast<const TCmdParam3 *>(pCmd);
+	const auto &message = *reinterpret_cast<const TCmdParam4 *>(pCmd);
 
 	if (gbBufferMsgs == 1)
 		return sizeof(message);
@@ -1373,7 +1394,7 @@ size_t OnTargetSpellMonster(const TCmd *pCmd, Player &player)
 		return sizeof(message);
 	if (message.wParam2 > SPL_LAST)
 		return sizeof(message);
-	if (message.wParam3 > RSPLTYPE_INVALID)
+	if (message.wParam4 > INVITEM_BELT_LAST)
 		return sizeof(message);
 
 	auto spell = static_cast<spell_id>(message.wParam2);
@@ -1386,16 +1407,16 @@ size_t OnTargetSpellMonster(const TCmd *pCmd, Player &player)
 	player.destAction = ACTION_SPELLMON;
 	player.destParam1 = message.wParam1;
 	player.destParam2 = message.wParam3;
-	player._pSpell = spell;
-	player._pSplType = RSPLTYPE_INVALID;
-	player._pSplFrom = 2;
+	player.queuedSpell.spellId = spell;
+	player.queuedSpell.spellType = RSPLTYPE_SCROLL;
+	player.queuedSpell.spellFrom = static_cast<int8_t>(message.wParam4);
 
 	return sizeof(message);
 }
 
 size_t OnTargetSpellPlayer(const TCmd *pCmd, Player &player)
 {
-	const auto &message = *reinterpret_cast<const TCmdParam3 *>(pCmd);
+	const auto &message = *reinterpret_cast<const TCmdParam4 *>(pCmd);
 
 	if (gbBufferMsgs == 1)
 		return sizeof(message);
@@ -1404,6 +1425,8 @@ size_t OnTargetSpellPlayer(const TCmd *pCmd, Player &player)
 	if (message.wParam1 >= MAX_PLRS)
 		return sizeof(message);
 	if (message.wParam2 > SPL_LAST)
+		return sizeof(message);
+	if (message.wParam4 > INVITEM_BELT_LAST)
 		return sizeof(message);
 
 	auto spell = static_cast<spell_id>(message.wParam2);
@@ -1416,9 +1439,9 @@ size_t OnTargetSpellPlayer(const TCmd *pCmd, Player &player)
 	player.destAction = ACTION_SPELLPLR;
 	player.destParam1 = message.wParam1;
 	player.destParam2 = message.wParam3;
-	player._pSpell = spell;
-	player._pSplType = RSPLTYPE_INVALID;
-	player._pSplFrom = 2;
+	player.queuedSpell.spellId = spell;
+	player.queuedSpell.spellType = RSPLTYPE_SCROLL;
+	player.queuedSpell.spellFrom = static_cast<int8_t>(message.wParam4);
 
 	return sizeof(message);
 }
@@ -1591,7 +1614,7 @@ size_t OnMonstDamage(const TCmd *pCmd, int pnum)
 		if (&player != MyPlayer) {
 			if (player.isOnActiveLevel() && message.wMon < MaxMonsters) {
 				auto &monster = Monsters[message.wMon];
-				monster.whoHit |= 1 << pnum;
+				monster.tag(player);
 				if (monster.hitPoints > 0) {
 					monster.hitPoints -= message.dwDam;
 					if ((monster.hitPoints >> 6) < 1)
@@ -1641,15 +1664,19 @@ size_t OnPlayerDamage(const TCmd *pCmd, Player &player)
 size_t OnOperateObject(const TCmd &pCmd, int pnum)
 {
 	const auto &message = reinterpret_cast<const TCmdLoc &>(pCmd);
-	Object *object = ObjectAtPosition({ message.x, message.y });
 
 	if (gbBufferMsgs == 1) {
 		SendPacket(pnum, &message, sizeof(message));
-	} else if (object != nullptr) {
+	} else {
 		Player &player = Players[pnum];
-		if (player.isOnActiveLevel())
-			SyncOpObject(player, message.bCmd, *object);
-		DeltaSyncObject(*object, message.bCmd, player);
+		WorldTilePosition position { message.x, message.y };
+		assert(InDungeonBounds(position));
+		if (player.isOnActiveLevel()) {
+			Object *object = FindObjectAtPosition(position);
+			if (object != nullptr)
+				SyncOpObject(player, message.bCmd, *object);
+		}
+		DeltaSyncObject(position, message.bCmd, player);
 	}
 
 	return sizeof(message);
@@ -1658,15 +1685,19 @@ size_t OnOperateObject(const TCmd &pCmd, int pnum)
 size_t OnBreakObject(const TCmd &pCmd, int pnum)
 {
 	const auto &message = reinterpret_cast<const TCmdLoc &>(pCmd);
-	Object *breakable = ObjectAtPosition({ message.x, message.y });
 
 	if (gbBufferMsgs == 1) {
 		SendPacket(pnum, &message, sizeof(message));
-	} else if (breakable != nullptr) {
+	} else {
 		Player &player = Players[pnum];
-		if (player.isOnActiveLevel())
-			SyncBreakObj(player, *breakable);
-		DeltaSyncObject(*breakable, CMD_BREAKOBJ, player);
+		WorldTilePosition position { message.x, message.y };
+		assert(InDungeonBounds(position));
+		if (player.isOnActiveLevel()) {
+			Object *object = FindObjectAtPosition(position);
+			if (object != nullptr)
+				SyncBreakObj(player, *object);
+		}
+		DeltaSyncObject(position, CMD_BREAKOBJ, player);
 	}
 
 	return sizeof(message);
@@ -2021,9 +2052,9 @@ size_t OnNova(const TCmd *pCmd, Player &player)
 	if (gbBufferMsgs != 1) {
 		if (player.isOnActiveLevel() && &player != MyPlayer && InDungeonBounds(position)) {
 			ClrPlrPath(player);
-			player._pSpell = SPL_NOVA;
-			player._pSplType = RSPLTYPE_INVALID;
-			player._pSplFrom = 3;
+			player.queuedSpell.spellId = SPL_NOVA;
+			player.queuedSpell.spellType = RSPLTYPE_SCROLL;
+			player.queuedSpell.spellFrom = 3;
 			player.destAction = ACTION_SPELL;
 			player.destParam1 = position.x;
 			player.destParam2 = position.y;
@@ -2159,27 +2190,35 @@ void DeltaExportData(int pnum)
 {
 	if (sgbDeltaChanged) {
 		for (auto &it : DeltaLevels) {
-			std::unique_ptr<byte[]> dst { new byte[sizeof(DLevel) + 1 + sizeof(uint8_t)] };
-			byte *dstEnd = &dst.get()[1];
 			DLevel &deltaLevel = it.second;
+
+			const size_t bufferSize = 1U                                                      /* marker byte, always 0 */
+			    + sizeof(uint8_t)                                                             /* level id */
+			    + sizeof(deltaLevel.item)                                                     /* items spawned during dungeon generation which have been picked up, and items dropped by a player during a game */
+			    + sizeof(uint8_t)                                                             /* count of object interactions which caused a state change since dungeon generation */
+			    + (sizeof(WorldTilePosition) + sizeof(DObjectStr)) * deltaLevel.object.size() /* location/action pairs for the object interactions */
+			    + sizeof(deltaLevel.monster);                                                 /* latest monster state */
+			std::unique_ptr<byte[]> dst { new byte[bufferSize] };
+
+			byte *dstEnd = &dst.get()[1];
 			*dstEnd = static_cast<byte>(it.first);
 			dstEnd += sizeof(uint8_t);
 			dstEnd = DeltaExportItem(dstEnd, deltaLevel.item);
 			dstEnd = DeltaExportObject(dstEnd, deltaLevel.object);
 			dstEnd = DeltaExportMonster(dstEnd, deltaLevel.monster);
 			uint32_t size = CompressData(dst.get(), dstEnd);
-			dthread_send_delta(pnum, CMD_DLEVEL, std::move(dst), size);
+			multi_send_zero_packet(pnum, CMD_DLEVEL, dst.get(), size);
 		}
 
-		std::unique_ptr<byte[]> dst { new byte[sizeof(DJunk) + 1] };
-		byte *dstEnd = &dst.get()[1];
+		byte dst[sizeof(DJunk) + 1];
+		byte *dstEnd = &dst[1];
 		dstEnd = DeltaExportJunk(dstEnd);
-		uint32_t size = CompressData(dst.get(), dstEnd);
-		dthread_send_delta(pnum, CMD_DLEVEL_JUNK, std::move(dst), size);
+		uint32_t size = CompressData(dst, dstEnd);
+		multi_send_zero_packet(pnum, CMD_DLEVEL_JUNK, dst, size);
 	}
 
-	std::unique_ptr<byte[]> src { new byte[1] { static_cast<byte>(0) } };
-	dthread_send_delta(pnum, CMD_DLEVEL_END, std::move(src), 1);
+	byte src[1] = { static_cast<byte>(0) };
+	multi_send_zero_packet(pnum, CMD_DLEVEL_END, src, 1);
 }
 
 void delta_init()
@@ -2188,7 +2227,6 @@ void delta_init()
 	memset(&sgJunk, 0xFF, sizeof(sgJunk));
 	DeltaLevels.clear();
 	LocalLevels.clear();
-	deltaload = false;
 }
 
 void delta_kill_monster(const Monster &monster, Point position, const Player &player)
@@ -2376,7 +2414,6 @@ void DeltaLoadLevel()
 	if (!gbIsMultiplayer)
 		return;
 
-	deltaload = true;
 	uint8_t localLevel = GetLevelForMultiplayer(*MyPlayer);
 	DLevel &deltaLevel = GetDeltaLevel(localLevel);
 	if (leveltype != DTYPE_TOWN) {
@@ -2412,7 +2449,7 @@ void DeltaLoadLevel()
 				if (monster.position.tile != Point { 0, 0 } && monster.position.tile != GolemHoldingCell)
 					dMonster[monster.position.tile.x][monster.position.tile.y] = i + 1;
 				if (monster.type().type == MT_GOLEM) {
-					GolumAi(i);
+					GolumAi(monster);
 					monster.flags |= (MFLAG_TARGETS_MONSTER | MFLAG_GOLEM);
 				} else {
 					M_StartStand(monster, monster.direction);
@@ -2490,29 +2527,36 @@ void DeltaLoadLevel()
 	}
 
 	if (leveltype != DTYPE_TOWN) {
-		for (int i = 0; i < MAXOBJECTS; i++) {
-			switch (deltaLevel.object[i].bCmd) {
+		for (auto it = deltaLevel.object.begin(); it != deltaLevel.object.end();) {
+			Object *object = FindObjectAtPosition(it->first);
+			if (object == nullptr) {
+				it = deltaLevel.object.erase(it);
+				continue;
+			}
+
+			switch (it->second.bCmd) {
 			case CMD_OPENDOOR:
-			case CMD_CLOSEDOOR:
 			case CMD_OPERATEOBJ:
-			case CMD_PLROPOBJ:
-				DeltaSyncOpObject(deltaLevel.object[i].bCmd, Objects[i]);
+				DeltaSyncOpObject(*object);
+				it++;
 				break;
 			case CMD_BREAKOBJ:
-				DeltaSyncBreakObj(Objects[i]);
+				DeltaSyncBreakObj(*object);
+				it++;
 				break;
 			default:
+				it = deltaLevel.object.erase(it); // discard invalid commands
 				break;
 			}
 		}
 
 		for (int i = 0; i < ActiveObjectCount; i++) {
-			if (Objects[ActiveObjects[i]].IsTrap()) {
-				OperateTrap(Objects[ActiveObjects[i]]);
+			Object &object = Objects[ActiveObjects[i]];
+			if (object.IsTrap()) {
+				UpdateTrapState(object);
 			}
 		}
 	}
-	deltaload = false;
 }
 
 void NetSendCmd(bool bHiPri, _cmd_id bCmd)
@@ -2996,7 +3040,6 @@ size_t ParseCmd(int pnum, const TCmd *pCmd)
 	case CMD_OPENDOOR:
 	case CMD_CLOSEDOOR:
 	case CMD_OPERATEOBJ:
-	case CMD_PLROPOBJ:
 		return OnOperateObject(*pCmd, pnum);
 	case CMD_BREAKOBJ:
 		return OnBreakObject(*pCmd, pnum);

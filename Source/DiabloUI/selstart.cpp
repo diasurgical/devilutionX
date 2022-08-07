@@ -2,7 +2,7 @@
 
 #include "DiabloUI/diabloui.h"
 #include "control.h"
-#include "engine/load_pcx.hpp"
+#include "engine/load_clx.hpp"
 #include "options.h"
 #include "utils/language.h"
 #include "utils/sdl_geometry.h"
@@ -32,7 +32,7 @@ void EscPressed()
 
 void UiSelStartUpGameOption()
 {
-	ArtBackgroundWidescreen = LoadPcxAsCl2("ui_art\\mainmenuw.pcx");
+	ArtBackgroundWidescreen = LoadOptionalClx("ui_art\\mainmenuw.clx");
 	LoadBackgroundArt("ui_art\\mainmenu.pcx");
 	UiAddBackground(&vecDialog);
 	UiAddLogo(&vecDialog);

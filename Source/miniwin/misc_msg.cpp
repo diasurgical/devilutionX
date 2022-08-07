@@ -47,8 +47,6 @@
 
 namespace devilution {
 
-static std::deque<tagMSG> message_queue;
-
 void SetMouseButtonEvent(SDL_Event &event, uint32_t type, uint8_t button, Point position)
 {
 	event.type = type;
@@ -96,11 +94,6 @@ void FocusOnCharInfo()
 }
 
 namespace {
-
-uint32_t PositionForMouse(int16_t x, int16_t y)
-{
-	return (static_cast<uint16_t>(y) << 16) | static_cast<uint16_t>(x);
-}
 
 bool FalseAvail(const char *name, int value)
 {
@@ -217,26 +210,19 @@ void ProcessGamepadEvents(GameAction &action)
 
 } // namespace
 
-bool FetchMessage_Real(tagMSG *lpMsg)
+bool FetchMessage_Real(SDL_Event *event, uint16_t *modState)
 {
 #ifdef __SWITCH__
 	HandleDocking();
 #endif
-
-	if (!message_queue.empty()) {
-		*lpMsg = message_queue.front();
-		message_queue.pop_front();
-		return true;
-	}
 
 	SDL_Event e;
 	if (PollEvent(&e) == 0) {
 		return false;
 	}
 
-	lpMsg->message = 0;
-	lpMsg->wParam = 0;
-	lpMsg->lParam = 0;
+	event->type = static_cast<SDL_EventType>(0);
+	*modState = SDL_GetModState();
 
 #ifdef __vita__
 	HandleTouchEvent(&e, MousePosition);
@@ -244,8 +230,8 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 	HandleTouchEvent(e);
 #endif
 
-	if (e.type == SDL_QUIT) {
-		lpMsg->message = DVL_WM_QUIT;
+	if (e.type == SDL_QUIT || IsCustomEvent(e.type)) {
+		*event = e;
 		return true;
 	}
 
@@ -292,21 +278,18 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 	if (GetGameAction(e, ctrlEvent, &action)) {
 		if (movie_playing) {
 			if (action.type != GameActionType_NONE) {
-				lpMsg->message = DVL_WM_KEYDOWN;
+				event->type = SDL_KEYDOWN;
 				if (action.type == GameActionType_SEND_KEY)
-					lpMsg->wParam = action.send_key.vk_code;
+					event->key.keysym.sym = static_cast<SDL_Keycode>(action.send_key.vk_code);
 			}
 		} else if (action.type == GameActionType_SEND_KEY) {
 			if ((action.send_key.vk_code & KeymapperMouseButtonMask) != 0) {
 				const unsigned button = action.send_key.vk_code & ~KeymapperMouseButtonMask;
-				lpMsg->message = action.send_key.up
-				    ? (button == SDL_BUTTON_LEFT ? DVL_WM_LBUTTONUP : DVL_WM_RBUTTONUP)
-				    : (button == SDL_BUTTON_RIGHT ? DVL_WM_LBUTTONDOWN : DVL_WM_RBUTTONDOWN);
-				lpMsg->wParam = (static_cast<int16_t>(MousePosition.y) << 16) | static_cast<int16_t>(MousePosition.x);
-				lpMsg->lParam = 0;
+				SetMouseButtonEvent(*event, action.send_key.up ? SDL_MOUSEBUTTONUP : SDL_MOUSEBUTTONDOWN, static_cast<uint8_t>(button), MousePosition);
 			} else {
-				lpMsg->message = action.send_key.up ? DVL_WM_KEYUP : DVL_WM_KEYDOWN;
-				lpMsg->wParam = action.send_key.vk_code;
+				event->type = action.send_key.up ? SDL_KEYUP : SDL_KEYDOWN;
+				event->key.state = action.send_key.up ? SDL_PRESSED : SDL_RELEASED;
+				event->key.keysym.sym = static_cast<SDL_Keycode>(action.send_key.vk_code);
 			}
 		} else {
 			ProcessGamepadEvents(action);
@@ -318,9 +301,6 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 		return true;
 
 	switch (e.type) {
-	case SDL_QUIT:
-		lpMsg->message = DVL_WM_QUIT;
-		break;
 	case SDL_KEYDOWN:
 	case SDL_KEYUP: {
 #ifdef USE_SDL1
@@ -340,72 +320,31 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 		remap_keyboard_key(&key);
 		if (key == -1)
 			return FalseAvail(e.type == SDL_KEYDOWN ? "SDL_KEYDOWN" : "SDL_KEYUP", e.key.keysym.sym);
-		lpMsg->message = e.type == SDL_KEYDOWN ? DVL_WM_KEYDOWN : DVL_WM_KEYUP;
-		lpMsg->wParam = static_cast<uint32_t>(key);
-		lpMsg->lParam = e.key.keysym.mod;
+		event->type = e.type;
+		event->key.state = e.key.state;
+		event->key.keysym.sym = key;
+		event->key.keysym.mod = e.key.keysym.mod;
 	} break;
 	case SDL_MOUSEMOTION:
-		lpMsg->message = DVL_WM_MOUSEMOVE;
-		lpMsg->wParam = PositionForMouse(e.motion.x, e.motion.y);
-		lpMsg->lParam = SDL_GetModState();
+		*event = e;
 		if (ControlMode == ControlTypes::KeyboardAndMouse && invflag)
 			InvalidateInventorySlot();
 		break;
-	case SDL_MOUSEBUTTONDOWN: {
-		lpMsg->wParam = PositionForMouse(e.button.x, e.button.y);
-		lpMsg->lParam = SDL_GetModState();
-		const int button = e.button.button;
-		switch (button) {
-		case SDL_BUTTON_LEFT:
-			lpMsg->message = DVL_WM_LBUTTONDOWN;
-			break;
-		case SDL_BUTTON_RIGHT:
-			lpMsg->message = DVL_WM_RBUTTONDOWN;
-			break;
-		case SDL_BUTTON_MIDDLE:
-			lpMsg->message = DVL_WM_MBUTTONDOWN;
-			break;
-		case SDL_BUTTON_X1:
-			lpMsg->message = DVL_WM_X1BUTTONDOWN;
-			break;
-		case SDL_BUTTON_X2:
-			lpMsg->message = DVL_WM_X2BUTTONDOWN;
-			break;
-		}
-	} break;
-	case SDL_MOUSEBUTTONUP: {
-		lpMsg->wParam = PositionForMouse(e.button.x, e.button.y);
-		lpMsg->lParam = SDL_GetModState();
-		const int button = e.button.button;
-		switch (button) {
-		case SDL_BUTTON_LEFT:
-			lpMsg->message = DVL_WM_LBUTTONUP;
-			break;
-		case SDL_BUTTON_RIGHT:
-			lpMsg->message = DVL_WM_RBUTTONUP;
-			break;
-		case SDL_BUTTON_MIDDLE:
-			lpMsg->message = DVL_WM_MBUTTONUP;
-			break;
-		case SDL_BUTTON_X1:
-			lpMsg->message = DVL_WM_X1BUTTONUP;
-			break;
-		case SDL_BUTTON_X2:
-			lpMsg->message = DVL_WM_X2BUTTONUP;
-			break;
-		}
-	} break;
+	case SDL_MOUSEBUTTONDOWN:
+	case SDL_MOUSEBUTTONUP:
+		*event = e;
+		break;
 #ifndef USE_SDL1
 	case SDL_MOUSEWHEEL:
-		lpMsg->message = DVL_WM_KEYDOWN;
+		event->type = SDL_KEYDOWN;
 		if (e.wheel.y > 0) {
-			lpMsg->wParam = (SDL_GetModState() & KMOD_CTRL) != 0 ? SDLK_KP_PLUS : SDLK_UP;
+			event->key.keysym.sym = (SDL_GetModState() & KMOD_CTRL) != 0 ? SDLK_KP_PLUS : SDLK_UP;
 		} else if (e.wheel.y < 0) {
-			lpMsg->wParam = (SDL_GetModState() & KMOD_CTRL) != 0 ? SDLK_KP_MINUS : SDLK_DOWN;
+			event->key.keysym.sym = (SDL_GetModState() & KMOD_CTRL) != 0 ? SDLK_KP_MINUS : SDLK_DOWN;
 		} else if (e.wheel.x > 0) {
-			lpMsg->wParam = SDLK_LEFT;
+			event->key.keysym.sym = SDLK_LEFT;
 		} else if (e.wheel.x < 0) {
-			lpMsg->wParam = SDLK_RIGHT;
+			event->key.keysym.sym = SDLK_RIGHT;
 		}
 		break;
 #if SDL_VERSION_ATLEAST(2, 0, 4)
@@ -435,56 +374,11 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 		}
 		return FalseAvail("SDL_TEXTINPUT", e.text.windowID);
 	case SDL_WINDOWEVENT:
-		switch (e.window.event) {
-		case SDL_WINDOWEVENT_SHOWN:
-			gbActive = true;
-			lpMsg->message = DVL_WM_PAINT;
-			break;
-		case SDL_WINDOWEVENT_HIDDEN:
-			gbActive = false;
-			break;
-		case SDL_WINDOWEVENT_EXPOSED:
-			lpMsg->message = DVL_WM_PAINT;
-			break;
-		case SDL_WINDOWEVENT_LEAVE:
-			lpMsg->message = DVL_WM_CAPTURECHANGED;
-			break;
-		case SDL_WINDOWEVENT_SIZE_CHANGED:
-			ReinitializeHardwareCursor();
-			break;
-		case SDL_WINDOWEVENT_MOVED:
-		case SDL_WINDOWEVENT_RESIZED:
-		case SDL_WINDOWEVENT_MINIMIZED:
-		case SDL_WINDOWEVENT_MAXIMIZED:
-		case SDL_WINDOWEVENT_RESTORED:
-#if SDL_VERSION_ATLEAST(2, 0, 5)
-		case SDL_WINDOWEVENT_TAKE_FOCUS:
-#endif
-			break;
-		case SDL_WINDOWEVENT_CLOSE:
-			lpMsg->message = DVL_WM_QUERYENDSESSION;
-			break;
-
-		case SDL_WINDOWEVENT_FOCUS_LOST:
-			diablo_focus_pause();
-			break;
-		case SDL_WINDOWEVENT_FOCUS_GAINED:
-			diablo_focus_unpause();
-			break;
-
-		default:
-			return FalseAvail("SDL_WINDOWEVENT", e.window.event);
-		}
-
+		*event = e;
 		break;
 #else
 	case SDL_ACTIVEEVENT:
-		if ((e.active.state & SDL_APPINPUTFOCUS) != 0) {
-			if (e.active.gain == 0)
-				diablo_focus_pause();
-			else
-				diablo_focus_unpause();
-		}
+		*event = e;
 		break;
 #endif
 	default:
@@ -493,31 +387,21 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 	return true;
 }
 
-bool FetchMessage(tagMSG *lpMsg)
+bool FetchMessage(SDL_Event *event, uint16_t *modState)
 {
-	bool available = demo::IsRunning() ? demo::FetchMessage(lpMsg) : FetchMessage_Real(lpMsg);
+	const bool available = demo::IsRunning() ? demo::FetchMessage(event, modState) : FetchMessage_Real(event, modState);
 
 	if (available && demo::IsRecording())
-		demo::RecordMessage(lpMsg);
+		demo::RecordMessage(*event, *modState);
 
 	return available;
 }
 
-void PushMessage(const tagMSG *lpMsg)
+void HandleMessage(const SDL_Event &event, uint16_t modState)
 {
 	assert(CurrentEventHandler != nullptr);
 
-	CurrentEventHandler(lpMsg->message, lpMsg->wParam, lpMsg->lParam);
-}
-
-void PostMessage(uint32_t type, uint32_t wParam, uint16_t lParam)
-{
-	message_queue.push_back({ type, wParam, lParam });
-}
-
-void ClearMessageQueue()
-{
-	message_queue.clear();
+	CurrentEventHandler(event, modState);
 }
 
 } // namespace devilution

@@ -5,8 +5,7 @@
  */
 #include "misdat.h"
 
-#include "engine/cel_header.hpp"
-#include "engine/load_file.hpp"
+#include "engine/load_cl2.hpp"
 #include "missiles.h"
 #include "utils/file_name_generator.hpp"
 
@@ -111,7 +110,7 @@ MissileData MissilesData[] = {
 	{  &AddImmolationRune,         &MI_Rune,           MIS_RUNEIMMOLAT,   true,      1, MISR_NONE,      MFILE_RUNE,      SFX_NONE,    SFX_NONE,    MissileMovementDistrubution::Disabled    },
 	{  &AddStoneRune,              &MI_Rune,           MIS_RUNESTONE,     true,      1, MISR_NONE,      MFILE_RUNE,      SFX_NONE,    SFX_NONE,    MissileMovementDistrubution::Disabled    },
 	{  &AddRuneExplosion,          &MI_HiveExplode,    MIS_HIVEEXP,       true,      1, MISR_FIRE,      MFILE_BIGEXP,    LS_NESTXPLD, LS_NESTXPLD, MissileMovementDistrubution::Disabled    },
-	{  &AddHorkSpawn,              &MI_HorkSpawn,      MIS_HORKDMN,       true,      2, MISR_NONE,      MFILE_NONE,      SFX_NONE,    SFX_NONE,    MissileMovementDistrubution::Disabled    },
+	{  &AddHorkSpawn,              &MI_HorkSpawn,      MIS_HORKDMN,       false,     2, MISR_NONE,      MFILE_NONE,      SFX_NONE,    SFX_NONE,    MissileMovementDistrubution::Disabled    },
 	{  &AddJester,                 nullptr,            MIS_JESTER,        false,     2, MISR_NONE,      MFILE_NONE,      SFX_NONE,    SFX_NONE,    MissileMovementDistrubution::Disabled    },
 	{  &AddHiveExplosion,          nullptr,            MIS_HIVEEXP2,      false,     2, MISR_NONE,      MFILE_NONE,      SFX_NONE,    SFX_NONE,    MissileMovementDistrubution::Disabled    },
 	{  &AddFlare,                  &MI_Firebolt,       MIS_LICH,          true,      1, MISR_MAGIC,     MFILE_LICH,      SFX_NONE,    SFX_NONE,    MissileMovementDistrubution::Blockable   },
@@ -231,7 +230,7 @@ MissileFileData::MissileFileData(string_view name, uint8_t animName, uint8_t ani
 
 void MissileFileData::LoadGFX()
 {
-	if (animData != nullptr)
+	if (sprites)
 		return;
 
 	if (name.empty())
@@ -239,10 +238,9 @@ void MissileFileData::LoadGFX()
 
 	FileNameGenerator pathGenerator({ "Missiles\\", name }, ".CL2");
 	if (animFAmt == 1) {
-		animData = LoadFileInMem(pathGenerator());
-		frameOffsets[0] = 0;
+		sprites.emplace(OwnedClxSpriteListOrSheet { LoadCl2(pathGenerator(), animWidth) });
 	} else {
-		animData = MultiFileLoader<16> {}(animFAmt, pathGenerator, &frameOffsets[0]);
+		sprites.emplace(OwnedClxSpriteListOrSheet { LoadMultipleCl2Sheet<16>(pathGenerator, animFAmt, animWidth) });
 	}
 }
 
