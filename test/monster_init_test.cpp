@@ -116,6 +116,17 @@ bool CompareMonsters(Monster &m1, Monster &m2)
 	    && m1.leader == m2.leader && m1.leaderRelation == m2.leaderRelation && m1.lightId == m2.lightId;
 }
 
+bool CompareMonsterData(MonsterData data1[], MonsterData data2[])
+{
+	for (size_t i = 0; i < MonstersDataSize; i++) {
+		if (!(data1->level == data2->level && data1->exp == data2->exp && data1->toHit == data2->toHit && data1->minDamage == data2->minDamage && data1->maxDamage == data2->maxDamage
+		        && data1->toHitSpecial == data2->toHitSpecial && data1->minDamageSpecial == data2->minDamageSpecial && data1->armorClass == data2->armorClass && data1->maxDamageSpecial == data2->maxDamageSpecial))
+			return false;
+	}
+
+	return true;
+}
+
 void CopyMonsterData(MonsterData destination[], MonsterData source[])
 {
 	for (size_t i = 0; i < MonstersDataSize; i++) {
@@ -127,7 +138,10 @@ bool test_general(_difficulty testDifficulty)
 {
 	_difficulty lastDifficulty = sgGameInitInfo.nDifficulty;
 	sgGameInitInfo.nDifficulty = testDifficulty;
+
 	InitMonstersData(devilution::DIFF_NORMAL, lastDifficulty);
+	if (!CompareMonsterData(MonstersData, MonsterDataCopy))
+		return false;
 
 	Monster monsters_old_init[MonstersDataSize];
 	for (size_t i = 0; i < MonstersDataSize; i++) {
@@ -149,22 +163,11 @@ bool test_general(_difficulty testDifficulty)
 	return true;
 }
 
-TEST(MonsterInit, normale)
+TEST(MonsterInit, normal)
 {
+	CopyMonsterData(MonsterDataCopy, MonstersData);
 	EXPECT_TRUE(test_general(devilution::DIFF_NORMAL));
-}
-
-TEST(MonsterInit, nightmare)
-{
 	EXPECT_TRUE(test_general(devilution::DIFF_NIGHTMARE));
-}
-
-TEST(MonsterInit, hell)
-{
 	EXPECT_TRUE(test_general(devilution::DIFF_HELL));
-}
-
-TEST(MonsterInit, normal_again)
-{
 	EXPECT_TRUE(test_general(devilution::DIFF_NORMAL));
 }

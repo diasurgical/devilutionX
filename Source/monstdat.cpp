@@ -493,6 +493,7 @@ void ClearMonstersDataToNormalFromHell()
 {
 	for (auto &monsterData : MonstersData) {
 		monsterData.level -= 30;
+		monsterData.exp = monsterData.exp / 4 - 1000;
 		monsterData.toHit -= HellToHitBonus;
 		monsterData.minDamage = (monsterData.minDamage - 6) / 4;
 		monsterData.maxDamage = (monsterData.maxDamage - 6) / 4;
