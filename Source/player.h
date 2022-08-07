@@ -723,12 +723,12 @@ struct Player {
 		return isOnLevel(currlevel);
 	}
 
-	/** @brief Checks if the player is on the correspondig level. */
+	/** @brief Checks if the player is on the corresponding level. */
 	bool isOnLevel(uint8_t level) const
 	{
 		return !this->plrIsOnSetLevel && this->plrlevel == level;
 	}
-	/** @brief Checks if the player is on the correspondig level. */
+	/** @brief Checks if the player is on the corresponding level. */
 	bool isOnLevel(_setlevels level) const
 	{
 		return this->plrIsOnSetLevel && this->plrlevel == static_cast<uint8_t>(level);

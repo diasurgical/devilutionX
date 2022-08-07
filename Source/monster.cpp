@@ -3809,7 +3809,6 @@ bool Walk(Monster &monster, Direction md)
 		return false;
 	}
 
-	int mwi = monster.type().getAnimData(MonsterGraphic::Walk).frames - 1;
 	switch (md) {
 	case Direction::North:
 		WalkNorthwards(monster, -1, -1, Direction::North);
