@@ -20,8 +20,6 @@
 #endif
 #include "DiabloUI/diabloui.h"
 #include "controls/plrctrls.h"
-#include "controls/touch/gamepad.h"
-#include "controls/touch/renderers.h"
 #include "diablo.h"
 #include "discord/discord.h"
 #include "doom.h"
@@ -81,6 +79,11 @@
 #include "utils/stdcompat/string_view.hpp"
 #include "utils/str_cat.hpp"
 #include "utils/utf8.hpp"
+
+#ifndef USE_SDL1
+#include "controls/touch/gamepad.h"
+#include "controls/touch/renderers.h"
+#endif
 
 #ifdef __vita__
 #include "platform/vita/touch.h"
