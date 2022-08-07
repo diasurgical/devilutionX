@@ -1767,6 +1767,34 @@ size_t OnDeleteInventoryItems(const TCmd *pCmd, int pnum)
 	return sizeof(message);
 }
 
+size_t OnChangeBeltItems(const TCmd *pCmd, int pnum)
+{
+	const auto &message = *reinterpret_cast<const TCmdChItem *>(pCmd);
+	Player &player = Players[pnum];
+
+	if (gbBufferMsgs == 1) {
+		SendPacket(pnum, &message, sizeof(message));
+	} else if (&player != MyPlayer && message.bLoc < MaxBeltItems && message.wIndx <= IDI_LAST) {
+		CheckBeltSwap(player, message.bLoc, message.wIndx, message.wCI, message.dwSeed, message.bId != 0, message.dwBuff);
+	}
+
+	return sizeof(message);
+}
+
+size_t OnDeleteBeltItems(const TCmd *pCmd, int pnum)
+{
+	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
+	Player &player = Players[pnum];
+
+	if (gbBufferMsgs == 1) {
+		SendPacket(pnum, &message, sizeof(message));
+	} else if (&player != MyPlayer && message.wParam1 < MaxBeltItems) {
+		player.RemoveSpdBarItem(message.wParam1);
+	}
+
+	return sizeof(message);
+}
+
 size_t OnPlayerLevel(const TCmd *pCmd, int pnum)
 {
 	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
@@ -2942,6 +2970,26 @@ void NetSendCmdChInvItem(bool bHiPri, int invGridIndex)
 		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
 }
 
+void NetSendCmdChBeltItem(bool bHiPri, int beltIndex)
+{
+	TCmdChItem cmd;
+
+	Item &item = MyPlayer->SpdList[beltIndex];
+
+	cmd.bCmd = CMD_CHANGEBELTITEMS;
+	cmd.bLoc = beltIndex;
+	cmd.wIndx = item.IDidx;
+	cmd.wCI = item._iCreateInfo;
+	cmd.dwSeed = item._iSeed;
+	cmd.bId = item._iIdentified ? 1 : 0;
+	cmd.dwBuff = item.dwBuff;
+
+	if (bHiPri)
+		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+	else
+		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+}
+
 void NetSendCmdDamage(bool bHiPri, uint8_t bPlr, uint32_t dwDam)
 {
 	TCmdDamage cmd;
@@ -3100,6 +3148,10 @@ size_t ParseCmd(int pnum, const TCmd *pCmd)
 		return OnChangeInventoryItems(pCmd, pnum);
 	case CMD_DELINVITEMS:
 		return OnDeleteInventoryItems(pCmd, pnum);
+	case CMD_CHANGEBELTITEMS:
+		return OnChangeBeltItems(pCmd, pnum);
+	case CMD_DELBELTITEMS:
+		return OnDeleteBeltItems(pCmd, pnum);
 	case CMD_PLRLEVEL:
 		return OnPlayerLevel(pCmd, pnum);
 	case CMD_DROPITEM:

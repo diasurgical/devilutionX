@@ -560,6 +560,9 @@ void CheckInvPaste(Player &player, Point cursorPosition)
 			if (player.HoldItem._itype == ItemType::Gold)
 				player._pGold = CalculateGold(player);
 		}
+		if (&player == MyPlayer) {
+			NetSendCmdChBeltItem(false, ii);
+		}
 		drawsbarflag = true;
 	} break;
 	case ILOC_NONE:
@@ -803,8 +806,7 @@ void CheckInvCut(Player &player, Point cursorPosition, bool automaticMove, bool 
 			}
 
 			if (!automaticMove || automaticallyMoved) {
-				beltItem.clear();
-				drawsbarflag = true;
+				player.RemoveSpdBarItem(r - SLOTXY_BELT_FIRST);
 			}
 		}
 	}
@@ -1237,6 +1239,10 @@ bool AutoPlaceItemInBelt(Player &player, const Item &item, bool persistItem)
 				beltItem = item;
 				player.CalcScrolls();
 				drawsbarflag = true;
+				if (&player == MyPlayer) {
+					size_t beltIndex = std::distance<const Item *>(&player.SpdList[0], &beltItem);
+					NetSendCmdChBeltItem(false, beltIndex);
+				}
 			}
 
 			return true;
@@ -1527,6 +1533,18 @@ void CheckInvRemove(Player &player, int invGridIndex)
 
 	if (invListIndex >= 0) {
 		player.RemoveInvItem(invListIndex);
+	}
+}
+
+void CheckBeltSwap(Player &player, int beltIndex, int idx, uint16_t wCI, int seed, bool bId, uint32_t dwBuff)
+{
+	Item &item = player.SpdList[beltIndex];
+
+	item = {};
+	RecreateItem(item, idx, wCI, seed, 0, (dwBuff & CF_HELLFIRE) != 0);
+
+	if (bId) {
+		item._iIdentified = true;
 	}
 }
 
