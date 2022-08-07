@@ -2225,6 +2225,41 @@ void NextItemRecord(int i)
 	itemrecord[i].nIndex = itemrecord[gnNumGetRecords].nIndex;
 }
 
+int RndItemForMonsterLevel(int8_t monsterLevel)
+{
+	if (GenerateRnd(100) > 40)
+		return 0;
+
+	if (GenerateRnd(100) > 25)
+		return IDI_GOLD + 1;
+
+	int ril[512];
+
+	int ri = 0;
+	for (int i = 0; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
+		if (!IsItemAvailable(i))
+			continue;
+
+		if (AllItemsList[i].iRnd == IDROP_DOUBLE && monsterLevel >= AllItemsList[i].iMinMLvl
+		    && ri < 512) {
+			ril[ri] = i;
+			ri++;
+		}
+		if (AllItemsList[i].iRnd != IDROP_NEVER && monsterLevel >= AllItemsList[i].iMinMLvl
+		    && ri < 512) {
+			ril[ri] = i;
+			ri++;
+		}
+		if (AllItemsList[i].iSpell == SPL_RESURRECT && !gbIsMultiplayer)
+			ri--;
+		if (AllItemsList[i].iSpell == SPL_HEALOTHER && !gbIsMultiplayer)
+			ri--;
+	}
+
+	int r = GenerateRnd(ri);
+	return ril[r] + 1;
+}
+
 } // namespace
 
 bool IsItemAvailable(int i)
@@ -2996,43 +3031,15 @@ void SetupItem(Item &item)
 
 int RndItem(const Monster &monster)
 {
-	if ((monster.data().treasure & T_UNIQ) != 0)
-		return -((monster.data().treasure & T_MASK) + 1);
+	const uint16_t monsterTreasureFlags = monster.data().treasure;
 
-	if ((monster.data().treasure & T_NODROP) != 0)
+	if ((monsterTreasureFlags & T_UNIQ) != 0)
+		return -((monsterTreasureFlags & T_MASK) + 1);
+
+	if ((monsterTreasureFlags & T_NODROP) != 0)
 		return 0;
 
-	if (GenerateRnd(100) > 40)
-		return 0;
-
-	if (GenerateRnd(100) > 25)
-		return IDI_GOLD + 1;
-
-	int ril[512];
-
-	int ri = 0;
-	for (int i = 0; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
-		if (!IsItemAvailable(i))
-			continue;
-
-		if (AllItemsList[i].iRnd == IDROP_DOUBLE && monster.level >= AllItemsList[i].iMinMLvl
-		    && ri < 512) {
-			ril[ri] = i;
-			ri++;
-		}
-		if (AllItemsList[i].iRnd != IDROP_NEVER && monster.level >= AllItemsList[i].iMinMLvl
-		    && ri < 512) {
-			ril[ri] = i;
-			ri++;
-		}
-		if (AllItemsList[i].iSpell == SPL_RESURRECT && !gbIsMultiplayer)
-			ri--;
-		if (AllItemsList[i].iSpell == SPL_HEALOTHER && !gbIsMultiplayer)
-			ri--;
-	}
-
-	int r = GenerateRnd(ri);
-	return ril[r] + 1;
+	return RndItemForMonsterLevel(monster.level);
 }
 
 void SpawnUnique(_unique_items uid, Point position)
@@ -4443,10 +4450,6 @@ std::string DebugSpawnItem(std::string itemName)
 	GetSuperItemSpace(pos, ii);
 
 	uint32_t begin = SDL_GetTicks();
-	Monster fake_m;
-	fake_m.levelType = 0;
-	fake_m.uniqueType = UniqueMonsterType::None;
-
 	int i = 0;
 	for (;; i++) {
 		// using a better rng here to seed the item to prevent getting stuck repeating same values using old one
@@ -4458,9 +4461,8 @@ std::string DebugSpawnItem(std::string itemName)
 		if (i > max_iter)
 			return StrCat("Item not found in ", max_iter, " tries!");
 
-		fake_m.level = dist(BetterRng) % CF_LEVEL + 1;
-
-		int idx = RndItem(fake_m);
+		const int8_t monsterLevel = dist(BetterRng) % CF_LEVEL + 1;
+		int idx = RndItemForMonsterLevel(monsterLevel);
 		if (idx > 1) {
 			idx--;
 		} else
@@ -4469,7 +4471,7 @@ std::string DebugSpawnItem(std::string itemName)
 		Point bkp = item.position;
 		item = {};
 		item.position = bkp;
-		SetupAllItems(item, idx, AdvanceRndSeed(), fake_m.level, 1, false, false, false);
+		SetupAllItems(item, idx, AdvanceRndSeed(), monsterLevel, 1, false, false, false);
 
 		std::string tmp(item._iIName);
 		std::transform(tmp.begin(), tmp.end(), tmp.begin(), [](unsigned char c) { return std::tolower(c); });
