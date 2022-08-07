@@ -14,7 +14,7 @@
 #include "engine.h"
 #include "engine/actor_position.hpp"
 #include "engine/animationinfo.h"
-#include "engine/cel_sprite.hpp"
+#include "engine/clx_sprite.hpp"
 #include "engine/path.h"
 #include "engine/point.hpp"
 #include "interfac.h"
@@ -195,19 +195,23 @@ constexpr std::array<char, 6> CharChar = {
  */
 struct PlayerAnimationData {
 	/**
-	 * @brief CelSprites for the different directions
+	 * @brief Sprite lists for each of the 8 directions.
 	 */
-	std::array<OptionalCelSprite, 8> CelSpritesForDirections;
-	/**
-	 * @brief Raw Data (binary) of the CL2 file.
-	 *        Is referenced from CelSprite in celSpritesForDirections
-	 */
-	std::unique_ptr<byte[]> RawData;
+	OptionalOwnedClxSpriteSheet sprites;
 
-	[[nodiscard]] OptionalCelSprite GetCelSpritesForDirection(Direction direction) const
+	[[nodiscard]] ClxSpriteList spritesForDirection(Direction direction) const
 	{
-		return CelSpritesForDirections[static_cast<size_t>(direction)];
+		return (*sprites)[static_cast<size_t>(direction)];
 	}
+};
+
+struct SpellCastInfo {
+	spell_id spellId;
+	spell_type spellType;
+	/* @brief Inventory location for scrolls */
+	int8_t spellFrom;
+	/* @brief Used for spell level */
+	int spellLevel;
 };
 
 struct Player {
@@ -233,18 +237,19 @@ struct Player {
 	 */
 	AnimationInfo AnimInfo;
 	/**
-	 * @brief Contains a optional preview CelSprite that is displayed until the current command is handled by the game logic
+	 * @brief Contains a optional preview ClxSprite that is displayed until the current command is handled by the game logic
 	 */
-	OptionalCelSprite previewCelSprite;
+	OptionalClxSprite previewCelSprite;
 	/**
 	 * @brief Contains the progress to next game tick when previewCelSprite was set
 	 */
 	float progressToNextGameTickWhenPreviewWasSet;
 	int _plid;
 	int _pvid;
-	spell_id _pSpell;
-	spell_type _pSplType;
-	int8_t _pSplFrom; // TODO Create enum
+	/* @brief next queued spell */
+	SpellCastInfo queuedSpell;
+	/* @brief the spell that is currently casted */
+	SpellCastInfo executedSpell;
 	spell_id _pTSpell;
 	spell_id _pRSpell;
 	spell_type _pRSplType;
@@ -295,8 +300,7 @@ struct Player {
 	bool _pInfraFlag;
 	/** Player's direction when ending movement. Also used for casting direction of SPL_FIREWALL. */
 	Direction tempDirection;
-	/** Used for spell level */
-	int spellLevel;
+
 	bool _pLvlVisited[NUMLEVELS];
 	bool _pSLvlVisited[NUMLEVELS]; // only 10 used
 	/**

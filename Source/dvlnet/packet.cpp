@@ -73,7 +73,7 @@ const char *packet_type_to_string(uint8_t packetType)
 	case PT_ECHO_REQUEST:
 		return "PT_ECHO_REQUEST";
 	case PT_ECHO_REPLY:
-		return "PT_ECHO_REQUEST";
+		return "PT_ECHO_REPLY";
 	default:
 		return nullptr;
 	}

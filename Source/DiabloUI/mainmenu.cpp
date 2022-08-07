@@ -2,7 +2,7 @@
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/selok.h"
 #include "control.h"
-#include "engine/load_pcx.hpp"
+#include "engine/load_clx.hpp"
 #include "utils/language.h"
 
 namespace devilution {
@@ -45,7 +45,7 @@ void MainmenuLoad(const char *name)
 
 	if (!gbIsSpawn || gbIsHellfire) {
 		if (gbIsHellfire)
-			ArtBackgroundWidescreen = LoadPcxAsCl2("ui_art\\mainmenuw.pcx");
+			ArtBackgroundWidescreen = LoadOptionalClx("ui_art\\mainmenuw.clx");
 		LoadBackgroundArt("ui_art\\mainmenu.pcx");
 	} else {
 		LoadBackgroundArt("ui_art\\swmmenu.pcx");

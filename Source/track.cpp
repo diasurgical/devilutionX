@@ -109,7 +109,7 @@ void RepeatMouseAction()
 			CheckPlrSpell(false);
 		break;
 	case MouseActionType::OperateObject:
-		if (ObjectUnderCursor != nullptr && !ObjectUnderCursor->IsDoor()) {
+		if (ObjectUnderCursor != nullptr && !ObjectUnderCursor->isDoor()) {
 			// This should probably be cursPosition so paths to large objects are consistent
 			NetSendCmdLoc(MyPlayerId, true, CMD_OPOBJXY, ObjectUnderCursor->position);
 		}

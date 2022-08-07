@@ -100,10 +100,14 @@ struct Missile {
 	bool _miDelFlag; // Indicate whether the missile should be deleted
 	uint8_t _miAnimType;
 	MissileDataFlags _miAnimFlags;
-	const byte *_miAnimData;
+	OptionalClxSpriteList _miAnimData;
 	int _miAnimDelay; // Tick length of each frame in the current animation
 	int _miAnimLen;   // Number of frames in current animation
+
+	// TODO: This field is no longer used and is always equal to
+	// (*_miAnimData)[0].width()
 	uint16_t _miAnimWidth;
+
 	int16_t _miAnimWidth2;
 	int _miAnimCnt; // Increases by one each game tick, counting how close we are to _pAnimDelay
 	int _miAnimAdd;

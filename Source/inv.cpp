@@ -11,9 +11,9 @@
 #include "DiabloUI/ui_flags.hpp"
 #include "controls/plrctrls.h"
 #include "cursor.h"
-#include "engine/cel_sprite.hpp"
+#include "engine/clx_sprite.hpp"
 #include "engine/load_cel.hpp"
-#include "engine/render/cl2_render.hpp"
+#include "engine/render/clx_render.hpp"
 #include "engine/render/text_render.hpp"
 #include "engine/size.hpp"
 #include "hwcursor.hpp"
@@ -142,7 +142,7 @@ const Point InvRect[] = {
 
 namespace {
 
-OptionalOwnedCelSprite pInvCels;
+OptionalOwnedClxSpriteList pInvCels;
 
 /**
  * @brief Adds an item to a player's InvGrid array
@@ -1064,24 +1064,24 @@ void InitInv()
 	switch (MyPlayer->_pClass) {
 	case HeroClass::Warrior:
 	case HeroClass::Barbarian:
-		pInvCels = LoadCelAsCl2("Data\\Inv\\Inv.CEL", static_cast<uint16_t>(SidePanelSize.width));
+		pInvCels = LoadCel("Data\\Inv\\Inv.CEL", static_cast<uint16_t>(SidePanelSize.width));
 		break;
 	case HeroClass::Rogue:
 	case HeroClass::Bard:
-		pInvCels = LoadCelAsCl2("Data\\Inv\\Inv_rog.CEL", static_cast<uint16_t>(SidePanelSize.width));
+		pInvCels = LoadCel("Data\\Inv\\Inv_rog.CEL", static_cast<uint16_t>(SidePanelSize.width));
 		break;
 	case HeroClass::Sorcerer:
-		pInvCels = LoadCelAsCl2("Data\\Inv\\Inv_Sor.CEL", static_cast<uint16_t>(SidePanelSize.width));
+		pInvCels = LoadCel("Data\\Inv\\Inv_Sor.CEL", static_cast<uint16_t>(SidePanelSize.width));
 		break;
 	case HeroClass::Monk:
-		pInvCels = LoadCelAsCl2(!gbIsSpawn ? "Data\\Inv\\Inv_Sor.CEL" : "Data\\Inv\\Inv.CEL", static_cast<uint16_t>(SidePanelSize.width));
+		pInvCels = LoadCel(!gbIsSpawn ? "Data\\Inv\\Inv_Sor.CEL" : "Data\\Inv\\Inv.CEL", static_cast<uint16_t>(SidePanelSize.width));
 		break;
 	}
 }
 
 void DrawInv(const Surface &out)
 {
-	Cl2Draw(out, GetPanelPosition(UiPanels::Inventory, { 0, 351 }), CelSprite { *pInvCels }, 0);
+	ClxDraw(out, GetPanelPosition(UiPanels::Inventory, { 0, 351 }), (*pInvCels)[0]);
 
 	Size slotSize[] = {
 		{ 2, 2 }, // head
@@ -1124,15 +1124,14 @@ void DrawInv(const Surface &out)
 				screenY += frameSize.height == (3 * InventorySlotSizeInPixels.height) ? 0 : -INV_SLOT_HALF_SIZE_PX;
 			}
 
-			const CelSprite cel { GetInvItemSprite(cursId) };
-			const int celFrame = GetInvItemFrame(cursId);
+			const ClxSprite sprite = GetInvItemSprite(cursId);
 			const Point position = GetPanelPosition(UiPanels::Inventory, { screenX, screenY });
 
 			if (pcursinvitem == slot) {
-				Cl2DrawOutline(out, GetOutlineColor(myPlayer.InvBody[slot], true), position, cel, celFrame);
+				ClxDrawOutline(out, GetOutlineColor(myPlayer.InvBody[slot], true), position, sprite);
 			}
 
-			DrawItem(myPlayer.InvBody[slot], out, position, cel, celFrame);
+			DrawItem(myPlayer.InvBody[slot], out, position, sprite);
 
 			if (slot == INVLOC_HAND_LEFT) {
 				if (myPlayer.GetItemLocation(myPlayer.InvBody[slot]) == ILOC_TWOHAND) {
@@ -1142,7 +1141,7 @@ void DrawInv(const Surface &out)
 
 					const int dstX = GetRightPanel().position.x + slotPos[INVLOC_HAND_RIGHT].x + (frameSize.width == InventorySlotSizeInPixels.width ? INV_SLOT_HALF_SIZE_PX : 0) - 1;
 					const int dstY = GetRightPanel().position.y + slotPos[INVLOC_HAND_RIGHT].y;
-					Cl2DrawLightBlended(out, { dstX, dstY }, cel, celFrame);
+					ClxDrawLightBlended(out, { dstX, dstY }, sprite);
 
 					cel_transparency_active = false;
 				}
@@ -1164,18 +1163,13 @@ void DrawInv(const Surface &out)
 			int ii = myPlayer.InvGrid[j] - 1;
 			int cursId = myPlayer.InvList[ii]._iCurs + CURSOR_FIRSTITEM;
 
-			const CelSprite cel { GetInvItemSprite(cursId) };
-			const int celFrame = GetInvItemFrame(cursId);
+			const ClxSprite sprite = GetInvItemSprite(cursId);
 			const Point position = GetPanelPosition(UiPanels::Inventory, InvRect[j + SLOTXY_INV_FIRST]) + Displacement { 0, -1 };
 			if (pcursinvitem == ii + INVITEM_INV_FIRST) {
-				Cl2DrawOutline(out, GetOutlineColor(myPlayer.InvList[ii], true), position, cel, celFrame);
+				ClxDrawOutline(out, GetOutlineColor(myPlayer.InvList[ii], true), position, sprite);
 			}
 
-			DrawItem(
-			    myPlayer.InvList[ii],
-			    out,
-			    position,
-			    cel, celFrame);
+			DrawItem(myPlayer.InvList[ii], out, position, sprite);
 		}
 	}
 }
@@ -1201,16 +1195,15 @@ void DrawInvBelt(const Surface &out)
 		InvDrawSlotBack(out, position, InventorySlotSizeInPixels);
 		const int cursId = myPlayer.SpdList[i]._iCurs + CURSOR_FIRSTITEM;
 
-		const CelSprite cel { GetInvItemSprite(cursId) };
-		const int celFrame = GetInvItemFrame(cursId);
+		const ClxSprite sprite = GetInvItemSprite(cursId);
 
 		if (pcursinvitem == i + INVITEM_BELT_FIRST) {
 			if (ControlMode == ControlTypes::KeyboardAndMouse || invflag) {
-				Cl2DrawOutline(out, GetOutlineColor(myPlayer.SpdList[i], true), position, cel, celFrame);
+				ClxDrawOutline(out, GetOutlineColor(myPlayer.SpdList[i], true), position, sprite);
 			}
 		}
 
-		DrawItem(myPlayer.SpdList[i], out, position, cel, celFrame);
+		DrawItem(myPlayer.SpdList[i], out, position, sprite);
 
 		if (AllItemsList[myPlayer.SpdList[i].IDidx].iUsable
 		    && myPlayer.SpdList[i]._itype != ItemType::Gold) {
@@ -1897,39 +1890,63 @@ int8_t CheckInvHLight()
 	return rv;
 }
 
-bool UseScroll(const spell_id spell)
+void ConsumeScroll(Player &player)
 {
-	if (pcurs != CURSOR_HAND)
-		return false;
+	const spell_id spellId = player.executedSpell.spellId;
 
+	// Try to remove the scroll from selected inventory slot
+	int itemSlot = player.executedSpell.spellFrom;
+	int itemIndex = 0;
+	Item *item;
+	if (itemSlot <= INVITEM_INV_LAST) {
+		itemIndex = itemSlot - INVITEM_INV_FIRST;
+		item = &player.InvList[itemIndex];
+	} else {
+		itemIndex = itemSlot - INVITEM_BELT_FIRST;
+		item = &player.SpdList[itemIndex];
+	}
+
+	const auto isCurrentSpell = [spellId](const Item &item) {
+		return item.isScrollOf(spellId) || item.isRuneOf(spellId);
+	};
+
+	if (!item->isEmpty() && isCurrentSpell(*item)) {
+		if (itemSlot <= INVITEM_INV_LAST)
+			player.RemoveInvItem(static_cast<int>(itemIndex));
+		else
+			player.RemoveSpdBarItem(itemIndex);
+		return;
+	}
+
+	// Didn't find it at the selected slot, take the first one we find
+	// This path is always used when the scroll is consumed via spell selection
+	RemoveInventoryOrBeltItem(player, isCurrentSpell);
+}
+
+bool CanUseScroll(Player &player, spell_id spell)
+{
 	if (leveltype == DTYPE_TOWN && !spelldata[spell].sTownSpell)
 		return false;
 
-	return HasInventoryOrBeltItem(*MyPlayer, [spell](const Item &item) {
+	return HasInventoryOrBeltItem(player, [spell](const Item &item) {
 		return item.isScrollOf(spell);
 	});
 }
 
-void UseStaffCharge(Player &player)
+void ConsumeStaffCharge(Player &player)
 {
 	auto &staff = player.InvBody[INVLOC_HAND_LEFT];
 
-	if (!CanUseStaff(staff, player._pSpell))
+	if (!CanUseStaff(staff, player.executedSpell.spellId))
 		return;
 
 	staff._iCharges--;
 	CalcPlrStaff(player);
 }
 
-bool UseStaff(const spell_id spell)
+bool CanUseStaff(Player &player, spell_id spellId)
 {
-	if (pcurs != CURSOR_HAND) {
-		return false;
-	}
-
-	Player &myPlayer = *MyPlayer;
-
-	return CanUseStaff(myPlayer.InvBody[INVLOC_HAND_LEFT], spell);
+	return CanUseStaff(player.InvBody[INVLOC_HAND_LEFT], spellId);
 }
 
 Item &GetInventoryItem(Player &player, int location)
@@ -2059,7 +2076,10 @@ bool UseInvItem(int pnum, int cii)
 			CloseInventory();
 			return true;
 		}
-		player.RemoveSpdBarItem(c);
+		if (!item->isScroll() && !item->isRune())
+			player.RemoveSpdBarItem(c);
+		else
+			player.queuedSpell.spellFrom = cii;
 		return true;
 	}
 	if (player.InvList[c]._iMiscId == IMISC_MAPOFDOOM)
@@ -2069,7 +2089,10 @@ bool UseInvItem(int pnum, int cii)
 		CloseInventory();
 		return true;
 	}
-	player.RemoveInvItem(c);
+	if (!item->isScroll() && !item->isRune())
+		player.RemoveInvItem(c);
+	else
+		player.queuedSpell.spellFrom = cii;
 
 	return true;
 }

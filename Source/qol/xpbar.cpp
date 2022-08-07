@@ -9,9 +9,11 @@
 
 #include <fmt/core.h>
 
-#include "DiabloUI/art_draw.h"
 #include "control.h"
+#include "engine/clx_sprite.hpp"
+#include "engine/load_clx.hpp"
 #include "engine/point.hpp"
+#include "engine/render/clx_render.hpp"
 #include "options.h"
 #include "utils/format_int.hpp"
 #include "utils/language.h"
@@ -29,7 +31,7 @@ constexpr ColorGradient SilverGradient = { 0xFE, 0xFD, 0xFC, 0xFB, 0xFA, 0xF9, 0
 constexpr int BackWidth = 313;
 constexpr int BackHeight = 9;
 
-Art xpbarArt;
+OptionalOwnedClxSpriteList xpbarArt;
 
 void DrawBar(const Surface &out, Point screenPosition, int width, const ColorGradient &gradient)
 {
@@ -50,19 +52,13 @@ void DrawEndCap(const Surface &out, Point point, int idx, const ColorGradient &g
 void InitXPBar()
 {
 	if (*sgOptions.Gameplay.experienceBar) {
-		LoadMaskedArt("data\\xpbar.pcx", &xpbarArt, 1, 1);
-
-		if (xpbarArt.surface == nullptr) {
-			app_fatal(_("Failed to load UI resources.\n"
-			            "\n"
-			            "Make sure devilutionx.mpq is in the game folder and that it is up to date."));
-		}
+		xpbarArt = LoadClx("data\\xpbar.clx");
 	}
 }
 
 void FreeXPBar()
 {
-	xpbarArt.Unload();
+	xpbarArt = std::nullopt;
 }
 
 void DrawXPBar(const Surface &out)
@@ -76,7 +72,7 @@ void DrawXPBar(const Surface &out)
 	const Point back = { mainPanel.position.x + mainPanel.size.width / 2 - 155, mainPanel.position.y + mainPanel.size.height - 11 };
 	const Point position = back + Displacement { 3, 2 };
 
-	DrawArt(out, back, &xpbarArt);
+	RenderClxSprite(out, (*xpbarArt)[0], back);
 
 	const int8_t charLevel = player._pLevel;
 

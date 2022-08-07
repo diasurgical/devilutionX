@@ -215,7 +215,13 @@ endif()
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
   # For some reason, adding to CMAKE_CXX_FLAGS results in a slightly smaller
   # binary than using `add_compile/link_options`
-  set(_extra_flags "-ffunction-sections -fdata-sections -Wl,--gc-sections,--as-needed")
+
+  set(_extra_flags "-ffunction-sections -fdata-sections")
+  if(APPLE)
+    set(_extra_flags "${_extra_flags} -Wl,-dead_strip")
+  else()
+    set(_extra_flags "${_extra_flags} -Wl,--gc-sections,--as-needed")
+  endif()
 
   set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${_extra_flags}")
   set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} ${_extra_flags}")

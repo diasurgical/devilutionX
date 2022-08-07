@@ -1,16 +1,17 @@
 #include "qol/stash.h"
 
-#include "utils/stdcompat/algorithm.hpp"
-#include <fmt/format.h>
 #include <utility>
 
-#include "DiabloUI/art_draw.h"
+#include <fmt/format.h>
+
 #include "control.h"
 #include "controls/plrctrls.h"
 #include "cursor.h"
+#include "engine/clx_sprite.hpp"
+#include "engine/load_clx.hpp"
 #include "engine/points_in_rectangle_range.hpp"
 #include "engine/rectangle.hpp"
-#include "engine/render/cl2_render.hpp"
+#include "engine/render/clx_render.hpp"
 #include "engine/render/text_render.hpp"
 #include "engine/size.hpp"
 #include "hwcursor.hpp"
@@ -19,6 +20,7 @@
 #include "stores.h"
 #include "utils/format_int.hpp"
 #include "utils/language.h"
+#include "utils/stdcompat/algorithm.hpp"
 #include "utils/str_cat.hpp"
 #include "utils/utf8.hpp"
 
@@ -50,8 +52,8 @@ constexpr Rectangle StashButtonRect[] = {
 
 constexpr PointsInRectangleRange StashGridRange { { { 0, 0 }, Size { 10, 10 } } };
 
-Art StashPanelArt;
-Art StashNavButtonArt;
+OptionalOwnedClxSpriteList StashPanelArt;
+OptionalOwnedClxSpriteList StashNavButtonArt;
 
 /**
  * @param page The stash page index.
@@ -258,16 +260,16 @@ Point GetStashSlotCoord(Point slot)
 
 void FreeStashGFX()
 {
-	StashPanelArt.Unload();
-	StashNavButtonArt.Unload();
+	StashNavButtonArt = std::nullopt;
+	StashPanelArt = std::nullopt;
 }
 
 void InitStash()
 {
 	InitialWithdrawGoldValue = 0;
 
-	LoadArt("data\\stash.pcx", &StashPanelArt, 1);
-	LoadArt("data\\stashnavbtns.pcx", &StashNavButtonArt, 5);
+	StashPanelArt = LoadClx("data\\stash.clx");
+	StashNavButtonArt = LoadClx("data\\stashnavbtns.clx");
 }
 
 void TransferItemToInventory(Player &player, uint16_t itemId)
@@ -341,11 +343,11 @@ void CheckStashButtonPress(Point mousePosition)
 
 void DrawStash(const Surface &out)
 {
-	DrawArt(out, GetPanelPosition(UiPanels::Stash), &StashPanelArt);
+	RenderClxSprite(out, (*StashPanelArt)[0], GetPanelPosition(UiPanels::Stash));
 
 	if (StashButtonPressed != -1) {
 		Point stashButton = GetPanelPosition(UiPanels::Stash, StashButtonRect[StashButtonPressed].position);
-		DrawArt(out, stashButton, &StashNavButtonArt, StashButtonPressed);
+		RenderClxSprite(out, (*StashNavButtonArt)[StashButtonPressed], stashButton);
 	}
 
 	constexpr Displacement offset { 0, INV_SLOT_SIZE_PX - 1 };
@@ -370,15 +372,14 @@ void DrawStash(const Surface &out)
 		int frame = item._iCurs + CURSOR_FIRSTITEM;
 
 		const Point position = GetStashSlotCoord(item.position) + offset;
-		const CelSprite cel { GetInvItemSprite(frame) };
-		const int celFrame = GetInvItemFrame(frame);
+		const ClxSprite sprite = GetInvItemSprite(frame);
 
 		if (pcursstashitem == itemId) {
 			uint8_t color = GetOutlineColor(item, true);
-			Cl2DrawOutline(out, color, position, cel, celFrame);
+			ClxDrawOutline(out, color, position, sprite);
 		}
 
-		DrawItem(item, out, position, cel, celFrame);
+		DrawItem(item, out, position, sprite);
 	}
 
 	Point position = GetPanelPosition(UiPanels::Stash);
@@ -621,7 +622,7 @@ void DrawGoldWithdraw(const Surface &out, int amount)
 
 	const int dialogX = 30;
 
-	Cl2Draw(out, GetPanelPosition(UiPanels::Stash, { dialogX, 178 }), CelSprite { *pGBoxBuff }, 0);
+	ClxDraw(out, GetPanelPosition(UiPanels::Stash, { dialogX, 178 }), (*pGBoxBuff)[0]);
 
 	// Pre-wrap the string at spaces, otherwise DrawString would hard wrap in the middle of words
 	const std::string wrapped = WordWrapString(_("How many gold pieces do you want to withdraw?"), 200);

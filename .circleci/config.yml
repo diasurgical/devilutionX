@@ -57,7 +57,7 @@ jobs:
       - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_m68k}
   vita:
     docker:
-      - image: vitasdk/vitasdk:latest
+      - image: vitasdk/vitasdk@sha256:6b09f9324acabeee769008ef45fff2acf77ecc2062b1a92a74178214b9af877b
     working_directory: ~/repo
     steps:
       - checkout

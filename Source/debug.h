@@ -8,13 +8,13 @@
 #include <unordered_map>
 
 #include "engine.h"
-#include "engine/cel_sprite.hpp"
+#include "engine/clx_sprite.hpp"
 #include "utils/stdcompat/string_view.hpp"
 
 namespace devilution {
 
 extern std::string TestMapPath;
-extern OptionalOwnedCelSprite pSquareCel;
+extern OptionalOwnedClxSpriteList pSquareCel;
 extern bool DebugToggle;
 extern bool DebugGodMode;
 extern bool DebugVision;

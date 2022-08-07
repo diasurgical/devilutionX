@@ -25,12 +25,39 @@ enum class DemoMsgType {
 	Message = 2,
 };
 
+struct MouseMotionEventData {
+	uint16_t x;
+	uint16_t y;
+};
+
+struct MouseButtonEventData {
+	uint8_t button;
+	uint16_t x;
+	uint16_t y;
+	uint16_t mod;
+};
+
+struct MouseWheelEventData {
+	int32_t x;
+	int32_t y;
+	uint16_t mod;
+};
+
+struct KeyEventData {
+	SDL_Keycode sym;
+	SDL_Keymod mod;
+};
+
 struct DemoMsg {
 	DemoMsgType type;
-	uint32_t message;
-	uint32_t wParam;
-	uint16_t lParam;
 	float progressToNextGameTick;
+	SDL_EventType eventType;
+	union {
+		MouseMotionEventData motion;
+		MouseButtonEventData button;
+		MouseWheelEventData wheel;
+		KeyEventData key;
+	};
 };
 
 int DemoNumber = -1;
@@ -47,11 +74,6 @@ int StartTime = 0;
 
 uint16_t DemoGraphicsWidth = 640;
 uint16_t DemoGraphicsHeight = 480;
-
-void PumpDemoMessage(DemoMsgType demoMsgType, uint32_t message, uint32_t wParam, uint16_t lParam, float progressToNextGameTick)
-{
-	Demo_Message_Queue.push_back(DemoMsg { demoMsgType, message, wParam, lParam, progressToNextGameTick });
-}
 
 bool LoadDemoMessages(int i)
 {
@@ -78,14 +100,45 @@ bool LoadDemoMessages(int i)
 
 		switch (type) {
 		case DemoMsgType::Message: {
-			const uint32_t message = ReadLE32(demofile);
-			const uint32_t wParam = ReadLE32(demofile);
-			const uint16_t lParam = ReadLE16(demofile);
-			PumpDemoMessage(type, message, wParam, lParam, progressToNextGameTick);
+			const auto eventType = static_cast<SDL_EventType>(ReadLE32(demofile));
+			DemoMsg msg { type, progressToNextGameTick, eventType, {} };
+			switch (eventType) {
+			case SDL_MOUSEMOTION:
+				msg.motion.x = ReadLE16(demofile);
+				msg.motion.y = ReadLE16(demofile);
+				break;
+			case SDL_MOUSEBUTTONDOWN:
+			case SDL_MOUSEBUTTONUP:
+				msg.button.button = ReadByte(demofile);
+				msg.button.x = ReadLE16(demofile);
+				msg.button.y = ReadLE16(demofile);
+				msg.button.mod = ReadLE16(demofile);
+				break;
+#ifndef USE_SDL1
+			case SDL_MOUSEWHEEL:
+				msg.wheel.x = ReadLE32<int32_t>(demofile);
+				msg.wheel.y = ReadLE32<int32_t>(demofile);
+				msg.wheel.mod = ReadLE16(demofile);
+				break;
+#endif
+			case SDL_KEYDOWN:
+			case SDL_KEYUP:
+				msg.key.sym = static_cast<SDL_Keycode>(ReadLE32(demofile));
+				msg.key.mod = static_cast<SDL_Keymod>(ReadLE16(demofile));
+				break;
+			case SDL_QUIT:
+				break;
+			default:
+				if (eventType < SDL_USEREVENT) {
+					app_fatal(StrCat("Unknown event ", static_cast<uint32_t>(eventType)));
+				}
+				break;
+			}
+			Demo_Message_Queue.push_back(msg);
 			break;
 		}
 		default:
-			PumpDemoMessage(type, 0, 0, 0, progressToNextGameTick);
+			Demo_Message_Queue.push_back(DemoMsg { type, progressToNextGameTick, static_cast<SDL_EventType>(0), {} });
 			break;
 		}
 	}
@@ -95,6 +148,13 @@ bool LoadDemoMessages(int i)
 	DemoModeLastTick = SDL_GetTicks();
 
 	return true;
+}
+
+void RecordEventHeader(const SDL_Event &event)
+{
+	WriteLE32(DemoRecording, static_cast<uint32_t>(DemoMsgType::Message));
+	WriteLEFloat(DemoRecording, gfProgressToNextGameTick);
+	WriteLE32(DemoRecording, event.type);
 }
 
 } // namespace
@@ -180,19 +240,16 @@ bool GetRunGameLoop(bool &drawGame, bool &processInput)
 	return dmsg.type == DemoMsgType::GameTick;
 }
 
-bool FetchMessage(tagMSG *lpMsg)
+bool FetchMessage(SDL_Event *event, uint16_t *modState)
 {
 	SDL_Event e;
 	if (SDL_PollEvent(&e) != 0) {
 		if (e.type == SDL_QUIT) {
-			lpMsg->message = DVL_WM_QUIT;
-			lpMsg->wParam = 0;
-			lpMsg->lParam = 0;
+			*event = e;
 			return true;
 		}
 		if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE) {
 			Demo_Message_Queue.clear();
-			ClearMessageQueue();
 			DemoNumber = -1;
 			Timedemo = false;
 			last_tick = SDL_GetTicks();
@@ -212,18 +269,44 @@ bool FetchMessage(tagMSG *lpMsg)
 	if (!Demo_Message_Queue.empty()) {
 		const DemoMsg dmsg = Demo_Message_Queue.front();
 		if (dmsg.type == DemoMsgType::Message) {
-			lpMsg->message = dmsg.message;
-			lpMsg->wParam = dmsg.wParam;
-			lpMsg->lParam = dmsg.lParam;
+			event->type = dmsg.eventType;
+			switch (dmsg.eventType) {
+			case SDL_MOUSEMOTION:
+				event->motion.x = dmsg.motion.x;
+				event->motion.y = dmsg.motion.y;
+				break;
+			case SDL_MOUSEBUTTONDOWN:
+			case SDL_MOUSEBUTTONUP:
+				event->button.button = dmsg.button.button;
+				event->button.state = dmsg.eventType == SDL_MOUSEBUTTONDOWN ? SDL_PRESSED : SDL_RELEASED;
+				event->button.x = dmsg.button.x;
+				event->button.y = dmsg.button.y;
+				*modState = dmsg.button.mod;
+				break;
+#ifndef USE_SDL1
+			case SDL_MOUSEWHEEL:
+				event->wheel.x = dmsg.wheel.x;
+				event->wheel.y = dmsg.wheel.y;
+				*modState = dmsg.wheel.mod;
+				break;
+#endif
+			case SDL_KEYDOWN:
+			case SDL_KEYUP:
+				event->key.state = dmsg.eventType == SDL_KEYDOWN ? SDL_PRESSED : SDL_RELEASED;
+				event->key.keysym.sym = dmsg.key.sym;
+				event->key.keysym.mod = dmsg.key.mod;
+				break;
+			default:
+				if (dmsg.eventType >= SDL_USEREVENT) {
+					event->type = CustomEventToSdlEvent(static_cast<interface_mode>(dmsg.eventType - SDL_USEREVENT));
+				}
+				break;
+			}
 			gfProgressToNextGameTick = dmsg.progressToNextGameTick;
 			Demo_Message_Queue.pop_front();
 			return true;
 		}
 	}
-
-	lpMsg->message = 0;
-	lpMsg->wParam = 0;
-	lpMsg->lParam = 0;
 
 	return false;
 }
@@ -234,15 +317,58 @@ void RecordGameLoopResult(bool runGameLoop)
 	WriteLEFloat(DemoRecording, gfProgressToNextGameTick);
 }
 
-void RecordMessage(tagMSG *lpMsg)
+void RecordMessage(const SDL_Event &event, uint16_t modState)
 {
 	if (!gbRunGame || !DemoRecording.is_open())
 		return;
-	WriteLE32(DemoRecording, static_cast<uint32_t>(DemoMsgType::Message));
-	WriteLEFloat(DemoRecording, gfProgressToNextGameTick);
-	WriteLE32(DemoRecording, lpMsg->message);
-	WriteLE32(DemoRecording, lpMsg->wParam);
-	WriteLE16(DemoRecording, lpMsg->lParam);
+	switch (event.type) {
+	case SDL_MOUSEMOTION:
+		RecordEventHeader(event);
+		WriteLE16(DemoRecording, event.motion.x);
+		WriteLE16(DemoRecording, event.motion.y);
+		break;
+	case SDL_MOUSEBUTTONDOWN:
+	case SDL_MOUSEBUTTONUP:
+		RecordEventHeader(event);
+		WriteByte(DemoRecording, event.button.button);
+		WriteLE16(DemoRecording, event.button.x);
+		WriteLE16(DemoRecording, event.button.y);
+		WriteLE16(DemoRecording, modState);
+		break;
+#ifndef USE_SDL1
+	case SDL_MOUSEWHEEL:
+		RecordEventHeader(event);
+		WriteLE32(DemoRecording, event.wheel.x);
+		WriteLE32(DemoRecording, event.wheel.y);
+		WriteLE16(DemoRecording, modState);
+		break;
+#endif
+	case SDL_KEYDOWN:
+	case SDL_KEYUP:
+		RecordEventHeader(event);
+		WriteLE32(DemoRecording, static_cast<uint32_t>(event.key.keysym.sym));
+		WriteLE16(DemoRecording, static_cast<uint16_t>(event.key.keysym.mod));
+		break;
+#ifndef USE_SDL1
+	case SDL_WINDOWEVENT:
+		if (event.window.type == SDL_WINDOWEVENT_CLOSE) {
+			SDL_Event quitEvent;
+			quitEvent.type = SDL_QUIT;
+			RecordEventHeader(quitEvent);
+		}
+		break;
+#endif
+	case SDL_QUIT:
+		RecordEventHeader(event);
+		break;
+	default:
+		if (IsCustomEvent(event.type)) {
+			SDL_Event stableCustomEvent;
+			stableCustomEvent.type = SDL_USEREVENT + static_cast<uint32_t>(GetCustomEvent(event.type));
+			RecordEventHeader(stableCustomEvent);
+		}
+		break;
+	}
 }
 
 void NotifyGameLoopStart()
@@ -279,8 +405,8 @@ void NotifyGameLoopEnd()
 		gbRunGameResult = false;
 		gbRunGame = false;
 
-		HeroCompareResult compareResult = pfile_compare_hero_demo(DemoNumber);
-		switch (compareResult) {
+		HeroCompareResult compareResult = pfile_compare_hero_demo(DemoNumber, false);
+		switch (compareResult.status) {
 		case HeroCompareResult::ReferenceNotFound:
 			SDL_Log("Timedemo: No final comparision cause reference is not present.");
 			break;
@@ -288,7 +414,7 @@ void NotifyGameLoopEnd()
 			SDL_Log("Timedemo: Same outcome as inital run. :)");
 			break;
 		case HeroCompareResult::Difference:
-			SDL_Log("Timedemo: Different outcome then inital run. ;(");
+			Log("Timedemo: Different outcome then inital run. ;(\n{}", compareResult.message);
 			break;
 		}
 	}

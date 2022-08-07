@@ -10,7 +10,7 @@
 
 #include "effects.h"
 #include "engine.h"
-#include "engine/cel_sprite.hpp"
+#include "engine/clx_sprite.hpp"
 #include "utils/stdcompat/cstddef.hpp"
 #include "utils/stdcompat/string_view.hpp"
 
@@ -144,8 +144,7 @@ struct MissileFileData {
 	std::array<uint8_t, 16> animLen = {};
 	uint16_t animWidth;
 	int16_t animWidth2;
-	std::unique_ptr<byte[]> animData;
-	std::array<uint32_t, 16> frameOffsets;
+	OptionalOwnedClxSpriteListOrSheet sprites;
 
 	MissileFileData(string_view name, uint8_t animName, uint8_t animFAmt, MissileDataFlags flags,
 	    std::initializer_list<uint8_t> animDelay, std::initializer_list<uint8_t> animLen,
@@ -153,26 +152,22 @@ struct MissileFileData {
 
 	void LoadGFX();
 
-	[[nodiscard]] const byte *GetFirstFrame() const
-	{
-		return animData.get();
-	}
-
-	[[nodiscard]] const byte *GetFrame(size_t i) const
-	{
-		// For a "null" missile, `frameOffsets[i]` is 0 and `animData` is nullptr
-		// `animData[frameOffsets[i]]` is UB, so we use get() instead.
-		return animData.get() + frameOffsets[i];
-	}
-
-	CelSprite Sprite() const
-	{
-		return CelSprite { GetFirstFrame(), animWidth };
-	}
-
 	void FreeGFX()
 	{
-		animData = nullptr;
+		sprites = std::nullopt;
+	}
+
+	/**
+	 * @brief Returns the sprite list for a given direction.
+	 *
+	 * @param direction One of the 16 directions. Valid range: [0, 15].
+	 * @return OptionalClxSpriteList
+	 */
+	[[nodiscard]] OptionalClxSpriteList spritesForDirection(size_t direction) const
+	{
+		if (!sprites)
+			return std::nullopt;
+		return sprites->isSheet() ? sprites->sheet()[direction] : sprites->list();
 	}
 };
 

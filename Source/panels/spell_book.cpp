@@ -3,10 +3,10 @@
 #include <fmt/format.h>
 
 #include "control.h"
-#include "engine/cel_sprite.hpp"
+#include "engine/clx_sprite.hpp"
 #include "engine/load_cel.hpp"
 #include "engine/rectangle.hpp"
-#include "engine/render/cl2_render.hpp"
+#include "engine/render/clx_render.hpp"
 #include "engine/render/text_render.hpp"
 #include "init.h"
 #include "missiles.h"
@@ -21,12 +21,12 @@
 
 namespace devilution {
 
-OptionalOwnedCelSprite pSBkIconCels;
+OptionalOwnedClxSpriteList pSBkIconCels;
 
 namespace {
 
-OptionalOwnedCelSprite pSBkBtnCel;
-OptionalOwnedCelSprite pSpellBkCel;
+OptionalOwnedClxSpriteList pSBkBtnCel;
+OptionalOwnedClxSpriteList pSpellBkCel;
 
 /** Maps from spellbook page number and position to spell_id. */
 spell_id SpellPages[6][7] = {
@@ -81,9 +81,9 @@ spell_type GetSBookTrans(spell_id ii, bool townok)
 
 void InitSpellBook()
 {
-	pSpellBkCel = LoadCelAsCl2("Data\\SpellBk.CEL", static_cast<uint16_t>(SidePanelSize.width));
-	pSBkBtnCel = LoadCelAsCl2("Data\\SpellBkB.CEL", gbIsHellfire ? 61 : 76);
-	pSBkIconCels = LoadCelAsCl2("Data\\SpellI2.CEL", 37);
+	pSpellBkCel = LoadCel("Data\\SpellBk.CEL", static_cast<uint16_t>(SidePanelSize.width));
+	pSBkBtnCel = LoadCel("Data\\SpellBkB.CEL", gbIsHellfire ? 61 : 76);
+	pSBkIconCels = LoadCel("Data\\SpellI2.CEL", 37);
 
 	Player &player = *MyPlayer;
 	if (player._pClass == HeroClass::Warrior) {
@@ -110,16 +110,16 @@ void FreeSpellBook()
 
 void DrawSpellBook(const Surface &out)
 {
-	Cl2Draw(out, GetPanelPosition(UiPanels::Spell, { 0, 351 }), CelSprite { *pSpellBkCel }, 0);
+	ClxDraw(out, GetPanelPosition(UiPanels::Spell, { 0, 351 }), (*pSpellBkCel)[0]);
 	if (gbIsHellfire && sbooktab < 5) {
-		Cl2Draw(out, GetPanelPosition(UiPanels::Spell, { 61 * sbooktab + 7, 348 }), CelSprite { *pSBkBtnCel }, sbooktab);
+		ClxDraw(out, GetPanelPosition(UiPanels::Spell, { 61 * sbooktab + 7, 348 }), (*pSBkBtnCel)[sbooktab]);
 	} else {
 		// BUGFIX: rendering of page 3 and page 4 buttons are both off-by-one pixel (fixed).
 		int sx = 76 * sbooktab + 7;
 		if (sbooktab == 2 || sbooktab == 3) {
 			sx++;
 		}
-		Cl2Draw(out, GetPanelPosition(UiPanels::Spell, { sx, 348 }), CelSprite { *pSBkBtnCel }, sbooktab);
+		ClxDraw(out, GetPanelPosition(UiPanels::Spell, { sx, 348 }), (*pSBkBtnCel)[sbooktab]);
 	}
 	Player &player = *MyPlayer;
 	uint64_t spl = player._pMemSpells | player._pISpells | player._pAblSpells;

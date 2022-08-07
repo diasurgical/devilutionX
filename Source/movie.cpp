@@ -37,17 +37,17 @@ void play_movie(const char *pszMovie, bool userCanClose)
 	}
 
 	if (SVidPlayBegin(pszMovie, loop_movie ? 0x100C0808 : 0x10280808)) {
-		tagMSG msg;
+		SDL_Event event;
+		uint16_t modState;
 		while (movie_playing) {
-			while (movie_playing && FetchMessage(&msg)) {
-				switch (msg.message) {
-				case DVL_WM_KEYDOWN:
-				case DVL_WM_LBUTTONUP:
-				case DVL_WM_RBUTTONUP:
-					if (userCanClose || (msg.message == DVL_WM_KEYDOWN && msg.wParam == SDLK_ESCAPE))
+			while (movie_playing && FetchMessage(&event, &modState)) {
+				switch (event.type) {
+				case SDL_KEYDOWN:
+				case SDL_MOUSEBUTTONUP:
+					if (userCanClose || (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE))
 						movie_playing = false;
 					break;
-				case DVL_WM_QUIT:
+				case SDL_QUIT:
 					SVidPlayEnd();
 					diablo_quit(0);
 				}

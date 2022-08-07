@@ -1,12 +1,11 @@
 #pragma once
 
-#include "DiabloUI/art.h"
-#include "DiabloUI/art_draw.h"
+#include "engine/clx_sprite.hpp"
 
 namespace devilution {
 
-extern Art PanelButtonDown;
-extern Art TalkButton;
+extern OptionalOwnedClxSpriteList PanelButtonDown;
+extern OptionalOwnedClxSpriteList TalkButton;
 
 void LoadMainPanel();
 void FreeMainPanel();

@@ -4470,8 +4470,8 @@ msgstr "2x урона монстрам, 1x вам"
 
 #: Source/items.cpp:3746
 #, no-c-format
-msgid "Random 0 - 500% damage"
-msgstr "Случайные 0 - 500% урона"
+msgid "Random 0 - 600% damage"
+msgstr "Случайные 0 - 600% урона"
 
 #: Source/items.cpp:3748
 #, no-c-format

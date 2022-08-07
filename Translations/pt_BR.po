@@ -4416,8 +4416,8 @@ msgstr "2x dano para monst, 1x a você"
 
 #: Source/items.cpp:3746
 #, no-c-format
-msgid "Random 0 - 500% damage"
-msgstr "Dano aleatório 0 - 500%"
+msgid "Random 0 - 600% damage"
+msgstr "Dano aleatório 0 - 600%"
 
 #: Source/items.cpp:3748
 #, no-c-format

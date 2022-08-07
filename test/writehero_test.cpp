@@ -268,9 +268,9 @@ static void AssertPlayer(Player &player)
 	ASSERT_EQ(player.AnimInfo.tickCounterOfCurrentFrame, 1);
 	ASSERT_EQ(player.AnimInfo.numberOfFrames, 20);
 	ASSERT_EQ(player.AnimInfo.currentFrame, 0);
-	ASSERT_EQ(player._pSpell, -1);
-	ASSERT_EQ(player._pSplType, 4);
-	ASSERT_EQ(player._pSplFrom, 0);
+	ASSERT_EQ(player.queuedSpell.spellId, -1);
+	ASSERT_EQ(player.queuedSpell.spellType, 4);
+	ASSERT_EQ(player.queuedSpell.spellFrom, 0);
 	ASSERT_EQ(player._pTSpell, 0);
 	ASSERT_EQ(player._pRSpell, -1);
 	ASSERT_EQ(player._pRSplType, 4);

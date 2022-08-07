@@ -6,20 +6,20 @@
 #include "control.h"
 #include "controls/input.h"
 #include "controls/menu_controls.h"
-#include "engine/cel_sprite.hpp"
+#include "engine/clx_sprite.hpp"
 #include "engine/dx.h"
 #include "engine/load_pcx.hpp"
 #include "engine/palette.h"
-#include "engine/render/cl2_render.hpp"
+#include "engine/render/clx_render.hpp"
 #include "hwcursor.hpp"
 #include "utils/display.h"
 #include "utils/language.h"
 
 namespace devilution {
 namespace {
-std::optional<OwnedCelSpriteWithFrameHeight> ArtPopupSm;
-std::optional<OwnedCelSpriteWithFrameHeight> ArtProgBG;
-std::optional<OwnedCelSpriteWithFrameHeight> ProgFil;
+OptionalOwnedClxSpriteList ArtPopupSm;
+OptionalOwnedClxSpriteList ArtProgBG;
+OptionalOwnedClxSpriteList ProgFil;
 std::vector<std::unique_ptr<UiItemBase>> vecProgress;
 bool endMenu;
 
@@ -31,14 +31,14 @@ void DialogActionCancel()
 void ProgressLoadBackground()
 {
 	UiLoadBlackBackground();
-	ArtPopupSm = LoadPcxAsCl2("ui_art\\spopup.pcx");
-	ArtProgBG = LoadPcxAsCl2("ui_art\\prog_bg.pcx");
+	ArtPopupSm = LoadPcx("ui_art\\spopup.pcx");
+	ArtProgBG = LoadPcx("ui_art\\prog_bg.pcx");
 }
 
 void ProgressLoadForeground()
 {
 	LoadDialogButtonGraphics();
-	ProgFil = LoadPcxAsCl2("ui_art\\prog_fil.pcx");
+	ProgFil = LoadPcx("ui_art\\prog_fil.pcx");
 
 	const Point uiPosition = GetUIRectangle().position;
 	SDL_Rect rect3 = { (Sint16)(uiPosition.x + 265), (Sint16)(uiPosition.y + 267), DialogButtonWidth, DialogButtonHeight };
@@ -70,8 +70,8 @@ void ProgressRenderBackground()
 
 	const Surface &out = Surface(DiabloUiSurface());
 	const Point position = GetPosition();
-	RenderCl2Sprite(out.subregion(position.x, position.y, 280, 140), ArtPopupSm->sprite(), { 0, 0 });
-	RenderCl2Sprite(out.subregion(GetCenterOffset(227), 0, 227, out.h()), ArtProgBG->sprite(), { 0, position.y + 52 });
+	RenderClxSprite(out.subregion(position.x, position.y, 280, 140), (*ArtPopupSm)[0], { 0, 0 });
+	RenderClxSprite(out.subregion(GetCenterOffset(227), 0, 227, out.h()), (*ArtProgBG)[0], { 0, position.y + 52 });
 }
 
 void ProgressRenderForeground(int progress)
@@ -81,10 +81,10 @@ void ProgressRenderForeground(int progress)
 	if (progress != 0) {
 		const int x = GetCenterOffset(227);
 		const int w = 227 * progress / 100;
-		RenderCl2Sprite(out.subregion(x, 0, w, out.h()), ProgFil->sprite(), { 0, position.y + 52 });
+		RenderClxSprite(out.subregion(x, 0, w, out.h()), (*ProgFil)[0], { 0, position.y + 52 });
 	}
 	// Not rendering an actual button, only the top 2 rows of its graphics.
-	RenderCl2Sprite(
+	RenderClxSprite(
 	    out.subregion(GetCenterOffset(110), position.y + 99, DialogButtonWidth, 2),
 	    ButtonSprite(/*pressed=*/false), { 0, 0 });
 }

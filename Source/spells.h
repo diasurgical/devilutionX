@@ -20,7 +20,7 @@ bool IsValidSpell(spell_id spl);
 bool IsWallSpell(spell_id spl);
 bool TargetsMonster(spell_id id);
 int GetManaAmount(const Player &player, spell_id sn);
-void UseMana(Player &player, spell_id sn);
+void ConsumeSpell(Player &player, spell_id sn);
 SpellCheckResult CheckSpell(const Player &player, spell_id sn, spell_type st, bool manaonly);
 
 /**

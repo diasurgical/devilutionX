@@ -11,7 +11,7 @@ declare -r MIYOO_CUSTOM_SDL_BRANCH="miniui-miyoomini"
 main() {
 	# ensure we are in devilutionx root
 	cd "$PACKAGING_DIR/../.."
-	
+
 	rm -f "$BUILD_DIR/CMakeCache.txt"
 	cmake_configure -DCMAKE_BUILD_TYPE=Release
 	cmake_build
@@ -37,12 +37,12 @@ build_custom_sdl() {
 	# make clean folder for custom SDL build
 	rm -rf $BUILD_DIR/CustomSDL
 	mkdir  $BUILD_DIR/CustomSDL
-	
+
 	# clone the repo and build the lib
 	cd $BUILD_DIR/CustomSDL
 	git clone $MIYOO_CUSTOM_SDL_REPO --branch $MIYOO_CUSTOM_SDL_BRANCH --single-branch .
 	./make.sh
-	
+
 	# change back to devilutionx root
 	cd "$PACKAGING_DIR/../.."
 	cp -rfL "$BUILD_DIR/CustomSDL/build/.libs/libSDL-1.2.so.0" "$BUILD_DIR/OnionOS/Emu/PORTS/Binaries/Diablo.port/lib/libSDL-1.2.so.0"
@@ -50,16 +50,16 @@ build_custom_sdl() {
 
 prepare_onion_skeleton() {
 	mkdir -p $BUILD_DIR/OnionOS
-	
+
 	# Copy basic skeleton
 	cp -rf  Packaging/miyoo_mini/skeleton_OnionOS/* $BUILD_DIR/OnionOS
-	
+
 	# ensure devilutionx asset dir
 	mkdir -p $BUILD_DIR/OnionOS/Emu/PORTS/Binaries/Diablo.port/assets
-	
+
 	# ensure lib dir for custom SDL
 	mkdir -p $BUILD_DIR/OnionOS/Emu/PORTS/Binaries/Diablo.port/lib
-	
+
 	# ensure config dir
 	mkdir -p $BUILD_DIR/OnionOS/Saves/CurrentProfile/config/DevilutionX
 
@@ -74,20 +74,20 @@ package_onion() {
 	cp -rf $BUILD_DIR/assets/* $BUILD_DIR/OnionOS/Emu/PORTS/Binaries/Diablo.port/assets
 	# copy executable
 	cp -f $BUILD_DIR/devilutionx $BUILD_DIR/OnionOS/Emu/PORTS/Binaries/Diablo.port/devilutionx
-	
+
 	rm -f $BUILD_DIR/onion.zip
-	
+
 	cd $BUILD_DIR/OnionOS
-	zip -r ../devilutionx-onion-os.zip .
+	zip -r ../devilutionx-miyoo-mini-onion-os.zip .
 	cd "$PACKAGING_DIR/../.."
 }
 
 prepare_miniui_skeleton() {
 	mkdir -p $BUILD_DIR/MiniUI
-	
+
 	# copy basic skeleton
 	cp -rf  Packaging/miyoo_mini/skeleton_MiniUI/* $BUILD_DIR/MiniUI
-	
+
 	# ensure devilutionx asset dir
 	mkdir -p $BUILD_DIR/MiniUI/Diablo/assets
 }
@@ -98,11 +98,11 @@ package_miniui() {
 	cp -rf $BUILD_DIR/assets/* $BUILD_DIR/MiniUI/Diablo/assets
 	# copy executable
 	cp -f $BUILD_DIR/devilutionx $BUILD_DIR/MiniUI/Diablo/devilutionx
-	
+
 	rm -f $BUILD_DIR/miniui.zip
 
 	cd $BUILD_DIR/MiniUI
-	zip -r ../devilutionx-miniui.zip .
+	zip -r ../devilutionx-miyoo-mini-miniui.zip .
 	cd "$PACKAGING_DIR/../.."
 }
 

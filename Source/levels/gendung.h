@@ -9,7 +9,7 @@
 #include <memory>
 
 #include "engine.h"
-#include "engine/cel_sprite.hpp"
+#include "engine/clx_sprite.hpp"
 #include "engine/point.hpp"
 #include "engine/rectangle.hpp"
 #include "engine/render/scrollrt.h"
@@ -102,15 +102,6 @@ enum _difficulty : uint8_t {
 	DIFF_LAST = DIFF_HELL,
 };
 
-struct ScrollStruct {
-	/** @brief Tile offset of camera. */
-	Point tile;
-	/** @brief Pixel offset of camera. */
-	Displacement offset;
-	/** @brief Move direction of camera. */
-	ScrollDirection _sdir;
-};
-
 struct THEME_LOC {
 	Rectangle room;
 	int16_t ttval;
@@ -150,7 +141,7 @@ extern Rectangle SetPieceRoom;
 extern Rectangle SetPiece;
 /** Contains the contents of the single player quest DUN file. */
 extern std::unique_ptr<uint16_t[]> pSetPiece;
-extern OptionalOwnedCelSprite pSpecialCels;
+extern OptionalOwnedClxSpriteList pSpecialCels;
 /** Specifies the tile definitions of the active dungeon type; (e.g. levels/l1data/l1.til). */
 extern DVL_API_FOR_TEST std::unique_ptr<MegaTile[]> pMegaTiles;
 extern std::unique_ptr<byte[]> pDungeonCels;
@@ -173,7 +164,6 @@ extern _setlevels setlvlnum;
 extern dungeon_type setlvltype;
 /** Specifies the player viewpoint X,Y-coordinates of the map. */
 extern DVL_API_FOR_TEST Point ViewPosition;
-extern ScrollStruct ScrollInfo;
 extern int MicroTileLen;
 extern char TransVal;
 /** Specifies the active transparency indices. */

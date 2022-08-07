@@ -121,7 +121,7 @@ struct MultiFileLoader {
 	/**
 	 * @param numFiles number of files to read
 	 * @param pathFn a function that returns the path for the given index
-	 * @param outOffsets a buffer index for the start of each file will be written here
+	 * @param outOffsets a buffer index for the start of each file will be written here, then the total file size at the end.
 	 * @param filterFn a function that returns whether to load a file for the given index
 	 * @return std::unique_ptr<byte[]> the buffer with all the files
 	 */
@@ -132,20 +132,21 @@ struct MultiFileLoader {
 		StaticVector<SFile, MaxFiles> files;
 		StaticVector<uint32_t, MaxFiles> sizes;
 		size_t totalSize = 0;
-		for (size_t i = 0; i < numFiles; ++i) {
+		for (size_t i = 0, j = 0; i < numFiles; ++i) {
 			if (!filterFn(i))
 				continue;
 			const size_t size = files.emplace_back(pathFn(i)).Size();
 			sizes.emplace_back(static_cast<uint32_t>(size));
-			outOffsets[i] = static_cast<uint32_t>(totalSize);
+			outOffsets[j] = static_cast<uint32_t>(totalSize);
 			totalSize += size;
+			++j;
 		}
+		outOffsets[files.size()] = totalSize;
 		std::unique_ptr<byte[]> buf { new byte[totalSize] };
-		size_t j = 0;
-		for (size_t i = 0; i < numFiles; ++i) {
+		for (size_t i = 0, j = 0; i < numFiles; ++i) {
 			if (!filterFn(i))
 				continue;
-			files[j].Read(&buf[outOffsets[i]], sizes[j]);
+			files[j].Read(&buf[outOffsets[j]], sizes[j]);
 			++j;
 		}
 		return buf;

@@ -32,14 +32,14 @@ TEST(Inv, UseScroll_from_inventory)
 {
 	set_up_scroll(MyPlayer->InvList[2], SPL_FIREBOLT);
 	MyPlayer->_pNumInv = 5;
-	EXPECT_TRUE(UseScroll(MyPlayer->_pRSpell));
+	EXPECT_TRUE(CanUseScroll(*MyPlayer, SPL_FIREBOLT));
 }
 
 // Test that the scroll is used in the belt in correct conditions
 TEST(Inv, UseScroll_from_belt)
 {
 	set_up_scroll(MyPlayer->SpdList[2], SPL_FIREBOLT);
-	EXPECT_TRUE(UseScroll(MyPlayer->_pRSpell));
+	EXPECT_TRUE(CanUseScroll(*MyPlayer, SPL_FIREBOLT));
 }
 
 // Test that the scroll is not used in the inventory for each invalid condition
@@ -50,25 +50,24 @@ TEST(Inv, UseScroll_from_inventory_invalid_conditions)
 		MyPlayer->SpdList[i].clear();
 	}
 
-	set_up_scroll(MyPlayer->InvList[2], SPL_FIREBOLT);
-	pcurs = CURSOR_IDENTIFY;
-	EXPECT_FALSE(UseScroll(MyPlayer->_pRSpell));
+	// Adjust inventory size
+	MyPlayer->_pNumInv = 5;
 
 	set_up_scroll(MyPlayer->InvList[2], SPL_FIREBOLT);
 	leveltype = DTYPE_TOWN;
-	EXPECT_FALSE(UseScroll(MyPlayer->_pRSpell));
+	EXPECT_FALSE(CanUseScroll(*MyPlayer, SPL_FIREBOLT));
 
 	set_up_scroll(MyPlayer->InvList[2], SPL_FIREBOLT);
 	MyPlayer->_pRSpell = static_cast<spell_id>(SPL_HEAL);
-	EXPECT_FALSE(UseScroll(MyPlayer->_pRSpell));
+	EXPECT_FALSE(CanUseScroll(*MyPlayer, SPL_HEAL));
 
 	set_up_scroll(MyPlayer->InvList[2], SPL_FIREBOLT);
 	MyPlayer->InvList[2]._iMiscId = IMISC_STAFF;
-	EXPECT_FALSE(UseScroll(MyPlayer->_pRSpell));
+	EXPECT_FALSE(CanUseScroll(*MyPlayer, SPL_FIREBOLT));
 
 	set_up_scroll(MyPlayer->InvList[2], SPL_FIREBOLT);
 	MyPlayer->InvList[2].clear();
-	EXPECT_FALSE(UseScroll(MyPlayer->_pRSpell));
+	EXPECT_FALSE(CanUseScroll(*MyPlayer, SPL_FIREBOLT));
 }
 
 // Test that the scroll is not used in the belt for each invalid condition
@@ -78,24 +77,20 @@ TEST(Inv, UseScroll_from_belt_invalid_conditions)
 	MyPlayer->_pNumInv = 0;
 
 	set_up_scroll(MyPlayer->SpdList[2], SPL_FIREBOLT);
-	pcurs = CURSOR_IDENTIFY;
-	EXPECT_FALSE(UseScroll(MyPlayer->_pRSpell));
-
-	set_up_scroll(MyPlayer->SpdList[2], SPL_FIREBOLT);
 	leveltype = DTYPE_TOWN;
-	EXPECT_FALSE(UseScroll(MyPlayer->_pRSpell));
+	EXPECT_FALSE(CanUseScroll(*MyPlayer, SPL_FIREBOLT));
 
 	set_up_scroll(MyPlayer->SpdList[2], SPL_FIREBOLT);
 	MyPlayer->_pRSpell = static_cast<spell_id>(SPL_HEAL);
-	EXPECT_FALSE(UseScroll(MyPlayer->_pRSpell));
+	EXPECT_FALSE(CanUseScroll(*MyPlayer, SPL_HEAL));
 
 	set_up_scroll(MyPlayer->SpdList[2], SPL_FIREBOLT);
 	MyPlayer->SpdList[2]._iMiscId = IMISC_STAFF;
-	EXPECT_FALSE(UseScroll(MyPlayer->_pRSpell));
+	EXPECT_FALSE(CanUseScroll(*MyPlayer, SPL_FIREBOLT));
 
 	set_up_scroll(MyPlayer->SpdList[2], SPL_FIREBOLT);
 	MyPlayer->SpdList[2].clear();
-	EXPECT_FALSE(UseScroll(MyPlayer->_pRSpell));
+	EXPECT_FALSE(CanUseScroll(*MyPlayer, SPL_FIREBOLT));
 }
 
 // Test gold calculation
@@ -198,12 +193,12 @@ TEST(Inv, RemoveCurrentSpellScroll_inventory)
 
 	// Put a firebolt scroll into the inventory
 	MyPlayer->_pNumInv = 1;
-	MyPlayer->_pSpell = static_cast<spell_id>(SPL_FIREBOLT);
+	MyPlayer->executedSpell.spellId = static_cast<spell_id>(SPL_FIREBOLT);
 	MyPlayer->InvList[0]._itype = ItemType::Misc;
 	MyPlayer->InvList[0]._iMiscId = IMISC_SCROLL;
 	MyPlayer->InvList[0]._iSpell = SPL_FIREBOLT;
 
-	RemoveCurrentSpellScroll(*MyPlayer);
+	ConsumeScroll(*MyPlayer);
 	EXPECT_EQ(MyPlayer->InvGrid[0], 0);
 	EXPECT_EQ(MyPlayer->_pNumInv, 0);
 }
@@ -216,12 +211,12 @@ TEST(Inv, RemoveCurrentSpellScroll_belt)
 		MyPlayer->SpdList[i].clear();
 	}
 	// Put a firebolt scroll into the belt
-	MyPlayer->_pSpell = static_cast<spell_id>(SPL_FIREBOLT);
+	MyPlayer->executedSpell.spellId = static_cast<spell_id>(SPL_FIREBOLT);
 	MyPlayer->SpdList[3]._itype = ItemType::Misc;
 	MyPlayer->SpdList[3]._iMiscId = IMISC_SCROLL;
 	MyPlayer->SpdList[3]._iSpell = SPL_FIREBOLT;
 
-	RemoveCurrentSpellScroll(*MyPlayer);
+	ConsumeScroll(*MyPlayer);
 	EXPECT_TRUE(MyPlayer->SpdList[3].isEmpty());
 }
 

@@ -381,12 +381,37 @@ struct Item {
 
 	[[nodiscard]] bool isScroll() const
 	{
-		return _iMiscId == IMISC_SCROLL || _iMiscId == IMISC_SCROLLT;
+		return IsAnyOf(_iMiscId, IMISC_SCROLL, IMISC_SCROLLT);
 	}
 
 	[[nodiscard]] bool isScrollOf(spell_id spellId) const
 	{
 		return isScroll() && _iSpell == spellId;
+	}
+
+	[[nodiscard]] bool isRune() const
+	{
+		return _iMiscId > IMISC_RUNEFIRST && _iMiscId < IMISC_RUNELAST;
+	}
+
+	[[nodiscard]] bool isRuneOf(spell_id spellId) const
+	{
+		if (!isRune())
+			return false;
+		switch (_iMiscId) {
+		case IMISC_RUNEF:
+			return spellId == SPL_RUNEFIRE;
+		case IMISC_RUNEL:
+			return spellId == SPL_RUNELIGHT;
+		case IMISC_GR_RUNEL:
+			return spellId == SPL_RUNENOVA;
+		case IMISC_GR_RUNEF:
+			return spellId == SPL_RUNEIMMOLAT;
+		case IMISC_RUNES:
+			return spellId == SPL_RUNESTONE;
+		default:
+			return false;
+		}
 	}
 
 	[[nodiscard]] bool keyAttributesMatch(int32_t seed, _item_indexes itemIndex, uint16_t createInfo) const
@@ -504,7 +529,7 @@ void UseItem(int p, item_misc_id Mid, spell_id spl);
 bool UseItemOpensHive(const Item &item, Point position);
 bool UseItemOpensCrypt(const Item &item, Point position);
 void SpawnSmith(int lvl);
-void SpawnPremium(Player &player);
+void SpawnPremium(const Player &player);
 void SpawnWitch(int lvl);
 void SpawnBoy(int lvl);
 void SpawnHealer(int lvl);

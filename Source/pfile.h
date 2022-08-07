@@ -17,10 +17,14 @@ extern bool gbValidSaveFile;
 /**
  * @brief Comparsion result of pfile_compare_hero_demo
  */
-enum class HeroCompareResult {
-	ReferenceNotFound,
-	Same,
-	Difference,
+struct HeroCompareResult {
+	enum Status {
+		ReferenceNotFound,
+		Same,
+		Difference,
+	};
+	Status status;
+	std::string message;
 };
 
 std::optional<MpqArchive> OpenSaveArchive(uint32_t saveNum);
@@ -36,9 +40,10 @@ void pfile_write_hero_demo(int demo);
 /**
  * @brief Compares the actual game-state (savegame) with a reference game-state (save game from demo recording)
  * @param demo for the comparsion
+ * @param logDetails in case of a difference log details
  * @return The comparsion result.
  */
-HeroCompareResult pfile_compare_hero_demo(int demo);
+HeroCompareResult pfile_compare_hero_demo(int demo, bool logDetails);
 void sfile_write_stash();
 bool pfile_ui_set_hero_infos(bool (*uiAddHeroInfo)(_uiheroinfo *));
 void pfile_ui_set_class_stats(unsigned int playerClass, _uidefaultstats *classStats);

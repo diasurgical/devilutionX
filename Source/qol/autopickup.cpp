@@ -63,6 +63,20 @@ bool DoPickup(Item item)
 		case IMISC_ELIXDEX:
 		case IMISC_ELIXVIT:
 			return *sgOptions.Gameplay.autoElixirPickup;
+		case IMISC_OILFIRST:
+		case IMISC_OILOF:
+		case IMISC_OILACC:
+		case IMISC_OILMAST:
+		case IMISC_OILSHARP:
+		case IMISC_OILDEATH:
+		case IMISC_OILSKILL:
+		case IMISC_OILBSMTH:
+		case IMISC_OILFORT:
+		case IMISC_OILPERM:
+		case IMISC_OILHARD:
+		case IMISC_OILIMP:
+		case IMISC_OILLAST:
+			return *sgOptions.Gameplay.autoOilPickup;
 		default:
 			return false;
 		}

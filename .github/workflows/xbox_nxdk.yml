@@ -5,7 +5,9 @@ on:
     branches:
       - master
   pull_request:
-    types: [ opened, synchronize ]
+    types: [opened, synchronize]
+  release:
+    types: [published]
 
 jobs:
   xbox:
@@ -32,7 +34,9 @@ jobs:
 
     - name: Configure CMake
       working-directory: ${{github.workspace}}
-      run: cmake -S. -Bbuild-xbox -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_TOOLCHAIN_FILE=/opt/nxdk/share/toolchain-nxdk.cmake
+      env:
+        CMAKE_BUILD_TYPE: ${{github.event_name == 'release' && 'Release' || 'RelWithDebInfo'}}
+      run: cmake -S. -Bbuild-xbox -DCMAKE_BUILD_TYPE=${{env.CMAKE_BUILD_TYPE}} -DCMAKE_TOOLCHAIN_FILE=/opt/nxdk/share/toolchain-nxdk.cmake
 
     - name: Build
       working-directory: ${{github.workspace}}
@@ -45,3 +49,15 @@ jobs:
       with:
         name: devilutionx-xbox
         path: build-xbox/pkg/
+
+    - name: Package Release
+      if: ${{ github.event_name == 'release' && !env.ACT }}
+      working-directory: ${{github.workspace}}/build-xbox/pkg
+      run: zip -r ../../devilutionx-xbox.zip .
+
+    - name: Update Release
+      if: ${{ github.event_name == 'release' && !env.ACT }}
+      uses: svenstaro/upload-release-action@v2
+      with:
+        file: devilutionx-xbox.zip
+        overwrite: true

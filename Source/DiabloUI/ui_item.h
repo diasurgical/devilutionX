@@ -7,7 +7,7 @@
 
 #include "DiabloUI/art.h"
 #include "DiabloUI/ui_flags.hpp"
-#include "engine/cel_sprite.hpp"
+#include "engine/clx_sprite.hpp"
 #include "engine/render/text_render.hpp"
 #include "utils/enum_traits.h"
 #include "utils/stubs.h"
@@ -18,8 +18,8 @@ enum class UiType {
 	Text,
 	ArtText,
 	ArtTextButton,
-	ImageCl2,
-	ImageAnimatedCl2,
+	ImageClx,
+	ImageAnimatedClx,
 	Button,
 	List,
 	Scrollbar,
@@ -89,10 +89,10 @@ private:
 };
 
 //=============================================================================
-class UiImageCl2 : public UiItemBase {
+class UiImageClx : public UiItemBase {
 public:
-	UiImageCl2(CelFrameWithHeight sprite, SDL_Rect rect, UiFlags flags = UiFlags::None)
-	    : UiItemBase(UiType::ImageCl2, rect, flags)
+	UiImageClx(ClxSprite sprite, SDL_Rect rect, UiFlags flags = UiFlags::None)
+	    : UiItemBase(UiType::ImageClx, rect, flags)
 	    , sprite_(sprite)
 	{
 	}
@@ -102,26 +102,26 @@ public:
 		return HasAnyOf(GetFlags(), UiFlags::AlignCenter);
 	}
 
-	[[nodiscard]] CelFrameWithHeight sprite() const
+	[[nodiscard]] ClxSprite sprite() const
 	{
 		return sprite_;
 	}
 
-	void setSprite(CelFrameWithHeight sprite)
+	void setSprite(ClxSprite sprite)
 	{
 		sprite_ = sprite;
 	}
 
 private:
-	CelFrameWithHeight sprite_;
+	ClxSprite sprite_;
 };
 
 //=============================================================================
-class UiImageAnimatedCl2 : public UiItemBase {
+class UiImageAnimatedClx : public UiItemBase {
 public:
-	UiImageAnimatedCl2(CelSpriteSheetWithFrameHeight sheet, SDL_Rect rect, UiFlags flags = UiFlags::None)
-	    : UiItemBase(UiType::ImageAnimatedCl2, rect, flags)
-	    , sheet_(sheet)
+	UiImageAnimatedClx(ClxSpriteList list, SDL_Rect rect, UiFlags flags = UiFlags::None)
+	    : UiItemBase(UiType::ImageAnimatedClx, rect, flags)
+	    , list_(list)
 	{
 	}
 
@@ -130,18 +130,18 @@ public:
 		return HasAnyOf(GetFlags(), UiFlags::AlignCenter);
 	}
 
-	[[nodiscard]] CelFrameWithHeight sprite(uint16_t frame) const
+	[[nodiscard]] ClxSprite sprite(uint16_t frame) const
 	{
-		return sheet_.sprite(frame);
+		return list_[frame];
 	}
 
 	[[nodiscard]] uint16_t numFrames() const
 	{
-		return sheet_.numFrames();
+		return list_.numSprites();
 	}
 
 private:
-	CelSpriteSheetWithFrameHeight sheet_;
+	ClxSpriteList list_;
 };
 
 //=============================================================================
@@ -208,7 +208,7 @@ private:
 
 class UiScrollbar : public UiItemBase {
 public:
-	UiScrollbar(CelFrameWithHeight bg, CelFrameWithHeight thumb, CelSpriteSheetWithFrameHeight arrow, SDL_Rect rect, UiFlags flags = UiFlags::None)
+	UiScrollbar(ClxSprite bg, ClxSprite thumb, ClxSpriteList arrow, SDL_Rect rect, UiFlags flags = UiFlags::None)
 	    : UiItemBase(UiType::Scrollbar, rect, flags)
 	    , m_bg(bg)
 	    , m_thumb(thumb)
@@ -217,9 +217,9 @@ public:
 	}
 
 	// private:
-	CelFrameWithHeight m_bg;
-	CelFrameWithHeight m_thumb;
-	CelSpriteSheetWithFrameHeight m_arrow;
+	ClxSprite m_bg;
+	ClxSprite m_thumb;
+	ClxSpriteList m_arrow;
 };
 
 //=============================================================================

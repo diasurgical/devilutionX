@@ -4,10 +4,9 @@
 
 #include <fmt/format.h>
 
-#include "DiabloUI/art.h"
-#include "DiabloUI/art_draw.h"
 #include "control.h"
-#include "engine/render/cl2_render.hpp"
+#include "engine/load_clx.hpp"
+#include "engine/render/clx_render.hpp"
 #include "engine/render/text_render.hpp"
 #include "panels/ui_panels.hpp"
 #include "player.h"
@@ -15,10 +14,11 @@
 #include "utils/format_int.hpp"
 #include "utils/language.h"
 #include "utils/str_cat.hpp"
+#include "utils/surface_to_clx.hpp"
 
 namespace devilution {
 
-OptionalOwnedCelSprite pChrButtons;
+OptionalOwnedClxSpriteList pChrButtons;
 
 /** Map of hero class names */
 const char *const ClassStrTbl[] = {
@@ -199,24 +199,21 @@ PanelEntry panelEntries[] = {
 	    []() { return GetResistInfo(MyPlayer->_pLghtResist); } },
 };
 
-Art PanelBoxLeft;
-Art PanelBoxMiddle;
-Art PanelBoxRight;
-Art PanelFull;
+OptionalOwnedClxSpriteList Panel;
 
 constexpr int PanelFieldHeight = 24;
 constexpr int PanelFieldPaddingTop = 3;
 constexpr int PanelFieldPaddingBottom = 3;
 constexpr int PanelFieldInnerHeight = PanelFieldHeight - PanelFieldPaddingTop - PanelFieldPaddingBottom;
 
-void DrawPanelField(const Surface &out, Point pos, int len)
+void DrawPanelField(const Surface &out, Point pos, int len, ClxSprite left, ClxSprite middle, ClxSprite right)
 {
-	DrawArt(out, pos, &PanelBoxLeft);
-	pos.x += PanelBoxLeft.w();
-	len -= PanelBoxLeft.w() + PanelBoxRight.w();
-	DrawArt(out, pos, &PanelBoxMiddle, 0, len);
+	RenderClxSprite(out, left, pos);
+	pos.x += left.width();
+	len -= left.width() + right.width();
+	RenderClxSprite(out.subregion(pos.x, pos.y, len, middle.height()), middle, Point { 0, 0 });
 	pos.x += len;
-	DrawArt(out, pos, &PanelBoxRight);
+	RenderClxSprite(out, right, pos);
 }
 
 void DrawShadowString(const Surface &out, const PanelEntry &entry)
@@ -253,15 +250,14 @@ void DrawShadowString(const Surface &out, const PanelEntry &entry)
 void DrawStatButtons(const Surface &out)
 {
 	if (MyPlayer->_pStatPts > 0) {
-		CelSprite sprite { *pChrButtons };
 		if (MyPlayer->_pBaseStr < MyPlayer->GetMaximumAttributeValue(CharacterAttribute::Strength))
-			Cl2Draw(out, GetPanelPosition(UiPanels::Character, { 137, 157 }), sprite, chrbtn[static_cast<size_t>(CharacterAttribute::Strength)] ? 2 : 1);
+			ClxDraw(out, GetPanelPosition(UiPanels::Character, { 137, 157 }), (*pChrButtons)[chrbtn[static_cast<size_t>(CharacterAttribute::Strength)] ? 2 : 1]);
 		if (MyPlayer->_pBaseMag < MyPlayer->GetMaximumAttributeValue(CharacterAttribute::Magic))
-			Cl2Draw(out, GetPanelPosition(UiPanels::Character, { 137, 185 }), sprite, chrbtn[static_cast<size_t>(CharacterAttribute::Magic)] ? 4 : 3);
+			ClxDraw(out, GetPanelPosition(UiPanels::Character, { 137, 185 }), (*pChrButtons)[chrbtn[static_cast<size_t>(CharacterAttribute::Magic)] ? 4 : 3]);
 		if (MyPlayer->_pBaseDex < MyPlayer->GetMaximumAttributeValue(CharacterAttribute::Dexterity))
-			Cl2Draw(out, GetPanelPosition(UiPanels::Character, { 137, 214 }), sprite, chrbtn[static_cast<size_t>(CharacterAttribute::Dexterity)] ? 6 : 5);
+			ClxDraw(out, GetPanelPosition(UiPanels::Character, { 137, 214 }), (*pChrButtons)[chrbtn[static_cast<size_t>(CharacterAttribute::Dexterity)] ? 6 : 5]);
 		if (MyPlayer->_pBaseVit < MyPlayer->GetMaximumAttributeValue(CharacterAttribute::Vitality))
-			Cl2Draw(out, GetPanelPosition(UiPanels::Character, { 137, 242 }), sprite, chrbtn[static_cast<size_t>(CharacterAttribute::Vitality)] ? 8 : 7);
+			ClxDraw(out, GetPanelPosition(UiPanels::Character, { 137, 242 }), (*pChrButtons)[chrbtn[static_cast<size_t>(CharacterAttribute::Vitality)] ? 8 : 7]);
 	}
 }
 
@@ -269,42 +265,43 @@ void DrawStatButtons(const Surface &out)
 
 void LoadCharPanel()
 {
-	LoadArt("data\\charbg.pcx", &PanelFull);
-	UpdatePalette(&PanelFull); // PanelFull is being used as a render target
-	LoadArt("data\\boxleftend.pcx", &PanelBoxLeft);
-	LoadArt("data\\boxmiddle.pcx", &PanelBoxMiddle);
-	LoadArt("data\\boxrightend.pcx", &PanelBoxRight);
+	OptionalOwnedClxSpriteList background = LoadClx("data\\charbg.clx");
+	OwnedSurface out((*background)[0].width(), (*background)[0].height());
+	RenderClxSprite(out, (*background)[0], { 0, 0 });
+	background = std::nullopt;
 
-	const Surface out(PanelFull.surface.get());
+	{
+		OwnedClxSpriteList boxLeft = LoadClx("data\\boxleftend.clx");
+		OwnedClxSpriteList boxMiddle = LoadClx("data\\boxmiddle.clx");
+		OwnedClxSpriteList boxRight = LoadClx("data\\boxrightend.clx");
 
-	const bool isSmallFontTall = IsSmallFontTall();
-	const int attributeHeadersY = isSmallFontTall ? 112 : 114;
-	for (unsigned i : AttributeHeaderEntryIndices) {
-		panelEntries[i].position.y = attributeHeadersY;
-	}
-	panelEntries[GoldHeaderEntryIndex].position.y = isSmallFontTall ? 105 : 106;
-
-	for (auto &entry : panelEntries) {
-		if (entry.statDisplayFunc != nullptr) {
-			DrawPanelField(out, entry.position, entry.length);
+		const bool isSmallFontTall = IsSmallFontTall();
+		const int attributeHeadersY = isSmallFontTall ? 112 : 114;
+		for (unsigned i : AttributeHeaderEntryIndices) {
+			panelEntries[i].position.y = attributeHeadersY;
 		}
-		DrawShadowString(out, entry);
+		panelEntries[GoldHeaderEntryIndex].position.y = isSmallFontTall ? 105 : 106;
+
+		for (auto &entry : panelEntries) {
+			if (entry.statDisplayFunc != nullptr) {
+				DrawPanelField(out, entry.position, entry.length, boxLeft[0], boxMiddle[0], boxRight[0]);
+			}
+			DrawShadowString(out, entry);
+		}
 	}
 
-	PanelBoxLeft.Unload();
-	PanelBoxMiddle.Unload();
-	PanelBoxRight.Unload();
+	Panel = SurfaceToClx(out);
 }
 
 void FreeCharPanel()
 {
-	PanelFull.Unload();
+	Panel = std::nullopt;
 }
 
 void DrawChr(const Surface &out)
 {
 	Point pos = GetPanelPosition(UiPanels::Character, { 0, 0 });
-	DrawArt(out, pos, &PanelFull);
+	RenderClxSprite(out, (*Panel)[0], pos);
 	for (auto &entry : panelEntries) {
 		if (entry.statDisplayFunc != nullptr) {
 			StyledText tmp = entry.statDisplayFunc();
