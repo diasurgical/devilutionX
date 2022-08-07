@@ -172,15 +172,9 @@ void DrawSelectModifierMenu(const Surface &out)
 
 void InitModifierHints()
 {
-	hintBox = LoadOptionalClx("data\\hintbox.clx");
-	hintBoxBackground = LoadOptionalClx("data\\hintboxbackground.clx");
-	hintIcons = LoadOptionalClx("data\\hinticons.clx");
-
-	if (!hintBox || !hintBoxBackground || !hintIcons) {
-		app_fatal(_("Failed to load UI resources.\n"
-		            "\n"
-		            "Make sure devilutionx.mpq is in the game folder and that it is up to date."));
-	}
+	hintBox = LoadClx("data\\hintbox.clx");
+	hintBoxBackground = LoadClx("data\\hintboxbackground.clx");
+	hintIcons = LoadClx("data\\hinticons.clx");
 }
 
 void FreeModifierHints()
