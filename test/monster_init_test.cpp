@@ -9,6 +9,8 @@
 
 using namespace devilution;
 
+MonsterData MonsterDataCopy[MonstersDataSize];
+
 void InitMonsterOld(Monster &monster, Direction rd, size_t typeIndex, Point position)
 {
 	monster.direction = rd;
@@ -112,6 +114,13 @@ bool CompareMonsters(Monster &m1, Monster &m2)
 	    && m1.whoHit == m2.whoHit && m1.level == m2.level && m1.minDamage == m2.minDamage && m1.maxDamage == m2.maxDamage
 	    && m1.minDamageSpecial == m2.minDamageSpecial && m1.maxDamageSpecial == m2.maxDamageSpecial && m1.armorClass == m2.armorClass
 	    && m1.leader == m2.leader && m1.leaderRelation == m2.leaderRelation && m1.lightId == m2.lightId;
+}
+
+void CopyMonsterData(MonsterData destination[], MonsterData source[])
+{
+	for (size_t i = 0; i < MonstersDataSize; i++) {
+		destination[i] = source[i];
+	}
 }
 
 bool test_general(_difficulty testDifficulty)
