@@ -1,6 +1,5 @@
 #include <SDL.h>
 
-#include "DiabloUI/art_draw.h"
 #include "DiabloUI/button.h"
 #include "DiabloUI/diabloui.h"
 #include "control.h"

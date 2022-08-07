@@ -5,7 +5,6 @@
 #include <cstddef>
 #include <cstdint>
 
-#include "DiabloUI/art.h"
 #include "DiabloUI/ui_item.h"
 #include "engine/clx_sprite.hpp"
 #include "player.h"

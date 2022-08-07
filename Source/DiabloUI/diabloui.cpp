@@ -3,7 +3,6 @@
 #include <algorithm>
 #include <string>
 
-#include "DiabloUI/art_draw.h"
 #include "DiabloUI/button.h"
 #include "DiabloUI/dialogs.h"
 #include "DiabloUI/scrollbar.h"

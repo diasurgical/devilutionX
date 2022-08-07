@@ -5,7 +5,6 @@
 #include <string>
 #include <vector>
 
-#include "DiabloUI/art.h"
 #include "DiabloUI/ui_flags.hpp"
 #include "engine/clx_sprite.hpp"
 #include "engine/render/text_render.hpp"

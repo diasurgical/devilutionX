@@ -2,8 +2,6 @@
 #include <memory>
 #include <vector>
 
-#include "DiabloUI/art.h"
-#include "DiabloUI/art_draw.h"
 #include "DiabloUI/credits_lines.h"
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/support_lines.h"
