@@ -1753,6 +1753,20 @@ size_t OnChangeInventoryItems(const TCmd *pCmd, int pnum)
 	return sizeof(message);
 }
 
+size_t OnDeleteInventoryItems(const TCmd *pCmd, int pnum)
+{
+	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
+	Player &player = Players[pnum];
+
+	if (gbBufferMsgs == 1) {
+		SendPacket(pnum, &message, sizeof(message));
+	} else if (&player != MyPlayer && message.wParam1 < InventoryGridCells) {
+		CheckInvRemove(player, message.wParam1);
+	}
+
+	return sizeof(message);
+}
+
 size_t OnPlayerLevel(const TCmd *pCmd, int pnum)
 {
 	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
@@ -3084,6 +3098,8 @@ size_t ParseCmd(int pnum, const TCmd *pCmd)
 		return OnDeletePlayerItems(pCmd, pnum);
 	case CMD_CHANGEINVITEMS:
 		return OnChangeInventoryItems(pCmd, pnum);
+	case CMD_DELINVITEMS:
+		return OnDeleteInventoryItems(pCmd, pnum);
 	case CMD_PLRLEVEL:
 		return OnPlayerLevel(pCmd, pnum);
 	case CMD_DROPITEM:

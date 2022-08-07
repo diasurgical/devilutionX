@@ -285,6 +285,10 @@ enum _cmd_id : uint8_t {
 	//
 	// body (TCmdChItem)
 	CMD_CHANGEINVITEMS,
+	// Remove item from player's backpack.
+	//
+	// body (TCmdParam1)
+	CMD_DELINVITEMS,
 	// Damage target player.
 	//
 	// body (TCmdDamage)

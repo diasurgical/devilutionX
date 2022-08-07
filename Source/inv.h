@@ -183,6 +183,7 @@ bool GoldAutoPlace(Player &player, Item &goldStack);
 void CheckInvSwap(Player &player, inv_body_loc bLoc, int idx, uint16_t wCI, int seed, bool bId, uint32_t dwBuff);
 void inv_update_rem_item(Player &player, inv_body_loc iv);
 void CheckInvSwap(Player &player, int invGridIndex, int idx, uint16_t wCI, int seed, bool bId, uint32_t dwBuff);
+void CheckInvRemove(Player &player, int invGridIndex);
 void TransferItemToStash(Player &player, int location);
 void CheckInvItem(bool isShiftHeld = false, bool isCtrlHeld = false);
 

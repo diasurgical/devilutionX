@@ -1521,6 +1521,15 @@ void CheckInvSwap(Player &player, int invGridIndex, int idx, uint16_t wCI, int s
 	CalcPlrInv(player, true);
 }
 
+void CheckInvRemove(Player &player, int invGridIndex)
+{
+	int invListIndex = abs(player.InvGrid[invGridIndex]) - 1;
+
+	if (invListIndex >= 0) {
+		player.RemoveInvItem(invListIndex);
+	}
+}
+
 void TransferItemToStash(Player &player, int location)
 {
 	if (location == -1) {
