@@ -7,7 +7,6 @@
 
 #include <fmt/format.h>
 
-#include "DiabloUI/art.h"
 #include "DiabloUI/diabloui.h"
 #include "control.h"
 #include "controls/plrctrls.h"
