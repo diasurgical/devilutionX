@@ -127,22 +127,17 @@ bool test_general(_difficulty testDifficulty)
 {
 	_difficulty lastDifficulty = sgGameInitInfo.nDifficulty;
 	sgGameInitInfo.nDifficulty = testDifficulty;
+	InitMonstersData(devilution::DIFF_NORMAL, lastDifficulty);
 
 	Monster monsters_old_init[MonstersDataSize];
-	MonsterData currentMonstersData[MonstersDataSize];
-	CopyMonsterData(currentMonstersData, MonstersData);
-	CopyMonsterData(MonstersData, MonsterDataCopy);
-
 	for (size_t i = 0; i < MonstersDataSize; i++) {
 		LevelMonsterTypes[i % 24].data = &MonstersData[i];
 		InitMonsterOld(monsters_old_init[i], Direction::South, i % 24, Point(0, 0));
 	}
 
-	CopyMonsterData(MonstersData, currentMonstersData);
-
 	InitLevelMonsters();
 	Monster *monsters_new_init[MonstersDataSize];
-	InitMonstersData(testDifficulty, lastDifficulty);
+	InitMonstersData(testDifficulty, devilution::DIFF_NORMAL);
 
 	for (size_t i = 0; i < MonstersDataSize; i++) {
 		LevelMonsterTypes[i % 24].data = &MonstersData[i];
@@ -154,24 +149,22 @@ bool test_general(_difficulty testDifficulty)
 	return true;
 }
 
-TEST(MonsterInit, normal_difficulty)
+TEST(MonsterInit, normale)
 {
-	CopyMonsterData(MonsterDataCopy, MonstersData);
 	EXPECT_TRUE(test_general(devilution::DIFF_NORMAL));
 }
 
-TEST(MonsterInit, nightmare_difficulty)
+TEST(MonsterInit, nightmare)
 {
 	EXPECT_TRUE(test_general(devilution::DIFF_NIGHTMARE));
 }
 
-TEST(MonsterInit, hell_difficulty)
+TEST(MonsterInit, hell)
 {
 	EXPECT_TRUE(test_general(devilution::DIFF_HELL));
 }
 
-// This simulates loading the game from hell difficulty to normal one. This is non-trivial and can be done wrong, hence this test.
-TEST(MonsterInit, normal_difficulty_once_again)
+TEST(MonsterInit, normal_again)
 {
 	EXPECT_TRUE(test_general(devilution::DIFF_NORMAL));
 }
