@@ -44,6 +44,7 @@ bool selhero_deleteEnabled;
 std::vector<std::unique_ptr<UiItemBase>> vecSelHeroDialog;
 std::vector<std::unique_ptr<UiListItem>> vecSelHeroDlgItems;
 std::vector<std::unique_ptr<UiItemBase>> vecSelDlgItems;
+std::vector<std::unique_ptr<UiItemBase>> vecDifficultyIndicators;
 
 UiImageClx *SELHERO_DIALOG_HERO_IMG;
 
@@ -70,6 +71,7 @@ void SelheroFree()
 	ArtBackground = std::nullopt;
 
 	vecSelHeroDialog.clear();
+	vecDifficultyIndicators.clear();
 
 	vecSelDlgItems.clear();
 	vecSelHeroDlgItems.clear();
@@ -85,6 +87,14 @@ void SelheroSetStats()
 	CopyUtf8(textStats[3], StrCat(selhero_heroInfo.dexterity), sizeof(textStats[3]));
 	CopyUtf8(textStats[4], StrCat(selhero_heroInfo.vitality), sizeof(textStats[4]));
 	CopyUtf8(textStats[5], StrCat(selhero_heroInfo.saveNumber), sizeof(textStats[5]));
+
+	const Point uiPosition = GetUIRectangle().position;
+	vecDifficultyIndicators.clear();
+	SDL_Rect rect = MakeSdlRect(uiPosition.x + 28, uiPosition.y + 198, 12, 12);
+	for (int i = 0; i <= DIFF_LAST; i++) {
+		vecDifficultyIndicators.push_back(std::make_unique<UiImageAnimatedClx>(*DifficultyIndicator[i < selhero_heroInfo.herorank ? 0 : 1], rect, UiFlags::None));
+		rect.x += 12;
+	}
 }
 
 UiArtTextButton *SELLIST_DIALOG_DELETE_BUTTON;
@@ -563,6 +573,7 @@ static void UiSelHeroDialog(
 		while (!selhero_endMenu && !selhero_navigateYesNo) {
 			UiClearScreen();
 			UiRenderItems(vecSelHeroDialog);
+			UiRenderItems(vecDifficultyIndicators);
 			UiPollAndRender();
 		}
 		SelheroFree();
