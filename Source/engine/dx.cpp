@@ -8,12 +8,15 @@
 #include <SDL.h>
 
 #include "controls/plrctrls.h"
-#include "controls/touch/renderers.h"
 #include "engine.h"
 #include "options.h"
 #include "utils/display.h"
 #include "utils/log.hpp"
 #include "utils/sdl_wrap.h"
+
+#ifndef USE_SDL1
+#include "controls/touch/renderers.h"
+#endif
 
 #ifdef __3DS__
 #include <3ds.h>
