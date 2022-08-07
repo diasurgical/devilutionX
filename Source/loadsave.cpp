@@ -27,6 +27,7 @@
 #include "lighting.h"
 #include "menu.h"
 #include "missiles.h"
+#include "monstdat.h"
 #include "monster.h"
 #include "mpq/mpq_writer.hpp"
 #include "pfile.h"
@@ -34,7 +35,6 @@
 #include "stores.h"
 #include "utils/endian.hpp"
 #include "utils/language.h"
-#include "monstdat.h"
 
 namespace devilution {
 
