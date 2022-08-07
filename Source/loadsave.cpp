@@ -1734,7 +1734,7 @@ void ConvertLevels(MpqWriter &saveWriter)
 
 	gbSkipSync = false;
 
-	// Restor current level state
+	// Restore current level state
 	setlevel = tmpSetlevel;
 	setlvlnum = tmpSetlvlnum;
 	currlevel = tmpCurrlevel;

@@ -443,47 +443,45 @@ void selhero_Init()
 	const Point uiPosition = GetUIRectangle().position;
 
 	vecSelDlgItems.clear();
-	SDL_Rect rect1 = { (Sint16)(uiPosition.x + 24), (Sint16)(uiPosition.y + 161), 590, 35 };
-	vecSelHeroDialog.push_back(std::make_unique<UiArtText>(&title, rect1, UiFlags::AlignCenter | UiFlags::FontSize30 | UiFlags::ColorUiSilver, 3));
+	SDL_Rect rect = { (Sint16)(uiPosition.x + 24), (Sint16)(uiPosition.y + 161), 590, 35 };
+	vecSelHeroDialog.push_back(std::make_unique<UiArtText>(&title, rect, UiFlags::AlignCenter | UiFlags::FontSize30 | UiFlags::ColorUiSilver, 3));
 
-	SDL_Rect rect2 = { (Sint16)(uiPosition.x + 30), (Sint16)(uiPosition.y + 211), 180, 76 };
-	auto heroImg = std::make_unique<UiImageClx>(UiGetHeroDialogSprite(0), rect2, UiFlags::None);
+	rect = { (Sint16)(uiPosition.x + 30), (Sint16)(uiPosition.y + 211), 180, 76 };
+	auto heroImg = std::make_unique<UiImageClx>(UiGetHeroDialogSprite(0), rect, UiFlags::None);
 	SELHERO_DIALOG_HERO_IMG = heroImg.get();
 	vecSelHeroDialog.push_back(std::move(heroImg));
 
-	SDL_Rect rect3 = { (Sint16)(uiPosition.x + 39), (Sint16)(uiPosition.y + 323), 110, 21 };
-	vecSelHeroDialog.push_back(std::make_unique<UiArtText>(_("Level:").data(), rect3, UiFlags::AlignRight | UiFlags::FontSize12 | UiFlags::ColorUiSilverDark));
+	rect = { (Sint16)(uiPosition.x + 39), (Sint16)(uiPosition.y + 323), 110, 21 };
+	vecSelHeroDialog.push_back(std::make_unique<UiArtText>(_("Level:").data(), rect, UiFlags::AlignRight | UiFlags::FontSize12 | UiFlags::ColorUiSilverDark));
 
-	SDL_Rect rect4 = { (Sint16)(uiPosition.x + 39), (Sint16)(uiPosition.y + 323), 110, 21 };
-	vecSelHeroDialog.push_back(std::make_unique<UiArtText>(_("Level:").data(), rect4, UiFlags::AlignRight | UiFlags::FontSize12 | UiFlags::ColorUiSilverDark));
-	SDL_Rect rect5 = { (Sint16)(uiPosition.x + 159), (Sint16)(uiPosition.y + 323), 40, 21 };
-	vecSelHeroDialog.push_back(std::make_unique<UiArtText>(textStats[0], rect5, UiFlags::AlignCenter | UiFlags::FontSize12 | UiFlags::ColorUiSilverDark));
+	rect = { (Sint16)(uiPosition.x + 159), (Sint16)(uiPosition.y + 323), 40, 21 };
+	vecSelHeroDialog.push_back(std::make_unique<UiArtText>(textStats[0], rect, UiFlags::AlignCenter | UiFlags::FontSize12 | UiFlags::ColorUiSilverDark));
 
-	SDL_Rect rect6 = { (Sint16)(uiPosition.x + 39), (Sint16)(uiPosition.y + 358), 110, 21 };
-	vecSelHeroDialog.push_back(std::make_unique<UiArtText>(_("Strength:").data(), rect6, UiFlags::AlignRight | UiFlags::FontSize12 | UiFlags::ColorUiSilverDark));
-	SDL_Rect rect7 = { (Sint16)(uiPosition.x + 159), (Sint16)(uiPosition.y + 358), 40, 21 };
-	vecSelHeroDialog.push_back(std::make_unique<UiArtText>(textStats[1], rect7, UiFlags::AlignCenter | UiFlags::FontSize12 | UiFlags::ColorUiSilverDark));
+	rect = { (Sint16)(uiPosition.x + 39), (Sint16)(uiPosition.y + 358), 110, 21 };
+	vecSelHeroDialog.push_back(std::make_unique<UiArtText>(_("Strength:").data(), rect, UiFlags::AlignRight | UiFlags::FontSize12 | UiFlags::ColorUiSilverDark));
+	rect = { (Sint16)(uiPosition.x + 159), (Sint16)(uiPosition.y + 358), 40, 21 };
+	vecSelHeroDialog.push_back(std::make_unique<UiArtText>(textStats[1], rect, UiFlags::AlignCenter | UiFlags::FontSize12 | UiFlags::ColorUiSilverDark));
 
-	SDL_Rect rect8 = { (Sint16)(uiPosition.x + 39), (Sint16)(uiPosition.y + 380), 110, 21 };
-	vecSelHeroDialog.push_back(std::make_unique<UiArtText>(_("Magic:").data(), rect8, UiFlags::AlignRight | UiFlags::FontSize12 | UiFlags::ColorUiSilverDark));
-	SDL_Rect rect9 = { (Sint16)(uiPosition.x + 159), (Sint16)(uiPosition.y + 380), 40, 21 };
-	vecSelHeroDialog.push_back(std::make_unique<UiArtText>(textStats[2], rect9, UiFlags::AlignCenter | UiFlags::FontSize12 | UiFlags::ColorUiSilverDark));
+	rect = { (Sint16)(uiPosition.x + 39), (Sint16)(uiPosition.y + 380), 110, 21 };
+	vecSelHeroDialog.push_back(std::make_unique<UiArtText>(_("Magic:").data(), rect, UiFlags::AlignRight | UiFlags::FontSize12 | UiFlags::ColorUiSilverDark));
+	rect = { (Sint16)(uiPosition.x + 159), (Sint16)(uiPosition.y + 380), 40, 21 };
+	vecSelHeroDialog.push_back(std::make_unique<UiArtText>(textStats[2], rect, UiFlags::AlignCenter | UiFlags::FontSize12 | UiFlags::ColorUiSilverDark));
 
-	SDL_Rect rect10 = { (Sint16)(uiPosition.x + 39), (Sint16)(uiPosition.y + 401), 110, 21 };
-	vecSelHeroDialog.push_back(std::make_unique<UiArtText>(_("Dexterity:").data(), rect10, UiFlags::AlignRight | UiFlags::FontSize12 | UiFlags::ColorUiSilverDark));
-	SDL_Rect rect11 = { (Sint16)(uiPosition.x + 159), (Sint16)(uiPosition.y + 401), 40, 21 };
-	vecSelHeroDialog.push_back(std::make_unique<UiArtText>(textStats[3], rect11, UiFlags::AlignCenter | UiFlags::FontSize12 | UiFlags::ColorUiSilverDark));
+	rect = { (Sint16)(uiPosition.x + 39), (Sint16)(uiPosition.y + 401), 110, 21 };
+	vecSelHeroDialog.push_back(std::make_unique<UiArtText>(_("Dexterity:").data(), rect, UiFlags::AlignRight | UiFlags::FontSize12 | UiFlags::ColorUiSilverDark));
+	rect = { (Sint16)(uiPosition.x + 159), (Sint16)(uiPosition.y + 401), 40, 21 };
+	vecSelHeroDialog.push_back(std::make_unique<UiArtText>(textStats[3], rect, UiFlags::AlignCenter | UiFlags::FontSize12 | UiFlags::ColorUiSilverDark));
 
-	SDL_Rect rect12 = { (Sint16)(uiPosition.x + 39), (Sint16)(uiPosition.y + 422), 110, 21 };
-	vecSelHeroDialog.push_back(std::make_unique<UiArtText>(_("Vitality:").data(), rect12, UiFlags::AlignRight | UiFlags::FontSize12 | UiFlags::ColorUiSilverDark));
-	SDL_Rect rect13 = { (Sint16)(uiPosition.x + 159), (Sint16)(uiPosition.y + 422), 40, 21 };
-	vecSelHeroDialog.push_back(std::make_unique<UiArtText>(textStats[4], rect13, UiFlags::AlignCenter | UiFlags::FontSize12 | UiFlags::ColorUiSilverDark));
+	rect = { (Sint16)(uiPosition.x + 39), (Sint16)(uiPosition.y + 422), 110, 21 };
+	vecSelHeroDialog.push_back(std::make_unique<UiArtText>(_("Vitality:").data(), rect, UiFlags::AlignRight | UiFlags::FontSize12 | UiFlags::ColorUiSilverDark));
+	rect = { (Sint16)(uiPosition.x + 159), (Sint16)(uiPosition.y + 422), 40, 21 };
+	vecSelHeroDialog.push_back(std::make_unique<UiArtText>(textStats[4], rect, UiFlags::AlignCenter | UiFlags::FontSize12 | UiFlags::ColorUiSilverDark));
 
 #ifdef _DEBUG
-	SDL_Rect rect14 = { (Sint16)(uiPosition.x + 39), (Sint16)(uiPosition.y + 443), 110, 21 };
-	vecSelHeroDialog.push_back(std::make_unique<UiArtText>(_("Savegame:").data(), rect14, UiFlags::AlignRight | UiFlags::FontSize12 | UiFlags::ColorUiSilverDark));
-	SDL_Rect rect15 = { (Sint16)(uiPosition.x + 159), (Sint16)(uiPosition.y + 443), 40, 21 };
-	vecSelHeroDialog.push_back(std::make_unique<UiArtText>(textStats[5], rect15, UiFlags::AlignCenter | UiFlags::FontSize12 | UiFlags::ColorUiSilverDark));
+	rect = { (Sint16)(uiPosition.x + 39), (Sint16)(uiPosition.y + 443), 110, 21 };
+	vecSelHeroDialog.push_back(std::make_unique<UiArtText>(_("Savegame:").data(), rect, UiFlags::AlignRight | UiFlags::FontSize12 | UiFlags::ColorUiSilverDark));
+	rect = { (Sint16)(uiPosition.x + 159), (Sint16)(uiPosition.y + 443), 40, 21 };
+	vecSelHeroDialog.push_back(std::make_unique<UiArtText>(textStats[5], rect, UiFlags::AlignCenter | UiFlags::FontSize12 | UiFlags::ColorUiSilverDark));
 #endif
 }
 
