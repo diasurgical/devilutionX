@@ -13,7 +13,9 @@
 
 #include "appfat.h"
 #include "cursor.h"
-#include "engine.h"
+#include "engine/clx_sprite.hpp"
+#include "engine/render/clx_render.hpp"
+#include "engine/surface.hpp"
 #include "utils/display.h"
 #include "utils/sdl_bilinear_scale.hpp"
 #include "utils/sdl_wrap.h"
@@ -96,6 +98,15 @@ bool SetHardwareCursor(SDL_Surface *surface, HotpointPosition hotpointPosition)
 	return true;
 }
 
+bool SetHardwareCursor(ClxSprite sprite, HotpointPosition hotpointPosition)
+{
+	OwnedSurface surface { sprite.width(), sprite.height() };
+	SDL_SetSurfacePalette(surface.surface, Palette.get());
+	SDL_SetColorKey(surface.surface, SDL_TRUE, 0);
+	RenderClxSprite(surface, sprite, { 0, 0 });
+	return SetHardwareCursor(surface.surface, hotpointPosition);
+}
+
 bool SetHardwareCursorFromSprite(int pcurs)
 {
 	const bool isItem = !MyPlayer->HoldItem.isEmpty();
@@ -145,8 +156,8 @@ void SetHardwareCursor(CursorInfo cursorInfo)
 		// ArtCursor is null while loading the game on the progress screen,
 		// called via palette fade from ShowProgress.
 		CurrentCursorInfo.SetEnabled(
-		    ArtCursor.surface != nullptr && IsCursorSizeAllowed(Size { ArtCursor.surface->w, ArtCursor.surface->h })
-		    && SetHardwareCursor(ArtCursor.surface.get(), HotpointPosition::TopLeft));
+		    ArtCursor && IsCursorSizeAllowed(Size { (*ArtCursor)[0].width(), (*ArtCursor)[0].height() })
+		    && SetHardwareCursor((*ArtCursor)[0], HotpointPosition::TopLeft));
 		break;
 	case CursorType::Unknown:
 		CurrentCursorInfo.SetEnabled(false);

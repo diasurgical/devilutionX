@@ -50,7 +50,7 @@ std::array<OptionalOwnedClxSpriteList, 3> ArtFocus;
 
 OptionalOwnedClxSpriteList ArtBackgroundWidescreen;
 OptionalOwnedClxSpriteList ArtBackground;
-Art ArtCursor;
+OptionalOwnedClxSpriteList ArtCursor;
 
 bool textInputActive = true;
 std::size_t SelectedItem = 0;
@@ -567,14 +567,7 @@ void LoadUiGFX()
 	ArtFocus[FOCUS_MED] = LoadPcxSpriteList("ui_art\\focus.pcx", /*numFrames=*/8, /*transparentColor=*/250);
 	ArtFocus[FOCUS_BIG] = LoadPcxSpriteList("ui_art\\focus42.pcx", /*numFrames=*/8, /*transparentColor=*/250);
 
-	LoadMaskedArt("ui_art\\cursor.pcx", &ArtCursor, 1, 0);
-
-#if SDL_VERSION_ATLEAST(2, 0, 0)
-	// Set the palette because `ArtCursor` may be used as the hardware cursor.
-	if (ArtCursor.surface != nullptr) {
-		SDL_SetSurfacePalette(ArtCursor.surface.get(), Palette.get());
-	}
-#endif
+	ArtCursor = LoadPcx("ui_art\\cursor.pcx", /*transparentColor=*/0);
 
 	LoadHeros();
 }
@@ -593,7 +586,7 @@ void UnloadUiGFX()
 	ArtHero = std::nullopt;
 	for (OptionalOwnedClxSpriteList &override : ArtHeroOverrides)
 		override = std::nullopt;
-	ArtCursor.Unload();
+	ArtCursor = std::nullopt;
 	for (auto &art : ArtFocus)
 		art = std::nullopt;
 	ArtLogo = std::nullopt;
@@ -603,7 +596,7 @@ void UiInitialize()
 {
 	LoadUiGFX();
 
-	if (ArtCursor.surface != nullptr) {
+	if (ArtCursor) {
 		if (SDL_ShowCursor(SDL_DISABLE) <= -1) {
 			ErrSdl();
 		}
@@ -694,7 +687,7 @@ void LoadBackgroundArt(const char *pszFile, int frames)
 	fadeTc = 0;
 	fadeValue = 0;
 
-	if (IsHardwareCursorEnabled() && ArtCursor.surface != nullptr && ControlDevice == ControlTypes::KeyboardAndMouse && GetCurrentCursorInfo().type() != CursorType::UserInterface) {
+	if (IsHardwareCursorEnabled() && ArtCursor && ControlDevice == ControlTypes::KeyboardAndMouse && GetCurrentCursorInfo().type() != CursorType::UserInterface) {
 		SetHardwareCursor(CursorInfo::UserInterfaceCursor());
 	}
 
@@ -1130,9 +1123,8 @@ bool UiItemMouseEvents(SDL_Event *event, const std::vector<std::unique_ptr<UiIte
 
 void DrawMouse()
 {
-	if (ControlDevice != ControlTypes::KeyboardAndMouse || IsHardwareCursor())
+	if (ControlDevice != ControlTypes::KeyboardAndMouse || IsHardwareCursor() || !ArtCursor)
 		return;
-
-	DrawArt(MousePosition, &ArtCursor);
+	RenderClxSprite(Surface(DiabloUiSurface()), (*ArtCursor)[0], MousePosition);
 }
 } // namespace devilution

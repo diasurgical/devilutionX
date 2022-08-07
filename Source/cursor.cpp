@@ -193,12 +193,12 @@ void NewCursor(int cursId)
 	pcurs = cursId;
 
 	if (IsHardwareCursorEnabled() && ControlDevice == ControlTypes::KeyboardAndMouse) {
-		if (ArtCursor.surface == nullptr && cursId == CURSOR_NONE)
+		if (!ArtCursor && cursId == CURSOR_NONE)
 			return;
 
-		const CursorInfo newCursor = ArtCursor.surface == nullptr
-		    ? CursorInfo::GameCursor(cursId)
-		    : CursorInfo::UserInterfaceCursor();
+		const CursorInfo newCursor = ArtCursor
+		    ? CursorInfo::UserInterfaceCursor()
+		    : CursorInfo::GameCursor(cursId);
 		if (newCursor != GetCurrentCursorInfo())
 			SetHardwareCursor(newCursor);
 	}
