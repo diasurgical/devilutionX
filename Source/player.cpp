@@ -22,6 +22,7 @@
 #include "engine/random.hpp"
 #include "engine/world_tile.hpp"
 #include "gamemenu.h"
+#include "help.h"
 #include "init.h"
 #include "inv_iterators.hpp"
 #include "lighting.h"
@@ -1521,6 +1522,7 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 			break;
 		case ACTION_TALK:
 			if (&player == MyPlayer) {
+				HelpFlag = false;
 				TalkToTowner(player, player.destParam1);
 			}
 			break;
