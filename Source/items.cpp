@@ -594,6 +594,7 @@ void CalcItemValue(Item &item)
 		v = item._ivalue / v;
 	}
 	v = item._iVAdd1 + item._iVAdd2 + v;
+
 	item._iIvalue = std::max(v, 1);
 }
 
@@ -2965,6 +2966,45 @@ void GetItemAttrs(Item &item, int itemData, int lvl)
 	if (gbIsHellfire && item._iMiscId == IMISC_OILOF)
 		GetOilType(item, lvl);
 
+	if (*sgOptions.Gameplay.hpRegen || *sgOptions.Gameplay.manaRegen) {
+		const int initVal = item._ivalue;
+
+		if (*sgOptions.Gameplay.hpRegen) {
+			const uint8_t healingPotions[] = {
+				ICURS_POTION_OF_HEALING,
+				ICURS_POTION_OF_FULL_HEALING,
+				ICURS_POTION_OF_REJUVENATION,
+				ICURS_POTION_OF_FULL_REJUVENATION
+			};
+
+			for (uint8_t healingPotion : healingPotions) {
+				if (healingPotion == item._iCurs) {
+					item._ivalue *= 2;
+					item._iIvalue *= 2;
+					break;
+				}
+			}
+		}
+
+		if (*sgOptions.Gameplay.manaRegen) {
+			const uint8_t manaPotions[] = {
+				ICURS_POTION_OF_MANA,
+				ICURS_POTION_OF_FULL_MANA,
+				ICURS_POTION_OF_REJUVENATION,
+				ICURS_POTION_OF_FULL_REJUVENATION
+			};
+
+			for (uint8_t manaPotion : manaPotions) {
+				if (manaPotion == item._iCurs) {
+					const int xed = (int)round(item._ivalue * 2 > initVal * 2.5 ? initVal * 2.5 - 50 : item._ivalue * 2);
+					item._ivalue = xed;
+					item._iIvalue = xed;
+					break;
+				}
+			}
+		}
+	}
+
 	if (item._itype != ItemType::Gold)
 		return;
 
@@ -3011,7 +3051,41 @@ int RndItem(const Monster &monster)
 	int ril[512];
 
 	int ri = 0;
+
+	int pi = 0;
+
 	for (int i = 0; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
+		const char healingPotions[4] = {
+			ICURS_POTION_OF_HEALING,
+			ICURS_POTION_OF_FULL_HEALING,
+			ICURS_POTION_OF_REJUVENATION,
+			ICURS_POTION_OF_FULL_REJUVENATION
+		};
+
+		const char manaPotions[4] = {
+			ICURS_POTION_OF_MANA,
+			ICURS_POTION_OF_FULL_MANA,
+			ICURS_POTION_OF_REJUVENATION,
+			ICURS_POTION_OF_FULL_REJUVENATION
+		};
+
+		bool isHealingPotion = false;
+		bool isManaPotion = false;
+
+		for (uint64_t j = 0; j < sizeof(healingPotions) / sizeof(healingPotions[0]); j++) {
+			if (AllItemsList[i].iCurs == healingPotions[i]) {
+				isHealingPotion = true;
+				break;
+			}
+		}
+
+		for (uint64_t j = 0; j < sizeof(manaPotions) / sizeof(manaPotions[0]); j++) {
+			if (AllItemsList[i].iCurs == manaPotions[i]) {
+				isManaPotion = true;
+				break;
+			}
+		}
+
 		if (!IsItemAvailable(i))
 			continue;
 
@@ -3029,6 +3103,24 @@ int RndItem(const Monster &monster)
 			ri--;
 		if (AllItemsList[i].iSpell == SPL_HEALOTHER && !gbIsMultiplayer)
 			ri--;
+
+		if (*sgOptions.Gameplay.hpRegen || *sgOptions.Gameplay.manaRegen) {
+			if (isHealingPotion || isManaPotion) {
+				if (*sgOptions.Gameplay.hpRegen && isHealingPotion) {
+					pi++;
+				}
+
+				if (*sgOptions.Gameplay.manaRegen && isManaPotion) {
+					pi++;
+				}
+
+				if (pi > 2)
+					pi = 0;
+
+				if (pi != 2)
+					ri--;
+			}
+		}
 	}
 
 	int r = GenerateRnd(ri);
