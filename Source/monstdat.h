@@ -11,6 +11,14 @@
 
 namespace devilution {
 
+constexpr int NightmareToHitBonus = 85;
+constexpr int HellToHitBonus = 120;
+
+constexpr int NightmareAcBonus = 50;
+constexpr int HellAcBonus = 80;
+
+constexpr uint8_t MonstersDataSize = 138;
+
 enum _mai_id : int8_t {
 	AI_ZOMBIE,
 	AI_FAT,
@@ -111,7 +119,7 @@ struct MonsterData {
 	 */
 	uint16_t abilityFlags;
 	uint8_t intelligence;
-	uint8_t toHit;
+	uint16_t toHit;
 	int8_t animFrameNum;
 	uint8_t minDamage;
 	uint8_t maxDamage;
@@ -314,8 +322,10 @@ struct UniqueMonsterData {
 	_speech_id mtalkmsg;
 };
 
-extern const MonsterData MonstersData[];
+extern MonsterData MonstersData[];
 extern const _monster_id MonstConvTbl[];
 extern const UniqueMonsterData UniqueMonstersData[];
+
+void InitMonstersData(_difficulty difficulty, _difficulty lastDifficulty);
 
 } // namespace devilution
