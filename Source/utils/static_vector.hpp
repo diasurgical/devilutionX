@@ -43,6 +43,11 @@ public:
 		return size_;
 	}
 
+	[[nodiscard]] bool empty() const
+	{
+		return size_ == 0;
+	}
+
 	[[nodiscard]] T &back()
 	{
 		return (*this)[size_ - 1];

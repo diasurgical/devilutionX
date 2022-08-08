@@ -287,6 +287,8 @@ void CreateDetailDiffs(std::string_view prefix, std::string_view memoryMapFile, 
 	size_t readBytes = SDL_RWsize(handle);
 	std::unique_ptr<std::byte[]> memoryMapFileData { new std::byte[readBytes] };
 	SDL_RWread(handle, memoryMapFileData.get(), readBytes, 1);
+	SDL_RWclose(handle);
+
 	const std::string_view buffer(reinterpret_cast<const char *>(memoryMapFileData.get()), readBytes);
 
 	std::unordered_map<std::string, CompareCounter> counter;
