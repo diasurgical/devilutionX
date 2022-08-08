@@ -197,7 +197,7 @@ void GetDamageAmt(spell_id i, int *mind, int *maxd);
  * @return the direction of the p1->p2 vector
  */
 Direction16 GetDirection16(Point p1, Point p2);
-bool MonsterTrapHit(int monsterId, int mindam, int maxdam, int dist, missile_id t, bool shift);
+bool MonsterTrapHit(Monster &monster, int mindam, int maxdam, int dist, missile_id t, bool shift);
 bool PlayerMHit(int pnum, Monster *monster, int dist, int mind, int maxd, missile_id mtype, bool shift, int earflag, bool *blocked);
 
 /**
