@@ -3,6 +3,7 @@
 #include "cursor.h"
 #include "inv.h"
 #include "player.h"
+#include "storm/storm_net.hpp"
 
 using namespace devilution;
 
@@ -136,6 +137,8 @@ TEST(Inv, GoldAutoPlace)
 // Test removing an item from inventory with no other items.
 TEST(Inv, RemoveInvItem)
 {
+	SNetInitializeProvider(SELCONN_LOOPBACK, nullptr);
+
 	clear_inventory();
 	// Put a two-slot misc item into the inventory:
 	// | (item) | (item) | ... | ...
@@ -153,6 +156,8 @@ TEST(Inv, RemoveInvItem)
 // Test removing an item from inventory with other items in it.
 TEST(Inv, RemoveInvItem_other_item)
 {
+	SNetInitializeProvider(SELCONN_LOOPBACK, nullptr);
+
 	clear_inventory();
 	// Put a two-slot misc item and a ring into the inventory:
 	// | (item) | (item) | (ring) | ...
@@ -175,6 +180,8 @@ TEST(Inv, RemoveInvItem_other_item)
 // Test removing an item from the belt
 TEST(Inv, RemoveSpdBarItem)
 {
+	SNetInitializeProvider(SELCONN_LOOPBACK, nullptr);
+
 	// Clear the belt
 	for (int i = 0; i < MaxBeltItems; i++) {
 		MyPlayer->SpdList[i].clear();
@@ -206,6 +213,8 @@ TEST(Inv, RemoveCurrentSpellScroll_inventory)
 // Test removing a scroll from the belt
 TEST(Inv, RemoveCurrentSpellScroll_belt)
 {
+	SNetInitializeProvider(SELCONN_LOOPBACK, nullptr);
+
 	// Clear the belt
 	for (int i = 0; i < MaxBeltItems; i++) {
 		MyPlayer->SpdList[i].clear();
