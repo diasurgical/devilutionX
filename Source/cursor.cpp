@@ -287,12 +287,15 @@ void CheckCursMove()
 	int xo = 0;
 	int yo = 0;
 	CalcTileOffset(&xo, &yo);
+	sx += xo;
+	sy += yo;
+
 	const Player &myPlayer = *MyPlayer;
 
 	if (myPlayer.IsWalking()) {
 		Displacement offset = GetOffsetForWalking(myPlayer.AnimInfo, myPlayer._pdir, true);
-		sx -= offset.deltaX - xo;
-		sy -= offset.deltaY - yo;
+		sx -= offset.deltaX;
+		sy -= offset.deltaY;
 
 		// Predict the next frame when walking to avoid input jitter
 		DisplacementOf<int16_t> offset2 = myPlayer.position.CalculateWalkingOffsetShifted8(myPlayer._pdir, myPlayer.AnimInfo);
