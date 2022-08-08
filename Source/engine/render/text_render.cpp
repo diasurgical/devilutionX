@@ -12,7 +12,6 @@
 
 #include <fmt/compile.h>
 
-#include "DiabloUI/art_draw.h"
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/ui_item.h"
 #include "engine.h"

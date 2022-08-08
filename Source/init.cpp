@@ -15,6 +15,7 @@
 #include "DiabloUI/diabloui.h"
 #include "engine/assets.hpp"
 #include "engine/dx.h"
+#include "hwcursor.hpp"
 #include "miniwin/misc_msg.h"
 #include "mpq/mpq_reader.hpp"
 #include "options.h"
@@ -244,6 +245,9 @@ void MainWndProc(const SDL_Event &event)
 		break;
 	case SDL_WINDOWEVENT_EXPOSED:
 		force_redraw = 255;
+		break;
+	case SDL_WINDOWEVENT_SIZE_CHANGED:
+		ReinitializeHardwareCursor();
 		break;
 	case SDL_WINDOWEVENT_LEAVE:
 		sgbMouseDown = CLICK_NONE;

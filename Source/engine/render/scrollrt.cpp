@@ -8,7 +8,6 @@
 #include "DiabloUI/ui_flags.hpp"
 #include "automap.h"
 #include "controls/plrctrls.h"
-#include "controls/touch/renderers.h"
 #include "cursor.h"
 #include "dead.h"
 #include "doom.h"
@@ -45,6 +44,10 @@
 #include "utils/endian.hpp"
 #include "utils/log.hpp"
 #include "utils/str_cat.hpp"
+
+#ifndef USE_SDL1
+#include "controls/touch/renderers.h"
+#endif
 
 #ifdef _DEBUG
 #include "debug.h"

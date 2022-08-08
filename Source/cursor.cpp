@@ -7,7 +7,6 @@
 
 #include <fmt/format.h>
 
-#include "DiabloUI/art.h"
 #include "DiabloUI/diabloui.h"
 #include "control.h"
 #include "controls/plrctrls.h"
@@ -193,12 +192,12 @@ void NewCursor(int cursId)
 	pcurs = cursId;
 
 	if (IsHardwareCursorEnabled() && ControlDevice == ControlTypes::KeyboardAndMouse) {
-		if (ArtCursor.surface == nullptr && cursId == CURSOR_NONE)
+		if (!ArtCursor && cursId == CURSOR_NONE)
 			return;
 
-		const CursorInfo newCursor = ArtCursor.surface == nullptr
-		    ? CursorInfo::GameCursor(cursId)
-		    : CursorInfo::UserInterfaceCursor();
+		const CursorInfo newCursor = ArtCursor
+		    ? CursorInfo::UserInterfaceCursor()
+		    : CursorInfo::GameCursor(cursId);
 		if (newCursor != GetCurrentCursorInfo())
 			SetHardwareCursor(newCursor);
 	}
@@ -288,12 +287,15 @@ void CheckCursMove()
 	int xo = 0;
 	int yo = 0;
 	CalcTileOffset(&xo, &yo);
+	sx += xo;
+	sy += yo;
+
 	const Player &myPlayer = *MyPlayer;
 
 	if (myPlayer.IsWalking()) {
 		Displacement offset = GetOffsetForWalking(myPlayer.AnimInfo, myPlayer._pdir, true);
-		sx -= offset.deltaX - xo;
-		sy -= offset.deltaY - yo;
+		sx -= offset.deltaX;
+		sy -= offset.deltaY;
 
 		// Predict the next frame when walking to avoid input jitter
 		DisplacementOf<int16_t> offset2 = myPlayer.position.CalculateWalkingOffsetShifted8(myPlayer._pdir, myPlayer.AnimInfo);

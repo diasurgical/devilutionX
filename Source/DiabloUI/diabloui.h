@@ -5,7 +5,6 @@
 #include <cstddef>
 #include <cstdint>
 
-#include "DiabloUI/art.h"
 #include "DiabloUI/ui_item.h"
 #include "engine/clx_sprite.hpp"
 #include "player.h"
@@ -62,10 +61,11 @@ struct _uiheroinfo {
 };
 
 extern OptionalOwnedClxSpriteList ArtLogo;
+extern std::array<OptionalOwnedClxSpriteList, 2> DifficultyIndicator;
 extern std::array<OptionalOwnedClxSpriteList, 3> ArtFocus;
 extern OptionalOwnedClxSpriteList ArtBackgroundWidescreen;
 extern OptionalOwnedClxSpriteList ArtBackground;
-extern Art ArtCursor;
+extern OptionalOwnedClxSpriteList ArtCursor;
 
 extern bool (*gfnHeroInfo)(bool (*fninfofunc)(_uiheroinfo *));
 

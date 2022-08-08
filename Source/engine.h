@@ -119,4 +119,10 @@ Direction GetDirection(Point start, Point destination);
  */
 int CalculateWidth2(int width);
 
+inline int GetAnimationFrame(int frames, int fps = 60)
+{
+	int frame = (SDL_GetTicks() / fps) % frames;
+	return frame > frames ? 0 : frame;
+}
+
 } // namespace devilution
