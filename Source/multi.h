@@ -44,7 +44,7 @@ extern bool gbSomebodyWonGameKludge;
 extern uint16_t sgwPackPlrOffsetTbl[MAX_PLRS];
 extern uint8_t gbActivePlayers;
 extern bool gbGameDestroyed;
-extern GameData sgGameInitInfo;
+extern DVL_API_FOR_TEST GameData sgGameInitInfo;
 extern bool gbSelectProvider;
 extern DVL_API_FOR_TEST bool gbIsMultiplayer;
 extern std::string GameName;
