@@ -175,16 +175,26 @@ enum class MonsterSound : uint8_t {
 	Special
 };
 
+struct MonsterSpritesData {
+	static constexpr size_t MaxAnims = 6;
+	std::unique_ptr<std::byte[]> data;
+	std::array<uint32_t, MaxAnims + 1> offsets;
+};
+
 struct CMonster {
 	std::unique_ptr<std::byte[]> animData;
 	AnimStruct anims[6];
 	std::unique_ptr<TSnd> sounds[4][2];
-	const MonsterData *data;
 
 	_monster_id type;
 	/** placeflag enum as a flags*/
 	uint8_t placeFlags;
-	int8_t corpseId;
+	int8_t corpseId = 0;
+
+	const MonsterData &data() const
+	{
+		return MonstersData[type];
+	}
 
 	/**
 	 * @brief Returns AnimStruct for specified graphic
@@ -313,7 +323,7 @@ struct Monster { // note: missing field _mAFNum
 
 	const MonsterData &data() const
 	{
-		return *type().data;
+		return type().data();
 	}
 
 	/**
@@ -466,7 +476,8 @@ void PrepareUniqueMonst(Monster &monster, UniqueMonsterType monsterType, size_t 
 void InitLevelMonsters();
 void GetLevelMTypes();
 void InitMonsterSND(CMonster &monsterType);
-void InitMonsterGFX(CMonster &monsterType);
+void InitMonsterGFX(CMonster &monsterType, MonsterSpritesData &&spritesData = {});
+void InitAllMonsterGFX();
 void WeakenNaKrul();
 void InitGolems();
 void InitMonsters();

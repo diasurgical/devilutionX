@@ -87,11 +87,73 @@ enum class MonsterAvailability : uint8_t {
 	Retail,
 };
 
+enum class MonsterSpriteId : uint8_t {
+	Zombie = 0,      // "zombie\\zombie"
+	FallenSpear,     // "falspear\\phall"
+	FallenSword,     // "falsword\\fall"
+	SkeletonAxe,     // "skelaxe\\sklax"
+	SkeletonBow,     // "skelbow\\sklbw"
+	SkeletonCaptain, // "skelsd\\sklsr"
+	SkeletonDemon,   // "demskel\\demskl"
+	SkeletonKing,    // "sking\\sking"
+	Scavenger,       // "scav\\scav"
+	InvisibleLord,   // "tsneak\\tsneak"
+	Hidden,          // "sneak\\sneak"
+	GoatMace,        // "goatmace\\goat"
+	GoatBow,         // "goatbow\\goatb"
+	GoatLord,        // "goatlord\\goatl"
+	Bat,             // "bat\\bat"
+	AcidBeast,       // "acid\\acid"
+	Overlord,        // "fat\\fat"
+	Butcher,         // "fatc\\fatc"
+	Wyrm,            // "worm\\worm"
+	MagmaDemon,      // "magma\\magma"
+	HornedDemon,     // "rhino\\rhino"
+	StormRider,      // "thin\\thin"
+	Incinerator,     // "fireman\\firem"
+	DevilKinBrute,   // "bigfall\\fallg"
+	Gargoyle,        // "gargoyle\\gargo"
+	Slayer,          // "mega\\mega"
+	Viper,           // "snake\\snake"
+	BlackKnight,     // "black\\black"
+	Shredded,        // "unrav\\unrav"
+	Succubus,        // "succ\\scbs"
+	Counselor,       // "mage\\mage"
+	Golem,           // "golem\\golem"
+	Diablo,          // "diablo\\diablo"
+	ArchLitch,       // "darkmage\\dmage"
+	Hellboar,        // "fork\\fork"
+	Stinger,         // "scorp\\scorp"
+	Psychorb,        // "eye\\eye"
+	Arachnon,        // "spider\\spider"
+	HorkSpawn,       // "spawn\\spawn"
+	Venomtail,       // "wscorp\\wscorp"
+	Necromorb,       // "eye2\\eye2"
+	SpiderLord,      // "bspidr\\bspidr"
+	Lashworm,        // "clasp\\clasp"
+	Torchant,        // "antworm\\worm"
+	HorkDemon,       // "horkd\\horkd"
+	HellBug,         // "hellbug\\hellbg"
+	Gravedigger,     // "gravdg\\gravdg"
+	Rat,             // "rat\\rat"
+	Firebat,         // "hellbat\\helbat"
+	Lich,            // "lich\\lich"
+	CryptDemon,      // "bubba\\bubba"
+	Hellbat,         // "hellbat2\\bhelbt"
+	ArchLich,        // "lich2\\lich2"
+	Biclops,         // "byclps\\byclps"
+	FleshThing,      // "flesh\\flesh"
+	Reaper,          // "reaper\\reap"
+	NaKrul,          // "nkr\\nkr"
+	FIRST = Zombie,
+	LAST = NaKrul
+};
+
 struct MonsterData {
 	const char *name;
-	const char *assetsSuffix;
 	const char *soundSuffix;
 	const char *trnFile;
+	MonsterSpriteId spriteId;
 	MonsterAvailability availability;
 	uint16_t width;
 	uint16_t image;
@@ -129,6 +191,18 @@ struct MonsterData {
 	/** Using monster_treasure */
 	uint16_t treasure;
 	uint16_t exp;
+
+	[[nodiscard]] const char *spritePath() const;
+
+	[[nodiscard]] const char *soundPath() const
+	{
+		return soundSuffix != nullptr ? soundSuffix : spritePath();
+	}
+
+	[[nodiscard]] bool hasAnim(size_t index) const
+	{
+		return frames[index] != 0;
+	}
 };
 
 enum _monster_id : int16_t {
