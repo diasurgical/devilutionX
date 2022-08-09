@@ -3653,7 +3653,8 @@ void M_StartHit(Monster &monster, const Player &player, int dam)
 
 void MonsterDeath(Monster &monster, Direction md, bool sendmsg)
 {
-	AddPlrMonstExper(monster.level, monster.exp(sgGameInitInfo.nDifficulty), monster.whoHit);
+	if (!monster.isPlayerMinion())
+	 	AddPlrMonstExper(monster.level, monster.exp(sgGameInitInfo.nDifficulty), monster.whoHit);
 
 	MonsterKillCounts[monster.type().type]++;
 	monster.hitPoints = 0;
