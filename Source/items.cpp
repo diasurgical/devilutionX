@@ -3013,6 +3013,7 @@ void GetItemAttrs(Item &item, int itemData, int lvl)
 		rndv = 5 * (itemlevel + 16) + GenerateRnd(10 * (itemlevel + 16));
 		break;
 	case DIFF_HELL:
+	case DIFF_INFERNO:
 		rndv = 5 * (itemlevel + 32) + GenerateRnd(10 * (itemlevel + 32));
 		break;
 	}
