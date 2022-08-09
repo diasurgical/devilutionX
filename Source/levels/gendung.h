@@ -98,8 +98,9 @@ enum _difficulty : uint8_t {
 	DIFF_NORMAL,
 	DIFF_NIGHTMARE,
 	DIFF_HELL,
+	DIFF_INFERNO,
 
-	DIFF_LAST = DIFF_HELL,
+	DIFF_LAST = DIFF_INFERNO,
 };
 
 struct THEME_LOC {

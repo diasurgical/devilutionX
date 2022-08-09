@@ -62,9 +62,11 @@ namespace {
 
 constexpr int NightmareToHitBonus = 85;
 constexpr int HellToHitBonus = 120;
+constexpr int InfernoToHitBonus = 170;
 
 constexpr int NightmareAcBonus = 50;
 constexpr int HellAcBonus = 80;
+constexpr int InfernoAcBonus = 128;
 
 /** Tracks which missile files are already loaded */
 size_t totalmonsters;
@@ -209,6 +211,23 @@ void InitMonster(Monster &monster, Direction rd, size_t typeIndex, Point positio
 		monster.minDamageSpecial = 4 * monster.minDamageSpecial + 6;
 		monster.maxDamageSpecial = 4 * monster.maxDamageSpecial + 6;
 		monster.armorClass += HellAcBonus;
+		monster.resistance = monster.data().resistanceHell;
+	} else if (sgGameInitInfo.nDifficulty == DIFF_INFERNO) {
+		monster.maxHitPoints = 5 * monster.maxHitPoints;
+		if (gbIsHellfire)
+			monster.maxHitPoints += (gbIsMultiplayer ? 600 : 300) << 6;
+		else
+			monster.maxHitPoints += 576;
+		monster.hitPoints = monster.maxHitPoints;
+		monster.level += 45;
+		monster.exp = 8 * (monster.exp + 1000);
+		monster.toHit += InfernoToHitBonus;
+		monster.minDamage = 8 * monster.minDamage + 18;
+		monster.maxDamage = 8 * monster.maxDamage + 18;
+		monster.toHitSpecial += InfernoToHitBonus;
+		monster.minDamageSpecial = 8 * monster.minDamageSpecial + 18;
+		monster.maxDamageSpecial = 8 * monster.maxDamageSpecial + 18;
+		monster.armorClass += InfernoAcBonus;
 		monster.resistance = monster.data().resistanceHell;
 	}
 }
@@ -4226,9 +4245,11 @@ void PrintMonstHistory(int mt)
 
 		int hpBonusNightmare = 1;
 		int hpBonusHell = 3;
+		int hpBonusInferno = 9;
 		if (gbIsHellfire) {
 			hpBonusNightmare = (!gbIsMultiplayer ? 50 : 100);
 			hpBonusHell = (!gbIsMultiplayer ? 100 : 200);
+			hpBonusInferno = (!gbIsMultiplayer ? 300 : 600);
 		}
 		if (sgGameInitInfo.nDifficulty == DIFF_NIGHTMARE) {
 			minHP = 3 * minHP + hpBonusNightmare;
