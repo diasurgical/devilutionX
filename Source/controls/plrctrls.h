@@ -25,6 +25,8 @@ enum class ControlTypes : uint8_t {
 
 string_view ControlTypeToString(ControlTypes controlType);
 
+string_view GamepadTypeToString(SDL_GameControllerType gamepadType);
+
 extern ControlTypes ControlMode;
 
 /**
@@ -38,6 +40,13 @@ extern ControlTypes ControlMode;
 extern ControlTypes ControlDevice;
 
 extern ControllerButton ControllerButtonHeld;
+
+extern SDL_GameControllerType GamepadType;
+
+struct ControlTypeWithGamepad {
+	ControlTypes controlTypeCoarse;
+	SDL_GameControllerType gamepadType;
+};
 
 // Runs every frame.
 // Handles menu movement.
