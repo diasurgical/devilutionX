@@ -563,8 +563,8 @@ void LoadUiGFX()
 	} else {
 		ArtLogo = LoadPcxSpriteList("ui_art\\smlogo.pcx", /*numFrames=*/15, /*transparentColor=*/250);
 	}
-	DifficultyIndicator[0] = LoadPcx("ui_art\\radio1.pcx");
-	DifficultyIndicator[1] = LoadPcx("ui_art\\radio3.pcx");
+	DifficultyIndicator[0] = LoadPcx("ui_art\\radio1.pcx", /*transparentColor=*/0);
+	DifficultyIndicator[1] = LoadPcx("ui_art\\radio3.pcx", /*transparentColor=*/0);
 	ArtFocus[FOCUS_SMALL] = LoadPcxSpriteList("ui_art\\focus16.pcx", /*numFrames=*/8, /*transparentColor=*/250);
 	ArtFocus[FOCUS_MED] = LoadPcxSpriteList("ui_art\\focus.pcx", /*numFrames=*/8, /*transparentColor=*/250);
 	ArtFocus[FOCUS_BIG] = LoadPcxSpriteList("ui_art\\focus42.pcx", /*numFrames=*/8, /*transparentColor=*/250);

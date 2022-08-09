@@ -87,13 +87,19 @@ void SelheroSetStats()
 	CopyUtf8(textStats[3], StrCat(selhero_heroInfo.dexterity), sizeof(textStats[3]));
 	CopyUtf8(textStats[4], StrCat(selhero_heroInfo.vitality), sizeof(textStats[4]));
 	CopyUtf8(textStats[5], StrCat(selhero_heroInfo.saveNumber), sizeof(textStats[5]));
+}
 
-	const Point uiPosition = GetUIRectangle().position;
+void UpdateDifficultyIndicators(bool visible)
+{
 	vecDifficultyIndicators.clear();
-	SDL_Rect rect = MakeSdlRect(uiPosition.x + 28, uiPosition.y + 198, 12, 12);
+	if (!visible)
+		return;
+	const uint16_t width = (*DifficultyIndicator[0])[0].width();
+	const uint16_t height = (*DifficultyIndicator[0])[0].height();
+	SDL_Rect rect = MakeSdlRect(SELHERO_DIALOG_HERO_IMG->m_rect.x, SELHERO_DIALOG_HERO_IMG->m_rect.y - height - 2, width, height);
 	for (int i = 0; i <= DIFF_LAST; i++) {
-		vecDifficultyIndicators.push_back(std::make_unique<UiImageAnimatedClx>(*DifficultyIndicator[i < selhero_heroInfo.herorank ? 0 : 1], rect, UiFlags::None));
-		rect.x += 12;
+		vecDifficultyIndicators.push_back(std::make_unique<UiImageClx>((*DifficultyIndicator[i < selhero_heroInfo.herorank ? 0 : 1])[0], rect, UiFlags::None));
+		rect.x += width;
 	}
 }
 
@@ -117,6 +123,7 @@ void SelheroListFocus(int value)
 		SelheroSetStats();
 		SELLIST_DIALOG_DELETE_BUTTON->SetFlags(baseFlags | UiFlags::ColorUiGold);
 		selhero_deleteEnabled = true;
+		UpdateDifficultyIndicators(/*visible=*/true);
 		return;
 	}
 
@@ -124,6 +131,7 @@ void SelheroListFocus(int value)
 	for (char *textStat : textStats)
 		strcpy(textStat, "--");
 	SELLIST_DIALOG_DELETE_BUTTON->SetFlags(baseFlags | UiFlags::ColorUiSilver | UiFlags::ElementDisabled);
+	UpdateDifficultyIndicators(/*visible=*/false);
 	selhero_deleteEnabled = false;
 }
 
