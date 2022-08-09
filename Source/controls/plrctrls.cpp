@@ -1432,25 +1432,25 @@ ControlTypeWithGamepad GetInputTypeFromEvent(const SDL_Event &event)
 	if (IsAnyOf(event.type, SDL_MOUSEBUTTONDOWN, SDL_MOUSEBUTTONUP)) {
 		return {
 			.controlTypeCoarse = event.button.which == SDL_TOUCH_MOUSEID ? ControlTypes::VirtualGamepad : ControlTypes::KeyboardAndMouse,
-			.gamepadType = SDL_CONTROLLER_TYPE_UNKNOWN
+			.gamepadType = event.button.which == SDL_TOUCH_MOUSEID ? SDL_CONTROLLER_TYPE_VIRTUAL : SDL_CONTROLLER_TYPE_UNKNOWN
 		};
 	}
 	if (event.type == SDL_MOUSEMOTION) {
 		return {
 			.controlTypeCoarse = event.motion.which == SDL_TOUCH_MOUSEID ? ControlTypes::VirtualGamepad : ControlTypes::KeyboardAndMouse,
-			.gamepadType = SDL_CONTROLLER_TYPE_UNKNOWN
+			.gamepadType = event.button.which == SDL_TOUCH_MOUSEID ? SDL_CONTROLLER_TYPE_VIRTUAL : SDL_CONTROLLER_TYPE_UNKNOWN
 		};
 	}
 	if (event.type == SDL_MOUSEWHEEL) {
 		return {
 			.controlTypeCoarse = event.wheel.which == SDL_TOUCH_MOUSEID ? ControlTypes::VirtualGamepad : ControlTypes::KeyboardAndMouse,
-			.gamepadType = SDL_CONTROLLER_TYPE_UNKNOWN
+			.gamepadType = event.button.which == SDL_TOUCH_MOUSEID ? SDL_CONTROLLER_TYPE_VIRTUAL : SDL_CONTROLLER_TYPE_UNKNOWN
 		};
 	}
 	if (IsAnyOf(event.type, SDL_FINGERDOWN, SDL_FINGERUP, SDL_FINGERMOTION)) {
 		return {
 			.controlTypeCoarse = ControlTypes::VirtualGamepad,
-			.gamepadType = SDL_CONTROLLER_TYPE_UNKNOWN
+			.gamepadType = SDL_CONTROLLER_TYPE_VIRTUAL
 		};
 	}
 	if (event.type == SDL_CONTROLLERAXISMOTION
