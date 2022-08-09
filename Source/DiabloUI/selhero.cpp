@@ -39,12 +39,11 @@ char textStats[6][4];
 const char *title = "";
 _selhero_selections selhero_result;
 bool selhero_navigateYesNo;
-bool selhero_deleteEnabled;
+bool selhero_isSavegame;
 
 std::vector<std::unique_ptr<UiItemBase>> vecSelHeroDialog;
 std::vector<std::unique_ptr<UiListItem>> vecSelHeroDlgItems;
 std::vector<std::unique_ptr<UiItemBase>> vecSelDlgItems;
-std::vector<std::unique_ptr<UiItemBase>> vecDifficultyIndicators;
 
 UiImageClx *SELHERO_DIALOG_HERO_IMG;
 
@@ -62,7 +61,7 @@ const char *SelheroGenerateName(HeroClass heroClass);
 
 void SelheroUiFocusNavigationYesNo()
 {
-	if (selhero_deleteEnabled)
+	if (selhero_isSavegame)
 		UiFocusNavigationYesNo();
 }
 
@@ -71,7 +70,6 @@ void SelheroFree()
 	ArtBackground = std::nullopt;
 
 	vecSelHeroDialog.clear();
-	vecDifficultyIndicators.clear();
 
 	vecSelDlgItems.clear();
 	vecSelHeroDlgItems.clear();
@@ -89,16 +87,15 @@ void SelheroSetStats()
 	CopyUtf8(textStats[5], StrCat(selhero_heroInfo.saveNumber), sizeof(textStats[5]));
 }
 
-void UpdateDifficultyIndicators(bool visible)
+void RenderDifficultyIndicators()
 {
-	vecDifficultyIndicators.clear();
-	if (!visible)
+	if (!selhero_isSavegame)
 		return;
 	const uint16_t width = (*DifficultyIndicator[0])[0].width();
 	const uint16_t height = (*DifficultyIndicator[0])[0].height();
 	SDL_Rect rect = MakeSdlRect(SELHERO_DIALOG_HERO_IMG->m_rect.x, SELHERO_DIALOG_HERO_IMG->m_rect.y - height - 2, width, height);
 	for (int i = 0; i <= DIFF_LAST; i++) {
-		vecDifficultyIndicators.push_back(std::make_unique<UiImageClx>((*DifficultyIndicator[i < selhero_heroInfo.herorank ? 0 : 1])[0], rect, UiFlags::None));
+		UiRenderItem(UiImageClx((*DifficultyIndicator[i < selhero_heroInfo.herorank ? 0 : 1])[0], rect, UiFlags::None));
 		rect.x += width;
 	}
 }
@@ -122,8 +119,7 @@ void SelheroListFocus(int value)
 		memcpy(&selhero_heroInfo, &selhero_heros[index], sizeof(selhero_heroInfo));
 		SelheroSetStats();
 		SELLIST_DIALOG_DELETE_BUTTON->SetFlags(baseFlags | UiFlags::ColorUiGold);
-		selhero_deleteEnabled = true;
-		UpdateDifficultyIndicators(/*visible=*/true);
+		selhero_isSavegame = true;
 		return;
 	}
 
@@ -131,13 +127,12 @@ void SelheroListFocus(int value)
 	for (char *textStat : textStats)
 		strcpy(textStat, "--");
 	SELLIST_DIALOG_DELETE_BUTTON->SetFlags(baseFlags | UiFlags::ColorUiSilver | UiFlags::ElementDisabled);
-	UpdateDifficultyIndicators(/*visible=*/false);
-	selhero_deleteEnabled = false;
+	selhero_isSavegame = false;
 }
 
 bool SelheroListDeleteYesNo()
 {
-	selhero_navigateYesNo = selhero_deleteEnabled;
+	selhero_navigateYesNo = selhero_isSavegame;
 
 	return selhero_navigateYesNo;
 }
@@ -581,7 +576,7 @@ static void UiSelHeroDialog(
 		while (!selhero_endMenu && !selhero_navigateYesNo) {
 			UiClearScreen();
 			UiRenderItems(vecSelHeroDialog);
-			UiRenderItems(vecDifficultyIndicators);
+			RenderDifficultyIndicators();
 			UiPollAndRender();
 		}
 		SelheroFree();
