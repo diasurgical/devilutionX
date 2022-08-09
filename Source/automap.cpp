@@ -530,6 +530,9 @@ void DrawAutomapText(const Surface &out)
 	case DIFF_HELL:
 		difficulty = _("Hell");
 		break;
+	case DIFF_INFERNO:
+		difficulty = _("Inferno");
+		break;
 	}
 
 	std::string description = fmt::format(fmt::runtime(_(/* TRANSLATORS: {:s} means: Game Difficulty. */ "Difficulty: {:s}")), difficulty);
