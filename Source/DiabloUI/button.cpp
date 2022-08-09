@@ -34,17 +34,17 @@ ClxSprite ButtonSprite(bool pressed)
 	return (*ButtonSprites)[pressed ? 1 : 0];
 }
 
-void RenderButton(UiButton *button)
+void RenderButton(const UiButton &button)
 {
-	const Surface &out = Surface(DiabloUiSurface()).subregion(button->m_rect.x, button->m_rect.y, button->m_rect.w, button->m_rect.h);
-	RenderClxSprite(out, ButtonSprite(button->IsPressed()), { 0, 0 });
+	const Surface &out = Surface(DiabloUiSurface()).subregion(button.m_rect.x, button.m_rect.y, button.m_rect.w, button.m_rect.h);
+	RenderClxSprite(out, ButtonSprite(button.IsPressed()), { 0, 0 });
 
-	Rectangle textRect { { 0, 0 }, { button->m_rect.w, button->m_rect.h } };
-	if (!button->IsPressed()) {
+	Rectangle textRect { { 0, 0 }, { button.m_rect.w, button.m_rect.h } };
+	if (!button.IsPressed()) {
 		--textRect.position.y;
 	}
 
-	DrawString(out, button->GetText(), textRect, UiFlags::AlignCenter | UiFlags::FontSizeDialog | UiFlags::ColorDialogWhite);
+	DrawString(out, button.GetText(), textRect, UiFlags::AlignCenter | UiFlags::FontSizeDialog | UiFlags::ColorDialogWhite);
 }
 
 bool HandleMouseEventButton(const SDL_Event &event, UiButton *button)
