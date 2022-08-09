@@ -3186,6 +3186,19 @@ void PrepareUniqueMonst(Monster &monster, UniqueMonsterType monsterType, size_t 
 		monster.maxDamage = 4 * monster.maxDamage + 6;
 		monster.minDamageSpecial = 4 * monster.minDamageSpecial + 6;
 		monster.maxDamageSpecial = 4 * monster.maxDamageSpecial + 6;
+	} else if (sgGameInitInfo.nDifficulty == DIFF_INFERNO) {
+		monster.maxHitPoints = 5 * monster.maxHitPoints;
+		if (gbIsHellfire)
+			monster.maxHitPoints += (gbIsMultiplayer ? 600 : 300) << 6;
+		else
+			monster.maxHitPoints += 576;
+		monster.level += 45;
+		monster.hitPoints = monster.maxHitPoints;
+		monster.exp = 8 * (monster.exp + 1000);
+		monster.minDamage = 8 * monster.minDamage + 18;
+		monster.maxDamage = 8 * monster.maxDamage + 18;
+		monster.minDamageSpecial = 8 * monster.minDamageSpecial + 18;
+		monster.maxDamageSpecial = 8 * monster.maxDamageSpecial + 18;
 	}
 
 	InitTRNForUniqueMonster(monster);
@@ -3201,6 +3214,9 @@ void PrepareUniqueMonst(Monster &monster, UniqueMonsterType monsterType, size_t 
 		} else if (sgGameInitInfo.nDifficulty == DIFF_HELL) {
 			monster.toHit += HellToHitBonus;
 			monster.toHitSpecial += HellToHitBonus;
+		} else if (sgGameInitInfo.nDifficulty == DIFF_INFERNO) {
+			monster.toHit += InfernoToHitBonus;
+			monster.toHitSpecial += InfernoToHitBonus;
 		}
 	}
 	if (uniqueMonsterData.customArmorClass != 0) {
@@ -3210,6 +3226,8 @@ void PrepareUniqueMonst(Monster &monster, UniqueMonsterType monsterType, size_t 
 			monster.armorClass += NightmareAcBonus;
 		} else if (sgGameInitInfo.nDifficulty == DIFF_HELL) {
 			monster.armorClass += HellAcBonus;
+		} else if (sgGameInitInfo.nDifficulty == DIFF_INFERNO) {
+			monster.armorClass += InfernoAcBonus;
 		}
 	}
 
@@ -4257,6 +4275,9 @@ void PrintMonstHistory(int mt)
 		} else if (sgGameInitInfo.nDifficulty == DIFF_HELL) {
 			minHP = 4 * minHP + hpBonusHell;
 			maxHP = 4 * maxHP + hpBonusHell;
+		} else if (sgGameInitInfo.nDifficulty == DIFF_INFERNO) {
+			minHP = 5 * minHP + hpBonusInferno;
+			maxHP = 5 * maxHP + hpBonusInferno;
 		}
 		AddPanelString(fmt::format(fmt::runtime(_("Hit Points: {:d}-{:d}")), minHP, maxHP));
 	}
