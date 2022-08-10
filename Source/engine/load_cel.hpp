@@ -7,21 +7,21 @@
 
 namespace devilution {
 
-OwnedClxSpriteListOrSheet LoadCelListOrSheet(const char *pszName, PointerOrValue<uint16_t> widthOrWidths);
+OwnedClxSpriteListOrSheet LoadCelListOrSheet(const char *path, PointerOrValue<uint16_t> widthOrWidths);
 
-inline OwnedClxSpriteList LoadCel(const char *pszName, uint16_t width)
+inline OwnedClxSpriteList LoadCel(const char *path, uint16_t width)
 {
-	return LoadCelListOrSheet(pszName, PointerOrValue<uint16_t> { width }).list();
+	return LoadCelListOrSheet(path, PointerOrValue<uint16_t> { width }).list();
 }
 
-inline OwnedClxSpriteList LoadCel(const char *pszName, const uint16_t *widths)
+inline OwnedClxSpriteList LoadCel(const char *path, const uint16_t *widths)
 {
-	return LoadCelListOrSheet(pszName, PointerOrValue<uint16_t> { widths }).list();
+	return LoadCelListOrSheet(path, PointerOrValue<uint16_t> { widths }).list();
 }
 
-inline OwnedClxSpriteSheet LoadCelSheet(const char *pszName, uint16_t width)
+inline OwnedClxSpriteSheet LoadCelSheet(const char *path, uint16_t width)
 {
-	return LoadCelListOrSheet(pszName, PointerOrValue<uint16_t> { width }).sheet();
+	return LoadCelListOrSheet(path, PointerOrValue<uint16_t> { width }).sheet();
 }
 
 } // namespace devilution

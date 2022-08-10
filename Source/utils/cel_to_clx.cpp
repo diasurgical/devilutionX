@@ -2,6 +2,7 @@
 
 #include <cstring>
 
+#include <array>
 #include <vector>
 
 #ifdef DEBUG_CEL_TO_CL2_SIZE
@@ -12,6 +13,11 @@
 #include "appfat.h"
 #include "utils/clx_write.hpp"
 #include "utils/endian.hpp"
+#include "utils/str_cat.hpp"
+
+#ifdef USE_SDL1
+#include "utils/sdl2_to_1_2_backports.h"
+#endif
 
 namespace devilution {
 
@@ -28,16 +34,66 @@ constexpr uint8_t GetCelTransparentWidth(uint8_t control)
 	return -static_cast<int8_t>(control);
 }
 
+void ReadLE32s(SDL_RWops *rwops, size_t n, uint32_t *out)
+{
+	const size_t numRead = SDL_RWread(rwops, out, 4, n);
+	if (numRead != n)
+		app_fatal(StrCat("Read failed: ", SDL_GetError()));
+#if SDL_BYTEORDER != SDL_LIL_ENDIAN
+	for (size_t i = 0; i < n; ++i)
+		out[i] = SDL_SwapLE32(out[i]);
+#endif
+}
+
+void ReadUint8s(SDL_RWops *rwops, size_t n, uint8_t *out)
+{
+	const size_t numRead = SDL_RWread(rwops, out, 1, n);
+	if (numRead != n)
+		app_fatal(StrCat("Read failed: ", SDL_GetError()));
+}
+
+uint32_t ReadLE32(SDL_RWops *rwops)
+{
+	uint8_t buf[4];
+	const size_t numRead = SDL_RWread(rwops, buf, 4, 1);
+	if (numRead == 0)
+		app_fatal(StrCat("Read failed: ", SDL_GetError()));
+	return LoadLE32(buf);
+}
+
+void Seek(SDL_RWops *rwops, Sint64 offset, int whence)
+{
+	if (SDL_RWseek(rwops, offset, whence) == -1)
+		app_fatal(StrCat("Seek failed: ", SDL_GetError()));
+}
+
+uint32_t GetMaxSizeFromOffsets(uint32_t *offsets, size_t size)
+{
+	uint32_t max = 0;
+	uint32_t prev = *offsets++;
+	while (--size > 0) {
+		uint32_t cur = *offsets++;
+		max = std::max(max, cur - prev);
+		prev = cur;
+	}
+	return max;
+}
+
 } // namespace
 
-OwnedClxSpriteListOrSheet CelToClx(const uint8_t *data, size_t size, PointerOrValue<uint16_t> widthOrWidths)
+OwnedClxSpriteListOrSheet CelToClx(SDL_RWops *rwops, PointerOrValue<uint16_t> widthOrWidths)
 {
 	// A CEL file either begins with:
 	// 1. A CEL header.
 	// 2. A list of offsets to frame groups (each group is a CEL file).
 	size_t groupsHeaderSize = 0;
 	uint32_t numGroups = 1;
-	const uint32_t maybeNumFrames = LoadLE32(data);
+
+	const Sint64 sizeResult = SDL_RWsize(rwops);
+	if (sizeResult == -1)
+		app_fatal(StrCat("SDL_RWsize failed: ", SDL_GetError()));
+	const auto size = static_cast<size_t>(sizeResult);
+	const uint32_t maybeNumFrames = ReadLE32(rwops);
 
 	std::vector<uint8_t> cl2Data;
 
@@ -46,13 +102,49 @@ OwnedClxSpriteListOrSheet CelToClx(const uint8_t *data, size_t size, PointerOrVa
 	cl2Data.reserve(size + 4445);
 
 	// If it is a number of frames, then the last frame offset will be equal to the size of the file.
-	if (LoadLE32(&data[maybeNumFrames * 4 + 4]) != size) {
+	Seek(rwops, maybeNumFrames * 4 + 4, RW_SEEK_SET);
+	if (ReadLE32(rwops) != size) {
 		// maybeNumFrames is the address of the first group, right after
 		// the list of group offsets.
 		numGroups = maybeNumFrames / 4;
 		groupsHeaderSize = maybeNumFrames;
-		data += groupsHeaderSize;
 		cl2Data.resize(groupsHeaderSize);
+	}
+
+	std::unique_ptr<uint32_t[]> offsets;
+	std::unique_ptr<uint8_t[]> frameBuf;
+	std::unique_ptr<uint32_t[]> groupNumFrames;
+	std::unique_ptr<uint32_t[]> groupOffsets;
+
+	Seek(rwops, 4, RW_SEEK_SET);
+	if (numGroups == 1) {
+		offsets.reset(new uint32_t[maybeNumFrames + 1]);
+		ReadLE32s(rwops, maybeNumFrames + 1, offsets.get());
+		frameBuf.reset(new uint8_t[GetMaxSizeFromOffsets(offsets.get(), maybeNumFrames + 1)]);
+	} else {
+		groupOffsets.reset(new uint32_t[numGroups]);
+		groupNumFrames.reset(new uint32_t[numGroups]);
+
+		groupOffsets[0] = maybeNumFrames;
+		ReadLE32s(rwops, numGroups - 1, groupOffsets.get() + 1);
+
+		uint32_t maxNumFrames = 0;
+		for (size_t group = 0; group < numGroups; ++group) {
+			Seek(rwops, groupOffsets[group], RW_SEEK_SET);
+			groupNumFrames[group] = ReadLE32(rwops);
+			if (groupNumFrames[group] > maxNumFrames)
+				maxNumFrames = groupNumFrames[group];
+		}
+		offsets.reset(new uint32_t[maxNumFrames + 1]);
+
+		uint32_t maxFrameSize = 0;
+		for (size_t group = numGroups; group-- > 0;) {
+			const uint32_t numFrames = groupNumFrames[group];
+			Seek(rwops, groupOffsets[group] + 4, RW_SEEK_SET);
+			ReadLE32s(rwops, numFrames + 1, offsets.get());
+			maxFrameSize = std::max(maxFrameSize, GetMaxSizeFromOffsets(offsets.get(), numFrames + 1));
+		}
+		frameBuf.reset(new uint8_t[maxFrameSize]);
 	}
 
 	for (size_t group = 0; group < numGroups; ++group) {
@@ -60,19 +152,28 @@ OwnedClxSpriteListOrSheet CelToClx(const uint8_t *data, size_t size, PointerOrVa
 		if (numGroups == 1) {
 			numFrames = maybeNumFrames;
 		} else {
-			numFrames = LoadLE32(data);
+			numFrames = groupNumFrames[group];
+			if (group == 0) {
+				// `offsets` already contains the offsets.
+				Seek(rwops, groupOffsets[group] + 4 * (numFrames + 2), RW_SEEK_SET);
+			} else {
+				Seek(rwops, groupOffsets[group] + 4, RW_SEEK_SET);
+				ReadLE32s(rwops, numFrames + 1, offsets.get());
+			}
 			WriteLE32(&cl2Data[4 * group], cl2Data.size());
 		}
 
-		// CL2 header: frame count, frame offset for each frame, file size
+		// CLX header: frame count, frame offset for each frame, file size
 		const size_t cl2DataOffset = cl2Data.size();
 		cl2Data.resize(cl2Data.size() + 4 * (2 + static_cast<size_t>(numFrames)));
 		WriteLE32(&cl2Data[cl2DataOffset], numFrames);
 
-		const uint8_t *srcEnd = &data[LoadLE32(&data[4])];
 		for (size_t frame = 1; frame <= numFrames; ++frame) {
-			const uint8_t *src = srcEnd;
-			srcEnd = &data[LoadLE32(&data[4 * (frame + 1)])];
+			const uint32_t frameSize = offsets[frame] - offsets[frame - 1];
+			ReadUint8s(rwops, frameSize, frameBuf.get());
+			const uint8_t *src = frameBuf.get();
+			const uint8_t *srcEnd = src + frameSize;
+
 			WriteLE32(&cl2Data[cl2DataOffset + 4 * frame], static_cast<uint32_t>(cl2Data.size() - cl2DataOffset));
 
 			// Skip CEL frame header if there is one.
@@ -115,7 +216,6 @@ OwnedClxSpriteListOrSheet CelToClx(const uint8_t *data, size_t size, PointerOrVa
 		}
 
 		WriteLE32(&cl2Data[cl2DataOffset + 4 * (1 + static_cast<size_t>(numFrames))], static_cast<uint32_t>(cl2Data.size() - cl2DataOffset));
-		data = srcEnd;
 	}
 
 	auto out = std::unique_ptr<uint8_t[]>(new uint8_t[cl2Data.size()]);
