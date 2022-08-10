@@ -885,9 +885,6 @@ int SaveItemPower(Item &item, ItemPower &power)
 		item._iFlags |= ItemSpecialEffect::NoMana;
 		drawmanaflag = true;
 		break;
-	case IPL_NOHEALPLR:
-		item._iFlags |= ItemSpecialEffect::NoHealOnPlayer;
-		break;
 	case IPL_ABSHALFTRAP:
 		item._iFlags |= ItemSpecialEffect::HalfTrapDamage;
 		break;
@@ -899,9 +896,6 @@ int SaveItemPower(Item &item, ItemPower &power)
 		break;
 	case IPL_ALLRESZERO:
 		item._iFlags |= ItemSpecialEffect::ZeroResistance;
-		break;
-	case IPL_NOHEALMON:
-		item._iFlags |= ItemSpecialEffect::NoHealOnMonsters;
 		break;
 	case IPL_STEALMANA:
 		if (power.param1 == 3)
@@ -958,9 +952,6 @@ int SaveItemPower(Item &item, ItemPower &power)
 		item._iDurability = power.param1;
 		item._iMaxDur = power.param1;
 		break;
-	case IPL_FASTSWING:
-		item._iFlags |= ItemSpecialEffect::FasterAttack;
-		break;
 	case IPL_ONEHAND:
 		item._iLoc = ILOC_ONEHAND;
 		break;
@@ -969,9 +960,6 @@ int SaveItemPower(Item &item, ItemPower &power)
 		break;
 	case IPL_RNDSTEALLIFE:
 		item._iFlags |= ItemSpecialEffect::RandomStealLife;
-		break;
-	case IPL_INFRAVISION:
-		item._iFlags |= ItemSpecialEffect::Infravision;
 		break;
 	case IPL_NOMINSTR:
 		item._iMinStr = 0;
@@ -993,10 +981,6 @@ int SaveItemPower(Item &item, ItemPower &power)
 		item._iLMinDam = 2;
 		item._iLMaxDam = 0;
 		break;
-	case IPL_FIRERESCLVL:
-		item._iPLFR = 30 - MyPlayer->_pLevel;
-		item._iPLFR = std::max<int16_t>(item._iPLFR, 0);
-		break;
 	case IPL_FIRERES_CURSE:
 		item._iPLFR -= r;
 		break;
@@ -1004,11 +988,6 @@ int SaveItemPower(Item &item, ItemPower &power)
 		item._iPLLR -= r;
 		break;
 	case IPL_MAGICRES_CURSE:
-		item._iPLMR -= r;
-		break;
-	case IPL_ALLRES_CURSE:
-		item._iPLFR -= r;
-		item._iPLLR -= r;
 		item._iPLMR -= r;
 		break;
 	case IPL_DEVASTATION:
@@ -2613,8 +2592,6 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	player._pILMinDam = lmin;
 	player._pILMaxDam = lmax;
 
-	player._pInfraFlag = HasAnyOf(iflgs, ItemSpecialEffect::Infravision);
-
 	player._pBlockFlag = false;
 	if (player._pClass == HeroClass::Monk) {
 		if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Staff && player.InvBody[INVLOC_HAND_LEFT]._iStatFlag) {
@@ -3549,7 +3526,6 @@ bool DoOil(Player &player, int cii)
 		else
 			return fmt::format(fmt::runtime(_("Resist Magic: {:+d}% MAX")), MaxResistance);
 	case IPL_ALLRES:
-	case IPL_ALLRES_CURSE:
 		if (item._iPLFR < MaxResistance)
 			return fmt::format(fmt::runtime(_("Resist All: {:+d}%")), item._iPLFR);
 		else
@@ -3630,8 +3606,6 @@ bool DoOil(Player &player, int cii)
 		return _("attacker takes 1-3 damage");
 	case IPL_NOMANA:
 		return _("user loses all mana");
-	case IPL_NOHEALPLR:
-		return _("you can't heal");
 	case IPL_ABSHALFTRAP:
 		return _("absorbs half of trap damage");
 	case IPL_KNOCKBACK:
@@ -3640,8 +3614,6 @@ bool DoOil(Player &player, int cii)
 		return _(/*xgettext:no-c-format*/ "+200% damage vs. demons");
 	case IPL_ALLRESZERO:
 		return _("All Resistance equals 0");
-	case IPL_NOHEALMON:
-		return _("hit monster doesn't heal");
 	case IPL_STEALMANA:
 		if (HasAnyOf(item._iFlags, ItemSpecialEffect::StealMana3))
 			return _(/*xgettext:no-c-format*/ "hit steals 3% mana");
@@ -3684,8 +3656,6 @@ bool DoOil(Player &player, int cii)
 		return _("unusual item damage");
 	case IPL_SETDUR:
 		return _("altered durability");
-	case IPL_FASTSWING:
-		return _("Faster attack swing");
 	case IPL_ONEHAND:
 		return _("one handed sword");
 	case IPL_DRAINLIFE:
@@ -3694,8 +3664,6 @@ bool DoOil(Player &player, int cii)
 		return _("life stealing");
 	case IPL_NOMINSTR:
 		return _("no strength requirement");
-	case IPL_INFRAVISION:
-		return _("see with infravision");
 	case IPL_INVCURS:
 		return { string_view(" ") };
 	case IPL_ADDACLIFE:
@@ -3705,11 +3673,6 @@ bool DoOil(Player &player, int cii)
 			return fmt::format(fmt::runtime(_("lightning damage: {:d}-{:d}")), item._iFMinDam, item._iFMaxDam);
 	case IPL_ADDMANAAC:
 		return _("charged bolts on hits");
-	case IPL_FIRERESCLVL:
-		if (item._iPLFR > 0)
-			return fmt::format(fmt::runtime(_("Resist Fire: {:+d}%")), item._iPLFR);
-		else
-			return { string_view(" ") };
 	case IPL_DEVASTATION:
 		return _("occasional triple damage");
 	case IPL_DECAY:

@@ -240,7 +240,7 @@ bool MonsterMHit(int pnum, int monsterId, int mindam, int maxdam, int dist, miss
 	if (&player == MyPlayer)
 		ApplyMonsterDamage(monster, dam);
 
-	if ((gbIsHellfire && HasAnyOf(player._pIFlags, ItemSpecialEffect::NoHealOnMonsters)) || (!gbIsHellfire && HasAnyOf(player._pIFlags, ItemSpecialEffect::FireArrows)))
+	if (!gbIsHellfire && HasAnyOf(player._pIFlags, ItemSpecialEffect::FireArrows))
 		monster.flags |= MFLAG_NOHEAL;
 
 	if (monster.hitPoints >> 6 <= 0) {

@@ -872,9 +872,6 @@ bool PlrHitMonst(Player &player, Monster &monster, bool adjacentDamage = false)
 		}
 		drawhpflag = true;
 	}
-	if (HasAnyOf(player._pIFlags, ItemSpecialEffect::NoHealOnPlayer)) { // Why is there a different ItemSpecialEffect here? (see missile.cpp) is this a BUG?
-		monster.flags |= MFLAG_NOHEAL;
-	}
 #ifdef _DEBUG
 	if (DebugGodMode) {
 		monster.hitPoints = 0; /* double check */
