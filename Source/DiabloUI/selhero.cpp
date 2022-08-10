@@ -345,6 +345,10 @@ void SelheroLoadSelect(int value)
 		// This means selhero's render loop will render selgame's items,
 		// which happens to work because the render loops are similar.
 		selhero_endMenu = false;
+
+		// Set this to false so that we do not attempt to render difficulty indicators.
+		selhero_isSavegame = false;
+
 		SelheroFree();
 		LoadBackgroundArt("ui_art\\selgame.pcx");
 		selgame_GameSelection_Select(0);
