@@ -137,6 +137,7 @@ option(DEVILUTIONX_PALETTE_TRANSPARENCY_BLACK_16_LUT "Whether to use a lookup ta
 mark_as_advanced(DEVILUTIONX_PALETTE_TRANSPARENCY_BLACK_16_LUT)
 
 # Additional features
+option(DISABLE_DEMOMODE "Disable demo mode support" OFF)
 option(DISCORD_INTEGRATION "Build with Discord SDK for rich presence support" OFF)
 
 # By default, devilutionx.mpq is built only if smpq is installed.
@@ -167,6 +168,11 @@ endif()
 
 # Note: `CMAKE_CROSSCOMPILING` is only available after the `project` call.
 if(CMAKE_CROSSCOMPILING)
+  set(BUILD_TESTING OFF)
+endif()
+
+if(DISABLE_DEMOMODE)
+  # Testing requires demomode.
   set(BUILD_TESTING OFF)
 endif()
 

@@ -796,9 +796,11 @@ void PrintHelpOption(string_view flags, string_view description)
 	PrintHelpOption("-n", _(/* TRANSLATORS: Commandline Option */ "Skip startup videos"));
 	PrintHelpOption("-f", _(/* TRANSLATORS: Commandline Option */ "Display frames per second"));
 	PrintHelpOption("--verbose", _(/* TRANSLATORS: Commandline Option */ "Enable verbose logging"));
+#ifndef DISABLE_DEMOMODE
 	PrintHelpOption("--record <#>", _(/* TRANSLATORS: Commandline Option */ "Record a demo file"));
 	PrintHelpOption("--demo <#>", _(/* TRANSLATORS: Commandline Option */ "Play a demo file"));
 	PrintHelpOption("--timedemo", _(/* TRANSLATORS: Commandline Option */ "Disable all frame limiting during demo playback"));
+#endif
 	printNewlineInConsole();
 	printInConsole(_(/* TRANSLATORS: Commandline Option */ "Game selection:"));
 	printNewlineInConsole();
@@ -833,10 +835,12 @@ void DiabloParseFlags(int argc, char **argv)
 	int argumentIndexOfLastCommandPart = -1;
 	std::string currentCommand;
 #endif
+#ifndef DISABLE_DEMOMODE
 	bool timedemo = false;
 	int demoNumber = -1;
 	int recordNumber = -1;
 	bool createDemoReference = false;
+#endif
 	for (int i = 1; i < argc; i++) {
 		const string_view arg = argv[i];
 		if (arg == "-h" || arg == "--help") {
@@ -865,6 +869,7 @@ void DiabloParseFlags(int argc, char **argv)
 				diablo_quit(0);
 			}
 			paths::SetConfigPath(argv[++i]);
+#ifndef DISABLE_DEMOMODE
 		} else if (arg == "--demo") {
 			if (i + 1 == argc) {
 				PrintFlagsRequiresArgument("--demo");
@@ -882,6 +887,12 @@ void DiabloParseFlags(int argc, char **argv)
 			recordNumber = SDL_atoi(argv[++i]);
 		} else if (arg == "--create-reference") {
 			createDemoReference = true;
+#else
+		} else if (arg == "--demo" || arg == "--timedemo" || arg == "--record" || arg == "--create-reference") {
+			printInConsole("Binary compiled without demo mode support.");
+			printNewlineInConsole();
+			diablo_quit(1);
+#endif
 		} else if (arg == "-n") {
 			gbShowIntro = false;
 		} else if (arg == "-f") {
@@ -923,10 +934,12 @@ void DiabloParseFlags(int argc, char **argv)
 		DebugCmdsFromCommandLine.push_back(currentCommand);
 #endif
 
+#ifndef DISABLE_DEMOMODE
 	if (demoNumber != -1)
 		demo::InitPlayBack(demoNumber, timedemo);
 	if (recordNumber != -1)
 		demo::InitRecording(recordNumber, createDemoReference);
+#endif
 }
 
 void DiabloInitScreen()
