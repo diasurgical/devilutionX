@@ -56,7 +56,7 @@ enum text_color : uint8_t {
  */
 class DrawStringFormatArg {
 public:
-	enum class Type {
+	enum class Type : uint8_t {
 		StringView,
 		Int
 	};

@@ -322,7 +322,7 @@ enum unique_base_item : int8_t {
 	UITYPE_INVALID = -1,
 };
 
-enum class ItemSpecialEffect {
+enum class ItemSpecialEffect : uint32_t {
 	// clang-format off
 	None                   = 0,
 	RandomStealLife        = 1 << 1,
@@ -350,7 +350,7 @@ enum class ItemSpecialEffect {
 	NoMana                 = 1 << 27,
 	HalfTrapDamage         = 1 << 28,
 	TripleDemonDamage      = 1 << 30,
-	ZeroResistance         = 1 << 31,
+	ZeroResistance         = 1U << 31,
 	// clang-format on
 };
 use_enum_as_flags(ItemSpecialEffect);

@@ -2,7 +2,7 @@
 
 namespace devilution {
 
-enum class UiPanels {
+enum class UiPanels : uint8_t {
 	Main,
 	Quest,
 	Character,

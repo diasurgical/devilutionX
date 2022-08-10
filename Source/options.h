@@ -15,21 +15,21 @@
 
 namespace devilution {
 
-enum class StartUpGameMode {
+enum class StartUpGameMode : uint8_t {
 	/** @brief If hellfire is present, asks the user what game they want to start. */
 	Ask = 0,
 	Hellfire = 1,
 	Diablo = 2,
 };
 
-enum class StartUpIntro {
+enum class StartUpIntro : uint8_t {
 	Off = 0,
 	Once = 1,
 	On = 2,
 };
 
 /** @brief Defines what splash screen should be shown at startup. */
-enum class StartUpSplash {
+enum class StartUpSplash : uint8_t {
 	/** @brief Show no splash screen. */
 	None = 0,
 	/** @brief Show only TitleDialog. */
@@ -38,13 +38,13 @@ enum class StartUpSplash {
 	LogoAndTitleDialog = 2,
 };
 
-enum class ScalingQuality {
+enum class ScalingQuality : uint8_t {
 	NearestPixel,
 	BilinearFiltering,
 	AnisotropicFiltering,
 };
 
-enum class Resampler {
+enum class Resampler : uint8_t {
 #ifdef DEVILUTIONX_RESAMPLER_SPEEX
 	Speex = 0,
 #endif
@@ -56,13 +56,13 @@ enum class Resampler {
 string_view ResamplerToString(Resampler resampler);
 std::optional<Resampler> ResamplerFromString(string_view resampler);
 
-enum class OptionEntryType {
+enum class OptionEntryType : uint8_t {
 	Boolean,
 	List,
 	Key,
 };
 
-enum class OptionEntryFlags {
+enum class OptionEntryFlags : uint8_t {
 	/** @brief No special logic. */
 	None = 0,
 	/** @brief Shouldn't be shown in settings dialog. */

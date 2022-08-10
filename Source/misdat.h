@@ -96,7 +96,7 @@ typedef enum missile_graphic_id : uint8_t {
 /**
  * @brief Specifies what if and how movement distribution is applied
  */
-enum class MissileMovementDistrubution {
+enum class MissileMovementDistrubution : uint8_t {
 	/**
 	 * @brief No movement distribution is calculated. Normally this means the missile doesn't move at all.
 	 */
@@ -127,7 +127,7 @@ struct MissileData {
 	MissileMovementDistrubution MovementDistribution;
 };
 
-enum class MissileDataFlags {
+enum class MissileDataFlags : uint8_t {
 	// clang-format off
 	None         = 0,
 	MonsterOwned = 1 << 0,

@@ -153,7 +153,7 @@ struct AnimStruct {
 	int8_t rate;
 };
 
-enum class MonsterSound {
+enum class MonsterSound : uint8_t {
 	Attack,
 	Hit,
 	Death,

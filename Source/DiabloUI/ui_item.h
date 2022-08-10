@@ -13,7 +13,7 @@
 
 namespace devilution {
 
-enum class UiType {
+enum class UiType : uint8_t {
 	Text,
 	ArtText,
 	ArtTextButton,

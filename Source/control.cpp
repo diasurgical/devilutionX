@@ -151,7 +151,7 @@ int sgbPlrTalkTbl;
 bool WhisperList[MAX_PLRS];
 char panelstr[4][64];
 
-enum panel_button_id {
+enum panel_button_id : uint8_t {
 	PanelButtonCharinfo,
 	PanelButtonQlog,
 	PanelButtonAutomap,

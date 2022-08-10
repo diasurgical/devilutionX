@@ -66,7 +66,7 @@ struct MissilePosition {
  *               |
  *      N  NNE   NE  ENE  E
  */
-enum class Direction16 {
+enum class Direction16 : uint8_t {
 	South,
 	South_SouthWest,
 	SouthWest,
@@ -85,7 +85,7 @@ enum class Direction16 {
 	South_SouthEast,
 };
 
-enum class MissileSource {
+enum class MissileSource : uint8_t {
 	Player,
 	Monster,
 	Trap,
