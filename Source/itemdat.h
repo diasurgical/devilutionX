@@ -578,9 +578,9 @@ enum class AffixItemType : uint8_t {
 use_enum_as_flags(AffixItemType);
 
 struct ItemPower {
-	item_effect_type type;
-	int param1;
-	int param2;
+	item_effect_type type = IPL_INVALID;
+	int param1 = 0;
+	int param2 = 0;
 };
 
 struct PLStruct {
