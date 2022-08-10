@@ -7,7 +7,7 @@
 
 namespace devilution {
 namespace {
-enum class OperationMode {
+enum class OperationMode : int8_t {
 	Handheld,
 	Docked,
 	Uninitialized = -1

@@ -13,7 +13,7 @@
 
 namespace devilution {
 
-enum class HeroSpeech {
+enum class HeroSpeech : uint8_t {
 	ChamberOfBoneLore,
 	HorazonsSanctumLore,
 	GolemSpellLore,

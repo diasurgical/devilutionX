@@ -18,7 +18,7 @@ extern bool gbValidSaveFile;
  * @brief Comparsion result of pfile_compare_hero_demo
  */
 struct HeroCompareResult {
-	enum Status {
+	enum Status : uint8_t {
 		ReferenceNotFound,
 		Same,
 		Difference,

@@ -6,7 +6,7 @@ namespace devilution {
 
 namespace {
 
-enum class VelocityToUse {
+enum class VelocityToUse : uint8_t {
 	None,
 	Full,
 	NegativeFull,
