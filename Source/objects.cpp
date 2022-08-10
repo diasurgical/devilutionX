@@ -4459,6 +4459,8 @@ void DeltaSyncOpObject(Object &object)
 	case OBJ_SARC:
 	case OBJ_L5SARC:
 	case OBJ_GOATSHRINE:
+	case OBJ_SHRINEL:
+	case OBJ_SHRINER:
 		UpdateState(object, object._oAnimLen);
 		break;
 	case OBJ_BLINDBOOK:
