@@ -42,6 +42,7 @@ bool DebugVision = false;
 bool DebugGrid = false;
 std::unordered_map<int, Point> DebugCoordsMap;
 bool DebugScrollViewEnabled = false;
+std::string debugTRN;
 
 namespace {
 
@@ -954,6 +955,35 @@ std::string DebugCmdToggleFPS(const string_view parameter)
 	return "";
 }
 
+std::string DebugCmdChangeTRN(const string_view parameter)
+{
+	std::stringstream paramsStream(parameter.data());
+	std::string first;
+	std::string out;
+	if (std::getline(paramsStream, first, ' ')) {
+		std::string second;
+		if (std::getline(paramsStream, second, ' ')) {
+			std::string prefix;
+			if (first == "mon") {
+				prefix = "Monsters\\Monsters\\";
+			} else if (first == "plr") {
+				prefix = "PlrGFX\\";
+			}
+			debugTRN = prefix + second + ".TRN";
+		} else {
+			debugTRN = first + ".TRN";
+		}
+		out = fmt::format("I am a pretty butterfly. \n(Loading TRN: {:s})", debugTRN);
+	} else {
+		debugTRN = "";
+		out = "I am a big brown potato.";
+	}
+	auto &player = *MyPlayer;
+	InitPlayerGFX(player);
+	StartStand(player, player._pdir);
+	return out;
+}
+
 std::vector<DebugCmdItem> DebugCmdList = {
 	{ "help", "Prints help overview or help for a specific command.", "({command})", &DebugCmdHelp },
 	{ "give gold", "Fills the inventory with gold.", "", &DebugCmdGiveGoldCheat },
@@ -990,6 +1020,7 @@ std::vector<DebugCmdItem> DebugCmdList = {
 	{ "questinfo", "Shows info of quests.", "{id}", &DebugCmdQuestInfo },
 	{ "playerinfo", "Shows info of player.", "{playerid}", &DebugCmdPlayerInfo },
 	{ "fps", "Toggles displaying FPS", "", &DebugCmdToggleFPS },
+	{ "trn", "Makes player use TRN {trn} - Write 'plr' before it to look in PlrGFX\\ or 'mon' to look in Monsters\\Monsters\\ - example: trn plr infra is equal to 'PlrGFX\\Infra.TRN'", "{trn}", &DebugCmdChangeTRN },
 };
 
 } // namespace

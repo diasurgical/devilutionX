@@ -24,7 +24,7 @@ std::vector<std::unique_ptr<UiItemBase>> vecDialog;
 std::vector<OptionEntryBase *> vecOptions;
 OptionEntryBase *selectedOption = nullptr;
 
-enum class ShownMenuType {
+enum class ShownMenuType : uint8_t {
 	Settings,
 	ListOption,
 	KeyInput,
@@ -37,7 +37,7 @@ char optionDescription[512];
 Rectangle rectList;
 Rectangle rectDescription;
 
-enum class SpecialMenuEntry {
+enum class SpecialMenuEntry : int8_t {
 	None = -1,
 	PreviousMenu = -2,
 	UnbindKey = -3,

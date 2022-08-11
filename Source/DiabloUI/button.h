@@ -11,7 +11,7 @@ const Uint16 DialogButtonHeight = 28;
 void LoadDialogButtonGraphics();
 void FreeDialogButtonGraphics();
 ClxSprite ButtonSprite(bool pressed);
-void RenderButton(UiButton *button);
+void RenderButton(const UiButton &button);
 bool HandleMouseEventButton(const SDL_Event &event, UiButton *button);
 void HandleGlobalMouseUpButton(UiButton *button);
 

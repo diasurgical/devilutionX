@@ -34,7 +34,7 @@ enum clicktype : int8_t {
 /**
  * @brief Specifices what game logic step is currently executed
  */
-enum class GameLogicStep {
+enum class GameLogicStep : uint8_t {
 	None,
 	ProcessPlayers,
 	ProcessMonsters,
@@ -46,7 +46,7 @@ enum class GameLogicStep {
 	ProcessMissilesTown,
 };
 
-enum class MouseActionType : int {
+enum class MouseActionType : uint8_t {
 	None,
 	Walk,
 	Spell,

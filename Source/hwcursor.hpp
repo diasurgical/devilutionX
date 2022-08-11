@@ -31,7 +31,7 @@ inline bool SetHardwareCursorVisible(bool visible)
 #endif
 }
 
-enum class CursorType {
+enum class CursorType : uint8_t {
 	Unknown,
 	UserInterface,
 	Game,

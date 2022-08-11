@@ -28,7 +28,7 @@ namespace {
  * Each tile type has its own encoding but they all encode data in the order
  * of bottom-to-top (bottom row first).
  */
-enum class TileType {
+enum class TileType : uint8_t {
 	/**
 	 * 🮆 A 32x32 square. Stored as an array of pixels.
 	 */
@@ -348,12 +348,12 @@ const std::uint32_t LeftFoliageMask[TILE_HEIGHT] = {
 	0x00000000,
 };
 
-enum class TransparencyType {
+enum class TransparencyType : uint8_t {
 	Solid,
 	Blended,
 };
 
-enum class LightType {
+enum class LightType : uint8_t {
 	FullyDark,
 	PartiallyLit,
 	FullyLit,

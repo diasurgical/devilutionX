@@ -20,6 +20,8 @@
 #include "engine/load_file.hpp"
 #include "engine/points_in_rectangle_range.hpp"
 #include "engine/random.hpp"
+#include "engine/render/clx_render.hpp"
+#include "engine/trn.hpp"
 #include "engine/world_tile.hpp"
 #include "gamemenu.h"
 #include "help.h"
@@ -871,9 +873,6 @@ bool PlrHitMonst(Player &player, Monster &monster, bool adjacentDamage = false)
 			player._pHPBase = player._pMaxHPBase;
 		}
 		drawhpflag = true;
-	}
-	if (HasAnyOf(player._pIFlags, ItemSpecialEffect::NoHealOnPlayer)) { // Why is there a different ItemSpecialEffect here? (see missile.cpp) is this a BUG?
-		monster.flags |= MFLAG_NOHEAL;
 	}
 #ifdef _DEBUG
 	if (DebugGodMode) {
@@ -2272,6 +2271,10 @@ void LoadPlrGFX(Player &player, player_graphic graphic)
 	*fmt::format_to(pszName, FMT_COMPILE(R"(PlrGFX\{0}\{1}\{1}{2}.CL2)"), path, string_view(prefix, 3), szCel) = 0;
 	const uint16_t animationWidth = GetPlayerSpriteWidth(cls, graphic, animWeaponId);
 	animationData.sprites = LoadCl2Sheet(pszName, animationWidth);
+	std::optional<std::array<uint8_t, 256>> trn = GetClassTRN(player);
+	if (trn) {
+		ClxApplyTrans(*animationData.sprites, trn->data());
+	}
 }
 
 void InitPlayerGFX(Player &player)
@@ -3133,7 +3136,8 @@ StartNewLvl(Player &player, interface_mode fom, int lvl)
 		player.setLevel(lvl);
 		break;
 	case WM_DIABSETLVL:
-		setlvlnum = (_setlevels)lvl;
+		if (&player == MyPlayer)
+			setlvlnum = (_setlevels)lvl;
 		player.setLevel(setlvlnum);
 		break;
 	case WM_DIABTWARPUP:

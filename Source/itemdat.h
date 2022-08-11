@@ -322,22 +322,17 @@ enum unique_base_item : int8_t {
 	UITYPE_INVALID = -1,
 };
 
-enum class ItemSpecialEffect {
+enum class ItemSpecialEffect : uint32_t {
 	// clang-format off
 	None                   = 0,
-	Infravision            = 1 << 0,
 	RandomStealLife        = 1 << 1,
 	RandomArrowVelocity    = 1 << 2,
 	FireArrows             = 1 << 3,
 	FireDamage             = 1 << 4,
 	LightningDamage        = 1 << 5,
 	DrainLife              = 1 << 6,
-	Unknown7               = 1 << 7,
-	NoHealOnPlayer         = 1 << 8,
 	MultipleArrows         = 1 << 9,
-	Unknown10              = 1 << 10,
 	Knockback              = 1 << 11,
-	NoHealOnMonsters       = 1 << 12,
 	StealMana3             = 1 << 13,
 	StealMana5             = 1 << 14,
 	StealLife3             = 1 << 15,
@@ -354,9 +349,8 @@ enum class ItemSpecialEffect {
 	Thorns                 = 1 << 26,
 	NoMana                 = 1 << 27,
 	HalfTrapDamage         = 1 << 28,
-	Unknown29              = 1 << 29,
 	TripleDemonDamage      = 1 << 30,
-	ZeroResistance         = 1 << 31,
+	ZeroResistance         = 1U << 31,
 	// clang-format on
 };
 use_enum_as_flags(ItemSpecialEffect);
@@ -472,14 +466,11 @@ enum item_effect_type : int8_t {
 	IPL_LIGHTRES,
 	IPL_MAGICRES,
 	IPL_ALLRES,
-	IPL_SPLCOST, /* only used in beta */
-	IPL_SPLDUR,  /* only used in beta */
-	IPL_SPLLVLADD,
+	IPL_SPLLVLADD = 14,
 	IPL_CHARGES,
 	IPL_FIREDAM,
 	IPL_LIGHTDAM,
-	IPL_0x12, // Unknown
-	IPL_STR,
+	IPL_STR = 19,
 	IPL_STR_CURSE,
 	IPL_MAG,
 	IPL_MAG_CURSE,
@@ -500,22 +491,16 @@ enum item_effect_type : int8_t {
 	IPL_INDESTRUCTIBLE,
 	IPL_LIGHT,
 	IPL_LIGHT_CURSE,
-	IPL_0x28,        // Unknown
-	IPL_MULT_ARROWS, /* only used in hellfire */
+	IPL_MULT_ARROWS = 41, /* only used in hellfire */
 	IPL_FIRE_ARROWS,
 	IPL_LIGHT_ARROWS,
 	IPL_INVCURS,
 	IPL_THORNS,
 	IPL_NOMANA,
-	IPL_NOHEALPLR, // unused
-	IPL_0x30,      // Unknown
-	IPL_0x31,      // Unknown
-	IPL_FIREBALL,  /* only used in hellfire */
-	IPL_0x33,      // Unknown
-	IPL_ABSHALFTRAP,
+	IPL_FIREBALL = 50, /* only used in hellfire */
+	IPL_ABSHALFTRAP = 52,
 	IPL_KNOCKBACK,
-	IPL_NOHEALMON, // unused
-	IPL_STEALMANA,
+	IPL_STEALMANA = 55,
 	IPL_STEALLIFE,
 	IPL_TARGAC,
 	IPL_FASTATTACK,
@@ -527,25 +512,20 @@ enum item_effect_type : int8_t {
 	IPL_SETDUR,
 	IPL_NOMINSTR,
 	IPL_SPELL,
-	IPL_FASTSWING, // unused
-	IPL_ONEHAND,
+	IPL_ONEHAND = 68,
 	IPL_3XDAMVDEM,
 	IPL_ALLRESZERO,
-	IPL_0x47, // Unknown
-	IPL_DRAINLIFE,
+	IPL_DRAINLIFE = 72,
 	IPL_RNDSTEALLIFE,
-	IPL_INFRAVISION, // unused
-	IPL_SETAC,
+	IPL_SETAC = 75,
 	IPL_ADDACLIFE,
 	IPL_ADDMANAAC,
-	IPL_FIRERESCLVL, // unused
-	IPL_AC_CURSE,
+	IPL_AC_CURSE = 79,
 	IPL_LASTDIABLO = IPL_AC_CURSE,
 	IPL_FIRERES_CURSE,
 	IPL_LIGHTRES_CURSE,
 	IPL_MAGICRES_CURSE,
-	IPL_ALLRES_CURSE, // unused
-	IPL_DEVASTATION,
+	IPL_DEVASTATION = 84,
 	IPL_DECAY,
 	IPL_PERIL,
 	IPL_JESTERS,
@@ -578,9 +558,9 @@ enum class AffixItemType : uint8_t {
 use_enum_as_flags(AffixItemType);
 
 struct ItemPower {
-	item_effect_type type;
-	int param1;
-	int param2;
+	item_effect_type type = IPL_INVALID;
+	int param1 = 0;
+	int param2 = 0;
 };
 
 struct PLStruct {

@@ -1,10 +1,12 @@
 #pragma once
 
+#include <cstdint>
+
 #include "utils/enum_traits.h"
 
 namespace devilution {
 
-enum class UiFlags {
+enum class UiFlags : uint32_t {
 	// clang-format off
 	None               = 0,
 
