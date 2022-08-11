@@ -1753,16 +1753,36 @@ void printItemMiscKBM(const Item &item, const bool isOil, const bool isCastOnTar
 	} else if (isCastOnTarget) {
 		AddPanelString(_("Right-click to read, then"));
 		AddPanelString(_("left-click to target"));
-	} else {
+	} else if (IsAnyOf(item._iMiscId, IMISC_BOOK, IMISC_NOTE, IMISC_SCROLL)){
 		AddPanelString(_("Right-click to read"));
 	}
+}
+
+void printItemMiscVirtualGamepad(const Item &item, const bool isOil)
+{
+	if (item._iMiscId == IMISC_MAPOFDOOM) {
+		AddPanelString(_("Activate to view"));
+	} else if (isOil) {
+		PrintItemOil(item._iMiscId);
+		if (!invflag) {
+			AddPanelString(_("Open inventory to use"));
+
+		} else {
+			AddPanelString(_("Activate to use"));
+		}
+	} else if (item._iMiscId == IMISC_SCROLL){
+		AddPanelString(_("Select from spell book, then"));
+		AddPanelString(_("cast to read"));
+        } else {
+          AddPanelString(_("Activate to read"));
+        }
 }
 
 void printItemMiscGamepad(const Item &item, const bool isOil, const bool isCastOnTarget, const bool usingDualShock)
 {
 	if (item._iMiscId == IMISC_MAPOFDOOM) {
 		if (usingDualShock) {
-			AddPanelString(_("triangle to view"));
+			AddPanelString(_("Triangle to view"));
 		} else {
 			AddPanelString(_("Y to view"));
 		}
@@ -1772,19 +1792,19 @@ void printItemMiscGamepad(const Item &item, const bool isOil, const bool isCastO
 			AddPanelString(_("Open inventory to use"));
 
 		} else if (usingDualShock) {
-			AddPanelString(_("triangle to use"));
+			AddPanelString(_("Triangle to use"));
 		} else {
 			AddPanelString(_("Y to use"));
 		}
 	} else if (isCastOnTarget) {
 		AddPanelString(_("Select from spell book, then"));
 		if (usingDualShock)
-			AddPanelString(_("square to read"));
+			AddPanelString(_("Square to read"));
 		else
 			AddPanelString(_("X to read"));
-	} else {
+	} else if (IsAnyOf(item._iMiscId, IMISC_BOOK, IMISC_NOTE, IMISC_SCROLL)){
 		if (usingDualShock)
-			AddPanelString(_("triangle to read"));
+			AddPanelString(_("Triangle to read"));
 		else
 			AddPanelString(_("Y to read"));
 	}
@@ -1810,6 +1830,8 @@ void PrintItemMisc(const Item &item)
 
 	if (ControlMode == ControlTypes::KeyboardAndMouse) {
 		printItemMiscKBM(item, isOil, isCastOnTarget);
+	} else if (ControlMode == ControlTypes::VirtualGamepad || GamepadType == SDL_CONTROLLER_TYPE_VIRTUAL) {
+		printItemMiscVirtualGamepad(item, isOil);
 	} else {
 		const bool usingDualShock = IsAnyOf(GamepadType, SDL_CONTROLLER_TYPE_PS3, SDL_CONTROLLER_TYPE_PS4, SDL_CONTROLLER_TYPE_PS5);
 		printItemMiscGamepad(item, isOil, isCastOnTarget, usingDualShock);
