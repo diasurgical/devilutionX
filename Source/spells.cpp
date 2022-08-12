@@ -15,7 +15,6 @@
 #include "gamemenu.h"
 #include "inv.h"
 #include "missiles.h"
-#include "options.h"
 
 namespace devilution {
 

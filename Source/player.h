@@ -673,7 +673,6 @@ struct Player {
 			_pManaBase = _pMaxManaBase;
 		}
 	}
-
 	/**
 	 * @brief Sets the readied spell to the spell in the specified equipment slot. Does nothing if the item does not have a valid spell.
 	 * @param bodyLocation - the body location whose item will be checked for the spell.
