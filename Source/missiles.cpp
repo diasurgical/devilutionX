@@ -626,6 +626,17 @@ bool GrowWall(int playerId, Point position, Point target, missile_id type, int s
 	return true;
 }
 
+/** @brief Sync missile position with parent missile */
+void SyncPositionWithParent(Missile &missile, const AddMissileParameter &parameter)
+{
+	const Missile *parent = parameter.pParent;
+	if (parent == nullptr)
+		return;
+
+	missile.position.offset = parent->position.offset;
+	missile.position.traveled = parent->position.traveled;
+}
+
 void SpawnLightning(Missile &missile, int dam)
 {
 	missile._mirange--;
@@ -658,7 +669,8 @@ void SpawnLightning(Missile &missile, int dam)
 			    missile._micaster,
 			    missile._misource,
 			    dam,
-			    missile._mispllvl);
+			    missile._mispllvl,
+			    &missile);
 			missile.var1 = position.x;
 			missile.var2 = position.y;
 		}
@@ -1796,6 +1808,8 @@ void AddLightning(Missile &missile, const AddMissileParameter &parameter)
 {
 	missile.position.start = parameter.dst;
 
+	SyncPositionWithParent(missile, parameter);
+
 	missile._miAnimFrame = GenerateRnd(8) + 1;
 
 	if (missile._micaster == TARGET_PLAYERS || missile.IsTrap()) {
@@ -2446,6 +2460,8 @@ void AddFlame(Missile &missile, const AddMissileParameter &parameter)
 {
 	missile.var2 = 5 * missile._midam;
 	missile.position.start = parameter.dst;
+
+	SyncPositionWithParent(missile, parameter);
 
 	missile._mirange = missile.var2 + 20;
 	missile._mlid = AddLight(missile.position.start, 1);
@@ -3783,7 +3799,8 @@ void MI_Flamec(Missile &missile)
 			    missile._micaster,
 			    missile._misource,
 			    missile.var3,
-			    missile._mispllvl);
+			    missile._mispllvl,
+			    &missile);
 		} else {
 			missile._mirange = 0;
 		}
