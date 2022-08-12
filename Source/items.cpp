@@ -1753,7 +1753,7 @@ void printItemMiscKBM(const Item &item, const bool isOil, const bool isCastOnTar
 	} else if (isCastOnTarget) {
 		AddPanelString(_("Right-click to read, then"));
 		AddPanelString(_("left-click to target"));
-	} else if (IsAnyOf(item._iMiscId, IMISC_BOOK, IMISC_NOTE, IMISC_SCROLL)){
+	} else if (IsAnyOf(item._iMiscId, IMISC_BOOK, IMISC_NOTE, IMISC_SCROLL)) {
 		AddPanelString(_("Right-click to read"));
 	}
 }
@@ -1770,12 +1770,12 @@ void printItemMiscVirtualGamepad(const Item &item, const bool isOil)
 		} else {
 			AddPanelString(_("Activate to use"));
 		}
-	} else if (item._iMiscId == IMISC_SCROLL){
+	} else if (item._iMiscId == IMISC_SCROLL) {
 		AddPanelString(_("Select from spell book, then"));
 		AddPanelString(_("cast to read"));
-        } else {
-          AddPanelString(_("Activate to read"));
-        }
+	} else {
+		AddPanelString(_("Activate to read"));
+	}
 }
 
 void printItemMiscGamepad(const Item &item, const bool isOil, const bool isCastOnTarget, const bool usingDualShock)
@@ -1802,7 +1802,7 @@ void printItemMiscGamepad(const Item &item, const bool isOil, const bool isCastO
 			AddPanelString(_("Square to read"));
 		else
 			AddPanelString(_("X to read"));
-	} else if (IsAnyOf(item._iMiscId, IMISC_BOOK, IMISC_NOTE, IMISC_SCROLL)){
+	} else if (IsAnyOf(item._iMiscId, IMISC_BOOK, IMISC_NOTE, IMISC_SCROLL)) {
 		if (usingDualShock)
 			AddPanelString(_("Triangle to read"));
 		else
