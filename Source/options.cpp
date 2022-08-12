@@ -1013,8 +1013,6 @@ GameplayOptions::GameplayOptions()
     , numFullManaPotionPickup("Full Mana Potion Pickup", OptionEntryFlags::None, N_("Full Mana Potion Pickup"), N_("Number of Full Mana potions to pick up automatically."), 0, { 0, 1, 2, 4, 8, 16 })
     , numRejuPotionPickup("Rejuvenation Potion Pickup", OptionEntryFlags::None, N_("Rejuvenation Potion Pickup"), N_("Number of Rejuvenation potions to pick up automatically."), 0, { 0, 1, 2, 4, 8, 16 })
     , numFullRejuPotionPickup("Full Rejuvenation Potion Pickup", OptionEntryFlags::None, N_("Full Rejuvenation Potion Pickup"), N_("Number of Full Rejuvenation potions to pick up automatically."), 0, { 0, 1, 2, 4, 8, 16 })
-    , hpRegen("Regenerate HP Over Time", OptionEntryFlags::None, N_("Regenerate HP Over Time"), N_("Regenerate HP over time, rate depends on class. Also makes healing potions more expensive."), false)
-    , manaRegen("Regenerate Mana Over Time", OptionEntryFlags::None, N_("Regenerate Mana Over Time"), N_("Regenerate Mana over time, rate depends on class. Also makes spells and mana restoring potions more expensive."), false)
 
 {
 	grabInput.SetValueChangedCallback(OptionGrabInputChanged);
@@ -1055,9 +1053,7 @@ std::vector<OptionEntryBase *> GameplayOptions::GetEntries()
 		&numManaPotionPickup,
 		&numFullManaPotionPickup,
 		&numRejuPotionPickup,
-		&numFullRejuPotionPickup,
-		&hpRegen,
-		&manaRegen
+		&numFullRejuPotionPickup
 	};
 }
 

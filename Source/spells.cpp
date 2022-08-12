@@ -190,9 +190,6 @@ void ConsumeSpell(Player &player, spell_id sn)
 			break;
 #endif
 		int ma = GetManaAmount(player, sn);
-		if (*sgOptions.Gameplay.manaRegen) {
-			ma *= 3;
-		}
 		player._pMana -= ma;
 		player._pManaBase -= ma;
 		drawmanaflag = true;
