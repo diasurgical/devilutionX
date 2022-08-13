@@ -5,6 +5,7 @@
 #include <cstdint>
 
 #include <SDL.h>
+#include <SDL_gamecontroller.h>
 
 #include "controls/controller.h"
 #include "player.h"
