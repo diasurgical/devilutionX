@@ -1,5 +1,6 @@
 #include "./sdl2_to_1_2_backports.h"
 
+#include <SDL_getenv.h>
 #include <algorithm>
 #include <cstddef>
 

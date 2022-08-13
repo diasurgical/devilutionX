@@ -1,5 +1,6 @@
 #include "utils/pcx.hpp"
 
+#include <SDL_endian.h>
 #include <cstring>
 #include <memory>
 
