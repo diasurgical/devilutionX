@@ -1779,33 +1779,34 @@ void printItemMiscVirtualGamepad(const Item &item, const bool isOil)
 
 void printItemMiscGamepad(const Item &item, const bool isOil, const bool isCastOnTarget, const bool usingDualShock)
 {
+	std::string y_icon = "Y";
+	std::string x_icon = "X";
+
+	if (GamepadType == GamepadLayout::Xbox) {
+		y_icon = "Y";
+		x_icon = "X";
+	} else if (GamepadType == GamepadLayout::Playstation) {
+		y_icon = "Triangle";
+		x_icon = "Square";
+	} else if (GamepadType == GamepadLayout::Nintendo) {
+		y_icon = "Y";
+		x_icon = "X";
+	}
+
 	if (item._iMiscId == IMISC_MAPOFDOOM) {
-		if (usingDualShock) {
-			AddPanelString(_("Triangle to view"));
-		} else {
-			AddPanelString(_("Y to view"));
-		}
+		AddPanelString(_(y_icon + " to view"));
 	} else if (isOil) {
 		PrintItemOil(item._iMiscId);
 		if (!invflag) {
 			AddPanelString(_("Open inventory to use"));
-
-		} else if (usingDualShock) {
-			AddPanelString(_("Triangle to use"));
 		} else {
-			AddPanelString(_("Y to use"));
+			AddPanelString(_(y_icon + " to use"));
 		}
 	} else if (isCastOnTarget) {
 		AddPanelString(_("Select from spell book, then"));
-		if (usingDualShock)
-			AddPanelString(_("Square to read"));
-		else
-			AddPanelString(_("X to read"));
+		AddPanelString(_(x_icon + " to read"));
 	} else if (IsAnyOf(item._iMiscId, IMISC_BOOK, IMISC_NOTE, IMISC_SCROLL)) {
-		if (usingDualShock)
-			AddPanelString(_("Triangle to read"));
-		else
-			AddPanelString(_("Y to read"));
+		AddPanelString(_(y_icon + " to read"));
 	}
 }
 
@@ -1829,11 +1830,10 @@ void PrintItemMisc(const Item &item)
 
 	if (ControlMode == ControlTypes::KeyboardAndMouse) {
 		printItemMiscKBM(item, isOil, isCastOnTarget);
-	} else if (ControlMode == ControlTypes::VirtualGamepad || GamepadType == SDL_CONTROLLER_TYPE_VIRTUAL) {
+	} else if (ControlMode == ControlTypes::VirtualGamepad || GamepadType == GamepadLayout::Virtual) {
 		printItemMiscVirtualGamepad(item, isOil);
 	} else {
-		const bool usingDualShock = IsAnyOf(GamepadType, SDL_CONTROLLER_TYPE_PS3, SDL_CONTROLLER_TYPE_PS4, SDL_CONTROLLER_TYPE_PS5);
-		printItemMiscGamepad(item, isOil, isCastOnTarget, usingDualShock);
+		printItemMiscGamepad(item, isOil, isCastOnTarget);
 	}
 }
 

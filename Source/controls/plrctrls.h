@@ -4,8 +4,8 @@
 #include <cstddef>
 #include <cstdint>
 
+#include "controls/devices/game_controller.h"
 #include <SDL.h>
-#include <SDL_gamecontroller.h>
 
 #include "controls/controller.h"
 #include "player.h"
@@ -26,7 +26,7 @@ enum class ControlTypes : uint8_t {
 
 string_view ControlTypeToString(ControlTypes controlType);
 
-string_view GamepadTypeToString(SDL_GameControllerType gamepadType);
+string_view GamepadTypeToString(GamepadLayout gamepadLayout);
 
 extern ControlTypes ControlMode;
 
@@ -42,11 +42,11 @@ extern ControlTypes ControlDevice;
 
 extern ControllerButton ControllerButtonHeld;
 
-extern SDL_GameControllerType GamepadType;
+extern GamepadLayout GamepadType;
 
 struct ControlTypeWithGamepad {
 	ControlTypes controlTypeCoarse;
-	SDL_GameControllerType gamepadType;
+	GamepadLayout gamepadLayout;
 };
 
 // Runs every frame.

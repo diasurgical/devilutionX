@@ -11,10 +11,7 @@
 #include "automap.h"
 #include "control.h"
 #include "controls/controller_motion.h"
-#include "miniwin/misc_msg.h"
-#ifndef USE_SDL1
 #include "controls/devices/game_controller.h"
-#endif
 #include "controls/game_controls.h"
 #include "controls/touch/gamepad.h"
 #include "cursor.h"
@@ -28,6 +25,7 @@
 #include "items.h"
 #include "levels/trigs.h"
 #include "minitext.h"
+#include "miniwin/misc_msg.h"
 #include "missiles.h"
 #include "panels/spell_list.hpp"
 #include "panels/ui_panels.hpp"
@@ -46,7 +44,7 @@ namespace devilution {
 ControlTypes ControlMode = ControlTypes::None;
 ControlTypes ControlDevice = ControlTypes::None;
 ControllerButton ControllerButtonHeld = ControllerButton_NONE;
-SDL_GameControllerType GamepadType = SDL_CONTROLLER_TYPE_UNKNOWN;
+GamepadLayout GamepadType = GamepadLayout::Generic;
 int pcurstrig = -1;
 Missile *pcursmissile = nullptr;
 quest_id pcursquest = Q_INVALID;
@@ -1416,41 +1414,29 @@ ControlTypeWithGamepad GetInputTypeFromEvent(const SDL_Event &event)
 	if (IsAnyOf(event.type, SDL_MOUSEBUTTONDOWN, SDL_MOUSEBUTTONUP, SDL_MOUSEMOTION)) {
 		return {
 			.controlTypeCoarse = ControlTypes::KeyboardAndMouse,
-			.gamepadType = SDL_CONTROLLER_TYPE_UNKNOWN
+			.gamepadLayout = GamepadLayout::Generic
 		};
 	}
 #else
-	SDL_GameControllerType gamepad = SDL_GameControllerTypeForIndex(event.cdevice.which);
+	GamepadLayout gamepad = GameController::getLayout(event);
 
-	if (gamepad > 0) {
+	if (gamepad > GamepadLayout::Generic) {
 		return {
-			.controlTypeCoarse = ControlTypes::Gamepad,
-			.gamepadType = gamepad
+			.controlTypeCoarse = gamepad < GamepadLayout::Virtual ? ControlTypes::Gamepad : ControlTypes::VirtualGamepad,
+			.gamepadLayout = gamepad
 		};
 	}
 
-	if (IsAnyOf(event.type, SDL_MOUSEBUTTONDOWN, SDL_MOUSEBUTTONUP)) {
+	if (IsAnyOf(event.type, SDL_MOUSEBUTTONDOWN, SDL_MOUSEBUTTONUP, SDL_MOUSEMOTION, SDL_MOUSEWHEEL)) {
 		return {
 			.controlTypeCoarse = event.button.which == SDL_TOUCH_MOUSEID ? ControlTypes::VirtualGamepad : ControlTypes::KeyboardAndMouse,
-			.gamepadType = event.button.which == SDL_TOUCH_MOUSEID ? SDL_CONTROLLER_TYPE_VIRTUAL : SDL_CONTROLLER_TYPE_UNKNOWN
-		};
-	}
-	if (event.type == SDL_MOUSEMOTION) {
-		return {
-			.controlTypeCoarse = event.motion.which == SDL_TOUCH_MOUSEID ? ControlTypes::VirtualGamepad : ControlTypes::KeyboardAndMouse,
-			.gamepadType = event.button.which == SDL_TOUCH_MOUSEID ? SDL_CONTROLLER_TYPE_VIRTUAL : SDL_CONTROLLER_TYPE_UNKNOWN
-		};
-	}
-	if (event.type == SDL_MOUSEWHEEL) {
-		return {
-			.controlTypeCoarse = event.wheel.which == SDL_TOUCH_MOUSEID ? ControlTypes::VirtualGamepad : ControlTypes::KeyboardAndMouse,
-			.gamepadType = event.button.which == SDL_TOUCH_MOUSEID ? SDL_CONTROLLER_TYPE_VIRTUAL : SDL_CONTROLLER_TYPE_UNKNOWN
+			.gamepadLayout = event.button.which == SDL_TOUCH_MOUSEID ? GamepadLayout::Virtual : GamepadLayout::Generic
 		};
 	}
 	if (IsAnyOf(event.type, SDL_FINGERDOWN, SDL_FINGERUP, SDL_FINGERMOTION)) {
 		return {
 			.controlTypeCoarse = ControlTypes::VirtualGamepad,
-			.gamepadType = SDL_CONTROLLER_TYPE_VIRTUAL
+			.gamepadLayout = GamepadLayout::Virtual
 		};
 	}
 	if (event.type == SDL_CONTROLLERAXISMOTION
@@ -1458,38 +1444,38 @@ ControlTypeWithGamepad GetInputTypeFromEvent(const SDL_Event &event)
 	        || IsStickMovementSignificant())) {
 		return {
 			.controlTypeCoarse = ControlTypes::Gamepad,
-			.gamepadType = SDL_CONTROLLER_TYPE_UNKNOWN
+			.gamepadLayout = GamepadLayout::Generic
 		};
 	}
 	if (event.type >= SDL_CONTROLLERBUTTONDOWN && event.type <= SDL_CONTROLLERDEVICEREMAPPED) {
 		return {
 			.controlTypeCoarse = ControlTypes::Gamepad,
-			.gamepadType = SDL_CONTROLLER_TYPE_UNKNOWN
+			.gamepadLayout = GamepadLayout::Generic
 		};
 	}
 	if (IsAnyOf(event.type, SDL_JOYDEVICEADDED, SDL_JOYDEVICEREMOVED)) {
 		return {
 			.controlTypeCoarse = ControlTypes::Gamepad,
-			.gamepadType = SDL_CONTROLLER_TYPE_UNKNOWN
+			.gamepadLayout = GamepadLayout::Generic
 		};
 	}
 #endif
 	if (event.type == SDL_JOYAXISMOTION && IsStickMovementSignificant()) {
 		return {
 			.controlTypeCoarse = ControlTypes::Gamepad,
-			.gamepadType = SDL_CONTROLLER_TYPE_UNKNOWN
+			.gamepadLayout = GamepadLayout::Generic
 		};
 	}
 	if (event.type >= SDL_JOYBALLMOTION && event.type <= SDL_JOYBUTTONUP) {
 		return {
 			.controlTypeCoarse = ControlTypes::Gamepad,
-			.gamepadType = SDL_CONTROLLER_TYPE_UNKNOWN
+			.gamepadLayout = GamepadLayout::Generic
 		};
 	}
 
 	return {
 		.controlTypeCoarse = ControlTypes::None,
-		.gamepadType = SDL_CONTROLLER_TYPE_UNKNOWN
+		.gamepadLayout = GamepadLayout::Generic
 	};
 }
 
@@ -1515,7 +1501,7 @@ bool ContinueSimulatedMouseEvent(const SDL_Event &event, const ControllerButtonE
 	return SimulatingMouseWithSelectAndDPad || IsSimulatedMouseClickBinding(gamepadEvent);
 }
 
-void LogControlDeviceAndModeChange(ControlTypes newControlDevice, ControlTypes newControlMode, SDL_GameControllerType newGamepad = SDL_CONTROLLER_TYPE_UNKNOWN)
+void LogControlDeviceAndModeChange(ControlTypes newControlDevice, ControlTypes newControlMode)
 {
 	if (SDL_LOG_PRIORITY_VERBOSE < SDL_LogGetPriority(SDL_LOG_CATEGORY_APPLICATION))
 		return;
@@ -1529,13 +1515,13 @@ void LogControlDeviceAndModeChange(ControlTypes newControlDevice, ControlTypes n
 	LogVerbose("Control: device {}, mode {}", DebugChange(ControlDevice, newControlDevice), DebugChange(ControlMode, newControlMode));
 }
 
-void LogGamepadChange(SDL_GameControllerType newGamepad)
+void LogGamepadChange(GamepadLayout newGamepad)
 {
 	if (SDL_LOG_PRIORITY_VERBOSE < SDL_LogGetPriority(SDL_LOG_CATEGORY_APPLICATION))
 		return;
 	if (GamepadType == newGamepad)
 		return;
-	constexpr auto DebugChange = [](SDL_GameControllerType before, SDL_GameControllerType after) -> std::string {
+	constexpr auto DebugChange = [](GamepadLayout before, GamepadLayout after) -> std::string {
 		if (before == after)
 			return std::string { GamepadTypeToString(before) };
 		return StrCat(GamepadTypeToString(before), " -> ", GamepadTypeToString(after));
@@ -1560,29 +1546,19 @@ string_view ControlTypeToString(ControlTypes controlType)
 	return "Invalid";
 }
 
-string_view GamepadTypeToString(SDL_GameControllerType gamepadType)
+string_view GamepadTypeToString(GamepadLayout gamepadLayout)
 {
-	switch (gamepadType) {
-	case SDL_GameControllerType::SDL_CONTROLLER_TYPE_UNKNOWN:
+	switch (gamepadLayout) {
+	case GamepadLayout::Generic:
 		return "Unknown";
-	case SDL_GameControllerType::SDL_CONTROLLER_TYPE_AMAZON_LUNA:
-		return "Amazon Luma";
-	case SDL_GameControllerType::SDL_CONTROLLER_TYPE_GOOGLE_STADIA:
-		return "Google Stadia";
-	case SDL_GameControllerType::SDL_CONTROLLER_TYPE_NINTENDO_SWITCH_PRO:
+	case GamepadLayout::Nintendo:
 		return "Nintendo Switch Pro";
-	case SDL_GameControllerType::SDL_CONTROLLER_TYPE_PS3:
-		return "Dual Shock 3";
-	case SDL_GameControllerType::SDL_CONTROLLER_TYPE_PS4:
-		return "Dual Shock 4";
-	case SDL_GameControllerType::SDL_CONTROLLER_TYPE_PS5:
-		return "Dual Shock 5";
-	case SDL_GameControllerType::SDL_CONTROLLER_TYPE_VIRTUAL:
+	case GamepadLayout::Playstation:
+		return "Dual Shock";
+	case GamepadLayout::Virtual:
 		return "Virtual Gamepad";
-	case SDL_GameControllerType::SDL_CONTROLLER_TYPE_XBOX360:
-		return "Xbox 360";
-	case SDL_GameControllerType::SDL_CONTROLLER_TYPE_XBOXONE:
-		return "Xbox One";
+	case GamepadLayout::Xbox:
+		return "Xbox";
 	}
 	return "Invalid";
 }
@@ -1608,7 +1584,7 @@ void DetectInputMethod(const SDL_Event &event, const ControllerButtonEvent &game
 
 	ControlTypes newControlDevice = inputType.controlTypeCoarse;
 	ControlTypes newControlMode = inputType.controlTypeCoarse;
-	SDL_GameControllerType newGamepad = inputType.gamepadType;
+	GamepadLayout newGamepad = inputType.gamepadLayout;
 	if (ContinueSimulatedMouseEvent(event, gamepadEvent)) {
 		newControlMode = ControlMode;
 	}

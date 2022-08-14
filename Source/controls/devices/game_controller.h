@@ -8,6 +8,14 @@
 
 namespace devilution {
 
+enum GamepadLayout {
+	Generic = 0,
+	Xbox,
+	Playstation,
+	Nintendo,
+	Virtual
+};
+
 class GameController {
 	static std::vector<GameController> controllers_;
 
@@ -27,6 +35,7 @@ public:
 	bool IsPressed(ControllerButton button) const;
 	static bool ProcessAxisMotion(const SDL_Event &event);
 	static SDL_GameControllerButton ToSdlGameControllerButton(ControllerButton button);
+	static GamepadLayout getLayout(const SDL_Event &event);
 
 private:
 	SDL_GameController *sdl_game_controller_ = NULL;
