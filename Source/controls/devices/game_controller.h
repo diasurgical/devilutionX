@@ -10,9 +10,9 @@ namespace devilution {
 
 enum class GamepadLayout {
 	Generic = 0,
-	Xbox,
-	Playstation,
 	Nintendo,
+	Playstation,
+	Xbox,
 	Virtual
 };
 
