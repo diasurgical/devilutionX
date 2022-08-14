@@ -5,16 +5,9 @@
 #include <SDL.h>
 
 #include "controls/controller_buttons.h"
+#include "controls/game_controls.h"
 
 namespace devilution {
-
-enum class GamepadLayout {
-	Generic = 0,
-	Nintendo,
-	Playstation,
-	Xbox,
-	Virtual
-};
 
 class GameController {
 	static std::vector<GameController> controllers_;

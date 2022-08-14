@@ -64,4 +64,12 @@ extern const ControllerButton ControllerButtonPrimary;
 extern const ControllerButton ControllerButtonSecondary;
 extern const ControllerButton ControllerButtonTertiary;
 
+enum class GamepadLayout {
+	Generic = 0,
+	Nintendo,
+	Playstation,
+	Xbox,
+	Virtual
+};
+
 } // namespace devilution

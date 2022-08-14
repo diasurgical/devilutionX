@@ -1410,75 +1410,37 @@ bool IsStickMovementSignificant()
 	    || rightStickX != 0 || rightStickY != 0;
 }
 
-ControlTypeWithGamepad GetInputTypeFromEvent(const SDL_Event &event)
+ControlTypes GetInputTypeFromEvent(const SDL_Event &event)
 {
+	if (IsAnyOf(event.type, SDL_KEYDOWN, SDL_KEYUP))
+		return ControlTypes::KeyboardAndMouse;
 #ifdef USE_SDL1
-	if (IsAnyOf(event.type, SDL_MOUSEBUTTONDOWN, SDL_MOUSEBUTTONUP, SDL_MOUSEMOTION)) {
-		return {
-			.controlTypeCoarse = ControlTypes::KeyboardAndMouse,
-			.gamepadLayout = GamepadLayout::Generic
-		};
-	}
+	if (IsAnyOf(event.type, SDL_MOUSEBUTTONDOWN, SDL_MOUSEBUTTONUP, SDL_MOUSEMOTION))
+		return ControlTypes::KeyboardAndMouse;
 #else
-	GamepadLayout gamepad = GameController::getLayout(event);
-
-	if (gamepad != GamepadLayout::Generic) {
-		return {
-			.controlTypeCoarse = gamepad != GamepadLayout::Virtual ? ControlTypes::Gamepad : ControlTypes::VirtualGamepad,
-			.gamepadLayout = gamepad
-		};
-	}
-
-	if (IsAnyOf(event.type, SDL_MOUSEBUTTONDOWN, SDL_MOUSEBUTTONUP, SDL_MOUSEMOTION, SDL_MOUSEWHEEL)) {
-		return {
-			.controlTypeCoarse = event.button.which == SDL_TOUCH_MOUSEID ? ControlTypes::VirtualGamepad : ControlTypes::KeyboardAndMouse,
-			.gamepadLayout = event.button.which == SDL_TOUCH_MOUSEID ? GamepadLayout::Virtual : GamepadLayout::Generic
-		};
-	}
-	if (IsAnyOf(event.type, SDL_FINGERDOWN, SDL_FINGERUP, SDL_FINGERMOTION)) {
-		return {
-			.controlTypeCoarse = ControlTypes::VirtualGamepad,
-			.gamepadLayout = GamepadLayout::Virtual
-		};
-	}
+	if (IsAnyOf(event.type, SDL_MOUSEBUTTONDOWN, SDL_MOUSEBUTTONUP))
+		return event.button.which == SDL_TOUCH_MOUSEID ? ControlTypes::VirtualGamepad : ControlTypes::KeyboardAndMouse;
+	if (event.type == SDL_MOUSEMOTION)
+		return event.motion.which == SDL_TOUCH_MOUSEID ? ControlTypes::VirtualGamepad : ControlTypes::KeyboardAndMouse;
+	if (event.type == SDL_MOUSEWHEEL)
+		return event.wheel.which == SDL_TOUCH_MOUSEID ? ControlTypes::VirtualGamepad : ControlTypes::KeyboardAndMouse;
+	if (IsAnyOf(event.type, SDL_FINGERDOWN, SDL_FINGERUP, SDL_FINGERMOTION))
+		return ControlTypes::VirtualGamepad;
 	if (event.type == SDL_CONTROLLERAXISMOTION
 	    && (event.caxis.axis == SDL_CONTROLLER_AXIS_TRIGGERLEFT || event.caxis.axis == SDL_CONTROLLER_AXIS_TRIGGERRIGHT
-	        || IsStickMovementSignificant())) {
-		return {
-			.controlTypeCoarse = ControlTypes::Gamepad,
-			.gamepadLayout = GamepadLayout::Generic
-		};
-	}
-	if (event.type >= SDL_CONTROLLERBUTTONDOWN && event.type <= SDL_CONTROLLERDEVICEREMAPPED) {
-		return {
-			.controlTypeCoarse = ControlTypes::Gamepad,
-			.gamepadLayout = GamepadLayout::Generic
-		};
-	}
-	if (IsAnyOf(event.type, SDL_JOYDEVICEADDED, SDL_JOYDEVICEREMOVED)) {
-		return {
-			.controlTypeCoarse = ControlTypes::Gamepad,
-			.gamepadLayout = GamepadLayout::Generic
-		};
-	}
+	        || IsStickMovementSignificant()))
+		return ControlTypes::Gamepad;
+	if (event.type >= SDL_CONTROLLERBUTTONDOWN && event.type <= SDL_CONTROLLERDEVICEREMAPPED)
+		return ControlTypes::Gamepad;
+	if (IsAnyOf(event.type, SDL_JOYDEVICEADDED, SDL_JOYDEVICEREMOVED))
+		return ControlTypes::Gamepad;
 #endif
-	if (event.type == SDL_JOYAXISMOTION && IsStickMovementSignificant()) {
-		return {
-			.controlTypeCoarse = ControlTypes::Gamepad,
-			.gamepadLayout = GamepadLayout::Generic
-		};
-	}
-	if (event.type >= SDL_JOYBALLMOTION && event.type <= SDL_JOYBUTTONUP) {
-		return {
-			.controlTypeCoarse = ControlTypes::Gamepad,
-			.gamepadLayout = GamepadLayout::Generic
-		};
-	}
+	if (event.type == SDL_JOYAXISMOTION && IsStickMovementSignificant())
+		return ControlTypes::Gamepad;
+	if (event.type >= SDL_JOYBALLMOTION && event.type <= SDL_JOYBUTTONUP)
+		return ControlTypes::Gamepad;
 
-	return {
-		.controlTypeCoarse = ControlTypes::None,
-		.gamepadLayout = GamepadLayout::Generic
-	};
+	return ControlTypes::None;
 }
 
 float rightStickLastMove = 0;
@@ -1567,32 +1529,30 @@ string_view GamepadTypeToString(GamepadLayout gamepadLayout)
 
 void DetectInputMethod(const SDL_Event &event, const ControllerButtonEvent &gamepadEvent)
 {
-	ControlTypeWithGamepad inputType = GetInputTypeFromEvent(event);
+	ControlTypes inputType = GetInputTypeFromEvent(event);
 
-	if (inputType.controlTypeCoarse == ControlTypes::None)
+	if (inputType == ControlTypes::None)
 		return;
 
 #ifdef __vita__
 	if (inputType == ControlTypes::VirtualGamepad) {
-		inputType.controlTypeCoarse = ControlTypes::Gamepad;
+		inputType = ControlTypes::Gamepad;
 	}
 #endif
 
 #if HAS_KBCTRL == 1
 	if (inputType == ControlTypes::KeyboardAndMouse && IsNoneOf(gamepadEvent.button, ControllerButton_NONE, ControllerButton_IGNORE)) {
-		inputType.controlTypeCoarse = ControlTypes::Gamepad;
+		inputType = ControlTypes::Gamepad;
 	}
 #endif
 
-	ControlTypes newControlDevice = inputType.controlTypeCoarse;
-	ControlTypes newControlMode = inputType.controlTypeCoarse;
-	GamepadLayout newGamepad = inputType.gamepadLayout;
+	ControlTypes newControlDevice = inputType;
+	ControlTypes newControlMode = inputType;
 	if (ContinueSimulatedMouseEvent(event, gamepadEvent)) {
 		newControlMode = ControlMode;
 	}
 
 	LogControlDeviceAndModeChange(newControlDevice, newControlMode);
-	LogGamepadChange(newGamepad);
 
 	if (newControlDevice != ControlDevice) {
 		ControlDevice = newControlDevice;
@@ -1604,6 +1564,13 @@ void DetectInputMethod(const SDL_Event &event, const ControllerButtonEvent &game
 		} else {
 			ResetCursor();
 		}
+		if (ControlDevice == ControlTypes::Gamepad) {
+			GamepadLayout newGamepadLayout = GameController::getLayout(event);
+			if (newGamepadLayout != GamepadType) {
+				LogGamepadChange(newGamepadLayout);
+				GamepadType = newGamepadLayout;
+			}
+		}
 #endif
 	}
 
@@ -1611,9 +1578,6 @@ void DetectInputMethod(const SDL_Event &event, const ControllerButtonEvent &game
 		ControlMode = newControlMode;
 		CalculatePanelAreas();
 	}
-
-	if (newGamepad != GamepadType)
-		GamepadType = newGamepad;
 }
 
 bool IsAutomapActive()
