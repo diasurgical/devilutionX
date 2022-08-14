@@ -1422,7 +1422,7 @@ ControlTypeWithGamepad GetInputTypeFromEvent(const SDL_Event &event)
 
 	if (gamepad != GamepadLayout::Generic) {
 		return {
-			.controlTypeCoarse = gamepad < GamepadLayout::Virtual ? ControlTypes::Gamepad : ControlTypes::VirtualGamepad,
+			.controlTypeCoarse = gamepad != GamepadLayout::Virtual ? ControlTypes::Gamepad : ControlTypes::VirtualGamepad,
 			.gamepadLayout = gamepad
 		};
 	}
