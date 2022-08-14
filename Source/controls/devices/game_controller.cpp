@@ -257,8 +257,8 @@ GamepadLayout GameController::getLayout(const SDL_Event &event)
 		return GamepadLayout::Nintendo;
 	case SDL_CONTROLLER_TYPE_UNKNOWN:
 		return GamepadLayout::Generic;
-#endif
 	}
+#endif
 	return GamepadLayout::Generic;
 }
 
