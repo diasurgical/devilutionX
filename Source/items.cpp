@@ -1777,7 +1777,7 @@ void printItemMiscVirtualGamepad(const Item &item, const bool isOil)
 	}
 }
 
-void printItemMiscGamepad(const Item &item, const bool isOil, const bool isCastOnTarget, const bool usingDualShock)
+void printItemMiscGamepad(const Item &item, bool isOil, bool isCastOnTarget)
 {
 	std::string y_icon = "Y";
 	std::string x_icon = "X";
