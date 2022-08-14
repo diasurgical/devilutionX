@@ -1555,10 +1555,10 @@ string_view GamepadTypeToString(GamepadLayout gamepadLayout)
 		return "Nintendo Switch Pro";
 	case GamepadLayout::Playstation:
 		return "Dual Shock";
-	case GamepadLayout::Virtual:
-		return "Virtual Gamepad";
 	case GamepadLayout::Xbox:
 		return "Xbox";
+	case GamepadLayout::Virtual:
+		return "Virtual Gamepad";
 	}
 	return "Invalid";
 }
