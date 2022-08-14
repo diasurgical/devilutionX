@@ -11,7 +11,9 @@
 #include "automap.h"
 #include "control.h"
 #include "controls/controller_motion.h"
+#ifndef USE_SDL1
 #include "controls/devices/game_controller.h"
+#endif
 #include "controls/game_controls.h"
 #include "controls/touch/gamepad.h"
 #include "cursor.h"
