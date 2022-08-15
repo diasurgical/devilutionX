@@ -1794,7 +1794,7 @@ void printItemMiscGamepad(const Item &item, bool isOil, bool isCastOnTarget)
 	}
 
 	if (item._iMiscId == IMISC_MAPOFDOOM) {
-            AddPanelString(fmt::format(fmt::runtime(_("{} to view")), activateButton));
+		AddPanelString(fmt::format(fmt::runtime(_("{} to view")), activateButton));
 	} else if (isOil) {
 		PrintItemOil(item._iMiscId);
 		if (!invflag) {
