@@ -1794,18 +1794,18 @@ void printItemMiscGamepad(const Item &item, bool isOil, bool isCastOnTarget)
 	}
 
 	if (item._iMiscId == IMISC_MAPOFDOOM) {
-		AddPanelString(_(fmt::format("{} to view", activateButton)));
+            AddPanelString(fmt::format(fmt::runtime(_("{} to view")), activateButton));
 	} else if (isOil) {
 		PrintItemOil(item._iMiscId);
 		if (!invflag) {
 			AddPanelString(_("Open inventory to use"));
 		} else {
-			AddPanelString(_(fmt::format("{} to use", activateButton)));
+			AddPanelString(fmt::format(fmt::runtime(_("{} to use")), activateButton));
 		}
 	} else if (isCastOnTarget) {
-		AddPanelString(_(fmt::format("Select from spell book, then {} to read", castButton)));
+		AddPanelString(fmt::format(fmt::runtime(_("Select from spell book, then {} to read")), castButton));
 	} else if (IsAnyOf(item._iMiscId, IMISC_BOOK, IMISC_NOTE, IMISC_SCROLL)) {
-		AddPanelString(_(fmt::format("{} to read", activateButton)));
+		AddPanelString(fmt::format(fmt::runtime(_("{} to read")), activateButton));
 	}
 }
 
