@@ -4,12 +4,10 @@
 #include <cstddef>
 #include <cstdint>
 
-#ifndef USE_SDL1
-#include "controls/devices/game_controller.h"
-#endif
 #include <SDL.h>
 
 #include "controls/controller.h"
+#include "controls/game_controls.h"
 #include "player.h"
 
 namespace devilution {
@@ -26,12 +24,6 @@ enum class ControlTypes : uint8_t {
 	VirtualGamepad,
 };
 
-string_view ControlTypeToString(ControlTypes controlType);
-
-#ifndef USE_SDL1
-string_view GamepadTypeToString(GamepadLayout gamepadLayout);
-#endif
-
 extern ControlTypes ControlMode;
 
 /**
@@ -46,9 +38,7 @@ extern ControlTypes ControlDevice;
 
 extern ControllerButton ControllerButtonHeld;
 
-#ifndef USE_SDL1
 extern GamepadLayout GamepadType;
-#endif
 
 // Runs every frame.
 // Handles menu movement.

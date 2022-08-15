@@ -8,6 +8,13 @@
 
 namespace devilution {
 
+enum class GamepadLayout : uint8_t {
+	Generic,
+	Nintendo,
+	PlayStation,
+	Xbox,
+};
+
 enum GameActionType : uint8_t {
 	GameActionType_NONE,
 	GameActionType_USE_HEALTH_POTION,
@@ -63,13 +70,5 @@ extern bool select_modifier_active;
 extern const ControllerButton ControllerButtonPrimary;
 extern const ControllerButton ControllerButtonSecondary;
 extern const ControllerButton ControllerButtonTertiary;
-
-enum class GamepadLayout {
-	Generic = 0,
-	Nintendo,
-	Playstation,
-	Xbox,
-	Virtual
-};
 
 } // namespace devilution

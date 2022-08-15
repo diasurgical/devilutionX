@@ -1777,7 +1777,6 @@ void printItemMiscVirtualGamepad(const Item &item, const bool isOil)
 	}
 }
 
-#ifndef USE_SDL1
 void printItemMiscGamepad(const Item &item, bool isOil, bool isCastOnTarget)
 {
 	std::string y_icon = "Y";
@@ -1786,7 +1785,7 @@ void printItemMiscGamepad(const Item &item, bool isOil, bool isCastOnTarget)
 	if (GamepadType == GamepadLayout::Xbox) {
 		y_icon = "Y";
 		x_icon = "X";
-	} else if (GamepadType == GamepadLayout::Playstation) {
+	} else if (GamepadType == GamepadLayout::PlayStation) {
 		y_icon = "Triangle";
 		x_icon = "Square";
 	} else if (GamepadType == GamepadLayout::Nintendo) {
@@ -1810,7 +1809,6 @@ void printItemMiscGamepad(const Item &item, bool isOil, bool isCastOnTarget)
 		AddPanelString(_(y_icon + " to read"));
 	}
 }
-#endif
 
 void PrintItemMisc(const Item &item)
 {
@@ -1834,10 +1832,8 @@ void PrintItemMisc(const Item &item)
 		printItemMiscKBM(item, isOil, isCastOnTarget);
 	} else if (ControlMode == ControlTypes::VirtualGamepad) {
 		printItemMiscVirtualGamepad(item, isOil);
-#ifndef USE_SDL1
 	} else {
 		printItemMiscGamepad(item, isOil, isCastOnTarget);
-#endif
 	}
 }
 

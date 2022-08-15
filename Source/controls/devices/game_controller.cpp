@@ -238,23 +238,32 @@ GamepadLayout GameController::getLayout(const SDL_Event &event)
 	const int index = event.cdevice.which;
 	const SDL_GameControllerType gamepadType = SDL_GameControllerTypeForIndex(index);
 	switch (gamepadType) {
-#if SDL_VERSION_ATLEAST(2, 0, 16)
-	case SDL_CONTROLLER_TYPE_GOOGLE_STADIA:
-	case SDL_CONTROLLER_TYPE_AMAZON_LUNA:;
+	case SDL_CONTROLLER_TYPE_NINTENDO_SWITCH_PRO:
+#if SDL_VERSION_ATLEAST(2, 0, 23)
+	case SDL_CONTROLLER_TYPE_NINTENDO_SWITCH_JOYCON_LEFT:
+	case SDL_CONTROLLER_TYPE_NINTENDO_SWITCH_JOYCON_RIGH:
+	case SDL_CONTROLLER_TYPE_NINTENDO_SWITCH_JOYCON_PAIR:
 #endif
+		return GamepadLayout::Nintendo;
+	case SDL_CONTROLLER_TYPE_PS3:
+	case SDL_CONTROLLER_TYPE_PS4:
+#if SDL_VERSION_ATLEAST(2, 0, 14)
+	case SDL_CONTROLLER_TYPE_PS5:
+#endif
+		return GamepadLayout::PlayStation;
 	case SDL_CONTROLLER_TYPE_XBOXONE:
 	case SDL_CONTROLLER_TYPE_XBOX360:
+#if SDL_VERSION_ATLEAST(2, 0, 16)
+	case SDL_CONTROLLER_TYPE_GOOGLE_STADIA:
+	case SDL_CONTROLLER_TYPE_AMAZON_LUNA:
+#endif
+#if SDL_VERSION_ATLEAST(2, 0, 23)
+	case SDL_CONTROLLER_TYPE_NVIDIA_SHIELD:
+#endif
 		return GamepadLayout::Xbox;
 #if SDL_VERSION_ATLEAST(2, 0, 14)
 	case SDL_CONTROLLER_TYPE_VIRTUAL:
-		return GamepadLayout::Virtual;
-	case SDL_CONTROLLER_TYPE_PS5:
 #endif
-	case SDL_CONTROLLER_TYPE_PS4:
-	case SDL_CONTROLLER_TYPE_PS3:
-		return GamepadLayout::Playstation;
-	case SDL_CONTROLLER_TYPE_NINTENDO_SWITCH_PRO:
-		return GamepadLayout::Nintendo;
 	case SDL_CONTROLLER_TYPE_UNKNOWN:
 		return GamepadLayout::Generic;
 	}
