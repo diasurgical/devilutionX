@@ -1779,8 +1779,8 @@ void printItemMiscVirtualGamepad(const Item &item, const bool isOil)
 
 void printItemMiscGamepad(const Item &item, bool isOil, bool isCastOnTarget)
 {
-	std::string y_icon = "Y";
-	std::string x_icon = "X";
+	std::string activateButton = "Activate";
+	std::string castButton = "Cast";
 
 	if (GamepadType == GamepadLayout::Xbox) {
 		y_icon = "Y";
