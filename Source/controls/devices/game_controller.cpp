@@ -239,10 +239,9 @@ GamepadLayout GameController::getLayout(const SDL_Event &event)
 	const SDL_GameControllerType gamepadType = SDL_GameControllerTypeForIndex(index);
 	switch (gamepadType) {
 	case SDL_CONTROLLER_TYPE_NINTENDO_SWITCH_PRO:
-#endif
 #if SDL_VERSION_ATLEAST(2, 0, 23)
 	case SDL_CONTROLLER_TYPE_NINTENDO_SWITCH_JOYCON_LEFT:
-	case SDL_CONTROLLER_TYPE_NINTENDO_SWITCH_JOYCON_RIGH:
+	case SDL_CONTROLLER_TYPE_NINTENDO_SWITCH_JOYCON_RIGHT:
 	case SDL_CONTROLLER_TYPE_NINTENDO_SWITCH_JOYCON_PAIR:
 #endif
 		return GamepadLayout::Nintendo;
