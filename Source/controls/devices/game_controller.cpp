@@ -239,7 +239,7 @@ GamepadLayout GameController::getLayout(const SDL_Event &event)
 	const SDL_GameControllerType gamepadType = SDL_GameControllerTypeForIndex(index);
 	switch (gamepadType) {
 	case SDL_CONTROLLER_TYPE_NINTENDO_SWITCH_PRO:
-#if SDL_VERSION_ATLEAST(2, 0, 23)
+#if SDL_VERSION_ATLEAST(2, 0, 24)
 	case SDL_CONTROLLER_TYPE_NINTENDO_SWITCH_JOYCON_LEFT:
 	case SDL_CONTROLLER_TYPE_NINTENDO_SWITCH_JOYCON_RIGHT:
 	case SDL_CONTROLLER_TYPE_NINTENDO_SWITCH_JOYCON_PAIR:
@@ -257,7 +257,7 @@ GamepadLayout GameController::getLayout(const SDL_Event &event)
 	case SDL_CONTROLLER_TYPE_GOOGLE_STADIA:
 	case SDL_CONTROLLER_TYPE_AMAZON_LUNA:
 #endif
-#if SDL_VERSION_ATLEAST(2, 0, 23)
+#if SDL_VERSION_ATLEAST(2, 0, 24)
 	case SDL_CONTROLLER_TYPE_NVIDIA_SHIELD:
 #endif
 		return GamepadLayout::Xbox;
