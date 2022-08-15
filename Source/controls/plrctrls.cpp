@@ -1479,11 +1479,10 @@ void LogControlDeviceAndModeChange(ControlTypes newControlDevice, ControlTypes n
 	LogVerbose("Control: device {}, mode {}", DebugChange(ControlDevice, newControlDevice), DebugChange(ControlMode, newControlMode));
 }
 
+#ifndef USE_SDL1
 void LogGamepadChange(GamepadLayout newGamepad)
 {
 	if (SDL_LOG_PRIORITY_VERBOSE < SDL_LogGetPriority(SDL_LOG_CATEGORY_APPLICATION))
-		return;
-	if (GamepadType == newGamepad)
 		return;
 	constexpr auto DebugChange = [](GamepadLayout before, GamepadLayout after) -> std::string {
 		if (before == after)
@@ -1492,6 +1491,7 @@ void LogGamepadChange(GamepadLayout newGamepad)
 	};
 	LogVerbose("Control: gamepad {}", DebugChange(GamepadType, newGamepad));
 }
+#endif
 
 } // namespace
 

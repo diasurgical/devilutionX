@@ -1777,6 +1777,7 @@ void printItemMiscVirtualGamepad(const Item &item, const bool isOil)
 	}
 }
 
+#ifndef USE_SDL1
 void printItemMiscGamepad(const Item &item, bool isOil, bool isCastOnTarget)
 {
 	std::string y_icon = "Y";
@@ -1792,6 +1793,7 @@ void printItemMiscGamepad(const Item &item, bool isOil, bool isCastOnTarget)
 		y_icon = "Y";
 		x_icon = "X";
 	}
+
 
 	if (item._iMiscId == IMISC_MAPOFDOOM) {
 		AddPanelString(_(y_icon + " to view"));
@@ -1809,6 +1811,7 @@ void printItemMiscGamepad(const Item &item, bool isOil, bool isCastOnTarget)
 		AddPanelString(_(y_icon + " to read"));
 	}
 }
+#endif
 
 void PrintItemMisc(const Item &item)
 {
@@ -1830,10 +1833,12 @@ void PrintItemMisc(const Item &item)
 
 	if (ControlMode == ControlTypes::KeyboardAndMouse) {
 		printItemMiscKBM(item, isOil, isCastOnTarget);
-	} else if (ControlMode == ControlTypes::VirtualGamepad || GamepadType == GamepadLayout::Virtual) {
+	} else if (ControlMode == ControlTypes::VirtualGamepad) {
 		printItemMiscVirtualGamepad(item, isOil);
+#ifndef USE_SDL1
 	} else {
 		printItemMiscGamepad(item, isOil, isCastOnTarget);
+#endif
 	}
 }
 
