@@ -1783,30 +1783,29 @@ void printItemMiscGamepad(const Item &item, bool isOil, bool isCastOnTarget)
 	std::string castButton = "Cast";
 
 	if (GamepadType == GamepadLayout::Xbox) {
-		y_icon = "Y";
-		x_icon = "X";
+		activateButton = "Y";
+		castButton = "X";
 	} else if (GamepadType == GamepadLayout::PlayStation) {
-		y_icon = "Triangle";
-		x_icon = "Square";
+		activateButton = "Triangle";
+		castButton = "Square";
 	} else if (GamepadType == GamepadLayout::Nintendo) {
-		y_icon = "Y";
-		x_icon = "X";
+		activateButton = "Y";
+		castButton = "X";
 	}
 
 	if (item._iMiscId == IMISC_MAPOFDOOM) {
-		AddPanelString(_(y_icon + " to view"));
+		AddPanelString(_(fmt::format("{} to view", activateButton)));
 	} else if (isOil) {
 		PrintItemOil(item._iMiscId);
 		if (!invflag) {
 			AddPanelString(_("Open inventory to use"));
 		} else {
-			AddPanelString(_(y_icon + " to use"));
+			AddPanelString(_(fmt::format("{} to use", activateButton)));
 		}
 	} else if (isCastOnTarget) {
-		AddPanelString(_("Select from spell book, then"));
-		AddPanelString(_(x_icon + " to read"));
+		AddPanelString(_(fmt::format("Select from spell book, then {} to read", castButton)));
 	} else if (IsAnyOf(item._iMiscId, IMISC_BOOK, IMISC_NOTE, IMISC_SCROLL)) {
-		AddPanelString(_(y_icon + " to read"));
+		AddPanelString(_(fmt::format("{} to read", activateButton)));
 	}
 }
 
