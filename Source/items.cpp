@@ -1794,7 +1794,6 @@ void printItemMiscGamepad(const Item &item, bool isOil, bool isCastOnTarget)
 		x_icon = "X";
 	}
 
-
 	if (item._iMiscId == IMISC_MAPOFDOOM) {
 		AddPanelString(_(y_icon + " to view"));
 	} else if (isOil) {

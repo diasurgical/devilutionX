@@ -4,7 +4,7 @@
 #include <cstddef>
 #include <cstdint>
 
-#ifndef USE_SDL1 
+#ifndef USE_SDL1
 #include "controls/devices/game_controller.h"
 #endif
 #include <SDL.h>
