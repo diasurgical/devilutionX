@@ -186,6 +186,12 @@ void NewCursor(const Item &item)
 
 void NewCursor(int cursId)
 {
+	if (pcurs >= CURSOR_FIRSTITEM && cursId > CURSOR_HAND && cursId < CURSOR_HOURGLASS) {
+		if (!TryDropItem()) {
+			return;
+		}
+	}
+
 	if (cursId < CURSOR_HOURGLASS && MyPlayer != nullptr) {
 		MyPlayer->HoldItem.clear();
 	}
