@@ -4,6 +4,8 @@
 
 #include <fstream>
 
+#include <SDL_endian.h>
+
 #include "utils/endian.hpp"
 
 namespace devilution {

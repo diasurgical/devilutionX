@@ -7,7 +7,6 @@
 #include <SDL.h>
 #include <config.h>
 
-#include <ctime>
 #include <fmt/format.h>
 
 #include "DiabloUI/diabloui.h"
