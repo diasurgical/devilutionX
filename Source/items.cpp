@@ -1741,76 +1741,98 @@ void DrawUniqueInfoWindow(const Surface &out)
 	DrawHalfTransparentRectTo(out, GetRightPanel().position.x - SidePanelSize.width + 27, GetRightPanel().position.y + 28, 265, 297);
 }
 
+void printItemMiscKBM(const Item &item, const bool isOil, const bool isCastOnTarget)
+{
+	if (item._iMiscId == IMISC_MAPOFDOOM) {
+		AddPanelString(_("Right-click to view"));
+
+	} else if (isOil) {
+		PrintItemOil(item._iMiscId);
+		AddPanelString(_("Right-click to use"));
+	} else if (isCastOnTarget) {
+		AddPanelString(_("Right-click to read, then"));
+		AddPanelString(_("left-click to target"));
+	} else if (IsAnyOf(item._iMiscId, IMISC_BOOK, IMISC_NOTE, IMISC_SCROLL)) {
+		AddPanelString(_("Right-click to read"));
+	}
+}
+
+void printItemMiscVirtualGamepad(const Item &item, const bool isOil)
+{
+	if (item._iMiscId == IMISC_MAPOFDOOM) {
+		AddPanelString(_("Activate to view"));
+	} else if (isOil) {
+		PrintItemOil(item._iMiscId);
+		if (!invflag) {
+			AddPanelString(_("Open inventory to use"));
+
+		} else {
+			AddPanelString(_("Activate to use"));
+		}
+	} else if (item._iMiscId == IMISC_SCROLL) {
+		AddPanelString(_("Select from spell book, then"));
+		AddPanelString(_("cast to read"));
+	} else {
+		AddPanelString(_("Activate to read"));
+	}
+}
+
+void printItemMiscGamepad(const Item &item, bool isOil, bool isCastOnTarget)
+{
+	std::string activateButton = "Activate";
+	std::string castButton = "Cast";
+
+	if (GamepadType == GamepadLayout::Xbox) {
+		activateButton = "Y";
+		castButton = "X";
+	} else if (GamepadType == GamepadLayout::PlayStation) {
+		activateButton = "Triangle";
+		castButton = "Square";
+	} else if (GamepadType == GamepadLayout::Nintendo) {
+		activateButton = "Y";
+		castButton = "X";
+	}
+
+	if (item._iMiscId == IMISC_MAPOFDOOM) {
+		AddPanelString(fmt::format(fmt::runtime(_("{} to view")), activateButton));
+	} else if (isOil) {
+		PrintItemOil(item._iMiscId);
+		if (!invflag) {
+			AddPanelString(_("Open inventory to use"));
+		} else {
+			AddPanelString(fmt::format(fmt::runtime(_("{} to use")), activateButton));
+		}
+	} else if (isCastOnTarget) {
+		AddPanelString(fmt::format(fmt::runtime(_("Select from spell book, then {} to read")), castButton));
+	} else if (IsAnyOf(item._iMiscId, IMISC_BOOK, IMISC_NOTE, IMISC_SCROLL)) {
+		AddPanelString(fmt::format(fmt::runtime(_("{} to read")), activateButton));
+	}
+}
+
 void PrintItemMisc(const Item &item)
 {
-	if (item._iMiscId == IMISC_SCROLL) {
-		if (ControlMode == ControlTypes::KeyboardAndMouse) {
-			if (item._iSpell == SPL_TOWN || item._iSpell == SPL_IDENTIFY) {
-				AddPanelString(_("Right-click to read, then"));
-				AddPanelString(_("left-click to target"));
-			} else {
-				AddPanelString(_("Right-click to read"));
-			}
-		} else {
-			if (!invflag) {
-				AddPanelString(_("Open inventory to use"));
-			} else {
-				AddPanelString(_("Activate to read"));
-			}
-		}
-	}
-	if (item._iMiscId == IMISC_SCROLLT) {
-		if (ControlMode == ControlTypes::KeyboardAndMouse) {
-			if (item._iSpell == SPL_FLASH) {
-				AddPanelString(_("Right-click to read"));
-			} else {
-				AddPanelString(_("Right-click to read, then"));
-				AddPanelString(_("left-click to target"));
-			}
-		} else {
-			if (TargetsMonster(item._iSpell)) {
-				AddPanelString(_("Select from spell book, then"));
-				AddPanelString(_("cast spell to read"));
-			} else if (!invflag) {
-				AddPanelString(_("Open inventory to use"));
-			} else {
-				AddPanelString(_("Activate to read"));
-			}
-		}
-	}
-	if ((item._iMiscId >= IMISC_USEFIRST && item._iMiscId <= IMISC_USELAST)
-	    || (item._iMiscId > IMISC_OILFIRST && item._iMiscId < IMISC_OILLAST)
-	    || (item._iMiscId > IMISC_RUNEFIRST && item._iMiscId < IMISC_RUNELAST)) {
-		PrintItemOil(item._iMiscId);
-		if (ControlMode == ControlTypes::KeyboardAndMouse) {
-			AddPanelString(_("Right-click to use"));
-		} else {
-			if (!invflag) {
-				AddPanelString(_("Open inventory to use"));
-			} else {
-				AddPanelString(_("Activate to use"));
-			}
-		}
-	}
-	if (IsAnyOf(item._iMiscId, IMISC_BOOK, IMISC_NOTE)) {
-		if (ControlMode == ControlTypes::KeyboardAndMouse) {
-			AddPanelString(_("Right-click to read"));
-		} else {
-			AddPanelString(_("Activate to read"));
-		}
-	}
-	if (item._iMiscId == IMISC_MAPOFDOOM) {
-		if (ControlMode == ControlTypes::KeyboardAndMouse) {
-			AddPanelString(_("Right-click to view"));
-		} else {
-			AddPanelString(_("Activate to view"));
-		}
-	}
 	if (item._iMiscId == IMISC_EAR) {
 		AddPanelString(fmt::format(fmt::runtime(pgettext("player", "Level: {:d}")), item._ivalue));
+		return;
 	}
 	if (item._iMiscId == IMISC_AURIC) {
 		AddPanelString(_("Doubles gold capacity"));
+		return;
+	}
+	const bool isOil = (item._iMiscId >= IMISC_USEFIRST && item._iMiscId <= IMISC_USELAST)
+	    || (item._iMiscId > IMISC_OILFIRST && item._iMiscId < IMISC_OILLAST)
+	    || (item._iMiscId > IMISC_RUNEFIRST && item._iMiscId < IMISC_RUNELAST);
+	const bool isCastOnTarget = (item._iMiscId == IMISC_SCROLLT && item._iSpell != SPL_FLASH)
+	    || item._iSpell == SPL_TOWN
+	    || item._iSpell == SPL_IDENTIFY
+	    || TargetsMonster(item._iSpell);
+
+	if (ControlMode == ControlTypes::KeyboardAndMouse) {
+		printItemMiscKBM(item, isOil, isCastOnTarget);
+	} else if (ControlMode == ControlTypes::VirtualGamepad) {
+		printItemMiscVirtualGamepad(item, isOil);
+	} else {
+		printItemMiscGamepad(item, isOil, isCastOnTarget);
 	}
 }
 

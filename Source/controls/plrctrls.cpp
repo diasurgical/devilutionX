@@ -46,6 +46,7 @@ namespace devilution {
 ControlTypes ControlMode = ControlTypes::None;
 ControlTypes ControlDevice = ControlTypes::None;
 ControllerButton ControllerButtonHeld = ControllerButton_NONE;
+GamepadLayout GamepadType = GamepadLayout::Generic;
 int pcurstrig = -1;
 Missile *pcursmissile = nullptr;
 quest_id pcursquest = Q_INVALID;
@@ -1464,22 +1465,6 @@ bool ContinueSimulatedMouseEvent(const SDL_Event &event, const ControllerButtonE
 	return SimulatingMouseWithSelectAndDPad || IsSimulatedMouseClickBinding(gamepadEvent);
 }
 
-void LogControlDeviceAndModeChange(ControlTypes newControlDevice, ControlTypes newControlMode)
-{
-	if (SDL_LOG_PRIORITY_VERBOSE < SDL_LogGetPriority(SDL_LOG_CATEGORY_APPLICATION))
-		return;
-	if (newControlDevice == ControlDevice && newControlMode == ControlMode)
-		return;
-	constexpr auto DebugChange = [](ControlTypes before, ControlTypes after) -> std::string {
-		if (before == after)
-			return std::string { ControlTypeToString(before) };
-		return StrCat(ControlTypeToString(before), " -> ", ControlTypeToString(after));
-	};
-	LogVerbose("Control: device {}, mode {}", DebugChange(ControlDevice, newControlDevice), DebugChange(ControlMode, newControlMode));
-}
-
-} // namespace
-
 string_view ControlTypeToString(ControlTypes controlType)
 {
 	switch (controlType) {
@@ -1494,6 +1479,51 @@ string_view ControlTypeToString(ControlTypes controlType)
 	}
 	return "Invalid";
 }
+
+void LogControlDeviceAndModeChange(ControlTypes newControlDevice, ControlTypes newControlMode)
+{
+	if (SDL_LOG_PRIORITY_VERBOSE < SDL_LogGetPriority(SDL_LOG_CATEGORY_APPLICATION))
+		return;
+	if (newControlDevice == ControlDevice && newControlMode == ControlMode)
+		return;
+	constexpr auto DebugChange = [](ControlTypes before, ControlTypes after) -> std::string {
+		if (before == after)
+			return std::string { ControlTypeToString(before) };
+		return StrCat(ControlTypeToString(before), " -> ", ControlTypeToString(after));
+	};
+	LogVerbose("Control: device {}, mode {}", DebugChange(ControlDevice, newControlDevice), DebugChange(ControlMode, newControlMode));
+}
+
+#ifndef USE_SDL1
+string_view GamepadTypeToString(GamepadLayout gamepadLayout)
+{
+	switch (gamepadLayout) {
+	case GamepadLayout::Nintendo:
+		return "Nintendo";
+	case GamepadLayout::PlayStation:
+		return "PlayStation";
+	case GamepadLayout::Xbox:
+		return "Xbox";
+	case GamepadLayout::Generic:
+		return "Unknown";
+	}
+	return "Invalid";
+}
+
+void LogGamepadChange(GamepadLayout newGamepad)
+{
+	if (SDL_LOG_PRIORITY_VERBOSE < SDL_LogGetPriority(SDL_LOG_CATEGORY_APPLICATION))
+		return;
+	constexpr auto DebugChange = [](GamepadLayout before, GamepadLayout after) -> std::string {
+		if (before == after)
+			return std::string { GamepadTypeToString(before) };
+		return StrCat(GamepadTypeToString(before), " -> ", GamepadTypeToString(after));
+	};
+	LogVerbose("Control: gamepad {}", DebugChange(GamepadType, newGamepad));
+}
+#endif
+
+} // namespace
 
 void DetectInputMethod(const SDL_Event &event, const ControllerButtonEvent &gamepadEvent)
 {
@@ -1531,6 +1561,13 @@ void DetectInputMethod(const SDL_Event &event, const ControllerButtonEvent &game
 				SetHardwareCursor(CursorInfo::UnknownCursor());
 		} else {
 			ResetCursor();
+		}
+		if (ControlDevice == ControlTypes::Gamepad) {
+			GamepadLayout newGamepadLayout = GameController::getLayout(event);
+			if (newGamepadLayout != GamepadType) {
+				LogGamepadChange(newGamepadLayout);
+				GamepadType = newGamepadLayout;
+			}
 		}
 #endif
 	}
