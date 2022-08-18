@@ -3668,6 +3668,7 @@ void MonsterDeath(Monster &monster, Direction md, bool sendmsg)
 
 	MonsterKillCounts[monster.type().type]++;
 	monster.hitPoints = 0;
+	monster.flags &= ~MFLAG_HIDDEN;
 	SetRndSeed(monster.rndItemSeed);
 
 	SpawnLoot(monster, sendmsg);
