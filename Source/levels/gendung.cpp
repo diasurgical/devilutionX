@@ -58,20 +58,20 @@ std::unique_ptr<uint16_t[]> LoadMinData(size_t &tileCount)
 	switch (leveltype) {
 	case DTYPE_TOWN:
 		if (gbIsHellfire)
-			return LoadFileInMem<uint16_t>("NLevels\\TownData\\Town.MIN", &tileCount);
-		return LoadFileInMem<uint16_t>("Levels\\TownData\\Town.MIN", &tileCount);
+			return LoadFileInMem<uint16_t>("nlevels\\towndata\\town.min", &tileCount);
+		return LoadFileInMem<uint16_t>("levels\\towndata\\town.min", &tileCount);
 	case DTYPE_CATHEDRAL:
-		return LoadFileInMem<uint16_t>("Levels\\L1Data\\L1.MIN", &tileCount);
+		return LoadFileInMem<uint16_t>("levels\\l1data\\l1.min", &tileCount);
 	case DTYPE_CATACOMBS:
-		return LoadFileInMem<uint16_t>("Levels\\L2Data\\L2.MIN", &tileCount);
+		return LoadFileInMem<uint16_t>("levels\\l2data\\l2.min", &tileCount);
 	case DTYPE_CAVES:
-		return LoadFileInMem<uint16_t>("Levels\\L3Data\\L3.MIN", &tileCount);
+		return LoadFileInMem<uint16_t>("levels\\l3data\\l3.min", &tileCount);
 	case DTYPE_HELL:
-		return LoadFileInMem<uint16_t>("Levels\\L4Data\\L4.MIN", &tileCount);
+		return LoadFileInMem<uint16_t>("levels\\l4data\\l4.min", &tileCount);
 	case DTYPE_NEST:
-		return LoadFileInMem<uint16_t>("NLevels\\L6Data\\L6.MIN", &tileCount);
+		return LoadFileInMem<uint16_t>("nlevels\\l6data\\l6.min", &tileCount);
 	case DTYPE_CRYPT:
-		return LoadFileInMem<uint16_t>("NLevels\\L5Data\\L5.MIN", &tileCount);
+		return LoadFileInMem<uint16_t>("nlevels\\l5data\\l5.min", &tileCount);
 	default:
 		app_fatal("LoadMinData");
 	}
@@ -416,28 +416,28 @@ void LoadLevelSOLData()
 	switch (leveltype) {
 	case DTYPE_TOWN:
 		if (gbIsHellfire)
-			LoadFileInMem("NLevels\\TownData\\Town.SOL", SOLData);
+			LoadFileInMem("nlevels\\towndata\\town.sol", SOLData);
 		else
-			LoadFileInMem("Levels\\TownData\\Town.SOL", SOLData);
+			LoadFileInMem("levels\\towndata\\town.sol", SOLData);
 		break;
 	case DTYPE_CATHEDRAL:
-		LoadFileInMem("Levels\\L1Data\\L1.SOL", SOLData);
+		LoadFileInMem("levels\\l1data\\l1.sol", SOLData);
 		break;
 	case DTYPE_CATACOMBS:
-		LoadFileInMem("Levels\\L2Data\\L2.SOL", SOLData);
+		LoadFileInMem("levels\\l2data\\l2.sol", SOLData);
 		break;
 	case DTYPE_CAVES:
-		LoadFileInMem("Levels\\L3Data\\L3.SOL", SOLData);
+		LoadFileInMem("levels\\l3data\\l3.sol", SOLData);
 		break;
 	case DTYPE_HELL:
-		LoadFileInMem("Levels\\L4Data\\L4.SOL", SOLData);
+		LoadFileInMem("levels\\l4data\\l4.sol", SOLData);
 		SOLData[210] = TileProperties::None; // Tile is incorrectly marked as being solid
 		break;
 	case DTYPE_NEST:
-		LoadFileInMem("NLevels\\L6Data\\L6.SOL", SOLData);
+		LoadFileInMem("nlevels\\l6data\\l6.sol", SOLData);
 		break;
 	case DTYPE_CRYPT:
-		LoadFileInMem("NLevels\\L5Data\\L5.SOL", SOLData);
+		LoadFileInMem("nlevels\\l5data\\l5.sol", SOLData);
 		break;
 	default:
 		app_fatal("LoadLevelSOLData");

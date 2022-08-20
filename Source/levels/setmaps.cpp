@@ -74,18 +74,18 @@ void LoadSetMap()
 			Quests[Q_SKELKING]._qactive = QUEST_ACTIVE;
 			Quests[Q_SKELKING]._qvar1 = 1;
 		}
-		LoadPreL1Dungeon("Levels\\L1Data\\SklKng1.DUN");
-		LoadL1Dungeon("Levels\\L1Data\\SklKng2.DUN", { 83, 45 });
-		SetMapTransparency("Levels\\L1Data\\SklKngT.dun");
-		LoadPalette("Levels\\L1Data\\L1_2.pal");
+		LoadPreL1Dungeon("levels\\l1data\\sklkng1.dun");
+		LoadL1Dungeon("levels\\l1data\\sklkng2.dun", { 83, 45 });
+		SetMapTransparency("levels\\l1data\\sklkngt.dun");
+		LoadPalette("levels\\l1data\\l1_2.pal");
 		AddSKingObjs();
 		InitSKingTriggers();
 		break;
 	case SL_BONECHAMB:
-		LoadPreL2Dungeon("Levels\\L2Data\\Bonecha2.DUN");
-		LoadL2Dungeon("Levels\\L2Data\\Bonecha1.DUN", { 69, 39 });
-		SetMapTransparency("Levels\\L2Data\\BonechaT.dun");
-		LoadPalette("Levels\\L2Data\\L2_2.pal");
+		LoadPreL2Dungeon("levels\\l2data\\bonecha2.dun");
+		LoadL2Dungeon("levels\\l2data\\bonecha1.dun", { 69, 39 });
+		SetMapTransparency("levels\\l2data\\bonechat.dun");
+		LoadPalette("levels\\l2data\\l2_2.pal");
 		AddSChamObjs();
 		InitSChambTriggers();
 		break;
@@ -94,8 +94,8 @@ void LoadSetMap()
 	case SL_POISONWATER:
 		if (Quests[Q_PWATER]._qactive == QUEST_INIT)
 			Quests[Q_PWATER]._qactive = QUEST_ACTIVE;
-		LoadL3Dungeon("Levels\\L3Data\\Foulwatr.DUN", { 31, 83 });
-		LoadPalette("Levels\\L3Data\\L3pfoul.pal");
+		LoadL3Dungeon("levels\\l3data\\foulwatr.dun", { 31, 83 });
+		LoadPalette("levels\\l3data\\l3pfoul.pal");
 		InitPWaterTriggers();
 		break;
 	case SL_VILEBETRAYER:
@@ -104,10 +104,10 @@ void LoadSetMap()
 		} else if (Quests[Q_BETRAYER]._qactive == QUEST_ACTIVE) {
 			Quests[Q_BETRAYER]._qvar2 = 3;
 		}
-		LoadPreL1Dungeon("Levels\\L1Data\\Vile1.DUN");
-		LoadL1Dungeon("Levels\\L1Data\\Vile2.DUN", { 35, 36 });
-		SetMapTransparency("Levels\\L1Data\\Vile1.DUN");
-		LoadPalette("Levels\\L1Data\\L1_2.pal");
+		LoadPreL1Dungeon("levels\\l1data\\vile1.dun");
+		LoadL1Dungeon("levels\\l1data\\vile2.dun", { 35, 36 });
+		SetMapTransparency("levels\\l1data\\vile1.dun");
+		LoadPalette("levels\\l1data\\l1_2.pal");
 		AddVileObjs();
 		InitNoTriggers();
 		break;

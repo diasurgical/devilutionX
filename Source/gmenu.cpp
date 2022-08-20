@@ -195,12 +195,12 @@ void gmenu_init_menu()
 		return;
 
 	if (gbIsHellfire)
-		sgpLogo = LoadCel("Data\\hf_logo3.CEL", 430);
+		sgpLogo = LoadCel("data\\hf_logo3.cel", 430);
 	else
-		sgpLogo = LoadCel("Data\\Diabsmal.CEL", 296);
-	PentSpin_cel = LoadCel("Data\\PentSpin.CEL", 48);
-	option_cel = LoadCel("Data\\option.CEL", 27);
-	optbar_cel = LoadCel("Data\\optbar.CEL", 287);
+		sgpLogo = LoadCel("data\\diabsmal.cel", 296);
+	PentSpin_cel = LoadCel("data\\pentspin.cel", 48);
+	option_cel = LoadCel("data\\option.cel", 27);
+	optbar_cel = LoadCel("data\\optbar.cel", 287);
 }
 
 bool gmenu_is_active()

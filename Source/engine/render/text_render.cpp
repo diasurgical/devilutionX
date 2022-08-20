@@ -413,7 +413,7 @@ int DoDrawString(const Surface &out, string_view text, Rectangle rect, Point &ch
 
 void LoadSmallSelectionSpinner()
 {
-	pSPentSpn2Cels = LoadCel("Data\\PentSpn2.CEL", 12);
+	pSPentSpn2Cels = LoadCel("data\\pentspn2.cel", 12);
 }
 
 void UnloadFonts()

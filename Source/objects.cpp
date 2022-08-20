@@ -683,9 +683,9 @@ void LoadMapObjects(const char *path, Point start, Rectangle mapRange = {}, int 
 
 void AddDiabObjs()
 {
-	LoadMapObjects("Levels\\L4Data\\diab1.DUN", DiabloQuad1.megaToWorld(), { DiabloQuad2, { 11, 12 } }, 1);
-	LoadMapObjects("Levels\\L4Data\\diab2a.DUN", DiabloQuad2.megaToWorld(), { DiabloQuad3, { 11, 11 } }, 2);
-	LoadMapObjects("Levels\\L4Data\\diab3a.DUN", DiabloQuad3.megaToWorld(), { DiabloQuad4, { 9, 9 } }, 3);
+	LoadMapObjects("levels\\l4data\\diab1.dun", DiabloQuad1.megaToWorld(), { DiabloQuad2, { 11, 12 } }, 1);
+	LoadMapObjects("levels\\l4data\\diab2a.dun", DiabloQuad2.megaToWorld(), { DiabloQuad3, { 11, 11 } }, 2);
+	LoadMapObjects("levels\\l4data\\diab3a.dun", DiabloQuad3.megaToWorld(), { DiabloQuad4, { 9, 9 } }, 3);
 }
 
 void AddCryptObject(Object &object, int a2)
@@ -2256,7 +2256,7 @@ void OperatePedestal(Player &player, Object &pedestal)
 	if (pedestal._oVar6 == 3) {
 		PlaySfxLoc(LS_BLODSTAR, pedestal.position);
 		ObjChangeMap(pedestal._oVar1, pedestal._oVar2, pedestal._oVar3, pedestal._oVar4);
-		LoadMapObjects("Levels\\L2Data\\Blood2.DUN", SetPiece.position.megaToWorld());
+		LoadMapObjects("levels\\l2data\\blood2.dun", SetPiece.position.megaToWorld());
 		SpawnUnique(UITEM_ARMOFVAL, SetPiece.position.megaToWorld() + Displacement { 9, 3 });
 		pedestal._oSelFlag = 0;
 	}
@@ -3537,7 +3537,7 @@ void SyncPedestal(const Object &pedestal, Point origin, int width)
 	}
 	if (pedestal._oVar6 == 3) {
 		ObjChangeMapResync(pedestal._oVar1, pedestal._oVar2, pedestal._oVar3, pedestal._oVar4);
-		LoadMapObjects("Levels\\L2Data\\Blood2.DUN", origin.megaToWorld());
+		LoadMapObjects("levels\\l2data\\blood2.dun", origin.megaToWorld());
 	}
 }
 
@@ -3642,7 +3642,7 @@ void LoadLevelObjects(uint16_t filesWidths[65])
 
 		ObjFileList[numobjfiles] = static_cast<object_graphic_id>(i);
 		char filestr[32];
-		*BufCopy(filestr, "Objects\\", ObjMasterLoadList[i], ".CEL") = '\0';
+		*BufCopy(filestr, "objects\\", ObjMasterLoadList[i], ".cel") = '\0';
 		pObjCels[numobjfiles] = LoadCel(filestr, filesWidths[i]);
 		numobjfiles++;
 	}
@@ -3822,7 +3822,7 @@ void InitObjects()
 				}
 				Quests[Q_BLIND]._qmsg = spId;
 				AddBookLever(OBJ_BLINDBOOK, { SetPiece.position, SetPiece.size + 1 }, spId);
-				LoadMapObjects("Levels\\L2Data\\Blind2.DUN", SetPiece.position.megaToWorld());
+				LoadMapObjects("levels\\l2data\\blind2.dun", SetPiece.position.megaToWorld());
 			}
 			if (Quests[Q_BLOOD].IsAvailable()) {
 				_speech_id spId;
@@ -3881,7 +3881,7 @@ void InitObjects()
 				}
 				Quests[Q_WARLORD]._qmsg = spId;
 				AddBookLever(OBJ_STEELTOME, SetPiece, spId);
-				LoadMapObjects("Levels\\L4Data\\Warlord.DUN", SetPiece.position.megaToWorld());
+				LoadMapObjects("levels\\l4data\\warlord.dun", SetPiece.position.megaToWorld());
 			}
 			if (Quests[Q_BETRAYER].IsAvailable() && !gbIsMultiplayer)
 				AddLazStand();

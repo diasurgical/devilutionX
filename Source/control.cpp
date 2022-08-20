@@ -550,12 +550,12 @@ void InitControlPan()
 		LoadCharPanel();
 		LoadSpellIcons();
 		{
-			const OwnedClxSpriteList sprite = LoadCel("CtrlPan\\Panel8.CEL", GetMainPanel().size.width);
+			const OwnedClxSpriteList sprite = LoadCel("ctrlpan\\panel8.cel", GetMainPanel().size.width);
 			ClxDraw(*pBtmBuff, { 0, (GetMainPanel().size.height + 16) - 1 }, sprite[0]);
 		}
 		{
 			const Point bulbsPosition { 0, 87 };
-			const OwnedClxSpriteList statusPanel = LoadCel("CtrlPan\\P8Bulbs.CEL", 88);
+			const OwnedClxSpriteList statusPanel = LoadCel("ctrlpan\\p8bulbs.cel", 88);
 			ClxDraw(*pLifeBuff, bulbsPosition, statusPanel[0]);
 			ClxDraw(*pManaBuff, bulbsPosition, statusPanel[1]);
 		}
@@ -564,11 +564,11 @@ void InitControlPan()
 	if (IsChatAvailable()) {
 		if (!HeadlessMode) {
 			{
-				const OwnedClxSpriteList sprite = LoadCel("CtrlPan\\TalkPanl.CEL", GetMainPanel().size.width);
+				const OwnedClxSpriteList sprite = LoadCel("ctrlpan\\talkpanl.cel", GetMainPanel().size.width);
 				ClxDraw(*pBtmBuff, { 0, (GetMainPanel().size.height + 16) * 2 - 1 }, sprite[0]);
 			}
-			multiButtons = LoadCel("CtrlPan\\P8But2.CEL", 33);
-			talkButtons = LoadCel("CtrlPan\\TalkButt.CEL", 61);
+			multiButtons = LoadCel("ctrlpan\\p8but2.cel", 33);
+			talkButtons = LoadCel("ctrlpan\\talkbutt.cel", 61);
 		}
 		sgbPlrTalkTbl = 0;
 		TalkMessage[0] = '\0';
@@ -581,10 +581,10 @@ void InitControlPan()
 	lvlbtndown = false;
 	if (!HeadlessMode) {
 		LoadMainPanel();
-		pPanelButtons = LoadCel("CtrlPan\\Panel8bu.CEL", 71);
+		pPanelButtons = LoadCel("ctrlpan\\panel8bu.cel", 71);
 
 		static const uint16_t CharButtonsFrameWidths[9] { 95, 41, 41, 41, 41, 41, 41, 41, 41 };
-		pChrButtons = LoadCel("Data\\CharBut.CEL", CharButtonsFrameWidths);
+		pChrButtons = LoadCel("data\\charbut.cel", CharButtonsFrameWidths);
 	}
 	ClearPanBtn();
 	if (!IsChatAvailable())
@@ -592,7 +592,7 @@ void InitControlPan()
 	else
 		PanelButtonIndex = 8;
 	if (!HeadlessMode)
-		pDurIcons = LoadCel("Items\\DurIcons.CEL", 32);
+		pDurIcons = LoadCel("items\\duricons.cel", 32);
 	for (bool &buttonEnabled : chrbtn)
 		buttonEnabled = false;
 	chrbtnactive = false;
@@ -607,8 +607,8 @@ void InitControlPan()
 
 	if (!HeadlessMode) {
 		InitSpellBook();
-		pQLogCel = LoadCel("Data\\Quest.CEL", static_cast<uint16_t>(SidePanelSize.width));
-		pGBoxBuff = LoadCel("CtrlPan\\Golddrop.cel", 261);
+		pQLogCel = LoadCel("data\\quest.cel", static_cast<uint16_t>(SidePanelSize.width));
+		pGBoxBuff = LoadCel("ctrlpan\\golddrop.cel", 261);
 	}
 	CloseGoldDrop();
 	dropGoldValue = 0;

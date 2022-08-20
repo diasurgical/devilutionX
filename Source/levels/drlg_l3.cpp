@@ -1793,7 +1793,7 @@ void Fence()
 void LoadQuestSetPieces()
 {
 	if (Quests[Q_ANVIL].IsAvailable())
-		pSetPiece = LoadFileInMem<uint16_t>("Levels\\L3Data\\Anvil.DUN");
+		pSetPiece = LoadFileInMem<uint16_t>("levels\\l3data\\anvil.dun");
 }
 
 bool PlaceAnvil()

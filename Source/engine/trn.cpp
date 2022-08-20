@@ -32,22 +32,22 @@ std::optional<std::array<uint8_t, 256>> GetClassTRN(Player &player)
 
 	switch (player._pClass) {
 	case HeroClass::Warrior:
-		path = "PlrGFX\\warrior.TRN";
+		path = "plrgfx\\warrior.trn";
 		break;
 	case HeroClass::Rogue:
-		path = "PlrGFX\\rogue.TRN";
+		path = "plrgfx\\rogue.trn";
 		break;
 	case HeroClass::Sorcerer:
-		path = "PlrGFX\\sorcerer.TRN";
+		path = "plrgfx\\sorcerer.trn";
 		break;
 	case HeroClass::Monk:
-		path = "PlrGFX\\monk.TRN";
+		path = "plrgfx\\monk.trn";
 		break;
 	case HeroClass::Bard:
-		path = "PlrGFX\\bard.TRN";
+		path = "plrgfx\\bard.trn";
 		break;
 	case HeroClass::Barbarian:
-		path = "PlrGFX\\barbarian.TRN";
+		path = "plrgfx\\barbarian.trn";
 		break;
 	}
 

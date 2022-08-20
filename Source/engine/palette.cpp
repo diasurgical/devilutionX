@@ -248,13 +248,13 @@ void LoadRndLvlPal(dungeon_type l)
 		return;
 
 	if (l == DTYPE_TOWN) {
-		LoadPalette("Levels\\TownData\\Town.pal");
+		LoadPalette("levels\\towndata\\town.pal");
 		return;
 	}
 
 	int rv = GenerateRnd(4) + 1;
 	if (l == DTYPE_CRYPT) {
-		LoadPalette("NLevels\\L5Data\\L5Base.PAL");
+		LoadPalette("nlevels\\l5data\\l5base.pal");
 		return;
 	}
 
@@ -263,9 +263,9 @@ void LoadRndLvlPal(dungeon_type l)
 		if (!*sgOptions.Graphics.alternateNestArt) {
 			rv++;
 		}
-		*fmt::format_to(szFileName, FMT_COMPILE(R"(NLevels\L{0}Data\L{0}Base{1}.PAL)"), 6, rv) = '\0';
+		*fmt::format_to(szFileName, FMT_COMPILE(R"(nlevels\l{0}data\l{0}base{1}.pal)"), 6, rv) = '\0';
 	} else {
-		*fmt::format_to(szFileName, FMT_COMPILE(R"(Levels\L{0}Data\L{0}_{1}.PAL)"), l, rv) = '\0';
+		*fmt::format_to(szFileName, FMT_COMPILE(R"(levels\l{0}data\l{0}_{1}.pal)"), l, rv) = '\0';
 	}
 	LoadPalette(szFileName);
 }

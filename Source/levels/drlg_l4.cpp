@@ -159,9 +159,9 @@ void ApplyShadowsPatterns()
 void LoadQuestSetPieces()
 {
 	if (Quests[Q_WARLORD].IsAvailable()) {
-		pSetPiece = LoadFileInMem<uint16_t>("Levels\\L4Data\\Warlord.DUN");
+		pSetPiece = LoadFileInMem<uint16_t>("levels\\l4data\\warlord.dun");
 	} else if (currlevel == 15 && gbIsMultiplayer) {
-		pSetPiece = LoadFileInMem<uint16_t>("Levels\\L4Data\\Vile1.DUN");
+		pSetPiece = LoadFileInMem<uint16_t>("levels\\l4data\\vile1.dun");
 	}
 }
 
@@ -939,22 +939,22 @@ void ProtectQuads()
 void LoadDiabQuads(bool preflag)
 {
 	{
-		auto dunData = LoadFileInMem<uint16_t>("Levels\\L4Data\\diab1.DUN");
+		auto dunData = LoadFileInMem<uint16_t>("levels\\l4data\\diab1.dun");
 		DiabloQuad1 = L4Hold + Displacement { 4, 4 };
 		PlaceDunTiles(dunData.get(), DiabloQuad1, 6);
 	}
 	{
-		auto dunData = LoadFileInMem<uint16_t>(preflag ? "Levels\\L4Data\\diab2b.DUN" : "Levels\\L4Data\\diab2a.DUN");
+		auto dunData = LoadFileInMem<uint16_t>(preflag ? "levels\\l4data\\diab2b.dun" : "levels\\l4data\\diab2a.dun");
 		DiabloQuad2 = { 27 - L4Hold.x, 1 + L4Hold.y };
 		PlaceDunTiles(dunData.get(), DiabloQuad2, 6);
 	}
 	{
-		auto dunData = LoadFileInMem<uint16_t>(preflag ? "Levels\\L4Data\\diab3b.DUN" : "Levels\\L4Data\\diab3a.DUN");
+		auto dunData = LoadFileInMem<uint16_t>(preflag ? "levels\\l4data\\diab3b.dun" : "levels\\l4data\\diab3a.dun");
 		DiabloQuad3 = { 1 + L4Hold.x, 27 - L4Hold.y };
 		PlaceDunTiles(dunData.get(), DiabloQuad3, 6);
 	}
 	{
-		auto dunData = LoadFileInMem<uint16_t>(preflag ? "Levels\\L4Data\\diab4b.DUN" : "Levels\\L4Data\\diab4a.DUN");
+		auto dunData = LoadFileInMem<uint16_t>(preflag ? "levels\\l4data\\diab4b.dun" : "levels\\l4data\\diab4a.dun");
 		DiabloQuad4 = { 28 - L4Hold.x, 28 - L4Hold.y };
 		PlaceDunTiles(dunData.get(), DiabloQuad4, 6);
 	}

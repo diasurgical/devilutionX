@@ -137,7 +137,7 @@ void DrawSkelKing(quest_id q, Point position)
 
 void DrawWarLord(Point position)
 {
-	auto dunData = LoadFileInMem<uint16_t>("Levels\\L4Data\\Warlord2.DUN");
+	auto dunData = LoadFileInMem<uint16_t>("levels\\l4data\\warlord2.dun");
 
 	SetPiece = { position, { SDL_SwapLE16(dunData[0]), SDL_SwapLE16(dunData[1]) } };
 
@@ -146,7 +146,7 @@ void DrawWarLord(Point position)
 
 void DrawSChamber(quest_id q, Point position)
 {
-	auto dunData = LoadFileInMem<uint16_t>("Levels\\L2Data\\Bonestr1.DUN");
+	auto dunData = LoadFileInMem<uint16_t>("levels\\l2data\\bonestr1.dun");
 
 	SetPiece = { position, { SDL_SwapLE16(dunData[0]), SDL_SwapLE16(dunData[1]) } };
 
@@ -157,7 +157,7 @@ void DrawSChamber(quest_id q, Point position)
 
 void DrawLTBanner(Point position)
 {
-	auto dunData = LoadFileInMem<uint16_t>("Levels\\L1Data\\Banner1.DUN");
+	auto dunData = LoadFileInMem<uint16_t>("levels\\l1data\\banner1.dun");
 
 	int width = SDL_SwapLE16(dunData[0]);
 	int height = SDL_SwapLE16(dunData[1]);
@@ -187,7 +187,7 @@ void DrawBlind(Point position)
 
 void DrawBlood(Point position)
 {
-	auto dunData = LoadFileInMem<uint16_t>("Levels\\L2Data\\Blood2.DUN");
+	auto dunData = LoadFileInMem<uint16_t>("levels\\l2data\\blood2.dun");
 
 	SetPiece = { position, { SDL_SwapLE16(dunData[0]), SDL_SwapLE16(dunData[1]) } };
 
@@ -352,7 +352,7 @@ void CheckQuests()
 		    && Quests[Q_PWATER]._qactive != QUEST_DONE) {
 			Quests[Q_PWATER]._qactive = QUEST_DONE;
 			PlaySfxLoc(IS_QUESTDN, MyPlayer->position.tile);
-			LoadPalette("Levels\\L3Data\\L3pwater.pal", false);
+			LoadPalette("levels\\l3data\\l3pwater.pal", false);
 			UpdatePWaterPalette();
 			WaterDone = 32;
 		}
@@ -532,9 +532,9 @@ void LoadPWaterPalette()
 		return;
 
 	if (Quests[Q_PWATER]._qactive == QUEST_DONE)
-		LoadPalette("Levels\\L3Data\\L3pwater.pal");
+		LoadPalette("levels\\l3data\\l3pwater.pal");
 	else
-		LoadPalette("Levels\\L3Data\\L3pfoul.pal");
+		LoadPalette("levels\\l3data\\l3pfoul.pal");
 }
 
 void UpdatePWaterPalette()
