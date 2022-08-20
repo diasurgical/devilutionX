@@ -530,7 +530,7 @@ void MoveMissileAndCheckMissileCol(Missile &missile, int mindam, int maxdam, boo
 		if (missile._mirange != 0)
 			return true;
 
-		if (missile._miHitFlag && MissilesData[missile._mitype].MovementDistribution == MissileMovementDistrubution::Blockable)
+		if (missile._miHitFlag && MissilesData[missile._mitype].MovementDistribution == MissileMovementDistribution::Blockable)
 			return false;
 
 		return !IsMissileBlockedByTile(tile);
