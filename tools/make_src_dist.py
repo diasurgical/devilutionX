@@ -41,7 +41,7 @@ _ALWAYS_VENDORED_DEPS = ['asio', 'libmpq', 'libsmackerdec', 'libzt']
 
 # These dependencies are not vendored by default.
 # Run with `--fully_vendored` to include them.
-_DEPS_NOT_VENDORED_BY_DEFAULT = ['googletest', 'sdl2', 'sdl_image',
+_DEPS_NOT_VENDORED_BY_DEFAULT = ['absl', 'googletest', 'sdl2', 'sdl_image',
                                  'libpng', 'libfmt', 'bzip2', 'libsodium']
 
 _ROOT_DIR = pathlib.Path(__file__).resolve().parent.parent

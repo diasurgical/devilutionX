@@ -18,7 +18,7 @@ Note that ```pkg-config``` is an optional dependency for finding libsodium, alth
 ### Installing dependencies on Debian and Ubuntu
 
 ```
-sudo apt-get install cmake g++ libsdl2-dev libsodium-dev libpng-dev libbz2-dev libgtest-dev libgmock-dev libsdl2-image-dev libfmt-dev
+sudo apt-get install cmake g++ libsdl2-dev libsodium-dev libpng-dev libbz2-dev libgtest-dev libgmock-dev libsdl2-image-dev libfmt-dev libabsl-dev
 ```
 
 ### If you want to build the translations (optional)
@@ -36,7 +36,7 @@ sudo apt-get install smpq
 ### Installing dependencies on Fedora
 
 ```
-sudo dnf install cmake gcc-c++ glibc-devel libstdc++-static SDL2-devel libsodium-devel libpng-devel bzip2-devel gmock-devel gtest-devel libasan libubsan fmt-devel
+sudo dnf install cmake gcc-c++ glibc-devel libstdc++-static SDL2-devel libsodium-devel libpng-devel bzip2-devel gmock-devel gtest-devel libasan libubsan fmt-devel abseil-cpp-devel
 ```
 
 ### Compiling
@@ -87,7 +87,7 @@ Then open the generated Xcode project and run things from there.
 ### Installing dependencies
 
 ```
-pkg install cmake sdl2 libsodium libpng bzip2 googletest
+pkg install cmake sdl2 libsodium libpng bzip2 googletest abseil
 ```
 
 ### Compiling
@@ -103,7 +103,7 @@ cmake --build build -j $(sysctl -n hw.ncpu)
 ### Installing dependencies
 
 ```
-pkgin install cmake SDL2 libsodium libpng bzip2 googletest
+pkgin install cmake SDL2 libsodium libpng bzip2 googletest abseil
 ```
 
 ### Compiling
@@ -120,7 +120,7 @@ cmake --build build -j $(sysctl -n hw.ncpu)
 ### Installing dependencies
 
 ```
-pkg_add cmake sdl2 libsodium libpng bzip2 gmake googletest
+pkg_add cmake sdl2 libsodium libpng bzip2 gmake googletest abseil-cpp
 ```
 
 ### Compiling
@@ -181,10 +181,10 @@ Make sure to install the workload `Desktop development with C++` and the individ
 
 Install [Git for Windows](https://gitforwindows.org/)
 
-Run the following commands in Command Prompt or Powershell  
-git clone https://github.com/microsoft/vcpkg  
-cd vcpkg  
-bootstrap-vcpkg.bat  
+Run the following commands in Command Prompt or Powershell
+git clone https://github.com/microsoft/vcpkg
+cd vcpkg
+bootstrap-vcpkg.bat
 vcpkg integrate install
 
 If you need aditional instructions for vcpkg you can find the documentation [here](https://github.com/microsoft/vcpkg#quick-start-windows).
@@ -479,7 +479,7 @@ Packaging/xbox-one/build.bat
 <details><summary>Miyoo Mini</summary>
 
 Building for Miyoo Mini must be run from inside the [Toolchain Docker image](https://github.com/MiyooMini/union-toolchain).
-Executing `Packaging/miyoo_mini/build.sh` will create the folder `build-miyoo-mini/SDROOT` which has the correct structure to be used with 
+Executing `Packaging/miyoo_mini/build.sh` will create the folder `build-miyoo-mini/SDROOT` which has the correct structure to be used with
 OnionOS Port Collection.
 </details>
 

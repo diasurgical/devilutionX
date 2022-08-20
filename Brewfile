@@ -1,4 +1,5 @@
 brew "cmake"
+brew "abseil"
 brew "fmt"
 brew "sdl2"
 brew "libsodium"

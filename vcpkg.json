@@ -4,7 +4,11 @@
     "dependencies": [
         "fmt",
         "bzip2",
-        "simpleini"
+        "simpleini",
+        {
+            "name": "abseil",
+            "features": [ "cpp17" ]
+        }
     ],
     "features": {
         "sdl1": {
