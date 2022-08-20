@@ -128,9 +128,9 @@ void UpdateMissileRendererData(Missile &m)
 	m.position.tileForRendering = m.position.tile;
 	m.position.offsetForRendering = m.position.offset;
 
-	const MissileMovementDistrubution missileMovement = MissilesData[m._mitype].MovementDistribution;
+	const MissileMovementDistribution missileMovement = MissilesData[m._mitype].MovementDistribution;
 	// don't calculate missile position if they don't move
-	if (missileMovement == MissileMovementDistrubution::Disabled || m.position.velocity == Displacement {})
+	if (missileMovement == MissileMovementDistribution::Disabled || m.position.velocity == Displacement {})
 		return;
 
 	float fProgress = gfProgressToNextGameTick;
@@ -156,7 +156,7 @@ void UpdateMissileRendererData(Missile &m)
 		return;
 
 	// If no collision can happen at the new tile we can advance
-	if (!CouldMissileCollide(m.position.tileForRendering, missileMovement == MissileMovementDistrubution::Blockable))
+	if (!CouldMissileCollide(m.position.tileForRendering, missileMovement == MissileMovementDistribution::Blockable))
 		return;
 
 	// The new tile could be invalid, so don't advance to it.
