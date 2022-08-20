@@ -1775,6 +1775,17 @@ void Player::CalcScrolls()
 
 void Player::RemoveInvItem(int iv, bool calcScrolls)
 {
+	if (this == MyPlayer) {
+		// Locate the first grid index containing this item and notify remote clients
+		for (size_t i = 0; i < InventoryGridCells; i++) {
+			int8_t itemIndex = InvGrid[i];
+			if (abs(itemIndex) - 1 == iv) {
+				NetSendCmdParam1(false, CMD_DELINVITEMS, i);
+				break;
+			}
+		}
+	}
+
 	// Iterate through invGrid and remove every reference to item
 	for (int8_t &itemIndex : InvGrid) {
 		if (abs(itemIndex) - 1 == iv) {
@@ -1807,6 +1818,10 @@ void Player::RemoveInvItem(int iv, bool calcScrolls)
 
 void Player::RemoveSpdBarItem(int iv)
 {
+	if (this == MyPlayer) {
+		NetSendCmdParam1(false, CMD_DELBELTITEMS, iv);
+	}
+
 	SpdList[iv].clear();
 
 	CalcScrolls();

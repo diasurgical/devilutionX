@@ -155,13 +155,17 @@ void AddItemToInvGrid(Player &player, int invGridIndex, int invListIndex, Size i
 {
 	const int pitch = 10;
 	for (int y = 0; y < itemSize.height; y++) {
+		int rowGridIndex = invGridIndex + pitch * y;
 		for (int x = 0; x < itemSize.width; x++) {
 			if (x == 0 && y == itemSize.height - 1)
-				player.InvGrid[invGridIndex + x] = invListIndex;
+				player.InvGrid[rowGridIndex + x] = invListIndex;
 			else
-				player.InvGrid[invGridIndex + x] = -invListIndex;
+				player.InvGrid[rowGridIndex + x] = -invListIndex;
 		}
-		invGridIndex += pitch;
+	}
+
+	if (&player == MyPlayer) {
+		NetSendCmdChInvItem(false, invGridIndex);
 	}
 }
 
@@ -556,6 +560,9 @@ void CheckInvPaste(Player &player, Point cursorPosition)
 			if (player.HoldItem._itype == ItemType::Gold)
 				player._pGold = CalculateGold(player);
 		}
+		if (&player == MyPlayer) {
+			NetSendCmdChBeltItem(false, ii);
+		}
 		drawsbarflag = true;
 	} break;
 	case ILOC_NONE:
@@ -799,8 +806,7 @@ void CheckInvCut(Player &player, Point cursorPosition, bool automaticMove, bool 
 			}
 
 			if (!automaticMove || automaticallyMoved) {
-				beltItem.clear();
-				drawsbarflag = true;
+				player.RemoveSpdBarItem(r - SLOTXY_BELT_FIRST);
 			}
 		}
 	}
@@ -1233,6 +1239,10 @@ bool AutoPlaceItemInBelt(Player &player, const Item &item, bool persistItem)
 				beltItem = item;
 				player.CalcScrolls();
 				drawsbarflag = true;
+				if (&player == MyPlayer) {
+					size_t beltIndex = std::distance<const Item *>(&player.SpdList[0], &beltItem);
+					NetSendCmdChBeltItem(false, beltIndex);
+				}
 			}
 
 			return true;
@@ -1467,6 +1477,75 @@ void inv_update_rem_item(Player &player, inv_body_loc iv)
 	player.InvBody[iv].clear();
 
 	CalcPlrInv(player, player._pmode != PM_DEATH);
+}
+
+void CheckInvSwap(Player &player, int invGridIndex, int idx, uint16_t wCI, int seed, bool bId, uint32_t dwBuff)
+{
+	Item item = {};
+	RecreateItem(item, idx, wCI, seed, 0, (dwBuff & CF_HELLFIRE) != 0);
+
+	if (bId) {
+		item._iIdentified = true;
+	}
+
+	auto itemSize = GetInventorySize(item);
+
+	const int pitch = 10;
+	int invListIndex = [&]() -> int {
+		for (int y = 0; y < itemSize.height; y++) {
+			int rowGridIndex = invGridIndex + pitch * y;
+			for (int x = 0; x < itemSize.width; x++) {
+				if (player.InvGrid[rowGridIndex + x] != 0)
+					return abs(player.InvGrid[rowGridIndex]);
+			}
+		}
+		player._pNumInv++;
+		return player._pNumInv;
+	}();
+
+	if (invListIndex < player._pNumInv) {
+		for (auto &itemIndex : player.InvGrid) {
+			if (itemIndex == invListIndex)
+				itemIndex = 0;
+			if (itemIndex == -invListIndex)
+				itemIndex = 0;
+		}
+	}
+
+	player.InvList[invListIndex - 1] = item;
+
+	for (int y = 0; y < itemSize.height; y++) {
+		int rowGridIndex = invGridIndex + pitch * y;
+		for (int x = 0; x < itemSize.width; x++) {
+			if (x == 0 && y == itemSize.height - 1)
+				player.InvGrid[rowGridIndex + x] = invListIndex;
+			else
+				player.InvGrid[rowGridIndex + x] = -invListIndex;
+		}
+	}
+
+	CalcPlrInv(player, true);
+}
+
+void CheckInvRemove(Player &player, int invGridIndex)
+{
+	int invListIndex = abs(player.InvGrid[invGridIndex]) - 1;
+
+	if (invListIndex >= 0) {
+		player.RemoveInvItem(invListIndex);
+	}
+}
+
+void CheckBeltSwap(Player &player, int beltIndex, int idx, uint16_t wCI, int seed, bool bId, uint32_t dwBuff)
+{
+	Item &item = player.SpdList[beltIndex];
+
+	item = {};
+	RecreateItem(item, idx, wCI, seed, 0, (dwBuff & CF_HELLFIRE) != 0);
+
+	if (bId) {
+		item._iIdentified = true;
+	}
 }
 
 void TransferItemToStash(Player &player, int location)

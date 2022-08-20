@@ -281,6 +281,22 @@ enum _cmd_id : uint8_t {
 	//
 	// body (TCmdDelItem)
 	CMD_DELPLRITEMS,
+	// Put item into player's backpack.
+	//
+	// body (TCmdChItem)
+	CMD_CHANGEINVITEMS,
+	// Remove item from player's backpack.
+	//
+	// body (TCmdParam1)
+	CMD_DELINVITEMS,
+	// Put item into player's belt.
+	//
+	// body (TCmdChItem)
+	CMD_CHANGEBELTITEMS,
+	// Remove item from player's belt.
+	//
+	// body (TCmdParam1)
+	CMD_DELBELTITEMS,
 	// Damage target player.
 	//
 	// body (TCmdDamage)
@@ -743,6 +759,8 @@ void NetSendCmdGItem(bool bHiPri, _cmd_id bCmd, uint8_t pnum, uint8_t ii);
 void NetSendCmdPItem(bool bHiPri, _cmd_id bCmd, Point position, const Item &item);
 void NetSendCmdChItem(bool bHiPri, uint8_t bLoc);
 void NetSendCmdDelItem(bool bHiPri, uint8_t bLoc);
+void NetSendCmdChInvItem(bool bHiPri, int invGridIndex);
+void NetSendCmdChBeltItem(bool bHiPri, int invGridIndex);
 void NetSendCmdDamage(bool bHiPri, uint8_t bPlr, uint32_t dwDam);
 void NetSendCmdMonDmg(bool bHiPri, uint16_t wMon, uint32_t dwDam);
 void NetSendCmdString(uint32_t pmask, const char *pszStr);
