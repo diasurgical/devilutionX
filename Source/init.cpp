@@ -95,7 +95,7 @@ std::vector<std::string> GetMPQSearchPaths()
 #if defined(__unix__) && !defined(__ANDROID__)
 	paths.emplace_back("/usr/share/diasurgical/devilutionx/");
 	paths.emplace_back("/usr/local/share/diasurgical/devilutionx/");
-#elif defined(__3DS__) || defined(__SWITCH__)
+#elif defined(__SWITCH__)
 	paths.emplace_back("romfs:/");
 #elif defined(NXDK)
 	paths.emplace_back("D:\\");
