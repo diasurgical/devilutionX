@@ -445,8 +445,6 @@ if(NINTENDO_3DS)
   set(APP_BANNER      "${PROJECT_SOURCE_DIR}/Packaging/ctr/banner.png")
   set(APP_AUDIO       "${CMAKE_BINARY_DIR}/banner_audio.wav")
   set(APP_RSF         "${PROJECT_SOURCE_DIR}/Packaging/ctr/template.rsf")
-  set(APP_ROMFS       "${CMAKE_BINARY_DIR}/romfs")
-  list(APPEND APP_ROMFS_FILES ${DEVILUTIONX_MPQ})
   set(APP_VERSION ${PROJECT_VERSION})
 
   find_program(FFMPEG ffmpeg)
@@ -462,22 +460,9 @@ if(NINTENDO_3DS)
       VERBATIM)
   endif()
 
-  add_custom_target(romfs_directory
-    COMMAND ${CMAKE_COMMAND} -E make_directory ${APP_ROMFS})
-
-  add_custom_target(romfs_files
-    COMMAND ${CMAKE_COMMAND} -E copy ${APP_ROMFS_FILES} ${APP_ROMFS}
-    DEPENDS ${APP_ROMFS_FILES})
-
-  add_dependencies(romfs_files romfs_directory devilutionx_mpq)
-
   include(Tools3DS)
   add_3dsx_target(${BIN_TARGET})
   add_cia_target(${BIN_TARGET} ${APP_RSF} ${APP_BANNER} ${APP_AUDIO})
-
-  get_filename_component(APP_TARGET_PREFIX ${BIN_TARGET} NAME_WE)
-  add_dependencies(${APP_TARGET_PREFIX}_3dsx romfs_files)
-  add_dependencies(${APP_TARGET_PREFIX}_cia romfs_files)
 endif()
 
 if(UWP_LIB)

@@ -122,6 +122,8 @@ const std::string &AssetsPath()
 		assetsPath.emplace("assets/");
 #elif defined(NXDK)
 		assetsPath.emplace("D:\\assets\\");
+#elif defined(__3DS__)
+		assetsPath.emplace("romfs:/");
 #else
 		assetsPath.emplace(FromSDL(SDL_GetBasePath()) + ("assets" DIRECTORY_SEPARATOR_STR));
 #endif
