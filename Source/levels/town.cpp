@@ -193,10 +193,10 @@ void DrlgTPass3()
 		}
 	}
 
-	FillSector("Levels\\TownData\\Sector1s.DUN", 46, 46);
-	FillSector("Levels\\TownData\\Sector2s.DUN", 46, 0);
-	FillSector("Levels\\TownData\\Sector3s.DUN", 0, 46);
-	FillSector("Levels\\TownData\\Sector4s.DUN", 0, 0);
+	FillSector("levels\\towndata\\sector1s.dun", 46, 46);
+	FillSector("levels\\towndata\\sector2s.dun", 46, 0);
+	FillSector("levels\\towndata\\sector3s.dun", 0, 46);
+	FillSector("levels\\towndata\\sector4s.dun", 0, 0);
 
 	if (!IsWarpOpen(DTYPE_CATACOMBS)) {
 		FillTile(48, 20, 320);

@@ -97,7 +97,7 @@ size_t GetNumAnims(const MonsterData &monsterData)
 void InitMonsterTRN(CMonster &monst)
 {
 	char path[64];
-	*BufCopy(path, "Monsters\\", monst.data->trnFile, ".TRN") = '\0';
+	*BufCopy(path, "monsters\\", monst.data->trnFile, ".trn") = '\0';
 	std::array<uint8_t, 256> colorTranslations;
 	LoadFileInMem(path, colorTranslations);
 	std::replace(colorTranslations.begin(), colorTranslations.end(), 255, 0);
@@ -501,23 +501,23 @@ void PlaceQuestMonsters()
 		}
 
 		if (Quests[Q_LTBANNER].IsAvailable()) {
-			auto dunData = LoadFileInMem<uint16_t>("Levels\\L1Data\\Banner1.DUN");
+			auto dunData = LoadFileInMem<uint16_t>("levels\\l1data\\banner1.dun");
 			SetMapMonsters(dunData.get(), SetPiece.position.megaToWorld());
 		}
 		if (Quests[Q_BLOOD].IsAvailable()) {
-			auto dunData = LoadFileInMem<uint16_t>("Levels\\L2Data\\Blood2.DUN");
+			auto dunData = LoadFileInMem<uint16_t>("levels\\l2data\\blood2.dun");
 			SetMapMonsters(dunData.get(), SetPiece.position.megaToWorld());
 		}
 		if (Quests[Q_BLIND].IsAvailable()) {
-			auto dunData = LoadFileInMem<uint16_t>("Levels\\L2Data\\Blind2.DUN");
+			auto dunData = LoadFileInMem<uint16_t>("levels\\l2data\\blind2.dun");
 			SetMapMonsters(dunData.get(), SetPiece.position.megaToWorld());
 		}
 		if (Quests[Q_ANVIL].IsAvailable()) {
-			auto dunData = LoadFileInMem<uint16_t>("Levels\\L3Data\\Anvil.DUN");
+			auto dunData = LoadFileInMem<uint16_t>("levels\\l3data\\anvil.dun");
 			SetMapMonsters(dunData.get(), SetPiece.position.megaToWorld() + Displacement { 2, 2 });
 		}
 		if (Quests[Q_WARLORD].IsAvailable()) {
-			auto dunData = LoadFileInMem<uint16_t>("Levels\\L4Data\\Warlord.DUN");
+			auto dunData = LoadFileInMem<uint16_t>("levels\\l4data\\warlord.dun");
 			SetMapMonsters(dunData.get(), SetPiece.position.megaToWorld());
 			AddMonsterType(UniqueMonsterType::WarlordOfBlood, PLACE_SCATTER);
 		}
@@ -534,7 +534,7 @@ void PlaceQuestMonsters()
 			PlaceUniqueMonst(UniqueMonsterType::Lazarus, 0, 0);
 			PlaceUniqueMonst(UniqueMonsterType::RedVex, 0, 0);
 			PlaceUniqueMonst(UniqueMonsterType::BlackJade, 0, 0);
-			auto dunData = LoadFileInMem<uint16_t>("Levels\\L4Data\\Vile1.DUN");
+			auto dunData = LoadFileInMem<uint16_t>("levels\\l4data\\vile1.dun");
 			SetMapMonsters(dunData.get(), SetPiece.position.megaToWorld());
 		}
 
@@ -561,19 +561,19 @@ void PlaceQuestMonsters()
 void LoadDiabMonsts()
 {
 	{
-		auto dunData = LoadFileInMem<uint16_t>("Levels\\L4Data\\diab1.DUN");
+		auto dunData = LoadFileInMem<uint16_t>("levels\\l4data\\diab1.dun");
 		SetMapMonsters(dunData.get(), DiabloQuad1.megaToWorld());
 	}
 	{
-		auto dunData = LoadFileInMem<uint16_t>("Levels\\L4Data\\diab2a.DUN");
+		auto dunData = LoadFileInMem<uint16_t>("levels\\l4data\\diab2a.dun");
 		SetMapMonsters(dunData.get(), DiabloQuad2.megaToWorld());
 	}
 	{
-		auto dunData = LoadFileInMem<uint16_t>("Levels\\L4Data\\diab3a.DUN");
+		auto dunData = LoadFileInMem<uint16_t>("levels\\l4data\\diab3a.dun");
 		SetMapMonsters(dunData.get(), DiabloQuad3.megaToWorld());
 	}
 	{
-		auto dunData = LoadFileInMem<uint16_t>("Levels\\L4Data\\diab4a.DUN");
+		auto dunData = LoadFileInMem<uint16_t>("levels\\l4data\\diab4a.dun");
 		SetMapMonsters(dunData.get(), DiabloQuad4.megaToWorld());
 	}
 }
@@ -3095,7 +3095,7 @@ bool UpdateModeStance(Monster &monster)
 void InitTRNForUniqueMonster(Monster &monster)
 {
 	char filestr[64];
-	*BufCopy(filestr, R"(Monsters\Monsters\)", UniqueMonstersData[static_cast<size_t>(monster.uniqueType)].mTrnName, ".TRN") = '\0';
+	*BufCopy(filestr, R"(monsters\monsters\)", UniqueMonstersData[static_cast<size_t>(monster.uniqueType)].mTrnName, ".trn") = '\0';
 	monster.uniqueMonsterTRN = LoadFileInMem<uint8_t>(filestr);
 }
 
@@ -3333,7 +3333,7 @@ void InitMonsterSND(CMonster &monsterType)
 
 		for (int j = 0; j < 2; j++) {
 			char path[64];
-			*BufCopy(path, "Monsters\\", soundSuffix, prefix, j + 1, ".WAV") = '\0';
+			*BufCopy(path, "monsters\\", soundSuffix, prefix, j + 1, ".wav") = '\0';
 			monsterType.sounds[i][j] = sound_file_load(path);
 		}
 	}
@@ -3352,7 +3352,7 @@ void InitMonsterGFX(CMonster &monsterType)
 	if (!HeadlessMode) {
 		monsterType.animData = MultiFileLoader<MaxAnims> {}(
 		    numAnims,
-		    FileNameWithCharAffixGenerator({ "Monsters\\", monsterData.assetsSuffix }, ".CL2", Animletter),
+		    FileNameWithCharAffixGenerator({ "monsters\\", monsterData.assetsSuffix }, ".cl2", Animletter),
 		    animOffsets.data(),
 		    hasAnim);
 	}
@@ -3757,17 +3757,17 @@ void DoEnding()
 	switch (MyPlayer->_pClass) {
 	case HeroClass::Sorcerer:
 	case HeroClass::Monk:
-		play_movie("gendata\\DiabVic1.smk", false);
+		play_movie("gendata\\diabvic1.smk", false);
 		break;
 	case HeroClass::Warrior:
 	case HeroClass::Barbarian:
-		play_movie("gendata\\DiabVic2.smk", false);
+		play_movie("gendata\\diabvic2.smk", false);
 		break;
 	default:
-		play_movie("gendata\\DiabVic3.smk", false);
+		play_movie("gendata\\diabvic3.smk", false);
 		break;
 	}
-	play_movie("gendata\\Diabend.smk", false);
+	play_movie("gendata\\diabend.smk", false);
 
 	bool bMusicOn = gbMusicOn;
 	gbMusicOn = true;

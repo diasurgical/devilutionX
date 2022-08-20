@@ -965,13 +965,13 @@ std::string DebugCmdChangeTRN(const string_view parameter)
 		if (std::getline(paramsStream, second, ' ')) {
 			std::string prefix;
 			if (first == "mon") {
-				prefix = "Monsters\\Monsters\\";
+				prefix = "monsters\\monsters\\";
 			} else if (first == "plr") {
-				prefix = "PlrGFX\\";
+				prefix = "plrgfx\\";
 			}
-			debugTRN = prefix + second + ".TRN";
+			debugTRN = prefix + second + ".trn";
 		} else {
-			debugTRN = first + ".TRN";
+			debugTRN = first + ".trn";
 		}
 		out = fmt::format("I am a pretty butterfly. \n(Loading TRN: {:s})", debugTRN);
 	} else {
@@ -1020,14 +1020,14 @@ std::vector<DebugCmdItem> DebugCmdList = {
 	{ "questinfo", "Shows info of quests.", "{id}", &DebugCmdQuestInfo },
 	{ "playerinfo", "Shows info of player.", "{playerid}", &DebugCmdPlayerInfo },
 	{ "fps", "Toggles displaying FPS", "", &DebugCmdToggleFPS },
-	{ "trn", "Makes player use TRN {trn} - Write 'plr' before it to look in PlrGFX\\ or 'mon' to look in Monsters\\Monsters\\ - example: trn plr infra is equal to 'PlrGFX\\Infra.TRN'", "{trn}", &DebugCmdChangeTRN },
+	{ "trn", "Makes player use TRN {trn} - Write 'plr' before it to look in plrgfx\\ or 'mon' to look in monsters\\monsters\\ - example: trn plr infra is equal to 'plrgfx\\infra.trn'", "{trn}", &DebugCmdChangeTRN },
 };
 
 } // namespace
 
 void LoadDebugGFX()
 {
-	pSquareCel = LoadCel("Data\\Square.CEL", 64);
+	pSquareCel = LoadCel("data\\square.cel", 64);
 }
 
 void FreeDebugGFX()

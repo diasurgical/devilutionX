@@ -77,7 +77,7 @@ void InitSmith(Towner &towner, const TownerData &townerData)
 	};
 	towner.animOrder = AnimOrder;
 	towner.animOrderSize = sizeof(AnimOrder);
-	LoadTownerAnimations(towner, "Towners\\Smith\\SmithN.CEL", 16, 3);
+	LoadTownerAnimations(towner, "towners\\smith\\smithn.cel", 16, 3);
 	towner.name = _("Griswold the Blacksmith");
 }
 
@@ -99,7 +99,7 @@ void InitBarOwner(Towner &towner, const TownerData &townerData)
 	};
 	towner.animOrder = AnimOrder;
 	towner.animOrderSize = sizeof(AnimOrder);
-	LoadTownerAnimations(towner, "Towners\\TwnF\\TwnFN.CEL", 16, 3);
+	LoadTownerAnimations(towner, "towners\\twnf\\twnfn.cel", 16, 3);
 	towner.name = _("Ogden the Tavern owner");
 }
 
@@ -108,7 +108,7 @@ void InitTownDead(Towner &towner, const TownerData &townerData)
 	towner._tAnimWidth = 96;
 	towner.animOrder = nullptr;
 	towner.animOrderSize = 0;
-	LoadTownerAnimations(towner, "Towners\\Butch\\Deadguy.CEL", 8, 6);
+	LoadTownerAnimations(towner, "towners\\butch\\deadguy.cel", 8, 6);
 	towner.name = _("Wounded Townsman");
 }
 
@@ -130,7 +130,7 @@ void InitWitch(Towner &towner, const TownerData &townerData)
 	};
 	towner.animOrder = AnimOrder;
 	towner.animOrderSize = sizeof(AnimOrder);
-	LoadTownerAnimations(towner, "Towners\\TownWmn1\\Witch.CEL", 19, 6);
+	LoadTownerAnimations(towner, "towners\\townwmn1\\witch.cel", 19, 6);
 	towner.name = _("Adria the Witch");
 }
 
@@ -139,7 +139,7 @@ void InitBarmaid(Towner &towner, const TownerData &townerData)
 	towner._tAnimWidth = 96;
 	towner.animOrder = nullptr;
 	towner.animOrderSize = 0;
-	LoadTownerAnimations(towner, "Towners\\TownWmn1\\WmnN.CEL", 18, 6);
+	LoadTownerAnimations(towner, "towners\\townwmn1\\wmnn.cel", 18, 6);
 	towner.name = _("Gillian the Barmaid");
 }
 
@@ -148,7 +148,7 @@ void InitBoy(Towner &towner, const TownerData &townerData)
 	towner._tAnimWidth = 96;
 	towner.animOrder = nullptr;
 	towner.animOrderSize = 0;
-	LoadTownerAnimations(towner, "Towners\\TownBoy\\PegKid1.CEL", 20, 6);
+	LoadTownerAnimations(towner, "towners\\townboy\\pegkid1.cel", 20, 6);
 	towner.name = _("Wirt the Peg-legged boy");
 }
 
@@ -170,7 +170,7 @@ void InitHealer(Towner &towner, const TownerData &townerData)
 	};
 	towner.animOrder = AnimOrder;
 	towner.animOrderSize = sizeof(AnimOrder);
-	LoadTownerAnimations(towner, "Towners\\Healer\\Healer.CEL", 20, 6);
+	LoadTownerAnimations(towner, "towners\\healer\\healer.cel", 20, 6);
 	towner.name = _("Pepin the Healer");
 }
 
@@ -187,7 +187,7 @@ void InitTeller(Towner &towner, const TownerData &townerData)
 	};
 	towner.animOrder = AnimOrder;
 	towner.animOrderSize = sizeof(AnimOrder);
-	LoadTownerAnimations(towner, "Towners\\Strytell\\Strytell.CEL", 25, 3);
+	LoadTownerAnimations(towner, "towners\\strytell\\strytell.cel", 25, 3);
 	towner.name = _("Cain the Elder");
 }
 
@@ -203,7 +203,7 @@ void InitDrunk(Towner &towner, const TownerData &townerData)
 	};
 	towner.animOrder = AnimOrder;
 	towner.animOrderSize = sizeof(AnimOrder);
-	LoadTownerAnimations(towner, "Towners\\Drunk\\TwnDrunk.CEL", 18, 3);
+	LoadTownerAnimations(towner, "towners\\drunk\\twndrunk.cel", 18, 3);
 	towner.name = _("Farnham the Drunk");
 }
 
@@ -238,15 +238,15 @@ void InitFarmer(Towner &towner, const TownerData &townerData)
 	towner._tAnimWidth = 96;
 	towner.animOrder = nullptr;
 	towner.animOrderSize = 0;
-	LoadTownerAnimations(towner, "Towners\\Farmer\\Farmrn2.CEL", 15, 3);
+	LoadTownerAnimations(towner, "towners\\farmer\\farmrn2.cel", 15, 3);
 	towner.name = _("Lester the farmer");
 }
 
 void InitCowFarmer(Towner &towner, const TownerData &townerData)
 {
-	const char *celPath = "Towners\\Farmer\\cfrmrn2.CEL";
+	const char *celPath = "towners\\farmer\\cfrmrn2.cel";
 	if (Quests[Q_JERSEY]._qactive == QUEST_DONE) {
-		celPath = "Towners\\Farmer\\mfrmrn2.CEL";
+		celPath = "towners\\farmer\\mfrmrn2.cel";
 	}
 	towner._tAnimWidth = 96;
 	towner.animOrder = nullptr;
@@ -260,7 +260,7 @@ void InitGirl(Towner &towner, const TownerData &townerData)
 	towner._tAnimWidth = 96;
 	towner.animOrder = nullptr;
 	towner.animOrderSize = 0;
-	LoadTownerAnimations(towner, "Towners\\Girl\\Girlw1.CEL", 20, 6);
+	LoadTownerAnimations(towner, "towners\\girl\\girlw1.cel", 20, 6);
 	towner.name = _("Celia");
 }
 
@@ -649,7 +649,7 @@ void TalkToCowFarmer(Player &player, Towner &cowFarmer)
 		InitQTextMsg(TEXT_JERSEY8);
 		quest._qactive = QUEST_DONE;
 		auto curFrame = cowFarmer._tAnimFrame;
-		LoadTownerAnimations(cowFarmer, "Towners\\Farmer\\mfrmrn2.CEL", 15, 3);
+		LoadTownerAnimations(cowFarmer, "towners\\farmer\\mfrmrn2.cel", 15, 3);
 		cowFarmer._tAnimFrame = std::min<uint8_t>(curFrame, cowFarmer._tAnimLen - 1);
 		return;
 	}
@@ -729,7 +729,7 @@ void TalkToGirl(Player &player, Towner &girl)
 		quest._qlog = false;
 		quest._qactive = QUEST_DONE;
 		auto curFrame = girl._tAnimFrame;
-		LoadTownerAnimations(girl, "Towners\\Girl\\Girls1.CEL", 20, 6);
+		LoadTownerAnimations(girl, "towners\\girl\\girls1.cel", 20, 6);
 		girl._tAnimFrame = std::min<uint8_t>(curFrame, girl._tAnimLen - 1);
 		if (gbIsMultiplayer)
 			NetSendCmdQuest(true, quest);
@@ -820,7 +820,7 @@ void InitTowners()
 {
 	assert(!CowSprites);
 
-	CowSprites.emplace(LoadCelSheet("Towners\\Animals\\Cow.CEL", 128));
+	CowSprites.emplace(LoadCelSheet("towners\\animals\\cow.cel", 128));
 
 	int i = 0;
 	for (const auto &townerData : TownersData) {

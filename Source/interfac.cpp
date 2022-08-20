@@ -106,60 +106,60 @@ void LoadCutsceneBackground(interface_mode uMsg)
 	switch (PickCutscene(uMsg)) {
 	case CutStart:
 		ArtCutsceneWidescreen = LoadOptionalClx("gendata\\cutstartw.pcx");
-		celPath = "Gendata\\Cutstart.cel";
-		palPath = "Gendata\\Cutstart.pal";
+		celPath = "gendata\\cutstart.cel";
+		palPath = "gendata\\cutstart.pal";
 		progress_id = 1;
 		break;
 	case CutTown:
-		celPath = "Gendata\\Cuttt.cel";
-		palPath = "Gendata\\Cuttt.pal";
+		celPath = "gendata\\cuttt.cel";
+		palPath = "gendata\\cuttt.pal";
 		progress_id = 1;
 		break;
 	case CutLevel1:
-		celPath = "Gendata\\Cutl1d.cel";
-		palPath = "Gendata\\Cutl1d.pal";
+		celPath = "gendata\\cutl1d.cel";
+		palPath = "gendata\\cutl1d.pal";
 		progress_id = 0;
 		break;
 	case CutLevel2:
-		celPath = "Gendata\\Cut2.cel";
-		palPath = "Gendata\\Cut2.pal";
+		celPath = "gendata\\cut2.cel";
+		palPath = "gendata\\cut2.pal";
 		progress_id = 2;
 		break;
 	case CutLevel3:
-		celPath = "Gendata\\Cut3.cel";
-		palPath = "Gendata\\Cut3.pal";
+		celPath = "gendata\\cut3.cel";
+		palPath = "gendata\\cut3.pal";
 		progress_id = 1;
 		break;
 	case CutLevel4:
-		celPath = "Gendata\\Cut4.cel";
-		palPath = "Gendata\\Cut4.pal";
+		celPath = "gendata\\cut4.cel";
+		palPath = "gendata\\cut4.pal";
 		progress_id = 1;
 		break;
 	case CutLevel5:
-		celPath = "Nlevels\\Cutl5.cel";
-		palPath = "Nlevels\\Cutl5.pal";
+		celPath = "nlevels\\cutl5.cel";
+		palPath = "nlevels\\cutl5.pal";
 		progress_id = 1;
 		break;
 	case CutLevel6:
-		celPath = "Nlevels\\Cutl6.cel";
-		palPath = "Nlevels\\Cutl6.pal";
+		celPath = "nlevels\\cutl6.cel";
+		palPath = "nlevels\\cutl6.pal";
 		progress_id = 1;
 		break;
 	case CutPortal:
 		ArtCutsceneWidescreen = LoadOptionalClx("gendata\\cutportlw.pcx");
-		celPath = "Gendata\\Cutportl.cel";
-		palPath = "Gendata\\Cutportl.pal";
+		celPath = "gendata\\cutportl.cel";
+		palPath = "gendata\\cutportl.pal";
 		progress_id = 1;
 		break;
 	case CutPortalRed:
 		ArtCutsceneWidescreen = LoadOptionalClx("gendata\\cutportrw.pcx");
-		celPath = "Gendata\\Cutportr.cel";
-		palPath = "Gendata\\Cutportr.pal";
+		celPath = "gendata\\cutportr.cel";
+		palPath = "gendata\\cutportr.pal";
 		progress_id = 1;
 		break;
 	case CutGate:
-		celPath = "Gendata\\Cutgate.cel";
-		palPath = "Gendata\\Cutgate.pal";
+		celPath = "gendata\\cutgate.cel";
+		palPath = "gendata\\cutgate.pal";
 		progress_id = 1;
 		break;
 	}

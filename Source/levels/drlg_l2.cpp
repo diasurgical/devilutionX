@@ -1616,11 +1616,11 @@ void PlaceMiniSetRandom1x1(uint8_t search, uint8_t replace, int rndper)
 void LoadQuestSetPieces()
 {
 	if (Quests[Q_BLIND].IsAvailable()) {
-		pSetPiece = LoadFileInMem<uint16_t>("Levels\\L2Data\\Blind1.DUN");
+		pSetPiece = LoadFileInMem<uint16_t>("levels\\l2data\\blind1.dun");
 	} else if (Quests[Q_BLOOD].IsAvailable()) {
-		pSetPiece = LoadFileInMem<uint16_t>("Levels\\L2Data\\Blood1.DUN");
+		pSetPiece = LoadFileInMem<uint16_t>("levels\\l2data\\blood1.dun");
 	} else if (Quests[Q_SCHAMB].IsAvailable()) {
-		pSetPiece = LoadFileInMem<uint16_t>("Levels\\L2Data\\Bonestr2.DUN");
+		pSetPiece = LoadFileInMem<uint16_t>("levels\\l2data\\bonestr2.dun");
 	}
 }
 

@@ -132,9 +132,9 @@ int pcurs;
 void InitCursor()
 {
 	assert(!pCursCels);
-	pCursCels = LoadCel("Data\\Inv\\Objcurs.CEL", InvItemWidth1);
+	pCursCels = LoadCel("data\\inv\\objcurs.cel", InvItemWidth1);
 	if (gbIsHellfire)
-		pCursCels2 = LoadCel("Data\\Inv\\Objcurs2.CEL", InvItemWidth2);
+		pCursCels2 = LoadCel("data\\inv\\objcurs2.cel", InvItemWidth2);
 	ClearCursor();
 }
 
