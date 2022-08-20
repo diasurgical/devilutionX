@@ -2954,7 +2954,7 @@ void NetSendCmdChInvItem(bool bHiPri, int invGridIndex)
 	TCmdChItem cmd;
 
 	int8_t invListIndex = abs(MyPlayer->InvGrid[invGridIndex]) - 1;
-	Item &item = MyPlayer->InvList[invListIndex];
+	const Item &item = MyPlayer->InvList[invListIndex];
 
 	cmd.bCmd = CMD_CHANGEINVITEMS;
 	cmd.bLoc = invGridIndex;
@@ -2974,7 +2974,7 @@ void NetSendCmdChBeltItem(bool bHiPri, int beltIndex)
 {
 	TCmdChItem cmd;
 
-	Item &item = MyPlayer->SpdList[beltIndex];
+	const Item &item = MyPlayer->SpdList[beltIndex];
 
 	cmd.bCmd = CMD_CHANGEBELTITEMS;
 	cmd.bLoc = beltIndex;
