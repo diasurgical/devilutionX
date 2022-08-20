@@ -128,7 +128,7 @@ void DoUnLight(int nXPos, int nYPos, int nRadius)
 	}
 }
 
-bool CrawlFlipsX(Displacement mirrored, tl::function_ref<bool(Displacement)> function)
+bool CrawlFlipsX(Displacement mirrored, absl::FunctionRef<bool(Displacement)> function)
 {
 	for (const Displacement displacement : { mirrored.flipX(), mirrored }) {
 		if (!function(displacement))
@@ -137,7 +137,7 @@ bool CrawlFlipsX(Displacement mirrored, tl::function_ref<bool(Displacement)> fun
 	return true;
 }
 
-bool CrawlFlipsY(Displacement mirrored, tl::function_ref<bool(Displacement)> function)
+bool CrawlFlipsY(Displacement mirrored, absl::FunctionRef<bool(Displacement)> function)
 {
 	for (const Displacement displacement : { mirrored, mirrored.flipY() }) {
 		if (!function(displacement))
@@ -146,7 +146,7 @@ bool CrawlFlipsY(Displacement mirrored, tl::function_ref<bool(Displacement)> fun
 	return true;
 }
 
-bool CrawlFlipsXY(Displacement mirrored, tl::function_ref<bool(Displacement)> function)
+bool CrawlFlipsXY(Displacement mirrored, absl::FunctionRef<bool(Displacement)> function)
 {
 	for (const Displacement displacement : { mirrored.flipX(), mirrored, mirrored.flipXY(), mirrored.flipY() }) {
 		if (!function(displacement))
@@ -176,7 +176,7 @@ void DoVisionFlags(Point position, MapExplorationType doAutomap, bool visible)
 
 } // namespace
 
-bool DoCrawl(unsigned radius, tl::function_ref<bool(Displacement)> function)
+bool DoCrawl(unsigned radius, absl::FunctionRef<bool(Displacement)> function)
 {
 	if (radius == 0)
 		return function(Displacement { 0, 0 });
@@ -200,7 +200,7 @@ bool DoCrawl(unsigned radius, tl::function_ref<bool(Displacement)> function)
 	return true;
 }
 
-bool DoCrawl(unsigned minRadius, unsigned maxRadius, tl::function_ref<bool(Displacement)> function)
+bool DoCrawl(unsigned minRadius, unsigned maxRadius, absl::FunctionRef<bool(Displacement)> function)
 {
 	for (unsigned i = minRadius; i <= maxRadius; i++) {
 		if (!DoCrawl(i, function))

@@ -8,7 +8,7 @@
 #include <array>
 #include <vector>
 
-#include <function_ref.hpp>
+#include <absl/functional/function_ref.h>
 
 #include "automap.h"
 #include "engine.h"
@@ -103,8 +103,8 @@ constexpr int MaxCrawlRadius = 18;
  *    +-------> x
  */
 
-bool DoCrawl(unsigned radius, tl::function_ref<bool(Displacement)> function);
-bool DoCrawl(unsigned minRadius, unsigned maxRadius, tl::function_ref<bool(Displacement)> function);
+bool DoCrawl(unsigned radius, absl::FunctionRef<bool(Displacement)> function);
+bool DoCrawl(unsigned minRadius, unsigned maxRadius, absl::FunctionRef<bool(Displacement)> function);
 
 template <typename F>
 auto Crawl(unsigned radius, F function) -> invoke_result_t<decltype(function), Displacement>

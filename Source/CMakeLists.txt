@@ -249,6 +249,7 @@ target_link_libraries(libdevilutionx PUBLIC
   DevilutionX::SDL
   DevilutionX::SDL_image
   fmt::fmt
+  absl::function_ref
   PKWare
   libmpq
   libsmackerdec

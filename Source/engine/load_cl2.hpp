@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-#include <function_ref.hpp>
+#include <absl/functional/function_ref.h>
 
 #include "appfat.h"
 #include "engine/clx_sprite.hpp"
@@ -17,7 +17,7 @@ namespace devilution {
 OwnedClxSpriteListOrSheet LoadCl2ListOrSheet(const char *pszName, PointerOrValue<uint16_t> widthOrWidths);
 
 template <size_t MaxCount>
-OwnedClxSpriteSheet LoadMultipleCl2Sheet(tl::function_ref<const char *(size_t)> filenames, size_t count, uint16_t width)
+OwnedClxSpriteSheet LoadMultipleCl2Sheet(absl::FunctionRef<const char *(size_t)> filenames, size_t count, uint16_t width)
 {
 	StaticVector<SFile, MaxCount> files;
 	StaticVector<size_t, MaxCount> fileSizes;
