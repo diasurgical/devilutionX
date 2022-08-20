@@ -139,9 +139,7 @@ DLevel &GetDeltaLevel(uint8_t level)
 	auto keyIt = DeltaLevels.find(level);
 	if (keyIt != DeltaLevels.end())
 		return keyIt->second;
-	auto emplaceRet = DeltaLevels.emplace(level, DLevel {});
-	assert(emplaceRet.second);
-	DLevel &deltaLevel = emplaceRet.first->second;
+	DLevel &deltaLevel = DeltaLevels[level];
 	memset(&deltaLevel.item, 0xFF, sizeof(deltaLevel.item));
 	memset(&deltaLevel.monster, 0xFF, sizeof(deltaLevel.monster));
 	return deltaLevel;
