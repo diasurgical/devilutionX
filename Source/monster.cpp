@@ -10,6 +10,7 @@
 #include <algorithm>
 #include <array>
 
+#include <absl/strings/str_cat.h>
 #include <fmt/compile.h>
 #include <fmt/format.h>
 
@@ -4248,21 +4249,21 @@ void PrintMonstHistory(int mt)
 			if ((res & (RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING)) != 0) {
 				std::string resists = std::string(_("Resists:"));
 				if ((res & RESIST_MAGIC) != 0)
-					AppendStrView(resists, _(" Magic"));
+					absl::StrAppend(&resists, _(" Magic"));
 				if ((res & RESIST_FIRE) != 0)
-					AppendStrView(resists, _(" Fire"));
+					absl::StrAppend(&resists, _(" Fire"));
 				if ((res & RESIST_LIGHTNING) != 0)
-					AppendStrView(resists, _(" Lightning"));
+					absl::StrAppend(&resists, _(" Lightning"));
 				AddPanelString(resists);
 			}
 			if ((res & (IMMUNE_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING)) != 0) {
 				std::string immune = std::string(_("Immune:"));
 				if ((res & IMMUNE_MAGIC) != 0)
-					AppendStrView(immune, _(" Magic"));
+					absl::StrAppend(&immune, _(" Magic"));
 				if ((res & IMMUNE_FIRE) != 0)
-					AppendStrView(immune, _(" Fire"));
+					absl::StrAppend(&immune, _(" Fire"));
 				if ((res & IMMUNE_LIGHTNING) != 0)
-					AppendStrView(immune, _(" Lightning"));
+					absl::StrAppend(&immune, _(" Lightning"));
 				AddPanelString(immune);
 			}
 		}

@@ -5,6 +5,8 @@
 #include <unordered_map>
 #include <vector>
 
+#include <absl/strings/str_cat.h>
+
 #include "engine/assets.hpp"
 #include "options.h"
 #include "utils/file_util.h"
@@ -261,7 +263,7 @@ string_view LanguageParticularTranslate(string_view context, string_view message
 	std::string key = std::string(context);
 	key.reserve(key.size() + 1 + message.size());
 	key += Glue;
-	AppendStrView(key, message);
+	absl::StrAppend(&key, message);
 
 	auto it = translation[0].find(key.c_str());
 	if (it == translation[0].end()) {

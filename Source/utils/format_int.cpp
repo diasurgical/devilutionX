@@ -1,5 +1,6 @@
 #include "utils/format_int.hpp"
 
+#include <absl/strings/str_cat.h>
 #include <fmt/compile.h>
 #include <fmt/core.h>
 
@@ -39,7 +40,7 @@ std::string FormatInteger(int n)
 	out.append(begin, mlen);
 	begin += mlen;
 	for (; begin != end; begin += GroupSize) {
-		AppendStrView(out, separator);
+		absl::StrAppend(&out, separator);
 		out.append(begin, GroupSize);
 	}
 

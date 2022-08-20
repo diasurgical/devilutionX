@@ -1,5 +1,6 @@
 #include "selgame.h"
 
+#include <absl/strings/str_cat.h>
 #include <fmt/format.h>
 
 #include "DiabloUI/diabloui.h"
@@ -242,16 +243,16 @@ void selgame_GameSelection_Focus(int value)
 			infoString += '\n';
 			switch (gameInfo.gameData.nTickRate) {
 			case 20:
-				AppendStrView(infoString, _("Speed: Normal"));
+				absl::StrAppend(&infoString, _("Speed: Normal"));
 				break;
 			case 30:
-				AppendStrView(infoString, _("Speed: Fast"));
+				absl::StrAppend(&infoString, _("Speed: Fast"));
 				break;
 			case 40:
-				AppendStrView(infoString, _("Speed: Faster"));
+				absl::StrAppend(&infoString, _("Speed: Faster"));
 				break;
 			case 50:
-				AppendStrView(infoString, _("Speed: Fastest"));
+				absl::StrAppend(&infoString, _("Speed: Fastest"));
 				break;
 			default:
 				// This should not occure, so no translations is needed
@@ -259,7 +260,7 @@ void selgame_GameSelection_Focus(int value)
 				break;
 			}
 			infoString += '\n';
-			AppendStrView(infoString, _("Players: "));
+			absl::StrAppend(&infoString, _("Players: "));
 			for (auto &playerName : gameInfo.players) {
 				infoString.append(playerName);
 				infoString += ' ';

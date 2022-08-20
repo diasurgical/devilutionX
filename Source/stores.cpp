@@ -7,6 +7,7 @@
 
 #include <algorithm>
 
+#include <absl/strings/str_cat.h>
 #include <fmt/format.h>
 
 #include "controls/plrctrls.h"
@@ -248,7 +249,7 @@ void AddSText(uint8_t x, size_t y, string_view text, UiFlags flags, bool sel)
 	stext[y]._sx = x;
 	stext[y]._syoff = 0;
 	stext[y].text.clear();
-	AppendStrView(stext[y].text, text);
+	absl::StrAppend(&stext[y].text, text);
 	stext[y].flags = flags;
 	stext[y].type = sel ? STextStruct::Selectable : STextStruct::Label;
 }
@@ -280,18 +281,18 @@ void PrintStoreItem(const Item &item, int l, UiFlags flags)
 	if (item._iIdentified) {
 		if (item._iMagical != ITEM_QUALITY_UNIQUE) {
 			if (item._iPrePower != -1) {
-				AppendStrView(productLine, PrintItemPower(item._iPrePower, item));
+				absl::StrAppend(&productLine, PrintItemPower(item._iPrePower, item).str());
 			}
 		}
 		if (item._iSufPower != -1) {
 			if (!productLine.empty())
-				AppendStrView(productLine, _(",  "));
-			AppendStrView(productLine, PrintItemPower(item._iSufPower, item));
+				absl::StrAppend(&productLine, _(",  "));
+			absl::StrAppend(&productLine, PrintItemPower(item._iSufPower, item).str());
 		}
 	}
 	if (item._iMiscId == IMISC_STAFF && item._iMaxCharges != 0) {
 		if (!productLine.empty())
-			AppendStrView(productLine, _(",  "));
+			absl::StrAppend(&productLine, _(",  "));
 		productLine.append(fmt::format(fmt::runtime(_("Charges: {:d}/{:d}")), item._iCharges, item._iMaxCharges));
 	}
 	if (!productLine.empty()) {
@@ -308,7 +309,7 @@ void PrintStoreItem(const Item &item, int l, UiFlags flags)
 		if (item._iMaxDur != DUR_INDESTRUCTIBLE && item._iMaxDur != 0)
 			productLine += fmt::format(fmt::runtime(_("Dur: {:d}/{:d},  ")), item._iDurability, item._iMaxDur);
 		else
-			AppendStrView(productLine, _("Indestructible,  "));
+			absl::StrAppend(&productLine, _("Indestructible,  "));
 	}
 
 	int8_t str = item._iMinStr;
@@ -316,9 +317,9 @@ void PrintStoreItem(const Item &item, int l, UiFlags flags)
 	int8_t dex = item._iMinDex;
 
 	if (str == 0 && mag == 0 && dex == 0) {
-		AppendStrView(productLine, _("No required attributes"));
+		absl::StrAppend(&productLine, _("No required attributes"));
 	} else {
-		AppendStrView(productLine, _("Required:"));
+		absl::StrAppend(&productLine, _("Required:"));
 		if (str != 0)
 			productLine.append(fmt::format(fmt::runtime(_(" {:d} Str")), str));
 		if (mag != 0)
