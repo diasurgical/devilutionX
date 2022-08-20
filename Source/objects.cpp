@@ -9,6 +9,7 @@
 
 #include <algorithm>
 
+#include <absl/strings/str_cat.h>
 #include <fmt/core.h>
 
 #include "DiabloUI/ui_flags.hpp"
@@ -39,7 +40,7 @@
 #include "track.h"
 #include "utils/language.h"
 #include "utils/log.hpp"
-#include "utils/str_cat.hpp"
+#include "utils/str_buf_copy.hpp"
 #include "utils/utf8.hpp"
 
 namespace devilution {

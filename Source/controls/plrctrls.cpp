@@ -4,6 +4,8 @@
 #include <cstdint>
 #include <list>
 
+#include <absl/strings/str_cat.h>
+
 #ifdef USE_SDL1
 #include "utils/sdl2_to_1_2_backports.h"
 #endif
@@ -37,7 +39,6 @@
 #include "towners.h"
 #include "track.h"
 #include "utils/log.hpp"
-#include "utils/str_cat.hpp"
 
 #define SPLICONLENGTH 56
 
@@ -1489,7 +1490,7 @@ void LogControlDeviceAndModeChange(ControlTypes newControlDevice, ControlTypes n
 	constexpr auto DebugChange = [](ControlTypes before, ControlTypes after) -> std::string {
 		if (before == after)
 			return std::string { ControlTypeToString(before) };
-		return StrCat(ControlTypeToString(before), " -> ", ControlTypeToString(after));
+		return absl::StrCat(ControlTypeToString(before), " -> ", ControlTypeToString(after));
 	};
 	LogVerbose("Control: device {}, mode {}", DebugChange(ControlDevice, newControlDevice), DebugChange(ControlMode, newControlMode));
 }
@@ -1517,7 +1518,7 @@ void LogGamepadChange(GamepadLayout newGamepad)
 	constexpr auto DebugChange = [](GamepadLayout before, GamepadLayout after) -> std::string {
 		if (before == after)
 			return std::string { GamepadTypeToString(before) };
-		return StrCat(GamepadTypeToString(before), " -> ", GamepadTypeToString(after));
+		return absl::StrCat(GamepadTypeToString(before), " -> ", GamepadTypeToString(after));
 	};
 	LogVerbose("Control: gamepad {}", DebugChange(GamepadType, newGamepad));
 }

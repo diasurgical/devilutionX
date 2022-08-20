@@ -5,13 +5,14 @@
  */
 #include "effects.h"
 
+#include <absl/strings/str_cat.h>
+
 #include "engine/random.hpp"
 #include "engine/sound.h"
 #include "engine/sound_defs.hpp"
 #include "init.h"
 #include "player.h"
 #include "utils/stdcompat/algorithm.hpp"
-#include "utils/str_cat.hpp"
 
 namespace devilution {
 

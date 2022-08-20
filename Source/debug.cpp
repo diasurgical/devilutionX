@@ -5,11 +5,12 @@
  */
 
 #ifdef _DEBUG
+#include "debug.h"
 
 #include <fstream>
 #include <sstream>
 
-#include "debug.h"
+#include <absl/strings/str_cat.h>
 
 #include "automap.h"
 #include "control.h"
@@ -30,7 +31,7 @@
 #include "utils/endian_stream.hpp"
 #include "utils/language.h"
 #include "utils/log.hpp"
-#include "utils/str_cat.hpp"
+#include "utils/str_buf_copy.hpp"
 
 namespace devilution {
 
@@ -96,7 +97,7 @@ void SetSpellLevelCheat(spell_id spl, int spllvl)
 
 void PrintDebugMonster(const Monster &monster)
 {
-	EventPlrMsg(StrCat(
+	EventPlrMsg(absl::StrCat(
 	                "Monster ", static_cast<int>(monster.getId()), " = ", monster.name(),
 	                "\nX = ", monster.position.tile.x, ", Y = ", monster.position.tile.y,
 	                "\nEnemy = ", monster.enemy, ", HP = ", monster.hitPoints,
@@ -112,7 +113,7 @@ void PrintDebugMonster(const Monster &monster)
 		}
 	}
 
-	EventPlrMsg(StrCat("Active List = ", bActive ? 1 : 0, ", Squelch = ", monster.activeForTicks), UiFlags::ColorWhite);
+	EventPlrMsg(absl::StrCat("Active List = ", bActive ? 1 : 0, ", Squelch = ", monster.activeForTicks), UiFlags::ColorWhite);
 }
 
 void ProcessMessages()
@@ -154,11 +155,11 @@ std::string DebugCmdHelp(const string_view parameter)
 	}
 	auto debugCmdIterator = std::find_if(DebugCmdList.begin(), DebugCmdList.end(), [&](const DebugCmdItem &elem) { return elem.text == parameter; });
 	if (debugCmdIterator == DebugCmdList.end())
-		return StrCat("Debug command ", parameter, " wasn't found");
+		return absl::StrCat("Debug command ", parameter, " wasn't found");
 	auto &dbgCmdItem = *debugCmdIterator;
 	if (dbgCmdItem.requiredParameter.empty())
-		return StrCat("Description: ", dbgCmdItem.description, "\nParameters: No additional parameter needed.");
-	return StrCat("Description: ", dbgCmdItem.description, "\nParameters: ", dbgCmdItem.requiredParameter);
+		return absl::StrCat("Description: ", dbgCmdItem.description, "\nParameters: No additional parameter needed.");
+	return absl::StrCat("Description: ", dbgCmdItem.description, "\nParameters: ", dbgCmdItem.requiredParameter);
 }
 
 std::string DebugCmdGiveGoldCheat(const string_view parameter)
@@ -206,12 +207,12 @@ std::string DebugCmdWarpToLevel(const string_view parameter)
 	Player &myPlayer = *MyPlayer;
 	auto level = atoi(parameter.data());
 	if (level < 0 || level > (gbIsHellfire ? 24 : 16))
-		return StrCat("Level ", level, " is not known. Do you want to write a mod?");
+		return absl::StrCat("Level ", level, " is not known. Do you want to write a mod?");
 	if (!setlevel && myPlayer.isOnLevel(level))
-		return StrCat("I did nothing but fulfilled your wish. You are already at level ", level, ".");
+		return absl::StrCat("I did nothing but fulfilled your wish. You are already at level ", level, ".");
 
 	StartNewLvl(myPlayer, (level != 21) ? interface_mode::WM_DIABNEXTLVL : interface_mode::WM_DIABTOWNWARP, level);
-	return StrCat("Welcome to level ", level, ".");
+	return absl::StrCat("Welcome to level ", level, ".");
 }
 
 std::string DebugCmdLoadQuestMap(const string_view parameter)
@@ -221,7 +222,7 @@ std::string DebugCmdLoadQuestMap(const string_view parameter)
 		for (auto &quest : Quests) {
 			if (quest._qslvl <= 0)
 				continue;
-			StrAppend(ret, " ", quest._qslvl, " (", QuestLevelNames[quest._qslvl], ")");
+			absl::StrAppend(&ret, " ", quest._qslvl, " (", QuestLevelNames[quest._qslvl], ")");
 		}
 		return ret;
 	}
@@ -230,7 +231,7 @@ std::string DebugCmdLoadQuestMap(const string_view parameter)
 	if (level < 1)
 		return "Map id must be 1 or higher";
 	if (setlevel && setlvlnum == level)
-		return StrCat("I did nothing but fulfilled your wish. You are already at mapid .", level);
+		return absl::StrCat("I did nothing but fulfilled your wish. You are already at mapid .", level);
 
 	for (auto &quest : Quests) {
 		if (level != quest._qslvl)
@@ -249,10 +250,10 @@ std::string DebugCmdLoadQuestMap(const string_view parameter)
 		setlvltype = quest._qlvltype;
 		StartNewLvl(*MyPlayer, WM_DIABSETLVL, level);
 
-		return StrCat("Welcome to ", QuestLevelNames[level], ".");
+		return absl::StrCat("Welcome to ", QuestLevelNames[level], ".");
 	}
 
-	return StrCat("Mapid ", level, " is not known. Do you want to write a mod?");
+	return absl::StrCat("Mapid ", level, " is not known. Do you want to write a mod?");
 }
 
 std::string DebugCmdLoadMap(const string_view parameter)
@@ -266,7 +267,7 @@ std::string DebugCmdLoadMap(const string_view parameter)
 	for (std::string tmp; std::getline(paramsStream, tmp, ' ');) {
 		switch (count) {
 		case 0:
-			TestMapPath = StrCat(tmp, ".dun");
+			TestMapPath = absl::StrCat(tmp, ".dun");
 			break;
 		case 1:
 			mapType = atoi(tmp.c_str());
@@ -300,7 +301,7 @@ std::string ExportDun(const string_view parameter)
 {
 	std::ofstream dunFile;
 
-	std::string levelName = StrCat(currlevel, "-", glSeedTbl[currlevel], ".dun");
+	std::string levelName = absl::StrCat(currlevel, "-", glSeedTbl[currlevel], ".dun");
 
 	dunFile.open(levelName, std::ios::out | std::ios::app | std::ios::binary);
 
@@ -362,7 +363,7 @@ std::string ExportDun(const string_view parameter)
 	}
 	dunFile.close();
 
-	return StrCat(levelName, " saved. Happy mapping!");
+	return absl::StrCat(levelName, " saved. Happy mapping!");
 }
 
 std::unordered_map<string_view, _talker_id> TownerShortNameToTownerId = {
@@ -398,7 +399,7 @@ std::string DebugCmdVisitTowner(const string_view parameter)
 
 	auto it = TownerShortNameToTownerId.find(parameter);
 	if (it == TownerShortNameToTownerId.end())
-		return StrCat(parameter, " is unknown. Perhaps he is a ninja?");
+		return absl::StrCat(parameter, " is unknown. Perhaps he is a ninja?");
 
 	for (auto &towner : Towners) {
 		if (towner._ttype != it->second)
@@ -413,10 +414,10 @@ std::string DebugCmdVisitTowner(const string_view parameter)
 		    towner.position.y,
 		    1);
 
-		return StrCat("Say hello to ", parameter, " from me.");
+		return absl::StrCat("Say hello to ", parameter, " from me.");
 	}
 
-	return StrCat("Couldn't find ", parameter, ".");
+	return absl::StrCat("Couldn't find ", parameter, ".");
 }
 
 std::string DebugCmdResetLevel(const string_view parameter)
@@ -429,7 +430,7 @@ std::string DebugCmdResetLevel(const string_view parameter)
 		return "What level do you want to visit?";
 	auto level = atoi(singleParameter.c_str());
 	if (level < 0 || level > (gbIsHellfire ? 24 : 16))
-		return StrCat("Level ", level, " is not known. Do you want to write an extension mod?");
+		return absl::StrCat("Level ", level, " is not known. Do you want to write an extension mod?");
 	myPlayer._pLvlVisited[level] = false;
 
 	if (std::getline(paramsStream, singleParameter, ' ')) {
@@ -438,8 +439,8 @@ std::string DebugCmdResetLevel(const string_view parameter)
 	}
 
 	if (myPlayer.isOnLevel(level))
-		return StrCat("Level ", level, " can't be cleaned, cause you still occupy it!");
-	return StrCat("Level ", level, " was restored and looks fabulous.");
+		return absl::StrCat("Level ", level, " can't be cleaned, cause you still occupy it!");
+	return absl::StrCat("Level ", level, " was restored and looks fabulous.");
 }
 
 std::string DebugCmdGodMode(const string_view parameter)
@@ -491,7 +492,7 @@ std::string DebugCmdQuest(const string_view parameter)
 		for (auto &quest : Quests) {
 			if (IsNoneOf(quest._qactive, QUEST_NOTAVAIL, QUEST_INIT))
 				continue;
-			StrAppend(ret, ", ", quest._qidx, " (", QuestsData[quest._qidx]._qlstr, ")");
+			absl::StrAppend(&ret, ", ", quest._qidx, " (", QuestsData[quest._qidx]._qlstr, ")");
 		}
 		return ret;
 	}
@@ -511,16 +512,16 @@ std::string DebugCmdQuest(const string_view parameter)
 	int questId = atoi(parameter.data());
 
 	if (questId >= MAXQUESTS)
-		return StrCat("Quest ", questId, " is not known. Do you want to write a mod?");
+		return absl::StrCat("Quest ", questId, " is not known. Do you want to write a mod?");
 	auto &quest = Quests[questId];
 
 	if (IsNoneOf(quest._qactive, QUEST_NOTAVAIL, QUEST_INIT))
-		return StrCat(QuestsData[questId]._qlstr, " was already given.");
+		return absl::StrCat(QuestsData[questId]._qlstr, " was already given.");
 
 	quest._qactive = QUEST_ACTIVE;
 	quest._qlog = true;
 
-	return StrCat(QuestsData[questId]._qlstr, " enabled.");
+	return absl::StrCat(QuestsData[questId]._qlstr, " enabled.");
 }
 
 std::string DebugCmdLevelUp(const string_view parameter)
@@ -652,7 +653,7 @@ std::string DebugCmdShowGrid(const string_view parameter)
 
 std::string DebugCmdLevelSeed(const string_view parameter)
 {
-	return StrCat("Seedinfo for level ", currlevel, "\nseed: ", glSeedTbl[currlevel], "\nMid1: ", glMid1Seed[currlevel], "\nMid2: ", glMid2Seed[currlevel], "\nMid3: ", glMid3Seed[currlevel], "\nEnd: ", glEndSeed[currlevel]);
+	return absl::StrCat("Seedinfo for level ", currlevel, "\nseed: ", glSeedTbl[currlevel], "\nMid1: ", glMid1Seed[currlevel], "\nMid2: ", glMid2Seed[currlevel], "\nMid3: ", glMid3Seed[currlevel], "\nEnd: ", glEndSeed[currlevel]);
 }
 
 std::string DebugCmdSpawnUniqueMonster(const string_view parameter)
@@ -726,7 +727,7 @@ std::string DebugCmdSpawnUniqueMonster(const string_view parameter)
 
 		Monster *monster = AddMonster(pos, myPlayer._pdir, id, true);
 		if (monster == nullptr)
-			return StrCat("I could only summon ", spawnedMonster, " Monsters. The rest strike for shorter working hours.");
+			return absl::StrCat("I could only summon ", spawnedMonster, " Monsters. The rest strike for shorter working hours.");
 		PrepareUniqueMonst(*monster, uniqueIndex, 0, 0, UniqueMonstersData[static_cast<size_t>(uniqueIndex)]);
 		monster->corpseId = 1;
 		spawnedMonster += 1;
@@ -738,7 +739,7 @@ std::string DebugCmdSpawnUniqueMonster(const string_view parameter)
 	});
 
 	if (!ret)
-		ret = StrCat("I could only summon ", spawnedMonster, " Monsters. The rest strike for shorter working hours.");
+		ret = absl::StrCat("I could only summon ", spawnedMonster, " Monsters. The rest strike for shorter working hours.");
 	return *ret;
 }
 
@@ -811,7 +812,7 @@ std::string DebugCmdSpawnMonster(const string_view parameter)
 			return {};
 
 		if (AddMonster(pos, myPlayer._pdir, id, true) == nullptr)
-			return StrCat("I could only summon ", spawnedMonster, " Monsters. The rest strike for shorter working hours.");
+			return absl::StrCat("I could only summon ", spawnedMonster, " Monsters. The rest strike for shorter working hours.");
 		spawnedMonster += 1;
 
 		if (spawnedMonster >= count)
@@ -821,7 +822,7 @@ std::string DebugCmdSpawnMonster(const string_view parameter)
 	});
 
 	if (!ret)
-		ret = StrCat("I could only summon ", spawnedMonster, " Monsters. The rest strike for shorter working hours.");
+		ret = absl::StrCat("I could only summon ", spawnedMonster, " Monsters. The rest strike for shorter working hours.");
 	return *ret;
 }
 
@@ -907,9 +908,9 @@ std::string DebugCmdItemInfo(const string_view parameter)
 		pItem = &Items[pcursitem];
 	}
 	if (pItem != nullptr) {
-		return StrCat("Name: ", pItem->_iIName, "\nIDidx: ", pItem->IDidx, "\nSeed: ", pItem->_iSeed, "\nCreateInfo: ", pItem->_iCreateInfo);
+		return absl::StrCat("Name: ", pItem->_iIName, "\nIDidx: ", pItem->IDidx, "\nSeed: ", pItem->_iSeed, "\nCreateInfo: ", pItem->_iCreateInfo);
 	}
-	return StrCat("Numitems: ", ActiveItemCount);
+	return absl::StrCat("Numitems: ", ActiveItemCount);
 }
 
 std::string DebugCmdQuestInfo(const string_view parameter)
@@ -919,7 +920,7 @@ std::string DebugCmdQuestInfo(const string_view parameter)
 		for (auto &quest : Quests) {
 			if (IsNoneOf(quest._qactive, QUEST_NOTAVAIL, QUEST_INIT))
 				continue;
-			StrAppend(ret, ", ", quest._qidx, " (", QuestsData[quest._qidx]._qlstr, ")");
+			absl::StrAppend(&ret, ", ", quest._qidx, " (", QuestsData[quest._qidx]._qlstr, ")");
 		}
 		return ret;
 	}
@@ -927,9 +928,9 @@ std::string DebugCmdQuestInfo(const string_view parameter)
 	int questId = atoi(parameter.data());
 
 	if (questId >= MAXQUESTS)
-		return StrCat("Quest ", questId, " is not known. Do you want to write a mod?");
+		return absl::StrCat("Quest ", questId, " is not known. Do you want to write a mod?");
 	auto &quest = Quests[questId];
-	return StrCat("\nQuest: ", QuestsData[quest._qidx]._qlstr, "\nActive: ", quest._qactive, " Var1: ", quest._qvar1, " Var2: ", quest._qvar2);
+	return absl::StrCat("\nQuest: ", QuestsData[quest._qidx]._qlstr, "\nActive: ", quest._qactive, " Var1: ", quest._qvar1, " Var2: ", quest._qvar2);
 }
 
 std::string DebugCmdPlayerInfo(const string_view parameter)
@@ -942,7 +943,7 @@ std::string DebugCmdPlayerInfo(const string_view parameter)
 		return "Player is not active";
 
 	const Point target = player.GetTargetPosition();
-	return StrCat("Plr ", playerId, " is ", player._pName,
+	return absl::StrCat("Plr ", playerId, " is ", player._pName,
 	    "\nLvl: ", player.plrlevel, " Changing: ", player._pLvlChanging,
 	    "\nTile.x: ", player.position.tile.x, " Tile.y: ", player.position.tile.y, " Target.x: ", target.x, " Target.y: ", target.y,
 	    "\nMode: ", player._pmode, " destAction: ", player.destAction, " walkpath[0]: ", player.walkpath[0],
@@ -1053,7 +1054,7 @@ void NextDebugMonster()
 	if (DebugMonsterId == MaxMonsters)
 		DebugMonsterId = 0;
 
-	EventPlrMsg(StrCat("Current debug monster = ", DebugMonsterId), UiFlags::ColorWhite);
+	EventPlrMsg(absl::StrCat("Current debug monster = ", DebugMonsterId), UiFlags::ColorWhite);
 }
 
 void SetDebugLevelSeedInfos(uint32_t mid1Seed, uint32_t mid2Seed, uint32_t mid3Seed, uint32_t endSeed)

@@ -7,6 +7,7 @@
 #include <cstdint>
 #include <fstream>
 
+#include <absl/strings/str_cat.h>
 #include <fmt/format.h>
 
 #define SI_SUPPORT_IOSTREAMS
@@ -28,7 +29,6 @@
 #include "utils/log.hpp"
 #include "utils/paths.h"
 #include "utils/stdcompat/algorithm.hpp"
-#include "utils/str_cat.hpp"
 #include "utils/utf8.hpp"
 
 namespace devilution {
@@ -516,7 +516,7 @@ string_view OptionEntryIntBase::GetListDescription(size_t index) const
 {
 	if (entryNames.empty()) {
 		for (auto value : entryValues) {
-			entryNames.push_back(StrCat(value));
+			entryNames.push_back(absl::StrCat(value));
 		}
 	}
 	return entryNames[index].data();
@@ -725,7 +725,7 @@ void OptionEntryResolution::CheckResolutionsAreInitialized() const
 	sizes.erase(std::unique(sizes.begin(), sizes.end()), sizes.end());
 
 	for (auto &size : sizes) {
-		resolutions.emplace_back(size, StrCat(size.width, "x", size.height));
+		resolutions.emplace_back(size, absl::StrCat(size.width, "x", size.height));
 	}
 }
 
@@ -1226,7 +1226,7 @@ KeymapperOptions::KeymapperOptions()
 		keyIDToKeyName.emplace(c, std::string(1, c));
 	}
 	for (int i = 0; i < 12; ++i) {
-		keyIDToKeyName.emplace(SDLK_F1 + i, StrCat("F", i + 1));
+		keyIDToKeyName.emplace(SDLK_F1 + i, absl::StrCat("F", i + 1));
 	}
 
 	keyIDToKeyName.emplace(SDLK_LALT, "LALT");

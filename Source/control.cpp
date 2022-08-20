@@ -10,6 +10,7 @@
 #include <cstddef>
 #include <string>
 
+#include <absl/strings/str_cat.h>
 #include <fmt/format.h>
 
 #include "automap.h"
@@ -45,7 +46,6 @@
 #include "utils/language.h"
 #include "utils/sdl_geometry.h"
 #include "utils/stdcompat/optional.hpp"
-#include "utils/str_cat.hpp"
 #include "utils/string_or_view.hpp"
 #include "utils/utf8.hpp"
 
@@ -528,10 +528,10 @@ void DrawFlaskValues(const Surface &out, Point pos, int currValue, int maxValue)
 		DrawString(out, text, pos, color | UiFlags::KerningFitSpacing, 0);
 	};
 
-	std::string currText = StrCat(currValue);
+	std::string currText = absl::StrCat(currValue);
 	drawStringWithShadow(currText, pos - Displacement { GetLineWidth(currText, GameFont12) + 1, 0 });
 	drawStringWithShadow("/", pos);
-	drawStringWithShadow(StrCat(maxValue), pos + Displacement { GetLineWidth("/", GameFont12) + 1, 0 });
+	drawStringWithShadow(absl::StrCat(maxValue), pos + Displacement { GetLineWidth("/", GameFont12) + 1, 0 });
 }
 
 void control_update_life_mana()
@@ -1092,7 +1092,7 @@ void DrawGoldSplit(const Surface &out, int amount)
 
 	std::string value;
 	if (amount > 0) {
-		value = StrCat(amount);
+		value = absl::StrCat(amount);
 	}
 	// Even a ten digit amount of gold only takes up about half a line. There's no need to wrap or clip text here so we
 	// use the Point form of DrawString.

@@ -2,6 +2,8 @@
 
 #include <algorithm>
 
+#include <absl/strings/str_cat.h>
+
 #ifdef __vita__
 #include <psp2/power.h>
 #endif
@@ -29,7 +31,6 @@
 #include "utils/log.hpp"
 #include "utils/sdl_geometry.h"
 #include "utils/sdl_wrap.h"
-#include "utils/str_cat.hpp"
 
 #ifdef USE_SDL1
 #ifndef SDL1_VIDEO_MODE_BPP
@@ -352,7 +353,7 @@ void ReinitializeTexture()
 	if (renderer == nullptr)
 		return;
 
-	auto quality = StrCat(static_cast<int>(*sgOptions.Graphics.scaleQuality));
+	auto quality = absl::StrCat(static_cast<int>(*sgOptions.Graphics.scaleQuality));
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, quality.c_str());
 
 	texture = SDLWrap::CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, gnScreenWidth, gnScreenHeight);

@@ -6,6 +6,8 @@
 #include <memory>
 #include <type_traits>
 
+#include <absl/strings/str_cat.h>
+
 #include "appfat.h"
 #include "encrypt.h"
 #include "engine.h"
@@ -13,7 +15,6 @@
 #include "utils/file_util.h"
 #include "utils/language.h"
 #include "utils/log.hpp"
-#include "utils/str_cat.hpp"
 
 namespace devilution {
 
@@ -158,7 +159,7 @@ MpqWriter::MpqWriter(const char *path)
 	}
 	return;
 on_error:
-	app_fatal(StrCat(_("Failed to open archive for writing."), "\n", path, "\n", error));
+	app_fatal(absl::StrCat(_("Failed to open archive for writing."), "\n", path, "\n", error));
 }
 
 MpqWriter::~MpqWriter()
@@ -335,7 +336,7 @@ MpqBlockEntry *MpqWriter::AddFile(const char *filename, MpqBlockEntry *block, ui
 	uint32_t h2 = Hash(filename, 1);
 	uint32_t h3 = Hash(filename, 2);
 	if (GetHashIndex(h1, h2, h3) != HashEntryNotFound)
-		app_fatal(StrCat("Hash collision between \"", filename, "\" and existing file\n"));
+		app_fatal(absl::StrCat("Hash collision between \"", filename, "\" and existing file\n"));
 	unsigned int hIdx = h1 & 0x7FF;
 
 	bool hasSpace = false;

@@ -5,6 +5,7 @@
  */
 #include <array>
 
+#include <absl/strings/str_cat.h>
 #include <fmt/format.h>
 
 #include <config.h>
@@ -77,7 +78,7 @@
 #include "utils/language.h"
 #include "utils/paths.h"
 #include "utils/stdcompat/string_view.hpp"
-#include "utils/str_cat.hpp"
+#include "utils/str_buf_copy.hpp"
 #include "utils/utf8.hpp"
 
 #ifndef USE_SDL1

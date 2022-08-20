@@ -40,7 +40,7 @@
 #include "utils/file_name_generator.hpp"
 #include "utils/language.h"
 #include "utils/stdcompat/string_view.hpp"
-#include "utils/str_cat.hpp"
+#include "utils/str_buf_copy.hpp"
 #include "utils/utf8.hpp"
 
 #ifdef _DEBUG
@@ -1426,7 +1426,7 @@ void MonsterTalk(Monster &monster)
 			monster.flags |= MFLAG_QUEST_COMPLETE;
 		}
 		if (Quests[Q_LTBANNER]._qvar1 < 2) {
-			app_fatal(StrCat("SS Talk = ", monster.talkMsg, ", Flags = ", monster.flags));
+			app_fatal(absl::StrCat("SS Talk = ", monster.talkMsg, ", Flags = ", monster.flags));
 		}
 	}
 	if (monster.uniqueType == UniqueMonsterType::Lachdan) {
@@ -2959,7 +2959,7 @@ string_view GetMonsterTypeText(const MonsterData &monsterData)
 		return _("Undead");
 	}
 
-	app_fatal(StrCat("Unknown monsterClass ", static_cast<int>(monsterData.monsterClass)));
+	app_fatal(absl::StrCat("Unknown monsterClass ", static_cast<int>(monsterData.monsterClass)));
 }
 
 void ActivateSpawn(Monster &monster, Point position, Direction dir)

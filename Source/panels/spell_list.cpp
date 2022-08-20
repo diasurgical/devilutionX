@@ -1,5 +1,6 @@
 #include "panels/spell_list.hpp"
 
+#include <absl/strings/str_cat.h>
 #include <fmt/format.h>
 
 #include "control.h"
@@ -13,7 +14,6 @@
 #include "player.h"
 #include "spells.h"
 #include "utils/language.h"
-#include "utils/str_cat.hpp"
 #include "utils/utf8.hpp"
 
 #define SPLROWICONLS 10
@@ -90,7 +90,7 @@ std::optional<string_view> GetHotkeyName(spell_id spellId, spell_type spellType)
 	for (size_t t = 0; t < NumHotkeys; t++) {
 		if (myPlayer._pSplHotKey[t] != spellId || myPlayer._pSplTHotKey[t] != spellType)
 			continue;
-		auto quickSpellActionKey = StrCat("QuickSpell", t + 1);
+		auto quickSpellActionKey = absl::StrCat("QuickSpell", t + 1);
 		return sgOptions.Keymapper.KeyNameForAction(quickSpellActionKey);
 	}
 	return {};

@@ -14,7 +14,6 @@
 #include "options.h"
 #include "storm/storm_net.hpp"
 #include "utils/language.h"
-#include "utils/str_cat.hpp"
 #include "utils/utf8.hpp"
 
 namespace devilution {
@@ -256,7 +255,7 @@ void selgame_GameSelection_Focus(int value)
 				break;
 			default:
 				// This should not occure, so no translations is needed
-				infoString.append(StrCat("Speed: ", gameInfo.gameData.nTickRate));
+				infoString.append(absl::StrCat("Speed: ", gameInfo.gameData.nTickRate));
 				break;
 			}
 			infoString += '\n';

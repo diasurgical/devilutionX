@@ -3,6 +3,8 @@
 #include <algorithm>
 #include <string>
 
+#include <absl/strings/str_cat.h>
+
 #include "DiabloUI/button.h"
 #include "DiabloUI/dialogs.h"
 #include "DiabloUI/scrollbar.h"
@@ -24,7 +26,7 @@
 #include "utils/sdl_compat.h"
 #include "utils/sdl_geometry.h"
 #include "utils/sdl_wrap.h"
-#include "utils/str_cat.hpp"
+#include "utils/str_buf_copy.hpp"
 #include "utils/stubs.h"
 #include "utils/utf8.hpp"
 

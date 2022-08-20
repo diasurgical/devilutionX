@@ -5,6 +5,7 @@
  */
 #include "nthread.h"
 
+#include <absl/strings/str_cat.h>
 #include <fmt/core.h>
 
 #include "diablo.h"
@@ -13,7 +14,6 @@
 #include "storm/storm_net.hpp"
 #include "utils/sdl_mutex.h"
 #include "utils/sdl_thread.h"
-#include "utils/str_cat.hpp"
 
 namespace devilution {
 
@@ -70,7 +70,7 @@ void nthread_terminate_game(const char *pszFcn)
 		return;
 	}
 	if (sErr != STORM_ERROR_GAME_TERMINATED && sErr != STORM_ERROR_NOT_IN_GAME) {
-		app_fatal(StrCat(pszFcn, ":\n", pszFcn));
+		app_fatal(absl::StrCat(pszFcn, ":\n", pszFcn));
 	}
 
 	gbGameDestroyed = true;

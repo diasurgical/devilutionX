@@ -5,6 +5,8 @@
  */
 #include "engine/render/scrollrt.h"
 
+#include <absl/strings/str_cat.h>
+
 #include "DiabloUI/ui_flags.hpp"
 #include "automap.h"
 #include "controls/plrctrls.h"
@@ -43,7 +45,7 @@
 #include "utils/display.h"
 #include "utils/endian.hpp"
 #include "utils/log.hpp"
-#include "utils/str_cat.hpp"
+#include "utils/str_buf_copy.hpp"
 
 #ifndef USE_SDL1
 #include "controls/touch/renderers.h"

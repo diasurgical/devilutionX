@@ -36,7 +36,7 @@ OwnedClxSpriteSheet LoadMultipleCl2Sheet(absl::FunctionRef<const char *(size_t)>
 	for (size_t i = 0; i < count; ++i) {
 		const size_t size = fileSizes[i];
 		if (!files[i].Read(&data[accumulatedSize], size))
-			app_fatal(StrCat("Read failed: ", SDL_GetError()));
+			app_fatal(absl::StrCat("Read failed: ", SDL_GetError()));
 		WriteLE32(&data[i * 4], accumulatedSize);
 		[[maybe_unused]] const uint16_t numLists = Cl2ToClx(&data[accumulatedSize], size, frameWidth);
 		assert(numLists == 0);

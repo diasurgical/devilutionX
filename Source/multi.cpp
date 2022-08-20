@@ -8,6 +8,8 @@
 #include <config.h>
 
 #include <ctime>
+
+#include <absl/strings/str_cat.h>
 #include <fmt/format.h>
 
 #include "DiabloUI/diabloui.h"
@@ -28,7 +30,6 @@
 #include "utils/language.h"
 #include "utils/stdcompat/cstddef.hpp"
 #include "utils/stdcompat/string_view.hpp"
-#include "utils/str_cat.hpp"
 
 namespace devilution {
 
@@ -366,7 +367,7 @@ void HandleEvents(_SNETEVENT *pEvt)
 	case EVENT_TYPE_PLAYER_CREATE_GAME: {
 		auto *gameData = (GameData *)pEvt->data;
 		if (gameData->size != sizeof(GameData))
-			app_fatal(StrCat("Invalid size of game data: ", gameData->size));
+			app_fatal(absl::StrCat("Invalid size of game data: ", gameData->size));
 		sgGameInitInfo = *gameData;
 		sgbPlayerTurnBitTbl[pEvt->playerid] = true;
 		break;
@@ -397,7 +398,7 @@ void RegisterNetEventHandlers()
 {
 	for (auto eventType : EventTypes) {
 		if (!SNetRegisterEventHandler(eventType, HandleEvents)) {
-			app_fatal(StrCat("SNetRegisterEventHandler:\n", SDL_GetError()));
+			app_fatal(absl::StrCat("SNetRegisterEventHandler:\n", SDL_GetError()));
 		}
 	}
 }
@@ -417,7 +418,7 @@ bool InitSingle(GameData *gameData)
 
 	int unused = 0;
 	if (!SNetCreateGame("local", "local", (char *)&sgGameInitInfo, sizeof(sgGameInitInfo), &unused)) {
-		app_fatal(StrCat("SNetCreateGame1:\n", SDL_GetError()));
+		app_fatal(absl::StrCat("SNetCreateGame1:\n", SDL_GetError()));
 	}
 
 	MyPlayerId = 0;

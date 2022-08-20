@@ -5,6 +5,7 @@
  */
 #include "levels/themes.h"
 
+#include <absl/strings/str_cat.h>
 #include <fmt/core.h>
 
 #include "engine/path.h"
@@ -15,7 +16,6 @@
 #include "monster.h"
 #include "objects.h"
 #include "quests.h"
-#include "utils/str_cat.hpp"
 
 namespace devilution {
 
@@ -1011,7 +1011,7 @@ void CreateThemeRooms()
 			Theme_WeaponRack(i);
 			break;
 		case THEME_NONE:
-			app_fatal(StrCat("Unknown theme type: ", static_cast<int>(themes[i].ttype)));
+			app_fatal(absl::StrCat("Unknown theme type: ", static_cast<int>(themes[i].ttype)));
 		}
 	}
 	ApplyObjectLighting = false;

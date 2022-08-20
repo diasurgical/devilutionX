@@ -25,7 +25,6 @@
 #include "utils/format_int.hpp"
 #include "utils/language.h"
 #include "utils/stdcompat/string_view.hpp"
-#include "utils/str_cat.hpp"
 #include "utils/utf8.hpp"
 
 namespace devilution {
@@ -1023,7 +1022,7 @@ void StoreConfirm(Item &item)
 		prompt = _("Are you sure you want to repair this item?");
 		break;
 	default:
-		app_fatal(StrCat("Unknown store dialog ", static_cast<int>(stextshold)));
+		app_fatal(absl::StrCat("Unknown store dialog ", static_cast<int>(stextshold)));
 	}
 	AddSText(0, 15, prompt, UiFlags::ColorWhite | UiFlags::AlignCenter, false);
 	AddSText(0, 18, _("Yes"), UiFlags::ColorWhite | UiFlags::AlignCenter, true);

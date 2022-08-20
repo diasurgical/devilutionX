@@ -13,6 +13,7 @@
 #include <climits>
 #include <cstdint>
 
+#include <absl/strings/str_cat.h>
 #include <fmt/compile.h>
 #include <fmt/format.h>
 
@@ -42,7 +43,7 @@
 #include "utils/language.h"
 #include "utils/math.h"
 #include "utils/stdcompat/algorithm.hpp"
-#include "utils/str_cat.hpp"
+#include "utils/str_buf_copy.hpp"
 #include "utils/utf8.hpp"
 
 namespace devilution {
@@ -4441,10 +4442,10 @@ std::string DebugSpawnItem(std::string itemName)
 		std::uniform_int_distribution<int32_t> dist(0, INT_MAX);
 		SetRndSeed(dist(BetterRng));
 		if (SDL_GetTicks() - begin > max_time)
-			return StrCat("Item not found in ", max_time / 1000, " seconds!");
+			return absl::StrCat("Item not found in ", max_time / 1000, " seconds!");
 
 		if (i > max_iter)
-			return StrCat("Item not found in ", max_iter, " tries!");
+			return absl::StrCat("Item not found in ", max_iter, " tries!");
 
 		const int8_t monsterLevel = dist(BetterRng) % CF_LEVEL + 1;
 		int idx = RndItemForMonsterLevel(monsterLevel);
@@ -4466,7 +4467,7 @@ std::string DebugSpawnItem(std::string itemName)
 
 	item._iIdentified = true;
 	NetSendCmdPItem(false, CMD_DROPITEM, item.position, item);
-	return StrCat("Item generated successfully - iterations: ", i);
+	return absl::StrCat("Item generated successfully - iterations: ", i);
 }
 
 std::string DebugSpawnUniqueItem(std::string itemName)
@@ -4514,10 +4515,10 @@ std::string DebugSpawnUniqueItem(std::string itemName)
 	int i = 0;
 	for (uint32_t begin = SDL_GetTicks();; i++) {
 		if (SDL_GetTicks() - begin > max_time)
-			return StrCat("Item not found in ", max_time / 1000, " seconds!");
+			return absl::StrCat("Item not found in ", max_time / 1000, " seconds!");
 
 		if (i > max_iter)
-			return StrCat("Item not found in ", max_iter, " tries!");
+			return absl::StrCat("Item not found in ", max_iter, " tries!");
 
 		Point bkp = item.position;
 		item = {};
@@ -4543,7 +4544,7 @@ std::string DebugSpawnUniqueItem(std::string itemName)
 
 	item._iIdentified = true;
 	NetSendCmdPItem(false, CMD_DROPITEM, item.position, item);
-	return StrCat("Item generated successfully - iterations: ", i);
+	return absl::StrCat("Item generated successfully - iterations: ", i);
 }
 #endif
 

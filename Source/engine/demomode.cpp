@@ -5,6 +5,8 @@
 #include <iostream>
 #include <sstream>
 
+#include <absl/strings/str_cat.h>
+
 #include "controls/plrctrls.h"
 #include "menu.h"
 #include "nthread.h"
@@ -13,7 +15,6 @@
 #include "utils/display.h"
 #include "utils/endian_stream.hpp"
 #include "utils/paths.h"
-#include "utils/str_cat.hpp"
 
 namespace devilution {
 
@@ -78,7 +79,7 @@ uint16_t DemoGraphicsHeight = 480;
 bool LoadDemoMessages(int i)
 {
 	std::ifstream demofile;
-	demofile.open(StrCat(paths::PrefPath(), "demo_", i, ".dmo"), std::fstream::binary);
+	demofile.open(absl::StrCat(paths::PrefPath(), "demo_", i, ".dmo"), std::fstream::binary);
 	if (!demofile.is_open()) {
 		return false;
 	}
@@ -130,7 +131,7 @@ bool LoadDemoMessages(int i)
 				break;
 			default:
 				if (eventType < SDL_USEREVENT) {
-					app_fatal(StrCat("Unknown event ", static_cast<uint32_t>(eventType)));
+					app_fatal(absl::StrCat("Unknown event ", static_cast<uint32_t>(eventType)));
 				}
 				break;
 			}
@@ -374,7 +375,7 @@ void RecordMessage(const SDL_Event &event, uint16_t modState)
 void NotifyGameLoopStart()
 {
 	if (IsRecording()) {
-		DemoRecording.open(StrCat(paths::PrefPath(), "demo_", RecordNumber, ".dmo"), std::fstream::trunc | std::fstream::binary);
+		DemoRecording.open(absl::StrCat(paths::PrefPath(), "demo_", RecordNumber, ".dmo"), std::fstream::trunc | std::fstream::binary);
 		constexpr uint8_t Version = 0;
 		WriteByte(DemoRecording, Version);
 		WriteLE32(DemoRecording, gSaveNumber);

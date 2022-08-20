@@ -331,7 +331,7 @@ void LanguageInitialize()
 	if (IsSmallFontTall() && !font_mpq) {
 		UiErrorOkDialog(
 		    "Missing fonts.mpq",
-		    StrCat("fonts.mpq is required for locale \"",
+		    absl::StrCat("fonts.mpq is required for locale \"",
 		        *sgOptions.Language.code,
 		        "\"\n\n"
 		        "Please download fonts.mpq from:\n"

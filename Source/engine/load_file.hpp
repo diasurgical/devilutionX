@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <memory>
 
+#include <absl/strings/str_cat.h>
 #include <fmt/core.h>
 
 #include "appfat.h"
@@ -12,7 +13,6 @@
 #include "engine/assets.hpp"
 #include "utils/static_vector.hpp"
 #include "utils/stdcompat/cstddef.hpp"
-#include "utils/str_cat.hpp"
 
 namespace devilution {
 
@@ -23,7 +23,7 @@ public:
 		handle_ = OpenAsset(path);
 		if (handle_ == nullptr) {
 			if (!HeadlessMode && !isOptional) {
-				app_fatal(StrCat("Failed to open file:\n", path, "\n\n", SDL_GetError()));
+				app_fatal(absl::StrCat("Failed to open file:\n", path, "\n\n", SDL_GetError()));
 			}
 		}
 	}
@@ -61,7 +61,7 @@ void LoadFileInMem(const char *path, T *data)
 		return;
 	const std::size_t fileLen = file.Size();
 	if ((fileLen % sizeof(T)) != 0)
-		app_fatal(StrCat("File size does not align with type\n", path));
+		app_fatal(absl::StrCat("File size does not align with type\n", path));
 	file.Read(reinterpret_cast<byte *>(data), fileLen);
 }
 
@@ -104,7 +104,7 @@ std::unique_ptr<T[]> LoadFileInMem(const char *path, std::size_t *numRead = null
 		return nullptr;
 	const std::size_t fileLen = file.Size();
 	if ((fileLen % sizeof(T)) != 0)
-		app_fatal(StrCat("File size does not align with type\n", path));
+		app_fatal(absl::StrCat("File size does not align with type\n", path));
 
 	if (numRead != nullptr)
 		*numRead = fileLen / sizeof(T);

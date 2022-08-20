@@ -6,6 +6,8 @@
 
 #include <fmt/format.h>
 
+#include <absl/strings/str_cat.h>
+
 #include "control.h"
 #include "cursor.h"
 #include "engine/clx_sprite.hpp"
@@ -13,7 +15,6 @@
 #include "engine/render/clx_render.hpp"
 #include "options.h"
 #include "utils/language.h"
-#include "utils/str_cat.hpp"
 
 namespace devilution {
 namespace {
@@ -112,7 +113,7 @@ void DrawMonsterHealthBar(const Surface &out)
 			return 150;
 
 		default:
-			app_fatal(StrCat("Invalid monster class: ", static_cast<int>(monsterClass)));
+			app_fatal(absl::StrCat("Invalid monster class: ", static_cast<int>(monsterClass)));
 		}
 	};
 
@@ -137,7 +138,7 @@ void DrawMonsterHealthBar(const Surface &out)
 	DrawString(out, monster.name(), { position, { width, height } }, style);
 
 	if (multiplier > 0)
-		DrawString(out, StrCat("x", multiplier), { position, { width - 2, height } }, UiFlags::ColorWhite | UiFlags::AlignRight | UiFlags::VerticalCenter);
+		DrawString(out, absl::StrCat("x", multiplier), { position, { width - 2, height } }, UiFlags::ColorWhite | UiFlags::AlignRight | UiFlags::VerticalCenter);
 	if (monster.isUnique() || MonsterKillCounts[monster.type().type] >= 15) {
 		monster_resistance immunes[] = { IMMUNE_MAGIC, IMMUNE_FIRE, IMMUNE_LIGHTNING };
 		monster_resistance resists[] = { RESIST_MAGIC, RESIST_FIRE, RESIST_LIGHTNING };

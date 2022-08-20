@@ -4,6 +4,7 @@
 #include <chrono>
 #include <random>
 
+#include <absl/strings/str_cat.h>
 #include <fmt/format.h>
 
 #include "DiabloUI/diabloui.h"
@@ -18,7 +19,6 @@
 #include "options.h"
 #include "pfile.h"
 #include "utils/language.h"
-#include "utils/str_cat.hpp"
 #include "utils/utf8.hpp"
 
 namespace devilution {
@@ -79,12 +79,12 @@ void SelheroFree()
 void SelheroSetStats()
 {
 	SELHERO_DIALOG_HERO_IMG->setSprite(UiGetHeroDialogSprite(static_cast<size_t>(selhero_heroInfo.heroclass)));
-	CopyUtf8(textStats[0], StrCat(selhero_heroInfo.level), sizeof(textStats[0]));
-	CopyUtf8(textStats[1], StrCat(selhero_heroInfo.strength), sizeof(textStats[1]));
-	CopyUtf8(textStats[2], StrCat(selhero_heroInfo.magic), sizeof(textStats[2]));
-	CopyUtf8(textStats[3], StrCat(selhero_heroInfo.dexterity), sizeof(textStats[3]));
-	CopyUtf8(textStats[4], StrCat(selhero_heroInfo.vitality), sizeof(textStats[4]));
-	CopyUtf8(textStats[5], StrCat(selhero_heroInfo.saveNumber), sizeof(textStats[5]));
+	CopyUtf8(textStats[0], absl::StrCat(selhero_heroInfo.level), sizeof(textStats[0]));
+	CopyUtf8(textStats[1], absl::StrCat(selhero_heroInfo.strength), sizeof(textStats[1]));
+	CopyUtf8(textStats[2], absl::StrCat(selhero_heroInfo.magic), sizeof(textStats[2]));
+	CopyUtf8(textStats[3], absl::StrCat(selhero_heroInfo.dexterity), sizeof(textStats[3]));
+	CopyUtf8(textStats[4], absl::StrCat(selhero_heroInfo.vitality), sizeof(textStats[4]));
+	CopyUtf8(textStats[5], absl::StrCat(selhero_heroInfo.saveNumber), sizeof(textStats[5]));
 }
 
 void RenderDifficultyIndicators()

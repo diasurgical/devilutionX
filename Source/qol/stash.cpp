@@ -2,6 +2,7 @@
 
 #include <utility>
 
+#include <absl/strings/str_cat.h>
 #include <fmt/format.h>
 
 #include "control.h"
@@ -21,7 +22,6 @@
 #include "utils/format_int.hpp"
 #include "utils/language.h"
 #include "utils/stdcompat/algorithm.hpp"
-#include "utils/str_cat.hpp"
 #include "utils/utf8.hpp"
 
 namespace devilution {
@@ -385,7 +385,7 @@ void DrawStash(const Surface &out)
 	Point position = GetPanelPosition(UiPanels::Stash);
 	UiFlags style = UiFlags::VerticalCenter | UiFlags::ColorWhite;
 
-	DrawString(out, StrCat(Stash.GetPage() + 1), { position + Displacement { 132, 0 }, { 57, 11 } }, UiFlags::AlignCenter | style);
+	DrawString(out, absl::StrCat(Stash.GetPage() + 1), { position + Displacement { 132, 0 }, { 57, 11 } }, UiFlags::AlignCenter | style);
 	DrawString(out, FormatInteger(Stash.gold), { position + Displacement { 122, 19 }, { 107, 13 } }, UiFlags::AlignRight | style);
 }
 
@@ -634,7 +634,7 @@ void DrawGoldWithdraw(const Surface &out, int amount)
 
 	std::string value = "";
 	if (amount > 0) {
-		value = StrCat(amount);
+		value = absl::StrCat(amount);
 	}
 	// Even a ten digit amount of gold only takes up about half a line. There's no need to wrap or clip text here so we
 	// use the Point form of DrawString.

@@ -9,6 +9,7 @@
 #include <string>
 #include <unordered_map>
 
+#include <absl/strings/str_cat.h>
 #include <fmt/compile.h>
 
 #include "codec.h"
@@ -26,7 +27,6 @@
 #include "utils/paths.h"
 #include "utils/stdcompat/abs.hpp"
 #include "utils/stdcompat/string_view.hpp"
-#include "utils/str_cat.hpp"
 #include "utils/utf8.hpp"
 
 namespace devilution {
@@ -45,7 +45,7 @@ char hero_names[MAX_CHARACTERS][PlayerNameLength];
 
 std::string GetSavePath(uint32_t saveNum, string_view savePrefix = {})
 {
-	return StrCat(paths::PrefPath(), savePrefix,
+	return absl::StrCat(paths::PrefPath(), savePrefix,
 	    gbIsSpawn
 	        ? (gbIsMultiplayer ? "share_" : "spawn_")
 	        : (gbIsMultiplayer ? "multi_" : "single_"),
@@ -54,7 +54,7 @@ std::string GetSavePath(uint32_t saveNum, string_view savePrefix = {})
 
 std::string GetStashSavePath()
 {
-	return StrCat(paths::PrefPath(),
+	return absl::StrCat(paths::PrefPath(),
 	    gbIsSpawn ? "stash_spawn" : "stash",
 	    gbIsHellfire ? ".hsv" : ".sv");
 }
@@ -249,11 +249,11 @@ inline bool string_ends_with(std::string const &value, std::string const &ending
 void CreateDetailDiffs(string_view prefix, string_view memoryMapFile, CompareInfo &compareInfoReference, CompareInfo &compareInfoActual, std::unordered_map<std::string, size_t> &foundDiffs)
 {
 	// Note: Detail diffs are currently only supported in unit tests
-	std::string memoryMapFileAssetName = StrCat(paths::BasePath(), "/test/fixtures/memory_map/", memoryMapFile, ".txt");
+	std::string memoryMapFileAssetName = absl::StrCat(paths::BasePath(), "/test/fixtures/memory_map/", memoryMapFile, ".txt");
 
 	SDL_RWops *handle = SDL_RWFromFile(memoryMapFileAssetName.c_str(), "r");
 	if (handle == nullptr) {
-		app_fatal(StrCat("MemoryMapFile ", memoryMapFile, " is missing"));
+		app_fatal(absl::StrCat("MemoryMapFile ", memoryMapFile, " is missing"));
 		return;
 	}
 
@@ -284,9 +284,9 @@ void CreateDetailDiffs(string_view prefix, string_view memoryMapFile, CompareInf
 
 	auto compareBytes = [&](size_t countBytes) {
 		if (compareInfoReference.dataExists && compareInfoReference.currentPosition + countBytes > compareInfoReference.size)
-			app_fatal(StrCat("Comparsion failed. Too less bytes in reference to compare. Location: ", prefix));
+			app_fatal(absl::StrCat("Comparsion failed. Too less bytes in reference to compare. Location: ", prefix));
 		if (compareInfoActual.dataExists && compareInfoActual.currentPosition + countBytes > compareInfoActual.size)
-			app_fatal(StrCat("Comparsion failed. Too less bytes in actual to compare. Location: ", prefix));
+			app_fatal(absl::StrCat("Comparsion failed. Too less bytes in actual to compare. Location: ", prefix));
 		bool result = true;
 		if (compareInfoReference.dataExists && compareInfoActual.dataExists)
 			result = memcmp(compareInfoReference.data.get() + compareInfoReference.currentPosition, compareInfoActual.data.get() + compareInfoActual.currentPosition, countBytes) == 0;
@@ -366,7 +366,7 @@ void CreateDetailDiffs(string_view prefix, string_view memoryMapFile, CompareInf
 			}
 
 			if (!compareBytes(bytes)) {
-				std::string diffKey = StrCat(prefix, ".", comment);
+				std::string diffKey = absl::StrCat(prefix, ".", comment);
 				addDiff(diffKey);
 			}
 		} else if (command == "M") {
@@ -382,7 +382,7 @@ void CreateDetailDiffs(string_view prefix, string_view memoryMapFile, CompareInf
 			for (int i = 0; i < count.max(); i++) {
 				count.checkIfDataExists(i, compareInfoReference, compareInfoActual);
 				if (!compareBytes(bytes)) {
-					std::string diffKey = StrCat(prefix, ".", comment);
+					std::string diffKey = absl::StrCat(prefix, ".", comment);
 					addDiff(diffKey);
 				}
 			}
@@ -398,7 +398,7 @@ void CreateDetailDiffs(string_view prefix, string_view memoryMapFile, CompareInf
 			subMemoryMapFile.erase(std::remove(subMemoryMapFile.begin(), subMemoryMapFile.end(), '\r'), subMemoryMapFile.end());
 			for (int i = 0; i < count.max(); i++) {
 				count.checkIfDataExists(i, compareInfoReference, compareInfoActual);
-				std::string subPrefix = StrCat(prefix, ".", comment);
+				std::string subPrefix = absl::StrCat(prefix, ".", comment);
 				CreateDetailDiffs(subPrefix, subMemoryMapFile, compareInfoReference, compareInfoActual, foundDiffs);
 			}
 		}
@@ -445,9 +445,9 @@ HeroCompareResult CompareSaves(const std::string &actualSavePath, const std::str
 		if (!message.empty())
 			message.append("\n");
 		if (fileSizeActual != fileSizeReference)
-			StrAppend(message, "file \"", compareTarget.fileName, "\" is different size. Expected: ", fileSizeReference, " Actual: ", fileSizeActual);
+			absl::StrAppend(&message, "file \"", compareTarget.fileName, "\" is different size. Expected: ", fileSizeReference, " Actual: ", fileSizeActual);
 		else
-			StrAppend(message, "file \"", compareTarget.fileName, "\" has different content.");
+			absl::StrAppend(&message, "file \"", compareTarget.fileName, "\" has different content.");
 		if (!logDetails)
 			continue;
 		std::unordered_map<std::string, size_t> foundDiffs;
@@ -455,11 +455,11 @@ HeroCompareResult CompareSaves(const std::string &actualSavePath, const std::str
 		CompareInfo compareInfoActual = { fileDataActual, 0, fileSizeActual, compareTarget.isTownLevel, fileSizeActual != 0 };
 		CreateDetailDiffs(compareTarget.fileName, compareTarget.memoryMapFileName, compareInfoReference, compareInfoActual, foundDiffs);
 		if (compareInfoReference.currentPosition != fileSizeReference)
-			app_fatal(StrCat("Comparsion failed. Uncompared bytes in reference. File: ", compareTarget.fileName));
+			app_fatal(absl::StrCat("Comparsion failed. Uncompared bytes in reference. File: ", compareTarget.fileName));
 		if (compareInfoActual.currentPosition != fileSizeActual)
-			app_fatal(StrCat("Comparsion failed. Uncompared bytes in actual. File: ", compareTarget.fileName));
+			app_fatal(absl::StrCat("Comparsion failed. Uncompared bytes in actual. File: ", compareTarget.fileName));
 		for (auto entry : foundDiffs) {
-			StrAppend(message, "\nDiff found in ", entry.first, " count: ", entry.second);
+			absl::StrAppend(&message, "\nDiff found in ", entry.first, " count: ", entry.second);
 		}
 	}
 	return { compareResult ? HeroCompareResult::Same : HeroCompareResult::Difference, message };
@@ -532,7 +532,7 @@ void pfile_write_hero(bool writeGameData)
 #ifndef DISABLE_DEMOMODE
 void pfile_write_hero_demo(int demo)
 {
-	std::string savePath = GetSavePath(gSaveNumber, StrCat("demo_", demo, "_reference_"));
+	std::string savePath = GetSavePath(gSaveNumber, absl::StrCat("demo_", demo, "_reference_"));
 	CopySaveFile(gSaveNumber, savePath);
 	auto saveWriter = MpqWriter(savePath.c_str());
 	pfile_write_hero(saveWriter, true);
@@ -540,12 +540,12 @@ void pfile_write_hero_demo(int demo)
 
 HeroCompareResult pfile_compare_hero_demo(int demo, bool logDetails)
 {
-	std::string referenceSavePath = GetSavePath(gSaveNumber, StrCat("demo_", demo, "_reference_"));
+	std::string referenceSavePath = GetSavePath(gSaveNumber, absl::StrCat("demo_", demo, "_reference_"));
 
 	if (!FileExists(referenceSavePath.c_str()))
 		return { HeroCompareResult::ReferenceNotFound, {} };
 
-	std::string actualSavePath = GetSavePath(gSaveNumber, StrCat("demo_", demo, "_actual_"));
+	std::string actualSavePath = GetSavePath(gSaveNumber, absl::StrCat("demo_", demo, "_actual_"));
 	{
 		CopySaveFile(gSaveNumber, actualSavePath);
 		MpqWriter saveWriter(actualSavePath.c_str());

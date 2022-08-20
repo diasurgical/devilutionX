@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <cstdint>
 
+#include <absl/strings/str_cat.h>
 #include <fmt/compile.h>
 
 #include "control.h"
@@ -42,7 +43,6 @@
 #include "towners.h"
 #include "utils/language.h"
 #include "utils/log.hpp"
-#include "utils/str_cat.hpp"
 #include "utils/utf8.hpp"
 
 namespace devilution {

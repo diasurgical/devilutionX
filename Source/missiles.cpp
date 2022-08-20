@@ -7,6 +7,8 @@
 
 #include <climits>
 
+#include <absl/strings/str_cat.h>
+
 #include "control.h"
 #include "controls/plrctrls.h"
 #include "cursor.h"
@@ -22,7 +24,6 @@
 #include "lighting.h"
 #include "monster.h"
 #include "spells.h"
-#include "utils/str_cat.hpp"
 
 namespace devilution {
 
@@ -2712,7 +2713,7 @@ void MI_LArrow(Missile &missile)
 				eRst = MISR_FIRE;
 				break;
 			default:
-				app_fatal(StrCat("wrong missile ID ", static_cast<int>(missile._mitype)));
+				app_fatal(absl::StrCat("wrong missile ID ", static_cast<int>(missile._mitype)));
 				break;
 			}
 			SetMissAnim(missile, eAnim);

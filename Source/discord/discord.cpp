@@ -9,6 +9,7 @@
 #include <string>
 #include <tuple>
 
+#include <absl/strings/str_cat.h>
 #include <fmt/format.h>
 
 #include "config.h"
@@ -19,7 +20,6 @@
 #include "panels/charpanel.hpp"
 #include "player.h"
 #include "utils/language.h"
-#include "utils/str_cat.hpp"
 
 namespace devilution {
 namespace discord_manager {
@@ -93,7 +93,7 @@ std::string GetCharacterString()
 
 std::string GetDetailString()
 {
-	return StrCat(GetCharacterString(), " - ", GetLocationString());
+	return absl::StrCat(GetCharacterString(), " - ", GetLocationString());
 }
 
 std::string GetStateString()
@@ -105,7 +105,7 @@ std::string GetStateString()
 
 std::string GetTooltipString()
 {
-	return StrCat(MyPlayer->_pName, " - ", GetCharacterString());
+	return absl::StrCat(MyPlayer->_pName, " - ", GetCharacterString());
 }
 
 std::string GetPlayerAssetString()
