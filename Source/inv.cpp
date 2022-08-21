@@ -1022,7 +1022,7 @@ int CreateGoldItemInInventorySlot(Player &player, int slotIndex, int value)
 
 } // namespace
 
-void InvDrawSlotBack(const Surface &out, Point targetPosition, Size size)
+void InvDrawSlotBack(const Surface &out, Point targetPosition, Size size, item_quality itemQuality)
 {
 	SDL_Rect srcRect = MakeSdlRect(0, 0, size.width, size.height);
 	out.Clip(&srcRect, &targetPosition);
@@ -1035,11 +1035,18 @@ void InvDrawSlotBack(const Surface &out, Point targetPosition, Size size)
 	for (int hgt = size.height; hgt != 0; hgt--, dst -= dstPitch + size.width) {
 		for (int wdt = size.width; wdt != 0; wdt--) {
 			std::uint8_t pix = *dst;
-			if (pix >= PAL16_BLUE) {
-				if (pix <= PAL16_BLUE + 15)
-					pix -= PAL16_BLUE - PAL16_BEIGE;
-				else if (pix >= PAL16_GRAY)
-					pix -= PAL16_GRAY - PAL16_BEIGE;
+			switch (itemQuality) {
+			case ITEM_QUALITY_NORMAL:
+				pix -= PAL16_GRAY - PAL16_BEIGE;
+				break;
+			case ITEM_QUALITY_MAGIC:
+				pix -= PAL16_GRAY - PAL16_BLUE;
+				break;
+			case ITEM_QUALITY_UNIQUE:
+				pix -= PAL16_GRAY - PAL16_YELLOW;
+				break;
+			default:
+				break;
 			}
 			*dst++ = pix;
 		}
@@ -1109,7 +1116,7 @@ void DrawInv(const Surface &out)
 		if (!myPlayer.InvBody[slot].isEmpty()) {
 			int screenX = slotPos[slot].x;
 			int screenY = slotPos[slot].y;
-			InvDrawSlotBack(out, GetPanelPosition(UiPanels::Inventory, { screenX, screenY }), { slotSize[slot].width * InventorySlotSizeInPixels.width, slotSize[slot].height * InventorySlotSizeInPixels.height });
+			InvDrawSlotBack(out, GetPanelPosition(UiPanels::Inventory, { screenX, screenY }), { slotSize[slot].width * InventorySlotSizeInPixels.width, slotSize[slot].height * InventorySlotSizeInPixels.height }, myPlayer.InvBody[slot]._iMagical);
 
 			const int cursId = myPlayer.InvBody[slot]._iCurs + CURSOR_FIRSTITEM;
 
@@ -1135,7 +1142,7 @@ void DrawInv(const Surface &out)
 
 			if (slot == INVLOC_HAND_LEFT) {
 				if (myPlayer.GetItemLocation(myPlayer.InvBody[slot]) == ILOC_TWOHAND) {
-					InvDrawSlotBack(out, GetPanelPosition(UiPanels::Inventory, slotPos[INVLOC_HAND_RIGHT]), { slotSize[INVLOC_HAND_RIGHT].width * InventorySlotSizeInPixels.width, slotSize[INVLOC_HAND_RIGHT].height * InventorySlotSizeInPixels.height });
+					InvDrawSlotBack(out, GetPanelPosition(UiPanels::Inventory, slotPos[INVLOC_HAND_RIGHT]), { slotSize[INVLOC_HAND_RIGHT].width * InventorySlotSizeInPixels.width, slotSize[INVLOC_HAND_RIGHT].height * InventorySlotSizeInPixels.height }, myPlayer.InvBody[slot]._iMagical);
 					LightTableIndex = 0;
 					cel_transparency_active = true;
 
@@ -1154,7 +1161,8 @@ void DrawInv(const Surface &out)
 			InvDrawSlotBack(
 			    out,
 			    GetPanelPosition(UiPanels::Inventory, InvRect[i + SLOTXY_INV_FIRST]) + Displacement { 0, -1 },
-			    InventorySlotSizeInPixels);
+			    InventorySlotSizeInPixels,
+			    myPlayer.InvBody[i]._iMagical);
 		}
 	}
 
@@ -1192,7 +1200,7 @@ void DrawInvBelt(const Surface &out)
 		}
 
 		const Point position { InvRect[i + SLOTXY_BELT_FIRST].x + mainPanelPosition.x, InvRect[i + SLOTXY_BELT_FIRST].y + mainPanelPosition.y - 1 };
-		InvDrawSlotBack(out, position, InventorySlotSizeInPixels);
+		InvDrawSlotBack(out, position, InventorySlotSizeInPixels, myPlayer.SpdList[i]._iMagical);
 		const int cursId = myPlayer.SpdList[i]._iCurs + CURSOR_FIRSTITEM;
 
 		const ClxSprite sprite = GetInvItemSprite(cursId);
