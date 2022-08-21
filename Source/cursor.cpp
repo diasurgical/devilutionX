@@ -535,7 +535,7 @@ void CheckCursMove()
 			pcursmonst = -1;
 			cursPosition = { mx, my };
 		}
-		if (pcursmonst != -1 && Monsters[pcursmonst].isPlayerMinion()) {
+		if (pcursmonst != -1 && (Monsters[pcursmonst].isPlayerMinion() || IsAnyOf(pcurs, CURSOR_HEALOTHER, CURSOR_RESURRECT))) {
 			pcursmonst = -1;
 		}
 	} else {
