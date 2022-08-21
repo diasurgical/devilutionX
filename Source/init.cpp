@@ -95,8 +95,6 @@ std::vector<std::string> GetMPQSearchPaths()
 #if defined(__unix__) && !defined(__ANDROID__)
 	paths.emplace_back("/usr/share/diasurgical/devilutionx/");
 	paths.emplace_back("/usr/local/share/diasurgical/devilutionx/");
-#elif defined(__SWITCH__)
-	paths.emplace_back("romfs:/");
 #elif defined(NXDK)
 	paths.emplace_back("D:\\");
 #elif (defined(_WIN64) || defined(_WIN32)) && !defined(__UWP__) && !defined(NXDK)
@@ -152,7 +150,7 @@ void LoadCoreArchives()
 {
 	auto paths = GetMPQSearchPaths();
 
-#if !defined(__ANDROID__) && !defined(__APPLE__) && !defined(__3DS__)
+#if !defined(__ANDROID__) && !defined(__APPLE__) && !defined(__3DS__) && !defined(__SWITCH__)
 	// Load devilutionx.mpq first to get the font file for error messages
 	devilutionx_mpq = LoadMPQ(paths, "devilutionx.mpq");
 #endif
