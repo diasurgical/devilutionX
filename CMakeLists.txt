@@ -371,21 +371,6 @@ if(APPLE)
 endif()
 
 if(NINTENDO_SWITCH)
-  set(APP_ROMFS       "${CMAKE_BINARY_DIR}/romfs")
-
-  add_custom_target(romfs_directory
-    COMMAND ${CMAKE_COMMAND} -E make_directory ${APP_ROMFS})
-
-  add_custom_target(romfs_files
-    COMMAND ${CMAKE_COMMAND} -E copy ${DEVILUTIONX_MPQ} ${APP_ROMFS}
-    DEPENDS ${DEVILUTIONX_MPQ})
-
-  # the romfs_directory target will create this directory at build time,
-  # but the nx_create_nro function requires it to also exist at configure time
-  file(MAKE_DIRECTORY ${APP_ROMFS})
-
-  add_dependencies(romfs_files romfs_directory devilutionx_mpq)
-
   nx_generate_nacp (${BIN_TARGET}.nacp
     NAME    "DevilutionX"
     AUTHOR  "Devilution Team"
@@ -395,11 +380,8 @@ if(NINTENDO_SWITCH)
   nx_create_nro(${BIN_TARGET}
     NACP  ${BIN_TARGET}.nacp
     ICON  "${PROJECT_SOURCE_DIR}/Packaging/switch/icon.jpg"
-    ROMFS ${APP_ROMFS}
+    ROMFS ${DEVILUTIONX_ASSETS_OUTPUT_DIRECTORY}
   )
-
-  add_dependencies(${BIN_TARGET}_nro romfs_files)
-
 endif()
 
 if(VITA)
