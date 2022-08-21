@@ -1035,7 +1035,8 @@ void InvDrawSlotBack(const Surface &out, Point targetPosition, Size size)
 	for (int hgt = size.height; hgt != 0; hgt--, dst -= dstPitch + size.width) {
 		for (int wdt = size.width; wdt != 0; wdt--) {
 			std::uint8_t pix = *dst;
-			pix -= PAL16_GRAY - PAL16_BEIGE;
+			if (pix >= PAL16_GRAY)
+				pix -= PAL16_GRAY - PAL16_BEIGE;
 			*dst++ = pix;
 		}
 	}
