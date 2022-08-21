@@ -1803,7 +1803,7 @@ void printItemMiscGamepad(const Item &item, bool isOil, bool isCastOnTarget)
 			AddPanelString(fmt::format(fmt::runtime(_("{} to use")), activateButton));
 		}
 	} else if (isCastOnTarget) {
-		AddPanelString(fmt::format(fmt::runtime(_("Select from spell book, then {} to read")), castButton));
+		AddPanelText(fmt::format(fmt::runtime(_("Select from spell book,\nthen {} to read")), castButton));
 	} else if (IsAnyOf(item._iMiscId, IMISC_BOOK, IMISC_NOTE, IMISC_SCROLL)) {
 		AddPanelString(fmt::format(fmt::runtime(_("{} to read")), activateButton));
 	}

@@ -466,6 +466,51 @@ void AddPanelString(string_view str)
 		pnumlines++;
 }
 
+std::vector<string_view> splitStringViewByNewline(const string_view str, const char delim = '\n')
+{
+	std::vector<string_view> result;
+
+	int indexCommaToLeftOfColumn = 0;
+	int indexCommaToRightOfColumn = -1;
+
+	for (int i = 0; i < static_cast<int>(str.size()); i++) {
+		if (str[i] == delim) {
+			indexCommaToLeftOfColumn = indexCommaToRightOfColumn;
+			indexCommaToRightOfColumn = i;
+			int index = indexCommaToLeftOfColumn + 1;
+			int length = indexCommaToRightOfColumn - index;
+
+			// Bounds checking can be omitted as logically, this code can never be invoked
+			// Try it: put a breakpoint here and run the unit tests.
+			/*if (index + length >= static_cast<int>(str.size()))
+			{
+			    length--;
+			}
+			if (length < 0)
+			{
+			    length = 0;
+			}*/
+
+			string_view column(str.data() + index, length);
+			result.push_back(column);
+		}
+	}
+	const string_view finalColumn(str.data() + indexCommaToRightOfColumn + 1, str.size() - indexCommaToRightOfColumn - 1);
+	result.push_back(finalColumn);
+	return result;
+}
+
+void AddPanelText(string_view str)
+{
+	std::vector<string_view> panelLines = splitStringViewByNewline(str);
+	for (uint32_t i = 0; i < size(panelLines); i++) {
+		CopyUtf8(panelstr[pnumlines], panelLines[i], sizeof(*panelstr));
+
+		if (pnumlines < 4)
+			pnumlines++;
+	}
+}
+
 void ClearPanel()
 {
 	pnumlines = 0;
