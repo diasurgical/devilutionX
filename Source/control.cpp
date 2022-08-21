@@ -43,6 +43,7 @@
 #include "towners.h"
 #include "utils/format_int.hpp"
 #include "utils/language.h"
+#include "utils/log.hpp"
 #include "utils/sdl_geometry.h"
 #include "utils/stdcompat/optional.hpp"
 #include "utils/str_cat.hpp"
@@ -460,10 +461,12 @@ bool IsChatAvailable()
 
 void AddPanelString(string_view str)
 {
+	if (pnumlines >= 4) {
+		Log("AddPanelString failed - not enough lines");
+		return;
+	}
 	CopyUtf8(panelstr[pnumlines], str, sizeof(*panelstr));
-
-	if (pnumlines < 4)
-		pnumlines++;
+	pnumlines++;
 }
 
 void ClearPanel()
