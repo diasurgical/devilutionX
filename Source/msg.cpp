@@ -64,6 +64,7 @@ struct DMonsterStr {
 	int32_t hitPoints;
 	int8_t mWhoHit;
 };
+#pragma pack(pop)
 
 struct DObjectStr {
 	_cmd_id bCmd;
@@ -75,6 +76,7 @@ struct DLevel {
 	DMonsterStr monster[MaxMonsters];
 };
 
+#pragma pack(push, 1)
 struct LocalLevel {
 	LocalLevel(const uint8_t (&other)[DMAXX][DMAXY])
 	{
