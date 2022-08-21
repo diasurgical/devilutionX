@@ -480,17 +480,6 @@ std::vector<string_view> splitStringViewByNewline(const string_view str, const c
 			int index = indexCommaToLeftOfColumn + 1;
 			int length = indexCommaToRightOfColumn - index;
 
-			// Bounds checking can be omitted as logically, this code can never be invoked
-			// Try it: put a breakpoint here and run the unit tests.
-			/*if (index + length >= static_cast<int>(str.size()))
-			{
-			    length--;
-			}
-			if (length < 0)
-			{
-			    length = 0;
-			}*/
-
 			string_view column(str.data() + index, length);
 			result.push_back(column);
 		}
