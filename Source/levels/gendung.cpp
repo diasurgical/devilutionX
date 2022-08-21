@@ -422,7 +422,31 @@ void LoadLevelSOLData()
 		break;
 	case DTYPE_CATHEDRAL:
 		LoadFileInMem("levels\\l1data\\l1.sol", SOLData);
-		SOLData[27] |= TileProperties::BlockMissile; // Tile is incorrectly marked
+		// Fix incorrectly marked arched tiles
+		SOLData[9] |= TileProperties::BlockLight | TileProperties::BlockMissile;
+		SOLData[15] |= TileProperties::BlockLight | TileProperties::BlockMissile;
+		SOLData[16] |= TileProperties::BlockLight | TileProperties::BlockMissile;
+		SOLData[20] |= TileProperties::BlockLight | TileProperties::BlockMissile;
+		SOLData[21] |= TileProperties::BlockLight | TileProperties::BlockMissile;
+		SOLData[27] |= TileProperties::BlockMissile;
+		SOLData[28] |= TileProperties::BlockMissile;
+		SOLData[51] |= TileProperties::BlockLight | TileProperties::BlockMissile;
+		SOLData[56] |= TileProperties::BlockLight | TileProperties::BlockMissile;
+		SOLData[58] |= TileProperties::BlockLight | TileProperties::BlockMissile;
+		SOLData[61] |= TileProperties::BlockLight | TileProperties::BlockMissile;
+		SOLData[63] |= TileProperties::BlockLight | TileProperties::BlockMissile;
+		SOLData[65] |= TileProperties::BlockLight | TileProperties::BlockMissile;
+		SOLData[72] |= TileProperties::BlockLight | TileProperties::BlockMissile;
+		SOLData[208] |= TileProperties::BlockLight | TileProperties::BlockMissile;
+		SOLData[247] |= TileProperties::BlockLight | TileProperties::BlockMissile;
+		SOLData[253] |= TileProperties::BlockLight | TileProperties::BlockMissile;
+		SOLData[257] |= TileProperties::BlockLight | TileProperties::BlockMissile;
+		SOLData[323] |= TileProperties::BlockLight | TileProperties::BlockMissile;
+		SOLData[403] |= TileProperties::BlockLight;
+		// Fix incorrectly marked pillar tile
+		SOLData[24] |= TileProperties::BlockLight;
+		// Fix incorrectly marked wall tile
+		SOLData[450] |= TileProperties::BlockLight | TileProperties::BlockMissile;
 		break;
 	case DTYPE_CATACOMBS:
 		LoadFileInMem("levels\\l2data\\l2.sol", SOLData);
