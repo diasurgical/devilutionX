@@ -1035,18 +1035,20 @@ void InvDrawSlotBack(const Surface &out, Point targetPosition, Size size, item_q
 	for (int hgt = size.height; hgt != 0; hgt--, dst -= dstPitch + size.width) {
 		for (int wdt = size.width; wdt != 0; wdt--) {
 			std::uint8_t pix = *dst;
-			switch (itemQuality) {
-			case ITEM_QUALITY_NORMAL:
-				pix -= PAL16_GRAY - PAL16_BEIGE;
-				break;
-			case ITEM_QUALITY_MAGIC:
-				pix -= PAL16_GRAY - PAL16_BLUE;
-				break;
-			case ITEM_QUALITY_UNIQUE:
-				pix -= PAL16_GRAY - PAL16_YELLOW;
-				break;
-			default:
-				break;
+			if (pix >= PAL16_GRAY) {
+				switch (itemQuality) {
+				case ITEM_QUALITY_NORMAL:
+					pix -= PAL16_GRAY - PAL16_BEIGE;
+					break;
+				case ITEM_QUALITY_MAGIC:
+					pix -= PAL16_GRAY - PAL16_BLUE;
+					break;
+				case ITEM_QUALITY_UNIQUE:
+					pix -= PAL16_GRAY - PAL16_YELLOW;
+					break;
+				default:
+					break;
+				}
 			}
 			*dst++ = pix;
 		}
@@ -1162,7 +1164,7 @@ void DrawInv(const Surface &out)
 			    out,
 			    GetPanelPosition(UiPanels::Inventory, InvRect[i + SLOTXY_INV_FIRST]) + Displacement { 0, -1 },
 			    InventorySlotSizeInPixels,
-			    myPlayer.InvBody[i]._iMagical);
+			    myPlayer.InvList[abs(myPlayer.InvGrid[i]) - 1]._iMagical);
 		}
 	}
 
