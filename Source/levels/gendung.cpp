@@ -422,6 +422,7 @@ void LoadLevelSOLData()
 		break;
 	case DTYPE_CATHEDRAL:
 		LoadFileInMem("levels\\l1data\\l1.sol", SOLData);
+		SOLData[27] |= TileProperties::BlockMissile; // Tile is incorrectly marked
 		break;
 	case DTYPE_CATACOMBS:
 		LoadFileInMem("levels\\l2data\\l2.sol", SOLData);
