@@ -152,7 +152,7 @@ void LoadCoreArchives()
 {
 	auto paths = GetMPQSearchPaths();
 
-#if !defined(__ANDROID__) && !defined(__APPLE__)
+#if !defined(__ANDROID__) && !defined(__APPLE__) && !defined(__3DS__)
 	// Load devilutionx.mpq first to get the font file for error messages
 	devilutionx_mpq = LoadMPQ(paths, "devilutionx.mpq");
 #endif
