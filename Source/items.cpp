@@ -1745,19 +1745,18 @@ void printItemMiscKBM(const Item &item, const bool isOil, const bool isCastOnTar
 {
 	if (item._iMiscId == IMISC_MAPOFDOOM) {
 		AddPanelString(_("Right-click to view"));
-
 	} else if (isOil) {
 		PrintItemOil(item._iMiscId);
 		AddPanelString(_("Right-click to use"));
 	} else if (isCastOnTarget) {
 		AddPanelString(_("Right-click to read, then"));
 		AddPanelString(_("left-click to target"));
-	} else if (IsAnyOf(item._iMiscId, IMISC_BOOK, IMISC_NOTE, IMISC_SCROLL)) {
+	} else if (IsAnyOf(item._iMiscId, IMISC_BOOK, IMISC_NOTE, IMISC_SCROLL, IMISC_SCROLLT)) {
 		AddPanelString(_("Right-click to read"));
 	}
 }
 
-void printItemMiscVirtualGamepad(const Item &item, const bool isOil)
+void printItemMiscVirtualGamepad(const Item &item, const bool isOil, bool isCastOnTarget)
 {
 	if (item._iMiscId == IMISC_MAPOFDOOM) {
 		AddPanelString(_("Activate to view"));
@@ -1765,11 +1764,10 @@ void printItemMiscVirtualGamepad(const Item &item, const bool isOil)
 		PrintItemOil(item._iMiscId);
 		if (!invflag) {
 			AddPanelString(_("Open inventory to use"));
-
 		} else {
 			AddPanelString(_("Activate to use"));
 		}
-	} else if (item._iMiscId == IMISC_SCROLL) {
+	} else if (isCastOnTarget) {
 		AddPanelString(_("Select from spell book, then"));
 		AddPanelString(_("cast to read"));
 	} else {
@@ -1804,7 +1802,7 @@ void printItemMiscGamepad(const Item &item, bool isOil, bool isCastOnTarget)
 		}
 	} else if (isCastOnTarget) {
 		AddPanelString(fmt::format(fmt::runtime(_("Select from spell book, then {} to read")), castButton));
-	} else if (IsAnyOf(item._iMiscId, IMISC_BOOK, IMISC_NOTE, IMISC_SCROLL)) {
+	} else if (IsAnyOf(item._iMiscId, IMISC_BOOK, IMISC_NOTE, IMISC_SCROLL, IMISC_SCROLLT)) {
 		AddPanelString(fmt::format(fmt::runtime(_("{} to read")), activateButton));
 	}
 }
@@ -1823,14 +1821,12 @@ void PrintItemMisc(const Item &item)
 	    || (item._iMiscId > IMISC_OILFIRST && item._iMiscId < IMISC_OILLAST)
 	    || (item._iMiscId > IMISC_RUNEFIRST && item._iMiscId < IMISC_RUNELAST);
 	const bool isCastOnTarget = (item._iMiscId == IMISC_SCROLLT && item._iSpell != SPL_FLASH)
-	    || item._iSpell == SPL_TOWN
-	    || item._iSpell == SPL_IDENTIFY
-	    || TargetsMonster(item._iSpell);
+	    || (item._iMiscId == IMISC_SCROLL && IsAnyOf(item._iSpell, SPL_TOWN, SPL_IDENTIFY));
 
 	if (ControlMode == ControlTypes::KeyboardAndMouse) {
 		printItemMiscKBM(item, isOil, isCastOnTarget);
 	} else if (ControlMode == ControlTypes::VirtualGamepad) {
-		printItemMiscVirtualGamepad(item, isOil);
+		printItemMiscVirtualGamepad(item, isOil, isCastOnTarget);
 	} else {
 		printItemMiscGamepad(item, isOil, isCastOnTarget);
 	}
