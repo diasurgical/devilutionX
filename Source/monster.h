@@ -369,7 +369,7 @@ extern size_t LevelMonsterTypeCount;
 extern Monster Monsters[MaxMonsters];
 extern int ActiveMonsters[MaxMonsters];
 extern size_t ActiveMonsterCount;
-extern int MonsterKillCounts[MaxMonsters];
+extern int32_t MonsterKillCounts[MaxMonsters];
 extern bool sgbSaveSoundOn;
 
 void PrepareUniqueMonst(Monster &monster, UniqueMonsterType monsterType, size_t miniontype, int bosspacksize, const UniqueMonsterData &uniqueMonsterData);

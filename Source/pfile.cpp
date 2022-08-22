@@ -480,6 +480,7 @@ void pfile_write_hero(MpqWriter &saveWriter, bool writeGameData)
 	if (!gbVanilla) {
 		SaveHotkeys(saveWriter);
 		SaveHeroItems(saveWriter, myPlayer);
+		SaveMonsterKillCounts(saveWriter);
 	}
 }
 
@@ -682,6 +683,7 @@ void pfile_read_player_from_save(uint32_t saveNum, Player &player)
 	}
 
 	LoadHeroItems(player);
+	LoadMonsterKillCounts();
 	RemoveEmptyInventory(player);
 	CalcPlrInv(player, false);
 }

@@ -55,7 +55,7 @@ int ActiveMonsters[MaxMonsters];
 size_t ActiveMonsterCount;
 // BUGFIX: replace MonsterKillCounts[MaxMonsters] with MonsterKillCounts[NUM_MTYPES].
 /** Tracks the total number of monsters killed per monster_id. */
-int MonsterKillCounts[MaxMonsters];
+int32_t MonsterKillCounts[MaxMonsters];
 bool sgbSaveSoundOn;
 
 namespace {

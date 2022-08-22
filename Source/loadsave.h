@@ -22,6 +22,7 @@ _item_indexes RemapItemIdxToSpawn(_item_indexes i);
 bool IsHeaderValid(uint32_t magicNumber);
 void LoadHotkeys();
 void LoadHeroItems(Player &player);
+void LoadMonsterKillCounts();
 /**
  * @brief Remove invalid inventory items from the inventory grid
  * @param player The player to remove invalid items from
@@ -35,6 +36,7 @@ void RemoveEmptyInventory(Player &player);
 void LoadGame(bool firstflag);
 void SaveHotkeys(MpqWriter &saveWriter);
 void SaveHeroItems(MpqWriter &saveWriter, Player &player);
+void SaveMonsterKillCounts(MpqWriter &saveWriter);
 void SaveGameData(MpqWriter &saveWriter);
 void SaveGame();
 void SaveLevel(MpqWriter &saveWriter);

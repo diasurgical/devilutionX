@@ -13,6 +13,7 @@
 #include <SDL.h>
 #include <fmt/compile.h>
 
+#include "DiabloUI/selgame.h"
 #include "automap.h"
 #include "codec.h"
 #include "control.h"
@@ -24,10 +25,13 @@
 #include "engine/random.hpp"
 #include "init.h"
 #include "inv.h"
+#include "levels/gendung.h"
 #include "lighting.h"
 #include "menu.h"
 #include "missiles.h"
+#include "monster.h"
 #include "mpq/mpq_writer.hpp"
+#include "multi.h"
 #include "pfile.h"
 #include "qol/stash.h"
 #include "stores.h"
@@ -1971,6 +1975,28 @@ void LoadHeroItems(Player &player)
 	gbIsHellfireSaveGame = gbIsHellfire;
 }
 
+constexpr const char *MonsterKillCountSection = "monsterKillCounts";
+constexpr uint32_t MonsterKillCountVersion = 0;
+
+static bool LoadMonsterKillCountsInto(int32_t *mkc, _difficulty difficulty)
+{
+	LoadHelper file(OpenSaveArchive(gSaveNumber), MonsterKillCountSection);
+	if (!file.IsValid() || file.NextBE<uint32_t>() > MonsterKillCountVersion)
+		return false;
+
+	file.Skip(difficulty * sizeof(MonsterKillCounts));
+	for (size_t m = 0; m < MaxMonsters; m++)
+		mkc[m] = file.NextBE<int32_t>();
+
+	return true;
+}
+
+void LoadMonsterKillCounts()
+{
+	if (!LoadMonsterKillCountsInto(MonsterKillCounts, nDifficulty))
+		return;
+}
+
 constexpr uint8_t StashVersion = 0;
 
 void LoadStash()
@@ -2095,7 +2121,7 @@ void LoadGame(bool firstflag)
 	ActiveMonsterCount = tmpNummonsters;
 	ActiveObjectCount = tmpNobjects;
 
-	for (int &monstkill : MonsterKillCounts)
+	for (int32_t &monstkill : MonsterKillCounts)
 		monstkill = file.NextBE<int32_t>();
 
 	if (leveltype != DTYPE_TOWN) {
@@ -2238,6 +2264,26 @@ void SaveHeroItems(MpqWriter &saveWriter, Player &player)
 		SaveItem(file, item);
 }
 
+void SaveMonsterKillCounts(MpqWriter &saveWriter)
+{
+	int32_t mkc[DIFF_LAST + 1][MaxMonsters] = { { 0 } };
+
+	for (int diff = DIFF_NORMAL; diff < DIFF_LAST; diff++) {
+		if (diff == nDifficulty) {
+			memcpy(mkc[diff], MonsterKillCounts, sizeof(MonsterKillCounts));
+			continue;
+		}
+		LoadMonsterKillCountsInto(mkc[diff], static_cast<_difficulty>(diff));
+	}
+
+	SaveHelper file(saveWriter, MonsterKillCountSection, sizeof(MonsterKillCountVersion) + (DIFF_LAST + 1) * sizeof(MonsterKillCounts));
+
+	file.WriteBE<uint32_t>(MonsterKillCountVersion);
+	for (int diff = DIFF_NORMAL; diff < DIFF_LAST; diff++)
+		for (size_t m = 0; m < MaxMonsters; m++)
+			file.WriteBE<int32_t>(mkc[diff][m]);
+}
+
 void SaveStash(MpqWriter &stashWriter)
 {
 	const char *filename;
@@ -2349,7 +2395,7 @@ void SaveGameData(MpqWriter &saveWriter)
 		SaveQuest(&file, i);
 	for (int i = 0; i < MAXPORTAL; i++)
 		SavePortal(&file, i);
-	for (int monstkill : MonsterKillCounts)
+	for (int32_t monstkill : MonsterKillCounts)
 		file.WriteBE<int32_t>(monstkill);
 
 	if (leveltype != DTYPE_TOWN) {
