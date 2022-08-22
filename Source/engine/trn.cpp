@@ -56,7 +56,7 @@ std::optional<std::array<uint8_t, 256>> GetClassTRN(Player &player)
 		path = debugTRN.c_str();
 	}
 #endif
-	if (LoadOptionalFileInMem(path, &trn, 256)) {
+	if (LoadOptionalFileInMem(path, &trn[0], 256)) {
 		return trn;
 	}
 	return std::nullopt;
