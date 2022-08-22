@@ -1047,6 +1047,7 @@ void InvDrawSlotBack(const Surface &out, Point targetPosition, Size size, item_q
 					pix -= PAL16_GRAY - PAL16_YELLOW;
 					break;
 				default:
+					pix -= PAL16_GRAY - PAL16_BEIGE;
 					break;
 				}
 			}
