@@ -27,6 +27,7 @@
 #include "lighting.h"
 #include "menu.h"
 #include "missiles.h"
+#include "monster.h"
 #include "mpq/mpq_writer.hpp"
 #include "pfile.h"
 #include "qol/stash.h"
@@ -1971,6 +1972,13 @@ void LoadHeroItems(Player &player)
 	gbIsHellfireSaveGame = gbIsHellfire;
 }
 
+void LoadMonsterKillCounts()
+{
+	LoadHelper file(OpenSaveArchive(gSaveNumber), "monsterkillcounts");
+	for (int32_t &monsterKillCount : MonsterKillCounts)
+		monsterKillCount = file.NextBE<int32_t>();
+}
+
 constexpr uint8_t StashVersion = 0;
 
 void LoadStash()
@@ -2095,7 +2103,7 @@ void LoadGame(bool firstflag)
 	ActiveMonsterCount = tmpNummonsters;
 	ActiveObjectCount = tmpNobjects;
 
-	for (int &monstkill : MonsterKillCounts)
+	for (int32_t &monstkill : MonsterKillCounts)
 		monstkill = file.NextBE<int32_t>();
 
 	if (leveltype != DTYPE_TOWN) {
@@ -2238,6 +2246,13 @@ void SaveHeroItems(MpqWriter &saveWriter, Player &player)
 		SaveItem(file, item);
 }
 
+void SaveMonsterKillCounts(MpqWriter &saveWriter)
+{
+	SaveHelper file(saveWriter, "monsterkillcounts", sizeof(MonsterKillCounts));
+	for (int32_t monstkill : MonsterKillCounts)
+		file.WriteBE<int32_t>(monstkill);
+}
+
 void SaveStash(MpqWriter &stashWriter)
 {
 	const char *filename;
@@ -2349,7 +2364,7 @@ void SaveGameData(MpqWriter &saveWriter)
 		SaveQuest(&file, i);
 	for (int i = 0; i < MAXPORTAL; i++)
 		SavePortal(&file, i);
-	for (int monstkill : MonsterKillCounts)
+	for (int32_t monstkill : MonsterKillCounts)
 		file.WriteBE<int32_t>(monstkill);
 
 	if (leveltype != DTYPE_TOWN) {
