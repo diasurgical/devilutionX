@@ -39,14 +39,14 @@ OptionalClxSprite LoadDialogSprite(bool hasCaption, bool isError)
 {
 	constexpr uint8_t TransparentColor = 255;
 	if (!hasCaption) {
-		ownedDialogSprite = LoadPcx(isError ? "ui_art\\srpopup.pcx" : "ui_art\\spopup.pcx", TransparentColor);
+		ownedDialogSprite = LoadPcx(isError ? "ui_art\\srpopup" : "ui_art\\spopup", TransparentColor);
 	} else if (isError) {
 		ownedDialogSprite = LoadOptionalClx("ui_art\\dvl_lrpopup.clx");
 		if (!ownedDialogSprite) {
-			ownedDialogSprite = LoadPcx("ui_art\\lrpopup.pcx", TransparentColor);
+			ownedDialogSprite = LoadPcx("ui_art\\lrpopup", TransparentColor);
 		}
 	} else {
-		ownedDialogSprite = LoadPcx("ui_art\\lpopup.pcx", TransparentColor);
+		ownedDialogSprite = LoadPcx("ui_art\\lpopup", TransparentColor);
 	}
 	if (!ownedDialogSprite)
 		return std::nullopt;

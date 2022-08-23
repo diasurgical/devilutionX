@@ -164,31 +164,31 @@ use_enum_as_flags(SpellFlag);
 
 /** Maps from armor animation to letter used in graphic files. */
 constexpr std::array<char, 4> ArmourChar = {
-	'L', // light
-	'M', // medium
-	'H', // heavy
+	'l', // light
+	'm', // medium
+	'h', // heavy
 };
 /** Maps from weapon animation to letter used in graphic files. */
 constexpr std::array<char, 9> WepChar = {
-	'N', // unarmed
-	'U', // no weapon + shield
-	'S', // sword + no shield
-	'D', // sword + shield
-	'B', // bow
-	'A', // axe
-	'M', // blunt + no shield
-	'H', // blunt + shield
-	'T', // staff
+	'n', // unarmed
+	'u', // no weapon + shield
+	's', // sword + no shield
+	'd', // sword + shield
+	'b', // bow
+	'a', // axe
+	'm', // blunt + no shield
+	'h', // blunt + shield
+	't', // staff
 };
 
 /** Maps from player class to letter used in graphic files. */
 constexpr std::array<char, 6> CharChar = {
-	'W', // warrior
-	'R', // rogue
-	'S', // sorcerer
-	'M', // monk
-	'B',
-	'C',
+	'w', // warrior
+	'r', // rogue
+	's', // sorcerer
+	'm', // monk
+	'b',
+	'c',
 };
 
 /**

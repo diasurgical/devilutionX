@@ -959,8 +959,13 @@ void SetApplicationVersions()
 
 void CheckArchivesUpToDate()
 {
+#ifdef UNPACKED_MPQS
+	const bool devilutionxMpqOutOfDate = false;
+	const bool fontsMpqOutOfDate = font_data_path && !FileExists(*font_data_path + "fonts" + DirectorySeparator + "12-4e.clx");
+#else
 	const bool devilutionxMpqOutOfDate = devilutionx_mpq && !devilutionx_mpq->HasFile("data\\charbg.clx");
 	const bool fontsMpqOutOfDate = font_mpq && !font_mpq->HasFile("fonts\\12-4e.clx");
+#endif
 
 	if (devilutionxMpqOutOfDate && fontsMpqOutOfDate) {
 		app_fatal(_("Please update devilutionx.mpq and fonts.mpq to the latest version"));
@@ -1093,37 +1098,37 @@ void LoadLvlGFX()
 			pDungeonCels = LoadFileInMem("levels\\towndata\\town.cel");
 			pMegaTiles = LoadFileInMem<MegaTile>("levels\\towndata\\town.til");
 		}
-		pSpecialCels = LoadCel("levels\\towndata\\towns.cel", SpecialCelWidth);
+		pSpecialCels = LoadCel("levels\\towndata\\towns", SpecialCelWidth);
 		break;
 	case DTYPE_CATHEDRAL:
 		pDungeonCels = LoadFileInMem("levels\\l1data\\l1.cel");
 		pMegaTiles = LoadFileInMem<MegaTile>("levels\\l1data\\l1.til");
-		pSpecialCels = LoadCel("levels\\l1data\\l1s.cel", SpecialCelWidth);
+		pSpecialCels = LoadCel("levels\\l1data\\l1s", SpecialCelWidth);
 		break;
 	case DTYPE_CATACOMBS:
 		pDungeonCels = LoadFileInMem("levels\\l2data\\l2.cel");
 		pMegaTiles = LoadFileInMem<MegaTile>("levels\\l2data\\l2.til");
-		pSpecialCels = LoadCel("levels\\l2data\\l2s.cel", SpecialCelWidth);
+		pSpecialCels = LoadCel("levels\\l2data\\l2s", SpecialCelWidth);
 		break;
 	case DTYPE_CAVES:
 		pDungeonCels = LoadFileInMem("levels\\l3data\\l3.cel");
 		pMegaTiles = LoadFileInMem<MegaTile>("levels\\l3data\\l3.til");
-		pSpecialCels = LoadCel("levels\\l1data\\l1s.cel", SpecialCelWidth);
+		pSpecialCels = LoadCel("levels\\l1data\\l1s", SpecialCelWidth);
 		break;
 	case DTYPE_HELL:
 		pDungeonCels = LoadFileInMem("levels\\l4data\\l4.cel");
 		pMegaTiles = LoadFileInMem<MegaTile>("levels\\l4data\\l4.til");
-		pSpecialCels = LoadCel("levels\\l2data\\l2s.cel", SpecialCelWidth);
+		pSpecialCels = LoadCel("levels\\l2data\\l2s", SpecialCelWidth);
 		break;
 	case DTYPE_NEST:
 		pDungeonCels = LoadFileInMem("nlevels\\l6data\\l6.cel");
 		pMegaTiles = LoadFileInMem<MegaTile>("nlevels\\l6data\\l6.til");
-		pSpecialCels = LoadCel("levels\\l1data\\l1s.cel", SpecialCelWidth);
+		pSpecialCels = LoadCel("levels\\l1data\\l1s", SpecialCelWidth);
 		break;
 	case DTYPE_CRYPT:
 		pDungeonCels = LoadFileInMem("nlevels\\l5data\\l5.cel");
 		pMegaTiles = LoadFileInMem<MegaTile>("nlevels\\l5data\\l5.til");
-		pSpecialCels = LoadCel("nlevels\\l5data\\l5s.cel", SpecialCelWidth);
+		pSpecialCels = LoadCel("nlevels\\l5data\\l5s", SpecialCelWidth);
 		break;
 	default:
 		app_fatal("LoadLvlGFX");

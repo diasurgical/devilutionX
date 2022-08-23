@@ -12,6 +12,12 @@
 #include "utils/pointer_value_union.hpp"
 #include "utils/static_vector.hpp"
 
+#ifdef UNPACKED_MPQS
+#define DEVILUTIONX_CL2_EXT ".clx"
+#else
+#define DEVILUTIONX_CL2_EXT ".cl2"
+#endif
+
 namespace devilution {
 
 OwnedClxSpriteListOrSheet LoadCl2ListOrSheet(const char *pszName, PointerOrValue<uint16_t> widthOrWidths);
@@ -31,15 +37,19 @@ OwnedClxSpriteSheet LoadMultipleCl2Sheet(tl::function_ref<const char *(size_t)> 
 		totalSize += size;
 	}
 	auto data = std::unique_ptr<uint8_t[]> { new uint8_t[totalSize] };
+#ifndef UNPACKED_MPQS
 	const PointerOrValue<uint16_t> frameWidth { width };
+#endif
 	size_t accumulatedSize = sheetHeaderSize;
 	for (size_t i = 0; i < count; ++i) {
 		const size_t size = fileSizes[i];
 		if (!files[i].Read(&data[accumulatedSize], size))
 			app_fatal(StrCat("Read failed: ", SDL_GetError()));
 		WriteLE32(&data[i * 4], accumulatedSize);
+#ifndef UNPACKED_MPQS
 		[[maybe_unused]] const uint16_t numLists = Cl2ToClx(&data[accumulatedSize], size, frameWidth);
 		assert(numLists == 0);
+#endif
 		accumulatedSize += size;
 	}
 	return OwnedClxSpriteSheet { std::move(data), static_cast<uint16_t>(count) };

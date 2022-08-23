@@ -3642,7 +3642,7 @@ void LoadLevelObjects(uint16_t filesWidths[65])
 
 		ObjFileList[numobjfiles] = static_cast<object_graphic_id>(i);
 		char filestr[32];
-		*BufCopy(filestr, "objects\\", ObjMasterLoadList[i], ".cel") = '\0';
+		*BufCopy(filestr, "objects\\", ObjMasterLoadList[i]) = '\0';
 		pObjCels[numobjfiles] = LoadCel(filestr, filesWidths[i]);
 		numobjfiles++;
 	}

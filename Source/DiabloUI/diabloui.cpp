@@ -544,7 +544,7 @@ bool IsInsideRect(const SDL_Event &event, const SDL_Rect &rect)
 void LoadHeros()
 {
 	constexpr unsigned PortraitHeight = 76;
-	ArtHero = LoadPcxSpriteList("ui_art\\heros.pcx", -static_cast<int>(PortraitHeight));
+	ArtHero = LoadPcxSpriteList("ui_art\\heros", -static_cast<int>(PortraitHeight));
 	if (!ArtHero)
 		return;
 	const uint16_t numPortraits = ClxSpriteList { *ArtHero }.numSprites();
@@ -561,32 +561,25 @@ void LoadHeros()
 
 	for (size_t i = 0; i <= enum_size<HeroClass>::value; ++i) {
 		char portraitPath[18];
-		*BufCopy(portraitPath, "ui_art\\hero", i, ".pcx") = '\0';
-
-		SDL_RWops *handle = OpenAsset(portraitPath);
-		if (handle == nullptr) {
-			// Portrait overrides are optional, ignore the error and continue.
-			SDL_ClearError();
-			continue;
-		}
-		ArtHeroOverrides[i] = PcxToClx(handle);
+		*BufCopy(portraitPath, "ui_art\\hero", i) = '\0';
+		ArtHeroOverrides[i] = LoadPcx(portraitPath, /*transparentColor=*/std::nullopt, /*outPalette=*/nullptr, /*logError=*/false);
 	}
 }
 
 void LoadUiGFX()
 {
 	if (gbIsHellfire) {
-		ArtLogo = LoadPcxSpriteList("ui_art\\hf_logo2.pcx", /*numFrames=*/16, /*transparentColor=*/0);
+		ArtLogo = LoadPcxSpriteList("ui_art\\hf_logo2", /*numFrames=*/16, /*transparentColor=*/0);
 	} else {
-		ArtLogo = LoadPcxSpriteList("ui_art\\smlogo.pcx", /*numFrames=*/15, /*transparentColor=*/250);
+		ArtLogo = LoadPcxSpriteList("ui_art\\smlogo", /*numFrames=*/15, /*transparentColor=*/250);
 	}
-	DifficultyIndicator[0] = LoadPcx("ui_art\\radio1.pcx", /*transparentColor=*/0);
-	DifficultyIndicator[1] = LoadPcx("ui_art\\radio3.pcx", /*transparentColor=*/0);
-	ArtFocus[FOCUS_SMALL] = LoadPcxSpriteList("ui_art\\focus16.pcx", /*numFrames=*/8, /*transparentColor=*/250);
-	ArtFocus[FOCUS_MED] = LoadPcxSpriteList("ui_art\\focus.pcx", /*numFrames=*/8, /*transparentColor=*/250);
-	ArtFocus[FOCUS_BIG] = LoadPcxSpriteList("ui_art\\focus42.pcx", /*numFrames=*/8, /*transparentColor=*/250);
+	DifficultyIndicator[0] = LoadPcx("ui_art\\radio1", /*transparentColor=*/0);
+	DifficultyIndicator[1] = LoadPcx("ui_art\\radio3", /*transparentColor=*/0);
+	ArtFocus[FOCUS_SMALL] = LoadPcxSpriteList("ui_art\\focus16", /*numFrames=*/8, /*transparentColor=*/250);
+	ArtFocus[FOCUS_MED] = LoadPcxSpriteList("ui_art\\focus", /*numFrames=*/8, /*transparentColor=*/250);
+	ArtFocus[FOCUS_BIG] = LoadPcxSpriteList("ui_art\\focus42", /*numFrames=*/8, /*transparentColor=*/250);
 
-	ArtCursor = LoadPcx("ui_art\\cursor.pcx", /*transparentColor=*/0);
+	ArtCursor = LoadPcx("ui_art\\cursor", /*transparentColor=*/0);
 
 	LoadHeros();
 }

@@ -185,12 +185,12 @@ constexpr int8_t PlrGFXAnimLens[enum_size<HeroClass>::value][11] = {
 };
 
 const char *const ClassPathTbl[] = {
-	"Warrior",
-	"Rogue",
-	"Sorceror",
-	"Monk",
-	"Rogue",
-	"Warrior",
+	"warrior",
+	"rogue",
+	"sorceror",
+	"monk",
+	"rogue",
+	"warrior",
 };
 
 void PmChangeLightOff(Player &player)
@@ -1701,9 +1701,9 @@ void CheckCheatStats(Player &player)
 
 HeroClass GetPlayerSpriteClass(HeroClass cls)
 {
-	if (cls == HeroClass::Bard && !hfbard_mpq)
+	if (cls == HeroClass::Bard && !gbBard)
 		return HeroClass::Rogue;
-	if (cls == HeroClass::Barbarian && !hfbarb_mpq)
+	if (cls == HeroClass::Barbarian && !gbBarbarian)
 		return HeroClass::Warrior;
 	return cls;
 }
@@ -2227,45 +2227,45 @@ void LoadPlrGFX(Player &player, player_graphic graphic)
 	const char *szCel;
 	switch (graphic) {
 	case player_graphic::Stand:
-		szCel = "AS";
+		szCel = "as";
 		if (leveltype == DTYPE_TOWN)
-			szCel = "ST";
+			szCel = "st";
 		break;
 	case player_graphic::Walk:
-		szCel = "AW";
+		szCel = "aw";
 		if (leveltype == DTYPE_TOWN)
-			szCel = "WL";
+			szCel = "wl";
 		break;
 	case player_graphic::Attack:
 		if (leveltype == DTYPE_TOWN)
 			return;
-		szCel = "AT";
+		szCel = "at";
 		break;
 	case player_graphic::Hit:
 		if (leveltype == DTYPE_TOWN)
 			return;
-		szCel = "HT";
+		szCel = "ht";
 		break;
 	case player_graphic::Lightning:
-		szCel = "LM";
+		szCel = "lm";
 		break;
 	case player_graphic::Fire:
-		szCel = "FM";
+		szCel = "fm";
 		break;
 	case player_graphic::Magic:
-		szCel = "QM";
+		szCel = "qm";
 		break;
 	case player_graphic::Death:
 		if (animWeaponId != PlayerWeaponGraphic::Unarmed)
 			return;
-		szCel = "DT";
+		szCel = "dt";
 		break;
 	case player_graphic::Block:
 		if (leveltype == DTYPE_TOWN)
 			return;
 		if (!player._pBlockFlag)
 			return;
-		szCel = "BL";
+		szCel = "bl";
 		break;
 	default:
 		app_fatal("PLR:2");
@@ -2276,7 +2276,7 @@ void LoadPlrGFX(Player &player, player_graphic graphic)
 
 	char prefix[3] = { CharChar[static_cast<std::size_t>(cls)], ArmourChar[player._pgfxnum >> 4], WepChar[static_cast<std::size_t>(animWeaponId)] };
 	char pszName[256];
-	*fmt::format_to(pszName, FMT_COMPILE(R"(plrgfx\{0}\{1}\{1}{2}.cl2)"), path, string_view(prefix, 3), szCel) = 0;
+	*fmt::format_to(pszName, FMT_COMPILE(R"(plrgfx\{0}\{1}\{1}{2})"), path, string_view(prefix, 3), szCel) = 0;
 	const uint16_t animationWidth = GetPlayerSpriteWidth(cls, graphic, animWeaponId);
 	animationData.sprites = LoadCl2Sheet(pszName, animationWidth);
 	std::optional<std::array<uint8_t, 256>> trn = GetClassTRN(player);

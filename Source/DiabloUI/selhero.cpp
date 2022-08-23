@@ -247,7 +247,7 @@ void RemoveSelHeroBackground()
 
 void AddSelHeroBackground()
 {
-	LoadBackgroundArt("ui_art\\selhero.pcx");
+	LoadBackgroundArt("ui_art\\selhero");
 	vecSelHeroDialog.insert(vecSelHeroDialog.begin(),
 	    std::make_unique<UiImageClx>((*ArtBackground)[0], MakeSdlRect(0, GetUIRectangle().position.y, 0, 0), UiFlags::AlignCenter));
 }
@@ -255,7 +255,7 @@ void AddSelHeroBackground()
 void SelheroClassSelectorSelect(int value)
 {
 	auto hClass = static_cast<HeroClass>(vecSelHeroDlgItems[value]->m_value);
-	if (gbIsSpawn && (hClass == HeroClass::Rogue || hClass == HeroClass::Sorcerer || (hClass == HeroClass::Bard && !hfbard_mpq))) {
+	if (gbIsSpawn && (hClass == HeroClass::Rogue || hClass == HeroClass::Sorcerer || (hClass == HeroClass::Bard && !gbBard))) {
 		RemoveSelHeroBackground();
 		UiSelOkDialog(nullptr, _("The Rogue and Sorcerer are only available in the full retail version of Diablo. Visit https://www.gog.com/game/diablo to purchase.").data(), false);
 		AddSelHeroBackground();
@@ -350,7 +350,7 @@ void SelheroLoadSelect(int value)
 		selhero_isSavegame = false;
 
 		SelheroFree();
-		LoadBackgroundArt("ui_art\\selgame.pcx");
+		LoadBackgroundArt("ui_art\\selgame");
 		selgame_GameSelection_Select(0);
 	}
 

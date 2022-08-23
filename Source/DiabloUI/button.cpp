@@ -20,7 +20,7 @@ void LoadDialogButtonGraphics()
 {
 	ButtonSprites = LoadOptionalClx("ui_art\\dvl_but_sml.clx");
 	if (!ButtonSprites) {
-		ButtonSprites = LoadPcxSpriteList("ui_art\\but_sml.pcx", 15);
+		ButtonSprites = LoadPcxSpriteList("ui_art\\but_sml", 15);
 	}
 }
 

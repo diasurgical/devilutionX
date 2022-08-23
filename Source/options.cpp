@@ -1155,7 +1155,7 @@ void OptionEntryLanguageCode::CheckLanguagesAreInitialized() const
 	languages.emplace_back("hr", "Hrvatski");
 	languages.emplace_back("it", "Italiano");
 
-	if (font_mpq) {
+	if (HaveExtraFonts()) {
 		languages.emplace_back("ja", "日本語");
 		languages.emplace_back("ko", "한국어");
 	}
@@ -1167,7 +1167,7 @@ void OptionEntryLanguageCode::CheckLanguagesAreInitialized() const
 	languages.emplace_back("sv", "Svenska");
 	languages.emplace_back("uk", "Українська");
 
-	if (font_mpq) {
+	if (HaveExtraFonts()) {
 		languages.emplace_back("zh_CN", "汉语");
 		languages.emplace_back("zh_TW", "漢語");
 	}

@@ -3346,7 +3346,7 @@ void InitMonsterGFX(CMonster &monsterType)
 	if (!HeadlessMode) {
 		monsterType.animData = MultiFileLoader<MaxAnims> {}(
 		    numAnims,
-		    FileNameWithCharAffixGenerator({ "monsters\\", monsterData.assetsSuffix }, ".cl2", Animletter),
+		    FileNameWithCharAffixGenerator({ "monsters\\", monsterData.assetsSuffix }, DEVILUTIONX_CL2_EXT, Animletter),
 		    animOffsets.data(),
 		    hasAnim);
 	}

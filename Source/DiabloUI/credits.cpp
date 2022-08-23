@@ -170,7 +170,7 @@ bool TextDialog(char const *const *text, std::size_t textLines)
 bool UiCreditsDialog()
 {
 	ArtBackgroundWidescreen = LoadOptionalClx("ui_art\\creditsw.clx");
-	LoadBackgroundArt("ui_art\\credits.pcx");
+	LoadBackgroundArt("ui_art\\credits");
 
 	return TextDialog(CreditLines, CreditLinesSize);
 }
@@ -179,10 +179,10 @@ bool UiSupportDialog()
 {
 	if (gbIsHellfire) {
 		ArtBackgroundWidescreen = LoadOptionalClx("ui_art\\supportw.clx");
-		LoadBackgroundArt("ui_art\\support.pcx");
+		LoadBackgroundArt("ui_art\\support");
 	} else {
 		ArtBackgroundWidescreen = LoadOptionalClx("ui_art\\creditsw.clx");
-		LoadBackgroundArt("ui_art\\credits.pcx");
+		LoadBackgroundArt("ui_art\\credits");
 	}
 
 	return TextDialog(SupportLines, SupportLinesSize);

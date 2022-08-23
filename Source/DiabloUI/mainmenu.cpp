@@ -46,9 +46,9 @@ void MainmenuLoad(const char *name)
 	if (!gbIsSpawn || gbIsHellfire) {
 		if (gbIsHellfire)
 			ArtBackgroundWidescreen = LoadOptionalClx("ui_art\\mainmenuw.clx");
-		LoadBackgroundArt("ui_art\\mainmenu.pcx");
+		LoadBackgroundArt("ui_art\\mainmenu");
 	} else {
-		LoadBackgroundArt("ui_art\\swmmenu.pcx");
+		LoadBackgroundArt("ui_art\\swmmenu");
 	}
 
 	UiAddBackground(&vecMainMenuDialog);
@@ -102,7 +102,7 @@ bool UiMainMenuDialog(const char *name, _mainmenu_selections *pdwResult, int att
 		while (MainMenuResult == MAINMENU_NONE) {
 			UiClearScreen();
 			UiPollAndRender();
-			if (SDL_GetTicks() >= dwAttractTicks && (diabdat_mpq || hellfire_mpq)) {
+			if (SDL_GetTicks() >= dwAttractTicks && (HaveDiabdat() || HaveHellfire())) {
 				MainMenuResult = MAINMENU_ATTRACT_MODE;
 			}
 		}

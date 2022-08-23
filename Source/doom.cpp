@@ -21,7 +21,7 @@ bool DoomFlag;
 
 void doom_init()
 {
-	DoomSprite = LoadCel("items\\map\\mapztown.cel", 640);
+	DoomSprite = LoadCel("items\\map\\mapztown", 640);
 	DoomFlag = true;
 }
 

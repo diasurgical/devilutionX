@@ -7,7 +7,9 @@
 
 #include "engine/load_cl2.hpp"
 #include "missiles.h"
+#include "mpq/mpq_common.hpp"
 #include "utils/file_name_generator.hpp"
+#include "utils/str_cat.hpp"
 
 namespace devilution {
 
@@ -236,10 +238,12 @@ void MissileFileData::LoadGFX()
 	if (name.empty())
 		return;
 
-	FileNameGenerator pathGenerator({ "missiles\\", name }, ".cl2");
 	if (animFAmt == 1) {
-		sprites.emplace(OwnedClxSpriteListOrSheet { LoadCl2(pathGenerator(), animWidth) });
+		char path[MaxMpqPathSize];
+		*BufCopy(path, "missiles\\", name) = '\0';
+		sprites.emplace(OwnedClxSpriteListOrSheet { LoadCl2(path, animWidth) });
 	} else {
+		FileNameGenerator pathGenerator({ "missiles\\", name }, DEVILUTIONX_CL2_EXT);
 		sprites.emplace(OwnedClxSpriteListOrSheet { LoadMultipleCl2Sheet<16>(pathGenerator, animFAmt, animWidth) });
 	}
 }
