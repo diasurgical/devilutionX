@@ -319,6 +319,23 @@ bool HandleMenuAction(MenuAction menuAction)
 	}
 }
 
+void UiOnBackgroundChange()
+{
+	fadeTc = 0;
+	fadeValue = 0;
+
+	if (IsHardwareCursorEnabled() && ArtCursor && ControlDevice == ControlTypes::KeyboardAndMouse && GetCurrentCursorInfo().type() != CursorType::UserInterface) {
+		SetHardwareCursor(CursorInfo::UserInterfaceCursor());
+	}
+
+	BlackPalette();
+
+	SDL_FillRect(DiabloUiSurface(), nullptr, 0x000000);
+	if (DiabloUiSurface() == PalSurface)
+		BltFast(nullptr, nullptr);
+	RenderPresent();
+}
+
 } // namespace
 
 void UiFocusNavigation(SDL_Event *event)
@@ -664,16 +681,17 @@ Sint16 GetCenterOffset(Sint16 w, Sint16 bw)
 	return (bw - w) / 2;
 }
 
+void UiLoadDefaultPalette()
+{
+	LoadPalette(gbIsHellfire ? "ui_art\\hellfire.pal" : "ui_art\\diablo.pal", /*blend=*/false);
+	ApplyGamma(logical_palette, orig_palette, 256);
+}
+
 bool UiLoadBlackBackground()
 {
-	LoadBackgroundArt(gbIsHellfire ? "ui_art\\black_hellfire.pcx" : "ui_art\\black_diablo.pcx");
-
-	if (!ArtBackground)
-		return false;
-
-	// We only needed the black background for the palette, can now deallocate it.
 	ArtBackground = std::nullopt;
-
+	UiLoadDefaultPalette();
+	UiOnBackgroundChange();
 	return true;
 }
 
@@ -687,20 +705,7 @@ void LoadBackgroundArt(const char *pszFile, int frames)
 
 	LoadPalInMem(pPal);
 	ApplyGamma(logical_palette, orig_palette, 256);
-
-	fadeTc = 0;
-	fadeValue = 0;
-
-	if (IsHardwareCursorEnabled() && ArtCursor && ControlDevice == ControlTypes::KeyboardAndMouse && GetCurrentCursorInfo().type() != CursorType::UserInterface) {
-		SetHardwareCursor(CursorInfo::UserInterfaceCursor());
-	}
-
-	BlackPalette();
-
-	SDL_FillRect(DiabloUiSurface(), nullptr, 0x000000);
-	if (DiabloUiSurface() == PalSurface)
-		BltFast(nullptr, nullptr);
-	RenderPresent();
+	UiOnBackgroundChange();
 }
 
 void UiAddBackground(std::vector<std::unique_ptr<UiItemBase>> *vecDialog)
