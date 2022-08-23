@@ -112,6 +112,8 @@ void PackPlayer(PlayerPack *pPack, const Player &player, bool manashield, bool n
 		const Item &item = player.InvBody[i];
 		bool isHellfire = netSync ? ((item.dwBuff & CF_HELLFIRE) != 0) : gbIsHellfire;
 		PackItem(pPack->InvBody[i], item, isHellfire);
+		if (item.isForeign)
+			pPack->foreignBodyFlags |= 1 << i;
 	}
 
 	pPack->_pNumInv = player._pNumInv;
@@ -119,6 +121,8 @@ void PackPlayer(PlayerPack *pPack, const Player &player, bool manashield, bool n
 		const Item &item = player.InvList[i];
 		bool isHellfire = netSync ? ((item.dwBuff & CF_HELLFIRE) != 0) : gbIsHellfire;
 		PackItem(pPack->InvList[i], item, isHellfire);
+		if (item.isForeign)
+			pPack->foreignInvFlags |= SDL_SwapLE64(1ULL << i);
 	}
 
 	for (int i = 0; i < InventoryGridCells; i++)
@@ -128,6 +132,8 @@ void PackPlayer(PlayerPack *pPack, const Player &player, bool manashield, bool n
 		const Item &item = player.SpdList[i];
 		bool isHellfire = netSync ? ((item.dwBuff & CF_HELLFIRE) != 0) : gbIsHellfire;
 		PackItem(pPack->SpdList[i], item, isHellfire);
+		if (item.isForeign)
+			pPack->foreignBeltFlags |= 1 << i;
 	}
 
 	pPack->wReflections = SDL_SwapLE16(player.wReflections);
@@ -187,6 +193,15 @@ void UnPackItem(const ItemPack &packedItem, Item &item, bool isHellfire)
 		else
 			item.dwBuff &= ~CF_HELLFIRE;
 	}
+}
+
+//TODO: clean implementation
+void UnPackForeignItem(const ItemPack &packedItem, Item &item, bool isHellfire)
+{
+	gbIsMultiplayer = !gbIsMultiplayer;
+	UnPackItem(packedItem, item, isHellfire);
+	item.isForeign = true;
+	gbIsMultiplayer = !gbIsMultiplayer;
 }
 
 bool UnPackPlayer(const PlayerPack *pPack, Player &player, bool netSync)
@@ -260,14 +275,22 @@ bool UnPackPlayer(const PlayerPack *pPack, Player &player, bool netSync)
 	for (int i = 0; i < NUM_INVLOC; i++) {
 		auto packedItem = pPack->InvBody[i];
 		bool isHellfire = netSync ? ((packedItem.dwBuff & CF_HELLFIRE) != 0) : (pPack->bIsHellfire != 0);
-		UnPackItem(packedItem, player.InvBody[i], isHellfire);
+		bool isForeign = !!(pPack->foreignBodyFlags & (1 << i));
+		if (!isForeign)
+			UnPackItem(packedItem, player.InvBody[i], isHellfire);
+		else
+			UnPackForeignItem(packedItem, player.InvBody[i], isHellfire);
 	}
 
 	player._pNumInv = pPack->_pNumInv;
 	for (int i = 0; i < player._pNumInv; i++) {
 		auto packedItem = pPack->InvList[i];
 		bool isHellfire = netSync ? ((packedItem.dwBuff & CF_HELLFIRE) != 0) : (pPack->bIsHellfire != 0);
-		UnPackItem(packedItem, player.InvList[i], isHellfire);
+		bool isForeign = !!(pPack->foreignInvFlags & SDL_SwapLE64(1ULL << i));
+		if (!isForeign)
+			UnPackItem(packedItem, player.InvList[i], isHellfire);
+		else
+			UnPackForeignItem(packedItem, player.InvList[i], isHellfire);
 	}
 
 	for (int i = 0; i < InventoryGridCells; i++)
@@ -278,7 +301,11 @@ bool UnPackPlayer(const PlayerPack *pPack, Player &player, bool netSync)
 	for (int i = 0; i < MaxBeltItems; i++) {
 		auto packedItem = pPack->SpdList[i];
 		bool isHellfire = netSync ? ((packedItem.dwBuff & CF_HELLFIRE) != 0) : (pPack->bIsHellfire != 0);
-		UnPackItem(packedItem, player.SpdList[i], isHellfire);
+		bool isForeign = !!(pPack->foreignBeltFlags & (1 << i));
+		if (!isForeign)
+			UnPackItem(packedItem, player.SpdList[i], isHellfire);
+		else
+			UnPackForeignItem(packedItem, player.SpdList[i], isHellfire);
 	}
 
 	CalcPlrInv(player, false);
