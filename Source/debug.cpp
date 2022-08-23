@@ -1027,7 +1027,7 @@ std::vector<DebugCmdItem> DebugCmdList = {
 
 void LoadDebugGFX()
 {
-	pSquareCel = LoadCel("data\\square.cel", 64);
+	pSquareCel = LoadCel("data\\square", 64);
 }
 
 void FreeDebugGFX()

@@ -10,9 +10,9 @@ OptionalOwnedClxSpriteList ArtScrollBarArrow;
 
 void LoadScrollBar()
 {
-	ArtScrollBarBackground = LoadPcx("ui_art\\sb_bg.pcx");
-	ArtScrollBarThumb = LoadPcx("ui_art\\sb_thumb.pcx");
-	ArtScrollBarArrow = LoadPcxSpriteList("ui_art\\sb_arrow.pcx", 4);
+	ArtScrollBarBackground = LoadPcx("ui_art\\sb_bg");
+	ArtScrollBarThumb = LoadPcx("ui_art\\sb_thumb");
+	ArtScrollBarArrow = LoadPcxSpriteList("ui_art\\sb_arrow", 4);
 }
 
 void UnloadScrollBar()

@@ -9,8 +9,8 @@ OptionalOwnedClxSpriteList pSTextSlidCels;
 
 void InitInfoBoxGfx()
 {
-	pSTextSlidCels = LoadCel("data\\textslid.cel", 12);
-	pSTextBoxCels = LoadCel("data\\textbox2.cel", 271);
+	pSTextSlidCels = LoadCel("data\\textslid", 12);
+	pSTextBoxCels = LoadCel("data\\textbox2", 271);
 }
 
 void FreeInfoBoxGfx()

@@ -12,6 +12,12 @@
 namespace devilution {
 
 bool FileExists(const char *path);
+
+inline bool FileExists(const std::string &str)
+{
+	return FileExists(str.c_str());
+}
+
 bool FileExistsAndIsWriteable(const char *path);
 bool GetFileSize(const char *path, std::uintmax_t *size);
 bool ResizeFile(const char *path, std::uintmax_t size);

@@ -71,9 +71,9 @@ const char SpellITbl[] = {
 void LoadSpellIcons()
 {
 	if (!gbIsHellfire)
-		pSpellCels = LoadCel("ctrlpan\\spelicon.cel", SPLICONLENGTH);
+		pSpellCels = LoadCel("ctrlpan\\spelicon", SPLICONLENGTH);
 	else
-		pSpellCels = LoadCel("data\\spelicon.cel", SPLICONLENGTH);
+		pSpellCels = LoadCel("data\\spelicon", SPLICONLENGTH);
 	SetSpellTrans(RSPLTYPE_SKILL);
 }
 

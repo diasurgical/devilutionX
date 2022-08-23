@@ -442,6 +442,18 @@ inline ClxSpriteSheet::ClxSpriteSheet(const OwnedClxSpriteSheet &owned)
 class OwnedClxSpriteListOrSheet;
 class OptionalClxSpriteListOrSheet;
 
+inline uint16_t GetNumListsFromClxListOrSheetBuffer(const uint8_t *data, size_t size)
+{
+	const uint32_t maybeNumFrames = LoadLE32(data);
+
+	// If it is a number of frames, then the last frame offset will be equal to the size of the file.
+	if (LoadLE32(&data[maybeNumFrames * 4 + 4]) != size)
+		return maybeNumFrames / 4;
+
+	// Not a sprite sheet.
+	return 0;
+}
+
 /**
  * @brief A CLX sprite list or a sprite sheet (list of lists).
  */
@@ -493,7 +505,13 @@ class OptionalOwnedClxSpriteListOrSheet;
  */
 class OwnedClxSpriteListOrSheet {
 public:
-	explicit OwnedClxSpriteListOrSheet(std::unique_ptr<uint8_t[]> &&data, uint16_t numLists = 0)
+	static OwnedClxSpriteListOrSheet FromBuffer(std::unique_ptr<uint8_t[]> &&data, size_t size)
+	{
+		const uint16_t numLists = GetNumListsFromClxListOrSheetBuffer(data.get(), size);
+		return OwnedClxSpriteListOrSheet { std::move(data), numLists };
+	}
+
+	explicit OwnedClxSpriteListOrSheet(std::unique_ptr<uint8_t[]> &&data, uint16_t numLists)
 	    : data_(std::move(data))
 	    , num_lists_(numLists)
 	{

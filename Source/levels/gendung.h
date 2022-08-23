@@ -198,8 +198,8 @@ extern DVL_API_FOR_TEST int8_t dCorpse[MAXDUNX][MAXDUNY];
 extern DVL_API_FOR_TEST int8_t dObject[MAXDUNX][MAXDUNY];
 /**
  * Contains the arch frame numbers of the map from the special tileset
- * (e.g. "levels/l1data/l1s.cel"). Note, the special tileset of Tristram (i.e.
- * "levels/towndata/towns.cel") contains trees rather than arches.
+ * (e.g. "levels/l1data/l1s"). Note, the special tileset of Tristram (i.e.
+ * "levels/towndata/towns") contains trees rather than arches.
  */
 extern char dSpecial[MAXDUNX][MAXDUNY];
 extern int themeCount;

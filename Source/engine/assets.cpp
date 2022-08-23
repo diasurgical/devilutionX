@@ -14,6 +14,39 @@ namespace devilution {
 
 namespace {
 
+bool IsDebugLogging()
+{
+	return SDL_LOG_PRIORITY_DEBUG >= SDL_LogGetPriority(SDL_LOG_CATEGORY_APPLICATION);
+}
+
+SDL_RWops *OpenOptionalRWops(const std::string &path)
+{
+	// SDL always logs an error in Debug mode.
+	// We check the file presence in Debug mode to avoid this.
+	if (IsDebugLogging() && !FileExists(path.c_str()))
+		return nullptr;
+	return SDL_RWFromFile(path.c_str(), "rb");
+};
+
+#ifdef UNPACKED_MPQS
+SDL_RWops *OpenUnpackedMpqFile(const std::string &relativePath)
+{
+	SDL_RWops *result = nullptr;
+	std::string tmpPath;
+	const auto at = [&](const std::optional<std::string> &unpackedDir) -> bool {
+		if (!unpackedDir)
+			return false;
+		tmpPath.clear();
+		tmpPath.reserve(unpackedDir->size() + relativePath.size());
+		result = OpenOptionalRWops(tmpPath.append(*unpackedDir).append(relativePath));
+		return result != nullptr;
+	};
+	at(font_data_path) || at(lang_data_path)
+	    || (gbIsHellfire && at(hellfire_data_path))
+	    || at(spawn_data_path) || at(diabdat_data_path);
+	return result;
+}
+#else
 bool OpenMpqFile(const char *filename, MpqArchive **archive, uint32_t *fileNumber)
 {
 	const MpqArchive::FileHash fileHash = MpqArchive::CalculateFileHash(filename);
@@ -28,6 +61,7 @@ bool OpenMpqFile(const char *filename, MpqArchive **archive, uint32_t *fileNumbe
 	return at(font_mpq) || at(lang_mpq) || at(devilutionx_mpq)
 	    || (gbIsHellfire && (at(hfvoice_mpq) || at(hfmusic_mpq) || at(hfbarb_mpq) || at(hfbard_mpq) || at(hfmonk_mpq) || at(hellfire_mpq))) || at(spawn_mpq) || at(diabdat_mpq);
 }
+#endif
 
 } // namespace
 
@@ -43,32 +77,28 @@ SDL_RWops *OpenAsset(const char *filename, bool threadsafe)
 
 	SDL_RWops *rwops;
 
-	// SDL always logs an error in Debug mode.
-	// We check the file presence in Debug mode to avoid this.
-	const bool isDebug = SDL_LOG_PRIORITY_DEBUG >= SDL_LogGetPriority(SDL_LOG_CATEGORY_APPLICATION);
-
-	const auto loadFile = [&rwops, isDebug](const std::string &path) {
-		return (!isDebug || FileExists(path.c_str()))
-		    && (rwops = SDL_RWFromFile(path.c_str(), "rb")) != nullptr;
-	};
-
 	// Files in the `PrefPath()` directory can override MPQ contents.
 	{
 		const std::string path = paths::PrefPath() + relativePath;
-		if (loadFile(path)) {
+		if ((rwops = OpenOptionalRWops(path)) != nullptr) {
 			LogVerbose("Loaded MPQ file override: {}", path);
 			return rwops;
 		}
 	}
 
 	// Load from all the MPQ archives.
+#ifdef UNPACKED_MPQS
+	if ((rwops = OpenUnpackedMpqFile(relativePath)) != nullptr)
+		return rwops;
+#else
 	MpqArchive *archive;
 	uint32_t fileNumber;
 	if (OpenMpqFile(filename, &archive, &fileNumber))
 		return SDL_RWops_FromMpqFile(*archive, fileNumber, filename, threadsafe);
+#endif
 
 	// Load from the `/assets` directory next to the devilutionx binary.
-	if (loadFile(paths::AssetsPath() + relativePath))
+	if ((rwops = OpenOptionalRWops(paths::AssetsPath() + relativePath)))
 		return rwops;
 
 #if defined(__ANDROID__) || defined(__APPLE__)

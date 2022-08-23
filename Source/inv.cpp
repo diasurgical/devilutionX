@@ -1077,17 +1077,17 @@ void InitInv()
 	switch (MyPlayer->_pClass) {
 	case HeroClass::Warrior:
 	case HeroClass::Barbarian:
-		pInvCels = LoadCel("data\\inv\\inv.cel", static_cast<uint16_t>(SidePanelSize.width));
+		pInvCels = LoadCel("data\\inv\\inv", static_cast<uint16_t>(SidePanelSize.width));
 		break;
 	case HeroClass::Rogue:
 	case HeroClass::Bard:
-		pInvCels = LoadCel("data\\inv\\inv_rog.cel", static_cast<uint16_t>(SidePanelSize.width));
+		pInvCels = LoadCel("data\\inv\\inv_rog", static_cast<uint16_t>(SidePanelSize.width));
 		break;
 	case HeroClass::Sorcerer:
-		pInvCels = LoadCel("data\\inv\\inv_sor.cel", static_cast<uint16_t>(SidePanelSize.width));
+		pInvCels = LoadCel("data\\inv\\inv_sor", static_cast<uint16_t>(SidePanelSize.width));
 		break;
 	case HeroClass::Monk:
-		pInvCels = LoadCel(!gbIsSpawn ? "data\\inv\\inv_sor.cel" : "data\\inv\\inv.cel", static_cast<uint16_t>(SidePanelSize.width));
+		pInvCels = LoadCel(!gbIsSpawn ? "data\\inv\\inv_sor" : "data\\inv\\inv", static_cast<uint16_t>(SidePanelSize.width));
 		break;
 	}
 }

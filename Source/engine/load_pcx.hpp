@@ -7,6 +7,12 @@
 #include "engine/clx_sprite.hpp"
 #include "utils/stdcompat/optional.hpp"
 
+#ifdef UNPACKED_MPQS
+#define DEVILUTIONX_PCX_EXT ".clx"
+#else
+#define DEVILUTIONX_PCX_EXT ".pcx"
+#endif
+
 namespace devilution {
 
 /**
@@ -18,7 +24,7 @@ namespace devilution {
  * @param outPalette
  * @return OptionalOwnedClxSpriteList
  */
-OptionalOwnedClxSpriteList LoadPcxSpriteList(const char *filename, int numFramesOrFrameHeight, std::optional<uint8_t> transparentColor = std::nullopt, SDL_Color *outPalette = nullptr);
+OptionalOwnedClxSpriteList LoadPcxSpriteList(const char *filename, int numFramesOrFrameHeight, std::optional<uint8_t> transparentColor = std::nullopt, SDL_Color *outPalette = nullptr, bool logError = true);
 
 /**
  * @brief Loads a PCX file as a CLX sprite list with a single sprite.
@@ -28,9 +34,9 @@ OptionalOwnedClxSpriteList LoadPcxSpriteList(const char *filename, int numFrames
  * @param outPalette
  * @return OptionalOwnedClxSpriteList
  */
-inline OptionalOwnedClxSpriteList LoadPcx(const char *filename, std::optional<uint8_t> transparentColor = std::nullopt, SDL_Color *outPalette = nullptr)
+inline OptionalOwnedClxSpriteList LoadPcx(const char *filename, std::optional<uint8_t> transparentColor = std::nullopt, SDL_Color *outPalette = nullptr, bool logError = true)
 {
-	return LoadPcxSpriteList(filename, 1, transparentColor, outPalette);
+	return LoadPcxSpriteList(filename, 1, transparentColor, outPalette, logError);
 }
 
 } // namespace devilution

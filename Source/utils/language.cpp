@@ -326,7 +326,7 @@ void LanguageInitialize()
 	translationKeys = nullptr;
 	translationValues = nullptr;
 
-	if (IsSmallFontTall() && !font_mpq) {
+	if (IsSmallFontTall() && !HaveExtraFonts()) {
 		UiErrorOkDialog(
 		    "Missing fonts.mpq",
 		    StrCat("fonts.mpq is required for locale \"",
