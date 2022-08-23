@@ -166,6 +166,10 @@ if(MSVC AND NOT CMAKE_BUILD_TYPE STREQUAL "Debug" AND NOT DISABLE_LTO)
   set(BUILD_TESTING OFF)
 endif()
 
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+  add_definitions(-D_DEBUG)
+endif()
+
 # Note: `CMAKE_CROSSCOMPILING` is only available after the `project` call.
 if(CMAKE_CROSSCOMPILING)
   set(BUILD_TESTING OFF)
