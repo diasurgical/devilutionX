@@ -23,7 +23,12 @@ msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:7
 msgid "Game Design"
-msgstr "Дизайн Гри"
+msgstr ""
+"Переклад українською\n"
+"\n"
+"Олександр \"tsunami_state\" Калько\n"
+"\n"
+"Дизайн Гри"
 
 #: Source/DiabloUI/credits_lines.cpp:10
 msgid "Senior Designers"
@@ -1197,7 +1202,7 @@ msgstr "Пишіть про помилки на https://github.com/diasurgical/d
 
 #: Source/diablo.cpp:966
 msgid "Please update devilutionx.mpq and fonts.mpq to the latest version"
-msgstr ""
+msgstr "Будь ласка, оновіть devilutionx.mpq та fonts.mpq до останньої версії"
 
 #: Source/diablo.cpp:968
 msgid ""
@@ -1211,7 +1216,7 @@ msgstr ""
 
 #: Source/diablo.cpp:972
 msgid "Please update fonts.mpq to the latest version"
-msgstr ""
+msgstr "Будь ласка, оновіть fonts.mpq до останньої версії"
 
 #: Source/diablo.cpp:1283
 msgid "-- Network timeout --"
@@ -4002,7 +4007,7 @@ msgstr "Активуйте щоб використати"
 msgid "Select from spell book, then"
 msgstr "Виберіть з книги чар, потім"
 
-#: Source/items.cpp:1768
+#: Source/items.cpp:1772
 msgid "cast to read"
 msgstr "зачаруйте чари щоб прочитати"
 
@@ -4010,21 +4015,21 @@ msgstr "зачаруйте чари щоб прочитати"
 msgid "Activate to read"
 msgstr "Активуйте щоб прочитати"
 
-#: Source/items.cpp:1791
+#: Source/items.cpp:1795
 msgid "{} to view"
-msgstr "Активуйте щоб оглянути"
+msgstr "{} щоб оглянути"
 
-#: Source/items.cpp:1797
+#: Source/items.cpp:1801
 msgid "{} to use"
-msgstr "{:+d} до сили"
+msgstr "{} щоб використати"
 
-#: Source/items.cpp:1800
+#: Source/items.cpp:1804
 msgid "Select from spell book, then {} to read"
-msgstr "Виберіть з книги чар, потім"
+msgstr "Виберіть з книги чар, потім {}, щоб прочитати"
 
-#: Source/items.cpp:1802
+#: Source/items.cpp:1806
 msgid "{} to read"
-msgstr "Активуйте щоб прочитати"
+msgstr "{} щоб прочитати"
 
 #: Source/items.cpp:1809
 msgctxt "player"
@@ -5757,8 +5762,6 @@ msgstr "Пробуєте кинути предмет що на підлозі?"
 
 #: Source/msg.cpp:1150 Source/msg.cpp:1189 Source/msg.cpp:1330
 #: Source/msg.cpp:1366
-#, fuzzy
-#| msgid "{:s} has cast an illegal spell."
 msgid "{:s} has cast an invalid spell."
 msgstr "{:s} зворожував заборонені чари."
 
@@ -6400,7 +6403,7 @@ msgstr ""
 
 #: Source/options.cpp:922
 msgid "Zoom on when enabled."
-msgstr ""
+msgstr "Коли ввімкнено, наближує екран гри."
 
 #: Source/options.cpp:923
 msgid "Color Cycling"
@@ -6594,18 +6597,12 @@ msgstr ""
 "Еліксири автоматично збираються коли гравець знаходиться близько до них."
 
 #: Source/options.cpp:996
-#, fuzzy
-#| msgid "Auto Gold Pickup"
 msgid "Auto Oil Pickup"
-msgstr "Автопідбір Золота"
+msgstr "Автопідбір Масел"
 
 #: Source/options.cpp:996
-#, fuzzy
-#| msgid ""
-#| "Elixirs are automatically collected when in close proximity to the player."
 msgid "Oils are automatically collected when in close proximity to the player."
-msgstr ""
-"Еліксири автоматично збираються коли гравець знаходиться близько до них."
+msgstr "Масла автоматично збираються коли гравець знаходиться близько до них."
 
 #: Source/options.cpp:997
 msgid "Auto Pickup in Town"
@@ -11517,33 +11514,3 @@ msgstr "Вбитий Житель"
 #: Source/utils/format_int.cpp:29
 msgid ","
 msgstr ","
-
-#~ msgid "version {:s}"
-#~ msgstr "версія {:s}"
-
-#~ msgid "recover life"
-#~ msgstr "відновлює життя"
-
-#~ msgid "deadly heal"
-#~ msgstr "смертельне відновлення"
-
-#~ msgid "decrease strength"
-#~ msgstr "знижує силу"
-
-#~ msgid "decrease dexterity"
-#~ msgstr "знижує спритність"
-
-#~ msgid "decrease vitality"
-#~ msgstr "живучість"
-
-#~ msgid "you can't heal"
-#~ msgstr "ти не можеш цілитися"
-
-#~ msgid "hit monster doesn't heal"
-#~ msgstr "вдарений монстр не цілиться"
-
-#~ msgid "Faster attack swing"
-#~ msgstr "Швидший змах атаки"
-
-#~ msgid "see with infravision"
-#~ msgstr "бачить інфрабаченням"
