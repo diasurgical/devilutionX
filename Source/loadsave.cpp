@@ -1934,26 +1934,24 @@ void LoadHotkeys()
 	myPlayer._pRSplType = static_cast<spell_type>(file.NextLE<uint8_t>());
 }
 
-void SaveHotkeys(MpqWriter &saveWriter)
+void SaveHotkeys(MpqWriter &saveWriter, Player &player)
 {
-	Player &myPlayer = *MyPlayer;
-
 	SaveHelper file(saveWriter, "hotkeys", HotkeysSize());
 
 	// Write the number of spell hotkeys
 	file.WriteLE<uint8_t>(static_cast<uint8_t>(NumHotkeys));
 
 	// Write the spell hotkeys
-	for (auto &spellId : myPlayer._pSplHotKey) {
+	for (auto &spellId : player._pSplHotKey) {
 		file.WriteLE<int32_t>(spellId);
 	}
-	for (auto &spellType : myPlayer._pSplTHotKey) {
+	for (auto &spellType : player._pSplTHotKey) {
 		file.WriteLE<uint8_t>(spellType);
 	}
 
 	// Write the selected spell last
-	file.WriteLE<int32_t>(myPlayer._pRSpell);
-	file.WriteLE<uint8_t>(myPlayer._pRSplType);
+	file.WriteLE<int32_t>(player._pRSpell);
+	file.WriteLE<uint8_t>(player._pRSplType);
 }
 
 void LoadHeroItems(Player &player)

@@ -478,7 +478,7 @@ void pfile_write_hero(MpqWriter &saveWriter, bool writeGameData)
 	PackPlayer(&pkplr, myPlayer, !gbIsMultiplayer, false);
 	EncodeHero(saveWriter, &pkplr);
 	if (!gbVanilla) {
-		SaveHotkeys(saveWriter);
+		SaveHotkeys(saveWriter, myPlayer);
 		SaveHeroItems(saveWriter, myPlayer);
 	}
 }
@@ -643,7 +643,7 @@ bool pfile_ui_save_create(_uiheroinfo *heroinfo)
 	EncodeHero(saveWriter, &pkplr);
 	Game2UiPlayer(player, heroinfo, false);
 	if (!gbVanilla) {
-		SaveHotkeys(saveWriter);
+		SaveHotkeys(saveWriter, player);
 		SaveHeroItems(saveWriter, player);
 	}
 
