@@ -1934,7 +1934,7 @@ void LoadHotkeys()
 	myPlayer._pRSplType = static_cast<spell_type>(file.NextLE<uint8_t>());
 }
 
-void SaveHotkeys(MpqWriter &saveWriter, Player &player)
+void SaveHotkeys(MpqWriter &saveWriter, const Player &player)
 {
 	SaveHelper file(saveWriter, "hotkeys", HotkeysSize());
 
