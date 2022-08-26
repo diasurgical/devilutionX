@@ -135,16 +135,12 @@ void UpdateMissileRendererData(Missile &m)
 
 	float fProgress = gfProgressToNextGameTick;
 	Displacement velocity = m.position.velocity * fProgress;
-	Displacement traveled = m.position.traveled + velocity;
-
-	int mx = traveled.deltaX >> 16;
-	int my = traveled.deltaY >> 16;
-	int dx = (mx + 2 * my) / 64;
-	int dy = (2 * my - mx) / 64;
+	Displacement pixelsTravelled = (m.position.traveled + velocity) >> 16;
+	Displacement tileOffset = pixelsTravelled.screenToMissile();
 
 	// calculcate the future missile position
-	m.position.tileForRendering = m.position.start + Displacement { dx, dy };
-	m.position.offsetForRendering = { mx + (dy * 32) - (dx * 32), my - (dx * 16) - (dy * 16) };
+	m.position.tileForRendering = m.position.start + tileOffset;
+	m.position.offsetForRendering = pixelsTravelled + tileOffset.worldToScreen();
 
 	// In some cases this calculcated position is invalid.
 	// For example a missile shouldn't move inside a wall.
@@ -172,15 +168,11 @@ void UpdateMissileRendererData(Missile &m)
 		}
 
 		velocity = m.position.velocity * fProgress;
-		traveled = m.position.traveled + velocity;
+		pixelsTravelled = (m.position.traveled + velocity) >> 16;
+		tileOffset = pixelsTravelled.screenToMissile();
 
-		mx = traveled.deltaX >> 16;
-		my = traveled.deltaY >> 16;
-		dx = (mx + 2 * my) / 64;
-		dy = (2 * my - mx) / 64;
-
-		m.position.tileForRendering = m.position.start + Displacement { dx, dy };
-		m.position.offsetForRendering = { mx + (dy * 32) - (dx * 32), my - (dx * 16) - (dy * 16) };
+		m.position.tileForRendering = m.position.start + tileOffset;
+		m.position.offsetForRendering = pixelsTravelled + tileOffset.worldToScreen();
 	}
 }
 
