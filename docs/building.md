@@ -329,7 +329,7 @@ pkgman install cmake_x86 devel:libsdl2_x86 devel:libsodium_x86 devel:libpng_x86 
 ### Installing dependencies on 64 bit Haiku
 
 ```
-pkgman install cmake devel:libsdl2 devel:libsodium devel:libpng devel:bzip2
+pkgman install cmake libsdl2_devel libsodium_devel libpng16_devel bzip2_devel gtest_devel gettext getconf
 ```
 
 ### Compiling on 32 bit Haiku
