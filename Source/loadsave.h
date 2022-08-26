@@ -33,7 +33,7 @@ void RemoveEmptyInventory(Player &player);
  * @param firstflag Can be set to false if we are simply reloading the current game
  */
 void LoadGame(bool firstflag);
-void SaveHotkeys(MpqWriter &saveWriter);
+void SaveHotkeys(MpqWriter &saveWriter, const Player &player);
 void SaveHeroItems(MpqWriter &saveWriter, Player &player);
 void SaveGameData(MpqWriter &saveWriter);
 void SaveGame();
