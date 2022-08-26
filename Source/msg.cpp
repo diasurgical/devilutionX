@@ -2554,6 +2554,7 @@ void DeltaLoadLevel()
 				    deltaLevel.item[i].dwBuff);
 			} else {
 				RecreateItem(
+				    *MyPlayer,
 				    item,
 				    deltaLevel.item[i].wIndx,
 				    deltaLevel.item[i].wCI,

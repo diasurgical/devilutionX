@@ -354,7 +354,7 @@ TEST_F(PackTest, UnPackItem_diablo)
 	MyPlayer->_pMaxHPBase = 125 << 6;
 
 	for (size_t i = 0; i < sizeof(PackedDiabloItems) / sizeof(*PackedDiabloItems); i++) {
-		UnPackItem(PackedDiabloItems[i], id, false);
+		UnPackItem(PackedDiabloItems[i], *MyPlayer, id, false);
 		CompareItems(id, DiabloItems[i]);
 
 		PackItem(is, id, gbIsHellfire);
@@ -372,7 +372,7 @@ TEST_F(PackTest, UnPackItem_diablo_unique_bug)
 	gbIsSpawn = false;
 
 	Item id;
-	UnPackItem(pkItemBug, id, false);
+	UnPackItem(pkItemBug, *MyPlayer, id, false);
 	ASSERT_STREQ(id._iIName, "Veil of Steel");
 	ASSERT_EQ(id._itype, ItemType::Helm);
 	ASSERT_EQ(id._iClass, ICLASS_ARMOR);
@@ -425,7 +425,7 @@ TEST_F(PackTest, UnPackItem_spawn)
 	MyPlayer->_pMaxHPBase = 125 << 6;
 
 	for (size_t i = 0; i < sizeof(PackedSpawnItems) / sizeof(*PackedSpawnItems); i++) {
-		UnPackItem(PackedSpawnItems[i], id, false);
+		UnPackItem(PackedSpawnItems[i], *MyPlayer, id, false);
 		CompareItems(id, SpawnItems[i]);
 
 		PackItem(is, id, gbIsHellfire);
@@ -469,7 +469,7 @@ TEST_F(PackTest, UnPackItem_diablo_multiplayer)
 	MyPlayer->_pMaxHPBase = 125 << 6;
 
 	for (size_t i = 0; i < sizeof(PackedDiabloMPItems) / sizeof(*PackedDiabloMPItems); i++) {
-		UnPackItem(PackedDiabloMPItems[i], id, false);
+		UnPackItem(PackedDiabloMPItems[i], *MyPlayer, id, false);
 		CompareItems(id, DiabloMPItems[i]);
 
 		PackItem(is, id, gbIsHellfire);
@@ -682,7 +682,7 @@ TEST_F(PackTest, UnPackItem_hellfire)
 	MyPlayer->_pMaxHPBase = 125 << 6;
 
 	for (size_t i = 0; i < sizeof(PackedHellfireItems) / sizeof(*PackedHellfireItems); i++) {
-		UnPackItem(PackedHellfireItems[i], id, true);
+		UnPackItem(PackedHellfireItems[i], *MyPlayer, id, true);
 		CompareItems(id, HellfireItems[i]);
 
 		PackItem(is, id, gbIsHellfire);
@@ -700,7 +700,7 @@ TEST_F(PackTest, UnPackItem_diablo_strip_hellfire_items)
 	gbIsMultiplayer = false;
 	gbIsSpawn = false;
 
-	UnPackItem(is, id, true);
+	UnPackItem(is, *MyPlayer, id, true);
 
 	ASSERT_EQ(id._itype, ItemType::None);
 }
@@ -710,7 +710,7 @@ TEST_F(PackTest, UnPackItem_empty)
 	ItemPack is = { 0, 0, 0xFFFF, 0, 0, 0, 0, 0, 0, 0 };
 	Item id;
 
-	UnPackItem(is, id, false);
+	UnPackItem(is, *MyPlayer, id, false);
 
 	ASSERT_EQ(id._itype, ItemType::None);
 }
@@ -732,7 +732,7 @@ TEST_F(PackTest, PackItem_empty)
 static void compareGold(const ItemPack &is, int iCurs)
 {
 	Item id;
-	UnPackItem(is, id, false);
+	UnPackItem(is, *MyPlayer, id, false);
 	ASSERT_EQ(id._iCurs, iCurs);
 	ASSERT_EQ(id.IDidx, IDI_GOLD);
 	// Copy the value out before comparing to avoid loading a misaligned address.
@@ -769,7 +769,7 @@ TEST_F(PackTest, UnPackItem_ear)
 	ItemPack is = { 1633955154, 17509, 23, 111, 103, 117, 101, 68, 19843, 0 };
 	Item id;
 
-	UnPackItem(is, id, false);
+	UnPackItem(is, *MyPlayer, id, false);
 	ASSERT_STREQ(id._iName, "Ear of Dead-RogueDM");
 	ASSERT_EQ(id._ivalue, 3);
 

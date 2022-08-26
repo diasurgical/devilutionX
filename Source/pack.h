@@ -102,6 +102,6 @@ void PackItem(ItemPack &packedItem, const Item &item, bool isHellfire);
  * @param item The destination item
  * @param isHellfire Whether the item is from Hellfire or not
  */
-void UnPackItem(const ItemPack &packedItem, Item &item, bool isHellfire);
+void UnPackItem(const ItemPack &packedItem, const Player &player, Item &item, bool isHellfire);
 
 } // namespace devilution

@@ -142,7 +142,7 @@ void PackPlayer(PlayerPack *pPack, const Player &player, bool manashield, bool n
 		pPack->pManaShield = 0;
 }
 
-void UnPackItem(const ItemPack &packedItem, Item &item, bool isHellfire)
+void UnPackItem(const ItemPack &packedItem, const Player &player, Item &item, bool isHellfire)
 {
 	auto idx = static_cast<_item_indexes>(SDL_SwapLE16(packedItem.idx));
 
@@ -172,7 +172,7 @@ void UnPackItem(const ItemPack &packedItem, Item &item, bool isHellfire)
 		    SDL_SwapLE32(packedItem.dwBuff));
 	} else {
 		item = {};
-		RecreateItem(item, idx, SDL_SwapLE16(packedItem.iCreateInfo), SDL_SwapLE32(packedItem.iSeed), SDL_SwapLE16(packedItem.wValue), isHellfire);
+		RecreateItem(player, item, idx, SDL_SwapLE16(packedItem.iCreateInfo), SDL_SwapLE32(packedItem.iSeed), SDL_SwapLE16(packedItem.wValue), isHellfire);
 		item._iMagical = static_cast<item_quality>(packedItem.bId >> 1);
 		item._iIdentified = (packedItem.bId & 1) != 0;
 		item._iDurability = packedItem.bDur;
@@ -260,14 +260,14 @@ bool UnPackPlayer(const PlayerPack *pPack, Player &player, bool netSync)
 	for (int i = 0; i < NUM_INVLOC; i++) {
 		auto packedItem = pPack->InvBody[i];
 		bool isHellfire = netSync ? ((packedItem.dwBuff & CF_HELLFIRE) != 0) : (pPack->bIsHellfire != 0);
-		UnPackItem(packedItem, player.InvBody[i], isHellfire);
+		UnPackItem(packedItem, player, player.InvBody[i], isHellfire);
 	}
 
 	player._pNumInv = pPack->_pNumInv;
 	for (int i = 0; i < player._pNumInv; i++) {
 		auto packedItem = pPack->InvList[i];
 		bool isHellfire = netSync ? ((packedItem.dwBuff & CF_HELLFIRE) != 0) : (pPack->bIsHellfire != 0);
-		UnPackItem(packedItem, player.InvList[i], isHellfire);
+		UnPackItem(packedItem, player, player.InvList[i], isHellfire);
 	}
 
 	for (int i = 0; i < InventoryGridCells; i++)
@@ -278,7 +278,7 @@ bool UnPackPlayer(const PlayerPack *pPack, Player &player, bool netSync)
 	for (int i = 0; i < MaxBeltItems; i++) {
 		auto packedItem = pPack->SpdList[i];
 		bool isHellfire = netSync ? ((packedItem.dwBuff & CF_HELLFIRE) != 0) : (pPack->bIsHellfire != 0);
-		UnPackItem(packedItem, player.SpdList[i], isHellfire);
+		UnPackItem(packedItem, player, player.SpdList[i], isHellfire);
 	}
 
 	CalcPlrInv(player, false);
