@@ -477,12 +477,9 @@ bool MoveMissile(Missile &missile, const std::function<bool(Point)> &checkTile, 
 			traveled += incVelocity;
 
 			// calculate in-between tile
-			int mx = traveled.deltaX >> 16;
-			int my = traveled.deltaY >> 16;
-			int dx = (mx + 2 * my) / 64;
-			int dy = (2 * my - mx) / 64;
-
-			auto tile = missile.position.start + Displacement { dx, dy };
+			Displacement pixelsTraveled = traveled >> 16;
+			Displacement tileOffset = pixelsTraveled.screenToMissile();
+			Point tile = missile.position.start + tileOffset;
 
 			// we are at the original calculated position => resume with normal logic
 			if (tile == missile.position.tile)
