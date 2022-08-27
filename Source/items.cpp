@@ -2350,7 +2350,6 @@ void InitItems()
 
 	ShowUniqueItemInfoBox = false;
 
-	// BUGFIX: item get records not reset when resetting items (fixed).
 	initItemGetRecords();
 }
 
@@ -4367,6 +4366,7 @@ bool GetItemRecord(int nSeed, uint16_t wCI, int nIndex)
 
 	for (int i = 0; i < gnNumGetRecords; i++) {
 		if (ticks - itemrecord[i].dwTimestamp > 6000) {
+			// BUGFIX: loot actions for multiple quest items with same seed (e.g. blood stone) performed within less then 6 seconds will be ignored.
 			NextItemRecord(i);
 			i--;
 		} else if (nSeed == itemrecord[i].nSeed && wCI == itemrecord[i].wCI && nIndex == itemrecord[i].nIndex) {

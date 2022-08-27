@@ -2259,7 +2259,6 @@ void FallenAi(Monster &monster)
 			for (int x = -rad; x <= rad; x++) {
 				int xpos = monster.position.tile.x + x;
 				int ypos = monster.position.tile.y + y;
-				// BUGFIX: incorrect check of offset against limits of the dungeon (fixed)
 				if (InDungeonBounds({ xpos, ypos })) {
 					int m = dMonster[xpos][ypos];
 					if (m <= 0)
@@ -3967,6 +3966,7 @@ void ProcessMonsters()
 
 		if ((monster.flags & MFLAG_TARGETS_MONSTER) != 0) {
 			assert(monster.enemy >= 0 && monster.enemy < MaxMonsters);
+			// BUGFIX: enemy target may be dead at time of access, thus reading garbage data from `Monsters[monster.enemy].position.future`.
 			monster.position.last = Monsters[monster.enemy].position.future;
 			monster.enemyPosition = monster.position.last;
 		} else {

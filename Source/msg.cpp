@@ -1570,7 +1570,7 @@ size_t OnKillGolem(const TCmd *pCmd, size_t pnum)
 			Monster &monster = Monsters[pnum];
 			if (player.isOnActiveLevel())
 				M_SyncStartKill(monster, position, player);
-			delta_kill_monster(monster, position, player);
+			delta_kill_monster(monster, position, player); // BUGFIX: should be p->wParam1, plrlevel will be incorrect if golem is killed because player changed levels
 		}
 	} else {
 		SendPacket(pnum, &message, sizeof(message));
@@ -2293,6 +2293,7 @@ void delta_kill_monster(const Monster &monster, Point position, const Player &pl
 	sgbDeltaChanged = true;
 	DMonsterStr *pD = &GetDeltaLevel(player).monster[monster.getId()];
 	pD->position = position;
+	// BUGFIX: should only sync monster direction if bLevel is same as currlevel.
 	pD->_mdir = monster.direction;
 	pD->hitPoints = 0;
 }

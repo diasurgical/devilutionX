@@ -281,7 +281,7 @@ struct Miniset {
 
 	/**
 	 * @param position Coordinates of the dungeon tile to check
-	 * @param respectProtected Match bug from Crypt levels
+	 * @param respectProtected Match bug from Crypt levels if false
 	 */
 	bool matches(Point position, bool respectProtected = true) const
 	{
