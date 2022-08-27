@@ -76,7 +76,7 @@ Want to compile the program by yourself? Great! Simply follow the [build instruc
 
 # Legal
 
-DevilutionX is released to the Public Domain. The documentation and functionality provided by DevilutionX may only be utilized with assets provided by the ownership of Diablo.
+DevilutionX is made publicly available and released under the Sustainable Use License (see [LICENSE](LICENSE.md))
 
 The source code in this repository is for non-commercial use only. If you use the source code you may not charge others for access to it or any derivative work thereof.
 

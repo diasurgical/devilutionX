@@ -1457,7 +1457,7 @@ void CheckInvSwap(Player &player, inv_body_loc bLoc, int idx, uint16_t wCI, int 
 	Item &item = player.InvBody[bLoc];
 
 	item = {};
-	RecreateItem(item, idx, wCI, seed, 0, (dwBuff & CF_HELLFIRE) != 0);
+	RecreateItem(player, item, idx, wCI, seed, 0, (dwBuff & CF_HELLFIRE) != 0);
 
 	if (bId) {
 		item._iIdentified = true;
@@ -1482,7 +1482,7 @@ void inv_update_rem_item(Player &player, inv_body_loc iv)
 void CheckInvSwap(Player &player, int invGridIndex, int idx, uint16_t wCI, int seed, bool bId, uint32_t dwBuff)
 {
 	Item item = {};
-	RecreateItem(item, idx, wCI, seed, 0, (dwBuff & CF_HELLFIRE) != 0);
+	RecreateItem(player, item, idx, wCI, seed, 0, (dwBuff & CF_HELLFIRE) != 0);
 
 	if (bId) {
 		item._iIdentified = true;
@@ -1541,7 +1541,7 @@ void CheckBeltSwap(Player &player, int beltIndex, int idx, uint16_t wCI, int see
 	Item &item = player.SpdList[beltIndex];
 
 	item = {};
-	RecreateItem(item, idx, wCI, seed, 0, (dwBuff & CF_HELLFIRE) != 0);
+	RecreateItem(player, item, idx, wCI, seed, 0, (dwBuff & CF_HELLFIRE) != 0);
 
 	if (bId) {
 		item._iIdentified = true;
@@ -1851,7 +1851,7 @@ int SyncDropItem(Point position, int idx, uint16_t icreateinfo, int iseed, int i
 	if (idx == IDI_EAR) {
 		RecreateEar(item, icreateinfo, iseed, id, dur, mdur, ch, mch, ivalue, ibuff);
 	} else {
-		RecreateItem(item, idx, icreateinfo, iseed, ivalue, (ibuff & CF_HELLFIRE) != 0);
+		RecreateItem(*MyPlayer, item, idx, icreateinfo, iseed, ivalue, (ibuff & CF_HELLFIRE) != 0);
 		if (id != 0)
 			item._iIdentified = true;
 		item._iDurability = dur;
@@ -2039,7 +2039,7 @@ Item &GetInventoryItem(Player &player, int location)
 	return player.SpdList[location - INVITEM_BELT_FIRST];
 }
 
-bool UseInvItem(int pnum, int cii)
+bool UseInvItem(size_t pnum, int cii)
 {
 	Player &player = Players[pnum];
 

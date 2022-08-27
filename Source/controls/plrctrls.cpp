@@ -373,7 +373,7 @@ void CheckPlayerNearby()
 	if (myPlayer.friendlyMode && spl != SPL_RESURRECT && spl != SPL_HEALOTHER)
 		return;
 
-	for (int i = 0; i < MAX_PLRS; i++) {
+	for (size_t i = 0; i < Players.size(); i++) {
 		const Player &player = Players[i];
 		if (&player == MyPlayer)
 			continue;
@@ -1266,7 +1266,7 @@ bool IsPathBlocked(Point position, Direction dir)
 	return !PosOkPlayer(myPlayer, leftStep) && !PosOkPlayer(myPlayer, rightStep);
 }
 
-void WalkInDir(int playerId, AxisDirection dir)
+void WalkInDir(size_t playerId, AxisDirection dir)
 {
 	Player &player = Players[playerId];
 
@@ -1356,7 +1356,7 @@ void ProcessLeftStickOrDPadGameUI()
 		handler(GetLeftStickOrDpadDirection(true));
 }
 
-void Movement(int playerId)
+void Movement(size_t playerId)
 {
 	if (InGameMenu()
 	    || IsControllerButtonPressed(ControllerButton_BUTTON_START)

@@ -935,7 +935,7 @@ std::string DebugCmdQuestInfo(const string_view parameter)
 std::string DebugCmdPlayerInfo(const string_view parameter)
 {
 	int playerId = atoi(parameter.data());
-	if (playerId < 0 || playerId >= MAX_PLRS)
+	if (static_cast<size_t>(playerId) >= Players.size())
 		return "My friend, we need a valid playerId.";
 	Player &player = Players[playerId];
 	if (!player.plractive)

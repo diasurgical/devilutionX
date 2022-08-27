@@ -135,16 +135,12 @@ void UpdateMissileRendererData(Missile &m)
 
 	float fProgress = gfProgressToNextGameTick;
 	Displacement velocity = m.position.velocity * fProgress;
-	Displacement traveled = m.position.traveled + velocity;
-
-	int mx = traveled.deltaX >> 16;
-	int my = traveled.deltaY >> 16;
-	int dx = (mx + 2 * my) / 64;
-	int dy = (2 * my - mx) / 64;
+	Displacement pixelsTravelled = (m.position.traveled + velocity) >> 16;
+	Displacement tileOffset = pixelsTravelled.screenToMissile();
 
 	// calculcate the future missile position
-	m.position.tileForRendering = m.position.start + Displacement { dx, dy };
-	m.position.offsetForRendering = { mx + (dy * 32) - (dx * 32), my - (dx * 16) - (dy * 16) };
+	m.position.tileForRendering = m.position.start + tileOffset;
+	m.position.offsetForRendering = pixelsTravelled + tileOffset.worldToScreen();
 
 	// In some cases this calculcated position is invalid.
 	// For example a missile shouldn't move inside a wall.
@@ -172,15 +168,11 @@ void UpdateMissileRendererData(Missile &m)
 		}
 
 		velocity = m.position.velocity * fProgress;
-		traveled = m.position.traveled + velocity;
+		pixelsTravelled = (m.position.traveled + velocity) >> 16;
+		tileOffset = pixelsTravelled.screenToMissile();
 
-		mx = traveled.deltaX >> 16;
-		my = traveled.deltaY >> 16;
-		dx = (mx + 2 * my) / 64;
-		dy = (2 * my - mx) / 64;
-
-		m.position.tileForRendering = m.position.start + Displacement { dx, dy };
-		m.position.offsetForRendering = { mx + (dy * 32) - (dx * 32), my - (dx * 16) - (dy * 16) };
+		m.position.tileForRendering = m.position.start + tileOffset;
+		m.position.offsetForRendering = pixelsTravelled + tileOffset.worldToScreen();
 	}
 }
 
@@ -496,7 +488,7 @@ void DrawPlayer(const Surface &out, const Player &player, Point tilePosition, Po
 
 	Point spriteBufferPosition = targetBufferPosition - Displacement { CalculateWidth2(sprite.width()), 0 };
 
-	if (pcursplr >= 0 && pcursplr < MAX_PLRS && &player == &Players[pcursplr])
+	if (static_cast<size_t>(pcursplr) < Players.size() && &player == &Players[pcursplr])
 		ClxDrawOutlineSkipColorZero(out, 165, spriteBufferPosition, sprite);
 
 	if (&player == MyPlayer) {
@@ -799,7 +791,7 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 		DrawDeadPlayer(out, tilePosition, targetBufferPosition);
 	}
 	int8_t playerId = dPlayer[tilePosition.x][tilePosition.y];
-	if (playerId > 0 && playerId <= MAX_PLRS) {
+	if (static_cast<size_t>(playerId - 1) < Players.size()) {
 		DrawPlayerHelper(out, Players[playerId - 1], tilePosition, targetBufferPosition);
 	}
 	if (dMonster[tilePosition.x][tilePosition.y] != 0) {

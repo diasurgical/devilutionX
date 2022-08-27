@@ -661,6 +661,10 @@ void Theme_Treasure(int t)
 					CreateRndItem({ xp, yp }, false, false, true);
 					ItemNoFlippy();
 				}
+				// BUGFIX: the following code is likely not working as intended.
+				//    `rv >= treasureType - 2` is not connected to either
+				//    of the item creation branches above, thus the last (unrelated)
+				//    item spawned/dropped on ground would be halved in value.
 				if (rv >= treasureType - 2 && leveltype != DTYPE_CATHEDRAL) {
 					Item &item = Items[ActiveItems[ActiveItemCount - 1]];
 					if (item.IDidx == IDI_GOLD) {

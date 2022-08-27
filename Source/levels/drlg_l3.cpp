@@ -1395,6 +1395,7 @@ bool PlaceMiniSetRandom(const Miniset &miniset, int rndper)
 		for (int sx = 0; sx < DMAXX - sw; sx++) {
 			if (!miniset.matches({ sx, sy }))
 				continue;
+			// BUGFIX: This should not be applied to Nest levels
 			if (!CanReplaceTile(miniset.replace[0][0], { sx, sy }))
 				continue;
 			if (GenerateRnd(100) >= rndper)

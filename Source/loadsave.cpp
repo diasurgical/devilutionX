@@ -1934,26 +1934,24 @@ void LoadHotkeys()
 	myPlayer._pRSplType = static_cast<spell_type>(file.NextLE<uint8_t>());
 }
 
-void SaveHotkeys(MpqWriter &saveWriter)
+void SaveHotkeys(MpqWriter &saveWriter, const Player &player)
 {
-	Player &myPlayer = *MyPlayer;
-
 	SaveHelper file(saveWriter, "hotkeys", HotkeysSize());
 
 	// Write the number of spell hotkeys
 	file.WriteLE<uint8_t>(static_cast<uint8_t>(NumHotkeys));
 
 	// Write the spell hotkeys
-	for (auto &spellId : myPlayer._pSplHotKey) {
+	for (auto &spellId : player._pSplHotKey) {
 		file.WriteLE<int32_t>(spellId);
 	}
-	for (auto &spellType : myPlayer._pSplTHotKey) {
+	for (auto &spellType : player._pSplTHotKey) {
 		file.WriteLE<uint8_t>(spellType);
 	}
 
 	// Write the selected spell last
-	file.WriteLE<int32_t>(myPlayer._pRSpell);
-	file.WriteLE<uint8_t>(myPlayer._pRSplType);
+	file.WriteLE<int32_t>(player._pRSpell);
+	file.WriteLE<uint8_t>(player._pRSplType);
 }
 
 void LoadHeroItems(Player &player)
@@ -2171,8 +2169,8 @@ void LoadGame(bool firstflag)
 				dObject[i][j] = file.NextLE<int8_t>();
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
-			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
-				dLight[i][j] = file.NextLE<int8_t>();
+			for (int i = 0; i < MAXDUNX; i++)         // NOLINT(modernize-loop-convert)
+				dLight[i][j] = file.NextLE<int8_t>(); // BUGFIX: dLight got loaded already
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
 			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
@@ -2428,8 +2426,8 @@ void SaveGameData(MpqWriter &saveWriter)
 				file.WriteLE<int8_t>(dObject[i][j]);
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
-			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
-				file.WriteLE<int8_t>(dLight[i][j]);
+			for (int i = 0; i < MAXDUNX; i++)       // NOLINT(modernize-loop-convert)
+				file.WriteLE<int8_t>(dLight[i][j]); // BUGFIX: dLight got saved already
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
 			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)

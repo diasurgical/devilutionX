@@ -34,9 +34,9 @@ _music_id NextTrack()
 	case TMUSIC_CAVES:
 		return TMUSIC_HELL;
 	case TMUSIC_HELL:
-		return TMUSIC_NEST;
+		return gbIsHellfire ? TMUSIC_NEST : TMUSIC_INTRO;
 	case TMUSIC_NEST:
-		return TMUSIC_CRYPT;
+		return gbIsHellfire ? TMUSIC_CRYPT : TMUSIC_INTRO;
 	default:
 		return TMUSIC_INTRO;
 	}

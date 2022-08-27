@@ -1246,6 +1246,7 @@ void PlaceMiniSetRandom(const Miniset &miniset, int rndper)
 		for (int sx = 0; sx < DMAXX - sw; sx++) {
 			if (!miniset.matches({ sx, sy }, false))
 				continue;
+			// BUGFIX: This code is copied from Cave and should not be applied for crypt
 			if (!CanReplaceTile(miniset.replace[0][0], { sx, sy }))
 				continue;
 			if (GenerateRnd(100) >= rndper)
