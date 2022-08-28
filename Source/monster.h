@@ -195,7 +195,7 @@ struct Monster { // note: missing field _mAFNum
 	uint32_t rndItemSeed;
 	/** Seed used to determine AI behaviour/sync sounds in multiplayer games? */
 	uint32_t aiSeed;
-	uint16_t exp;
+
 	uint16_t toHit;
 	uint16_t toHitSpecial;
 	uint16_t resistance;
@@ -315,6 +315,29 @@ struct Monster { // note: missing field _mAFNum
 			return pgettext("monster", UniqueMonstersData[static_cast<int8_t>(uniqueType)].mName);
 
 		return pgettext("monster", data().name);
+	}
+
+	/**
+	 * @brief Calculates monster's experience points.
+	 * Fetches base exp value from @p MonstersData array.
+	 * @param difficulty - difficulty on which calculation is performed
+	 * @return Monster's experience points, including bonuses from difficulty and monster being unique
+	 */
+	unsigned int exp(_difficulty difficulty) const
+	{
+		unsigned int monsterExp = data().exp;
+
+		if (difficulty == DIFF_NIGHTMARE) {
+			monsterExp = 2 * (monsterExp + 1000);
+		} else if (difficulty == DIFF_HELL) {
+			monsterExp = 4 * (monsterExp + 1000);
+		}
+
+		if (isUnique()) {
+			monsterExp *= 2;
+		}
+
+		return monsterExp;
 	}
 
 	/**
