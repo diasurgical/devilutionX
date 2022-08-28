@@ -1745,8 +1745,7 @@ void printItemMiscKBM(const Item &item, const bool isOil, const bool isCastOnTar
 		PrintItemOil(item._iMiscId);
 		AddPanelString(_("Right-click to use"));
 	} else if (isCastOnTarget) {
-		AddPanelString(_("Right-click to read, then"));
-		AddPanelString(_("left-click to target"));
+		AddPanelString(_("Right-click to read, then\nleft-click to target"));
 	} else if (IsAnyOf(item._iMiscId, IMISC_BOOK, IMISC_NOTE, IMISC_SCROLL, IMISC_SCROLLT)) {
 		AddPanelString(_("Right-click to read"));
 	}
@@ -1764,8 +1763,7 @@ void printItemMiscVirtualGamepad(const Item &item, const bool isOil, bool isCast
 			AddPanelString(_("Activate to use"));
 		}
 	} else if (isCastOnTarget) {
-		AddPanelString(_("Select from spell book, then"));
-		AddPanelString(_("cast to read"));
+		AddPanelString(_("Select from spell book, then\ncast to read"));
 	} else {
 		AddPanelString(_("Activate to read"));
 	}
@@ -1799,7 +1797,7 @@ void printItemMiscGamepad(const Item &item, bool isOil, bool isCastOnTarget)
 	} else if (isCastOnTarget) {
 		AddPanelText(fmt::format(fmt::runtime(_("Select from spell book,\nthen {} to read")), castButton));
 	} else if (IsAnyOf(item._iMiscId, IMISC_BOOK, IMISC_NOTE, IMISC_SCROLL)) {
-		AddPanelString(fmt::format(fmt::runtime(_("Select from spell book, then {} to read")), castButton));
+		AddPanelString(fmt::format(fmt::runtime(_("Select from spell book,\nthen {} to read")), castButton));
 	} else if (IsAnyOf(item._iMiscId, IMISC_BOOK, IMISC_NOTE, IMISC_SCROLL, IMISC_SCROLLT)) {
 		AddPanelString(fmt::format(fmt::runtime(_("{} to read")), activateButton));
 	}
