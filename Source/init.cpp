@@ -23,6 +23,7 @@
 #include "utils/language.h"
 #include "utils/log.hpp"
 #include "utils/paths.h"
+#include "utils/str_split.hpp"
 #include "utils/ui_fwd.h"
 #include "utils/utf8.hpp"
 
@@ -93,8 +94,21 @@ std::vector<std::string> GetMPQSearchPaths()
 		paths.pop_back();
 
 #if defined(__unix__) && !defined(__ANDROID__)
-	paths.emplace_back("/usr/share/diasurgical/devilutionx/");
-	paths.emplace_back("/usr/local/share/diasurgical/devilutionx/");
+	// `XDG_DATA_HOME` is usually the root path of `paths::PrefPath()`, so we only
+	// add `XDG_DATA_DIRS`.
+	const char *xdgDataDirs = std::getenv("XDG_DATA_DIRS");
+	if (xdgDataDirs != nullptr) {
+		for (const string_view path : SplitByChar(xdgDataDirs, ':')) {
+			std::string fullPath(path);
+			if (!path.empty() && path.back() != '/')
+				fullPath += '/';
+			fullPath.append("diasurgical/devilutionx/");
+			paths.push_back(std::move(fullPath));
+		}
+	} else {
+		paths.emplace_back("/usr/local/share/diasurgical/devilutionx/");
+		paths.emplace_back("/usr/share/diasurgical/devilutionx/");
+	}
 #elif defined(NXDK)
 	paths.emplace_back("D:\\");
 #elif (defined(_WIN64) || defined(_WIN32)) && !defined(__UWP__) && !defined(NXDK)
