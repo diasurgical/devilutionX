@@ -3832,6 +3832,8 @@ bool Walk(Monster &monster, Direction md)
 	case Direction::NorthWest:
 		WalkNorthwards(monster, -1, 0, Direction::NorthWest);
 		break;
+	case Direction::NoDirection:
+		break;
 	}
 	return true;
 }

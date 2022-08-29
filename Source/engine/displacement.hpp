@@ -244,6 +244,8 @@ private:
 			return { 1, -1 };
 		case Direction::SouthEast:
 			return { 1, 0 };
+		case Direction::NoDirection:
+			return { 0, 0 };
 		default:
 			return { 0, 0 };
 		}
