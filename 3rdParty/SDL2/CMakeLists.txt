@@ -10,7 +10,7 @@ else()
   set(SDL_SHARED ON)
   set(SDL_STATIC OFF)
 endif()
-set(SDL_TEST OFF)
+set(SDL_TEST_ENABLED_BY_DEFAULT OFF)
 
 include(functions/FetchContent_MakeAvailableExcludeFromAll)
 include(FetchContent)
