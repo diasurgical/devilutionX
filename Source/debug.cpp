@@ -4,6 +4,8 @@
  * Implementation of debug functions.
  */
 
+#include "missiles.h"
+#include "objects.h"
 #ifdef _DEBUG
 
 #include <fstream>
@@ -984,6 +986,67 @@ std::string DebugCmdChangeTRN(const string_view parameter)
 	return out;
 }
 
+std::string DebugCmdOpenAllChests(const string_view /*parameter*/)
+{
+	int countOpened = 0;
+	for (int i = 0; i < ActiveObjectCount; i++) {
+		Object &o = Objects[ActiveObjects[i]];
+		if ((o.IsChest() || o.isSarcophagus()) && !o.isOpen()) {
+			OperateObject(*MyPlayer, o);
+			countOpened++;
+		}
+	}
+	return StrCat(countOpened, " opened");
+}
+
+std::string DebugCmdBreakAllBarrels(const string_view /*parameter*/)
+{
+	int countBroken = 0;
+	for (int i = 0; i < ActiveObjectCount; i++) {
+		Object &o = Objects[ActiveObjects[i]];
+		if (o.IsBarrel() && !o.IsBroken()) {
+			BreakObject(*MyPlayer, o);
+			countBroken++;
+		}
+	}
+	return StrCat(countBroken, " broken");
+}
+
+std::string DebugCmdKillAllMonsters(const string_view parameter)
+{
+	int countKilled = 0;
+	for (size_t i = 0; i < ActiveMonsterCount; i++) {
+		int mi = ActiveMonsters[i];
+		auto &monster = Monsters[mi];
+		if ((monster.hitPoints >> 6) <= 0)
+			continue;
+		if (monster.position.tile == GolemHoldingCell)
+			continue;
+		M_StartKill(monster, *MyPlayer);
+		countKilled++;
+	}
+	return StrCat(countKilled, " killed");
+}
+
+std::string DebugCmdClearLevel(const string_view parameter)
+{
+	std::string subcmd { parameter };
+	std::transform(subcmd.begin(), subcmd.end(), subcmd.begin(), ::tolower);
+	bool doAll = subcmd == "all";
+	std::string msg {};
+	if (doAll || subcmd == "chests")
+		msg += DebugCmdOpenAllChests("");
+	if (doAll || subcmd == "barrels")
+		msg += (msg.empty() ? "" : ", ") + DebugCmdBreakAllBarrels("");
+	if (doAll || subcmd == "monsters")
+		msg += (msg.empty() ? "" : ", ") + DebugCmdKillAllMonsters("");
+
+	if (msg.empty())
+		return "Type not recognized.\nPlease write 'clear {type}'.\nPossible values for {type}: all, chests, barrels, monsters";
+
+	return msg;
+}
+
 std::vector<DebugCmdItem> DebugCmdList = {
 	{ "help", "Prints help overview or help for a specific command.", "({command})", &DebugCmdHelp },
 	{ "give gold", "Fills the inventory with gold.", "", &DebugCmdGiveGoldCheat },
@@ -1021,6 +1084,7 @@ std::vector<DebugCmdItem> DebugCmdList = {
 	{ "playerinfo", "Shows info of player.", "{playerid}", &DebugCmdPlayerInfo },
 	{ "fps", "Toggles displaying FPS", "", &DebugCmdToggleFPS },
 	{ "trn", "Makes player use TRN {trn} - Write 'plr' before it to look in plrgfx\\ or 'mon' to look in monsters\\monsters\\ - example: trn plr infra is equal to 'plrgfx\\infra.trn'", "{trn}", &DebugCmdChangeTRN },
+	{ "clear", "Clears (kills, breaks or opens accordinly) all instances of the specified {type}.", "{type} is 'monsters', 'barrels', 'chests', or 'all')", &DebugCmdClearLevel },
 };
 
 } // namespace

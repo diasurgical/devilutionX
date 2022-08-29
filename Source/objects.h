@@ -191,6 +191,26 @@ struct Object {
 		return IsAnyOf(_otype, _object_id::OBJ_CHEST1, _object_id::OBJ_CHEST2, _object_id::OBJ_CHEST3, _object_id::OBJ_TCHEST1, _object_id::OBJ_TCHEST2, _object_id::OBJ_TCHEST3);
 	}
 
+	[[nodiscard]] constexpr bool isSarcophagus() const
+	{
+		return _otype == _object_id::OBJ_SARC;
+	}
+
+	/**
+	 * @brief Check if the object is open
+	 *
+	 * Only chests, sarcophagus and doors are handled.
+	 */
+	[[nodiscard]] constexpr bool isOpen() const
+	{
+		assert((IsChest() || isSarcophagus() || isDoor()) && "IsOpen can only be called on chests, sarcophagus and doors");
+		if (IsChest() || isSarcophagus())
+			return _oSelFlag == 0U;
+		if (isDoor())
+			return _oSelFlag == 2U;
+		return false;
+	}
+
 	/**
 	 * @brief Check if this object is a trapped chest (specifically a chest which is currently trapped).
 	 * @return True if the object is one of the trapped chest types (see _object_id) and has an active trap.
