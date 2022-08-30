@@ -256,6 +256,16 @@ void SetButtonStateDown(int btnId)
 	panbtndown = true;
 }
 
+int CountNewlines(std::string_view str)
+{
+	int count = 0;
+	for (char c : str) {
+		if (c == '\n')
+			count++;
+	}
+	return count;
+}
+
 void PrintInfo(const Surface &out)
 {
 	if (talkflag)
@@ -264,7 +274,8 @@ void PrintInfo(const Surface &out)
 	const int LineStart[] = { 70, 58, 52, 48, 46 };
 	const int LineHeights[] = { 30, 24, 18, 15, 12 };
 
-	Rectangle line { GetMainPanel().position + Displacement { 177, LineStart[pnumlines] }, { 288, 12 } };
+	const int yAdjust = 6 * CountNewlines(InfoString);
+	Rectangle line { GetMainPanel().position + Displacement { 177, LineStart[pnumlines] - yAdjust }, { 288, 12 + yAdjust } };
 
 	if (!InfoString.empty()) {
 		DrawString(out, InfoString, line, InfoColor | UiFlags::AlignCenter | UiFlags::KerningFitSpacing, 2);
