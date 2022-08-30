@@ -4,6 +4,7 @@ include(FetchContent)
 FetchContent_Declare(discordsrc
   URL https://dl-game-sdk.discordapp.net/2.5.6/discord_game_sdk.zip
   URL_HASH MD5=f86f15957cc9fbf04e3db10462027d58
+  PATCH_COMMAND patch -p0 < "${CMAKE_CURRENT_LIST_DIR}/fix-types-h.patch"
 )
 FetchContent_MakeAvailableExcludeFromAll(discordsrc)
 
@@ -23,7 +24,7 @@ if(WIN32 AND NOT MSVC)
   set_target_properties(discord_game_sdk PROPERTIES PREFIX "")
 else()
   find_library(DISCORD_LIB discord_game_sdk${CMAKE_SHARED_LIBRARY_SUFFIX} ${DISCORD_LIB_DIR})
-  
+
   add_library(discord_game_sdk SHARED IMPORTED GLOBAL)
   set_property(TARGET discord_game_sdk PROPERTY IMPORTED_IMPLIB ${DISCORD_LIB})
   set_property(TARGET discord_game_sdk PROPERTY IMPORTED_LOCATION ${DISCORD_SHARED_LIB})
