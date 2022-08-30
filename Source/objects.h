@@ -203,7 +203,8 @@ struct Object {
 	 */
 	[[nodiscard]] constexpr bool isOpen() const
 	{
-		assert((IsChest() || isSarcophagus() || isDoor()) && "IsOpen can only be called on chests, sarcophagus and doors");
+		assert((IsChest() || isSarcophagus() || isDoor()) && "isOpen can only be called on chests, sarcophagus and doors");
+
 		if (IsChest() || isSarcophagus())
 			return _oSelFlag == 0U;
 		if (isDoor())
