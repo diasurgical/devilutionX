@@ -9,7 +9,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -39,7 +39,7 @@ jobs:
       with:
         name: devilutionx_x64.zip
         path: build/devilutionx.zip
-        
+
     - name: Move artifacts to new folder and split exe and other data into two folders
       if: ${{ !env.ACT && github.ref == 'refs/heads/master' && github.event_name != 'pull_request' && github.repository == 'diasurgical/devilutionX'}}
       working-directory: ${{github.workspace}}
@@ -54,11 +54,11 @@ jobs:
       with:
         source-directory: artifacts_dir/exe_dir
         destination-github-username: 'artifacts-storage'
-        destination-repository-name: 'devilutionx-artifacts'     
+        destination-repository-name: 'devilutionx-artifacts'
         target-directory: ${{ github.sha }}
         commit-message: "[EXE] ${{ github.event.head_commit.message }}"
         target-branch: master
-        
+
     - name: Pushes DLLs and devilutionx.mpq to another repository
       if: ${{ !env.ACT && github.ref == 'refs/heads/master' && github.event_name != 'pull_request' && github.repository == 'diasurgical/devilutionX' }}
       uses: cpina/github-action-push-to-another-repository@main
@@ -67,7 +67,7 @@ jobs:
       with:
         source-directory: artifacts_dir/devilutionx/
         destination-github-username: 'artifacts-storage'
-        destination-repository-name: 'devilutionx-artifacts' 
+        destination-repository-name: 'devilutionx-artifacts'
         target-directory: data
         commit-message: "[DATA] ${{ github.event.head_commit.message }}"
         target-branch: master
