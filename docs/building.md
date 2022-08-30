@@ -188,6 +188,7 @@ bootstrap-vcpkg.bat
 vcpkg integrate install
 
 If you need aditional instructions for vcpkg you can find the documentation [here](https://github.com/microsoft/vcpkg#quick-start-windows).
+Make sure you have `patch` utility in your PATH environment variable. This utility is provided by [Git for Windows](https://gitforwindows.org/) in `<Git folder>/usr/bin`. [Instructions on how to add locations to PATH](https://docs.microsoft.com/en-us/previous-versions/office/developer/sharepoint-2010/ee537574(v=office.14))
 
 ### If you want to build the devilutionX.mpq File (optional)
 
