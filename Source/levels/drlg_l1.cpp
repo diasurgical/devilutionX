@@ -1258,14 +1258,14 @@ void PlaceMiniSetRandom(const Miniset &miniset, int rndper)
 
 Point SelectChamber()
 {
-	int chamber;
-	if (!HasChamber1)
+	int chamber = 2;
+	if (!HasChamber1 && HasChamber2 && HasChamber3)
 		chamber = PickRandomlyAmong({ 2, 3 });
-	else if (!HasChamber2)
+	else if (HasChamber1 && !HasChamber2 && HasChamber3)
 		chamber = PickRandomlyAmong({ 3, 1 });
-	else if (!HasChamber3)
+	else if (HasChamber1 && HasChamber2 && !HasChamber3)
 		chamber = PickRandomlyAmong({ 2, 1 });
-	else
+	else if (HasChamber1 && HasChamber2 && HasChamber3)
 		chamber = GenerateRnd(3) + 1;
 
 	switch (chamber) {
