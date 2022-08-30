@@ -301,6 +301,14 @@ else()
     Packaging/windows/devilutionx.rc
     Packaging/apple/AppIcon.icns
     Packaging/apple/LaunchScreen.storyboard)
+
+    if(CMAKE_STRIP AND NOT DEVILUTIONX_DISABLE_STRIP)
+      add_custom_command(
+        TARGET ${BIN_TARGET} POST_BUILD
+        DEPENDS ${BIN_TARGET}
+        COMMAND $<$<CONFIG:Release>:${CMAKE_STRIP}>
+        ARGS --strip-all $<TARGET_FILE:${BIN_TARGET}>)
+    endif()
 endif()
 
 if(NOT UWP_LIB)
