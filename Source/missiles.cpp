@@ -15,8 +15,8 @@
 #include "debug.h"
 #endif
 #include "engine/load_file.hpp"
-#include "engine/random.hpp"
 #include "engine/points_in_rectangle_range.hpp"
+#include "engine/random.hpp"
 #include "init.h"
 #include "inv.h"
 #include "levels/trigs.h"
@@ -1443,8 +1443,8 @@ void AddRuneExplosion(Missile &missile, const AddMissileParameter & /*parameter*
 
 		missile._midam = dmg;
 
-		auto searchArea = PointsInRectangleRangeColMajor { 
-			Rectangle { missile.position.tile, 1 } 
+		auto searchArea = PointsInRectangleRangeColMajor {
+			Rectangle { missile.position.tile, 1 }
 		};
 		for (Point position : searchArea)
 			CheckMissileCol(missile, dmg, dmg, false, position, true);
@@ -2979,16 +2979,16 @@ void MI_Fireball(Missile &missile)
 			const Point missilePosition = missile.position.tile;
 			ChangeLight(missile._mlid, missile.position.tile, missile._miAnimFrame);
 
-			constexpr Direction Offsets[] = { 
-				Direction::NoDirection, 
-				Direction::SouthWest, 
-				Direction::NorthEast, 
-				Direction::SouthEast, 
-				Direction::East, 
-				Direction::South, 
-				Direction::NorthWest, 
-				Direction::West, 
-				Direction::North 
+			constexpr Direction Offsets[] = {
+				Direction::NoDirection,
+				Direction::SouthWest,
+				Direction::NorthEast,
+				Direction::SouthEast,
+				Direction::East,
+				Direction::South,
+				Direction::NorthWest,
+				Direction::West,
+				Direction::North
 			};
 			for (Direction offset : Offsets) {
 				if (!CheckBlock(missile.position.start, missilePosition + offset))
@@ -3327,13 +3327,13 @@ void MI_Flash(Missile &missile)
 	}
 	missile._mirange--;
 
-	constexpr Direction Offsets[] = { 
-		Direction::NorthWest, 
-		Direction::NoDirection, 
-		Direction::SouthEast, 
-		Direction::West, 
+	constexpr Direction Offsets[] = {
+		Direction::NorthWest,
+		Direction::NoDirection,
+		Direction::SouthEast,
+		Direction::West,
 		Direction::SouthWest,
-		Direction::South 
+		Direction::South
 	};
 	for (Direction offset : Offsets)
 		CheckMissileCol(missile, missile._midam, missile._midam, true, missile.position.tile + offset, true);
@@ -3356,9 +3356,9 @@ void MI_Flash2(Missile &missile)
 	}
 	missile._mirange--;
 
-	constexpr Direction Offsets[] = { 
-		Direction::North, 
-		Direction::North, 
+	constexpr Direction Offsets[] = {
+		Direction::North,
+		Direction::North,
 		Direction::East
 	};
 	for (Direction offset : Offsets)
@@ -3949,15 +3949,15 @@ void MI_Element(Missile &missile)
 		ChangeLight(missile._mlid, missile.position.tile, missile._miAnimFrame);
 
 		Point startPoint = missile.var3 == 2 ? Point { missile.var4, missile.var5 } : Point(missile.position.start);
-		constexpr Direction Offsets[] = { 
-			Direction::NoDirection, 
-			Direction::SouthWest, 
-			Direction::NorthEast, 
-			Direction::SouthEast, 
-			Direction::East, 
-			Direction::South, 
-			Direction::NorthWest, 
-			Direction::West, 
+		constexpr Direction Offsets[] = {
+			Direction::NoDirection,
+			Direction::SouthWest,
+			Direction::NorthEast,
+			Direction::SouthEast,
+			Direction::East,
+			Direction::South,
+			Direction::NorthWest,
+			Direction::West,
 			Direction::North
 		};
 		for (Direction offset : Offsets) {
