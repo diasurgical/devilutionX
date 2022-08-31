@@ -469,7 +469,7 @@ void DrawAutomapPlr(const Surface &out, const Displacement &myPlayerOffset, int 
 		DrawMapLineSteepSE(out, point, AmLine(4), playerColor);
 	} break;
 	case Direction::NoDirection:
-	break;
+		break;
 	}
 }
 
