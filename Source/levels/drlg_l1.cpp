@@ -1258,15 +1258,21 @@ void PlaceMiniSetRandom(const Miniset &miniset, int rndper)
 
 Point SelectChamber()
 {
-	int chamber = 2;
-	if (!HasChamber1 && HasChamber2 && HasChamber3)
+	int chamber;
+	if (HasChamber1 && HasChamber2 && HasChamber3) {
+		chamber = PickRandomlyAmong({ 1, 2, 3 });
+	} else if (HasChamber1 && HasChamber2) {
+		chamber = PickRandomlyAmong({ 2, 1 }); // Reverse odrder to match vanilla
+	} else if (HasChamber1 && HasChamber3) {
+		chamber = PickRandomlyAmong({ 3, 1 }); // Reverse odrder to match vanilla
+	} else if (HasChamber2 && HasChamber3) {
 		chamber = PickRandomlyAmong({ 2, 3 });
-	else if (HasChamber1 && !HasChamber2 && HasChamber3)
-		chamber = PickRandomlyAmong({ 3, 1 });
-	else if (HasChamber1 && HasChamber2 && !HasChamber3)
-		chamber = PickRandomlyAmong({ 2, 1 });
-	else if (HasChamber1 && HasChamber2 && HasChamber3)
-		chamber = GenerateRnd(3) + 1;
+	} else {
+		// The dungeon generation logic ensures that chamber 2 is available if
+		// either (or both of) 1 or 3 aren't, so if we ever end up with a single
+		// chamber layout it's always chamber 2.
+		chamber = 2;
+	}
 
 	switch (chamber) {
 	case 1:
