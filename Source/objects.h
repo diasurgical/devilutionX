@@ -208,7 +208,7 @@ struct Object {
 		if (IsChest() || isSarcophagus())
 			return _oSelFlag == 0U;
 		if (isDoor())
-			return _oSelFlag == 2U;
+			return _oVar4 != DOOR_CLOSED;
 		return false;
 	}
 
