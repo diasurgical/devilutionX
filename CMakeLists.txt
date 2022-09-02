@@ -1,17 +1,11 @@
 cmake_minimum_required(VERSION 3.13)
 
-if(POLICY CMP0092)
-  cmake_policy(SET CMP0092 NEW)
-endif()
-if(POLICY CMP0083)
-  cmake_policy(SET CMP0083 NEW)
-endif()
-if(POLICY CMP0111)
-  cmake_policy(SET CMP0111 NEW)
-endif()
-if(POLICY CMP0126)
-  cmake_policy(SET CMP0126 NEW)
-endif()
+foreach(_policy CMP0083 CMP0092 CMP0111 CMP0126 CMP0135)
+  if(POLICY ${_policy})
+    cmake_policy(SET ${_policy} NEW)
+    set(CMAKE_POLICY_DEFAULT_${_policy} NEW)
+  endif()
+endforeach()
 
 # Projects added via `add_subdirectory` or `FetchContent` may have a lower
 # `cmake_minimum_required` than we set here. Set policies that we require
@@ -301,6 +295,14 @@ else()
     Packaging/windows/devilutionx.rc
     Packaging/apple/AppIcon.icns
     Packaging/apple/LaunchScreen.storyboard)
+
+    if(CMAKE_STRIP AND NOT DEVILUTIONX_DISABLE_STRIP)
+      add_custom_command(
+        TARGET ${BIN_TARGET} POST_BUILD
+        DEPENDS ${BIN_TARGET}
+        COMMAND $<$<CONFIG:Release>:${CMAKE_STRIP}>
+        ARGS --strip-all $<TARGET_FILE:${BIN_TARGET}>)
+    endif()
 endif()
 
 if(NOT UWP_LIB)
