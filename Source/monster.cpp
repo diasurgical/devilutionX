@@ -1015,7 +1015,7 @@ void MonsterIdle(Monster &monster)
 	else
 		monster.changeAnimationData(MonsterGraphic::Stand);
 
-	if (monster.animInfo.currentFrame == monster.animInfo.numberOfFrames - 1)
+	if (monster.animInfo.isLastFrame())
 		UpdateEnemy(monster);
 
 	monster.var2++;
@@ -1027,7 +1027,7 @@ void MonsterIdle(Monster &monster)
 bool MonsterWalk(Monster &monster, MonsterMode variant)
 {
 	// Check if we reached new tile
-	const bool isAnimationEnd = monster.animInfo.currentFrame == monster.animInfo.numberOfFrames - 1;
+	const bool isAnimationEnd = monster.animInfo.isLastFrame();
 	if (isAnimationEnd) {
 		switch (variant) {
 		case MonsterMode::MoveNorthwards:
@@ -1241,7 +1241,7 @@ bool MonsterAttack(Monster &monster)
 	}
 	if (monster.ai == AI_SNAKE && monster.animInfo.currentFrame == 0)
 		PlayEffect(monster, MonsterSound::Attack);
-	if (monster.animInfo.currentFrame == monster.animInfo.numberOfFrames - 1) {
+	if (monster.animInfo.isLastFrame()) {
 		M_StartStand(monster, monster.direction);
 		return true;
 	}
@@ -1272,7 +1272,7 @@ bool MonsterRangedAttack(Monster &monster)
 		PlayEffect(monster, MonsterSound::Attack);
 	}
 
-	if (monster.animInfo.currentFrame == monster.animInfo.numberOfFrames - 1) {
+	if (monster.animInfo.isLastFrame()) {
 		M_StartStand(monster, monster.direction);
 		return true;
 	}
@@ -1305,7 +1305,7 @@ bool MonsterRangedSpecialAttack(Monster &monster)
 		}
 	}
 
-	if (monster.animInfo.currentFrame == monster.animInfo.numberOfFrames - 1) {
+	if (monster.animInfo.isLastFrame()) {
 		M_StartStand(monster, monster.direction);
 		return true;
 	}
@@ -1319,7 +1319,7 @@ bool MonsterSpecialAttack(Monster &monster)
 		MonsterAttackEnemy(monster, monster.toHitSpecial, monster.minDamageSpecial, monster.maxDamageSpecial);
 	}
 
-	if (monster.animInfo.currentFrame == monster.animInfo.numberOfFrames - 1) {
+	if (monster.animInfo.isLastFrame()) {
 		M_StartStand(monster, monster.direction);
 		return true;
 	}
@@ -1447,7 +1447,7 @@ void MonsterTalk(Monster &monster)
 
 bool MonsterGotHit(Monster &monster)
 {
-	if (monster.animInfo.currentFrame == monster.animInfo.numberOfFrames - 1) {
+	if (monster.animInfo.isLastFrame()) {
 		M_StartStand(monster, monster.direction);
 
 		return true;
@@ -1491,7 +1491,7 @@ void MonsterDeath(Monster &monster)
 
 		if (monster.var1 == 140)
 			PrepDoEnding();
-	} else if (monster.animInfo.currentFrame == monster.animInfo.numberOfFrames - 1) {
+	} else if (monster.animInfo.isLastFrame()) {
 		if (monster.isUnique())
 			AddCorpse(monster.position.tile, monster.corpseId, monster.direction);
 		else
@@ -1509,7 +1509,7 @@ bool MonsterSpecialStand(Monster &monster)
 	if (monster.animInfo.currentFrame == monster.data().animFrameNumSpecial - 1)
 		PlayEffect(monster, MonsterSound::Special);
 
-	if (monster.animInfo.currentFrame == monster.animInfo.numberOfFrames - 1) {
+	if (monster.animInfo.isLastFrame()) {
 		M_StartStand(monster, monster.direction);
 		return true;
 	}
@@ -2240,7 +2240,7 @@ void FallenAi(Monster &monster)
 		}
 	}
 
-	if (monster.animInfo.currentFrame == monster.animInfo.numberOfFrames - 1) {
+	if (monster.animInfo.isLastFrame()) {
 		if (!FlipCoin(4)) {
 			return;
 		}
