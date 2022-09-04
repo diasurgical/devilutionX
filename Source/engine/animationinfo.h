@@ -66,6 +66,11 @@ public:
 		return (*sprites)[getFrameToUseForRendering()];
 	}
 
+	[[nodiscard]] bool isLastFrame() const
+	{
+		return currentFrame >= (numberOfFrames - 1);
+	}
+
 	/**
 	 * @brief Calculates the Frame to use for the Animation rendering
 	 * @return The Frame to use for rendering

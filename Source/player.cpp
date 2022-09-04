@@ -587,51 +587,51 @@ bool DoWalk(Player &player, int variant)
 		}
 	}
 
-	// Check if we reached new tile
-	if (player.AnimInfo.currentFrame >= player._pWFrames - 1) {
+	if (!player.AnimInfo.isLastFrame()) {
+		// We didn't reach new tile so update player's "sub-tile" position
+		ChangeOffset(player);
+		return false;
+	}
 
-		// Update the player's tile position
-		switch (variant) {
-		case PM_WALK_NORTHWARDS:
-			dPlayer[player.position.tile.x][player.position.tile.y] = 0;
-			player.position.tile = player.position.temp;
-			dPlayer[player.position.tile.x][player.position.tile.y] = player.getId() + 1;
-			break;
-		case PM_WALK_SOUTHWARDS:
-			dPlayer[player.position.temp.x][player.position.temp.y] = 0;
-			break;
-		case PM_WALK_SIDEWAYS:
-			dPlayer[player.position.tile.x][player.position.tile.y] = 0;
-			player.position.tile = player.position.temp;
-			// dPlayer is set here for backwards comparability, without it the player would be invisible if loaded from a vanilla save.
-			dPlayer[player.position.tile.x][player.position.tile.y] = player.getId() + 1;
-			break;
-		}
+	// We reached the new tile -> update the player's tile position
+	switch (variant) {
+	case PM_WALK_NORTHWARDS:
+		dPlayer[player.position.tile.x][player.position.tile.y] = 0;
+		player.position.tile = player.position.temp;
+		dPlayer[player.position.tile.x][player.position.tile.y] = player.getId() + 1;
+		break;
+	case PM_WALK_SOUTHWARDS:
+		dPlayer[player.position.temp.x][player.position.temp.y] = 0;
+		break;
+	case PM_WALK_SIDEWAYS:
+		dPlayer[player.position.tile.x][player.position.tile.y] = 0;
+		player.position.tile = player.position.temp;
+		// dPlayer is set here for backwards comparability, without it the player would be invisible if loaded from a vanilla save.
+		dPlayer[player.position.tile.x][player.position.tile.y] = player.getId() + 1;
+		break;
+	}
 
-		// Update the coordinates for lighting and vision entries for the player
-		if (leveltype != DTYPE_TOWN) {
-			ChangeLightXY(player._plid, player.position.tile);
-			ChangeVisionXY(player._pvid, player.position.tile);
-		}
+	// Update the coordinates for lighting and vision entries for the player
+	if (leveltype != DTYPE_TOWN) {
+		ChangeLightXY(player._plid, player.position.tile);
+		ChangeVisionXY(player._pvid, player.position.tile);
+	}
 
-		if (player.walkpath[0] != WALK_NONE) {
-			StartWalkStand(player);
-		} else {
-			StartStand(player, player.tempDirection);
-		}
+	if (player.walkpath[0] != WALK_NONE) {
+		StartWalkStand(player);
+	} else {
+		StartStand(player, player.tempDirection);
+	}
 
-		ClearStateVariables(player);
+	ClearStateVariables(player);
 
-		// Reset the "sub-tile" position of the player's light entry to 0
-		if (leveltype != DTYPE_TOWN) {
-			ChangeLightOffset(player._plid, { 0, 0 });
-		}
+	// Reset the "sub-tile" position of the player's light entry to 0
+	if (leveltype != DTYPE_TOWN) {
+		ChangeLightOffset(player._plid, { 0, 0 });
+	}
 
-		AutoPickup(player);
-		return true;
-	} // We didn't reach new tile so update player's "sub-tile" position
-	ChangeOffset(player);
-	return false;
+	AutoPickup(player);
+	return true;
 }
 
 bool WeaponDecay(Player &player, int ii)
@@ -1040,7 +1040,7 @@ bool DoAttack(Player &player)
 		}
 	}
 
-	if (player.AnimInfo.currentFrame == player._pAFrames - 1) {
+	if (player.AnimInfo.isLastFrame()) {
 		StartStand(player, player._pdir);
 		ClearStateVariables(player);
 		return true;
@@ -1107,7 +1107,7 @@ bool DoRangeAttack(Player &player)
 		}
 	}
 
-	if (player.AnimInfo.currentFrame >= player._pAFrames - 1) {
+	if (player.AnimInfo.isLastFrame()) {
 		StartStand(player, player._pdir);
 		ClearStateVariables(player);
 		return true;
@@ -1146,7 +1146,7 @@ void DamageParryItem(Player &player)
 
 bool DoBlock(Player &player)
 {
-	if (player.AnimInfo.currentFrame >= player._pBFrames - 1) {
+	if (player.AnimInfo.isLastFrame()) {
 		StartStand(player, player._pdir);
 		ClearStateVariables(player);
 
@@ -1217,7 +1217,7 @@ bool DoSpell(Player &player)
 		}
 	}
 
-	if (player.AnimInfo.currentFrame >= player._pSFrames - 1) {
+	if (player.AnimInfo.isLastFrame()) {
 		StartStand(player, player._pdir);
 		ClearStateVariables(player);
 		return true;
@@ -1228,7 +1228,7 @@ bool DoSpell(Player &player)
 
 bool DoGotHit(Player &player)
 {
-	if (player.AnimInfo.currentFrame >= player._pHFrames - 1) {
+	if (player.AnimInfo.isLastFrame()) {
 		StartStand(player, player._pdir);
 		ClearStateVariables(player);
 		if (!FlipCoin(4)) {
