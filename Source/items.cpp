@@ -2688,13 +2688,12 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 		ResetPlayerGFX(player);
 		SetPlrAnims(player);
 		player.previewCelSprite = std::nullopt;
-		if (player._pmode == PM_STAND) {
-			LoadPlrGFX(player, player_graphic::Stand);
-			player.AnimInfo.changeAnimationData(player.AnimationData[static_cast<size_t>(player_graphic::Stand)].spritesForDirection(player._pdir), player._pNFrames, 4);
-		} else {
-			LoadPlrGFX(player, player_graphic::Walk);
-			player.AnimInfo.changeAnimationData(player.AnimationData[static_cast<size_t>(player_graphic::Walk)].spritesForDirection(player._pdir), player._pWFrames, 1);
-		}
+		player_graphic graphic = player.getGraphic();
+		int8_t numberOfFrames;
+		int8_t ticksPerFrame;
+		player.getAnimationFramesAndTicksPerFrame(graphic, numberOfFrames, ticksPerFrame);
+		LoadPlrGFX(player, graphic);
+		player.AnimInfo.changeAnimationData(player.AnimationData[static_cast<size_t>(graphic)].spritesForDirection(player._pdir), numberOfFrames, ticksPerFrame);
 	} else {
 		player._pgfxnum = gfxNum;
 	}
