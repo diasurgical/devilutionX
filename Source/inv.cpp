@@ -1488,8 +1488,9 @@ void CheckInvSwap(Player &player, const Item &item, int invGridIndex)
 		for (int y = 0; y < itemSize.height; y++) {
 			int rowGridIndex = invGridIndex + pitch * y;
 			for (int x = 0; x < itemSize.width; x++) {
-				if (player.InvGrid[rowGridIndex + x] != 0)
-					return abs(player.InvGrid[rowGridIndex]);
+				int gridIndex = rowGridIndex + x;
+				if (player.InvGrid[gridIndex] != 0)
+					return abs(player.InvGrid[gridIndex]);
 			}
 		}
 		player._pNumInv++;
