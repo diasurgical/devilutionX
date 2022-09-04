@@ -378,10 +378,12 @@ void RemoveGold(Player &player, int goldIndex)
 {
 	int gi = goldIndex - INVITEM_INV_FIRST;
 	player.InvList[gi]._ivalue -= dropGoldValue;
-	if (player.InvList[gi]._ivalue > 0)
+	if (player.InvList[gi]._ivalue > 0) {
 		SetPlrHandGoldCurs(player.InvList[gi]);
-	else
+		NetSyncInvItem(player, gi);
+	} else {
 		player.RemoveInvItem(gi);
+	}
 
 	MakeGoldStack(player.HoldItem, dropGoldValue);
 	NewCursor(player.HoldItem);

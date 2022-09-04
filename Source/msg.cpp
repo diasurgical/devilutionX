@@ -3118,6 +3118,19 @@ void NetSendCmdDelItem(bool bHiPri, uint8_t bLoc)
 		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
 }
 
+void NetSyncInvItem(const Player &player, int invListIndex)
+{
+	if (&player != MyPlayer)
+		return;
+
+	for (int j = 0; j < InventoryGridCells; j++) {
+		if (player.InvGrid[j] == invListIndex + 1) {
+			NetSendCmdChInvItem(false, j);
+			break;
+		}
+	}
+}
+
 void NetSendCmdChInvItem(bool bHiPri, int invGridIndex)
 {
 	TCmdChItem cmd {};
