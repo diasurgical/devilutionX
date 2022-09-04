@@ -267,15 +267,13 @@ void PrintInfo(const Surface &out)
 
 	auto infoStringLines = (int)std::count(InfoString.str().begin(), InfoString.str().end(), '\n');
 
-	Rectangle line { GetMainPanel().position + Displacement { 177, LineStart[infoStringLines] }, { 288, 12 } };
+	Rectangle line { GetMainPanel().position + Displacement { 177, LineStart[infoStringLines + pnumlines] }, { 288, 12 } };
 
 	int i = 0;
-	int yOffset = -10 * infoStringLines;
 	if (!InfoString.empty()) {
-		line.position.y += yOffset;
 		for (string_view s : SplitByChar(InfoString, '\n')) {
 			DrawString(out, s, line, InfoColor | UiFlags::AlignCenter | UiFlags::KerningFitSpacing, 2);
-			line.position.y += LineHeights[i];
+			line.position.y += (LineHeights[i] - 3 * (infoStringLines + 1));
 			i++;
 		}
 	}
