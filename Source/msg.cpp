@@ -845,6 +845,48 @@ bool IsPItemValid(const TCmdPItem &message)
 	return IsItemAvailable(message.def.wIndx);
 }
 
+void RecreateItem(const Player &player, const TItem &messageItem, Item &item)
+{
+	RecreateItem(player, item, messageItem.wIndx, messageItem.wCI, messageItem.dwSeed, messageItem.wValue, (messageItem.dwBuff & CF_HELLFIRE) != 0);
+	if (messageItem.bId != 0)
+		item._iIdentified = true;
+	item._iDurability = messageItem.bDur;
+	item._iMaxDur = messageItem.bMDur;
+	item._iCharges = messageItem.bCh;
+	item._iMaxCharges = messageItem.bMCh;
+	item._iPLToHit = messageItem.wToHit;
+	item._iMaxDam = messageItem.wMaxDam;
+	item._iMinStr = messageItem.bMinStr;
+	item._iMinMag = messageItem.bMinMag;
+	item._iMinDex = messageItem.bMinDex;
+	item._iAC = messageItem.bAC;
+	item.dwBuff = messageItem.dwBuff;
+}
+
+void RecreateItem(const Player &player, const TCmdGItem &message, Item &item)
+{
+	if (message.def.wIndx == IDI_EAR)
+		RecreateEar(item, message.ear.wCI, message.ear.dwSeed, message.ear.bCursval, message.ear.heroname);
+	else
+		RecreateItem(player, message.item, item);
+}
+
+void RecreateItem(const Player &player, const TCmdPItem &message, Item &item)
+{
+	if (message.def.wIndx == IDI_EAR)
+		RecreateEar(item, message.ear.wCI, message.ear.dwSeed, message.ear.bCursval, message.ear.heroname);
+	else
+		RecreateItem(player, message.item, item);
+}
+
+void RecreateItem(const Player &player, const TCmdChItem &message, Item &item)
+{
+	if (message.def.wIndx == IDI_EAR)
+		RecreateEar(item, message.ear.wCI, message.ear.dwSeed, message.ear.bCursval, message.ear.heroname);
+	else
+		RecreateItem(player, message.item, item);
+}
+
 size_t OnRequestGetItem(const TCmd *pCmd, Player &player)
 {
 	const auto &message = *reinterpret_cast<const TCmdGItem *>(pCmd);
@@ -1835,39 +1877,7 @@ size_t OnChangePlayerItems(const TCmd *pCmd, size_t pnum)
 	} else if (&player != MyPlayer && IsItemAvailable(message.def.wIndx)) {
 		Item &item = player.InvBody[message.bLoc];
 		item = {};
-
-		if (message.def.wIndx == IDI_EAR) {
-			RecreateEar(
-			    item,
-			    message.ear.wCI,
-			    message.ear.dwSeed,
-			    message.ear.bCursval,
-			    message.ear.heroname);
-		} else {
-			RecreateItem(
-				player,
-				item,
-				message.item.wIndx,
-				message.item.wCI,
-				message.item.dwSeed,
-				message.item.wValue,
-				(message.item.dwBuff & CF_HELLFIRE) != 0);
-
-			if (message.item.bId != 0)
-				item._iIdentified = true;
-			item._iDurability = message.item.bDur;
-			item._iMaxDur = message.item.bMDur;
-			item._iCharges = message.item.bCh;
-			item._iMaxCharges = message.item.bMCh;
-			item._iPLToHit = message.item.wToHit;
-			item._iMaxDam = message.item.wMaxDam;
-			item._iMinStr = message.item.bMinStr;
-			item._iMinMag = message.item.bMinMag;
-			item._iMinDex = message.item.bMinDex;
-			item._iAC = message.item.bAC;
-			item.dwBuff = message.item.dwBuff;
-		}
-
+		RecreateItem(player, message, item);
 		CheckInvSwap(player, bodyLocation);
 	}
 
@@ -1903,39 +1913,7 @@ size_t OnChangeInventoryItems(const TCmd *pCmd, int pnum)
 		SendPacket(pnum, &message, sizeof(message));
 	} else if (&player != MyPlayer && IsItemAvailable(message.def.wIndx)) {
 		Item item {};
-
-		if (message.def.wIndx == IDI_EAR) {
-			RecreateEar(
-			    item,
-			    message.ear.wCI,
-			    message.ear.dwSeed,
-			    message.ear.bCursval,
-			    message.ear.heroname);
-		} else {
-			RecreateItem(
-			    player,
-			    item,
-			    message.item.wIndx,
-			    message.item.wCI,
-			    message.item.dwSeed,
-			    message.item.wValue,
-			    (message.item.dwBuff & CF_HELLFIRE) != 0);
-
-			if (message.item.bId != 0)
-				item._iIdentified = true;
-			item._iDurability = message.item.bDur;
-			item._iMaxDur = message.item.bMDur;
-			item._iCharges = message.item.bCh;
-			item._iMaxCharges = message.item.bMCh;
-			item._iPLToHit = message.item.wToHit;
-			item._iMaxDam = message.item.wMaxDam;
-			item._iMinStr = message.item.bMinStr;
-			item._iMinMag = message.item.bMinMag;
-			item._iMinDex = message.item.bMinDex;
-			item._iAC = message.item.bAC;
-			item.dwBuff = message.item.dwBuff;
-		}
-
+		RecreateItem(player, message, item);
 		CheckInvSwap(player, item, message.bLoc);
 	}
 
@@ -1969,38 +1947,7 @@ size_t OnChangeBeltItems(const TCmd *pCmd, int pnum)
 	} else if (&player != MyPlayer && IsItemAvailable(message.def.wIndx)) {
 		Item &item = player.SpdList[message.bLoc];
 		item = {};
-
-		if (message.def.wIndx == IDI_EAR) {
-			RecreateEar(
-			    item,
-			    message.ear.wCI,
-			    message.ear.dwSeed,
-			    message.ear.bCursval,
-			    message.ear.heroname);
-		} else {
-			RecreateItem(
-			    player,
-			    item,
-			    message.item.wIndx,
-			    message.item.wCI,
-			    message.item.dwSeed,
-			    message.item.wValue,
-			    (message.item.dwBuff & CF_HELLFIRE) != 0);
-
-			if (message.item.bId != 0)
-				item._iIdentified = true;
-			item._iDurability = message.item.bDur;
-			item._iMaxDur = message.item.bMDur;
-			item._iCharges = message.item.bCh;
-			item._iMaxCharges = message.item.bMCh;
-			item._iPLToHit = message.item.wToHit;
-			item._iMaxDam = message.item.wMaxDam;
-			item._iMinStr = message.item.bMinStr;
-			item._iMinMag = message.item.bMinMag;
-			item._iMinDex = message.item.bMinDex;
-			item._iAC = message.item.bAC;
-			item.dwBuff = message.item.dwBuff;
-		}
+		RecreateItem(player, message, item);
 	}
 
 	return sizeof(message);
@@ -2791,37 +2738,8 @@ void DeltaLoadLevel()
 		if (deltaLevel.item[i].bCmd == TCmdPItem::DroppedItem) {
 			int ii = AllocateItem();
 			auto &item = Items[ii];
+			RecreateItem(*MyPlayer, deltaLevel.item[i], item);
 
-			if (deltaLevel.item[i].def.wIndx == IDI_EAR) {
-				RecreateEar(
-				    item,
-				    deltaLevel.item[i].ear.wCI,
-				    deltaLevel.item[i].ear.dwSeed,
-				    deltaLevel.item[i].ear.bCursval,
-				    deltaLevel.item[i].ear.heroname);
-			} else {
-				RecreateItem(
-				    *MyPlayer,
-				    item,
-				    deltaLevel.item[i].item.wIndx,
-				    deltaLevel.item[i].item.wCI,
-				    deltaLevel.item[i].item.dwSeed,
-				    deltaLevel.item[i].item.wValue,
-				    (deltaLevel.item[i].item.dwBuff & CF_HELLFIRE) != 0);
-				if (deltaLevel.item[i].item.bId != 0)
-					item._iIdentified = true;
-				item._iDurability = deltaLevel.item[i].item.bDur;
-				item._iMaxDur = deltaLevel.item[i].item.bMDur;
-				item._iCharges = deltaLevel.item[i].item.bCh;
-				item._iMaxCharges = deltaLevel.item[i].item.bMCh;
-				item._iPLToHit = deltaLevel.item[i].item.wToHit;
-				item._iMaxDam = deltaLevel.item[i].item.wMaxDam;
-				item._iMinStr = deltaLevel.item[i].item.bMinStr;
-				item._iMinMag = deltaLevel.item[i].item.bMinMag;
-				item._iMinDex = deltaLevel.item[i].item.bMinDex;
-				item._iAC = deltaLevel.item[i].item.bAC;
-				item.dwBuff = deltaLevel.item[i].item.dwBuff;
-			}
 			int x = deltaLevel.item[i].x;
 			int y = deltaLevel.item[i].y;
 			item.position = GetItemPosition({ x, y });
