@@ -693,7 +693,7 @@ struct Player {
 			return true;
 		if (_pmode == PM_SPELL && AnimInfo.currentFrame >= _pSFNum)
 			return true;
-		if (IsWalking() && AnimInfo.currentFrame == AnimInfo.numberOfFrames - 1)
+		if (IsWalking() && AnimInfo.isLastFrame())
 			return true;
 		return false;
 	}
