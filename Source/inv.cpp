@@ -1848,25 +1848,48 @@ int SyncDropItem(Point position, int idx, uint16_t icreateinfo, int iseed, int i
 
 	dItem[position.x][position.y] = ii + 1;
 
-	if (idx == IDI_EAR) {
-		RecreateEar(item, icreateinfo, iseed, id, dur, mdur, ch, mch, ivalue, ibuff);
-	} else {
-		RecreateItem(*MyPlayer, item, idx, icreateinfo, iseed, ivalue, (ibuff & CF_HELLFIRE) != 0);
-		if (id != 0)
-			item._iIdentified = true;
-		item._iDurability = dur;
-		item._iMaxDur = mdur;
-		item._iCharges = ch;
-		item._iMaxCharges = mch;
-		item._iPLToHit = toHit;
-		item._iMaxDam = maxDam;
-		item._iMinStr = minStr;
-		item._iMinMag = minMag;
-		item._iMinDex = minDex;
-		item._iAC = ac;
-		item.dwBuff = ibuff;
-	}
+	RecreateItem(*MyPlayer, item, idx, icreateinfo, iseed, ivalue, (ibuff & CF_HELLFIRE) != 0);
+	if (id != 0)
+		item._iIdentified = true;
+	item._iDurability = dur;
+	item._iMaxDur = mdur;
+	item._iCharges = ch;
+	item._iMaxCharges = mch;
+	item._iPLToHit = toHit;
+	item._iMaxDam = maxDam;
+	item._iMinStr = minStr;
+	item._iMinMag = minMag;
+	item._iMinDex = minDex;
+	item._iAC = ac;
+	item.dwBuff = ibuff;
+	item.position = position;
+	RespawnItem(item, true);
 
+	if (currlevel == 21 && position == CornerStone.position) {
+		CornerStone.item = item;
+		InitQTextMsg(TEXT_CORNSTN);
+		Quests[Q_CORNSTN]._qlog = false;
+		Quests[Q_CORNSTN]._qactive = QUEST_DONE;
+	}
+	return ii;
+}
+
+int SyncPutEar(const Player &player, Point position, uint16_t icreateinfo, int iseed, uint8_t cursval, string_view heroname)
+{
+	std::optional<Point> itemTile = FindAdjacentPositionForItem(player.position.tile, GetDirection(player.position.tile, position));
+	if (!itemTile)
+		return -1;
+
+	return SyncDropEar(*itemTile, icreateinfo, iseed, cursval, heroname);
+}
+
+int SyncDropEar(Point position, uint16_t icreateinfo, int iseed, uint8_t cursval, string_view heroname)
+{
+	int ii = AllocateItem();
+	auto &item = Items[ii];
+
+	dItem[position.x][position.y] = ii + 1;
+	RecreateEar(item, icreateinfo, iseed, cursval, heroname);
 	item.position = position;
 	RespawnItem(item, true);
 
