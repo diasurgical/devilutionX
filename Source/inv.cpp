@@ -523,6 +523,9 @@ void CheckInvPaste(Player &player, Point cursorPosition)
 				player._pNumInv++;
 				player.InvGrid[ii] = player._pNumInv;
 			}
+			if (&player == MyPlayer) {
+				NetSendCmdChInvItem(false, ii);
+			}
 		} else {
 			if (it == 0) {
 				player.InvList[player._pNumInv] = player.HoldItem.pop();
@@ -1020,6 +1023,9 @@ int CreateGoldItemInInventorySlot(Player &player, int slotIndex, int value)
 	MakeGoldStack(goldItem, std::min(value, MaxGold));
 	player._pNumInv++;
 	player.InvGrid[slotIndex] = player._pNumInv;
+	if (&player == MyPlayer) {
+		NetSendCmdChInvItem(false, slotIndex);
+	}
 
 	value -= goldItem._ivalue;
 
@@ -1424,6 +1430,7 @@ int AddGoldToInventory(Player &player, int value)
 			value = 0;
 		}
 
+		NetSyncInvItem(player, i);
 		SetPlrHandGoldCurs(goldItem);
 	}
 
