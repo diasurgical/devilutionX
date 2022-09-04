@@ -1790,13 +1790,11 @@ void printItemMiscGamepad(const Item &item, bool isOil, bool isCastOnTarget)
 	} else if (isOil) {
 		PrintItemOil(item._iMiscId);
 		if (!invflag) {
-			InfoString = StrCat(item._iName, "\n", fmt::format(fmt::runtime(_("Open inventory to use"))));
+			InfoString = StrCat(item._iName, "\n", "Open inventory to use");
 		} else {
-			AddPanelString(fmt::format(fmt::runtime(_("{} to use")), activateButton));
+			InfoString = StrCat(item._iName, "\n", fmt::format(fmt::runtime(_("{} to use")), activateButton));
 		}
 	} else if (isCastOnTarget) {
-		InfoString = StrCat(item._iName, "\n", fmt::format(fmt::runtime(_("Select from spell book,\nthen {} to read"))), castButton);
-	} else if (IsAnyOf(item._iMiscId, IMISC_BOOK, IMISC_NOTE, IMISC_SCROLL)) {
 		InfoString = StrCat(item._iName, "\n", fmt::format(fmt::runtime(_("Select from spell book,\nthen {} to read")), castButton));
 	} else if (IsAnyOf(item._iMiscId, IMISC_BOOK, IMISC_NOTE, IMISC_SCROLL, IMISC_SCROLLT)) {
 		InfoString = StrCat(item._iName, "\n", fmt::format(fmt::runtime(_("{} to read")), activateButton));
