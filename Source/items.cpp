@@ -1743,11 +1743,11 @@ void printItemMiscKBM(const Item &item, const bool isOil, const bool isCastOnTar
 		AddPanelString(_("Right-click to view"));
 	} else if (isOil) {
 		PrintItemOil(item._iMiscId);
-		AddPanelString(_("Right-click to use"));
+		InfoString = StrCat(item._iName, "\n", _("Right-click to use"));
 	} else if (isCastOnTarget) {
-		AddPanelString(_("Right-click to read, then\nleft-click to target"));
+		InfoString = StrCat(item._iName, "\n", _("Right-click to read, then\nleft-click to target"));
 	} else if (IsAnyOf(item._iMiscId, IMISC_BOOK, IMISC_NOTE, IMISC_SCROLL, IMISC_SCROLLT)) {
-		AddPanelString(_("Right-click to read"));
+		InfoString = StrCat(item._iName, "\n", _("Right-click to read"));
 	}
 }
 
