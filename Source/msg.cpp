@@ -1832,8 +1832,43 @@ size_t OnChangePlayerItems(const TCmd *pCmd, size_t pnum)
 
 	if (gbBufferMsgs == 1) {
 		SendPacket(pnum, &message, sizeof(message));
-	} else if (&player != MyPlayer && message.wIndx <= IDI_LAST) {
-		CheckInvSwap(player, bodyLocation, message.wIndx, message.wCI, message.dwSeed, message.bId != 0, message.dwBuff);
+	} else if (&player != MyPlayer && IsItemAvailable(message.def.wIndx)) {
+		Item &item = player.InvBody[message.bLoc];
+		item = {};
+
+		if (message.def.wIndx == IDI_EAR) {
+			RecreateEar(
+			    item,
+			    message.ear.wCI,
+			    message.ear.dwSeed,
+			    message.ear.bCursval,
+			    message.ear.heroname);
+		} else {
+			RecreateItem(
+				player,
+				item,
+				message.item.wIndx,
+				message.item.wCI,
+				message.item.dwSeed,
+				message.item.wValue,
+				(message.item.dwBuff & CF_HELLFIRE) != 0);
+
+			if (message.item.bId != 0)
+				item._iIdentified = true;
+			item._iDurability = message.item.bDur;
+			item._iMaxDur = message.item.bMDur;
+			item._iCharges = message.item.bCh;
+			item._iMaxCharges = message.item.bMCh;
+			item._iPLToHit = message.item.wToHit;
+			item._iMaxDam = message.item.wMaxDam;
+			item._iMinStr = message.item.bMinStr;
+			item._iMinMag = message.item.bMinMag;
+			item._iMinDex = message.item.bMinDex;
+			item._iAC = message.item.bAC;
+			item.dwBuff = message.item.dwBuff;
+		}
+
+		CheckInvSwap(player, bodyLocation);
 	}
 
 	player.ReadySpellFromEquipment(bodyLocation);
@@ -1861,10 +1896,47 @@ size_t OnChangeInventoryItems(const TCmd *pCmd, int pnum)
 	const auto &message = *reinterpret_cast<const TCmdChItem *>(pCmd);
 	Player &player = Players[pnum];
 
+	if (message.bLoc >= InventoryGridCells)
+		return sizeof(message);
+
 	if (gbBufferMsgs == 1) {
 		SendPacket(pnum, &message, sizeof(message));
-	} else if (&player != MyPlayer && message.bLoc < InventoryGridCells && message.wIndx <= IDI_LAST) {
-		CheckInvSwap(player, message.bLoc, message.wIndx, message.wCI, message.dwSeed, message.bId != 0, message.dwBuff);
+	} else if (&player != MyPlayer && IsItemAvailable(message.def.wIndx)) {
+		Item item {};
+
+		if (message.def.wIndx == IDI_EAR) {
+			RecreateEar(
+			    item,
+			    message.ear.wCI,
+			    message.ear.dwSeed,
+			    message.ear.bCursval,
+			    message.ear.heroname);
+		} else {
+			RecreateItem(
+			    player,
+			    item,
+			    message.item.wIndx,
+			    message.item.wCI,
+			    message.item.dwSeed,
+			    message.item.wValue,
+			    (message.item.dwBuff & CF_HELLFIRE) != 0);
+
+			if (message.item.bId != 0)
+				item._iIdentified = true;
+			item._iDurability = message.item.bDur;
+			item._iMaxDur = message.item.bMDur;
+			item._iCharges = message.item.bCh;
+			item._iMaxCharges = message.item.bMCh;
+			item._iPLToHit = message.item.wToHit;
+			item._iMaxDam = message.item.wMaxDam;
+			item._iMinStr = message.item.bMinStr;
+			item._iMinMag = message.item.bMinMag;
+			item._iMinDex = message.item.bMinDex;
+			item._iAC = message.item.bAC;
+			item.dwBuff = message.item.dwBuff;
+		}
+
+		CheckInvSwap(player, item, message.bLoc);
 	}
 
 	return sizeof(message);
@@ -1889,10 +1961,46 @@ size_t OnChangeBeltItems(const TCmd *pCmd, int pnum)
 	const auto &message = *reinterpret_cast<const TCmdChItem *>(pCmd);
 	Player &player = Players[pnum];
 
+	if (message.bLoc >= MaxBeltItems)
+		return sizeof(message);
+
 	if (gbBufferMsgs == 1) {
 		SendPacket(pnum, &message, sizeof(message));
-	} else if (&player != MyPlayer && message.bLoc < MaxBeltItems && message.wIndx <= IDI_LAST) {
-		CheckBeltSwap(player, message.bLoc, message.wIndx, message.wCI, message.dwSeed, message.bId != 0, message.dwBuff);
+	} else if (&player != MyPlayer && IsItemAvailable(message.def.wIndx)) {
+		Item &item = player.SpdList[message.bLoc];
+		item = {};
+
+		if (message.def.wIndx == IDI_EAR) {
+			RecreateEar(
+			    item,
+			    message.ear.wCI,
+			    message.ear.dwSeed,
+			    message.ear.bCursval,
+			    message.ear.heroname);
+		} else {
+			RecreateItem(
+			    player,
+			    item,
+			    message.item.wIndx,
+			    message.item.wCI,
+			    message.item.dwSeed,
+			    message.item.wValue,
+			    (message.item.dwBuff & CF_HELLFIRE) != 0);
+
+			if (message.item.bId != 0)
+				item._iIdentified = true;
+			item._iDurability = message.item.bDur;
+			item._iMaxDur = message.item.bMDur;
+			item._iCharges = message.item.bCh;
+			item._iMaxCharges = message.item.bMCh;
+			item._iPLToHit = message.item.wToHit;
+			item._iMaxDam = message.item.wMaxDam;
+			item._iMinStr = message.item.bMinStr;
+			item._iMinMag = message.item.bMinMag;
+			item._iMinDex = message.item.bMinDex;
+			item._iAC = message.item.bAC;
+			item.dwBuff = message.item.dwBuff;
+		}
 	}
 
 	return sizeof(message);
@@ -3045,17 +3153,34 @@ void NetSendCmdPItem(bool bHiPri, _cmd_id bCmd, Point position, const Item &item
 
 void NetSendCmdChItem(bool bHiPri, uint8_t bLoc)
 {
-	TCmdChItem cmd;
+	TCmdChItem cmd {};
 
 	Item &item = MyPlayer->InvBody[bLoc];
 
 	cmd.bCmd = CMD_CHANGEPLRITEMS;
 	cmd.bLoc = bLoc;
-	cmd.wIndx = item.IDidx;
-	cmd.wCI = item._iCreateInfo;
-	cmd.dwSeed = item._iSeed;
-	cmd.bId = item._iIdentified ? 1 : 0;
-	cmd.dwBuff = item.dwBuff;
+	cmd.def.wIndx = item.IDidx;
+	cmd.def.wCI = item._iCreateInfo;
+	cmd.def.dwSeed = item._iSeed;
+
+	if (item.IDidx == IDI_EAR) {
+		cmd.ear.bCursval = item._ivalue | ((item._iCurs - ICURS_EAR_SORCERER) << 6);
+		CopyUtf8(cmd.ear.heroname, item._iIName, sizeof(cmd.ear.heroname));
+	} else {
+		cmd.item.bId = item._iIdentified ? 1 : 0;
+		cmd.item.bDur = item._iDurability;
+		cmd.item.bMDur = item._iMaxDur;
+		cmd.item.bCh = item._iCharges;
+		cmd.item.bMCh = item._iMaxCharges;
+		cmd.item.wValue = item._ivalue;
+		cmd.item.wToHit = item._iPLToHit;
+		cmd.item.wMaxDam = item._iMaxDam;
+		cmd.item.bMinStr = item._iMinStr;
+		cmd.item.bMinMag = item._iMinMag;
+		cmd.item.bMinDex = item._iMinDex;
+		cmd.item.bAC = item._iAC;
+		cmd.item.dwBuff = item.dwBuff;
+	}
 
 	if (bHiPri)
 		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
@@ -3077,18 +3202,35 @@ void NetSendCmdDelItem(bool bHiPri, uint8_t bLoc)
 
 void NetSendCmdChInvItem(bool bHiPri, int invGridIndex)
 {
-	TCmdChItem cmd;
+	TCmdChItem cmd {};
 
 	int8_t invListIndex = abs(MyPlayer->InvGrid[invGridIndex]) - 1;
 	const Item &item = MyPlayer->InvList[invListIndex];
 
 	cmd.bCmd = CMD_CHANGEINVITEMS;
 	cmd.bLoc = invGridIndex;
-	cmd.wIndx = item.IDidx;
-	cmd.wCI = item._iCreateInfo;
-	cmd.dwSeed = item._iSeed;
-	cmd.bId = item._iIdentified ? 1 : 0;
-	cmd.dwBuff = item.dwBuff;
+	cmd.def.wIndx = item.IDidx;
+	cmd.def.wCI = item._iCreateInfo;
+	cmd.def.dwSeed = item._iSeed;
+
+	if (item.IDidx == IDI_EAR) {
+		cmd.ear.bCursval = item._ivalue | ((item._iCurs - ICURS_EAR_SORCERER) << 6);
+		CopyUtf8(cmd.ear.heroname, item._iIName, sizeof(cmd.ear.heroname));
+	} else {
+		cmd.item.bId = item._iIdentified ? 1 : 0;
+		cmd.item.bDur = item._iDurability;
+		cmd.item.bMDur = item._iMaxDur;
+		cmd.item.bCh = item._iCharges;
+		cmd.item.bMCh = item._iMaxCharges;
+		cmd.item.wValue = item._ivalue;
+		cmd.item.wToHit = item._iPLToHit;
+		cmd.item.wMaxDam = item._iMaxDam;
+		cmd.item.bMinStr = item._iMinStr;
+		cmd.item.bMinMag = item._iMinMag;
+		cmd.item.bMinDex = item._iMinDex;
+		cmd.item.bAC = item._iAC;
+		cmd.item.dwBuff = item.dwBuff;
+	}
 
 	if (bHiPri)
 		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
@@ -3098,17 +3240,34 @@ void NetSendCmdChInvItem(bool bHiPri, int invGridIndex)
 
 void NetSendCmdChBeltItem(bool bHiPri, int beltIndex)
 {
-	TCmdChItem cmd;
+	TCmdChItem cmd {};
 
 	const Item &item = MyPlayer->SpdList[beltIndex];
 
 	cmd.bCmd = CMD_CHANGEBELTITEMS;
 	cmd.bLoc = beltIndex;
-	cmd.wIndx = item.IDidx;
-	cmd.wCI = item._iCreateInfo;
-	cmd.dwSeed = item._iSeed;
-	cmd.bId = item._iIdentified ? 1 : 0;
-	cmd.dwBuff = item.dwBuff;
+	cmd.def.wIndx = item.IDidx;
+	cmd.def.wCI = item._iCreateInfo;
+	cmd.def.dwSeed = item._iSeed;
+
+	if (item.IDidx == IDI_EAR) {
+		cmd.ear.bCursval = item._ivalue | ((item._iCurs - ICURS_EAR_SORCERER) << 6);
+		CopyUtf8(cmd.ear.heroname, item._iIName, sizeof(cmd.ear.heroname));
+	} else {
+		cmd.item.bId = item._iIdentified ? 1 : 0;
+		cmd.item.bDur = item._iDurability;
+		cmd.item.bMDur = item._iMaxDur;
+		cmd.item.bCh = item._iCharges;
+		cmd.item.bMCh = item._iMaxCharges;
+		cmd.item.wValue = item._ivalue;
+		cmd.item.wToHit = item._iPLToHit;
+		cmd.item.wMaxDam = item._iMaxDam;
+		cmd.item.bMinStr = item._iMinStr;
+		cmd.item.bMinMag = item._iMinMag;
+		cmd.item.bMinDex = item._iMinDex;
+		cmd.item.bAC = item._iAC;
+		cmd.item.dwBuff = item.dwBuff;
+	}
 
 	if (bHiPri)
 		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
