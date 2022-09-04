@@ -114,8 +114,79 @@ struct MegaTile {
 	uint16_t micro4;
 };
 
+/**
+ * Tile type.
+ *
+ * The tile type determines data encoding and the shape.
+ *
+ * Each tile type has its own encoding but they all encode data in the order
+ * of bottom-to-top (bottom row first).
+ */
+enum class TileType : uint8_t {
+	/**
+	 * 🮆 A 32x32 square. Stored as an array of pixels.
+	 */
+	Square,
+
+	/**
+	 * 🮆 A 32x32 square with transparency. RLE encoded.
+	 *
+	 * Each run starts with an int8_t value.
+	 * If positive, it is followed by this many pixels.
+	 * If negative, it indicates `-value` fully transparent pixels, which are omitted.
+	 *
+	 * Runs do not cross row boundaries.
+	 */
+	TransparentSquare,
+
+	/**
+	 *🭮 Left-pointing 32x31 triangle. Encoded as 31 varying-width rows with 2 padding bytes before every even row.
+	 *
+	 * The smallest rows (bottom and top) are 2px wide, the largest row is 16px wide (middle row).
+	 *
+	 * Encoding:
+	 * for i in [0, 30]:
+	 * - 2 unused bytes if i is even
+	 * - row (only the pixels within the triangle)
+	 */
+	LeftTriangle,
+
+	/**
+	 * 🭬Right-pointing 32x31 triangle.  Encoded as 31 varying-width rows with 2 padding bytes after every even row.
+	 *
+	 * The smallest rows (bottom and top) are 2px wide, the largest row is 16px wide (middle row).
+	 *
+	 * Encoding:
+	 * for i in [0, 30]:
+	 * - row (only the pixels within the triangle)
+	 * - 2 unused bytes if i is even
+	 */
+	RightTriangle,
+
+	/**
+	 * 🭓 Left-pointing 32x32 trapezoid: a 32x16 rectangle and the 16x16 bottom part of `LeftTriangle`.
+	 *
+	 * Begins with triangle part, which uses the `LeftTriangle` encoding,
+	 * and is followed by a flat array of pixels for the top rectangle part.
+	 */
+	LeftTrapezoid,
+
+	/**
+	 * 🭞 Right-pointing 32x32 trapezoid: 32x16 rectangle and the 16x16 bottom part of `RightTriangle`.
+	 *
+	 * Begins with the triangle part, which uses the `RightTriangle` encoding,
+	 * and is followed by a flat array of pixels for the top rectangle part.
+	 */
+	RightTrapezoid,
+};
+
+struct MicroTile {
+	TileType type;
+	uint16_t id;
+};
+
 struct MICROS {
-	uint16_t mt[16];
+	MicroTile mt[16];
 };
 
 struct ShadowStruct {

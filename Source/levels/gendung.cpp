@@ -447,25 +447,25 @@ void LoadLevelSOLData()
 
 void SetDungeonMicros()
 {
-	MicroTileLen = 10;
-	size_t blocks = 10;
-
-	if (leveltype == DTYPE_TOWN) {
-		MicroTileLen = 16;
-		blocks = 16;
-	} else if (leveltype == DTYPE_HELL) {
-		MicroTileLen = 12;
-		blocks = 16;
-	}
-
 	size_t tileCount;
 	std::unique_ptr<uint16_t[]> levelPieces = LoadMinData(tileCount);
 
-	for (size_t i = 0; i < tileCount / blocks; i++) {
-		uint16_t *pieces = &levelPieces[blocks * i];
-		for (size_t block = 0; block < blocks; block++) {
-			DPieceMicros[i].mt[block] = SDL_SwapLE16(pieces[blocks - 2 + (block & 1) - (block & 0xE)]);
+	MicroTileLen = 10; // Todo tileCount / sizeof(.sol)
+	if (IsAnyOf(leveltype, DTYPE_TOWN, DTYPE_HELL)) {
+		MicroTileLen = 16;
+	}
+
+	for (size_t i = 0; i < tileCount / MicroTileLen; i++) {
+		uint16_t *pieces = &levelPieces[MicroTileLen * i];
+		for (size_t block = 0; block < MicroTileLen; block++) {
+			uint16_t micro = SDL_SwapLE16(pieces[MicroTileLen - 2 + (block & 1) - (block & 0xE)]);
+			DPieceMicros[i].mt[block].type = static_cast<TileType>((micro & 0x7000) >> 12);
+			DPieceMicros[i].mt[block].id = micro & 0xFFF;
 		}
+	}
+
+	if (leveltype == DTYPE_HELL) {
+		MicroTileLen = 12; // Optimize render performance (no tile uses the full height)
 	}
 }
 

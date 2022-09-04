@@ -60,13 +60,6 @@ namespace devilution {
  */
 int LightTableIndex;
 
-/**
- * Specifies the current MIN block of the level CEL file, as used during rendering of the level tiles.
- *
- * frameNum  := block & 0x0FFF
- * frameType := block & 0x7000 >> 12
- */
-uint32_t level_cel_block;
 bool AutoMapShowItems;
 /**
  * Specifies the type of arches to render.
@@ -599,15 +592,15 @@ void DrawCell(const Surface &out, Point tilePosition, Point targetBufferPosition
 	cel_transparency_active = TileHasAny(level_piece_id, TileProperties::Transparent) && TransList[dTransVal[tilePosition.x][tilePosition.y]];
 	cel_foliage_active = !TileHasAny(level_piece_id, TileProperties::Solid);
 	for (int i = 0; i < (MicroTileLen / 2); i++) {
-		level_cel_block = pMap->mt[2 * i];
-		if (level_cel_block != 0) {
+		MicroTile tile = pMap->mt[2 * i];
+		if (tile.id != 0) {
 			arch_draw_type = i == 0 ? 1 : 0;
-			RenderTile(out, targetBufferPosition);
+			RenderTile(out, targetBufferPosition, tile);
 		}
-		level_cel_block = pMap->mt[2 * i + 1];
-		if (level_cel_block != 0) {
+		tile = pMap->mt[2 * i + 1];
+		if (tile.id != 0) {
 			arch_draw_type = i == 0 ? 2 : 0;
-			RenderTile(out, targetBufferPosition + Displacement { TILE_WIDTH / 2, 0 });
+			RenderTile(out, targetBufferPosition + Displacement { TILE_WIDTH / 2, 0 }, tile);
 		}
 		targetBufferPosition.y -= TILE_HEIGHT;
 	}
@@ -625,16 +618,16 @@ void DrawFloor(const Surface &out, Point tilePosition, Point targetBufferPositio
 	cel_transparency_active = false;
 	LightTableIndex = dLight[tilePosition.x][tilePosition.y];
 
-	arch_draw_type = 1; // Left
 	int pn = dPiece[tilePosition.x][tilePosition.y];
-	level_cel_block = DPieceMicros[pn].mt[0];
-	if (level_cel_block != 0) {
-		RenderTile(out, targetBufferPosition);
+	MicroTile tile = DPieceMicros[pn].mt[0];
+	if (tile.id != 0) {
+		arch_draw_type = 1; // Left
+		RenderTile(out, targetBufferPosition, tile);
 	}
-	arch_draw_type = 2; // Right
-	level_cel_block = DPieceMicros[pn].mt[1];
-	if (level_cel_block != 0) {
-		RenderTile(out, targetBufferPosition + Displacement { TILE_WIDTH / 2, 0 });
+	tile = DPieceMicros[pn].mt[1];
+	if (tile.id != 0) {
+		arch_draw_type = 2; // Right
+		RenderTile(out, targetBufferPosition + Displacement { TILE_WIDTH / 2, 0 }, tile);
 	}
 }
 
