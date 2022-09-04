@@ -845,6 +845,65 @@ bool IsPItemValid(const TCmdPItem &message)
 	return IsItemAvailable(message.def.wIndx);
 }
 
+void PrepareItemForNetwork(const Item &item, TItem &messageItem)
+{
+	messageItem.bId = item._iIdentified ? 1 : 0;
+	messageItem.bDur = item._iDurability;
+	messageItem.bMDur = item._iMaxDur;
+	messageItem.bCh = item._iCharges;
+	messageItem.bMCh = item._iMaxCharges;
+	messageItem.wValue = item._ivalue;
+	messageItem.wToHit = item._iPLToHit;
+	messageItem.wMaxDam = item._iMaxDam;
+	messageItem.bMinStr = item._iMinStr;
+	messageItem.bMinMag = item._iMinMag;
+	messageItem.bMinDex = item._iMinDex;
+	messageItem.bAC = item._iAC;
+	messageItem.dwBuff = item.dwBuff;
+}
+
+void PrepareEarForNetwork(const Item &item, TEar &ear)
+{
+	ear.bCursval = item._ivalue | ((item._iCurs - ICURS_EAR_SORCERER) << 6);
+	CopyUtf8(ear.heroname, item._iIName, sizeof(ear.heroname));
+}
+
+void PrepareItemForNetwork(const Item &item, TCmdGItem &message)
+{
+	message.def.wIndx = item.IDidx;
+	message.def.wCI = item._iCreateInfo;
+	message.def.dwSeed = item._iSeed;
+
+	if (item.IDidx == IDI_EAR)
+		PrepareEarForNetwork(item, message.ear);
+	else
+		PrepareItemForNetwork(item, message.item);
+}
+
+void PrepareItemForNetwork(const Item &item, TCmdPItem &message)
+{
+	message.def.wIndx = item.IDidx;
+	message.def.wCI = item._iCreateInfo;
+	message.def.dwSeed = item._iSeed;
+
+	if (item.IDidx == IDI_EAR)
+		PrepareEarForNetwork(item, message.ear);
+	else
+		PrepareItemForNetwork(item, message.item);
+}
+
+void PrepareItemForNetwork(const Item &item, TCmdChItem &message)
+{
+	message.def.wIndx = item.IDidx;
+	message.def.wCI = item._iCreateInfo;
+	message.def.dwSeed = item._iSeed;
+
+	if (item.IDidx == IDI_EAR)
+		PrepareEarForNetwork(item, message.ear);
+	else
+		PrepareItemForNetwork(item, message.item);
+}
+
 void RecreateItem(const Player &player, const TItem &messageItem, Item &item)
 {
 	RecreateItem(player, item, messageItem.wIndx, messageItem.wCI, messageItem.dwSeed, messageItem.wValue, (messageItem.dwBuff & CF_HELLFIRE) != 0);
@@ -3002,28 +3061,7 @@ void NetSendCmdGItem(bool bHiPri, _cmd_id bCmd, uint8_t pnum, uint8_t ii)
 	cmd.dwTime = 0;
 	cmd.x = Items[ii].position.x;
 	cmd.y = Items[ii].position.y;
-	cmd.def.wIndx = Items[ii].IDidx;
-	cmd.def.wCI = Items[ii]._iCreateInfo;
-	cmd.def.dwSeed = Items[ii]._iSeed;
-
-	if (Items[ii].IDidx == IDI_EAR) {
-		cmd.ear.bCursval = Items[ii]._ivalue | ((Items[ii]._iCurs - ICURS_EAR_SORCERER) << 6);
-		CopyUtf8(cmd.ear.heroname, Items[ii]._iIName, sizeof(cmd.ear.heroname));
-	} else {
-		cmd.item.bId = Items[ii]._iIdentified ? 1 : 0;
-		cmd.item.bDur = Items[ii]._iDurability;
-		cmd.item.bMDur = Items[ii]._iMaxDur;
-		cmd.item.bCh = Items[ii]._iCharges;
-		cmd.item.bMCh = Items[ii]._iMaxCharges;
-		cmd.item.wValue = Items[ii]._ivalue;
-		cmd.item.wToHit = Items[ii]._iPLToHit;
-		cmd.item.wMaxDam = Items[ii]._iMaxDam;
-		cmd.item.bMinStr = Items[ii]._iMinStr;
-		cmd.item.bMinMag = Items[ii]._iMinMag;
-		cmd.item.bMinDex = Items[ii]._iMinDex;
-		cmd.item.bAC = Items[ii]._iAC;
-		cmd.item.dwBuff = Items[ii].dwBuff;
-	}
+	PrepareItemForNetwork(Items[ii], cmd);
 
 	if (bHiPri)
 		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
@@ -3038,28 +3076,7 @@ void NetSendCmdPItem(bool bHiPri, _cmd_id bCmd, Point position, const Item &item
 	cmd.bCmd = bCmd;
 	cmd.x = position.x;
 	cmd.y = position.y;
-	cmd.def.wIndx = item.IDidx;
-	cmd.def.wCI = item._iCreateInfo;
-	cmd.def.dwSeed = item._iSeed;
-
-	if (item.IDidx == IDI_EAR) {
-		cmd.ear.bCursval = item._ivalue | ((item._iCurs - ICURS_EAR_SORCERER) << 6);
-		CopyUtf8(cmd.ear.heroname, item._iIName, sizeof(cmd.ear.heroname));
-	} else {
-		cmd.item.bId = item._iIdentified ? 1 : 0;
-		cmd.item.bDur = item._iDurability;
-		cmd.item.bMDur = item._iMaxDur;
-		cmd.item.bCh = item._iCharges;
-		cmd.item.bMCh = item._iMaxCharges;
-		cmd.item.wValue = item._ivalue;
-		cmd.item.wToHit = item._iPLToHit;
-		cmd.item.wMaxDam = item._iMaxDam;
-		cmd.item.bMinStr = item._iMinStr;
-		cmd.item.bMinMag = item._iMinMag;
-		cmd.item.bMinDex = item._iMinDex;
-		cmd.item.bAC = item._iAC;
-		cmd.item.dwBuff = item.dwBuff;
-	}
+	PrepareItemForNetwork(item, cmd);
 
 	ItemLimbo = item;
 
@@ -3077,28 +3094,7 @@ void NetSendCmdChItem(bool bHiPri, uint8_t bLoc)
 
 	cmd.bCmd = CMD_CHANGEPLRITEMS;
 	cmd.bLoc = bLoc;
-	cmd.def.wIndx = item.IDidx;
-	cmd.def.wCI = item._iCreateInfo;
-	cmd.def.dwSeed = item._iSeed;
-
-	if (item.IDidx == IDI_EAR) {
-		cmd.ear.bCursval = item._ivalue | ((item._iCurs - ICURS_EAR_SORCERER) << 6);
-		CopyUtf8(cmd.ear.heroname, item._iIName, sizeof(cmd.ear.heroname));
-	} else {
-		cmd.item.bId = item._iIdentified ? 1 : 0;
-		cmd.item.bDur = item._iDurability;
-		cmd.item.bMDur = item._iMaxDur;
-		cmd.item.bCh = item._iCharges;
-		cmd.item.bMCh = item._iMaxCharges;
-		cmd.item.wValue = item._ivalue;
-		cmd.item.wToHit = item._iPLToHit;
-		cmd.item.wMaxDam = item._iMaxDam;
-		cmd.item.bMinStr = item._iMinStr;
-		cmd.item.bMinMag = item._iMinMag;
-		cmd.item.bMinDex = item._iMinDex;
-		cmd.item.bAC = item._iAC;
-		cmd.item.dwBuff = item.dwBuff;
-	}
+	PrepareItemForNetwork(item, cmd);
 
 	if (bHiPri)
 		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
@@ -3140,28 +3136,7 @@ void NetSendCmdChInvItem(bool bHiPri, int invGridIndex)
 
 	cmd.bCmd = CMD_CHANGEINVITEMS;
 	cmd.bLoc = invGridIndex;
-	cmd.def.wIndx = item.IDidx;
-	cmd.def.wCI = item._iCreateInfo;
-	cmd.def.dwSeed = item._iSeed;
-
-	if (item.IDidx == IDI_EAR) {
-		cmd.ear.bCursval = item._ivalue | ((item._iCurs - ICURS_EAR_SORCERER) << 6);
-		CopyUtf8(cmd.ear.heroname, item._iIName, sizeof(cmd.ear.heroname));
-	} else {
-		cmd.item.bId = item._iIdentified ? 1 : 0;
-		cmd.item.bDur = item._iDurability;
-		cmd.item.bMDur = item._iMaxDur;
-		cmd.item.bCh = item._iCharges;
-		cmd.item.bMCh = item._iMaxCharges;
-		cmd.item.wValue = item._ivalue;
-		cmd.item.wToHit = item._iPLToHit;
-		cmd.item.wMaxDam = item._iMaxDam;
-		cmd.item.bMinStr = item._iMinStr;
-		cmd.item.bMinMag = item._iMinMag;
-		cmd.item.bMinDex = item._iMinDex;
-		cmd.item.bAC = item._iAC;
-		cmd.item.dwBuff = item.dwBuff;
-	}
+	PrepareItemForNetwork(item, cmd);
 
 	if (bHiPri)
 		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
@@ -3177,28 +3152,7 @@ void NetSendCmdChBeltItem(bool bHiPri, int beltIndex)
 
 	cmd.bCmd = CMD_CHANGEBELTITEMS;
 	cmd.bLoc = beltIndex;
-	cmd.def.wIndx = item.IDidx;
-	cmd.def.wCI = item._iCreateInfo;
-	cmd.def.dwSeed = item._iSeed;
-
-	if (item.IDidx == IDI_EAR) {
-		cmd.ear.bCursval = item._ivalue | ((item._iCurs - ICURS_EAR_SORCERER) << 6);
-		CopyUtf8(cmd.ear.heroname, item._iIName, sizeof(cmd.ear.heroname));
-	} else {
-		cmd.item.bId = item._iIdentified ? 1 : 0;
-		cmd.item.bDur = item._iDurability;
-		cmd.item.bMDur = item._iMaxDur;
-		cmd.item.bCh = item._iCharges;
-		cmd.item.bMCh = item._iMaxCharges;
-		cmd.item.wValue = item._ivalue;
-		cmd.item.wToHit = item._iPLToHit;
-		cmd.item.wMaxDam = item._iMaxDam;
-		cmd.item.bMinStr = item._iMinStr;
-		cmd.item.bMinMag = item._iMinMag;
-		cmd.item.bMinDex = item._iMinDex;
-		cmd.item.bAC = item._iAC;
-		cmd.item.dwBuff = item.dwBuff;
-	}
+	PrepareItemForNetwork(item, cmd);
 
 	if (bHiPri)
 		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
