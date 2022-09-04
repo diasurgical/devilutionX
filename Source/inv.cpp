@@ -1452,16 +1452,9 @@ bool GoldAutoPlace(Player &player, Item &goldStack)
 	return goldStack._ivalue == 0;
 }
 
-void CheckInvSwap(Player &player, inv_body_loc bLoc, int idx, uint16_t wCI, int seed, bool bId, uint32_t dwBuff)
+void CheckInvSwap(Player &player, inv_body_loc bLoc)
 {
 	Item &item = player.InvBody[bLoc];
-
-	item = {};
-	RecreateItem(player, item, idx, wCI, seed, 0, (dwBuff & CF_HELLFIRE) != 0);
-
-	if (bId) {
-		item._iIdentified = true;
-	}
 
 	if (bLoc == INVLOC_HAND_LEFT && player.GetItemLocation(item) == ILOC_TWOHAND) {
 		player.InvBody[INVLOC_HAND_RIGHT].clear();
@@ -1479,15 +1472,8 @@ void inv_update_rem_item(Player &player, inv_body_loc iv)
 	CalcPlrInv(player, player._pmode != PM_DEATH);
 }
 
-void CheckInvSwap(Player &player, int invGridIndex, int idx, uint16_t wCI, int seed, bool bId, uint32_t dwBuff)
+void CheckInvSwap(Player &player, const Item &item, int invGridIndex)
 {
-	Item item = {};
-	RecreateItem(player, item, idx, wCI, seed, 0, (dwBuff & CF_HELLFIRE) != 0);
-
-	if (bId) {
-		item._iIdentified = true;
-	}
-
 	auto itemSize = GetInventorySize(item);
 
 	const int pitch = 10;
@@ -1533,18 +1519,6 @@ void CheckInvRemove(Player &player, int invGridIndex)
 
 	if (invListIndex >= 0) {
 		player.RemoveInvItem(invListIndex);
-	}
-}
-
-void CheckBeltSwap(Player &player, int beltIndex, int idx, uint16_t wCI, int seed, bool bId, uint32_t dwBuff)
-{
-	Item &item = player.SpdList[beltIndex];
-
-	item = {};
-	RecreateItem(player, item, idx, wCI, seed, 0, (dwBuff & CF_HELLFIRE) != 0);
-
-	if (bId) {
-		item._iIdentified = true;
 	}
 }
 
