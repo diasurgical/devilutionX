@@ -77,7 +77,6 @@ void SetSpeedSpell(size_t slot);
 void ToggleSpell(size_t slot);
 
 void AddPanelString(string_view str);
-void AddPanelText(string_view str);
 void ClearPanel();
 void DrawPanelBox(const Surface &out, SDL_Rect srcRect, Point targetPosition);
 Point GetPanelPosition(UiPanels panel, Point offset = { 0, 0 });

@@ -25,10 +25,7 @@
 #include "utils/display.h"
 #include "utils/language.h"
 #include "utils/sdl_compat.h"
-#include "utils/split_by_char.hpp"
-
 #include "utils/stdcompat/optional.hpp"
-
 #include "utils/utf8.hpp"
 
 namespace devilution {
@@ -616,46 +613,43 @@ std::string WordWrapString(string_view text, unsigned width, GameFontTables size
  */
 uint32_t DrawString(const Surface &out, string_view text, const Rectangle &rect, UiFlags flags, int spacing, int lineHeight)
 {
-	int bytesDrawn = 0;
-	for (string_view s : SplitByChar(text, '\n')) {
-		GameFontTables size = GetSizeFromFlags(flags);
-		text_color color = GetColorFromFlags(flags);
+	GameFontTables size = GetSizeFromFlags(flags);
+	text_color color = GetColorFromFlags(flags);
 
-		int charactersInLine = 0;
-		int lineWidth = 0;
-		if (HasAnyOf(flags, (UiFlags::AlignCenter | UiFlags::AlignRight | UiFlags::KerningFitSpacing)))
-			lineWidth = GetLineWidth(text, size, spacing, &charactersInLine);
+	int charactersInLine = 0;
+	int lineWidth = 0;
+	if (HasAnyOf(flags, (UiFlags::AlignCenter | UiFlags::AlignRight | UiFlags::KerningFitSpacing)))
+		lineWidth = GetLineWidth(text, size, spacing, &charactersInLine);
 
-		int maxSpacing = spacing;
-		if (HasAnyOf(flags, UiFlags::KerningFitSpacing))
-			spacing = AdjustSpacingToFitHorizontally(lineWidth, maxSpacing, charactersInLine, rect.size.width);
+	int maxSpacing = spacing;
+	if (HasAnyOf(flags, UiFlags::KerningFitSpacing))
+		spacing = AdjustSpacingToFitHorizontally(lineWidth, maxSpacing, charactersInLine, rect.size.width);
 
-		Point characterPosition = rect.position;
-		if (HasAnyOf(flags, UiFlags::AlignCenter))
-			characterPosition.x += (rect.size.width - lineWidth) / 2;
-		else if (HasAnyOf(flags, UiFlags::AlignRight))
-			characterPosition.x += rect.size.width - lineWidth;
+	Point characterPosition = rect.position;
+	if (HasAnyOf(flags, UiFlags::AlignCenter))
+		characterPosition.x += (rect.size.width - lineWidth) / 2;
+	else if (HasAnyOf(flags, UiFlags::AlignRight))
+		characterPosition.x += rect.size.width - lineWidth;
 
-		int rightMargin = rect.position.x + rect.size.width;
-		const int bottomMargin = rect.size.height != 0 ? std::min(rect.position.y + rect.size.height, out.h()) : out.h();
+	int rightMargin = rect.position.x + rect.size.width;
+	const int bottomMargin = rect.size.height != 0 ? std::min(rect.position.y + rect.size.height, out.h()) : out.h();
 
-		if (lineHeight == -1)
-			lineHeight = GetLineHeight(text, size);
+	if (lineHeight == -1)
+		lineHeight = GetLineHeight(text, size);
 
-		if (HasAnyOf(flags, UiFlags::VerticalCenter)) {
-			int textHeight = (std::count(text.cbegin(), text.cend(), '\n') + 1) * lineHeight;
-			characterPosition.y += (rect.size.height - textHeight) / 2;
-		}
+	if (HasAnyOf(flags, UiFlags::VerticalCenter)) {
+		int textHeight = (std::count(text.cbegin(), text.cend(), '\n') + 1) * lineHeight;
+		characterPosition.y += (rect.size.height - textHeight) / 2;
+	}
 
-		characterPosition.y += BaseLineOffset[size];
+	characterPosition.y += BaseLineOffset[size];
 
-		bytesDrawn += DoDrawString(out, text, rect, characterPosition, spacing, lineHeight, lineWidth, rightMargin, bottomMargin, flags, size, color);
+	int bytesDrawn = DoDrawString(out, text, rect, characterPosition, spacing, lineHeight, lineWidth, rightMargin, bottomMargin, flags, size, color);
 
-		if (HasAnyOf(flags, UiFlags::PentaCursor)) {
-			ClxDraw(out, characterPosition + Displacement { 0, lineHeight - BaseLineOffset[size] }, (*pSPentSpn2Cels)[PentSpn2Spin()]);
-		} else if (HasAnyOf(flags, UiFlags::TextCursor) && GetAnimationFrame(2, 500) != 0) {
-			DrawFont(out, characterPosition, LoadFont(size, color, 0), color, '|');
-		}
+	if (HasAnyOf(flags, UiFlags::PentaCursor)) {
+		ClxDraw(out, characterPosition + Displacement { 0, lineHeight - BaseLineOffset[size] }, (*pSPentSpn2Cels)[PentSpn2Spin()]);
+	} else if (HasAnyOf(flags, UiFlags::TextCursor) && GetAnimationFrame(2, 500) != 0) {
+		DrawFont(out, characterPosition, LoadFont(size, color, 0), color, '|');
 	}
 
 	return bytesDrawn;
