@@ -159,17 +159,31 @@ void UnPackItem(const ItemPack &packedItem, const Player &player, Item &item, bo
 	}
 
 	if (idx == IDI_EAR) {
-		RecreateEar(
-		    item,
-		    SDL_SwapLE16(packedItem.iCreateInfo),
-		    SDL_SwapLE32(packedItem.iSeed),
-		    packedItem.bId,
-		    packedItem.bDur,
-		    packedItem.bMDur,
-		    packedItem.bCh,
-		    packedItem.bMCh,
-		    SDL_SwapLE16(packedItem.wValue),
-		    SDL_SwapLE32(packedItem.dwBuff));
+		uint16_t ic = SDL_SwapLE16(packedItem.iCreateInfo);
+		uint32_t iseed = SDL_SwapLE32(packedItem.iSeed);
+		uint16_t ivalue = SDL_SwapLE16(packedItem.wValue);
+		int32_t ibuff = SDL_SwapLE32(packedItem.dwBuff);
+
+		char heroName[17];
+		heroName[0] = static_cast<char>((ic >> 8) & 0x7F);
+		heroName[1] = static_cast<char>(ic & 0x7F);
+		heroName[2] = static_cast<char>((iseed >> 24) & 0x7F);
+		heroName[3] = static_cast<char>((iseed >> 16) & 0x7F);
+		heroName[4] = static_cast<char>((iseed >> 8) & 0x7F);
+		heroName[5] = static_cast<char>(iseed & 0x7F);
+		heroName[6] = static_cast<char>(packedItem.bId & 0x7F);
+		heroName[7] = static_cast<char>(packedItem.bDur & 0x7F);
+		heroName[8] = static_cast<char>(packedItem.bMDur & 0x7F);
+		heroName[9] = static_cast<char>(packedItem.bCh & 0x7F);
+		heroName[10] = static_cast<char>(packedItem.bMCh & 0x7F);
+		heroName[11] = static_cast<char>((ivalue >> 8) & 0x7F);
+		heroName[12] = static_cast<char>((ibuff >> 24) & 0x7F);
+		heroName[13] = static_cast<char>((ibuff >> 16) & 0x7F);
+		heroName[14] = static_cast<char>((ibuff >> 8) & 0x7F);
+		heroName[15] = static_cast<char>(ibuff & 0x7F);
+		heroName[16] = '\0';
+
+		RecreateEar(item, ic, iseed, ivalue & 0xFF, heroName);
 	} else {
 		item = {};
 		RecreateItem(player, item, idx, SDL_SwapLE16(packedItem.iCreateInfo), SDL_SwapLE32(packedItem.iSeed), SDL_SwapLE16(packedItem.wValue), isHellfire);

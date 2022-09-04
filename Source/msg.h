@@ -539,17 +539,13 @@ struct TCmdQuest {
 	uint8_t qvar1;
 };
 
-/**
- * Represents an item being picked up from the ground
- */
-struct TCmdGItem {
-	_cmd_id bCmd;
-	uint8_t bMaster;
-	uint8_t bPnum;
-	uint8_t bCursitem;
-	uint8_t bLevel;
-	uint8_t x;
-	uint8_t y;
+struct TItemDef {
+	_item_indexes wIndx;
+	uint16_t wCI;
+	int32_t dwSeed;
+};
+
+struct TItem {
 	_item_indexes wIndx;
 	uint16_t wCI;
 	int32_t dwSeed;
@@ -560,13 +556,41 @@ struct TCmdGItem {
 	uint8_t bMCh;
 	uint16_t wValue;
 	uint32_t dwBuff;
-	int32_t dwTime;
 	uint16_t wToHit;
 	uint16_t wMaxDam;
 	uint8_t bMinStr;
 	uint8_t bMinMag;
 	uint8_t bMinDex;
 	int16_t bAC;
+};
+
+struct TEar {
+	_item_indexes wIndx;
+	uint16_t wCI;
+	int32_t dwSeed;
+	uint8_t bCursval;
+	char heroname[17];
+};
+
+/**
+ * Represents an item being picked up from the ground
+ */
+struct TCmdGItem {
+	_cmd_id bCmd;
+	uint8_t x;
+	uint8_t y;
+
+	union {
+		TItemDef def;
+		TItem item;
+		TEar ear;
+	};
+
+	uint8_t bMaster;
+	uint8_t bPnum;
+	uint8_t bCursitem;
+	uint8_t bLevel;
+	int32_t dwTime;
 };
 
 /**
@@ -576,26 +600,12 @@ struct TCmdPItem {
 	_cmd_id bCmd;
 	uint8_t x;
 	uint8_t y;
-	_item_indexes wIndx;
-	uint16_t wCI;
-	/**
-	 * Item identifier
-	 * @see Item::_iSeed
-	 */
-	int32_t dwSeed;
-	uint8_t bId;
-	uint8_t bDur;
-	uint8_t bMDur;
-	uint8_t bCh;
-	uint8_t bMCh;
-	uint16_t wValue;
-	uint32_t dwBuff;
-	uint16_t wToHit;
-	uint16_t wMaxDam;
-	uint8_t bMinStr;
-	uint8_t bMinMag;
-	uint8_t bMinDex;
-	int16_t bAC;
+
+	union {
+		TItemDef def;
+		TItem item;
+		TEar ear;
+	};
 
 	/**
 	 * Items placed during dungeon generation

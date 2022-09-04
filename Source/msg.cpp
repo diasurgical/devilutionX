@@ -576,7 +576,7 @@ bool DeltaGetItem(const TCmdGItem &message, uint8_t bLevel)
 	DLevel &deltaLevel = GetDeltaLevel(bLevel);
 
 	for (TCmdPItem &item : deltaLevel.item) {
-		if (item.bCmd == CMD_INVALID || item.wIndx != message.wIndx || item.wCI != message.wCI || item.dwSeed != message.dwSeed)
+		if (item.bCmd == CMD_INVALID || item.def.wIndx != message.def.wIndx || item.def.wCI != message.def.wCI || item.def.dwSeed != message.def.dwSeed)
 			continue;
 
 		if (item.bCmd == TCmdPItem::PickedUpItem) {
@@ -596,7 +596,7 @@ bool DeltaGetItem(const TCmdGItem &message, uint8_t bLevel)
 		app_fatal("delta:1");
 	}
 
-	if ((message.wCI & CF_PREGEN) == 0)
+	if ((message.def.wCI & CF_PREGEN) == 0)
 		return false;
 
 	for (TCmdPItem &item : deltaLevel.item) {
@@ -605,22 +605,22 @@ bool DeltaGetItem(const TCmdGItem &message, uint8_t bLevel)
 			item.bCmd = TCmdPItem::PickedUpItem;
 			item.x = message.x;
 			item.y = message.y;
-			item.wIndx = message.wIndx;
-			item.wCI = message.wCI;
-			item.dwSeed = message.dwSeed;
-			item.bId = message.bId;
-			item.bDur = message.bDur;
-			item.bMDur = message.bMDur;
-			item.bCh = message.bCh;
-			item.bMCh = message.bMCh;
-			item.wValue = message.wValue;
-			item.dwBuff = message.dwBuff;
-			item.wToHit = message.wToHit;
-			item.wMaxDam = message.wMaxDam;
-			item.bMinStr = message.bMinStr;
-			item.bMinMag = message.bMinMag;
-			item.bMinDex = message.bMinDex;
-			item.bAC = message.bAC;
+			item.item.wIndx = message.item.wIndx;
+			item.item.wCI = message.item.wCI;
+			item.item.dwSeed = message.item.dwSeed;
+			item.item.bId = message.item.bId;
+			item.item.bDur = message.item.bDur;
+			item.item.bMDur = message.item.bMDur;
+			item.item.bCh = message.item.bCh;
+			item.item.bMCh = message.item.bMCh;
+			item.item.wValue = message.item.wValue;
+			item.item.dwBuff = message.item.dwBuff;
+			item.item.wToHit = message.item.wToHit;
+			item.item.wMaxDam = message.item.wMaxDam;
+			item.item.bMinStr = message.item.bMinStr;
+			item.item.bMinMag = message.item.bMinMag;
+			item.item.bMinDex = message.item.bMinDex;
+			item.item.bAC = message.item.bAC;
 			break;
 		}
 	}
@@ -637,9 +637,9 @@ void DeltaPutItem(const TCmdPItem &message, Point position, const Player &player
 	for (const TCmdPItem &item : deltaLevel.item) {
 		if (item.bCmd != TCmdPItem::PickedUpItem
 		    && item.bCmd != CMD_INVALID
-		    && item.wIndx == message.wIndx
-		    && item.wCI == message.wCI
-		    && item.dwSeed == message.dwSeed) {
+		    && item.def.wIndx == message.def.wIndx
+		    && item.def.wCI == message.def.wCI
+		    && item.def.dwSeed == message.def.dwSeed) {
 			if (item.bCmd == TCmdPItem::DroppedItem)
 				return;
 			app_fatal(_("Trying to drop a floor item?"));
@@ -832,7 +832,7 @@ bool IsGItemValid(const TCmdGItem &message)
 	if (!InDungeonBounds({ message.x, message.y }))
 		return false;
 
-	return IsItemAvailable(message.wIndx);
+	return IsItemAvailable(message.def.wIndx);
 }
 
 bool IsPItemValid(const TCmdPItem &message)
@@ -842,7 +842,7 @@ bool IsPItemValid(const TCmdPItem &message)
 	if (!InDungeonBounds(position))
 		return false;
 
-	return IsItemAvailable(message.wIndx);
+	return IsItemAvailable(message.def.wIndx);
 }
 
 size_t OnRequestGetItem(const TCmd *pCmd, Player &player)
@@ -851,18 +851,18 @@ size_t OnRequestGetItem(const TCmd *pCmd, Player &player)
 
 	if (gbBufferMsgs != 1 && IOwnLevel(player) && IsGItemValid(message)) {
 		const Point position { message.x, message.y };
-		if (GetItemRecord(message.dwSeed, message.wCI, message.wIndx)) {
+		if (GetItemRecord(message.def.dwSeed, message.def.wCI, message.def.wIndx)) {
 			int ii = -1;
 			if (InDungeonBounds(position)) {
 				ii = abs(dItem[position.x][position.y]) - 1;
-				if (ii >= 0 && !Items[ii].keyAttributesMatch(message.dwSeed, static_cast<_item_indexes>(message.wIndx), message.wCI)) {
+				if (ii >= 0 && !Items[ii].keyAttributesMatch(message.def.dwSeed, static_cast<_item_indexes>(message.def.wIndx), message.def.wCI)) {
 					ii = -1;
 				}
 			}
 
 			if (ii == -1) {
 				// No item at the target position or the key attributes don't match, so try find a matching item.
-				int activeItemIndex = FindGetItem(message.dwSeed, message.wIndx, message.wCI);
+				int activeItemIndex = FindGetItem(message.def.dwSeed, message.def.wIndx, message.def.wCI);
 				if (activeItemIndex != -1) {
 					ii = ActiveItems[activeItemIndex];
 				}
@@ -871,10 +871,10 @@ size_t OnRequestGetItem(const TCmd *pCmd, Player &player)
 			if (ii != -1) {
 				NetSendCmdGItem2(false, CMD_GETITEM, MyPlayerId, message.bPnum, message);
 				if (message.bPnum != MyPlayerId)
-					SyncGetItem(position, message.dwSeed, message.wIndx, message.wCI);
+					SyncGetItem(position, message.def.dwSeed, message.def.wIndx, message.def.wCI);
 				else
 					InvGetItem(*MyPlayer, ii);
-				SetItemRecord(message.dwSeed, message.wCI, message.wIndx);
+				SetItemRecord(message.def.dwSeed, message.def.wCI, message.def.wIndx);
 			} else if (!NetSendCmdReq2(CMD_REQUESTGITEM, MyPlayerId, message.bPnum, message)) {
 				NetSendCmdExtra(message);
 			}
@@ -897,15 +897,44 @@ size_t OnGetItem(const TCmd *pCmd, size_t pnum)
 			if ((isOnActiveLevel || message.bPnum == MyPlayerId) && message.bMaster != MyPlayerId) {
 				if (message.bPnum == MyPlayerId) {
 					if (!isOnActiveLevel) {
-						int ii = SyncPutItem(*MyPlayer, MyPlayer->position.tile, message.wIndx, message.wCI, message.dwSeed, message.bId, message.bDur, message.bMDur, message.bCh, message.bMCh, message.wValue, message.dwBuff, message.wToHit, message.wMaxDam, message.bMinStr, message.bMinMag, message.bMinDex, message.bAC);
+						int ii;
+						if (message.def.wIndx == IDI_EAR) {
+							ii = SyncPutEar(
+							    *MyPlayer,
+							    MyPlayer->position.tile,
+							    message.ear.wCI,
+							    message.ear.dwSeed,
+							    message.ear.bCursval,
+							    message.ear.heroname);
+						} else {
+							ii = SyncPutItem(
+							    *MyPlayer,
+							    MyPlayer->position.tile,
+							    message.item.wIndx,
+							    message.item.wCI,
+							    message.item.dwSeed,
+							    message.item.bId,
+							    message.item.bDur,
+							    message.item.bMDur,
+							    message.item.bCh,
+							    message.item.bMCh,
+							    message.item.wValue,
+							    message.item.dwBuff,
+							    message.item.wToHit,
+							    message.item.wMaxDam,
+							    message.item.bMinStr,
+							    message.item.bMinMag,
+							    message.item.bMinDex,
+							    message.item.bAC);
+						}
 						if (ii != -1)
 							InvGetItem(*MyPlayer, ii);
 					} else {
-						int activeItemIndex = FindGetItem(message.dwSeed, message.wIndx, message.wCI);
+						int activeItemIndex = FindGetItem(message.def.dwSeed, message.def.wIndx, message.def.wCI);
 						InvGetItem(*MyPlayer, ActiveItems[activeItemIndex]);
 					}
 				} else {
-					SyncGetItem(position, message.dwSeed, message.wIndx, message.wCI);
+					SyncGetItem(position, message.def.dwSeed, message.def.wIndx, message.def.wCI);
 				}
 			}
 		} else {
@@ -936,14 +965,14 @@ size_t OnRequestAutoGetItem(const TCmd *pCmd, Player &player)
 
 	if (gbBufferMsgs != 1 && IOwnLevel(player) && IsGItemValid(message)) {
 		const Point position { message.x, message.y };
-		if (GetItemRecord(message.dwSeed, message.wCI, message.wIndx)) {
-			if (FindGetItem(message.dwSeed, message.wIndx, message.wCI) != -1) {
+		if (GetItemRecord(message.def.dwSeed, message.def.wCI, message.def.wIndx)) {
+			if (FindGetItem(message.def.dwSeed, message.def.wIndx, message.def.wCI) != -1) {
 				NetSendCmdGItem2(false, CMD_AGETITEM, MyPlayerId, message.bPnum, message);
 				if (message.bPnum != MyPlayerId)
-					SyncGetItem(position, message.dwSeed, message.wIndx, message.wCI);
+					SyncGetItem(position, message.def.dwSeed, message.def.wIndx, message.def.wCI);
 				else
 					AutoGetItem(*MyPlayer, &Items[message.bCursitem], message.bCursitem);
-				SetItemRecord(message.dwSeed, message.wCI, message.wIndx);
+				SetItemRecord(message.def.dwSeed, message.def.wCI, message.def.wIndx);
 			} else if (!NetSendCmdReq2(CMD_REQUESTAGITEM, MyPlayerId, message.bPnum, message)) {
 				NetSendCmdExtra(message);
 			}
@@ -967,14 +996,43 @@ size_t OnAutoGetItem(const TCmd *pCmd, size_t pnum)
 				if (message.bPnum == MyPlayerId) {
 					if (localLevel != message.bLevel) {
 						Player &player = *MyPlayer;
-						int ii = SyncPutItem(player, player.position.tile, message.wIndx, message.wCI, message.dwSeed, message.bId, message.bDur, message.bMDur, message.bCh, message.bMCh, message.wValue, message.dwBuff, message.wToHit, message.wMaxDam, message.bMinStr, message.bMinMag, message.bMinDex, message.bAC);
+						int ii;
+						if (message.def.wIndx == IDI_EAR) {
+							ii = SyncPutEar(
+							    player,
+							    player.position.tile,
+							    message.ear.wCI,
+							    message.ear.dwSeed,
+							    message.ear.bCursval,
+							    message.ear.heroname);
+						} else {
+							ii = SyncPutItem(
+							    player,
+							    player.position.tile,
+							    message.item.wIndx,
+							    message.item.wCI,
+							    message.item.dwSeed,
+							    message.item.bId,
+							    message.item.bDur,
+							    message.item.bMDur,
+							    message.item.bCh,
+							    message.item.bMCh,
+							    message.item.wValue,
+							    message.item.dwBuff,
+							    message.item.wToHit,
+							    message.item.wMaxDam,
+							    message.item.bMinStr,
+							    message.item.bMinMag,
+							    message.item.bMinDex,
+							    message.item.bAC);
+						}
 						if (ii != -1)
 							AutoGetItem(*MyPlayer, &Items[ii], ii);
 					} else {
 						AutoGetItem(*MyPlayer, &Items[message.bCursitem], message.bCursitem);
 					}
 				} else {
-					SyncGetItem(position, message.dwSeed, message.wIndx, message.wCI);
+					SyncGetItem(position, message.def.dwSeed, message.def.wIndx, message.def.wCI);
 				}
 			}
 		} else {
@@ -995,7 +1053,7 @@ size_t OnItemExtra(const TCmd *pCmd, size_t pnum)
 		DeltaGetItem(message, message.bLevel);
 		if (Players[pnum].isOnActiveLevel()) {
 			const Point position { message.x, message.y };
-			SyncGetItem(position, message.dwSeed, message.wIndx, message.wCI);
+			SyncGetItem(position, message.def.dwSeed, message.def.wIndx, message.def.wCI);
 		}
 	}
 
@@ -1016,17 +1074,19 @@ size_t OnPutItem(const TCmd *pCmd, size_t pnum)
 			int ii;
 			if (isSelf)
 				ii = InvPutItem(player, position, ItemLimbo);
+			else if (message.def.wIndx == IDI_EAR)
+				ii = SyncPutEar(player, position, message.ear.wCI, message.ear.dwSeed, message.ear.bCursval, message.ear.heroname);
 			else
-				ii = SyncPutItem(player, position, message.wIndx, message.wCI, message.dwSeed, message.bId, message.bDur, message.bMDur, message.bCh, message.bMCh, message.wValue, message.dwBuff, message.wToHit, message.wMaxDam, message.bMinStr, message.bMinMag, message.bMinDex, message.bAC);
+				ii = SyncPutItem(player, position, message.item.wIndx, message.item.wCI, message.item.dwSeed, message.item.bId, message.item.bDur, message.item.bMDur, message.item.bCh, message.item.bMCh, message.item.wValue, message.item.dwBuff, message.item.wToHit, message.item.wMaxDam, message.item.bMinStr, message.item.bMinMag, message.item.bMinDex, message.item.bAC);
 			if (ii != -1) {
-				PutItemRecord(message.dwSeed, message.wCI, message.wIndx);
+				PutItemRecord(message.def.dwSeed, message.def.wCI, message.def.wIndx);
 				DeltaPutItem(message, Items[ii].position, player);
 				if (isSelf)
 					pfile_update(true);
 			}
 			return sizeof(message);
 		} else {
-			PutItemRecord(message.dwSeed, message.wCI, message.wIndx);
+			PutItemRecord(message.def.dwSeed, message.def.wCI, message.def.wIndx);
 			DeltaPutItem(message, position, player);
 			if (isSelf)
 				pfile_update(true);
@@ -1046,16 +1106,45 @@ size_t OnSyncPutItem(const TCmd *pCmd, size_t pnum)
 		const Point position { message.x, message.y };
 		Player &player = Players[pnum];
 		if (player.isOnActiveLevel()) {
-			int ii = SyncPutItem(player, position, message.wIndx, message.wCI, message.dwSeed, message.bId, message.bDur, message.bMDur, message.bCh, message.bMCh, message.wValue, message.dwBuff, message.wToHit, message.wMaxDam, message.bMinStr, message.bMinMag, message.bMinDex, message.bAC);
+			int ii;
+			if (message.def.wIndx == IDI_EAR) {
+				ii = SyncPutEar(
+				    player,
+				    position,
+				    message.ear.wCI,
+				    message.ear.dwSeed,
+				    message.ear.bCursval,
+				    message.ear.heroname);
+			} else {
+				ii = SyncPutItem(
+				    player,
+				    position,
+				    message.item.wIndx,
+				    message.item.wCI,
+				    message.item.dwSeed,
+				    message.item.bId,
+				    message.item.bDur,
+				    message.item.bMDur,
+				    message.item.bCh,
+				    message.item.bMCh,
+				    message.item.wValue,
+				    message.item.dwBuff,
+				    message.item.wToHit,
+				    message.item.wMaxDam,
+				    message.item.bMinStr,
+				    message.item.bMinMag,
+				    message.item.bMinDex,
+				    message.item.bAC);
+			}
 			if (ii != -1) {
-				PutItemRecord(message.dwSeed, message.wCI, message.wIndx);
+				PutItemRecord(message.def.dwSeed, message.def.wCI, message.def.wIndx);
 				DeltaPutItem(message, Items[ii].position, player);
 				if (&player == MyPlayer)
 					pfile_update(true);
 			}
 			return sizeof(message);
 		} else {
-			PutItemRecord(message.dwSeed, message.wCI, message.wIndx);
+			PutItemRecord(message.def.dwSeed, message.def.wCI, message.def.wIndx);
 			DeltaPutItem(message, position, player);
 			if (&player == MyPlayer)
 				pfile_update(true);
@@ -1075,9 +1164,37 @@ size_t OnRespawnItem(const TCmd *pCmd, size_t pnum)
 		const Point position { message.x, message.y };
 		Player &player = Players[pnum];
 		if (player.isOnActiveLevel() && &player != MyPlayer) {
-			SyncPutItem(player, position, message.wIndx, message.wCI, message.dwSeed, message.bId, message.bDur, message.bMDur, message.bCh, message.bMCh, message.wValue, message.dwBuff, message.wToHit, message.wMaxDam, message.bMinStr, message.bMinMag, message.bMinDex, message.bAC);
+			if (message.def.wIndx == IDI_EAR) {
+				SyncPutEar(
+				    player,
+				    position,
+				    message.ear.wCI,
+				    message.ear.dwSeed,
+				    message.ear.bCursval,
+				    message.ear.heroname);
+			} else {
+				SyncPutItem(
+				    player,
+				    position,
+				    message.item.wIndx,
+				    message.item.wCI,
+				    message.item.dwSeed,
+				    message.item.bId,
+				    message.item.bDur,
+				    message.item.bMDur,
+				    message.item.bCh,
+				    message.item.bMCh,
+				    message.item.wValue,
+				    message.item.dwBuff,
+				    message.item.wToHit,
+				    message.item.wMaxDam,
+				    message.item.bMinStr,
+				    message.item.bMinMag,
+				    message.item.bMinDex,
+				    message.item.bAC);
+			}
 		}
-		PutItemRecord(message.dwSeed, message.wCI, message.wIndx);
+		PutItemRecord(message.def.dwSeed, message.def.wCI, message.def.wIndx);
 		DeltaPutItem(message, position, player);
 	}
 
@@ -1833,9 +1950,35 @@ size_t OnSpawnItem(const TCmd *pCmd, size_t pnum)
 		Player &player = Players[pnum];
 		Point position = { message.x, message.y };
 		if (player.isOnActiveLevel() && &player != MyPlayer) {
-			SyncDropItem(position, message.wIndx, message.wCI, message.dwSeed, message.bId, message.bDur, message.bMDur, message.bCh, message.bMCh, message.wValue, message.dwBuff, message.wToHit, message.wMaxDam, message.bMinStr, message.bMinMag, message.bMinDex, message.bAC);
+			if (message.def.wIndx == IDI_EAR) {
+				SyncDropEar(
+				    position,
+				    message.ear.wCI,
+				    message.ear.dwSeed,
+				    message.ear.bCursval,
+				    message.ear.heroname);
+			} else {
+				SyncDropItem(
+				    position,
+				    message.item.wIndx,
+				    message.item.wCI,
+				    message.item.dwSeed,
+				    message.item.bId,
+				    message.item.bDur,
+				    message.item.bMDur,
+				    message.item.bCh,
+				    message.item.bMCh,
+				    message.item.wValue,
+				    message.item.dwBuff,
+				    message.item.wToHit,
+				    message.item.wMaxDam,
+				    message.item.bMinStr,
+				    message.item.bMinMag,
+				    message.item.bMinDex,
+				    message.item.bAC);
+			}
 		}
-		PutItemRecord(message.dwSeed, message.wCI, message.wIndx);
+		PutItemRecord(message.def.dwSeed, message.def.wCI, message.def.wIndx);
 		DeltaPutItem(message, position, player);
 	}
 
@@ -2370,9 +2513,9 @@ void DeltaAddItem(int ii)
 
 	for (const TCmdPItem &item : deltaLevel.item) {
 		if (item.bCmd != CMD_INVALID
-		    && item.wIndx == Items[ii].IDidx
-		    && item.wCI == Items[ii]._iCreateInfo
-		    && item.dwSeed == Items[ii]._iSeed
+		    && item.def.wIndx == Items[ii].IDidx
+		    && item.def.wCI == Items[ii]._iCreateInfo
+		    && item.def.dwSeed == Items[ii]._iSeed
 		    && IsAnyOf(item.bCmd, TCmdPItem::PickedUpItem, TCmdPItem::FloorItem)) {
 			return;
 		}
@@ -2386,22 +2529,22 @@ void DeltaAddItem(int ii)
 		item.bCmd = TCmdPItem::FloorItem;
 		item.x = Items[ii].position.x;
 		item.y = Items[ii].position.y;
-		item.wIndx = Items[ii].IDidx;
-		item.wCI = Items[ii]._iCreateInfo;
-		item.dwSeed = Items[ii]._iSeed;
-		item.bId = Items[ii]._iIdentified ? 1 : 0;
-		item.bDur = Items[ii]._iDurability;
-		item.bMDur = Items[ii]._iMaxDur;
-		item.bCh = Items[ii]._iCharges;
-		item.bMCh = Items[ii]._iMaxCharges;
-		item.wValue = Items[ii]._ivalue;
-		item.wToHit = Items[ii]._iPLToHit;
-		item.wMaxDam = Items[ii]._iMaxDam;
-		item.bMinStr = Items[ii]._iMinStr;
-		item.bMinMag = Items[ii]._iMinMag;
-		item.bMinDex = Items[ii]._iMinDex;
-		item.bAC = Items[ii]._iAC;
-		item.dwBuff = Items[ii].dwBuff;
+		item.item.wIndx = Items[ii].IDidx;
+		item.item.wCI = Items[ii]._iCreateInfo;
+		item.item.dwSeed = Items[ii]._iSeed;
+		item.item.bId = Items[ii]._iIdentified ? 1 : 0;
+		item.item.bDur = Items[ii]._iDurability;
+		item.item.bMDur = Items[ii]._iMaxDur;
+		item.item.bCh = Items[ii]._iCharges;
+		item.item.bMCh = Items[ii]._iMaxCharges;
+		item.item.wValue = Items[ii]._ivalue;
+		item.item.wToHit = Items[ii]._iPLToHit;
+		item.item.wMaxDam = Items[ii]._iMaxDam;
+		item.item.bMinStr = Items[ii]._iMinStr;
+		item.item.bMinMag = Items[ii]._iMinMag;
+		item.item.bMinDex = Items[ii]._iMinDex;
+		item.item.bAC = Items[ii]._iAC;
+		item.item.dwBuff = Items[ii].dwBuff;
 		return;
 	}
 }
@@ -2527,9 +2670,9 @@ void DeltaLoadLevel()
 
 		if (deltaLevel.item[i].bCmd == TCmdPItem::PickedUpItem) {
 			int activeItemIndex = FindGetItem(
-			    deltaLevel.item[i].dwSeed,
-			    deltaLevel.item[i].wIndx,
-			    deltaLevel.item[i].wCI);
+			    deltaLevel.item[i].def.dwSeed,
+			    deltaLevel.item[i].def.wIndx,
+			    deltaLevel.item[i].def.wCI);
 			if (activeItemIndex != -1) {
 				const auto &position = Items[ActiveItems[activeItemIndex]].position;
 				if (dItem[position.x][position.y] == ActiveItems[activeItemIndex] + 1)
@@ -2541,40 +2684,35 @@ void DeltaLoadLevel()
 			int ii = AllocateItem();
 			auto &item = Items[ii];
 
-			if (deltaLevel.item[i].wIndx == IDI_EAR) {
+			if (deltaLevel.item[i].def.wIndx == IDI_EAR) {
 				RecreateEar(
 				    item,
-				    deltaLevel.item[i].wCI,
-				    deltaLevel.item[i].dwSeed,
-				    deltaLevel.item[i].bId,
-				    deltaLevel.item[i].bDur,
-				    deltaLevel.item[i].bMDur,
-				    deltaLevel.item[i].bCh,
-				    deltaLevel.item[i].bMCh,
-				    deltaLevel.item[i].wValue,
-				    deltaLevel.item[i].dwBuff);
+				    deltaLevel.item[i].ear.wCI,
+				    deltaLevel.item[i].ear.dwSeed,
+				    deltaLevel.item[i].ear.bCursval,
+				    deltaLevel.item[i].ear.heroname);
 			} else {
 				RecreateItem(
 				    *MyPlayer,
 				    item,
-				    deltaLevel.item[i].wIndx,
-				    deltaLevel.item[i].wCI,
-				    deltaLevel.item[i].dwSeed,
-				    deltaLevel.item[i].wValue,
-				    (deltaLevel.item[i].dwBuff & CF_HELLFIRE) != 0);
-				if (deltaLevel.item[i].bId != 0)
+				    deltaLevel.item[i].item.wIndx,
+				    deltaLevel.item[i].item.wCI,
+				    deltaLevel.item[i].item.dwSeed,
+				    deltaLevel.item[i].item.wValue,
+				    (deltaLevel.item[i].item.dwBuff & CF_HELLFIRE) != 0);
+				if (deltaLevel.item[i].item.bId != 0)
 					item._iIdentified = true;
-				item._iDurability = deltaLevel.item[i].bDur;
-				item._iMaxDur = deltaLevel.item[i].bMDur;
-				item._iCharges = deltaLevel.item[i].bCh;
-				item._iMaxCharges = deltaLevel.item[i].bMCh;
-				item._iPLToHit = deltaLevel.item[i].wToHit;
-				item._iMaxDam = deltaLevel.item[i].wMaxDam;
-				item._iMinStr = deltaLevel.item[i].bMinStr;
-				item._iMinMag = deltaLevel.item[i].bMinMag;
-				item._iMinDex = deltaLevel.item[i].bMinDex;
-				item._iAC = deltaLevel.item[i].bAC;
-				item.dwBuff = deltaLevel.item[i].dwBuff;
+				item._iDurability = deltaLevel.item[i].item.bDur;
+				item._iMaxDur = deltaLevel.item[i].item.bMDur;
+				item._iCharges = deltaLevel.item[i].item.bCh;
+				item._iMaxCharges = deltaLevel.item[i].item.bMCh;
+				item._iPLToHit = deltaLevel.item[i].item.wToHit;
+				item._iMaxDam = deltaLevel.item[i].item.wMaxDam;
+				item._iMinStr = deltaLevel.item[i].item.bMinStr;
+				item._iMinMag = deltaLevel.item[i].item.bMinMag;
+				item._iMinDex = deltaLevel.item[i].item.bMinDex;
+				item._iAC = deltaLevel.item[i].item.bAC;
+				item.dwBuff = deltaLevel.item[i].item.dwBuff;
 			}
 			int x = deltaLevel.item[i].x;
 			int y = deltaLevel.item[i].y;
@@ -2838,34 +2976,27 @@ void NetSendCmdGItem(bool bHiPri, _cmd_id bCmd, uint8_t pnum, uint8_t ii)
 	cmd.dwTime = 0;
 	cmd.x = Items[ii].position.x;
 	cmd.y = Items[ii].position.y;
-	cmd.wIndx = Items[ii].IDidx;
+	cmd.def.wIndx = Items[ii].IDidx;
+	cmd.def.wCI = Items[ii]._iCreateInfo;
+	cmd.def.dwSeed = Items[ii]._iSeed;
 
 	if (Items[ii].IDidx == IDI_EAR) {
-		cmd.wCI = Items[ii]._iIName[1] | (Items[ii]._iIName[0] << 8);
-		cmd.dwSeed = Items[ii]._iIName[5] | ((Items[ii]._iIName[4] | ((Items[ii]._iIName[3] | (Items[ii]._iIName[2] << 8)) << 8)) << 8);
-		cmd.bId = Items[ii]._iIName[6];
-		cmd.bDur = Items[ii]._iIName[7];
-		cmd.bMDur = Items[ii]._iIName[8];
-		cmd.bCh = Items[ii]._iIName[9];
-		cmd.bMCh = Items[ii]._iIName[10];
-		cmd.wValue = Items[ii]._ivalue | (Items[ii]._iIName[11] << 8) | ((Items[ii]._iCurs - ICURS_EAR_SORCERER) << 6);
-		cmd.dwBuff = Items[ii]._iIName[15] | ((Items[ii]._iIName[14] | ((Items[ii]._iIName[13] | (Items[ii]._iIName[12] << 8)) << 8)) << 8);
+		cmd.ear.bCursval = Items[ii]._ivalue | ((Items[ii]._iCurs - ICURS_EAR_SORCERER) << 6);
+		CopyUtf8(cmd.ear.heroname, Items[ii]._iIName, sizeof(cmd.ear.heroname));
 	} else {
-		cmd.wCI = Items[ii]._iCreateInfo;
-		cmd.dwSeed = Items[ii]._iSeed;
-		cmd.bId = Items[ii]._iIdentified ? 1 : 0;
-		cmd.bDur = Items[ii]._iDurability;
-		cmd.bMDur = Items[ii]._iMaxDur;
-		cmd.bCh = Items[ii]._iCharges;
-		cmd.bMCh = Items[ii]._iMaxCharges;
-		cmd.wValue = Items[ii]._ivalue;
-		cmd.wToHit = Items[ii]._iPLToHit;
-		cmd.wMaxDam = Items[ii]._iMaxDam;
-		cmd.bMinStr = Items[ii]._iMinStr;
-		cmd.bMinMag = Items[ii]._iMinMag;
-		cmd.bMinDex = Items[ii]._iMinDex;
-		cmd.bAC = Items[ii]._iAC;
-		cmd.dwBuff = Items[ii].dwBuff;
+		cmd.item.bId = Items[ii]._iIdentified ? 1 : 0;
+		cmd.item.bDur = Items[ii]._iDurability;
+		cmd.item.bMDur = Items[ii]._iMaxDur;
+		cmd.item.bCh = Items[ii]._iCharges;
+		cmd.item.bMCh = Items[ii]._iMaxCharges;
+		cmd.item.wValue = Items[ii]._ivalue;
+		cmd.item.wToHit = Items[ii]._iPLToHit;
+		cmd.item.wMaxDam = Items[ii]._iMaxDam;
+		cmd.item.bMinStr = Items[ii]._iMinStr;
+		cmd.item.bMinMag = Items[ii]._iMinMag;
+		cmd.item.bMinDex = Items[ii]._iMinDex;
+		cmd.item.bAC = Items[ii]._iAC;
+		cmd.item.dwBuff = Items[ii].dwBuff;
 	}
 
 	if (bHiPri)
@@ -2881,34 +3012,27 @@ void NetSendCmdPItem(bool bHiPri, _cmd_id bCmd, Point position, const Item &item
 	cmd.bCmd = bCmd;
 	cmd.x = position.x;
 	cmd.y = position.y;
-	cmd.wIndx = item.IDidx;
+	cmd.def.wIndx = item.IDidx;
+	cmd.def.wCI = item._iCreateInfo;
+	cmd.def.dwSeed = item._iSeed;
 
 	if (item.IDidx == IDI_EAR) {
-		cmd.wCI = item._iIName[1] | (item._iIName[0] << 8);
-		cmd.dwSeed = item._iIName[5] | ((item._iIName[4] | ((item._iIName[3] | (item._iIName[2] << 8)) << 8)) << 8);
-		cmd.bId = item._iIName[6];
-		cmd.bDur = item._iIName[7];
-		cmd.bMDur = item._iIName[8];
-		cmd.bCh = item._iIName[9];
-		cmd.bMCh = item._iIName[10];
-		cmd.wValue = item._ivalue | (item._iIName[11] << 8) | ((item._iCurs - ICURS_EAR_SORCERER) << 6);
-		cmd.dwBuff = item._iIName[15] | ((item._iIName[14] | ((item._iIName[13] | (item._iIName[12] << 8)) << 8)) << 8);
+		cmd.ear.bCursval = item._ivalue | ((item._iCurs - ICURS_EAR_SORCERER) << 6);
+		CopyUtf8(cmd.ear.heroname, item._iIName, sizeof(cmd.ear.heroname));
 	} else {
-		cmd.wCI = item._iCreateInfo;
-		cmd.dwSeed = item._iSeed;
-		cmd.bId = item._iIdentified ? 1 : 0;
-		cmd.bDur = item._iDurability;
-		cmd.bMDur = item._iMaxDur;
-		cmd.bCh = item._iCharges;
-		cmd.bMCh = item._iMaxCharges;
-		cmd.wValue = item._ivalue;
-		cmd.wToHit = item._iPLToHit;
-		cmd.wMaxDam = item._iMaxDam;
-		cmd.bMinStr = item._iMinStr;
-		cmd.bMinMag = item._iMinMag;
-		cmd.bMinDex = item._iMinDex;
-		cmd.bAC = item._iAC;
-		cmd.dwBuff = item.dwBuff;
+		cmd.item.bId = item._iIdentified ? 1 : 0;
+		cmd.item.bDur = item._iDurability;
+		cmd.item.bMDur = item._iMaxDur;
+		cmd.item.bCh = item._iCharges;
+		cmd.item.bMCh = item._iMaxCharges;
+		cmd.item.wValue = item._ivalue;
+		cmd.item.wToHit = item._iPLToHit;
+		cmd.item.wMaxDam = item._iMaxDam;
+		cmd.item.bMinStr = item._iMinStr;
+		cmd.item.bMinMag = item._iMinMag;
+		cmd.item.bMinDex = item._iMinDex;
+		cmd.item.bAC = item._iAC;
+		cmd.item.dwBuff = item.dwBuff;
 	}
 
 	ItemLimbo = item;
