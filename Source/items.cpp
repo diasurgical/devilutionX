@@ -1790,7 +1790,7 @@ void printItemMiscGamepad(const Item &item, bool isOil, bool isCastOnTarget)
 	} else if (isOil) {
 		PrintItemOil(item._iMiscId);
 		if (!invflag) {
-			InfoString = StrCat(item._iName, "\n", "Open inventory to use");
+			InfoString = StrCat(item._iName, "\n", _("Open inventory to use"));
 		} else {
 			InfoString = StrCat(item._iName, "\n", fmt::format(fmt::runtime(_("{} to use")), activateButton));
 		}
