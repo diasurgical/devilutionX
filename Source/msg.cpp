@@ -599,28 +599,33 @@ bool DeltaGetItem(const TCmdGItem &message, uint8_t bLevel)
 	if ((message.def.wCI & CF_PREGEN) == 0)
 		return false;
 
-	for (TCmdPItem &item : deltaLevel.item) {
-		if (item.bCmd == CMD_INVALID) {
+	for (TCmdPItem &delta : deltaLevel.item) {
+		if (delta.bCmd == CMD_INVALID) {
 			sgbDeltaChanged = true;
-			item.bCmd = TCmdPItem::PickedUpItem;
-			item.x = message.x;
-			item.y = message.y;
-			item.item.wIndx = message.item.wIndx;
-			item.item.wCI = message.item.wCI;
-			item.item.dwSeed = message.item.dwSeed;
-			item.item.bId = message.item.bId;
-			item.item.bDur = message.item.bDur;
-			item.item.bMDur = message.item.bMDur;
-			item.item.bCh = message.item.bCh;
-			item.item.bMCh = message.item.bMCh;
-			item.item.wValue = message.item.wValue;
-			item.item.dwBuff = message.item.dwBuff;
-			item.item.wToHit = message.item.wToHit;
-			item.item.wMaxDam = message.item.wMaxDam;
-			item.item.bMinStr = message.item.bMinStr;
-			item.item.bMinMag = message.item.bMinMag;
-			item.item.bMinDex = message.item.bMinDex;
-			item.item.bAC = message.item.bAC;
+			delta.bCmd = TCmdPItem::PickedUpItem;
+			delta.x = message.x;
+			delta.y = message.y;
+			delta.def.wIndx = message.def.wIndx;
+			delta.def.wCI = message.def.wCI;
+			delta.def.dwSeed = message.def.dwSeed;
+			if (message.def.wIndx == IDI_EAR) {
+				delta.ear.bCursval = message.ear.bCursval;
+				CopyUtf8(delta.ear.heroname, message.ear.heroname, sizeof(delta.ear.heroname));
+			} else {
+				delta.item.bId = message.item.bId;
+				delta.item.bDur = message.item.bDur;
+				delta.item.bMDur = message.item.bMDur;
+				delta.item.bCh = message.item.bCh;
+				delta.item.bMCh = message.item.bMCh;
+				delta.item.wValue = message.item.wValue;
+				delta.item.dwBuff = message.item.dwBuff;
+				delta.item.wToHit = message.item.wToHit;
+				delta.item.wMaxDam = message.item.wMaxDam;
+				delta.item.bMinStr = message.item.bMinStr;
+				delta.item.bMinMag = message.item.bMinMag;
+				delta.item.bMinDex = message.item.bMinDex;
+				delta.item.bAC = message.item.bAC;
+			}
 			break;
 		}
 	}
@@ -2635,30 +2640,15 @@ void DeltaAddItem(int ii)
 		}
 	}
 
-	for (TCmdPItem &item : deltaLevel.item) {
-		if (item.bCmd != CMD_INVALID)
+	for (TCmdPItem &delta : deltaLevel.item) {
+		if (delta.bCmd != CMD_INVALID)
 			continue;
 
 		sgbDeltaChanged = true;
-		item.bCmd = TCmdPItem::FloorItem;
-		item.x = Items[ii].position.x;
-		item.y = Items[ii].position.y;
-		item.item.wIndx = Items[ii].IDidx;
-		item.item.wCI = Items[ii]._iCreateInfo;
-		item.item.dwSeed = Items[ii]._iSeed;
-		item.item.bId = Items[ii]._iIdentified ? 1 : 0;
-		item.item.bDur = Items[ii]._iDurability;
-		item.item.bMDur = Items[ii]._iMaxDur;
-		item.item.bCh = Items[ii]._iCharges;
-		item.item.bMCh = Items[ii]._iMaxCharges;
-		item.item.wValue = Items[ii]._ivalue;
-		item.item.wToHit = Items[ii]._iPLToHit;
-		item.item.wMaxDam = Items[ii]._iMaxDam;
-		item.item.bMinStr = Items[ii]._iMinStr;
-		item.item.bMinMag = Items[ii]._iMinMag;
-		item.item.bMinDex = Items[ii]._iMinDex;
-		item.item.bAC = Items[ii]._iAC;
-		item.item.dwBuff = Items[ii].dwBuff;
+		delta.bCmd = TCmdPItem::FloorItem;
+		delta.x = Items[ii].position.x;
+		delta.y = Items[ii].position.y;
+		PrepareItemForNetwork(Items[ii], delta);
 		return;
 	}
 }
