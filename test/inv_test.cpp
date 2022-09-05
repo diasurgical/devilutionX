@@ -125,6 +125,8 @@ TEST_F(InvTest, CalculateGold)
 // Test automatic gold placing
 TEST_F(InvTest, GoldAutoPlace)
 {
+	SNetInitializeProvider(SELCONN_LOOPBACK, nullptr);
+
 	// Empty the inventory
 	clear_inventory();
 
