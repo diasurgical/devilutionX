@@ -280,7 +280,7 @@ void PrintInfo(const Surface &out)
 
 		DrawString(out, panelstr[i], line, InfoColor | UiFlags::AlignCenter | UiFlags::KerningFitSpacing, 2);
 		line.position.y += LineHeights[pnumlines + infoStringLines];
-	};
+	}
 }
 
 int CapStatPointsToAdd(int remainingStatPoints, const Player &player, CharacterAttribute attribute)
