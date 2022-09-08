@@ -277,7 +277,6 @@ void PrintInfo(const Surface &out)
 	}
 
 	for (int i = 0; i < pnumlines; i++) {
-
 		DrawString(out, panelstr[i], line, InfoColor | UiFlags::AlignCenter | UiFlags::KerningFitSpacing, 2);
 		line.position.y += LineHeights[pnumlines + infoStringLines];
 	}
