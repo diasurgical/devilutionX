@@ -63,7 +63,7 @@ bool InGameMenu()
 	    || qtextflag
 	    || gmenu_is_active()
 	    || PauseMode == 2
-	    || (MyPlayer->_pInvincible && MyPlayer->_pHitPoints == 0);
+	    || (MyPlayer != nullptr && MyPlayer->_pInvincible && MyPlayer->_pHitPoints == 0);
 }
 
 namespace {
