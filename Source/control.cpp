@@ -270,10 +270,9 @@ void PrintInfo(const Surface &out)
 	Rectangle line { GetMainPanel().position + Displacement { 177, LineStart[infoStringLines + pnumlines] }, { 288, 12 } };
 
 	if (!InfoString.empty()) {
-		for (string_view s : SplitByChar(InfoString, '\n')) {
-			DrawString(out, s, line, InfoColor | UiFlags::AlignCenter | UiFlags::KerningFitSpacing, 2);
-			line.position.y += LineHeights[pnumlines + infoStringLines];
-		}
+		int lineHeight = LineHeights[pnumlines + infoStringLines];
+		DrawString(out, InfoString, line, InfoColor | UiFlags::AlignCenter | UiFlags::KerningFitSpacing, 2, lineHeight);
+		line.position.y += lineHeight * (infoStringLines + 1);
 	}
 
 	for (int i = 0; i < pnumlines; i++) {
