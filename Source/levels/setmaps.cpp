@@ -75,7 +75,7 @@ void LoadSetMap()
 			Quests[Q_SKELKING]._qvar1 = 1;
 		}
 		LoadPreL1Dungeon("levels\\l1data\\sklkng1.dun");
-		LoadL1Dungeon("levels\\l1data\\sklkng2.dun", { 83, 45 });
+		LoadL1Dungeon("levels\\l1data\\sklkng2.dun", { 83, 44 });
 		SetMapTransparency("levels\\l1data\\sklkngt.dun");
 		LoadPalette("levels\\l1data\\l1_2.pal");
 		AddSKingObjs();
