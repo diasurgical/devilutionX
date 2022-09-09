@@ -1394,7 +1394,9 @@ void AddWarp(Missile &missile, const AddMissileParameter & /*parameter*/)
 		TriggerStruct *trg = &trigs[i];
 		if (IsAnyOf(trg->_tmsg, WM_DIABTWARPUP, WM_DIABPREVLVL, WM_DIABNEXTLVL, WM_DIABRTNLVL)) {
 			Point candidate = trg->position;
-			if (IsAnyOf(leveltype, DTYPE_CATHEDRAL, DTYPE_CATACOMBS, DTYPE_CRYPT) && IsAnyOf(trg->_tmsg, WM_DIABNEXTLVL, WM_DIABPREVLVL, WM_DIABRTNLVL)) {
+			if (leveltype == DTYPE_CATHEDRAL && IsAnyOf(trg->_tmsg, WM_DIABPREVLVL, WM_DIABRTNLVL)) {
+				candidate += Displacement { 1, 2 };
+			} else if (IsAnyOf(leveltype, DTYPE_CATHEDRAL, DTYPE_CATACOMBS, DTYPE_CRYPT) && IsAnyOf(trg->_tmsg, WM_DIABNEXTLVL, WM_DIABPREVLVL, WM_DIABRTNLVL)) {
 				candidate += Displacement { 0, 1 };
 			} else {
 				candidate += Displacement { 1, 0 };
