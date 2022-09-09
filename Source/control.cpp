@@ -47,6 +47,7 @@
 #include "utils/sdl_geometry.h"
 #include "utils/stdcompat/optional.hpp"
 #include "utils/str_cat.hpp"
+#include "utils/str_split.hpp"
 #include "utils/string_or_view.hpp"
 #include "utils/utf8.hpp"
 
@@ -264,16 +265,19 @@ void PrintInfo(const Surface &out)
 	const int LineStart[] = { 70, 58, 52, 48, 46 };
 	const int LineHeights[] = { 30, 24, 18, 15, 12 };
 
-	Rectangle line { GetMainPanel().position + Displacement { 177, LineStart[pnumlines] }, { 288, 12 } };
+	auto infoStringLines = (int)std::count(InfoString.str().begin(), InfoString.str().end(), '\n');
+
+	Rectangle line { GetMainPanel().position + Displacement { 177, LineStart[infoStringLines + pnumlines] }, { 288, 12 } };
 
 	if (!InfoString.empty()) {
-		DrawString(out, InfoString, line, InfoColor | UiFlags::AlignCenter | UiFlags::KerningFitSpacing, 2);
-		line.position.y += LineHeights[pnumlines];
+		int lineHeight = LineHeights[pnumlines + infoStringLines];
+		DrawString(out, InfoString, line, InfoColor | UiFlags::AlignCenter | UiFlags::KerningFitSpacing, 2, lineHeight);
+		line.position.y += lineHeight * (infoStringLines + 1);
 	}
 
 	for (int i = 0; i < pnumlines; i++) {
 		DrawString(out, panelstr[i], line, InfoColor | UiFlags::AlignCenter | UiFlags::KerningFitSpacing, 2);
-		line.position.y += LineHeights[pnumlines];
+		line.position.y += LineHeights[pnumlines + infoStringLines];
 	}
 }
 
