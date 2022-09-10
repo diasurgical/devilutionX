@@ -1213,9 +1213,9 @@ void MonsterAttackPlayer(Monster &monster, Player &player, int hit, int minDam, 
 void MonsterAttackEnemy(Monster &monster, int hit, int minDam, int maxDam)
 {
 	if ((monster.flags & MFLAG_TARGETS_MONSTER) != 0)
-		MonsterAttackMonster(monster, Monsters[monster.enemy], monster.toHit, monster.minDamage, monster.maxDamage);
+		MonsterAttackMonster(monster, Monsters[monster.enemy], hit, minDam, maxDam);
 	else
-		MonsterAttackPlayer(monster, Players[monster.enemy], monster.toHit, monster.minDamage, monster.maxDamage);
+		MonsterAttackPlayer(monster, Players[monster.enemy], hit, minDam, maxDam);
 }
 
 bool MonsterAttack(Monster &monster)
