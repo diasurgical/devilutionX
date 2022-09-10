@@ -31,6 +31,9 @@ struct Player;
 constexpr size_t MaxMonsters = 200;
 constexpr size_t MaxLvlMTypes = 24;
 
+constexpr int NightmareToHitBonus = 85;
+constexpr int HellToHitBonus = 120;
+
 enum monster_flag : uint16_t {
 	// clang-format off
 	MFLAG_HIDDEN          = 1 << 0,
@@ -197,7 +200,6 @@ struct Monster { // note: missing field _mAFNum
 	uint32_t aiSeed;
 
 	uint16_t toHit;
-	uint16_t toHitSpecial;
 	uint16_t resistance;
 	_speech_id talkMsg;
 
@@ -338,6 +340,22 @@ struct Monster { // note: missing field _mAFNum
 		}
 
 		return monsterExp;
+	}
+
+	unsigned int toHitSpecial(_difficulty difficulty) const
+	{
+		unsigned int baseToHitSpecial = data().toHitSpecial;
+		if (isUnique() && UniqueMonstersData[static_cast<size_t>(uniqueType)].customToHit != 0) {
+			baseToHitSpecial = UniqueMonstersData[static_cast<size_t>(uniqueType)].customToHit;
+		}
+
+		if (difficulty == DIFF_NIGHTMARE) {
+			baseToHitSpecial += NightmareToHitBonus;
+		} else if (difficulty == DIFF_HELL) {
+			baseToHitSpecial += HellToHitBonus;
+		}
+
+		return baseToHitSpecial;
 	}
 
 	/**

@@ -60,8 +60,7 @@ bool sgbSaveSoundOn;
 
 namespace {
 
-constexpr int NightmareToHitBonus = 85;
-constexpr int HellToHitBonus = 120;
+
 
 constexpr int NightmareAcBonus = 50;
 constexpr int HellAcBonus = 80;
@@ -159,7 +158,6 @@ void InitMonster(Monster &monster, Direction rd, size_t typeIndex, Point positio
 	monster.toHit = monster.data().toHit;
 	monster.minDamage = monster.data().minDamage;
 	monster.maxDamage = monster.data().maxDamage;
-	monster.toHitSpecial = monster.data().toHitSpecial;
 	monster.minDamageSpecial = monster.data().minDamageSpecial;
 	monster.maxDamageSpecial = monster.data().maxDamageSpecial;
 	monster.armorClass = monster.data().armorClass;
@@ -187,7 +185,6 @@ void InitMonster(Monster &monster, Direction rd, size_t typeIndex, Point positio
 		monster.toHit += NightmareToHitBonus;
 		monster.minDamage = 2 * (monster.minDamage + 2);
 		monster.maxDamage = 2 * (monster.maxDamage + 2);
-		monster.toHitSpecial += NightmareToHitBonus;
 		monster.minDamageSpecial = 2 * (monster.minDamageSpecial + 2);
 		monster.maxDamageSpecial = 2 * (monster.maxDamageSpecial + 2);
 		monster.armorClass += NightmareAcBonus;
@@ -202,7 +199,6 @@ void InitMonster(Monster &monster, Direction rd, size_t typeIndex, Point positio
 		monster.toHit += HellToHitBonus;
 		monster.minDamage = 4 * monster.minDamage + 6;
 		monster.maxDamage = 4 * monster.maxDamage + 6;
-		monster.toHitSpecial += HellToHitBonus;
 		monster.minDamageSpecial = 4 * monster.minDamageSpecial + 6;
 		monster.maxDamageSpecial = 4 * monster.maxDamageSpecial + 6;
 		monster.armorClass += HellAcBonus;
@@ -1316,7 +1312,7 @@ bool MonsterRangedSpecialAttack(Monster &monster)
 bool MonsterSpecialAttack(Monster &monster)
 {
 	if (monster.animInfo.currentFrame == monster.data().animFrameNumSpecial - 1) {
-		MonsterAttackEnemy(monster, monster.toHitSpecial, monster.minDamageSpecial, monster.maxDamageSpecial);
+		MonsterAttackEnemy(monster, monster.toHitSpecial(sgGameInitInfo.nDifficulty), monster.minDamageSpecial, monster.maxDamageSpecial);
 	}
 
 	if (monster.animInfo.isLastFrame()) {
@@ -3167,14 +3163,11 @@ void PrepareUniqueMonst(Monster &monster, UniqueMonsterType monsterType, size_t 
 
 	if (uniqueMonsterData.customToHit != 0) {
 		monster.toHit = uniqueMonsterData.customToHit;
-		monster.toHitSpecial = uniqueMonsterData.customToHit;
 
 		if (sgGameInitInfo.nDifficulty == DIFF_NIGHTMARE) {
 			monster.toHit += NightmareToHitBonus;
-			monster.toHitSpecial += NightmareToHitBonus;
 		} else if (sgGameInitInfo.nDifficulty == DIFF_HELL) {
 			monster.toHit += HellToHitBonus;
-			monster.toHitSpecial += HellToHitBonus;
 		}
 	}
 	if (uniqueMonsterData.customArmorClass != 0) {
