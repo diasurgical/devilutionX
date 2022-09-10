@@ -3631,7 +3631,7 @@ void M_StartHit(Monster &monster, int dam)
 void M_StartHit(Monster &monster, const Player &player, int dam)
 {
 	monster.tag(player);
-	if (IsAnyOf(monster.type().type, MT_SNEAK, MT_STALKER, MT_UNSEEN, MT_ILLWEAV) || dam >> 6 >= monster.level(sgGameInitInfo.nDifficulty)+ 3) {
+	if (IsAnyOf(monster.type().type, MT_SNEAK, MT_STALKER, MT_UNSEEN, MT_ILLWEAV) || dam >> 6 >= monster.level(sgGameInitInfo.nDifficulty) + 3) {
 		monster.enemy = player.getId();
 		monster.enemyPosition = player.position.future;
 		monster.flags &= ~MFLAG_TARGETS_MONSTER;
@@ -3920,8 +3920,8 @@ void ProcessMonsters()
 			monster.aiSeed = AdvanceRndSeed();
 		}
 		if ((monster.flags & MFLAG_NOHEAL) == 0 && monster.hitPoints < monster.maxHitPoints && monster.hitPoints >> 6 > 0) {
-			if (monster.level(sgGameInitInfo.nDifficulty)> 1) {
-				monster.hitPoints += monster.level(sgGameInitInfo.nDifficulty)/ 2;
+			if (monster.level(sgGameInitInfo.nDifficulty) > 1) {
+				monster.hitPoints += monster.level(sgGameInitInfo.nDifficulty) / 2;
 			} else {
 				monster.hitPoints += monster.level(sgGameInitInfo.nDifficulty);
 			}
