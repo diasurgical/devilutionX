@@ -198,7 +198,6 @@ struct Monster { // note: missing field _mAFNum
 	uint32_t rndItemSeed;
 	/** Seed used to determine AI behaviour/sync sounds in multiplayer games? */
 	uint32_t aiSeed;
-
 	uint16_t toHit;
 	uint16_t resistance;
 	_speech_id talkMsg;
@@ -342,6 +341,12 @@ struct Monster { // note: missing field _mAFNum
 		return monsterExp;
 	}
 
+	/**
+	 * @brief Calculates monster's chance to hit with special attack.
+	 * Fetches base value from @p MonstersData array or @p UniqueMonstersData.
+	 * @param difficulty - difficulty on which calculation is performed
+	 * @return Monster's chance to hit with special attack, including bonuses from difficulty and monster being unique
+	 */
 	unsigned int toHitSpecial(_difficulty difficulty) const
 	{
 		unsigned int baseToHitSpecial = data().toHitSpecial;
