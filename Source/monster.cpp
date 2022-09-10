@@ -60,8 +60,6 @@ bool sgbSaveSoundOn;
 
 namespace {
 
-
-
 constexpr int NightmareAcBonus = 50;
 constexpr int HellAcBonus = 80;
 
