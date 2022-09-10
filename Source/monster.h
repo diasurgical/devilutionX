@@ -18,6 +18,7 @@
 #include "engine/point.hpp"
 #include "engine/sound.h"
 #include "engine/world_tile.hpp"
+#include "init.h"
 #include "monstdat.h"
 #include "spelldat.h"
 #include "textdat.h"
@@ -248,7 +249,6 @@ struct Monster { // note: missing field _mAFNum
 	uint8_t uniqTrans;
 	int8_t corpseId;
 	int8_t whoHit;
-	int8_t level;
 	uint8_t minDamage;
 	uint8_t maxDamage;
 	uint8_t minDamageSpecial;
@@ -338,6 +338,31 @@ struct Monster { // note: missing field _mAFNum
 		}
 
 		return monsterExp;
+	}
+
+	unsigned int level(_difficulty difficulty) const
+	{
+		unsigned int baseLevel = data().level;
+		if (isUnique()) {
+			baseLevel = UniqueMonstersData[static_cast<int8_t>(uniqueType)].mlevel;
+			if (baseLevel != 0) {
+				baseLevel *= 2;
+			} else {
+				baseLevel = data().level + 5;
+			}
+		}
+
+		if (type().type == MT_DIABLO && !gbIsHellfire) {
+			baseLevel -= 15;
+		}
+
+		if (difficulty == DIFF_NIGHTMARE) {
+			baseLevel += 15;
+		} else if (difficulty == DIFF_HELL) {
+			baseLevel += 30;
+		}
+
+		return baseLevel;
 	}
 
 	/**
