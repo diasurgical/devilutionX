@@ -340,6 +340,12 @@ struct Monster { // note: missing field _mAFNum
 		return monsterExp;
 	}
 
+	/**
+	 * @brief Calculates monster's level.
+	 * Fetches base level value from @p MonstersData array or @p UniqueMonstersData.
+	 * @param difficulty - difficulty on which calculation is performed
+	 * @return Monster's level, including bonuses from difficulty and monster being unique
+	 */
 	unsigned int level(_difficulty difficulty) const
 	{
 		unsigned int baseLevel = data().level;
