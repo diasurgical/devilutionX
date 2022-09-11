@@ -83,7 +83,7 @@ void LoadSetMap()
 		break;
 	case SL_BONECHAMB:
 		LoadPreL2Dungeon("levels\\l2data\\bonecha2.dun");
-		LoadL2Dungeon("levels\\l2data\\bonecha1.dun", { 69, 39 });
+		LoadL2Dungeon("levels\\l2data\\bonecha1.dun", { 70, 40 });
 		SetMapTransparency("levels\\l2data\\bonechat.dun");
 		LoadPalette("levels\\l2data\\l2_2.pal");
 		AddSChamObjs();
