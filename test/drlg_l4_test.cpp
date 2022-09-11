@@ -35,7 +35,7 @@ TEST(Drlg_l4, CreateL4Dungeon_diablo_13_594689775)
 	TestCreateDungeon(13, 594689775, ENTRY_MAIN);
 	EXPECT_EQ(ViewPosition, Point(72, 38));
 	TestCreateDungeon(13, 594689775, ENTRY_PREV);
-	EXPECT_EQ(ViewPosition, Point(32, 40));
+	EXPECT_EQ(ViewPosition, Point(33, 41));
 	TestCreateDungeon(13, 594689775, ENTRY_TWARPDN);
 	EXPECT_EQ(ViewPosition, Point(36, 88));
 }
