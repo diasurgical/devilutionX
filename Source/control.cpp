@@ -713,14 +713,10 @@ void control_check_btn_press()
 
 void DoAutoMap()
 {
-	if (leveltype != DTYPE_TOWN || gbIsMultiplayer) {
-		if (!AutomapActive)
-			StartAutomap();
-		else
-			AutomapActive = false;
-	} else {
-		InitDiabloMsg(EMSG_NO_AUTOMAP_IN_TOWN);
-	}
+	if (!AutomapActive)
+		StartAutomap();
+	else
+		AutomapActive = false;
 }
 
 void CheckPanelInfo()
