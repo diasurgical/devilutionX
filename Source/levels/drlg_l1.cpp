@@ -1130,7 +1130,7 @@ bool PlaceCathedralStairs(lvl_entry entry)
 	// Place stairs down
 	if (Quests[Q_LTBANNER].IsAvailable()) {
 		if (entry == ENTRY_PREV)
-			ViewPosition = SetPiece.position.megaToWorld() + Displacement { 4, 12 };
+			ViewPosition = SetPiece.position.megaToWorld() + Displacement { 3, 11 };
 	} else {
 		position = PlaceMiniSet(STAIRSDOWN, DMAXX * DMAXY, true);
 		if (!position) {
