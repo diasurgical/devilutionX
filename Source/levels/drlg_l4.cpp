@@ -1092,7 +1092,7 @@ bool PlaceStairs(lvl_entry entry)
 				if (!position)
 					return false;
 				if (entry == ENTRY_PREV)
-					ViewPosition = position->megaToWorld() + Displacement { 5, 7 };
+					ViewPosition = position->megaToWorld() + Displacement { 7, 5 };
 			}
 		}
 

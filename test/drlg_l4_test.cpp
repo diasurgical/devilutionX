@@ -20,7 +20,7 @@ TEST(Drlg_l4, CreateL4Dungeon_diablo_13_428074402)
 	TestCreateDungeon(13, 428074402, ENTRY_MAIN);
 	EXPECT_EQ(ViewPosition, Point(26, 64));
 	TestCreateDungeon(13, 428074402, ENTRY_PREV);
-	EXPECT_EQ(ViewPosition, Point(47, 79));
+	EXPECT_EQ(ViewPosition, Point(49, 77));
 	TestCreateDungeon(13, 428074402, ENTRY_TWARPDN);
 	EXPECT_EQ(ViewPosition, Point(26, 44));
 }
@@ -47,7 +47,7 @@ TEST(Drlg_l4, CreateL4Dungeon_diablo_14_717625719)
 	TestCreateDungeon(14, 717625719, ENTRY_MAIN);
 	EXPECT_EQ(ViewPosition, Point(90, 64));
 	TestCreateDungeon(14, 717625719, ENTRY_PREV);
-	EXPECT_EQ(ViewPosition, Point(49, 31));
+	EXPECT_EQ(ViewPosition, Point(51, 29));
 }
 
 TEST(Drlg_l4, CreateL4Dungeon_diablo_15_1583642716)
