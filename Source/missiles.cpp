@@ -1392,21 +1392,45 @@ void AddWarp(Missile &missile, const AddMissileParameter & /*parameter*/)
 
 	for (int i = 0; i < numtrigs && i < MAXTRIGGERS; i++) {
 		TriggerStruct *trg = &trigs[i];
-		if (IsAnyOf(trg->_tmsg, WM_DIABTWARPUP, WM_DIABPREVLVL, WM_DIABNEXTLVL, WM_DIABRTNLVL)) {
-			Point candidate = trg->position;
-			if (leveltype == DTYPE_CATHEDRAL && IsAnyOf(trg->_tmsg, WM_DIABPREVLVL, WM_DIABRTNLVL)) {
-				candidate += Displacement { 1, 2 };
-			} else if (IsAnyOf(leveltype, DTYPE_CATHEDRAL, DTYPE_CATACOMBS, DTYPE_CRYPT) && IsAnyOf(trg->_tmsg, WM_DIABNEXTLVL, WM_DIABPREVLVL, WM_DIABRTNLVL)) {
-				candidate += Displacement { 0, 1 };
-			} else {
-				candidate += Displacement { 1, 0 };
+		if (IsNoneOf(trg->_tmsg, WM_DIABTWARPUP, WM_DIABPREVLVL, WM_DIABNEXTLVL, WM_DIABRTNLVL))
+			continue;
+		Point candidate = trg->position;
+		auto getTriggerOffset = [](TriggerStruct *trg) {
+			switch (leveltype) {
+			case DTYPE_CATHEDRAL:
+				if (setlevel && setlvlnum == SL_VILEBETRAYER)
+					return Displacement { 1, 1 }; // Portal
+				if (IsAnyOf(trg->_tmsg, WM_DIABTWARPUP, WM_DIABPREVLVL, WM_DIABRTNLVL))
+					return Displacement { 1, 2 };
+				return Displacement { 0, 1 }; // WM_DIABNEXTLVL
+			case DTYPE_CATACOMBS:
+				if (IsAnyOf(trg->_tmsg, WM_DIABTWARPUP, WM_DIABPREVLVL))
+					return Displacement { 1, 1 };
+				return Displacement { 0, 1 }; // WM_DIABRTNLVL, WM_DIABNEXTLVL
+			case DTYPE_CAVES:
+				if (IsAnyOf(trg->_tmsg, WM_DIABTWARPUP, WM_DIABPREVLVL))
+					return Displacement { 0, 1 };
+				return Displacement { 1, 0 }; // WM_DIABRTNLVL, WM_DIABNEXTLVL
+			case DTYPE_HELL:
+				return Displacement { 1, 0 };
+			case DTYPE_NEST:
+				if (IsAnyOf(trg->_tmsg, WM_DIABTWARPUP, WM_DIABPREVLVL, WM_DIABRTNLVL))
+					return Displacement { 0, 1 };
+				return Displacement { 1, 0 }; // WM_DIABNEXTLVL
+			case DTYPE_CRYPT:
+				if (IsAnyOf(trg->_tmsg, WM_DIABTWARPUP, WM_DIABPREVLVL, WM_DIABRTNLVL))
+					return Displacement { 1, 1 };
+				return Displacement { 0, 1 }; // WM_DIABNEXTLVL
 			}
-			Displacement off = src - candidate;
-			int distanceSq = off.deltaY * off.deltaY + off.deltaX * off.deltaX;
-			if (distanceSq < minDistanceSq) {
-				minDistanceSq = distanceSq;
-				tile = candidate;
-			}
+			app_fatal("Unhandled leveltype");
+		};
+		Displacement triggerOffset = getTriggerOffset(trg);
+		candidate += triggerOffset;
+		Displacement off = src - candidate;
+		int distanceSq = off.deltaY * off.deltaY + off.deltaX * off.deltaX;
+		if (distanceSq < minDistanceSq) {
+			minDistanceSq = distanceSq;
+			tile = candidate;
 		}
 	}
 	missile._mirange = 2;
