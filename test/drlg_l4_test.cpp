@@ -61,7 +61,7 @@ TEST(Drlg_l4, CreateL4Dungeon_diablo_15_1583642716)
 	TestCreateDungeon(15, 1583642716, ENTRY_MAIN);
 	EXPECT_EQ(ViewPosition, Point(44, 26));
 	TestCreateDungeon(15, 1583642716, ENTRY_PREV);
-	EXPECT_EQ(ViewPosition, Point(87, 69));
+	EXPECT_EQ(ViewPosition, Point(88, 67));
 
 	Quests[Q_BETRAYER]._qactive = QUEST_ACTIVE;
 	TestCreateDungeon(15, 1583642716, ENTRY_MAIN); // Betrayer quest does not change level gen
@@ -77,7 +77,7 @@ TEST(Drlg_l4, CreateL4Dungeon_diablo_15_1583642716)
 	EXPECT_EQ(ViewPosition, Point(44, 26));
 	EXPECT_EQ(Quests[Q_BETRAYER].position, Point(34, 24)) << "Not really required? current bugfix sets this position anyway";
 	TestCreateDungeon(15, 1583642716, ENTRY_PREV);
-	EXPECT_EQ(ViewPosition, Point(87, 69));
+	EXPECT_EQ(ViewPosition, Point(88, 67));
 	EXPECT_EQ(Quests[Q_BETRAYER].position, Point(34, 24)) << "Not really required? current bugfix sets this position anyway";
 }
 
@@ -91,7 +91,7 @@ TEST(Drlg_l4, CreateL4Dungeon_diablo_15_1256511996)
 	TestCreateDungeon(15, 1256511996, ENTRY_MAIN);
 	EXPECT_EQ(ViewPosition, Point(80, 70));
 	TestCreateDungeon(15, 1256511996, ENTRY_PREV);
-	EXPECT_EQ(ViewPosition, Point(33, 67));
+	EXPECT_EQ(ViewPosition, Point(34, 65));
 }
 
 TEST(Drlg_l4, CreateL4Dungeon_diablo_16_741281013)
