@@ -318,10 +318,10 @@ void UiSettingsMenu()
 				case SDL_KEYDOWN: {
 					SDL_Keycode keycode = event.key.keysym.sym;
 					remap_keyboard_key(&keycode);
+					key = static_cast<uint32_t>(keycode);
 					if (key >= SDLK_a && key <= SDLK_z) {
 						key -= 'a' - 'A';
 					}
-					key = static_cast<uint32_t>(keycode);
 				} break;
 				case SDL_MOUSEBUTTONDOWN:
 					switch (event.button.button) {
