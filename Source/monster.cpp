@@ -1546,7 +1546,7 @@ void MonsterPetrified(Monster &monster)
 Monster *AddSkeleton(Point position, Direction dir, bool inMap)
 {
 	size_t typeCount = 0;
-	size_t skeletonIndexes[sizeof(SkeletonTypes) / sizeof(SkeletonTypes[0])];
+	size_t skeletonIndexes[SkeletonTypes.size()];
 	for (size_t i = 0; i < LevelMonsterTypeCount; i++) {
 		if (IsSkel(LevelMonsterTypes[i].type)) {
 			skeletonIndexes[typeCount++] = i;
