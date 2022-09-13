@@ -4624,7 +4624,7 @@ bool Monster::isResistant(missile_id missileType) const
 bool Monster::isPlayerMinion() const
 {
 	// This could be HasAnyOf(GOLEM) && HasNoneOf(BERSERK), I think referencing the type and player index is more robust though
-	return type().type == MT_GOLEM && getId() < sizeof(Players) / sizeof(Players[0]);
+	return type().type == MT_GOLEM && getId() < Players.size();
 }
 
 bool Monster::isPossibleToHit() const
