@@ -523,7 +523,7 @@ bool GetItemSpace(Point position, int8_t inum)
 		}
 	}
 
-	int rs = GenerateRnd(15) + 1;
+	int rs = GenerateRnd(15);
 
 	if (candidate_count == 0)
 		return false;
