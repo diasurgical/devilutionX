@@ -779,14 +779,15 @@ void CheckInvCut(Player &player, Point cursorPosition, bool automaticMove, bool 
 						break;
 					default:
 						automaticallyUnequip = false; // Switch to say "I can't do that"
-						invloc = NUM_INVLOC;
 						break;
 					}
 					// Empty the identified InvBody slot (invloc) and hand over to AutoEquip
-					holdItem = player.InvBody[invloc];
-					if (player.InvBody[invloc]._itype != ItemType::None) {
-						if (invloc != NUM_INVLOC && AutoPlaceItemInInventory(player, holdItem, true)) {
-							player.InvBody[invloc].clear();
+					if (invloc != NUM_INVLOC) {
+						holdItem = player.InvBody[invloc];
+						if (player.InvBody[invloc]._itype != ItemType::None) {
+							if (AutoPlaceItemInInventory(player, holdItem, true)) {
+								player.InvBody[invloc].clear();
+							}
 						}
 					}
 					holdItem = player.InvList[iv - 1];
