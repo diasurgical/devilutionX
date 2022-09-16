@@ -18,6 +18,10 @@
 #include "spelldat.h"
 #include "utils/language.h"
 #include "utils/stdcompat/optional.hpp"
+#include "utils/str_cat.hpp"
+#include <vector>
+
+#define SPLICONLAST (gbIsHellfire ? 51 : 42)
 
 namespace devilution {
 
@@ -45,7 +49,7 @@ void PrintSBookStr(const Surface &out, Point position, string_view text, UiFlags
 	    Rectangle(GetPanelPosition(UiPanels::Spell, position + Displacement { SPLICONLENGTH, 0 }),
 	        SpellBookDescription)
 	        .inset({ SpellBookDescriptionPaddingHorizontal, 0 }),
-	    UiFlags::ColorWhite | flags);
+	    flags);
 }
 
 SpellType GetSBookTrans(SpellID ii, bool townok)
@@ -109,6 +113,7 @@ void FreeSpellBook()
 void DrawSpellBook(const Surface &out)
 {
 	ClxDraw(out, GetPanelPosition(UiPanels::Spell, { 0, 351 }), (*pSpellBkCel)[0]);
+
 	if (gbIsHellfire && sbooktab < 5) {
 		ClxDraw(out, GetPanelPosition(UiPanels::Spell, { 61 * sbooktab + 7, 348 }), (*pSBkBtnCel)[sbooktab]);
 	} else {
@@ -119,6 +124,7 @@ void DrawSpellBook(const Surface &out)
 		}
 		ClxDraw(out, GetPanelPosition(UiPanels::Spell, { sx, 348 }), (*pSBkBtnCel)[sbooktab]);
 	}
+
 	Player &player = *MyPlayer;
 	uint64_t spl = player._pMemSpells | player._pISpells | player._pAblSpells;
 
@@ -126,13 +132,34 @@ void DrawSpellBook(const Surface &out)
 
 	int yp = 12;
 	const int textPaddingTop = 7;
+
 	for (int i = 1; i < 8; i++) {
+<<<<<<< HEAD
 		SpellID sn = SpellPages[sbooktab][i - 1];
+=======
+		spell_id sn = SpellPages[sbooktab][i - 1];
+
+>>>>>>> d87240e2d (Revise Spell Book Colors and Text)
 		if (IsValidSpell(sn) && (spl & GetSpellBitmask(sn)) != 0) {
 			SpellType st = GetSBookTrans(sn, true);
 			SetSpellTrans(st);
 			const Point spellCellPosition = GetPanelPosition(UiPanels::Spell, { 11, yp + SpellBookDescription.height });
-			DrawSmallSpellIcon(out, spellCellPosition, sn);
+			DrawSpellCel(out, spellCellPosition, *pSBkIconCels, SpellITbl[sn]);
+
+			bool isSkill = false;
+			bool isStaff = false;
+			int mana = GetManaAmount(player, sn) >> 6;
+			int charges = player.InvBody[INVLOC_HAND_LEFT]._iCharges;
+			int lvl = player.GetSpellLevel(sn);
+			int baseLvl = player._pSplLvl[static_cast<std::size_t>(sn)];
+			int8_t splLvlAdd = player._pISplLvlAdd;
+			UiFlags maxSplLvlColor = baseLvl == MaxSpellLevel ? UiFlags::ColorGold : UiFlags::ColorWhite;
+			UiFlags splLvlAddColor;
+			if (splLvlAdd > 0)
+				splLvlAddColor = UiFlags::ColorBlue;
+			else if (splLvlAdd < 0)
+				splLvlAddColor = UiFlags::ColorRed;
+
 			if (sn == player._pRSpell && st == player._pRSplType) {
 				SetSpellTrans(SpellType::Skill);
 				DrawSmallSpellIconBorder(out, spellCellPosition);
@@ -140,6 +167,7 @@ void DrawSpellBook(const Surface &out)
 
 			const Point line0 { 0, yp + textPaddingTop };
 			const Point line1 { 0, yp + textPaddingTop + lineHeight };
+<<<<<<< HEAD
 			PrintSBookStr(out, line0, pgettext("spell", GetSpellData(sn).sNameText));
 			switch (GetSBookTrans(sn, false)) {
 			case SpellType::Skill:
@@ -166,15 +194,53 @@ void DrawSpellBook(const Surface &out)
 							} else {
 								PrintSBookStr(out, line1, fmt::format(fmt::runtime(_(/* TRANSLATORS: UI constraints, keep short please.*/ "Damage: {:d} - {:d}")), min, max), UiFlags::AlignRight);
 							}
-						}
-					} else {
-						PrintSBookStr(out, line1, _(/* TRANSLATORS: UI constraints, keep short please.*/ "Dmg: 1/3 target hp"), UiFlags::AlignRight);
-					}
-					PrintSBookStr(out, line1, fmt::format(fmt::runtime(pgettext(/* TRANSLATORS: UI constraints, keep short please.*/ "spellbook", "Mana: {:d}")), mana));
+=======
+			PrintSBookStr(out, line0, pgettext("spell", spelldata[sn].sNameText), UiFlags::ColorWhite);
+
+			if (GetSBookTrans(sn, false) == SpellType::Skill)
+				isSkill = true;
+			else if (GetSBookTrans(sn, false) == SpellType::Charges)
+				isStaff = true;
+
+			if (IsNoneOf(sn, SpellID::ItemRepair, SpellID::StaffRecharge, SpellID::TrapDisarm, SpellID::Identify, SpellID::Rage)) {
+				if (splLvlAdd != 0) {
+					DrawStringWithColors(out, _(/* TRANSLATORS: UI constraints, keep short please.*/ "Level: {} {}"), std::vector<DrawStringFormatArg> { { baseLvl, maxSplLvlColor }, { StrCat("(", lvl, ")"), splLvlAddColor } }, Rectangle(GetPanelPosition(UiPanels::Spell, line0 + Displacement { SPLICONLENGTH, 0 }), SpellBookDescription), UiFlags::AlignRight | UiFlags::ColorWhite);
+				} else {
+					DrawStringWithColors(out, _(/* TRANSLATORS: UI constraints, keep short please.*/ "Level: {}"), std::vector<DrawStringFormatArg> { { baseLvl, maxSplLvlColor } }, Rectangle(GetPanelPosition(UiPanels::Spell, line0 + Displacement { SPLICONLENGTH, 0 }), SpellBookDescription), UiFlags::AlignRight | UiFlags::ColorWhite);
 				}
-			} break;
+			}
+
+			if (lvl == 0 && !isSkill && !isStaff) {
+				PrintSBookStr(out, line1, _("Unusable"), UiFlags::AlignRight | UiFlags::ColorRed);
+			} else {
+				if (sn == SpellID::BoneSpirit) {
+					PrintSBookStr(out, line1, _(/* TRANSLATORS: UI constraints, keep short please.*/ "Dmg: 1/3 target hp"), UiFlags::AlignRight | UiFlags::ColorWhite);
+				} else if (sn == SpellID::ManaShield) {
+					PrintSBookStr(out, line1, fmt::format(fmt::runtime(_(/* TRANSLATORS: UI constraints, keep short please.*/ "Dmg Reduction: {:d}%")), lvl > 0 ? (100 / player.GetManaShieldDamageReduction()) : 0), UiFlags::AlignRight | UiFlags::ColorWhite);
+				} else {
+					int min;
+					int max;
+					GetDamageAmt(sn, &min, &max);
+
+					if (min != -1) {
+						if (sn == SPL_HEAL || sn == SPL_HEALOTHER) {
+							PrintSBookStr(out, line1, fmt::format(fmt::runtime(_(/* TRANSLATORS: UI constraints, keep short please.*/ "Heals: {:d} - {:d}")), min, max), UiFlags::AlignRight | UiFlags::ColorWhite);
+						} else {
+							PrintSBookStr(out, line1, fmt::format(fmt::runtime(_(/* TRANSLATORS: UI constraints, keep short please.*/ "Damage: {:d} - {:d}")), min, max), UiFlags::AlignRight | UiFlags::ColorWhite);
+>>>>>>> d87240e2d (Revise Spell Book Colors and Text)
+						}
+					}
+				}
+
+				if (isSkill)
+					PrintSBookStr(out, line1, _("Skill"), UiFlags::ColorWhite);
+				else if (isStaff)
+					PrintSBookStr(out, line1, fmt::format(fmt::runtime(ngettext(/* TRANSLATORS: UI constraints, keep short please.*/ "{:d} charge", "{:d} charges", charges)), charges), UiFlags::ColorWhite);
+				else
+					PrintSBookStr(out, line1, fmt::format(fmt::runtime(pgettext(/* TRANSLATORS: UI constraints, keep short please.*/ "spellbook", "Mana: {:d}")), mana), UiFlags::ColorWhite);
 			}
 		}
+
 		yp += SpellBookDescription.height;
 	}
 }
