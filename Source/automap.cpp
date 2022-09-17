@@ -51,7 +51,7 @@ struct AutomapTile {
 		CaveHorizontal,
 		CaveVertical,
 		CaveCross,
-		Bridg,
+		Bridge,
 		River,
 		RiverCornerEast,
 		RiverCornerNorth,
@@ -148,7 +148,7 @@ void DrawDirt(const Surface &out, Point center, uint8_t color)
 	out.SetPixel({ center.x - AmLine(8) + AmLine(32), center.y + AmLine(4) }, color);
 }
 
-void DrawBridg(const Surface &out, Point center, uint8_t color)
+void DrawBridge(const Surface &out, Point center, uint8_t color)
 {
 	out.SetPixel(center, color);
 
@@ -536,8 +536,8 @@ void DrawAutomapTile(const Surface &out, Point center, Point map)
 	case AutomapTile::Types::Corner:
 	case AutomapTile::Types::None:
 		break;
-	case AutomapTile::Types::Bridg:
-		DrawBridg(out, center, MapColorsItem);
+	case AutomapTile::Types::Bridge:
+		DrawBridge(out, center, MapColorsItem);
 		break;
 	case AutomapTile::Types::River:
 		DrawRiver(out, center, MapColorsItem);
