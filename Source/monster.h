@@ -339,7 +339,6 @@ struct Monster { // note: missing field _mAFNum
 	}
 
 	/**
-
 	 * @brief Calculates monster's chance to hit with special attack.
 	 * Fetches base value from @p MonstersData array or @p UniqueMonstersData.
 	 * @param difficulty - difficulty on which calculation is performed
