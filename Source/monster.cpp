@@ -63,6 +63,9 @@ namespace {
 constexpr int NightmareAcBonus = 50;
 constexpr int HellAcBonus = 80;
 
+constexpr int NightmareToHitBonus = 85;
+constexpr int HellToHitBonus = 120;
+
 /** Tracks which missile files are already loaded */
 size_t totalmonsters;
 int monstimgtot;
@@ -4640,6 +4643,22 @@ bool Monster::tryLiftGargoyle()
 		return true;
 	}
 	return false;
+}
+
+unsigned int Monster::toHitSpecial(_difficulty difficulty) const
+{
+	unsigned int baseToHitSpecial = data().toHitSpecial;
+	if (isUnique() && UniqueMonstersData[static_cast<size_t>(uniqueType)].customToHit != 0) {
+		baseToHitSpecial = UniqueMonstersData[static_cast<size_t>(uniqueType)].customToHit;
+	}
+
+	if (difficulty == DIFF_NIGHTMARE) {
+		baseToHitSpecial += NightmareToHitBonus;
+	} else if (difficulty == DIFF_HELL) {
+		baseToHitSpecial += HellToHitBonus;
+	}
+
+	return baseToHitSpecial;
 }
 
 } // namespace devilution

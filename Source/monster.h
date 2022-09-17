@@ -31,9 +31,6 @@ struct Player;
 constexpr size_t MaxMonsters = 200;
 constexpr size_t MaxLvlMTypes = 24;
 
-constexpr int NightmareToHitBonus = 85;
-constexpr int HellToHitBonus = 120;
-
 enum monster_flag : uint16_t {
 	// clang-format off
 	MFLAG_HIDDEN          = 1 << 0,
@@ -347,21 +344,7 @@ struct Monster { // note: missing field _mAFNum
 	 * @param difficulty - difficulty on which calculation is performed
 	 * @return Monster's chance to hit with special attack, including bonuses from difficulty and monster being unique
 	 */
-	unsigned int toHitSpecial(_difficulty difficulty) const
-	{
-		unsigned int baseToHitSpecial = data().toHitSpecial;
-		if (isUnique() && UniqueMonstersData[static_cast<size_t>(uniqueType)].customToHit != 0) {
-			baseToHitSpecial = UniqueMonstersData[static_cast<size_t>(uniqueType)].customToHit;
-		}
-
-		if (difficulty == DIFF_NIGHTMARE) {
-			baseToHitSpecial += NightmareToHitBonus;
-		} else if (difficulty == DIFF_HELL) {
-			baseToHitSpecial += HellToHitBonus;
-		}
-
-		return baseToHitSpecial;
-	}
+	unsigned int toHitSpecial(_difficulty difficulty) const;
 
 	/**
 	 * @brief Returns the network identifier for this monster
