@@ -346,7 +346,8 @@ struct Monster { // note: missing field _mAFNum
 	 * @return Monster's chance to hit with special attack, including bonuses from difficulty and monster being unique
 	 */
 	unsigned int toHitSpecial(_difficulty difficulty) const;
-
+	
+	/*
 	 * @brief Calculates monster's level.
 	 * Fetches base level value from @p MonstersData array or @p UniqueMonstersData.
 	 * @param difficulty - difficulty on which calculation is performed
