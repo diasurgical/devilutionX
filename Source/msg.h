@@ -752,8 +752,8 @@ bool IsValidLevel(uint8_t level, bool isSetLevel);
 void DeltaAddItem(int ii);
 void DeltaSaveLevel();
 void DeltaLoadLevel();
-/** @brief Clears last send player command for the local player. This is used when a game tick changes. */
-void ClearLastSendPlayerCmd();
+/** @brief Clears last sent player command for the local player. This is used when a game tick changes. */
+void ClearLastSentPlayerCmd();
 void NetSendCmd(bool bHiPri, _cmd_id bCmd);
 void NetSendCmdGolem(uint8_t mx, uint8_t my, Direction dir, uint8_t menemy, int hp, uint8_t cl);
 void NetSendCmdLoc(size_t playerId, bool bHiPri, _cmd_id bCmd, Point position);

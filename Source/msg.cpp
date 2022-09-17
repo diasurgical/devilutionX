@@ -2382,7 +2382,7 @@ size_t OnOpenCrypt(const TCmd *pCmd)
 
 } // namespace
 
-void ClearLastSendPlayerCmd()
+void ClearLastSentPlayerCmd()
 {
 	lastSentPlayerCmd = {};
 }
