@@ -130,11 +130,9 @@ void InitMonster(Monster &monster, Direction rd, size_t typeIndex, Point positio
 	monster.animInfo.tickCounterOfCurrentFrame = GenerateRnd(monster.animInfo.ticksPerFrame - 1);
 	monster.animInfo.currentFrame = GenerateRnd(monster.animInfo.numberOfFrames - 1);
 
-	monster.level = monster.data().level;
 	int maxhp = monster.data().hitPointsMinimum + GenerateRnd(monster.data().hitPointsMaximum - monster.data().hitPointsMinimum + 1);
 	if (monster.type().type == MT_DIABLO && !gbIsHellfire) {
 		maxhp /= 2;
-		monster.level -= 15;
 	}
 	monster.maxHitPoints = maxhp << 6;
 
@@ -182,7 +180,6 @@ void InitMonster(Monster &monster, Direction rd, size_t typeIndex, Point positio
 		else
 			monster.maxHitPoints += 64;
 		monster.hitPoints = monster.maxHitPoints;
-		monster.level += 15;
 		monster.toHit += NightmareToHitBonus;
 		monster.minDamage = 2 * (monster.minDamage + 2);
 		monster.maxDamage = 2 * (monster.maxDamage + 2);
@@ -196,7 +193,6 @@ void InitMonster(Monster &monster, Direction rd, size_t typeIndex, Point positio
 		else
 			monster.maxHitPoints += 192;
 		monster.hitPoints = monster.maxHitPoints;
-		monster.level += 30;
 		monster.toHit += HellToHitBonus;
 		monster.minDamage = 4 * monster.minDamage + 6;
 		monster.maxDamage = 4 * monster.maxDamage + 6;
@@ -940,7 +936,7 @@ void Teleport(Monster &monster)
 
 void MonsterHitMonster(Monster &attacker, Monster &target, int dam)
 {
-	if (IsAnyOf(target.type().type, MT_SNEAK, MT_STALKER, MT_UNSEEN, MT_ILLWEAV) || dam >> 6 >= target.level + 3) {
+	if (IsAnyOf(target.type().type, MT_SNEAK, MT_STALKER, MT_UNSEEN, MT_ILLWEAV) || dam >> 6 >= target.level(sgGameInitInfo.nDifficulty) + 3) {
 		target.direction = Opposite(attacker.direction);
 	}
 
@@ -1127,7 +1123,7 @@ void MonsterAttackPlayer(Monster &monster, Player &player, int hit, int minDam, 
 		ac += 40;
 	if (HasAnyOf(player.pDamAcFlags, ItemSpecialEffectHf::ACAgainstUndead) && monster.data().monsterClass == MonsterClass::Undead)
 		ac += 20;
-	hit += 2 * (monster.level - player._pLevel)
+	hit += 2 * (monster.level(sgGameInitInfo.nDifficulty) - player._pLevel)
 	    + 30
 	    - ac;
 	int minhit = 15;
@@ -1142,7 +1138,7 @@ void MonsterAttackPlayer(Monster &monster, Player &player, int hit, int minDam, 
 	if ((player._pmode == PM_STAND || player._pmode == PM_ATTACK) && player._pBlockFlag) {
 		blkper = GenerateRnd(100);
 	}
-	int blk = player.GetBlockChance() - (monster.level * 2);
+	int blk = player.GetBlockChance() - (monster.level(sgGameInitInfo.nDifficulty) * 2);
 	blk = clamp(blk, 0, 100);
 	if (hper >= hit)
 		return;
@@ -1543,7 +1539,7 @@ void MonsterPetrified(Monster &monster)
 Monster *AddSkeleton(Point position, Direction dir, bool inMap)
 {
 	size_t typeCount = 0;
-	size_t skeletonIndexes[sizeof(SkeletonTypes) / sizeof(SkeletonTypes[0])];
+	size_t skeletonIndexes[SkeletonTypes.size()];
 	for (size_t i = 0; i < LevelMonsterTypeCount; i++) {
 		if (IsSkel(LevelMonsterTypes[i].type)) {
 			skeletonIndexes[typeCount++] = i;
@@ -3095,13 +3091,6 @@ void InitTRNForUniqueMonster(Monster &monster)
 void PrepareUniqueMonst(Monster &monster, UniqueMonsterType monsterType, size_t minionType, int bosspacksize, const UniqueMonsterData &uniqueMonsterData)
 {
 	monster.uniqueType = monsterType;
-
-	if (uniqueMonsterData.mlevel != 0) {
-		monster.level = 2 * uniqueMonsterData.mlevel;
-	} else {
-		monster.level = monster.data().level + 5;
-	}
-
 	monster.maxHitPoints = uniqueMonsterData.mmaxhp << 6;
 
 	if (!gbIsMultiplayer)
@@ -3139,7 +3128,6 @@ void PrepareUniqueMonst(Monster &monster, UniqueMonsterType monsterType, size_t 
 			monster.maxHitPoints += (gbIsMultiplayer ? 100 : 50) << 6;
 		else
 			monster.maxHitPoints += 64;
-		monster.level += 15;
 		monster.hitPoints = monster.maxHitPoints;
 		monster.minDamage = 2 * (monster.minDamage + 2);
 		monster.maxDamage = 2 * (monster.maxDamage + 2);
@@ -3151,7 +3139,6 @@ void PrepareUniqueMonst(Monster &monster, UniqueMonsterType monsterType, size_t 
 			monster.maxHitPoints += (gbIsMultiplayer ? 200 : 100) << 6;
 		else
 			monster.maxHitPoints += 192;
-		monster.level += 30;
 		monster.hitPoints = monster.maxHitPoints;
 		monster.minDamage = 4 * monster.minDamage + 6;
 		monster.maxDamage = 4 * monster.maxDamage + 6;
@@ -3621,7 +3608,7 @@ void M_StartHit(Monster &monster, int dam)
 {
 	PlayEffect(monster, MonsterSound::Hit);
 
-	if (IsAnyOf(monster.type().type, MT_SNEAK, MT_STALKER, MT_UNSEEN, MT_ILLWEAV) || dam >> 6 >= monster.level + 3) {
+	if (IsAnyOf(monster.type().type, MT_SNEAK, MT_STALKER, MT_UNSEEN, MT_ILLWEAV) || dam >> 6 >= monster.level(sgGameInitInfo.nDifficulty) + 3) {
 		if (monster.type().type == MT_BLINK) {
 			Teleport(monster);
 		} else if (IsAnyOf(monster.type().type, MT_NSCAV, MT_BSCAV, MT_WSCAV, MT_YSCAV, MT_GRAVEDIG)) {
@@ -3638,7 +3625,7 @@ void M_StartHit(Monster &monster, int dam)
 void M_StartHit(Monster &monster, const Player &player, int dam)
 {
 	monster.tag(player);
-	if (IsAnyOf(monster.type().type, MT_SNEAK, MT_STALKER, MT_UNSEEN, MT_ILLWEAV) || dam >> 6 >= monster.level + 3) {
+	if (IsAnyOf(monster.type().type, MT_SNEAK, MT_STALKER, MT_UNSEEN, MT_ILLWEAV) || dam >> 6 >= monster.level(sgGameInitInfo.nDifficulty) + 3) {
 		monster.enemy = player.getId();
 		monster.enemyPosition = player.position.future;
 		monster.flags &= ~MFLAG_TARGETS_MONSTER;
@@ -3651,7 +3638,7 @@ void M_StartHit(Monster &monster, const Player &player, int dam)
 void MonsterDeath(Monster &monster, Direction md, bool sendmsg)
 {
 	if (!monster.isPlayerMinion())
-		AddPlrMonstExper(monster.level, monster.exp(sgGameInitInfo.nDifficulty), monster.whoHit);
+		AddPlrMonstExper(monster.level(sgGameInitInfo.nDifficulty), monster.exp(sgGameInitInfo.nDifficulty), monster.whoHit);
 
 	MonsterKillCounts[monster.type().type]++;
 	monster.hitPoints = 0;
@@ -3927,10 +3914,10 @@ void ProcessMonsters()
 			monster.aiSeed = AdvanceRndSeed();
 		}
 		if ((monster.flags & MFLAG_NOHEAL) == 0 && monster.hitPoints < monster.maxHitPoints && monster.hitPoints >> 6 > 0) {
-			if (monster.level > 1) {
-				monster.hitPoints += monster.level / 2;
+			if (monster.level(sgGameInitInfo.nDifficulty) > 1) {
+				monster.hitPoints += monster.level(sgGameInitInfo.nDifficulty) / 2;
 			} else {
-				monster.hitPoints += monster.level;
+				monster.hitPoints += monster.level(sgGameInitInfo.nDifficulty);
 			}
 			monster.hitPoints = std::min(monster.hitPoints, monster.maxHitPoints); // prevent going over max HP with part of a single regen tick
 		}
@@ -4618,7 +4605,7 @@ bool Monster::isResistant(missile_id missileType) const
 bool Monster::isPlayerMinion() const
 {
 	// This could be HasAnyOf(GOLEM) && HasNoneOf(BERSERK), I think referencing the type and player index is more robust though
-	return type().type == MT_GOLEM && getId() < sizeof(Players) / sizeof(Players[0]);
+	return type().type == MT_GOLEM && getId() < Players.size();
 }
 
 bool Monster::isPossibleToHit() const

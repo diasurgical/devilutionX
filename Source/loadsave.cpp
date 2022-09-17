@@ -631,7 +631,7 @@ void LoadMonster(LoadHelper *file, Monster &monster)
 	monster.corpseId = file->NextLE<int8_t>();
 
 	monster.whoHit = file->NextLE<int8_t>();
-	monster.level = file->NextLE<int8_t>();
+	file->Skip(1); // Skip level - now calculated on the fly
 	file->Skip(1); // Alignment
 	file->Skip(2); // Skip exp - now calculated from monstdat when the monster dies
 
@@ -1397,7 +1397,7 @@ void SaveMonster(SaveHelper *file, Monster &monster)
 	file->WriteLE<int8_t>(monster.corpseId);
 
 	file->WriteLE<int8_t>(monster.whoHit);
-	file->WriteLE<int8_t>(monster.level);
+	file->WriteLE<int8_t>(static_cast<int8_t>(monster.level(sgGameInitInfo.nDifficulty)));
 	file->Skip(1); // Alignment
 	file->WriteLE<uint16_t>(static_cast<uint16_t>(std::min<unsigned>(std::numeric_limits<uint16_t>::max(), monster.exp(sgGameInitInfo.nDifficulty))));
 

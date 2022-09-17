@@ -18,6 +18,7 @@
 #include "engine/point.hpp"
 #include "engine/sound.h"
 #include "engine/world_tile.hpp"
+#include "init.h"
 #include "monstdat.h"
 #include "spelldat.h"
 #include "textdat.h"
@@ -246,7 +247,6 @@ struct Monster { // note: missing field _mAFNum
 	uint8_t uniqTrans;
 	int8_t corpseId;
 	int8_t whoHit;
-	int8_t level;
 	uint8_t minDamage;
 	uint8_t maxDamage;
 	uint8_t minDamageSpecial;
@@ -339,12 +339,43 @@ struct Monster { // note: missing field _mAFNum
 	}
 
 	/**
+
 	 * @brief Calculates monster's chance to hit with special attack.
 	 * Fetches base value from @p MonstersData array or @p UniqueMonstersData.
 	 * @param difficulty - difficulty on which calculation is performed
 	 * @return Monster's chance to hit with special attack, including bonuses from difficulty and monster being unique
 	 */
 	unsigned int toHitSpecial(_difficulty difficulty) const;
+
+	 * @brief Calculates monster's level.
+	 * Fetches base level value from @p MonstersData array or @p UniqueMonstersData.
+	 * @param difficulty - difficulty on which calculation is performed
+	 * @return Monster's level, including bonuses from difficulty and monster being unique
+	 */
+	unsigned int level(_difficulty difficulty) const
+	{
+		unsigned int baseLevel = data().level;
+		if (isUnique()) {
+			baseLevel = UniqueMonstersData[static_cast<int8_t>(uniqueType)].mlevel;
+			if (baseLevel != 0) {
+				baseLevel *= 2;
+			} else {
+				baseLevel = data().level + 5;
+			}
+		}
+
+		if (type().type == MT_DIABLO && !gbIsHellfire) {
+			baseLevel -= 15;
+		}
+
+		if (difficulty == DIFF_NIGHTMARE) {
+			baseLevel += 15;
+		} else if (difficulty == DIFF_HELL) {
+			baseLevel += 30;
+		}
+
+		return baseLevel;
+	}
 
 	/**
 	 * @brief Returns the network identifier for this monster
