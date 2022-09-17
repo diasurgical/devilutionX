@@ -1323,7 +1323,7 @@ int RndUItem(Monster *monster)
 		if (AllItemsList[i].iRnd == IDROP_NEVER)
 			okflag = false;
 		if (monster != nullptr) {
-			if (monster->level < AllItemsList[i].iMinMLvl)
+			if (monster->level(sgGameInitInfo.nDifficulty) < AllItemsList[i].iMinMLvl)
 				okflag = false;
 		} else {
 			if (2 * curlv < AllItemsList[i].iMinMLvl)
@@ -3026,7 +3026,7 @@ int RndItem(const Monster &monster)
 	if ((monsterTreasureFlags & T_NODROP) != 0)
 		return 0;
 
-	return RndItemForMonsterLevel(monster.level);
+	return RndItemForMonsterLevel(monster.level(sgGameInitInfo.nDifficulty));
 }
 
 void SpawnUnique(_unique_items uid, Point position)
