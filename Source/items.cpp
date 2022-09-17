@@ -1771,18 +1771,19 @@ void printItemMiscVirtualGamepad(const Item &item, const bool isOil, bool isCast
 
 void printItemMiscGamepad(const Item &item, bool isOil, bool isCastOnTarget)
 {
+	using namespace controllerButtonIcon;
 	std::string activateButton = "Activate";
 	std::string castButton = "Cast";
 
 	if (GamepadType == GamepadLayout::Xbox) {
-		activateButton = "Y";
-		castButton = "X";
+		activateButton = Xbox_Y;
+		castButton = Xbox_X;
 	} else if (GamepadType == GamepadLayout::PlayStation) {
-		activateButton = "Triangle";
-		castButton = "Square";
+		activateButton = Playstation_Triangle;
+		castButton = Playstation_Square;
 	} else if (GamepadType == GamepadLayout::Nintendo) {
-		activateButton = "Y";
-		castButton = "X";
+		activateButton = Nintendo_Y;
+		castButton = Nintendo_X;
 	}
 
 	if (item._iMiscId == IMISC_MAPOFDOOM) {
