@@ -60,11 +60,11 @@ bool sgbSaveSoundOn;
 
 namespace {
 
-constexpr int NightmareAcBonus = 50;
-constexpr int HellAcBonus = 80;
-
 constexpr int NightmareToHitBonus = 85;
 constexpr int HellToHitBonus = 120;
+
+constexpr int NightmareAcBonus = 50;
+constexpr int HellAcBonus = 80;
 
 /** Tracks which missile files are already loaded */
 size_t totalmonsters;
