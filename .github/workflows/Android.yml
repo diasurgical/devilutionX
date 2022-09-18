@@ -30,8 +30,8 @@ jobs:
       uses: actions/cache@v2
       with:
         path: android-project/app/.cxx
-        key: android-cmake-v3-${{ github.sha }}
-        restore-keys: android-cmake-v3-
+        key: android-cmake-v5-${{ github.sha }}
+        restore-keys: android-cmake-v5-
 
     - name: Build
       working-directory: ${{github.workspace}}
