@@ -1,6 +1,6 @@
 app-id: org.diasurgical.DevilutionX
 runtime: org.freedesktop.Platform
-runtime-version: '21.08'
+runtime-version: '22.08'
 sdk: org.freedesktop.Sdk
 command: devilutionx
 rename-desktop-file: devilutionx.desktop
