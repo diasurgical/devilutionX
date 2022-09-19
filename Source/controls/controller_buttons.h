@@ -38,7 +38,6 @@ inline bool IsDPadButton(ControllerButton button)
 }
 
 namespace controllerButtonIcon {
-using namespace std;
 const std::string Playstation_Triangle = "\uE000";
 const std::string Playstation_Square = "\uE001";
 const std::string Playstation_X = "\uE002";
