@@ -34,6 +34,9 @@
 # -modernize-concat-nested-namespaces
 # -modernize-avoid-bind
 #   Compatibility with older compilers.
+# -modernize-use-nodiscard
+#   This checks suggests to add [[nodiscard]] to member functions,
+#   without a good reason to do so, cluttering the code.
 Checks: >
   -*,
   bugprone-*,
@@ -51,7 +54,8 @@ Checks: >
   -modernize-avoid-c-arrays,
   -modernize-use-trailing-return-type,
   -modernize-concat-nested-namespaces,
-  -modernize-avoid-bind
+  -modernize-avoid-bind,
+  -modernize-use-nodiscard
 
 HeaderFilterRegex: "^(Source|test)\\.h$"
 
