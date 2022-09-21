@@ -631,11 +631,9 @@ uint32_t DrawString(const Surface &out, string_view text, const Rectangle &rect,
 	else if (HasAnyOf(flags, UiFlags::AlignRight))
 		characterPosition.x += rect.size.width - lineWidth;
 
-	auto textLines = (int)std::count(text.begin(), text.end(), '\n');
-	int yMax = rect.position.y + rect.size.height * (textLines + 1);
 
 	int rightMargin = rect.position.x + rect.size.width;
-	const int bottomMargin = rect.size.height != 0 ? std::min(yMax, out.h()) : out.h();
+	const int bottomMargin = rect.size.height != 0 ? std::min(rect.position.y + rect.size.height, out.h()) : out.h();
 
 	if (lineHeight == -1)
 		lineHeight = GetLineHeight(text, size);
