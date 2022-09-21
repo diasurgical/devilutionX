@@ -293,7 +293,7 @@ void PrintInfo(const Surface &out)
 				i++;
 			}
 		}
-		DrawString(out, infoStringOut, line, InfoColor | UiFlags::AlignCenter  | UiFlags::KerningFitSpacing, 2, lineHeight);
+		DrawString(out, infoStringOut, line, InfoColor | UiFlags::AlignCenter | UiFlags::KerningFitSpacing, 2, lineHeight);
 		line.position.y += lineHeight * (infoStringLines + 1);
 	}
 
