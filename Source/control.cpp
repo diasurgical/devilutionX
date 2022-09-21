@@ -267,11 +267,33 @@ void PrintInfo(const Surface &out)
 
 	auto infoStringLines = (int)std::count(InfoString.str().begin(), InfoString.str().end(), '\n');
 
-	Rectangle line { GetMainPanel().position + Displacement { 177, LineStart[infoStringLines + pnumlines] }, { 288, 12 } };
+	int panelLines = pnumlines + infoStringLines;
+
+	std::string infoStringOut = std::string(InfoString.str());
+
+	if (panelLines >= 4) {
+		panelLines = 3;
+		pnumlines = panelLines - infoStringLines;
+		Log("PrintInfo unable to render everything - not enough lines");
+	}
+
+	Rectangle line { GetMainPanel().position + Displacement { 177, LineStart[panelLines] }, { 288, 12 } };
 
 	if (!InfoString.empty()) {
-		int lineHeight = LineHeights[pnumlines + infoStringLines];
-		DrawString(out, InfoString, line, InfoColor | UiFlags::AlignCenter | UiFlags::KerningFitSpacing, 2, lineHeight);
+		const int lineHeight = LineHeights[panelLines];
+		if (infoStringLines >= 4) {
+			infoStringLines = 3;
+			infoStringOut = "";
+			int i = 0;
+			for (string_view s : SplitByChar(InfoString, '\n')) {
+				infoStringOut = StrCat(infoStringOut, s);
+				if (i == 3)
+					break;
+				infoStringOut = StrCat(infoStringOut, "\n");
+				i++;
+			}
+		}
+		DrawString(out, infoStringOut, line, InfoColor | UiFlags::AlignCenter | UiFlags::KerningFitSpacing, 2, lineHeight);
 		line.position.y += lineHeight * (infoStringLines + 1);
 	}
 
