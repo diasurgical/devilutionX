@@ -203,7 +203,6 @@ struct SpellData {
 	uint8_t sManaCost;
 	magic_type sType;
 	const char *sNameText;
-	const char *sSkillText;
 	int sBookLvl;
 	int sStaffLvl;
 	bool sTargeted;
