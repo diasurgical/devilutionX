@@ -269,31 +269,16 @@ void PrintInfo(const Surface &out)
 
 	int panelLines = pnumlines + infoStringLines;
 
-	std::string infoStringOut = std::string(InfoString.str());
-
 	if (panelLines > 4) {
 		panelLines = 4;
 		pnumlines = panelLines - infoStringLines;
-		Log("PrintInfo unable to render everything - not enough lines");
 	}
 
 	Rectangle line { GetMainPanel().position + Displacement { 177, LineStart[panelLines] }, { 288, 12 * (infoStringLines + 1) } };
 
 	if (!InfoString.empty()) {
 		const int lineHeight = LineHeights[panelLines];
-		if (infoStringLines > 4) {
-			infoStringLines = 4;
-			infoStringOut = "";
-			int i = 0;
-			for (string_view s : SplitByChar(InfoString, '\n')) {
-				infoStringOut = StrCat(infoStringOut, s);
-				if (i == 3)
-					break;
-				infoStringOut = StrCat(infoStringOut, "\n");
-				i++;
-			}
-		}
-		DrawString(out, infoStringOut, line, InfoColor | UiFlags::AlignCenter | UiFlags::KerningFitSpacing, 2, lineHeight);
+		DrawString(out, InfoString, line, InfoColor | UiFlags::AlignCenter | UiFlags::KerningFitSpacing, 2, lineHeight);
 		line.position.y += lineHeight * (infoStringLines + 1);
 	}
 
@@ -967,8 +952,9 @@ void DrawInfoBox(const Surface &out)
 			AddPanelString(fmt::format(fmt::runtime(_("Hit Points {:d} of {:d}")), target._pHitPoints >> 6, target._pMaxHP >> 6));
 		}
 	}
-	if (!InfoString.empty() || pnumlines != 0)
+	if (!InfoString.empty() || pnumlines != 0) {
 		PrintInfo(out);
+	}
 }
 
 void CheckLvlBtn()
