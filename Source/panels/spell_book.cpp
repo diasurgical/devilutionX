@@ -21,10 +21,7 @@
 
 namespace devilution {
 
-namespace {
-
-OptionalOwnedClxSpriteList pSBkBtnCel;
-OptionalOwnedClxSpriteList pSpellBkCel;
+OptionalOwnedClxSpriteList pSBkIconCels;
 
 /** Maps from spellbook page number and position to spell_id. */
 spell_id SpellPages[6][7] = {
@@ -35,6 +32,11 @@ spell_id SpellPages[6][7] = {
 	{ SPL_LIGHTWALL, SPL_IMMOLAT, SPL_WARP, SPL_REFLECT, SPL_BERSERK, SPL_FIRERING, SPL_SEARCH },
 	{ SPL_INVALID, SPL_INVALID, SPL_INVALID, SPL_INVALID, SPL_INVALID, SPL_INVALID, SPL_INVALID }
 };
+
+namespace {
+
+OptionalOwnedClxSpriteList pSBkBtnCel;
+OptionalOwnedClxSpriteList pSpellBkCel;
 
 constexpr Size SpellBookDescription { 250, 43 };
 constexpr int SpellBookDescriptionPaddingHorizontal = 2;

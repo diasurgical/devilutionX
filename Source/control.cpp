@@ -167,6 +167,61 @@ const char *const PanBtnStr[8] = {
 	"" // Player attack
 };
 
+const char *const SpellDescription[MAX_SPELLS] = {
+	N_("null"),
+	N_("Creates a magical flaming missile"),
+	N_("Instantly restores lost life"),
+	N_("Creates a powerful lightning bolt to lay waste to your enemies"),
+	N_("Releases a short-ranged but deadly burst of energy"),
+	N_("Identify a magic item's properties"),
+	N_("Creates a wall of flame that burns nearby enemies"),
+	N_("Creates a magic portal to town"),
+	N_("Petrifies an enemy, rendering it harmless and defenseless for a short time"),
+	N_("Vision pierces through walls"),
+	N_("A blind, unpredictable blink jump to a nearby location"),
+	N_("Creates a magical shield that consumes mana instead of health when you take damage"),
+	N_("Creates an explosive sphere of fiery death to engulf your enemies"),
+	N_("Summons a multi-headed beast of flame to reduce your enemies to ashes"),
+	N_("Unleashes multiple bolts of lightning into surrounding enemies"),
+	N_("Sends forth a moving wall of fire"),
+	N_("Unleashes twin serpents to hunt an enemy"),
+	N_("Restores spiritual energy at the cost of blood"),
+	N_("Creates an expanding ring of lightning to shock nearby enemies"),
+	N_("Renders the caster unseen, allowing to sneak past enemies"),
+	N_("Creates a continuous jet of flame to scorch your enemies"),
+	N_("Creates a golem from the earth to fight by your side"),
+	N_("Increases physical abilities for a short time"),
+	N_("Instantly moves to a destination within your line of sight"),
+	N_("Devastates the battlefield with unstoppable hellfire"),
+	N_("Fade into the Ether, becoming invulnerable to damage for a few moments"),
+	N_("Repairs an item at cost of reducing its maximum durability"),
+	N_("Replenishes charges in a spell staff at cost of decreasing maximum charge capacity"),
+	N_("Attempts to disarm a trap"),
+	N_("Summons a fiery apparition that charges an enemy and engulfs them in flames"),
+	N_("Creates multiple, randomly directed bolts of electrical energy"),
+	N_("A bolt of divine energy that damages undead"),
+	N_("Brings a deceased ally back to life"),
+	N_("Uses the power of your mind to pick up items, use objects, and knock back enemies"),
+	N_("Instantly restores lost life to an ally"),
+	N_("Creates a powerful bolt of magical energy at the cost of blood"),
+	N_("Summons a powerful spirit to seek the enemy at the cost of blood"),
+	N_("Refills one's spiritual force, restoring a portion of mana"),
+	N_("Completely refills one's spiritual force, restoring all mana"),
+	N_("Allows fate to choose the demise of enemies"),
+	N_("Creates a wall of electrical energy that shocks nearby enemies"),
+	N_("Releases balls of flame in all directions, engulfing enemies in fiery death"),
+	N_("Transports the caster to the nearest stairway, no matter explored or not"),
+	N_("Reflects part of damage taken, mirroring it on attackers"),
+	N_("Drives enemy amok, making it attack friend and foe alike"),
+	N_("Surrounds the caster with a circle of flame"),
+	N_("Highlights items on the ground"),
+	N_("null"),
+	N_("null"),
+	N_("null"),
+	N_("null"),
+	N_("null"),
+};
+
 /**
  * Draws a section of the empty flask cel on top of the panel to create the illusion
  * of the flask getting empty. This function takes a cel and draws a
@@ -1044,6 +1099,27 @@ void DrawInfoBox(const Surface &out)
 			InfoString = string_view(target._pName);
 			AddPanelString(fmt::format(fmt::runtime(_("{:s}, Level: {:d}")), _(ClassStrTbl[static_cast<std::size_t>(target._pClass)]), target._pLevel));
 			AddPanelString(fmt::format(fmt::runtime(_("Hit Points {:d} of {:d}")), target._pHitPoints >> 6, target._pMaxHP >> 6));
+		}
+		if (sbookflag) {
+			Player &player = *MyPlayer;
+			const uint64_t spl = player._pMemSpells | player._pISpells | player._pAblSpells;
+			const uint8_t spellSlots = 7;
+			spell_id snPos[spellSlots];
+			Rectangle iconAreas[spellSlots];
+			constexpr Size SpellBookDescription { 250, 43 };
+
+			for (uint8_t i = 0; i < spellSlots; i++) {
+				snPos[i] = SpellPages[sbooktab][i];
+				iconAreas[i] = { GetPanelPosition(UiPanels::Spell, { 11, 18 + (SpellBookDescription.height * i) }), Size { 37, SpellBookDescription.height - 5 } };
+			}
+			constexpr int PanelWidth = 240;
+			for (uint8_t i = 0; i < spellSlots; i++) {
+				if (iconAreas[i].contains(MousePosition)) {
+					if ((IsValidSpell(snPos[i]) && (spl & GetSpellBitmask(snPos[i])) != 0) || snPos[i] == player._pRSpell) {
+						InfoString = WordWrapString(SpellDescription[snPos[i]], PanelWidth);
+					}
+				}
+			}
 		}
 	}
 	if (!InfoString.empty())
