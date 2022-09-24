@@ -133,7 +133,6 @@ void DrawSpell(const Surface &out)
 void DrawSpellList(const Surface &out)
 {
 	InfoString = {};
-	ClearPanel();
 
 	Player &myPlayer = *MyPlayer;
 
@@ -276,8 +275,6 @@ void SetSpell()
 	if (!GetSpellListSelection(pSpell, pSplType)) {
 		return;
 	}
-
-	ClearPanel();
 
 	Player &myPlayer = *MyPlayer;
 	myPlayer._pRSpell = pSpell;
