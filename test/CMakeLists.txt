@@ -14,7 +14,6 @@ set(tests
   appfat_test
   automap_test
   codec_test
-  control_test
   cursor_test
   dead_test
   diablo_test

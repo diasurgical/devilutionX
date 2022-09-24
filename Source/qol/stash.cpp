@@ -420,8 +420,6 @@ uint16_t CheckStashHLight(Point mousePosition)
 
 	InfoColor = UiFlags::ColorWhite;
 
-	ClearPanel();
-
 	StashStruct::StashCell itemId = Stash.GetItemIdAtPosition(slot);
 	if (itemId == StashStruct::EmptyCell) {
 		return -1;

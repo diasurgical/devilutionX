@@ -39,7 +39,6 @@ extern bool lvlbtndown;
 extern int dropGoldValue;
 extern bool drawmanaflag;
 extern bool chrbtnactive;
-extern DVL_API_FOR_TEST int pnumlines;
 extern UiFlags InfoColor;
 extern int sbooktab;
 extern int8_t initialDropGoldIndex;
@@ -77,7 +76,6 @@ void SetSpeedSpell(size_t slot);
 void ToggleSpell(size_t slot);
 
 void AddPanelString(string_view str);
-void ClearPanel();
 void DrawPanelBox(const Surface &out, SDL_Rect srcRect, Point targetPosition);
 Point GetPanelPosition(UiPanels panel, Point offset = { 0, 0 });
 

@@ -1912,7 +1912,6 @@ int8_t CheckInvHLight()
 	Item *pi = nullptr;
 	Player &myPlayer = *MyPlayer;
 
-	ClearPanel();
 	if (r >= SLOTXY_HEAD_FIRST && r <= SLOTXY_HEAD_LAST) {
 		rv = INVLOC_HEAD;
 		pi = &myPlayer.InvBody[rv];

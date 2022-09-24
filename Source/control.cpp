@@ -69,7 +69,6 @@ int dropGoldValue;
  */
 bool drawmanaflag;
 bool chrbtnactive;
-int pnumlines;
 UiFlags InfoColor;
 int sbooktab;
 int8_t initialDropGoldIndex;
@@ -150,7 +149,6 @@ char TalkMessage[MAX_SEND_STR_LEN];
 bool TalkButtonsDown[3];
 int sgbPlrTalkTbl;
 bool WhisperList[MAX_PLRS];
-char panelstr[4][64];
 
 enum panel_button_id : uint8_t {
 	PanelButtonCharinfo,
@@ -261,20 +259,20 @@ void PrintInfo(const Surface &out)
 	if (talkflag)
 		return;
 
-	const int LineStart[] = { 70, 58, 52, 48, 46 };
-	const int LineHeights[] = { 30, 24, 18, 15, 12 };
+	const int space[] = { 18, 12, 6, 3, 0 };
+	Rectangle infoArea { GetMainPanel().position + Displacement { 177, 46 }, { 288, 60 } };
 
-	Rectangle line { GetMainPanel().position + Displacement { 177, LineStart[pnumlines] }, { 288, 12 } };
+	const int newLineCount = std::count(InfoString.str().begin(), InfoString.str().end(), '\n');
+	const int spaceIndex = std::min(4, newLineCount);
+	const int spacing = space[spaceIndex];
+	const int lineHeight = 12 + spacing;
 
-	if (!InfoString.empty()) {
-		DrawString(out, InfoString, line, InfoColor | UiFlags::AlignCenter | UiFlags::KerningFitSpacing, 2);
-		line.position.y += LineHeights[pnumlines];
-	}
+	// Adjusting the line height to add spacing between lines
+	// will also add additional space beneath the last line
+	// which throws off the vertical centering
+	infoArea.position.y += spacing / 2;
 
-	for (int i = 0; i < pnumlines; i++) {
-		DrawString(out, panelstr[i], line, InfoColor | UiFlags::AlignCenter | UiFlags::KerningFitSpacing, 2);
-		line.position.y += LineHeights[pnumlines];
-	}
+	DrawString(out, InfoString, infoArea, InfoColor | UiFlags::AlignCenter | UiFlags::VerticalCenter | UiFlags::KerningFitSpacing, 2, lineHeight);
 }
 
 int CapStatPointsToAdd(int remainingStatPoints, const Player &player, CharacterAttribute attribute)
@@ -463,17 +461,10 @@ bool IsChatAvailable()
 
 void AddPanelString(string_view str)
 {
-	if (pnumlines >= 4) {
-		Log("AddPanelString failed - not enough lines");
-		return;
-	}
-	CopyUtf8(panelstr[pnumlines], str, sizeof(*panelstr));
-	pnumlines++;
-}
-
-void ClearPanel()
-{
-	pnumlines = 0;
+	if (InfoString.empty())
+		InfoString = str;
+	else
+		InfoString = StrCat(InfoString, "\n", str);
 }
 
 Point GetPanelPosition(UiPanels panel, Point offset)
@@ -602,7 +593,6 @@ void InitControlPan()
 		buttonEnabled = false;
 	chrbtnactive = false;
 	InfoString = {};
-	ClearPanel();
 	drawhpflag = true;
 	drawmanaflag = true;
 	chrflag = false;
@@ -723,7 +713,6 @@ void CheckPanelInfo()
 {
 	panelflag = false;
 	const Point mainPanelPosition = GetMainPanel().position;
-	ClearPanel();
 	for (int i = 0; i < PanelButtonIndex; i++) {
 		int xend = PanBtnPos[i].x + mainPanelPosition.x + PanBtnPos[i].w;
 		int yend = PanBtnPos[i].y + mainPanelPosition.y + PanBtnPos[i].h;
@@ -891,7 +880,6 @@ void DrawInfoBox(const Surface &out)
 	if (!panelflag && !trigflag && pcursinvitem == -1 && pcursstashitem == uint16_t(-1) && !spselflag) {
 		InfoString = {};
 		InfoColor = UiFlags::ColorWhite;
-		ClearPanel();
 	}
 	Player &myPlayer = *MyPlayer;
 	if (spselflag || trigflag) {
@@ -919,7 +907,6 @@ void DrawInfoBox(const Surface &out)
 				const auto &monster = Monsters[pcursmonst];
 				InfoColor = UiFlags::ColorWhite;
 				InfoString = monster.name();
-				ClearPanel();
 				if (monster.isUnique()) {
 					InfoColor = UiFlags::ColorWhitegold;
 					PrintUniqueHistory();
@@ -934,12 +921,11 @@ void DrawInfoBox(const Surface &out)
 			InfoColor = UiFlags::ColorWhitegold;
 			auto &target = Players[pcursplr];
 			InfoString = string_view(target._pName);
-			ClearPanel();
 			AddPanelString(fmt::format(fmt::runtime(_("{:s}, Level: {:d}")), _(ClassStrTbl[static_cast<std::size_t>(target._pClass)]), target._pLevel));
 			AddPanelString(fmt::format(fmt::runtime(_("Hit Points {:d} of {:d}")), target._pHitPoints >> 6, target._pMaxHP >> 6));
 		}
 	}
-	if (!InfoString.empty() || pnumlines != 0)
+	if (!InfoString.empty())
 		PrintInfo(out);
 }
 
