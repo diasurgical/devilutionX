@@ -383,10 +383,11 @@ int DoDrawString(const Surface &out, string_view text, Rectangle rect, Point &ch
 
 		uint8_t frame = next & 0xFF;
 		if (next == '\n' || characterPosition.x > rightMargin) {
-			if (characterPosition.y + lineHeight >= bottomMargin)
+			int nextLineY = characterPosition.y + lineHeight;
+			if (nextLineY + lineHeight > bottomMargin)
 				break;
 			characterPosition.x = rect.position.x;
-			characterPosition.y += lineHeight;
+			characterPosition.y = nextLineY;
 
 			if (HasAnyOf(flags, (UiFlags::AlignCenter | UiFlags::AlignRight))) {
 				lineWidth = (*kerning)[frame];
