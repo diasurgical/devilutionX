@@ -265,9 +265,10 @@ void PrintInfo(const Surface &out)
 	const int LineStart[] = { 70, 58, 52, 48, 46 };
 	const int LineHeights[] = { 30, 24, 18, 15, 12 };
 
-	auto infoStringLines = (int)std::count(InfoString.str().begin(), InfoString.str().end(), '\n');
+	auto infoStringLines = (int)std::count(InfoString.str().begin(), InfoString.str().end(), '\n') + 1;
 
 	int panelLines = pnumlines + infoStringLines;
+	int lineCountIndex = panelLines - 1;
 
 	if (panelLines > 4) {
 		panelLines = 4;
