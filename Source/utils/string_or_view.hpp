@@ -40,23 +40,9 @@ public:
 
 	StringOrView &operator=(StringOrView &&other) noexcept
 	{
-		string_view::size_type end = 0;
-		for (unsigned i = 0; i < 5; ++i) {
-			if (end < other.str().size()) {
-				if (other.str().find('\n', end + 1) == std::string::npos)
-					end = other.str().size();
-				else
-					end = other.str().find('\n', end + 1);
-			} else
-				break;
-		}
-		if (end < other.str().size()) {
-			LogWarn("PrintInfo unable to render everything - not enough lines");
-		}
-
 		if (owned_) {
 			if (other.owned_) {
-				str_ = std::string(other.str().substr(0, end));
+				str_ = std::move(other.str_);
 			} else {
 				str_.~basic_string();
 				owned_ = false;
@@ -66,7 +52,7 @@ public:
 			if (other.owned_) {
 				view_.~string_view();
 				owned_ = true;
-				new (&str_) std::string(other.str().substr(0, end));
+				new (&str_) std::string(std::move(other.str_));
 			} else {
 				view_ = other.view_;
 			}
@@ -104,6 +90,7 @@ private:
 		std::string str_;
 		string_view view_;
 	};
+	friend class InfoStringView;
 };
 
 } // namespace devilution

@@ -132,7 +132,7 @@ void DrawSpell(const Surface &out)
 
 void DrawSpellList(const Surface &out)
 {
-	InfoString = {};
+	InfoString.clear();
 	ClearPanel();
 
 	Player &myPlayer = *MyPlayer;

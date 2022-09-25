@@ -78,7 +78,7 @@ bool talkflag;
 bool sbookflag;
 bool chrflag;
 bool drawbtnflag;
-StringOrView InfoString;
+InfoStringView InfoString;
 bool panelflag;
 int initialDropGoldValue;
 bool panbtndown;
@@ -275,12 +275,12 @@ void PrintInfo(const Surface &out)
 		pnumlines = panelLines - infoStringLines;
 	}
 
-	Rectangle line { GetMainPanel().position + Displacement { 177, LineStart[panelLines] }, { 288, 12 * (infoStringLines + 1) } };
+	Rectangle line { GetMainPanel().position + Displacement { 177, LineStart[panelLines] }, { 288, 12 * (infoStringLines) } };
 
 	if (!InfoString.empty()) {
 		const int lineHeight = LineHeights[panelLines];
 		DrawString(out, InfoString, line, InfoColor | UiFlags::AlignCenter | UiFlags::KerningFitSpacing, 2, lineHeight);
-		line.position.y += lineHeight * (infoStringLines + 1);
+		line.position.y += lineHeight * (infoStringLines);
 	}
 
 	for (int i = 0; i < pnumlines; i++) {
@@ -611,7 +611,7 @@ void InitControlPan()
 	for (bool &buttonEnabled : chrbtn)
 		buttonEnabled = false;
 	chrbtnactive = false;
-	InfoString = {};
+	InfoString.clear();
 	ClearPanel();
 	drawhpflag = true;
 	drawmanaflag = true;
@@ -903,7 +903,7 @@ void DrawInfoBox(const Surface &out)
 {
 	DrawPanelBox(out, { 177, 62, 288, 63 }, GetMainPanel().position + Displacement { 177, 46 });
 	if (!panelflag && !trigflag && pcursinvitem == -1 && pcursstashitem == uint16_t(-1) && !spselflag) {
-		InfoString = {};
+		InfoString.clear();
 		InfoColor = UiFlags::ColorWhite;
 		ClearPanel();
 	}
