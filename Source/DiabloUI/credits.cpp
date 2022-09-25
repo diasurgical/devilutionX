@@ -112,7 +112,6 @@ void CreditsRenderer::Render()
 	viewport.x += uiPosition.x;
 	viewport.y += uiPosition.y;
 	ScaleOutputRect(&viewport);
-	SDL_SetClipRect(DiabloUiSurface(), &viewport);
 
 	// We use unscaled coordinates for calculation throughout.
 	Sint16 destY = uiPosition.y + VIEWPORT.y - (offsetY - linesBegin * LINE_H);
@@ -123,10 +122,12 @@ void CreditsRenderer::Render()
 
 		SDL_Rect dstRect = MakeSdlRect(destX + lineContent.offset, destY, 0, 0);
 		ScaleOutputRect(&dstRect);
-		const Surface &out = Surface(DiabloUiSurface());
+		dstRect.x -= viewport.x;
+		dstRect.y -= viewport.y;
+
+		const Surface &out = Surface(DiabloUiSurface(), viewport);
 		DrawString(out, lineContent.text, Point { dstRect.x, dstRect.y }, UiFlags::FontSizeDialog | UiFlags::ColorDialogWhite, -1);
 	}
-	SDL_SetClipRect(DiabloUiSurface(), nullptr);
 }
 
 bool TextDialog(char const *const *text, std::size_t textLines)
