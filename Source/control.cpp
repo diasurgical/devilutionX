@@ -269,6 +269,7 @@ void PrintInfo(const Surface &out)
 
 	int panelLines = pnumlines + infoStringLines;
 	int lineCountIndex = panelLines - 1;
+	const int lineHeight = LineHeights[lineCountIndex];
 
 	if (panelLines > 4) {
 		panelLines = 4;
@@ -278,14 +279,13 @@ void PrintInfo(const Surface &out)
 	Rectangle line { GetMainPanel().position + Displacement { 177, LineStart[lineCountIndex] }, { 288, 12 * infoStringLines } };
 
 	if (!InfoString.empty()) {
-		const int lineHeight = LineHeights[lineCountIndex];
 		DrawString(out, InfoString, line, InfoColor | UiFlags::AlignCenter | UiFlags::KerningFitSpacing, 2, lineHeight);
 		line.position.y += lineHeight * (infoStringLines);
 	}
 
 	for (int i = 0; i < pnumlines; i++) {
 		DrawString(out, panelstr[i], line, InfoColor | UiFlags::AlignCenter | UiFlags::KerningFitSpacing, 2);
-		line.position.y += LineHeights[lineCountIndex];
+		line.position.y += lineHeight;
 	}
 }
 
