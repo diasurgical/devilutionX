@@ -177,12 +177,12 @@ void DrawSpellList(const Surface &out)
 			PrintSBookSpellType(out, spellListItem.location, _("Spell"), spellColor);
 			InfoString = fmt::format(fmt::runtime(_("{:s} Spell")), pgettext("spell", spellDataItem.sNameText));
 			if (spellId == SPL_HBOLT) {
-				AddPanelString(_("Damages undead only"));
+				InfoString = StrCat(InfoString, "\n", _("Damages undead only"));
 			}
 			if (spellLevel == 0)
-				AddPanelString(_("Spell Level 0 - Unusable"));
+				InfoString = StrCat(InfoString, "\n", _("Spell Level 0 - Unusable"));
 			else
-				AddPanelString(fmt::format(fmt::runtime(_("Spell Level {:d}")), spellLevel));
+				InfoString = StrCat(InfoString, "\n", fmt::format(fmt::runtime(_("Spell Level {:d}")), spellLevel));
 			break;
 		case RSPLTYPE_SCROLL: {
 			if (!myPlayer.isOnLevel(0)) {
@@ -194,7 +194,7 @@ void DrawSpellList(const Surface &out)
 			const int scrollCount = std::count_if(items.begin(), items.end(), [spellId](const Item &item) {
 				return item.isScrollOf(spellId);
 			});
-			AddPanelString(fmt::format(fmt::runtime(ngettext("{:d} Scroll", "{:d} Scrolls", scrollCount)), scrollCount));
+			InfoString = StrCat(InfoString, "\n", fmt::format(fmt::runtime(ngettext("{:d} Scroll", "{:d} Scrolls", scrollCount)), scrollCount));
 		} break;
 		case RSPLTYPE_CHARGES: {
 			if (!myPlayer.isOnLevel(0)) {
@@ -203,13 +203,13 @@ void DrawSpellList(const Surface &out)
 			PrintSBookSpellType(out, spellListItem.location, _("Staff"), spellColor);
 			InfoString = fmt::format(fmt::runtime(_("Staff of {:s}")), pgettext("spell", spellDataItem.sNameText));
 			int charges = myPlayer.InvBody[INVLOC_HAND_LEFT]._iCharges;
-			AddPanelString(fmt::format(fmt::runtime(ngettext("{:d} Charge", "{:d} Charges", charges)), charges));
+			InfoString = StrCat(InfoString, "\n", fmt::format(fmt::runtime(ngettext("{:d} Charge", "{:d} Charges", charges)), charges));
 		} break;
 		case RSPLTYPE_INVALID:
 			break;
 		}
 		if (hotkeyName) {
-			AddPanelString(fmt::format(fmt::runtime(_("Spell Hotkey {:s}")), *hotkeyName));
+			InfoString = StrCat(InfoString, "\n", fmt::format(fmt::runtime(_("Spell Hotkey {:s}")), *hotkeyName));
 		}
 	}
 }

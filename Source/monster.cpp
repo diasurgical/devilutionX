@@ -4200,9 +4200,9 @@ void M_FallenFear(Point position)
 void PrintMonstHistory(int mt)
 {
 	if (*sgOptions.Gameplay.showMonsterType) {
-		AddPanelString(fmt::format(fmt::runtime(_("Type: {:s}  Kills: {:d}")), GetMonsterTypeText(MonstersData[mt]), MonsterKillCounts[mt]));
+		InfoString = StrCat(InfoString, "\n", fmt::format(fmt::runtime(_("Type: {:s}  Kills: {:d}")), GetMonsterTypeText(MonstersData[mt]), MonsterKillCounts[mt]));
 	} else {
-		AddPanelString(fmt::format(fmt::runtime(_("Total kills: {:d}")), MonsterKillCounts[mt]));
+		InfoString = StrCat(InfoString, "\n", fmt::format(fmt::runtime(_("Total kills: {:d}")), MonsterKillCounts[mt]));
 	}
 
 	if (MonsterKillCounts[mt] >= 30) {
@@ -4234,12 +4234,12 @@ void PrintMonstHistory(int mt)
 			minHP = 4 * minHP + hpBonusHell;
 			maxHP = 4 * maxHP + hpBonusHell;
 		}
-		AddPanelString(fmt::format(fmt::runtime(_("Hit Points: {:d}-{:d}")), minHP, maxHP));
+		InfoString = StrCat(InfoString, "\n", fmt::format(fmt::runtime(_("Hit Points: {:d}-{:d}")), minHP, maxHP));
 	}
 	if (MonsterKillCounts[mt] >= 15) {
 		int res = (sgGameInitInfo.nDifficulty != DIFF_HELL) ? MonstersData[mt].resistance : MonstersData[mt].resistanceHell;
 		if ((res & (RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING | IMMUNE_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING)) == 0) {
-			AddPanelString(_("No magic resistance"));
+			InfoString = StrCat(InfoString, "\n", _("No magic resistance"));
 		} else {
 			if ((res & (RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING)) != 0) {
 				std::string resists = std::string(_("Resists:"));
@@ -4249,7 +4249,7 @@ void PrintMonstHistory(int mt)
 					AppendStrView(resists, _(" Fire"));
 				if ((res & RESIST_LIGHTNING) != 0)
 					AppendStrView(resists, _(" Lightning"));
-				AddPanelString(resists);
+				InfoString = StrCat(InfoString, "\n", resists);
 			}
 			if ((res & (IMMUNE_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING)) != 0) {
 				std::string immune = std::string(_("Immune:"));
@@ -4259,7 +4259,7 @@ void PrintMonstHistory(int mt)
 					AppendStrView(immune, _(" Fire"));
 				if ((res & IMMUNE_LIGHTNING) != 0)
 					AppendStrView(immune, _(" Lightning"));
-				AddPanelString(immune);
+				InfoString = StrCat(InfoString, "\n", immune);
 			}
 		}
 	}
@@ -4269,22 +4269,22 @@ void PrintUniqueHistory()
 {
 	auto &monster = Monsters[pcursmonst];
 	if (*sgOptions.Gameplay.showMonsterType) {
-		AddPanelString(fmt::format(fmt::runtime(_("Type: {:s}")), GetMonsterTypeText(monster.data())));
+		InfoString = StrCat(InfoString, "\n", fmt::format(fmt::runtime(_("Type: {:s}")), GetMonsterTypeText(monster.data())));
 	}
 
 	int res = monster.resistance & (RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING | IMMUNE_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING);
 	if (res == 0) {
-		AddPanelString(_("No resistances"));
-		AddPanelString(_("No Immunities"));
+		InfoString = StrCat(InfoString, "\n", _("No resistances"));
+		InfoString = StrCat(InfoString, "\n", _("No Immunities"));
 	} else {
 		if ((res & (RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING)) != 0)
-			AddPanelString(_("Some Magic Resistances"));
+			InfoString = StrCat(InfoString, "\n", _("Some Magic Resistances"));
 		else
-			AddPanelString(_("No resistances"));
+			InfoString = StrCat(InfoString, "\n", _("No resistances"));
 		if ((res & (IMMUNE_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING)) != 0) {
-			AddPanelString(_("Some Magic Immunities"));
+			InfoString = StrCat(InfoString, "\n", _("Some Magic Immunities"));
 		} else {
-			AddPanelString(_("No Immunities"));
+			InfoString = StrCat(InfoString, "\n", _("No Immunities"));
 		}
 	}
 }

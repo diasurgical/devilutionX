@@ -267,13 +267,11 @@ void PrintInfo(const Surface &out)
 
 	auto infoStringLines = (int)std::count(InfoString.str().begin(), InfoString.str().end(), '\n') + 1;
 
-	int panelLines = pnumlines + infoStringLines;
-	int lineCountIndex = panelLines - 1;
+	int const lineCountIndex = infoStringLines - 1;
 	const int lineHeight = LineHeights[lineCountIndex];
 
-	if (panelLines > 4) {
-		panelLines = 4;
-		pnumlines = panelLines - infoStringLines;
+	if (infoStringLines > 4) {
+		infoStringLines = 4;
 	}
 
 	Rectangle line { GetMainPanel().position + Displacement { 177, LineStart[lineCountIndex] }, { 288, 12 * infoStringLines } };
@@ -751,7 +749,7 @@ void CheckPanelInfo()
 					InfoString = _("Player attack");
 			}
 			if (PanBtnHotKey[i] != nullptr) {
-				AddPanelString(fmt::format(fmt::runtime(_("Hotkey: {:s}")), _(PanBtnHotKey[i])));
+				InfoString = StrCat(InfoString, "\n", fmt::format(fmt::runtime(_("Hotkey: {:s}")), _(PanBtnHotKey[i])));
 			}
 			InfoColor = UiFlags::ColorWhite;
 			panelflag = true;
@@ -761,30 +759,30 @@ void CheckPanelInfo()
 		InfoString = _("Select current spell button");
 		InfoColor = UiFlags::ColorWhite;
 		panelflag = true;
-		AddPanelString(_("Hotkey: 's'"));
+		InfoString = StrCat(InfoString, "\n", _("Hotkey: 's'"));
 		Player &myPlayer = *MyPlayer;
 		const spell_id spellId = myPlayer._pRSpell;
 		if (IsValidSpell(spellId)) {
 			switch (myPlayer._pRSplType) {
 			case RSPLTYPE_SKILL:
-				AddPanelString(fmt::format(fmt::runtime(_("{:s} Skill")), pgettext("spell", spelldata[spellId].sSkillText)));
+				InfoString = StrCat(InfoString, "\n", fmt::format(fmt::runtime(_("{:s} Skill")), pgettext("spell", spelldata[spellId].sSkillText)));
 				break;
 			case RSPLTYPE_SPELL: {
-				AddPanelString(fmt::format(fmt::runtime(_("{:s} Spell")), pgettext("spell", spelldata[spellId].sNameText)));
+				InfoString = StrCat(InfoString, "\n", fmt::format(fmt::runtime(_("{:s} Spell")), pgettext("spell", spelldata[spellId].sNameText)));
 				const int spellLevel = myPlayer.GetSpellLevel(spellId);
-				AddPanelString(spellLevel == 0 ? _("Spell Level 0 - Unusable") : fmt::format(fmt::runtime(_("Spell Level {:d}")), spellLevel));
+				InfoString = StrCat(InfoString, "\n", spellLevel == 0 ? _("Spell Level 0 - Unusable") : fmt::format(fmt::runtime(_("Spell Level {:d}")), spellLevel));
 			} break;
 			case RSPLTYPE_SCROLL: {
-				AddPanelString(fmt::format(fmt::runtime(_("Scroll of {:s}")), pgettext("spell", spelldata[spellId].sNameText)));
+				InfoString = StrCat(InfoString, "\n", fmt::format(fmt::runtime(_("Scroll of {:s}")), pgettext("spell", spelldata[spellId].sNameText)));
 				const InventoryAndBeltPlayerItemsRange items { myPlayer };
 				const int scrollCount = std::count_if(items.begin(), items.end(), [spellId](const Item &item) {
 					return item.isScrollOf(spellId);
 				});
-				AddPanelString(fmt::format(fmt::runtime(ngettext("{:d} Scroll", "{:d} Scrolls", scrollCount)), scrollCount));
+				InfoString = StrCat(InfoString, "\n", fmt::format(fmt::runtime(ngettext("{:d} Scroll", "{:d} Scrolls", scrollCount)), scrollCount));
 			} break;
 			case RSPLTYPE_CHARGES:
-				AddPanelString(fmt::format(fmt::runtime(_("Staff of {:s}")), pgettext("spell", spelldata[spellId].sNameText)));
-				AddPanelString(fmt::format(fmt::runtime(ngettext("{:d} Charge", "{:d} Charges", myPlayer.InvBody[INVLOC_HAND_LEFT]._iCharges)), myPlayer.InvBody[INVLOC_HAND_LEFT]._iCharges));
+				InfoString = StrCat(InfoString, "\n", fmt::format(fmt::runtime(_("Staff of {:s}")), pgettext("spell", spelldata[spellId].sNameText)));
+				InfoString = StrCat(InfoString, "\n", fmt::format(fmt::runtime(ngettext("{:d} Charge", "{:d} Charges", myPlayer.InvBody[INVLOC_HAND_LEFT]._iCharges)), myPlayer.InvBody[INVLOC_HAND_LEFT]._iCharges));
 				break;
 			case RSPLTYPE_INVALID:
 				break;
@@ -949,8 +947,8 @@ void DrawInfoBox(const Surface &out)
 			auto &target = Players[pcursplr];
 			InfoString = string_view(target._pName);
 			ClearPanel();
-			AddPanelString(fmt::format(fmt::runtime(_("{:s}, Level: {:d}")), _(ClassStrTbl[static_cast<std::size_t>(target._pClass)]), target._pLevel));
-			AddPanelString(fmt::format(fmt::runtime(_("Hit Points {:d} of {:d}")), target._pHitPoints >> 6, target._pMaxHP >> 6));
+			InfoString = StrCat(InfoString, "\n", fmt::format(fmt::runtime(_("{:s}, Level: {:d}")), _(ClassStrTbl[static_cast<std::size_t>(target._pClass)]), target._pLevel));
+			InfoString = StrCat(InfoString, "\n", fmt::format(fmt::runtime(_("Hit Points {:d} of {:d}")), target._pHitPoints >> 6, target._pMaxHP >> 6));
 		}
 	}
 	if (!InfoString.empty() || pnumlines != 0) {

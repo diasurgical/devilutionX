@@ -242,7 +242,7 @@ void CheckTown()
 				trigflag = true;
 				ClearPanel();
 				InfoString = _("Town Portal");
-				AddPanelString(fmt::format(fmt::runtime(_("from {:s}")), Players[missile._misource]._pName));
+				InfoString = StrCat(InfoString, "\n", fmt::format(fmt::runtime(_("from {:s}")), Players[missile._misource]._pName));
 				cursPosition = missile.position.tile;
 			}
 		}
@@ -257,7 +257,7 @@ void CheckRportal()
 				trigflag = true;
 				ClearPanel();
 				InfoString = _("Portal to");
-				AddPanelString(!setlevel ? _("The Unholy Altar") : _("level 15"));
+				InfoString = StrCat(InfoString, "\n", !setlevel ? _("The Unholy Altar") : _("level 15"));
 				cursPosition = missile.position.tile;
 			}
 		}

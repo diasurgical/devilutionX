@@ -1280,8 +1280,8 @@ void TimeoutCursor(bool bTimeout)
 			sgnTimeoutCurs = pcurs;
 			multi_net_ping();
 			ClearPanel();
-			AddPanelString(_("-- Network timeout --"));
-			AddPanelString(_("-- Waiting for players --"));
+			InfoString = StrCat(InfoString, "\n", _("-- Network timeout --"));
+			InfoString = StrCat(InfoString, "\n", _("-- Waiting for players --"));
 			NewCursor(CURSOR_HOURGLASS);
 			force_redraw = 255;
 		}
@@ -1300,8 +1300,8 @@ void HelpKeyPressed()
 		HelpFlag = false;
 	} else if (stextflag != STORE_NONE) {
 		ClearPanel();
-		AddPanelString(_("No help available")); /// BUGFIX: message isn't displayed
-		AddPanelString(_("while in stores"));
+		InfoString = StrCat(InfoString, "\n", _("No help available")); /// BUGFIX: message isn't displayed
+		InfoString = StrCat(InfoString, "\n", _("while in stores"));
 		LastMouseButtonAction = MouseActionType::None;
 	} else {
 		CloseInventory();

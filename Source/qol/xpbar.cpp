@@ -120,23 +120,23 @@ bool CheckXPBarInfo()
 
 	const int8_t charLevel = player._pLevel;
 
-	AddPanelString(fmt::format(fmt::runtime(_("Level {:d}")), charLevel));
+	InfoString = StrCat(InfoString, "\n", fmt::format(fmt::runtime(_("Level {:d}")), charLevel));
 
 	if (charLevel == MaxCharacterLevel) {
 		// Show a maximum level indicator for max level players.
 		InfoColor = UiFlags::ColorWhitegold;
 
-		AddPanelString(fmt::format(fmt::runtime(_("Experience: {:s}")), FormatInteger(ExpLvlsTbl[charLevel - 1])));
-		AddPanelString(_("Maximum Level"));
+		InfoString = StrCat(InfoString, "\n", fmt::format(fmt::runtime(_("Experience: {:s}")), FormatInteger(ExpLvlsTbl[charLevel - 1])));
+		InfoString = StrCat(InfoString, "\n", _("Maximum Level"));
 
 		return true;
 	}
 
 	InfoColor = UiFlags::ColorWhite;
 
-	AddPanelString(fmt::format(fmt::runtime(_("Experience: {:s}")), FormatInteger(player._pExperience)));
-	AddPanelString(fmt::format(fmt::runtime(_("Next Level: {:s}")), FormatInteger(ExpLvlsTbl[charLevel])));
-	AddPanelString(fmt::format(fmt::runtime(_("{:s} to Level {:d}")), FormatInteger(ExpLvlsTbl[charLevel] - player._pExperience), charLevel + 1));
+	InfoString = StrCat(InfoString, "\n", fmt::format(fmt::runtime(_("Experience: {:s}")), FormatInteger(player._pExperience)));
+	InfoString = StrCat(InfoString, "\n", fmt::format(fmt::runtime(_("Next Level: {:s}")), FormatInteger(ExpLvlsTbl[charLevel])));
+	InfoString = StrCat(InfoString, "\n", fmt::format(fmt::runtime(_("{:s} to Level {:d}")), FormatInteger(ExpLvlsTbl[charLevel] - player._pExperience), charLevel + 1));
 
 	return true;
 }
