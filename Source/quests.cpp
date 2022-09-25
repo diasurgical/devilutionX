@@ -508,7 +508,7 @@ void SetReturnLvlPos()
 		ReturnLevelType = DTYPE_CATHEDRAL;
 		break;
 	case SL_VILEBETRAYER:
-		ReturnLvlPosition = Quests[Q_BETRAYER].position + Direction::East;
+		ReturnLvlPosition = Quests[Q_BETRAYER].position + Direction::South;
 		ReturnLevel = Quests[Q_BETRAYER]._qlevel;
 		ReturnLevelType = DTYPE_HELL;
 		break;

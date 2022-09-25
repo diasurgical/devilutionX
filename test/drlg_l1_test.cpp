@@ -209,7 +209,7 @@ TEST(Drlg_l1, CreateL5Dungeon_hellfire_4_1924296259)
 	TestCreateDungeon(4, 1924296259, ENTRY_MAIN);
 	EXPECT_EQ(ViewPosition, Point(83, 54));
 	TestCreateDungeon(4, 1924296259, ENTRY_PREV);
-	EXPECT_EQ(ViewPosition, Point(52, 88));
+	EXPECT_EQ(ViewPosition, Point(51, 87));
 }
 
 TEST(Drlg_l1, CreateL5Dungeon_crypt_1_2122696790)

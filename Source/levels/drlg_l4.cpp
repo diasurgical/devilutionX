@@ -1086,13 +1086,13 @@ bool PlaceStairs(lvl_entry entry)
 		if (currlevel != 16) {
 			if (Quests[Q_WARLORD].IsAvailable()) {
 				if (entry == ENTRY_PREV)
-					ViewPosition = SetPiece.position.megaToWorld() + Displacement { 6, 6 };
+					ViewPosition = SetPiece.position.megaToWorld() + Displacement { 7, 7 };
 			} else {
 				position = PlaceMiniSet(L4DSTAIRS);
 				if (!position)
 					return false;
 				if (entry == ENTRY_PREV)
-					ViewPosition = position->megaToWorld() + Displacement { 5, 7 };
+					ViewPosition = position->megaToWorld() + Displacement { 7, 5 };
 			}
 		}
 
@@ -1111,7 +1111,7 @@ bool PlaceStairs(lvl_entry entry)
 		if (!position)
 			return false;
 		if (entry == ENTRY_PREV)
-			ViewPosition = position->megaToWorld() + Displacement { 5, 7 };
+			ViewPosition = position->megaToWorld() + Displacement { 6, 5 };
 	}
 
 	return true;
