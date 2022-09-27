@@ -1766,7 +1766,7 @@ void printItemMiscVirtualGamepad(const Item &item, const bool isOil, bool isCast
 	} else if (isCastOnTarget) {
 		AddPanelString(_("Select from spell book, then"));
 		AddPanelString(_("cast to read"));
-	} else {
+	} else if (IsAnyOf(item._iMiscId, IMISC_BOOK, IMISC_NOTE, IMISC_SCROLL, IMISC_SCROLLT)) {
 		AddPanelString(_("Activate to read"));
 	}
 }
@@ -1823,7 +1823,7 @@ void PrintItemMisc(const Item &item)
 		printItemMiscKBM(item, isOil, isCastOnTarget);
 	} else if (ControlMode == ControlTypes::VirtualGamepad) {
 		printItemMiscVirtualGamepad(item, isOil, isCastOnTarget);
-	} else if (IsAnyOf(item._iMiscId, IMISC_BOOK, IMISC_NOTE, IMISC_SCROLL, IMISC_SCROLLT)) {
+	} else {
 		printItemMiscGamepad(item, isOil, isCastOnTarget);
 	}
 }
