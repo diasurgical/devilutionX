@@ -1823,7 +1823,7 @@ void PrintItemMisc(const Item &item)
 		printItemMiscKBM(item, isOil, isCastOnTarget);
 	} else if (ControlMode == ControlTypes::VirtualGamepad) {
 		printItemMiscVirtualGamepad(item, isOil, isCastOnTarget);
-	} else if (IsAnyOf(item._iMiscId, IMISC_BOOK, IMISC_NOTE, IMISC_SCROLL, IMISC_SCROLLT)) {
+	} else {
 		printItemMiscGamepad(item, isOil, isCastOnTarget);
 	}
 }
