@@ -39,7 +39,7 @@ void DrawButtonOnPanel(Point position, string_view text, int frame)
 		width = std::min<int>(GetLineWidth(text, GameFont12, spacing), (*PanelButton)[0].width());
 	}
 	RenderClxSprite(pBtmBuff->subregion(position.x + ((*PanelButton)[0].width() - width) / 2, position.y + 7, width, pBtmBuff->h() - 7), (*PanelButtonGrime)[frame], { 0, 0 });
-	DrawButtonText(*pBtmBuff, text, { position, { (*PanelButton)[0].width(), 0 } }, UiFlags::ColorButtonface, spacing);
+	DrawButtonText(*pBtmBuff, text, { position, Size { (*PanelButton)[0].width(), 0 } }, UiFlags::ColorButtonface, spacing);
 }
 
 void RenderMainButton(const Surface &out, int buttonId, string_view text, int frame)
@@ -57,7 +57,7 @@ void RenderMainButton(const Surface &out, int buttonId, string_view text, int fr
 		width = std::min<int>(GetLineWidth(text, GameFont12, spacing), (*PanelButton)[0].width());
 	}
 	RenderClxSprite(out.subregion(position.x + ((*PanelButton)[0].width() - width) / 2, position.y + 9, width, out.h() - position.y - 9), (*PanelButtonDownGrime)[frame], { 0, 0 });
-	DrawButtonText(out, text, { position + Displacement { 0, 2 }, { out.w(), 0 } }, UiFlags::ColorButtonpushed, spacing);
+	DrawButtonText(out, text, { position + Displacement { 0, 2 }, Size { out.w(), 0 } }, UiFlags::ColorButtonpushed, spacing);
 }
 
 } // namespace
@@ -103,7 +103,7 @@ void LoadMainPanel()
 			RenderClxSprite(*pBtmBuff, (*talkButton)[0], position);
 			int width = std::min<int>(textWidth, (*PanelButton)[0].width());
 			RenderClxSprite(pBtmBuff->subregion(position.x + (talkButtonWidth - width) / 2, position.y + 6, width, 9), (*PanelButtonGrime)[1], { 0, 0 });
-			DrawButtonText(*pBtmBuff, text, { position, { talkButtonWidth, 0 } }, UiFlags::ColorButtonface);
+			DrawButtonText(*pBtmBuff, text, { position, Size { talkButtonWidth, 0 } }, UiFlags::ColorButtonface);
 		}
 
 		OwnedSurface talkSurface(talkButtonWidth, talkButtonHeight * NumTalkButtonSprites);
@@ -116,12 +116,12 @@ void LoadMainPanel()
 
 		int muteWidth = GetLineWidth(_("mute"), GameFont12, 2);
 		RenderClxSprite(talkSurface.subregion((talkButtonWidth - muteWidth) / 2, 6, muteWidth, 9), (*PanelButtonGrime)[1], { 0, 0 });
-		DrawButtonText(talkSurface, _("mute"), { { 0, 0 }, { talkButtonWidth, 0 } }, UiFlags::ColorButtonface);
+		DrawButtonText(talkSurface, _("mute"), { { 0, 0 }, Size { talkButtonWidth, 0 } }, UiFlags::ColorButtonface);
 		RenderClxSprite(talkSurface.subregion((talkButtonWidth - muteWidth) / 2, 23, muteWidth, 9), (*PanelButtonGrime)[1], { 0, 0 });
-		DrawButtonText(talkSurface, _("mute"), { { 0, 17 }, { talkButtonWidth, 0 } }, UiFlags::ColorButtonpushed);
+		DrawButtonText(talkSurface, _("mute"), { { 0, 17 }, Size { talkButtonWidth, 0 } }, UiFlags::ColorButtonpushed);
 		int voiceWidth = GetLineWidth(_("voice"), GameFont12, 2);
 		RenderClxSprite(talkSurface.subregion((talkButtonWidth - voiceWidth) / 2, 39, voiceWidth, 9), (*PanelButtonGrime)[1], { 0, 0 });
-		DrawButtonText(talkSurface, _("voice"), { { 0, 33 }, { talkButtonWidth, 0 } }, UiFlags::ColorButtonpushed);
+		DrawButtonText(talkSurface, _("voice"), { { 0, 33 }, Size { talkButtonWidth, 0 } }, UiFlags::ColorButtonpushed);
 		TalkButton = SurfaceToClx(talkSurface, NumTalkButtonSprites);
 	}
 

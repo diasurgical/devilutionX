@@ -3,6 +3,7 @@
 #include "levels/gendung.h"
 
 #include "engine/load_file.hpp"
+#include "engine/points_in_rectangle_range.hpp"
 #include "engine/random.hpp"
 #include "init.h"
 #include "levels/drlg_l1.h"
@@ -344,8 +345,8 @@ void InitGlobals()
 
 	dminPosition = Point(0, 0).megaToWorld();
 	dmaxPosition = Point(40, 40).megaToWorld();
-	SetPieceRoom = { { -1, -1 }, { -1, -1 } };
-	SetPiece = { { 0, 0 }, { 0, 0 } };
+	SetPieceRoom = { { -1, -1 }, Size { -1, -1 } };
+	SetPiece = {};
 }
 
 } // namespace
@@ -478,13 +479,8 @@ void DRLG_InitTrans()
 
 void DRLG_RectTrans(Rectangle area)
 {
-	Point position = area.position;
-	Size size = area.size;
-
-	for (int j = position.y; j <= position.y + size.height; j++) {
-		for (int i = position.x; i <= position.x + size.width; i++) {
-			dTransVal[i][j] = TransVal;
-		}
+	for (Point position : PointsInRectangleRange { area }) {
+		dTransVal[position.x][position.y] = TransVal;
 	}
 
 	TransVal++;
@@ -492,15 +488,26 @@ void DRLG_RectTrans(Rectangle area)
 
 void DRLG_MRectTrans(Rectangle area)
 {
-	Point position = area.position.megaToWorld();
-	Size size = area.size * 2;
-
-	DRLG_RectTrans({ position + Displacement { 1, 1 }, { size.width - 1, size.height - 1 } });
+	DRLG_RectTrans({ area.position.megaToWorld() + Direction::South, area.size * 2 });
 }
 
-void DRLG_MRectTrans(Point origin, Point extent)
+void DRLG_MRectTrans(Point megaOrigin, Point megaExtent)
 {
-	DRLG_MRectTrans({ origin, { extent.x - origin.x, extent.y - origin.y } });
+	// MegaRect regions are inset one tile in world space.
+	// For example a region defined by megaOrigin 0,0 and megaExtent 3,3 looks like the following in world space:
+	//  00112233
+	// 0--------
+	// 0-++++++-
+	// 1-++++++-
+	// 1-++++++-
+	// 2-++++++-
+	// 2-++++++-
+	// 3-++++++-
+	// 3--------
+
+	// When defining a rectangle by two mega points we only need to offset the northern (closest to origin) point since
+	// the extent already "rounds" down
+	DRLG_RectTrans(Rectangle { megaOrigin.megaToWorld() + Direction::South, megaExtent.megaToWorld() });
 }
 
 void DRLG_CopyTrans(int sx, int sy, int dx, int dy)
@@ -647,7 +654,7 @@ void DRLG_PlaceThemeRooms(int minSize, int maxSize, int floor, int freq, bool rn
 				THEME_LOC &theme = themeLoc[themeCount];
 				theme.room = { Point { i, j } + Direction::South, *themeSize };
 				if (IsAnyOf(leveltype, DTYPE_CAVES, DTYPE_NEST)) {
-					DRLG_RectTrans({ (theme.room.position + Direction::South).megaToWorld(), theme.room.size * 2 - 5 });
+					DRLG_RectTrans({ (theme.room.position + Direction::South).megaToWorld(), theme.room.size * 2 - 4 });
 				} else {
 					DRLG_MRectTrans({ theme.room.position, theme.room.size - 1 });
 				}
@@ -681,7 +688,7 @@ void SetSetPieceRoom(Point position, int floorId)
 		return;
 
 	PlaceDunTiles(pSetPiece.get(), position, floorId);
-	SetPiece = { position, { SDL_SwapLE16(pSetPiece[0]), SDL_SwapLE16(pSetPiece[1]) } };
+	SetPiece = { position, Size { SDL_SwapLE16(pSetPiece[0]), SDL_SwapLE16(pSetPiece[1]) } };
 }
 
 void FreeQuestSetPieces()

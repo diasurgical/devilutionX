@@ -460,26 +460,26 @@ void GenerateRoom(Rectangle area, bool verticalLayout)
 		room1.position = area.position;
 		if (verticalLayout) {
 			room1.position += Displacement { -room1.size.width, area.size.height / 2 - room1.size.height / 2 };
-			placeRoom1 = CheckRoom({ room1.position + Displacement { -1, -1 }, { room1.size.height + 2, room1.size.width + 1 } }); /// BUGFIX: swap height and width ({ room1.size.width + 1, room1.size.height + 2 }) (workaround applied below)
+			placeRoom1 = CheckRoom({ room1.position + Displacement { -1, -1 }, Size { room1.size.height + 2, room1.size.width + 1 } }); /// BUGFIX: swap height and width ({ room1.size.width + 1, room1.size.height + 2 }) (workaround applied below)
 		} else {
 			room1.position += Displacement { area.size.width / 2 - room1.size.width / 2, -room1.size.height };
-			placeRoom1 = CheckRoom({ room1.position + Displacement { -1, -1 }, { room1.size.width + 2, room1.size.height + 1 } });
+			placeRoom1 = CheckRoom({ room1.position + Displacement { -1, -1 }, Size { room1.size.width + 2, room1.size.height + 1 } });
 		}
 		if (placeRoom1)
 			break;
 	}
 
 	if (placeRoom1)
-		MapRoom({ room1.position, { std::min(DMAXX - room1.position.x, room1.size.width), std::min(DMAXX - room1.position.y, room1.size.height) } });
+		MapRoom({ room1.position, Size { std::min(DMAXX - room1.position.x, room1.size.width), std::min(DMAXX - room1.position.y, room1.size.height) } });
 
 	bool placeRoom2;
 	Rectangle room2 = room1;
 	if (verticalLayout) {
 		room2.position.x = area.position.x + area.size.width;
-		placeRoom2 = CheckRoom({ room2.position + Displacement { 0, -1 }, { room2.size.width + 1, room2.size.height + 2 } });
+		placeRoom2 = CheckRoom({ room2.position + Displacement { 0, -1 }, Size { room2.size.width + 1, room2.size.height + 2 } });
 	} else {
 		room2.position.y = area.position.y + area.size.height;
-		placeRoom2 = CheckRoom({ room2.position + Displacement { -1, 0 }, { room2.size.width + 2, room2.size.height + 1 } });
+		placeRoom2 = CheckRoom({ room2.position + Displacement { -1, 0 }, Size { room2.size.width + 2, room2.size.height + 1 } });
 	}
 
 	if (placeRoom2)
@@ -505,10 +505,10 @@ void FirstRoom()
 	if (!HasChamber1 || !HasChamber3)
 		HasChamber2 = true;
 
-	Rectangle chamber1 { { 1, 15 }, { 10, 10 } };
-	Rectangle chamber2 { { 15, 15 }, { 10, 10 } };
-	Rectangle chamber3 { { 29, 15 }, { 10, 10 } };
-	Rectangle hallway { { 1, 17 }, { 38, 6 } };
+	Rectangle chamber1 { { 1, 15 }, Size { 10, 10 } };
+	Rectangle chamber2 { { 15, 15 }, Size { 10, 10 } };
+	Rectangle chamber3 { { 29, 15 }, Size { 10, 10 } };
+	Rectangle hallway { { 1, 17 }, Size { 38, 6 } };
 	if (!HasChamber1) {
 		hallway.position.x += 17;
 		hallway.size.width -= 17;
@@ -1109,7 +1109,7 @@ bool PlaceCathedralStairs(lvl_entry entry)
 			int8_t t = TransVal;
 			TransVal = 0;
 			Point miniPosition = *position;
-			DRLG_MRectTrans({ miniPosition + Displacement { 0, 2 }, { 5, 2 } });
+			DRLG_MRectTrans({ miniPosition + Displacement { 0, 2 }, Size { 5, 2 } });
 			TransVal = t;
 			Quests[Q_PWATER].position = miniPosition.megaToWorld() + Displacement { 5, 7 };
 			if (entry == ENTRY_RTNLVL)

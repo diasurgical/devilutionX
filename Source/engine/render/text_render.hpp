@@ -203,7 +203,7 @@ uint32_t DrawString(const Surface &out, string_view text, const Rectangle &rect,
  */
 inline void DrawString(const Surface &out, string_view text, const Point &position, UiFlags flags = UiFlags::None, int spacing = 1, int lineHeight = -1)
 {
-	DrawString(out, text, { position, { out.w() - position.x, 0 } }, flags, spacing, lineHeight);
+	DrawString(out, text, { position, Size { out.w() - position.x, 0 } }, flags, spacing, lineHeight);
 }
 
 /**

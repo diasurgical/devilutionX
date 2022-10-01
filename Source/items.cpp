@@ -3698,11 +3698,11 @@ void DrawUniqueInfo(const Surface &out)
 
 	DrawUniqueInfoWindow(out);
 
-	Rectangle rect { position + Displacement { 32, 56 }, { 257, 0 } };
+	Rectangle rect { position + Displacement { 32, 56 }, Size { 257, 0 } };
 	const UniqueItem &uitem = UniqueItems[curruitem._iUid];
 	DrawString(out, _(uitem.UIName), rect, UiFlags::AlignCenter);
 
-	const Rectangle dividerLineRect { position + Displacement { 26, 25 }, { 267, 3 } };
+	const Rectangle dividerLineRect { position + Displacement { 26, 25 }, Size { 267, 3 } };
 	out.BlitFrom(out, MakeSdlRect(dividerLineRect), dividerLineRect.position + Displacement { 0, 5 * 12 + 13 });
 
 	rect.position.y += (10 - uitem.UINumPL) * 12;

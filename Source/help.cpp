@@ -183,7 +183,7 @@ void DrawHelp(const Surface &out)
 	const int sy = uiPosition.y;
 
 	DrawString(out, title,
-	    { { sx, sy + PaddingTop + blankLineHeight }, { ContentTextWidth, lineHeight } },
+	    { { sx, sy + PaddingTop + blankLineHeight }, Size { ContentTextWidth, lineHeight } },
 	    UiFlags::ColorWhitegold | UiFlags::AlignCenter);
 
 	const int titleBottom = sy + HeaderHeight();
@@ -204,11 +204,11 @@ void DrawHelp(const Surface &out)
 			style = UiFlags::ColorBlue;
 		}
 
-		DrawString(out, line.substr(offset), { { sx, contentY + i * lineHeight }, { ContentTextWidth, lineHeight } }, style, /*spacing=*/1, lineHeight);
+		DrawString(out, line.substr(offset), { { sx, contentY + i * lineHeight }, Size { ContentTextWidth, lineHeight } }, style, /*spacing=*/1, lineHeight);
 	}
 
 	DrawString(out, _("Press ESC to end or the arrow keys to scroll."),
-	    { { sx, contentY + ContentsTextHeight() + ContentPaddingY() + blankLineHeight }, { ContentTextWidth, lineHeight } },
+	    { { sx, contentY + ContentsTextHeight() + ContentPaddingY() + blankLineHeight }, Size { ContentTextWidth, lineHeight } },
 	    UiFlags::ColorWhitegold | UiFlags::AlignCenter);
 }
 

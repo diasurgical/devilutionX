@@ -2271,7 +2271,7 @@ void PrintSString(const Surface &out, int margin, int line, string_view text, Ui
 	}
 	width -= margin * 2;
 
-	const Rectangle rect { { sx, sy }, { width, 0 } };
+	const Rectangle rect { { sx, sy }, Size { width, 0 } };
 	DrawString(out, text, rect, flags);
 	if (price > 0)
 		DrawString(out, FormatInteger(price), rect, flags | UiFlags::AlignRight);

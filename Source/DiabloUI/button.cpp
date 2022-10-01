@@ -39,7 +39,7 @@ void RenderButton(const UiButton &button)
 	const Surface &out = Surface(DiabloUiSurface()).subregion(button.m_rect.x, button.m_rect.y, button.m_rect.w, button.m_rect.h);
 	RenderClxSprite(out, ButtonSprite(button.IsPressed()), { 0, 0 });
 
-	Rectangle textRect { { 0, 0 }, { button.m_rect.w, button.m_rect.h } };
+	Rectangle textRect { { 0, 0 }, Size { button.m_rect.w, button.m_rect.h } };
 	if (!button.IsPressed()) {
 		--textRect.position.y;
 	}

@@ -214,26 +214,26 @@ void GenerateRoom(Rectangle area, bool verticalLayout)
 		room1.position = area.position;
 		if (verticalLayout) {
 			room1.position += Displacement { -room1.size.width, area.size.height / 2 - room1.size.height / 2 };
-			placeRoom1 = CheckRoom({ room1.position + Displacement { -1, -1 }, { room1.size.height + 2, room1.size.width + 1 } }); /// BUGFIX: swap height and width ({ room1.size.width + 1, room1.size.height + 2 }) (workaround applied below)
+			placeRoom1 = CheckRoom({ room1.position + Displacement { -1, -1 }, Size { room1.size.height + 2, room1.size.width + 1 } }); /// BUGFIX: swap height and width ({ room1.size.width + 1, room1.size.height + 2 }) (workaround applied below)
 		} else {
 			room1.position += Displacement { area.size.width / 2 - room1.size.width / 2, -room1.size.height };
-			placeRoom1 = CheckRoom({ room1.position + Displacement { -1, -1 }, { room1.size.width + 2, room1.size.height + 1 } });
+			placeRoom1 = CheckRoom({ room1.position + Displacement { -1, -1 }, Size { room1.size.width + 2, room1.size.height + 1 } });
 		}
 		if (placeRoom1)
 			break;
 	}
 
 	if (placeRoom1)
-		MapRoom({ room1.position, { std::min(DMAXX - room1.position.x, room1.size.width), std::min(DMAXX - room1.position.y, room1.size.height) } });
+		MapRoom({ room1.position, Size { std::min(DMAXX - room1.position.x, room1.size.width), std::min(DMAXX - room1.position.y, room1.size.height) } });
 
 	bool placeRoom2;
 	Rectangle room2 = room1;
 	if (verticalLayout) {
 		room2.position.x = area.position.x + area.size.width;
-		placeRoom2 = CheckRoom({ room2.position + Displacement { 0, -1 }, { room2.size.width + 1, room2.size.height + 2 } });
+		placeRoom2 = CheckRoom({ room2.position + Displacement { 0, -1 }, Size { room2.size.width + 1, room2.size.height + 2 } });
 	} else {
 		room2.position.y = area.position.y + area.size.height;
-		placeRoom2 = CheckRoom({ room2.position + Displacement { -1, 0 }, { room2.size.width + 2, room2.size.height + 1 } });
+		placeRoom2 = CheckRoom({ room2.position + Displacement { -1, 0 }, Size { room2.size.width + 2, room2.size.height + 1 } });
 	}
 
 	if (placeRoom2)
@@ -246,7 +246,7 @@ void GenerateRoom(Rectangle area, bool verticalLayout)
 
 void FirstRoom()
 {
-	Rectangle room { { 0, 0 }, { 14, 14 } };
+	Rectangle room { { 0, 0 }, Size { 14, 14 } };
 	if (currlevel != 16) {
 		if (currlevel == Quests[Q_WARLORD]._qlevel && Quests[Q_WARLORD]._qactive != QUEST_NOTAVAIL) {
 			assert(!gbIsMultiplayer);
@@ -268,7 +268,7 @@ void FirstRoom()
 		L4Hold = room.position;
 	}
 	if (Quests[Q_WARLORD].IsAvailable() || (currlevel == Quests[Q_BETRAYER]._qlevel && gbIsMultiplayer)) {
-		SetPieceRoom = { room.position + Displacement { 1, 1 }, { room.size.width + 1, room.size.height + 1 } };
+		SetPieceRoom = { room.position + Displacement { 1, 1 }, room.size + 1 };
 	} else {
 		SetPieceRoom = {};
 	}
@@ -1177,7 +1177,7 @@ void GenerateLevel(lvl_entry entry)
 		for (int j = 0; j < DMAXY; j++) {
 			for (int i = 0; i < DMAXX; i++) {
 				if (IsAnyOf(dungeon[i][j], 98, 107)) {
-					Make_SetPC({ { i - 1, j - 1 }, { 5, 5 } });
+					Make_SetPC({ { i - 1, j - 1 }, Size { 5, 5 } });
 					if (Quests[Q_BETRAYER]._qactive >= QUEST_ACTIVE) { /// Lazarus staff skip bug fixed
 						// Set the portal position to the location of the northmost pentagram tile.
 						Quests[Q_BETRAYER].position = { i, j };
