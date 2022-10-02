@@ -53,7 +53,7 @@ TEST(Drlg_l1, CreateL5Dungeon_diablo_2_1383137027)
 	TestCreateDungeon(2, 1383137027, ENTRY_PREV);
 	EXPECT_EQ(ViewPosition, Point(57, 79));
 	TestCreateDungeon(2, 1383137027, ENTRY_RTNLVL);
-	EXPECT_EQ(ViewPosition, Point(49, 89));
+	EXPECT_EQ(ViewPosition, Point(49, 88));
 }
 
 TEST(Drlg_l1, CreateL5Dungeon_diablo_3_844660068)
