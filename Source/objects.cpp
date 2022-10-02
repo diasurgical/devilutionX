@@ -2568,12 +2568,19 @@ void OperateShrineEldritch(Player &player)
 			continue;
 		}
 		if (IsAnyOf(item._iMiscId, IMISC_HEAL, IMISC_MANA)) {
+			// Reinitializing the item zeroes out the seed, we save and restore here to avoid triggering false
+			// positives on duplicated item checks (e.g. when picking up the item).
+			auto seed = item._iSeed;
 			InitializeItem(item, ItemMiscIdIdx(IMISC_REJUV));
+			item._iSeed = seed;
 			item._iStatFlag = true;
 			continue;
 		}
 		if (IsAnyOf(item._iMiscId, IMISC_FULLHEAL, IMISC_FULLMANA)) {
+			// As above.
+			auto seed = item._iSeed;
 			InitializeItem(item, ItemMiscIdIdx(IMISC_FULLREJUV));
+			item._iSeed = seed;
 			item._iStatFlag = true;
 			continue;
 		}
