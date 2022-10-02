@@ -1280,7 +1280,7 @@ void AddStealPotions(Missile &missile, const AddMissileParameter & /*parameter*/
 		bool hasPlayedSFX = false;
 		for (int si = 0; si < MaxBeltItems; si++) {
 			Item &beltItem = player.SpdList[si];
-			int ii = IDI_NONE;
+			_item_indexes ii = IDI_NONE;
 			if (beltItem._itype == ItemType::Misc) {
 				if (FlipCoin())
 					continue;
