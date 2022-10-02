@@ -101,28 +101,26 @@ bool CheckThemeObj5(Point origin, int8_t regionId)
 
 bool TFit_Obj5(int t)
 {
-	int skipCandidates = GenerateRnd(5);
-	if (skipCandidates < 0) {
+	const int targetCandidates = GenerateRnd(5);
+	if (targetCandidates < 0) {
 		// vanilla rng can return -3 for GenerateRnd(5), default behaviour is to set the output to 0,0 and return true in this case...
 		themex = 0;
 		themey = 0;
 		return true;
 	}
 
-	bool validFound = false;
-	for (int yp = 0; yp < MAXDUNY; yp++) {
-		for (int xp = 0; xp < MAXDUNX; xp++) {
-			if (dTransVal[xp][yp] == themes[t].ttval && IsTileNotSolid({ xp, yp }) && CheckThemeObj5({ xp, yp }, themes[t].ttval)) {
-				themex = xp;
-				themey = yp;
-				validFound = true;
-				skipCandidates--;
-				if (skipCandidates <= 0)
-					return true;
-			}
+	int candidatesFound = 0;
+	for (Point tile : PointsInRectangleRange { { { 0, 0 }, { MAXDUNX, MAXDUNY } } }) {
+		if (dTransVal[tile.x][tile.y] == themes[t].ttval && IsTileNotSolid(tile) && CheckThemeObj5(tile, themes[t].ttval)) {
+			// Use themex/y to keep track of the last candidate area found, in case we end up with fewer candidates than the target
+			themex = tile.x;
+			themey = tile.y;
+			candidatesFound++;
+			if (candidatesFound > targetCandidates)
+				return true;
 		}
 	}
-	return validFound;
+	return candidatesFound > 0;
 }
 bool TFit_SkelRoom(int t)
 {
