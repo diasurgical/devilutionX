@@ -109,20 +109,20 @@ bool TFit_Obj5(int t)
 		return true;
 	}
 
+	bool validFound = false;
 	for (int yp = 0; yp < MAXDUNY; yp++) {
 		for (int xp = 0; xp < MAXDUNX; xp++) {
 			if (dTransVal[xp][yp] == themes[t].ttval && IsTileNotSolid({ xp, yp }) && CheckThemeObj5({ xp, yp }, themes[t].ttval)) {
-				if (skipCandidates > 0) {
-					skipCandidates--;
-					continue;
-				}
 				themex = xp;
 				themey = yp;
-				return true;
+				validFound = true;
+				skipCandidates--;
+				if (skipCandidates <= 0)
+					return true;
 			}
 		}
 	}
-	return false;
+	return validFound;
 }
 bool TFit_SkelRoom(int t)
 {
