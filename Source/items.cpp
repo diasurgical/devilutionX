@@ -2227,10 +2227,10 @@ void NextItemRecord(int i)
 int RndItemForMonsterLevel(int8_t monsterLevel)
 {
 	if (GenerateRnd(100) > 40)
-		return 0;
+		return IDI_NONE;
 
 	if (GenerateRnd(100) > 25)
-		return IDI_GOLD + 1;
+		return IDI_GOLD;
 
 	static std::array<int, 512> ril;
 
@@ -2256,7 +2256,7 @@ int RndItemForMonsterLevel(int8_t monsterLevel)
 	}
 
 	int r = GenerateRnd(static_cast<int>(ri));
-	return ril[r] + 1;
+	return ril[r];
 }
 
 } // namespace
@@ -3036,7 +3036,7 @@ int RndItem(const Monster &monster)
 	if ((monsterTreasureFlags & T_NODROP) != 0)
 		return 0;
 
-	return RndItemForMonsterLevel(monster.level(sgGameInitInfo.nDifficulty));
+	return RndItemForMonsterLevel(monster.level(sgGameInitInfo.nDifficulty)) + 1;
 }
 
 void SpawnUnique(_unique_items uid, Point position)
@@ -4428,9 +4428,7 @@ std::string DebugSpawnItem(std::string itemName)
 
 		const int8_t monsterLevel = dist(BetterRng) % CF_LEVEL + 1;
 		int idx = RndItemForMonsterLevel(monsterLevel);
-		if (idx > 1) {
-			idx--;
-		} else
+		if (IsAnyOf(idx, IDI_NONE, IDI_GOLD))
 			continue;
 
 		Point bkp = item.position;
