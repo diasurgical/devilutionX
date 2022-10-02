@@ -1111,7 +1111,7 @@ bool PlaceCathedralStairs(lvl_entry entry)
 			Point miniPosition = *position;
 			DRLG_MRectTrans({ miniPosition + Displacement { 0, 2 }, { 5, 2 } });
 			TransVal = t;
-			Quests[Q_PWATER].position = miniPosition.megaToWorld() + Displacement { 5, 7 };
+			Quests[Q_PWATER].position = miniPosition.megaToWorld() + Displacement { 5, 6 };
 			if (entry == ENTRY_RTNLVL)
 				ViewPosition = Quests[Q_PWATER].position;
 		}
