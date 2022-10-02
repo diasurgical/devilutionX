@@ -1311,10 +1311,10 @@ int RndUItem(Monster *monster)
 	if (monster != nullptr && (monster->data().treasure & T_UNIQ) != 0 && !gbIsMultiplayer)
 		return -((monster->data().treasure & T_MASK) + 1);
 
-	int ril[512];
+	static std::array<int, 512> ril;
 
 	int curlv = ItemsGetCurrlevel();
-	int ri = 0;
+	size_t ri = 0;
 	for (int i = 0; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
 		if (!IsItemAvailable(i))
 			continue;
@@ -1339,13 +1339,13 @@ int RndUItem(Monster *monster)
 			okflag = false;
 		if (AllItemsList[i].iSpell == SPL_HEALOTHER && !gbIsMultiplayer)
 			okflag = false;
-		if (okflag && ri < 512) {
+		if (okflag && ri < ril.size()) {
 			ril[ri] = i;
 			ri++;
 		}
 	}
 
-	return ril[GenerateRnd(ri)];
+	return ril[GenerateRnd(static_cast<int>(ri))];
 }
 
 int RndAllItems()
@@ -1353,32 +1353,30 @@ int RndAllItems()
 	if (GenerateRnd(100) > 25)
 		return IDI_GOLD;
 
-	int ril[512];
+	static std::array<int, 512> ril;
 
 	int curlv = ItemsGetCurrlevel();
-	int ri = 0;
+	size_t ri = 0;
 	for (int i = 0; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
 		if (!IsItemAvailable(i))
 			continue;
+		if (IsAnyOf(AllItemsList[i].iSpell, SPL_RESURRECT, SPL_HEALOTHER) && !gbIsMultiplayer)
+			continue;
 
-		if (AllItemsList[i].iRnd != IDROP_NEVER && 2 * curlv >= AllItemsList[i].iMinMLvl && ri < 512) {
+		if (AllItemsList[i].iRnd != IDROP_NEVER && 2 * curlv >= AllItemsList[i].iMinMLvl && ri < ril.size()) {
 			ril[ri] = i;
 			ri++;
 		}
-		if (AllItemsList[i].iSpell == SPL_RESURRECT && !gbIsMultiplayer)
-			ri--;
-		if (AllItemsList[i].iSpell == SPL_HEALOTHER && !gbIsMultiplayer)
-			ri--;
 	}
 
-	return ril[GenerateRnd(ri)];
+	return ril[GenerateRnd(static_cast<int>(ri))];
 }
 
 int RndTypeItems(ItemType itemType, int imid, int lvl)
 {
-	int ril[512];
+	static std::array<int, 512> ril;
 
-	int ri = 0;
+	size_t ri = 0;
 	for (int i = 0; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
 		if (!IsItemAvailable(i))
 			continue;
@@ -1392,13 +1390,13 @@ int RndTypeItems(ItemType itemType, int imid, int lvl)
 			okflag = false;
 		if (imid != -1 && AllItemsList[i].iMiscId != imid)
 			okflag = false;
-		if (okflag && ri < 512) {
+		if (okflag && ri < ril.size()) {
 			ril[ri] = i;
 			ri++;
 		}
 	}
 
-	return ril[GenerateRnd(ri)];
+	return ril[GenerateRnd(static_cast<int>(ri))];
 }
 
 _unique_items CheckUnique(Item &item, int lvl, int uper, bool recreate)
@@ -1545,7 +1543,7 @@ void SetupAllUseful(Item &item, int iseed, int lvl)
 		switch (idx) {
 		case 0:
 			idx = IDI_PORTAL;
-			if ((lvl <= 1))
+			if (lvl <= 1)
 				idx = IDI_HEAL;
 			break;
 		case 1:
@@ -1554,7 +1552,7 @@ void SetupAllUseful(Item &item, int iseed, int lvl)
 			break;
 		case 3:
 			idx = IDI_PORTAL;
-			if ((lvl <= 1))
+			if (lvl <= 1)
 				idx = IDI_MANA;
 			break;
 		case 4:
@@ -1875,9 +1873,9 @@ bool SmithItemOk(const Player &player, int i)
 template <bool (*Ok)(const Player &, int), bool ConsiderDropRate = false>
 int RndVendorItem(const Player &player, int minlvl, int maxlvl)
 {
-	int ril[512];
+	static std::array<int, 512> ril;
 
-	int ri = 0;
+	size_t ri = 0;
 	for (int i = 1; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
 		if (!IsItemAvailable(i))
 			continue;
@@ -1890,7 +1888,7 @@ int RndVendorItem(const Player &player, int minlvl, int maxlvl)
 
 		ril[ri] = i;
 		ri++;
-		if (ri == 512)
+		if (ri >= ril.size())
 			break;
 
 		if (!ConsiderDropRate || AllItemsList[i].iRnd != IDROP_DOUBLE)
@@ -1898,11 +1896,11 @@ int RndVendorItem(const Player &player, int minlvl, int maxlvl)
 
 		ril[ri] = i;
 		ri++;
-		if (ri == 512)
+		if (ri >= ril.size())
 			break;
 	}
 
-	return ril[GenerateRnd(ri)] + 1;
+	return ril[GenerateRnd(static_cast<int>(ri))] + 1;
 }
 
 int RndSmithItem(const Player &player, int lvl)
@@ -2234,20 +2232,20 @@ int RndItemForMonsterLevel(int8_t monsterLevel)
 	if (GenerateRnd(100) > 25)
 		return IDI_GOLD + 1;
 
-	int ril[512];
+	static std::array<int, 512> ril;
 
-	int ri = 0;
+	size_t ri = 0;
 	for (int i = 0; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
 		if (!IsItemAvailable(i))
 			continue;
 
 		if (AllItemsList[i].iRnd == IDROP_DOUBLE && monsterLevel >= AllItemsList[i].iMinMLvl
-		    && ri < 512) {
+		    && ri < ril.size()) {
 			ril[ri] = i;
 			ri++;
 		}
 		if (AllItemsList[i].iRnd != IDROP_NEVER && monsterLevel >= AllItemsList[i].iMinMLvl
-		    && ri < 512) {
+		    && ri < ril.size()) {
 			ril[ri] = i;
 			ri++;
 		}
@@ -2257,7 +2255,7 @@ int RndItemForMonsterLevel(int8_t monsterLevel)
 			ri--;
 	}
 
-	int r = GenerateRnd(ri);
+	int r = GenerateRnd(static_cast<int>(ri));
 	return ril[r] + 1;
 }
 
@@ -3068,7 +3066,7 @@ void SpawnItem(Monster &monster, Point position, bool sendmsg)
 	if (monster.isUnique() || ((monster.data().treasure & T_UNIQ) != 0 && gbIsMultiplayer)) {
 		idx = RndUItem(&monster);
 		if (idx < 0) {
-			SpawnUnique((_unique_items) - (idx + 1), position);
+			SpawnUnique(static_cast<_unique_items>(-(idx + 1)), position);
 			return;
 		}
 		onlygood = true;
@@ -3080,7 +3078,7 @@ void SpawnItem(Monster &monster, Point position, bool sendmsg)
 			idx--;
 			onlygood = false;
 		} else {
-			SpawnUnique((_unique_items) - (idx + 1), position);
+			SpawnUnique(static_cast<_unique_items>(-(idx + 1)), position);
 			return;
 		}
 	} else {
@@ -4456,9 +4454,6 @@ std::string DebugSpawnUniqueItem(std::string itemName)
 	if (ActiveItemCount >= MAXITEMS)
 		return "No space to generate the item!";
 
-	const int max_time = 3000;
-	const int max_iter = 1000000;
-
 	std::transform(itemName.begin(), itemName.end(), itemName.begin(), [](unsigned char c) { return std::tolower(c); });
 	UniqueItem uniqueItem;
 	bool foundUnique = false;
@@ -4495,9 +4490,11 @@ std::string DebugSpawnUniqueItem(std::string itemName)
 
 	int i = 0;
 	for (uint32_t begin = SDL_GetTicks();; i++) {
+		constexpr int max_time = 3000;
 		if (SDL_GetTicks() - begin > max_time)
 			return StrCat("Item not found in ", max_time / 1000, " seconds!");
 
+		constexpr int max_iter = 1000000;
 		if (i > max_iter)
 			return StrCat("Item not found in ", max_iter, " tries!");
 
