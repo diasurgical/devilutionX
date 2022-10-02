@@ -1351,7 +1351,7 @@ int RndUItem(Monster *monster)
 int RndAllItems()
 {
 	if (GenerateRnd(100) > 25)
-		return 0;
+		return IDI_GOLD;
 
 	int ril[512];
 
@@ -2861,7 +2861,7 @@ void CreatePlrItems(Player &player)
 		GenerateNewSeed(player.SpdList[1]);
 		break;
 	case HeroClass::Sorcerer:
-		InitializeItem(player.InvBody[INVLOC_HAND_LEFT], gbIsHellfire ? IDI_SORCERER : 166);
+		InitializeItem(player.InvBody[INVLOC_HAND_LEFT], gbIsHellfire ? IDI_SORCERER : IDI_SORCERER_DIABLO);
 		GenerateNewSeed(player.InvBody[INVLOC_HAND_LEFT]);
 
 		InitializeItem(player.SpdList[0], gbIsHellfire ? IDI_HEAL : IDI_MANA);
@@ -2893,7 +2893,7 @@ void CreatePlrItems(Player &player)
 		GenerateNewSeed(player.SpdList[1]);
 		break;
 	case HeroClass::Barbarian:
-		InitializeItem(player.InvBody[INVLOC_HAND_LEFT], 139); // TODO: add more enums to items
+		InitializeItem(player.InvBody[INVLOC_HAND_LEFT], IDI_BARBARIAN);
 		GenerateNewSeed(player.InvBody[INVLOC_HAND_LEFT]);
 
 		InitializeItem(player.InvBody[INVLOC_HAND_RIGHT], IDI_WARRSHLD);
@@ -4069,7 +4069,7 @@ void SpawnWitch(int lvl)
 	constexpr int PinnedItemCount = 3;
 	constexpr std::array<int, PinnedItemCount> PinnedItemTypes = { IDI_MANA, IDI_FULLMANA, IDI_PORTAL };
 	constexpr int MaxPinnedBookCount = 4;
-	constexpr std::array<int, MaxPinnedBookCount> PinnedBookTypes = { 114, 115, 116, 117 };
+	constexpr std::array<int, MaxPinnedBookCount> PinnedBookTypes = { IDI_BOOK1, IDI_BOOK2, IDI_BOOK3, IDI_BOOK4 };
 
 	int bookCount = 0;
 	const int pinnedBookCount = gbIsHellfire ? GenerateRnd(MaxPinnedBookCount) : 0;
