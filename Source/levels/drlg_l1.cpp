@@ -1260,7 +1260,7 @@ Point SelectChamber()
 {
 	int chamber;
 	if (HasChamber1 && HasChamber2 && HasChamber3) {
-		chamber = PickRandomlyAmong({ 1, 2, 3 });
+		chamber = GenerateRnd(3) + 1;
 	} else if (HasChamber1 && HasChamber2) {
 		chamber = PickRandomlyAmong({ 2, 1 }); // Reverse odrder to match vanilla
 	} else if (HasChamber1 && HasChamber3) {
