@@ -4317,14 +4317,14 @@ void ObjChangeMapResync(int x1, int y1, int x2, int y2)
 	}
 }
 
-int ItemMiscIdIdx(item_misc_id imiscid)
+_item_indexes ItemMiscIdIdx(item_misc_id imiscid)
 {
-	int i = IDI_GOLD;
+	std::underlying_type_t<_item_indexes> i = IDI_GOLD;
 	while (AllItemsList[i].iRnd == IDROP_NEVER || AllItemsList[i].iMiscId != imiscid) {
 		i++;
 	}
 
-	return i;
+	return static_cast<_item_indexes>(i);
 }
 
 void OperateObject(Player &player, Object &object)
