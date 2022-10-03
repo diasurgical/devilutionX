@@ -92,6 +92,18 @@ enum class MonsterMode : uint8_t {
 	Talk,
 };
 
+inline bool IsMonsterModeMove(MonsterMode mode)
+{
+	switch (mode) {
+	case MonsterMode::MoveNorthwards:
+	case MonsterMode::MoveSouthwards:
+	case MonsterMode::MoveSideways:
+		return true;
+	default:
+		return false;
+	}
+}
+
 enum class MonsterGraphic : uint8_t {
 	Stand,
 	Walk,
