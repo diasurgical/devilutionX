@@ -4658,12 +4658,12 @@ bool ApplyOilToItem(Item &item, Player &player)
 		}
 		break;
 	case IMISC_OILSHARP:
-		if (item._iMaxDam - item._iMinDam < 30) {
+		if (item._iMaxDam - item._iMinDam < 30 && item._iMaxDam < 255) {
 			item._iMaxDam = item._iMaxDam + 1;
 		}
 		break;
 	case IMISC_OILDEATH:
-		if (item._iMaxDam - item._iMinDam < 30) {
+		if (item._iMaxDam - item._iMinDam < 30 && item._iMaxDam < 254) {
 			item._iMinDam = item._iMinDam + 1;
 			item._iMaxDam = item._iMaxDam + 2;
 		}

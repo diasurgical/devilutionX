@@ -32,6 +32,7 @@ set(devilutionx_fixtures
   hellfire/1-536340718.dun
   hellfire/2-128964898.dun
   hellfire/2-1180526547.dun
+  hellfire/3-1369955278.dun
   hellfire/3-1512491184.dun
   hellfire/3-1799396623.dun
   hellfire/4-1190318991.dun

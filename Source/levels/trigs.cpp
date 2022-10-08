@@ -810,10 +810,6 @@ void CheckTrigForce()
 			break;
 		}
 	}
-
-	if (trigflag) {
-		ClearPanel();
-	}
 }
 
 void CheckTriggers()

@@ -934,9 +934,22 @@ void Teleport(Monster &monster)
 	}
 }
 
+bool IsHardHit(Monster &target, unsigned dam)
+{
+	switch (target.type().type) {
+	case MT_SNEAK:
+	case MT_STALKER:
+	case MT_UNSEEN:
+	case MT_ILLWEAV:
+		return true;
+	default:
+		return (dam >> 6) >= target.level(sgGameInitInfo.nDifficulty) + 3;
+	}
+}
+
 void MonsterHitMonster(Monster &attacker, Monster &target, int dam)
 {
-	if (IsAnyOf(target.type().type, MT_SNEAK, MT_STALKER, MT_UNSEEN, MT_ILLWEAV) || dam >> 6 >= target.level(sgGameInitInfo.nDifficulty) + 3) {
+	if (IsHardHit(target, dam)) {
 		target.direction = Opposite(attacker.direction);
 	}
 
@@ -1820,7 +1833,7 @@ void AiAvoidance(Monster &monster)
 	if (monster.goal == MonsterGoal::Normal) {
 		if (distanceToEnemy >= 2) {
 			if ((monster.var2 > 20 && v < 2 * monster.intelligence + 28)
-			    || (IsAnyOf(static_cast<MonsterMode>(monster.var1), MonsterMode::MoveNorthwards, MonsterMode::MoveSouthwards, MonsterMode::MoveSideways)
+			    || (IsMonsterModeMove(static_cast<MonsterMode>(monster.var1))
 			        && monster.var2 == 0
 			        && v < 2 * monster.intelligence + 78)) {
 				RandomWalk(monster, md);
@@ -1951,7 +1964,9 @@ void AiRangedAvoidance(Monster &monster)
 		} else if (distanceToEnemy >= 2) {
 			v = GenerateRnd(100);
 			if (v < 1000 * (monster.intelligence + 5)
-			    || (IsAnyOf(static_cast<MonsterMode>(monster.var1), MonsterMode::MoveNorthwards, MonsterMode::MoveSouthwards, MonsterMode::MoveSideways) && monster.var2 == 0 && v < 1000 * (monster.intelligence + 8))) {
+			    || (IsMonsterModeMove(static_cast<MonsterMode>(monster.var1))
+			        && monster.var2 == 0
+			        && v < 1000 * (monster.intelligence + 8))) {
 				RandomWalk(monster, md);
 			}
 		} else if (v < 1000 * (monster.intelligence + 6)) {
@@ -2005,7 +2020,7 @@ void OverlordAi(Monster &monster)
 	int v = GenerateRnd(100);
 	if (monster.distanceToEnemy() >= 2) {
 		if ((monster.var2 > 20 && v < 4 * monster.intelligence + 20)
-		    || (IsAnyOf(static_cast<MonsterMode>(monster.var1), MonsterMode::MoveNorthwards, MonsterMode::MoveSouthwards, MonsterMode::MoveSideways)
+		    || (IsMonsterModeMove(static_cast<MonsterMode>(monster.var1))
 		        && monster.var2 == 0
 		        && v < 4 * monster.intelligence + 70)) {
 			RandomWalk(monster, md);
@@ -2058,7 +2073,7 @@ void SkeletonBowAi(Monster &monster)
 
 	if (monster.distanceToEnemy() < 4) {
 		if ((monster.var2 > 20 && v < 2 * monster.intelligence + 13)
-		    || (IsAnyOf(static_cast<MonsterMode>(monster.var1), MonsterMode::MoveNorthwards, MonsterMode::MoveSouthwards, MonsterMode::MoveSideways)
+		    || (IsMonsterModeMove(static_cast<MonsterMode>(monster.var1))
 		        && monster.var2 == 0
 		        && v < 2 * monster.intelligence + 63)) {
 			walking = Walk(monster, Opposite(md));
@@ -2362,7 +2377,7 @@ void BatAi(Monster &monster)
 		}
 	} else if (distanceToEnemy >= 2) {
 		if ((monster.var2 > 20 && v < monster.intelligence + 13)
-		    || (IsAnyOf(static_cast<MonsterMode>(monster.var1), MonsterMode::MoveNorthwards, MonsterMode::MoveSouthwards, MonsterMode::MoveSideways)
+		    || (IsMonsterModeMove(static_cast<MonsterMode>(monster.var1))
 		        && monster.var2 == 0
 		        && v < monster.intelligence + 63)) {
 			RandomWalk(monster, md);
@@ -2464,7 +2479,10 @@ void SneakAi(Monster &monster)
 			StartFadeout(monster, md, true);
 		} else {
 			if (monster.goal == MonsterGoal::Retreat
-			    || (distanceToEnemy >= 2 && ((monster.var2 > 20 && v < 4 * monster.intelligence + 14) || (IsAnyOf(static_cast<MonsterMode>(monster.var1), MonsterMode::MoveNorthwards, MonsterMode::MoveSouthwards, MonsterMode::MoveSideways) && monster.var2 == 0 && v < 4 * monster.intelligence + 64)))) {
+			    || (distanceToEnemy >= 2
+			        && ((monster.var2 > 20 && v < 4 * monster.intelligence + 14)
+			            || (IsMonsterModeMove(static_cast<MonsterMode>(monster.var1))
+			                && monster.var2 == 0 && v < 4 * monster.intelligence + 64)))) {
 				monster.goalVar1++;
 				RandomWalk(monster, md);
 			}
@@ -2743,7 +2761,7 @@ void MegaAi(Monster &monster)
 		} else if (distanceToEnemy >= 2) {
 			v = GenerateRnd(100);
 			if (v < 2 * (5 * monster.intelligence + 25)
-			    || (IsAnyOf(static_cast<MonsterMode>(monster.var1), MonsterMode::MoveNorthwards, MonsterMode::MoveSouthwards, MonsterMode::MoveSideways)
+			    || (IsMonsterModeMove(static_cast<MonsterMode>(monster.var1))
 			        && monster.var2 == 0
 			        && v < 2 * (5 * monster.intelligence + 40))) {
 				RandomWalk(monster, md);
@@ -2925,7 +2943,9 @@ void HorkDemonAi(Monster &monster)
 		} else {
 			v = GenerateRnd(100);
 			if (v < 2 * monster.intelligence + 33
-			    || (IsAnyOf(static_cast<MonsterMode>(monster.var1), MonsterMode::MoveNorthwards, MonsterMode::MoveSouthwards, MonsterMode::MoveSideways) && monster.var2 == 0 && v < 2 * monster.intelligence + 83)) {
+			    || (IsMonsterModeMove(static_cast<MonsterMode>(monster.var1))
+			        && monster.var2 == 0
+			        && v < 2 * monster.intelligence + 83)) {
 				RandomWalk(monster, md);
 			} else {
 				AiDelay(monster, GenerateRnd(10) + 10);
@@ -3608,7 +3628,7 @@ void M_StartHit(Monster &monster, int dam)
 {
 	PlayEffect(monster, MonsterSound::Hit);
 
-	if (IsAnyOf(monster.type().type, MT_SNEAK, MT_STALKER, MT_UNSEEN, MT_ILLWEAV) || dam >> 6 >= monster.level(sgGameInitInfo.nDifficulty) + 3) {
+	if (IsHardHit(monster, dam)) {
 		if (monster.type().type == MT_BLINK) {
 			Teleport(monster);
 		} else if (IsAnyOf(monster.type().type, MT_NSCAV, MT_BSCAV, MT_WSCAV, MT_YSCAV, MT_GRAVEDIG)) {
@@ -3625,7 +3645,7 @@ void M_StartHit(Monster &monster, int dam)
 void M_StartHit(Monster &monster, const Player &player, int dam)
 {
 	monster.tag(player);
-	if (IsAnyOf(monster.type().type, MT_SNEAK, MT_STALKER, MT_UNSEEN, MT_ILLWEAV) || dam >> 6 >= monster.level(sgGameInitInfo.nDifficulty) + 3) {
+	if (IsHardHit(monster, dam)) {
 		monster.enemy = player.getId();
 		monster.enemyPosition = player.position.future;
 		monster.flags &= ~MFLAG_TARGETS_MONSTER;
