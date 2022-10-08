@@ -1740,32 +1740,32 @@ void DrawUniqueInfoWindow(const Surface &out)
 void printItemMiscKBM(const Item &item, const bool isOil, const bool isCastOnTarget)
 {
 	if (item._iMiscId == IMISC_MAPOFDOOM) {
-		InfoString = StrCat(item._iName, "\n", _("Right-click to view"));
+		AddPanelString(_("Right-click to view"));
 	} else if (isOil) {
 		PrintItemOil(item._iMiscId);
-		InfoString = StrCat(item._iName, "\n", _("Right-click to use"));
+		AddPanelString(_("Right-click to use"));
 	} else if (isCastOnTarget) {
-		InfoString = StrCat(item._iName, "\n", _("Right-click to read, then\nleft-click to target"));
+		AddPanelString(_("Right-click to read, then\nleft-click to target"));
 	} else if (IsAnyOf(item._iMiscId, IMISC_BOOK, IMISC_NOTE, IMISC_SCROLL, IMISC_SCROLLT)) {
-		InfoString = StrCat(item._iName, "\n", _("Right-click to read"));
+		AddPanelString(_("Right-click to read"));
 	}
 }
 
 void printItemMiscVirtualGamepad(const Item &item, const bool isOil, bool isCastOnTarget)
 {
 	if (item._iMiscId == IMISC_MAPOFDOOM) {
-		InfoString = StrCat(item._iName, "\n", _("Activate to view"));
+		AddPanelString(_("Activate to view"));
 	} else if (isOil) {
 		PrintItemOil(item._iMiscId);
 		if (!invflag) {
-			InfoString = StrCat(item._iName, "\n", _("Open inventory to use"));
+			AddPanelString(_("Open inventory to use"));
 		} else {
-			InfoString = StrCat(item._iName, "\n", _("Activate to use"));
+			AddPanelString(_("Activate to use"));
 		}
 	} else if (isCastOnTarget) {
-		InfoString = StrCat(item._iName, "\n", _("Select from spell book, then\ncast to read"));
+		AddPanelString(_("Select from spell book, then\ncast to read"));
 	} else {
-		InfoString = StrCat(item._iName, "\n", _("Activate to read"));
+		AddPanelString(_("Activate to read"));
 	}
 }
 
@@ -1787,18 +1787,18 @@ void printItemMiscGamepad(const Item &item, bool isOil, bool isCastOnTarget)
 	}
 
 	if (item._iMiscId == IMISC_MAPOFDOOM) {
-		InfoString = StrCat(item._iName, "\n", fmt::format(fmt::runtime(_("{} to view")), activateButton));
+		AddPanelString(fmt::format(fmt::runtime(_("{} to view")), activateButton));
 	} else if (isOil) {
 		PrintItemOil(item._iMiscId);
 		if (!invflag) {
-			InfoString = StrCat(item._iName, "\n", _("Open inventory to use"));
+			AddPanelString(_("Open inventory to use"));
 		} else {
-			InfoString = StrCat(item._iName, "\n", fmt::format(fmt::runtime(_("{} to use")), activateButton));
+			AddPanelString(fmt::format(fmt::runtime(_("{} to use")), activateButton));
 		}
 	} else if (isCastOnTarget) {
-		InfoString = StrCat(item._iName, "\n", fmt::format(fmt::runtime(_("Select from spell book,\nthen {} to read")), castButton));
+		AddPanelString(fmt::format(fmt::runtime(_("Select from spell book,\nthen {} to read")), castButton));
 	} else if (IsAnyOf(item._iMiscId, IMISC_BOOK, IMISC_NOTE, IMISC_SCROLL, IMISC_SCROLLT)) {
-		InfoString = StrCat(item._iName, "\n", fmt::format(fmt::runtime(_("{} to read")), activateButton));
+		AddPanelString(fmt::format(fmt::runtime(_("{} to read")), activateButton));
 	}
 }
 
