@@ -812,6 +812,10 @@ void SetMultiQuest(int q, quest_state s, bool log, int v1, int v2)
 	if (v1 > quest._qvar1)
 		quest._qvar1 = v1;
 	quest._qvar2 = v2;
+	if (!UseMultiplayerQuests()) {
+		// Ensure that changes on another client is also updated on our own
+		ResyncQuests();
+	}
 }
 
 bool UseMultiplayerQuests()
