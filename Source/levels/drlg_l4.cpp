@@ -1184,10 +1184,8 @@ void GenerateLevel(lvl_entry entry)
 			for (WorldTileCoord i = 1; i < DMAXX; i++) {
 				if (IsAnyOf(dungeon[i][j], 98, 107)) {
 					Make_SetPC({ WorldTilePosition(i - 1, j - 1), { 5, 5 } });
-					if (Quests[Q_BETRAYER]._qactive >= QUEST_ACTIVE) { /// Lazarus staff skip bug fixed
-						// Set the portal position to the location of the northmost pentagram tile.
-						Quests[Q_BETRAYER].position = { i, j };
-					}
+					// Set the portal position to the location of the northmost pentagram tile.
+					Quests[Q_BETRAYER].position = { i, j };
 				}
 			}
 		}
