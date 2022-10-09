@@ -1875,7 +1875,7 @@ _item_indexes RndVendorItem(const Player &player, int minlvl, int maxlvl)
 	static std::array<_item_indexes, 512> ril;
 
 	size_t ri = 0;
-	for (std::underlying_type_t<_item_indexes> i = IDI_WARRIOR; i <= IDI_LAST && AllItemsList[i].iLoc != ILOC_INVALID; i++) {
+	for (std::underlying_type_t<_item_indexes> i = IDI_WARRIOR; i <= IDI_LAST; i++) {
 		if (!IsItemAvailable(i))
 			continue;
 		if (AllItemsList[i].iRnd == IDROP_NEVER)
