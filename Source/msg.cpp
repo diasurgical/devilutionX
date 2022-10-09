@@ -2505,7 +2505,7 @@ void delta_sync_monster(const TSyncMonster &monsterSync, uint8_t level)
 	if (!gbIsMultiplayer)
 		return;
 
-	assert(level < MAX_MULTIPLAYERLEVELS);
+	assert(level <= MAX_MULTIPLAYERLEVELS);
 	sgbDeltaChanged = true;
 
 	DMonsterStr &monster = GetDeltaLevel(level).monster[monsterSync._mndx];
