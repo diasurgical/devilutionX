@@ -4392,6 +4392,17 @@ Monster *FindMonsterAtPosition(Point position, bool ignoreMovingMonsters)
 	return &Monsters[abs(monsterId) - 1];
 }
 
+Monster *FindUniqueMonster(UniqueMonsterType monsterType)
+{
+	for (size_t i = 0; i < ActiveMonsterCount; i++) {
+		int monsterId = ActiveMonsters[i];
+		auto &monster = Monsters[monsterId];
+		if (monster.uniqueType == monsterType)
+			return &monster;
+	}
+	return nullptr;
+}
+
 bool IsTileAvailable(const Monster &monster, Point position)
 {
 	if (!IsTileAvailable(position))
