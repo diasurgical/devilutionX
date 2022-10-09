@@ -1279,11 +1279,12 @@ void AddStealPotions(Missile &missile, const AddMissileParameter & /*parameter*/
 
 		bool hasPlayedSFX = false;
 		for (int si = 0; si < MaxBeltItems; si++) {
-			int ii = -1;
-			if (player.SpdList[si]._itype == ItemType::Misc) {
+			Item &beltItem = player.SpdList[si];
+			int ii = IDI_NONE;
+			if (beltItem._itype == ItemType::Misc) {
 				if (FlipCoin())
 					continue;
-				switch (player.SpdList[si]._iMiscId) {
+				switch (beltItem._iMiscId) {
 				case IMISC_FULLHEAL:
 					ii = ItemMiscIdIdx(IMISC_HEAL);
 					break;
@@ -1314,9 +1315,11 @@ void AddStealPotions(Missile &missile, const AddMissileParameter & /*parameter*/
 					continue;
 				}
 			}
-			if (ii != -1) {
-				InitializeItem(player.SpdList[si], ii);
-				player.SpdList[si]._iStatFlag = true;
+			if (ii != IDI_NONE) {
+				auto seed = beltItem._iSeed;
+				InitializeItem(beltItem, ii);
+				beltItem._iSeed = seed;
+				beltItem._iStatFlag = true;
 			}
 			if (!hasPlayedSFX) {
 				PlaySfxLoc(IS_POPPOP2, target);
