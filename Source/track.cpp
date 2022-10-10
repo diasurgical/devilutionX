@@ -110,8 +110,7 @@ void RepeatMouseAction()
 		break;
 	case MouseActionType::OperateObject:
 		if (ObjectUnderCursor != nullptr && !ObjectUnderCursor->isDoor()) {
-			// This should probably be cursPosition so paths to large objects are consistent
-			NetSendCmdLoc(MyPlayerId, true, CMD_OPOBJXY, ObjectUnderCursor->position);
+			NetSendCmdLoc(MyPlayerId, true, CMD_OPOBJXY, cursPosition);
 		}
 		break;
 	case MouseActionType::Walk:
