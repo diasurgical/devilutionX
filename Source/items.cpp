@@ -1745,8 +1745,7 @@ void printItemMiscKBM(const Item &item, const bool isOil, const bool isCastOnTar
 		PrintItemOil(item._iMiscId);
 		AddPanelString(_("Right-click to use"));
 	} else if (isCastOnTarget) {
-		AddPanelString(_("Right-click to read, then"));
-		AddPanelString(_("left-click to target"));
+		AddPanelString(_("Right-click to read, then\nleft-click to target"));
 	} else if (IsAnyOf(item._iMiscId, IMISC_BOOK, IMISC_NOTE, IMISC_SCROLL, IMISC_SCROLLT)) {
 		AddPanelString(_("Right-click to read"));
 	}
@@ -1764,27 +1763,27 @@ void printItemMiscVirtualGamepad(const Item &item, const bool isOil, bool isCast
 			AddPanelString(_("Activate to use"));
 		}
 	} else if (isCastOnTarget) {
-		AddPanelString(_("Select from spell book, then"));
-		AddPanelString(_("cast to read"));
-	} else if (IsAnyOf(item._iMiscId, IMISC_BOOK, IMISC_NOTE, IMISC_SCROLL, IMISC_SCROLLT)) {
+		AddPanelString(_("Select from spell book, then\ncast to read"));
+	} else {
 		AddPanelString(_("Activate to read"));
 	}
 }
 
 void printItemMiscGamepad(const Item &item, bool isOil, bool isCastOnTarget)
 {
+	using namespace controllerButtonIcon;
 	std::string activateButton = "Activate";
 	std::string castButton = "Cast";
 
 	if (GamepadType == GamepadLayout::Xbox) {
-		activateButton = "Y";
-		castButton = "X";
+		activateButton = Xbox_Y;
+		castButton = Xbox_X;
 	} else if (GamepadType == GamepadLayout::PlayStation) {
-		activateButton = "Triangle";
-		castButton = "Square";
+		activateButton = Playstation_Triangle;
+		castButton = Playstation_Square;
 	} else if (GamepadType == GamepadLayout::Nintendo) {
-		activateButton = "Y";
-		castButton = "X";
+		activateButton = Nintendo_Y;
+		castButton = Nintendo_X;
 	}
 
 	if (item._iMiscId == IMISC_MAPOFDOOM) {
@@ -1797,7 +1796,7 @@ void printItemMiscGamepad(const Item &item, bool isOil, bool isCastOnTarget)
 			AddPanelString(fmt::format(fmt::runtime(_("{} to use")), activateButton));
 		}
 	} else if (isCastOnTarget) {
-		AddPanelString(fmt::format(fmt::runtime(_("Select from spell book, then {} to read")), castButton));
+		AddPanelString(fmt::format(fmt::runtime(_("Select from spell book,\nthen {} to read")), castButton));
 	} else if (IsAnyOf(item._iMiscId, IMISC_BOOK, IMISC_NOTE, IMISC_SCROLL, IMISC_SCROLLT)) {
 		AddPanelString(fmt::format(fmt::runtime(_("{} to read")), activateButton));
 	}
