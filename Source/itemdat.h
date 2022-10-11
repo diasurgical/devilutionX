@@ -355,7 +355,7 @@ enum class ItemSpecialEffect : uint32_t {
 };
 use_enum_as_flags(ItemSpecialEffect);
 
-enum class ItemSpecialEffectHf : uint32_t {
+enum class ItemSpecialEffectHf : uint8_t {
 	// clang-format off
 	None               = 0,
 	Devastation        = 1 << 0,

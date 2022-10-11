@@ -132,7 +132,7 @@ void PackPlayer(PlayerPack *pPack, const Player &player, bool manashield, bool n
 
 	pPack->wReflections = SDL_SwapLE16(player.wReflections);
 	pPack->pDifficulty = SDL_SwapLE32(player.pDifficulty);
-	pPack->pDamAcFlags = static_cast<ItemSpecialEffectHf>(SDL_SwapLE32(static_cast<uint32_t>(player.pDamAcFlags)));
+	pPack->pDamAcFlags = SDL_SwapLE32(static_cast<uint32_t>(player.pDamAcFlags));
 	pPack->pDiabloKillLevel = SDL_SwapLE32(player.pDiabloKillLevel);
 	pPack->bIsHellfire = gbIsHellfire ? 1 : 0;
 

@@ -74,7 +74,7 @@ struct PlayerPack {
 	int16_t wReserved8;  // For future use
 	uint32_t pDiabloKillLevel;
 	uint32_t pDifficulty;
-	ItemSpecialEffectHf pDamAcFlags;
+	uint32_t pDamAcFlags; // `ItemSpecialEffectHf` is 1 byte but this is 4 bytes.
 	/**@brief Only used in multiplayer sync (SendPlayerInfo/recv_plrinfo). Never used in save games (single- or multiplayer). */
 	uint8_t friendlyMode;
 	/**@brief Only used in multiplayer sync (SendPlayerInfo/recv_plrinfo). Never used in save games (single- or multiplayer). */
