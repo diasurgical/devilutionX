@@ -234,6 +234,10 @@ bool GameController::IsPressedOnAnyController(ControllerButton button, SDL_Joyst
 
 GamepadLayout GameController::getLayout(const SDL_Event &event)
 {
+#if defined(DEVILUTIONX_GAMEPAD_TYPE)
+	return GamepadLayout::
+	    DEVILUTIONX_GAMEPAD_TYPE;
+#else // !defined(DEVILUTIONX_GAMEPAD_TYPE)
 #if SDL_VERSION_ATLEAST(2, 0, 12)
 	const int index = event.cdevice.which;
 	const SDL_GameControllerType gamepadType = SDL_GameControllerTypeForIndex(index);
@@ -261,6 +265,7 @@ GamepadLayout GameController::getLayout(const SDL_Event &event)
 	}
 #endif
 	return GamepadLayout::Generic;
+#endif // !defined(DEVILUTIONX_GAMEPAD_TYPE)
 }
 
 } // namespace devilution
