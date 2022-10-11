@@ -13,6 +13,7 @@ set(DEFAULT_AUDIO_SAMPLE_RATE 44100)
 
 # The mini's buttons are connected via GPIO and are mapped to keyboard inputs
 set(HAS_KBCTRL 1)
+set(DEVILUTIONX_GAMEPAD_TYPE Nintendo)
 set(KBCTRL_BUTTON_DPAD_LEFT SDLK_LEFT)
 set(KBCTRL_BUTTON_DPAD_RIGHT SDLK_RIGHT)
 set(KBCTRL_BUTTON_DPAD_UP SDLK_UP)

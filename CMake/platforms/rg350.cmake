@@ -20,6 +20,7 @@ set(JOY_AXIS_RIGHTY 3)
 # so we use KBCTRL instead. Unfortunately, this partially breaks
 # external mouse and keyboard support.
 set(HAS_KBCTRL 1)
+set(DEVILUTIONX_GAMEPAD_TYPE Nintendo)
 set(KBCTRL_BUTTON_DPAD_LEFT SDLK_LEFT)
 set(KBCTRL_BUTTON_DPAD_RIGHT SDLK_RIGHT)
 set(KBCTRL_BUTTON_DPAD_UP SDLK_UP)

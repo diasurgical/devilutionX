@@ -11,6 +11,7 @@ set(DISABLE_ZERO_TIER ON)
 set(LIBMPQ_FILE_BUFFER_SIZE 32768)
 set(USE_SDL1 ON)
 set(PREFILL_PLAYER_NAME ON)
+set(DEVILUTIONX_GAMEPAD_TYPE Nintendo)
 set(NOEXIT ON)
 
 # 3DS libraries and compile definitions
