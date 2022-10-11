@@ -2293,7 +2293,7 @@ void InitPlayerGFX(Player &player)
 	ResetPlayerGFX(player);
 
 	if (player._pHitPoints >> 6 == 0) {
-		player._pgfxnum &= ~0xF;
+		player._pgfxnum &= ~0xFU;
 		LoadPlrGFX(player, player_graphic::Death);
 		return;
 	}
@@ -2354,8 +2354,8 @@ void SetPlrAnims(Player &player)
 	}
 	player._pSFNum = PlrGFXAnimLens[static_cast<std::size_t>(pc)][10];
 
-	auto gn = static_cast<PlayerWeaponGraphic>(player._pgfxnum & 0xF);
-	int armorGraphicIndex = player._pgfxnum & ~0xF;
+	auto gn = static_cast<PlayerWeaponGraphic>(player._pgfxnum & 0xFU);
+	int armorGraphicIndex = player._pgfxnum & ~0xFU;
 	if (pc == HeroClass::Warrior) {
 		if (gn == PlayerWeaponGraphic::Bow) {
 			if (leveltype != DTYPE_TOWN) {
@@ -2570,7 +2570,7 @@ void CreatePlayer(Player &player, HeroClass c)
 		animWeaponId = PlayerWeaponGraphic::Staff;
 		break;
 	}
-	player._pgfxnum = static_cast<int>(animWeaponId);
+	player._pgfxnum = static_cast<uint8_t>(animWeaponId);
 
 	for (bool &levelVisited : player._pLvlVisited) {
 		levelVisited = false;
@@ -2745,7 +2745,7 @@ void InitPlayer(Player &player, bool firstTime)
 			player.AnimInfo.currentFrame = GenerateRnd(player._pNFrames - 1);
 			player.AnimInfo.tickCounterOfCurrentFrame = GenerateRnd(3);
 		} else {
-			player._pgfxnum &= ~0xF;
+			player._pgfxnum &= ~0xFU;
 			player._pmode = PM_DEATH;
 			NewPlrAnim(player, player_graphic::Death, Direction::South);
 			player.AnimInfo.currentFrame = player.AnimInfo.numberOfFrames - 2;
@@ -2955,7 +2955,7 @@ StartPlayerKill(Player &player, int earflag)
 
 	if (player._pgfxnum != 0) {
 		if (diablolevel || earflag != 0)
-			player._pgfxnum &= ~0xF;
+			player._pgfxnum &= ~0xFU;
 		else
 			player._pgfxnum = 0;
 		ResetPlayerGFX(player);

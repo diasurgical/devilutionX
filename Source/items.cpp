@@ -2694,7 +2694,7 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 		player._pIAC += player._pLevel * 2;
 	}
 
-	int gfxNum = static_cast<int>(animWeaponId) | static_cast<int>(animArmorId);
+	const uint8_t gfxNum = static_cast<uint8_t>(animWeaponId) | static_cast<uint8_t>(animArmorId);
 	if (player._pgfxnum != gfxNum && loadgfx) {
 		player._pgfxnum = gfxNum;
 		ResetPlayerGFX(player);
