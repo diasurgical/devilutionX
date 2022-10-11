@@ -146,8 +146,7 @@ public:
 	template <class TSource, class TDesired>
 	TDesired NextLENarrow(TSource modifier = 0)
 	{
-		static_assert(std::numeric_limits<TSource>::min() < std::numeric_limits<TDesired>::min());
-		static_assert(std::numeric_limits<TSource>::max() > std::numeric_limits<TDesired>::max());
+		static_assert(sizeof(TSource) > sizeof(TDesired), "Can only narrow to a smaller type");
 		TSource value = SwapLE(Next<TSource>()) + modifier;
 		return static_cast<TDesired>(clamp<TSource>(value, std::numeric_limits<TDesired>::min(), std::numeric_limits<TDesired>::max()));
 	}
@@ -346,7 +345,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	file.Skip<int32_t>(4); // Skip offset and velocity
 	player._pdir = static_cast<Direction>(file.NextLE<int32_t>());
 	file.Skip(4); // Unused
-	player._pgfxnum = file.NextLE<int32_t>();
+	player._pgfxnum = file.NextLENarrow<uint32_t, uint8_t>();
 	file.Skip<uint32_t>(); // Skip pointer pData
 	player.AnimInfo = {};
 	player.AnimInfo.ticksPerFrame = file.NextLENarrow<int32_t, int8_t>(1);
@@ -1116,7 +1115,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.WriteLE<int32_t>(velocity.deltaY);
 	file.WriteLE<int32_t>(static_cast<int32_t>(player._pdir));
 	file.Skip(4); // Unused
-	file.WriteLE<int32_t>(player._pgfxnum);
+	file.WriteLE<uint32_t>(player._pgfxnum);
 	file.Skip(4); // Skip pointer _pAnimData
 	file.WriteLE<int32_t>(std::max(0, player.AnimInfo.ticksPerFrame - 1));
 	file.WriteLE<int32_t>(player.AnimInfo.tickCounterOfCurrentFrame);

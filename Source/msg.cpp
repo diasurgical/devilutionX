@@ -2090,7 +2090,7 @@ size_t OnPlayerJoinLevel(const TCmd *pCmd, size_t pnum)
 			if ((player._pHitPoints >> 6) > 0) {
 				StartStand(player, Direction::South);
 			} else {
-				player._pgfxnum &= ~0xF;
+				player._pgfxnum &= ~0xFU;
 				player._pmode = PM_DEATH;
 				NewPlrAnim(player, player_graphic::Death, Direction::South);
 				player.AnimInfo.currentFrame = player.AnimInfo.numberOfFrames - 2;
