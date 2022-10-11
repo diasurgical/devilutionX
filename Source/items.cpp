@@ -1751,7 +1751,7 @@ void printItemMiscKBM(const Item &item, const bool isOil, const bool isCastOnTar
 	}
 }
 
-void printItemMiscVirtualGamepad(const Item &item, const bool isOil, bool isCastOnTarget)
+void printItemMiscGenericGamepad(const Item &item, const bool isOil, bool isCastOnTarget)
 {
 	if (item._iMiscId == IMISC_MAPOFDOOM) {
 		AddPanelString(_("Activate to view"));
@@ -1764,26 +1764,31 @@ void printItemMiscVirtualGamepad(const Item &item, const bool isOil, bool isCast
 		}
 	} else if (isCastOnTarget) {
 		AddPanelString(_("Select from spell book, then\ncast to read"));
-	} else {
+	} else if (IsAnyOf(item._iMiscId, IMISC_BOOK, IMISC_NOTE, IMISC_SCROLL, IMISC_SCROLLT)) {
 		AddPanelString(_("Activate to read"));
 	}
 }
 
 void printItemMiscGamepad(const Item &item, bool isOil, bool isCastOnTarget)
 {
-	using namespace controllerButtonIcon;
-	std::string activateButton = "Activate";
-	std::string castButton = "Cast";
-
-	if (GamepadType == GamepadLayout::Xbox) {
-		activateButton = Xbox_Y;
-		castButton = Xbox_X;
-	} else if (GamepadType == GamepadLayout::PlayStation) {
-		activateButton = Playstation_Triangle;
-		castButton = Playstation_Square;
-	} else if (GamepadType == GamepadLayout::Nintendo) {
-		activateButton = Nintendo_Y;
-		castButton = Nintendo_X;
+	string_view activateButton;
+	string_view castButton;
+	switch (GamepadType) {
+	case GamepadLayout::Generic:
+		printItemMiscGenericGamepad(item, isOil, isCastOnTarget);
+		return;
+	case GamepadLayout::Xbox:
+		activateButton = controller_button_icon::Xbox_Y;
+		castButton = controller_button_icon::Xbox_X;
+		break;
+	case GamepadLayout::PlayStation:
+		activateButton = controller_button_icon::Playstation_Triangle;
+		castButton = controller_button_icon::Playstation_Square;
+		break;
+	case GamepadLayout::Nintendo:
+		activateButton = controller_button_icon::Nintendo_Y;
+		castButton = controller_button_icon::Nintendo_X;
+		break;
 	}
 
 	if (item._iMiscId == IMISC_MAPOFDOOM) {
@@ -1818,12 +1823,18 @@ void PrintItemMisc(const Item &item)
 	const bool isCastOnTarget = (item._iMiscId == IMISC_SCROLLT && item._iSpell != SPL_FLASH)
 	    || (item._iMiscId == IMISC_SCROLL && IsAnyOf(item._iSpell, SPL_TOWN, SPL_IDENTIFY));
 
-	if (ControlMode == ControlTypes::KeyboardAndMouse) {
+	switch (ControlMode) {
+	case ControlTypes::None:
+		break;
+	case ControlTypes::KeyboardAndMouse:
 		printItemMiscKBM(item, isOil, isCastOnTarget);
-	} else if (ControlMode == ControlTypes::VirtualGamepad) {
-		printItemMiscVirtualGamepad(item, isOil, isCastOnTarget);
-	} else {
+		break;
+	case ControlTypes::VirtualGamepad:
+		printItemMiscGenericGamepad(item, isOil, isCastOnTarget);
+		break;
+	case ControlTypes::Gamepad:
 		printItemMiscGamepad(item, isOil, isCastOnTarget);
+		break;
 	}
 }
 
