@@ -59,6 +59,7 @@ set(libdevilutionx_SRCS
 
   controls/axis_direction.cpp
   controls/controller.cpp
+  controls/controller_buttons.cpp
   controls/controller_motion.cpp
   controls/devices/joystick.cpp
   controls/devices/kbcontroller.cpp
