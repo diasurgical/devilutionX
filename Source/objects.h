@@ -22,8 +22,11 @@ namespace devilution {
 
 struct Object {
 	_object_id _otype = OBJ_NULL;
-	Point position;
 	bool _oLight = false;
+	bool _oTrapFlag = false;
+	bool _oDoorFlag = false;
+
+	Point position;
 	uint32_t _oAnimFlag = 0;
 	OptionalClxSpriteList _oAnimData;
 	int _oAnimDelay = 0;      // Tick length of each frame in the current animation
@@ -42,8 +45,6 @@ struct Object {
 	bool _oMissFlag = false;
 	uint8_t _oSelFlag = 0;
 	bool _oPreFlag = false;
-	bool _oTrapFlag = false;
-	bool _oDoorFlag = false;
 	int _olid = 0;
 	/**
 	 * Saves the absolute value of the engine state (typically from a call to AdvanceRndSeed()) to later use when spawning items from a container object
@@ -56,6 +57,8 @@ struct Object {
 	int _oVar4 = 0;
 	int _oVar5 = 0;
 	uint32_t _oVar6 = 0;
+	int _oVar8 = 0;
+
 	/**
 	 * @brief ID of a quest message to play when this object is activated.
 	 *
@@ -63,7 +66,6 @@ struct Object {
 	 */
 	// TODO: Should be TEXT_NONE (timedemo save will need to be updated).
 	_speech_id bookMessage = TEXT_KING1;
-	int _oVar8 = 0;
 
 	/**
 	 * @brief Returns the network identifier for this object
