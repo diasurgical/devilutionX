@@ -469,7 +469,7 @@ void AddCandles()
  * @param affectedArea The map region to be updated when this object is activated by the player.
  * @param msg The quest text to play when the player activates the book.
  */
-void AddBookLever(_object_id type, Rectangle affectedArea, _speech_id msg)
+void AddBookLever(_object_id type, WorldTileRectangle affectedArea, _speech_id msg)
 {
 	std::optional<Point> position = GetRandomObjectPosition({ 2, 2 });
 	if (!position)
@@ -647,7 +647,7 @@ void AddChestTraps()
 	}
 }
 
-void LoadMapObjects(const char *path, Point start, Rectangle mapRange = {}, int leveridx = 0)
+void LoadMapObjects(const char *path, Point start, WorldTileRectangle mapRange = {}, int leveridx = 0)
 {
 	LoadingMapObjects = true;
 	ApplyObjectLighting = true;
@@ -920,10 +920,10 @@ void AddStoryBooks()
 
 void AddHookedBodies(int freq)
 {
-	for (int j = 0; j < DMAXY; j++) {
-		int jj = 16 + j * 2;
-		for (int i = 0; i < DMAXX; i++) {
-			int ii = 16 + i * 2;
+	for (WorldTileCoord j = 0; j < DMAXY; j++) {
+		WorldTileCoord jj = 16 + j * 2;
+		for (WorldTileCoord i = 0; i < DMAXX; i++) {
+			WorldTileCoord ii = 16 + i * 2;
 			if (dungeon[i][j] != 1 && dungeon[i][j] != 2)
 				continue;
 			if (!FlipCoin(freq))
@@ -2000,7 +2000,7 @@ void OperateBookLever(Object &questBook, bool sendmsg)
 				SpawnUnique(UITEM_OPTAMULET, SetPiece.position.megaToWorld() + Displacement { 5, 5 });
 				auto tren = TransVal;
 				TransVal = 9;
-				DRLG_MRectTrans({ questBook._oVar1, questBook._oVar2 }, { questBook._oVar3, questBook._oVar4 });
+				DRLG_MRectTrans(WorldTilePosition(questBook._oVar1, questBook._oVar2), WorldTilePosition(questBook._oVar3, questBook._oVar4));
 				TransVal = tren;
 			}
 		}
@@ -3528,7 +3528,7 @@ void SyncQSTLever(const Object &qstLever)
 		if (qstLever._otype == OBJ_BLINDBOOK) {
 			auto tren = TransVal;
 			TransVal = 9;
-			DRLG_MRectTrans({ qstLever._oVar1, qstLever._oVar2 }, { qstLever._oVar3, qstLever._oVar4 });
+			DRLG_MRectTrans(WorldTilePosition(qstLever._oVar1, qstLever._oVar2), WorldTilePosition(qstLever._oVar3, qstLever._oVar4));
 			TransVal = tren;
 		}
 	}
@@ -3996,7 +3996,7 @@ Object *AddObject(_object_id objType, Point objPos)
 		AddDoor(object);
 		break;
 	case OBJ_BOOK2R:
-		object.InitializeBook({ SetPiece.position, { SetPiece.size.width + 1, SetPiece.size.height + 1 } });
+		object.InitializeBook({ SetPiece.position, WorldTileSize(SetPiece.size.width + 1, SetPiece.size.height + 1) });
 		break;
 	case OBJ_CHEST1:
 	case OBJ_CHEST2:
@@ -4146,7 +4146,7 @@ void OperateTrap(Object &trap)
 	Point triggerPosition = { trap._oVar1, trap._oVar2 };
 	Point target = triggerPosition;
 
-	PointsInRectangleRange searchArea { Rectangle { target, 1 } };
+	auto searchArea = PointsInRectangle(Rectangle { target, 1 });
 	// look for a player near the trigger (using a reverse search to match vanilla behaviour)
 	auto foundPosition = std::find_if(searchArea.crbegin(), searchArea.crend(), [](Point testPosition) { return InDungeonBounds(testPosition) && dPlayer[testPosition.x][testPosition.y] != 0; });
 	if (foundPosition != searchArea.crend()) {

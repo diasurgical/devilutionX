@@ -1595,12 +1595,12 @@ void ApplyShadowsPatterns()
 
 void PlaceMiniSetRandom(const Miniset &miniset, int rndper)
 {
-	int sw = miniset.size.width;
-	int sh = miniset.size.height;
+	const WorldTileCoord sw = miniset.size.width;
+	const WorldTileCoord sh = miniset.size.height;
 
-	for (int sy = 0; sy < DMAXY - sh; sy++) {
-		for (int sx = 0; sx < DMAXX - sw; sx++) {
-			if (SetPieceRoom.contains({ sx, sy }))
+	for (WorldTileCoord sy = 0; sy < DMAXY - sh; sy++) {
+		for (WorldTileCoord sx = 0; sx < DMAXX - sw; sx++) {
+			if (SetPieceRoom.contains(sx, sy))
 				continue;
 			if (!miniset.matches({ sx, sy }))
 				continue;
@@ -1752,21 +1752,18 @@ void PlaceHallExt(Point position)
  * @param nHDir The direction of the hall from nRDest to this room.
  * @param size If set, is is used used for room size instead of random values.
  */
-void CreateRoom(Point topLeft, Point bottomRight, int nRDest, HallDirection nHDir, std::optional<Size> size)
+void CreateRoom(WorldTilePosition topLeft, WorldTilePosition bottomRight, int nRDest, HallDirection nHDir, std::optional<WorldTileSize> size)
 {
-	if (nRoomCnt >= 80)
-		return;
-
-	Displacement areaDisplacement = bottomRight - topLeft;
-	Size area { areaDisplacement.deltaX, areaDisplacement.deltaY };
-
 	constexpr int AreaMin = 2;
-	if (area.width < AreaMin || area.height < AreaMin)
+	if (nRoomCnt >= 80 || topLeft.x + AreaMin > bottomRight.x || topLeft.y + AreaMin > bottomRight.y)
 		return;
 
-	constexpr int RoomMax = 10;
-	constexpr int RoomMin = 4;
-	Size roomSize = area;
+	WorldTileDisplacement areaDisplacement = bottomRight - topLeft;
+	WorldTileSize area(areaDisplacement.deltaX, areaDisplacement.deltaY);
+
+	constexpr WorldTileCoord RoomMax = 10;
+	constexpr WorldTileCoord RoomMin = 4;
+	WorldTileSize roomSize = area;
 	if (area.width > RoomMin)
 		roomSize.width = GenerateRnd(std::min(area.width, RoomMax) - RoomMin) + RoomMin;
 	if (area.height > RoomMin)
@@ -1775,8 +1772,11 @@ void CreateRoom(Point topLeft, Point bottomRight, int nRDest, HallDirection nHDi
 	if (size)
 		roomSize = *size;
 
-	Point roomTopLeft = topLeft + Displacement { GenerateRnd(area.width), GenerateRnd(area.height) };
-	Point roomBottomRight = roomTopLeft + Displacement { roomSize };
+	const int32_t randomWidth = GenerateRnd(area.width);
+	const int32_t randomHeight = GenerateRnd(area.height);
+
+	WorldTilePosition roomTopLeft = topLeft + WorldTileDisplacement(randomWidth, randomHeight);
+	WorldTilePosition roomBottomRight = roomTopLeft + WorldTileDisplacement(roomSize);
 	if (roomBottomRight.x > bottomRight.x) {
 		roomBottomRight.x = bottomRight.x;
 		roomTopLeft.x = bottomRight.x - roomSize.width;
@@ -1786,14 +1786,14 @@ void CreateRoom(Point topLeft, Point bottomRight, int nRDest, HallDirection nHDi
 		roomTopLeft.y = bottomRight.y - roomSize.height;
 	}
 
-	roomTopLeft.x = clamp(roomTopLeft.x, 1, 38);
-	roomTopLeft.y = clamp(roomTopLeft.y, 1, 38);
-	roomBottomRight.x = clamp(roomBottomRight.x, 1, 38);
-	roomBottomRight.y = clamp(roomBottomRight.y, 1, 38);
+	roomTopLeft.x = clamp<WorldTileCoord>(roomTopLeft.x, 1, 38);
+	roomTopLeft.y = clamp<WorldTileCoord>(roomTopLeft.y, 1, 38);
+	roomBottomRight.x = clamp<WorldTileCoord>(roomBottomRight.x, 1, 38);
+	roomBottomRight.y = clamp<WorldTileCoord>(roomBottomRight.y, 1, 38);
 
 	DefineRoom(roomTopLeft, roomBottomRight, static_cast<bool>(size));
 
-	constexpr Displacement standoff { 2, 2 };
+	constexpr WorldTileDisplacement standoff { 2, 2 };
 	if (size)
 		SetPieceRoom = { roomTopLeft + standoff, roomSize - 1 };
 
@@ -1835,18 +1835,18 @@ void CreateRoom(Point topLeft, Point bottomRight, int nRDest, HallDirection nHDi
 		HallList.push_back({ { nHx1, nHy1 }, { nHx2, nHy2 }, nHDir });
 	}
 
-	Point roomBottomLeft { roomTopLeft.x, roomBottomRight.y };
-	Point roomTopRight { roomBottomRight.x, roomTopLeft.y };
+	WorldTilePosition roomBottomLeft { roomTopLeft.x, roomBottomRight.y };
+	WorldTilePosition roomTopRight { roomBottomRight.x, roomTopLeft.y };
 	if (roomSize.height > roomSize.width) {
 		CreateRoom(topLeft + standoff, roomBottomLeft - standoff, nRid, HallDirection::Right, {});
 		CreateRoom(roomTopRight + standoff, bottomRight - standoff, nRid, HallDirection::Left, {});
-		CreateRoom(Point { topLeft.x, roomBottomRight.y } + standoff, Point { roomBottomRight.x, bottomRight.y } - standoff, nRid, HallDirection::Up, {});
-		CreateRoom(Point { roomTopLeft.x, topLeft.y } + standoff, Point { bottomRight.x, roomTopLeft.y } - standoff, nRid, HallDirection::Down, {});
+		CreateRoom(WorldTilePosition { topLeft.x, roomBottomRight.y } + standoff, WorldTilePosition { roomBottomRight.x, bottomRight.y } - standoff, nRid, HallDirection::Up, {});
+		CreateRoom(WorldTilePosition { roomTopLeft.x, topLeft.y } + standoff, WorldTilePosition { bottomRight.x, roomTopLeft.y } - standoff, nRid, HallDirection::Down, {});
 	} else {
 		CreateRoom(topLeft + standoff, roomTopRight - standoff, nRid, HallDirection::Down, {});
 		CreateRoom(roomBottomLeft + standoff, bottomRight - standoff, nRid, HallDirection::Up, {});
-		CreateRoom(Point { topLeft.x, roomTopLeft.y } + standoff, Point { roomTopLeft.x, bottomRight.y } - standoff, nRid, HallDirection::Right, {});
-		CreateRoom(Point { roomBottomRight.x, topLeft.y } + standoff, Point { bottomRight.x, roomBottomRight.y } - standoff, nRid, HallDirection::Left, {});
+		CreateRoom(WorldTilePosition { topLeft.x, roomTopLeft.y } + standoff, WorldTilePosition { roomTopLeft.x, bottomRight.y } - standoff, nRid, HallDirection::Right, {});
+		CreateRoom(WorldTilePosition { roomBottomRight.x, topLeft.y } + standoff, WorldTilePosition { bottomRight.x, roomBottomRight.y } - standoff, nRid, HallDirection::Left, {});
 	}
 }
 
@@ -2059,9 +2059,9 @@ void FixTilesPatterns()
 
 void Substitution()
 {
-	for (int y = 0; y < DMAXY; y++) {
-		for (int x = 0; x < DMAXX; x++) {
-			if (SetPieceRoom.contains({ x, y }))
+	for (WorldTileCoord y = 0; y < DMAXY; y++) {
+		for (WorldTileCoord x = 0; x < DMAXX; x++) {
+			if (SetPieceRoom.contains(x, y))
 				continue;
 			if (!FlipCoin(4))
 				continue;
@@ -2425,7 +2425,7 @@ bool FillVoids()
 
 bool CreateDungeon()
 {
-	std::optional<Size> size;
+	std::optional<WorldTileSize> size;
 
 	switch (currlevel) {
 	case 5:

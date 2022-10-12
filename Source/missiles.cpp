@@ -1472,10 +1472,7 @@ void AddRuneExplosion(Missile &missile, const AddMissileParameter & /*parameter*
 
 		missile._midam = dmg;
 
-		auto searchArea = PointsInRectangleRangeColMajor {
-			Rectangle { missile.position.tile, 1 }
-		};
-		for (Point position : searchArea)
+		for (Point position : PointsInRectangleColMajor(Rectangle { missile.position.tile, 1 }))
 			CheckMissileCol(missile, dmg, dmg, false, position, true);
 	}
 	missile._mlid = AddLight(missile.position.start, 8);

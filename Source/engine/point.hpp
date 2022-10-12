@@ -151,7 +151,7 @@ struct PointOf {
 	 */
 	constexpr PointOf<CoordT> megaToWorld() const
 	{
-		return { 16 + 2 * x, 16 + 2 * y };
+		return { static_cast<CoordT>(16 + 2 * x), static_cast<CoordT>(16 + 2 * y) };
 	}
 
 	/**
@@ -159,7 +159,7 @@ struct PointOf {
 	 */
 	constexpr PointOf<CoordT> worldToMega() const
 	{
-		return { (x - 16) / 2, (y - 16) / 2 };
+		return { static_cast<CoordT>((x - 16) / 2), static_cast<CoordT>((y - 16) / 2) };
 	}
 };
 

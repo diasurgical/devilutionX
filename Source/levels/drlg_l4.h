@@ -5,14 +5,15 @@
  */
 #pragma once
 
+#include "engine/world_tile.hpp"
 #include "levels/gendung.h"
 
 namespace devilution {
 
-extern Point DiabloQuad1;
-extern Point DiabloQuad2;
-extern Point DiabloQuad3;
-extern Point DiabloQuad4;
+extern WorldTilePosition DiabloQuad1;
+extern WorldTilePosition DiabloQuad2;
+extern WorldTilePosition DiabloQuad3;
+extern WorldTilePosition DiabloQuad4;
 
 void CreateL4Dungeon(uint32_t rseed, lvl_entry entry);
 void LoadPreL4Dungeon(const char *path);

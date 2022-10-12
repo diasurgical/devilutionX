@@ -456,7 +456,9 @@ void GenerateRoom(Rectangle area, bool verticalLayout)
 	Rectangle room1;
 
 	for (int num = 0; num < 20; num++) {
-		room1.size = { (GenerateRnd(5) + 2) & ~1, (GenerateRnd(5) + 2) & ~1 };
+		const int32_t randomWidth = (GenerateRnd(5) + 2) & ~1;
+		const int32_t randomHeight = (GenerateRnd(5) + 2) & ~1;
+		room1.size = { randomWidth, randomHeight };
 		room1.position = area.position;
 		if (verticalLayout) {
 			room1.position += Displacement { -room1.size.width, area.size.height / 2 - room1.size.height / 2 };
@@ -1239,11 +1241,11 @@ void Pass3()
 
 void PlaceMiniSetRandom(const Miniset &miniset, int rndper)
 {
-	int sw = miniset.size.width;
-	int sh = miniset.size.height;
+	const WorldTileCoord sw = miniset.size.width;
+	const WorldTileCoord sh = miniset.size.height;
 
-	for (int sy = 0; sy < DMAXY - sh; sy++) {
-		for (int sx = 0; sx < DMAXX - sw; sx++) {
+	for (WorldTileCoord sy = 0; sy < DMAXY - sh; sy++) {
+		for (WorldTileCoord sx = 0; sx < DMAXX - sw; sx++) {
 			if (!miniset.matches({ sx, sy }, false))
 				continue;
 			// BUGFIX: This code is copied from Cave and should not be applied for crypt
@@ -1256,7 +1258,7 @@ void PlaceMiniSetRandom(const Miniset &miniset, int rndper)
 	}
 }
 
-Point SelectChamber()
+WorldTilePosition SelectChamber()
 {
 	int chamber;
 	if (HasChamber1 && HasChamber2 && HasChamber3) {
@@ -1276,9 +1278,9 @@ Point SelectChamber()
 
 	switch (chamber) {
 	case 1:
-		return VerticalLayout ? Point { 16, 2 } : Point { 2, 16 };
+		return VerticalLayout ? WorldTilePosition { 16, 2 } : WorldTilePosition { 2, 16 };
 	case 3:
-		return VerticalLayout ? Point { 16, 30 } : Point { 30, 16 };
+		return VerticalLayout ? WorldTilePosition { 16, 30 } : WorldTilePosition { 30, 16 };
 	default:
 		return { 16, 16 };
 	}

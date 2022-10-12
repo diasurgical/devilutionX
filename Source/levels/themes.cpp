@@ -85,7 +85,7 @@ bool TFit_Shrine(int i)
 
 bool CheckThemeObj5(Point origin, int8_t regionId)
 {
-	const PointsInRectangleRange searchArea { Rectangle { origin, 2 } };
+	const auto searchArea = PointsInRectangle(Rectangle { origin, 2 });
 	return std::all_of(searchArea.cbegin(), searchArea.cend(), [regionId](Point testPosition) {
 		// note out-of-bounds tiles are not solid, this function relies on the guard in TFit_Obj5 and dungeon border
 		if (IsTileSolid(testPosition)) {
@@ -110,7 +110,7 @@ bool TFit_Obj5(int t)
 	}
 
 	int candidatesFound = 0;
-	for (Point tile : PointsInRectangleRange { { { 0, 0 }, { MAXDUNX, MAXDUNY } } }) {
+	for (Point tile : PointsInRectangle(Rectangle { { 0, 0 }, { MAXDUNX, MAXDUNY } })) {
 		if (dTransVal[tile.x][tile.y] == themes[t].ttval && IsTileNotSolid(tile) && CheckThemeObj5(tile, themes[t].ttval)) {
 			// Use themex/y to keep track of the last candidate area found, in case we end up with fewer candidates than the target
 			themex = tile.x;
@@ -152,7 +152,7 @@ bool TFit_GoatShrine(int t)
 
 bool CheckThemeObj3(Point origin, int8_t regionId, unsigned frequency = 0)
 {
-	const PointsInRectangleRange searchArea { Rectangle { origin, 1 } };
+	const auto searchArea = PointsInRectangle(Rectangle { origin, 1 });
 	return std::all_of(searchArea.cbegin(), searchArea.cend(), [regionId, frequency](Point testPosition) {
 		if (!InDungeonBounds(testPosition)) {
 			return false;
