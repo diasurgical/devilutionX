@@ -36,9 +36,11 @@ extern ControlTypes ControlMode;
  */
 extern ControlTypes ControlDevice;
 
-extern ControllerButton ControllerButtonHeld;
+extern GameActionType ControllerActionHeld;
 
 extern GamepadLayout GamepadType;
+
+extern bool StandToggle;
 
 // Runs every frame.
 // Handles menu movement.
@@ -63,6 +65,7 @@ void SetPointAndClick(bool value);
 bool IsPointAndClick();
 
 void DetectInputMethod(const SDL_Event &event, const ControllerButtonEvent &gamepadEvent);
+void ProcessGameAction(const GameAction &action);
 
 // Whether the automap is being displayed.
 bool IsAutomapActive();

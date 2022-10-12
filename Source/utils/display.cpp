@@ -262,6 +262,9 @@ bool SpawnWindow(const char *lpWindowName)
 #if SDL_VERSION_ATLEAST(2, 0, 2)
 	SDL_SetHint(SDL_HINT_ACCELEROMETER_AS_JOYSTICK, "0");
 #endif
+#if SDL_VERSION_ATLEAST(2, 0, 12)
+	SDL_SetHint(SDL_HINT_GAMECONTROLLER_USE_BUTTON_LABELS, "0");
+#endif
 
 	int initFlags = SDL_INIT_VIDEO | SDL_INIT_JOYSTICK;
 #ifndef NOSOUND

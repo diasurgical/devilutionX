@@ -2,6 +2,7 @@
 // Unifies joystick, gamepad, and keyboard controller APIs.
 
 #include <cstdint>
+#include <functional>
 
 #include "utils/stdcompat/string_view.hpp"
 
@@ -28,6 +29,29 @@ enum ControllerButton : uint8_t {
 	ControllerButton_BUTTON_DPAD_DOWN,
 	ControllerButton_BUTTON_DPAD_LEFT,
 	ControllerButton_BUTTON_DPAD_RIGHT
+};
+
+struct ControllerButtonCombo {
+	constexpr ControllerButtonCombo()
+	    : modifier(ControllerButton_NONE)
+	    , button(ControllerButton_NONE)
+	{
+	}
+
+	constexpr ControllerButtonCombo(ControllerButton button)
+	    : modifier(ControllerButton_NONE)
+	    , button(button)
+	{
+	}
+
+	constexpr ControllerButtonCombo(ControllerButton modifier, ControllerButton button)
+	    : modifier(modifier)
+	    , button(button)
+	{
+	}
+
+	ControllerButton modifier;
+	ControllerButton button;
 };
 
 inline bool IsDPadButton(ControllerButton button)

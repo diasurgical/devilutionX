@@ -45,7 +45,7 @@ namespace devilution {
 
 ControlTypes ControlMode = ControlTypes::None;
 ControlTypes ControlDevice = ControlTypes::None;
-ControllerButton ControllerButtonHeld = ControllerButton_NONE;
+GameActionType ControllerActionHeld = GameActionType_NONE;
 GamepadLayout GamepadType =
 #if defined(DEVILUTIONX_GAMEPAD_TYPE)
     GamepadLayout::
@@ -53,6 +53,8 @@ GamepadLayout GamepadType =
 #else
     GamepadLayout::Generic;
 #endif
+
+bool StandToggle = false;
 
 int pcurstrig = -1;
 Missile *pcursmissile = nullptr;
@@ -488,8 +490,12 @@ void Interact()
 		return;
 	}
 
-	bool stand = false;
+	bool stand = StandToggle;
 #ifndef USE_SDL1
+	if (ControlMode == ControlTypes::Gamepad) {
+		ControllerButtonCombo standGroundCombo = sgOptions.Padmapper.ButtonComboForAction("StandGround");
+		stand = IsControllerButtonComboPressed(standGroundCombo);
+	}
 	if (ControlMode == ControlTypes::VirtualGamepad) {
 		stand = VirtualGamepadState.standButton.isHeld;
 	}
@@ -1057,6 +1063,28 @@ void CheckInventoryMove(AxisDirection dir)
 	InventoryMove(dir);
 }
 
+/**
+ * @brief Try to clean the inventory related cursor states.
+ * @return True if it is safe to close the inventory
+ */
+bool BlurInventory()
+{
+	if (!MyPlayer->HoldItem.isEmpty()) {
+		if (!TryDropItem()) {
+			MyPlayer->Say(HeroSpeech::WhereWouldIPutThis);
+			return false;
+		}
+	}
+
+	CloseInventory();
+	if (pcurs > CURSOR_HAND)
+		NewCursor(CURSOR_HAND);
+	if (chrflag)
+		FocusOnCharInfo();
+
+	return true;
+}
+
 void StashMove(AxisDirection dir)
 {
 	static AxisDirectionRepeater repeater(/*min_interval_ms=*/150);
@@ -1360,14 +1388,12 @@ void ProcessLeftStickOrDPadGameUI()
 {
 	HandleLeftStickOrDPadFn handler = GetLeftStickOrDPadGameUIHandler();
 	if (handler != nullptr)
-		handler(GetLeftStickOrDpadDirection(true));
+		handler(GetLeftStickOrDpadDirection(false));
 }
 
 void Movement(size_t playerId)
 {
-	if (InGameMenu()
-	    || IsControllerButtonPressed(ControllerButton_BUTTON_START)
-	    || IsControllerButtonPressed(ControllerButton_BUTTON_BACK))
+	if (PadMenuNavigatorActive || PadHotspellMenuActive || InGameMenu())
 		return;
 
 	if (GetLeftStickOrDPadGameUIHandler() == nullptr) {
@@ -1469,7 +1495,7 @@ bool ContinueSimulatedMouseEvent(const SDL_Event &event, const ControllerButtonE
 		return true;
 	}
 
-	return SimulatingMouseWithSelectAndDPad || IsSimulatedMouseClickBinding(gamepadEvent);
+	return SimulatingMouseWithPadmapper || IsSimulatedMouseClickBinding(gamepadEvent);
 }
 
 string_view ControlTypeToString(ControlTypes controlType)
@@ -1585,6 +1611,85 @@ void DetectInputMethod(const SDL_Event &event, const ControllerButtonEvent &game
 	}
 }
 
+void ProcessGameAction(const GameAction &action)
+{
+	switch (action.type) {
+	case GameActionType_NONE:
+	case GameActionType_SEND_KEY:
+		break;
+	case GameActionType_USE_HEALTH_POTION:
+		UseBeltItem(BLT_HEALING);
+		break;
+	case GameActionType_USE_MANA_POTION:
+		UseBeltItem(BLT_MANA);
+		break;
+	case GameActionType_PRIMARY_ACTION:
+		PerformPrimaryAction();
+		break;
+	case GameActionType_SECONDARY_ACTION:
+		PerformSecondaryAction();
+		break;
+	case GameActionType_CAST_SPELL:
+		PerformSpellAction();
+		break;
+	case GameActionType_TOGGLE_QUICK_SPELL_MENU:
+		if (!invflag || BlurInventory()) {
+			if (!spselflag)
+				DoSpeedBook();
+			else
+				spselflag = false;
+			chrflag = false;
+			QuestLogIsOpen = false;
+			sbookflag = false;
+			CloseGoldWithdraw();
+			IsStashOpen = false;
+		}
+		break;
+	case GameActionType_TOGGLE_CHARACTER_INFO:
+		chrflag = !chrflag;
+		if (chrflag) {
+			QuestLogIsOpen = false;
+			CloseGoldWithdraw();
+			IsStashOpen = false;
+			spselflag = false;
+			if (pcurs == CURSOR_DISARM)
+				NewCursor(CURSOR_HAND);
+			FocusOnCharInfo();
+		}
+		break;
+	case GameActionType_TOGGLE_QUEST_LOG:
+		if (!QuestLogIsOpen) {
+			StartQuestlog();
+			chrflag = false;
+			CloseGoldWithdraw();
+			IsStashOpen = false;
+			spselflag = false;
+		} else {
+			QuestLogIsOpen = false;
+		}
+		break;
+	case GameActionType_TOGGLE_INVENTORY:
+		if (invflag) {
+			BlurInventory();
+		} else {
+			sbookflag = false;
+			spselflag = false;
+			invflag = true;
+			if (pcurs == CURSOR_DISARM)
+				NewCursor(CURSOR_HAND);
+			FocusOnInventory();
+		}
+		break;
+	case GameActionType_TOGGLE_SPELL_BOOK:
+		if (BlurInventory()) {
+			CloseInventory();
+			spselflag = false;
+			sbookflag = !sbookflag;
+		}
+		break;
+	}
+}
+
 bool IsAutomapActive()
 {
 	return AutomapActive && leveltype != DTYPE_TOWN;
@@ -1667,7 +1772,7 @@ void plrctrls_after_check_curs_move()
 	}
 
 	// While holding the button down we should retain target (but potentially lose it if it dies, goes out of view, etc)
-	if (ControllerButtonHeld != ControllerButton_NONE && IsNoneOf(LastMouseButtonAction, MouseActionType::None, MouseActionType::Attack, MouseActionType::Spell)) {
+	if (ControllerActionHeld != GameActionType_NONE && IsNoneOf(LastMouseButtonAction, MouseActionType::None, MouseActionType::Attack, MouseActionType::Spell)) {
 		InvalidateTargets();
 
 		if (pcursmonst == -1 && ObjectUnderCursor == nullptr && pcursitem == -1 && pcursinvitem == -1 && pcursstashitem == uint16_t(-1) && pcursplr == -1) {

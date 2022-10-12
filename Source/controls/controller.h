@@ -17,6 +17,7 @@ void UnlockControllerState(const SDL_Event &event);
 ControllerButtonEvent ToControllerButtonEvent(const SDL_Event &event);
 
 bool IsControllerButtonPressed(ControllerButton button);
+bool IsControllerButtonComboPressed(ControllerButtonCombo combo);
 
 bool HandleControllerAddedOrRemovedEvent(const SDL_Event &event);
 

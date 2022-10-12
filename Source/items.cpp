@@ -1783,8 +1783,8 @@ void printItemMiscGamepad(const Item &item, bool isOil, bool isCastOnTarget)
 		castButton = controller_button_icon::Playstation_Square;
 		break;
 	case GamepadLayout::Nintendo:
-		activateButton = controller_button_icon::Nintendo_Y;
-		castButton = controller_button_icon::Nintendo_X;
+		activateButton = controller_button_icon::Nintendo_X;
+		castButton = controller_button_icon::Nintendo_Y;
 		break;
 	}
 
