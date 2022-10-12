@@ -1420,7 +1420,7 @@ void MonsterTalk(Monster &monster)
 			ObjChangeMap(SetPiece.position.x, SetPiece.position.y, SetPiece.position.x + (SetPiece.size.width / 2) + 2, SetPiece.position.y + (SetPiece.size.height / 2) - 2);
 			auto tren = TransVal;
 			TransVal = 9;
-			DRLG_MRectTrans({ SetPiece.position, { SetPiece.size.width / 2 + 4, SetPiece.size.height / 2 } });
+			DRLG_MRectTrans({ SetPiece.position, WorldTileSize(SetPiece.size.width / 2 + 4, SetPiece.size.height / 2) });
 			TransVal = tren;
 			Quests[Q_LTBANNER]._qvar1 = 2;
 			if (Quests[Q_LTBANNER]._qactive == QUEST_INIT)
@@ -3606,7 +3606,7 @@ void M_StartStand(Monster &monster, Direction md)
 
 void M_ClearSquares(const Monster &monster)
 {
-	for (Point searchTile : PointsInRectangleRange { Rectangle { monster.position.old, 1 } }) {
+	for (Point searchTile : PointsInRectangle(Rectangle { monster.position.old, 1 })) {
 		if (FindMonsterAtPosition(searchTile) == &monster)
 			dMonster[searchTile.x][searchTile.y] = 0;
 	}
@@ -4181,7 +4181,7 @@ void SyncMonsterAnim(Monster &monster)
 void M_FallenFear(Point position)
 {
 	const Rectangle fearArea = Rectangle { position, 4 };
-	for (const Point tile : PointsInRectangleRange { fearArea }) {
+	for (const Point tile : PointsInRectangle(fearArea)) {
 		if (!InDungeonBounds(tile))
 			continue;
 		int m = dMonster[tile.x][tile.y];

@@ -14,6 +14,7 @@
 #include "engine/random.hpp"
 #include "engine/render/clx_render.hpp"
 #include "engine/render/text_render.hpp"
+#include "engine/world_tile.hpp"
 #include "init.h"
 #include "levels/gendung.h"
 #include "levels/trigs.h"
@@ -139,7 +140,7 @@ void DrawWarLord(Point position)
 {
 	auto dunData = LoadFileInMem<uint16_t>("levels\\l4data\\warlord2.dun");
 
-	SetPiece = { position, { SDL_SwapLE16(dunData[0]), SDL_SwapLE16(dunData[1]) } };
+	SetPiece = { position, WorldTileSize(SDL_SwapLE16(dunData[0]), SDL_SwapLE16(dunData[1])) };
 
 	PlaceDunTiles(dunData.get(), position, 6);
 }
@@ -148,7 +149,7 @@ void DrawSChamber(quest_id q, Point position)
 {
 	auto dunData = LoadFileInMem<uint16_t>("levels\\l2data\\bonestr1.dun");
 
-	SetPiece = { position, { SDL_SwapLE16(dunData[0]), SDL_SwapLE16(dunData[1]) } };
+	SetPiece = { position, WorldTileSize(SDL_SwapLE16(dunData[0]), SDL_SwapLE16(dunData[1])) };
 
 	PlaceDunTiles(dunData.get(), position, 3);
 
@@ -162,7 +163,7 @@ void DrawLTBanner(Point position)
 	int width = SDL_SwapLE16(dunData[0]);
 	int height = SDL_SwapLE16(dunData[1]);
 
-	SetPiece = { position, { SDL_SwapLE16(dunData[0]), SDL_SwapLE16(dunData[1]) } };
+	SetPiece = { position, WorldTileSize(SDL_SwapLE16(dunData[0]), SDL_SwapLE16(dunData[1])) };
 
 	const uint16_t *tileLayer = &dunData[2];
 
@@ -189,7 +190,7 @@ void DrawBlood(Point position)
 {
 	auto dunData = LoadFileInMem<uint16_t>("levels\\l2data\\blood2.dun");
 
-	SetPiece = { position, { SDL_SwapLE16(dunData[0]), SDL_SwapLE16(dunData[1]) } };
+	SetPiece = { position, WorldTileSize(SDL_SwapLE16(dunData[0]), SDL_SwapLE16(dunData[1])) };
 
 	PlaceDunTiles(dunData.get(), position, 0);
 }
@@ -626,7 +627,7 @@ void ResyncQuests()
 				SyncObjectAnim(Objects[ActiveObjects[i]]);
 			auto tren = TransVal;
 			TransVal = 9;
-			DRLG_MRectTrans({ SetPiece.position, { SetPiece.size.width / 2 + 4, SetPiece.size.height / 2 } });
+			DRLG_MRectTrans({ SetPiece.position, WorldTileSize(SetPiece.size.width / 2 + 4, SetPiece.size.height / 2) });
 			TransVal = tren;
 		}
 		if (Quests[Q_LTBANNER]._qvar1 == 3) {
@@ -635,7 +636,7 @@ void ResyncQuests()
 				SyncObjectAnim(Objects[ActiveObjects[i]]);
 			auto tren = TransVal;
 			TransVal = 9;
-			DRLG_MRectTrans({ SetPiece.position, { SetPiece.size.width / 2 + 4, SetPiece.size.height / 2 } });
+			DRLG_MRectTrans({ SetPiece.position, WorldTileSize(SetPiece.size.width / 2 + 4, SetPiece.size.height / 2) });
 			TransVal = tren;
 		}
 	}

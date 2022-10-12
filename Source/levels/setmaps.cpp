@@ -35,13 +35,13 @@ namespace {
 
 void AddSKingObjs()
 {
-	constexpr Rectangle SmallSecretRoom { { 20, 7 }, { 3, 3 } };
+	constexpr WorldTileRectangle SmallSecretRoom { { 20, 7 }, { 3, 3 } };
 	ObjectAtPosition({ 64, 34 }).InitializeLoadedObject(SmallSecretRoom, 1);
 
-	constexpr Rectangle Gate { { 20, 14 }, { 1, 2 } };
+	constexpr WorldTileRectangle Gate { { 20, 14 }, { 1, 2 } };
 	ObjectAtPosition({ 64, 59 }).InitializeLoadedObject(Gate, 2);
 
-	constexpr Rectangle LargeSecretRoom { { 8, 1 }, { 7, 10 } };
+	constexpr WorldTileRectangle LargeSecretRoom { { 8, 1 }, { 7, 10 } };
 	ObjectAtPosition({ 27, 37 }).InitializeLoadedObject(LargeSecretRoom, 3);
 	ObjectAtPosition({ 46, 35 }).InitializeLoadedObject(LargeSecretRoom, 3);
 	ObjectAtPosition({ 49, 53 }).InitializeLoadedObject(LargeSecretRoom, 3);

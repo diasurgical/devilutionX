@@ -2885,7 +2885,7 @@ void StartPlrBlock(Player &player, Direction dir)
 
 void FixPlrWalkTags(const Player &player)
 {
-	for (Point searchTile : PointsInRectangleRange { Rectangle { player.position.old, 1 } }) {
+	for (Point searchTile : PointsInRectangle(Rectangle { player.position.old, 1 })) {
 		if (PlayerAtPosition(searchTile) == &player) {
 			dPlayer[searchTile.x][searchTile.y] = 0;
 		}

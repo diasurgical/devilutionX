@@ -34,6 +34,7 @@ set(tests
   player_test
   quests_test
   random_test
+  rectangle_test
   scrollrt_test
   stores_test
   timedemo_test

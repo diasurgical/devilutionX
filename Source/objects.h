@@ -10,6 +10,7 @@
 #include "engine/clx_sprite.hpp"
 #include "engine/point.hpp"
 #include "engine/rectangle.hpp"
+#include "engine/world_tile.hpp"
 #include "itemdat.h"
 #include "monster.h"
 #include "objdat.h"
@@ -84,7 +85,7 @@ struct Object {
 	 * @param topLeftPosition corner of the map region closest to the origin.
 	 * @param bottomRightPosition corner of the map region furthest from the origin.
 	 */
-	constexpr void SetMapRange(Point topLeftPosition, Point bottomRightPosition)
+	constexpr void SetMapRange(WorldTilePosition topLeftPosition, WorldTilePosition bottomRightPosition)
 	{
 		_oVar1 = topLeftPosition.x;
 		_oVar2 = topLeftPosition.y;
@@ -96,9 +97,9 @@ struct Object {
 	 * @brief Convenience function for SetMapRange(Point, Point).
 	 * @param mapRange A rectangle defining the top left corner and size of the affected region.
 	 */
-	constexpr void SetMapRange(Rectangle mapRange)
+	constexpr void SetMapRange(WorldTileRectangle mapRange)
 	{
-		SetMapRange(mapRange.position, mapRange.position + Displacement { mapRange.size });
+		SetMapRange(mapRange.position, mapRange.position + DisplacementOf<uint8_t>(mapRange.size));
 	}
 
 	/**
@@ -109,7 +110,7 @@ struct Object {
 	 *
 	 * @param mapRange The region to be updated when this object is activated.
 	 */
-	constexpr void InitializeBook(Rectangle mapRange)
+	constexpr void InitializeBook(WorldTileRectangle mapRange)
 	{
 		SetMapRange(mapRange);
 		_oVar6 = _oAnimFrame + 1; // Save the frame number for the open book frame
@@ -121,7 +122,7 @@ struct Object {
 	 * @param leverID An ID (distinct from the object index) to identify the new objects spawned after updating the map.
 	 * @param message The quest text to play when this object is activated.
 	 */
-	constexpr void InitializeQuestBook(Rectangle mapRange, int leverID, _speech_id message)
+	constexpr void InitializeQuestBook(WorldTileRectangle mapRange, int leverID, _speech_id message)
 	{
 		InitializeBook(mapRange);
 		_oVar8 = leverID;
@@ -133,7 +134,7 @@ struct Object {
 	 * @param mapRange The region which was updated to spawn this object.
 	 * @param leverID The id (*not* an object ID/index) of the lever responsible for the map change.
 	 */
-	constexpr void InitializeLoadedObject(Rectangle mapRange, int leverID)
+	constexpr void InitializeLoadedObject(WorldTileRectangle mapRange, int leverID)
 	{
 		SetMapRange(mapRange);
 		_oVar8 = leverID;
