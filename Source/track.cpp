@@ -63,7 +63,7 @@ void RepeatMouseAction()
 	if (pcurs != CURSOR_HAND)
 		return;
 
-	if (sgbMouseDown == CLICK_NONE && ControllerButtonHeld == ControllerButton_NONE)
+	if (sgbMouseDown == CLICK_NONE && ControllerActionHeld == GameActionType_NONE)
 		return;
 
 	if (stextflag != STORE_NONE)

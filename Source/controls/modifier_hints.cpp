@@ -145,9 +145,9 @@ void DrawSpellsCircleMenuHint(const Surface &out, const Point &origin)
 	}
 }
 
-void DrawStartModifierMenu(const Surface &out)
+void DrawGamepadMenuNavigator(const Surface &out)
 {
-	if (!start_modifier_active)
+	if (!PadMenuNavigatorActive || SimulatingMouseWithPadmapper)
 		return;
 	static const CircleMenuHint DPad(/*top=*/HintIcon::IconMenu, /*right=*/HintIcon::IconInv, /*bottom=*/HintIcon::IconMap, /*left=*/HintIcon::IconChar);
 	static const CircleMenuHint Buttons(/*top=*/HintIcon::IconNull, /*right=*/HintIcon::IconNull, /*bottom=*/HintIcon::IconSpells, /*left=*/HintIcon::IconQuests);
@@ -156,15 +156,12 @@ void DrawStartModifierMenu(const Surface &out)
 	DrawCircleMenuHint(out, Buttons, { mainPanel.position.x + mainPanel.size.width - HintBoxSize * 3 - CircleMarginX - HintBoxMargin * 2, mainPanel.position.y - CircleTop });
 }
 
-void DrawSelectModifierMenu(const Surface &out)
+void DrawGamepadHotspellMenu(const Surface &out)
 {
-	if (!select_modifier_active || SimulatingMouseWithSelectAndDPad)
+	if (!PadHotspellMenuActive || SimulatingMouseWithPadmapper)
 		return;
 
 	const Rectangle &mainPanel = GetMainPanel();
-	if (sgOptions.Controller.bDpadHotkeys) {
-		DrawSpellsCircleMenuHint(out, { mainPanel.position.x + CircleMarginX, mainPanel.position.y - CircleTop });
-	}
 	DrawSpellsCircleMenuHint(out, { mainPanel.position.x + mainPanel.size.width - HintBoxSize * 3 - CircleMarginX - HintBoxMargin * 2, mainPanel.position.y - CircleTop });
 }
 
@@ -186,8 +183,8 @@ void FreeModifierHints()
 
 void DrawControllerModifierHints(const Surface &out)
 {
-	DrawStartModifierMenu(out);
-	DrawSelectModifierMenu(out);
+	DrawGamepadMenuNavigator(out);
+	DrawGamepadHotspellMenu(out);
 }
 
 } // namespace devilution

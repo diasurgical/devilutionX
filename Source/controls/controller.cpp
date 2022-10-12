@@ -73,6 +73,14 @@ bool IsControllerButtonPressed(ControllerButton button)
 	return Joystick::IsPressedOnAnyJoystick(button);
 }
 
+bool IsControllerButtonComboPressed(ControllerButtonCombo combo)
+{
+	bool comboPressed = IsControllerButtonPressed(combo.button);
+	if (combo.modifier != ControllerButton_NONE)
+		comboPressed = comboPressed && IsControllerButtonPressed(combo.modifier);
+	return comboPressed;
+}
+
 bool HandleControllerAddedOrRemovedEvent(const SDL_Event &event)
 {
 #ifndef USE_SDL1

@@ -597,6 +597,91 @@ void PressKey(SDL_Keycode vkey, uint16_t modState)
 	}
 }
 
+void PressControllerButton(ControllerButton button)
+{
+	if (IsStashOpen) {
+		switch (button) {
+		case ControllerButton_BUTTON_BACK:
+			StartGoldWithdraw();
+			return;
+		case ControllerButton_BUTTON_LEFTSHOULDER:
+			Stash.PreviousPage();
+			return;
+		case ControllerButton_BUTTON_RIGHTSHOULDER:
+			Stash.NextPage();
+			return;
+		}
+	}
+
+	if (PadHotspellMenuActive) {
+		auto quickSpellAction = [](size_t slot) {
+			if (spselflag) {
+				SetSpeedSpell(slot);
+				return;
+			}
+			if (!*sgOptions.Gameplay.quickCast)
+				ToggleSpell(slot);
+			else
+				QuickCast(slot);
+		};
+		switch (button) {
+		case devilution::ControllerButton_BUTTON_A:
+			quickSpellAction(2);
+			return;
+		case devilution::ControllerButton_BUTTON_B:
+			quickSpellAction(3);
+			return;
+		case devilution::ControllerButton_BUTTON_X:
+			quickSpellAction(0);
+			return;
+		case devilution::ControllerButton_BUTTON_Y:
+			quickSpellAction(1);
+			return;
+		default:
+			break;
+		}
+	}
+
+	if (PadMenuNavigatorActive) {
+		switch (button) {
+		case devilution::ControllerButton_BUTTON_DPAD_UP:
+			PressEscKey();
+			LastMouseButtonAction = MouseActionType::None;
+			PadHotspellMenuActive = false;
+			PadMenuNavigatorActive = false;
+			gamemenu_on();
+			return;
+		case devilution::ControllerButton_BUTTON_DPAD_DOWN:
+			DoAutoMap();
+			return;
+		case devilution::ControllerButton_BUTTON_DPAD_LEFT:
+			ProcessGameAction(GameAction { GameActionType_TOGGLE_CHARACTER_INFO });
+			return;
+		case devilution::ControllerButton_BUTTON_DPAD_RIGHT:
+			ProcessGameAction(GameAction { GameActionType_TOGGLE_INVENTORY });
+			return;
+		case devilution::ControllerButton_BUTTON_A:
+			ProcessGameAction(GameAction { GameActionType_TOGGLE_SPELL_BOOK });
+			return;
+		case devilution::ControllerButton_BUTTON_B:
+			return;
+		case devilution::ControllerButton_BUTTON_X:
+			ProcessGameAction(GameAction { GameActionType_TOGGLE_QUEST_LOG });
+			return;
+		case devilution::ControllerButton_BUTTON_Y:
+#ifdef __3DS__
+			sgOptions.Graphics.zoom.SetValue(!*sgOptions.Graphics.zoom);
+			CalcViewportGeometry();
+#endif
+			return;
+		default:
+			break;
+		}
+	}
+
+	sgOptions.Padmapper.ButtonPressed(button);
+}
+
 void GameEventHandler(const SDL_Event &event, uint16_t modState)
 {
 	switch (event.type) {
@@ -641,6 +726,12 @@ void GameEventHandler(const SDL_Event &event, uint16_t modState)
 		} else {
 			sgOptions.Keymapper.KeyReleased(event.button.button | KeymapperMouseButtonMask);
 		}
+		return;
+	case SDL_JOYBUTTONDOWN:
+		PressControllerButton(static_cast<ControllerButton>(event.jbutton.button));
+		return;
+	case SDL_JOYBUTTONUP:
+		sgOptions.Padmapper.ButtonReleased(static_cast<ControllerButton>(event.jbutton.button));
 		return;
 	default:
 		if (IsCustomEvent(event.type)) {
@@ -1690,6 +1781,465 @@ void InitKeymapActions()
 #endif
 }
 
+void InitPadmapActions()
+{
+	for (int i = 0; i < 8; ++i) {
+		sgOptions.Padmapper.AddAction(
+		    "BeltItem{}",
+		    N_("Belt item {}"),
+		    N_("Use Belt item."),
+		    ControllerButton_NONE,
+		    [i] {
+			    Player &myPlayer = *MyPlayer;
+			    if (!myPlayer.SpdList[i].isEmpty() && myPlayer.SpdList[i]._itype != ItemType::Gold) {
+				    UseInvItem(MyPlayerId, INVITEM_BELT_FIRST + i);
+			    }
+		    },
+		    nullptr,
+		    CanPlayerTakeAction,
+		    i + 1);
+	}
+	for (size_t i = 0; i < NumHotkeys; ++i) {
+		sgOptions.Padmapper.AddAction(
+		    "QuickSpell{}",
+		    N_("Quick spell {}"),
+		    N_("Hotkey for skill or spell."),
+		    ControllerButton_NONE,
+		    [i]() {
+			    if (spselflag) {
+				    SetSpeedSpell(i);
+				    return;
+			    }
+			    if (!*sgOptions.Gameplay.quickCast)
+				    ToggleSpell(i);
+			    else
+				    QuickCast(i);
+		    },
+		    nullptr,
+		    CanPlayerTakeAction,
+		    i + 1);
+	}
+	sgOptions.Padmapper.AddAction(
+	    "PrimaryAction",
+	    N_("Primary action"),
+	    N_("Attack monsters, talk to towners, lift and place inventory items."),
+	    ControllerButton_BUTTON_B,
+	    [] {
+		    ControllerActionHeld = GameActionType_PRIMARY_ACTION;
+		    LastMouseButtonAction = MouseActionType::None;
+		    PerformPrimaryAction();
+	    },
+	    [] {
+		    ControllerActionHeld = GameActionType_NONE;
+		    LastMouseButtonAction = MouseActionType::None;
+	    },
+	    CanPlayerTakeAction);
+	sgOptions.Padmapper.AddAction(
+	    "SecondaryAction",
+	    N_("Secondary action"),
+	    N_("Open chests, interact with doors, pick up items."),
+	    ControllerButton_BUTTON_Y,
+	    [] {
+		    ControllerActionHeld = GameActionType_SECONDARY_ACTION;
+		    LastMouseButtonAction = MouseActionType::None;
+		    PerformSecondaryAction();
+	    },
+	    [] {
+		    ControllerActionHeld = GameActionType_NONE;
+		    LastMouseButtonAction = MouseActionType::None;
+	    },
+	    CanPlayerTakeAction);
+	sgOptions.Padmapper.AddAction(
+	    "SpellAction",
+	    N_("Spell action"),
+	    N_("Cast the active spell."),
+	    ControllerButton_BUTTON_X,
+	    [] {
+		    ControllerActionHeld = GameActionType_CAST_SPELL;
+		    LastMouseButtonAction = MouseActionType::None;
+		    PerformSpellAction();
+	    },
+	    [] {
+		    ControllerActionHeld = GameActionType_NONE;
+		    LastMouseButtonAction = MouseActionType::None;
+	    },
+	    CanPlayerTakeAction);
+	sgOptions.Padmapper.AddAction(
+	    "CancelAction",
+	    N_("Cancel action"),
+	    N_("Close menus."),
+	    ControllerButton_BUTTON_A,
+	    [] {
+		    if (DoomFlag) {
+			    doom_close();
+			    return;
+		    }
+
+		    GameAction action;
+		    if (spselflag)
+			    action = GameAction(GameActionType_TOGGLE_QUICK_SPELL_MENU);
+		    else if (invflag)
+			    action = GameAction(GameActionType_TOGGLE_INVENTORY);
+		    else if (sbookflag)
+			    action = GameAction(GameActionType_TOGGLE_SPELL_BOOK);
+		    else if (QuestLogIsOpen)
+			    action = GameAction(GameActionType_TOGGLE_QUEST_LOG);
+		    else if (chrflag)
+			    action = GameAction(GameActionType_TOGGLE_CHARACTER_INFO);
+		    ProcessGameAction(action);
+	    },
+	    nullptr,
+	    [] { return DoomFlag || spselflag || invflag || sbookflag || QuestLogIsOpen || chrflag; });
+	sgOptions.Padmapper.AddAction(
+	    "MoveUp",
+	    N_("Move up"),
+	    N_("Moves the player character up."),
+	    ControllerButton_BUTTON_DPAD_UP,
+	    [] {});
+	sgOptions.Padmapper.AddAction(
+	    "MoveDown",
+	    N_("Move down"),
+	    N_("Moves the player character down."),
+	    ControllerButton_BUTTON_DPAD_DOWN,
+	    [] {});
+	sgOptions.Padmapper.AddAction(
+	    "MoveLeft",
+	    N_("Move left"),
+	    N_("Moves the player character left."),
+	    ControllerButton_BUTTON_DPAD_LEFT,
+	    [] {});
+	sgOptions.Padmapper.AddAction(
+	    "MoveRight",
+	    N_("Move right"),
+	    N_("Moves the player character right."),
+	    ControllerButton_BUTTON_DPAD_RIGHT,
+	    [] {});
+	sgOptions.Padmapper.AddAction(
+	    "StandGround",
+	    N_("Stand ground"),
+	    N_("Hold to prevent the player from moving."),
+	    ControllerButton_NONE,
+	    [] {});
+	sgOptions.Padmapper.AddAction(
+	    "ToggleStandGround",
+	    N_("Toggle stand ground"),
+	    N_("Toggle whether the player moves."),
+	    ControllerButton_NONE,
+	    [] { StandToggle = true; },
+	    [] { StandToggle = false; },
+	    CanPlayerTakeAction);
+	sgOptions.Padmapper.AddAction(
+	    "UseHealthPotion",
+	    N_("Use health potion"),
+	    N_("Use health potions from belt."),
+	    ControllerButton_BUTTON_LEFTSHOULDER,
+	    [] { UseBeltItem(BLT_HEALING); },
+	    nullptr,
+	    CanPlayerTakeAction);
+	sgOptions.Padmapper.AddAction(
+	    "UseManaPotion",
+	    N_("Use mana potion"),
+	    N_("Use mana potions from belt."),
+	    ControllerButton_BUTTON_RIGHTSHOULDER,
+	    [] { UseBeltItem(BLT_MANA); },
+	    nullptr,
+	    CanPlayerTakeAction);
+	sgOptions.Padmapper.AddAction(
+	    "Character",
+	    N_("Character"),
+	    N_("Open Character screen."),
+	    ControllerButton_AXIS_TRIGGERLEFT,
+	    [] {
+		    ProcessGameAction(GameAction { GameActionType_TOGGLE_CHARACTER_INFO });
+	    });
+	sgOptions.Padmapper.AddAction(
+	    "Inventory",
+	    N_("Inventory"),
+	    N_("Open Inventory screen."),
+	    ControllerButton_AXIS_TRIGGERRIGHT,
+	    [] {
+		    ProcessGameAction(GameAction { GameActionType_TOGGLE_INVENTORY });
+	    },
+	    nullptr,
+	    CanPlayerTakeAction);
+	sgOptions.Padmapper.AddAction(
+	    "QuestLog",
+	    N_("Quest log"),
+	    N_("Open Quest log."),
+	    { ControllerButton_BUTTON_BACK, ControllerButton_AXIS_TRIGGERLEFT },
+	    [] {
+		    ProcessGameAction(GameAction { GameActionType_TOGGLE_QUEST_LOG });
+	    },
+	    nullptr,
+	    CanPlayerTakeAction);
+	sgOptions.Padmapper.AddAction(
+	    "SpellBook",
+	    N_("Spellbook"),
+	    N_("Open Spellbook."),
+	    { ControllerButton_BUTTON_BACK, ControllerButton_AXIS_TRIGGERRIGHT },
+	    [] {
+		    ProcessGameAction(GameAction { GameActionType_TOGGLE_SPELL_BOOK });
+	    },
+	    nullptr,
+	    CanPlayerTakeAction);
+	sgOptions.Padmapper.AddAction(
+	    "DisplaySpells",
+	    N_("Speedbook"),
+	    N_("Open Speedbook."),
+	    ControllerButton_BUTTON_A,
+	    [] {
+		    ProcessGameAction(GameAction { GameActionType_TOGGLE_QUICK_SPELL_MENU });
+	    },
+	    nullptr,
+	    CanPlayerTakeAction);
+	sgOptions.Padmapper.AddAction(
+	    "Toggle Automap",
+	    N_("Toggle automap"),
+	    N_("Toggles if automap is displayed."),
+	    ControllerButton_BUTTON_LEFTSTICK,
+	    DoAutoMap);
+	sgOptions.Padmapper.AddAction(
+	    "MouseUp",
+	    N_("Move mouse up"),
+	    N_("Simulates upward mouse movement."),
+	    { ControllerButton_BUTTON_BACK, ControllerButton_BUTTON_DPAD_UP },
+	    [] {});
+	sgOptions.Padmapper.AddAction(
+	    "MouseDown",
+	    N_("Move mouse down"),
+	    N_("Simulates downward mouse movement."),
+	    { ControllerButton_BUTTON_BACK, ControllerButton_BUTTON_DPAD_DOWN },
+	    [] {});
+	sgOptions.Padmapper.AddAction(
+	    "MouseLeft",
+	    N_("Move mouse left"),
+	    N_("Simulates leftward mouse movement."),
+	    { ControllerButton_BUTTON_BACK, ControllerButton_BUTTON_DPAD_LEFT },
+	    [] {});
+	sgOptions.Padmapper.AddAction(
+	    "MouseRight",
+	    N_("Move mouse right"),
+	    N_("Simulates rightward mouse movement."),
+	    { ControllerButton_BUTTON_BACK, ControllerButton_BUTTON_DPAD_RIGHT },
+	    [] {});
+	sgOptions.Padmapper.AddAction(
+	    "LeftMouseClick1",
+	    N_("Left mouse click"),
+	    N_("Simulates the left mouse button."),
+	    ControllerButton_BUTTON_RIGHTSTICK,
+	    [] {
+		    sgbMouseDown = CLICK_LEFT;
+		    LeftMouseDown(KMOD_NONE);
+	    },
+	    [] {
+		    LastMouseButtonAction = MouseActionType::None;
+		    sgbMouseDown = CLICK_NONE;
+		    LeftMouseUp(KMOD_NONE);
+	    });
+	sgOptions.Padmapper.AddAction(
+	    "LeftMouseClick2",
+	    N_("Left mouse click"),
+	    N_("Simulates the left mouse button."),
+	    { ControllerButton_BUTTON_BACK, ControllerButton_BUTTON_LEFTSHOULDER },
+	    [] {
+		    sgbMouseDown = CLICK_LEFT;
+		    LeftMouseDown(KMOD_NONE);
+	    },
+	    [] {
+		    LastMouseButtonAction = MouseActionType::None;
+		    sgbMouseDown = CLICK_NONE;
+		    LeftMouseUp(KMOD_NONE);
+	    });
+	sgOptions.Padmapper.AddAction(
+	    "RightMouseClick1",
+	    N_("Right mouse click"),
+	    N_("Simulates the right mouse button."),
+	    { ControllerButton_BUTTON_BACK, ControllerButton_BUTTON_RIGHTSTICK },
+	    [] {
+		    sgbMouseDown = CLICK_RIGHT;
+		    RightMouseDown(false);
+	    },
+	    [] {
+		    LastMouseButtonAction = MouseActionType::None;
+		    sgbMouseDown = CLICK_NONE;
+	    });
+	sgOptions.Padmapper.AddAction(
+	    "RightMouseClick2",
+	    N_("Right mouse click"),
+	    N_("Simulates the right mouse button."),
+	    { ControllerButton_BUTTON_BACK, ControllerButton_BUTTON_RIGHTSHOULDER },
+	    [] {
+		    sgbMouseDown = CLICK_RIGHT;
+		    RightMouseDown(false);
+	    },
+	    [] {
+		    LastMouseButtonAction = MouseActionType::None;
+		    sgbMouseDown = CLICK_NONE;
+	    });
+	sgOptions.Padmapper.AddAction(
+	    "PadHotspellMenu",
+	    N_("Gamepad hotspell menu"),
+	    N_("Hold to set or use spell hotkeys."),
+	    ControllerButton_BUTTON_BACK,
+	    [] { PadHotspellMenuActive = true; },
+	    [] { PadHotspellMenuActive = false; });
+	sgOptions.Padmapper.AddAction(
+	    "PadMenuNavigator",
+	    N_("Gamepad menu navigator"),
+	    N_("Hold to access gamepad menu navigation."),
+	    ControllerButton_BUTTON_START,
+	    [] { PadMenuNavigatorActive = true; },
+	    [] { PadMenuNavigatorActive = false; });
+	auto toggleGameMenu = [] {
+		bool inMenu = gmenu_is_active();
+		PressEscKey();
+		LastMouseButtonAction = MouseActionType::None;
+		PadHotspellMenuActive = false;
+		PadMenuNavigatorActive = false;
+		if (!inMenu)
+			gamemenu_on();
+	};
+	sgOptions.Padmapper.AddAction(
+	    "ToggleGameMenu1",
+	    N_("Toggle game menu"),
+	    N_("Opens the game menu."),
+	    {
+	        ControllerButton_BUTTON_BACK,
+	        ControllerButton_BUTTON_START,
+	    },
+	    toggleGameMenu);
+	sgOptions.Padmapper.AddAction(
+	    "ToggleGameMenu2",
+	    N_("Toggle game menu"),
+	    N_("Opens the game menu."),
+	    {
+	        ControllerButton_BUTTON_START,
+	        ControllerButton_BUTTON_BACK,
+	    },
+	    toggleGameMenu);
+	sgOptions.Padmapper.AddAction(
+	    "QuickSave",
+	    N_("Quick save"),
+	    N_("Saves the game."),
+	    ControllerButton_NONE,
+	    [] { gamemenu_save_game(false); },
+	    nullptr,
+	    [&]() { return !gbIsMultiplayer && CanPlayerTakeAction(); });
+	sgOptions.Padmapper.AddAction(
+	    "QuickLoad",
+	    N_("Quick load"),
+	    N_("Loads the game."),
+	    ControllerButton_NONE,
+	    [] { gamemenu_load_game(false); },
+	    nullptr,
+	    [&]() { return !gbIsMultiplayer && gbValidSaveFile && stextflag == STORE_NONE && IsGameRunning(); });
+	sgOptions.Padmapper.AddAction(
+	    "Item Highlighting",
+	    N_("Item highlighting"),
+	    N_("Show/hide items on ground."),
+	    ControllerButton_NONE,
+	    [] { AltPressed(true); },
+	    [] { AltPressed(false); });
+	sgOptions.Padmapper.AddAction(
+	    "Toggle Item Highlighting",
+	    N_("Toggle item highlighting"),
+	    N_("Permanent show/hide items on ground."),
+	    ControllerButton_NONE,
+	    nullptr,
+	    [] { ToggleItemLabelHighlight(); });
+	sgOptions.Padmapper.AddAction(
+	    "Hide Info Screens",
+	    N_("Hide Info Screens"),
+	    N_("Hide all info screens."),
+	    ControllerButton_NONE,
+	    [] {
+		    ClosePanels();
+		    HelpFlag = false;
+		    ChatLogFlag = false;
+		    spselflag = false;
+		    if (qtextflag && leveltype == DTYPE_TOWN) {
+			    qtextflag = false;
+			    stream_stop();
+		    }
+		    AutomapActive = false;
+		    CancelCurrentDiabloMsg();
+		    gamemenu_off();
+		    doom_close();
+	    },
+	    nullptr,
+	    IsGameRunning);
+	sgOptions.Padmapper.AddAction(
+	    "Zoom",
+	    N_("Zoom"),
+	    N_("Zoom Game Screen."),
+	    ControllerButton_NONE,
+	    [] {
+		    sgOptions.Graphics.zoom.SetValue(!*sgOptions.Graphics.zoom);
+		    CalcViewportGeometry();
+	    },
+	    nullptr,
+	    CanPlayerTakeAction);
+	sgOptions.Padmapper.AddAction(
+	    "Pause Game",
+	    N_("Pause Game"),
+	    N_("Pauses the game."),
+	    ControllerButton_NONE,
+	    diablo_pause_game);
+	sgOptions.Padmapper.AddAction(
+	    "DecreaseGamma",
+	    N_("Decrease Gamma"),
+	    N_("Reduce screen brightness."),
+	    ControllerButton_NONE,
+	    DecreaseGamma,
+	    nullptr,
+	    CanPlayerTakeAction);
+	sgOptions.Padmapper.AddAction(
+	    "IncreaseGamma",
+	    N_("Increase Gamma"),
+	    N_("Increase screen brightness."),
+	    ControllerButton_NONE,
+	    IncreaseGamma,
+	    nullptr,
+	    CanPlayerTakeAction);
+	sgOptions.Padmapper.AddAction(
+	    "Help",
+	    N_("Help"),
+	    N_("Open Help Screen."),
+	    ControllerButton_NONE,
+	    HelpKeyPressed,
+	    nullptr,
+	    CanPlayerTakeAction);
+	sgOptions.Padmapper.AddAction(
+	    "Screenshot",
+	    N_("Screenshot"),
+	    N_("Takes a screenshot."),
+	    ControllerButton_NONE,
+	    nullptr,
+	    CaptureScreen);
+	sgOptions.Padmapper.AddAction(
+	    "GameInfo",
+	    N_("Game info"),
+	    N_("Displays game infos."),
+	    ControllerButton_NONE,
+	    [] {
+		    EventPlrMsg(fmt::format(
+		                    fmt::runtime(_(/* TRANSLATORS: {:s} means: Character Name, Game Version, Game Difficulty. */ "{:s} {:s}")),
+		                    PROJECT_NAME,
+		                    PROJECT_VERSION),
+		        UiFlags::ColorWhite);
+	    },
+	    nullptr,
+	    CanPlayerTakeAction);
+	sgOptions.Padmapper.AddAction(
+	    "ChatLog",
+	    N_("Chat Log"),
+	    N_("Displays chat log."),
+	    ControllerButton_NONE,
+	    [] {
+		    ToggleChatLog();
+	    });
+}
+
 void FreeGameMem()
 {
 	pDungeonCels = nullptr;
@@ -1778,6 +2328,7 @@ int DiabloMain(int argc, char **argv)
 
 	DiabloParseFlags(argc, argv);
 	InitKeymapActions();
+	InitPadmapActions();
 
 	// Need to ensure devilutionx.mpq (and fonts.mpq if available) are loaded before attempting to read translation settings
 	LoadCoreArchives();

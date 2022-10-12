@@ -139,7 +139,7 @@ void GmenuDrawMenuItem(const Surface &out, TMenuItem *pItem, int y)
 void GameMenuMove()
 {
 	static AxisDirectionRepeater repeater;
-	const AxisDirection moveDir = repeater.Get(GetLeftStickOrDpadDirection());
+	const AxisDirection moveDir = repeater.Get(GetLeftStickOrDpadDirection(false));
 	if (moveDir.x != AxisDirectionX_NONE)
 		GmenuLeftRight(moveDir.x == AxisDirectionX_RIGHT);
 	if (moveDir.y != AxisDirectionY_NONE)
