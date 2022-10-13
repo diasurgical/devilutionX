@@ -31,14 +31,14 @@ enum class HallDirection : int8_t {
 };
 
 struct HallNode {
-	Point beginning;
-	Point end;
+	WorldTilePosition beginning;
+	WorldTilePosition end;
 	HallDirection direction;
 };
 
 struct RoomNode {
-	Point topLeft;
-	Point bottomRight;
+	WorldTilePosition topLeft;
+	WorldTilePosition bottomRight;
 };
 
 int nRoomCnt;
@@ -1800,10 +1800,10 @@ void CreateRoom(WorldTilePosition topLeft, WorldTilePosition bottomRight, int nR
 	int nRid = nRoomCnt;
 
 	if (nRDest != 0) {
-		int nHx1 = 0;
-		int nHy1 = 0;
-		int nHx2 = 0;
-		int nHy2 = 0;
+		WorldTileCoord nHx1 = 0;
+		WorldTileCoord nHy1 = 0;
+		WorldTileCoord nHx2 = 0;
+		WorldTileCoord nHy2 = 0;
 		if (nHDir == HallDirection::Up) {
 			nHx1 = GenerateRnd(roomSize.width - 2) + roomTopLeft.x + 1;
 			nHy1 = roomTopLeft.y;
