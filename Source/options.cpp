@@ -1494,14 +1494,16 @@ void PadmapperOptions::Action::LoadFromIni(string_view category)
 
 	std::string modName;
 	std::string buttonName;
-	for (string_view name : SplitByChar(result.data(), '+')) {
-		modName = buttonName;
-		buttonName = name;
-	}
-
-	if (buttonName.empty()) {
+	auto parts = SplitByChar(result.data(), '+');
+	auto it = parts.begin();
+	if (it == parts.end()) {
 		SetValue(ControllerButtonCombo {});
 		return;
+	}
+	buttonName = std::string(*it);
+	if (++it != parts.end()) {
+		modName = std::move(buttonName);
+		buttonName = std::string(*it);
 	}
 
 	ControllerButtonCombo input {};

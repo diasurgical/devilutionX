@@ -75,10 +75,8 @@ bool IsControllerButtonPressed(ControllerButton button)
 
 bool IsControllerButtonComboPressed(ControllerButtonCombo combo)
 {
-	bool comboPressed = IsControllerButtonPressed(combo.button);
-	if (combo.modifier != ControllerButton_NONE)
-		comboPressed = comboPressed && IsControllerButtonPressed(combo.modifier);
-	return comboPressed;
+	return IsControllerButtonPressed(combo.button)
+	    && (combo.modifier == ControllerButton_NONE || IsControllerButtonPressed(combo.modifier));
 }
 
 bool HandleControllerAddedOrRemovedEvent(const SDL_Event &event)
