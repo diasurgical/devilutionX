@@ -240,7 +240,7 @@ protected:
 };
 
 template <typename CoordT>
-PointsInRectangleRange<CoordT> PointsInRectangle(RectangleOf<CoordT> region)
+constexpr PointsInRectangleRange<CoordT> PointsInRectangle(RectangleOf<CoordT> region)
 {
 	return PointsInRectangleRange<CoordT> { region };
 }
@@ -420,7 +420,7 @@ protected:
 };
 
 template <typename CoordT = int>
-PointsInRectangleColMajorRange<CoordT> PointsInRectangleColMajor(RectangleOf<CoordT> region)
+constexpr PointsInRectangleColMajorRange<CoordT> PointsInRectangleColMajor(RectangleOf<CoordT> region)
 {
 	return PointsInRectangleColMajorRange<CoordT> { region };
 }

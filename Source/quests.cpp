@@ -431,8 +431,8 @@ void CheckQuestKill(const Monster &monster, bool sendmsg)
 		diabloQuest._qactive = QUEST_ACTIVE;
 
 		if (gbIsMultiplayer) {
-			for (int j = 0; j < MAXDUNY; j++) {
-				for (int i = 0; i < MAXDUNX; i++) {
+			for (WorldTileCoord j = 0; j < MAXDUNY; j++) {
+				for (WorldTileCoord i = 0; i < MAXDUNX; i++) {
 					if (dPiece[i][j] == 369) {
 						trigs[numtrigs].position = { i, j };
 						trigs[numtrigs]._tmsg = WM_DIABNEXTLVL;

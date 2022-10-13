@@ -22,42 +22,44 @@ int numtrigs;
 TriggerStruct trigs[MAXTRIGGERS];
 int TWarpFrom;
 
+namespace {
 /** Specifies the dungeon piece IDs which constitute stairways leading down to the cathedral from town. */
-int TownDownList[] = { 715, 714, 718, 719, 720, 722, 723, 724, 725, 726, -1 };
+const uint16_t TownDownList[] = { 715, 714, 718, 719, 720, 722, 723, 724, 725, 726 };
 /** Specifies the dungeon piece IDs which constitute stairways leading down to the catacombs from town. */
-int TownWarp1List[] = { 1170, 1171, 1172, 1173, 1174, 1175, 1176, 1177, 1178, 1180, 1182, 1184, -1 };
-int TownCryptList[] = { 1330, 1331, 1332, 1333, 1334, 1335, 1336, 1337, -1 };
-int TownHiveList[] = { 1306, 1307, 1308, 1309, -1 };
+const uint16_t TownWarp1List[] = { 1170, 1171, 1172, 1173, 1174, 1175, 1176, 1177, 1178, 1180, 1182, 1184 };
+const uint16_t TownCryptList[] = { 1330, 1331, 1332, 1333, 1334, 1335, 1336, 1337 };
+const uint16_t TownHiveList[] = { 1306, 1307, 1308, 1309 };
 /** Specifies the dungeon piece IDs which constitute stairways leading up from the cathedral. */
-int L1UpList[] = { 126, 128, 129, 130, 131, 132, 134, 136, 137, 138, 139, -1 };
+const uint16_t L1UpList[] = { 126, 128, 129, 130, 131, 132, 134, 136, 137, 138, 139 };
 /** Specifies the dungeon piece IDs which constitute stairways leading down from the cathedral. */
-int L1DownList[] = { 105, 106, 107, 108, 109, 111, 113, 114, 117, -1 };
+const uint16_t L1DownList[] = { 105, 106, 107, 108, 109, 111, 113, 114, 117 };
 /** Specifies the dungeon piece IDs which constitute stairways leading up from the catacombs. */
-int L2UpList[] = { 265, 266, -1 };
+const uint16_t L2UpList[] = { 265, 266 };
 /** Specifies the dungeon piece IDs which constitute stairways leading down from the catacombs. */
-int L2DownList[] = { 268, 269, 270, 271, -1 };
+const uint16_t L2DownList[] = { 268, 269, 270, 271 };
 /** Specifies the dungeon piece IDs which constitute stairways leading up to town from the catacombs. */
-int L2TWarpUpList[] = { 557, 558, -1 };
+const uint16_t L2TWarpUpList[] = { 557, 558 };
 /** Specifies the dungeon piece IDs which constitute stairways leading up from the caves. */
-int L3UpList[] = { 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, -1 };
+const uint16_t L3UpList[] = { 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182 };
 /** Specifies the dungeon piece IDs which constitute stairways leading down from the caves. */
-int L3DownList[] = { 161, 162, 163, 164, 165, 166, 167, 168, -1 };
+const uint16_t L3DownList[] = { 161, 162, 163, 164, 165, 166, 167, 168 };
 /** Specifies the dungeon piece IDs which constitute stairways leading up to town from the caves. */
-int L3TWarpUpList[] = { 181, 547, 548, 549, 550, 551, 552, 553, 554, 555, 556, 557, 558, 559, -1 };
+const uint16_t L3TWarpUpList[] = { 181, 547, 548, 549, 550, 551, 552, 553, 554, 555, 556, 557, 558, 559 };
 /** Specifies the dungeon piece IDs which constitute stairways leading up from hell. */
-int L4UpList[] = { 81, 82, 89, -1 };
+const uint16_t L4UpList[] = { 81, 82, 89 };
 /** Specifies the dungeon piece IDs which constitute stairways leading down from hell. */
-int L4DownList[] = { 119, 129, 130, 131, 132, -1 };
+const uint16_t L4DownList[] = { 119, 129, 130, 131, 132 };
 /** Specifies the dungeon piece IDs which constitute stairways leading up to town from hell. */
-int L4TWarpUpList[] = { 420, 421, 428, -1 };
+const uint16_t L4TWarpUpList[] = { 420, 421, 428 };
 /** Specifies the dungeon piece IDs which constitute stairways leading down to Diablo from hell. */
-int L4PentaList[] = { 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 365, 366, 367, 368, 369, 370, 371, 372, 373, 374, 375, 376, 377, 378, 379, 380, 381, 382, 383, -1 };
-int L5TWarpUpList[] = { 171, 172, 173, 174, 175, 176, 177, 178, 183, -1 };
-int L5UpList[] = { 148, 149, 150, 151, 152, 153, 154, 156, 157, 158, -1 };
-int L5DownList[] = { 124, 125, 128, 130, 131, 134, 135, 139, 141, -1 };
-int L6TWarpUpList[] = { 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, -1 };
-int L6UpList[] = { 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, -1 };
-int L6DownList[] = { 56, 57, 58, 59, 60, 61, 62, 63, -1 };
+const uint16_t L4PentaList[] = { 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 365, 366, 367, 368, 369, 370, 371, 372, 373, 374, 375, 376, 377, 378, 379, 380, 381, 382, 383 };
+const uint16_t L5TWarpUpList[] = { 171, 172, 173, 174, 175, 176, 177, 178, 183 };
+const uint16_t L5UpList[] = { 148, 149, 150, 151, 152, 153, 154, 156, 157, 158 };
+const uint16_t L5DownList[] = { 124, 125, 128, 130, 131, 134, 135, 139, 141 };
+const uint16_t L6TWarpUpList[] = { 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91 };
+const uint16_t L6UpList[] = { 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77 };
+const uint16_t L6DownList[] = { 56, 57, 58, 59, 60, 61, 62, 63 };
+} // namespace
 
 void InitNoTriggers()
 {
@@ -144,8 +146,8 @@ void InitTownTriggers()
 void InitL1Triggers()
 {
 	numtrigs = 0;
-	for (int j = 0; j < MAXDUNY; j++) {
-		for (int i = 0; i < MAXDUNX; i++) {
+	for (WorldTileCoord j = 0; j < MAXDUNY; j++) {
+		for (WorldTileCoord i = 0; i < MAXDUNX; i++) {
 			if (dPiece[i][j] == 128) {
 				trigs[numtrigs].position = { i, j };
 				trigs[numtrigs]._tmsg = WM_DIABPREVLVL;
@@ -164,8 +166,8 @@ void InitL1Triggers()
 void InitL2Triggers()
 {
 	numtrigs = 0;
-	for (int j = 0; j < MAXDUNY; j++) {
-		for (int i = 0; i < MAXDUNX; i++) {
+	for (WorldTileCoord j = 0; j < MAXDUNY; j++) {
+		for (WorldTileCoord i = 0; i < MAXDUNX; i++) {
 			if (dPiece[i][j] == 266 && (i != Quests[Q_SCHAMB].position.x || j != Quests[Q_SCHAMB].position.y)) {
 				trigs[numtrigs].position = { i, j };
 				trigs[numtrigs]._tmsg = WM_DIABPREVLVL;
@@ -192,8 +194,8 @@ void InitL2Triggers()
 void InitL3Triggers()
 {
 	numtrigs = 0;
-	for (int j = 0; j < MAXDUNY; j++) {
-		for (int i = 0; i < MAXDUNX; i++) {
+	for (WorldTileCoord j = 0; j < MAXDUNY; j++) {
+		for (WorldTileCoord i = 0; i < MAXDUNX; i++) {
 			if (dPiece[i][j] == 170) {
 				trigs[numtrigs].position = { i, j };
 				trigs[numtrigs]._tmsg = WM_DIABPREVLVL;
@@ -219,8 +221,8 @@ void InitL3Triggers()
 void InitL4Triggers()
 {
 	numtrigs = 0;
-	for (int j = 0; j < MAXDUNY; j++) {
-		for (int i = 0; i < MAXDUNX; i++) {
+	for (WorldTileCoord j = 0; j < MAXDUNY; j++) {
+		for (WorldTileCoord i = 0; i < MAXDUNX; i++) {
 			if (dPiece[i][j] == 82) {
 				trigs[numtrigs].position = { i, j };
 				trigs[numtrigs]._tmsg = WM_DIABPREVLVL;
@@ -242,8 +244,8 @@ void InitL4Triggers()
 		}
 	}
 
-	for (int j = 0; j < MAXDUNY; j++) {
-		for (int i = 0; i < MAXDUNX; i++) {
+	for (WorldTileCoord j = 0; j < MAXDUNY; j++) {
+		for (WorldTileCoord i = 0; i < MAXDUNX; i++) {
 			if (dPiece[i][j] == 369 && Quests[Q_BETRAYER]._qactive == QUEST_DONE) {
 				trigs[numtrigs].position = { i, j };
 				trigs[numtrigs]._tmsg = WM_DIABNEXTLVL;
@@ -257,8 +259,8 @@ void InitL4Triggers()
 void InitHiveTriggers()
 {
 	numtrigs = 0;
-	for (int j = 0; j < MAXDUNY; j++) {
-		for (int i = 0; i < MAXDUNX; i++) {
+	for (WorldTileCoord j = 0; j < MAXDUNY; j++) {
+		for (WorldTileCoord i = 0; i < MAXDUNX; i++) {
 			if (dPiece[i][j] == 65) {
 				trigs[numtrigs].position = { i, j };
 				trigs[numtrigs]._tmsg = WM_DIABPREVLVL;
@@ -284,8 +286,8 @@ void InitHiveTriggers()
 void InitCryptTriggers()
 {
 	numtrigs = 0;
-	for (int j = 0; j < MAXDUNY; j++) {
-		for (int i = 0; i < MAXDUNX; i++) {
+	for (WorldTileCoord j = 0; j < MAXDUNY; j++) {
+		for (WorldTileCoord i = 0; i < MAXDUNX; i++) {
 			if (dPiece[i][j] == 183) {
 				trigs[numtrigs].position = { i, j };
 				trigs[numtrigs]._tmsg = WM_DIABTWARPUP;
@@ -341,9 +343,7 @@ void InitVPTriggers()
 
 bool ForceTownTrig()
 {
-	for (auto tileId : TownDownList) {
-		if (tileId == -1)
-			break;
+	for (const uint16_t tileId : TownDownList) {
 		if (dPiece[cursPosition.x][cursPosition.y] == tileId) {
 			InfoString = _("Down to dungeon");
 			cursPosition = { 25, 29 };
@@ -352,9 +352,7 @@ bool ForceTownTrig()
 	}
 
 	if (IsWarpOpen(DTYPE_CATACOMBS)) {
-		for (auto tileId : TownWarp1List) {
-			if (tileId == -1)
-				break;
+		for (const uint16_t tileId : TownWarp1List) {
 			if (dPiece[cursPosition.x][cursPosition.y] == tileId) {
 				InfoString = _("Down to catacombs");
 				cursPosition = { 49, 21 };
@@ -364,7 +362,7 @@ bool ForceTownTrig()
 	}
 
 	if (IsWarpOpen(DTYPE_CAVES)) {
-		for (int i = 1198; i <= 1219; i++) {
+		for (uint16_t i = 1198; i <= 1219; ++i) {
 			if (dPiece[cursPosition.x][cursPosition.y] == i) {
 				InfoString = _("Down to caves");
 				cursPosition = { 17, 69 };
@@ -374,7 +372,7 @@ bool ForceTownTrig()
 	}
 
 	if (IsWarpOpen(DTYPE_HELL)) {
-		for (int i = 1239; i <= 1254; i++) {
+		for (uint16_t i = 1239; i <= 1254; ++i) {
 			if (dPiece[cursPosition.x][cursPosition.y] == i) {
 				InfoString = _("Down to hell");
 				cursPosition = { 41, 80 };
@@ -384,9 +382,7 @@ bool ForceTownTrig()
 	}
 
 	if (IsWarpOpen(DTYPE_NEST)) {
-		for (auto tileId : TownHiveList) {
-			if (tileId == -1)
-				break;
+		for (const uint16_t tileId : TownHiveList) {
 			if (dPiece[cursPosition.x][cursPosition.y] == tileId) {
 				InfoString = _("Down to Hive");
 				cursPosition = { 80, 62 };
@@ -396,9 +392,7 @@ bool ForceTownTrig()
 	}
 
 	if (IsWarpOpen(DTYPE_CRYPT)) {
-		for (auto tileId : TownCryptList) {
-			if (tileId == -1)
-				break;
+		for (const uint16_t tileId : TownCryptList) {
 			if (dPiece[cursPosition.x][cursPosition.y] == tileId) {
 				InfoString = _("Down to Crypt");
 				cursPosition = { 36, 24 };
@@ -412,8 +406,8 @@ bool ForceTownTrig()
 
 bool ForceL1Trig()
 {
-	for (int i = 0; L1UpList[i] != -1; i++) {
-		if (dPiece[cursPosition.x][cursPosition.y] == L1UpList[i]) {
+	for (const uint16_t tileId : L1UpList) {
+		if (dPiece[cursPosition.x][cursPosition.y] == tileId) {
 			if (currlevel > 1)
 				InfoString = fmt::format(fmt::runtime(_("Up to level {:d}")), currlevel - 1);
 			else
@@ -426,8 +420,8 @@ bool ForceL1Trig()
 			}
 		}
 	}
-	for (int i = 0; L1DownList[i] != -1; i++) {
-		if (dPiece[cursPosition.x][cursPosition.y] == L1DownList[i]) {
+	for (const uint16_t tileId : L1DownList) {
+		if (dPiece[cursPosition.x][cursPosition.y] == tileId) {
 			InfoString = fmt::format(fmt::runtime(_("Down to level {:d}")), currlevel + 1);
 			for (int j = 0; j < numtrigs; j++) {
 				if (trigs[j]._tmsg == WM_DIABNEXTLVL) {
@@ -443,8 +437,8 @@ bool ForceL1Trig()
 
 bool ForceL2Trig()
 {
-	for (int i = 0; L2UpList[i] != -1; i++) {
-		if (dPiece[cursPosition.x][cursPosition.y] == L2UpList[i]) {
+	for (const uint16_t tileId : L2UpList) {
+		if (dPiece[cursPosition.x][cursPosition.y] == tileId) {
 			for (int j = 0; j < numtrigs; j++) {
 				if (trigs[j]._tmsg == WM_DIABPREVLVL) {
 					int dx = abs(trigs[j].position.x - cursPosition.x);
@@ -459,8 +453,8 @@ bool ForceL2Trig()
 		}
 	}
 
-	for (int i = 0; L2DownList[i] != -1; i++) {
-		if (dPiece[cursPosition.x][cursPosition.y] == L2DownList[i]) {
+	for (const uint16_t tileId : L2DownList) {
+		if (dPiece[cursPosition.x][cursPosition.y] == tileId) {
 			InfoString = fmt::format(fmt::runtime(_("Down to level {:d}")), currlevel + 1);
 			for (int j = 0; j < numtrigs; j++) {
 				if (trigs[j]._tmsg == WM_DIABNEXTLVL) {
@@ -472,8 +466,8 @@ bool ForceL2Trig()
 	}
 
 	if (currlevel == 5) {
-		for (int i = 0; L2TWarpUpList[i] != -1; i++) {
-			if (dPiece[cursPosition.x][cursPosition.y] == L2TWarpUpList[i]) {
+		for (const uint16_t tileId : L2TWarpUpList) {
+			if (dPiece[cursPosition.x][cursPosition.y] == tileId) {
 				for (int j = 0; j < numtrigs; j++) {
 					if (trigs[j]._tmsg == WM_DIABTWARPUP) {
 						int dx = abs(trigs[j].position.x - cursPosition.x);
@@ -494,8 +488,8 @@ bool ForceL2Trig()
 
 bool ForceL3Trig()
 {
-	for (int i = 0; L3UpList[i] != -1; ++i) {
-		if (dPiece[cursPosition.x][cursPosition.y] == L3UpList[i]) {
+	for (const uint16_t tileId : L3UpList) {
+		if (dPiece[cursPosition.x][cursPosition.y] == tileId) {
 			InfoString = fmt::format(fmt::runtime(_("Up to level {:d}")), currlevel - 1);
 			for (int j = 0; j < numtrigs; j++) {
 				if (trigs[j]._tmsg == WM_DIABPREVLVL) {
@@ -509,10 +503,10 @@ bool ForceL3Trig()
 			}
 		}
 	}
-	for (int i = 0; L3DownList[i] != -1; i++) {
-		if (dPiece[cursPosition.x][cursPosition.y] == L3DownList[i]
-		    || dPiece[cursPosition.x + 1][cursPosition.y] == L3DownList[i]
-		    || dPiece[cursPosition.x + 2][cursPosition.y] == L3DownList[i]) {
+	for (const uint16_t tileId : L3DownList) {
+		if (dPiece[cursPosition.x][cursPosition.y] == tileId
+		    || dPiece[cursPosition.x + 1][cursPosition.y] == tileId
+		    || dPiece[cursPosition.x + 2][cursPosition.y] == tileId) {
 			InfoString = fmt::format(fmt::runtime(_("Down to level {:d}")), currlevel + 1);
 			for (int j = 0; j < numtrigs; j++) {
 				if (trigs[j]._tmsg == WM_DIABNEXTLVL) {
@@ -524,8 +518,8 @@ bool ForceL3Trig()
 	}
 
 	if (currlevel == 9) {
-		for (int i = 0; L3TWarpUpList[i] != -1; i++) {
-			if (dPiece[cursPosition.x][cursPosition.y] == L3TWarpUpList[i]) {
+		for (const uint16_t tileId : L3TWarpUpList) {
+			if (dPiece[cursPosition.x][cursPosition.y] == tileId) {
 				for (int j = 0; j < numtrigs; j++) {
 					if (trigs[j]._tmsg == WM_DIABTWARPUP) {
 						int dx = abs(trigs[j].position.x - cursPosition.x);
@@ -546,8 +540,8 @@ bool ForceL3Trig()
 
 bool ForceL4Trig()
 {
-	for (int i = 0; L4UpList[i] != -1; ++i) {
-		if (dPiece[cursPosition.x][cursPosition.y] == L4UpList[i]) {
+	for (const uint16_t tileId : L4UpList) {
+		if (dPiece[cursPosition.x][cursPosition.y] == tileId) {
 			InfoString = fmt::format(fmt::runtime(_("Up to level {:d}")), currlevel - 1);
 			for (int j = 0; j < numtrigs; j++) {
 				if (trigs[j]._tmsg == WM_DIABPREVLVL) {
@@ -558,8 +552,8 @@ bool ForceL4Trig()
 		}
 	}
 
-	for (int i = 0; L4DownList[i] != -1; i++) {
-		if (dPiece[cursPosition.x][cursPosition.y] == L4DownList[i]) {
+	for (const uint16_t tileId : L4DownList) {
+		if (dPiece[cursPosition.x][cursPosition.y] == tileId) {
 			InfoString = fmt::format(fmt::runtime(_("Down to level {:d}")), currlevel + 1);
 			for (int j = 0; j < numtrigs; j++) {
 				if (trigs[j]._tmsg == WM_DIABNEXTLVL) {
@@ -571,8 +565,8 @@ bool ForceL4Trig()
 	}
 
 	if (currlevel == 13) {
-		for (int i = 0; L4TWarpUpList[i] != -1; i++) {
-			if (dPiece[cursPosition.x][cursPosition.y] == L4TWarpUpList[i]) {
+		for (const uint16_t tileId : L4TWarpUpList) {
+			if (dPiece[cursPosition.x][cursPosition.y] == tileId) {
 				for (int j = 0; j < numtrigs; j++) {
 					if (trigs[j]._tmsg == WM_DIABTWARPUP) {
 						int dx = abs(trigs[j].position.x - cursPosition.x);
@@ -589,8 +583,8 @@ bool ForceL4Trig()
 	}
 
 	if (currlevel == 15) {
-		for (int i = 0; L4PentaList[i] != -1; i++) {
-			if (dPiece[cursPosition.x][cursPosition.y] == L4PentaList[i]) {
+		for (const uint16_t tileId : L4PentaList) {
+			if (dPiece[cursPosition.x][cursPosition.y] == tileId) {
 				InfoString = _("Down to Diablo");
 				for (int j = 0; j < numtrigs; j++) {
 					if (trigs[j]._tmsg == WM_DIABNEXTLVL) {
@@ -607,8 +601,8 @@ bool ForceL4Trig()
 
 bool ForceHiveTrig()
 {
-	for (int i = 0; L6UpList[i] != -1; ++i) {
-		if (dPiece[cursPosition.x][cursPosition.y] == L6UpList[i]) {
+	for (const uint16_t tileId : L6UpList) {
+		if (dPiece[cursPosition.x][cursPosition.y] == tileId) {
 			InfoString = fmt::format(fmt::runtime(_("Up to Nest level {:d}")), currlevel - 17);
 			for (int j = 0; j < numtrigs; j++) {
 				if (trigs[j]._tmsg == WM_DIABPREVLVL) {
@@ -618,10 +612,10 @@ bool ForceHiveTrig()
 			}
 		}
 	}
-	for (int i = 0; L6DownList[i] != -1; i++) {
-		if (dPiece[cursPosition.x][cursPosition.y] == L6DownList[i]
-		    || dPiece[cursPosition.x + 1][cursPosition.y] == L6DownList[i]
-		    || dPiece[cursPosition.x + 2][cursPosition.y] == L6DownList[i]) {
+	for (const uint16_t tileId : L6DownList) {
+		if (dPiece[cursPosition.x][cursPosition.y] == tileId
+		    || dPiece[cursPosition.x + 1][cursPosition.y] == tileId
+		    || dPiece[cursPosition.x + 2][cursPosition.y] == tileId) {
 			InfoString = fmt::format(fmt::runtime(_("Down to level {:d}")), currlevel - 15);
 			for (int j = 0; j < numtrigs; j++) {
 				if (trigs[j]._tmsg == WM_DIABNEXTLVL) {
@@ -633,8 +627,8 @@ bool ForceHiveTrig()
 	}
 
 	if (currlevel == 17) {
-		for (int i = 0; L6TWarpUpList[i] != -1; i++) {
-			if (dPiece[cursPosition.x][cursPosition.y] == L6TWarpUpList[i]) {
+		for (const uint16_t tileId : L6TWarpUpList) {
+			if (dPiece[cursPosition.x][cursPosition.y] == tileId) {
 				for (int j = 0; j < numtrigs; j++) {
 					if (trigs[j]._tmsg == WM_DIABTWARPUP) {
 						int dx = abs(trigs[j].position.x - cursPosition.x);
@@ -655,8 +649,8 @@ bool ForceHiveTrig()
 
 bool ForceCryptTrig()
 {
-	for (int i = 0; L5UpList[i] != -1; i++) {
-		if (dPiece[cursPosition.x][cursPosition.y] == L5UpList[i]) {
+	for (const uint16_t tileId : L5UpList) {
+		if (dPiece[cursPosition.x][cursPosition.y] == tileId) {
 			InfoString = fmt::format(fmt::runtime(_("Up to Crypt level {:d}")), currlevel - 21);
 			for (int j = 0; j < numtrigs; j++) {
 				if (trigs[j]._tmsg == WM_DIABPREVLVL) {
@@ -670,8 +664,8 @@ bool ForceCryptTrig()
 		InfoString = _("Cornerstone of the World");
 		return true;
 	}
-	for (int i = 0; L5DownList[i] != -1; i++) {
-		if (dPiece[cursPosition.x][cursPosition.y] == L5DownList[i]) {
+	for (const uint16_t tileId : L5DownList) {
+		if (dPiece[cursPosition.x][cursPosition.y] == tileId) {
 			InfoString = fmt::format(fmt::runtime(_("Down to Crypt level {:d}")), currlevel - 19);
 			for (int j = 0; j < numtrigs; j++) {
 				if (trigs[j]._tmsg == WM_DIABNEXTLVL) {
@@ -682,8 +676,8 @@ bool ForceCryptTrig()
 		}
 	}
 	if (currlevel == 21) {
-		for (int i = 0; L5TWarpUpList[i] != -1; i++) {
-			if (dPiece[cursPosition.x][cursPosition.y] == L5TWarpUpList[i]) {
+		for (const uint16_t tileId : L5TWarpUpList) {
+			if (dPiece[cursPosition.x][cursPosition.y] == tileId) {
 				for (int j = 0; j < numtrigs; j++) {
 					if (trigs[j]._tmsg == WM_DIABTWARPUP) {
 						int dx = abs(trigs[j].position.x - cursPosition.x);
@@ -718,8 +712,8 @@ void Freeupstairs()
 
 bool ForceSKingTrig()
 {
-	for (int i = 0; L1UpList[i] != -1; i++) {
-		if (dPiece[cursPosition.x][cursPosition.y] == L1UpList[i]) {
+	for (const uint16_t tileId : L1UpList) {
+		if (dPiece[cursPosition.x][cursPosition.y] == tileId) {
 			InfoString = fmt::format(fmt::runtime(_("Back to Level {:d}")), Quests[Q_SKELKING]._qlevel);
 			cursPosition = trigs[0].position;
 
@@ -732,8 +726,8 @@ bool ForceSKingTrig()
 
 bool ForceSChambTrig()
 {
-	for (int i = 0; L2DownList[i] != -1; i++) {
-		if (dPiece[cursPosition.x][cursPosition.y] == L2DownList[i]) {
+	for (const uint16_t tileId : L2DownList) {
+		if (dPiece[cursPosition.x][cursPosition.y] == tileId) {
 			InfoString = fmt::format(fmt::runtime(_("Back to Level {:d}")), Quests[Q_SCHAMB]._qlevel);
 			cursPosition = trigs[0].position;
 
@@ -746,8 +740,8 @@ bool ForceSChambTrig()
 
 bool ForcePWaterTrig()
 {
-	for (int i = 0; L3DownList[i] != -1; i++) {
-		if (dPiece[cursPosition.x][cursPosition.y] == L3DownList[i]) {
+	for (const uint16_t tileId : L3DownList) {
+		if (dPiece[cursPosition.x][cursPosition.y] == tileId) {
 			InfoString = fmt::format(fmt::runtime(_("Back to Level {:d}")), Quests[Q_PWATER]._qlevel);
 			cursPosition = trigs[0].position;
 

@@ -14,7 +14,7 @@ namespace devilution {
 #define MAXTRIGGERS 7
 
 struct TriggerStruct {
-	Point position;
+	WorldTilePosition position;
 	interface_mode _tmsg;
 	int _tlvl;
 };
