@@ -516,10 +516,7 @@ void DRLG_RectTrans(WorldTileRectangle area)
 
 void DRLG_MRectTrans(WorldTileRectangle area)
 {
-	WorldTilePosition position = area.position.megaToWorld();
-	WorldTileSize size = area.size * 2;
-
-	DRLG_RectTrans({ position + WorldTileDisplacement { 1, 1 }, WorldTileSize(size.width - 1, size.height - 1) });
+	DRLG_RectTrans({ area.position.megaToWorld() + WorldTileDisplacement { 1, 1 }, area.size * 2 - 1 });
 }
 
 void DRLG_MRectTrans(WorldTilePosition origin, WorldTilePosition extent)
