@@ -90,11 +90,13 @@ VirtualGamepadButtonType GetStandButtonType(bool isPressed)
 
 void LoadButtonArt(ButtonTexture *buttonArt, SDL_Renderer *renderer)
 {
-	constexpr unsigned Frames = 26;
+	constexpr unsigned Sprites = 13;
+	constexpr unsigned Frames = 2;
 	buttonArt->surface.reset(LoadPNG("ui_art\\button.png"));
 	if (buttonArt->surface == nullptr)
 		return;
 
+	buttonArt->numSprites = Sprites;
 	buttonArt->numFrames = Frames;
 
 	if (renderer != nullptr) {
@@ -181,6 +183,7 @@ Size ButtonTexture::size() const
 	} else {
 		SDL_QueryTexture(texture.get(), /*format=*/nullptr, /*access=*/nullptr, &w, &h);
 	}
+	w /= numSprites;
 	h /= numFrames;
 	return Size { w, h };
 }
@@ -324,8 +327,9 @@ void VirtualPadButtonRenderer::Render(RenderFunction renderFunction, const Butto
 
 	VirtualGamepadButtonType buttonType = GetButtonType();
 	Size size = buttonArt.size();
-	int frame = buttonType;
-	int offset = size.height * frame;
+	const auto index = static_cast<unsigned>(buttonType);
+	const int xOffset = size.width * (index / buttonArt.numFrames);
+	const int yOffset = size.height * (index % buttonArt.numFrames);
 
 	auto center = virtualPadButton->area.position;
 	auto radius = virtualPadButton->area.radius;
@@ -336,7 +340,7 @@ void VirtualPadButtonRenderer::Render(RenderFunction renderFunction, const Butto
 	int width = diameter;
 	int height = diameter;
 
-	SDL_Rect src = MakeSdlRect(0, offset, size.width, size.height);
+	SDL_Rect src = MakeSdlRect(xOffset, yOffset, size.width, size.height);
 	SDL_Rect dst = MakeSdlRect(x, y, width, height);
 	renderFunction(buttonArt, &src, &dst);
 }

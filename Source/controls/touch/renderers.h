@@ -53,6 +53,7 @@ enum VirtualGamepadPotionType : uint8_t {
 struct ButtonTexture {
 	SDLSurfaceUniquePtr surface;
 	SDLTextureUniquePtr texture;
+	unsigned numSprites = 1;
 	unsigned numFrames = 1;
 
 	Size size() const;
