@@ -754,33 +754,41 @@ bool ForcePWaterTrig()
 
 bool ForceArenaTrig()
 {
-	int *checkList = nullptr;
+	const uint16_t *checkList;
+	size_t len;
 	switch (setlvltype) {
 	case DTYPE_TOWN:
 		checkList = TownWarp1List;
+		len = sizeof(TownWarp1List) / sizeof(TownWarp1List[0]);
 		break;
 	case DTYPE_CATHEDRAL:
 		checkList = L1UpList;
+		len = sizeof(L1UpList) / sizeof(L1UpList[0]);
 		break;
 	case DTYPE_CATACOMBS:
 		checkList = L2TWarpUpList;
+		len = sizeof(L2TWarpUpList) / sizeof(L2TWarpUpList[0]);
 		break;
 	case DTYPE_CAVES:
 		checkList = L3TWarpUpList;
+		len = sizeof(L3TWarpUpList) / sizeof(L3TWarpUpList[0]);
 		break;
 	case DTYPE_HELL:
 		checkList = L4TWarpUpList;
+		len = sizeof(L4TWarpUpList) / sizeof(L4TWarpUpList[0]);
 		break;
 	case DTYPE_NEST:
 		checkList = L5TWarpUpList;
+		len = sizeof(L5TWarpUpList) / sizeof(L5TWarpUpList[0]);
 		break;
 	case DTYPE_CRYPT:
 		checkList = L6TWarpUpList;
+		len = sizeof(L6TWarpUpList) / sizeof(L6TWarpUpList[0]);
 		break;
 	default:
 		return false;
 	}
-	for (int i = 0; checkList[i] != -1; i++) {
+	for (size_t i = 0; i < len; ++i) {
 		if (dPiece[cursPosition.x][cursPosition.y] == checkList[i]) {
 			InfoString = _("Up to town");
 			cursPosition = trigs[0].position;
