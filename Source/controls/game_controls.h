@@ -62,11 +62,12 @@ struct GameAction {
 ControllerButton TranslateTo(GamepadLayout layout, ControllerButton button);
 
 bool SkipsMovie(ControllerButtonEvent ctrlEvent);
-bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, GameAction *action);
 
 bool IsSimulatedMouseClickBinding(ControllerButtonEvent ctrlEvent);
 
 AxisDirection GetMoveDirection();
+
+bool HandleControllerButtonEvent(const SDL_Event &event, GameAction &action);
 
 extern bool PadMenuNavigatorActive;
 extern bool PadHotspellMenuActive;

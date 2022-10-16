@@ -20,6 +20,7 @@
 #endif
 #include "DiabloUI/diabloui.h"
 #include "controls/plrctrls.h"
+#include "controls/remap_keyboard.h"
 #include "diablo.h"
 #include "discord/discord.h"
 #include "doom.h"
@@ -415,8 +416,9 @@ void RightMouseDown(bool isShiftHeld)
 	}
 }
 
-void ReleaseKey(int vkey)
+void ReleaseKey(SDL_Keycode vkey)
 {
+	remap_keyboard_key(&vkey);
 	if (sgnTimeoutCurs != CURSOR_NONE || dropGoldFlag)
 		return;
 	sgOptions.Keymapper.KeyReleased(vkey);
@@ -439,6 +441,8 @@ void ClosePanels()
 
 void PressKey(SDL_Keycode vkey, uint16_t modState)
 {
+	remap_keyboard_key(&vkey);
+
 	if (vkey == SDLK_UNKNOWN)
 		return;
 
@@ -597,93 +601,60 @@ void PressKey(SDL_Keycode vkey, uint16_t modState)
 	}
 }
 
-void PressControllerButton(ControllerButton button)
+void HandleMouseButtonDown(Uint8 button, uint16_t modState)
 {
-	if (IsStashOpen) {
+	if (sgbMouseDown == CLICK_NONE) {
 		switch (button) {
-		case ControllerButton_BUTTON_BACK:
-			StartGoldWithdraw();
-			return;
-		case ControllerButton_BUTTON_LEFTSHOULDER:
-			Stash.PreviousPage();
-			return;
-		case ControllerButton_BUTTON_RIGHTSHOULDER:
-			Stash.NextPage();
-			return;
-		}
-	}
-
-	if (PadHotspellMenuActive) {
-		auto quickSpellAction = [](size_t slot) {
-			if (spselflag) {
-				SetSpeedSpell(slot);
-				return;
-			}
-			if (!*sgOptions.Gameplay.quickCast)
-				ToggleSpell(slot);
-			else
-				QuickCast(slot);
-		};
-		switch (button) {
-		case devilution::ControllerButton_BUTTON_A:
-			quickSpellAction(2);
-			return;
-		case devilution::ControllerButton_BUTTON_B:
-			quickSpellAction(3);
-			return;
-		case devilution::ControllerButton_BUTTON_X:
-			quickSpellAction(0);
-			return;
-		case devilution::ControllerButton_BUTTON_Y:
-			quickSpellAction(1);
-			return;
+		case SDL_BUTTON_LEFT:
+			sgbMouseDown = CLICK_LEFT;
+			LeftMouseDown(modState);
+			break;
+		case SDL_BUTTON_RIGHT:
+			sgbMouseDown = CLICK_RIGHT;
+			RightMouseDown((modState & KMOD_SHIFT) != 0);
+			break;
 		default:
+			sgOptions.Keymapper.KeyPressed(button | KeymapperMouseButtonMask);
 			break;
 		}
 	}
+}
 
-	if (PadMenuNavigatorActive) {
-		switch (button) {
-		case devilution::ControllerButton_BUTTON_DPAD_UP:
-			PressEscKey();
-			LastMouseButtonAction = MouseActionType::None;
-			PadHotspellMenuActive = false;
-			PadMenuNavigatorActive = false;
-			gamemenu_on();
-			return;
-		case devilution::ControllerButton_BUTTON_DPAD_DOWN:
-			DoAutoMap();
-			return;
-		case devilution::ControllerButton_BUTTON_DPAD_LEFT:
-			ProcessGameAction(GameAction { GameActionType_TOGGLE_CHARACTER_INFO });
-			return;
-		case devilution::ControllerButton_BUTTON_DPAD_RIGHT:
-			ProcessGameAction(GameAction { GameActionType_TOGGLE_INVENTORY });
-			return;
-		case devilution::ControllerButton_BUTTON_A:
-			ProcessGameAction(GameAction { GameActionType_TOGGLE_SPELL_BOOK });
-			return;
-		case devilution::ControllerButton_BUTTON_B:
-			return;
-		case devilution::ControllerButton_BUTTON_X:
-			ProcessGameAction(GameAction { GameActionType_TOGGLE_QUEST_LOG });
-			return;
-		case devilution::ControllerButton_BUTTON_Y:
-#ifdef __3DS__
-			sgOptions.Graphics.zoom.SetValue(!*sgOptions.Graphics.zoom);
-			CalcViewportGeometry();
-#endif
-			return;
-		default:
-			break;
-		}
+void HandleMouseButtonUp(Uint8 button, uint16_t modState)
+{
+	if (sgbMouseDown == CLICK_LEFT && button == SDL_BUTTON_LEFT) {
+		LastMouseButtonAction = MouseActionType::None;
+		sgbMouseDown = CLICK_NONE;
+		LeftMouseUp(modState);
+	} else if (sgbMouseDown == CLICK_RIGHT && button == SDL_BUTTON_RIGHT) {
+		LastMouseButtonAction = MouseActionType::None;
+		sgbMouseDown = CLICK_NONE;
+	} else {
+		sgOptions.Keymapper.KeyReleased(button | KeymapperMouseButtonMask);
 	}
-
-	sgOptions.Padmapper.ButtonPressed(button);
 }
 
 void GameEventHandler(const SDL_Event &event, uint16_t modState)
 {
+	GameAction action;
+	if (HandleControllerButtonEvent(event, action)) {
+		if (action.type == GameActionType_SEND_KEY) {
+			if ((action.send_key.vk_code & KeymapperMouseButtonMask) != 0) {
+				const unsigned button = action.send_key.vk_code & ~KeymapperMouseButtonMask;
+				if (!action.send_key.up)
+					HandleMouseButtonDown(static_cast<Uint8>(button), modState);
+				else
+					HandleMouseButtonUp(static_cast<Uint8>(button), modState);
+			} else {
+				if (!action.send_key.up)
+					PressKey(static_cast<SDL_Keycode>(action.send_key.vk_code), modState);
+				else
+					ReleaseKey(static_cast<SDL_Keycode>(action.send_key.vk_code));
+			}
+		}
+		return;
+	}
+
 	switch (event.type) {
 	case SDL_KEYDOWN:
 		PressKey(event.key.keysym.sym, modState);
@@ -697,41 +668,11 @@ void GameEventHandler(const SDL_Event &event, uint16_t modState)
 		return;
 	case SDL_MOUSEBUTTONDOWN:
 		MousePosition = { event.button.x, event.button.y };
-		if (sgbMouseDown == CLICK_NONE) {
-			switch (event.button.button) {
-			case SDL_BUTTON_LEFT:
-				sgbMouseDown = CLICK_LEFT;
-				LeftMouseDown(modState);
-				break;
-			case SDL_BUTTON_RIGHT:
-				sgbMouseDown = CLICK_RIGHT;
-				RightMouseDown((modState & KMOD_SHIFT) != 0);
-				break;
-			default:
-				sgOptions.Keymapper.KeyPressed(event.button.button | KeymapperMouseButtonMask);
-				break;
-			}
-		}
+		HandleMouseButtonDown(event.button.button, modState);
 		return;
 	case SDL_MOUSEBUTTONUP:
 		MousePosition = { event.button.x, event.button.y };
-
-		if (sgbMouseDown == CLICK_LEFT && event.button.button == SDL_BUTTON_LEFT) {
-			LastMouseButtonAction = MouseActionType::None;
-			sgbMouseDown = CLICK_NONE;
-			LeftMouseUp(modState);
-		} else if (sgbMouseDown == CLICK_RIGHT && event.button.button == SDL_BUTTON_RIGHT) {
-			LastMouseButtonAction = MouseActionType::None;
-			sgbMouseDown = CLICK_NONE;
-		} else {
-			sgOptions.Keymapper.KeyReleased(event.button.button | KeymapperMouseButtonMask);
-		}
-		return;
-	case SDL_JOYBUTTONDOWN:
-		PressControllerButton(static_cast<ControllerButton>(event.jbutton.button));
-		return;
-	case SDL_JOYBUTTONUP:
-		sgOptions.Padmapper.ButtonReleased(static_cast<ControllerButton>(event.jbutton.button));
+		HandleMouseButtonUp(event.button.button, modState);
 		return;
 	default:
 		if (IsCustomEvent(event.type)) {

@@ -11,8 +11,10 @@
 #include "controls/plrctrls.h"
 #include "controls/touch/gamepad.h"
 #include "doom.h"
+#include "gamemenu.h"
 #include "gmenu.h"
 #include "options.h"
+#include "qol/stash.h"
 #include "stores.h"
 
 namespace devilution {
@@ -101,36 +103,6 @@ SDL_Keycode TranslateControllerButtonToSpellbookKey(ControllerButton controllerB
 	default:
 		return SDLK_UNKNOWN;
 	}
-}
-
-} // namespace
-
-ControllerButton TranslateTo(GamepadLayout layout, ControllerButton button)
-{
-	if (layout != GamepadLayout::Nintendo)
-		return button;
-
-	switch (button) {
-	case ControllerButton_BUTTON_A:
-		return ControllerButton_BUTTON_B;
-	case ControllerButton_BUTTON_B:
-		return ControllerButton_BUTTON_A;
-	case ControllerButton_BUTTON_X:
-		return ControllerButton_BUTTON_Y;
-	case ControllerButton_BUTTON_Y:
-		return ControllerButton_BUTTON_X;
-	default:
-		return button;
-	}
-}
-
-bool SkipsMovie(ControllerButtonEvent ctrlEvent)
-{
-	return IsAnyOf(ctrlEvent.button,
-	    ControllerButton_BUTTON_A,
-	    ControllerButton_BUTTON_B,
-	    ControllerButton_BUTTON_START,
-	    ControllerButton_BUTTON_BACK);
 }
 
 bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, GameAction *action)
@@ -241,6 +213,121 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, Game
 	return false;
 }
 
+void PressControllerButton(ControllerButton button)
+{
+	if (IsStashOpen) {
+		switch (button) {
+		case ControllerButton_BUTTON_BACK:
+			StartGoldWithdraw();
+			return;
+		case ControllerButton_BUTTON_LEFTSHOULDER:
+			Stash.PreviousPage();
+			return;
+		case ControllerButton_BUTTON_RIGHTSHOULDER:
+			Stash.NextPage();
+			return;
+		}
+	}
+
+	if (PadHotspellMenuActive) {
+		auto quickSpellAction = [](size_t slot) {
+			if (spselflag) {
+				SetSpeedSpell(slot);
+				return;
+			}
+			if (!*sgOptions.Gameplay.quickCast)
+				ToggleSpell(slot);
+			else
+				QuickCast(slot);
+		};
+		switch (button) {
+		case devilution::ControllerButton_BUTTON_A:
+			quickSpellAction(2);
+			return;
+		case devilution::ControllerButton_BUTTON_B:
+			quickSpellAction(3);
+			return;
+		case devilution::ControllerButton_BUTTON_X:
+			quickSpellAction(0);
+			return;
+		case devilution::ControllerButton_BUTTON_Y:
+			quickSpellAction(1);
+			return;
+		default:
+			break;
+		}
+	}
+
+	if (PadMenuNavigatorActive) {
+		switch (button) {
+		case devilution::ControllerButton_BUTTON_DPAD_UP:
+			PressEscKey();
+			LastMouseButtonAction = MouseActionType::None;
+			PadHotspellMenuActive = false;
+			PadMenuNavigatorActive = false;
+			gamemenu_on();
+			return;
+		case devilution::ControllerButton_BUTTON_DPAD_DOWN:
+			DoAutoMap();
+			return;
+		case devilution::ControllerButton_BUTTON_DPAD_LEFT:
+			ProcessGameAction(GameAction { GameActionType_TOGGLE_CHARACTER_INFO });
+			return;
+		case devilution::ControllerButton_BUTTON_DPAD_RIGHT:
+			ProcessGameAction(GameAction { GameActionType_TOGGLE_INVENTORY });
+			return;
+		case devilution::ControllerButton_BUTTON_A:
+			ProcessGameAction(GameAction { GameActionType_TOGGLE_SPELL_BOOK });
+			return;
+		case devilution::ControllerButton_BUTTON_B:
+			return;
+		case devilution::ControllerButton_BUTTON_X:
+			ProcessGameAction(GameAction { GameActionType_TOGGLE_QUEST_LOG });
+			return;
+		case devilution::ControllerButton_BUTTON_Y:
+#ifdef __3DS__
+			sgOptions.Graphics.zoom.SetValue(!*sgOptions.Graphics.zoom);
+			CalcViewportGeometry();
+#endif
+			return;
+		default:
+			break;
+		}
+	}
+
+	sgOptions.Padmapper.ButtonPressed(button);
+}
+
+} // namespace
+
+ControllerButton TranslateTo(GamepadLayout layout, ControllerButton button)
+{
+	if (layout != GamepadLayout::Nintendo)
+		return button;
+
+	switch (button) {
+	case ControllerButton_BUTTON_A:
+		return ControllerButton_BUTTON_B;
+	case ControllerButton_BUTTON_B:
+		return ControllerButton_BUTTON_A;
+	case ControllerButton_BUTTON_X:
+		return ControllerButton_BUTTON_Y;
+	case ControllerButton_BUTTON_Y:
+		return ControllerButton_BUTTON_X;
+	default:
+		return button;
+	}
+}
+
+bool SkipsMovie(ControllerButtonEvent ctrlEvent)
+{
+	return IsAnyOf(ctrlEvent.button,
+	    ControllerButton_BUTTON_A,
+	    ControllerButton_BUTTON_B,
+	    ControllerButton_BUTTON_START,
+	    ControllerButton_BUTTON_BACK);
+}
+
 bool IsSimulatedMouseClickBinding(ControllerButtonEvent ctrlEvent)
 {
 	ControllerButtonCombo leftMouseClickBinding1 = sgOptions.Padmapper.ButtonComboForAction("LeftMouseClick1");
@@ -256,6 +343,35 @@ bool IsSimulatedMouseClickBinding(ControllerButtonEvent ctrlEvent)
 AxisDirection GetMoveDirection()
 {
 	return GetLeftStickOrDpadDirection(true);
+}
+
+bool HandleControllerButtonEvent(const SDL_Event &event, GameAction &action)
+{
+	const ControllerButtonEvent ctrlEvent = ToControllerButtonEvent(event);
+	bool isGamepadMotion = ProcessControllerMotion(event, ctrlEvent);
+	DetectInputMethod(event, ctrlEvent);
+	if (isGamepadMotion) {
+		return true;
+	}
+
+	if (ctrlEvent.button != ControllerButton_NONE && ctrlEvent.button == SuppressedButton) {
+		if (!ctrlEvent.up)
+			return true;
+		SuppressedButton = ControllerButton_NONE;
+	}
+
+	if (GetGameAction(event, ctrlEvent, &action)) {
+		ProcessGameAction(action);
+		return true;
+	} else if (ctrlEvent.button != ControllerButton_NONE) {
+		if (!ctrlEvent.up)
+			PressControllerButton(ctrlEvent.button);
+		else
+			sgOptions.Padmapper.ButtonReleased(ctrlEvent.button);
+		return true;
+	}
+
+	return false;
 }
 
 } // namespace devilution
