@@ -8,11 +8,8 @@
 
 #include "control.h"
 #include "controls/controller.h"
-#include "controls/controller_motion.h"
-#include "controls/game_controls.h"
 #include "controls/input.h"
 #include "controls/plrctrls.h"
-#include "controls/remap_keyboard.h"
 #ifndef USE_SDL1
 #include "controls/touch/event_handlers.h"
 #endif
@@ -20,15 +17,11 @@
 #include "engine/demomode.h"
 #include "engine/rectangle.hpp"
 #include "hwcursor.hpp"
-#include "inv.h"
-#include "menu.h"
 #include "movie.h"
 #include "panels/spell_list.hpp"
 #include "qol/stash.h"
 #include "utils/display.h"
 #include "utils/log.hpp"
-#include "utils/sdl_compat.h"
-#include "utils/stubs.h"
 #include "utils/utf8.hpp"
 
 #ifdef __vita__
@@ -154,52 +147,20 @@ bool FetchMessage_Real(SDL_Event *event, uint16_t *modState)
 	}
 #endif
 
-	const ControllerButtonEvent ctrlEvent = ToControllerButtonEvent(e);
-	bool isGamepadMotion = ProcessControllerMotion(e, ctrlEvent);
-
-	DetectInputMethod(e, ctrlEvent);
-	if (isGamepadMotion) {
-		return true;
-	}
-
-	if (movie_playing && SkipsMovie(ctrlEvent)) {
-		event->type = SDL_KEYDOWN;
-		return true;
-	}
-
-	if (ctrlEvent.button != ControllerButton_NONE) {
-		if (ctrlEvent.button == SuppressedButton) {
-			if (!ctrlEvent.up)
-				return true;
-			SuppressedButton = ControllerButton_NONE;
-		}
-
-		event->type = ctrlEvent.up ? SDL_JOYBUTTONUP : SDL_JOYBUTTONDOWN;
-		event->jbutton.button = ctrlEvent.button;
-		event->jbutton.state = ctrlEvent.up ? SDL_RELEASED : SDL_PRESSED;
-	}
-
-	GameAction action;
-	if (GetGameAction(e, ctrlEvent, &action)) {
-		if (action.type == GameActionType_SEND_KEY) {
-			if ((action.send_key.vk_code & KeymapperMouseButtonMask) != 0) {
-				const unsigned button = action.send_key.vk_code & ~KeymapperMouseButtonMask;
-				SetMouseButtonEvent(*event, action.send_key.up ? SDL_MOUSEBUTTONUP : SDL_MOUSEBUTTONDOWN, static_cast<uint8_t>(button), MousePosition);
-			} else {
-				event->type = action.send_key.up ? SDL_KEYUP : SDL_KEYDOWN;
-				event->key.state = action.send_key.up ? SDL_PRESSED : SDL_RELEASED;
-				event->key.keysym.sym = static_cast<SDL_Keycode>(action.send_key.vk_code);
-			}
-		} else {
-			ProcessGameAction(action);
-		}
-		return true;
-	}
-
 	if (HandleControllerAddedOrRemovedEvent(e))
 		return true;
 
 	switch (e.type) {
+#ifndef USE_SDL1
+	case SDL_CONTROLLERAXISMOTION:
+	case SDL_CONTROLLERBUTTONDOWN:
+	case SDL_CONTROLLERBUTTONUP:
+#endif
+	case SDL_JOYAXISMOTION:
+	case SDL_JOYBUTTONDOWN:
+	case SDL_JOYBUTTONUP:
+		*event = e;
+		break;
 	case SDL_KEYDOWN:
 	case SDL_KEYUP: {
 #ifdef USE_SDL1
@@ -215,14 +176,9 @@ bool FetchMessage_Real(SDL_Event *event, uint16_t *modState)
 			}
 		}
 #endif
-		SDL_Keycode key = e.key.keysym.sym;
-		remap_keyboard_key(&key);
-		if (key == -1)
+		if (e.key.keysym.sym == -1)
 			return FalseAvail(e.type == SDL_KEYDOWN ? "SDL_KEYDOWN" : "SDL_KEYUP", e.key.keysym.sym);
-		event->type = e.type;
-		event->key.state = e.key.state;
-		event->key.keysym.sym = key;
-		event->key.keysym.mod = e.key.keysym.mod;
+		*event = e;
 	} break;
 	case SDL_MOUSEMOTION:
 		*event = e;
