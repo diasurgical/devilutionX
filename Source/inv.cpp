@@ -2013,7 +2013,7 @@ bool CanUseScroll(Player &player, spell_id spell)
 		return false;
 
 	return HasInventoryOrBeltItem(player, [spell](const Item &item) {
-		return item.isScrollOf(spell);
+		return item.isScrollOf(spell) || item.isRuneOf(spell);
 	});
 }
 
