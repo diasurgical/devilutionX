@@ -194,6 +194,12 @@ void ConsumeSpell(Player &player, spell_id sn)
 		drawmanaflag = true;
 		break;
 	}
+	if (sn == SPL_FLARE) {
+		ApplyPlrDamage(player, 5);
+	}
+	if (sn == SPL_BONESPIRIT) {
+		ApplyPlrDamage(player, 6);
+	}
 }
 
 void EnsureValidReadiedSpell(Player &player)
@@ -237,18 +243,19 @@ void CastSpell(int id, spell_id spl, int sx, int sy, int dx, int dy, int spllvl)
 		dir = player.tempDirection;
 	}
 
+	bool fizzled = false;
 	for (int i = 0; i < 3 && spelldata[spl].sMissiles[i] != MIS_NULL; i++) {
-		AddMissile({ sx, sy }, { dx, dy }, dir, spelldata[spl].sMissiles[i], TARGET_MONSTERS, id, 0, spllvl);
+		Missile *missile = AddMissile({ sx, sy }, { dx, dy }, dir, spelldata[spl].sMissiles[i], TARGET_MONSTERS, id, 0, spllvl);
+		fizzled |= (missile == nullptr);
 	}
-
-	if (spl == SPL_TOWN) {
-		ConsumeSpell(player, SPL_TOWN);
-	} else if (spl == SPL_CBOLT) {
-		ConsumeSpell(player, SPL_CBOLT);
-
+	if (spl == SPL_CBOLT) {
 		for (int i = (spllvl / 2) + 3; i > 0; i--) {
-			AddMissile({ sx, sy }, { dx, dy }, dir, MIS_CBOLT, TARGET_MONSTERS, id, 0, spllvl);
+			Missile *missile = AddMissile({ sx, sy }, { dx, dy }, dir, MIS_CBOLT, TARGET_MONSTERS, id, 0, spllvl);
+			fizzled |= (missile == nullptr);
 		}
+	}
+	if (!fizzled) {
+		ConsumeSpell(player, spl);
 	}
 }
 
