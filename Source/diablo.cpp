@@ -346,8 +346,9 @@ void LeftMouseDown(uint16_t modState)
 				CheckSBook();
 			} else if (!MyPlayer->HoldItem.isEmpty()) {
 				Point currentPosition = MyPlayer->position.tile;
-				if (FindAdjacentPositionForItem(currentPosition, GetDirection(currentPosition, cursPosition))) {
-					NetSendCmdPItem(true, CMD_PUTITEM, cursPosition, MyPlayer->HoldItem);
+				std::optional<Point> itemTile = FindAdjacentPositionForItem(currentPosition, GetDirection(currentPosition, cursPosition));
+				if (itemTile) {
+					NetSendCmdPItem(true, CMD_PUTITEM, *itemTile, MyPlayer->HoldItem);
 					NewCursor(CURSOR_HAND);
 				}
 			} else {

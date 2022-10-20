@@ -154,6 +154,25 @@ DLevel &GetDeltaLevel(const Player &player)
 	return GetDeltaLevel(level);
 }
 
+Point GetItemPosition(Point position)
+{
+	if (CanPut(position))
+		return position;
+
+	for (int k = 1; k < 50; k++) {
+		for (int j = -k; j <= k; j++) {
+			int yy = position.y + j;
+			for (int l = -k; l <= k; l++) {
+				int xx = position.x + l;
+				if (CanPut({ xx, yy }))
+					return { xx, yy };
+			}
+		}
+	}
+
+	return position;
+}
+
 /**
  * @brief Throttles that a player command is only sent once per game tick.
  * This is a workaround for a desync that happens when a command is processed in different game ticks for different clients. See https://github.com/diasurgical/devilutionX/issues/2681 for details.
@@ -964,11 +983,11 @@ int SyncPutEar(const TEar &ear)
 	    ear.heroname);
 }
 
-int SyncPutItem(const Player &player, const TItem &item)
+int SyncPutItem(const Player &player, Point position, const TItem &item)
 {
 	return SyncPutItem(
 	    player,
-	    player.position.tile,
+	    position,
 	    item.wIndx,
 	    item.wCI,
 	    item.dwSeed,
@@ -991,14 +1010,14 @@ int SyncPutItem(const Player &player, const TCmdGItem &message)
 {
 	if (message.def.wIndx == IDI_EAR)
 		return SyncPutEar(message.ear);
-	return SyncPutItem(player, message.item);
+	return SyncPutItem(player, GetItemPosition({ message.x, message.y }), message.item);
 }
 
 int SyncPutItem(const Player &player, const TCmdPItem &message)
 {
 	if (message.def.wIndx == IDI_EAR)
 		return SyncPutEar(message.ear);
-	return SyncPutItem(player, message.item);
+	return SyncPutItem(player, GetItemPosition({ message.x, message.y }), message.item);
 }
 
 int SyncDropItem(Point position, const TCmdPItem message)
@@ -2610,29 +2629,6 @@ void DeltaSaveLevel()
 	}
 	DeltaLeaveSync(localLevel);
 }
-
-namespace {
-
-Point GetItemPosition(Point position)
-{
-	if (CanPut(position))
-		return position;
-
-	for (int k = 1; k < 50; k++) {
-		for (int j = -k; j <= k; j++) {
-			int yy = position.y + j;
-			for (int l = -k; l <= k; l++) {
-				int xx = position.x + l;
-				if (CanPut({ xx, yy }))
-					return { xx, yy };
-			}
-		}
-	}
-
-	return position;
-}
-
-} // namespace
 
 uint8_t GetLevelForMultiplayer(const Player &player)
 {
