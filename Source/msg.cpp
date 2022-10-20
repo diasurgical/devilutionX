@@ -970,21 +970,9 @@ void RecreateItem(const Player &player, const TCmdChItem &message, Item &item)
 		RecreateItem(player, message.item, item);
 }
 
-int SyncPutEar(const TEar &ear)
+int SyncDropItem(Point position, const TItem &item)
 {
-	return SyncPutEar(
-	    *MyPlayer,
-	    MyPlayer->position.tile,
-	    ear.wCI,
-	    ear.dwSeed,
-	    ear.bCursval,
-	    ear.heroname);
-}
-
-int SyncPutItem(const Player &player, Point position, const TItem &item)
-{
-	return SyncPutItem(
-	    player,
+	return SyncDropItem(
 	    position,
 	    item.wIndx,
 	    item.wCI,
@@ -1004,49 +992,42 @@ int SyncPutItem(const Player &player, Point position, const TItem &item)
 	    item.bAC);
 }
 
-int SyncPutItem(const Player &player, const TCmdGItem &message)
+int SyncDropEar(Point position, const TEar &ear)
 {
-	if (message.def.wIndx == IDI_EAR)
-		return SyncPutEar(message.ear);
-	return SyncPutItem(player, GetItemPosition({ message.x, message.y }), message.item);
+	return SyncDropEar(
+	    position,
+	    ear.wCI,
+	    ear.dwSeed,
+	    ear.bCursval,
+	    ear.heroname);
 }
 
-int SyncPutItem(const Player &player, const TCmdPItem &message)
+int SyncDropItem(const TCmdGItem &message)
 {
-	if (message.def.wIndx == IDI_EAR)
-		return SyncPutEar(message.ear);
-	return SyncPutItem(player, GetItemPosition({ message.x, message.y }), message.item);
-}
-
-int SyncDropItem(Point position, const TCmdPItem message)
-{
+	Point position = GetItemPosition({ message.x, message.y });
 	if (message.def.wIndx == IDI_EAR) {
 		return SyncDropEar(
 		    position,
-		    message.ear.wCI,
-		    message.ear.dwSeed,
-		    message.ear.bCursval,
-		    message.ear.heroname);
+		    message.ear);
 	}
 
 	return SyncDropItem(
 	    position,
-	    message.item.wIndx,
-	    message.item.wCI,
-	    message.item.dwSeed,
-	    message.item.bId,
-	    message.item.bDur,
-	    message.item.bMDur,
-	    message.item.bCh,
-	    message.item.bMCh,
-	    message.item.wValue,
-	    message.item.dwBuff,
-	    message.item.wToHit,
-	    message.item.wMaxDam,
-	    message.item.bMinStr,
-	    message.item.bMinMag,
-	    message.item.bMinDex,
-	    message.item.bAC);
+	    message.item);
+}
+
+int SyncDropItem(const TCmdPItem &message)
+{
+	Point position = GetItemPosition({ message.x, message.y });
+	if (message.def.wIndx == IDI_EAR) {
+		return SyncDropEar(
+		    position,
+		    message.ear);
+	}
+
+	return SyncDropItem(
+	    position,
+	    message.item);
 }
 
 size_t OnRequestGetItem(const TCmd *pCmd, Player &player)
@@ -1101,7 +1082,7 @@ size_t OnGetItem(const TCmd *pCmd, size_t pnum)
 			if ((isOnActiveLevel || message.bPnum == MyPlayerId) && message.bMaster != MyPlayerId) {
 				if (message.bPnum == MyPlayerId) {
 					if (!isOnActiveLevel) {
-						int ii = SyncPutItem(*MyPlayer, message);
+						int ii = SyncDropItem(message);
 						if (ii != -1)
 							InvGetItem(*MyPlayer, ii);
 					} else {
@@ -1171,7 +1152,7 @@ size_t OnAutoGetItem(const TCmd *pCmd, size_t pnum)
 				if (message.bPnum == MyPlayerId) {
 					if (localLevel != message.bLevel) {
 						Player &player = *MyPlayer;
-						int ii = SyncPutItem(player, message);
+						int ii = SyncDropItem(message);
 						if (ii != -1)
 							AutoGetItem(*MyPlayer, &Items[ii], ii);
 					} else {
@@ -1221,7 +1202,7 @@ size_t OnPutItem(const TCmd *pCmd, size_t pnum)
 			if (isSelf)
 				ii = InvPutItem(player, position, ItemLimbo);
 			else
-				ii = SyncPutItem(player, message);
+				ii = SyncDropItem(message);
 			if (ii != -1) {
 				PutItemRecord(message.def.dwSeed, message.def.wCI, message.def.wIndx);
 				DeltaPutItem(message, Items[ii].position, player);
@@ -1247,10 +1228,9 @@ size_t OnSyncPutItem(const TCmd *pCmd, size_t pnum)
 	if (gbBufferMsgs == 1)
 		SendPacket(pnum, &message, sizeof(message));
 	else if (IsPItemValid(message)) {
-		const Point position { message.x, message.y };
 		Player &player = Players[pnum];
 		if (player.isOnActiveLevel()) {
-			int ii = SyncPutItem(player, message);
+			int ii = SyncDropItem(message);
 			if (ii != -1) {
 				PutItemRecord(message.def.dwSeed, message.def.wCI, message.def.wIndx);
 				DeltaPutItem(message, Items[ii].position, player);
@@ -1260,7 +1240,7 @@ size_t OnSyncPutItem(const TCmd *pCmd, size_t pnum)
 			return sizeof(message);
 		} else {
 			PutItemRecord(message.def.dwSeed, message.def.wCI, message.def.wIndx);
-			DeltaPutItem(message, position, player);
+			DeltaPutItem(message, { message.x, message.y }, player);
 			if (&player == MyPlayer)
 				pfile_update(true);
 		}
@@ -1276,13 +1256,12 @@ size_t OnRespawnItem(const TCmd *pCmd, size_t pnum)
 	if (gbBufferMsgs == 1) {
 		SendPacket(pnum, &message, sizeof(message));
 	} else if (IsPItemValid(message)) {
-		const Point position { message.x, message.y };
 		Player &player = Players[pnum];
 		if (player.isOnActiveLevel() && &player != MyPlayer) {
-			SyncPutItem(player, message);
+			SyncDropItem(message);
 		}
 		PutItemRecord(message.def.dwSeed, message.def.wCI, message.def.wIndx);
-		DeltaPutItem(message, position, player);
+		DeltaPutItem(message, { message.x, message.y }, player);
 	}
 
 	return sizeof(message);
@@ -2048,12 +2027,11 @@ size_t OnSpawnItem(const TCmd *pCmd, size_t pnum)
 		SendPacket(pnum, &message, sizeof(message));
 	} else if (IsPItemValid(message)) {
 		Player &player = Players[pnum];
-		Point position = { message.x, message.y };
 		if (player.isOnActiveLevel() && &player != MyPlayer) {
-			SyncDropItem(position, message);
+			SyncDropItem(message);
 		}
 		PutItemRecord(message.def.dwSeed, message.def.wCI, message.def.wIndx);
-		DeltaPutItem(message, position, player);
+		DeltaPutItem(message, { message.x, message.y }, player);
 	}
 
 	return sizeof(message);
