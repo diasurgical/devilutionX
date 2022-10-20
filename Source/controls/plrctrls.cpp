@@ -1981,14 +1981,13 @@ bool TryDropItem()
 		}
 	}
 
-	Point position = myPlayer.position.future;
-	Direction direction = myPlayer._pdir;
-	if (!FindAdjacentPositionForItem(position, direction)) {
+	std::optional<Point> itemTile = FindAdjacentPositionForItem(myPlayer.position.future, myPlayer._pdir);
+	if (!itemTile) {
 		myPlayer.Say(HeroSpeech::WhereWouldIPutThis);
 		return false;
 	}
 
-	NetSendCmdPItem(true, CMD_PUTITEM, position + direction, myPlayer.HoldItem);
+	NetSendCmdPItem(true, CMD_PUTITEM, *itemTile, myPlayer.HoldItem);
 	myPlayer.HoldItem.clear();
 	NewCursor(CURSOR_HAND);
 	return true;
