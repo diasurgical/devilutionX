@@ -1808,9 +1808,9 @@ int InvPutItem(const Player &player, Point position, const Item &item)
 	return ii;
 }
 
-int SyncPutItem(const Player &player, Point position, _item_indexes idx, uint16_t icreateinfo, int iseed, int id, int dur, int mdur, int ch, int mch, int ivalue, uint32_t ibuff, int toHit, int maxDam, int minStr, int minMag, int minDex, int ac)
+int SyncDropItem(Point position, _item_indexes idx, uint16_t icreateinfo, int iseed, int id, int dur, int mdur, int ch, int mch, int ivalue, uint32_t ibuff, int toHit, int maxDam, int minStr, int minMag, int minDex, int ac)
 {
-	if (player.isOnLevel(0)) {
+	if (MyPlayer->isOnLevel(0)) {
 		if (idx == IDI_RUNEBOMB && OpensHive(position))
 			return -1;
 		if (idx == IDI_MAPOFDOOM && OpensGrave(position))
@@ -1820,11 +1820,6 @@ int SyncPutItem(const Player &player, Point position, _item_indexes idx, uint16_
 	if (ActiveItemCount >= MAXITEMS)
 		return -1;
 
-	return SyncDropItem(position, idx, icreateinfo, iseed, id, dur, mdur, ch, mch, ivalue, ibuff, toHit, maxDam, minStr, minMag, minDex, ac);
-}
-
-int SyncDropItem(Point position, _item_indexes idx, uint16_t icreateinfo, int iseed, int id, int dur, int mdur, int ch, int mch, int ivalue, uint32_t ibuff, int toHit, int maxDam, int minStr, int minMag, int minDex, int ac)
-{
 	int ii = AllocateItem();
 	auto &item = Items[ii];
 
@@ -1856,17 +1851,11 @@ int SyncDropItem(Point position, _item_indexes idx, uint16_t icreateinfo, int is
 	return ii;
 }
 
-int SyncPutEar(const Player &player, Point position, uint16_t icreateinfo, int iseed, uint8_t cursval, string_view heroname)
-{
-	std::optional<Point> itemTile = FindAdjacentPositionForItem(player.position.tile, GetDirection(player.position.tile, position));
-	if (!itemTile)
-		return -1;
-
-	return SyncDropEar(*itemTile, icreateinfo, iseed, cursval, heroname);
-}
-
 int SyncDropEar(Point position, uint16_t icreateinfo, int iseed, uint8_t cursval, string_view heroname)
 {
+	if (ActiveItemCount >= MAXITEMS)
+		return -1;
+
 	int ii = AllocateItem();
 	auto &item = Items[ii];
 
