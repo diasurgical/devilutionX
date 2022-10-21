@@ -1324,7 +1324,11 @@ void TimeoutCursor(bool bTimeout)
 		}
 		scrollrt_draw_game_screen();
 	} else if (sgnTimeoutCurs != CURSOR_NONE) {
-		NewCursor(sgnTimeoutCurs);
+		// Timeout is gone, we should restore the previous cursor.
+		// But the timeout cursor could already be changed by the now processed messages (for example item cursor from CMD_GETITEM).
+		// Changing the item cursor back to the previous (hand) cursor could result in deleted items, cause this resets Player.HoldItem (see NewCursor).
+		if (pcurs == CURSOR_HOURGLASS)
+			NewCursor(sgnTimeoutCurs);
 		sgnTimeoutCurs = CURSOR_NONE;
 		InfoString = {};
 		force_redraw = 255;
