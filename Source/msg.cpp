@@ -670,6 +670,8 @@ bool IOwnLevel(const Player &player)
 			continue;
 		if (other._pLvlChanging)
 			continue;
+		if (other._pmode == PM_NEWLVL)
+			continue;
 		if (other.plrlevel != player.plrlevel)
 			continue;
 		if (other.plrIsOnSetLevel != player.plrIsOnSetLevel)
