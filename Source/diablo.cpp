@@ -765,9 +765,9 @@ void RunGameLoop(interface_mode uMsg)
 			continue;
 		}
 
-		diablo_color_cyc_logic();
 		multi_process_network_packets();
-		game_loop(gbGameLoopStartup);
+		if (game_loop(gbGameLoopStartup))
+			diablo_color_cyc_logic();
 		gbGameLoopStartup = false;
 		if (drawGame)
 			DrawAndBlit();
@@ -2818,14 +2818,14 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 	pcursplr = -1;
 }
 
-void game_loop(bool bStartup)
+bool game_loop(bool bStartup)
 {
 	uint16_t wait = bStartup ? sgGameInitInfo.nTickRate * 3 : 3;
 
 	for (unsigned i = 0; i < wait; i++) {
 		if (!multi_handle_delta()) {
 			TimeoutCursor(true);
-			break;
+			return false;
 		}
 		TimeoutCursor(false);
 		GameLogic();
@@ -2834,6 +2834,7 @@ void game_loop(bool bStartup)
 		if (!gbRunGame || !gbIsMultiplayer || demo::IsRunning() || demo::IsRecording() || !nthread_has_500ms_passed())
 			break;
 	}
+	return true;
 }
 
 void diablo_color_cyc_logic()
