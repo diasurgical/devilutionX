@@ -155,6 +155,8 @@ bool FetchMessage_Real(SDL_Event *event, uint16_t *modState)
 	case SDL_CONTROLLERAXISMOTION:
 	case SDL_CONTROLLERBUTTONDOWN:
 	case SDL_CONTROLLERBUTTONUP:
+	case SDL_FINGERDOWN:
+	case SDL_FINGERUP:
 #endif
 	case SDL_JOYAXISMOTION:
 	case SDL_JOYBUTTONDOWN:
