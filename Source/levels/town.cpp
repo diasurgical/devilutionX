@@ -259,6 +259,24 @@ bool OpensGrave(Point position)
 	return xp >= 35 && xp <= 38 && yp >= 20 && yp <= 24;
 }
 
+void OpenHive()
+{
+	NetSendCmd(false, CMD_OPENHIVE);
+	auto &quest = Quests[Q_FARMER];
+	quest._qactive = QUEST_DONE;
+	if (gbIsMultiplayer)
+		NetSendCmdQuest(true, quest);
+}
+
+void OpenGrave()
+{
+	NetSendCmd(false, CMD_OPENGRAVE);
+	auto &quest = Quests[Q_GRAVE];
+	quest._qactive = QUEST_DONE;
+	if (gbIsMultiplayer)
+		NetSendCmdQuest(true, quest);
+}
+
 void TownOpenHive()
 {
 	dungeon[36][27] = 47;

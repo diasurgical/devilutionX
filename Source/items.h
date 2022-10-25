@@ -527,7 +527,7 @@ void PrintItemDetails(const Item &item);
 void PrintItemDur(const Item &item);
 void UseItem(size_t pnum, item_misc_id Mid, spell_id spl);
 bool UseItemOpensHive(const Item &item, Point position);
-bool UseItemOpensCrypt(const Item &item, Point position);
+bool UseItemOpensGrave(const Item &item, Point position);
 void SpawnSmith(int lvl);
 void SpawnPremium(const Player &player);
 void SpawnWitch(int lvl);
