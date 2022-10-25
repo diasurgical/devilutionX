@@ -287,6 +287,23 @@ void LeftMouseCmd(bool bShift)
 	}
 }
 
+bool TryOpenDungeonWithMouse()
+{
+	if (leveltype != DTYPE_TOWN)
+		return false;
+
+	Item &holdItem = MyPlayer->HoldItem;
+	if (holdItem.IDidx == IDI_RUNEBOMB && OpensHive(cursPosition))
+		OpenHive();
+	else if (holdItem.IDidx == IDI_MAPOFDOOM && OpensGrave(cursPosition))
+		OpenGrave();
+	else
+		return false;
+
+	NewCursor(CURSOR_HAND);
+	return true;
+}
+
 void LeftMouseDown(uint16_t modState)
 {
 	LastMouseButtonAction = MouseActionType::None;
@@ -345,11 +362,13 @@ void LeftMouseDown(uint16_t modState)
 			} else if (sbookflag && GetRightPanel().contains(MousePosition)) {
 				CheckSBook();
 			} else if (!MyPlayer->HoldItem.isEmpty()) {
-				Point currentPosition = MyPlayer->position.tile;
-				std::optional<Point> itemTile = FindAdjacentPositionForItem(currentPosition, GetDirection(currentPosition, cursPosition));
-				if (itemTile) {
-					NetSendCmdPItem(true, CMD_PUTITEM, *itemTile, MyPlayer->HoldItem);
-					NewCursor(CURSOR_HAND);
+				if (!TryOpenDungeonWithMouse()) {
+					Point currentPosition = MyPlayer->position.tile;
+					std::optional<Point> itemTile = FindAdjacentPositionForItem(currentPosition, GetDirection(currentPosition, cursPosition));
+					if (itemTile) {
+						NetSendCmdPItem(true, CMD_PUTITEM, *itemTile, MyPlayer->HoldItem);
+						NewCursor(CURSOR_HAND);
+					}
 				}
 			} else {
 				CheckLvlBtn();

@@ -437,7 +437,7 @@ enum _cmd_id : uint8_t {
 	CMD_SETREFLECT,
 	CMD_NAKRUL,
 	CMD_OPENHIVE,
-	CMD_OPENCRYPT,
+	CMD_OPENGRAVE,
 	// Fake command; set current player for succeeding mega pkt buffer messages.
 	//
 	// body (TFakeCmdPlr)

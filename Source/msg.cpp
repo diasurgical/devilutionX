@@ -2368,7 +2368,7 @@ size_t OnOpenHive(const TCmd *pCmd, size_t pnum)
 	return sizeof(*pCmd);
 }
 
-size_t OnOpenCrypt(const TCmd *pCmd)
+size_t OnOpenGrave(const TCmd *pCmd)
 {
 	if (gbBufferMsgs != 1) {
 		TownOpenGrave();
@@ -3269,8 +3269,8 @@ size_t ParseCmd(size_t pnum, const TCmd *pCmd)
 		return OnNakrul(pCmd);
 	case CMD_OPENHIVE:
 		return OnOpenHive(pCmd, pnum);
-	case CMD_OPENCRYPT:
-		return OnOpenCrypt(pCmd);
+	case CMD_OPENGRAVE:
+		return OnOpenGrave(pCmd);
 	default:
 		break;
 	}

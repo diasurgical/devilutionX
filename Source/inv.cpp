@@ -937,24 +937,6 @@ void CheckQuestItem(Player &player, Item &questItem)
 	TryCombineNaKrulNotes(player, questItem);
 }
 
-void OpenHive()
-{
-	NetSendCmd(false, CMD_OPENHIVE);
-	auto &quest = Quests[Q_FARMER];
-	quest._qactive = QUEST_DONE;
-	if (gbIsMultiplayer)
-		NetSendCmdQuest(true, quest);
-}
-
-void OpenCrypt()
-{
-	NetSendCmd(false, CMD_OPENCRYPT);
-	auto &quest = Quests[Q_GRAVE];
-	quest._qactive = QUEST_DONE;
-	if (gbIsMultiplayer)
-		NetSendCmdQuest(true, quest);
-}
-
 void CleanupItems(int ii)
 {
 	auto &item = Items[ii];
@@ -1776,17 +1758,6 @@ bool CanPut(Point position)
 
 int InvPutItem(const Player &player, Point position, const Item &item)
 {
-	if (player.isOnLevel(0)) {
-		if (item.IDidx == IDI_RUNEBOMB && OpensHive(position)) {
-			OpenHive();
-			return -1;
-		}
-		if (item.IDidx == IDI_MAPOFDOOM && OpensGrave(position)) {
-			OpenCrypt();
-			return -1;
-		}
-	}
-
 	std::optional<Point> itemTile = FindAdjacentPositionForItem(player.position.tile, GetDirection(player.position.tile, position));
 	if (!itemTile)
 		return -1;
@@ -1810,13 +1781,6 @@ int InvPutItem(const Player &player, Point position, const Item &item)
 
 int SyncDropItem(Point position, _item_indexes idx, uint16_t icreateinfo, int iseed, int id, int dur, int mdur, int ch, int mch, int ivalue, uint32_t ibuff, int toHit, int maxDam, int minStr, int minMag, int minDex, int ac)
 {
-	if (MyPlayer->isOnLevel(0)) {
-		if (idx == IDI_RUNEBOMB && OpensHive(position))
-			return -1;
-		if (idx == IDI_MAPOFDOOM && OpensGrave(position))
-			return -1;
-	}
-
 	if (ActiveItemCount >= MAXITEMS)
 		return -1;
 
@@ -2101,8 +2065,8 @@ bool UseInvItem(size_t pnum, int cii)
 			player.RemoveInvItem(c);
 			return true;
 		}
-		if (UseItemOpensCrypt(*item, player.position.tile)) {
-			OpenCrypt();
+		if (UseItemOpensGrave(*item, player.position.tile)) {
+			OpenGrave();
 			player.RemoveInvItem(c);
 			return true;
 		}

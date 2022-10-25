@@ -3985,7 +3985,7 @@ bool UseItemOpensHive(const Item &item, Point position)
 	return false;
 }
 
-bool UseItemOpensCrypt(const Item &item, Point position)
+bool UseItemOpensGrave(const Item &item, Point position)
 {
 	if (item.IDidx != IDI_MAPOFDOOM)
 		return false;
