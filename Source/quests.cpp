@@ -683,6 +683,14 @@ void ResyncQuests()
 		Quests[Q_BETRAYER]._qvar2 = 2;
 		NetSendCmdQuest(true, Quests[Q_BETRAYER]);
 	}
+	if (currlevel == Quests[Q_DIABLO]._qlevel
+	    && !setlevel
+	    && Quests[Q_DIABLO]._qactive == QUEST_ACTIVE
+	    && gbIsMultiplayer) {
+		Point posPentagram = Quests[Q_DIABLO].position;
+		ObjChangeMapResync(posPentagram.x, posPentagram.y, posPentagram.x + 5, posPentagram.y + 5);
+		InitL4Triggers();
+	}
 }
 
 void DrawQuestLog(const Surface &out)
