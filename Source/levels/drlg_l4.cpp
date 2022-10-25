@@ -1112,10 +1112,10 @@ bool PlaceStairs(lvl_entry entry)
 		}
 	} else {
 		// Place hell gate
-		bool isGateOpen = UseMultiplayerQuests() || Quests[Q_DIABLO]._qactive == QUEST_ACTIVE;
-		position = PlaceMiniSet(isGateOpen ? L4PENTA2 : L4PENTA);
+		position = PlaceMiniSet(L4PENTA2);
 		if (!position)
 			return false;
+		Quests[Q_DIABLO].position = *position;
 		if (entry == ENTRY_PREV)
 			ViewPosition = position->megaToWorld() + Displacement { 6, 5 };
 	}
@@ -1180,6 +1180,10 @@ void GenerateLevel(lvl_entry entry)
 	DRLG_CheckQuests(SetPieceRoom.position);
 
 	if (currlevel == 15) {
+		bool isGateOpen = UseMultiplayerQuests() || Quests[Q_DIABLO]._qactive == QUEST_ACTIVE;
+		if (!isGateOpen)
+			L4PENTA.place(Quests[Q_DIABLO].position);
+
 		for (WorldTileCoord j = 1; j < DMAXY; j++) {
 			for (WorldTileCoord i = 1; i < DMAXX; i++) {
 				if (IsAnyOf(dungeon[i][j], 98, 107)) {
