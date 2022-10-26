@@ -1591,7 +1591,7 @@ bool PadmapperOptions::Action::SetValue(ControllerButtonCombo value)
 
 void PadmapperOptions::AddAction(string_view key, const char *name, const char *description, ControllerButtonCombo defaultInput, std::function<void()> actionPressed, std::function<void()> actionReleased, std::function<bool()> enable, unsigned index)
 {
-	actions.push_front(Action { key, name, description, defaultInput, std::move(actionPressed), std::move(actionReleased), std::move(enable), index });
+	actions.emplace_front(key, name, description, defaultInput, std::move(actionPressed), std::move(actionReleased), std::move(enable), index);
 }
 
 void PadmapperOptions::ButtonPressed(ControllerButton button)
