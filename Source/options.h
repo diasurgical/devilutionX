@@ -633,6 +633,10 @@ struct KeymapperOptions : OptionCategoryBase {
 	 */
 	class Action final : public OptionEntryBase {
 	public:
+		// OptionEntryBase::key may be referencing Action::dynamicKey.
+		// The implicit copy constructor would copy that reference instead of referencing the copy.
+		Action(const Action &) = delete;
+
 		[[nodiscard]] string_view GetName() const override;
 		[[nodiscard]] OptionEntryType GetType() const override
 		{
@@ -689,6 +693,12 @@ struct PadmapperOptions : OptionCategoryBase {
 	 */
 	class Action final : public OptionEntryBase {
 	public:
+		Action(string_view key, const char *name, const char *description, ControllerButtonCombo defaultInput, std::function<void()> actionPressed, std::function<void()> actionReleased, std::function<bool()> enable, unsigned index);
+
+		// OptionEntryBase::key may be referencing Action::dynamicKey.
+		// The implicit copy constructor would copy that reference instead of referencing the copy.
+		Action(const Action &) = delete;
+
 		[[nodiscard]] string_view GetName() const override;
 		[[nodiscard]] OptionEntryType GetType() const override
 		{
@@ -703,7 +713,6 @@ struct PadmapperOptions : OptionCategoryBase {
 		bool SetValue(ControllerButtonCombo value);
 
 	private:
-		Action(string_view key, const char *name, const char *description, ControllerButtonCombo defaultInput, std::function<void()> actionPressed, std::function<void()> actionReleased, std::function<bool()> enable, unsigned index);
 		ControllerButtonCombo defaultInput;
 		std::function<void()> actionPressed;
 		std::function<void()> actionReleased;
