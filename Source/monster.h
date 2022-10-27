@@ -487,6 +487,7 @@ void PlayEffect(Monster &monster, MonsterSound mode);
 void MissToMonst(Missile &missile, Point position);
 
 Monster *FindMonsterAtPosition(Point position, bool ignoreMovingMonsters = false);
+std::tuple<Monster *, bool> FindMonsterMovingStateAtPosition(Point position);
 
 /**
  * @brief Check that the given tile is available to the monster

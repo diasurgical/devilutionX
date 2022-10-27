@@ -1691,8 +1691,9 @@ void UpdateFlameTrap(Object &trap)
 
 		int x = trap.position.x;
 		int y = trap.position.y;
-		if (dMonster[x][y] > 0)
-			MonsterTrapHit(dMonster[x][y] - 1, mindam / 2, maxdam / 2, 0, MIS_FIREWALLC, false);
+		Monster *monster = FindMonsterAtPosition(trap.position, true);
+		if (monster != nullptr)
+			MonsterTrapHit(*monster, mindam / 2, maxdam / 2, 0, MIS_FIREWALLC, false);
 		if (dPlayer[x][y] > 0) {
 			bool unused;
 			PlayerMHit(dPlayer[x][y] - 1, nullptr, 0, mindam, maxdam, MIS_FIREWALLC, false, 0, &unused);
@@ -3468,8 +3469,9 @@ void BreakBarrel(const Player &player, Object &barrel, bool forcebreak, bool sen
 			PlaySfxLoc(IS_BARLFIRE, barrel.position);
 		for (int yp = barrel.position.y - 1; yp <= barrel.position.y + 1; yp++) {
 			for (int xp = barrel.position.x - 1; xp <= barrel.position.x + 1; xp++) {
-				if (dMonster[xp][yp] > 0) {
-					MonsterTrapHit(dMonster[xp][yp] - 1, 1, 4, 0, MIS_FIREBOLT, false);
+				Monster *monster = FindMonsterAtPosition({ xp, yp }, true);
+				if (monster != nullptr) {
+					MonsterTrapHit(*monster, 1, 4, 0, MIS_FIREBOLT, false);
 				}
 				if (dPlayer[xp][yp] > 0) {
 					bool unused;

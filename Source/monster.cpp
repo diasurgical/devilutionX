@@ -4376,20 +4376,26 @@ void MissToMonst(Missile &missile, Point position)
 	}
 }
 
-Monster *FindMonsterAtPosition(Point position, bool ignoreMovingMonsters)
+std::tuple<Monster *, bool> FindMonsterMovingStateAtPosition(Point position)
 {
-	if (!InDungeonBounds(position)) {
-		return nullptr;
-	}
+	if (!InDungeonBounds(position))
+		return { nullptr, false };
 
 	auto monsterId = dMonster[position.x][position.y];
 
-	if (monsterId == 0 || (ignoreMovingMonsters && monsterId < 0)) {
+	if (monsterId == 0)
 		// nothing at this position, return a nullptr
-		return nullptr;
-	}
+		return { nullptr, false };
 
-	return &Monsters[abs(monsterId) - 1];
+	return { &Monsters[abs(monsterId) - 1], monsterId < 0 };
+}
+
+Monster *FindMonsterAtPosition(Point position, bool ignoreMovingMonsters)
+{
+	auto [monster, isMoving] = FindMonsterMovingStateAtPosition(position);
+	if (isMoving && ignoreMovingMonsters)
+		return nullptr;
+	return monster;
 }
 
 bool IsTileAvailable(const Monster &monster, Point position)

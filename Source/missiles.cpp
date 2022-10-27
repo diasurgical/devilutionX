@@ -183,10 +183,8 @@ void MoveMissilePos(Missile &missile)
 	}
 }
 
-bool MonsterMHit(int pnum, int monsterId, int mindam, int maxdam, int dist, missile_id t, bool shift)
+bool MonsterMHit(int pnum, Monster &monster, int mindam, int maxdam, int dist, missile_id t, bool shift)
 {
-	auto &monster = Monsters[monsterId];
-
 	if (!monster.isPossibleToHit() || monster.isImmune(t))
 		return false;
 
@@ -393,19 +391,18 @@ void CheckMissileCol(Missile &missile, int minDamage, int maxDamage, bool isDama
 	int my = position.y;
 
 	bool isMonsterHit = false;
-	int mid = dMonster[mx][my];
-	if (mid > 0 || (mid != 0 && Monsters[abs(mid) - 1].mode == MonsterMode::Petrified)) {
-		mid = abs(mid) - 1;
+	auto [hitMonster, isMoving] = FindMonsterMovingStateAtPosition(position);
+	if (hitMonster != nullptr && (!isMoving || (isMoving && hitMonster->mode == MonsterMode::Petrified))) {
 		if (missile.IsTrap()
-		    || (missile._micaster == TARGET_PLAYERS && (                                           // or was fired by a monster and
-		            Monsters[mid].isPlayerMinion() != Monsters[missile._misource].isPlayerMinion() //  the monsters are on opposing factions
-		            || (Monsters[missile._misource].flags & MFLAG_BERSERK) != 0                    //  or the attacker is berserked
-		            || (Monsters[mid].flags & MFLAG_BERSERK) != 0                                  //  or the target is berserked
+		    || (missile._micaster == TARGET_PLAYERS && (                                         // or was fired by a monster and
+		            hitMonster->isPlayerMinion() != Monsters[missile._misource].isPlayerMinion() //  the monsters are on opposing factions
+		            || (Monsters[missile._misource].flags & MFLAG_BERSERK) != 0                  //  or the attacker is berserked
+		            || (hitMonster->flags & MFLAG_BERSERK) != 0                                  //  or the target is berserked
 		            ))) {
 			// then the missile can potentially hit this target
-			isMonsterHit = MonsterTrapHit(mid, minDamage, maxDamage, missile._midist, missile._mitype, isDamageShifted);
+			isMonsterHit = MonsterTrapHit(*hitMonster, minDamage, maxDamage, missile._midist, missile._mitype, isDamageShifted);
 		} else if (IsAnyOf(missile._micaster, TARGET_BOTH, TARGET_MONSTERS)) {
-			isMonsterHit = MonsterMHit(missile._misource, mid, minDamage, maxDamage, missile._midist, missile._mitype, isDamageShifted);
+			isMonsterHit = MonsterMHit(missile._misource, *hitMonster, minDamage, maxDamage, missile._midist, missile._mitype, isDamageShifted);
 		}
 	}
 
@@ -891,10 +888,8 @@ Direction16 GetDirection16(Point p1, Point p2)
 	return ret;
 }
 
-bool MonsterTrapHit(int monsterId, int mindam, int maxdam, int dist, missile_id t, bool shift)
+bool MonsterTrapHit(Monster &monster, int mindam, int maxdam, int dist, missile_id t, bool shift)
 {
-	auto &monster = Monsters[monsterId];
-
 	if (!monster.isPossibleToHit() || monster.isImmune(t))
 		return false;
 
