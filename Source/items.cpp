@@ -3944,7 +3944,7 @@ void UseItem(size_t pnum, item_misc_id mid, spell_id spl)
 		ModifyPlrVit(player, 3);
 		break;
 	case IMISC_RUNEF:
-		player._pTSpell = SPL_RUNEFIRE;
+		player._pTSpell = SPL_RUNEOFFIRE;
 		if (&player == MyPlayer)
 			NewCursor(CURSOR_TELEPORT);
 		break;
@@ -3959,7 +3959,7 @@ void UseItem(size_t pnum, item_misc_id mid, spell_id spl)
 			NewCursor(CURSOR_TELEPORT);
 		break;
 	case IMISC_GR_RUNEF:
-		player._pTSpell = SPL_RUNEIMMOLAT;
+		player._pTSpell = SPL_GREATERRUNEOFFIRE;
 		if (&player == MyPlayer)
 			NewCursor(CURSOR_TELEPORT);
 		break;
