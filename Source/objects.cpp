@@ -3041,7 +3041,7 @@ void OperateShrine(Player &player, Object &shrine, _sfx_id sType)
 		OperateShrineHoly(player);
 		break;
 	case ShrineSacred:
-		OperateShrineCostOfWisdom(player, SPL_CBOLT, EMSG_SHRINE_SACRED);
+		OperateShrineCostOfWisdom(player, SPL_CHARGEDBOLT, EMSG_SHRINE_SACRED);
 		break;
 	case ShrineSpiritual:
 		OperateShrineSpiritual(player);
@@ -3062,7 +3062,7 @@ void OperateShrine(Player &player, Object &shrine, _sfx_id sType)
 		OperateShrineSecluded(player);
 		break;
 	case ShrineOrnate:
-		OperateShrineCostOfWisdom(player, SPL_HBOLT, EMSG_SHRINE_ORNATE);
+		OperateShrineCostOfWisdom(player, SPL_HOLYBOLT, EMSG_SHRINE_ORNATE);
 		break;
 	case ShrineGlimmering:
 		OperateShrineGlimmering(player);

@@ -2515,14 +2515,14 @@ void CreatePlayer(Player &player, HeroClass c)
 
 	player._pRSplType = RSPLTYPE_SKILL;
 	if (c == HeroClass::Warrior) {
-		player._pAblSpells = GetSpellBitmask(SPL_REPAIR);
-		player._pRSpell = SPL_REPAIR;
+		player._pAblSpells = GetSpellBitmask(SPL_ITEMREPAIR);
+		player._pRSpell = SPL_ITEMREPAIR;
 	} else if (c == HeroClass::Rogue) {
-		player._pAblSpells = GetSpellBitmask(SPL_DISARM);
-		player._pRSpell = SPL_DISARM;
+		player._pAblSpells = GetSpellBitmask(SPL_TRAPDISARM);
+		player._pRSpell = SPL_TRAPDISARM;
 	} else if (c == HeroClass::Sorcerer) {
-		player._pAblSpells = GetSpellBitmask(SPL_RECHARGE);
-		player._pRSpell = SPL_RECHARGE;
+		player._pAblSpells = GetSpellBitmask(SPL_STAFFRECHARGE);
+		player._pRSpell = SPL_STAFFRECHARGE;
 	} else if (c == HeroClass::Monk) {
 		player._pAblSpells = GetSpellBitmask(SPL_SEARCH);
 		player._pRSpell = SPL_SEARCH;
@@ -2530,8 +2530,8 @@ void CreatePlayer(Player &player, HeroClass c)
 		player._pAblSpells = GetSpellBitmask(SPL_IDENTIFY);
 		player._pRSpell = SPL_IDENTIFY;
 	} else if (c == HeroClass::Barbarian) {
-		player._pAblSpells = GetSpellBitmask(SPL_BLODBOIL);
-		player._pRSpell = SPL_BLODBOIL;
+		player._pAblSpells = GetSpellBitmask(SPL_RAGE);
+		player._pRSpell = SPL_RAGE;
 	}
 
 	if (c == HeroClass::Sorcerer) {
@@ -2779,17 +2779,17 @@ void InitPlayer(Player &player, bool firstTime)
 	}
 
 	if (player._pClass == HeroClass::Warrior) {
-		player._pAblSpells = GetSpellBitmask(SPL_REPAIR);
+		player._pAblSpells = GetSpellBitmask(SPL_ITEMREPAIR);
 	} else if (player._pClass == HeroClass::Rogue) {
-		player._pAblSpells = GetSpellBitmask(SPL_DISARM);
+		player._pAblSpells = GetSpellBitmask(SPL_TRAPDISARM);
 	} else if (player._pClass == HeroClass::Sorcerer) {
-		player._pAblSpells = GetSpellBitmask(SPL_RECHARGE);
+		player._pAblSpells = GetSpellBitmask(SPL_STAFFRECHARGE);
 	} else if (player._pClass == HeroClass::Monk) {
 		player._pAblSpells = GetSpellBitmask(SPL_SEARCH);
 	} else if (player._pClass == HeroClass::Bard) {
 		player._pAblSpells = GetSpellBitmask(SPL_IDENTIFY);
 	} else if (player._pClass == HeroClass::Barbarian) {
-		player._pAblSpells = GetSpellBitmask(SPL_BLODBOIL);
+		player._pAblSpells = GetSpellBitmask(SPL_RAGE);
 	}
 
 	player._pNextExper = ExpLvlsTbl[player._pLevel];
@@ -3410,11 +3410,11 @@ void CheckPlrSpell(bool isShiftHeld, spell_id spellID, spell_type spellType)
 		    (IsLeftPanelOpen() && GetLeftPanel().contains(MousePosition))      // inside left panel
 		    || (IsRightPanelOpen() && GetRightPanel().contains(MousePosition)) // inside right panel
 		) {
-			if (spellID != SPL_HEAL
+			if (spellID != SPL_HEALING
 			    && spellID != SPL_IDENTIFY
-			    && spellID != SPL_REPAIR
-			    && spellID != SPL_INFRA
-			    && spellID != SPL_RECHARGE)
+			    && spellID != SPL_ITEMREPAIR
+			    && spellID != SPL_INFRAVISION
+			    && spellID != SPL_STAFFRECHARGE)
 				return;
 		}
 	}

@@ -231,7 +231,7 @@ bool HasRangedSpell()
 	int spl = MyPlayer->_pRSpell;
 
 	return spl != SPL_INVALID
-	    && spl != SPL_TOWN
+	    && spl != SPL_TOWNPORTAL
 	    && spl != SPL_TELEPORT
 	    && spelldata[spl].sTargeted
 	    && !spelldata[spl].sTownSpell;
@@ -1826,7 +1826,7 @@ void UseBeltItem(int type)
 		}
 
 		bool isRejuvenation = IsAnyOf(item._iMiscId, IMISC_REJUV, IMISC_FULLREJUV);
-		bool isHealing = isRejuvenation || IsAnyOf(item._iMiscId, IMISC_HEAL, IMISC_FULLHEAL) || item.isScrollOf(SPL_HEAL);
+		bool isHealing = isRejuvenation || IsAnyOf(item._iMiscId, IMISC_HEAL, IMISC_FULLHEAL) || item.isScrollOf(SPL_HEALING);
 		bool isMana = isRejuvenation || IsAnyOf(item._iMiscId, IMISC_MANA, IMISC_FULLMANA);
 
 		if ((type == BLT_HEALING && isHealing) || (type == BLT_MANA && isMana)) {
@@ -1933,7 +1933,7 @@ void PerformPrimaryAction()
 bool SpellHasActorTarget()
 {
 	spell_id spl = MyPlayer->_pRSpell;
-	if (spl == SPL_TOWN || spl == SPL_TELEPORT)
+	if (spl == SPL_TOWNPORTAL || spl == SPL_TELEPORT)
 		return false;
 
 	if (IsWallSpell(spl) && pcursmonst != -1) {
@@ -2029,7 +2029,7 @@ void PerformSpellAction()
 	const Player &myPlayer = *MyPlayer;
 	int spl = myPlayer._pRSpell;
 	if ((pcursplr == -1 && (spl == SPL_RESURRECT || spl == SPL_HEALOTHER))
-	    || (ObjectUnderCursor == nullptr && spl == SPL_DISARM)) {
+	    || (ObjectUnderCursor == nullptr && spl == SPL_TRAPDISARM)) {
 		myPlayer.Say(HeroSpeech::ICantCastThatHere);
 		return;
 	}

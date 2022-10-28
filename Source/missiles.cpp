@@ -745,13 +745,13 @@ void GetDamageAmt(spell_id i, int *mind, int *maxd)
 		*mind = (myPlayer._pMagic / 8) + sl + 1;
 		*maxd = *mind + 9;
 		break;
-	case SPL_HEAL:
+	case SPL_HEALING:
 	case SPL_HEALOTHER:
 		/// BUGFIX: healing calculation is unused
 		*mind = AddClassHealingBonus(myPlayer._pLevel + sl + 1, myPlayer._pClass) - 1;
 		*maxd = AddClassHealingBonus((4 * myPlayer._pLevel) + (6 * sl) + 10, myPlayer._pClass) - 1;
 		break;
-	case SPL_RUNELIGHT:
+	case SPL_RUNEOFLIGHTNING:
 	case SPL_LIGHTNING:
 		*mind = 2;
 		*maxd = 2 + myPlayer._pLevel;
@@ -762,20 +762,20 @@ void GetDamageAmt(spell_id i, int *mind, int *maxd)
 		*maxd = *mind * 2;
 		break;
 	case SPL_IDENTIFY:
-	case SPL_TOWN:
-	case SPL_STONE:
-	case SPL_INFRA:
-	case SPL_RNDTELEPORT:
+	case SPL_TOWNPORTAL:
+	case SPL_STONECURSE:
+	case SPL_INFRAVISION:
+	case SPL_PHASING:
 	case SPL_MANASHIELD:
-	case SPL_DOOMSERP:
-	case SPL_BLODRIT:
-	case SPL_INVISIBIL:
-	case SPL_BLODBOIL:
+	case SPL_DOOMSERPENTS:
+	case SPL_BLOODRITUAL:
+	case SPL_INVISIBILITY:
+	case SPL_RAGE:
 	case SPL_TELEPORT:
 	case SPL_ETHEREALIZE:
-	case SPL_REPAIR:
-	case SPL_RECHARGE:
-	case SPL_DISARM:
+	case SPL_ITEMREPAIR:
+	case SPL_STAFFRECHARGE:
+	case SPL_TRAPDISARM:
 	case SPL_RESURRECT:
 	case SPL_TELEKINESIS:
 	case SPL_BONESPIRIT:
@@ -783,13 +783,13 @@ void GetDamageAmt(spell_id i, int *mind, int *maxd)
 	case SPL_REFLECT:
 	case SPL_BERSERK:
 	case SPL_SEARCH:
-	case SPL_RUNESTONE:
+	case SPL_RUNEOFSTONE:
 		*mind = -1;
 		*maxd = -1;
 		break;
 	case SPL_FIREWALL:
-	case SPL_LIGHTWALL:
-	case SPL_FIRERING:
+	case SPL_LIGHTNINGWALL:
+	case SPL_RINGOFFIRE:
 		*mind = 2 * myPlayer._pLevel + 4;
 		*maxd = *mind + 36;
 		break;
@@ -804,22 +804,22 @@ void GetDamageAmt(spell_id i, int *mind, int *maxd)
 		*mind = ScaleSpellEffect(base, sl);
 		*maxd = ScaleSpellEffect(base + 9, sl);
 	} break;
-	case SPL_CHAIN:
+	case SPL_CHAINLIGHTNING:
 		*mind = 4;
 		*maxd = 4 + (2 * myPlayer._pLevel);
 		break;
-	case SPL_WAVE:
+	case SPL_FLAMEWAVE:
 		*mind = 6 * (myPlayer._pLevel + 1);
 		*maxd = *mind + 54;
 		break;
 	case SPL_NOVA:
-	case SPL_IMMOLAT:
+	case SPL_IMMOLATION:
 	case SPL_RUNEIMMOLAT:
-	case SPL_RUNENOVA:
+	case SPL_GREATERRUNEOFLIGHTNING:
 		*mind = ScaleSpellEffect((myPlayer._pLevel + 5) / 2, sl) * 5;
 		*maxd = ScaleSpellEffect((myPlayer._pLevel + 30) / 2, sl) * 5;
 		break;
-	case SPL_FLAME:
+	case SPL_INFERNO:
 		*mind = 3;
 		*maxd = myPlayer._pLevel + 4;
 		*maxd += *maxd / 2;
@@ -828,25 +828,25 @@ void GetDamageAmt(spell_id i, int *mind, int *maxd)
 		*mind = 11;
 		*maxd = 17;
 		break;
-	case SPL_APOCA:
+	case SPL_APOCALYPSE:
 		*mind = myPlayer._pLevel;
 		*maxd = *mind * 6;
 		break;
-	case SPL_ELEMENT:
+	case SPL_ELEMENTAL:
 		*mind = ScaleSpellEffect(2 * myPlayer._pLevel + 4, sl);
 		/// BUGFIX: add here '*mind /= 2;'
 		*maxd = ScaleSpellEffect(2 * myPlayer._pLevel + 40, sl);
 		/// BUGFIX: add here '*maxd /= 2;'
 		break;
-	case SPL_CBOLT:
+	case SPL_CHARGEDBOLT:
 		*mind = 1;
 		*maxd = *mind + (myPlayer._pMagic / 4);
 		break;
-	case SPL_HBOLT:
+	case SPL_HOLYBOLT:
 		*mind = myPlayer._pLevel + 9;
 		*maxd = *mind + 9;
 		break;
-	case SPL_FLARE:
+	case SPL_BLOODSTAR:
 		*mind = (myPlayer._pMagic / 2) + 3 * sl - (myPlayer._pMagic / 8);
 		*maxd = *mind;
 		break;

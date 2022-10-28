@@ -69,8 +69,8 @@ TEST_F(InvTest, UseScroll_from_inventory_invalid_conditions)
 	EXPECT_FALSE(CanUseScroll(*MyPlayer, SPL_FIREBOLT));
 
 	set_up_scroll(MyPlayer->InvList[2], SPL_FIREBOLT);
-	MyPlayer->_pRSpell = static_cast<spell_id>(SPL_HEAL);
-	EXPECT_FALSE(CanUseScroll(*MyPlayer, SPL_HEAL));
+	MyPlayer->_pRSpell = static_cast<spell_id>(SPL_HEALING);
+	EXPECT_FALSE(CanUseScroll(*MyPlayer, SPL_HEALING));
 
 	set_up_scroll(MyPlayer->InvList[2], SPL_FIREBOLT);
 	MyPlayer->InvList[2]._iMiscId = IMISC_STAFF;
@@ -92,8 +92,8 @@ TEST_F(InvTest, UseScroll_from_belt_invalid_conditions)
 	EXPECT_FALSE(CanUseScroll(*MyPlayer, SPL_FIREBOLT));
 
 	set_up_scroll(MyPlayer->SpdList[2], SPL_FIREBOLT);
-	MyPlayer->_pRSpell = static_cast<spell_id>(SPL_HEAL);
-	EXPECT_FALSE(CanUseScroll(*MyPlayer, SPL_HEAL));
+	MyPlayer->_pRSpell = static_cast<spell_id>(SPL_HEALING);
+	EXPECT_FALSE(CanUseScroll(*MyPlayer, SPL_HEALING));
 
 	set_up_scroll(MyPlayer->SpdList[2], SPL_FIREBOLT);
 	MyPlayer->SpdList[2]._iMiscId = IMISC_STAFF;

@@ -114,17 +114,17 @@ bool IsValidSpell(spell_id spl)
 
 bool IsWallSpell(spell_id spl)
 {
-	return spl == SPL_FIREWALL || spl == SPL_LIGHTWALL;
+	return spl == SPL_FIREWALL || spl == SPL_LIGHTNINGWALL;
 }
 
 bool TargetsMonster(spell_id id)
 {
 	return id == SPL_FIREBALL
 	    || id == SPL_FIREWALL
-	    || id == SPL_FLAME
+	    || id == SPL_INFERNO
 	    || id == SPL_LIGHTNING
-	    || id == SPL_STONE
-	    || id == SPL_WAVE;
+	    || id == SPL_STONECURSE
+	    || id == SPL_FLAMEWAVE;
 }
 
 int GetManaAmount(const Player &player, spell_id sn)
@@ -147,8 +147,8 @@ int GetManaAmount(const Player &player, spell_id sn)
 		adj = sl * (spelldata[SPL_RESURRECT].sManaCost / 8);
 	}
 
-	if (sn == SPL_HEAL || sn == SPL_HEALOTHER) {
-		ma = (spelldata[SPL_HEAL].sManaCost + 2 * player._pLevel - adj);
+	if (sn == SPL_HEALING || sn == SPL_HEALOTHER) {
+		ma = (spelldata[SPL_HEALING].sManaCost + 2 * player._pLevel - adj);
 	} else if (spelldata[sn].sManaCost == 255) {
 		ma = (player._pMaxManaBase >> 6) - adj;
 	} else {
@@ -194,7 +194,7 @@ void ConsumeSpell(Player &player, spell_id sn)
 		drawmanaflag = true;
 		break;
 	}
-	if (sn == SPL_FLARE) {
+	if (sn == SPL_BLOODSTAR) {
 		ApplyPlrDamage(player, 5);
 	}
 	if (sn == SPL_BONESPIRIT) {
@@ -248,7 +248,7 @@ void CastSpell(int id, spell_id spl, int sx, int sy, int dx, int dy, int spllvl)
 		Missile *missile = AddMissile({ sx, sy }, { dx, dy }, dir, spelldata[spl].sMissiles[i], TARGET_MONSTERS, id, 0, spllvl);
 		fizzled |= (missile == nullptr);
 	}
-	if (spl == SPL_CBOLT) {
+	if (spl == SPL_CHARGEDBOLT) {
 		for (int i = (spllvl / 2) + 3; i > 0; i--) {
 			Missile *missile = AddMissile({ sx, sy }, { dx, dy }, dir, MIS_CBOLT, TARGET_MONSTERS, id, 0, spllvl);
 			fizzled |= (missile == nullptr);
@@ -335,11 +335,11 @@ int GetSpellBookLevel(spell_id s)
 {
 	if (gbIsSpawn) {
 		switch (s) {
-		case SPL_STONE:
+		case SPL_STONECURSE:
 		case SPL_GUARDIAN:
 		case SPL_GOLEM:
-		case SPL_ELEMENT:
-		case SPL_FLARE:
+		case SPL_ELEMENTAL:
+		case SPL_BLOODSTAR:
 		case SPL_BONESPIRIT:
 			return -1;
 		default:
@@ -350,7 +350,7 @@ int GetSpellBookLevel(spell_id s)
 	if (!gbIsHellfire) {
 		switch (s) {
 		case SPL_NOVA:
-		case SPL_APOCA:
+		case SPL_APOCALYPSE:
 			return -1;
 		default:
 			if (s > SPL_LASTDIABLO)
@@ -366,12 +366,12 @@ int GetSpellStaffLevel(spell_id s)
 {
 	if (gbIsSpawn) {
 		switch (s) {
-		case SPL_STONE:
+		case SPL_STONECURSE:
 		case SPL_GUARDIAN:
 		case SPL_GOLEM:
-		case SPL_APOCA:
-		case SPL_ELEMENT:
-		case SPL_FLARE:
+		case SPL_APOCALYPSE:
+		case SPL_ELEMENTAL:
+		case SPL_BLOODSTAR:
 		case SPL_BONESPIRIT:
 			return -1;
 		default:

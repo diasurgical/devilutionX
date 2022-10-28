@@ -626,7 +626,7 @@ void GetBookSpell(Item &item, int lvl)
 		}
 		if (!gbIsMultiplayer) {
 			if (s == SPL_HEALOTHER)
-				s = SPL_FLARE;
+				s = SPL_BLOODSTAR;
 		}
 		if (s == maxSpells)
 			s = 1;
@@ -1221,7 +1221,7 @@ void GetStaffSpell(const Player &player, Item &item, int lvl, bool onlygood)
 		if (!gbIsMultiplayer && s == SPL_RESURRECT)
 			s = SPL_TELEKINESIS;
 		if (!gbIsMultiplayer && s == SPL_HEALOTHER)
-			s = SPL_FLARE;
+			s = SPL_BLOODSTAR;
 		if (s == maxSpells)
 			s = SPL_FIREBOLT;
 	}
@@ -1818,7 +1818,7 @@ void PrintItemMisc(const Item &item)
 	    || (item._iMiscId > IMISC_OILFIRST && item._iMiscId < IMISC_OILLAST)
 	    || (item._iMiscId > IMISC_RUNEFIRST && item._iMiscId < IMISC_RUNELAST);
 	const bool isCastOnTarget = (item._iMiscId == IMISC_SCROLLT && item._iSpell != SPL_FLASH)
-	    || (item._iMiscId == IMISC_SCROLL && IsAnyOf(item._iSpell, SPL_TOWN, SPL_IDENTIFY));
+	    || (item._iMiscId == IMISC_SCROLL && IsAnyOf(item._iSpell, SPL_TOWNPORTAL, SPL_IDENTIFY));
 
 	switch (ControlMode) {
 	case ControlTypes::None:
@@ -2034,7 +2034,7 @@ bool WitchItemOk(const Player &player, int i)
 		return false;
 	if (AllItemsList[i].iMiscId == IMISC_FULLMANA)
 		return false;
-	if (AllItemsList[i].iSpell == SPL_TOWN)
+	if (AllItemsList[i].iSpell == SPL_TOWNPORTAL)
 		return false;
 	if (AllItemsList[i].iMiscId == IMISC_FULLHEAL)
 		return false;
@@ -2066,7 +2066,7 @@ bool HealerItemOk(const Player &player, int i)
 		return false;
 
 	if (AllItemsList[i].iMiscId == IMISC_SCROLL)
-		return AllItemsList[i].iSpell == SPL_HEAL;
+		return AllItemsList[i].iSpell == SPL_HEALING;
 	if (AllItemsList[i].iMiscId == IMISC_SCROLLT)
 		return AllItemsList[i].iSpell == SPL_HEALOTHER && gbIsMultiplayer;
 
@@ -3949,12 +3949,12 @@ void UseItem(size_t pnum, item_misc_id mid, spell_id spl)
 			NewCursor(CURSOR_TELEPORT);
 		break;
 	case IMISC_RUNEL:
-		player._pTSpell = SPL_RUNELIGHT;
+		player._pTSpell = SPL_RUNEOFLIGHTNING;
 		if (&player == MyPlayer)
 			NewCursor(CURSOR_TELEPORT);
 		break;
 	case IMISC_GR_RUNEL:
-		player._pTSpell = SPL_RUNENOVA;
+		player._pTSpell = SPL_GREATERRUNEOFLIGHTNING;
 		if (&player == MyPlayer)
 			NewCursor(CURSOR_TELEPORT);
 		break;
@@ -3964,7 +3964,7 @@ void UseItem(size_t pnum, item_misc_id mid, spell_id spl)
 			NewCursor(CURSOR_TELEPORT);
 		break;
 	case IMISC_RUNES:
-		player._pTSpell = SPL_RUNESTONE;
+		player._pTSpell = SPL_RUNEOFSTONE;
 		if (&player == MyPlayer)
 			NewCursor(CURSOR_TELEPORT);
 		break;

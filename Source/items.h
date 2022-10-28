@@ -402,13 +402,13 @@ struct Item {
 		case IMISC_RUNEF:
 			return spellId == SPL_RUNEFIRE;
 		case IMISC_RUNEL:
-			return spellId == SPL_RUNELIGHT;
+			return spellId == SPL_RUNEOFLIGHTNING;
 		case IMISC_GR_RUNEL:
-			return spellId == SPL_RUNENOVA;
+			return spellId == SPL_GREATERRUNEOFLIGHTNING;
 		case IMISC_GR_RUNEF:
 			return spellId == SPL_RUNEIMMOLAT;
 		case IMISC_RUNES:
-			return spellId == SPL_RUNESTONE;
+			return spellId == SPL_RUNEOFSTONE;
 		default:
 			return false;
 		}
