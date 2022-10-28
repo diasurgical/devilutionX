@@ -814,8 +814,8 @@ void GetDamageAmt(spell_id i, int *mind, int *maxd)
 		break;
 	case SPL_NOVA:
 	case SPL_IMMOLATION:
-	case SPL_GREATERRUNEOFFIRE:
-	case SPL_GREATERRUNEOFLIGHTNING:
+	case SPL_RUNEOFIMMOLATION:
+	case SPL_RUNEOFNOVA:
 		*mind = ScaleSpellEffect((myPlayer._pLevel + 5) / 2, sl) * 5;
 		*maxd = ScaleSpellEffect((myPlayer._pLevel + 30) / 2, sl) * 5;
 		break;

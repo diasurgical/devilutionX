@@ -61,8 +61,8 @@ const SpellData spelldata[] = {
 	{ SPL_SEARCH,       15, STYPE_MAGIC,     P_("spell", "Search"),                    1,         3, false,     false,           25, IS_CAST6, { MIS_SEARCH,        MIS_NULL,   MIS_NULL },        1,        1,         8,        12,      3000,        200 },
 	{ SPL_RUNEOFFIRE,    255, STYPE_MAGIC,     P_("spell", "Rune of Fire"),             -1,        -1, true,      false,           48, IS_CAST8, { MIS_RUNEFIRE,      MIS_NULL,   MIS_NULL },        1,       10,        40,        80,      8000,        300 },
 	{ SPL_RUNEOFLIGHTNING,   255, STYPE_MAGIC,     P_("spell", "Rune of Light"),            -1,        -1, true,      false,           48, IS_CAST8, { MIS_RUNELIGHT,     MIS_NULL,   MIS_NULL },        1,       10,        40,        80,      8000,        300 },
-	{ SPL_GREATERRUNEOFLIGHTNING,    255, STYPE_MAGIC,     P_("spell", "Rune of Nova"),             -1,        -1, true,      false,           48, IS_CAST8, { MIS_RUNENOVA,      MIS_NULL,   MIS_NULL },        1,       10,        40,        80,      8000,        300 },
-	{ SPL_GREATERRUNEOFFIRE, 255, STYPE_MAGIC,     P_("spell", "Rune of Immolation"),       -1,        -1, true,      false,           48, IS_CAST8, { MIS_RUNEIMMOLAT,   MIS_NULL,   MIS_NULL },        1,       10,        40,        80,      8000,        300 },
+	{ SPL_RUNEOFNOVA,    255, STYPE_MAGIC,     P_("spell", "Rune of Nova"),             -1,        -1, true,      false,           48, IS_CAST8, { MIS_RUNENOVA,      MIS_NULL,   MIS_NULL },        1,       10,        40,        80,      8000,        300 },
+	{ SPL_RUNEOFIMMOLATION, 255, STYPE_MAGIC,     P_("spell", "Rune of Immolation"),       -1,        -1, true,      false,           48, IS_CAST8, { MIS_RUNEIMMOLAT,   MIS_NULL,   MIS_NULL },        1,       10,        40,        80,      8000,        300 },
 	{ SPL_RUNEOFSTONE,   255, STYPE_MAGIC,     P_("spell", "Rune of Stone"),            -1,        -1, true,      false,           48, IS_CAST8, { MIS_RUNESTONE,     MIS_NULL,   MIS_NULL },        1,       10,        40,        80,      8000,        300 },
 	// clang-format on
 };

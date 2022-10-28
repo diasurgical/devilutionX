@@ -404,9 +404,9 @@ struct Item {
 		case IMISC_RUNEL:
 			return spellId == SPL_RUNEOFLIGHTNING;
 		case IMISC_GR_RUNEL:
-			return spellId == SPL_GREATERRUNEOFLIGHTNING;
+			return spellId == SPL_RUNEOFNOVA;
 		case IMISC_GR_RUNEF:
-			return spellId == SPL_GREATERRUNEOFFIRE;
+			return spellId == SPL_RUNEOFIMMOLATION;
 		case IMISC_RUNES:
 			return spellId == SPL_RUNEOFSTONE;
 		default:

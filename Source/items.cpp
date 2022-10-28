@@ -3954,12 +3954,12 @@ void UseItem(size_t pnum, item_misc_id mid, spell_id spl)
 			NewCursor(CURSOR_TELEPORT);
 		break;
 	case IMISC_GR_RUNEL:
-		player._pTSpell = SPL_GREATERRUNEOFLIGHTNING;
+		player._pTSpell = SPL_RUNEOFNOVA;
 		if (&player == MyPlayer)
 			NewCursor(CURSOR_TELEPORT);
 		break;
 	case IMISC_GR_RUNEF:
-		player._pTSpell = SPL_GREATERRUNEOFFIRE;
+		player._pTSpell = SPL_RUNEOFIMMOLATION;
 		if (&player == MyPlayer)
 			NewCursor(CURSOR_TELEPORT);
 		break;

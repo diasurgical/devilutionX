@@ -127,9 +127,9 @@ enum spell_id : int8_t {
 	/* Rune of Lightning */
 	SPL_RUNEOFLIGHTNING,
 	/* Greater Rune of Lightning */
-	SPL_GREATERRUNEOFLIGHTNING,
+	SPL_RUNEOFNOVA,
 	/* Greater Rune of Fire */
-	SPL_GREATERRUNEOFFIRE,
+	SPL_RUNEOFIMMOLATION,
 	/* Rune of Stone */
 	SPL_RUNEOFSTONE,
 
