@@ -400,13 +400,13 @@ struct Item {
 			return false;
 		switch (_iMiscId) {
 		case IMISC_RUNEF:
-			return spellId == SPL_RUNEFIRE;
+			return spellId == SPL_RUNEOFFIRE;
 		case IMISC_RUNEL:
 			return spellId == SPL_RUNEOFLIGHTNING;
 		case IMISC_GR_RUNEL:
 			return spellId == SPL_GREATERRUNEOFLIGHTNING;
 		case IMISC_GR_RUNEF:
-			return spellId == SPL_RUNEIMMOLAT;
+			return spellId == SPL_GREATERRUNEOFFIRE;
 		case IMISC_RUNES:
 			return spellId == SPL_RUNEOFSTONE;
 		default:
