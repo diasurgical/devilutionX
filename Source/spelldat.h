@@ -32,7 +32,7 @@ enum spell_id : int8_t {
 	/* Firebolt */
 	SPL_FIREBOLT,
 	/* Healing */
-	SPL_HEAL,
+	SPL_HEALING,
 	/* Lightning */
 	SPL_LIGHTNING,
 	/* Flash */
@@ -42,13 +42,13 @@ enum spell_id : int8_t {
 	/* Fire Wall */
 	SPL_FIREWALL,
 	/* Town Portal */
-	SPL_TOWN,
+	SPL_TOWNPORTAL,
 	/* Stone Curse */
-	SPL_STONE,
+	SPL_STONECURSE,
 	/* Infravision */
-	SPL_INFRA,
+	SPL_INFRAVISION,
 	/* Phasing */
-	SPL_RNDTELEPORT,
+	SPL_PHASING,
 	/* Mana Shield */
 	SPL_MANASHIELD,
 	/* Fireball */
@@ -56,41 +56,41 @@ enum spell_id : int8_t {
 	/* Guardian */
 	SPL_GUARDIAN,
 	/* Chain Lightning */
-	SPL_CHAIN,
+	SPL_CHAINLIGHTNING,
 	/* Flame Wave */
-	SPL_WAVE,
+	SPL_FLAMEWAVE,
 	/* Doom Serpents (Unused) */
-	SPL_DOOMSERP,
+	SPL_DOOMSERPENTS,
 	/* Blood Ritual (Unused) */
-	SPL_BLODRIT,
+	SPL_BLOODRITUAL,
 	/* Nova */
 	SPL_NOVA,
 	/* Invisibility (Unused)*/
-	SPL_INVISIBIL,
+	SPL_INVISIBILITY,
 	/* Inferno */
-	SPL_FLAME,
+	SPL_INFERNO,
 	/* Golem */
 	SPL_GOLEM,
 	/* Rage (Originally Blood Boil, which was unused) */
-	SPL_BLODBOIL,
+	SPL_RAGE,
 	/* Teleport */
 	SPL_TELEPORT,
 	/* Apocalypse */
-	SPL_APOCA,
+	SPL_APOCALYPSE,
 	/* Etherealize (Unused) */
 	SPL_ETHEREALIZE,
 	/* Item Repair */
-	SPL_REPAIR,
+	SPL_ITEMREPAIR,
 	/* Staff Recharge */
-	SPL_RECHARGE,
+	SPL_STAFFRECHARGE,
 	/* Trap Disarm */
-	SPL_DISARM,
+	SPL_TRAPDISARM,
 	/* Elemental */
-	SPL_ELEMENT,
+	SPL_ELEMENTAL,
 	/* Charged Bolt */
-	SPL_CBOLT,
+	SPL_CHARGEDBOLT,
 	/* Holy Bolt */
-	SPL_HBOLT,
+	SPL_HOLYBOLT,
 	/* Resurrect */
 	SPL_RESURRECT,
 	/* Telekinesis */
@@ -98,7 +98,7 @@ enum spell_id : int8_t {
 	/* Heal Other */
 	SPL_HEALOTHER,
 	/* Blood Star */
-	SPL_FLARE,
+	SPL_BLOODSTAR,
 	/* Bone Spirit */
 	SPL_BONESPIRIT,
 	SPL_LASTDIABLO = SPL_BONESPIRIT,
@@ -109,9 +109,9 @@ enum spell_id : int8_t {
 	/* Jester */
 	SPL_JESTER,
 	/* Lightning Wall */
-	SPL_LIGHTWALL,
+	SPL_LIGHTNINGWALL,
 	/* Immolation */
-	SPL_IMMOLAT,
+	SPL_IMMOLATION,
 	/* Warp */
 	SPL_WARP,
 	/* Reflect */
@@ -119,21 +119,21 @@ enum spell_id : int8_t {
 	/* Berserk */
 	SPL_BERSERK,
 	/* Ring of Fire */
-	SPL_FIRERING,
+	SPL_RINGOFFIRE,
 	/* Search */
 	SPL_SEARCH,
 	/* Rune of Fire */
-	SPL_RUNEFIRE,
+	SPL_RUNEOFFIRE,
 	/* Rune of Lightning */
-	SPL_RUNELIGHT,
+	SPL_RUNEOFLIGHTNING,
 	/* Greater Rune of Lightning */
-	SPL_RUNENOVA,
+	SPL_GREATERRUNEOFLIGHTNING,
 	/* Greater Rune of Fire */
-	SPL_RUNEIMMOLAT,
+	SPL_GREATERRUNEOFFIRE,
 	/* Rune of Stone */
-	SPL_RUNESTONE,
+	SPL_RUNEOFSTONE,
 
-	SPL_LAST = SPL_RUNESTONE,
+	SPL_LAST = SPL_RUNEOFSTONE,
 	/* Invalid */
 	SPL_INVALID = -1,
 };
