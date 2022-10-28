@@ -1119,6 +1119,20 @@ void CheckReflect(Monster &monster, Player &player, int &dam)
 		M_StartHit(monster, player, mdam);
 }
 
+int GetMinHit()
+{
+	switch (currlevel) {
+	case 16:
+		return 30;
+	case 15:
+		return 25;
+	case 14:
+		return 20;
+	default:
+		return 15;
+	}
+}
+
 void MonsterAttackPlayer(Monster &monster, Player &player, int hit, int minDam, int maxDam)
 {
 	if (player._pHitPoints >> 6 <= 0 || player._pInvincible || HasAnyOf(player._pSpellFlags, SpellFlag::Etherealize))
@@ -1139,17 +1153,7 @@ void MonsterAttackPlayer(Monster &monster, Player &player, int hit, int minDam, 
 	hit += 2 * (monster.level(sgGameInitInfo.nDifficulty) - player._pLevel)
 	    + 30
 	    - ac;
-	int minhit;
-	switch (currlevel) {
-	case 16:
-		minhit = 30;
-	case 15:
-		minhit = 25;
-	case 14:
-		minhit = 20;
-	default:
-		minhit = 15;
-	}
+	int minhit = GetMinHit();
 	hit = std::max(hit, minhit);
 	int blkper = 100;
 	if ((player._pmode == PM_STAND || player._pmode == PM_ATTACK) && player._pBlockFlag) {
