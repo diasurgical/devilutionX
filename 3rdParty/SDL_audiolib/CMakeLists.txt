@@ -43,3 +43,6 @@ FetchContent_Declare(SDL_audiolib
 FetchContent_MakeAvailableExcludeFromAll(SDL_audiolib)
 
 add_library(SDL_audiolib::SDL_audiolib ALIAS SDL_audiolib)
+
+# External library, disable warnings.
+target_compile_options(SDL_audiolib PRIVATE -w)

@@ -128,6 +128,7 @@ bool ChangeOptionValue(OptionEntryBase *pOption, size_t listIndex)
 		pOptionList->SetActiveListIndex(listIndex);
 	} break;
 	case OptionEntryType::Key:
+	case OptionEntryType::PadButton:
 		break;
 	}
 

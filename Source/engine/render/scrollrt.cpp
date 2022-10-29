@@ -354,67 +354,6 @@ void DrawMonster(const Surface &out, Point tilePosition, Point targetBufferPosit
 		return;
 	}
 
-	constexpr auto getMonsterModeDisplayName = [](MonsterMode monsterMode) {
-		switch (monsterMode) {
-		case MonsterMode::Stand:
-			return "standing";
-
-		case MonsterMode::MoveNorthwards:
-			return "moving (northwards)";
-
-		case MonsterMode::MoveSouthwards:
-			return "moving (southwards)";
-
-		case MonsterMode::MoveSideways:
-			return "moving (sideways)";
-
-		case MonsterMode::MeleeAttack:
-			return "attacking (melee)";
-
-		case MonsterMode::HitRecovery:
-			return "getting hit";
-
-		case MonsterMode::Death:
-			return "dying";
-
-		case MonsterMode::SpecialMeleeAttack:
-			return "attacking (special melee)";
-
-		case MonsterMode::FadeIn:
-			return "fading in";
-
-		case MonsterMode::FadeOut:
-			return "fading out";
-
-		case MonsterMode::RangedAttack:
-			return "attacking (ranged)";
-
-		case MonsterMode::SpecialStand:
-			return "standing (special)";
-
-		case MonsterMode::SpecialRangedAttack:
-			return "attacking (special ranged)";
-
-		case MonsterMode::Delay:
-			return "delaying";
-
-		case MonsterMode::Charge:
-			return "charging";
-
-		case MonsterMode::Petrified:
-			return "petrified";
-
-		case MonsterMode::Heal:
-			return "healing";
-
-		case MonsterMode::Talk:
-			return "talking";
-
-		default:
-			app_fatal("Invalid monster mode.");
-		}
-	};
-
 	const ClxSprite sprite = monster.animInfo.currentSprite();
 
 	if (!IsTileLit(tilePosition)) {
@@ -1049,6 +988,8 @@ void DrawGame(const Surface &fullOut, Point position)
 	// Draw areas moving in and out of the screen
 	if (myPlayer.IsWalking()) {
 		switch (myPlayer._pdir) {
+		case Direction::NoDirection:
+			break;
 		case Direction::North:
 			sy -= TILE_HEIGHT;
 			position += Direction::North;

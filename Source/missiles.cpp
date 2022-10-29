@@ -1421,8 +1421,12 @@ void AddWarp(Missile &missile, AddMissileParameter & /*parameter*/)
 				if (IsAnyOf(trg->_tmsg, WM_DIABTWARPUP, WM_DIABPREVLVL, WM_DIABRTNLVL))
 					return Displacement { 1, 1 };
 				return Displacement { 0, 1 }; // WM_DIABNEXTLVL
+			case DTYPE_TOWN:
+				app_fatal("invalid leveltype: DTYPE_TOWN");
+			case DTYPE_NONE:
+				app_fatal("leveltype not set");
 			}
-			app_fatal("Unhandled leveltype");
+			app_fatal(StrCat("invalid leveltype", static_cast<int>(leveltype)));
 		};
 		Displacement triggerOffset = getTriggerOffset(trg);
 		candidate += triggerOffset;
