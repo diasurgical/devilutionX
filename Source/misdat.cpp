@@ -89,7 +89,7 @@ MissileData MissilesData[] = {
 	{  &AddMagi,                   nullptr,            MIS_MAGI,          false,     1, MISR_NONE,      MFILE_NONE,      SFX_NONE,    SFX_NONE,    MissileMovementDistribution::Disabled    },
 	{  &AddLightningWall,          &MI_LightningWall,  MIS_LIGHTNINGWALL_SEGMENT,     true,      1, MISR_LIGHTNING, MFILE_LGHNING,   LS_LMAG,     LS_ELECIMP1, MissileMovementDistribution::Disabled    },
 	{  &AddFirewallC,              &MI_LightningWallC, MIS_LIGHTNINGWALL, false,     1, MISR_LIGHTNING, MFILE_LGHNING,   SFX_NONE,    SFX_NONE,    MissileMovementDistribution::Disabled    },
-	{  &AddNova,                   &MI_FireNova,       MIS_IMMOLATION,    true,      1, MISR_FIRE,      MFILE_FIREBA,    LS_FBOLT1,   LS_FIRIMP2,  MissileMovementDistribution::Disabled    },
+	{  &AddNova,                   &MI_FireNova,       MIS_IMMOLATION_CAST,    true,      1, MISR_FIRE,      MFILE_FIREBA,    LS_FBOLT1,   LS_FIRIMP2,  MissileMovementDistribution::Disabled    },
 	{  &AddSpecArrow,              &MI_SpecArrow,      MIS_SPECTRALARROW,     true,      0, MISR_NONE,      MFILE_ARROWS,    SFX_NONE,    SFX_NONE,    MissileMovementDistribution::Disabled    },
 	{  &AddFireNova,               &MI_Fireball,       MIS_IMMOLATION,      true,      1, MISR_FIRE,      MFILE_FIREBA,    IS_FBALLBOW, LS_FIRIMP2,  MissileMovementDistribution::Blockable   },
 	{  &AddLightningArrow,         &MI_LightningArrow, MIS_LIGHTNING_BOW,    false,     1, MISR_LIGHTNING, MFILE_LGHNING,   IS_FBALLBOW, SFX_NONE,    MissileMovementDistribution::Disabled    },

@@ -293,7 +293,7 @@ enum missile_id : int8_t {
 	/* Lightning Wall cast*/
 	MIS_LIGHTNINGWALL,
 	/* Immolation cast */
-	MIS_IMMOLATION,
+	MIS_IMMOLATION_CAST,
 	/* Spectral Arrow */
 	MIS_SPECTRALARROW,
 	/* Immolation projectile */

@@ -1141,7 +1141,7 @@ void AddGreatLightningRune(Missile &missile, AddMissileParameter &parameter)
 
 void AddImmolationRune(Missile &missile, AddMissileParameter &parameter)
 {
-	AddRune(missile, parameter.dst, MIS_IMMOLATION);
+	AddRune(missile, parameter.dst, MIS_IMMOLATION_CAST);
 }
 
 void AddStoneRune(Missile &missile, AddMissileParameter &parameter)
