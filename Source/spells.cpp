@@ -250,7 +250,7 @@ void CastSpell(int id, spell_id spl, int sx, int sy, int dx, int dy, int spllvl)
 	}
 	if (spl == SPL_CHARGEDBOLT) {
 		for (int i = (spllvl / 2) + 3; i > 0; i--) {
-			Missile *missile = AddMissile({ sx, sy }, { dx, dy }, dir, MIS_CBOLT, TARGET_MONSTERS, id, 0, spllvl);
+			Missile *missile = AddMissile({ sx, sy }, { dx, dy }, dir, MIS_CHARGEDBOLT, TARGET_MONSTERS, id, 0, spllvl);
 			fizzled |= (missile == nullptr);
 		}
 	}
@@ -265,7 +265,7 @@ void DoResurrect(size_t pnum, Player &target)
 		return;
 	}
 
-	AddMissile(target.position.tile, target.position.tile, Direction::South, MIS_RESURRECTBEAM, TARGET_MONSTERS, pnum, 0, 0);
+	AddMissile(target.position.tile, target.position.tile, Direction::South, MIS_RESURRECT_BEAM, TARGET_MONSTERS, pnum, 0, 0);
 
 	if (target._pHitPoints != 0)
 		return;

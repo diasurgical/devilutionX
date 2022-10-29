@@ -1261,7 +1261,7 @@ bool MonsterRangedAttack(Monster &monster)
 		const auto &missileType = static_cast<missile_id>(monster.var1);
 		if (missileType != MIS_NULL) {
 			int multimissiles = 1;
-			if (missileType == MIS_CBOLT)
+			if (missileType == MIS_CHARGEDBOLT)
 				multimissiles = 3;
 			for (int mi = 0; mi < multimissiles; mi++) {
 				AddMissile(
@@ -1685,10 +1685,10 @@ bool IsTileSafe(const Monster &monster, Point position)
 
 	for (auto &missile : Missiles) {
 		if (missile.position.tile == position) {
-			if (fearsFire && missile._mitype == MIS_FIREWALL) {
+			if (fearsFire && missile._mitype == MIS_FIREWALL_SEGMENT) {
 				return false;
 			}
-			if (fearsLightning && missile._mitype == MIS_LIGHTWALL) {
+			if (fearsLightning && missile._mitype == MIS_LIGHTNINGWALL_SEGMENT) {
 				return false;
 			}
 		}
@@ -1857,7 +1857,7 @@ missile_id GetMissileType(_mai_id ai)
 		return MIS_ARROW;
 	case AI_SUCC:
 	case AI_LAZHELP:
-		return MIS_FLARE;
+		return MIS_BLOODSTAR;
 	case AI_ACID:
 	case AI_ACIDUNIQ:
 		return MIS_ACID;
@@ -1876,9 +1876,9 @@ missile_id GetMissileType(_mai_id ai)
 	case AI_MAGMA:
 		return MIS_MAGMABALL;
 	case AI_STORM:
-		return MIS_LIGHTCTRL2;
+		return MIS_LIGHTNING_CTRL_MONST;
 	case AI_DIABLO:
-		return MIS_DIABAPOCA;
+		return MIS_APOCALYPSE_MONST;
 	case AI_BONEDEMON:
 		return MIS_BONEDEMON;
 	default:
@@ -2387,7 +2387,7 @@ void BatAi(Monster &monster)
 		monster.goal = MonsterGoal::Retreat;
 		monster.goalVar1 = 0;
 		if (monster.type().type == MT_FAMILIAR) {
-			AddMissile(monster.enemyPosition, { monster.enemyPosition.x + 1, 0 }, Direction::South, MIS_LIGHTNING, TARGET_PLAYERS, monster.getId(), GenerateRnd(10) + 1, 0);
+			AddMissile(monster.enemyPosition, { monster.enemyPosition.x + 1, 0 }, Direction::South, MIS_LIGHTNING_SEGMENT, TARGET_PLAYERS, monster.getId(), GenerateRnd(10) + 1, 0);
 		}
 	}
 
@@ -2665,7 +2665,7 @@ void CounselorAi(Monster &monster)
 	} else if (monster.goal == MonsterGoal::Normal) {
 		if (distanceToEnemy >= 2) {
 			if (v < 5 * (monster.intelligence + 10) && LineClearMissile(monster.position.tile, monster.enemyPosition)) {
-				constexpr missile_id MissileTypes[4] = { MIS_FIREBOLT, MIS_CBOLT, MIS_LIGHTCTRL, MIS_FIREBALL };
+				constexpr missile_id MissileTypes[4] = { MIS_FIREBOLT, MIS_CHARGEDBOLT, MIS_LIGHTNING_CTRL, MIS_FIREBALL };
 				StartRangedAttack(monster, MissileTypes[monster.intelligence], monster.minDamage + GenerateRnd(monster.maxDamage - monster.minDamage + 1));
 			} else if (GenerateRnd(100) < 30) {
 				monster.goal = MonsterGoal::Move;
@@ -2683,8 +2683,8 @@ void CounselorAi(Monster &monster)
 			    || GenerateRnd(100) < 2 * monster.intelligence + 20) {
 				StartRangedAttack(monster, MIS_NULL, 0);
 				size_t monsterId = monster.getId();
-				AddMissile(monster.position.tile, { 0, 0 }, monster.direction, MIS_FLASH, TARGET_PLAYERS, monsterId, 4, 0);
-				AddMissile(monster.position.tile, { 0, 0 }, monster.direction, MIS_FLASH2, TARGET_PLAYERS, monsterId, 4, 0);
+				AddMissile(monster.position.tile, { 0, 0 }, monster.direction, MIS_FLASH_SEGMENT, TARGET_PLAYERS, monsterId, 4, 0);
+				AddMissile(monster.position.tile, { 0, 0 }, monster.direction, MIS_FLASH_SEGMENT_2, TARGET_PLAYERS, monsterId, 4, 0);
 			} else
 				AiDelay(monster, GenerateRnd(10) + 2 * (5 - monster.intelligence));
 		}
@@ -2757,7 +2757,7 @@ void MegaAi(Monster &monster)
 	}
 	if (monster.goal == MonsterGoal::Normal) {
 		if (((distanceToEnemy >= 3 && v < 5 * (monster.intelligence + 2)) || v < 5 * (monster.intelligence + 1) || monster.goalVar3 == 4) && LineClearMissile(monster.position.tile, monster.enemyPosition)) {
-			StartRangedSpecialAttack(monster, MIS_FLAMEC, 0);
+			StartRangedSpecialAttack(monster, MIS_INFERNO_CAST, 0);
 		} else if (distanceToEnemy >= 2) {
 			v = GenerateRnd(100);
 			if (v < 2 * (5 * monster.intelligence + 25)
@@ -2770,7 +2770,7 @@ void MegaAi(Monster &monster)
 			if (GenerateRnd(100) < 10 * (monster.intelligence + 4)) {
 				monster.direction = md;
 				if (FlipCoin())
-					StartRangedSpecialAttack(monster, MIS_FLAMEC, 0);
+					StartRangedSpecialAttack(monster, MIS_INFERNO_CAST, 0);
 				else
 					StartAttack(monster);
 			}
@@ -2933,7 +2933,7 @@ void HorkDemonAi(Monster &monster)
 		if ((distanceToEnemy >= 3) && v < 2 * monster.intelligence + 43) {
 			Point position = monster.position.tile + monster.direction;
 			if (IsTileAvailable(monster, position) && ActiveMonsterCount < MaxMonsters) {
-				StartRangedSpecialAttack(monster, MIS_HORKDMN, 0);
+				StartRangedSpecialAttack(monster, MIS_HORKDEMON, 0);
 			}
 		} else if (distanceToEnemy < 2) {
 			if (v < 2 * monster.intelligence + 28) {
@@ -3687,7 +3687,7 @@ void MonsterDeath(Monster &monster, Direction md, bool sendmsg)
 	CheckQuestKill(monster, sendmsg);
 	M_FallenFear(monster.position.tile);
 	if (IsAnyOf(monster.type().type, MT_NACID, MT_RACID, MT_BACID, MT_XACID, MT_SPIDLORD))
-		AddMissile(monster.position.tile, { 0, 0 }, Direction::South, MIS_ACIDPUD, TARGET_PLAYERS, monster.getId(), monster.intelligence + 1, 0);
+		AddMissile(monster.position.tile, { 0, 0 }, Direction::South, MIS_ACID_PUDDLE, TARGET_PLAYERS, monster.getId(), monster.intelligence + 1, 0);
 }
 
 void StartMonsterDeath(Monster &monster, const Player &player, bool sendmsg)
@@ -4604,7 +4604,7 @@ bool Monster::isImmune(missile_id missileType) const
 	    || ((resistance & IMMUNE_LIGHTNING) != 0 && missileElement == MISR_LIGHTNING)
 	    || ((resistance & IMMUNE_ACID) != 0 && missileElement == MISR_ACID))
 		return true;
-	if (missileType == MIS_HBOLT && type().type != MT_DIABLO && data().monsterClass != MonsterClass::Undead)
+	if (missileType == MIS_HOLYBOLT && type().type != MT_DIABLO && data().monsterClass != MonsterClass::Undead)
 		return true;
 	return false;
 }
@@ -4617,7 +4617,7 @@ bool Monster::isResistant(missile_id missileType) const
 	    || ((resistance & RESIST_FIRE) != 0 && missileElement == MISR_FIRE)
 	    || ((resistance & RESIST_LIGHTNING) != 0 && missileElement == MISR_LIGHTNING))
 		return true;
-	if (gbIsHellfire && missileType == MIS_HBOLT && IsAnyOf(type().type, MT_DIABLO, MT_BONEDEMN))
+	if (gbIsHellfire && missileType == MIS_HOLYBOLT && IsAnyOf(type().type, MT_DIABLO, MT_BONEDEMN))
 		return true;
 	return false;
 }

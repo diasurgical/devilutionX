@@ -60,13 +60,13 @@ enum spell_id : int8_t {
 	/* Flame Wave */
 	SPL_FLAMEWAVE,
 	/* Doom Serpents (Unused) */
-	SPL_DOOMSERPENTS,
+	SPL_NULL_16,
 	/* Blood Ritual (Unused) */
-	SPL_BLOODRITUAL,
+	SPL_NULL_17,
 	/* Nova */
 	SPL_NOVA,
 	/* Invisibility (Unused)*/
-	SPL_INVISIBILITY,
+	SPL_NULL_19,
 	/* Inferno */
 	SPL_INFERNO,
 	/* Golem */
@@ -78,7 +78,7 @@ enum spell_id : int8_t {
 	/* Apocalypse */
 	SPL_APOCALYPSE,
 	/* Etherealize (Unused) */
-	SPL_ETHEREALIZE,
+	SPL_NULL_25,
 	/* Item Repair */
 	SPL_ITEMREPAIR,
 	/* Staff Recharge */
@@ -155,155 +155,155 @@ enum missile_id : int8_t {
 	/* Guardian */
 	MIS_GUARDIAN,
 	/* Phasing */
-	MIS_RNDTELEPORT,
+	MIS_PHASING,
 	/* Nova segment */
-	MIS_LIGHTBALL,
+	MIS_NOVA_SEGEMENT,
 	/* Fire Wall segment */
-	MIS_FIREWALL,
+	MIS_FIREWALL_SEGMENT,
 	/* Fireball */
 	MIS_FIREBALL,
 	/* Lightning control segment */
-	MIS_LIGHTCTRL,
+	MIS_LIGHTNING_CTRL,
 	/* Lightning segment */
-	MIS_LIGHTNING,
+	MIS_LIGHTNING_SEGMENT,
 	/* Magma Ball impact */
-	MIS_MISEXP,
+	MIS_MAGMABALL_EXP,
 	/* Town Portal */
-	MIS_TOWN,
+	MIS_TOWNPORTAL,
 	/* Flash segment */
-	MIS_FLASH,
+	MIS_FLASH_SEGMENT,
 	/* Flash segment 2 */
-	MIS_FLASH2,
+	MIS_FLASH_SEGMENT_2,
 	/* Mana Shield */
 	MIS_MANASHIELD,
 	/* Flame Wave segment */
-	MIS_FIREMOVE,
+	MIS_FLAMEWAVE_SEGMENT,
 	/* Chain Lightning segment */
-	MIS_CHAIN,
+	MIS_CHAINLIGHTNING_SEGMENT,
 	/* Sentinel (Unused) */
-	MIS_SENTINAL,
+	MIS_NULL_16,
 	/* Blood Star? (Unused) */
-	MIS_BLODSTAR,
+	MIS_NULL_17,
 	/* Bone Spirit? (Unused) */
-	MIS_BONE,
+	MIS_NULL_18,
 	/* Metal Hit? (Unused) */
-	MIS_METLHIT,
+	MIS_NULL_19,
 	/* Rhino (Monster charge attack) */
 	MIS_RHINO,
 	/* Magma Ball */
 	MIS_MAGMABALL,
 	/* Monster Lightning control segment */
-	MIS_LIGHTCTRL2,
+	MIS_LIGHTNING_CTRL_MONST,
 	/* Monster Lightning segment */
-	MIS_LIGHTNING2,
+	MIS_LIGHTNING_SEGEMENT_MONST,
 	/* Blood Star */
-	MIS_FLARE,
+	MIS_BLOODSTAR,
 	/* Monster Blood Star impact */
-	MIS_MISEXP2,
+	MIS_BLOODSTAR_EXP,
 	/* Teleport */
 	MIS_TELEPORT,
 	/* Fire Arrow */
-	MIS_FARROW,
+	MIS_FIREARROW,
 	/* Doom Serpent (Unused) */
-	MIS_DOOMSERP,
+	MIS_NULL_28,
 	/* Fire Wall (Unused) */
-	MIS_FIREWALLA,
+	MIS_NULL_29,
 	/* Stone Curse */
-	MIS_STONE,
+	MIS_STONECURSE,
 	/* Null (Unused) */
-	MIS_NULL_1F,
+	MIS_NULL_31,
 	/* Invisibility (Unused) */
-	MIS_INVISIBL,
+	MIS_NULL_32,
 	/* Golem */
 	MIS_GOLEM,
 	/* Etherealize (Unused) */
-	MIS_ETHEREALIZE,
+	MIS_NULL_34,
 	/* Blood Burst? (Unused) */
-	MIS_BLODBUR,
+	MIS_NULL_35,
 	/* Apocalypse impact */
-	MIS_BOOM,
+	MIS_APOCALYPSE_EXP,
 	/* Healing */
-	MIS_HEAL,
+	MIS_HEALING,
 	/* Fire Wall cast */
-	MIS_FIREWALLC,
+	MIS_FIREWALL_CAST,
 	/* Infravision */
-	MIS_INFRA,
+	MIS_INFRAVISION,
 	/* Identify */
 	MIS_IDENTIFY,
 	/* Flame Wave */
-	MIS_WAVE,
+	MIS_FLAMEWAVE,
 	/* Nova */
 	MIS_NOVA,
 	/* Rage (Originally Blood Boil, which was unused) */
-	MIS_BLODBOIL,
+	MIS_RAGE,
 	/* Apocalypse cast */
-	MIS_APOCA,
+	MIS_APOCALYPSE,
 	/* Item Repair */
-	MIS_REPAIR,
+	MIS_ITEMREPAIR,
 	/* Staff Recharged */
-	MIS_RECHARGE,
+	MIS_STAFFRECHARGE,
 	/* Trap Disarm */
-	MIS_DISARM,
+	MIS_TRAPDISARM,
 	/* Inferno */
-	MIS_FLAME,
+	MIS_INFERNO,
 	/* Inferno cast */
-	MIS_FLAMEC,
+	MIS_INFERNO_CAST,
 	/* Unraveler monster missile (Unused) */
-	MIS_FIREMAN,
+	MIS_NULL_50,
 	/* Unraveler monster missile (Unused) */
-	MIS_KRULL,
+	MIS_NULL_51,
 	/* Charged Bolt cast */
-	MIS_CBOLT,
+	MIS_CHARGEDBOLT,
 	/* Holy Bolt */
-	MIS_HBOLT,
+	MIS_HOLYBOLT,
 	/* Resurrect cast */
 	MIS_RESURRECT,
 	/* Telekinesis */
 	MIS_TELEKINESIS,
 	/* Lightning Arrow */
-	MIS_LARROW,
+	MIS_LIGHTNINGARROW,
 	/* Monster Acid */
 	MIS_ACID,
 	/* Monster Acid impact */
-	MIS_MISEXP3,
+	MIS_ACID_EXP,
 	/* Monster Acid puddle */
-	MIS_ACIDPUD,
+	MIS_ACID_PUDDLE,
 	/* Heal Other */
 	MIS_HEALOTHER,
 	/* Elemental */
-	MIS_ELEMENT,
+	MIS_ELEMENTAL,
 	/* Resurrect */
-	MIS_RESURRECTBEAM,
+	MIS_RESURRECT_BEAM,
 	/* Bone Spirit */
 	MIS_BONESPIRIT,
 	/* Melee element damage impact */
-	MIS_WEAPEXP,
+	MIS_WEAPON_EXP,
 	/* Red Portal (Lazarus level) */
-	MIS_RPORTAL,
+	MIS_REDPORTAL,
 	/* Diablo Apocalypse impact */
-	MIS_BOOM2,
+	MIS_APOCALYPSE_EXP_MONST,
 	/* Diablo Apocalypse cast */
-	MIS_DIABAPOCA,
+	MIS_APOCALYPSE_MONST,
 	/* Mana */
 	MIS_MANA,
 	/* Magi */
 	MIS_MAGI,
 	/* Lightning Wall segment */
-	MIS_LIGHTWALL,
+	MIS_LIGHTNINGWALL_SEGMENT,
 	/* Lightning Wall cast*/
 	MIS_LIGHTNINGWALL,
 	/* Immolation cast */
 	MIS_IMMOLATION,
 	/* Spectral Arrow */
-	MIS_SPECARROW,
+	MIS_SPECTRALARROW,
 	/* Immolation projectile */
-	MIS_FIRENOVA,
+	MIS_IMMOLATION,
 	/* Lightning Arrow */
-	MIS_LIGHTARROW,
+	MIS_LIGHTNING_BOW,
 	/* Charged Bolt Arrow */
-	MIS_CBOLTARROW,
+	MIS_CHARGEDBOLT_BOW,
 	/* Holy Bolt Arrow */
-	MIS_HBOLTARROW,
+	MIS_HOLYBOLT_BOW,
 	/* Warp */
 	MIS_WARP,
 	/* Reflect */
@@ -311,39 +311,39 @@ enum missile_id : int8_t {
 	/* Berserk */
 	MIS_BERSERK,
 	/* Ring of Fire cast */
-	MIS_FIRERING,
+	MIS_RINGOFFIRE,
 	/* Trap (Take player potions) */
-	MIS_STEALPOTS,
+	MIS_TRAP_POTIONS,
 	/* Trap (Take player mana) */
-	MIS_MANATRAP,
+	MIS_TRAP_MANA,
 	/* Ring of Lightning cast (Unused) */
-	MIS_LIGHTRING,
+	MIS_NULL_84,
 	/* Search */
 	MIS_SEARCH,
 	/* Flash front (Unused) */
-	MIS_FLASHFR,
+	MIS_NULL_86,
 	/* Flash back (Unused) */
-	MIS_FLASHBK,
+	MIS_NULL_87,
 	/* Immolation 2 (Unused) */
-	MIS_IMMOLATION2,
+	MIS_NULL_88,
 	/* Rune of Fire */
-	MIS_RUNEFIRE,
+	MIS_RUNEOFFIRE,
 	/* Rune of Lightning */
-	MIS_RUNELIGHT,
+	MIS_RUNEOFLIGHTNING,
 	/* Greater Rune of Lightning */
-	MIS_RUNENOVA,
+	MIS_RUNEOFNOVA,
 	/* Greater Rune of Fire */
-	MIS_RUNEIMMOLAT,
+	MIS_RUNEOFIMMOLATION,
 	/* Rune of Stone */
-	MIS_RUNESTONE,
+	MIS_RUNEOFSTONE,
 	/* Rune impact */
-	MIS_HIVEEXP,
+	MIS_RUNEBOMB_EXP,
 	/* Hork Demon missile */
-	MIS_HORKDMN,
+	MIS_HORKDEMON,
 	/* Jester cast */
 	MIS_JESTER,
 	/* Hive Entrance impact*/
-	MIS_HIVEEXP2,
+	MIS_RUNEBOMB_EXP_2,
 	/* Lich projectile */
 	MIS_LICH,
 	/* Psychorb projectile */
@@ -355,15 +355,15 @@ enum missile_id : int8_t {
 	/* Bone Demon projectile */
 	MIS_BONEDEMON,
 	/* Arch Lich projectile impact */
-	MIS_EXYEL2,
+	MIS_ARCHLICH_EXP,
 	/* Necromorb projectile impact */
-	MIS_EXRED3,
+	MIS_NECROMORB_EXP,
 	/* Psychorb projectile impact */
-	MIS_EXBL2,
+	MIS_PSYCHORB_EXP,
 	/* Bone Demon projectile impact */
-	MIS_EXBL3,
+	MIS_BONEDEMON_EXP,
 	/* Lich projectile impact */
-	MIS_EXORA1,
+	MIS_LICH_EXP,
 	/* Null */
 	MIS_NULL = -1,
 };

@@ -2123,7 +2123,7 @@ size_t OnActivatePortal(const TCmd *pCmd, size_t pnum)
 			} else if (player.isOnActiveLevel()) {
 				bool addPortal = true;
 				for (auto &missile : Missiles) {
-					if (missile._mitype == MIS_TOWN && &Players[missile._misource] == &player) {
+					if (missile._mitype == MIS_TOWNPORTAL && &Players[missile._misource] == &player) {
 						addPortal = false;
 						break;
 					}
@@ -2360,7 +2360,7 @@ size_t OnNakrul(const TCmd *pCmd)
 size_t OnOpenHive(const TCmd *pCmd, size_t pnum)
 {
 	if (gbBufferMsgs != 1) {
-		AddMissile({ 0, 0 }, { 0, 0 }, Direction::South, MIS_HIVEEXP2, TARGET_MONSTERS, pnum, 0, 0);
+		AddMissile({ 0, 0 }, { 0, 0 }, Direction::South, MIS_RUNEBOMB_EXP_2, TARGET_MONSTERS, pnum, 0, 0);
 		TownOpenHive();
 		InitTownTriggers();
 	}

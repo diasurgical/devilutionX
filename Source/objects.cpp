@@ -1323,7 +1323,7 @@ void AddFlameTrap(Object &flameTrap)
 void AddFlameLever(Object &flameLever)
 {
 	flameLever._oVar1 = trapid;
-	flameLever._oVar2 = MIS_FLAMEC;
+	flameLever._oVar2 = MIS_INFERNO_CAST;
 }
 
 void AddTrap(Object &trap)
@@ -1340,7 +1340,7 @@ void AddTrap(Object &trap)
 	if (missileType == 1)
 		trap._oVar3 = MIS_FIREBOLT;
 	if (missileType == 2)
-		trap._oVar3 = MIS_LIGHTCTRL;
+		trap._oVar3 = MIS_LIGHTNING_CTRL;
 	trap._oVar4 = 0;
 }
 
@@ -1591,7 +1591,7 @@ void UpdateCircle(Object &circle)
 			if (Quests[Q_BETRAYER]._qactive == QUEST_ACTIVE)
 				Quests[Q_BETRAYER]._qvar1 = 4;
 		}
-		AddMissile(myPlayer.position.tile, { 35, 46 }, Direction::South, MIS_RNDTELEPORT, TARGET_BOTH, MyPlayerId, 0, 0);
+		AddMissile(myPlayer.position.tile, { 35, 46 }, Direction::South, MIS_PHASING, TARGET_BOTH, MyPlayerId, 0, 0);
 		LastMouseButtonAction = MouseActionType::None;
 		sgbMouseDown = CLICK_NONE;
 		ClrPlrPath(myPlayer);
@@ -1692,10 +1692,10 @@ void UpdateFlameTrap(Object &trap)
 		int x = trap.position.x;
 		int y = trap.position.y;
 		if (dMonster[x][y] > 0)
-			MonsterTrapHit(dMonster[x][y] - 1, mindam / 2, maxdam / 2, 0, MIS_FIREWALLC, false);
+			MonsterTrapHit(dMonster[x][y] - 1, mindam / 2, maxdam / 2, 0, MIS_FIREWALL_CAST, false);
 		if (dPlayer[x][y] > 0) {
 			bool unused;
-			PlayerMHit(dPlayer[x][y] - 1, nullptr, 0, mindam, maxdam, MIS_FIREWALLC, false, 0, &unused);
+			PlayerMHit(dPlayer[x][y] - 1, nullptr, 0, mindam, maxdam, MIS_FIREWALL_CAST, false, 0, &unused);
 		}
 
 		if (trap._oAnimFrame == trap._oAnimLen)
@@ -1927,7 +1927,7 @@ void OperateBook(Player &player, Object &book)
 			if (doAddMissile) {
 				questObject._oVar6 = 4;
 				ObjectAtPosition({ 35, 36 })._oVar5++;
-				AddMissile(player.position.tile, target, Direction::South, MIS_RNDTELEPORT, TARGET_BOTH, player.getId(), 0, 0);
+				AddMissile(player.position.tile, target, Direction::South, MIS_PHASING, TARGET_BOTH, player.getId(), 0, 0);
 				missileAdded = true;
 			}
 		}
@@ -2084,19 +2084,19 @@ void OperateChest(const Player &player, Object &chest, bool sendLootMsg)
 			mtype = MIS_ARROW;
 			break;
 		case 1:
-			mtype = MIS_FARROW;
+			mtype = MIS_FIREARROW;
 			break;
 		case 2:
 			mtype = MIS_NOVA;
 			break;
 		case 3:
-			mtype = MIS_FIRERING;
+			mtype = MIS_RINGOFFIRE;
 			break;
 		case 4:
-			mtype = MIS_STEALPOTS;
+			mtype = MIS_TRAP_POTIONS;
 			break;
 		case 5:
-			mtype = MIS_MANATRAP;
+			mtype = MIS_TRAP_MANA;
 			break;
 		default:
 			mtype = MIS_ARROW;
@@ -2635,7 +2635,7 @@ void OperateShrineDivine(Player &player, Point spawnPosition)
 
 void OperateShrineHoly(const Player &player)
 {
-	AddMissile(player.position.tile, { 0, 0 }, Direction::South, MIS_RNDTELEPORT, TARGET_MONSTERS, player.getId(), 0, 2 * leveltype);
+	AddMissile(player.position.tile, { 0, 0 }, Direction::South, MIS_PHASING, TARGET_MONSTERS, player.getId(), 0, 2 * leveltype);
 
 	if (&player != MyPlayer)
 		return;
@@ -2819,7 +2819,7 @@ void OperateShrineOily(Player &player, Point spawnPosition)
 	    spawnPosition,
 	    player.position.tile,
 	    player._pdir,
-	    MIS_FIREWALL,
+	    MIS_FIREWALL_SEGMENT,
 	    TARGET_PLAYERS,
 	    -1,
 	    2 * currlevel + 2,
@@ -2878,7 +2878,7 @@ void OperateShrineSparkling(Player &player, Point spawnPosition)
 	    spawnPosition,
 	    player.position.tile,
 	    player._pdir,
-	    MIS_FLASH,
+	    MIS_FLASH_SEGMENT,
 	    TARGET_PLAYERS,
 	    -1,
 	    3 * currlevel + 2,
@@ -2903,7 +2903,7 @@ void OperateShrineTown(const Player &player, Point spawnPosition)
 	    spawnPosition,
 	    player.position.tile,
 	    player._pdir,
-	    MIS_TOWN,
+	    MIS_TOWNPORTAL,
 	    TARGET_MONSTERS,
 	    player.getId(),
 	    0,
@@ -3260,7 +3260,7 @@ bool OperateFountains(Player &player, Object &fountain)
 		    player.position.tile,
 		    player.position.tile,
 		    player._pdir,
-		    MIS_INFRA,
+		    MIS_INFRAVISION,
 		    TARGET_MONSTERS,
 		    player.getId(),
 		    0,
