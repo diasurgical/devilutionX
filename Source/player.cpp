@@ -442,6 +442,9 @@ void StartSpell(Player &player, Direction d, WorldTileCoord cx, WorldTileCoord c
 	case RSPLTYPE_CHARGES:
 		isValid = CanUseStaff(player, player.queuedSpell.spellId);
 		break;
+	case RSPLTYPE_INVALID:
+		isValid = false;
+		break;
 	}
 	if (!isValid)
 		return;

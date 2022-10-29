@@ -948,14 +948,6 @@ void RecreateItem(const Player &player, const TItem &messageItem, Item &item)
 	item.dwBuff = messageItem.dwBuff;
 }
 
-void RecreateItem(const Player &player, const TCmdGItem &message, Item &item)
-{
-	if (message.def.wIndx == IDI_EAR)
-		RecreateEar(item, message.ear.wCI, message.ear.dwSeed, message.ear.bCursval, message.ear.heroname);
-	else
-		RecreateItem(player, message.item, item);
-}
-
 void RecreateItem(const Player &player, const TCmdPItem &message, Item &item)
 {
 	if (message.def.wIndx == IDI_EAR)
@@ -1153,7 +1145,6 @@ size_t OnAutoGetItem(const TCmd *pCmd, size_t pnum)
 			if ((localLevel == message.bLevel || message.bPnum == MyPlayerId) && message.bMaster != MyPlayerId) {
 				if (message.bPnum == MyPlayerId) {
 					if (localLevel != message.bLevel) {
-						Player &player = *MyPlayer;
 						int ii = SyncDropItem(message);
 						if (ii != -1)
 							AutoGetItem(*MyPlayer, &Items[ii], ii);
