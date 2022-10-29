@@ -152,7 +152,7 @@ bool ProcessControllerMotion(const SDL_Event &event, ControllerButtonEvent ctrlE
 	}
 #if HAS_KBCTRL == 1
 	if (ProcessKbCtrlAxisMotion(event)) {
-		SetSimulatingMouseWithDpad(false);
+		SetSimulatingMouseWithPadmapper(false);
 		return true;
 	}
 #endif
