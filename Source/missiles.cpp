@@ -685,7 +685,7 @@ void SpawnLightning(Missile &missile, int dam)
 			missile_id type = MIS_LIGHTNING_SEGMENT;
 			if (missile.sourceType() == MissileSource::Monster
 			    && IsAnyOf(missile.sourceMonster()->type().type, MT_STORM, MT_RSTORM, MT_STORML, MT_MAEL)) {
-				type = MIS_LIGHTNING_SEGEMENT_MONST;
+				type = MIS_LIGHTNING_SEGMENT_MONST;
 			}
 			AddMissile(
 			    position,

@@ -195,7 +195,7 @@ enum missile_id : int8_t {
 	/* Monster Lightning control segment */
 	MIS_LIGHTNING_CTRL_MONST,
 	/* Monster Lightning segment */
-	MIS_LIGHTNING_SEGEMENT_MONST,
+	MIS_LIGHTNING_SEGMENT_MONST,
 	/* Blood Star */
 	MIS_BLOODSTAR,
 	/* Monster Blood Star impact */
