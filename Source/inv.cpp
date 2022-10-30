@@ -1037,17 +1037,14 @@ void InvDrawSlotBack(const Surface &out, Point targetPosition, Size size, item_q
 			std::uint8_t pix = *dst;
 			if (pix >= PAL16_GRAY) {
 				switch (itemQuality) {
-				case ITEM_QUALITY_NORMAL:
-					pix -= PAL16_GRAY - PAL16_BEIGE;
-					break;
 				case ITEM_QUALITY_MAGIC:
-					pix -= PAL16_GRAY - PAL16_BLUE;
+					pix -= PAL16_GRAY - PAL16_BLUE - 1;
 					break;
 				case ITEM_QUALITY_UNIQUE:
-					pix -= PAL16_GRAY - PAL16_YELLOW;
+					pix -= PAL16_GRAY - PAL16_YELLOW - 1;
 					break;
 				default:
-					pix -= PAL16_GRAY - PAL16_BEIGE;
+					pix -= PAL16_GRAY - PAL16_BEIGE - 1;
 					break;
 				}
 			}
