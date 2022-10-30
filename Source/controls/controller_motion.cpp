@@ -81,26 +81,32 @@ void SetSimulatingMouseWithPadmapper(bool value)
 // SELECT + D-Pad to simulate right stick movement.
 bool SimulateRightStickWithDpad(ControllerButtonEvent ctrlEvent)
 {
+	if (IsAnyOf(ctrlEvent.button, ControllerButton_NONE, ControllerButton_IGNORE))
+		return false;
+
 	ControllerButtonCombo upCombo = sgOptions.Padmapper.ButtonComboForAction("MouseUp");
 	ControllerButtonCombo downCombo = sgOptions.Padmapper.ButtonComboForAction("MouseDown");
 	ControllerButtonCombo leftCombo = sgOptions.Padmapper.ButtonComboForAction("MouseLeft");
 	ControllerButtonCombo rightCombo = sgOptions.Padmapper.ButtonComboForAction("MouseRight");
+	if (IsNoneOf(ctrlEvent.button, upCombo.button, downCombo.button, leftCombo.button, rightCombo.button)) {
+		if (rightStickX == 0 && rightStickY == 0)
+			SetSimulatingMouseWithPadmapper(false);
+		return false;
+	}
 
-	int simulatedRightStickX = 0;
-	int simulatedRightStickY = 0;
+	rightStickX = 0;
+	rightStickY = 0;
 	if (IsControllerButtonComboPressed(upCombo))
-		simulatedRightStickY += 1;
+		rightStickY += 1.F;
 	if (IsControllerButtonComboPressed(downCombo))
-		simulatedRightStickY -= 1;
+		rightStickY -= 1.F;
 	if (IsControllerButtonComboPressed(leftCombo))
-		simulatedRightStickX -= 1;
+		rightStickX -= 1.F;
 	if (IsControllerButtonComboPressed(rightCombo))
-		simulatedRightStickX += 1;
-	SetSimulatingMouseWithPadmapper(simulatedRightStickX != 0 || simulatedRightStickY != 0);
-
-	rightStickX += simulatedRightStickX;
-	rightStickY += simulatedRightStickY;
-	return SimulatingMouseWithPadmapper && IsAnyOf(ctrlEvent.button, upCombo.button, downCombo.button, leftCombo.button, rightCombo.button);
+		rightStickX += 1.F;
+	if (rightStickX != 0 || rightStickY != 0)
+		SetSimulatingMouseWithPadmapper(true);
+	return true;
 }
 
 } // namespace
