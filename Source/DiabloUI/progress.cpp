@@ -96,14 +96,19 @@ bool UiProgressDialog(int (*fnfunc)())
 
 	// Blit the background once and then free it.
 	ProgressLoadBackground();
+
 	ProgressRenderBackground();
-	if (RenderDirectlyToOutputSurface && IsDoubleBuffered()) {
-		// Blit twice for triple buffering.
-		for (unsigned i = 0; i < 2; ++i) {
-			UiFadeIn();
+
+	if (RenderDirectlyToOutputSurface && PalSurface != nullptr) {
+		// Render into all the backbuffers if there are multiple.
+		const void *initialPixels = PalSurface->pixels;
+		UiFadeIn();
+		while (PalSurface->pixels != initialPixels) {
 			ProgressRenderBackground();
+			UiFadeIn();
 		}
 	}
+
 	ProgressFreeBackground();
 
 	ProgressLoadForeground();

@@ -25,6 +25,7 @@
 #include "discord/discord.h"
 #include "doom.h"
 #include "encrypt.h"
+#include "engine/backbuffer_state.hpp"
 #include "engine/clx_sprite.hpp"
 #include "engine/demomode.h"
 #include "engine/dx.h"
@@ -105,7 +106,6 @@ bool ReturnToMainMenu;
 bool gbProcessPlayers;
 bool gbLoadGame;
 bool cineflag;
-int force_redraw;
 int PauseMode;
 bool gbBard;
 bool gbBarbarian;
@@ -202,7 +202,7 @@ bool ProcessInput()
 	plrctrls_every_frame();
 
 	if (!gbIsMultiplayer && gmenu_is_active()) {
-		force_redraw |= 1;
+		RedrawViewport();
 		return false;
 	}
 
@@ -704,7 +704,7 @@ void GameEventHandler(const SDL_Event &event, uint16_t modState)
 			LastMouseButtonAction = MouseActionType::None;
 			sgbMouseDown = CLICK_NONE;
 			ShowProgress(GetCustomEvent(event.type));
-			force_redraw = 255;
+			RedrawEverything();
 			DrawAndBlit();
 			LoadPWaterPalette();
 			if (gbRunGame)
@@ -730,11 +730,20 @@ void RunGameLoop(interface_mode uMsg)
 	gbRunGame = true;
 	gbProcessPlayers = true;
 	gbRunGameResult = true;
-	force_redraw = 255;
-	DrawAndBlit();
+
+	RedrawEverything();
+	if (!HeadlessMode) {
+		while (IsRedrawEverything()) {
+			// In direct rendering mode with double/triple buffering, we need
+			// to prepare all buffers before fading in.
+			DrawAndBlit();
+		}
+	}
+
 	LoadPWaterPalette();
 	PaletteFadeIn(8);
-	force_redraw = 255;
+	InitBackbufferState();
+	RedrawEverything();
 	gbGameLoopStartup = true;
 	nthread_ignore_mutex(false);
 
@@ -780,7 +789,7 @@ void RunGameLoop(interface_mode uMsg)
 				ProcessInput();
 			if (!drawGame)
 				continue;
-			force_redraw |= 1;
+			RedrawViewport();
 			DrawAndBlit();
 			continue;
 		}
@@ -807,7 +816,7 @@ void RunGameLoop(interface_mode uMsg)
 	PaletteFadeOut(8);
 	NewCursor(CURSOR_NONE);
 	ClearScreenBuffer();
-	force_redraw = 255;
+	RedrawEverything();
 	scrollrt_draw_game_screen();
 	previousHandler = SetEventHandler(previousHandler);
 	assert(HeadlessMode || previousHandler == GameEventHandler);
@@ -1324,7 +1333,7 @@ void GameLogic()
 	sound_update();
 	CheckTriggers();
 	CheckQuests();
-	force_redraw |= 1;
+	RedrawViewport();
 	pfile_update(false);
 
 	plrctrls_after_game_logic();
@@ -1340,7 +1349,7 @@ void TimeoutCursor(bool bTimeout)
 			AddPanelString(_("-- Network timeout --"));
 			AddPanelString(_("-- Waiting for players --"));
 			NewCursor(CURSOR_HOURGLASS);
-			force_redraw = 255;
+			RedrawEverything();
 		}
 		scrollrt_draw_game_screen();
 	} else if (sgnTimeoutCurs != CURSOR_NONE) {
@@ -1351,7 +1360,7 @@ void TimeoutCursor(bool bTimeout)
 			NewCursor(sgnTimeoutCurs);
 		sgnTimeoutCurs = CURSOR_NONE;
 		InfoString = {};
-		force_redraw = 255;
+		RedrawEverything();
 	}
 }
 
@@ -2427,7 +2436,7 @@ void diablo_pause_game()
 			LastMouseButtonAction = MouseActionType::None;
 		}
 
-		force_redraw = 255;
+		RedrawEverything();
 	}
 }
 
@@ -2584,7 +2593,6 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 
 	if (firstflag) {
 		CloseInventory();
-		drawsbarflag = false;
 		qtextflag = false;
 		if (!HeadlessMode) {
 			InitInv();

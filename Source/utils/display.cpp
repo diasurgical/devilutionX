@@ -24,6 +24,7 @@
 #include "controls/devices/kbcontroller.h"
 #include "controls/game_controls.h"
 #include "controls/touch/gamepad.h"
+#include "engine/backbuffer_state.hpp"
 #include "engine/dx.h"
 #include "options.h"
 #include "utils/log.hpp"
@@ -449,7 +450,7 @@ void SetFullscreenMode()
 	}
 	InitializeVirtualGamepad();
 #endif
-	force_redraw = 255;
+	RedrawEverything();
 }
 
 void ResizeWindow()
@@ -473,7 +474,7 @@ void ResizeWindow()
 #endif
 
 	CreateBackBuffer();
-	force_redraw = 255;
+	RedrawEverything();
 }
 
 SDL_Surface *GetOutputSurface()
@@ -490,15 +491,6 @@ SDL_Surface *GetOutputSurface()
 	if (ret == nullptr)
 		ErrSdl();
 	return ret;
-#endif
-}
-
-bool IsDoubleBuffered()
-{
-#ifdef USE_SDL1
-	return (GetOutputSurface()->flags & SDL_DOUBLEBUF) == SDL_DOUBLEBUF;
-#else
-	return true;
 #endif
 }
 

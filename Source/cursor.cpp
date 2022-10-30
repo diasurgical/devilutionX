@@ -12,6 +12,7 @@
 #include "controls/plrctrls.h"
 #include "doom.h"
 #include "engine.h"
+#include "engine/backbuffer_state.hpp"
 #include "engine/load_cel.hpp"
 #include "engine/point.hpp"
 #include "engine/render/clx_render.hpp"
@@ -381,7 +382,7 @@ void CheckCursMove()
 	ObjectUnderCursor = nullptr;
 	pcursitem = -1;
 	if (pcursinvitem != -1) {
-		drawsbarflag = true;
+		RedrawComponent(PanelDrawComponent::Belt);
 	}
 	pcursinvitem = -1;
 	pcursstashitem = uint16_t(-1);

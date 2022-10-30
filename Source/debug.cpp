@@ -14,6 +14,7 @@
 #include "automap.h"
 #include "control.h"
 #include "cursor.h"
+#include "engine/backbuffer_state.hpp"
 #include "engine/load_cel.hpp"
 #include "engine/point.hpp"
 #include "error.h"
@@ -550,8 +551,8 @@ std::string DebugCmdRefillHealthMana(const string_view parameter)
 	Player &myPlayer = *MyPlayer;
 	myPlayer.RestoreFullLife();
 	myPlayer.RestoreFullMana();
-	drawhpflag = true;
-	drawmanaflag = true;
+	RedrawComponent(PanelDrawComponent::Health);
+	RedrawComponent(PanelDrawComponent::Mana);
 
 	return "Ready for more.";
 }
@@ -589,7 +590,7 @@ std::string DebugCmdChangeMana(const string_view parameter)
 	int newMana = myPlayer._pMana + (change * 64);
 	myPlayer._pMana = newMana;
 	myPlayer._pManaBase = myPlayer._pMana + myPlayer._pMaxManaBase - myPlayer._pMaxMana;
-	drawmanaflag = true;
+	RedrawComponent(PanelDrawComponent::Mana);
 
 	return "Mana has changed.";
 }

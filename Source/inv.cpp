@@ -11,6 +11,7 @@
 #include "DiabloUI/ui_flags.hpp"
 #include "controls/plrctrls.h"
 #include "cursor.h"
+#include "engine/backbuffer_state.hpp"
 #include "engine/clx_sprite.hpp"
 #include "engine/load_cel.hpp"
 #include "engine/render/clx_render.hpp"
@@ -37,7 +38,6 @@
 namespace devilution {
 
 bool invflag;
-bool drawsbarflag;
 
 /**
  * Maps from inventory slot to screen position. The inventory slots are
@@ -566,7 +566,7 @@ void CheckInvPaste(Player &player, Point cursorPosition)
 		if (&player == MyPlayer) {
 			NetSendCmdChBeltItem(false, ii);
 		}
-		drawsbarflag = true;
+		RedrawComponent(PanelDrawComponent::Belt);
 	} break;
 	case ILOC_NONE:
 	case ILOC_INVALID:
@@ -1235,7 +1235,7 @@ bool AutoPlaceItemInBelt(Player &player, const Item &item, bool persistItem)
 			if (persistItem) {
 				beltItem = item;
 				player.CalcScrolls();
-				drawsbarflag = true;
+				RedrawComponent(PanelDrawComponent::Belt);
 				if (&player == MyPlayer) {
 					size_t beltIndex = std::distance<const Item *>(&player.SpdList[0], &beltItem);
 					NetSendCmdChBeltItem(false, beltIndex);
@@ -1907,7 +1907,7 @@ int8_t CheckInvHLight()
 		pi = &myPlayer.InvList[ii];
 	} else if (r >= SLOTXY_BELT_FIRST) {
 		r -= SLOTXY_BELT_FIRST;
-		drawsbarflag = true;
+		RedrawComponent(PanelDrawComponent::Belt);
 		pi = &myPlayer.SpdList[r];
 		if (pi->isEmpty())
 			return -1;

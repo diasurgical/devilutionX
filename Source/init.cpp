@@ -14,6 +14,7 @@
 
 #include "DiabloUI/diabloui.h"
 #include "engine/assets.hpp"
+#include "engine/backbuffer_state.hpp"
 #include "engine/dx.h"
 #include "hwcursor.hpp"
 #include "miniwin/misc_msg.h"
@@ -332,10 +333,10 @@ void MainWndProc(const SDL_Event &event)
 		break;
 	case SDL_WINDOWEVENT_SHOWN:
 		gbActive = false;
-		force_redraw = 255;
+		RedrawEverything();
 		break;
 	case SDL_WINDOWEVENT_EXPOSED:
-		force_redraw = 255;
+		RedrawEverything();
 		break;
 	case SDL_WINDOWEVENT_SIZE_CHANGED:
 		ReinitializeHardwareCursor();
@@ -343,7 +344,7 @@ void MainWndProc(const SDL_Event &event)
 	case SDL_WINDOWEVENT_LEAVE:
 		sgbMouseDown = CLICK_NONE;
 		LastMouseButtonAction = MouseActionType::None;
-		force_redraw = 255;
+		RedrawEverything();
 		break;
 	case SDL_WINDOWEVENT_CLOSE:
 		diablo_quit(0);

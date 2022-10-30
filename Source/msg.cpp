@@ -16,6 +16,7 @@
 #include "control.h"
 #include "dead.h"
 #include "encrypt.h"
+#include "engine/backbuffer_state.hpp"
 #include "engine/random.hpp"
 #include "engine/world_tile.hpp"
 #include "gamemenu.h"
@@ -2235,7 +2236,7 @@ size_t OnString(const TCmd *pCmd, Player &player)
 size_t OnFriendlyMode(const TCmd *pCmd, Player &player) // NOLINT(misc-unused-parameters)
 {
 	player.friendlyMode = !player.friendlyMode;
-	force_redraw = 255;
+	RedrawEverything();
 	return sizeof(*pCmd);
 }
 
@@ -2262,7 +2263,7 @@ size_t OnCheatExperience(const TCmd *pCmd, size_t pnum) // NOLINT(misc-unused-pa
 	else if (Players[pnum]._pLevel < MaxCharacterLevel) {
 		Players[pnum]._pExperience = Players[pnum]._pNextExper;
 		if (*sgOptions.Gameplay.experienceBar) {
-			force_redraw = 255;
+			RedrawEverything();
 		}
 		NextPlrLevel(Players[pnum]);
 	}

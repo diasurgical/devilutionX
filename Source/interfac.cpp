@@ -293,13 +293,17 @@ void ShowProgress(interface_mode uMsg)
 		// Blit the background once and then free it.
 		LoadCutsceneBackground(uMsg);
 		DrawCutsceneBackground();
-		if (RenderDirectlyToOutputSurface && IsDoubleBuffered()) {
-			// Blit twice for triple buffering.
-			for (unsigned i = 0; i < 2; ++i) {
+		if (RenderDirectlyToOutputSurface && PalSurface != nullptr) {
+			// Render into all the backbuffers if there are multiple.
+			const void *initialPixels = PalSurface->pixels;
+			if (DiabloUiSurface() == PalSurface)
+				BltFast(nullptr, nullptr);
+			RenderPresent();
+			while (PalSurface->pixels != initialPixels) {
+				DrawCutsceneBackground();
 				if (DiabloUiSurface() == PalSurface)
 					BltFast(nullptr, nullptr);
 				RenderPresent();
-				DrawCutsceneBackground();
 			}
 		}
 		FreeCutsceneBackground();

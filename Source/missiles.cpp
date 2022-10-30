@@ -14,6 +14,7 @@
 #ifdef _DEBUG
 #include "debug.h"
 #endif
+#include "engine/backbuffer_state.hpp"
 #include "engine/load_file.hpp"
 #include "engine/points_in_rectangle_range.hpp"
 #include "engine/random.hpp"
@@ -1323,7 +1324,7 @@ void AddStealPotions(Missile &missile, AddMissileParameter & /*parameter*/)
 				hasPlayedSFX = true;
 			}
 		}
-		force_redraw = 255;
+		RedrawEverything();
 
 		return false;
 	});
@@ -1344,7 +1345,7 @@ void AddManaTrap(Missile &missile, AddMissileParameter & /*parameter*/)
 		player._pMana = 0;
 		player._pManaBase = player._pMana + player._pMaxManaBase - player._pMaxMana;
 		CalcPlrInv(player, false);
-		drawmanaflag = true;
+		RedrawComponent(PanelDrawComponent::Mana);
 		PlaySfxLoc(TSFX_COW7, *trappedPlayerPosition);
 	}
 
@@ -1535,7 +1536,7 @@ void AddMana(Missile &missile, AddMissileParameter & /*parameter*/)
 	if (player._pManaBase > player._pMaxManaBase)
 		player._pManaBase = player._pMaxManaBase;
 	missile._miDelFlag = true;
-	drawmanaflag = true;
+	RedrawComponent(PanelDrawComponent::Mana);
 }
 
 void AddMagi(Missile &missile, AddMissileParameter & /*parameter*/)
@@ -1545,7 +1546,7 @@ void AddMagi(Missile &missile, AddMissileParameter & /*parameter*/)
 	player._pMana = player._pMaxMana;
 	player._pManaBase = player._pMaxManaBase;
 	missile._miDelFlag = true;
-	drawmanaflag = true;
+	RedrawComponent(PanelDrawComponent::Mana);
 }
 
 void AddRing(Missile &missile, AddMissileParameter & /*parameter*/)
@@ -2264,7 +2265,7 @@ void AddHeal(Missile &missile, AddMissileParameter & /*parameter*/)
 	player._pHPBase = std::min(player._pHPBase + hp, player._pMaxHPBase);
 
 	missile._miDelFlag = true;
-	drawhpflag = true;
+	RedrawComponent(PanelDrawComponent::Health);
 }
 
 void AddHealOther(Missile &missile, AddMissileParameter & /*parameter*/)
@@ -2394,7 +2395,7 @@ void AddBlodboil(Missile &missile, AddMissileParameter &parameter)
 	int lvl = player._pLevel * 2;
 	missile._mirange = lvl + 10 * missile._mispllvl + 245;
 	CalcPlrItemVals(player, true);
-	force_redraw = 255;
+	RedrawEverything();
 	player.Say(HeroSpeech::Aaaaargh);
 }
 
@@ -3788,7 +3789,7 @@ void MI_Blodboil(Missile &missile)
 
 	CalcPlrItemVals(player, true);
 	ApplyPlrDamage(player, 0, 1, hpdif);
-	force_redraw = 255;
+	RedrawEverything();
 	player.Say(HeroSpeech::HeavyBreathing);
 }
 

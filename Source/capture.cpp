@@ -8,6 +8,7 @@
 #include <fstream>
 
 #include "DiabloUI/diabloui.h"
+#include "engine/backbuffer_state.hpp"
 #include "engine/dx.h"
 #include "engine/palette.h"
 #include "utils/file_util.h"
@@ -195,7 +196,7 @@ void CaptureScreen()
 		system_palette[i] = palette[i];
 	}
 	palette_update();
-	force_redraw = 255;
+	RedrawEverything();
 }
 
 } // namespace devilution

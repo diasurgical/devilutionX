@@ -6,6 +6,7 @@
 #include "gamemenu.h"
 
 #include "cursor.h"
+#include "engine/backbuffer_state.hpp"
 #include "engine/sound.h"
 #include "engine/sound_defs.hpp"
 #include "error.h"
@@ -102,7 +103,7 @@ void GamemenuNewGame(bool /*bActivate*/)
 
 	MyPlayerIsDead = false;
 	if (!HeadlessMode) {
-		force_redraw = 255;
+		RedrawEverything();
 		scrollrt_draw_game_screen();
 	}
 	CornerStone.activated = false;
@@ -293,14 +294,14 @@ void gamemenu_load_game(bool /*bActivate*/)
 	gamemenu_off();
 	NewCursor(CURSOR_NONE);
 	InitDiabloMsg(EMSG_LOADING);
-	force_redraw = 255;
+	RedrawEverything();
 	DrawAndBlit();
 	LoadGame(false);
 	ClrDiabloMsg();
 	CornerStone.activated = false;
 	PaletteFadeOut(8);
 	MyPlayerIsDead = false;
-	force_redraw = 255;
+	RedrawEverything();
 	DrawAndBlit();
 	LoadPWaterPalette();
 	PaletteFadeIn(8);
@@ -324,11 +325,11 @@ void gamemenu_save_game(bool /*bActivate*/)
 	NewCursor(CURSOR_NONE);
 	gamemenu_off();
 	InitDiabloMsg(EMSG_SAVING);
-	force_redraw = 255;
+	RedrawEverything();
 	DrawAndBlit();
 	SaveGame();
 	ClrDiabloMsg();
-	force_redraw = 255;
+	RedrawEverything();
 	NewCursor(CURSOR_HAND);
 	if (CornerStone.activated) {
 		CornerstoneSave();
