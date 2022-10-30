@@ -569,6 +569,14 @@ void AddPanelString(string_view str)
 		InfoString = StrCat(InfoString, "\n", str);
 }
 
+void AddPanelString(std::string &&str)
+{
+	if (InfoString.empty())
+		InfoString = std::move(str);
+	else
+		InfoString = StrCat(InfoString, "\n", str);
+}
+
 Point GetPanelPosition(UiPanels panel, Point offset)
 {
 	Displacement displacement { offset.x, offset.y };
