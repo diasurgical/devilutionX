@@ -11,6 +11,7 @@
 
 #include "controls/plrctrls.h"
 #include "cursor.h"
+#include "engine/backbuffer_state.hpp"
 #include "engine/load_cel.hpp"
 #include "engine/random.hpp"
 #include "engine/render/clx_render.hpp"
@@ -695,7 +696,7 @@ void FillManaPlayer()
 	}
 	myPlayer._pMana = myPlayer._pMaxMana;
 	myPlayer._pManaBase = myPlayer._pMaxManaBase;
-	drawmanaflag = true;
+	RedrawComponent(PanelDrawComponent::Mana);
 }
 
 void StartWitch()
@@ -1090,7 +1091,7 @@ void HealPlayer()
 	}
 	myPlayer._pHitPoints = myPlayer._pMaxHP;
 	myPlayer._pHPBase = myPlayer._pMaxHPBase;
-	drawhpflag = true;
+	RedrawComponent(PanelDrawComponent::Health);
 }
 
 void StartHealer()

@@ -83,7 +83,6 @@ enum item_color : uint8_t {
 };
 
 extern bool invflag;
-extern bool drawsbarflag;
 extern const Point InvRect[73];
 
 void InvDrawSlotBack(const Surface &out, Point targetPosition, Size size, item_quality itemQuality);

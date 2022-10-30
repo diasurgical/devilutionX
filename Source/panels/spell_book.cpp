@@ -3,6 +3,7 @@
 #include <fmt/format.h>
 
 #include "control.h"
+#include "engine/backbuffer_state.hpp"
 #include "engine/clx_sprite.hpp"
 #include "engine/load_cel.hpp"
 #include "engine/rectangle.hpp"
@@ -202,7 +203,7 @@ void CheckSBook()
 			}
 			player._pRSpell = sn;
 			player._pRSplType = st;
-			force_redraw = 255;
+			RedrawEverything();
 		}
 		return;
 	}

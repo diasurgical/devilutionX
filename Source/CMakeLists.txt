@@ -96,6 +96,7 @@ set(libdevilutionx_SRCS
   engine/actor_position.cpp
   engine/animationinfo.cpp
   engine/assets.cpp
+  engine/backbuffer_state.cpp
   engine/direction.cpp
   engine/dx.cpp
   engine/load_cel.cpp

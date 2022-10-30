@@ -17,6 +17,7 @@
 #ifdef _DEBUG
 #include "debug.h"
 #endif
+#include "engine/backbuffer_state.hpp"
 #include "engine/load_cel.hpp"
 #include "engine/load_file.hpp"
 #include "engine/points_in_rectangle_range.hpp"
@@ -2289,7 +2290,7 @@ void OperateShrineMysterious(Player &player)
 
 	CheckStats(player);
 	CalcPlrInv(player, true);
-	force_redraw = 255;
+	RedrawEverything();
 
 	InitDiabloMsg(EMSG_SHRINE_MYSTERIOUS);
 }
@@ -2432,7 +2433,7 @@ void OperateShrineStone(Player &player)
 			item._iCharges = item._iMaxCharges;
 	}
 
-	force_redraw = 255;
+	RedrawEverything();
 
 	InitDiabloMsg(EMSG_SHRINE_STONE);
 }
@@ -2530,7 +2531,7 @@ void OperateShrineCostOfWisdom(Player &player, spell_id spellId, diablo_message 
 		player._pMaxManaBase = 0;
 	}
 
-	force_redraw = 255;
+	RedrawEverything();
 
 	InitDiabloMsg(message);
 }
@@ -2555,7 +2556,7 @@ void OperateShrineCryptic(Player &player)
 
 	InitDiabloMsg(EMSG_SHRINE_CRYPTIC);
 
-	force_redraw = 255;
+	RedrawEverything();
 }
 
 void OperateShrineEldritch(Player &player)
@@ -2586,7 +2587,7 @@ void OperateShrineEldritch(Player &player)
 		}
 	}
 
-	force_redraw = 255;
+	RedrawEverything();
 
 	InitDiabloMsg(EMSG_SHRINE_ELDRITCH);
 }
@@ -2599,7 +2600,7 @@ void OperateShrineEerie(Player &player)
 	ModifyPlrMag(player, 2);
 	CheckStats(player);
 	CalcPlrInv(player, true);
-	force_redraw = 255;
+	RedrawEverything();
 
 	InitDiabloMsg(EMSG_SHRINE_EERIE);
 }
@@ -2628,7 +2629,7 @@ void OperateShrineDivine(Player &player, Point spawnPosition)
 	player._pHitPoints = player._pMaxHP;
 	player._pHPBase = player._pMaxHPBase;
 
-	force_redraw = 255;
+	RedrawEverything();
 
 	InitDiabloMsg(EMSG_SHRINE_DIVINE);
 }
@@ -2676,7 +2677,7 @@ void OperateShrineSpooky(const Player &player)
 	myPlayer._pMana = myPlayer._pMaxMana;
 	myPlayer._pManaBase = myPlayer._pMaxManaBase;
 
-	force_redraw = 255;
+	RedrawEverything();
 
 	InitDiabloMsg(EMSG_SHRINE_SPOOKY2);
 }
@@ -2689,7 +2690,7 @@ void OperateShrineAbandoned(Player &player)
 	ModifyPlrDex(player, 2);
 	CheckStats(player);
 	CalcPlrInv(player, true);
-	force_redraw = 255;
+	RedrawEverything();
 
 	InitDiabloMsg(EMSG_SHRINE_ABANDONED);
 }
@@ -2702,7 +2703,7 @@ void OperateShrineCreepy(Player &player)
 	ModifyPlrStr(player, 2);
 	CheckStats(player);
 	CalcPlrInv(player, true);
-	force_redraw = 255;
+	RedrawEverything();
 
 	InitDiabloMsg(EMSG_SHRINE_CREEPY);
 }
@@ -2715,7 +2716,7 @@ void OperateShrineQuiet(Player &player)
 	ModifyPlrVit(player, 2);
 	CheckStats(player);
 	CalcPlrInv(player, true);
-	force_redraw = 255;
+	RedrawEverything();
 
 	InitDiabloMsg(EMSG_SHRINE_QUIET);
 }
@@ -2744,7 +2745,7 @@ void OperateShrineGlimmering(Player &player)
 	}
 
 	CalcPlrInv(player, true);
-	force_redraw = 255;
+	RedrawEverything();
 
 	InitDiabloMsg(EMSG_SHRINE_GLIMMERING);
 }
@@ -2772,7 +2773,7 @@ void OperateShrineTainted(const Player &player)
 
 	CheckStats(myPlayer);
 	CalcPlrInv(myPlayer, true);
-	force_redraw = 255;
+	RedrawEverything();
 
 	InitDiabloMsg(EMSG_SHRINE_TAINTED2);
 }
@@ -2813,7 +2814,7 @@ void OperateShrineOily(Player &player, Point spawnPosition)
 
 	CheckStats(player);
 	CalcPlrInv(player, true);
-	force_redraw = 255;
+	RedrawEverything();
 
 	AddMissile(
 	    spawnPosition,
@@ -2843,7 +2844,7 @@ void OperateShrineGlowing(Player &player)
 		player._pExperience = 0;
 
 	CheckStats(player);
-	force_redraw = 255;
+	RedrawEverything();
 
 	InitDiabloMsg(EMSG_SHRINE_GLOWING);
 }
@@ -2857,7 +2858,7 @@ void OperateShrineMendicant(Player &player)
 	AddPlrExperience(player, player._pLevel, gold);
 	TakePlrsMoney(gold);
 
-	force_redraw = 255;
+	RedrawEverything();
 
 	InitDiabloMsg(EMSG_SHRINE_MENDICANT);
 }
@@ -2884,7 +2885,7 @@ void OperateShrineSparkling(Player &player, Point spawnPosition)
 	    3 * currlevel + 2,
 	    0);
 
-	force_redraw = 255;
+	RedrawEverything();
 
 	InitDiabloMsg(EMSG_SHRINE_SPARKLING);
 }
@@ -2920,7 +2921,7 @@ void OperateShrineShimmering(Player &player)
 	player._pMana = player._pMaxMana;
 	player._pManaBase = player._pMaxManaBase;
 
-	force_redraw = 255;
+	RedrawEverything();
 
 	InitDiabloMsg(EMSG_SHRINE_SHIMMERING);
 }
@@ -2949,7 +2950,7 @@ void OperateShrineSolar(Player &player)
 
 	CheckStats(player);
 	CalcPlrInv(player, true);
-	force_redraw = 255;
+	RedrawEverything();
 }
 
 void OperateShrineMurphys(Player &player)
@@ -3200,7 +3201,7 @@ void OperateGoatShrine(Player &player, Object &object, _sfx_id sType)
 	object._oVar1 = FindValidShrine();
 	OperateShrine(player, object, sType);
 	object._oAnimDelay = 2;
-	force_redraw = 255;
+	RedrawEverything();
 }
 
 void OperateCauldron(Player &player, Object &object, _sfx_id sType)
@@ -3210,7 +3211,7 @@ void OperateCauldron(Player &player, Object &object, _sfx_id sType)
 	OperateShrine(player, object, sType);
 	object._oAnimFrame = 3;
 	object._oAnimFlag = false;
-	force_redraw = 255;
+	RedrawEverything();
 }
 
 bool OperateFountains(Player &player, Object &fountain)
@@ -3309,7 +3310,7 @@ bool OperateFountains(Player &player, Object &fountain)
 	default:
 		break;
 	}
-	force_redraw = 255;
+	RedrawEverything();
 	return applied;
 }
 

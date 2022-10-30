@@ -10,6 +10,7 @@
 #ifdef _DEBUG
 #include "debug.h"
 #endif
+#include "engine/backbuffer_state.hpp"
 #include "engine/point.hpp"
 #include "engine/random.hpp"
 #include "gamemenu.h"
@@ -55,12 +56,12 @@ void ClearReadiedSpell(Player &player)
 {
 	if (player._pRSpell != SPL_INVALID) {
 		player._pRSpell = SPL_INVALID;
-		force_redraw = 255;
+		RedrawEverything();
 	}
 
 	if (player._pRSplType != RSPLTYPE_INVALID) {
 		player._pRSplType = RSPLTYPE_INVALID;
-		force_redraw = 255;
+		RedrawEverything();
 	}
 }
 
@@ -191,7 +192,7 @@ void ConsumeSpell(Player &player, spell_id sn)
 		int ma = GetManaAmount(player, sn);
 		player._pMana -= ma;
 		player._pManaBase -= ma;
-		drawmanaflag = true;
+		RedrawComponent(PanelDrawComponent::Mana);
 		break;
 	}
 	if (sn == SPL_FLARE) {
@@ -273,8 +274,8 @@ void DoResurrect(size_t pnum, Player &target)
 	if (&target == MyPlayer) {
 		MyPlayerIsDead = false;
 		gamemenu_off();
-		drawhpflag = true;
-		drawmanaflag = true;
+		RedrawComponent(PanelDrawComponent::Health);
+		RedrawComponent(PanelDrawComponent::Mana);
 	}
 
 	ClrPlrPath(target);
@@ -327,7 +328,7 @@ void DoHealOther(const Player &caster, Player &target)
 	target._pHPBase = std::min(target._pHPBase + hp, target._pMaxHPBase);
 
 	if (&target == MyPlayer) {
-		drawhpflag = true;
+		RedrawComponent(PanelDrawComponent::Health);
 	}
 }
 

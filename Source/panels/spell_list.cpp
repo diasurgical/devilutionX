@@ -4,6 +4,7 @@
 
 #include "control.h"
 #include "engine.h"
+#include "engine/backbuffer_state.hpp"
 #include "engine/palette.h"
 #include "engine/render/text_render.hpp"
 #include "inv_iterators.hpp"
@@ -280,7 +281,7 @@ void SetSpell()
 	myPlayer._pRSpell = pSpell;
 	myPlayer._pRSplType = pSplType;
 
-	force_redraw = 255;
+	RedrawEverything();
 }
 
 void SetSpeedSpell(size_t slot)
@@ -331,7 +332,7 @@ void ToggleSpell(size_t slot)
 	if ((spells & GetSpellBitmask(spellId)) != 0) {
 		myPlayer._pRSpell = spellId;
 		myPlayer._pRSplType = myPlayer._pSplTHotKey[slot];
-		force_redraw = 255;
+		RedrawEverything();
 	}
 }
 

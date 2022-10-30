@@ -16,6 +16,7 @@
 #include "controls/modifier_hints.h"
 #include "controls/plrctrls.h"
 #include "cursor.h"
+#include "engine/backbuffer_state.hpp"
 #include "engine/clx_sprite.hpp"
 #include "engine/load_cel.hpp"
 #include "engine/render/clx_render.hpp"
@@ -57,18 +58,10 @@
 
 namespace devilution {
 
-/**
- * @brief Set if the life flask needs to be redrawn during next frame
- */
-bool drawhpflag;
 bool dropGoldFlag;
 bool chrbtn[4];
 bool lvlbtndown;
 int dropGoldValue;
-/**
- * @brief Set if the mana flask needs to be redrawn during the next frame
- */
-bool drawmanaflag;
 bool chrbtnactive;
 UiFlags InfoColor;
 int sbooktab;
@@ -76,7 +69,6 @@ int8_t initialDropGoldIndex;
 bool talkflag;
 bool sbookflag;
 bool chrflag;
-bool drawbtnflag;
 StringOrView InfoString;
 bool panelflag;
 int initialDropGoldValue;
@@ -251,7 +243,7 @@ void DrawFlaskLower(const Surface &out, const Surface &sourceBuffer, int offset,
 void SetButtonStateDown(int btnId)
 {
 	PanelButtons[btnId] = true;
-	drawbtnflag = true;
+	RedrawComponent(PanelDrawComponent::ControlButtons);
 	panbtndown = true;
 }
 
@@ -703,8 +695,8 @@ void InitControlPan()
 		buttonEnabled = false;
 	chrbtnactive = false;
 	InfoString = {};
-	drawhpflag = true;
-	drawmanaflag = true;
+	RedrawComponent(PanelDrawComponent::Health);
+	RedrawComponent(PanelDrawComponent::Mana);
 	chrflag = false;
 	spselflag = false;
 	sbooktab = 0;
@@ -758,7 +750,7 @@ void ClearPanBtn()
 {
 	for (bool &panelButton : PanelButtons)
 		panelButton = false;
-	drawbtnflag = true;
+	RedrawComponent(PanelDrawComponent::ControlButtons);
 	panbtndown = false;
 }
 
@@ -772,7 +764,7 @@ void DoPanBtn()
 		if (MousePosition.x >= PanBtnPos[i].x + mainPanelPosition.x && MousePosition.x <= x) {
 			if (MousePosition.y >= PanBtnPos[i].y + mainPanelPosition.y && MousePosition.y <= y) {
 				PanelButtons[i] = true;
-				drawbtnflag = true;
+				RedrawComponent(PanelDrawComponent::ControlButtons);
 				panbtndown = true;
 			}
 		}
@@ -782,7 +774,7 @@ void DoPanBtn()
 			Player &myPlayer = *MyPlayer;
 			myPlayer._pRSpell = SPL_INVALID;
 			myPlayer._pRSplType = RSPLTYPE_INVALID;
-			force_redraw = 255;
+			RedrawEverything();
 			return;
 		}
 		DoSpeedBook();
@@ -889,7 +881,7 @@ void CheckBtnUp()
 	bool gamemenuOff = true;
 	const Point mainPanelPosition = GetMainPanel().position;
 
-	drawbtnflag = true;
+	RedrawComponent(PanelDrawComponent::ControlButtons);
 	panbtndown = false;
 
 	for (int i = 0; i < 8; i++) {
@@ -1223,8 +1215,6 @@ void DrawTalkPan(const Surface &out)
 	if (!talkflag)
 		return;
 
-	force_redraw = 255;
-
 	const Point mainPanelPosition = GetMainPanel().position;
 
 	DrawPanelBox(out, MakeSdlRect(175, sgbPlrTalkTbl + 20, 294, 5), mainPanelPosition + Displacement { 175, 4 });
@@ -1329,7 +1319,7 @@ void control_type_message()
 	if (!IsChatAvailable())
 		return;
 
-	talkflag = true;
+	RedrawComponent(PanelDrawComponent::ChatInput);
 	SDL_Rect rect = MakeSdlRect(GetMainPanel().position.x + 200, GetMainPanel().position.y + 22, 250, 39);
 	SDL_SetTextInputRect(&rect);
 	TalkMessage[0] = '\0';
@@ -1337,7 +1327,7 @@ void control_type_message()
 		talkButtonDown = false;
 	}
 	sgbPlrTalkTbl = GetMainPanel().size.height + 16;
-	force_redraw = 255;
+	RedrawEverything();
 	TalkSaveIndex = NextTalkSave;
 	SDL_StartTextInput();
 }
@@ -1347,7 +1337,7 @@ void control_reset_talk()
 	talkflag = false;
 	SDL_StopTextInput();
 	sgbPlrTalkTbl = 0;
-	force_redraw = 255;
+	RedrawEverything();
 }
 
 bool IsTalkActive()

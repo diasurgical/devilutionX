@@ -40,8 +40,6 @@ bool IsFullScreen();
 // SDL2, upscale: Renderer texture surface.
 SDL_Surface *GetOutputSurface();
 
-bool IsDoubleBuffered();
-
 // Whether the output surface requires software scaling.
 // Always returns false on SDL2.
 bool OutputRequiresScaling();

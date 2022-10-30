@@ -20,6 +20,7 @@
 #include "controls/plrctrls.h"
 #include "cursor.h"
 #include "doom.h"
+#include "engine/backbuffer_state.hpp"
 #include "engine/clx_sprite.hpp"
 #include "engine/dx.h"
 #include "engine/load_cel.hpp"
@@ -823,11 +824,11 @@ int SaveItemPower(const Player &player, Item &item, ItemPower &power)
 		break;
 	case IPL_MANA:
 		item._iPLMana += r << 6;
-		drawmanaflag = true;
+		RedrawComponent(PanelDrawComponent::Mana);
 		break;
 	case IPL_MANA_CURSE:
 		item._iPLMana -= r << 6;
-		drawmanaflag = true;
+		RedrawComponent(PanelDrawComponent::Mana);
 		break;
 	case IPL_DUR: {
 		int bonus = r * item._iMaxDur / 100;
@@ -883,7 +884,7 @@ int SaveItemPower(const Player &player, Item &item, ItemPower &power)
 		break;
 	case IPL_NOMANA:
 		item._iFlags |= ItemSpecialEffect::NoMana;
-		drawmanaflag = true;
+		RedrawComponent(PanelDrawComponent::Mana);
 		break;
 	case IPL_ABSHALFTRAP:
 		item._iFlags |= ItemSpecialEffect::HalfTrapDamage;
@@ -902,14 +903,14 @@ int SaveItemPower(const Player &player, Item &item, ItemPower &power)
 			item._iFlags |= ItemSpecialEffect::StealMana3;
 		if (power.param1 == 5)
 			item._iFlags |= ItemSpecialEffect::StealMana5;
-		drawmanaflag = true;
+		RedrawComponent(PanelDrawComponent::Mana);
 		break;
 	case IPL_STEALLIFE:
 		if (power.param1 == 3)
 			item._iFlags |= ItemSpecialEffect::StealLife3;
 		if (power.param1 == 5)
 			item._iFlags |= ItemSpecialEffect::StealLife5;
-		drawhpflag = true;
+		RedrawComponent(PanelDrawComponent::Health);
 		break;
 	case IPL_TARGAC:
 		if (gbIsHellfire)
@@ -2719,8 +2720,8 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 		}
 	}
 
-	drawmanaflag = true;
-	drawhpflag = true;
+	RedrawComponent(PanelDrawComponent::Mana);
+	RedrawComponent(PanelDrawComponent::Health);
 }
 
 void CalcPlrInv(Player &player, bool loadgfx)
@@ -3813,25 +3814,25 @@ void UseItem(size_t pnum, item_misc_id mid, spell_id spl)
 	case IMISC_HEAL:
 		player.RestorePartialLife();
 		if (&player == MyPlayer) {
-			drawhpflag = true;
+			RedrawComponent(PanelDrawComponent::Health);
 		}
 		break;
 	case IMISC_FULLHEAL:
 		player.RestoreFullLife();
 		if (&player == MyPlayer) {
-			drawhpflag = true;
+			RedrawComponent(PanelDrawComponent::Health);
 		}
 		break;
 	case IMISC_MANA:
 		player.RestorePartialMana();
 		if (&player == MyPlayer) {
-			drawmanaflag = true;
+			RedrawComponent(PanelDrawComponent::Mana);
 		}
 		break;
 	case IMISC_FULLMANA:
 		player.RestoreFullMana();
 		if (&player == MyPlayer) {
-			drawmanaflag = true;
+			RedrawComponent(PanelDrawComponent::Mana);
 		}
 		break;
 	case IMISC_ELIXSTR:
@@ -3842,7 +3843,7 @@ void UseItem(size_t pnum, item_misc_id mid, spell_id spl)
 		if (gbIsHellfire) {
 			player.RestoreFullMana();
 			if (&player == MyPlayer) {
-				drawmanaflag = true;
+				RedrawComponent(PanelDrawComponent::Mana);
 			}
 		}
 		break;
@@ -3854,7 +3855,7 @@ void UseItem(size_t pnum, item_misc_id mid, spell_id spl)
 		if (gbIsHellfire) {
 			player.RestoreFullLife();
 			if (&player == MyPlayer) {
-				drawhpflag = true;
+				RedrawComponent(PanelDrawComponent::Health);
 			}
 		}
 		break;
@@ -3862,16 +3863,16 @@ void UseItem(size_t pnum, item_misc_id mid, spell_id spl)
 		player.RestorePartialLife();
 		player.RestorePartialMana();
 		if (&player == MyPlayer) {
-			drawhpflag = true;
-			drawmanaflag = true;
+			RedrawComponent(PanelDrawComponent::Health);
+			RedrawComponent(PanelDrawComponent::Mana);
 		}
 	} break;
 	case IMISC_FULLREJUV:
 		player.RestoreFullLife();
 		player.RestoreFullMana();
 		if (&player == MyPlayer) {
-			drawhpflag = true;
-			drawmanaflag = true;
+			RedrawComponent(PanelDrawComponent::Health);
+			RedrawComponent(PanelDrawComponent::Mana);
 		}
 		break;
 	case IMISC_SCROLL:
@@ -3910,7 +3911,7 @@ void UseItem(size_t pnum, item_misc_id mid, spell_id spl)
 				Stash.RefreshItemStatFlags();
 			}
 		}
-		drawmanaflag = true;
+		RedrawComponent(PanelDrawComponent::Mana);
 		break;
 	case IMISC_MAPOFDOOM:
 		doom_init();

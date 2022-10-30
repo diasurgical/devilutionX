@@ -32,12 +32,10 @@ namespace devilution {
 
 constexpr Size SidePanelSize { 320, 352 };
 
-extern bool drawhpflag;
 extern bool dropGoldFlag;
 extern bool chrbtn[4];
 extern bool lvlbtndown;
 extern int dropGoldValue;
-extern bool drawmanaflag;
 extern bool chrbtnactive;
 extern UiFlags InfoColor;
 extern int sbooktab;
@@ -45,7 +43,6 @@ extern int8_t initialDropGoldIndex;
 extern bool talkflag;
 extern bool sbookflag;
 extern bool chrflag;
-extern bool drawbtnflag;
 extern StringOrView InfoString;
 extern bool panelflag;
 extern int initialDropGoldValue;

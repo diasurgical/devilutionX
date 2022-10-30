@@ -7,6 +7,7 @@
 #include "controls/plrctrls.h"
 #include "diablo.h"
 #include "effects.h"
+#include "engine/backbuffer_state.hpp"
 #include "engine/demomode.h"
 #include "engine/sound.h"
 #include "hwcursor.hpp"
@@ -74,10 +75,10 @@ void PlayInGameMovie(const char *pszMovie)
 	PaletteFadeOut(8);
 	play_movie(pszMovie, false);
 	ClearScreenBuffer();
-	force_redraw = 255;
+	RedrawEverything();
 	scrollrt_draw_game_screen();
 	PaletteFadeIn(8);
-	force_redraw = 255;
+	RedrawEverything();
 }
 
 } // namespace devilution
