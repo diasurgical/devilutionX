@@ -353,8 +353,10 @@ void DrawStash(const Surface &out)
 	constexpr Displacement offset { 0, INV_SLOT_SIZE_PX - 1 };
 
 	for (auto slot : StashGridRange) {
+		StashStruct::StashCell itemId = Stash.GetItemIdAtPosition(slot);
+		Item &item = Stash.stashList[itemId];
 		if (Stash.IsItemAtPosition(slot)) {
-			InvDrawSlotBack(out, GetStashSlotCoord(slot) + offset, InventorySlotSizeInPixels);
+			InvDrawSlotBack(out, GetStashSlotCoord(slot) + offset, InventorySlotSizeInPixels, item._iMagical);
 		}
 	}
 
