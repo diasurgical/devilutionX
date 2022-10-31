@@ -78,47 +78,40 @@ void SetSimulatingMouseWithPadmapper(bool value)
 	}
 }
 
-// SELECT + D-Pad to simulate right stick movement.
-bool SimulateRightStickWithDpad(ControllerButtonEvent ctrlEvent)
+void SimulateRightStickWithPadmapper(ControllerButtonEvent ctrlEvent)
 {
 	if (IsAnyOf(ctrlEvent.button, ControllerButton_NONE, ControllerButton_IGNORE))
-		return false;
+		return;
+	if (!ctrlEvent.up && ctrlEvent.button == SuppressedButton)
+		return;
 
-	ControllerButtonCombo upCombo = sgOptions.Padmapper.ButtonComboForAction("MouseUp");
-	ControllerButtonCombo downCombo = sgOptions.Padmapper.ButtonComboForAction("MouseDown");
-	ControllerButtonCombo leftCombo = sgOptions.Padmapper.ButtonComboForAction("MouseLeft");
-	ControllerButtonCombo rightCombo = sgOptions.Padmapper.ButtonComboForAction("MouseRight");
-	if (IsNoneOf(ctrlEvent.button, upCombo.button, downCombo.button, leftCombo.button, rightCombo.button)) {
+	string_view actionName = sgOptions.Padmapper.ActionNameTriggeredByButtonEvent(ctrlEvent);
+	bool upTriggered = actionName == "MouseUp";
+	bool downTriggered = actionName == "MouseDown";
+	bool leftTriggered = actionName == "MouseLeft";
+	bool rightTriggered = actionName == "MouseRight";
+	if (!upTriggered && !downTriggered && !leftTriggered && !rightTriggered) {
 		if (rightStickX == 0 && rightStickY == 0)
 			SetSimulatingMouseWithPadmapper(false);
-		return false;
+		return;
 	}
+
+	bool upActive = (upTriggered && !ctrlEvent.up) || (!upTriggered && sgOptions.Padmapper.IsActive("MouseUp"));
+	bool downActive = (downTriggered && !ctrlEvent.up) || (!downTriggered && sgOptions.Padmapper.IsActive("MouseDown"));
+	bool leftActive = (leftTriggered && !ctrlEvent.up) || (!leftTriggered && sgOptions.Padmapper.IsActive("MouseLeft"));
+	bool rightActive = (rightTriggered && !ctrlEvent.up) || (!rightTriggered && sgOptions.Padmapper.IsActive("MouseRight"));
 
 	rightStickX = 0;
 	rightStickY = 0;
-
-	// Cannot use PadmapperOptions::IsActive() because this function
-	// is invoked before PadmapperOptions::ButtonPressed()
-	if (IsControllerButtonComboPressed(upCombo))
+	if (upActive)
 		rightStickY += 1.F;
-	if (IsControllerButtonComboPressed(downCombo))
+	if (downActive)
 		rightStickY -= 1.F;
-	if (IsControllerButtonComboPressed(leftCombo))
+	if (leftActive)
 		rightStickX -= 1.F;
-	if (IsControllerButtonComboPressed(rightCombo))
+	if (rightActive)
 		rightStickX += 1.F;
-
-	if (rightStickX == 0 && rightStickY == 0) {
-		// In this case, PadmapperOptions::IsActive() can be used to anticipate PadmapperOptions::ButtonReleased()
-		bool upReleased = ctrlEvent.up && ctrlEvent.button == upCombo.button && sgOptions.Padmapper.IsActive("MouseUp");
-		bool downReleased = ctrlEvent.up && ctrlEvent.button == downCombo.button && sgOptions.Padmapper.IsActive("MouseDown");
-		bool leftReleased = ctrlEvent.up && ctrlEvent.button == leftCombo.button && sgOptions.Padmapper.IsActive("MouseLeft");
-		bool rightReleased = ctrlEvent.up && ctrlEvent.button == rightCombo.button && sgOptions.Padmapper.IsActive("MouseRight");
-		return upReleased || downReleased || leftReleased || rightReleased;
-	}
-
 	SetSimulatingMouseWithPadmapper(true);
-	return true;
 }
 
 } // namespace
@@ -174,7 +167,8 @@ bool ProcessControllerMotion(const SDL_Event &event, ControllerButtonEvent ctrlE
 		return true;
 	}
 #endif
-	return SimulateRightStickWithDpad(ctrlEvent);
+	SimulateRightStickWithPadmapper(ctrlEvent);
+	return false;
 }
 
 AxisDirection GetLeftStickOrDpadDirection(bool usePadmapper)
@@ -194,7 +188,7 @@ AxisDirection GetLeftStickOrDpadDirection(bool usePadmapper)
 		isDownPressed |= sgOptions.Padmapper.IsActive("MoveDown");
 		isLeftPressed |= sgOptions.Padmapper.IsActive("MoveLeft");
 		isRightPressed |= sgOptions.Padmapper.IsActive("MoveRight");
-	} else {
+	} else if (!SimulatingMouseWithPadmapper) {
 		isUpPressed |= IsControllerButtonPressed(ControllerButton_BUTTON_DPAD_UP);
 		isDownPressed |= IsControllerButtonPressed(ControllerButton_BUTTON_DPAD_DOWN);
 		isLeftPressed |= IsControllerButtonPressed(ControllerButton_BUTTON_DPAD_LEFT);

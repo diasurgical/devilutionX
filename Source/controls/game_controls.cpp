@@ -332,14 +332,12 @@ bool SkipsMovie(ControllerButtonEvent ctrlEvent)
 
 bool IsSimulatedMouseClickBinding(ControllerButtonEvent ctrlEvent)
 {
-	ControllerButtonCombo leftMouseClickBinding1 = sgOptions.Padmapper.ButtonComboForAction("LeftMouseClick1");
-	ControllerButtonCombo leftMouseClickBinding2 = sgOptions.Padmapper.ButtonComboForAction("LeftMouseClick2");
-	ControllerButtonCombo rightMouseClickBinding1 = sgOptions.Padmapper.ButtonComboForAction("RightMouseClick1");
-	ControllerButtonCombo rightMouseClickBinding2 = sgOptions.Padmapper.ButtonComboForAction("RightMouseClick2");
-	return (ctrlEvent.button == leftMouseClickBinding1.button && IsControllerButtonComboPressed(leftMouseClickBinding1))
-	    || (ctrlEvent.button == leftMouseClickBinding2.button && IsControllerButtonComboPressed(leftMouseClickBinding2))
-	    || (ctrlEvent.button == rightMouseClickBinding1.button && IsControllerButtonComboPressed(rightMouseClickBinding1))
-	    || (ctrlEvent.button == rightMouseClickBinding2.button && IsControllerButtonComboPressed(rightMouseClickBinding2));
+	if (IsAnyOf(ctrlEvent.button, ControllerButton_NONE, ControllerButton_IGNORE))
+		return false;
+	if (!ctrlEvent.up && ctrlEvent.button == SuppressedButton)
+		return false;
+	string_view actionName = sgOptions.Padmapper.ActionNameTriggeredByButtonEvent(ctrlEvent);
+	return IsAnyOf(actionName, "LeftMouseClick1", "LeftMouseClick2", "RightMouseClick1", "RightMouseClick2");
 }
 
 AxisDirection GetMoveDirection()
@@ -365,8 +363,11 @@ bool HandleControllerButtonEvent(const SDL_Event &event, GameAction &action)
 	if (isGamepadMotion) {
 		return true;
 	}
+	if (IsAnyOf(ctrlEvent.button, ControllerButton_NONE, ControllerButton_IGNORE)) {
+		return false;
+	}
 
-	if (ctrlEvent.button != ControllerButton_NONE && ctrlEvent.button == SuppressedButton) {
+	if (ctrlEvent.button == SuppressedButton) {
 		if (!ctrlEvent.up)
 			return true;
 		SuppressedButton = ControllerButton_NONE;

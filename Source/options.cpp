@@ -1597,39 +1597,13 @@ void PadmapperOptions::CommitActions()
 
 void PadmapperOptions::ButtonPressed(ControllerButton button)
 {
-	// To give preference to button combinations,
-	// first pass ignores mappings where no modifier is bound
-	for (Action &action : actions) {
-		ControllerButtonCombo combo = action.boundInput;
-		if (combo.modifier == ControllerButton_NONE)
-			continue;
-		if (button != combo.button)
-			continue;
-		if (!IsControllerButtonPressed(combo.modifier))
-			continue;
-		if (action.enable && !action.enable())
-			continue;
-		if (action.actionPressed)
-			action.actionPressed();
-		SuppressedButton = combo.modifier;
-		buttonToReleaseAction.insert_or_assign(combo.button, action);
+	const Action *action = FindAction(button);
+	if (action == nullptr)
 		return;
-	}
-
-	for (Action &action : actions) {
-		ControllerButtonCombo combo = action.boundInput;
-		if (combo.modifier != ControllerButton_NONE)
-			continue;
-		if (button != combo.button)
-			continue;
-		if (action.enable && !action.enable())
-			continue;
-		if (action.actionPressed)
-			action.actionPressed();
-		SuppressedButton = combo.modifier;
-		buttonToReleaseAction.insert_or_assign(combo.button, action);
-		return;
-	}
+	if (action->actionPressed)
+		action->actionPressed();
+	SuppressedButton = action->boundInput.modifier;
+	buttonToReleaseAction.insert_or_assign(button, *action);
 }
 
 void PadmapperOptions::ButtonReleased(ControllerButton button, bool invokeAction)
@@ -1663,6 +1637,22 @@ bool PadmapperOptions::IsActive(string_view actionName) const
 	return false;
 }
 
+string_view PadmapperOptions::ActionNameTriggeredByButtonEvent(ControllerButtonEvent ctrlEvent) const
+{
+	if (!gbRunGame)
+		return "";
+
+	if (!ctrlEvent.up) {
+		const Action *pressAction = FindAction(ctrlEvent.button);
+		return pressAction != nullptr ? pressAction->key : "";
+	}
+	auto it = buttonToReleaseAction.find(ctrlEvent.button);
+	if (it == buttonToReleaseAction.end())
+		return "";
+	const Action &releaseAction = it->second.get();
+	return releaseAction.key;
+}
+
 string_view PadmapperOptions::InputNameForAction(string_view actionName) const
 {
 	for (const Action &action : actions) {
@@ -1681,6 +1671,37 @@ ControllerButtonCombo PadmapperOptions::ButtonComboForAction(string_view actionN
 		}
 	}
 	return ControllerButton_NONE;
+}
+
+const PadmapperOptions::Action *PadmapperOptions::FindAction(ControllerButton button) const
+{
+	// To give preference to button combinations,
+	// first pass ignores mappings where no modifier is bound
+	for (const Action &action : actions) {
+		ControllerButtonCombo combo = action.boundInput;
+		if (combo.modifier == ControllerButton_NONE)
+			continue;
+		if (button != combo.button)
+			continue;
+		if (!IsControllerButtonPressed(combo.modifier))
+			continue;
+		if (action.enable && !action.enable())
+			continue;
+		return &action;
+	}
+
+	for (const Action &action : actions) {
+		ControllerButtonCombo combo = action.boundInput;
+		if (combo.modifier != ControllerButton_NONE)
+			continue;
+		if (button != combo.button)
+			continue;
+		if (action.enable && !action.enable())
+			continue;
+		return &action;
+	}
+
+	return nullptr;
 }
 
 namespace {

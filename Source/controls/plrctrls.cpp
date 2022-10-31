@@ -1481,7 +1481,7 @@ float rightStickLastMove = 0;
 
 bool ContinueSimulatedMouseEvent(const SDL_Event &event, const ControllerButtonEvent &gamepadEvent)
 {
-	if (IsAutomapActive())
+	if (AutomapActive)
 		return false;
 
 #if !defined(USE_SDL1) && !defined(JOY_AXIS_RIGHTX) && !defined(JOY_AXIS_RIGHTY)
@@ -1691,11 +1691,6 @@ void ProcessGameAction(const GameAction &action)
 	}
 }
 
-bool IsAutomapActive()
-{
-	return AutomapActive && leveltype != DTYPE_TOWN;
-}
-
 void HandleRightStickMotion()
 {
 	static RightStickAccumulator acc;
@@ -1705,7 +1700,7 @@ void HandleRightStickMotion()
 		return;
 	}
 
-	if (IsAutomapActive()) { // move map
+	if (AutomapActive) { // move map
 		int dx = 0;
 		int dy = 0;
 		acc.Pool(&dx, &dy, 32);

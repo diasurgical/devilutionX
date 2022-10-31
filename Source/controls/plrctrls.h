@@ -67,9 +67,6 @@ bool IsPointAndClick();
 void DetectInputMethod(const SDL_Event &event, const ControllerButtonEvent &gamepadEvent);
 void ProcessGameAction(const GameAction &action);
 
-// Whether the automap is being displayed.
-bool IsAutomapActive();
-
 void UseBeltItem(int type);
 
 // Talk to towners, click on inv items, attack, etc.
