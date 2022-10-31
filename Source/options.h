@@ -737,7 +737,7 @@ struct PadmapperOptions : OptionCategoryBase {
 	    unsigned index = 0);
 	void CommitActions();
 	void ButtonPressed(ControllerButton button);
-	void ButtonReleased(ControllerButton button);
+	void ButtonReleased(ControllerButton button, bool invokeAction = true);
 	string_view InputNameForAction(string_view actionName) const;
 	ControllerButtonCombo ButtonComboForAction(string_view actionName) const;
 

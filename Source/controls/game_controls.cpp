@@ -349,7 +349,17 @@ AxisDirection GetMoveDirection()
 
 bool HandleControllerButtonEvent(const SDL_Event &event, GameAction &action)
 {
+	struct ButtonReleaser {
+		~ButtonReleaser()
+		{
+			if (ctrlEvent.up)
+				sgOptions.Padmapper.ButtonReleased(ctrlEvent.button, false);
+		}
+		ControllerButtonEvent ctrlEvent;
+	};
+
 	const ControllerButtonEvent ctrlEvent = ToControllerButtonEvent(event);
+	const ButtonReleaser buttonReleaser { ctrlEvent };
 	bool isGamepadMotion = ProcessControllerMotion(event, ctrlEvent);
 	DetectInputMethod(event, ctrlEvent);
 	if (isGamepadMotion) {
