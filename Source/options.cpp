@@ -1632,19 +1632,19 @@ void PadmapperOptions::ButtonPressed(ControllerButton button)
 	}
 }
 
-void PadmapperOptions::ButtonReleased(ControllerButton button)
+void PadmapperOptions::ButtonReleased(ControllerButton button, bool invokeAction)
 {
-	auto it = buttonToReleaseAction.find(button);
-	if (it == buttonToReleaseAction.end())
-		return; // Ignore unmapped buttons.
+	if (invokeAction) {
+		auto it = buttonToReleaseAction.find(button);
+		if (it == buttonToReleaseAction.end())
+			return; // Ignore unmapped buttons.
 
-	const Action &action = it->second.get();
+		const Action &action = it->second.get();
 
-	// Check that the action can be triggered.
-	if (!action.actionReleased || (action.enable && !action.enable()))
-		return;
-
-	action.actionReleased();
+		// Check that the action can be triggered.
+		if (action.actionReleased && (!action.enable || action.enable()))
+			action.actionReleased();
+	}
 	buttonToReleaseAction.erase(button);
 }
 
