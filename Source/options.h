@@ -735,6 +735,7 @@ struct PadmapperOptions : OptionCategoryBase {
 	    std::function<void()> actionReleased = nullptr,
 	    std::function<bool()> enable = nullptr,
 	    unsigned index = 0);
+	void CommitActions();
 	void ButtonPressed(ControllerButton button);
 	void ButtonReleased(ControllerButton button);
 	string_view InputNameForAction(string_view actionName) const;
@@ -745,9 +746,7 @@ private:
 	std::unordered_map<ControllerButton, std::reference_wrapper<Action>> buttonToReleaseAction;
 	std::unordered_map<ControllerButton, std::string> buttonToButtonName;
 	std::unordered_map<std::string, ControllerButton> buttonNameToButton;
-	bool reversed = false;
-
-	std::forward_list<Action> &GetActions();
+	bool committed = false;
 };
 
 struct Options {

@@ -2203,6 +2203,7 @@ void InitPadmapActions()
 	    [] {
 		    ToggleChatLog();
 	    });
+	sgOptions.Padmapper.CommitActions();
 }
 
 void FreeGameMem()
