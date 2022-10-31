@@ -7,6 +7,7 @@
 
 #include <SDL_version.h>
 
+#include "controls/controller.h"
 #include "controls/controller_buttons.h"
 #include "engine/sound_defs.hpp"
 #include "miniwin/misc_msg.h"
@@ -739,15 +740,18 @@ struct PadmapperOptions : OptionCategoryBase {
 	void ButtonPressed(ControllerButton button);
 	void ButtonReleased(ControllerButton button, bool invokeAction = true);
 	bool IsActive(string_view actionName) const;
+	string_view ActionNameTriggeredByButtonEvent(ControllerButtonEvent ctrlEvent) const;
 	string_view InputNameForAction(string_view actionName) const;
 	ControllerButtonCombo ButtonComboForAction(string_view actionName) const;
 
 private:
 	std::forward_list<Action> actions;
-	std::unordered_map<ControllerButton, std::reference_wrapper<Action>> buttonToReleaseAction;
+	std::unordered_map<ControllerButton, std::reference_wrapper<const Action>> buttonToReleaseAction;
 	std::unordered_map<ControllerButton, std::string> buttonToButtonName;
 	std::unordered_map<std::string, ControllerButton> buttonNameToButton;
 	bool committed = false;
+
+	const Action *FindAction(ControllerButton button) const;
 };
 
 struct Options {
