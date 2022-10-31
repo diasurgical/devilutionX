@@ -42,6 +42,7 @@ bool DebugVision = false;
 bool DebugGrid = false;
 std::unordered_map<int, Point> DebugCoordsMap;
 bool DebugScrollViewEnabled = false;
+std::string debugTRN;
 
 namespace {
 
@@ -934,7 +935,7 @@ std::string DebugCmdQuestInfo(const string_view parameter)
 std::string DebugCmdPlayerInfo(const string_view parameter)
 {
 	int playerId = atoi(parameter.data());
-	if (playerId < 0 || playerId >= MAX_PLRS)
+	if (static_cast<size_t>(playerId) >= Players.size())
 		return "My friend, we need a valid playerId.";
 	Player &player = Players[playerId];
 	if (!player.plractive)
@@ -952,6 +953,35 @@ std::string DebugCmdToggleFPS(const string_view parameter)
 {
 	frameflag = !frameflag;
 	return "";
+}
+
+std::string DebugCmdChangeTRN(const string_view parameter)
+{
+	std::stringstream paramsStream(parameter.data());
+	std::string first;
+	std::string out;
+	if (std::getline(paramsStream, first, ' ')) {
+		std::string second;
+		if (std::getline(paramsStream, second, ' ')) {
+			std::string prefix;
+			if (first == "mon") {
+				prefix = "monsters\\monsters\\";
+			} else if (first == "plr") {
+				prefix = "plrgfx\\";
+			}
+			debugTRN = prefix + second + ".trn";
+		} else {
+			debugTRN = first + ".trn";
+		}
+		out = fmt::format("I am a pretty butterfly. \n(Loading TRN: {:s})", debugTRN);
+	} else {
+		debugTRN = "";
+		out = "I am a big brown potato.";
+	}
+	auto &player = *MyPlayer;
+	InitPlayerGFX(player);
+	StartStand(player, player._pdir);
+	return out;
 }
 
 std::vector<DebugCmdItem> DebugCmdList = {
@@ -990,13 +1020,14 @@ std::vector<DebugCmdItem> DebugCmdList = {
 	{ "questinfo", "Shows info of quests.", "{id}", &DebugCmdQuestInfo },
 	{ "playerinfo", "Shows info of player.", "{playerid}", &DebugCmdPlayerInfo },
 	{ "fps", "Toggles displaying FPS", "", &DebugCmdToggleFPS },
+	{ "trn", "Makes player use TRN {trn} - Write 'plr' before it to look in plrgfx\\ or 'mon' to look in monsters\\monsters\\ - example: trn plr infra is equal to 'plrgfx\\infra.trn'", "{trn}", &DebugCmdChangeTRN },
 };
 
 } // namespace
 
 void LoadDebugGFX()
 {
-	pSquareCel = LoadCel("Data\\Square.CEL", 64);
+	pSquareCel = LoadCel("data\\square", 64);
 }
 
 void FreeDebugGFX()

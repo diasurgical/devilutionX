@@ -7,6 +7,7 @@
 
 #include "DiabloUI/ui_item.h"
 #include "engine/clx_sprite.hpp"
+#include "engine/load_pcx.hpp" // IWYU pragma: export
 #include "player.h"
 #include "utils/display.h"
 
@@ -94,6 +95,7 @@ bool UiItemMouseEvents(SDL_Event *event, const std::vector<std::unique_ptr<UiIte
 Sint16 GetCenterOffset(Sint16 w, Sint16 bw = 0);
 void LoadPalInMem(const SDL_Color *pPal);
 void DrawMouse();
+void UiLoadDefaultPalette();
 bool UiLoadBlackBackground();
 void LoadBackgroundArt(const char *pszFile, int frames = 1);
 void UiAddBackground(std::vector<std::unique_ptr<UiItemBase>> *vecDialog);
@@ -104,6 +106,7 @@ void UiFocusNavigationYesNo();
 void UiInitList(void (*fnFocus)(int value), void (*fnSelect)(int value), void (*fnEsc)(), const std::vector<std::unique_ptr<UiItemBase>> &items, bool wraps = false, void (*fnFullscreen)() = nullptr, bool (*fnYesNo)() = nullptr, size_t selectedItem = 0);
 void UiClearScreen();
 void UiPollAndRender(std::function<bool(SDL_Event &)> eventHandler = nullptr);
+void UiRenderItem(const UiItemBase &item);
 void UiRenderItems(const std::vector<UiItemBase *> &items);
 void UiRenderItems(const std::vector<std::unique_ptr<UiItemBase>> &items);
 void UiInitList_clear();

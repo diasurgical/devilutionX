@@ -383,10 +383,11 @@ int DoDrawString(const Surface &out, string_view text, Rectangle rect, Point &ch
 
 		uint8_t frame = next & 0xFF;
 		if (next == '\n' || characterPosition.x > rightMargin) {
-			if (characterPosition.y + lineHeight >= bottomMargin)
+			int nextLineY = characterPosition.y + lineHeight;
+			if (nextLineY + lineHeight > bottomMargin)
 				break;
 			characterPosition.x = rect.position.x;
-			characterPosition.y += lineHeight;
+			characterPosition.y = nextLineY;
 
 			if (HasAnyOf(flags, (UiFlags::AlignCenter | UiFlags::AlignRight))) {
 				lineWidth = (*kerning)[frame];
@@ -413,7 +414,7 @@ int DoDrawString(const Surface &out, string_view text, Rectangle rect, Point &ch
 
 void LoadSmallSelectionSpinner()
 {
-	pSPentSpn2Cels = LoadCel("Data\\PentSpn2.CEL", 12);
+	pSPentSpn2Cels = LoadCel("data\\pentspn2", 12);
 }
 
 void UnloadFonts()
@@ -631,7 +632,7 @@ uint32_t DrawString(const Surface &out, string_view text, const Rectangle &rect,
 	else if (HasAnyOf(flags, UiFlags::AlignRight))
 		characterPosition.x += rect.size.width - lineWidth;
 
-	int rightMargin = rect.position.x + rect.size.width;
+	const int rightMargin = rect.position.x + rect.size.width;
 	const int bottomMargin = rect.size.height != 0 ? std::min(rect.position.y + rect.size.height, out.h()) : out.h();
 
 	if (lineHeight == -1)
@@ -639,7 +640,7 @@ uint32_t DrawString(const Surface &out, string_view text, const Rectangle &rect,
 
 	if (HasAnyOf(flags, UiFlags::VerticalCenter)) {
 		int textHeight = (std::count(text.cbegin(), text.cend(), '\n') + 1) * lineHeight;
-		characterPosition.y += (rect.size.height - textHeight) / 2;
+		characterPosition.y += std::max(0, (rect.size.height - textHeight) / 2);
 	}
 
 	characterPosition.y += BaseLineOffset[size];
@@ -675,7 +676,7 @@ void DrawStringWithColors(const Surface &out, string_view fmt, DrawStringFormatA
 	else if (HasAnyOf(flags, UiFlags::AlignRight))
 		characterPosition.x += rect.size.width - lineWidth;
 
-	int rightMargin = rect.position.x + rect.size.width;
+	const int rightMargin = rect.position.x + rect.size.width;
 	const int bottomMargin = rect.size.height != 0 ? std::min(rect.position.y + rect.size.height, out.h()) : out.h();
 
 	if (lineHeight == -1)
@@ -683,7 +684,7 @@ void DrawStringWithColors(const Surface &out, string_view fmt, DrawStringFormatA
 
 	if (HasAnyOf(flags, UiFlags::VerticalCenter)) {
 		int textHeight = (CountNewlines(fmt, args, argsLen) + 1) * lineHeight;
-		characterPosition.y += (rect.size.height - textHeight) / 2;
+		characterPosition.y += std::max(0, (rect.size.height - textHeight) / 2);
 	}
 
 	characterPosition.y += BaseLineOffset[size];

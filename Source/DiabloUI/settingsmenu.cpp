@@ -24,7 +24,7 @@ std::vector<std::unique_ptr<UiItemBase>> vecDialog;
 std::vector<OptionEntryBase *> vecOptions;
 OptionEntryBase *selectedOption = nullptr;
 
-enum class ShownMenuType {
+enum class ShownMenuType : uint8_t {
 	Settings,
 	ListOption,
 	KeyInput,
@@ -37,7 +37,7 @@ char optionDescription[512];
 Rectangle rectList;
 Rectangle rectDescription;
 
-enum class SpecialMenuEntry {
+enum class SpecialMenuEntry : int8_t {
 	None = -1,
 	PreviousMenu = -2,
 	UnbindKey = -3,
@@ -46,9 +46,9 @@ enum class SpecialMenuEntry {
 bool IsValidEntry(OptionEntryBase *pOptionEntry)
 {
 	auto flags = pOptionEntry->GetFlags();
-	if (HasAnyOf(flags, OptionEntryFlags::NeedDiabloMpq) && !diabdat_mpq)
+	if (HasAnyOf(flags, OptionEntryFlags::NeedDiabloMpq) && !HaveDiabdat())
 		return false;
-	if (HasAnyOf(flags, OptionEntryFlags::NeedHellfireMpq) && !hellfire_mpq)
+	if (HasAnyOf(flags, OptionEntryFlags::NeedHellfireMpq) && !HaveHellfire())
 		return false;
 	return HasNoneOf(flags, OptionEntryFlags::Invisible | (gbIsHellfire ? OptionEntryFlags::OnlyDiablo : OptionEntryFlags::OnlyHellfire));
 }
@@ -318,10 +318,10 @@ void UiSettingsMenu()
 				case SDL_KEYDOWN: {
 					SDL_Keycode keycode = event.key.keysym.sym;
 					remap_keyboard_key(&keycode);
+					key = static_cast<uint32_t>(keycode);
 					if (key >= SDLK_a && key <= SDLK_z) {
 						key -= 'a' - 'A';
 					}
-					key = static_cast<uint32_t>(keycode);
 				} break;
 				case SDL_MOUSEBUTTONDOWN:
 					switch (event.button.button) {

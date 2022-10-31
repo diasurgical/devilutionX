@@ -281,6 +281,22 @@ enum _cmd_id : uint8_t {
 	//
 	// body (TCmdDelItem)
 	CMD_DELPLRITEMS,
+	// Put item into player's backpack.
+	//
+	// body (TCmdChItem)
+	CMD_CHANGEINVITEMS,
+	// Remove item from player's backpack.
+	//
+	// body (TCmdParam1)
+	CMD_DELINVITEMS,
+	// Put item into player's belt.
+	//
+	// body (TCmdChItem)
+	CMD_CHANGEBELTITEMS,
+	// Remove item from player's belt.
+	//
+	// body (TCmdParam1)
+	CMD_DELBELTITEMS,
 	// Damage target player.
 	//
 	// body (TCmdDamage)
@@ -421,7 +437,7 @@ enum _cmd_id : uint8_t {
 	CMD_SETREFLECT,
 	CMD_NAKRUL,
 	CMD_OPENHIVE,
-	CMD_OPENCRYPT,
+	CMD_OPENGRAVE,
 	// Fake command; set current player for succeeding mega pkt buffer messages.
 	//
 	// body (TFakeCmdPlr)
@@ -523,17 +539,13 @@ struct TCmdQuest {
 	uint8_t qvar1;
 };
 
-/**
- * Represents an item being picked up from the ground
- */
-struct TCmdGItem {
-	_cmd_id bCmd;
-	uint8_t bMaster;
-	uint8_t bPnum;
-	uint8_t bCursitem;
-	uint8_t bLevel;
-	uint8_t x;
-	uint8_t y;
+struct TItemDef {
+	_item_indexes wIndx;
+	uint16_t wCI;
+	int32_t dwSeed;
+};
+
+struct TItem {
 	_item_indexes wIndx;
 	uint16_t wCI;
 	int32_t dwSeed;
@@ -544,13 +556,41 @@ struct TCmdGItem {
 	uint8_t bMCh;
 	uint16_t wValue;
 	uint32_t dwBuff;
-	int32_t dwTime;
 	uint16_t wToHit;
 	uint16_t wMaxDam;
 	uint8_t bMinStr;
 	uint8_t bMinMag;
 	uint8_t bMinDex;
 	int16_t bAC;
+};
+
+struct TEar {
+	_item_indexes wIndx;
+	uint16_t wCI;
+	int32_t dwSeed;
+	uint8_t bCursval;
+	char heroname[17];
+};
+
+/**
+ * Represents an item being picked up from the ground
+ */
+struct TCmdGItem {
+	_cmd_id bCmd;
+	uint8_t x;
+	uint8_t y;
+
+	union {
+		TItemDef def;
+		TItem item;
+		TEar ear;
+	};
+
+	uint8_t bMaster;
+	uint8_t bPnum;
+	uint8_t bCursitem;
+	uint8_t bLevel;
+	int32_t dwTime;
 };
 
 /**
@@ -560,26 +600,12 @@ struct TCmdPItem {
 	_cmd_id bCmd;
 	uint8_t x;
 	uint8_t y;
-	_item_indexes wIndx;
-	uint16_t wCI;
-	/**
-	 * Item identifier
-	 * @see Item::_iSeed
-	 */
-	int32_t dwSeed;
-	uint8_t bId;
-	uint8_t bDur;
-	uint8_t bMDur;
-	uint8_t bCh;
-	uint8_t bMCh;
-	uint16_t wValue;
-	uint32_t dwBuff;
-	uint16_t wToHit;
-	uint16_t wMaxDam;
-	uint8_t bMinStr;
-	uint8_t bMinMag;
-	uint8_t bMinDex;
-	int16_t bAC;
+
+	union {
+		TItemDef def;
+		TItem item;
+		TEar ear;
+	};
 
 	/**
 	 * Items placed during dungeon generation
@@ -600,11 +626,12 @@ struct TCmdPItem {
 struct TCmdChItem {
 	_cmd_id bCmd;
 	uint8_t bLoc;
-	uint16_t wIndx;
-	uint16_t wCI;
-	int32_t dwSeed;
-	uint8_t bId;
-	uint32_t dwBuff;
+
+	union {
+		TItemDef def;
+		TItem item;
+		TEar ear;
+	};
 };
 
 struct TCmdDelItem {
@@ -725,11 +752,11 @@ bool IsValidLevel(uint8_t level, bool isSetLevel);
 void DeltaAddItem(int ii);
 void DeltaSaveLevel();
 void DeltaLoadLevel();
-/** @brief Clears last send player command for the local player. This is used when a game tick changes. */
-void ClearLastSendPlayerCmd();
+/** @brief Clears last sent player command for the local player. This is used when a game tick changes. */
+void ClearLastSentPlayerCmd();
 void NetSendCmd(bool bHiPri, _cmd_id bCmd);
 void NetSendCmdGolem(uint8_t mx, uint8_t my, Direction dir, uint8_t menemy, int hp, uint8_t cl);
-void NetSendCmdLoc(int playerId, bool bHiPri, _cmd_id bCmd, Point position);
+void NetSendCmdLoc(size_t playerId, bool bHiPri, _cmd_id bCmd, Point position);
 void NetSendCmdLocParam1(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wParam1);
 void NetSendCmdLocParam2(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wParam1, uint16_t wParam2);
 void NetSendCmdLocParam3(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wParam1, uint16_t wParam2, uint16_t wParam3);
@@ -741,12 +768,15 @@ void NetSendCmdParam4(bool bHiPri, _cmd_id bCmd, uint16_t wParam1, uint16_t wPar
 void NetSendCmdQuest(bool bHiPri, const Quest &quest);
 void NetSendCmdGItem(bool bHiPri, _cmd_id bCmd, uint8_t pnum, uint8_t ii);
 void NetSendCmdPItem(bool bHiPri, _cmd_id bCmd, Point position, const Item &item);
+void NetSyncInvItem(const Player &player, int invListIndex);
 void NetSendCmdChItem(bool bHiPri, uint8_t bLoc);
 void NetSendCmdDelItem(bool bHiPri, uint8_t bLoc);
+void NetSendCmdChInvItem(bool bHiPri, int invGridIndex);
+void NetSendCmdChBeltItem(bool bHiPri, int invGridIndex);
 void NetSendCmdDamage(bool bHiPri, uint8_t bPlr, uint32_t dwDam);
 void NetSendCmdMonDmg(bool bHiPri, uint16_t wMon, uint32_t dwDam);
 void NetSendCmdString(uint32_t pmask, const char *pszStr);
 void delta_close_portal(int pnum);
-size_t ParseCmd(int pnum, const TCmd *pCmd);
+size_t ParseCmd(size_t pnum, const TCmd *pCmd);
 
 } // namespace devilution

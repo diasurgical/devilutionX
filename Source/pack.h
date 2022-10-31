@@ -74,7 +74,7 @@ struct PlayerPack {
 	int16_t wReserved8;  // For future use
 	uint32_t pDiabloKillLevel;
 	uint32_t pDifficulty;
-	ItemSpecialEffectHf pDamAcFlags;
+	uint32_t pDamAcFlags; // `ItemSpecialEffectHf` is 1 byte but this is 4 bytes.
 	/**@brief Only used in multiplayer sync (SendPlayerInfo/recv_plrinfo). Never used in save games (single- or multiplayer). */
 	uint8_t friendlyMode;
 	/**@brief Only used in multiplayer sync (SendPlayerInfo/recv_plrinfo). Never used in save games (single- or multiplayer). */
@@ -102,6 +102,6 @@ void PackItem(ItemPack &packedItem, const Item &item, bool isHellfire);
  * @param item The destination item
  * @param isHellfire Whether the item is from Hellfire or not
  */
-void UnPackItem(const ItemPack &packedItem, Item &item, bool isHellfire);
+void UnPackItem(const ItemPack &packedItem, const Player &player, Item &item, bool isHellfire);
 
 } // namespace devilution

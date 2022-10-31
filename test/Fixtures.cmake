@@ -32,6 +32,7 @@ set(devilutionx_fixtures
   hellfire/1-536340718.dun
   hellfire/2-128964898.dun
   hellfire/2-1180526547.dun
+  hellfire/3-1369955278.dun
   hellfire/3-1512491184.dun
   hellfire/3-1799396623.dun
   hellfire/4-1190318991.dun
@@ -44,26 +45,26 @@ set(devilutionx_fixtures
   hellfire/22-1191662129.dun
   hellfire/23-97055268.dun
   hellfire/24-1324803725.dun
-  Levels/L1Data/Banner1.DUN
-  Levels/L1Data/Banner2.DUN
-  Levels/L1Data/rnd6.DUN
-  Levels/L1Data/SKngDO.DUN
-  Levels/L2Data/Blind1.DUN
-  Levels/L2Data/Blood1.DUN
-  Levels/L2Data/Blood2.DUN
-  Levels/L2Data/Bonestr1.DUN
-  Levels/L2Data/Bonestr2.DUN
-  Levels/L3Data/Anvil.DUN
-  Levels/L4Data/diab1.DUN
-  Levels/L4Data/diab2a.DUN
-  Levels/L4Data/diab2b.DUN
-  Levels/L4Data/diab3a.DUN
-  Levels/L4Data/diab3b.DUN
-  Levels/L4Data/diab4a.DUN
-  Levels/L4Data/diab4b.DUN
-  Levels/L4Data/Vile1.DUN
-  Levels/L4Data/Warlord.DUN
-  Levels/L4Data/Warlord2.DUN
+  levels/l1data/banner1.dun
+  levels/l1data/banner2.dun
+  levels/l1data/rnd6.dun
+  levels/l1data/skngdo.dun
+  levels/l2data/blind1.dun
+  levels/l2data/blood1.dun
+  levels/l2data/blood2.dun
+  levels/l2data/bonestr1.dun
+  levels/l2data/bonestr2.dun
+  levels/l3data/anvil.dun
+  levels/l4data/diab1.dun
+  levels/l4data/diab2a.dun
+  levels/l4data/diab2b.dun
+  levels/l4data/diab3a.dun
+  levels/l4data/diab3b.dun
+  levels/l4data/diab4a.dun
+  levels/l4data/diab4b.dun
+  levels/l4data/vile1.dun
+  levels/l4data/warlord.dun
+  levels/l4data/warlord2.dun
   memory_map/additionalMissiles.txt
   memory_map/game.txt
   memory_map/hero.txt

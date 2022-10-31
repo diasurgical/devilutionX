@@ -1,0 +1,10 @@
+--- cpp/types.h	2022-08-30 09:49:34.940037347 +0900
++++ cpp/types.h	2022-08-30 09:44:44.235036008 +0900
+@@ -1,5 +1,7 @@
+ #pragma once
+
++#include <cstdint>
++
+ #include "ffi.h"
+ #include "event.h"
+

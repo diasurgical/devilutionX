@@ -75,6 +75,9 @@ void FillTile(int xx, int yy, int t)
  */
 void TownCloseHive()
 {
+	dungeon[35][27] = 18;
+	dungeon[36][27] = 63;
+
 	dPiece[78][60] = 0x489;
 	dPiece[79][60] = 0x4ea;
 	dPiece[78][61] = 0x4eb;
@@ -193,19 +196,28 @@ void DrlgTPass3()
 		}
 	}
 
-	FillSector("Levels\\TownData\\Sector1s.DUN", 46, 46);
-	FillSector("Levels\\TownData\\Sector2s.DUN", 46, 0);
-	FillSector("Levels\\TownData\\Sector3s.DUN", 0, 46);
-	FillSector("Levels\\TownData\\Sector4s.DUN", 0, 0);
+	FillSector("levels\\towndata\\sector1s.dun", 46, 46);
+	FillSector("levels\\towndata\\sector2s.dun", 46, 0);
+	FillSector("levels\\towndata\\sector3s.dun", 0, 46);
+	FillSector("levels\\towndata\\sector4s.dun", 0, 0);
+
+	auto dunData = LoadFileInMem<uint16_t>("levels\\towndata\\automap.dun");
+	PlaceDunTiles(dunData.get(), { 0, 0 });
 
 	if (!IsWarpOpen(DTYPE_CATACOMBS)) {
+		dungeon[20][7] = 10;
+		dungeon[20][6] = 8;
 		FillTile(48, 20, 320);
 	}
 	if (!IsWarpOpen(DTYPE_CAVES)) {
+		dungeon[4][30] = 8;
 		FillTile(16, 68, 332);
 		FillTile(16, 70, 331);
 	}
 	if (!IsWarpOpen(DTYPE_HELL)) {
+		dungeon[15][35] = 7;
+		dungeon[16][35] = 7;
+		dungeon[17][35] = 7;
 		for (int x = 36; x < 46; x++) {
 			FillTile(x, 78, GenerateRnd(4) + 1);
 		}
@@ -247,8 +259,28 @@ bool OpensGrave(Point position)
 	return xp >= 35 && xp <= 38 && yp >= 20 && yp <= 24;
 }
 
+void OpenHive()
+{
+	NetSendCmd(false, CMD_OPENHIVE);
+	auto &quest = Quests[Q_FARMER];
+	quest._qactive = QUEST_DONE;
+	if (gbIsMultiplayer)
+		NetSendCmdQuest(true, quest);
+}
+
+void OpenGrave()
+{
+	NetSendCmd(false, CMD_OPENGRAVE);
+	auto &quest = Quests[Q_GRAVE];
+	quest._qactive = QUEST_DONE;
+	if (gbIsMultiplayer)
+		NetSendCmdQuest(true, quest);
+}
+
 void TownOpenHive()
 {
+	dungeon[36][27] = 47;
+
 	dPiece[78][60] = 0x489;
 	dPiece[79][60] = 0x48a;
 	dPiece[78][61] = 0x48b;
@@ -299,6 +331,9 @@ void TownOpenHive()
 
 void TownOpenGrave()
 {
+	dungeon[14][8] = 47;
+	dungeon[14][7] = 47;
+
 	dPiece[36][21] = 0x532;
 	dPiece[37][21] = 0x533;
 	dPiece[36][22] = 0x534;

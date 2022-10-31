@@ -1,6 +1,8 @@
 #pragma once
 
 #include "engine/point.hpp"
+#include "engine/rectangle.hpp"
+#include "engine/size.hpp"
 
 namespace devilution {
 
@@ -9,6 +11,9 @@ using WorldTilePosition = PointOf<WorldTileCoord>;
 
 using WorldTileOffset = int8_t;
 using WorldTileDisplacement = DisplacementOf<WorldTileOffset>;
+
+using WorldTileSize = SizeOf<WorldTileCoord>;
+using WorldTileRectangle = RectangleOf<WorldTileCoord>;
 
 } // namespace devilution
 

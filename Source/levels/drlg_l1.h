@@ -5,12 +5,13 @@
  */
 #pragma once
 
+#include "engine/world_tile.hpp"
 #include "levels/gendung.h"
 
 namespace devilution {
 
 void PlaceMiniSetRandom(const Miniset &miniset, int rndper);
-Point SelectChamber();
+WorldTilePosition SelectChamber();
 void CreateL5Dungeon(uint32_t rseed, lvl_entry entry);
 void LoadPreL1Dungeon(const char *path);
 void LoadL1Dungeon(const char *path, Point spawn);

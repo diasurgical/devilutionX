@@ -3,8 +3,19 @@
 #include "cursor.h"
 #include "inv.h"
 #include "player.h"
+#include "storm/storm_net.hpp"
 
-using namespace devilution;
+namespace devilution {
+namespace {
+
+class InvTest : public ::testing::Test {
+public:
+	void SetUp() override
+	{
+		Players.resize(1);
+		MyPlayer = &Players[0];
+	}
+};
 
 /* Set up a given item as a spell scroll, allowing for its usage. */
 void set_up_scroll(Item &item, spell_id spell)
@@ -28,7 +39,7 @@ void clear_inventory()
 }
 
 // Test that the scroll is used in the inventory in correct conditions
-TEST(Inv, UseScroll_from_inventory)
+TEST_F(InvTest, UseScroll_from_inventory)
 {
 	set_up_scroll(MyPlayer->InvList[2], SPL_FIREBOLT);
 	MyPlayer->_pNumInv = 5;
@@ -36,14 +47,14 @@ TEST(Inv, UseScroll_from_inventory)
 }
 
 // Test that the scroll is used in the belt in correct conditions
-TEST(Inv, UseScroll_from_belt)
+TEST_F(InvTest, UseScroll_from_belt)
 {
 	set_up_scroll(MyPlayer->SpdList[2], SPL_FIREBOLT);
 	EXPECT_TRUE(CanUseScroll(*MyPlayer, SPL_FIREBOLT));
 }
 
 // Test that the scroll is not used in the inventory for each invalid condition
-TEST(Inv, UseScroll_from_inventory_invalid_conditions)
+TEST_F(InvTest, UseScroll_from_inventory_invalid_conditions)
 {
 	// Empty the belt to prevent using a scroll from the belt
 	for (int i = 0; i < MaxBeltItems; i++) {
@@ -71,7 +82,7 @@ TEST(Inv, UseScroll_from_inventory_invalid_conditions)
 }
 
 // Test that the scroll is not used in the belt for each invalid condition
-TEST(Inv, UseScroll_from_belt_invalid_conditions)
+TEST_F(InvTest, UseScroll_from_belt_invalid_conditions)
 {
 	// Disable the inventory to prevent using a scroll from the inventory
 	MyPlayer->_pNumInv = 0;
@@ -94,7 +105,7 @@ TEST(Inv, UseScroll_from_belt_invalid_conditions)
 }
 
 // Test gold calculation
-TEST(Inv, CalculateGold)
+TEST_F(InvTest, CalculateGold)
 {
 	MyPlayer->_pNumInv = 10;
 	// Set up 4 slots of gold in the inventory
@@ -112,8 +123,10 @@ TEST(Inv, CalculateGold)
 }
 
 // Test automatic gold placing
-TEST(Inv, GoldAutoPlace)
+TEST_F(InvTest, GoldAutoPlace)
 {
+	SNetInitializeProvider(SELCONN_LOOPBACK, nullptr);
+
 	// Empty the inventory
 	clear_inventory();
 
@@ -134,8 +147,10 @@ TEST(Inv, GoldAutoPlace)
 }
 
 // Test removing an item from inventory with no other items.
-TEST(Inv, RemoveInvItem)
+TEST_F(InvTest, RemoveInvItem)
 {
+	SNetInitializeProvider(SELCONN_LOOPBACK, nullptr);
+
 	clear_inventory();
 	// Put a two-slot misc item into the inventory:
 	// | (item) | (item) | ... | ...
@@ -151,8 +166,10 @@ TEST(Inv, RemoveInvItem)
 }
 
 // Test removing an item from inventory with other items in it.
-TEST(Inv, RemoveInvItem_other_item)
+TEST_F(InvTest, RemoveInvItem_other_item)
 {
+	SNetInitializeProvider(SELCONN_LOOPBACK, nullptr);
+
 	clear_inventory();
 	// Put a two-slot misc item and a ring into the inventory:
 	// | (item) | (item) | (ring) | ...
@@ -173,8 +190,10 @@ TEST(Inv, RemoveInvItem_other_item)
 }
 
 // Test removing an item from the belt
-TEST(Inv, RemoveSpdBarItem)
+TEST_F(InvTest, RemoveSpdBarItem)
 {
+	SNetInitializeProvider(SELCONN_LOOPBACK, nullptr);
+
 	// Clear the belt
 	for (int i = 0; i < MaxBeltItems; i++) {
 		MyPlayer->SpdList[i].clear();
@@ -187,7 +206,7 @@ TEST(Inv, RemoveSpdBarItem)
 }
 
 // Test removing a scroll from the inventory
-TEST(Inv, RemoveCurrentSpellScroll_inventory)
+TEST_F(InvTest, RemoveCurrentSpellScroll_inventory)
 {
 	clear_inventory();
 
@@ -204,8 +223,10 @@ TEST(Inv, RemoveCurrentSpellScroll_inventory)
 }
 
 // Test removing a scroll from the belt
-TEST(Inv, RemoveCurrentSpellScroll_belt)
+TEST_F(InvTest, RemoveCurrentSpellScroll_belt)
 {
+	SNetInitializeProvider(SELCONN_LOOPBACK, nullptr);
+
 	// Clear the belt
 	for (int i = 0; i < MaxBeltItems; i++) {
 		MyPlayer->SpdList[i].clear();
@@ -220,7 +241,7 @@ TEST(Inv, RemoveCurrentSpellScroll_belt)
 	EXPECT_TRUE(MyPlayer->SpdList[3].isEmpty());
 }
 
-TEST(Inv, ItemSize)
+TEST_F(InvTest, ItemSize)
 {
 	Item testItem {};
 
@@ -241,3 +262,6 @@ TEST(Inv, ItemSize)
 	InitializeItem(testItem, IDI_GOLD);
 	EXPECT_EQ(GetInventorySize(testItem), Size(1, 1));
 }
+
+} // namespace
+} // namespace devilution

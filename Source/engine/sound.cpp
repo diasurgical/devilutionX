@@ -117,25 +117,25 @@ SoundSample *DuplicateSound(const SoundSample &sound)
 
 /** Maps from track ID to track name in spawn. */
 const char *const SpawnMusicTracks[NUM_MUSIC] = {
-	"Music\\sTowne.wav",
-	"Music\\sLvlA.wav",
-	"Music\\sLvlA.wav",
-	"Music\\sLvlA.wav",
-	"Music\\sLvlA.wav",
-	"Music\\DLvlF.wav",
-	"Music\\DLvlE.wav",
-	"Music\\sintro.wav",
+	"music\\stowne.wav",
+	"music\\slvla.wav",
+	"music\\slvla.wav",
+	"music\\slvla.wav",
+	"music\\slvla.wav",
+	"music\\dlvlf.wav",
+	"music\\dlvle.wav",
+	"music\\sintro.wav",
 };
 /** Maps from track ID to track name. */
 const char *const MusicTracks[NUM_MUSIC] = {
-	"Music\\DTowne.wav",
-	"Music\\DLvlA.wav",
-	"Music\\DLvlB.wav",
-	"Music\\DLvlC.wav",
-	"Music\\DLvlD.wav",
-	"Music\\DLvlF.wav",
-	"Music\\DLvlE.wav",
-	"Music\\Dintro.wav",
+	"music\\dtowne.wav",
+	"music\\dlvla.wav",
+	"music\\dlvlb.wav",
+	"music\\dlvlc.wav",
+	"music\\dlvld.wav",
+	"music\\dlvlf.wav",
+	"music\\dlvle.wav",
+	"music\\dintro.wav",
 };
 
 int CapVolume(int volume)
@@ -259,7 +259,7 @@ void music_start(_music_id nTrack)
 	music_stop();
 	if (!gbMusicOn)
 		return;
-	if (spawn_mpq)
+	if (HaveSpawn())
 		trackPath = SpawnMusicTracks[nTrack];
 	else
 		trackPath = MusicTracks[nTrack];

@@ -6,6 +6,7 @@
 #pragma once
 
 #include <cstdint>
+#include <vector>
 
 #include <algorithm>
 #include <array>
@@ -163,31 +164,31 @@ use_enum_as_flags(SpellFlag);
 
 /** Maps from armor animation to letter used in graphic files. */
 constexpr std::array<char, 4> ArmourChar = {
-	'L', // light
-	'M', // medium
-	'H', // heavy
+	'l', // light
+	'm', // medium
+	'h', // heavy
 };
 /** Maps from weapon animation to letter used in graphic files. */
 constexpr std::array<char, 9> WepChar = {
-	'N', // unarmed
-	'U', // no weapon + shield
-	'S', // sword + no shield
-	'D', // sword + shield
-	'B', // bow
-	'A', // axe
-	'M', // blunt + no shield
-	'H', // blunt + shield
-	'T', // staff
+	'n', // unarmed
+	'u', // no weapon + shield
+	's', // sword + no shield
+	'd', // sword + shield
+	'b', // bow
+	'a', // axe
+	'm', // blunt + no shield
+	'h', // blunt + shield
+	't', // staff
 };
 
 /** Maps from player class to letter used in graphic files. */
 constexpr std::array<char, 6> CharChar = {
-	'W', // warrior
-	'R', // rogue
-	'S', // sorcerer
-	'M', // monk
-	'B',
-	'C',
+	'w', // warrior
+	'r', // rogue
+	's', // sorcerer
+	'm', // monk
+	'b',
+	'c',
 };
 
 /**
@@ -219,54 +220,16 @@ struct Player {
 	Player(Player &&) noexcept = default;
 	Player &operator=(Player &&) noexcept = default;
 
-	PLR_MODE _pmode;
-	int8_t walkpath[MaxPathLength];
-	bool plractive;
-	action_id destAction;
-	int destParam1;
-	int destParam2;
-	int destParam3;
-	int destParam4;
-	uint8_t plrlevel;
-	bool plrIsOnSetLevel;
-	ActorPosition position;
-	Direction _pdir; // Direction faced by player (direction enum)
-	int _pgfxnum;    // Bitmask indicating what variant of the sprite the player is using. Lower byte define weapon (PlayerWeaponGraphic) and higher values define armour (starting with PlayerArmorGraphic)
-	/**
-	 * @brief Contains Information for current Animation
-	 */
-	AnimationInfo AnimInfo;
-	/**
-	 * @brief Contains a optional preview ClxSprite that is displayed until the current command is handled by the game logic
-	 */
-	OptionalClxSprite previewCelSprite;
-	/**
-	 * @brief Contains the progress to next game tick when previewCelSprite was set
-	 */
-	float progressToNextGameTickWhenPreviewWasSet;
+	char _pName[PlayerNameLength];
+	Item InvBody[NUM_INVLOC];
+	Item InvList[InventoryGridCells];
+	Item SpdList[MaxBeltItems];
+	Item HoldItem;
+
 	int _plid;
 	int _pvid;
-	/* @brief next queued spell */
-	SpellCastInfo queuedSpell;
-	/* @brief the spell that is currently casted */
-	SpellCastInfo executedSpell;
-	spell_id _pTSpell;
-	spell_id _pRSpell;
-	spell_type _pRSplType;
-	spell_id _pSBkSpell;
-	int8_t _pSplLvl[64];
-	uint64_t _pMemSpells;  // Bitmask of learned spells
-	uint64_t _pAblSpells;  // Bitmask of abilities
-	uint64_t _pScrlSpells; // Bitmask of spells available via scrolls
-	SpellFlag _pSpellFlags;
-	spell_id _pSplHotKey[NumHotkeys];
-	spell_type _pSplTHotKey[NumHotkeys];
-	bool _pBlockFlag;
-	bool _pInvincible;
-	int8_t _pLightRad;
-	bool _pLvlChanging; // True when the player is transitioning between levels
-	char _pName[PlayerNameLength];
-	HeroClass _pClass;
+
+	int _pNumInv;
 	int _pStrength;
 	int _pBaseStr;
 	int _pMagic;
@@ -288,21 +251,46 @@ struct Player {
 	int _pMana;
 	int _pMaxMana;
 	int _pManaPer;
-	int8_t _pLevel;
-	int8_t _pMaxLvl;
+	int _pIMinDam;
+	int _pIMaxDam;
+	int _pIAC;
+	int _pIBonusDam;
+	int _pIBonusToHit;
+	int _pIBonusAC;
+	int _pIBonusDamMod;
+	int _pIGetHit;
+	int _pISplDur;
+	int _pIEnAc;
+	int _pIFMinDam;
+	int _pIFMaxDam;
+	int _pILMinDam;
+	int _pILMaxDam;
 	uint32_t _pExperience;
 	uint32_t _pNextExper;
-	int8_t _pArmorClass;
-	int8_t _pMagResist;
-	int8_t _pFireResist;
-	int8_t _pLghtResist;
+	PLR_MODE _pmode;
+	int8_t walkpath[MaxPathLength];
+	bool plractive;
+	action_id destAction;
+	int destParam1;
+	int destParam2;
+	int destParam3;
+	int destParam4;
 	int _pGold;
-	bool _pInfraFlag;
-	/** Player's direction when ending movement. Also used for casting direction of SPL_FIREWALL. */
-	Direction tempDirection;
 
-	bool _pLvlVisited[NUMLEVELS];
-	bool _pSLvlVisited[NUMLEVELS]; // only 10 used
+	/**
+	 * @brief Contains Information for current Animation
+	 */
+	AnimationInfo AnimInfo;
+	/**
+	 * @brief Contains a optional preview ClxSprite that is displayed until the current command is handled by the game logic
+	 */
+	OptionalClxSprite previewCelSprite;
+	/**
+	 * @brief Contains the progress to next game tick when previewCelSprite was set
+	 */
+	float progressToNextGameTickWhenPreviewWasSet;
+	/** @brief Bitmask using item_special_effect */
+	ItemSpecialEffect _pIFlags;
 	/**
 	 * @brief Contains Data (Sprites) for the different Animations
 	 */
@@ -316,31 +304,57 @@ struct Player {
 	int8_t _pHFrames;
 	int8_t _pDFrames;
 	int8_t _pBFrames;
-	Item InvBody[NUM_INVLOC];
-	Item InvList[InventoryGridCells];
-	int _pNumInv;
 	int8_t InvGrid[InventoryGridCells];
-	Item SpdList[MaxBeltItems];
-	Item HoldItem;
-	int _pIMinDam;
-	int _pIMaxDam;
-	int _pIAC;
-	int _pIBonusDam;
-	int _pIBonusToHit;
-	int _pIBonusAC;
-	int _pIBonusDamMod;
-	/** Bitmask of staff spell */
-	uint64_t _pISpells;
-	/** Bitmask using item_special_effect */
-	ItemSpecialEffect _pIFlags;
-	int _pIGetHit;
+
+	uint8_t plrlevel;
+	bool plrIsOnSetLevel;
+	ActorPosition position;
+	Direction _pdir; // Direction faced by player (direction enum)
+	HeroClass _pClass;
+	int8_t _pLevel;
+	int8_t _pMaxLvl;
+	uint8_t _pgfxnum; // Bitmask indicating what variant of the sprite the player is using. The 3 lower bits define weapon (PlayerWeaponGraphic) and the higher bits define armour (starting with PlayerArmorGraphic)
 	int8_t _pISplLvlAdd;
-	int _pISplDur;
-	int _pIEnAc;
-	int _pIFMinDam;
-	int _pIFMaxDam;
-	int _pILMinDam;
-	int _pILMaxDam;
+	/** @brief Specifies whether players are in non-PvP mode. */
+	bool friendlyMode = true;
+
+	/** @brief The next queued spell */
+	SpellCastInfo queuedSpell;
+	/** @brief The spell that is currently being cast */
+	SpellCastInfo executedSpell;
+	spell_id _pTSpell;
+	spell_id _pRSpell;
+	spell_type _pRSplType;
+	spell_id _pSBkSpell;
+	int8_t _pSplLvl[64];
+	/** @brief Bitmask of staff spell */
+	uint64_t _pISpells;
+	/** @brief Bitmask of learned spells */
+	uint64_t _pMemSpells;
+	/** @brief Bitmask of abilities */
+	uint64_t _pAblSpells;
+	/** @brief Bitmask of spells available via scrolls */
+	uint64_t _pScrlSpells;
+	SpellFlag _pSpellFlags;
+	spell_id _pSplHotKey[NumHotkeys];
+	spell_type _pSplTHotKey[NumHotkeys];
+	bool _pBlockFlag;
+	bool _pInvincible;
+	int8_t _pLightRad;
+	/** @brief True when the player is transitioning between levels */
+	bool _pLvlChanging;
+
+	int8_t _pArmorClass;
+	int8_t _pMagResist;
+	int8_t _pFireResist;
+	int8_t _pLghtResist;
+	bool _pInfraFlag;
+	/** Player's direction when ending movement. Also used for casting direction of SPL_FIREWALL. */
+	Direction tempDirection;
+
+	bool _pLvlVisited[NUMLEVELS];
+	bool _pSLvlVisited[NUMLEVELS]; // only 10 used
+
 	item_misc_id _pOilType;
 	uint8_t pTownWarps;
 	uint8_t pDungMsgs;
@@ -349,12 +363,10 @@ struct Player {
 	bool pManaShield;
 	uint8_t pDungMsgs2;
 	bool pOriginalCathedral;
-	uint16_t wReflections;
 	uint8_t pDiabloKillLevel;
+	uint16_t wReflections;
 	_difficulty pDifficulty;
 	ItemSpecialEffectHf pDamAcFlags;
-	/** @brief Specifies whether players are in non-PvP mode. */
-	bool friendlyMode = true;
 
 	void CalcScrolls();
 
@@ -462,11 +474,6 @@ struct Player {
 	 * @brief Is the player currently walking?
 	 */
 	bool IsWalking() const;
-
-	/**
-	 * @brief Resets all Data of the current Player
-	 */
-	void Reset();
 
 	/**
 	 * @brief Returns item location taking into consideration barbarian's ability to hold two-handed maces and clubs in one hand.
@@ -697,7 +704,7 @@ struct Player {
 			return true;
 		if (_pmode == PM_SPELL && AnimInfo.currentFrame >= _pSFNum)
 			return true;
-		if (IsWalking() && AnimInfo.currentFrame == AnimInfo.numberOfFrames - 1)
+		if (IsWalking() && AnimInfo.isLastFrame())
 			return true;
 		return false;
 	}
@@ -705,6 +712,8 @@ struct Player {
 	[[nodiscard]] player_graphic getGraphic() const;
 
 	[[nodiscard]] uint16_t getSpriteWidth() const;
+
+	void getAnimationFramesAndTicksPerFrame(player_graphic graphics, int8_t &numberOfFrames, int8_t &ticksPerFrame) const;
 
 	/**
 	 * @brief Updates previewCelSprite according to new requested command
@@ -733,6 +742,11 @@ struct Player {
 	{
 		return this->plrIsOnSetLevel && this->plrlevel == static_cast<uint8_t>(level);
 	}
+	/** @brief Checks if the player is on a arena level. */
+	bool isOnArenaLevel() const
+	{
+		return plrIsOnSetLevel && IsArenaLevel(static_cast<_setlevels>(plrlevel));
+	}
 	void setLevel(uint8_t level)
 	{
 		this->plrlevel = level;
@@ -745,9 +759,9 @@ struct Player {
 	}
 };
 
-extern DVL_API_FOR_TEST int MyPlayerId;
+extern DVL_API_FOR_TEST size_t MyPlayerId;
 extern DVL_API_FOR_TEST Player *MyPlayer;
-extern DVL_API_FOR_TEST Player Players[MAX_PLRS];
+extern DVL_API_FOR_TEST std::vector<Player> Players;
 extern bool MyPlayerIsDead;
 extern const int BlockBonuses[enum_size<HeroClass>::value];
 
@@ -768,7 +782,7 @@ void ResetPlayerGFX(Player &player);
  * @param numSkippedFrames Number of Frames that will be skipped (for example with modifier "faster attack")
  * @param distributeFramesBeforeFrame Distribute the numSkippedFrames only before this frame
  */
-void NewPlrAnim(Player &player, player_graphic graphic, Direction dir, int8_t numberOfFrames, int8_t delayLen, AnimationDistributionFlags flags = AnimationDistributionFlags::None, int8_t numSkippedFrames = 0, int8_t distributeFramesBeforeFrame = 0);
+void NewPlrAnim(Player &player, player_graphic graphic, Direction dir, AnimationDistributionFlags flags = AnimationDistributionFlags::None, int8_t numSkippedFrames = 0, int8_t distributeFramesBeforeFrame = 0);
 void SetPlrAnims(Player &player);
 void CreatePlayer(Player &player, HeroClass c);
 int CalcStatDiff(Player &player);
@@ -797,7 +811,7 @@ void SyncPlrKill(Player &player, int earflag);
 void RemovePlrMissiles(const Player &player);
 void StartNewLvl(Player &player, interface_mode fom, int lvl);
 void RestartTownLvl(Player &player);
-void StartWarpLvl(Player &player, int pidx);
+void StartWarpLvl(Player &player, size_t pidx);
 void ProcessPlayers();
 void ClrPlrPath(Player &player);
 bool PosOkPlayer(const Player &player, Point position);

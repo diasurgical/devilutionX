@@ -42,7 +42,7 @@ OwnedClxSpriteListOrSheet CelToClx(const uint8_t *data, size_t size, PointerOrVa
 	std::vector<uint8_t> cl2Data;
 
 	// Most files become smaller with CL2. Allocate exactly enough bytes to avoid reallocation.
-	// The only file that becomes larger is Data\hf_logo3.CEL, by exactly 4445 bytes.
+	// The only file that becomes larger is data\hf_logo3.cel, by exactly 4445 bytes.
 	cl2Data.reserve(size + 4445);
 
 	// If it is a number of frames, then the last frame offset will be equal to the size of the file.

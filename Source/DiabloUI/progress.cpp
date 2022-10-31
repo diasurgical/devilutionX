@@ -30,14 +30,14 @@ void DialogActionCancel()
 void ProgressLoadBackground()
 {
 	UiLoadBlackBackground();
-	ArtPopupSm = LoadPcx("ui_art\\spopup.pcx");
-	ArtProgBG = LoadPcx("ui_art\\prog_bg.pcx");
+	ArtPopupSm = LoadPcx("ui_art\\spopup");
+	ArtProgBG = LoadPcx("ui_art\\prog_bg");
 }
 
 void ProgressLoadForeground()
 {
 	LoadDialogButtonGraphics();
-	ProgFil = LoadPcx("ui_art\\prog_fil.pcx");
+	ProgFil = LoadPcx("ui_art\\prog_fil");
 
 	const Point uiPosition = GetUIRectangle().position;
 	SDL_Rect rect3 = { (Sint16)(uiPosition.x + 265), (Sint16)(uiPosition.y + 267), DialogButtonWidth, DialogButtonHeight };

@@ -20,12 +20,14 @@ OptionalOwnedClxSpriteListOrSheet LoadOptionalClxListOrSheet(const char *path)
 	std::unique_ptr<uint8_t[]> data { new uint8_t[size] };
 	SDL_RWread(handle, data.get(), size, 1);
 	SDL_RWclose(handle);
-	return OwnedClxSpriteListOrSheet { std::move(data) };
+	return OwnedClxSpriteListOrSheet::FromBuffer(std::move(data), size);
 }
 
 OwnedClxSpriteListOrSheet LoadClxListOrSheet(const char *path)
 {
-	return OwnedClxSpriteListOrSheet { LoadFileInMem<uint8_t>(path) };
+	size_t size;
+	std::unique_ptr<uint8_t[]> data = LoadFileInMem<uint8_t>(path, &size);
+	return OwnedClxSpriteListOrSheet::FromBuffer(std::move(data), size);
 }
 
 } // namespace devilution

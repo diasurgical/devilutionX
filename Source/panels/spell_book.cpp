@@ -81,9 +81,9 @@ spell_type GetSBookTrans(spell_id ii, bool townok)
 
 void InitSpellBook()
 {
-	pSpellBkCel = LoadCel("Data\\SpellBk.CEL", static_cast<uint16_t>(SidePanelSize.width));
-	pSBkBtnCel = LoadCel("Data\\SpellBkB.CEL", gbIsHellfire ? 61 : 76);
-	pSBkIconCels = LoadCel("Data\\SpellI2.CEL", 37);
+	pSpellBkCel = LoadCel("data\\spellbk", static_cast<uint16_t>(SidePanelSize.width));
+	pSBkBtnCel = LoadCel("data\\spellbkb", gbIsHellfire ? 61 : 76);
+	pSBkIconCels = LoadCel("data\\spelli2", 37);
 
 	Player &player = *MyPlayer;
 	if (player._pClass == HeroClass::Warrior) {

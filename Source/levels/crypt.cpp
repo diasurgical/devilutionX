@@ -684,9 +684,9 @@ void SetCryptRoom()
 	IsUberRoomOpened = false;
 	IsUberLeverActivated = false;
 
-	auto dunData = LoadFileInMem<uint16_t>("NLevels\\L5Data\\uberroom.dun");
+	auto dunData = LoadFileInMem<uint16_t>("nlevels\\l5data\\uberroom.dun");
 
-	SetPiece = { position, { dunData[0], dunData[1] } };
+	SetPiece = { position, WorldTileSize(SDL_SwapLE16(dunData[0]), SDL_SwapLE16(dunData[1])) };
 
 	PlaceDunTiles(dunData.get(), position, 0);
 }
@@ -695,9 +695,9 @@ void SetCornerRoom()
 {
 	Point position = SelectChamber();
 
-	auto dunData = LoadFileInMem<uint16_t>("NLevels\\L5Data\\cornerstone.dun");
+	auto dunData = LoadFileInMem<uint16_t>("nlevels\\l5data\\cornerstone.dun");
 
-	SetPiece = { position, { dunData[0], dunData[1] } };
+	SetPiece = { position, WorldTileSize(SDL_SwapLE16(dunData[0]), SDL_SwapLE16(dunData[1])) };
 
 	PlaceDunTiles(dunData.get(), position, 0);
 }

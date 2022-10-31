@@ -50,7 +50,7 @@ constexpr Rectangle StashButtonRect[] = {
 	// clang-format on
 };
 
-constexpr PointsInRectangleRange StashGridRange { { { 0, 0 }, Size { 10, 10 } } };
+constexpr PointsInRectangleRange<int> StashGridRange { { { 0, 0 }, Size { 10, 10 } } };
 
 OptionalOwnedClxSpriteList StashPanelArt;
 OptionalOwnedClxSpriteList StashNavButtonArt;
@@ -63,7 +63,7 @@ OptionalOwnedClxSpriteList StashNavButtonArt;
  */
 void AddItemToStashGrid(unsigned page, Point position, uint16_t stashListIndex, Size itemSize)
 {
-	for (auto point : PointsInRectangleRange({ position, itemSize })) {
+	for (Point point : PointsInRectangle(Rectangle { position, itemSize })) {
 		Stash.stashGrids[page][point.x][point.y] = stashListIndex + 1;
 	}
 }
@@ -121,7 +121,7 @@ void CheckStashPaste(Point cursorPosition)
 
 	// Check that no more than 1 item is replaced by the move
 	StashStruct::StashCell stashIndex = StashStruct::EmptyCell;
-	for (auto point : PointsInRectangleRange({ firstSlot, itemSize })) {
+	for (Point point : PointsInRectangle(Rectangle { firstSlot, itemSize })) {
 		StashStruct::StashCell iv = Stash.GetItemIdAtPosition(point);
 		if (iv == StashStruct::EmptyCell || stashIndex == iv)
 			continue;
@@ -422,8 +422,6 @@ uint16_t CheckStashHLight(Point mousePosition)
 
 	InfoColor = UiFlags::ColorWhite;
 
-	ClearPanel();
-
 	StashStruct::StashCell itemId = Stash.GetItemIdAtPosition(slot);
 	if (itemId == StashStruct::EmptyCell) {
 		return -1;
@@ -685,10 +683,10 @@ bool AutoPlaceItemInStash(Player &player, const Item &item, bool persistItem)
 		if (pageIndex >= CountStashPages)
 			pageIndex -= CountStashPages;
 		// Search all possible position in stash grid
-		for (auto stashPosition : PointsInRectangleRange({ { 0, 0 }, Size { 10 - (itemSize.width - 1), 10 - (itemSize.height - 1) } })) {
+		for (auto stashPosition : PointsInRectangle(Rectangle { { 0, 0 }, Size { 10 - (itemSize.width - 1), 10 - (itemSize.height - 1) } })) {
 			// Check that all needed slots are free
 			bool isSpaceFree = true;
-			for (auto itemPoint : PointsInRectangleRange({ stashPosition, itemSize })) {
+			for (auto itemPoint : PointsInRectangle(Rectangle { stashPosition, itemSize })) {
 				uint16_t iv = Stash.stashGrids[pageIndex][itemPoint.x][itemPoint.y];
 				if (iv != 0) {
 					isSpaceFree = false;

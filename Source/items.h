@@ -179,9 +179,9 @@ struct Item {
 	/** Randomly generated identifier */
 	int32_t _iSeed = 0;
 	uint16_t _iCreateInfo = 0;
-	enum ItemType _itype = ItemType::None;
-	Point position = { 0, 0 };
+	ItemType _itype = ItemType::None;
 	bool _iAnimFlag = false;
+	Point position = { 0, 0 };
 	/*
 	 * @brief Contains Information for current Animation
 	 */
@@ -193,8 +193,8 @@ struct Item {
 	item_quality _iMagical = ITEM_QUALITY_NORMAL;
 	char _iName[64] = {};
 	char _iIName[64] = {};
-	enum item_equip_type _iLoc = ILOC_NONE;
-	enum item_class _iClass = ICLASS_NONE;
+	item_equip_type _iLoc = ILOC_NONE;
+	item_class _iClass = ICLASS_NONE;
 	uint8_t _iCurs = 0;
 	int _ivalue = 0;
 	int _iIvalue = 0;
@@ -202,8 +202,9 @@ struct Item {
 	uint8_t _iMaxDam = 0;
 	int16_t _iAC = 0;
 	ItemSpecialEffect _iFlags = ItemSpecialEffect::None;
-	enum item_misc_id _iMiscId = IMISC_NONE;
-	enum spell_id _iSpell = SPL_NULL;
+	item_misc_id _iMiscId = IMISC_NONE;
+	spell_id _iSpell = SPL_NULL;
+	_item_indexes IDidx = IDI_NONE;
 	int _iCharges = 0;
 	int _iMaxCharges = 0;
 	int _iDurability = 0;
@@ -242,9 +243,8 @@ struct Item {
 	uint8_t _iMinMag = 0;
 	int8_t _iMinDex = 0;
 	bool _iStatFlag = false;
-	_item_indexes IDidx = IDI_NONE;
-	uint32_t dwBuff = 0;
 	ItemSpecialEffectHf _iDamAcFlags = ItemSpecialEffectHf::None;
+	uint32_t dwBuff = 0;
 
 	/**
 	 * @brief Clears this item and returns the old value
@@ -481,7 +481,7 @@ void InitItemGFX();
 void InitItems();
 void CalcPlrItemVals(Player &player, bool Loadgfx);
 void CalcPlrInv(Player &player, bool Loadgfx);
-void InitializeItem(Item &item, int itemData);
+void InitializeItem(Item &item, _item_indexes itemData);
 void GenerateNewSeed(Item &h);
 int GetGoldCursor(int value);
 
@@ -494,7 +494,7 @@ void CreatePlrItems(Player &player);
 bool ItemSpaceOk(Point position);
 int AllocateItem();
 Point GetSuperItemLoc(Point position);
-void GetItemAttrs(Item &item, int itemData, int lvl);
+void GetItemAttrs(Item &item, _item_indexes itemData, int lvl);
 void SetupItem(Item &item);
 int RndItem(const Monster &monster);
 void SpawnUnique(_unique_items uid, Point position);
@@ -502,12 +502,12 @@ void SpawnItem(Monster &monster, Point position, bool sendmsg);
 void CreateRndItem(Point position, bool onlygood, bool sendmsg, bool delta);
 void CreateRndUseful(Point position, bool sendmsg);
 void CreateTypeItem(Point position, bool onlygood, ItemType itemType, int imisc, bool sendmsg, bool delta);
-void RecreateItem(Item &item, int idx, uint16_t icreateinfo, int iseed, int ivalue, bool isHellfire);
-void RecreateEar(Item &item, uint16_t ic, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, int ibuff);
+void RecreateItem(const Player &player, Item &item, _item_indexes idx, uint16_t icreateinfo, int iseed, int ivalue, bool isHellfire);
+void RecreateEar(Item &item, uint16_t ic, int iseed, uint8_t bCursval, string_view heroName);
 void CornerstoneSave();
 void CornerstoneLoad(Point position);
-void SpawnQuestItem(int itemid, Point position, int randarea, int selflag);
-void SpawnRewardItem(int itemid, Point position, bool sendmsg);
+void SpawnQuestItem(_item_indexes itemid, Point position, int randarea, int selflag);
+void SpawnRewardItem(_item_indexes itemid, Point position, bool sendmsg);
 void SpawnMapOfDoom(Point position, bool sendmsg);
 void SpawnRuneBomb(Point position, bool sendmsg);
 void SpawnTheodore(Point position, bool sendmsg);
@@ -525,9 +525,9 @@ bool DoOil(Player &player, int cii);
 void DrawUniqueInfo(const Surface &out);
 void PrintItemDetails(const Item &item);
 void PrintItemDur(const Item &item);
-void UseItem(int p, item_misc_id Mid, spell_id spl);
+void UseItem(size_t pnum, item_misc_id Mid, spell_id spl);
 bool UseItemOpensHive(const Item &item, Point position);
-bool UseItemOpensCrypt(const Item &item, Point position);
+bool UseItemOpensGrave(const Item &item, Point position);
 void SpawnSmith(int lvl);
 void SpawnPremium(const Player &player);
 void SpawnWitch(int lvl);

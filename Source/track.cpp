@@ -63,7 +63,7 @@ void RepeatMouseAction()
 	if (pcurs != CURSOR_HAND)
 		return;
 
-	if (sgbMouseDown == CLICK_NONE && ControllerButtonHeld == ControllerButton_NONE)
+	if (sgbMouseDown == CLICK_NONE && ControllerActionHeld == GameActionType_NONE)
 		return;
 
 	if (stextflag != STORE_NONE)
@@ -110,8 +110,7 @@ void RepeatMouseAction()
 		break;
 	case MouseActionType::OperateObject:
 		if (ObjectUnderCursor != nullptr && !ObjectUnderCursor->isDoor()) {
-			// This should probably be cursPosition so paths to large objects are consistent
-			NetSendCmdLoc(MyPlayerId, true, CMD_OPOBJXY, ObjectUnderCursor->position);
+			NetSendCmdLoc(MyPlayerId, true, CMD_OPOBJXY, cursPosition);
 		}
 		break;
 	case MouseActionType::Walk:

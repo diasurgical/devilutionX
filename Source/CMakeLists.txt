@@ -59,6 +59,7 @@ set(libdevilutionx_SRCS
 
   controls/axis_direction.cpp
   controls/controller.cpp
+  controls/controller_buttons.cpp
   controls/controller_motion.cpp
   controls/devices/joystick.cpp
   controls/devices/kbcontroller.cpp
@@ -95,7 +96,6 @@ set(libdevilutionx_SRCS
   engine/actor_position.cpp
   engine/animationinfo.cpp
   engine/assets.cpp
-  engine/demomode.cpp
   engine/direction.cpp
   engine/dx.cpp
   engine/load_cel.cpp
@@ -173,6 +173,10 @@ endif()
 
 if(USE_SDL1)
   list(APPEND libdevilutionx_SRCS utils/sdl2_to_1_2_backports.cpp)
+endif()
+
+if(NOT DISABLE_DEMOMODE)
+  list(APPEND libdevilutionx_SRCS engine/demomode.cpp)
 endif()
 
 if(NOSOUND)

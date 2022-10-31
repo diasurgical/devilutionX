@@ -27,6 +27,7 @@
 #include "lighting.h"
 #include "menu.h"
 #include "missiles.h"
+#include "monster.h"
 #include "mpq/mpq_writer.hpp"
 #include "pfile.h"
 #include "qol/stash.h"
@@ -145,8 +146,7 @@ public:
 	template <class TSource, class TDesired>
 	TDesired NextLENarrow(TSource modifier = 0)
 	{
-		static_assert(std::numeric_limits<TSource>::min() < std::numeric_limits<TDesired>::min());
-		static_assert(std::numeric_limits<TSource>::max() > std::numeric_limits<TDesired>::max());
+		static_assert(sizeof(TSource) > sizeof(TDesired), "Can only narrow to a smaller type");
 		TSource value = SwapLE(Next<TSource>()) + modifier;
 		return static_cast<TDesired>(clamp<TSource>(value, std::numeric_limits<TDesired>::min(), std::numeric_limits<TDesired>::max()));
 	}
@@ -345,7 +345,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	file.Skip<int32_t>(4); // Skip offset and velocity
 	player._pdir = static_cast<Direction>(file.NextLE<int32_t>());
 	file.Skip(4); // Unused
-	player._pgfxnum = file.NextLE<int32_t>();
+	player._pgfxnum = file.NextLENarrow<uint32_t, uint8_t>();
 	file.Skip<uint32_t>(); // Skip pointer pData
 	player.AnimInfo = {};
 	player.AnimInfo.ticksPerFrame = file.NextLENarrow<int32_t, int8_t>(1);
@@ -630,9 +630,9 @@ void LoadMonster(LoadHelper *file, Monster &monster)
 	monster.corpseId = file->NextLE<int8_t>();
 
 	monster.whoHit = file->NextLE<int8_t>();
-	monster.level = file->NextLE<int8_t>();
+	file->Skip(1); // Skip level - now calculated on the fly
 	file->Skip(1); // Alignment
-	monster.exp = file->NextLE<uint16_t>();
+	file->Skip(2); // Skip exp - now calculated from monstdat when the monster dies
 
 	if (monster.isPlayerMinion()) // Don't skip for golems
 		monster.toHit = file->NextLE<uint8_t>();
@@ -1115,7 +1115,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.WriteLE<int32_t>(velocity.deltaY);
 	file.WriteLE<int32_t>(static_cast<int32_t>(player._pdir));
 	file.Skip(4); // Unused
-	file.WriteLE<int32_t>(player._pgfxnum);
+	file.WriteLE<uint32_t>(player._pgfxnum);
 	file.Skip(4); // Skip pointer _pAnimData
 	file.WriteLE<int32_t>(std::max(0, player.AnimInfo.ticksPerFrame - 1));
 	file.WriteLE<int32_t>(player.AnimInfo.tickCounterOfCurrentFrame);
@@ -1396,14 +1396,14 @@ void SaveMonster(SaveHelper *file, Monster &monster)
 	file->WriteLE<int8_t>(monster.corpseId);
 
 	file->WriteLE<int8_t>(monster.whoHit);
-	file->WriteLE<int8_t>(monster.level);
+	file->WriteLE<int8_t>(static_cast<int8_t>(monster.level(sgGameInitInfo.nDifficulty)));
 	file->Skip(1); // Alignment
-	file->WriteLE<uint16_t>(monster.exp);
+	file->WriteLE<uint16_t>(static_cast<uint16_t>(std::min<unsigned>(std::numeric_limits<uint16_t>::max(), monster.exp(sgGameInitInfo.nDifficulty))));
 
 	file->WriteLE<uint8_t>(static_cast<uint8_t>(std::min<uint16_t>(monster.toHit, std::numeric_limits<uint8_t>::max()))); // For backwards compatibility
 	file->WriteLE<uint8_t>(monster.minDamage);
 	file->WriteLE<uint8_t>(monster.maxDamage);
-	file->WriteLE<uint8_t>(static_cast<uint8_t>(std::min<uint16_t>(monster.toHitSpecial, std::numeric_limits<uint8_t>::max()))); // For backwards compatibility
+	file->WriteLE<uint8_t>(static_cast<uint8_t>(std::min<uint16_t>(monster.toHitSpecial(sgGameInitInfo.nDifficulty), std::numeric_limits<uint8_t>::max()))); // For backwards compatibility
 	file->WriteLE<uint8_t>(monster.minDamageSpecial);
 	file->WriteLE<uint8_t>(monster.maxDamageSpecial);
 	file->WriteLE<uint8_t>(monster.armorClass);
@@ -1934,26 +1934,24 @@ void LoadHotkeys()
 	myPlayer._pRSplType = static_cast<spell_type>(file.NextLE<uint8_t>());
 }
 
-void SaveHotkeys(MpqWriter &saveWriter)
+void SaveHotkeys(MpqWriter &saveWriter, const Player &player)
 {
-	Player &myPlayer = *MyPlayer;
-
 	SaveHelper file(saveWriter, "hotkeys", HotkeysSize());
 
 	// Write the number of spell hotkeys
 	file.WriteLE<uint8_t>(static_cast<uint8_t>(NumHotkeys));
 
 	// Write the spell hotkeys
-	for (auto &spellId : myPlayer._pSplHotKey) {
+	for (auto &spellId : player._pSplHotKey) {
 		file.WriteLE<int32_t>(spellId);
 	}
-	for (auto &spellType : myPlayer._pSplTHotKey) {
+	for (auto &spellType : player._pSplTHotKey) {
 		file.WriteLE<uint8_t>(spellType);
 	}
 
 	// Write the selected spell last
-	file.WriteLE<int32_t>(myPlayer._pRSpell);
-	file.WriteLE<uint8_t>(myPlayer._pRSplType);
+	file.WriteLE<int32_t>(player._pRSpell);
+	file.WriteLE<uint8_t>(player._pRSplType);
 }
 
 void LoadHeroItems(Player &player)
@@ -2171,8 +2169,8 @@ void LoadGame(bool firstflag)
 				dObject[i][j] = file.NextLE<int8_t>();
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
-			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
-				dLight[i][j] = file.NextLE<int8_t>();
+			for (int i = 0; i < MAXDUNX; i++)         // NOLINT(modernize-loop-convert)
+				dLight[i][j] = file.NextLE<int8_t>(); // BUGFIX: dLight got loaded already
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
 			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
@@ -2428,8 +2426,8 @@ void SaveGameData(MpqWriter &saveWriter)
 				file.WriteLE<int8_t>(dObject[i][j]);
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
-			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
-				file.WriteLE<int8_t>(dLight[i][j]);
+			for (int i = 0; i < MAXDUNX; i++)       // NOLINT(modernize-loop-convert)
+				file.WriteLE<int8_t>(dLight[i][j]); // BUGFIX: dLight got saved already
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
 			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)

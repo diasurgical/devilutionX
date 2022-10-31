@@ -6,7 +6,7 @@
   <summary>Diablo/Hellfire source port for modern operating systems</summary>
   
   <metadata_license>CC-BY-SA-4.0</metadata_license>
-  <project_license>UPL-1.0</project_license>
+  <project_license>LicenseRef=https://github.com/diasurgical/devilutionX/blob/master/LICENSE.md</project_license>
   
   <supports>
     <control>pointing</control>

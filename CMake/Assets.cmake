@@ -41,6 +41,9 @@ if (Gettext_FOUND)
 endif()
 
 set(devilutionx_assets
+  arena/church.dun
+  arena/circle_of_death.dun
+  arena/hell.dun
   data/boxleftend.clx
   data/boxmiddle.clx
   data/boxrightend.clx
@@ -76,6 +79,8 @@ set(devilutionx_assets
   fonts/12-20.bin
   fonts/12-20.clx
   fonts/12-26.clx
+  fonts/12-e0.clx
+  fonts/12-e0.bin
   fonts/22-00.bin
   fonts/22-00.clx
   fonts/22-01.bin
@@ -157,12 +162,14 @@ set(devilutionx_assets
   gendata/cutportlw.clx
   gendata/cutportrw.clx
   gendata/cutstartw.clx
-  Levels/L1Data/SklKngT.dun
-  Levels/L2Data/BonechaT.dun
-  NLevels/L5Data/cornerstone.dun
-  NLevels/L5Data/uberroom.dun
-  ui_art/black_diablo.pcx
-  ui_art/black_hellfire.pcx
+  levels/l1data/sklkngt.dun
+  levels/l2data/bonechat.dun
+  levels/towndata/automap.dun
+  levels/towndata/automap.amp
+  nlevels/l5data/cornerstone.dun
+  nlevels/l5data/uberroom.dun
+  ui_art/diablo.pal
+  ui_art/hellfire.pal
   ui_art/creditsw.clx
   ui_art/dvl_but_sml.clx
   ui_art/dvl_lrpopup.clx

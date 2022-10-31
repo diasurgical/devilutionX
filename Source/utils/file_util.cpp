@@ -76,7 +76,7 @@ bool FileExists(const char *path)
 	return ::access(path, F_OK) == 0;
 #else
 	SDL_RWops *file = SDL_RWFromFile(path, "r+b");
-	if (file == NULL)
+	if (file == nullptr)
 		return false;
 	SDL_RWclose(file);
 	return true;
@@ -115,7 +115,7 @@ bool FileExistsAndIsWriteable(const char *path)
 	if (!FileExists(path))
 		return false;
 	SDL_RWops *file = SDL_RWFromFile(path, "a+b");
-	if (file == NULL)
+	if (file == nullptr)
 		return false;
 	SDL_RWclose(file);
 	return true;
@@ -222,25 +222,6 @@ std::optional<std::fstream> CreateFileStream(const char *path, std::ios::openmod
 	return { std::fstream(pathUtf16.get(), mode) };
 #else
 	return { std::fstream(path, mode) };
-#endif
-}
-
-FILE *FOpen(const char *path, const char *mode)
-{
-#if (defined(_WIN64) || defined(_WIN32)) && !defined(NXDK)
-	const auto pathUtf16 = ToWideChar(path);
-	if (pathUtf16 == nullptr) {
-		LogError("UTF-8 -> UTF-16 conversion error code {}", ::GetLastError());
-		return nullptr;
-	}
-	const auto modeUtf16 = ToWideChar(mode);
-	if (modeUtf16 == nullptr) {
-		LogError("UTF-8 -> UTF-16 conversion error code {}", ::GetLastError());
-		return nullptr;
-	}
-	return ::_wfopen(&pathUtf16[0], &modeUtf16[0]);
-#else
-	return std::fopen(path, mode);
 #endif
 }
 

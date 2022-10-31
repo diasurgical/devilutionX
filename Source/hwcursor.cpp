@@ -27,7 +27,7 @@ CursorInfo CurrentCursorInfo;
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 SDLCursorUniquePtr CurrentCursor;
 
-enum class HotpointPosition {
+enum class HotpointPosition : uint8_t {
 	TopLeft,
 	Center,
 };

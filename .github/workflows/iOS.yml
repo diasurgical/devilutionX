@@ -58,5 +58,5 @@ jobs:
       if: ${{ github.event_name == 'release' && !env.ACT }}
       uses: svenstaro/upload-release-action@v2
       with:
-        asset_name: build/devilutionx.ipa
+        file: build/devilutionx.ipa
         overwrite: true

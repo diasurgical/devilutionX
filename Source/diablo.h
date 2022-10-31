@@ -34,7 +34,7 @@ enum clicktype : int8_t {
 /**
  * @brief Specifices what game logic step is currently executed
  */
-enum class GameLogicStep {
+enum class GameLogicStep : uint8_t {
 	None,
 	ProcessPlayers,
 	ProcessMonsters,
@@ -46,7 +46,7 @@ enum class GameLogicStep {
 	ProcessMissilesTown,
 };
 
-enum class MouseActionType : int {
+enum class MouseActionType : uint8_t {
 	None,
 	Walk,
 	Spell,
@@ -99,7 +99,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir);
 /**
  * @param bStartup Process additional ticks before returning
  */
-void game_loop(bool bStartup);
+bool game_loop(bool bStartup);
 void diablo_color_cyc_logic();
 
 /* rdata */

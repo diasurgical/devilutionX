@@ -19,15 +19,15 @@ Bitset2d<DMAXX, DMAXY> DungeonMask;
 uint8_t dungeon[DMAXX][DMAXY];
 uint8_t pdungeon[DMAXX][DMAXY];
 Bitset2d<DMAXX, DMAXY> Protected;
-Rectangle SetPieceRoom;
-Rectangle SetPiece;
+WorldTileRectangle SetPieceRoom;
+WorldTileRectangle SetPiece;
 std::unique_ptr<uint16_t[]> pSetPiece;
 OptionalOwnedClxSpriteList pSpecialCels;
 std::unique_ptr<MegaTile[]> pMegaTiles;
 std::unique_ptr<byte[]> pDungeonCels;
 std::array<TileProperties, MAXTILES> SOLData;
-Point dminPosition;
-Point dmaxPosition;
+WorldTilePosition dminPosition;
+WorldTilePosition dmaxPosition;
 dungeon_type leveltype;
 uint8_t currlevel;
 bool setlevel;
@@ -58,20 +58,20 @@ std::unique_ptr<uint16_t[]> LoadMinData(size_t &tileCount)
 	switch (leveltype) {
 	case DTYPE_TOWN:
 		if (gbIsHellfire)
-			return LoadFileInMem<uint16_t>("NLevels\\TownData\\Town.MIN", &tileCount);
-		return LoadFileInMem<uint16_t>("Levels\\TownData\\Town.MIN", &tileCount);
+			return LoadFileInMem<uint16_t>("nlevels\\towndata\\town.min", &tileCount);
+		return LoadFileInMem<uint16_t>("levels\\towndata\\town.min", &tileCount);
 	case DTYPE_CATHEDRAL:
-		return LoadFileInMem<uint16_t>("Levels\\L1Data\\L1.MIN", &tileCount);
+		return LoadFileInMem<uint16_t>("levels\\l1data\\l1.min", &tileCount);
 	case DTYPE_CATACOMBS:
-		return LoadFileInMem<uint16_t>("Levels\\L2Data\\L2.MIN", &tileCount);
+		return LoadFileInMem<uint16_t>("levels\\l2data\\l2.min", &tileCount);
 	case DTYPE_CAVES:
-		return LoadFileInMem<uint16_t>("Levels\\L3Data\\L3.MIN", &tileCount);
+		return LoadFileInMem<uint16_t>("levels\\l3data\\l3.min", &tileCount);
 	case DTYPE_HELL:
-		return LoadFileInMem<uint16_t>("Levels\\L4Data\\L4.MIN", &tileCount);
+		return LoadFileInMem<uint16_t>("levels\\l4data\\l4.min", &tileCount);
 	case DTYPE_NEST:
-		return LoadFileInMem<uint16_t>("NLevels\\L6Data\\L6.MIN", &tileCount);
+		return LoadFileInMem<uint16_t>("nlevels\\l6data\\l6.min", &tileCount);
 	case DTYPE_CRYPT:
-		return LoadFileInMem<uint16_t>("NLevels\\L5Data\\L5.MIN", &tileCount);
+		return LoadFileInMem<uint16_t>("nlevels\\l5data\\l5.min", &tileCount);
 	default:
 		app_fatal("LoadMinData");
 	}
@@ -89,7 +89,7 @@ std::unique_ptr<uint16_t[]> LoadMinData(size_t &tileCount)
  * @param maxSize maximum allowable value for both dimensions
  * @return how much width/height is available for a theme room or an empty optional if there's not enough space
  */
-std::optional<Size> GetSizeForThemeRoom(int floor, Point origin, int minSize, int maxSize)
+std::optional<WorldTileSize> GetSizeForThemeRoom(uint8_t floor, WorldTilePosition origin, WorldTileCoord minSize, WorldTileCoord maxSize)
 {
 	if (origin.x + maxSize > DMAXX && origin.y + maxSize > DMAXY) {
 		return {}; // Original broken bounds check, avoids lower right corner
@@ -98,13 +98,13 @@ std::optional<Size> GetSizeForThemeRoom(int floor, Point origin, int minSize, in
 		return {};
 	}
 
-	const int maxWidth = std::min(maxSize, DMAXX - origin.x);
-	const int maxHeight = std::min(maxSize, DMAXY - origin.y);
+	const WorldTileCoord maxWidth = std::min<WorldTileCoord>(maxSize, DMAXX - origin.x);
+	const WorldTileCoord maxHeight = std::min<WorldTileCoord>(maxSize, DMAXY - origin.y);
 
-	Size room { maxWidth, maxHeight };
+	WorldTileSize room { maxWidth, maxHeight };
 
-	for (int i = 0; i < maxSize; i++) {
-		int width = i < room.height ? i : 0;
+	for (WorldTileCoord i = 0; i < maxSize; i++) {
+		WorldTileCoord width = i < room.height ? i : 0;
 		if (i < maxHeight) {
 			while (width < room.width) {
 				if (dungeon[origin.x + width][origin.y + i] != floor)
@@ -114,7 +114,7 @@ std::optional<Size> GetSizeForThemeRoom(int floor, Point origin, int minSize, in
 			}
 		}
 
-		int height = i < room.width ? i : 0;
+		WorldTileCoord height = i < room.width ? i : 0;
 		if (i < maxWidth) {
 			while (height < room.height) {
 				if (dungeon[origin.x + i][origin.y + height] != floor)
@@ -342,16 +342,16 @@ void InitGlobals()
 
 	DRLG_InitTrans();
 
-	dminPosition = Point(0, 0).megaToWorld();
-	dmaxPosition = Point(40, 40).megaToWorld();
-	SetPieceRoom = { { -1, -1 }, { -1, -1 } };
+	dminPosition = WorldTilePosition(0, 0).megaToWorld();
+	dmaxPosition = WorldTilePosition(40, 40).megaToWorld();
+	SetPieceRoom = { { 0, 0 }, { 0, 0 } };
 	SetPiece = { { 0, 0 }, { 0, 0 } };
 }
 
 } // namespace
 
 #ifdef BUILD_TESTING
-std::optional<Size> GetSizeForThemeRoom()
+std::optional<WorldTileSize> GetSizeForThemeRoom()
 {
 	return GetSizeForThemeRoom(0, { 0, 0 }, 5, 10);
 }
@@ -416,28 +416,53 @@ void LoadLevelSOLData()
 	switch (leveltype) {
 	case DTYPE_TOWN:
 		if (gbIsHellfire)
-			LoadFileInMem("NLevels\\TownData\\Town.SOL", SOLData);
+			LoadFileInMem("nlevels\\towndata\\town.sol", SOLData);
 		else
-			LoadFileInMem("Levels\\TownData\\Town.SOL", SOLData);
+			LoadFileInMem("levels\\towndata\\town.sol", SOLData);
 		break;
 	case DTYPE_CATHEDRAL:
-		LoadFileInMem("Levels\\L1Data\\L1.SOL", SOLData);
+		LoadFileInMem("levels\\l1data\\l1.sol", SOLData);
+		// Fix incorrectly marked arched tiles
+		SOLData[9] |= TileProperties::BlockLight | TileProperties::BlockMissile;
+		SOLData[15] |= TileProperties::BlockLight | TileProperties::BlockMissile;
+		SOLData[16] |= TileProperties::BlockLight | TileProperties::BlockMissile;
+		SOLData[20] |= TileProperties::BlockLight | TileProperties::BlockMissile;
+		SOLData[21] |= TileProperties::BlockLight | TileProperties::BlockMissile;
+		SOLData[27] |= TileProperties::BlockMissile;
+		SOLData[28] |= TileProperties::BlockMissile;
+		SOLData[51] |= TileProperties::BlockLight | TileProperties::BlockMissile;
+		SOLData[56] |= TileProperties::BlockLight | TileProperties::BlockMissile;
+		SOLData[58] |= TileProperties::BlockLight | TileProperties::BlockMissile;
+		SOLData[61] |= TileProperties::BlockLight | TileProperties::BlockMissile;
+		SOLData[63] |= TileProperties::BlockLight | TileProperties::BlockMissile;
+		SOLData[65] |= TileProperties::BlockLight | TileProperties::BlockMissile;
+		SOLData[72] |= TileProperties::BlockLight | TileProperties::BlockMissile;
+		SOLData[208] |= TileProperties::BlockLight | TileProperties::BlockMissile;
+		SOLData[247] |= TileProperties::BlockLight | TileProperties::BlockMissile;
+		SOLData[253] |= TileProperties::BlockLight | TileProperties::BlockMissile;
+		SOLData[257] |= TileProperties::BlockLight | TileProperties::BlockMissile;
+		SOLData[323] |= TileProperties::BlockLight | TileProperties::BlockMissile;
+		SOLData[403] |= TileProperties::BlockLight;
+		// Fix incorrectly marked pillar tile
+		SOLData[24] |= TileProperties::BlockLight;
+		// Fix incorrectly marked wall tile
+		SOLData[450] |= TileProperties::BlockLight | TileProperties::BlockMissile;
 		break;
 	case DTYPE_CATACOMBS:
-		LoadFileInMem("Levels\\L2Data\\L2.SOL", SOLData);
+		LoadFileInMem("levels\\l2data\\l2.sol", SOLData);
 		break;
 	case DTYPE_CAVES:
-		LoadFileInMem("Levels\\L3Data\\L3.SOL", SOLData);
+		LoadFileInMem("levels\\l3data\\l3.sol", SOLData);
 		break;
 	case DTYPE_HELL:
-		LoadFileInMem("Levels\\L4Data\\L4.SOL", SOLData);
+		LoadFileInMem("levels\\l4data\\l4.sol", SOLData);
 		SOLData[210] = TileProperties::None; // Tile is incorrectly marked as being solid
 		break;
 	case DTYPE_NEST:
-		LoadFileInMem("NLevels\\L6Data\\L6.SOL", SOLData);
+		LoadFileInMem("nlevels\\l6data\\l6.sol", SOLData);
 		break;
 	case DTYPE_CRYPT:
-		LoadFileInMem("NLevels\\L5Data\\L5.SOL", SOLData);
+		LoadFileInMem("nlevels\\l5data\\l5.sol", SOLData);
 		break;
 	default:
 		app_fatal("LoadLevelSOLData");
@@ -475,10 +500,10 @@ void DRLG_InitTrans()
 	TransVal = 1;
 }
 
-void DRLG_RectTrans(Rectangle area)
+void DRLG_RectTrans(WorldTileRectangle area)
 {
-	Point position = area.position;
-	Size size = area.size;
+	WorldTilePosition position = area.position;
+	WorldTileSize size = area.size;
 
 	for (int j = position.y; j <= position.y + size.height; j++) {
 		for (int i = position.x; i <= position.x + size.width; i++) {
@@ -489,17 +514,14 @@ void DRLG_RectTrans(Rectangle area)
 	TransVal++;
 }
 
-void DRLG_MRectTrans(Rectangle area)
+void DRLG_MRectTrans(WorldTileRectangle area)
 {
-	Point position = area.position.megaToWorld();
-	Size size = area.size * 2;
-
-	DRLG_RectTrans({ position + Displacement { 1, 1 }, { size.width - 1, size.height - 1 } });
+	DRLG_RectTrans({ area.position.megaToWorld() + WorldTileDisplacement { 1, 1 }, area.size * 2 - 1 });
 }
 
-void DRLG_MRectTrans(Point origin, Point extent)
+void DRLG_MRectTrans(WorldTilePosition origin, WorldTilePosition extent)
 {
-	DRLG_MRectTrans({ origin, { extent.x - origin.x, extent.y - origin.y } });
+	DRLG_MRectTrans({ origin, WorldTileSize(extent.x - origin.x, extent.y - origin.y) });
 }
 
 void DRLG_CopyTrans(int sx, int sy, int dx, int dy)
@@ -544,13 +566,13 @@ void LoadDungeonBase(const char *path, Point spawn, int floorId, int dirtId)
 	SetMapObjects(dunData.get(), 0, 0);
 }
 
-void Make_SetPC(Rectangle area)
+void Make_SetPC(WorldTileRectangle area)
 {
-	Point position = area.position.megaToWorld();
-	Size size = area.size * 2;
+	WorldTilePosition position = area.position.megaToWorld();
+	WorldTileSize size = area.size * 2;
 
-	for (int j = 0; j < size.height; j++) {
-		for (int i = 0; i < size.width; i++) {
+	for (unsigned j = 0; j < size.height; j++) {
+		for (unsigned i = 0; i < size.width; i++) {
 			dFlags[position.x + i][position.y + j] |= DungeonFlag::Populated;
 		}
 	}
@@ -624,10 +646,10 @@ void DRLG_PlaceThemeRooms(int minSize, int maxSize, int floor, int freq, bool rn
 {
 	themeCount = 0;
 	memset(themeLoc, 0, sizeof(*themeLoc));
-	for (int j = 0; j < DMAXY; j++) {
-		for (int i = 0; i < DMAXX; i++) {
+	for (WorldTileCoord j = 0; j < DMAXY; j++) {
+		for (WorldTileCoord i = 0; i < DMAXX; i++) {
 			if (dungeon[i][j] == floor && FlipCoin(freq)) {
-				std::optional<Size> themeSize = GetSizeForThemeRoom(floor, { i, j }, minSize, maxSize);
+				std::optional<WorldTileSize> themeSize = GetSizeForThemeRoom(floor, { i, j }, minSize, maxSize);
 
 				if (!themeSize)
 					continue;
@@ -644,7 +666,7 @@ void DRLG_PlaceThemeRooms(int minSize, int maxSize, int floor, int freq, bool rn
 				}
 
 				THEME_LOC &theme = themeLoc[themeCount];
-				theme.room = { Point { i, j } + Direction::South, *themeSize };
+				theme.room = { WorldTilePosition { i, j } + Direction::South, *themeSize };
 				if (IsAnyOf(leveltype, DTYPE_CAVES, DTYPE_NEST)) {
 					DRLG_RectTrans({ (theme.room.position + Direction::South).megaToWorld(), theme.room.size * 2 - 5 });
 				} else {
@@ -674,13 +696,13 @@ void DRLG_HoldThemeRooms()
 	}
 }
 
-void SetSetPieceRoom(Point position, int floorId)
+void SetSetPieceRoom(WorldTilePosition position, int floorId)
 {
 	if (pSetPiece == nullptr)
 		return;
 
 	PlaceDunTiles(pSetPiece.get(), position, floorId);
-	SetPiece = { position, { SDL_SwapLE16(pSetPiece[0]), SDL_SwapLE16(pSetPiece[1]) } };
+	SetPiece = { position, WorldTileSize(SDL_SwapLE16(pSetPiece[0]), SDL_SwapLE16(pSetPiece[1])) };
 }
 
 void FreeQuestSetPieces()
@@ -723,10 +745,10 @@ void DRLG_LPass3(int lv)
 	}
 }
 
-bool IsNearThemeRoom(Point testPosition)
+bool IsNearThemeRoom(WorldTilePosition testPosition)
 {
 	for (int i = 0; i < themeCount; i++) {
-		if (Rectangle(themeLoc[i].room.position - Displacement { 2 }, themeLoc[i].room.size + 5).contains(testPosition))
+		if (WorldTileRectangle(themeLoc[i].room.position - WorldTileDisplacement { 2 }, themeLoc[i].room.size + 5).contains(testPosition))
 			return true;
 	}
 

@@ -141,6 +141,7 @@ MpqWriter GetStashWriter()
 	return MpqWriter(GetStashSavePath().c_str());
 }
 
+#ifndef DISABLE_DEMOMODE
 void CopySaveFile(uint32_t saveNum, std::string targetPath)
 {
 	std::string savePath = GetSavePath(saveNum);
@@ -152,6 +153,7 @@ void CopySaveFile(uint32_t saveNum, std::string targetPath)
 		return;
 	*targetStream << saveStream->rdbuf();
 }
+#endif
 
 void Game2UiPlayer(const Player &player, _uiheroinfo *heroinfo, bool bHasSaveFile)
 {
@@ -203,6 +205,7 @@ bool ArchiveContainsGame(MpqArchive &hsArchive)
 	return IsHeaderValid(hdr);
 }
 
+#ifndef DISABLE_DEMOMODE
 class MemoryBuffer : public std::basic_streambuf<char> {
 public:
 	MemoryBuffer(char *data, size_t byteCount)
@@ -461,6 +464,7 @@ HeroCompareResult CompareSaves(const std::string &actualSavePath, const std::str
 	}
 	return { compareResult ? HeroCompareResult::Same : HeroCompareResult::Difference, message };
 }
+#endif // !DISABLE_DEMOMODE
 
 void pfile_write_hero(MpqWriter &saveWriter, bool writeGameData)
 {
@@ -474,7 +478,7 @@ void pfile_write_hero(MpqWriter &saveWriter, bool writeGameData)
 	PackPlayer(&pkplr, myPlayer, !gbIsMultiplayer, false);
 	EncodeHero(saveWriter, &pkplr);
 	if (!gbVanilla) {
-		SaveHotkeys(saveWriter);
+		SaveHotkeys(saveWriter, myPlayer);
 		SaveHeroItems(saveWriter, myPlayer);
 	}
 }
@@ -525,6 +529,7 @@ void pfile_write_hero(bool writeGameData)
 	pfile_write_hero(saveWriter, writeGameData);
 }
 
+#ifndef DISABLE_DEMOMODE
 void pfile_write_hero_demo(int demo)
 {
 	std::string savePath = GetSavePath(gSaveNumber, StrCat("demo_", demo, "_reference_"));
@@ -549,6 +554,7 @@ HeroCompareResult pfile_compare_hero_demo(int demo, bool logDetails)
 
 	return CompareSaves(actualSavePath, referenceSavePath, logDetails);
 }
+#endif
 
 void sfile_write_stash()
 {
@@ -637,7 +643,7 @@ bool pfile_ui_save_create(_uiheroinfo *heroinfo)
 	EncodeHero(saveWriter, &pkplr);
 	Game2UiPlayer(player, heroinfo, false);
 	if (!gbVanilla) {
-		SaveHotkeys(saveWriter);
+		SaveHotkeys(saveWriter, player);
 		SaveHeroItems(saveWriter, player);
 	}
 

@@ -8,11 +8,8 @@
 
 #include "control.h"
 #include "controls/controller.h"
-#include "controls/controller_motion.h"
-#include "controls/game_controls.h"
 #include "controls/input.h"
 #include "controls/plrctrls.h"
-#include "controls/remap_keyboard.h"
 #ifndef USE_SDL1
 #include "controls/touch/event_handlers.h"
 #endif
@@ -20,15 +17,11 @@
 #include "engine/demomode.h"
 #include "engine/rectangle.hpp"
 #include "hwcursor.hpp"
-#include "inv.h"
-#include "menu.h"
 #include "movie.h"
 #include "panels/spell_list.hpp"
 #include "qol/stash.h"
 #include "utils/display.h"
 #include "utils/log.hpp"
-#include "utils/sdl_compat.h"
-#include "utils/stubs.h"
 #include "utils/utf8.hpp"
 
 #ifdef __vita__
@@ -101,113 +94,6 @@ bool FalseAvail(const char *name, int value)
 	return true;
 }
 
-/**
- * @brief Try to clean the inventory related cursor states.
- * @return True if it is safe to close the inventory
- */
-bool BlurInventory()
-{
-	if (!MyPlayer->HoldItem.isEmpty()) {
-		if (!TryDropItem()) {
-			MyPlayer->Say(HeroSpeech::WhereWouldIPutThis);
-			return false;
-		}
-	}
-
-	CloseInventory();
-	if (pcurs > CURSOR_HAND)
-		NewCursor(CURSOR_HAND);
-	if (chrflag)
-		FocusOnCharInfo();
-
-	return true;
-}
-
-void ProcessGamepadEvents(GameAction &action)
-{
-	switch (action.type) {
-	case GameActionType_NONE:
-	case GameActionType_SEND_KEY:
-		break;
-	case GameActionType_USE_HEALTH_POTION:
-		if (IsStashOpen)
-			Stash.PreviousPage();
-		else
-			UseBeltItem(BLT_HEALING);
-		break;
-	case GameActionType_USE_MANA_POTION:
-		if (IsStashOpen)
-			Stash.NextPage();
-		else
-			UseBeltItem(BLT_MANA);
-		break;
-	case GameActionType_PRIMARY_ACTION:
-		PerformPrimaryAction();
-		break;
-	case GameActionType_SECONDARY_ACTION:
-		PerformSecondaryAction();
-		break;
-	case GameActionType_CAST_SPELL:
-		PerformSpellAction();
-		break;
-	case GameActionType_TOGGLE_QUICK_SPELL_MENU:
-		if (!invflag || BlurInventory()) {
-			if (!spselflag)
-				DoSpeedBook();
-			else
-				spselflag = false;
-			chrflag = false;
-			QuestLogIsOpen = false;
-			sbookflag = false;
-			CloseGoldWithdraw();
-			IsStashOpen = false;
-		}
-		break;
-	case GameActionType_TOGGLE_CHARACTER_INFO:
-		chrflag = !chrflag;
-		if (chrflag) {
-			QuestLogIsOpen = false;
-			CloseGoldWithdraw();
-			IsStashOpen = false;
-			spselflag = false;
-			if (pcurs == CURSOR_DISARM)
-				NewCursor(CURSOR_HAND);
-			FocusOnCharInfo();
-		}
-		break;
-	case GameActionType_TOGGLE_QUEST_LOG:
-		if (!QuestLogIsOpen) {
-			StartQuestlog();
-			chrflag = false;
-			CloseGoldWithdraw();
-			IsStashOpen = false;
-			spselflag = false;
-		} else {
-			QuestLogIsOpen = false;
-		}
-		break;
-	case GameActionType_TOGGLE_INVENTORY:
-		if (invflag) {
-			BlurInventory();
-		} else {
-			sbookflag = false;
-			spselflag = false;
-			invflag = true;
-			if (pcurs == CURSOR_DISARM)
-				NewCursor(CURSOR_HAND);
-			FocusOnInventory();
-		}
-		break;
-	case GameActionType_TOGGLE_SPELL_BOOK:
-		if (BlurInventory()) {
-			CloseInventory();
-			spselflag = false;
-			sbookflag = !sbookflag;
-		}
-		break;
-	}
-}
-
 } // namespace
 
 bool FetchMessage_Real(SDL_Event *event, uint16_t *modState)
@@ -261,46 +147,22 @@ bool FetchMessage_Real(SDL_Event *event, uint16_t *modState)
 	}
 #endif
 
-	const ControllerButtonEvent ctrlEvent = ToControllerButtonEvent(e);
-	bool isGamepadMotion = ProcessControllerMotion(e, ctrlEvent);
-
-	DetectInputMethod(e, ctrlEvent);
-	if (isGamepadMotion) {
-		return true;
-	}
-
-	if (IsAnyOf(ctrlEvent.button, ControllerButtonPrimary, ControllerButtonSecondary, ControllerButtonTertiary) && IsAnyOf(ControllerButtonHeld, ctrlEvent.button, ControllerButton_NONE)) {
-		ControllerButtonHeld = (ctrlEvent.up || IsControllerButtonPressed(ControllerButton_BUTTON_BACK)) ? ControllerButton_NONE : ctrlEvent.button;
-		LastMouseButtonAction = MouseActionType::None;
-	}
-
-	GameAction action;
-	if (GetGameAction(e, ctrlEvent, &action)) {
-		if (movie_playing) {
-			if (action.type != GameActionType_NONE) {
-				event->type = SDL_KEYDOWN;
-				if (action.type == GameActionType_SEND_KEY)
-					event->key.keysym.sym = static_cast<SDL_Keycode>(action.send_key.vk_code);
-			}
-		} else if (action.type == GameActionType_SEND_KEY) {
-			if ((action.send_key.vk_code & KeymapperMouseButtonMask) != 0) {
-				const unsigned button = action.send_key.vk_code & ~KeymapperMouseButtonMask;
-				SetMouseButtonEvent(*event, action.send_key.up ? SDL_MOUSEBUTTONUP : SDL_MOUSEBUTTONDOWN, static_cast<uint8_t>(button), MousePosition);
-			} else {
-				event->type = action.send_key.up ? SDL_KEYUP : SDL_KEYDOWN;
-				event->key.state = action.send_key.up ? SDL_PRESSED : SDL_RELEASED;
-				event->key.keysym.sym = static_cast<SDL_Keycode>(action.send_key.vk_code);
-			}
-		} else {
-			ProcessGamepadEvents(action);
-		}
-		return true;
-	}
-
 	if (HandleControllerAddedOrRemovedEvent(e))
 		return true;
 
 	switch (e.type) {
+#ifndef USE_SDL1
+	case SDL_CONTROLLERAXISMOTION:
+	case SDL_CONTROLLERBUTTONDOWN:
+	case SDL_CONTROLLERBUTTONUP:
+	case SDL_FINGERDOWN:
+	case SDL_FINGERUP:
+#endif
+	case SDL_JOYAXISMOTION:
+	case SDL_JOYBUTTONDOWN:
+	case SDL_JOYBUTTONUP:
+		*event = e;
+		break;
 	case SDL_KEYDOWN:
 	case SDL_KEYUP: {
 #ifdef USE_SDL1
@@ -316,14 +178,9 @@ bool FetchMessage_Real(SDL_Event *event, uint16_t *modState)
 			}
 		}
 #endif
-		SDL_Keycode key = e.key.keysym.sym;
-		remap_keyboard_key(&key);
-		if (key == -1)
+		if (e.key.keysym.sym == -1)
 			return FalseAvail(e.type == SDL_KEYDOWN ? "SDL_KEYDOWN" : "SDL_KEYUP", e.key.keysym.sym);
-		event->type = e.type;
-		event->key.state = e.key.state;
-		event->key.keysym.sym = key;
-		event->key.keysym.mod = e.key.keysym.mod;
+		*event = e;
 	} break;
 	case SDL_MOUSEMOTION:
 		*event = e;

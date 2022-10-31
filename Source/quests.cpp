@@ -14,6 +14,7 @@
 #include "engine/random.hpp"
 #include "engine/render/clx_render.hpp"
 #include "engine/render/text_render.hpp"
+#include "engine/world_tile.hpp"
 #include "init.h"
 #include "levels/gendung.h"
 #include "levels/trigs.h"
@@ -137,18 +138,18 @@ void DrawSkelKing(quest_id q, Point position)
 
 void DrawWarLord(Point position)
 {
-	auto dunData = LoadFileInMem<uint16_t>("Levels\\L4Data\\Warlord2.DUN");
+	auto dunData = LoadFileInMem<uint16_t>("levels\\l4data\\warlord2.dun");
 
-	SetPiece = { position, { SDL_SwapLE16(dunData[0]), SDL_SwapLE16(dunData[1]) } };
+	SetPiece = { position, WorldTileSize(SDL_SwapLE16(dunData[0]), SDL_SwapLE16(dunData[1])) };
 
 	PlaceDunTiles(dunData.get(), position, 6);
 }
 
 void DrawSChamber(quest_id q, Point position)
 {
-	auto dunData = LoadFileInMem<uint16_t>("Levels\\L2Data\\Bonestr1.DUN");
+	auto dunData = LoadFileInMem<uint16_t>("levels\\l2data\\bonestr1.dun");
 
-	SetPiece = { position, { SDL_SwapLE16(dunData[0]), SDL_SwapLE16(dunData[1]) } };
+	SetPiece = { position, WorldTileSize(SDL_SwapLE16(dunData[0]), SDL_SwapLE16(dunData[1])) };
 
 	PlaceDunTiles(dunData.get(), position, 3);
 
@@ -157,12 +158,12 @@ void DrawSChamber(quest_id q, Point position)
 
 void DrawLTBanner(Point position)
 {
-	auto dunData = LoadFileInMem<uint16_t>("Levels\\L1Data\\Banner1.DUN");
+	auto dunData = LoadFileInMem<uint16_t>("levels\\l1data\\banner1.dun");
 
 	int width = SDL_SwapLE16(dunData[0]);
 	int height = SDL_SwapLE16(dunData[1]);
 
-	SetPiece = { position, { SDL_SwapLE16(dunData[0]), SDL_SwapLE16(dunData[1]) } };
+	SetPiece = { position, WorldTileSize(SDL_SwapLE16(dunData[0]), SDL_SwapLE16(dunData[1])) };
 
 	const uint16_t *tileLayer = &dunData[2];
 
@@ -187,9 +188,9 @@ void DrawBlind(Point position)
 
 void DrawBlood(Point position)
 {
-	auto dunData = LoadFileInMem<uint16_t>("Levels\\L2Data\\Blood2.DUN");
+	auto dunData = LoadFileInMem<uint16_t>("levels\\l2data\\blood2.dun");
 
-	SetPiece = { position, { SDL_SwapLE16(dunData[0]), SDL_SwapLE16(dunData[1]) } };
+	SetPiece = { position, WorldTileSize(SDL_SwapLE16(dunData[0]), SDL_SwapLE16(dunData[1])) };
 
 	PlaceDunTiles(dunData.get(), position, 0);
 }
@@ -352,7 +353,7 @@ void CheckQuests()
 		    && Quests[Q_PWATER]._qactive != QUEST_DONE) {
 			Quests[Q_PWATER]._qactive = QUEST_DONE;
 			PlaySfxLoc(IS_QUESTDN, MyPlayer->position.tile);
-			LoadPalette("Levels\\L3Data\\L3pwater.pal", false);
+			LoadPalette("levels\\l3data\\l3pwater.pal", false);
 			UpdatePWaterPalette();
 			WaterDone = 32;
 		}
@@ -430,8 +431,8 @@ void CheckQuestKill(const Monster &monster, bool sendmsg)
 		diabloQuest._qactive = QUEST_ACTIVE;
 
 		if (gbIsMultiplayer) {
-			for (int j = 0; j < MAXDUNY; j++) {
-				for (int i = 0; i < MAXDUNX; i++) {
+			for (WorldTileCoord j = 0; j < MAXDUNY; j++) {
+				for (WorldTileCoord i = 0; i < MAXDUNX; i++) {
 					if (dPiece[i][j] == 369) {
 						trigs[numtrigs].position = { i, j };
 						trigs[numtrigs]._tmsg = WM_DIABNEXTLVL;
@@ -508,11 +509,18 @@ void SetReturnLvlPos()
 		ReturnLevelType = DTYPE_CATHEDRAL;
 		break;
 	case SL_VILEBETRAYER:
-		ReturnLvlPosition = Quests[Q_BETRAYER].position + Direction::East;
+		ReturnLvlPosition = Quests[Q_BETRAYER].position + Direction::South;
 		ReturnLevel = Quests[Q_BETRAYER]._qlevel;
 		ReturnLevelType = DTYPE_HELL;
 		break;
 	case SL_NONE:
+		break;
+	default:
+		if (IsArenaLevel(setlvlnum)) {
+			ReturnLvlPosition = Towners[TOWN_DRUNK].position + Displacement { 1, 0 };
+			ReturnLevel = 0;
+			ReturnLevelType = DTYPE_TOWN;
+		}
 		break;
 	}
 }
@@ -532,9 +540,9 @@ void LoadPWaterPalette()
 		return;
 
 	if (Quests[Q_PWATER]._qactive == QUEST_DONE)
-		LoadPalette("Levels\\L3Data\\L3pwater.pal");
+		LoadPalette("levels\\l3data\\l3pwater.pal");
 	else
-		LoadPalette("Levels\\L3Data\\L3pfoul.pal");
+		LoadPalette("levels\\l3data\\l3pfoul.pal");
 }
 
 void UpdatePWaterPalette()
@@ -619,7 +627,7 @@ void ResyncQuests()
 				SyncObjectAnim(Objects[ActiveObjects[i]]);
 			auto tren = TransVal;
 			TransVal = 9;
-			DRLG_MRectTrans({ SetPiece.position, { SetPiece.size.width / 2 + 4, SetPiece.size.height / 2 } });
+			DRLG_MRectTrans({ SetPiece.position, WorldTileSize(SetPiece.size.width / 2 + 4, SetPiece.size.height / 2) });
 			TransVal = tren;
 		}
 		if (Quests[Q_LTBANNER]._qvar1 == 3) {
@@ -628,7 +636,7 @@ void ResyncQuests()
 				SyncObjectAnim(Objects[ActiveObjects[i]]);
 			auto tren = TransVal;
 			TransVal = 9;
-			DRLG_MRectTrans({ SetPiece.position, { SetPiece.size.width / 2 + 4, SetPiece.size.height / 2 } });
+			DRLG_MRectTrans({ SetPiece.position, WorldTileSize(SetPiece.size.width / 2 + 4, SetPiece.size.height / 2) });
 			TransVal = tren;
 		}
 	}

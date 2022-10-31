@@ -1,7 +1,9 @@
 # RG99 has the same layout as RG300 but only 32 MiB RAM
 set(BUILD_ASSETS_MPQ OFF)
+set(UNPACKED_MPQS ON)
 set(NONET ON)
 set(NOSOUND ON)
+set(DISABLE_DEMOMODE ON)
 set(USE_SDL1 ON)
 
 # Link `libstdc++` dynamically: ~1.3 MiB.
@@ -13,6 +15,9 @@ set(DEVILUTIONX_STATIC_CXX_STDLIB OFF)
 set(_extra_flags "-fmerge-all-constants")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${_extra_flags}")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${_extra_flags}")
+# -Wl,-z-stack-size: the default thread stack size for RG99 is 128 KiB, reduce it.
+#   https://wiki.musl-libc.org/functional-differences-from-glibc.html#Thread-stack-size
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-z,stack-size=32768")
 
 # 128 KiB
 set(DEVILUTIONX_PALETTE_TRANSPARENCY_BLACK_16_LUT OFF)
@@ -37,6 +42,7 @@ set(SDL1_VIDEO_MODE_SVID_FLAGS SDL_HWSURFACE|SDL_FULLSCREEN|SDL_DOUBLEBUF)
 
 set(PREFILL_PLAYER_NAME ON)
 set(HAS_KBCTRL 1)
+set(DEVILUTIONX_GAMEPAD_TYPE Nintendo)
 set(KBCTRL_BUTTON_DPAD_LEFT SDLK_LEFT)
 set(KBCTRL_BUTTON_DPAD_RIGHT SDLK_RIGHT)
 set(KBCTRL_BUTTON_DPAD_UP SDLK_UP)

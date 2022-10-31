@@ -469,7 +469,7 @@ void AddCandles()
  * @param affectedArea The map region to be updated when this object is activated by the player.
  * @param msg The quest text to play when the player activates the book.
  */
-void AddBookLever(_object_id type, Rectangle affectedArea, _speech_id msg)
+void AddBookLever(_object_id type, WorldTileRectangle affectedArea, _speech_id msg)
 {
 	std::optional<Point> position = GetRandomObjectPosition({ 2, 2 });
 	if (!position)
@@ -647,7 +647,7 @@ void AddChestTraps()
 	}
 }
 
-void LoadMapObjects(const char *path, Point start, Rectangle mapRange = {}, int leveridx = 0)
+void LoadMapObjects(const char *path, Point start, WorldTileRectangle mapRange = {}, int leveridx = 0)
 {
 	LoadingMapObjects = true;
 	ApplyObjectLighting = true;
@@ -683,9 +683,9 @@ void LoadMapObjects(const char *path, Point start, Rectangle mapRange = {}, int 
 
 void AddDiabObjs()
 {
-	LoadMapObjects("Levels\\L4Data\\diab1.DUN", DiabloQuad1.megaToWorld(), { DiabloQuad2, { 11, 12 } }, 1);
-	LoadMapObjects("Levels\\L4Data\\diab2a.DUN", DiabloQuad2.megaToWorld(), { DiabloQuad3, { 11, 11 } }, 2);
-	LoadMapObjects("Levels\\L4Data\\diab3a.DUN", DiabloQuad3.megaToWorld(), { DiabloQuad4, { 9, 9 } }, 3);
+	LoadMapObjects("levels\\l4data\\diab1.dun", DiabloQuad1.megaToWorld(), { DiabloQuad2, { 11, 12 } }, 1);
+	LoadMapObjects("levels\\l4data\\diab2a.dun", DiabloQuad2.megaToWorld(), { DiabloQuad3, { 11, 11 } }, 2);
+	LoadMapObjects("levels\\l4data\\diab3a.dun", DiabloQuad3.megaToWorld(), { DiabloQuad4, { 9, 9 } }, 3);
 }
 
 void AddCryptObject(Object &object, int a2)
@@ -920,10 +920,10 @@ void AddStoryBooks()
 
 void AddHookedBodies(int freq)
 {
-	for (int j = 0; j < DMAXY; j++) {
-		int jj = 16 + j * 2;
-		for (int i = 0; i < DMAXX; i++) {
-			int ii = 16 + i * 2;
+	for (WorldTileCoord j = 0; j < DMAXY; j++) {
+		WorldTileCoord jj = 16 + j * 2;
+		for (WorldTileCoord i = 0; i < DMAXX; i++) {
+			WorldTileCoord ii = 16 + i * 2;
 			if (dungeon[i][j] != 1 && dungeon[i][j] != 2)
 				continue;
 			if (!FlipCoin(freq))
@@ -2000,7 +2000,7 @@ void OperateBookLever(Object &questBook, bool sendmsg)
 				SpawnUnique(UITEM_OPTAMULET, SetPiece.position.megaToWorld() + Displacement { 5, 5 });
 				auto tren = TransVal;
 				TransVal = 9;
-				DRLG_MRectTrans({ questBook._oVar1, questBook._oVar2 }, { questBook._oVar3, questBook._oVar4 });
+				DRLG_MRectTrans(WorldTilePosition(questBook._oVar1, questBook._oVar2), WorldTilePosition(questBook._oVar3, questBook._oVar4));
 				TransVal = tren;
 			}
 		}
@@ -2256,7 +2256,7 @@ void OperatePedestal(Player &player, Object &pedestal)
 	if (pedestal._oVar6 == 3) {
 		PlaySfxLoc(LS_BLODSTAR, pedestal.position);
 		ObjChangeMap(pedestal._oVar1, pedestal._oVar2, pedestal._oVar3, pedestal._oVar4);
-		LoadMapObjects("Levels\\L2Data\\Blood2.DUN", SetPiece.position.megaToWorld());
+		LoadMapObjects("levels\\l2data\\blood2.dun", SetPiece.position.megaToWorld());
 		SpawnUnique(UITEM_ARMOFVAL, SetPiece.position.megaToWorld() + Displacement { 9, 3 });
 		pedestal._oSelFlag = 0;
 	}
@@ -2568,12 +2568,19 @@ void OperateShrineEldritch(Player &player)
 			continue;
 		}
 		if (IsAnyOf(item._iMiscId, IMISC_HEAL, IMISC_MANA)) {
+			// Reinitializing the item zeroes out the seed, we save and restore here to avoid triggering false
+			// positives on duplicated item checks (e.g. when picking up the item).
+			auto seed = item._iSeed;
 			InitializeItem(item, ItemMiscIdIdx(IMISC_REJUV));
+			item._iSeed = seed;
 			item._iStatFlag = true;
 			continue;
 		}
 		if (IsAnyOf(item._iMiscId, IMISC_FULLHEAL, IMISC_FULLMANA)) {
+			// As above.
+			auto seed = item._iSeed;
 			InitializeItem(item, ItemMiscIdIdx(IMISC_FULLREJUV));
+			item._iSeed = seed;
 			item._iStatFlag = true;
 			continue;
 		}
@@ -3521,7 +3528,7 @@ void SyncQSTLever(const Object &qstLever)
 		if (qstLever._otype == OBJ_BLINDBOOK) {
 			auto tren = TransVal;
 			TransVal = 9;
-			DRLG_MRectTrans({ qstLever._oVar1, qstLever._oVar2 }, { qstLever._oVar3, qstLever._oVar4 });
+			DRLG_MRectTrans(WorldTilePosition(qstLever._oVar1, qstLever._oVar2), WorldTilePosition(qstLever._oVar3, qstLever._oVar4));
 			TransVal = tren;
 		}
 	}
@@ -3537,7 +3544,7 @@ void SyncPedestal(const Object &pedestal, Point origin, int width)
 	}
 	if (pedestal._oVar6 == 3) {
 		ObjChangeMapResync(pedestal._oVar1, pedestal._oVar2, pedestal._oVar3, pedestal._oVar4);
-		LoadMapObjects("Levels\\L2Data\\Blood2.DUN", origin.megaToWorld());
+		LoadMapObjects("levels\\l2data\\blood2.dun", origin.megaToWorld());
 	}
 }
 
@@ -3642,7 +3649,7 @@ void LoadLevelObjects(uint16_t filesWidths[65])
 
 		ObjFileList[numobjfiles] = static_cast<object_graphic_id>(i);
 		char filestr[32];
-		*BufCopy(filestr, "Objects\\", ObjMasterLoadList[i], ".CEL") = '\0';
+		*BufCopy(filestr, "objects\\", ObjMasterLoadList[i]) = '\0';
 		pObjCels[numobjfiles] = LoadCel(filestr, filesWidths[i]);
 		numobjfiles++;
 	}
@@ -3822,7 +3829,7 @@ void InitObjects()
 				}
 				Quests[Q_BLIND]._qmsg = spId;
 				AddBookLever(OBJ_BLINDBOOK, { SetPiece.position, SetPiece.size + 1 }, spId);
-				LoadMapObjects("Levels\\L2Data\\Blind2.DUN", SetPiece.position.megaToWorld());
+				LoadMapObjects("levels\\l2data\\blind2.dun", SetPiece.position.megaToWorld());
 			}
 			if (Quests[Q_BLOOD].IsAvailable()) {
 				_speech_id spId;
@@ -3881,7 +3888,7 @@ void InitObjects()
 				}
 				Quests[Q_WARLORD]._qmsg = spId;
 				AddBookLever(OBJ_STEELTOME, SetPiece, spId);
-				LoadMapObjects("Levels\\L4Data\\Warlord.DUN", SetPiece.position.megaToWorld());
+				LoadMapObjects("levels\\l4data\\warlord.dun", SetPiece.position.megaToWorld());
 			}
 			if (Quests[Q_BETRAYER].IsAvailable() && !gbIsMultiplayer)
 				AddLazStand();
@@ -3989,7 +3996,7 @@ Object *AddObject(_object_id objType, Point objPos)
 		AddDoor(object);
 		break;
 	case OBJ_BOOK2R:
-		object.InitializeBook({ SetPiece.position, { SetPiece.size.width + 1, SetPiece.size.height + 1 } });
+		object.InitializeBook({ SetPiece.position, WorldTileSize(SetPiece.size.width + 1, SetPiece.size.height + 1) });
 		break;
 	case OBJ_CHEST1:
 	case OBJ_CHEST2:
@@ -4139,7 +4146,7 @@ void OperateTrap(Object &trap)
 	Point triggerPosition = { trap._oVar1, trap._oVar2 };
 	Point target = triggerPosition;
 
-	PointsInRectangleRange searchArea { Rectangle { target, 1 } };
+	auto searchArea = PointsInRectangle(Rectangle { target, 1 });
 	// look for a player near the trigger (using a reverse search to match vanilla behaviour)
 	auto foundPosition = std::find_if(searchArea.crbegin(), searchArea.crend(), [](Point testPosition) { return InDungeonBounds(testPosition) && dPlayer[testPosition.x][testPosition.y] != 0; });
 	if (foundPosition != searchArea.crend()) {
@@ -4310,14 +4317,14 @@ void ObjChangeMapResync(int x1, int y1, int x2, int y2)
 	}
 }
 
-int ItemMiscIdIdx(item_misc_id imiscid)
+_item_indexes ItemMiscIdIdx(item_misc_id imiscid)
 {
-	int i = IDI_GOLD;
+	std::underlying_type_t<_item_indexes> i = IDI_GOLD;
 	while (AllItemsList[i].iRnd == IDROP_NEVER || AllItemsList[i].iMiscId != imiscid) {
 		i++;
 	}
 
-	return i;
+	return static_cast<_item_indexes>(i);
 }
 
 void OperateObject(Player &player, Object &object)
@@ -4459,6 +4466,8 @@ void DeltaSyncOpObject(Object &object)
 	case OBJ_SARC:
 	case OBJ_L5SARC:
 	case OBJ_GOATSHRINE:
+	case OBJ_SHRINEL:
+	case OBJ_SHRINER:
 		UpdateState(object, object._oAnimLen);
 		break;
 	case OBJ_BLINDBOOK:

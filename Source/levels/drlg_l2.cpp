@@ -22,15 +22,23 @@ namespace devilution {
 
 namespace {
 
+enum class HallDirection : int8_t {
+	None,
+	Up,
+	Right,
+	Down,
+	Left,
+};
+
 struct HallNode {
-	Point beginning;
-	Point end;
-	int nHalldir;
+	WorldTilePosition beginning;
+	WorldTilePosition end;
+	HallDirection direction;
 };
 
 struct RoomNode {
-	Point topLeft;
-	Point bottomRight;
+	WorldTilePosition topLeft;
+	WorldTilePosition bottomRight;
 };
 
 int nRoomCnt;
@@ -39,7 +47,13 @@ std::list<HallNode> HallList;
 // An ASCII representation of the level
 char predungeon[DMAXX][DMAXY];
 
-const Displacement DirAdd[5] = { { 0, 0 }, { 0, -1 }, { 1, 0 }, { 0, 1 }, { -1, 0 } };
+const Displacement DirAdd[5] = {
+	{ 0, 0 },
+	{ 0, -1 },
+	{ 1, 0 },
+	{ 0, 1 },
+	{ -1, 0 }
+};
 const ShadowStruct SPATSL2[2] = { { 6, 3, 0, 3, 48, 0, 50 }, { 9, 3, 0, 3, 48, 0, 50 } };
 // short word_48489A = 0;
 
@@ -1581,12 +1595,12 @@ void ApplyShadowsPatterns()
 
 void PlaceMiniSetRandom(const Miniset &miniset, int rndper)
 {
-	int sw = miniset.size.width;
-	int sh = miniset.size.height;
+	const WorldTileCoord sw = miniset.size.width;
+	const WorldTileCoord sh = miniset.size.height;
 
-	for (int sy = 0; sy < DMAXY - sh; sy++) {
-		for (int sx = 0; sx < DMAXX - sw; sx++) {
-			if (SetPieceRoom.contains({ sx, sy }))
+	for (WorldTileCoord sy = 0; sy < DMAXY - sh; sy++) {
+		for (WorldTileCoord sx = 0; sx < DMAXX - sw; sx++) {
+			if (SetPieceRoom.contains(sx, sy))
 				continue;
 			if (!miniset.matches({ sx, sy }))
 				continue;
@@ -1616,11 +1630,11 @@ void PlaceMiniSetRandom1x1(uint8_t search, uint8_t replace, int rndper)
 void LoadQuestSetPieces()
 {
 	if (Quests[Q_BLIND].IsAvailable()) {
-		pSetPiece = LoadFileInMem<uint16_t>("Levels\\L2Data\\Blind1.DUN");
+		pSetPiece = LoadFileInMem<uint16_t>("levels\\l2data\\blind1.dun");
 	} else if (Quests[Q_BLOOD].IsAvailable()) {
-		pSetPiece = LoadFileInMem<uint16_t>("Levels\\L2Data\\Blood1.DUN");
+		pSetPiece = LoadFileInMem<uint16_t>("levels\\l2data\\blood1.dun");
 	} else if (Quests[Q_SCHAMB].IsAvailable()) {
-		pSetPiece = LoadFileInMem<uint16_t>("Levels\\L2Data\\Bonestr2.DUN");
+		pSetPiece = LoadFileInMem<uint16_t>("levels\\l2data\\bonestr2.dun");
 	}
 }
 
@@ -1738,21 +1752,18 @@ void PlaceHallExt(Point position)
  * @param nHDir The direction of the hall from nRDest to this room.
  * @param size If set, is is used used for room size instead of random values.
  */
-void CreateRoom(Point topLeft, Point bottomRight, int nRDest, int nHDir, std::optional<Size> size)
+void CreateRoom(WorldTilePosition topLeft, WorldTilePosition bottomRight, int nRDest, HallDirection nHDir, std::optional<WorldTileSize> size)
 {
-	if (nRoomCnt >= 80)
-		return;
-
-	Displacement areaDisplacement = bottomRight - topLeft;
-	Size area { areaDisplacement.deltaX, areaDisplacement.deltaY };
-
 	constexpr int AreaMin = 2;
-	if (area.width < AreaMin || area.height < AreaMin)
+	if (nRoomCnt >= 80 || topLeft.x + AreaMin > bottomRight.x || topLeft.y + AreaMin > bottomRight.y)
 		return;
 
-	constexpr int RoomMax = 10;
-	constexpr int RoomMin = 4;
-	Size roomSize = area;
+	WorldTileDisplacement areaDisplacement = bottomRight - topLeft;
+	WorldTileSize area(areaDisplacement.deltaX, areaDisplacement.deltaY);
+
+	constexpr WorldTileCoord RoomMax = 10;
+	constexpr WorldTileCoord RoomMin = 4;
+	WorldTileSize roomSize = area;
 	if (area.width > RoomMin)
 		roomSize.width = GenerateRnd(std::min(area.width, RoomMax) - RoomMin) + RoomMin;
 	if (area.height > RoomMin)
@@ -1761,8 +1772,11 @@ void CreateRoom(Point topLeft, Point bottomRight, int nRDest, int nHDir, std::op
 	if (size)
 		roomSize = *size;
 
-	Point roomTopLeft = topLeft + Displacement { GenerateRnd(area.width), GenerateRnd(area.height) };
-	Point roomBottomRight = roomTopLeft + Displacement { roomSize };
+	const int32_t randomWidth = GenerateRnd(area.width);
+	const int32_t randomHeight = GenerateRnd(area.height);
+
+	WorldTilePosition roomTopLeft = topLeft + WorldTileDisplacement(randomWidth, randomHeight);
+	WorldTilePosition roomBottomRight = roomTopLeft + WorldTileDisplacement(roomSize);
 	if (roomBottomRight.x > bottomRight.x) {
 		roomBottomRight.x = bottomRight.x;
 		roomTopLeft.x = bottomRight.x - roomSize.width;
@@ -1772,46 +1786,46 @@ void CreateRoom(Point topLeft, Point bottomRight, int nRDest, int nHDir, std::op
 		roomTopLeft.y = bottomRight.y - roomSize.height;
 	}
 
-	roomTopLeft.x = clamp(roomTopLeft.x, 1, 38);
-	roomTopLeft.y = clamp(roomTopLeft.y, 1, 38);
-	roomBottomRight.x = clamp(roomBottomRight.x, 1, 38);
-	roomBottomRight.y = clamp(roomBottomRight.y, 1, 38);
+	roomTopLeft.x = clamp<WorldTileCoord>(roomTopLeft.x, 1, 38);
+	roomTopLeft.y = clamp<WorldTileCoord>(roomTopLeft.y, 1, 38);
+	roomBottomRight.x = clamp<WorldTileCoord>(roomBottomRight.x, 1, 38);
+	roomBottomRight.y = clamp<WorldTileCoord>(roomBottomRight.y, 1, 38);
 
 	DefineRoom(roomTopLeft, roomBottomRight, static_cast<bool>(size));
 
-	constexpr Displacement standoff { 2, 2 };
+	constexpr WorldTileDisplacement standoff { 2, 2 };
 	if (size)
 		SetPieceRoom = { roomTopLeft + standoff, roomSize - 1 };
 
 	int nRid = nRoomCnt;
 
 	if (nRDest != 0) {
-		int nHx1 = 0;
-		int nHy1 = 0;
-		int nHx2 = 0;
-		int nHy2 = 0;
-		if (nHDir == 1) {
+		WorldTileCoord nHx1 = 0;
+		WorldTileCoord nHy1 = 0;
+		WorldTileCoord nHx2 = 0;
+		WorldTileCoord nHy2 = 0;
+		if (nHDir == HallDirection::Up) {
 			nHx1 = GenerateRnd(roomSize.width - 2) + roomTopLeft.x + 1;
 			nHy1 = roomTopLeft.y;
 			int nHw = RoomList[nRDest].bottomRight.x - RoomList[nRDest].topLeft.x - 2;
 			nHx2 = GenerateRnd(nHw) + RoomList[nRDest].topLeft.x + 1;
 			nHy2 = RoomList[nRDest].bottomRight.y;
 		}
-		if (nHDir == 3) {
+		if (nHDir == HallDirection::Down) {
 			nHx1 = GenerateRnd(roomSize.width - 2) + roomTopLeft.x + 1;
 			nHy1 = roomBottomRight.y;
 			int nHw = RoomList[nRDest].bottomRight.x - RoomList[nRDest].topLeft.x - 2;
 			nHx2 = GenerateRnd(nHw) + RoomList[nRDest].topLeft.x + 1;
 			nHy2 = RoomList[nRDest].topLeft.y;
 		}
-		if (nHDir == 2) {
+		if (nHDir == HallDirection::Right) {
 			nHx1 = roomBottomRight.x;
 			nHy1 = GenerateRnd(roomSize.height - 2) + roomTopLeft.y + 1;
 			nHx2 = RoomList[nRDest].topLeft.x;
 			int nHh = RoomList[nRDest].bottomRight.y - RoomList[nRDest].topLeft.y - 2;
 			nHy2 = GenerateRnd(nHh) + RoomList[nRDest].topLeft.y + 1;
 		}
-		if (nHDir == 4) {
+		if (nHDir == HallDirection::Left) {
 			nHx1 = roomTopLeft.x;
 			nHy1 = GenerateRnd(roomSize.height - 2) + roomTopLeft.y + 1;
 			nHx2 = RoomList[nRDest].bottomRight.x;
@@ -1821,18 +1835,18 @@ void CreateRoom(Point topLeft, Point bottomRight, int nRDest, int nHDir, std::op
 		HallList.push_back({ { nHx1, nHy1 }, { nHx2, nHy2 }, nHDir });
 	}
 
-	Point roomBottomLeft { roomTopLeft.x, roomBottomRight.y };
-	Point roomTopRight { roomBottomRight.x, roomTopLeft.y };
+	WorldTilePosition roomBottomLeft { roomTopLeft.x, roomBottomRight.y };
+	WorldTilePosition roomTopRight { roomBottomRight.x, roomTopLeft.y };
 	if (roomSize.height > roomSize.width) {
-		CreateRoom(topLeft + standoff, roomBottomLeft - standoff, nRid, 2, {});
-		CreateRoom(roomTopRight + standoff, bottomRight - standoff, nRid, 4, {});
-		CreateRoom(Point { topLeft.x, roomBottomRight.y } + standoff, Point { roomBottomRight.x, bottomRight.y } - standoff, nRid, 1, {});
-		CreateRoom(Point { roomTopLeft.x, topLeft.y } + standoff, Point { bottomRight.x, roomTopLeft.y } - standoff, nRid, 3, {});
+		CreateRoom(topLeft + standoff, roomBottomLeft - standoff, nRid, HallDirection::Right, {});
+		CreateRoom(roomTopRight + standoff, bottomRight - standoff, nRid, HallDirection::Left, {});
+		CreateRoom(WorldTilePosition { topLeft.x, roomBottomRight.y } + standoff, WorldTilePosition { roomBottomRight.x, bottomRight.y } - standoff, nRid, HallDirection::Up, {});
+		CreateRoom(WorldTilePosition { roomTopLeft.x, topLeft.y } + standoff, WorldTilePosition { bottomRight.x, roomTopLeft.y } - standoff, nRid, HallDirection::Down, {});
 	} else {
-		CreateRoom(topLeft + standoff, roomTopRight - standoff, nRid, 3, {});
-		CreateRoom(roomBottomLeft + standoff, bottomRight - standoff, nRid, 1, {});
-		CreateRoom(Point { topLeft.x, roomTopLeft.y } + standoff, Point { roomTopLeft.x, bottomRight.y } - standoff, nRid, 2, {});
-		CreateRoom(Point { roomBottomRight.x, topLeft.y } + standoff, Point { bottomRight.x, roomBottomRight.y } - standoff, nRid, 4, {});
+		CreateRoom(topLeft + standoff, roomTopRight - standoff, nRid, HallDirection::Down, {});
+		CreateRoom(roomBottomLeft + standoff, bottomRight - standoff, nRid, HallDirection::Up, {});
+		CreateRoom(WorldTilePosition { topLeft.x, roomTopLeft.y } + standoff, WorldTilePosition { roomTopLeft.x, bottomRight.y } - standoff, nRid, HallDirection::Right, {});
+		CreateRoom(WorldTilePosition { roomBottomRight.x, topLeft.y } + standoff, WorldTilePosition { bottomRight.x, roomBottomRight.y } - standoff, nRid, HallDirection::Left, {});
 	}
 }
 
@@ -1841,49 +1855,49 @@ void ConnectHall(const HallNode &node)
 	Point beginning = node.beginning;
 	Point end = node.end;
 
-	int fMinusFlag = GenerateRnd(100);
-	int fPlusFlag = GenerateRnd(100);
+	bool fMinusFlag = GenerateRnd(100) < 50;
+	bool fPlusFlag = GenerateRnd(100) < 50;
 	CreateDoorType(beginning);
 	CreateDoorType(end);
-	int nCurrd = node.nHalldir;
-	end -= DirAdd[nCurrd];
+	HallDirection nCurrd = node.direction;
+	end -= DirAdd[static_cast<uint8_t>(nCurrd)];
 	predungeon[end.x][end.y] = ',';
 	bool fInroom = false;
 
 	do {
-		if (beginning.x >= 38 && nCurrd == 2)
-			nCurrd = 4;
-		if (beginning.y >= 38 && nCurrd == 3)
-			nCurrd = 1;
-		if (beginning.x <= 1 && nCurrd == 4)
-			nCurrd = 2;
-		if (beginning.y <= 1 && nCurrd == 1)
-			nCurrd = 3;
-		if (predungeon[beginning.x][beginning.y] == 'C' && (nCurrd == 1 || nCurrd == 4))
-			nCurrd = 2;
-		if (predungeon[beginning.x][beginning.y] == 'B' && (nCurrd == 1 || nCurrd == 2))
-			nCurrd = 3;
-		if (predungeon[beginning.x][beginning.y] == 'E' && (nCurrd == 4 || nCurrd == 3))
-			nCurrd = 1;
-		if (predungeon[beginning.x][beginning.y] == 'A' && (nCurrd == 2 || nCurrd == 3))
-			nCurrd = 4;
-		beginning += DirAdd[nCurrd];
+		if (beginning.x >= 38 && nCurrd == HallDirection::Right)
+			nCurrd = HallDirection::Left;
+		if (beginning.y >= 38 && nCurrd == HallDirection::Down)
+			nCurrd = HallDirection::Up;
+		if (beginning.x <= 1 && nCurrd == HallDirection::Left)
+			nCurrd = HallDirection::Right;
+		if (beginning.y <= 1 && nCurrd == HallDirection::Up)
+			nCurrd = HallDirection::Down;
+		if (predungeon[beginning.x][beginning.y] == 'C' && IsAnyOf(nCurrd, HallDirection::Up, HallDirection::Left))
+			nCurrd = HallDirection::Right;
+		if (predungeon[beginning.x][beginning.y] == 'B' && IsAnyOf(nCurrd, HallDirection::Up, HallDirection::Right))
+			nCurrd = HallDirection::Down;
+		if (predungeon[beginning.x][beginning.y] == 'E' && IsAnyOf(nCurrd, HallDirection::Left, HallDirection::Down))
+			nCurrd = HallDirection::Up;
+		if (predungeon[beginning.x][beginning.y] == 'A' && IsAnyOf(nCurrd, HallDirection::Right, HallDirection::Down))
+			nCurrd = HallDirection::Left;
+		beginning += DirAdd[static_cast<uint8_t>(nCurrd)];
 		if (predungeon[beginning.x][beginning.y] == ' ') {
 			if (fInroom) {
-				CreateDoorType(beginning - DirAdd[nCurrd]);
+				CreateDoorType(beginning - DirAdd[static_cast<uint8_t>(nCurrd)]);
 				fInroom = false;
 			} else {
-				if (fMinusFlag < 50) {
-					if (nCurrd != 1 && nCurrd != 3)
-						PlaceHallExt(beginning + Displacement { 0, -1 });
+				if (fMinusFlag) {
+					if (IsNoneOf(nCurrd, HallDirection::Up, HallDirection::Down))
+						PlaceHallExt(beginning + Displacement { 0, -1 }); // Up
 					else
-						PlaceHallExt(beginning + Displacement { -1, 0 });
+						PlaceHallExt(beginning + Displacement { -1, 0 }); // Left
 				}
-				if (fPlusFlag < 50) {
-					if (nCurrd != 1 && nCurrd != 3)
-						PlaceHallExt(beginning + Displacement { 0, 1 });
+				if (fPlusFlag) {
+					if (IsNoneOf(nCurrd, HallDirection::Up, HallDirection::Down))
+						PlaceHallExt(beginning + Displacement { 0, 1 }); // Down
 					else
-						PlaceHallExt(beginning + Displacement { 1, 0 });
+						PlaceHallExt(beginning + Displacement { 1, 0 }); // Right
 				}
 			}
 			predungeon[beginning.x][beginning.y] = ',';
@@ -1899,54 +1913,54 @@ void ConnectHall(const HallNode &node)
 			int nRp = std::min(2 * nDx, 30);
 			if (GenerateRnd(100) < nRp) {
 				if (end.x <= beginning.x || beginning.x >= DMAXX)
-					nCurrd = 4;
+					nCurrd = HallDirection::Left;
 				else
-					nCurrd = 2;
+					nCurrd = HallDirection::Right;
 			}
 		} else {
 			int nRp = std::min(5 * nDy, 80);
 			if (GenerateRnd(100) < nRp) {
 				if (end.y <= beginning.y || beginning.y >= DMAXY)
-					nCurrd = 1;
+					nCurrd = HallDirection::Up;
 				else
-					nCurrd = 3;
+					nCurrd = HallDirection::Down;
 			}
 		}
-		if (nDy < 10 && beginning.x == end.x && (nCurrd == 2 || nCurrd == 4)) {
+		if (nDy < 10 && beginning.x == end.x && IsAnyOf(nCurrd, HallDirection::Right, HallDirection::Left)) {
 			if (end.y <= beginning.y || beginning.y >= DMAXY)
-				nCurrd = 1;
+				nCurrd = HallDirection::Up;
 			else
-				nCurrd = 3;
+				nCurrd = HallDirection::Down;
 		}
-		if (nDx < 10 && beginning.y == end.y && (nCurrd == 1 || nCurrd == 3)) {
+		if (nDx < 10 && beginning.y == end.y && IsAnyOf(nCurrd, HallDirection::Up, HallDirection::Down)) {
 			if (end.x <= beginning.x || beginning.x >= DMAXX)
-				nCurrd = 4;
+				nCurrd = HallDirection::Left;
 			else
-				nCurrd = 2;
+				nCurrd = HallDirection::Right;
 		}
-		if (nDy == 1 && nDx > 1 && (nCurrd == 1 || nCurrd == 3)) {
+		if (nDy == 1 && nDx > 1 && IsAnyOf(nCurrd, HallDirection::Up, HallDirection::Down)) {
 			if (end.x <= beginning.x || beginning.x >= DMAXX)
-				nCurrd = 4;
+				nCurrd = HallDirection::Left;
 			else
-				nCurrd = 2;
+				nCurrd = HallDirection::Right;
 		}
-		if (nDx == 1 && nDy > 1 && (nCurrd == 2 || nCurrd == 4)) {
+		if (nDx == 1 && nDy > 1 && IsAnyOf(nCurrd, HallDirection::Right, HallDirection::Left)) {
 			if (end.y <= beginning.y || beginning.x >= DMAXX)
-				nCurrd = 1;
+				nCurrd = HallDirection::Up;
 			else
-				nCurrd = 3;
+				nCurrd = HallDirection::Down;
 		}
-		if (nDx == 0 && predungeon[beginning.x][beginning.y] != ' ' && (nCurrd == 2 || nCurrd == 4)) {
+		if (nDx == 0 && predungeon[beginning.x][beginning.y] != ' ' && IsAnyOf(nCurrd, HallDirection::Right, HallDirection::Left)) {
 			if (end.x <= node.beginning.x || beginning.x >= DMAXX)
-				nCurrd = 1;
+				nCurrd = HallDirection::Up;
 			else
-				nCurrd = 3;
+				nCurrd = HallDirection::Down;
 		}
-		if (nDy == 0 && predungeon[beginning.x][beginning.y] != ' ' && (nCurrd == 1 || nCurrd == 3)) {
+		if (nDy == 0 && predungeon[beginning.x][beginning.y] != ' ' && IsAnyOf(nCurrd, HallDirection::Up, HallDirection::Down)) {
 			if (end.y <= node.beginning.y || beginning.y >= DMAXY)
-				nCurrd = 4;
+				nCurrd = HallDirection::Left;
 			else
-				nCurrd = 2;
+				nCurrd = HallDirection::Right;
 		}
 	} while (beginning != end);
 }
@@ -2045,9 +2059,9 @@ void FixTilesPatterns()
 
 void Substitution()
 {
-	for (int y = 0; y < DMAXY; y++) {
-		for (int x = 0; x < DMAXX; x++) {
-			if (SetPieceRoom.contains({ x, y }))
+	for (WorldTileCoord y = 0; y < DMAXY; y++) {
+		for (WorldTileCoord x = 0; x < DMAXX; x++) {
+			if (SetPieceRoom.contains(x, y))
 				continue;
 			if (!FlipCoin(4))
 				continue;
@@ -2411,7 +2425,7 @@ bool FillVoids()
 
 bool CreateDungeon()
 {
-	std::optional<Size> size;
+	std::optional<WorldTileSize> size;
 
 	switch (currlevel) {
 	case 5:
@@ -2430,7 +2444,7 @@ bool CreateDungeon()
 		break;
 	}
 
-	CreateRoom({ 2, 2 }, { DMAXX - 1, DMAXY - 1 }, 0, 0, size);
+	CreateRoom({ 2, 2 }, { DMAXX - 1, DMAXY - 1 }, 0, HallDirection::None, size);
 
 	while (!HallList.empty()) {
 		ConnectHall(HallList.front());

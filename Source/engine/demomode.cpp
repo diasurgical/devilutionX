@@ -19,7 +19,7 @@ namespace devilution {
 
 namespace {
 
-enum class DemoMsgType {
+enum class DemoMsgType : uint8_t {
 	GameTick = 0,
 	Rendering = 1,
 	Message = 2,

@@ -11,7 +11,7 @@
 
 namespace devilution {
 
-enum VirtualGamepadButtonType {
+enum VirtualGamepadButtonType : uint8_t {
 	GAMEPAD_ATTACK,
 	GAMEPAD_ATTACKDOWN,
 	GAMEPAD_TALK,
@@ -40,7 +40,7 @@ enum VirtualGamepadButtonType {
 	GAMEPAD_POTIONDOWN,
 };
 
-enum VirtualGamepadPotionType {
+enum VirtualGamepadPotionType : uint8_t {
 	GAMEPAD_HEALING,
 	GAMEPAD_MANA,
 	GAMEPAD_REJUVENATION,
@@ -53,6 +53,7 @@ enum VirtualGamepadPotionType {
 struct ButtonTexture {
 	SDLSurfaceUniquePtr surface;
 	SDLTextureUniquePtr texture;
+	unsigned numSprites = 1;
 	unsigned numFrames = 1;
 
 	Size size() const;

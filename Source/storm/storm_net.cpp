@@ -9,6 +9,7 @@
 #endif
 
 #include "dvlnet/abstract_net.h"
+#include "engine/demomode.h"
 #include "menu.h"
 #include "options.h"
 #include "utils/stubs.h"
@@ -36,7 +37,7 @@ void SErrSetLastError(uint32_t dwErrCode)
 	dwLastError = dwErrCode;
 }
 
-bool SNetReceiveMessage(int *senderplayerid, void **data, uint32_t *databytes)
+bool SNetReceiveMessage(uint8_t *senderplayerid, void **data, uint32_t *databytes)
 {
 #ifndef NONET
 	std::lock_guard<SdlMutex> lg(storm_net_mutex);
@@ -142,7 +143,7 @@ bool SNetInitializeProvider(uint32_t provider, struct GameData *gameData)
 	std::lock_guard<SdlMutex> lg(storm_net_mutex);
 #endif
 	dvlnet_inst = net::abstract_net::MakeNet(provider);
-	return mainmenu_select_hero_dialog(gameData);
+	return (HeadlessMode && !demo::IsRunning()) || mainmenu_select_hero_dialog(gameData);
 }
 
 /**

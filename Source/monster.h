@@ -18,6 +18,7 @@
 #include "engine/point.hpp"
 #include "engine/sound.h"
 #include "engine/world_tile.hpp"
+#include "init.h"
 #include "monstdat.h"
 #include "spelldat.h"
 #include "textdat.h"
@@ -91,6 +92,18 @@ enum class MonsterMode : uint8_t {
 	Talk,
 };
 
+inline bool IsMonsterModeMove(MonsterMode mode)
+{
+	switch (mode) {
+	case MonsterMode::MoveNorthwards:
+	case MonsterMode::MoveSouthwards:
+	case MonsterMode::MoveSideways:
+		return true;
+	default:
+		return false;
+	}
+}
+
 enum class MonsterGraphic : uint8_t {
 	Stand,
 	Walk,
@@ -153,7 +166,7 @@ struct AnimStruct {
 	int8_t rate;
 };
 
-enum class MonsterSound {
+enum class MonsterSound : uint8_t {
 	Attack,
 	Hit,
 	Death,
@@ -195,9 +208,7 @@ struct Monster { // note: missing field _mAFNum
 	uint32_t rndItemSeed;
 	/** Seed used to determine AI behaviour/sync sounds in multiplayer games? */
 	uint32_t aiSeed;
-	uint16_t exp;
 	uint16_t toHit;
-	uint16_t toHitSpecial;
 	uint16_t resistance;
 	_speech_id talkMsg;
 
@@ -248,7 +259,6 @@ struct Monster { // note: missing field _mAFNum
 	uint8_t uniqTrans;
 	int8_t corpseId;
 	int8_t whoHit;
-	int8_t level;
 	uint8_t minDamage;
 	uint8_t maxDamage;
 	uint8_t minDamageSpecial;
@@ -315,6 +325,68 @@ struct Monster { // note: missing field _mAFNum
 			return pgettext("monster", UniqueMonstersData[static_cast<int8_t>(uniqueType)].mName);
 
 		return pgettext("monster", data().name);
+	}
+
+	/**
+	 * @brief Calculates monster's experience points.
+	 * Fetches base exp value from @p MonstersData array.
+	 * @param difficulty - difficulty on which calculation is performed
+	 * @return Monster's experience points, including bonuses from difficulty and monster being unique
+	 */
+	unsigned int exp(_difficulty difficulty) const
+	{
+		unsigned int monsterExp = data().exp;
+
+		if (difficulty == DIFF_NIGHTMARE) {
+			monsterExp = 2 * (monsterExp + 1000);
+		} else if (difficulty == DIFF_HELL) {
+			monsterExp = 4 * (monsterExp + 1000);
+		}
+
+		if (isUnique()) {
+			monsterExp *= 2;
+		}
+
+		return monsterExp;
+	}
+
+	/**
+	 * @brief Calculates monster's chance to hit with special attack.
+	 * Fetches base value from @p MonstersData array or @p UniqueMonstersData.
+	 * @param difficulty - difficulty on which calculation is performed
+	 * @return Monster's chance to hit with special attack, including bonuses from difficulty and monster being unique
+	 */
+	unsigned int toHitSpecial(_difficulty difficulty) const;
+
+	/**
+	 * @brief Calculates monster's level.
+	 * Fetches base level value from @p MonstersData array or @p UniqueMonstersData.
+	 * @param difficulty - difficulty on which calculation is performed
+	 * @return Monster's level, including bonuses from difficulty and monster being unique
+	 */
+	unsigned int level(_difficulty difficulty) const
+	{
+		unsigned int baseLevel = data().level;
+		if (isUnique()) {
+			baseLevel = UniqueMonstersData[static_cast<int8_t>(uniqueType)].mlevel;
+			if (baseLevel != 0) {
+				baseLevel *= 2;
+			} else {
+				baseLevel = data().level + 5;
+			}
+		}
+
+		if (type().type == MT_DIABLO && !gbIsHellfire) {
+			baseLevel -= 15;
+		}
+
+		if (difficulty == DIFF_NIGHTMARE) {
+			baseLevel += 15;
+		} else if (difficulty == DIFF_HELL) {
+			baseLevel += 30;
+		}
+
+		return baseLevel;
 	}
 
 	/**

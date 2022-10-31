@@ -14,7 +14,6 @@ set(tests
   appfat_test
   automap_test
   codec_test
-  control_test
   cursor_test
   dead_test
   diablo_test
@@ -35,9 +34,10 @@ set(tests
   player_test
   quests_test
   random_test
-  timedemo_test
+  rectangle_test
   scrollrt_test
   stores_test
+  timedemo_test
   utf8_test
   writehero_test
 )

@@ -51,6 +51,18 @@ struct AutomapTile {
 		CaveHorizontal,
 		CaveVertical,
 		CaveCross,
+		Bridge,
+		River,
+		RiverCornerEast,
+		RiverCornerNorth,
+		RiverCornerSouth,
+		RiverCornerWest,
+		RiverForkIn,
+		RiverForkOut,
+		RiverLeftIn,
+		RiverLeftOut,
+		RiverRightIn,
+		RiverRightOut,
 	};
 
 	Types type;
@@ -112,22 +124,206 @@ void DrawMapHorizontalDoor(const Surface &out, Point center, uint8_t colorBright
 
 void DrawDirt(const Surface &out, Point center, uint8_t color)
 {
-	out.SetPixel(center, color);
+	out.SetPixel({ center.x + AmLine(8) - AmLine(32), center.y + AmLine(4) }, color);
+
+	out.SetPixel({ center.x - AmLine(16), center.y }, color);
+	out.SetPixel({ center.x - AmLine(16), center.y + AmLine(8) }, color);
+
 	out.SetPixel({ center.x - AmLine(8), center.y - AmLine(4) }, color);
 	out.SetPixel({ center.x - AmLine(8), center.y + AmLine(4) }, color);
+	out.SetPixel({ center.x - AmLine(8), center.y + AmLine(16) - AmLine(4) }, color);
+
+	out.SetPixel({ center.x, center.y - AmLine(8) }, color);
+	out.SetPixel(center, color);
+	out.SetPixel({ center.x, center.y + AmLine(8) }, color);
+	out.SetPixel({ center.x, center.y + AmLine(16) }, color);
+
 	out.SetPixel({ center.x + AmLine(8), center.y - AmLine(4) }, color);
 	out.SetPixel({ center.x + AmLine(8), center.y + AmLine(4) }, color);
-	out.SetPixel({ center.x - AmLine(16), center.y }, color);
-	out.SetPixel({ center.x + AmLine(16), center.y }, color);
-	out.SetPixel({ center.x, center.y - AmLine(8) }, color);
-	out.SetPixel({ center.x, center.y + AmLine(8) }, color);
-	out.SetPixel({ center.x + AmLine(8) - AmLine(32), center.y + AmLine(4) }, color);
-	out.SetPixel({ center.x - AmLine(8) + AmLine(32), center.y + AmLine(4) }, color);
-	out.SetPixel({ center.x - AmLine(16), center.y + AmLine(8) }, color);
-	out.SetPixel({ center.x + AmLine(16), center.y + AmLine(8) }, color);
-	out.SetPixel({ center.x - AmLine(8), center.y + AmLine(16) - AmLine(4) }, color);
 	out.SetPixel({ center.x + AmLine(8), center.y + AmLine(16) - AmLine(4) }, color);
+
+	out.SetPixel({ center.x + AmLine(16), center.y }, color);
+	out.SetPixel({ center.x + AmLine(16), center.y + AmLine(8) }, color);
+
+	out.SetPixel({ center.x - AmLine(8) + AmLine(32), center.y + AmLine(4) }, color);
+}
+
+void DrawBridge(const Surface &out, Point center, uint8_t color)
+{
+	out.SetPixel(center, color);
+
+	out.SetPixel({ center.x + AmLine(8), center.y - AmLine(4) }, color);
+	out.SetPixel({ center.x + AmLine(8), center.y + AmLine(4) }, color);
+
+	out.SetPixel({ center.x + AmLine(16), center.y }, color);
+	out.SetPixel({ center.x + AmLine(16), center.y + AmLine(8) }, color);
+
+	out.SetPixel({ center.x - AmLine(8) + AmLine(32), center.y + AmLine(4) }, color);
+}
+
+void DrawRiverRightIn(const Surface &out, Point center, uint8_t color)
+{
+	out.SetPixel({ center.x - AmLine(16), center.y + AmLine(8) }, color);
+
+	out.SetPixel({ center.x - AmLine(8), center.y + AmLine(4) }, color);
+	out.SetPixel({ center.x - AmLine(8), center.y + AmLine(16) - AmLine(4) }, color);
+
+	out.SetPixel(center, color);
+	out.SetPixel({ center.x, center.y + AmLine(8) }, color);
 	out.SetPixel({ center.x, center.y + AmLine(16) }, color);
+
+	out.SetPixel({ center.x + AmLine(8), center.y + AmLine(4) }, color);
+	out.SetPixel({ center.x + AmLine(8), center.y + AmLine(16) - AmLine(4) }, color);
+
+	out.SetPixel({ center.x + AmLine(16), center.y }, color);
+	out.SetPixel({ center.x + AmLine(16), center.y + AmLine(8) }, color);
+
+	out.SetPixel({ center.x - AmLine(8) + AmLine(32), center.y + AmLine(4) }, color);
+}
+
+void DrawRiverCornerSouth(const Surface &out, Point center, uint8_t color)
+{
+	out.SetPixel({ center.x, center.y + AmLine(16) }, color);
+}
+
+void DrawRiverCornerNorth(const Surface &out, Point center, uint8_t color)
+{
+	out.SetPixel({ center.x - AmLine(8), center.y - AmLine(4) }, color);
+	out.SetPixel({ center.x, center.y - AmLine(8) }, color);
+	out.SetPixel({ center.x + AmLine(8), center.y - AmLine(4) }, color);
+}
+
+void DrawRiverLeftOut(const Surface &out, Point center, uint8_t color)
+{
+	out.SetPixel({ center.x + AmLine(8) - AmLine(32), center.y + AmLine(4) }, color);
+
+	out.SetPixel({ center.x - AmLine(16), center.y }, color);
+	out.SetPixel({ center.x - AmLine(16), center.y + AmLine(8) }, color);
+
+	out.SetPixel({ center.x - AmLine(8), center.y + AmLine(4) }, color);
+	out.SetPixel({ center.x - AmLine(8), center.y + AmLine(16) - AmLine(4) }, color);
+
+	out.SetPixel(center, color);
+	out.SetPixel({ center.x, center.y + AmLine(8) }, color);
+
+	out.SetPixel({ center.x + AmLine(8), center.y - AmLine(4) }, color);
+	out.SetPixel({ center.x + AmLine(8), center.y + AmLine(4) }, color);
+	out.SetPixel({ center.x + AmLine(8), center.y + AmLine(16) - AmLine(4) }, color);
+
+	out.SetPixel({ center.x + AmLine(16), center.y }, color);
+	out.SetPixel({ center.x + AmLine(16), center.y + AmLine(8) }, color);
+
+	out.SetPixel({ center.x - AmLine(8) + AmLine(32), center.y + AmLine(4) }, color);
+}
+
+void DrawRiverLeftIn(const Surface &out, Point center, uint8_t color)
+{
+	out.SetPixel({ center.x - AmLine(16), center.y }, color);
+	out.SetPixel({ center.x - AmLine(16), center.y + AmLine(8) }, color);
+
+	out.SetPixel({ center.x - AmLine(8), center.y - AmLine(4) }, color);
+	out.SetPixel({ center.x - AmLine(8), center.y + AmLine(4) }, color);
+	out.SetPixel({ center.x - AmLine(8), center.y + AmLine(16) - AmLine(4) }, color);
+
+	out.SetPixel({ center.x, center.y - AmLine(8) }, color);
+	out.SetPixel(center, color);
+	out.SetPixel({ center.x, center.y + AmLine(8) }, color);
+	out.SetPixel({ center.x, center.y + AmLine(16) }, color);
+
+	out.SetPixel({ center.x + AmLine(8), center.y - AmLine(4) }, color);
+	out.SetPixel({ center.x + AmLine(8), center.y + AmLine(4) }, color);
+	out.SetPixel({ center.x + AmLine(8), center.y + AmLine(16) - AmLine(4) }, color);
+}
+
+void DrawRiverCornerWest(const Surface &out, Point center, uint8_t color)
+{
+	out.SetPixel({ center.x + AmLine(8) - AmLine(32), center.y + AmLine(4) }, color);
+	out.SetPixel({ center.x - AmLine(16), center.y }, color);
+}
+
+void DrawRiverCornerEast(const Surface &out, Point center, uint8_t color)
+{
+	out.SetPixel({ center.x + AmLine(16), center.y }, color);
+	out.SetPixel({ center.x + AmLine(16), center.y + AmLine(8) }, color);
+	out.SetPixel({ center.x - AmLine(8) + AmLine(32), center.y + AmLine(4) }, color);
+}
+
+void DrawRiverRightOut(const Surface &out, Point center, uint8_t color)
+{
+	out.SetPixel({ center.x - AmLine(8), center.y + AmLine(4) }, color);
+	out.SetPixel({ center.x - AmLine(8), center.y + AmLine(16) - AmLine(4) }, color);
+
+	out.SetPixel(center, color);
+	out.SetPixel({ center.x, center.y + AmLine(8) }, color);
+	out.SetPixel({ center.x, center.y + AmLine(16) }, color);
+
+	out.SetPixel({ center.x + AmLine(8), center.y - AmLine(4) }, color);
+	out.SetPixel({ center.x + AmLine(8), center.y + AmLine(4) }, color);
+	out.SetPixel({ center.x + AmLine(8), center.y + AmLine(16) - AmLine(4) }, color);
+
+	out.SetPixel({ center.x + AmLine(16), center.y }, color);
+	out.SetPixel({ center.x + AmLine(16), center.y + AmLine(8) }, color);
+
+	out.SetPixel({ center.x - AmLine(8) + AmLine(32), center.y + AmLine(4) }, color);
+}
+
+void DrawRiver(const Surface &out, Point center, uint8_t color)
+{
+	out.SetPixel({ center.x - AmLine(16), center.y + AmLine(8) }, color);
+
+	out.SetPixel({ center.x - AmLine(8), center.y + AmLine(4) }, color);
+	out.SetPixel({ center.x - AmLine(8), center.y + AmLine(16) - AmLine(4) }, color);
+
+	out.SetPixel(center, color);
+	out.SetPixel({ center.x, center.y + AmLine(8) }, color);
+	out.SetPixel({ center.x, center.y + AmLine(16) }, color);
+
+	out.SetPixel({ center.x + AmLine(8), center.y - AmLine(4) }, color);
+	out.SetPixel({ center.x + AmLine(8), center.y + AmLine(4) }, color);
+	out.SetPixel({ center.x + AmLine(8), center.y + AmLine(16) - AmLine(4) }, color);
+
+	out.SetPixel({ center.x + AmLine(16), center.y }, color);
+	out.SetPixel({ center.x + AmLine(16), center.y + AmLine(8) }, color);
+
+	out.SetPixel({ center.x - AmLine(8) + AmLine(32), center.y + AmLine(4) }, color);
+}
+
+void DrawRiverForkIn(const Surface &out, Point center, uint8_t color)
+{
+	out.SetPixel({ center.x - AmLine(16), center.y }, color);
+	out.SetPixel({ center.x - AmLine(16), center.y + AmLine(8) }, color);
+
+	out.SetPixel({ center.x - AmLine(8), center.y - AmLine(4) }, color);
+	out.SetPixel({ center.x - AmLine(8), center.y + AmLine(4) }, color);
+	out.SetPixel({ center.x - AmLine(8), center.y + AmLine(16) - AmLine(4) }, color);
+
+	out.SetPixel({ center.x, center.y - AmLine(8) }, color);
+	out.SetPixel(center, color);
+	out.SetPixel({ center.x, center.y + AmLine(8) }, color);
+	out.SetPixel({ center.x, center.y + AmLine(16) }, color);
+
+	out.SetPixel({ center.x + AmLine(8), center.y - AmLine(4) }, color);
+	out.SetPixel({ center.x + AmLine(8), center.y + AmLine(4) }, color);
+	out.SetPixel({ center.x + AmLine(8), center.y + AmLine(16) - AmLine(4) }, color);
+
+	out.SetPixel({ center.x + AmLine(16), center.y }, color);
+	out.SetPixel({ center.x + AmLine(16), center.y + AmLine(8) }, color);
+
+	out.SetPixel({ center.x - AmLine(8) + AmLine(32), center.y + AmLine(4) }, color);
+}
+
+void DrawRiverForkOut(const Surface &out, Point center, uint8_t color)
+{
+	out.SetPixel({ center.x + AmLine(8) - AmLine(32), center.y + AmLine(4) }, color);
+
+	out.SetPixel({ center.x - AmLine(16), center.y }, color);
+	out.SetPixel({ center.x - AmLine(16), center.y + AmLine(8) }, color);
+
+	out.SetPixel({ center.x - AmLine(8), center.y + AmLine(16) - AmLine(4) }, color);
+
+	out.SetPixel({ center.x, center.y + AmLine(16) }, color);
+
+	out.SetPixel({ center.x + AmLine(8), center.y + AmLine(16) - AmLine(4) }, color);
 }
 
 void DrawStairs(const Surface &out, Point center, uint8_t color)
@@ -340,6 +536,42 @@ void DrawAutomapTile(const Surface &out, Point center, Point map)
 	case AutomapTile::Types::Corner:
 	case AutomapTile::Types::None:
 		break;
+	case AutomapTile::Types::Bridge:
+		DrawBridge(out, center, MapColorsItem);
+		break;
+	case AutomapTile::Types::River:
+		DrawRiver(out, center, MapColorsItem);
+		break;
+	case AutomapTile::Types::RiverCornerEast:
+		DrawRiverCornerEast(out, center, MapColorsItem);
+		break;
+	case AutomapTile::Types::RiverCornerNorth:
+		DrawRiverCornerNorth(out, center, MapColorsItem);
+		break;
+	case AutomapTile::Types::RiverCornerSouth:
+		DrawRiverCornerSouth(out, center, MapColorsItem);
+		break;
+	case AutomapTile::Types::RiverCornerWest:
+		DrawRiverCornerWest(out, center, MapColorsItem);
+		break;
+	case AutomapTile::Types::RiverForkIn:
+		DrawRiverForkIn(out, center, MapColorsItem);
+		break;
+	case AutomapTile::Types::RiverForkOut:
+		DrawRiverForkOut(out, center, MapColorsItem);
+		break;
+	case AutomapTile::Types::RiverLeftIn:
+		DrawRiverLeftIn(out, center, MapColorsItem);
+		break;
+	case AutomapTile::Types::RiverLeftOut:
+		DrawRiverLeftOut(out, center, MapColorsItem);
+		break;
+	case AutomapTile::Types::RiverRightIn:
+		DrawRiverRightIn(out, center, MapColorsItem);
+		break;
+	case AutomapTile::Types::RiverRightOut:
+		DrawRiverRightOut(out, center, MapColorsItem);
+		break;
 	}
 }
 
@@ -468,6 +700,8 @@ void DrawAutomapPlr(const Surface &out, const Displacement &myPlayerOffset, int 
 		DrawHorizontalLine(out, point, AmLine(8) + 1, playerColor);
 		DrawMapLineSteepSE(out, point, AmLine(4), playerColor);
 	} break;
+	case Direction::NoDirection:
+		break;
 	}
 }
 
@@ -502,23 +736,24 @@ void DrawAutomapText(const Surface &out)
 		return;
 	}
 
-	if (leveltype != DTYPE_TOWN) {
-		std::string description;
-		switch (leveltype) {
-		case DTYPE_NEST:
-			description = fmt::format(fmt::runtime(_("Level: Nest {:d}")), currlevel - 16);
-			break;
-		case DTYPE_CRYPT:
-			description = fmt::format(fmt::runtime(_("Level: Crypt {:d}")), currlevel - 20);
-			break;
-		default:
-			description = fmt::format(fmt::runtime(_("Level: {:d}")), currlevel);
-			break;
-		}
-
-		DrawString(out, description, linePosition);
-		linePosition.y += 15;
+	std::string description;
+	switch (leveltype) {
+	case DTYPE_NEST:
+		description = fmt::format(fmt::runtime(_("Level: Nest {:d}")), currlevel - 16);
+		break;
+	case DTYPE_CRYPT:
+		description = fmt::format(fmt::runtime(_("Level: Crypt {:d}")), currlevel - 20);
+		break;
+	case DTYPE_TOWN:
+		description = std::string(_("Town"));
+		break;
+	default:
+		description = fmt::format(fmt::runtime(_("Level: {:d}")), currlevel);
+		break;
 	}
+
+	DrawString(out, description, linePosition);
+	linePosition.y += 15;
 	string_view difficulty;
 	switch (sgGameInitInfo.nDifficulty) {
 	case DIFF_NORMAL:
@@ -532,25 +767,27 @@ void DrawAutomapText(const Surface &out)
 		break;
 	}
 
-	std::string description = fmt::format(fmt::runtime(_(/* TRANSLATORS: {:s} means: Game Difficulty. */ "Difficulty: {:s}")), difficulty);
-	DrawString(out, description, linePosition);
+	std::string difficultyString = fmt::format(fmt::runtime(_(/* TRANSLATORS: {:s} means: Game Difficulty. */ "Difficulty: {:s}")), difficulty);
+	DrawString(out, difficultyString, linePosition);
 }
 
 std::unique_ptr<AutomapTile[]> LoadAutomapData(size_t &tileCount)
 {
 	switch (leveltype) {
+	case DTYPE_TOWN:
+		return LoadFileInMem<AutomapTile>("levels\\towndata\\automap.amp", &tileCount);
 	case DTYPE_CATHEDRAL:
-		return LoadFileInMem<AutomapTile>("Levels\\L1Data\\L1.AMP", &tileCount);
+		return LoadFileInMem<AutomapTile>("levels\\l1data\\l1.amp", &tileCount);
 	case DTYPE_CATACOMBS:
-		return LoadFileInMem<AutomapTile>("Levels\\L2Data\\L2.AMP", &tileCount);
+		return LoadFileInMem<AutomapTile>("levels\\l2data\\l2.amp", &tileCount);
 	case DTYPE_CAVES:
-		return LoadFileInMem<AutomapTile>("Levels\\L3Data\\L3.AMP", &tileCount);
+		return LoadFileInMem<AutomapTile>("levels\\l3data\\l3.amp", &tileCount);
 	case DTYPE_HELL:
-		return LoadFileInMem<AutomapTile>("Levels\\L4Data\\L4.AMP", &tileCount);
+		return LoadFileInMem<AutomapTile>("levels\\l4data\\l4.amp", &tileCount);
 	case DTYPE_NEST:
-		return LoadFileInMem<AutomapTile>("NLevels\\L6Data\\L6.AMP", &tileCount);
+		return LoadFileInMem<AutomapTile>("nlevels\\l6data\\l6.amp", &tileCount);
 	case DTYPE_CRYPT:
-		return LoadFileInMem<AutomapTile>("NLevels\\L5Data\\L5.AMP", &tileCount);
+		return LoadFileInMem<AutomapTile>("nlevels\\l5data\\l5.amp", &tileCount);
 	default:
 		return nullptr;
 	}
@@ -632,12 +869,10 @@ void AutomapZoomOut()
 
 void DrawAutomap(const Surface &out)
 {
-	if (leveltype == DTYPE_TOWN) {
-		DrawAutomapText(out);
-		return;
+	Automap = { (ViewPosition.x - 8) / 2, (ViewPosition.y - 8) / 2 };
+	if (leveltype != DTYPE_TOWN) {
+		Automap += { -4, -4 };
 	}
-
-	Automap = { (ViewPosition.x - 16) / 2, (ViewPosition.y - 16) / 2 };
 	while (Automap.x + AutomapOffset.deltaX < 0)
 		AutomapOffset.deltaX++;
 	while (Automap.x + AutomapOffset.deltaX >= DMAXX)
@@ -715,7 +950,7 @@ void DrawAutomap(const Surface &out)
 		screen.y += AmLine(32);
 	}
 
-	for (int playerId = 0; playerId < MAX_PLRS; playerId++) {
+	for (size_t playerId = 0; playerId < Players.size(); playerId++) {
 		Player &player = Players[playerId];
 		if (player.isOnActiveLevel() && player.plractive && !player._pLvlChanging && (&player == MyPlayer || player.friendlyMode)) {
 			DrawAutomapPlr(out, myPlayerOffset, playerId);

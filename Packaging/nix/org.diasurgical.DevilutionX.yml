@@ -1,6 +1,6 @@
 app-id: org.diasurgical.DevilutionX
 runtime: org.freedesktop.Platform
-runtime-version: '21.08'
+runtime-version: '22.08'
 sdk: org.freedesktop.Sdk
 command: devilutionx
 rename-desktop-file: devilutionx.desktop
@@ -12,7 +12,7 @@ finish-args:
     - --socket=wayland
     - --device=dri
     - --share=network
-    - --share-ipc
+    - --share=ipc
     - --socket=pulseaudio
 modules:
     - name: devilutionX
@@ -22,7 +22,8 @@ modules:
         - -DCMAKE_BUILD_TYPE=Release
       sources:
         - type: archive
-          path: ./devilutionx-src-full-1.4.0-aab970dc.tar.xz
+          url: https://github.com/diasurgical/devilutionX/releases/download/1.4.1/devilutionx-src-fully-vendored.tar.xz
+          sha256: 80527c29cd1d369ce905be426b671350b400c9468b73ef8cfbe6a09a563aeac0
       post-install:
         - "sed -i 's/Icon=devilutionx-hellfire/Icon=org.diasurgical.DevilutionX-hellfire/g' ${FLATPAK_DEST}/share/applications/devilutionx-hellfire.desktop"
         - "mv ${FLATPAK_DEST}/share/applications/devilutionx-hellfire.desktop ${FLATPAK_DEST}/share/applications/${FLATPAK_ID}-hellfire.desktop"

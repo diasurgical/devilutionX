@@ -1,17 +1,11 @@
 cmake_minimum_required(VERSION 3.13)
 
-if(POLICY CMP0092)
-  cmake_policy(SET CMP0092 NEW)
-endif()
-if(POLICY CMP0083)
-  cmake_policy(SET CMP0083 NEW)
-endif()
-if(POLICY CMP0111)
-  cmake_policy(SET CMP0111 NEW)
-endif()
-if(POLICY CMP0126)
-  cmake_policy(SET CMP0126 NEW)
-endif()
+foreach(_policy CMP0083 CMP0092 CMP0111 CMP0126 CMP0135)
+  if(POLICY ${_policy})
+    cmake_policy(SET ${_policy} NEW)
+    set(CMAKE_POLICY_DEFAULT_${_policy} NEW)
+  endif()
+endforeach()
 
 # Projects added via `add_subdirectory` or `FetchContent` may have a lower
 # `cmake_minimum_required` than we set here. Set policies that we require
@@ -127,6 +121,7 @@ RELEASE_OPTION(DEVILUTIONX_STATIC_CXX_STDLIB "Link C++ standard library statical
 include(MoldLinker)
 
 # Memory / performance trade-off options
+option(UNPACKED_MPQS "Expect MPQs to be unpacked and the data converted with devilutionx-mpq-tools" OFF)
 option(DISABLE_STREAMING_MUSIC "Disable streaming music (to work around broken platform implementations)" OFF)
 mark_as_advanced(DISABLE_STREAMING_MUSIC)
 option(DISABLE_STREAMING_SOUNDS "Disable streaming sounds (to work around broken platform implementations)" OFF)
@@ -137,6 +132,7 @@ option(DEVILUTIONX_PALETTE_TRANSPARENCY_BLACK_16_LUT "Whether to use a lookup ta
 mark_as_advanced(DEVILUTIONX_PALETTE_TRANSPARENCY_BLACK_16_LUT)
 
 # Additional features
+option(DISABLE_DEMOMODE "Disable demo mode support" OFF)
 option(DISCORD_INTEGRATION "Build with Discord SDK for rich presence support" OFF)
 
 # By default, devilutionx.mpq is built only if smpq is installed.
@@ -167,6 +163,11 @@ endif()
 
 # Note: `CMAKE_CROSSCOMPILING` is only available after the `project` call.
 if(CMAKE_CROSSCOMPILING)
+  set(BUILD_TESTING OFF)
+endif()
+
+if(DISABLE_DEMOMODE)
+  # Testing requires demomode.
   set(BUILD_TESTING OFF)
 endif()
 
@@ -295,6 +296,14 @@ else()
     Packaging/windows/devilutionx.rc
     Packaging/apple/AppIcon.icns
     Packaging/apple/LaunchScreen.storyboard)
+
+    if(CMAKE_STRIP AND NOT DEVILUTIONX_DISABLE_STRIP)
+      add_custom_command(
+        TARGET ${BIN_TARGET} POST_BUILD
+        DEPENDS ${BIN_TARGET}
+        COMMAND $<$<CONFIG:Release>:${CMAKE_STRIP}>
+        ARGS --strip-all $<TARGET_FILE:${BIN_TARGET}>)
+    endif()
 endif()
 
 if(NOT UWP_LIB)
@@ -365,21 +374,6 @@ if(APPLE)
 endif()
 
 if(NINTENDO_SWITCH)
-  set(APP_ROMFS       "${CMAKE_BINARY_DIR}/romfs")
-
-  add_custom_target(romfs_directory
-    COMMAND ${CMAKE_COMMAND} -E make_directory ${APP_ROMFS})
-
-  add_custom_target(romfs_files
-    COMMAND ${CMAKE_COMMAND} -E copy ${DEVILUTIONX_MPQ} ${APP_ROMFS}
-    DEPENDS ${DEVILUTIONX_MPQ})
-
-  # the romfs_directory target will create this directory at build time,
-  # but the nx_create_nro function requires it to also exist at configure time
-  file(MAKE_DIRECTORY ${APP_ROMFS})
-
-  add_dependencies(romfs_files romfs_directory devilutionx_mpq)
-
   nx_generate_nacp (${BIN_TARGET}.nacp
     NAME    "DevilutionX"
     AUTHOR  "Devilution Team"
@@ -389,11 +383,8 @@ if(NINTENDO_SWITCH)
   nx_create_nro(${BIN_TARGET}
     NACP  ${BIN_TARGET}.nacp
     ICON  "${PROJECT_SOURCE_DIR}/Packaging/switch/icon.jpg"
-    ROMFS ${APP_ROMFS}
+    ROMFS ${DEVILUTIONX_ASSETS_OUTPUT_DIRECTORY}
   )
-
-  add_dependencies(${BIN_TARGET}_nro romfs_files)
-
 endif()
 
 if(VITA)
@@ -439,8 +430,6 @@ if(NINTENDO_3DS)
   set(APP_BANNER      "${PROJECT_SOURCE_DIR}/Packaging/ctr/banner.png")
   set(APP_AUDIO       "${CMAKE_BINARY_DIR}/banner_audio.wav")
   set(APP_RSF         "${PROJECT_SOURCE_DIR}/Packaging/ctr/template.rsf")
-  set(APP_ROMFS       "${CMAKE_BINARY_DIR}/romfs")
-  list(APPEND APP_ROMFS_FILES ${DEVILUTIONX_MPQ})
   set(APP_VERSION ${PROJECT_VERSION})
 
   find_program(FFMPEG ffmpeg)
@@ -456,22 +445,9 @@ if(NINTENDO_3DS)
       VERBATIM)
   endif()
 
-  add_custom_target(romfs_directory
-    COMMAND ${CMAKE_COMMAND} -E make_directory ${APP_ROMFS})
-
-  add_custom_target(romfs_files
-    COMMAND ${CMAKE_COMMAND} -E copy ${APP_ROMFS_FILES} ${APP_ROMFS}
-    DEPENDS ${APP_ROMFS_FILES})
-
-  add_dependencies(romfs_files romfs_directory devilutionx_mpq)
-
   include(Tools3DS)
   add_3dsx_target(${BIN_TARGET})
   add_cia_target(${BIN_TARGET} ${APP_RSF} ${APP_BANNER} ${APP_AUDIO})
-
-  get_filename_component(APP_TARGET_PREFIX ${BIN_TARGET} NAME_WE)
-  add_dependencies(${APP_TARGET_PREFIX}_3dsx romfs_files)
-  add_dependencies(${APP_TARGET_PREFIX}_cia romfs_files)
 endif()
 
 if(UWP_LIB)

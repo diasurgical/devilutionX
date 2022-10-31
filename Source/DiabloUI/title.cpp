@@ -19,11 +19,11 @@ std::vector<std::unique_ptr<UiItemBase>> vecTitleScreen;
 void TitleLoad()
 {
 	if (gbIsHellfire) {
-		LoadBackgroundArt("ui_art\\hf_logo1.pcx", 16);
+		LoadBackgroundArt("ui_art\\hf_logo1", 16);
 		ArtBackgroundWidescreen = LoadOptionalClx("ui_art\\hf_titlew.clx");
 	} else {
-		LoadBackgroundArt("ui_art\\title.pcx");
-		DiabloTitleLogo = LoadPcxSpriteList("ui_art\\logo.pcx", /*numFrames=*/15, /*transparentColor=*/250);
+		LoadBackgroundArt("ui_art\\title");
+		DiabloTitleLogo = LoadPcxSpriteList("ui_art\\logo", /*numFrames=*/15, /*transparentColor=*/250);
 	}
 }
 

@@ -216,9 +216,23 @@ bool nthread_has_500ms_passed()
 {
 	int currentTickCount = SDL_GetTicks();
 	int ticksElapsed = currentTickCount - last_tick;
-	if (!gbIsMultiplayer && ticksElapsed > gnTickDelay * 10) {
-		last_tick = currentTickCount;
-		ticksElapsed = 0;
+	// Check if we missed multiple game ticks (> 10)
+	if (ticksElapsed > gnTickDelay * 10) {
+		bool resetLastTick = true;
+		if (gbIsMultiplayer) {
+			for (size_t i = 0; i < Players.size(); i++) {
+				if ((player_state[i] & PS_CONNECTED) != 0 && i != MyPlayerId) {
+					// Reset last tick is not allowed when other players are connected, cause the elapsed time is needed to sync the game ticks between the clients
+					resetLastTick = false;
+					break;
+				}
+			}
+		}
+		if (resetLastTick) {
+			// Reset last tick to avoid caught up of all missed game ticks (game speed is dramatically increased for a short time)
+			last_tick = currentTickCount;
+			ticksElapsed = 0;
+		}
 	}
 	return ticksElapsed >= 0;
 }

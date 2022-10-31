@@ -64,7 +64,7 @@ struct Touch {
 
 Touch finger[TOUCH_PORT_MAX_NUM][MaxNumFingers]; // keep track of finger status
 
-enum DraggingType {
+enum DraggingType : uint8_t {
 	DragNone,
 	DragTwoFinger,
 	DragThreeFinger,

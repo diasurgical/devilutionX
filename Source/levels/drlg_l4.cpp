@@ -14,15 +14,15 @@
 
 namespace devilution {
 
-Point DiabloQuad1;
-Point DiabloQuad2;
-Point DiabloQuad3;
-Point DiabloQuad4;
+WorldTilePosition DiabloQuad1;
+WorldTilePosition DiabloQuad2;
+WorldTilePosition DiabloQuad3;
+WorldTilePosition DiabloQuad4;
 
 namespace {
 
 bool hallok[20];
-Point L4Hold;
+WorldTilePosition L4Hold;
 
 /**
  * A lookup table for the 16 possible patterns of a 2x2 area,
@@ -159,9 +159,9 @@ void ApplyShadowsPatterns()
 void LoadQuestSetPieces()
 {
 	if (Quests[Q_WARLORD].IsAvailable()) {
-		pSetPiece = LoadFileInMem<uint16_t>("Levels\\L4Data\\Warlord.DUN");
+		pSetPiece = LoadFileInMem<uint16_t>("levels\\l4data\\warlord.dun");
 	} else if (currlevel == 15 && gbIsMultiplayer) {
-		pSetPiece = LoadFileInMem<uint16_t>("Levels\\L4Data\\Vile1.DUN");
+		pSetPiece = LoadFileInMem<uint16_t>("levels\\l4data\\vile1.dun");
 	}
 }
 
@@ -172,16 +172,16 @@ void InitDungeonFlags()
 	memset(dungeon, 30, sizeof(dungeon));
 }
 
-void MapRoom(Rectangle room)
+void MapRoom(WorldTileRectangle room)
 {
-	for (int y = 0; y < room.size.height && y + room.position.y < DMAXY / 2; y++) {
-		for (int x = 0; x < room.size.width && x + room.position.x < DMAXX / 2; x++) {
+	for (WorldTileCoord y = 0; y < room.size.height && y + room.position.y < DMAXY / 2; y++) {
+		for (WorldTileCoord x = 0; x < room.size.width && x + room.position.x < DMAXX / 2; x++) {
 			DungeonMask.set(room.position.x + x, room.position.y + y);
 		}
 	}
 }
 
-bool CheckRoom(Rectangle room)
+bool CheckRoom(WorldTileRectangle room)
 {
 	if (room.position.x <= 0 || room.position.y <= 0) {
 		return false;
@@ -201,39 +201,41 @@ bool CheckRoom(Rectangle room)
 	return true;
 }
 
-void GenerateRoom(Rectangle area, bool verticalLayout)
+void GenerateRoom(WorldTileRectangle area, bool verticalLayout)
 {
 	bool rotate = !FlipCoin(4);
 	verticalLayout = (!verticalLayout && rotate) || (verticalLayout && !rotate);
 
 	bool placeRoom1;
-	Rectangle room1;
+	WorldTileRectangle room1;
 
 	for (int num = 0; num < 20; num++) {
-		room1.size = { (GenerateRnd(5) + 2) & ~1, (GenerateRnd(5) + 2) & ~1 };
+		const int32_t randomWidth = (GenerateRnd(5) + 2) & ~1;
+		const int32_t randomHeight = (GenerateRnd(5) + 2) & ~1;
+		room1.size = WorldTileSize(randomWidth, randomHeight);
 		room1.position = area.position;
 		if (verticalLayout) {
-			room1.position += Displacement { -room1.size.width, area.size.height / 2 - room1.size.height / 2 };
-			placeRoom1 = CheckRoom({ room1.position + Displacement { -1, -1 }, { room1.size.height + 2, room1.size.width + 1 } }); /// BUGFIX: swap height and width ({ room1.size.width + 1, room1.size.height + 2 }) (workaround applied below)
+			room1.position += WorldTileDisplacement(-room1.size.width, area.size.height / 2 - room1.size.height / 2);
+			placeRoom1 = CheckRoom({ room1.position + WorldTileDisplacement { -1, -1 }, WorldTileSize(room1.size.height + 2, room1.size.width + 1) }); /// BUGFIX: swap height and width ({ room1.size.width + 1, room1.size.height + 2 }) (workaround applied below)
 		} else {
-			room1.position += Displacement { area.size.width / 2 - room1.size.width / 2, -room1.size.height };
-			placeRoom1 = CheckRoom({ room1.position + Displacement { -1, -1 }, { room1.size.width + 2, room1.size.height + 1 } });
+			room1.position += WorldTileDisplacement(area.size.width / 2 - room1.size.width / 2, -room1.size.height);
+			placeRoom1 = CheckRoom({ room1.position + WorldTileDisplacement { -1, -1 }, WorldTileSize(room1.size.width + 2, room1.size.height + 1) });
 		}
 		if (placeRoom1)
 			break;
 	}
 
 	if (placeRoom1)
-		MapRoom({ room1.position, { std::min(DMAXX - room1.position.x, room1.size.width), std::min(DMAXX - room1.position.y, room1.size.height) } });
+		MapRoom({ room1.position, WorldTileSize(std::min<int>(DMAXX - room1.position.x, room1.size.width), std::min<int>(DMAXX - room1.position.y, room1.size.height)) });
 
 	bool placeRoom2;
-	Rectangle room2 = room1;
+	WorldTileRectangle room2 = room1;
 	if (verticalLayout) {
 		room2.position.x = area.position.x + area.size.width;
-		placeRoom2 = CheckRoom({ room2.position + Displacement { 0, -1 }, { room2.size.width + 1, room2.size.height + 2 } });
+		placeRoom2 = CheckRoom({ room2.position + WorldTileDisplacement { 0, -1 }, WorldTileSize(room2.size.width + 1, room2.size.height + 2) });
 	} else {
 		room2.position.y = area.position.y + area.size.height;
-		placeRoom2 = CheckRoom({ room2.position + Displacement { -1, 0 }, { room2.size.width + 2, room2.size.height + 1 } });
+		placeRoom2 = CheckRoom({ room2.position + WorldTileDisplacement { -1, 0 }, WorldTileSize(room2.size.width + 2, room2.size.height + 1) });
 	}
 
 	if (placeRoom2)
@@ -246,7 +248,7 @@ void GenerateRoom(Rectangle area, bool verticalLayout)
 
 void FirstRoom()
 {
-	Rectangle room { { 0, 0 }, { 14, 14 } };
+	WorldTileRectangle room { { 0, 0 }, { 14, 14 } };
 	if (currlevel != 16) {
 		if (currlevel == Quests[Q_WARLORD]._qlevel && Quests[Q_WARLORD]._qactive != QUEST_NOTAVAIL) {
 			assert(!gbIsMultiplayer);
@@ -254,7 +256,9 @@ void FirstRoom()
 		} else if (currlevel == Quests[Q_BETRAYER]._qlevel && gbIsMultiplayer) {
 			room.size = { 11, 11 };
 		} else {
-			room.size = { GenerateRnd(5) + 2, GenerateRnd(5) + 2 };
+			const int32_t randomWidth = GenerateRnd(5) + 2;
+			const int32_t randomHeight = GenerateRnd(5) + 2;
+			room.size = WorldTileSize(randomWidth, randomHeight);
 		}
 	}
 
@@ -262,13 +266,15 @@ void FirstRoom()
 	int xmax = DMAXX / 2 - 1 - room.size.width;
 	int ymin = (DMAXY / 2 - room.size.height) / 2;
 	int ymax = DMAXY / 2 - 1 - room.size.height;
-	room.position = { GenerateRnd(xmax - xmin + 1) + xmin, GenerateRnd(ymax - ymin + 1) + ymin };
+	const int32_t randomX = GenerateRnd(xmax - xmin + 1) + xmin;
+	const int32_t randomY = GenerateRnd(ymax - ymin + 1) + ymin;
+	room.position = WorldTilePosition(randomX, randomY);
 
 	if (currlevel == 16) {
 		L4Hold = room.position;
 	}
 	if (Quests[Q_WARLORD].IsAvailable() || (currlevel == Quests[Q_BETRAYER]._qlevel && gbIsMultiplayer)) {
-		SetPieceRoom = { room.position + Displacement { 1, 1 }, { room.size.width + 1, room.size.height + 1 } };
+		SetPieceRoom = { room.position + WorldTileDisplacement { 1, 1 }, WorldTileSize(room.size.width + 1, room.size.height + 1) };
 	} else {
 		SetPieceRoom = {};
 	}
@@ -939,23 +945,23 @@ void ProtectQuads()
 void LoadDiabQuads(bool preflag)
 {
 	{
-		auto dunData = LoadFileInMem<uint16_t>("Levels\\L4Data\\diab1.DUN");
-		DiabloQuad1 = L4Hold + Displacement { 4, 4 };
+		auto dunData = LoadFileInMem<uint16_t>("levels\\l4data\\diab1.dun");
+		DiabloQuad1 = L4Hold + WorldTileDisplacement { 4, 4 };
 		PlaceDunTiles(dunData.get(), DiabloQuad1, 6);
 	}
 	{
-		auto dunData = LoadFileInMem<uint16_t>(preflag ? "Levels\\L4Data\\diab2b.DUN" : "Levels\\L4Data\\diab2a.DUN");
-		DiabloQuad2 = { 27 - L4Hold.x, 1 + L4Hold.y };
+		auto dunData = LoadFileInMem<uint16_t>(preflag ? "levels\\l4data\\diab2b.dun" : "levels\\l4data\\diab2a.dun");
+		DiabloQuad2 = WorldTilePosition(27 - L4Hold.x, 1 + L4Hold.y);
 		PlaceDunTiles(dunData.get(), DiabloQuad2, 6);
 	}
 	{
-		auto dunData = LoadFileInMem<uint16_t>(preflag ? "Levels\\L4Data\\diab3b.DUN" : "Levels\\L4Data\\diab3a.DUN");
-		DiabloQuad3 = { 1 + L4Hold.x, 27 - L4Hold.y };
+		auto dunData = LoadFileInMem<uint16_t>(preflag ? "levels\\l4data\\diab3b.dun" : "levels\\l4data\\diab3a.dun");
+		DiabloQuad3 = WorldTilePosition(1 + L4Hold.x, 27 - L4Hold.y);
 		PlaceDunTiles(dunData.get(), DiabloQuad3, 6);
 	}
 	{
-		auto dunData = LoadFileInMem<uint16_t>(preflag ? "Levels\\L4Data\\diab4b.DUN" : "Levels\\L4Data\\diab4a.DUN");
-		DiabloQuad4 = { 28 - L4Hold.x, 28 - L4Hold.y };
+		auto dunData = LoadFileInMem<uint16_t>(preflag ? "levels\\l4data\\diab4b.dun" : "levels\\l4data\\diab4a.dun");
+		DiabloQuad4 = WorldTilePosition(28 - L4Hold.x, 28 - L4Hold.y);
 		PlaceDunTiles(dunData.get(), DiabloQuad4, 6);
 	}
 }
@@ -1086,13 +1092,13 @@ bool PlaceStairs(lvl_entry entry)
 		if (currlevel != 16) {
 			if (Quests[Q_WARLORD].IsAvailable()) {
 				if (entry == ENTRY_PREV)
-					ViewPosition = SetPiece.position.megaToWorld() + Displacement { 6, 6 };
+					ViewPosition = SetPiece.position.megaToWorld() + Displacement { 7, 7 };
 			} else {
 				position = PlaceMiniSet(L4DSTAIRS);
 				if (!position)
 					return false;
 				if (entry == ENTRY_PREV)
-					ViewPosition = position->megaToWorld() + Displacement { 5, 7 };
+					ViewPosition = position->megaToWorld() + Displacement { 7, 5 };
 			}
 		}
 
@@ -1111,7 +1117,7 @@ bool PlaceStairs(lvl_entry entry)
 		if (!position)
 			return false;
 		if (entry == ENTRY_PREV)
-			ViewPosition = position->megaToWorld() + Displacement { 5, 7 };
+			ViewPosition = position->megaToWorld() + Displacement { 6, 5 };
 	}
 
 	return true;
@@ -1174,10 +1180,10 @@ void GenerateLevel(lvl_entry entry)
 	DRLG_CheckQuests(SetPieceRoom.position);
 
 	if (currlevel == 15) {
-		for (int j = 0; j < DMAXY; j++) {
-			for (int i = 0; i < DMAXX; i++) {
+		for (WorldTileCoord j = 1; j < DMAXY; j++) {
+			for (WorldTileCoord i = 1; i < DMAXX; i++) {
 				if (IsAnyOf(dungeon[i][j], 98, 107)) {
-					Make_SetPC({ { i - 1, j - 1 }, { 5, 5 } });
+					Make_SetPC({ WorldTilePosition(i - 1, j - 1), { 5, 5 } });
 					if (Quests[Q_BETRAYER]._qactive >= QUEST_ACTIVE) { /// Lazarus staff skip bug fixed
 						// Set the portal position to the location of the northmost pentagram tile.
 						Quests[Q_BETRAYER].position = { i, j };

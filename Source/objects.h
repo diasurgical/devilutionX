@@ -10,6 +10,7 @@
 #include "engine/clx_sprite.hpp"
 #include "engine/point.hpp"
 #include "engine/rectangle.hpp"
+#include "engine/world_tile.hpp"
 #include "itemdat.h"
 #include "monster.h"
 #include "objdat.h"
@@ -22,8 +23,11 @@ namespace devilution {
 
 struct Object {
 	_object_id _otype = OBJ_NULL;
-	Point position;
 	bool _oLight = false;
+	bool _oTrapFlag = false;
+	bool _oDoorFlag = false;
+
+	Point position;
 	uint32_t _oAnimFlag = 0;
 	OptionalClxSpriteList _oAnimData;
 	int _oAnimDelay = 0;      // Tick length of each frame in the current animation
@@ -42,8 +46,6 @@ struct Object {
 	bool _oMissFlag = false;
 	uint8_t _oSelFlag = 0;
 	bool _oPreFlag = false;
-	bool _oTrapFlag = false;
-	bool _oDoorFlag = false;
 	int _olid = 0;
 	/**
 	 * Saves the absolute value of the engine state (typically from a call to AdvanceRndSeed()) to later use when spawning items from a container object
@@ -56,6 +58,8 @@ struct Object {
 	int _oVar4 = 0;
 	int _oVar5 = 0;
 	uint32_t _oVar6 = 0;
+	int _oVar8 = 0;
+
 	/**
 	 * @brief ID of a quest message to play when this object is activated.
 	 *
@@ -63,7 +67,6 @@ struct Object {
 	 */
 	// TODO: Should be TEXT_NONE (timedemo save will need to be updated).
 	_speech_id bookMessage = TEXT_KING1;
-	int _oVar8 = 0;
 
 	/**
 	 * @brief Returns the network identifier for this object
@@ -82,7 +85,7 @@ struct Object {
 	 * @param topLeftPosition corner of the map region closest to the origin.
 	 * @param bottomRightPosition corner of the map region furthest from the origin.
 	 */
-	constexpr void SetMapRange(Point topLeftPosition, Point bottomRightPosition)
+	constexpr void SetMapRange(WorldTilePosition topLeftPosition, WorldTilePosition bottomRightPosition)
 	{
 		_oVar1 = topLeftPosition.x;
 		_oVar2 = topLeftPosition.y;
@@ -94,9 +97,9 @@ struct Object {
 	 * @brief Convenience function for SetMapRange(Point, Point).
 	 * @param mapRange A rectangle defining the top left corner and size of the affected region.
 	 */
-	constexpr void SetMapRange(Rectangle mapRange)
+	constexpr void SetMapRange(WorldTileRectangle mapRange)
 	{
-		SetMapRange(mapRange.position, mapRange.position + Displacement { mapRange.size });
+		SetMapRange(mapRange.position, mapRange.position + DisplacementOf<uint8_t>(mapRange.size));
 	}
 
 	/**
@@ -107,7 +110,7 @@ struct Object {
 	 *
 	 * @param mapRange The region to be updated when this object is activated.
 	 */
-	constexpr void InitializeBook(Rectangle mapRange)
+	constexpr void InitializeBook(WorldTileRectangle mapRange)
 	{
 		SetMapRange(mapRange);
 		_oVar6 = _oAnimFrame + 1; // Save the frame number for the open book frame
@@ -119,7 +122,7 @@ struct Object {
 	 * @param leverID An ID (distinct from the object index) to identify the new objects spawned after updating the map.
 	 * @param message The quest text to play when this object is activated.
 	 */
-	constexpr void InitializeQuestBook(Rectangle mapRange, int leverID, _speech_id message)
+	constexpr void InitializeQuestBook(WorldTileRectangle mapRange, int leverID, _speech_id message)
 	{
 		InitializeBook(mapRange);
 		_oVar8 = leverID;
@@ -131,7 +134,7 @@ struct Object {
 	 * @param mapRange The region which was updated to spawn this object.
 	 * @param leverID The id (*not* an object ID/index) of the lever responsible for the map change.
 	 */
-	constexpr void InitializeLoadedObject(Rectangle mapRange, int leverID)
+	constexpr void InitializeLoadedObject(WorldTileRectangle mapRange, int leverID)
 	{
 		SetMapRange(mapRange);
 		_oVar8 = leverID;
@@ -313,7 +316,7 @@ void RedoPlayerVision();
 void MonstCheckDoors(const Monster &monster);
 void ObjChangeMap(int x1, int y1, int x2, int y2);
 void ObjChangeMapResync(int x1, int y1, int x2, int y2);
-int ItemMiscIdIdx(item_misc_id imiscid);
+_item_indexes ItemMiscIdIdx(item_misc_id imiscid);
 void OperateObject(Player &player, Object &object);
 void SyncOpObject(Player &player, int cmd, Object &object);
 void BreakObjectMissile(Object &object);

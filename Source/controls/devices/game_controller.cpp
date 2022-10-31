@@ -232,4 +232,40 @@ bool GameController::IsPressedOnAnyController(ControllerButton button, SDL_Joyst
 	return false;
 }
 
+GamepadLayout GameController::getLayout(const SDL_Event &event)
+{
+#if defined(DEVILUTIONX_GAMEPAD_TYPE)
+	return GamepadLayout::
+	    DEVILUTIONX_GAMEPAD_TYPE;
+#else // !defined(DEVILUTIONX_GAMEPAD_TYPE)
+#if SDL_VERSION_ATLEAST(2, 0, 12)
+	const int index = event.cdevice.which;
+	const SDL_GameControllerType gamepadType = SDL_GameControllerTypeForIndex(index);
+	switch (gamepadType) {
+	case SDL_CONTROLLER_TYPE_NINTENDO_SWITCH_PRO:
+		return GamepadLayout::Nintendo;
+	case SDL_CONTROLLER_TYPE_PS3:
+	case SDL_CONTROLLER_TYPE_PS4:
+#if SDL_VERSION_ATLEAST(2, 0, 14)
+	case SDL_CONTROLLER_TYPE_PS5:
+#endif
+		return GamepadLayout::PlayStation;
+	case SDL_CONTROLLER_TYPE_XBOXONE:
+	case SDL_CONTROLLER_TYPE_XBOX360:
+#if SDL_VERSION_ATLEAST(2, 0, 16)
+	case SDL_CONTROLLER_TYPE_GOOGLE_STADIA:
+	case SDL_CONTROLLER_TYPE_AMAZON_LUNA:
+#endif
+		return GamepadLayout::Xbox;
+#if SDL_VERSION_ATLEAST(2, 0, 14)
+	case SDL_CONTROLLER_TYPE_VIRTUAL:
+#endif
+	case SDL_CONTROLLER_TYPE_UNKNOWN:
+		return GamepadLayout::Generic;
+	}
+#endif
+	return GamepadLayout::Generic;
+#endif // !defined(DEVILUTIONX_GAMEPAD_TYPE)
+}
+
 } // namespace devilution

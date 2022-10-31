@@ -2,10 +2,12 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <forward_list>
 #include <unordered_map>
 
 #include <SDL_version.h>
 
+#include "controls/controller_buttons.h"
 #include "engine/sound_defs.hpp"
 #include "miniwin/misc_msg.h"
 #include "pack.h"
@@ -15,21 +17,21 @@
 
 namespace devilution {
 
-enum class StartUpGameMode {
+enum class StartUpGameMode : uint8_t {
 	/** @brief If hellfire is present, asks the user what game they want to start. */
 	Ask = 0,
 	Hellfire = 1,
 	Diablo = 2,
 };
 
-enum class StartUpIntro {
+enum class StartUpIntro : uint8_t {
 	Off = 0,
 	Once = 1,
 	On = 2,
 };
 
 /** @brief Defines what splash screen should be shown at startup. */
-enum class StartUpSplash {
+enum class StartUpSplash : uint8_t {
 	/** @brief Show no splash screen. */
 	None = 0,
 	/** @brief Show only TitleDialog. */
@@ -38,13 +40,13 @@ enum class StartUpSplash {
 	LogoAndTitleDialog = 2,
 };
 
-enum class ScalingQuality {
+enum class ScalingQuality : uint8_t {
 	NearestPixel,
 	BilinearFiltering,
 	AnisotropicFiltering,
 };
 
-enum class Resampler {
+enum class Resampler : uint8_t {
 #ifdef DEVILUTIONX_RESAMPLER_SPEEX
 	Speex = 0,
 #endif
@@ -56,13 +58,14 @@ enum class Resampler {
 string_view ResamplerToString(Resampler resampler);
 std::optional<Resampler> ResamplerFromString(string_view resampler);
 
-enum class OptionEntryType {
+enum class OptionEntryType : uint8_t {
 	Boolean,
 	List,
 	Key,
+	PadButton,
 };
 
-enum class OptionEntryFlags {
+enum class OptionEntryFlags : uint8_t {
 	/** @brief No special logic. */
 	None = 0,
 	/** @brief Shouldn't be shown in settings dialog. */
@@ -583,10 +586,6 @@ struct ControllerOptions : OptionCategoryBase {
 
 	/** @brief SDL Controller mapping, see SDL_GameControllerDB. */
 	char szMapping[1024];
-	/** @brief Use dpad for spell hotkeys without holding "start" */
-	bool bDpadHotkeys;
-	/** @brief Shoulder gamepad shoulder buttons act as potions by default */
-	bool bSwapShoulderButtonMode;
 	/** @brief Configure gamepad joysticks deadzone */
 	float fDeadzone;
 #ifdef __vita__
@@ -634,6 +633,10 @@ struct KeymapperOptions : OptionCategoryBase {
 	 */
 	class Action final : public OptionEntryBase {
 	public:
+		// OptionEntryBase::key may be referencing Action::dynamicKey.
+		// The implicit copy constructor would copy that reference instead of referencing the copy.
+		Action(const Action &) = delete;
+
 		[[nodiscard]] string_view GetName() const override;
 		[[nodiscard]] OptionEntryType GetType() const override
 		{
@@ -682,6 +685,71 @@ private:
 	std::unordered_map<std::string, uint32_t> keyNameToKeyID;
 };
 
+/** The Padmapper maps gamepad buttons to actions. */
+struct PadmapperOptions : OptionCategoryBase {
+	/**
+	 * Action represents an action that can be triggered using a gamepad
+	 * button combo.
+	 */
+	class Action final : public OptionEntryBase {
+	public:
+		Action(string_view key, const char *name, const char *description, ControllerButtonCombo defaultInput, std::function<void()> actionPressed, std::function<void()> actionReleased, std::function<bool()> enable, unsigned index);
+
+		// OptionEntryBase::key may be referencing Action::dynamicKey.
+		// The implicit copy constructor would copy that reference instead of referencing the copy.
+		Action(const Action &) = delete;
+
+		[[nodiscard]] string_view GetName() const override;
+		[[nodiscard]] OptionEntryType GetType() const override
+		{
+			return OptionEntryType::PadButton;
+		}
+
+		void LoadFromIni(string_view category) override;
+		void SaveToIni(string_view category) const override;
+
+		[[nodiscard]] string_view GetValueDescription() const override;
+
+		bool SetValue(ControllerButtonCombo value);
+
+	private:
+		ControllerButtonCombo defaultInput;
+		std::function<void()> actionPressed;
+		std::function<void()> actionReleased;
+		std::function<bool()> enable;
+		ControllerButtonCombo boundInput {};
+		std::string boundInputDescription;
+		unsigned dynamicIndex;
+		std::string dynamicKey;
+		mutable std::string dynamicName;
+
+		friend struct PadmapperOptions;
+	};
+
+	PadmapperOptions();
+	std::vector<OptionEntryBase *> GetEntries() override;
+
+	void AddAction(
+	    string_view key, const char *name, const char *description, ControllerButtonCombo defaultInput,
+	    std::function<void()> actionPressed,
+	    std::function<void()> actionReleased = nullptr,
+	    std::function<bool()> enable = nullptr,
+	    unsigned index = 0);
+	void ButtonPressed(ControllerButton button);
+	void ButtonReleased(ControllerButton button);
+	string_view InputNameForAction(string_view actionName) const;
+	ControllerButtonCombo ButtonComboForAction(string_view actionName) const;
+
+private:
+	std::forward_list<Action> actions;
+	std::unordered_map<ControllerButton, std::reference_wrapper<Action>> buttonToReleaseAction;
+	std::unordered_map<ControllerButton, std::string> buttonToButtonName;
+	std::unordered_map<std::string, ControllerButton> buttonNameToButton;
+	bool reversed = false;
+
+	std::forward_list<Action> &GetActions();
+};
+
 struct Options {
 	StartUpOptions StartUp;
 	DiabloOptions Diablo;
@@ -694,6 +762,7 @@ struct Options {
 	ChatOptions Chat;
 	LanguageOptions Language;
 	KeymapperOptions Keymapper;
+	PadmapperOptions Padmapper;
 
 	[[nodiscard]] std::vector<OptionCategoryBase *> GetCategories()
 	{
@@ -709,6 +778,7 @@ struct Options {
 			&Network,
 			&Chat,
 			&Keymapper,
+			&Padmapper,
 		};
 	}
 };

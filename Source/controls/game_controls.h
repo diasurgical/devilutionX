@@ -8,6 +8,13 @@
 
 namespace devilution {
 
+enum class GamepadLayout : uint8_t {
+	Generic,
+	Nintendo,
+	PlayStation,
+	Xbox,
+};
+
 enum GameActionType : uint8_t {
 	GameActionType_NONE,
 	GameActionType_USE_HEALTH_POTION,
@@ -52,16 +59,24 @@ struct GameAction {
 	};
 };
 
-bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, GameAction *action);
+ControllerButton TranslateTo(GamepadLayout layout, ControllerButton button);
+
+bool SkipsMovie(ControllerButtonEvent ctrlEvent);
 
 bool IsSimulatedMouseClickBinding(ControllerButtonEvent ctrlEvent);
 
 AxisDirection GetMoveDirection();
 
-extern bool start_modifier_active;
-extern bool select_modifier_active;
-extern const ControllerButton ControllerButtonPrimary;
-extern const ControllerButton ControllerButtonSecondary;
-extern const ControllerButton ControllerButtonTertiary;
+bool HandleControllerButtonEvent(const SDL_Event &event, GameAction &action);
+
+extern bool PadMenuNavigatorActive;
+extern bool PadHotspellMenuActive;
+
+// Tracks the button most recently used as a modifier for another button.
+//
+// If two buttons are pressed simultaneously, SDL sends two events for which both buttons are in the pressed state.
+// The event processor may interpret the second event's button as a modifier for the action taken when processing the first event.
+// The code for the modifier will be stored here, and the event processor can check this value when processing the second event to suppress it.
+extern ControllerButton SuppressedButton;
 
 } // namespace devilution

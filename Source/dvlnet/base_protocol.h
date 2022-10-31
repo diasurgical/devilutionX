@@ -68,7 +68,7 @@ template <class P>
 plr_t base_protocol<P>::get_master()
 {
 	plr_t ret = plr_self;
-	for (plr_t i = 0; i < MAX_PLRS; ++i)
+	for (plr_t i = 0; i < Players.size(); ++i)
 		if (peers[i].endpoint)
 			ret = std::min(ret, i);
 	return ret;
@@ -195,7 +195,7 @@ void base_protocol<P>::send(packet &pkt)
 			return;
 		SendTo(destination, pkt);
 	} else if (destination == PLR_BROADCAST) {
-		for (plr_t player = 0; player < MAX_PLRS; player++)
+		for (plr_t player = 0; player < Players.size(); player++)
 			SendTo(player, pkt);
 	} else if (destination == PLR_MASTER) {
 		throw dvlnet_exception();
@@ -236,7 +236,7 @@ void base_protocol<P>::recv()
 			}
 		}
 		while (proto.get_disconnected(sender)) {
-			for (plr_t i = 0; i < MAX_PLRS; ++i) {
+			for (plr_t i = 0; i < Players.size(); ++i) {
 				if (peers[i].endpoint == sender) {
 					DisconnectNet(i);
 					break;
@@ -253,7 +253,7 @@ template <class P>
 void base_protocol<P>::handle_join_request(packet &pkt, endpoint_t sender)
 {
 	plr_t i;
-	for (i = 0; i < MAX_PLRS; ++i) {
+	for (i = 0; i < Players.size(); ++i) {
 		Peer &peer = peers[i];
 		if (i != plr_self && !peer.endpoint) {
 			peer.endpoint = sender;
@@ -268,7 +268,7 @@ void base_protocol<P>::handle_join_request(packet &pkt, endpoint_t sender)
 	}
 
 	auto senderinfo = sender.serialize();
-	for (plr_t j = 0; j < MAX_PLRS; ++j) {
+	for (plr_t j = 0; j < Players.size(); ++j) {
 		endpoint_t peer = peers[j].endpoint;
 		if ((j != plr_self) && (j != i) && peer) {
 			auto peerpkt = pktfty->make_packet<PT_CONNECT>(PLR_MASTER, PLR_BROADCAST, i, senderinfo);
@@ -297,7 +297,7 @@ void base_protocol<P>::recv_decrypted(packet &pkt, endpoint_t sender)
 			return;
 		const GameData *gameData = (const GameData *)pkt.Info().data();
 		std::vector<std::string> playerNames;
-		for (size_t i = 0; i < MAX_PLRS; i++) {
+		for (size_t i = 0; i < Players.size(); i++) {
 			std::string playerName;
 			const char *playerNamePointer = (const char *)(pkt.Info().data() + sizeof(GameData) + (i * PlayerNameLength));
 			playerName.append(playerNamePointer, strnlen(playerNamePointer, PlayerNameLength));
@@ -325,7 +325,7 @@ void base_protocol<P>::recv_ingame(packet &pkt, endpoint_t sender)
 				buffer_t buf;
 				buf.resize(game_init_info.size() + (PlayerNameLength * MAX_PLRS) + gamename.size());
 				std::memcpy(buf.data(), &game_init_info[0], game_init_info.size());
-				for (size_t i = 0; i < MAX_PLRS; i++) {
+				for (size_t i = 0; i < Players.size(); i++) {
 					if (Players[i].plractive) {
 						std::memcpy(buf.data() + game_init_info.size() + (i * PlayerNameLength), &Players[i]._pName, PlayerNameLength);
 					} else {
@@ -379,7 +379,7 @@ void base_protocol<P>::recv_ingame(packet &pkt, endpoint_t sender)
 	if (plr_self != PLR_BROADCAST) {
 		if (wasBroadcast) {
 			// Send a handshake to everyone just after PT_JOIN_ACCEPT
-			for (plr_t player = 0; player < MAX_PLRS; player++)
+			for (plr_t player = 0; player < Players.size(); player++)
 				InitiateHandshake(player);
 		}
 

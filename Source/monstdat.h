@@ -277,7 +277,7 @@ enum _monster_id : int16_t {
 /**
  * @brief Defines if and how a group of monsters should be spawned with the unique monster
  */
-enum class UniqueMonsterPack {
+enum class UniqueMonsterPack : uint8_t {
 	/**
 	 * @brief Don't spawn a group of monsters with the unique monster
 	 */

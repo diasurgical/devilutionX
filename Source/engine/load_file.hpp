@@ -18,11 +18,11 @@ namespace devilution {
 
 class SFile {
 public:
-	explicit SFile(const char *path)
+	explicit SFile(const char *path, bool isOptional = false)
 	{
 		handle_ = OpenAsset(path);
 		if (handle_ == nullptr) {
-			if (!HeadlessMode) {
+			if (!HeadlessMode && !isOptional) {
 				app_fatal(StrCat("Failed to open file:\n", path, "\n\n", SDL_GetError()));
 			}
 		}
@@ -72,6 +72,16 @@ void LoadFileInMem(const char *path, T *data, std::size_t count)
 	if (!file.Ok())
 		return;
 	file.Read(reinterpret_cast<byte *>(data), count * sizeof(T));
+}
+
+template <typename T>
+bool LoadOptionalFileInMem(const char *path, T *data, std::size_t count)
+{
+	SFile file { path, true };
+	if (!file.Ok())
+		return false;
+	file.Read(reinterpret_cast<byte *>(data), count * sizeof(T));
+	return true;
 }
 
 template <typename T, std::size_t N>

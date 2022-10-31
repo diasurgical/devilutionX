@@ -5,8 +5,8 @@
 #include <ostream>
 #endif
 
-#include "direction.hpp"
-#include "size.hpp"
+#include "engine/direction.hpp"
+#include "engine/size.hpp"
 #include "utils/stdcompat/abs.hpp"
 
 namespace devilution {
@@ -42,7 +42,8 @@ struct DisplacementOf {
 	{
 	}
 
-	explicit constexpr DisplacementOf(const Size &size)
+	template <typename SizeT>
+	explicit constexpr DisplacementOf(const SizeOf<SizeT> &size)
 	    : deltaX(size.width)
 	    , deltaY(size.height)
 	{
@@ -244,6 +245,8 @@ private:
 			return { 1, -1 };
 		case Direction::SouthEast:
 			return { 1, 0 };
+		case Direction::NoDirection:
+			return { 0, 0 };
 		default:
 			return { 0, 0 };
 		}

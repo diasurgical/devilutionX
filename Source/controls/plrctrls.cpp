@@ -26,6 +26,7 @@
 #include "hwcursor.hpp"
 #include "inv.h"
 #include "items.h"
+#include "levels/town.h"
 #include "levels/trigs.h"
 #include "minitext.h"
 #include "missiles.h"
@@ -45,7 +46,17 @@ namespace devilution {
 
 ControlTypes ControlMode = ControlTypes::None;
 ControlTypes ControlDevice = ControlTypes::None;
-ControllerButton ControllerButtonHeld = ControllerButton_NONE;
+GameActionType ControllerActionHeld = GameActionType_NONE;
+GamepadLayout GamepadType =
+#if defined(DEVILUTIONX_GAMEPAD_TYPE)
+    GamepadLayout::
+        DEVILUTIONX_GAMEPAD_TYPE;
+#else
+    GamepadLayout::Generic;
+#endif
+
+bool StandToggle = false;
+
 int pcurstrig = -1;
 Missile *pcursmissile = nullptr;
 quest_id pcursquest = Q_INVALID;
@@ -62,7 +73,7 @@ bool InGameMenu()
 	    || qtextflag
 	    || gmenu_is_active()
 	    || PauseMode == 2
-	    || (MyPlayer->_pInvincible && MyPlayer->_pHitPoints == 0);
+	    || (MyPlayer != nullptr && MyPlayer->_pInvincible && MyPlayer->_pHitPoints == 0);
 }
 
 namespace {
@@ -142,12 +153,12 @@ int GetDistanceRanged(Point destination)
 
 void FindItemOrObject()
 {
-	Point futurePosition = MyPlayer->position.future;
+	WorldTilePosition futurePosition = MyPlayer->position.future;
 	int rotations = 5;
 
-	auto searchArea = PointsInRectangleRangeColMajor { Rectangle { futurePosition, 1 } };
+	auto searchArea = PointsInRectangleColMajor(WorldTileRectangle { futurePosition, 1 });
 
-	for (Point targetPosition : searchArea) {
+	for (WorldTilePosition targetPosition : searchArea) {
 		// As the player can not stand on the edge of the map this is safe from OOB
 		int8_t itemId = dItem[targetPosition.x][targetPosition.y] - 1;
 		if (itemId < 0) {
@@ -177,7 +188,7 @@ void FindItemOrObject()
 		return; // Don't look for objects in town
 	}
 
-	for (Point targetPosition : searchArea) {
+	for (WorldTilePosition targetPosition : searchArea) {
 		Object *object = FindObjectAtPosition(targetPosition);
 		if (object == nullptr || object->_oSelFlag == 0) {
 			// No object or non-interactive object
@@ -372,7 +383,7 @@ void CheckPlayerNearby()
 	if (myPlayer.friendlyMode && spl != SPL_RESURRECT && spl != SPL_HEALOTHER)
 		return;
 
-	for (int i = 0; i < MAX_PLRS; i++) {
+	for (size_t i = 0; i < Players.size(); i++) {
 		const Player &player = Players[i];
 		if (&player == MyPlayer)
 			continue;
@@ -480,8 +491,12 @@ void Interact()
 		return;
 	}
 
-	bool stand = false;
+	bool stand = StandToggle;
 #ifndef USE_SDL1
+	if (ControlMode == ControlTypes::Gamepad) {
+		ControllerButtonCombo standGroundCombo = sgOptions.Padmapper.ButtonComboForAction("StandGround");
+		stand = IsControllerButtonComboPressed(standGroundCombo);
+	}
 	if (ControlMode == ControlTypes::VirtualGamepad) {
 		stand = VirtualGamepadState.standButton.isHeld;
 	}
@@ -693,7 +708,7 @@ Point FindFirstStashSlotOnItem(StashStruct::StashCell itemInvId)
 	if (itemInvId == StashStruct::EmptyCell)
 		return InvalidStashPoint;
 
-	for (auto point : PointsInRectangleRange({ { 0, 0 }, Size { 10, 10 } })) {
+	for (WorldTilePosition point : PointsInRectangle(WorldTileRectangle { { 0, 0 }, { 10, 10 } })) {
 		if (Stash.GetItemIdAtPosition(point) == itemInvId)
 			return point;
 	}
@@ -762,7 +777,7 @@ Point FindClosestStashSlot(Point mousePos)
 	Point bestSlot = {};
 	mousePos += Displacement { -INV_SLOT_HALF_SIZE_PX, -INV_SLOT_HALF_SIZE_PX };
 
-	for (auto point : PointsInRectangleRange({ { 0, 0 }, Size { 10, 10 } })) {
+	for (Point point : PointsInRectangle(Rectangle { { 0, 0 }, Size { 10, 10 } })) {
 		int distance = mousePos.ManhattanDistance(GetStashSlotCoord(point));
 		if (distance < shortestDistance) {
 			shortestDistance = distance;
@@ -1049,6 +1064,28 @@ void CheckInventoryMove(AxisDirection dir)
 	InventoryMove(dir);
 }
 
+/**
+ * @brief Try to clean the inventory related cursor states.
+ * @return True if it is safe to close the inventory
+ */
+bool BlurInventory()
+{
+	if (!MyPlayer->HoldItem.isEmpty()) {
+		if (!TryDropItem()) {
+			MyPlayer->Say(HeroSpeech::WhereWouldIPutThis);
+			return false;
+		}
+	}
+
+	CloseInventory();
+	if (pcurs > CURSOR_HAND)
+		NewCursor(CURSOR_HAND);
+	if (chrflag)
+		FocusOnCharInfo();
+
+	return true;
+}
+
 void StashMove(AxisDirection dir)
 {
 	static AxisDirectionRepeater repeater(/*min_interval_ms=*/150);
@@ -1265,7 +1302,7 @@ bool IsPathBlocked(Point position, Direction dir)
 	return !PosOkPlayer(myPlayer, leftStep) && !PosOkPlayer(myPlayer, rightStep);
 }
 
-void WalkInDir(int playerId, AxisDirection dir)
+void WalkInDir(size_t playerId, AxisDirection dir)
 {
 	Player &player = Players[playerId];
 
@@ -1352,14 +1389,12 @@ void ProcessLeftStickOrDPadGameUI()
 {
 	HandleLeftStickOrDPadFn handler = GetLeftStickOrDPadGameUIHandler();
 	if (handler != nullptr)
-		handler(GetLeftStickOrDpadDirection(true));
+		handler(GetLeftStickOrDpadDirection(false));
 }
 
-void Movement(int playerId)
+void Movement(size_t playerId)
 {
-	if (InGameMenu()
-	    || IsControllerButtonPressed(ControllerButton_BUTTON_START)
-	    || IsControllerButtonPressed(ControllerButton_BUTTON_BACK))
+	if (PadMenuNavigatorActive || PadHotspellMenuActive || InGameMenu())
 		return;
 
 	if (GetLeftStickOrDPadGameUIHandler() == nullptr) {
@@ -1461,7 +1496,22 @@ bool ContinueSimulatedMouseEvent(const SDL_Event &event, const ControllerButtonE
 		return true;
 	}
 
-	return SimulatingMouseWithSelectAndDPad || IsSimulatedMouseClickBinding(gamepadEvent);
+	return SimulatingMouseWithPadmapper || IsSimulatedMouseClickBinding(gamepadEvent);
+}
+
+string_view ControlTypeToString(ControlTypes controlType)
+{
+	switch (controlType) {
+	case ControlTypes::None:
+		return "None";
+	case ControlTypes::KeyboardAndMouse:
+		return "KeyboardAndMouse";
+	case ControlTypes::Gamepad:
+		return "Gamepad";
+	case ControlTypes::VirtualGamepad:
+		return "VirtualGamepad";
+	}
+	return "Invalid";
 }
 
 void LogControlDeviceAndModeChange(ControlTypes newControlDevice, ControlTypes newControlMode)
@@ -1478,22 +1528,36 @@ void LogControlDeviceAndModeChange(ControlTypes newControlDevice, ControlTypes n
 	LogVerbose("Control: device {}, mode {}", DebugChange(ControlDevice, newControlDevice), DebugChange(ControlMode, newControlMode));
 }
 
-} // namespace
-
-string_view ControlTypeToString(ControlTypes controlType)
+#ifndef USE_SDL1
+string_view GamepadTypeToString(GamepadLayout gamepadLayout)
 {
-	switch (controlType) {
-	case ControlTypes::None:
-		return "None";
-	case ControlTypes::KeyboardAndMouse:
-		return "KeyboardAndMouse";
-	case ControlTypes::Gamepad:
-		return "Gamepad";
-	case ControlTypes::VirtualGamepad:
-		return "VirtualGamepad";
+	switch (gamepadLayout) {
+	case GamepadLayout::Nintendo:
+		return "Nintendo";
+	case GamepadLayout::PlayStation:
+		return "PlayStation";
+	case GamepadLayout::Xbox:
+		return "Xbox";
+	case GamepadLayout::Generic:
+		return "Unknown";
 	}
 	return "Invalid";
 }
+
+void LogGamepadChange(GamepadLayout newGamepad)
+{
+	if (SDL_LOG_PRIORITY_VERBOSE < SDL_LogGetPriority(SDL_LOG_CATEGORY_APPLICATION))
+		return;
+	constexpr auto DebugChange = [](GamepadLayout before, GamepadLayout after) -> std::string {
+		if (before == after)
+			return std::string { GamepadTypeToString(before) };
+		return StrCat(GamepadTypeToString(before), " -> ", GamepadTypeToString(after));
+	};
+	LogVerbose("Control: gamepad {}", DebugChange(GamepadType, newGamepad));
+}
+#endif
+
+} // namespace
 
 void DetectInputMethod(const SDL_Event &event, const ControllerButtonEvent &gamepadEvent)
 {
@@ -1532,12 +1596,98 @@ void DetectInputMethod(const SDL_Event &event, const ControllerButtonEvent &game
 		} else {
 			ResetCursor();
 		}
+		if (ControlDevice == ControlTypes::Gamepad) {
+			GamepadLayout newGamepadLayout = GameController::getLayout(event);
+			if (newGamepadLayout != GamepadType) {
+				LogGamepadChange(newGamepadLayout);
+				GamepadType = newGamepadLayout;
+			}
+		}
 #endif
 	}
 
 	if (newControlMode != ControlMode) {
 		ControlMode = newControlMode;
 		CalculatePanelAreas();
+	}
+}
+
+void ProcessGameAction(const GameAction &action)
+{
+	switch (action.type) {
+	case GameActionType_NONE:
+	case GameActionType_SEND_KEY:
+		break;
+	case GameActionType_USE_HEALTH_POTION:
+		UseBeltItem(BLT_HEALING);
+		break;
+	case GameActionType_USE_MANA_POTION:
+		UseBeltItem(BLT_MANA);
+		break;
+	case GameActionType_PRIMARY_ACTION:
+		PerformPrimaryAction();
+		break;
+	case GameActionType_SECONDARY_ACTION:
+		PerformSecondaryAction();
+		break;
+	case GameActionType_CAST_SPELL:
+		PerformSpellAction();
+		break;
+	case GameActionType_TOGGLE_QUICK_SPELL_MENU:
+		if (!invflag || BlurInventory()) {
+			if (!spselflag)
+				DoSpeedBook();
+			else
+				spselflag = false;
+			chrflag = false;
+			QuestLogIsOpen = false;
+			sbookflag = false;
+			CloseGoldWithdraw();
+			IsStashOpen = false;
+		}
+		break;
+	case GameActionType_TOGGLE_CHARACTER_INFO:
+		chrflag = !chrflag;
+		if (chrflag) {
+			QuestLogIsOpen = false;
+			CloseGoldWithdraw();
+			IsStashOpen = false;
+			spselflag = false;
+			if (pcurs == CURSOR_DISARM)
+				NewCursor(CURSOR_HAND);
+			FocusOnCharInfo();
+		}
+		break;
+	case GameActionType_TOGGLE_QUEST_LOG:
+		if (!QuestLogIsOpen) {
+			StartQuestlog();
+			chrflag = false;
+			CloseGoldWithdraw();
+			IsStashOpen = false;
+			spselflag = false;
+		} else {
+			QuestLogIsOpen = false;
+		}
+		break;
+	case GameActionType_TOGGLE_INVENTORY:
+		if (invflag) {
+			BlurInventory();
+		} else {
+			sbookflag = false;
+			spselflag = false;
+			invflag = true;
+			if (pcurs == CURSOR_DISARM)
+				NewCursor(CURSOR_HAND);
+			FocusOnInventory();
+		}
+		break;
+	case GameActionType_TOGGLE_SPELL_BOOK:
+		if (BlurInventory()) {
+			CloseInventory();
+			spselflag = false;
+			sbookflag = !sbookflag;
+		}
+		break;
 	}
 }
 
@@ -1623,7 +1773,7 @@ void plrctrls_after_check_curs_move()
 	}
 
 	// While holding the button down we should retain target (but potentially lose it if it dies, goes out of view, etc)
-	if (ControllerButtonHeld != ControllerButton_NONE && IsNoneOf(LastMouseButtonAction, MouseActionType::None, MouseActionType::Attack, MouseActionType::Spell)) {
+	if (ControllerActionHeld != GameActionType_NONE && IsNoneOf(LastMouseButtonAction, MouseActionType::None, MouseActionType::Attack, MouseActionType::Spell)) {
 		InvalidateTargets();
 
 		if (pcursmonst == -1 && ObjectUnderCursor == nullptr && pcursitem == -1 && pcursinvitem == -1 && pcursstashitem == uint16_t(-1) && pcursplr == -1) {
@@ -1650,7 +1800,6 @@ void plrctrls_after_check_curs_move()
 	}
 	if (!invflag) {
 		InfoString = {};
-		ClearPanel();
 		FindActor();
 		FindItemOrObject();
 		FindTrigger();
@@ -1738,7 +1887,7 @@ void PerformPrimaryAction()
 			StashStruct::StashCell itemUnderCursor = [](Point stashSlot, Size cursorSizeInCells) -> StashStruct::StashCell {
 				if (stashSlot != InvalidStashPoint)
 					return StashStruct::EmptyCell;
-				for (Point slotUnderCursor : PointsInRectangleRange { { stashSlot, cursorSizeInCells } }) {
+				for (Point slotUnderCursor : PointsInRectangle(Rectangle { stashSlot, cursorSizeInCells })) {
 					if (slotUnderCursor.x >= 10 || slotUnderCursor.y >= 10)
 						continue;
 					StashStruct::StashCell itemId = Stash.GetItemIdAtPosition(slotUnderCursor);
@@ -1822,25 +1971,24 @@ bool TryDropItem()
 
 	if (leveltype == DTYPE_TOWN) {
 		if (UseItemOpensHive(myPlayer.HoldItem, myPlayer.position.tile)) {
-			NetSendCmdPItem(true, CMD_PUTITEM, { 79, 61 }, myPlayer.HoldItem.pop());
+			OpenHive();
 			NewCursor(CURSOR_HAND);
 			return true;
 		}
-		if (UseItemOpensCrypt(myPlayer.HoldItem, myPlayer.position.tile)) {
-			NetSendCmdPItem(true, CMD_PUTITEM, { 35, 20 }, myPlayer.HoldItem.pop());
+		if (UseItemOpensGrave(myPlayer.HoldItem, myPlayer.position.tile)) {
+			OpenGrave();
 			NewCursor(CURSOR_HAND);
 			return true;
 		}
 	}
 
-	Point position = myPlayer.position.future;
-	Direction direction = myPlayer._pdir;
-	if (!FindAdjacentPositionForItem(position, direction)) {
+	std::optional<Point> itemTile = FindAdjacentPositionForItem(myPlayer.position.future, myPlayer._pdir);
+	if (!itemTile) {
 		myPlayer.Say(HeroSpeech::WhereWouldIPutThis);
 		return false;
 	}
 
-	NetSendCmdPItem(true, CMD_PUTITEM, position + direction, myPlayer.HoldItem);
+	NetSendCmdPItem(true, CMD_PUTITEM, *itemTile, myPlayer.HoldItem);
 	myPlayer.HoldItem.clear();
 	NewCursor(CURSOR_HAND);
 	return true;

@@ -18,9 +18,10 @@ jobs:
       run: >
         sudo apt-get update &&
         sudo apt-get install -y curl cmake git squashfs-tools &&
-        curl -L http://od.abstraction.se/opendingux/toolchain/opendingux-gcw0-toolchain.2021-10-22.tar.xz -o gcw0-toolchain.tar.xz &&
+        curl -L https://github.com/OpenDingux/buildroot/releases/download/od-2022.09.22/opendingux-gcw0-toolchain.2022-09-22.tar.xz -o gcw0-toolchain.tar.xz &&
         sudo mkdir -p /opt/gcw0-toolchain && sudo chown -R "${USER}:" /opt/gcw0-toolchain &&
-        tar -C /opt -xf gcw0-toolchain.tar.xz
+        tar -C /opt -xf gcw0-toolchain.tar.xz &&
+        cd /opt/gcw0-toolchain && ./relocate-sdk.sh
 
     - name: Build
       working-directory: ${{github.workspace}}
@@ -55,9 +56,10 @@ jobs:
       run: >
         sudo apt update &&
         sudo apt install -y curl cmake git squashfs-tools &&
-        curl -L http://od.abstraction.se/opendingux/toolchain/opendingux-lepus-toolchain.2021-10-22.tar.xz -o lepus-toolchain.tar.xz &&
+        curl -L https://github.com/OpenDingux/buildroot/releases/download/od-2022.09.22/opendingux-lepus-toolchain.2022-09-22.tar.xz -o lepus-toolchain.tar.xz &&
         sudo mkdir -p /opt/lepus-toolchain && sudo chown -R "${USER}:" /opt/lepus-toolchain &&
-        tar -C /opt -xf lepus-toolchain.tar.xz
+        tar -C /opt -xf lepus-toolchain.tar.xz &&
+        cd /opt/lepus-toolchain && ./relocate-sdk.sh
 
     - name: Build
       working-directory: ${{github.workspace}}

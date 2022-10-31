@@ -180,8 +180,10 @@ int RoomForGold();
  */
 int AddGoldToInventory(Player &player, int value);
 bool GoldAutoPlace(Player &player, Item &goldStack);
-void CheckInvSwap(Player &player, inv_body_loc bLoc, int idx, uint16_t wCI, int seed, bool bId, uint32_t dwBuff);
+void CheckInvSwap(Player &player, inv_body_loc bLoc);
 void inv_update_rem_item(Player &player, inv_body_loc iv);
+void CheckInvSwap(Player &player, const Item &item, int invGridIndex);
+void CheckInvRemove(Player &player, int invGridIndex);
 void TransferItemToStash(Player &player, int location);
 void CheckInvItem(bool isShiftHeld = false, bool isCtrlHeld = false);
 
@@ -222,14 +224,14 @@ void SyncGetItem(Point position, int32_t iseed, _item_indexes idx, uint16_t ci);
 bool CanPut(Point position);
 
 int InvPutItem(const Player &player, Point position, const Item &item);
-int SyncPutItem(const Player &player, Point position, int idx, uint16_t icreateinfo, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, uint32_t ibuff, int toHit, int maxDam, int minStr, int minMag, int minDex, int ac);
-int SyncDropItem(Point position, int idx, uint16_t icreateinfo, int iseed, int id, int dur, int mdur, int ch, int mch, int ivalue, uint32_t ibuff, int toHit, int maxDam, int minStr, int minMag, int minDex, int ac);
+int SyncDropItem(Point position, _item_indexes idx, uint16_t icreateinfo, int iseed, int id, int dur, int mdur, int ch, int mch, int ivalue, uint32_t ibuff, int toHit, int maxDam, int minStr, int minMag, int minDex, int ac);
+int SyncDropEar(Point position, uint16_t icreateinfo, int iseed, uint8_t cursval, string_view heroname);
 int8_t CheckInvHLight();
 bool CanUseScroll(Player &player, spell_id spell);
 void ConsumeStaffCharge(Player &player);
 bool CanUseStaff(Player &player, spell_id spellId);
 Item &GetInventoryItem(Player &player, int location);
-bool UseInvItem(int pnum, int cii);
+bool UseInvItem(size_t pnum, int cii);
 void DoTelekinesis();
 int CalculateGold(Player &player);
 

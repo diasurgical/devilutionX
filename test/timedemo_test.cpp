@@ -28,12 +28,17 @@ void RunTimedemo(std::string timedemoFolderName)
 
 	// The tests need spawn.mpq or diabdat.mpq
 	// Please provide them so that the tests can run successfully
-	ASSERT_TRUE(spawn_mpq || diabdat_mpq);
+	ASSERT_TRUE(HaveSpawn() || HaveDiabdat());
 
 	InitKeymapActions();
 	LoadOptions();
 
 	const int demoNumber = 0;
+
+	Players.resize(1);
+	MyPlayerId = demoNumber;
+	MyPlayer = &Players[MyPlayerId];
+	*MyPlayer = {};
 
 	// Currently only spawn.mpq is present when building on github actions
 	gbIsSpawn = true;

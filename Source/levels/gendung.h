@@ -13,6 +13,7 @@
 #include "engine/point.hpp"
 #include "engine/rectangle.hpp"
 #include "engine/render/scrollrt.h"
+#include "engine/world_tile.hpp"
 #include "utils/attributes.h"
 #include "utils/bitset2d.hpp"
 #include "utils/enum_traits.h"
@@ -37,8 +38,25 @@ enum _setlevels : int8_t {
 	SL_POISONWATER,
 	SL_VILEBETRAYER,
 
-	SL_LAST = SL_VILEBETRAYER,
+	SL_ARENA_CHURCH,
+	SL_ARENA_HELL,
+	SL_ARENA_CIRCLE_OF_LIFE,
+
+	SL_FIRST_ARENA = SL_ARENA_CHURCH,
+	SL_LAST = SL_ARENA_CIRCLE_OF_LIFE,
 };
+
+inline bool IsArenaLevel(_setlevels setLevel)
+{
+	switch (setLevel) {
+	case SL_ARENA_CHURCH:
+	case SL_ARENA_HELL:
+	case SL_ARENA_CIRCLE_OF_LIFE:
+		return true;
+	default:
+		return false;
+	}
+}
 
 enum dungeon_type : int8_t {
 	DTYPE_TOWN,
@@ -103,7 +121,7 @@ enum _difficulty : uint8_t {
 };
 
 struct THEME_LOC {
-	Rectangle room;
+	RectangleOf<uint8_t> room;
 	int16_t ttval;
 };
 
@@ -136,9 +154,9 @@ extern DVL_API_FOR_TEST uint8_t dungeon[DMAXX][DMAXY];
 extern uint8_t pdungeon[DMAXX][DMAXY];
 /** Tile that may not be overwritten by the level generator */
 extern Bitset2d<DMAXX, DMAXY> Protected;
-extern Rectangle SetPieceRoom;
+extern WorldTileRectangle SetPieceRoom;
 /** Specifies the active set quest piece in coordinate. */
-extern Rectangle SetPiece;
+extern WorldTileRectangle SetPiece;
 /** Contains the contents of the single player quest DUN file. */
 extern std::unique_ptr<uint16_t[]> pSetPiece;
 extern OptionalOwnedClxSpriteList pSpecialCels;
@@ -150,9 +168,9 @@ extern std::unique_ptr<byte[]> pDungeonCels;
  */
 extern DVL_API_FOR_TEST std::array<TileProperties, MAXTILES> SOLData;
 /** Specifies the minimum X,Y-coordinates of the map. */
-extern Point dminPosition;
+extern WorldTilePosition dminPosition;
 /** Specifies the maximum X,Y-coordinates of the map. */
-extern Point dmaxPosition;
+extern WorldTilePosition dmaxPosition;
 /** Specifies the active dungeon type of the current game. */
 extern DVL_API_FOR_TEST dungeon_type leveltype;
 /** Specifies the active dungeon level of the current game. */
@@ -198,15 +216,15 @@ extern DVL_API_FOR_TEST int8_t dCorpse[MAXDUNX][MAXDUNY];
 extern DVL_API_FOR_TEST int8_t dObject[MAXDUNX][MAXDUNY];
 /**
  * Contains the arch frame numbers of the map from the special tileset
- * (e.g. "levels/l1data/l1s.cel"). Note, the special tileset of Tristram (i.e.
- * "levels/towndata/towns.cel") contains trees rather than arches.
+ * (e.g. "levels/l1data/l1s"). Note, the special tileset of Tristram (i.e.
+ * "levels/towndata/towns") contains trees rather than arches.
  */
 extern char dSpecial[MAXDUNX][MAXDUNY];
 extern int themeCount;
 extern THEME_LOC themeLoc[MAXTHEMES];
 
 #ifdef BUILD_TESTING
-std::optional<Size> GetSizeForThemeRoom();
+std::optional<WorldTileSize> GetSizeForThemeRoom();
 #endif
 
 dungeon_type GetLevelType(int level);
@@ -274,19 +292,19 @@ constexpr bool IsTileLit(Point position)
 }
 
 struct Miniset {
-	Size size;
+	WorldTileSize size;
 	/* these are indexed as [y][x] */
 	uint8_t search[6][6];
 	uint8_t replace[6][6];
 
 	/**
 	 * @param position Coordinates of the dungeon tile to check
-	 * @param respectProtected Match bug from Crypt levels
+	 * @param respectProtected Match bug from Crypt levels if false
 	 */
-	bool matches(Point position, bool respectProtected = true) const
+	bool matches(WorldTilePosition position, bool respectProtected = true) const
 	{
-		for (int yy = 0; yy < size.height; yy++) {
-			for (int xx = 0; xx < size.width; xx++) {
+		for (WorldTileCoord yy = 0; yy < size.height; yy++) {
+			for (WorldTileCoord xx = 0; xx < size.width; xx++) {
 				if (search[yy][xx] != 0 && dungeon[xx + position.x][yy + position.y] != search[yy][xx])
 					return false;
 				if (respectProtected && Protected.test(xx + position.x, yy + position.y))
@@ -296,10 +314,10 @@ struct Miniset {
 		return true;
 	}
 
-	void place(Point position, bool protect = false) const
+	void place(WorldTilePosition position, bool protect = false) const
 	{
-		for (int y = 0; y < size.height; y++) {
-			for (int x = 0; x < size.width; x++) {
+		for (WorldTileCoord y = 0; y < size.height; y++) {
+			for (WorldTileCoord x = 0; x < size.width; x++) {
 				if (replace[y][x] == 0)
 					continue;
 				dungeon[x + position.x][y + position.y] = replace[y][x];
@@ -314,13 +332,13 @@ bool TileHasAny(int tileId, TileProperties property);
 void LoadLevelSOLData();
 void SetDungeonMicros();
 void DRLG_InitTrans();
-void DRLG_MRectTrans(Point origin, Point extent);
-void DRLG_MRectTrans(Rectangle area);
-void DRLG_RectTrans(Rectangle area);
+void DRLG_MRectTrans(WorldTilePosition origin, WorldTilePosition extent);
+void DRLG_MRectTrans(WorldTileRectangle area);
+void DRLG_RectTrans(WorldTileRectangle area);
 void DRLG_CopyTrans(int sx, int sy, int dx, int dy);
 void LoadTransparency(const uint16_t *dunData);
 void LoadDungeonBase(const char *path, Point spawn, int floorId, int dirtId);
-void Make_SetPC(Rectangle area);
+void Make_SetPC(WorldTileRectangle area);
 /**
  * @param miniset The miniset to place
  * @param tries Tiles to try, 1600 will scan the full map
@@ -330,7 +348,7 @@ std::optional<Point> PlaceMiniSet(const Miniset &miniset, int tries = 199, bool 
 void PlaceDunTiles(const uint16_t *dunData, Point position, int floorId = 0);
 void DRLG_PlaceThemeRooms(int minSize, int maxSize, int floor, int freq, bool rndSize);
 void DRLG_HoldThemeRooms();
-void SetSetPieceRoom(Point position, int floorId);
+void SetSetPieceRoom(WorldTilePosition position, int floorId);
 void FreeQuestSetPieces();
 void DRLG_LPass3(int lv);
 
@@ -339,7 +357,7 @@ void DRLG_LPass3(int lv);
  * @param position Target location in dungeon coordinates
  * @return True if a theme room is near (within 2 tiles of) this point, false if it is free.
  */
-bool IsNearThemeRoom(Point position);
+bool IsNearThemeRoom(WorldTilePosition position);
 void InitLevels();
 void FloodTransparencyValues(uint8_t floorID);
 

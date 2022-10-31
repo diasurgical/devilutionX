@@ -18,6 +18,7 @@
 #include "options.h"
 #include "stores.h"
 #include "utils/language.h"
+#include "utils/stdcompat/algorithm.hpp"
 #include "utils/stdcompat/optional.hpp"
 #include "utils/ui_fwd.h"
 
@@ -25,11 +26,31 @@ namespace devilution {
 
 namespace {
 
+// Width of the slider menu item, including the label.
+constexpr int SliderItemWidth = 490;
+
+// Horizontal dimensions of the slider value
+constexpr int SliderValueBoxLeft = 16 + SliderItemWidth / 2;
+constexpr int SliderValueBoxWidth = 287;
+
+constexpr int SliderValueBorderWidth = 2;
+constexpr int SliderValueLeft = SliderValueBoxLeft + SliderValueBorderWidth;
+constexpr int SliderValueWidth = SliderValueBoxWidth - 2 * SliderValueBorderWidth;
+constexpr int SliderValueHeight = 29;
+constexpr int SliderValuePaddingTop = 10;
+constexpr int SliderMarkerWidth = 27;
+
+constexpr int SliderFillMin = SliderMarkerWidth / 2;
+constexpr int SliderFillMax = SliderValueWidth - SliderMarkerWidth / 2 - 1;
+
+constexpr int GMenuTop = 117;
+constexpr int GMenuItemHeight = 45;
+
 OptionalOwnedClxSpriteList optbar_cel;
 OptionalOwnedClxSpriteList PentSpin_cel;
 OptionalOwnedClxSpriteList option_cel;
 OptionalOwnedClxSpriteList sgpLogo;
-bool mouseNavigation;
+bool isDraggingSlider;
 TMenuItem *sgpCurrItem;
 int LogoAnim_tick;
 uint8_t LogoAnim_frame;
@@ -41,7 +62,7 @@ void GmenuUpDown(bool isDown)
 	if (sgpCurrItem == nullptr) {
 		return;
 	}
-	mouseNavigation = false;
+	isDraggingSlider = false;
 	int i = sgCurrentMenuIdx;
 	if (sgCurrentMenuIdx != 0) {
 		while (i != 0) {
@@ -55,7 +76,7 @@ void GmenuUpDown(bool isDown)
 					sgpCurrItem = &sgpCurrentMenu[sgCurrentMenuIdx];
 				sgpCurrItem--;
 			}
-			if ((sgpCurrItem->dwFlags & GMENU_ENABLED) != 0) {
+			if (sgpCurrItem->enabled()) {
 				if (i != 0)
 					PlaySFX(IS_TITLEMOV);
 				return;
@@ -66,13 +87,12 @@ void GmenuUpDown(bool isDown)
 
 void GmenuLeftRight(bool isRight)
 {
-	if ((sgpCurrItem->dwFlags & GMENU_SLIDER) == 0)
+	if (!sgpCurrItem->isSlider())
 		return;
 
-	uint16_t step = sgpCurrItem->dwFlags & 0xFFF;
-	uint16_t steps = (sgpCurrItem->dwFlags & 0xFFF000) >> 12;
+	uint16_t step = sgpCurrItem->sliderStep();
 	if (isRight) {
-		if (step == steps)
+		if (step == sgpCurrItem->sliderSteps())
 			return;
 		step++;
 	} else {
@@ -80,24 +100,14 @@ void GmenuLeftRight(bool isRight)
 			return;
 		step--;
 	}
-	sgpCurrItem->dwFlags &= 0xFFFFF000;
-	sgpCurrItem->dwFlags |= step;
+	sgpCurrItem->setSliderStep(step);
 	sgpCurrItem->fnMenu(false);
-}
-
-void GmenuClearBuffer(const Surface &out, int x, int y, int width, int height)
-{
-	uint8_t *i = out.at(x, y);
-	while ((height--) != 0) {
-		memset(i, 205, width);
-		i -= out.pitch();
-	}
 }
 
 int GmenuGetLineWidth(TMenuItem *pItem)
 {
-	if ((pItem->dwFlags & GMENU_SLIDER) != 0)
-		return 490;
+	if (pItem->isSlider())
+		return SliderItemWidth;
 
 	return GetLineWidth(_(pItem->pszStr), GameFont46, 2);
 }
@@ -105,19 +115,19 @@ int GmenuGetLineWidth(TMenuItem *pItem)
 void GmenuDrawMenuItem(const Surface &out, TMenuItem *pItem, int y)
 {
 	int w = GmenuGetLineWidth(pItem);
-	if ((pItem->dwFlags & GMENU_SLIDER) != 0) {
+	if (pItem->isSlider()) {
 		int uiPositionX = GetUIRectangle().position.x;
-		int x = 16 + w / 2;
-		ClxDraw(out, { x + uiPositionX, y + 40 }, (*optbar_cel)[0]);
-		uint16_t step = pItem->dwFlags & 0xFFF;
-		uint16_t steps = std::max<uint16_t>((pItem->dwFlags & 0xFFF000) >> 12, 2);
-		uint16_t pos = step * 256 / steps;
-		GmenuClearBuffer(out, x + 2 + uiPositionX, y + 38, pos + 13, 28);
-		ClxDraw(out, { x + 2 + pos + uiPositionX, y + 38 }, (*option_cel)[0]);
+		ClxDraw(out, { SliderValueBoxLeft + uiPositionX, y + 40 }, (*optbar_cel)[0]);
+		const uint16_t step = pItem->dwFlags & 0xFFF;
+		const uint16_t steps = std::max<uint16_t>(pItem->sliderSteps(), 2);
+		const uint16_t pos = SliderFillMin + step * (SliderFillMax - SliderFillMin) / steps;
+		SDL_Rect rect = MakeSdlRect(SliderValueLeft + uiPositionX, y + SliderValuePaddingTop, pos, SliderValueHeight);
+		SDL_FillRect(out.surface, &rect, 205);
+		ClxDraw(out, { SliderValueLeft + pos - SliderMarkerWidth / 2 + uiPositionX, y + SliderValuePaddingTop + SliderValueHeight - 1 }, (*option_cel)[0]);
 	}
 
 	int x = (gnScreenWidth - w) / 2;
-	UiFlags style = (pItem->dwFlags & GMENU_ENABLED) != 0 ? UiFlags::ColorGold : UiFlags::ColorBlack;
+	UiFlags style = pItem->enabled() ? UiFlags::ColorGold : UiFlags::ColorBlack;
 	DrawString(out, _(pItem->pszStr), Point { x, y }, style | UiFlags::FontSize46, 2);
 	if (pItem == sgpCurrItem) {
 		const ClxSprite sprite = (*PentSpin_cel)[PentSpn2Spin()];
@@ -129,35 +139,28 @@ void GmenuDrawMenuItem(const Surface &out, TMenuItem *pItem, int y)
 void GameMenuMove()
 {
 	static AxisDirectionRepeater repeater;
-	const AxisDirection moveDir = repeater.Get(GetLeftStickOrDpadDirection());
+	const AxisDirection moveDir = repeater.Get(GetLeftStickOrDpadDirection(false));
 	if (moveDir.x != AxisDirectionX_NONE)
 		GmenuLeftRight(moveDir.x == AxisDirectionX_RIGHT);
 	if (moveDir.y != AxisDirectionY_NONE)
 		GmenuUpDown(moveDir.y == AxisDirectionY_DOWN);
 }
 
-bool GmenuMouseNavigation()
+bool GmenuMouseIsOverSlider()
 {
 	int uiPositionX = GetUIRectangle().position.x;
-	if (MousePosition.x < 282 + uiPositionX) {
+	if (MousePosition.x < SliderValueLeft + uiPositionX) {
 		return false;
 	}
-	if (MousePosition.x > 538 + uiPositionX) {
+	if (MousePosition.x >= SliderValueLeft + SliderValueWidth + uiPositionX) {
 		return false;
 	}
 	return true;
 }
 
-int GmenuGetMouseSlider()
+int GmenuGetSliderFill()
 {
-	int uiPositionX = GetUIRectangle().position.x;
-	if (MousePosition.x < 282 + uiPositionX) {
-		return 0;
-	}
-	if (MousePosition.x > 538 + uiPositionX) {
-		return 256;
-	}
-	return MousePosition.x - 282 - uiPositionX;
+	return clamp(MousePosition.x - SliderValueLeft - GetUIRectangle().position.x, SliderFillMin, SliderFillMax);
 }
 
 } // namespace
@@ -189,18 +192,18 @@ void gmenu_init_menu()
 	sgpCurrItem = nullptr;
 	gmenu_current_option = nullptr;
 	sgCurrentMenuIdx = 0;
-	mouseNavigation = false;
+	isDraggingSlider = false;
 
 	if (HeadlessMode)
 		return;
 
 	if (gbIsHellfire)
-		sgpLogo = LoadCel("Data\\hf_logo3.CEL", 430);
+		sgpLogo = LoadCel("data\\hf_logo3", 430);
 	else
-		sgpLogo = LoadCel("Data\\Diabsmal.CEL", 296);
-	PentSpin_cel = LoadCel("Data\\PentSpin.CEL", 48);
-	option_cel = LoadCel("Data\\option.CEL", 27);
-	optbar_cel = LoadCel("Data\\optbar.CEL", 287);
+		sgpLogo = LoadCel("data\\diabsmal", 296);
+	PentSpin_cel = LoadCel("data\\pentspin", 48);
+	option_cel = LoadCel("data\\option", SliderMarkerWidth);
+	optbar_cel = LoadCel("data\\optbar", SliderValueBoxWidth);
 }
 
 bool gmenu_is_active()
@@ -211,7 +214,7 @@ bool gmenu_is_active()
 void gmenu_set_items(TMenuItem *pItem, void (*gmFunc)())
 {
 	PauseMode = 0;
-	mouseNavigation = false;
+	isDraggingSlider = false;
 	sgpCurrentMenu = pItem;
 	gmenu_current_option = gmFunc;
 	if (gmenu_current_option != nullptr) {
@@ -254,7 +257,7 @@ void gmenu_draw(const Surface &out)
 			while (i->fnMenu != nullptr) {
 				GmenuDrawMenuItem(out, i, y);
 				i++;
-				y += 45;
+				y += GMenuItemHeight;
 			}
 		}
 	}
@@ -267,7 +270,7 @@ bool gmenu_presskeys(SDL_Keycode vkey)
 	switch (vkey) {
 	case SDLK_KP_ENTER:
 	case SDLK_RETURN:
-		if ((sgpCurrItem->dwFlags & GMENU_ENABLED) != 0) {
+		if (sgpCurrItem->enabled()) {
 			PlaySFX(IS_TITLEMOV);
 			sgpCurrItem->fnMenu(true);
 		}
@@ -298,15 +301,11 @@ bool gmenu_presskeys(SDL_Keycode vkey)
 
 bool gmenu_on_mouse_move()
 {
-	if (!mouseNavigation)
+	if (!isDraggingSlider)
 		return false;
 
-	uint16_t step = (sgpCurrItem->dwFlags & 0xFFF000) >> 12;
-	step *= GmenuGetMouseSlider();
-	step /= 256;
-
-	sgpCurrItem->dwFlags &= 0xFFFFF000;
-	sgpCurrItem->dwFlags |= step;
+	const uint16_t step = sgpCurrItem->sliderSteps() * (GmenuGetSliderFill() - SliderFillMin) / (SliderFillMax - SliderFillMin);
+	sgpCurrItem->setSliderStep(step);
 	sgpCurrItem->fnMenu(false);
 
 	return true;
@@ -315,8 +314,8 @@ bool gmenu_on_mouse_move()
 bool gmenu_left_mouse(bool isDown)
 {
 	if (!isDown) {
-		if (mouseNavigation) {
-			mouseNavigation = false;
+		if (isDraggingSlider) {
+			isDraggingSlider = false;
 			return true;
 		}
 		return false;
@@ -329,15 +328,15 @@ bool gmenu_left_mouse(bool isDown)
 	if (MousePosition.y >= GetMainPanel().position.y) {
 		return false;
 	}
-	if (MousePosition.y - (117 + uiPosition.y) < 0) {
+	if (MousePosition.y - (GMenuTop + uiPosition.y) < 0) {
 		return true;
 	}
-	int i = (MousePosition.y - (117 + uiPosition.y)) / 45;
+	int i = (MousePosition.y - (GMenuTop + uiPosition.y)) / GMenuItemHeight;
 	if (i >= sgCurrentMenuIdx) {
 		return true;
 	}
 	TMenuItem *pItem = &sgpCurrentMenu[i];
-	if ((sgpCurrentMenu[i].dwFlags & GMENU_ENABLED) == 0) {
+	if (!pItem->enabled()) {
 		return true;
 	}
 	int w = GmenuGetLineWidth(pItem);
@@ -350,8 +349,8 @@ bool gmenu_left_mouse(bool isDown)
 	}
 	sgpCurrItem = pItem;
 	PlaySFX(IS_TITLEMOV);
-	if ((pItem->dwFlags & GMENU_SLIDER) != 0) {
-		mouseNavigation = GmenuMouseNavigation();
+	if (pItem->isSlider()) {
+		isDraggingSlider = GmenuMouseIsOverSlider();
 		gmenu_on_mouse_move();
 	} else {
 		sgpCurrItem->fnMenu(true);
@@ -359,33 +358,24 @@ bool gmenu_left_mouse(bool isDown)
 	return true;
 }
 
-void gmenu_enable(TMenuItem *pMenuItem, bool enable)
-{
-	if (enable)
-		pMenuItem->dwFlags |= GMENU_ENABLED;
-	else
-		pMenuItem->dwFlags &= ~GMENU_ENABLED;
-}
-
 void gmenu_slider_set(TMenuItem *pItem, int min, int max, int value)
 {
 	assert(pItem);
-	uint16_t nSteps = std::max<uint16_t>((pItem->dwFlags & 0xFFF000) >> 12, 2);
-	pItem->dwFlags &= 0xFFFFF000;
-	pItem->dwFlags |= ((max - min - 1) / 2 + (value - min) * nSteps) / (max - min);
+	uint16_t nSteps = std::max<uint16_t>(pItem->sliderSteps(), 2);
+	pItem->setSliderStep(((max - min - 1) / 2 + (value - min) * nSteps) / (max - min));
 }
 
 int gmenu_slider_get(TMenuItem *pItem, int min, int max)
 {
-	uint16_t step = pItem->dwFlags & 0xFFF;
-	uint16_t steps = std::max<uint16_t>((pItem->dwFlags & 0xFFF000) >> 12, 2);
+	uint16_t step = pItem->sliderStep();
+	uint16_t steps = std::max<uint16_t>(pItem->sliderSteps(), 2);
 	return min + (step * (max - min) + (steps - 1) / 2) / steps;
 }
 
 void gmenu_slider_steps(TMenuItem *pItem, int steps)
 {
 	pItem->dwFlags &= 0xFF000FFF;
-	pItem->dwFlags |= (steps << 12) & 0xFFF000;
+	pItem->setSliderSteps(steps);
 }
 
 } // namespace devilution

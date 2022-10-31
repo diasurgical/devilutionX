@@ -20,6 +20,8 @@
 #include "engine/load_file.hpp"
 #include "engine/points_in_rectangle_range.hpp"
 #include "engine/random.hpp"
+#include "engine/render/clx_render.hpp"
+#include "engine/trn.hpp"
 #include "engine/world_tile.hpp"
 #include "gamemenu.h"
 #include "help.h"
@@ -45,9 +47,9 @@
 
 namespace devilution {
 
-int MyPlayerId;
-Player *MyPlayer = &Players[MyPlayerId];
-Player Players[MAX_PLRS];
+size_t MyPlayerId;
+Player *MyPlayer;
+std::vector<Player> Players;
 bool MyPlayerIsDead;
 
 /** Specifies the X-coordinate delta from the player start location in Tristram. */
@@ -183,12 +185,12 @@ constexpr int8_t PlrGFXAnimLens[enum_size<HeroClass>::value][11] = {
 };
 
 const char *const ClassPathTbl[] = {
-	"Warrior",
-	"Rogue",
-	"Sorceror",
-	"Monk",
-	"Rogue",
-	"Warrior",
+	"warrior",
+	"rogue",
+	"sorceror",
+	"monk",
+	"rogue",
+	"warrior",
 };
 
 void PmChangeLightOff(Player &player)
@@ -317,7 +319,7 @@ void StartWalkAnimation(Player &player, Direction dir, bool pmWillBeCalled)
 		skippedFrames = 2;
 	if (pmWillBeCalled)
 		skippedFrames += 1;
-	NewPlrAnim(player, player_graphic::Walk, dir, player._pWFrames, 1, AnimationDistributionFlags::ProcessAnimationPending, skippedFrames);
+	NewPlrAnim(player, player_graphic::Walk, dir, AnimationDistributionFlags::ProcessAnimationPending, skippedFrames);
 }
 
 /**
@@ -377,7 +379,7 @@ void StartAttack(Player &player, Direction d)
 	auto animationFlags = AnimationDistributionFlags::ProcessAnimationPending;
 	if (player._pmode == PM_ATTACK)
 		animationFlags = static_cast<AnimationDistributionFlags>(animationFlags | AnimationDistributionFlags::RepeatedAction);
-	NewPlrAnim(player, player_graphic::Attack, d, player._pAFrames, 1, animationFlags, skippedAnimationFrames, player._pAFNum);
+	NewPlrAnim(player, player_graphic::Attack, d, animationFlags, skippedAnimationFrames, player._pAFNum);
 	player._pmode = PM_ATTACK;
 	FixPlayerLocation(player, d);
 	SetPlayerOld(player);
@@ -400,7 +402,7 @@ void StartRangeAttack(Player &player, Direction d, WorldTileCoord cx, WorldTileC
 	auto animationFlags = AnimationDistributionFlags::ProcessAnimationPending;
 	if (player._pmode == PM_RATTACK)
 		animationFlags = static_cast<AnimationDistributionFlags>(animationFlags | AnimationDistributionFlags::RepeatedAction);
-	NewPlrAnim(player, player_graphic::Attack, d, player._pAFrames, 1, animationFlags, skippedAnimationFrames, player._pAFNum);
+	NewPlrAnim(player, player_graphic::Attack, d, animationFlags, skippedAnimationFrames, player._pAFNum);
 
 	player._pmode = PM_RATTACK;
 	FixPlayerLocation(player, d);
@@ -447,7 +449,7 @@ void StartSpell(Player &player, Direction d, WorldTileCoord cx, WorldTileCoord c
 	auto animationFlags = AnimationDistributionFlags::ProcessAnimationPending;
 	if (player._pmode == PM_SPELL)
 		animationFlags = static_cast<AnimationDistributionFlags>(animationFlags | AnimationDistributionFlags::RepeatedAction);
-	NewPlrAnim(player, GetPlayerGraphicForSpell(player.queuedSpell.spellId), d, player._pSFrames, 1, animationFlags, 0, player._pSFNum);
+	NewPlrAnim(player, GetPlayerGraphicForSpell(player.queuedSpell.spellId), d, animationFlags, 0, player._pSFNum);
 
 	PlaySfxLoc(spelldata[player.queuedSpell.spellId].sSFX, player.position.tile);
 
@@ -585,51 +587,51 @@ bool DoWalk(Player &player, int variant)
 		}
 	}
 
-	// Check if we reached new tile
-	if (player.AnimInfo.currentFrame >= player._pWFrames - 1) {
+	if (!player.AnimInfo.isLastFrame()) {
+		// We didn't reach new tile so update player's "sub-tile" position
+		ChangeOffset(player);
+		return false;
+	}
 
-		// Update the player's tile position
-		switch (variant) {
-		case PM_WALK_NORTHWARDS:
-			dPlayer[player.position.tile.x][player.position.tile.y] = 0;
-			player.position.tile = player.position.temp;
-			dPlayer[player.position.tile.x][player.position.tile.y] = player.getId() + 1;
-			break;
-		case PM_WALK_SOUTHWARDS:
-			dPlayer[player.position.temp.x][player.position.temp.y] = 0;
-			break;
-		case PM_WALK_SIDEWAYS:
-			dPlayer[player.position.tile.x][player.position.tile.y] = 0;
-			player.position.tile = player.position.temp;
-			// dPlayer is set here for backwards comparability, without it the player would be invisible if loaded from a vanilla save.
-			dPlayer[player.position.tile.x][player.position.tile.y] = player.getId() + 1;
-			break;
-		}
+	// We reached the new tile -> update the player's tile position
+	switch (variant) {
+	case PM_WALK_NORTHWARDS:
+		dPlayer[player.position.tile.x][player.position.tile.y] = 0;
+		player.position.tile = player.position.temp;
+		dPlayer[player.position.tile.x][player.position.tile.y] = player.getId() + 1;
+		break;
+	case PM_WALK_SOUTHWARDS:
+		dPlayer[player.position.temp.x][player.position.temp.y] = 0;
+		break;
+	case PM_WALK_SIDEWAYS:
+		dPlayer[player.position.tile.x][player.position.tile.y] = 0;
+		player.position.tile = player.position.temp;
+		// dPlayer is set here for backwards comparability, without it the player would be invisible if loaded from a vanilla save.
+		dPlayer[player.position.tile.x][player.position.tile.y] = player.getId() + 1;
+		break;
+	}
 
-		// Update the coordinates for lighting and vision entries for the player
-		if (leveltype != DTYPE_TOWN) {
-			ChangeLightXY(player._plid, player.position.tile);
-			ChangeVisionXY(player._pvid, player.position.tile);
-		}
+	// Update the coordinates for lighting and vision entries for the player
+	if (leveltype != DTYPE_TOWN) {
+		ChangeLightXY(player._plid, player.position.tile);
+		ChangeVisionXY(player._pvid, player.position.tile);
+	}
 
-		if (player.walkpath[0] != WALK_NONE) {
-			StartWalkStand(player);
-		} else {
-			StartStand(player, player.tempDirection);
-		}
+	if (player.walkpath[0] != WALK_NONE) {
+		StartWalkStand(player);
+	} else {
+		StartStand(player, player.tempDirection);
+	}
 
-		ClearStateVariables(player);
+	ClearStateVariables(player);
 
-		// Reset the "sub-tile" position of the player's light entry to 0
-		if (leveltype != DTYPE_TOWN) {
-			ChangeLightOffset(player._plid, { 0, 0 });
-		}
+	// Reset the "sub-tile" position of the player's light entry to 0
+	if (leveltype != DTYPE_TOWN) {
+		ChangeLightOffset(player._plid, { 0, 0 });
+	}
 
-		AutoPickup(player);
-		return true;
-	} // We didn't reach new tile so update player's "sub-tile" position
-	ChangeOffset(player);
-	return false;
+	AutoPickup(player);
+	return true;
 }
 
 bool WeaponDecay(Player &player, int ii)
@@ -872,9 +874,6 @@ bool PlrHitMonst(Player &player, Monster &monster, bool adjacentDamage = false)
 		}
 		drawhpflag = true;
 	}
-	if (HasAnyOf(player._pIFlags, ItemSpecialEffect::NoHealOnPlayer)) { // Why is there a different ItemSpecialEffect here? (see missile.cpp) is this a BUG?
-		monster.flags |= MFLAG_NOHEAL;
-	}
 #ifdef _DEBUG
 	if (DebugGodMode) {
 		monster.hitPoints = 0; /* double check */
@@ -1041,7 +1040,7 @@ bool DoAttack(Player &player)
 		}
 	}
 
-	if (player.AnimInfo.currentFrame == player._pAFrames - 1) {
+	if (player.AnimInfo.isLastFrame()) {
 		StartStand(player, player._pdir);
 		ClearStateVariables(player);
 		return true;
@@ -1108,7 +1107,7 @@ bool DoRangeAttack(Player &player)
 		}
 	}
 
-	if (player.AnimInfo.currentFrame >= player._pAFrames - 1) {
+	if (player.AnimInfo.isLastFrame()) {
 		StartStand(player, player._pdir);
 		ClearStateVariables(player);
 		return true;
@@ -1147,7 +1146,7 @@ void DamageParryItem(Player &player)
 
 bool DoBlock(Player &player)
 {
-	if (player.AnimInfo.currentFrame >= player._pBFrames - 1) {
+	if (player.AnimInfo.isLastFrame()) {
 		StartStand(player, player._pdir);
 		ClearStateVariables(player);
 
@@ -1218,7 +1217,7 @@ bool DoSpell(Player &player)
 		}
 	}
 
-	if (player.AnimInfo.currentFrame >= player._pSFrames - 1) {
+	if (player.AnimInfo.isLastFrame()) {
 		StartStand(player, player._pdir);
 		ClearStateVariables(player);
 		return true;
@@ -1229,7 +1228,7 @@ bool DoSpell(Player &player)
 
 bool DoGotHit(Player &player)
 {
-	if (player.AnimInfo.currentFrame >= player._pHFrames - 1) {
+	if (player.AnimInfo.isLastFrame()) {
 		StartStand(player, player._pdir);
 		ClearStateVariables(player);
 		if (!FlipCoin(4)) {
@@ -1244,7 +1243,7 @@ bool DoGotHit(Player &player)
 
 bool DoDeath(Player &player)
 {
-	if (player.AnimInfo.currentFrame == player.AnimInfo.numberOfFrames - 1) {
+	if (player.AnimInfo.isLastFrame()) {
 		if (player.AnimInfo.tickCounterOfCurrentFrame == 0) {
 			player.AnimInfo.ticksPerFrame = 100;
 			dFlags[player.position.tile.x][player.position.tile.y] |= DungeonFlag::DeadPlayer;
@@ -1702,9 +1701,9 @@ void CheckCheatStats(Player &player)
 
 HeroClass GetPlayerSpriteClass(HeroClass cls)
 {
-	if (cls == HeroClass::Bard && !hfbard_mpq)
+	if (cls == HeroClass::Bard && !gbBard)
 		return HeroClass::Rogue;
-	if (cls == HeroClass::Barbarian && !hfbarb_mpq)
+	if (cls == HeroClass::Barbarian && !gbBarbarian)
 		return HeroClass::Warrior;
 	return cls;
 }
@@ -1776,6 +1775,17 @@ void Player::CalcScrolls()
 
 void Player::RemoveInvItem(int iv, bool calcScrolls)
 {
+	if (this == MyPlayer) {
+		// Locate the first grid index containing this item and notify remote clients
+		for (size_t i = 0; i < InventoryGridCells; i++) {
+			int8_t itemIndex = InvGrid[i];
+			if (abs(itemIndex) - 1 == iv) {
+				NetSendCmdParam1(false, CMD_DELINVITEMS, i);
+				break;
+			}
+		}
+	}
+
 	// Iterate through invGrid and remove every reference to item
 	for (int8_t &itemIndex : InvGrid) {
 		if (abs(itemIndex) - 1 == iv) {
@@ -1808,6 +1818,10 @@ void Player::RemoveInvItem(int iv, bool calcScrolls)
 
 void Player::RemoveSpdBarItem(int iv)
 {
+	if (this == MyPlayer) {
+		NetSendCmdParam1(false, CMD_DELBELTITEMS, iv);
+	}
+
 	SpdList[iv].clear();
 
 	CalcScrolls();
@@ -1919,13 +1933,6 @@ bool Player::IsWalking() const
 	return IsAnyOf(_pmode, PM_WALK_NORTHWARDS, PM_WALK_SOUTHWARDS, PM_WALK_SIDEWAYS);
 }
 
-void Player::Reset()
-{
-	// Create empty default initialized Player on heap to avoid excessive stack usage
-	auto emptyPlayer = std::make_unique<Player>();
-	*this = std::move(*emptyPlayer);
-}
-
 int Player::GetManaShieldDamageReduction()
 {
 	constexpr int8_t Max = 7;
@@ -2011,6 +2018,41 @@ uint16_t Player::getSpriteWidth() const
 	const HeroClass cls = GetPlayerSpriteClass(_pClass);
 	const PlayerWeaponGraphic weaponGraphic = GetPlayerWeaponGraphic(graphic, static_cast<PlayerWeaponGraphic>(_pgfxnum & 0xF));
 	return GetPlayerSpriteWidth(cls, graphic, weaponGraphic);
+}
+
+void Player::getAnimationFramesAndTicksPerFrame(player_graphic graphics, int8_t &numberOfFrames, int8_t &ticksPerFrame) const
+{
+	ticksPerFrame = 1;
+	switch (graphics) {
+	case player_graphic::Stand:
+		numberOfFrames = _pNFrames;
+		ticksPerFrame = 4;
+		break;
+	case player_graphic::Walk:
+		numberOfFrames = _pWFrames;
+		break;
+	case player_graphic::Attack:
+		numberOfFrames = _pAFrames;
+		break;
+	case player_graphic::Hit:
+		numberOfFrames = _pHFrames;
+		break;
+	case player_graphic::Lightning:
+	case player_graphic::Fire:
+	case player_graphic::Magic:
+		numberOfFrames = _pSFrames;
+		break;
+	case player_graphic::Death:
+		numberOfFrames = _pDFrames;
+		ticksPerFrame = 2;
+		break;
+	case player_graphic::Block:
+		numberOfFrames = _pBFrames;
+		ticksPerFrame = 3;
+		break;
+	default:
+		app_fatal("Unknown player graphics");
+	}
 }
 
 void Player::UpdatePreviewCelSprite(_cmd_id cmdId, Point point, uint16_t wParam1, uint16_t wParam2)
@@ -2185,45 +2227,45 @@ void LoadPlrGFX(Player &player, player_graphic graphic)
 	const char *szCel;
 	switch (graphic) {
 	case player_graphic::Stand:
-		szCel = "AS";
+		szCel = "as";
 		if (leveltype == DTYPE_TOWN)
-			szCel = "ST";
+			szCel = "st";
 		break;
 	case player_graphic::Walk:
-		szCel = "AW";
+		szCel = "aw";
 		if (leveltype == DTYPE_TOWN)
-			szCel = "WL";
+			szCel = "wl";
 		break;
 	case player_graphic::Attack:
 		if (leveltype == DTYPE_TOWN)
 			return;
-		szCel = "AT";
+		szCel = "at";
 		break;
 	case player_graphic::Hit:
 		if (leveltype == DTYPE_TOWN)
 			return;
-		szCel = "HT";
+		szCel = "ht";
 		break;
 	case player_graphic::Lightning:
-		szCel = "LM";
+		szCel = "lm";
 		break;
 	case player_graphic::Fire:
-		szCel = "FM";
+		szCel = "fm";
 		break;
 	case player_graphic::Magic:
-		szCel = "QM";
+		szCel = "qm";
 		break;
 	case player_graphic::Death:
 		if (animWeaponId != PlayerWeaponGraphic::Unarmed)
 			return;
-		szCel = "DT";
+		szCel = "dt";
 		break;
 	case player_graphic::Block:
 		if (leveltype == DTYPE_TOWN)
 			return;
 		if (!player._pBlockFlag)
 			return;
-		szCel = "BL";
+		szCel = "bl";
 		break;
 	default:
 		app_fatal("PLR:2");
@@ -2234,9 +2276,13 @@ void LoadPlrGFX(Player &player, player_graphic graphic)
 
 	char prefix[3] = { CharChar[static_cast<std::size_t>(cls)], ArmourChar[player._pgfxnum >> 4], WepChar[static_cast<std::size_t>(animWeaponId)] };
 	char pszName[256];
-	*fmt::format_to(pszName, FMT_COMPILE(R"(PlrGFX\{0}\{1}\{1}{2}.CL2)"), path, string_view(prefix, 3), szCel) = 0;
+	*fmt::format_to(pszName, FMT_COMPILE(R"(plrgfx\{0}\{1}\{1}{2})"), path, string_view(prefix, 3), szCel) = 0;
 	const uint16_t animationWidth = GetPlayerSpriteWidth(cls, graphic, animWeaponId);
 	animationData.sprites = LoadCl2Sheet(pszName, animationWidth);
+	std::optional<std::array<uint8_t, 256>> trn = GetClassTRN(player);
+	if (trn) {
+		ClxApplyTrans(*animationData.sprites, trn->data());
+	}
 }
 
 void InitPlayerGFX(Player &player)
@@ -2247,7 +2293,7 @@ void InitPlayerGFX(Player &player)
 	ResetPlayerGFX(player);
 
 	if (player._pHitPoints >> 6 == 0) {
-		player._pgfxnum &= ~0xF;
+		player._pgfxnum &= ~0xFU;
 		LoadPlrGFX(player, player_graphic::Death);
 		return;
 	}
@@ -2268,7 +2314,7 @@ void ResetPlayerGFX(Player &player)
 	}
 }
 
-void NewPlrAnim(Player &player, player_graphic graphic, Direction dir, int8_t numberOfFrames, int8_t delayLen, AnimationDistributionFlags flags /*= AnimationDistributionFlags::None*/, int8_t numSkippedFrames /*= 0*/, int8_t distributeFramesBeforeFrame /*= 0*/)
+void NewPlrAnim(Player &player, player_graphic graphic, Direction dir, AnimationDistributionFlags flags /*= AnimationDistributionFlags::None*/, int8_t numSkippedFrames /*= 0*/, int8_t distributeFramesBeforeFrame /*= 0*/)
 {
 	LoadPlrGFX(player, graphic);
 
@@ -2280,7 +2326,11 @@ void NewPlrAnim(Player &player, player_graphic graphic, Direction dir, int8_t nu
 			previewShownGameTickFragments = clamp(1.F - player.progressToNextGameTickWhenPreviewWasSet, 0.F, 1.F);
 		}
 	}
-	player.AnimInfo.setNewAnimation(sprites, numberOfFrames, delayLen, flags, numSkippedFrames, distributeFramesBeforeFrame, previewShownGameTickFragments);
+
+	int8_t numberOfFrames;
+	int8_t ticksPerFrame;
+	player.getAnimationFramesAndTicksPerFrame(graphic, numberOfFrames, ticksPerFrame);
+	player.AnimInfo.setNewAnimation(sprites, numberOfFrames, ticksPerFrame, flags, numSkippedFrames, distributeFramesBeforeFrame, previewShownGameTickFragments);
 }
 
 void SetPlrAnims(Player &player)
@@ -2304,8 +2354,8 @@ void SetPlrAnims(Player &player)
 	}
 	player._pSFNum = PlrGFXAnimLens[static_cast<std::size_t>(pc)][10];
 
-	auto gn = static_cast<PlayerWeaponGraphic>(player._pgfxnum & 0xF);
-	int armorGraphicIndex = player._pgfxnum & ~0xF;
+	auto gn = static_cast<PlayerWeaponGraphic>(player._pgfxnum & 0xFU);
+	int armorGraphicIndex = player._pgfxnum & ~0xFU;
 	if (pc == HeroClass::Warrior) {
 		if (gn == PlayerWeaponGraphic::Bow) {
 			if (leveltype != DTYPE_TOWN) {
@@ -2403,7 +2453,7 @@ void SetPlrAnims(Player &player)
  */
 void CreatePlayer(Player &player, HeroClass c)
 {
-	player.Reset();
+	player = {};
 	SetRndSeed(SDL_GetTicks());
 
 	player._pClass = c;
@@ -2520,7 +2570,7 @@ void CreatePlayer(Player &player, HeroClass c)
 		animWeaponId = PlayerWeaponGraphic::Staff;
 		break;
 	}
-	player._pgfxnum = static_cast<int>(animWeaponId);
+	player._pgfxnum = static_cast<uint8_t>(animWeaponId);
 
 	for (bool &levelVisited : player._pLvlVisited) {
 		levelVisited = false;
@@ -2656,7 +2706,7 @@ void AddPlrExperience(Player &player, int lvl, int exp)
 void AddPlrMonstExper(int lvl, int exp, char pmask)
 {
 	int totplrs = 0;
-	for (int i = 0; i < MAX_PLRS; i++) {
+	for (size_t i = 0; i < Players.size(); i++) {
 		if (((1 << i) & pmask) != 0) {
 			totplrs++;
 		}
@@ -2691,13 +2741,13 @@ void InitPlayer(Player &player, bool firstTime)
 
 		if (player._pHitPoints >> 6 > 0) {
 			player._pmode = PM_STAND;
-			NewPlrAnim(player, player_graphic::Stand, Direction::South, player._pNFrames, 4);
+			NewPlrAnim(player, player_graphic::Stand, Direction::South);
 			player.AnimInfo.currentFrame = GenerateRnd(player._pNFrames - 1);
 			player.AnimInfo.tickCounterOfCurrentFrame = GenerateRnd(3);
 		} else {
-			player._pgfxnum &= ~0xF;
+			player._pgfxnum &= ~0xFU;
 			player._pmode = PM_DEATH;
-			NewPlrAnim(player, player_graphic::Death, Direction::South, player._pDFrames, 2);
+			NewPlrAnim(player, player_graphic::Death, Direction::South);
 			player.AnimInfo.currentFrame = player.AnimInfo.numberOfFrames - 2;
 		}
 
@@ -2804,7 +2854,7 @@ void StartStand(Player &player, Direction dir)
 		return;
 	}
 
-	NewPlrAnim(player, player_graphic::Stand, dir, player._pNFrames, 4);
+	NewPlrAnim(player, player_graphic::Stand, dir);
 	player._pmode = PM_STAND;
 	FixPlayerLocation(player, dir);
 	FixPlrWalkTags(player);
@@ -2826,7 +2876,7 @@ void StartPlrBlock(Player &player, Direction dir)
 		skippedAnimationFrames = (player._pBFrames - 2); // ISPL_FASTBLOCK means we cancel the animation if frame 2 was shown
 	}
 
-	NewPlrAnim(player, player_graphic::Block, dir, player._pBFrames, 3, AnimationDistributionFlags::SkipsDelayOfLastFrame, skippedAnimationFrames);
+	NewPlrAnim(player, player_graphic::Block, dir, AnimationDistributionFlags::SkipsDelayOfLastFrame, skippedAnimationFrames);
 
 	player._pmode = PM_BLOCK;
 	FixPlayerLocation(player, dir);
@@ -2835,7 +2885,7 @@ void StartPlrBlock(Player &player, Direction dir)
 
 void FixPlrWalkTags(const Player &player)
 {
-	for (Point searchTile : PointsInRectangleRange { Rectangle { player.position.old, 1 } }) {
+	for (Point searchTile : PointsInRectangle(Rectangle { player.position.old, 1 })) {
 		if (PlayerAtPosition(searchTile) == &player) {
 			dPlayer[searchTile.x][searchTile.y] = 0;
 		}
@@ -2876,7 +2926,7 @@ void StartPlrHit(Player &player, int dam, bool forcehit)
 		skippedAnimationFrames = 0;
 	}
 
-	NewPlrAnim(player, player_graphic::Hit, pd, player._pHFrames, 1, AnimationDistributionFlags::None, skippedAnimationFrames);
+	NewPlrAnim(player, player_graphic::Hit, pd, AnimationDistributionFlags::None, skippedAnimationFrames);
 
 	player._pmode = PM_GOTHIT;
 	FixPlayerLocation(player, pd);
@@ -2899,20 +2949,20 @@ StartPlayerKill(Player &player, int earflag)
 		NetSendCmdParam1(true, CMD_PLRDEAD, earflag);
 	}
 
-	bool diablolevel = gbIsMultiplayer && player.plrlevel == 16;
+	bool diablolevel = gbIsMultiplayer && (player.isOnLevel(16) || player.isOnArenaLevel());
 
 	player.Say(HeroSpeech::AuughUh);
 
 	if (player._pgfxnum != 0) {
 		if (diablolevel || earflag != 0)
-			player._pgfxnum &= ~0xF;
+			player._pgfxnum &= ~0xFU;
 		else
 			player._pgfxnum = 0;
 		ResetPlayerGFX(player);
 		SetPlrAnims(player);
 	}
 
-	NewPlrAnim(player, player_graphic::Death, player._pdir, player._pDFrames, 2);
+	NewPlrAnim(player, player_graphic::Death, player._pdir);
 
 	player._pBlockFlag = false;
 	player._pmode = PM_DEATH;
@@ -3098,7 +3148,8 @@ StartNewLvl(Player &player, interface_mode fom, int lvl)
 		player.setLevel(lvl);
 		break;
 	case WM_DIABSETLVL:
-		setlvlnum = (_setlevels)lvl;
+		if (&player == MyPlayer)
+			setlvlnum = (_setlevels)lvl;
 		player.setLevel(setlvlnum);
 		break;
 	case WM_DIABTWARPUP:
@@ -3146,7 +3197,7 @@ void RestartTownLvl(Player &player)
 	}
 }
 
-void StartWarpLvl(Player &player, int pidx)
+void StartWarpLvl(Player &player, size_t pidx)
 {
 	InitLevelChange(player);
 
@@ -3204,7 +3255,7 @@ void ProcessPlayers()
 
 	ValidatePlayer();
 
-	for (int pnum = 0; pnum < MAX_PLRS; pnum++) {
+	for (size_t pnum = 0; pnum < Players.size(); pnum++) {
 		Player &player = Players[pnum];
 		if (player.plractive && player.isOnActiveLevel() && (&player == MyPlayer || !player._pLvlChanging)) {
 			CheckCheatStats(player);

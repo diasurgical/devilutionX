@@ -382,11 +382,11 @@ void FillFloor()
 void LoadQuestSetPieces()
 {
 	if (Quests[Q_BUTCHER].IsAvailable()) {
-		pSetPiece = LoadFileInMem<uint16_t>("Levels\\L1Data\\rnd6.DUN");
+		pSetPiece = LoadFileInMem<uint16_t>("levels\\l1data\\rnd6.dun");
 	} else if (Quests[Q_SKELKING].IsAvailable() && !gbIsMultiplayer) {
-		pSetPiece = LoadFileInMem<uint16_t>("Levels\\L1Data\\SKngDO.DUN");
+		pSetPiece = LoadFileInMem<uint16_t>("levels\\l1data\\skngdo.dun");
 	} else if (Quests[Q_LTBANNER].IsAvailable()) {
-		pSetPiece = LoadFileInMem<uint16_t>("Levels\\L1Data\\Banner2.DUN");
+		pSetPiece = LoadFileInMem<uint16_t>("levels\\l1data\\banner2.dun");
 	}
 }
 
@@ -456,7 +456,9 @@ void GenerateRoom(Rectangle area, bool verticalLayout)
 	Rectangle room1;
 
 	for (int num = 0; num < 20; num++) {
-		room1.size = { (GenerateRnd(5) + 2) & ~1, (GenerateRnd(5) + 2) & ~1 };
+		const int32_t randomWidth = (GenerateRnd(5) + 2) & ~1;
+		const int32_t randomHeight = (GenerateRnd(5) + 2) & ~1;
+		room1.size = { randomWidth, randomHeight };
 		room1.position = area.position;
 		if (verticalLayout) {
 			room1.position += Displacement { -room1.size.width, area.size.height / 2 - room1.size.height / 2 };
@@ -1111,7 +1113,7 @@ bool PlaceCathedralStairs(lvl_entry entry)
 			Point miniPosition = *position;
 			DRLG_MRectTrans({ miniPosition + Displacement { 0, 2 }, { 5, 2 } });
 			TransVal = t;
-			Quests[Q_PWATER].position = miniPosition.megaToWorld() + Displacement { 5, 7 };
+			Quests[Q_PWATER].position = miniPosition.megaToWorld() + Displacement { 5, 6 };
 			if (entry == ENTRY_RTNLVL)
 				ViewPosition = Quests[Q_PWATER].position;
 		}
@@ -1130,7 +1132,7 @@ bool PlaceCathedralStairs(lvl_entry entry)
 	// Place stairs down
 	if (Quests[Q_LTBANNER].IsAvailable()) {
 		if (entry == ENTRY_PREV)
-			ViewPosition = SetPiece.position.megaToWorld() + Displacement { 4, 12 };
+			ViewPosition = SetPiece.position.megaToWorld() + Displacement { 3, 11 };
 	} else {
 		position = PlaceMiniSet(STAIRSDOWN, DMAXX * DMAXY, true);
 		if (!position) {
@@ -1239,13 +1241,14 @@ void Pass3()
 
 void PlaceMiniSetRandom(const Miniset &miniset, int rndper)
 {
-	int sw = miniset.size.width;
-	int sh = miniset.size.height;
+	const WorldTileCoord sw = miniset.size.width;
+	const WorldTileCoord sh = miniset.size.height;
 
-	for (int sy = 0; sy < DMAXY - sh; sy++) {
-		for (int sx = 0; sx < DMAXX - sw; sx++) {
+	for (WorldTileCoord sy = 0; sy < DMAXY - sh; sy++) {
+		for (WorldTileCoord sx = 0; sx < DMAXX - sw; sx++) {
 			if (!miniset.matches({ sx, sy }, false))
 				continue;
+			// BUGFIX: This code is copied from Cave and should not be applied for crypt
 			if (!CanReplaceTile(miniset.replace[0][0], { sx, sy }))
 				continue;
 			if (GenerateRnd(100) >= rndper)
@@ -1255,23 +1258,29 @@ void PlaceMiniSetRandom(const Miniset &miniset, int rndper)
 	}
 }
 
-Point SelectChamber()
+WorldTilePosition SelectChamber()
 {
 	int chamber;
-	if (!HasChamber1)
-		chamber = PickRandomlyAmong({ 2, 3 });
-	else if (!HasChamber2)
-		chamber = PickRandomlyAmong({ 3, 1 });
-	else if (!HasChamber3)
-		chamber = PickRandomlyAmong({ 2, 1 });
-	else
+	if (HasChamber1 && HasChamber2 && HasChamber3) {
 		chamber = GenerateRnd(3) + 1;
+	} else if (HasChamber1 && HasChamber2) {
+		chamber = PickRandomlyAmong({ 2, 1 }); // Reverse order to match vanilla
+	} else if (HasChamber1 && HasChamber3) {
+		chamber = PickRandomlyAmong({ 3, 1 }); // Reverse order to match vanilla
+	} else if (HasChamber2 && HasChamber3) {
+		chamber = PickRandomlyAmong({ 2, 3 });
+	} else {
+		// The dungeon generation logic ensures that chamber 2 is available if
+		// either (or both of) 1 or 3 aren't, so if we ever end up with a single
+		// chamber layout it's always chamber 2.
+		chamber = 2;
+	}
 
 	switch (chamber) {
 	case 1:
-		return VerticalLayout ? Point { 16, 2 } : Point { 2, 16 };
+		return VerticalLayout ? WorldTilePosition { 16, 2 } : WorldTilePosition { 2, 16 };
 	case 3:
-		return VerticalLayout ? Point { 16, 30 } : Point { 30, 16 };
+		return VerticalLayout ? WorldTilePosition { 16, 30 } : WorldTilePosition { 30, 16 };
 	default:
 		return { 16, 16 };
 	}

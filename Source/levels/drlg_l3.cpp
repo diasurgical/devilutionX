@@ -1387,14 +1387,15 @@ bool CanReplaceTile(uint8_t replace, Point tile)
  */
 bool PlaceMiniSetRandom(const Miniset &miniset, int rndper)
 {
-	int sw = miniset.size.width;
-	int sh = miniset.size.height;
+	const WorldTileCoord sw = miniset.size.width;
+	const WorldTileCoord sh = miniset.size.height;
 
 	bool placed = false;
-	for (int sy = 0; sy < DMAXY - sh; sy++) {
-		for (int sx = 0; sx < DMAXX - sw; sx++) {
+	for (WorldTileCoord sy = 0; sy < DMAXY - sh; sy++) {
+		for (WorldTileCoord sx = 0; sx < DMAXX - sw; sx++) {
 			if (!miniset.matches({ sx, sy }))
 				continue;
+			// BUGFIX: This should not be applied to Nest levels
 			if (!CanReplaceTile(miniset.replace[0][0], { sx, sy }))
 				continue;
 			if (GenerateRnd(100) >= rndper)
@@ -1679,8 +1680,8 @@ void Fence()
 		}
 	}
 
-	for (int j = 1; j < DMAXY; j++) {     // BUGFIX: Change '0' to '1' (fixed)
-		for (int i = 1; i < DMAXX; i++) { // BUGFIX: Change '0' to '1' (fixed)
+	for (WorldTileCoord j = 1; j < DMAXY; j++) {     // BUGFIX: Change '0' to '1' (fixed)
+		for (WorldTileCoord i = 1; i < DMAXX; i++) { // BUGFIX: Change '0' to '1' (fixed)
 			// note the comma operator is used here to advance the RNG state
 			if (dungeon[i][j] == 7 && (AdvanceRndSeed(), !IsNearThemeRoom({ i, j }))) {
 				if (FlipCoin()) {
@@ -1793,15 +1794,15 @@ void Fence()
 void LoadQuestSetPieces()
 {
 	if (Quests[Q_ANVIL].IsAvailable())
-		pSetPiece = LoadFileInMem<uint16_t>("Levels\\L3Data\\Anvil.DUN");
+		pSetPiece = LoadFileInMem<uint16_t>("levels\\l3data\\anvil.dun");
 }
 
 bool PlaceAnvil()
 {
 	// growing the size by 2 to allow a 1 tile border on all sides
-	Size areaSize = Size { SDL_SwapLE16(pSetPiece[0]), SDL_SwapLE16(pSetPiece[1]) } + 2;
-	int sx = GenerateRnd(DMAXX - areaSize.width);
-	int sy = GenerateRnd(DMAXY - areaSize.height);
+	WorldTileSize areaSize = WorldTileSize(SDL_SwapLE16(pSetPiece[0]), SDL_SwapLE16(pSetPiece[1])) + 2;
+	WorldTileCoord sx = GenerateRnd(DMAXX - areaSize.width);
+	WorldTileCoord sy = GenerateRnd(DMAXY - areaSize.height);
 
 	for (int trys = 0;; trys++, sx++) {
 		if (trys > 198)
@@ -1816,7 +1817,7 @@ bool PlaceAnvil()
 		}
 
 		bool found = true;
-		for (Point tile : PointsInRectangleRange { { { sx, sy }, areaSize } }) {
+		for (WorldTilePosition tile : PointsInRectangle(WorldTileRectangle { { sx, sy }, areaSize })) {
 			if (Protected.test(tile.x, tile.y) || dungeon[tile.x][tile.y] != 7) {
 				found = false;
 				break;
@@ -1829,7 +1830,7 @@ bool PlaceAnvil()
 	PlaceDunTiles(pSetPiece.get(), { sx + 1, sy + 1 }, 7);
 	SetPiece = { { sx, sy }, areaSize };
 
-	for (Point tile : PointsInRectangleRange { SetPiece }) {
+	for (WorldTilePosition tile : PointsInRectangle(SetPiece)) {
 		Protected.set(tile.x, tile.y);
 	}
 

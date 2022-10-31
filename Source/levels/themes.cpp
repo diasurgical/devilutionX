@@ -22,36 +22,22 @@ namespace devilution {
 int numthemes;
 bool armorFlag;
 bool weaponFlag;
-bool treasureFlag;
-bool mFountainFlag;
-bool cauldronFlag;
-bool tFountainFlag;
 int zharlib;
+ThemeStruct themes[MAXTHEMES];
+
+namespace {
+
+bool cauldronFlag;
+bool bFountainFlag;
+bool mFountainFlag;
+bool pFountainFlag;
+bool tFountainFlag;
+bool treasureFlag;
+
 int themex;
 int themey;
 int themeVar1;
-ThemeStruct themes[MAXTHEMES];
-bool pFountainFlag;
-bool bFountainFlag;
 
-/** Specifies the set of special theme IDs from which one will be selected at random. */
-theme_id ThemeGood[4] = { THEME_GOATSHRINE, THEME_SHRINE, THEME_SKELROOM, THEME_LIBRARY };
-/** Specifies a 5x5 area to fit theme objects. */
-int trm5x[] = {
-	-2, -1, 0, 1, 2,
-	-2, -1, 0, 1, 2,
-	-2, -1, 0, 1, 2,
-	-2, -1, 0, 1, 2,
-	-2, -1, 0, 1, 2
-};
-/** Specifies a 5x5 area to fit theme objects. */
-int trm5y[] = {
-	-2, -2, -2, -2, -2,
-	-1, -1, -1, -1, -1,
-	0, 0, 0, 0, 0,
-	1, 1, 1, 1, 1,
-	2, 2, 2, 2, 2
-};
 bool TFit_Shrine(int i)
 {
 	int xp = 0;
@@ -97,51 +83,45 @@ bool TFit_Shrine(int i)
 	return true;
 }
 
-bool TFit_Obj5(int t)
+bool CheckThemeObj5(Point origin, int8_t regionId)
 {
-	int xp = 0;
-	int yp = 0;
-	int r = GenerateRnd(5) + 1;
-	int rs = r;
-
-	while (r > 0) {
-		bool found = false;
-		if (dTransVal[xp][yp] == themes[t].ttval && IsTileNotSolid({ xp, yp })) {
-			found = true;
-			for (int i = 0; found && i < 25; i++) {
-				if (TileHasAny(dPiece[xp + trm5x[i]][yp + trm5y[i]], TileProperties::Solid)) {
-					found = false;
-				}
-				if (dTransVal[xp + trm5x[i]][yp + trm5y[i]] != themes[t].ttval) {
-					found = false;
-				}
-			}
+	const auto searchArea = PointsInRectangle(Rectangle { origin, 2 });
+	return std::all_of(searchArea.cbegin(), searchArea.cend(), [regionId](Point testPosition) {
+		// note out-of-bounds tiles are not solid, this function relies on the guard in TFit_Obj5 and dungeon border
+		if (IsTileSolid(testPosition)) {
+			return false;
 		}
-
-		if (!found) {
-			xp++;
-			if (xp == MAXDUNX) {
-				xp = 0;
-				yp++;
-				if (yp == MAXDUNY) {
-					if (r == rs) {
-						return false;
-					}
-					yp = 0;
-				}
-			}
-			continue;
+		// If the theme object would extend into a different region then it doesn't fit.
+		if (dTransVal[testPosition.x][testPosition.y] != regionId) {
+			return false;
 		}
-
-		r--;
-	}
-
-	themex = xp;
-	themey = yp;
-
-	return true;
+		return true;
+	});
 }
 
+bool TFit_Obj5(int t)
+{
+	const int targetCandidates = GenerateRnd(5);
+	if (targetCandidates < 0) {
+		// vanilla rng can return -3 for GenerateRnd(5), default behaviour is to set the output to 0,0 and return true in this case...
+		themex = 0;
+		themey = 0;
+		return true;
+	}
+
+	int candidatesFound = 0;
+	for (Point tile : PointsInRectangle(Rectangle { { 0, 0 }, { MAXDUNX, MAXDUNY } })) {
+		if (dTransVal[tile.x][tile.y] == themes[t].ttval && IsTileNotSolid(tile) && CheckThemeObj5(tile, themes[t].ttval)) {
+			// Use themex/y to keep track of the last candidate area found, in case we end up with fewer candidates than the target
+			themex = tile.x;
+			themey = tile.y;
+			candidatesFound++;
+			if (candidatesFound > targetCandidates)
+				return true;
+		}
+	}
+	return candidatesFound > 0;
+}
 bool TFit_SkelRoom(int t)
 {
 	if (IsNoneOf(leveltype, DTYPE_CATHEDRAL, DTYPE_CATACOMBS)) {
@@ -170,9 +150,9 @@ bool TFit_GoatShrine(int t)
 	return false;
 }
 
-bool CheckThemeObj3(Point origin, int8_t regionId, unsigned frequency = std::numeric_limits<unsigned>::max())
+bool CheckThemeObj3(Point origin, int8_t regionId, unsigned frequency = 0)
 {
-	const PointsInRectangleRange searchArea { Rectangle { origin, 1 } };
+	const auto searchArea = PointsInRectangle(Rectangle { origin, 1 });
 	return std::all_of(searchArea.cbegin(), searchArea.cend(), [regionId, frequency](Point testPosition) {
 		if (!InDungeonBounds(testPosition)) {
 			return false;
@@ -187,7 +167,7 @@ bool CheckThemeObj3(Point origin, int8_t regionId, unsigned frequency = std::num
 		if (IsObjectAtPosition(testPosition)) {
 			return false;
 		}
-		if (frequency != std::numeric_limits<unsigned>::max() && FlipCoin(frequency)) {
+		if (frequency > 0 && FlipCoin(frequency)) {
 			return false;
 		}
 		return true;
@@ -217,57 +197,30 @@ bool CheckThemeReqs(theme_id t)
 	case THEME_SHRINE:
 	case THEME_SKELROOM:
 	case THEME_LIBRARY:
-		if (leveltype == DTYPE_CAVES || leveltype == DTYPE_HELL) {
-			return false;
-		}
-		break;
-	case THEME_BLOODFOUNTAIN:
-		if (!bFountainFlag) {
-			return false;
-		}
-		break;
-	case THEME_PURIFYINGFOUNTAIN:
-		if (!pFountainFlag) {
-			return false;
-		}
-		break;
+		return IsNoneOf(leveltype, DTYPE_CAVES, DTYPE_HELL);
 	case THEME_ARMORSTAND:
-		if (leveltype == DTYPE_CATHEDRAL) {
-			return false;
-		}
-		break;
-	case THEME_CAULDRON:
-		if (leveltype != DTYPE_HELL || !cauldronFlag) {
-			return false;
-		}
-		break;
-	case THEME_MURKYFOUNTAIN:
-		if (!mFountainFlag) {
-			return false;
-		}
-		break;
-	case THEME_TEARFOUNTAIN:
-		if (!tFountainFlag) {
-			return false;
-		}
-		break;
 	case THEME_WEAPONRACK:
-		if (leveltype == DTYPE_CATHEDRAL) {
-			return false;
-		}
-		break;
+		return IsNoneOf(leveltype, DTYPE_CATHEDRAL);
+	case THEME_CAULDRON:
+		return leveltype == DTYPE_HELL && cauldronFlag;
+	case THEME_BLOODFOUNTAIN:
+		return bFountainFlag;
+	case THEME_PURIFYINGFOUNTAIN:
+		return pFountainFlag;
+	case THEME_MURKYFOUNTAIN:
+		return mFountainFlag;
+	case THEME_TEARFOUNTAIN:
+		return tFountainFlag;
+	case THEME_TREASURE:
+		return treasureFlag;
 	default:
-		break;
+		return true;
 	}
-
-	return true;
 }
 
-static bool SpecialThemeFit(int i, theme_id t)
+bool SpecialThemeFit(int i, theme_id t)
 {
-	bool rv;
-
-	rv = CheckThemeReqs(t);
+	bool rv = CheckThemeReqs(t);
 	switch (t) {
 	case THEME_SHRINE:
 	case THEME_LIBRARY:
@@ -335,7 +288,6 @@ static bool SpecialThemeFit(int i, theme_id t)
 		}
 		break;
 	case THEME_TREASURE:
-		rv = treasureFlag;
 		if (rv) {
 			treasureFlag = false;
 		}
@@ -385,88 +337,6 @@ bool CheckThemeRoom(int tv)
 	}
 
 	return true;
-}
-
-void InitThemes()
-{
-	zharlib = -1;
-	numthemes = 0;
-	armorFlag = true;
-	bFountainFlag = true;
-	cauldronFlag = true;
-	mFountainFlag = true;
-	pFountainFlag = true;
-	tFountainFlag = true;
-	treasureFlag = true;
-	weaponFlag = true;
-
-	if (currlevel == 16 || IsAnyOf(leveltype, DTYPE_NEST, DTYPE_CRYPT)) {
-		return;
-	}
-
-	if (leveltype == DTYPE_CATHEDRAL) {
-		for (size_t i = 0; i < 256 && numthemes < MAXTHEMES; i++) {
-			if (CheckThemeRoom(i)) {
-				themes[numthemes].ttval = i;
-				theme_id j = ThemeGood[GenerateRnd(4)];
-				while (!SpecialThemeFit(numthemes, j)) {
-					j = (theme_id)GenerateRnd(17);
-				}
-				themes[numthemes].ttype = j;
-				numthemes++;
-			}
-		}
-		return;
-	}
-
-	for (int i = 0; i < themeCount; i++) {
-		themes[i].ttype = THEME_NONE;
-	}
-
-	if (Quests[Q_ZHAR].IsAvailable()) {
-		for (int j = 0; j < themeCount; j++) {
-			themes[j].ttval = themeLoc[j].ttval;
-			if (SpecialThemeFit(j, THEME_LIBRARY)) {
-				themes[j].ttype = THEME_LIBRARY;
-				zharlib = j;
-				break;
-			}
-		}
-	}
-	for (int i = 0; i < themeCount; i++) {
-		if (themes[i].ttype == THEME_NONE) {
-			themes[i].ttval = themeLoc[i].ttval;
-			theme_id j = ThemeGood[GenerateRnd(4)];
-			while (!SpecialThemeFit(i, j)) {
-				j = (theme_id)GenerateRnd(17);
-			}
-			themes[i].ttype = j;
-		}
-	}
-	numthemes += themeCount;
-}
-
-void HoldThemeRooms()
-{
-	if (currlevel == 16 || IsAnyOf(leveltype, DTYPE_NEST, DTYPE_CRYPT)) {
-		return;
-	}
-
-	if (leveltype != DTYPE_CATHEDRAL) {
-		DRLG_HoldThemeRooms();
-		return;
-	}
-
-	for (int i = 0; i < numthemes; i++) {
-		int8_t v = themes[i].ttval;
-		for (int y = 0; y < MAXDUNY; y++) {
-			for (int x = 0; x < MAXDUNX; x++) {
-				if (dTransVal[x][y] == v) {
-					dFlags[x][y] |= DungeonFlag::Populated;
-				}
-			}
-		}
-	}
 }
 
 /**
@@ -575,7 +445,6 @@ void Theme_MonstPit(int t)
 	PlaceThemeMonsts(t, monstrnd[leveltype - 1]);
 }
 
-namespace {
 void SpawnObjectOrSkeleton(unsigned frequency, _object_id objectType, Point tile)
 {
 	if (FlipCoin(frequency)) {
@@ -586,7 +455,6 @@ void SpawnObjectOrSkeleton(unsigned frequency, _object_id objectType, Point tile
 			ActivateSkeleton(*skeleton, tile);
 	}
 }
-} // namespace
 
 /**
  * Theme_SkelRoom initializes the skeleton room theme.
@@ -661,6 +529,10 @@ void Theme_Treasure(int t)
 					CreateRndItem({ xp, yp }, false, false, true);
 					ItemNoFlippy();
 				}
+				// BUGFIX: the following code is likely not working as intended.
+				//    `rv >= treasureType - 2` is not connected to either
+				//    of the item creation branches above, thus the last (unrelated)
+				//    item spawned/dropped on ground would be halved in value.
 				if (rv >= treasureType - 2 && leveltype != DTYPE_CATHEDRAL) {
 					Item &item = Items[ActiveItems[ActiveItemCount - 1]];
 					if (item.IDidx == IDI_GOLD) {
@@ -943,6 +815,93 @@ void UpdateL4Trans()
 		for (int i = 0; i < MAXDUNX; i++) { // NOLINT(modernize-loop-convert)
 			if (dTransVal[i][j] != 0) {
 				dTransVal[i][j] = 1;
+			}
+		}
+	}
+}
+
+} // namespace
+
+void InitThemes()
+{
+	zharlib = -1;
+	numthemes = 0;
+	armorFlag = true;
+	bFountainFlag = true;
+	cauldronFlag = true;
+	mFountainFlag = true;
+	pFountainFlag = true;
+	tFountainFlag = true;
+	treasureFlag = true;
+	weaponFlag = true;
+
+	if (currlevel == 16 || IsAnyOf(leveltype, DTYPE_NEST, DTYPE_CRYPT)) {
+		return;
+	}
+
+	/** Specifies the set of special theme IDs from which one will be selected at random. */
+	constexpr theme_id ThemeGood[4] = { THEME_GOATSHRINE, THEME_SHRINE, THEME_SKELROOM, THEME_LIBRARY };
+
+	if (leveltype == DTYPE_CATHEDRAL) {
+		for (size_t i = 0; i < 256 && numthemes < MAXTHEMES; i++) {
+			if (CheckThemeRoom(i)) {
+				themes[numthemes].ttval = i;
+				theme_id j = ThemeGood[GenerateRnd(4)];
+				while (!SpecialThemeFit(numthemes, j)) {
+					j = (theme_id)GenerateRnd(17);
+				}
+				themes[numthemes].ttype = j;
+				numthemes++;
+			}
+		}
+		return;
+	}
+
+	for (int i = 0; i < themeCount; i++) {
+		themes[i].ttype = THEME_NONE;
+	}
+
+	if (Quests[Q_ZHAR].IsAvailable()) {
+		for (int j = 0; j < themeCount; j++) {
+			themes[j].ttval = themeLoc[j].ttval;
+			if (SpecialThemeFit(j, THEME_LIBRARY)) {
+				themes[j].ttype = THEME_LIBRARY;
+				zharlib = j;
+				break;
+			}
+		}
+	}
+	for (int i = 0; i < themeCount; i++) {
+		if (themes[i].ttype == THEME_NONE) {
+			themes[i].ttval = themeLoc[i].ttval;
+			theme_id j = ThemeGood[GenerateRnd(4)];
+			while (!SpecialThemeFit(i, j)) {
+				j = (theme_id)GenerateRnd(17);
+			}
+			themes[i].ttype = j;
+		}
+	}
+	numthemes += themeCount;
+}
+
+void HoldThemeRooms()
+{
+	if (currlevel == 16 || IsAnyOf(leveltype, DTYPE_NEST, DTYPE_CRYPT)) {
+		return;
+	}
+
+	if (leveltype != DTYPE_CATHEDRAL) {
+		DRLG_HoldThemeRooms();
+		return;
+	}
+
+	for (int i = 0; i < numthemes; i++) {
+		int8_t v = themes[i].ttval;
+		for (int y = 0; y < MAXDUNY; y++) {
+			for (int x = 0; x < MAXDUNX; x++) {
+				if (dTransVal[x][y] == v) {
+					dFlags[x][y] |= DungeonFlag::Populated;
+				}
 			}
 		}
 	}
