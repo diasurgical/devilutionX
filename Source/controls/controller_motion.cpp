@@ -96,6 +96,9 @@ bool SimulateRightStickWithDpad(ControllerButtonEvent ctrlEvent)
 
 	rightStickX = 0;
 	rightStickY = 0;
+
+	// Cannot use PadmapperOptions::IsActive() because this function
+	// is invoked before PadmapperOptions::ButtonPressed()
 	if (IsControllerButtonComboPressed(upCombo))
 		rightStickY += 1.F;
 	if (IsControllerButtonComboPressed(downCombo))
@@ -104,8 +107,17 @@ bool SimulateRightStickWithDpad(ControllerButtonEvent ctrlEvent)
 		rightStickX -= 1.F;
 	if (IsControllerButtonComboPressed(rightCombo))
 		rightStickX += 1.F;
-	if (rightStickX != 0 || rightStickY != 0)
-		SetSimulatingMouseWithPadmapper(true);
+
+	if (rightStickX == 0 && rightStickY == 0) {
+		// In this case, PadmapperOptions::IsActive() can be used to anticipate PadmapperOptions::ButtonReleased()
+		bool upReleased = ctrlEvent.up && ctrlEvent.button == upCombo.button && sgOptions.Padmapper.IsActive("MouseUp");
+		bool downReleased = ctrlEvent.up && ctrlEvent.button == downCombo.button && sgOptions.Padmapper.IsActive("MouseDown");
+		bool leftReleased = ctrlEvent.up && ctrlEvent.button == leftCombo.button && sgOptions.Padmapper.IsActive("MouseLeft");
+		bool rightReleased = ctrlEvent.up && ctrlEvent.button == rightCombo.button && sgOptions.Padmapper.IsActive("MouseRight");
+		return upReleased || downReleased || leftReleased || rightReleased;
+	}
+
+	SetSimulatingMouseWithPadmapper(true);
 	return true;
 }
 
@@ -178,14 +190,10 @@ AxisDirection GetLeftStickOrDpadDirection(bool usePadmapper)
 	bool isRightPressed = stickX >= 0.5;
 
 	if (usePadmapper) {
-		ControllerButtonCombo upCombo = sgOptions.Padmapper.ButtonComboForAction("MoveUp");
-		ControllerButtonCombo downCombo = sgOptions.Padmapper.ButtonComboForAction("MoveDown");
-		ControllerButtonCombo leftCombo = sgOptions.Padmapper.ButtonComboForAction("MoveLeft");
-		ControllerButtonCombo rightCombo = sgOptions.Padmapper.ButtonComboForAction("MoveRight");
-		isUpPressed |= IsControllerButtonComboPressed(upCombo);
-		isDownPressed |= IsControllerButtonComboPressed(downCombo);
-		isLeftPressed |= IsControllerButtonComboPressed(leftCombo);
-		isRightPressed |= IsControllerButtonComboPressed(rightCombo);
+		isUpPressed |= sgOptions.Padmapper.IsActive("MoveUp");
+		isDownPressed |= sgOptions.Padmapper.IsActive("MoveDown");
+		isLeftPressed |= sgOptions.Padmapper.IsActive("MoveLeft");
+		isRightPressed |= sgOptions.Padmapper.IsActive("MoveRight");
 	} else {
 		isUpPressed |= IsControllerButtonPressed(ControllerButton_BUTTON_DPAD_UP);
 		isDownPressed |= IsControllerButtonPressed(ControllerButton_BUTTON_DPAD_DOWN);

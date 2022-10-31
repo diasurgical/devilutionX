@@ -1648,6 +1648,21 @@ void PadmapperOptions::ButtonReleased(ControllerButton button, bool invokeAction
 	buttonToReleaseAction.erase(button);
 }
 
+bool PadmapperOptions::IsActive(string_view actionName) const
+{
+	for (const Action &action : actions) {
+		if (action.key != actionName)
+			continue;
+		ControllerButton button = action.boundInput.button;
+		auto it = buttonToReleaseAction.find(button);
+		if (it == buttonToReleaseAction.end())
+			return false;
+		const Action &releaseAction = it->second.get();
+		return releaseAction.key == actionName;
+	}
+	return false;
+}
+
 string_view PadmapperOptions::InputNameForAction(string_view actionName) const
 {
 	for (const Action &action : actions) {
