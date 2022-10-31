@@ -1444,19 +1444,10 @@ PadmapperOptions::PadmapperOptions()
 	}
 }
 
-std::forward_list<PadmapperOptions::Action> &PadmapperOptions::GetActions()
-{
-	if (!reversed) {
-		actions.reverse();
-		reversed = true;
-	}
-	return actions;
-}
-
 std::vector<OptionEntryBase *> PadmapperOptions::GetEntries()
 {
 	std::vector<OptionEntryBase *> entries;
-	for (Action &action : GetActions()) {
+	for (Action &action : actions) {
 		entries.push_back(&action);
 	}
 	return entries;
@@ -1591,14 +1582,24 @@ bool PadmapperOptions::Action::SetValue(ControllerButtonCombo value)
 
 void PadmapperOptions::AddAction(string_view key, const char *name, const char *description, ControllerButtonCombo defaultInput, std::function<void()> actionPressed, std::function<void()> actionReleased, std::function<bool()> enable, unsigned index)
 {
+	if (committed)
+		return;
 	actions.emplace_front(key, name, description, defaultInput, std::move(actionPressed), std::move(actionReleased), std::move(enable), index);
+}
+
+void PadmapperOptions::CommitActions()
+{
+	if (committed)
+		return;
+	actions.reverse();
+	committed = true;
 }
 
 void PadmapperOptions::ButtonPressed(ControllerButton button)
 {
 	// To give preference to button combinations,
 	// first pass ignores mappings where no modifier is bound
-	for (Action &action : GetActions()) {
+	for (Action &action : actions) {
 		ControllerButtonCombo combo = action.boundInput;
 		if (combo.modifier == ControllerButton_NONE)
 			continue;
@@ -1615,7 +1616,7 @@ void PadmapperOptions::ButtonPressed(ControllerButton button)
 		return;
 	}
 
-	for (Action &action : GetActions()) {
+	for (Action &action : actions) {
 		ControllerButtonCombo combo = action.boundInput;
 		if (combo.modifier != ControllerButton_NONE)
 			continue;
