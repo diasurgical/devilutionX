@@ -704,8 +704,16 @@ void GameEventHandler(const SDL_Event &event, uint16_t modState)
 			LastMouseButtonAction = MouseActionType::None;
 			sgbMouseDown = CLICK_NONE;
 			ShowProgress(GetCustomEvent(event.type));
+
 			RedrawEverything();
-			DrawAndBlit();
+			if (!HeadlessMode) {
+				while (IsRedrawEverything()) {
+					// In direct rendering mode with double/triple buffering, we need
+					// to prepare all buffers before fading in.
+					DrawAndBlit();
+				}
+			}
+
 			LoadPWaterPalette();
 			if (gbRunGame)
 				PaletteFadeIn(8);

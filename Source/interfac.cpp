@@ -467,6 +467,17 @@ void ShowProgress(interface_mode uMsg)
 	if (!HeadlessMode) {
 		assert(ghMainWnd);
 
+		if (RenderDirectlyToOutputSurface && PalSurface != nullptr) {
+			// Ensure that all back buffers have the full progress bar.
+			const void *initialPixels = PalSurface->pixels;
+			do {
+				DrawCutsceneForeground();
+				if (DiabloUiSurface() == PalSurface)
+					BltFast(nullptr, nullptr);
+				RenderPresent();
+			} while (PalSurface->pixels != initialPixels);
+		}
+
 		PaletteFadeOut(8);
 	}
 
