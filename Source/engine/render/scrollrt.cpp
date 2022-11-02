@@ -1529,7 +1529,7 @@ void DrawAndBlit()
 	bool drawMana = IsRedrawComponent(PanelDrawComponent::Mana);
 	bool drawControlButtons = IsRedrawComponent(PanelDrawComponent::ControlButtons);
 	bool drawBelt = IsRedrawComponent(PanelDrawComponent::Belt);
-	bool drawChatInput = IsRedrawComponent(PanelDrawComponent::ChatInput);
+	bool drawChatInput = talkflag;
 	bool drawInfoBox = false;
 	bool drawCtrlPan = false;
 
