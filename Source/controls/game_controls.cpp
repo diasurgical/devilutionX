@@ -332,7 +332,7 @@ bool SkipsMovie(ControllerButtonEvent ctrlEvent)
 
 bool IsSimulatedMouseClickBinding(ControllerButtonEvent ctrlEvent)
 {
-	if (IsAnyOf(ctrlEvent.button, ControllerButton_NONE, ControllerButton_IGNORE))
+	if (ctrlEvent.button == ControllerButton_NONE)
 		return false;
 	if (!ctrlEvent.up && ctrlEvent.button == SuppressedButton)
 		return false;
@@ -357,17 +357,18 @@ bool HandleControllerButtonEvent(const SDL_Event &event, GameAction &action)
 	};
 
 	const ControllerButtonEvent ctrlEvent = ToControllerButtonEvent(event);
+	if (ctrlEvent.button == ControllerButton_IGNORE) {
+		return false;
+	}
+
 	const ButtonReleaser buttonReleaser { ctrlEvent };
 	bool isGamepadMotion = ProcessControllerMotion(event, ctrlEvent);
 	DetectInputMethod(event, ctrlEvent);
 	if (isGamepadMotion) {
 		return true;
 	}
-	if (IsAnyOf(ctrlEvent.button, ControllerButton_NONE, ControllerButton_IGNORE)) {
-		return false;
-	}
 
-	if (ctrlEvent.button == SuppressedButton) {
+	if (ctrlEvent.button != ControllerButton_NONE && ctrlEvent.button == SuppressedButton) {
 		if (!ctrlEvent.up)
 			return true;
 		SuppressedButton = ControllerButton_NONE;

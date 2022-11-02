@@ -27,8 +27,11 @@ MenuAction GetMenuHeldUpDownAction()
 MenuAction GetMenuAction(const SDL_Event &event)
 {
 	const ControllerButtonEvent ctrlEvent = ToControllerButtonEvent(event);
-	bool isGamepadMotion = ProcessControllerMotion(event, ctrlEvent);
+	if (ctrlEvent.button == ControllerButton_IGNORE) {
+		return MenuAction_NONE;
+	}
 
+	bool isGamepadMotion = ProcessControllerMotion(event, ctrlEvent);
 	DetectInputMethod(event, ctrlEvent);
 	if (isGamepadMotion) {
 		return GetMenuHeldUpDownAction();
@@ -36,8 +39,6 @@ MenuAction GetMenuAction(const SDL_Event &event)
 
 	if (!ctrlEvent.up) {
 		switch (TranslateTo(GamepadType, ctrlEvent.button)) {
-		case ControllerButton_IGNORE:
-			return MenuAction_NONE;
 		case ControllerButton_BUTTON_A:
 		case ControllerButton_BUTTON_START:
 			return MenuAction_SELECT;

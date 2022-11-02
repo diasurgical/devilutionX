@@ -80,7 +80,7 @@ void SetSimulatingMouseWithPadmapper(bool value)
 
 void SimulateRightStickWithPadmapper(ControllerButtonEvent ctrlEvent)
 {
-	if (IsAnyOf(ctrlEvent.button, ControllerButton_NONE, ControllerButton_IGNORE))
+	if (ctrlEvent.button == ControllerButton_NONE)
 		return;
 	if (!ctrlEvent.up && ctrlEvent.button == SuppressedButton)
 		return;
