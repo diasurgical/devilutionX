@@ -638,6 +638,8 @@ struct KeymapperOptions : OptionCategoryBase {
 		// The implicit copy constructor would copy that reference instead of referencing the copy.
 		Action(const Action &) = delete;
 
+		Action(string_view key, const char *name, const char *description, uint32_t defaultKey, std::function<void()> actionPressed, std::function<void()> actionReleased, std::function<bool()> enable, unsigned index);
+
 		[[nodiscard]] string_view GetName() const override;
 		[[nodiscard]] OptionEntryType GetType() const override
 		{
@@ -652,7 +654,6 @@ struct KeymapperOptions : OptionCategoryBase {
 		bool SetValue(int value);
 
 	private:
-		Action(string_view key, const char *name, const char *description, uint32_t defaultKey, std::function<void()> actionPressed, std::function<void()> actionReleased, std::function<bool()> enable, unsigned index);
 		uint32_t defaultKey;
 		std::function<void()> actionPressed;
 		std::function<void()> actionReleased;
@@ -674,13 +675,14 @@ struct KeymapperOptions : OptionCategoryBase {
 	    std::function<void()> actionReleased = nullptr,
 	    std::function<bool()> enable = nullptr,
 	    unsigned index = 0);
+	void CommitActions();
 	void KeyPressed(uint32_t key) const;
 	void KeyReleased(uint32_t key) const;
 	string_view KeyNameForAction(string_view actionName) const;
 	uint32_t KeyForAction(string_view actionName) const;
 
 private:
-	std::vector<std::unique_ptr<Action>> actions;
+	std::forward_list<Action> actions;
 	std::unordered_map<uint32_t, std::reference_wrapper<Action>> keyIDToAction;
 	std::unordered_map<uint32_t, std::string> keyIDToKeyName;
 	std::unordered_map<std::string, uint32_t> keyNameToKeyID;

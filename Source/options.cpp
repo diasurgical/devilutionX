@@ -1249,8 +1249,8 @@ KeymapperOptions::KeymapperOptions()
 std::vector<OptionEntryBase *> KeymapperOptions::GetEntries()
 {
 	std::vector<OptionEntryBase *> entries;
-	for (auto &action : actions) {
-		entries.push_back(action.get());
+	for (Action &action : actions) {
+		entries.push_back(&action);
 	}
 	return entries;
 }
@@ -1359,7 +1359,12 @@ bool KeymapperOptions::Action::SetValue(int value)
 
 void KeymapperOptions::AddAction(string_view key, const char *name, const char *description, uint32_t defaultKey, std::function<void()> actionPressed, std::function<void()> actionReleased, std::function<bool()> enable, unsigned index)
 {
-	actions.push_back(std::unique_ptr<Action>(new Action(key, name, description, defaultKey, std::move(actionPressed), std::move(actionReleased), std::move(enable), index)));
+	actions.emplace_front(key, name, description, defaultKey, std::move(actionPressed), std::move(actionReleased), std::move(enable), index);
+}
+
+void KeymapperOptions::CommitActions()
+{
+	actions.reverse();
 }
 
 void KeymapperOptions::KeyPressed(uint32_t key) const
@@ -1400,9 +1405,9 @@ void KeymapperOptions::KeyReleased(uint32_t key) const
 
 string_view KeymapperOptions::KeyNameForAction(string_view actionName) const
 {
-	for (const auto &action : actions) {
-		if (action->key == actionName && action->boundKey != SDLK_UNKNOWN) {
-			return action->GetValueDescription();
+	for (const Action &action : actions) {
+		if (action.key == actionName && action.boundKey != SDLK_UNKNOWN) {
+			return action.GetValueDescription();
 		}
 	}
 	return "";
@@ -1410,9 +1415,9 @@ string_view KeymapperOptions::KeyNameForAction(string_view actionName) const
 
 uint32_t KeymapperOptions::KeyForAction(string_view actionName) const
 {
-	for (const auto &action : actions) {
-		if (action->key == actionName && action->boundKey != SDLK_UNKNOWN) {
-			return action->boundKey;
+	for (const Action &action : actions) {
+		if (action.key == actionName && action.boundKey != SDLK_UNKNOWN) {
+			return action.boundKey;
 		}
 	}
 	return SDLK_UNKNOWN;
