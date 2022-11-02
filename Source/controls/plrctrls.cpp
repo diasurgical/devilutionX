@@ -1573,7 +1573,7 @@ void DetectInputMethod(const SDL_Event &event, const ControllerButtonEvent &game
 #endif
 
 #if HAS_KBCTRL == 1
-	if (inputType == ControlTypes::KeyboardAndMouse && IsNoneOf(gamepadEvent.button, ControllerButton_NONE, ControllerButton_IGNORE)) {
+	if (inputType == ControlTypes::KeyboardAndMouse && gamepadEvent.button != ControllerButton_NONE) {
 		inputType = ControlTypes::Gamepad;
 	}
 #endif
