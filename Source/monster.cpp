@@ -4049,7 +4049,7 @@ bool LineClearMissile(Point startPoint, Point endPoint)
 	return LineClear(PosOkMissile, startPoint, endPoint);
 }
 
-bool LineClear(const std::function<bool(Point)> &clear, Point startPoint, Point endPoint)
+bool LineClear(tl::function_ref<bool(Point)> clear, Point startPoint, Point endPoint)
 {
 	Point position = startPoint;
 

@@ -1,9 +1,10 @@
 #include "utils/language.h"
 
-#include <functional>
 #include <memory>
 #include <unordered_map>
 #include <vector>
+
+#include <function_ref.hpp>
 
 #include "engine/assets.hpp"
 #include "options.h"
@@ -104,7 +105,7 @@ string_view TrimRight(string_view str)
 
 // English, Danish, Spanish, Italian, Swedish
 unsigned PluralForms = 2;
-std::function<int(int n)> GetLocalPluralId = [](int n) -> int { return n != 1 ? 1 : 0; };
+tl::function_ref<int(int n)> GetLocalPluralId = [](int n) -> int { return n != 1 ? 1 : 0; };
 
 /**
  * Match plural=(n != 1);"

@@ -5,11 +5,14 @@
 #include <cstddef>
 #include <cstdint>
 
+#include <function_ref.hpp>
+
 #include "DiabloUI/ui_item.h"
 #include "engine/clx_sprite.hpp"
 #include "engine/load_pcx.hpp" // IWYU pragma: export
 #include "player.h"
 #include "utils/display.h"
+#include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
 
@@ -105,7 +108,7 @@ void UiFocusNavigationEsc();
 void UiFocusNavigationYesNo();
 void UiInitList(void (*fnFocus)(int value), void (*fnSelect)(int value), void (*fnEsc)(), const std::vector<std::unique_ptr<UiItemBase>> &items, bool wraps = false, void (*fnFullscreen)() = nullptr, bool (*fnYesNo)() = nullptr, size_t selectedItem = 0);
 void UiClearScreen();
-void UiPollAndRender(std::function<bool(SDL_Event &)> eventHandler = nullptr);
+void UiPollAndRender(std::optional<tl::function_ref<bool(SDL_Event &)>> eventHandler = std::nullopt);
 void UiRenderItem(const UiItemBase &item);
 void UiRenderItems(const std::vector<UiItemBase *> &items);
 void UiRenderItems(const std::vector<std::unique_ptr<UiItemBase>> &items);

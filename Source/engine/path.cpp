@@ -7,6 +7,8 @@
 
 #include <array>
 
+#include <function_ref.hpp>
+
 #include "levels/gendung.h"
 #include "lighting.h"
 #include "objects.h"
@@ -290,7 +292,7 @@ bool ParentPath(uint16_t pathIndex, Point candidatePosition, Point destinationPo
  *
  * @return false if we ran out of preallocated nodes to use, else true
  */
-bool GetPath(const std::function<bool(Point)> &posOk, uint16_t pathIndex, Point destination)
+bool GetPath(tl::function_ref<bool(Point)> posOk, uint16_t pathIndex, Point destination)
 {
 	for (Displacement dir : PathDirs) {
 		const PathNode &path = PathNodes[pathIndex];
@@ -362,7 +364,7 @@ bool IsTileOccupied(Point position)
 	return false;
 }
 
-int FindPath(const std::function<bool(Point)> &posOk, Point startPosition, Point destinationPosition, int8_t path[MaxPathLength])
+int FindPath(tl::function_ref<bool(Point)> posOk, Point startPosition, Point destinationPosition, int8_t path[MaxPathLength])
 {
 	/**
 	 * for reconstructing the path after the A* search is done. The longest
@@ -434,7 +436,7 @@ bool path_solid_pieces(Point startPosition, Point destinationPosition)
 	return rv;
 }
 
-std::optional<Point> FindClosestValidPosition(const std::function<bool(Point)> &posOk, Point startingPosition, unsigned int minimumRadius, unsigned int maximumRadius)
+std::optional<Point> FindClosestValidPosition(tl::function_ref<bool(Point)> posOk, Point startingPosition, unsigned int minimumRadius, unsigned int maximumRadius)
 {
 	return Crawl(minimumRadius, maximumRadius, [&](Displacement displacement) -> std::optional<Point> {
 		Point candidatePosition = startingPosition + displacement;
