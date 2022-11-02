@@ -28,7 +28,9 @@ enum ControllerButton : uint8_t {
 	ControllerButton_BUTTON_DPAD_UP,
 	ControllerButton_BUTTON_DPAD_DOWN,
 	ControllerButton_BUTTON_DPAD_LEFT,
-	ControllerButton_BUTTON_DPAD_RIGHT
+	ControllerButton_BUTTON_DPAD_RIGHT,
+	FIRST = ControllerButton_NONE,
+	LAST = ControllerButton_BUTTON_DPAD_RIGHT
 };
 
 struct ControllerButtonCombo {

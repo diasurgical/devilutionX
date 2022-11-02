@@ -1420,27 +1420,30 @@ uint32_t KeymapperOptions::KeyForAction(string_view actionName) const
 
 PadmapperOptions::PadmapperOptions()
     : OptionCategoryBase("Padmapping", N_("Padmapping"), N_("Padmapping Settings"))
+    , buttonToButtonName { {
+	      /*ControllerButton_NONE*/ {},
+	      /*ControllerButton_IGNORE*/ {},
+	      /*ControllerButton_AXIS_TRIGGERLEFT*/ "LT",
+	      /*ControllerButton_AXIS_TRIGGERRIGHT*/ "RT",
+	      /*ControllerButton_BUTTON_A*/ "A",
+	      /*ControllerButton_BUTTON_B*/ "B",
+	      /*ControllerButton_BUTTON_X*/ "X",
+	      /*ControllerButton_BUTTON_Y*/ "Y",
+	      /*ControllerButton_BUTTON_LEFTSTICK*/ "LS",
+	      /*ControllerButton_BUTTON_RIGHTSTICK*/ "RS",
+	      /*ControllerButton_BUTTON_LEFTSHOULDER*/ "LB",
+	      /*ControllerButton_BUTTON_RIGHTSHOULDER*/ "RB",
+	      /*ControllerButton_BUTTON_START*/ "Start",
+	      /*ControllerButton_BUTTON_BACK*/ "Select",
+	      /*ControllerButton_BUTTON_DPAD_UP*/ "Up",
+	      /*ControllerButton_BUTTON_DPAD_DOWN*/ "Down",
+	      /*ControllerButton_BUTTON_DPAD_LEFT*/ "Left",
+	      /*ControllerButton_BUTTON_DPAD_RIGHT*/ "Right",
+	  } }
 {
-	buttonToButtonName.emplace(ControllerButton_AXIS_TRIGGERLEFT, "LT");
-	buttonToButtonName.emplace(ControllerButton_AXIS_TRIGGERRIGHT, "RT");
-	buttonToButtonName.emplace(ControllerButton_BUTTON_A, "A");
-	buttonToButtonName.emplace(ControllerButton_BUTTON_B, "B");
-	buttonToButtonName.emplace(ControllerButton_BUTTON_X, "X");
-	buttonToButtonName.emplace(ControllerButton_BUTTON_Y, "Y");
-	buttonToButtonName.emplace(ControllerButton_BUTTON_LEFTSTICK, "LS");
-	buttonToButtonName.emplace(ControllerButton_BUTTON_RIGHTSTICK, "RS");
-	buttonToButtonName.emplace(ControllerButton_BUTTON_LEFTSHOULDER, "LB");
-	buttonToButtonName.emplace(ControllerButton_BUTTON_RIGHTSHOULDER, "RB");
-	buttonToButtonName.emplace(ControllerButton_BUTTON_START, "Start");
-	buttonToButtonName.emplace(ControllerButton_BUTTON_BACK, "Select");
-	buttonToButtonName.emplace(ControllerButton_BUTTON_DPAD_UP, "Up");
-	buttonToButtonName.emplace(ControllerButton_BUTTON_DPAD_DOWN, "Down");
-	buttonToButtonName.emplace(ControllerButton_BUTTON_DPAD_LEFT, "Left");
-	buttonToButtonName.emplace(ControllerButton_BUTTON_DPAD_RIGHT, "Right");
-
 	buttonNameToButton.reserve(buttonToButtonName.size());
-	for (const auto &kv : buttonToButtonName) {
-		buttonNameToButton.emplace(kv.second, kv.first);
+	for (size_t i = 0; i < buttonToButtonName.size(); ++i) {
+		buttonNameToButton.emplace(buttonToButtonName[i], static_cast<ControllerButton>(i));
 	}
 }
 
@@ -1529,19 +1532,18 @@ void PadmapperOptions::Action::SaveToIni(string_view category) const
 		SetIniValue(category.data(), key.data(), "");
 		return;
 	}
-	auto buttonNameIt = sgOptions.Padmapper.buttonToButtonName.find(boundInput.button);
-	if (buttonNameIt == sgOptions.Padmapper.buttonToButtonName.end()) {
+	std::string inputName = sgOptions.Padmapper.buttonToButtonName[static_cast<size_t>(boundInput.button)];
+	if (inputName.empty()) {
 		LogVerbose("Padmapper: no name found for key '{}'", key);
 		return;
 	}
-	std::string inputName = buttonNameIt->second;
 	if (boundInput.modifier != ControllerButton_NONE) {
-		auto modifierNameIt = sgOptions.Padmapper.buttonToButtonName.find(boundInput.modifier);
-		if (modifierNameIt == sgOptions.Padmapper.buttonToButtonName.end()) {
+		const std::string &modifierName = sgOptions.Padmapper.buttonToButtonName[static_cast<size_t>(boundInput.modifier)];
+		if (modifierName.empty()) {
 			LogVerbose("Padmapper: no name found for key '{}'", key);
 			return;
 		}
-		inputName = StrCat(modifierNameIt->second, "+", inputName);
+		inputName = StrCat(modifierName, "+", inputName);
 	}
 	SetIniValue(category.data(), key.data(), inputName.data());
 }
@@ -1553,10 +1555,10 @@ string_view PadmapperOptions::Action::GetValueDescription() const
 
 bool PadmapperOptions::Action::SetValue(ControllerButtonCombo value)
 {
-	auto modifierNameIt = sgOptions.Padmapper.buttonToButtonName.find(value.modifier);
-	auto buttonNameIt = sgOptions.Padmapper.buttonToButtonName.find(value.button);
-	auto notFoundIt = sgOptions.Padmapper.buttonToButtonName.end();
-	if ((value.modifier != ControllerButton_NONE && modifierNameIt == notFoundIt) || (value.button != ControllerButton_NONE && buttonNameIt == notFoundIt)) {
+	const std::string &modifierName = sgOptions.Padmapper.buttonToButtonName[static_cast<size_t>(value.modifier)];
+	const std::string &buttonName = sgOptions.Padmapper.buttonToButtonName[static_cast<size_t>(value.button)];
+	if ((value.modifier != ControllerButton_NONE && modifierName.empty())
+	    || (value.button != ControllerButton_NONE && buttonName.empty())) {
 		// Ignore invalid button combos
 		return false;
 	}
@@ -1570,10 +1572,10 @@ bool PadmapperOptions::Action::SetValue(ControllerButtonCombo value)
 	// Add new button combo
 	if (value.button != ControllerButton_NONE) {
 		boundInput = value;
-		boundInputDescription = buttonNameIt->second;
+		boundInputDescription = buttonName;
 
-		if (modifierNameIt != notFoundIt) {
-			boundInputDescription = StrCat(modifierNameIt->second, "+", boundInputDescription);
+		if (!modifierName.empty()) {
+			boundInputDescription = StrCat(modifierName, "+", boundInputDescription);
 		}
 	}
 
@@ -1603,23 +1605,21 @@ void PadmapperOptions::ButtonPressed(ControllerButton button)
 	if (action->actionPressed)
 		action->actionPressed();
 	SuppressedButton = action->boundInput.modifier;
-	buttonToReleaseAction.insert_or_assign(button, *action);
+	buttonToReleaseAction[static_cast<size_t>(button)] = action;
 }
 
 void PadmapperOptions::ButtonReleased(ControllerButton button, bool invokeAction)
 {
 	if (invokeAction) {
-		auto it = buttonToReleaseAction.find(button);
-		if (it == buttonToReleaseAction.end())
+		const Action *action = buttonToReleaseAction[static_cast<size_t>(button)];
+		if (action == nullptr)
 			return; // Ignore unmapped buttons.
 
-		const Action &action = it->second.get();
-
 		// Check that the action can be triggered.
-		if (action.actionReleased && (!action.enable || action.enable()))
-			action.actionReleased();
+		if (action->actionReleased && (!action->enable || action->enable()))
+			action->actionReleased();
 	}
-	buttonToReleaseAction.erase(button);
+	buttonToReleaseAction[static_cast<size_t>(button)] = nullptr;
 }
 
 bool PadmapperOptions::IsActive(string_view actionName) const
@@ -1627,12 +1627,8 @@ bool PadmapperOptions::IsActive(string_view actionName) const
 	for (const Action &action : actions) {
 		if (action.key != actionName)
 			continue;
-		ControllerButton button = action.boundInput.button;
-		auto it = buttonToReleaseAction.find(button);
-		if (it == buttonToReleaseAction.end())
-			return false;
-		const Action &releaseAction = it->second.get();
-		return releaseAction.key == actionName;
+		const Action *releaseAction = buttonToReleaseAction[static_cast<size_t>(action.boundInput.button)];
+		return releaseAction != nullptr && releaseAction->key == actionName;
 	}
 	return false;
 }
@@ -1646,11 +1642,10 @@ string_view PadmapperOptions::ActionNameTriggeredByButtonEvent(ControllerButtonE
 		const Action *pressAction = FindAction(ctrlEvent.button);
 		return pressAction != nullptr ? pressAction->key : "";
 	}
-	auto it = buttonToReleaseAction.find(ctrlEvent.button);
-	if (it == buttonToReleaseAction.end())
+	const Action *releaseAction = buttonToReleaseAction[static_cast<size_t>(ctrlEvent.button)];
+	if (releaseAction == nullptr)
 		return "";
-	const Action &releaseAction = it->second.get();
-	return releaseAction.key;
+	return releaseAction->key;
 }
 
 string_view PadmapperOptions::InputNameForAction(string_view actionName) const

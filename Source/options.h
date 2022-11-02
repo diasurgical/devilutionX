@@ -1,5 +1,6 @@
 #pragma once
 
+#include <array>
 #include <cstddef>
 #include <cstdint>
 #include <forward_list>
@@ -746,8 +747,8 @@ struct PadmapperOptions : OptionCategoryBase {
 
 private:
 	std::forward_list<Action> actions;
-	std::unordered_map<ControllerButton, std::reference_wrapper<const Action>> buttonToReleaseAction;
-	std::unordered_map<ControllerButton, std::string> buttonToButtonName;
+	std::array<const Action *, enum_size<ControllerButton>::value> buttonToReleaseAction;
+	std::array<std::string, enum_size<ControllerButton>::value> buttonToButtonName;
 	std::unordered_map<std::string, ControllerButton> buttonNameToButton;
 	bool committed = false;
 
