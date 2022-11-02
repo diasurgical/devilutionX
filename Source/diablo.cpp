@@ -1761,6 +1761,7 @@ void InitKeymapActions()
 		    DebugToggle = !DebugToggle;
 	    });
 #endif
+	sgOptions.Keymapper.CommitActions();
 }
 
 void InitPadmapActions()
