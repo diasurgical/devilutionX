@@ -1,5 +1,7 @@
 #include "selstart.h"
 
+#include <function_ref.hpp>
+
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/scrollbar.h"
 #include "control.h"
@@ -9,6 +11,7 @@
 #include "miniwin/misc_msg.h"
 #include "options.h"
 #include "utils/language.h"
+#include "utils/stdcompat/optional.hpp"
 #include "utils/utf8.hpp"
 
 namespace devilution {
@@ -268,7 +271,7 @@ void UiSettingsMenu()
 		vecDialog.push_back(std::make_unique<UiArtText>(optionDescription, MakeSdlRect(rectDescription), UiFlags::FontSize12 | UiFlags::ColorUiSilverDark | UiFlags::AlignCenter, 1, IsSmallFontTall() ? 22 : 18));
 
 		size_t itemToSelect = 1;
-		std::function<bool(SDL_Event &)> eventHandler;
+		std::optional<tl::function_ref<bool(SDL_Event &)>> eventHandler;
 
 		switch (shownMenu) {
 		case ShownMenuType::Settings: {

@@ -11,6 +11,8 @@
 #include <array>
 #include <functional>
 
+#include <function_ref.hpp>
+
 #include "engine.h"
 #include "engine/actor_position.hpp"
 #include "engine/animationinfo.h"
@@ -478,7 +480,7 @@ void FreeMonsters();
 bool DirOK(const Monster &monster, Direction mdir);
 bool PosOkMissile(Point position);
 bool LineClearMissile(Point startPoint, Point endPoint);
-bool LineClear(const std::function<bool(Point)> &clear, Point startPoint, Point endPoint);
+bool LineClear(tl::function_ref<bool(Point)> clear, Point startPoint, Point endPoint);
 void SyncMonsterAnim(Monster &monster);
 void M_FallenFear(Point position);
 void PrintMonstHistory(int mt);

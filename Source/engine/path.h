@@ -6,10 +6,10 @@
 #pragma once
 
 #include <cstdint>
-#include <functional>
 #include <limits>
 
 #include <SDL.h>
+#include <function_ref.hpp>
 
 #include "engine/direction.hpp"
 #include "engine/point.hpp"
@@ -36,7 +36,7 @@ bool IsTileOccupied(Point position);
  * @brief Find the shortest path from startPosition to destinationPosition, using PosOk(Point) to check that each step is a valid position.
  * Store the step directions (corresponds to an index in PathDirs) in path, which must have room for 24 steps
  */
-int FindPath(const std::function<bool(Point)> &posOk, Point startPosition, Point destinationPosition, int8_t path[MaxPathLength]);
+int FindPath(tl::function_ref<bool(Point)> posOk, Point startPosition, Point destinationPosition, int8_t path[MaxPathLength]);
 
 /**
  * @brief check if stepping from a given position to a neighbouring tile cuts a corner.
@@ -83,6 +83,6 @@ const Displacement PathDirs[8] = {
  * @param maximumRadius The maximum distance to check, defaults to 18 for vanilla compatibility but supports values up to 50
  * @return either the closest valid point or an empty optional
  */
-std::optional<Point> FindClosestValidPosition(const std::function<bool(Point)> &posOk, Point startingPosition, unsigned int minimumRadius = 0, unsigned int maximumRadius = 18);
+std::optional<Point> FindClosestValidPosition(tl::function_ref<bool(Point)> posOk, Point startingPosition, unsigned int minimumRadius = 0, unsigned int maximumRadius = 18);
 
 } // namespace devilution

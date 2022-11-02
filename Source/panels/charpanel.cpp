@@ -3,6 +3,7 @@
 #include <string>
 
 #include <fmt/format.h>
+#include <function_ref.hpp>
 
 #include "control.h"
 #include "engine/load_clx.hpp"
@@ -42,8 +43,8 @@ struct PanelEntry {
 	std::string label;
 	Point position;
 	int length;
-	int labelLength;                                       // max label's length - used for line wrapping
-	std::function<StyledText()> statDisplayFunc = nullptr; // function responsible for displaying stat
+	int labelLength;                                               // max label's length - used for line wrapping
+	std::optional<tl::function_ref<StyledText()>> statDisplayFunc; // function responsible for displaying stat
 };
 
 UiFlags GetBaseStatColor(CharacterAttribute attr)
@@ -145,8 +146,8 @@ PanelEntry panelEntries[] = {
 	        return StyledText { UiFlags::ColorWhite, FormatInteger(MyPlayer->_pNextExper), spacing };
 	    } },
 
-	{ N_("Base"), { LeftColumnLabelX, /* set dynamically */ 0 }, 0, 44 },
-	{ N_("Now"), { 135, /* set dynamically */ 0 }, 0, 44 },
+	{ N_("Base"), { LeftColumnLabelX, /* set dynamically */ 0 }, 0, 44, {} },
+	{ N_("Now"), { 135, /* set dynamically */ 0 }, 0, 44, {} },
 	{ N_("Strength"), { LeftColumnLabelX, 135 }, 45, LeftColumnLabelWidth,
 	    []() { return StyledText { GetBaseStatColor(CharacterAttribute::Strength), StrCat(MyPlayer->_pBaseStr) }; } },
 	{ "", { 135, 135 }, 45, 0,
@@ -167,7 +168,7 @@ PanelEntry panelEntries[] = {
 	        return StyledText { UiFlags::ColorRed, (MyPlayer->_pStatPts > 0 ? StrCat(MyPlayer->_pStatPts) : "") };
 	    } },
 
-	{ N_("Gold"), { TopRightLabelX, /* set dynamically */ 0 }, 0, 98 },
+	{ N_("Gold"), { TopRightLabelX, /* set dynamically */ 0 }, 0, 98, {} },
 	{ "", { TopRightLabelX, 127 }, 99, 0,
 	    []() { return StyledText { UiFlags::ColorWhite, FormatInteger(MyPlayer->_pGold) }; } },
 
@@ -283,7 +284,7 @@ void LoadCharPanel()
 		panelEntries[GoldHeaderEntryIndex].position.y = isSmallFontTall ? 105 : 106;
 
 		for (auto &entry : panelEntries) {
-			if (entry.statDisplayFunc != nullptr) {
+			if (entry.statDisplayFunc) {
 				DrawPanelField(out, entry.position, entry.length, boxLeft[0], boxMiddle[0], boxRight[0]);
 			}
 			DrawShadowString(out, entry);
@@ -303,8 +304,8 @@ void DrawChr(const Surface &out)
 	Point pos = GetPanelPosition(UiPanels::Character, { 0, 0 });
 	RenderClxSprite(out, (*Panel)[0], pos);
 	for (auto &entry : panelEntries) {
-		if (entry.statDisplayFunc != nullptr) {
-			StyledText tmp = entry.statDisplayFunc();
+		if (entry.statDisplayFunc) {
+			StyledText tmp = (*entry.statDisplayFunc)();
 			DrawString(
 			    out,
 			    tmp.text,

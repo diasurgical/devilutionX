@@ -458,7 +458,7 @@ void CheckMissileCol(Missile &missile, int minDamage, int maxDamage, bool isDama
 		PlaySfxLoc(MissilesData[missile._mitype].miSFX, missile.position.tile);
 }
 
-bool MoveMissile(Missile &missile, const std::function<bool(Point)> &checkTile, bool ifCheckTileFailsDontMoveToTile = false)
+bool MoveMissile(Missile &missile, tl::function_ref<bool(Point)> checkTile, bool ifCheckTileFailsDontMoveToTile = false)
 {
 	Point prevTile = missile.position.tile;
 	missile.position.traveled += missile.position.velocity;
