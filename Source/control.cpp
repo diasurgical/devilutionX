@@ -1319,7 +1319,7 @@ void control_type_message()
 	if (!IsChatAvailable())
 		return;
 
-	RedrawComponent(PanelDrawComponent::ChatInput);
+	talkflag = true;
 	SDL_Rect rect = MakeSdlRect(GetMainPanel().position.x + 200, GetMainPanel().position.y + 22, 250, 39);
 	SDL_SetTextInputRect(&rect);
 	TalkMessage[0] = '\0';

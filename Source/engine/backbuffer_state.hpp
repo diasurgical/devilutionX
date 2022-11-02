@@ -12,10 +12,9 @@ enum class PanelDrawComponent {
 	Mana,
 	ControlButtons,
 	Belt,
-	ChatInput,
 
 	FIRST = Health,
-	LAST = ChatInput
+	LAST = Belt
 };
 
 struct DrawnCursor {
