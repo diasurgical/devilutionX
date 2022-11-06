@@ -78,9 +78,9 @@ public:
 	[[nodiscard]] int8_t getFrameToUseForRendering() const;
 
 	/**
-	 * @brief Calculates the progress of the current animation as a fraction (0.0f to 1.0f)
+	 * @brief Calculates the progress of the current animation as a fraction (see baseValueFraction)
 	 */
-	[[nodiscard]] float getAnimationProgress() const;
+	[[nodiscard]] uint8_t getAnimationProgress() const;
 
 	/**
 	 * @brief Sets the new Animation with all relevant information for rendering
@@ -92,7 +92,7 @@ public:
 	 * @param distributeFramesBeforeFrame Distribute the numSkippedFrames only before this frame
 	 * @param previewShownGameTickFragments Defines how long (in game ticks fraction) the preview animation was shown
 	 */
-	void setNewAnimation(OptionalClxSpriteList sprites, int8_t numberOfFrames, int8_t ticksPerFrame, AnimationDistributionFlags flags = AnimationDistributionFlags::None, int8_t numSkippedFrames = 0, int8_t distributeFramesBeforeFrame = 0, float previewShownGameTickFragments = 0.F);
+	void setNewAnimation(OptionalClxSpriteList sprites, int8_t numberOfFrames, int8_t ticksPerFrame, AnimationDistributionFlags flags = AnimationDistributionFlags::None, int8_t numSkippedFrames = 0, int8_t distributeFramesBeforeFrame = 0, int8_t previewShownGameTickFragments = 0);
 
 	/**
 	 * @brief Changes the Animation Data on-the-fly. This is needed if a animation is currently in progress and the player changes his gear.
@@ -108,11 +108,16 @@ public:
 	 */
 	void processAnimation(bool reverseAnimation = false);
 
+	/**
+	 * @brief Fractions in AnimationInfo are stored as fixed point (baseValueFraction/128 correspondents to 1/100%).
+	 */
+	constexpr static uint8_t baseValueFraction = 128;
+
 private:
 	/**
-	 * @brief returns the progress as a fraction (0.0f to 1.0f) in time to the next game tick or 0.0f if the animation is frozen
+	 * @brief returns the progress as a fraction in time to the next game tick or no progress if the animation is frozen (see baseValueFraction)
 	 */
-	[[nodiscard]] float getProgressToNextGameTick() const;
+	[[nodiscard]] uint8_t getProgressToNextGameTick() const;
 
 	/**
 	 * @brief Animation Frames that will be adjusted for the skipped Frames/game ticks
@@ -122,15 +127,14 @@ private:
 	 * @brief Animation Frames that wasn't shown from previous Animation
 	 */
 	int8_t skippedFramesFromPreviousAnimation_;
-
 	/**
-	 * @brief Specifies how many animations-fractions are displayed between two game ticks. this can be > 0, if animations are skipped or < 0 if the same animation is shown in multiple times (delay specified).
+	 * @brief Specifies how many animations-fractions (see baseValueFraction) are displayed between two game ticks. this can be more then one frame, if animations are skipped or less then one frame if the same animation is shown in multiple times (delay specified).
 	 */
-	float tickModifier_;
+	uint16_t tickModifier_;
 	/**
 	 * @brief Number of game ticks after the current animation sequence started
 	 */
-	float ticksSinceSequenceStarted_;
+	int16_t ticksSinceSequenceStarted_;
 };
 
 } // namespace devilution

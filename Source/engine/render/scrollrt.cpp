@@ -125,6 +125,19 @@ bool CouldMissileCollide(Point tile, bool checkPlayerAndMonster)
 	return IsMissileBlockedByTile(tile);
 }
 
+void UpdateMissilePositionForRendering(Missile &m, int progress)
+{
+	DisplacementOf<int64_t> velocity = m.position.velocity;
+	velocity *= progress;
+	velocity /= AnimationInfo::baseValueFraction;
+	Displacement pixelsTravelled = (m.position.traveled + Displacement { static_cast<int>(velocity.deltaX), static_cast<int>(velocity.deltaY) }) >> 16;
+	Displacement tileOffset = pixelsTravelled.screenToMissile();
+
+	// calculcate the future missile position
+	m.position.tileForRendering = m.position.start + tileOffset;
+	m.position.offsetForRendering = pixelsTravelled + tileOffset.worldToScreen();
+}
+
 void UpdateMissileRendererData(Missile &m)
 {
 	m.position.tileForRendering = m.position.tile;
@@ -135,14 +148,8 @@ void UpdateMissileRendererData(Missile &m)
 	if (missileMovement == MissileMovementDistribution::Disabled || m.position.velocity == Displacement {})
 		return;
 
-	float fProgress = gfProgressToNextGameTick;
-	Displacement velocity = m.position.velocity * fProgress;
-	Displacement pixelsTravelled = (m.position.traveled + velocity) >> 16;
-	Displacement tileOffset = pixelsTravelled.screenToMissile();
-
-	// calculcate the future missile position
-	m.position.tileForRendering = m.position.start + tileOffset;
-	m.position.offsetForRendering = pixelsTravelled + tileOffset.worldToScreen();
+	int progress = ProgressToNextGameTick;
+	UpdateMissilePositionForRendering(m, progress);
 
 	// In some cases this calculcated position is invalid.
 	// For example a missile shouldn't move inside a wall.
@@ -161,20 +168,15 @@ void UpdateMissileRendererData(Missile &m)
 	// We search the last offset that is in the old (valid) tile.
 	// Implementation note: If someone knows the correct math to calculate this without the loop, I would really appreciate it.
 	while (m.position.tile != m.position.tileForRendering) {
-		fProgress -= 0.01F;
+		progress -= 1;
 
-		if (fProgress <= 0.0F) {
+		if (progress <= 0) {
 			m.position.tileForRendering = m.position.tile;
 			m.position.offsetForRendering = m.position.offset;
 			return;
 		}
 
-		velocity = m.position.velocity * fProgress;
-		pixelsTravelled = (m.position.traveled + velocity) >> 16;
-		tileOffset = pixelsTravelled.screenToMissile();
-
-		m.position.tileForRendering = m.position.start + tileOffset;
-		m.position.offsetForRendering = pixelsTravelled + tileOffset.worldToScreen();
+		UpdateMissilePositionForRendering(m, progress);
 	}
 }
 
@@ -1276,9 +1278,10 @@ Displacement GetOffsetForWalking(const AnimationInfo &animationInfo, const Direc
 	constexpr Displacement MovingOffset[8]   = { {   0,  32 }, { -32,  16 }, { -64,   0 }, { -32, -16 }, {   0, -32 }, {  32, -16 },  {  64,   0 }, {  32,  16 } };
 	// clang-format on
 
-	float fAnimationProgress = animationInfo.getAnimationProgress();
+	int8_t animationProgress = animationInfo.getAnimationProgress();
 	Displacement offset = MovingOffset[static_cast<size_t>(dir)];
-	offset *= fAnimationProgress;
+	offset *= animationProgress;
+	offset /= AnimationInfo::baseValueFraction;
 
 	if (cameraMode) {
 		offset = -offset;

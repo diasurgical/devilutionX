@@ -24,16 +24,16 @@ int8_t AnimationInfo::getFrameToUseForRendering() const
 	if (currentFrame >= relevantFramesForDistributing_)
 		return currentFrame;
 
-	float ticksSinceSequenceStarted = ticksSinceSequenceStarted_;
+	int16_t ticksSinceSequenceStarted = ticksSinceSequenceStarted_;
 	if (ticksSinceSequenceStarted_ < 0) {
-		ticksSinceSequenceStarted = 0.0F;
+		ticksSinceSequenceStarted = 0;
 		Log("getFrameToUseForRendering: Invalid ticksSinceSequenceStarted_ {}", ticksSinceSequenceStarted_);
 	}
 
 	// we don't use the processed game ticks alone but also the fraction of the next game tick (if a rendering happens between game ticks). This helps to smooth the animations.
-	float totalTicksForCurrentAnimationSequence = getProgressToNextGameTick() + ticksSinceSequenceStarted;
+	int32_t totalTicksForCurrentAnimationSequence = getProgressToNextGameTick() + ticksSinceSequenceStarted;
 
-	int8_t absoluteAnimationFrame = static_cast<int8_t>(totalTicksForCurrentAnimationSequence * tickModifier_);
+	int8_t absoluteAnimationFrame = static_cast<int8_t>(totalTicksForCurrentAnimationSequence * tickModifier_ / baseValueFraction / baseValueFraction);
 	if (skippedFramesFromPreviousAnimation_ > 0) {
 		// absoluteAnimationFrames contains also the Frames from the previous Animation, so if we want to get the current Frame we have to remove them
 		absoluteAnimationFrame -= skippedFramesFromPreviousAnimation_;
@@ -42,7 +42,7 @@ int8_t AnimationInfo::getFrameToUseForRendering() const
 			absoluteAnimationFrame = numberOfFrames + absoluteAnimationFrame;
 		}
 	} else if (absoluteAnimationFrame >= relevantFramesForDistributing_) {
-		// this can happen if we are at the last frame and the next game tick is due (gfProgressToNextGameTick >= 1.0f)
+		// this can happen if we are at the last frame and the next game tick is due
 		if (absoluteAnimationFrame >= (relevantFramesForDistributing_ + 1)) {
 			// we should never have +2 frames even if next game tick is due
 			Log("getFrameToUseForRendering: Calculated an invalid Animation Frame (Calculated {} MaxFrame {})", absoluteAnimationFrame, relevantFramesForDistributing_);
@@ -56,25 +56,26 @@ int8_t AnimationInfo::getFrameToUseForRendering() const
 	return absoluteAnimationFrame;
 }
 
-float AnimationInfo::getAnimationProgress() const
+uint8_t AnimationInfo::getAnimationProgress() const
 {
-	float ticksSinceSequenceStarted = ticksSinceSequenceStarted_;
-	float tickModifier = tickModifier_;
+	int16_t ticksSinceSequenceStarted = ticksSinceSequenceStarted_;
+	int32_t tickModifier = tickModifier_;
 
 	if (relevantFramesForDistributing_ <= 0) {
 		// This logic is used if animation distribution is not active (see getFrameToUseForRendering).
 		// In this case the variables calculated with animation distribution are not initialized and we have to calculate them on the fly with the given information.
-		ticksSinceSequenceStarted = static_cast<float>((currentFrame * ticksPerFrame) + tickCounterOfCurrentFrame);
-		tickModifier = 1.0F / static_cast<float>(ticksPerFrame);
+		ticksSinceSequenceStarted = ((currentFrame * ticksPerFrame) + tickCounterOfCurrentFrame) * baseValueFraction;
+		tickModifier = baseValueFraction / ticksPerFrame;
 	}
 
-	float totalTicksForCurrentAnimationSequence = getProgressToNextGameTick() + ticksSinceSequenceStarted;
-	float progressInAnimationFrames = totalTicksForCurrentAnimationSequence * tickModifier;
-	float animationFraction = progressInAnimationFrames / static_cast<float>(numberOfFrames);
-	return animationFraction;
+	int32_t totalTicksForCurrentAnimationSequence = getProgressToNextGameTick() + ticksSinceSequenceStarted;
+	int32_t progressInAnimationFrames = totalTicksForCurrentAnimationSequence * tickModifier;
+	int32_t animationFraction = progressInAnimationFrames / numberOfFrames / baseValueFraction;
+	assert(animationFraction <= baseValueFraction);
+	return static_cast<uint8_t>(animationFraction);
 }
 
-void AnimationInfo::setNewAnimation(OptionalClxSpriteList celSprite, int8_t numberOfFrames, int8_t ticksPerFrame, AnimationDistributionFlags flags /*= AnimationDistributionFlags::None*/, int8_t numSkippedFrames /*= 0*/, int8_t distributeFramesBeforeFrame /*= 0*/, float previewShownGameTickFragments /*= 0.F*/)
+void AnimationInfo::setNewAnimation(OptionalClxSpriteList celSprite, int8_t numberOfFrames, int8_t ticksPerFrame, AnimationDistributionFlags flags /*= AnimationDistributionFlags::None*/, int8_t numSkippedFrames /*= 0*/, int8_t distributeFramesBeforeFrame /*= 0*/, int8_t previewShownGameTickFragments /*= 0*/)
 {
 	if ((flags & AnimationDistributionFlags::RepeatedAction) == AnimationDistributionFlags::RepeatedAction && distributeFramesBeforeFrame != 0 && this->numberOfFrames == numberOfFrames && currentFrame + 1 >= distributeFramesBeforeFrame && currentFrame != this->numberOfFrames - 1) {
 		// We showed the same Animation (for example a melee attack) before but truncated the Animation.
@@ -94,9 +95,9 @@ void AnimationInfo::setNewAnimation(OptionalClxSpriteList celSprite, int8_t numb
 	currentFrame = numSkippedFrames;
 	tickCounterOfCurrentFrame = 0;
 	this->ticksPerFrame = ticksPerFrame;
-	ticksSinceSequenceStarted_ = 0.F;
+	ticksSinceSequenceStarted_ = 0;
 	relevantFramesForDistributing_ = 0;
-	tickModifier_ = 0.0F;
+	tickModifier_ = 0;
 	isPetrified = false;
 
 	if (numSkippedFrames != 0 || flags != AnimationDistributionFlags::None) {
@@ -111,27 +112,22 @@ void AnimationInfo::setNewAnimation(OptionalClxSpriteList celSprite, int8_t numb
 		}
 
 		// Game ticks that will be adjusted for the skipped Frames/game ticks
-		int8_t relevantAnimationTicksForDistribution = relevantAnimationFramesForDistributing * ticksPerFrame;
+		int32_t relevantAnimationTicksForDistribution = relevantAnimationFramesForDistributing * ticksPerFrame;
 
 		// How many game ticks will the Animation be really shown (skipped Frames and game ticks removed)
-		float relevantAnimationTicksWithSkipping = relevantAnimationTicksForDistribution - (numSkippedFrames * ticksPerFrame);
+		int32_t relevantAnimationTicksWithSkipping = relevantAnimationTicksForDistribution - (numSkippedFrames * ticksPerFrame);
 
 		if ((flags & AnimationDistributionFlags::ProcessAnimationPending) == AnimationDistributionFlags::ProcessAnimationPending) {
 			// If processAnimation will be called after setNewAnimation (in same game tick as setNewAnimation), we increment the Animation-Counter.
 			// If no delay is specified, this will result in complete skipped frame (see processAnimation).
 			// But if we have a delay specified, this would only result in a reduced time the first frame is shown (one skipped delay).
 			// Because of that, we only the remove one game tick from the time the Animation is shown
-			relevantAnimationTicksWithSkipping -= 1.F;
+			relevantAnimationTicksWithSkipping -= 1;
 			// The Animation Distribution Logic needs to account how many game ticks passed since the Animation started.
 			// Because processAnimation will increase this later (in same game tick as setNewAnimation), we correct this upfront.
 			// This also means Rendering should never hapen with ticksSinceSequenceStarted_ < 0.
-			ticksSinceSequenceStarted_ = -1.F;
+			ticksSinceSequenceStarted_ = -baseValueFraction;
 		}
-
-		// The preview animation was shown some times (less then one game tick)
-		// So we overall have a longer time the animation is shown
-		ticksSinceSequenceStarted_ += previewShownGameTickFragments;
-		relevantAnimationTicksWithSkipping += previewShownGameTickFragments;
 
 		if ((flags & AnimationDistributionFlags::SkipsDelayOfLastFrame) == AnimationDistributionFlags::SkipsDelayOfLastFrame) {
 			// The logic for player/monster/... (not processAnimation) only checks the frame not the delay.
@@ -156,14 +152,23 @@ void AnimationInfo::setNewAnimation(OptionalClxSpriteList celSprite, int8_t numb
 		// The truncated Frames from previous Animation will also be shown, so we also have to distribute them for the given time (game ticks)
 		relevantAnimationTicksForDistribution += (skippedFramesFromPreviousAnimation_ * ticksPerFrame);
 
+		// At this point we use fixed point math for the fragment calculations
+		relevantAnimationTicksForDistribution *= baseValueFraction;
+		relevantAnimationTicksWithSkipping *= baseValueFraction;
+
+		// The preview animation was shown some times (less then one game tick)
+		// So we overall have a longer time the animation is shown
+		ticksSinceSequenceStarted_ += previewShownGameTickFragments;
+		relevantAnimationTicksWithSkipping += previewShownGameTickFragments;
+
 		// if we skipped Frames we need to expand the game ticks to make one game tick for this Animation "faster"
-		float tickModifier = static_cast<float>(relevantAnimationTicksForDistribution) / relevantAnimationTicksWithSkipping;
+		int32_t tickModifier = baseValueFraction * relevantAnimationTicksForDistribution / relevantAnimationTicksWithSkipping;
 
 		// tickModifier specifies the Animation fraction per game tick, so we have to remove the delay from the variable
-		tickModifier /= static_cast<float>(ticksPerFrame);
+		tickModifier /= ticksPerFrame;
 
 		relevantFramesForDistributing_ = relevantAnimationFramesForDistributing;
-		tickModifier_ = tickModifier;
+		tickModifier_ = static_cast<uint16_t>(tickModifier);
 	}
 }
 
@@ -178,9 +183,9 @@ void AnimationInfo::changeAnimationData(OptionalClxSpriteList celSprite, int8_t 
 
 		this->numberOfFrames = numberOfFrames;
 		this->ticksPerFrame = ticksPerFrame;
-		ticksSinceSequenceStarted_ = 0.F;
+		ticksSinceSequenceStarted_ = 0;
 		relevantFramesForDistributing_ = 0;
-		tickModifier_ = 0.0F;
+		tickModifier_ = 0;
 	}
 	this->sprites = celSprite;
 }
@@ -188,30 +193,30 @@ void AnimationInfo::changeAnimationData(OptionalClxSpriteList celSprite, int8_t 
 void AnimationInfo::processAnimation(bool reverseAnimation /*= false*/)
 {
 	tickCounterOfCurrentFrame++;
-	ticksSinceSequenceStarted_++;
+	ticksSinceSequenceStarted_ += baseValueFraction;
 	if (tickCounterOfCurrentFrame >= ticksPerFrame) {
 		tickCounterOfCurrentFrame = 0;
 		if (reverseAnimation) {
 			--currentFrame;
 			if (currentFrame == -1) {
 				currentFrame = numberOfFrames - 1;
-				ticksSinceSequenceStarted_ = 0.F;
+				ticksSinceSequenceStarted_ = 0;
 			}
 		} else {
 			++currentFrame;
 			if (currentFrame >= numberOfFrames) {
 				currentFrame = 0;
-				ticksSinceSequenceStarted_ = 0.F;
+				ticksSinceSequenceStarted_ = 0;
 			}
 		}
 	}
 }
 
-float AnimationInfo::getProgressToNextGameTick() const
+uint8_t AnimationInfo::getProgressToNextGameTick() const
 {
 	if (isPetrified)
-		return 0.0F;
-	return gfProgressToNextGameTick;
+		return 0;
+	return ProgressToNextGameTick;
 }
 
 } // namespace devilution
