@@ -2198,7 +2198,7 @@ void Player::UpdatePreviewCelSprite(_cmd_id cmdId, Point point, uint16_t wParam1
 	ClxSpriteList sprites = AnimationData[static_cast<size_t>(*graphic)].spritesForDirection(dir);
 	if (!previewCelSprite || *previewCelSprite != sprites[0]) {
 		previewCelSprite = sprites[0];
-		progressToNextGameTickWhenPreviewWasSet = gfProgressToNextGameTick;
+		progressToNextGameTickWhenPreviewWasSet = ProgressToNextGameTick;
 	}
 }
 
@@ -2323,18 +2323,18 @@ void NewPlrAnim(Player &player, player_graphic graphic, Direction dir, Animation
 	LoadPlrGFX(player, graphic);
 
 	OptionalClxSpriteList sprites;
-	float previewShownGameTickFragments = 0.F;
+	int previewShownGameTickFragments = 0;
 	if (!HeadlessMode) {
 		sprites = player.AnimationData[static_cast<size_t>(graphic)].spritesForDirection(dir);
 		if (player.previewCelSprite && (*sprites)[0] == *player.previewCelSprite && !player.IsWalking()) {
-			previewShownGameTickFragments = clamp(1.F - player.progressToNextGameTickWhenPreviewWasSet, 0.F, 1.F);
+			previewShownGameTickFragments = clamp<int>(AnimationInfo::baseValueFraction - player.progressToNextGameTickWhenPreviewWasSet, 0, AnimationInfo::baseValueFraction);
 		}
 	}
 
 	int8_t numberOfFrames;
 	int8_t ticksPerFrame;
 	player.getAnimationFramesAndTicksPerFrame(graphic, numberOfFrames, ticksPerFrame);
-	player.AnimInfo.setNewAnimation(sprites, numberOfFrames, ticksPerFrame, flags, numSkippedFrames, distributeFramesBeforeFrame, previewShownGameTickFragments);
+	player.AnimInfo.setNewAnimation(sprites, numberOfFrames, ticksPerFrame, flags, numSkippedFrames, distributeFramesBeforeFrame, static_cast<uint8_t>(previewShownGameTickFragments));
 }
 
 void SetPlrAnims(Player &player)

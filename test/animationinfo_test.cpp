@@ -110,7 +110,7 @@ void RunAnimationTest(const std::vector<TestData *> &vecTestData)
 		} break;
 		case TestDataType::Rendering: {
 			auto renderingData = static_cast<RenderingData *>(x);
-			gfProgressToNextGameTick = renderingData->_fProgressToNextGameTick;
+			ProgressToNextGameTick = static_cast<uint8_t>(renderingData->_fProgressToNextGameTick * AnimationInfo::baseValueFraction);
 			EXPECT_EQ(animInfo.getFrameToUseForRendering(), renderingData->_ExpectedRenderingFrame)
 			    << std::fixed << std::setprecision(2)
 			    << "ProgressToNextGameTick: " << renderingData->_fProgressToNextGameTick

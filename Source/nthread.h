@@ -16,7 +16,8 @@ extern uint32_t gdwTurnsInTransit;
 extern uintptr_t glpMsgTbl[MAX_PLRS];
 extern uint32_t gdwLargestMsgSize;
 extern uint32_t gdwNormalMsgSize;
-extern DVL_API_FOR_TEST float gfProgressToNextGameTick; // the progress as a fraction (0.0f to 1.0f) in time to the next game tick
+/** @brief the progress as a fraction (see AnimationInfo::baseValueFraction) in time to the next game tick */
+extern DVL_API_FOR_TEST uint8_t ProgressToNextGameTick;
 extern int last_tick;
 
 void nthread_terminate_game(const char *pszFcn);

@@ -153,7 +153,7 @@ bool LoadDemoMessages(int i)
 void RecordEventHeader(const SDL_Event &event)
 {
 	WriteLE32(DemoRecording, static_cast<uint32_t>(DemoMsgType::Message));
-	WriteLEFloat(DemoRecording, gfProgressToNextGameTick);
+	WriteLEFloat(DemoRecording, ProgressToNextGameTick / static_cast<float>(AnimationInfo::baseValueFraction));
 	WriteLE32(DemoRecording, event.type);
 }
 
@@ -226,14 +226,14 @@ bool GetRunGameLoop(bool &drawGame, bool &processInput)
 			float progressToNextGameTick = clamp((float)ticksElapsed / (float)gnTickDelay, 0.F, 1.F);
 			if (dmsg.type == DemoMsgType::GameTick || dmsg.progressToNextGameTick > progressToNextGameTick) {
 				// we are ahead of the replay => add a additional rendering for smoothness
-				gfProgressToNextGameTick = progressToNextGameTick;
+				ProgressToNextGameTick = static_cast<uint8_t>(AnimationInfo::baseValueFraction * progressToNextGameTick);
 				processInput = false;
 				drawGame = true;
 				return false;
 			}
 		}
 	}
-	gfProgressToNextGameTick = dmsg.progressToNextGameTick;
+	ProgressToNextGameTick = static_cast<uint8_t>(AnimationInfo::baseValueFraction * dmsg.progressToNextGameTick);
 	Demo_Message_Queue.pop_front();
 	if (dmsg.type == DemoMsgType::GameTick)
 		LogicTick++;
@@ -302,7 +302,7 @@ bool FetchMessage(SDL_Event *event, uint16_t *modState)
 				}
 				break;
 			}
-			gfProgressToNextGameTick = dmsg.progressToNextGameTick;
+			ProgressToNextGameTick = static_cast<uint8_t>(AnimationInfo::baseValueFraction * dmsg.progressToNextGameTick);
 			Demo_Message_Queue.pop_front();
 			return true;
 		}
@@ -314,7 +314,7 @@ bool FetchMessage(SDL_Event *event, uint16_t *modState)
 void RecordGameLoopResult(bool runGameLoop)
 {
 	WriteLE32(DemoRecording, static_cast<uint32_t>(runGameLoop ? DemoMsgType::GameTick : DemoMsgType::Rendering));
-	WriteLEFloat(DemoRecording, gfProgressToNextGameTick);
+	WriteLEFloat(DemoRecording, ProgressToNextGameTick / static_cast<float>(AnimationInfo::baseValueFraction));
 }
 
 void RecordMessage(const SDL_Event &event, uint16_t modState)

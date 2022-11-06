@@ -288,7 +288,7 @@ struct Player {
 	/**
 	 * @brief Contains the progress to next game tick when previewCelSprite was set
 	 */
-	float progressToNextGameTickWhenPreviewWasSet;
+	int8_t progressToNextGameTickWhenPreviewWasSet;
 	/** @brief Bitmask using item_special_effect */
 	ItemSpecialEffect _pIFlags;
 	/**
