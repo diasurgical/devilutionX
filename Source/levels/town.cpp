@@ -346,6 +346,13 @@ void TownOpenGrave()
 	dPiece[34][21] = 0x53b;
 }
 
+void CleanTownFountain()
+{
+	if (!pMegaTiles)
+		return;
+	FillTile(60, 70, 71);
+}
+
 void CreateTown(lvl_entry entry)
 {
 	dminPosition = { 10, 10 };
@@ -374,7 +381,6 @@ void CreateTown(lvl_entry entry)
 	}
 
 	DrlgTPass3();
-	pMegaTiles = nullptr;
 }
 
 } // namespace devilution

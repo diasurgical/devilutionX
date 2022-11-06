@@ -484,12 +484,14 @@ void TalkToHealer(Player &player, Towner &healer)
 			Quests[Q_PWATER]._qlog = true;
 			Quests[Q_PWATER]._qmsg = TEXT_POISON3;
 			InitQTextMsg(TEXT_POISON3);
+			NetSendCmdQuest(true, Quests[Q_PWATER]);
 			return;
 		}
 		if (Quests[Q_PWATER]._qactive == QUEST_DONE && Quests[Q_PWATER]._qvar1 != 2) {
 			Quests[Q_PWATER]._qvar1 = 2;
 			InitQTextMsg(TEXT_POISON5);
 			SpawnUnique(UITEM_TRING, healer.position + Direction::SouthWest);
+			NetSendCmdQuest(true, Quests[Q_PWATER]);
 			return;
 		}
 	}
