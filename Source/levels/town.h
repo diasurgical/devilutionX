@@ -45,6 +45,11 @@ void TownOpenHive();
 void TownOpenGrave();
 
 /**
+ * @brief Update town to show clean/not poisoned water fountain
+ */
+void CleanTownFountain();
+
+/**
  * @brief Initialize town level
  * @param entry Method of entry
  */

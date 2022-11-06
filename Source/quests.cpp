@@ -17,6 +17,7 @@
 #include "engine/world_tile.hpp"
 #include "init.h"
 #include "levels/gendung.h"
+#include "levels/town.h"
 #include "levels/trigs.h"
 #include "minitext.h"
 #include "missiles.h"
@@ -350,6 +351,7 @@ void CheckQuests()
 		    && ActiveMonsterCount == 4
 		    && Quests[Q_PWATER]._qactive != QUEST_DONE) {
 			Quests[Q_PWATER]._qactive = QUEST_DONE;
+			NetSendCmdQuest(true, Quests[Q_PWATER]);
 			PlaySfxLoc(IS_QUESTDN, MyPlayer->position.tile);
 			LoadPalette("levels\\l3data\\l3pwater.pal", false);
 			UpdatePWaterPalette();
@@ -690,6 +692,11 @@ void ResyncQuests()
 		Point posPentagram = Quests[Q_DIABLO].position;
 		ObjChangeMapResync(posPentagram.x, posPentagram.y, posPentagram.x + 5, posPentagram.y + 5);
 		InitL4Triggers();
+	}
+	if (currlevel == 0
+	    && Quests[Q_PWATER]._qactive == QUEST_DONE
+	    && gbIsMultiplayer) {
+		CleanTownFountain();
 	}
 }
 
