@@ -653,13 +653,8 @@ void GoldWithdrawNewText(string_view text)
 		if (digit >= 0 && digit <= 9) {
 			int newGoldValue = WithdrawGoldValue * 10;
 			newGoldValue += digit;
-			if (newGoldValue <= InitialWithdrawGoldValue) {
-				// update to newly set value
-				WithdrawGoldValue = newGoldValue;
-			} else {
-				// lazily 'set & cap' to maximum gold value
-				WithdrawGoldValue = InitialWithdrawGoldValue;
-			}
+			// Mimic D2 stash behaviour, cap withdrawal amounts to maximum gold value
+			WithdrawGoldValue = std::min(newGoldValue, InitialWithdrawGoldValue);
 		}
 	}
 }
