@@ -361,9 +361,7 @@ void DrawStash(const Surface &out)
 		Item &item = Stash.stashList[itemId];
 
 		// provide item background coloring
-		if (Stash.IsItemAtPosition(slot)) {
-			InvDrawSlotBack(out, GetStashSlotCoord(slot) + offset, InventorySlotSizeInPixels, item._iMagical);
-		}
+		InvDrawSlotBack(out, GetStashSlotCoord(slot) + offset, InventorySlotSizeInPixels, item._iMagical);
 		
 		if (item.position != slot) {
 			continue; // Not the first slot of the item
