@@ -355,10 +355,8 @@ void TalkToDeadguy(Player &player, Towner & /*deadguy*/)
 		return;
 	}
 
-	quest._qactive = QUEST_ACTIVE;
-	quest._qlog = true;
+	quest.activateMultiStageQuest();
 	quest._qmsg = TEXT_BUTCH9;
-	quest._qvar1 = 1;
 	InitQTextMsg(TEXT_BUTCH9);
 	NetSendCmdQuest(true, quest);
 }
@@ -414,9 +412,8 @@ void TalkToWitch(Player &player, Towner & /*witch*/)
 {
 	if (Quests[Q_MUSHROOM]._qactive != QUEST_NOTAVAIL) {
 		if (Quests[Q_MUSHROOM]._qactive == QUEST_INIT && RemoveInventoryItemById(player, IDI_FUNGALTM)) {
-			Quests[Q_MUSHROOM]._qactive = QUEST_ACTIVE;
-			Quests[Q_MUSHROOM]._qlog = true;
-			Quests[Q_MUSHROOM]._qvar1 = QS_TOMEGIVEN;
+			Quests[Q_MUSHROOM].activateMultiStageQuest();
+			Quests[Q_MUSHROOM]._qvar1 = static_cast<uint8_t>(QS_TOMEGIVEN);
 			InitQTextMsg(TEXT_MUSH8);
 			return;
 		}
@@ -518,10 +515,9 @@ void TalkToStoryteller(Player &player, Towner & /*storyteller*/)
 	auto &betrayerQuest = Quests[Q_BETRAYER];
 	if (!gbIsMultiplayer) {
 		if (betrayerQuest._qactive == QUEST_INIT && RemoveInventoryItemById(player, IDI_LAZSTAFF)) {
-			InitQTextMsg(TEXT_VILE1);
-			betrayerQuest._qlog = true;
-			betrayerQuest._qactive = QUEST_ACTIVE;
+			betrayerQuest.activateMultiStageQuest();
 			betrayerQuest._qvar1 = 2;
+			InitQTextMsg(TEXT_VILE1);
 			return;
 		}
 	} else {
@@ -585,11 +581,9 @@ void TalkToFarmer(Player &player, Towner &farmer)
 	case QUEST_NOTAVAIL:
 	case QUEST_INIT:
 		if (HasInventoryItemWithId(player, IDI_RUNEBOMB)) {
-			InitQTextMsg(TEXT_FARMER2);
-			quest._qactive = QUEST_ACTIVE;
-			quest._qvar1 = 1;
+			quest.activateMultiStageQuest();
 			quest._qmsg = TEXT_FARMER1;
-			quest._qlog = true;
+			InitQTextMsg(TEXT_FARMER2);
 			if (gbIsMultiplayer)
 				NetSendCmdQuest(true, quest);
 			break;
@@ -607,11 +601,9 @@ void TalkToFarmer(Player &player, Towner &farmer)
 			break;
 		}
 
-		InitQTextMsg(TEXT_FARMER1);
-		quest._qactive = QUEST_ACTIVE;
-		quest._qvar1 = 1;
-		quest._qlog = true;
+		quest.activateMultiStageQuest();
 		quest._qmsg = TEXT_FARMER1;
+		InitQTextMsg(TEXT_FARMER1);
 		SpawnRuneBomb(farmer.position + Displacement { 1, 0 }, true);
 		if (gbIsMultiplayer)
 			NetSendCmdQuest(true, quest);
@@ -655,11 +647,9 @@ void TalkToCowFarmer(Player &player, Towner &cowFarmer)
 	}
 
 	if (HasInventoryItemWithId(player, IDI_RUNEBOMB)) {
-		InitQTextMsg(TEXT_JERSEY5);
-		quest._qactive = QUEST_ACTIVE;
-		quest._qvar1 = 1;
+		quest.activateMultiStageQuest();
 		quest._qmsg = TEXT_JERSEY4;
-		quest._qlog = true;
+		InitQTextMsg(TEXT_JERSEY5);
 		return;
 	}
 
@@ -704,11 +694,9 @@ void TalkToCowFarmer(Player &player, Towner &cowFarmer)
 			break;
 		}
 
-		InitQTextMsg(TEXT_JERSEY4);
-		quest._qactive = QUEST_ACTIVE;
-		quest._qvar1 = 1;
+		quest.activateMultiStageQuest();
 		quest._qmsg = TEXT_JERSEY4;
-		quest._qlog = true;
+		InitQTextMsg(TEXT_JERSEY4);
 		SpawnRuneBomb(cowFarmer.position + Displacement { 1, 0 }, true);
 		if (gbIsMultiplayer)
 			NetSendCmdQuest(true, quest);
@@ -739,11 +727,9 @@ void TalkToGirl(Player &player, Towner &girl)
 	switch (quest._qactive) {
 	case QUEST_NOTAVAIL:
 	case QUEST_INIT:
-		InitQTextMsg(TEXT_GIRL2);
-		quest._qactive = QUEST_ACTIVE;
-		quest._qvar1 = 1;
-		quest._qlog = true;
+		quest.activateMultiStageQuest();
 		quest._qmsg = TEXT_GIRL2;
+		InitQTextMsg(TEXT_GIRL2);
 		if (gbIsMultiplayer)
 			NetSendCmdQuest(true, quest);
 		return;

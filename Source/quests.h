@@ -58,6 +58,13 @@ struct Quest {
 	uint8_t _qvar2;
 
 	bool IsAvailable();
+
+	void activateMultiStageQuest()
+	{
+		_qactive = QUEST_ACTIVE;
+		_qlog = true;
+		_qvar1 = 1;
+	}
 };
 
 struct QuestData {
