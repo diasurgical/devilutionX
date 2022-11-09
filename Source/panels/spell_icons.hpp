@@ -25,9 +25,14 @@ void DrawSpellCel(const Surface &out, Point position, int nCel);
  * @param out Output buffer.
  * @param position Buffer coordinates.
  * @param sprite Icons sprite sheet.
- * @param nCel Index of the cel frame to draw. 0 based.
  */
-void DrawSpellCel(const Surface &out, Point position, const OwnedClxSpriteList &sprite, int nCel);
+#ifdef UNPACKED_MPQS
+void DrawSpellCel(const Surface &out, Point position, ClxSprite sprite, ClxSprite background);
+#else
+void DrawSpellCel(const Surface &out, Point position, ClxSprite sprite);
+#endif
+
+void DrawSpellBorder(const Surface &out, Point position, ClxSprite sprite);
 
 void SetSpellTrans(spell_type t);
 

@@ -12,12 +12,11 @@
 #include "engine/render/clx_render.hpp"
 #include "engine/render/text_render.hpp"
 #include "options.h"
+#include "panels/spell_book.hpp"
 #include "panels/spell_icons.hpp"
 #include "utils/language.h"
 
 namespace devilution {
-
-extern OptionalOwnedClxSpriteList pSBkIconCels;
 
 namespace {
 
@@ -140,7 +139,11 @@ void DrawSpellsCircleMenuHint(const Surface &out, const Point &origin)
 		}
 
 		SetSpellTrans(splType);
-		DrawSpellCel(out, spellIconPositions[slot], *pSBkIconCels, SpellITbl[splId]);
+#ifdef UNPACKED_MPQS
+		DrawSpellCel(out, spellIconPositions[slot], (*pSBkIconsForeground)[SpellITbl[splId]], (*pSBkIconsBackground)[0]);
+#else
+		DrawSpellCel(out, spellIconPositions[slot], (*pSBkIconCels)[SpellITbl[splId]]);
+#endif
 		RenderClxSprite(out, (*hintBox)[0], hintBoxPositions[slot]);
 	}
 }

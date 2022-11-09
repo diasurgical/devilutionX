@@ -1,6 +1,7 @@
 #include "panels/spell_icons.hpp"
 
 #include "engine/load_cel.hpp"
+#include "engine/load_clx.hpp"
 #include "engine/palette.h"
 #include "engine/render/clx_render.hpp"
 #include "init.h"
@@ -9,7 +10,13 @@
 namespace devilution {
 
 namespace {
+#ifdef UNPACKED_MPQS
+OptionalOwnedClxSpriteList pSpellIconsBackground;
+OptionalOwnedClxSpriteList pSpellIconsForeground;
+#else
 OptionalOwnedClxSpriteList pSpellCels;
+#endif
+
 uint8_t SplTransTbl[256];
 } // namespace
 
@@ -70,26 +77,74 @@ const char SpellITbl[] = {
 
 void LoadSpellIcons()
 {
-	if (!gbIsHellfire)
+	if (!gbIsHellfire) {
+#ifdef UNPACKED_MPQS
+		pSpellIconsForeground = LoadClx("ctrlpan\\spelicon_fg.clx");
+		pSpellIconsBackground = LoadClx("ctrlpan\\spelicon_bg.clx");
+#else
 		pSpellCels = LoadCel("ctrlpan\\spelicon", SPLICONLENGTH);
-	else
+#endif
+	} else {
+#ifdef UNPACKED_MPQS
+		pSpellIconsForeground = LoadClx("data\\spelicon_fg.clx");
+		pSpellIconsBackground = LoadClx("data\\spelicon_bg.clx");
+#else
 		pSpellCels = LoadCel("data\\spelicon", SPLICONLENGTH);
+#endif
+	}
 	SetSpellTrans(RSPLTYPE_SKILL);
 }
 
 void FreeSpellIcons()
 {
+#ifdef UNPACKED_MPQS
+	pSpellIconsBackground = std::nullopt;
+	pSpellIconsForeground = std::nullopt;
+#else
 	pSpellCels = std::nullopt;
+#endif
 }
 
 void DrawSpellCel(const Surface &out, Point position, int nCel)
 {
-	DrawSpellCel(out, position, *pSpellCels, nCel);
+#ifdef UNPACKED_MPQS
+	DrawSpellCel(out, position, (*pSpellIconsForeground)[nCel], (*pSpellIconsBackground)[0]);
+#else
+	DrawSpellCel(out, position, (*pSpellCels)[nCel]);
+#endif
 }
 
-void DrawSpellCel(const Surface &out, Point position, const OwnedClxSpriteList &sprite, int nCel)
+#ifdef UNPACKED_MPQS
+void DrawSpellCel(const Surface &out, Point position, ClxSprite sprite, ClxSprite background)
 {
-	ClxDrawTRN(out, position, sprite[nCel], SplTransTbl);
+	ClxDrawTRN(out, position, background, SplTransTbl);
+	ClxDrawTRN(out, position, sprite, SplTransTbl);
+}
+#else
+void DrawSpellCel(const Surface &out, Point position, ClxSprite sprite)
+{
+	ClxDrawTRN(out, position, sprite, SplTransTbl);
+}
+#endif
+
+void DrawSpellBorder(const Surface &out, Point position, ClxSprite sprite)
+{
+	const uint8_t color = SplTransTbl[PAL8_YELLOW + 2];
+	const size_t width = sprite.width();
+	const size_t height = sprite.height();
+	position.y -= static_cast<int>(height);
+	uint8_t *buf = &out[position];
+	std::memset(buf, color, width);
+	buf += out.pitch();
+	std::memset(buf, color, width);
+	for (size_t i = 4; i < sprite.height(); ++i) {
+		buf[0] = buf[1] = color;
+		buf[width - 2] = buf[width - 1] = color;
+		buf += out.pitch();
+	}
+	std::memset(buf, color, width);
+	buf += out.pitch();
+	std::memset(buf, color, width);
 }
 
 void SetSpellTrans(spell_type t)
