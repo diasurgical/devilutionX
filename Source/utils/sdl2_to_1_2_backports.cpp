@@ -696,7 +696,7 @@ char *SDL_GetPrefPath(const char *org, const char *app)
 #else
 
 namespace {
-#if !defined(__QNXNTO__)
+#if !defined(__QNXNTO__) && !defined(__amigaos__)
 char *readSymLink(const char *path)
 {
 	// From sdl2-2.0.9/src/filesystem/unix/SDL_sysfilesystem.c
@@ -779,6 +779,9 @@ char *SDL_GetBasePath()
 #if defined(__3DS__)
 	retval = SDL_strdup("file:sdmc:/3ds/devilutionx/");
 	return retval;
+#elif defined(__amigaos__)
+	retval = SDL_strdup("PROGDIR:");
+	return retval;	
 #endif
 
 	/* is a Linux-style /proc filesystem available? */
@@ -792,6 +795,8 @@ char *SDL_GetBasePath()
 		retval = readSymLink("/proc/curproc/exe");
 #elif defined(__QNXNTO__)
 		retval = SDL_LoadFile("/proc/self/exefile", NULL);
+#elif defined(__amigaos__)
+		//avoid compiling readSymLink	
 #else
 		retval = readSymLink("/proc/self/exe"); /* linux. */
 		if (retval == NULL) {
@@ -849,6 +854,9 @@ char *SDL_GetPrefPath(const char *org, const char *app)
 #if defined(__3DS__)
 	retval = SDL_strdup("sdmc:/3ds/devilutionx/");
 	return retval;
+#elif defined(__amigaos__)
+	retval = SDL_strdup("PROGDIR:");
+	return retval;	
 #endif
 
 	if (!app) {
