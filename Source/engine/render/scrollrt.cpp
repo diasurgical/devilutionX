@@ -1278,7 +1278,7 @@ Displacement GetOffsetForWalking(const AnimationInfo &animationInfo, const Direc
 	constexpr Displacement MovingOffset[8]   = { {   0,  32 }, { -32,  16 }, { -64,   0 }, { -32, -16 }, {   0, -32 }, {  32, -16 },  {  64,   0 }, {  32,  16 } };
 	// clang-format on
 
-	int8_t animationProgress = animationInfo.getAnimationProgress();
+	uint8_t animationProgress = animationInfo.getAnimationProgress();
 	Displacement offset = MovingOffset[static_cast<size_t>(dir)];
 	offset *= animationProgress;
 	offset /= AnimationInfo::baseValueFraction;
