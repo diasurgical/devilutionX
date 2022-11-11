@@ -3027,10 +3027,10 @@ void SetupItem(Item &item)
 	item._iIdentified = false;
 }
 
-void SpawnUnique(_unique_items uid, Point position)
+Item *SpawnUnique(_unique_items uid, Point position, bool sendmsg /*= true*/)
 {
 	if (ActiveItemCount >= MAXITEMS)
-		return;
+		return nullptr;
 
 	int ii = AllocateItem();
 	auto &item = Items[ii];
@@ -3044,6 +3044,11 @@ void SpawnUnique(_unique_items uid, Point position)
 	GetItemAttrs(item, static_cast<_item_indexes>(idx), curlv);
 	GetUniqueItem(*MyPlayer, item, uid);
 	SetupItem(item);
+
+	if (sendmsg)
+		NetSendCmdPItem(false, CMD_SPAWNITEM, item.position, item);
+
+	return &item;
 }
 
 void SpawnItem(Monster &monster, Point position, bool sendmsg)
@@ -3054,7 +3059,9 @@ void SpawnItem(Monster &monster, Point position, bool sendmsg)
 	bool dropsSpecialTreasure = (monster.data().treasure & T_UNIQ) != 0;
 
 	if (dropsSpecialTreasure && !gbIsMultiplayer) {
-		SpawnUnique(static_cast<_unique_items>(monster.data().treasure & T_MASK), position);
+		Item *uniqueItem = SpawnUnique(static_cast<_unique_items>(monster.data().treasure & T_MASK), position, false);
+		if (uniqueItem != nullptr && sendmsg)
+			NetSendCmdPItem(false, CMD_DROPITEM, uniqueItem->position, *uniqueItem);
 		return;
 	} else if (monster.isUnique() || dropsSpecialTreasure) {
 		// Unqiue monster is killed => use better item base (for example no gold)
