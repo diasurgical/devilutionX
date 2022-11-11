@@ -1309,9 +1309,6 @@ void GetItemBonus(const Player &player, Item &item, int minlvl, int maxlvl, bool
 
 _item_indexes RndUItem(Monster *monster)
 {
-	if (monster != nullptr && (monster->data().treasure & T_UNIQ) != 0 && !gbIsMultiplayer)
-		return static_cast<_item_indexes>(-((monster->data().treasure & T_MASK) + 1));
-
 	static std::array<_item_indexes, 512> ril;
 
 	int curlv = ItemsGetCurrlevel();
@@ -3030,19 +3027,6 @@ void SetupItem(Item &item)
 	item._iIdentified = false;
 }
 
-int RndItem(const Monster &monster)
-{
-	const uint16_t monsterTreasureFlags = monster.data().treasure;
-
-	if ((monsterTreasureFlags & T_UNIQ) != 0)
-		return -((monsterTreasureFlags & T_MASK) + 1);
-
-	if ((monsterTreasureFlags & T_NODROP) != 0)
-		return 0;
-
-	return RndItemForMonsterLevel(monster.level(sgGameInitInfo.nDifficulty)) + 1;
-}
-
 void SpawnUnique(_unique_items uid, Point position)
 {
 	if (ActiveItemCount >= MAXITEMS)
@@ -3067,28 +3051,28 @@ void SpawnItem(Monster &monster, Point position, bool sendmsg)
 	_item_indexes idx;
 	bool onlygood = true;
 
-	if (monster.isUnique() || ((monster.data().treasure & T_UNIQ) != 0 && gbIsMultiplayer)) {
+	bool dropsSpecialTreasure = (monster.data().treasure & T_UNIQ) != 0;
+
+	if (dropsSpecialTreasure && !gbIsMultiplayer) {
+		SpawnUnique(static_cast<_unique_items>(monster.data().treasure & T_MASK), position);
+		return;
+	} else if (monster.isUnique() || dropsSpecialTreasure) {
+		// Unqiue monster is killed => use better item base (for example no gold)
 		idx = RndUItem(&monster);
-		if (idx < IDI_GOLD) {
-			SpawnUnique(static_cast<_unique_items>(-(idx + 1)), position);
-			return;
-		}
-		onlygood = true;
-	} else if (Quests[Q_MUSHROOM]._qactive != QUEST_ACTIVE || Quests[Q_MUSHROOM]._qvar1 != QS_MUSHGIVEN) {
-		int optionalIndexOrUniqueIndex = RndItem(monster);
-		if (optionalIndexOrUniqueIndex == 0) // No drop
-			return;
-		if (optionalIndexOrUniqueIndex > 0) { // Item index
-			idx = static_cast<_item_indexes>(optionalIndexOrUniqueIndex - 1);
-			onlygood = false;
-		} else { // Unique item index
-			SpawnUnique(static_cast<_unique_items>(-(optionalIndexOrUniqueIndex + 1)), position);
-			return;
-		}
-	} else {
+	} else if (Quests[Q_MUSHROOM]._qactive == QUEST_ACTIVE && Quests[Q_MUSHROOM]._qvar1 == QS_MUSHGIVEN) {
+		// Normal monster is killed => need to drop brain to progress the quest
 		idx = IDI_BRAIN;
 		Quests[Q_MUSHROOM]._qvar1 = QS_BRAINSPAWNED;
+	} else {
+		// Normal monster
+		if ((monster.data().treasure & T_NODROP) != 0)
+			return;
+		onlygood = false;
+		idx = RndItemForMonsterLevel(monster.level(sgGameInitInfo.nDifficulty));
 	}
+
+	if (idx == IDI_NONE)
+		return;
 
 	if (ActiveItemCount >= MAXITEMS)
 		return;
