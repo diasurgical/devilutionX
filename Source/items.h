@@ -496,7 +496,7 @@ int AllocateItem();
 Point GetSuperItemLoc(Point position);
 void GetItemAttrs(Item &item, _item_indexes itemData, int lvl);
 void SetupItem(Item &item);
-void SpawnUnique(_unique_items uid, Point position);
+Item *SpawnUnique(_unique_items uid, Point position, bool sendmsg = true);
 void SpawnItem(Monster &monster, Point position, bool sendmsg);
 void CreateRndItem(Point position, bool onlygood, bool sendmsg, bool delta);
 void CreateRndUseful(Point position, bool sendmsg);
