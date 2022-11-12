@@ -1992,7 +1992,7 @@ void OperateBookLever(Object &questBook, bool sendmsg)
 			Quests[Q_BLOOD]._qactive = QUEST_ACTIVE;
 			Quests[Q_BLOOD]._qlog = true;
 			Quests[Q_BLOOD]._qvar1 = 1;
-			SpawnQuestItem(IDI_BLDSTONE, SetPiece.position.megaToWorld() + Displacement { 9, 17 }, 0, 1);
+			SpawnQuestItem(IDI_BLDSTONE, SetPiece.position.megaToWorld() + Displacement { 9, 17 }, 0, 1, true);
 		}
 		if (questBook._otype == OBJ_STEELTOME && Quests[Q_WARLORD]._qvar1 == 0) {
 			Quests[Q_WARLORD]._qactive = QUEST_ACTIVE;
@@ -2136,7 +2136,7 @@ void OperateMushroomPatch(const Player &player, Object &mushroomPatch)
 
 	PlaySfxLoc(IS_CHEST, mushroomPatch.position);
 	Point pos = GetSuperItemLoc(mushroomPatch.position);
-	SpawnQuestItem(IDI_MUSHROOM, pos, 0, 0);
+	SpawnQuestItem(IDI_MUSHROOM, pos, 0, 0, true);
 	Quests[Q_MUSHROOM]._qvar1 = QS_MUSHSPAWNED;
 }
 
@@ -2162,7 +2162,7 @@ void OperateInnSignChest(const Player &player, Object &questContainer)
 
 	PlaySfxLoc(IS_CHEST, questContainer.position);
 	Point pos = GetSuperItemLoc(questContainer.position);
-	SpawnQuestItem(IDI_BANNER, pos, 0, 0);
+	SpawnQuestItem(IDI_BANNER, pos, 0, 0, true);
 }
 
 void OperateSlainHero(const Player &player, Object &corpse)
@@ -2252,12 +2252,12 @@ void OperatePedestal(Player &player, Object &pedestal)
 	if (pedestal._oVar6 == 1) {
 		PlaySfxLoc(LS_PUDDLE, pedestal.position);
 		ObjChangeMap(SetPiece.position.x, SetPiece.position.y + 3, SetPiece.position.x + 2, SetPiece.position.y + 7);
-		SpawnQuestItem(IDI_BLDSTONE, SetPiece.position.megaToWorld() + Displacement { 3, 10 }, 0, 1);
+		SpawnQuestItem(IDI_BLDSTONE, SetPiece.position.megaToWorld() + Displacement { 3, 10 }, 0, 1, true);
 	}
 	if (pedestal._oVar6 == 2) {
 		PlaySfxLoc(LS_PUDDLE, pedestal.position);
 		ObjChangeMap(SetPiece.position.x + 6, SetPiece.position.y + 3, SetPiece.position.x + SetPiece.size.width, SetPiece.position.y + 7);
-		SpawnQuestItem(IDI_BLDSTONE, SetPiece.position.megaToWorld() + Displacement { 15, 10 }, 0, 1);
+		SpawnQuestItem(IDI_BLDSTONE, SetPiece.position.megaToWorld() + Displacement { 15, 10 }, 0, 1, true);
 	}
 	if (pedestal._oVar6 == 3) {
 		PlaySfxLoc(LS_BLODSTAR, pedestal.position);
@@ -3404,7 +3404,7 @@ void OperateLazStand(Object &stand)
 	stand._oAnimFrame++;
 	stand._oSelFlag = 0;
 	Point pos = GetSuperItemLoc(stand.position);
-	SpawnQuestItem(IDI_LAZSTAFF, pos, 0, 0);
+	SpawnQuestItem(IDI_LAZSTAFF, pos, 0, 0, true);
 	NetSendCmdLoc(MyPlayerId, false, CMD_OPERATEOBJ, stand.position);
 }
 

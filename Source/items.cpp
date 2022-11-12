@@ -468,7 +468,7 @@ void SpawnNote()
 	}
 
 	Point position = GetRandomAvailableItemPosition();
-	SpawnQuestItem(id, position, 0, 1);
+	SpawnQuestItem(id, position, 0, 1, false);
 }
 
 void CalcSelfItems(Player &player)
@@ -1619,6 +1619,9 @@ void SpawnRock()
 	item._iSelFlag = 2;
 	item._iPostDraw = true;
 	item.AnimInfo.currentFrame = 10;
+	item._iCreateInfo |= CF_PREGEN;
+
+	DeltaAddItem(ii);
 }
 
 void ItemDoppel()
@@ -2345,11 +2348,11 @@ void InitItems()
 		if (Quests[Q_ROCK].IsAvailable())
 			SpawnRock();
 		if (Quests[Q_ANVIL].IsAvailable())
-			SpawnQuestItem(IDI_ANVIL, SetPiece.position.megaToWorld() + Displacement { 11, 11 }, 0, 1);
+			SpawnQuestItem(IDI_ANVIL, SetPiece.position.megaToWorld() + Displacement { 11, 11 }, 0, 1, false);
 		if (sgGameInitInfo.bCowQuest != 0 && currlevel == 20)
-			SpawnQuestItem(IDI_BROWNSUIT, { 25, 25 }, 3, 1);
+			SpawnQuestItem(IDI_BROWNSUIT, { 25, 25 }, 3, 1, false);
 		if (sgGameInitInfo.bCowQuest != 0 && currlevel == 19)
-			SpawnQuestItem(IDI_GREYSUIT, { 25, 25 }, 3, 1);
+			SpawnQuestItem(IDI_GREYSUIT, { 25, 25 }, 3, 1, false);
 		if (currlevel > 0 && currlevel < 16)
 			AddInitItems();
 		if (currlevel >= 21 && currlevel <= 23)
@@ -3261,7 +3264,7 @@ void CornerstoneLoad(Point position)
 	CornerStone.item = item;
 }
 
-void SpawnQuestItem(_item_indexes itemid, Point position, int randarea, int selflag)
+void SpawnQuestItem(_item_indexes itemid, Point position, int randarea, int selflag, bool sendmsg)
 {
 	if (randarea > 0) {
 		int tries = 0;
@@ -3305,6 +3308,13 @@ void SpawnQuestItem(_item_indexes itemid, Point position, int randarea, int self
 		item._iSelFlag = selflag;
 		item.AnimInfo.currentFrame = item.AnimInfo.numberOfFrames - 1;
 		item._iAnimFlag = false;
+	}
+
+	if (sendmsg)
+		NetSendCmdPItem(true, CMD_SPAWNITEM, item.position, item);
+	else {
+		DeltaAddItem(ii);
+		item._iCreateInfo |= CF_PREGEN;
 	}
 }
 

@@ -642,7 +642,7 @@ void ResyncQuests()
 	}
 	if (currlevel == Quests[Q_MUSHROOM]._qlevel) {
 		if (Quests[Q_MUSHROOM]._qactive == QUEST_INIT && Quests[Q_MUSHROOM]._qvar1 == QS_INIT) {
-			SpawnQuestItem(IDI_FUNGALTM, { 0, 0 }, 5, 1);
+			SpawnQuestItem(IDI_FUNGALTM, { 0, 0 }, 5, 1, false);
 			Quests[Q_MUSHROOM]._qvar1 = QS_TOMESPAWNED;
 		} else {
 			if (Quests[Q_MUSHROOM]._qactive == QUEST_ACTIVE) {
@@ -657,7 +657,7 @@ void ResyncQuests()
 	}
 	if (currlevel == Quests[Q_VEIL]._qlevel + 1 && Quests[Q_VEIL]._qactive == QUEST_ACTIVE && Quests[Q_VEIL]._qvar1 == 0) {
 		Quests[Q_VEIL]._qvar1 = 1;
-		SpawnQuestItem(IDI_GLDNELIX, { 0, 0 }, 5, 1);
+		SpawnQuestItem(IDI_GLDNELIX, { 0, 0 }, 5, 1, false);
 	}
 	if (setlevel && setlvlnum == SL_VILEBETRAYER) {
 		if (Quests[Q_BETRAYER]._qvar1 >= 4)
