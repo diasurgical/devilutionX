@@ -793,8 +793,6 @@ char *SDL_GetBasePath()
 		retval = readSymLink("/proc/curproc/exe");
 #elif defined(__QNXNTO__)
 		retval = SDL_LoadFile("/proc/self/exefile", NULL);
-#elif defined(__amigaos__)
-		//avoid compiling readSymLink	
 #else
 		retval = readSymLink("/proc/self/exe"); /* linux. */
 		if (retval == NULL) {
