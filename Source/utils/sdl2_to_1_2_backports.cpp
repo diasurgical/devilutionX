@@ -778,11 +778,9 @@ char *SDL_GetBasePath()
 #endif
 #if defined(__3DS__)
 	retval = SDL_strdup("file:sdmc:/3ds/devilutionx/");
-	return retval;
 #elif defined(__amigaos__)
 	retval = SDL_strdup("PROGDIR:");
-	return retval;	
-#endif
+#else
 
 	/* is a Linux-style /proc filesystem available? */
 	if (!retval && (access("/proc", F_OK) == 0)) {
@@ -831,7 +829,7 @@ char *SDL_GetBasePath()
 		if (ptr != NULL)
 			retval = ptr; /* oh well if it failed. */
 	}
-
+#endif
 	return retval;
 }
 
