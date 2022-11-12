@@ -36,7 +36,7 @@ jobs:
       - checkout
       - run: apt-get update -y
       - run: apt-get install -y ffmpeg gettext smpq
-      - run: wget https://github.com/Steveice10/bannertool/releases/download/1.2.0/bannertool.zip
+      - run: wget https://github.com/diasurgical/bannertool/releases/download/1.2.0/bannertool.zip
       - run: unzip -j "bannertool.zip" "linux-x86_64/bannertool" -d "/opt/devkitpro/tools/bin"
       - run: wget https://github.com/3DSGuy/Project_CTR/releases/download/makerom-v0.18/makerom-v0.18-ubuntu_x86_64.zip
       - run: unzip "makerom-v0.18-ubuntu_x86_64.zip" "makerom" -d "/opt/devkitpro/tools/bin"
