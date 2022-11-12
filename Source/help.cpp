@@ -155,11 +155,11 @@ void DrawHelpSlider(const Surface &out)
 	ClxDraw(out, { sliderXPos, sliderCurrent }, (*pSTextSlidCels)[10]);
 	// Subtract visible lines from the total number of lines to get the actual
 	// scroll range
-	const int scrollRange = HelpTextLines.size() - NumVisibleLines();
+	const int scrollRange = static_cast<int>(HelpTextLines.size()) - NumVisibleLines();
 	// Subtract the size of the arrow buttons to get the length of the interior
 	// part of the slider
 	const int sliderLength = sliderCurrent - 12 - sliderStart;
-	ClxDraw(out, { sliderXPos, sliderStart + ((SkipLines * sliderLength) / scrollRange) }, (*pSTextSlidCels)[12]);
+	ClxDraw(out, { sliderXPos, sliderStart + ((static_cast<int>(SkipLines) * sliderLength) / scrollRange) }, (*pSTextSlidCels)[12]);
 }
 
 } // namespace
