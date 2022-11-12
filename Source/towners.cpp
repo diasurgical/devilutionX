@@ -497,7 +497,7 @@ void TalkToHealer(Player &player, Towner &healer)
 	}
 	if (Quests[Q_MUSHROOM]._qactive == QUEST_ACTIVE) {
 		if (Quests[Q_MUSHROOM]._qvar1 >= QS_MUSHGIVEN && Quests[Q_MUSHROOM]._qvar1 < QS_BRAINGIVEN && RemoveInventoryItemById(player, IDI_BRAIN)) {
-			SpawnQuestItem(IDI_SPECELIX, healer.position + Displacement { 0, 1 }, 0, 0);
+			SpawnQuestItem(IDI_SPECELIX, healer.position + Displacement { 0, 1 }, 0, 0, true);
 			InitQTextMsg(TEXT_MUSH4);
 			Quests[Q_MUSHROOM]._qvar1 = QS_BRAINGIVEN;
 			QuestDialogTable[TOWN_HEALER][Q_MUSHROOM] = TEXT_NONE;
