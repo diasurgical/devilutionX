@@ -52,9 +52,6 @@ std::string FromSDL(char *s)
 		Log("{}", SDL_GetError());
 		SDL_ClearError();
 	}
-#ifdef defined(__MORPHOS__) || defined(__amigaos__)
-	AddTrailingSlash(result);
-#endif	
 	return result;
 }
 
