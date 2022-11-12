@@ -852,7 +852,7 @@ char *SDL_GetPrefPath(const char *org, const char *app)
 	return retval;
 #elif defined(__amigaos__)
 	retval = SDL_strdup("PROGDIR:");
-	return retval;	
+	return retval;
 #endif
 
 	if (!app) {
