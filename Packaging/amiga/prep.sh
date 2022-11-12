@@ -9,7 +9,7 @@ export SYSROOT=/opt/$TARGET
 export M68K_CPU=68040
 export M68K_FPU=hard
 export M68K_CPU_FPU="-m${M68K_CPU} -m${M68K_FPU}-float"
-export M68K_COMMON="-s -ffast-math -fomit-frame-pointer"
+export M68K_COMMON="-s -ffast-math -fomit-frame-pointer -fbbb=-"
 export M68K_CFLAGS="${M68K_CPU_FPU} ${M68K_COMMON}"
 export M68K_CXXFLAGS="${M68K_CPU_FPU} ${M68K_COMMON}"
 
