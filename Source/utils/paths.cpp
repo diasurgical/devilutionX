@@ -106,7 +106,7 @@ const std::string &ConfigPath()
 #elif defined(NXDK)
 		configPath = NxdkGetPrefPath();
 #elif defined(__amigaos__)
-		prefPath = std::string("PROGDIR:");		
+		prefPath = std::string("PROGDIR:");
 #else
 		configPath = FromSDL(SDL_GetPrefPath("diasurgical", "devilution"));
 		if (FileExistsAndIsWriteable("diablo.ini")) {
