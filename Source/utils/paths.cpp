@@ -86,13 +86,13 @@ const std::string &PrefPath()
 		prefPath = FromSDL(IOSGetPrefPath());
 #elif defined(NXDK)
 		prefPath = NxdkGetPrefPath();
-#elif defined(__amigaos__)
-		prefPath = std::string("PROGDIR:");
 #else
 		prefPath = FromSDL(SDL_GetPrefPath("diasurgical", "devilution"));
+#if !defined(__amigaos__)
 		if (FileExistsAndIsWriteable("diablo.ini")) {
-			prefPath = std::string("." DIRECTORY_SEPARATOR_STR);
+			configPath = std::string("." DIRECTORY_SEPARATOR_STR);
 		}
+#endif
 #endif
 	}
 	return *prefPath;
