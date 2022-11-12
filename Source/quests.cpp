@@ -17,6 +17,7 @@
 #include "engine/world_tile.hpp"
 #include "init.h"
 #include "levels/gendung.h"
+#include "levels/town.h"
 #include "levels/trigs.h"
 #include "minitext.h"
 #include "missiles.h"
@@ -234,7 +235,6 @@ void InitQuests()
 	QuestLogIsOpen = false;
 	WaterDone = 0;
 
-	int initiatedQuests = 0;
 	int q = 0;
 	for (auto &quest : Quests) {
 		quest._qidx = static_cast<quest_id>(q);
@@ -250,17 +250,16 @@ void InitQuests()
 		quest._qlog = false;
 		quest._qmsg = questData._qdmsg;
 
-		if (!gbIsMultiplayer) {
+		if (!UseMultiplayerQuests()) {
 			quest._qlevel = questData._qdlvl;
 			quest._qactive = QUEST_INIT;
 		} else if (!questData.isSinglePlayerOnly) {
 			quest._qlevel = questData._qdmultlvl;
 			quest._qactive = QUEST_INIT;
-			initiatedQuests++;
 		}
 	}
 
-	if (!gbIsMultiplayer && *sgOptions.Gameplay.randomizeQuests) {
+	if (!UseMultiplayerQuests() && *sgOptions.Gameplay.randomizeQuests) {
 		// Quests are set from the seed used to generate level 16.
 		InitialiseQuestPools(glSeedTbl[15], Quests);
 	}
@@ -276,7 +275,7 @@ void InitQuests()
 	if (Quests[Q_ROCK]._qactive == QUEST_NOTAVAIL)
 		Quests[Q_ROCK]._qvar2 = 2;
 	Quests[Q_LTBANNER]._qvar1 = 1;
-	if (gbIsMultiplayer)
+	if (UseMultiplayerQuests())
 		Quests[Q_BETRAYER]._qvar1 = 2;
 }
 
@@ -312,13 +311,13 @@ void CheckQuests()
 		return;
 
 	auto &quest = Quests[Q_BETRAYER];
-	if (quest.IsAvailable() && gbIsMultiplayer && quest._qvar1 == 2) {
+	if (quest.IsAvailable() && UseMultiplayerQuests() && quest._qvar1 == 2) {
 		AddObject(OBJ_ALTBOY, SetPiece.position.megaToWorld() + Displacement { 4, 6 });
 		quest._qvar1 = 3;
 		NetSendCmdQuest(true, quest);
 	}
 
-	if (gbIsMultiplayer) {
+	if (UseMultiplayerQuests()) {
 		return;
 	}
 
@@ -352,6 +351,7 @@ void CheckQuests()
 		    && ActiveMonsterCount == 4
 		    && Quests[Q_PWATER]._qactive != QUEST_DONE) {
 			Quests[Q_PWATER]._qactive = QUEST_DONE;
+			NetSendCmdQuest(true, Quests[Q_PWATER]);
 			PlaySfxLoc(IS_QUESTDN, MyPlayer->position.tile);
 			LoadPalette("levels\\l3data\\l3pwater.pal", false);
 			UpdatePWaterPalette();
@@ -377,7 +377,7 @@ bool ForceQuests()
 	if (gbIsSpawn)
 		return false;
 
-	if (gbIsMultiplayer) {
+	if (UseMultiplayerQuests()) {
 		return false;
 	}
 
@@ -430,7 +430,7 @@ void CheckQuestKill(const Monster &monster, bool sendmsg)
 		auto &diabloQuest = Quests[Q_DIABLO];
 		diabloQuest._qactive = QUEST_ACTIVE;
 
-		if (gbIsMultiplayer) {
+		if (UseMultiplayerQuests()) {
 			for (WorldTileCoord j = 0; j < MAXDUNY; j++) {
 				for (WorldTileCoord i = 0; i < MAXDUNX; i++) {
 					if (dPiece[i][j] == 369) {
@@ -662,8 +662,17 @@ void ResyncQuests()
 	if (setlevel && setlvlnum == SL_VILEBETRAYER) {
 		if (Quests[Q_BETRAYER]._qvar1 >= 4)
 			ObjChangeMapResync(1, 11, 20, 18);
-		if (Quests[Q_BETRAYER]._qvar1 >= 6)
+		if (Quests[Q_BETRAYER]._qvar1 >= 6) {
 			ObjChangeMapResync(1, 18, 20, 24);
+			if (gbIsMultiplayer) {
+				Monster *lazarus = FindUniqueMonster(UniqueMonsterType::Lazarus);
+				if (lazarus != nullptr) {
+					// Ensure lazarus starts attacking again after returning to the level
+					lazarus->goal = MonsterGoal::Normal;
+					lazarus->talkMsg = TEXT_NONE;
+				}
+			}
+		}
 		if (Quests[Q_BETRAYER]._qvar1 >= 7)
 			InitVPTriggers();
 		for (int i = 0; i < ActiveObjectCount; i++)
@@ -674,6 +683,20 @@ void ResyncQuests()
 	    && (Quests[Q_BETRAYER]._qvar2 == 1 || Quests[Q_BETRAYER]._qvar2 >= 3)
 	    && (Quests[Q_BETRAYER]._qactive == QUEST_ACTIVE || Quests[Q_BETRAYER]._qactive == QUEST_DONE)) {
 		Quests[Q_BETRAYER]._qvar2 = 2;
+		NetSendCmdQuest(true, Quests[Q_BETRAYER]);
+	}
+	if (currlevel == Quests[Q_DIABLO]._qlevel
+	    && !setlevel
+	    && Quests[Q_DIABLO]._qactive == QUEST_ACTIVE
+	    && gbIsMultiplayer) {
+		Point posPentagram = Quests[Q_DIABLO].position;
+		ObjChangeMapResync(posPentagram.x, posPentagram.y, posPentagram.x + 5, posPentagram.y + 5);
+		InitL4Triggers();
+	}
+	if (currlevel == 0
+	    && Quests[Q_PWATER]._qactive == QUEST_DONE
+	    && gbIsMultiplayer) {
+		CleanTownFountain();
 	}
 }
 
@@ -789,19 +812,30 @@ void QuestlogESC()
 	}
 }
 
-void SetMultiQuest(int q, quest_state s, bool log, int v1)
+void SetMultiQuest(int q, quest_state s, bool log, int v1, int v2)
 {
 	if (gbIsSpawn)
 		return;
 
-	if (Quests[q]._qactive != QUEST_DONE) {
-		if (s > Quests[q]._qactive)
-			Quests[q]._qactive = s;
+	auto &quest = Quests[q];
+	if (quest._qactive != QUEST_DONE) {
+		if (s > quest._qactive)
+			quest._qactive = s;
 		if (log)
-			Quests[q]._qlog = true;
-		if (v1 > Quests[q]._qvar1)
-			Quests[q]._qvar1 = v1;
+			quest._qlog = true;
 	}
+	if (v1 > quest._qvar1)
+		quest._qvar1 = v1;
+	quest._qvar2 = v2;
+	if (!UseMultiplayerQuests()) {
+		// Ensure that changes on another client is also updated on our own
+		ResyncQuests();
+	}
+}
+
+bool UseMultiplayerQuests()
+{
+	return gbIsMultiplayer;
 }
 
 bool Quest::IsAvailable()
@@ -812,7 +846,7 @@ bool Quest::IsAvailable()
 		return false;
 	if (_qactive == QUEST_NOTAVAIL)
 		return false;
-	if (gbIsMultiplayer && QuestsData[_qidx].isSinglePlayerOnly)
+	if (QuestsData[_qidx].isSinglePlayerOnly && UseMultiplayerQuests())
 		return false;
 
 	return true;

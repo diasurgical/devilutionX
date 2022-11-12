@@ -17,7 +17,6 @@
 namespace devilution {
 
 #define MAX_SEND_STR_LEN 80
-#define MAXMULTIQUESTS 10
 
 enum _cmd_id : uint8_t {
 	// Player mode standing.
@@ -537,6 +536,7 @@ struct TCmdQuest {
 	quest_state qstate;
 	uint8_t qlog;
 	uint8_t qvar1;
+	uint8_t qvar2;
 };
 
 struct TItemDef {

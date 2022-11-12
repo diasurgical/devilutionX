@@ -9,6 +9,10 @@ on:
   release:
     types: [published]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   xbox:
     # `ubuntu-latest` is currently 20.04 but we require a newer clang.

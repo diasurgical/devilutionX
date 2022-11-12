@@ -6,8 +6,11 @@ on:
       - master
   pull_request:
     types: [ opened, synchronize ]
-
   workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:

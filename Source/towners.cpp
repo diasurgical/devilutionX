@@ -484,12 +484,14 @@ void TalkToHealer(Player &player, Towner &healer)
 			Quests[Q_PWATER]._qlog = true;
 			Quests[Q_PWATER]._qmsg = TEXT_POISON3;
 			InitQTextMsg(TEXT_POISON3);
+			NetSendCmdQuest(true, Quests[Q_PWATER]);
 			return;
 		}
 		if (Quests[Q_PWATER]._qactive == QUEST_DONE && Quests[Q_PWATER]._qvar1 != 2) {
 			Quests[Q_PWATER]._qvar1 = 2;
 			InitQTextMsg(TEXT_POISON5);
 			SpawnUnique(UITEM_TRING, healer.position + Direction::SouthWest);
+			NetSendCmdQuest(true, Quests[Q_PWATER]);
 			return;
 		}
 	}
@@ -516,12 +518,13 @@ void TalkToBoy(Player & /*player*/, Towner & /*boy*/)
 void TalkToStoryteller(Player &player, Towner & /*storyteller*/)
 {
 	auto &betrayerQuest = Quests[Q_BETRAYER];
-	if (!gbIsMultiplayer) {
+	if (!UseMultiplayerQuests()) {
 		if (betrayerQuest._qactive == QUEST_INIT && RemoveInventoryItemById(player, IDI_LAZSTAFF)) {
 			InitQTextMsg(TEXT_VILE1);
 			betrayerQuest._qlog = true;
 			betrayerQuest._qactive = QUEST_ACTIVE;
 			betrayerQuest._qvar1 = 2;
+			NetSendCmdQuest(true, betrayerQuest);
 			return;
 		}
 	} else {

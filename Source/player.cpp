@@ -828,6 +828,11 @@ bool PlrHitMonst(Player &player, Monster &monster, bool adjacentDamage = false)
 			}
 			dam *= 2;
 		}
+#ifdef _DEBUG
+		if (DebugGodMode) {
+			dam = monster.hitPoints; /* ensure monster is killed with one hit */
+		}
+#endif
 		ApplyMonsterDamage(monster, dam);
 	}
 
@@ -878,11 +883,6 @@ bool PlrHitMonst(Player &player, Monster &monster, bool adjacentDamage = false)
 		}
 		RedrawComponent(PanelDrawComponent::Health);
 	}
-#ifdef _DEBUG
-	if (DebugGodMode) {
-		monster.hitPoints = 0; /* double check */
-	}
-#endif
 	if ((monster.hitPoints >> 6) <= 0) {
 		M_StartKill(monster, player);
 	} else {

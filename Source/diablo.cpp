@@ -2745,10 +2745,10 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 				for (int y = 0; y < DMAXY; y++)
 					UpdateAutomapExplorer({ x, y }, MAP_EXP_SELF);
 		}
-		if (!gbIsMultiplayer)
-			ResyncQuests();
-		else
+		if (UseMultiplayerQuests())
 			ResyncMPQuests();
+		else
+			ResyncQuests();
 	} else {
 		LoadSetMap();
 		IncProgress();
@@ -2791,8 +2791,11 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		} else {
 			LoadLevel();
 		}
-		if (gbIsMultiplayer)
+		if (gbIsMultiplayer) {
 			DeltaLoadLevel();
+			if (!UseMultiplayerQuests())
+				ResyncQuests();
+		}
 
 		InitMissiles();
 		IncProgress();

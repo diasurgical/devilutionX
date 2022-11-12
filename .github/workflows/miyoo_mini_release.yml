@@ -5,6 +5,10 @@ on:
     types: [published]
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   miyoo-mini:
     runs-on: ubuntu-22.04
