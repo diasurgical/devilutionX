@@ -13,13 +13,16 @@ namespace devilution {
 
 OptionalOwnedClxSpriteListOrSheet LoadOptionalClxListOrSheet(const char *path)
 {
-	SDL_RWops *handle = OpenAsset(path);
-	if (handle == nullptr)
+	AssetRef ref = FindAsset(path);
+	if (!ref.ok())
 		return std::nullopt;
-	const size_t size = SDL_RWsize(handle);
+	const size_t size = ref.size();
 	std::unique_ptr<uint8_t[]> data { new uint8_t[size] };
-	SDL_RWread(handle, data.get(), size, 1);
-	SDL_RWclose(handle);
+	{
+		AssetHandle handle = OpenAsset(std::move(ref));
+		if (!handle.ok() || !handle.read(data.get(), size))
+			return std::nullopt;
+	}
 	return OwnedClxSpriteListOrSheet::FromBuffer(std::move(data), size);
 }
 

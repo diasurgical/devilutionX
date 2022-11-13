@@ -62,26 +62,27 @@ bool LoadAudioFile(const char *path, bool stream, bool errorDialog, SoundSample 
 #ifndef STREAM_ALL_AUDIO
 	} else {
 		bool isMp3 = true;
-		SDL_RWops *file = OpenAsset(GetMp3Path(path).c_str());
-		if (file == nullptr) {
+		size_t dwBytes;
+		AssetHandle handle = OpenAsset(GetMp3Path(path).c_str(), dwBytes);
+		if (!handle.ok()) {
+#ifndef UNPACKED_MPQS
 			SDL_ClearError();
+#endif
 			isMp3 = false;
-			file = OpenAsset(path);
-			if (file == nullptr) {
+			handle = OpenAsset(path, dwBytes);
+			if (!handle.ok()) {
 				if (errorDialog)
 					ErrDlg("OpenAsset failed", path, __FILE__, __LINE__);
 				return false;
 			}
 		}
-		size_t dwBytes = SDL_RWsize(file);
 		auto waveFile = MakeArraySharedPtr<std::uint8_t>(dwBytes);
-		if (SDL_RWread(file, waveFile.get(), dwBytes, 1) == 0) {
+		if (!handle.read(waveFile.get(), dwBytes)) {
 			if (errorDialog)
 				ErrDlg("Failed to read file", StrCat(path, ": ", SDL_GetError()), __FILE__, __LINE__);
 			return false;
 		}
-		int error = result.SetChunk(waveFile, dwBytes, isMp3);
-		SDL_RWclose(file);
+		const int error = result.SetChunk(waveFile, dwBytes, isMp3);
 		if (error != 0) {
 			if (errorDialog)
 				ErrSdl();

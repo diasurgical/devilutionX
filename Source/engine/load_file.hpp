@@ -16,72 +16,32 @@
 
 namespace devilution {
 
-class SFile {
-public:
-	explicit SFile(const char *path, bool isOptional = false)
-	{
-		handle_ = OpenAsset(path);
-		if (handle_ == nullptr) {
-			if (!HeadlessMode && !isOptional) {
-				app_fatal(StrCat("Failed to open file:\n", path, "\n\n", SDL_GetError()));
-			}
-		}
-	}
-
-	~SFile()
-	{
-		if (handle_ != nullptr)
-			SDL_RWclose(handle_);
-	}
-
-	[[nodiscard]] bool Ok() const
-	{
-		return handle_ != nullptr;
-	}
-
-	[[nodiscard]] std::size_t Size() const
-	{
-		return SDL_RWsize(handle_);
-	}
-
-	bool Read(void *buffer, std::size_t len) const
-	{
-		return SDL_RWread(handle_, buffer, len, 1);
-	}
-
-private:
-	SDL_RWops *handle_;
-};
-
 template <typename T>
 void LoadFileInMem(const char *path, T *data)
 {
-	SFile file { path };
-	if (!file.Ok())
+	size_t size;
+	AssetHandle handle = OpenAsset(path, size);
+	if (!ValidateHandle(path, handle))
 		return;
-	const std::size_t fileLen = file.Size();
-	if ((fileLen % sizeof(T)) != 0)
+	if ((size % sizeof(T)) != 0)
 		app_fatal(StrCat("File size does not align with type\n", path));
-	file.Read(reinterpret_cast<byte *>(data), fileLen);
+	handle.read(data, size);
 }
 
 template <typename T>
 void LoadFileInMem(const char *path, T *data, std::size_t count)
 {
-	SFile file { path };
-	if (!file.Ok())
+	AssetHandle handle = OpenAsset(path);
+	if (!ValidateHandle(path, handle))
 		return;
-	file.Read(reinterpret_cast<byte *>(data), count * sizeof(T));
+	handle.read(data, count * sizeof(T));
 }
 
 template <typename T>
 bool LoadOptionalFileInMem(const char *path, T *data, std::size_t count)
 {
-	SFile file { path, true };
-	if (!file.Ok())
-		return false;
-	file.Read(reinterpret_cast<byte *>(data), count * sizeof(T));
-	return true;
+	AssetHandle handle = OpenAsset(path);
+	return handle.ok() && handle.read(data, count * sizeof(T));
 }
 
 template <typename T, std::size_t N>
@@ -99,18 +59,18 @@ void LoadFileInMem(const char *path, std::array<T, N> &data)
 template <typename T = byte>
 std::unique_ptr<T[]> LoadFileInMem(const char *path, std::size_t *numRead = nullptr)
 {
-	SFile file { path };
-	if (!file.Ok())
+	size_t size;
+	AssetHandle handle = OpenAsset(path, size);
+	if (!ValidateHandle(path, handle))
 		return nullptr;
-	const std::size_t fileLen = file.Size();
-	if ((fileLen % sizeof(T)) != 0)
+	if ((size % sizeof(T)) != 0)
 		app_fatal(StrCat("File size does not align with type\n", path));
 
 	if (numRead != nullptr)
-		*numRead = fileLen / sizeof(T);
+		*numRead = size / sizeof(T);
 
-	std::unique_ptr<T[]> buf { new T[fileLen / sizeof(T)] };
-	file.Read(reinterpret_cast<byte *>(buf.get()), fileLen);
+	std::unique_ptr<T[]> buf { new T[size / sizeof(T)] };
+	handle.read(buf.get(), size);
 	return buf;
 }
 
@@ -139,13 +99,18 @@ struct MultiFileLoader {
 	[[nodiscard]] std::unique_ptr<byte[]> operator()(size_t numFiles, PathFn &&pathFn, uint32_t *outOffsets,
 	    FilterFn filterFn = DefaultFilterFn {})
 	{
-		StaticVector<SFile, MaxFiles> files;
+		StaticVector<AssetHandle, MaxFiles> files;
 		StaticVector<uint32_t, MaxFiles> sizes;
 		size_t totalSize = 0;
 		for (size_t i = 0, j = 0; i < numFiles; ++i) {
 			if (!filterFn(i))
 				continue;
-			const size_t size = files.emplace_back(pathFn(i)).Size();
+			size_t size;
+			const char *path = pathFn(i);
+			files.emplace_back(OpenAsset(path, size));
+			if (!ValidateHandle(path, files.back()))
+				return nullptr;
+
 			sizes.emplace_back(static_cast<uint32_t>(size));
 			outOffsets[j] = static_cast<uint32_t>(totalSize);
 			totalSize += size;
@@ -156,7 +121,7 @@ struct MultiFileLoader {
 		for (size_t i = 0, j = 0; i < numFiles; ++i) {
 			if (!filterFn(i))
 				continue;
-			files[j].Read(&buf[outOffsets[j]], sizes[j]);
+			files[j].read(&buf[outOffsets[j]], sizes[j]);
 			++j;
 		}
 		return buf;

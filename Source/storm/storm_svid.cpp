@@ -241,7 +241,7 @@ bool SVidPlayBegin(const char *filename, int flags)
 	// 0x800000 // Edge detection
 	// 0x200800 // Clear FB
 
-	SDL_RWops *videoStream = OpenAsset(filename);
+	SDL_RWops *videoStream = OpenAssetAsSdlRwOps(filename);
 	SVidHandle = Smacker_Open(videoStream);
 	if (!SVidHandle.isValid) {
 		return false;

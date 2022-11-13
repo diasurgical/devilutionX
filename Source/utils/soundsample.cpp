@@ -114,7 +114,7 @@ bool SoundSample::Play(int numIterations)
 
 int SoundSample::SetChunkStream(std::string filePath, bool isMp3, bool logErrors)
 {
-	SDL_RWops *handle = OpenAsset(filePath.c_str(), /*threadsafe=*/true);
+	SDL_RWops *handle = OpenAssetAsSdlRwOps(filePath.c_str(), /*threadsafe=*/true);
 	if (handle == nullptr) {
 		if (logErrors)
 			LogError(LogCategory::Audio, "OpenAsset failed (from SoundSample::SetChunkStream): {}", SDL_GetError());
@@ -122,7 +122,7 @@ int SoundSample::SetChunkStream(std::string filePath, bool isMp3, bool logErrors
 	}
 	file_path_ = std::move(filePath);
 	isMp3_ = isMp3;
-	stream_ = CreateStream(handle, isMp3_);
+	stream_ = CreateStream(handle, isMp3);
 	if (!stream_->open()) {
 		stream_ = nullptr;
 		if (logErrors)

@@ -245,12 +245,12 @@ void ParseMetadata(string_view metadata)
 	}
 }
 
-bool ReadEntry(SDL_RWops *rw, const MoEntry &e, char *result)
+bool ReadEntry(AssetHandle &handle, const MoEntry &e, char *result)
 {
-	if (SDL_RWseek(rw, e.offset, RW_SEEK_SET) == -1)
+	if (!handle.seek(e.offset))
 		return false;
 	result[e.length] = '\0';
-	return static_cast<uint32_t>(SDL_RWread(rw, result, sizeof(char), e.length)) == e.length;
+	return handle.read(result, e.length);
 }
 
 } // namespace
@@ -306,12 +306,7 @@ bool HasTranslation(const std::string &locale)
 
 	constexpr std::array<const char *, 2> Extensions { ".mo", ".gmo" };
 	return std::any_of(Extensions.cbegin(), Extensions.cend(), [locale](const std::string &extension) {
-		SDL_RWops *rw = OpenAsset((locale + extension).c_str());
-		if (rw != nullptr) {
-			SDL_RWclose(rw);
-			return true;
-		}
-		return false;
+		return FindAsset((locale + extension).c_str()).ok();
 	});
 }
 
@@ -339,47 +334,43 @@ void LanguageInitialize()
 	}
 
 	const std::string lang(*sgOptions.Language.code);
-	SDL_RWops *rw;
+
+	AssetHandle handle;
 
 	// Translations normally come in ".gmo" files.
 	// We also support ".mo" because that is what poedit generates
 	// and what translators use to test their work.
 	for (const char *ext : { ".mo", ".gmo" }) {
-		if ((rw = OpenAsset((lang + ext).c_str())) != nullptr) {
+		if ((handle = OpenAsset((lang + ext).c_str())).ok()) {
 			break;
 		}
 	}
-	if (rw == nullptr) {
+	if (!handle.ok()) {
 		SetPluralForm("plural=(n != 1);"); // Reset to English plural form
 		return;
 	}
 
 	// Read header and do sanity checks
 	MoHead head;
-	if (SDL_RWread(rw, &head, sizeof(MoHead), 1) != 1) {
-		SDL_RWclose(rw);
+	if (!handle.read(&head, sizeof(MoHead))) {
 		return;
 	}
 	SwapLE(head);
 
 	if (head.magic != MO_MAGIC) {
-		SDL_RWclose(rw);
 		return; // not a MO file
 	}
 
 	if (head.revision.major > 1 || head.revision.minor > 1) {
-		SDL_RWclose(rw);
 		return; // unsupported revision
 	}
 
 	// Read entries of source strings
 	std::unique_ptr<MoEntry[]> src { new MoEntry[head.nbMappings] };
-	if (SDL_RWseek(rw, head.srcOffset, RW_SEEK_SET) == -1) {
-		SDL_RWclose(rw);
+	if (!handle.seek(head.srcOffset)) {
 		return;
 	}
-	if (static_cast<uint32_t>(SDL_RWread(rw, src.get(), sizeof(MoEntry), head.nbMappings)) != head.nbMappings) {
-		SDL_RWclose(rw);
+	if (!handle.read(src.get(), head.nbMappings * sizeof(MoEntry))) {
 		return;
 	}
 	for (size_t i = 0; i < head.nbMappings; ++i) {
@@ -388,12 +379,10 @@ void LanguageInitialize()
 
 	// Read entries of target strings
 	std::unique_ptr<MoEntry[]> dst { new MoEntry[head.nbMappings] };
-	if (SDL_RWseek(rw, head.dstOffset, RW_SEEK_SET) == -1) {
-		SDL_RWclose(rw);
+	if (!handle.seek(head.dstOffset)) {
 		return;
 	}
-	if (static_cast<uint32_t>(SDL_RWread(rw, dst.get(), sizeof(MoEntry), head.nbMappings)) != head.nbMappings) {
-		SDL_RWclose(rw);
+	if (!handle.read(dst.get(), head.nbMappings * sizeof(MoEntry))) {
 		return;
 	}
 	for (size_t i = 0; i < head.nbMappings; ++i) {
@@ -402,13 +391,11 @@ void LanguageInitialize()
 
 	// MO header
 	if (src[0].length != 0) {
-		SDL_RWclose(rw);
 		return;
 	}
 	{
 		auto headerValue = std::unique_ptr<char[]> { new char[dst[0].length + 1] };
-		if (!ReadEntry(rw, dst[0], &headerValue[0])) {
-			SDL_RWclose(rw);
+		if (!ReadEntry(handle, dst[0], &headerValue[0])) {
 			return;
 		}
 		ParseMetadata(&headerValue[0]);
@@ -431,7 +418,7 @@ void LanguageInitialize()
 	char *keyPtr = &translationKeys[0];
 	char *valuePtr = &translationValues[0];
 	for (uint32_t i = 1; i < head.nbMappings; i++) {
-		if (ReadEntry(rw, src[i], keyPtr) && ReadEntry(rw, dst[i], valuePtr)) {
+		if (ReadEntry(handle, src[i], keyPtr) && ReadEntry(handle, dst[i], valuePtr)) {
 			// Plural keys also have a plural form but it does not participate in lookup.
 			// Plural values are \0-terminated.
 			string_view value { valuePtr, dst[i].length + 1 };
@@ -445,6 +432,4 @@ void LanguageInitialize()
 			valuePtr += dst[i].length + 1;
 		}
 	}
-
-	SDL_RWclose(rw);
 }

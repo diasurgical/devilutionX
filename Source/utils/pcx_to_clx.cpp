@@ -7,6 +7,8 @@
 #include <memory>
 #include <vector>
 
+#include <SDL_endian.h>
+
 #include "appfat.h"
 #include "utils/clx_write.hpp"
 #include "utils/endian.hpp"
@@ -16,10 +18,6 @@
 #ifdef DEBUG_PCX_TO_CL2_SIZE
 #include <iomanip>
 #include <iostream>
-#endif
-
-#ifdef USE_SDL1
-#include "utils/sdl2_to_1_2_backports.h"
 #endif
 
 namespace devilution {
@@ -41,15 +39,26 @@ size_t GetReservationSize(size_t pcxSize)
 	}
 }
 
+bool LoadPcxMeta(AssetHandle &handle, int &width, int &height, uint8_t &bpp)
+{
+	PCXHeader pcxhdr;
+	if (!handle.read(&pcxhdr, PcxHeaderSize)) {
+		return false;
+	}
+	width = SDL_SwapLE16(pcxhdr.Xmax) - SDL_SwapLE16(pcxhdr.Xmin) + 1;
+	height = SDL_SwapLE16(pcxhdr.Ymax) - SDL_SwapLE16(pcxhdr.Ymin) + 1;
+	bpp = pcxhdr.BitsPerPixel;
+	return true;
+}
+
 } // namespace
 
-OptionalOwnedClxSpriteList PcxToClx(SDL_RWops *handle, int numFramesOrFrameHeight, std::optional<uint8_t> transparentColor, SDL_Color *outPalette)
+OptionalOwnedClxSpriteList PcxToClx(AssetHandle &handle, size_t fileSize, int numFramesOrFrameHeight, std::optional<uint8_t> transparentColor, SDL_Color *outPalette)
 {
 	int width;
 	int height;
 	uint8_t bpp;
 	if (!LoadPcxMeta(handle, width, height, bpp)) {
-		SDL_RWclose(handle);
 		return std::nullopt;
 	}
 	assert(bpp == 8);
@@ -64,17 +73,14 @@ OptionalOwnedClxSpriteList PcxToClx(SDL_RWops *handle, int numFramesOrFrameHeigh
 		numFrames = height / frameHeight;
 	}
 
-	ptrdiff_t pixelDataSize = SDL_RWsize(handle);
-	if (pixelDataSize < 0) {
-		SDL_RWclose(handle);
+	size_t pixelDataSize = fileSize;
+	if (pixelDataSize <= PcxHeaderSize) {
 		return std::nullopt;
 	}
-
 	pixelDataSize -= PcxHeaderSize;
 
 	std::unique_ptr<uint8_t[]> fileBuffer { new uint8_t[pixelDataSize] };
-	if (SDL_RWread(handle, fileBuffer.get(), pixelDataSize, 1) == 0) {
-		SDL_RWclose(handle);
+	if (handle.read(fileBuffer.get(), pixelDataSize) == 0) {
 		return std::nullopt;
 	}
 
@@ -173,8 +179,6 @@ OptionalOwnedClxSpriteList PcxToClx(SDL_RWops *handle, int numFramesOrFrameHeigh
 			++outPalette;
 		}
 	}
-
-	SDL_RWclose(handle);
 
 	// Release buffers before allocating the result array to reduce peak memory use.
 	frameBuffer = nullptr;
