@@ -11,6 +11,7 @@
 #include "levels/drlg_l4.h"
 #include "levels/gendung.h"
 #include "levels/trigs.h"
+#include "msg.h"
 #include "objdat.h"
 #include "objects.h"
 #include "quests.h"
@@ -109,6 +110,7 @@ void LoadSetMap()
 		if (Quests[Q_SKELKING]._qactive == QUEST_INIT) {
 			Quests[Q_SKELKING]._qactive = QUEST_ACTIVE;
 			Quests[Q_SKELKING]._qvar1 = 1;
+			NetSendCmdQuest(true, Quests[Q_SKELKING]);
 		}
 		LoadPreL1Dungeon("levels\\l1data\\sklkng1.dun");
 		LoadL1Dungeon("levels\\l1data\\sklkng2.dun", { 83, 44 });
