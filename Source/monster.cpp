@@ -481,7 +481,7 @@ void PlaceQuestMonsters()
 			PlaceUniqueMonst(UniqueMonsterType::Butcher, 0, 0);
 		}
 
-		if (currlevel == Quests[Q_SKELKING]._qlevel && gbIsMultiplayer) {
+		if (currlevel == Quests[Q_SKELKING]._qlevel && UseMultiplayerQuests()) {
 			for (size_t i = 0; i < LevelMonsterTypeCount; i++) {
 				if (IsSkel(LevelMonsterTypes[i].type)) {
 					PlaceUniqueMonst(UniqueMonsterType::SkeletonKing, i, 30);
@@ -3262,7 +3262,7 @@ void GetLevelMTypes()
 		if (Quests[Q_WARLORD].IsAvailable())
 			AddMonsterType(UniqueMonsterType::WarlordOfBlood, PLACE_UNIQUE);
 
-		if (gbIsMultiplayer && currlevel == Quests[Q_SKELKING]._qlevel) {
+		if (UseMultiplayerQuests() && currlevel == Quests[Q_SKELKING]._qlevel) {
 
 			AddMonsterType(MT_SKING, PLACE_UNIQUE);
 

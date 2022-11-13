@@ -383,7 +383,7 @@ void LoadQuestSetPieces()
 {
 	if (Quests[Q_BUTCHER].IsAvailable()) {
 		pSetPiece = LoadFileInMem<uint16_t>("levels\\l1data\\rnd6.dun");
-	} else if (Quests[Q_SKELKING].IsAvailable() && !gbIsMultiplayer) {
+	} else if (Quests[Q_SKELKING].IsAvailable() && !UseMultiplayerQuests()) {
 		pSetPiece = LoadFileInMem<uint16_t>("levels\\l1data\\skngdo.dun");
 	} else if (Quests[Q_LTBANNER].IsAvailable()) {
 		pSetPiece = LoadFileInMem<uint16_t>("levels\\l1data\\banner2.dun");
