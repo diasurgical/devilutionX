@@ -143,7 +143,6 @@ void DrawHelpSlider(const Surface &out)
 {
 	const Point uiPosition = GetUIRectangle().position;
 	const int sliderXPos = ContentTextWidth + uiPosition.x + 36;
-	const Point sliderPosition = uiPosition;
 	int sliderStart = uiPosition.y + HeaderHeight() + LineHeight() + 3;
 	int sliderEnd = uiPosition.y + PaddingTop + PanelHeight - 12;
 	ClxDraw(out, { sliderXPos, sliderStart }, (*pSTextSlidCels)[11]);
