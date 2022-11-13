@@ -2674,35 +2674,6 @@ void DeltaLoadLevel()
 			memset(AutomapView, 0, sizeof(AutomapView));
 	}
 
-	for (int i = 0; i < MAXITEMS; i++) {
-		if (deltaLevel.item[i].bCmd == CMD_INVALID)
-			continue;
-
-		if (deltaLevel.item[i].bCmd == TCmdPItem::PickedUpItem) {
-			int activeItemIndex = FindGetItem(
-			    deltaLevel.item[i].def.dwSeed,
-			    deltaLevel.item[i].def.wIndx,
-			    deltaLevel.item[i].def.wCI);
-			if (activeItemIndex != -1) {
-				const auto &position = Items[ActiveItems[activeItemIndex]].position;
-				if (dItem[position.x][position.y] == ActiveItems[activeItemIndex] + 1)
-					dItem[position.x][position.y] = 0;
-				DeleteItem(activeItemIndex);
-			}
-		}
-		if (deltaLevel.item[i].bCmd == TCmdPItem::DroppedItem) {
-			int ii = AllocateItem();
-			auto &item = Items[ii];
-			RecreateItem(*MyPlayer, deltaLevel.item[i], item);
-
-			int x = deltaLevel.item[i].x;
-			int y = deltaLevel.item[i].y;
-			item.position = GetItemPosition({ x, y });
-			dItem[item.position.x][item.position.y] = ii + 1;
-			RespawnItem(Items[ii], false);
-		}
-	}
-
 	if (leveltype != DTYPE_TOWN) {
 		for (auto it = deltaLevel.object.begin(); it != deltaLevel.object.end();) {
 			Object *object = FindObjectAtPosition(it->first);
@@ -2732,6 +2703,35 @@ void DeltaLoadLevel()
 			if (object.IsTrap()) {
 				UpdateTrapState(object);
 			}
+		}
+	}
+
+	for (int i = 0; i < MAXITEMS; i++) {
+		if (deltaLevel.item[i].bCmd == CMD_INVALID)
+			continue;
+
+		if (deltaLevel.item[i].bCmd == TCmdPItem::PickedUpItem) {
+			int activeItemIndex = FindGetItem(
+			    deltaLevel.item[i].def.dwSeed,
+			    deltaLevel.item[i].def.wIndx,
+			    deltaLevel.item[i].def.wCI);
+			if (activeItemIndex != -1) {
+				const auto &position = Items[ActiveItems[activeItemIndex]].position;
+				if (dItem[position.x][position.y] == ActiveItems[activeItemIndex] + 1)
+					dItem[position.x][position.y] = 0;
+				DeleteItem(activeItemIndex);
+			}
+		}
+		if (deltaLevel.item[i].bCmd == TCmdPItem::DroppedItem) {
+			int ii = AllocateItem();
+			auto &item = Items[ii];
+			RecreateItem(*MyPlayer, deltaLevel.item[i], item);
+
+			int x = deltaLevel.item[i].x;
+			int y = deltaLevel.item[i].y;
+			item.position = GetItemPosition({ x, y });
+			dItem[item.position.x][item.position.y] = ii + 1;
+			RespawnItem(Items[ii], false);
 		}
 	}
 }
