@@ -143,9 +143,14 @@ void GetFontPath(GameFontTables size, uint16_t row, string_view ext, char *out)
 	*fmt::format_to(out, FMT_COMPILE(R"(fonts\{}-{:02x}.{})"), FontSizes[size], row, ext) = '\0';
 }
 
+uint32_t GetFontId(GameFontTables size, uint16_t row)
+{
+	return (size << 16) | row;
+}
+
 std::array<uint8_t, 256> *LoadFontKerning(GameFontTables size, uint16_t row)
 {
-	uint32_t fontId = (size << 16) | row;
+	uint32_t fontId = GetFontId(size, row);
 
 	auto hotKerning = FontKerns.find(fontId);
 	if (hotKerning != FontKerns.end()) {
@@ -162,22 +167,14 @@ std::array<uint8_t, 256> *LoadFontKerning(GameFontTables size, uint16_t row)
 	} else if (IsHangul(row)) {
 		kerning->fill(HangulWidth[size]);
 	} else {
-		SDL_RWops *handle = OpenAsset(path);
-		if (handle != nullptr) {
-			SDL_RWread(handle, kerning, 256, 1);
-			SDL_RWclose(handle);
-		} else {
+		AssetHandle handle = OpenAsset(path);
+		if (!handle.ok() || !handle.read(kerning, 256)) {
 			LogError("Missing font kerning: {}", path);
 			kerning->fill(CJKWidth[size]);
 		}
 	}
 
 	return kerning;
-}
-
-uint32_t GetFontId(GameFontTables size, uint16_t row)
-{
-	return (size << 16) | row;
 }
 
 const OwnedClxSpriteList *LoadFont(GameFontTables size, text_color color, uint16_t row)

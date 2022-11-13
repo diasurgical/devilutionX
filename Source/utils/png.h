@@ -41,7 +41,7 @@ inline void QuitPNG()
 
 inline SDL_Surface *LoadPNG(const char *file)
 {
-	SDL_RWops *rwops = OpenAsset(file);
+	SDL_RWops *rwops = OpenAssetAsSdlRwOps(file);
 	SDL_Surface *surface = IMG_LoadPNG_RW(rwops);
 	SDL_RWclose(rwops);
 	return surface;

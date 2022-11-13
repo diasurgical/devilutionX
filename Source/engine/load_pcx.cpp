@@ -57,8 +57,9 @@ OptionalOwnedClxSpriteList LoadPcxSpriteList(const char *filename, int numFrames
 	}
 	return result;
 #else
-	SDL_RWops *handle = OpenAsset(path);
-	if (handle == nullptr) {
+	size_t fileSize;
+	AssetHandle handle = OpenAsset(path, fileSize);
+	if (!handle.ok()) {
 		if (logError)
 			LogError("Missing file: {}", path);
 		return std::nullopt;
@@ -66,7 +67,7 @@ OptionalOwnedClxSpriteList LoadPcxSpriteList(const char *filename, int numFrames
 #ifdef DEBUG_PCX_TO_CL2_SIZE
 	std::cout << filename;
 #endif
-	OptionalOwnedClxSpriteList result = PcxToClx(handle, numFramesOrFrameHeight, transparentColor, outPalette);
+	OptionalOwnedClxSpriteList result = PcxToClx(handle, fileSize, numFramesOrFrameHeight, transparentColor, outPalette);
 	if (!result)
 		return std::nullopt;
 	return result;

@@ -44,6 +44,16 @@ public:
 		return size_;
 	}
 
+	[[nodiscard]] T &back()
+	{
+		return (*this)[size_ - 1];
+	}
+
+	[[nodiscard]] const T &back() const
+	{
+		return (*this)[size_ - 1];
+	}
+
 	template <typename... Args>
 	T &emplace_back(Args &&...args) // NOLINT(readability-identifier-naming)
 	{
@@ -56,6 +66,15 @@ public:
 #endif
 		++size_;
 		return result;
+	}
+
+	T &operator[](std::size_t pos)
+	{
+#if __cplusplus >= 201703L
+		return *std::launder(reinterpret_cast<T *>(&data_[pos]));
+#else
+		return *reinterpret_cast<T *>(&data_[pos]);
+#endif
 	}
 
 	const T &operator[](std::size_t pos) const

@@ -231,7 +231,7 @@ void LoadLanguageArchive()
 void LoadGameArchives()
 {
 	auto paths = GetMPQSearchPaths();
-#if UNPACKED_MPQS
+#ifdef UNPACKED_MPQS
 	diabdat_data_path = FindUnpackedMpqData(paths, "diabdat");
 	if (!diabdat_data_path) {
 		spawn_data_path = FindUnpackedMpqData(paths, "spawn");
@@ -239,12 +239,11 @@ void LoadGameArchives()
 			gbIsSpawn = true;
 	}
 	if (!HeadlessMode) {
-		SDL_RWops *handle = OpenAsset("ui_art\\title.clx");
-		if (handle == nullptr) {
+		AssetRef ref = FindAsset("ui_art\\title.clx");
+		if (!ref.ok()) {
 			LogError("{}", SDL_GetError());
 			InsertCDDlg(_("diabdat.mpq or spawn.mpq"));
 		}
-		SDL_RWclose(handle);
 	}
 	hellfire_data_path = FindUnpackedMpqData(paths, "hellfire");
 	if (hellfire_data_path)
@@ -280,12 +279,11 @@ void LoadGameArchives()
 			gbIsSpawn = true;
 	}
 	if (!HeadlessMode) {
-		SDL_RWops *handle = OpenAsset("ui_art\\title.pcx");
-		if (handle == nullptr) {
+		AssetRef ref = FindAsset("ui_art\\title.pcx");
+		if (!ref.ok()) {
 			LogError("{}", SDL_GetError());
 			InsertCDDlg(_("diabdat.mpq or spawn.mpq"));
 		}
-		SDL_RWclose(handle);
 	}
 
 	hellfire_mpq = LoadMPQ(paths, "hellfire.mpq");
