@@ -3058,7 +3058,7 @@ void SpawnItem(Monster &monster, Point position, bool sendmsg)
 
 	bool dropsSpecialTreasure = (monster.data().treasure & T_UNIQ) != 0;
 
-	if (dropsSpecialTreasure && !gbIsMultiplayer) {
+	if (dropsSpecialTreasure && !UseMultiplayerQuests()) {
 		Item *uniqueItem = SpawnUnique(static_cast<_unique_items>(monster.data().treasure & T_MASK), position, false);
 		if (uniqueItem != nullptr && sendmsg)
 			NetSendCmdPItem(false, CMD_DROPITEM, uniqueItem->position, *uniqueItem);
