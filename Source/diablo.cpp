@@ -2781,7 +2781,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 			}
 		}
 		IncProgress();
-
+		PlayDungMsgs();
 		InitMultiView();
 		IncProgress();
 
@@ -2851,9 +2851,6 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 	}
 
 	CompleteProgress();
-
-	if (!gbIsSpawn && setlevel && setlvlnum == SL_SKELKING && Quests[Q_SKELKING]._qactive == QUEST_ACTIVE)
-		PlaySFX(USFX_SKING1);
 
 	// Reset mouse selection of entities
 	pcursmonst = -1;
