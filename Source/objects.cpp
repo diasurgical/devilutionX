@@ -3432,7 +3432,7 @@ bool AreAllCruxesOfTypeBroken(int cruxType)
 	return true;
 }
 
-void BreakCrux(Object &crux)
+void BreakCrux(const Player *player, Object &crux)
 {
 	crux._oAnimFlag = true;
 	crux._oAnimFrame = 1;
@@ -3441,6 +3441,9 @@ void BreakCrux(Object &crux)
 	crux._oMissFlag = true;
 	crux._oBreak = -1;
 	crux._oSelFlag = 0;
+
+	if (player == MyPlayer || player == nullptr)
+		NetSendCmdLoc(MyPlayerId, false, CMD_BREAKOBJ, crux.position);
 
 	if (!AreAllCruxesOfTypeBroken(crux._oVar8))
 		return;
@@ -4616,32 +4619,37 @@ void SyncOpObject(Player &player, int cmd, Object &object)
 	}
 }
 
-void BreakObjectMissile(Object &object)
+void BreakObjectMissile(const Player *player, Object &object)
 {
 	if (object.IsCrux())
-		BreakCrux(object);
+		BreakCrux(player, object);
 }
 void BreakObject(const Player &player, Object &object)
 {
 	if (object.IsBarrel()) {
 		BreakBarrel(player, object, false, true);
 	} else if (object.IsCrux()) {
-		BreakCrux(object);
+		BreakCrux(&player, object);
 	}
 }
 
 void DeltaSyncBreakObj(Object &object)
 {
-	if (!object.IsBarrel() || object._oSelFlag == 0)
+	if (!object.IsBreakable() || object._oSelFlag == 0)
 		return;
 
-	object._oSolidFlag = false;
 	object._oMissFlag = true;
 	object._oBreak = -1;
 	object._oSelFlag = 0;
 	object._oPreFlag = true;
 	object._oAnimFlag = false;
 	object._oAnimFrame = object._oAnimLen;
+
+	if (object.IsBarrel()) {
+		object._oSolidFlag = false;
+	} else if (object.IsCrux() && AreAllCruxesOfTypeBroken(object._oVar8)) {
+		ObjChangeMap(object._oVar1, object._oVar2, object._oVar3, object._oVar4);
+	}
 }
 
 void SyncBreakObj(const Player &player, Object &object)
