@@ -144,7 +144,7 @@ AssetRef FindAsset(const char *filename)
 AssetHandle OpenAsset(AssetRef &&ref, bool threadsafe)
 {
 #ifdef UNPACKED_MPQS
-	return AssetHandle { CreateFileStream(ref.path.c_str(), std::fstream::in | std::fstream::binary) };
+	return AssetHandle { OpenFile(ref.path.c_str(), "rb") };
 #else
 	if (ref.archive != nullptr)
 		return AssetHandle { SDL_RWops_FromMpqFile(*ref.archive, ref.fileNumber, ref.filename, threadsafe) };

@@ -2,6 +2,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <cstdio>
 #include <string>
 
 #include <SDL.h>
@@ -40,23 +41,47 @@ struct AssetRef {
 };
 
 struct AssetHandle {
-	std::optional<std::fstream> handle;
+	FILE *handle = nullptr;
+
+	AssetHandle() = default;
+
+	AssetHandle(FILE *handle)
+	    : handle(handle)
+	{
+	}
+
+	AssetHandle(AssetHandle &&other) noexcept
+	    : handle(other.handle)
+	{
+		other.handle = nullptr;
+	}
+
+	AssetHandle &operator=(AssetHandle &&other) noexcept
+	{
+		handle = other.handle;
+		other.handle = nullptr;
+		return *this;
+	}
+
+	~AssetHandle()
+	{
+		if (handle != nullptr)
+			std::fclose(handle);
+	}
 
 	[[nodiscard]] bool ok() const
 	{
-		return handle && !handle->fail();
+		return handle != nullptr && std::ferror(handle) == 0;
 	}
 
 	bool read(void *buffer, size_t len)
 	{
-		handle->read(static_cast<char *>(buffer), len);
-		return !handle->fail();
+		return std::fread(buffer, len, 1, handle) == 1;
 	}
 
 	bool seek(std::ios::pos_type pos)
 	{
-		handle->seekg(pos);
-		return !handle->fail();
+		return std::fseek(handle, pos, SEEK_SET) == 0;
 	}
 
 	[[nodiscard]] const char *error() const

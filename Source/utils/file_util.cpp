@@ -225,4 +225,20 @@ std::optional<std::fstream> CreateFileStream(const char *path, std::ios::openmod
 #endif
 }
 
+FILE *OpenFile(const char *path, const char *mode)
+{
+#if (defined(_WIN64) || defined(_WIN32)) && !defined(NXDK)
+	std::unique_ptr<wchar_t[]> pathUtf16;
+	std::unique_ptr<wchar_t[]> modeUtf16;
+	if ((pathUtf16 = ToWideChar(path)) == nullptr
+	    || (modeUtf16 = ToWideChar(mode)) == nullptr) {
+		LogError("UTF-8 -> UTF-16 conversion error code {}", ::GetLastError());
+		return {};
+	}
+	return _wfopen(pathUtf16.get(), modeUtf16.get());
+#else
+	return std::fopen(path, mode);
+#endif
+}
+
 } // namespace devilution
