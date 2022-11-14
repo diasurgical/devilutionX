@@ -18,11 +18,13 @@ namespace devilution {
 
 #ifdef UNPACKED_MPQS
 struct AssetRef {
-	std::string path;
+	static constexpr size_t PathBufSize = 4088;
+
+	char path[PathBufSize];
 
 	[[nodiscard]] bool ok() const
 	{
-		return !path.empty();
+		return path[0] != '\0';
 	}
 
 	// NOLINTNEXTLINE(readability-convert-member-functions-to-static)
@@ -34,7 +36,7 @@ struct AssetRef {
 	[[nodiscard]] size_t size() const
 	{
 		uintmax_t fileSize;
-		if (!GetFileSize(path.c_str(), &fileSize))
+		if (!GetFileSize(path, &fileSize))
 			return 0;
 		return fileSize;
 	}
