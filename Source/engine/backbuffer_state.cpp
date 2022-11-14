@@ -1,6 +1,6 @@
 #include "engine/backbuffer_state.hpp"
 
-#include <unordered_map>
+#include <vector>
 
 #include "engine/dx.h"
 #include "utils/enum_traits.h"
@@ -22,17 +22,27 @@ struct BackbufferState {
 	DrawnCursor cursor;
 };
 
-std::unordered_map<void *, BackbufferState> States;
+struct BackbufferPtrAndState {
+	void *ptr;
+	BackbufferState state;
+};
+
+std::vector<BackbufferPtrAndState> States;
 
 BackbufferState &GetBackbufferState()
 {
 	// `PalSurface` is null in headless mode.
 	void *ptr = PalSurface != nullptr ? PalSurface->pixels : nullptr;
-	auto result = States.emplace(std::piecewise_construct, std::forward_as_tuple(ptr), std::forward_as_tuple());
-	BackbufferState &state = result.first->second;
-	if (result.second)
-		state.redrawState.Redraw = RedrawState::RedrawAll;
-	return state;
+	for (BackbufferPtrAndState &ptrAndState : States) {
+		if (ptrAndState.ptr == ptr)
+			return ptrAndState.state;
+	}
+	States.emplace_back();
+	BackbufferPtrAndState &ptrAndState = States.back();
+	ptrAndState.ptr = ptr;
+	ptrAndState.state.redrawState.Redraw = RedrawState::RedrawAll;
+
+	return ptrAndState.state;
 }
 
 } // namespace
@@ -44,9 +54,9 @@ bool IsRedrawEverything()
 
 void RedrawViewport()
 {
-	for (auto &&it : States) {
-		if (it.second.redrawState.Redraw != RedrawState::RedrawAll) {
-			it.second.redrawState.Redraw = RedrawState::RedrawViewportOnly;
+	for (BackbufferPtrAndState &ptrAndState : States) {
+		if (ptrAndState.state.redrawState.Redraw != RedrawState::RedrawAll) {
+			ptrAndState.state.redrawState.Redraw = RedrawState::RedrawViewportOnly;
 		}
 	}
 }
@@ -63,8 +73,8 @@ void RedrawComplete()
 
 void RedrawEverything()
 {
-	for (auto &&it : States) {
-		it.second.redrawState.Redraw = RedrawState::RedrawAll;
+	for (BackbufferPtrAndState &ptrAndState : States) {
+		ptrAndState.state.redrawState.Redraw = RedrawState::RedrawAll;
 	}
 }
 
@@ -75,8 +85,8 @@ void InitBackbufferState()
 
 void RedrawComponent(PanelDrawComponent component)
 {
-	for (auto &&it : States) {
-		it.second.redrawState.redrawComponents[static_cast<size_t>(component)] = true;
+	for (BackbufferPtrAndState &ptrAndState : States) {
+		ptrAndState.state.redrawState.redrawComponents[static_cast<size_t>(component)] = true;
 	}
 }
 
