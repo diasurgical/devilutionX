@@ -9,21 +9,24 @@
 #include "utils/file_util.h"
 #include "utils/log.hpp"
 #include "utils/paths.h"
+#include "utils/str_cat.hpp"
 
 namespace devilution {
 
 namespace {
 
 #ifdef UNPACKED_MPQS
-std::string FindUnpackedMpqFile(const char *relativePath)
+char *FindUnpackedMpqFile(char *relativePath)
 {
-	std::string path;
+	char *path = nullptr;
 	const auto at = [&](const std::optional<std::string> &unpackedDir) -> bool {
 		if (!unpackedDir)
 			return false;
-		if (FileExists(path.append(*unpackedDir).append(relativePath).c_str()))
+		path = relativePath - unpackedDir->size();
+		std::memcpy(path, unpackedDir->data(), unpackedDir->size());
+		if (FileExists(path))
 			return true;
-		path.clear();
+		path = nullptr;
 		return false;
 	};
 	at(font_data_path) || at(lang_data_path)
@@ -68,26 +71,39 @@ bool FindMpqFile(const char *filename, MpqArchive **archive, uint32_t *fileNumbe
 AssetRef FindAsset(const char *filename)
 {
 	AssetRef result;
-	std::string relativePath = filename;
+	result.path[0] = '\0';
+
+	const string_view filenameStr = filename;
+	char pathBuf[AssetRef::PathBufSize];
+	char *const pathEnd = pathBuf + AssetRef::PathBufSize;
+	char *const relativePath = &pathBuf[AssetRef::PathBufSize - filenameStr.size() - 1];
+	*BufCopy(relativePath, filenameStr) = '\0';
+
 #ifndef _WIN32
-	std::replace(relativePath.begin(), relativePath.end(), '\\', '/');
+	std::replace(relativePath, pathEnd, '\\', '/');
 #endif
 	// Absolute path:
 	if (relativePath[0] == '/') {
-		if (FileExists(relativePath))
-			result.path = std::move(relativePath);
+		if (FileExists(relativePath)) {
+			*BufCopy(result.path, string_view(relativePath, filenameStr.size())) = '\0';
+		}
 		return result;
 	}
 
 	// Unpacked MPQ file:
-	result.path = FindUnpackedMpqFile(relativePath.c_str());
-	if (!result.path.empty())
+	char *const unpackedMpqPath = FindUnpackedMpqFile(relativePath);
+	if (unpackedMpqPath != nullptr) {
+		*BufCopy(result.path, string_view(unpackedMpqPath, pathEnd - unpackedMpqPath)) = '\0';
 		return result;
+	}
 
 	// The `/assets` directory next to the devilutionx binary.
-	std::string path = paths::AssetsPath() + relativePath;
-	if (FileExists(path))
-		result.path = std::move(path);
+	const std::string &assetsPathPrefix = paths::AssetsPath();
+	char *assetsPath = relativePath - assetsPathPrefix.size();
+	std::memcpy(assetsPath, assetsPathPrefix.data(), assetsPathPrefix.size());
+	if (FileExists(assetsPath)) {
+		*BufCopy(result.path, string_view(assetsPath, pathEnd - assetsPath)) = '\0';
+	}
 	return result;
 }
 #else
@@ -143,8 +159,8 @@ AssetRef FindAsset(const char *filename)
 
 AssetHandle OpenAsset(AssetRef &&ref, bool threadsafe)
 {
-#ifdef UNPACKED_MPQS
-	return AssetHandle { OpenFile(ref.path.c_str(), "rb") };
+#if UNPACKED_MPQS
+	return AssetHandle { OpenFile(ref.path, "rb") };
 #else
 	if (ref.archive != nullptr)
 		return AssetHandle { SDL_RWops_FromMpqFile(*ref.archive, ref.fileNumber, ref.filename, threadsafe) };
@@ -181,7 +197,7 @@ SDL_RWops *OpenAssetAsSdlRwOps(const char *filename, bool threadsafe)
 	AssetRef ref = FindAsset(filename);
 	if (!ref.ok())
 		return nullptr;
-	return SDL_RWFromFile(ref.path.c_str(), "rb");
+	return SDL_RWFromFile(ref.path, "rb");
 #else
 	return OpenAsset(filename, threadsafe).release();
 #endif
