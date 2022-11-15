@@ -914,6 +914,7 @@ void CheckQuestItem(Player &player, Item &questItem)
 	if (questItem.IDidx == IDI_ROCK && Quests[Q_ROCK]._qactive != QUEST_NOTAVAIL) {
 		if (Quests[Q_ROCK]._qactive == QUEST_INIT) {
 			Quests[Q_ROCK]._qactive = QUEST_ACTIVE;
+			NetSendCmdQuest(true, Quests[Q_ROCK]);
 		}
 		if (Quests[Q_ROCK]._qlog) {
 			myPlayer.Say(HeroSpeech::ThisMustBeWhatGriswoldWanted, 10);
