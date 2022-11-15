@@ -36,7 +36,7 @@ sudo apt-get install smpq
 ### Installing dependencies on Fedora
 
 ```
-sudo dnf install cmake gcc-c++ glibc-devel libstdc++-static SDL2-devel libsodium-devel libpng-devel bzip2-devel gmock-devel gtest-devel libasan libubsan fmt-devel
+sudo dnf install cmake gcc-c++ glibc-devel libstdc++-static SDL2-devel SDL2_image-devel libsodium-devel libpng-devel bzip2-devel gmock-devel gtest-devel libasan libubsan fmt-devel
 ```
 
 ### Compiling
