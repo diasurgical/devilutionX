@@ -373,12 +373,14 @@ void TalkToBlackSmith(Player &player, Towner &blackSmith)
 				if (Quests[Q_ROCK]._qactive == QUEST_INIT) {
 					Quests[Q_ROCK]._qactive = QUEST_ACTIVE;
 				}
+				NetSendCmdQuest(true, Quests[Q_ROCK]);
 				InitQTextMsg(TEXT_INFRA5);
 				return;
 			}
 
 			if (Quests[Q_ROCK]._qvar2 == 1 && RemoveInventoryItemById(player, IDI_ROCK)) {
 				Quests[Q_ROCK]._qactive = QUEST_DONE;
+				NetSendCmdQuest(true, Quests[Q_ROCK]);
 				SpawnUnique(UITEM_INFRARING, blackSmith.position + Direction::SouthWest);
 				InitQTextMsg(TEXT_INFRA7);
 				return;
