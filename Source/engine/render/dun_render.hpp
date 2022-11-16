@@ -6,6 +6,7 @@
 #pragma once
 
 #include "engine.h"
+#include "levels/gendung.h"
 
 namespace devilution {
 
@@ -14,7 +15,7 @@ namespace devilution {
  * @param out Target buffer
  * @param position Target buffer coordinates
  */
-void RenderTile(const Surface &out, Point position);
+void RenderTile(const Surface &out, Point position, MicroTile tile);
 
 /**
  * @brief Render a black 64x31 tile ◆
