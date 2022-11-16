@@ -19,6 +19,7 @@ namespace devilution {
 #define INV_SLOT_HALF_SIZE_PX (INV_SLOT_SIZE_PX / 2)
 #define INV_ROW_SLOT_SIZE 10
 constexpr Size InventorySlotSizeInPixels { INV_SLOT_SIZE_PX };
+static constexpr uint16_t InvalidItemId = uint16_t(-1);
 
 enum inv_item : int8_t {
 	// clang-format off

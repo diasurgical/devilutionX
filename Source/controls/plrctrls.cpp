@@ -1771,7 +1771,7 @@ void plrctrls_after_check_curs_move()
 	if (ControllerActionHeld != GameActionType_NONE && IsNoneOf(LastMouseButtonAction, MouseActionType::None, MouseActionType::Attack, MouseActionType::Spell)) {
 		InvalidateTargets();
 
-		if (pcursmonst == -1 && ObjectUnderCursor == nullptr && pcursitem == -1 && pcursinvitem == -1 && pcursstashitem == uint16_t(-1) && pcursplr == -1) {
+		if (pcursmonst == -1 && ObjectUnderCursor == nullptr && pcursitem == -1 && pcursinvitem == -1 && pcursstashitem == InvalidItemId && pcursplr == -1) {
 			FindTrigger();
 		}
 		return;
@@ -2005,7 +2005,7 @@ void PerformSpellAction()
 			CheckInvItem(true, false);
 			if (itemId != GetItemIdOnSlot(Slot))
 				ResetInvCursorPosition();
-		} else if (pcursstashitem != uint16_t(-1)) {
+		} else if (pcursstashitem != InvalidItemId) {
 			CheckStashItem(MousePosition, true, false);
 		}
 		return;
@@ -2069,7 +2069,7 @@ void CtrlUseInvItem()
 
 void CtrlUseStashItem()
 {
-	if (pcursstashitem == uint16_t(-1)) {
+	if (pcursstashitem == InvalidItemId) {
 		return;
 	}
 
@@ -2099,7 +2099,7 @@ void PerformSecondaryAction()
 			TryIconCurs();
 			NewCursor(CURSOR_HAND);
 		} else if (IsStashOpen) {
-			if (pcursstashitem != uint16_t(-1)) {
+			if (pcursstashitem != InvalidItemId) {
 				TransferItemToInventory(myPlayer, pcursstashitem);
 			} else if (pcursinvitem != -1) {
 				TransferItemToStash(myPlayer, pcursinvitem);
