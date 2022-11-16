@@ -449,6 +449,16 @@ struct Item {
 	 * @param player Player to compare stats against requirements
 	 */
 	void updateRequiredStatsCacheForPlayer(const Player &player);
+
+	bool operator==(const Item &other) const
+	{
+		return this->_iSeed == other._iSeed && this->_iCreateInfo == other._iCreateInfo;
+	}
+
+	bool operator!=(const Item &other) const
+	{
+		return this->_iSeed != other._iSeed && this->_iCreateInfo != other._iCreateInfo;
+	}
 };
 
 struct ItemGetRecordStruct {
