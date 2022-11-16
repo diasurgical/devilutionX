@@ -88,9 +88,11 @@ const std::string &PrefPath()
 		prefPath = NxdkGetPrefPath();
 #else
 		prefPath = FromSDL(SDL_GetPrefPath("diasurgical", "devilution"));
+#if !defined(__amigaos__)
 		if (FileExistsAndIsWriteable("diablo.ini")) {
 			prefPath = std::string("." DIRECTORY_SEPARATOR_STR);
 		}
+#endif
 #endif
 	}
 	return *prefPath;
@@ -105,9 +107,11 @@ const std::string &ConfigPath()
 		configPath = NxdkGetPrefPath();
 #else
 		configPath = FromSDL(SDL_GetPrefPath("diasurgical", "devilution"));
+#if !defined(__amigaos__)
 		if (FileExistsAndIsWriteable("diablo.ini")) {
 			configPath = std::string("." DIRECTORY_SEPARATOR_STR);
 		}
+#endif
 #endif
 	}
 	return *configPath;
