@@ -34,7 +34,7 @@ public:
 
 	/**
 	 * @brief Get the current stash page.
-	 * @return page number as int.
+	 * @return page number as unsigned int.
 	 */
 	unsigned GetPage() const
 	{
