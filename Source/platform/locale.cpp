@@ -176,6 +176,8 @@ std::vector<std::string> GetLocales()
 	}
 
 	CFRelease(languages);
+#elif PS4
+    // std::locale is unavailable on PS4, so we just let the fallback language get loaded
 #else
 	constexpr auto svOrEmpty = [](const char *cString) -> string_view {
 		return cString != nullptr ? cString : "";
