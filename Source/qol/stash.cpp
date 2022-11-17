@@ -479,7 +479,7 @@ void StashStruct::RemoveStashItem(Item *item, Point itemPosition, StashCell item
 		Point swappedItemPosition = stashList[lastItemIndex].position;
 		const Size swappedItemSize = GetInventorySize(stashList[lastItemIndex]);
 		unsigned swappedItemPage = GetPageByItemId(lastItemIndex);
-		std::swap(stashList[itemIndex], stashList[lastItemIndex]);
+		stashList[itemIndex] = std::move(stashList[lastItemIndex]);
 
 		UpdateStashGrid(swappedItemPage, swappedItemPosition, swappedItemSize, itemIndex + 1);
 	}
