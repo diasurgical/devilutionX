@@ -1195,22 +1195,23 @@ void DrawFPS(const Surface &out)
 
 /**
  * @brief Update part of the screen from the back buffer
- * @param dwX Back buffer coordinate
- * @param dwY Back buffer coordinate
- * @param dwWdt Back buffer coordinate
- * @param dwHgt Back buffer coordinate
+ * @param x Back buffer coordinate
+ * @param y Back buffer coordinate
+ * @param w Back buffer coordinate
+ * @param h Back buffer coordinate
  */
-void DoBlitScreen(Sint16 dwX, Sint16 dwY, Uint16 dwWdt, Uint16 dwHgt)
+void DoBlitScreen(int x, int y, int w, int h)
 {
-	// In SDL1 SDL_Rect x and y are Sint16. Cast explicitly to avoid a compiler warning.
-	using CoordType = decltype(SDL_Rect {}.x);
-	SDL_Rect srcRect {
-		static_cast<CoordType>(dwX),
-		static_cast<CoordType>(dwY),
-		dwWdt, dwHgt
-	};
-	SDL_Rect dstRect { dwX, dwY, dwWdt, dwHgt };
-
+#ifdef DEBUG_DO_BLIT_SCREEN
+	const Surface &out = GlobalBackBuffer();
+	const uint8_t debugColor = PAL8_RED;
+	DrawHorizontalLine(out, Point(x, y), w, debugColor);
+	DrawHorizontalLine(out, Point(x, y + h - 1), w, debugColor);
+	DrawVerticalLine(out, Point(x, y), h, debugColor);
+	DrawVerticalLine(out, Point(x + w - 1, y), h, debugColor);
+#endif
+	SDL_Rect srcRect = MakeSdlRect(x, y, w, h);
+	SDL_Rect dstRect = MakeSdlRect(x, y, w, h);
 	BltFast(&srcRect, &dstRect);
 }
 
@@ -1241,7 +1242,12 @@ void DrawMain(const Surface &out, int dwHgt, bool drawDesc, bool drawHp, bool dr
 			DoBlitScreen(mainPanelPosition.x + 204, mainPanelPosition.y + 5, 232, 28);
 		}
 		if (drawDesc) {
-			DoBlitScreen(mainPanelPosition.x + 176, mainPanelPosition.y + 46, 288, 63);
+			if (talkflag) {
+				// When chat input is displayed, the belt is hidden and the chat moves up.
+				DoBlitScreen(mainPanelPosition.x + 171, mainPanelPosition.y + 6, 298, 116);
+			} else {
+				DoBlitScreen(mainPanelPosition.x + 176, mainPanelPosition.y + 46, 288, 63);
+			}
 		}
 		if (drawMana) {
 			DoBlitScreen(mainPanelPosition.x + 460, mainPanelPosition.y, 88, 72);
@@ -1251,11 +1257,11 @@ void DrawMain(const Surface &out, int dwHgt, bool drawDesc, bool drawHp, bool dr
 			DoBlitScreen(mainPanelPosition.x + 96, mainPanelPosition.y, 88, 72);
 		}
 		if (drawBtn) {
-			DoBlitScreen(mainPanelPosition.x + 8, mainPanelPosition.y + 5, 72, 119);
-			DoBlitScreen(mainPanelPosition.x + 556, mainPanelPosition.y + 5, 72, 48);
+			DoBlitScreen(mainPanelPosition.x + 8, mainPanelPosition.y + 7, 74, 114);
+			DoBlitScreen(mainPanelPosition.x + 559, mainPanelPosition.y + 7, 74, 48);
 			if (gbIsMultiplayer) {
-				DoBlitScreen(mainPanelPosition.x + 84, mainPanelPosition.y + 91, 36, 32);
-				DoBlitScreen(mainPanelPosition.x + 524, mainPanelPosition.y + 91, 36, 32);
+				DoBlitScreen(mainPanelPosition.x + 86, mainPanelPosition.y + 91, 34, 32);
+				DoBlitScreen(mainPanelPosition.x + 526, mainPanelPosition.y + 91, 34, 32);
 			}
 		}
 		if (PrevCursorRect.size.width != 0 && PrevCursorRect.size.height != 0) {
