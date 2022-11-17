@@ -268,8 +268,10 @@ void InitStash()
 {
 	InitialWithdrawGoldValue = 0;
 
-	StashPanelArt = LoadClx("data\\stash.clx");
-	StashNavButtonArt = LoadClx("data\\stashnavbtns.clx");
+	if (!HeadlessMode) {
+		StashPanelArt = LoadClx("data\\stash.clx");
+		StashNavButtonArt = LoadClx("data\\stashnavbtns.clx");
+	}
 }
 
 void TransferItemToInventory(Player &player, uint16_t itemId)

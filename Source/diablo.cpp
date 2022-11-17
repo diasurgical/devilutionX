@@ -176,7 +176,6 @@ void FreeGame()
 	FreeXPBar();
 	FreeControlPan();
 	FreeInvGFX();
-	FreeStashGFX();
 	FreeGMenu();
 	FreeQuestText();
 	FreeInfoBoxGfx();
@@ -2234,6 +2233,7 @@ void FreeGameMem()
 	FreeMissileGFX();
 	FreeObjectGFX();
 	FreeTownerGFX();
+	FreeStashGFX();
 #ifndef USE_SDL1
 	DeactivateVirtualGamepad();
 	FreeVirtualGamepadGFX();
@@ -2605,7 +2605,6 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		qtextflag = false;
 		if (!HeadlessMode) {
 			InitInv();
-			InitStash();
 			InitQuestText();
 			InitInfoBoxGfx();
 			InitHelp();
@@ -2731,6 +2730,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 			}
 
 			InitTowners();
+			InitStash();
 			InitItems();
 			InitMissiles();
 			IncProgress();
