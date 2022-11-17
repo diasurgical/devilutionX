@@ -473,9 +473,9 @@ void StashStruct::RemoveStashItem(Item *item, Point itemPosition, StashCell item
 	// reset claimed slot IDs to zero
 	UpdateStashGrid(Stash.GetPage(), itemPosition, itemSize);
 
-	// not the last item, swap with last item to keep IDs contiguous
 	StashStruct::StashCell lastItemIndex = static_cast<StashStruct::StashCell>(stashList.size() - 1);
 	if (lastItemIndex != itemIndex) {
+		// not the last item, swap with last item to keep IDs contiguous
 		Point swappedItemPosition = stashList[lastItemIndex].position;
 		const Size swappedItemSize = GetInventorySize(stashList[lastItemIndex]);
 		unsigned swappedItemPage = GetPageByItemId(lastItemIndex);
