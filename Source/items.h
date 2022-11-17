@@ -457,7 +457,7 @@ struct Item {
 
 	bool operator!=(const Item &other) const
 	{
-		return this->_iSeed != other._iSeed && this->_iCreateInfo != other._iCreateInfo;
+		return !(*this == other);
 	}
 };
 
