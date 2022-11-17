@@ -177,7 +177,7 @@ void CheckStashButtonRelease(Point mousePosition);
 void CheckStashButtonPress(Point mousePosition);
 
 /**
- * @brief Being the gold withdraw process, initializing the withdraw dialog popup.
+ * @brief Begin the gold withdraw process, initializing the withdraw dialog popup.
  */
 void StartGoldWithdraw();
 
