@@ -1,5 +1,7 @@
 include(functions/FetchContent_MakeAvailableExcludeFromAll)
 
+set(CMAKE_POLICY_DEFAULT_CMP0048 NEW)
+
 include(FetchContent)
 FetchContent_Declare(zlib
     URL https://www.zlib.net/zlib-1.2.13.tar.gz
@@ -8,42 +10,18 @@ FetchContent_Declare(zlib
 FetchContent_MakeAvailableExcludeFromAll(zlib)
 
 if(DEVILUTIONX_STATIC_ZLIB)
-  set(_lib_type STATIC)
+  add_library(ZLIB::ZLIB ALIAS zlibstatic)
+  target_include_directories(zlibstatic INTERFACE ${zlib_BINARY_DIR} ${zlib_SOURCE_DIR})
 else()
-  set(_lib_type SHARED)
+  add_library(ZLIB::ZLIB ALIAS zlib)
+  target_include_directories(zlib INTERFACE ${zlib_BINARY_DIR} ${zlib_SOURCE_DIR})
 endif()
-add_library(ZLIB ${_lib_type}
-  ${zlib_SOURCE_DIR}/crc32.h
-  ${zlib_SOURCE_DIR}/gzguts.h
-  ${zlib_SOURCE_DIR}/inffixed.h
-  ${zlib_SOURCE_DIR}/inftrees.h
-  ${zlib_BINARY_DIR}/zconf.h
-  ${zlib_SOURCE_DIR}/zutil.h
-  ${zlib_SOURCE_DIR}/deflate.h
-  ${zlib_SOURCE_DIR}/inffast.h
-  ${zlib_SOURCE_DIR}/inflate.h
-  ${zlib_SOURCE_DIR}/trees.h
-  ${zlib_SOURCE_DIR}/zlib.h
-  ${zlib_SOURCE_DIR}/adler32.c
-  ${zlib_SOURCE_DIR}/deflate.c
-  ${zlib_SOURCE_DIR}/gzread.c
-  ${zlib_SOURCE_DIR}/inffast.c
-  ${zlib_SOURCE_DIR}/trees.c
-  ${zlib_SOURCE_DIR}/compress.c
-  ${zlib_SOURCE_DIR}/gzclose.c
-  ${zlib_SOURCE_DIR}/gzwrite.c
-  ${zlib_SOURCE_DIR}/inflate.c
-  ${zlib_SOURCE_DIR}/uncompr.c
-  ${zlib_SOURCE_DIR}/crc32.c
-  ${zlib_SOURCE_DIR}/gzlib.c
-  ${zlib_SOURCE_DIR}/infback.c
-  ${zlib_SOURCE_DIR}/inftrees.c
-  ${zlib_SOURCE_DIR}/zutil.c
-)
-target_include_directories(ZLIB PUBLIC ${zlib_SOURCE_DIR})
-target_include_directories(ZLIB PUBLIC ${zlib_BINARY_DIR})
 
-add_library(ZLIB::ZLIB ALIAS ZLIB)
-
+# 1. Set the variables that are usually set by FindZLIB.cmake.
+# 2. Add the module that stubs out `find_package(ZLIB ...)` calls.
+set(ZLIB_FOUND ON PARENT_SCOPE)
 set(ZLIB_LIBRARY ZLIB::ZLIB PARENT_SCOPE)
-set(ZLIB_INCLUDE_DIR HINTS ${zlib_SOURCE_DIR} ${zlib_BINARY_DIR} PARENT_SCOPE)
+set(ZLIB_LIBRARIES ZLIB::ZLIB PARENT_SCOPE)
+set(ZLIB_INCLUDE_DIR ${zlib_SOURCE_DIR} ${zlib_BINARY_DIR} PARENT_SCOPE)
+set(ZLIB_INCLUDE_DIRS ${zlib_SOURCE_DIR} ${zlib_BINARY_DIR} PARENT_SCOPE)
+set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_CURRENT_LIST_DIR}/CMake" PARENT_SCOPE)
