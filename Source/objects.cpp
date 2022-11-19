@@ -2140,7 +2140,7 @@ void OperateMushroomPatch(const Player &player, Object &mushroomPatch)
 	Quests[Q_MUSHROOM]._qvar1 = QS_MUSHSPAWNED;
 }
 
-void OperateInnSignChest(const Player &player, Object &questContainer)
+void OperateInnSignChest(const Player &player, Object &questContainer, bool sendmsg)
 {
 	if (ActiveItemCount >= MAXITEMS) {
 		return;
@@ -2161,8 +2161,12 @@ void OperateInnSignChest(const Player &player, Object &questContainer)
 	questContainer._oAnimFrame += 2;
 
 	PlaySfxLoc(IS_CHEST, questContainer.position);
-	Point pos = GetSuperItemLoc(questContainer.position);
-	SpawnQuestItem(IDI_BANNER, pos, 0, 0, true);
+
+	if (sendmsg) {
+		Point pos = GetSuperItemLoc(questContainer.position);
+		SpawnQuestItem(IDI_BANNER, pos, 0, 0, true);
+		NetSendCmdLoc(MyPlayerId, true, CMD_OPERATEOBJ, questContainer.position);
+	}
 }
 
 void OperateSlainHero(const Player &player, Object &corpse)
@@ -4438,7 +4442,7 @@ void OperateObject(Player &player, Object &object)
 		OperateSlainHero(player, object);
 		break;
 	case OBJ_SIGNCHEST:
-		OperateInnSignChest(player, object);
+		OperateInnSignChest(player, object, sendmsg);
 		break;
 	default:
 		break;
@@ -4512,7 +4516,7 @@ void DeltaSyncOpObject(Object &object)
 		}
 		break;
 	case OBJ_SIGNCHEST:
-		if (Quests[Q_LTBANNER]._qvar1 == 2) {
+		if (Quests[Q_LTBANNER]._qvar1 >= 2) {
 			UpdateState(object, object._oAnimFrame + 2);
 		}
 		break;
@@ -4612,7 +4616,7 @@ void SyncOpObject(Player &player, int cmd, Object &object)
 		OperateSlainHero(player, object);
 		break;
 	case OBJ_SIGNCHEST:
-		OperateInnSignChest(player, object);
+		OperateInnSignChest(player, object, sendmsg);
 		break;
 	default:
 		break;
