@@ -326,6 +326,7 @@ void TalkToBarOwner(Player &player, Towner &barOwner)
 					bannerQuest._qactive = QUEST_ACTIVE;
 				}
 				bannerQuest._qlog = true;
+				NetSendCmdQuest(true, bannerQuest);
 				InitQTextMsg(TEXT_BANNER2);
 				return;
 			}
@@ -333,6 +334,7 @@ void TalkToBarOwner(Player &player, Towner &barOwner)
 			if (bannerQuest._qvar2 == 1 && RemoveInventoryItemById(player, IDI_BANNER)) {
 				bannerQuest._qactive = QUEST_DONE;
 				bannerQuest._qvar1 = 3;
+				NetSendCmdQuest(true, bannerQuest);
 				SpawnUnique(UITEM_HARCREST, barOwner.position + Direction::SouthWest);
 				InitQTextMsg(TEXT_BANNER3);
 				return;

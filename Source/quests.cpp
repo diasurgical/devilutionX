@@ -609,6 +609,7 @@ void ResyncQuests()
 		return;
 
 	if (Quests[Q_LTBANNER].IsAvailable()) {
+		Monster *snotSpill = FindUniqueMonster(UniqueMonsterType::SnotSpill);
 		if (Quests[Q_LTBANNER]._qvar1 == 1) {
 			ObjChangeMapResync(
 			    SetPiece.position.x + SetPiece.size.width - 2,
@@ -629,6 +630,11 @@ void ResyncQuests()
 			TransVal = 9;
 			DRLG_MRectTrans({ SetPiece.position, WorldTileSize(SetPiece.size.width / 2 + 4, SetPiece.size.height / 2) });
 			TransVal = tren;
+			if (gbIsMultiplayer && snotSpill != nullptr && snotSpill->talkMsg != TEXT_BANNER12) {
+				snotSpill->goal = MonsterGoal::Inquiring;
+				snotSpill->talkMsg = Quests[Q_LTBANNER]._qactive == QUEST_DONE ? TEXT_BANNER12 : TEXT_BANNER11;
+				snotSpill->flags |= MFLAG_QUEST_COMPLETE;
+			}
 		}
 		if (Quests[Q_LTBANNER]._qvar1 == 3) {
 			ObjChangeMapResync(SetPiece.position.x, SetPiece.position.y, SetPiece.position.x + SetPiece.size.width + 1, SetPiece.position.y + SetPiece.size.height + 1);
@@ -638,6 +644,13 @@ void ResyncQuests()
 			TransVal = 9;
 			DRLG_MRectTrans({ SetPiece.position, WorldTileSize(SetPiece.size.width / 2 + 4, SetPiece.size.height / 2) });
 			TransVal = tren;
+			if (gbIsMultiplayer && snotSpill != nullptr) {
+				snotSpill->goal = MonsterGoal::Normal;
+				snotSpill->flags |= MFLAG_QUEST_COMPLETE;
+				snotSpill->talkMsg = TEXT_NONE;
+				snotSpill->activeForTicks = UINT8_MAX;
+				RedoPlayerVision();
+			}
 		}
 	}
 	if (currlevel == Quests[Q_MUSHROOM]._qlevel) {

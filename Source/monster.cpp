@@ -1426,6 +1426,7 @@ void MonsterTalk(Monster &monster)
 			if (Quests[Q_LTBANNER]._qactive == QUEST_INIT)
 				Quests[Q_LTBANNER]._qactive = QUEST_ACTIVE;
 			monster.flags |= MFLAG_QUEST_COMPLETE;
+			NetSendCmdQuest(true, Quests[Q_LTBANNER]);
 		}
 		if (Quests[Q_LTBANNER]._qvar1 < 2) {
 			app_fatal(StrCat("SS Talk = ", monster.talkMsg, ", Flags = ", monster.flags));
@@ -2563,6 +2564,7 @@ void SnotSpilAi(Monster &monster)
 			if (!effect_is_playing(USFX_SNOT3) && monster.goal == MonsterGoal::Talking) {
 				ObjChangeMap(SetPiece.position.x, SetPiece.position.y, SetPiece.position.x + SetPiece.size.width + 1, SetPiece.position.y + SetPiece.size.height + 1);
 				Quests[Q_LTBANNER]._qvar1 = 3;
+				NetSendCmdQuest(true, Quests[Q_LTBANNER]);
 				RedoPlayerVision();
 				monster.activeForTicks = UINT8_MAX;
 				monster.talkMsg = TEXT_NONE;
@@ -4485,6 +4487,7 @@ void TalktoMonster(Player &player, Monster &monster)
 			Quests[Q_LTBANNER]._qactive = QUEST_DONE;
 			monster.talkMsg = TEXT_BANNER12;
 			monster.goal = MonsterGoal::Inquiring;
+			NetSendCmdQuest(true, Quests[Q_LTBANNER]);
 		}
 	}
 	if (Quests[Q_VEIL].IsAvailable() && monster.talkMsg >= TEXT_VEIL9) {
