@@ -318,7 +318,7 @@ void TalkToBarOwner(Player &player, Towner &barOwner)
 
 	auto &bannerQuest = Quests[Q_LTBANNER];
 	if (bannerQuest._qactive != QUEST_NOTAVAIL) {
-		if (player._pLvlVisited[3] && bannerQuest._qactive != QUEST_DONE) {
+		if ((player._pLvlVisited[3] || player._pLvlVisited[4]) && bannerQuest._qactive != QUEST_DONE) {
 			if (bannerQuest._qvar2 == 0) {
 				bannerQuest._qvar2 = 1;
 				if (bannerQuest._qactive == QUEST_INIT) {
