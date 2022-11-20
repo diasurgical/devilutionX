@@ -249,7 +249,6 @@ endif()
 target_link_libraries(libdevilutionx PUBLIC
   Threads::Threads
   DevilutionX::SDL
-  DevilutionX::SDL_image
   fmt::fmt
   PKWare
   libmpq
@@ -258,6 +257,10 @@ target_link_libraries(libdevilutionx PUBLIC
   tl
   hoehrmann_utf8
 )
+
+if(NOT USE_SDL1)
+  target_link_libraries(libdevilutionx PUBLIC SDL2::SDL2_image)
+endif()
 
 if(NOT NONET)
   if(NOT DISABLE_TCP)
