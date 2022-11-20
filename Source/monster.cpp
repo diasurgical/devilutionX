@@ -4473,9 +4473,8 @@ Monster *PreSpawnSkeleton()
 	return skeleton;
 }
 
-void TalktoMonster(Monster &monster)
+void TalktoMonster(Player &player, Monster &monster)
 {
-	Player &player = Players[monster.enemy];
 	monster.mode = MonsterMode::Talk;
 	if (monster.ai != AI_SNOTSPIL && monster.ai != AI_LACHDAN) {
 		return;
