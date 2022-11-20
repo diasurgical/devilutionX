@@ -387,24 +387,24 @@ void TalkToBlackSmith(Player &player, Towner &blackSmith)
 			}
 		}
 	}
-	if (Quests[Q_ANVIL]._qactive != QUEST_NOTAVAIL) {
-		if (player._pLvlVisited[9] && Quests[Q_ANVIL]._qactive != QUEST_DONE) {
-			if (Quests[Q_ANVIL]._qvar2 == 0 && Quests[Q_ROCK]._qactive != QUEST_INIT) {
-				Quests[Q_ANVIL]._qvar2 = 1;
-				Quests[Q_ANVIL]._qlog = true;
-				if (Quests[Q_ANVIL]._qactive == QUEST_INIT) {
-					Quests[Q_ANVIL]._qactive = QUEST_ACTIVE;
-				}
-				InitQTextMsg(TEXT_ANVIL5);
-				return;
+	if (IsNoneOf(Quests[Q_ANVIL]._qactive, QUEST_NOTAVAIL, QUEST_DONE)) {
+		if ((player._pLvlVisited[9] || player._pLvlVisited[10]) && Quests[Q_ANVIL]._qvar2 == 0) {
+			Quests[Q_ANVIL]._qvar2 = 1;
+			Quests[Q_ANVIL]._qlog = true;
+			if (Quests[Q_ANVIL]._qactive == QUEST_INIT) {
+				Quests[Q_ANVIL]._qactive = QUEST_ACTIVE;
 			}
+			NetSendCmdQuest(true, Quests[Q_ANVIL]);
+			InitQTextMsg(TEXT_ANVIL5);
+			return;
+		}
 
-			if (Quests[Q_ANVIL]._qvar2 == 1 && RemoveInventoryItemById(player, IDI_ANVIL)) {
-				Quests[Q_ANVIL]._qactive = QUEST_DONE;
-				SpawnUnique(UITEM_GRISWOLD, blackSmith.position + Direction::SouthWest);
-				InitQTextMsg(TEXT_ANVIL7);
-				return;
-			}
+		if (Quests[Q_ANVIL]._qvar2 == 1 && RemoveInventoryItemById(player, IDI_ANVIL)) {
+			Quests[Q_ANVIL]._qactive = QUEST_DONE;
+			NetSendCmdQuest(true, Quests[Q_ANVIL]);
+			SpawnUnique(UITEM_GRISWOLD, blackSmith.position + Direction::SouthWest);
+			InitQTextMsg(TEXT_ANVIL7);
+			return;
 		}
 	}
 
