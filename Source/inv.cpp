@@ -901,6 +901,7 @@ void CheckQuestItem(Player &player, Item &questItem)
 	if (questItem.IDidx == IDI_ANVIL && Quests[Q_ANVIL]._qactive != QUEST_NOTAVAIL) {
 		if (Quests[Q_ANVIL]._qactive == QUEST_INIT) {
 			Quests[Q_ANVIL]._qactive = QUEST_ACTIVE;
+			NetSendCmdQuest(true, Quests[Q_ANVIL]);
 		}
 		if (Quests[Q_ANVIL]._qlog) {
 			myPlayer.Say(HeroSpeech::INeedToGetThisToGriswold, 10);
