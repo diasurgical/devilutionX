@@ -354,6 +354,16 @@ int GetLineHeight(string_view fmt, DrawStringFormatArg *args, std::size_t argsLe
 	return LineHeights[fontIndex];
 }
 
+Surface ClipSurface(const Surface &out, Rectangle rect)
+{
+	if (rect.size.height == 0) {
+		return out.subregion(0, 0, std::min(rect.position.x + rect.size.width, out.w()), out.h());
+	}
+	return out.subregion(0, 0,
+	    std::min(rect.position.x + rect.size.width, out.w()),
+	    std::min(rect.position.y + rect.size.height, out.h()));
+}
+
 int DoDrawString(const Surface &out, string_view text, Rectangle rect, Point &characterPosition,
     int spacing, int lineHeight, int lineWidth, int rightMargin, int bottomMargin,
     UiFlags flags, GameFontTables size, text_color color)
@@ -642,12 +652,14 @@ uint32_t DrawString(const Surface &out, string_view text, const Rectangle &rect,
 
 	characterPosition.y += BaseLineOffset[size];
 
-	const int bytesDrawn = DoDrawString(out, text, rect, characterPosition, spacing, lineHeight, lineWidth, rightMargin, bottomMargin, flags, size, color);
+	const Surface clippedOut = ClipSurface(out, rect);
+
+	const int bytesDrawn = DoDrawString(clippedOut, text, rect, characterPosition, spacing, lineHeight, lineWidth, rightMargin, bottomMargin, flags, size, color);
 
 	if (HasAnyOf(flags, UiFlags::PentaCursor)) {
-		ClxDraw(out, characterPosition + Displacement { 0, lineHeight - BaseLineOffset[size] }, (*pSPentSpn2Cels)[PentSpn2Spin()]);
+		ClxDraw(clippedOut, characterPosition + Displacement { 0, lineHeight - BaseLineOffset[size] }, (*pSPentSpn2Cels)[PentSpn2Spin()]);
 	} else if (HasAnyOf(flags, UiFlags::TextCursor) && GetAnimationFrame(2, 500) != 0) {
-		DrawFont(out, characterPosition, LoadFont(size, color, 0), color, '|');
+		DrawFont(clippedOut, characterPosition, LoadFont(size, color, 0), color, '|');
 	}
 
 	return bytesDrawn;
@@ -686,6 +698,8 @@ void DrawStringWithColors(const Surface &out, string_view fmt, DrawStringFormatA
 
 	characterPosition.y += BaseLineOffset[size];
 
+	const Surface clippedOut = ClipSurface(out, rect);
+
 	Font *font = nullptr;
 	std::array<uint8_t, 256> *kerning = nullptr;
 
@@ -701,7 +715,7 @@ void DrawStringWithColors(const Surface &out, string_view fmt, DrawStringFormatA
 		}
 		const std::optional<std::size_t> fmtArgPos = fmtArgParser(rest);
 		if (fmtArgPos) {
-			DoDrawString(out, args[*fmtArgPos].GetFormatted(), rect, characterPosition, spacing, lineHeight, lineWidth, rightMargin, bottomMargin, flags, size,
+			DoDrawString(clippedOut, args[*fmtArgPos].GetFormatted(), rect, characterPosition, spacing, lineHeight, lineWidth, rightMargin, bottomMargin, flags, size,
 			    GetColorFromFlags(args[*fmtArgPos].GetFlags()));
 			prev = U'\0';
 			font = nullptr;
@@ -747,15 +761,15 @@ void DrawStringWithColors(const Surface &out, string_view fmt, DrawStringFormatA
 			}
 		}
 
-		DrawFont(out, characterPosition, font, color, frame);
+		DrawFont(clippedOut, characterPosition, font, color, frame);
 		characterPosition.x += (*kerning)[frame] + spacing;
 		prev = next;
 	}
 
 	if (HasAnyOf(flags, UiFlags::PentaCursor)) {
-		ClxDraw(out, characterPosition + Displacement { 0, lineHeight - BaseLineOffset[size] }, (*pSPentSpn2Cels)[PentSpn2Spin()]);
+		ClxDraw(clippedOut, characterPosition + Displacement { 0, lineHeight - BaseLineOffset[size] }, (*pSPentSpn2Cels)[PentSpn2Spin()]);
 	} else if (HasAnyOf(flags, UiFlags::TextCursor) && GetAnimationFrame(2, 500) != 0) {
-		DrawFont(out, characterPosition, LoadFont(size, color, 0), color, '|');
+		DrawFont(clippedOut, characterPosition, LoadFont(size, color, 0), color, '|');
 	}
 }
 
