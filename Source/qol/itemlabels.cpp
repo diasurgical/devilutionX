@@ -140,6 +140,7 @@ void FillRect(const Surface &out, int x, int y, int width, int height, Uint8 col
 
 void DrawItemNameLabels(const Surface &out)
 {
+	const Surface clippedOut = out.subregionY(0, gnViewportHeight);
 	isLabelHighlighted = false;
 	if (labelQueue.empty())
 		return;
@@ -187,10 +188,10 @@ void DrawItemNameLabels(const Surface &out)
 			}
 		}
 		if (pcursitem == label.id)
-			FillRect(out, label.pos.x, label.pos.y + MarginY, label.width, Height, PAL8_BLUE + 6);
+			FillRect(clippedOut, label.pos.x, label.pos.y + MarginY, label.width, Height, PAL8_BLUE + 6);
 		else
-			DrawHalfTransparentRectTo(out, label.pos.x, label.pos.y + MarginY, label.width, Height);
-		DrawString(out, label.text, { { label.pos.x + MarginX, label.pos.y }, { label.width, Height } }, item.getTextColor());
+			DrawHalfTransparentRectTo(clippedOut, label.pos.x, label.pos.y + MarginY, label.width, Height);
+		DrawString(clippedOut, label.text, { { label.pos.x + MarginX, label.pos.y }, { label.width, Height } }, item.getTextColor());
 	}
 	labelQueue.clear();
 }
