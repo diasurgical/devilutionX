@@ -25,24 +25,7 @@ namespace {
 
 void PrintSBookSpellType(const Surface &out, Point position, string_view text, uint8_t rectColorIndex)
 {
-	Point rect { position };
-	rect += Displacement { 0, -SPLICONLENGTH + 1 };
-
-	// Top
-	DrawHorizontalLine(out, rect, SPLICONLENGTH, rectColorIndex);
-	DrawHorizontalLine(out, rect + Displacement { 0, 1 }, SPLICONLENGTH, rectColorIndex);
-
-	// Bottom
-	DrawHorizontalLine(out, rect + Displacement { 0, SPLICONLENGTH - 2 }, SPLICONLENGTH, rectColorIndex);
-	DrawHorizontalLine(out, rect + Displacement { 0, SPLICONLENGTH - 1 }, SPLICONLENGTH, rectColorIndex);
-
-	// Left Side
-	DrawVerticalLine(out, rect, SPLICONLENGTH, rectColorIndex);
-	DrawVerticalLine(out, rect + Displacement { 1, 0 }, SPLICONLENGTH, rectColorIndex);
-
-	// Right Side
-	DrawVerticalLine(out, rect + Displacement { SPLICONLENGTH - 2, 0 }, SPLICONLENGTH, rectColorIndex);
-	DrawVerticalLine(out, rect + Displacement { SPLICONLENGTH - 1, 0 }, SPLICONLENGTH, rectColorIndex);
+	DrawLargeSpellIconBorder(out, position, rectColorIndex);
 
 	// Align the spell type text with bottom of spell icon
 	position += Displacement { SPLICONLENGTH / 2 - GetLineWidth(text) / 2, (IsSmallFontTall() ? -19 : -15) };
@@ -122,9 +105,8 @@ void DrawSpell(const Surface &out)
 		st = RSPLTYPE_INVALID;
 
 	SetSpellTrans(st);
-	const int nCel = SpellITbl[spl];
 	const Point position = GetMainPanel().position + Displacement { 565, 119 };
-	DrawSpellCel(out, position, nCel);
+	DrawLargeSpellIcon(out, position, spl);
 
 	std::optional<string_view> hotkeyName = GetHotkeyName(spl, myPlayer._pRSplType);
 	if (hotkeyName)
@@ -152,7 +134,7 @@ void DrawSpellList(const Surface &out)
 		}
 
 		SetSpellTrans(transType);
-		DrawSpellCel(out, spellListItem.location, SpellITbl[static_cast<size_t>(spellId)]);
+		DrawLargeSpellIcon(out, spellListItem.location, spellId);
 
 		std::optional<string_view> hotkeyName = GetHotkeyName(spellId, spellListItem.type);
 

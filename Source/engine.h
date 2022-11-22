@@ -105,6 +105,15 @@ void UnsafeDrawVerticalLine(const Surface &out, Point from, int height, std::uin
 void DrawHalfTransparentRectTo(const Surface &out, int sx, int sy, int width, int height);
 
 /**
+ * Draws a 2px inset border.
+ *
+ * @param out Target buffer
+ * @param rect The rectangle that border pixels are rendered inside of.
+ * @param color Border color.
+ */
+void UnsafeDrawBorder2px(const Surface &out, Rectangle rect, uint8_t color);
+
+/**
  * @brief Calculate the best fit direction between two points
  * @param start Tile coordinate
  * @param destination Tile coordinate

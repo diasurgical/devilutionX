@@ -139,11 +139,7 @@ void DrawSpellsCircleMenuHint(const Surface &out, const Point &origin)
 		}
 
 		SetSpellTrans(splType);
-#ifdef UNPACKED_MPQS
-		DrawSpellCel(out, spellIconPositions[slot], (*pSBkIconsForeground)[SpellITbl[splId]], (*pSBkIconsBackground)[0]);
-#else
-		DrawSpellCel(out, spellIconPositions[slot], (*pSBkIconCels)[SpellITbl[splId]]);
-#endif
+		DrawSmallSpellIcon(out, spellIconPositions[slot], splId);
 		RenderClxSprite(out, (*hintBox)[0], hintBoxPositions[slot]);
 	}
 }
