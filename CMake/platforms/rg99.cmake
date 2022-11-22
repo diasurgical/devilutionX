@@ -2,7 +2,6 @@
 set(BUILD_ASSETS_MPQ OFF)
 set(UNPACKED_MPQS ON)
 set(NONET ON)
-set(NOSOUND ON)
 set(DISABLE_DEMOMODE ON)
 set(USE_SDL1 ON)
 
@@ -21,6 +20,9 @@ set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-z,stack-size=32768")
 
 # 128 KiB
 set(DEVILUTIONX_PALETTE_TRANSPARENCY_BLACK_16_LUT OFF)
+
+# Must stream all the audio due to RAM constraints.
+set(STREAM_ALL_AUDIO ON)
 
 # Must use a tiny audio buffer due to RAM constraints.
 set(DEFAULT_AUDIO_BUFFER_SIZE 256)
