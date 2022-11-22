@@ -24,7 +24,7 @@ extern Portal Portals[MAXPORTAL];
 
 void InitPortals();
 void SetPortalStats(int i, bool o, int x, int y, int lvl, dungeon_type lvltype, bool isSetLevel);
-void AddWarpMissile(int i, Point position);
+void AddWarpMissile(int i, Point position, bool sync);
 void SyncPortals();
 void AddInTownPortal(int i);
 void ActivatePortal(int i, Point position, int lvl, dungeon_type lvltype, bool sp);

@@ -2123,7 +2123,7 @@ size_t OnActivatePortal(const TCmd *pCmd, size_t pnum)
 					}
 				}
 				if (addPortal) {
-					AddWarpMissile(pnum, position);
+					AddWarpMissile(pnum, position, false);
 				}
 			} else {
 				RemovePortalMissile(pnum);
