@@ -2073,6 +2073,7 @@ size_t OnPlayerJoinLevel(const TCmd *pCmd, size_t pnum)
 
 	if (player.plractive && &player != MyPlayer) {
 		player.position.tile = position;
+		SetPlayerOld(player);
 		if (isSetLevel)
 			player.setLevel(static_cast<_setlevels>(playerLevel));
 		else
