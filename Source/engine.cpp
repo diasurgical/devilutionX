@@ -163,6 +163,25 @@ void DrawHalfTransparentRectTo(const Surface &out, int sx, int sy, int width, in
 	DrawHalfTransparentBlendedRectTo(out, sx, sy, width, height);
 }
 
+void UnsafeDrawBorder2px(const Surface &out, Rectangle rect, uint8_t color)
+{
+	const size_t width = rect.size.width;
+	const size_t height = rect.size.height;
+	uint8_t *buf = &out[rect.position];
+	std::memset(buf, color, width);
+	buf += out.pitch();
+	std::memset(buf, color, width);
+	buf += out.pitch();
+	for (size_t i = 4; i < height; ++i) {
+		buf[0] = buf[1] = color;
+		buf[width - 2] = buf[width - 1] = color;
+		buf += out.pitch();
+	}
+	std::memset(buf, color, width);
+	buf += out.pitch();
+	std::memset(buf, color, width);
+}
+
 Direction GetDirection(Point start, Point destination)
 {
 	Direction md;

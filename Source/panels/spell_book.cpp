@@ -21,13 +21,6 @@
 
 namespace devilution {
 
-#ifdef UNPACKED_MPQS
-OptionalOwnedClxSpriteList pSBkIconsBackground;
-OptionalOwnedClxSpriteList pSBkIconsForeground;
-#else
-OptionalOwnedClxSpriteList pSBkIconCels;
-#endif
-
 namespace {
 
 OptionalOwnedClxSpriteList pSBkBtnCel;
@@ -88,12 +81,7 @@ void InitSpellBook()
 {
 	pSpellBkCel = LoadCel("data\\spellbk", static_cast<uint16_t>(SidePanelSize.width));
 	pSBkBtnCel = LoadCel("data\\spellbkb", gbIsHellfire ? 61 : 76);
-#ifdef UNPACKED_MPQS
-	pSBkIconsBackground = LoadClx("data\\spelli2_bg.clx");
-	pSBkIconsForeground = LoadClx("data\\spelli2_fg.clx");
-#else
-	pSBkIconCels = LoadCel("data\\spelli2", 37);
-#endif
+	LoadSmallSpellIcons();
 
 	Player &player = *MyPlayer;
 	if (player._pClass == HeroClass::Warrior) {
@@ -113,12 +101,7 @@ void InitSpellBook()
 
 void FreeSpellBook()
 {
-#ifdef UNPACKED_MPQS
-	pSBkIconsForeground = std::nullopt;
-	pSBkIconsBackground = std::nullopt;
-#else
-	pSBkIconCels = std::nullopt;
-#endif
+	FreeSmallSpellIcons();
 	pSBkBtnCel = std::nullopt;
 	pSpellBkCel = std::nullopt;
 }
@@ -149,18 +132,10 @@ void DrawSpellBook(const Surface &out)
 			spell_type st = GetSBookTrans(sn, true);
 			SetSpellTrans(st);
 			const Point spellCellPosition = GetPanelPosition(UiPanels::Spell, { 11, yp + SpellBookDescription.height });
-#ifdef UNPACKED_MPQS
-			DrawSpellCel(out, spellCellPosition, (*pSBkIconsForeground)[SpellITbl[sn]], (*pSBkIconsBackground)[0]);
-#else
-			DrawSpellCel(out, spellCellPosition, (*pSBkIconCels)[SpellITbl[sn]]);
-#endif
+			DrawSmallSpellIcon(out, spellCellPosition, sn);
 			if (sn == player._pRSpell && st == player._pRSplType) {
 				SetSpellTrans(RSPLTYPE_SKILL);
-#ifdef UNPACKED_MPQS
-				DrawSpellBorder(out, spellCellPosition, (*pSBkIconsForeground)[SpellITbl[sn]]);
-#else
-				DrawSpellBorder(out, spellCellPosition, (*pSBkIconCels)[SpellITbl[sn]]);
-#endif
+				DrawSmallSpellIconBorder(out, spellCellPosition);
 			}
 
 			const Point line0 { 0, yp + textPaddingTop };

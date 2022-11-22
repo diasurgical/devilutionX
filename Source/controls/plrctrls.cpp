@@ -30,6 +30,7 @@
 #include "levels/trigs.h"
 #include "minitext.h"
 #include "missiles.h"
+#include "panels/spell_icons.hpp"
 #include "panels/spell_list.hpp"
 #include "panels/ui_panels.hpp"
 #include "qol/chatlog.h"
@@ -39,8 +40,6 @@
 #include "track.h"
 #include "utils/log.hpp"
 #include "utils/str_cat.hpp"
-
-#define SPLICONLENGTH 56
 
 namespace devilution {
 

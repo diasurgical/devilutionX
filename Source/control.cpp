@@ -646,7 +646,7 @@ void InitControlPan()
 		pLifeBuff.emplace(88, 88);
 
 		LoadCharPanel();
-		LoadSpellIcons();
+		LoadLargeSpellIcons();
 		{
 			const OwnedClxSpriteList sprite = LoadCel("ctrlpan\\panel8", GetMainPanel().size.width);
 			ClxDraw(*pBtmBuff, { 0, (GetMainPanel().size.height + 16) - 1 }, sprite[0]);
@@ -962,7 +962,7 @@ void FreeControlPan()
 	pBtmBuff = std::nullopt;
 	pManaBuff = std::nullopt;
 	pLifeBuff = std::nullopt;
-	FreeSpellIcons();
+	FreeLargeSpellIcons();
 	FreeSpellBook();
 	pPanelButtons = std::nullopt;
 	multiButtons = std::nullopt;
