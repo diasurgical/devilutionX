@@ -125,11 +125,7 @@ build_release() {
 
 build() {
 	rm -f "${BUILD_DIR}/CMakeCache.txt"
-	if [[ $TARGET == rg99 ]]; then
-		build_minsizerel
-	else
-		build_release
-	fi
+	build_release
 }
 
 main
