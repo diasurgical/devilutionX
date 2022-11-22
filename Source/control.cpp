@@ -1363,21 +1363,26 @@ bool control_presskeys(SDL_Keycode vkey)
 	if (!talkflag)
 		return false;
 
-	if (vkey == SDLK_ESCAPE) {
+	switch (vkey) {
+	case SDLK_ESCAPE:
 		control_reset_talk();
-	} else if (vkey == SDLK_RETURN || vkey == SDLK_KP_ENTER) {
+		return true;
+	case SDLK_RETURN:
+	case SDLK_KP_ENTER:
 		ControlPressEnter();
-	} else if (vkey == SDLK_BACKSPACE) {
+		return true;
+	case SDLK_BACKSPACE:
 		TalkMessage[FindLastUtf8Symbols(TalkMessage)] = '\0';
-	} else if (vkey == SDLK_DOWN) {
+		return true;
+	case SDLK_DOWN:
 		ControlUpDown(1);
-	} else if (vkey == SDLK_UP) {
+		return true;
+	case SDLK_UP:
 		ControlUpDown(-1);
-	} else if (vkey != SDLK_SPACE) {
-		return false;
+		return true;
+	default:
+		return vkey >= SDLK_SPACE && vkey <= SDLK_z;
 	}
-
-	return true;
 }
 
 void DiabloHotkeyMsg(uint32_t dwMsg)
