@@ -5,6 +5,8 @@
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/scrollbar.h"
 #include "control.h"
+#include "controls/controller_motion.h"
+#include "controls/plrctrls.h"
 #include "controls/remap_keyboard.h"
 #include "engine/render/text_render.hpp"
 #include "hwcursor.hpp"
@@ -17,7 +19,8 @@
 namespace devilution {
 namespace {
 
-constexpr size_t IndexKeyInput = 1;
+constexpr size_t IndexKeyOrPadInput = 1;
+constexpr size_t IndexPadTimerText = 2;
 
 bool endMenu = false;
 bool backToMain = false;
@@ -31,6 +34,7 @@ enum class ShownMenuType : uint8_t {
 	Settings,
 	ListOption,
 	KeyInput,
+	PadInput,
 };
 
 ShownMenuType shownMenu;
@@ -44,7 +48,13 @@ enum class SpecialMenuEntry : int8_t {
 	None = -1,
 	PreviousMenu = -2,
 	UnbindKey = -3,
+	BindPadButton = -4,
+	UnbindPadButton = -5,
 };
+
+ControllerButtonCombo padEntryCombo {};
+Uint32 padEntryStartTime = 0;
+std::string padEntryTimerText;
 
 bool IsValidEntry(OptionEntryBase *pOptionEntry)
 {
@@ -88,6 +98,41 @@ void GoBackOneMenuLevel()
 	endMenu = true;
 	backToMain = shownMenu == ShownMenuType::Settings;
 	shownMenu = ShownMenuType::Settings;
+}
+
+void StartPadEntryTimer()
+{
+	padEntryCombo = ControllerButton_NONE;
+	padEntryStartTime = SDL_GetTicks();
+	if (padEntryStartTime == 0)
+		padEntryStartTime++;
+	// Removes access to these dialog items while entering bindings
+	for (size_t i = IndexPadTimerText + 1; i < vecDialogItems.size(); i++)
+		vecDialogItems[i]->uiFlags |= UiFlags::ElementHidden;
+}
+
+void StopPadEntryTimer()
+{
+	padEntryCombo = ControllerButton_NONE;
+	padEntryStartTime = 0;
+	padEntryTimerText = "";
+	vecDialogItems[IndexPadTimerText]->m_text = padEntryTimerText;
+	// Restores access to these dialog items after binding is complete
+	for (size_t i = IndexPadTimerText + 1; i < vecDialogItems.size(); i++)
+		vecDialogItems[i]->uiFlags &= ~UiFlags::ElementHidden;
+}
+
+void UpdatePadEntryTimerText()
+{
+	if (shownMenu != ShownMenuType::PadInput)
+		return;
+	Uint32 elapsed = SDL_GetTicks() - padEntryStartTime;
+	if (padEntryStartTime == 0 || elapsed > 10000) {
+		StopPadEntryTimer();
+		return;
+	}
+	padEntryTimerText = StrCat(_("Press gamepad buttons to change."), " ", 10 - elapsed / 1000);
+	vecDialogItems[IndexPadTimerText]->m_text = padEntryTimerText;
 }
 
 void UpdateDescription(const OptionEntryBase &option)
@@ -159,10 +204,19 @@ void ItemSelected(int value)
 		case SpecialMenuEntry::PreviousMenu:
 			GoBackOneMenuLevel();
 			break;
-		case SpecialMenuEntry::UnbindKey:
+		case SpecialMenuEntry::UnbindKey: {
 			auto *pOptionKey = static_cast<KeymapperOptions::Action *>(selectedOption);
 			pOptionKey->SetValue(SDLK_UNKNOWN);
-			vecDialogItems[IndexKeyInput]->m_text = selectedOption->GetValueDescription().data();
+			vecDialogItems[IndexKeyOrPadInput]->m_text = selectedOption->GetValueDescription().data();
+			break;
+		}
+		case SpecialMenuEntry::BindPadButton:
+			StartPadEntryTimer();
+			break;
+		case SpecialMenuEntry::UnbindPadButton:
+			auto *pOptionPad = static_cast<PadmapperOptions::Action *>(selectedOption);
+			pOptionPad->SetValue(ControllerButton_NONE);
+			vecDialogItems[IndexKeyOrPadInput]->m_text = selectedOption->GetValueDescription().data();
 			break;
 		}
 		return;
@@ -189,6 +243,10 @@ void ItemSelected(int value)
 			selectedOption = pOption;
 			endMenu = true;
 			shownMenu = ShownMenuType::KeyInput;
+		} else if (pOption->GetType() == OptionEntryType::PadButton) {
+			selectedOption = pOption;
+			endMenu = true;
+			shownMenu = ShownMenuType::PadInput;
 		} else {
 			updateValueDescription = ChangeOptionValue(pOption, 0);
 		}
@@ -213,6 +271,7 @@ void ItemSelected(int value)
 		GoBackOneMenuLevel();
 	} break;
 	case ShownMenuType::KeyInput:
+	case ShownMenuType::PadInput:
 		break;
 	}
 }
@@ -312,10 +371,10 @@ void UiSettingsMenu()
 		case ShownMenuType::KeyInput: {
 			vecDialogItems.push_back(std::make_unique<UiListItem>(_("Bound key:"), static_cast<int>(SpecialMenuEntry::None), UiFlags::ColorWhitegold | UiFlags::ElementDisabled));
 			vecDialogItems.push_back(std::make_unique<UiListItem>(selectedOption->GetValueDescription(), static_cast<int>(SpecialMenuEntry::None), UiFlags::ColorUiGold));
-			assert(IndexKeyInput == vecDialogItems.size() - 1);
-			itemToSelect = IndexKeyInput;
+			assert(IndexKeyOrPadInput == vecDialogItems.size() - 1);
+			itemToSelect = IndexKeyOrPadInput;
 			eventHandler = [](SDL_Event &event) {
-				if (SelectedItem != IndexKeyInput)
+				if (SelectedItem != IndexKeyOrPadInput)
 					return false;
 				uint32_t key = SDLK_UNKNOWN;
 				switch (event.type) {
@@ -343,12 +402,59 @@ void UiSettingsMenu()
 				auto *pOptionKey = static_cast<KeymapperOptions::Action *>(selectedOption);
 				if (!pOptionKey->SetValue(key))
 					return false;
-				vecDialogItems[IndexKeyInput]->m_text = selectedOption->GetValueDescription().data();
+				vecDialogItems[IndexKeyOrPadInput]->m_text = selectedOption->GetValueDescription().data();
 				return true;
 			};
 			vecDialogItems.push_back(std::make_unique<UiListItem>(_("Press any key to change."), static_cast<int>(SpecialMenuEntry::None), UiFlags::ColorUiSilver | UiFlags::ElementDisabled));
 			vecDialogItems.push_back(std::make_unique<UiListItem>("", static_cast<int>(SpecialMenuEntry::None), UiFlags::ElementDisabled));
 			vecDialogItems.push_back(std::make_unique<UiListItem>(_("Unbind key"), static_cast<int>(SpecialMenuEntry::UnbindKey), UiFlags::ColorUiGold));
+			UpdateDescription(*selectedOption);
+		} break;
+		case ShownMenuType::PadInput: {
+			vecDialogItems.push_back(std::make_unique<UiListItem>(_("Bound button combo:"), static_cast<int>(SpecialMenuEntry::None), UiFlags::ColorWhitegold | UiFlags::ElementDisabled));
+			vecDialogItems.push_back(std::make_unique<UiListItem>(selectedOption->GetValueDescription(), static_cast<int>(SpecialMenuEntry::BindPadButton), UiFlags::ColorUiGold));
+			assert(IndexKeyOrPadInput == vecDialogItems.size() - 1);
+			itemToSelect = IndexKeyOrPadInput;
+
+			vecDialogItems.push_back(std::make_unique<UiListItem>(padEntryTimerText, static_cast<int>(SpecialMenuEntry::None), UiFlags::ColorUiSilver | UiFlags::ElementDisabled));
+			assert(IndexPadTimerText == vecDialogItems.size() - 1);
+
+			vecDialogItems.push_back(std::make_unique<UiListItem>("", static_cast<int>(SpecialMenuEntry::None), UiFlags::ElementDisabled));
+			vecDialogItems.push_back(std::make_unique<UiListItem>(_("Unbind button combo"), static_cast<int>(SpecialMenuEntry::UnbindPadButton), UiFlags::ColorUiGold));
+
+			padEntryStartTime = 0;
+			eventHandler = [](SDL_Event &event) {
+				if (padEntryStartTime == 0)
+					return false;
+
+				ControllerButtonEvent ctrlEvent = ToControllerButtonEvent(event);
+				bool isGamepadMotion = ProcessControllerMotion(event, ctrlEvent);
+				DetectInputMethod(event, ctrlEvent);
+				if (event.type == SDL_KEYUP && event.key.keysym.sym == SDLK_ESCAPE) {
+					StopPadEntryTimer();
+					return true;
+				}
+				if (isGamepadMotion || IsAnyOf(ctrlEvent.button, ControllerButton_NONE, ControllerButton_IGNORE)) {
+					return true;
+				}
+
+				bool modifierPressed = padEntryCombo.modifier != ControllerButton_NONE && IsControllerButtonPressed(padEntryCombo.modifier);
+				bool buttonPressed = padEntryCombo.button != ControllerButton_NONE && IsControllerButtonPressed(padEntryCombo.button);
+				if (ctrlEvent.up) {
+					// When the player has released all relevant inputs, assume the binding is finished and stop the timer
+					if (padEntryCombo.button != ControllerButton_NONE && !modifierPressed && !buttonPressed)
+						StopPadEntryTimer();
+					return true;
+				}
+
+				auto *pOptionPad = static_cast<PadmapperOptions::Action *>(selectedOption);
+				if (!modifierPressed && buttonPressed)
+					padEntryCombo.modifier = padEntryCombo.button;
+				padEntryCombo.button = ctrlEvent.button;
+				if (pOptionPad->SetValue(padEntryCombo))
+					vecDialogItems[IndexKeyOrPadInput]->m_text = selectedOption->GetValueDescription().data();
+				return true;
+			};
 			UpdateDescription(*selectedOption);
 		} break;
 		}
@@ -362,7 +468,7 @@ void UiSettingsMenu()
 
 		while (!endMenu) {
 			UiClearScreen();
-			UiRenderItems(vecDialog);
+			UpdatePadEntryTimerText();
 			UiPollAndRender(eventHandler);
 		}
 

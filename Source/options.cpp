@@ -16,6 +16,7 @@
 #include "control.h"
 #include "controls/controller.h"
 #include "controls/game_controls.h"
+#include "controls/plrctrls.h"
 #include "discord/discord.h"
 #include "engine/demomode.h"
 #include "engine/sound_defs.hpp"
@@ -1462,7 +1463,7 @@ std::vector<OptionEntryBase *> PadmapperOptions::GetEntries()
 }
 
 PadmapperOptions::Action::Action(string_view key, const char *name, const char *description, ControllerButtonCombo defaultInput, std::function<void()> actionPressed, std::function<void()> actionReleased, std::function<bool()> enable, unsigned index)
-    : OptionEntryBase(key, OptionEntryFlags::Invisible, name, description)
+    : OptionEntryBase(key, OptionEntryFlags::None, name, description)
     , defaultInput(defaultInput)
     , actionPressed(std::move(actionPressed))
     , actionReleased(std::move(actionReleased))
@@ -1553,37 +1554,36 @@ void PadmapperOptions::Action::SaveToIni(string_view category) const
 	SetIniValue(category.data(), key.data(), inputName.data());
 }
 
+void PadmapperOptions::Action::UpdateValueDescription() const
+{
+	boundInputDescriptionType = GamepadType;
+	if (boundInput.button == ControllerButton_NONE) {
+		boundInputDescription = "";
+		return;
+	}
+	string_view buttonName = ToString(boundInput.button);
+	if (boundInput.modifier == ControllerButton_NONE) {
+		boundInputDescription = std::string(buttonName);
+		return;
+	}
+	string_view modifierName = ToString(boundInput.modifier);
+	boundInputDescription = StrCat(modifierName, "+", buttonName);
+}
+
 string_view PadmapperOptions::Action::GetValueDescription() const
 {
+	if (GamepadType != boundInputDescriptionType)
+		UpdateValueDescription();
 	return boundInputDescription;
 }
 
 bool PadmapperOptions::Action::SetValue(ControllerButtonCombo value)
 {
-	const std::string &modifierName = sgOptions.Padmapper.buttonToButtonName[static_cast<size_t>(value.modifier)];
-	const std::string &buttonName = sgOptions.Padmapper.buttonToButtonName[static_cast<size_t>(value.button)];
-	if ((value.modifier != ControllerButton_NONE && modifierName.empty())
-	    || (value.button != ControllerButton_NONE && buttonName.empty())) {
-		// Ignore invalid button combos
-		return false;
-	}
-
-	// Remove old button combo
-	if (boundInput.button != ControllerButton_NONE) {
+	if (boundInput.button != ControllerButton_NONE)
 		boundInput = {};
-		boundInputDescription = "";
-	}
-
-	// Add new button combo
-	if (value.button != ControllerButton_NONE) {
+	if (value.button != ControllerButton_NONE)
 		boundInput = value;
-		boundInputDescription = buttonName;
-
-		if (!modifierName.empty()) {
-			boundInputDescription = StrCat(modifierName, "+", boundInputDescription);
-		}
-	}
-
+	UpdateValueDescription();
 	return true;
 }
 
