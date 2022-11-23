@@ -5,6 +5,10 @@
 #include <iostream>
 #include <sstream>
 
+#ifdef USE_SDL1
+#include "utils/sdl2_to_1_2_backports.h"
+#endif
+
 #include "controls/plrctrls.h"
 #include "menu.h"
 #include "nthread.h"
@@ -44,14 +48,14 @@ struct MouseWheelEventData {
 };
 
 struct KeyEventData {
-	SDL_Keycode sym;
-	SDL_Keymod mod;
+	uint32_t sym;
+	uint16_t mod;
 };
 
 struct DemoMsg {
 	DemoMsgType type;
 	float progressToNextGameTick;
-	SDL_EventType eventType;
+	uint32_t eventType;
 	union {
 		MouseMotionEventData motion;
 		MouseButtonEventData button;
@@ -74,6 +78,140 @@ int StartTime = 0;
 
 uint16_t DemoGraphicsWidth = 640;
 uint16_t DemoGraphicsHeight = 480;
+
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+bool CreateSdlEvent(const DemoMsg &dmsg, SDL_Event &event, uint16_t &modState)
+{
+	event.type = dmsg.eventType;
+	switch (static_cast<SDL_EventType>(dmsg.eventType)) {
+	case SDL_MOUSEMOTION:
+		event.motion.x = dmsg.motion.x;
+		event.motion.y = dmsg.motion.y;
+		return true;
+	case SDL_MOUSEBUTTONDOWN:
+	case SDL_MOUSEBUTTONUP:
+		event.button.button = dmsg.button.button;
+		event.button.state = dmsg.eventType == SDL_MOUSEBUTTONDOWN ? SDL_PRESSED : SDL_RELEASED;
+		event.button.x = dmsg.button.x;
+		event.button.y = dmsg.button.y;
+		modState = dmsg.button.mod;
+		return true;
+	case SDL_MOUSEWHEEL:
+		event.wheel.x = dmsg.wheel.x;
+		event.wheel.y = dmsg.wheel.y;
+		modState = dmsg.wheel.mod;
+		return true;
+	case SDL_KEYDOWN:
+	case SDL_KEYUP:
+		event.key.state = dmsg.eventType == SDL_KEYDOWN ? SDL_PRESSED : SDL_RELEASED;
+		event.key.keysym.sym = dmsg.key.sym;
+		event.key.keysym.mod = dmsg.key.mod;
+		return true;
+	default:
+		if (dmsg.eventType >= SDL_USEREVENT) {
+			event.type = CustomEventToSdlEvent(static_cast<interface_mode>(dmsg.eventType - SDL_USEREVENT));
+			return true;
+		}
+		event.type = static_cast<SDL_EventType>(0);
+		LogWarn("Unsupported demo event (type={:x})", dmsg.eventType);
+		return false;
+	}
+}
+#else
+SDLKey Sdl2ToSdl1Key(uint32_t key)
+{
+	if ((key & (1 << 30)) != 0) {
+		constexpr uint32_t Keys1Start = 57;
+		constexpr SDLKey Keys1[] {
+			SDLK_CAPSLOCK, SDLK_F1, SDLK_F2, SDLK_F3, SDLK_F4, SDLK_F5, SDLK_F6,
+			SDLK_F7, SDLK_F8, SDLK_F9, SDLK_F10, SDLK_F11, SDLK_F12,
+			SDLK_PRINTSCREEN, SDLK_SCROLLLOCK, SDLK_PAUSE, SDLK_INSERT, SDLK_HOME,
+			SDLK_PAGEUP, SDLK_DELETE, SDLK_END, SDLK_PAGEDOWN, SDLK_RIGHT, SDLK_LEFT,
+			SDLK_DOWN, SDLK_UP, SDLK_NUMLOCKCLEAR, SDLK_KP_DIVIDE, SDLK_KP_MULTIPLY,
+			SDLK_KP_MINUS, SDLK_KP_PLUS, SDLK_KP_ENTER, SDLK_KP_1, SDLK_KP_2,
+			SDLK_KP_3, SDLK_KP_4, SDLK_KP_5, SDLK_KP_6, SDLK_KP_7, SDLK_KP_8,
+			SDLK_KP_9, SDLK_KP_0, SDLK_KP_PERIOD
+		};
+		constexpr uint32_t Keys2Start = 224;
+		constexpr SDLKey Keys2[] {
+			SDLK_LCTRL, SDLK_LSHIFT, SDLK_LALT, SDLK_LGUI, SDLK_RCTRL, SDLK_RSHIFT,
+			SDLK_RALT, SDLK_RGUI, SDLK_MODE
+		};
+		const uint32_t scancode = key & ~(1 << 30);
+		if (scancode >= Keys1Start) {
+			if (scancode < Keys1Start + sizeof(Keys1) / sizeof(Keys1[0]))
+				return Keys1[scancode - Keys1Start];
+			if (scancode >= Keys2Start && scancode < Keys2Start + sizeof(Keys2) / sizeof(Keys2[0]))
+				return Keys2[scancode - Keys2Start];
+		}
+		LogWarn("Demo: unknown key {:d}", key);
+		return SDLK_UNKNOWN;
+	}
+	if (key <= 122) {
+		return static_cast<SDLKey>(key);
+	}
+	LogWarn("Demo: unknown key {:d}", key);
+	return SDLK_UNKNOWN;
+}
+
+uint8_t Sdl2ToSdl1MouseButton(uint8_t button)
+{
+	switch (button) {
+	case 4:
+		return SDL_BUTTON_X1;
+	case 5:
+		return SDL_BUTTON_X2;
+	default:
+		return button;
+	}
+}
+
+bool CreateSdlEvent(const DemoMsg &dmsg, SDL_Event &event, uint16_t &modState)
+{
+	switch (dmsg.eventType) {
+	case 0x400:
+		event.type = SDL_MOUSEMOTION;
+		event.motion.x = dmsg.motion.x;
+		event.motion.y = dmsg.motion.y;
+		return true;
+	case 0x401:
+	case 0x402:
+		event.type = dmsg.eventType == 0x401 ? SDL_MOUSEBUTTONDOWN : SDL_MOUSEBUTTONUP;
+		event.button.which = 0;
+		event.button.button = Sdl2ToSdl1MouseButton(dmsg.button.button);
+		event.button.state = dmsg.eventType == 0x401 ? SDL_PRESSED : SDL_RELEASED;
+		event.button.x = dmsg.button.x;
+		event.button.y = dmsg.button.y;
+		modState = dmsg.button.mod;
+		return true;
+	case 0x403: // SDL_MOUSEWHEEL
+		if (dmsg.wheel.y == 0) {
+			LogWarn("Demo: unsupported event (mouse wheel y == 0)");
+			return false;
+		}
+		event.type = SDL_MOUSEBUTTONDOWN;
+		event.button.button = dmsg.wheel.y > 0 ? SDL_BUTTON_WHEELUP : SDL_BUTTON_WHEELDOWN;
+		modState = dmsg.wheel.mod;
+		return true;
+	case 0x300:
+	case 0x301:
+		event.type = dmsg.eventType == 0x300 ? SDL_KEYDOWN : SDL_KEYUP;
+		event.key.which = 0;
+		event.key.state = dmsg.eventType == 0x300 ? SDL_PRESSED : SDL_RELEASED;
+		event.key.keysym.sym = Sdl2ToSdl1Key(dmsg.key.sym);
+		event.key.keysym.mod = static_cast<SDL_Keymod>(dmsg.key.mod);
+		return true;
+	default:
+		if (dmsg.eventType >= 0x8000) {
+			event.type = CustomEventToSdlEvent(static_cast<interface_mode>(dmsg.eventType - 0x8000));
+			return true;
+		}
+		event.type = static_cast<SDL_EventType>(0);
+		LogWarn("Demo: unsupported event (type={:x})", dmsg.eventType);
+		return false;
+	}
+}
+#endif
 
 bool LoadDemoMessages(int i)
 {
@@ -100,33 +238,31 @@ bool LoadDemoMessages(int i)
 
 		switch (type) {
 		case DemoMsgType::Message: {
-			const auto eventType = static_cast<SDL_EventType>(ReadLE32(demofile));
+			const uint32_t eventType = ReadLE32(demofile);
 			DemoMsg msg { type, progressToNextGameTick, eventType, {} };
 			switch (eventType) {
-			case SDL_MOUSEMOTION:
+			case 0x400: // SDL_MOUSEMOTION
 				msg.motion.x = ReadLE16(demofile);
 				msg.motion.y = ReadLE16(demofile);
 				break;
-			case SDL_MOUSEBUTTONDOWN:
-			case SDL_MOUSEBUTTONUP:
+			case 0x401: // SDL_MOUSEBUTTONDOWN
+			case 0x402: // SDL_MOUSEBUTTONUP
 				msg.button.button = ReadByte(demofile);
 				msg.button.x = ReadLE16(demofile);
 				msg.button.y = ReadLE16(demofile);
 				msg.button.mod = ReadLE16(demofile);
 				break;
-#ifndef USE_SDL1
-			case SDL_MOUSEWHEEL:
+			case 0x403: // SDL_MOUSEWHEEL
 				msg.wheel.x = ReadLE32<int32_t>(demofile);
 				msg.wheel.y = ReadLE32<int32_t>(demofile);
 				msg.wheel.mod = ReadLE16(demofile);
 				break;
-#endif
-			case SDL_KEYDOWN:
-			case SDL_KEYUP:
+			case 0x300: // SDL_KEYDOWN
+			case 0x301: // SDL_KEYUP
 				msg.key.sym = static_cast<SDL_Keycode>(ReadLE32(demofile));
 				msg.key.mod = static_cast<SDL_Keymod>(ReadLE16(demofile));
 				break;
-			case SDL_QUIT:
+			case 0x100: // SDL_QUIT
 				break;
 			default:
 				if (eventType < SDL_USEREVENT) {
@@ -138,7 +274,7 @@ bool LoadDemoMessages(int i)
 			break;
 		}
 		default:
-			Demo_Message_Queue.push_back(DemoMsg { type, progressToNextGameTick, static_cast<SDL_EventType>(0), {} });
+			Demo_Message_Queue.push_back(DemoMsg { type, progressToNextGameTick, 0, {} });
 			break;
 		}
 	}
@@ -201,7 +337,7 @@ bool IsRunning()
 bool IsRecording()
 {
 	return RecordNumber != -1;
-};
+}
 
 bool GetRunGameLoop(bool &drawGame, bool &processInput)
 {
@@ -269,42 +405,10 @@ bool FetchMessage(SDL_Event *event, uint16_t *modState)
 	if (!Demo_Message_Queue.empty()) {
 		const DemoMsg dmsg = Demo_Message_Queue.front();
 		if (dmsg.type == DemoMsgType::Message) {
-			event->type = dmsg.eventType;
-			switch (dmsg.eventType) {
-			case SDL_MOUSEMOTION:
-				event->motion.x = dmsg.motion.x;
-				event->motion.y = dmsg.motion.y;
-				break;
-			case SDL_MOUSEBUTTONDOWN:
-			case SDL_MOUSEBUTTONUP:
-				event->button.button = dmsg.button.button;
-				event->button.state = dmsg.eventType == SDL_MOUSEBUTTONDOWN ? SDL_PRESSED : SDL_RELEASED;
-				event->button.x = dmsg.button.x;
-				event->button.y = dmsg.button.y;
-				*modState = dmsg.button.mod;
-				break;
-#ifndef USE_SDL1
-			case SDL_MOUSEWHEEL:
-				event->wheel.x = dmsg.wheel.x;
-				event->wheel.y = dmsg.wheel.y;
-				*modState = dmsg.wheel.mod;
-				break;
-#endif
-			case SDL_KEYDOWN:
-			case SDL_KEYUP:
-				event->key.state = dmsg.eventType == SDL_KEYDOWN ? SDL_PRESSED : SDL_RELEASED;
-				event->key.keysym.sym = dmsg.key.sym;
-				event->key.keysym.mod = dmsg.key.mod;
-				break;
-			default:
-				if (dmsg.eventType >= SDL_USEREVENT) {
-					event->type = CustomEventToSdlEvent(static_cast<interface_mode>(dmsg.eventType - SDL_USEREVENT));
-				}
-				break;
-			}
+			const bool hasEvent = CreateSdlEvent(dmsg, *event, *modState);
 			ProgressToNextGameTick = static_cast<uint8_t>(AnimationInfo::baseValueFraction * dmsg.progressToNextGameTick);
 			Demo_Message_Queue.pop_front();
-			return true;
+			return hasEvent;
 		}
 	}
 
