@@ -10,6 +10,7 @@
 
 #include "controls/controller.h"
 #include "controls/controller_buttons.h"
+#include "controls/game_controls.h"
 #include "engine/sound_defs.hpp"
 #include "miniwin/misc_msg.h"
 #include "pack.h"
@@ -722,10 +723,13 @@ struct PadmapperOptions : OptionCategoryBase {
 		std::function<void()> actionReleased;
 		std::function<bool()> enable;
 		ControllerButtonCombo boundInput {};
-		std::string boundInputDescription;
+		mutable GamepadLayout boundInputDescriptionType = GamepadLayout::Generic;
+		mutable std::string boundInputDescription;
 		unsigned dynamicIndex;
 		std::string dynamicKey;
 		mutable std::string dynamicName;
+
+		void UpdateValueDescription() const;
 
 		friend struct PadmapperOptions;
 	};
