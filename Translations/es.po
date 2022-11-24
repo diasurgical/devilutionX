@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
 "POT-Creation-Date: 2022-08-26 21:28-0300\n"
-"PO-Revision-Date: 2022-08-26 21:39-0300\n"
+"PO-Revision-Date: 2022-11-23 17:20-0800\n"
 "Last-Translator: Emiliano Augusto Gonzalez <emigonza@gmail.com>\n"
 "Language-Team: Spanish\n"
 "Language: es\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.1.1\n"
+"X-Generator: Poedit 3.2\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: _;N_;P_:1c,2\n"
 "X-Poedit-Basepath: ..\n"
@@ -1083,7 +1083,7 @@ msgstr[1] "Tiene {:s} monedas de oro. ¿Cuantas quiere eliminar?"
 
 #: Source/cursor.cpp:244
 msgid "Town Portal"
-msgstr "Portal a la ciudad"
+msgstr "Portal del pueblo"
 
 #: Source/cursor.cpp:245
 msgid "from {:s}"
@@ -1491,7 +1491,7 @@ msgstr "error: leidos 0 bytes del servidor"
 
 #: Source/error.cpp:53
 msgid "No automap available in town"
-msgstr "No hay automapa disponible en la ciudad"
+msgstr "No hay automapa disponible en el pueblo"
 
 #: Source/error.cpp:54
 msgid "No multiplayer functions in demo"
@@ -1511,7 +1511,7 @@ msgstr "No hay suficiente espacio para grabar"
 
 #: Source/error.cpp:58
 msgid "No Pause in town"
-msgstr "Sin Pausa en la ciudad"
+msgstr "Sin Pausa en el pueblo"
 
 #: Source/error.cpp:59
 msgid "Copying to a hard disk is recommended"
@@ -1755,7 +1755,7 @@ msgstr "Salir del juego"
 
 #: Source/gamemenu.cpp:50
 msgid "Restart In Town"
-msgstr "Reiniciar en la Ciudad"
+msgstr "Reiniciar en el pueblo"
 
 #: Source/gamemenu.cpp:60
 msgid "Gamma"
@@ -2158,7 +2158,7 @@ msgstr "Pergamino de la identidad"
 
 #: Source/itemdat.cpp:80 Source/itemdat.cpp:151
 msgid "Scroll of Town Portal"
-msgstr "Pergamino de portal a la ciudad"
+msgstr "Pergamino de portal a el pueblo"
 
 #: Source/itemdat.cpp:81 Source/itemdat.cpp:440
 msgid "Arkaine's Valor"
@@ -4520,7 +4520,7 @@ msgstr "Sube al nivel {:d}"
 #: Source/levels/trigs.cpp:534 Source/levels/trigs.cpp:581
 #: Source/levels/trigs.cpp:643 Source/levels/trigs.cpp:692
 msgid "Up to town"
-msgstr "Subir a la ciudad"
+msgstr "Subir a el pueblo"
 
 #: Source/levels/trigs.cpp:431 Source/levels/trigs.cpp:464
 #: Source/levels/trigs.cpp:516 Source/levels/trigs.cpp:563
@@ -6511,14 +6511,14 @@ msgstr "Configuraciones durante el juego"
 
 #: Source/options.cpp:985
 msgid "Run in Town"
-msgstr "Correr en la Ciudad"
+msgstr "Correr en el pueblo"
 
 #: Source/options.cpp:985
 msgid ""
 "Enable jogging/fast walking in town for Diablo and Hellfire. This option was "
 "introduced in the expansion."
 msgstr ""
-"Habillita trotar/caminar veloz en la ciudad para Diablo y Hellfire. Esta "
+"Habillita trotar/caminar veloz en el pueblo para Diablo y Hellfire. Esta "
 "opción fue introducida en la expansión."
 
 #: Source/options.cpp:986
@@ -7197,7 +7197,7 @@ msgstr "Muro de Fuego"
 #: Source/spelldat.cpp:22
 msgctxt "spell"
 msgid "Town Portal"
-msgstr "Portal a la ciudad"
+msgstr "Portal a el pueblo"
 
 #: Source/spelldat.cpp:23
 msgctxt "spell"
@@ -8252,7 +8252,7 @@ msgid ""
 "Please, do what you can or I don't know what we will do."
 msgstr ""
 "Siempre he tratado de mantener una gran cantidad de alimentos y bebidas en "
-"nuestro sótano de almacenamiento, pero como toda la ciudad no tiene una "
+"nuestro sótano de almacenamiento, pero como todo el pueblo no tiene una "
 "fuente de agua dulce, incluso nuestras tiendas se secarán pronto. \n"
 " \n"
 "Por favor, haz lo que puedas o no sé qué haremos."
@@ -8295,7 +8295,7 @@ msgid ""
 "will aid you in the destruction of such vile creatures."
 msgstr ""
 "¿Qué dices? ¿La mera presencia de los demonios provocó que el agua se "
-"contaminara? Oh, verdaderamente un gran mal acecha debajo de nuestra ciudad, "
+"contaminara? Oh, verdaderamente un gran mal acecha debajo de nuestro pueblo, "
 "pero tu perseverancia y coraje nos dan esperanza. Por favor, toma este "
 "anillo, tal vez te ayude a destruir a esas criaturas tan viles."
 
@@ -9741,7 +9741,7 @@ msgid ""
 msgstr ""
 "La bruja, Adria, es una anomalía aquí en Tristram. Llegó poco después de que "
 "la Catedral fuera profanada mientras la mayoría de los demás huían. Ella "
-"hizo construir una pequeña cabaña en las afueras de la ciudad, aparentemente "
+"hizo construir una pequeña cabaña en las afueras del pueblo, aparentemente "
 "de la noche a la mañana, y tiene acceso a muchos artefactos extraños y "
 "arcanos y tomos de conocimiento que ni siquiera yo había visto antes."
 
@@ -10037,8 +10037,8 @@ msgid ""
 "It would take someone quite brave, like you, to see what she is doing out "
 "there."
 msgstr ""
-"¡La mujer de las afueras de la ciudad es una bruja! Parece bastante "
-"agradable y su nombre, Adria, es muy agradable al oído, pero le temo. \n"
+"¡La mujer de las afueras del pueblo es una bruja! Parece bastante agradable "
+"y su nombre, Adria, es muy agradable al oído, pero le temo. \n"
 " \n"
 "Se necesitaría alguien bastante valiente, como tú, para ver lo que está "
 "haciendo ahí fuera."
@@ -10189,7 +10189,7 @@ msgid ""
 msgstr ""
 "Mientras prácticamente tengo que pasar de contrabando los metales y "
 "herramientas que necesito de las caravanas que bordean los límites de "
-"nuestra maldita ciudad, esa bruja, Adria, siempre parece conseguir lo que "
+"nuestro maldito pueblo, esa bruja, Adria, siempre parece conseguir lo que "
 "necesita. Si supiera lo más mínimo sobre cómo aprovechar la magia como ella "
 "lo hizo, podría hacer algunas cosas realmente increíbles."
 
@@ -10350,7 +10350,7 @@ msgid ""
 "long as she keeps tappin' kegs, I'll like her just fine. Seems like I been "
 "spendin' more time with Ogden than most, but he's so good to me..."
 msgstr ""
-"Ogden es el mejor hombre de la ciudad. No creo que yo le guste mucho a su "
+"Ogden es el mejor hombre del pueblo. No creo que yo le guste mucho a su "
 "esposa, pero mientras ella siga golpeando barriles, supongo que estará bien. "
 "Parece que he pasado más tiempo con Ogden que la mayoría, pero es tan bueno "
 "conmigo ..."
@@ -10507,9 +10507,9 @@ msgid ""
 "be gleaned, but you must separate fact from fantasy."
 msgstr ""
 "Cuanto más alto pongas tu fe en un hombre, más debe caer. Farnham ha perdido "
-"su alma, pero no ante ningún demonio. Se perdió cuando vio a sus "
-"conciudadanos traicionados por el Arzobispo Lazarus. Él tiene conocimientos "
-"para cosechar, pero debes separar los hechos de las fantasías."
+"su alma, pero no ante ningún demonio. Se perdió cuando vio a la gente del "
+"pueblo traicionados por el Arzobispo Lazarus. Él tiene conocimientos para "
+"cosechar, pero debes separar los hechos de las fantasías."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:444
@@ -10539,11 +10539,11 @@ msgid ""
 msgstr ""
 "Hay mucho sobre el futuro que no podemos ver, pero cuando llegue serán los "
 "niños quienes lo manejen. El niño Wirt tiene algo oscuro en el alma, pero no "
-"representa una amenaza para la ciudad o su gente. Sus tratos secretos con "
-"los rufianes y los inconfesables gremios de las ciudades cercanas le "
-"permiten acceder a muchos dispositivos que no se pueden encontrar fácilmente "
-"en Tristram. Si bien sus métodos pueden ser reprochables, Wirt puede "
-"ayudarte en tu batalla contra la Oscuridad que nos invade."
+"representa una amenaza para el pueblo o su gente. Sus tratos secretos con "
+"los rufianes y los inconfesables gremios de los pueblos cercanos le permiten "
+"acceder a muchos dispositivos que no se pueden encontrar fácilmente en "
+"Tristram. Si bien sus métodos pueden ser reprochables, Wirt puede ayudarte "
+"en tu batalla contra la Oscuridad que nos invade."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:448
@@ -10557,9 +10557,9 @@ msgid ""
 "is that memory that continues to feed their hopes for your success."
 msgstr ""
 "Las paredes de tierra y el dosel de paja no crean una casa. El posadero "
-"Ogden tiene un mayor propósito en esta ciudad de lo que muchos creen. "
+"Ogden tiene un mayor propósito en este pueblo de lo que muchos creen. "
 "Proporciona refugio para Gillian y su matriarca, mantiene la vida que le "
-"dejó Farnham y proporciona un ancla para todos los que quedan en la ciudad a "
+"dejó Farnham y proporciona un ancla para todos los que quedan en el pueblo a "
 "lo que Tristram fue una vez. Su taberna, y los placeres sencillos que aún se "
 "pueden encontrar allí, dan una idea de una vida que la gente de aquí "
 "recuerda. Es ese recuerdo el que sigue alimentando sus esperanzas de éxito."
@@ -10693,10 +10693,10 @@ msgid ""
 "stupid tavern. I guess at the least he gives Gillian a place to work, and "
 "his wife Garda does make a superb Shepherd's pie..."
 msgstr ""
-"Ogden es un tonto por quedarse aquí. Podría sacarlo de la ciudad por un "
-"precio muy razonable, pero él insiste en intentar salir adelante con esa "
-"estúpida taberna. Supongo que al menos le da a Gillian un lugar para "
-"trabajar, y su esposa Garda hace un excelente Pastel de cordero ..."
+"Ogden es un tonto por quedarse aquí. Podría sacarlo del pueblo por un precio "
+"muy razonable, pero él insiste en intentar salir adelante con esa estúpida "
+"taberna. Supongo que al menos le da a Gillian un lugar para trabajar, y su "
+"esposa Garda hace un excelente Pastel de cordero ..."
 
 #. TRANSLATORS: Quest text spoken aloud from a book by player
 #: Source/textdat.cpp:471 Source/textdat.cpp:479 Source/textdat.cpp:487
@@ -10868,7 +10868,7 @@ msgid ""
 msgstr ""
 "Muchos demonios viajaron al reino de los mortales en busca de los Tres "
 "Hermanos. Estos demonios fueron seguidos al plano mortal por Ángeles que los "
-"cazaron por las vastas ciudades del Este. Los Ángeles se aliaron con una "
+"cazaron por las vastas pueblos del Este. Los Ángeles se aliaron con una "
 "Orden secreta de magos mortales llamada Los Horadrim, quienes rápidamente se "
 "volvieron expertos en cazar demonios. Estos también se hicieron muchos "
 "enemigos oscuros en los inframundos."
@@ -10982,11 +10982,11 @@ msgstr ""
 "que llegaron los jinetes oscuros y destruyeron nuestra aldea. Muchos fueron "
 "asesinados donde estaban, y los que tomaron las armas fueron asesinados o "
 "arrastrados para convertirse en esclavos, o algo peor. La iglesia en las "
-"afueras de la ciudad ha sido profanada y se utiliza para rituales oscuros. "
-"Los gritos que resuenan en la noche son inhumanos, pero es posible que "
-"algunos de nuestros habitantes hayan sobrevivido. Sigue el camino que se "
-"encuentra entre mi taberna y la herrería para encontrar la iglesia y salvar "
-"a quien puedas. \n"
+"afueras del pueblo ha sido profanada y se utiliza para rituales oscuros. Los "
+"gritos que resuenan en la noche son inhumanos, pero es posible que algunos "
+"de nuestros habitantes hayan sobrevivido. Sigue el camino que se encuentra "
+"entre mi taberna y la herrería para encontrar la iglesia y salvar a quien "
+"puedas. \n"
 " \n"
 "Quizás pueda contarte más si volvemos a hablar. Buena suerte."
 
@@ -11035,7 +11035,7 @@ msgid ""
 msgstr ""
 "¿Un qué? ¡Esto es una tontería!. No hay ningún tesoro enterrado aquí en "
 "Tristram. ¡Déjame ver eso! Ah, mira, estos dibujos son inexactos. No "
-"coinciden en absoluto con nuestra ciudad. Me concentraría en lo que hay "
+"coinciden en absoluto con nuestro pueblo. Me concentraría en lo que hay "
 "debajo de la catedral y no en lo que hay debajo de nuestra capa superficial "
 "del suelo."
 
@@ -11067,7 +11067,7 @@ msgid ""
 "dirt.  I'd ignore it."
 msgstr ""
 "Apuesto a que Wirt te vio venir y fingió un acto para poder reírse de ti más "
-"tarde, cuando estabas corriendo por la ciudad con la nariz en la tierra. Yo "
+"tarde, cuando estabas corriendo por el pueblo con la nariz en la tierra. Yo "
 "lo ignoraría."
 
 #. TRANSLATORS: Quest text spoken by Cain
@@ -11078,7 +11078,7 @@ msgid ""
 "treasure are common fantasies of any child.  Wirt seldom indulges in "
 "youthful games.  So it may just be his imagination."
 msgstr ""
-"Hubo un tiempo en que esta ciudad era una parada frecuente para los viajeros "
+"Hubo un tiempo en que este pueblo era una parada frecuente para los viajeros "
 "de todas partes. Mucho ha cambiado desde entonces. Pero las cuevas "
 "escondidas y los tesoros enterrados son fantasías comunes de cualquier niño. "
 "Wirt rara vez se entrega a juegos juveniles. Así que puede que sea sólo su "
@@ -11158,8 +11158,8 @@ msgid ""
 msgstr ""
 "¿Se ha ido? ¿Lo enviaste de vuelta a los oscuros recovecos del Hades que lo "
 "engendraron? ¿Tu que? ¡Oh, no me digas que lo perdiste! Esas cosas no son "
-"baratas, ¿sabes? Tienes que encontrarlo y luego sacar ese horror de nuestra "
-"ciudad."
+"baratas, ¿sabes? Tienes que encontrarlo y luego sacar ese horror de nuestro "
+"pueblo."
 
 #. TRANSLATORS: Neutral text spoken by Farmer (Gossip)
 #: Source/textdat.cpp:567
@@ -11627,7 +11627,7 @@ msgstr "Ogden el propietario de la Taberna"
 
 #: Source/towners.cpp:112
 msgid "Wounded Townsman"
-msgstr "Ciudadano Herido"
+msgstr "Aldeano Herido"
 
 #: Source/towners.cpp:134
 msgid "Adria the Witch"
