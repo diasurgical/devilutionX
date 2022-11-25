@@ -11,6 +11,7 @@
 #include "control.h"
 #include "engine.h"
 #include "engine/clx_sprite.hpp"
+#include "engine/demomode.h"
 #include "engine/dx.h"
 #include "engine/load_cel.hpp"
 #include "engine/load_clx.hpp"
@@ -252,15 +253,15 @@ void interface_msg_pump()
 
 void IncProgress()
 {
-	if (HeadlessMode)
-		return;
-	interface_msg_pump();
+	if (!HeadlessMode && !demo::IsRunning())
+		interface_msg_pump();
 	if (!IsProgress)
 		return;
 	sgdwProgress += 23;
 	if (sgdwProgress > MaxProgress)
 		sgdwProgress = MaxProgress;
-	DrawCutsceneForeground();
+	if (!HeadlessMode && !demo::IsRunning())
+		DrawCutsceneForeground();
 }
 
 void CompleteProgress()
