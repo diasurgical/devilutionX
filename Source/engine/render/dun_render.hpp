@@ -80,6 +80,15 @@ enum class TileType : uint8_t {
 };
 
 /**
+ * Specifies the type of arches to render.
+ */
+enum class ArchType {
+	None,
+	Left,
+	Right
+};
+
+/**
  * Specifies the current MIN block of the level CEL file, as used during rendering of the level tiles.
  */
 class LevelCelBlock {
@@ -113,8 +122,9 @@ private:
  * @param out Target buffer
  * @param position Target buffer coordinates
  * @param levelCelBlock The MIN block of the level CEL file.
+ * @param archType The type of arch to render.
  */
-void RenderTile(const Surface &out, Point position, LevelCelBlock levelCelBlock);
+void RenderTile(const Surface &out, Point position, LevelCelBlock levelCelBlock, ArchType archType);
 
 /**
  * @brief Render a black 64x31 tile ◆

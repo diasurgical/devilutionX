@@ -63,10 +63,6 @@ int LightTableIndex;
 
 bool AutoMapShowItems;
 /**
- * Specifies the type of arches to render.
- */
-char arch_draw_type;
-/**
  * Specifies whether transparency is active for the current CEL file being decoded.
  */
 bool cel_transparency_active;
@@ -516,15 +512,15 @@ void DrawCell(const Surface &out, Point tilePosition, Point targetBufferPosition
 		{
 			const LevelCelBlock levelCelBlock { pMap->mt[2 * i] };
 			if (levelCelBlock.hasValue()) {
-				arch_draw_type = i == 0 ? 1 : 0;
-				RenderTile(out, targetBufferPosition, levelCelBlock);
+				RenderTile(out, targetBufferPosition, levelCelBlock,
+				    i == 0 ? ArchType::Left : ArchType::None);
 			}
 		}
 		{
 			const LevelCelBlock levelCelBlock { pMap->mt[2 * i + 1] };
 			if (levelCelBlock.hasValue()) {
-				arch_draw_type = i == 0 ? 2 : 0;
-				RenderTile(out, targetBufferPosition + Displacement { TILE_WIDTH / 2, 0 }, levelCelBlock);
+				RenderTile(out, targetBufferPosition + Displacement { TILE_WIDTH / 2, 0 }, levelCelBlock,
+				    i == 0 ? ArchType::Right : ArchType::None);
 			}
 		}
 		targetBufferPosition.y -= TILE_HEIGHT;
@@ -543,19 +539,17 @@ void DrawFloor(const Surface &out, Point tilePosition, Point targetBufferPositio
 	cel_transparency_active = false;
 	LightTableIndex = dLight[tilePosition.x][tilePosition.y];
 
-	arch_draw_type = 1; // Left
-	int pn = dPiece[tilePosition.x][tilePosition.y];
+	const uint16_t pn = dPiece[tilePosition.x][tilePosition.y];
 	{
 		const LevelCelBlock levelCelBlock { DPieceMicros[pn].mt[0] };
 		if (levelCelBlock.hasValue()) {
-			RenderTile(out, targetBufferPosition, levelCelBlock);
+			RenderTile(out, targetBufferPosition, levelCelBlock, ArchType::Left);
 		}
 	}
-	arch_draw_type = 2; // Right
 	{
 		const LevelCelBlock levelCelBlock { DPieceMicros[pn].mt[1] };
 		if (levelCelBlock.hasValue()) {
-			RenderTile(out, targetBufferPosition + Displacement { TILE_WIDTH / 2, 0 }, levelCelBlock);
+			RenderTile(out, targetBufferPosition + Displacement { TILE_WIDTH / 2, 0 }, levelCelBlock, ArchType::Right);
 		}
 	}
 }

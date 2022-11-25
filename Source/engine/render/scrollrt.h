@@ -14,7 +14,6 @@
 namespace devilution {
 
 extern int LightTableIndex;
-extern char arch_draw_type;
 extern bool cel_transparency_active;
 extern bool cel_foliage_active;
 extern int level_piece_id;
