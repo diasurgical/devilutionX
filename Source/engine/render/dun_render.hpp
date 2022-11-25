@@ -123,12 +123,15 @@ private:
  * @param position Target buffer coordinates
  * @param levelCelBlock The MIN block of the level CEL file.
  * @param levelPieceId The piece ID (index into SOLData and DPieceMicros).
+ * @param lightTableIndex The light level to use for rendering (index into LightTables / 256).
  * @param archType The type of arch to render.
  * @param transparency Specifies whether transparency is active for the CEL sprite.
  * @param foliage Specifies whether the tile has foliage. Foliage is extra content that overlaps the previous tile.
  */
-void RenderTile(const Surface &out, Point position, LevelCelBlock levelCelBlock,
-    uint16_t levelPieceId, ArchType archType, bool transparency, bool foliage);
+void RenderTile(const Surface &out, Point position,
+    LevelCelBlock levelCelBlock, uint16_t levelPieceId,
+    uint8_t lightTableIndex, ArchType archType,
+    bool transparency, bool foliage);
 
 /**
  * @brief Render a black 64x31 tile ◆

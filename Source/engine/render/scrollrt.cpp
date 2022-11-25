@@ -506,7 +506,7 @@ void DrawCell(const Surface &out, Point tilePosition, Point targetBufferPosition
 			const LevelCelBlock levelCelBlock { pMap->mt[2 * i] };
 			if (levelCelBlock.hasValue()) {
 				RenderTile(out, targetBufferPosition,
-				    levelCelBlock, levelPieceId,
+				    levelCelBlock, levelPieceId, LightTableIndex,
 				    i == 0 ? ArchType::Left : ArchType::None,
 				    transparency, foliage);
 			}
@@ -515,7 +515,7 @@ void DrawCell(const Surface &out, Point tilePosition, Point targetBufferPosition
 			const LevelCelBlock levelCelBlock { pMap->mt[2 * i + 1] };
 			if (levelCelBlock.hasValue()) {
 				RenderTile(out, targetBufferPosition + Displacement { TILE_WIDTH / 2, 0 },
-				    levelCelBlock, levelPieceId,
+				    levelCelBlock, levelPieceId, LightTableIndex,
 				    i == 0 ? ArchType::Right : ArchType::None,
 				    transparency, foliage);
 			}
@@ -539,7 +539,7 @@ void DrawFloor(const Surface &out, Point tilePosition, Point targetBufferPositio
 		const LevelCelBlock levelCelBlock { DPieceMicros[levelPieceId].mt[0] };
 		if (levelCelBlock.hasValue()) {
 			RenderTile(out, targetBufferPosition,
-			    levelCelBlock, levelPieceId, ArchType::Left,
+			    levelCelBlock, levelPieceId, LightTableIndex, ArchType::Left,
 			    /*transparency=*/false, /*foliage=*/false);
 		}
 	}
@@ -547,7 +547,7 @@ void DrawFloor(const Surface &out, Point tilePosition, Point targetBufferPositio
 		const LevelCelBlock levelCelBlock { DPieceMicros[levelPieceId].mt[1] };
 		if (levelCelBlock.hasValue()) {
 			RenderTile(out, targetBufferPosition + Displacement { TILE_WIDTH / 2, 0 },
-			    levelCelBlock, levelPieceId, ArchType::Right,
+			    levelCelBlock, levelPieceId, LightTableIndex, ArchType::Right,
 			    /*transparency=*/false, /*foliage=*/false);
 		}
 	}
