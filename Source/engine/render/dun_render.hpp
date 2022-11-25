@@ -122,9 +122,10 @@ private:
  * @param out Target buffer
  * @param position Target buffer coordinates
  * @param levelCelBlock The MIN block of the level CEL file.
+ * @param levelPieceId The piece ID (index into SOLData and DPieceMicros).
  * @param archType The type of arch to render.
  */
-void RenderTile(const Surface &out, Point position, LevelCelBlock levelCelBlock, ArchType archType);
+void RenderTile(const Surface &out, Point position, LevelCelBlock levelCelBlock, uint16_t levelPieceId, ArchType archType);
 
 /**
  * @brief Render a black 64x31 tile ◆
