@@ -62,14 +62,6 @@ namespace devilution {
 int LightTableIndex;
 
 bool AutoMapShowItems;
-/**
- * Specifies whether transparency is active for the current CEL file being decoded.
- */
-bool cel_transparency_active;
-/**
- * Specifies whether foliage (tile has extra content that overlaps previous tile) being rendered.
- */
-bool cel_foliage_active = false;
 
 // DevilutionX extension.
 extern void DrawControllerModifierHints(const Surface &out);
@@ -502,15 +494,21 @@ void DrawCell(const Surface &out, Point tilePosition, Point targetBufferPosition
 {
 	const uint16_t levelPieceId = dPiece[tilePosition.x][tilePosition.y];
 	MICROS *pMap = &DPieceMicros[levelPieceId];
-	cel_transparency_active = TileHasAny(levelPieceId, TileProperties::Transparent) && TransList[dTransVal[tilePosition.x][tilePosition.y]];
-	cel_foliage_active = !TileHasAny(levelPieceId, TileProperties::Solid);
+	bool transparency = TileHasAny(levelPieceId, TileProperties::Transparent) && TransList[dTransVal[tilePosition.x][tilePosition.y]];
+#ifdef _DEBUG
+	// Turn transparency off here for debugging
+	transparency = transparency && (SDL_GetModState() & KMOD_ALT) == 0;
+#endif
+
+	const bool foliage = !TileHasAny(levelPieceId, TileProperties::Solid);
 	for (int i = 0; i < (MicroTileLen / 2); i++) {
 		{
 			const LevelCelBlock levelCelBlock { pMap->mt[2 * i] };
 			if (levelCelBlock.hasValue()) {
 				RenderTile(out, targetBufferPosition,
 				    levelCelBlock, levelPieceId,
-				    i == 0 ? ArchType::Left : ArchType::None);
+				    i == 0 ? ArchType::Left : ArchType::None,
+				    transparency, foliage);
 			}
 		}
 		{
@@ -518,36 +516,39 @@ void DrawCell(const Surface &out, Point tilePosition, Point targetBufferPosition
 			if (levelCelBlock.hasValue()) {
 				RenderTile(out, targetBufferPosition + Displacement { TILE_WIDTH / 2, 0 },
 				    levelCelBlock, levelPieceId,
-				    i == 0 ? ArchType::Right : ArchType::None);
+				    i == 0 ? ArchType::Right : ArchType::None,
+				    transparency, foliage);
 			}
 		}
 		targetBufferPosition.y -= TILE_HEIGHT;
 	}
-	cel_foliage_active = false;
 }
 
 /**
- * @brief Render a floor tiles
+ * @brief Render a floor tile.
  * @param out Target buffer
  * @param tilePosition dPiece coordinates
  * @param targetBufferPosition Target buffer coordinate
  */
 void DrawFloor(const Surface &out, Point tilePosition, Point targetBufferPosition)
 {
-	cel_transparency_active = false;
 	LightTableIndex = dLight[tilePosition.x][tilePosition.y];
 
 	const uint16_t levelPieceId = dPiece[tilePosition.x][tilePosition.y];
 	{
 		const LevelCelBlock levelCelBlock { DPieceMicros[levelPieceId].mt[0] };
 		if (levelCelBlock.hasValue()) {
-			RenderTile(out, targetBufferPosition, levelCelBlock, levelPieceId, ArchType::Left);
+			RenderTile(out, targetBufferPosition,
+			    levelCelBlock, levelPieceId, ArchType::Left,
+			    /*transparency=*/false, /*foliage=*/false);
 		}
 	}
 	{
 		const LevelCelBlock levelCelBlock { DPieceMicros[levelPieceId].mt[1] };
 		if (levelCelBlock.hasValue()) {
-			RenderTile(out, targetBufferPosition + Displacement { TILE_WIDTH / 2, 0 }, levelCelBlock, levelPieceId, ArchType::Right);
+			RenderTile(out, targetBufferPosition + Displacement { TILE_WIDTH / 2, 0 },
+			    levelCelBlock, levelPieceId, ArchType::Right,
+			    /*transparency=*/false, /*foliage=*/false);
 		}
 	}
 }
@@ -726,22 +727,16 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 	if (leveltype != DTYPE_TOWN) {
 		char bArch = dSpecial[tilePosition.x][tilePosition.y];
 		if (bArch != 0) {
-			cel_transparency_active = TransList[bMap];
+			bool transparency = TransList[bMap];
 #ifdef _DEBUG
-			if ((SDL_GetModState() & KMOD_ALT) != 0) {
-				cel_transparency_active = false; // Turn transparency off here for debugging
-			}
+			// Turn transparency off here for debugging
+			transparency = transparency && (SDL_GetModState() & KMOD_ALT) == 0;
 #endif
-			if (cel_transparency_active) {
+			if (transparency) {
 				ClxDrawLightBlended(out, targetBufferPosition, (*pSpecialCels)[bArch - 1]);
 			} else {
 				ClxDrawLight(out, targetBufferPosition, (*pSpecialCels)[bArch - 1]);
 			}
-#ifdef _DEBUG
-			if ((SDL_GetModState() & KMOD_ALT) != 0) {
-				cel_transparency_active = TransList[bMap]; // Turn transparency back to its normal state
-			}
-#endif
 		}
 	} else {
 		// Tree leaves should always cover player when entering or leaving the tile,
