@@ -1017,7 +1017,7 @@ DVL_ATTRIBUTE_HOT void RenderTileType(TileType tile, std::uint8_t *dst, int dstP
 }
 
 /** Returns the mask that defines what parts of the tile are opaque. */
-const std::uint32_t *GetMask(TileType tile)
+const std::uint32_t *GetMask(TileType tile, ArchType archType)
 {
 #ifdef _DEBUG
 	if ((SDL_GetModState() & KMOD_ALT) != 0) {
@@ -1026,25 +1026,25 @@ const std::uint32_t *GetMask(TileType tile)
 #endif
 
 	if (cel_transparency_active) {
-		if (arch_draw_type == 0) {
+		if (archType == ArchType::None) {
 			return &WallMaskFullyTrasparent[TILE_HEIGHT - 1];
 		}
-		if (arch_draw_type == 1 && tile != TileType::LeftTriangle) {
+		if (archType == ArchType::Left && tile != TileType::LeftTriangle) {
 			if (TileHasAny(level_piece_id, TileProperties::TransparentLeft)) {
 				return &LeftMaskTransparent[TILE_HEIGHT - 1];
 			}
 		}
-		if (arch_draw_type == 2 && tile != TileType::RightTriangle) {
+		if (archType == ArchType::Right && tile != TileType::RightTriangle) {
 			if (TileHasAny(level_piece_id, TileProperties::TransparentRight)) {
 				return &RightMaskTransparent[TILE_HEIGHT - 1];
 			}
 		}
-	} else if (arch_draw_type != 0 && cel_foliage_active) {
+	} else if (archType != ArchType::None && cel_foliage_active) {
 		if (tile != TileType::TransparentSquare)
 			return nullptr;
-		if (arch_draw_type == 1)
+		if (archType == ArchType::Left)
 			return &LeftFoliageMask[TILE_HEIGHT - 1];
-		if (arch_draw_type == 2)
+		if (archType == ArchType::Right)
 			return &RightFoliageMask[TILE_HEIGHT - 1];
 	}
 	return &SolidMask[TILE_HEIGHT - 1];
@@ -1142,10 +1142,10 @@ void RenderBlackTileFull(std::uint8_t *dst, int dstPitch)
 
 } // namespace
 
-void RenderTile(const Surface &out, Point position, LevelCelBlock levelCelBlock)
+void RenderTile(const Surface &out, Point position, LevelCelBlock levelCelBlock, ArchType archType)
 {
 	const TileType tile = levelCelBlock.type();
-	const auto *mask = GetMask(tile);
+	const uint32_t *mask = GetMask(tile, archType);
 	if (mask == nullptr)
 		return;
 
