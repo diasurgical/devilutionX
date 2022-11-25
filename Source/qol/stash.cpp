@@ -632,7 +632,7 @@ void GoldWithdrawNewText(string_view text)
 
 void UpdateStashGrid(unsigned page, Point startPoint, Size itemSize, StashStruct::StashCell itemId /*= 0*/)
 {
-	if (itemId == InvalidItemId) {
+	if (itemId > stashList.size()) {
 		return;
 	}
 
