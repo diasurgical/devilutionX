@@ -16,7 +16,6 @@ namespace devilution {
 extern int LightTableIndex;
 extern bool cel_transparency_active;
 extern bool cel_foliage_active;
-extern int level_piece_id;
 extern bool AutoMapShowItems;
 extern bool frameflag;
 

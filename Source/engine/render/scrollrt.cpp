@@ -70,10 +70,6 @@ bool cel_transparency_active;
  * Specifies whether foliage (tile has extra content that overlaps previous tile) being rendered.
  */
 bool cel_foliage_active = false;
-/**
- * Specifies the current dungeon piece ID of the level, as used during rendering of the level tiles.
- */
-int level_piece_id;
 
 // DevilutionX extension.
 extern void DrawControllerModifierHints(const Surface &out);
@@ -504,22 +500,24 @@ static void DrawDungeon(const Surface & /*out*/, Point /*tilePosition*/, Point /
  */
 void DrawCell(const Surface &out, Point tilePosition, Point targetBufferPosition)
 {
-	level_piece_id = dPiece[tilePosition.x][tilePosition.y];
-	MICROS *pMap = &DPieceMicros[level_piece_id];
-	cel_transparency_active = TileHasAny(level_piece_id, TileProperties::Transparent) && TransList[dTransVal[tilePosition.x][tilePosition.y]];
-	cel_foliage_active = !TileHasAny(level_piece_id, TileProperties::Solid);
+	const uint16_t levelPieceId = dPiece[tilePosition.x][tilePosition.y];
+	MICROS *pMap = &DPieceMicros[levelPieceId];
+	cel_transparency_active = TileHasAny(levelPieceId, TileProperties::Transparent) && TransList[dTransVal[tilePosition.x][tilePosition.y]];
+	cel_foliage_active = !TileHasAny(levelPieceId, TileProperties::Solid);
 	for (int i = 0; i < (MicroTileLen / 2); i++) {
 		{
 			const LevelCelBlock levelCelBlock { pMap->mt[2 * i] };
 			if (levelCelBlock.hasValue()) {
-				RenderTile(out, targetBufferPosition, levelCelBlock,
+				RenderTile(out, targetBufferPosition,
+				    levelCelBlock, levelPieceId,
 				    i == 0 ? ArchType::Left : ArchType::None);
 			}
 		}
 		{
 			const LevelCelBlock levelCelBlock { pMap->mt[2 * i + 1] };
 			if (levelCelBlock.hasValue()) {
-				RenderTile(out, targetBufferPosition + Displacement { TILE_WIDTH / 2, 0 }, levelCelBlock,
+				RenderTile(out, targetBufferPosition + Displacement { TILE_WIDTH / 2, 0 },
+				    levelCelBlock, levelPieceId,
 				    i == 0 ? ArchType::Right : ArchType::None);
 			}
 		}
@@ -539,17 +537,17 @@ void DrawFloor(const Surface &out, Point tilePosition, Point targetBufferPositio
 	cel_transparency_active = false;
 	LightTableIndex = dLight[tilePosition.x][tilePosition.y];
 
-	const uint16_t pn = dPiece[tilePosition.x][tilePosition.y];
+	const uint16_t levelPieceId = dPiece[tilePosition.x][tilePosition.y];
 	{
-		const LevelCelBlock levelCelBlock { DPieceMicros[pn].mt[0] };
+		const LevelCelBlock levelCelBlock { DPieceMicros[levelPieceId].mt[0] };
 		if (levelCelBlock.hasValue()) {
-			RenderTile(out, targetBufferPosition, levelCelBlock, ArchType::Left);
+			RenderTile(out, targetBufferPosition, levelCelBlock, levelPieceId, ArchType::Left);
 		}
 	}
 	{
-		const LevelCelBlock levelCelBlock { DPieceMicros[pn].mt[1] };
+		const LevelCelBlock levelCelBlock { DPieceMicros[levelPieceId].mt[1] };
 		if (levelCelBlock.hasValue()) {
-			RenderTile(out, targetBufferPosition + Displacement { TILE_WIDTH / 2, 0 }, levelCelBlock, ArchType::Right);
+			RenderTile(out, targetBufferPosition + Displacement { TILE_WIDTH / 2, 0 }, levelCelBlock, levelPieceId, ArchType::Right);
 		}
 	}
 }

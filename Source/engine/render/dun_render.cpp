@@ -1017,7 +1017,7 @@ DVL_ATTRIBUTE_HOT void RenderTileType(TileType tile, std::uint8_t *dst, int dstP
 }
 
 /** Returns the mask that defines what parts of the tile are opaque. */
-const std::uint32_t *GetMask(TileType tile, ArchType archType)
+const std::uint32_t *GetMask(TileType tile, uint16_t levelPieceId, ArchType archType)
 {
 #ifdef _DEBUG
 	if ((SDL_GetModState() & KMOD_ALT) != 0) {
@@ -1030,12 +1030,12 @@ const std::uint32_t *GetMask(TileType tile, ArchType archType)
 			return &WallMaskFullyTrasparent[TILE_HEIGHT - 1];
 		}
 		if (archType == ArchType::Left && tile != TileType::LeftTriangle) {
-			if (TileHasAny(level_piece_id, TileProperties::TransparentLeft)) {
+			if (TileHasAny(levelPieceId, TileProperties::TransparentLeft)) {
 				return &LeftMaskTransparent[TILE_HEIGHT - 1];
 			}
 		}
 		if (archType == ArchType::Right && tile != TileType::RightTriangle) {
-			if (TileHasAny(level_piece_id, TileProperties::TransparentRight)) {
+			if (TileHasAny(levelPieceId, TileProperties::TransparentRight)) {
 				return &RightMaskTransparent[TILE_HEIGHT - 1];
 			}
 		}
@@ -1142,10 +1142,10 @@ void RenderBlackTileFull(std::uint8_t *dst, int dstPitch)
 
 } // namespace
 
-void RenderTile(const Surface &out, Point position, LevelCelBlock levelCelBlock, ArchType archType)
+void RenderTile(const Surface &out, Point position, LevelCelBlock levelCelBlock, uint16_t levelPieceId, ArchType archType)
 {
 	const TileType tile = levelCelBlock.type();
-	const uint32_t *mask = GetMask(tile, archType);
+	const uint32_t *mask = GetMask(tile, levelPieceId, archType);
 	if (mask == nullptr)
 		return;
 
