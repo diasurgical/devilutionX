@@ -98,6 +98,7 @@ struct MultiQuests {
 	quest_state qstate;
 	uint8_t qlog;
 	uint8_t qvar1;
+	uint8_t qvar2;
 };
 
 struct DJunk {
@@ -429,6 +430,7 @@ byte *DeltaExportJunk(byte *dst)
 		sgJunk.quests[q].qlog = quest._qlog ? 1 : 0;
 		sgJunk.quests[q].qstate = quest._qactive;
 		sgJunk.quests[q].qvar1 = quest._qvar1;
+		sgJunk.quests[q].qvar2 = quest._qvar2;
 		memcpy(dst, &sgJunk.quests[q], sizeof(MultiQuests));
 		dst += sizeof(MultiQuests);
 		q++;
@@ -2547,6 +2549,7 @@ void DeltaSyncJunk()
 			quest._qlog = sgJunk.quests[q].qlog != 0;
 			quest._qactive = sgJunk.quests[q].qstate;
 			quest._qvar1 = sgJunk.quests[q].qvar1;
+			quest._qvar2 = sgJunk.quests[q].qvar2;
 		}
 		q++;
 	}
