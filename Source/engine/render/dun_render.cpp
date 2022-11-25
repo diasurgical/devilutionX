@@ -20,72 +20,6 @@ namespace devilution {
 
 namespace {
 
-/**
- * Tile type.
- *
- * The tile type determines data encoding and the shape.
- *
- * Each tile type has its own encoding but they all encode data in the order
- * of bottom-to-top (bottom row first).
- */
-enum class TileType : uint8_t {
-	/**
-	 * 🮆 A 32x32 square. Stored as an array of pixels.
-	 */
-	Square,
-
-	/**
-	 * 🮆 A 32x32 square with transparency. RLE encoded.
-	 *
-	 * Each run starts with an int8_t value.
-	 * If positive, it is followed by this many pixels.
-	 * If negative, it indicates `-value` fully transparent pixels, which are omitted.
-	 *
-	 * Runs do not cross row boundaries.
-	 */
-	TransparentSquare,
-
-	/**
-	 *🭮 Left-pointing 32x31 triangle. Encoded as 31 varying-width rows with 2 padding bytes before every even row.
-	 *
-	 * The smallest rows (bottom and top) are 2px wide, the largest row is 16px wide (middle row).
-	 *
-	 * Encoding:
-	 * for i in [0, 30]:
-	 * - 2 unused bytes if i is even
-	 * - row (only the pixels within the triangle)
-	 */
-	LeftTriangle,
-
-	/**
-	 * 🭬Right-pointing 32x31 triangle.  Encoded as 31 varying-width rows with 2 padding bytes after every even row.
-	 *
-	 * The smallest rows (bottom and top) are 2px wide, the largest row is 16px wide (middle row).
-	 *
-	 * Encoding:
-	 * for i in [0, 30]:
-	 * - row (only the pixels within the triangle)
-	 * - 2 unused bytes if i is even
-	 */
-	RightTriangle,
-
-	/**
-	 * 🭓 Left-pointing 32x32 trapezoid: a 32x16 rectangle and the 16x16 bottom part of `LeftTriangle`.
-	 *
-	 * Begins with triangle part, which uses the `LeftTriangle` encoding,
-	 * and is followed by a flat array of pixels for the top rectangle part.
-	 */
-	LeftTrapezoid,
-
-	/**
-	 * 🭞 Right-pointing 32x32 trapezoid: 32x16 rectangle and the 16x16 bottom part of `RightTriangle`.
-	 *
-	 * Begins with the triangle part, which uses the `RightTriangle` encoding,
-	 * and is followed by a flat array of pixels for the top rectangle part.
-	 */
-	RightTrapezoid,
-};
-
 /** Width of a tile rendering primitive. */
 constexpr std::int_fast16_t Width = TILE_WIDTH / 2;
 
@@ -1208,9 +1142,9 @@ void RenderBlackTileFull(std::uint8_t *dst, int dstPitch)
 
 } // namespace
 
-void RenderTile(const Surface &out, Point position)
+void RenderTile(const Surface &out, Point position, LevelCelBlock levelCelBlock)
 {
-	const auto tile = static_cast<TileType>((level_cel_block & 0x7000) >> 12);
+	const TileType tile = levelCelBlock.type();
 	const auto *mask = GetMask(tile);
 	if (mask == nullptr)
 		return;
@@ -1231,7 +1165,7 @@ void RenderTile(const Surface &out, Point position)
 
 	const std::uint8_t *tbl = &LightTables[256 * LightTableIndex];
 	const auto *pFrameTable = reinterpret_cast<const std::uint32_t *>(pDungeonCels.get());
-	const auto *src = reinterpret_cast<const std::uint8_t *>(&pDungeonCels[SDL_SwapLE32(pFrameTable[level_cel_block & 0xFFF])]);
+	const auto *src = reinterpret_cast<const std::uint8_t *>(&pDungeonCels[pFrameTable[levelCelBlock.frame()]]);
 	std::uint8_t *dst = out.at(static_cast<int>(position.x + clip.left), static_cast<int>(position.y - clip.bottom));
 	const auto dstPitch = out.pitch();
 
