@@ -195,7 +195,7 @@ void WithdrawGoldKeyPress(SDL_Keycode vkey);
 void DrawGoldWithdraw(const Surface &out, int amount);
 
 /**
- * @brief Closes the gold withdraw popup and stop capturing text input.
+ * @brief Close the gold withdraw popup and stop capturing text input.
  * Actually withdrawing gold is performed when the player confirms a value by pressing enter with the popup open, during WithdrawGoldKeyPress.
  */
 void CloseGoldWithdraw();
