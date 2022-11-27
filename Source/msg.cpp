@@ -2283,7 +2283,7 @@ size_t OnCheatStats(const TCmd *pCmd, size_t pnum) // NOLINT(misc-unused-paramet
 	}
 #endif
 	return sizeof(*pCmd);
-    }
+}
 
 size_t OnCheatSpellLevel(const TCmd *pCmd, size_t pnum) // NOLINT(misc-unused-parameters)
 {
