@@ -364,7 +364,24 @@ Surface ClipSurface(const Surface &out, Rectangle rect)
 	    std::min(rect.position.y + rect.size.height, out.h()));
 }
 
-int DoDrawString(const Surface &out, string_view text, Rectangle rect, Point &characterPosition,
+void MaybeWrap(Point &characterPosition, int characterWidth, int rightMargin, int initialX, int lineHeight)
+{
+	if (characterPosition.x + characterWidth > rightMargin) {
+		characterPosition.x = initialX;
+		characterPosition.y += lineHeight;
+	}
+}
+
+int GetLineStartX(UiFlags flags, const Rectangle &rect, int lineWidth)
+{
+	if (HasAnyOf(flags, UiFlags::AlignCenter))
+		return rect.position.x + (rect.size.width - lineWidth) / 2;
+	if (HasAnyOf(flags, UiFlags::AlignRight))
+		return rect.position.x + rect.size.width - lineWidth;
+	return rect.position.x;
+}
+
+uint32_t DoDrawString(const Surface &out, string_view text, Rectangle rect, Point &characterPosition,
     int spacing, int lineHeight, int lineWidth, int rightMargin, int bottomMargin,
     UiFlags flags, GameFontTables size, text_color color)
 {
@@ -374,10 +391,10 @@ int DoDrawString(const Surface &out, string_view text, Rectangle rect, Point &ch
 
 	char32_t next;
 	string_view remaining = text;
-	while (!remaining.empty() && remaining[0] != '\0') {
-		next = ConsumeFirstUtf8CodePoint(&remaining);
-		if (next == Utf8DecodeError)
-			break;
+	size_t cpLen;
+	for (; !remaining.empty() && remaining[0] != '\0'
+	     && (next = DecodeFirstUtf8CodePoint(remaining, &cpLen)) != Utf8DecodeError;
+	     remaining.remove_prefix(cpLen)) {
 		if (next == ZWSP)
 			continue;
 
@@ -388,24 +405,19 @@ int DoDrawString(const Surface &out, string_view text, Rectangle rect, Point &ch
 			currentUnicodeRow = unicodeRow;
 		}
 
-		uint8_t frame = next & 0xFF;
-		if (next == '\n' || characterPosition.x > rightMargin) {
-			int nextLineY = characterPosition.y + lineHeight;
-			if (nextLineY + lineHeight > bottomMargin)
+		const uint8_t frame = next & 0xFF;
+		if (next == '\n' || characterPosition.x + (*kerning)[frame] > rightMargin) {
+			const int nextLineY = characterPosition.y + lineHeight;
+			if (nextLineY >= bottomMargin)
 				break;
-			characterPosition.x = rect.position.x;
 			characterPosition.y = nextLineY;
 
 			if (HasAnyOf(flags, (UiFlags::AlignCenter | UiFlags::AlignRight))) {
 				lineWidth = (*kerning)[frame];
-				if (!remaining.empty())
-					lineWidth += spacing + GetLineWidth(remaining, size, spacing);
+				if (remaining.size() > cpLen)
+					lineWidth += spacing + GetLineWidth(remaining.substr(cpLen), size, spacing);
 			}
-
-			if (HasAnyOf(flags, UiFlags::AlignCenter))
-				characterPosition.x += (rect.size.width - lineWidth) / 2;
-			else if (HasAnyOf(flags, UiFlags::AlignRight))
-				characterPosition.x += rect.size.width - lineWidth;
+			characterPosition.x = GetLineStartX(flags, rect, lineWidth);
 
 			if (next == '\n')
 				continue;
@@ -414,7 +426,7 @@ int DoDrawString(const Surface &out, string_view text, Rectangle rect, Point &ch
 		DrawFont(out, characterPosition, font, color, frame);
 		characterPosition.x += (*kerning)[frame] + spacing;
 	}
-	return text.data() - remaining.data();
+	return remaining.data() - text.data();
 }
 
 } // namespace
@@ -633,14 +645,11 @@ uint32_t DrawString(const Surface &out, string_view text, const Rectangle &rect,
 	if (HasAnyOf(flags, UiFlags::KerningFitSpacing))
 		spacing = AdjustSpacingToFitHorizontally(lineWidth, maxSpacing, charactersInLine, rect.size.width);
 
-	Point characterPosition = rect.position;
-	if (HasAnyOf(flags, UiFlags::AlignCenter))
-		characterPosition.x += (rect.size.width - lineWidth) / 2;
-	else if (HasAnyOf(flags, UiFlags::AlignRight))
-		characterPosition.x += rect.size.width - lineWidth;
+	Point characterPosition { GetLineStartX(flags, rect, lineWidth), rect.position.y };
+	const int initialX = characterPosition.x;
 
 	const int rightMargin = rect.position.x + rect.size.width;
-	const int bottomMargin = rect.size.height != 0 ? std::min(rect.position.y + rect.size.height, out.h()) : out.h();
+	const int bottomMargin = rect.size.height != 0 ? std::min(rect.position.y + rect.size.height + BaseLineOffset[size], out.h()) : out.h();
 
 	if (lineHeight == -1)
 		lineHeight = GetLineHeight(text, size);
@@ -654,11 +663,14 @@ uint32_t DrawString(const Surface &out, string_view text, const Rectangle &rect,
 
 	const Surface clippedOut = ClipSurface(out, rect);
 
-	const int bytesDrawn = DoDrawString(clippedOut, text, rect, characterPosition, spacing, lineHeight, lineWidth, rightMargin, bottomMargin, flags, size, color);
+	const uint32_t bytesDrawn = DoDrawString(clippedOut, text, rect, characterPosition, spacing, lineHeight, lineWidth, rightMargin, bottomMargin, flags, size, color);
 
 	if (HasAnyOf(flags, UiFlags::PentaCursor)) {
-		ClxDraw(clippedOut, characterPosition + Displacement { 0, lineHeight - BaseLineOffset[size] }, (*pSPentSpn2Cels)[PentSpn2Spin()]);
+		const ClxSprite sprite = (*pSPentSpn2Cels)[PentSpn2Spin()];
+		MaybeWrap(characterPosition, sprite.width(), rightMargin, initialX, lineHeight);
+		ClxDraw(clippedOut, characterPosition + Displacement { 0, lineHeight - BaseLineOffset[size] }, sprite);
 	} else if (HasAnyOf(flags, UiFlags::TextCursor) && GetAnimationFrame(2, 500) != 0) {
+		MaybeWrap(characterPosition, 2, rightMargin, initialX, lineHeight);
 		DrawFont(clippedOut, characterPosition, LoadFont(size, color, 0), color, '|');
 	}
 
@@ -679,14 +691,11 @@ void DrawStringWithColors(const Surface &out, string_view fmt, DrawStringFormatA
 	if (HasAnyOf(flags, UiFlags::KerningFitSpacing))
 		spacing = AdjustSpacingToFitHorizontally(lineWidth, maxSpacing, charactersInLine, rect.size.width);
 
-	Point characterPosition = rect.position;
-	if (HasAnyOf(flags, UiFlags::AlignCenter))
-		characterPosition.x += (rect.size.width - lineWidth) / 2;
-	else if (HasAnyOf(flags, UiFlags::AlignRight))
-		characterPosition.x += rect.size.width - lineWidth;
+	Point characterPosition { GetLineStartX(flags, rect, lineWidth), rect.position.y };
+	const int initialX = characterPosition.x;
 
 	const int rightMargin = rect.position.x + rect.size.width;
-	const int bottomMargin = rect.size.height != 0 ? std::min(rect.position.y + rect.size.height, out.h()) : out.h();
+	const int bottomMargin = rect.size.height != 0 ? std::min(rect.position.y + rect.size.height + BaseLineOffset[size], out.h()) : out.h();
 
 	if (lineHeight == -1)
 		lineHeight = GetLineHeight(fmt, args, argsLen, size);
@@ -706,27 +715,25 @@ void DrawStringWithColors(const Surface &out, string_view fmt, DrawStringFormatA
 	char32_t prev = U'\0';
 	char32_t next;
 	uint32_t currentUnicodeRow = 0;
-	string_view rest = fmt;
+	string_view remaining = fmt;
 	FmtArgParser fmtArgParser { fmt, args, argsLen };
-	while (!rest.empty() && rest[0] != '\0') {
-		if ((prev == U'{' || prev == U'}') && static_cast<char>(prev) == rest[0]) {
-			rest.remove_prefix(1);
+	size_t cpLen;
+	for (; !remaining.empty() && remaining[0] != '\0'
+	     && (next = DecodeFirstUtf8CodePoint(remaining, &cpLen)) != Utf8DecodeError;
+	     remaining.remove_prefix(cpLen), prev = next) {
+		if (((prev == U'{' || prev == U'}') && prev == next)
+		    || next == ZWSP)
 			continue;
-		}
-		const std::optional<std::size_t> fmtArgPos = fmtArgParser(rest);
+
+		const std::optional<std::size_t> fmtArgPos = fmtArgParser(remaining);
 		if (fmtArgPos) {
 			DoDrawString(clippedOut, args[*fmtArgPos].GetFormatted(), rect, characterPosition, spacing, lineHeight, lineWidth, rightMargin, bottomMargin, flags, size,
 			    GetColorFromFlags(args[*fmtArgPos].GetFlags()));
-			prev = U'\0';
+			// `fmtArgParser` has already consumed `remaining`. Ensure the loop doesn't consume any more.
+			cpLen = 0;
+			// The loop assigns `prev = next`. We want `prev` to be `\0` after this.
+			next = U'\0';
 			font = nullptr;
-			continue;
-		}
-
-		next = ConsumeFirstUtf8CodePoint(&rest);
-		if (next == Utf8DecodeError)
-			break;
-		if (next == ZWSP) {
-			prev = next;
 			continue;
 		}
 
@@ -737,38 +744,34 @@ void DrawStringWithColors(const Surface &out, string_view fmt, DrawStringFormatA
 			currentUnicodeRow = unicodeRow;
 		}
 
-		uint8_t frame = next & 0xFF;
-		if (next == '\n' || characterPosition.x > rightMargin) {
-			if (characterPosition.y + lineHeight >= bottomMargin)
+		const uint8_t frame = next & 0xFF;
+		if (next == U'\n' || characterPosition.x + (*kerning)[frame] > rightMargin) {
+			const int nextLineY = characterPosition.y + lineHeight;
+			if (nextLineY >= bottomMargin)
 				break;
-			characterPosition.x = rect.position.x;
-			characterPosition.y += lineHeight;
+			characterPosition.y = nextLineY;
 
 			if (HasAnyOf(flags, (UiFlags::AlignCenter | UiFlags::AlignRight))) {
 				lineWidth = (*kerning)[frame];
-				if (!rest.empty())
-					lineWidth += spacing + GetLineWidth(rest, size, spacing);
+				if (remaining.size() > cpLen)
+					lineWidth += spacing + GetLineWidth(remaining.substr(cpLen), size, spacing);
 			}
+			characterPosition.x = GetLineStartX(flags, rect, lineWidth);
 
-			if (HasAnyOf(flags, UiFlags::AlignCenter))
-				characterPosition.x += (rect.size.width - lineWidth) / 2;
-			else if (HasAnyOf(flags, UiFlags::AlignRight))
-				characterPosition.x += rect.size.width - lineWidth;
-
-			if (next == '\n') {
-				prev = next;
+			if (next == U'\n')
 				continue;
-			}
 		}
 
 		DrawFont(clippedOut, characterPosition, font, color, frame);
 		characterPosition.x += (*kerning)[frame] + spacing;
-		prev = next;
 	}
 
 	if (HasAnyOf(flags, UiFlags::PentaCursor)) {
-		ClxDraw(clippedOut, characterPosition + Displacement { 0, lineHeight - BaseLineOffset[size] }, (*pSPentSpn2Cels)[PentSpn2Spin()]);
+		const ClxSprite sprite = (*pSPentSpn2Cels)[PentSpn2Spin()];
+		MaybeWrap(characterPosition, sprite.width(), rightMargin, initialX, lineHeight);
+		ClxDraw(clippedOut, characterPosition + Displacement { 0, lineHeight - BaseLineOffset[size] }, sprite);
 	} else if (HasAnyOf(flags, UiFlags::TextCursor) && GetAnimationFrame(2, 500) != 0) {
+		MaybeWrap(characterPosition, 2, rightMargin, initialX, lineHeight);
 		DrawFont(clippedOut, characterPosition, LoadFont(size, color, 0), color, '|');
 	}
 }
