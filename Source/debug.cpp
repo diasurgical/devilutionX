@@ -534,20 +534,20 @@ std::string DebugCmdLevelUp(const string_view parameter)
 std::string DebugCmdMaxStats(const string_view parameter)
 {
 	Player &myPlayer = *MyPlayer;
-	ModifyPlrStr(myPlayer, myPlayer.GetMaximumAttributeValue(CharacterAttribute::Strength));
-	ModifyPlrMag(myPlayer, myPlayer.GetMaximumAttributeValue(CharacterAttribute::Magic));
-	ModifyPlrDex(myPlayer, myPlayer.GetMaximumAttributeValue(CharacterAttribute::Dexterity));
-	ModifyPlrVit(myPlayer, myPlayer.GetMaximumAttributeValue(CharacterAttribute::Vitality));
+	ModifyPlrStr(myPlayer, myPlayer.GetMaximumAttributeValue(CharacterAttribute::Strength) - myPlayer._pBaseStr);
+	ModifyPlrMag(myPlayer, myPlayer.GetMaximumAttributeValue(CharacterAttribute::Magic) - myPlayer._pBaseMag);
+	ModifyPlrDex(myPlayer, myPlayer.GetMaximumAttributeValue(CharacterAttribute::Dexterity) - myPlayer._pBaseDex);
+	ModifyPlrVit(myPlayer, myPlayer.GetMaximumAttributeValue(CharacterAttribute::Vitality) - myPlayer._pBaseVit);
 	return "Who needs elixirs anyway?";
 }
 
 std::string DebugCmdMinStats(const string_view parameter)
 {
 	Player &myPlayer = *MyPlayer;
-	ModifyPlrStr(myPlayer, -myPlayer.GetMaximumAttributeValue(CharacterAttribute::Strength));
-	ModifyPlrMag(myPlayer, -myPlayer.GetMaximumAttributeValue(CharacterAttribute::Magic));
-	ModifyPlrDex(myPlayer, -myPlayer.GetMaximumAttributeValue(CharacterAttribute::Dexterity));
-	ModifyPlrVit(myPlayer, -myPlayer.GetMaximumAttributeValue(CharacterAttribute::Vitality));
+	ModifyPlrStr(myPlayer, -myPlayer._pBaseStr);
+	ModifyPlrMag(myPlayer, -myPlayer._pBaseMag);
+	ModifyPlrDex(myPlayer, -myPlayer._pBaseDex);
+	ModifyPlrVit(myPlayer, -myPlayer._pBaseVit);
 	return "From hero to zero.";
 }
 
