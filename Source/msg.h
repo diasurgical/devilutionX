@@ -198,10 +198,6 @@ enum _cmd_id : uint8_t {
 	// Cheat: increase active spell level of player.
 	//
 	// body (TCmd)
-	CMD_CHEAT_STATS,
-	// Cheat: max base stats of player.
-	//
-	// body (TCmd)
 	CMD_CHEAT_SPELL_LEVEL,
 	// Debug command (nop).
 	//

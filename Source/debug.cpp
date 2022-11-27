@@ -533,7 +533,11 @@ std::string DebugCmdLevelUp(const string_view parameter)
 
 std::string DebugCmdMaxStats(const string_view parameter)
 {
-	NetSendCmd(true, CMD_CHEAT_STATS);
+	Player &myPlayer = *MyPlayer;
+	ModifyPlrStr(myPlayer, 255);
+	ModifyPlrMag(myPlayer, 255);
+	ModifyPlrDex(myPlayer, 255);
+	ModifyPlrVit(myPlayer, 255);
 	return "Who needs elixirs anyway?";
 }
 
