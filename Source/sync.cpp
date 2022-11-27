@@ -303,6 +303,7 @@ uint32_t OnSyncData(const TCmd *pCmd, size_t pnum)
 	int monsterCount = header.wLen / sizeof(TSyncMonster);
 
 	uint8_t level = header.bLevel;
+	bool syncLocalLevel = !MyPlayer->_pLvlChanging && GetLevelForMultiplayer(*MyPlayer) == level;
 
 	if (IsValidLevelForMultiplayer(level)) {
 		const auto *monsterSyncs = reinterpret_cast<const TSyncMonster *>(pCmd + sizeof(header));
@@ -311,7 +312,7 @@ uint32_t OnSyncData(const TCmd *pCmd, size_t pnum)
 			if (!IsTSyncMonsterValidate(monsterSyncs[i]))
 				continue;
 
-			if (GetLevelForMultiplayer(*MyPlayer) == level) {
+			if (syncLocalLevel) {
 				SyncMonster(pnum > MyPlayerId, monsterSyncs[i]);
 			}
 
