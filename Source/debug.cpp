@@ -534,11 +534,21 @@ std::string DebugCmdLevelUp(const string_view parameter)
 std::string DebugCmdMaxStats(const string_view parameter)
 {
 	Player &myPlayer = *MyPlayer;
-	ModifyPlrStr(myPlayer, 255);
-	ModifyPlrMag(myPlayer, 255);
-	ModifyPlrDex(myPlayer, 255);
-	ModifyPlrVit(myPlayer, 255);
+	ModifyPlrStr(myPlayer, myPlayer.GetMaximumAttributeValue(CharacterAttribute::Strength));
+	ModifyPlrMag(myPlayer, myPlayer.GetMaximumAttributeValue(CharacterAttribute::Magic));
+	ModifyPlrDex(myPlayer, myPlayer.GetMaximumAttributeValue(CharacterAttribute::Dexterity));
+	ModifyPlrVit(myPlayer, myPlayer.GetMaximumAttributeValue(CharacterAttribute::Vitality));
 	return "Who needs elixirs anyway?";
+}
+
+std::string DebugCmdMinStats(const string_view parameter)
+{
+	Player &myPlayer = *MyPlayer;
+	ModifyPlrStr(myPlayer, -myPlayer.GetMaximumAttributeValue(CharacterAttribute::Strength));
+	ModifyPlrMag(myPlayer, -myPlayer.GetMaximumAttributeValue(CharacterAttribute::Magic));
+	ModifyPlrDex(myPlayer, -myPlayer.GetMaximumAttributeValue(CharacterAttribute::Dexterity));
+	ModifyPlrVit(myPlayer, -myPlayer.GetMaximumAttributeValue(CharacterAttribute::Vitality));
+	return "From hero to zero.";
 }
 
 std::string DebugCmdSetSpellsLevel(const string_view parameter)
@@ -999,6 +1009,7 @@ std::vector<DebugCmdItem> DebugCmdList = {
 	{ "give gold", "Fills the inventory with gold.", "", &DebugCmdGiveGoldCheat },
 	{ "give xp", "Levels the player up (min 1 level or {levels}).", "({levels})", &DebugCmdLevelUp },
 	{ "maxstats", "Sets all stat values to maximum.", "", &DebugCmdMaxStats },
+	{ "minstats", "Sets all stat values to minimum.", "", &DebugCmdMinStats },
 	{ "setspells", "Set spell level to {level} for all spells.", "{level}", &DebugCmdSetSpellsLevel },
 	{ "take gold", "Removes all gold from inventory.", "", &DebugCmdTakeGoldCheat },
 	{ "give quest", "Enable a given quest.", "({id})", &DebugCmdQuest },
