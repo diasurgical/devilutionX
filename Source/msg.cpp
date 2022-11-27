@@ -2270,6 +2270,21 @@ size_t OnCheatExperience(const TCmd *pCmd, size_t pnum) // NOLINT(misc-unused-pa
 	return sizeof(*pCmd);
 }
 
+size_t OnCheatStats(const TCmd *pCmd, size_t pnum) // NOLINT(misc-unused-parameters)
+{
+#ifdef _DEBUG
+	if (gbBufferMsgs == 1)
+		SendPacket(pnum, pCmd, sizeof(*pCmd));
+	else {
+		ModifyPlrStr(Players[pnum], 255);
+		ModifyPlrMag(Players[pnum], 255);
+		ModifyPlrDex(Players[pnum], 255);
+		ModifyPlrVit(Players[pnum], 255);
+	}
+#endif
+	return sizeof(*pCmd);
+    }
+
 size_t OnCheatSpellLevel(const TCmd *pCmd, size_t pnum) // NOLINT(misc-unused-parameters)
 {
 #ifdef _DEBUG
@@ -3246,6 +3261,8 @@ size_t ParseCmd(size_t pnum, const TCmd *pCmd)
 		return OnSyncQuest(pCmd, pnum);
 	case CMD_CHEAT_EXPERIENCE:
 		return OnCheatExperience(pCmd, pnum);
+	case CMD_CHEAT_STATS:
+		return OnCheatStats(pCmd, pnum);
 	case CMD_CHEAT_SPELL_LEVEL:
 		return OnCheatSpellLevel(pCmd, pnum);
 	case CMD_NOVA:

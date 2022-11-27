@@ -531,6 +531,12 @@ std::string DebugCmdLevelUp(const string_view parameter)
 	return "New experience leads to new insights.";
 }
 
+std::string DebugCmdMaxStats(const string_view parameter)
+{
+	NetSendCmd(true, CMD_CHEAT_STATS);
+	return "Who needs elixirs anyway?";
+}
+
 std::string DebugCmdSetSpellsLevel(const string_view parameter)
 {
 	int level = std::max(0, atoi(parameter.data()));
@@ -988,6 +994,7 @@ std::vector<DebugCmdItem> DebugCmdList = {
 	{ "help", "Prints help overview or help for a specific command.", "({command})", &DebugCmdHelp },
 	{ "give gold", "Fills the inventory with gold.", "", &DebugCmdGiveGoldCheat },
 	{ "give xp", "Levels the player up (min 1 level or {levels}).", "({levels})", &DebugCmdLevelUp },
+	{ "maxstats", "Sets all stat values to maximum.", "", &DebugCmdMaxStats },
 	{ "setspells", "Set spell level to {level} for all spells.", "{level}", &DebugCmdSetSpellsLevel },
 	{ "take gold", "Removes all gold from inventory.", "", &DebugCmdTakeGoldCheat },
 	{ "give quest", "Enable a given quest.", "({id})", &DebugCmdQuest },
