@@ -288,9 +288,6 @@ bool SpawnWindow(const char *lpWindowName)
 #endif
 
 #ifdef USE_SDL1
-	SDL_EnableUNICODE(1);
-#endif
-#ifdef USE_SDL1
 	// On SDL 1, there are no ADDED/REMOVED events.
 	// Always try to initialize the first joystick.
 	Joystick::Add(0);
