@@ -310,7 +310,7 @@ void SelheroNameSelect(int /*value*/)
 			SelheroLoadSelect(1);
 			return;
 		}
-		UiErrorOkDialog(_(/* TRANSLATORS: Error Message */ "Unable to create character."), vecSelDlgItems);
+		UiErrorOkDialog(_(/* TRANSLATORS: Error Message */ "Unable to create character."), vecSelHeroDialog);
 	}
 
 	memset(selhero_heroInfo.name, '\0', sizeof(selhero_heroInfo.name));

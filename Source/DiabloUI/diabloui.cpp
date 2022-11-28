@@ -164,6 +164,11 @@ void UiInitList(void (*fnFocus)(int value), void (*fnSelect)(int value), void (*
 	}
 }
 
+void UiRenderListItems()
+{
+	UiRenderItems(gUiItems);
+}
+
 void UiInitList_clear()
 {
 	SelectedItem = 0;
@@ -772,7 +777,7 @@ void UiPollAndRender(std::optional<tl::function_ref<bool(SDL_Event &)>> eventHan
 		UiHandleEvents(&event);
 	}
 	HandleMenuAction(GetMenuHeldUpDownAction());
-	UiRenderItems(gUiItems);
+	UiRenderListItems();
 	DrawMouse();
 	UiFadeIn();
 
