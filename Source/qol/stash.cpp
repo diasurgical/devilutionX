@@ -495,12 +495,10 @@ unsigned StashStruct::GetPageByItemId(StashCell itemId)
 {
 	if (itemId < stashList.size()) {
 		Point itemPosition = stashList[itemId].position;
-		unsigned currentPageIndex = 0;
-		while (currentPageIndex <= LastStashPage) {
-			if (stashGrids[currentPageIndex][itemPosition.x][itemPosition.y] == itemId + 1) {
-				return currentPageIndex;
+		for(const auto& grid : stashGrids) {
+			if (grid.second[itemPosition.x][itemPosition.y] == itemId + 1) {
+				return grid.first;
 			}
-			currentPageIndex++;
 		}
 	}
 
@@ -632,14 +630,14 @@ void GoldWithdrawNewText(string_view text)
 
 void UpdateStashGrid(unsigned page, Point startPoint, Size itemSize, StashStruct::StashCell itemId /*= 0*/)
 {
-	if (itemId > stashList.size()) {
+	if (itemId > Stash.stashList.size()) {
 		return;
 	}
 
 	// set start position to top-left corner as PointsInRectangle draws right (x) and down (y)
-	Point adjustedStartPoint = startPoint - Displacement(0, itemSize.height - 1);
+	startPoint -= Displacement(0, itemSize.height - 1);
 
-	for (Point point : PointsInRectangle(Rectangle { adjustedStartPoint, itemSize })) {
+	for (Point point : PointsInRectangle(Rectangle { startPoint, itemSize })) {
 		Stash.stashGrids[page][point.x][point.y] = itemId;
 	}
 }
