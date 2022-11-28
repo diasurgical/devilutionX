@@ -29,7 +29,7 @@ enum MapColors : uint8_t {
 	MapColorsPlayer = (PAL8_ORANGE + 1),
 	/** color for bright map lines (doors, stairs etc.) */
 	MapColorsBright = PAL8_YELLOW,
-	/** color fo the stairs type indicator line */
+	/** color of the stairs type indicator line */
 	MapColorsAccent = PAL8_RED,
 	/** color for dim map lines/dots */
 	MapColorsDim = (PAL16_YELLOW + 8),
@@ -387,7 +387,7 @@ StairsType GetStairsType(uint8_t tileId, uint8_t dlvl)
 	case 44: return StairsType::Part;
 	case 46: return StairsType::Down;
 
-	// Parts of a staircase to town
+	// Hell: Parts of a staircase to town
 	case 131:
 	case 132:
 	case 133:
