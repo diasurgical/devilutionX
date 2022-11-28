@@ -29,6 +29,8 @@ enum MapColors : uint8_t {
 	MapColorsPlayer = (PAL8_ORANGE + 1),
 	/** color for bright map lines (doors, stairs etc.) */
 	MapColorsBright = PAL8_YELLOW,
+	/** color fo the stairs type indicator line */
+	MapColorsAccent = PAL8_RED,
 	/** color for dim map lines/dots */
 	MapColorsDim = (PAL16_YELLOW + 8),
 	/** color for items on automap */
@@ -65,7 +67,7 @@ struct AutomapTile {
 		RiverRightOut,
 	};
 
-	Types type;
+	Types type = Types::None;
 
 	/** Additional details about the given tile */
 	enum class Flags : uint8_t {
@@ -83,7 +85,7 @@ struct AutomapTile {
 		// clang-format on
 	};
 
-	Flags flags;
+	Flags flags = {};
 
 	constexpr bool HasFlag(Flags test) const
 	{
@@ -326,14 +328,95 @@ void DrawRiverForkOut(const Surface &out, Point center, uint8_t color)
 	out.SetPixel({ center.x + AmLine(8), center.y + AmLine(16) - AmLine(4) }, color);
 }
 
-void DrawStairs(const Surface &out, Point center, uint8_t color)
+enum class StairsType : uint8_t {
+	Invalid,
+	Down,
+	Up,
+	ShortcutToTown,
+	Part // of a multi-part staircase, e.g. in Hell
+};
+
+StairsType GetStairsType(uint8_t tileId, uint8_t dlvl)
 {
-	constexpr int NumStairSteps = 4;
-	const Displacement offset = { -AmLine(8), AmLine(4) };
-	Point p = { center.x - AmLine(8), center.y - AmLine(8) - AmLine(4) };
-	for (int i = 0; i < NumStairSteps; ++i) {
-		DrawMapLineSE(out, p, AmLine(16), color);
-		p += offset;
+	if (dlvl == 0)
+		return StairsType::Part;
+	if (tileId == 48) {
+		// This ID is used by both Caves and Crypt.
+		return dlvl >= 21 ? /* Crypt */ StairsType::Down : /* Caves */ StairsType::Part;
+	}
+	// clang-format off
+	switch (tileId) {
+	// Church
+	case 57: return StairsType::Down;
+	case 66: return StairsType::Up; // NOLINT(bugprone-branch-clone)
+
+	// Crypt
+	// case 48: StairsType::Down; // Used by both crypt and caves
+	case 56:
+	case 64: return StairsType::Up;
+
+	// Catacombs
+	case 77: return StairsType::Up;
+	case 78: return StairsType::Down;
+	case 160: return StairsType::ShortcutToTown;
+
+	// Caves
+	case 47: return StairsType::Down;
+	// case 48: return StairsType::Part; // Used by both crypt and caves
+	case 51: return StairsType::Up;
+	case 153: return StairsType::ShortcutToTown;
+
+	// Hive
+	case 16: return StairsType::Down;
+	case 17:
+	case 21: return StairsType::Up;
+
+	// Hell: Parts of a staircase up
+	case 33:
+	case 34: return StairsType::Part;
+	case 35:
+	case 36: return StairsType::Up;
+	case 37: return StairsType::Part;
+	case 38: return StairsType::Up;
+
+	// Hell: Parts of a staircase down
+	case 39: return StairsType::Down;
+	case 40: return StairsType::Part;
+	case 42: return StairsType::Down;
+	case 43:
+	case 44: return StairsType::Part;
+	case 46: return StairsType::Down;
+
+	// Parts of a staircase to town
+	case 131:
+	case 132:
+	case 133:
+	case 134:
+	case 135:
+	case 136: return StairsType::ShortcutToTown;
+
+	default: return StairsType::Invalid;
+	}
+	// clang-format on
+}
+
+void DrawStairs(const Surface &out, Point center, uint8_t color, uint8_t accentColor, StairsType type)
+{
+	constexpr size_t NumStairSteps = 4;
+	std::array<uint8_t, NumStairSteps> colors {
+		type == StairsType::Up ? accentColor : color,
+		type == StairsType::ShortcutToTown ? accentColor : color,
+		type == StairsType::ShortcutToTown ? accentColor : color,
+		type == StairsType::Down ? accentColor : color,
+	};
+	if (type == StairsType::Invalid) {
+		colors.fill(accentColor);
+	}
+	const Displacement offset { -AmLine(8), AmLine(4) };
+	Point topLeft { center.x - AmLine(8), center.y - AmLine(8) - AmLine(4) };
+	for (const uint8_t color : colors) {
+		DrawMapLineSE(out, topLeft, AmLine(16), color);
+		topLeft += offset;
 	}
 }
 
@@ -496,7 +579,7 @@ void DrawAutomapTile(const Surface &out, Point center, Point map)
 	}
 
 	if (tile.HasFlag(AutomapTile::Flags::Stairs)) {
-		DrawStairs(out, center, colorBright);
+		DrawStairs(out, center, colorBright, MapColorsAccent, GetStairsType(dungeon[map.x][map.y], currlevel));
 	}
 
 	switch (tile.type) {
