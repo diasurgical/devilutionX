@@ -1854,23 +1854,23 @@ void PrintItemInfo(const Item &item)
 	}
 }
 
-bool SmithItemOk(const Player &player, int i)
+bool SmithItemOk(const Player &player, const ItemData &item)
 {
-	if (AllItemsList[i].itype == ItemType::Misc)
+	if (item.itype == ItemType::Misc)
 		return false;
-	if (AllItemsList[i].itype == ItemType::Gold)
+	if (item.itype == ItemType::Gold)
 		return false;
-	if (AllItemsList[i].itype == ItemType::Staff && (!gbIsHellfire || IsValidSpell(AllItemsList[i].iSpell)))
+	if (item.itype == ItemType::Staff && (!gbIsHellfire || IsValidSpell(item.iSpell)))
 		return false;
-	if (AllItemsList[i].itype == ItemType::Ring)
+	if (item.itype == ItemType::Ring)
 		return false;
-	if (AllItemsList[i].itype == ItemType::Amulet)
+	if (item.itype == ItemType::Amulet)
 		return false;
 
 	return true;
 }
 
-template <bool (*Ok)(const Player &, int), bool ConsiderDropRate = false>
+template <bool (*Ok)(const Player &, const ItemData &), bool ConsiderDropRate = false>
 _item_indexes RndVendorItem(const Player &player, int minlvl, int maxlvl)
 {
 	static std::array<_item_indexes, 512> ril;
@@ -1881,7 +1881,7 @@ _item_indexes RndVendorItem(const Player &player, int minlvl, int maxlvl)
 			continue;
 		if (AllItemsList[i].iRnd == IDROP_NEVER)
 			continue;
-		if (!Ok(player, i))
+		if (!Ok(player, AllItemsList[i]))
 			continue;
 		if (AllItemsList[i].iMinMLvl < minlvl || AllItemsList[i].iMinMLvl > maxlvl)
 			continue;
@@ -1921,21 +1921,21 @@ void SortVendor(Item *itemList)
 	std::sort(itemList, itemList + count, cmp);
 }
 
-bool PremiumItemOk(const Player &player, int i)
+bool PremiumItemOk(const Player &player, const ItemData &item)
 {
-	if (AllItemsList[i].itype == ItemType::Misc)
+	if (item.itype == ItemType::Misc)
 		return false;
-	if (AllItemsList[i].itype == ItemType::Gold)
+	if (item.itype == ItemType::Gold)
 		return false;
-	if (!gbIsHellfire && AllItemsList[i].itype == ItemType::Staff)
+	if (!gbIsHellfire && item.itype == ItemType::Staff)
 		return false;
 
 	if (gbIsMultiplayer) {
-		if (AllItemsList[i].iMiscId == IMISC_OILOF)
+		if (item.iMiscId == IMISC_OILOF)
 			return false;
-		if (AllItemsList[i].itype == ItemType::Ring)
+		if (item.itype == ItemType::Ring)
 			return false;
-		if (AllItemsList[i].itype == ItemType::Amulet)
+		if (item.itype == ItemType::Amulet)
 			return false;
 	}
 
@@ -2027,25 +2027,25 @@ void SpawnOnePremium(Item &premiumItem, int plvl, const Player &player)
 	premiumItem._iStatFlag = player.CanUseItem(premiumItem);
 }
 
-bool WitchItemOk(const Player &player, int i)
+bool WitchItemOk(const Player &player, const ItemData &item)
 {
-	if (IsNoneOf(AllItemsList[i].itype, ItemType::Misc, ItemType::Staff))
+	if (IsNoneOf(item.itype, ItemType::Misc, ItemType::Staff))
 		return false;
-	if (AllItemsList[i].iMiscId == IMISC_MANA)
+	if (item.iMiscId == IMISC_MANA)
 		return false;
-	if (AllItemsList[i].iMiscId == IMISC_FULLMANA)
+	if (item.iMiscId == IMISC_FULLMANA)
 		return false;
-	if (AllItemsList[i].iSpell == SPL_TOWN)
+	if (item.iSpell == SPL_TOWN)
 		return false;
-	if (AllItemsList[i].iMiscId == IMISC_FULLHEAL)
+	if (item.iMiscId == IMISC_FULLHEAL)
 		return false;
-	if (AllItemsList[i].iMiscId == IMISC_HEAL)
+	if (item.iMiscId == IMISC_HEAL)
 		return false;
-	if (AllItemsList[i].iMiscId > IMISC_OILFIRST && AllItemsList[i].iMiscId < IMISC_OILLAST)
+	if (item.iMiscId > IMISC_OILFIRST && item.iMiscId < IMISC_OILLAST)
 		return false;
-	if (AllItemsList[i].iSpell == SPL_RESURRECT && !gbIsMultiplayer)
+	if (item.iSpell == SPL_RESURRECT && !gbIsMultiplayer)
 		return false;
-	if (AllItemsList[i].iSpell == SPL_HEALOTHER && !gbIsMultiplayer)
+	if (item.iSpell == SPL_HEALOTHER && !gbIsMultiplayer)
 		return false;
 
 	return true;
@@ -2061,30 +2061,30 @@ _item_indexes RndBoyItem(const Player &player, int lvl)
 	return RndVendorItem<PremiumItemOk>(player, 0, lvl);
 }
 
-bool HealerItemOk(const Player &player, int i)
+bool HealerItemOk(const Player &player, const ItemData &item)
 {
-	if (AllItemsList[i].itype != ItemType::Misc)
+	if (item.itype != ItemType::Misc)
 		return false;
 
-	if (AllItemsList[i].iMiscId == IMISC_SCROLL)
-		return AllItemsList[i].iSpell == SPL_HEAL;
-	if (AllItemsList[i].iMiscId == IMISC_SCROLLT)
-		return AllItemsList[i].iSpell == SPL_HEALOTHER && gbIsMultiplayer;
+	if (item.iMiscId == IMISC_SCROLL)
+		return item.iSpell == SPL_HEAL;
+	if (item.iMiscId == IMISC_SCROLLT)
+		return item.iSpell == SPL_HEALOTHER && gbIsMultiplayer;
 
 	if (!gbIsMultiplayer) {
-		if (AllItemsList[i].iMiscId == IMISC_ELIXSTR)
+		if (item.iMiscId == IMISC_ELIXSTR)
 			return !gbIsHellfire || player._pBaseStr < player.GetMaximumAttributeValue(CharacterAttribute::Strength);
-		if (AllItemsList[i].iMiscId == IMISC_ELIXMAG)
+		if (item.iMiscId == IMISC_ELIXMAG)
 			return !gbIsHellfire || player._pBaseMag < player.GetMaximumAttributeValue(CharacterAttribute::Magic);
-		if (AllItemsList[i].iMiscId == IMISC_ELIXDEX)
+		if (item.iMiscId == IMISC_ELIXDEX)
 			return !gbIsHellfire || player._pBaseDex < player.GetMaximumAttributeValue(CharacterAttribute::Dexterity);
-		if (AllItemsList[i].iMiscId == IMISC_ELIXVIT)
+		if (item.iMiscId == IMISC_ELIXVIT)
 			return !gbIsHellfire || player._pBaseVit < player.GetMaximumAttributeValue(CharacterAttribute::Vitality);
 	}
 
-	if (AllItemsList[i].iMiscId == IMISC_REJUV)
+	if (item.iMiscId == IMISC_REJUV)
 		return true;
-	if (AllItemsList[i].iMiscId == IMISC_FULLREJUV)
+	if (item.iMiscId == IMISC_FULLREJUV)
 		return true;
 
 	return false;
