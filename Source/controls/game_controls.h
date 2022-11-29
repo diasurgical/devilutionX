@@ -67,7 +67,7 @@ bool IsSimulatedMouseClickBinding(ControllerButtonEvent ctrlEvent);
 
 AxisDirection GetMoveDirection();
 
-bool HandleControllerButtonEvent(const SDL_Event &event, GameAction &action);
+bool HandleControllerButtonEvent(const SDL_Event &event, const ControllerButtonEvent ctrlEvent, GameAction &action);
 
 extern bool PadMenuNavigatorActive;
 extern bool PadHotspellMenuActive;

@@ -116,12 +116,10 @@ void DialogLoop(const std::vector<std::unique_ptr<UiItemBase>> &items, const std
 				UiItemMouseEvents(&event, items);
 				break;
 			default:
-				switch (GetMenuAction(event)) {
-				case MenuAction_BACK:
-				case MenuAction_SELECT:
+				for (MenuAction menuAction : GetMenuActions(event)) {
+					if (IsNoneOf(menuAction, MenuAction_BACK, MenuAction_SELECT))
+						continue;
 					dialogEnd = true;
-					break;
-				default:
 					break;
 				}
 				break;
