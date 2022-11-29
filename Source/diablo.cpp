@@ -677,9 +677,10 @@ bool HandleTextInput(string_view text)
 
 void GameEventHandler(const SDL_Event &event, uint16_t modState)
 {
-	GameAction action;
-	if (HandleControllerButtonEvent(event, action)) {
-		if (action.type == GameActionType_SEND_KEY) {
+	StaticVector<ControllerButtonEvent, 4> ctrlEvents = ToControllerButtonEvents(event);
+	for (ControllerButtonEvent ctrlEvent : ctrlEvents) {
+		GameAction action;
+		if (HandleControllerButtonEvent(event, ctrlEvent, action) && action.type == GameActionType_SEND_KEY) {
 			if ((action.send_key.vk_code & KeymapperMouseButtonMask) != 0) {
 				const unsigned button = action.send_key.vk_code & ~KeymapperMouseButtonMask;
 				if (!action.send_key.up)
@@ -693,6 +694,8 @@ void GameEventHandler(const SDL_Event &event, uint16_t modState)
 					ReleaseKey(static_cast<SDL_Keycode>(action.send_key.vk_code));
 			}
 		}
+	}
+	if (ctrlEvents.size() > 0 && ctrlEvents[0].button != ControllerButton_NONE) {
 		return;
 	}
 

@@ -345,8 +345,12 @@ AxisDirection GetMoveDirection()
 	return GetLeftStickOrDpadDirection(true);
 }
 
-bool HandleControllerButtonEvent(const SDL_Event &event, GameAction &action)
+bool HandleControllerButtonEvent(const SDL_Event &event, const ControllerButtonEvent ctrlEvent, GameAction &action)
 {
+	if (ctrlEvent.button == ControllerButton_IGNORE) {
+		return false;
+	}
+
 	struct ButtonReleaser {
 		~ButtonReleaser()
 		{
@@ -355,11 +359,6 @@ bool HandleControllerButtonEvent(const SDL_Event &event, GameAction &action)
 		}
 		ControllerButtonEvent ctrlEvent;
 	};
-
-	const ControllerButtonEvent ctrlEvent = ToControllerButtonEvent(event);
-	if (ctrlEvent.button == ControllerButton_IGNORE) {
-		return false;
-	}
 
 	const ButtonReleaser buttonReleaser { ctrlEvent };
 	bool isGamepadMotion = ProcessControllerMotion(event, ctrlEvent);

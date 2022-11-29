@@ -42,9 +42,14 @@ void play_movie(const char *pszMovie, bool userCanClose)
 		uint16_t modState;
 		while (movie_playing) {
 			while (movie_playing && FetchMessage(&event, &modState)) {
-				ControllerButtonEvent ctrlEvent = ToControllerButtonEvent(event);
-				if (userCanClose && SkipsMovie(ctrlEvent))
-					movie_playing = false;
+				if (userCanClose) {
+					for (ControllerButtonEvent ctrlEvent : ToControllerButtonEvents(event)) {
+						if (!SkipsMovie(ctrlEvent))
+							continue;
+						movie_playing = false;
+						break;
+					}
+				}
 				switch (event.type) {
 				case SDL_KEYDOWN:
 				case SDL_MOUSEBUTTONUP:

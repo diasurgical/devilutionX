@@ -368,7 +368,10 @@ void UiFocusNavigation(SDL_Event *event)
 		break;
 	}
 
-	if (HandleMenuAction(GetMenuAction(*event)))
+	bool menuActionHandled = false;
+	for (MenuAction menuAction : GetMenuActions(*event))
+		menuActionHandled |= HandleMenuAction(menuAction);
+	if (menuActionHandled)
 		return;
 
 #if SDL_VERSION_ATLEAST(2, 0, 0)

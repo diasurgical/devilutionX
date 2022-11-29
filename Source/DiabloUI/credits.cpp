@@ -149,14 +149,13 @@ bool TextDialog(char const *const *text, std::size_t textLines)
 				endMenu = true;
 				break;
 			default:
-				switch (GetMenuAction(event)) {
-				case MenuAction_BACK:
-				case MenuAction_SELECT:
+				for (MenuAction menuAction : GetMenuActions(event)) {
+					if (IsNoneOf(menuAction, MenuAction_BACK, MenuAction_SELECT))
+						continue;
 					endMenu = true;
 					break;
-				default:
-					break;
 				}
+				break;
 			}
 			UiHandleEvents(&event);
 		}

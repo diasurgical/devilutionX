@@ -68,7 +68,8 @@ void UiTitleDialog()
 		discord_manager::UpdateMenu();
 
 		while (PollEvent(&event) != 0) {
-			if (GetMenuAction(event) != MenuAction_NONE) {
+			std::vector<MenuAction> menuActions = GetMenuActions(event);
+			if (std::any_of(menuActions.begin(), menuActions.end(), [](auto menuAction) { return menuAction != MenuAction_NONE; })) {
 				endMenu = true;
 				break;
 			}

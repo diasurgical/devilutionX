@@ -429,32 +429,36 @@ void UiSettingsMenu()
 				if (padEntryStartTime == 0)
 					return false;
 
-				ControllerButtonEvent ctrlEvent = ToControllerButtonEvent(event);
-				bool isGamepadMotion = ProcessControllerMotion(event, ctrlEvent);
-				DetectInputMethod(event, ctrlEvent);
-				if (event.type == SDL_KEYUP && event.key.keysym.sym == SDLK_ESCAPE) {
-					StopPadEntryTimer();
-					return true;
-				}
-				if (isGamepadMotion || IsAnyOf(ctrlEvent.button, ControllerButton_NONE, ControllerButton_IGNORE)) {
-					return true;
-				}
-
-				bool modifierPressed = padEntryCombo.modifier != ControllerButton_NONE && IsControllerButtonPressed(padEntryCombo.modifier);
-				bool buttonPressed = padEntryCombo.button != ControllerButton_NONE && IsControllerButtonPressed(padEntryCombo.button);
-				if (ctrlEvent.up) {
-					// When the player has released all relevant inputs, assume the binding is finished and stop the timer
-					if (padEntryCombo.button != ControllerButton_NONE && !modifierPressed && !buttonPressed)
+				StaticVector<ControllerButtonEvent, 4> ctrlEvents = ToControllerButtonEvents(event);
+				for (ControllerButtonEvent ctrlEvent : ctrlEvents) {
+					bool isGamepadMotion = ProcessControllerMotion(event, ctrlEvent);
+					DetectInputMethod(event, ctrlEvent);
+					if (event.type == SDL_KEYUP && event.key.keysym.sym == SDLK_ESCAPE) {
 						StopPadEntryTimer();
-					return true;
-				}
+						return true;
+					}
+					if (isGamepadMotion || IsAnyOf(ctrlEvent.button, ControllerButton_NONE, ControllerButton_IGNORE)) {
+						continue;
+					}
 
-				auto *pOptionPad = static_cast<PadmapperOptions::Action *>(selectedOption);
-				if (!modifierPressed && buttonPressed)
-					padEntryCombo.modifier = padEntryCombo.button;
-				padEntryCombo.button = ctrlEvent.button;
-				if (pOptionPad->SetValue(padEntryCombo))
-					vecDialogItems[IndexKeyOrPadInput]->m_text = selectedOption->GetValueDescription().data();
+					bool modifierPressed = padEntryCombo.modifier != ControllerButton_NONE && IsControllerButtonPressed(padEntryCombo.modifier);
+					bool buttonPressed = padEntryCombo.button != ControllerButton_NONE && IsControllerButtonPressed(padEntryCombo.button);
+					if (ctrlEvent.up) {
+						// When the player has released all relevant inputs, assume the binding is finished and stop the timer
+						if (padEntryCombo.button != ControllerButton_NONE && !modifierPressed && !buttonPressed) {
+							StopPadEntryTimer();
+							return true;
+						}
+						continue;
+					}
+
+					auto *pOptionPad = static_cast<PadmapperOptions::Action *>(selectedOption);
+					if (!modifierPressed && buttonPressed)
+						padEntryCombo.modifier = padEntryCombo.button;
+					padEntryCombo.button = ctrlEvent.button;
+					if (pOptionPad->SetValue(padEntryCombo))
+						vecDialogItems[IndexKeyOrPadInput]->m_text = selectedOption->GetValueDescription().data();
+				}
 				return true;
 			};
 			UpdateDescription(*selectedOption);
