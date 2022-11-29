@@ -1307,43 +1307,46 @@ void GetItemBonus(const Player &player, Item &item, int minlvl, int maxlvl, bool
 	}
 }
 
-_item_indexes RndUItem(Monster *monster)
+_item_indexes GetItemIndexForDroppableItem(bool considerDropRate, tl::function_ref<bool(const ItemData &item)> isItemOkay)
 {
-	static std::array<_item_indexes, 512> ril;
+	static std::array<_item_indexes, IDI_LAST * 2> ril;
 
-	int curlv = ItemsGetCurrlevel();
 	size_t ri = 0;
 	for (std::underlying_type_t<_item_indexes> i = IDI_GOLD; i <= IDI_LAST; i++) {
 		if (!IsItemAvailable(i))
 			continue;
-
-		bool okflag = true;
-		if (AllItemsList[i].iRnd == IDROP_NEVER)
-			okflag = false;
-		if (monster != nullptr) {
-			if (monster->level(sgGameInitInfo.nDifficulty) < AllItemsList[i].iMinMLvl)
-				okflag = false;
-		} else {
-			if (2 * curlv < AllItemsList[i].iMinMLvl)
-				okflag = false;
-		}
-		if (AllItemsList[i].itype == ItemType::Misc)
-			okflag = false;
-		if (AllItemsList[i].itype == ItemType::Gold)
-			okflag = false;
-		if (AllItemsList[i].iMiscId == IMISC_BOOK)
-			okflag = true;
-		if (AllItemsList[i].iSpell == SPL_RESURRECT && !gbIsMultiplayer)
-			okflag = false;
-		if (AllItemsList[i].iSpell == SPL_HEALOTHER && !gbIsMultiplayer)
-			okflag = false;
-		if (okflag && ri < ril.size()) {
+		const ItemData &item = AllItemsList[i];
+		if (item.iRnd == IDROP_NEVER)
+			continue;
+		if (IsAnyOf(item.iSpell, SPL_RESURRECT, SPL_HEALOTHER) && !gbIsMultiplayer)
+			continue;
+		if (!isItemOkay(item))
+			continue;
+		ril[ri] = static_cast<_item_indexes>(i);
+		ri++;
+		if (item.iRnd == IDROP_DOUBLE && considerDropRate) {
 			ril[ri] = static_cast<_item_indexes>(i);
 			ri++;
 		}
 	}
 
 	return ril[GenerateRnd(static_cast<int>(ri))];
+}
+
+_item_indexes RndUItem(Monster *monster)
+{
+	int itemMaxLevel = ItemsGetCurrlevel() * 2;
+	if (monster != nullptr)
+		itemMaxLevel = monster->level(sgGameInitInfo.nDifficulty);
+	return GetItemIndexForDroppableItem(false, [&itemMaxLevel](const ItemData &item) {
+		if (item.itype == ItemType::Misc && item.iMiscId == IMISC_BOOK)
+			return true;
+		if (itemMaxLevel < item.iMinMLvl)
+			return false;
+		if (IsAnyOf(item.itype, ItemType::Gold, ItemType::Misc))
+			return false;
+		return true;
+	});
 }
 
 _item_indexes RndAllItems()
@@ -1351,50 +1354,26 @@ _item_indexes RndAllItems()
 	if (GenerateRnd(100) > 25)
 		return IDI_GOLD;
 
-	static std::array<_item_indexes, 512> ril;
-
-	int curlv = ItemsGetCurrlevel();
-	size_t ri = 0;
-	for (std::underlying_type_t<_item_indexes> i = IDI_GOLD; i <= IDI_LAST; i++) {
-		if (!IsItemAvailable(i))
-			continue;
-		if (IsAnyOf(AllItemsList[i].iSpell, SPL_RESURRECT, SPL_HEALOTHER) && !gbIsMultiplayer)
-			continue;
-
-		if (AllItemsList[i].iRnd != IDROP_NEVER && 2 * curlv >= AllItemsList[i].iMinMLvl && ri < ril.size()) {
-			ril[ri] = static_cast<_item_indexes>(i);
-			ri++;
-		}
-	}
-
-	return ril[GenerateRnd(static_cast<int>(ri))];
+	int itemMaxLevel = ItemsGetCurrlevel() * 2;
+	return GetItemIndexForDroppableItem(false, [&itemMaxLevel](const ItemData &item) {
+		if (itemMaxLevel < item.iMinMLvl)
+			return false;
+		return true;
+	});
 }
 
 _item_indexes RndTypeItems(ItemType itemType, int imid, int lvl)
 {
-	static std::array<_item_indexes, 512> ril;
-
-	size_t ri = 0;
-	for (std::underlying_type_t<_item_indexes> i = IDI_GOLD; i <= IDI_LAST; i++) {
-		if (!IsItemAvailable(i))
-			continue;
-
-		bool okflag = true;
-		if (AllItemsList[i].iRnd == IDROP_NEVER)
-			okflag = false;
-		if (lvl * 2 < AllItemsList[i].iMinMLvl)
-			okflag = false;
-		if (AllItemsList[i].itype != itemType)
-			okflag = false;
-		if (imid != -1 && AllItemsList[i].iMiscId != imid)
-			okflag = false;
-		if (okflag && ri < ril.size()) {
-			ril[ri] = static_cast<_item_indexes>(i);
-			ri++;
-		}
-	}
-
-	return ril[GenerateRnd(static_cast<int>(ri))];
+	int itemMaxLevel = lvl * 2;
+	return GetItemIndexForDroppableItem(false, [&itemMaxLevel, &itemType, &imid](const ItemData &item) {
+		if (itemMaxLevel < item.iMinMLvl)
+			return false;
+		if (item.itype != itemType)
+			return false;
+		if (imid != -1 && item.iMiscId != imid)
+			return false;
+		return true;
+	});
 }
 
 _unique_items CheckUnique(Item &item, int lvl, int uper, bool recreate)
@@ -1873,34 +1852,13 @@ bool SmithItemOk(const Player &player, const ItemData &item)
 template <bool (*Ok)(const Player &, const ItemData &), bool ConsiderDropRate = false>
 _item_indexes RndVendorItem(const Player &player, int minlvl, int maxlvl)
 {
-	static std::array<_item_indexes, 512> ril;
-
-	size_t ri = 0;
-	for (std::underlying_type_t<_item_indexes> i = IDI_WARRIOR; i <= IDI_LAST; i++) {
-		if (!IsItemAvailable(i))
-			continue;
-		if (AllItemsList[i].iRnd == IDROP_NEVER)
-			continue;
-		if (!Ok(player, AllItemsList[i]))
-			continue;
-		if (AllItemsList[i].iMinMLvl < minlvl || AllItemsList[i].iMinMLvl > maxlvl)
-			continue;
-
-		ril[ri] = static_cast<_item_indexes>(i);
-		ri++;
-		if (ri >= ril.size())
-			break;
-
-		if (!ConsiderDropRate || AllItemsList[i].iRnd != IDROP_DOUBLE)
-			continue;
-
-		ril[ri] = static_cast<_item_indexes>(i);
-		ri++;
-		if (ri >= ril.size())
-			break;
-	}
-
-	return ril[GenerateRnd(static_cast<int>(ri))];
+	return GetItemIndexForDroppableItem(ConsiderDropRate, [&player, &minlvl, &maxlvl](const ItemData &item) {
+		if (!Ok(player, item))
+			return false;
+		if (item.iMinMLvl < minlvl || item.iMinMLvl > maxlvl)
+			return false;
+		return true;
+	});
 }
 
 _item_indexes RndSmithItem(const Player &player, int lvl)
@@ -2232,31 +2190,9 @@ _item_indexes RndItemForMonsterLevel(int8_t monsterLevel)
 	if (GenerateRnd(100) > 25)
 		return IDI_GOLD;
 
-	static std::array<_item_indexes, 512> ril;
-
-	size_t ri = 0;
-	for (std::underlying_type_t<_item_indexes> i = IDI_GOLD; i <= IDI_LAST; i++) {
-		if (!IsItemAvailable(i))
-			continue;
-
-		if (AllItemsList[i].iRnd == IDROP_DOUBLE && monsterLevel >= AllItemsList[i].iMinMLvl
-		    && ri < ril.size()) {
-			ril[ri] = static_cast<_item_indexes>(i);
-			ri++;
-		}
-		if (AllItemsList[i].iRnd != IDROP_NEVER && monsterLevel >= AllItemsList[i].iMinMLvl
-		    && ri < ril.size()) {
-			ril[ri] = static_cast<_item_indexes>(i);
-			ri++;
-		}
-		if (AllItemsList[i].iSpell == SPL_RESURRECT && !gbIsMultiplayer)
-			ri--;
-		if (AllItemsList[i].iSpell == SPL_HEALOTHER && !gbIsMultiplayer)
-			ri--;
-	}
-
-	int r = GenerateRnd(static_cast<int>(ri));
-	return ril[r];
+	return GetItemIndexForDroppableItem(true, [&monsterLevel](const ItemData &item) {
+		return item.iMinMLvl <= monsterLevel;
+	});
 }
 
 } // namespace
