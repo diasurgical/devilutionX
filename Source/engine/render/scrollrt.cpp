@@ -54,6 +54,10 @@
 #include "debug.h"
 #endif
 
+#ifdef DUN_RENDER_STATS
+#include "utils/format_int.hpp"
+#endif
+
 namespace devilution {
 
 /**
@@ -1010,12 +1014,35 @@ void DrawGame(const Surface &fullOut, Point position)
 		}
 	}
 
+#ifdef DUN_RENDER_STATS
+	DunRenderStats.clear();
+#endif
+
 	DrawFloor(out, position, { sx, sy }, rows, columns);
 	DrawTileContent(out, position, { sx, sy }, rows, columns);
 
 	if (*sgOptions.Graphics.zoom) {
 		Zoom(fullOut.subregionY(0, gnViewportHeight));
 	}
+
+#ifdef DUN_RENDER_STATS
+	std::vector<std::pair<DunRenderType, size_t>> sortedStats(DunRenderStats.begin(), DunRenderStats.end());
+	std::sort(sortedStats.begin(), sortedStats.end(),
+	    [](const std::pair<DunRenderType, size_t> &a, const std::pair<DunRenderType, size_t> &b) {
+		    return a.first.maskType == b.first.maskType
+		        ? static_cast<uint8_t>(a.first.tileType) < static_cast<uint8_t>(b.first.tileType)
+		        : a.first.maskType < b.first.maskType;
+	    });
+	Point pos { 100, 20 };
+	for (size_t i = 0; i < sortedStats.size(); ++i) {
+		const auto &stat = sortedStats[i];
+		DrawString(out, StrCat(i, "."), Rectangle(pos, Size { 20, 16 }), UiFlags::AlignRight);
+		DrawString(out, MaskTypeToString(stat.first.maskType), { pos.x + 24, pos.y });
+		DrawString(out, TileTypeToString(stat.first.tileType), { pos.x + 184, pos.y });
+		DrawString(out, FormatInteger(stat.second), Rectangle({ pos.x + 354, pos.y }, Size(40, 16)), UiFlags::AlignRight);
+		pos.y += 16;
+	}
+#endif
 }
 
 /**

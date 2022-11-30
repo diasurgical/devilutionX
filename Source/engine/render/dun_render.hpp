@@ -11,6 +11,11 @@
 
 #include "engine.h"
 
+// #define DUN_RENDER_STATS
+#ifdef DUN_RENDER_STATS
+#include <unordered_map>
+#endif
+
 namespace devilution {
 
 /**
@@ -110,12 +115,34 @@ public:
 
 	[[nodiscard]] uint16_t frame() const
 	{
-		return SDL_SwapLE32(data_ & 0xFFF);
+		return data_ & 0xFFF;
 	}
 
 private:
 	uint16_t data_;
 };
+
+#ifdef DUN_RENDER_STATS
+struct DunRenderType {
+	TileType tileType;
+	uint8_t maskType;
+	bool operator==(const DunRenderType &other) const
+	{
+		return tileType == other.tileType && maskType == other.maskType;
+	}
+};
+struct DunRenderTypeHash {
+	size_t operator()(DunRenderType t) const noexcept
+	{
+		return std::hash<uint16_t> {}((static_cast<uint8_t>(t.tileType) << 1) | t.maskType);
+	}
+};
+extern std::unordered_map<DunRenderType, size_t, DunRenderTypeHash> DunRenderStats;
+
+string_view TileTypeToString(TileType tileType);
+
+string_view MaskTypeToString(uint8_t maskType);
+#endif
 
 /**
  * @brief Blit current world CEL to the given buffer
