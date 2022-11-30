@@ -2,7 +2,6 @@
 set(BUILD_ASSETS_MPQ OFF)
 set(UNPACKED_MPQS ON)
 set(NONET ON)
-set(DISABLE_DEMOMODE ON)
 set(USE_SDL1 ON)
 
 # Link `libstdc++` dynamically: ~1.3 MiB.
