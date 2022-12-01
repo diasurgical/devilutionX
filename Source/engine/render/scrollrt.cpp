@@ -1171,11 +1171,14 @@ void DrawFPS(const Surface &out)
 	uint32_t msSinceLastUpdate = runtimeInMs - lastFpsUpdateInMs;
 	if (msSinceLastUpdate >= 1000) {
 		lastFpsUpdateInMs = runtimeInMs;
-		int framerate = 1000 * framesSinceLastUpdate / msSinceLastUpdate;
+		constexpr int FpsPow10 = 10;
+		const int fps = 1000 * FpsPow10 * framesSinceLastUpdate / msSinceLastUpdate;
 		framesSinceLastUpdate = 0;
 
-		static char buf[12] {};
-		const char *end = BufCopy(buf, framerate, " FPS");
+		static char buf[15] {};
+		const char *end = fps >= 100 * FpsPow10
+		    ? BufCopy(buf, fps / FpsPow10, " FPS")
+		    : BufCopy(buf, fps / FpsPow10, ".", fps % FpsPow10, " FPS");
 		formatted = { buf, static_cast<string_view::size_type>(end - buf) };
 	};
 	DrawString(out, formatted, Point { 8, 68 }, UiFlags::ColorRed);
