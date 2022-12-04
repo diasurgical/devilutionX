@@ -497,31 +497,98 @@ static void DrawDungeon(const Surface & /*out*/, Point /*tilePosition*/, Point /
 void DrawCell(const Surface &out, Point tilePosition, Point targetBufferPosition)
 {
 	const uint16_t levelPieceId = dPiece[tilePosition.x][tilePosition.y];
-	MICROS *pMap = &DPieceMicros[levelPieceId];
+	const MICROS *pMap = &DPieceMicros[levelPieceId];
+
 	bool transparency = TileHasAny(levelPieceId, TileProperties::Transparent) && TransList[dTransVal[tilePosition.x][tilePosition.y]];
 #ifdef _DEBUG
-	// Turn transparency off here for debugging
-	transparency = transparency && (SDL_GetModState() & KMOD_ALT) == 0;
+	if ((SDL_GetModState() & KMOD_ALT) != 0)
+		transparency = false;
 #endif
-
 	const bool foliage = !TileHasAny(levelPieceId, TileProperties::Solid);
-	for (int i = 0; i < (MicroTileLen / 2); i++) {
+
+	const auto getFirstTileMaskLeft = [=](TileType tile) -> MaskType {
+		if (transparency) {
+			switch (tile) {
+			case TileType::LeftTrapezoid:
+			case TileType::TransparentSquare:
+				return TileHasAny(levelPieceId, TileProperties::TransparentLeft)
+				    ? MaskType::Left
+				    : MaskType::Solid;
+			case TileType::LeftTriangle:
+				return MaskType::Solid;
+			default:
+				return MaskType::Transparent;
+			}
+		}
+		if (foliage)
+			return MaskType::LeftFoliage;
+		return MaskType::Solid;
+	};
+
+	const auto getFirstTileMaskRight = [=](TileType tile) -> MaskType {
+		if (transparency) {
+			switch (tile) {
+			case TileType::RightTrapezoid:
+			case TileType::TransparentSquare:
+				return TileHasAny(levelPieceId, TileProperties::TransparentRight)
+				    ? MaskType::Right
+				    : MaskType::Solid;
+			case TileType::RightTriangle:
+				return MaskType::Solid;
+			default:
+				return MaskType::Transparent;
+			}
+		}
+		if (foliage)
+			return MaskType::RightFoliage;
+		return MaskType::Solid;
+	};
+
+	// The first micro tile may be rendered with a foliage mask.
+	// Only `TransparentSquare` tiles are rendered when `foliage` is true.
+	{
 		{
-			const LevelCelBlock levelCelBlock { pMap->mt[2 * i] };
+			const LevelCelBlock levelCelBlock { pMap->mt[0] };
+			const TileType tileType = levelCelBlock.type();
+			const MaskType maskType = getFirstTileMaskLeft(tileType);
 			if (levelCelBlock.hasValue()) {
-				RenderTile(out, targetBufferPosition,
-				    levelCelBlock, levelPieceId, LightTableIndex,
-				    i == 0 ? ArchType::Left : ArchType::None,
-				    transparency, foliage);
+				if (maskType != MaskType::LeftFoliage || tileType == TileType::TransparentSquare) {
+					RenderTile(out, targetBufferPosition,
+					    levelPieceId, levelCelBlock, maskType, LightTableIndex);
+				}
 			}
 		}
 		{
-			const LevelCelBlock levelCelBlock { pMap->mt[2 * i + 1] };
+			const LevelCelBlock levelCelBlock { pMap->mt[1] };
+			const TileType tileType = levelCelBlock.type();
+			const MaskType maskType = getFirstTileMaskRight(tileType);
+			if (levelCelBlock.hasValue()) {
+				if (transparency || !foliage || levelCelBlock.type() == TileType::TransparentSquare) {
+					if (maskType != MaskType::RightFoliage || tileType == TileType::TransparentSquare) {
+						RenderTile(out, targetBufferPosition + Displacement { TILE_WIDTH / 2, 0 },
+						    levelPieceId, levelCelBlock, maskType, LightTableIndex);
+					}
+				}
+			}
+		}
+		targetBufferPosition.y -= TILE_HEIGHT;
+	}
+
+	for (uint_fast8_t i = 2, n = MicroTileLen; i < n; i += 2) {
+		{
+			const LevelCelBlock levelCelBlock { pMap->mt[i] };
+			if (levelCelBlock.hasValue()) {
+				RenderTile(out, targetBufferPosition,
+				    levelPieceId, levelCelBlock,
+				    transparency ? MaskType::Transparent : MaskType::Solid, LightTableIndex);
+			}
+		}
+		{
+			const LevelCelBlock levelCelBlock { pMap->mt[i + 1] };
 			if (levelCelBlock.hasValue()) {
 				RenderTile(out, targetBufferPosition + Displacement { TILE_WIDTH / 2, 0 },
-				    levelCelBlock, levelPieceId, LightTableIndex,
-				    i == 0 ? ArchType::Right : ArchType::None,
-				    transparency, foliage);
+				    levelPieceId, levelCelBlock,
+				    transparency ? MaskType::Transparent : MaskType::Solid, LightTableIndex);
 			}
 		}
 		targetBufferPosition.y -= TILE_HEIGHT;
@@ -543,16 +610,14 @@ void DrawFloor(const Surface &out, Point tilePosition, Point targetBufferPositio
 		const LevelCelBlock levelCelBlock { DPieceMicros[levelPieceId].mt[0] };
 		if (levelCelBlock.hasValue()) {
 			RenderTile(out, targetBufferPosition,
-			    levelCelBlock, levelPieceId, LightTableIndex, ArchType::Left,
-			    /*transparency=*/false, /*foliage=*/false);
+			    levelPieceId, levelCelBlock, MaskType::Solid, LightTableIndex);
 		}
 	}
 	{
 		const LevelCelBlock levelCelBlock { DPieceMicros[levelPieceId].mt[1] };
 		if (levelCelBlock.hasValue()) {
 			RenderTile(out, targetBufferPosition + Displacement { TILE_WIDTH / 2, 0 },
-			    levelCelBlock, levelPieceId, LightTableIndex, ArchType::Right,
-			    /*transparency=*/false, /*foliage=*/false);
+			    levelPieceId, levelCelBlock, MaskType::Solid, LightTableIndex);
 		}
 	}
 }
@@ -1031,7 +1096,7 @@ void DrawGame(const Surface &fullOut, Point position)
 	    [](const std::pair<DunRenderType, size_t> &a, const std::pair<DunRenderType, size_t> &b) {
 		    return a.first.maskType == b.first.maskType
 		        ? static_cast<uint8_t>(a.first.tileType) < static_cast<uint8_t>(b.first.tileType)
-		        : a.first.maskType < b.first.maskType;
+		        : static_cast<uint8_t>(a.first.maskType) < static_cast<uint8_t>(b.first.maskType);
 	    });
 	Point pos { 100, 20 };
 	for (size_t i = 0; i < sortedStats.size(); ++i) {

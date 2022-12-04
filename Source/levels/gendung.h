@@ -182,7 +182,7 @@ extern _setlevels setlvlnum;
 extern dungeon_type setlvltype;
 /** Specifies the player viewpoint X,Y-coordinates of the map. */
 extern DVL_API_FOR_TEST Point ViewPosition;
-extern int MicroTileLen;
+extern uint_fast8_t MicroTileLen;
 extern char TransVal;
 /** Specifies the active transparency indices. */
 extern bool TransList[256];

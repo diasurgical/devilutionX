@@ -34,7 +34,7 @@ bool setlevel;
 _setlevels setlvlnum;
 dungeon_type setlvltype;
 Point ViewPosition;
-int MicroTileLen;
+uint_fast8_t MicroTileLen;
 char TransVal;
 bool TransList[256];
 uint16_t dPiece[MAXDUNX][MAXDUNY];
