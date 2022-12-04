@@ -146,16 +146,6 @@ std::string prefixDebugString(int8_t prefix) {
 }
 #endif
 
-enum class MaskType {
-	Invalid,
-	Solid,
-	Transparent,
-	Right,
-	Left,
-	RightFoliage,
-	LeftFoliage,
-};
-
 enum class LightType : uint8_t {
 	FullyDark,
 	PartiallyLit,
@@ -1010,39 +1000,6 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderTileDispatch(uint8_t lightTableIn
 	}
 }
 
-DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT MaskType GetMask(TileType tile, uint16_t levelPieceId, ArchType archType, bool transparency, bool foliage)
-{
-#ifdef _DEBUG
-	if ((SDL_GetModState() & KMOD_ALT) != 0) {
-		return MaskType::Solid;
-	}
-#endif
-
-	if (transparency) {
-		if (archType == ArchType::None) {
-			return MaskType::Transparent;
-		}
-		if (archType == ArchType::Left && tile != TileType::LeftTriangle) {
-			if (TileHasAny(levelPieceId, TileProperties::TransparentLeft)) {
-				return MaskType::Left;
-			}
-		}
-		if (archType == ArchType::Right && tile != TileType::RightTriangle) {
-			if (TileHasAny(levelPieceId, TileProperties::TransparentRight)) {
-				return MaskType::Right;
-			}
-		}
-	} else if (archType != ArchType::None && foliage) {
-		if (tile != TileType::TransparentSquare)
-			return MaskType::Invalid;
-		if (archType == ArchType::Left)
-			return MaskType::LeftFoliage;
-		if (archType == ArchType::Right)
-			return MaskType::RightFoliage;
-	}
-	return MaskType::Solid;
-}
-
 // Blit with left and vertical clipping.
 void RenderBlackTileClipLeftAndVertical(uint8_t *DVL_RESTRICT dst, int dstPitch, int sx, DiamondClipY clipY)
 {
@@ -1153,11 +1110,10 @@ string_view TileTypeToString(TileType tileType)
 	// clang-format on
 }
 
-string_view MaskTypeToString(uint8_t maskType)
+string_view MaskTypeToString(MaskType maskType)
 {
 	// clang-format off
-	switch (static_cast<MaskType>(maskType)) {
-	case MaskType::Invalid: return "Invalid";
+	switch (maskType) {
 	case MaskType::Solid: return "Solid";
 	case MaskType::Transparent: return "Transparent";
 	case MaskType::Right: return "Right";
@@ -1171,9 +1127,8 @@ string_view MaskTypeToString(uint8_t maskType)
 #endif
 
 void RenderTile(const Surface &out, Point position,
-    LevelCelBlock levelCelBlock, uint16_t levelPieceId,
-    uint8_t lightTableIndex, ArchType archType,
-    bool transparency, bool foliage)
+    uint16_t levelPieceId, LevelCelBlock levelCelBlock,
+    MaskType maskType, uint8_t lightTableIndex)
 {
 	const TileType tile = levelCelBlock.type();
 
@@ -1191,7 +1146,6 @@ void RenderTile(const Surface &out, Point position,
 	if (clip.width <= 0 || clip.height <= 0)
 		return;
 
-	MaskType maskType = GetMask(tile, levelPieceId, archType, transparency, foliage);
 	const uint8_t *tbl = &LightTables[256 * lightTableIndex];
 	const auto *pFrameTable = reinterpret_cast<const uint32_t *>(pDungeonCels.get());
 	const auto *src = reinterpret_cast<const uint8_t *>(&pDungeonCels[pFrameTable[levelCelBlock.frame()]]);
@@ -1199,12 +1153,10 @@ void RenderTile(const Surface &out, Point position,
 	const auto dstPitch = out.pitch();
 
 #ifdef DUN_RENDER_STATS
-	++DunRenderStats[DunRenderType { tile, static_cast<uint8_t>(maskType) }];
+	++DunRenderStats[DunRenderType { tile, maskType }];
 #endif
 
 	switch (maskType) {
-	case MaskType::Invalid:
-		break;
 	case MaskType::Solid:
 		RenderTileDispatch</*OpaquePrefix=*/false, /*PrefixIncrement=*/0>(lightTableIndex, tile, dst, dstPitch, src, tbl, clip);
 		break;
