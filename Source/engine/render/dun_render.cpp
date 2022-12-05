@@ -260,17 +260,6 @@ DVL_ALWAYS_INLINE Clip CalculateClip(int_fast16_t x, int_fast16_t y, int_fast16_
 	return clip;
 }
 
-template <LightType Light, bool OpaquePrefix, int8_t PrefixIncrement>
-DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderSquareUpperHalf(uint8_t *DVL_RESTRICT dst, int dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl) {
-	uint_fast8_t prefixWidth = PrefixIncrement < 0 ? 32 : 0;
-	for (auto i = 0; i < TrapezoidUpperHeight; ++i, dst -= dstPitch) {
-		RenderLineTransparentAndOpaque<Light, OpaquePrefix, PrefixIncrement>(dst, src, prefixWidth, Width, tbl);
-		if (PrefixIncrement != 0)
-			prefixWidth += PrefixIncrement;
-		src += Width;
-	}
-}
-
 template <LightType Light, bool Transparent>
 DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderSquareFull(uint8_t *DVL_RESTRICT dst, int dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl)
 {
@@ -716,20 +705,18 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderRightTriangle(uint8_t *DVL_RESTRI
 }
 
 template <LightType Light, bool OpaquePrefix, int8_t PrefixIncrement>
-DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLeftTrapezoidFull(uint8_t *DVL_RESTRICT dst, int dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl)
-{
-	RenderLeftTriangleLower<Light, LowerHalfTransparent<OpaquePrefix, PrefixIncrement>>(dst, dstPitch, src, tbl);
-	dst += XStep;
-	RenderSquareUpperHalf<Light, OpaquePrefix, PrefixIncrement>(dst, dstPitch, src, tbl);
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderTrapezoidUpperHalf(uint8_t *DVL_RESTRICT dst, int dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl) {
+	uint_fast8_t prefixWidth = PrefixIncrement < 0 ? 32 : 0;
+	for (auto i = 0; i < TrapezoidUpperHeight; ++i, dst -= dstPitch) {
+		RenderLineTransparentAndOpaque<Light, OpaquePrefix, PrefixIncrement>(dst, src, prefixWidth, Width, tbl);
+		if (PrefixIncrement != 0)
+			prefixWidth += PrefixIncrement;
+		src += Width;
+	}
 }
 
 template <LightType Light, bool OpaquePrefix, int8_t PrefixIncrement>
-DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLeftTrapezoidClipVertical(uint8_t *DVL_RESTRICT dst, int dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl, Clip clip)
-{
-	const DiamondClipY clipY = CalculateDiamondClipY<TrapezoidUpperHeight>(clip);
-	RenderLeftTriangleLowerClipVertical<Light, LowerHalfTransparent<OpaquePrefix, PrefixIncrement>>(clipY, dst, dstPitch, src, tbl);
-	src += clipY.upperBottom * Width;
-	dst += XStep;
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderTrapezoidUpperHalfClipVertical(const Clip &clip, const DiamondClipY &clipY, uint8_t *DVL_RESTRICT dst, int dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl) {
 	const auto upperMax = TrapezoidUpperHeight - clipY.upperTop;
 	int8_t prefix = InitPrefix<PrefixIncrement>(clip.bottom);
 	for (auto i = 1 + clipY.upperBottom; i <= upperMax; ++i, dst -= dstPitch) {
@@ -740,30 +727,18 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLeftTrapezoidClipVertical(uint8_t
 }
 
 template <LightType Light, bool OpaquePrefix, int8_t PrefixIncrement>
-DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLeftTrapezoidClipLeftAndVertical(uint8_t *DVL_RESTRICT dst, int dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl, Clip clip)
-{
-	const DiamondClipY clipY = CalculateDiamondClipY<TrapezoidUpperHeight>(clip);
-	const int_fast16_t clipLeft = clip.left;
-	RenderLeftTriangleLowerClipLeftAndVertical<Light, LowerHalfTransparent<OpaquePrefix, PrefixIncrement>>(clipLeft, clipY, dst, dstPitch, src, tbl);
-	src += clipY.upperBottom * Width + clipLeft;
-	dst += XStep + clipLeft;
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderTrapezoidUpperHalfClipLeftAndVertical(const Clip &clip, const DiamondClipY &clipY, uint8_t *DVL_RESTRICT dst, int dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl) {
 	const auto upperMax = TrapezoidUpperHeight - clipY.upperTop;
 	int8_t prefix = InitPrefix<PrefixIncrement>(clip.bottom);
 	for (auto i = 1 + clipY.upperBottom; i <= upperMax; ++i, dst -= dstPitch) {
-		RenderLine<Light, OpaquePrefix, PrefixIncrement>(dst, src, clip.width, tbl, prefix - clipLeft);
+		RenderLine<Light, OpaquePrefix, PrefixIncrement>(dst, src, clip.width, tbl, prefix - clip.left);
 		src += Width;
 		prefix += PrefixIncrement;
 	}
 }
 
 template <LightType Light, bool OpaquePrefix, int8_t PrefixIncrement>
-DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLeftTrapezoidClipRightAndVertical(uint8_t *DVL_RESTRICT dst, int dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl, Clip clip)
-{
-	const DiamondClipY clipY = CalculateDiamondClipY<TrapezoidUpperHeight>(clip);
-	const int_fast16_t clipRight = clip.right;
-	RenderLeftTriangleLowerClipRightAndVertical<Light, LowerHalfTransparent<OpaquePrefix, PrefixIncrement>>(clipRight, clipY, dst, dstPitch, src, tbl);
-	src += clipY.upperBottom * Width;
-	dst += XStep;
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderTrapezoidUpperHalfClipRightAndVertical(const Clip &clip, const DiamondClipY &clipY, uint8_t *DVL_RESTRICT dst, int dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl) {
 	const auto upperMax = TrapezoidUpperHeight - clipY.upperTop;
 	int8_t prefix = InitPrefix<PrefixIncrement>(clip.bottom);
 	for (auto i = 1 + clipY.upperBottom; i <= upperMax; ++i, dst -= dstPitch) {
@@ -771,6 +746,44 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLeftTrapezoidClipRightAndVertical
 		src += Width;
 		prefix += PrefixIncrement;
 	}
+}
+
+template <LightType Light, bool OpaquePrefix, int8_t PrefixIncrement>
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLeftTrapezoidFull(uint8_t *DVL_RESTRICT dst, int dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl)
+{
+	RenderLeftTriangleLower<Light, LowerHalfTransparent<OpaquePrefix, PrefixIncrement>>(dst, dstPitch, src, tbl);
+	dst += XStep;
+	RenderTrapezoidUpperHalf<Light, OpaquePrefix, PrefixIncrement>(dst, dstPitch, src, tbl);
+}
+
+template <LightType Light, bool OpaquePrefix, int8_t PrefixIncrement>
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLeftTrapezoidClipVertical(uint8_t *DVL_RESTRICT dst, int dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl, Clip clip)
+{
+	const DiamondClipY clipY = CalculateDiamondClipY<TrapezoidUpperHeight>(clip);
+	RenderLeftTriangleLowerClipVertical<Light, LowerHalfTransparent<OpaquePrefix, PrefixIncrement>>(clipY, dst, dstPitch, src, tbl);
+	src += clipY.upperBottom * Width;
+	dst += XStep;
+	RenderTrapezoidUpperHalfClipVertical<Light, OpaquePrefix, PrefixIncrement>(clip, clipY, dst, dstPitch, src, tbl);
+}
+
+template <LightType Light, bool OpaquePrefix, int8_t PrefixIncrement>
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLeftTrapezoidClipLeftAndVertical(uint8_t *DVL_RESTRICT dst, int dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl, Clip clip)
+{
+	const DiamondClipY clipY = CalculateDiamondClipY<TrapezoidUpperHeight>(clip);
+	RenderLeftTriangleLowerClipLeftAndVertical<Light, LowerHalfTransparent<OpaquePrefix, PrefixIncrement>>(clip.left, clipY, dst, dstPitch, src, tbl);
+	src += clipY.upperBottom * Width + clip.left;
+	dst += XStep + clip.left;
+	RenderTrapezoidUpperHalfClipLeftAndVertical<Light, OpaquePrefix, PrefixIncrement>(clip, clipY, dst, dstPitch, src, tbl);
+}
+
+template <LightType Light, bool OpaquePrefix, int8_t PrefixIncrement>
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLeftTrapezoidClipRightAndVertical(uint8_t *DVL_RESTRICT dst, int dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl, Clip clip)
+{
+	const DiamondClipY clipY = CalculateDiamondClipY<TrapezoidUpperHeight>(clip);
+	RenderLeftTriangleLowerClipRightAndVertical<Light, LowerHalfTransparent<OpaquePrefix, PrefixIncrement>>(clip.right, clipY, dst, dstPitch, src, tbl);
+	src += clipY.upperBottom * Width;
+	dst += XStep;
+	RenderTrapezoidUpperHalfClipRightAndVertical<Light, OpaquePrefix, PrefixIncrement>(clip, clipY, dst, dstPitch, src, tbl);
 }
 
 template <LightType Light, bool OpaquePrefix, int8_t PrefixIncrement = 0>
@@ -793,7 +806,7 @@ template <LightType Light, bool OpaquePrefix, int8_t PrefixIncrement>
 DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderRightTrapezoidFull(uint8_t *DVL_RESTRICT dst, int dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl)
 {
 	RenderRightTriangleLower<Light, LowerHalfTransparent<OpaquePrefix, PrefixIncrement>>(dst, dstPitch, src, tbl);
-	RenderSquareUpperHalf<Light, OpaquePrefix, PrefixIncrement>(dst, dstPitch, src, tbl);
+	RenderTrapezoidUpperHalf<Light, OpaquePrefix, PrefixIncrement>(dst, dstPitch, src, tbl);
 }
 
 template <LightType Light, bool OpaquePrefix, int8_t PrefixIncrement>
@@ -802,45 +815,25 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderRightTrapezoidClipVertical(uint8_
 	const DiamondClipY clipY = CalculateDiamondClipY<TrapezoidUpperHeight>(clip);
 	RenderRightTriangleLowerClipVertical<Light, LowerHalfTransparent<OpaquePrefix, PrefixIncrement>>(clipY, dst, dstPitch, src, tbl);
 	src += clipY.upperBottom * Width;
-	const auto upperMax = TrapezoidUpperHeight - clipY.upperTop;
-	int8_t prefix = InitPrefix<PrefixIncrement>(clip.bottom);
-	for (auto i = 1 + clipY.upperBottom; i <= upperMax; ++i, dst -= dstPitch) {
-		RenderLine<Light, OpaquePrefix, PrefixIncrement>(dst, src, Width, tbl, prefix);
-		src += Width;
-		prefix += PrefixIncrement;
-	}
+	RenderTrapezoidUpperHalfClipVertical<Light, OpaquePrefix, PrefixIncrement>(clip, clipY, dst, dstPitch, src, tbl);
 }
 
 template <LightType Light, bool OpaquePrefix, int8_t PrefixIncrement>
 DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderRightTrapezoidClipLeftAndVertical(uint8_t *DVL_RESTRICT dst, int dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl, Clip clip)
 {
 	const DiamondClipY clipY = CalculateDiamondClipY<TrapezoidUpperHeight>(clip);
-	const int_fast16_t clipLeft = clip.left;
-	RenderRightTriangleLowerClipLeftAndVertical<Light, LowerHalfTransparent<OpaquePrefix, PrefixIncrement>>(clipLeft, clipY, dst, dstPitch, src, tbl);
-	src += clipY.upperBottom * Width + clipLeft;
-	const auto upperMax = TrapezoidUpperHeight - clipY.upperTop;
-	int8_t prefix = InitPrefix<PrefixIncrement>(clip.bottom);
-	for (auto i = 1 + clipY.upperBottom; i <= upperMax; ++i, dst -= dstPitch) {
-		RenderLine<Light, OpaquePrefix, PrefixIncrement>(dst, src, clip.width, tbl, prefix - clipLeft);
-		src += Width;
-		prefix += PrefixIncrement;
-	}
+	RenderRightTriangleLowerClipLeftAndVertical<Light, LowerHalfTransparent<OpaquePrefix, PrefixIncrement>>(clip.left, clipY, dst, dstPitch, src, tbl);
+	src += clipY.upperBottom * Width + clip.left;
+	RenderTrapezoidUpperHalfClipLeftAndVertical<Light, OpaquePrefix, PrefixIncrement>(clip, clipY, dst, dstPitch, src, tbl);
 }
 
 template <LightType Light, bool OpaquePrefix, int8_t PrefixIncrement>
 DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderRightTrapezoidClipRightAndVertical(uint8_t *DVL_RESTRICT dst, int dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl, Clip clip)
 {
-	int8_t prefix = InitPrefix<PrefixIncrement>(clip.bottom);
 	const DiamondClipY clipY = CalculateDiamondClipY<TrapezoidUpperHeight>(clip);
-	const int_fast16_t clipRight = clip.right;
-	RenderRightTriangleLowerClipRightAndVertical<Light, LowerHalfTransparent<OpaquePrefix, PrefixIncrement>>(clipRight, clipY, dst, dstPitch, src, tbl);
+	RenderRightTriangleLowerClipRightAndVertical<Light, LowerHalfTransparent<OpaquePrefix, PrefixIncrement>>(clip.right, clipY, dst, dstPitch, src, tbl);
 	src += clipY.upperBottom * Width;
-	const auto upperMax = TrapezoidUpperHeight - clipY.upperTop;
-	for (auto i = 1 + clipY.upperBottom; i <= upperMax; ++i, dst -= dstPitch) {
-		RenderLine<Light, OpaquePrefix, PrefixIncrement>(dst, src, clip.width, tbl, prefix);
-		src += Width;
-		prefix += PrefixIncrement;
-	}
+	RenderTrapezoidUpperHalfClipRightAndVertical<Light, OpaquePrefix, PrefixIncrement>(clip, clipY, dst, dstPitch, src, tbl);
 }
 
 template <LightType Light, bool OpaquePrefix, int8_t PrefixIncrement = 0>
