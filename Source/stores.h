@@ -52,7 +52,7 @@ extern talk_id stextflag;
 /** Current index into storehidx/storehold */
 extern DVL_API_FOR_TEST int storenumh;
 /** Map of inventory items being presented in the store */
-extern char storehidx[48];
+extern int8_t storehidx[48];
 /** Copies of the players items as presented in the store */
 extern DVL_API_FOR_TEST Item storehold[48];
 

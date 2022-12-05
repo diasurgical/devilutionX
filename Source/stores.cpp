@@ -33,7 +33,7 @@ namespace devilution {
 talk_id stextflag;
 
 int storenumh;
-char storehidx[48];
+int8_t storehidx[48];
 Item storehold[48];
 
 Item smithitem[SMITH_ITEMS];
@@ -110,9 +110,9 @@ int stextdown;
 /** Previous scoll position */
 int stextup;
 /** Count down for the push state of the scroll up button */
-char stextscrlubtn;
+int8_t stextscrlubtn;
 /** Count down for the push state of the scroll down button */
-char stextscrldbtn;
+int8_t stextscrldbtn;
 
 /** Remember current store while displaying a dialog */
 talk_id stextshold;

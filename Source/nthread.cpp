@@ -30,10 +30,10 @@ namespace {
 
 SdlMutex MemCrit;
 bool nthread_should_run;
-char sgbSyncCountdown;
+int8_t sgbSyncCountdown;
 uint32_t turn_upper_bit;
 bool sgbTicsOutOfSync;
-char sgbPacketCountdown;
+int8_t sgbPacketCountdown;
 bool sgbThreadIsRunning;
 SdlThread Thread;
 
