@@ -2590,7 +2590,7 @@ void SnotSpilAi(Monster &monster)
 
 void SnakeAi(Monster &monster)
 {
-	char pattern[6] = { 1, 1, 0, -1, -1, 0 };
+	int8_t pattern[6] = { 1, 1, 0, -1, -1, 0 };
 	if (monster.mode != MonsterMode::Stand || monster.activeForTicks == 0)
 		return;
 	Direction md = GetDirection(monster.position.tile, monster.position.last);

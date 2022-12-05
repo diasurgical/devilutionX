@@ -35,7 +35,7 @@ _setlevels setlvlnum;
 dungeon_type setlvltype;
 Point ViewPosition;
 uint_fast8_t MicroTileLen;
-char TransVal;
+int8_t TransVal;
 bool TransList[256];
 uint16_t dPiece[MAXDUNX][MAXDUNY];
 MICROS DPieceMicros[MAXTILES];
@@ -47,7 +47,7 @@ int8_t dPlayer[MAXDUNX][MAXDUNY];
 int16_t dMonster[MAXDUNX][MAXDUNY];
 int8_t dCorpse[MAXDUNX][MAXDUNY];
 int8_t dObject[MAXDUNX][MAXDUNY];
-char dSpecial[MAXDUNX][MAXDUNY];
+int8_t dSpecial[MAXDUNX][MAXDUNY];
 int themeCount;
 THEME_LOC themeLoc[MAXTHEMES];
 

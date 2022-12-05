@@ -183,7 +183,7 @@ extern dungeon_type setlvltype;
 /** Specifies the player viewpoint X,Y-coordinates of the map. */
 extern DVL_API_FOR_TEST Point ViewPosition;
 extern uint_fast8_t MicroTileLen;
-extern char TransVal;
+extern int8_t TransVal;
 /** Specifies the active transparency indices. */
 extern bool TransList[256];
 /** Contains the piece IDs of each tile on the map. */
@@ -219,7 +219,7 @@ extern DVL_API_FOR_TEST int8_t dObject[MAXDUNX][MAXDUNY];
  * (e.g. "levels/l1data/l1s"). Note, the special tileset of Tristram (i.e.
  * "levels/towndata/towns") contains trees rather than arches.
  */
-extern char dSpecial[MAXDUNX][MAXDUNY];
+extern int8_t dSpecial[MAXDUNX][MAXDUNY];
 extern int themeCount;
 extern THEME_LOC themeLoc[MAXTHEMES];
 
