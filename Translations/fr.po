@@ -312,7 +312,7 @@ msgstr "L'Anneau des Mille"
 
 #: Source/DiabloUI/credits_lines.cpp:547
 msgid "\tNo souls were sold in the making of this game."
-msgstr "\tAucunes âmes n'ont été vendue durant le développement de ce jeu."
+msgstr "\tAucune âme n'a été vendue durant le développement de ce jeu."
 
 #: Source/DiabloUI/dialogs.cpp:196 Source/DiabloUI/dialogs.cpp:208
 #: Source/DiabloUI/selconn.cpp:80 Source/DiabloUI/selgame.cpp:168
@@ -427,11 +427,11 @@ msgstr "Hellfire Shareware"
 
 #: Source/DiabloUI/selgame.cpp:95
 msgid "The host is running a different game than you."
-msgstr "L'hôte utilise un jeu différente du vôtre."
+msgstr "L'hôte utilise un jeu différent du vôtre."
 
 #: Source/DiabloUI/selgame.cpp:97
 msgid "The host is running a different game mode ({:s}) than you."
-msgstr "L'hôte utilise un mode de jeu ({:s}) différente du vôtre."
+msgstr "L'hôte utilise un mode de jeu ({:s}) différent du vôtre."
 
 #. TRANSLATORS: Error message when somebody tries to join a game running another version.
 #: Source/DiabloUI/selgame.cpp:99
