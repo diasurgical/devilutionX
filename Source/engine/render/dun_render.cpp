@@ -12,6 +12,8 @@
 
 #include "engine/render/dun_render.hpp"
 
+#include <SDL_endian.h>
+
 #include <algorithm>
 #include <climits>
 #include <cstdint>
@@ -1148,7 +1150,7 @@ void RenderTile(const Surface &out, Point position,
 
 	const uint8_t *tbl = &LightTables[256 * lightTableIndex];
 	const auto *pFrameTable = reinterpret_cast<const uint32_t *>(pDungeonCels.get());
-	const auto *src = reinterpret_cast<const uint8_t *>(&pDungeonCels[pFrameTable[levelCelBlock.frame()]]);
+	const auto *src = reinterpret_cast<const uint8_t *>(&pDungeonCels[SDL_SwapLE32(pFrameTable[levelCelBlock.frame()])]);
 	uint8_t *dst = out.at(static_cast<int>(position.x + clip.left), static_cast<int>(position.y - clip.bottom));
 	const auto dstPitch = out.pitch();
 
