@@ -43,9 +43,6 @@ function(add_devilutionx_library NAME)
 
     # Warnings for devilutionX
     target_compile_options(${NAME} PUBLIC -Wall -Wextra -Wno-unused-parameter)
-
-    # For ARM and other default unsigned char platforms
-    target_compile_options(${NAME} PUBLIC -fsigned-char)
   endif()
 
   if(NOT WIN32 AND NOT APPLE AND NOT ${CMAKE_SYSTEM_NAME} STREQUAL FreeBSD)
