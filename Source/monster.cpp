@@ -3043,6 +3043,12 @@ bool IsRelativeMoveOK(const Monster &monster, Point position, Direction mdir)
 	Point futurePosition = position + mdir;
 	if (!InDungeonBounds(futurePosition) || !IsTileAvailable(monster, futurePosition))
 		return false;
+	// Fixes exploit that allows a monster to become "stuck" in a trigger tile
+	for (int i = 0; i < numtrigs; i++) {
+		if (futurePosition == trigs[i].position) {
+			return false;
+		}
+	}
 	if (mdir == Direction::East) {
 		if (IsTileSolid(position + Direction::SouthEast))
 			return false;
