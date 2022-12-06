@@ -54,7 +54,7 @@ struct KeyEventData {
 
 struct DemoMsg {
 	DemoMsgType type;
-	float progressToNextGameTick;
+	uint8_t progressToNextGameTick;
 	uint32_t eventType;
 	union {
 		MouseMotionEventData motion;
@@ -234,7 +234,7 @@ bool LoadDemoMessages(int i)
 		const uint32_t typeNum = ReadLE32(demofile);
 		const auto type = static_cast<DemoMsgType>(typeNum);
 
-		const float progressToNextGameTick = ReadLEFloat(demofile);
+		const uint8_t progressToNextGameTick = ReadByte(demofile);
 
 		switch (type) {
 		case DemoMsgType::Message: {
@@ -289,7 +289,7 @@ bool LoadDemoMessages(int i)
 void RecordEventHeader(const SDL_Event &event)
 {
 	WriteLE32(DemoRecording, static_cast<uint32_t>(DemoMsgType::Message));
-	WriteLEFloat(DemoRecording, ProgressToNextGameTick / static_cast<float>(AnimationInfo::baseValueFraction));
+	WriteByte(DemoRecording, ProgressToNextGameTick);
 	WriteLE32(DemoRecording, event.type);
 }
 
@@ -359,17 +359,19 @@ bool GetRunGameLoop(bool &drawGame, bool &processInput)
 				DemoModeLastTick = currentTickCount;
 			}
 		} else {
-			float progressToNextGameTick = clamp((float)ticksElapsed / (float)gnTickDelay, 0.F, 1.F);
+			int32_t fraction = ticksElapsed * AnimationInfo::baseValueFraction / gnTickDelay;
+			fraction = clamp<int32_t>(fraction, 0, AnimationInfo::baseValueFraction);
+			uint8_t progressToNextGameTick = static_cast<uint8_t>(fraction);
 			if (dmsg.type == DemoMsgType::GameTick || dmsg.progressToNextGameTick > progressToNextGameTick) {
 				// we are ahead of the replay => add a additional rendering for smoothness
-				ProgressToNextGameTick = static_cast<uint8_t>(AnimationInfo::baseValueFraction * progressToNextGameTick);
+				ProgressToNextGameTick = progressToNextGameTick;
 				processInput = false;
 				drawGame = true;
 				return false;
 			}
 		}
 	}
-	ProgressToNextGameTick = static_cast<uint8_t>(AnimationInfo::baseValueFraction * dmsg.progressToNextGameTick);
+	ProgressToNextGameTick = dmsg.progressToNextGameTick;
 	Demo_Message_Queue.pop_front();
 	if (dmsg.type == DemoMsgType::GameTick)
 		LogicTick++;
@@ -406,7 +408,7 @@ bool FetchMessage(SDL_Event *event, uint16_t *modState)
 		const DemoMsg dmsg = Demo_Message_Queue.front();
 		if (dmsg.type == DemoMsgType::Message) {
 			const bool hasEvent = CreateSdlEvent(dmsg, *event, *modState);
-			ProgressToNextGameTick = static_cast<uint8_t>(AnimationInfo::baseValueFraction * dmsg.progressToNextGameTick);
+			ProgressToNextGameTick = dmsg.progressToNextGameTick;
 			Demo_Message_Queue.pop_front();
 			return hasEvent;
 		}
@@ -418,7 +420,7 @@ bool FetchMessage(SDL_Event *event, uint16_t *modState)
 void RecordGameLoopResult(bool runGameLoop)
 {
 	WriteLE32(DemoRecording, static_cast<uint32_t>(runGameLoop ? DemoMsgType::GameTick : DemoMsgType::Rendering));
-	WriteLEFloat(DemoRecording, ProgressToNextGameTick / static_cast<float>(AnimationInfo::baseValueFraction));
+	WriteByte(DemoRecording, ProgressToNextGameTick);
 }
 
 void RecordMessage(const SDL_Event &event, uint16_t modState)
