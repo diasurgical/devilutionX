@@ -3044,9 +3044,12 @@ bool IsRelativeMoveOK(const Monster &monster, Point position, Direction mdir)
 	if (!InDungeonBounds(futurePosition) || !IsTileAvailable(monster, futurePosition))
 		return false;
 	// Fixes exploit that allows a monster to become "stuck" in a trigger tile in Cathedral and Crypt levels
-	for (int i = 0; i < numtrigs; i++) {
-		if (futurePosition == trigs[i].position && ((currlevel >= 1 && currlevel <= 4) || (currlevel >= 21 && currlevel <= 24))) {
-			return false;
+	if ((currlevel >= 1 && currlevel <= 4)
+	    || (currlevel >= 21 && currlevel <= 24)) {
+		for (int i = 0; i < numtrigs; i++) {
+			if (futurePosition == trigs[i].position) {
+				return false;
+			}
 		}
 	}
 	if (mdir == Direction::East) {
