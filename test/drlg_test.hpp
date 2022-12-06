@@ -45,7 +45,7 @@ void LoadExpectedLevelData(const char *fixture)
 	dunPath.append(fixture);
 	DunData = LoadFileInMem<uint16_t>(dunPath.c_str());
 	ASSERT_NE(DunData, nullptr) << "Unable to load test fixture " << dunPath;
-	ASSERT_EQ(Size(DMAXX, DMAXY), Size(DunData[0], DunData[1]));
+	ASSERT_EQ(Size(DMAXX, DMAXY), Size(SDL_SwapLE16(DunData[0]), SDL_SwapLE16(DunData[1])));
 }
 
 void TestCreateDungeon(int level, uint32_t seed, lvl_entry entry)
