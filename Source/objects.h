@@ -65,8 +65,7 @@ struct Object {
 	 *
 	 * Used by spell book objects which trigger quest progress for Halls of the Blind, Valor, or Warlord of Blood
 	 */
-	// TODO: Should be TEXT_NONE (timedemo save will need to be updated).
-	_speech_id bookMessage = TEXT_KING1;
+	_speech_id bookMessage = TEXT_NONE;
 
 	/**
 	 * @brief Returns the network identifier for this object
