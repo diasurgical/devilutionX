@@ -3705,7 +3705,8 @@ void DrawItemInfo(const Surface &out)
 	DrawItemInfoWindow(out);
 
 	Rectangle rect { position + Displacement { 32, 56 }, { 257, 0 } };
-	int nextline = 2 * 12;
+	int nextLine = 2 * 12;
+	bool noBonuses = true;
 
 	switch (curritem._iMagical) {
 	case ITEM_QUALITY_UNIQUE: {
@@ -3720,14 +3721,14 @@ void DrawItemInfo(const Surface &out)
 		assert(uitem.UINumPL <= sizeof(uitem.powers) / sizeof(*uitem.powers));
 
 		if (curritem._itype == ItemType::Sword) {
-			rect.position.y += nextline;
+			rect.position.y += nextLine;
 			DrawString(out, fmt::format(fmt::runtime(_("+50% damage vs. animals"))), rect, UiFlags::ColorWhite | UiFlags::AlignCenter);
-			rect.position.y += nextline;
+			rect.position.y += nextLine;
 			DrawString(out, fmt::format(fmt::runtime(_("-50% damage vs. undead"))), rect, UiFlags::ColorWhite | UiFlags::AlignCenter);
 		} else if (curritem._itype == ItemType::Mace) {
-			rect.position.y += nextline;
+			rect.position.y += nextLine;
 			DrawString(out, fmt::format(fmt::runtime(_("+50% damage vs. undead"))), rect, UiFlags::ColorWhite | UiFlags::AlignCenter);
-			rect.position.y += nextline;
+			rect.position.y += nextLine;
 			DrawString(out, fmt::format(fmt::runtime(_("-50% damage vs. animals"))), rect, UiFlags::ColorWhite | UiFlags::AlignCenter);
 		}
 
@@ -3735,8 +3736,12 @@ void DrawItemInfo(const Surface &out)
 			if (power.type == IPL_INVALID)
 				break;
 
-			rect.position.y += nextline;
+			rect.position.y += nextLine;
 			DrawString(out, PrintItemPower(power.type, curritem), rect, UiFlags::ColorWhite | UiFlags::AlignCenter);
+		}
+		if (curritem._iPLToHit > 0) {
+			rect.position.y += nextLine;
+			DrawString(out, PrintItemPower(IPL_TOHIT, curritem), rect, UiFlags::ColorWhite | UiFlags::AlignCenter);
 		}
 	} break;
 	case ITEM_QUALITY_MAGIC:
@@ -3749,26 +3754,39 @@ void DrawItemInfo(const Surface &out)
 		rect.position.y += (10 - (curritem._iPrePower != IPL_INVALID ? 1 : 0) - (curritem._iSufPower != IPL_INVALID ? 1 : 0) - ((curritem._itype == ItemType::Sword || curritem._itype == ItemType::Mace) ? 2 : 0)) * 12;
 
 		if (curritem._itype == ItemType::Sword) {
-			rect.position.y += nextline;
+			rect.position.y += nextLine;
 			DrawString(out, fmt::format(fmt::runtime(_("+50% damage vs. animals"))), rect, UiFlags::ColorWhite | UiFlags::AlignCenter);
-			rect.position.y += nextline;
+			rect.position.y += nextLine;
 			DrawString(out, fmt::format(fmt::runtime(_("-50% damage vs. undead"))), rect, UiFlags::ColorWhite | UiFlags::AlignCenter);
+			noBonuses = false;
 		} else if (curritem._itype == ItemType::Mace) {
-			rect.position.y += nextline;
+			rect.position.y += nextLine;
 			DrawString(out, fmt::format(fmt::runtime(_("+50% damage vs. undead"))), rect, UiFlags::ColorWhite | UiFlags::AlignCenter);
-			rect.position.y += nextline;
+			rect.position.y += nextLine;
 			DrawString(out, fmt::format(fmt::runtime(_("-50% damage vs. animals"))), rect, UiFlags::ColorWhite | UiFlags::AlignCenter);
+			noBonuses = false;
 		}
 
 		if (curritem._iPrePower != IPL_INVALID) {
-			rect.position.y += nextline;
+			rect.position.y += nextLine;
 			DrawString(out, PrintItemPower(curritem._iPrePower, curritem), rect, UiFlags::ColorWhite | UiFlags::AlignCenter);
+			noBonuses = false;
 		}
 
 		if (curritem._iSufPower != IPL_INVALID) {
-			rect.position.y += nextline;
+			rect.position.y += nextLine;
 			DrawString(out, PrintItemPower(curritem._iSufPower, curritem), rect, UiFlags::ColorWhite | UiFlags::AlignCenter);
+			noBonuses = false;
 		}
+
+		if (curritem._iPLToHit > 0) {
+			rect.position.y += nextLine;
+			DrawString(out, PrintItemPower(IPL_TOHIT, curritem), rect, UiFlags::ColorWhite | UiFlags::AlignCenter);
+			noBonuses = false;
+		}
+
+		if (noBonuses)
+			DrawString(out, fmt::format(fmt::runtime(_("no bonuses"))), rect, UiFlags::ColorWhite | UiFlags::AlignCenter);
 	} break;
 	default:
 		break;
