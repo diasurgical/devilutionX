@@ -29,8 +29,8 @@ jobs:
         uses: actions/cache@v3
         with:
           path: build
-          key: linux-x86-64-test-cmake-v2-${{ github.sha }}
-          restore-keys: linux-x86-64-test-cmake-v2-
+          key: linux-x86-64-test-cmake-v3-${{ github.sha }}
+          restore-keys: linux-x86-64-test-cmake-v3-
       - name: Build tests
         run: |
           cmake -S. -Bbuild -DENABLE_CODECOVERAGE=ON
