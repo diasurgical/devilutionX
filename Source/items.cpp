@@ -3821,7 +3821,7 @@ void DrawItemInfo(const Surface &out)
 			noBonuses = false;
 		}
 
-		if (curritem._iPLToHit > 0 && IsNoneOf(curritem._iSufPower, IPL_TOHIT, IPL_TOHIT_CURSE, IPL_TOHIT_DAMP, IPL_TOHIT_DAMP_CURSE)) {
+		if (curritem._iPLToHit > 0 && IsNoneOf(curritem._iPrePower, IPL_TOHIT, IPL_TOHIT_CURSE, IPL_TOHIT_DAMP, IPL_TOHIT_DAMP_CURSE)) {
 			rect.position.y += nextLine;
 			DrawString(out, PrintItemPower(IPL_TOHIT, curritem), rect, UiFlags::ColorWhite | UiFlags::AlignCenter);
 			noBonuses = false;
