@@ -232,14 +232,20 @@ bool ShouldShowCursor()
 void DrawCursor(const Surface &out)
 {
 	DrawnCursor &cursor = GetDrawnCursor();
+	if (IsHardwareCursor()) {
+		SetHardwareCursorVisible(ShouldShowCursor());
+		cursor.rect.size = { 0, 0 };
+		return;
+	}
+
 	if (pcurs <= CURSOR_NONE || !ShouldShowCursor()) {
-		cursor.rect.size.width = 0;
+		cursor.rect.size = { 0, 0 };
 		return;
 	}
 
 	Size cursSize = GetInvItemSize(pcurs);
 	if (cursSize.width == 0 || cursSize.height == 0) {
-		cursor.rect.size.width = 0;
+		cursor.rect.size = { 0, 0 };
 		return;
 	}
 
@@ -1598,14 +1604,8 @@ void scrollrt_draw_game_screen()
 
 	const Surface &out = GlobalBackBuffer();
 	UndrawCursor(out);
-
 	DrawMain(out, hgt, false, false, false, false, false);
-
-	if (IsHardwareCursor()) {
-		SetHardwareCursorVisible(ShouldShowCursor());
-	} else {
-		DrawCursor(out);
-	}
+	DrawCursor(out);
 
 	RenderPresent();
 }
@@ -1673,11 +1673,7 @@ void DrawAndBlit()
 	if (*sgOptions.Graphics.showManaValues)
 		DrawFlaskValues(out, { mainPanel.position.x + mainPanel.size.width - 138, mainPanel.position.y + 28 }, MyPlayer->_pMana >> 6, MyPlayer->_pMaxMana >> 6);
 
-	if (IsHardwareCursor()) {
-		SetHardwareCursorVisible(ShouldShowCursor());
-	} else {
-		DrawCursor(out);
-	}
+	DrawCursor(out);
 
 	DrawFPS(out);
 
