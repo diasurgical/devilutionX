@@ -2865,7 +2865,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 	IncProgress();
 	IncProgress();
 
-	if (firstflag && !HeadlessMode) {
+	if (firstflag) {
 		InitControlPan();
 	}
 	IncProgress();
