@@ -3734,7 +3734,7 @@ UiFlags GetItemPowerTextColor(char plidx, const Item &item)
 void DrawItemInfo(const Surface &out)
 {
 	const Point position = GetRightPanel().position - Displacement { SidePanelSize.width, 0 };
-	if (IsLeftPanelOpen() && GetLeftPanel().contains(position)) {
+	if (IsLeftPanelOpen() && GetLeftPanel().contains(position) && !IsStashOpen) {
 		return;
 	}
 
