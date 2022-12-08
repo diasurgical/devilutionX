@@ -761,7 +761,7 @@ static void compareGold(const ItemPack &is, int iCurs)
 	ASSERT_EQ(id._iCurs, iCurs);
 	ASSERT_EQ(id.IDidx, IDI_GOLD);
 	// Copy the value out before comparing to avoid loading a misaligned address.
-	const auto wvalue = is.wValue;
+	const auto wvalue = SDL_SwapLE16(is.wValue);
 	ASSERT_EQ(id._ivalue, wvalue);
 	ASSERT_EQ(id._itype, ItemType::Gold);
 	ASSERT_EQ(id._iClass, ICLASS_GOLD);

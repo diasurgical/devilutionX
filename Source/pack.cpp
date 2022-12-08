@@ -50,15 +50,15 @@ void PackItem(ItemPack &packedItem, const Item &item, bool isHellfire)
 		}
 		packedItem.idx = SDL_SwapLE16(idx);
 		if (item.IDidx == IDI_EAR) {
-			packedItem.iCreateInfo = item._iIName[1] | (item._iIName[0] << 8);
-			packedItem.iSeed = LoadBE32(&item._iIName[2]);
+			packedItem.iCreateInfo = SDL_SwapLE16(item._iIName[1] | (item._iIName[0] << 8));
+			packedItem.iSeed = SDL_SwapLE32(LoadBE32(&item._iIName[2]));
 			packedItem.bId = item._iIName[6];
 			packedItem.bDur = item._iIName[7];
 			packedItem.bMDur = item._iIName[8];
 			packedItem.bCh = item._iIName[9];
 			packedItem.bMCh = item._iIName[10];
 			packedItem.wValue = SDL_SwapLE16(item._ivalue | (item._iIName[11] << 8) | ((item._iCurs - ICURS_EAR_SORCERER) << 6));
-			packedItem.dwBuff = LoadBE32(&item._iIName[12]);
+			packedItem.dwBuff = SDL_SwapLE32(LoadBE32(&item._iIName[12]));
 		} else {
 			packedItem.iSeed = SDL_SwapLE32(item._iSeed);
 			packedItem.iCreateInfo = SDL_SwapLE16(item._iCreateInfo);
