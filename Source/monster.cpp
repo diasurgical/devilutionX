@@ -1685,25 +1685,14 @@ bool RandomWalk2(Monster &monster, Direction md)
  */
 bool IsTileSafe(const Monster &monster, Point position)
 {
-	if (!TileContainsMissile(position)) {
-		return true;
-	}
+	if (!InDungeonBounds(position))
+		return false;
 
-	bool fearsFire = (monster.resistance & IMMUNE_FIRE) == 0 || monster.type().type == MT_DIABLO;
-	bool fearsLightning = (monster.resistance & IMMUNE_LIGHTNING) == 0 || monster.type().type == MT_DIABLO;
+	const bool fearsFire = (monster.resistance & IMMUNE_FIRE) == 0 || monster.type().type == MT_DIABLO;
+	const bool fearsLightning = (monster.resistance & IMMUNE_LIGHTNING) == 0 || monster.type().type == MT_DIABLO;
 
-	for (auto &missile : Missiles) {
-		if (missile.position.tile == position) {
-			if (fearsFire && missile._mitype == MIS_FIREWALL) {
-				return false;
-			}
-			if (fearsLightning && missile._mitype == MIS_LIGHTWALL) {
-				return false;
-			}
-		}
-	}
-
-	return true;
+	return !(fearsFire && HasAnyOf(dFlags[position.x][position.y], DungeonFlag::MissileFireWall))
+	    && !(fearsLightning && HasAnyOf(dFlags[position.x][position.y], DungeonFlag::MissileLightningWall));
 }
 
 /**
