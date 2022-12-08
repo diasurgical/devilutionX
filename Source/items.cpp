@@ -3699,56 +3699,33 @@ UiFlags GetItemPowerTextColor(char plidx, const Item &item)
 {
 	switch (plidx) {
 	case IPL_TOHIT_CURSE:
-		return UiFlags::ColorRed;
 	case IPL_DAMP_CURSE:
-		return UiFlags::ColorRed;
 	case IPL_TOHIT_DAMP_CURSE:
-		return UiFlags::ColorRed;
 	case IPL_ACP_CURSE:
-		return UiFlags::ColorRed;
 	case IPL_AC_CURSE:
-		return UiFlags::ColorRed;
 	case IPL_FIRERES_CURSE:
-		return UiFlags::ColorRed;
 	case IPL_LIGHTRES_CURSE:
-		return UiFlags::ColorRed;
 	case IPL_MAGICRES_CURSE:
+	case IPL_STR_CURSE:
+	case IPL_MAG_CURSE:
+	case IPL_DEX_CURSE:
+	case IPL_VIT_CURSE:
+	case IPL_ATTRIBS_CURSE:
+	case IPL_GETHIT_CURSE:
+	case IPL_LIFE_CURSE:
+	case IPL_MANA_CURSE:
+	case IPL_DUR_CURSE:
+	case IPL_LIGHT_CURSE:
+	case IPL_NOMANA:
+	case IPL_ALLRESZERO:
+	case IPL_DRAINLIFE:
+	case IPL_DECAY:
+	case IPL_PERIL:
+	case IPL_CRYSTALLINE:
 		return UiFlags::ColorRed;
 	case IPL_SPLLVLADD:
 		if (item._iSplLvlAdd < 0)
 			return UiFlags::ColorRed;
-	case IPL_STR_CURSE:
-		return UiFlags::ColorRed;
-	case IPL_MAG_CURSE:
-		return UiFlags::ColorRed;
-	case IPL_DEX_CURSE:
-		return UiFlags::ColorRed;
-	case IPL_VIT_CURSE:
-		return UiFlags::ColorRed;
-	case IPL_ATTRIBS_CURSE:
-		return UiFlags::ColorRed;
-	case IPL_GETHIT_CURSE:
-		return UiFlags::ColorRed;
-	case IPL_LIFE_CURSE:
-		return UiFlags::ColorRed;
-	case IPL_MANA_CURSE:
-		return UiFlags::ColorRed;
-	case IPL_DUR_CURSE:
-		return UiFlags::ColorRed;
-	case IPL_LIGHT_CURSE:
-		return UiFlags::ColorRed;
-	case IPL_NOMANA:
-		return UiFlags::ColorRed;
-	case IPL_ALLRESZERO:
-		return UiFlags::ColorRed;
-	case IPL_DRAINLIFE:
-		return UiFlags::ColorRed;
-	case IPL_DECAY:
-		return UiFlags::ColorRed;
-	case IPL_PERIL:
-		return UiFlags::ColorRed;
-	case IPL_CRYSTALLINE:
-		return UiFlags::ColorRed;
 	default:
 		return UiFlags::ColorWhite;
 	}
