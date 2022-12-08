@@ -1731,8 +1731,13 @@ void PrintItemOil(char iDidx)
 
 void DrawItemInfoWindow(const Surface &out)
 {
-	ClxDraw(out, GetPanelPosition(UiPanels::Inventory, { 24 - SidePanelSize.width, 327 }), (*pSTextBoxCels)[0]);
-	DrawHalfTransparentRectTo(out, GetRightPanel().position.x - SidePanelSize.width + 27, GetRightPanel().position.y + 28, 265, 297);
+	if (IsStashOpen && GetLeftPanel().contains(MousePosition)) {
+		ClxDraw(out, GetPanelPosition(UiPanels::Stash, { 24 + SidePanelSize.width, 327 }), (*pSTextBoxCels)[0]);
+		DrawHalfTransparentRectTo(out, GetLeftPanel().position.x + SidePanelSize.width + 27, GetLeftPanel().position.y + 28, 265, 297);
+	} else {
+		ClxDraw(out, GetPanelPosition(UiPanels::Inventory, { 24 - SidePanelSize.width, 327 }), (*pSTextBoxCels)[0]);
+		DrawHalfTransparentRectTo(out, GetRightPanel().position.x - SidePanelSize.width + 27, GetRightPanel().position.y + 28, 265, 297);
+	}
 }
 
 void printItemMiscKBM(const Item &item, const bool isOil, const bool isCastOnTarget)
@@ -3733,7 +3738,13 @@ UiFlags GetItemPowerTextColor(char plidx, const Item &item)
 
 void DrawItemInfo(const Surface &out)
 {
-	const Point position = GetRightPanel().position - Displacement { SidePanelSize.width, 0 };
+	Point position;
+
+	if (IsStashOpen && GetLeftPanel().contains(MousePosition))
+		position = GetLeftPanel().position + Displacement { SidePanelSize.width, 0 };
+	else
+		position = GetRightPanel().position - Displacement { SidePanelSize.width, 0 };
+
 	if (IsLeftPanelOpen() && GetLeftPanel().contains(position) && !IsStashOpen) {
 		return;
 	}
