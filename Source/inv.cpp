@@ -1922,7 +1922,7 @@ int8_t CheckInvHLight()
 		InfoString = fmt::format(fmt::runtime(ngettext("{:s} gold piece", "{:s} gold pieces", nGold)), FormatInteger(nGold));
 	} else {
 		InfoColor = pi->getTextColor();
-		if (pi->_iIdentified) {
+		if (pi->_iIdentified || pi->_iMagical == ITEM_QUALITY_NORMAL) {
 			InfoString = string_view(pi->_iIName);
 			PrintItemDetails(*pi);
 		} else {

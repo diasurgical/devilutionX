@@ -1116,8 +1116,8 @@ void DrawView(const Surface &out, Point startPosition)
 		DrawStash(out);
 	}
 	DrawLevelUpIcon(out);
-	if (ShowUniqueItemInfoBox) {
-		DrawUniqueInfo(out);
+	if (ShowItemInfoBox) {
+		DrawItemInfo(out);
 	}
 	if (qtextflag) {
 		DrawQText(out);

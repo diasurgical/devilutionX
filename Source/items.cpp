@@ -52,7 +52,7 @@ Item Items[MAXITEMS + 1];
 uint8_t ActiveItems[MAXITEMS];
 uint8_t ActiveItemCount;
 int8_t dItem[MAXDUNX][MAXDUNY];
-bool ShowUniqueItemInfoBox;
+bool ShowItemInfoBox;
 CornerStoneStruct CornerStone;
 bool UniqueItemFlags[128];
 int MaxGold = GOLD_MAX_LIMIT;
@@ -143,7 +143,7 @@ enum class PlayerArmorGraphic : uint8_t {
 	// clang-format on
 };
 
-Item curruitem;
+Item curritem;
 
 /** Holds item get records, tracking items being recently looted. This is in an effort to prevent items being picked up more than once. */
 ItemGetRecordStruct itemrecord[MAXITEMS];
@@ -1729,7 +1729,7 @@ void PrintItemOil(char iDidx)
 	}
 }
 
-void DrawUniqueInfoWindow(const Surface &out)
+void DrawItemInfoWindow(const Surface &out)
 {
 	ClxDraw(out, GetPanelPosition(UiPanels::Inventory, { 24 - SidePanelSize.width, 327 }), (*pSTextBoxCels)[0]);
 	DrawHalfTransparentRectTo(out, GetRightPanel().position.x - SidePanelSize.width + 27, GetRightPanel().position.y + 28, 265, 297);
@@ -2356,7 +2356,7 @@ void InitItems()
 			SpawnNote();
 	}
 
-	ShowUniqueItemInfoBox = false;
+	ShowItemInfoBox = false;
 
 	initItemGetRecords();
 }
@@ -3695,30 +3695,86 @@ bool DoOil(Player &player, int cii)
 	}
 }
 
-void DrawUniqueInfo(const Surface &out)
+void DrawItemInfo(const Surface &out)
 {
 	const Point position = GetRightPanel().position - Displacement { SidePanelSize.width, 0 };
 	if (IsLeftPanelOpen() && GetLeftPanel().contains(position)) {
 		return;
 	}
 
-	DrawUniqueInfoWindow(out);
+	DrawItemInfoWindow(out);
 
 	Rectangle rect { position + Displacement { 32, 56 }, { 257, 0 } };
-	const UniqueItem &uitem = UniqueItems[curruitem._iUid];
-	DrawString(out, _(uitem.UIName), rect, UiFlags::AlignCenter);
+	int nextline = 2 * 12;
 
-	const Rectangle dividerLineRect { position + Displacement { 26, 25 }, { 267, 3 } };
-	out.BlitFrom(out, MakeSdlRect(dividerLineRect), dividerLineRect.position + Displacement { 0, 5 * 12 + 13 });
+	switch (curritem._iMagical) {
+	case ITEM_QUALITY_UNIQUE: {
+		const UniqueItem &uitem = UniqueItems[curritem._iUid];
 
-	rect.position.y += (10 - uitem.UINumPL) * 12;
-	assert(uitem.UINumPL <= sizeof(uitem.powers) / sizeof(*uitem.powers));
-	for (const auto &power : uitem.powers) {
-		if (power.type == IPL_INVALID)
-			break;
-		rect.position.y += 2 * 12;
-		DrawString(out, PrintItemPower(power.type, curruitem), rect, UiFlags::ColorWhite | UiFlags::AlignCenter);
+		DrawString(out, _(uitem.UIName), rect, UiFlags::AlignCenter);
+
+		const Rectangle dividerLineRect { position + Displacement { 26, 25 }, { 267, 3 } };
+		out.BlitFrom(out, MakeSdlRect(dividerLineRect), dividerLineRect.position + Displacement { 0, 5 * 12 + 13 });
+
+		rect.position.y += (10 - uitem.UINumPL - ((curritem._itype == ItemType::Sword || curritem._itype == ItemType::Mace) ? 2 : 0)) * 12;
+		assert(uitem.UINumPL <= sizeof(uitem.powers) / sizeof(*uitem.powers));
+
+		if (curritem._itype == ItemType::Sword) {
+			rect.position.y += nextline;
+			DrawString(out, fmt::format(fmt::runtime(_("+50% damage vs. animals"))), rect, UiFlags::ColorWhite | UiFlags::AlignCenter);
+			rect.position.y += nextline;
+			DrawString(out, fmt::format(fmt::runtime(_("-50% damage vs. undead"))), rect, UiFlags::ColorWhite | UiFlags::AlignCenter);
+		} else if (curritem._itype == ItemType::Mace) {
+			rect.position.y += nextline;
+			DrawString(out, fmt::format(fmt::runtime(_("+50% damage vs. undead"))), rect, UiFlags::ColorWhite | UiFlags::AlignCenter);
+			rect.position.y += nextline;
+			DrawString(out, fmt::format(fmt::runtime(_("-50% damage vs. animals"))), rect, UiFlags::ColorWhite | UiFlags::AlignCenter);
+		}
+
+		for (const auto &power : uitem.powers) {
+			if (power.type == IPL_INVALID)
+				break;
+
+			rect.position.y += nextline;
+			DrawString(out, PrintItemPower(power.type, curritem), rect, UiFlags::ColorWhite | UiFlags::AlignCenter);
+		}
+	} break;
+	case ITEM_QUALITY_MAGIC:
+	case ITEM_QUALITY_NORMAL: {
+		DrawString(out, _(curritem._iIName), rect, (curritem._iMagical == ITEM_QUALITY_MAGIC ? UiFlags::ColorBlue : UiFlags::ColorWhite) | UiFlags::AlignCenter);
+
+		const Rectangle dividerLineRect { position + Displacement { 26, 25 }, { 267, 3 } };
+		out.BlitFrom(out, MakeSdlRect(dividerLineRect), dividerLineRect.position + Displacement { 0, 5 * 12 + 13 });
+
+		rect.position.y += (10 - (curritem._iPrePower != IPL_INVALID ? 1 : 0) - (curritem._iSufPower != IPL_INVALID ? 1 : 0) - ((curritem._itype == ItemType::Sword || curritem._itype == ItemType::Mace) ? 2 : 0)) * 12;
+
+		if (curritem._itype == ItemType::Sword) {
+			rect.position.y += nextline;
+			DrawString(out, fmt::format(fmt::runtime(_("+50% damage vs. animals"))), rect, UiFlags::ColorWhite | UiFlags::AlignCenter);
+			rect.position.y += nextline;
+			DrawString(out, fmt::format(fmt::runtime(_("-50% damage vs. undead"))), rect, UiFlags::ColorWhite | UiFlags::AlignCenter);
+		} else if (curritem._itype == ItemType::Mace) {
+			rect.position.y += nextline;
+			DrawString(out, fmt::format(fmt::runtime(_("+50% damage vs. undead"))), rect, UiFlags::ColorWhite | UiFlags::AlignCenter);
+			rect.position.y += nextline;
+			DrawString(out, fmt::format(fmt::runtime(_("-50% damage vs. animals"))), rect, UiFlags::ColorWhite | UiFlags::AlignCenter);
+		}
+
+		if (curritem._iPrePower != IPL_INVALID) {
+			rect.position.y += nextline;
+			DrawString(out, PrintItemPower(curritem._iPrePower, curritem), rect, UiFlags::ColorWhite | UiFlags::AlignCenter);
+		}
+
+		if (curritem._iSufPower != IPL_INVALID) {
+			rect.position.y += nextline;
+			DrawString(out, PrintItemPower(curritem._iSufPower, curritem), rect, UiFlags::ColorWhite | UiFlags::AlignCenter);
+		}
+	} break;
+	default:
+		break;
 	}
+
+
 }
 
 void PrintItemDetails(const Item &item)
@@ -3739,25 +3795,35 @@ void PrintItemDetails(const Item &item)
 				AddPanelString(fmt::format(fmt::runtime(_(/* TRANSLATORS: Dur: is durability */ "damage: {:d}-{:d}  Dur: {:d}/{:d}")), item._iMinDam, item._iMaxDam, item._iDurability, item._iMaxDur));
 		}
 	}
+
 	if (item._iClass == ICLASS_ARMOR) {
 		if (item._iMaxDur == DUR_INDESTRUCTIBLE)
 			AddPanelString(fmt::format(fmt::runtime(_("armor: {:d}  Indestructible")), item._iAC));
 		else
 			AddPanelString(fmt::format(fmt::runtime(_(/* TRANSLATORS: Dur: is durability */ "armor: {:d}  Dur: {:d}/{:d}")), item._iAC, item._iDurability, item._iMaxDur));
 	}
+
 	if (item._iMiscId == IMISC_STAFF && item._iMaxCharges != 0) {
 		AddPanelString(fmt::format(fmt::runtime(_("Charges: {:d}/{:d}")), item._iCharges, item._iMaxCharges));
 	}
-	if (item._iPrePower != -1) {
-		AddPanelString(PrintItemPower(item._iPrePower, item));
-	}
-	if (item._iSufPower != -1) {
-		AddPanelString(PrintItemPower(item._iSufPower, item));
-	}
-	if (item._iMagical == ITEM_QUALITY_UNIQUE) {
-		AddPanelString(_("unique item"));
-		ShowUniqueItemInfoBox = true;
-		curruitem = item;
+
+	if (item._itype != ItemType::Misc) {
+		switch (item._iMagical) {
+		case ITEM_QUALITY_UNIQUE:
+			AddPanelString(_("unique item"));
+			break;
+		case ITEM_QUALITY_MAGIC:
+			AddPanelString(_("magic item"));
+			break;
+		case ITEM_QUALITY_NORMAL:
+			AddPanelString(_("mundane item"));
+			break;
+		default:
+			break;
+		}
+
+		curritem = item;
+		ShowItemInfoBox = true;
 	}
 	PrintItemInfo(item);
 }

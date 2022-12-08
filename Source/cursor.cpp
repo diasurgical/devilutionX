@@ -387,7 +387,7 @@ void CheckCursMove()
 	pcursinvitem = -1;
 	pcursstashitem = uint16_t(-1);
 	pcursplr = -1;
-	ShowUniqueItemInfoBox = false;
+	ShowItemInfoBox = false;
 	panelflag = false;
 	trigflag = false;
 
