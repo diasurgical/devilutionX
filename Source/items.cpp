@@ -3791,8 +3791,6 @@ void DrawItemInfo(const Surface &out)
 	default:
 		break;
 	}
-
-
 }
 
 void PrintItemDetails(const Item &item)
