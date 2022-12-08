@@ -3695,6 +3695,65 @@ bool DoOil(Player &player, int cii)
 	}
 }
 
+UiFlags GetItemPowerTextColor(char plidx, const Item &item)
+{
+	switch (plidx) {
+	case IPL_TOHIT_CURSE:
+		return UiFlags::ColorRed;
+	case IPL_DAMP_CURSE:
+		return UiFlags::ColorRed;
+	case IPL_TOHIT_DAMP_CURSE:
+		return UiFlags::ColorRed;
+	case IPL_ACP_CURSE:
+		return UiFlags::ColorRed;
+	case IPL_AC_CURSE:
+		return UiFlags::ColorRed;
+	case IPL_FIRERES_CURSE:
+		return UiFlags::ColorRed;
+	case IPL_LIGHTRES_CURSE:
+		return UiFlags::ColorRed;
+	case IPL_MAGICRES_CURSE:
+		return UiFlags::ColorRed;
+	case IPL_SPLLVLADD:
+		if (item._iSplLvlAdd < 0)
+			return UiFlags::ColorRed;
+	case IPL_STR_CURSE:
+		return UiFlags::ColorRed;
+	case IPL_MAG_CURSE:
+		return UiFlags::ColorRed;
+	case IPL_DEX_CURSE:
+		return UiFlags::ColorRed;
+	case IPL_VIT_CURSE:
+		return UiFlags::ColorRed;
+	case IPL_ATTRIBS_CURSE:
+		return UiFlags::ColorRed;
+	case IPL_GETHIT_CURSE:
+		return UiFlags::ColorRed;
+	case IPL_LIFE_CURSE:
+		return UiFlags::ColorRed;
+	case IPL_MANA_CURSE:
+		return UiFlags::ColorRed;
+	case IPL_DUR_CURSE:
+		return UiFlags::ColorRed;
+	case IPL_LIGHT_CURSE:
+		return UiFlags::ColorRed;
+	case IPL_NOMANA:
+		return UiFlags::ColorRed;
+	case IPL_ALLRESZERO:
+		return UiFlags::ColorRed;
+	case IPL_DRAINLIFE:
+		return UiFlags::ColorRed;
+	case IPL_DECAY:
+		return UiFlags::ColorRed;
+	case IPL_PERIL:
+		return UiFlags::ColorRed;
+	case IPL_CRYSTALLINE:
+		return UiFlags::ColorRed;
+	default:
+		return UiFlags::ColorWhite;
+	}
+}
+
 void DrawItemInfo(const Surface &out)
 {
 	const Point position = GetRightPanel().position - Displacement { SidePanelSize.width, 0 };
@@ -3707,6 +3766,7 @@ void DrawItemInfo(const Surface &out)
 	Rectangle rect { position + Displacement { 32, 56 }, { 257, 0 } };
 	int nextLine = 2 * 12;
 	bool noBonuses = true;
+	bool hasToHitPower = false;
 
 	switch (curritem._iMagical) {
 	case ITEM_QUALITY_UNIQUE: {
@@ -3724,24 +3784,29 @@ void DrawItemInfo(const Surface &out)
 			rect.position.y += nextLine;
 			DrawString(out, fmt::format(fmt::runtime(_("+50% damage vs. animals"))), rect, UiFlags::ColorWhite | UiFlags::AlignCenter);
 			rect.position.y += nextLine;
-			DrawString(out, fmt::format(fmt::runtime(_("-50% damage vs. undead"))), rect, UiFlags::ColorWhite | UiFlags::AlignCenter);
+			DrawString(out, fmt::format(fmt::runtime(_("-50% damage vs. undead"))), rect, UiFlags::ColorRed | UiFlags::AlignCenter);
 		} else if (curritem._itype == ItemType::Mace) {
 			rect.position.y += nextLine;
 			DrawString(out, fmt::format(fmt::runtime(_("+50% damage vs. undead"))), rect, UiFlags::ColorWhite | UiFlags::AlignCenter);
 			rect.position.y += nextLine;
-			DrawString(out, fmt::format(fmt::runtime(_("-50% damage vs. animals"))), rect, UiFlags::ColorWhite | UiFlags::AlignCenter);
+			DrawString(out, fmt::format(fmt::runtime(_("-50% damage vs. animals"))), rect, UiFlags::ColorRed | UiFlags::AlignCenter);
 		}
 
 		for (const auto &power : uitem.powers) {
+			if (IsAnyOf(power.type, IPL_TOHIT, IPL_TOHIT_CURSE, IPL_TOHIT_DAMP, IPL_TOHIT_DAMP_CURSE))
+				hasToHitPower = true;
+
 			if (power.type == IPL_INVALID)
 				break;
 
 			rect.position.y += nextLine;
-			DrawString(out, PrintItemPower(power.type, curritem), rect, UiFlags::ColorWhite | UiFlags::AlignCenter);
+			DrawString(out, PrintItemPower(power.type, curritem), rect, GetItemPowerTextColor(power.type, curritem) | UiFlags::AlignCenter);
 		}
-		if (curritem._iPLToHit > 0) {
+
+		if (curritem._iPLToHit > 0 && !hasToHitPower) {
 			rect.position.y += nextLine;
 			DrawString(out, PrintItemPower(IPL_TOHIT, curritem), rect, UiFlags::ColorWhite | UiFlags::AlignCenter);
+			noBonuses = false;
 		}
 	} break;
 	case ITEM_QUALITY_MAGIC:
@@ -3757,29 +3822,29 @@ void DrawItemInfo(const Surface &out)
 			rect.position.y += nextLine;
 			DrawString(out, fmt::format(fmt::runtime(_("+50% damage vs. animals"))), rect, UiFlags::ColorWhite | UiFlags::AlignCenter);
 			rect.position.y += nextLine;
-			DrawString(out, fmt::format(fmt::runtime(_("-50% damage vs. undead"))), rect, UiFlags::ColorWhite | UiFlags::AlignCenter);
+			DrawString(out, fmt::format(fmt::runtime(_("-50% damage vs. undead"))), rect, UiFlags::ColorRed | UiFlags::AlignCenter);
 			noBonuses = false;
 		} else if (curritem._itype == ItemType::Mace) {
 			rect.position.y += nextLine;
 			DrawString(out, fmt::format(fmt::runtime(_("+50% damage vs. undead"))), rect, UiFlags::ColorWhite | UiFlags::AlignCenter);
 			rect.position.y += nextLine;
-			DrawString(out, fmt::format(fmt::runtime(_("-50% damage vs. animals"))), rect, UiFlags::ColorWhite | UiFlags::AlignCenter);
+			DrawString(out, fmt::format(fmt::runtime(_("-50% damage vs. animals"))), rect, UiFlags::ColorRed | UiFlags::AlignCenter);
 			noBonuses = false;
 		}
 
 		if (curritem._iPrePower != IPL_INVALID) {
 			rect.position.y += nextLine;
-			DrawString(out, PrintItemPower(curritem._iPrePower, curritem), rect, UiFlags::ColorWhite | UiFlags::AlignCenter);
+			DrawString(out, PrintItemPower(curritem._iPrePower, curritem), rect, GetItemPowerTextColor(curritem._iPrePower, curritem) | UiFlags::AlignCenter);
 			noBonuses = false;
 		}
 
 		if (curritem._iSufPower != IPL_INVALID) {
 			rect.position.y += nextLine;
-			DrawString(out, PrintItemPower(curritem._iSufPower, curritem), rect, UiFlags::ColorWhite | UiFlags::AlignCenter);
+			DrawString(out, PrintItemPower(curritem._iSufPower, curritem), rect, GetItemPowerTextColor(curritem._iSufPower, curritem) | UiFlags::AlignCenter);
 			noBonuses = false;
 		}
 
-		if (curritem._iPLToHit > 0) {
+		if (curritem._iPLToHit > 0 && IsNoneOf(curritem._iSufPower, IPL_TOHIT, IPL_TOHIT_CURSE, IPL_TOHIT_DAMP, IPL_TOHIT_DAMP_CURSE)) {
 			rect.position.y += nextLine;
 			DrawString(out, PrintItemPower(IPL_TOHIT, curritem), rect, UiFlags::ColorWhite | UiFlags::AlignCenter);
 			noBonuses = false;
@@ -3832,7 +3897,7 @@ void PrintItemDetails(const Item &item)
 			AddPanelString(_("magic item"));
 			break;
 		case ITEM_QUALITY_NORMAL:
-			AddPanelString(_("mundane item"));
+			AddPanelString(_("normal item"));
 			break;
 		default:
 			break;
