@@ -15,7 +15,7 @@ class RunMetrics(NamedTuple):
 
 def measure(binary: str) -> RunMetrics:
 	result: subprocess.CompletedProcess = subprocess.run(
-		[binary, '--diablo', '--spawn', '--demo', '0', '--timedemo'], capture_output=True)
+		[binary, '--diablo', '--spawn', '--lang', 'en', '--demo', '0', '--timedemo'], capture_output=True)
 	match = _TIME_AND_FPS_REGEX.search(result.stderr)
 	if not match:
 		raise Exception(f"Failed to parse output in:\n{result.stderr}")

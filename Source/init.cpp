@@ -216,7 +216,7 @@ void LoadLanguageArchive()
 	lang_mpq = std::nullopt;
 #endif
 
-	string_view code = *sgOptions.Language.code;
+	string_view code = GetLanguageCode();
 	if (code != "en") {
 		std::string langMpqName { code };
 #ifdef UNPACKED_MPQS

@@ -907,6 +907,7 @@ void PrintHelpOption(string_view flags, string_view description)
 	PrintHelpOption("--data-dir", _(/* TRANSLATORS: Commandline Option */ "Specify the folder of diabdat.mpq"));
 	PrintHelpOption("--save-dir", _(/* TRANSLATORS: Commandline Option */ "Specify the folder of save files"));
 	PrintHelpOption("--config-dir", _(/* TRANSLATORS: Commandline Option */ "Specify the location of diablo.ini"));
+	PrintHelpOption("--lang", _(/* TRANSLATORS: Commandline Option */ "Specify the language code (e.g. en or pt_BR)"));
 	PrintHelpOption("-n", _(/* TRANSLATORS: Commandline Option */ "Skip startup videos"));
 	PrintHelpOption("-f", _(/* TRANSLATORS: Commandline Option */ "Display frames per second"));
 	PrintHelpOption("--verbose", _(/* TRANSLATORS: Commandline Option */ "Enable verbose logging"));
@@ -939,7 +940,7 @@ void PrintHelpOption(string_view flags, string_view description)
 void PrintFlagsRequiresArgument(string_view flag)
 {
 	printInConsole(flag);
-	printInConsole("requires an argument");
+	printInConsole(" requires an argument");
 	printNewlineInConsole();
 }
 
@@ -968,26 +969,32 @@ void DiabloParseFlags(int argc, char **argv)
 		} else if (arg == "--data-dir") {
 			if (i + 1 == argc) {
 				PrintFlagsRequiresArgument("--data-dir");
-				diablo_quit(0);
+				diablo_quit(64);
 			}
 			paths::SetBasePath(argv[++i]);
 		} else if (arg == "--save-dir") {
 			if (i + 1 == argc) {
 				PrintFlagsRequiresArgument("--save-dir");
-				diablo_quit(0);
+				diablo_quit(64);
 			}
 			paths::SetPrefPath(argv[++i]);
 		} else if (arg == "--config-dir") {
 			if (i + 1 == argc) {
 				PrintFlagsRequiresArgument("--config-dir");
-				diablo_quit(0);
+				diablo_quit(64);
 			}
 			paths::SetConfigPath(argv[++i]);
+		} else if (arg == "--lang") {
+			if (i + 1 == argc) {
+				PrintFlagsRequiresArgument("--lang");
+				diablo_quit(64);
+			}
+			forceLocale = argv[++i];
 #ifndef DISABLE_DEMOMODE
 		} else if (arg == "--demo") {
 			if (i + 1 == argc) {
 				PrintFlagsRequiresArgument("--demo");
-				diablo_quit(0);
+				diablo_quit(64);
 			}
 			demoNumber = SDL_atoi(argv[++i]);
 			gbShowIntro = false;
@@ -996,7 +1003,7 @@ void DiabloParseFlags(int argc, char **argv)
 		} else if (arg == "--record") {
 			if (i + 1 == argc) {
 				PrintFlagsRequiresArgument("--record");
-				diablo_quit(0);
+				diablo_quit(64);
 			}
 			recordNumber = SDL_atoi(argv[++i]);
 		} else if (arg == "--create-reference") {

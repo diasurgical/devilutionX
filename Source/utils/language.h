@@ -10,6 +10,10 @@
 #define N_(x) (x)
 #define P_(context, x) (x)
 
+extern std::string forceLocale;
+
+devilution::string_view GetLanguageCode();
+
 bool HasTranslation(const std::string &locale);
 void LanguageInitialize();
 
