@@ -13,6 +13,10 @@
 #include "utils/paths.h"
 #include "utils/stdcompat/string_view.hpp"
 
+#ifdef USE_SDL1
+#include "utils/sdl2_to_1_2_backports.h"
+#endif
+
 #define MO_MAGIC 0x950412de
 
 namespace {
@@ -264,6 +268,22 @@ bool ReadEntry(AssetHandle &handle, const MoEntry &e, char *result)
 	return handle.read(result, e.length);
 }
 
+bool CopyData(void *dst, const byte *data, size_t dataSize, size_t offset, size_t length)
+{
+	if (offset + length > dataSize)
+		return false;
+	memcpy(dst, data + offset, length);
+	return true;
+}
+
+bool ReadEntry(const byte *data, size_t dataSize, const MoEntry &e, char *result)
+{
+	if (!CopyData(result, data, dataSize, e.offset, e.length))
+		return false;
+	result[e.length] = '\0';
+	return true;
+}
+
 } // namespace
 
 string_view LanguageParticularTranslate(string_view context, string_view message)
@@ -346,12 +366,13 @@ void LanguageInitialize()
 	const std::string lang(*sgOptions.Language.code);
 
 	AssetHandle handle;
-	uint32_t loadTranslationsStart = SDL_GetTicks();
+	const uint32_t loadTranslationsStart = SDL_GetTicks();
 
 	std::string translationsPath;
+	size_t fileSize;
 	for (const char *ext : Extensions) {
 		translationsPath = lang + ext;
-		handle = OpenAsset(translationsPath.c_str());
+		handle = OpenAsset(translationsPath.c_str(), fileSize);
 		if (handle.ok())
 			break;
 	}
@@ -360,9 +381,27 @@ void LanguageInitialize()
 		return;
 	}
 
+#ifdef UNPACKED_MPQS
+	const bool readWholeFile = false;
+#else
+	// If reading from an MPQ, it is much faster to
+	// load the whole file instead of seeking.
+	const bool readWholeFile = handle.handle->type == SDL_RWOPS_UNKNOWN;
+#endif
+
+	std::unique_ptr<byte[]> data;
+	if (readWholeFile) {
+		data.reset(new byte[fileSize]);
+		if (!handle.read(data.get(), fileSize))
+			return;
+		handle = {};
+	}
+
 	// Read header and do sanity checks
 	MoHead head;
-	if (!handle.read(&head, sizeof(MoHead))) {
+	if (readWholeFile
+	        ? !CopyData(&head, data.get(), fileSize, 0, sizeof(MoHead))
+	        : !handle.read(&head, sizeof(MoHead))) {
 		return;
 	}
 	SwapLE(head);
@@ -377,10 +416,9 @@ void LanguageInitialize()
 
 	// Read entries of source strings
 	std::unique_ptr<MoEntry[]> src { new MoEntry[head.nbMappings] };
-	if (!handle.seek(head.srcOffset)) {
-		return;
-	}
-	if (!handle.read(src.get(), head.nbMappings * sizeof(MoEntry))) {
+	if (readWholeFile
+	        ? !CopyData(src.get(), data.get(), fileSize, head.srcOffset, head.nbMappings * sizeof(MoEntry))
+	        : !handle.seek(head.srcOffset) || !handle.read(src.get(), head.nbMappings * sizeof(MoEntry))) {
 		return;
 	}
 	for (size_t i = 0; i < head.nbMappings; ++i) {
@@ -389,10 +427,9 @@ void LanguageInitialize()
 
 	// Read entries of target strings
 	std::unique_ptr<MoEntry[]> dst { new MoEntry[head.nbMappings] };
-	if (!handle.seek(head.dstOffset)) {
-		return;
-	}
-	if (!handle.read(dst.get(), head.nbMappings * sizeof(MoEntry))) {
+	if (readWholeFile
+	        ? !CopyData(dst.get(), data.get(), fileSize, head.dstOffset, head.nbMappings * sizeof(MoEntry))
+	        : !handle.seek(head.dstOffset) || !handle.read(dst.get(), head.nbMappings * sizeof(MoEntry))) {
 		return;
 	}
 	for (size_t i = 0; i < head.nbMappings; ++i) {
@@ -405,7 +442,9 @@ void LanguageInitialize()
 	}
 	{
 		auto headerValue = std::unique_ptr<char[]> { new char[dst[0].length + 1] };
-		if (!ReadEntry(handle, dst[0], &headerValue[0])) {
+		if (readWholeFile
+		        ? !ReadEntry(data.get(), fileSize, dst[0], &headerValue[0])
+		        : !ReadEntry(handle, dst[0], &headerValue[0])) {
 			return;
 		}
 		ParseMetadata(&headerValue[0]);
@@ -428,7 +467,9 @@ void LanguageInitialize()
 	char *keyPtr = &translationKeys[0];
 	char *valuePtr = &translationValues[0];
 	for (uint32_t i = 1; i < head.nbMappings; i++) {
-		if (ReadEntry(handle, src[i], keyPtr) && ReadEntry(handle, dst[i], valuePtr)) {
+		if (readWholeFile
+		        ? ReadEntry(data.get(), fileSize, src[i], keyPtr) && ReadEntry(data.get(), fileSize, dst[i], valuePtr)
+		        : ReadEntry(handle, src[i], keyPtr) && ReadEntry(handle, dst[i], valuePtr)) {
 			// Plural keys also have a plural form but it does not participate in lookup.
 			// Plural values are \0-terminated.
 			string_view value { valuePtr, dst[i].length + 1 };

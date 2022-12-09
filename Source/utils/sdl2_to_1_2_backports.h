@@ -315,6 +315,7 @@ int SDL_BlitScaled(SDL_Surface *src, SDL_Rect *srcrect,
     SDL_Surface *dst, SDL_Rect *dstrect);
 
 //== Filesystem
+#define SDL_RWOPS_UNKNOWN 0U
 
 Sint64 SDL_RWsize(SDL_RWops *context);
 
