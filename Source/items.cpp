@@ -3755,6 +3755,8 @@ void DrawItemInfo(const Surface &out)
 	int nextLine = 2 * 12;
 	bool noBonuses = true;
 	bool hasToHitPower = false;
+	bool modifiedAC = false;
+	bool modifiedDam = false;
 
 	switch (curritem._iMagical) {
 	case ITEM_QUALITY_UNIQUE: {
@@ -3765,8 +3767,41 @@ void DrawItemInfo(const Surface &out)
 		const Rectangle dividerLineRect { position + Displacement { 26, 25 }, { 267, 3 } };
 		out.BlitFrom(out, MakeSdlRect(dividerLineRect), dividerLineRect.position + Displacement { 0, 5 * 12 + 13 });
 
-		rect.position.y += (10 - uitem.UINumPL - ((curritem._itype == ItemType::Sword || curritem._itype == ItemType::Mace) ? 2 : 0)) * 12;
+		rect.position.y += (10 - uitem.UINumPL - ((curritem._itype == ItemType::Sword || curritem._itype == ItemType::Mace) ? 2 : 0)) * 13;
 		assert(uitem.UINumPL <= sizeof(uitem.powers) / sizeof(*uitem.powers));
+
+		for (const auto &power : uitem.powers) {
+			if (IsAnyOf(power.type, IPL_TOHIT, IPL_TOHIT_CURSE, IPL_TOHIT_DAMP, IPL_TOHIT_DAMP_CURSE))
+				hasToHitPower = true;
+
+			if (power.type == IPL_INVALID || power.type == IPL_INVCURS)
+				break;
+
+			rect.position.y += nextLine;
+			DrawString(out, PrintItemPower(power.type, curritem), rect, GetItemPowerTextColor(power.type, curritem) | UiFlags::AlignCenter);
+
+			switch (power.type) {
+			case IPL_ACP:
+			case IPL_ACP_CURSE:
+				modifiedAC = true;
+				break;
+			case IPL_DAMP:
+			case IPL_DAMP_CURSE:
+			case IPL_TOHIT_DAMP:
+			case IPL_TOHIT_DAMP_CURSE:
+			case IPL_DAMMOD:
+				modifiedDam = true;
+				break;
+			default:
+				break;
+			}
+		}
+
+		if (curritem._iPLToHit > 0 && !hasToHitPower) {
+			rect.position.y += nextLine;
+			DrawString(out, PrintItemPower(IPL_TOHIT, curritem), rect, UiFlags::ColorWhite | UiFlags::AlignCenter);
+			noBonuses = false;
+		}
 
 		if (curritem._itype == ItemType::Sword) {
 			rect.position.y += nextLine;
@@ -3780,21 +3815,15 @@ void DrawItemInfo(const Surface &out)
 			DrawString(out, fmt::format(fmt::runtime(_("-50% damage vs. animals"))), rect, UiFlags::ColorRed | UiFlags::AlignCenter);
 		}
 
-		for (const auto &power : uitem.powers) {
-			if (IsAnyOf(power.type, IPL_TOHIT, IPL_TOHIT_CURSE, IPL_TOHIT_DAMP, IPL_TOHIT_DAMP_CURSE))
-				hasToHitPower = true;
+		rect.position.y += nextLine;
 
-			if (power.type == IPL_INVALID)
-				break;
-
+		if (modifiedAC) {
 			rect.position.y += nextLine;
-			DrawString(out, PrintItemPower(power.type, curritem), rect, GetItemPowerTextColor(power.type, curritem) | UiFlags::AlignCenter);
+			DrawString(out, fmt::format(fmt::runtime(_("armor class: {:d}")), curritem._iAC * (curritem._iPLAC + 100) / 100), rect, UiFlags::ColorGold | UiFlags::AlignCenter);
 		}
-
-		if (curritem._iPLToHit > 0 && !hasToHitPower) {
+		if (modifiedDam) {
 			rect.position.y += nextLine;
-			DrawString(out, PrintItemPower(IPL_TOHIT, curritem), rect, UiFlags::ColorWhite | UiFlags::AlignCenter);
-			noBonuses = false;
+			DrawString(out, fmt::format(fmt::runtime(_("damage: {:d}-{:d}")), curritem._iMinDam * (curritem._iPLDam + 100) / 100 + curritem._iPLDamMod, curritem._iMaxDam * (curritem._iPLDam + 100) / 100 + curritem._iPLDamMod), rect, UiFlags::ColorGold | UiFlags::AlignCenter);
 		}
 	} break;
 	case ITEM_QUALITY_MAGIC:
@@ -3806,6 +3835,48 @@ void DrawItemInfo(const Surface &out)
 
 		rect.position.y += (10 - (curritem._iPrePower != IPL_INVALID ? 1 : 0) - (curritem._iSufPower != IPL_INVALID ? 1 : 0) - ((curritem._itype == ItemType::Sword || curritem._itype == ItemType::Mace) ? 2 : 0)) * 12;
 
+		if (curritem._iPrePower != IPL_INVALID) {
+			rect.position.y += nextLine;
+			DrawString(out, PrintItemPower(curritem._iPrePower, curritem), rect, GetItemPowerTextColor(curritem._iPrePower, curritem) | UiFlags::AlignCenter);
+
+			switch (curritem._iPrePower) {
+			case IPL_ACP:
+			case IPL_ACP_CURSE:
+				modifiedAC = true;
+				break;
+			case IPL_DAMP:
+			case IPL_DAMP_CURSE:
+			case IPL_TOHIT_DAMP:
+			case IPL_TOHIT_DAMP_CURSE:
+				modifiedDam = true;
+				break;
+			default:
+				break;
+			}
+
+			noBonuses = false;
+		}
+
+		if (curritem._iSufPower != IPL_INVALID) {
+			rect.position.y += nextLine;
+			DrawString(out, PrintItemPower(curritem._iSufPower, curritem), rect, GetItemPowerTextColor(curritem._iSufPower, curritem) | UiFlags::AlignCenter);
+
+			switch (curritem._iSufPower) {
+			case IPL_DAMMOD:
+				modifiedDam = true;
+			default:
+				break;
+			}
+
+			noBonuses = false;
+		}
+
+		if (curritem._iPLToHit > 0 && IsNoneOf(curritem._iPrePower, IPL_TOHIT, IPL_TOHIT_CURSE, IPL_TOHIT_DAMP, IPL_TOHIT_DAMP_CURSE)) {
+			rect.position.y += nextLine;
+			DrawString(out, PrintItemPower(IPL_TOHIT, curritem), rect, UiFlags::ColorWhite | UiFlags::AlignCenter);
+			noBonuses = false;
+		}
+
 		if (curritem._itype == ItemType::Sword) {
 			rect.position.y += nextLine;
 			DrawString(out, fmt::format(fmt::runtime(_("+50% damage vs. animals"))), rect, UiFlags::ColorWhite | UiFlags::AlignCenter);
@@ -3820,22 +3891,15 @@ void DrawItemInfo(const Surface &out)
 			noBonuses = false;
 		}
 
-		if (curritem._iPrePower != IPL_INVALID) {
-			rect.position.y += nextLine;
-			DrawString(out, PrintItemPower(curritem._iPrePower, curritem), rect, GetItemPowerTextColor(curritem._iPrePower, curritem) | UiFlags::AlignCenter);
-			noBonuses = false;
-		}
+		rect.position.y += nextLine;
 
-		if (curritem._iSufPower != IPL_INVALID) {
+		if (modifiedAC) {
 			rect.position.y += nextLine;
-			DrawString(out, PrintItemPower(curritem._iSufPower, curritem), rect, GetItemPowerTextColor(curritem._iSufPower, curritem) | UiFlags::AlignCenter);
-			noBonuses = false;
+			DrawString(out, fmt::format(fmt::runtime(_("armor class: {:d}")), curritem._iAC * (curritem._iPLAC + 100) / 100), rect, UiFlags::ColorGold | UiFlags::AlignCenter);
 		}
-
-		if (curritem._iPLToHit > 0 && IsNoneOf(curritem._iPrePower, IPL_TOHIT, IPL_TOHIT_CURSE, IPL_TOHIT_DAMP, IPL_TOHIT_DAMP_CURSE)) {
+		if (modifiedDam) {
 			rect.position.y += nextLine;
-			DrawString(out, PrintItemPower(IPL_TOHIT, curritem), rect, UiFlags::ColorWhite | UiFlags::AlignCenter);
-			noBonuses = false;
+			DrawString(out, fmt::format(fmt::runtime(_("damage: {:d}-{:d}")), curritem._iMinDam * (curritem._iPLDam + 100) / 100 + curritem._iPLDamMod, curritem._iMaxDam * (curritem._iPLDam + 100) / 100 + curritem._iPLDamMod), rect, UiFlags::ColorGold | UiFlags::AlignCenter);
 		}
 
 		if (noBonuses)
