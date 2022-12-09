@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "effects.h"
+#include "engine/sound_position.hpp"
 #include "player.h"
 
 using namespace devilution;

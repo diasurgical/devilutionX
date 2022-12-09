@@ -106,6 +106,7 @@ set(libdevilutionx_SRCS
   engine/palette.cpp
   engine/path.cpp
   engine/random.cpp
+  engine/sound_position.cpp
   engine/surface.cpp
   engine/trn.cpp
 

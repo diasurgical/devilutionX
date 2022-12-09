@@ -21,6 +21,7 @@
 #include "engine/points_in_rectangle_range.hpp"
 #include "engine/random.hpp"
 #include "engine/render/clx_render.hpp"
+#include "engine/sound_position.hpp"
 #include "engine/world_tile.hpp"
 #include "init.h"
 #include "levels/crypt.h"
