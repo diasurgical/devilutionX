@@ -3815,13 +3815,14 @@ void DrawItemInfo(const Surface &out)
 			DrawString(out, fmt::format(fmt::runtime(_("-50% damage vs. animals"))), rect, UiFlags::ColorRed | UiFlags::AlignCenter);
 		}
 
-		rect.position.y += nextLine;
-
 		if (modifiedAC) {
+			rect.position.y += nextLine;
 			rect.position.y += nextLine;
 			DrawString(out, fmt::format(fmt::runtime(_("armor class: {:d}")), curritem._iAC * (curritem._iPLAC + 100) / 100), rect, UiFlags::ColorGold | UiFlags::AlignCenter);
 		}
+
 		if (modifiedDam) {
+			rect.position.y += nextLine;
 			rect.position.y += nextLine;
 			DrawString(out, fmt::format(fmt::runtime(_("damage: {:d}-{:d}")), curritem._iMinDam * (curritem._iPLDam + 100) / 100 + curritem._iPLDamMod, curritem._iMaxDam * (curritem._iPLDam + 100) / 100 + curritem._iPLDamMod), rect, UiFlags::ColorGold | UiFlags::AlignCenter);
 		}
@@ -3871,6 +3872,12 @@ void DrawItemInfo(const Surface &out)
 			noBonuses = false;
 		}
 
+		if (curritem._iCharges != 0) {
+			rect.position.y += nextLine;
+			DrawString(out, PrintItemPower(IPL_SPELL, curritem), rect, UiFlags::ColorWhite | UiFlags::AlignCenter);
+			noBonuses = false;
+		}
+
 		if (curritem._iPLToHit > 0 && IsNoneOf(curritem._iPrePower, IPL_TOHIT, IPL_TOHIT_CURSE, IPL_TOHIT_DAMP, IPL_TOHIT_DAMP_CURSE)) {
 			rect.position.y += nextLine;
 			DrawString(out, PrintItemPower(IPL_TOHIT, curritem), rect, UiFlags::ColorWhite | UiFlags::AlignCenter);
@@ -3891,13 +3898,14 @@ void DrawItemInfo(const Surface &out)
 			noBonuses = false;
 		}
 
-		rect.position.y += nextLine;
-
 		if (modifiedAC) {
+			rect.position.y += nextLine;
 			rect.position.y += nextLine;
 			DrawString(out, fmt::format(fmt::runtime(_("armor class: {:d}")), curritem._iAC * (curritem._iPLAC + 100) / 100), rect, UiFlags::ColorGold | UiFlags::AlignCenter);
 		}
+
 		if (modifiedDam) {
+			rect.position.y += nextLine;
 			rect.position.y += nextLine;
 			DrawString(out, fmt::format(fmt::runtime(_("damage: {:d}-{:d}")), curritem._iMinDam * (curritem._iPLDam + 100) / 100 + curritem._iPLDamMod, curritem._iMaxDam * (curritem._iPLDam + 100) / 100 + curritem._iPLDamMod), rect, UiFlags::ColorGold | UiFlags::AlignCenter);
 		}
