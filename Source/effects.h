@@ -1177,7 +1177,6 @@ extern _sfx_id sfxdnum;
 
 bool effect_is_playing(int nSFX);
 void stream_stop();
-bool CalculateSoundPosition(Point soundPosition, int *plVolume, int *plPan);
 void PlaySFX(_sfx_id psfx);
 void PlaySfxLoc(_sfx_id psfx, Point position, bool randomizeByCategory = true);
 void sound_stop();

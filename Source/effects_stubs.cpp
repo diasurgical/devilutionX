@@ -12,7 +12,6 @@ _sfx_id sfxdnum;
 // clang-format off
 bool effect_is_playing(int nSFX) { return false; }
 void stream_stop() { }
-bool CalculateSoundPosition(Point soundPosition, int *plVolume, int *plPan) { return false; }
 void PlaySFX(_sfx_id psfx)
 {
 	switch (psfx) {
