@@ -265,8 +265,8 @@ bool LoadDemoMessages(int i)
 			case 0x100: // SDL_QUIT
 				break;
 			default:
-				if (eventType < SDL_USEREVENT) {
-					app_fatal(StrCat("Unknown event ", static_cast<uint32_t>(eventType)));
+				if (eventType < 0x8000) { // SDL_USEREVENT
+					app_fatal(StrCat("Unknown event ", eventType));
 				}
 				break;
 			}
