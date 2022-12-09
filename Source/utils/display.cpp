@@ -497,6 +497,8 @@ SDL_Surface *GetOutputSurface()
 bool OutputRequiresScaling()
 {
 #ifdef USE_SDL1
+	if (HeadlessMode)
+		return false;
 	return gnScreenWidth != GetOutputSurface()->w || gnScreenHeight != GetOutputSurface()->h;
 #else // SDL2, scaling handled by renderer.
 	return false;
