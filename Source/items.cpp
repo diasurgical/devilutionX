@@ -3751,7 +3751,7 @@ void DrawItemInfo(const Surface &out)
 
 	DrawItemInfoWindow(out);
 
-	Rectangle rect { position + Displacement { 32, 56 }, { 257, 0 } };
+	Rectangle rect { position + Displacement { 32, 60 }, { 257, 0 } };
 	int nextLine = 2 * 12;
 	bool noBonuses = true;
 	bool hasToHitPower = false;
