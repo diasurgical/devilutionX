@@ -19,6 +19,8 @@
 
 #define MO_MAGIC 0x950412de
 
+std::string forceLocale;
+
 namespace {
 
 using namespace devilution;
@@ -112,15 +114,15 @@ string_view TrimRight(string_view str)
 	return str;
 }
 
-// English, Danish, Spanish, Italian, Swedish
-unsigned PluralForms = 2;
-tl::function_ref<int(int n)> GetLocalPluralId = [](int n) -> int { return n != 1 ? 1 : 0; };
-
 /** plural=(n != 1); */
 int PluralIfNotOne(int n)
 {
 	return n != 1 ? 1 : 0;
 }
+
+// English, Danish, Spanish, Italian, Swedish
+unsigned PluralForms = 2;
+tl::function_ref<int(int n)> GetLocalPluralId = PluralIfNotOne;
 
 /**
  * Match plural=(n != 1);"
@@ -148,7 +150,7 @@ void SetPluralForm(string_view expression)
 
 	// en, bg, da, de, es, it, sv
 	if (expression == "(n != 1)") {
-		GetLocalPluralId = &PluralIfNotOne;
+		GetLocalPluralId = PluralIfNotOne;
 		return;
 	}
 
@@ -340,9 +342,16 @@ bool HasTranslation(const std::string &locale)
 	});
 }
 
+string_view GetLanguageCode()
+{
+	if (!forceLocale.empty())
+		return forceLocale;
+	return *sgOptions.Language.code;
+}
+
 bool IsSmallFontTall()
 {
-	const string_view code = (*sgOptions.Language.code).substr(0, 2);
+	const string_view code = GetLanguageCode().substr(0, 2);
 	return code == "zh" || code == "ja" || code == "ko";
 }
 
@@ -356,14 +365,14 @@ void LanguageInitialize()
 		UiErrorOkDialog(
 		    "Missing fonts.mpq",
 		    StrCat("fonts.mpq is required for locale \"",
-		        *sgOptions.Language.code,
+		        GetLanguageCode(),
 		        "\"\n\n"
 		        "Please download fonts.mpq from:\n"
 		        "github.com/diasurgical/\ndevilutionx-assets/releases"));
-		sgOptions.Language.code = "en";
+		forceLocale = "en";
 	}
 
-	const std::string lang(*sgOptions.Language.code);
+	const std::string lang(GetLanguageCode());
 
 	AssetHandle handle;
 	const uint32_t loadTranslationsStart = SDL_GetTicks();
@@ -377,7 +386,9 @@ void LanguageInitialize()
 			break;
 	}
 	if (!handle.ok()) {
-		GetLocalPluralId = &PluralIfNotOne; // Reset to English plural form
+		// Reset to English, which is always available:
+		forceLocale = "en";
+		GetLocalPluralId = PluralIfNotOne;
 		return;
 	}
 
