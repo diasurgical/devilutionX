@@ -19,6 +19,11 @@ namespace {
 
 using namespace devilution;
 
+// Translations normally come in ".gmo" files.
+// We also support ".mo" because that is what poedit generates
+// and what translators use to test their work.
+constexpr std::array<const char *, 2> Extensions { ".mo", ".gmo" };
+
 std::unique_ptr<char[]> translationKeys;
 std::unique_ptr<char[]> translationValues;
 
@@ -107,6 +112,12 @@ string_view TrimRight(string_view str)
 unsigned PluralForms = 2;
 tl::function_ref<int(int n)> GetLocalPluralId = [](int n) -> int { return n != 1 ? 1 : 0; };
 
+/** plural=(n != 1); */
+int PluralIfNotOne(int n)
+{
+	return n != 1 ? 1 : 0;
+}
+
 /**
  * Match plural=(n != 1);"
  */
@@ -133,7 +144,7 @@ void SetPluralForm(string_view expression)
 
 	// en, bg, da, de, es, it, sv
 	if (expression == "(n != 1)") {
-		GetLocalPluralId = [](int n) -> int { return n != 1 ? 1 : 0; };
+		GetLocalPluralId = &PluralIfNotOne;
 		return;
 	}
 
@@ -304,15 +315,14 @@ bool HasTranslation(const std::string &locale)
 		return true;
 	}
 
-	constexpr std::array<const char *, 2> Extensions { ".mo", ".gmo" };
-	return std::any_of(Extensions.cbegin(), Extensions.cend(), [locale](const std::string &extension) {
+	return std::any_of(Extensions.cbegin(), Extensions.cend(), [locale](const char *extension) {
 		return FindAsset((locale + extension).c_str()).ok();
 	});
 }
 
 bool IsSmallFontTall()
 {
-	string_view code = (*sgOptions.Language.code).substr(0, 2);
+	const string_view code = (*sgOptions.Language.code).substr(0, 2);
 	return code == "zh" || code == "ja" || code == "ko";
 }
 
@@ -336,17 +346,17 @@ void LanguageInitialize()
 	const std::string lang(*sgOptions.Language.code);
 
 	AssetHandle handle;
+	uint32_t loadTranslationsStart = SDL_GetTicks();
 
-	// Translations normally come in ".gmo" files.
-	// We also support ".mo" because that is what poedit generates
-	// and what translators use to test their work.
-	for (const char *ext : { ".mo", ".gmo" }) {
-		if ((handle = OpenAsset((lang + ext).c_str())).ok()) {
+	std::string translationsPath;
+	for (const char *ext : Extensions) {
+		translationsPath = lang + ext;
+		handle = OpenAsset(translationsPath.c_str());
+		if (handle.ok())
 			break;
-		}
 	}
 	if (!handle.ok()) {
-		SetPluralForm("plural=(n != 1);"); // Reset to English plural form
+		GetLocalPluralId = &PluralIfNotOne; // Reset to English plural form
 		return;
 	}
 
@@ -432,4 +442,6 @@ void LanguageInitialize()
 			valuePtr += dst[i].length + 1;
 		}
 	}
+
+	LogVerbose(StrCat("Loaded translations from ", translationsPath, " in ", SDL_GetTicks() - loadTranslationsStart, "ms"));
 }
