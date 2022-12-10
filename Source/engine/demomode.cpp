@@ -10,6 +10,7 @@
 #endif
 
 #include "controls/plrctrls.h"
+#include "gmenu.h"
 #include "menu.h"
 #include "nthread.h"
 #include "options.h"
@@ -364,7 +365,8 @@ bool GetRunGameLoop(bool &drawGame, bool &processInput)
 			uint8_t progressToNextGameTick = static_cast<uint8_t>(fraction);
 			if (dmsg.type == DemoMsgType::GameTick || dmsg.progressToNextGameTick > progressToNextGameTick) {
 				// we are ahead of the replay => add a additional rendering for smoothness
-				ProgressToNextGameTick = progressToNextGameTick;
+				if (gbRunGame && PauseMode == 0 && (gbIsMultiplayer || !gmenu_is_active()) && gbProcessPlayers) // if game is not running or paused there is no next gametick in the near future
+					ProgressToNextGameTick = progressToNextGameTick;
 				processInput = false;
 				drawGame = true;
 				return false;
