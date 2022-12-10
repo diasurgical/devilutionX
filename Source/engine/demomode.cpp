@@ -380,6 +380,9 @@ bool GetRunGameLoop(bool &drawGame, bool &processInput)
 
 bool FetchMessage(SDL_Event *event, uint16_t *modState)
 {
+	if (CurrentEventHandler == DisableInputEventHandler)
+		return false;
+
 	SDL_Event e;
 	if (SDL_PollEvent(&e) != 0) {
 		if (e.type == SDL_QUIT) {
@@ -426,6 +429,8 @@ void RecordGameLoopResult(bool runGameLoop)
 void RecordMessage(const SDL_Event &event, uint16_t modState)
 {
 	if (!gbRunGame || !DemoRecording.is_open())
+		return;
+	if (CurrentEventHandler == DisableInputEventHandler)
 		return;
 	switch (event.type) {
 	case SDL_MOUSEMOTION:
