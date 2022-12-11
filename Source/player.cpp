@@ -398,6 +398,10 @@ void StartRangeAttack(Player &player, Direction d, WorldTileCoord cx, WorldTileC
 		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastAttack)) {
 			skippedAnimationFrames += 1;
 		}
+	} else {
+		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::MultipleArrows)) {
+			skippedAnimationFrames -= 1;
+		}
 	}
 
 	auto animationFlags = AnimationDistributionFlags::ProcessAnimationPending;
