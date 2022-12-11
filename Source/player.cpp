@@ -1570,7 +1570,7 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 		}
 	}
 
-	if (player._pmode == PM_RATTACK && player.AnimInfo.currentFrame >= player._pAFNum) {
+	if (player._pmode == PM_RATTACK && player.AnimInfo.currentFrame >= player._pAFNum + (HasAnyOf(player._pIFlags, ItemSpecialEffect::MultipleArrows) ? 1 : 0)) {
 		if (player.destAction == ACTION_RATTACK) {
 			d = GetDirection(player.position.tile, { player.destParam1, player.destParam2 });
 			StartRangeAttack(player, d, player.destParam1, player.destParam2);
