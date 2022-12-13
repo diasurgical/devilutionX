@@ -4089,6 +4089,7 @@ void SpawnWitch(int lvl)
 				if (lvl >= AllItemsList[bookType].iMinMLvl) {
 					item._iSeed = AdvanceRndSeed();
 					SetRndSeed(item._iSeed);
+					AdvanceRndSeed();
 					GetItemAttrs(item, bookType, lvl);
 					item._iCreateInfo = lvl | CF_WITCH;
 					item._iIdentified = true;
