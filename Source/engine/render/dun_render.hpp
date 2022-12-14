@@ -261,13 +261,11 @@ string_view MaskTypeToString(MaskType maskType);
  * @param out Target buffer
  * @param position Target buffer coordinates
  * @param levelCelBlock The MIN block of the level CEL file.
- * @param levelPieceId The piece ID (index into SOLData and DPieceMicros).
  * @param maskType The mask to use,
  * @param lightTableIndex The light level to use for rendering (index into LightTables / 256).
  */
 void RenderTile(const Surface &out, Point position,
-    uint16_t levelPieceId, LevelCelBlock levelCelBlock,
-    MaskType maskType, uint8_t lightTableIndex);
+    LevelCelBlock levelCelBlock, MaskType maskType, uint8_t lightTableIndex);
 
 /**
  * @brief Render a black 64x31 tile ◆

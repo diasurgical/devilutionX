@@ -560,7 +560,7 @@ void DrawCell(const Surface &out, Point tilePosition, Point targetBufferPosition
 			if (levelCelBlock.hasValue()) {
 				if (maskType != MaskType::LeftFoliage || tileType == TileType::TransparentSquare) {
 					RenderTile(out, targetBufferPosition,
-					    levelPieceId, levelCelBlock, maskType, LightTableIndex);
+					    levelCelBlock, maskType, LightTableIndex);
 				}
 			}
 		}
@@ -572,7 +572,7 @@ void DrawCell(const Surface &out, Point tilePosition, Point targetBufferPosition
 				if (transparency || !foliage || levelCelBlock.type() == TileType::TransparentSquare) {
 					if (maskType != MaskType::RightFoliage || tileType == TileType::TransparentSquare) {
 						RenderTile(out, targetBufferPosition + Displacement { TILE_WIDTH / 2, 0 },
-						    levelPieceId, levelCelBlock, maskType, LightTableIndex);
+						    levelCelBlock, maskType, LightTableIndex);
 					}
 				}
 			}
@@ -585,7 +585,7 @@ void DrawCell(const Surface &out, Point tilePosition, Point targetBufferPosition
 			const LevelCelBlock levelCelBlock { pMap->mt[i] };
 			if (levelCelBlock.hasValue()) {
 				RenderTile(out, targetBufferPosition,
-				    levelPieceId, levelCelBlock,
+				    levelCelBlock,
 				    transparency ? MaskType::Transparent : MaskType::Solid, LightTableIndex);
 			}
 		}
@@ -593,7 +593,7 @@ void DrawCell(const Surface &out, Point tilePosition, Point targetBufferPosition
 			const LevelCelBlock levelCelBlock { pMap->mt[i + 1] };
 			if (levelCelBlock.hasValue()) {
 				RenderTile(out, targetBufferPosition + Displacement { TILE_WIDTH / 2, 0 },
-				    levelPieceId, levelCelBlock,
+				    levelCelBlock,
 				    transparency ? MaskType::Transparent : MaskType::Solid, LightTableIndex);
 			}
 		}
@@ -616,14 +616,14 @@ void DrawFloor(const Surface &out, Point tilePosition, Point targetBufferPositio
 		const LevelCelBlock levelCelBlock { DPieceMicros[levelPieceId].mt[0] };
 		if (levelCelBlock.hasValue()) {
 			RenderTile(out, targetBufferPosition,
-			    levelPieceId, levelCelBlock, MaskType::Solid, LightTableIndex);
+			    levelCelBlock, MaskType::Solid, LightTableIndex);
 		}
 	}
 	{
 		const LevelCelBlock levelCelBlock { DPieceMicros[levelPieceId].mt[1] };
 		if (levelCelBlock.hasValue()) {
 			RenderTile(out, targetBufferPosition + Displacement { TILE_WIDTH / 2, 0 },
-			    levelPieceId, levelCelBlock, MaskType::Solid, LightTableIndex);
+			    levelCelBlock, MaskType::Solid, LightTableIndex);
 		}
 	}
 }
