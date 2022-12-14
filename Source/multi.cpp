@@ -74,6 +74,13 @@ const event_type EventTypes[3] = {
 
 namespace {
 
+constexpr uint16_t HeaderCheckVal =
+#if SDL_BYTEORDER == SDL_LIL_ENDIAN
+    LoadBE16("ip");
+#else
+    LoadLE16("ip");
+#endif
+
 uint32_t sgbSentThisCycle;
 
 void BufferInit(TBuffer *pBuf)
@@ -124,15 +131,15 @@ void NetReceivePlayerData(TPkt *pkt)
 	const Player &myPlayer = *MyPlayer;
 	const Point target = myPlayer.GetTargetPosition();
 
-	pkt->hdr.wCheck = LoadBE32("\0\0ip");
+	pkt->hdr.wCheck = HeaderCheckVal;
 	pkt->hdr.px = myPlayer.position.tile.x;
 	pkt->hdr.py = myPlayer.position.tile.y;
 	pkt->hdr.targx = target.x;
 	pkt->hdr.targy = target.y;
-	pkt->hdr.php = myPlayer._pHitPoints;
-	pkt->hdr.pmhp = myPlayer._pMaxHP;
-	pkt->hdr.mana = myPlayer._pMana;
-	pkt->hdr.maxmana = myPlayer._pMaxMana;
+	pkt->hdr.php = SDL_SwapLE32(myPlayer._pHitPoints);
+	pkt->hdr.pmhp = SDL_SwapLE32(myPlayer._pMaxHP);
+	pkt->hdr.mana = SDL_SwapLE32(myPlayer._pMana);
+	pkt->hdr.maxmana = SDL_SwapLE32(myPlayer._pMaxMana);
 	pkt->hdr.bstr = myPlayer._pBaseStr;
 	pkt->hdr.bmag = myPlayer._pBaseMag;
 	pkt->hdr.bdex = myPlayer._pBaseDex;
@@ -185,9 +192,10 @@ void SendPacket(int playerId, const byte *packet, size_t size)
 	TPkt pkt;
 
 	NetReceivePlayerData(&pkt);
-	pkt.hdr.wLen = static_cast<uint16_t>(size + sizeof(pkt.hdr));
+	const size_t sizeWithheader = size + sizeof(pkt.hdr);
+	pkt.hdr.wLen = SDL_SwapLE16(static_cast<uint16_t>(sizeWithheader));
 	memcpy(pkt.body, packet, size);
-	if (!SNetSendMessage(playerId, &pkt.hdr, pkt.hdr.wLen))
+	if (!SNetSendMessage(playerId, &pkt.hdr, sizeWithheader))
 		nthread_terminate_game("SNetSendMessage0");
 }
 
@@ -501,8 +509,8 @@ void NetSendHiPri(int playerId, const byte *data, size_t size)
 		byte *hipriBody = ReceivePacket(&sgHiPriBuf, pkt.body, &msgSize);
 		byte *lowpriBody = ReceivePacket(&sgLoPriBuf, hipriBody, &msgSize);
 		msgSize = sync_all_monsters(lowpriBody, msgSize);
-		size_t len = gdwNormalMsgSize - msgSize;
-		pkt.hdr.wLen = static_cast<uint16_t>(len);
+		const size_t len = gdwNormalMsgSize - msgSize;
+		pkt.hdr.wLen = SDL_SwapLE16(static_cast<uint16_t>(len));
 		if (!SNetSendMessage(SNPLAYER_OTHERS, &pkt.hdr, static_cast<unsigned>(len)))
 			nthread_terminate_game("SNetSendMessage");
 	}
@@ -512,8 +520,8 @@ void multi_send_msg_packet(uint32_t pmask, const byte *data, size_t size)
 {
 	TPkt pkt;
 	NetReceivePlayerData(&pkt);
-	size_t len = size + sizeof(pkt.hdr);
-	pkt.hdr.wLen = static_cast<uint16_t>(len);
+	const size_t len = size + sizeof(pkt.hdr);
+	pkt.hdr.wLen = SDL_SwapLE16(static_cast<uint16_t>(len));
 	memcpy(pkt.body, data, size);
 	size_t playerID = 0;
 	for (size_t v = 1; playerID < Players.size(); playerID++, v <<= 1) {
@@ -601,9 +609,9 @@ void multi_process_network_packets()
 			continue;
 		if (playerId >= Players.size())
 			continue;
-		if (pkt->wCheck != LoadBE32("\0\0ip"))
+		if (pkt->wCheck != HeaderCheckVal)
 			continue;
-		if (pkt->wLen != dwMsgSize)
+		if (SDL_SwapLE16(pkt->wLen) != dwMsgSize)
 			continue;
 		Player &player = Players[playerId];
 		if (!IsNetPlayerValid(player)) {
@@ -618,10 +626,10 @@ void multi_process_network_packets()
 		player.position.last = syncPosition;
 		if (&player != MyPlayer) {
 			assert(gbBufferMsgs != 2);
-			player._pHitPoints = pkt->php;
-			player._pMaxHP = pkt->pmhp;
-			player._pMana = pkt->mana;
-			player._pMaxMana = pkt->maxmana;
+			player._pHitPoints = SDL_SwapLE32(pkt->php);
+			player._pMaxHP = SDL_SwapLE32(pkt->pmhp);
+			player._pMana = SDL_SwapLE32(pkt->mana);
+			player._pMaxMana = SDL_SwapLE32(pkt->maxmana);
 			bool cond = gbBufferMsgs == 1;
 			player._pBaseStr = pkt->bstr;
 			player._pBaseMag = pkt->bmag;
@@ -666,29 +674,27 @@ void multi_send_zero_packet(size_t pnum, _cmd_id bCmd, const byte *data, size_t 
 
 	for (size_t offset = 0; offset < size;) {
 		TPkt pkt {};
-		pkt.hdr.wCheck = LoadBE32("\0\0ip");
+		pkt.hdr.wCheck = HeaderCheckVal;
 		auto &message = *reinterpret_cast<TCmdPlrInfoHdr *>(pkt.body);
 		message.bCmd = bCmd;
-		message.wOffset = offset;
+		message.wOffset = SDL_SwapLE16(offset);
 
 		size_t dwBody = gdwLargestMsgSize - sizeof(pkt.hdr) - sizeof(message);
 		dwBody = std::min(dwBody, size - offset);
 		assert(dwBody <= 0x0ffff);
-		message.wBytes = dwBody;
+		message.wBytes = SDL_SwapLE16(dwBody);
 
-		memcpy(&pkt.body[sizeof(message)], &data[offset], message.wBytes);
+		memcpy(&pkt.body[sizeof(message)], &data[offset], dwBody);
 
-		size_t dwMsg = sizeof(pkt.hdr);
-		dwMsg += sizeof(message);
-		dwMsg += message.wBytes;
-		pkt.hdr.wLen = dwMsg;
+		const size_t dwMsg = sizeof(pkt.hdr) + sizeof(message) + dwBody;
+		pkt.hdr.wLen = SDL_SwapLE16(dwMsg);
 
 		if (!SNetSendMessage(pnum, &pkt, dwMsg)) {
 			nthread_terminate_game("SNetSendMessage2");
 			return;
 		}
 
-		offset += message.wBytes;
+		offset += dwBody;
 	}
 }
 
@@ -787,7 +793,7 @@ void recv_plrinfo(int pnum, const TCmdPlrInfoHdr &header, bool recv)
 	}
 	auto &packedPlayer = PackedPlayerBuffer[pnum];
 
-	if (sgwPackPlrOffsetTbl[pnum] != header.wOffset) {
+	if (sgwPackPlrOffsetTbl[pnum] != SDL_SwapLE16(header.wOffset)) {
 		sgwPackPlrOffsetTbl[pnum] = 0;
 		if (header.wOffset != 0) {
 			return;
@@ -797,9 +803,9 @@ void recv_plrinfo(int pnum, const TCmdPlrInfoHdr &header, bool recv)
 		SendPlayerInfo(pnum, CMD_ACK_PLRINFO);
 	}
 
-	memcpy(reinterpret_cast<uint8_t *>(&packedPlayer) + header.wOffset, reinterpret_cast<const uint8_t *>(&header) + sizeof(header), header.wBytes);
+	memcpy(reinterpret_cast<uint8_t *>(&packedPlayer) + SDL_SwapLE16(header.wOffset), reinterpret_cast<const uint8_t *>(&header) + sizeof(header), SDL_SwapLE16(header.wBytes));
 
-	sgwPackPlrOffsetTbl[pnum] += header.wBytes;
+	sgwPackPlrOffsetTbl[pnum] += SDL_SwapLE16(header.wBytes);
 	if (sgwPackPlrOffsetTbl[pnum] != sizeof(packedPlayer)) {
 		return;
 	}
