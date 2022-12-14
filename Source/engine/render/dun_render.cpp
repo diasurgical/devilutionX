@@ -1082,8 +1082,7 @@ string_view MaskTypeToString(MaskType maskType)
 #endif
 
 void RenderTile(const Surface &out, Point position,
-    uint16_t levelPieceId, LevelCelBlock levelCelBlock,
-    MaskType maskType, uint8_t lightTableIndex)
+    LevelCelBlock levelCelBlock, MaskType maskType, uint8_t lightTableIndex)
 {
 	const TileType tile = levelCelBlock.type();
 
