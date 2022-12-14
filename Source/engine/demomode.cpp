@@ -22,6 +22,11 @@
 
 namespace devilution {
 
+// #define LOG_DEMOMODE_MESSAGES
+// #define LOG_DEMOMODE_MESSAGES_MOUSEMOTION
+// #define LOG_DEMOMODE_MESSAGES_RENDERING
+// #define LOG_DEMOMODE_MESSAGES_GAMETICK
+
 namespace {
 
 enum class DemoMsgType : uint8_t {
@@ -214,6 +219,61 @@ bool CreateSdlEvent(const DemoMsg &dmsg, SDL_Event &event, uint16_t &modState)
 }
 #endif
 
+void LogDemoMessage(const DemoMsg &msg)
+{
+#ifdef LOG_DEMOMODE_MESSAGES
+	const uint8_t progressToNextGameTick = msg.progressToNextGameTick;
+	switch (msg.type) {
+	case DemoMsgType::Message: {
+		const uint32_t eventType = msg.eventType;
+		switch (eventType) {
+		case 0x400: // SDL_MOUSEMOTION
+#ifdef LOG_DEMOMODE_MESSAGES_MOUSEMOTION
+			Log("🖱️  Message {:>3} MOUSEMOTION {} {}", progressToNextGameTick,
+			    msg.motion.x, msg.motion.y);
+#endif
+			break;
+		case 0x401: // SDL_MOUSEBUTTONDOWN
+		case 0x402: // SDL_MOUSEBUTTONUP
+			Log("🖱️  Message {:>3} {} {} {} {} 0x{:x}", progressToNextGameTick,
+			    eventType == 0x401 ? "MOUSEBUTTONDOWN" : "MOUSEBUTTONUP",
+			    msg.button.button, msg.button.x, msg.button.y, msg.button.mod);
+			break;
+		case 0x403: // SDL_MOUSEWHEEL
+			Log("🖱️  Message {:>3} MOUSEWHEEL {} {} 0x{:x}", progressToNextGameTick,
+			    msg.wheel.x, msg.wheel.y, msg.wheel.mod);
+			break;
+		case 0x300: // SDL_KEYDOWN
+		case 0x301: // SDL_KEYUP
+			Log("🔤 Message {:>3} {} 0x{:x} 0x{:x}", progressToNextGameTick,
+			    eventType == 0x300 ? "KEYDOWN" : "KEYUP",
+			    msg.key.sym, msg.key.mod);
+			break;
+		case 0x100: // SDL_QUIT
+			Log("❎  Message {:>3} QUIT", progressToNextGameTick);
+			break;
+		default:
+			Log("📨  Message {:>3} USEREVENT 0x{:x}", progressToNextGameTick, eventType);
+			break;
+		}
+	} break;
+	case DemoMsgType::GameTick:
+#ifdef LOG_DEMOMODE_MESSAGES_GAMETICK
+		Log("⏲️  GameTick {:>3}", progressToNextGameTick);
+#endif
+		break;
+	case DemoMsgType::Rendering:
+#ifdef LOG_DEMOMODE_MESSAGES_RENDERING
+		Log("🖼️  Rendering {:>3}", progressToNextGameTick);
+#endif
+		break;
+	default:
+		LogError("INVALID DEMO MODE MESSAGE {} {:>3}", static_cast<uint32_t>(msg.type), progressToNextGameTick);
+		break;
+	}
+#endif // LOG_DEMOMODE_MESSAGES
+}
+
 bool LoadDemoMessages(int i)
 {
 	std::ifstream demofile;
@@ -345,6 +405,7 @@ bool GetRunGameLoop(bool &drawGame, bool &processInput)
 	if (Demo_Message_Queue.empty())
 		app_fatal("Demo queue empty");
 	const DemoMsg dmsg = Demo_Message_Queue.front();
+	LogDemoMessage(dmsg);
 	if (dmsg.type == DemoMsgType::Message)
 		app_fatal("Unexpected Message");
 	if (Timedemo) {
@@ -411,6 +472,7 @@ bool FetchMessage(SDL_Event *event, uint16_t *modState)
 
 	if (!Demo_Message_Queue.empty()) {
 		const DemoMsg dmsg = Demo_Message_Queue.front();
+		LogDemoMessage(dmsg);
 		if (dmsg.type == DemoMsgType::Message) {
 			const bool hasEvent = CreateSdlEvent(dmsg, *event, *modState);
 			ProgressToNextGameTick = dmsg.progressToNextGameTick;
