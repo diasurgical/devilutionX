@@ -2633,7 +2633,10 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 		int8_t ticksPerFrame;
 		player.getAnimationFramesAndTicksPerFrame(graphic, numberOfFrames, ticksPerFrame);
 		LoadPlrGFX(player, graphic);
-		player.AnimInfo.changeAnimationData(player.AnimationData[static_cast<size_t>(graphic)].spritesForDirection(player._pdir), numberOfFrames, ticksPerFrame);
+		OptionalClxSpriteList sprites;
+		if (!HeadlessMode)
+			sprites = player.AnimationData[static_cast<size_t>(graphic)].spritesForDirection(player._pdir);
+		player.AnimInfo.changeAnimationData(sprites, numberOfFrames, ticksPerFrame);
 	} else {
 		player._pgfxnum = gfxNum;
 	}
