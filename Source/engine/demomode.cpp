@@ -291,8 +291,10 @@ bool LoadDemoMessages(int i)
 	DemoGraphicsWidth = ReadLE16(demofile);
 	DemoGraphicsHeight = ReadLE16(demofile);
 
-	while (!demofile.eof()) {
+	while (true) {
 		const uint32_t typeNum = ReadLE32(demofile);
+		if (demofile.eof())
+			break;
 		const auto type = static_cast<DemoMsgType>(typeNum);
 
 		const uint8_t progressToNextGameTick = ReadByte(demofile);
