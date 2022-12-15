@@ -41,10 +41,111 @@
 
 namespace devilution {
 
+// #define LOG_RECEIVED_MESSAGES
+
 uint8_t gbBufferMsgs;
 int dwRecCount;
 
 namespace {
+
+#ifdef LOG_RECEIVED_MESSAGES
+string_view CmdIdString(_cmd_id cmd)
+{
+	// clang-format off
+	switch (cmd) {
+	case CMD_STAND: return "CMD_STAND";
+	case CMD_WALKXY: return "CMD_WALKXY";
+	case CMD_ACK_PLRINFO: return "CMD_ACK_PLRINFO";
+	case CMD_ADDSTR: return "CMD_ADDSTR";
+	case CMD_ADDMAG: return "CMD_ADDMAG";
+	case CMD_ADDDEX: return "CMD_ADDDEX";
+	case CMD_ADDVIT: return "CMD_ADDVIT";
+	case CMD_GETITEM: return "CMD_GETITEM";
+	case CMD_AGETITEM: return "CMD_AGETITEM";
+	case CMD_PUTITEM: return "CMD_PUTITEM";
+	case CMD_SPAWNITEM: return "CMD_SPAWNITEM";
+	case CMD_RESPAWNITEM: return "CMD_RESPAWNITEM";
+	case CMD_ATTACKXY: return "CMD_ATTACKXY";
+	case CMD_RATTACKXY: return "CMD_RATTACKXY";
+	case CMD_SPELLXY: return "CMD_SPELLXY";
+	case CMD_TSPELLXY: return "CMD_TSPELLXY";
+	case CMD_OPOBJXY: return "CMD_OPOBJXY";
+	case CMD_DISARMXY: return "CMD_DISARMXY";
+	case CMD_ATTACKID: return "CMD_ATTACKID";
+	case CMD_ATTACKPID: return "CMD_ATTACKPID";
+	case CMD_RATTACKID: return "CMD_RATTACKID";
+	case CMD_RATTACKPID: return "CMD_RATTACKPID";
+	case CMD_SPELLID: return "CMD_SPELLID";
+	case CMD_SPELLPID: return "CMD_SPELLPID";
+	case CMD_TSPELLID: return "CMD_TSPELLID";
+	case CMD_TSPELLPID: return "CMD_TSPELLPID";
+	case CMD_RESURRECT: return "CMD_RESURRECT";
+	case CMD_OPOBJT: return "CMD_OPOBJT";
+	case CMD_KNOCKBACK: return "CMD_KNOCKBACK";
+	case CMD_TALKXY: return "CMD_TALKXY";
+	case CMD_NEWLVL: return "CMD_NEWLVL";
+	case CMD_WARP: return "CMD_WARP";
+	case CMD_CHEAT_EXPERIENCE: return "CMD_CHEAT_EXPERIENCE";
+	case CMD_CHEAT_SPELL_LEVEL: return "CMD_CHEAT_SPELL_LEVEL";
+	case CMD_DEBUG: return "CMD_DEBUG";
+	case CMD_SYNCDATA: return "CMD_SYNCDATA";
+	case CMD_MONSTDEATH: return "CMD_MONSTDEATH";
+	case CMD_MONSTDAMAGE: return "CMD_MONSTDAMAGE";
+	case CMD_PLRDEAD: return "CMD_PLRDEAD";
+	case CMD_REQUESTGITEM: return "CMD_REQUESTGITEM";
+	case CMD_REQUESTAGITEM: return "CMD_REQUESTAGITEM";
+	case CMD_GOTOGETITEM: return "CMD_GOTOGETITEM";
+	case CMD_GOTOAGETITEM: return "CMD_GOTOAGETITEM";
+	case CMD_OPENDOOR: return "CMD_OPENDOOR";
+	case CMD_CLOSEDOOR: return "CMD_CLOSEDOOR";
+	case CMD_OPERATEOBJ: return "CMD_OPERATEOBJ";
+	case CMD_BREAKOBJ: return "CMD_BREAKOBJ";
+	case CMD_CHANGEPLRITEMS: return "CMD_CHANGEPLRITEMS";
+	case CMD_DELPLRITEMS: return "CMD_DELPLRITEMS";
+	case CMD_CHANGEINVITEMS: return "CMD_CHANGEINVITEMS";
+	case CMD_DELINVITEMS: return "CMD_DELINVITEMS";
+	case CMD_CHANGEBELTITEMS: return "CMD_CHANGEBELTITEMS";
+	case CMD_DELBELTITEMS: return "CMD_DELBELTITEMS";
+	case CMD_PLRDAMAGE: return "CMD_PLRDAMAGE";
+	case CMD_PLRLEVEL: return "CMD_PLRLEVEL";
+	case CMD_DROPITEM: return "CMD_DROPITEM";
+	case CMD_PLAYER_JOINLEVEL: return "CMD_PLAYER_JOINLEVEL";
+	case CMD_SEND_PLRINFO: return "CMD_SEND_PLRINFO";
+	case CMD_SATTACKXY: return "CMD_SATTACKXY";
+	case CMD_ACTIVATEPORTAL: return "CMD_ACTIVATEPORTAL";
+	case CMD_DEACTIVATEPORTAL: return "CMD_DEACTIVATEPORTAL";
+	case CMD_DLEVEL: return "CMD_DLEVEL";
+	case CMD_DLEVEL_JUNK: return "CMD_DLEVEL_JUNK";
+	case CMD_DLEVEL_END: return "CMD_DLEVEL_END";
+	case CMD_HEALOTHER: return "CMD_HEALOTHER";
+	case CMD_STRING: return "CMD_STRING";
+	case CMD_FRIENDLYMODE: return "CMD_FRIENDLYMODE";
+	case CMD_SETSTR: return "CMD_SETSTR";
+	case CMD_SETMAG: return "CMD_SETMAG";
+	case CMD_SETDEX: return "CMD_SETDEX";
+	case CMD_SETVIT: return "CMD_SETVIT";
+	case CMD_RETOWN: return "CMD_RETOWN";
+	case CMD_SPELLXYD: return "CMD_SPELLXYD";
+	case CMD_ITEMEXTRA: return "CMD_ITEMEXTRA";
+	case CMD_SYNCPUTITEM: return "CMD_SYNCPUTITEM";
+	case CMD_KILLGOLEM: return "CMD_KILLGOLEM";
+	case CMD_SYNCQUEST: return "CMD_SYNCQUEST";
+	case CMD_AWAKEGOLEM: return "CMD_AWAKEGOLEM";
+	case CMD_NOVA: return "CMD_NOVA";
+	case CMD_SETSHIELD: return "CMD_SETSHIELD";
+	case CMD_REMSHIELD: return "CMD_REMSHIELD";
+	case CMD_SETREFLECT: return "CMD_SETREFLECT";
+	case CMD_NAKRUL: return "CMD_NAKRUL";
+	case CMD_OPENHIVE: return "CMD_OPENHIVE";
+	case CMD_OPENGRAVE: return "CMD_OPENGRAVE";
+	case FAKE_CMD_SETID: return "FAKE_CMD_SETID";
+	case FAKE_CMD_DROPID: return "FAKE_CMD_DROPID";
+	case CMD_INVALID: return "CMD_INVALID";
+	default: return "";
+	}
+	// clang-format on
+}
+#endif // LOG_RECEIVED_MESSAGES
 
 struct TMegaPkt {
 	uint32_t spaceLeft;
@@ -3109,6 +3210,10 @@ size_t ParseCmd(size_t pnum, const TCmd *pCmd)
 		return 0;
 
 	Player &player = Players[pnum];
+
+#ifdef LOG_RECEIVED_MESSAGES
+	Log("📥 {}", CmdIdString(pCmd->bCmd));
+#endif
 
 	switch (pCmd->bCmd) {
 	case CMD_SYNCDATA:
