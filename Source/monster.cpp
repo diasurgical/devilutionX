@@ -614,7 +614,8 @@ void UpdateEnemy(Monster &monster)
 	int bestDist = -1;
 	bool bestsameroom = false;
 	const auto &position = monster.position.tile;
-	if ((monster.flags & MFLAG_BERSERK) != 0 || (monster.flags & MFLAG_GOLEM) == 0) {
+	const bool isPlayerMinion = monster.isPlayerMinion();
+	if (!isPlayerMinion) {
 		for (size_t pnum = 0; pnum < Players.size(); pnum++) {
 			Player &player = Players[pnum];
 			if (!player.plractive || !player.isOnActiveLevel() || player._pLvlChanging
@@ -644,7 +645,7 @@ void UpdateEnemy(Monster &monster)
 			continue;
 		if (otherMonster.talkMsg != TEXT_NONE && M_Talker(otherMonster))
 			continue;
-		if (monster.isPlayerMinion() && otherMonster.isPlayerMinion()) // prevent golems from fighting each other
+		if (isPlayerMinion && otherMonster.isPlayerMinion()) // prevent golems from fighting each other
 			continue;
 
 		int dist = otherMonster.position.tile.WalkingDistance(position);
@@ -4640,8 +4641,7 @@ bool Monster::isResistant(missile_id missileType) const
 
 bool Monster::isPlayerMinion() const
 {
-	// This could be HasAnyOf(GOLEM) && HasNoneOf(BERSERK), I think referencing the type and player index is more robust though
-	return type().type == MT_GOLEM && getId() < Players.size();
+	return (flags & MFLAG_GOLEM) != 0 && (flags & MFLAG_BERSERK) == 0;
 }
 
 bool Monster::isPossibleToHit() const
