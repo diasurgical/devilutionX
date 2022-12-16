@@ -642,7 +642,7 @@ void UpdateEnemy(Monster &monster)
 			continue;
 		if (otherMonster.position.tile == GolemHoldingCell)
 			continue;
-		if (M_Talker(otherMonster) && otherMonster.talkMsg != TEXT_NONE)
+		if (otherMonster.talkMsg != TEXT_NONE && M_Talker(otherMonster))
 			continue;
 		if (monster.isPlayerMinion() && otherMonster.isPlayerMinion()) // prevent golems from fighting each other
 			continue;
