@@ -3205,7 +3205,7 @@ void SetupItem(Item &item)
 	item._iIdentified = false;
 }
 
-Item *SpawnUnique(_unique_items uid, Point position, bool sendmsg /*= true*/)
+Item *SpawnUnique(_unique_items uid, Point position, std::optional<int> level /*= std::nullopt*/, bool sendmsg /*= true*/)
 {
 	if (ActiveItemCount >= MAXITEMS)
 		return nullptr;
@@ -3219,9 +3219,20 @@ Item *SpawnUnique(_unique_items uid, Point position, bool sendmsg /*= true*/)
 	while (AllItemsList[idx].iItemId != UniqueItems[uid].UIItemId)
 		idx++;
 
-	GetItemAttrs(item, static_cast<_item_indexes>(idx), curlv);
-	GetUniqueItem(*MyPlayer, item, uid);
-	SetupItem(item);
+	if (gbIsMultiplayer) {
+		if (level)
+			curlv = *level;
+		const ItemData &uniqueItemData = AllItemsList[idx];
+		_item_indexes idx = GetItemIndexForDroppableItem(false, [&uniqueItemData](const ItemData &item) {
+			return item.itype == uniqueItemData.itype || (uniqueItemData.itype == ItemType::Amulet && item.itype == ItemType::Ring);
+		});
+		SetupAllItems(*MyPlayer, item, idx, AdvanceRndSeed(), curlv * 2, 15, true, false, false);
+	}
+	if (!gbIsMultiplayer || item._iMagical == ITEM_QUALITY_UNIQUE) {
+		GetItemAttrs(item, static_cast<_item_indexes>(idx), curlv);
+		GetUniqueItem(*MyPlayer, item, uid);
+		SetupItem(item);
+	}
 
 	if (sendmsg)
 		NetSendCmdPItem(false, CMD_SPAWNITEM, item.position, item);
@@ -3238,7 +3249,7 @@ void SpawnItem(Monster &monster, Point position, bool sendmsg, bool spawn /*= fa
 	bool dropBrain = Quests[Q_MUSHROOM]._qactive == QUEST_ACTIVE && Quests[Q_MUSHROOM]._qvar1 == QS_MUSHGIVEN;
 
 	if (dropsSpecialTreasure && !UseMultiplayerQuests()) {
-		Item *uniqueItem = SpawnUnique(static_cast<_unique_items>(monster.data().treasure & T_MASK), position, false);
+		Item *uniqueItem = SpawnUnique(static_cast<_unique_items>(monster.data().treasure & T_MASK), position, std::nullopt, false);
 		if (uniqueItem != nullptr && sendmsg)
 			NetSendCmdPItem(false, CMD_DROPITEM, uniqueItem->position, *uniqueItem);
 		return;

@@ -344,7 +344,7 @@ void TalkToBarOwner(Player &player, Towner &barOwner)
 				bannerQuest._qactive = QUEST_DONE;
 				bannerQuest._qvar1 = 3;
 				NetSendCmdQuest(true, bannerQuest);
-				SpawnUnique(UITEM_HARCREST, barOwner.position + Direction::SouthWest);
+				SpawnUnique(UITEM_HARCREST, barOwner.position + Direction::SouthWest, bannerQuest._qlevel);
 				InitQTextMsg(TEXT_BANNER3);
 				return;
 			}
@@ -392,7 +392,7 @@ void TalkToBlackSmith(Player &player, Towner &blackSmith)
 			if (Quests[Q_ROCK]._qvar2 == 1 && RemoveInventoryItemById(player, IDI_ROCK)) {
 				Quests[Q_ROCK]._qactive = QUEST_DONE;
 				NetSendCmdQuest(true, Quests[Q_ROCK]);
-				SpawnUnique(UITEM_INFRARING, blackSmith.position + Direction::SouthWest);
+				SpawnUnique(UITEM_INFRARING, blackSmith.position + Direction::SouthWest, Quests[Q_ROCK]._qlevel);
 				InitQTextMsg(TEXT_INFRA7);
 				return;
 			}
@@ -413,7 +413,7 @@ void TalkToBlackSmith(Player &player, Towner &blackSmith)
 		if (Quests[Q_ANVIL]._qvar2 == 1 && RemoveInventoryItemById(player, IDI_ANVIL)) {
 			Quests[Q_ANVIL]._qactive = QUEST_DONE;
 			NetSendCmdQuest(true, Quests[Q_ANVIL]);
-			SpawnUnique(UITEM_GRISWOLD, blackSmith.position + Direction::SouthWest);
+			SpawnUnique(UITEM_GRISWOLD, blackSmith.position + Direction::SouthWest, Quests[Q_ANVIL]._qlevel);
 			InitQTextMsg(TEXT_ANVIL7);
 			return;
 		}
@@ -511,7 +511,7 @@ void TalkToHealer(Player &player, Towner &healer)
 		if (poisonWater._qactive == QUEST_DONE && poisonWater._qvar1 != 2) {
 			poisonWater._qvar1 = 2;
 			InitQTextMsg(TEXT_POISON5);
-			SpawnUnique(UITEM_TRING, healer.position + Direction::SouthWest);
+			SpawnUnique(UITEM_TRING, healer.position + Direction::SouthWest, poisonWater._qlevel);
 			NetSendCmdQuest(true, poisonWater);
 			return;
 		}
@@ -670,7 +670,7 @@ void TalkToCowFarmer(Player &player, Towner &cowFarmer)
 	auto &quest = Quests[Q_JERSEY];
 
 	if (RemoveInventoryItemById(player, IDI_BROWNSUIT)) {
-		SpawnUnique(UITEM_BOVINE, cowFarmer.position + Direction::SouthEast);
+		SpawnUnique(UITEM_BOVINE, cowFarmer.position + Direction::SouthEast, quest._qlevel);
 		InitQTextMsg(TEXT_JERSEY8);
 		quest._qactive = QUEST_DONE;
 		UpdateCowFarmerAnimAfterQuestComplete();
