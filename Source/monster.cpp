@@ -609,20 +609,20 @@ bool IsRanged(Monster &monster)
 
 void UpdateEnemy(Monster &monster)
 {
-	Point target;
+	WorldTilePosition target;
 	int menemy = -1;
 	int bestDist = -1;
 	bool bestsameroom = false;
-	const auto &position = monster.position.tile;
+	const WorldTilePosition position = monster.position.tile;
 	const bool isPlayerMinion = monster.isPlayerMinion();
 	if (!isPlayerMinion) {
 		for (size_t pnum = 0; pnum < Players.size(); pnum++) {
-			Player &player = Players[pnum];
+			const Player &player = Players[pnum];
 			if (!player.plractive || !player.isOnActiveLevel() || player._pLvlChanging
 			    || (((player._pHitPoints >> 6) == 0) && gbIsMultiplayer))
 				continue;
-			bool sameroom = (dTransVal[position.x][position.y] == dTransVal[player.position.tile.x][player.position.tile.y]);
-			int dist = position.WalkingDistance(player.position.tile);
+			const bool sameroom = (dTransVal[position.x][position.y] == dTransVal[player.position.tile.x][player.position.tile.y]);
+			const int dist = position.WalkingDistance(player.position.tile);
 			if ((sameroom && !bestsameroom)
 			    || ((sameroom || !bestsameroom) && dist < bestDist)
 			    || (menemy == -1)) {
@@ -635,8 +635,8 @@ void UpdateEnemy(Monster &monster)
 		}
 	}
 	for (size_t i = 0; i < ActiveMonsterCount; i++) {
-		int monsterId = ActiveMonsters[i];
-		auto &otherMonster = Monsters[monsterId];
+		const int monsterId = ActiveMonsters[i];
+		Monster &otherMonster = Monsters[monsterId];
 		if (&otherMonster == &monster)
 			continue;
 		if ((otherMonster.hitPoints >> 6) <= 0)
@@ -648,7 +648,7 @@ void UpdateEnemy(Monster &monster)
 		if (isPlayerMinion && otherMonster.isPlayerMinion()) // prevent golems from fighting each other
 			continue;
 
-		int dist = otherMonster.position.tile.WalkingDistance(position);
+		const int dist = otherMonster.position.tile.WalkingDistance(position);
 		if (((monster.flags & MFLAG_GOLEM) == 0
 		        && (monster.flags & MFLAG_BERSERK) == 0
 		        && dist >= 2
@@ -658,7 +658,7 @@ void UpdateEnemy(Monster &monster)
 		        && (otherMonster.flags & MFLAG_GOLEM) == 0)) {
 			continue;
 		}
-		bool sameroom = dTransVal[position.x][position.y] == dTransVal[otherMonster.position.tile.x][otherMonster.position.tile.y];
+		const bool sameroom = dTransVal[position.x][position.y] == dTransVal[otherMonster.position.tile.x][otherMonster.position.tile.y];
 		if ((sameroom && !bestsameroom)
 		    || ((sameroom || !bestsameroom) && dist < bestDist)
 		    || (menemy == -1)) {

@@ -17,7 +17,7 @@
 
 namespace devilution {
 
-constexpr Point GolemHoldingCell = Point { 1, 0 };
+constexpr WorldTilePosition GolemHoldingCell = Point { 1, 0 };
 
 struct MissilePosition {
 	Point tile;
