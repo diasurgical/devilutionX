@@ -2270,7 +2270,7 @@ size_t OnActivatePortal(const TCmd *pCmd, size_t pnum)
 	const auto &message = *reinterpret_cast<const TCmdLocParam3 *>(pCmd);
 	const Point position { message.x, message.y };
 	const uint16_t level = SDL_SwapLE16(message.wParam1);
-	const uint16_t dungeonTypeIdx = SDL_SwapLE16(message.wParam1);
+	const uint16_t dungeonTypeIdx = SDL_SwapLE16(message.wParam2);
 	const bool isSetLevel = message.wParam3 != 0;
 
 	if (gbBufferMsgs == 1) {
