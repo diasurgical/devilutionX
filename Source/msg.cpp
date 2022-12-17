@@ -2649,6 +2649,12 @@ void delta_init()
 	LocalLevels.clear();
 }
 
+void DeltaClearLevel(uint8_t level)
+{
+	DeltaLevels.erase(level);
+	LocalLevels.erase(level);
+}
+
 void delta_kill_monster(const Monster &monster, Point position, const Player &player)
 {
 	if (!gbIsMultiplayer)
