@@ -743,6 +743,7 @@ void run_delta_info();
 void DeltaExportData(int pnum);
 void DeltaSyncJunk();
 void delta_init();
+void DeltaClearLevel(uint8_t level);
 void delta_kill_monster(const Monster &monster, Point position, const Player &player);
 void delta_monster_hp(const Monster &monster, const Player &player);
 void delta_sync_monster(const TSyncMonster &monsterSync, uint8_t level);

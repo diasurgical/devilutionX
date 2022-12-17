@@ -432,6 +432,7 @@ std::string DebugCmdResetLevel(const string_view parameter)
 	if (level < 0 || level > (gbIsHellfire ? 24 : 16))
 		return StrCat("Level ", level, " is not known. Do you want to write an extension mod?");
 	myPlayer._pLvlVisited[level] = false;
+	DeltaClearLevel(level);
 
 	if (std::getline(paramsStream, singleParameter, ' ')) {
 		uint32_t seed = static_cast<uint32_t>(std::stoul(singleParameter));
