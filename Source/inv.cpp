@@ -1942,13 +1942,13 @@ void ConsumeScroll(Player &player)
 	int itemSlot = player.executedSpell.spellFrom;
 	int itemIndex = 0;
 	Item *item;
-	if (itemSlot <= INVITEM_INV_LAST) {
-		itemIndex = itemSlot - INVITEM_INV_FIRST;
-		item = &player.InvList[itemIndex];
-	} else {
-		itemIndex = itemSlot - INVITEM_BELT_FIRST;
-		item = &player.SpdList[itemIndex];
-	}
+        if (itemSlot >= INVITEM_INV_FIRST && itemSlot <= INVITEM_INV_LAST) {
+                itemIndex = itemSlot - INVITEM_INV_FIRST;
+                item = &player.InvList[itemIndex];
+        } else if (itemSlot >= INVITEM_BELT_FIRST) {
+                itemIndex = itemSlot - INVITEM_BELT_FIRST;
+                item = &player.SpdList[itemIndex];
+        }
 
 	const auto isCurrentSpell = [spellId](const Item &item) {
 		return item.isScrollOf(spellId) || item.isRuneOf(spellId);
