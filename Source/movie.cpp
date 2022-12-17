@@ -73,6 +73,7 @@ void play_movie(const char *pszMovie, bool userCanClose)
 
 	SDL_GetMouseState(&MousePosition.x, &MousePosition.y);
 	OutputToLogical(&MousePosition.x, &MousePosition.y);
+	InitBackbufferState();
 }
 
 void PlayInGameMovie(const char *pszMovie)
