@@ -206,13 +206,32 @@ TEST_F(InvTest, RemoveSpdBarItem)
 }
 
 // Test removing a scroll from the inventory
-TEST_F(InvTest, RemoveCurrentSpellScroll_inventory)
+TEST_F(InvTest, RemoveCurrentSpellScrollFromInventory)
 {
 	clear_inventory();
 
 	// Put a firebolt scroll into the inventory
 	MyPlayer->_pNumInv = 1;
 	MyPlayer->executedSpell.spellId = static_cast<spell_id>(SPL_FIREBOLT);
+	MyPlayer->executedSpell.spellFrom = INVITEM_INV_FIRST;
+	MyPlayer->InvList[0]._itype = ItemType::Misc;
+	MyPlayer->InvList[0]._iMiscId = IMISC_SCROLL;
+	MyPlayer->InvList[0]._iSpell = SPL_FIREBOLT;
+
+	ConsumeScroll(*MyPlayer);
+	EXPECT_EQ(MyPlayer->InvGrid[0], 0);
+	EXPECT_EQ(MyPlayer->_pNumInv, 0);
+}
+
+// Test removing the first matching scroll from inventory
+TEST_F(InvTest, RemoveCurrentSpellScrollFromInventoryFirstMatch)
+{
+	clear_inventory();
+
+	// Put a firebolt scroll into the inventory
+	MyPlayer->_pNumInv = 1;
+	MyPlayer->executedSpell.spellId = static_cast<spell_id>(SPL_FIREBOLT);
+	MyPlayer->executedSpell.spellFrom = 0; // any matching scroll
 	MyPlayer->InvList[0]._itype = ItemType::Misc;
 	MyPlayer->InvList[0]._iMiscId = IMISC_SCROLL;
 	MyPlayer->InvList[0]._iSpell = SPL_FIREBOLT;
@@ -233,6 +252,27 @@ TEST_F(InvTest, RemoveCurrentSpellScroll_belt)
 	}
 	// Put a firebolt scroll into the belt
 	MyPlayer->executedSpell.spellId = static_cast<spell_id>(SPL_FIREBOLT);
+	MyPlayer->executedSpell.spellFrom = INVITEM_BELT_FIRST + 3;
+	MyPlayer->SpdList[3]._itype = ItemType::Misc;
+	MyPlayer->SpdList[3]._iMiscId = IMISC_SCROLL;
+	MyPlayer->SpdList[3]._iSpell = SPL_FIREBOLT;
+
+	ConsumeScroll(*MyPlayer);
+	EXPECT_TRUE(MyPlayer->SpdList[3].isEmpty());
+}
+
+// Test removing the first matching scroll from the belt
+TEST_F(InvTest, RemoveCurrentSpellScrollFirstMatchFromBelt)
+{
+	SNetInitializeProvider(SELCONN_LOOPBACK, nullptr);
+
+	// Clear the belt
+	for (int i = 0; i < MaxBeltItems; i++) {
+		MyPlayer->SpdList[i].clear();
+	}
+	// Put a firebolt scroll into the belt
+	MyPlayer->executedSpell.spellId = static_cast<spell_id>(SPL_FIREBOLT);
+	MyPlayer->executedSpell.spellFrom = 0; // any matching scroll
 	MyPlayer->SpdList[3]._itype = ItemType::Misc;
 	MyPlayer->SpdList[3]._iMiscId = IMISC_SCROLL;
 	MyPlayer->SpdList[3]._iSpell = SPL_FIREBOLT;
