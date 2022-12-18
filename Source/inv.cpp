@@ -1938,28 +1938,28 @@ void ConsumeScroll(Player &player)
 {
 	const spell_id spellId = player.executedSpell.spellId;
 
-	// Try to remove the scroll from selected inventory slot
-	int itemSlot = player.executedSpell.spellFrom;
-	int itemIndex = 0;
-	Item *item;
-	if (itemSlot <= INVITEM_INV_LAST) {
-		itemIndex = itemSlot - INVITEM_INV_FIRST;
-		item = &player.InvList[itemIndex];
-	} else {
-		itemIndex = itemSlot - INVITEM_BELT_FIRST;
-		item = &player.SpdList[itemIndex];
-	}
-
 	const auto isCurrentSpell = [spellId](const Item &item) {
 		return item.isScrollOf(spellId) || item.isRuneOf(spellId);
 	};
 
-	if (!item->isEmpty() && isCurrentSpell(*item)) {
-		if (itemSlot <= INVITEM_INV_LAST)
-			player.RemoveInvItem(static_cast<int>(itemIndex));
-		else
+	// Try to remove the scroll from selected inventory slot
+	const int8_t itemSlot = player.executedSpell.spellFrom;
+	if (itemSlot >= INVITEM_INV_FIRST && itemSlot <= INVITEM_INV_LAST) {
+		const int itemIndex = itemSlot - INVITEM_INV_FIRST;
+		const Item *item = &player.InvList[itemIndex];
+		if (!item->isEmpty() && isCurrentSpell(*item)) {
+			player.RemoveInvItem(itemIndex);
+			return;
+		}
+	} else if (itemSlot >= INVITEM_BELT_FIRST && itemSlot <= INVITEM_BELT_LAST) {
+		const int itemIndex = itemSlot - INVITEM_BELT_FIRST;
+		const Item *item = &player.SpdList[itemIndex];
+		if (!item->isEmpty() && isCurrentSpell(*item)) {
 			player.RemoveSpdBarItem(itemIndex);
-		return;
+			return;
+		}
+	} else if (itemSlot != 0) {
+		app_fatal(StrCat("ConsumeScroll: Invalid item index ", itemSlot));
 	}
 
 	// Didn't find it at the selected slot, take the first one we find
