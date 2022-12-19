@@ -156,17 +156,15 @@ void AnimationInfo::setNewAnimation(OptionalClxSpriteList celSprite, int8_t numb
 		relevantAnimationTicksForDistribution *= baseValueFraction;
 		relevantAnimationTicksWithSkipping *= baseValueFraction;
 
-		// The preview animation was shown some times (less then one game tick)
+		// The preview animation was shown some times (less than one game tick)
 		// So we overall have a longer time the animation is shown
 		ticksSinceSequenceStarted_ += previewShownGameTickFragments;
 		relevantAnimationTicksWithSkipping += previewShownGameTickFragments;
 
 		// if we skipped Frames we need to expand the game ticks to make one game tick for this Animation "faster"
-		int32_t tickModifier;
+		int32_t tickModifier = 0;
 		if (relevantAnimationTicksWithSkipping != 0)
 			tickModifier = baseValueFraction * relevantAnimationTicksForDistribution / relevantAnimationTicksWithSkipping;
-		else
-			tickModifier = 0;
 
 		// tickModifier specifies the Animation fraction per game tick, so we have to remove the delay from the variable
 		tickModifier /= ticksPerFrame;

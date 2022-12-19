@@ -229,7 +229,7 @@ bool nthread_has_500ms_passed()
 			}
 		}
 		if (resetLastTick) {
-			// Reset last tick to avoid caught up of all missed game ticks (game speed is dramatically increased for a short time)
+			// Reset last tick to avoid catching up with all missed game ticks (game speed is dramatically increased for a short time)
 			last_tick = currentTickCount;
 			ticksElapsed = 0;
 		}

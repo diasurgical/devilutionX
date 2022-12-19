@@ -128,7 +128,7 @@ private:
 	 */
 	int8_t skippedFramesFromPreviousAnimation_;
 	/**
-	 * @brief Specifies how many animations-fractions (see baseValueFraction) are displayed between two game ticks. this can be more then one frame, if animations are skipped or less then one frame if the same animation is shown in multiple times (delay specified).
+	 * @brief Specifies how many animations-fractions (see baseValueFraction) are displayed between two game ticks. this can be more than one frame, if animations are skipped or less than one frame if the same animation is shown in multiple times (delay specified).
 	 */
 	uint16_t tickModifier_;
 	/**

@@ -1139,7 +1139,7 @@ void DiabloInit()
 	if (gbIsHellfire && !forceHellfire && *sgOptions.StartUp.gameMode == StartUpGameMode::Ask) {
 		UiSelStartUpGameOption();
 		if (!gbIsHellfire) {
-			// Reinitalize the UI Elements cause we changed the game
+			// Reinitialize the UI Elements cause we changed the game
 			UnloadUiGFX();
 			UiInitialize();
 			if (IsHardwareCursor())
