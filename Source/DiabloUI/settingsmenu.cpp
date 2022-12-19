@@ -181,7 +181,7 @@ bool ChangeOptionValue(OptionEntryBase *pOption, size_t listIndex)
 	}
 
 	if (HasAnyOf(pOption->GetFlags(), OptionEntryFlags::RecreateUI)) {
-		// Reinitalize UI with changed settings (for example game mode, language or resolution)
+		// Reinitialize UI with changed settings (for example game mode, language or resolution)
 		UiInitialize();
 		InitItemGFX();
 		SetHardwareCursor(CursorInfo::UnknownCursor());
