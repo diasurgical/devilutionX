@@ -390,6 +390,7 @@ void OverrideOptions()
 #endif
 		sgOptions.Graphics.limitFPS.SetValue(false);
 	}
+	forceResolution = Size(DemoGraphicsWidth, DemoGraphicsHeight);
 }
 
 bool IsRunning()

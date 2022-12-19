@@ -46,6 +46,8 @@ namespace devilution {
 extern SDLSurfaceUniquePtr RendererTextureSurface; /** defined in dx.cpp */
 SDL_Window *ghMainWnd;
 
+Size forceResolution;
+
 Uint16 gnScreenWidth;
 Uint16 gnScreenHeight;
 Uint16 gnViewportHeight;
@@ -155,7 +157,7 @@ void CalculateUIRectangle()
 
 Size GetPreferredWindowSize()
 {
-	Size windowSize = *sgOptions.Graphics.resolution;
+	Size windowSize = forceResolution.width != 0 ? forceResolution : *sgOptions.Graphics.resolution;
 
 #ifndef USE_SDL1
 	if (*sgOptions.Graphics.upscale && *sgOptions.Graphics.fitToScreen) {
@@ -243,7 +245,7 @@ bool SpawnWindow(const char *lpWindowName)
 #endif
 #ifdef NXDK
 	{
-		Size windowSize = *sgOptions.Graphics.resolution;
+		Size windowSize = forceResolution.width != 0 ? forceResolution : *sgOptions.Graphics.resolution;
 		VIDEO_MODE xmode;
 		void *p = nullptr;
 		while (XVideoListModes(&xmode, 0, 0, &p)) {

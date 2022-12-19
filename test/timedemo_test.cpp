@@ -53,7 +53,7 @@ void RunTimedemo(std::string timedemoFolderName)
 
 	demo::OverrideOptions();
 
-	AdjustToScreenGeometry(*sgOptions.Graphics.resolution);
+	AdjustToScreenGeometry(forceResolution);
 
 	StartGame(false, true);
 
