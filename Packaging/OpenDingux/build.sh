@@ -110,7 +110,6 @@ parse_args() {
 			"-DDEVILUTIONX_PROFILE_GENERATE=ON"
 			"-DDEVILUTIONX_PROFILE_DIR=${PROFILE_DIR}"
 		)
-		BUILD_TYPE=relwithdebinfo
 		OPK_DESKTOP_NAME="DevilutionX PG"
 		OPK_DESKTOP_EXEC="profile-generate.sh"
 		OPK_EXTRA_FILES=(
