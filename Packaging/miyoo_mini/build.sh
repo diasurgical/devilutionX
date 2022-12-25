@@ -21,16 +21,15 @@ main() {
 
 cmake_configure() {
 	cmake -S. -B"$BUILD_DIR" \
-		"-DTARGET_PLATFORM=miyoo_mini" \
-		-DCMAKE_C_COMPILER=arm-linux-gnueabihf-gcc \
-		-DCMAKE_CXX_COMPILER=arm-linux-gnueabihf-g++ \
+		-DTARGET_PLATFORM=miyoo_mini \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_TOOLCHAIN_FILE="${PACKAGING_DIR}/toolchainfile.cmake" \
 		-DBUILD_TESTING=OFF \
-		-DCMAKE_FIND_ROOT_PATH="/opt/miyoomini-toolchain/arm-linux-gnueabihf/sysroot" \
 		"$@"
 }
 
 cmake_build() {
-	cmake --build "$BUILD_DIR"
+	cmake --build "$BUILD_DIR" -j $(getconf _NPROCESSORS_ONLN)
 }
 
 build_custom_sdl() {
@@ -41,6 +40,11 @@ build_custom_sdl() {
 	# clone the repo and build the lib
 	cd $BUILD_DIR/CustomSDL
 	git clone $MIYOO_CUSTOM_SDL_REPO --branch $MIYOO_CUSTOM_SDL_BRANCH --single-branch .
+
+	PATH="/opt/miyoomini-toolchain/usr/bin:${PATH}:/opt/miyoomini-toolchain/usr/arm-linux-gnueabihf/sysroot/bin" \
+	CROSS_COMPILE=/opt/miyoomini-toolchain/usr/bin/arm-linux-gnueabihf- \
+	PREFIX=/opt/miyoomini-toolchain/usr/arm-linux-gnueabihf/sysroot/usr \
+	UNION_PLATFORM=miyoomini \
 	./make.sh
 
 	# change back to devilutionx root
