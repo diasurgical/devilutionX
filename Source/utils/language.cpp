@@ -361,6 +361,14 @@ void LanguageInitialize()
 	translationKeys = nullptr;
 	translationValues = nullptr;
 
+	const std::string lang(GetLanguageCode());
+
+	if (lang == "en") {
+		// English does not have a translation file.
+		GetLocalPluralId = PluralIfNotOne;
+		return;
+	}
+
 	if (IsSmallFontTall() && !HaveExtraFonts()) {
 		UiErrorOkDialog(
 		    "Missing fonts.mpq",
@@ -371,8 +379,6 @@ void LanguageInitialize()
 		        "github.com/diasurgical/\ndevilutionx-assets/releases"));
 		forceLocale = "en";
 	}
-
-	const std::string lang(GetLanguageCode());
 
 	AssetHandle handle;
 	const uint32_t loadTranslationsStart = SDL_GetTicks();
