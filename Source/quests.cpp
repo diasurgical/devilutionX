@@ -225,6 +225,14 @@ void PrintQLString(const Surface &out, int x, int y, string_view str, bool marke
 	}
 }
 
+void StartPWaterPurify()
+{
+	PlaySfxLoc(IS_QUESTDN, MyPlayer->position.tile);
+	LoadPalette("levels\\l3data\\l3pwater.pal", false);
+	UpdatePWaterPalette();
+	WaterDone = 32;
+}
+
 } // namespace
 
 void InitQuests()
@@ -352,10 +360,7 @@ void CheckQuests()
 		    && Quests[Q_PWATER]._qactive != QUEST_DONE) {
 			Quests[Q_PWATER]._qactive = QUEST_DONE;
 			NetSendCmdQuest(true, Quests[Q_PWATER]);
-			PlaySfxLoc(IS_QUESTDN, MyPlayer->position.tile);
-			LoadPalette("levels\\l3data\\l3pwater.pal", false);
-			UpdatePWaterPalette();
-			WaterDone = 32;
+			StartPWaterPurify();
 		}
 	} else if (MyPlayer->_pmode == PM_STAND) {
 		for (auto &quest : Quests) {
@@ -831,6 +836,7 @@ void SetMultiQuest(int q, quest_state s, bool log, int v1, int v2)
 		return;
 
 	auto &quest = Quests[q];
+	quest_state oldQuestState = quest._qactive;
 	if (quest._qactive != QUEST_DONE) {
 		if (s > quest._qactive)
 			quest._qactive = s;
@@ -843,6 +849,10 @@ void SetMultiQuest(int q, quest_state s, bool log, int v1, int v2)
 	if (!UseMultiplayerQuests()) {
 		// Ensure that changes on another client is also updated on our own
 		ResyncQuests();
+
+		// Ensure that water also changes for remote players
+		if (quest._qidx == Q_PWATER && oldQuestState == QUEST_ACTIVE && quest._qactive == QUEST_DONE && MyPlayer->isOnLevel(quest._qslvl))
+			StartPWaterPurify();
 	}
 }
 
