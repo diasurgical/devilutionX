@@ -1987,6 +1987,7 @@ void OperateBookLever(Object &questBook, bool sendmsg)
 			Quests[Q_BLIND]._qactive = QUEST_ACTIVE;
 			Quests[Q_BLIND]._qlog = true;
 			Quests[Q_BLIND]._qvar1 = 1;
+			NetSendCmdQuest(true, Quests[Q_BLIND]);
 		}
 		if (questBook._otype == OBJ_BLOODBOOK && Quests[Q_BLOOD]._qvar1 == 0) {
 			Quests[Q_BLOOD]._qactive = QUEST_ACTIVE;
@@ -2005,7 +2006,8 @@ void OperateBookLever(Object &questBook, bool sendmsg)
 			if (questBook._otype != OBJ_BLOODBOOK)
 				ObjChangeMap(questBook._oVar1, questBook._oVar2, questBook._oVar3, questBook._oVar4);
 			if (questBook._otype == OBJ_BLINDBOOK) {
-				SpawnUnique(UITEM_OPTAMULET, SetPiece.position.megaToWorld() + Displacement { 5, 5 });
+				if (sendmsg)
+					SpawnUnique(UITEM_OPTAMULET, SetPiece.position.megaToWorld() + Displacement { 5, 5 });
 				auto tren = TransVal;
 				TransVal = 9;
 				DRLG_MRectTrans(WorldTilePosition(questBook._oVar1, questBook._oVar2), WorldTilePosition(questBook._oVar3, questBook._oVar4));
@@ -4513,6 +4515,7 @@ void DeltaSyncOpObject(Object &object)
 	case OBJ_BLOODBOOK:
 	case OBJ_STEELTOME:
 		object._oAnimFrame = object._oVar6;
+		SyncQSTLever(object);
 		break;
 	case OBJ_BOOKCASEL:
 	case OBJ_BOOKCASER:
