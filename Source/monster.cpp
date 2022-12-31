@@ -1106,19 +1106,20 @@ void MonsterAttackMonster(Monster &attacker, Monster &target, int hper, int mind
 	}
 }
 
-void CheckReflect(Monster &monster, Player &player, int &dam)
+int CheckReflect(Monster &monster, Player &player, int dam)
 {
 	player.wReflections--;
 	if (player.wReflections <= 0)
 		NetSendCmdParam1(true, CMD_SETREFLECT, 0);
 	// reflects 20-30% damage
-	int mdam = dam * (GenerateRnd(10) + 20L) / 100;
+	int mdam = dam * RandomIntBetween(20, 30, true) / 100;
 	ApplyMonsterDamage(monster, mdam);
-	dam = std::max(dam - mdam, 0);
 	if (monster.hitPoints >> 6 <= 0)
 		M_StartKill(monster, player);
 	else
 		M_StartHit(monster, player, mdam);
+
+	return mdam;
 }
 
 int GetMinHit()
@@ -1192,8 +1193,10 @@ void MonsterAttackPlayer(Monster &monster, Player &player, int hit, int minDam, 
 	int dam = (minDam << 6) + GenerateRnd(((maxDam - minDam) << 6) + 1);
 	dam = std::max(dam + (player._pIGetHit << 6), 64);
 	if (&player == MyPlayer) {
-		if (player.wReflections > 0)
-			CheckReflect(monster, player, dam);
+		if (player.wReflections > 0) {
+			int reflectedDamage = CheckReflect(monster, player, dam);
+			dam = std::max(dam - reflectedDamage, 0);
+		}
 		ApplyPlrDamage(player, 0, 0, dam);
 	}
 
