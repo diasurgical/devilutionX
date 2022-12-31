@@ -1114,7 +1114,6 @@ void CheckReflect(Monster &monster, Player &player, int &dam)
 	// reflects 20-30% damage
 	int mdam = dam * (GenerateRnd(10) + 20L) / 100;
 	ApplyMonsterDamage(monster, mdam);
-	dam = std::max(dam - mdam, 0);
 	if (monster.hitPoints >> 6 <= 0)
 		M_StartKill(monster, player);
 	else
