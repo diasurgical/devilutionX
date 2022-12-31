@@ -477,9 +477,15 @@ bool MoveMissile(Missile &missile, tl::function_ref<bool(Point)> checkTile, bool
 
 	// Did the missile skip a tile?
 	if (possibleVisitTiles > 1) {
-		// Implementation note: If someone knows the correct math to calculate this without this step for step increase loop, I would really appreciate it.
-		auto incVelocity = missile.position.velocity * (0.01f / (float)(possibleVisitTiles - 1));
+		auto speed = abs(missile.position.velocity);
+		float denominator = (2 * speed.deltaY >= speed.deltaX) ? 2 * speed.deltaY : speed.deltaX;
+		auto incVelocity = missile.position.velocity * ((32 << 16) / denominator);
 		auto traveled = missile.position.traveled - missile.position.velocity;
+		// Adjust the traveled vector to start on the next smallest multiple of incVelocity
+		if (incVelocity.deltaY != 0)
+			traveled.deltaY = (traveled.deltaY / incVelocity.deltaY) * incVelocity.deltaY;
+		if (incVelocity.deltaX != 0)
+			traveled.deltaX = (traveled.deltaX / incVelocity.deltaX) * incVelocity.deltaX;
 		do {
 			traveled += incVelocity;
 
@@ -491,6 +497,13 @@ bool MoveMissile(Missile &missile, tl::function_ref<bool(Point)> checkTile, bool
 			// we are at the original calculated position => resume with normal logic
 			if (tile == missile.position.tile)
 				break;
+
+			// skip collision logic if the missile is on a corner between tiles
+			if (pixelsTraveled.deltaY % 16 == 0
+			    && pixelsTraveled.deltaX % 32 == 0
+			    && (pixelsTraveled.deltaY / 16) % 2 != (pixelsTraveled.deltaX / 32) % 2) {
+				continue;
+			}
 
 			// don't call checkTile more than once for a tile
 			if (prevTile == tile)
