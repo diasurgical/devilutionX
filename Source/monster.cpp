@@ -1381,12 +1381,6 @@ bool MonsterFadeout(Monster &monster)
  */
 void MonsterHeal(Monster &monster)
 {
-	if ((monster.flags & MFLAG_NOHEAL) != 0) {
-		monster.flags &= ~MFLAG_ALLOW_SPECIAL;
-		monster.mode = MonsterMode::SpecialMeleeAttack;
-		return;
-	}
-
 	if (monster.animInfo.currentFrame == 0) {
 		monster.flags &= ~MFLAG_LOCK_ANIMATION;
 		monster.flags |= MFLAG_ALLOW_SPECIAL;
@@ -2129,17 +2123,15 @@ void ScavengerAi(Monster &monster)
 		monster.goalVar3--;
 		if (dCorpse[monster.position.tile.x][monster.position.tile.y] != 0) {
 			StartEating(monster);
-			if ((monster.flags & MFLAG_NOHEAL) == 0) {
-				if (gbIsHellfire) {
-					int mMaxHP = monster.maxHitPoints; // BUGFIX use hitPointsMaximum or we loose health when difficulty isn't normal (fixed)
-					monster.hitPoints += mMaxHP / 8;
-					if (monster.hitPoints > monster.maxHitPoints)
-						monster.hitPoints = monster.maxHitPoints;
-					if (monster.goalVar3 <= 0 || monster.hitPoints == monster.maxHitPoints)
-						dCorpse[monster.position.tile.x][monster.position.tile.y] = 0;
-				} else {
-					monster.hitPoints += 64;
-				}
+			if (gbIsHellfire) {
+				int mMaxHP = monster.maxHitPoints;
+				monster.hitPoints += mMaxHP / 8;
+				if (monster.hitPoints > monster.maxHitPoints)
+					monster.hitPoints = monster.maxHitPoints;
+				if (monster.goalVar3 <= 0 || monster.hitPoints == monster.maxHitPoints)
+					dCorpse[monster.position.tile.x][monster.position.tile.y] = 0;
+			} else {
+				monster.hitPoints += 64;
 			}
 			int targetHealth = monster.maxHitPoints;
 			if (!gbIsHellfire)
@@ -2252,13 +2244,11 @@ void FallenAi(Monster &monster)
 		if (!FlipCoin(4)) {
 			return;
 		}
-		if ((monster.flags & MFLAG_NOHEAL) == 0) {
-			StartSpecialStand(monster, monster.direction);
-			if (monster.maxHitPoints - (2 * monster.intelligence + 2) >= monster.hitPoints)
-				monster.hitPoints += 2 * monster.intelligence + 2;
-			else
-				monster.hitPoints = monster.maxHitPoints;
-		}
+		StartSpecialStand(monster, monster.direction);
+		if (monster.maxHitPoints - (2 * monster.intelligence + 2) >= monster.hitPoints)
+			monster.hitPoints += 2 * monster.intelligence + 2;
+		else
+			monster.hitPoints = monster.maxHitPoints;
 		int rad = 2 * monster.intelligence + 4;
 		for (int y = -rad; y <= rad; y++) {
 			for (int x = -rad; x <= rad; x++) {
@@ -2411,8 +2401,7 @@ void GargoyleAi(Monster &monster)
 	}
 
 	if (monster.hitPoints < (monster.maxHitPoints / 2))
-		if ((monster.flags & MFLAG_NOHEAL) == 0)
-			monster.goal = MonsterGoal::Retreat;
+		monster.goal = MonsterGoal::Retreat;
 	if (monster.goal == MonsterGoal::Retreat) {
 		if (distanceToEnemy >= monster.intelligence + 2u) {
 			monster.goal = MonsterGoal::Normal;
@@ -3939,7 +3928,7 @@ void ProcessMonsters()
 			SetRndSeed(monster.aiSeed);
 			monster.aiSeed = AdvanceRndSeed();
 		}
-		if ((monster.flags & MFLAG_NOHEAL) == 0 && monster.hitPoints < monster.maxHitPoints && monster.hitPoints >> 6 > 0) {
+		if (monster.hitPoints < monster.maxHitPoints && monster.hitPoints >> 6 > 0) {
 			if (monster.level(sgGameInitInfo.nDifficulty) > 1) {
 				monster.hitPoints += monster.level(sgGameInitInfo.nDifficulty) / 2;
 			} else {
