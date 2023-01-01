@@ -160,7 +160,6 @@ struct TMegaPkt {
 #pragma pack(push, 1)
 struct DMonsterStr {
 	WorldTilePosition position;
-	Direction _mdir;
 	uint8_t _menemy;
 	uint8_t _mactive;
 	int32_t hitPoints;
@@ -651,7 +650,6 @@ void DeltaSyncGolem(const TCmdGolem &message, int pnum, uint8_t level)
 	monster.position.y = message._my;
 	monster._mactive = UINT8_MAX;
 	monster._menemy = message._menemy;
-	monster._mdir = message._mdir;
 	monster.hitPoints = SDL_SwapLE32(message._mhitpoints);
 }
 
@@ -674,7 +672,6 @@ void DeltaLeaveSync(uint8_t bLevel)
 		sgbDeltaChanged = true;
 		DMonsterStr &delta = deltaLevel.monster[ma];
 		delta.position = monster.position.tile;
-		delta._mdir = monster.direction;
 		delta._menemy = encode_enemy(monster);
 		delta.hitPoints = monster.hitPoints;
 		delta._mactive = monster.activeForTicks;
@@ -2663,8 +2660,6 @@ void delta_kill_monster(const Monster &monster, Point position, const Player &pl
 	sgbDeltaChanged = true;
 	DMonsterStr *pD = &GetDeltaLevel(player).monster[monster.getId()];
 	pD->position = position;
-	// BUGFIX: should only sync monster direction if bLevel is same as currlevel.
-	pD->_mdir = monster.direction;
 	pD->hitPoints = 0;
 }
 
