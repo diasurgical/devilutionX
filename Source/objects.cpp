@@ -2140,8 +2140,13 @@ void OperateMushroomPatch(const Player &player, Object &mushroomPatch)
 
 	PlaySfxLoc(IS_CHEST, mushroomPatch.position);
 	Point pos = GetSuperItemLoc(mushroomPatch.position);
-	SpawnQuestItem(IDI_MUSHROOM, pos, 0, 0, true);
-	Quests[Q_MUSHROOM]._qvar1 = QS_MUSHSPAWNED;
+
+	if (&player == MyPlayer) {
+		SpawnQuestItem(IDI_MUSHROOM, pos, 0, 0, true);
+		Quests[Q_MUSHROOM]._qvar1 = QS_MUSHSPAWNED;
+		NetSendCmdQuest(true, Quests[Q_MUSHROOM]);
+		NetSendCmdLoc(MyPlayerId, false, CMD_OPERATEOBJ, mushroomPatch.position);
+	}
 }
 
 void OperateInnSignChest(const Player &player, Object &questContainer, bool sendmsg)
@@ -3810,7 +3815,7 @@ void InitObjects()
 		AdvanceRndSeed();
 		if (currlevel == 9 && !gbIsMultiplayer)
 			AddSlainHero();
-		if (currlevel == Quests[Q_MUSHROOM]._qlevel && Quests[Q_MUSHROOM]._qactive == QUEST_INIT)
+		if (Quests[Q_MUSHROOM].IsAvailable())
 			AddMushPatch();
 
 		if (currlevel == 4 || currlevel == 8 || currlevel == 12)
@@ -4538,7 +4543,7 @@ void DeltaSyncOpObject(Object &object)
 		UpdateState(object, 3);
 		break;
 	case OBJ_MUSHPATCH:
-		if (Quests[Q_MUSHROOM]._qactive == QUEST_ACTIVE) {
+		if (Quests[Q_MUSHROOM]._qvar1 >= QS_MUSHSPAWNED) {
 			UpdateState(object, object._oAnimFrame + 1);
 		}
 		break;
