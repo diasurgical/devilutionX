@@ -729,7 +729,7 @@ void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBuffe
 void DrawPlayerHelper(const Surface &out, const Player &player, Point tilePosition, Point targetBufferPosition)
 {
 	Displacement offset = {};
-	if (player.IsWalking()) {
+	if (player.isWalking()) {
 		offset = GetOffsetForWalking(player.AnimInfo, player._pdir);
 	}
 
@@ -999,7 +999,7 @@ void DrawGame(const Surface &fullOut, Point position)
 	// Adjust by player offset and tile grid alignment
 	Player &myPlayer = *MyPlayer;
 	Displacement offset = {};
-	if (myPlayer.IsWalking())
+	if (myPlayer.isWalking())
 		offset = GetOffsetForWalking(myPlayer.AnimInfo, myPlayer._pdir, true);
 	int sx = offset.deltaX + tileOffset.deltaX;
 	int sy = offset.deltaY + tileOffset.deltaY;
@@ -1039,7 +1039,7 @@ void DrawGame(const Surface &fullOut, Point position)
 	UpdateMissilesRendererData();
 
 	// Draw areas moving in and out of the screen
-	if (myPlayer.IsWalking()) {
+	if (myPlayer.isWalking()) {
 		switch (myPlayer._pdir) {
 		case Direction::NoDirection:
 			break;

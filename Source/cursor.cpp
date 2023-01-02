@@ -297,7 +297,7 @@ void CheckCursMove()
 
 	const Player &myPlayer = *MyPlayer;
 
-	if (myPlayer.IsWalking()) {
+	if (myPlayer.isWalking()) {
 		Displacement offset = GetOffsetForWalking(myPlayer.AnimInfo, myPlayer._pdir, true);
 		sx -= offset.deltaX;
 		sy -= offset.deltaY;

@@ -645,7 +645,7 @@ void multi_process_network_packets()
 						FixPlrWalkTags(player);
 						player.position.tile = syncPosition;
 						player.position.future = syncPosition;
-						if (player.IsWalking())
+						if (player.isWalking())
 							player.position.temp = syncPosition;
 						dPlayer[player.position.tile.x][player.position.tile.y] = playerId + 1;
 					}

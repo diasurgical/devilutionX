@@ -635,7 +635,7 @@ void DrawAutomapPlr(const Surface &out, const Displacement &myPlayerOffset, int 
 	int py = tile.y - 2 * AutomapOffset.deltaY - ViewPosition.y;
 
 	Displacement playerOffset = {};
-	if (player.IsWalking())
+	if (player.isWalking())
 		playerOffset = GetOffsetForWalking(player.AnimInfo, player._pdir);
 
 	Point base = {
@@ -887,7 +887,7 @@ void DrawAutomap(const Surface &out)
 
 	const Player &myPlayer = *MyPlayer;
 	Displacement myPlayerOffset = {};
-	if (myPlayer.IsWalking())
+	if (myPlayer.isWalking())
 		myPlayerOffset = GetOffsetForWalking(myPlayer.AnimInfo, myPlayer._pdir, true);
 
 	int d = (AutoMapScale * 64) / 100;
