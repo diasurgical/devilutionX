@@ -473,7 +473,7 @@ struct Player {
 	/**
 	 * @brief Is the player currently walking?
 	 */
-	bool IsWalking() const;
+	bool isWalking() const;
 
 	/**
 	 * @brief Returns item location taking into consideration barbarian's ability to hold two-handed maces and clubs in one hand.
@@ -704,7 +704,7 @@ struct Player {
 			return true;
 		if (_pmode == PM_SPELL && AnimInfo.currentFrame >= _pSFNum)
 			return true;
-		if (IsWalking() && AnimInfo.isLastFrame())
+		if (isWalking() && AnimInfo.isLastFrame())
 			return true;
 		return false;
 	}

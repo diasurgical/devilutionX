@@ -1104,7 +1104,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	DisplacementOf<int16_t> offset = {};
 	DisplacementOf<int16_t> offset2 = {};
 	DisplacementOf<int16_t> velocity = {};
-	if (player.IsWalking()) {
+	if (player.isWalking()) {
 		offset = player.position.CalculateWalkingOffset(player._pdir, player.AnimInfo);
 		offset2 = player.position.CalculateWalkingOffsetShifted8(player._pdir, player.AnimInfo);
 		velocity = player.position.GetWalkingVelocityShifted8(player._pdir, player.AnimInfo);

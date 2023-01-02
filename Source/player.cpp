@@ -1932,7 +1932,7 @@ void Player::Stop()
 	destAction = ACTION_NONE;
 }
 
-bool Player::IsWalking() const
+bool Player::isWalking() const
 {
 	return IsAnyOf(_pmode, PM_WALK_NORTHWARDS, PM_WALK_SOUTHWARDS, PM_WALK_SIDEWAYS);
 }
@@ -2326,7 +2326,7 @@ void NewPlrAnim(Player &player, player_graphic graphic, Direction dir, Animation
 	int previewShownGameTickFragments = 0;
 	if (!HeadlessMode) {
 		sprites = player.AnimationData[static_cast<size_t>(graphic)].spritesForDirection(dir);
-		if (player.previewCelSprite && (*sprites)[0] == *player.previewCelSprite && !player.IsWalking()) {
+		if (player.previewCelSprite && (*sprites)[0] == *player.previewCelSprite && !player.isWalking()) {
 			previewShownGameTickFragments = clamp<int>(AnimationInfo::baseValueFraction - player.progressToNextGameTickWhenPreviewWasSet, 0, AnimationInfo::baseValueFraction);
 		}
 	}
