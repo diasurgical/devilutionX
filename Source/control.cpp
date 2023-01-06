@@ -979,7 +979,7 @@ void FreeControlPan()
 void DrawInfoBox(const Surface &out)
 {
 	DrawPanelBox(out, { 177, 62, 288, 63 }, GetMainPanel().position + Displacement { 177, 46 });
-	if (!panelflag && !trigflag && pcursinvitem == -1 && pcursstashitem == InvalidItemId && !spselflag) {
+	if (!panelflag && !trigflag && pcursinvitem == -1 && pcursstashitem == -1 && !spselflag) {
 		InfoString = {};
 		InfoColor = UiFlags::ColorWhite;
 	}

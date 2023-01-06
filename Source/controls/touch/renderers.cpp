@@ -442,7 +442,7 @@ VirtualGamepadButtonType PrimaryActionButtonRenderer::GetDungeonButtonType()
 
 VirtualGamepadButtonType PrimaryActionButtonRenderer::GetInventoryButtonType()
 {
-	if (pcursinvitem != -1 || pcursstashitem != InvalidItemId || pcurs > CURSOR_HAND)
+	if (pcursinvitem != -1 || pcursstashitem != -1 || pcurs > CURSOR_HAND)
 		return GetItemButtonType(virtualPadButton->isHeld);
 	return GetBlankButtonType(virtualPadButton->isHeld);
 }

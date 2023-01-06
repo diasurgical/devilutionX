@@ -230,7 +230,7 @@ void InitLevelCursor()
 	pcursmonst = -1;
 	ObjectUnderCursor = nullptr;
 	pcursitem = -1;
-	pcursstashitem = InvalidItemId;
+	pcursstashitem = -1;
 	pcursplr = -1;
 	ClearCursor();
 }
@@ -366,7 +366,7 @@ void CheckCursMove()
 	if ((sgbMouseDown != CLICK_NONE || ControllerActionHeld != GameActionType_NONE) && IsNoneOf(LastMouseButtonAction, MouseActionType::None, MouseActionType::Attack, MouseActionType::Spell)) {
 		InvalidateTargets();
 
-		if (pcursmonst == -1 && ObjectUnderCursor == nullptr && pcursitem == -1 && pcursinvitem == -1 && pcursstashitem == InvalidItemId && pcursplr == -1) {
+		if (pcursmonst == -1 && ObjectUnderCursor == nullptr && pcursitem == -1 && pcursinvitem == -1 && pcursstashitem == -1 && pcursplr == -1) {
 			cursPosition = { mx, my };
 			CheckTrigForce();
 			CheckTown();
@@ -385,7 +385,7 @@ void CheckCursMove()
 		RedrawComponent(PanelDrawComponent::Belt);
 	}
 	pcursinvitem = -1;
-	pcursstashitem = InvalidItemId;
+	pcursstashitem = -1;
 	pcursplr = -1;
 	ShowUniqueItemInfoBox = false;
 	panelflag = false;

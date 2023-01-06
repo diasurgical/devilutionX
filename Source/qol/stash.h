@@ -160,7 +160,7 @@ bool UseStashItem(uint16_t itemIndex);
 /**
  * @brief Handle stash highlight and stats pop-up, if an item is under the cursor.
  * @param mousePosition x,y screen coordinates of mouse.
- * @return 0-based index of the item as it exists in the stashList, or InvalidItemId if nothing is under the cursor.
+ * @return 0-based index of the item as it exists in the stashList, or uint16_t(-1) if nothing is under the cursor.
  */
 uint16_t CheckStashHLight(Point mousePosition);
 
