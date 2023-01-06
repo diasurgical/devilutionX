@@ -243,16 +243,16 @@ void InitStash()
 
 void TransferItemToInventory(Player &player, uint16_t itemIndex)
 {
-	if (itemIndex == InvalidItemId) {
+	if (itemIndex == -1) {
 		return;
 	}
 
 	Item &item = Stash.stashList[itemIndex];
-	Point originalPosition = item.position;
 	if (item.isEmpty()) {
 		return;
 	}
 
+	Point originalPosition = item.position;
 	if (!AutoPlaceItemInInventory(player, item, true)) {
 		player.SaySpecific(HeroSpeech::IHaveNoRoom);
 		return;
@@ -372,18 +372,18 @@ uint16_t CheckStashHLight(Point mousePosition)
 	Point slot = FindSlotUnderCursor(mousePosition);
 
 	if (slot == InvalidStashPoint)
-		return InvalidItemId;
+		return -1;
 
 	InfoColor = UiFlags::ColorWhite;
 
 	StashStruct::StashCell itemId = Stash.GetItemIdAtPosition(slot);
 	if (itemId == StashStruct::EmptyCell || itemId >= Stash.stashList.size()) {
-		return InvalidItemId;
+		return -1;
 	}
 
 	Item &item = Stash.stashList[itemId];
 	if (item.isEmpty()) {
-		return InvalidItemId;
+		return -1;
 	}
 
 	InfoColor = item.getTextColor();
@@ -408,7 +408,6 @@ bool UseStashItem(uint16_t itemIndex)
 		return true;
 
 	Item *item = &Stash.stashList[itemIndex];
-	Point itemPosition = item->position;
 
 	constexpr int SpeechDelay = 10;
 	if (item->IDidx == IDI_MUSHROOM) {
@@ -449,14 +448,14 @@ bool UseStashItem(uint16_t itemIndex)
 
 	UseItem(MyPlayerId, item->_iMiscId, item->_iSpell);
 
-	if (Stash.stashList[itemIndex]._iMiscId == IMISC_MAPOFDOOM)
+	if (item->_iMiscId == IMISC_MAPOFDOOM)
 		return true;
-	if (Stash.stashList[itemIndex]._iMiscId == IMISC_NOTE) {
+	if (item->_iMiscId == IMISC_NOTE) {
 		InitQTextMsg(TEXT_BOOK9);
 		CloseInventory();
 		return true;
 	}
-	Stash.RemoveStashItem(item, itemPosition, itemIndex);
+	Stash.RemoveStashItem(item, item->position, itemIndex);
 
 	return true;
 }
