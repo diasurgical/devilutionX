@@ -495,7 +495,7 @@ unsigned StashStruct::GetPageByItemId(StashCell itemId)
 {
 	if (itemId < stashList.size()) {
 		Point itemPosition = stashList[itemId].position;
-		for(const auto& grid : stashGrids) {
+		for (const auto &grid : stashGrids) {
 			if (grid.second[itemPosition.x][itemPosition.y] == itemId + 1) {
 				return grid.first;
 			}
