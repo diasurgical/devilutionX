@@ -815,10 +815,8 @@ msgid "No"
 msgstr "Ні"
 
 #: Source/DiabloUI/settingsmenu.cpp:145
-#, fuzzy
-#| msgid "Press any key to change."
 msgid "Press gamepad buttons to change."
-msgstr "Натисніть на бажану клавішу."
+msgstr "Натисніть на кнопку геймпада щоб змінити."
 
 #: Source/DiabloUI/settingsmenu.cpp:421
 msgid "Bound key:"
@@ -834,11 +832,11 @@ msgstr "Прив'язати клавішу"
 
 #: Source/DiabloUI/settingsmenu.cpp:463
 msgid "Bound button combo:"
-msgstr ""
+msgstr "Прив'язана комбінація кнопок:"
 
 #: Source/DiabloUI/settingsmenu.cpp:472
 msgid "Unbind button combo"
-msgstr ""
+msgstr "Відв'язати комбінацію кнопок"
 
 #: Source/DiabloUI/settingsmenu.cpp:516 Source/gamemenu.cpp:63
 msgid "Previous Menu"
@@ -1011,81 +1009,79 @@ msgstr "Відправити Повідомлення"
 
 #: Source/control.cpp:326
 msgid "Available Commands:"
-msgstr ""
+msgstr "Доступні Команди:"
 
 #: Source/control.cpp:334
 msgid "Command "
-msgstr ""
+msgstr "Команда "
 
 #: Source/control.cpp:334
 msgid " is unkown."
-msgstr ""
+msgstr " невідома."
 
 #: Source/control.cpp:337 Source/control.cpp:338
-#, fuzzy
-#| msgid "Description:"
 msgid "Description: "
-msgstr "Описання:"
+msgstr "Опис: "
 
 #: Source/control.cpp:337
 msgid ""
 "\n"
 "Parameters: No additional parameter needed."
 msgstr ""
+"\n"
+"Параметри: Додаткові параметри не потрібні."
 
 #: Source/control.cpp:338
-#, fuzzy
-#| msgid "Players: "
 msgid ""
 "\n"
 "Parameters: "
-msgstr "Гравці: "
+msgstr ""
+"\n"
+"Параметри: "
 
 #: Source/control.cpp:358
 msgid "Arenas are only supported in multiplayer."
-msgstr ""
+msgstr "Арени підтримуються тільки в мережевій грі."
 
 #: Source/control.cpp:363
-#, fuzzy
-#| msgid "Are you sure you want to buy this item?"
 msgid "What arena do you want to visit?"
-msgstr "Ви впевнені, що хочете купити цей предмет?"
+msgstr "Яку арену ви хочете відвідати?"
 
 #: Source/control.cpp:371
 msgid "Invalid arena-number. Valid numbers are:"
-msgstr ""
+msgstr "Невірний номер арени. Допустимі номери:"
 
 #: Source/control.cpp:377
 msgid "To enter a arena, you need to be in town or another arena."
-msgstr ""
+msgstr "Щоб потрапити на арену, треба бути в місті або іншій арені."
 
 #: Source/control.cpp:387
 msgid "/help"
-msgstr ""
+msgstr "/help"
 
 #: Source/control.cpp:387
 msgid "Prints help overview or help for a specific command."
-msgstr ""
+msgstr "Друкує огляд довідки або довідку для конкретної команди."
 
 #: Source/control.cpp:387
 msgid "({command})"
-msgstr ""
+msgstr "({command})"
 
 #: Source/control.cpp:388
 msgid "/arena"
-msgstr ""
+msgstr "/arena"
 
 #: Source/control.cpp:388
 msgid "Enter a PvP Arena."
-msgstr ""
+msgstr "Зайти на PvP-арену."
 
 #: Source/control.cpp:388
 msgid "{arena-number}"
-msgstr ""
+msgstr "{arena-number}"
 
 #: Source/control.cpp:398
 msgid "Command \""
-msgstr ""
+msgstr "Команда \""
 
 #: Source/control.cpp:826
 msgid "Player friendly"
@@ -1240,7 +1236,7 @@ msgstr "Визначити папку з diablo.ini"
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:910
 msgid "Specify the language code (e.g. en or pt_BR)"
-msgstr ""
+msgstr "Вкажіть код мови (наприклад, en або pt_BR)"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:911
@@ -1353,19 +1349,19 @@ msgstr "Гаряча клавіша для чар або таланту."
 
 #: Source/diablo.cpp:1611 Source/diablo.cpp:1984
 msgid "Use health potion"
-msgstr ""
+msgstr "Використати зілля Зцілення"
 
 #: Source/diablo.cpp:1612 Source/diablo.cpp:1985
 msgid "Use health potions from belt."
-msgstr ""
+msgstr "Використати зілля Зцілення з пояса."
 
 #: Source/diablo.cpp:1619 Source/diablo.cpp:1992
 msgid "Use mana potion"
-msgstr ""
+msgstr "Використати зілля Мани"
 
 #: Source/diablo.cpp:1620 Source/diablo.cpp:1993
 msgid "Use mana potions from belt."
-msgstr ""
+msgstr "Використати зілля Мани з пояса."
 
 #: Source/diablo.cpp:1627 Source/diablo.cpp:2038
 msgid "Speedbook"
@@ -1546,179 +1542,157 @@ msgstr "Показує лог чату."
 
 #: Source/diablo.cpp:1875
 msgid "Primary action"
-msgstr ""
+msgstr "Основна дія"
 
 #: Source/diablo.cpp:1876
 msgid "Attack monsters, talk to towners, lift and place inventory items."
 msgstr ""
+"Атака монстрів, розмови з городянами, підняття та розміщення предметів "
+"інвентарю."
 
 #: Source/diablo.cpp:1890
-#, fuzzy
-#| msgid "Select Action"
 msgid "Secondary action"
-msgstr "Виберіть"
+msgstr "Вторинна дія"
 
 #: Source/diablo.cpp:1891
 msgid "Open chests, interact with doors, pick up items."
-msgstr ""
+msgstr "Відкриття скринь, взаємодія з дверима, підбір предметів."
 
 #: Source/diablo.cpp:1905
-#, fuzzy
-#| msgid "Select Action"
 msgid "Spell action"
-msgstr "Виберіть"
+msgstr "Дія чарування"
 
 #: Source/diablo.cpp:1906
 msgid "Cast the active spell."
-msgstr ""
+msgstr "Накласти активне чарування."
 
 #: Source/diablo.cpp:1920
-#, fuzzy
-#| msgid "Cancel"
 msgid "Cancel action"
 msgstr "Відміна"
 
 #: Source/diablo.cpp:1921
-#, fuzzy
-#| msgid "Closes the game."
 msgid "Close menus."
-msgstr "Закриває гру."
+msgstr "Закриває меню."
 
 #: Source/diablo.cpp:1946
 msgid "Move up"
-msgstr ""
+msgstr "Ідти нагору"
 
 #: Source/diablo.cpp:1947
-#, fuzzy
-#| msgid "Multi Player Characters"
 msgid "Moves the player character up."
-msgstr "Герої Мережевої Гри"
+msgstr "Переміщує персонажа гравця вгору."
 
 #: Source/diablo.cpp:1952
 msgid "Move down"
-msgstr ""
+msgstr "Ідти вниз"
 
 #: Source/diablo.cpp:1953
-#, fuzzy
-#| msgid "Multi Player Characters"
 msgid "Moves the player character down."
-msgstr "Герої Мережевої Гри"
+msgstr "Переміщує персонажа гравця вниз."
 
 #: Source/diablo.cpp:1958
-#, fuzzy
-#| msgid "$Movement:"
 msgid "Move left"
-msgstr "$Пересування:"
+msgstr "Ідти вліво"
 
 #: Source/diablo.cpp:1959
-#, fuzzy
-#| msgid "Multi Player Characters"
 msgid "Moves the player character left."
-msgstr "Герої Мережевої Гри"
+msgstr "Переміщує персонажа гравця вліво."
 
 #: Source/diablo.cpp:1964
-#, fuzzy
-#| msgid "the night"
 msgid "Move right"
-msgstr "ночі"
+msgstr "Ідти вправо"
 
 #: Source/diablo.cpp:1965
-#, fuzzy
-#| msgid "Multi Player Characters"
 msgid "Moves the player character right."
-msgstr "Герої Мережевої Гри"
+msgstr "Переміщує персонажа гравця вправо."
 
 #: Source/diablo.cpp:1970
 msgid "Stand ground"
-msgstr ""
+msgstr "Стояти на місці"
 
 #: Source/diablo.cpp:1971
 msgid "Hold to prevent the player from moving."
-msgstr ""
+msgstr "Утримуйте, щоб не дати гравцеві рухатися."
 
 #: Source/diablo.cpp:1976
 msgid "Toggle stand ground"
-msgstr ""
+msgstr "Перемкнути стояння на місці"
 
 #: Source/diablo.cpp:1977
 msgid "Toggle whether the player moves."
-msgstr ""
+msgstr "Перемикає, чи рухається гравець."
 
 #: Source/diablo.cpp:2054
 msgid "Move mouse up"
-msgstr ""
+msgstr "Перемішення мишу вгору"
 
 #: Source/diablo.cpp:2055
 msgid "Simulates upward mouse movement."
-msgstr ""
+msgstr "Імітує рух миші вгору."
 
 #: Source/diablo.cpp:2060
 msgid "Move mouse down"
-msgstr ""
+msgstr "Рухати миш вниз"
 
 #: Source/diablo.cpp:2061
 msgid "Simulates downward mouse movement."
-msgstr ""
+msgstr "Імітує рух миші вниз."
 
 #: Source/diablo.cpp:2066
 msgid "Move mouse left"
-msgstr ""
+msgstr "Рухати миш вліво"
 
 #: Source/diablo.cpp:2067
 msgid "Simulates leftward mouse movement."
-msgstr ""
+msgstr "Імітує рух миші вліво."
 
 #: Source/diablo.cpp:2072
 msgid "Move mouse right"
-msgstr ""
+msgstr "Рухати миш вправо"
 
 #: Source/diablo.cpp:2073
 msgid "Simulates rightward mouse movement."
-msgstr ""
+msgstr "Імітує рух миші вправо."
 
 #: Source/diablo.cpp:2078 Source/diablo.cpp:2092
 msgid "Left mouse click"
-msgstr ""
+msgstr "Клік лівою кнопкою миші"
 
 #: Source/diablo.cpp:2079 Source/diablo.cpp:2093
 msgid "Simulates the left mouse button."
-msgstr ""
+msgstr "Імітує ліву кнопку миші."
 
 #: Source/diablo.cpp:2106 Source/diablo.cpp:2119
 msgid "Right mouse click"
-msgstr ""
+msgstr "Клік правою кнопкою миші"
 
 #: Source/diablo.cpp:2107 Source/diablo.cpp:2120
 msgid "Simulates the right mouse button."
-msgstr ""
+msgstr "Імітує праву кнопку миші."
 
 #: Source/diablo.cpp:2132
 msgid "Gamepad hotspell menu"
-msgstr ""
+msgstr "Меню гарячих чарувань геймпаду"
 
 #: Source/diablo.cpp:2133
 msgid "Hold to set or use spell hotkeys."
-msgstr ""
+msgstr "Утримуйте, щоб встановити або використати гарячі клавіші чарування."
 
 #: Source/diablo.cpp:2139
 msgid "Gamepad menu navigator"
-msgstr ""
+msgstr "Навігація по меню геймпада"
 
 #: Source/diablo.cpp:2140
 msgid "Hold to access gamepad menu navigation."
-msgstr ""
+msgstr "Утримуйте для навігації по меню геймпада."
 
 #: Source/diablo.cpp:2155 Source/diablo.cpp:2164
-#, fuzzy
-#| msgid "The game ended"
 msgid "Toggle game menu"
-msgstr "Гра закінчилась"
+msgstr "Перемкнути ігрове меню"
 
 #: Source/diablo.cpp:2156 Source/diablo.cpp:2165
-#, fuzzy
-#| msgid "Saves the game."
 msgid "Opens the game menu."
-msgstr "Зберігає гру."
+msgstr "Відкриває ігрове меню."
 
 #: Source/discord/discord.cpp:67
 msgid "Cathedral"
@@ -4269,12 +4243,12 @@ msgid "Right-click to use"
 msgstr "Правий клік щоб використати"
 
 #: Source/items.cpp:1725
-#, fuzzy
-#| msgid "Right-click to read, then"
 msgid ""
 "Right-click to read, then\n"
 "left-click to target"
-msgstr "Правий клік щоб прочитати, потім"
+msgstr ""
+"Клацніть правою кнопкою миші, щоб прочитати, потім\n"
+"клацніть лівою кнопкою миші, щоб вибрати ціль"
 
 #: Source/items.cpp:1727
 msgid "Right-click to read"
@@ -4293,12 +4267,12 @@ msgid "Activate to use"
 msgstr "Активуйте щоб використати"
 
 #: Source/items.cpp:1743
-#, fuzzy
-#| msgid "Select from spell book, then {} to read"
 msgid ""
 "Select from spell book, then\n"
 "cast to read"
-msgstr "Виберіть з книги чар, потім {}, щоб прочитати"
+msgstr ""
+"Виберіть з книги чарувань, а потім\n"
+"чаруйте, щоб прочитати"
 
 #: Source/items.cpp:1745
 msgid "Activate to read"
@@ -4313,12 +4287,12 @@ msgid "{} to use"
 msgstr "{} щоб використати"
 
 #: Source/items.cpp:1781
-#, fuzzy
-#| msgid "Select from spell book, then {} to read"
 msgid ""
 "Select from spell book,\n"
 "then {} to read"
-msgstr "Виберіть з книги чар, потім {}, щоб прочитати"
+msgstr ""
+"Виберіть з книги чар,\n"
+"потім {}, щоб прочитати"
 
 #: Source/items.cpp:1783
 msgid "{} to read"
@@ -4772,17 +4746,15 @@ msgstr "Лігво Архієпископа Лазаря"
 
 #: Source/levels/setmaps.cpp:30
 msgid "Church Arena"
-msgstr ""
+msgstr "Арена \"Церква\""
 
 #: Source/levels/setmaps.cpp:31
-#, fuzzy
-#| msgid "Hellfire"
 msgid "Hell Arena"
-msgstr "Hellfire"
+msgstr "Арена \"Пекло\""
 
 #: Source/levels/setmaps.cpp:32
 msgid "Circle of Life Arena"
-msgstr ""
+msgstr "Арена \"Коло життя\""
 
 #: Source/levels/trigs.cpp:348
 msgid "Down to dungeon"
@@ -7125,16 +7097,12 @@ msgid "Keymapping Settings"
 msgstr "Налаштування Назначення"
 
 #: Source/options.cpp:1428
-#, fuzzy
-#| msgid "Keymapping"
 msgid "Padmapping"
-msgstr "Назначення Клавіш"
+msgstr "Падмапінг"
 
 #: Source/options.cpp:1428
-#, fuzzy
-#| msgid "Keymapping Settings"
 msgid "Padmapping Settings"
-msgstr "Налаштування Назначення"
+msgstr "Налаштування Падмапінгу"
 
 #: Source/panels/charpanel.cpp:133
 msgid "Level"
@@ -11834,12 +11802,3 @@ msgstr "Вбитий Житель"
 #: Source/utils/format_int.cpp:29
 msgid ","
 msgstr ","
-
-#~ msgid "left-click to target"
-#~ msgstr "лівий клік для наведення"
-
-#~ msgid "Select from spell book, then"
-#~ msgstr "Виберіть з книги чар, потім"
-
-#~ msgid "cast to read"
-#~ msgstr "зачаруйте чари щоб прочитати"
