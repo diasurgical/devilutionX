@@ -295,6 +295,8 @@ void base_protocol<P>::recv_decrypted(packet &pkt, endpoint_t sender)
 		size_t neededSize = sizeof(GameData) + (PlayerNameLength * MAX_PLRS);
 		if (pkt.Info().size() < neededSize)
 			return;
+		if (pkt.Info().data()[0] != sizeof(GameData))
+			return;
 		const GameData *gameData = (const GameData *)pkt.Info().data();
 		std::vector<std::string> playerNames;
 		for (size_t i = 0; i < Players.size(); i++) {
