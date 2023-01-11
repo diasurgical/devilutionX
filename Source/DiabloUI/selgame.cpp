@@ -624,7 +624,7 @@ void selgame_Password_Select(int /*value*/)
 			strcpy(sgOptions.Network.szPreviousHost, selgame_Ip);
 		}
 		if (allowJoin && SNetJoinGame(selgame_Ip, gamePassword, gdwPlayerId)) {
-			if (!IsGameCompatibleWithErrorMessage(Gamelist[selgame_selectedGame - 3].gameData)) {
+			if (!IsGameCompatibleWithErrorMessage(*m_game_data)) {
 				InitGameInfo();
 				selgame_GameSelection_Select(1);
 				return;
