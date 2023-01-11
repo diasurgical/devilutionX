@@ -633,7 +633,6 @@ void selgame_Password_Select(int /*value*/)
 			UiInitList_clear();
 			selgame_endMenu = true;
 		} else {
-
 			InitGameInfo();
 			selgame_Free();
 			std::string error;
