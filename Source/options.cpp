@@ -31,6 +31,7 @@
 #include "utils/log.hpp"
 #include "utils/paths.h"
 #include "utils/stdcompat/algorithm.hpp"
+#include "utils/stdcompat/filesystem.hpp"
 #include "utils/str_cat.hpp"
 #include "utils/str_split.hpp"
 #include "utils/utf8.hpp"
@@ -234,6 +235,15 @@ void SaveIni()
 {
 	if (!IniChanged)
 		return;
+#ifdef DVL_HAS_FILESYSTEM
+	{
+		std::error_code error;
+		std::filesystem::create_directories(paths::ConfigPath(), error);
+		if (error) {
+			LogError("failed to create directory: {}", error.message());
+		}
+	}
+#endif
 	auto iniPath = GetIniPath();
 	auto stream = CreateFileStream(iniPath.c_str(), std::fstream::out | std::fstream::trunc | std::fstream::binary);
 	GetIni().Save(*stream, true);
