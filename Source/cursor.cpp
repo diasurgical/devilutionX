@@ -261,7 +261,7 @@ void NewCursor(const Item &item)
 	if (item.isEmpty()) {
 		NewCursor(CURSOR_HAND);
 	} else {
-		NewCursor(item._iCurs + CURSOR_FIRSTITEM);
+		NewCursor(static_cast<uint8_t>(item._iCurs) + CURSOR_FIRSTITEM);
 	}
 }
 

@@ -1995,7 +1995,7 @@ void OperateBookLever(Object &questBook, bool sendmsg)
 			Quests[Q_BLOOD]._qvar1 = 1;
 			NetSendCmdQuest(true, Quests[Q_BLOOD]);
 			if (sendmsg)
-				SpawnQuestItem(IDI_BLDSTONE, SetPiece.position.megaToWorld() + Displacement { 9, 17 }, 0, 1, true);
+				SpawnQuestItem(ItemIndex::BloodStone, SetPiece.position.megaToWorld() + Displacement { 9, 17 }, 0, 1, true);
 		}
 		if (questBook._otype == OBJ_STEELTOME && Quests[Q_WARLORD]._qvar1 == 0) {
 			Quests[Q_WARLORD]._qactive = QUEST_ACTIVE;
@@ -2140,7 +2140,7 @@ void OperateMushroomPatch(const Player &player, Object &mushroomPatch)
 
 	PlaySfxLoc(IS_CHEST, mushroomPatch.position);
 	Point pos = GetSuperItemLoc(mushroomPatch.position);
-	SpawnQuestItem(IDI_MUSHROOM, pos, 0, 0, true);
+	SpawnQuestItem(ItemIndex::BlackMushroom, pos, 0, 0, true);
 	Quests[Q_MUSHROOM]._qvar1 = QS_MUSHSPAWNED;
 }
 
@@ -2168,7 +2168,7 @@ void OperateInnSignChest(const Player &player, Object &questContainer, bool send
 
 	if (sendmsg) {
 		Point pos = GetSuperItemLoc(questContainer.position);
-		SpawnQuestItem(IDI_BANNER, pos, 0, 0, true);
+		SpawnQuestItem(ItemIndex::TavernSign, pos, 0, 0, true);
 		NetSendCmdLoc(MyPlayerId, true, CMD_OPERATEOBJ, questContainer.position);
 	}
 }
@@ -2181,17 +2181,17 @@ void OperateSlainHero(const Player &player, Object &corpse)
 	corpse._oSelFlag = 0;
 
 	if (player._pClass == HeroClass::Warrior) {
-		CreateMagicArmor(corpse.position, ItemType::HeavyArmor, ICURS_BREAST_PLATE, true, false);
+		CreateMagicArmor(corpse.position, ItemType::HeavyArmor, ItemCursorGraphic::BreastPlate, true, false);
 	} else if (player._pClass == HeroClass::Rogue) {
-		CreateMagicWeapon(corpse.position, ItemType::Bow, ICURS_LONG_BATTLE_BOW, true, false);
+		CreateMagicWeapon(corpse.position, ItemType::Bow, ItemCursorGraphic::LongBattleBow, true, false);
 	} else if (player._pClass == HeroClass::Sorcerer) {
 		CreateSpellBook(corpse.position, SpellID::Lightning, true, false);
 	} else if (player._pClass == HeroClass::Monk) {
-		CreateMagicWeapon(corpse.position, ItemType::Staff, ICURS_WAR_STAFF, true, false);
+		CreateMagicWeapon(corpse.position, ItemType::Staff, ItemCursorGraphic::WarStaff, true, false);
 	} else if (player._pClass == HeroClass::Bard) {
-		CreateMagicWeapon(corpse.position, ItemType::Sword, ICURS_BASTARD_SWORD, true, false);
+		CreateMagicWeapon(corpse.position, ItemType::Sword, ItemCursorGraphic::BastardSword, true, false);
 	} else if (player._pClass == HeroClass::Barbarian) {
-		CreateMagicWeapon(corpse.position, ItemType::Axe, ICURS_BATTLE_AXE, true, false);
+		CreateMagicWeapon(corpse.position, ItemType::Axe, ItemCursorGraphic::BattleAxe, true, false);
 	}
 	MyPlayer->Say(HeroSpeech::RestInPeaceMyFriend);
 	if (&player == MyPlayer)
@@ -2251,7 +2251,7 @@ void OperatePedestal(Player &player, Object &pedestal, bool sendmsg)
 		return;
 	}
 
-	if (pedestal._oVar6 == 3 || !RemoveInventoryItemById(player, IDI_BLDSTONE)) {
+	if (pedestal._oVar6 == 3 || !RemoveInventoryItemById(player, ItemIndex::BloodStone)) {
 		return;
 	}
 
@@ -2261,13 +2261,13 @@ void OperatePedestal(Player &player, Object &pedestal, bool sendmsg)
 		PlaySfxLoc(LS_PUDDLE, pedestal.position);
 		ObjChangeMap(SetPiece.position.x, SetPiece.position.y + 3, SetPiece.position.x + 2, SetPiece.position.y + 7);
 		if (sendmsg)
-			SpawnQuestItem(IDI_BLDSTONE, SetPiece.position.megaToWorld() + Displacement { 3, 10 }, 0, 1, true);
+			SpawnQuestItem(ItemIndex::BloodStone, SetPiece.position.megaToWorld() + Displacement { 3, 10 }, 0, 1, true);
 	}
 	if (pedestal._oVar6 == 2) {
 		PlaySfxLoc(LS_PUDDLE, pedestal.position);
 		ObjChangeMap(SetPiece.position.x + 6, SetPiece.position.y + 3, SetPiece.position.x + SetPiece.size.width, SetPiece.position.y + 7);
 		if (sendmsg)
-			SpawnQuestItem(IDI_BLDSTONE, SetPiece.position.megaToWorld() + Displacement { 15, 10 }, 0, 1, true);
+			SpawnQuestItem(ItemIndex::BloodStone, SetPiece.position.megaToWorld() + Displacement { 15, 10 }, 0, 1, true);
 	}
 	if (pedestal._oVar6 == 3) {
 		PlaySfxLoc(LS_BLODSTAR, pedestal.position);
@@ -2593,19 +2593,19 @@ void OperateShrineEldritch(Player &player)
 		if (item._itype != ItemType::Misc) {
 			continue;
 		}
-		if (IsAnyOf(item._iMiscId, IMISC_HEAL, IMISC_MANA)) {
+		if (IsAnyOf(item._iMiscId, ItemMiscID::PotionOfHealing, ItemMiscID::PotionOfMana)) {
 			// Reinitializing the item zeroes out the seed, we save and restore here to avoid triggering false
 			// positives on duplicated item checks (e.g. when picking up the item).
 			auto seed = item._iSeed;
-			InitializeItem(item, ItemMiscIdIdx(IMISC_REJUV));
+			InitializeItem(item, ItemMiscIdIdx(ItemMiscID::PotionOfRejuvenation));
 			item._iSeed = seed;
 			item._iStatFlag = true;
 			continue;
 		}
-		if (IsAnyOf(item._iMiscId, IMISC_FULLHEAL, IMISC_FULLMANA)) {
+		if (IsAnyOf(item._iMiscId, ItemMiscID::PotionOfFullHealing, ItemMiscID::PotionOfFullMana)) {
 			// As above.
 			auto seed = item._iSeed;
-			InitializeItem(item, ItemMiscIdIdx(IMISC_FULLREJUV));
+			InitializeItem(item, ItemMiscIdIdx(ItemMiscID::PotionOfFullRejuvenation));
 			item._iSeed = seed;
 			item._iStatFlag = true;
 			continue;
@@ -2642,11 +2642,11 @@ void OperateShrineDivine(Player &player, Point spawnPosition)
 		return;
 
 	if (currlevel < 4) {
-		CreateTypeItem(spawnPosition, false, ItemType::Misc, IMISC_FULLMANA, false, true);
-		CreateTypeItem(spawnPosition, false, ItemType::Misc, IMISC_FULLHEAL, false, true);
+		CreateTypeItem(spawnPosition, false, ItemType::Misc, ItemMiscID::PotionOfFullMana, false, true);
+		CreateTypeItem(spawnPosition, false, ItemType::Misc, ItemMiscID::PotionOfFullHealing, false, true);
 	} else {
-		CreateTypeItem(spawnPosition, false, ItemType::Misc, IMISC_FULLREJUV, false, true);
-		CreateTypeItem(spawnPosition, false, ItemType::Misc, IMISC_FULLREJUV, false, true);
+		CreateTypeItem(spawnPosition, false, ItemType::Misc, ItemMiscID::PotionOfFullRejuvenation, false, true);
+		CreateTypeItem(spawnPosition, false, ItemType::Misc, ItemMiscID::PotionOfFullRejuvenation, false, true);
 	}
 
 	player._pMana = player._pMaxMana;
@@ -3137,9 +3137,9 @@ void OperateBookStand(Object &bookStand, bool sendmsg, bool sendLootMsg)
 	bookStand._oAnimFrame += 2;
 	SetRndSeed(bookStand._oRndSeed);
 	if (FlipCoin(5))
-		CreateTypeItem(bookStand.position, false, ItemType::Misc, IMISC_BOOK, sendLootMsg, false);
+		CreateTypeItem(bookStand.position, false, ItemType::Misc, ItemMiscID::Book, sendLootMsg, false);
 	else
-		CreateTypeItem(bookStand.position, false, ItemType::Misc, IMISC_SCROLL, sendLootMsg, false);
+		CreateTypeItem(bookStand.position, false, ItemType::Misc, ItemMiscID::Scroll, sendLootMsg, false);
 	if (sendmsg)
 		NetSendCmdLoc(MyPlayerId, false, CMD_OPERATEOBJ, bookStand.position);
 }
@@ -3154,7 +3154,7 @@ void OperateBookcase(Object &bookcase, bool sendmsg, bool sendLootMsg)
 	bookcase._oSelFlag = 0;
 	bookcase._oAnimFrame -= 2;
 	SetRndSeed(bookcase._oRndSeed);
-	CreateTypeItem(bookcase.position, false, ItemType::Misc, IMISC_BOOK, sendLootMsg, false);
+	CreateTypeItem(bookcase.position, false, ItemType::Misc, ItemMiscID::Book, sendLootMsg, false);
 
 	if (Quests[Q_ZHAR].IsAvailable()) {
 		auto &zhar = Monsters[MAX_PLRS];
@@ -3194,13 +3194,13 @@ void OperateArmorStand(Object &armorStand, bool sendmsg, bool sendLootMsg)
 	SetRndSeed(armorStand._oRndSeed);
 	bool uniqueRnd = !FlipCoin();
 	if (currlevel <= 5) {
-		CreateTypeItem(armorStand.position, true, ItemType::LightArmor, IMISC_NONE, sendLootMsg, false);
+		CreateTypeItem(armorStand.position, true, ItemType::LightArmor, ItemMiscID::None, sendLootMsg, false);
 	} else if (currlevel >= 6 && currlevel <= 9) {
-		CreateTypeItem(armorStand.position, uniqueRnd, ItemType::MediumArmor, IMISC_NONE, sendLootMsg, false);
+		CreateTypeItem(armorStand.position, uniqueRnd, ItemType::MediumArmor, ItemMiscID::None, sendLootMsg, false);
 	} else if (currlevel >= 10 && currlevel <= 12) {
-		CreateTypeItem(armorStand.position, false, ItemType::HeavyArmor, IMISC_NONE, sendLootMsg, false);
+		CreateTypeItem(armorStand.position, false, ItemType::HeavyArmor, ItemMiscID::None, sendLootMsg, false);
 	} else if (currlevel >= 13) {
-		CreateTypeItem(armorStand.position, true, ItemType::HeavyArmor, IMISC_NONE, sendLootMsg, false);
+		CreateTypeItem(armorStand.position, true, ItemType::HeavyArmor, ItemMiscID::None, sendLootMsg, false);
 	}
 	if (sendmsg)
 		NetSendCmdLoc(MyPlayerId, false, CMD_OPERATEOBJ, armorStand.position);
@@ -3350,7 +3350,7 @@ void OperateWeaponRack(Object &weaponRack, bool sendmsg, bool sendLootMsg)
 	weaponRack._oSelFlag = 0;
 	weaponRack._oAnimFrame++;
 
-	CreateTypeItem(weaponRack.position, leveltype != DTYPE_CATHEDRAL, weaponType, IMISC_NONE, sendLootMsg, false);
+	CreateTypeItem(weaponRack.position, leveltype != DTYPE_CATHEDRAL, weaponType, ItemMiscID::None, sendLootMsg, false);
 
 	if (sendmsg)
 		NetSendCmdLoc(MyPlayerId, false, CMD_OPERATEOBJ, weaponRack.position);
@@ -3424,7 +3424,7 @@ void OperateLazStand(Object &stand)
 	stand._oAnimFrame++;
 	stand._oSelFlag = 0;
 	Point pos = GetSuperItemLoc(stand.position);
-	SpawnQuestItem(IDI_LAZSTAFF, pos, 0, 0, true);
+	SpawnQuestItem(ItemIndex::StaffOfLazarus, pos, 0, 0, true);
 	NetSendCmdLoc(MyPlayerId, false, CMD_OPERATEOBJ, stand.position);
 }
 
@@ -4357,14 +4357,14 @@ void ObjChangeMapResync(int x1, int y1, int x2, int y2)
 	}
 }
 
-_item_indexes ItemMiscIdIdx(item_misc_id imiscid)
+ItemIndex ItemMiscIdIdx(ItemMiscID imiscid)
 {
-	std::underlying_type_t<_item_indexes> i = IDI_GOLD;
-	while (AllItemsList[i].iRnd == IDROP_NEVER || AllItemsList[i].iMiscId != imiscid) {
-		i++;
+	ItemIndex i = ItemIndex::Gold;
+	while (AllItemsList[static_cast<int16_t>(i)].iRnd == ItemDropRate::Never || AllItemsList[static_cast<int16_t>(i)].iMiscId != imiscid) {
+		i = static_cast<ItemIndex>(static_cast<int16_t>(i) + 1);
 	}
 
-	return static_cast<_item_indexes>(i);
+	return static_cast<ItemIndex>(i);
 }
 
 void OperateObject(Player &player, Object &object)

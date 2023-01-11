@@ -128,6 +128,52 @@ enum _unique_items : int8_t {
 	UITEM_INVALID = -1,
 };
 
+enum class ItemAnimationID : int8_t {
+	ArmorMedium,
+	Axe,
+	BottleDarkRed,
+	Bow,
+	Gold,
+	Helmet,
+	Mace,
+	ShieldHeavy,
+	Sword,
+	Rock,
+	Cleaver,
+	Staff,
+	Ring,
+	Crown,
+	ArmorLight,
+	ShieldLight,
+	Scroll,
+	ArmorHeavy,
+	Book,
+	Food, // unused
+	BottleBrightBlue,
+	BottleDarkYellow,
+	BottleOrange,
+	BottleBrightRed,
+	BottleBlack,
+	BottleBrightYellow,
+	BottleWhite,
+	BottleDarkBlue,
+	Ear,
+	Brain,
+	Mushroom,
+	InnSign,
+	BloodStone,
+	Anvil,
+	LazarusStaff,
+	Bomb,
+	HalfNote,
+	WholeNote,
+	Rune,
+	Teddy,
+	ArmorCow,
+	SuitBrown,
+	SuitGray,
+};
+
 /*
  First 5 bits store level
  6th bit stores onlygood flag
@@ -193,18 +239,18 @@ struct Item {
 	item_quality _iMagical = ITEM_QUALITY_NORMAL;
 	char _iName[64] = {};
 	char _iIName[64] = {};
-	item_equip_type _iLoc = ILOC_NONE;
-	item_class _iClass = ICLASS_NONE;
-	uint8_t _iCurs = 0;
+	ItemEquipType _iLoc = ItemEquipType::None;
+	ItemClass _iClass = ItemClass::None;
+	ItemCursorGraphic _iCurs = ItemCursorGraphic::PotionOfFullMana;
 	int _ivalue = 0;
 	int _iIvalue = 0;
 	uint8_t _iMinDam = 0;
 	uint8_t _iMaxDam = 0;
 	int16_t _iAC = 0;
 	ItemSpecialEffect _iFlags = ItemSpecialEffect::None;
-	item_misc_id _iMiscId = IMISC_NONE;
+	ItemMiscID _iMiscId = ItemMiscID::None;
 	SpellID _iSpell = SpellID::Null;
-	_item_indexes IDidx = IDI_NONE;
+	ItemIndex IDidx = ItemIndex::None;
 	int _iCharges = 0;
 	int _iMaxCharges = 0;
 	int _iDurability = 0;
@@ -233,8 +279,8 @@ struct Item {
 	int16_t _iLMinDam = 0;
 	int16_t _iLMaxDam = 0;
 	int16_t _iPLEnAc = 0;
-	enum item_effect_type _iPrePower = IPL_INVALID;
-	enum item_effect_type _iSufPower = IPL_INVALID;
+	enum ItemEffectType _iPrePower = ItemEffectType::Invalid;
+	enum ItemEffectType _iSufPower = ItemEffectType::Invalid;
 	int _iVAdd1 = 0;
 	int _iVMult1 = 0;
 	int _iVAdd2 = 0;
@@ -284,12 +330,12 @@ struct Item {
 		}
 
 		switch (this->_iLoc) {
-		case ILOC_AMULET:
-		case ILOC_ARMOR:
-		case ILOC_HELM:
-		case ILOC_ONEHAND:
-		case ILOC_RING:
-		case ILOC_TWOHAND:
+		case ItemEquipType::Amulet:
+		case ItemEquipType::Armor:
+		case ItemEquipType::Helm:
+		case ItemEquipType::OneHand:
+		case ItemEquipType::Ring:
+		case ItemEquipType::TwoHands:
 			return true;
 
 		default:
@@ -381,7 +427,7 @@ struct Item {
 
 	[[nodiscard]] bool isScroll() const
 	{
-		return IsAnyOf(_iMiscId, IMISC_SCROLL, IMISC_SCROLLT);
+		return IsAnyOf(_iMiscId, ItemMiscID::Scroll, ItemMiscID::ScrollTargeted);
 	}
 
 	[[nodiscard]] bool isScrollOf(SpellID spellId) const
@@ -391,7 +437,7 @@ struct Item {
 
 	[[nodiscard]] bool isRune() const
 	{
-		return _iMiscId > IMISC_RUNEFIRST && _iMiscId < IMISC_RUNELAST;
+		return _iMiscId > ItemMiscID::RuneFirst && _iMiscId < ItemMiscID::RuneLast;
 	}
 
 	[[nodiscard]] bool isRuneOf(SpellID spellId) const
@@ -399,22 +445,22 @@ struct Item {
 		if (!isRune())
 			return false;
 		switch (_iMiscId) {
-		case IMISC_RUNEF:
+		case ItemMiscID::RuneOfFire:
 			return spellId == SpellID::RuneOfFire;
-		case IMISC_RUNEL:
+		case ItemMiscID::RuneOfLight:
 			return spellId == SpellID::RuneOfLight;
-		case IMISC_GR_RUNEL:
+		case ItemMiscID::RuneOfNova:
 			return spellId == SpellID::RuneOfNova;
-		case IMISC_GR_RUNEF:
+		case ItemMiscID::RuneOfImmolation:
 			return spellId == SpellID::RuneOfImmolation;
-		case IMISC_RUNES:
+		case ItemMiscID::RuneOfStone:
 			return spellId == SpellID::RuneOfStone;
 		default:
 			return false;
 		}
 	}
 
-	[[nodiscard]] bool keyAttributesMatch(int32_t seed, _item_indexes itemIndex, uint16_t createInfo) const
+	[[nodiscard]] bool keyAttributesMatch(int32_t seed, ItemIndex itemIndex, uint16_t createInfo) const
 	{
 		return _iSeed == seed && IDidx == itemIndex && _iCreateInfo == createInfo;
 	}
@@ -454,7 +500,7 @@ struct Item {
 struct ItemGetRecordStruct {
 	int32_t nSeed;
 	uint16_t wCI;
-	int nIndex;
+	ItemIndex nIndex;
 	uint32_t dwTimestamp;
 };
 
@@ -475,15 +521,15 @@ extern CornerStoneStruct CornerStone;
 extern bool UniqueItemFlags[128];
 
 uint8_t GetOutlineColor(const Item &item, bool checkReq);
-bool IsItemAvailable(int i);
+bool IsItemAvailable(ItemIndex i);
 bool IsUniqueAvailable(int i);
 void InitItemGFX();
 void InitItems();
 void CalcPlrItemVals(Player &player, bool Loadgfx);
 void CalcPlrInv(Player &player, bool Loadgfx);
-void InitializeItem(Item &item, _item_indexes itemData);
+void InitializeItem(Item &item, ItemIndex itemData);
 void GenerateNewSeed(Item &h);
-int GetGoldCursor(int value);
+ItemCursorGraphic GetGoldCursor(int value);
 
 /**
  * @brief Update the gold cursor on the given gold item
@@ -494,19 +540,19 @@ void CreatePlrItems(Player &player);
 bool ItemSpaceOk(Point position);
 int AllocateItem();
 Point GetSuperItemLoc(Point position);
-void GetItemAttrs(Item &item, _item_indexes itemData, int lvl);
+void GetItemAttrs(Item &item, ItemIndex itemData, int lvl);
 void SetupItem(Item &item);
 Item *SpawnUnique(_unique_items uid, Point position, bool sendmsg = true);
 void SpawnItem(Monster &monster, Point position, bool sendmsg);
 void CreateRndItem(Point position, bool onlygood, bool sendmsg, bool delta);
 void CreateRndUseful(Point position, bool sendmsg);
-void CreateTypeItem(Point position, bool onlygood, ItemType itemType, int imisc, bool sendmsg, bool delta);
-void RecreateItem(const Player &player, Item &item, _item_indexes idx, uint16_t icreateinfo, int iseed, int ivalue, bool isHellfire);
+void CreateTypeItem(Point position, bool onlygood, ItemType itemType, ItemMiscID imisc, bool sendmsg, bool delta);
+void RecreateItem(const Player &player, Item &item, ItemIndex idx, uint16_t icreateinfo, int iseed, int ivalue, bool isHellfire);
 void RecreateEar(Item &item, uint16_t ic, int iseed, uint8_t bCursval, string_view heroName);
 void CornerstoneSave();
 void CornerstoneLoad(Point position);
-void SpawnQuestItem(_item_indexes itemid, Point position, int randarea, int selflag, bool sendmsg);
-void SpawnRewardItem(_item_indexes itemid, Point position, bool sendmsg);
+void SpawnQuestItem(ItemIndex itemid, Point position, int randarea, int selflag, bool sendmsg);
+void SpawnRewardItem(ItemIndex itemid, Point position, bool sendmsg);
 void SpawnMapOfDoom(Point position, bool sendmsg);
 void SpawnRuneBomb(Point position, bool sendmsg);
 void SpawnTheodore(Point position, bool sendmsg);
@@ -520,11 +566,11 @@ void CheckIdentify(Player &player, int cii);
 void DoRepair(Player &player, int cii);
 void DoRecharge(Player &player, int cii);
 bool DoOil(Player &player, int cii);
-[[nodiscard]] StringOrView PrintItemPower(char plidx, const Item &item);
+[[nodiscard]] StringOrView PrintItemPower(ItemEffectType plidx, const Item &item);
 void DrawUniqueInfo(const Surface &out);
 void PrintItemDetails(const Item &item);
 void PrintItemDur(const Item &item);
-void UseItem(size_t pnum, item_misc_id Mid, SpellID spl);
+void UseItem(size_t pnum, ItemMiscID Mid, SpellID spl);
 bool UseItemOpensHive(const Item &item, Point position);
 bool UseItemOpensGrave(const Item &item, Point position);
 void SpawnSmith(int lvl);
@@ -535,12 +581,12 @@ void SpawnHealer(int lvl);
 void MakeGoldStack(Item &goldItem, int value);
 int ItemNoFlippy();
 void CreateSpellBook(Point position, SpellID ispell, bool sendmsg, bool delta);
-void CreateMagicArmor(Point position, ItemType itemType, int icurs, bool sendmsg, bool delta);
+void CreateMagicArmor(Point position, ItemType itemType, ItemCursorGraphic icurs, bool sendmsg, bool delta);
 void CreateAmulet(Point position, int lvl, bool sendmsg, bool delta);
-void CreateMagicWeapon(Point position, ItemType itemType, int icurs, bool sendmsg, bool delta);
-bool GetItemRecord(int nSeed, uint16_t wCI, int nIndex);
-void SetItemRecord(int nSeed, uint16_t wCI, int nIndex);
-void PutItemRecord(int nSeed, uint16_t wCI, int nIndex);
+void CreateMagicWeapon(Point position, ItemType itemType, ItemCursorGraphic icurs, bool sendmsg, bool delta);
+bool GetItemRecord(int nSeed, uint16_t wCI, ItemIndex nIndex);
+void SetItemRecord(int nSeed, uint16_t wCI, ItemIndex nIndex);
+void PutItemRecord(int nSeed, uint16_t wCI, ItemIndex nIndex);
 
 /**
  * @brief Resets item get records.
@@ -559,7 +605,7 @@ std::string DebugSpawnUniqueItem(std::string itemName);
 
 extern int MaxGold;
 
-extern int8_t ItemCAnimTbl[];
+extern ItemAnimationID ItemCAnimTbl[];
 extern _sfx_id ItemInvSnds[];
 
 } // namespace devilution

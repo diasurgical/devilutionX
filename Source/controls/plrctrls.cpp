@@ -1818,9 +1818,9 @@ void UseBeltItem(int type)
 			continue;
 		}
 
-		bool isRejuvenation = IsAnyOf(item._iMiscId, IMISC_REJUV, IMISC_FULLREJUV);
-		bool isHealing = isRejuvenation || IsAnyOf(item._iMiscId, IMISC_HEAL, IMISC_FULLHEAL) || item.isScrollOf(SpellID::Healing);
-		bool isMana = isRejuvenation || IsAnyOf(item._iMiscId, IMISC_MANA, IMISC_FULLMANA);
+		bool isRejuvenation = IsAnyOf(item._iMiscId, ItemMiscID::PotionOfRejuvenation, ItemMiscID::PotionOfFullRejuvenation);
+		bool isHealing = isRejuvenation || IsAnyOf(item._iMiscId, ItemMiscID::PotionOfHealing, ItemMiscID::PotionOfFullHealing) || item.isScrollOf(SpellID::Healing);
+		bool isMana = isRejuvenation || IsAnyOf(item._iMiscId, ItemMiscID::PotionOfMana, ItemMiscID::PotionOfFullMana);
 
 		if ((type == BLT_HEALING && isHealing) || (type == BLT_MANA && isMana)) {
 			UseInvItem(MyPlayerId, INVITEM_BELT_FIRST + i);

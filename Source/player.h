@@ -355,7 +355,7 @@ struct Player {
 	bool _pLvlVisited[NUMLEVELS];
 	bool _pSLvlVisited[NUMLEVELS]; // only 10 used
 
-	item_misc_id _pOilType;
+	ItemMiscID _pOilType;
 	uint8_t pTownWarps;
 	uint8_t pDungMsgs;
 	uint8_t pLvlLoad;
@@ -478,10 +478,10 @@ struct Player {
 	/**
 	 * @brief Returns item location taking into consideration barbarian's ability to hold two-handed maces and clubs in one hand.
 	 */
-	item_equip_type GetItemLocation(const Item &item) const
+	ItemEquipType GetItemLocation(const Item &item) const
 	{
-		if (_pClass == HeroClass::Barbarian && item._iLoc == ILOC_TWOHAND && IsAnyOf(item._itype, ItemType::Sword, ItemType::Mace))
-			return ILOC_ONEHAND;
+		if (_pClass == HeroClass::Barbarian && item._iLoc == ItemEquipType::TwoHands && IsAnyOf(item._itype, ItemType::Sword, ItemType::Mace))
+			return ItemEquipType::OneHand;
 		return item._iLoc;
 	}
 

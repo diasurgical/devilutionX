@@ -293,9 +293,9 @@ bool TryOpenDungeonWithMouse()
 		return false;
 
 	Item &holdItem = MyPlayer->HoldItem;
-	if (holdItem.IDidx == IDI_RUNEBOMB && OpensHive(cursPosition))
+	if (holdItem.IDidx == ItemIndex::RuneBomb && OpensHive(cursPosition))
 		OpenHive();
-	else if (holdItem.IDidx == IDI_MAPOFDOOM && OpensGrave(cursPosition))
+	else if (holdItem.IDidx == ItemIndex::Map && OpensGrave(cursPosition))
 		OpenGrave();
 	else
 		return false;

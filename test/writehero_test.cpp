@@ -159,7 +159,7 @@ void PackItemArmor(ItemPack *id)
 void PackItemFullRejuv(ItemPack *id, int i)
 {
 	const uint32_t seeds[] = { 0x7C253335, 0x3EEFBFF8, 0x76AFB1A9, 0x38EB45FE, 0x1154E197, 0x5964B644, 0x76B58BEB, 0x002A6E5A };
-	id->idx = ItemMiscIdIdx(IMISC_FULLREJUV);
+	id->idx = static_cast<int16_t>(ItemMiscIdIdx(ItemMiscID::PotionOfFullRejuvenation));
 	id->iSeed = seeds[i];
 	id->iCreateInfo = 0;
 	id->bId = 2 * ITEM_QUALITY_NORMAL;

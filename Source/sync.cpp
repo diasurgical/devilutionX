@@ -106,8 +106,8 @@ void SyncPlrInv(TSyncHeader *pHdr)
 		auto &item = Items[pHdr->bItemI];
 		pHdr->bItemX = item.position.x;
 		pHdr->bItemY = item.position.y;
-		pHdr->wItemIndx = SDL_SwapLE16(item.IDidx);
-		if (item.IDidx == IDI_EAR) {
+		pHdr->wItemIndx = SDL_SwapLE16(static_cast<int16_t>(item.IDidx));
+		if (item.IDidx == ItemIndex::Ear) {
 			pHdr->wItemCI = SDL_SwapLE16((item._iIName[0] << 8) | item._iIName[1]);
 			pHdr->dwItemSeed = SDL_SwapLE32((item._iIName[2] << 24) | (item._iIName[3] << 16) | (item._iIName[4] << 8) | item._iIName[5]);
 			pHdr->bItemId = item._iIName[6];
@@ -115,7 +115,7 @@ void SyncPlrInv(TSyncHeader *pHdr)
 			pHdr->bItemMDur = item._iIName[8];
 			pHdr->bItemCh = item._iIName[9];
 			pHdr->bItemMCh = item._iIName[10];
-			pHdr->wItemVal = SDL_SwapLE16((item._iIName[11] << 8) | ((item._iCurs - ICURS_EAR_SORCERER) << 6) | item._ivalue);
+			pHdr->wItemVal = SDL_SwapLE16((item._iIName[11] << 8) | ((static_cast<uint8_t>(item._iCurs) - static_cast<uint8_t>(ItemCursorGraphic::EarSorcerer)) << 6) | item._ivalue);
 			pHdr->dwItemBuff = SDL_SwapLE32((item._iIName[12] << 24) | (item._iIName[13] << 16) | (item._iIName[14] << 8) | item._iIName[15]);
 		} else {
 			pHdr->wItemCI = SDL_SwapLE16(item._iCreateInfo);
@@ -125,7 +125,7 @@ void SyncPlrInv(TSyncHeader *pHdr)
 			pHdr->bItemMDur = item._iMaxDur;
 			pHdr->bItemCh = item._iCharges;
 			pHdr->bItemMCh = item._iMaxCharges;
-			if (item.IDidx == IDI_GOLD) {
+			if (item.IDidx == ItemIndex::Gold) {
 				pHdr->wItemVal = SDL_SwapLE16(item._ivalue);
 			}
 		}
@@ -136,7 +136,7 @@ void SyncPlrInv(TSyncHeader *pHdr)
 	const auto &item = MyPlayer->InvBody[sgnSyncPInv];
 	if (!item.isEmpty()) {
 		pHdr->bPInvLoc = sgnSyncPInv;
-		pHdr->wPInvIndx = SDL_SwapLE16(item.IDidx);
+		pHdr->wPInvIndx = SDL_SwapLE16(static_cast<int16_t>(item.IDidx));
 		pHdr->wPInvCI = SDL_SwapLE16(item._iCreateInfo);
 		pHdr->dwPInvSeed = SDL_SwapLE32(item._iSeed);
 		pHdr->bPInvId = item._iIdentified ? 1 : 0;

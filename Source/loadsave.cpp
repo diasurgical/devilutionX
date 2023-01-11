@@ -250,17 +250,17 @@ void LoadItemData(LoadHelper &file, Item &item)
 	item._iMagical = static_cast<item_quality>(file.NextLE<int8_t>());
 	file.NextBytes(item._iName, 64);
 	file.NextBytes(item._iIName, 64);
-	item._iLoc = static_cast<item_equip_type>(file.NextLE<int8_t>());
-	item._iClass = static_cast<item_class>(file.NextLE<uint8_t>());
+	item._iLoc = static_cast<ItemEquipType>(file.NextLE<int8_t>());
+	item._iClass = static_cast<ItemClass>(file.NextLE<uint8_t>());
 	file.Skip(1); // Alignment
-	item._iCurs = file.NextLE<int32_t>();
+	item._iCurs = static_cast<ItemCursorGraphic>(file.NextLE<int32_t>());
 	item._ivalue = file.NextLE<int32_t>();
 	item._iIvalue = file.NextLE<int32_t>();
 	item._iMinDam = file.NextLE<int32_t>();
 	item._iMaxDam = file.NextLE<int32_t>();
 	item._iAC = file.NextLE<int32_t>();
 	item._iFlags = static_cast<ItemSpecialEffect>(file.NextLE<uint32_t>());
-	item._iMiscId = static_cast<item_misc_id>(file.NextLE<int32_t>());
+	item._iMiscId = static_cast<ItemMiscID>(file.NextLE<int32_t>());
 	item._iSpell = static_cast<SpellID>(file.NextLE<int32_t>());
 	item._iCharges = file.NextLE<int32_t>();
 	item._iMaxCharges = file.NextLE<int32_t>();
@@ -290,8 +290,8 @@ void LoadItemData(LoadHelper &file, Item &item)
 	item._iLMinDam = file.NextLE<int32_t>();
 	item._iLMaxDam = file.NextLE<int32_t>();
 	item._iPLEnAc = file.NextLE<int32_t>();
-	item._iPrePower = static_cast<item_effect_type>(file.NextLE<int8_t>());
-	item._iSufPower = static_cast<item_effect_type>(file.NextLE<int8_t>());
+	item._iPrePower = static_cast<ItemEffectType>(file.NextLE<int8_t>());
+	item._iSufPower = static_cast<ItemEffectType>(file.NextLE<int8_t>());
 	file.Skip(2); // Alignment
 	item._iVAdd1 = file.NextLE<int32_t>();
 	item._iVMult1 = file.NextLE<int32_t>();
@@ -302,7 +302,7 @@ void LoadItemData(LoadHelper &file, Item &item)
 	item._iMinDex = file.NextLE<int8_t>();
 	file.Skip(1); // Alignment
 	item._iStatFlag = file.NextBool32();
-	item.IDidx = static_cast<_item_indexes>(file.NextLE<int32_t>());
+	item.IDidx = static_cast<ItemIndex>(file.NextLE<int32_t>());
 	if (gbIsSpawn) {
 		item.IDidx = RemapItemIdxFromSpawn(item.IDidx);
 	}
@@ -517,7 +517,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	player._pIFMaxDam = file.NextLE<int32_t>();
 	player._pILMinDam = file.NextLE<int32_t>();
 	player._pILMaxDam = file.NextLE<int32_t>();
-	player._pOilType = static_cast<item_misc_id>(file.NextLE<int32_t>());
+	player._pOilType = static_cast<ItemMiscID>(file.NextLE<int32_t>());
 	player.pTownWarps = file.NextLE<uint8_t>();
 	player.pDungMsgs = file.NextLE<uint8_t>();
 	player.pLvlLoad = file.NextLE<uint8_t>();
@@ -935,7 +935,7 @@ void LoadMatchingItems(LoadHelper &file, const int n, Item *pItem)
 			continue;
 		if (pItem[i]._iSeed != tempItem._iSeed)
 			continue;
-		if (tempItem.IDidx == IDI_EAR)
+		if (tempItem.IDidx == ItemIndex::Ear)
 			continue;
 		pItem[i] = tempItem;
 	}
@@ -989,8 +989,8 @@ void SaveItem(SaveHelper &file, const Item &item)
 	if (gbIsSpawn)
 		idx = RemapItemIdxToSpawn(idx);
 	ItemType iType = item._itype;
-	if (idx == -1) {
-		idx = _item_indexes::IDI_GOLD;
+	if (idx == ItemIndex::None) {
+		idx = ItemIndex::Gold;
 		iType = ItemType::None;
 	}
 
@@ -1016,17 +1016,17 @@ void SaveItem(SaveHelper &file, const Item &item)
 	file.WriteLE<int8_t>(item._iMagical);
 	file.WriteBytes(item._iName, 64);
 	file.WriteBytes(item._iIName, 64);
-	file.WriteLE<int8_t>(item._iLoc);
-	file.WriteLE<uint8_t>(item._iClass);
+	file.WriteLE<int8_t>(static_cast<int8_t>(item._iLoc));
+	file.WriteLE<uint8_t>(static_cast<uint8_t>(item._iClass));
 	file.Skip(1); // Alignment
-	file.WriteLE<int32_t>(item._iCurs);
+	file.WriteLE<int32_t>(static_cast<uint8_t>(item._iCurs));
 	file.WriteLE<int32_t>(item._ivalue);
 	file.WriteLE<int32_t>(item._iIvalue);
 	file.WriteLE<int32_t>(item._iMinDam);
 	file.WriteLE<int32_t>(item._iMaxDam);
 	file.WriteLE<int32_t>(item._iAC);
 	file.WriteLE<uint32_t>(static_cast<uint32_t>(item._iFlags));
-	file.WriteLE<int32_t>(item._iMiscId);
+	file.WriteLE<int32_t>(static_cast<int16_t>(item._iMiscId));
 	file.WriteLE<int32_t>(static_cast<int8_t>(item._iSpell));
 	file.WriteLE<int32_t>(item._iCharges);
 	file.WriteLE<int32_t>(item._iMaxCharges);
@@ -1056,8 +1056,8 @@ void SaveItem(SaveHelper &file, const Item &item)
 	file.WriteLE<int32_t>(item._iLMinDam);
 	file.WriteLE<int32_t>(item._iLMaxDam);
 	file.WriteLE<int32_t>(item._iPLEnAc);
-	file.WriteLE<int8_t>(item._iPrePower);
-	file.WriteLE<int8_t>(item._iSufPower);
+	file.WriteLE<int8_t>(static_cast<int8_t>(item._iPrePower));
+	file.WriteLE<int8_t>(static_cast<int8_t>(item._iSufPower));
 	file.Skip(2); // Alignment
 	file.WriteLE<int32_t>(item._iVAdd1);
 	file.WriteLE<int32_t>(item._iVMult1);
@@ -1068,7 +1068,7 @@ void SaveItem(SaveHelper &file, const Item &item)
 	file.WriteLE<int8_t>(item._iMinDex);
 	file.Skip(1); // Alignment
 	file.WriteLE<uint32_t>(item._iStatFlag ? 1 : 0);
-	file.WriteLE<int32_t>(idx);
+	file.WriteLE<int32_t>(static_cast<int16_t>(idx));
 	file.WriteLE<uint32_t>(item.dwBuff);
 	if (gbIsHellfire)
 		file.WriteLE<uint32_t>(static_cast<uint32_t>(item._iDamAcFlags));
@@ -1293,7 +1293,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.WriteLE<int32_t>(player._pIFMaxDam);
 	file.WriteLE<int32_t>(player._pILMinDam);
 	file.WriteLE<int32_t>(player._pILMaxDam);
-	file.WriteLE<int32_t>(player._pOilType);
+	file.WriteLE<int32_t>(static_cast<int16_t>(player._pOilType));
 	file.WriteLE<uint8_t>(player.pTownWarps);
 	file.WriteLE<uint8_t>(player.pDungMsgs);
 	file.WriteLE<uint8_t>(player.pLvlLoad);
@@ -1747,10 +1747,10 @@ void RemoveInvalidItem(Item &item)
 
 	if (!gbIsHellfire) {
 		isInvalid = isInvalid || (item._itype == ItemType::Staff && GetSpellStaffLevel(item._iSpell) == -1);
-		isInvalid = isInvalid || (item._iMiscId == IMISC_BOOK && GetSpellBookLevel(item._iSpell) == -1);
+		isInvalid = isInvalid || (item._iMiscId == ItemMiscID::Book && GetSpellBookLevel(item._iSpell) == -1);
 		isInvalid = isInvalid || item._iDamAcFlags != ItemSpecialEffectHf::None;
-		isInvalid = isInvalid || item._iPrePower > IPL_LASTDIABLO;
-		isInvalid = isInvalid || item._iSufPower > IPL_LASTDIABLO;
+		isInvalid = isInvalid || item._iPrePower > ItemEffectType::LastDiablo;
+		isInvalid = isInvalid || item._iSufPower > ItemEffectType::LastDiablo;
 	}
 
 	if (isInvalid) {
@@ -1758,11 +1758,11 @@ void RemoveInvalidItem(Item &item)
 	}
 }
 
-_item_indexes RemapItemIdxFromDiablo(_item_indexes i)
+ItemIndex RemapItemIdxFromDiablo(ItemIndex i)
 {
 	constexpr auto GetItemIdValue = [](int i) -> int {
-		if (i == IDI_SORCERER) {
-			return IDI_SORCERER_DIABLO;
+		if (i == static_cast<int16_t>(ItemIndex::SorcererStaff)) {
+			return static_cast<int16_t>(ItemIndex::SorcererStaffDiablo);
 		}
 		if (i >= 156) {
 			i += 5; // Hellfire exclusive items
@@ -1777,14 +1777,14 @@ _item_indexes RemapItemIdxFromDiablo(_item_indexes i)
 		return i;
 	};
 
-	return static_cast<_item_indexes>(GetItemIdValue(i));
+	return static_cast<ItemIndex>(GetItemIdValue(static_cast<int16_t>(i)));
 }
 
-_item_indexes RemapItemIdxToDiablo(_item_indexes i)
+ItemIndex RemapItemIdxToDiablo(ItemIndex i)
 {
 	constexpr auto GetItemIdValue = [](int i) -> int {
-		if (i == IDI_SORCERER_DIABLO) {
-			return IDI_SORCERER;
+		if (i == static_cast<int16_t>(ItemIndex::SorcererStaffDiablo)) {
+			return static_cast<int16_t>(ItemIndex::SorcererStaff);
 		}
 		if ((i >= 83 && i <= 86) || i == 92 || i >= 161) {
 			return -1; // Hellfire exclusive items
@@ -1799,10 +1799,10 @@ _item_indexes RemapItemIdxToDiablo(_item_indexes i)
 		return i;
 	};
 
-	return static_cast<_item_indexes>(GetItemIdValue(i));
+	return static_cast<ItemIndex>(GetItemIdValue(static_cast<int16_t>(i)));
 }
 
-_item_indexes RemapItemIdxFromSpawn(_item_indexes i)
+ItemIndex RemapItemIdxFromSpawn(ItemIndex i)
 {
 	constexpr auto GetItemIdValue = [](int i) {
 		if (i >= 62) {
@@ -1830,10 +1830,10 @@ _item_indexes RemapItemIdxFromSpawn(_item_indexes i)
 		return i;
 	};
 
-	return static_cast<_item_indexes>(GetItemIdValue(i));
+	return static_cast<ItemIndex>(GetItemIdValue(static_cast<int16_t>(i)));
 }
 
-_item_indexes RemapItemIdxToSpawn(_item_indexes i)
+ItemIndex RemapItemIdxToSpawn(ItemIndex i)
 {
 	constexpr auto GetItemIdValue = [](int i) {
 		if (i >= 104) {
@@ -1861,7 +1861,7 @@ _item_indexes RemapItemIdxToSpawn(_item_indexes i)
 		return i;
 	};
 
-	return static_cast<_item_indexes>(GetItemIdValue(i));
+	return static_cast<ItemIndex>(GetItemIdValue(static_cast<int16_t>(i)));
 }
 
 bool IsHeaderValid(uint32_t magicNumber)

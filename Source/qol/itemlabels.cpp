@@ -109,13 +109,13 @@ void AddItemToLabelQueue(int id, Point position)
 
 	int nameWidth = GetLineWidth(textOnGround);
 	nameWidth += MarginX * 2;
-	int index = ItemCAnimTbl[item._iCurs];
-	if (!labelCenterOffsets[index]) {
+	ItemAnimationID index = ItemCAnimTbl[static_cast<uint8_t>(item._iCurs)];
+	if (!labelCenterOffsets[static_cast<int8_t>(index)]) {
 		std::pair<int, int> itemBounds = ClxMeasureSolidHorizontalBounds((*item.AnimInfo.sprites)[item.AnimInfo.currentFrame]);
-		labelCenterOffsets[index].emplace((itemBounds.first + itemBounds.second) / 2);
+		labelCenterOffsets[static_cast<int8_t>(index)].emplace((itemBounds.first + itemBounds.second) / 2);
 	}
 
-	position.x += *labelCenterOffsets[index];
+	position.x += *labelCenterOffsets[static_cast<int8_t>(index)];
 	position.y -= TILE_HEIGHT;
 	if (*sgOptions.Graphics.zoom) {
 		position *= 2;

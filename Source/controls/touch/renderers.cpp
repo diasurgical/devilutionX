@@ -108,17 +108,17 @@ void LoadButtonArt(ButtonTexture *buttonArt, SDL_Renderer *renderer)
 
 void LoadPotionArt(ButtonTexture *potionArt, SDL_Renderer *renderer)
 {
-	item_cursor_graphic potionGraphics[] {
-		ICURS_POTION_OF_HEALING,
-		ICURS_POTION_OF_MANA,
-		ICURS_POTION_OF_REJUVENATION,
-		ICURS_POTION_OF_FULL_HEALING,
-		ICURS_POTION_OF_FULL_MANA,
-		ICURS_POTION_OF_FULL_REJUVENATION,
-		ICURS_SCROLL_OF
+	ItemCursorGraphic potionGraphics[] {
+		ItemCursorGraphic::PotionOfHealing,
+		ItemCursorGraphic::PotionOfMana,
+		ItemCursorGraphic::PotionOfRejuvenation,
+		ItemCursorGraphic::PotionOfFullHealing,
+		ItemCursorGraphic::PotionOfMana,
+		ItemCursorGraphic::PotionOfFullRejuvenation,
+		ItemCursorGraphic::Scroll
 	};
 
-	int potionFrame = static_cast<int>(CURSOR_FIRSTITEM) + static_cast<int>(ICURS_POTION_OF_HEALING);
+	int potionFrame = static_cast<int>(CURSOR_FIRSTITEM) + static_cast<int>(ItemCursorGraphic::PotionOfHealing);
 	Size potionSize = GetInvItemSize(potionFrame);
 
 	auto surface = SDLWrap::CreateRGBSurfaceWithFormat(
@@ -139,8 +139,8 @@ void LoadPotionArt(ButtonTexture *potionArt, SDL_Renderer *renderer)
 		ErrSdl();
 
 	Point position { 0, 0 };
-	for (item_cursor_graphic graphic : potionGraphics) {
-		const int cursorID = static_cast<int>(CURSOR_FIRSTITEM) + graphic;
+	for (ItemCursorGraphic graphic : potionGraphics) {
+		const int cursorID = static_cast<int>(CURSOR_FIRSTITEM) + static_cast<uint8_t>(graphic);
 		position.y += potionSize.height;
 		ClxDraw(Surface(surface.get()), position, GetInvItemSprite(cursorID));
 	}
@@ -381,24 +381,24 @@ std::optional<VirtualGamepadPotionType> PotionButtonRenderer::GetPotionType()
 		}
 
 		if (potionType == BLT_HEALING) {
-			if (item._iMiscId == IMISC_HEAL)
+			if (item._iMiscId == ItemMiscID::PotionOfHealing)
 				return GAMEPAD_HEALING;
-			if (item._iMiscId == IMISC_FULLHEAL)
+			if (item._iMiscId == ItemMiscID::PotionOfFullHealing)
 				return GAMEPAD_FULL_HEALING;
 			if (item.isScrollOf(SpellID::Healing))
 				return GAMEPAD_SCROLL_OF_HEALING;
 		}
 
 		if (potionType == BLT_MANA) {
-			if (item._iMiscId == IMISC_MANA)
+			if (item._iMiscId == ItemMiscID::PotionOfMana)
 				return GAMEPAD_MANA;
-			if (item._iMiscId == IMISC_FULLMANA)
+			if (item._iMiscId == ItemMiscID::PotionOfFullMana)
 				return GAMEPAD_FULL_MANA;
 		}
 
-		if (item._iMiscId == IMISC_REJUV)
+		if (item._iMiscId == ItemMiscID::PotionOfRejuvenation)
 			return GAMEPAD_REJUVENATION;
-		if (item._iMiscId == IMISC_FULLREJUV)
+		if (item._iMiscId == ItemMiscID::PotionOfFullRejuvenation)
 			return GAMEPAD_FULL_REJUVENATION;
 	}
 

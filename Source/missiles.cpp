@@ -1316,34 +1316,34 @@ void AddStealPotions(Missile &missile, AddMissileParameter & /*parameter*/)
 		bool hasPlayedSFX = false;
 		for (int si = 0; si < MaxBeltItems; si++) {
 			Item &beltItem = player.SpdList[si];
-			_item_indexes ii = IDI_NONE;
+			ItemIndex ii = ItemIndex::None;
 			if (beltItem._itype == ItemType::Misc) {
 				if (FlipCoin())
 					continue;
 				switch (beltItem._iMiscId) {
-				case IMISC_FULLHEAL:
-					ii = ItemMiscIdIdx(IMISC_HEAL);
+				case ItemMiscID::PotionOfFullHealing:
+					ii = ItemMiscIdIdx(ItemMiscID::PotionOfHealing);
 					break;
-				case IMISC_HEAL:
-				case IMISC_MANA:
+				case ItemMiscID::PotionOfHealing:
+				case ItemMiscID::PotionOfMana:
 					player.RemoveSpdBarItem(si);
 					break;
-				case IMISC_FULLMANA:
-					ii = ItemMiscIdIdx(IMISC_MANA);
+				case ItemMiscID::PotionOfFullMana:
+					ii = ItemMiscIdIdx(ItemMiscID::PotionOfMana);
 					break;
-				case IMISC_REJUV:
-					ii = ItemMiscIdIdx(PickRandomlyAmong({ IMISC_HEAL, IMISC_MANA }));
+				case ItemMiscID::PotionOfRejuvenation:
+					ii = ItemMiscIdIdx(PickRandomlyAmong({ ItemMiscID::PotionOfHealing, ItemMiscID::PotionOfMana }));
 					break;
-				case IMISC_FULLREJUV:
+				case ItemMiscID::PotionOfFullRejuvenation:
 					switch (GenerateRnd(3)) {
 					case 0:
-						ii = ItemMiscIdIdx(IMISC_FULLMANA);
+						ii = ItemMiscIdIdx(ItemMiscID::PotionOfFullMana);
 						break;
 					case 1:
-						ii = ItemMiscIdIdx(IMISC_FULLHEAL);
+						ii = ItemMiscIdIdx(ItemMiscID::PotionOfFullHealing);
 						break;
 					default:
-						ii = ItemMiscIdIdx(IMISC_REJUV);
+						ii = ItemMiscIdIdx(ItemMiscID::PotionOfRejuvenation);
 						break;
 					}
 					break;
@@ -1351,7 +1351,7 @@ void AddStealPotions(Missile &missile, AddMissileParameter & /*parameter*/)
 					continue;
 				}
 			}
-			if (ii != IDI_NONE) {
+			if (ii != ItemIndex::None) {
 				auto seed = beltItem._iSeed;
 				InitializeItem(beltItem, ii);
 				beltItem._iSeed = seed;

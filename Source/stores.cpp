@@ -287,17 +287,17 @@ void PrintStoreItem(const Item &item, int l, UiFlags flags, bool cursIndent = fa
 
 	if (item._iIdentified) {
 		if (item._iMagical != ITEM_QUALITY_UNIQUE) {
-			if (item._iPrePower != -1) {
+			if (item._iPrePower != ItemEffectType::Invalid) {
 				AppendStrView(productLine, PrintItemPower(item._iPrePower, item));
 			}
 		}
-		if (item._iSufPower != -1) {
+		if (item._iSufPower != ItemEffectType::Invalid) {
 			if (!productLine.empty())
 				AppendStrView(productLine, _(",  "));
 			AppendStrView(productLine, PrintItemPower(item._iSufPower, item));
 		}
 	}
-	if (item._iMiscId == IMISC_STAFF && item._iMaxCharges != 0) {
+	if (item._iMiscId == ItemMiscID::Staff && item._iMaxCharges != 0) {
 		if (!productLine.empty())
 			AppendStrView(productLine, _(",  "));
 		productLine.append(fmt::format(fmt::runtime(_("Charges: {:d}/{:d}")), item._iCharges, item._iMaxCharges));
@@ -309,9 +309,9 @@ void PrintStoreItem(const Item &item, int l, UiFlags flags, bool cursIndent = fa
 	}
 
 	if (item._itype != ItemType::Misc) {
-		if (item._iClass == ICLASS_WEAPON)
+		if (item._iClass == ItemClass::Weapon)
 			productLine = fmt::format(fmt::runtime(_("Damage: {:d}-{:d}  ")), item._iMinDam, item._iMaxDam);
-		else if (item._iClass == ICLASS_ARMOR)
+		else if (item._iClass == ItemClass::Armor)
 			productLine = fmt::format(fmt::runtime(_("Armor: {:d}  ")), item._iAC);
 		if (item._iMaxDur != DUR_INDESTRUCTIBLE && item._iMaxDur != 0)
 			productLine += fmt::format(fmt::runtime(_("Dur: {:d}/{:d},  ")), item._iDurability, item._iMaxDur);
@@ -379,9 +379,9 @@ void ScrollSmithBuy(int idx)
 			UiFlags itemColor = smithitem[idx].getTextColorWithStatCheck();
 
 			if (smithitem[idx]._iMagical != ITEM_QUALITY_NORMAL) {
-				AddSText(20, l, smithitem[idx]._iIName, itemColor, true, smithitem[idx]._iCurs, true);
+				AddSText(20, l, smithitem[idx]._iIName, itemColor, true, static_cast<uint8_t>(smithitem[idx]._iCurs), true);
 			} else {
-				AddSText(20, l, smithitem[idx]._iName, itemColor, true, smithitem[idx]._iCurs, true);
+				AddSText(20, l, smithitem[idx]._iName, itemColor, true, static_cast<uint8_t>(smithitem[idx]._iCurs), true);
 			}
 
 			AddSTextVal(l, smithitem[idx]._iIvalue);
@@ -444,7 +444,7 @@ void ScrollSmithPremiumBuy(int boughtitems)
 	for (int l = 5; l < 20 && idx < SMITH_PREMIUM_ITEMS; l += 4) {
 		if (!premiumitems[idx].isEmpty()) {
 			UiFlags itemColor = premiumitems[idx].getTextColorWithStatCheck();
-			AddSText(20, l, premiumitems[idx]._iIName, itemColor, true, premiumitems[idx]._iCurs, true);
+			AddSText(20, l, premiumitems[idx]._iIName, itemColor, true, static_cast<uint8_t>(premiumitems[idx]._iCurs), true);
 			AddSTextVal(l, premiumitems[idx]._iIvalue);
 			PrintStoreItem(premiumitems[idx], l + 1, itemColor, true);
 			stextdown = l;
@@ -502,7 +502,7 @@ bool SmithSellOk(int i)
 	if (pI->isEmpty())
 		return false;
 
-	if (pI->_iMiscId > IMISC_OILFIRST && pI->_iMiscId < IMISC_OILLAST)
+	if (pI->_iMiscId > ItemMiscID::OilFirst && pI->_iMiscId < ItemMiscID::OilLast)
 		return true;
 
 	if (pI->_itype == ItemType::Misc)
@@ -511,9 +511,9 @@ bool SmithSellOk(int i)
 		return false;
 	if (pI->_itype == ItemType::Staff && (!gbIsHellfire || IsValidSpell(pI->_iSpell)))
 		return false;
-	if (pI->_iClass == ICLASS_QUEST)
+	if (pI->_iClass == ItemClass::Quest)
 		return false;
-	if (pI->IDidx == IDI_LAZSTAFF)
+	if (pI->IDidx == ItemIndex::StaffOfLazarus)
 		return false;
 
 	return true;
@@ -531,10 +531,10 @@ void ScrollSmithSell(int idx)
 			UiFlags itemColor = storehold[idx].getTextColorWithStatCheck();
 
 			if (storehold[idx]._iMagical != ITEM_QUALITY_NORMAL && storehold[idx]._iIdentified) {
-				AddSText(20, l, storehold[idx]._iIName, itemColor, true, storehold[idx]._iCurs, true);
+				AddSText(20, l, storehold[idx]._iIName, itemColor, true, static_cast<uint8_t>(storehold[idx]._iCurs), true);
 				AddSTextVal(l, storehold[idx]._iIvalue);
 			} else {
-				AddSText(20, l, storehold[idx]._iName, itemColor, true, storehold[idx]._iCurs, true);
+				AddSText(20, l, storehold[idx]._iName, itemColor, true, static_cast<uint8_t>(storehold[idx]._iCurs), true);
 				AddSTextVal(l, storehold[idx]._ivalue);
 			}
 
@@ -732,9 +732,9 @@ void ScrollWitchBuy(int idx)
 			UiFlags itemColor = witchitem[idx].getTextColorWithStatCheck();
 
 			if (witchitem[idx]._iMagical != ITEM_QUALITY_NORMAL) {
-				AddSText(20, l, witchitem[idx]._iIName, itemColor, true, witchitem[idx]._iCurs, true);
+				AddSText(20, l, witchitem[idx]._iIName, itemColor, true, static_cast<uint8_t>(witchitem[idx]._iCurs), true);
 			} else {
-				AddSText(20, l, witchitem[idx]._iName, itemColor, true, witchitem[idx]._iCurs, true);
+				AddSText(20, l, witchitem[idx]._iName, itemColor, true, static_cast<uint8_t>(witchitem[idx]._iCurs), true);
 			}
 
 			AddSTextVal(l, witchitem[idx]._iIvalue);
@@ -750,7 +750,7 @@ void ScrollWitchBuy(int idx)
 
 void WitchBookLevel(Item &bookItem)
 {
-	if (bookItem._iMiscId != IMISC_BOOK)
+	if (bookItem._iMiscId != ItemMiscID::Book)
 		return;
 	bookItem._iMinMag = GetSpellData(bookItem._iSpell).sMinInt;
 	int8_t spellLevel = MyPlayer->_pSplLvl[static_cast<int8_t>(bookItem._iSpell)];
@@ -802,15 +802,15 @@ bool WitchSellOk(int i)
 
 	if (pI->_itype == ItemType::Misc)
 		rv = true;
-	if (pI->_iMiscId > 29 && pI->_iMiscId < 41)
+	if (pI->_iMiscId > ItemMiscID::OilFirst && pI->_iMiscId < ItemMiscID::OilLast)
 		rv = false;
-	if (pI->_iClass == ICLASS_QUEST)
+	if (pI->_iClass == ItemClass::Quest)
 		rv = false;
 	if (pI->_itype == ItemType::Staff && (!gbIsHellfire || IsValidSpell(pI->_iSpell)))
 		rv = true;
-	if (pI->IDidx >= IDI_FIRSTQUEST && pI->IDidx <= IDI_LASTQUEST)
+	if (pI->IDidx >= ItemIndex::FirstQuest && pI->IDidx <= ItemIndex::LastQuest)
 		rv = false;
-	if (pI->IDidx == IDI_LAZSTAFF)
+	if (pI->IDidx == ItemIndex::StaffOfLazarus)
 		rv = false;
 	return rv;
 }
@@ -891,7 +891,7 @@ bool WitchRechargeOk(int i)
 		return true;
 	}
 
-	if ((item._iMiscId == IMISC_UNIQUE || item._iMiscId == IMISC_STAFF) && item._iCharges < item._iMaxCharges) {
+	if ((item._iMiscId == ItemMiscID::Unique || item._iMiscId == ItemMiscID::Staff) && item._iCharges < item._iMaxCharges) {
 		return true;
 	}
 
@@ -921,7 +921,7 @@ void StartWitchRecharge()
 	const Player &myPlayer = *MyPlayer;
 	const auto &leftHand = myPlayer.InvBody[INVLOC_HAND_LEFT];
 
-	if ((leftHand._itype == ItemType::Staff || leftHand._iMiscId == IMISC_UNIQUE) && leftHand._iCharges != leftHand._iMaxCharges) {
+	if ((leftHand._itype == ItemType::Staff || leftHand._iMiscId == ItemMiscID::Unique) && leftHand._iCharges != leftHand._iMaxCharges) {
 		rechargeok = true;
 		AddStoreHoldRecharge(leftHand, -1);
 	}
@@ -1069,9 +1069,9 @@ void SStartBoyBuy()
 	UiFlags itemColor = boyitem.getTextColorWithStatCheck();
 
 	if (boyitem._iMagical != ITEM_QUALITY_NORMAL)
-		AddSText(20, 10, boyitem._iIName, itemColor, true, boyitem._iCurs, true);
+		AddSText(20, 10, boyitem._iIName, itemColor, true, static_cast<uint8_t>(boyitem._iCurs), true);
 	else
-		AddSText(20, 10, boyitem._iName, itemColor, true, boyitem._iCurs, true);
+		AddSText(20, 10, boyitem._iName, itemColor, true, static_cast<uint8_t>(boyitem._iCurs), true);
 
 	if (gbIsHellfire)
 		AddSTextVal(10, boyitem._iIvalue - (boyitem._iIvalue / 4));
@@ -1124,7 +1124,7 @@ void ScrollHealerBuy(int idx)
 		if (!healitem[idx].isEmpty()) {
 			UiFlags itemColor = healitem[idx].getTextColorWithStatCheck();
 
-			AddSText(20, l, healitem[idx]._iName, itemColor, true, healitem[idx]._iCurs, true);
+			AddSText(20, l, healitem[idx]._iName, itemColor, true, static_cast<uint8_t>(healitem[idx]._iCurs), true);
 			AddSTextVal(l, healitem[idx]._iIvalue);
 			PrintStoreItem(healitem[idx], l + 1, itemColor, true);
 			stextdown = l;

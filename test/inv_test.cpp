@@ -24,7 +24,7 @@ void set_up_scroll(Item &item, SpellID spell)
 	leveltype = DTYPE_CATACOMBS;
 	MyPlayer->_pRSpell = static_cast<SpellID>(spell);
 	item._itype = ItemType::Misc;
-	item._iMiscId = IMISC_SCROLL;
+	item._iMiscId = ItemMiscID::Scroll;
 	item._iSpell = spell;
 }
 
@@ -73,7 +73,7 @@ TEST_F(InvTest, UseScroll_from_inventory_invalid_conditions)
 	EXPECT_FALSE(CanUseScroll(*MyPlayer, SpellID::Healing));
 
 	set_up_scroll(MyPlayer->InvList[2], SpellID::Firebolt);
-	MyPlayer->InvList[2]._iMiscId = IMISC_STAFF;
+	MyPlayer->InvList[2]._iMiscId = ItemMiscID::Staff;
 	EXPECT_FALSE(CanUseScroll(*MyPlayer, SpellID::Firebolt));
 
 	set_up_scroll(MyPlayer->InvList[2], SpellID::Firebolt);
@@ -96,7 +96,7 @@ TEST_F(InvTest, UseScroll_from_belt_invalid_conditions)
 	EXPECT_FALSE(CanUseScroll(*MyPlayer, SpellID::Healing));
 
 	set_up_scroll(MyPlayer->SpdList[2], SpellID::Firebolt);
-	MyPlayer->SpdList[2]._iMiscId = IMISC_STAFF;
+	MyPlayer->SpdList[2]._iMiscId = ItemMiscID::Staff;
 	EXPECT_FALSE(CanUseScroll(*MyPlayer, SpellID::Firebolt));
 
 	set_up_scroll(MyPlayer->SpdList[2], SpellID::Firebolt);
@@ -215,7 +215,7 @@ TEST_F(InvTest, RemoveCurrentSpellScrollFromInventory)
 	MyPlayer->executedSpell.spellId = SpellID::Firebolt;
 	MyPlayer->executedSpell.spellFrom = INVITEM_INV_FIRST;
 	MyPlayer->InvList[0]._itype = ItemType::Misc;
-	MyPlayer->InvList[0]._iMiscId = IMISC_SCROLL;
+	MyPlayer->InvList[0]._iMiscId = ItemMiscID::Scroll;
 	MyPlayer->InvList[0]._iSpell = SpellID::Firebolt;
 
 	ConsumeScroll(*MyPlayer);
@@ -233,7 +233,7 @@ TEST_F(InvTest, RemoveCurrentSpellScrollFromInventoryFirstMatch)
 	MyPlayer->executedSpell.spellId = SpellID::Firebolt;
 	MyPlayer->executedSpell.spellFrom = 0; // any matching scroll
 	MyPlayer->InvList[0]._itype = ItemType::Misc;
-	MyPlayer->InvList[0]._iMiscId = IMISC_SCROLL;
+	MyPlayer->InvList[0]._iMiscId = ItemMiscID::Scroll;
 	MyPlayer->InvList[0]._iSpell = SpellID::Firebolt;
 
 	ConsumeScroll(*MyPlayer);
@@ -254,7 +254,7 @@ TEST_F(InvTest, RemoveCurrentSpellScroll_belt)
 	MyPlayer->executedSpell.spellId = SpellID::Firebolt;
 	MyPlayer->executedSpell.spellFrom = INVITEM_BELT_FIRST + 3;
 	MyPlayer->SpdList[3]._itype = ItemType::Misc;
-	MyPlayer->SpdList[3]._iMiscId = IMISC_SCROLL;
+	MyPlayer->SpdList[3]._iMiscId = ItemMiscID::Scroll;
 	MyPlayer->SpdList[3]._iSpell = SpellID::Firebolt;
 
 	ConsumeScroll(*MyPlayer);
@@ -274,7 +274,7 @@ TEST_F(InvTest, RemoveCurrentSpellScrollFirstMatchFromBelt)
 	MyPlayer->executedSpell.spellId = SpellID::Firebolt;
 	MyPlayer->executedSpell.spellFrom = 0; // any matching scroll
 	MyPlayer->SpdList[3]._itype = ItemType::Misc;
-	MyPlayer->SpdList[3]._iMiscId = IMISC_SCROLL;
+	MyPlayer->SpdList[3]._iMiscId = ItemMiscID::Scroll;
 	MyPlayer->SpdList[3]._iSpell = SpellID::Firebolt;
 
 	ConsumeScroll(*MyPlayer);
@@ -287,19 +287,19 @@ TEST_F(InvTest, ItemSize)
 
 	// Inventory sizes are currently determined by examining the sprite size
 	// rune of stone and grey suit are adjacent in the sprite list so provide an easy check for off-by-one errors
-	InitializeItem(testItem, IDI_RUNEOFSTONE);
+	InitializeItem(testItem, ItemIndex::RuneOfStone);
 	EXPECT_EQ(GetInventorySize(testItem), Size(1, 1));
-	InitializeItem(testItem, IDI_GREYSUIT);
+	InitializeItem(testItem, ItemIndex::GreySuit);
 	EXPECT_EQ(GetInventorySize(testItem), Size(2, 2));
 
 	// auric amulet is the first used hellfire sprite, but there's multiple unused sprites before it in the list.
 	// unfortunately they're the same size so this is less valuable as a test.
-	InitializeItem(testItem, IDI_AURIC);
+	InitializeItem(testItem, ItemIndex::AuricAmulet);
 	EXPECT_EQ(GetInventorySize(testItem), Size(1, 1));
 
 	// gold is the last diablo sprite, off by ones will end up loading a 1x1 unused sprite from hellfire but maybe
 	//  this'll segfault if we make a mistake in the future?
-	InitializeItem(testItem, IDI_GOLD);
+	InitializeItem(testItem, ItemIndex::Gold);
 	EXPECT_EQ(GetInventorySize(testItem), Size(1, 1));
 }
 

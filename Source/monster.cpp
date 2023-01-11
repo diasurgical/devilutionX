@@ -866,7 +866,7 @@ void SpawnLoot(Monster &monster, bool sendmsg)
 	}
 
 	if (Quests[Q_GARBUD].IsAvailable() && monster.uniqueType == UniqueMonsterType::Garbud) {
-		CreateTypeItem(monster.position.tile + Displacement { 1, 1 }, true, ItemType::Mace, IMISC_NONE, sendmsg, false);
+		CreateTypeItem(monster.position.tile + Displacement { 1, 1 }, true, ItemType::Mace, ItemMiscID::None, sendmsg, false);
 	} else if (monster.uniqueType == UniqueMonsterType::Defiler) {
 		if (effect_is_playing(USFX_DEFILER8))
 			stream_stop();
@@ -886,9 +886,9 @@ void SpawnLoot(Monster &monster, bool sendmsg)
 			stream_stop();
 		Quests[Q_NAKRUL]._qlog = false;
 		UberDiabloMonsterIndex = -2;
-		CreateMagicWeapon(monster.position.tile, ItemType::Sword, ICURS_GREAT_SWORD, sendmsg, false);
-		CreateMagicWeapon(monster.position.tile, ItemType::Staff, ICURS_WAR_STAFF, sendmsg, false);
-		CreateMagicWeapon(monster.position.tile, ItemType::Bow, ICURS_LONG_WAR_BOW, sendmsg, false);
+		CreateMagicWeapon(monster.position.tile, ItemType::Sword, ItemCursorGraphic::GreatSword, sendmsg, false);
+		CreateMagicWeapon(monster.position.tile, ItemType::Staff, ItemCursorGraphic::WarStaff, sendmsg, false);
+		CreateMagicWeapon(monster.position.tile, ItemType::Bow, ItemCursorGraphic::LongWarBow, sendmsg, false);
 		CreateSpellBook(monster.position.tile, SpellID::Apocalypse, sendmsg, false);
 	} else if (!monster.isPlayerMinion()) {
 		SpawnItem(monster, monster.position.tile, sendmsg);
@@ -1150,9 +1150,9 @@ void MonsterAttackPlayer(Monster &monster, Player &player, int hit, int minDam, 
 		hper = 1000;
 #endif
 	int ac = player.GetArmor();
-	if (HasAnyOf(player.pDamAcFlags, ItemSpecialEffectHf::ACAgainstDemons) && monster.data().monsterClass == MonsterClass::Demon)
+	if (HasAnyOf(player.pDamAcFlags, ItemSpecialEffectHf::ArmorClassVsDemons) && monster.data().monsterClass == MonsterClass::Demon)
 		ac += 40;
-	if (HasAnyOf(player.pDamAcFlags, ItemSpecialEffectHf::ACAgainstUndead) && monster.data().monsterClass == MonsterClass::Undead)
+	if (HasAnyOf(player.pDamAcFlags, ItemSpecialEffectHf::ArmorClassVsUndead) && monster.data().monsterClass == MonsterClass::Undead)
 		ac += 20;
 	hit += 2 * (monster.level(sgGameInitInfo.nDifficulty) - player._pLevel)
 	    + 30
@@ -1420,7 +1420,7 @@ void MonsterTalk(Monster &monster)
 	    && (monster.flags & MFLAG_QUEST_COMPLETE) == 0) {
 		Quests[Q_ZHAR]._qactive = QUEST_ACTIVE;
 		Quests[Q_ZHAR]._qlog = true;
-		CreateTypeItem(monster.position.tile + Displacement { 1, 1 }, false, ItemType::Misc, IMISC_BOOK, true, false);
+		CreateTypeItem(monster.position.tile + Displacement { 1, 1 }, false, ItemType::Misc, ItemMiscID::Book, true, false);
 		monster.flags |= MFLAG_QUEST_COMPLETE;
 	}
 	if (monster.uniqueType == UniqueMonsterType::SnotSpill) {
@@ -4477,7 +4477,7 @@ void TalktoMonster(Player &player, Monster &monster)
 	}
 
 	if (Quests[Q_LTBANNER].IsAvailable() && Quests[Q_LTBANNER]._qvar1 == 2) {
-		if (RemoveInventoryItemById(player, IDI_BANNER)) {
+		if (RemoveInventoryItemById(player, ItemIndex::TavernSign)) {
 			Quests[Q_LTBANNER]._qactive = QUEST_DONE;
 			monster.talkMsg = TEXT_BANNER12;
 			monster.goal = MonsterGoal::Inquiring;
@@ -4485,7 +4485,7 @@ void TalktoMonster(Player &player, Monster &monster)
 		}
 	}
 	if (Quests[Q_VEIL].IsAvailable() && monster.talkMsg >= TEXT_VEIL9) {
-		if (RemoveInventoryItemById(player, IDI_GLDNELIX)) {
+		if (RemoveInventoryItemById(player, ItemIndex::GoldenElixir)) {
 			monster.talkMsg = TEXT_VEIL11;
 			monster.goal = MonsterGoal::Inquiring;
 		}

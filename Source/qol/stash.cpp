@@ -131,7 +131,7 @@ void CheckStashPaste(Point cursorPosition)
 		return; // Found a second item
 	}
 
-	PlaySFX(ItemInvSnds[ItemCAnimTbl[player.HoldItem._iCurs]]);
+	PlaySFX(ItemInvSnds[static_cast<int8_t>(ItemCAnimTbl[static_cast<uint8_t>(player.HoldItem._iCurs)])]);
 
 	player.HoldItem.position = firstSlot + Displacement { 0, itemSize.height - 1 };
 
@@ -215,7 +215,7 @@ void CheckStashCut(Point cursorPosition, bool automaticMove)
 		CalcPlrInv(player, true);
 		holdItem._iStatFlag = player.CanUseItem(holdItem);
 		if (automaticallyEquipped) {
-			PlaySFX(ItemInvSnds[ItemCAnimTbl[holdItem._iCurs]]);
+			PlaySFX(ItemInvSnds[static_cast<int8_t>(ItemCAnimTbl[static_cast<uint8_t>(holdItem._iCurs)])]);
 		} else if (!automaticMove || automaticallyMoved) {
 			PlaySFX(IS_IGRAB);
 		}
@@ -234,7 +234,7 @@ void CheckStashCut(Point cursorPosition, bool automaticMove)
 			NewCursor(holdItem);
 			if (!IsHardwareCursor()) {
 				// For a hardware cursor, we set the "hot point" to the center of the item instead.
-				Size cursSize = GetInvItemSize(holdItem._iCurs + CURSOR_FIRSTITEM);
+				Size cursSize = GetInvItemSize(static_cast<uint8_t>(holdItem._iCurs) + CURSOR_FIRSTITEM);
 				SetCursorPos(cursorPosition - Displacement(cursSize / 2));
 			}
 		}
@@ -289,7 +289,7 @@ void TransferItemToInventory(Player &player, uint16_t itemId)
 		return;
 	}
 
-	PlaySFX(ItemInvSnds[ItemCAnimTbl[item._iCurs]]);
+	PlaySFX(ItemInvSnds[static_cast<int8_t>(ItemCAnimTbl[static_cast<uint8_t>(item._iCurs)])]);
 
 	Stash.RemoveStashItem(itemId);
 }
@@ -372,7 +372,7 @@ void DrawStash(const Surface &out)
 			continue; // Not the first slot of the item
 		}
 
-		int frame = item._iCurs + CURSOR_FIRSTITEM;
+		int frame = static_cast<uint8_t>(item._iCurs) + CURSOR_FIRSTITEM;
 
 		const Point position = GetStashSlotCoord(item.position) + offset;
 		const ClxSprite sprite = GetInvItemSprite(frame);
@@ -457,17 +457,17 @@ bool UseStashItem(uint16_t c)
 	Item *item = &Stash.stashList[c];
 
 	constexpr int SpeechDelay = 10;
-	if (item->IDidx == IDI_MUSHROOM) {
+	if (item->IDidx == ItemIndex::BlackMushroom) {
 		MyPlayer->Say(HeroSpeech::NowThatsOneBigMushroom, SpeechDelay);
 		return true;
 	}
-	if (item->IDidx == IDI_FUNGALTM) {
+	if (item->IDidx == ItemIndex::FungalTome) {
 		PlaySFX(IS_IBOOK);
 		MyPlayer->Say(HeroSpeech::ThatDidntDoAnything, SpeechDelay);
 		return true;
 	}
 
-	if (!AllItemsList[item->IDidx].iUsable)
+	if (!AllItemsList[static_cast<int16_t>(item->IDidx)].iUsable)
 		return false;
 
 	if (!MyPlayer->CanUseItem(*item)) {
@@ -484,20 +484,20 @@ bool UseStashItem(uint16_t c)
 		return true;
 	}
 
-	if (item->_iMiscId > IMISC_RUNEFIRST && item->_iMiscId < IMISC_RUNELAST && leveltype == DTYPE_TOWN) {
+	if (item->_iMiscId > ItemMiscID::RuneFirst && item->_iMiscId < ItemMiscID::RuneLast && leveltype == DTYPE_TOWN) {
 		return true;
 	}
 
-	if (item->_iMiscId == IMISC_BOOK)
+	if (item->_iMiscId == ItemMiscID::Book)
 		PlaySFX(IS_RBOOK);
 	else
-		PlaySFX(ItemInvSnds[ItemCAnimTbl[item->_iCurs]]);
+		PlaySFX(ItemInvSnds[static_cast<int8_t>(ItemCAnimTbl[static_cast<uint8_t>(item->_iCurs)])]);
 
 	UseItem(MyPlayerId, item->_iMiscId, item->_iSpell);
 
-	if (Stash.stashList[c]._iMiscId == IMISC_MAPOFDOOM)
+	if (Stash.stashList[c]._iMiscId == ItemMiscID::Map)
 		return true;
-	if (Stash.stashList[c]._iMiscId == IMISC_NOTE) {
+	if (Stash.stashList[c]._iMiscId == ItemMiscID::ReconstructedNote) {
 		InitQTextMsg(TEXT_BOOK9);
 		CloseInventory();
 		return true;

@@ -651,7 +651,7 @@ void DrawItem(const Surface &out, Point tilePosition, Point targetBufferPosition
 		ClxDrawOutlineSkipColorZero(out, GetOutlineColor(item, false), position, sprite);
 	}
 	ClxDrawLight(out, position, sprite);
-	if (item.AnimInfo.isLastFrame() || item._iCurs == ICURS_MAGIC_ROCK)
+	if (item.AnimInfo.isLastFrame() || item._iCurs == ItemCursorGraphic::MagicRock)
 		AddItemToLabelQueue(bItem - 1, position);
 }
 
