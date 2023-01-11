@@ -288,3 +288,17 @@ foreach(path ${DEVILUTIONX_PLATFORM_SUBDIRECTORIES})
 endforeach()
 
 target_link_libraries(libdevilutionx PUBLIC ${DEVILUTIONX_PLATFORM_LINK_LIBRARIES})
+
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+  if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 9 AND NOT AMIGA)
+    target_link_libraries(libdevilutionx PUBLIC stdc++fs)
+  endif()
+elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  # Assumes libc++ (clang) is used rather than libstdc++ (gcc).
+  # This is not always true but these are ancient clang versions anyway.
+  if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 7)
+    target_link_libraries(libdevilutionx PUBLIC c++experimental)
+  elseif(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 9)
+    target_link_libraries(libdevilutionx PUBLIC c++fs)
+  endif()
+endif()
