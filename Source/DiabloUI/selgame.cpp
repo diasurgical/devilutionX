@@ -612,6 +612,9 @@ void selgame_Password_Select(int /*value*/)
 	SDL_ClearError();
 
 	if (selgame_selectedGame > 1) {
+		bool allowJoin = true;
+		if (selgame_selectedGame > 2)
+			allowJoin = IsGameCompatible(Gamelist[selgame_selectedGame - 3].gameData);
 		if (provider == SELCONN_ZT) {
 			for (unsigned int i = 0; i < (sizeof(selgame_Ip) / sizeof(selgame_Ip[0])); i++) {
 				selgame_Ip[i] = (selgame_Ip[i] >= 'A' && selgame_Ip[i] <= 'Z') ? selgame_Ip[i] + 'a' - 'A' : selgame_Ip[i];
@@ -620,8 +623,8 @@ void selgame_Password_Select(int /*value*/)
 		} else {
 			strcpy(sgOptions.Network.szPreviousHost, selgame_Ip);
 		}
-		if (SNetJoinGame(selgame_Ip, gamePassword, gdwPlayerId)) {
-			if (!IsGameCompatibleWithErrorMessage(*m_game_data)) {
+		if (allowJoin && SNetJoinGame(selgame_Ip, gamePassword, gdwPlayerId)) {
+			if (!IsGameCompatibleWithErrorMessage(Gamelist[selgame_selectedGame - 3].gameData)) {
 				InitGameInfo();
 				selgame_GameSelection_Select(1);
 				return;
@@ -630,14 +633,22 @@ void selgame_Password_Select(int /*value*/)
 			UiInitList_clear();
 			selgame_endMenu = true;
 		} else {
+
 			InitGameInfo();
 			selgame_Free();
-			std::string error = SDL_GetError();
+			std::string error;
+			if (!allowJoin)
+				error = GetErrorMessageIncompatibility(Gamelist[selgame_selectedGame - 3].gameData);
+			else
+				error = SDL_GetError();
 			if (error.empty())
 				error = "Unknown network error";
 			UiSelOkDialog(_("Multi Player Game").data(), error.c_str(), false);
 			selgame_Init();
-			selgame_Password_Init(selgame_selectedGame);
+			if (selgame_selectedGame == 2)
+				selgame_Password_Init(selgame_selectedGame);
+			else
+				UiInitGameSelectionList("");
 		}
 		return;
 	}
