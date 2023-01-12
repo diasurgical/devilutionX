@@ -22,12 +22,12 @@ enum mienemy_type : uint8_t {
 	TARGET_BOTH,
 };
 
-enum missile_resistance : uint8_t {
-	MISR_NONE,
-	MISR_FIRE,
-	MISR_LIGHTNING,
-	MISR_MAGIC,
-	MISR_ACID,
+enum class DamageType : uint8_t {
+	Physical,
+	Fire,
+	Lightning,
+	Magic,
+	Acid,
 };
 
 typedef enum missile_graphic_id : uint8_t {
@@ -120,7 +120,7 @@ struct MissileData {
 	uint8_t mName;
 	bool mDraw;
 	uint8_t mType;
-	missile_resistance mResist;
+	DamageType damageType;
 	uint8_t mFileNum;
 	_sfx_id mlSFX;
 	_sfx_id miSFX;

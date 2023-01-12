@@ -4606,12 +4606,12 @@ bool Monster::isWalking() const
 
 bool Monster::isImmune(missile_id missileType) const
 {
-	missile_resistance missileElement = MissilesData[missileType].mResist;
+	DamageType missileElement = MissilesData[missileType].damageType;
 
-	if (((resistance & IMMUNE_MAGIC) != 0 && missileElement == MISR_MAGIC)
-	    || ((resistance & IMMUNE_FIRE) != 0 && missileElement == MISR_FIRE)
-	    || ((resistance & IMMUNE_LIGHTNING) != 0 && missileElement == MISR_LIGHTNING)
-	    || ((resistance & IMMUNE_ACID) != 0 && missileElement == MISR_ACID))
+	if (((resistance & IMMUNE_MAGIC) != 0 && missileElement == DamageType::Magic)
+	    || ((resistance & IMMUNE_FIRE) != 0 && missileElement == DamageType::Fire)
+	    || ((resistance & IMMUNE_LIGHTNING) != 0 && missileElement == DamageType::Lightning)
+	    || ((resistance & IMMUNE_ACID) != 0 && missileElement == DamageType::Acid))
 		return true;
 	if (missileType == MIS_HBOLT && type().type != MT_DIABLO && data().monsterClass != MonsterClass::Undead)
 		return true;
@@ -4620,11 +4620,11 @@ bool Monster::isImmune(missile_id missileType) const
 
 bool Monster::isResistant(missile_id missileType) const
 {
-	missile_resistance missileElement = MissilesData[missileType].mResist;
+	DamageType missileElement = MissilesData[missileType].damageType;
 
-	if (((resistance & RESIST_MAGIC) != 0 && missileElement == MISR_MAGIC)
-	    || ((resistance & RESIST_FIRE) != 0 && missileElement == MISR_FIRE)
-	    || ((resistance & RESIST_LIGHTNING) != 0 && missileElement == MISR_LIGHTNING))
+	if (((resistance & RESIST_MAGIC) != 0 && missileElement == DamageType::Magic)
+	    || ((resistance & RESIST_FIRE) != 0 && missileElement == DamageType::Fire)
+	    || ((resistance & RESIST_LIGHTNING) != 0 && missileElement == DamageType::Lightning))
 		return true;
 	if (gbIsHellfire && missileType == MIS_HBOLT && IsAnyOf(type().type, MT_DIABLO, MT_BONEDEMN))
 		return true;
