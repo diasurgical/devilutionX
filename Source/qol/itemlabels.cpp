@@ -88,7 +88,7 @@ bool IsHighlightingLabelsEnabled()
 	return altPressed != *sgOptions.Gameplay.showItemLabels;
 }
 
-void AddItemToLabelQueue(int id, int x, int y)
+void AddItemToLabelQueue(int id, Point position)
 {
 	if (!IsHighlightingLabelsEnabled())
 		return;
@@ -109,14 +109,14 @@ void AddItemToLabelQueue(int id, int x, int y)
 		labelCenterOffsets[index].emplace((itemBounds.first + itemBounds.second) / 2);
 	}
 
-	x += *labelCenterOffsets[index];
-	y -= TILE_HEIGHT;
+	position.x += *labelCenterOffsets[index];
+	position.y -= TILE_HEIGHT;
 	if (*sgOptions.Graphics.zoom) {
-		x *= 2;
-		y *= 2;
+		position *= 2;
 	}
-	x -= nameWidth / 2;
-	labelQueue.push_back(ItemLabel { id, nameWidth, { x, y - Height }, textOnGround });
+	position.x -= nameWidth / 2;
+	position.y -= Height;
+	labelQueue.push_back(ItemLabel { id, nameWidth, position, textOnGround });
 }
 
 bool IsMouseOverGameArea()

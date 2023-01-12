@@ -654,7 +654,7 @@ void DrawItem(const Surface &out, Point tilePosition, Point targetBufferPosition
 	}
 	ClxDrawLight(out, position, sprite);
 	if (item.AnimInfo.isLastFrame() || item._iCurs == ICURS_MAGIC_ROCK)
-		AddItemToLabelQueue(bItem - 1, px, targetBufferPosition.y);
+		AddItemToLabelQueue(bItem - 1, position);
 }
 
 /**
