@@ -229,7 +229,7 @@ bool MonsterMHit(int pnum, int monsterId, int mindam, int maxdam, int dist, miss
 		dam = mindam + GenerateRnd(maxdam - mindam + 1);
 	}
 
-	if (MissilesData[t].mType == 0 && MissilesData[t].mResist == MISR_NONE) {
+	if (MissilesData[t].mType == 0 && MissilesData[t].damageType == DamageType::Physical) {
 		dam = player._pIBonusDamMod + dam * player._pIBonusDam / 100 + dam;
 		if (player._pClass == HeroClass::Rogue)
 			dam += player._pDamageMod;
@@ -292,15 +292,15 @@ bool Plr2PlrMHit(const Player &player, int p, int mindam, int maxdam, int dist, 
 	}
 
 	int8_t resper;
-	switch (MissilesData[mtype].mResist) {
-	case MISR_FIRE:
+	switch (MissilesData[mtype].damageType) {
+	case DamageType::Fire:
 		resper = target._pFireResist;
 		break;
-	case MISR_LIGHTNING:
+	case DamageType::Lightning:
 		resper = target._pLghtResist;
 		break;
-	case MISR_MAGIC:
-	case MISR_ACID:
+	case DamageType::Magic:
+	case DamageType::Acid:
 		resper = target._pMagResist;
 		break;
 	default:
@@ -340,7 +340,7 @@ bool Plr2PlrMHit(const Player &player, int p, int mindam, int maxdam, int dist, 
 		dam = target._pHitPoints / 3;
 	} else {
 		dam = mindam + GenerateRnd(maxdam - mindam + 1);
-		if (MissilesData[mtype].mType == 0 && MissilesData[mtype].mResist == MISR_NONE)
+		if (MissilesData[mtype].mType == 0 && MissilesData[mtype].damageType == DamageType::Physical)
 			dam += player._pIBonusDamMod + player._pDamageMod + dam * player._pIBonusDam / 100;
 		if (!shift)
 			dam <<= 6;
@@ -997,15 +997,15 @@ bool PlayerMHit(int pnum, Monster *monster, int dist, int mind, int maxd, missil
 	blkper = clamp(blkper, 0, 100);
 
 	int8_t resper;
-	switch (MissilesData[mtype].mResist) {
-	case MISR_FIRE:
+	switch (MissilesData[mtype].damageType) {
+	case DamageType::Fire:
 		resper = player._pFireResist;
 		break;
-	case MISR_LIGHTNING:
+	case DamageType::Lightning:
 		resper = player._pLghtResist;
 		break;
-	case MISR_MAGIC:
-	case MISR_ACID:
+	case DamageType::Magic:
+	case DamageType::Acid:
 		resper = player._pMagResist;
 		break;
 	default:
@@ -2675,21 +2675,21 @@ void MI_LArrow(Missile &missile)
 			mind = GenerateRnd(10) + 1 + currlevel;
 			maxd = GenerateRnd(10) + 1 + currlevel * 2;
 		}
-		missile_resistance rst = MissilesData[missile._mitype].mResist;
-		MissilesData[missile._mitype].mResist = MISR_NONE;
+		DamageType rst = MissilesData[missile._mitype].damageType;
+		MissilesData[missile._mitype].damageType = DamageType::Physical;
 		MoveMissileAndCheckMissileCol(missile, mind, maxd, true, false);
-		MissilesData[missile._mitype].mResist = rst;
+		MissilesData[missile._mitype].damageType = rst;
 		if (missile._mirange == 0) {
 			missile._mimfnum = 0;
 			missile._mirange = missile._miAnimLen - 1;
 			missile.position.StopMissile();
 
-			rst = MissilesData[missile._mitype].mResist;
+			rst = MissilesData[missile._mitype].damageType;
 
 			int eMind;
 			int eMaxd;
 			missile_graphic_id eAnim;
-			missile_resistance eRst;
+			DamageType eRst;
 			switch (missile._mitype) {
 			case MIS_LARROW:
 				if (!missile.IsTrap()) {
@@ -2702,7 +2702,7 @@ void MI_LArrow(Missile &missile)
 					eMaxd = GenerateRnd(10) + 1 + currlevel * 2;
 				}
 				eAnim = MFILE_MINILTNG;
-				eRst = MISR_LIGHTNING;
+				eRst = DamageType::Lightning;
 				break;
 			case MIS_FARROW:
 				if (!missile.IsTrap()) {
@@ -2715,16 +2715,16 @@ void MI_LArrow(Missile &missile)
 					eMaxd = GenerateRnd(10) + 1 + currlevel * 2;
 				}
 				eAnim = MFILE_MAGBLOS;
-				eRst = MISR_FIRE;
+				eRst = DamageType::Fire;
 				break;
 			default:
 				app_fatal(StrCat("wrong missile ID ", static_cast<int>(missile._mitype)));
 				break;
 			}
 			SetMissAnim(missile, eAnim);
-			MissilesData[missile._mitype].mResist = eRst;
+			MissilesData[missile._mitype].damageType = eRst;
 			CheckMissileCol(missile, eMind, eMaxd, false, missile.position.tile, true);
-			MissilesData[missile._mitype].mResist = rst;
+			MissilesData[missile._mitype].damageType = rst;
 		} else {
 			if (missile.position.tile != Point { missile.var1, missile.var2 }) {
 				missile.var1 = missile.position.tile.x;
@@ -3489,12 +3489,12 @@ void MI_Weapexp(Missile &missile)
 		// BUGFIX: damage of missile should be encoded in missile struct; player can be dead/have left the game before missile arrives.
 		mind = player._pIFMinDam;
 		maxd = player._pIFMaxDam;
-		MissilesData[missile._mitype].mResist = MISR_FIRE;
+		MissilesData[missile._mitype].damageType = DamageType::Fire;
 	} else {
 		// BUGFIX: damage of missile should be encoded in missile struct; player can be dead/have left the game before missile arrives.
 		mind = player._pILMinDam;
 		maxd = player._pILMaxDam;
-		MissilesData[missile._mitype].mResist = MISR_LIGHTNING;
+		MissilesData[missile._mitype].damageType = DamageType::Lightning;
 	}
 	CheckMissileCol(missile, mind, maxd, false, missile.position.tile, false);
 	if (missile.var1 == 0) {
