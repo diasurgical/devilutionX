@@ -1,6 +1,6 @@
-cmake_minimum_required(VERSION 3.13)
+cmake_minimum_required(VERSION 3.15)
 
-foreach(_policy CMP0083 CMP0092 CMP0111 CMP0126 CMP0135)
+foreach(_policy CMP0111 CMP0126 CMP0135)
   if(POLICY ${_policy})
     cmake_policy(SET ${_policy} NEW)
     set(CMAKE_POLICY_DEFAULT_${_policy} NEW)
