@@ -30,12 +30,8 @@ void PrintSBookSpellType(const Surface &out, Point position, string_view text, u
 	// Align the spell type text with bottom of spell icon
 	position += Displacement { SPLICONLENGTH / 2 - GetLineWidth(text) / 2, (IsSmallFontTall() ? -19 : -15) };
 
-	// Draw a drop shadow below and to the left of the text
-	DrawString(out, text, position + Displacement { -1, 1 }, UiFlags::ColorBlack);
-	DrawString(out, text, position + Displacement { -1, -1 }, UiFlags::ColorBlack);
-	DrawString(out, text, position + Displacement { 1, -1 }, UiFlags::ColorBlack);
 	// Then draw the text over the top
-	DrawString(out, text, position, UiFlags::ColorWhite);
+	DrawString(out, text, position, UiFlags::ColorWhite | UiFlags::Outlined);
 }
 
 void PrintSBookHotkey(const Surface &out, Point position, const string_view text)
@@ -43,10 +39,8 @@ void PrintSBookHotkey(const Surface &out, Point position, const string_view text
 	// Align the hot key text with the top-right corner of the spell icon
 	position += Displacement { SPLICONLENGTH - (GetLineWidth(text.data()) + 5), 5 - SPLICONLENGTH };
 
-	// Draw a drop shadow below and to the left of the text
-	DrawString(out, text, position + Displacement { -1, 1 }, UiFlags::ColorBlack);
 	// Then draw the text over the top
-	DrawString(out, text, position, UiFlags::ColorWhite);
+	DrawString(out, text, position, UiFlags::ColorWhite | UiFlags::Outlined);
 }
 
 bool GetSpellListSelection(spell_id &pSpell, spell_type &pSplType)
