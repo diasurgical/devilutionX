@@ -43,9 +43,10 @@ enum class UiFlags : uint32_t {
 
 	PentaCursor        = 1 << 26,
 	TextCursor         = 1 << 27,
+	Outlined           = 1 << 28,
 
 	/** @brief Ensures that the if current element is active that the next element is also visible. */
-	NeedsNextElement   = 1 << 28,
+	NeedsNextElement   = 1 << 29,
 	// clang-format on
 };
 use_enum_as_flags(UiFlags);
