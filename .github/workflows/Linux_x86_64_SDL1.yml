@@ -13,7 +13,7 @@ concurrency:
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -23,14 +23,14 @@ jobs:
     - name: Create Build Environment
       run: >
         sudo apt-get update &&
-        sudo apt-get install -y cmake file g++ git libfmt-dev libsdl-dev libsodium-dev libpng-dev libbz2-dev rpm smpq
+        sudo apt-get install -y cmake file g++ git libfmt-dev libsdl1.2-dev libsodium-dev libpng-dev libbz2-dev rpm smpq
 
     - name: Cache CMake build folder
       uses: actions/cache@v2
       with:
         path: build
-        key: linux-x86_64-sdl1-cmake-v4-${{ github.sha }}
-        restore-keys: linux-x86_64-sdl1-cmake-v4-
+        key: linux-x86_64-sdl1-cmake-v5-${{ github.sha }}
+        restore-keys: linux-x86_64-sdl1-cmake-v5-
 
     - name: Configure CMake
       shell: bash
