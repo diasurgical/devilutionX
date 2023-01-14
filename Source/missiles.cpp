@@ -2580,7 +2580,7 @@ void AddTelekinesis(Missile &missile, AddMissileParameter & /*parameter*/)
 void AddBoneSpirit(Missile &missile, AddMissileParameter &parameter)
 {
 	Point dst = parameter.dst;
-	if (missile.position.start == parameter.dst) {
+	if (missile.position.start == dst) {
 		dst += parameter.midir;
 	}
 	UpdateMissileVelocity(missile, dst, 16);
