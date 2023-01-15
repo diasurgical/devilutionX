@@ -484,7 +484,7 @@ void InitGameInfo()
 	sgGameInitInfo.bRunInTown = *sgOptions.Gameplay.runInTown ? 1 : 0;
 	sgGameInitInfo.bTheoQuest = *sgOptions.Gameplay.theoQuest ? 1 : 0;
 	sgGameInitInfo.bCowQuest = *sgOptions.Gameplay.cowQuest ? 1 : 0;
-	sgGameInitInfo.bFriendlyFire = *sgOptions.Gameplay.friendlyFire ? 1 : 0;
+	sgGameInitInfo.bNoFriendlyFire = *sgOptions.Gameplay.noFriendlyFire ? 1 : 0;
 }
 
 void NetSendLoPri(int playerId, const byte *data, size_t size)

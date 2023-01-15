@@ -271,7 +271,7 @@ bool Plr2PlrMHit(const Player &player, int p, int mindam, int maxdam, int dist, 
 {
 	Player &target = Players[p];
 
-	if (sgGameInitInfo.bFriendlyFire == 0 && player.friendlyMode)
+	if (sgGameInitInfo.bNoFriendlyFire == 0 && player.friendlyMode)
 		return false;
 
 	*blocked = false;

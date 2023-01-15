@@ -30,7 +30,7 @@ struct GameData {
 	uint8_t bRunInTown;
 	uint8_t bTheoQuest;
 	uint8_t bCowQuest;
-	uint8_t bFriendlyFire;
+	uint8_t bNoFriendlyFire;
 };
 
 /* @brief Contains info of running public game (for game list browsing) */

@@ -996,7 +996,7 @@ GameplayOptions::GameplayOptions()
     , grabInput("Grab Input", OptionEntryFlags::None, N_("Grab Input"), N_("When enabled mouse is locked to the game window."), false)
     , theoQuest("Theo Quest", OptionEntryFlags::CantChangeInGame | OptionEntryFlags::OnlyHellfire, N_("Theo Quest"), N_("Enable Little Girl quest."), false)
     , cowQuest("Cow Quest", OptionEntryFlags::CantChangeInGame | OptionEntryFlags::OnlyHellfire, N_("Cow Quest"), N_("Enable Jersey's quest. Lester the farmer is replaced by the Complete Nut."), false)
-    , friendlyFire("Friendly Fire", OptionEntryFlags::CantChangeInMultiPlayer, N_("Friendly Fire"), N_("Allow arrow/spell damage between players in multiplayer even when the friendly mode is on."), true)
+    , noFriendlyFire("No Friendly Fire", OptionEntryFlags::CantChangeInMultiPlayer, N_("No Friendly Fire"), N_("Disallow arrow/spell damage between players in multiplayer."), true)
     , testBard("Test Bard", OptionEntryFlags::CantChangeInGame, N_("Test Bard"), N_("Force the Bard character type to appear in the hero selection menu."), false)
     , testBarbarian("Test Barbarian", OptionEntryFlags::CantChangeInGame, N_("Test Barbarian"), N_("Force the Barbarian character type to appear in the hero selection menu."), false)
     , experienceBar("Experience Bar", OptionEntryFlags::None, N_("Experience Bar"), N_("Experience Bar is added to the UI at the bottom of the screen."), false)
@@ -1038,7 +1038,7 @@ std::vector<OptionEntryBase *> GameplayOptions::GetEntries()
 		&randomizeQuests,
 		&theoQuest,
 		&cowQuest,
-		&friendlyFire,
+		&noFriendlyFire,
 		&testBard,
 		&testBarbarian,
 		&experienceBar,
