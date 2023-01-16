@@ -69,7 +69,7 @@ def Process(path: str):
         output_line = FormatLine(input[j], state, columns_state)
         output_lines.append(output_line)
 
-    with open(path, "w", encoding="utf-8") as f:
+    with open(path, "w", encoding="utf-8", newline='') as f:
         f.writelines(f"{line}\r\n" for line in output_lines)
 
 
