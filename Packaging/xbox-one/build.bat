@@ -4,7 +4,7 @@ mkdir ..\..\build
 cd ..\..\build
 
 git clone https://github.com/libsdl-org/SDL.git
-git -C SDL checkout c7097418711b57e786eeb464bbe366c056b19801
+git -C SDL checkout 5d1e6b28d9c97e5223281c0f0189f6c99a564b70
 msbuild /p:PlatformToolset=v143;TargetPlatformVersion=10.0.22000.0;TargetPlatformMinVersion=10.0.14393.0;ConfigurationType=StaticLibrary;Configuration=Release;Platform=x64 SDL\VisualC-WinRT\SDL-UWP.vcxproj
 
 cmake -DUWP_LIB=1 -DUWP_SDL2_DIR="%CD%/SDL" -DCMAKE_BUILD_TYPE=x64-Release ..
