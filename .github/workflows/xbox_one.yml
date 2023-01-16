@@ -1,15 +1,13 @@
 name: Xbox One / Series
 
-# Temporarily disabled due to https://github.com/diasurgical/devilutionX/issues/5661
 on:
-  workflow_dispatch:
-#   push:
-#     branches:
-#       - master
-#   pull_request:
-#     types: [opened, synchronize]
-#   release:
-#     types: [published]
+  push:
+    branches:
+      - master
+  pull_request:
+    types: [opened, synchronize]
+  release:
+    types: [published]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
