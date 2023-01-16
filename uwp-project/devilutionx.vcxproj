@@ -61,6 +61,7 @@
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
     <AppxPackageDir>..\build\uwp-project\AppxPackages</AppxPackageDir>
     <PackageCertificateThumbprint>0D43FF406F8BFD3F3325F61908D76FBDAB01425C</PackageCertificateThumbprint>
+    <PackageCertificateKeyFile>devilutionX_TemporaryKey.pfx</PackageCertificateKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>..\build\uwp-project\$(Configuration)\</OutDir>
