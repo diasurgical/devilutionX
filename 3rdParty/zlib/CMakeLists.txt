@@ -6,6 +6,7 @@ include(FetchContent)
 FetchContent_Declare(zlib
     URL https://www.zlib.net/zlib-1.2.13.tar.gz
         https://www.zlib.net/fossils/zlib-1.2.13.tar.gz
+        https://github.com/madler/zlib/releases/download/v1.2.13/zlib-1.2.13.tar.gz
     URL_HASH MD5=9b8aa094c4e5765dabf4da391f00d15c
 )
 FetchContent_MakeAvailableExcludeFromAll(zlib)
