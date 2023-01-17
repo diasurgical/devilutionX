@@ -414,9 +414,9 @@ void StartRangeAttack(Player &player, Direction d, WorldTileCoord cx, WorldTileC
 player_graphic GetPlayerGraphicForSpell(spell_id spellId)
 {
 	switch (spelldata[spellId].sType) {
-	case STYPE_FIRE:
+	case MagicType::Fire:
 		return player_graphic::Fire;
-	case STYPE_LIGHTNING:
+	case MagicType::Lightning:
 		return player_graphic::Lightning;
 	default:
 		return player_graphic::Magic;
@@ -1997,11 +1997,11 @@ player_graphic Player::getGraphic() const
 		return player_graphic::Block;
 	case PM_SPELL:
 		switch (spelldata[executedSpell.spellId].sType) {
-		case STYPE_FIRE:
+		case MagicType::Fire:
 			return player_graphic::Fire;
-		case STYPE_LIGHTNING:
+		case MagicType::Lightning:
 			return player_graphic::Lightning;
-		case STYPE_MAGIC:
+		case MagicType::Magic:
 			return player_graphic::Magic;
 		}
 		return player_graphic::Fire;

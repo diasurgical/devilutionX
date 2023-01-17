@@ -80,10 +80,10 @@ enum spell_id : int8_t {
 	SPL_INVALID = -1,
 };
 
-enum magic_type : uint8_t {
-	STYPE_FIRE,
-	STYPE_LIGHTNING,
-	STYPE_MAGIC,
+enum class MagicType : uint8_t {
+	Fire,
+	Lightning,
+	Magic,
 };
 
 enum missile_id : int8_t {
@@ -201,7 +201,7 @@ enum missile_id : int8_t {
 struct SpellData {
 	spell_id sName;
 	uint8_t sManaCost;
-	magic_type sType;
+	MagicType sType;
 	const char *sNameText;
 	int sBookLvl;
 	int sStaffLvl;

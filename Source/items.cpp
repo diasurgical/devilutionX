@@ -641,11 +641,11 @@ void GetBookSpell(Item &item, int lvl)
 	item._iMinMag = spelldata[bs].sMinInt;
 	item._ivalue += spelldata[bs].sBookCost;
 	item._iIvalue += spelldata[bs].sBookCost;
-	if (spelldata[bs].sType == STYPE_FIRE)
+	if (spelldata[bs].sType == MagicType::Fire)
 		item._iCurs = ICURS_BOOK_RED;
-	else if (spelldata[bs].sType == STYPE_LIGHTNING)
+	else if (spelldata[bs].sType == MagicType::Lightning)
 		item._iCurs = ICURS_BOOK_BLUE;
-	else if (spelldata[bs].sType == STYPE_MAGIC)
+	else if (spelldata[bs].sType == MagicType::Magic)
 		item._iCurs = ICURS_BOOK_GREY;
 }
 
