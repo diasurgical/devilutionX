@@ -3818,7 +3818,7 @@ void UseItem(size_t pnum, item_misc_id mid, spell_id spl)
 		} else {
 			ClrPlrPath(player);
 			player.queuedSpell.spellId = spl;
-			player.queuedSpell.spellType = RSPLTYPE_SCROLL;
+			player.queuedSpell.spellType = SpellType::Scroll;
 			player.queuedSpell.spellFrom = 0;
 			player.destAction = ACTION_SPELL;
 			player.destParam1 = cursPosition.x;

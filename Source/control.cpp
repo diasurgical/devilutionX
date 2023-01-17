@@ -773,7 +773,7 @@ void DoPanBtn()
 		if ((SDL_GetModState() & KMOD_SHIFT) != 0) {
 			Player &myPlayer = *MyPlayer;
 			myPlayer._pRSpell = SPL_INVALID;
-			myPlayer._pRSplType = RSPLTYPE_INVALID;
+			myPlayer._pRSplType = SpellType::Invalid;
 			RedrawEverything();
 			return;
 		}
@@ -843,15 +843,15 @@ void CheckPanelInfo()
 		const spell_id spellId = myPlayer._pRSpell;
 		if (IsValidSpell(spellId)) {
 			switch (myPlayer._pRSplType) {
-			case RSPLTYPE_SKILL:
+			case SpellType::Skill:
 				AddPanelString(fmt::format(fmt::runtime(_("{:s} Skill")), pgettext("spell", spelldata[spellId].sNameText)));
 				break;
-			case RSPLTYPE_SPELL: {
+			case SpellType::Spell: {
 				AddPanelString(fmt::format(fmt::runtime(_("{:s} Spell")), pgettext("spell", spelldata[spellId].sNameText)));
 				const int spellLevel = myPlayer.GetSpellLevel(spellId);
 				AddPanelString(spellLevel == 0 ? _("Spell Level 0 - Unusable") : fmt::format(fmt::runtime(_("Spell Level {:d}")), spellLevel));
 			} break;
-			case RSPLTYPE_SCROLL: {
+			case SpellType::Scroll: {
 				AddPanelString(fmt::format(fmt::runtime(_("Scroll of {:s}")), pgettext("spell", spelldata[spellId].sNameText)));
 				const InventoryAndBeltPlayerItemsRange items { myPlayer };
 				const int scrollCount = std::count_if(items.begin(), items.end(), [spellId](const Item &item) {
@@ -859,11 +859,11 @@ void CheckPanelInfo()
 				});
 				AddPanelString(fmt::format(fmt::runtime(ngettext("{:d} Scroll", "{:d} Scrolls", scrollCount)), scrollCount));
 			} break;
-			case RSPLTYPE_CHARGES:
+			case SpellType::Charges:
 				AddPanelString(fmt::format(fmt::runtime(_("Staff of {:s}")), pgettext("spell", spelldata[spellId].sNameText)));
 				AddPanelString(fmt::format(fmt::runtime(ngettext("{:d} Charge", "{:d} Charges", myPlayer.InvBody[INVLOC_HAND_LEFT]._iCharges)), myPlayer.InvBody[INVLOC_HAND_LEFT]._iCharges));
 				break;
-			case RSPLTYPE_INVALID:
+			case SpellType::Invalid:
 				break;
 			}
 		}
