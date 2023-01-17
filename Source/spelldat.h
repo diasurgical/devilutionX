@@ -203,19 +203,19 @@ struct SpellData {
 	uint8_t sManaCost;
 	MagicType sType;
 	const char *sNameText;
-	int sBookLvl;
-	int sStaffLvl;
+	int8_t sBookLvl;
+	int8_t sStaffLvl;
 	bool sTargeted;
 	bool sTownSpell;
-	int sMinInt;
+	int16_t sMinInt;
 	_sfx_id sSFX;
 	missile_id sMissiles[3];
 	uint8_t sManaAdj;
 	uint8_t sMinMana;
-	int sStaffMin;
-	int sStaffMax;
-	int sBookCost;
-	int sStaffCost;
+	uint8_t sStaffMin;
+	uint8_t sStaffMax;
+	uint32_t sBookCost;
+	uint16_t sStaffCost;
 };
 
 extern const SpellData spelldata[];
