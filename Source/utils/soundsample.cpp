@@ -117,7 +117,7 @@ int SoundSample::SetChunkStream(std::string filePath, bool isMp3, bool logErrors
 	SDL_RWops *handle = OpenAssetAsSdlRwOps(filePath.c_str(), /*threadsafe=*/true);
 	if (handle == nullptr) {
 		if (logErrors)
-			LogError(LogCategory::Audio, "OpenAsset failed (from SoundSample::SetChunkStream): {}", SDL_GetError());
+			LogError(LogCategory::Audio, "OpenAsset failed (from SoundSample::SetChunkStream) for {}: {}", filePath, SDL_GetError());
 		return -1;
 	}
 	file_path_ = std::move(filePath);
@@ -126,7 +126,7 @@ int SoundSample::SetChunkStream(std::string filePath, bool isMp3, bool logErrors
 	if (!stream_->open()) {
 		stream_ = nullptr;
 		if (logErrors)
-			LogError(LogCategory::Audio, "Aulib::Stream::open (from SoundSample::SetChunkStream): {}", SDL_GetError());
+			LogError(LogCategory::Audio, "Aulib::Stream::open (from SoundSample::SetChunkStream) for {}: {}", file_path_, SDL_GetError());
 		return -1;
 	}
 	return 0;
