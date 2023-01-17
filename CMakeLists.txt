@@ -307,6 +307,7 @@ else()
         TARGET ${BIN_TARGET} POST_BUILD
         DEPENDS ${BIN_TARGET}
         COMMAND $<$<CONFIG:Release>:${CMAKE_STRIP}>
+                $<$<CONFIG:MinSizeRel>:${CMAKE_STRIP}>
         ARGS $<TARGET_FILE:${BIN_TARGET}>)
     endif()
 endif()
