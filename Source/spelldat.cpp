@@ -11,7 +11,7 @@ namespace devilution {
 /** Data related to each spell ID. */
 const SpellData spelldata[] = {
 	// clang-format off
-// sName,           sManaCost, sType,           sNameText,                          sBookLvl,  sStaffLvl, sTargeted,  sTownSpell,   sMinInt, sSFX,     sMissiles[3],                                 sManaAdj,  sMinMana,  sStaffMin,  sStaffMax,  sBookCost,  sStaffCost
+// sName,           sManaCost, sType,                sNameText,                          sBookLvl,  sStaffLvl, sTargeted,  sTownSpell,   sMinInt, sSFX,     sMissiles[3],                                 sManaAdj,  sMinMana,  sStaffMin,  sStaffMax,  sBookCost,  sStaffCost
 { SPL_NULL,                 0, MagicType::Fire,      nullptr,                                   0,          0, false,      false,              0, SFX_NONE, { MIS_NULL,          MIS_NULL,   MIS_NULL },         0,         0,         40,         80,          0,           0 },
 { SPL_FIREBOLT,             6, MagicType::Fire,      P_("spell", "Firebolt"),                   1,          1, true,       false,             15, IS_CAST2, { MIS_FIREBOLT,      MIS_NULL,   MIS_NULL },         1,         3,         40,         80,       1000,          50 },
 { SPL_HEAL,                 5, MagicType::Magic,     P_("spell", "Healing"),                    1,          1, false,      true,              17, IS_CAST8, { MIS_HEAL,          MIS_NULL,   MIS_NULL },         3,         1,         20,         40,       1000,          50 },
