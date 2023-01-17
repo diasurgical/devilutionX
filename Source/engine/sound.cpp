@@ -54,8 +54,9 @@ bool LoadAudioFile(const char *path, bool stream, bool errorDialog, SoundSample 
 		if (result.SetChunkStream(GetMp3Path(path), /*isMp3=*/true, /*logErrors=*/false) != 0) {
 			SDL_ClearError();
 			if (result.SetChunkStream(path, /*isMp3=*/false, /*logErrors=*/true) != 0) {
-				if (errorDialog)
-					ErrSdl();
+				if (errorDialog) {
+					ErrDlg("Failed to load audio file", StrCat(path, "\n", SDL_GetError(), "\n"), __FILE__, __LINE__);
+				}
 				return false;
 			}
 		}
