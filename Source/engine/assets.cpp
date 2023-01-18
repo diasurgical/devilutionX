@@ -5,11 +5,14 @@
 #include <cstring>
 
 #include "init.h"
-#include "mpq/mpq_sdl_rwops.hpp"
 #include "utils/file_util.h"
 #include "utils/log.hpp"
 #include "utils/paths.h"
 #include "utils/str_cat.hpp"
+
+#ifndef UNPACKED_MPQS
+#include "mpq/mpq_sdl_rwops.hpp"
+#endif
 
 namespace devilution {
 

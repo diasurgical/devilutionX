@@ -129,10 +129,6 @@ set(libdevilutionx_SRCS
 
   miniwin/misc_msg.cpp
 
-  mpq/mpq_reader.cpp
-  mpq/mpq_sdl_rwops.cpp
-  mpq/mpq_writer.cpp
-
   panels/charpanel.cpp
   panels/info_box.cpp
   panels/mainpanel.cpp
@@ -167,6 +163,14 @@ set(libdevilutionx_SRCS
   utils/str_cat.cpp
   utils/surface_to_clx.cpp
   utils/utf8.cpp)
+
+if(NOT (UNPACKED_MPQS AND UNPACKED_SAVES))
+  list(APPEND libdevilutionx_DEPS libmpq)
+  list(APPEND libdevilutionx_SRCS
+    mpq/mpq_reader.cpp
+    mpq/mpq_sdl_rwops.cpp
+    mpq/mpq_writer.cpp)
+endif()
 
 if(IOS)
   list(APPEND libdevilutionx_SRCS platform/ios/ios_paths.m)
@@ -251,11 +255,11 @@ target_link_libraries(libdevilutionx PUBLIC
   DevilutionX::SDL
   fmt::fmt
   PKWare
-  libmpq
   libsmackerdec
   simpleini::simpleini
   tl
   hoehrmann_utf8
+  ${libdevilutionx_DEPS}
 )
 
 if(NOT USE_SDL1)

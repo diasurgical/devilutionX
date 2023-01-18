@@ -21,6 +21,7 @@ inline bool FileExists(const std::string &str)
 bool FileExistsAndIsWriteable(const char *path);
 bool GetFileSize(const char *path, std::uintmax_t *size);
 bool ResizeFile(const char *path, std::uintmax_t size);
+void RenameFile(const char *from, const char *to);
 void RemoveFile(const char *path);
 std::optional<std::fstream> CreateFileStream(const char *path, std::ios::openmode mode);
 FILE *OpenFile(const char *path, const char *mode);

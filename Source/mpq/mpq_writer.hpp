@@ -15,6 +15,10 @@ namespace devilution {
 class MpqWriter {
 public:
 	explicit MpqWriter(const char *path);
+	explicit MpqWriter(const std::string &path)
+	    : MpqWriter(path.c_str())
+	{
+	}
 	MpqWriter(MpqWriter &&other) = default;
 	MpqWriter &operator=(MpqWriter &&other) = default;
 	~MpqWriter();
