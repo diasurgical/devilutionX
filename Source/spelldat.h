@@ -15,12 +15,12 @@ namespace devilution {
 
 enum class SpellType : uint8_t {
 	Skill,
-	First = Skill,
+	FIRST = Skill,
 	Spell,
 	Scroll,
 	Charges,
 	Invalid,
-	Last = Invalid,
+	LAST = Invalid,
 };
 
 enum spell_id : int8_t {
