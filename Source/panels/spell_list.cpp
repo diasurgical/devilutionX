@@ -200,7 +200,7 @@ std::vector<SpellListItem> GetSpellListItems()
 	int x = mainPanelPosition.x + 12 + SPLICONLENGTH * SPLROWICONLS;
 	int y = mainPanelPosition.y - 17;
 
-	for (int i = static_cast<uint8_t>(SpellType::Skill); i < static_cast<uint8_t>(SpellType::Invalid); i++) {
+	for (int i = static_cast<uint8_t>(SpellType::First); i < static_cast<uint8_t>(SpellType::Last); i++) {
 		Player &myPlayer = *MyPlayer;
 		switch ((SpellType)i) {
 		case SpellType::Skill:
