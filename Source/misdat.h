@@ -11,6 +11,7 @@
 #include "effects.h"
 #include "engine.h"
 #include "engine/clx_sprite.hpp"
+#include "spelldat.h"
 #include "utils/stdcompat/cstddef.hpp"
 #include "utils/stdcompat/string_view.hpp"
 
@@ -117,7 +118,7 @@ struct AddMissileParameter;
 struct MissileData {
 	void (*mAddProc)(Missile &, AddMissileParameter &);
 	void (*mProc)(Missile &);
-	uint8_t mName;
+	MissileID mName;
 	bool mDraw;
 	uint8_t mType;
 	DamageType damageType;

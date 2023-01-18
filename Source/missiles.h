@@ -93,7 +93,7 @@ enum class MissileSource : uint8_t {
 
 struct Missile {
 	/** Type of projectile */
-	missile_id _mitype;
+	MissileID _mitype;
 	MissilePosition position;
 	int _mimfnum; // The direction of the missile (direction enum)
 	int _mispllvl;
@@ -197,8 +197,8 @@ void GetDamageAmt(spell_id i, int *mind, int *maxd);
  * @return the direction of the p1->p2 vector
  */
 Direction16 GetDirection16(Point p1, Point p2);
-bool MonsterTrapHit(int monsterId, int mindam, int maxdam, int dist, missile_id t, bool shift);
-bool PlayerMHit(int pnum, Monster *monster, int dist, int mind, int maxd, missile_id mtype, bool shift, int earflag, bool *blocked);
+bool MonsterTrapHit(int monsterId, int mindam, int maxdam, int dist, MissileID t, bool shift);
+bool PlayerMHit(int pnum, Monster *monster, int dist, int mind, int maxd, MissileID mtype, bool shift, int earflag, bool *blocked);
 
 /**
  * @brief Could the missile collide with solid objects? (like walls or closed doors)
@@ -385,7 +385,7 @@ void AddTelekinesis(Missile &missile, AddMissileParameter &parameter);
 void AddBoneSpirit(Missile &missile, AddMissileParameter &parameter);
 void AddRportal(Missile &missile, AddMissileParameter &parameter);
 void AddDiabApoca(Missile &missile, AddMissileParameter &parameter);
-Missile *AddMissile(Point src, Point dst, Direction midir, missile_id mitype, mienemy_type micaster, int id, int midam, int spllvl, Missile *pParent = nullptr);
+Missile *AddMissile(Point src, Point dst, Direction midir, MissileID mitype, mienemy_type micaster, int id, int midam, int spllvl, Missile *pParent = nullptr);
 void MI_LArrow(Missile &missile);
 void MI_Arrow(Missile &missile);
 void MI_Firebolt(Missile &missile);
