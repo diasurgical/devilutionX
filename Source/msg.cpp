@@ -1492,7 +1492,7 @@ size_t OnSpellTile(const TCmd *pCmd, Player &player)
 	if (wParam1 > SPL_LAST)
 		return sizeof(message);
 	const uint16_t wParam2 = SDL_SwapLE16(message.wParam2);
-	if (wParam2 > static_cast<uint8_t>(SpellType::Invalid))
+	if (wParam2 > static_cast<uint8_t>(SpellType::Last))
 		return sizeof(message);
 
 	auto spell = static_cast<spell_id>(wParam1);
@@ -1642,7 +1642,7 @@ size_t OnSpellMonster(const TCmd *pCmd, Player &player)
 	if (wParam2 > SPL_LAST)
 		return sizeof(message);
 	const uint16_t wParam3 = SDL_SwapLE16(message.wParam3);
-	if (wParam3 > static_cast<uint8_t>(SpellType::Invalid))
+	if (wParam3 > static_cast<uint8_t>(SpellType::Last))
 		return sizeof(message);
 
 	auto spell = static_cast<spell_id>(wParam2);
@@ -1681,7 +1681,7 @@ size_t OnSpellPlayer(const TCmd *pCmd, Player &player)
 	if (wParam2 > SPL_LAST)
 		return sizeof(message);
 	const uint16_t wParam3 = SDL_SwapLE16(message.wParam3);
-	if (wParam3 > static_cast<uint8_t>(SpellType::Invalid))
+	if (wParam3 > static_cast<uint8_t>(SpellType::Last))
 		return sizeof(message);
 
 	auto spell = static_cast<spell_id>(wParam2);
