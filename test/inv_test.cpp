@@ -18,11 +18,11 @@ public:
 };
 
 /* Set up a given item as a spell scroll, allowing for its usage. */
-void set_up_scroll(Item &item, spell_id spell)
+void set_up_scroll(Item &item, SpellID spell)
 {
 	pcurs = CURSOR_HAND;
 	leveltype = DTYPE_CATACOMBS;
-	MyPlayer->_pRSpell = static_cast<spell_id>(spell);
+	MyPlayer->_pRSpell = static_cast<SpellID>(spell);
 	item._itype = ItemType::Misc;
 	item._iMiscId = IMISC_SCROLL;
 	item._iSpell = spell;
@@ -41,16 +41,16 @@ void clear_inventory()
 // Test that the scroll is used in the inventory in correct conditions
 TEST_F(InvTest, UseScroll_from_inventory)
 {
-	set_up_scroll(MyPlayer->InvList[2], SPL_FIREBOLT);
+	set_up_scroll(MyPlayer->InvList[2], SpellID::Firebolt);
 	MyPlayer->_pNumInv = 5;
-	EXPECT_TRUE(CanUseScroll(*MyPlayer, SPL_FIREBOLT));
+	EXPECT_TRUE(CanUseScroll(*MyPlayer, SpellID::Firebolt));
 }
 
 // Test that the scroll is used in the belt in correct conditions
 TEST_F(InvTest, UseScroll_from_belt)
 {
-	set_up_scroll(MyPlayer->SpdList[2], SPL_FIREBOLT);
-	EXPECT_TRUE(CanUseScroll(*MyPlayer, SPL_FIREBOLT));
+	set_up_scroll(MyPlayer->SpdList[2], SpellID::Firebolt);
+	EXPECT_TRUE(CanUseScroll(*MyPlayer, SpellID::Firebolt));
 }
 
 // Test that the scroll is not used in the inventory for each invalid condition
@@ -64,21 +64,21 @@ TEST_F(InvTest, UseScroll_from_inventory_invalid_conditions)
 	// Adjust inventory size
 	MyPlayer->_pNumInv = 5;
 
-	set_up_scroll(MyPlayer->InvList[2], SPL_FIREBOLT);
+	set_up_scroll(MyPlayer->InvList[2], SpellID::Firebolt);
 	leveltype = DTYPE_TOWN;
-	EXPECT_FALSE(CanUseScroll(*MyPlayer, SPL_FIREBOLT));
+	EXPECT_FALSE(CanUseScroll(*MyPlayer, SpellID::Firebolt));
 
-	set_up_scroll(MyPlayer->InvList[2], SPL_FIREBOLT);
-	MyPlayer->_pRSpell = static_cast<spell_id>(SPL_HEAL);
-	EXPECT_FALSE(CanUseScroll(*MyPlayer, SPL_HEAL));
+	set_up_scroll(MyPlayer->InvList[2], SpellID::Firebolt);
+	MyPlayer->_pRSpell = SpellID::Healing;
+	EXPECT_FALSE(CanUseScroll(*MyPlayer, SpellID::Healing));
 
-	set_up_scroll(MyPlayer->InvList[2], SPL_FIREBOLT);
+	set_up_scroll(MyPlayer->InvList[2], SpellID::Firebolt);
 	MyPlayer->InvList[2]._iMiscId = IMISC_STAFF;
-	EXPECT_FALSE(CanUseScroll(*MyPlayer, SPL_FIREBOLT));
+	EXPECT_FALSE(CanUseScroll(*MyPlayer, SpellID::Firebolt));
 
-	set_up_scroll(MyPlayer->InvList[2], SPL_FIREBOLT);
+	set_up_scroll(MyPlayer->InvList[2], SpellID::Firebolt);
 	MyPlayer->InvList[2].clear();
-	EXPECT_FALSE(CanUseScroll(*MyPlayer, SPL_FIREBOLT));
+	EXPECT_FALSE(CanUseScroll(*MyPlayer, SpellID::Firebolt));
 }
 
 // Test that the scroll is not used in the belt for each invalid condition
@@ -87,21 +87,21 @@ TEST_F(InvTest, UseScroll_from_belt_invalid_conditions)
 	// Disable the inventory to prevent using a scroll from the inventory
 	MyPlayer->_pNumInv = 0;
 
-	set_up_scroll(MyPlayer->SpdList[2], SPL_FIREBOLT);
+	set_up_scroll(MyPlayer->SpdList[2], SpellID::Firebolt);
 	leveltype = DTYPE_TOWN;
-	EXPECT_FALSE(CanUseScroll(*MyPlayer, SPL_FIREBOLT));
+	EXPECT_FALSE(CanUseScroll(*MyPlayer, SpellID::Firebolt));
 
-	set_up_scroll(MyPlayer->SpdList[2], SPL_FIREBOLT);
-	MyPlayer->_pRSpell = static_cast<spell_id>(SPL_HEAL);
-	EXPECT_FALSE(CanUseScroll(*MyPlayer, SPL_HEAL));
+	set_up_scroll(MyPlayer->SpdList[2], SpellID::Firebolt);
+	MyPlayer->_pRSpell = SpellID::Healing;
+	EXPECT_FALSE(CanUseScroll(*MyPlayer, SpellID::Healing));
 
-	set_up_scroll(MyPlayer->SpdList[2], SPL_FIREBOLT);
+	set_up_scroll(MyPlayer->SpdList[2], SpellID::Firebolt);
 	MyPlayer->SpdList[2]._iMiscId = IMISC_STAFF;
-	EXPECT_FALSE(CanUseScroll(*MyPlayer, SPL_FIREBOLT));
+	EXPECT_FALSE(CanUseScroll(*MyPlayer, SpellID::Firebolt));
 
-	set_up_scroll(MyPlayer->SpdList[2], SPL_FIREBOLT);
+	set_up_scroll(MyPlayer->SpdList[2], SpellID::Firebolt);
 	MyPlayer->SpdList[2].clear();
-	EXPECT_FALSE(CanUseScroll(*MyPlayer, SPL_FIREBOLT));
+	EXPECT_FALSE(CanUseScroll(*MyPlayer, SpellID::Firebolt));
 }
 
 // Test gold calculation
@@ -212,11 +212,11 @@ TEST_F(InvTest, RemoveCurrentSpellScrollFromInventory)
 
 	// Put a firebolt scroll into the inventory
 	MyPlayer->_pNumInv = 1;
-	MyPlayer->executedSpell.spellId = static_cast<spell_id>(SPL_FIREBOLT);
+	MyPlayer->executedSpell.spellId = SpellID::Firebolt;
 	MyPlayer->executedSpell.spellFrom = INVITEM_INV_FIRST;
 	MyPlayer->InvList[0]._itype = ItemType::Misc;
 	MyPlayer->InvList[0]._iMiscId = IMISC_SCROLL;
-	MyPlayer->InvList[0]._iSpell = SPL_FIREBOLT;
+	MyPlayer->InvList[0]._iSpell = SpellID::Firebolt;
 
 	ConsumeScroll(*MyPlayer);
 	EXPECT_EQ(MyPlayer->InvGrid[0], 0);
@@ -230,11 +230,11 @@ TEST_F(InvTest, RemoveCurrentSpellScrollFromInventoryFirstMatch)
 
 	// Put a firebolt scroll into the inventory
 	MyPlayer->_pNumInv = 1;
-	MyPlayer->executedSpell.spellId = static_cast<spell_id>(SPL_FIREBOLT);
+	MyPlayer->executedSpell.spellId = SpellID::Firebolt;
 	MyPlayer->executedSpell.spellFrom = 0; // any matching scroll
 	MyPlayer->InvList[0]._itype = ItemType::Misc;
 	MyPlayer->InvList[0]._iMiscId = IMISC_SCROLL;
-	MyPlayer->InvList[0]._iSpell = SPL_FIREBOLT;
+	MyPlayer->InvList[0]._iSpell = SpellID::Firebolt;
 
 	ConsumeScroll(*MyPlayer);
 	EXPECT_EQ(MyPlayer->InvGrid[0], 0);
@@ -251,11 +251,11 @@ TEST_F(InvTest, RemoveCurrentSpellScroll_belt)
 		MyPlayer->SpdList[i].clear();
 	}
 	// Put a firebolt scroll into the belt
-	MyPlayer->executedSpell.spellId = static_cast<spell_id>(SPL_FIREBOLT);
+	MyPlayer->executedSpell.spellId = SpellID::Firebolt;
 	MyPlayer->executedSpell.spellFrom = INVITEM_BELT_FIRST + 3;
 	MyPlayer->SpdList[3]._itype = ItemType::Misc;
 	MyPlayer->SpdList[3]._iMiscId = IMISC_SCROLL;
-	MyPlayer->SpdList[3]._iSpell = SPL_FIREBOLT;
+	MyPlayer->SpdList[3]._iSpell = SpellID::Firebolt;
 
 	ConsumeScroll(*MyPlayer);
 	EXPECT_TRUE(MyPlayer->SpdList[3].isEmpty());
@@ -271,11 +271,11 @@ TEST_F(InvTest, RemoveCurrentSpellScrollFirstMatchFromBelt)
 		MyPlayer->SpdList[i].clear();
 	}
 	// Put a firebolt scroll into the belt
-	MyPlayer->executedSpell.spellId = static_cast<spell_id>(SPL_FIREBOLT);
+	MyPlayer->executedSpell.spellId = SpellID::Firebolt;
 	MyPlayer->executedSpell.spellFrom = 0; // any matching scroll
 	MyPlayer->SpdList[3]._itype = ItemType::Misc;
 	MyPlayer->SpdList[3]._iMiscId = IMISC_SCROLL;
-	MyPlayer->SpdList[3]._iSpell = SPL_FIREBOLT;
+	MyPlayer->SpdList[3]._iSpell = SpellID::Firebolt;
 
 	ConsumeScroll(*MyPlayer);
 	EXPECT_TRUE(MyPlayer->SpdList[3].isEmpty());

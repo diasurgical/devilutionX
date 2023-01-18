@@ -203,7 +203,7 @@ struct Item {
 	int16_t _iAC = 0;
 	ItemSpecialEffect _iFlags = ItemSpecialEffect::None;
 	item_misc_id _iMiscId = IMISC_NONE;
-	spell_id _iSpell = SPL_NULL;
+	SpellID _iSpell = SpellID::Null;
 	_item_indexes IDidx = IDI_NONE;
 	int _iCharges = 0;
 	int _iMaxCharges = 0;
@@ -384,7 +384,7 @@ struct Item {
 		return IsAnyOf(_iMiscId, IMISC_SCROLL, IMISC_SCROLLT);
 	}
 
-	[[nodiscard]] bool isScrollOf(spell_id spellId) const
+	[[nodiscard]] bool isScrollOf(SpellID spellId) const
 	{
 		return isScroll() && _iSpell == spellId;
 	}
@@ -394,21 +394,21 @@ struct Item {
 		return _iMiscId > IMISC_RUNEFIRST && _iMiscId < IMISC_RUNELAST;
 	}
 
-	[[nodiscard]] bool isRuneOf(spell_id spellId) const
+	[[nodiscard]] bool isRuneOf(SpellID spellId) const
 	{
 		if (!isRune())
 			return false;
 		switch (_iMiscId) {
 		case IMISC_RUNEF:
-			return spellId == SPL_RUNEFIRE;
+			return spellId == SpellID::RuneOfFire;
 		case IMISC_RUNEL:
-			return spellId == SPL_RUNELIGHT;
+			return spellId == SpellID::RuneOfLight;
 		case IMISC_GR_RUNEL:
-			return spellId == SPL_RUNENOVA;
+			return spellId == SpellID::RuneOfNova;
 		case IMISC_GR_RUNEF:
-			return spellId == SPL_RUNEIMMOLAT;
+			return spellId == SpellID::RuneOfImmolation;
 		case IMISC_RUNES:
-			return spellId == SPL_RUNESTONE;
+			return spellId == SpellID::RuneOfStone;
 		default:
 			return false;
 		}
@@ -524,7 +524,7 @@ bool DoOil(Player &player, int cii);
 void DrawUniqueInfo(const Surface &out);
 void PrintItemDetails(const Item &item);
 void PrintItemDur(const Item &item);
-void UseItem(size_t pnum, item_misc_id Mid, spell_id spl);
+void UseItem(size_t pnum, item_misc_id Mid, SpellID spl);
 bool UseItemOpensHive(const Item &item, Point position);
 bool UseItemOpensGrave(const Item &item, Point position);
 void SpawnSmith(int lvl);
@@ -534,7 +534,7 @@ void SpawnBoy(int lvl);
 void SpawnHealer(int lvl);
 void MakeGoldStack(Item &goldItem, int value);
 int ItemNoFlippy();
-void CreateSpellBook(Point position, spell_id ispell, bool sendmsg, bool delta);
+void CreateSpellBook(Point position, SpellID ispell, bool sendmsg, bool delta);
 void CreateMagicArmor(Point position, ItemType itemType, int icurs, bool sendmsg, bool delta);
 void CreateAmulet(Point position, int lvl, bool sendmsg, bool delta);
 void CreateMagicWeapon(Point position, ItemType itemType, int icurs, bool sendmsg, bool delta);

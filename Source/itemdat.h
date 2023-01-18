@@ -453,7 +453,7 @@ struct ItemData {
 	uint8_t iMinDex;
 	ItemSpecialEffect iFlags; // ItemSpecialEffect as bit flags
 	enum item_misc_id iMiscId;
-	enum spell_id iSpell;
+	enum SpellID iSpell;
 	bool iUsable;
 	uint16_t iValue;
 };

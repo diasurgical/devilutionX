@@ -261,7 +261,7 @@ void LoadItemData(LoadHelper &file, Item &item)
 	item._iAC = file.NextLE<int32_t>();
 	item._iFlags = static_cast<ItemSpecialEffect>(file.NextLE<uint32_t>());
 	item._iMiscId = static_cast<item_misc_id>(file.NextLE<int32_t>());
-	item._iSpell = static_cast<spell_id>(file.NextLE<int32_t>());
+	item._iSpell = static_cast<SpellID>(file.NextLE<int32_t>());
 	item._iCharges = file.NextLE<int32_t>();
 	item._iMaxCharges = file.NextLE<int32_t>();
 	item._iDurability = file.NextLE<int32_t>();
@@ -356,17 +356,17 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	player._plid = file.NextLE<int32_t>();
 	player._pvid = file.NextLE<int32_t>();
 
-	player.queuedSpell.spellId = static_cast<spell_id>(file.NextLE<int32_t>());
+	player.queuedSpell.spellId = static_cast<SpellID>(file.NextLE<int32_t>());
 	player.queuedSpell.spellType = static_cast<SpellType>(file.NextLE<int8_t>());
 	player.queuedSpell.spellFrom = file.NextLE<int8_t>();
 	file.Skip(2); // Alignment
-	player._pTSpell = static_cast<spell_id>(file.NextLE<int32_t>());
+	player._pTSpell = static_cast<SpellID>(file.NextLE<int32_t>());
 	file.Skip<int8_t>(); // Skip _pTSplType
 	file.Skip(3);        // Alignment
-	player._pRSpell = static_cast<spell_id>(file.NextLE<int32_t>());
+	player._pRSpell = static_cast<SpellID>(file.NextLE<int32_t>());
 	player._pRSplType = static_cast<SpellType>(file.NextLE<int8_t>());
 	file.Skip(3); // Alignment
-	player._pSBkSpell = static_cast<spell_id>(file.NextLE<int32_t>());
+	player._pSBkSpell = static_cast<SpellID>(file.NextLE<int32_t>());
 	file.Skip<int8_t>(); // Skip _pSBkSplType
 	for (int8_t &spellLevel : player._pSplLvl)
 		spellLevel = file.NextLE<int8_t>();
@@ -379,7 +379,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 
 	// Extra hotkeys: to keep single player save compatibility, read only 4 hotkeys here, rely on LoadHotkeys for the rest
 	for (size_t i = 0; i < 4; i++) {
-		player._pSplHotKey[i] = static_cast<spell_id>(file.NextLE<int32_t>());
+		player._pSplHotKey[i] = static_cast<SpellID>(file.NextLE<int32_t>());
 	}
 	for (size_t i = 0; i < 4; i++) {
 		player._pSplTHotKey[i] = static_cast<SpellType>(file.NextLE<uint8_t>());
@@ -1027,7 +1027,7 @@ void SaveItem(SaveHelper &file, const Item &item)
 	file.WriteLE<int32_t>(item._iAC);
 	file.WriteLE<uint32_t>(static_cast<uint32_t>(item._iFlags));
 	file.WriteLE<int32_t>(item._iMiscId);
-	file.WriteLE<int32_t>(item._iSpell);
+	file.WriteLE<int32_t>(static_cast<int8_t>(item._iSpell));
 	file.WriteLE<int32_t>(item._iCharges);
 	file.WriteLE<int32_t>(item._iMaxCharges);
 	file.WriteLE<int32_t>(item._iDurability);
@@ -1130,17 +1130,17 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.WriteLE<int32_t>(player._plid);
 	file.WriteLE<int32_t>(player._pvid);
 
-	file.WriteLE<int32_t>(player.queuedSpell.spellId);
+	file.WriteLE<int32_t>(static_cast<int8_t>(player.queuedSpell.spellId));
 	file.WriteLE<int8_t>(static_cast<int8_t>(player.queuedSpell.spellType));
 	file.WriteLE<int8_t>(player.queuedSpell.spellFrom);
 	file.Skip(2); // Alignment
-	file.WriteLE<int32_t>(player._pTSpell);
+	file.WriteLE<int32_t>(static_cast<int8_t>(player._pTSpell));
 	file.Skip<int8_t>(); // Skip _pTSplType
 	file.Skip(3);        // Alignment
-	file.WriteLE<int32_t>(player._pRSpell);
+	file.WriteLE<int32_t>(static_cast<int8_t>(player._pRSpell));
 	file.WriteLE<int8_t>(static_cast<uint8_t>(player._pRSplType));
 	file.Skip(3); // Alignment
-	file.WriteLE<int32_t>(player._pSBkSpell);
+	file.WriteLE<int32_t>(static_cast<int8_t>(player._pSBkSpell));
 	file.Skip<int8_t>(); // Skip _pSBkSplType
 
 	for (int8_t spellLevel : player._pSplLvl)
@@ -1155,7 +1155,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 
 	// Extra hotkeys: to keep single player save compatibility, write only 4 hotkeys here, rely on SaveHotkeys for the rest
 	for (size_t i = 0; i < 4; i++) {
-		file.WriteLE<int32_t>(player._pSplHotKey[i]);
+		file.WriteLE<int32_t>(static_cast<int8_t>(player._pSplHotKey[i]));
 	}
 	for (size_t i = 0; i < 4; i++) {
 		file.WriteLE<uint8_t>(static_cast<uint8_t>(player._pSplTHotKey[i]));
@@ -1902,7 +1902,7 @@ void LoadHotkeys()
 	size_t nHotkeys = 4; // Defaults to old save format number
 
 	// Refill the spell arrays with no selection
-	std::fill(myPlayer._pSplHotKey, myPlayer._pSplHotKey + NumHotkeys, SPL_INVALID);
+	std::fill(myPlayer._pSplHotKey, myPlayer._pSplHotKey + NumHotkeys, SpellID::Invalid);
 	std::fill(myPlayer._pSplTHotKey, myPlayer._pSplTHotKey + NumHotkeys, SpellType::Invalid);
 
 	// Checking if the save file has the old format with only 4 hotkeys and no header
@@ -1915,7 +1915,7 @@ void LoadHotkeys()
 	for (size_t i = 0; i < nHotkeys; i++) {
 		// Do not load hotkeys past the size of the spell types array, discard the rest
 		if (i < NumHotkeys) {
-			myPlayer._pSplHotKey[i] = static_cast<spell_id>(file.NextLE<int32_t>());
+			myPlayer._pSplHotKey[i] = static_cast<SpellID>(file.NextLE<int32_t>());
 		} else {
 			file.Skip<int32_t>();
 		}
@@ -1930,7 +1930,7 @@ void LoadHotkeys()
 	}
 
 	// Load the selected spell last
-	myPlayer._pRSpell = static_cast<spell_id>(file.NextLE<int32_t>());
+	myPlayer._pRSpell = static_cast<SpellID>(file.NextLE<int32_t>());
 	myPlayer._pRSplType = static_cast<SpellType>(file.NextLE<uint8_t>());
 }
 
@@ -1943,14 +1943,14 @@ void SaveHotkeys(SaveWriter &saveWriter, const Player &player)
 
 	// Write the spell hotkeys
 	for (auto &spellId : player._pSplHotKey) {
-		file.WriteLE<int32_t>(spellId);
+		file.WriteLE<int32_t>(static_cast<int8_t>(spellId));
 	}
 	for (auto &spellType : player._pSplTHotKey) {
 		file.WriteLE<uint8_t>(static_cast<uint8_t>(spellType));
 	}
 
 	// Write the selected spell last
-	file.WriteLE<int32_t>(player._pRSpell);
+	file.WriteLE<int32_t>(static_cast<int8_t>(player._pRSpell));
 	file.WriteLE<uint8_t>(static_cast<uint8_t>(player._pRSplType));
 }
 

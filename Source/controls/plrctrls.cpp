@@ -226,13 +226,13 @@ void CheckTownersNearby()
 
 bool HasRangedSpell()
 {
-	int spl = MyPlayer->_pRSpell;
+	SpellID spl = MyPlayer->_pRSpell;
 
-	return spl != SPL_INVALID
-	    && spl != SPL_TOWN
-	    && spl != SPL_TELEPORT
-	    && spelldata[spl].sTargeted
-	    && !spelldata[spl].sTownSpell;
+	return spl != SpellID::Invalid
+	    && spl != SpellID::TownPortal
+	    && spl != SpellID::Teleport
+	    && spelldata[static_cast<int8_t>(spl)].sTargeted
+	    && !spelldata[static_cast<int8_t>(spl)].sTownSpell;
 }
 
 bool CanTargetMonster(const Monster &monster)
@@ -377,8 +377,8 @@ void CheckPlayerNearby()
 
 	Player &myPlayer = *MyPlayer;
 
-	int spl = myPlayer._pRSpell;
-	if (myPlayer.friendlyMode && spl != SPL_RESURRECT && spl != SPL_HEALOTHER)
+	SpellID spl = myPlayer._pRSpell;
+	if (myPlayer.friendlyMode && spl != SpellID::Resurrect && spl != SpellID::HealOther)
 		return;
 
 	for (size_t i = 0; i < Players.size(); i++) {
@@ -389,10 +389,10 @@ void CheckPlayerNearby()
 		const int my = player.position.future.y;
 		if (dPlayer[mx][my] == 0
 		    || !IsTileLit(player.position.future)
-		    || (player._pHitPoints == 0 && spl != SPL_RESURRECT))
+		    || (player._pHitPoints == 0 && spl != SpellID::Resurrect))
 			continue;
 
-		if (myPlayer.UsesRangedWeapon() || HasRangedSpell() || spl == SPL_HEALOTHER) {
+		if (myPlayer.UsesRangedWeapon() || HasRangedSpell() || spl == SpellID::HealOther) {
 			newDdistance = GetDistanceRanged(player.position.future);
 		} else {
 			newDdistance = GetDistance(player.position.future, distance);
@@ -1819,7 +1819,7 @@ void UseBeltItem(int type)
 		}
 
 		bool isRejuvenation = IsAnyOf(item._iMiscId, IMISC_REJUV, IMISC_FULLREJUV);
-		bool isHealing = isRejuvenation || IsAnyOf(item._iMiscId, IMISC_HEAL, IMISC_FULLHEAL) || item.isScrollOf(SPL_HEAL);
+		bool isHealing = isRejuvenation || IsAnyOf(item._iMiscId, IMISC_HEAL, IMISC_FULLHEAL) || item.isScrollOf(SpellID::Healing);
 		bool isMana = isRejuvenation || IsAnyOf(item._iMiscId, IMISC_MANA, IMISC_FULLMANA);
 
 		if ((type == BLT_HEALING && isHealing) || (type == BLT_MANA && isMana)) {
@@ -1925,8 +1925,8 @@ void PerformPrimaryAction()
 
 bool SpellHasActorTarget()
 {
-	spell_id spl = MyPlayer->_pRSpell;
-	if (spl == SPL_TOWN || spl == SPL_TELEPORT)
+	SpellID spl = MyPlayer->_pRSpell;
+	if (spl == SpellID::TownPortal || spl == SpellID::Teleport)
 		return false;
 
 	if (IsWallSpell(spl) && pcursmonst != -1) {
@@ -1936,7 +1936,7 @@ bool SpellHasActorTarget()
 	return pcursplr != -1 || pcursmonst != -1;
 }
 
-void UpdateSpellTarget(spell_id spell)
+void UpdateSpellTarget(SpellID spell)
 {
 	if (SpellHasActorTarget())
 		return;
@@ -1946,7 +1946,7 @@ void UpdateSpellTarget(spell_id spell)
 
 	Player &myPlayer = *MyPlayer;
 
-	int range = spell == SPL_TELEPORT ? 4 : 1;
+	int range = spell == SpellID::Teleport ? 4 : 1;
 
 	cursPosition = myPlayer.position.future + Displacement(myPlayer._pdir) * range;
 }
@@ -2020,9 +2020,9 @@ void PerformSpellAction()
 	}
 
 	const Player &myPlayer = *MyPlayer;
-	int spl = myPlayer._pRSpell;
-	if ((pcursplr == -1 && (spl == SPL_RESURRECT || spl == SPL_HEALOTHER))
-	    || (ObjectUnderCursor == nullptr && spl == SPL_DISARM)) {
+	SpellID spl = myPlayer._pRSpell;
+	if ((pcursplr == -1 && (spl == SpellID::Resurrect || spl == SpellID::HealOther))
+	    || (ObjectUnderCursor == nullptr && spl == SpellID::TrapDisarm)) {
 		myPlayer.Say(HeroSpeech::ICantCastThatHere);
 		return;
 	}
@@ -2049,7 +2049,7 @@ void CtrlUseInvItem()
 		if (TargetsMonster(item._iSpell)) {
 			return;
 		}
-		if (spelldata[item._iSpell].sTargeted) {
+		if (spelldata[static_cast<int8_t>(item._iSpell)].sTargeted) {
 			UpdateSpellTarget(item._iSpell);
 		}
 	}
@@ -2076,7 +2076,7 @@ void CtrlUseStashItem()
 		if (TargetsMonster(item._iSpell)) {
 			return;
 		}
-		if (spelldata[item._iSpell].sTargeted) {
+		if (spelldata[static_cast<int8_t>(item._iSpell)].sTargeted) {
 			UpdateSpellTarget(item._iSpell);
 		}
 	}
@@ -2136,7 +2136,7 @@ void QuickCast(size_t slot)
 {
 	MouseActionType prevMouseButtonAction = LastMouseButtonAction;
 	Player &myPlayer = *MyPlayer;
-	spell_id spell = myPlayer._pSplHotKey[slot];
+	SpellID spell = myPlayer._pSplHotKey[slot];
 	SpellType spellType = myPlayer._pSplTHotKey[slot];
 
 	if (ControlMode != ControlTypes::KeyboardAndMouse) {
