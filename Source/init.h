@@ -6,8 +6,12 @@
 #pragma once
 
 #include "miniwin/misc_msg.h"
-#include "mpq/mpq_reader.hpp"
 #include "utils/attributes.h"
+#include "utils/stdcompat/optional.hpp"
+
+#ifndef UNPACKED_MPQS
+#include "mpq/mpq_reader.hpp"
+#endif
 
 namespace devilution {
 

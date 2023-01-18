@@ -1,6 +1,7 @@
 # RG99 has the same layout as RG300 but only 32 MiB RAM
 set(BUILD_ASSETS_MPQ OFF)
 set(UNPACKED_MPQS ON)
+set(UNPACKED_SAVES ON)
 set(NONET ON)
 set(USE_SDL1 ON)
 

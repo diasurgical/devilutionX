@@ -18,7 +18,6 @@
 #include "engine/dx.h"
 #include "hwcursor.hpp"
 #include "miniwin/misc_msg.h"
-#include "mpq/mpq_reader.hpp"
 #include "options.h"
 #include "pfile.h"
 #include "utils/file_util.h"
@@ -28,6 +27,10 @@
 #include "utils/str_split.hpp"
 #include "utils/ui_fwd.h"
 #include "utils/utf8.hpp"
+
+#ifndef UNPACKED_MPQS
+#include "mpq/mpq_reader.hpp"
+#endif
 
 #ifdef __vita__
 // increase default allowed heap size on Vita

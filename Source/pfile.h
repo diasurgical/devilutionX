@@ -8,11 +8,75 @@
 #include "DiabloUI/diabloui.h"
 #include "player.h"
 
+#ifdef UNPACKED_SAVES
+#include "utils/file_util.h"
+#else
+#include "mpq/mpq_reader.hpp"
+#include "mpq/mpq_writer.hpp"
+#endif
+
 namespace devilution {
 
 #define MAX_CHARACTERS 99
 
 extern bool gbValidSaveFile;
+
+#ifdef UNPACKED_SAVES
+struct SaveReader {
+	explicit SaveReader(std::string &&dir)
+	    : dir_(std::move(dir))
+	{
+	}
+
+	const std::string &dir() const
+	{
+		return dir_;
+	}
+
+	std::unique_ptr<byte[]> ReadFile(const char *filename, std::size_t &fileSize, int32_t &error);
+
+	bool HasFile(const char *path)
+	{
+		return ::devilution::FileExists((dir_ + path).c_str());
+	}
+
+private:
+	std::string dir_;
+};
+
+struct SaveWriter {
+	explicit SaveWriter(std::string &&dir)
+	    : dir_(std::move(dir))
+	{
+	}
+
+	bool WriteFile(const char *filename, const byte *data, size_t size);
+
+	bool HasFile(const char *path)
+	{
+		return ::devilution::FileExists((dir_ + path).c_str());
+	}
+
+	void RenameFile(const char *from, const char *to)
+	{
+		::devilution::RenameFile((dir_ + from).c_str(), (dir_ + to).c_str());
+	}
+
+	void RemoveHashEntry(const char *path)
+	{
+		RemoveFile((dir_ + path).c_str());
+	}
+
+	void RemoveHashEntries(bool (*fnGetName)(uint8_t, char *));
+
+private:
+	std::string dir_;
+};
+
+#else
+using SaveReader = MpqArchive;
+using SaveWriter = MpqWriter;
+#endif
 
 /**
  * @brief Comparsion result of pfile_compare_hero_demo
@@ -27,10 +91,10 @@ struct HeroCompareResult {
 	std::string message;
 };
 
-std::optional<MpqArchive> OpenSaveArchive(uint32_t saveNum);
-std::optional<MpqArchive> OpenStashArchive();
+std::optional<SaveReader> OpenSaveArchive(uint32_t saveNum);
+std::optional<SaveReader> OpenStashArchive();
 const char *pfile_get_password();
-std::unique_ptr<byte[]> ReadArchive(MpqArchive &archive, const char *pszName, size_t *pdwLen = nullptr);
+std::unique_ptr<byte[]> ReadArchive(SaveReader &archive, const char *pszName, size_t *pdwLen = nullptr);
 void pfile_write_hero(bool writeGameData = false);
 
 #ifndef DISABLE_DEMOMODE
