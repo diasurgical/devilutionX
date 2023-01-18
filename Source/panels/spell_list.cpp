@@ -324,7 +324,7 @@ void DoSpeedBook()
 	Player &myPlayer = *MyPlayer;
 
 	if (IsValidSpell(myPlayer._pRSpell)) {
-		for (int i = static_cast<uint8_t>(SpellType::Skill); i <= static_cast<uint8_t>(SpellType::Charges); i++) {
+		for (auto i : enum_values<SpellType>()) {
 			uint64_t spells;
 			switch (static_cast<SpellType>(i)) {
 			case SpellType::Skill:
