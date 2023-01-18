@@ -85,7 +85,7 @@ enum _cmd_id : uint8_t {
 	// body (TCmdLocParam2):
 	//    int8_t x
 	//    int8_t y
-	//    int16_t spell_id
+	//    int16_t SpellID
 	//    int16_t spell_lvl
 	CMD_SPELLXY,
 	// Cast targetted spell at target location.
@@ -93,7 +93,7 @@ enum _cmd_id : uint8_t {
 	// body (TCmdLocParam2):
 	//    int8_t x
 	//    int8_t y
-	//    int16_t spell_id
+	//    int16_t SpellID
 	//    int16_t spell_lvl
 	CMD_TSPELLXY,
 	// Operate object at location.
@@ -132,28 +132,28 @@ enum _cmd_id : uint8_t {
 	//
 	// body (TCmdParam3):
 	//    int16_t monster_num
-	//    int16_t spell_id
+	//    int16_t SpellID
 	//    int16_t spell_lvl
 	CMD_SPELLID,
 	// Cast spell on target player.
 	//
 	// body (TCmdParam3):
 	//    int16_t player_num
-	//    int16_t spell_id
+	//    int16_t SpellID
 	//    int16_t spell_lvl
 	CMD_SPELLPID,
 	// Cast targetted spell on target monster.
 	//
 	// body (TCmdParam3):
 	//    int16_t monster_num
-	//    int16_t spell_id
+	//    int16_t SpellID
 	//    int16_t spell_lvl
 	CMD_TSPELLID,
 	// Cast targetted spell on target player.
 	//
 	// body (TCmdParam3):
 	//    int16_t player_num
-	//    int16_t spell_id
+	//    int16_t SpellID
 	//    int16_t spell_lvl
 	CMD_TSPELLPID,
 	// Cast resurrect spell on target player.
@@ -392,7 +392,7 @@ enum _cmd_id : uint8_t {
 	// body (TCmdLocParam3):
 	//    int8_t x
 	//    int8_t y
-	//    int16_t spell_id
+	//    int16_t SpellID
 	//    int16_t dir
 	//    int16_t spell_lvl
 	CMD_SPELLXYD,

@@ -207,7 +207,7 @@ struct PlayerAnimationData {
 };
 
 struct SpellCastInfo {
-	spell_id spellId;
+	SpellID spellId;
 	SpellType spellType;
 	/* @brief Inventory location for scrolls */
 	int8_t spellFrom;
@@ -322,10 +322,10 @@ struct Player {
 	SpellCastInfo queuedSpell;
 	/** @brief The spell that is currently being cast */
 	SpellCastInfo executedSpell;
-	spell_id _pTSpell;
-	spell_id _pRSpell;
+	SpellID _pTSpell;
+	SpellID _pRSpell;
 	SpellType _pRSplType;
-	spell_id _pSBkSpell;
+	SpellID _pSBkSpell;
 	int8_t _pSplLvl[64];
 	/** @brief Bitmask of staff spell */
 	uint64_t _pISpells;
@@ -336,7 +336,7 @@ struct Player {
 	/** @brief Bitmask of spells available via scrolls */
 	uint64_t _pScrlSpells;
 	SpellFlag _pSpellFlags;
-	spell_id _pSplHotKey[NumHotkeys];
+	SpellID _pSplHotKey[NumHotkeys];
 	SpellType _pSplTHotKey[NumHotkeys];
 	bool _pBlockFlag;
 	bool _pInvincible;
@@ -349,7 +349,7 @@ struct Player {
 	int8_t _pFireResist;
 	int8_t _pLghtResist;
 	bool _pInfraFlag;
-	/** Player's direction when ending movement. Also used for casting direction of SPL_FIREWALL. */
+	/** Player's direction when ending movement. Also used for casting direction of SpellID::FireWall. */
 	Direction tempDirection;
 
 	bool _pLvlVisited[NUMLEVELS];
@@ -572,12 +572,12 @@ struct Player {
 
 	/**
 	 * @brief Gets the effective spell level for the player, considering item bonuses
-	 * @param spell spell_id enum member identifying the spell
+	 * @param spell SpellID enum member identifying the spell
 	 * @return effective spell level
 	 */
-	int GetSpellLevel(spell_id spell) const
+	int GetSpellLevel(SpellID spell) const
 	{
-		if (spell == SPL_INVALID || static_cast<std::size_t>(spell) >= sizeof(_pSplLvl)) {
+		if (spell == SpellID::Invalid || static_cast<std::size_t>(spell) >= sizeof(_pSplLvl)) {
 			return 0;
 		}
 
@@ -817,7 +817,7 @@ void ClrPlrPath(Player &player);
 bool PosOkPlayer(const Player &player, Point position);
 void MakePlrPath(Player &player, Point targetPosition, bool endspace);
 void CalcPlrStaff(Player &player);
-void CheckPlrSpell(bool isShiftHeld, spell_id spellID = MyPlayer->_pRSpell, SpellType spellType = MyPlayer->_pRSplType);
+void CheckPlrSpell(bool isShiftHeld, SpellID spellID = MyPlayer->_pRSpell, SpellType spellType = MyPlayer->_pRSplType);
 void SyncPlrAnim(Player &player);
 void SyncInitPlrPos(Player &player);
 void SyncInitPlr(Player &player);

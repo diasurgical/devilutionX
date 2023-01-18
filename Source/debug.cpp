@@ -87,12 +87,12 @@ uint32_t glMid2Seed[NUMLEVELS];
 uint32_t glMid3Seed[NUMLEVELS];
 uint32_t glEndSeed[NUMLEVELS];
 
-void SetSpellLevelCheat(spell_id spl, int spllvl)
+void SetSpellLevelCheat(SpellID spl, int spllvl)
 {
 	Player &myPlayer = *MyPlayer;
 
 	myPlayer._pMemSpells |= GetSpellBitmask(spl);
-	myPlayer._pSplLvl[spl] = spllvl;
+	myPlayer._pSplLvl[static_cast<int8_t>(spl)] = spllvl;
 }
 
 void PrintDebugMonster(const Monster &monster)
@@ -407,7 +407,7 @@ std::string DebugCmdVisitTowner(const string_view parameter)
 
 		CastSpell(
 		    MyPlayerId,
-		    SPL_TELEPORT,
+		    SpellID::Teleport,
 		    myPlayer.position.tile.x,
 		    myPlayer.position.tile.y,
 		    towner.position.x,
@@ -556,9 +556,9 @@ std::string DebugCmdMinStats(const string_view parameter)
 std::string DebugCmdSetSpellsLevel(const string_view parameter)
 {
 	int level = std::max(0, atoi(parameter.data()));
-	for (int i = SPL_FIREBOLT; i < MAX_SPELLS; i++) {
-		if (GetSpellBookLevel((spell_id)i) != -1) {
-			SetSpellLevelCheat((spell_id)i, level);
+	for (int i = static_cast<int8_t>(SpellID::Firebolt); i < MAX_SPELLS; i++) {
+		if (GetSpellBookLevel(static_cast<SpellID>(i)) != -1) {
+			SetSpellLevelCheat(static_cast<SpellID>(i), level);
 		}
 	}
 	if (level == 0)
