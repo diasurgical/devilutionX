@@ -202,7 +202,7 @@ std::vector<SpellListItem> GetSpellListItems()
 
 	for (int i = static_cast<uint8_t>(SpellType::First); i < static_cast<uint8_t>(SpellType::Last); i++) {
 		Player &myPlayer = *MyPlayer;
-		switch ((SpellType)i) {
+		switch (static_cast<SpellType>(i) i)) {
 		case SpellType::Skill:
 			mask = myPlayer._pAblSpells;
 			break;
@@ -225,7 +225,7 @@ std::vector<SpellListItem> GetSpellListItems()
 			int lx = x;
 			int ly = y - SPLICONLENGTH;
 			bool isSelected = (MousePosition.x >= lx && MousePosition.x < lx + SPLICONLENGTH && MousePosition.y >= ly && MousePosition.y < ly + SPLICONLENGTH);
-			spellListItems.emplace_back(SpellListItem { { x, y }, (SpellType)i, (spell_id)j, isSelected });
+			spellListItems.emplace_back(SpellListItem { { x, y }, static_cast<SpellType>(i), (spell_id)j, isSelected });
 			x -= SPLICONLENGTH;
 			if (x == mainPanelPosition.x + 12 - SPLICONLENGTH) {
 				x = mainPanelPosition.x + 12 + SPLICONLENGTH * SPLROWICONLS;
