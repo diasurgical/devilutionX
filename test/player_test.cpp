@@ -139,7 +139,7 @@ static void AssertPlayer(Player &player)
 	ASSERT_EQ(player._pmode, 0);
 	ASSERT_EQ(Count8(player.walkpath, MaxPathLength), 0);
 	ASSERT_EQ(player.queuedSpell.spellId, 0);
-	ASSERT_EQ(player.queuedSpell.spellType, 0);
+	ASSERT_EQ(player.queuedSpell.spellType, SpellType::Skill);
 	ASSERT_EQ(player.queuedSpell.spellFrom, 0);
 	ASSERT_EQ(player._pTSpell, 0);
 	ASSERT_EQ(player._pRSpell, 28);
