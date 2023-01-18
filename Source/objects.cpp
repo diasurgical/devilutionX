@@ -1324,7 +1324,7 @@ void AddFlameTrap(Object &flameTrap)
 void AddFlameLever(Object &flameLever)
 {
 	flameLever._oVar1 = trapid;
-	flameLever._oVar2 = MIS_FLAMEC;
+	flameLever._oVar2 = static_cast<int8_t>(MissileID::InfernoControl);
 }
 
 void AddTrap(Object &trap)
@@ -1337,11 +1337,11 @@ void AddTrap(Object &trap)
 
 	int missileType = GenerateRnd(effectiveLevel / 3 + 1);
 	if (missileType == 0)
-		trap._oVar3 = MIS_ARROW;
+		trap._oVar3 = static_cast<int8_t>(MissileID::Arrow);
 	if (missileType == 1)
-		trap._oVar3 = MIS_FIREBOLT;
+		trap._oVar3 = static_cast<int8_t>(MissileID::Firebolt);
 	if (missileType == 2)
-		trap._oVar3 = MIS_LIGHTCTRL;
+		trap._oVar3 = static_cast<int8_t>(MissileID::LightningControl);
 	trap._oVar4 = 0;
 }
 
@@ -1592,7 +1592,7 @@ void UpdateCircle(Object &circle)
 			if (Quests[Q_BETRAYER]._qactive == QUEST_ACTIVE)
 				Quests[Q_BETRAYER]._qvar1 = 4;
 		}
-		AddMissile(myPlayer.position.tile, { 35, 46 }, Direction::South, MIS_RNDTELEPORT, TARGET_BOTH, MyPlayerId, 0, 0);
+		AddMissile(myPlayer.position.tile, { 35, 46 }, Direction::South, MissileID::Phasing, TARGET_BOTH, MyPlayerId, 0, 0);
 		LastMouseButtonAction = MouseActionType::None;
 		sgbMouseDown = CLICK_NONE;
 		ClrPlrPath(myPlayer);
@@ -1693,10 +1693,10 @@ void UpdateFlameTrap(Object &trap)
 		int x = trap.position.x;
 		int y = trap.position.y;
 		if (dMonster[x][y] > 0)
-			MonsterTrapHit(dMonster[x][y] - 1, mindam / 2, maxdam / 2, 0, MIS_FIREWALLC, false);
+			MonsterTrapHit(dMonster[x][y] - 1, mindam / 2, maxdam / 2, 0, MissileID::FireWallControl, false);
 		if (dPlayer[x][y] > 0) {
 			bool unused;
-			PlayerMHit(dPlayer[x][y] - 1, nullptr, 0, mindam, maxdam, MIS_FIREWALLC, false, 0, &unused);
+			PlayerMHit(dPlayer[x][y] - 1, nullptr, 0, mindam, maxdam, MissileID::FireWallControl, false, 0, &unused);
 		}
 
 		if (trap._oAnimFrame == trap._oAnimLen)
@@ -1931,7 +1931,7 @@ void OperateBook(Player &player, Object &book)
 			if (doAddMissile) {
 				questObject._oVar6 = 4;
 				ObjectAtPosition({ 35, 36 })._oVar5++;
-				AddMissile(player.position.tile, target, Direction::South, MIS_RNDTELEPORT, TARGET_BOTH, player.getId(), 0, 0);
+				AddMissile(player.position.tile, target, Direction::South, MissileID::Phasing, TARGET_BOTH, player.getId(), 0, 0);
 				missileAdded = true;
 			}
 		}
@@ -1960,7 +1960,7 @@ void OperateBook(Player &player, Object &book)
 		    player.position.tile,
 		    book.position + Displacement { -2, -4 },
 		    player._pdir,
-		    MIS_GUARDIAN,
+		    MissileID::Guardian,
 		    TARGET_MONSTERS,
 		    player.getId(),
 		    0,
@@ -2088,28 +2088,28 @@ void OperateChest(const Player &player, Object &chest, bool sendLootMsg)
 	}
 	if (chest.IsTrappedChest()) {
 		Direction mdir = GetDirection(chest.position, player.position.tile);
-		missile_id mtype;
+		MissileID mtype;
 		switch (chest._oVar4) {
 		case 0:
-			mtype = MIS_ARROW;
+			mtype = MissileID::Arrow;
 			break;
 		case 1:
-			mtype = MIS_FARROW;
+			mtype = MissileID::FireArrow;
 			break;
 		case 2:
-			mtype = MIS_NOVA;
+			mtype = MissileID::Nova;
 			break;
 		case 3:
-			mtype = MIS_FIRERING;
+			mtype = MissileID::RingOfFire;
 			break;
 		case 4:
-			mtype = MIS_STEALPOTS;
+			mtype = MissileID::StealPotions;
 			break;
 		case 5:
-			mtype = MIS_MANATRAP;
+			mtype = MissileID::StealMana;
 			break;
 		default:
-			mtype = MIS_ARROW;
+			mtype = MissileID::Arrow;
 		}
 		AddMissile(chest.position, player.position.tile, mdir, mtype, TARGET_PLAYERS, -1, 0, 0);
 		chest._oTrapFlag = false;
@@ -2436,7 +2436,7 @@ void OperateShrineMagical(const Player &player)
 	    player.position.tile,
 	    player.position.tile,
 	    player._pdir,
-	    MIS_MANASHIELD,
+	    MissileID::ManaShield,
 	    TARGET_MONSTERS,
 	    player.getId(),
 	    0,
@@ -2567,7 +2567,7 @@ void OperateShrineCryptic(Player &player)
 	    player.position.tile,
 	    player.position.tile,
 	    player._pdir,
-	    MIS_NOVA,
+	    MissileID::Nova,
 	    TARGET_MONSTERS,
 	    player.getId(),
 	    0,
@@ -2661,7 +2661,7 @@ void OperateShrineDivine(Player &player, Point spawnPosition)
 
 void OperateShrineHoly(const Player &player)
 {
-	AddMissile(player.position.tile, { 0, 0 }, Direction::South, MIS_RNDTELEPORT, TARGET_MONSTERS, player.getId(), 0, 2 * leveltype);
+	AddMissile(player.position.tile, { 0, 0 }, Direction::South, MissileID::Phasing, TARGET_MONSTERS, player.getId(), 0, 2 * leveltype);
 
 	if (&player != MyPlayer)
 		return;
@@ -2845,7 +2845,7 @@ void OperateShrineOily(Player &player, Point spawnPosition)
 	    spawnPosition,
 	    player.position.tile,
 	    player._pdir,
-	    MIS_FIREWALL,
+	    MissileID::FireWall,
 	    TARGET_PLAYERS,
 	    -1,
 	    2 * currlevel + 2,
@@ -2904,7 +2904,7 @@ void OperateShrineSparkling(Player &player, Point spawnPosition)
 	    spawnPosition,
 	    player.position.tile,
 	    player._pdir,
-	    MIS_FLASH,
+	    MissileID::FlashBottom,
 	    TARGET_PLAYERS,
 	    -1,
 	    3 * currlevel + 2,
@@ -2929,7 +2929,7 @@ void OperateShrineTown(const Player &player, Point spawnPosition)
 	    spawnPosition,
 	    player.position.tile,
 	    player._pdir,
-	    MIS_TOWN,
+	    MissileID::TownPortal,
 	    TARGET_MONSTERS,
 	    player.getId(),
 	    0,
@@ -3286,7 +3286,7 @@ bool OperateFountains(Player &player, Object &fountain)
 		    player.position.tile,
 		    player.position.tile,
 		    player._pdir,
-		    MIS_INFRA,
+		    MissileID::Infravision,
 		    TARGET_MONSTERS,
 		    player.getId(),
 		    0,
@@ -3499,11 +3499,11 @@ void BreakBarrel(const Player &player, Object &barrel, bool forcebreak, bool sen
 		for (int yp = barrel.position.y - 1; yp <= barrel.position.y + 1; yp++) {
 			for (int xp = barrel.position.x - 1; xp <= barrel.position.x + 1; xp++) {
 				if (dMonster[xp][yp] > 0) {
-					MonsterTrapHit(dMonster[xp][yp] - 1, 1, 4, 0, MIS_FIREBOLT, false);
+					MonsterTrapHit(dMonster[xp][yp] - 1, 1, 4, 0, MissileID::Firebolt, false);
 				}
 				if (dPlayer[xp][yp] > 0) {
 					bool unused;
-					PlayerMHit(dPlayer[xp][yp] - 1, nullptr, 0, 8, 16, MIS_FIREBOLT, false, 0, &unused);
+					PlayerMHit(dPlayer[xp][yp] - 1, nullptr, 0, 8, 16, MissileID::Firebolt, false, 0, &unused);
 				}
 				// don't really need to exclude large objects as explosive barrels are single tile objects, but using considerLargeObjects == false as this matches the old logic.
 				Object *adjacentObject = FindObjectAtPosition({ xp, yp }, false);
@@ -4195,7 +4195,7 @@ void OperateTrap(Object &trap)
 	}
 
 	Direction dir = GetDirection(trap.position, target);
-	AddMissile(trap.position, target, dir, static_cast<missile_id>(trap._oVar3), TARGET_PLAYERS, -1, 0, 0);
+	AddMissile(trap.position, target, dir, static_cast<MissileID>(trap._oVar3), TARGET_PLAYERS, -1, 0, 0);
 	PlaySfxLoc(IS_TRAP, triggerPosition);
 }
 

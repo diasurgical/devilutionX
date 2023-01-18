@@ -117,7 +117,7 @@ struct AddMissileParameter;
 struct MissileData {
 	void (*mAddProc)(Missile &, AddMissileParameter &);
 	void (*mProc)(Missile &);
-	uint8_t mName;
+	MissileID mName;
 	bool mDraw;
 	uint8_t mType;
 	DamageType damageType;

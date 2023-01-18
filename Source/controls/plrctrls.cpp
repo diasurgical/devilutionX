@@ -433,7 +433,7 @@ void FindTrigger()
 		return; // Prefer showing items/objects over triggers (use of cursm* conflicts)
 
 	for (auto &missile : Missiles) {
-		if (missile._mitype == MIS_TOWN || missile._mitype == MIS_RPORTAL) {
+		if (missile._mitype == MissileID::TownPortal || missile._mitype == MissileID::RedPortal) {
 			const int newDistance = GetDistance(missile.position.tile, 2);
 			if (newDistance == 0)
 				continue;

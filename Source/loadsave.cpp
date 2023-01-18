@@ -690,7 +690,7 @@ void SyncPackSize(Monster &leader)
 void LoadMissile(LoadHelper *file)
 {
 	Missile missile = {};
-	missile._mitype = static_cast<missile_id>(file->NextLE<int32_t>());
+	missile._mitype = static_cast<MissileID>(file->NextLE<int32_t>());
 	missile.position.tile.x = file->NextLE<int32_t>();
 	missile.position.tile.y = file->NextLE<int32_t>();
 	missile.position.offset.deltaX = file->NextLE<int32_t>();
@@ -1426,7 +1426,7 @@ void SaveMonster(SaveHelper *file, Monster &monster)
 
 void SaveMissile(SaveHelper *file, const Missile &missile)
 {
-	file->WriteLE<int32_t>(missile._mitype);
+	file->WriteLE<int32_t>(static_cast<int8_t>(missile._mitype));
 	file->WriteLE<int32_t>(missile.position.tile.x);
 	file->WriteLE<int32_t>(missile.position.tile.y);
 	file->WriteLE<int32_t>(missile.position.offset.deltaX);
@@ -2203,7 +2203,7 @@ void LoadGame(bool firstflag)
 	ProcessVisionList();
 	// convert stray manashield missiles into pManaShield flag
 	for (auto &missile : Missiles) {
-		if (missile._mitype == MIS_MANASHIELD && !missile._miDelFlag) {
+		if (missile._mitype == MissileID::ManaShield && !missile._miDelFlag) {
 			Players[missile._misource].pManaShield = true;
 			missile._miDelFlag = true;
 		}
