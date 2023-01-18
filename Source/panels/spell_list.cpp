@@ -202,7 +202,7 @@ std::vector<SpellListItem> GetSpellListItems()
 
 	for (int i = static_cast<uint8_t>(SpellType::First); i < static_cast<uint8_t>(SpellType::Last); i++) {
 		Player &myPlayer = *MyPlayer;
-		switch (static_cast<SpellType>(i) i)) {
+		switch (static_cast<SpellType>(i)) {
 		case SpellType::Skill:
 			mask = myPlayer._pAblSpells;
 			break;
