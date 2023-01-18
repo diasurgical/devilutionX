@@ -124,7 +124,7 @@ void UpdateMissileRendererData(Missile &m)
 	m.position.tileForRendering = m.position.tile;
 	m.position.offsetForRendering = m.position.offset;
 
-	const MissileMovementDistribution missileMovement = MissilesData[m._mitype].MovementDistribution;
+	const MissileMovementDistribution missileMovement = MissilesData[static_cast<int8_t>(m._mitype)].MovementDistribution;
 	// don't calculate missile position if they don't move
 	if (missileMovement == MissileMovementDistribution::Disabled || m.position.velocity == Displacement {})
 		return;
