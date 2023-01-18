@@ -1451,7 +1451,7 @@ size_t OnSpellWall(const TCmd *pCmd, Player &player)
 	if (wParam1 > SPL_LAST)
 		return sizeof(message);
 	const uint16_t wParam2 = SDL_SwapLE16(message.wParam2);
-	if (wParam2 > static_cast<uint8_t>(SpellType::Invalid))
+	if (wParam2 > static_cast<uint8_t>(SpellType::Last))
 		return sizeof(message);
 
 	auto spell = static_cast<spell_id>(wParam1);
