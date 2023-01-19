@@ -66,7 +66,11 @@ std::unique_ptr<Aulib::Decoder> CreateDecoder(bool isMp3)
 
 std::unique_ptr<Aulib::Stream> CreateStream(SDL_RWops *handle, bool isMp3)
 {
-	return std::make_unique<Aulib::Stream>(handle, CreateDecoder(isMp3), CreateAulibResampler(), /*closeRw=*/true);
+	auto decoder = CreateDecoder(isMp3);
+	if (!decoder->open(handle)) // open for `getRate`
+		return nullptr;
+	auto resampler = CreateAulibResampler(decoder->getRate());
+	return std::make_unique<Aulib::Stream>(handle, std::move(decoder), std::move(resampler), /*closeRw=*/true);
 }
 
 /**
