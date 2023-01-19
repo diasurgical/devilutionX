@@ -25,6 +25,7 @@ set(DEVILUTIONX_PALETTE_TRANSPARENCY_BLACK_16_LUT OFF)
 
 # Must stream all the audio due to RAM constraints.
 set(STREAM_ALL_AUDIO ON)
+set(STREAM_ALL_AUDIO_MIN_FILE_SIZE 4096)
 
 # Must use a smaller audio buffer due to RAM constraints.
 set(DEFAULT_AUDIO_BUFFER_SIZE 768)

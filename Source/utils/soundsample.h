@@ -33,7 +33,7 @@ public:
 		stream_->setFinishCallback(std::forward<Aulib::Stream::Callback>(callback));
 	}
 
-#ifndef STREAM_ALL_AUDIO
+#if !defined(STREAM_ALL_AUDIO) || STREAM_ALL_AUDIO_MIN_FILE_SIZE > 0
 	/**
 	 * @brief Sets the sample's WAV, FLAC, or Ogg/Vorbis data.
 	 * @param fileData Buffer containing the data
@@ -44,7 +44,7 @@ public:
 	int SetChunk(ArraySharedPtr<std::uint8_t> fileData, std::size_t dwBytes, bool isMp3);
 #endif
 
-#ifndef STREAM_ALL_AUDIO
+#if !defined(STREAM_ALL_AUDIO) || STREAM_ALL_AUDIO_MIN_FILE_SIZE > 0
 	[[nodiscard]] bool IsStreaming() const
 	{
 		return file_data_ == nullptr;
@@ -53,7 +53,7 @@ public:
 
 	int DuplicateFrom(const SoundSample &other)
 	{
-#ifdef STREAM_ALL_AUDIO
+#if defined(STREAM_ALL_AUDIO) && STREAM_ALL_AUDIO_MIN_FILE_SIZE == 0
 		return SetChunkStream(other.file_path_, other.isMp3_);
 #else
 		if (other.IsStreaming())
@@ -104,7 +104,7 @@ public:
 	int GetLength() const;
 
 private:
-#ifndef STREAM_ALL_AUDIO
+#if !defined(STREAM_ALL_AUDIO) || STREAM_ALL_AUDIO_MIN_FILE_SIZE > 0
 	// Non-streaming audio fields:
 	ArraySharedPtr<std::uint8_t> file_data_;
 	std::size_t file_data_size_;
