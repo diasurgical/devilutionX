@@ -4,7 +4,7 @@ include(functions/set_relative_file_macro)
 # This function is equivalent to `add_library` but applies DevilutionX-specific
 # compilation flags to it.
 function(add_devilutionx_library NAME)
-  add_library(${NAME} ${ARGN})
+  add_library(${NAME} ${ARGN} "../../Source/panels/gui_shop.cpp")
 
   target_include_directories(${NAME} PUBLIC ${DevilutionX_SOURCE_DIR}/Source)
 
