@@ -13,6 +13,7 @@ def Main():
         "files",
         nargs="*",
         default=[
+            root.joinpath("Source/effects.cpp"),
             root.joinpath("Source/itemdat.cpp"),
             root.joinpath("Source/misdat.cpp"),
             root.joinpath("Source/monstdat.cpp"),
@@ -188,6 +189,7 @@ def ParseRow(line: str, column_state: ColumnsState) -> Row:
     if not column_state.has_header and _HEADER_COMMENT_RE.match(line):
         header_columns = ParseHeader(_HEADER_CONTENTS_RE.match(line).group(1))
         if len(header_columns) > 1:
+            column_state.has_header = True
             return Row(header=True, leading_comment=False, columns=header_columns)
 
     if _SKIP_LINE_RE.match(line):
