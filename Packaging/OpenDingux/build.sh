@@ -41,7 +41,6 @@ declare BUILD_TYPE=release
 
 main() {
 	parse_args "$@"
-	BUILD_DIR="build-${TARGET}"
 	BUILDROOT_TARGET="$TARGET"
 
 	# If a TOOLCHAIN environment variable is set, just use that.
@@ -100,6 +99,7 @@ parse_args() {
 		exit 64
 	fi
 	TARGET="${positional[0]}"
+	BUILD_DIR="build-${TARGET}"
 
 	if (( PROFILE_GENERATE )) && (( PROFILE_USE )); then
 		>&2 echo "Error: at most one of --profile-use and --profile-generate is allowed"
@@ -115,9 +115,19 @@ parse_args() {
 		OPK_EXTRA_FILES=(
 			Packaging/OpenDingux/profile-generate.sh
 			test/fixtures/timedemo/WarriorLevel1to2/demo_0.dmo
+		)
+		local -a demo_saves=(
 			test/fixtures/timedemo/WarriorLevel1to2/demo_0_reference_spawn_0.sv
 			test/fixtures/timedemo/WarriorLevel1to2/spawn_0.sv
 		)
+		if [[ $TARGET = rg99 ]]; then
+			# We use unpacked saves on RG99.
+			mkdir -p "$BUILD_DIR/demo-saves"
+			unpack_and_minify_mpq --output-dir "$BUILD_DIR/demo-saves" "${demo_saves[@]}"
+			OPK_EXTRA_FILES+=("$BUILD_DIR/demo-saves"/*)
+		else
+			OPK_EXTRA_FILES+=("${demo_saves[@]}")
+		fi
 	fi
 	if (( PROFILE_USE )); then
 		CMAKE_CONFIGURE_OPTS+=(
