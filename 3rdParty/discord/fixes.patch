@@ -1,0 +1,482 @@
+From 767aff84177e8805933ac4f980d9fc36a8b02af6 Mon Sep 17 00:00:00 2001
+From: Gleb Mazovetskiy <glex.spb@gmail.com>
+Date: Sat, 21 Jan 2023 13:09:38 +0000
+Subject: [PATCH] Various fixes
+
+1. Replaces `#include <Windows.h>` with `#include <windows.h>`
+   for compatibility with case-sensitive file systems (e.g. MinGW
+   cross-compilation on a Linux host).
+
+2. Adds missing `#include <cstdint>` to `cpp/types.h`.
+
+3. Fixes calling convention for callback lambdas.
+
+Signed-off-by: Gleb Mazovetskiy <glex.spb@gmail.com>
+---
+ c/discord_game_sdk.h         |  2 +-
+ cpp/achievement_manager.cpp  |  4 ++--
+ cpp/activity_manager.cpp     | 10 +++++-----
+ cpp/application_manager.cpp  |  6 +++---
+ cpp/core.cpp                 |  2 +-
+ cpp/ffi.h                    |  2 +-
+ cpp/image_manager.cpp        |  2 +-
+ cpp/lobby_manager.cpp        | 22 +++++++++++-----------
+ cpp/overlay_manager.cpp      | 12 ++++++------
+ cpp/relationship_manager.cpp |  2 +-
+ cpp/storage_manager.cpp      |  6 +++---
+ cpp/store_manager.cpp        |  6 +++---
+ cpp/types.h                  |  4 +++-
+ cpp/user_manager.cpp         |  2 +-
+ cpp/voice_manager.cpp        |  2 +-
+ examples/c/main.c            |  2 +-
+ 16 files changed, 44 insertions(+), 42 deletions(-)
+
+diff --git a/c/discord_game_sdk.h b/c/discord_game_sdk.h
+index 4618756..f4c209a 100644
+--- a/c/discord_game_sdk.h
++++ b/c/discord_game_sdk.h
+@@ -2,7 +2,7 @@
+ #define _DISCORD_GAME_SDK_H_
+ 
+ #ifdef _WIN32
+-#include <Windows.h>
++#include <windows.h>
+ #include <dxgi.h>
+ #endif
+ 
+diff --git a/cpp/achievement_manager.cpp b/cpp/achievement_manager.cpp
+index 43a6d4c..9e92ad6 100644
+--- a/cpp/achievement_manager.cpp
++++ b/cpp/achievement_manager.cpp
+@@ -34,7 +34,7 @@ void AchievementManager::SetUserAchievement(Snowflake achievementId,
+                                             std::uint8_t percentComplete,
+                                             std::function<void(Result)> callback)
+ {
+-    static auto wrapper = [](void* callbackData, EDiscordResult result) -> void {
++    static auto wrapper = [] DISCORD_CALLBACK (void* callbackData, EDiscordResult result) -> void {
+         std::unique_ptr<std::function<void(Result)>> cb(
+           reinterpret_cast<std::function<void(Result)>*>(callbackData));
+         if (!cb || !(*cb)) {
+@@ -50,7 +50,7 @@ void AchievementManager::SetUserAchievement(Snowflake achievementId,
+ 
+ void AchievementManager::FetchUserAchievements(std::function<void(Result)> callback)
+ {
+-    static auto wrapper = [](void* callbackData, EDiscordResult result) -> void {
++    static auto wrapper = [] DISCORD_CALLBACK (void* callbackData, EDiscordResult result) -> void {
+         std::unique_ptr<std::function<void(Result)>> cb(
+           reinterpret_cast<std::function<void(Result)>*>(callbackData));
+         if (!cb || !(*cb)) {
+diff --git a/cpp/activity_manager.cpp b/cpp/activity_manager.cpp
+index 3c20074..074f784 100644
+--- a/cpp/activity_manager.cpp
++++ b/cpp/activity_manager.cpp
+@@ -84,7 +84,7 @@ Result ActivityManager::RegisterSteam(std::uint32_t steamId)
+ 
+ void ActivityManager::UpdateActivity(Activity const& activity, std::function<void(Result)> callback)
+ {
+-    static auto wrapper = [](void* callbackData, EDiscordResult result) -> void {
++    static auto wrapper = [] DISCORD_CALLBACK (void* callbackData, EDiscordResult result) -> void {
+         std::unique_ptr<std::function<void(Result)>> cb(
+           reinterpret_cast<std::function<void(Result)>*>(callbackData));
+         if (!cb || !(*cb)) {
+@@ -102,7 +102,7 @@ void ActivityManager::UpdateActivity(Activity const& activity, std::function<voi
+ 
+ void ActivityManager::ClearActivity(std::function<void(Result)> callback)
+ {
+-    static auto wrapper = [](void* callbackData, EDiscordResult result) -> void {
++    static auto wrapper = [] DISCORD_CALLBACK (void* callbackData, EDiscordResult result) -> void {
+         std::unique_ptr<std::function<void(Result)>> cb(
+           reinterpret_cast<std::function<void(Result)>*>(callbackData));
+         if (!cb || !(*cb)) {
+@@ -119,7 +119,7 @@ void ActivityManager::SendRequestReply(UserId userId,
+                                        ActivityJoinRequestReply reply,
+                                        std::function<void(Result)> callback)
+ {
+-    static auto wrapper = [](void* callbackData, EDiscordResult result) -> void {
++    static auto wrapper = [] DISCORD_CALLBACK (void* callbackData, EDiscordResult result) -> void {
+         std::unique_ptr<std::function<void(Result)>> cb(
+           reinterpret_cast<std::function<void(Result)>*>(callbackData));
+         if (!cb || !(*cb)) {
+@@ -141,7 +141,7 @@ void ActivityManager::SendInvite(UserId userId,
+                                  char const* content,
+                                  std::function<void(Result)> callback)
+ {
+-    static auto wrapper = [](void* callbackData, EDiscordResult result) -> void {
++    static auto wrapper = [] DISCORD_CALLBACK (void* callbackData, EDiscordResult result) -> void {
+         std::unique_ptr<std::function<void(Result)>> cb(
+           reinterpret_cast<std::function<void(Result)>*>(callbackData));
+         if (!cb || !(*cb)) {
+@@ -161,7 +161,7 @@ void ActivityManager::SendInvite(UserId userId,
+ 
+ void ActivityManager::AcceptInvite(UserId userId, std::function<void(Result)> callback)
+ {
+-    static auto wrapper = [](void* callbackData, EDiscordResult result) -> void {
++    static auto wrapper = [] DISCORD_CALLBACK (void* callbackData, EDiscordResult result) -> void {
+         std::unique_ptr<std::function<void(Result)>> cb(
+           reinterpret_cast<std::function<void(Result)>*>(callbackData));
+         if (!cb || !(*cb)) {
+diff --git a/cpp/application_manager.cpp b/cpp/application_manager.cpp
+index 0e05f3f..98dac16 100644
+--- a/cpp/application_manager.cpp
++++ b/cpp/application_manager.cpp
+@@ -13,7 +13,7 @@ namespace discord {
+ 
+ void ApplicationManager::ValidateOrExit(std::function<void(Result)> callback)
+ {
+-    static auto wrapper = [](void* callbackData, EDiscordResult result) -> void {
++    static auto wrapper = [] DISCORD_CALLBACK (void* callbackData, EDiscordResult result) -> void {
+         std::unique_ptr<std::function<void(Result)>> cb(
+           reinterpret_cast<std::function<void(Result)>*>(callbackData));
+         if (!cb || !(*cb)) {
+@@ -47,7 +47,7 @@ void ApplicationManager::GetCurrentBranch(char branch[4096])
+ void ApplicationManager::GetOAuth2Token(std::function<void(Result, OAuth2Token const&)> callback)
+ {
+     static auto wrapper =
+-      [](void* callbackData, EDiscordResult result, DiscordOAuth2Token* oauth2Token) -> void {
++      [] DISCORD_CALLBACK (void* callbackData, EDiscordResult result, DiscordOAuth2Token* oauth2Token) -> void {
+         std::unique_ptr<std::function<void(Result, OAuth2Token const&)>> cb(
+           reinterpret_cast<std::function<void(Result, OAuth2Token const&)>*>(callbackData));
+         if (!cb || !(*cb)) {
+@@ -62,7 +62,7 @@ void ApplicationManager::GetOAuth2Token(std::function<void(Result, OAuth2Token c
+ 
+ void ApplicationManager::GetTicket(std::function<void(Result, char const*)> callback)
+ {
+-    static auto wrapper = [](void* callbackData, EDiscordResult result, char const* data) -> void {
++    static auto wrapper = [] DISCORD_CALLBACK (void* callbackData, EDiscordResult result, char const* data) -> void {
+         std::unique_ptr<std::function<void(Result, char const*)>> cb(
+           reinterpret_cast<std::function<void(Result, char const*)>*>(callbackData));
+         if (!cb || !(*cb)) {
+diff --git a/cpp/core.cpp b/cpp/core.cpp
+index 110c9ef..56b2801 100644
+--- a/cpp/core.cpp
++++ b/cpp/core.cpp
+@@ -59,7 +59,7 @@ void Core::SetLogHook(LogLevel minLevel, std::function<void(LogLevel, char const
+     setLogHook_.DisconnectAll();
+     setLogHook_.Connect(std::move(hook));
+     static auto wrapper =
+-      [](void* callbackData, EDiscordLogLevel level, char const* message) -> void {
++      [] DISCORD_CALLBACK (void* callbackData, EDiscordLogLevel level, char const* message) -> void {
+         auto cb(reinterpret_cast<decltype(setLogHook_)*>(callbackData));
+         if (!cb) {
+             return;
+diff --git a/cpp/ffi.h b/cpp/ffi.h
+index 4a21057..3d2dd9d 100644
+--- a/cpp/ffi.h
++++ b/cpp/ffi.h
+@@ -2,7 +2,7 @@
+ #define _DISCORD_GAME_SDK_H_
+ 
+ #ifdef _WIN32
+-#include <Windows.h>
++#include <windows.h>
+ #include <dxgi.h>
+ #endif
+ 
+diff --git a/cpp/image_manager.cpp b/cpp/image_manager.cpp
+index 03b1db4..c90f337 100644
+--- a/cpp/image_manager.cpp
++++ b/cpp/image_manager.cpp
+@@ -16,7 +16,7 @@ void ImageManager::Fetch(ImageHandle handle,
+                          std::function<void(Result, ImageHandle)> callback)
+ {
+     static auto wrapper =
+-      [](void* callbackData, EDiscordResult result, DiscordImageHandle handleResult) -> void {
++      [] DISCORD_CALLBACK (void* callbackData, EDiscordResult result, DiscordImageHandle handleResult) -> void {
+         std::unique_ptr<std::function<void(Result, ImageHandle)>> cb(
+           reinterpret_cast<std::function<void(Result, ImageHandle)>*>(callbackData));
+         if (!cb || !(*cb)) {
+diff --git a/cpp/lobby_manager.cpp b/cpp/lobby_manager.cpp
+index 3a95b1a..4000032 100644
+--- a/cpp/lobby_manager.cpp
++++ b/cpp/lobby_manager.cpp
+@@ -167,7 +167,7 @@ void LobbyManager::CreateLobby(LobbyTransaction const& transaction,
+                                std::function<void(Result, Lobby const&)> callback)
+ {
+     static auto wrapper =
+-      [](void* callbackData, EDiscordResult result, DiscordLobby* lobby) -> void {
++      [] DISCORD_CALLBACK (void* callbackData, EDiscordResult result, DiscordLobby* lobby) -> void {
+         std::unique_ptr<std::function<void(Result, Lobby const&)>> cb(
+           reinterpret_cast<std::function<void(Result, Lobby const&)>*>(callbackData));
+         if (!cb || !(*cb)) {
+@@ -185,7 +185,7 @@ void LobbyManager::UpdateLobby(LobbyId lobbyId,
+                                LobbyTransaction const& transaction,
+                                std::function<void(Result)> callback)
+ {
+-    static auto wrapper = [](void* callbackData, EDiscordResult result) -> void {
++    static auto wrapper = [] DISCORD_CALLBACK (void* callbackData, EDiscordResult result) -> void {
+         std::unique_ptr<std::function<void(Result)>> cb(
+           reinterpret_cast<std::function<void(Result)>*>(callbackData));
+         if (!cb || !(*cb)) {
+@@ -204,7 +204,7 @@ void LobbyManager::UpdateLobby(LobbyId lobbyId,
+ 
+ void LobbyManager::DeleteLobby(LobbyId lobbyId, std::function<void(Result)> callback)
+ {
+-    static auto wrapper = [](void* callbackData, EDiscordResult result) -> void {
++    static auto wrapper = [] DISCORD_CALLBACK (void* callbackData, EDiscordResult result) -> void {
+         std::unique_ptr<std::function<void(Result)>> cb(
+           reinterpret_cast<std::function<void(Result)>*>(callbackData));
+         if (!cb || !(*cb)) {
+@@ -222,7 +222,7 @@ void LobbyManager::ConnectLobby(LobbyId lobbyId,
+                                 std::function<void(Result, Lobby const&)> callback)
+ {
+     static auto wrapper =
+-      [](void* callbackData, EDiscordResult result, DiscordLobby* lobby) -> void {
++      [] DISCORD_CALLBACK (void* callbackData, EDiscordResult result, DiscordLobby* lobby) -> void {
+         std::unique_ptr<std::function<void(Result, Lobby const&)>> cb(
+           reinterpret_cast<std::function<void(Result, Lobby const&)>*>(callbackData));
+         if (!cb || !(*cb)) {
+@@ -240,7 +240,7 @@ void LobbyManager::ConnectLobbyWithActivitySecret(
+   std::function<void(Result, Lobby const&)> callback)
+ {
+     static auto wrapper =
+-      [](void* callbackData, EDiscordResult result, DiscordLobby* lobby) -> void {
++      [] DISCORD_CALLBACK (void* callbackData, EDiscordResult result, DiscordLobby* lobby) -> void {
+         std::unique_ptr<std::function<void(Result, Lobby const&)>> cb(
+           reinterpret_cast<std::function<void(Result, Lobby const&)>*>(callbackData));
+         if (!cb || !(*cb)) {
+@@ -256,7 +256,7 @@ void LobbyManager::ConnectLobbyWithActivitySecret(
+ 
+ void LobbyManager::DisconnectLobby(LobbyId lobbyId, std::function<void(Result)> callback)
+ {
+-    static auto wrapper = [](void* callbackData, EDiscordResult result) -> void {
++    static auto wrapper = [] DISCORD_CALLBACK (void* callbackData, EDiscordResult result) -> void {
+         std::unique_ptr<std::function<void(Result)>> cb(
+           reinterpret_cast<std::function<void(Result)>*>(callbackData));
+         if (!cb || !(*cb)) {
+@@ -403,7 +403,7 @@ void LobbyManager::UpdateMember(LobbyId lobbyId,
+                                 LobbyMemberTransaction const& transaction,
+                                 std::function<void(Result)> callback)
+ {
+-    static auto wrapper = [](void* callbackData, EDiscordResult result) -> void {
++    static auto wrapper = [] DISCORD_CALLBACK (void* callbackData, EDiscordResult result) -> void {
+         std::unique_ptr<std::function<void(Result)>> cb(
+           reinterpret_cast<std::function<void(Result)>*>(callbackData));
+         if (!cb || !(*cb)) {
+@@ -426,7 +426,7 @@ void LobbyManager::SendLobbyMessage(LobbyId lobbyId,
+                                     std::uint32_t dataLength,
+                                     std::function<void(Result)> callback)
+ {
+-    static auto wrapper = [](void* callbackData, EDiscordResult result) -> void {
++    static auto wrapper = [] DISCORD_CALLBACK (void* callbackData, EDiscordResult result) -> void {
+         std::unique_ptr<std::function<void(Result)>> cb(
+           reinterpret_cast<std::function<void(Result)>*>(callbackData));
+         if (!cb || !(*cb)) {
+@@ -452,7 +452,7 @@ Result LobbyManager::GetSearchQuery(LobbySearchQuery* query)
+ 
+ void LobbyManager::Search(LobbySearchQuery const& query, std::function<void(Result)> callback)
+ {
+-    static auto wrapper = [](void* callbackData, EDiscordResult result) -> void {
++    static auto wrapper = [] DISCORD_CALLBACK (void* callbackData, EDiscordResult result) -> void {
+         std::unique_ptr<std::function<void(Result)>> cb(
+           reinterpret_cast<std::function<void(Result)>*>(callbackData));
+         if (!cb || !(*cb)) {
+@@ -487,7 +487,7 @@ Result LobbyManager::GetLobbyId(std::int32_t index, LobbyId* lobbyId)
+ 
+ void LobbyManager::ConnectVoice(LobbyId lobbyId, std::function<void(Result)> callback)
+ {
+-    static auto wrapper = [](void* callbackData, EDiscordResult result) -> void {
++    static auto wrapper = [] DISCORD_CALLBACK (void* callbackData, EDiscordResult result) -> void {
+         std::unique_ptr<std::function<void(Result)>> cb(
+           reinterpret_cast<std::function<void(Result)>*>(callbackData));
+         if (!cb || !(*cb)) {
+@@ -502,7 +502,7 @@ void LobbyManager::ConnectVoice(LobbyId lobbyId, std::function<void(Result)> cal
+ 
+ void LobbyManager::DisconnectVoice(LobbyId lobbyId, std::function<void(Result)> callback)
+ {
+-    static auto wrapper = [](void* callbackData, EDiscordResult result) -> void {
++    static auto wrapper = [] DISCORD_CALLBACK (void* callbackData, EDiscordResult result) -> void {
+         std::unique_ptr<std::function<void(Result)>> cb(
+           reinterpret_cast<std::function<void(Result)>*>(callbackData));
+         if (!cb || !(*cb)) {
+diff --git a/cpp/overlay_manager.cpp b/cpp/overlay_manager.cpp
+index f4b1fba..d1bffc0 100644
+--- a/cpp/overlay_manager.cpp
++++ b/cpp/overlay_manager.cpp
+@@ -49,7 +49,7 @@ void OverlayManager::IsLocked(bool* locked)
+ 
+ void OverlayManager::SetLocked(bool locked, std::function<void(Result)> callback)
+ {
+-    static auto wrapper = [](void* callbackData, EDiscordResult result) -> void {
++    static auto wrapper = [] DISCORD_CALLBACK (void* callbackData, EDiscordResult result) -> void {
+         std::unique_ptr<std::function<void(Result)>> cb(
+           reinterpret_cast<std::function<void(Result)>*>(callbackData));
+         if (!cb || !(*cb)) {
+@@ -65,7 +65,7 @@ void OverlayManager::SetLocked(bool locked, std::function<void(Result)> callback
+ void OverlayManager::OpenActivityInvite(ActivityActionType type,
+                                         std::function<void(Result)> callback)
+ {
+-    static auto wrapper = [](void* callbackData, EDiscordResult result) -> void {
++    static auto wrapper = [] DISCORD_CALLBACK (void* callbackData, EDiscordResult result) -> void {
+         std::unique_ptr<std::function<void(Result)>> cb(
+           reinterpret_cast<std::function<void(Result)>*>(callbackData));
+         if (!cb || !(*cb)) {
+@@ -81,7 +81,7 @@ void OverlayManager::OpenActivityInvite(ActivityActionType type,
+ 
+ void OverlayManager::OpenGuildInvite(char const* code, std::function<void(Result)> callback)
+ {
+-    static auto wrapper = [](void* callbackData, EDiscordResult result) -> void {
++    static auto wrapper = [] DISCORD_CALLBACK (void* callbackData, EDiscordResult result) -> void {
+         std::unique_ptr<std::function<void(Result)>> cb(
+           reinterpret_cast<std::function<void(Result)>*>(callbackData));
+         if (!cb || !(*cb)) {
+@@ -96,7 +96,7 @@ void OverlayManager::OpenGuildInvite(char const* code, std::function<void(Result
+ 
+ void OverlayManager::OpenVoiceSettings(std::function<void(Result)> callback)
+ {
+-    static auto wrapper = [](void* callbackData, EDiscordResult result) -> void {
++    static auto wrapper = [] DISCORD_CALLBACK (void* callbackData, EDiscordResult result) -> void {
+         std::unique_ptr<std::function<void(Result)>> cb(
+           reinterpret_cast<std::function<void(Result)>*>(callbackData));
+         if (!cb || !(*cb)) {
+@@ -182,7 +182,7 @@ void OverlayManager::SetImeCompositionRangeCallback(
+   std::function<void(std::int32_t, std::int32_t, Rect*, std::uint32_t)>
+     onImeCompositionRangeChanged)
+ {
+-    static auto wrapper = [](void* callbackData,
++    static auto wrapper = [] DISCORD_CALLBACK (void* callbackData,
+                              int32_t from,
+                              int32_t to,
+                              DiscordRect* bounds,
+@@ -205,7 +205,7 @@ void OverlayManager::SetImeSelectionBoundsCallback(
+   std::function<void(Rect, Rect, bool)> onImeSelectionBoundsChanged)
+ {
+     static auto wrapper =
+-      [](void* callbackData, DiscordRect anchor, DiscordRect focus, bool isAnchorFirst) -> void {
++      [] DISCORD_CALLBACK (void* callbackData, DiscordRect anchor, DiscordRect focus, bool isAnchorFirst) -> void {
+         std::unique_ptr<std::function<void(Rect, Rect, bool)>> cb(
+           reinterpret_cast<std::function<void(Rect, Rect, bool)>*>(callbackData));
+         if (!cb || !(*cb)) {
+diff --git a/cpp/relationship_manager.cpp b/cpp/relationship_manager.cpp
+index dce874e..a427996 100644
+--- a/cpp/relationship_manager.cpp
++++ b/cpp/relationship_manager.cpp
+@@ -44,7 +44,7 @@ IDiscordRelationshipEvents RelationshipManager::events_{
+ 
+ void RelationshipManager::Filter(std::function<bool(Relationship const&)> filter)
+ {
+-    static auto wrapper = [](void* callbackData, DiscordRelationship* relationship) -> bool {
++    static auto wrapper = [] DISCORD_CALLBACK (void* callbackData, DiscordRelationship* relationship) -> bool {
+         auto cb(reinterpret_cast<std::function<bool(Relationship const&)>*>(callbackData));
+         if (!cb || !(*cb)) {
+             return {};
+diff --git a/cpp/storage_manager.cpp b/cpp/storage_manager.cpp
+index fbf9ca7..f114665 100644
+--- a/cpp/storage_manager.cpp
++++ b/cpp/storage_manager.cpp
+@@ -32,7 +32,7 @@ void StorageManager::ReadAsync(char const* name,
+                                std::function<void(Result, std::uint8_t*, std::uint32_t)> callback)
+ {
+     static auto wrapper =
+-      [](void* callbackData, EDiscordResult result, uint8_t* data, uint32_t dataLength) -> void {
++      [] DISCORD_CALLBACK (void* callbackData, EDiscordResult result, uint8_t* data, uint32_t dataLength) -> void {
+         std::unique_ptr<std::function<void(Result, std::uint8_t*, std::uint32_t)>> cb(
+           reinterpret_cast<std::function<void(Result, std::uint8_t*, std::uint32_t)>*>(
+             callbackData));
+@@ -53,7 +53,7 @@ void StorageManager::ReadAsyncPartial(
+   std::function<void(Result, std::uint8_t*, std::uint32_t)> callback)
+ {
+     static auto wrapper =
+-      [](void* callbackData, EDiscordResult result, uint8_t* data, uint32_t dataLength) -> void {
++      [] DISCORD_CALLBACK (void* callbackData, EDiscordResult result, uint8_t* data, uint32_t dataLength) -> void {
+         std::unique_ptr<std::function<void(Result, std::uint8_t*, std::uint32_t)>> cb(
+           reinterpret_cast<std::function<void(Result, std::uint8_t*, std::uint32_t)>*>(
+             callbackData));
+@@ -80,7 +80,7 @@ void StorageManager::WriteAsync(char const* name,
+                                 std::uint32_t dataLength,
+                                 std::function<void(Result)> callback)
+ {
+-    static auto wrapper = [](void* callbackData, EDiscordResult result) -> void {
++    static auto wrapper = [] DISCORD_CALLBACK (void* callbackData, EDiscordResult result) -> void {
+         std::unique_ptr<std::function<void(Result)>> cb(
+           reinterpret_cast<std::function<void(Result)>*>(callbackData));
+         if (!cb || !(*cb)) {
+diff --git a/cpp/store_manager.cpp b/cpp/store_manager.cpp
+index 40c7e65..dd13cf9 100644
+--- a/cpp/store_manager.cpp
++++ b/cpp/store_manager.cpp
+@@ -45,7 +45,7 @@ IDiscordStoreEvents StoreManager::events_{
+ 
+ void StoreManager::FetchSkus(std::function<void(Result)> callback)
+ {
+-    static auto wrapper = [](void* callbackData, EDiscordResult result) -> void {
++    static auto wrapper = [] DISCORD_CALLBACK (void* callbackData, EDiscordResult result) -> void {
+         std::unique_ptr<std::function<void(Result)>> cb(
+           reinterpret_cast<std::function<void(Result)>*>(callbackData));
+         if (!cb || !(*cb)) {
+@@ -89,7 +89,7 @@ Result StoreManager::GetSkuAt(std::int32_t index, Sku* sku)
+ 
+ void StoreManager::FetchEntitlements(std::function<void(Result)> callback)
+ {
+-    static auto wrapper = [](void* callbackData, EDiscordResult result) -> void {
++    static auto wrapper = [] DISCORD_CALLBACK (void* callbackData, EDiscordResult result) -> void {
+         std::unique_ptr<std::function<void(Result)>> cb(
+           reinterpret_cast<std::function<void(Result)>*>(callbackData));
+         if (!cb || !(*cb)) {
+@@ -146,7 +146,7 @@ Result StoreManager::HasSkuEntitlement(Snowflake skuId, bool* hasEntitlement)
+ 
+ void StoreManager::StartPurchase(Snowflake skuId, std::function<void(Result)> callback)
+ {
+-    static auto wrapper = [](void* callbackData, EDiscordResult result) -> void {
++    static auto wrapper = [] DISCORD_CALLBACK (void* callbackData, EDiscordResult result) -> void {
+         std::unique_ptr<std::function<void(Result)>> cb(
+           reinterpret_cast<std::function<void(Result)>*>(callbackData));
+         if (!cb || !(*cb)) {
+diff --git a/cpp/types.h b/cpp/types.h
+index 76c4311..4e78f54 100644
+--- a/cpp/types.h
++++ b/cpp/types.h
+@@ -1,9 +1,11 @@
+ #pragma once
+ 
++#include <cstdint>
++
+ #include "ffi.h"
+ #include "event.h"
+ #ifdef _WIN32
+-#include <Windows.h>
++#include <windows.h>
+ #include <dxgi.h>
+ #endif
+ 
+diff --git a/cpp/user_manager.cpp b/cpp/user_manager.cpp
+index ddb6d5c..8617ec9 100644
+--- a/cpp/user_manager.cpp
++++ b/cpp/user_manager.cpp
+@@ -42,7 +42,7 @@ Result UserManager::GetCurrentUser(User* currentUser)
+ 
+ void UserManager::GetUser(UserId userId, std::function<void(Result, User const&)> callback)
+ {
+-    static auto wrapper = [](void* callbackData, EDiscordResult result, DiscordUser* user) -> void {
++    static auto wrapper = [] DISCORD_CALLBACK (void* callbackData, EDiscordResult result, DiscordUser* user) -> void {
+         std::unique_ptr<std::function<void(Result, User const&)>> cb(
+           reinterpret_cast<std::function<void(Result, User const&)>*>(callbackData));
+         if (!cb || !(*cb)) {
+diff --git a/cpp/voice_manager.cpp b/cpp/voice_manager.cpp
+index 014ceb3..69d4904 100644
+--- a/cpp/voice_manager.cpp
++++ b/cpp/voice_manager.cpp
+@@ -42,7 +42,7 @@ Result VoiceManager::GetInputMode(InputMode* inputMode)
+ 
+ void VoiceManager::SetInputMode(InputMode inputMode, std::function<void(Result)> callback)
+ {
+-    static auto wrapper = [](void* callbackData, EDiscordResult result) -> void {
++    static auto wrapper = [] DISCORD_CALLBACK (void* callbackData, EDiscordResult result) -> void {
+         std::unique_ptr<std::function<void(Result)>> cb(
+           reinterpret_cast<std::function<void(Result)>*>(callbackData));
+         if (!cb || !(*cb)) {
+diff --git a/examples/c/main.c b/examples/c/main.c
+index 197c26d..45d8811 100644
+--- a/examples/c/main.c
++++ b/examples/c/main.c
+@@ -3,7 +3,7 @@
+ #include <assert.h>
+ #include "discord_game_sdk.h"
+ #ifdef _WIN32
+-#include <Windows.h>
++#include <windows.h>
+ #else
+ #include <unistd.h>
+ #include <string.h>
+-- 
+2.37.2
+
