@@ -57,23 +57,27 @@ bool LoadAudioFile(const char *path, bool stream, bool errorDialog, SoundSample 
 	if (!ref.ok())
 		ErrDlg("Audio file not found", StrCat(path, "\n", SDL_GetError(), "\n"), __FILE__, __LINE__);
 
-#if defined(STREAM_ALL_AUDIO) && STREAM_ALL_AUDIO_MIN_FILE_SIZE > 0
-	const size_t size = ref.size();
-	stream = size >= STREAM_ALL_AUDIO_MIN_FILE_SIZE;
+#ifdef STREAM_ALL_AUDIO_MIN_FILE_SIZE
+#if STREAM_ALL_AUDIO_MIN_FILE_SIZE == 0
+	stream = true;
+#else
+	size_t size;
+	if (!stream) {
+		size = ref.size();
+		stream = size >= STREAM_ALL_AUDIO_MIN_FILE_SIZE;
+	}
+#endif
 #endif
 
-#if !defined(STREAM_ALL_AUDIO) || STREAM_ALL_AUDIO_MIN_FILE_SIZE > 0
 	if (stream) {
-#endif
 		if (result.SetChunkStream(path, isMp3, /*logErrors=*/true) != 0) {
 			if (errorDialog) {
 				ErrDlg("Failed to load audio file", StrCat(path, "\n", SDL_GetError(), "\n"), __FILE__, __LINE__);
 			}
 			return false;
 		}
-#if !defined(STREAM_ALL_AUDIO) || STREAM_ALL_AUDIO_MIN_FILE_SIZE > 0
 	} else {
-#ifndef STREAM_ALL_AUDIO
+#if !defined(STREAM_ALL_AUDIO_MIN_FILE_SIZE) || STREAM_ALL_AUDIO_MIN_FILE_SIZE == 0
 		const size_t size = ref.size();
 #endif
 		AssetHandle handle = OpenAsset(std::move(ref));
@@ -95,7 +99,6 @@ bool LoadAudioFile(const char *path, bool stream, bool errorDialog, SoundSample 
 			return false;
 		}
 	}
-#endif
 	return true;
 }
 

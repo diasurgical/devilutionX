@@ -23,8 +23,7 @@ set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-z,stack-size=32768")
 # 128 KiB
 set(DEVILUTIONX_PALETTE_TRANSPARENCY_BLACK_16_LUT OFF)
 
-# Must stream all the audio due to RAM constraints.
-set(STREAM_ALL_AUDIO ON)
+# Must stream most of the audio due to RAM constraints.
 set(STREAM_ALL_AUDIO_MIN_FILE_SIZE 4096)
 
 # Must use a smaller audio buffer due to RAM constraints.
