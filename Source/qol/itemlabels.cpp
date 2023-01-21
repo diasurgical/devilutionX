@@ -83,6 +83,11 @@ bool IsItemLabelHighlighted()
 	return isLabelHighlighted;
 }
 
+void ResetItemlabelHighlighted()
+{
+	isLabelHighlighted = false;
+}
+
 bool IsHighlightingLabelsEnabled()
 {
 	return altPressed != *sgOptions.Gameplay.showItemLabels;
