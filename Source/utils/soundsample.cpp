@@ -93,10 +93,8 @@ float VolumeLogToLinear(int logVolume, int logMin, int logMax)
 void SoundSample::Release()
 {
 	stream_ = nullptr;
-#if !defined(STREAM_ALL_AUDIO) || STREAM_ALL_AUDIO_MIN_FILE_SIZE
 	file_data_ = nullptr;
 	file_data_size_ = 0;
-#endif
 }
 
 /**
@@ -136,7 +134,6 @@ int SoundSample::SetChunkStream(std::string filePath, bool isMp3, bool logErrors
 	return 0;
 }
 
-#if !defined(STREAM_ALL_AUDIO) || STREAM_ALL_AUDIO_MIN_FILE_SIZE > 0
 int SoundSample::SetChunk(ArraySharedPtr<std::uint8_t> fileData, std::size_t dwBytes, bool isMp3)
 {
 	isMp3_ = isMp3;
@@ -157,7 +154,6 @@ int SoundSample::SetChunk(ArraySharedPtr<std::uint8_t> fileData, std::size_t dwB
 
 	return 0;
 }
-#endif
 
 void SoundSample::SetVolume(int logVolume, int logMin, int logMax)
 {
