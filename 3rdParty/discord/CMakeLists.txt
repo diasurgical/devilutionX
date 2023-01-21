@@ -6,7 +6,7 @@ find_package(Patch REQUIRED)
 FetchContent_Declare(discordsrc
   URL https://dl-game-sdk.discordapp.net/3.2.1/discord_game_sdk.zip
   URL_HASH MD5=73e5e1b3f8413a2c7184ef17476822f2
-  PATCH_COMMAND "${Patch_EXECUTABLE}" -p0 -N < "${CMAKE_CURRENT_LIST_DIR}/fix-types-h.patch" || true
+  PATCH_COMMAND "${Patch_EXECUTABLE}" -p1 -N < "${CMAKE_CURRENT_LIST_DIR}/fixes.patch" || true
 )
 FetchContent_MakeAvailableExcludeFromAll(discordsrc)
 
