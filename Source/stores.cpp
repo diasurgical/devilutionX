@@ -24,8 +24,10 @@
 #include "towners.h"
 #include "utils/format_int.hpp"
 #include "utils/language.h"
+#include "utils/sdl_bilinear_scale.hpp"
 #include "utils/stdcompat/string_view.hpp"
 #include "utils/str_cat.hpp"
+#include "utils/surface_to_clx.hpp"
 #include "utils/utf8.hpp"
 
 namespace devilution {
@@ -77,6 +79,8 @@ struct STextStruct {
 	Type type;
 	uint8_t _sx;
 	uint8_t _syoff;
+	int cursId;
+	bool cursIndent;
 
 	[[nodiscard]] bool isDivider() const
 	{
@@ -237,6 +241,8 @@ void AddSLine(size_t y)
 	stext[y].text.clear();
 	stext[y].text.shrink_to_fit();
 	stext[y].type = STextStruct::Divider;
+	stext[y].cursId = -1;
+	stext[y].cursIndent = false;
 }
 
 void AddSTextVal(size_t y, int val)
@@ -244,7 +250,7 @@ void AddSTextVal(size_t y, int val)
 	stext[y]._sval = val;
 }
 
-void AddSText(uint8_t x, size_t y, string_view text, UiFlags flags, bool sel)
+void AddSText(uint8_t x, size_t y, string_view text, UiFlags flags, bool sel, int cursId = -1, bool cursIndent = false)
 {
 	stext[y]._sx = x;
 	stext[y]._syoff = 0;
@@ -252,6 +258,8 @@ void AddSText(uint8_t x, size_t y, string_view text, UiFlags flags, bool sel)
 	AppendStrView(stext[y].text, text);
 	stext[y].flags = flags;
 	stext[y].type = sel ? STextStruct::Selectable : STextStruct::Label;
+	stext[y].cursId = cursId;
+	stext[y].cursIndent = cursIndent;
 }
 
 void AddOptionsBackButton()
@@ -274,7 +282,7 @@ void AddItemListBackButton(bool selectable = false)
 	}
 }
 
-void PrintStoreItem(const Item &item, int l, UiFlags flags)
+void PrintStoreItem(const Item &item, int l, UiFlags flags, bool cursIndent = false)
 {
 	std::string productLine;
 
@@ -296,7 +304,7 @@ void PrintStoreItem(const Item &item, int l, UiFlags flags)
 		productLine.append(fmt::format(fmt::runtime(_("Charges: {:d}/{:d}")), item._iCharges, item._iMaxCharges));
 	}
 	if (!productLine.empty()) {
-		AddSText(40, l, productLine, flags, false);
+		AddSText(40, l, productLine, flags, false, -1, cursIndent);
 		l++;
 		productLine.clear();
 	}
@@ -327,7 +335,7 @@ void PrintStoreItem(const Item &item, int l, UiFlags flags)
 		if (dex != 0)
 			productLine.append(fmt::format(fmt::runtime(_(" {:d} Dex")), dex));
 	}
-	AddSText(40, l++, productLine, flags, false);
+	AddSText(40, l++, productLine, flags, false, -1, cursIndent);
 }
 
 bool StoreAutoPlace(Item &item, bool persistItem)
@@ -372,13 +380,13 @@ void ScrollSmithBuy(int idx)
 			UiFlags itemColor = smithitem[idx].getTextColorWithStatCheck();
 
 			if (smithitem[idx]._iMagical != ITEM_QUALITY_NORMAL) {
-				AddSText(20, l, smithitem[idx]._iIName, itemColor, true);
+				AddSText(20, l, smithitem[idx]._iIName, itemColor, true, smithitem[idx]._iCurs, true);
 			} else {
-				AddSText(20, l, smithitem[idx]._iName, itemColor, true);
+				AddSText(20, l, smithitem[idx]._iName, itemColor, true, smithitem[idx]._iCurs, true);
 			}
 
 			AddSTextVal(l, smithitem[idx]._iIvalue);
-			PrintStoreItem(smithitem[idx], l + 1, itemColor);
+			PrintStoreItem(smithitem[idx], l + 1, itemColor, true);
 			stextdown = l;
 			idx++;
 		}
@@ -437,9 +445,9 @@ void ScrollSmithPremiumBuy(int boughtitems)
 	for (int l = 5; l < 20 && idx < SMITH_PREMIUM_ITEMS; l += 4) {
 		if (!premiumitems[idx].isEmpty()) {
 			UiFlags itemColor = premiumitems[idx].getTextColorWithStatCheck();
-			AddSText(20, l, premiumitems[idx]._iIName, itemColor, true);
+			AddSText(20, l, premiumitems[idx]._iIName, itemColor, true, premiumitems[idx]._iCurs, true);
 			AddSTextVal(l, premiumitems[idx]._iIvalue);
-			PrintStoreItem(premiumitems[idx], l + 1, itemColor);
+			PrintStoreItem(premiumitems[idx], l + 1, itemColor, true);
 			stextdown = l;
 		} else {
 			l -= 4;
@@ -524,14 +532,14 @@ void ScrollSmithSell(int idx)
 			UiFlags itemColor = storehold[idx].getTextColorWithStatCheck();
 
 			if (storehold[idx]._iMagical != ITEM_QUALITY_NORMAL && storehold[idx]._iIdentified) {
-				AddSText(20, l, storehold[idx]._iIName, itemColor, true);
+				AddSText(20, l, storehold[idx]._iIName, itemColor, true, storehold[idx]._iCurs, true);
 				AddSTextVal(l, storehold[idx]._iIvalue);
 			} else {
-				AddSText(20, l, storehold[idx]._iName, itemColor, true);
+				AddSText(20, l, storehold[idx]._iName, itemColor, true, storehold[idx]._iCurs, true);
 				AddSTextVal(l, storehold[idx]._ivalue);
 			}
 
-			PrintStoreItem(storehold[idx], l + 1, itemColor);
+			PrintStoreItem(storehold[idx], l + 1, itemColor, true);
 			stextdown = l;
 		}
 		idx++;
@@ -725,13 +733,13 @@ void ScrollWitchBuy(int idx)
 			UiFlags itemColor = witchitem[idx].getTextColorWithStatCheck();
 
 			if (witchitem[idx]._iMagical != ITEM_QUALITY_NORMAL) {
-				AddSText(20, l, witchitem[idx]._iIName, itemColor, true);
+				AddSText(20, l, witchitem[idx]._iIName, itemColor, true, witchitem[idx]._iCurs, true);
 			} else {
-				AddSText(20, l, witchitem[idx]._iName, itemColor, true);
+				AddSText(20, l, witchitem[idx]._iName, itemColor, true, witchitem[idx]._iCurs, true);
 			}
 
 			AddSTextVal(l, witchitem[idx]._iIvalue);
-			PrintStoreItem(witchitem[idx], l + 1, itemColor);
+			PrintStoreItem(witchitem[idx], l + 1, itemColor, true);
 			stextdown = l;
 			idx++;
 		}
@@ -1062,15 +1070,15 @@ void SStartBoyBuy()
 	UiFlags itemColor = boyitem.getTextColorWithStatCheck();
 
 	if (boyitem._iMagical != ITEM_QUALITY_NORMAL)
-		AddSText(20, 10, boyitem._iIName, itemColor, true);
+		AddSText(20, 10, boyitem._iIName, itemColor, true, boyitem._iCurs, true);
 	else
-		AddSText(20, 10, boyitem._iName, itemColor, true);
+		AddSText(20, 10, boyitem._iName, itemColor, true, boyitem._iCurs, true);
 
 	if (gbIsHellfire)
 		AddSTextVal(10, boyitem._iIvalue - (boyitem._iIvalue / 4));
 	else
 		AddSTextVal(10, boyitem._iIvalue + (boyitem._iIvalue / 2));
-	PrintStoreItem(boyitem, 11, itemColor);
+	PrintStoreItem(boyitem, 11, itemColor, true);
 
 	{
 		// Add a Leave button. Unlike the other item list back buttons,
@@ -1117,9 +1125,9 @@ void ScrollHealerBuy(int idx)
 		if (!healitem[idx].isEmpty()) {
 			UiFlags itemColor = healitem[idx].getTextColorWithStatCheck();
 
-			AddSText(20, l, healitem[idx]._iName, itemColor, true);
+			AddSText(20, l, healitem[idx]._iName, itemColor, true, healitem[idx]._iCurs, true);
 			AddSTextVal(l, healitem[idx]._iIvalue);
-			PrintStoreItem(healitem[idx], l + 1, itemColor);
+			PrintStoreItem(healitem[idx], l + 1, itemColor, true);
 			stextdown = l;
 			idx++;
 		}
@@ -2256,7 +2264,7 @@ void FreeStoreMem()
 	}
 }
 
-void PrintSString(const Surface &out, int margin, int line, string_view text, UiFlags flags, int price)
+void PrintSString(const Surface &out, int margin, int line, string_view text, UiFlags flags, int price, int cursId, bool cursIndent)
 {
 	const Point uiPosition = GetUIRectangle().position;
 	int sx = uiPosition.x + 32 + margin;
@@ -2273,7 +2281,34 @@ void PrintSString(const Surface &out, int margin, int line, string_view text, Ui
 	width -= margin * 2;
 
 	const Rectangle rect { { sx, sy }, { width, 0 } };
-	DrawString(out, text, rect, flags);
+
+	// Space reserved for item graphic is based on the size of 2x3 cursor sprites
+	const int cursWidth = INV_SLOT_SIZE_PX * 2;
+	const int cursHeight = INV_SLOT_SIZE_PX * 3;
+	const int halfCursWidth = cursWidth / 2;
+	const int halfCursHeight = cursHeight / 2;
+
+	if (cursId >= 0) {
+		const ClxSprite itemSprite = GetInvItemSprite(static_cast<int>(CURSOR_FIRSTITEM) + cursId);
+		const OwnedSurface itemSurface(itemSprite.width(), itemSprite.height());
+		SDL_FillRect(itemSurface.surface, nullptr, 1);
+		ClxDraw(itemSurface, { 0, itemSurface.h() }, itemSprite);
+
+		const OwnedSurface halfSurface(itemSurface.w() / 2, itemSurface.h() / 2);
+		BilinearDownscaleByHalf8(itemSurface.surface, paletteTransparencyLookup, halfSurface.surface, 1);
+
+		const Displacement spriteOffset { (halfCursWidth - halfSurface.w()) / 2, (halfCursHeight + halfSurface.h()) / 2 };
+		const OwnedClxSpriteList halfSprite = SurfaceToClx(halfSurface, 1, 1);
+		ClxDraw(out, rect.position + spriteOffset, halfSprite[0]);
+	}
+
+	if (cursIndent) {
+		const Rectangle textRect { { rect.position.x + halfCursWidth + 8, rect.position.y }, { rect.size.width - halfCursWidth + 8, rect.size.height } };
+		DrawString(out, text, textRect, flags);
+	} else {
+		DrawString(out, text, rect, flags);
+	}
+
 	if (price > 0)
 		DrawString(out, FormatInteger(price), rect, flags | UiFlags::AlignRight);
 
@@ -2469,7 +2504,7 @@ void DrawSText(const Surface &out)
 		if (stext[i].isDivider())
 			DrawSLine(out, uiPosition.y + PaddingTop + stext[i].y + TextHeight() / 2);
 		else if (stext[i].hasText())
-			PrintSString(out, stext[i]._sx, i, stext[i].text, stext[i].flags, stext[i]._sval);
+			PrintSString(out, stext[i]._sx, i, stext[i].text, stext[i].flags, stext[i]._sval, stext[i].cursId, stext[i].cursIndent);
 	}
 
 	if (RenderGold) {
