@@ -107,6 +107,7 @@ TSFX sgSFX[] = {
 /*IS_CAST8*/      { sfx_MISC,                  "sfx\\misc\\cast8.wav",        nullptr },
 /*IS_REPAIR*/     { sfx_MISC,                  "sfx\\misc\\repair.wav",       nullptr },
 /*LS_ACID*/       { sfx_MISC,                  "sfx\\misc\\acids1.wav",       nullptr },
+/*LS_ACIDS*/      { sfx_MISC,                  "sfx\\misc\\acids2.wav",       nullptr },
 /*LS_APOC*/       { sfx_MISC,                  "sfx\\misc\\apoc.wav",         nullptr },
 /*LS_BLODSTAR*/   { sfx_MISC,                  "sfx\\misc\\blodstar.wav",     nullptr },
 /*LS_BLSIMPT*/    { sfx_MISC,                  "sfx\\misc\\blsimpt.wav",      nullptr },

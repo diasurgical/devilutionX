@@ -194,6 +194,7 @@ enum _sfx_id : int16_t {
 	IS_CAST8,
 	IS_REPAIR,
 	LS_ACID,
+	LS_ACIDS,
 	LS_APOC,
 	LS_BLODSTAR,
 	LS_BLSIMPT,
