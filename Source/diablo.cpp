@@ -747,8 +747,6 @@ void GameEventHandler(const SDL_Event &event, uint16_t modState)
 			nthread_ignore_mutex(true);
 			PaletteFadeOut(8);
 			sound_stop();
-			LastMouseButtonAction = MouseActionType::None;
-			sgbMouseDown = CLICK_NONE;
 			ShowProgress(GetCustomEvent(event.type));
 
 			RedrawEverything();
@@ -2923,12 +2921,12 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 
 	CompleteProgress();
 
-	// Reset mouse selection of entities
-	pcursmonst = -1;
-	ObjectUnderCursor = nullptr;
-	pcursitem = -1;
-	pcursinvitem = -1;
-	pcursplr = -1;
+	// Recalculate mouse selection of entities after level change/load
+	LastMouseButtonAction = MouseActionType::None;
+	sgbMouseDown = CLICK_NONE;
+	ResetItemlabelHighlighted(); // level changed => item changed
+	pcursmonst = -1;             // ensure pcurstemp is set to a valid value
+	CheckCursMove();
 }
 
 bool game_loop(bool bStartup)
