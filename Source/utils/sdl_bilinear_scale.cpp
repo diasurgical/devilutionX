@@ -148,4 +148,37 @@ void BilinearScale32(SDL_Surface *src, SDL_Surface *dst)
 	}
 }
 
+void BilinearDownscaleByHalf8(SDL_Surface *src, const uint8_t (*paletteBlendingTable)[256], SDL_Surface *dst, uint8_t transparentIndex)
+{
+	for (unsigned y = 0; y < static_cast<unsigned>(dst->h); ++y) {
+		auto *srcPixels = static_cast<uint8_t *>(src->pixels) + 2 * y * src->pitch;
+		auto *dstPixels = static_cast<uint8_t *>(dst->pixels) + y * dst->pitch;
+		for (unsigned x = 0; x < static_cast<unsigned>(dst->w); ++x) {
+			uint8_t quad[] = {
+				srcPixels[0],
+				srcPixels[1],
+				srcPixels[src->pitch],
+				srcPixels[src->pitch + 1]
+			};
+			// Attempt to avoid blending with transparent pixels
+			if (quad[0] == transparentIndex)
+				quad[0] = quad[1];
+			if (quad[1] == transparentIndex)
+				quad[1] = quad[0];
+			if (quad[2] == transparentIndex)
+				quad[2] = quad[3];
+			if (quad[3] == transparentIndex)
+				quad[3] = quad[2];
+			uint8_t top = paletteBlendingTable[quad[0]][quad[1]];
+			uint8_t bottom = paletteBlendingTable[quad[2]][quad[3]];
+			if (top == transparentIndex)
+				top = bottom;
+			if (bottom == transparentIndex)
+				bottom = top;
+			*dstPixels++ = paletteBlendingTable[top][bottom];
+			srcPixels += 2;
+		}
+	}
+}
+
 } // namespace devilution
