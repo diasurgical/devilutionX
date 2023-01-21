@@ -2288,7 +2288,7 @@ void PrintSString(const Surface &out, int margin, int line, string_view text, Ui
 	const int halfCursWidth = cursWidth / 2;
 	const int halfCursHeight = cursHeight / 2;
 
-	if (cursId >= 0) {
+	if (*sgOptions.Graphics.showItemGraphicsInStores && cursId >= 0) {
 		const ClxSprite itemSprite = GetInvItemSprite(static_cast<int>(CURSOR_FIRSTITEM) + cursId);
 		const OwnedSurface itemSurface(itemSprite.width(), itemSprite.height());
 		SDL_FillRect(itemSurface.surface, nullptr, 1);
@@ -2302,7 +2302,7 @@ void PrintSString(const Surface &out, int margin, int line, string_view text, Ui
 		ClxDraw(out, rect.position + spriteOffset, halfSprite[0]);
 	}
 
-	if (cursIndent) {
+	if (*sgOptions.Graphics.showItemGraphicsInStores && cursIndent) {
 		const Rectangle textRect { { rect.position.x + halfCursWidth + 8, rect.position.y }, { rect.size.width - halfCursWidth + 8, rect.size.height } };
 		DrawString(out, text, textRect, flags);
 	} else {
