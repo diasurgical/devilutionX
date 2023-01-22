@@ -830,7 +830,7 @@ void QuestlogESC()
 	}
 }
 
-void SetMultiQuest(int q, quest_state s, bool log, int v1, int v2)
+void SetMultiQuest(int q, quest_state s, bool log, int v1, int v2, int16_t qmsg)
 {
 	if (gbIsSpawn)
 		return;
@@ -846,6 +846,7 @@ void SetMultiQuest(int q, quest_state s, bool log, int v1, int v2)
 	if (v1 > quest._qvar1)
 		quest._qvar1 = v1;
 	quest._qvar2 = v2;
+	quest._qmsg = static_cast<_speech_id>(qmsg);
 	if (!UseMultiplayerQuests()) {
 		// Ensure that changes on another client is also updated on our own
 		ResyncQuests();
