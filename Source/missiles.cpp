@@ -246,7 +246,7 @@ bool MonsterMHit(int pnum, int monsterId, int mindam, int maxdam, int dist, Miss
 		dam >>= 2;
 
 	if (&player == MyPlayer)
-		ApplyMonsterDamage(MissilesData[static_cast<int8_t>(t)].damageType, monster, dam);
+		ApplyMonsterDamage(missileData.damageType, monster, dam);
 
 	if (monster.hitPoints >> 6 <= 0) {
 		M_StartKill(monster, player);
