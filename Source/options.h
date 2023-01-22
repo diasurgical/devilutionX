@@ -583,6 +583,8 @@ struct GameplayOptions : OptionCategoryBase {
 	OptionEntryInt<int> numRejuPotionPickup;
 	/** @brief Number of Full Rejuvenating potions to pick up automatically */
 	OptionEntryInt<int> numFullRejuPotionPickup;
+	/** @brief Enable floating numbers. */
+	OptionEntryBoolean enableFloatingNumbers;
 };
 
 struct ControllerOptions : OptionCategoryBase {

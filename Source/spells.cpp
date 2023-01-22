@@ -196,10 +196,10 @@ void ConsumeSpell(Player &player, spell_id sn)
 		break;
 	}
 	if (sn == SPL_FLARE) {
-		ApplyPlrDamage(player, 5);
+		ApplyPlrDamage(DamageType::Physical, player, 5);
 	}
 	if (sn == SPL_BONESPIRIT) {
-		ApplyPlrDamage(player, 6);
+		ApplyPlrDamage(DamageType::Physical, player, 6);
 	}
 }
 

@@ -643,6 +643,7 @@ struct TCmdDamage {
 	_cmd_id bCmd;
 	uint8_t bPlr;
 	uint32_t dwDam;
+	DamageType damageType;
 };
 
 struct TCmdMonDamage {
@@ -774,7 +775,7 @@ void NetSendCmdChItem(bool bHiPri, uint8_t bLoc);
 void NetSendCmdDelItem(bool bHiPri, uint8_t bLoc);
 void NetSendCmdChInvItem(bool bHiPri, int invGridIndex);
 void NetSendCmdChBeltItem(bool bHiPri, int invGridIndex);
-void NetSendCmdDamage(bool bHiPri, uint8_t bPlr, uint32_t dwDam);
+void NetSendCmdDamage(bool bHiPri, uint8_t bPlr, uint32_t dwDam, DamageType damageType);
 void NetSendCmdMonDmg(bool bHiPri, uint16_t wMon, uint32_t dwDam);
 void NetSendCmdString(uint32_t pmask, const char *pszStr);
 void delta_close_portal(int pnum);
