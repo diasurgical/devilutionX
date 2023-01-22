@@ -113,6 +113,7 @@ const uint16_t InvItemHeight2[InvItems2Size] = {
 
 constexpr size_t NumInvItems = InvItems1Size + InvItems2Size - static_cast<size_t>(CURSOR_FIRSTITEM);
 StaticVector<OwnedClxSpriteList, NumInvItems> *HalfSizeItemSprites;
+StaticVector<OwnedClxSpriteList, NumInvItems> *HalfSizeItemSpritesRed;
 
 } // namespace
 
@@ -177,11 +178,18 @@ ClxSprite GetHalfSizeItemSprite(int cursId)
 	return (*HalfSizeItemSprites)[cursId][0];
 }
 
+ClxSprite GetHalfSizeItemSpriteRed(int cursId)
+{
+	return (*HalfSizeItemSpritesRed)[cursId][0];
+}
+
 void CreateHalfSizeItemSprites()
 {
 	if (HalfSizeItemSprites != nullptr)
 		return;
 	HalfSizeItemSprites = new StaticVector<OwnedClxSpriteList, NumInvItems>;
+	HalfSizeItemSpritesRed = new StaticVector<OwnedClxSpriteList, NumInvItems>;
+	const uint8_t *redTrn = GetInfravisionTRN();
 	for (size_t i = 0; i < NumInvItems; ++i) {
 		const ClxSprite itemSprite = GetInvItemSprite(static_cast<int>(CURSOR_FIRSTITEM) + static_cast<int>(i));
 		const OwnedSurface itemSurface(itemSprite.width(), itemSprite.height());
@@ -191,6 +199,11 @@ void CreateHalfSizeItemSprites()
 		const OwnedSurface halfSurface(itemSurface.w() / 2, itemSurface.h() / 2);
 		BilinearDownscaleByHalf8(itemSurface.surface, paletteTransparencyLookup, halfSurface.surface, 1);
 		HalfSizeItemSprites->emplace_back(SurfaceToClx(halfSurface, 1, 1));
+
+		SDL_FillRect(itemSurface.surface, nullptr, 1);
+		ClxDrawTRN(itemSurface, { 0, itemSurface.h() }, itemSprite, redTrn);
+		BilinearDownscaleByHalf8(itemSurface.surface, paletteTransparencyLookup, halfSurface.surface, 1);
+		HalfSizeItemSpritesRed->emplace_back(SurfaceToClx(halfSurface, 1, 1));
 	}
 }
 
@@ -199,6 +212,8 @@ void FreeHalfSizeItemSprites()
 	if (HalfSizeItemSprites != nullptr) {
 		delete HalfSizeItemSprites;
 		HalfSizeItemSprites = nullptr;
+		delete HalfSizeItemSpritesRed;
+		HalfSizeItemSpritesRed = nullptr;
 	}
 }
 
