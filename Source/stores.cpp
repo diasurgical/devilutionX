@@ -2285,22 +2285,29 @@ void PrintSString(const Surface &out, int margin, int line, string_view text, Ui
 	const Rectangle rect { { sx, sy }, { width, 0 } };
 
 	// Space reserved for item graphic is based on the size of 2x3 cursor sprites
-	const int cursWidth = INV_SLOT_SIZE_PX * 2;
-	const int halfCursWidth = cursWidth / 2;
+	constexpr int CursWidth = INV_SLOT_SIZE_PX * 2;
+	constexpr int HalfCursWidth = CursWidth / 2;
 
 	if (*sgOptions.Graphics.showItemGraphicsInStores && cursId >= 0) {
-		const ClxSprite halfSprite = HasAnyOf(flags, UiFlags::ColorRed)
-		    ? GetHalfSizeItemSpriteRed(cursId)
-		    : GetHalfSizeItemSprite(cursId);
+		const Size size = GetInvItemSize(static_cast<int>(CURSOR_FIRSTITEM) + cursId);
+		const bool useHalfSize = size.width > INV_SLOT_SIZE_PX || size.height > INV_SLOT_SIZE_PX;
+		const bool useRed = HasAnyOf(flags, UiFlags::ColorRed);
+		const ClxSprite sprite = useHalfSize
+		    ? (useRed ? GetHalfSizeItemSpriteRed(cursId) : GetHalfSizeItemSprite(cursId))
+		    : GetInvItemSprite(static_cast<int>(CURSOR_FIRSTITEM) + cursId);
 		const Point position {
-			rect.position.x + (halfCursWidth - halfSprite.width()) / 2,
-			rect.position.y + (TextHeight() * 3 + halfSprite.height()) / 2
+			rect.position.x + (HalfCursWidth - sprite.width()) / 2,
+			rect.position.y + (TextHeight() * 3 + sprite.height()) / 2
 		};
-		ClxDraw(out, position, halfSprite);
+		if (useHalfSize || !useRed) {
+			ClxDraw(out, position, sprite);
+		} else {
+			ClxDrawTRN(out, position, sprite, GetInfravisionTRN());
+		}
 	}
 
 	if (*sgOptions.Graphics.showItemGraphicsInStores && cursIndent) {
-		const Rectangle textRect { { rect.position.x + halfCursWidth + 8, rect.position.y }, { rect.size.width - halfCursWidth + 8, rect.size.height } };
+		const Rectangle textRect { { rect.position.x + HalfCursWidth + 8, rect.position.y }, { rect.size.width - HalfCursWidth + 8, rect.size.height } };
 		DrawString(out, text, textRect, flags);
 	} else {
 		DrawString(out, text, rect, flags);
