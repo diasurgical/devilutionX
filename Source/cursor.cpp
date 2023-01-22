@@ -28,6 +28,9 @@
 #include "track.h"
 #include "utils/attributes.h"
 #include "utils/language.h"
+#include "utils/sdl_bilinear_scale.hpp"
+#include "utils/static_vector.hpp"
+#include "utils/surface_to_clx.hpp"
 #include "utils/utf8.hpp"
 
 namespace devilution {
@@ -108,6 +111,9 @@ const uint16_t InvItemHeight2[InvItems2Size] = {
 	// clang-format on
 };
 
+constexpr size_t NumInvItems = InvItems1Size + InvItems2Size - static_cast<size_t>(CURSOR_FIRSTITEM);
+StaticVector<OwnedClxSpriteList, NumInvItems> *HalfSizeItemSprites;
+
 } // namespace
 
 /** Current highlighted monster */
@@ -153,12 +159,47 @@ ClxSprite GetInvItemSprite(int cursId)
 	return (*pCursCels2)[cursId - InvItems1Size - 1];
 }
 
+size_t GetNumInvItems()
+{
+	return InvItems1Size + InvItems2Size;
+}
+
 Size GetInvItemSize(int cursId)
 {
 	const int i = cursId - 1;
 	if (i >= InvItems1Size)
 		return { InvItemWidth2[i - InvItems1Size], InvItemHeight2[i - InvItems1Size] };
 	return { InvItemWidth1[i], InvItemHeight1[i] };
+}
+
+ClxSprite GetHalfSizeItemSprite(int cursId)
+{
+	return (*HalfSizeItemSprites)[cursId][0];
+}
+
+void CreateHalfSizeItemSprites()
+{
+	if (HalfSizeItemSprites != nullptr)
+		return;
+	HalfSizeItemSprites = new StaticVector<OwnedClxSpriteList, NumInvItems>;
+	for (size_t i = 0; i < NumInvItems; ++i) {
+		const ClxSprite itemSprite = GetInvItemSprite(static_cast<int>(CURSOR_FIRSTITEM) + static_cast<int>(i));
+		const OwnedSurface itemSurface(itemSprite.width(), itemSprite.height());
+		SDL_FillRect(itemSurface.surface, nullptr, 1);
+		ClxDraw(itemSurface, { 0, itemSurface.h() }, itemSprite);
+
+		const OwnedSurface halfSurface(itemSurface.w() / 2, itemSurface.h() / 2);
+		BilinearDownscaleByHalf8(itemSurface.surface, paletteTransparencyLookup, halfSurface.surface, 1);
+		HalfSizeItemSprites->emplace_back(SurfaceToClx(halfSurface, 1, 1));
+	}
+}
+
+void FreeHalfSizeItemSprites()
+{
+	if (HalfSizeItemSprites != nullptr) {
+		delete HalfSizeItemSprites;
+		HalfSizeItemSprites = nullptr;
+	}
 }
 
 void DrawItem(const Item &item, const Surface &out, Point position, ClxSprite clx)
