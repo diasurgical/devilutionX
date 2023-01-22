@@ -10,12 +10,16 @@
 
 #include <fmt/format.h>
 
+#if !defined(UNPACKED_MPQS) || !defined(UNPACKED_SAVES) || !defined(NONET)
+#define USE_PKWARE
+#include "encrypt.h"
+#endif
+
 #include "DiabloUI/diabloui.h"
 #include "automap.h"
 #include "config.h"
 #include "control.h"
 #include "dead.h"
-#include "encrypt.h"
 #include "engine/backbuffer_state.hpp"
 #include "engine/random.hpp"
 #include "engine/world_tile.hpp"
@@ -565,18 +569,25 @@ void DeltaImportJunk(const byte *src)
 
 uint32_t CompressData(byte *buffer, byte *end)
 {
+#ifdef USE_PKWARE
 	const auto size = static_cast<uint32_t>(end - buffer - 1);
 	const uint32_t pkSize = PkwareCompress(buffer + 1, size);
 
 	*buffer = size != pkSize ? byte { 1 } : byte { 0 };
 
 	return pkSize + 1;
+#else
+	*buffer = byte { 0 };
+	return end - buffer;
+#endif
 }
 
 void DeltaImportData(_cmd_id cmd, uint32_t recvOffset)
 {
+#ifdef USE_PKWARE
 	if (sgRecvBuf[0] != byte { 0 })
 		PkwareDecompress(&sgRecvBuf[1], recvOffset, sizeof(sgRecvBuf) - 1);
+#endif
 
 	const byte *src = &sgRecvBuf[1];
 	if (cmd == CMD_DLEVEL_JUNK) {

@@ -13,7 +13,6 @@ set(libdevilutionx_SRCS
   debug.cpp
   diablo.cpp
   doom.cpp
-  encrypt.cpp
   engine.cpp
   error.cpp
   gamemenu.cpp
@@ -173,6 +172,11 @@ if(NOT (UNPACKED_MPQS AND UNPACKED_SAVES))
     mpq/mpq_writer.cpp)
 endif()
 
+if(NOT (UNPACKED_MPQS AND UNPACKED_SAVES AND NONET))
+  list(APPEND libdevilutionx_DEPS PKWare)
+  list(APPEND libdevilutionx_SRCS encrypt.cpp)
+endif()
+
 if(IOS)
   list(APPEND libdevilutionx_SRCS platform/ios/ios_paths.m)
 endif()
@@ -255,7 +259,6 @@ target_link_libraries(libdevilutionx PUBLIC
   Threads::Threads
   DevilutionX::SDL
   fmt::fmt
-  PKWare
   libsmackerdec
   simpleini::simpleini
   tl
