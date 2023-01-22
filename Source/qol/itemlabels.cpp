@@ -15,6 +15,7 @@
 #include "inv.h"
 #include "options.h"
 #include "qol/stash.h"
+#include "stores.h"
 #include "utils/format_int.hpp"
 #include "utils/language.h"
 #include "utils/stdcompat/string_view.hpp"
@@ -90,7 +91,7 @@ void ResetItemlabelHighlighted()
 
 bool IsHighlightingLabelsEnabled()
 {
-	return altPressed != *sgOptions.Gameplay.showItemLabels;
+	return stextflag == STORE_NONE && altPressed != *sgOptions.Gameplay.showItemLabels;
 }
 
 void AddItemToLabelQueue(int id, Point position)
@@ -186,13 +187,18 @@ void DrawItemNameLabels(const Surface &out)
 		Item &item = Items[label.id];
 
 		if (MousePosition.x >= label.pos.x && MousePosition.x < label.pos.x + label.width && MousePosition.y >= label.pos.y + MarginY && MousePosition.y < label.pos.y + MarginY + Height) {
-			if (!gmenu_is_active() && PauseMode == 0 && !MyPlayerIsDead && IsMouseOverGameArea() && LastMouseButtonAction == MouseActionType::None) {
+			if (!gmenu_is_active()
+			    && PauseMode == 0
+			    && !MyPlayerIsDead
+			    && stextflag == STORE_NONE
+			    && IsMouseOverGameArea()
+			    && LastMouseButtonAction == MouseActionType::None) {
 				isLabelHighlighted = true;
 				cursPosition = item.position;
 				pcursitem = label.id;
 			}
 		}
-		if (pcursitem == label.id)
+		if (pcursitem == label.id && stextflag == STORE_NONE)
 			FillRect(clippedOut, label.pos.x, label.pos.y + MarginY, label.width, Height, PAL8_BLUE + 6);
 		else
 			DrawHalfTransparentRectTo(clippedOut, label.pos.x, label.pos.y + MarginY, label.width, Height);
