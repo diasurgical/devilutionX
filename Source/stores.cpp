@@ -16,6 +16,7 @@
 #include "engine/random.hpp"
 #include "engine/render/clx_render.hpp"
 #include "engine/render/text_render.hpp"
+#include "engine/trn.hpp"
 #include "init.h"
 #include "minitext.h"
 #include "options.h"
@@ -2288,11 +2289,14 @@ void PrintSString(const Surface &out, int margin, int line, string_view text, Ui
 	const int halfCursWidth = cursWidth / 2;
 
 	if (*sgOptions.Graphics.showItemGraphicsInStores && cursId >= 0) {
-		const ClxSprite halfSprite = GetHalfSizeItemSprite(cursId);
-		ClxDraw(out,
-		    { rect.position.x + (halfCursWidth - halfSprite.width()) / 2,
-		        rect.position.y + (TextHeight() * 3 + halfSprite.height()) / 2 },
-		    halfSprite);
+		const ClxSprite halfSprite = HasAnyOf(flags, UiFlags::ColorRed)
+		    ? GetHalfSizeItemSpriteRed(cursId)
+		    : GetHalfSizeItemSprite(cursId);
+		const Point position {
+			rect.position.x + (halfCursWidth - halfSprite.width()) / 2,
+			rect.position.y + (TextHeight() * 3 + halfSprite.height()) / 2
+		};
+		ClxDraw(out, position, halfSprite);
 	}
 
 	if (*sgOptions.Graphics.showItemGraphicsInStores && cursIndent) {

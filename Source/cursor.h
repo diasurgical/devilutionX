@@ -68,6 +68,7 @@ void DrawItem(const Item &item, const Surface &out, Point position, ClxSprite cl
 ClxSprite GetInvItemSprite(int cursId);
 
 ClxSprite GetHalfSizeItemSprite(int cursId);
+ClxSprite GetHalfSizeItemSpriteRed(int cursId);
 void CreateHalfSizeItemSprites();
 void FreeHalfSizeItemSprites();
 
