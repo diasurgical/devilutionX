@@ -650,7 +650,7 @@ void DrawItem(const Surface &out, Point tilePosition, Point targetBufferPosition
 	const ClxSprite sprite = item.AnimInfo.currentSprite();
 	int px = targetBufferPosition.x - CalculateWidth2(sprite.width());
 	const Point position { px, targetBufferPosition.y };
-	if (bItem - 1 == pcursitem || AutoMapShowItems) {
+	if (stextflag == STORE_NONE && (bItem - 1 == pcursitem || AutoMapShowItems)) {
 		ClxDrawOutlineSkipColorZero(out, GetOutlineColor(item, false), position, sprite);
 	}
 	ClxDrawLight(out, position, sprite);
