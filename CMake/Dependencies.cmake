@@ -182,13 +182,17 @@ else()
   add_subdirectory(3rdParty/simpleini)
 endif()
 
-add_subdirectory(3rdParty/libmpq)
+if(NOT (UNPACKED_MPQS AND UNPACKED_SAVES))
+  add_subdirectory(3rdParty/libmpq)
+endif()
 
 add_subdirectory(3rdParty/tl)
 
 add_subdirectory(3rdParty/hoehrmann_utf8)
 
-add_subdirectory(3rdParty/PKWare)
+if(NOT (UNPACKED_MPQS AND UNPACKED_SAVES AND NONET))
+  add_subdirectory(3rdParty/PKWare)
+endif()
 
 if(NOT NONET AND NOT DISABLE_TCP)
   add_subdirectory(3rdParty/asio)
