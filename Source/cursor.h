@@ -67,6 +67,10 @@ void DrawItem(const Item &item, const Surface &out, Point position, ClxSprite cl
 /** Returns the sprite for the given inventory index. */
 ClxSprite GetInvItemSprite(int cursId);
 
+ClxSprite GetHalfSizeItemSprite(int cursId);
+void CreateHalfSizeItemSprites();
+void FreeHalfSizeItemSprites();
+
 /** Returns the width and height for an inventory index. */
 Size GetInvItemSize(int cursId);
 

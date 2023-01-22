@@ -24,10 +24,8 @@
 #include "towners.h"
 #include "utils/format_int.hpp"
 #include "utils/language.h"
-#include "utils/sdl_bilinear_scale.hpp"
 #include "utils/stdcompat/string_view.hpp"
 #include "utils/str_cat.hpp"
-#include "utils/surface_to_clx.hpp"
 #include "utils/utf8.hpp"
 
 namespace devilution {
@@ -2257,6 +2255,9 @@ void SetupTownStores()
 
 void FreeStoreMem()
 {
+	if (*sgOptions.Graphics.showItemGraphicsInStores) {
+		FreeHalfSizeItemSprites();
+	}
 	stextflag = STORE_NONE;
 	for (STextStruct &entry : stext) {
 		entry.text.clear();
@@ -2287,17 +2288,11 @@ void PrintSString(const Surface &out, int margin, int line, string_view text, Ui
 	const int halfCursWidth = cursWidth / 2;
 
 	if (*sgOptions.Graphics.showItemGraphicsInStores && cursId >= 0) {
-		const ClxSprite itemSprite = GetInvItemSprite(static_cast<int>(CURSOR_FIRSTITEM) + cursId);
-		const OwnedSurface itemSurface(itemSprite.width(), itemSprite.height());
-		SDL_FillRect(itemSurface.surface, nullptr, 1);
-		ClxDraw(itemSurface, { 0, itemSurface.h() }, itemSprite);
-
-		const OwnedSurface halfSurface(itemSurface.w() / 2, itemSurface.h() / 2);
-		BilinearDownscaleByHalf8(itemSurface.surface, paletteTransparencyLookup, halfSurface.surface, 1);
-
-		const Displacement spriteOffset { (halfCursWidth - halfSurface.w()) / 2, (TextHeight() * 3 + halfSurface.h()) / 2 };
-		const OwnedClxSpriteList halfSprite = SurfaceToClx(halfSurface, 1, 1);
-		ClxDraw(out, rect.position + spriteOffset, halfSprite[0]);
+		const ClxSprite halfSprite = GetHalfSizeItemSprite(cursId);
+		ClxDraw(out,
+		    { rect.position.x + (halfCursWidth - halfSprite.width()) / 2,
+		        rect.position.y + (TextHeight() * 3 + halfSprite.height()) / 2 },
+		    halfSprite);
 	}
 
 	if (*sgOptions.Graphics.showItemGraphicsInStores && cursIndent) {
@@ -2354,6 +2349,9 @@ void ClearSText(int s, int e)
 
 void StartStore(talk_id s)
 {
+	if (*sgOptions.Graphics.showItemGraphicsInStores) {
+		CreateHalfSizeItemSprites();
+	}
 	sbookflag = false;
 	CloseInventory();
 	chrflag = false;
