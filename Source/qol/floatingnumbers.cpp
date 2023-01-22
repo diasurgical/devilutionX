@@ -97,7 +97,12 @@ void AddFloatingNumber(Point pos, Displacement offset, DamageType type, int valu
 		{ -100, -100 },
 	};
 
-	Displacement endOffset = goodAngles[rand() % 3];
+	Displacement endOffset;
+	if (*sgOptions.Gameplay.enableFloatingNumbers == FloatingNumbers::Random) {
+		endOffset = goodAngles[rand() % 3];
+	} else if (*sgOptions.Gameplay.enableFloatingNumbers == FloatingNumbers::Vertical) {
+		endOffset = goodAngles[0];
+	}
 
 	if (damageToPlayer)
 		endOffset = -endOffset;
@@ -121,7 +126,7 @@ void AddFloatingNumber(Point pos, Displacement offset, DamageType type, int valu
 
 void AddFloatingNumber(DamageType damageType, const Monster &monster, int damage)
 {
-	if (!*sgOptions.Gameplay.enableFloatingNumbers)
+	if (*sgOptions.Gameplay.enableFloatingNumbers == FloatingNumbers::Off)
 		return;
 
 	Displacement offset = {};
@@ -144,7 +149,7 @@ void AddFloatingNumber(DamageType damageType, const Monster &monster, int damage
 
 void AddFloatingNumber(DamageType damageType, const Player &player, int damage)
 {
-	if (!*sgOptions.Gameplay.enableFloatingNumbers)
+	if (*sgOptions.Gameplay.enableFloatingNumbers == FloatingNumbers::Off)
 		return;
 
 	Displacement offset = {};
@@ -163,7 +168,7 @@ void AddFloatingNumber(DamageType damageType, const Player &player, int damage)
 
 void DrawFloatingNumbers(const Surface &out, Point viewPosition, Displacement offset)
 {
-	if (!*sgOptions.Gameplay.enableFloatingNumbers)
+	if (*sgOptions.Gameplay.enableFloatingNumbers == FloatingNumbers::Off)
 		return;
 
 	for (auto &floatingNum : FloatingQueue) {

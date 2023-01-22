@@ -61,6 +61,15 @@ enum class Resampler : uint8_t {
 string_view ResamplerToString(Resampler resampler);
 std::optional<Resampler> ResamplerFromString(string_view resampler);
 
+enum class FloatingNumbers : uint8_t {
+	/** @brief Show no floating numbers. */
+	Off = 0,
+	/** @brief Show floating numbers at random angles. */
+	Random = 1,
+	/** @brief Show floating numbers vertically only. */
+	Vertical = 2,
+};
+
 enum class OptionEntryType : uint8_t {
 	Boolean,
 	List,
@@ -584,7 +593,7 @@ struct GameplayOptions : OptionCategoryBase {
 	/** @brief Number of Full Rejuvenating potions to pick up automatically */
 	OptionEntryInt<int> numFullRejuPotionPickup;
 	/** @brief Enable floating numbers. */
-	OptionEntryBoolean enableFloatingNumbers;
+	OptionEntryEnum<FloatingNumbers> enableFloatingNumbers;
 };
 
 struct ControllerOptions : OptionCategoryBase {
