@@ -2284,9 +2284,7 @@ void PrintSString(const Surface &out, int margin, int line, string_view text, Ui
 
 	// Space reserved for item graphic is based on the size of 2x3 cursor sprites
 	const int cursWidth = INV_SLOT_SIZE_PX * 2;
-	const int cursHeight = INV_SLOT_SIZE_PX * 3;
 	const int halfCursWidth = cursWidth / 2;
-	const int halfCursHeight = cursHeight / 2;
 
 	if (*sgOptions.Graphics.showItemGraphicsInStores && cursId >= 0) {
 		const ClxSprite itemSprite = GetInvItemSprite(static_cast<int>(CURSOR_FIRSTITEM) + cursId);
@@ -2297,7 +2295,7 @@ void PrintSString(const Surface &out, int margin, int line, string_view text, Ui
 		const OwnedSurface halfSurface(itemSurface.w() / 2, itemSurface.h() / 2);
 		BilinearDownscaleByHalf8(itemSurface.surface, paletteTransparencyLookup, halfSurface.surface, 1);
 
-		const Displacement spriteOffset { (halfCursWidth - halfSurface.w()) / 2, (halfCursHeight + halfSurface.h()) / 2 };
+		const Displacement spriteOffset { (halfCursWidth - halfSurface.w()) / 2, (TextHeight() * 3 + halfSurface.h()) / 2 };
 		const OwnedClxSpriteList halfSprite = SurfaceToClx(halfSurface, 1, 1);
 		ClxDraw(out, rect.position + spriteOffset, halfSprite[0]);
 	}
