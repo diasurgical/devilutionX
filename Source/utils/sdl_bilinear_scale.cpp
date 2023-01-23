@@ -148,12 +148,16 @@ void BilinearScale32(SDL_Surface *src, SDL_Surface *dst)
 	}
 }
 
-void BilinearDownscaleByHalf8(SDL_Surface *src, const uint8_t (*paletteBlendingTable)[256], SDL_Surface *dst, uint8_t transparentIndex)
+void BilinearDownscaleByHalf8(const SDL_Surface *src, const uint8_t (*paletteBlendingTable)[256], SDL_Surface *dst, uint8_t transparentIndex)
 {
-	for (unsigned y = 0; y < static_cast<unsigned>(dst->h); ++y) {
-		auto *srcPixels = static_cast<uint8_t *>(src->pixels) + 2 * y * src->pitch;
-		auto *dstPixels = static_cast<uint8_t *>(dst->pixels) + y * dst->pitch;
-		for (unsigned x = 0; x < static_cast<unsigned>(dst->w); ++x) {
+	const auto *const srcPixelsBegin = static_cast<const uint8_t *>(src->pixels)
+	    + static_cast<size_t>(src->clip_rect.y * src->pitch + src->clip_rect.x);
+	auto *const dstPixelsBegin = static_cast<uint8_t *>(dst->pixels)
+	    + static_cast<size_t>(dst->clip_rect.y * dst->pitch + dst->clip_rect.x);
+	for (unsigned y = 0, h = static_cast<unsigned>(dst->clip_rect.h); y < h; ++y) {
+		const uint8_t *srcPixels = srcPixelsBegin + static_cast<size_t>(2 * y * src->pitch);
+		uint8_t *dstPixels = dstPixelsBegin + static_cast<size_t>(y * dst->pitch);
+		for (unsigned x = 0, w = static_cast<unsigned>(dst->clip_rect.w); x < w; ++x) {
 			uint8_t quad[] = {
 				srcPixels[0],
 				srcPixels[1],

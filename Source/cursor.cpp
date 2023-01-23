@@ -191,12 +191,21 @@ void CreateHalfSizeItemSprites()
 	HalfSizeItemSpritesRed = new StaticVector<OwnedClxSpriteList, NumInvItems>;
 	const uint8_t *redTrn = GetInfravisionTRN();
 
-	const auto createHalfSize = [redTrn](const ClxSprite itemSprite) {
-		const OwnedSurface itemSurface(itemSprite.width(), itemSprite.height());
+	constexpr int MaxWidth = 28 * 3;
+	constexpr int MaxHeight = 28 * 3;
+	OwnedSurface ownedItemSurface { MaxWidth, MaxHeight };
+	OwnedSurface ownedHalfSurface { MaxWidth / 2, MaxHeight / 2 };
+
+	const auto createHalfSize = [&, redTrn](const ClxSprite itemSprite) {
+		const Surface itemSurface = ownedItemSurface.subregion(0, 0, itemSprite.width(), itemSprite.height());
+		SDL_Rect itemSurfaceRect = MakeSdlRect(0, 0, itemSurface.w(), itemSurface.h());
+		SDL_SetClipRect(itemSurface.surface, &itemSurfaceRect);
 		SDL_FillRect(itemSurface.surface, nullptr, 1);
 		ClxDraw(itemSurface, { 0, itemSurface.h() }, itemSprite);
 
-		const OwnedSurface halfSurface(itemSurface.w() / 2, itemSurface.h() / 2);
+		const Surface halfSurface = ownedHalfSurface.subregion(0, 0, itemSurface.w() / 2, itemSurface.h() / 2);
+		SDL_Rect halfSurfaceRect = MakeSdlRect(0, 0, halfSurface.w(), halfSurface.h());
+		SDL_SetClipRect(halfSurface.surface, &halfSurfaceRect);
 		BilinearDownscaleByHalf8(itemSurface.surface, paletteTransparencyLookup, halfSurface.surface, 1);
 		HalfSizeItemSprites->emplace_back(SurfaceToClx(halfSurface, 1, 1));
 
