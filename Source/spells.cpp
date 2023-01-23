@@ -299,8 +299,6 @@ void DoResurrect(size_t pnum, Player &target)
 
 	if (target.isOnActiveLevel()) {
 		StartStand(target, target._pdir);
-	} else {
-		target._pmode = PM_STAND;
 	}
 }
 
