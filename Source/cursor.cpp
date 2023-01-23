@@ -29,7 +29,6 @@
 #include "utils/attributes.h"
 #include "utils/language.h"
 #include "utils/sdl_bilinear_scale.hpp"
-#include "utils/static_vector.hpp"
 #include "utils/surface_to_clx.hpp"
 #include "utils/utf8.hpp"
 
@@ -111,9 +110,8 @@ const uint16_t InvItemHeight2[InvItems2Size] = {
 	// clang-format on
 };
 
-constexpr size_t NumInvItems = InvItems1Size + InvItems2Size - (static_cast<size_t>(CURSOR_FIRSTITEM) - 1);
-StaticVector<OwnedClxSpriteList, NumInvItems> *HalfSizeItemSprites;
-StaticVector<OwnedClxSpriteList, NumInvItems> *HalfSizeItemSpritesRed;
+OptionalOwnedClxSpriteList *HalfSizeItemSprites;
+OptionalOwnedClxSpriteList *HalfSizeItemSpritesRed;
 
 } // namespace
 
@@ -175,20 +173,23 @@ Size GetInvItemSize(int cursId)
 
 ClxSprite GetHalfSizeItemSprite(int cursId)
 {
-	return (*HalfSizeItemSprites)[cursId][0];
+	return (*HalfSizeItemSprites[cursId])[0];
 }
 
 ClxSprite GetHalfSizeItemSpriteRed(int cursId)
 {
-	return (*HalfSizeItemSpritesRed)[cursId][0];
+	return (*HalfSizeItemSpritesRed[cursId])[0];
 }
 
 void CreateHalfSizeItemSprites()
 {
 	if (HalfSizeItemSprites != nullptr)
 		return;
-	HalfSizeItemSprites = new StaticVector<OwnedClxSpriteList, NumInvItems>;
-	HalfSizeItemSpritesRed = new StaticVector<OwnedClxSpriteList, NumInvItems>;
+	const int numInvItems = gbIsHellfire
+	    ? InvItems1Size + InvItems2Size - (static_cast<size_t>(CURSOR_FIRSTITEM) - 1)
+	    : InvItems1Size + (static_cast<size_t>(CURSOR_FIRSTITEM) - 1);
+	HalfSizeItemSprites = new OptionalOwnedClxSpriteList[numInvItems];
+	HalfSizeItemSpritesRed = new OptionalOwnedClxSpriteList[numInvItems];
 	const uint8_t *redTrn = GetInfravisionTRN();
 
 	constexpr int MaxWidth = 28 * 3;
@@ -196,7 +197,11 @@ void CreateHalfSizeItemSprites()
 	OwnedSurface ownedItemSurface { MaxWidth, MaxHeight };
 	OwnedSurface ownedHalfSurface { MaxWidth / 2, MaxHeight / 2 };
 
-	const auto createHalfSize = [&, redTrn](const ClxSprite itemSprite) {
+	const auto createHalfSize = [&, redTrn](const ClxSprite itemSprite, size_t outputIndex) {
+		if (itemSprite.width() <= 28 && itemSprite.height() <= 28) {
+			// Skip creating half-size sprites for 1x1 items because we always render them at full size anyway.
+			return;
+		}
 		const Surface itemSurface = ownedItemSurface.subregion(0, 0, itemSprite.width(), itemSprite.height());
 		SDL_Rect itemSurfaceRect = MakeSdlRect(0, 0, itemSurface.w(), itemSurface.h());
 		SDL_SetClipRect(itemSurface.surface, &itemSurfaceRect);
@@ -207,20 +212,21 @@ void CreateHalfSizeItemSprites()
 		SDL_Rect halfSurfaceRect = MakeSdlRect(0, 0, halfSurface.w(), halfSurface.h());
 		SDL_SetClipRect(halfSurface.surface, &halfSurfaceRect);
 		BilinearDownscaleByHalf8(itemSurface.surface, paletteTransparencyLookup, halfSurface.surface, 1);
-		HalfSizeItemSprites->emplace_back(SurfaceToClx(halfSurface, 1, 1));
+		HalfSizeItemSprites[outputIndex].emplace(SurfaceToClx(halfSurface, 1, 1));
 
 		SDL_FillRect(itemSurface.surface, nullptr, 1);
 		ClxDrawTRN(itemSurface, { 0, itemSurface.h() }, itemSprite, redTrn);
 		BilinearDownscaleByHalf8(itemSurface.surface, paletteTransparencyLookup, halfSurface.surface, 1);
-		HalfSizeItemSpritesRed->emplace_back(SurfaceToClx(halfSurface, 1, 1));
+		HalfSizeItemSpritesRed[outputIndex].emplace(SurfaceToClx(halfSurface, 1, 1));
 	};
 
-	for (size_t i = static_cast<int>(CURSOR_FIRSTITEM) - 1; i < InvItems1Size; ++i) {
-		createHalfSize((*pCursCels)[i]);
+	size_t outputIndex = 0;
+	for (size_t i = static_cast<int>(CURSOR_FIRSTITEM) - 1; i < InvItems1Size; ++i, ++outputIndex) {
+		createHalfSize((*pCursCels)[i], outputIndex);
 	}
 	if (gbIsHellfire) {
-		for (size_t i = 0; i < InvItems2Size; ++i) {
-			createHalfSize((*pCursCels2)[i]);
+		for (size_t i = 0; i < InvItems2Size; ++i, ++outputIndex) {
+			createHalfSize((*pCursCels2)[i], outputIndex);
 		}
 	}
 }
@@ -228,9 +234,9 @@ void CreateHalfSizeItemSprites()
 void FreeHalfSizeItemSprites()
 {
 	if (HalfSizeItemSprites != nullptr) {
-		delete HalfSizeItemSprites;
+		delete[] HalfSizeItemSprites;
 		HalfSizeItemSprites = nullptr;
-		delete HalfSizeItemSpritesRed;
+		delete[] HalfSizeItemSpritesRed;
 		HalfSizeItemSpritesRed = nullptr;
 	}
 }
