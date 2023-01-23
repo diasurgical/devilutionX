@@ -1093,11 +1093,14 @@ std::vector<OptionEntryBase *> NetworkOptions::GetEntries()
 
 ChatOptions::ChatOptions()
     : OptionCategoryBase("NetMsg", N_("Chat"), N_("Chat Settings"))
+    , filterChat("Filter Chat", OptionEntryFlags::None, N_("Filter Chat"), N_("Filter bad words from chat."), true)
 {
 }
 std::vector<OptionEntryBase *> ChatOptions::GetEntries()
 {
-	return {};
+	return {
+		&filterChat
+	};
 }
 
 OptionEntryLanguageCode::OptionEntryLanguageCode()

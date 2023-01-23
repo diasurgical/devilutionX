@@ -619,6 +619,8 @@ struct ChatOptions : OptionCategoryBase {
 	ChatOptions();
 	std::vector<OptionEntryBase *> GetEntries() override;
 
+	/** @brief Filter bad words out of multiplayer chat */
+	OptionEntryBoolean filterChat;
 	/** @brief Quick chat messages. */
 	std::vector<std::string> szHotKeyMsgs[QUICK_MESSAGE_OPTIONS];
 };
