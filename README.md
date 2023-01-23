@@ -40,7 +40,7 @@ If you want to help test the latest state of the next version you can fetch the 
    * All games are encrypted and password protected.
 
 # Saved Games and configuration file location:
-`C:\Users\[username]\AppData\Roaming\DiabloX`
+`C:\Users\[username]\AppData\Roaming\ikonomov\DiabloX`
 
 # [Summary of Changes in DevilutionX from Diablo](https://github.com/ikonomov/DiabloX/wiki/Summary-of-Changes-in-DevilutionX-from-Diablo)
 
