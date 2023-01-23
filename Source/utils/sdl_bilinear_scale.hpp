@@ -20,6 +20,6 @@ void BilinearScale32(SDL_Surface *src, SDL_Surface *dst);
  * @brief Streamlined bilinear downscaling using blended transparency table.
  * Requires `src` and `dst` to have the same pixel format (INDEX8).
  */
-void BilinearDownscaleByHalf8(SDL_Surface *src, const uint8_t (*paletteBlendingTable)[256], SDL_Surface *dst, uint8_t transparentIndex);
+void BilinearDownscaleByHalf8(const SDL_Surface *src, const uint8_t (*paletteBlendingTable)[256], SDL_Surface *dst, uint8_t transparentIndex);
 
 } // namespace devilution
