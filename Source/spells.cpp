@@ -293,12 +293,12 @@ void DoResurrect(size_t pnum, Player &target)
 	target._pMana = 0;
 	target._pManaBase = target._pMana + (target._pMaxManaBase - target._pMaxMana);
 
+	target._pmode = PM_STAND;
+
 	CalcPlrInv(target, true);
 
 	if (target.isOnActiveLevel()) {
 		StartStand(target, target._pdir);
-	} else {
-		target._pmode = PM_STAND;
 	}
 }
 
