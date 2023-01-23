@@ -1564,7 +1564,7 @@ msgstr "Дія чарування"
 
 #: Source/diablo.cpp:1906
 msgid "Cast the active spell."
-msgstr "Накласти активне чарування."
+msgstr "Чарує активне чарування."
 
 #: Source/diablo.cpp:1920
 msgid "Cancel action"
@@ -1620,7 +1620,7 @@ msgstr "Перемкнути стояння на місці"
 
 #: Source/diablo.cpp:1977
 msgid "Toggle whether the player moves."
-msgstr "Перемикає, чи рухається гравець."
+msgstr "Перемикає, чи може гравець рухатись."
 
 #: Source/diablo.cpp:2054
 msgid "Move mouse up"
