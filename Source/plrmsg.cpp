@@ -39,87 +39,84 @@ std::array<PlayerMessage, 8> Messages;
 
 std::string GetFilteredText(std::string text, string_view from)
 {
-	if (*sgOptions.Chat.filterChat) {
-		std::string badWords[] = {
-			// English
-			"asshole",
-			"beaner",
-			"bitch",
-			"chink",
-			"cock",
-			"cocksucker",
-			"cunt",
-			"darky",
-			"darkey",
-			"darkie",
-			"dick",
-			"dicksucker",
-			"dyke",
-			"fag",
-			"faggot",
-			"fuck",
-			"goddamn",
-			"hoe",
-			"homo",
-			"jew",
-			"kike",
-			"ladyboy",
-			"lady boy",
-			"lesbo",
-			"nigga",
-			"nigger",
-			"piss",
-			"polack",
-			"polock",
-			"polak",
-			"prick",
-			"punani",
-			"pussy",
-			"queer",
-			"redskin",
-			"red skin",
-			"retard",
-			"roundeye",
-			"round eye",
-			"shemale",
-			"shit",
-			"slanteye",
-			"slant eye",
-			"slut",
-			"spick",
-			"tranny",
-			"troon",
-			"twat",
-			"wetback",
-			"whitey",
-			"whitetrash",
-			"white trash",
-			"whore",
-			"wigger",
-		};
+	std::string badWords[] = {
+		// English
+		"asshole",
+		"beaner",
+		"bitch",
+		"chink",
+		"cock",
+		"cocksucker",
+		"cunt",
+		"darky",
+		"darkey",
+		"darkie",
+		"dick",
+		"dicksucker",
+		"dyke",
+		"fag",
+		"faggot",
+		"fuck",
+		"goddamn",
+		"hoe",
+		"homo",
+		"jew",
+		"kike",
+		"ladyboy",
+		"lady boy",
+		"lesbo",
+		"nigga",
+		"nigger",
+		"piss",
+		"polack",
+		"polock",
+		"polak",
+		"prick",
+		"punani",
+		"pussy",
+		"queer",
+		"redskin",
+		"red skin",
+		"retard",
+		"roundeye",
+		"round eye",
+		"shemale",
+		"shit",
+		"slanteye",
+		"slant eye",
+		"slut",
+		"spick",
+		"tranny",
+		"troon",
+		"twat",
+		"wetback",
+		"whitey",
+		"whitetrash",
+		"white trash",
+		"whore",
+		"wigger",
+	};
 
-		std::string originalText = text;
-		std::transform(text.begin(), text.end(), text.begin(), ::tolower);
+	std::string originalText = text;
+	std::transform(text.begin(), text.end(), text.begin(), ::tolower);
 
-		size_t from_pos = originalText.find(from);
-		size_t from_length = from.length();
+	size_t from_pos = originalText.find(from);
+	size_t from_length = from.length();
 
-		if (from_pos == std::string::npos)
-			return originalText;
-
-		for (const auto &word : badWords) {
-			std::string lower_word = word;
-			std::transform(lower_word.begin(), lower_word.end(), lower_word.begin(), ::tolower);
-			size_t found = originalText.find(word, from_pos + from_length);
-			while (found != std::string::npos) {
-				originalText.replace(found, word.length(), std::string(word.length(), '*'));
-				found = originalText.find(word, found + 1);
-			}
-		}
-
+	if (from_pos == std::string::npos)
 		return originalText;
+
+	for (const auto &word : badWords) {
+		std::string lower_word = word;
+		std::transform(lower_word.begin(), lower_word.end(), lower_word.begin(), ::tolower);
+		size_t found = originalText.find(word, from_pos + from_length);
+		while (found != std::string::npos) {
+			originalText.replace(found, word.length(), std::string(word.length(), '*'));
+			found = originalText.find(word, found + 1);
+		}
 	}
-	return text;
+
+	return originalText;
 }
 
 int CountLinesOfText(string_view text)
@@ -208,7 +205,11 @@ void DrawPlrMsg(const Surface &out)
 		if (!talkflag && SDL_GetTicks() - message.time >= 10000)
 			break;
 
-		std::string text = WordWrapString(GetFilteredText(message.text, message.from), width);
+		std::string text;
+		if (*sgOptions.Chat.filterChat)
+			text = WordWrapString(GetFilteredText(message.text, message.from), width);
+		else
+			text = WordWrapString(message.text, width);
 		int chatlines = CountLinesOfText(text);
 		y -= message.lineHeight * chatlines;
 
