@@ -505,7 +505,7 @@ struct GraphicsOptions : OptionCategoryBase {
 #endif
 	/** @brief Enable FPS Limiter. */
 	OptionEntryBoolean limitFPS;
-	/** @brief Show item graphics to the left of item desriptions in store menus. */
+	/** @brief Show item graphics to the left of item descriptions in store menus. */
 	OptionEntryBoolean showItemGraphicsInStores;
 	/** @brief Show FPS, even without the -f command line flag. */
 	OptionEntryBoolean showFPS;
