@@ -190,7 +190,7 @@ void CreateHalfSizeItemSprites()
 	HalfSizeItemSprites = new StaticVector<OwnedClxSpriteList, NumInvItems>;
 	HalfSizeItemSpritesRed = new StaticVector<OwnedClxSpriteList, NumInvItems>;
 	const uint8_t *redTrn = GetInfravisionTRN();
-	for (size_t i = 0; i < NumInvItems; ++i) {
+	for (size_t i = 0; i < (gbIsHellfire ? NumInvItems : NumInvItems - InvItems2Size); ++i) {
 		const ClxSprite itemSprite = GetInvItemSprite(static_cast<int>(CURSOR_FIRSTITEM) + static_cast<int>(i));
 		const OwnedSurface itemSurface(itemSprite.width(), itemSprite.height());
 		SDL_FillRect(itemSurface.surface, nullptr, 1);
