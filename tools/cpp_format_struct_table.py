@@ -17,6 +17,7 @@ def Main():
             root.joinpath("Source/itemdat.cpp"),
             root.joinpath("Source/misdat.cpp"),
             root.joinpath("Source/monstdat.cpp"),
+            root.joinpath("Source/objdat.cpp"),
             root.joinpath("Source/spelldat.cpp"),
         ],
     )
@@ -61,16 +62,18 @@ def Process(path: str):
         prev_state = state
         state = ProcessLine(input[i], state, columns_state)
         if prev_state != state:
+            columns_state.has_header = False
             for j in range(begin, i):
                 output_line = FormatLine(input[j], prev_state, columns_state)
                 output_lines.append(output_line)
             columns_state = ColumnsState()
             begin = i
+    columns_state.has_header = False
     for j in range(begin, len(input)):
         output_line = FormatLine(input[j], state, columns_state)
         output_lines.append(output_line)
 
-    with open(path, "w", encoding="utf-8", newline='') as f:
+    with open(path, "w", encoding="utf-8", newline="") as f:
         f.writelines(f"{line}\r\n" for line in output_lines)
 
 
@@ -319,11 +322,14 @@ def FormatLine(line: str, line_state: LineState, state: ColumnsState) -> str:
         return line
 
     if row.header:
-        return "// " + " ".join(
-            FormatColumn(column.rstrip(), align, width)
-            for column, width, align in zip(
-                row.columns, [state.widths[0] - 1, *state.widths[1:]], state.aligns
-            )
+        return (
+            "// "
+            + " ".join(
+                FormatColumn(column.rstrip(), align, width)
+                for column, width, align in zip(
+                    row.columns, [state.widths[0] - 1, *state.widths[1:]], state.aligns
+                )
+            ).rstrip()
         )
 
     result = []
