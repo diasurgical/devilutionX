@@ -408,6 +408,33 @@ TEST(AnimationInfo, BlockingSorcererWithFastBlock) // Skipped frames and ignored
 	    });
 }
 
+TEST(AnimationInfo, HitRecoverySorcererZenMode) // Skipped frames and ignored delay for last Frame should be considered by distribution logic
+{
+	RunAnimationTest(
+	    {
+	        new SetNewAnimationData(8, 1, AnimationDistributionFlags::None, 4),
+	        new RenderingData(0.0f, 0),
+	        new RenderingData(0.3f, 0),
+	        new RenderingData(0.6f, 1),
+	        new RenderingData(0.8f, 1),
+	        new GameTickData(5, 0),
+	        new RenderingData(0.0f, 2),
+	        new RenderingData(0.3f, 2),
+	        new RenderingData(0.6f, 3),
+	        new RenderingData(0.8f, 3),
+	        new GameTickData(6, 0),
+	        new RenderingData(0.0f, 4),
+	        new RenderingData(0.3f, 4),
+	        new RenderingData(0.6f, 5),
+	        new RenderingData(0.8f, 5),
+	        new GameTickData(7, 0),
+	        new RenderingData(0.0f, 6),
+	        new RenderingData(0.3f, 6),
+	        new RenderingData(0.6f, 7),
+	        new RenderingData(0.8f, 7),
+	        // Animation stopped cause PM_DoGotHit would stop the Animation "if (plr[pnum].AnimInfo.currentFrame >= plr[pnum]._pHFrames) {"
+	    });
+}
 TEST(AnimationInfo, Stand) // Distribution Logic shouldn't change anything here
 {
 	RunAnimationTest(
