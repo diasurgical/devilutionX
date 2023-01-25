@@ -584,7 +584,7 @@ void AddObjTraps()
 			if (triggerObject == nullptr || GenerateRnd(100) >= rndv)
 				continue;
 
-			if (!AllObjects[triggerObject->_otype].oTrapFlag)
+			if (!AllObjects[triggerObject->_otype].isTrap())
 				continue;
 
 			Object *trapObject = nullptr;
@@ -789,25 +789,25 @@ void SetupObject(Object &object, Point position, _object_id ot)
 			object._oAnimData = std::nullopt;
 		}
 	}
-	object._oAnimFlag = objectData.oAnimFlag;
+	object._oAnimFlag = objectData.isAnimated();
 	if (object._oAnimFlag) {
-		object._oAnimDelay = objectData.oAnimDelay;
+		object._oAnimDelay = objectData.animDelay;
 		object._oAnimCnt = GenerateRnd(object._oAnimDelay);
-		object._oAnimLen = objectData.oAnimLen;
+		object._oAnimLen = objectData.animLen;
 		object._oAnimFrame = GenerateRnd(object._oAnimLen - 1) + 1;
 	} else {
 		object._oAnimDelay = 1000;
 		object._oAnimCnt = 0;
-		object._oAnimLen = objectData.oAnimLen;
-		object._oAnimFrame = objectData.oAnimDelay;
+		object._oAnimLen = objectData.animLen;
+		object._oAnimFrame = objectData.animDelay;
 	}
-	object._oAnimWidth = objectData.oAnimWidth;
-	object._oSolidFlag = objectData.oSolidFlag;
-	object._oMissFlag = objectData.oMissFlag;
-	object._oLight = objectData.oLightFlag;
+	object._oAnimWidth = objectData.animWidth;
+	object._oSolidFlag = objectData.isSolid() ? 1 : 0;
+	object._oMissFlag = objectData.missilesPassThrough() ? 1 : 0;
+	object._oLight = objectData.isLight() ? 1 : 0;
 	object._oDelFlag = false;
-	object._oBreak = objectData.oBreak;
-	object._oSelFlag = objectData.oSelFlag;
+	object._oBreak = objectData.isBreakable() ? 1 : 0;
+	object._oSelFlag = objectData.selFlag;
 	object._oPreFlag = false;
 	object._oTrapFlag = false;
 	object._oDoorFlag = false;
@@ -3678,7 +3678,7 @@ void LoadLevelObjects(uint16_t filesWidths[65])
 
 	for (const ObjectData objectData : AllObjects) {
 		if (leveltype == objectData.olvltype) {
-			filesWidths[objectData.ofindex] = objectData.oAnimWidth;
+			filesWidths[objectData.ofindex] = objectData.animWidth;
 		}
 	}
 
@@ -3700,28 +3700,28 @@ void InitObjectGFX()
 	uint16_t filesWidths[65] = {};
 
 	if (IsAnyOf(currlevel, 4, 8, 12)) {
-		filesWidths[OFILE_BKSLBRNT] = AllObjects[OBJ_STORYBOOK].oAnimWidth;
-		filesWidths[OFILE_CANDLE2] = AllObjects[OBJ_STORYCANDLE].oAnimWidth;
+		filesWidths[OFILE_BKSLBRNT] = AllObjects[OBJ_STORYBOOK].animWidth;
+		filesWidths[OFILE_CANDLE2] = AllObjects[OBJ_STORYCANDLE].animWidth;
 	}
 
 	for (const ObjectData objectData : AllObjects) {
-		if (objectData.ominlvl != 0 && currlevel >= objectData.ominlvl && currlevel <= objectData.omaxlvl) {
+		if (objectData.minlvl != 0 && currlevel >= objectData.minlvl && currlevel <= objectData.maxlvl) {
 			if (IsAnyOf(objectData.ofindex, OFILE_TRAPHOLE, OFILE_TRAPHOLE) && leveltype == DTYPE_HELL) {
 				continue;
 			}
 
-			filesWidths[objectData.ofindex] = objectData.oAnimWidth;
+			filesWidths[objectData.ofindex] = objectData.animWidth;
 		}
 		if (objectData.otheme != THEME_NONE) {
 			for (int j = 0; j < numthemes; j++) {
 				if (themes[j].ttype == objectData.otheme) {
-					filesWidths[objectData.ofindex] = objectData.oAnimWidth;
+					filesWidths[objectData.ofindex] = objectData.animWidth;
 				}
 			}
 		}
 
 		if (objectData.oquest != Q_INVALID && Quests[objectData.oquest].IsAvailable()) {
-			filesWidths[objectData.ofindex] = objectData.oAnimWidth;
+			filesWidths[objectData.ofindex] = objectData.animWidth;
 		}
 	}
 
@@ -3977,7 +3977,7 @@ void SetMapObjects(const uint16_t *dunData, int startx, int starty)
 			auto objectId = static_cast<uint8_t>(SDL_SwapLE16(objectLayer[j * width + i]));
 			if (objectId != 0) {
 				const ObjectData &objectData = AllObjects[ObjTypeConv[objectId]];
-				filesWidths[objectData.ofindex] = objectData.oAnimWidth;
+				filesWidths[objectData.ofindex] = objectData.animWidth;
 			}
 		}
 	}

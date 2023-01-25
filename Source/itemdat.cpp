@@ -428,7 +428,7 @@ const PLStruct ItemSuffixes[] = {
 /** Contains the data related to each unique item ID. */
 const UniqueItem UniqueItems[] = {
 	// clang-format off
-// UIName,                       UIItemId,            UIMinLvl,  UINumPL,  UIValue, {  ItemPower[0],                          ItemPower[1],                          ItemPower[2],                          ItemPower[3],                          ItemPower[4],                          ItemPower[5]                         } 
+// UIName,                       UIItemId,            UIMinLvl,  UINumPL,  UIValue, {  ItemPower[0],                          ItemPower[1],                          ItemPower[2],                          ItemPower[3],                          ItemPower[4],                          ItemPower[5]                         }
 	// TRANSLATORS: Unique Item section
 { N_("The Butcher's Cleaver"),   UITYPE_CLEAVER,             1,        3,     3650, { { IPL_STR,             10,       10 }, { IPL_SETDAM,           4,       24 }, { IPL_SETDUR,          10,       10 }, {                                   }, {                                   }, {                                   } }  },
 { N_("The Undead Crown"),        UITYPE_SKCROWN,             1,        3,    16650, { { IPL_RNDSTEALLIFE                  }, { IPL_SETAC,            8,        8 }, { IPL_INVCURS,         77           }, {                                   }, {                                   }, {                                   } }  },
