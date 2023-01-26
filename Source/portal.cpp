@@ -47,19 +47,22 @@ void SetPortalStats(int i, bool o, int x, int y, int lvl, dungeon_type lvltype, 
 	Portals[i].setlvl = isSetLevel;
 }
 
-void AddWarpMissile(int i, Point position)
+void AddWarpMissile(int i, Point position, bool sync)
 {
-	MissilesData[MIS_TOWN].mlSFX = SFX_NONE;
+	MissileData &missileData = MissilesData[static_cast<int8_t>(MissileID::TownPortal)];
+	missileData.mlSFX = SFX_NONE;
 
-	auto *missile = AddMissile({ 0, 0 }, position, Direction::South, MIS_TOWN, TARGET_MONSTERS, i, 0, 0);
+	auto *missile = AddMissile({ 0, 0 }, position, Direction::South, MissileID::TownPortal, TARGET_MONSTERS, i, 0, 0);
 	if (missile != nullptr) {
-		SetMissDir(*missile, 1);
+		// Don't show portal opening animation if we sync existing portals
+		if (sync)
+			SetMissDir(*missile, 1);
 
 		if (leveltype != DTYPE_TOWN)
 			missile->_mlid = AddLight(missile->position.tile, 15);
 	}
 
-	MissilesData[MIS_TOWN].mlSFX = LS_SENTINEL;
+	missileData.mlSFX = LS_SENTINEL;
 }
 
 void SyncPortals()
@@ -68,20 +71,20 @@ void SyncPortals()
 		if (!Portals[i].open)
 			continue;
 		if (leveltype == DTYPE_TOWN)
-			AddWarpMissile(i, WarpDrop[i]);
+			AddWarpMissile(i, WarpDrop[i], true);
 		else {
 			int lvl = currlevel;
 			if (setlevel)
 				lvl = setlvlnum;
 			if (Portals[i].level == lvl && Portals[i].setlvl == setlevel)
-				AddWarpMissile(i, Portals[i].position);
+				AddWarpMissile(i, Portals[i].position, true);
 		}
 	}
 }
 
 void AddInTownPortal(int i)
 {
-	AddWarpMissile(i, WarpDrop[i]);
+	AddWarpMissile(i, WarpDrop[i], false);
 }
 
 void ActivatePortal(int i, Point position, int lvl, dungeon_type dungeonType, bool isSetLevel)
@@ -112,7 +115,7 @@ bool PortalOnLevel(size_t i)
 void RemovePortalMissile(int id)
 {
 	Missiles.remove_if([id](Missile &missile) {
-		if (missile._mitype == MIS_TOWN && missile._misource == id) {
+		if (missile._mitype == MissileID::TownPortal && missile._misource == id) {
 			dFlags[missile.position.tile.x][missile.position.tile.y] &= ~DungeonFlag::Missile;
 
 			if (Portals[id].level != 0)

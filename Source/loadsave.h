@@ -5,7 +5,7 @@
  */
 #pragma once
 
-#include "mpq/mpq_writer.hpp"
+#include "pfile.h"
 #include "player.h"
 #include "utils/attributes.h"
 
@@ -33,14 +33,14 @@ void RemoveEmptyInventory(Player &player);
  * @param firstflag Can be set to false if we are simply reloading the current game
  */
 void LoadGame(bool firstflag);
-void SaveHotkeys(MpqWriter &saveWriter, const Player &player);
-void SaveHeroItems(MpqWriter &saveWriter, Player &player);
-void SaveGameData(MpqWriter &saveWriter);
+void SaveHotkeys(SaveWriter &saveWriter, const Player &player);
+void SaveHeroItems(SaveWriter &saveWriter, Player &player);
+void SaveGameData(SaveWriter &saveWriter);
 void SaveGame();
-void SaveLevel(MpqWriter &saveWriter);
+void SaveLevel(SaveWriter &saveWriter);
 void LoadLevel();
-void ConvertLevels(MpqWriter &saveWriter);
+void ConvertLevels(SaveWriter &saveWriter);
 void LoadStash();
-void SaveStash(MpqWriter &stashWriter);
+void SaveStash(SaveWriter &stashWriter);
 
 } // namespace devilution

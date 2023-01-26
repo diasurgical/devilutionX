@@ -25,8 +25,9 @@ ControllerButton GameController::ToControllerButton(const SDL_Event &event)
 	case SDL_CONTROLLERAXISMOTION:
 		switch (event.caxis.axis) {
 		case SDL_CONTROLLER_AXIS_TRIGGERLEFT:
-			if (event.caxis.value < 8192) { // 25% pressed
+			if (event.caxis.value < 8192 && trigger_left_is_down_) { // 25% pressed
 				trigger_left_is_down_ = false;
+				trigger_left_state_ = ControllerButton_AXIS_TRIGGERLEFT;
 			}
 			if (event.caxis.value > 16384 && !trigger_left_is_down_) { // 50% pressed
 				trigger_left_is_down_ = true;
@@ -34,8 +35,9 @@ ControllerButton GameController::ToControllerButton(const SDL_Event &event)
 			}
 			return trigger_left_state_;
 		case SDL_CONTROLLER_AXIS_TRIGGERRIGHT:
-			if (event.caxis.value < 8192) { // 25% pressed
+			if (event.caxis.value < 8192 && trigger_right_is_down_) { // 25% pressed
 				trigger_right_is_down_ = false;
+				trigger_right_state_ = ControllerButton_AXIS_TRIGGERRIGHT;
 			}
 			if (event.caxis.value > 16384 && !trigger_right_is_down_) { // 50% pressed
 				trigger_right_is_down_ = true;

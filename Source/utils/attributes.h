@@ -56,3 +56,9 @@
 #else
 #define DVL_EXCEPTIONS 1
 #endif
+
+#if defined(_MSC_VER)
+#define DVL_RESTRICT __restrict
+#else
+#define DVL_RESTRICT __restrict__
+#endif

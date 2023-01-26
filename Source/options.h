@@ -1,5 +1,6 @@
 #pragma once
 
+#include <array>
 #include <cstddef>
 #include <cstdint>
 #include <forward_list>
@@ -9,6 +10,7 @@
 
 #include "controls/controller.h"
 #include "controls/controller_buttons.h"
+#include "controls/game_controls.h"
 #include "engine/sound_defs.hpp"
 #include "miniwin/misc_msg.h"
 #include "pack.h"
@@ -503,6 +505,8 @@ struct GraphicsOptions : OptionCategoryBase {
 #endif
 	/** @brief Enable FPS Limiter. */
 	OptionEntryBoolean limitFPS;
+	/** @brief Show item graphics to the left of item descriptions in store menus. */
+	OptionEntryBoolean showItemGraphicsInStores;
 	/** @brief Show FPS, even without the -f command line flag. */
 	OptionEntryBoolean showFPS;
 	/** @brief Display current/max health values on health globe. */
@@ -579,6 +583,8 @@ struct GameplayOptions : OptionCategoryBase {
 	OptionEntryInt<int> numRejuPotionPickup;
 	/** @brief Number of Full Rejuvenating potions to pick up automatically */
 	OptionEntryInt<int> numFullRejuPotionPickup;
+	/** @brief Enable floating numbers. */
+	OptionEntryBoolean enableFloatingNumbers;
 };
 
 struct ControllerOptions : OptionCategoryBase {
@@ -721,10 +727,13 @@ struct PadmapperOptions : OptionCategoryBase {
 		std::function<void()> actionReleased;
 		std::function<bool()> enable;
 		ControllerButtonCombo boundInput {};
-		std::string boundInputDescription;
+		mutable GamepadLayout boundInputDescriptionType = GamepadLayout::Generic;
+		mutable std::string boundInputDescription;
 		unsigned dynamicIndex;
 		std::string dynamicKey;
 		mutable std::string dynamicName;
+
+		void UpdateValueDescription() const;
 
 		friend struct PadmapperOptions;
 	};
@@ -748,8 +757,8 @@ struct PadmapperOptions : OptionCategoryBase {
 
 private:
 	std::forward_list<Action> actions;
-	std::unordered_map<ControllerButton, std::reference_wrapper<const Action>> buttonToReleaseAction;
-	std::unordered_map<ControllerButton, std::string> buttonToButtonName;
+	std::array<const Action *, enum_size<ControllerButton>::value> buttonToReleaseAction;
+	std::array<std::string, enum_size<ControllerButton>::value> buttonToButtonName;
 	std::unordered_map<std::string, ControllerButton> buttonNameToButton;
 	bool committed = false;
 

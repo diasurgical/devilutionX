@@ -106,13 +106,16 @@ void UiAddLogo(std::vector<std::unique_ptr<UiItemBase>> *vecDialog);
 void UiFocusNavigationSelect();
 void UiFocusNavigationEsc();
 void UiFocusNavigationYesNo();
+
 void UiInitList(void (*fnFocus)(int value), void (*fnSelect)(int value), void (*fnEsc)(), const std::vector<std::unique_ptr<UiItemBase>> &items, bool wraps = false, void (*fnFullscreen)() = nullptr, bool (*fnYesNo)() = nullptr, size_t selectedItem = 0);
+void UiRenderListItems();
+void UiInitList_clear();
+
 void UiClearScreen();
 void UiPollAndRender(std::optional<tl::function_ref<bool(SDL_Event &)>> eventHandler = std::nullopt);
 void UiRenderItem(const UiItemBase &item);
 void UiRenderItems(const std::vector<UiItemBase *> &items);
 void UiRenderItems(const std::vector<std::unique_ptr<UiItemBase>> &items);
-void UiInitList_clear();
 ClxSprite UiGetHeroDialogSprite(size_t heroClassIndex);
 
 void mainmenu_restart_repintro();

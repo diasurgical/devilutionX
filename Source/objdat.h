@@ -8,6 +8,7 @@
 #include <cstdint>
 
 #include "levels/gendung.h"
+#include "utils/enum_traits.h"
 
 namespace devilution {
 
@@ -242,23 +243,58 @@ enum quest_id : int8_t {
 	Q_INVALID = -1,
 };
 
+enum class ObjectDataFlags : uint8_t {
+	Animated = 1U,
+	Solid = 1U << 1,
+	MissilesPassThrough = 1U << 2,
+	Light = 1U << 3,
+	Trap = 1U << 4,
+	Breakable = 1U << 5,
+};
+use_enum_as_flags(ObjectDataFlags);
+
 struct ObjectData {
 	object_graphic_id ofindex;
-	int8_t ominlvl;
-	int8_t omaxlvl;
+	int8_t minlvl;
+	int8_t maxlvl;
 	dungeon_type olvltype;
 	theme_id otheme;
 	quest_id oquest;
-	bool oAnimFlag;
-	int oAnimDelay; // Tick length of each frame in the current animation
-	int oAnimLen;   // Number of frames in current animation
-	uint16_t oAnimWidth;
-	bool oSolidFlag;
-	bool oMissFlag;
-	bool oLightFlag;
-	int8_t oBreak;   // TODO Create enum
-	int8_t oSelFlag; // TODO Create enum
-	bool oTrapFlag;
+	ObjectDataFlags flags;
+	uint8_t animDelay; // Tick length of each frame in the current animation
+	uint8_t animLen;   // Number of frames in current animation
+	uint8_t animWidth;
+	int8_t selFlag; // TODO Create enum
+
+	[[nodiscard]] bool isAnimated() const
+	{
+		return HasAnyOf(flags, ObjectDataFlags::Animated);
+	}
+
+	[[nodiscard]] bool isSolid() const
+	{
+		return HasAnyOf(flags, ObjectDataFlags::Solid);
+	}
+
+	[[nodiscard]] bool missilesPassThrough() const
+	{
+		return HasAnyOf(flags, ObjectDataFlags::MissilesPassThrough);
+	}
+
+	[[nodiscard]] bool isLight() const
+	{
+		return HasAnyOf(flags, ObjectDataFlags::Light);
+	}
+
+	[[nodiscard]] bool isTrap() const
+	{
+		return HasAnyOf(flags, ObjectDataFlags::Trap);
+	}
+
+	[[nodiscard]] bool isBreakable() const
+	{
+		return HasAnyOf(flags, ObjectDataFlags::Breakable);
+	}
 };
 
 extern const _object_id ObjTypeConv[];

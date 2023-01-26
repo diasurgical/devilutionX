@@ -36,7 +36,7 @@ sudo apt-get install smpq
 ### Installing dependencies on Fedora
 
 ```
-sudo dnf install cmake gcc-c++ glibc-devel libstdc++-static SDL2-devel libsodium-devel libpng-devel bzip2-devel gmock-devel gtest-devel libasan libubsan fmt-devel
+sudo dnf install cmake gcc-c++ glibc-devel libstdc++-static SDL2-devel SDL2_image-devel libsodium-devel libpng-devel bzip2-devel gmock-devel gtest-devel libasan libubsan fmt-devel
 ```
 
 ### Compiling
@@ -181,11 +181,14 @@ Make sure to install the workload `Desktop development with C++` and the individ
 
 Install [Git for Windows](https://gitforwindows.org/)
 
-Run the following commands in Command Prompt or Powershell  
-git clone https://github.com/microsoft/vcpkg  
-cd vcpkg  
-bootstrap-vcpkg.bat  
+Run the following commands in Command Prompt or Powershell
+
+~~~ bat
+git clone https://github.com/microsoft/vcpkg
+cd vcpkg
+bootstrap-vcpkg.bat
 vcpkg integrate install
+~~~
 
 If you need aditional instructions for vcpkg you can find the documentation [here](https://github.com/microsoft/vcpkg#quick-start-windows).
 
@@ -431,8 +434,8 @@ Emscripten port is a work in progress. It builds but does not do more than that 
 To build, install the [Emscripten SDK](https://emscripten.org/docs/getting_started/downloads.html), then run:
 
 ~~~ bash
-emcmake cmake -S. -Bbuild-em -DCMAKE\_BUILD\_TYPE=Release
-cmake --build build-em -j $(getconf \_NPROCESSORS\_ONLN)
+emcmake cmake -S. -Bbuild-em -DCMAKE_BUILD_TYPE=Release
+cmake --build build-em -j $(getconf _NPROCESSORS_ONLN)
 ~~~
 
 To then run it:
@@ -479,7 +482,7 @@ Packaging/xbox-one/build.bat
 <details><summary>Miyoo Mini</summary>
 
 Building for Miyoo Mini must be run from inside the [Toolchain Docker image](https://github.com/MiyooMini/union-toolchain).
-Executing `Packaging/miyoo_mini/build.sh` will create the folder `build-miyoo-mini/SDROOT` which has the correct structure to be used with 
+Executing `Packaging/miyoo_mini/build.sh` will create the folder `build-miyoo-mini/SDROOT` which has the correct structure to be used with
 OnionOS Port Collection.
 </details>
 

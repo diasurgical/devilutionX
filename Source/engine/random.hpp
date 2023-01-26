@@ -84,4 +84,28 @@ const T PickRandomlyAmong(const std::initializer_list<T> &values)
 	return *(values.begin() + index);
 }
 
+/**
+ * @brief Generates a random non-negative integer
+ *
+ * Effectively the same as GenerateRnd but will never return a negative value
+ * @param v upper limit for the return value
+ * @return a value between 0 and v-1 inclusive, i.e. the range [0, v)
+ */
+inline int32_t RandomIntLessThan(int32_t v)
+{
+	return std::max<int32_t>(GenerateRnd(v), 0);
+}
+
+/**
+ * @brief Randomly chooses a value somewhere within the given range
+ * @param min lower limit, minumum possible value
+ * @param max upper limit, either the maximum possible value for a closed range (the default behaviour) or one greater than the maximum value for a half-open range
+ * @param halfOpen whether to use the limits as a half-open range or not
+ * @return a randomly selected integer
+ */
+inline int32_t RandomIntBetween(int32_t min, int32_t max, bool halfOpen = false)
+{
+	return RandomIntLessThan(max - min + (halfOpen ? 0 : 1)) + min;
+}
+
 } // namespace devilution

@@ -8,8 +8,29 @@
 namespace devilution {
 namespace {
 
-static void ComparePackedItems(const ItemPack &item1, const ItemPack &item2)
+void SwapLE(ItemPack &pack)
 {
+	pack.iSeed = SDL_SwapLE32(pack.iSeed);
+	pack.iCreateInfo = SDL_SwapLE16(pack.iCreateInfo);
+	pack.idx = SDL_SwapLE16(pack.idx);
+	pack.wValue = SDL_SwapLE16(pack.wValue);
+	pack.dwBuff = SDL_SwapLE32(pack.dwBuff);
+}
+
+ItemPack SwappedLE(const ItemPack &pack)
+{
+	ItemPack swapped = pack;
+	SwapLE(swapped);
+	return swapped;
+}
+
+void ComparePackedItems(const ItemPack &item1LE, const ItemPack &item2LE)
+{
+	// Packs are little-endian.
+	// Swap to native endianness on big-endian systems before comparison for better error messages.
+	const ItemPack item1 = SwappedLE(item1LE);
+	const ItemPack item2 = SwappedLE(item2LE);
+
 	// `ItemPack` is packed, so we copy the unaligned values out before comparing them.
 	// This avoids the following UBSAN error such as this one:
 	// runtime error: load of misaligned address for type 'const unsigned int', which requires 4 byte alignment
@@ -354,18 +375,19 @@ TEST_F(PackTest, UnPackItem_diablo)
 	MyPlayer->_pMaxHPBase = 125 << 6;
 
 	for (size_t i = 0; i < sizeof(PackedDiabloItems) / sizeof(*PackedDiabloItems); i++) {
-		UnPackItem(PackedDiabloItems[i], *MyPlayer, id, false);
+		const ItemPack packed = SwappedLE(PackedDiabloItems[i]);
+		UnPackItem(packed, *MyPlayer, id, false);
 		CompareItems(id, DiabloItems[i]);
 
 		PackItem(is, id, gbIsHellfire);
-		ComparePackedItems(is, PackedDiabloItems[i]);
+		ComparePackedItems(is, packed);
 	}
 }
 
 TEST_F(PackTest, UnPackItem_diablo_unique_bug)
 {
-	ItemPack pkItemBug = { 6, 911, 14, 5, 60, 60, 0, 0, 0, 0 }; // Veil of Steel - with morph bug
-	ItemPack pkItem = { 6, 655, 14, 5, 60, 60, 0, 0, 0, 0 };    // Veil of Steel - fixed
+	const auto pkItemBug = SwappedLE(ItemPack { 6, 911, 14, 5, 60, 60, 0, 0, 0, 0 }); // Veil of Steel - with morph bug
+	const auto pkItem = SwappedLE(ItemPack { 6, 655, 14, 5, 60, 60, 0, 0, 0, 0 });    // Veil of Steel - fixed
 
 	gbIsHellfire = false;
 	gbIsMultiplayer = false;
@@ -425,11 +447,12 @@ TEST_F(PackTest, UnPackItem_spawn)
 	MyPlayer->_pMaxHPBase = 125 << 6;
 
 	for (size_t i = 0; i < sizeof(PackedSpawnItems) / sizeof(*PackedSpawnItems); i++) {
-		UnPackItem(PackedSpawnItems[i], *MyPlayer, id, false);
+		const ItemPack packed = SwappedLE(PackedSpawnItems[i]);
+		UnPackItem(packed, *MyPlayer, id, false);
 		CompareItems(id, SpawnItems[i]);
 
 		PackItem(is, id, gbIsHellfire);
-		ComparePackedItems(is, PackedSpawnItems[i]);
+		ComparePackedItems(is, packed);
 	}
 }
 
@@ -469,11 +492,12 @@ TEST_F(PackTest, UnPackItem_diablo_multiplayer)
 	MyPlayer->_pMaxHPBase = 125 << 6;
 
 	for (size_t i = 0; i < sizeof(PackedDiabloMPItems) / sizeof(*PackedDiabloMPItems); i++) {
-		UnPackItem(PackedDiabloMPItems[i], *MyPlayer, id, false);
+		const ItemPack packed = SwappedLE(PackedDiabloMPItems[i]);
+		UnPackItem(packed, *MyPlayer, id, false);
 		CompareItems(id, DiabloMPItems[i]);
 
 		PackItem(is, id, gbIsHellfire);
-		ComparePackedItems(is, PackedDiabloMPItems[i]);
+		ComparePackedItems(is, packed);
 	}
 }
 
@@ -682,18 +706,19 @@ TEST_F(PackTest, UnPackItem_hellfire)
 	MyPlayer->_pMaxHPBase = 125 << 6;
 
 	for (size_t i = 0; i < sizeof(PackedHellfireItems) / sizeof(*PackedHellfireItems); i++) {
-		UnPackItem(PackedHellfireItems[i], *MyPlayer, id, true);
+		const ItemPack packed = SwappedLE(PackedHellfireItems[i]);
+		UnPackItem(packed, *MyPlayer, id, true);
 		CompareItems(id, HellfireItems[i]);
 
 		PackItem(is, id, gbIsHellfire);
 		is.dwBuff &= ~CF_HELLFIRE;
-		ComparePackedItems(is, PackedHellfireItems[i]);
+		ComparePackedItems(is, packed);
 	}
 }
 
 TEST_F(PackTest, UnPackItem_diablo_strip_hellfire_items)
 {
-	ItemPack is = { 1478792102, 259, 92, 0, 0, 0, 0, 0, 0, 0 }; // Scroll of Search
+	const auto is = SwappedLE(ItemPack { 1478792102, 259, 92, 0, 0, 0, 0, 0, 0, 0 }); // Scroll of Search
 	Item id;
 
 	gbIsHellfire = false;
@@ -707,7 +732,7 @@ TEST_F(PackTest, UnPackItem_diablo_strip_hellfire_items)
 
 TEST_F(PackTest, UnPackItem_empty)
 {
-	ItemPack is = { 0, 0, 0xFFFF, 0, 0, 0, 0, 0, 0, 0 };
+	const auto is = SwappedLE(ItemPack { 0, 0, 0xFFFF, 0, 0, 0, 0, 0, 0, 0 });
 	Item id;
 
 	UnPackItem(is, *MyPlayer, id, false);
@@ -726,7 +751,7 @@ TEST_F(PackTest, PackItem_empty)
 
 	// Copy the value out before comparing to avoid loading a misaligned address.
 	const auto idx = is.idx;
-	ASSERT_EQ(idx, 0xFFFF);
+	ASSERT_EQ(SDL_SwapLE16(idx), 0xFFFF);
 }
 
 static void compareGold(const ItemPack &is, int iCurs)
@@ -736,7 +761,7 @@ static void compareGold(const ItemPack &is, int iCurs)
 	ASSERT_EQ(id._iCurs, iCurs);
 	ASSERT_EQ(id.IDidx, IDI_GOLD);
 	// Copy the value out before comparing to avoid loading a misaligned address.
-	const auto wvalue = is.wValue;
+	const auto wvalue = SDL_SwapLE16(is.wValue);
 	ASSERT_EQ(id._ivalue, wvalue);
 	ASSERT_EQ(id._itype, ItemType::Gold);
 	ASSERT_EQ(id._iClass, ICLASS_GOLD);
@@ -748,25 +773,25 @@ static void compareGold(const ItemPack &is, int iCurs)
 
 TEST_F(PackTest, UnPackItem_gold_small)
 {
-	ItemPack is = { 0, 0, IDI_GOLD, 0, 0, 0, 0, 0, 1000, 0 };
+	const auto is = SwappedLE(ItemPack { 0, 0, IDI_GOLD, 0, 0, 0, 0, 0, 1000, 0 });
 	compareGold(is, ICURS_GOLD_SMALL);
 }
 
 TEST_F(PackTest, UnPackItem_gold_medium)
 {
-	ItemPack is = { 0, 0, IDI_GOLD, 0, 0, 0, 0, 0, 1001, 0 };
+	const auto is = SwappedLE(ItemPack { 0, 0, IDI_GOLD, 0, 0, 0, 0, 0, 1001, 0 });
 	compareGold(is, ICURS_GOLD_MEDIUM);
 }
 
 TEST_F(PackTest, UnPackItem_gold_large)
 {
-	ItemPack is = { 0, 0, IDI_GOLD, 0, 0, 0, 0, 0, 2500, 0 };
+	const auto is = SwappedLE(ItemPack { 0, 0, IDI_GOLD, 0, 0, 0, 0, 0, 2500, 0 });
 	compareGold(is, ICURS_GOLD_LARGE);
 }
 
 TEST_F(PackTest, UnPackItem_ear)
 {
-	ItemPack is = { 1633955154, 17509, 23, 111, 103, 117, 101, 68, 19843, 0 };
+	const auto is = SwappedLE(ItemPack { 1633955154, 17509, 23, 111, 103, 117, 101, 68, 19843, 0 });
 	Item id;
 
 	UnPackItem(is, *MyPlayer, id, false);

@@ -1,6 +1,8 @@
 #include "panels/spell_icons.hpp"
 
+#include "engine.h"
 #include "engine/load_cel.hpp"
+#include "engine/load_clx.hpp"
 #include "engine/palette.h"
 #include "engine/render/clx_render.hpp"
 #include "init.h"
@@ -9,11 +11,19 @@
 namespace devilution {
 
 namespace {
-OptionalOwnedClxSpriteList pSpellCels;
-uint8_t SplTransTbl[256];
-} // namespace
 
-const char SpellITbl[] = {
+#ifdef UNPACKED_MPQS
+OptionalOwnedClxSpriteList LargeSpellIconsBackground;
+OptionalOwnedClxSpriteList SmallSpellIconsBackground;
+#endif
+
+OptionalOwnedClxSpriteList SmallSpellIcons;
+OptionalOwnedClxSpriteList LargeSpellIcons;
+
+uint8_t SplTransTbl[256];
+
+/** Maps from spell_id to spelicon.cel frame number. */
+const uint8_t SpellITbl[] = {
 	26,
 	0,
 	1,
@@ -68,28 +78,82 @@ const char SpellITbl[] = {
 	34,
 };
 
-void LoadSpellIcons()
+} // namespace
+
+void LoadLargeSpellIcons()
 {
-	if (!gbIsHellfire)
-		pSpellCels = LoadCel("ctrlpan\\spelicon", SPLICONLENGTH);
-	else
-		pSpellCels = LoadCel("data\\spelicon", SPLICONLENGTH);
+	if (!gbIsHellfire) {
+#ifdef UNPACKED_MPQS
+		LargeSpellIcons = LoadClx("ctrlpan\\spelicon_fg.clx");
+		LargeSpellIconsBackground = LoadClx("ctrlpan\\spelicon_bg.clx");
+#else
+		LargeSpellIcons = LoadCel("ctrlpan\\spelicon", SPLICONLENGTH);
+#endif
+	} else {
+#ifdef UNPACKED_MPQS
+		LargeSpellIcons = LoadClx("data\\spelicon_fg.clx");
+		LargeSpellIconsBackground = LoadClx("data\\spelicon_bg.clx");
+#else
+		LargeSpellIcons = LoadCel("data\\spelicon", SPLICONLENGTH);
+#endif
+	}
 	SetSpellTrans(RSPLTYPE_SKILL);
 }
 
-void FreeSpellIcons()
+void FreeLargeSpellIcons()
 {
-	pSpellCels = std::nullopt;
+#ifdef UNPACKED_MPQS
+	LargeSpellIconsBackground = std::nullopt;
+#endif
+	LargeSpellIcons = std::nullopt;
 }
 
-void DrawSpellCel(const Surface &out, Point position, int nCel)
+void LoadSmallSpellIcons()
 {
-	DrawSpellCel(out, position, *pSpellCels, nCel);
+#ifdef UNPACKED_MPQS
+	SmallSpellIcons = LoadClx("data\\spelli2_fg.clx");
+	SmallSpellIconsBackground = LoadClx("data\\spelli2_bg.clx");
+#else
+	SmallSpellIcons = LoadCel("data\\spelli2", 37);
+#endif
 }
 
-void DrawSpellCel(const Surface &out, Point position, const OwnedClxSpriteList &sprite, int nCel)
+void FreeSmallSpellIcons()
 {
-	ClxDrawTRN(out, position, sprite[nCel], SplTransTbl);
+#ifdef UNPACKED_MPQS
+	SmallSpellIconsBackground = std::nullopt;
+#endif
+	SmallSpellIcons = std::nullopt;
+}
+
+void DrawLargeSpellIcon(const Surface &out, Point position, spell_id spell)
+{
+#ifdef UNPACKED_MPQS
+	ClxDrawTRN(out, position, (*LargeSpellIconsBackground)[0], SplTransTbl);
+#endif
+	ClxDrawTRN(out, position, (*LargeSpellIcons)[SpellITbl[spell]], SplTransTbl);
+}
+
+void DrawSmallSpellIcon(const Surface &out, Point position, spell_id spell)
+{
+#ifdef UNPACKED_MPQS
+	ClxDrawTRN(out, position, (*SmallSpellIconsBackground)[0], SplTransTbl);
+#endif
+	ClxDrawTRN(out, position, (*SmallSpellIcons)[SpellITbl[spell]], SplTransTbl);
+}
+
+void DrawLargeSpellIconBorder(const Surface &out, Point position, uint8_t color)
+{
+	const int width = (*LargeSpellIcons)[0].width();
+	const int height = (*LargeSpellIcons)[0].height();
+	UnsafeDrawBorder2px(out, Rectangle { Point { position.x, position.y - height + 1 }, Size { width, height } }, color);
+}
+
+void DrawSmallSpellIconBorder(const Surface &out, Point position)
+{
+	const int width = (*SmallSpellIcons)[0].width();
+	const int height = (*SmallSpellIcons)[0].height();
+	UnsafeDrawBorder2px(out, Rectangle { Point { position.x, position.y - height + 1 }, Size { width, height } }, SplTransTbl[PAL8_YELLOW + 2]);
 }
 
 void SetSpellTrans(spell_type t)

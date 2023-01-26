@@ -52,7 +52,7 @@ extern talk_id stextflag;
 /** Current index into storehidx/storehold */
 extern DVL_API_FOR_TEST int storenumh;
 /** Map of inventory items being presented in the store */
-extern char storehidx[48];
+extern int8_t storehidx[48];
 /** Copies of the players items as presented in the store */
 extern DVL_API_FOR_TEST Item storehold[48];
 
@@ -86,7 +86,7 @@ void SetupTownStores();
 
 void FreeStoreMem();
 
-void PrintSString(const Surface &out, int margin, int line, string_view text, UiFlags flags, int price = 0);
+void PrintSString(const Surface &out, int margin, int line, string_view text, UiFlags flags, int price = 0, int cursId = -1, bool cursIndent = false);
 void DrawSLine(const Surface &out, int sy);
 void DrawSTextHelp();
 void ClearSText(int s, int e);

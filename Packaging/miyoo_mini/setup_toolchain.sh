@@ -6,7 +6,7 @@ main() {
 }
 
 install_toolchain() {
-	TOOLCHAIN_VERSION=v0.0.2
+	TOOLCHAIN_VERSION=v0.0.3
 	TOOLCHAIN_TAR="miyoomini-toolchain.tar.xz"
 
 	TOOLCHAIN_ARCH=`uname -m`
@@ -35,6 +35,7 @@ install_dependencies() {
 		cmake \
 		cmake-curses-gui \
 		cpio \
+		gettext \
 		git \
 		libncurses5-dev \
 		make \

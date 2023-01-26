@@ -318,7 +318,7 @@ void TalkToBarOwner(Player &player, Towner &barOwner)
 
 	auto &bannerQuest = Quests[Q_LTBANNER];
 	if (bannerQuest._qactive != QUEST_NOTAVAIL) {
-		if (player._pLvlVisited[3] && bannerQuest._qactive != QUEST_DONE) {
+		if ((player._pLvlVisited[3] || player._pLvlVisited[4]) && bannerQuest._qactive != QUEST_DONE) {
 			if (bannerQuest._qvar2 == 0) {
 				bannerQuest._qvar2 = 1;
 				if (bannerQuest._qactive == QUEST_INIT) {
@@ -326,6 +326,7 @@ void TalkToBarOwner(Player &player, Towner &barOwner)
 					bannerQuest._qactive = QUEST_ACTIVE;
 				}
 				bannerQuest._qlog = true;
+				NetSendCmdQuest(true, bannerQuest);
 				InitQTextMsg(TEXT_BANNER2);
 				return;
 			}
@@ -333,6 +334,7 @@ void TalkToBarOwner(Player &player, Towner &barOwner)
 			if (bannerQuest._qvar2 == 1 && RemoveInventoryItemById(player, IDI_BANNER)) {
 				bannerQuest._qactive = QUEST_DONE;
 				bannerQuest._qvar1 = 3;
+				NetSendCmdQuest(true, bannerQuest);
 				SpawnUnique(UITEM_HARCREST, barOwner.position + Direction::SouthWest);
 				InitQTextMsg(TEXT_BANNER3);
 				return;
@@ -373,36 +375,38 @@ void TalkToBlackSmith(Player &player, Towner &blackSmith)
 				if (Quests[Q_ROCK]._qactive == QUEST_INIT) {
 					Quests[Q_ROCK]._qactive = QUEST_ACTIVE;
 				}
+				NetSendCmdQuest(true, Quests[Q_ROCK]);
 				InitQTextMsg(TEXT_INFRA5);
 				return;
 			}
 
 			if (Quests[Q_ROCK]._qvar2 == 1 && RemoveInventoryItemById(player, IDI_ROCK)) {
 				Quests[Q_ROCK]._qactive = QUEST_DONE;
+				NetSendCmdQuest(true, Quests[Q_ROCK]);
 				SpawnUnique(UITEM_INFRARING, blackSmith.position + Direction::SouthWest);
 				InitQTextMsg(TEXT_INFRA7);
 				return;
 			}
 		}
 	}
-	if (Quests[Q_ANVIL]._qactive != QUEST_NOTAVAIL) {
-		if (player._pLvlVisited[9] && Quests[Q_ANVIL]._qactive != QUEST_DONE) {
-			if (Quests[Q_ANVIL]._qvar2 == 0 && Quests[Q_ROCK]._qactive != QUEST_INIT) {
-				Quests[Q_ANVIL]._qvar2 = 1;
-				Quests[Q_ANVIL]._qlog = true;
-				if (Quests[Q_ANVIL]._qactive == QUEST_INIT) {
-					Quests[Q_ANVIL]._qactive = QUEST_ACTIVE;
-				}
-				InitQTextMsg(TEXT_ANVIL5);
-				return;
+	if (IsNoneOf(Quests[Q_ANVIL]._qactive, QUEST_NOTAVAIL, QUEST_DONE)) {
+		if ((player._pLvlVisited[9] || player._pLvlVisited[10]) && Quests[Q_ANVIL]._qvar2 == 0) {
+			Quests[Q_ANVIL]._qvar2 = 1;
+			Quests[Q_ANVIL]._qlog = true;
+			if (Quests[Q_ANVIL]._qactive == QUEST_INIT) {
+				Quests[Q_ANVIL]._qactive = QUEST_ACTIVE;
 			}
+			NetSendCmdQuest(true, Quests[Q_ANVIL]);
+			InitQTextMsg(TEXT_ANVIL5);
+			return;
+		}
 
-			if (Quests[Q_ANVIL]._qvar2 == 1 && RemoveInventoryItemById(player, IDI_ANVIL)) {
-				Quests[Q_ANVIL]._qactive = QUEST_DONE;
-				SpawnUnique(UITEM_GRISWOLD, blackSmith.position + Direction::SouthWest);
-				InitQTextMsg(TEXT_ANVIL7);
-				return;
-			}
+		if (Quests[Q_ANVIL]._qvar2 == 1 && RemoveInventoryItemById(player, IDI_ANVIL)) {
+			Quests[Q_ANVIL]._qactive = QUEST_DONE;
+			NetSendCmdQuest(true, Quests[Q_ANVIL]);
+			SpawnUnique(UITEM_GRISWOLD, blackSmith.position + Direction::SouthWest);
+			InitQTextMsg(TEXT_ANVIL7);
+			return;
 		}
 	}
 
@@ -458,7 +462,7 @@ void TalkToWitch(Player &player, Towner & /*witch*/)
 
 void TalkToBarmaid(Player &player, Towner & /*barmaid*/)
 {
-	if (!player._pLvlVisited[21] && HasInventoryItemWithId(player, IDI_MAPOFDOOM)) {
+	if (!player._pLvlVisited[21] && HasInventoryItemWithId(player, IDI_MAPOFDOOM) && Quests[Q_GRAVE]._qmsg != TEXT_GRAVE8) {
 		Quests[Q_GRAVE]._qactive = QUEST_ACTIVE;
 		Quests[Q_GRAVE]._qlog = true;
 		Quests[Q_GRAVE]._qmsg = TEXT_GRAVE8;
@@ -484,18 +488,20 @@ void TalkToHealer(Player &player, Towner &healer)
 			Quests[Q_PWATER]._qlog = true;
 			Quests[Q_PWATER]._qmsg = TEXT_POISON3;
 			InitQTextMsg(TEXT_POISON3);
+			NetSendCmdQuest(true, Quests[Q_PWATER]);
 			return;
 		}
 		if (Quests[Q_PWATER]._qactive == QUEST_DONE && Quests[Q_PWATER]._qvar1 != 2) {
 			Quests[Q_PWATER]._qvar1 = 2;
 			InitQTextMsg(TEXT_POISON5);
 			SpawnUnique(UITEM_TRING, healer.position + Direction::SouthWest);
+			NetSendCmdQuest(true, Quests[Q_PWATER]);
 			return;
 		}
 	}
 	if (Quests[Q_MUSHROOM]._qactive == QUEST_ACTIVE) {
 		if (Quests[Q_MUSHROOM]._qvar1 >= QS_MUSHGIVEN && Quests[Q_MUSHROOM]._qvar1 < QS_BRAINGIVEN && RemoveInventoryItemById(player, IDI_BRAIN)) {
-			SpawnQuestItem(IDI_SPECELIX, healer.position + Displacement { 0, 1 }, 0, 0);
+			SpawnQuestItem(IDI_SPECELIX, healer.position + Displacement { 0, 1 }, 0, 0, true);
 			InitQTextMsg(TEXT_MUSH4);
 			Quests[Q_MUSHROOM]._qvar1 = QS_BRAINGIVEN;
 			QuestDialogTable[TOWN_HEALER][Q_MUSHROOM] = TEXT_NONE;
@@ -516,12 +522,13 @@ void TalkToBoy(Player & /*player*/, Towner & /*boy*/)
 void TalkToStoryteller(Player &player, Towner & /*storyteller*/)
 {
 	auto &betrayerQuest = Quests[Q_BETRAYER];
-	if (!gbIsMultiplayer) {
+	if (!UseMultiplayerQuests()) {
 		if (betrayerQuest._qactive == QUEST_INIT && RemoveInventoryItemById(player, IDI_LAZSTAFF)) {
 			InitQTextMsg(TEXT_VILE1);
 			betrayerQuest._qlog = true;
 			betrayerQuest._qactive = QUEST_ACTIVE;
 			betrayerQuest._qvar1 = 2;
+			NetSendCmdQuest(true, betrayerQuest);
 			return;
 		}
 	} else {

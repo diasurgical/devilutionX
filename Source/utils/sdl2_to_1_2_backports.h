@@ -97,10 +97,12 @@ SDL_LogPriority SDL_LogGetPriority(int category);
 
 inline void SDL_StartTextInput()
 {
+	SDL_EnableUNICODE(1);
 }
 
 inline void SDL_StopTextInput()
 {
+	SDL_EnableUNICODE(0);
 }
 
 inline void SDL_SetTextInputRect(const SDL_Rect *r)
@@ -313,6 +315,7 @@ int SDL_BlitScaled(SDL_Surface *src, SDL_Rect *srcrect,
     SDL_Surface *dst, SDL_Rect *dstrect);
 
 //== Filesystem
+#define SDL_RWOPS_UNKNOWN 0U
 
 Sint64 SDL_RWsize(SDL_RWops *context);
 

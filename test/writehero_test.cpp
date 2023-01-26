@@ -5,6 +5,7 @@
 #include <fstream>
 #include <vector>
 
+#include <SDL_endian.h>
 #include <gtest/gtest.h>
 #include <picosha2.h>
 
@@ -13,15 +14,53 @@
 #include "pfile.h"
 #include "utils/paths.h"
 
-using namespace devilution;
+namespace devilution {
+namespace {
 
-int spelldat_vanilla[] = {
+constexpr int SpellDatVanilla[] = {
 	0, 1, 1, 4, 5, -1, 3, 3, 6, -1, 7, 6, 8, 9,
 	8, 9, -1, -1, -1, -1, 3, 11, -1, 14, -1, -1,
 	-1, -1, -1, 8, 1, 1, -1, 2, 1, 14, 9
 };
 
-static void PackItemUnique(ItemPack *id, int idx)
+void SwapLE(ItemPack &pack)
+{
+	pack.iSeed = SDL_SwapLE32(pack.iSeed);
+	pack.iCreateInfo = SDL_SwapLE16(pack.iCreateInfo);
+	pack.idx = SDL_SwapLE16(pack.idx);
+	pack.wValue = SDL_SwapLE16(pack.wValue);
+	pack.dwBuff = SDL_SwapLE32(pack.dwBuff);
+}
+
+void SwapLE(PlayerPack &player)
+{
+	player.dwLowDateTime = SDL_SwapLE32(player.dwLowDateTime);
+	player.dwHighDateTime = SDL_SwapLE32(player.dwHighDateTime);
+	player.pExperience = SDL_SwapLE32(player.pExperience);
+	player.pGold = SDL_SwapLE32(player.pGold);
+	player.pHPBase = SDL_SwapLE32(player.pHPBase);
+	player.pMaxHPBase = SDL_SwapLE32(player.pMaxHPBase);
+	player.pManaBase = SDL_SwapLE32(player.pManaBase);
+	player.pMaxManaBase = SDL_SwapLE32(player.pMaxManaBase);
+	player.pMemSpells = SDL_SwapLE64(player.pMemSpells);
+	for (ItemPack &item : player.InvBody) {
+		SwapLE(item);
+	}
+	for (ItemPack &item : player.InvList) {
+		SwapLE(item);
+	}
+	for (ItemPack &item : player.SpdList) {
+		SwapLE(item);
+	}
+	player.wReflections = SDL_SwapLE16(player.wReflections);
+	player.wReserved2 = SDL_SwapLE16(player.wReserved2);
+	player.wReserved8 = SDL_SwapLE16(player.wReserved8);
+	player.pDiabloKillLevel = SDL_SwapLE32(player.pDiabloKillLevel);
+	player.pDifficulty = SDL_SwapLE32(player.pDifficulty);
+	player.pDamAcFlags = SDL_SwapLE32(player.pDamAcFlags);
+}
+
+void PackItemUnique(ItemPack *id, int idx)
 {
 	id->idx = idx;
 	id->iCreateInfo = 0x2DE;
@@ -33,7 +72,7 @@ static void PackItemUnique(ItemPack *id, int idx)
 	id->iSeed = 0x1C0C44B0;
 }
 
-static void PackItemStaff(ItemPack *id)
+void PackItemStaff(ItemPack *id)
 {
 	id->idx = 150;
 	id->iCreateInfo = 0x2010;
@@ -45,7 +84,7 @@ static void PackItemStaff(ItemPack *id)
 	id->iSeed = 0x2A15243F;
 }
 
-static void PackItemBow(ItemPack *id)
+void PackItemBow(ItemPack *id)
 {
 	id->idx = 145;
 	id->iCreateInfo = 0x0814;
@@ -57,7 +96,7 @@ static void PackItemBow(ItemPack *id)
 	id->iSeed = 0x449D8992;
 }
 
-static void PackItemSword(ItemPack *id)
+void PackItemSword(ItemPack *id)
 {
 	id->idx = 122;
 	id->iCreateInfo = 0x081E;
@@ -69,7 +108,7 @@ static void PackItemSword(ItemPack *id)
 	id->iSeed = 0x680FAC02;
 }
 
-static void PackItemRing1(ItemPack *id)
+void PackItemRing1(ItemPack *id)
 {
 	id->idx = 153;
 	id->iCreateInfo = 0xDE;
@@ -81,7 +120,7 @@ static void PackItemRing1(ItemPack *id)
 	id->iSeed = 0x5B41AFA8;
 }
 
-static void PackItemRing2(ItemPack *id)
+void PackItemRing2(ItemPack *id)
 {
 	id->idx = 153;
 	id->iCreateInfo = 0xDE;
@@ -93,7 +132,7 @@ static void PackItemRing2(ItemPack *id)
 	id->iSeed = 0x1E41FEFC;
 }
 
-static void PackItemAmulet(ItemPack *id)
+void PackItemAmulet(ItemPack *id)
 {
 	id->idx = 155;
 	id->iCreateInfo = 0xDE;
@@ -105,7 +144,7 @@ static void PackItemAmulet(ItemPack *id)
 	id->iSeed = 0x70A0383A;
 }
 
-static void PackItemArmor(ItemPack *id)
+void PackItemArmor(ItemPack *id)
 {
 	id->idx = 70;
 	id->iCreateInfo = 0xDE;
@@ -117,7 +156,7 @@ static void PackItemArmor(ItemPack *id)
 	id->iSeed = 0x63AAC49B;
 }
 
-static void PackItemFullRejuv(ItemPack *id, int i)
+void PackItemFullRejuv(ItemPack *id, int i)
 {
 	const uint32_t seeds[] = { 0x7C253335, 0x3EEFBFF8, 0x76AFB1A9, 0x38EB45FE, 0x1154E197, 0x5964B644, 0x76B58BEB, 0x002A6E5A };
 	id->idx = ItemMiscIdIdx(IMISC_FULLREJUV);
@@ -130,7 +169,7 @@ static void PackItemFullRejuv(ItemPack *id, int i)
 	id->bMCh = 0;
 }
 
-static int PrepareInvSlot(PlayerPack *pPack, int pos, int size, int start = 0)
+int PrepareInvSlot(PlayerPack *pPack, int pos, int size, int start = 0)
 {
 	static char ret = 0;
 	if (start)
@@ -160,7 +199,7 @@ static int PrepareInvSlot(PlayerPack *pPack, int pos, int size, int start = 0)
 	return ret - 1;
 }
 
-static void PackPlayerTest(PlayerPack *pPack)
+void PackPlayerTest(PlayerPack *pPack)
 {
 	memset(pPack, 0, 0x4F2);
 	pPack->destAction = -1;
@@ -183,7 +222,7 @@ static void PackPlayerTest(PlayerPack *pPack)
 	for (auto i = 0; i < MaxBeltItems; i++)
 		PackItemFullRejuv(pPack->SpdList + i, i);
 	for (auto i = 1; i < 37; i++) {
-		if (spelldat_vanilla[i] != -1) {
+		if (SpellDatVanilla[i] != -1) {
 			pPack->pMemSpells |= 1ULL << (i - 1);
 			pPack->pSplLvl[i] = 15;
 		}
@@ -212,9 +251,11 @@ static void PackPlayerTest(PlayerPack *pPack)
 	PackItemSword(pPack->InvList + PrepareInvSlot(pPack, 20, 1));
 
 	pPack->_pNumInv = 2;
+
+	SwapLE(*pPack);
 }
 
-static void AssertPlayer(Player &player)
+void AssertPlayer(Player &player)
 {
 	ASSERT_EQ(Count8(player._pSplLvl, 64), 23);
 	ASSERT_EQ(Count8(player.InvGrid, InventoryGridCells), 9);
@@ -354,3 +395,6 @@ TEST(Writehero, pfile_write_hero)
 	EXPECT_EQ(picosha2::bytes_to_hex_string(s.begin(), s.end()),
 	    "a79367caae6192d54703168d82e0316aa289b2a33251255fad8abe34889c1d3a");
 }
+
+} // namespace
+} // namespace devilution

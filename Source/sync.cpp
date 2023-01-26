@@ -42,7 +42,7 @@ void SyncMonsterPos(TSyncMonster &monsterSync, int ndx)
 	monsterSync._menemy = encode_enemy(monster);
 	monsterSync._mdelta = sgnMonsterPriority[ndx] > 255 ? 255 : sgnMonsterPriority[ndx];
 	monsterSync.mWhoHit = monster.whoHit;
-	monsterSync._mhitpoints = monster.hitPoints;
+	monsterSync._mhitpoints = SDL_SwapLE32(monster.hitPoints);
 
 	sgnMonsterPriority[ndx] = 0xFFFF;
 	sgwLRU[ndx] = monster.activeForTicks == 0 ? 0xFFFF : 0xFFFE;
@@ -106,27 +106,27 @@ void SyncPlrInv(TSyncHeader *pHdr)
 		auto &item = Items[pHdr->bItemI];
 		pHdr->bItemX = item.position.x;
 		pHdr->bItemY = item.position.y;
-		pHdr->wItemIndx = item.IDidx;
+		pHdr->wItemIndx = SDL_SwapLE16(item.IDidx);
 		if (item.IDidx == IDI_EAR) {
-			pHdr->wItemCI = (item._iIName[0] << 8) | item._iIName[1];
-			pHdr->dwItemSeed = (item._iIName[2] << 24) | (item._iIName[3] << 16) | (item._iIName[4] << 8) | item._iIName[5];
+			pHdr->wItemCI = SDL_SwapLE16((item._iIName[0] << 8) | item._iIName[1]);
+			pHdr->dwItemSeed = SDL_SwapLE32((item._iIName[2] << 24) | (item._iIName[3] << 16) | (item._iIName[4] << 8) | item._iIName[5]);
 			pHdr->bItemId = item._iIName[6];
 			pHdr->bItemDur = item._iIName[7];
 			pHdr->bItemMDur = item._iIName[8];
 			pHdr->bItemCh = item._iIName[9];
 			pHdr->bItemMCh = item._iIName[10];
-			pHdr->wItemVal = (item._iIName[11] << 8) | ((item._iCurs - ICURS_EAR_SORCERER) << 6) | item._ivalue;
-			pHdr->dwItemBuff = (item._iIName[12] << 24) | (item._iIName[13] << 16) | (item._iIName[14] << 8) | item._iIName[15];
+			pHdr->wItemVal = SDL_SwapLE16((item._iIName[11] << 8) | ((item._iCurs - ICURS_EAR_SORCERER) << 6) | item._ivalue);
+			pHdr->dwItemBuff = SDL_SwapLE32((item._iIName[12] << 24) | (item._iIName[13] << 16) | (item._iIName[14] << 8) | item._iIName[15]);
 		} else {
-			pHdr->wItemCI = item._iCreateInfo;
-			pHdr->dwItemSeed = item._iSeed;
+			pHdr->wItemCI = SDL_SwapLE16(item._iCreateInfo);
+			pHdr->dwItemSeed = SDL_SwapLE32(item._iSeed);
 			pHdr->bItemId = item._iIdentified ? 1 : 0;
 			pHdr->bItemDur = item._iDurability;
 			pHdr->bItemMDur = item._iMaxDur;
 			pHdr->bItemCh = item._iCharges;
 			pHdr->bItemMCh = item._iMaxCharges;
 			if (item.IDidx == IDI_GOLD) {
-				pHdr->wItemVal = item._ivalue;
+				pHdr->wItemVal = SDL_SwapLE16(item._ivalue);
 			}
 		}
 	}
@@ -136,9 +136,9 @@ void SyncPlrInv(TSyncHeader *pHdr)
 	const auto &item = MyPlayer->InvBody[sgnSyncPInv];
 	if (!item.isEmpty()) {
 		pHdr->bPInvLoc = sgnSyncPInv;
-		pHdr->wPInvIndx = item.IDidx;
-		pHdr->wPInvCI = item._iCreateInfo;
-		pHdr->dwPInvSeed = item._iSeed;
+		pHdr->wPInvIndx = SDL_SwapLE16(item.IDidx);
+		pHdr->wPInvCI = SDL_SwapLE16(item._iCreateInfo);
+		pHdr->dwPInvSeed = SDL_SwapLE32(item._iSeed);
 		pHdr->bPInvId = item._iIdentified ? 1 : 0;
 	}
 
@@ -282,6 +282,7 @@ uint32_t sync_all_monsters(byte *pbBuf, uint32_t dwMaxLen)
 		pHdr->wLen += sizeof(TSyncMonster);
 		dwMaxLen -= sizeof(TSyncMonster);
 	}
+	pHdr->wLen = SDL_SwapLE16(pHdr->wLen);
 
 	return dwMaxLen;
 }
@@ -289,20 +290,22 @@ uint32_t sync_all_monsters(byte *pbBuf, uint32_t dwMaxLen)
 uint32_t OnSyncData(const TCmd *pCmd, size_t pnum)
 {
 	const auto &header = *reinterpret_cast<const TSyncHeader *>(pCmd);
+	const uint16_t wLen = SDL_SwapLE16(header.wLen);
 
 	assert(gbBufferMsgs != 2);
 
 	if (gbBufferMsgs == 1) {
-		return header.wLen + sizeof(header);
+		return wLen + sizeof(header);
 	}
 	if (pnum == MyPlayerId) {
-		return header.wLen + sizeof(header);
+		return wLen + sizeof(header);
 	}
 
 	assert(header.wLen % sizeof(TSyncMonster) == 0);
-	int monsterCount = header.wLen / sizeof(TSyncMonster);
+	int monsterCount = wLen / sizeof(TSyncMonster);
 
 	uint8_t level = header.bLevel;
+	bool syncLocalLevel = !MyPlayer->_pLvlChanging && GetLevelForMultiplayer(*MyPlayer) == level;
 
 	if (IsValidLevelForMultiplayer(level)) {
 		const auto *monsterSyncs = reinterpret_cast<const TSyncMonster *>(pCmd + sizeof(header));
@@ -311,7 +314,7 @@ uint32_t OnSyncData(const TCmd *pCmd, size_t pnum)
 			if (!IsTSyncMonsterValidate(monsterSyncs[i]))
 				continue;
 
-			if (GetLevelForMultiplayer(*MyPlayer) == level) {
+			if (syncLocalLevel) {
 				SyncMonster(pnum > MyPlayerId, monsterSyncs[i]);
 			}
 
@@ -319,7 +322,7 @@ uint32_t OnSyncData(const TCmd *pCmd, size_t pnum)
 		}
 	}
 
-	return header.wLen + sizeof(header);
+	return wLen + sizeof(header);
 }
 
 void sync_init()

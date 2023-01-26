@@ -196,10 +196,10 @@ void ConsumeSpell(Player &player, spell_id sn)
 		break;
 	}
 	if (sn == SPL_FLARE) {
-		ApplyPlrDamage(player, 5);
+		ApplyPlrDamage(DamageType::Physical, player, 5);
 	}
 	if (sn == SPL_BONESPIRIT) {
-		ApplyPlrDamage(player, 6);
+		ApplyPlrDamage(DamageType::Physical, player, 6);
 	}
 }
 
@@ -245,13 +245,13 @@ void CastSpell(int id, spell_id spl, int sx, int sy, int dx, int dy, int spllvl)
 	}
 
 	bool fizzled = false;
-	for (int i = 0; i < 3 && spelldata[spl].sMissiles[i] != MIS_NULL; i++) {
+	for (int i = 0; i < 3 && spelldata[spl].sMissiles[i] != MissileID::Null; i++) {
 		Missile *missile = AddMissile({ sx, sy }, { dx, dy }, dir, spelldata[spl].sMissiles[i], TARGET_MONSTERS, id, 0, spllvl);
 		fizzled |= (missile == nullptr);
 	}
 	if (spl == SPL_CBOLT) {
 		for (int i = (spllvl / 2) + 3; i > 0; i--) {
-			Missile *missile = AddMissile({ sx, sy }, { dx, dy }, dir, MIS_CBOLT, TARGET_MONSTERS, id, 0, spllvl);
+			Missile *missile = AddMissile({ sx, sy }, { dx, dy }, dir, MissileID::ChargedBolt, TARGET_MONSTERS, id, 0, spllvl);
 			fizzled |= (missile == nullptr);
 		}
 	}
@@ -266,7 +266,7 @@ void DoResurrect(size_t pnum, Player &target)
 		return;
 	}
 
-	AddMissile(target.position.tile, target.position.tile, Direction::South, MIS_RESURRECTBEAM, TARGET_MONSTERS, pnum, 0, 0);
+	AddMissile(target.position.tile, target.position.tile, Direction::South, MissileID::ResurrectBeam, TARGET_MONSTERS, pnum, 0, 0);
 
 	if (target._pHitPoints != 0)
 		return;
@@ -293,12 +293,12 @@ void DoResurrect(size_t pnum, Player &target)
 	target._pMana = 0;
 	target._pManaBase = target._pMana + (target._pMaxManaBase - target._pMaxMana);
 
+	target._pmode = PM_STAND;
+
 	CalcPlrInv(target, true);
 
 	if (target.isOnActiveLevel()) {
 		StartStand(target, target._pdir);
-	} else {
-		target._pmode = PM_STAND;
 	}
 }
 

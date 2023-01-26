@@ -48,47 +48,57 @@ std::string GetMp3Path(const char *path)
 
 bool LoadAudioFile(const char *path, bool stream, bool errorDialog, SoundSample &result)
 {
-#ifndef STREAM_ALL_AUDIO
-	if (stream) {
+	bool isMp3 = true;
+	AssetRef ref = FindAsset(GetMp3Path(path).c_str());
+	if (!ref.ok()) {
+		ref = FindAsset(path);
+		isMp3 = false;
+	}
+	if (!ref.ok())
+		ErrDlg("Audio file not found", StrCat(path, "\n", SDL_GetError(), "\n"), __FILE__, __LINE__);
+
+#ifdef STREAM_ALL_AUDIO_MIN_FILE_SIZE
+#if STREAM_ALL_AUDIO_MIN_FILE_SIZE == 0
+	stream = true;
+#else
+	size_t size;
+	if (!stream) {
+		size = ref.size();
+		stream = size >= STREAM_ALL_AUDIO_MIN_FILE_SIZE;
+	}
 #endif
-		if (result.SetChunkStream(GetMp3Path(path), /*isMp3=*/true, /*logErrors=*/false) != 0) {
-			SDL_ClearError();
-			if (result.SetChunkStream(path, /*isMp3=*/false, /*logErrors=*/true) != 0) {
-				if (errorDialog)
-					ErrSdl();
-				return false;
+#endif
+
+	if (stream) {
+		if (result.SetChunkStream(path, isMp3, /*logErrors=*/true) != 0) {
+			if (errorDialog) {
+				ErrDlg("Failed to load audio file", StrCat(path, "\n", SDL_GetError(), "\n"), __FILE__, __LINE__);
 			}
+			return false;
 		}
-#ifndef STREAM_ALL_AUDIO
 	} else {
-		bool isMp3 = true;
-		SDL_RWops *file = OpenAsset(GetMp3Path(path).c_str());
-		if (file == nullptr) {
-			SDL_ClearError();
-			isMp3 = false;
-			file = OpenAsset(path);
-			if (file == nullptr) {
-				if (errorDialog)
-					ErrDlg("OpenAsset failed", path, __FILE__, __LINE__);
-				return false;
-			}
+#if !defined(STREAM_ALL_AUDIO_MIN_FILE_SIZE) || STREAM_ALL_AUDIO_MIN_FILE_SIZE == 0
+		const size_t size = ref.size();
+#endif
+		AssetHandle handle = OpenAsset(std::move(ref));
+		if (!handle.ok()) {
+			if (errorDialog)
+				ErrDlg("Failed to load audio file", StrCat(path, "\n", SDL_GetError(), "\n"), __FILE__, __LINE__);
+			return false;
 		}
-		size_t dwBytes = SDL_RWsize(file);
-		auto waveFile = MakeArraySharedPtr<std::uint8_t>(dwBytes);
-		if (SDL_RWread(file, waveFile.get(), dwBytes, 1) == 0) {
+		auto waveFile = MakeArraySharedPtr<std::uint8_t>(size);
+		if (!handle.read(waveFile.get(), size)) {
 			if (errorDialog)
 				ErrDlg("Failed to read file", StrCat(path, ": ", SDL_GetError()), __FILE__, __LINE__);
 			return false;
 		}
-		int error = result.SetChunk(waveFile, dwBytes, isMp3);
-		SDL_RWclose(file);
+		const int error = result.SetChunk(waveFile, size, isMp3);
 		if (error != 0) {
 			if (errorDialog)
 				ErrSdl();
 			return false;
 		}
 	}
-#endif
 	return true;
 }
 

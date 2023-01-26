@@ -34,6 +34,7 @@
 #include "panels/charpanel.hpp"
 #include "plrmsg.h"
 #include "qol/chatlog.h"
+#include "qol/floatingnumbers.h"
 #include "qol/itemlabels.h"
 #include "qol/monhealthbar.h"
 #include "qol/stash.h"
@@ -54,6 +55,10 @@
 #include "debug.h"
 #endif
 
+#ifdef DUN_RENDER_STATS
+#include "utils/format_int.hpp"
+#endif
+
 namespace devilution {
 
 /**
@@ -61,30 +66,7 @@ namespace devilution {
  */
 int LightTableIndex;
 
-/**
- * Specifies the current MIN block of the level CEL file, as used during rendering of the level tiles.
- *
- * frameNum  := block & 0x0FFF
- * frameType := block & 0x7000 >> 12
- */
-uint32_t level_cel_block;
 bool AutoMapShowItems;
-/**
- * Specifies the type of arches to render.
- */
-char arch_draw_type;
-/**
- * Specifies whether transparency is active for the current CEL file being decoded.
- */
-bool cel_transparency_active;
-/**
- * Specifies whether foliage (tile has extra content that overlaps previous tile) being rendered.
- */
-bool cel_foliage_active = false;
-/**
- * Specifies the current dungeon piece ID of the level, as used during rendering of the level tiles.
- */
-int level_piece_id;
 
 // DevilutionX extension.
 extern void DrawControllerModifierHints(const Surface &out);
@@ -143,7 +125,7 @@ void UpdateMissileRendererData(Missile &m)
 	m.position.tileForRendering = m.position.tile;
 	m.position.offsetForRendering = m.position.offset;
 
-	const MissileMovementDistribution missileMovement = MissilesData[m._mitype].MovementDistribution;
+	const MissileMovementDistribution missileMovement = MissilesData[static_cast<int8_t>(m._mitype)].MovementDistribution;
 	// don't calculate missile position if they don't move
 	if (missileMovement == MissileMovementDistribution::Disabled || m.position.velocity == Displacement {})
 		return;
@@ -251,14 +233,20 @@ bool ShouldShowCursor()
 void DrawCursor(const Surface &out)
 {
 	DrawnCursor &cursor = GetDrawnCursor();
+	if (IsHardwareCursor()) {
+		SetHardwareCursorVisible(ShouldShowCursor());
+		cursor.rect.size = { 0, 0 };
+		return;
+	}
+
 	if (pcurs <= CURSOR_NONE || !ShouldShowCursor()) {
-		cursor.rect.size.width = 0;
+		cursor.rect.size = { 0, 0 };
 		return;
 	}
 
 	Size cursSize = GetInvItemSize(pcurs);
 	if (cursSize.width == 0 || cursSize.height == 0) {
-		cursor.rect.size.width = 0;
+		cursor.rect.size = { 0, 0 };
 		return;
 	}
 
@@ -515,47 +503,129 @@ static void DrawDungeon(const Surface & /*out*/, Point /*tilePosition*/, Point /
  */
 void DrawCell(const Surface &out, Point tilePosition, Point targetBufferPosition)
 {
-	level_piece_id = dPiece[tilePosition.x][tilePosition.y];
-	MICROS *pMap = &DPieceMicros[level_piece_id];
-	cel_transparency_active = TileHasAny(level_piece_id, TileProperties::Transparent) && TransList[dTransVal[tilePosition.x][tilePosition.y]];
-	cel_foliage_active = !TileHasAny(level_piece_id, TileProperties::Solid);
-	for (int i = 0; i < (MicroTileLen / 2); i++) {
-		level_cel_block = pMap->mt[2 * i];
-		if (level_cel_block != 0) {
-			arch_draw_type = i == 0 ? 1 : 0;
-			RenderTile(out, targetBufferPosition);
+	const uint16_t levelPieceId = dPiece[tilePosition.x][tilePosition.y];
+	const MICROS *pMap = &DPieceMicros[levelPieceId];
+
+	bool transparency = TileHasAny(levelPieceId, TileProperties::Transparent) && TransList[dTransVal[tilePosition.x][tilePosition.y]];
+#ifdef _DEBUG
+	if ((SDL_GetModState() & KMOD_ALT) != 0)
+		transparency = false;
+#endif
+	const bool foliage = !TileHasAny(levelPieceId, TileProperties::Solid);
+
+	const auto getFirstTileMaskLeft = [=](TileType tile) -> MaskType {
+		if (transparency) {
+			switch (tile) {
+			case TileType::LeftTrapezoid:
+			case TileType::TransparentSquare:
+				return TileHasAny(levelPieceId, TileProperties::TransparentLeft)
+				    ? MaskType::Left
+				    : MaskType::Solid;
+			case TileType::LeftTriangle:
+				return MaskType::Solid;
+			default:
+				return MaskType::Transparent;
+			}
 		}
-		level_cel_block = pMap->mt[2 * i + 1];
-		if (level_cel_block != 0) {
-			arch_draw_type = i == 0 ? 2 : 0;
-			RenderTile(out, targetBufferPosition + Displacement { TILE_WIDTH / 2, 0 });
+		if (foliage)
+			return MaskType::LeftFoliage;
+		return MaskType::Solid;
+	};
+
+	const auto getFirstTileMaskRight = [=](TileType tile) -> MaskType {
+		if (transparency) {
+			switch (tile) {
+			case TileType::RightTrapezoid:
+			case TileType::TransparentSquare:
+				return TileHasAny(levelPieceId, TileProperties::TransparentRight)
+				    ? MaskType::Right
+				    : MaskType::Solid;
+			case TileType::RightTriangle:
+				return MaskType::Solid;
+			default:
+				return MaskType::Transparent;
+			}
+		}
+		if (foliage)
+			return MaskType::RightFoliage;
+		return MaskType::Solid;
+	};
+
+	// The first micro tile may be rendered with a foliage mask.
+	// Only `TransparentSquare` tiles are rendered when `foliage` is true.
+	{
+		{
+			const LevelCelBlock levelCelBlock { pMap->mt[0] };
+			const TileType tileType = levelCelBlock.type();
+			const MaskType maskType = getFirstTileMaskLeft(tileType);
+			if (levelCelBlock.hasValue()) {
+				if (maskType != MaskType::LeftFoliage || tileType == TileType::TransparentSquare) {
+					RenderTile(out, targetBufferPosition,
+					    levelCelBlock, maskType, LightTableIndex);
+				}
+			}
+		}
+		{
+			const LevelCelBlock levelCelBlock { pMap->mt[1] };
+			const TileType tileType = levelCelBlock.type();
+			const MaskType maskType = getFirstTileMaskRight(tileType);
+			if (levelCelBlock.hasValue()) {
+				if (transparency || !foliage || levelCelBlock.type() == TileType::TransparentSquare) {
+					if (maskType != MaskType::RightFoliage || tileType == TileType::TransparentSquare) {
+						RenderTile(out, targetBufferPosition + Displacement { TILE_WIDTH / 2, 0 },
+						    levelCelBlock, maskType, LightTableIndex);
+					}
+				}
+			}
 		}
 		targetBufferPosition.y -= TILE_HEIGHT;
 	}
-	cel_foliage_active = false;
+
+	for (uint_fast8_t i = 2, n = MicroTileLen; i < n; i += 2) {
+		{
+			const LevelCelBlock levelCelBlock { pMap->mt[i] };
+			if (levelCelBlock.hasValue()) {
+				RenderTile(out, targetBufferPosition,
+				    levelCelBlock,
+				    transparency ? MaskType::Transparent : MaskType::Solid, LightTableIndex);
+			}
+		}
+		{
+			const LevelCelBlock levelCelBlock { pMap->mt[i + 1] };
+			if (levelCelBlock.hasValue()) {
+				RenderTile(out, targetBufferPosition + Displacement { TILE_WIDTH / 2, 0 },
+				    levelCelBlock,
+				    transparency ? MaskType::Transparent : MaskType::Solid, LightTableIndex);
+			}
+		}
+		targetBufferPosition.y -= TILE_HEIGHT;
+	}
 }
 
 /**
- * @brief Render a floor tiles
+ * @brief Render a floor tile.
  * @param out Target buffer
  * @param tilePosition dPiece coordinates
  * @param targetBufferPosition Target buffer coordinate
  */
 void DrawFloor(const Surface &out, Point tilePosition, Point targetBufferPosition)
 {
-	cel_transparency_active = false;
 	LightTableIndex = dLight[tilePosition.x][tilePosition.y];
 
-	arch_draw_type = 1; // Left
-	int pn = dPiece[tilePosition.x][tilePosition.y];
-	level_cel_block = DPieceMicros[pn].mt[0];
-	if (level_cel_block != 0) {
-		RenderTile(out, targetBufferPosition);
+	const uint16_t levelPieceId = dPiece[tilePosition.x][tilePosition.y];
+	{
+		const LevelCelBlock levelCelBlock { DPieceMicros[levelPieceId].mt[0] };
+		if (levelCelBlock.hasValue()) {
+			RenderTile(out, targetBufferPosition,
+			    levelCelBlock, MaskType::Solid, LightTableIndex);
+		}
 	}
-	arch_draw_type = 2; // Right
-	level_cel_block = DPieceMicros[pn].mt[1];
-	if (level_cel_block != 0) {
-		RenderTile(out, targetBufferPosition + Displacement { TILE_WIDTH / 2, 0 });
+	{
+		const LevelCelBlock levelCelBlock { DPieceMicros[levelPieceId].mt[1] };
+		if (levelCelBlock.hasValue()) {
+			RenderTile(out, targetBufferPosition + Displacement { TILE_WIDTH / 2, 0 },
+			    levelCelBlock, MaskType::Solid, LightTableIndex);
+		}
 	}
 }
 
@@ -580,12 +650,12 @@ void DrawItem(const Surface &out, Point tilePosition, Point targetBufferPosition
 	const ClxSprite sprite = item.AnimInfo.currentSprite();
 	int px = targetBufferPosition.x - CalculateWidth2(sprite.width());
 	const Point position { px, targetBufferPosition.y };
-	if (bItem - 1 == pcursitem || AutoMapShowItems) {
+	if (stextflag == STORE_NONE && (bItem - 1 == pcursitem || AutoMapShowItems)) {
 		ClxDrawOutlineSkipColorZero(out, GetOutlineColor(item, false), position, sprite);
 	}
 	ClxDrawLight(out, position, sprite);
 	if (item.AnimInfo.isLastFrame() || item._iCurs == ICURS_MAGIC_ROCK)
-		AddItemToLabelQueue(bItem - 1, px, targetBufferPosition.y);
+		AddItemToLabelQueue(bItem - 1, position);
 }
 
 /**
@@ -660,7 +730,7 @@ void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBuffe
 void DrawPlayerHelper(const Surface &out, const Player &player, Point tilePosition, Point targetBufferPosition)
 {
 	Displacement offset = {};
-	if (player.IsWalking()) {
+	if (player.isWalking()) {
 		offset = GetOffsetForWalking(player.AnimInfo, player._pdir);
 	}
 
@@ -733,22 +803,16 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 	if (leveltype != DTYPE_TOWN) {
 		char bArch = dSpecial[tilePosition.x][tilePosition.y];
 		if (bArch != 0) {
-			cel_transparency_active = TransList[bMap];
+			bool transparency = TransList[bMap];
 #ifdef _DEBUG
-			if ((SDL_GetModState() & KMOD_ALT) != 0) {
-				cel_transparency_active = false; // Turn transparency off here for debugging
-			}
+			// Turn transparency off here for debugging
+			transparency = transparency && (SDL_GetModState() & KMOD_ALT) == 0;
 #endif
-			if (cel_transparency_active) {
+			if (transparency) {
 				ClxDrawLightBlended(out, targetBufferPosition, (*pSpecialCels)[bArch - 1]);
 			} else {
 				ClxDrawLight(out, targetBufferPosition, (*pSpecialCels)[bArch - 1]);
 			}
-#ifdef _DEBUG
-			if ((SDL_GetModState() & KMOD_ALT) != 0) {
-				cel_transparency_active = TransList[bMap]; // Turn transparency back to its normal state
-			}
-#endif
 		}
 	} else {
 		// Tree leaves should always cover player when entering or leaving the tile,
@@ -921,113 +985,129 @@ Displacement tileShift;
 int tileColums;
 int tileRows;
 
+void CalcFirstTilePosition(Point &position, Displacement &offset)
+{
+	// Adjust by player offset and tile grid alignment
+	Player &myPlayer = *MyPlayer;
+	offset = tileOffset;
+	if (myPlayer.isWalking())
+		offset += GetOffsetForWalking(myPlayer.AnimInfo, myPlayer._pdir, true);
+
+	position += tileShift;
+
+	// Skip rendering parts covered by the panels
+	if (CanPanelsCoverView() && (IsLeftPanelOpen() || IsRightPanelOpen())) {
+		int multiplier = (*sgOptions.Graphics.zoom) ? 1 : 2;
+		position += Displacement(Direction::East) * multiplier;
+		offset.deltaX += -TILE_WIDTH * multiplier / 2 / 2;
+
+		if (IsLeftPanelOpen() && !*sgOptions.Graphics.zoom) {
+			offset.deltaX += SidePanelSize.width;
+			// SidePanelSize.width accounted for in Zoom()
+		}
+	}
+
+	// Draw areas moving in and out of the screen
+	if (myPlayer.isWalking()) {
+		switch (myPlayer._pdir) {
+		case Direction::North:
+		case Direction::NorthEast:
+			offset.deltaY -= TILE_HEIGHT;
+			position += Direction::North;
+			break;
+		case Direction::SouthWest:
+		case Direction::West:
+			offset.deltaX -= TILE_WIDTH;
+			position += Direction::West;
+			break;
+		case Direction::NorthWest:
+			offset.deltaX -= TILE_WIDTH / 2;
+			offset.deltaY -= TILE_HEIGHT / 2;
+			position += Direction::NorthWest;
+		default:
+			break;
+		}
+	}
+}
+
 /**
  * @brief Configure render and process screen rows
  * @param fullOut Buffer to render to
- * @param position Center of view in dPiece coordinate
+ * @param position First tile of view in dPiece coordinate
+ * @param offset Amount to offset the rendering in screen space
  */
-void DrawGame(const Surface &fullOut, Point position)
+void DrawGame(const Surface &fullOut, Point position, Displacement offset)
 {
 	// Limit rendering to the view area
 	const Surface &out = !*sgOptions.Graphics.zoom
 	    ? fullOut.subregionY(0, gnViewportHeight)
 	    : fullOut.subregionY(0, (gnViewportHeight + 1) / 2);
 
-	// Adjust by player offset and tile grid alignment
-	Player &myPlayer = *MyPlayer;
-	Displacement offset = {};
-	if (myPlayer.IsWalking())
-		offset = GetOffsetForWalking(myPlayer.AnimInfo, myPlayer._pdir, true);
-	int sx = offset.deltaX + tileOffset.deltaX;
-	int sy = offset.deltaY + tileOffset.deltaY;
-
 	int columns = tileColums;
 	int rows = tileRows;
 
-	position += tileShift;
-
 	// Skip rendering parts covered by the panels
-	if (CanPanelsCoverView()) {
-		if (!*sgOptions.Graphics.zoom) {
-			if (IsLeftPanelOpen()) {
-				position += Displacement(Direction::East) * 2;
-				columns -= 4;
-				sx += SidePanelSize.width - TILE_WIDTH / 2;
-			}
-			if (IsRightPanelOpen()) {
-				position += Displacement(Direction::East) * 2;
-				columns -= 4;
-				sx += -TILE_WIDTH / 2;
-			}
-		} else {
-			if (IsLeftPanelOpen()) {
-				position += Direction::East;
-				columns -= 2;
-				sx += -TILE_WIDTH / 2 / 2; // SPANEL_WIDTH accounted for in Zoom()
-			}
-			if (IsRightPanelOpen()) {
-				position += Direction::East;
-				columns -= 2;
-				sx += -TILE_WIDTH / 2 / 2;
-			}
-		}
+	if (CanPanelsCoverView() && (IsLeftPanelOpen() || IsRightPanelOpen())) {
+		columns -= (*sgOptions.Graphics.zoom) ? 2 : 4;
 	}
 
 	UpdateMissilesRendererData();
 
 	// Draw areas moving in and out of the screen
-	if (myPlayer.IsWalking()) {
-		switch (myPlayer._pdir) {
+	if (MyPlayer->isWalking()) {
+		switch (MyPlayer->_pdir) {
 		case Direction::NoDirection:
 			break;
 		case Direction::North:
-			sy -= TILE_HEIGHT;
-			position += Direction::North;
+		case Direction::South:
 			rows += 2;
 			break;
 		case Direction::NorthEast:
-			sy -= TILE_HEIGHT;
-			position += Direction::North;
 			columns++;
 			rows += 2;
 			break;
 		case Direction::East:
+		case Direction::West:
 			columns++;
 			break;
 		case Direction::SouthEast:
-			columns++;
-			rows++;
-			break;
-		case Direction::South:
-			rows += 2;
-			break;
 		case Direction::SouthWest:
-			sx -= TILE_WIDTH;
-			position += Direction::West;
-			columns++;
-			rows++;
-			break;
-		case Direction::West:
-			sx -= TILE_WIDTH;
-			position += Direction::West;
-			columns++;
-			break;
 		case Direction::NorthWest:
-			sx -= TILE_WIDTH / 2;
-			sy -= TILE_HEIGHT / 2;
-			position += Direction::NorthWest;
 			columns++;
 			rows++;
 			break;
 		}
 	}
 
-	DrawFloor(out, position, { sx, sy }, rows, columns);
-	DrawTileContent(out, position, { sx, sy }, rows, columns);
+#ifdef DUN_RENDER_STATS
+	DunRenderStats.clear();
+#endif
+
+	DrawFloor(out, position, Point {} + offset, rows, columns);
+	DrawTileContent(out, position, Point {} + offset, rows, columns);
 
 	if (*sgOptions.Graphics.zoom) {
 		Zoom(fullOut.subregionY(0, gnViewportHeight));
 	}
+
+#ifdef DUN_RENDER_STATS
+	std::vector<std::pair<DunRenderType, size_t>> sortedStats(DunRenderStats.begin(), DunRenderStats.end());
+	std::sort(sortedStats.begin(), sortedStats.end(),
+	    [](const std::pair<DunRenderType, size_t> &a, const std::pair<DunRenderType, size_t> &b) {
+		    return a.first.maskType == b.first.maskType
+		        ? static_cast<uint8_t>(a.first.tileType) < static_cast<uint8_t>(b.first.tileType)
+		        : static_cast<uint8_t>(a.first.maskType) < static_cast<uint8_t>(b.first.maskType);
+	    });
+	Point pos { 100, 20 };
+	for (size_t i = 0; i < sortedStats.size(); ++i) {
+		const auto &stat = sortedStats[i];
+		DrawString(out, StrCat(i, "."), Rectangle(pos, Size { 20, 16 }), UiFlags::AlignRight);
+		DrawString(out, MaskTypeToString(stat.first.maskType), { pos.x + 24, pos.y });
+		DrawString(out, TileTypeToString(stat.first.tileType), { pos.x + 184, pos.y });
+		DrawString(out, FormatInteger(stat.second), Rectangle({ pos.x + 354, pos.y }, Size(40, 16)), UiFlags::AlignRight);
+		pos.y += 16;
+	}
+#endif
 }
 
 /**
@@ -1040,7 +1120,9 @@ void DrawView(const Surface &out, Point startPosition)
 #ifdef _DEBUG
 	DebugCoordsMap.clear();
 #endif
-	DrawGame(out, startPosition);
+	Displacement offset = {};
+	CalcFirstTilePosition(startPosition, offset);
+	DrawGame(out, startPosition, offset);
 	if (AutomapActive) {
 		DrawAutomap(out.subregionY(0, gnViewportHeight));
 	}
@@ -1109,6 +1191,7 @@ void DrawView(const Surface &out, Point startPosition)
 #endif
 	DrawMonsterHealthBar(out);
 	DrawItemNameLabels(out);
+	DrawFloatingNumbers(out, startPosition, offset);
 
 	if (stextflag != STORE_NONE && !qtextflag)
 		DrawSText(out);
@@ -1183,11 +1266,14 @@ void DrawFPS(const Surface &out)
 	uint32_t msSinceLastUpdate = runtimeInMs - lastFpsUpdateInMs;
 	if (msSinceLastUpdate >= 1000) {
 		lastFpsUpdateInMs = runtimeInMs;
-		int framerate = 1000 * framesSinceLastUpdate / msSinceLastUpdate;
+		constexpr int FpsPow10 = 10;
+		const int fps = 1000 * FpsPow10 * framesSinceLastUpdate / msSinceLastUpdate;
 		framesSinceLastUpdate = 0;
 
-		static char buf[12] {};
-		const char *end = BufCopy(buf, framerate, " FPS");
+		static char buf[15] {};
+		const char *end = fps >= 100 * FpsPow10
+		    ? BufCopy(buf, fps / FpsPow10, " FPS")
+		    : BufCopy(buf, fps / FpsPow10, ".", fps % FpsPow10, " FPS");
 		formatted = { buf, static_cast<string_view::size_type>(end - buf) };
 	};
 	DrawString(out, formatted, Point { 8, 68 }, UiFlags::ColorRed);
@@ -1195,22 +1281,23 @@ void DrawFPS(const Surface &out)
 
 /**
  * @brief Update part of the screen from the back buffer
- * @param dwX Back buffer coordinate
- * @param dwY Back buffer coordinate
- * @param dwWdt Back buffer coordinate
- * @param dwHgt Back buffer coordinate
+ * @param x Back buffer coordinate
+ * @param y Back buffer coordinate
+ * @param w Back buffer coordinate
+ * @param h Back buffer coordinate
  */
-void DoBlitScreen(Sint16 dwX, Sint16 dwY, Uint16 dwWdt, Uint16 dwHgt)
+void DoBlitScreen(int x, int y, int w, int h)
 {
-	// In SDL1 SDL_Rect x and y are Sint16. Cast explicitly to avoid a compiler warning.
-	using CoordType = decltype(SDL_Rect {}.x);
-	SDL_Rect srcRect {
-		static_cast<CoordType>(dwX),
-		static_cast<CoordType>(dwY),
-		dwWdt, dwHgt
-	};
-	SDL_Rect dstRect { dwX, dwY, dwWdt, dwHgt };
-
+#ifdef DEBUG_DO_BLIT_SCREEN
+	const Surface &out = GlobalBackBuffer();
+	const uint8_t debugColor = PAL8_RED;
+	DrawHorizontalLine(out, Point(x, y), w, debugColor);
+	DrawHorizontalLine(out, Point(x, y + h - 1), w, debugColor);
+	DrawVerticalLine(out, Point(x, y), h, debugColor);
+	DrawVerticalLine(out, Point(x + w - 1, y), h, debugColor);
+#endif
+	SDL_Rect srcRect = MakeSdlRect(x, y, w, h);
+	SDL_Rect dstRect = MakeSdlRect(x, y, w, h);
 	BltFast(&srcRect, &dstRect);
 }
 
@@ -1241,7 +1328,12 @@ void DrawMain(const Surface &out, int dwHgt, bool drawDesc, bool drawHp, bool dr
 			DoBlitScreen(mainPanelPosition.x + 204, mainPanelPosition.y + 5, 232, 28);
 		}
 		if (drawDesc) {
-			DoBlitScreen(mainPanelPosition.x + 176, mainPanelPosition.y + 46, 288, 63);
+			if (talkflag) {
+				// When chat input is displayed, the belt is hidden and the chat moves up.
+				DoBlitScreen(mainPanelPosition.x + 171, mainPanelPosition.y + 6, 298, 116);
+			} else {
+				DoBlitScreen(mainPanelPosition.x + 176, mainPanelPosition.y + 46, 288, 63);
+			}
 		}
 		if (drawMana) {
 			DoBlitScreen(mainPanelPosition.x + 460, mainPanelPosition.y, 88, 72);
@@ -1251,11 +1343,11 @@ void DrawMain(const Surface &out, int dwHgt, bool drawDesc, bool drawHp, bool dr
 			DoBlitScreen(mainPanelPosition.x + 96, mainPanelPosition.y, 88, 72);
 		}
 		if (drawBtn) {
-			DoBlitScreen(mainPanelPosition.x + 8, mainPanelPosition.y + 5, 72, 119);
-			DoBlitScreen(mainPanelPosition.x + 556, mainPanelPosition.y + 5, 72, 48);
+			DoBlitScreen(mainPanelPosition.x + 8, mainPanelPosition.y + 7, 74, 114);
+			DoBlitScreen(mainPanelPosition.x + 559, mainPanelPosition.y + 7, 74, 48);
 			if (gbIsMultiplayer) {
-				DoBlitScreen(mainPanelPosition.x + 84, mainPanelPosition.y + 91, 36, 32);
-				DoBlitScreen(mainPanelPosition.x + 524, mainPanelPosition.y + 91, 36, 32);
+				DoBlitScreen(mainPanelPosition.x + 86, mainPanelPosition.y + 91, 34, 32);
+				DoBlitScreen(mainPanelPosition.x + 526, mainPanelPosition.y + 91, 34, 32);
 			}
 		}
 		if (PrevCursorRect.size.width != 0 && PrevCursorRect.size.height != 0) {
@@ -1278,7 +1370,7 @@ Displacement GetOffsetForWalking(const AnimationInfo &animationInfo, const Direc
 	constexpr Displacement MovingOffset[8]   = { {   0,  32 }, { -32,  16 }, { -64,   0 }, { -32, -16 }, {   0, -32 }, {  32, -16 },  {  64,   0 }, {  32,  16 } };
 	// clang-format on
 
-	int8_t animationProgress = animationInfo.getAnimationProgress();
+	uint8_t animationProgress = animationInfo.getAnimationProgress();
 	Displacement offset = MovingOffset[static_cast<size_t>(dir)];
 	offset *= animationProgress;
 	offset /= AnimationInfo::baseValueFraction;
@@ -1509,14 +1601,8 @@ void scrollrt_draw_game_screen()
 
 	const Surface &out = GlobalBackBuffer();
 	UndrawCursor(out);
-
 	DrawMain(out, hgt, false, false, false, false, false);
-
-	if (IsHardwareCursor()) {
-		SetHardwareCursorVisible(ShouldShowCursor());
-	} else {
-		DrawCursor(out);
-	}
+	DrawCursor(out);
 
 	RenderPresent();
 }
@@ -1538,7 +1624,7 @@ void DrawAndBlit()
 
 	const Rectangle &mainPanel = GetMainPanel();
 
-	if (gnScreenWidth > mainPanel.size.width || IsRedrawEverything() || IsHighlightingLabelsEnabled()) {
+	if (gnScreenWidth > mainPanel.size.width || IsRedrawEverything()) {
 		drawHealth = true;
 		drawMana = true;
 		drawControlButtons = true;
@@ -1584,11 +1670,7 @@ void DrawAndBlit()
 	if (*sgOptions.Graphics.showManaValues)
 		DrawFlaskValues(out, { mainPanel.position.x + mainPanel.size.width - 138, mainPanel.position.y + 28 }, MyPlayer->_pMana >> 6, MyPlayer->_pMaxMana >> 6);
 
-	if (IsHardwareCursor()) {
-		SetHardwareCursorVisible(ShouldShowCursor());
-	} else {
-		DrawCursor(out);
-	}
+	DrawCursor(out);
 
 	DrawFPS(out);
 

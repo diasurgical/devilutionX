@@ -43,6 +43,19 @@
 
 namespace devilution {
 
+#if __cplusplus >= 201703L
+template <typename V, typename X, typename... Xs>
+constexpr bool IsAnyOf(const V &v, X x, Xs... xs)
+{
+	return v == x || ((v == xs) || ...);
+}
+
+template <typename V, typename X, typename... Xs>
+constexpr bool IsNoneOf(const V &v, X x, Xs... xs)
+{
+	return v != x && ((v != xs) && ...);
+}
+#else
 template <typename V, typename X>
 constexpr bool IsAnyOf(const V &v, X x)
 {
@@ -66,6 +79,7 @@ constexpr bool IsNoneOf(const V &v, X x, Xs... xs)
 {
 	return IsNoneOf(v, x) && IsNoneOf(v, xs...);
 }
+#endif
 
 /**
  * @brief Draw a horizontal line segment in the target buffer (left to right)
@@ -103,6 +117,15 @@ void UnsafeDrawVerticalLine(const Surface &out, Point from, int height, std::uin
  * @param height Rectangle height
  */
 void DrawHalfTransparentRectTo(const Surface &out, int sx, int sy, int width, int height);
+
+/**
+ * Draws a 2px inset border.
+ *
+ * @param out Target buffer
+ * @param rect The rectangle that border pixels are rendered inside of.
+ * @param color Border color.
+ */
+void UnsafeDrawBorder2px(const Surface &out, Rectangle rect, uint8_t color);
 
 /**
  * @brief Calculate the best fit direction between two points

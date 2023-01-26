@@ -111,6 +111,8 @@ set(devilutionx_assets
   fonts/24-20.bin
   fonts/24-20.clx
   fonts/24-26.clx
+  fonts/24-e0.bin
+  fonts/24-e0.clx
   fonts/30-00.bin
   fonts/30-00.clx
   fonts/30-01.bin
@@ -155,10 +157,11 @@ set(devilutionx_assets
   fonts/goldui.trn
   fonts/grayuis.trn
   fonts/grayui.trn
+  fonts/orange.trn
   fonts/red.trn
   fonts/whitegold.trn
   fonts/white.trn
-  fonts/yellowdialog.trn
+  fonts/yellow.trn
   gendata/cutportlw.clx
   gendata/cutportrw.clx
   gendata/cutstartw.clx

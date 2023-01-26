@@ -506,8 +506,7 @@ int AllocateItem();
 Point GetSuperItemLoc(Point position);
 void GetItemAttrs(Item &item, _item_indexes itemData, int lvl);
 void SetupItem(Item &item);
-int RndItem(const Monster &monster);
-void SpawnUnique(_unique_items uid, Point position);
+Item *SpawnUnique(_unique_items uid, Point position, bool sendmsg = true);
 void SpawnItem(Monster &monster, Point position, bool sendmsg);
 void CreateRndItem(Point position, bool onlygood, bool sendmsg, bool delta);
 void CreateRndUseful(Point position, bool sendmsg);
@@ -516,7 +515,7 @@ void RecreateItem(const Player &player, Item &item, _item_indexes idx, uint16_t 
 void RecreateEar(Item &item, uint16_t ic, int iseed, uint8_t bCursval, string_view heroName);
 void CornerstoneSave();
 void CornerstoneLoad(Point position);
-void SpawnQuestItem(_item_indexes itemid, Point position, int randarea, int selflag);
+void SpawnQuestItem(_item_indexes itemid, Point position, int randarea, int selflag, bool sendmsg);
 void SpawnRewardItem(_item_indexes itemid, Point position, bool sendmsg);
 void SpawnMapOfDoom(Point position, bool sendmsg);
 void SpawnRuneBomb(Point position, bool sendmsg);

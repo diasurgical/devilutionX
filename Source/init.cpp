@@ -18,7 +18,6 @@
 #include "engine/dx.h"
 #include "hwcursor.hpp"
 #include "miniwin/misc_msg.h"
-#include "mpq/mpq_reader.hpp"
 #include "options.h"
 #include "pfile.h"
 #include "utils/file_util.h"
@@ -28,6 +27,10 @@
 #include "utils/str_split.hpp"
 #include "utils/ui_fwd.h"
 #include "utils/utf8.hpp"
+
+#ifndef UNPACKED_MPQS
+#include "mpq/mpq_reader.hpp"
+#endif
 
 #ifdef __vita__
 // increase default allowed heap size on Vita
@@ -116,6 +119,9 @@ std::vector<std::string> GetMPQSearchPaths()
 	paths.push_back(paths::BasePath());
 	paths.push_back(paths::PrefPath());
 	if (paths[0] == paths[1])
+		paths.pop_back();
+	paths.push_back(paths::ConfigPath());
+	if (paths[0] == paths[1] || (paths.size() == 3 && (paths[0] == paths[2] || paths[1] == paths[2])))
 		paths.pop_back();
 
 #if defined(__unix__) && !defined(__ANDROID__)
@@ -216,7 +222,7 @@ void LoadLanguageArchive()
 	lang_mpq = std::nullopt;
 #endif
 
-	string_view code = *sgOptions.Language.code;
+	string_view code = GetLanguageCode();
 	if (code != "en") {
 		std::string langMpqName { code };
 #ifdef UNPACKED_MPQS
@@ -231,7 +237,7 @@ void LoadLanguageArchive()
 void LoadGameArchives()
 {
 	auto paths = GetMPQSearchPaths();
-#if UNPACKED_MPQS
+#ifdef UNPACKED_MPQS
 	diabdat_data_path = FindUnpackedMpqData(paths, "diabdat");
 	if (!diabdat_data_path) {
 		spawn_data_path = FindUnpackedMpqData(paths, "spawn");
@@ -239,12 +245,11 @@ void LoadGameArchives()
 			gbIsSpawn = true;
 	}
 	if (!HeadlessMode) {
-		SDL_RWops *handle = OpenAsset("ui_art\\title.clx");
-		if (handle == nullptr) {
+		AssetRef ref = FindAsset("ui_art\\title.clx");
+		if (!ref.ok()) {
 			LogError("{}", SDL_GetError());
 			InsertCDDlg(_("diabdat.mpq or spawn.mpq"));
 		}
-		SDL_RWclose(handle);
 	}
 	hellfire_data_path = FindUnpackedMpqData(paths, "hellfire");
 	if (hellfire_data_path)
@@ -280,12 +285,11 @@ void LoadGameArchives()
 			gbIsSpawn = true;
 	}
 	if (!HeadlessMode) {
-		SDL_RWops *handle = OpenAsset("ui_art\\title.pcx");
-		if (handle == nullptr) {
+		AssetRef ref = FindAsset("ui_art\\title.pcx");
+		if (!ref.ok()) {
 			LogError("{}", SDL_GetError());
 			InsertCDDlg(_("diabdat.mpq or spawn.mpq"));
 		}
-		SDL_RWclose(handle);
 	}
 
 	hellfire_mpq = LoadMPQ(paths, "hellfire.mpq");

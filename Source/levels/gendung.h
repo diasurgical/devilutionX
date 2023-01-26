@@ -84,16 +84,17 @@ enum lvl_entry : uint8_t {
 
 enum class DungeonFlag : uint8_t {
 	// clang-format off
-	None        = 0, // Only used by lighting/automap
-	Missile     = 1 << 0,
-	Visible     = 1 << 1,
-	DeadPlayer  = 1 << 2,
-	Populated   = 1 << 3,
-	// 1 << 4 and 1 << 5 were used as workarounds for a bug with horizontal movement (relative to the screen) for monsters and players respectively
-	Lit         = 1 << 6,
-	Explored    = 1 << 7,
-	SavedFlags  = (Populated | Lit | Explored), // ~(Missile | Visible | DeadPlayer)
-	LoadedFlags = (Missile | Visible | DeadPlayer | Populated | Lit | Explored)
+	None                  = 0, // Only used by lighting/automap
+	Missile               = 1 << 0,
+	Visible               = 1 << 1,
+	DeadPlayer            = 1 << 2,
+	Populated             = 1 << 3,
+	MissileFireWall       = 1 << 4,
+	MissileLightningWall  = 1 << 5,
+	Lit                   = 1 << 6,
+	Explored              = 1 << 7,
+	SavedFlags            = (Populated | Lit | Explored), // ~(Missile | Visible | DeadPlayer)
+	LoadedFlags           = (Missile | Visible | DeadPlayer | Populated | Lit | Explored)
 	// clang-format on
 };
 use_enum_as_flags(DungeonFlag);
@@ -182,8 +183,8 @@ extern _setlevels setlvlnum;
 extern dungeon_type setlvltype;
 /** Specifies the player viewpoint X,Y-coordinates of the map. */
 extern DVL_API_FOR_TEST Point ViewPosition;
-extern int MicroTileLen;
-extern char TransVal;
+extern uint_fast8_t MicroTileLen;
+extern int8_t TransVal;
 /** Specifies the active transparency indices. */
 extern bool TransList[256];
 /** Contains the piece IDs of each tile on the map. */
@@ -219,7 +220,7 @@ extern DVL_API_FOR_TEST int8_t dObject[MAXDUNX][MAXDUNY];
  * (e.g. "levels/l1data/l1s"). Note, the special tileset of Tristram (i.e.
  * "levels/towndata/towns") contains trees rather than arches.
  */
-extern char dSpecial[MAXDUNX][MAXDUNY];
+extern int8_t dSpecial[MAXDUNX][MAXDUNY];
 extern int themeCount;
 extern THEME_LOC themeLoc[MAXTHEMES];
 

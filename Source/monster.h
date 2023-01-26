@@ -21,6 +21,7 @@
 #include "engine/sound.h"
 #include "engine/world_tile.hpp"
 #include "init.h"
+#include "misdat.h"
 #include "monstdat.h"
 #include "spelldat.h"
 #include "textdat.h"
@@ -39,7 +40,6 @@ enum monster_flag : uint16_t {
 	MFLAG_HIDDEN          = 1 << 0,
 	MFLAG_LOCK_ANIMATION  = 1 << 1,
 	MFLAG_ALLOW_SPECIAL   = 1 << 2,
-	MFLAG_NOHEAL          = 1 << 3,
 	MFLAG_TARGETS_MONSTER = 1 << 4,
 	MFLAG_GOLEM           = 1 << 5,
 	MFLAG_QUEST_COMPLETE  = 1 << 6,
@@ -420,8 +420,8 @@ struct Monster { // note: missing field _mAFNum
 	 * @brief Is the monster currently walking?
 	 */
 	bool isWalking() const;
-	bool isImmune(missile_id mitype) const;
-	bool isResistant(missile_id mitype) const;
+	bool isImmune(MissileID mitype) const;
+	bool isResistant(MissileID mitype) const;
 
 	/**
 	 * Is this a player's golem?
@@ -457,7 +457,7 @@ void InitMonsters();
 void SetMapMonsters(const uint16_t *dunData, Point startPosition);
 Monster *AddMonster(Point position, Direction dir, size_t mtype, bool inMap);
 void AddDoppelganger(Monster &monster);
-void ApplyMonsterDamage(Monster &monster, int damage);
+void ApplyMonsterDamage(DamageType damageType, Monster &monster, int damage);
 bool M_Talker(const Monster &monster);
 void M_StartStand(Monster &monster, Direction md);
 void M_ClearSquares(const Monster &monster);
@@ -489,6 +489,7 @@ void PlayEffect(Monster &monster, MonsterSound mode);
 void MissToMonst(Missile &missile, Point position);
 
 Monster *FindMonsterAtPosition(Point position, bool ignoreMovingMonsters = false);
+Monster *FindUniqueMonster(UniqueMonsterType monsterType);
 
 /**
  * @brief Check that the given tile is available to the monster
@@ -503,7 +504,7 @@ bool IsGoat(_monster_id mt);
  */
 void ActivateSkeleton(Monster &monster, Point position);
 Monster *PreSpawnSkeleton();
-void TalktoMonster(Monster &monster);
+void TalktoMonster(Player &player, Monster &monster);
 void SpawnGolem(Player &player, Monster &golem, Point position, Missile &missile);
 bool CanTalkToMonst(const Monster &monster);
 int encode_enemy(Monster &monster);

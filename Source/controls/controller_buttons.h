@@ -28,7 +28,9 @@ enum ControllerButton : uint8_t {
 	ControllerButton_BUTTON_DPAD_UP,
 	ControllerButton_BUTTON_DPAD_DOWN,
 	ControllerButton_BUTTON_DPAD_LEFT,
-	ControllerButton_BUTTON_DPAD_RIGHT
+	ControllerButton_BUTTON_DPAD_RIGHT,
+	FIRST = ControllerButton_NONE,
+	LAST = ControllerButton_BUTTON_DPAD_RIGHT
 };
 
 struct ControllerButtonCombo {
@@ -117,7 +119,7 @@ extern const string_view Nintendo_LStick_W;
 extern const string_view Nintendo_LStick_SW;
 extern const string_view Nintendo_LStick_N;
 extern const string_view Nintendo_LStick;
-extern const string_view Nintendoo_LStick_S;
+extern const string_view Nintendo_LStick_S;
 extern const string_view Nintendo_LStick_NE;
 extern const string_view Nintendo_LStick_E;
 extern const string_view Nintendo_LStick_SE;
@@ -147,9 +149,9 @@ extern const string_view Xbox_RT;
 extern const string_view Xbox_LB;
 extern const string_view Xbox_RB;
 extern const string_view Xbox_DPad_Up;
-extern const string_view Xbox_Dpad_Right;
-extern const string_view Xbox_Dpad_Down;
-extern const string_view Xbox_Dpad_Left;
+extern const string_view Xbox_DPad_Right;
+extern const string_view Xbox_DPad_Down;
+extern const string_view Xbox_DPad_Left;
 extern const string_view Xbox_LStick_NW;
 extern const string_view Xbox_LStick_W;
 extern const string_view Xbox_LStick_SW;
@@ -171,4 +173,11 @@ extern const string_view Xbox_RStick_SE;
 extern const string_view Xbox_RStick_Click;
 extern const string_view Xbox_Xbox;
 } // namespace controller_button_icon
+
+string_view ToPlayStationIcon(ControllerButton button);
+string_view ToNintendoIcon(ControllerButton button);
+string_view ToXboxIcon(ControllerButton button);
+string_view ToGenericButtonText(ControllerButton button);
+string_view ToString(ControllerButton button);
+
 } // namespace devilution

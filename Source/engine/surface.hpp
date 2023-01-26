@@ -90,7 +90,7 @@ struct Surface {
 	 * @brief Line width of the raw underlying byte buffer.
 	 * May be wider than its logical width (for power-of-2 alignment).
 	 */
-	int pitch() const
+	[[nodiscard]] uint16_t pitch() const
 	{
 		return surface->pitch;
 	}

@@ -151,12 +151,17 @@ bool FetchMessage_Real(SDL_Event *event, uint16_t *modState)
 		return true;
 
 	switch (e.type) {
-#ifndef USE_SDL1
+#if SDL_VERSION_ATLEAST(2, 0, 0)
 	case SDL_CONTROLLERAXISMOTION:
 	case SDL_CONTROLLERBUTTONDOWN:
 	case SDL_CONTROLLERBUTTONUP:
 	case SDL_FINGERDOWN:
 	case SDL_FINGERUP:
+	case SDL_TEXTEDITING:
+	case SDL_TEXTINPUT:
+	case SDL_WINDOWEVENT:
+#else
+	case SDL_ACTIVEEVENT:
 #endif
 	case SDL_JOYAXISMOTION:
 	case SDL_JOYHATMOTION:
@@ -165,24 +170,11 @@ bool FetchMessage_Real(SDL_Event *event, uint16_t *modState)
 		*event = e;
 		break;
 	case SDL_KEYDOWN:
-	case SDL_KEYUP: {
-#ifdef USE_SDL1
-		if (gbRunGame && (IsTalkActive() || dropGoldFlag)) {
-			Uint16 unicode = e.key.keysym.unicode;
-			if (unicode >= ' ') {
-				std::string utf8;
-				AppendUtf8(unicode, utf8);
-				if (IsTalkActive())
-					control_new_text(utf8);
-				if (dropGoldFlag)
-					GoldDropNewText(utf8);
-			}
-		}
-#endif
+	case SDL_KEYUP:
 		if (e.key.keysym.sym == -1)
 			return FalseAvail(e.type == SDL_KEYDOWN ? "SDL_KEYDOWN" : "SDL_KEYUP", e.key.keysym.sym);
 		*event = e;
-	} break;
+		break;
 	case SDL_MOUSEMOTION:
 		*event = e;
 		if (ControlMode == ControlTypes::KeyboardAndMouse && invflag)
@@ -213,31 +205,6 @@ bool FetchMessage_Real(SDL_Event *event, uint16_t *modState)
 	case SDL_KEYMAPCHANGED:
 		return FalseAvail("SDL_KEYMAPCHANGED", 0);
 #endif
-	case SDL_TEXTEDITING:
-		if (gbRunGame)
-			break;
-		return FalseAvail("SDL_TEXTEDITING", e.edit.length);
-	case SDL_TEXTINPUT:
-		if (gbRunGame && IsTalkActive()) {
-			control_new_text(e.text.text);
-			break;
-		}
-		if (gbRunGame && dropGoldFlag) {
-			GoldDropNewText(e.text.text);
-			break;
-		}
-		if (gbRunGame && IsWithdrawGoldOpen) {
-			GoldWithdrawNewText(e.text.text);
-			break;
-		}
-		return FalseAvail("SDL_TEXTINPUT", e.text.windowID);
-	case SDL_WINDOWEVENT:
-		*event = e;
-		break;
-#else
-	case SDL_ACTIVEEVENT:
-		*event = e;
-		break;
 #endif
 	default:
 		return FalseAvail("unknown", e.type);

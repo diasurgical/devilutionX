@@ -30,10 +30,10 @@ namespace {
 
 SdlMutex MemCrit;
 bool nthread_should_run;
-char sgbSyncCountdown;
+int8_t sgbSyncCountdown;
 uint32_t turn_upper_bit;
 bool sgbTicsOutOfSync;
-char sgbPacketCountdown;
+int8_t sgbPacketCountdown;
 bool sgbThreadIsRunning;
 SdlThread Thread;
 
@@ -229,7 +229,7 @@ bool nthread_has_500ms_passed()
 			}
 		}
 		if (resetLastTick) {
-			// Reset last tick to avoid caught up of all missed game ticks (game speed is dramatically increased for a short time)
+			// Reset last tick to avoid catching up with all missed game ticks (game speed is dramatically increased for a short time)
 			last_tick = currentTickCount;
 			ticksElapsed = 0;
 		}

@@ -13,11 +13,22 @@
 #include "utils/paths.h"
 #include "utils/stdcompat/string_view.hpp"
 
+#ifdef USE_SDL1
+#include "utils/sdl2_to_1_2_backports.h"
+#endif
+
 #define MO_MAGIC 0x950412de
+
+std::string forceLocale;
 
 namespace {
 
 using namespace devilution;
+
+// Translations normally come in ".gmo" files.
+// We also support ".mo" because that is what poedit generates
+// and what translators use to test their work.
+constexpr std::array<const char *, 2> Extensions { ".mo", ".gmo" };
 
 std::unique_ptr<char[]> translationKeys;
 std::unique_ptr<char[]> translationValues;
@@ -103,9 +114,15 @@ string_view TrimRight(string_view str)
 	return str;
 }
 
+/** plural=(n != 1); */
+int PluralIfNotOne(int n)
+{
+	return n != 1 ? 1 : 0;
+}
+
 // English, Danish, Spanish, Italian, Swedish
 unsigned PluralForms = 2;
-tl::function_ref<int(int n)> GetLocalPluralId = [](int n) -> int { return n != 1 ? 1 : 0; };
+tl::function_ref<int(int n)> GetLocalPluralId = PluralIfNotOne;
 
 /**
  * Match plural=(n != 1);"
@@ -133,7 +150,7 @@ void SetPluralForm(string_view expression)
 
 	// en, bg, da, de, es, it, sv
 	if (expression == "(n != 1)") {
-		GetLocalPluralId = [](int n) -> int { return n != 1 ? 1 : 0; };
+		GetLocalPluralId = PluralIfNotOne;
 		return;
 	}
 
@@ -245,12 +262,28 @@ void ParseMetadata(string_view metadata)
 	}
 }
 
-bool ReadEntry(SDL_RWops *rw, const MoEntry &e, char *result)
+bool ReadEntry(AssetHandle &handle, const MoEntry &e, char *result)
 {
-	if (SDL_RWseek(rw, e.offset, RW_SEEK_SET) == -1)
+	if (!handle.seek(e.offset))
 		return false;
 	result[e.length] = '\0';
-	return static_cast<uint32_t>(SDL_RWread(rw, result, sizeof(char), e.length)) == e.length;
+	return handle.read(result, e.length);
+}
+
+bool CopyData(void *dst, const byte *data, size_t dataSize, size_t offset, size_t length)
+{
+	if (offset + length > dataSize)
+		return false;
+	memcpy(dst, data + offset, length);
+	return true;
+}
+
+bool ReadEntry(const byte *data, size_t dataSize, const MoEntry &e, char *result)
+{
+	if (!CopyData(result, data, dataSize, e.offset, e.length))
+		return false;
+	result[e.length] = '\0';
+	return true;
 }
 
 } // namespace
@@ -304,20 +337,21 @@ bool HasTranslation(const std::string &locale)
 		return true;
 	}
 
-	constexpr std::array<const char *, 2> Extensions { ".mo", ".gmo" };
-	return std::any_of(Extensions.cbegin(), Extensions.cend(), [locale](const std::string &extension) {
-		SDL_RWops *rw = OpenAsset((locale + extension).c_str());
-		if (rw != nullptr) {
-			SDL_RWclose(rw);
-			return true;
-		}
-		return false;
+	return std::any_of(Extensions.cbegin(), Extensions.cend(), [locale](const char *extension) {
+		return FindAsset((locale + extension).c_str()).ok();
 	});
+}
+
+string_view GetLanguageCode()
+{
+	if (!forceLocale.empty())
+		return forceLocale;
+	return *sgOptions.Language.code;
 }
 
 bool IsSmallFontTall()
 {
-	string_view code = (*sgOptions.Language.code).substr(0, 2);
+	const string_view code = GetLanguageCode().substr(0, 2);
 	return code == "zh" || code == "ja" || code == "ko";
 }
 
@@ -327,59 +361,81 @@ void LanguageInitialize()
 	translationKeys = nullptr;
 	translationValues = nullptr;
 
+	const std::string lang(GetLanguageCode());
+
+	if (lang == "en") {
+		// English does not have a translation file.
+		GetLocalPluralId = PluralIfNotOne;
+		return;
+	}
+
 	if (IsSmallFontTall() && !HaveExtraFonts()) {
 		UiErrorOkDialog(
 		    "Missing fonts.mpq",
 		    StrCat("fonts.mpq is required for locale \"",
-		        *sgOptions.Language.code,
+		        GetLanguageCode(),
 		        "\"\n\n"
 		        "Please download fonts.mpq from:\n"
 		        "github.com/diasurgical/\ndevilutionx-assets/releases"));
-		sgOptions.Language.code = "en";
+		forceLocale = "en";
 	}
 
-	const std::string lang(*sgOptions.Language.code);
-	SDL_RWops *rw;
+	AssetHandle handle;
+	const uint32_t loadTranslationsStart = SDL_GetTicks();
 
-	// Translations normally come in ".gmo" files.
-	// We also support ".mo" because that is what poedit generates
-	// and what translators use to test their work.
-	for (const char *ext : { ".mo", ".gmo" }) {
-		if ((rw = OpenAsset((lang + ext).c_str())) != nullptr) {
+	std::string translationsPath;
+	size_t fileSize;
+	for (const char *ext : Extensions) {
+		translationsPath = lang + ext;
+		handle = OpenAsset(translationsPath.c_str(), fileSize);
+		if (handle.ok())
 			break;
-		}
 	}
-	if (rw == nullptr) {
-		SetPluralForm("plural=(n != 1);"); // Reset to English plural form
+	if (!handle.ok()) {
+		// Reset to English, which is always available:
+		forceLocale = "en";
+		GetLocalPluralId = PluralIfNotOne;
 		return;
+	}
+
+#ifdef UNPACKED_MPQS
+	const bool readWholeFile = false;
+#else
+	// If reading from an MPQ, it is much faster to
+	// load the whole file instead of seeking.
+	const bool readWholeFile = handle.handle->type == SDL_RWOPS_UNKNOWN;
+#endif
+
+	std::unique_ptr<byte[]> data;
+	if (readWholeFile) {
+		data.reset(new byte[fileSize]);
+		if (!handle.read(data.get(), fileSize))
+			return;
+		handle = {};
 	}
 
 	// Read header and do sanity checks
 	MoHead head;
-	if (SDL_RWread(rw, &head, sizeof(MoHead), 1) != 1) {
-		SDL_RWclose(rw);
+	if (readWholeFile
+	        ? !CopyData(&head, data.get(), fileSize, 0, sizeof(MoHead))
+	        : !handle.read(&head, sizeof(MoHead))) {
 		return;
 	}
 	SwapLE(head);
 
 	if (head.magic != MO_MAGIC) {
-		SDL_RWclose(rw);
 		return; // not a MO file
 	}
 
 	if (head.revision.major > 1 || head.revision.minor > 1) {
-		SDL_RWclose(rw);
 		return; // unsupported revision
 	}
 
 	// Read entries of source strings
 	std::unique_ptr<MoEntry[]> src { new MoEntry[head.nbMappings] };
-	if (SDL_RWseek(rw, head.srcOffset, RW_SEEK_SET) == -1) {
-		SDL_RWclose(rw);
-		return;
-	}
-	if (static_cast<uint32_t>(SDL_RWread(rw, src.get(), sizeof(MoEntry), head.nbMappings)) != head.nbMappings) {
-		SDL_RWclose(rw);
+	if (readWholeFile
+	        ? !CopyData(src.get(), data.get(), fileSize, head.srcOffset, head.nbMappings * sizeof(MoEntry))
+	        : !handle.seek(head.srcOffset) || !handle.read(src.get(), head.nbMappings * sizeof(MoEntry))) {
 		return;
 	}
 	for (size_t i = 0; i < head.nbMappings; ++i) {
@@ -388,12 +444,9 @@ void LanguageInitialize()
 
 	// Read entries of target strings
 	std::unique_ptr<MoEntry[]> dst { new MoEntry[head.nbMappings] };
-	if (SDL_RWseek(rw, head.dstOffset, RW_SEEK_SET) == -1) {
-		SDL_RWclose(rw);
-		return;
-	}
-	if (static_cast<uint32_t>(SDL_RWread(rw, dst.get(), sizeof(MoEntry), head.nbMappings)) != head.nbMappings) {
-		SDL_RWclose(rw);
+	if (readWholeFile
+	        ? !CopyData(dst.get(), data.get(), fileSize, head.dstOffset, head.nbMappings * sizeof(MoEntry))
+	        : !handle.seek(head.dstOffset) || !handle.read(dst.get(), head.nbMappings * sizeof(MoEntry))) {
 		return;
 	}
 	for (size_t i = 0; i < head.nbMappings; ++i) {
@@ -402,13 +455,13 @@ void LanguageInitialize()
 
 	// MO header
 	if (src[0].length != 0) {
-		SDL_RWclose(rw);
 		return;
 	}
 	{
 		auto headerValue = std::unique_ptr<char[]> { new char[dst[0].length + 1] };
-		if (!ReadEntry(rw, dst[0], &headerValue[0])) {
-			SDL_RWclose(rw);
+		if (readWholeFile
+		        ? !ReadEntry(data.get(), fileSize, dst[0], &headerValue[0])
+		        : !ReadEntry(handle, dst[0], &headerValue[0])) {
 			return;
 		}
 		ParseMetadata(&headerValue[0]);
@@ -431,7 +484,9 @@ void LanguageInitialize()
 	char *keyPtr = &translationKeys[0];
 	char *valuePtr = &translationValues[0];
 	for (uint32_t i = 1; i < head.nbMappings; i++) {
-		if (ReadEntry(rw, src[i], keyPtr) && ReadEntry(rw, dst[i], valuePtr)) {
+		if (readWholeFile
+		        ? ReadEntry(data.get(), fileSize, src[i], keyPtr) && ReadEntry(data.get(), fileSize, dst[i], valuePtr)
+		        : ReadEntry(handle, src[i], keyPtr) && ReadEntry(handle, dst[i], valuePtr)) {
 			// Plural keys also have a plural form but it does not participate in lookup.
 			// Plural values are \0-terminated.
 			string_view value { valuePtr, dst[i].length + 1 };
@@ -446,5 +501,5 @@ void LanguageInitialize()
 		}
 	}
 
-	SDL_RWclose(rw);
+	LogVerbose(StrCat("Loaded translations from ", translationsPath, " in ", SDL_GetTicks() - loadTranslationsStart, "ms"));
 }

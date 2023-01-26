@@ -21,12 +21,6 @@
 #include "utils/sdl2_to_1_2_backports.h"
 #endif
 
-#ifdef _WIN32
-#define DIRECTORY_SEPARATOR_STR "\\"
-#else
-#define DIRECTORY_SEPARATOR_STR "/"
-#endif
-
 namespace devilution {
 
 namespace paths {
@@ -88,9 +82,11 @@ const std::string &PrefPath()
 		prefPath = NxdkGetPrefPath();
 #else
 		prefPath = FromSDL(SDL_GetPrefPath("diasurgical", "devilution"));
+#if !defined(__amigaos__)
 		if (FileExistsAndIsWriteable("diablo.ini")) {
 			prefPath = std::string("." DIRECTORY_SEPARATOR_STR);
 		}
+#endif
 #endif
 	}
 	return *prefPath;
@@ -105,9 +101,11 @@ const std::string &ConfigPath()
 		configPath = NxdkGetPrefPath();
 #else
 		configPath = FromSDL(SDL_GetPrefPath("diasurgical", "devilution"));
+#if !defined(__amigaos__)
 		if (FileExistsAndIsWriteable("diablo.ini")) {
 			configPath = std::string("." DIRECTORY_SEPARATOR_STR);
 		}
+#endif
 #endif
 	}
 	return *configPath;

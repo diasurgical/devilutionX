@@ -1,9 +1,8 @@
 # RG99 has the same layout as RG300 but only 32 MiB RAM
 set(BUILD_ASSETS_MPQ OFF)
 set(UNPACKED_MPQS ON)
+set(UNPACKED_SAVES ON)
 set(NONET ON)
-set(NOSOUND ON)
-set(DISABLE_DEMOMODE ON)
 set(USE_SDL1 ON)
 
 # Link `libstdc++` dynamically: ~1.3 MiB.
@@ -12,7 +11,9 @@ set(USE_SDL1 ON)
 set(DEVILUTIONX_STATIC_CXX_STDLIB OFF)
 
 # -fmerge-all-constants saves ~4 KiB
-set(_extra_flags "-fmerge-all-constants")
+# -fsection-anchors saves ~4 KiB
+# -fipa-pta and -fdevirtualize-at-ltrans improves performance.
+set(_extra_flags "-fmerge-all-constants -fsection-anchors -fipa-pta -fdevirtualize-at-ltrans")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${_extra_flags}")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${_extra_flags}")
 # -Wl,-z-stack-size: the default thread stack size for RG99 is 128 KiB, reduce it.
@@ -22,8 +23,11 @@ set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-z,stack-size=32768")
 # 128 KiB
 set(DEVILUTIONX_PALETTE_TRANSPARENCY_BLACK_16_LUT OFF)
 
-# Must use a tiny audio buffer due to RAM constraints.
-set(DEFAULT_AUDIO_BUFFER_SIZE 256)
+# Must stream most of the audio due to RAM constraints.
+set(STREAM_ALL_AUDIO_MIN_FILE_SIZE 4096)
+
+# Must use a smaller audio buffer due to RAM constraints.
+set(DEFAULT_AUDIO_BUFFER_SIZE 768)
 
 # Use lower resampling quality for FPS.
 set(DEFAULT_AUDIO_RESAMPLING_QUALITY 2)

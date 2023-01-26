@@ -21,16 +21,15 @@ main() {
 
 cmake_configure() {
 	cmake -S. -B"$BUILD_DIR" \
-		"-DTARGET_PLATFORM=miyoo_mini" \
-		-DCMAKE_C_COMPILER=arm-linux-gnueabihf-gcc \
-		-DCMAKE_CXX_COMPILER=arm-linux-gnueabihf-g++ \
+		-DTARGET_PLATFORM=miyoo_mini \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_TOOLCHAIN_FILE="${PACKAGING_DIR}/toolchainfile.cmake" \
 		-DBUILD_TESTING=OFF \
-		-DCMAKE_FIND_ROOT_PATH="/opt/miyoomini-toolchain/arm-linux-gnueabihf/sysroot" \
 		"$@"
 }
 
 cmake_build() {
-	cmake --build "$BUILD_DIR"
+	cmake --build "$BUILD_DIR" -j $(getconf _NPROCESSORS_ONLN)
 }
 
 build_custom_sdl() {
@@ -41,11 +40,16 @@ build_custom_sdl() {
 	# clone the repo and build the lib
 	cd $BUILD_DIR/CustomSDL
 	git clone $MIYOO_CUSTOM_SDL_REPO --branch $MIYOO_CUSTOM_SDL_BRANCH --single-branch .
+
+	PATH="/opt/miyoomini-toolchain/usr/bin:${PATH}:/opt/miyoomini-toolchain/usr/arm-linux-gnueabihf/sysroot/bin" \
+	CROSS_COMPILE=/opt/miyoomini-toolchain/usr/bin/arm-linux-gnueabihf- \
+	PREFIX=/opt/miyoomini-toolchain/usr/arm-linux-gnueabihf/sysroot/usr \
+	UNION_PLATFORM=miyoomini \
 	./make.sh
 
 	# change back to devilutionx root
 	cd "$PACKAGING_DIR/../.."
-	cp -rfL "$BUILD_DIR/CustomSDL/build/.libs/libSDL-1.2.so.0" "$BUILD_DIR/OnionOS/Emu/PORTS/Binaries/Diablo.port/lib/libSDL-1.2.so.0"
+	cp -rfL "$BUILD_DIR/CustomSDL/build/.libs/libSDL-1.2.so.0" "$BUILD_DIR/OnionOS/Roms/PORTS/Binaries/Diablo.port/lib/libSDL-1.2.so.0"
 }
 
 prepare_onion_skeleton() {
@@ -55,10 +59,10 @@ prepare_onion_skeleton() {
 	cp -rf  Packaging/miyoo_mini/skeleton_OnionOS/* $BUILD_DIR/OnionOS
 
 	# ensure devilutionx asset dir
-	mkdir -p $BUILD_DIR/OnionOS/Emu/PORTS/Binaries/Diablo.port/assets
+	mkdir -p $BUILD_DIR/OnionOS/Roms/PORTS/Binaries/Diablo.port/assets
 
 	# ensure lib dir for custom SDL
-	mkdir -p $BUILD_DIR/OnionOS/Emu/PORTS/Binaries/Diablo.port/lib
+	mkdir -p $BUILD_DIR/OnionOS/Roms/PORTS/Binaries/Diablo.port/lib
 
 	# ensure config dir
 	mkdir -p $BUILD_DIR/OnionOS/Saves/CurrentProfile/config/DevilutionX
@@ -71,9 +75,9 @@ package_onion() {
 	prepare_onion_skeleton
 	build_custom_sdl
 	# copy assets
-	cp -rf $BUILD_DIR/assets/* $BUILD_DIR/OnionOS/Emu/PORTS/Binaries/Diablo.port/assets
+	cp -rf $BUILD_DIR/assets/* $BUILD_DIR/OnionOS/Roms/PORTS/Binaries/Diablo.port/assets
 	# copy executable
-	cp -f $BUILD_DIR/devilutionx $BUILD_DIR/OnionOS/Emu/PORTS/Binaries/Diablo.port/devilutionx
+	cp -f $BUILD_DIR/devilutionx $BUILD_DIR/OnionOS/Roms/PORTS/Binaries/Diablo.port/devilutionx
 
 	rm -f $BUILD_DIR/onion.zip
 

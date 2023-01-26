@@ -5,6 +5,10 @@ on:
     types: [published]
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   miyoo-mini:
     runs-on: ubuntu-22.04
@@ -20,9 +24,7 @@ jobs:
 
     - name:  Build
       working-directory: ${{github.workspace}}
-      run: >
-        source Packaging/miyoo_mini/toolchain_env.sh &&
-        Packaging/miyoo_mini/build.sh
+      run: Packaging/miyoo_mini/build.sh
 
     - name: Upload-OnionOS-Package
       if: ${{ !env.ACT }}

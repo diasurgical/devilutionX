@@ -31,7 +31,6 @@ void play_movie(const char *pszMovie, bool userCanClose)
 
 	sound_disable_music(true);
 	stream_stop();
-	effects_play_sound(SFX_SILENCE);
 
 	if (IsHardwareCursorEnabled() && ControlDevice == ControlTypes::KeyboardAndMouse) {
 		SetHardwareCursorVisible(false);
@@ -42,9 +41,14 @@ void play_movie(const char *pszMovie, bool userCanClose)
 		uint16_t modState;
 		while (movie_playing) {
 			while (movie_playing && FetchMessage(&event, &modState)) {
-				ControllerButtonEvent ctrlEvent = ToControllerButtonEvent(event);
-				if (userCanClose && SkipsMovie(ctrlEvent))
-					movie_playing = false;
+				if (userCanClose) {
+					for (ControllerButtonEvent ctrlEvent : ToControllerButtonEvents(event)) {
+						if (!SkipsMovie(ctrlEvent))
+							continue;
+						movie_playing = false;
+						break;
+					}
+				}
 				switch (event.type) {
 				case SDL_KEYDOWN:
 				case SDL_MOUSEBUTTONUP:
@@ -68,6 +72,7 @@ void play_movie(const char *pszMovie, bool userCanClose)
 
 	SDL_GetMouseState(&MousePosition.x, &MousePosition.y);
 	OutputToLogical(&MousePosition.x, &MousePosition.y);
+	InitBackbufferState();
 }
 
 void PlayInGameMovie(const char *pszMovie)

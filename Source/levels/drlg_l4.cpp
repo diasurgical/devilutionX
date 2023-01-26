@@ -160,7 +160,7 @@ void LoadQuestSetPieces()
 {
 	if (Quests[Q_WARLORD].IsAvailable()) {
 		pSetPiece = LoadFileInMem<uint16_t>("levels\\l4data\\warlord.dun");
-	} else if (currlevel == 15 && gbIsMultiplayer) {
+	} else if (currlevel == 15 && UseMultiplayerQuests()) {
 		pSetPiece = LoadFileInMem<uint16_t>("levels\\l4data\\vile1.dun");
 	}
 }
@@ -253,7 +253,7 @@ void FirstRoom()
 		if (currlevel == Quests[Q_WARLORD]._qlevel && Quests[Q_WARLORD]._qactive != QUEST_NOTAVAIL) {
 			assert(!gbIsMultiplayer);
 			room.size = { 11, 11 };
-		} else if (currlevel == Quests[Q_BETRAYER]._qlevel && gbIsMultiplayer) {
+		} else if (currlevel == Quests[Q_BETRAYER]._qlevel && UseMultiplayerQuests()) {
 			room.size = { 11, 11 };
 		} else {
 			const int32_t randomWidth = GenerateRnd(5) + 2;
@@ -273,7 +273,7 @@ void FirstRoom()
 	if (currlevel == 16) {
 		L4Hold = room.position;
 	}
-	if (Quests[Q_WARLORD].IsAvailable() || (currlevel == Quests[Q_BETRAYER]._qlevel && gbIsMultiplayer)) {
+	if (Quests[Q_WARLORD].IsAvailable() || (currlevel == Quests[Q_BETRAYER]._qlevel && UseMultiplayerQuests())) {
 		SetPieceRoom = { room.position + WorldTileDisplacement { 1, 1 }, WorldTileSize(room.size.width + 1, room.size.height + 1) };
 	} else {
 		SetPieceRoom = {};
@@ -1112,10 +1112,10 @@ bool PlaceStairs(lvl_entry entry)
 		}
 	} else {
 		// Place hell gate
-		bool isGateOpen = gbIsMultiplayer || Quests[Q_DIABLO]._qactive == QUEST_ACTIVE;
-		position = PlaceMiniSet(isGateOpen ? L4PENTA2 : L4PENTA);
+		position = PlaceMiniSet(L4PENTA2);
 		if (!position)
 			return false;
+		Quests[Q_DIABLO].position = *position;
 		if (entry == ENTRY_PREV)
 			ViewPosition = position->megaToWorld() + Displacement { 6, 5 };
 	}
@@ -1145,7 +1145,7 @@ void GenerateLevel(lvl_entry entry)
 		if (currlevel == 16) {
 			ProtectQuads();
 		}
-		if (Quests[Q_WARLORD].IsAvailable() || (currlevel == Quests[Q_BETRAYER]._qlevel && gbIsMultiplayer)) {
+		if (Quests[Q_WARLORD].IsAvailable() || (currlevel == Quests[Q_BETRAYER]._qlevel && UseMultiplayerQuests())) {
 			for (int spi = SetPieceRoom.position.x; spi < SetPieceRoom.position.x + SetPieceRoom.size.width - 1; spi++) {
 				for (int spj = SetPieceRoom.position.y; spj < SetPieceRoom.position.y + SetPieceRoom.size.height - 1; spj++) {
 					Protected.set(spi, spj);
@@ -1180,14 +1180,16 @@ void GenerateLevel(lvl_entry entry)
 	DRLG_CheckQuests(SetPieceRoom.position);
 
 	if (currlevel == 15) {
+		bool isGateOpen = UseMultiplayerQuests() || Quests[Q_DIABLO]._qactive == QUEST_ACTIVE;
+		if (!isGateOpen)
+			L4PENTA.place(Quests[Q_DIABLO].position);
+
 		for (WorldTileCoord j = 1; j < DMAXY; j++) {
 			for (WorldTileCoord i = 1; i < DMAXX; i++) {
 				if (IsAnyOf(dungeon[i][j], 98, 107)) {
 					Make_SetPC({ WorldTilePosition(i - 1, j - 1), { 5, 5 } });
-					if (Quests[Q_BETRAYER]._qactive >= QUEST_ACTIVE) { /// Lazarus staff skip bug fixed
-						// Set the portal position to the location of the northmost pentagram tile.
-						Quests[Q_BETRAYER].position = { i, j };
-					}
+					// Set the portal position to the location of the northmost pentagram tile.
+					Quests[Q_BETRAYER].position = { i, j };
 				}
 			}
 		}

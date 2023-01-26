@@ -646,7 +646,7 @@ void InitControlPan()
 		pLifeBuff.emplace(88, 88);
 
 		LoadCharPanel();
-		LoadSpellIcons();
+		LoadLargeSpellIcons();
 		{
 			const OwnedClxSpriteList sprite = LoadCel("ctrlpan\\panel8", GetMainPanel().size.width);
 			ClxDraw(*pBtmBuff, { 0, (GetMainPanel().size.height + 16) - 1 }, sprite[0]);
@@ -962,7 +962,7 @@ void FreeControlPan()
 	pBtmBuff = std::nullopt;
 	pManaBuff = std::nullopt;
 	pLifeBuff = std::nullopt;
-	FreeSpellIcons();
+	FreeLargeSpellIcons();
 	FreeSpellBook();
 	pPanelButtons = std::nullopt;
 	multiButtons = std::nullopt;
@@ -1232,9 +1232,8 @@ void DrawTalkPan(const Surface &out)
 	int x = mainPanelPosition.x + 200;
 	int y = mainPanelPosition.y + 10;
 
-	uint32_t idx = DrawString(out, TalkMessage, { { x, y }, { 250, 27 } }, UiFlags::ColorWhite | UiFlags::PentaCursor, 1, 13);
-	if (idx < sizeof(TalkMessage))
-		TalkMessage[idx] = '\0';
+	const uint32_t len = DrawString(out, TalkMessage, { { x, y }, { 250, 39 } }, UiFlags::ColorWhite | UiFlags::PentaCursor, 1, 13);
+	TalkMessage[std::min<size_t>(len, sizeof(TalkMessage) - 1)] = '\0';
 
 	x += 46;
 	int talkBtn = 0;
@@ -1320,7 +1319,7 @@ void control_type_message()
 		return;
 
 	talkflag = true;
-	SDL_Rect rect = MakeSdlRect(GetMainPanel().position.x + 200, GetMainPanel().position.y + 22, 250, 39);
+	SDL_Rect rect = MakeSdlRect(GetMainPanel().position.x + 200, GetMainPanel().position.y + 22, 0, 27);
 	SDL_SetTextInputRect(&rect);
 	TalkMessage[0] = '\0';
 	for (bool &talkButtonDown : TalkButtonsDown) {
@@ -1363,21 +1362,26 @@ bool control_presskeys(SDL_Keycode vkey)
 	if (!talkflag)
 		return false;
 
-	if (vkey == SDLK_ESCAPE) {
+	switch (vkey) {
+	case SDLK_ESCAPE:
 		control_reset_talk();
-	} else if (vkey == SDLK_RETURN || vkey == SDLK_KP_ENTER) {
+		return true;
+	case SDLK_RETURN:
+	case SDLK_KP_ENTER:
 		ControlPressEnter();
-	} else if (vkey == SDLK_BACKSPACE) {
+		return true;
+	case SDLK_BACKSPACE:
 		TalkMessage[FindLastUtf8Symbols(TalkMessage)] = '\0';
-	} else if (vkey == SDLK_DOWN) {
+		return true;
+	case SDLK_DOWN:
 		ControlUpDown(1);
-	} else if (vkey == SDLK_UP) {
+		return true;
+	case SDLK_UP:
 		ControlUpDown(-1);
-	} else if (vkey != SDLK_SPACE) {
-		return false;
+		return true;
+	default:
+		return vkey >= SDLK_SPACE && vkey <= SDLK_z;
 	}
-
-	return true;
 }
 
 void DiabloHotkeyMsg(uint32_t dwMsg)

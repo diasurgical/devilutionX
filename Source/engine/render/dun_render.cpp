@@ -3,120 +3,82 @@
  *
  * Implementation of functionality for rendering the level tiles.
  */
+
+// Debugging variables
+// #define DEBUG_STR
+// #define DEBUG_RENDER_COLOR
+// #define DEBUG_RENDER_OFFSET_X 5
+// #define DEBUG_RENDER_OFFSET_Y 5
+
 #include "engine/render/dun_render.hpp"
+
+#include <SDL_endian.h>
 
 #include <algorithm>
 #include <climits>
 #include <cstdint>
 
 #include "lighting.h"
+#include "utils/stdcompat/algorithm.hpp"
 #ifdef _DEBUG
 #include "miniwin/misc_msg.h"
 #endif
 #include "options.h"
 #include "utils/attributes.h"
+#ifdef DEBUG_STR
+#include "engine/render/text_render.hpp"
+#endif
+#if defined(DEBUG_STR) || defined(DUN_RENDER_STATS)
+#include "utils/str_cat.hpp"
+#endif
 
 namespace devilution {
 
 namespace {
 
-/**
- * Tile type.
- *
- * The tile type determines data encoding and the shape.
- *
- * Each tile type has its own encoding but they all encode data in the order
- * of bottom-to-top (bottom row first).
- */
-enum class TileType : uint8_t {
-	/**
-	 * 🮆 A 32x32 square. Stored as an array of pixels.
-	 */
-	Square,
-
-	/**
-	 * 🮆 A 32x32 square with transparency. RLE encoded.
-	 *
-	 * Each run starts with an int8_t value.
-	 * If positive, it is followed by this many pixels.
-	 * If negative, it indicates `-value` fully transparent pixels, which are omitted.
-	 *
-	 * Runs do not cross row boundaries.
-	 */
-	TransparentSquare,
-
-	/**
-	 *🭮 Left-pointing 32x31 triangle. Encoded as 31 varying-width rows with 2 padding bytes before every even row.
-	 *
-	 * The smallest rows (bottom and top) are 2px wide, the largest row is 16px wide (middle row).
-	 *
-	 * Encoding:
-	 * for i in [0, 30]:
-	 * - 2 unused bytes if i is even
-	 * - row (only the pixels within the triangle)
-	 */
-	LeftTriangle,
-
-	/**
-	 * 🭬Right-pointing 32x31 triangle.  Encoded as 31 varying-width rows with 2 padding bytes after every even row.
-	 *
-	 * The smallest rows (bottom and top) are 2px wide, the largest row is 16px wide (middle row).
-	 *
-	 * Encoding:
-	 * for i in [0, 30]:
-	 * - row (only the pixels within the triangle)
-	 * - 2 unused bytes if i is even
-	 */
-	RightTriangle,
-
-	/**
-	 * 🭓 Left-pointing 32x32 trapezoid: a 32x16 rectangle and the 16x16 bottom part of `LeftTriangle`.
-	 *
-	 * Begins with triangle part, which uses the `LeftTriangle` encoding,
-	 * and is followed by a flat array of pixels for the top rectangle part.
-	 */
-	LeftTrapezoid,
-
-	/**
-	 * 🭞 Right-pointing 32x32 trapezoid: 32x16 rectangle and the 16x16 bottom part of `RightTriangle`.
-	 *
-	 * Begins with the triangle part, which uses the `RightTriangle` encoding,
-	 * and is followed by a flat array of pixels for the top rectangle part.
-	 */
-	RightTrapezoid,
-};
-
 /** Width of a tile rendering primitive. */
-constexpr std::int_fast16_t Width = TILE_WIDTH / 2;
+constexpr int_fast16_t Width = TILE_WIDTH / 2;
 
 /** Height of a tile rendering primitive (except triangles). */
-constexpr std::int_fast16_t Height = TILE_HEIGHT;
+constexpr int_fast16_t Height = TILE_HEIGHT;
 
 /** Height of the lower triangle of a triangular or a trapezoid tile. */
-constexpr std::int_fast16_t LowerHeight = TILE_HEIGHT / 2;
+constexpr int_fast16_t LowerHeight = TILE_HEIGHT / 2;
 
 /** Height of the upper triangle of a triangular tile. */
-constexpr std::int_fast16_t TriangleUpperHeight = TILE_HEIGHT / 2 - 1;
+constexpr int_fast16_t TriangleUpperHeight = TILE_HEIGHT / 2 - 1;
 
 /** Height of the upper rectangle of a trapezoid tile. */
-constexpr std::int_fast16_t TrapezoidUpperHeight = TILE_HEIGHT / 2;
+constexpr int_fast16_t TrapezoidUpperHeight = TILE_HEIGHT / 2;
 
-constexpr std::int_fast16_t TriangleHeight = LowerHeight + TriangleUpperHeight;
+constexpr int_fast16_t TriangleHeight = LowerHeight + TriangleUpperHeight;
 
 /** For triangles, for each pixel drawn vertically, this many pixels are drawn horizontally. */
-constexpr std::int_fast16_t XStep = 2;
+constexpr int_fast16_t XStep = 2;
 
-std::int_fast16_t GetTileHeight(TileType tile)
+int_fast16_t GetTileHeight(TileType tile)
 {
 	if (tile == TileType::LeftTriangle || tile == TileType::RightTriangle)
 		return TriangleHeight;
 	return Height;
 }
 
-// Debugging variables
-// #define DEBUG_RENDER_COLOR
-// #define DEBUG_RENDER_OFFSET_X 5
-// #define DEBUG_RENDER_OFFSET_Y 5
+#ifdef DEBUG_STR
+std::pair<string_view, UiFlags> GetTileDebugStr(TileType tile)
+{
+	// clang-format off
+	switch (tile) {
+		case TileType::Square: return {"S", UiFlags::AlignCenter | UiFlags::VerticalCenter};
+		case TileType::TransparentSquare: return {"T", UiFlags::AlignCenter | UiFlags::VerticalCenter};
+		case TileType::LeftTriangle: return {"<", UiFlags::AlignRight | UiFlags::VerticalCenter};
+		case TileType::RightTriangle: return {">", UiFlags::VerticalCenter};
+		case TileType::LeftTrapezoid: return {"\\", UiFlags::AlignCenter};
+		case TileType::RightTrapezoid: return {"/", UiFlags::AlignCenter};
+		default: return {"", {}};
+	}
+	// clang-format on
+}
+#endif
 
 #ifdef DEBUG_RENDER_COLOR
 int DBGCOLOR = 0;
@@ -133,225 +95,58 @@ int GetTileDebugColor(TileType tile)
 		case TileType::RightTrapezoid: return PAL16_BLUE + 5;
 		default: return 0;
 	}
-	// clang-format on
 }
 #endif // DEBUG_RENDER_COLOR
 
-/** Fully transparent variant of WallMask. */
-const std::uint32_t WallMaskFullyTrasparent[TILE_HEIGHT] = {
-	0x00000000,
-	0x00000000,
-	0x00000000,
-	0x00000000,
-	0x00000000,
-	0x00000000,
-	0x00000000,
-	0x00000000,
-	0x00000000,
-	0x00000000,
-	0x00000000,
-	0x00000000,
-	0x00000000,
-	0x00000000,
-	0x00000000,
-	0x00000000,
-	0x00000000,
-	0x00000000,
-	0x00000000,
-	0x00000000,
-	0x00000000,
-	0x00000000,
-	0x00000000,
-	0x00000000,
-	0x00000000,
-	0x00000000,
-	0x00000000,
-	0x00000000,
-	0x00000000,
-	0x00000000,
-	0x00000000,
-	0x00000000
-};
-/** Transparent variant of RightMask. */
-const std::uint32_t RightMaskTransparent[TILE_HEIGHT] = {
-	0xC0000000,
-	0xF0000000,
-	0xFC000000,
-	0xFF000000,
-	0xFFC00000,
-	0xFFF00000,
-	0xFFFC0000,
-	0xFFFF0000,
-	0xFFFFC000,
-	0xFFFFF000,
-	0xFFFFFC00,
-	0xFFFFFF00,
-	0xFFFFFFC0,
-	0xFFFFFFF0,
-	0xFFFFFFFC,
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF
-};
-/** Transparent variant of LeftMask. */
-const std::uint32_t LeftMaskTransparent[TILE_HEIGHT] = {
-	0x00000003,
-	0x0000000F,
-	0x0000003F,
-	0x000000FF,
-	0x000003FF,
-	0x00000FFF,
-	0x00003FFF,
-	0x0000FFFF,
-	0x0003FFFF,
-	0x000FFFFF,
-	0x003FFFFF,
-	0x00FFFFFF,
-	0x03FFFFFF,
-	0x0FFFFFFF,
-	0x3FFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF
-};
-/** Fully opaque mask */
-const std::uint32_t SolidMask[TILE_HEIGHT] = {
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF,
-	0xFFFFFFFF
-};
-/** Used to mask out the left half of the tile diamond and only render additional content */
-const std::uint32_t RightFoliageMask[TILE_HEIGHT] = {
-	0xFFFFFFFF,
-	0x3FFFFFFF,
-	0x0FFFFFFF,
-	0x03FFFFFF,
-	0x00FFFFFF,
-	0x003FFFFF,
-	0x000FFFFF,
-	0x0003FFFF,
-	0x0000FFFF,
-	0x00003FFF,
-	0x00000FFF,
-	0x000003FF,
-	0x000000FF,
-	0x0000003F,
-	0x0000000F,
-	0x00000003,
-	0x00000000,
-	0x00000000,
-	0x00000000,
-	0x00000000,
-	0x00000000,
-	0x00000000,
-	0x00000000,
-	0x00000000,
-	0x00000000,
-	0x00000000,
-	0x00000000,
-	0x00000000,
-	0x00000000,
-	0x00000000,
-	0x00000000,
-	0x00000000,
-};
-/** Used to mask out the left half of the tile diamond and only render additional content */
-const std::uint32_t LeftFoliageMask[TILE_HEIGHT] = {
-	0xFFFFFFFF,
-	0xFFFFFFFC,
-	0xFFFFFFF0,
-	0xFFFFFFC0,
-	0xFFFFFF00,
-	0xFFFFFC00,
-	0xFFFFF000,
-	0xFFFFC000,
-	0xFFFF0000,
-	0xFFFC0000,
-	0xFFF00000,
-	0xFFC00000,
-	0xFF000000,
-	0xFC000000,
-	0xF0000000,
-	0xC0000000,
-	0x00000000,
-	0x00000000,
-	0x00000000,
-	0x00000000,
-	0x00000000,
-	0x00000000,
-	0x00000000,
-	0x00000000,
-	0x00000000,
-	0x00000000,
-	0x00000000,
-	0x00000000,
-	0x00000000,
-	0x00000000,
-	0x00000000,
-	0x00000000,
-};
+// Masks are defined by 2 template variables:
+//
+// 1. `OpaquePrefix`: Whether the line starts with opaque pixels
+//    followed by blended pixels or the other way around.
+// 2. `PrefixIncrement`: The change to the prefix when going
+//    up 1 line.
+//
+// The Left mask can only be applied to LeftTrapezoid and TransparentSquare.
+// The Right mask can only be applied to RightTrapezoid and TransparentSquare.
+// The Left/RightFoliage masks can only be applied to TransparentSquare.
 
-enum class TransparencyType : uint8_t {
-	Solid,
-	Blended,
-};
+// True if the given OpaquePrefix and PrefixIncrement represent foliage.
+// For foliage, we skip transparent pixels instead of blending them.
+template <bool OpaquePrefix, int8_t PrefixIncrement>
+constexpr bool IsFoliage = PrefixIncrement != 0 && (OpaquePrefix == (PrefixIncrement > 0));
+
+// True for foliage:
+template <bool OpaquePrefix, int8_t PrefixIncrement>
+constexpr bool SkipTransparentPixels = IsFoliage<OpaquePrefix, PrefixIncrement>;
+
+// True if the entire lower half of the mask is transparent.
+// True for Transparent, LeftFoliage, and RightFoliage.
+template <bool OpaquePrefix, int8_t PrefixIncrement>
+constexpr bool LowerHalfTransparent = (OpaquePrefix == (PrefixIncrement >= 0));
+
+// The initial value for the prefix:
+template <int8_t PrefixIncrement>
+DVL_ALWAYS_INLINE int8_t InitPrefix()
+{
+	return PrefixIncrement >= 0 ? -32 : 64;
+}
+
+// The initial value for the prefix at y-th line (counting from the bottom).
+template <int8_t PrefixIncrement>
+DVL_ALWAYS_INLINE int8_t InitPrefix(int8_t y)
+{
+	return InitPrefix<PrefixIncrement>() + PrefixIncrement * y;
+}
+
+#ifdef DEBUG_STR
+template <bool OpaquePrefix, int8_t PrefixIncrement>
+std::string prefixDebugString(int8_t prefix) {
+	std::string out(32, OpaquePrefix ? '0' : '1');
+	const uint8_t clamped = clamp<int8_t>(prefix, 0, 32);
+	out.replace(0, clamped, clamped, OpaquePrefix ? '1' : '0');
+	StrAppend(out, " prefix=", prefix, " OpaquePrefix=", OpaquePrefix, " PrefixIncrement=", PrefixIncrement);
+	return out;
+}
+#endif
 
 enum class LightType : uint8_t {
 	FullyDark,
@@ -360,7 +155,7 @@ enum class LightType : uint8_t {
 };
 
 template <LightType Light>
-DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLineOpaque(std::uint8_t *dst, const std::uint8_t *src, std::uint_fast8_t n, const std::uint8_t *tbl)
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLineOpaque(uint8_t *DVL_RESTRICT dst, const uint8_t *DVL_RESTRICT src, uint_fast8_t n, const uint8_t *DVL_RESTRICT tbl)
 {
 	if (Light == LightType::FullyDark) {
 		memset(dst, 0, n);
@@ -372,8 +167,8 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLineOpaque(std::uint8_t *dst, con
 #endif
 	} else { // Partially lit
 #ifndef DEBUG_RENDER_COLOR
-		for (size_t i = 0; i < n; i++) {
-			dst[i] = tbl[src[i]];
+		while (n-- != 0) {
+			*dst++ = tbl[*src++];
 		}
 #else
 		memset(dst, tbl[DBGCOLOR], n);
@@ -382,72 +177,78 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLineOpaque(std::uint8_t *dst, con
 }
 
 template <LightType Light>
-DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLineBlended(std::uint8_t *dst, const std::uint8_t *src, std::uint_fast8_t n, const std::uint8_t *tbl, std::uint32_t mask)
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLineTransparent(uint8_t *DVL_RESTRICT dst, const uint8_t *DVL_RESTRICT src, uint_fast8_t n, const uint8_t *DVL_RESTRICT tbl)
 {
 #ifndef DEBUG_RENDER_COLOR
 	if (Light == LightType::FullyDark) {
-		for (size_t i = 0; i < n; i++, mask <<= 1) {
-			if ((mask & 0x80000000) != 0)
-				dst[i] = 0;
-			else
-				dst[i] = paletteTransparencyLookup[0][dst[i]];
+		while (n-- != 0) {
+			*dst = paletteTransparencyLookup[0][*dst];
+			++dst;
 		}
 	} else if (Light == LightType::FullyLit) {
-		for (size_t i = 0; i < n; i++, mask <<= 1) {
-			if ((mask & 0x80000000) != 0)
-				dst[i] = src[i];
-			else
-				dst[i] = paletteTransparencyLookup[dst[i]][src[i]];
+		while (n-- != 0) {
+			*dst = paletteTransparencyLookup[*dst][*src];
+			++dst;
+			++src;
 		}
 	} else { // Partially lit
-		for (size_t i = 0; i < n; i++, mask <<= 1) {
-			if ((mask & 0x80000000) != 0)
-				dst[i] = tbl[src[i]];
-			else
-				dst[i] = paletteTransparencyLookup[dst[i]][tbl[src[i]]];
+		while (n-- != 0) {
+			*dst = paletteTransparencyLookup[*dst][tbl[*src]];
+			++dst;
+			++src;
 		}
 	}
 #else
-	for (size_t i = 0; i < n; i++, mask <<= 1) {
-		if ((mask & 0x80000000) != 0)
-			dst[i] = tbl[DBGCOLOR];
-		else
-			dst[i] = paletteTransparencyLookup[dst[i]][tbl[DBGCOLOR]];
+	for (size_t i = 0; i < n; i++) {
+		dst[i] = paletteTransparencyLookup[dst[i]][tbl[DBGCOLOR + 4]];
 	}
 #endif
 }
 
-template <TransparencyType Transparency, LightType Light>
-DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLine(std::uint8_t *dst, const std::uint8_t *src, std::uint_fast8_t n, const std::uint8_t *tbl, std::uint32_t mask)
+template <LightType Light, bool Transparent>
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLineTransparentOrOpaque(uint8_t *DVL_RESTRICT dst, const uint8_t *DVL_RESTRICT src, uint_fast8_t width, const uint8_t *DVL_RESTRICT tbl)
 {
-	if (Transparency == TransparencyType::Solid) {
-		RenderLineOpaque<Light>(dst, src, n, tbl);
+	if (Transparent) {
+		RenderLineTransparent<Light>(dst, src, width, tbl);
 	} else {
-		// The number of iterations is limited by the size of the mask.
-		// So we can limit it by ANDing the mask with another mask that only keeps
-		// iterations that are lower than n. We can now avoid testing if i < n
-		// at every loop iteration.
-		assert(n != 0 && n <= sizeof(std::uint32_t) * CHAR_BIT);
-		const std::uint32_t firstNOnes = std::uint32_t(-1) << ((sizeof(std::uint32_t) * CHAR_BIT) - n);
-		mask &= firstNOnes;
-		if (mask == firstNOnes) {
-			RenderLineOpaque<Light>(dst, src, n, tbl);
-		} else if (Transparency == TransparencyType::Blended) {
-			RenderLineBlended<Light>(dst, src, n, tbl, mask);
-		}
+		RenderLineOpaque<Light>(dst, src, width, tbl);
+	}
+}
+
+template <LightType Light, bool OpaquePrefix, int8_t PrefixIncrement>
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLineTransparentAndOpaque(uint8_t *DVL_RESTRICT dst, const uint8_t *DVL_RESTRICT src, uint_fast8_t prefixWidth, uint_fast8_t width, const uint8_t *DVL_RESTRICT tbl)
+{
+	if (OpaquePrefix) {
+		RenderLineOpaque<Light>(dst, src, prefixWidth, tbl);
+		if (!SkipTransparentPixels<OpaquePrefix, PrefixIncrement>)
+			RenderLineTransparent<Light>(dst + prefixWidth, src + prefixWidth, width - prefixWidth, tbl);
+	} else {
+		if (!SkipTransparentPixels<OpaquePrefix, PrefixIncrement>)
+			RenderLineTransparent<Light>(dst, src, prefixWidth, tbl);
+		RenderLineOpaque<Light>(dst + prefixWidth, src + prefixWidth, width - prefixWidth, tbl);
+	}
+}
+
+template <LightType Light, bool OpaquePrefix, int8_t PrefixIncrement>
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLine(uint8_t *DVL_RESTRICT dst, const uint8_t *DVL_RESTRICT src, uint_fast8_t n, const uint8_t *DVL_RESTRICT tbl, int8_t prefix)
+{
+	if (PrefixIncrement == 0) {
+		RenderLineTransparentOrOpaque<Light, OpaquePrefix>(dst, src, n, tbl);
+	} else {
+		RenderLineTransparentAndOpaque<Light, OpaquePrefix, PrefixIncrement>(dst, src, clamp<int8_t>(prefix, 0, n), n, tbl);
 	}
 }
 
 struct Clip {
-	std::int_fast16_t top;
-	std::int_fast16_t bottom;
-	std::int_fast16_t left;
-	std::int_fast16_t right;
-	std::int_fast16_t width;
-	std::int_fast16_t height;
+	int_fast16_t top;
+	int_fast16_t bottom;
+	int_fast16_t left;
+	int_fast16_t right;
+	int_fast16_t width;
+	int_fast16_t height;
 };
 
-Clip CalculateClip(std::int_fast16_t x, std::int_fast16_t y, std::int_fast16_t w, std::int_fast16_t h, const Surface &out)
+DVL_ALWAYS_INLINE Clip CalculateClip(int_fast16_t x, int_fast16_t y, int_fast16_t w, int_fast16_t h, const Surface &out)
 {
 	Clip clip;
 	clip.top = y + 1 < h ? h - (y + 1) : 0;
@@ -459,64 +260,63 @@ Clip CalculateClip(std::int_fast16_t x, std::int_fast16_t y, std::int_fast16_t w
 	return clip;
 }
 
-template <TransparencyType Transparency, LightType Light>
-DVL_ATTRIBUTE_HOT void RenderSquareFull(std::uint8_t *dst, int dstPitch, const std::uint8_t *src, const std::uint32_t *mask, const std::uint8_t *tbl)
+template <LightType Light, bool Transparent>
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderSquareFull(uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl)
 {
-	for (auto i = 0; i < Height; ++i, dst -= dstPitch, --mask) {
-		RenderLine<Transparency, Light>(dst, src, Width, tbl, *mask);
+	for (auto i = 0; i < Height; ++i, dst -= dstPitch) {
+		RenderLineTransparentOrOpaque<Light, Transparent>(dst, src, Width, tbl);
 		src += Width;
 	}
 }
 
-template <TransparencyType Transparency, LightType Light>
-DVL_ATTRIBUTE_HOT void RenderSquareClipped(std::uint8_t *dst, int dstPitch, const std::uint8_t *src, const std::uint32_t *mask, const std::uint8_t *tbl, Clip clip)
+template <LightType Light, bool Transparent>
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderSquareClipped(uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl, Clip clip)
 {
 	src += clip.bottom * Height + clip.left;
-	for (auto i = 0; i < clip.height; ++i, dst -= dstPitch, --mask) {
-		RenderLine<Transparency, Light>(dst, src, clip.width, tbl, (*mask) << clip.left);
+	for (auto i = 0; i < clip.height; ++i, dst -= dstPitch) {
+		RenderLineTransparentOrOpaque<Light, Transparent>(dst, src, clip.width, tbl);
 		src += Width;
 	}
 }
 
-template <TransparencyType Transparency, LightType Light>
-DVL_ATTRIBUTE_HOT void RenderSquare(std::uint8_t *dst, int dstPitch, const std::uint8_t *src, const std::uint32_t *mask, const std::uint8_t *tbl, Clip clip)
+template <LightType Light, bool Transparent>
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderSquare(uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl, Clip clip)
 {
 	if (clip.width == Width && clip.height == Height) {
-		RenderSquareFull<Transparency, Light>(dst, dstPitch, src, mask, tbl);
+		RenderSquareFull<Light, Transparent>(dst, dstPitch, src, tbl);
 	} else {
-		RenderSquareClipped<Transparency, Light>(dst, dstPitch, src, mask, tbl, clip);
+		RenderSquareClipped<Light, Transparent>(dst, dstPitch, src, tbl, clip);
 	}
 }
 
-template <TransparencyType Transparency, LightType Light>
-DVL_ATTRIBUTE_HOT void RenderTransparentSquareFull(std::uint8_t *dst, int dstPitch, const std::uint8_t *src, const std::uint32_t *mask, const std::uint8_t *tbl)
+template <LightType Light, bool OpaquePrefix, int8_t PrefixIncrement>
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderTransparentSquareFull(uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl)
 {
-	for (auto i = 0; i < Height; ++i, dst -= dstPitch + Width, --mask) {
-		constexpr unsigned MaxMaskShift = 32;
-		std::uint_fast8_t drawWidth = Width;
-		std::uint32_t m = *mask;
+	int8_t prefix = InitPrefix<PrefixIncrement>();
+	for (auto i = 0; i < Height; ++i, dst -= dstPitch + Width) {
+		uint_fast8_t drawWidth = Width;
 		while (drawWidth > 0) {
-			auto v = static_cast<std::int8_t>(*src++);
+			auto v = static_cast<int8_t>(*src++);
 			if (v > 0) {
-				RenderLine<Transparency, Light>(dst, src, v, tbl, m);
+				RenderLine<Light, OpaquePrefix, PrefixIncrement>(dst, src, v, tbl, prefix - (Width - drawWidth));
 				src += v;
 			} else {
 				v = -v;
 			}
 			dst += v;
 			drawWidth -= v;
-			m = (v == MaxMaskShift) ? 0 : (m << v);
 		}
+		prefix += PrefixIncrement;
 	}
 }
 
-template <TransparencyType Transparency, LightType Light>
+template <LightType Light, bool OpaquePrefix, int8_t PrefixIncrement>
 // NOLINTNEXTLINE(readability-function-cognitive-complexity): Actually complex and has to be fast.
-DVL_ATTRIBUTE_HOT void RenderTransparentSquareClipped(std::uint8_t *dst, int dstPitch, const std::uint8_t *src, const std::uint32_t *mask, const std::uint8_t *tbl, Clip clip)
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderTransparentSquareClipped(uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl, Clip clip)
 {
-	const auto skipRestOfTheLine = [&src](std::int_fast16_t remainingWidth) {
+	const auto skipRestOfTheLine = [&src](int_fast16_t remainingWidth) {
 		while (remainingWidth > 0) {
-			const auto v = static_cast<std::int8_t>(*src++);
+			const auto v = static_cast<int8_t>(*src++);
 			if (v > 0) {
 				src += v;
 				remainingWidth -= v;
@@ -532,20 +332,19 @@ DVL_ATTRIBUTE_HOT void RenderTransparentSquareClipped(std::uint8_t *dst, int dst
 		skipRestOfTheLine(Width);
 	}
 
-	for (auto i = 0; i < clip.height; ++i, dst -= dstPitch + clip.width, --mask) {
-		constexpr unsigned MaxMaskShift = 32;
+	int8_t prefix = InitPrefix<PrefixIncrement>(clip.bottom);
+	for (auto i = 0; i < clip.height; ++i, dst -= dstPitch + clip.width) {
 		auto drawWidth = clip.width;
-		std::uint32_t m = *mask;
 
 		// Skip initial src if clipping on the left.
 		// Handles overshoot, i.e. when the RLE segment goes into the unclipped area.
 		auto remainingLeftClip = clip.left;
 		while (remainingLeftClip > 0) {
-			auto v = static_cast<std::int8_t>(*src++);
+			auto v = static_cast<int8_t>(*src++);
 			if (v > 0) {
 				if (v > remainingLeftClip) {
 					const auto overshoot = v - remainingLeftClip;
-					RenderLine<Transparency, Light>(dst, src + remainingLeftClip, overshoot, tbl, m);
+					RenderLine<Light, OpaquePrefix, PrefixIncrement>(dst, src + remainingLeftClip, overshoot, tbl, prefix - (Width - remainingLeftClip));
 					dst += overshoot;
 					drawWidth -= overshoot;
 				}
@@ -559,21 +358,20 @@ DVL_ATTRIBUTE_HOT void RenderTransparentSquareClipped(std::uint8_t *dst, int dst
 				}
 			}
 			remainingLeftClip -= v;
-			m = (v == MaxMaskShift) ? 0 : (m << v);
 		}
 
 		// Draw the non-clipped segment
 		while (drawWidth > 0) {
-			auto v = static_cast<std::int8_t>(*src++);
+			auto v = static_cast<int8_t>(*src++);
 			if (v > 0) {
 				if (v > drawWidth) {
-					RenderLine<Transparency, Light>(dst, src, drawWidth, tbl, m);
+					RenderLine<Light, OpaquePrefix, PrefixIncrement>(dst, src, drawWidth, tbl, prefix - (Width - drawWidth));
 					src += v;
 					dst += drawWidth;
 					drawWidth -= v;
 					break;
 				}
-				RenderLine<Transparency, Light>(dst, src, v, tbl, m);
+				RenderLine<Light, OpaquePrefix, PrefixIncrement>(dst, src, v, tbl, prefix - (Width - drawWidth));
 				src += v;
 			} else {
 				v = -v;
@@ -585,35 +383,35 @@ DVL_ATTRIBUTE_HOT void RenderTransparentSquareClipped(std::uint8_t *dst, int dst
 			}
 			dst += v;
 			drawWidth -= v;
-			m = (v == MaxMaskShift) ? 0 : (m << v);
 		}
 
 		// Skip the rest of src line if clipping on the right
 		assert(drawWidth <= 0);
 		skipRestOfTheLine(clip.right + drawWidth);
+		prefix += PrefixIncrement;
 	}
 }
 
-template <TransparencyType Transparency, LightType Light>
-DVL_ATTRIBUTE_HOT void RenderTransparentSquare(std::uint8_t *dst, int dstPitch, const std::uint8_t *src, const std::uint32_t *mask, const std::uint8_t *tbl, Clip clip)
+template <LightType Light, bool OpaquePrefix, int8_t PrefixIncrement = 0>
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderTransparentSquare(uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl, Clip clip)
 {
 	if (clip.width == Width && clip.height == Height) {
-		RenderTransparentSquareFull<Transparency, Light>(dst, dstPitch, src, mask, tbl);
+		RenderTransparentSquareFull<Light, OpaquePrefix, PrefixIncrement>(dst, dstPitch, src, tbl);
 	} else {
-		RenderTransparentSquareClipped<Transparency, Light>(dst, dstPitch, src, mask, tbl, clip);
+		RenderTransparentSquareClipped<Light, OpaquePrefix, PrefixIncrement>(dst, dstPitch, src, tbl, clip);
 	}
 }
 
 /** Vertical clip for the lower and upper triangles of a diamond tile (L/RTRIANGLE).*/
 struct DiamondClipY {
-	std::int_fast16_t lowerBottom;
-	std::int_fast16_t lowerTop;
-	std::int_fast16_t upperBottom;
-	std::int_fast16_t upperTop;
+	int_fast16_t lowerBottom;
+	int_fast16_t lowerTop;
+	int_fast16_t upperBottom;
+	int_fast16_t upperTop;
 };
 
-template <std::int_fast16_t UpperHeight = TriangleUpperHeight>
-DiamondClipY CalculateDiamondClipY(const Clip &clip)
+template <int_fast16_t UpperHeight = TriangleUpperHeight>
+DVL_ALWAYS_INLINE DiamondClipY CalculateDiamondClipY(const Clip &clip)
 {
 	DiamondClipY result;
 	if (clip.bottom > LowerHeight) {
@@ -632,492 +430,533 @@ DiamondClipY CalculateDiamondClipY(const Clip &clip)
 	return result;
 }
 
-std::size_t CalculateTriangleSourceSkipLowerBottom(std::int_fast16_t numLines)
+DVL_ALWAYS_INLINE std::size_t CalculateTriangleSourceSkipLowerBottom(int_fast16_t numLines)
 {
 	return XStep * numLines * (numLines + 1) / 2 + 2 * ((numLines + 1) / 2);
 }
 
-std::size_t CalculateTriangleSourceSkipUpperBottom(std::int_fast16_t numLines)
+DVL_ALWAYS_INLINE std::size_t CalculateTriangleSourceSkipUpperBottom(int_fast16_t numLines)
 {
 	return 2 * TriangleUpperHeight * numLines - numLines * (numLines - 1) + 2 * ((numLines + 1) / 2);
 }
 
-template <TransparencyType Transparency, LightType Light>
-DVL_ATTRIBUTE_HOT void RenderLeftTriangleFull(std::uint8_t *dst, int dstPitch, const std::uint8_t *src, const std::uint32_t *mask, const std::uint8_t *tbl)
+template <LightType Light, bool Transparent>
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLeftTriangleLower(uint8_t *DVL_RESTRICT &dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT &src, const uint8_t *DVL_RESTRICT tbl)
 {
 	dst += XStep * (LowerHeight - 1);
-	for (auto i = 1; i <= LowerHeight; ++i, dst -= dstPitch + XStep, --mask) {
+	for (auto i = 1; i <= LowerHeight; ++i, dst -= dstPitch + XStep) {
 		src += 2 * (i % 2);
 		const auto width = XStep * i;
-		RenderLine<Transparency, Light>(dst, src, width, tbl, *mask);
-		src += width;
-	}
-	dst += 2 * XStep;
-	for (auto i = 1; i <= TriangleUpperHeight; ++i, dst -= dstPitch - XStep, --mask) {
-		src += 2 * (i % 2);
-		const auto width = Width - XStep * i;
-		RenderLine<Transparency, Light>(dst, src, width, tbl, *mask);
+		RenderLineTransparentOrOpaque<Light, Transparent>(dst, src, width, tbl);
 		src += width;
 	}
 }
 
-template <TransparencyType Transparency, LightType Light>
-DVL_ATTRIBUTE_HOT void RenderLeftTriangleClipVertical(std::uint8_t *dst, int dstPitch, const std::uint8_t *src, const std::uint32_t *mask, const std::uint8_t *tbl, Clip clip)
+template <LightType Light, bool Transparent>
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLeftTriangleLowerClipVertical(const DiamondClipY &clipY, uint8_t *DVL_RESTRICT &dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT &src, const uint8_t *DVL_RESTRICT tbl)
 {
-	const auto clipY = CalculateDiamondClipY(clip);
 	src += CalculateTriangleSourceSkipLowerBottom(clipY.lowerBottom);
 	dst += XStep * (LowerHeight - clipY.lowerBottom - 1);
 	const auto lowerMax = LowerHeight - clipY.lowerTop;
-	for (auto i = 1 + clipY.lowerBottom; i <= lowerMax; ++i, dst -= dstPitch + XStep, --mask) {
+	for (auto i = 1 + clipY.lowerBottom; i <= lowerMax; ++i, dst -= dstPitch + XStep) {
 		src += 2 * (i % 2);
 		const auto width = XStep * i;
-		RenderLine<Transparency, Light>(dst, src, width, tbl, *mask);
-		src += width;
-	}
-	src += CalculateTriangleSourceSkipUpperBottom(clipY.upperBottom);
-	dst += 2 * XStep + XStep * clipY.upperBottom;
-	const auto upperMax = TriangleUpperHeight - clipY.upperTop;
-	for (auto i = 1 + clipY.upperBottom; i <= upperMax; ++i, dst -= dstPitch - XStep, --mask) {
-		src += 2 * (i % 2);
-		const auto width = Width - XStep * i;
-		RenderLine<Transparency, Light>(dst, src, width, tbl, *mask);
+		RenderLineTransparentOrOpaque<Light, Transparent>(dst, src, width, tbl);
 		src += width;
 	}
 }
 
-template <TransparencyType Transparency, LightType Light>
-DVL_ATTRIBUTE_HOT void RenderLeftTriangleClipLeftAndVertical(std::uint8_t *dst, int dstPitch, const std::uint8_t *src, const std::uint32_t *mask, const std::uint8_t *tbl, Clip clip)
+template <LightType Light, bool Transparent>
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLeftTriangleLowerClipLeftAndVertical(int_fast16_t clipLeft, const DiamondClipY &clipY, uint8_t *DVL_RESTRICT &dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT &src, const uint8_t *DVL_RESTRICT tbl)
 {
-	const auto clipY = CalculateDiamondClipY(clip);
-	const auto clipLeft = clip.left;
 	src += CalculateTriangleSourceSkipLowerBottom(clipY.lowerBottom);
 	dst += XStep * (LowerHeight - clipY.lowerBottom - 1) - clipLeft;
 	const auto lowerMax = LowerHeight - clipY.lowerTop;
-	for (auto i = 1 + clipY.lowerBottom; i <= lowerMax; ++i, dst -= dstPitch + XStep, --mask) {
+	for (auto i = 1 + clipY.lowerBottom; i <= lowerMax; ++i, dst -= dstPitch + XStep) {
 		src += 2 * (i % 2);
 		const auto width = XStep * i;
 		const auto startX = Width - XStep * i;
 		const auto skip = startX < clipLeft ? clipLeft - startX : 0;
 		if (width > skip)
-			RenderLine<Transparency, Light>(dst + skip, src + skip, width - skip, tbl, (*mask) << skip);
+			RenderLineTransparentOrOpaque<Light, Transparent>(dst + skip, src + skip, width - skip, tbl);
 		src += width;
 	}
+}
+
+template <LightType Light, bool Transparent>
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLeftTriangleLowerClipRightAndVertical(int_fast16_t clipRight, const DiamondClipY &clipY, uint8_t *DVL_RESTRICT &dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT &src, const uint8_t *DVL_RESTRICT tbl)
+{
+	src += CalculateTriangleSourceSkipLowerBottom(clipY.lowerBottom);
+	dst += XStep * (LowerHeight - clipY.lowerBottom - 1);
+	const auto lowerMax = LowerHeight - clipY.lowerTop;
+	for (auto i = 1 + clipY.lowerBottom; i <= lowerMax; ++i, dst -= dstPitch + XStep) {
+		src += 2 * (i % 2);
+		const auto width = XStep * i;
+		if (width > clipRight)
+			RenderLineTransparentOrOpaque<Light, Transparent>(dst, src, width - clipRight, tbl);
+		src += width;
+	}
+}
+
+template <LightType Light, bool Transparent>
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLeftTriangleFull(uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl)
+{
+	RenderLeftTriangleLower<Light, Transparent>(dst, dstPitch, src, tbl);
+	dst += 2 * XStep;
+	for (auto i = 1; i <= TriangleUpperHeight; ++i, dst -= dstPitch - XStep) {
+		src += 2 * (i % 2);
+		const auto width = Width - XStep * i;
+		RenderLineTransparentOrOpaque<Light, Transparent>(dst, src, width, tbl);
+		src += width;
+	}
+}
+
+template <LightType Light, bool Transparent>
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLeftTriangleClipVertical(uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl, Clip clip)
+{
+	const DiamondClipY clipY = CalculateDiamondClipY(clip);
+	RenderLeftTriangleLowerClipVertical<Light, Transparent>(clipY, dst, dstPitch, src, tbl);
 	src += CalculateTriangleSourceSkipUpperBottom(clipY.upperBottom);
 	dst += 2 * XStep + XStep * clipY.upperBottom;
 	const auto upperMax = TriangleUpperHeight - clipY.upperTop;
-	for (auto i = 1 + clipY.upperBottom; i <= upperMax; ++i, dst -= dstPitch - XStep, --mask) {
+	for (auto i = 1 + clipY.upperBottom; i <= upperMax; ++i, dst -= dstPitch - XStep) {
+		src += 2 * (i % 2);
+		const auto width = Width - XStep * i;
+		RenderLineTransparentOrOpaque<Light, Transparent>(dst, src, width, tbl);
+		src += width;
+	}
+}
+
+template <LightType Light, bool Transparent>
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLeftTriangleClipLeftAndVertical(uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl, Clip clip)
+{
+	const DiamondClipY clipY = CalculateDiamondClipY(clip);
+	const int_fast16_t clipLeft = clip.left;
+	RenderLeftTriangleLowerClipLeftAndVertical<Light, Transparent>(clipLeft, clipY, dst, dstPitch, src, tbl);
+	src += CalculateTriangleSourceSkipUpperBottom(clipY.upperBottom);
+	dst += 2 * XStep + XStep * clipY.upperBottom;
+	const auto upperMax = TriangleUpperHeight - clipY.upperTop;
+	for (auto i = 1 + clipY.upperBottom; i <= upperMax; ++i, dst -= dstPitch - XStep) {
 		src += 2 * (i % 2);
 		const auto width = Width - XStep * i;
 		const auto startX = XStep * i;
 		const auto skip = startX < clipLeft ? clipLeft - startX : 0;
-		if (width > skip)
-			RenderLine<Transparency, Light>(dst + skip, src + skip, width - skip, tbl, (*mask) << skip);
+		RenderLineTransparentOrOpaque<Light, Transparent>(dst + skip, src + skip, width > skip ? width - skip : 0, tbl);
 		src += width;
 	}
 }
 
-template <TransparencyType Transparency, LightType Light>
-DVL_ATTRIBUTE_HOT void RenderLeftTriangleClipRightAndVertical(std::uint8_t *dst, int dstPitch, const std::uint8_t *src, const std::uint32_t *mask, const std::uint8_t *tbl, Clip clip)
+template <LightType Light, bool Transparent>
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLeftTriangleClipRightAndVertical(uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl, Clip clip)
 {
-	const auto clipY = CalculateDiamondClipY(clip);
-	const auto clipRight = clip.right;
-	src += CalculateTriangleSourceSkipLowerBottom(clipY.lowerBottom);
-	dst += XStep * (LowerHeight - clipY.lowerBottom - 1);
-	const auto lowerMax = LowerHeight - clipY.lowerTop;
-	for (auto i = 1 + clipY.lowerBottom; i <= lowerMax; ++i, dst -= dstPitch + XStep, --mask) {
-		src += 2 * (i % 2);
-		const auto width = XStep * i;
-		if (width > clipRight)
-			RenderLine<Transparency, Light>(dst, src, width - clipRight, tbl, *mask);
-		src += width;
-	}
+	const DiamondClipY clipY = CalculateDiamondClipY(clip);
+	const int_fast16_t clipRight = clip.right;
+	RenderLeftTriangleLowerClipRightAndVertical<Light, Transparent>(clipRight, clipY, dst, dstPitch, src, tbl);
 	src += CalculateTriangleSourceSkipUpperBottom(clipY.upperBottom);
 	dst += 2 * XStep + XStep * clipY.upperBottom;
 	const auto upperMax = TriangleUpperHeight - clipY.upperTop;
-	for (auto i = 1 + clipY.upperBottom; i <= upperMax; ++i, dst -= dstPitch - XStep, --mask) {
+	for (auto i = 1 + clipY.upperBottom; i <= upperMax; ++i, dst -= dstPitch - XStep) {
 		src += 2 * (i % 2);
 		const auto width = Width - XStep * i;
 		if (width <= clipRight)
 			break;
-		RenderLine<Transparency, Light>(dst, src, width - clipRight, tbl, *mask);
+		RenderLineTransparentOrOpaque<Light, Transparent>(dst, src, width - clipRight, tbl);
 		src += width;
 	}
 }
 
-template <TransparencyType Transparency, LightType Light>
-DVL_ATTRIBUTE_HOT void RenderLeftTriangle(std::uint8_t *dst, int dstPitch, const std::uint8_t *src, const std::uint32_t *mask, const std::uint8_t *tbl, Clip clip)
+template <LightType Light, bool Transparent>
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLeftTriangle(uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl, Clip clip)
 {
 	if (clip.width == Width) {
 		if (clip.height == TriangleHeight) {
-			RenderLeftTriangleFull<Transparency, Light>(dst, dstPitch, src, mask, tbl);
+			RenderLeftTriangleFull<Light, Transparent>(dst, dstPitch, src, tbl);
 		} else {
-			RenderLeftTriangleClipVertical<Transparency, Light>(dst, dstPitch, src, mask, tbl, clip);
+			RenderLeftTriangleClipVertical<Light, Transparent>(dst, dstPitch, src, tbl, clip);
 		}
 	} else if (clip.right == 0) {
-		RenderLeftTriangleClipLeftAndVertical<Transparency, Light>(dst, dstPitch, src, mask, tbl, clip);
+		RenderLeftTriangleClipLeftAndVertical<Light, Transparent>(dst, dstPitch, src, tbl, clip);
 	} else {
-		RenderLeftTriangleClipRightAndVertical<Transparency, Light>(dst, dstPitch, src, mask, tbl, clip);
+		RenderLeftTriangleClipRightAndVertical<Light, Transparent>(dst, dstPitch, src, tbl, clip);
 	}
 }
 
-template <TransparencyType Transparency, LightType Light>
-DVL_ATTRIBUTE_HOT void RenderRightTriangleFull(std::uint8_t *dst, int dstPitch, const std::uint8_t *src, const std::uint32_t *mask, const std::uint8_t *tbl)
+template <LightType Light, bool Transparent>
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderRightTriangleLower(uint8_t *DVL_RESTRICT &dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT &src, const uint8_t *DVL_RESTRICT tbl)
 {
-	for (auto i = 1; i <= LowerHeight; ++i, dst -= dstPitch, --mask) {
+	for (auto i = 1; i <= LowerHeight; ++i, dst -= dstPitch) {
 		const auto width = XStep * i;
-		RenderLine<Transparency, Light>(dst, src, width, tbl, *mask);
-		src += width + 2 * (i % 2);
-	}
-	for (auto i = 1; i <= TriangleUpperHeight; ++i, dst -= dstPitch, --mask) {
-		const auto width = Width - XStep * i;
-		RenderLine<Transparency, Light>(dst, src, width, tbl, *mask);
+		RenderLineTransparentOrOpaque<Light, Transparent>(dst, src, width, tbl);
 		src += width + 2 * (i % 2);
 	}
 }
 
-template <TransparencyType Transparency, LightType Light>
-DVL_ATTRIBUTE_HOT void RenderRightTriangleClipVertical(std::uint8_t *dst, int dstPitch, const std::uint8_t *src, const std::uint32_t *mask, const std::uint8_t *tbl, Clip clip)
+template <LightType Light, bool Transparent>
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderRightTriangleLowerClipVertical(const DiamondClipY &clipY, uint8_t *DVL_RESTRICT &dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT &src, const uint8_t *DVL_RESTRICT tbl)
 {
-	const auto clipY = CalculateDiamondClipY(clip);
 	src += CalculateTriangleSourceSkipLowerBottom(clipY.lowerBottom);
 	const auto lowerMax = LowerHeight - clipY.lowerTop;
-	for (auto i = 1 + clipY.lowerBottom; i <= lowerMax; ++i, dst -= dstPitch, --mask) {
+	for (auto i = 1 + clipY.lowerBottom; i <= lowerMax; ++i, dst -= dstPitch) {
 		const auto width = XStep * i;
-		RenderLine<Transparency, Light>(dst, src, width, tbl, *mask);
-		src += width + 2 * (i % 2);
-	}
-	src += CalculateTriangleSourceSkipUpperBottom(clipY.upperBottom);
-	const auto upperMax = TriangleUpperHeight - clipY.upperTop;
-	for (auto i = 1 + clipY.upperBottom; i <= upperMax; ++i, dst -= dstPitch, --mask) {
-		const auto width = Width - XStep * i;
-		RenderLine<Transparency, Light>(dst, src, width, tbl, *mask);
+		RenderLineTransparentOrOpaque<Light, Transparent>(dst, src, width, tbl);
 		src += width + 2 * (i % 2);
 	}
 }
 
-template <TransparencyType Transparency, LightType Light>
-DVL_ATTRIBUTE_HOT void RenderRightTriangleClipLeftAndVertical(std::uint8_t *dst, int dstPitch, const std::uint8_t *src, const std::uint32_t *mask, const std::uint8_t *tbl, Clip clip)
+template <LightType Light, bool Transparent>
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderRightTriangleLowerClipLeftAndVertical(int_fast16_t clipLeft, const DiamondClipY &clipY, uint8_t *DVL_RESTRICT &dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT &src, const uint8_t *DVL_RESTRICT tbl)
 {
-	const auto clipY = CalculateDiamondClipY(clip);
-	const auto clipLeft = clip.left;
 	src += CalculateTriangleSourceSkipLowerBottom(clipY.lowerBottom);
 	const auto lowerMax = LowerHeight - clipY.lowerTop;
-	for (auto i = 1 + clipY.lowerBottom; i <= lowerMax; ++i, dst -= dstPitch, --mask) {
+	for (auto i = 1 + clipY.lowerBottom; i <= lowerMax; ++i, dst -= dstPitch) {
 		const auto width = XStep * i;
 		if (width > clipLeft)
-			RenderLine<Transparency, Light>(dst, src + clipLeft, width - clipLeft, tbl, (*mask) << clipLeft);
+			RenderLineTransparentOrOpaque<Light, Transparent>(dst, src + clipLeft, width - clipLeft, tbl);
 		src += width + 2 * (i % 2);
 	}
+}
+
+template <LightType Light, bool Transparent>
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderRightTriangleLowerClipRightAndVertical(int_fast16_t clipRight, const DiamondClipY &clipY, uint8_t *DVL_RESTRICT &dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT &src, const uint8_t *DVL_RESTRICT tbl)
+{
+	src += CalculateTriangleSourceSkipLowerBottom(clipY.lowerBottom);
+	const auto lowerMax = LowerHeight - clipY.lowerTop;
+	for (auto i = 1 + clipY.lowerBottom; i <= lowerMax; ++i, dst -= dstPitch) {
+		const auto width = XStep * i;
+		const auto skip = Width - width < clipRight ? clipRight - (Width - width) : 0;
+		if (width > skip)
+			RenderLineTransparentOrOpaque<Light, Transparent>(dst, src, width - skip, tbl);
+		src += width + 2 * (i % 2);
+	}
+}
+
+template <LightType Light, bool Transparent>
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderRightTriangleFull(uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl)
+{
+	RenderRightTriangleLower<Light, Transparent>(dst, dstPitch, src, tbl);
+	for (auto i = 1; i <= TriangleUpperHeight; ++i, dst -= dstPitch) {
+		const auto width = Width - XStep * i;
+		RenderLineTransparentOrOpaque<Light, Transparent>(dst, src, width, tbl);
+		src += width + 2 * (i % 2);
+	}
+}
+
+template <LightType Light, bool Transparent>
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderRightTriangleClipVertical(uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl, Clip clip)
+{
+	const DiamondClipY clipY = CalculateDiamondClipY(clip);
+	RenderRightTriangleLowerClipVertical<Light, Transparent>(clipY, dst, dstPitch, src, tbl);
 	src += CalculateTriangleSourceSkipUpperBottom(clipY.upperBottom);
 	const auto upperMax = TriangleUpperHeight - clipY.upperTop;
-	for (auto i = 1 + clipY.upperBottom; i <= upperMax; ++i, dst -= dstPitch, --mask) {
+	for (auto i = 1 + clipY.upperBottom; i <= upperMax; ++i, dst -= dstPitch) {
+		const auto width = Width - XStep * i;
+		RenderLineTransparentOrOpaque<Light, Transparent>(dst, src, width, tbl);
+		src += width + 2 * (i % 2);
+	}
+}
+
+template <LightType Light, bool Transparent>
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderRightTriangleClipLeftAndVertical(uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl, Clip clip)
+{
+	const DiamondClipY clipY = CalculateDiamondClipY(clip);
+	const int_fast16_t clipLeft = clip.left;
+	RenderRightTriangleLowerClipLeftAndVertical<Light, Transparent>(clipLeft, clipY, dst, dstPitch, src, tbl);
+	src += CalculateTriangleSourceSkipUpperBottom(clipY.upperBottom);
+	const auto upperMax = TriangleUpperHeight - clipY.upperTop;
+	for (auto i = 1 + clipY.upperBottom; i <= upperMax; ++i, dst -= dstPitch) {
 		const auto width = Width - XStep * i;
 		if (width <= clipLeft)
 			break;
-		RenderLine<Transparency, Light>(dst, src + clipLeft, width - clipLeft, tbl, (*mask) << clipLeft);
+		RenderLineTransparentOrOpaque<Light, Transparent>(dst, src + clipLeft, width - clipLeft, tbl);
 		src += width + 2 * (i % 2);
 	}
 }
 
-template <TransparencyType Transparency, LightType Light>
-DVL_ATTRIBUTE_HOT void RenderRightTriangleClipRightAndVertical(std::uint8_t *dst, int dstPitch, const std::uint8_t *src, const std::uint32_t *mask, const std::uint8_t *tbl, Clip clip)
+template <LightType Light, bool Transparent>
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderRightTriangleClipRightAndVertical(uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl, Clip clip)
 {
-	const auto clipY = CalculateDiamondClipY(clip);
-	const auto clipRight = clip.right;
-	src += CalculateTriangleSourceSkipLowerBottom(clipY.lowerBottom);
-	const auto lowerMax = LowerHeight - clipY.lowerTop;
-	for (auto i = 1 + clipY.lowerBottom; i <= lowerMax; ++i, dst -= dstPitch, --mask) {
-		const auto width = XStep * i;
-		const auto skip = Width - width < clipRight ? clipRight - (Width - width) : 0;
-		if (width > skip)
-			RenderLine<Transparency, Light>(dst, src, width - skip, tbl, *mask);
-		src += width + 2 * (i % 2);
-	}
+	const DiamondClipY clipY = CalculateDiamondClipY(clip);
+	const int_fast16_t clipRight = clip.right;
+	RenderRightTriangleLowerClipRightAndVertical<Light, Transparent>(clipRight, clipY, dst, dstPitch, src, tbl);
 	src += CalculateTriangleSourceSkipUpperBottom(clipY.upperBottom);
 	const auto upperMax = TriangleUpperHeight - clipY.upperTop;
-	for (auto i = 1 + clipY.upperBottom; i <= upperMax; ++i, dst -= dstPitch, --mask) {
+	for (auto i = 1 + clipY.upperBottom; i <= upperMax; ++i, dst -= dstPitch) {
 		const auto width = Width - XStep * i;
 		const auto skip = Width - width < clipRight ? clipRight - (Width - width) : 0;
-		if (width > skip)
-			RenderLine<Transparency, Light>(dst, src, width - skip, tbl, *mask);
+		RenderLineTransparentOrOpaque<Light, Transparent>(dst, src, width > skip ? width - skip : 0, tbl);
 		src += width + 2 * (i % 2);
 	}
 }
 
-template <TransparencyType Transparency, LightType Light>
-DVL_ATTRIBUTE_HOT void RenderRightTriangle(std::uint8_t *dst, int dstPitch, const std::uint8_t *src, const std::uint32_t *mask, const std::uint8_t *tbl, Clip clip)
+template <LightType Light, bool Transparent>
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderRightTriangle(uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl, Clip clip)
 {
 	if (clip.width == Width) {
 		if (clip.height == TriangleHeight) {
-			RenderRightTriangleFull<Transparency, Light>(dst, dstPitch, src, mask, tbl);
+			RenderRightTriangleFull<Light, Transparent>(dst, dstPitch, src, tbl);
 		} else {
-			RenderRightTriangleClipVertical<Transparency, Light>(dst, dstPitch, src, mask, tbl, clip);
+			RenderRightTriangleClipVertical<Light, Transparent>(dst, dstPitch, src, tbl, clip);
 		}
 	} else if (clip.right == 0) {
-		RenderRightTriangleClipLeftAndVertical<Transparency, Light>(dst, dstPitch, src, mask, tbl, clip);
+		RenderRightTriangleClipLeftAndVertical<Light, Transparent>(dst, dstPitch, src, tbl, clip);
 	} else {
-		RenderRightTriangleClipRightAndVertical<Transparency, Light>(dst, dstPitch, src, mask, tbl, clip);
+		RenderRightTriangleClipRightAndVertical<Light, Transparent>(dst, dstPitch, src, tbl, clip);
 	}
 }
 
-template <TransparencyType Transparency, LightType Light>
-DVL_ATTRIBUTE_HOT void RenderLeftTrapezoidFull(std::uint8_t *dst, int dstPitch, const std::uint8_t *src, const std::uint32_t *mask, const std::uint8_t *tbl)
-{
-	dst += XStep * (LowerHeight - 1);
-	for (auto i = 1; i <= LowerHeight; ++i, dst -= dstPitch + XStep, --mask) {
-		src += 2 * (i % 2);
-		const auto width = XStep * i;
-		RenderLine<Transparency, Light>(dst, src, width, tbl, *mask);
-		src += width;
-	}
-	dst += XStep;
-	for (auto i = 1; i <= TrapezoidUpperHeight; ++i, dst -= dstPitch, --mask) {
-		RenderLine<Transparency, Light>(dst, src, Width, tbl, *mask);
+template <LightType Light, bool OpaquePrefix, int8_t PrefixIncrement>
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderTrapezoidUpperHalf(uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl) {
+	uint_fast8_t prefixWidth = PrefixIncrement < 0 ? 32 : 0;
+	for (auto i = 0; i < TrapezoidUpperHeight; ++i, dst -= dstPitch) {
+		RenderLineTransparentAndOpaque<Light, OpaquePrefix, PrefixIncrement>(dst, src, prefixWidth, Width, tbl);
+		if (PrefixIncrement != 0)
+			prefixWidth += PrefixIncrement;
 		src += Width;
 	}
 }
 
-template <TransparencyType Transparency, LightType Light>
-DVL_ATTRIBUTE_HOT void RenderLeftTrapezoidClipVertical(std::uint8_t *dst, int dstPitch, const std::uint8_t *src, const std::uint32_t *mask, const std::uint8_t *tbl, Clip clip)
-{
-	const auto clipY = CalculateDiamondClipY<TrapezoidUpperHeight>(clip);
-	src += CalculateTriangleSourceSkipLowerBottom(clipY.lowerBottom);
-	dst += XStep * (LowerHeight - clipY.lowerBottom - 1);
-	const auto lowerMax = LowerHeight - clipY.lowerTop;
-	for (auto i = 1 + clipY.lowerBottom; i <= lowerMax; ++i, dst -= dstPitch + XStep, --mask) {
-		src += 2 * (i % 2);
-		const auto width = XStep * i;
-		RenderLine<Transparency, Light>(dst, src, width, tbl, *mask);
-		src += width;
+template <LightType Light, bool OpaquePrefix, int8_t PrefixIncrement>
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderTrapezoidUpperHalfClipVertical(const Clip &clip, const DiamondClipY &clipY, uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl) {
+	const auto upperMax = TrapezoidUpperHeight - clipY.upperTop;
+	int8_t prefix = InitPrefix<PrefixIncrement>(clip.bottom);
+	for (auto i = 1 + clipY.upperBottom; i <= upperMax; ++i, dst -= dstPitch) {
+		RenderLine<Light, OpaquePrefix, PrefixIncrement>(dst, src, Width, tbl, prefix);
+		src += Width;
+		prefix += PrefixIncrement;
 	}
+}
+
+template <LightType Light, bool OpaquePrefix, int8_t PrefixIncrement>
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderTrapezoidUpperHalfClipLeftAndVertical(const Clip &clip, const DiamondClipY &clipY, uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl) {
+	const auto upperMax = TrapezoidUpperHeight - clipY.upperTop;
+	int8_t prefix = InitPrefix<PrefixIncrement>(clip.bottom);
+	for (auto i = 1 + clipY.upperBottom; i <= upperMax; ++i, dst -= dstPitch) {
+		RenderLine<Light, OpaquePrefix, PrefixIncrement>(dst, src, clip.width, tbl, prefix - clip.left);
+		src += Width;
+		prefix += PrefixIncrement;
+	}
+}
+
+template <LightType Light, bool OpaquePrefix, int8_t PrefixIncrement>
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderTrapezoidUpperHalfClipRightAndVertical(const Clip &clip, const DiamondClipY &clipY, uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl) {
+	const auto upperMax = TrapezoidUpperHeight - clipY.upperTop;
+	int8_t prefix = InitPrefix<PrefixIncrement>(clip.bottom);
+	for (auto i = 1 + clipY.upperBottom; i <= upperMax; ++i, dst -= dstPitch) {
+		RenderLine<Light, OpaquePrefix, PrefixIncrement>(dst, src, clip.width, tbl, prefix);
+		src += Width;
+		prefix += PrefixIncrement;
+	}
+}
+
+template <LightType Light, bool OpaquePrefix, int8_t PrefixIncrement>
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLeftTrapezoidFull(uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl)
+{
+	RenderLeftTriangleLower<Light, LowerHalfTransparent<OpaquePrefix, PrefixIncrement>>(dst, dstPitch, src, tbl);
+	dst += XStep;
+	RenderTrapezoidUpperHalf<Light, OpaquePrefix, PrefixIncrement>(dst, dstPitch, src, tbl);
+}
+
+template <LightType Light, bool OpaquePrefix, int8_t PrefixIncrement>
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLeftTrapezoidClipVertical(uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl, Clip clip)
+{
+	const DiamondClipY clipY = CalculateDiamondClipY<TrapezoidUpperHeight>(clip);
+	RenderLeftTriangleLowerClipVertical<Light, LowerHalfTransparent<OpaquePrefix, PrefixIncrement>>(clipY, dst, dstPitch, src, tbl);
 	src += clipY.upperBottom * Width;
 	dst += XStep;
-	const auto upperMax = TrapezoidUpperHeight - clipY.upperTop;
-	for (auto i = 1 + clipY.upperBottom; i <= upperMax; ++i, dst -= dstPitch, --mask) {
-		RenderLine<Transparency, Light>(dst, src, Width, tbl, *mask);
-		src += Width;
-	}
+	RenderTrapezoidUpperHalfClipVertical<Light, OpaquePrefix, PrefixIncrement>(clip, clipY, dst, dstPitch, src, tbl);
 }
 
-template <TransparencyType Transparency, LightType Light>
-DVL_ATTRIBUTE_HOT void RenderLeftTrapezoidClipLeftAndVertical(std::uint8_t *dst, int dstPitch, const std::uint8_t *src, const std::uint32_t *mask, const std::uint8_t *tbl, Clip clip)
+template <LightType Light, bool OpaquePrefix, int8_t PrefixIncrement>
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLeftTrapezoidClipLeftAndVertical(uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl, Clip clip)
 {
-	const auto clipY = CalculateDiamondClipY<TrapezoidUpperHeight>(clip);
-	const auto clipLeft = clip.left;
-	src += CalculateTriangleSourceSkipLowerBottom(clipY.lowerBottom);
-	dst += XStep * (LowerHeight - clipY.lowerBottom - 1) - clipLeft;
-	const auto lowerMax = LowerHeight - clipY.lowerTop;
-	for (auto i = 1 + clipY.lowerBottom; i <= lowerMax; ++i, dst -= dstPitch + XStep, --mask) {
-		src += 2 * (i % 2);
-		const auto width = XStep * i;
-		const auto startX = Width - XStep * i;
-		const auto skip = startX < clipLeft ? clipLeft - startX : 0;
-		if (width > skip)
-			RenderLine<Transparency, Light>(dst + skip, src + skip, width - skip, tbl, (*mask) << skip);
-		src += width;
-	}
-	src += clipY.upperBottom * Width + clipLeft;
-	dst += XStep + clipLeft;
-	const auto upperMax = TrapezoidUpperHeight - clipY.upperTop;
-	for (auto i = 1 + clipY.upperBottom; i <= upperMax; ++i, dst -= dstPitch, --mask) {
-		RenderLine<Transparency, Light>(dst, src, clip.width, tbl, (*mask) << clipLeft);
-		src += Width;
-	}
+	const DiamondClipY clipY = CalculateDiamondClipY<TrapezoidUpperHeight>(clip);
+	RenderLeftTriangleLowerClipLeftAndVertical<Light, LowerHalfTransparent<OpaquePrefix, PrefixIncrement>>(clip.left, clipY, dst, dstPitch, src, tbl);
+	src += clipY.upperBottom * Width + clip.left;
+	dst += XStep + clip.left;
+	RenderTrapezoidUpperHalfClipLeftAndVertical<Light, OpaquePrefix, PrefixIncrement>(clip, clipY, dst, dstPitch, src, tbl);
 }
 
-template <TransparencyType Transparency, LightType Light>
-DVL_ATTRIBUTE_HOT void RenderLeftTrapezoidClipRightAndVertical(std::uint8_t *dst, int dstPitch, const std::uint8_t *src, const std::uint32_t *mask, const std::uint8_t *tbl, Clip clip)
+template <LightType Light, bool OpaquePrefix, int8_t PrefixIncrement>
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLeftTrapezoidClipRightAndVertical(uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl, Clip clip)
 {
-	const auto clipY = CalculateDiamondClipY<TrapezoidUpperHeight>(clip);
-	const auto clipRight = clip.right;
-	src += CalculateTriangleSourceSkipLowerBottom(clipY.lowerBottom);
-	dst += XStep * (LowerHeight - clipY.lowerBottom - 1);
-	const auto lowerMax = LowerHeight - clipY.lowerTop;
-	for (auto i = 1 + clipY.lowerBottom; i <= lowerMax; ++i, dst -= dstPitch + XStep, --mask) {
-		src += 2 * (i % 2);
-		const auto width = XStep * i;
-		if (width > clipRight)
-			RenderLine<Transparency, Light>(dst, src, width - clipRight, tbl, *mask);
-		src += width;
-	}
+	const DiamondClipY clipY = CalculateDiamondClipY<TrapezoidUpperHeight>(clip);
+	RenderLeftTriangleLowerClipRightAndVertical<Light, LowerHalfTransparent<OpaquePrefix, PrefixIncrement>>(clip.right, clipY, dst, dstPitch, src, tbl);
 	src += clipY.upperBottom * Width;
 	dst += XStep;
-	const auto upperMax = TrapezoidUpperHeight - clipY.upperTop;
-	for (auto i = 1 + clipY.upperBottom; i <= upperMax; ++i, dst -= dstPitch, --mask) {
-		RenderLine<Transparency, Light>(dst, src, clip.width, tbl, *mask);
-		src += Width;
-	}
+	RenderTrapezoidUpperHalfClipRightAndVertical<Light, OpaquePrefix, PrefixIncrement>(clip, clipY, dst, dstPitch, src, tbl);
 }
 
-template <TransparencyType Transparency, LightType Light>
-DVL_ATTRIBUTE_HOT void RenderLeftTrapezoid(std::uint8_t *dst, int dstPitch, const std::uint8_t *src, const std::uint32_t *mask, const std::uint8_t *tbl, Clip clip)
+template <LightType Light, bool OpaquePrefix, int8_t PrefixIncrement = 0>
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLeftTrapezoid(uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl, Clip clip)
 {
 	if (clip.width == Width) {
 		if (clip.height == Height) {
-			RenderLeftTrapezoidFull<Transparency, Light>(dst, dstPitch, src, mask, tbl);
+			RenderLeftTrapezoidFull<Light, OpaquePrefix, PrefixIncrement>(dst, dstPitch, src, tbl);
 		} else {
-			RenderLeftTrapezoidClipVertical<Transparency, Light>(dst, dstPitch, src, mask, tbl, clip);
+			RenderLeftTrapezoidClipVertical<Light, OpaquePrefix, PrefixIncrement>(dst, dstPitch, src, tbl, clip);
 		}
 	} else if (clip.right == 0) {
-		RenderLeftTrapezoidClipLeftAndVertical<Transparency, Light>(dst, dstPitch, src, mask, tbl, clip);
+		RenderLeftTrapezoidClipLeftAndVertical<Light, OpaquePrefix, PrefixIncrement>(dst, dstPitch, src, tbl, clip);
 	} else {
-		RenderLeftTrapezoidClipRightAndVertical<Transparency, Light>(dst, dstPitch, src, mask, tbl, clip);
+		RenderLeftTrapezoidClipRightAndVertical<Light, OpaquePrefix, PrefixIncrement>(dst, dstPitch, src, tbl, clip);
 	}
 }
 
-template <TransparencyType Transparency, LightType Light>
-DVL_ATTRIBUTE_HOT void RenderRightTrapezoidFull(std::uint8_t *dst, int dstPitch, const std::uint8_t *src, const std::uint32_t *mask, const std::uint8_t *tbl)
+template <LightType Light, bool OpaquePrefix, int8_t PrefixIncrement>
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderRightTrapezoidFull(uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl)
 {
-	for (auto i = 1; i <= LowerHeight; ++i, dst -= dstPitch, --mask) {
-		const auto width = XStep * i;
-		RenderLine<Transparency, Light>(dst, src, width, tbl, *mask);
-		src += width + 2 * (i % 2);
-	}
-	for (auto i = 1; i <= TrapezoidUpperHeight; ++i, dst -= dstPitch, --mask) {
-		RenderLine<Transparency, Light>(dst, src, Width, tbl, *mask);
-		src += Width;
-	}
+	RenderRightTriangleLower<Light, LowerHalfTransparent<OpaquePrefix, PrefixIncrement>>(dst, dstPitch, src, tbl);
+	RenderTrapezoidUpperHalf<Light, OpaquePrefix, PrefixIncrement>(dst, dstPitch, src, tbl);
 }
 
-template <TransparencyType Transparency, LightType Light>
-DVL_ATTRIBUTE_HOT void RenderRightTrapezoidClipVertical(std::uint8_t *dst, int dstPitch, const std::uint8_t *src, const std::uint32_t *mask, const std::uint8_t *tbl, Clip clip)
+template <LightType Light, bool OpaquePrefix, int8_t PrefixIncrement>
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderRightTrapezoidClipVertical(uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl, Clip clip)
 {
-	const auto clipY = CalculateDiamondClipY<TrapezoidUpperHeight>(clip);
-	const auto lowerMax = LowerHeight - clipY.lowerTop;
-	src += CalculateTriangleSourceSkipLowerBottom(clipY.lowerBottom);
-	for (auto i = 1 + clipY.lowerBottom; i <= lowerMax; ++i, dst -= dstPitch, --mask) {
-		const auto width = XStep * i;
-		RenderLine<Transparency, Light>(dst, src, width, tbl, *mask);
-		src += width + 2 * (i % 2);
-	}
+	const DiamondClipY clipY = CalculateDiamondClipY<TrapezoidUpperHeight>(clip);
+	RenderRightTriangleLowerClipVertical<Light, LowerHalfTransparent<OpaquePrefix, PrefixIncrement>>(clipY, dst, dstPitch, src, tbl);
 	src += clipY.upperBottom * Width;
-	const auto upperMax = TrapezoidUpperHeight - clipY.upperTop;
-	for (auto i = 1 + clipY.upperBottom; i <= upperMax; ++i, dst -= dstPitch, --mask) {
-		RenderLine<Transparency, Light>(dst, src, Width, tbl, *mask);
-		src += Width;
-	}
+	RenderTrapezoidUpperHalfClipVertical<Light, OpaquePrefix, PrefixIncrement>(clip, clipY, dst, dstPitch, src, tbl);
 }
 
-template <TransparencyType Transparency, LightType Light>
-DVL_ATTRIBUTE_HOT void RenderRightTrapezoidClipLeftAndVertical(std::uint8_t *dst, int dstPitch, const std::uint8_t *src, const std::uint32_t *mask, const std::uint8_t *tbl, Clip clip)
+template <LightType Light, bool OpaquePrefix, int8_t PrefixIncrement>
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderRightTrapezoidClipLeftAndVertical(uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl, Clip clip)
 {
-	const auto clipY = CalculateDiamondClipY<TrapezoidUpperHeight>(clip);
-	const auto clipLeft = clip.left;
-	const auto lowerMax = LowerHeight - clipY.lowerTop;
-	src += CalculateTriangleSourceSkipLowerBottom(clipY.lowerBottom);
-	for (auto i = 1 + clipY.lowerBottom; i <= lowerMax; ++i, dst -= dstPitch, --mask) {
-		const auto width = XStep * i;
-		if (width > clipLeft)
-			RenderLine<Transparency, Light>(dst, src + clipLeft, width - clipLeft, tbl, (*mask) << clipLeft);
-		src += width + 2 * (i % 2);
-	}
-	src += clipY.upperBottom * Width + clipLeft;
-	const auto upperMax = TrapezoidUpperHeight - clipY.upperTop;
-	for (auto i = 1 + clipY.upperBottom; i <= upperMax; ++i, dst -= dstPitch, --mask) {
-		RenderLine<Transparency, Light>(dst, src, clip.width, tbl, (*mask) << clipLeft);
-		src += Width;
-	}
+	const DiamondClipY clipY = CalculateDiamondClipY<TrapezoidUpperHeight>(clip);
+	RenderRightTriangleLowerClipLeftAndVertical<Light, LowerHalfTransparent<OpaquePrefix, PrefixIncrement>>(clip.left, clipY, dst, dstPitch, src, tbl);
+	src += clipY.upperBottom * Width + clip.left;
+	RenderTrapezoidUpperHalfClipLeftAndVertical<Light, OpaquePrefix, PrefixIncrement>(clip, clipY, dst, dstPitch, src, tbl);
 }
 
-template <TransparencyType Transparency, LightType Light>
-DVL_ATTRIBUTE_HOT void RenderRightTrapezoidClipRightAndVertical(std::uint8_t *dst, int dstPitch, const std::uint8_t *src, const std::uint32_t *mask, const std::uint8_t *tbl, Clip clip)
+template <LightType Light, bool OpaquePrefix, int8_t PrefixIncrement>
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderRightTrapezoidClipRightAndVertical(uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl, Clip clip)
 {
-	const auto clipY = CalculateDiamondClipY<TrapezoidUpperHeight>(clip);
-	const auto clipRight = clip.right;
-	const auto lowerMax = LowerHeight - clipY.lowerTop;
-	src += CalculateTriangleSourceSkipLowerBottom(clipY.lowerBottom);
-	for (auto i = 1 + clipY.lowerBottom; i <= lowerMax; ++i, dst -= dstPitch, --mask) {
-		const auto width = XStep * i;
-		const auto skip = Width - width < clipRight ? clipRight - (Width - width) : 0;
-		if (width > skip)
-			RenderLine<Transparency, Light>(dst, src, width - skip, tbl, *mask);
-		src += width + 2 * (i % 2);
-	}
+	const DiamondClipY clipY = CalculateDiamondClipY<TrapezoidUpperHeight>(clip);
+	RenderRightTriangleLowerClipRightAndVertical<Light, LowerHalfTransparent<OpaquePrefix, PrefixIncrement>>(clip.right, clipY, dst, dstPitch, src, tbl);
 	src += clipY.upperBottom * Width;
-	const auto upperMax = TrapezoidUpperHeight - clipY.upperTop;
-	for (auto i = 1 + clipY.upperBottom; i <= upperMax; ++i, dst -= dstPitch, --mask) {
-		RenderLine<Transparency, Light>(dst, src, clip.width, tbl, *mask);
-		src += Width;
-	}
+	RenderTrapezoidUpperHalfClipRightAndVertical<Light, OpaquePrefix, PrefixIncrement>(clip, clipY, dst, dstPitch, src, tbl);
 }
 
-template <TransparencyType Transparency, LightType Light>
-DVL_ATTRIBUTE_HOT void RenderRightTrapezoid(std::uint8_t *dst, int dstPitch, const std::uint8_t *src, const std::uint32_t *mask, const std::uint8_t *tbl, Clip clip)
+template <LightType Light, bool OpaquePrefix, int8_t PrefixIncrement = 0>
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderRightTrapezoid(uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl, Clip clip)
 {
 	if (clip.width == Width) {
 		if (clip.height == Height) {
-			RenderRightTrapezoidFull<Transparency, Light>(dst, dstPitch, src, mask, tbl);
+			RenderRightTrapezoidFull<Light, OpaquePrefix, PrefixIncrement>(dst, dstPitch, src, tbl);
 		} else {
-			RenderRightTrapezoidClipVertical<Transparency, Light>(dst, dstPitch, src, mask, tbl, clip);
+			RenderRightTrapezoidClipVertical<Light, OpaquePrefix, PrefixIncrement>(dst, dstPitch, src, tbl, clip);
 		}
 	} else if (clip.right == 0) {
-		RenderRightTrapezoidClipLeftAndVertical<Transparency, Light>(dst, dstPitch, src, mask, tbl, clip);
+		RenderRightTrapezoidClipLeftAndVertical<Light, OpaquePrefix, PrefixIncrement>(dst, dstPitch, src, tbl, clip);
 	} else {
-		RenderRightTrapezoidClipRightAndVertical<Transparency, Light>(dst, dstPitch, src, mask, tbl, clip);
+		RenderRightTrapezoidClipRightAndVertical<Light, OpaquePrefix, PrefixIncrement>(dst, dstPitch, src, tbl, clip);
 	}
 }
 
-template <TransparencyType Transparency, LightType Light>
-DVL_ATTRIBUTE_HOT void RenderTileType(TileType tile, std::uint8_t *dst, int dstPitch, const std::uint8_t *src, const std::uint32_t *mask, const std::uint8_t *tbl, Clip clip)
+template <LightType Light, bool Transparent>
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderTileType(TileType tile, uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl, Clip clip)
 {
 	switch (tile) {
 	case TileType::Square:
-		RenderSquare<Transparency, Light>(dst, dstPitch, src, mask, tbl, clip);
+		RenderSquare<Light, Transparent>(dst, dstPitch, src, tbl, clip);
 		break;
 	case TileType::TransparentSquare:
-		RenderTransparentSquare<Transparency, Light>(dst, dstPitch, src, mask, tbl, clip);
+		RenderTransparentSquare<Light, Transparent>(dst, dstPitch, src, tbl, clip);
 		break;
 	case TileType::LeftTriangle:
-		RenderLeftTriangle<Transparency, Light>(dst, dstPitch, src, mask, tbl, clip);
+		RenderLeftTriangle<Light, Transparent>(dst, dstPitch, src, tbl, clip);
 		break;
 	case TileType::RightTriangle:
-		RenderRightTriangle<Transparency, Light>(dst, dstPitch, src, mask, tbl, clip);
+		RenderRightTriangle<Light, Transparent>(dst, dstPitch, src, tbl, clip);
 		break;
 	case TileType::LeftTrapezoid:
-		RenderLeftTrapezoid<Transparency, Light>(dst, dstPitch, src, mask, tbl, clip);
+		RenderLeftTrapezoid<Light, Transparent>(dst, dstPitch, src, tbl, clip);
 		break;
 	case TileType::RightTrapezoid:
-		RenderRightTrapezoid<Transparency, Light>(dst, dstPitch, src, mask, tbl, clip);
+		RenderRightTrapezoid<Light, Transparent>(dst, dstPitch, src, tbl, clip);
 		break;
 	}
 }
 
-/** Returns the mask that defines what parts of the tile are opaque. */
-const std::uint32_t *GetMask(TileType tile)
+template <bool OpaquePrefix, int8_t PrefixIncrement>
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderTransparentSquareDispatch(uint8_t lightTableIndex, uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl, Clip clip)
 {
-#ifdef _DEBUG
-	if ((SDL_GetModState() & KMOD_ALT) != 0) {
-		return &SolidMask[TILE_HEIGHT - 1];
+	if (lightTableIndex == LightsMax) {
+		RenderTransparentSquare<LightType::FullyDark, OpaquePrefix, PrefixIncrement>(dst, dstPitch, src, tbl, clip);
+	} else if (lightTableIndex == 0) {
+		RenderTransparentSquare<LightType::FullyLit, OpaquePrefix, PrefixIncrement>(dst, dstPitch, src, tbl, clip);
+	} else {
+		RenderTransparentSquare<LightType::PartiallyLit, OpaquePrefix, PrefixIncrement>(dst, dstPitch, src, tbl, clip);
 	}
-#endif
+}
 
-	if (cel_transparency_active) {
-		if (arch_draw_type == 0) {
-			return &WallMaskFullyTrasparent[TILE_HEIGHT - 1];
-		}
-		if (arch_draw_type == 1 && tile != TileType::LeftTriangle) {
-			if (TileHasAny(level_piece_id, TileProperties::TransparentLeft)) {
-				return &LeftMaskTransparent[TILE_HEIGHT - 1];
-			}
-		}
-		if (arch_draw_type == 2 && tile != TileType::RightTriangle) {
-			if (TileHasAny(level_piece_id, TileProperties::TransparentRight)) {
-				return &RightMaskTransparent[TILE_HEIGHT - 1];
-			}
-		}
-	} else if (arch_draw_type != 0 && cel_foliage_active) {
-		if (tile != TileType::TransparentSquare)
-			return nullptr;
-		if (arch_draw_type == 1)
-			return &LeftFoliageMask[TILE_HEIGHT - 1];
-		if (arch_draw_type == 2)
-			return &RightFoliageMask[TILE_HEIGHT - 1];
+template <LightType Light, bool OpaquePrefix, int8_t PrefixIncrement>
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLeftTrapezoidOrTransparentSquare(TileType tile, uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl, Clip clip)
+{
+	switch (tile) {
+	case TileType::TransparentSquare:
+		RenderTransparentSquare<Light, OpaquePrefix, PrefixIncrement>(dst, dstPitch, src, tbl, clip);
+		break;
+	case TileType::LeftTrapezoid:
+		RenderLeftTrapezoid<Light, OpaquePrefix, PrefixIncrement>(dst, dstPitch, src, tbl, clip);
+		break;
+	default:
+		app_fatal("Given mask can only be applied to TransparentSquare or LeftTrapezoid tiles");
 	}
-	return &SolidMask[TILE_HEIGHT - 1];
+}
+
+template <LightType Light, bool OpaquePrefix, int8_t PrefixIncrement>
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderRightTrapezoidOrTransparentSquare(TileType tile, uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl, Clip clip)
+{
+	switch (tile) {
+	case TileType::TransparentSquare:
+		RenderTransparentSquare<Light, OpaquePrefix, PrefixIncrement>(dst, dstPitch, src, tbl, clip);
+		break;
+	case TileType::RightTrapezoid:
+		RenderRightTrapezoid<Light, OpaquePrefix, PrefixIncrement>(dst, dstPitch, src, tbl, clip);
+		break;
+	default:
+		app_fatal("Given mask can only be applied to TransparentSquare or LeftTrapezoid tiles");
+	}
+}
+
+template <bool OpaquePrefix, int8_t PrefixIncrement>
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLeftTrapezoidOrTransparentSquareDispatch(uint8_t lightTableIndex, TileType tile, uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl, Clip clip)
+{
+	if (lightTableIndex == LightsMax) {
+		RenderLeftTrapezoidOrTransparentSquare<LightType::FullyDark, OpaquePrefix, PrefixIncrement>(tile, dst, dstPitch, src, tbl, clip);
+	} else if (lightTableIndex == 0) {
+		RenderLeftTrapezoidOrTransparentSquare<LightType::FullyLit, OpaquePrefix, PrefixIncrement>(tile, dst, dstPitch, src, tbl, clip);
+	} else {
+		RenderLeftTrapezoidOrTransparentSquare<LightType::PartiallyLit, OpaquePrefix, PrefixIncrement>(tile, dst, dstPitch, src, tbl, clip);
+	}
+}
+
+template <bool OpaquePrefix, int8_t PrefixIncrement>
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderRightTrapezoidOrTransparentSquareDispatch(uint8_t lightTableIndex, TileType tile, uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl, Clip clip)
+{
+	if (lightTableIndex == LightsMax) {
+		RenderRightTrapezoidOrTransparentSquare<LightType::FullyDark, OpaquePrefix, PrefixIncrement>(tile, dst, dstPitch, src, tbl, clip);
+	} else if (lightTableIndex == 0) {
+		RenderRightTrapezoidOrTransparentSquare<LightType::FullyLit, OpaquePrefix, PrefixIncrement>(tile, dst, dstPitch, src, tbl, clip);
+	} else {
+		RenderRightTrapezoidOrTransparentSquare<LightType::PartiallyLit, OpaquePrefix, PrefixIncrement>(tile, dst, dstPitch, src, tbl, clip);
+	}
+}
+
+template <bool Transparent>
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderTileDispatch(uint8_t lightTableIndex, TileType tile, uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl, Clip clip)
+{
+	if (lightTableIndex == LightsMax) {
+		RenderTileType<LightType::FullyDark, Transparent>(tile, dst, dstPitch, src, tbl, clip);
+	} else if (lightTableIndex == 0) {
+		RenderTileType<LightType::FullyLit, Transparent>(tile, dst, dstPitch, src, tbl, clip);
+	} else {
+		RenderTileType<LightType::PartiallyLit, Transparent>(tile, dst, dstPitch, src, tbl, clip);
+	}
 }
 
 // Blit with left and vertical clipping.
-void RenderBlackTileClipLeftAndVertical(std::uint8_t *dst, int dstPitch, int sx, DiamondClipY clipY)
+void RenderBlackTileClipLeftAndVertical(uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, int sx, DiamondClipY clipY)
 {
 	dst += XStep * (LowerHeight - clipY.lowerBottom - 1);
 	// Lower triangle (drawn bottom to top):
@@ -1148,7 +987,7 @@ void RenderBlackTileClipLeftAndVertical(std::uint8_t *dst, int dstPitch, int sx,
 }
 
 // Blit with right and vertical clipping.
-void RenderBlackTileClipRightAndVertical(std::uint8_t *dst, int dstPitch, std::int_fast16_t maxWidth, DiamondClipY clipY)
+void RenderBlackTileClipRightAndVertical(uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, int_fast16_t maxWidth, DiamondClipY clipY)
 {
 	dst += XStep * (LowerHeight - clipY.lowerBottom - 1);
 	// Lower triangle (drawn bottom to top):
@@ -1174,7 +1013,7 @@ void RenderBlackTileClipRightAndVertical(std::uint8_t *dst, int dstPitch, std::i
 }
 
 // Blit with vertical clipping only.
-void RenderBlackTileClipY(std::uint8_t *dst, int dstPitch, DiamondClipY clipY)
+void RenderBlackTileClipY(uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, DiamondClipY clipY)
 {
 	dst += XStep * (LowerHeight - clipY.lowerBottom - 1);
 	// Lower triangle (drawn bottom to top):
@@ -1191,7 +1030,7 @@ void RenderBlackTileClipY(std::uint8_t *dst, int dstPitch, DiamondClipY clipY)
 }
 
 // Blit a black tile without clipping (must be fully in bounds).
-void RenderBlackTileFull(std::uint8_t *dst, int dstPitch)
+void RenderBlackTileFull(uint8_t *DVL_RESTRICT dst, uint16_t dstPitch)
 {
 	dst += XStep * (LowerHeight - 1);
 	// Tile is fully in bounds, can use constant loop boundaries.
@@ -1208,12 +1047,44 @@ void RenderBlackTileFull(std::uint8_t *dst, int dstPitch)
 
 } // namespace
 
-void RenderTile(const Surface &out, Point position)
+#ifdef DUN_RENDER_STATS
+std::unordered_map<DunRenderType, size_t, DunRenderTypeHash> DunRenderStats;
+
+string_view TileTypeToString(TileType tileType)
 {
-	const auto tile = static_cast<TileType>((level_cel_block & 0x7000) >> 12);
-	const auto *mask = GetMask(tile);
-	if (mask == nullptr)
-		return;
+	// clang-format off
+	switch (tileType) {
+	case TileType::Square: return "Square";
+	case TileType::TransparentSquare: return "TransparentSquare";
+	case TileType::LeftTriangle: return "LeftTriangle";
+	case TileType::RightTriangle: return "RightTriangle";
+	case TileType::LeftTrapezoid: return "LeftTrapezoid";
+	case TileType::RightTrapezoid: return "RightTrapezoid";
+	default: return "???";
+	}
+	// clang-format on
+}
+
+string_view MaskTypeToString(MaskType maskType)
+{
+	// clang-format off
+	switch (maskType) {
+	case MaskType::Solid: return "Solid";
+	case MaskType::Transparent: return "Transparent";
+	case MaskType::Right: return "Right";
+	case MaskType::Left: return "Left";
+	case MaskType::RightFoliage: return "RightFoliage";
+	case MaskType::LeftFoliage: return "LeftFoliage";
+	default: return "???";
+	}
+	// clang-format on
+}
+#endif
+
+void RenderTile(const Surface &out, Point position,
+    LevelCelBlock levelCelBlock, MaskType maskType, uint8_t lightTableIndex)
+{
+	const TileType tile = levelCelBlock.type();
 
 #ifdef DEBUG_RENDER_OFFSET_X
 	position.x += DEBUG_RENDER_OFFSET_X;
@@ -1225,34 +1096,45 @@ void RenderTile(const Surface &out, Point position)
 	DBGCOLOR = GetTileDebugColor(tile);
 #endif
 
-	Clip clip = CalculateClip(position.x, position.y, Width, GetTileHeight(tile), out);
+	const Clip clip = CalculateClip(position.x, position.y, Width, GetTileHeight(tile), out);
 	if (clip.width <= 0 || clip.height <= 0)
 		return;
 
-	const std::uint8_t *tbl = &LightTables[256 * LightTableIndex];
-	const auto *pFrameTable = reinterpret_cast<const std::uint32_t *>(pDungeonCels.get());
-	const auto *src = reinterpret_cast<const std::uint8_t *>(&pDungeonCels[SDL_SwapLE32(pFrameTable[level_cel_block & 0xFFF])]);
-	std::uint8_t *dst = out.at(static_cast<int>(position.x + clip.left), static_cast<int>(position.y - clip.bottom));
-	const auto dstPitch = out.pitch();
+	const uint8_t *tbl = &LightTables[256 * lightTableIndex];
+	const auto *pFrameTable = reinterpret_cast<const uint32_t *>(pDungeonCels.get());
+	const auto *src = reinterpret_cast<const uint8_t *>(&pDungeonCels[SDL_SwapLE32(pFrameTable[levelCelBlock.frame()])]);
+	uint8_t *dst = out.at(static_cast<int>(position.x + clip.left), static_cast<int>(position.y - clip.bottom));
+	const uint16_t dstPitch = out.pitch();
 
-	if (mask == &SolidMask[TILE_HEIGHT - 1]) {
-		if (LightTableIndex == LightsMax) {
-			RenderTileType<TransparencyType::Solid, LightType::FullyDark>(tile, dst, dstPitch, src, mask, tbl, clip);
-		} else if (LightTableIndex == 0) {
-			RenderTileType<TransparencyType::Solid, LightType::FullyLit>(tile, dst, dstPitch, src, mask, tbl, clip);
-		} else {
-			RenderTileType<TransparencyType::Solid, LightType::PartiallyLit>(tile, dst, dstPitch, src, mask, tbl, clip);
-		}
-	} else {
-		mask -= clip.bottom;
-		if (LightTableIndex == LightsMax) {
-			RenderTileType<TransparencyType::Blended, LightType::FullyDark>(tile, dst, dstPitch, src, mask, tbl, clip);
-		} else if (LightTableIndex == 0) {
-			RenderTileType<TransparencyType::Blended, LightType::FullyLit>(tile, dst, dstPitch, src, mask, tbl, clip);
-		} else {
-			RenderTileType<TransparencyType::Blended, LightType::PartiallyLit>(tile, dst, dstPitch, src, mask, tbl, clip);
-		}
+#ifdef DUN_RENDER_STATS
+	++DunRenderStats[DunRenderType { tile, maskType }];
+#endif
+
+	switch (maskType) {
+	case MaskType::Solid:
+		RenderTileDispatch</*Transparent=*/false>(lightTableIndex, tile, dst, dstPitch, src, tbl, clip);
+		break;
+	case MaskType::Transparent:
+		RenderTileDispatch</*Transparent=*/true>(lightTableIndex, tile, dst, dstPitch, src, tbl, clip);
+		break;
+	case MaskType::Left:
+		RenderLeftTrapezoidOrTransparentSquareDispatch</*OpaquePrefix=*/false, /*PrefixIncrement=*/2>(lightTableIndex, tile, dst, dstPitch, src, tbl, clip);
+		break;
+	case MaskType::Right:
+		RenderRightTrapezoidOrTransparentSquareDispatch</*OpaquePrefix=*/true, /*PrefixIncrement=*/-2>(lightTableIndex, tile, dst, dstPitch, src, tbl, clip);
+		break;
+	case MaskType::LeftFoliage:
+		RenderTransparentSquareDispatch</*OpaquePrefix=*/true, /*PrefixIncrement=*/2>(lightTableIndex, dst, dstPitch, src, tbl, clip);
+		break;
+	case MaskType::RightFoliage:
+		RenderTransparentSquareDispatch</*OpaquePrefix=*/false, /*PrefixIncrement=*/-2>(lightTableIndex, dst, dstPitch, src, tbl, clip);
+		break;
 	}
+
+#ifdef DEBUG_STR
+	const std::pair<string_view, UiFlags> debugStr = GetTileDebugStr(tile);
+	DrawString(out, debugStr.first, Rectangle { Point { position.x + 2, position.y - 29 }, Size { 28, 28 } }, debugStr.second);
+#endif
 }
 
 void world_draw_black_tile(const Surface &out, int sx, int sy)
@@ -1268,7 +1150,7 @@ void world_draw_black_tile(const Surface &out, int sx, int sy)
 		return;
 
 	auto clipY = CalculateDiamondClipY(clip);
-	std::uint8_t *dst = out.at(sx, static_cast<int>(sy - clip.bottom));
+	uint8_t *dst = out.at(sx, static_cast<int>(sy - clip.bottom));
 	if (clip.width == TILE_WIDTH) {
 		if (clip.height == TriangleHeight) {
 			RenderBlackTileFull(dst, out.pitch());

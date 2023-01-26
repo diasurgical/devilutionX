@@ -11,6 +11,7 @@
 #include "utils/endian.hpp"
 #include "utils/pointer_value_union.hpp"
 #include "utils/static_vector.hpp"
+#include "utils/str_cat.hpp"
 
 #ifdef UNPACKED_MPQS
 #define DEVILUTIONX_CL2_EXT ".clx"
@@ -25,14 +26,17 @@ OwnedClxSpriteListOrSheet LoadCl2ListOrSheet(const char *pszName, PointerOrValue
 template <size_t MaxCount>
 OwnedClxSpriteSheet LoadMultipleCl2Sheet(tl::function_ref<const char *(size_t)> filenames, size_t count, uint16_t width)
 {
-	StaticVector<SFile, MaxCount> files;
+	StaticVector<AssetHandle, MaxCount> files;
 	StaticVector<size_t, MaxCount> fileSizes;
 	const size_t sheetHeaderSize = 4 * count;
 	size_t totalSize = sheetHeaderSize;
 	for (size_t i = 0; i < count; ++i) {
 		const char *filename = filenames(i);
-		files.emplace_back(filename);
-		const size_t size = files[i].Size();
+		size_t size;
+		files.emplace_back(OpenAsset(filename, size));
+		if (!files.back().ok()) {
+			app_fatal(StrCat("Failed to open file:\n", filename, "\n\n", files.back().error()));
+		}
 		fileSizes.emplace_back(size);
 		totalSize += size;
 	}
@@ -43,8 +47,8 @@ OwnedClxSpriteSheet LoadMultipleCl2Sheet(tl::function_ref<const char *(size_t)> 
 	size_t accumulatedSize = sheetHeaderSize;
 	for (size_t i = 0; i < count; ++i) {
 		const size_t size = fileSizes[i];
-		if (!files[i].Read(&data[accumulatedSize], size))
-			app_fatal(StrCat("Read failed: ", SDL_GetError()));
+		if (!files[i].read(&data[accumulatedSize], size))
+			app_fatal(StrCat("Read failed:\n", files[i].error()));
 		WriteLE32(&data[i * 4], accumulatedSize);
 #ifndef UNPACKED_MPQS
 		[[maybe_unused]] const uint16_t numLists = Cl2ToClx(&data[accumulatedSize], size, frameWidth);

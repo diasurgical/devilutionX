@@ -28,7 +28,7 @@
 #include "menu.h"
 #include "missiles.h"
 #include "monster.h"
-#include "mpq/mpq_writer.hpp"
+#include "mpq/mpq_common.hpp"
 #include "pfile.h"
 #include "qol/stash.h"
 #include "stores.h"
@@ -97,7 +97,7 @@ class LoadHelper {
 	}
 
 public:
-	LoadHelper(std::optional<MpqArchive> archive, const char *szFileName)
+	LoadHelper(std::optional<SaveReader> archive, const char *szFileName)
 	{
 		if (archive)
 			m_buffer_ = ReadArchive(*archive, szFileName, &m_size_);
@@ -163,14 +163,14 @@ public:
 };
 
 class SaveHelper {
-	MpqWriter &m_mpqWriter;
+	SaveWriter &m_mpqWriter;
 	const char *m_szFileName_;
 	std::unique_ptr<byte[]> m_buffer_;
 	size_t m_cur_ = 0;
 	size_t m_capacity_;
 
 public:
-	SaveHelper(MpqWriter &mpqWriter, const char *szFileName, size_t bufferLen)
+	SaveHelper(SaveWriter &mpqWriter, const char *szFileName, size_t bufferLen)
 	    : m_mpqWriter(mpqWriter)
 	    , m_szFileName_(szFileName)
 	    , m_buffer_(new byte[codec_get_encoded_len(bufferLen)])
@@ -690,7 +690,7 @@ void SyncPackSize(Monster &leader)
 void LoadMissile(LoadHelper *file)
 {
 	Missile missile = {};
-	missile._mitype = static_cast<missile_id>(file->NextLE<int32_t>());
+	missile._mitype = static_cast<MissileID>(file->NextLE<int32_t>());
 	missile.position.tile.x = file->NextLE<int32_t>();
 	missile.position.tile.y = file->NextLE<int32_t>();
 	missile.position.offset.deltaX = file->NextLE<int32_t>();
@@ -913,7 +913,7 @@ void GetPermLevelNames(char *szPerm)
 	return GetLevelNames("perm", szPerm);
 }
 
-bool LevelFileExists(MpqWriter &archive)
+bool LevelFileExists(SaveWriter &archive)
 {
 	char szName[MaxMpqPathSize];
 
@@ -1104,7 +1104,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	DisplacementOf<int16_t> offset = {};
 	DisplacementOf<int16_t> offset2 = {};
 	DisplacementOf<int16_t> velocity = {};
-	if (player.IsWalking()) {
+	if (player.isWalking()) {
 		offset = player.position.CalculateWalkingOffset(player._pdir, player.AnimInfo);
 		offset2 = player.position.CalculateWalkingOffsetShifted8(player._pdir, player.AnimInfo);
 		velocity = player.position.GetWalkingVelocityShifted8(player._pdir, player.AnimInfo);
@@ -1426,7 +1426,7 @@ void SaveMonster(SaveHelper *file, Monster &monster)
 
 void SaveMissile(SaveHelper *file, const Missile &missile)
 {
-	file->WriteLE<int32_t>(missile._mitype);
+	file->WriteLE<int32_t>(static_cast<int8_t>(missile._mitype));
 	file->WriteLE<int32_t>(missile.position.tile.x);
 	file->WriteLE<int32_t>(missile.position.tile.y);
 	file->WriteLE<int32_t>(missile.position.offset.deltaX);
@@ -1647,7 +1647,7 @@ void SaveDroppedItemLocations(SaveHelper &file, const std::unordered_map<uint8_t
 
 constexpr uint32_t VersionAdditionalMissiles = 0;
 
-void SaveAdditionalMissiles(MpqWriter &saveWriter)
+void SaveAdditionalMissiles(SaveWriter &saveWriter)
 {
 	constexpr size_t BytesWrittenBySaveMissile = 180;
 	uint32_t missileCountAdditional = (Missiles.size() > MaxMissilesForSaveGame) ? static_cast<uint32_t>(Missiles.size() - MaxMissilesForSaveGame) : 0;
@@ -1691,7 +1691,7 @@ const int HellfireItemSaveSize = 372;
 
 } // namespace
 
-void ConvertLevels(MpqWriter &saveWriter)
+void ConvertLevels(SaveWriter &saveWriter)
 {
 	// Backup current level state
 	bool tmpSetlevel = setlevel;
@@ -1934,7 +1934,7 @@ void LoadHotkeys()
 	myPlayer._pRSplType = static_cast<spell_type>(file.NextLE<uint8_t>());
 }
 
-void SaveHotkeys(MpqWriter &saveWriter, const Player &player)
+void SaveHotkeys(SaveWriter &saveWriter, const Player &player)
 {
 	SaveHelper file(saveWriter, "hotkeys", HotkeysSize());
 
@@ -2203,7 +2203,7 @@ void LoadGame(bool firstflag)
 	ProcessVisionList();
 	// convert stray manashield missiles into pManaShield flag
 	for (auto &missile : Missiles) {
-		if (missile._mitype == MIS_MANASHIELD && !missile._miDelFlag) {
+		if (missile._mitype == MissileID::ManaShield && !missile._miDelFlag) {
 			Players[missile._misource].pManaShield = true;
 			missile._miDelFlag = true;
 		}
@@ -2221,7 +2221,7 @@ void LoadGame(bool firstflag)
 	gbIsHellfireSaveGame = gbIsHellfire;
 }
 
-void SaveHeroItems(MpqWriter &saveWriter, Player &player)
+void SaveHeroItems(SaveWriter &saveWriter, Player &player)
 {
 	size_t itemCount = static_cast<size_t>(NUM_INVLOC) + InventoryGridCells + MaxBeltItems;
 	SaveHelper file(saveWriter, "heroitems", itemCount * (gbIsHellfire ? HellfireItemSaveSize : DiabloItemSaveSize) + sizeof(uint8_t));
@@ -2236,7 +2236,7 @@ void SaveHeroItems(MpqWriter &saveWriter, Player &player)
 		SaveItem(file, item);
 }
 
-void SaveStash(MpqWriter &stashWriter)
+void SaveStash(SaveWriter &stashWriter)
 {
 	const char *filename;
 	if (!gbIsMultiplayer)
@@ -2293,7 +2293,7 @@ void SaveStash(MpqWriter &stashWriter)
 	file.WriteLE<uint32_t>(static_cast<uint32_t>(Stash.GetPage()));
 }
 
-void SaveGameData(MpqWriter &saveWriter)
+void SaveGameData(SaveWriter &saveWriter)
 {
 	SaveHelper file(saveWriter, "game", 320 * 1024);
 
@@ -2462,7 +2462,7 @@ void SaveGame()
 	sfile_write_stash();
 }
 
-void SaveLevel(MpqWriter &saveWriter)
+void SaveLevel(SaveWriter &saveWriter)
 {
 	Player &myPlayer = *MyPlayer;
 
@@ -2539,7 +2539,7 @@ void SaveLevel(MpqWriter &saveWriter)
 void LoadLevel()
 {
 	char szName[MaxMpqPathSize];
-	std::optional<MpqArchive> archive = OpenSaveArchive(gSaveNumber);
+	std::optional<SaveReader> archive = OpenSaveArchive(gSaveNumber);
 	GetTempLevelNames(szName);
 	if (!archive || !archive->HasFile(szName))
 		GetPermLevelNames(szName);

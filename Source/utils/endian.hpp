@@ -16,6 +16,14 @@ constexpr uint16_t LoadLE16(const T *b)
 }
 
 template <typename T>
+constexpr uint16_t LoadBE16(const T *b)
+{
+	static_assert(sizeof(T) == 1, "invalid argument");
+	// NOLINTNEXTLINE(readability-magic-numbers)
+	return (static_cast<uint8_t>(b[0]) << 8) | static_cast<uint8_t>(b[1]);
+}
+
+template <typename T>
 constexpr uint32_t LoadLE32(const T *b)
 {
 	static_assert(sizeof(T) == 1, "invalid argument");

@@ -468,7 +468,7 @@ void SpawnNote()
 	}
 
 	Point position = GetRandomAvailableItemPosition();
-	SpawnQuestItem(id, position, 0, 1);
+	SpawnQuestItem(id, position, 0, 1, false);
 }
 
 void CalcSelfItems(Player &player)
@@ -641,11 +641,11 @@ void GetBookSpell(Item &item, int lvl)
 	item._iMinMag = spelldata[bs].sMinInt;
 	item._ivalue += spelldata[bs].sBookCost;
 	item._iIvalue += spelldata[bs].sBookCost;
-	if (spelldata[bs].sType == STYPE_FIRE)
+	if (spelldata[bs].sType == MagicType::Fire)
 		item._iCurs = ICURS_BOOK_RED;
-	else if (spelldata[bs].sType == STYPE_LIGHTNING)
+	else if (spelldata[bs].sType == MagicType::Lightning)
 		item._iCurs = ICURS_BOOK_BLUE;
-	else if (spelldata[bs].sType == STYPE_MAGIC)
+	else if (spelldata[bs].sType == MagicType::Magic)
 		item._iCurs = ICURS_BOOK_GREY;
 }
 
@@ -1307,46 +1307,46 @@ void GetItemBonus(const Player &player, Item &item, int minlvl, int maxlvl, bool
 	}
 }
 
-_item_indexes RndUItem(Monster *monster)
+_item_indexes GetItemIndexForDroppableItem(bool considerDropRate, tl::function_ref<bool(const ItemData &item)> isItemOkay)
 {
-	if (monster != nullptr && (monster->data().treasure & T_UNIQ) != 0 && !gbIsMultiplayer)
-		return static_cast<_item_indexes>(-((monster->data().treasure & T_MASK) + 1));
+	static std::array<_item_indexes, IDI_LAST * 2> ril;
 
-	static std::array<_item_indexes, 512> ril;
-
-	int curlv = ItemsGetCurrlevel();
 	size_t ri = 0;
 	for (std::underlying_type_t<_item_indexes> i = IDI_GOLD; i <= IDI_LAST; i++) {
 		if (!IsItemAvailable(i))
 			continue;
-
-		bool okflag = true;
-		if (AllItemsList[i].iRnd == IDROP_NEVER)
-			okflag = false;
-		if (monster != nullptr) {
-			if (monster->level(sgGameInitInfo.nDifficulty) < AllItemsList[i].iMinMLvl)
-				okflag = false;
-		} else {
-			if (2 * curlv < AllItemsList[i].iMinMLvl)
-				okflag = false;
-		}
-		if (AllItemsList[i].itype == ItemType::Misc)
-			okflag = false;
-		if (AllItemsList[i].itype == ItemType::Gold)
-			okflag = false;
-		if (AllItemsList[i].iMiscId == IMISC_BOOK)
-			okflag = true;
-		if (AllItemsList[i].iSpell == SPL_RESURRECT && !gbIsMultiplayer)
-			okflag = false;
-		if (AllItemsList[i].iSpell == SPL_HEALOTHER && !gbIsMultiplayer)
-			okflag = false;
-		if (okflag && ri < ril.size()) {
+		const ItemData &item = AllItemsList[i];
+		if (item.iRnd == IDROP_NEVER)
+			continue;
+		if (IsAnyOf(item.iSpell, SPL_RESURRECT, SPL_HEALOTHER) && !gbIsMultiplayer)
+			continue;
+		if (!isItemOkay(item))
+			continue;
+		ril[ri] = static_cast<_item_indexes>(i);
+		ri++;
+		if (item.iRnd == IDROP_DOUBLE && considerDropRate) {
 			ril[ri] = static_cast<_item_indexes>(i);
 			ri++;
 		}
 	}
 
 	return ril[GenerateRnd(static_cast<int>(ri))];
+}
+
+_item_indexes RndUItem(Monster *monster)
+{
+	int itemMaxLevel = ItemsGetCurrlevel() * 2;
+	if (monster != nullptr)
+		itemMaxLevel = monster->level(sgGameInitInfo.nDifficulty);
+	return GetItemIndexForDroppableItem(false, [&itemMaxLevel](const ItemData &item) {
+		if (item.itype == ItemType::Misc && item.iMiscId == IMISC_BOOK)
+			return true;
+		if (itemMaxLevel < item.iMinMLvl)
+			return false;
+		if (IsAnyOf(item.itype, ItemType::Gold, ItemType::Misc))
+			return false;
+		return true;
+	});
 }
 
 _item_indexes RndAllItems()
@@ -1354,50 +1354,26 @@ _item_indexes RndAllItems()
 	if (GenerateRnd(100) > 25)
 		return IDI_GOLD;
 
-	static std::array<_item_indexes, 512> ril;
-
-	int curlv = ItemsGetCurrlevel();
-	size_t ri = 0;
-	for (std::underlying_type_t<_item_indexes> i = IDI_GOLD; i <= IDI_LAST; i++) {
-		if (!IsItemAvailable(i))
-			continue;
-		if (IsAnyOf(AllItemsList[i].iSpell, SPL_RESURRECT, SPL_HEALOTHER) && !gbIsMultiplayer)
-			continue;
-
-		if (AllItemsList[i].iRnd != IDROP_NEVER && 2 * curlv >= AllItemsList[i].iMinMLvl && ri < ril.size()) {
-			ril[ri] = static_cast<_item_indexes>(i);
-			ri++;
-		}
-	}
-
-	return ril[GenerateRnd(static_cast<int>(ri))];
+	int itemMaxLevel = ItemsGetCurrlevel() * 2;
+	return GetItemIndexForDroppableItem(false, [&itemMaxLevel](const ItemData &item) {
+		if (itemMaxLevel < item.iMinMLvl)
+			return false;
+		return true;
+	});
 }
 
 _item_indexes RndTypeItems(ItemType itemType, int imid, int lvl)
 {
-	static std::array<_item_indexes, 512> ril;
-
-	size_t ri = 0;
-	for (std::underlying_type_t<_item_indexes> i = IDI_GOLD; i <= IDI_LAST; i++) {
-		if (!IsItemAvailable(i))
-			continue;
-
-		bool okflag = true;
-		if (AllItemsList[i].iRnd == IDROP_NEVER)
-			okflag = false;
-		if (lvl * 2 < AllItemsList[i].iMinMLvl)
-			okflag = false;
-		if (AllItemsList[i].itype != itemType)
-			okflag = false;
-		if (imid != -1 && AllItemsList[i].iMiscId != imid)
-			okflag = false;
-		if (okflag && ri < ril.size()) {
-			ril[ri] = static_cast<_item_indexes>(i);
-			ri++;
-		}
-	}
-
-	return ril[GenerateRnd(static_cast<int>(ri))];
+	int itemMaxLevel = lvl * 2;
+	return GetItemIndexForDroppableItem(false, [&itemMaxLevel, &itemType, &imid](const ItemData &item) {
+		if (itemMaxLevel < item.iMinMLvl)
+			return false;
+		if (item.itype != itemType)
+			return false;
+		if (imid != -1 && item.iMiscId != imid)
+			return false;
+		return true;
+	});
 }
 
 _unique_items CheckUnique(Item &item, int lvl, int uper, bool recreate)
@@ -1619,6 +1595,9 @@ void SpawnRock()
 	item._iSelFlag = 2;
 	item._iPostDraw = true;
 	item.AnimInfo.currentFrame = 10;
+	item._iCreateInfo |= CF_PREGEN;
+
+	DeltaAddItem(ii);
 }
 
 void ItemDoppel()
@@ -1854,53 +1833,32 @@ void PrintItemInfo(const Item &item)
 	}
 }
 
-bool SmithItemOk(const Player &player, int i)
+bool SmithItemOk(const Player &player, const ItemData &item)
 {
-	if (AllItemsList[i].itype == ItemType::Misc)
+	if (item.itype == ItemType::Misc)
 		return false;
-	if (AllItemsList[i].itype == ItemType::Gold)
+	if (item.itype == ItemType::Gold)
 		return false;
-	if (AllItemsList[i].itype == ItemType::Staff && (!gbIsHellfire || IsValidSpell(AllItemsList[i].iSpell)))
+	if (item.itype == ItemType::Staff && (!gbIsHellfire || IsValidSpell(item.iSpell)))
 		return false;
-	if (AllItemsList[i].itype == ItemType::Ring)
+	if (item.itype == ItemType::Ring)
 		return false;
-	if (AllItemsList[i].itype == ItemType::Amulet)
+	if (item.itype == ItemType::Amulet)
 		return false;
 
 	return true;
 }
 
-template <bool (*Ok)(const Player &, int), bool ConsiderDropRate = false>
+template <bool (*Ok)(const Player &, const ItemData &), bool ConsiderDropRate = false>
 _item_indexes RndVendorItem(const Player &player, int minlvl, int maxlvl)
 {
-	static std::array<_item_indexes, 512> ril;
-
-	size_t ri = 0;
-	for (std::underlying_type_t<_item_indexes> i = IDI_WARRIOR; i <= IDI_LAST; i++) {
-		if (!IsItemAvailable(i))
-			continue;
-		if (AllItemsList[i].iRnd == IDROP_NEVER)
-			continue;
-		if (!Ok(player, i))
-			continue;
-		if (AllItemsList[i].iMinMLvl < minlvl || AllItemsList[i].iMinMLvl > maxlvl)
-			continue;
-
-		ril[ri] = static_cast<_item_indexes>(i);
-		ri++;
-		if (ri >= ril.size())
-			break;
-
-		if (!ConsiderDropRate || AllItemsList[i].iRnd != IDROP_DOUBLE)
-			continue;
-
-		ril[ri] = static_cast<_item_indexes>(i);
-		ri++;
-		if (ri >= ril.size())
-			break;
-	}
-
-	return ril[GenerateRnd(static_cast<int>(ri))];
+	return GetItemIndexForDroppableItem(ConsiderDropRate, [&player, &minlvl, &maxlvl](const ItemData &item) {
+		if (!Ok(player, item))
+			return false;
+		if (item.iMinMLvl < minlvl || item.iMinMLvl > maxlvl)
+			return false;
+		return true;
+	});
 }
 
 _item_indexes RndSmithItem(const Player &player, int lvl)
@@ -1921,21 +1879,21 @@ void SortVendor(Item *itemList)
 	std::sort(itemList, itemList + count, cmp);
 }
 
-bool PremiumItemOk(const Player &player, int i)
+bool PremiumItemOk(const Player &player, const ItemData &item)
 {
-	if (AllItemsList[i].itype == ItemType::Misc)
+	if (item.itype == ItemType::Misc)
 		return false;
-	if (AllItemsList[i].itype == ItemType::Gold)
+	if (item.itype == ItemType::Gold)
 		return false;
-	if (!gbIsHellfire && AllItemsList[i].itype == ItemType::Staff)
+	if (!gbIsHellfire && item.itype == ItemType::Staff)
 		return false;
 
 	if (gbIsMultiplayer) {
-		if (AllItemsList[i].iMiscId == IMISC_OILOF)
+		if (item.iMiscId == IMISC_OILOF)
 			return false;
-		if (AllItemsList[i].itype == ItemType::Ring)
+		if (item.itype == ItemType::Ring)
 			return false;
-		if (AllItemsList[i].itype == ItemType::Amulet)
+		if (item.itype == ItemType::Amulet)
 			return false;
 	}
 
@@ -2027,25 +1985,25 @@ void SpawnOnePremium(Item &premiumItem, int plvl, const Player &player)
 	premiumItem._iStatFlag = player.CanUseItem(premiumItem);
 }
 
-bool WitchItemOk(const Player &player, int i)
+bool WitchItemOk(const Player &player, const ItemData &item)
 {
-	if (IsNoneOf(AllItemsList[i].itype, ItemType::Misc, ItemType::Staff))
+	if (IsNoneOf(item.itype, ItemType::Misc, ItemType::Staff))
 		return false;
-	if (AllItemsList[i].iMiscId == IMISC_MANA)
+	if (item.iMiscId == IMISC_MANA)
 		return false;
-	if (AllItemsList[i].iMiscId == IMISC_FULLMANA)
+	if (item.iMiscId == IMISC_FULLMANA)
 		return false;
-	if (AllItemsList[i].iSpell == SPL_TOWN)
+	if (item.iSpell == SPL_TOWN)
 		return false;
-	if (AllItemsList[i].iMiscId == IMISC_FULLHEAL)
+	if (item.iMiscId == IMISC_FULLHEAL)
 		return false;
-	if (AllItemsList[i].iMiscId == IMISC_HEAL)
+	if (item.iMiscId == IMISC_HEAL)
 		return false;
-	if (AllItemsList[i].iMiscId > IMISC_OILFIRST && AllItemsList[i].iMiscId < IMISC_OILLAST)
+	if (item.iMiscId > IMISC_OILFIRST && item.iMiscId < IMISC_OILLAST)
 		return false;
-	if (AllItemsList[i].iSpell == SPL_RESURRECT && !gbIsMultiplayer)
+	if (item.iSpell == SPL_RESURRECT && !gbIsMultiplayer)
 		return false;
-	if (AllItemsList[i].iSpell == SPL_HEALOTHER && !gbIsMultiplayer)
+	if (item.iSpell == SPL_HEALOTHER && !gbIsMultiplayer)
 		return false;
 
 	return true;
@@ -2061,30 +2019,30 @@ _item_indexes RndBoyItem(const Player &player, int lvl)
 	return RndVendorItem<PremiumItemOk>(player, 0, lvl);
 }
 
-bool HealerItemOk(const Player &player, int i)
+bool HealerItemOk(const Player &player, const ItemData &item)
 {
-	if (AllItemsList[i].itype != ItemType::Misc)
+	if (item.itype != ItemType::Misc)
 		return false;
 
-	if (AllItemsList[i].iMiscId == IMISC_SCROLL)
-		return AllItemsList[i].iSpell == SPL_HEAL;
-	if (AllItemsList[i].iMiscId == IMISC_SCROLLT)
-		return AllItemsList[i].iSpell == SPL_HEALOTHER && gbIsMultiplayer;
+	if (item.iMiscId == IMISC_SCROLL)
+		return item.iSpell == SPL_HEAL;
+	if (item.iMiscId == IMISC_SCROLLT)
+		return item.iSpell == SPL_HEALOTHER && gbIsMultiplayer;
 
 	if (!gbIsMultiplayer) {
-		if (AllItemsList[i].iMiscId == IMISC_ELIXSTR)
+		if (item.iMiscId == IMISC_ELIXSTR)
 			return !gbIsHellfire || player._pBaseStr < player.GetMaximumAttributeValue(CharacterAttribute::Strength);
-		if (AllItemsList[i].iMiscId == IMISC_ELIXMAG)
+		if (item.iMiscId == IMISC_ELIXMAG)
 			return !gbIsHellfire || player._pBaseMag < player.GetMaximumAttributeValue(CharacterAttribute::Magic);
-		if (AllItemsList[i].iMiscId == IMISC_ELIXDEX)
+		if (item.iMiscId == IMISC_ELIXDEX)
 			return !gbIsHellfire || player._pBaseDex < player.GetMaximumAttributeValue(CharacterAttribute::Dexterity);
-		if (AllItemsList[i].iMiscId == IMISC_ELIXVIT)
+		if (item.iMiscId == IMISC_ELIXVIT)
 			return !gbIsHellfire || player._pBaseVit < player.GetMaximumAttributeValue(CharacterAttribute::Vitality);
 	}
 
-	if (AllItemsList[i].iMiscId == IMISC_REJUV)
+	if (item.iMiscId == IMISC_REJUV)
 		return true;
-	if (AllItemsList[i].iMiscId == IMISC_FULLREJUV)
+	if (item.iMiscId == IMISC_FULLREJUV)
 		return true;
 
 	return false;
@@ -2232,31 +2190,9 @@ _item_indexes RndItemForMonsterLevel(int8_t monsterLevel)
 	if (GenerateRnd(100) > 25)
 		return IDI_GOLD;
 
-	static std::array<_item_indexes, 512> ril;
-
-	size_t ri = 0;
-	for (std::underlying_type_t<_item_indexes> i = IDI_GOLD; i <= IDI_LAST; i++) {
-		if (!IsItemAvailable(i))
-			continue;
-
-		if (AllItemsList[i].iRnd == IDROP_DOUBLE && monsterLevel >= AllItemsList[i].iMinMLvl
-		    && ri < ril.size()) {
-			ril[ri] = static_cast<_item_indexes>(i);
-			ri++;
-		}
-		if (AllItemsList[i].iRnd != IDROP_NEVER && monsterLevel >= AllItemsList[i].iMinMLvl
-		    && ri < ril.size()) {
-			ril[ri] = static_cast<_item_indexes>(i);
-			ri++;
-		}
-		if (AllItemsList[i].iSpell == SPL_RESURRECT && !gbIsMultiplayer)
-			ri--;
-		if (AllItemsList[i].iSpell == SPL_HEALOTHER && !gbIsMultiplayer)
-			ri--;
-	}
-
-	int r = GenerateRnd(static_cast<int>(ri));
-	return ril[r];
+	return GetItemIndexForDroppableItem(true, [&monsterLevel](const ItemData &item) {
+		return item.iMinMLvl <= monsterLevel;
+	});
 }
 
 } // namespace
@@ -2345,11 +2281,11 @@ void InitItems()
 		if (Quests[Q_ROCK].IsAvailable())
 			SpawnRock();
 		if (Quests[Q_ANVIL].IsAvailable())
-			SpawnQuestItem(IDI_ANVIL, SetPiece.position.megaToWorld() + Displacement { 11, 11 }, 0, 1);
+			SpawnQuestItem(IDI_ANVIL, SetPiece.position.megaToWorld() + Displacement { 11, 11 }, 0, 1, false);
 		if (sgGameInitInfo.bCowQuest != 0 && currlevel == 20)
-			SpawnQuestItem(IDI_BROWNSUIT, { 25, 25 }, 3, 1);
+			SpawnQuestItem(IDI_BROWNSUIT, { 25, 25 }, 3, 1, false);
 		if (sgGameInitInfo.bCowQuest != 0 && currlevel == 19)
-			SpawnQuestItem(IDI_GREYSUIT, { 25, 25 }, 3, 1);
+			SpawnQuestItem(IDI_GREYSUIT, { 25, 25 }, 3, 1, false);
 		if (currlevel > 0 && currlevel < 16)
 			AddInitItems();
 		if (currlevel >= 21 && currlevel <= 23)
@@ -2504,15 +2440,9 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	if (player._pClass == HeroClass::Rogue) {
 		player._pDamageMod = player._pLevel * (player._pStrength + player._pDexterity) / 200;
 	} else if (player._pClass == HeroClass::Monk) {
-		if (player.InvBody[INVLOC_HAND_LEFT]._itype != ItemType::Staff) {
-			if (player.InvBody[INVLOC_HAND_RIGHT]._itype != ItemType::Staff && (!player.InvBody[INVLOC_HAND_LEFT].isEmpty() || !player.InvBody[INVLOC_HAND_RIGHT].isEmpty())) {
-				player._pDamageMod = player._pLevel * (player._pStrength + player._pDexterity) / 300;
-			} else {
-				player._pDamageMod = player._pLevel * (player._pStrength + player._pDexterity) / 150;
-			}
-		} else {
-			player._pDamageMod = player._pLevel * (player._pStrength + player._pDexterity) / 150;
-		}
+		player._pDamageMod = player._pLevel * (player._pStrength + player._pDexterity) / 150;
+		if ((!player.InvBody[INVLOC_HAND_LEFT].isEmpty() && player.InvBody[INVLOC_HAND_LEFT]._itype != ItemType::Staff) || (!player.InvBody[INVLOC_HAND_RIGHT].isEmpty() && player.InvBody[INVLOC_HAND_RIGHT]._itype != ItemType::Staff))
+			player._pDamageMod /= 2; // Monks get half the normal damage bonus if they're holding a non-staff weapon
 	} else if (player._pClass == HeroClass::Bard) {
 		if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Sword || player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Sword)
 			player._pDamageMod = player._pLevel * (player._pStrength + player._pDexterity) / 150;
@@ -2703,7 +2633,10 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 		int8_t ticksPerFrame;
 		player.getAnimationFramesAndTicksPerFrame(graphic, numberOfFrames, ticksPerFrame);
 		LoadPlrGFX(player, graphic);
-		player.AnimInfo.changeAnimationData(player.AnimationData[static_cast<size_t>(graphic)].spritesForDirection(player._pdir), numberOfFrames, ticksPerFrame);
+		OptionalClxSpriteList sprites;
+		if (!HeadlessMode)
+			sprites = player.AnimationData[static_cast<size_t>(graphic)].spritesForDirection(player._pdir);
+		player.AnimInfo.changeAnimationData(sprites, numberOfFrames, ticksPerFrame);
 	} else {
 		player._pgfxnum = gfxNum;
 	}
@@ -3027,23 +2960,10 @@ void SetupItem(Item &item)
 	item._iIdentified = false;
 }
 
-int RndItem(const Monster &monster)
-{
-	const uint16_t monsterTreasureFlags = monster.data().treasure;
-
-	if ((monsterTreasureFlags & T_UNIQ) != 0)
-		return -((monsterTreasureFlags & T_MASK) + 1);
-
-	if ((monsterTreasureFlags & T_NODROP) != 0)
-		return 0;
-
-	return RndItemForMonsterLevel(monster.level(sgGameInitInfo.nDifficulty)) + 1;
-}
-
-void SpawnUnique(_unique_items uid, Point position)
+Item *SpawnUnique(_unique_items uid, Point position, bool sendmsg /*= true*/)
 {
 	if (ActiveItemCount >= MAXITEMS)
-		return;
+		return nullptr;
 
 	int ii = AllocateItem();
 	auto &item = Items[ii];
@@ -3057,6 +2977,11 @@ void SpawnUnique(_unique_items uid, Point position)
 	GetItemAttrs(item, static_cast<_item_indexes>(idx), curlv);
 	GetUniqueItem(*MyPlayer, item, uid);
 	SetupItem(item);
+
+	if (sendmsg)
+		NetSendCmdPItem(false, CMD_SPAWNITEM, item.position, item);
+
+	return &item;
 }
 
 void SpawnItem(Monster &monster, Point position, bool sendmsg)
@@ -3064,28 +2989,30 @@ void SpawnItem(Monster &monster, Point position, bool sendmsg)
 	_item_indexes idx;
 	bool onlygood = true;
 
-	if (monster.isUnique() || ((monster.data().treasure & T_UNIQ) != 0 && gbIsMultiplayer)) {
+	bool dropsSpecialTreasure = (monster.data().treasure & T_UNIQ) != 0;
+
+	if (dropsSpecialTreasure && !gbIsMultiplayer) {
+		Item *uniqueItem = SpawnUnique(static_cast<_unique_items>(monster.data().treasure & T_MASK), position, false);
+		if (uniqueItem != nullptr && sendmsg)
+			NetSendCmdPItem(false, CMD_DROPITEM, uniqueItem->position, *uniqueItem);
+		return;
+	} else if (monster.isUnique() || dropsSpecialTreasure) {
+		// Unqiue monster is killed => use better item base (for example no gold)
 		idx = RndUItem(&monster);
-		if (idx < IDI_GOLD) {
-			SpawnUnique(static_cast<_unique_items>(-(idx + 1)), position);
-			return;
-		}
-		onlygood = true;
-	} else if (Quests[Q_MUSHROOM]._qactive != QUEST_ACTIVE || Quests[Q_MUSHROOM]._qvar1 != QS_MUSHGIVEN) {
-		int optionalIndexOrUniqueIndex = RndItem(monster);
-		if (optionalIndexOrUniqueIndex == 0) // No drop
-			return;
-		if (optionalIndexOrUniqueIndex > 0) { // Item index
-			idx = static_cast<_item_indexes>(optionalIndexOrUniqueIndex - 1);
-			onlygood = false;
-		} else { // Unique item index
-			SpawnUnique(static_cast<_unique_items>(-(optionalIndexOrUniqueIndex + 1)), position);
-			return;
-		}
-	} else {
+	} else if (Quests[Q_MUSHROOM]._qactive == QUEST_ACTIVE && Quests[Q_MUSHROOM]._qvar1 == QS_MUSHGIVEN) {
+		// Normal monster is killed => need to drop brain to progress the quest
 		idx = IDI_BRAIN;
 		Quests[Q_MUSHROOM]._qvar1 = QS_BRAINSPAWNED;
+	} else {
+		// Normal monster
+		if ((monster.data().treasure & T_NODROP) != 0)
+			return;
+		onlygood = false;
+		idx = RndItemForMonsterLevel(monster.level(sgGameInitInfo.nDifficulty));
 	}
+
+	if (idx == IDI_NONE)
+		return;
 
 	if (ActiveItemCount >= MAXITEMS)
 		return;
@@ -3261,7 +3188,7 @@ void CornerstoneLoad(Point position)
 	CornerStone.item = item;
 }
 
-void SpawnQuestItem(_item_indexes itemid, Point position, int randarea, int selflag)
+void SpawnQuestItem(_item_indexes itemid, Point position, int randarea, int selflag, bool sendmsg)
 {
 	if (randarea > 0) {
 		int tries = 0;
@@ -3305,6 +3232,13 @@ void SpawnQuestItem(_item_indexes itemid, Point position, int randarea, int self
 		item._iSelFlag = selflag;
 		item.AnimInfo.currentFrame = item.AnimInfo.numberOfFrames - 1;
 		item._iAnimFlag = false;
+	}
+
+	if (sendmsg)
+		NetSendCmdPItem(true, CMD_SPAWNITEM, item.position, item);
+	else {
+		DeltaAddItem(ii);
+		item._iCreateInfo |= CF_PREGEN;
 	}
 }
 
@@ -4094,6 +4028,7 @@ void SpawnWitch(int lvl)
 				if (lvl >= AllItemsList[bookType].iMinMLvl) {
 					item._iSeed = AdvanceRndSeed();
 					SetRndSeed(item._iSeed);
+					AdvanceRndSeed();
 					GetItemAttrs(item, bookType, lvl);
 					item._iCreateInfo = lvl | CF_WITCH;
 					item._iIdentified = true;
@@ -4357,7 +4292,7 @@ bool GetItemRecord(int nSeed, uint16_t wCI, int nIndex)
 
 	for (int i = 0; i < gnNumGetRecords; i++) {
 		if (ticks - itemrecord[i].dwTimestamp > 6000) {
-			// BUGFIX: loot actions for multiple quest items with same seed (e.g. blood stone) performed within less then 6 seconds will be ignored.
+			// BUGFIX: loot actions for multiple quest items with same seed (e.g. blood stone) performed within less than 6 seconds will be ignored.
 			NextItemRecord(i);
 			i--;
 		} else if (nSeed == itemrecord[i].nSeed && wCI == itemrecord[i].wCI && nIndex == itemrecord[i].nIndex) {

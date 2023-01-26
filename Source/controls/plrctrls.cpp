@@ -30,6 +30,7 @@
 #include "levels/trigs.h"
 #include "minitext.h"
 #include "missiles.h"
+#include "panels/spell_icons.hpp"
 #include "panels/spell_list.hpp"
 #include "panels/ui_panels.hpp"
 #include "qol/chatlog.h"
@@ -39,8 +40,6 @@
 #include "track.h"
 #include "utils/log.hpp"
 #include "utils/str_cat.hpp"
-
-#define SPLICONLENGTH 56
 
 namespace devilution {
 
@@ -434,7 +433,7 @@ void FindTrigger()
 		return; // Prefer showing items/objects over triggers (use of cursm* conflicts)
 
 	for (auto &missile : Missiles) {
-		if (missile._mitype == MIS_TOWN || missile._mitype == MIS_RPORTAL) {
+		if (missile._mitype == MissileID::TownPortal || missile._mitype == MissileID::RedPortal) {
 			const int newDistance = GetDistance(missile.position.tile, 2);
 			if (newDistance == 0)
 				continue;
@@ -1315,7 +1314,7 @@ void WalkInDir(size_t playerId, AxisDirection dir)
 	const Direction pdir = FaceDir[static_cast<std::size_t>(dir.x)][static_cast<std::size_t>(dir.y)];
 	const auto delta = player.position.future + pdir;
 
-	if (!player.IsWalking() && player.CanChangeAction())
+	if (!player.isWalking() && player.CanChangeAction())
 		player._pdir = pdir;
 
 #ifndef USE_SDL1

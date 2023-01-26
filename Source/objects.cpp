@@ -584,7 +584,7 @@ void AddObjTraps()
 			if (triggerObject == nullptr || GenerateRnd(100) >= rndv)
 				continue;
 
-			if (!AllObjects[triggerObject->_otype].oTrapFlag)
+			if (!AllObjects[triggerObject->_otype].isTrap())
 				continue;
 
 			Object *trapObject = nullptr;
@@ -789,25 +789,25 @@ void SetupObject(Object &object, Point position, _object_id ot)
 			object._oAnimData = std::nullopt;
 		}
 	}
-	object._oAnimFlag = objectData.oAnimFlag;
+	object._oAnimFlag = objectData.isAnimated();
 	if (object._oAnimFlag) {
-		object._oAnimDelay = objectData.oAnimDelay;
+		object._oAnimDelay = objectData.animDelay;
 		object._oAnimCnt = GenerateRnd(object._oAnimDelay);
-		object._oAnimLen = objectData.oAnimLen;
+		object._oAnimLen = objectData.animLen;
 		object._oAnimFrame = GenerateRnd(object._oAnimLen - 1) + 1;
 	} else {
 		object._oAnimDelay = 1000;
 		object._oAnimCnt = 0;
-		object._oAnimLen = objectData.oAnimLen;
-		object._oAnimFrame = objectData.oAnimDelay;
+		object._oAnimLen = objectData.animLen;
+		object._oAnimFrame = objectData.animDelay;
 	}
-	object._oAnimWidth = objectData.oAnimWidth;
-	object._oSolidFlag = objectData.oSolidFlag;
-	object._oMissFlag = objectData.oMissFlag;
-	object._oLight = objectData.oLightFlag;
+	object._oAnimWidth = objectData.animWidth;
+	object._oSolidFlag = objectData.isSolid() ? 1 : 0;
+	object._oMissFlag = objectData.missilesPassThrough() ? 1 : 0;
+	object._oLight = objectData.isLight() ? 1 : 0;
 	object._oDelFlag = false;
-	object._oBreak = objectData.oBreak;
-	object._oSelFlag = objectData.oSelFlag;
+	object._oBreak = objectData.isBreakable() ? 1 : 0;
+	object._oSelFlag = objectData.selFlag;
 	object._oPreFlag = false;
 	object._oTrapFlag = false;
 	object._oDoorFlag = false;
@@ -1324,7 +1324,7 @@ void AddFlameTrap(Object &flameTrap)
 void AddFlameLever(Object &flameLever)
 {
 	flameLever._oVar1 = trapid;
-	flameLever._oVar2 = MIS_FLAMEC;
+	flameLever._oVar2 = static_cast<int8_t>(MissileID::InfernoControl);
 }
 
 void AddTrap(Object &trap)
@@ -1337,11 +1337,11 @@ void AddTrap(Object &trap)
 
 	int missileType = GenerateRnd(effectiveLevel / 3 + 1);
 	if (missileType == 0)
-		trap._oVar3 = MIS_ARROW;
+		trap._oVar3 = static_cast<int8_t>(MissileID::Arrow);
 	if (missileType == 1)
-		trap._oVar3 = MIS_FIREBOLT;
+		trap._oVar3 = static_cast<int8_t>(MissileID::Firebolt);
 	if (missileType == 2)
-		trap._oVar3 = MIS_LIGHTCTRL;
+		trap._oVar3 = static_cast<int8_t>(MissileID::LightningControl);
 	trap._oVar4 = 0;
 }
 
@@ -1592,7 +1592,7 @@ void UpdateCircle(Object &circle)
 			if (Quests[Q_BETRAYER]._qactive == QUEST_ACTIVE)
 				Quests[Q_BETRAYER]._qvar1 = 4;
 		}
-		AddMissile(myPlayer.position.tile, { 35, 46 }, Direction::South, MIS_RNDTELEPORT, TARGET_BOTH, MyPlayerId, 0, 0);
+		AddMissile(myPlayer.position.tile, { 35, 46 }, Direction::South, MissileID::Phasing, TARGET_BOTH, MyPlayerId, 0, 0);
 		LastMouseButtonAction = MouseActionType::None;
 		sgbMouseDown = CLICK_NONE;
 		ClrPlrPath(myPlayer);
@@ -1693,10 +1693,10 @@ void UpdateFlameTrap(Object &trap)
 		int x = trap.position.x;
 		int y = trap.position.y;
 		if (dMonster[x][y] > 0)
-			MonsterTrapHit(dMonster[x][y] - 1, mindam / 2, maxdam / 2, 0, MIS_FIREWALLC, false);
+			MonsterTrapHit(dMonster[x][y] - 1, mindam / 2, maxdam / 2, 0, MissileID::FireWallControl, false);
 		if (dPlayer[x][y] > 0) {
 			bool unused;
-			PlayerMHit(dPlayer[x][y] - 1, nullptr, 0, mindam, maxdam, MIS_FIREWALLC, false, 0, &unused);
+			PlayerMHit(dPlayer[x][y] - 1, nullptr, 0, mindam, maxdam, MissileID::FireWallControl, false, 0, &unused);
 		}
 
 		if (trap._oAnimFrame == trap._oAnimLen)
@@ -1722,7 +1722,7 @@ void UpdateBurningCrossDamage(Object &cross)
 	if (myPlayer.position.tile != cross.position + Displacement { 0, -1 })
 		return;
 
-	ApplyPlrDamage(myPlayer, 0, 0, damage[leveltype - 1]);
+	ApplyPlrDamage(DamageType::Fire, myPlayer, 0, 0, damage[leveltype - 1]);
 	if (myPlayer._pHitPoints >> 6 > 0) {
 		myPlayer.Say(HeroSpeech::Argh);
 	}
@@ -1880,6 +1880,9 @@ void UpdateLeverState(Object &object)
 		return;
 	}
 
+	if (setlevel && setlvlnum == SL_VILEBETRAYER)
+		ObjectAtPosition({ 35, 36 })._oVar5++;
+
 	ObjChangeMap(object._oVar1, object._oVar2, object._oVar3, object._oVar4);
 }
 
@@ -1928,7 +1931,7 @@ void OperateBook(Player &player, Object &book)
 			if (doAddMissile) {
 				questObject._oVar6 = 4;
 				ObjectAtPosition({ 35, 36 })._oVar5++;
-				AddMissile(player.position.tile, target, Direction::South, MIS_RNDTELEPORT, TARGET_BOTH, player.getId(), 0, 0);
+				AddMissile(player.position.tile, target, Direction::South, MissileID::Phasing, TARGET_BOTH, player.getId(), 0, 0);
 				missileAdded = true;
 			}
 		}
@@ -1939,6 +1942,8 @@ void OperateBook(Player &player, Object &book)
 
 	book._oSelFlag = 0;
 	book._oAnimFrame++;
+
+	NetSendCmdLoc(MyPlayerId, false, CMD_OPERATEOBJ, book.position);
 
 	if (!setlevel) {
 		return;
@@ -1955,7 +1960,7 @@ void OperateBook(Player &player, Object &book)
 		    player.position.tile,
 		    book.position + Displacement { -2, -4 },
 		    player._pdir,
-		    MIS_GUARDIAN,
+		    MissileID::Guardian,
 		    TARGET_MONSTERS,
 		    player.getId(),
 		    0,
@@ -1982,12 +1987,15 @@ void OperateBookLever(Object &questBook, bool sendmsg)
 			Quests[Q_BLIND]._qactive = QUEST_ACTIVE;
 			Quests[Q_BLIND]._qlog = true;
 			Quests[Q_BLIND]._qvar1 = 1;
+			NetSendCmdQuest(true, Quests[Q_BLIND]);
 		}
 		if (questBook._otype == OBJ_BLOODBOOK && Quests[Q_BLOOD]._qvar1 == 0) {
 			Quests[Q_BLOOD]._qactive = QUEST_ACTIVE;
 			Quests[Q_BLOOD]._qlog = true;
 			Quests[Q_BLOOD]._qvar1 = 1;
-			SpawnQuestItem(IDI_BLDSTONE, SetPiece.position.megaToWorld() + Displacement { 9, 17 }, 0, 1);
+			NetSendCmdQuest(true, Quests[Q_BLOOD]);
+			if (sendmsg)
+				SpawnQuestItem(IDI_BLDSTONE, SetPiece.position.megaToWorld() + Displacement { 9, 17 }, 0, 1, true);
 		}
 		if (questBook._otype == OBJ_STEELTOME && Quests[Q_WARLORD]._qvar1 == 0) {
 			Quests[Q_WARLORD]._qactive = QUEST_ACTIVE;
@@ -1998,7 +2006,8 @@ void OperateBookLever(Object &questBook, bool sendmsg)
 			if (questBook._otype != OBJ_BLOODBOOK)
 				ObjChangeMap(questBook._oVar1, questBook._oVar2, questBook._oVar3, questBook._oVar4);
 			if (questBook._otype == OBJ_BLINDBOOK) {
-				SpawnUnique(UITEM_OPTAMULET, SetPiece.position.megaToWorld() + Displacement { 5, 5 });
+				if (sendmsg)
+					SpawnUnique(UITEM_OPTAMULET, SetPiece.position.megaToWorld() + Displacement { 5, 5 });
 				auto tren = TransVal;
 				TransVal = 9;
 				DRLG_MRectTrans(WorldTilePosition(questBook._oVar1, questBook._oVar2), WorldTilePosition(questBook._oVar3, questBook._oVar4));
@@ -2079,28 +2088,28 @@ void OperateChest(const Player &player, Object &chest, bool sendLootMsg)
 	}
 	if (chest.IsTrappedChest()) {
 		Direction mdir = GetDirection(chest.position, player.position.tile);
-		missile_id mtype;
+		MissileID mtype;
 		switch (chest._oVar4) {
 		case 0:
-			mtype = MIS_ARROW;
+			mtype = MissileID::Arrow;
 			break;
 		case 1:
-			mtype = MIS_FARROW;
+			mtype = MissileID::FireArrow;
 			break;
 		case 2:
-			mtype = MIS_NOVA;
+			mtype = MissileID::Nova;
 			break;
 		case 3:
-			mtype = MIS_FIRERING;
+			mtype = MissileID::RingOfFire;
 			break;
 		case 4:
-			mtype = MIS_STEALPOTS;
+			mtype = MissileID::StealPotions;
 			break;
 		case 5:
-			mtype = MIS_MANATRAP;
+			mtype = MissileID::StealMana;
 			break;
 		default:
-			mtype = MIS_ARROW;
+			mtype = MissileID::Arrow;
 		}
 		AddMissile(chest.position, player.position.tile, mdir, mtype, TARGET_PLAYERS, -1, 0, 0);
 		chest._oTrapFlag = false;
@@ -2131,11 +2140,11 @@ void OperateMushroomPatch(const Player &player, Object &mushroomPatch)
 
 	PlaySfxLoc(IS_CHEST, mushroomPatch.position);
 	Point pos = GetSuperItemLoc(mushroomPatch.position);
-	SpawnQuestItem(IDI_MUSHROOM, pos, 0, 0);
+	SpawnQuestItem(IDI_MUSHROOM, pos, 0, 0, true);
 	Quests[Q_MUSHROOM]._qvar1 = QS_MUSHSPAWNED;
 }
 
-void OperateInnSignChest(const Player &player, Object &questContainer)
+void OperateInnSignChest(const Player &player, Object &questContainer, bool sendmsg)
 {
 	if (ActiveItemCount >= MAXITEMS) {
 		return;
@@ -2156,8 +2165,12 @@ void OperateInnSignChest(const Player &player, Object &questContainer)
 	questContainer._oAnimFrame += 2;
 
 	PlaySfxLoc(IS_CHEST, questContainer.position);
-	Point pos = GetSuperItemLoc(questContainer.position);
-	SpawnQuestItem(IDI_BANNER, pos, 0, 0);
+
+	if (sendmsg) {
+		Point pos = GetSuperItemLoc(questContainer.position);
+		SpawnQuestItem(IDI_BANNER, pos, 0, 0, true);
+		NetSendCmdLoc(MyPlayerId, true, CMD_OPERATEOBJ, questContainer.position);
+	}
 }
 
 void OperateSlainHero(const Player &player, Object &corpse)
@@ -2232,7 +2245,7 @@ void OperateSarcophagus(Object &sarcophagus, bool sendMsg, bool sendLootMsg)
 		NetSendCmdLoc(MyPlayerId, false, CMD_OPERATEOBJ, sarcophagus.position);
 }
 
-void OperatePedestal(Player &player, Object &pedestal)
+void OperatePedestal(Player &player, Object &pedestal, bool sendmsg)
 {
 	if (ActiveItemCount >= MAXITEMS) {
 		return;
@@ -2247,19 +2260,31 @@ void OperatePedestal(Player &player, Object &pedestal)
 	if (pedestal._oVar6 == 1) {
 		PlaySfxLoc(LS_PUDDLE, pedestal.position);
 		ObjChangeMap(SetPiece.position.x, SetPiece.position.y + 3, SetPiece.position.x + 2, SetPiece.position.y + 7);
-		SpawnQuestItem(IDI_BLDSTONE, SetPiece.position.megaToWorld() + Displacement { 3, 10 }, 0, 1);
+		if (sendmsg)
+			SpawnQuestItem(IDI_BLDSTONE, SetPiece.position.megaToWorld() + Displacement { 3, 10 }, 0, 1, true);
 	}
 	if (pedestal._oVar6 == 2) {
 		PlaySfxLoc(LS_PUDDLE, pedestal.position);
 		ObjChangeMap(SetPiece.position.x + 6, SetPiece.position.y + 3, SetPiece.position.x + SetPiece.size.width, SetPiece.position.y + 7);
-		SpawnQuestItem(IDI_BLDSTONE, SetPiece.position.megaToWorld() + Displacement { 15, 10 }, 0, 1);
+		if (sendmsg)
+			SpawnQuestItem(IDI_BLDSTONE, SetPiece.position.megaToWorld() + Displacement { 15, 10 }, 0, 1, true);
 	}
 	if (pedestal._oVar6 == 3) {
 		PlaySfxLoc(LS_BLODSTAR, pedestal.position);
 		ObjChangeMap(pedestal._oVar1, pedestal._oVar2, pedestal._oVar3, pedestal._oVar4);
 		LoadMapObjects("levels\\l2data\\blood2.dun", SetPiece.position.megaToWorld());
-		SpawnUnique(UITEM_ARMOFVAL, SetPiece.position.megaToWorld() + Displacement { 9, 3 });
+		if (sendmsg)
+			SpawnUnique(UITEM_ARMOFVAL, SetPiece.position.megaToWorld() + Displacement { 9, 3 });
 		pedestal._oSelFlag = 0;
+	}
+
+	if (sendmsg) {
+		NetSendCmdLoc(MyPlayerId, false, CMD_OPERATEOBJ, pedestal.position);
+		if (gbIsMultiplayer) {
+			// Store added stones to pedestal in qvar2, cause we get only one CMD_OPERATEOBJ from DeltaLoadLevel even if we add multiple stones
+			Quests[Q_BLOOD]._qvar2++;
+			NetSendCmdQuest(true, Quests[Q_BLOOD]);
+		}
 	}
 }
 
@@ -2411,7 +2436,7 @@ void OperateShrineMagical(const Player &player)
 	    player.position.tile,
 	    player.position.tile,
 	    player._pdir,
-	    MIS_MANASHIELD,
+	    MissileID::ManaShield,
 	    TARGET_MONSTERS,
 	    player.getId(),
 	    0,
@@ -2542,7 +2567,7 @@ void OperateShrineCryptic(Player &player)
 	    player.position.tile,
 	    player.position.tile,
 	    player._pdir,
-	    MIS_NOVA,
+	    MissileID::Nova,
 	    TARGET_MONSTERS,
 	    player.getId(),
 	    0,
@@ -2636,7 +2661,7 @@ void OperateShrineDivine(Player &player, Point spawnPosition)
 
 void OperateShrineHoly(const Player &player)
 {
-	AddMissile(player.position.tile, { 0, 0 }, Direction::South, MIS_RNDTELEPORT, TARGET_MONSTERS, player.getId(), 0, 2 * leveltype);
+	AddMissile(player.position.tile, { 0, 0 }, Direction::South, MissileID::Phasing, TARGET_MONSTERS, player.getId(), 0, 2 * leveltype);
 
 	if (&player != MyPlayer)
 		return;
@@ -2820,7 +2845,7 @@ void OperateShrineOily(Player &player, Point spawnPosition)
 	    spawnPosition,
 	    player.position.tile,
 	    player._pdir,
-	    MIS_FIREWALL,
+	    MissileID::FireWall,
 	    TARGET_PLAYERS,
 	    -1,
 	    2 * currlevel + 2,
@@ -2879,7 +2904,7 @@ void OperateShrineSparkling(Player &player, Point spawnPosition)
 	    spawnPosition,
 	    player.position.tile,
 	    player._pdir,
-	    MIS_FLASH,
+	    MissileID::FlashBottom,
 	    TARGET_PLAYERS,
 	    -1,
 	    3 * currlevel + 2,
@@ -2904,7 +2929,7 @@ void OperateShrineTown(const Player &player, Point spawnPosition)
 	    spawnPosition,
 	    player.position.tile,
 	    player._pdir,
-	    MIS_TOWN,
+	    MissileID::TownPortal,
 	    TARGET_MONSTERS,
 	    player.getId(),
 	    0,
@@ -3261,7 +3286,7 @@ bool OperateFountains(Player &player, Object &fountain)
 		    player.position.tile,
 		    player.position.tile,
 		    player._pdir,
-		    MIS_INFRA,
+		    MissileID::Infravision,
 		    TARGET_MONSTERS,
 		    player.getId(),
 		    0,
@@ -3399,7 +3424,8 @@ void OperateLazStand(Object &stand)
 	stand._oAnimFrame++;
 	stand._oSelFlag = 0;
 	Point pos = GetSuperItemLoc(stand.position);
-	SpawnQuestItem(IDI_LAZSTAFF, pos, 0, 0);
+	SpawnQuestItem(IDI_LAZSTAFF, pos, 0, 0, true);
+	NetSendCmdLoc(MyPlayerId, false, CMD_OPERATEOBJ, stand.position);
 }
 
 /**
@@ -3426,7 +3452,7 @@ bool AreAllCruxesOfTypeBroken(int cruxType)
 	return true;
 }
 
-void BreakCrux(Object &crux)
+void BreakCrux(const Player *player, Object &crux)
 {
 	crux._oAnimFlag = true;
 	crux._oAnimFrame = 1;
@@ -3435,6 +3461,9 @@ void BreakCrux(Object &crux)
 	crux._oMissFlag = true;
 	crux._oBreak = -1;
 	crux._oSelFlag = 0;
+
+	if (player == MyPlayer || player == nullptr)
+		NetSendCmdLoc(MyPlayerId, false, CMD_BREAKOBJ, crux.position);
 
 	if (!AreAllCruxesOfTypeBroken(crux._oVar8))
 		return;
@@ -3470,11 +3499,11 @@ void BreakBarrel(const Player &player, Object &barrel, bool forcebreak, bool sen
 		for (int yp = barrel.position.y - 1; yp <= barrel.position.y + 1; yp++) {
 			for (int xp = barrel.position.x - 1; xp <= barrel.position.x + 1; xp++) {
 				if (dMonster[xp][yp] > 0) {
-					MonsterTrapHit(dMonster[xp][yp] - 1, 1, 4, 0, MIS_FIREBOLT, false);
+					MonsterTrapHit(dMonster[xp][yp] - 1, 1, 4, 0, MissileID::Firebolt, false);
 				}
 				if (dPlayer[xp][yp] > 0) {
 					bool unused;
-					PlayerMHit(dPlayer[xp][yp] - 1, nullptr, 0, 8, 16, MIS_FIREBOLT, false, 0, &unused);
+					PlayerMHit(dPlayer[xp][yp] - 1, nullptr, 0, 8, 16, MissileID::Firebolt, false, 0, &unused);
 				}
 				// don't really need to exclude large objects as explosive barrels are single tile objects, but using considerLargeObjects == false as this matches the old logic.
 				Object *adjacentObject = FindObjectAtPosition({ xp, yp }, false);
@@ -3535,18 +3564,28 @@ void SyncQSTLever(const Object &qstLever)
 	}
 }
 
-void SyncPedestal(const Object &pedestal, Point origin, int width)
+void SyncPedestal(const Object &pedestal)
 {
 	if (pedestal._oVar6 == 1)
-		ObjChangeMapResync(origin.x, origin.y + 3, origin.x + 2, origin.y + 7);
+		ObjChangeMapResync(SetPiece.position.x, SetPiece.position.y + 3, SetPiece.position.x + 2, SetPiece.position.y + 7);
 	if (pedestal._oVar6 == 2) {
-		ObjChangeMapResync(origin.x, origin.y + 3, origin.x + 2, origin.y + 7);
-		ObjChangeMapResync(origin.x + 6, origin.y + 3, origin.x + width, origin.y + 7);
+		ObjChangeMapResync(SetPiece.position.x, SetPiece.position.y + 3, SetPiece.position.x + 2, SetPiece.position.y + 7);
+		ObjChangeMapResync(SetPiece.position.x + 6, SetPiece.position.y + 3, SetPiece.position.x + SetPiece.size.width, SetPiece.position.y + 7);
 	}
-	if (pedestal._oVar6 == 3) {
+	if (pedestal._oVar6 >= 3) {
 		ObjChangeMapResync(pedestal._oVar1, pedestal._oVar2, pedestal._oVar3, pedestal._oVar4);
-		LoadMapObjects("levels\\l2data\\blood2.dun", origin.megaToWorld());
+		LoadMapObjects("levels\\l2data\\blood2.dun", SetPiece.position.megaToWorld());
 	}
+}
+
+void UpdatePedestalState(Object &pedestal)
+{
+	int addedStones = Quests[Q_BLOOD]._qvar2;
+	pedestal._oAnimFrame += addedStones;
+	pedestal._oVar6 += addedStones;
+	SyncPedestal(pedestal);
+	if (pedestal._oVar6 >= 3)
+		pedestal._oSelFlag = 0;
 }
 
 void SyncDoor(Object &door)
@@ -3639,7 +3678,7 @@ void LoadLevelObjects(uint16_t filesWidths[65])
 
 	for (const ObjectData objectData : AllObjects) {
 		if (leveltype == objectData.olvltype) {
-			filesWidths[objectData.ofindex] = objectData.oAnimWidth;
+			filesWidths[objectData.ofindex] = objectData.animWidth;
 		}
 	}
 
@@ -3661,28 +3700,28 @@ void InitObjectGFX()
 	uint16_t filesWidths[65] = {};
 
 	if (IsAnyOf(currlevel, 4, 8, 12)) {
-		filesWidths[OFILE_BKSLBRNT] = AllObjects[OBJ_STORYBOOK].oAnimWidth;
-		filesWidths[OFILE_CANDLE2] = AllObjects[OBJ_STORYCANDLE].oAnimWidth;
+		filesWidths[OFILE_BKSLBRNT] = AllObjects[OBJ_STORYBOOK].animWidth;
+		filesWidths[OFILE_CANDLE2] = AllObjects[OBJ_STORYCANDLE].animWidth;
 	}
 
 	for (const ObjectData objectData : AllObjects) {
-		if (objectData.ominlvl != 0 && currlevel >= objectData.ominlvl && currlevel <= objectData.omaxlvl) {
+		if (objectData.minlvl != 0 && currlevel >= objectData.minlvl && currlevel <= objectData.maxlvl) {
 			if (IsAnyOf(objectData.ofindex, OFILE_TRAPHOLE, OFILE_TRAPHOLE) && leveltype == DTYPE_HELL) {
 				continue;
 			}
 
-			filesWidths[objectData.ofindex] = objectData.oAnimWidth;
+			filesWidths[objectData.ofindex] = objectData.animWidth;
 		}
 		if (objectData.otheme != THEME_NONE) {
 			for (int j = 0; j < numthemes; j++) {
 				if (themes[j].ttype == objectData.otheme) {
-					filesWidths[objectData.ofindex] = objectData.oAnimWidth;
+					filesWidths[objectData.ofindex] = objectData.animWidth;
 				}
 			}
 		}
 
 		if (objectData.oquest != Q_INVALID && Quests[objectData.oquest].IsAvailable()) {
-			filesWidths[objectData.ofindex] = objectData.oAnimWidth;
+			filesWidths[objectData.ofindex] = objectData.animWidth;
 		}
 	}
 
@@ -3891,7 +3930,7 @@ void InitObjects()
 				AddBookLever(OBJ_STEELTOME, SetPiece, spId);
 				LoadMapObjects("levels\\l4data\\warlord.dun", SetPiece.position.megaToWorld());
 			}
-			if (Quests[Q_BETRAYER].IsAvailable() && !gbIsMultiplayer)
+			if (Quests[Q_BETRAYER].IsAvailable() && !UseMultiplayerQuests())
 				AddLazStand();
 			InitRndBarrels();
 			AddL4Goodies();
@@ -3938,7 +3977,7 @@ void SetMapObjects(const uint16_t *dunData, int startx, int starty)
 			auto objectId = static_cast<uint8_t>(SDL_SwapLE16(objectLayer[j * width + i]));
 			if (objectId != 0) {
 				const ObjectData &objectData = AllObjects[ObjTypeConv[objectId]];
-				filesWidths[objectData.ofindex] = objectData.oAnimWidth;
+				filesWidths[objectData.ofindex] = objectData.animWidth;
 			}
 		}
 	}
@@ -4156,7 +4195,7 @@ void OperateTrap(Object &trap)
 	}
 
 	Direction dir = GetDirection(trap.position, target);
-	AddMissile(trap.position, target, dir, static_cast<missile_id>(trap._oVar3), TARGET_PLAYERS, -1, 0, 0);
+	AddMissile(trap.position, target, dir, static_cast<MissileID>(trap._oVar3), TARGET_PLAYERS, -1, 0, 0);
 	PlaySfxLoc(IS_TRAP, triggerPosition);
 }
 
@@ -4412,7 +4451,7 @@ void OperateObject(Player &player, Object &object)
 			OperateStoryBook(object);
 		break;
 	case OBJ_PEDESTAL:
-		OperatePedestal(player, object);
+		OperatePedestal(player, object, sendmsg);
 		break;
 	case OBJ_WARWEAP:
 	case OBJ_WEAPONRACK:
@@ -4429,7 +4468,7 @@ void OperateObject(Player &player, Object &object)
 		OperateSlainHero(player, object);
 		break;
 	case OBJ_SIGNCHEST:
-		OperateInnSignChest(player, object);
+		OperateInnSignChest(player, object, sendmsg);
 		break;
 	default:
 		break;
@@ -4452,6 +4491,7 @@ void DeltaSyncOpObject(Object &object)
 	case OBJ_LEVER:
 	case OBJ_L5LEVER:
 	case OBJ_SWITCHSKL:
+	case OBJ_BOOK2L:
 		UpdateLeverState(object);
 		break;
 	case OBJ_CHEST1:
@@ -4474,7 +4514,8 @@ void DeltaSyncOpObject(Object &object)
 	case OBJ_BLINDBOOK:
 	case OBJ_BLOODBOOK:
 	case OBJ_STEELTOME:
-		UpdateState(object, object._oVar6);
+		object._oAnimFrame = object._oVar6;
+		SyncQSTLever(object);
 		break;
 	case OBJ_BOOKCASEL:
 	case OBJ_BOOKCASER:
@@ -4490,6 +4531,7 @@ void DeltaSyncOpObject(Object &object)
 	case OBJ_WARARMOR:
 	case OBJ_WARWEAP:
 	case OBJ_WEAPONRACK:
+	case OBJ_LAZSTAND:
 		UpdateState(object, object._oAnimFrame + 1);
 		break;
 	case OBJ_CAULDRON:
@@ -4501,9 +4543,12 @@ void DeltaSyncOpObject(Object &object)
 		}
 		break;
 	case OBJ_SIGNCHEST:
-		if (Quests[Q_LTBANNER]._qvar1 == 2) {
+		if (Quests[Q_LTBANNER]._qvar1 >= 2) {
 			UpdateState(object, object._oAnimFrame + 2);
 		}
+		break;
+	case OBJ_PEDESTAL:
+		UpdatePedestalState(object);
 		break;
 	default:
 		break;
@@ -4588,7 +4633,7 @@ void SyncOpObject(Player &player, int cmd, Object &object)
 			OperateStoryBook(object);
 		break;
 	case OBJ_PEDESTAL:
-		OperatePedestal(player, object);
+		OperatePedestal(player, object, sendmsg);
 		break;
 	case OBJ_WARWEAP:
 	case OBJ_WEAPONRACK:
@@ -4601,39 +4646,44 @@ void SyncOpObject(Player &player, int cmd, Object &object)
 		OperateSlainHero(player, object);
 		break;
 	case OBJ_SIGNCHEST:
-		OperateInnSignChest(player, object);
+		OperateInnSignChest(player, object, sendmsg);
 		break;
 	default:
 		break;
 	}
 }
 
-void BreakObjectMissile(Object &object)
+void BreakObjectMissile(const Player *player, Object &object)
 {
 	if (object.IsCrux())
-		BreakCrux(object);
+		BreakCrux(player, object);
 }
 void BreakObject(const Player &player, Object &object)
 {
 	if (object.IsBarrel()) {
 		BreakBarrel(player, object, false, true);
 	} else if (object.IsCrux()) {
-		BreakCrux(object);
+		BreakCrux(&player, object);
 	}
 }
 
 void DeltaSyncBreakObj(Object &object)
 {
-	if (!object.IsBarrel() || object._oSelFlag == 0)
+	if (!object.IsBreakable() || object._oSelFlag == 0)
 		return;
 
-	object._oSolidFlag = false;
 	object._oMissFlag = true;
 	object._oBreak = -1;
 	object._oSelFlag = 0;
 	object._oPreFlag = true;
 	object._oAnimFlag = false;
 	object._oAnimFrame = object._oAnimLen;
+
+	if (object.IsBarrel()) {
+		object._oSolidFlag = false;
+	} else if (object.IsCrux() && AreAllCruxesOfTypeBroken(object._oVar8)) {
+		ObjChangeMap(object._oVar1, object._oVar2, object._oVar3, object._oVar4);
+	}
 }
 
 void SyncBreakObj(const Player &player, Object &object)
@@ -4691,7 +4741,7 @@ void SyncObjectAnim(Object &object)
 		SyncQSTLever(object);
 		break;
 	case OBJ_PEDESTAL:
-		SyncPedestal(object, SetPiece.position, SetPiece.size.width);
+		SyncPedestal(object);
 		break;
 	default:
 		break;

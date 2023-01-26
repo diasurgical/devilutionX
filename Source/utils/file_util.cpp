@@ -6,6 +6,7 @@
 #include <SDL.h>
 
 #include "utils/log.hpp"
+#include "utils/stdcompat/filesystem.hpp"
 
 #ifdef USE_SDL1
 #include "utils/sdl2_to_1_2_backports.h"
@@ -74,6 +75,9 @@ bool FileExists(const char *path)
 	return true;
 #elif (_POSIX_C_SOURCE >= 200112L || defined(_BSD_SOURCE) || defined(__APPLE__)) && !defined(__ANDROID__)
 	return ::access(path, F_OK) == 0;
+#elif defined(DVL_HAS_FILESYSTEM)
+	std::error_code ec;
+	return std::filesystem::exists(path, ec);
 #else
 	SDL_RWops *file = SDL_RWFromFile(path, "r+b");
 	if (file == nullptr)
@@ -185,6 +189,26 @@ bool ResizeFile(const char *path, std::uintmax_t size)
 #endif
 }
 
+void RenameFile(const char *from, const char *to)
+{
+#if defined(NXDK)
+	::MoveFile(from, to);
+#elif defined(_WIN64) || defined(_WIN32)
+	const auto fromUtf16 = ToWideChar(from);
+	const auto toUtf16 = ToWideChar(to);
+	if (fromUtf16 == nullptr || toUtf16 == nullptr) {
+		LogError("UTF-8 -> UTF-16 conversion error code {}", ::GetLastError());
+		return;
+	}
+	::MoveFileW(&fromUtf16[0], &toUtf16[0]);
+#elif defined(DVL_HAS_FILESYSTEM)
+	std::error_code ec;
+	return std::filesystem::rename(from, to);
+#else
+	::rename(from, to);
+#endif
+}
+
 void RemoveFile(const char *path)
 {
 #if defined(NXDK)
@@ -204,9 +228,9 @@ void RemoveFile(const char *path)
 		fclose(f);
 		remove(name.c_str());
 		f = nullptr;
-		Log("Removed file: {}", name);
+		LogVerbose("Removed file: {}", name);
 	} else {
-		Log("Failed to remove file: {}", name);
+		LogVerbose("Failed to remove file: {}", name);
 	}
 #endif
 }
@@ -222,6 +246,22 @@ std::optional<std::fstream> CreateFileStream(const char *path, std::ios::openmod
 	return { std::fstream(pathUtf16.get(), mode) };
 #else
 	return { std::fstream(path, mode) };
+#endif
+}
+
+FILE *OpenFile(const char *path, const char *mode)
+{
+#if (defined(_WIN64) || defined(_WIN32)) && !defined(NXDK)
+	std::unique_ptr<wchar_t[]> pathUtf16;
+	std::unique_ptr<wchar_t[]> modeUtf16;
+	if ((pathUtf16 = ToWideChar(path)) == nullptr
+	    || (modeUtf16 = ToWideChar(mode)) == nullptr) {
+		LogError("UTF-8 -> UTF-16 conversion error code {}", ::GetLastError());
+		return {};
+	}
+	return _wfopen(pathUtf16.get(), modeUtf16.get());
+#else
+	return std::fopen(path, mode);
 #endif
 }
 

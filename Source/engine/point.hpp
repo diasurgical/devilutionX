@@ -133,17 +133,16 @@ struct PointOf {
 	template <typename PointCoordT>
 	constexpr int ManhattanDistance(PointOf<PointCoordT> other) const
 	{
-		const Displacement offset = abs(Point(*this) - Point(other));
-
-		return offset.deltaX + offset.deltaY;
+		return abs(static_cast<int>(x) - static_cast<int>(other.x))
+		    + abs(static_cast<int>(y) - static_cast<int>(other.y));
 	}
 
 	template <typename PointCoordT>
 	constexpr int WalkingDistance(PointOf<PointCoordT> other) const
 	{
-		const Displacement offset = abs(Point(*this) - Point(other));
-
-		return std::max<int>(offset.deltaX, offset.deltaY);
+		return std::max<int>(
+		    abs(static_cast<int>(x) - static_cast<int>(other.x)),
+		    abs(static_cast<int>(y) - static_cast<int>(other.y)));
 	}
 
 	/**

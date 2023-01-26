@@ -432,6 +432,7 @@ std::string DebugCmdResetLevel(const string_view parameter)
 	if (level < 0 || level > (gbIsHellfire ? 24 : 16))
 		return StrCat("Level ", level, " is not known. Do you want to write an extension mod?");
 	myPlayer._pLvlVisited[level] = false;
+	DeltaClearLevel(level);
 
 	if (std::getline(paramsStream, singleParameter, ' ')) {
 		uint32_t seed = static_cast<uint32_t>(std::stoul(singleParameter));
@@ -530,6 +531,26 @@ std::string DebugCmdLevelUp(const string_view parameter)
 	for (int i = 0; i < levels; i++)
 		NetSendCmd(true, CMD_CHEAT_EXPERIENCE);
 	return "New experience leads to new insights.";
+}
+
+std::string DebugCmdMaxStats(const string_view parameter)
+{
+	Player &myPlayer = *MyPlayer;
+	ModifyPlrStr(myPlayer, myPlayer.GetMaximumAttributeValue(CharacterAttribute::Strength) - myPlayer._pBaseStr);
+	ModifyPlrMag(myPlayer, myPlayer.GetMaximumAttributeValue(CharacterAttribute::Magic) - myPlayer._pBaseMag);
+	ModifyPlrDex(myPlayer, myPlayer.GetMaximumAttributeValue(CharacterAttribute::Dexterity) - myPlayer._pBaseDex);
+	ModifyPlrVit(myPlayer, myPlayer.GetMaximumAttributeValue(CharacterAttribute::Vitality) - myPlayer._pBaseVit);
+	return "Who needs elixirs anyway?";
+}
+
+std::string DebugCmdMinStats(const string_view parameter)
+{
+	Player &myPlayer = *MyPlayer;
+	ModifyPlrStr(myPlayer, -myPlayer._pBaseStr);
+	ModifyPlrMag(myPlayer, -myPlayer._pBaseMag);
+	ModifyPlrDex(myPlayer, -myPlayer._pBaseDex);
+	ModifyPlrVit(myPlayer, -myPlayer._pBaseVit);
+	return "From hero to zero.";
 }
 
 std::string DebugCmdSetSpellsLevel(const string_view parameter)
@@ -989,6 +1010,8 @@ std::vector<DebugCmdItem> DebugCmdList = {
 	{ "help", "Prints help overview or help for a specific command.", "({command})", &DebugCmdHelp },
 	{ "give gold", "Fills the inventory with gold.", "", &DebugCmdGiveGoldCheat },
 	{ "give xp", "Levels the player up (min 1 level or {levels}).", "({levels})", &DebugCmdLevelUp },
+	{ "maxstats", "Sets all stat values to maximum.", "", &DebugCmdMaxStats },
+	{ "minstats", "Sets all stat values to minimum.", "", &DebugCmdMinStats },
 	{ "setspells", "Set spell level to {level} for all spells.", "{level}", &DebugCmdSetSpellsLevel },
 	{ "take gold", "Removes all gold from inventory.", "", &DebugCmdTakeGoldCheat },
 	{ "give quest", "Enable a given quest.", "({id})", &DebugCmdQuest },

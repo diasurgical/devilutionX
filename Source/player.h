@@ -473,7 +473,7 @@ struct Player {
 	/**
 	 * @brief Is the player currently walking?
 	 */
-	bool IsWalking() const;
+	bool isWalking() const;
 
 	/**
 	 * @brief Returns item location taking into consideration barbarian's ability to hold two-handed maces and clubs in one hand.
@@ -704,7 +704,7 @@ struct Player {
 			return true;
 		if (_pmode == PM_SPELL && AnimInfo.currentFrame >= _pSFNum)
 			return true;
-		if (IsWalking() && AnimInfo.isLastFrame())
+		if (isWalking() && AnimInfo.isLastFrame())
 			return true;
 		return false;
 	}
@@ -791,7 +791,7 @@ void NextPlrLevel(Player &player);
 #endif
 void AddPlrExperience(Player &player, int lvl, int exp);
 void AddPlrMonstExper(int lvl, int exp, char pmask);
-void ApplyPlrDamage(Player &player, int dam, int minHP = 0, int frac = 0, int earflag = 0);
+void ApplyPlrDamage(DamageType damageType, Player &player, int dam, int minHP = 0, int frac = 0, int earflag = 0);
 void InitPlayer(Player &player, bool FirstTime);
 void InitMultiView();
 void PlrClrTrans(Point position);

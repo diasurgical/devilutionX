@@ -12,7 +12,6 @@ _sfx_id sfxdnum;
 // clang-format off
 bool effect_is_playing(int nSFX) { return false; }
 void stream_stop() { }
-bool CalculateSoundPosition(Point soundPosition, int *plVolume, int *plPan) { return false; }
 void PlaySFX(_sfx_id psfx)
 {
 	switch (psfx) {
@@ -22,7 +21,6 @@ void PlaySFX(_sfx_id psfx)
 	case PS_MONK69:
 	case PS_SWING:
 	case LS_ACID:
-	case IS_FMAG:
 	case IS_MAGIC:
 	case IS_BHIT:
 	case PS_WARR14:

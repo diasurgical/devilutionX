@@ -6,6 +6,7 @@
 #include "engine/backbuffer_state.hpp"
 #include "engine/clx_sprite.hpp"
 #include "engine/load_cel.hpp"
+#include "engine/load_clx.hpp"
 #include "engine/rectangle.hpp"
 #include "engine/render/clx_render.hpp"
 #include "engine/render/text_render.hpp"
@@ -18,11 +19,7 @@
 #include "utils/language.h"
 #include "utils/stdcompat/optional.hpp"
 
-#define SPLICONLAST (gbIsHellfire ? 51 : 42)
-
 namespace devilution {
-
-OptionalOwnedClxSpriteList pSBkIconCels;
 
 namespace {
 
@@ -84,7 +81,7 @@ void InitSpellBook()
 {
 	pSpellBkCel = LoadCel("data\\spellbk", static_cast<uint16_t>(SidePanelSize.width));
 	pSBkBtnCel = LoadCel("data\\spellbkb", gbIsHellfire ? 61 : 76);
-	pSBkIconCels = LoadCel("data\\spelli2", 37);
+	LoadSmallSpellIcons();
 
 	Player &player = *MyPlayer;
 	if (player._pClass == HeroClass::Warrior) {
@@ -104,9 +101,9 @@ void InitSpellBook()
 
 void FreeSpellBook()
 {
-	pSpellBkCel = std::nullopt;
+	FreeSmallSpellIcons();
 	pSBkBtnCel = std::nullopt;
-	pSBkIconCels = std::nullopt;
+	pSpellBkCel = std::nullopt;
 }
 
 void DrawSpellBook(const Surface &out)
@@ -135,10 +132,10 @@ void DrawSpellBook(const Surface &out)
 			spell_type st = GetSBookTrans(sn, true);
 			SetSpellTrans(st);
 			const Point spellCellPosition = GetPanelPosition(UiPanels::Spell, { 11, yp + SpellBookDescription.height });
-			DrawSpellCel(out, spellCellPosition, *pSBkIconCels, SpellITbl[sn]);
+			DrawSmallSpellIcon(out, spellCellPosition, sn);
 			if (sn == player._pRSpell && st == player._pRSplType) {
 				SetSpellTrans(RSPLTYPE_SKILL);
-				DrawSpellCel(out, spellCellPosition, *pSBkIconCels, SPLICONLAST);
+				DrawSmallSpellIconBorder(out, spellCellPosition);
 			}
 
 			const Point line0 { 0, yp + textPaddingTop };

@@ -890,8 +890,10 @@ void CheckQuestItem(Player &player, Item &questItem)
 {
 	Player &myPlayer = *MyPlayer;
 
-	if (questItem.IDidx == IDI_OPTAMULET && Quests[Q_BLIND]._qactive == QUEST_ACTIVE)
+	if (questItem.IDidx == IDI_OPTAMULET && Quests[Q_BLIND]._qactive == QUEST_ACTIVE) {
 		Quests[Q_BLIND]._qactive = QUEST_DONE;
+		NetSendCmdQuest(true, Quests[Q_BLIND]);
+	}
 
 	if (questItem.IDidx == IDI_MUSHROOM && Quests[Q_MUSHROOM]._qactive == QUEST_ACTIVE && Quests[Q_MUSHROOM]._qvar1 == QS_MUSHSPAWNED) {
 		player.Say(HeroSpeech::NowThatsOneBigMushroom, 10); // BUGFIX: Voice for this quest might be wrong in MP
@@ -901,6 +903,7 @@ void CheckQuestItem(Player &player, Item &questItem)
 	if (questItem.IDidx == IDI_ANVIL && Quests[Q_ANVIL]._qactive != QUEST_NOTAVAIL) {
 		if (Quests[Q_ANVIL]._qactive == QUEST_INIT) {
 			Quests[Q_ANVIL]._qactive = QUEST_ACTIVE;
+			NetSendCmdQuest(true, Quests[Q_ANVIL]);
 		}
 		if (Quests[Q_ANVIL]._qlog) {
 			myPlayer.Say(HeroSpeech::INeedToGetThisToGriswold, 10);
@@ -914,6 +917,7 @@ void CheckQuestItem(Player &player, Item &questItem)
 	if (questItem.IDidx == IDI_ROCK && Quests[Q_ROCK]._qactive != QUEST_NOTAVAIL) {
 		if (Quests[Q_ROCK]._qactive == QUEST_INIT) {
 			Quests[Q_ROCK]._qactive = QUEST_ACTIVE;
+			NetSendCmdQuest(true, Quests[Q_ROCK]);
 		}
 		if (Quests[Q_ROCK]._qlog) {
 			myPlayer.Say(HeroSpeech::ThisMustBeWhatGriswoldWanted, 10);
@@ -922,6 +926,7 @@ void CheckQuestItem(Player &player, Item &questItem)
 
 	if (questItem.IDidx == IDI_ARMOFVAL && Quests[Q_BLOOD]._qactive == QUEST_ACTIVE) {
 		Quests[Q_BLOOD]._qactive = QUEST_DONE;
+		NetSendCmdQuest(true, Quests[Q_BLOOD]);
 		myPlayer.Say(HeroSpeech::MayTheSpiritOfArkaineProtectMe, 20);
 	}
 
@@ -1139,13 +1144,10 @@ void DrawInv(const Surface &out)
 				if (myPlayer.GetItemLocation(myPlayer.InvBody[slot]) == ILOC_TWOHAND) {
 					InvDrawSlotBack(out, GetPanelPosition(UiPanels::Inventory, slotPos[INVLOC_HAND_RIGHT]), { slotSize[INVLOC_HAND_RIGHT].width * InventorySlotSizeInPixels.width, slotSize[INVLOC_HAND_RIGHT].height * InventorySlotSizeInPixels.height }, myPlayer.InvBody[slot]._iMagical);
 					LightTableIndex = 0;
-					cel_transparency_active = true;
 
 					const int dstX = GetRightPanel().position.x + slotPos[INVLOC_HAND_RIGHT].x + (frameSize.width == InventorySlotSizeInPixels.width ? INV_SLOT_HALF_SIZE_PX : 0) - 1;
 					const int dstY = GetRightPanel().position.y + slotPos[INVLOC_HAND_RIGHT].y;
 					ClxDrawLightBlended(out, { dstX, dstY }, sprite);
-
-					cel_transparency_active = false;
 				}
 			}
 		}
@@ -1938,28 +1940,28 @@ void ConsumeScroll(Player &player)
 {
 	const spell_id spellId = player.executedSpell.spellId;
 
-	// Try to remove the scroll from selected inventory slot
-	int itemSlot = player.executedSpell.spellFrom;
-	int itemIndex = 0;
-	Item *item;
-	if (itemSlot <= INVITEM_INV_LAST) {
-		itemIndex = itemSlot - INVITEM_INV_FIRST;
-		item = &player.InvList[itemIndex];
-	} else {
-		itemIndex = itemSlot - INVITEM_BELT_FIRST;
-		item = &player.SpdList[itemIndex];
-	}
-
 	const auto isCurrentSpell = [spellId](const Item &item) {
 		return item.isScrollOf(spellId) || item.isRuneOf(spellId);
 	};
 
-	if (!item->isEmpty() && isCurrentSpell(*item)) {
-		if (itemSlot <= INVITEM_INV_LAST)
-			player.RemoveInvItem(static_cast<int>(itemIndex));
-		else
+	// Try to remove the scroll from selected inventory slot
+	const int8_t itemSlot = player.executedSpell.spellFrom;
+	if (itemSlot >= INVITEM_INV_FIRST && itemSlot <= INVITEM_INV_LAST) {
+		const int itemIndex = itemSlot - INVITEM_INV_FIRST;
+		const Item *item = &player.InvList[itemIndex];
+		if (!item->isEmpty() && isCurrentSpell(*item)) {
+			player.RemoveInvItem(itemIndex);
+			return;
+		}
+	} else if (itemSlot >= INVITEM_BELT_FIRST && itemSlot <= INVITEM_BELT_LAST) {
+		const int itemIndex = itemSlot - INVITEM_BELT_FIRST;
+		const Item *item = &player.SpdList[itemIndex];
+		if (!item->isEmpty() && isCurrentSpell(*item)) {
 			player.RemoveSpdBarItem(itemIndex);
-		return;
+			return;
+		}
+	} else if (itemSlot != 0) {
+		app_fatal(StrCat("ConsumeScroll: Invalid item index ", itemSlot));
 	}
 
 	// Didn't find it at the selected slot, take the first one we find

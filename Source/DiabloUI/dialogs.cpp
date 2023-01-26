@@ -86,7 +86,7 @@ bool Init(string_view caption, string_view text, bool error, bool renderBehind)
 		vecOkDialog.push_back(std::make_unique<UiImageClx>(*dialogSprite, rect1));
 
 		SDL_Rect rect2 = MakeSdlRect(uiPosition.x + 147, uiPosition.y + 110, textWidth, 20);
-		vecOkDialog.push_back(std::make_unique<UiText>(caption, rect2, UiFlags::AlignCenter | UiFlags::ColorDialogYellow));
+		vecOkDialog.push_back(std::make_unique<UiText>(caption, rect2, UiFlags::AlignCenter | UiFlags::ColorYellow));
 
 		SDL_Rect rect3 = MakeSdlRect(uiPosition.x + 147, uiPosition.y + 141, textWidth, 190);
 		vecOkDialog.push_back(std::make_unique<UiText>(wrappedText, rect3, UiFlags::AlignCenter | UiFlags::ColorDialogWhite));
@@ -101,7 +101,6 @@ void Deinit()
 {
 	ownedDialogSprite = std::nullopt;
 	vecOkDialog.clear();
-	ArtBackground = std::nullopt;
 	FreeDialogButtonGraphics();
 }
 
@@ -117,12 +116,10 @@ void DialogLoop(const std::vector<std::unique_ptr<UiItemBase>> &items, const std
 				UiItemMouseEvents(&event, items);
 				break;
 			default:
-				switch (GetMenuAction(event)) {
-				case MenuAction_BACK:
-				case MenuAction_SELECT:
+				for (MenuAction menuAction : GetMenuActions(event)) {
+					if (IsNoneOf(menuAction, MenuAction_BACK, MenuAction_SELECT))
+						continue;
 					dialogEnd = true;
-					break;
-				default:
 					break;
 				}
 				break;
@@ -130,15 +127,11 @@ void DialogLoop(const std::vector<std::unique_ptr<UiItemBase>> &items, const std
 			UiHandleEvents(&event);
 		}
 
-		if (renderBehind.empty()) {
-			SDL_FillRect(DiabloUiSurface(), nullptr, 0x000000);
-		} else {
-			UiRenderItems(renderBehind);
-		}
+		UiClearScreen();
+		UiRenderItems(renderBehind);
+		UiRenderListItems();
 		UiRenderItems(items);
-		if (ArtBackground) {
-			DrawMouse();
-		}
+		DrawMouse();
 		UiFadeIn();
 	} while (!dialogEnd);
 }

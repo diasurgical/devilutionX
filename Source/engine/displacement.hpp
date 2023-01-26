@@ -155,11 +155,16 @@ struct DisplacementOf {
 
 	/**
 	 * @brief Missiles flip the axes for some reason -_-
-	 * @return negated world displacement, for use with missile movement routines.
+	 * @return negated and rounded world displacement, for use with missile movement routines.
 	 */
 	constexpr DisplacementOf<DeltaT> screenToMissile() const
 	{
-		return -screenToWorld();
+		static_assert(std::is_signed<DeltaT>::value, "DeltaT must be signed for transformations involving a rotation");
+		DeltaT xNumerator = 2 * deltaY + deltaX;
+		DeltaT yNumerator = 2 * deltaY - deltaX;
+		DeltaT xOffset = (xNumerator >= 0) ? 32 : -32;
+		DeltaT yOffset = (yNumerator >= 0) ? 32 : -32;
+		return { (xNumerator + xOffset) / 64, (yNumerator + yOffset) / 64 };
 	}
 
 	constexpr DisplacementOf<DeltaT> screenToLight() const

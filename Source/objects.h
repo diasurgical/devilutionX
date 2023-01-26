@@ -65,8 +65,7 @@ struct Object {
 	 *
 	 * Used by spell book objects which trigger quest progress for Halls of the Blind, Valor, or Warlord of Blood
 	 */
-	// TODO: Should be TEXT_NONE (timedemo save will need to be updated).
-	_speech_id bookMessage = TEXT_KING1;
+	_speech_id bookMessage = TEXT_NONE;
 
 	/**
 	 * @brief Returns the network identifier for this object
@@ -319,7 +318,7 @@ void ObjChangeMapResync(int x1, int y1, int x2, int y2);
 _item_indexes ItemMiscIdIdx(item_misc_id imiscid);
 void OperateObject(Player &player, Object &object);
 void SyncOpObject(Player &player, int cmd, Object &object);
-void BreakObjectMissile(Object &object);
+void BreakObjectMissile(const Player *player, Object &object);
 void BreakObject(const Player &player, Object &object);
 void DeltaSyncOpObject(Object &object);
 void DeltaSyncBreakObj(Object &object);
