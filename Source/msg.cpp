@@ -2831,7 +2831,7 @@ void DeltaLoadLevel()
 			}
 			if (deltaLevel.monster[i].hitPoints == 0) {
 				M_ClearSquares(monster);
-				if (monster.ai != AI_DIABLO) {
+				if (monster.ai != MonsterAIID::Diablo) {
 					if (monster.isUnique()) {
 						AddCorpse(monster.position.tile, monster.corpseId, monster.direction);
 					} else {

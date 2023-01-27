@@ -11,48 +11,48 @@
 
 namespace devilution {
 
-enum _mai_id : int8_t {
-	AI_ZOMBIE,
-	AI_FAT,
-	AI_SKELSD,
-	AI_SKELBOW,
-	AI_SCAV,
-	AI_RHINO,
-	AI_GOATMC,
-	AI_GOATBOW,
-	AI_FALLEN,
-	AI_MAGMA,
-	AI_SKELKING,
-	AI_BAT,
-	AI_GARG,
-	AI_CLEAVER,
-	AI_SUCC,
-	AI_SNEAK,
-	AI_STORM,
-	AI_FIREMAN,
-	AI_GARBUD,
-	AI_ACID,
-	AI_ACIDUNIQ,
-	AI_GOLUM,
-	AI_ZHAR,
-	AI_SNOTSPIL,
-	AI_SNAKE,
-	AI_COUNSLR,
-	AI_MEGA,
-	AI_DIABLO,
-	AI_LAZARUS,
-	AI_LAZHELP,
-	AI_LACHDAN,
-	AI_WARLORD,
-	AI_FIREBAT,
-	AI_TORCHANT,
-	AI_HORKDMN,
-	AI_LICH,
-	AI_ARCHLICH,
-	AI_PSYCHORB,
-	AI_NECROMORB,
-	AI_BONEDEMON,
-	AI_INVALID = -1,
+enum class MonsterAIID : int8_t {
+	Zombie,
+	Fat,
+	SkeletonMelee,
+	SkeletonRanged,
+	Scavenger,
+	Rhino,
+	GoatMelee,
+	GoatRanged,
+	Fallen,
+	Magma,
+	SkeletonKing,
+	Bat,
+	Gargoyle,
+	Butcher,
+	Succubus,
+	Sneak,
+	Storm,
+	FireMan,
+	Gharbad,
+	Acid,
+	AcidUnique,
+	Golem,
+	Zhar,
+	Snotspill,
+	Snake,
+	Counselor,
+	Mega,
+	Diablo,
+	Lazarus,
+	LazarusSuccubus,
+	Lachdanan,
+	Warlord,
+	FireBat,
+	Torchant,
+	HorkDemon,
+	Lich,
+	ArchLich,
+	Psychorb,
+	Necromorb,
+	BoneDemon,
+	Invalid = -1,
 };
 
 enum class MonsterClass : uint8_t {
@@ -104,7 +104,7 @@ struct MonsterData {
 	int8_t level;
 	uint16_t hitPointsMinimum;
 	uint16_t hitPointsMaximum;
-	_mai_id ai;
+	MonsterAIID ai;
 	/**
 	 * @brief Denotes monster's abilities defined in @p monster_flag as bitflags
 	 * For usage, see @p MonstersData in monstdat.cpp
@@ -298,7 +298,7 @@ struct UniqueMonsterData {
 	const char *mTrnName;
 	uint8_t mlevel;
 	uint16_t mmaxhp;
-	_mai_id mAi;
+	MonsterAIID mAi;
 	uint8_t mint;
 	uint8_t mMinDamage;
 	uint8_t mMaxDamage;

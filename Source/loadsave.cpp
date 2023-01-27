@@ -612,7 +612,7 @@ void LoadMonster(LoadHelper *file, Monster &monster)
 	monster.maxHitPoints = file->NextLE<int32_t>();
 	monster.hitPoints = file->NextLE<int32_t>();
 
-	monster.ai = static_cast<_mai_id>(file->NextLE<uint8_t>());
+	monster.ai = static_cast<MonsterAIID>(file->NextLE<uint8_t>());
 	monster.intelligence = file->NextLE<uint8_t>();
 	file->Skip(2); // Alignment
 	monster.flags = file->NextLE<uint32_t>();
@@ -675,7 +675,7 @@ void SyncPackSize(Monster &leader)
 {
 	if (!leader.isUnique())
 		return;
-	if (leader.ai != AI_SCAV)
+	if (leader.ai != MonsterAIID::Scavenger)
 		return;
 
 	leader.packSize = 0;
@@ -1378,7 +1378,7 @@ void SaveMonster(SaveHelper *file, Monster &monster)
 	file->WriteLE<int32_t>(monster.maxHitPoints);
 	file->WriteLE<int32_t>(monster.hitPoints);
 
-	file->WriteLE<uint8_t>(monster.ai);
+	file->WriteLE<uint8_t>(static_cast<int8_t>(monster.ai));
 	file->WriteLE<uint8_t>(monster.intelligence);
 	file->Skip(2); // Alignment
 	file->WriteLE<uint32_t>(monster.flags);
