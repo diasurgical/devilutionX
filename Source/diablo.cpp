@@ -789,7 +789,7 @@ void RunGameLoop(interface_mode uMsg)
 	EventHandler previousHandler = SetEventHandler(GameEventHandler);
 	run_delta_info();
 	gbRunGame = true;
-	gbProcessPlayers = true;
+	gbProcessPlayers = IsDiabloAlive(true);
 	gbRunGameResult = true;
 
 	RedrawEverything();
@@ -2978,6 +2978,17 @@ void diablo_color_cyc_logic()
 	} else if (leveltype == DTYPE_CRYPT) {
 		palette_update_crypt();
 	}
+}
+
+bool IsDiabloAlive(bool playSFX)
+{
+	if (Quests[Q_DIABLO]._qactive == QUEST_DONE && !gbIsMultiplayer) {
+		if (playSFX)
+			PlaySFX(USFX_DIABLOD);
+		return false;
+	}
+
+	return true;
 }
 
 } // namespace devilution

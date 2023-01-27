@@ -2212,7 +2212,7 @@ void LoadGame(bool firstflag)
 	missiles_process_charge();
 	RedoMissileFlags();
 	NewCursor(CURSOR_HAND);
-	gbProcessPlayers = true;
+	gbProcessPlayers = IsDiabloAlive(!firstflag);
 
 	if (gbIsHellfireSaveGame != gbIsHellfire) {
 		SaveGame();
