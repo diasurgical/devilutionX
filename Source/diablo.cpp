@@ -64,6 +64,7 @@
 #include "pfile.h"
 #include "plrmsg.h"
 #include "qol/chatlog.h"
+#include "qol/floatingnumbers.h"
 #include "qol/itemlabels.h"
 #include "qol/monhealthbar.h"
 #include "qol/stash.h"
@@ -622,6 +623,15 @@ void PressKey(SDL_Keycode vkey, uint16_t modState)
 
 void HandleMouseButtonDown(Uint8 button, uint16_t modState)
 {
+	if (stextflag != STORE_NONE && (button == SDL_BUTTON_X1
+#if !SDL_VERSION_ATLEAST(2, 0, 0)
+	        || button == 8
+#endif
+	        )) {
+		StoreESC();
+		return;
+	}
+
 	if (sgbMouseDown == CLICK_NONE) {
 		switch (button) {
 		case SDL_BUTTON_LEFT:
@@ -746,8 +756,6 @@ void GameEventHandler(const SDL_Event &event, uint16_t modState)
 			nthread_ignore_mutex(true);
 			PaletteFadeOut(8);
 			sound_stop();
-			LastMouseButtonAction = MouseActionType::None;
-			sgbMouseDown = CLICK_NONE;
 			ShowProgress(GetCustomEvent(event.type));
 
 			RedrawEverything();
@@ -781,7 +789,7 @@ void RunGameLoop(interface_mode uMsg)
 	EventHandler previousHandler = SetEventHandler(GameEventHandler);
 	run_delta_info();
 	gbRunGame = true;
-	gbProcessPlayers = true;
+	gbProcessPlayers = IsDiabloAlive(true);
 	gbRunGameResult = true;
 
 	RedrawEverything();
@@ -2656,6 +2664,7 @@ void DisableInputEventHandler(const SDL_Event &event, uint16_t modState)
 void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 {
 	_music_id neededTrack = GetLevelMusic(leveltype);
+	ClearFloatingNumbers();
 
 	if (neededTrack != sgnMusicTrack)
 		music_stop();
@@ -2921,12 +2930,12 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 
 	CompleteProgress();
 
-	// Reset mouse selection of entities
-	pcursmonst = -1;
-	ObjectUnderCursor = nullptr;
-	pcursitem = -1;
-	pcursinvitem = -1;
-	pcursplr = -1;
+	// Recalculate mouse selection of entities after level change/load
+	LastMouseButtonAction = MouseActionType::None;
+	sgbMouseDown = CLICK_NONE;
+	ResetItemlabelHighlighted(); // level changed => item changed
+	pcursmonst = -1;             // ensure pcurstemp is set to a valid value
+	CheckCursMove();
 }
 
 bool game_loop(bool bStartup)
@@ -2969,6 +2978,17 @@ void diablo_color_cyc_logic()
 	} else if (leveltype == DTYPE_CRYPT) {
 		palette_update_crypt();
 	}
+}
+
+bool IsDiabloAlive(bool playSFX)
+{
+	if (Quests[Q_DIABLO]._qactive == QUEST_DONE && !gbIsMultiplayer) {
+		if (playSFX)
+			PlaySFX(USFX_DIABLOD);
+		return false;
+	}
+
+	return true;
 }
 
 } // namespace devilution

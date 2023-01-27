@@ -6,7 +6,7 @@ find_package(Patch REQUIRED)
 FetchContent_Declare(discordsrc
   URL https://dl-game-sdk.discordapp.net/3.2.1/discord_game_sdk.zip
   URL_HASH MD5=73e5e1b3f8413a2c7184ef17476822f2
-  PATCH_COMMAND "${Patch_EXECUTABLE}" -p0 -N < "${CMAKE_CURRENT_LIST_DIR}/fix-types-h.patch" || true
+  PATCH_COMMAND "${Patch_EXECUTABLE}" -p1 -N < "${CMAKE_CURRENT_LIST_DIR}/fixes.patch" || true
 )
 FetchContent_MakeAvailableExcludeFromAll(discordsrc)
 
@@ -23,12 +23,23 @@ else()
 endif()
 set(DISCORD_SHARED_LIB_FILENAME "discord_game_sdk${CMAKE_SHARED_LIBRARY_SUFFIX}")
 
-file(COPY "${DISCORD_LIB_DIR}/${DISCORD_SHARED_LIB_FILENAME}" DESTINATION "${CMAKE_BINARY_DIR}")
-set(DISCORD_SHARED_LIB "${CMAKE_BINARY_DIR}/${DISCORD_SHARED_LIB_FILENAME}")
-set(DISCORD_SHARED_LIB ${DISCORD_SHARED_LIB} PARENT_SCOPE)
+set(DISCORD_SHARED_LIB "${DISCORD_LIB_DIR}/${DISCORD_SHARED_LIB_FILENAME}")
+set(DISCORD_SHARED_LIB "${DISCORD_SHARED_LIB}" PARENT_SCOPE)
 
-find_library(DISCORD_LIB ${DISCORD_SHARED_LIB_FILENAME} ${CMAKE_BINARY_DIR})
+find_library(
+  DISCORD_LIB
+  NAMES "${DISCORD_SHARED_LIB_FILENAME}"
+  PATHS "${DISCORD_LIB_DIR}"
+  REQUIRED
+  NO_DEFAULT_PATH
+  NO_CMAKE_FIND_ROOT_PATH
+)
+
+message("-- 📚 discord_game_sdk: ${DISCORD_LIB}")
+
+# Copy the dll so that tests and Debug builds can find it on Windows.
+file(COPY "${DISCORD_SHARED_LIB}" DESTINATION "${CMAKE_BINARY_DIR}")
 
 add_library(discord_game_sdk SHARED IMPORTED GLOBAL)
-set_property(TARGET discord_game_sdk PROPERTY IMPORTED_IMPLIB ${DISCORD_LIB})
-set_property(TARGET discord_game_sdk PROPERTY IMPORTED_LOCATION ${DISCORD_SHARED_LIB})
+set_property(TARGET discord_game_sdk PROPERTY IMPORTED_IMPLIB "${DISCORD_LIB}")
+set_property(TARGET discord_game_sdk PROPERTY IMPORTED_LOCATION "${DISCORD_SHARED_LIB}")

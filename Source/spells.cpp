@@ -196,10 +196,10 @@ void ConsumeSpell(Player &player, spell_id sn)
 		break;
 	}
 	if (sn == SPL_FLARE) {
-		ApplyPlrDamage(player, 5);
+		ApplyPlrDamage(DamageType::Physical, player, 5);
 	}
 	if (sn == SPL_BONESPIRIT) {
-		ApplyPlrDamage(player, 6);
+		ApplyPlrDamage(DamageType::Physical, player, 6);
 	}
 }
 
@@ -293,12 +293,12 @@ void DoResurrect(size_t pnum, Player &target)
 	target._pMana = 0;
 	target._pManaBase = target._pMana + (target._pMaxManaBase - target._pMaxMana);
 
+	target._pmode = PM_STAND;
+
 	CalcPlrInv(target, true);
 
 	if (target.isOnActiveLevel()) {
 		StartStand(target, target._pdir);
-	} else {
-		target._pmode = PM_STAND;
 	}
 }
 

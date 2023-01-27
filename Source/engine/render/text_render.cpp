@@ -47,14 +47,14 @@ constexpr std::array<int, 6> LineHeights = { 12, 26, 38, 42, 50, 22 };
 constexpr int SmallFontTallLineHeight = 16;
 std::array<int, 6> BaseLineOffset = { -3, -2, -3, -6, -7, 3 };
 
-std::array<const char *, 14> ColorTranslations = {
+std::array<const char *, 15> ColorTranslations = {
 	"fonts\\goldui.trn",
 	"fonts\\grayui.trn",
 	"fonts\\golduis.trn",
 	"fonts\\grayuis.trn",
 
 	nullptr,
-	"fonts\\yellowdialog.trn",
+	"fonts\\yellow.trn",
 
 	nullptr,
 	"fonts\\black.trn",
@@ -63,12 +63,13 @@ std::array<const char *, 14> ColorTranslations = {
 	"fonts\\whitegold.trn",
 	"fonts\\red.trn",
 	"fonts\\blue.trn",
+	"fonts\\orange.trn",
 
 	"fonts\\buttonface.trn",
 	"fonts\\buttonpushed.trn",
 };
 
-std::array<std::optional<std::array<uint8_t, 256>>, 14> ColorTranslationsData;
+std::array<std::optional<std::array<uint8_t, 256>>, 15> ColorTranslationsData;
 
 GameFontTables GetSizeFromFlags(UiFlags flags)
 {
@@ -92,6 +93,8 @@ text_color GetColorFromFlags(UiFlags flags)
 		return ColorWhite;
 	else if (HasAnyOf(flags, UiFlags::ColorBlue))
 		return ColorBlue;
+	else if (HasAnyOf(flags, UiFlags::ColorOrange))
+		return ColorOrange;
 	else if (HasAnyOf(flags, UiFlags::ColorRed))
 		return ColorRed;
 	else if (HasAnyOf(flags, UiFlags::ColorBlack))
@@ -108,8 +111,8 @@ text_color GetColorFromFlags(UiFlags flags)
 		return ColorUiSilverDark;
 	else if (HasAnyOf(flags, UiFlags::ColorDialogWhite))
 		return ColorDialogWhite;
-	else if (HasAnyOf(flags, UiFlags::ColorDialogYellow))
-		return ColorDialogYellow;
+	else if (HasAnyOf(flags, UiFlags::ColorYellow))
+		return ColorYellow;
 	else if (HasAnyOf(flags, UiFlags::ColorButtonface))
 		return ColorButtonface;
 	else if (HasAnyOf(flags, UiFlags::ColorButtonpushed))

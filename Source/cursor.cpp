@@ -28,6 +28,8 @@
 #include "track.h"
 #include "utils/attributes.h"
 #include "utils/language.h"
+#include "utils/sdl_bilinear_scale.hpp"
+#include "utils/surface_to_clx.hpp"
 #include "utils/utf8.hpp"
 
 namespace devilution {
@@ -108,6 +110,9 @@ const uint16_t InvItemHeight2[InvItems2Size] = {
 	// clang-format on
 };
 
+OptionalOwnedClxSpriteList *HalfSizeItemSprites;
+OptionalOwnedClxSpriteList *HalfSizeItemSpritesRed;
+
 } // namespace
 
 /** Current highlighted monster */
@@ -153,12 +158,87 @@ ClxSprite GetInvItemSprite(int cursId)
 	return (*pCursCels2)[cursId - InvItems1Size - 1];
 }
 
+size_t GetNumInvItems()
+{
+	return InvItems1Size + InvItems2Size;
+}
+
 Size GetInvItemSize(int cursId)
 {
 	const int i = cursId - 1;
 	if (i >= InvItems1Size)
 		return { InvItemWidth2[i - InvItems1Size], InvItemHeight2[i - InvItems1Size] };
 	return { InvItemWidth1[i], InvItemHeight1[i] };
+}
+
+ClxSprite GetHalfSizeItemSprite(int cursId)
+{
+	return (*HalfSizeItemSprites[cursId])[0];
+}
+
+ClxSprite GetHalfSizeItemSpriteRed(int cursId)
+{
+	return (*HalfSizeItemSpritesRed[cursId])[0];
+}
+
+void CreateHalfSizeItemSprites()
+{
+	if (HalfSizeItemSprites != nullptr)
+		return;
+	const int numInvItems = gbIsHellfire
+	    ? InvItems1Size + InvItems2Size - (static_cast<size_t>(CURSOR_FIRSTITEM) - 1)
+	    : InvItems1Size + (static_cast<size_t>(CURSOR_FIRSTITEM) - 1);
+	HalfSizeItemSprites = new OptionalOwnedClxSpriteList[numInvItems];
+	HalfSizeItemSpritesRed = new OptionalOwnedClxSpriteList[numInvItems];
+	const uint8_t *redTrn = GetInfravisionTRN();
+
+	constexpr int MaxWidth = 28 * 3;
+	constexpr int MaxHeight = 28 * 3;
+	OwnedSurface ownedItemSurface { MaxWidth, MaxHeight };
+	OwnedSurface ownedHalfSurface { MaxWidth / 2, MaxHeight / 2 };
+
+	const auto createHalfSize = [&, redTrn](const ClxSprite itemSprite, size_t outputIndex) {
+		if (itemSprite.width() <= 28 && itemSprite.height() <= 28) {
+			// Skip creating half-size sprites for 1x1 items because we always render them at full size anyway.
+			return;
+		}
+		const Surface itemSurface = ownedItemSurface.subregion(0, 0, itemSprite.width(), itemSprite.height());
+		SDL_Rect itemSurfaceRect = MakeSdlRect(0, 0, itemSurface.w(), itemSurface.h());
+		SDL_SetClipRect(itemSurface.surface, &itemSurfaceRect);
+		SDL_FillRect(itemSurface.surface, nullptr, 1);
+		ClxDraw(itemSurface, { 0, itemSurface.h() }, itemSprite);
+
+		const Surface halfSurface = ownedHalfSurface.subregion(0, 0, itemSurface.w() / 2, itemSurface.h() / 2);
+		SDL_Rect halfSurfaceRect = MakeSdlRect(0, 0, halfSurface.w(), halfSurface.h());
+		SDL_SetClipRect(halfSurface.surface, &halfSurfaceRect);
+		BilinearDownscaleByHalf8(itemSurface.surface, paletteTransparencyLookup, halfSurface.surface, 1);
+		HalfSizeItemSprites[outputIndex].emplace(SurfaceToClx(halfSurface, 1, 1));
+
+		SDL_FillRect(itemSurface.surface, nullptr, 1);
+		ClxDrawTRN(itemSurface, { 0, itemSurface.h() }, itemSprite, redTrn);
+		BilinearDownscaleByHalf8(itemSurface.surface, paletteTransparencyLookup, halfSurface.surface, 1);
+		HalfSizeItemSpritesRed[outputIndex].emplace(SurfaceToClx(halfSurface, 1, 1));
+	};
+
+	size_t outputIndex = 0;
+	for (size_t i = static_cast<int>(CURSOR_FIRSTITEM) - 1; i < InvItems1Size; ++i, ++outputIndex) {
+		createHalfSize((*pCursCels)[i], outputIndex);
+	}
+	if (gbIsHellfire) {
+		for (size_t i = 0; i < InvItems2Size; ++i, ++outputIndex) {
+			createHalfSize((*pCursCels2)[i], outputIndex);
+		}
+	}
+}
+
+void FreeHalfSizeItemSprites()
+{
+	if (HalfSizeItemSprites != nullptr) {
+		delete[] HalfSizeItemSprites;
+		HalfSizeItemSprites = nullptr;
+		delete[] HalfSizeItemSpritesRed;
+		HalfSizeItemSpritesRed = nullptr;
+	}
 }
 
 void DrawItem(const Item &item, const Surface &out, Point position, ClxSprite clx)

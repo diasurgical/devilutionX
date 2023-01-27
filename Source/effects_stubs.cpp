@@ -21,7 +21,6 @@ void PlaySFX(_sfx_id psfx)
 	case PS_MONK69:
 	case PS_SWING:
 	case LS_ACID:
-	case IS_FMAG:
 	case IS_MAGIC:
 	case IS_BHIT:
 	case PS_WARR14:

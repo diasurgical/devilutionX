@@ -157,10 +157,11 @@ set(devilutionx_assets
   fonts/goldui.trn
   fonts/grayuis.trn
   fonts/grayui.trn
+  fonts/orange.trn
   fonts/red.trn
   fonts/whitegold.trn
   fonts/white.trn
-  fonts/yellowdialog.trn
+  fonts/yellow.trn
   gendata/cutportlw.clx
   gendata/cutportrw.clx
   gendata/cutstartw.clx
