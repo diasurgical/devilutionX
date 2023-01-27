@@ -360,7 +360,7 @@ void ChangeOffset(Player &player)
 	PmChangeLightOff(player);
 }
 
-void StartAttack(Player &player, Direction d)
+void StartAttack(Player &player, Direction d, bool includesFirstFrame)
 {
 	if (player._pInvincible && player._pHitPoints == 0 && &player == MyPlayer) {
 		SyncPlrKill(player, -1);
@@ -368,14 +368,30 @@ void StartAttack(Player &player, Direction d)
 	}
 
 	int8_t skippedAnimationFrames = 0;
-	if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FasterAttack)) {
-		// The combination of Faster and Fast Attack doesn't result in more skipped skipped frames, cause the secound frame skip of Faster Attack is not triggered.
-		skippedAnimationFrames = 2;
-	} else if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastAttack)) {
-		skippedAnimationFrames = 1;
-	} else if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastestAttack)) {
-		// Fastest Attack is skipped if Fast or Faster Attack is also specified, cause both skip the frame that triggers fastest attack skipping
-		skippedAnimationFrames = 2;
+	if (includesFirstFrame) {
+		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastestAttack) && HasAnyOf(player._pIFlags, ItemSpecialEffect::QuickAttack | ItemSpecialEffect::FastAttack)) {
+			// Combining Fastest Attack with any other attack speed modifier skips over the fourth frame, reducing the effectiveness of Fastest Attack.
+			// Faster Attack makes up for this by also skipping the sixth frame so this case only applies when using Quick or Fast Attack modifiers.
+			skippedAnimationFrames = 3;
+		} else if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastestAttack)) {
+			skippedAnimationFrames = 4;
+		} else if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FasterAttack)) {
+			skippedAnimationFrames = 3;
+		} else if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastAttack)) {
+			skippedAnimationFrames = 2;
+		} else if (HasAnyOf(player._pIFlags, ItemSpecialEffect::QuickAttack)) {
+			skippedAnimationFrames = 1;
+		}
+	} else {
+		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FasterAttack)) {
+			// The combination of Faster and Fast Attack doesn't result in more skipped frames, because the second frame skip of Faster Attack is not triggered.
+			skippedAnimationFrames = 2;
+		} else if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastAttack)) {
+			skippedAnimationFrames = 1;
+		} else if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastestAttack)) {
+			// Fastest Attack is skipped if Fast or Faster Attack is also specified, because both skip the frame that triggers Fastest Attack skipping.
+			skippedAnimationFrames = 2;
+		}
 	}
 
 	auto animationFlags = AnimationDistributionFlags::ProcessAnimationPending;
@@ -387,7 +403,7 @@ void StartAttack(Player &player, Direction d)
 	SetPlayerOld(player);
 }
 
-void StartRangeAttack(Player &player, Direction d, WorldTileCoord cx, WorldTileCoord cy)
+void StartRangeAttack(Player &player, Direction d, WorldTileCoord cx, WorldTileCoord cy, bool includesFirstFrame)
 {
 	if (player._pInvincible && player._pHitPoints == 0 && &player == MyPlayer) {
 		SyncPlrKill(player, -1);
@@ -396,6 +412,9 @@ void StartRangeAttack(Player &player, Direction d, WorldTileCoord cx, WorldTileC
 
 	int8_t skippedAnimationFrames = 0;
 	if (!gbIsHellfire) {
+		if (includesFirstFrame && HasAnyOf(player._pIFlags, ItemSpecialEffect::QuickAttack | ItemSpecialEffect::FastAttack)) {
+			skippedAnimationFrames += 1;
+		}
 		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastAttack)) {
 			skippedAnimationFrames += 1;
 		}
@@ -1365,7 +1384,7 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 						if (player.destAction == ACTION_ATTACKMON && monster->talkMsg != TEXT_NONE && monster->talkMsg != TEXT_VILE14) {
 							TalktoMonster(player, *monster);
 						} else {
-							StartAttack(player, d);
+							StartAttack(player, d, pmWillBeCalled);
 						}
 						player.destAction = ACTION_NONE;
 					}
@@ -1421,7 +1440,7 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 		switch (player.destAction) {
 		case ACTION_ATTACK:
 			d = GetDirection(player.position.tile, { player.destParam1, player.destParam2 });
-			StartAttack(player, d);
+			StartAttack(player, d, pmWillBeCalled);
 			break;
 		case ACTION_ATTACKMON:
 			x = abs(player.position.tile.x - monster->position.future.x);
@@ -1431,7 +1450,7 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 				if (monster->talkMsg != TEXT_NONE && monster->talkMsg != TEXT_VILE14) {
 					TalktoMonster(player, *monster);
 				} else {
-					StartAttack(player, d);
+					StartAttack(player, d, pmWillBeCalled);
 				}
 			}
 			break;
@@ -1440,24 +1459,24 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 			y = abs(player.position.tile.y - target->position.future.y);
 			if (x <= 1 && y <= 1) {
 				d = GetDirection(player.position.future, target->position.future);
-				StartAttack(player, d);
+				StartAttack(player, d, pmWillBeCalled);
 			}
 			break;
 		case ACTION_RATTACK:
 			d = GetDirection(player.position.tile, { player.destParam1, player.destParam2 });
-			StartRangeAttack(player, d, player.destParam1, player.destParam2);
+			StartRangeAttack(player, d, player.destParam1, player.destParam2, pmWillBeCalled);
 			break;
 		case ACTION_RATTACKMON:
 			d = GetDirection(player.position.future, monster->position.future);
 			if (monster->talkMsg != TEXT_NONE && monster->talkMsg != TEXT_VILE14) {
 				TalktoMonster(player, *monster);
 			} else {
-				StartRangeAttack(player, d, monster->position.future.x, monster->position.future.y);
+				StartRangeAttack(player, d, monster->position.future.x, monster->position.future.y, pmWillBeCalled);
 			}
 			break;
 		case ACTION_RATTACKPLR:
 			d = GetDirection(player.position.future, target->position.future);
-			StartRangeAttack(player, d, target->position.future.x, target->position.future.y);
+			StartRangeAttack(player, d, target->position.future.x, target->position.future.y, pmWillBeCalled);
 			break;
 		case ACTION_SPELL:
 			d = GetDirection(player.position.tile, { player.destParam1, player.destParam2 });
@@ -1483,7 +1502,7 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 			if (IsPlayerAdjacentToObject(player, *object)) {
 				if (object->_oBreak == 1) {
 					d = GetDirection(player.position.tile, object->position);
-					StartAttack(player, d);
+					StartAttack(player, d, pmWillBeCalled);
 				} else {
 					OperateObject(player, *object);
 				}
@@ -1493,7 +1512,7 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 			if (IsPlayerAdjacentToObject(player, *object)) {
 				if (object->_oBreak == 1) {
 					d = GetDirection(player.position.tile, object->position);
-					StartAttack(player, d);
+					StartAttack(player, d, pmWillBeCalled);
 				} else {
 					TryDisarm(player, *object);
 					OperateObject(player, *object);
@@ -1543,14 +1562,14 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 	if (player._pmode == PM_ATTACK && player.AnimInfo.currentFrame >= player._pAFNum) {
 		if (player.destAction == ACTION_ATTACK) {
 			d = GetDirection(player.position.future, { player.destParam1, player.destParam2 });
-			StartAttack(player, d);
+			StartAttack(player, d, pmWillBeCalled);
 			player.destAction = ACTION_NONE;
 		} else if (player.destAction == ACTION_ATTACKMON) {
 			x = abs(player.position.tile.x - monster->position.future.x);
 			y = abs(player.position.tile.y - monster->position.future.y);
 			if (x <= 1 && y <= 1) {
 				d = GetDirection(player.position.future, monster->position.future);
-				StartAttack(player, d);
+				StartAttack(player, d, pmWillBeCalled);
 			}
 			player.destAction = ACTION_NONE;
 		} else if (player.destAction == ACTION_ATTACKPLR) {
@@ -1558,14 +1577,14 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 			y = abs(player.position.tile.y - target->position.future.y);
 			if (x <= 1 && y <= 1) {
 				d = GetDirection(player.position.future, target->position.future);
-				StartAttack(player, d);
+				StartAttack(player, d, pmWillBeCalled);
 			}
 			player.destAction = ACTION_NONE;
 		} else if (player.destAction == ACTION_OPERATE) {
 			if (IsPlayerAdjacentToObject(player, *object)) {
 				if (object->_oBreak == 1) {
 					d = GetDirection(player.position.tile, object->position);
-					StartAttack(player, d);
+					StartAttack(player, d, pmWillBeCalled);
 				}
 			}
 		}
@@ -1574,15 +1593,15 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 	if (player._pmode == PM_RATTACK && player.AnimInfo.currentFrame >= player._pAFNum) {
 		if (player.destAction == ACTION_RATTACK) {
 			d = GetDirection(player.position.tile, { player.destParam1, player.destParam2 });
-			StartRangeAttack(player, d, player.destParam1, player.destParam2);
+			StartRangeAttack(player, d, player.destParam1, player.destParam2, pmWillBeCalled);
 			player.destAction = ACTION_NONE;
 		} else if (player.destAction == ACTION_RATTACKMON) {
 			d = GetDirection(player.position.tile, monster->position.future);
-			StartRangeAttack(player, d, monster->position.future.x, monster->position.future.y);
+			StartRangeAttack(player, d, monster->position.future.x, monster->position.future.y, pmWillBeCalled);
 			player.destAction = ACTION_NONE;
 		} else if (player.destAction == ACTION_RATTACKPLR) {
 			d = GetDirection(player.position.tile, target->position.future);
-			StartRangeAttack(player, d, target->position.future.x, target->position.future.y);
+			StartRangeAttack(player, d, target->position.future.x, target->position.future.y, pmWillBeCalled);
 			player.destAction = ACTION_NONE;
 		}
 	}
