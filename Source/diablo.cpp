@@ -2370,8 +2370,9 @@ bool IsDiabloAlive(bool playSFX)
 		if (playSFX)
 			PlaySFX(USFX_DIABLOD);
 		return false;
-	} else
-		return true;
+	}
+
+	 return true;
 }
 
 } // namespace devilution
