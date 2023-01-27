@@ -2372,7 +2372,7 @@ bool IsDiabloAlive(bool playSFX)
 		return false;
 	}
 
-	 return true;
+	return true;
 }
 
 } // namespace devilution
