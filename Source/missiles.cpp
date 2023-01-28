@@ -2035,9 +2035,6 @@ void AddGuardian(Missile &missile, AddMissileParameter &parameter)
 {
 	Player &player = Players[missile._misource];
 
-	int dmg = GenerateRnd(10) + (player._pLevel / 2) + 1;
-	missile._midam = ScaleSpellEffect(dmg, missile._mispllvl);
-
 	std::optional<Point> spawnPosition = FindClosestValidPosition(
 	    [start = missile.position.start](Point target) {
 		    if (!InDungeonBounds(target)) {
@@ -2811,6 +2808,10 @@ void MI_Firebolt(Missile &missile)
 				break;
 			case MissileID::BoneSpirit:
 				d = 0;
+				break;
+			case MissileID::Guardian:		
+				d = GenerateRnd(10) + (player._pLevel / 2) + 1;
+				missile._midam = ScaleSpellEffect(dmg, missile._mispllvl);
 				break;
 			default:
 				break;
