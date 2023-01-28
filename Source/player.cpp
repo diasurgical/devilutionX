@@ -453,17 +453,17 @@ void StartSpell(Player &player, Direction d, WorldTileCoord cx, WorldTileCoord c
 	// Checks conditions for spell again, cause initial check was done when spell was queued and the parameters could be changed meanwhile
 	bool isValid = true;
 	switch (player.queuedSpell.spellType) {
-	case RSPLTYPE_SKILL:
-	case RSPLTYPE_SPELL:
+	case SpellType::Skill:
+	case SpellType::Spell:
 		isValid = CheckSpell(player, player.queuedSpell.spellId, player.queuedSpell.spellType, true) == SpellCheckResult::Success;
 		break;
-	case RSPLTYPE_SCROLL:
+	case SpellType::Scroll:
 		isValid = CanUseScroll(player, player.queuedSpell.spellId);
 		break;
-	case RSPLTYPE_CHARGES:
+	case SpellType::Charges:
 		isValid = CanUseStaff(player, player.queuedSpell.spellId);
 		break;
-	case RSPLTYPE_INVALID:
+	case SpellType::Invalid:
 		isValid = false;
 		break;
 	}
@@ -1236,7 +1236,7 @@ bool DoSpell(Player &player)
 		    player.position.temp.y,
 		    player.executedSpell.spellLevel);
 
-		if (IsAnyOf(player.executedSpell.spellType, RSPLTYPE_SCROLL, RSPLTYPE_CHARGES)) {
+		if (IsAnyOf(player.executedSpell.spellType, SpellType::Scroll, SpellType::Charges)) {
 			EnsureValidReadiedSpell(player);
 		}
 	}
@@ -1997,7 +1997,7 @@ void Player::ReadySpellFromEquipment(inv_body_loc bodyLocation)
 	auto &item = InvBody[bodyLocation];
 	if (item._itype == ItemType::Staff && IsValidSpell(item._iSpell) && item._iCharges > 0) {
 		_pRSpell = item._iSpell;
-		_pRSplType = RSPLTYPE_CHARGES;
+		_pRSplType = SpellType::Charges;
 		RedrawEverything();
 	}
 }
@@ -2540,7 +2540,7 @@ void CreatePlayer(Player &player, HeroClass c)
 	player._pLightRad = 10;
 	player._pInfraFlag = false;
 
-	player._pRSplType = RSPLTYPE_SKILL;
+	player._pRSplType = SpellType::Skill;
 	if (c == HeroClass::Warrior) {
 		player._pAblSpells = GetSpellBitmask(SPL_REPAIR);
 		player._pRSpell = SPL_REPAIR;
@@ -2563,7 +2563,7 @@ void CreatePlayer(Player &player, HeroClass c)
 
 	if (c == HeroClass::Sorcerer) {
 		player._pMemSpells = GetSpellBitmask(SPL_FIREBOLT);
-		player._pRSplType = RSPLTYPE_SPELL;
+		player._pRSplType = SpellType::Spell;
 		player._pRSpell = SPL_FIREBOLT;
 	} else {
 		player._pMemSpells = 0;
@@ -2749,7 +2749,7 @@ void AddPlrMonstExper(int lvl, int exp, char pmask)
 void InitPlayer(Player &player, bool firstTime)
 {
 	if (firstTime) {
-		player._pRSplType = RSPLTYPE_INVALID;
+		player._pRSplType = SpellType::Invalid;
 		player._pRSpell = SPL_INVALID;
 		if (&player == MyPlayer)
 			LoadHotkeys();
@@ -3417,7 +3417,7 @@ void CalcPlrStaff(Player &player)
 	}
 }
 
-void CheckPlrSpell(bool isShiftHeld, spell_id spellID, spell_type spellType)
+void CheckPlrSpell(bool isShiftHeld, spell_id spellID, SpellType spellType)
 {
 	bool addflag = false;
 
@@ -3456,23 +3456,23 @@ void CheckPlrSpell(bool isShiftHeld, spell_id spellID, spell_type spellType)
 
 	SpellCheckResult spellcheck = SpellCheckResult::Success;
 	switch (spellType) {
-	case RSPLTYPE_SKILL:
-	case RSPLTYPE_SPELL:
+	case SpellType::Skill:
+	case SpellType::Spell:
 		spellcheck = CheckSpell(*MyPlayer, spellID, spellType, false);
 		addflag = spellcheck == SpellCheckResult::Success;
 		break;
-	case RSPLTYPE_SCROLL:
+	case SpellType::Scroll:
 		addflag = pcurs == CURSOR_HAND && CanUseScroll(myPlayer, spellID);
 		break;
-	case RSPLTYPE_CHARGES:
+	case SpellType::Charges:
 		addflag = pcurs == CURSOR_HAND && CanUseStaff(myPlayer, spellID);
 		break;
-	case RSPLTYPE_INVALID:
+	case SpellType::Invalid:
 		return;
 	}
 
 	if (!addflag) {
-		if (spellType == RSPLTYPE_SPELL) {
+		if (spellType == SpellType::Spell) {
 			switch (spellcheck) {
 			case SpellCheckResult::Fail_NoMana:
 				myPlayer.Say(HeroSpeech::NotEnoughMana);
@@ -3493,16 +3493,16 @@ void CheckPlrSpell(bool isShiftHeld, spell_id spellID, spell_type spellType)
 	if (IsWallSpell(spellID)) {
 		LastMouseButtonAction = MouseActionType::Spell;
 		Direction sd = GetDirection(myPlayer.position.tile, cursPosition);
-		NetSendCmdLocParam4(true, CMD_SPELLXYD, cursPosition, spellID, spellType, static_cast<uint16_t>(sd), sl);
+		NetSendCmdLocParam4(true, CMD_SPELLXYD, cursPosition, spellID, static_cast<uint8_t>(spellType), static_cast<uint16_t>(sd), sl);
 	} else if (pcursmonst != -1 && !isShiftHeld) {
 		LastMouseButtonAction = MouseActionType::SpellMonsterTarget;
-		NetSendCmdParam4(true, CMD_SPELLID, pcursmonst, spellID, spellType, sl);
+		NetSendCmdParam4(true, CMD_SPELLID, pcursmonst, spellID, static_cast<uint8_t>(spellType), sl);
 	} else if (pcursplr != -1 && !isShiftHeld && !myPlayer.friendlyMode) {
 		LastMouseButtonAction = MouseActionType::SpellPlayerTarget;
-		NetSendCmdParam4(true, CMD_SPELLPID, pcursplr, spellID, spellType, sl);
+		NetSendCmdParam4(true, CMD_SPELLPID, pcursplr, spellID, static_cast<uint8_t>(spellType), sl);
 	} else {
 		LastMouseButtonAction = MouseActionType::Spell;
-		NetSendCmdLocParam3(true, CMD_SPELLXY, cursPosition, spellID, spellType, sl);
+		NetSendCmdLocParam3(true, CMD_SPELLXY, cursPosition, spellID, static_cast<uint8_t>(spellType), sl);
 	}
 }
 

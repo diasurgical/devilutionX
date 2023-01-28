@@ -21,7 +21,7 @@ bool IsWallSpell(spell_id spl);
 bool TargetsMonster(spell_id id);
 int GetManaAmount(const Player &player, spell_id sn);
 void ConsumeSpell(Player &player, spell_id sn);
-SpellCheckResult CheckSpell(const Player &player, spell_id sn, spell_type st, bool manaonly);
+SpellCheckResult CheckSpell(const Player &player, spell_id sn, SpellType st, bool manaonly);
 
 /**
  * @brief Ensures the player's current readied spell is a valid selection for the character. If the current selection is

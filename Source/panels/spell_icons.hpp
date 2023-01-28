@@ -48,7 +48,7 @@ void DrawSmallSpellIconBorder(const Surface &out, Point position);
 /**
  * @brief Set the color mapping for the `Draw(Small|Large)SpellIcon(Border)` calls.
  */
-void SetSpellTrans(spell_type t);
+void SetSpellTrans(SpellType t);
 
 void LoadLargeSpellIcons();
 void FreeLargeSpellIcons();

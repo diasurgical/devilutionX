@@ -31,15 +31,15 @@ namespace {
 bool IsReadiedSpellValid(const Player &player)
 {
 	switch (player._pRSplType) {
-	case RSPLTYPE_SKILL:
-	case RSPLTYPE_SPELL:
-	case RSPLTYPE_INVALID:
+	case SpellType::Skill:
+	case SpellType::Spell:
+	case SpellType::Invalid:
 		return true;
 
-	case RSPLTYPE_CHARGES:
+	case SpellType::Charges:
 		return (player._pISpells & GetSpellBitmask(player._pRSpell)) != 0;
 
-	case RSPLTYPE_SCROLL:
+	case SpellType::Scroll:
 		return (player._pScrlSpells & GetSpellBitmask(player._pRSpell)) != 0;
 
 	default:
@@ -59,8 +59,8 @@ void ClearReadiedSpell(Player &player)
 		RedrawEverything();
 	}
 
-	if (player._pRSplType != RSPLTYPE_INVALID) {
-		player._pRSplType = RSPLTYPE_INVALID;
+	if (player._pRSplType != SpellType::Invalid) {
+		player._pRSplType = SpellType::Invalid;
 		RedrawEverything();
 	}
 }
@@ -175,16 +175,16 @@ int GetManaAmount(const Player &player, spell_id sn)
 void ConsumeSpell(Player &player, spell_id sn)
 {
 	switch (player.executedSpell.spellType) {
-	case RSPLTYPE_SKILL:
-	case RSPLTYPE_INVALID:
+	case SpellType::Skill:
+	case SpellType::Invalid:
 		break;
-	case RSPLTYPE_SCROLL:
+	case SpellType::Scroll:
 		ConsumeScroll(player);
 		break;
-	case RSPLTYPE_CHARGES:
+	case SpellType::Charges:
 		ConsumeStaffCharge(player);
 		break;
-	case RSPLTYPE_SPELL:
+	case SpellType::Spell:
 #ifdef _DEBUG
 		if (DebugGodMode)
 			break;
@@ -210,7 +210,7 @@ void EnsureValidReadiedSpell(Player &player)
 	}
 }
 
-SpellCheckResult CheckSpell(const Player &player, spell_id sn, spell_type st, bool manaonly)
+SpellCheckResult CheckSpell(const Player &player, spell_id sn, SpellType st, bool manaonly)
 {
 #ifdef _DEBUG
 	if (DebugGodMode)
@@ -221,7 +221,7 @@ SpellCheckResult CheckSpell(const Player &player, spell_id sn, spell_type st, bo
 		return SpellCheckResult::Fail_Busy;
 	}
 
-	if (st == RSPLTYPE_SKILL) {
+	if (st == SpellType::Skill) {
 		return SpellCheckResult::Success;
 	}
 

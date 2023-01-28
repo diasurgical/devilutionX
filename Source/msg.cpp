@@ -1462,7 +1462,7 @@ size_t OnSpellWall(const TCmd *pCmd, Player &player)
 	if (wParam1 > SPL_LAST)
 		return sizeof(message);
 	const uint16_t wParam2 = SDL_SwapLE16(message.wParam2);
-	if (wParam2 > RSPLTYPE_INVALID)
+	if (wParam2 > static_cast<uint8_t>(SpellType::LAST))
 		return sizeof(message);
 
 	auto spell = static_cast<spell_id>(wParam1);
@@ -1482,7 +1482,7 @@ size_t OnSpellWall(const TCmd *pCmd, Player &player)
 	player.destParam3 = SDL_SwapLE16(message.wParam3);
 	player.destParam4 = SDL_SwapLE16(message.wParam4);
 	player.queuedSpell.spellId = spell;
-	player.queuedSpell.spellType = static_cast<spell_type>(wParam2);
+	player.queuedSpell.spellType = static_cast<SpellType>(wParam2);
 	player.queuedSpell.spellFrom = 0;
 
 	return sizeof(message);
@@ -1503,7 +1503,7 @@ size_t OnSpellTile(const TCmd *pCmd, Player &player)
 	if (wParam1 > SPL_LAST)
 		return sizeof(message);
 	const uint16_t wParam2 = SDL_SwapLE16(message.wParam2);
-	if (wParam2 > RSPLTYPE_INVALID)
+	if (wParam2 > static_cast<uint8_t>(SpellType::LAST))
 		return sizeof(message);
 
 	auto spell = static_cast<spell_id>(wParam1);
@@ -1522,7 +1522,7 @@ size_t OnSpellTile(const TCmd *pCmd, Player &player)
 	player.destParam2 = position.y;
 	player.destParam3 = SDL_SwapLE16(message.wParam3);
 	player.queuedSpell.spellId = spell;
-	player.queuedSpell.spellType = static_cast<spell_type>(wParam2);
+	player.queuedSpell.spellType = static_cast<SpellType>(wParam2);
 
 	return sizeof(message);
 }
@@ -1557,7 +1557,7 @@ size_t OnTargetSpellTile(const TCmd *pCmd, Player &player)
 	player.destParam2 = position.y;
 	player.destParam3 = SDL_SwapLE16(message.wParam2);
 	player.queuedSpell.spellId = spell;
-	player.queuedSpell.spellType = RSPLTYPE_SCROLL;
+	player.queuedSpell.spellType = SpellType::Scroll;
 	player.queuedSpell.spellFrom = static_cast<int8_t>(wParam3);
 
 	return sizeof(message);
@@ -1653,7 +1653,7 @@ size_t OnSpellMonster(const TCmd *pCmd, Player &player)
 	if (wParam2 > SPL_LAST)
 		return sizeof(message);
 	const uint16_t wParam3 = SDL_SwapLE16(message.wParam3);
-	if (wParam3 > RSPLTYPE_INVALID)
+	if (wParam3 > static_cast<uint8_t>(SpellType::LAST))
 		return sizeof(message);
 
 	auto spell = static_cast<spell_id>(wParam2);
@@ -1671,7 +1671,7 @@ size_t OnSpellMonster(const TCmd *pCmd, Player &player)
 	player.destParam1 = monsterIdx;
 	player.destParam2 = SDL_SwapLE16(message.wParam4);
 	player.queuedSpell.spellId = spell;
-	player.queuedSpell.spellType = static_cast<spell_type>(wParam3);
+	player.queuedSpell.spellType = static_cast<SpellType>(wParam3);
 	player.queuedSpell.spellFrom = 0;
 
 	return sizeof(message);
@@ -1692,7 +1692,7 @@ size_t OnSpellPlayer(const TCmd *pCmd, Player &player)
 	if (wParam2 > SPL_LAST)
 		return sizeof(message);
 	const uint16_t wParam3 = SDL_SwapLE16(message.wParam3);
-	if (wParam3 > RSPLTYPE_INVALID)
+	if (wParam3 > static_cast<uint8_t>(SpellType::LAST))
 		return sizeof(message);
 
 	auto spell = static_cast<spell_id>(wParam2);
@@ -1710,7 +1710,7 @@ size_t OnSpellPlayer(const TCmd *pCmd, Player &player)
 	player.destParam1 = playerIdx;
 	player.destParam2 = SDL_SwapLE16(message.wParam4);
 	player.queuedSpell.spellId = spell;
-	player.queuedSpell.spellType = static_cast<spell_type>(wParam3);
+	player.queuedSpell.spellType = static_cast<SpellType>(wParam3);
 	player.queuedSpell.spellFrom = 0;
 
 	return sizeof(message);
@@ -1745,7 +1745,7 @@ size_t OnTargetSpellMonster(const TCmd *pCmd, Player &player)
 	player.destParam1 = monsterIdx;
 	player.destParam2 = SDL_SwapLE16(message.wParam3);
 	player.queuedSpell.spellId = spell;
-	player.queuedSpell.spellType = RSPLTYPE_SCROLL;
+	player.queuedSpell.spellType = SpellType::Scroll;
 	player.queuedSpell.spellFrom = static_cast<int8_t>(wParam4);
 
 	return sizeof(message);
@@ -1780,7 +1780,7 @@ size_t OnTargetSpellPlayer(const TCmd *pCmd, Player &player)
 	player.destParam1 = playerIdx;
 	player.destParam2 = SDL_SwapLE16(message.wParam3);
 	player.queuedSpell.spellId = spell;
-	player.queuedSpell.spellType = RSPLTYPE_SCROLL;
+	player.queuedSpell.spellType = SpellType::Scroll;
 	player.queuedSpell.spellFrom = static_cast<int8_t>(wParam4);
 
 	return sizeof(message);
@@ -2481,7 +2481,7 @@ size_t OnNova(const TCmd *pCmd, Player &player)
 		if (player.isOnActiveLevel() && &player != MyPlayer && InDungeonBounds(position)) {
 			ClrPlrPath(player);
 			player.queuedSpell.spellId = SPL_NOVA;
-			player.queuedSpell.spellType = RSPLTYPE_SCROLL;
+			player.queuedSpell.spellType = SpellType::Scroll;
 			player.queuedSpell.spellFrom = 3;
 			player.destAction = ACTION_SPELL;
 			player.destParam1 = position.x;

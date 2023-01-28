@@ -208,7 +208,7 @@ struct PlayerAnimationData {
 
 struct SpellCastInfo {
 	spell_id spellId;
-	spell_type spellType;
+	SpellType spellType;
 	/* @brief Inventory location for scrolls */
 	int8_t spellFrom;
 	/* @brief Used for spell level */
@@ -324,7 +324,7 @@ struct Player {
 	SpellCastInfo executedSpell;
 	spell_id _pTSpell;
 	spell_id _pRSpell;
-	spell_type _pRSplType;
+	SpellType _pRSplType;
 	spell_id _pSBkSpell;
 	int8_t _pSplLvl[64];
 	/** @brief Bitmask of staff spell */
@@ -337,7 +337,7 @@ struct Player {
 	uint64_t _pScrlSpells;
 	SpellFlag _pSpellFlags;
 	spell_id _pSplHotKey[NumHotkeys];
-	spell_type _pSplTHotKey[NumHotkeys];
+	SpellType _pSplTHotKey[NumHotkeys];
 	bool _pBlockFlag;
 	bool _pInvincible;
 	int8_t _pLightRad;
@@ -817,7 +817,7 @@ void ClrPlrPath(Player &player);
 bool PosOkPlayer(const Player &player, Point position);
 void MakePlrPath(Player &player, Point targetPosition, bool endspace);
 void CalcPlrStaff(Player &player);
-void CheckPlrSpell(bool isShiftHeld, spell_id spellID = MyPlayer->_pRSpell, spell_type spellType = MyPlayer->_pRSplType);
+void CheckPlrSpell(bool isShiftHeld, spell_id spellID = MyPlayer->_pRSpell, SpellType spellType = MyPlayer->_pRSplType);
 void SyncPlrAnim(Player &player);
 void SyncInitPlrPos(Player &player);
 void SyncInitPlr(Player &player);

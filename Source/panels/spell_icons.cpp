@@ -97,7 +97,7 @@ void LoadLargeSpellIcons()
 		LargeSpellIcons = LoadCel("data\\spelicon", SPLICONLENGTH);
 #endif
 	}
-	SetSpellTrans(RSPLTYPE_SKILL);
+	SetSpellTrans(SpellType::Skill);
 }
 
 void FreeLargeSpellIcons()
@@ -156,9 +156,9 @@ void DrawSmallSpellIconBorder(const Surface &out, Point position)
 	UnsafeDrawBorder2px(out, Rectangle { Point { position.x, position.y - height + 1 }, Size { width, height } }, SplTransTbl[PAL8_YELLOW + 2]);
 }
 
-void SetSpellTrans(spell_type t)
+void SetSpellTrans(SpellType t)
 {
-	if (t == RSPLTYPE_SKILL) {
+	if (t == SpellType::Skill) {
 		for (int i = 0; i < 128; i++)
 			SplTransTbl[i] = i;
 	}
@@ -167,7 +167,7 @@ void SetSpellTrans(spell_type t)
 	SplTransTbl[255] = 0;
 
 	switch (t) {
-	case RSPLTYPE_SPELL:
+	case SpellType::Spell:
 		SplTransTbl[PAL8_YELLOW] = PAL16_BLUE + 1;
 		SplTransTbl[PAL8_YELLOW + 1] = PAL16_BLUE + 3;
 		SplTransTbl[PAL8_YELLOW + 2] = PAL16_BLUE + 5;
@@ -177,7 +177,7 @@ void SetSpellTrans(spell_type t)
 			SplTransTbl[PAL16_ORANGE - PAL16_BLUE + i] = i;
 		}
 		break;
-	case RSPLTYPE_SCROLL:
+	case SpellType::Scroll:
 		SplTransTbl[PAL8_YELLOW] = PAL16_BEIGE + 1;
 		SplTransTbl[PAL8_YELLOW + 1] = PAL16_BEIGE + 3;
 		SplTransTbl[PAL8_YELLOW + 2] = PAL16_BEIGE + 5;
@@ -186,7 +186,7 @@ void SetSpellTrans(spell_type t)
 			SplTransTbl[PAL16_ORANGE - PAL16_BEIGE + i] = i;
 		}
 		break;
-	case RSPLTYPE_CHARGES:
+	case SpellType::Charges:
 		SplTransTbl[PAL8_YELLOW] = PAL16_ORANGE + 1;
 		SplTransTbl[PAL8_YELLOW + 1] = PAL16_ORANGE + 3;
 		SplTransTbl[PAL8_YELLOW + 2] = PAL16_ORANGE + 5;
@@ -195,7 +195,7 @@ void SetSpellTrans(spell_type t)
 			SplTransTbl[PAL16_YELLOW - PAL16_ORANGE + i] = i;
 		}
 		break;
-	case RSPLTYPE_INVALID:
+	case SpellType::Invalid:
 		SplTransTbl[PAL8_YELLOW] = PAL16_GRAY + 1;
 		SplTransTbl[PAL8_YELLOW + 1] = PAL16_GRAY + 3;
 		SplTransTbl[PAL8_YELLOW + 2] = PAL16_GRAY + 5;
@@ -208,7 +208,7 @@ void SetSpellTrans(spell_type t)
 		SplTransTbl[PAL16_YELLOW + 15] = 0;
 		SplTransTbl[PAL16_ORANGE + 15] = 0;
 		break;
-	case RSPLTYPE_SKILL:
+	case SpellType::Skill:
 		break;
 	}
 }

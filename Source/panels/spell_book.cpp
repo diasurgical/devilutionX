@@ -48,28 +48,28 @@ void PrintSBookStr(const Surface &out, Point position, string_view text, UiFlags
 	    UiFlags::ColorWhite | flags);
 }
 
-spell_type GetSBookTrans(spell_id ii, bool townok)
+SpellType GetSBookTrans(spell_id ii, bool townok)
 {
 	Player &player = *MyPlayer;
 	if ((player._pClass == HeroClass::Monk) && (ii == SPL_SEARCH))
-		return RSPLTYPE_SKILL;
-	spell_type st = RSPLTYPE_SPELL;
+		return SpellType::Skill;
+	SpellType st = SpellType::Spell;
 	if ((player._pISpells & GetSpellBitmask(ii)) != 0) {
-		st = RSPLTYPE_CHARGES;
+		st = SpellType::Charges;
 	}
 	if ((player._pAblSpells & GetSpellBitmask(ii)) != 0) {
-		st = RSPLTYPE_SKILL;
+		st = SpellType::Skill;
 	}
-	if (st == RSPLTYPE_SPELL) {
+	if (st == SpellType::Spell) {
 		if (CheckSpell(*MyPlayer, ii, st, true) != SpellCheckResult::Success) {
-			st = RSPLTYPE_INVALID;
+			st = SpellType::Invalid;
 		}
 		if (player.GetSpellLevel(ii) == 0) {
-			st = RSPLTYPE_INVALID;
+			st = SpellType::Invalid;
 		}
 	}
-	if (townok && leveltype == DTYPE_TOWN && st != RSPLTYPE_INVALID && !spelldata[ii].sTownSpell) {
-		st = RSPLTYPE_INVALID;
+	if (townok && leveltype == DTYPE_TOWN && st != SpellType::Invalid && !spelldata[ii].sTownSpell) {
+		st = SpellType::Invalid;
 	}
 
 	return st;
@@ -129,12 +129,12 @@ void DrawSpellBook(const Surface &out)
 	for (int i = 1; i < 8; i++) {
 		spell_id sn = SpellPages[sbooktab][i - 1];
 		if (IsValidSpell(sn) && (spl & GetSpellBitmask(sn)) != 0) {
-			spell_type st = GetSBookTrans(sn, true);
+			SpellType st = GetSBookTrans(sn, true);
 			SetSpellTrans(st);
 			const Point spellCellPosition = GetPanelPosition(UiPanels::Spell, { 11, yp + SpellBookDescription.height });
 			DrawSmallSpellIcon(out, spellCellPosition, sn);
 			if (sn == player._pRSpell && st == player._pRSplType) {
-				SetSpellTrans(RSPLTYPE_SKILL);
+				SetSpellTrans(SpellType::Skill);
 				DrawSmallSpellIconBorder(out, spellCellPosition);
 			}
 
@@ -142,10 +142,10 @@ void DrawSpellBook(const Surface &out)
 			const Point line1 { 0, yp + textPaddingTop + lineHeight };
 			PrintSBookStr(out, line0, pgettext("spell", spelldata[sn].sNameText));
 			switch (GetSBookTrans(sn, false)) {
-			case RSPLTYPE_SKILL:
+			case SpellType::Skill:
 				PrintSBookStr(out, line1, _("Skill"));
 				break;
-			case RSPLTYPE_CHARGES: {
+			case SpellType::Charges: {
 				int charges = player.InvBody[INVLOC_HAND_LEFT]._iCharges;
 				PrintSBookStr(out, line1, fmt::format(fmt::runtime(ngettext("Staff ({:d} charge)", "Staff ({:d} charges)", charges)), charges));
 			} break;
@@ -191,12 +191,12 @@ void CheckSBook()
 		Player &player = *MyPlayer;
 		uint64_t spl = player._pMemSpells | player._pISpells | player._pAblSpells;
 		if (IsValidSpell(sn) && (spl & GetSpellBitmask(sn)) != 0) {
-			spell_type st = RSPLTYPE_SPELL;
+			SpellType st = SpellType::Spell;
 			if ((player._pISpells & GetSpellBitmask(sn)) != 0) {
-				st = RSPLTYPE_CHARGES;
+				st = SpellType::Charges;
 			}
 			if ((player._pAblSpells & GetSpellBitmask(sn)) != 0) {
-				st = RSPLTYPE_SKILL;
+				st = SpellType::Skill;
 			}
 			player._pRSpell = sn;
 			player._pRSplType = st;

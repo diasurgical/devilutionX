@@ -357,14 +357,14 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	player._pvid = file.NextLE<int32_t>();
 
 	player.queuedSpell.spellId = static_cast<spell_id>(file.NextLE<int32_t>());
-	player.queuedSpell.spellType = static_cast<spell_type>(file.NextLE<int8_t>());
+	player.queuedSpell.spellType = static_cast<SpellType>(file.NextLE<int8_t>());
 	player.queuedSpell.spellFrom = file.NextLE<int8_t>();
 	file.Skip(2); // Alignment
 	player._pTSpell = static_cast<spell_id>(file.NextLE<int32_t>());
 	file.Skip<int8_t>(); // Skip _pTSplType
 	file.Skip(3);        // Alignment
 	player._pRSpell = static_cast<spell_id>(file.NextLE<int32_t>());
-	player._pRSplType = static_cast<spell_type>(file.NextLE<int8_t>());
+	player._pRSplType = static_cast<SpellType>(file.NextLE<int8_t>());
 	file.Skip(3); // Alignment
 	player._pSBkSpell = static_cast<spell_id>(file.NextLE<int32_t>());
 	file.Skip<int8_t>(); // Skip _pSBkSplType
@@ -382,7 +382,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 		player._pSplHotKey[i] = static_cast<spell_id>(file.NextLE<int32_t>());
 	}
 	for (size_t i = 0; i < 4; i++) {
-		player._pSplTHotKey[i] = static_cast<spell_type>(file.NextLE<uint8_t>());
+		player._pSplTHotKey[i] = static_cast<SpellType>(file.NextLE<uint8_t>());
 	}
 
 	file.Skip<int32_t>(); // Skip _pwtype
@@ -1131,14 +1131,14 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.WriteLE<int32_t>(player._pvid);
 
 	file.WriteLE<int32_t>(player.queuedSpell.spellId);
-	file.WriteLE<int8_t>(player.queuedSpell.spellType);
+	file.WriteLE<int8_t>(static_cast<int8_t>(player.queuedSpell.spellType));
 	file.WriteLE<int8_t>(player.queuedSpell.spellFrom);
 	file.Skip(2); // Alignment
 	file.WriteLE<int32_t>(player._pTSpell);
 	file.Skip<int8_t>(); // Skip _pTSplType
 	file.Skip(3);        // Alignment
 	file.WriteLE<int32_t>(player._pRSpell);
-	file.WriteLE<int8_t>(player._pRSplType);
+	file.WriteLE<int8_t>(static_cast<uint8_t>(player._pRSplType));
 	file.Skip(3); // Alignment
 	file.WriteLE<int32_t>(player._pSBkSpell);
 	file.Skip<int8_t>(); // Skip _pSBkSplType
@@ -1158,7 +1158,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 		file.WriteLE<int32_t>(player._pSplHotKey[i]);
 	}
 	for (size_t i = 0; i < 4; i++) {
-		file.WriteLE<uint8_t>(player._pSplTHotKey[i]);
+		file.WriteLE<uint8_t>(static_cast<uint8_t>(player._pSplTHotKey[i]));
 	}
 
 	file.WriteLE<int32_t>(player.UsesRangedWeapon() ? 1 : 0);
@@ -1903,7 +1903,7 @@ void LoadHotkeys()
 
 	// Refill the spell arrays with no selection
 	std::fill(myPlayer._pSplHotKey, myPlayer._pSplHotKey + NumHotkeys, SPL_INVALID);
-	std::fill(myPlayer._pSplTHotKey, myPlayer._pSplTHotKey + NumHotkeys, RSPLTYPE_INVALID);
+	std::fill(myPlayer._pSplTHotKey, myPlayer._pSplTHotKey + NumHotkeys, SpellType::Invalid);
 
 	// Checking if the save file has the old format with only 4 hotkeys and no header
 	if (file.IsValid(HotkeysSize(nHotkeys))) {
@@ -1923,7 +1923,7 @@ void LoadHotkeys()
 	for (size_t i = 0; i < nHotkeys; i++) {
 		// Do not load hotkeys past the size of the spells array, discard the rest
 		if (i < NumHotkeys) {
-			myPlayer._pSplTHotKey[i] = static_cast<spell_type>(file.NextLE<uint8_t>());
+			myPlayer._pSplTHotKey[i] = static_cast<SpellType>(file.NextLE<uint8_t>());
 		} else {
 			file.Skip<uint8_t>();
 		}
@@ -1931,7 +1931,7 @@ void LoadHotkeys()
 
 	// Load the selected spell last
 	myPlayer._pRSpell = static_cast<spell_id>(file.NextLE<int32_t>());
-	myPlayer._pRSplType = static_cast<spell_type>(file.NextLE<uint8_t>());
+	myPlayer._pRSplType = static_cast<SpellType>(file.NextLE<uint8_t>());
 }
 
 void SaveHotkeys(SaveWriter &saveWriter, const Player &player)
@@ -1946,12 +1946,12 @@ void SaveHotkeys(SaveWriter &saveWriter, const Player &player)
 		file.WriteLE<int32_t>(spellId);
 	}
 	for (auto &spellType : player._pSplTHotKey) {
-		file.WriteLE<uint8_t>(spellType);
+		file.WriteLE<uint8_t>(static_cast<uint8_t>(spellType));
 	}
 
 	// Write the selected spell last
 	file.WriteLE<int32_t>(player._pRSpell);
-	file.WriteLE<uint8_t>(player._pRSplType);
+	file.WriteLE<uint8_t>(static_cast<uint8_t>(player._pRSplType));
 }
 
 void LoadHeroItems(Player &player)

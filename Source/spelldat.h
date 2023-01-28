@@ -13,12 +13,14 @@ namespace devilution {
 
 #define MAX_SPELLS 52
 
-enum spell_type : uint8_t {
-	RSPLTYPE_SKILL,
-	RSPLTYPE_SPELL,
-	RSPLTYPE_SCROLL,
-	RSPLTYPE_CHARGES,
-	RSPLTYPE_INVALID,
+enum class SpellType : uint8_t {
+	Skill,
+	FIRST = Skill,
+	Spell,
+	Scroll,
+	Charges,
+	Invalid,
+	LAST = Invalid,
 };
 
 enum spell_id : int8_t {
