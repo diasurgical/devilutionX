@@ -648,7 +648,7 @@ bool GuardianTryFireAt(Missile &missile, Point target)
 		return false;
 
 	Direction dir = GetDirection(position, target);
-	AddMissile(position, target, dir, MissileID::Firebolt, TARGET_MONSTERS, missile._misource, missile._midam, missile.sourcePlayer()->GetSpellLevel(SPL_FIREBOLT), &missile);
+	AddMissile(position, target, dir, MissileID::Firebolt, TARGET_MONSTERS, missile._misource, missile._midam, missile.sourcePlayer()->GetSpellLevel(SPL_GUARDIAN), &missile);
 	SetMissDir(missile, 2);
 	missile.var2 = 3;
 
