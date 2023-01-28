@@ -2809,7 +2809,7 @@ void MI_Firebolt(Missile &missile)
 			case MissileID::BoneSpirit:
 				d = 0;
 				break;
-			case MissileID::Guardian:		
+			case MissileID::Guardian:
 				d = GenerateRnd(10) + (player._pLevel / 2) + 1;
 				missile._midam = ScaleSpellEffect(dmg, missile._mispllvl);
 				break;
