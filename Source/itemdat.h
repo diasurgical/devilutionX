@@ -590,7 +590,7 @@ struct UniqueItem {
 	ItemPower powers[6];
 };
 
-extern ItemData AllItemsList[];
+extern const ItemData AllItemsList[];
 extern const PLStruct ItemPrefixes[];
 extern const PLStruct ItemSuffixes[];
 extern const UniqueItem UniqueItems[];

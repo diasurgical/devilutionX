@@ -372,6 +372,8 @@ struct Player {
 
 	bool CanUseItem(const Item &item) const
 	{
+		if (item.IDidx == IDI_SPECELIX && Quests[Q_MUSHROOM]._qactive != QUEST_DONE)
+			return false;
 		return _pStrength >= item._iMinStr
 		    && _pMagic >= item._iMinMag
 		    && _pDexterity >= item._iMinDex;
