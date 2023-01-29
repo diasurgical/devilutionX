@@ -2875,12 +2875,6 @@ void MI_Projectile(Missile &missile)
 		case MissileID::Acid:
 			AddMissile(missile.position.tile, dst, dir, MissileID::AcidSplat, missile._micaster, missile._misource, 0, 0, &missile);
 			break;
-		//case MissileID::BoneSpirit:
-		//	SetMissDir(missile, 8);
-		//	missile._mirange = 7;
-		//	missile._miDelFlag = false;
-		//	PutMissile(missile);
-		//	return;
 		case MissileID::OrangeFlare:
 			AddMissile(missile.position.tile, dst, dir, MissileID::OrangeExplosion, missile._micaster, missile._misource, 0, 0, &missile);
 			break;
@@ -2911,14 +2905,6 @@ void MI_Projectile(Missile &missile)
 		}
 		PutMissile(missile);
 	}
-	/*} else if (missile._mirange == 0) {
-		if (missile._mlid != NO_LIGHT)
-			AddUnLight(missile._mlid);
-		missile._miDelFlag = true;
-		PlaySfxLoc(LS_BSIMPCT, missile.position.tile);
-		PutMissile(missile);
-	} else
-		PutMissile(missile);*/
 }
 
 void MI_Lightball(Missile &missile)
