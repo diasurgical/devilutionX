@@ -351,11 +351,11 @@ void DrawMonster(const Surface &out, Point tilePosition, Point targetBufferPosit
 /**
  * @brief Helper for rendering a specific player icon (Mana Shield or Reflect)
  */
-void DrawPlayerIconHelper(const Surface &out, missile_graphic_id missileGraphicId, Point position, bool lighting, bool infraVision)
+void DrawPlayerIconHelper(const Surface &out, MissileGraphicID missileGraphicId, Point position, bool lighting, bool infraVision)
 {
-	position.x -= MissileSpriteData[missileGraphicId].animWidth2;
+	position.x -= MissileSpriteData[static_cast<uint8_t>(missileGraphicId)].animWidth2;
 
-	const ClxSprite sprite = (*MissileSpriteData[missileGraphicId].sprites).list()[0];
+	const ClxSprite sprite = (*MissileSpriteData[static_cast<uint8_t>(missileGraphicId)].sprites).list()[0];
 
 	if (!lighting) {
 		ClxDraw(out, position, sprite);
@@ -380,9 +380,9 @@ void DrawPlayerIconHelper(const Surface &out, missile_graphic_id missileGraphicI
 void DrawPlayerIcons(const Surface &out, const Player &player, Point position, bool infraVision)
 {
 	if (player.pManaShield)
-		DrawPlayerIconHelper(out, MFILE_MANASHLD, position, &player != MyPlayer, infraVision);
+		DrawPlayerIconHelper(out, MissileGraphicID::ManaShield, position, &player != MyPlayer, infraVision);
 	if (player.wReflections > 0)
-		DrawPlayerIconHelper(out, MFILE_REFLECT, position + Displacement { 0, 16 }, &player != MyPlayer, infraVision);
+		DrawPlayerIconHelper(out, MissileGraphicID::Reflect, position + Displacement { 0, 16 }, &player != MyPlayer, infraVision);
 }
 
 /**

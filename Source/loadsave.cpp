@@ -704,7 +704,7 @@ void LoadMissile(LoadHelper *file)
 	missile._mimfnum = file->NextLE<int32_t>();
 	missile._mispllvl = file->NextLE<int32_t>();
 	missile._miDelFlag = file->NextBool32();
-	missile._miAnimType = file->NextLE<uint8_t>();
+	missile._miAnimType = static_cast<MissileGraphicID>(file->NextLE<uint8_t>());
 	file->Skip(3); // Alignment
 	missile._miAnimFlags = static_cast<MissileDataFlags>(file->NextLE<int32_t>());
 	file->Skip(4); // Skip pointer _miAnimData
@@ -1440,7 +1440,7 @@ void SaveMissile(SaveHelper *file, const Missile &missile)
 	file->WriteLE<int32_t>(missile._mimfnum);
 	file->WriteLE<int32_t>(missile._mispllvl);
 	file->WriteLE<uint32_t>(missile._miDelFlag ? 1 : 0);
-	file->WriteLE<uint8_t>(missile._miAnimType);
+	file->WriteLE<uint8_t>(static_cast<uint8_t>(missile._miAnimType));
 	file->Skip(3); // Alignment
 	file->WriteLE<int32_t>(static_cast<int32_t>(missile._miAnimFlags));
 	file->Skip(4); // Skip pointer _miAnimData

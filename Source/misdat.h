@@ -31,68 +31,68 @@ enum class DamageType : uint8_t {
 	Acid,
 };
 
-typedef enum missile_graphic_id : uint8_t {
-	MFILE_ARROWS,
-	MFILE_FIREBA,
-	MFILE_GUARD,
-	MFILE_LGHNING,
-	MFILE_FIREWAL,
-	MFILE_MAGBLOS,
-	MFILE_PORTAL,
-	MFILE_BLUEXFR,
-	MFILE_BLUEXBK,
-	MFILE_MANASHLD,
-	MFILE_BLOOD,
-	MFILE_BONE,
-	MFILE_METLHIT,
-	MFILE_FARROW,
-	MFILE_DOOM,
-	MFILE_0F,
-	MFILE_BLODBUR,
-	MFILE_NEWEXP,
-	MFILE_SHATTER1,
-	MFILE_BIGEXP,
-	MFILE_INFERNO,
-	MFILE_THINLGHT,
-	MFILE_FLARE,
-	MFILE_FLAREEXP,
-	MFILE_MAGBALL,
-	MFILE_KRULL,
-	MFILE_MINILTNG,
-	MFILE_HOLY,
-	MFILE_HOLYEXPL,
-	MFILE_LARROW,
-	MFILE_FIRARWEX,
-	MFILE_ACIDBF,
-	MFILE_ACIDSPLA,
-	MFILE_ACIDPUD,
-	MFILE_ETHRSHLD,
-	MFILE_FIRERUN,
-	MFILE_RESSUR1,
-	MFILE_SKLBALL,
-	MFILE_RPORTAL,
-	MFILE_FIREPLAR,
-	MFILE_SCUBMISB,
-	MFILE_SCBSEXPB,
-	MFILE_SCUBMISC,
-	MFILE_SCBSEXPC,
-	MFILE_SCUBMISD,
-	MFILE_SCBSEXPD,
-	MFILE_SPAWNS,
-	MFILE_REFLECT,
-	MFILE_LICH,
-	MFILE_MSBLA,
-	MFILE_NECROMORB,
-	MFILE_ARCHLICH,
-	MFILE_RUNE,
-	MFILE_EXYEL2,
-	MFILE_EXBL2,
-	MFILE_EXRED3,
-	MFILE_BONEDEMON,
-	MFILE_EXORA1,
-	MFILE_EXBL3,
-	MFILE_NONE,
-} missile_graphic_id;
+typedef enum class MissileGraphicID : uint8_t {
+	Arrow,
+	Fireball,
+	Guardian,
+	Lightning,
+	FireWall,
+	MagmaBallExplosion,
+	TownPortal,
+	FlashBottom,
+	FlashTop,
+	ManaShield,
+	BloodHit,
+	BoneHit,
+	MetalHit,
+	FireArrow,
+	DoomSerpents,
+	Golem,
+	Spurt,
+	ApocalypseBoom,
+	StoneCurseShatter,
+	BigExplosion,
+	Inferno,
+	ThinLightning,
+	BloodStar,
+	BloodStarExplosion,
+	MagmaBall,
+	Krull,
+	ChargedBolt,
+	HolyBolt,
+	HolyBoltExplosion,
+	LightningArrow,
+	FireArrowExplosion,
+	Acid,
+	AcidSplat,
+	AcidPuddle,
+	Etherealize,
+	Elemental,
+	Resurrect,
+	BoneSpirit,
+	RedPortal,
+	DiabloApocalypseBoom,
+	BloodStarBlue,
+	BloodStarBlueExplosion,
+	BloodStarYellow,
+	BloodStarYellowExplosion,
+	BloodStarRed,
+	BloodStarRedExplosion,
+	HorkSpawn,
+	Reflect,
+	OrangeFlare,
+	BlueFlare,
+	RedFlare,
+	YellowFlare,
+	Rune,
+	YellowFlareExplosion,
+	BlueFlareExplosion,
+	RedFlareExplosion,
+	BlueFlare2,
+	OrangeFlareExplosion,
+	BlueFlareExplosion2,
+	None,
+} MissileGraphicID;
 
 /**
  * @brief Specifies what if and how movement distribution is applied
@@ -122,7 +122,7 @@ struct MissileData {
 	bool mDraw;
 	uint8_t mType;
 	DamageType damageType;
-	uint8_t mFileNum;
+	MissileGraphicID mFileNum;
 	_sfx_id mlSFX;
 	_sfx_id miSFX;
 	MissileMovementDistribution MovementDistribution;
@@ -138,7 +138,7 @@ enum class MissileDataFlags : uint8_t {
 
 struct MissileFileData {
 	string_view name;
-	uint8_t animName;
+	MissileGraphicID animName;
 	uint8_t animFAmt;
 	MissileDataFlags flags;
 	std::array<uint8_t, 16> animDelay = {};
@@ -147,7 +147,7 @@ struct MissileFileData {
 	int16_t animWidth2;
 	OptionalOwnedClxSpriteListOrSheet sprites;
 
-	MissileFileData(string_view name, uint8_t animName, uint8_t animFAmt, MissileDataFlags flags,
+	MissileFileData(string_view name, MissileGraphicID animName, uint8_t animFAmt, MissileDataFlags flags,
 	    std::initializer_list<uint8_t> animDelay, std::initializer_list<uint8_t> animLen,
 	    uint16_t animWidth, int16_t animWidth2);
 
