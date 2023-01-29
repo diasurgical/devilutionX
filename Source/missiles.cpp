@@ -1774,20 +1774,20 @@ void AddFirebolt(Missile &missile, AddMissileParameter &parameter)
 	missile.var1 = missile.position.start.x;
 	missile.var2 = missile.position.start.y;
 	missile._mlid = AddLight(missile.position.start, 8);
-	switch (missile.sourceType()) {
-	case MissileSource::Player:
-		if (missile._midam == 0) {
+	if (missile._midam == 0) {
+		switch (missile.sourceType()) {
+		case MissileSource::Player: {
 			const Player &player = *missile.sourcePlayer();
 			missile._midam = GenerateRnd(10) + (player._pMagic / 8) + missile._mispllvl + 1;
-		}
-		break;
+		} break;
 
-	case MissileSource::Monster:
-		missile._midam = ProjectileMonsterDamage(missile);
-		break;
-	case MissileSource::Trap:
-		missile._midam = ProjectileTrapDamage(missile);
-		break;
+		case MissileSource::Monster:
+			missile._midam = ProjectileMonsterDamage(missile);
+			break;
+		case MissileSource::Trap:
+			missile._midam = ProjectileTrapDamage(missile);
+			break;
+		}
 	}
 }
 
@@ -1804,17 +1804,18 @@ void AddMagmaball(Missile &missile, AddMissileParameter &parameter)
 	missile.var1 = missile.position.start.x;
 	missile.var2 = missile.position.start.y;
 	missile._mlid = AddLight(missile.position.start, 8);
-	switch (missile.sourceType()) {
-	case MissileSource::Player:
-		// Not typically created by Players
-		missile._midam = 0;
-		break;
-	case MissileSource::Monster:
-		missile._midam = ProjectileMonsterDamage(missile);
-		break;
-	case MissileSource::Trap:
-		missile._midam = ProjectileTrapDamage(missile);
-		break;
+	if (missile._midam == 0) {
+		switch (missile.sourceType()) {
+		case MissileSource::Player:
+			// Not typically created by Players
+			break;
+		case MissileSource::Monster:
+			missile._midam = ProjectileMonsterDamage(missile);
+			break;
+		case MissileSource::Trap:
+			missile._midam = ProjectileTrapDamage(missile);
+			break;
+		}
 	}
 }
 
@@ -2199,18 +2200,20 @@ void AddFlare(Missile &missile, AddMissileParameter &parameter)
 		SetMissDir(missile, GetDirection16(missile.position.start, dst));
 	}
 
-	switch (missile.sourceType()) {
-	case MissileSource::Player: {
-		const Player &player = *missile.sourcePlayer();
-		missile._midam = 3 * missile._mispllvl - (player._pMagic / 8) + (player._pMagic / 2);
-		break;
-	}
-	case MissileSource::Monster:
-		missile._midam = ProjectileMonsterDamage(missile);
-		break;
-	case MissileSource::Trap:
-		missile._midam = ProjectileTrapDamage(missile);
-		break;
+	if (missile._midam == 0) {
+		switch (missile.sourceType()) {
+		case MissileSource::Player: {
+			const Player &player = *missile.sourcePlayer();
+			missile._midam = 3 * missile._mispllvl - (player._pMagic / 8) + (player._pMagic / 2);
+			break;
+		}
+		case MissileSource::Monster:
+			missile._midam = ProjectileMonsterDamage(missile);
+			break;
+		case MissileSource::Trap:
+			missile._midam = ProjectileTrapDamage(missile);
+			break;
+		}
 	}
 }
 
@@ -2225,17 +2228,18 @@ void AddAcid(Missile &missile, AddMissileParameter &parameter)
 	missile._mlid = NO_LIGHT;
 	missile.var1 = missile.position.start.x;
 	missile.var2 = missile.position.start.y;
-	switch (missile.sourceType()) {
-	case MissileSource::Player:
-		// Not typically used by Players
-		missile._midam = 0;
-		break;
-	case MissileSource::Monster:
-		missile._midam = ProjectileMonsterDamage(missile);
-		break;
-	case MissileSource::Trap:
-		missile._midam = ProjectileTrapDamage(missile);
-		break;
+	if (missile._midam == 0) {
+		switch (missile.sourceType()) {
+		case MissileSource::Player:
+			// Not typically created by Players
+			break;
+		case MissileSource::Monster:
+			missile._midam = ProjectileMonsterDamage(missile);
+			break;
+		case MissileSource::Trap:
+			missile._midam = ProjectileTrapDamage(missile);
+			break;
+		}
 	}
 	PutMissile(missile);
 }
