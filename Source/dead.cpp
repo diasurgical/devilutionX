@@ -52,7 +52,7 @@ void InitCorpses()
 	nd++; // Unused blood spatter
 
 	if (!HeadlessMode)
-		Corpses[nd].sprites.emplace(*MissileSpriteData[MFILE_SHATTER1].sprites);
+		Corpses[nd].sprites.emplace(*MissileSpriteData[static_cast<uint8_t>(MissileGraphicID::StoneCurseShatter)].sprites);
 	Corpses[nd].frame = 11;
 	Corpses[nd].width = 128;
 	Corpses[nd].translationPaletteIndex = 0;

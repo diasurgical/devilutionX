@@ -98,7 +98,7 @@ struct Missile {
 	int _mimfnum; // The direction of the missile (direction enum)
 	int _mispllvl;
 	bool _miDelFlag; // Indicate whether the missile should be deleted
-	uint8_t _miAnimType;
+	MissileGraphicID _miAnimType;
 	MissileDataFlags _miAnimFlags;
 	OptionalClxSpriteList _miAnimData;
 	int _miAnimDelay; // Tick length of each frame in the current animation
