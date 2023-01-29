@@ -388,7 +388,7 @@ void AddDiabApoca(Missile &missile, AddMissileParameter &parameter);
 Missile *AddMissile(Point src, Point dst, Direction midir, MissileID mitype, mienemy_type micaster, int id, int midam, int spllvl, Missile *pParent = nullptr);
 void MI_LArrow(Missile &missile);
 void MI_Arrow(Missile &missile);
-void MI_Firebolt(Missile &missile);
+void MI_Projectile(Missile &missile);
 void MI_Lightball(Missile &missilei);
 void MI_Acidpud(Missile &missile);
 void MI_Firewall(Missile &missile);
