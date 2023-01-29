@@ -2859,67 +2859,66 @@ void MI_Projectile(Missile &missile)
 {
 	missile._mirange--;
 
-	if (missile._mimfnum != 8) {
-		MoveMissileAndCheckMissileCol(missile, missile._midam, missile._midam, true, true);
-		if (missile._mirange == 0) {
-			missile._miDelFlag = true;
-			Point dst = { 0, 0 };
-			auto dir = static_cast<Direction>(missile._mimfnum);
-			switch (missile._mitype) {
-			case MissileID::Firebolt:
-			case MissileID::MagmaBall:
-				AddMissile(missile.position.tile, dst, dir, MissileID::MagmaBallExplosion, missile._micaster, missile._misource, 0, 0, &missile);
-				break;
-			case MissileID::BloodStar:
-				AddMissile(missile.position.tile, dst, dir, MissileID::BloodStarExplosion, missile._micaster, missile._misource, 0, 0, &missile);
-				break;
-			case MissileID::Acid:
-				AddMissile(missile.position.tile, dst, dir, MissileID::AcidSplat, missile._micaster, missile._misource, 0, 0, &missile);
-				break;
-			/*case MissileID::BoneSpirit:
-				SetMissDir(missile, 8);
-				missile._mirange = 7;
-				missile._miDelFlag = false;
-				PutMissile(missile);
-				return;*/
-			case MissileID::OrangeFlare:
-				AddMissile(missile.position.tile, dst, dir, MissileID::OrangeExplosion, missile._micaster, missile._misource, 0, 0, &missile);
-				break;
-			case MissileID::BlueFlare:
-				AddMissile(missile.position.tile, dst, dir, MissileID::BlueExplosion, missile._micaster, missile._misource, 0, 0, &missile);
-				break;
-			case MissileID::RedFlare:
-				AddMissile(missile.position.tile, dst, dir, MissileID::RedExplosion, missile._micaster, missile._misource, 0, 0, &missile);
-				break;
-			case MissileID::YellowFlare:
-				AddMissile(missile.position.tile, dst, dir, MissileID::YellowExplosion, missile._micaster, missile._misource, 0, 0, &missile);
-				break;
-			case MissileID::BlueFlare2:
-				AddMissile(missile.position.tile, dst, dir, MissileID::BlueExplosion2, missile._micaster, missile._misource, 0, 0, &missile);
-				break;
-			default:
-				break;
-			}
-			if (missile._mlid != NO_LIGHT)
-				AddUnLight(missile._mlid);
-			PutMissile(missile);
-		} else {
-			if (missile.position.tile != Point { missile.var1, missile.var2 }) {
-				missile.var1 = missile.position.tile.x;
-				missile.var2 = missile.position.tile.y;
-				if (missile._mlid != NO_LIGHT)
-					ChangeLight(missile._mlid, missile.position.tile, 8);
-			}
-			PutMissile(missile);
+	MoveMissileAndCheckMissileCol(missile, missile._midam, missile._midam, true, true);
+	if (missile._mirange == 0) {
+		missile._miDelFlag = true;
+		Point dst = { 0, 0 };
+		auto dir = static_cast<Direction>(missile._mimfnum);
+		switch (missile._mitype) {
+		case MissileID::Firebolt:
+		case MissileID::MagmaBall:
+			AddMissile(missile.position.tile, dst, dir, MissileID::MagmaBallExplosion, missile._micaster, missile._misource, 0, 0, &missile);
+			break;
+		case MissileID::BloodStar:
+			AddMissile(missile.position.tile, dst, dir, MissileID::BloodStarExplosion, missile._micaster, missile._misource, 0, 0, &missile);
+			break;
+		case MissileID::Acid:
+			AddMissile(missile.position.tile, dst, dir, MissileID::AcidSplat, missile._micaster, missile._misource, 0, 0, &missile);
+			break;
+		//case MissileID::BoneSpirit:
+		//	SetMissDir(missile, 8);
+		//	missile._mirange = 7;
+		//	missile._miDelFlag = false;
+		//	PutMissile(missile);
+		//	return;
+		case MissileID::OrangeFlare:
+			AddMissile(missile.position.tile, dst, dir, MissileID::OrangeExplosion, missile._micaster, missile._misource, 0, 0, &missile);
+			break;
+		case MissileID::BlueFlare:
+			AddMissile(missile.position.tile, dst, dir, MissileID::BlueExplosion, missile._micaster, missile._misource, 0, 0, &missile);
+			break;
+		case MissileID::RedFlare:
+			AddMissile(missile.position.tile, dst, dir, MissileID::RedExplosion, missile._micaster, missile._misource, 0, 0, &missile);
+			break;
+		case MissileID::YellowFlare:
+			AddMissile(missile.position.tile, dst, dir, MissileID::YellowExplosion, missile._micaster, missile._misource, 0, 0, &missile);
+			break;
+		case MissileID::BlueFlare2:
+			AddMissile(missile.position.tile, dst, dir, MissileID::BlueExplosion2, missile._micaster, missile._misource, 0, 0, &missile);
+			break;
+		default:
+			break;
 		}
-	} else if (missile._mirange == 0) {
+		if (missile._mlid != NO_LIGHT)
+			AddUnLight(missile._mlid);
+		PutMissile(missile);
+	} else {
+		if (missile.position.tile != Point { missile.var1, missile.var2 }) {
+			missile.var1 = missile.position.tile.x;
+			missile.var2 = missile.position.tile.y;
+			if (missile._mlid != NO_LIGHT)
+				ChangeLight(missile._mlid, missile.position.tile, 8);
+		}
+		PutMissile(missile);
+	}
+	/*} else if (missile._mirange == 0) {
 		if (missile._mlid != NO_LIGHT)
 			AddUnLight(missile._mlid);
 		missile._miDelFlag = true;
 		PlaySfxLoc(LS_BSIMPCT, missile.position.tile);
 		PutMissile(missile);
 	} else
-		PutMissile(missile);
+		PutMissile(missile);*/
 }
 
 void MI_Lightball(Missile &missile)
