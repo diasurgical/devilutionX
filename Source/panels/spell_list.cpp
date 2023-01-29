@@ -216,7 +216,7 @@ std::vector<SpellListItem> GetSpellListItems()
 			mask = myPlayer._pISpells;
 			break;
 		default:
-			break;
+			continue;
 		}
 		int8_t j = SPL_FIREBOLT;
 		for (uint64_t spl = 1; j < MAX_SPELLS; spl <<= 1, j++) {
@@ -339,6 +339,8 @@ void DoSpeedBook()
 			case SpellType::Charges:
 				spells = myPlayer._pISpells;
 				break;
+			default:
+				continue;
 			}
 			uint64_t spell = 1;
 			for (int j = 1; j < MAX_SPELLS; j++) {
