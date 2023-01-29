@@ -1467,46 +1467,49 @@ void TilesInView(int *rcolumns, int *rrows)
 
 void CalcViewportGeometry()
 {
+	const int zoomFactor = *sgOptions.Graphics.zoom ? 2 : 1;
+	const int screenWidth = GetScreenWidth() / zoomFactor;
+	const int screenHeight = GetScreenHeight() / zoomFactor;
+	const int panelHeight = GetMainPanel().size.height / zoomFactor;
+	const int pixelsToPanel = screenHeight - panelHeight;
+	Point playerPosition { screenWidth / 2, pixelsToPanel / 2 };
+
+	if (*sgOptions.Graphics.zoom)
+		playerPosition.y += TILE_HEIGHT / 4;
+
+	const int tilesToTop = (playerPosition.y + TILE_HEIGHT - 1) / TILE_HEIGHT;
+	const int tilesToLeft = (playerPosition.x + TILE_WIDTH - 1) / TILE_WIDTH;
+
+	// Location of the center of the tile from which to start rendering, relative to the viewport origin
+	Point startPosition = playerPosition - Displacement { tilesToLeft * TILE_WIDTH, tilesToTop * TILE_HEIGHT };
+
+	// Position of the tile from which to start rendering in tile space,
+	// relative to the tile the player character occupies
 	tileShift = { 0, 0 };
+	tileShift += Displacement(Direction::North) * tilesToTop;
+	tileShift += Displacement(Direction::West) * tilesToLeft;
 
-	// Adjust by player offset and tile grid alignment
-	int xo = 0;
-	int yo = 0;
-	CalcTileOffset(&xo, &yo);
-	tileOffset = { -xo, -yo - 1 + TILE_HEIGHT / 2 };
-
-	TilesInView(&tileColums, &tileRows);
-	int lrow = tileRows - RowsCoveredByPanel();
-
-	// Center player tile on screen
-	tileShift += Displacement(Direction::West) * (tileColums / 2);
-	tileShift += Displacement(Direction::North) * (lrow / 2);
-
-	tileRows *= 2;
-
-	// Align grid
-	if ((tileColums & 1) == 0) {
-		tileShift.deltaY--; // Shift player row to one that can be centered with out pixel offset
-		if ((lrow & 1) == 0) {
-			// Offset tile to vertically align the player when both rows and colums are even
-			tileRows++;
-			tileOffset.deltaY -= TILE_HEIGHT / 2;
-		}
-	} else if ((tileColums & 1) != 0 && (lrow & 1) != 0) {
-		// Offset tile to vertically align the player when both rows and colums are odd
+	// The rendering loop expects to start on a row with fewer columns
+	if (tilesToLeft * TILE_WIDTH >= playerPosition.x) {
+		startPosition += Displacement { TILE_WIDTH / 2, -TILE_HEIGHT / 2 };
+		tileShift += Displacement(Direction::NorthEast);
+	} else if (tilesToTop * TILE_HEIGHT < playerPosition.y) {
+		// There is one row above the current row that needs to be rendered,
+		// but we skip to the row above it because it has too many columns
+		startPosition += Displacement { 0, -TILE_HEIGHT };
 		tileShift += Displacement(Direction::North);
-		tileRows++;
-		tileOffset.deltaY -= TILE_HEIGHT / 2;
 	}
 
-	// Slightly lower the zoomed view
-	if (*sgOptions.Graphics.zoom) {
-		tileOffset.deltaY += TILE_HEIGHT / 4;
-		if (yo < TILE_HEIGHT / 4)
-			tileRows++;
-	}
+	// Location of the bottom-left corner of the bounding box around the
+	// tile from which to start rendering, relative to the viewport origin
+	tileOffset = { startPosition.x - TILE_WIDTH / 2, startPosition.y + TILE_HEIGHT / 2 - 1 };
 
-	tileRows++; // Cover lower edge saw tooth, right edge accounted for in scrollrt_draw()
+	// Compute the number of rows to be rendered as well as
+	// the number of columns to be rendered in the first row
+	const int viewportHeight = GetViewportHeight() / zoomFactor;
+	const Point renderStart = startPosition - Displacement { TILE_WIDTH / 2, TILE_HEIGHT / 2 };
+	tileRows = (viewportHeight - renderStart.y + TILE_HEIGHT / 2 - 1) / (TILE_HEIGHT / 2);
+	tileColums = (screenWidth - renderStart.x + TILE_WIDTH - 1) / TILE_WIDTH;
 }
 
 extern SDL_Surface *PalSurface;
