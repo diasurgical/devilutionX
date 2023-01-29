@@ -215,7 +215,7 @@ std::vector<SpellListItem> GetSpellListItems()
 		case SpellType::Charges:
 			mask = myPlayer._pISpells;
 			break;
-		case SpellType::Invalid:
+		default:
 			break;
 		}
 		int8_t j = SPL_FIREBOLT;
