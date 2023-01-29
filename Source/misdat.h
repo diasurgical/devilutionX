@@ -29,6 +29,7 @@ enum class DamageType : uint8_t {
 	Lightning,
 	Magic,
 	Acid,
+	Invalid,
 };
 
 typedef enum missile_graphic_id : uint8_t {
