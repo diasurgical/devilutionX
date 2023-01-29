@@ -19,8 +19,8 @@ enum class SpellType : uint8_t {
 	Spell,
 	Scroll,
 	Charges,
+	LAST = Charges,
 	Invalid,
-	LAST = Invalid,
 };
 
 enum spell_id : int8_t {
