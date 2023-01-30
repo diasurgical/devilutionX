@@ -12,92 +12,92 @@
 namespace devilution {
 
 enum class TranslationFile : uint16_t {
-	ZombieGold,
+	ZombieGold, // default
 	ZombieBlueRed,
 	ZombieGray,
 	ZombieYellow,
-	FallenSpearRed,
+	FallenSpearRed, // default
 	FallenSpearBlue,
 	FallenSpearDarkBlue,
 	FallenSpearBrown,
 	FallenSpearOrange,
 	FallenSpearRedYellow,
 	FallenSpearYellow,
-	SkeletonAxeRed,
+	SkeletonAxeRed, // default
 	SkeletonAxeBlack,
 	SkeletonAxeBlue,
 	SkeletonAxeDarkRed,
 	SkeletonAxeGold,
 	SkeletonAxeWhite,
-	FallenSwordRed,
+	FallenSwordRed, // default
 	FallenSwordBlue,
 	FallenSwordDarkBlue,
 	FallenSwordBrown,
 	FallenSwordOrange,
 	FallenSwordRedYellow,
 	FallenSwordYellow,
-	ScavengerRed,
+	ScavengerRed, // default
 	ScavengerBlueRed,
 	ScavengerOrange,
 	ScavengerGray,
 	ScavengerYellowBlue,
-	SkeletonBowRed,
+	SkeletonBowRed, // default
 	SkeletonBowBlack,
 	SkeletonBowBlue,
 	SkeletonBowDarkRed,
 	SkeletonBowGold,
 	SkeletonBowWhite,
-	SkeletonSwordRed,
+	SkeletonSwordRed, // default
 	SkeletonSwordBlack,
 	SkeletonSwordBlue,
 	SkeletonSwordDarkRed,
 	SkeletonSwordGold,
 	SkeletonSwordWhite,
-	TwinSneakGray,
-	SneakGray,
+	TwinSneakGray, // default
+	SneakGray, // default
 	SneakYellow,
 	SneakRed,
 	SneakGold,
-	GoatLordBlack,
-	GoatMaceOrange,
+	GoatLordBlack, // default
+	GoatMaceOrange, // default
 	GoatMaceGold,
 	GoatMaceTest1,
 	GoatMaceGray,
 	GoatMaceRed,
 	GoatMaceTest2,
-	BatBlue,
+	BatBlue, // default
 	BatGray,
 	BatOrange,
 	BatRed,
-	GoatBowOrange,
+	GoatBowOrange, // default
 	GoatBowGold,
 	GoatBowGray,
 	GoatBowRed,
-	AcidGold,
+	AcidGold, // default
 	AcidBlue,
 	AcidBlack,
 	AcidRed,
-	SkeletonKingRed,
-	ButcherRed,
-	FatRed,
+	SkeletonKingRed, // default
+	ButcherRed, // default
+	FatRed, // default
 	FatBlue,
 	FatGold,
 	FatDarkRed,
-	WormGray,
-	MagmaBlackOrange,
+	WormGray, // TODO: Double check this, not sure
+	MagmaBlackOrange, // default
 	MagmaBlueOrange,
 	MagmaRedBlue,
 	MagmaBlackYellow,
 
-	UndeadBalrogRed,
+	UndeadBalrogRed, // default
 
-	FireManYellowOrange,
+	FireManYellowOrange, // default
 
-	BigFallenRed,
+	BigFallenRed, // default
 
-	UnravelerGold,
+	UnravelerGold, // default
 
-	DarkMageBlack,
+	DarkMageBlack, // default
 
 };
 
