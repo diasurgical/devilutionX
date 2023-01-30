@@ -43,7 +43,7 @@ We hope to provide a good starting point for mods, in addition to the full Devil
 
 # Test builds
 
-If you want to help test the latest state of the next version you can fetch the build artifact from one of the build server:
+If you want to help test the latest development stage of the next version (make sure to backup your files as these may contain bugs), you can fetch the test build artifact from one of the build server:
 
 *Note: You must be logged into GitHub to download the attachments!*
 
