@@ -11,7 +11,7 @@
 
 namespace devilution {
 
-enum class TranslationFile : const char {
+enum class TranslationFile : uint16_t {
 	ZombieGold,
 	ZombieBlueRed,
 	ZombieGray,
