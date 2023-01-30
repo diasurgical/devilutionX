@@ -658,8 +658,12 @@ bool GuardianTryFireAt(Missile &missile, Point target)
 	if (monster.hitPoints >> 6 <= 0)
 		return false;
 
+	Player &player = Players[missile._misource];
+	int dmg = GenerateRnd(10) + (player._pLevel / 2) + 1;
+	dmg = ScaleSpellEffect(dmg, missile._mispllvl);
+
 	Direction dir = GetDirection(position, target);
-	AddMissile(position, target, dir, MissileID::Firebolt, TARGET_MONSTERS, missile._misource, missile._midam, missile.sourcePlayer()->GetSpellLevel(SPL_GUARDIAN), &missile);
+	AddMissile(position, target, dir, MissileID::Firebolt, TARGET_MONSTERS, missile._misource, dmg, missile.sourcePlayer()->GetSpellLevel(SPL_GUARDIAN), &missile);
 	SetMissDir(missile, 2);
 	missile.var2 = 3;
 
@@ -2073,9 +2077,6 @@ void AddFiremove(Missile &missile, AddMissileParameter &parameter)
 void AddGuardian(Missile &missile, AddMissileParameter &parameter)
 {
 	Player &player = Players[missile._misource];
-
-	int dmg = GenerateRnd(10) + (player._pLevel / 2) + 1;
-	missile._midam = ScaleSpellEffect(dmg, missile._mispllvl);
 
 	std::optional<Point> spawnPosition = FindClosestValidPosition(
 	    [start = missile.position.start](Point target) {
