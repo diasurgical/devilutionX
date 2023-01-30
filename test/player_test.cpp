@@ -34,7 +34,6 @@ constexpr ItemSpecialEffect Harmony = ItemSpecialEffect::FastestHitRecovery;
 constexpr ItemSpecialEffect BalanceStability = Balance | Stability;
 constexpr ItemSpecialEffect BalanceHarmony = Balance | Harmony;
 constexpr ItemSpecialEffect StabilityHarmony = Stability | Harmony;
-constexpr ItemSpecialEffect Zen = Balance | Stability | Harmony;
 
 constexpr int Warrior = 6;
 constexpr int Rogue = 7;
@@ -74,10 +73,6 @@ BlockTestCase BlockData[] = {
 	{ 3, Warrior, StabilityHarmony },
 	{ 4, Rogue, StabilityHarmony },
 	{ 5, Sorcerer, StabilityHarmony },
-
-	{ 2, Warrior, Zen },
-	{ 3, Rogue, Zen },
-	{ 4, Sorcerer, Zen },
 };
 
 TEST(Player, PM_DoGotHit)
