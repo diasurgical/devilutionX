@@ -11,7 +11,7 @@
 
 namespace devilution {
 
-enum class MonsterTranslationFile : const char {
+enum class TranslationFile : const char {
 	ZombieGold,
 	ZombieBlueRed,
 	ZombieGray,
