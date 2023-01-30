@@ -44,6 +44,20 @@ uint32_t GetLCGEngineState();
 int32_t AdvanceRndSeed();
 
 /**
+ * @brief A distribution function to go from a given state to a non-uniform value between 0 and v
+ *
+ * This is intended for use where we would otherwise be constructing a temporary engine or resetting the global RNG
+ * for a single random value.
+ * @param state 32 bit value assumed to come from an LCG algorithm
+ * @param v upper limit for the returned value, should be less than 2^15 for good results
+ * @return a value less than v with slight bias towards 0
+ */
+constexpr unsigned ShiftModDistribution(uint32_t state, unsigned v)
+{
+	return (state >> 16) % v;
+}
+
+/**
  * @brief Generates a random integer less than the given limit using the vanilla RNG
  *
  * If v is not a positive number this function returns 0 without calling the RNG.

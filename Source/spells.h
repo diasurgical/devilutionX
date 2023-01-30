@@ -50,9 +50,9 @@ int GetSpellStaffLevel(spell_id s);
  * @param spellId The id of the spell to get a bitmask for.
  * @return A 64bit bitmask representation for the specified spell.
  */
-constexpr uint64_t GetSpellBitmask(int spellId)
+constexpr uint64_t GetSpellBitmask(spell_id spellId)
 {
-	return 1ULL << (spellId - 1);
+	return 1ULL << (static_cast<unsigned>(spellId) - 1);
 }
 
 } // namespace devilution

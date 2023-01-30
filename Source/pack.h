@@ -52,7 +52,7 @@ struct PlayerPack {
 	int32_t pMaxHPBase;
 	int32_t pManaBase;
 	int32_t pMaxManaBase;
-	int8_t pSplLvl[37]; // Should be MAX_SPELLS but set to 37 to make save games compatible
+	int8_t pSplLvl[37]; // Only Diablo spells, for save game compatibility
 	uint64_t pMemSpells;
 	ItemPack InvBody[NUM_INVLOC];
 	ItemPack InvList[InventoryGridCells];
