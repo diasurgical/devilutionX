@@ -2686,6 +2686,12 @@ void AddPlrExperience(Player &player, int lvl, int exp)
 		return;
 	}
 
+	// exit function early if player is unable to gain more experience by checking final index of ExpLvlsTbl
+	int expLvlsTblSize = sizeof(ExpLvlsTbl) / sizeof(ExpLvlsTbl[0]);
+	if (player._pExperience >= ExpLvlsTbl[expLvlsTblSize - 1]) {
+		return;
+	}
+
 	if (player._pHitPoints <= 0) {
 		return;
 	}
@@ -2711,8 +2717,10 @@ void AddPlrExperience(Player &player, int lvl, int exp)
 		RedrawEverything();
 	}
 
-	if (player._pExperience >= ExpLvlsTbl[49]) {
-		player._pLevel = 50;
+	/* set player level to MaxCharacterLevel if the experience value for MaxCharacterLevel is reached, which exits the function early
+	and does not call NextPlrLevel(), which is responsible for giving Attribute points and Life/Mana on level up */
+	if (player._pExperience >= ExpLvlsTbl[MaxCharacterLevel - 1]) {
+		player._pLevel = MaxCharacterLevel;
 		return;
 	}
 
