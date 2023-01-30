@@ -2686,6 +2686,11 @@ void AddPlrExperience(Player &player, int lvl, int exp)
 		return;
 	}
 
+	// exit function early if player is unable to gain more experience
+	if (player._pExperience >= ExpLvlsTbl[50]) {
+		return;
+	}
+
 	if (player._pHitPoints <= 0) {
 		return;
 	}
