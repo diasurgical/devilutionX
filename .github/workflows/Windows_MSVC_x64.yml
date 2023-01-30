@@ -33,8 +33,8 @@ jobs:
 
     - name: Fetch test data
       run: |
-          mkdir build-ninja-vcpkg-debug
-          Invoke-WebRequest -Uri "https://github.com/diasurgical/devilutionx-assets/releases/download/v2/spawn.mpq" -OutFile "build-ninja-vcpkg-debug/spawn.mpq" -Resume
+          mkdir build-ninja-vcpkg-relwithdebinfo
+          Invoke-WebRequest -Uri "https://github.com/diasurgical/devilutionx-assets/releases/download/v2/spawn.mpq" -OutFile "build-ninja-vcpkg-relwithdebinfo/spawn.mpq" -Resume
 
     - name: Get CMakePresets.json
       run: cp Packaging/windows/CMakePresets.json .
@@ -42,13 +42,21 @@ jobs:
     - name: Run CMake consuming CMakePresets.json and vcpkg.json by mean of vcpkg.
       uses: lukka/run-cmake@v10
       with:
-        configurePreset: 'ninja-vcpkg-debug'
-        buildPreset: 'ninja-vcpkg-debug'
-        testPreset: 'ninja-vcpkg-debug'
+        configurePreset: 'ninja-vcpkg-relwithdebinfo'
+        buildPreset: 'ninja-vcpkg-relwithdebinfo'
+        testPreset: 'ninja-vcpkg-relwithdebinfo'
 
     - name: Upload-Package
       if: ${{ !env.ACT }}
       uses: actions/upload-artifact@v2
       with:
         name: devilutionx.exe
-        path: build-ninja-vcpkg-debug/devilutionx.exe
+        path: |
+            build-ninja-vcpkg-relwithdebinfo/devilutionx.exe
+            build-ninja-vcpkg-relwithdebinfo/bz2.dll
+            build-ninja-vcpkg-relwithdebinfo/fmt.dll
+            build-ninja-vcpkg-relwithdebinfo/libpng16.dll
+            build-ninja-vcpkg-relwithdebinfo/libsodium.dll
+            build-ninja-vcpkg-relwithdebinfo/SDL2.dll
+            build-ninja-vcpkg-relwithdebinfo/SDL2_image.dll
+            build-ninja-vcpkg-relwithdebinfo/zlib1.dll
