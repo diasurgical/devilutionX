@@ -2687,7 +2687,7 @@ void AddPlrExperience(Player &player, int lvl, int exp)
 	}
 
 	// exit function early if player is unable to gain more experience
-	if (player._pExperience >= ExpLvlsTbl[MaxCharacterLevel]) {
+	if (player._pExperience >= ExpLvlsTbl[-1]) {
 		return;
 	}
 
