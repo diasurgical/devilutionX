@@ -2686,8 +2686,9 @@ void AddPlrExperience(Player &player, int lvl, int exp)
 		return;
 	}
 
-	// exit function early if player is unable to gain more experience
-	if (player._pExperience >= ExpLvlsTbl[-1]) {
+	// exit function early if player is unable to gain more experience by checking final index of ExpLvlsTbl
+	int expLvlsTblSize = sizeof(ExpLvlsTbl) / sizeof(ExpLvlsTbl[0]);
+	if (player._pExperience >= ExpLvlsTbl[expLvlsTblSize - 1]) {
 		return;
 	}
 
