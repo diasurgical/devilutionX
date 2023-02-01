@@ -5,6 +5,7 @@
 #include "diablo.h"
 #include "doom.h"
 #include "engine.h"
+#include "engine/events.hpp"
 #include "engine/render/clx_render.hpp"
 #include "init.h"
 #include "inv.h"

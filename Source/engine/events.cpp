@@ -1,30 +1,20 @@
-#include "miniwin/misc_msg.h"
+#include "engine/events.hpp"
 
-#include <cstdint>
-#include <deque>
-#include <string>
-
-#include <SDL.h>
-
-#include "control.h"
-#include "controls/controller.h"
 #include "controls/input.h"
-#include "controls/plrctrls.h"
-#ifndef USE_SDL1
+#include "engine.h"
+#include "engine/demomode.h"
+#include "interfac.h"
+#include "movie.h"
+#include "utils/log.hpp"
+
+#ifdef USE_SDL1
+#include "utils/display.h"
+#else
 #include "controls/touch/event_handlers.h"
 #endif
-#include "cursor.h"
-#include "engine/demomode.h"
-#include "engine/rectangle.hpp"
-#include "hwcursor.hpp"
-#include "movie.h"
-#include "panels/spell_list.hpp"
-#include "qol/stash.h"
-#include "utils/display.h"
-#include "utils/log.hpp"
-#include "utils/utf8.hpp"
 
 #ifdef __vita__
+#include "diablo.h"
 #include "platform/vita/touch.h"
 #endif
 
@@ -33,58 +23,7 @@
 #include <switch.h>
 #endif
 
-/** @file
- * *
- * Windows message handling and keyboard event conversion for SDL.
- */
-
 namespace devilution {
-
-void SetMouseButtonEvent(SDL_Event &event, uint32_t type, uint8_t button, Point position)
-{
-	event.type = type;
-	event.button.button = button;
-	if (type == SDL_MOUSEBUTTONDOWN) {
-		event.button.state = SDL_PRESSED;
-	} else {
-		event.button.state = SDL_RELEASED;
-	}
-	event.button.x = position.x;
-	event.button.y = position.y;
-}
-
-void SetCursorPos(Point position)
-{
-	if (ControlDevice != ControlTypes::KeyboardAndMouse) {
-		MousePosition = position;
-		return;
-	}
-
-	LogicalToOutput(&position.x, &position.y);
-	if (!demo::IsRunning())
-		SDL_WarpMouseInWindow(ghMainWnd, position.x, position.y);
-}
-
-// Moves the mouse to the first attribute "+" button.
-void FocusOnCharInfo()
-{
-	Player &myPlayer = *MyPlayer;
-
-	if (invflag || myPlayer._pStatPts <= 0)
-		return;
-
-	// Find the first incrementable stat.
-	int stat = -1;
-	for (auto attribute : enum_values<CharacterAttribute>()) {
-		if (myPlayer.GetBaseAttributeValue(attribute) >= myPlayer.GetMaximumAttributeValue(attribute))
-			continue;
-		stat = static_cast<int>(attribute);
-	}
-	if (stat == -1)
-		return;
-
-	SetCursorPos(ChrBtnsRect[stat].Center());
-}
 
 namespace {
 
@@ -93,8 +32,6 @@ bool FalseAvail(const char *name, int value)
 	LogVerbose("Unhandled SDL event: {} {}", name, value);
 	return true;
 }
-
-} // namespace
 
 bool FetchMessage_Real(SDL_Event *event, uint16_t *modState)
 {
@@ -167,21 +104,15 @@ bool FetchMessage_Real(SDL_Event *event, uint16_t *modState)
 	case SDL_JOYHATMOTION:
 	case SDL_JOYBUTTONDOWN:
 	case SDL_JOYBUTTONUP:
+	case SDL_MOUSEMOTION:
+	case SDL_MOUSEBUTTONDOWN:
+	case SDL_MOUSEBUTTONUP:
 		*event = e;
 		break;
 	case SDL_KEYDOWN:
 	case SDL_KEYUP:
 		if (e.key.keysym.sym == -1)
 			return FalseAvail(e.type == SDL_KEYDOWN ? "SDL_KEYDOWN" : "SDL_KEYUP", e.key.keysym.sym);
-		*event = e;
-		break;
-	case SDL_MOUSEMOTION:
-		*event = e;
-		if (ControlMode == ControlTypes::KeyboardAndMouse && invflag)
-			InvalidateInventorySlot();
-		break;
-	case SDL_MOUSEBUTTONDOWN:
-	case SDL_MOUSEBUTTONUP:
 		*event = e;
 		break;
 #ifndef USE_SDL1
@@ -210,6 +141,17 @@ bool FetchMessage_Real(SDL_Event *event, uint16_t *modState)
 		return FalseAvail("unknown", e.type);
 	}
 	return true;
+}
+
+} // namespace
+
+EventHandler CurrentEventHandler;
+
+EventHandler SetEventHandler(EventHandler eventHandler)
+{
+	EventHandler previousHandler = CurrentEventHandler;
+	CurrentEventHandler = eventHandler;
+	return previousHandler;
 }
 
 bool FetchMessage(SDL_Event *event, uint16_t *modState)

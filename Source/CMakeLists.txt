@@ -98,6 +98,7 @@ set(libdevilutionx_SRCS
   engine/backbuffer_state.cpp
   engine/direction.cpp
   engine/dx.cpp
+  engine/events.cpp
   engine/load_cel.cpp
   engine/load_cl2.cpp
   engine/load_clx.cpp
@@ -125,8 +126,6 @@ set(libdevilutionx_SRCS
   levels/themes.cpp
   levels/town.cpp
   levels/trigs.cpp
-
-  miniwin/misc_msg.cpp
 
   panels/charpanel.cpp
   panels/info_box.cpp

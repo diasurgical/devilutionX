@@ -10,7 +10,6 @@
 #include "controls/remap_keyboard.h"
 #include "engine/render/text_render.hpp"
 #include "hwcursor.hpp"
-#include "miniwin/misc_msg.h"
 #include "options.h"
 #include "utils/language.h"
 #include "utils/stdcompat/optional.hpp"

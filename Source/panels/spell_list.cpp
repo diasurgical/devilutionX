@@ -8,7 +8,6 @@
 #include "engine/palette.h"
 #include "engine/render/text_render.hpp"
 #include "inv_iterators.hpp"
-#include "miniwin/misc_msg.h"
 #include "options.h"
 #include "panels/spell_icons.hpp"
 #include "player.h"

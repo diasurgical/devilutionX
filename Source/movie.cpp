@@ -9,9 +9,9 @@
 #include "effects.h"
 #include "engine/backbuffer_state.hpp"
 #include "engine/demomode.h"
+#include "engine/events.hpp"
 #include "engine/sound.h"
 #include "hwcursor.hpp"
-#include "miniwin/misc_msg.h"
 #include "storm/storm_svid.h"
 #include "utils/display.h"
 

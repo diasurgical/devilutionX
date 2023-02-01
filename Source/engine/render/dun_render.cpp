@@ -19,12 +19,9 @@
 #include <cstdint>
 
 #include "lighting.h"
-#include "utils/stdcompat/algorithm.hpp"
-#ifdef _DEBUG
-#include "miniwin/misc_msg.h"
-#endif
 #include "options.h"
 #include "utils/attributes.h"
+#include "utils/stdcompat/algorithm.hpp"
 #ifdef DEBUG_STR
 #include "engine/render/text_render.hpp"
 #endif
