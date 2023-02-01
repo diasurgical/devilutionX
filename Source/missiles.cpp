@@ -2051,14 +2051,16 @@ void AddFlash2(Missile &missile, AddMissileParameter & /*parameter*/)
 	missile._mirange = 19;
 }
 
-void AddManashield(Missile &missile, AddMissileParameter & /*parameter*/)
+void AddManashield(Missile &missile, AddMissileParameter &parameter)
 {
 	missile._miDelFlag = true;
 
 	Player &player = Players[missile._misource];
 
-	if (player.pManaShield)
+	if (player.pManaShield) {
+		parameter.spellFizzled = true;
 		return;
+	}
 
 	player.pManaShield = true;
 	if (&player == MyPlayer)
