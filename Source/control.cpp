@@ -31,7 +31,6 @@
 #include "levels/trigs.h"
 #include "lighting.h"
 #include "minitext.h"
-#include "miniwin/misc_msg.h"
 #include "missiles.h"
 #include "options.h"
 #include "panels/charpanel.hpp"
@@ -551,6 +550,26 @@ bool IsChatAvailable()
 #else
 	return gbIsMultiplayer;
 #endif
+}
+
+void FocusOnCharInfo()
+{
+	Player &myPlayer = *MyPlayer;
+
+	if (invflag || myPlayer._pStatPts <= 0)
+		return;
+
+	// Find the first incrementable stat.
+	int stat = -1;
+	for (auto attribute : enum_values<CharacterAttribute>()) {
+		if (myPlayer.GetBaseAttributeValue(attribute) >= myPlayer.GetMaximumAttributeValue(attribute))
+			continue;
+		stat = static_cast<int>(attribute);
+	}
+	if (stat == -1)
+		return;
+
+	SetCursorPos(ChrBtnsRect[stat].Center());
 }
 
 void AddPanelString(string_view str)

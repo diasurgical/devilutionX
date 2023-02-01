@@ -95,6 +95,19 @@ void InitTouch()
 	y_borderwidth = (current.h - visible_height) / 2;
 }
 
+void SetMouseButtonEvent(SDL_Event &event, uint32_t type, uint8_t button, Point position)
+{
+	event.type = type;
+	event.button.button = button;
+	if (type == SDL_MOUSEBUTTONDOWN) {
+		event.button.state = SDL_PRESSED;
+	} else {
+		event.button.state = SDL_RELEASED;
+	}
+	event.button.x = position.x;
+	event.button.y = position.y;
+}
+
 void PreprocessFingerDown(SDL_Event *event)
 {
 	// front (0) or back (1) panel

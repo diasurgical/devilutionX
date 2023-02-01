@@ -12,7 +12,6 @@
 #include "controls/controller_buttons.h"
 #include "controls/game_controls.h"
 #include "engine/sound_defs.hpp"
-#include "miniwin/misc_msg.h"
 #include "pack.h"
 #include "utils/enum_traits.h"
 #include "utils/stdcompat/optional.hpp"

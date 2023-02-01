@@ -10,6 +10,7 @@
 #endif
 
 #include "controls/plrctrls.h"
+#include "engine/events.hpp"
 #include "gmenu.h"
 #include "menu.h"
 #include "nthread.h"

@@ -12,7 +12,6 @@
 #include "controls/plrctrls.h"
 #include "cursor.h"
 #include "dead.h"
-#include "miniwin/misc_msg.h"
 #ifdef _DEBUG
 #include "debug.h"
 #endif

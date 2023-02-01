@@ -16,7 +16,6 @@
 #include "dead.h"
 #ifdef _DEBUG
 #include "debug.h"
-#include "miniwin/misc_msg.h"
 #endif
 #include "DiabloUI/diabloui.h"
 #include "controls/plrctrls.h"
@@ -29,6 +28,7 @@
 #include "engine/clx_sprite.hpp"
 #include "engine/demomode.h"
 #include "engine/dx.h"
+#include "engine/events.hpp"
 #include "engine/load_cel.hpp"
 #include "engine/load_file.hpp"
 #include "engine/random.hpp"
@@ -738,6 +738,8 @@ void GameEventHandler(const SDL_Event &event, uint16_t modState)
 		return;
 #endif
 	case SDL_MOUSEMOTION:
+		if (ControlMode == ControlTypes::KeyboardAndMouse && invflag)
+			InvalidateInventorySlot();
 		MousePosition = { event.motion.x, event.motion.y };
 		gmenu_on_mouse_move();
 		return;
@@ -2298,6 +2300,18 @@ void InitPadmapActions()
 		    ToggleChatLog();
 	    });
 	sgOptions.Padmapper.CommitActions();
+}
+
+void SetCursorPos(Point position)
+{
+	if (ControlDevice != ControlTypes::KeyboardAndMouse) {
+		MousePosition = position;
+		return;
+	}
+
+	LogicalToOutput(&position.x, &position.y);
+	if (!demo::IsRunning())
+		SDL_WarpMouseInWindow(ghMainWnd, position.x, position.y);
 }
 
 void FreeGameMem()

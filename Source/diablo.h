@@ -82,6 +82,7 @@ extern char gszProductName[64];
 extern MouseActionType LastMouseButtonAction;
 
 void InitKeymapActions();
+void SetCursorPos(Point position);
 void FreeGameMem();
 bool StartGame(bool bNewGame, bool bSinglePlayer);
 [[noreturn]] void diablo_quit(int exitStatus);
