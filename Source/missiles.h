@@ -388,7 +388,7 @@ void AddDiabloApocalypse(Missile &missile, AddMissileParameter &parameter);
 Missile *AddMissile(Point src, Point dst, Direction midir, MissileID mitype, mienemy_type micaster, int id, int midam, int spllvl, Missile *pParent = nullptr);
 void ProcessElementalArrow(Missile &missile);
 void ProcessArrow(Missile &missile);
-void ProcessGenericMagicMissile(Missile &missile);
+void ProcessGenericProjectile(Missile &missile);
 void ProcessNovaBall(Missile &missilei);
 void ProcessAcidPuddle(Missile &missile);
 void ProcessFireWall(Missile &missile);

@@ -2862,7 +2862,7 @@ void ProcessArrow(Missile &missile)
 	PutMissile(missile);
 }
 
-void ProcessGenericMagicMissile(Missile &missile)
+void ProcessGenericProjectile(Missile &missile)
 {
 	missile._mirange--;
 
