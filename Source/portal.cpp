@@ -49,7 +49,7 @@ void SetPortalStats(int i, bool o, int x, int y, int lvl, dungeon_type lvltype, 
 
 void AddWarpMissile(int i, Point position, bool sync)
 {
-	MissileData &missileData = MissilesData[static_cast<int8_t>(MissileID::TownPortal)];
+	MissileData &missileData = GetMissileData(MissileID::TownPortal);
 	missileData.mlSFX = SFX_NONE;
 
 	auto *missile = AddMissile({ 0, 0 }, position, Direction::South, MissileID::TownPortal, TARGET_MONSTERS, i, 0, 0);

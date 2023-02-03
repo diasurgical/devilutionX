@@ -122,7 +122,7 @@ void UpdateMissileRendererData(Missile &m)
 	m.position.tileForRendering = m.position.tile;
 	m.position.offsetForRendering = m.position.offset;
 
-	const MissileMovementDistribution missileMovement = MissilesData[static_cast<int8_t>(m._mitype)].MovementDistribution;
+	const MissileMovementDistribution missileMovement = GetMissileData(m._mitype).MovementDistribution;
 	// don't calculate missile position if they don't move
 	if (missileMovement == MissileMovementDistribution::Disabled || m.position.velocity == Displacement {})
 		return;
@@ -353,9 +353,9 @@ void DrawMonster(const Surface &out, Point tilePosition, Point targetBufferPosit
  */
 void DrawPlayerIconHelper(const Surface &out, MissileGraphicID missileGraphicId, Point position, bool lighting, bool infraVision)
 {
-	position.x -= MissileSpriteData[static_cast<uint8_t>(missileGraphicId)].animWidth2;
+	position.x -= GetMissileSpriteData(missileGraphicId).animWidth2;
 
-	const ClxSprite sprite = (*MissileSpriteData[static_cast<uint8_t>(missileGraphicId)].sprites).list()[0];
+	const ClxSprite sprite = (*GetMissileSpriteData(missileGraphicId).sprites).list()[0];
 
 	if (!lighting) {
 		ClxDraw(out, position, sprite);

@@ -6,6 +6,7 @@
 #pragma once
 
 #include <cstdint>
+#include <type_traits>
 #include <vector>
 
 #include "effects.h"
@@ -31,7 +32,7 @@ enum class DamageType : uint8_t {
 	Acid,
 };
 
-typedef enum class MissileGraphicID : uint8_t {
+enum class MissileGraphicID : uint8_t {
 	Arrow,
 	Fireball,
 	Guardian,
@@ -92,7 +93,7 @@ typedef enum class MissileGraphicID : uint8_t {
 	OrangeFlareExplosion,
 	BlueFlareExplosion2,
 	None,
-} MissileGraphicID;
+};
 
 /**
  * @brief Specifies what if and how movement distribution is applied
@@ -173,7 +174,18 @@ struct MissileFileData {
 };
 
 extern MissileData MissilesData[];
+
+inline MissileData &GetMissileData(MissileID missileId)
+{
+	return MissilesData[static_cast<std::underlying_type<MissileID>::type>(missileId)];
+}
+
 extern MissileFileData MissileSpriteData[];
+
+inline MissileFileData &GetMissileSpriteData(MissileGraphicID graphicId)
+{
+	return MissileSpriteData[static_cast<std::underlying_type<MissileGraphicID>::type>(graphicId)];
+}
 
 void InitMissileGFX(bool loadHellfireGraphics = false);
 void FreeMissileGFX();
