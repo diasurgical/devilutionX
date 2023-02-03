@@ -128,105 +128,144 @@ MissileData MissilesData[] = {
 	// clang-format on
 };
 
-/** Data related to each missile graphic ID. */
-MissileFileData MissileSpriteData[] = {
-	// clang-format off
-// id                          name,        animFAmt, flags,                          animDelay[16],  animLen[16],                            animWidth,  animWidth2
-/*Arrow*/                    { "arrows",           1, MissileDataFlags::NotAnimated,  { 0 },          { 16 },                                        96,          16 },
-/*Fireball*/                 { "fireba",          16, MissileDataFlags::None,         { 0 },          { 14 },                                        96,          16 },
-/*Guardian*/                 { "guard",            3, MissileDataFlags::None,         { 1 },          { 15, 14,  3 },                                96,          16 },
-/*Lightning*/                { "lghning",          1, MissileDataFlags::None,         { 0 },          {  8 },                                        96,          16 },
-/*FireWall*/                 { "firewal",          2, MissileDataFlags::None,         { 0 },          { 13, 11 },                                   128,          32 },
-/*MagmaBallExplosion*/       { "magblos",          1, MissileDataFlags::None,         { 1 },          { 10 },                                       128,          32 },
-/*TownPortal*/               { "portal",           2, MissileDataFlags::None,         { 0, 1 },       { 16 },                                        96,          16 },
-/*FlashBottom*/              { "bluexfr",          1, MissileDataFlags::None,         { 0 },          { 19 },                                       160,          48 },
-/*FlashTop*/                 { "bluexbk",          1, MissileDataFlags::None,         { 0 },          { 19 },                                       160,          48 },
-/*ManaShield*/               { "manashld",         1, MissileDataFlags::NotAnimated,  { 0 },          {  1 },                                        96,          16 },
-/*BloodHit*/                 { {},                 4, MissileDataFlags::None,         { 0 },          { 15 },                                        96,          16 },
-/*BoneHit*/                  { {},                 3, MissileDataFlags::None,         { 2 },          {  8 },                                       128,          32 },
-/*MetalHit*/                 { {},                 3, MissileDataFlags::None,         { 2 },          { 10 },                                        96,          16 },
-/*FireArrow*/                { "farrow",          16, MissileDataFlags::None,         { 0 },          {  4 },                                        96,          16 },
-/*DoomSerpents*/             { "doom",             9, MissileDataFlags::MonsterOwned, { 1 },          { 15 },                                        96,          16 },
-/*Golem*/                    { {},                 1, MissileDataFlags::MonsterOwned, { 0 },          {  0 },                                         0,           0 },
-/*Spurt*/                    { {},                 2, MissileDataFlags::None,         { 2 },          {  8 },                                       128,          32 },
-/*ApocalypseBoom*/           { "newexp",           1, MissileDataFlags::None,         { 1 },          { 15 },                                        96,          16 },
-/*StoneCurseShatter*/        { "shatter1",         1, MissileDataFlags::None,         { 1 },          { 12 },                                       128,          32 },
-/*BigExplosion*/             { "bigexp",           1, MissileDataFlags::None,         { 0 },          { 15 },                                       160,          48 },
-/*Inferno*/                  { "inferno",          1, MissileDataFlags::None,         { 0 },          { 20 },                                        96,          16 },
-/*ThinLightning*/            { "thinlght",         1, MissileDataFlags::MonsterOwned, { 0 },          {  8 },                                        96,          16 },
-/*BloodStar*/                { "flare",            1, MissileDataFlags::None,         { 0 },          { 16 },                                       128,          32 },
-/*BloodStarExplosion*/       { "flareexp",         1, MissileDataFlags::None,         { 0 },          {  7 },                                       128,          32 },
-/*MagmaBall*/                { "magball",          8, MissileDataFlags::MonsterOwned, { 1 },          { 16 },                                       128,          32 },
-/*Krull*/                    { "krull",            1, MissileDataFlags::MonsterOwned, { 0 },          { 14 },                                        96,          16 },
-/*ChargedBolt*/              { "miniltng",         1, MissileDataFlags::None,         { 1 },          {  8 },                                        64,           0 },
-/*HolyBolt*/                 { "holy",            16, MissileDataFlags::None,         { 1, 0 },       { 14 },                                        96,          16 },
-/*HolyBoltExplosion*/        { "holyexpl",         1, MissileDataFlags::None,         { 0 },          {  8 },                                       160,          48 },
-/*LightningArrow*/           { "larrow",          16, MissileDataFlags::None,         { 0 },          {  4 },                                        96,          16 },
-/*FireArrowExplosion*/       { {},                 1, MissileDataFlags::None,         { 0 },          {  6 },                                        64,           0 },
-/*Acid*/                     { "acidbf",          16, MissileDataFlags::MonsterOwned, { 0 },          {  8 },                                        96,          16 },
-/*AcidSplat*/                { "acidspla",         1, MissileDataFlags::MonsterOwned, { 0 },          {  8 },                                        96,          16 },
-/*AcidPuddle*/               { "acidpud",          2, MissileDataFlags::MonsterOwned, { 0 },          {  9,  4 },                                    96,          16 },
-/*Etherealize*/              { {},                 1, MissileDataFlags::None,         { 0 },          {  1 },                                        96,          16 },
-/*Elemental*/                { "firerun",          8, MissileDataFlags::None,         { 1 },          { 12 },                                        96,          16 },
-/*Resurrect*/                { "ressur1",          1, MissileDataFlags::None,         { 0 },          { 16 },                                        96,          16 },
-/*BoneSpirit*/               { "sklball",          9, MissileDataFlags::None,         { 1 },          { 16, 16, 16, 16, 16, 16, 16, 16, 8 },         96,          16 },
-/*RedPortal*/                { "rportal",          2, MissileDataFlags::None,         { 0 },          { 16 },                                        96,          16 },
-/*DiabloApocalypseBoom*/     { "fireplar",         1, MissileDataFlags::MonsterOwned, { 1 },          { 17 },                                       160,          48 },
-/*BloodStarBlue*/            { "scubmisb",         1, MissileDataFlags::MonsterOwned, { 0 },          { 16 },                                        96,          16 },
-/*BloodStarBlueExplosion*/   { "scbsexpb",         1, MissileDataFlags::MonsterOwned, { 0 },          {  6 },                                       128,          32 },
-/*BloodStarYellow*/          { "scubmisc",         1, MissileDataFlags::MonsterOwned, { 0 },          { 16 },                                        96,          16 },
-/*BloodStarYellowExplosion*/ { "scbsexpc",         1, MissileDataFlags::MonsterOwned, { 0 },          {  6 },                                       128,          32 },
-/*BloodStarRed*/             { "scubmisd",         1, MissileDataFlags::MonsterOwned, { 0 },          { 16 },                                        96,          16 },
-/*BloodStarRedExplosion*/    { "scbsexpd",         1, MissileDataFlags::MonsterOwned, { 0 },          {  6 },                                       128,          32 },
-/*HorkSpawn*/                { "spawns",           8, MissileDataFlags::MonsterOwned, { 0 },          {  9 },                                        96,          16 },
-/*Reflect*/                  { "reflect",          1, MissileDataFlags::NotAnimated,  { 0 },          {  1 },                                       160,          64 },
-/*OrangeFlare*/              { "ms_ora",          16, MissileDataFlags::MonsterOwned, { 0 },          { 15 },                                        96,           8 },
-/*BlueFlare*/                { "ms_bla",          16, MissileDataFlags::MonsterOwned, { 0 },          { 15 },                                        96,           8 },
-/*RedFlare*/                 { "ms_reb",          16, MissileDataFlags::MonsterOwned, { 0 },          { 15 },                                        96,           8 },
-/*YellowFlare*/              { "ms_yeb",          16, MissileDataFlags::MonsterOwned, { 0 },          { 15 },                                        96,           8 },
-/*Rune*/                     { "rglows1",          1, MissileDataFlags::None,         { 0 },          { 10 },                                        96,           8 },
-/*YellowFlareExplosion*/     { "ex_yel2",          1, MissileDataFlags::MonsterOwned, { 0 },          { 10 },                                       220,          78 },
-/*BlueFlareExplosion*/       { "ex_blu2",          1, MissileDataFlags::MonsterOwned, { 0 },          { 10 },                                       212,          86 },
-/*RedFlareExplosion*/        { "ex_red3",          1, MissileDataFlags::MonsterOwned, { 0 },          {  7 },                                       292,         114 },
-/*BlueFlare2*/               { "ms_blb",          16, MissileDataFlags::MonsterOwned, { 0 },          { 15 },                                        96,           8 },
-/*OrangeFlareExplosion*/     { "ex_ora1",          1, MissileDataFlags::MonsterOwned, { 0 },          { 13 },                                        96,         -12 },
-/*BlueFlareExplosion2*/      { "ex_blu3",          1, MissileDataFlags::MonsterOwned, { 0 },          {  7 },                                       292,         114 },
-/*None*/                     { {},                 0, MissileDataFlags::None,         {  },           { },                                            0,           0 },
-	// clang-format on
-};
-
 namespace {
 
-template <typename T>
-std::array<T, 16> maybeAutofill(std::initializer_list<T> list)
+constexpr std::array<uint8_t, 16> Repeat(uint8_t v) // NOLINT(readability-identifier-length)
 {
-	assert(list.size() <= 16);
-
-	std::array<T, 16> ret = {};
-
-	if (list.size() == 1) {
-		ret.fill(*list.begin());
-	} else {
-		int i = 0;
-		for (T x : list)
-			ret[i++] = x;
-	}
-	return ret;
+	return { v, v, v, v, v, v, v, v, v, v, v, v, v, v, v, v };
 }
+
+const std::array<uint8_t, 16> MissileAnimDelays[] {
+	{},
+	Repeat(1),
+	Repeat(2),
+	{ 0, 1 },
+	{ 1 },
+};
+
+const std::array<uint8_t, 16> MissileAnimLengths[] {
+	{},
+	Repeat(1),
+	Repeat(4),
+	Repeat(5),
+	Repeat(6),
+	Repeat(7),
+	Repeat(8),
+	Repeat(9),
+	Repeat(10),
+	Repeat(12),
+	Repeat(13),
+	Repeat(14),
+	Repeat(15),
+	Repeat(16),
+	Repeat(17),
+	Repeat(19),
+	Repeat(20),
+	{ 9, 4 },
+	{ 15, 4, 3 },
+	{ 13, 11 },
+	{ 16, 16, 16, 16, 16, 16, 16, 16, 8 }
+};
+
+constexpr uint8_t AnimLen_0 = 0;       // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_1 = 1;       // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_4 = 2;       // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_5 = 3;       // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_6 = 4;       // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_7 = 5;       // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_8 = 6;       // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_9 = 7;       // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_10 = 8;      // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_12 = 9;      // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_13 = 10;     // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_14 = 11;     // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_15 = 12;     // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_16 = 13;     // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_17 = 14;     // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_19 = 15;     // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_20 = 16;     // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_9_4 = 17;    // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_15_4_3 = 18; // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_13_11 = 19;  // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_16x8_8 = 20; // NOLINT(readability-identifier-naming)
 
 } // namespace
 
-MissileFileData::MissileFileData(string_view name, uint8_t animFAmt, MissileDataFlags flags,
-    std::initializer_list<uint8_t> animDelay, std::initializer_list<uint8_t> animLen,
-    uint16_t animWidth, int16_t animWidth2)
-    : name(name)
-    , animFAmt(animFAmt)
-    , flags(flags)
-    , animDelay(maybeAutofill(animDelay))
-    , animLen(maybeAutofill(animLen))
-    , animWidth(animWidth)
-    , animWidth2(animWidth2)
+/** Data related to each missile graphic ID. */
+MissileFileData MissileSpriteData[] = {
+	// clang-format off
+// id                          sprites,   animWidth,  animWidth2, name,        animFAmt, flags,                           animDelayIdx, animLenIdx
+/*Arrow*/                    { {},               96,          16, "arrows",           1, MissileDataFlags::NotAnimated,              0, AnimLen_16     },
+/*Fireball*/                 { {},               96,          16, "fireba",          16, MissileDataFlags::None,                     0, AnimLen_14     },
+/*Guardian*/                 { {},               96,          16, "guard",            3, MissileDataFlags::None,                     1, AnimLen_15_4_3 },
+/*Lightning*/                { {},               96,          16, "lghning",          1, MissileDataFlags::None,                     0, AnimLen_8      },
+/*FireWall*/                 { {},              128,          32, "firewal",          2, MissileDataFlags::None,                     0, AnimLen_13_11  },
+/*MagmaBallExplosion*/       { {},              128,          32, "magblos",          1, MissileDataFlags::None,                     1, AnimLen_10     },
+/*TownPortal*/               { {},               96,          16, "portal",           2, MissileDataFlags::None,                     3, AnimLen_16     },
+/*FlashBottom*/              { {},              160,          48, "bluexfr",          1, MissileDataFlags::None,                     0, AnimLen_19     },
+/*FlashTop*/                 { {},              160,          48, "bluexbk",          1, MissileDataFlags::None,                     0, AnimLen_19     },
+/*ManaShield*/               { {},               96,          16, "manashld",         1, MissileDataFlags::NotAnimated,              0, AnimLen_1      },
+/*BloodHit*/                 { {},               96,          16, {},                 4, MissileDataFlags::None,                     0, AnimLen_15     },
+/*BoneHit*/                  { {},              128,          32, {},                 3, MissileDataFlags::None,                     2, AnimLen_8      },
+/*MetalHit*/                 { {},               96,          16, {},                 3, MissileDataFlags::None,                     2, AnimLen_10     },
+/*FireArrow*/                { {},               96,          16, "farrow",          16, MissileDataFlags::None,                     0, AnimLen_4      },
+/*DoomSerpents*/             { {},               96,          16, "doom",             9, MissileDataFlags::MonsterOwned,             1, AnimLen_15     },
+/*Golem*/                    { {},                0,           0, {},                 1, MissileDataFlags::MonsterOwned,             0, AnimLen_0      },
+/*Spurt*/                    { {},              128,          32, {},                 2, MissileDataFlags::None,                     2, AnimLen_8      },
+/*ApocalypseBoom*/           { {},               96,          16, "newexp",           1, MissileDataFlags::None,                     1, AnimLen_15     },
+/*StoneCurseShatter*/        { {},              128,          32, "shatter1",         1, MissileDataFlags::None,                     1, AnimLen_12     },
+/*BigExplosion*/             { {},              160,          48, "bigexp",           1, MissileDataFlags::None,                     0, AnimLen_15     },
+/*Inferno*/                  { {},               96,          16, "inferno",          1, MissileDataFlags::None,                     0, AnimLen_20     },
+/*ThinLightning*/            { {},               96,          16, "thinlght",         1, MissileDataFlags::MonsterOwned,             0, AnimLen_8      },
+/*BloodStar*/                { {},              128,          32, "flare",            1, MissileDataFlags::None,                     0, AnimLen_16     },
+/*BloodStarExplosion*/       { {},              128,          32, "flareexp",         1, MissileDataFlags::None,                     0, AnimLen_7      },
+/*MagmaBall*/                { {},              128,          32, "magball",          8, MissileDataFlags::MonsterOwned,             1, AnimLen_16     },
+/*Krull*/                    { {},               96,          16, "krull",            1, MissileDataFlags::MonsterOwned,             0, AnimLen_14     },
+/*ChargedBolt*/              { {},               64,           0, "miniltng",         1, MissileDataFlags::None,                     1, AnimLen_8      },
+/*HolyBolt*/                 { {},               96,          16, "holy",            16, MissileDataFlags::None,                     4, AnimLen_14     },
+/*HolyBoltExplosion*/        { {},              160,          48, "holyexpl",         1, MissileDataFlags::None,                     0, AnimLen_8      },
+/*LightningArrow*/           { {},               96,          16, "larrow",          16, MissileDataFlags::None,                     0, AnimLen_4      },
+/*FireArrowExplosion*/       { {},               64,           0, {},                 1, MissileDataFlags::None,                     0, AnimLen_6      },
+/*Acid*/                     { {},               96,          16, "acidbf",          16, MissileDataFlags::MonsterOwned,             0, AnimLen_8      },
+/*AcidSplat*/                { {},               96,          16, "acidspla",         1, MissileDataFlags::MonsterOwned,             0, AnimLen_8      },
+/*AcidPuddle*/               { {},               96,          16, "acidpud",          2, MissileDataFlags::MonsterOwned,             0, AnimLen_9_4    },
+/*Etherealize*/              { {},               96,          16, {},                 1, MissileDataFlags::None,                     0, AnimLen_1      },
+/*Elemental*/                { {},               96,          16, "firerun",          8, MissileDataFlags::None,                     1, AnimLen_12     },
+/*Resurrect*/                { {},               96,          16, "ressur1",          1, MissileDataFlags::None,                     0, AnimLen_16     },
+/*BoneSpirit*/               { {},               96,          16, "sklball",          9, MissileDataFlags::None,                     1, AnimLen_16x8_8 },
+/*RedPortal*/                { {},               96,          16, "rportal",          2, MissileDataFlags::None,                     0, AnimLen_16     },
+/*DiabloApocalypseBoom*/     { {},              160,          48, "fireplar",         1, MissileDataFlags::MonsterOwned,             1, AnimLen_17     },
+/*BloodStarBlue*/            { {},               96,          16, "scubmisb",         1, MissileDataFlags::MonsterOwned,             0, AnimLen_16     },
+/*BloodStarBlueExplosion*/   { {},              128,          32, "scbsexpb",         1, MissileDataFlags::MonsterOwned,             0, AnimLen_6      },
+/*BloodStarYellow*/          { {},               96,          16, "scubmisc",         1, MissileDataFlags::MonsterOwned,             0, AnimLen_16     },
+/*BloodStarYellowExplosion*/ { {},              128,          32, "scbsexpc",         1, MissileDataFlags::MonsterOwned,             0, AnimLen_6      },
+/*BloodStarRed*/             { {},               96,          16, "scubmisd",         1, MissileDataFlags::MonsterOwned,             0, AnimLen_16     },
+/*BloodStarRedExplosion*/    { {},              128,          32, "scbsexpd",         1, MissileDataFlags::MonsterOwned,             0, AnimLen_6      },
+/*HorkSpawn*/                { {},               96,          16, "spawns",           8, MissileDataFlags::MonsterOwned,             0, AnimLen_9      },
+/*Reflect*/                  { {},              160,          64, "reflect",          1, MissileDataFlags::NotAnimated,              0, AnimLen_1      },
+/*OrangeFlare*/              { {},               96,           8, "ms_ora",          16, MissileDataFlags::MonsterOwned,             0, AnimLen_15     },
+/*BlueFlare*/                { {},               96,           8, "ms_bla",          16, MissileDataFlags::MonsterOwned,             0, AnimLen_15     },
+/*RedFlare*/                 { {},               96,           8, "ms_reb",          16, MissileDataFlags::MonsterOwned,             0, AnimLen_15     },
+/*YellowFlare*/              { {},               96,           8, "ms_yeb",          16, MissileDataFlags::MonsterOwned,             0, AnimLen_15     },
+/*Rune*/                     { {},               96,           8, "rglows1",          1, MissileDataFlags::None,                     0, AnimLen_10     },
+/*YellowFlareExplosion*/     { {},              220,          78, "ex_yel2",          1, MissileDataFlags::MonsterOwned,             0, AnimLen_10     },
+/*BlueFlareExplosion*/       { {},              212,          86, "ex_blu2",          1, MissileDataFlags::MonsterOwned,             0, AnimLen_10     },
+/*RedFlareExplosion*/        { {},              292,         114, "ex_red3",          1, MissileDataFlags::MonsterOwned,             0, AnimLen_7      },
+/*BlueFlare2*/               { {},               96,           8, "ms_blb",          16, MissileDataFlags::MonsterOwned,             0, AnimLen_15     },
+/*OrangeFlareExplosion*/     { {},               96,         -12, "ex_ora1",          1, MissileDataFlags::MonsterOwned,             0, AnimLen_13     },
+/*BlueFlareExplosion2*/      { {},              292,         114, "ex_blu3",          1, MissileDataFlags::MonsterOwned,             0, AnimLen_7      },
+/*None*/                     { {},                0,           0, {},                 0, MissileDataFlags::None,                     0, 0              },
+	// clang-format on
+};
+
+uint8_t MissileFileData::animDelay(uint8_t dir) const
 {
+	return MissileAnimDelays[animDelayIdx][dir];
+}
+
+uint8_t MissileFileData::animLen(uint8_t dir) const
+{
+	return MissileAnimLengths[animLenIdx][dir];
 }
 
 void MissileFileData::LoadGFX()
@@ -234,7 +273,7 @@ void MissileFileData::LoadGFX()
 	if (sprites)
 		return;
 
-	if (name.empty())
+	if (name[0] == '\0')
 		return;
 
 	if (animFAmt == 1) {
