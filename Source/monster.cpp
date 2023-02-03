@@ -1905,9 +1905,9 @@ void AiRanged(Monster &monster)
 			if (LineClearMissile(monster.position.tile, monster.enemyPosition)) {
 				MissileID missileType = GetMissileType(monster.ai);
 				if (monster.ai == MonsterAIID::AcidUnique)
-					StartRangedSpecialAttack(monster, missileType, 4);
+					StartRangedSpecialAttack(monster, missileType, 0);
 				else
-					StartRangedAttack(monster, missileType, 4);
+					StartRangedAttack(monster, missileType, 0);
 			} else {
 				monster.checkStandAnimationIsLoaded(md);
 			}
@@ -1931,7 +1931,7 @@ void AiRangedAvoidance(Monster &monster)
 	if (IsAnyOf(monster.ai, MonsterAIID::Magma, MonsterAIID::Storm, MonsterAIID::BoneDemon) && monster.activeForTicks < UINT8_MAX)
 		MonstCheckDoors(monster);
 	int lessmissiles = (monster.ai == MonsterAIID::Acid) ? 1 : 0;
-	int dam = (monster.ai == MonsterAIID::Diablo) ? 40 : 4;
+	int dam = (monster.ai == MonsterAIID::Diablo) ? 40 : 0;
 	MissileID missileType = GetMissileType(monster.ai);
 	int v = GenerateRnd(10000);
 	unsigned distanceToEnemy = monster.distanceToEnemy();
