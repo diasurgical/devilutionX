@@ -55,9 +55,8 @@ size_t LevelMonsterTypeCount;
 Monster Monsters[MaxMonsters];
 int ActiveMonsters[MaxMonsters];
 size_t ActiveMonsterCount;
-// BUGFIX: replace MonsterKillCounts[MaxMonsters] with MonsterKillCounts[NUM_MTYPES].
 /** Tracks the total number of monsters killed per monster_id. */
-int MonsterKillCounts[MaxMonsters];
+int MonsterKillCounts[NUM_MTYPES];
 bool sgbSaveSoundOn;
 
 namespace {
@@ -152,7 +151,7 @@ void InitMonster(Monster &monster, Direction rd, size_t typeIndex, Point positio
 	monster.isInvalid = false;
 	monster.uniqueType = UniqueMonsterType::None;
 	monster.activeForTicks = 0;
-	monster.lightId = NO_LIGHT; // BUGFIX monsters initial light id should be -1 (fixed)
+	monster.lightId = NO_LIGHT;
 	monster.rndItemSeed = AdvanceRndSeed();
 	monster.aiSeed = AdvanceRndSeed();
 	monster.whoHit = 0;
@@ -1067,7 +1066,7 @@ bool MonsterWalk(Monster &monster, MonsterMode variant)
 		}
 	}
 
-	if (monster.lightId != NO_LIGHT) // BUGFIX: change uniqtype check to lightId check like it is in all other places (fixed)
+	if (monster.lightId != NO_LIGHT)
 		SyncLightPosition(monster);
 
 	return isAnimationEnd;
@@ -1408,7 +1407,7 @@ void MonsterTalk(Monster &monster)
 	if (monster.uniqueType == UniqueMonsterType::Garbud) {
 		if (monster.talkMsg == TEXT_GARBUD1) {
 			Quests[Q_GARBUD]._qactive = QUEST_ACTIVE;
-			Quests[Q_GARBUD]._qlog = true; // BUGFIX: (?) for other quests qactive and qlog go together, maybe this should actually go into the if above (fixed)
+			Quests[Q_GARBUD]._qlog = true;
 		}
 		if (monster.talkMsg == TEXT_GARBUD2 && (monster.flags & MFLAG_QUEST_COMPLETE) == 0) {
 			SpawnItem(monster, monster.position.tile + Displacement { 1, 1 }, true);
@@ -2098,7 +2097,6 @@ std::optional<Point> ScavengerFindCorpse(const Monster &scavenger)
 	for (int y = first; y <= last; y += increment) {
 		for (int x = first; x <= last; x += increment) {
 			Point position = scavenger.position.tile + Displacement { x, y };
-			// BUGFIX: incorrect check of offset against limits of the dungeon (fixed)
 			if (!InDungeonBounds(position))
 				continue;
 			if (dCorpse[position.x][position.y] == 0)
@@ -3125,7 +3123,7 @@ void PrepareUniqueMonst(Monster &monster, UniqueMonsterType monsterType, size_t 
 	monster.resistance = uniqueMonsterData.mMagicRes;
 	monster.talkMsg = uniqueMonsterData.mtalkmsg;
 	if (monsterType == UniqueMonsterType::HorkDemon)
-		monster.lightId = NO_LIGHT; // BUGFIX monsters initial light id should be -1 (fixed)
+		monster.lightId = NO_LIGHT;
 	else
 		monster.lightId = AddLight(monster.position.tile, 3);
 
@@ -3869,9 +3867,13 @@ void GolumAi(Monster &golem)
 				enemy.position.last = golem.position.tile;
 				for (int j = 0; j < 5; j++) {
 					for (int k = 0; k < 5; k++) {
-						int enemyId = dMonster[golem.position.tile.x + k - 2][golem.position.tile.y + j - 2]; // BUGFIX: Check if indexes are between 0 and 112
+						int mx = golem.position.tile.x + k - 2;
+						int my = golem.position.tile.y + j - 2;
+						if (!InDungeonBounds({ mx, my }))
+							continue;
+						int enemyId = dMonster[mx][my];
 						if (enemyId > 0)
-							Monsters[enemyId - 1].activeForTicks = UINT8_MAX; // BUGFIX: should be `Monsters[enemy-1]`, not Monsters[enemy]. (fixed)
+							Monsters[enemyId - 1].activeForTicks = UINT8_MAX;
 					}
 				}
 			}
