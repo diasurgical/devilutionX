@@ -119,7 +119,6 @@ struct AddMissileParameter;
 struct MissileData {
 	void (*mAddProc)(Missile &, AddMissileParameter &);
 	void (*mProc)(Missile &);
-	MissileID mName;
 	bool mDraw;
 	uint8_t mType;
 	DamageType damageType;
@@ -139,7 +138,6 @@ enum class MissileDataFlags : uint8_t {
 
 struct MissileFileData {
 	string_view name;
-	MissileGraphicID animName;
 	uint8_t animFAmt;
 	MissileDataFlags flags;
 	std::array<uint8_t, 16> animDelay = {};
@@ -148,7 +146,7 @@ struct MissileFileData {
 	int16_t animWidth2;
 	OptionalOwnedClxSpriteListOrSheet sprites;
 
-	MissileFileData(string_view name, MissileGraphicID animName, uint8_t animFAmt, MissileDataFlags flags,
+	MissileFileData(string_view name, uint8_t animFAmt, MissileDataFlags flags,
 	    std::initializer_list<uint8_t> animDelay, std::initializer_list<uint8_t> animLen,
 	    uint16_t animWidth, int16_t animWidth2);
 
