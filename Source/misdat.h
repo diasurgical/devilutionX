@@ -137,18 +137,17 @@ enum class MissileDataFlags : uint8_t {
 };
 
 struct MissileFileData {
-	string_view name;
+	OptionalOwnedClxSpriteListOrSheet sprites;
+	uint16_t animWidth;
+	int8_t animWidth2;
+	char name[9];
 	uint8_t animFAmt;
 	MissileDataFlags flags;
-	std::array<uint8_t, 16> animDelay = {};
-	std::array<uint8_t, 16> animLen = {};
-	uint16_t animWidth;
-	int16_t animWidth2;
-	OptionalOwnedClxSpriteListOrSheet sprites;
+	uint8_t animDelayIdx;
+	uint8_t animLenIdx;
 
-	MissileFileData(string_view name, uint8_t animFAmt, MissileDataFlags flags,
-	    std::initializer_list<uint8_t> animDelay, std::initializer_list<uint8_t> animLen,
-	    uint16_t animWidth, int16_t animWidth2);
+	[[nodiscard]] uint8_t animDelay(uint8_t dir) const;
+	[[nodiscard]] uint8_t animLen(uint8_t dir) const;
 
 	void LoadGFX();
 

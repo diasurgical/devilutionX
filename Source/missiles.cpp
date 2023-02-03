@@ -596,8 +596,8 @@ void SetMissAnim(Missile &missile, MissileGraphicID animtype)
 	if (!HeadlessMode) {
 		missile._miAnimData = missileData.spritesForDirection(static_cast<size_t>(dir));
 	}
-	missile._miAnimDelay = missileData.animDelay[dir];
-	missile._miAnimLen = missileData.animLen[dir];
+	missile._miAnimDelay = missileData.animDelay(dir);
+	missile._miAnimLen = missileData.animLen(dir);
 	missile._miAnimWidth = missileData.animWidth;
 	missile._miAnimWidth2 = missileData.animWidth2;
 	missile._miAnimCnt = 0;
@@ -2644,7 +2644,7 @@ void AddResurrectBeam(Missile &missile, AddMissileParameter &parameter)
 {
 	missile.position.tile = parameter.dst;
 	missile.position.start = parameter.dst;
-	missile._mirange = GetMissileSpriteData(MissileGraphicID::Resurrect).animLen[0];
+	missile._mirange = GetMissileSpriteData(MissileGraphicID::Resurrect).animLen(0);
 }
 
 void AddTelekinesis(Missile &missile, AddMissileParameter & /*parameter*/)
