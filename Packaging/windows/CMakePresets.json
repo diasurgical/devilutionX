@@ -21,7 +21,7 @@
 		},
 		{
 			"name": "ninja-vcpkg-debug",
-			"displayName": "Ninja with VcPkg Configure Settings with CMAKE_BUILD_TYPE=RelWithDebInfo",
+			"displayName": "Ninja with VcPkg Configure Settings with CMAKE_BUILD_TYPE=Debug",
 			"inherits": "ninja-vcpkg",
 			"cacheVariables": {
 				"CMAKE_BUILD_TYPE": "Debug"
@@ -32,7 +32,11 @@
 			"displayName": "Ninja with VcPkg Configure Settings with CMAKE_BUILD_TYPE=RelWithDebInfo",
 			"inherits": "ninja-vcpkg",
 			"cacheVariables": {
-				"CMAKE_BUILD_TYPE": "RelWithDebInfo"
+				"CMAKE_BUILD_TYPE": "RelWithDebInfo",
+				"DISABLE_LTO": {
+					"type": "BOOL",
+					"value": "ON"
+				}
 			}
 		},
 		{
