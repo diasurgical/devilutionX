@@ -1850,33 +1850,34 @@ void AiAvoidance(Monster &monster)
 MissileID GetMissileType(MonsterAIID ai)
 {
 	switch (ai) {
-	case MonsterAIID::GoatMelee:
+	using enum MonsterAIID;
+	case GoatMelee:
 		return MissileID::Arrow;
-	case MonsterAIID::Succubus:
-	case MonsterAIID::LazarusSuccubus:
+	case Succubus:
+	case LazarusSuccubus:
 		return MissileID::BloodStar;
-	case MonsterAIID::Acid:
-	case MonsterAIID::AcidUnique:
+	case Acid:
+	case AcidUnique:
 		return MissileID::Acid;
-	case MonsterAIID::FireBat:
+	case FireBat:
 		return MissileID::Firebolt;
-	case MonsterAIID::Torchant:
+	case Torchant:
 		return MissileID::Fireball;
-	case MonsterAIID::Lich:
+	case Lich:
 		return MissileID::OrangeFlare;
-	case MonsterAIID::ArchLich:
+	case ArchLich:
 		return MissileID::YellowFlare;
-	case MonsterAIID::Psychorb:
+	case Psychorb:
 		return MissileID::BlueFlare;
-	case MonsterAIID::Necromorb:
+	case Necromorb:
 		return MissileID::RedFlare;
-	case MonsterAIID::Magma:
+	case Magma:
 		return MissileID::MagmaBall;
-	case MonsterAIID::Storm:
+	case Storm:
 		return MissileID::ThinLightningControl;
-	case MonsterAIID::Diablo:
+	case Diablo:
 		return MissileID::DiabloApocalypse;
-	case MonsterAIID::BoneDemon:
+	case BoneDemon:
 		return MissileID::BlueFlare2;
 	default:
 		return MissileID::Arrow;
