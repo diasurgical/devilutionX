@@ -4,7 +4,11 @@
 #include <cstdint>
 #include <memory>
 
+#ifdef PS2
+#include <audsrv.h>
+#else
 #include <Aulib/Stream.h>
+#endif
 
 #include "engine/sound_defs.hpp"
 #include "utils/stdcompat/shared_ptr_array.hpp"
@@ -28,10 +32,12 @@ public:
 	// Returns 0 on success.
 	int SetChunkStream(std::string filePath, bool isMp3, bool logErrors = true);
 
+#ifndef PS2
 	void SetFinishCallback(Aulib::Stream::Callback &&callback)
 	{
 		stream_->setFinishCallback(std::forward<Aulib::Stream::Callback>(callback));
 	}
+#endif
 
 	/**
 	 * @brief Sets the sample's WAV, FLAC, or Ogg/Vorbis data.
@@ -44,14 +50,25 @@ public:
 
 	[[nodiscard]] bool IsStreaming() const
 	{
+#ifndef PS2
 		return file_data_ == nullptr;
+#else
+		return sampleId_ == nullptr;
+#endif
 	}
 
 	int DuplicateFrom(const SoundSample &other)
 	{
+#ifndef PS2
 		if (other.IsStreaming())
 			return SetChunkStream(other.file_path_, other.isMp3_);
 		return SetChunk(other.file_data_, other.file_data_size_, other.isMp3_);
+#else
+		if (other.IsStreaming())
+			return SetChunkStream(other.file_path_, false);
+		sampleId_ = other.sampleId_;
+		return 0;
+#endif
 	}
 
 	/**
@@ -74,7 +91,13 @@ public:
 	 */
 	void Stop()
 	{
+#ifndef PS2
 		stream_->stop();
+#else
+		/** Hack: Implement way to stop sounds in PS2SDK */
+		if (channel_ != -1)
+			audsrv_adpcm_set_volume_and_pan(channel_, 0, pan_);
+#endif
 	}
 
 	void SetVolume(int logVolume, int logMin, int logMax);
@@ -82,12 +105,22 @@ public:
 
 	void Mute()
 	{
+#ifndef PS2
 		stream_->mute();
+#else
+		if (channel_ != -1)
+			audsrv_adpcm_set_volume_and_pan(channel_, 0, pan_);
+#endif
 	}
 
 	void Unmute()
 	{
+#ifndef PS2
 		stream_->unmute();
+#else
+		if (channel_ != -1)
+			audsrv_adpcm_set_volume_and_pan(channel_, volume_, pan_);
+#endif
 	}
 
 	/**
@@ -96,16 +129,24 @@ public:
 	int GetLength() const;
 
 private:
+	// Set for streaming audio to allow for duplicating it:
+	std::string file_path_;
+
+#ifndef PS2
 	// Non-streaming audio fields:
 	ArraySharedPtr<std::uint8_t> file_data_;
 	std::size_t file_data_size_;
 
-	// Set for streaming audio to allow for duplicating it:
-	std::string file_path_;
-
 	bool isMp3_;
 
 	std::unique_ptr<Aulib::Stream> stream_;
+#else
+	int channel_ = -1;
+	int pan_ = 0;
+	int volume_ = 100;
+	audsrv_adpcm_t *sampleId_ = nullptr;
+	std::unique_ptr<audsrv_adpcm_t> stream_;
+#endif
 };
 
 } // namespace devilution

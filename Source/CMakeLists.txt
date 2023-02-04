@@ -196,8 +196,10 @@ else()
   list(APPEND libdevilutionx_SRCS
     effects.cpp
     engine/sound.cpp
-    utils/push_aulib_decoder.cpp
     utils/soundsample.cpp)
+  if(NOT PS2)
+    list(APPEND libdevilutionx_SRCS utils/push_aulib_decoder.cpp)
+  endif()
 endif()
 
 if(NOT NONET)
@@ -279,7 +281,11 @@ if(NOT NONET)
 endif()
 
 if(NOT NOSOUND)
-  target_link_libraries(libdevilutionx PUBLIC SDL_audiolib::SDL_audiolib)
+  if(PS2)
+    target_link_libraries(libdevilutionx PUBLIC audsrv)
+  else()
+    target_link_libraries(libdevilutionx PUBLIC SDL_audiolib::SDL_audiolib)
+  endif()
 endif()
 
 if(NOT NONET AND NOT DISABLE_ZERO_TIER)

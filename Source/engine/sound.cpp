@@ -38,6 +38,7 @@ namespace {
 
 SoundSample music;
 
+#ifndef PS2
 std::string GetMp3Path(const char *path)
 {
 	std::string mp3Path = path;
@@ -45,15 +46,33 @@ std::string GetMp3Path(const char *path)
 	mp3Path.replace(dot + 1, mp3Path.size() - (dot + 1), "mp3");
 	return mp3Path;
 }
+#else
+std::string GetAdpPath(const char *path)
+{
+	std::string adpPath = path;
+	const std::string::size_type dot = adpPath.find_last_of('.');
+	adpPath.replace(dot + 1, adpPath.size() - (dot + 1), "adp");
+	return adpPath;
+}
+#endif
 
 bool LoadAudioFile(const char *path, bool stream, bool errorDialog, SoundSample &result)
 {
+	std::string filePath;
+#ifndef PS2
 	bool isMp3 = true;
-	AssetRef ref = FindAsset(GetMp3Path(path).c_str());
+	filePath = GetMp3Path(path);
+	AssetRef ref = FindAsset(filePath.c_str());
 	if (!ref.ok()) {
-		ref = FindAsset(path);
+		filePath = path;
+		ref = FindAsset(filePath.c_str());
 		isMp3 = false;
 	}
+#else
+	bool isMp3 = false;
+	filePath = GetAdpPath(path);
+	AssetRef ref = FindAsset(filePath.c_str());
+#endif
 	if (!ref.ok())
 		ErrDlg("Audio file not found", StrCat(path, "\n", SDL_GetError(), "\n"), __FILE__, __LINE__);
 
@@ -70,7 +89,7 @@ bool LoadAudioFile(const char *path, bool stream, bool errorDialog, SoundSample 
 #endif
 
 	if (stream) {
-		if (result.SetChunkStream(path, isMp3, /*logErrors=*/true) != 0) {
+		if (result.SetChunkStream(filePath, isMp3, /*logErrors=*/true) != 0) {
 			if (errorDialog) {
 				ErrDlg("Failed to load audio file", StrCat(path, "\n", SDL_GetError(), "\n"), __FILE__, __LINE__);
 			}
@@ -118,10 +137,12 @@ SoundSample *DuplicateSound(const SoundSample &sound)
 		it = duplicateSounds.end();
 		--it;
 	}
+#ifndef PS2
 	result->SetFinishCallback([it]([[maybe_unused]] Aulib::Stream &stream) {
 		const std::lock_guard<SdlMutex> lock(*duplicateSoundsMutex);
 		duplicateSounds.erase(it);
 	});
+#endif
 	return result;
 }
 
@@ -209,6 +230,7 @@ void snd_init()
 	sgOptions.Audio.musicVolume.SetValue(CapVolume(*sgOptions.Audio.musicVolume));
 	gbMusicOn = *sgOptions.Audio.musicVolume > VOLUME_MIN;
 
+#ifndef PS2
 	// Initialize the SDL_audiolib library. Set the output sample rate to
 	// 22kHz, the audio format to 16-bit signed, use 2 output channels
 	// (stereo), and a 2KiB output buffer.
@@ -220,14 +242,19 @@ void snd_init()
 	    Aulib::sampleRate(), Aulib::channelCount(), Aulib::frameSize(), Aulib::sampleFormat());
 
 	duplicateSoundsMutex.emplace();
+#else
+	audsrv_set_volume(MAX_VOLUME);
+#endif
 	gbSndInited = true;
 }
 
 void snd_deinit()
 {
 	if (gbSndInited) {
+#ifndef PS2
 		Aulib::quit();
 		duplicateSoundsMutex = std::nullopt;
+#endif
 	}
 
 	gbSndInited = false;
