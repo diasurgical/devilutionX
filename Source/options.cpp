@@ -293,7 +293,7 @@ void OptionEnemyHealthBarChanged()
 }
 
 #if !defined(USE_SDL1) || defined(__3DS__)
-void OptionFitToScreenChanged()
+void ResizeWindowAndUpdateResolutionOptions()
 {
 	ResizeWindow();
 #ifndef __3DS__
@@ -705,10 +705,13 @@ void OptionEntryResolution::CheckResolutionsAreInitialized() const
 	float scaleFactor = GetDpiScalingFactor();
 
 	// Add resolutions
+	bool supportsAnyResolution = false;
 #ifdef USE_SDL1
 	auto *modes = SDL_ListModes(nullptr, SDL_FULLSCREEN | SDL_HWPALETTE);
 	// SDL_ListModes returns -1 if any resolution is allowed (for example returned on 3DS)
-	if (modes != nullptr && modes != (SDL_Rect **)-1) {
+	if (modes == (SDL_Rect **)-1) {
+		supportsAnyResolution = true;
+	} else if (modes != nullptr) {
 		for (size_t i = 0; modes[i] != nullptr; i++) {
 			if (modes[i]->w < modes[i]->h) {
 				std::swap(modes[i]->w, modes[i]->h);
@@ -732,12 +735,29 @@ void OptionEntryResolution::CheckResolutionsAreInitialized() const
 		    static_cast<int>(mode.w * scaleFactor),
 		    static_cast<int>(mode.h * scaleFactor) });
 	}
+	supportsAnyResolution = *sgOptions.Graphics.upscale;
 #endif
 
+	if (supportsAnyResolution && sizes.size() == 1) {
+		// Attempt to provide sensible options for 4:3 and the native aspect ratio
+		const int width = sizes[0].width;
+		const int height = sizes[0].height;
+		const int commonHeights[] = { 480, 540, 720, 960, 1080, 1440, 2160 };
+		for (int commonHeight : commonHeights) {
+			if (commonHeight > height)
+				break;
+			sizes.emplace_back(Size { commonHeight * 4 / 3, commonHeight });
+			if (commonHeight * width % height == 0)
+				sizes.emplace_back(Size { commonHeight * width / height, commonHeight });
+		}
+	}
 	// Ensures that the ini specified resolution is present in resolution list even if it doesn't match a monitor resolution (for example if played in window mode)
 	sizes.push_back(this->size);
-	// Ensures that the vanilla/default resolution is always present
+	// Ensures that the platform's preferred default resolution is always present
 	sizes.emplace_back(Size { DEFAULT_WIDTH, DEFAULT_HEIGHT });
+	// Ensures that the vanilla Diablo resolution is present on systems that would support it
+	if (supportsAnyResolution)
+		sizes.emplace_back(Size { 640, 480 });
 
 #ifndef USE_SDL1
 	if (*sgOptions.Graphics.fitToScreen) {
@@ -983,10 +1003,10 @@ GraphicsOptions::GraphicsOptions()
 	resolution.SetValueChangedCallback(ResizeWindow);
 	fullscreen.SetValueChangedCallback(SetFullscreenMode);
 #if !defined(USE_SDL1) || defined(__3DS__)
-	fitToScreen.SetValueChangedCallback(OptionFitToScreenChanged);
+	fitToScreen.SetValueChangedCallback(ResizeWindowAndUpdateResolutionOptions);
 #endif
 #ifndef USE_SDL1
-	upscale.SetValueChangedCallback(ResizeWindow);
+	upscale.SetValueChangedCallback(ResizeWindowAndUpdateResolutionOptions);
 	scaleQuality.SetValueChangedCallback(ReinitializeTexture);
 	integerScaling.SetValueChangedCallback(ReinitializeIntegerScale);
 	vSync.SetValueChangedCallback(ReinitializeRenderer);
