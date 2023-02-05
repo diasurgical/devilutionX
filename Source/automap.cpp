@@ -776,10 +776,7 @@ std::unique_ptr<AutomapTile[]> LoadAutomapData(size_t &tileCount)
 {
 	switch (leveltype) {
 	case DTYPE_TOWN:
-		if (*sgOptions.Graphics.showTownMap)
-			return LoadFileInMem<AutomapTile>("levels\\towndata\\automap.amp", &tileCount);
-		else
-			return nullptr;
+		return LoadFileInMem<AutomapTile>("levels\\towndata\\automap.amp", &tileCount);
 	case DTYPE_CATHEDRAL:
 		return LoadFileInMem<AutomapTile>("levels\\l1data\\l1.amp", &tileCount);
 	case DTYPE_CATACOMBS:
