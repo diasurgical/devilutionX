@@ -231,8 +231,8 @@ bool HasRangedSpell()
 	return spl != SpellID::Invalid
 	    && spl != SpellID::TownPortal
 	    && spl != SpellID::Teleport
-	    && GetSpellData(spl).sTargeted
-	    && !GetSpellData(spl).sTownSpell;
+	    && GetSpellData(spl).isTargeted()
+	    && !GetSpellData(spl).isAllowedInTown();
 }
 
 bool CanTargetMonster(const Monster &monster)
@@ -2049,7 +2049,7 @@ void CtrlUseInvItem()
 		if (TargetsMonster(item._iSpell)) {
 			return;
 		}
-		if (GetSpellData(item._iSpell).sTargeted) {
+		if (GetSpellData(item._iSpell).isTargeted()) {
 			UpdateSpellTarget(item._iSpell);
 		}
 	}
@@ -2076,7 +2076,7 @@ void CtrlUseStashItem()
 		if (TargetsMonster(item._iSpell)) {
 			return;
 		}
-		if (GetSpellData(item._iSpell).sTargeted) {
+		if (GetSpellData(item._iSpell).isTargeted()) {
 			UpdateSpellTarget(item._iSpell);
 		}
 	}

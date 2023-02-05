@@ -245,8 +245,9 @@ void CastSpell(int id, SpellID spl, int sx, int sy, int dx, int dy, int spllvl)
 	}
 
 	bool fizzled = false;
-	for (int i = 0; i < 3 && GetSpellData(spl).sMissiles[i] != MissileID::Null; i++) {
-		Missile *missile = AddMissile({ sx, sy }, { dx, dy }, dir, GetSpellData(spl).sMissiles[i], TARGET_MONSTERS, id, 0, spllvl);
+	const SpellData &spellData = GetSpellData(spl);
+	for (size_t i = 0; i < sizeof(spellData.sMissiles) / sizeof(spellData.sMissiles[0]) && spellData.sMissiles[i] != MissileID::Null; i++) {
+		Missile *missile = AddMissile({ sx, sy }, { dx, dy }, dir, spellData.sMissiles[i], TARGET_MONSTERS, id, 0, spllvl);
 		fizzled |= (missile == nullptr);
 	}
 	if (spl == SpellID::ChargedBolt) {

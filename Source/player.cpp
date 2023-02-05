@@ -432,7 +432,7 @@ void StartRangeAttack(Player &player, Direction d, WorldTileCoord cx, WorldTileC
 
 player_graphic GetPlayerGraphicForSpell(SpellID spellId)
 {
-	switch (GetSpellData(spellId).sType) {
+	switch (GetSpellData(spellId).type()) {
 	case MagicType::Fire:
 		return player_graphic::Fire;
 	case MagicType::Lightning:
@@ -2018,15 +2018,7 @@ player_graphic Player::getGraphic() const
 	case PM_BLOCK:
 		return player_graphic::Block;
 	case PM_SPELL:
-		switch (GetSpellData(executedSpell.spellId).sType) {
-		case MagicType::Fire:
-			return player_graphic::Fire;
-		case MagicType::Lightning:
-			return player_graphic::Lightning;
-		case MagicType::Magic:
-			return player_graphic::Magic;
-		}
-		return player_graphic::Fire;
+		return GetPlayerGraphicForSpell(executedSpell.spellId);
 	case PM_GOTHIT:
 		return player_graphic::Hit;
 	case PM_DEATH:
@@ -3453,7 +3445,7 @@ void CheckPlrSpell(bool isShiftHeld, SpellID spellID, SpellType spellType)
 		}
 	}
 
-	if (leveltype == DTYPE_TOWN && !GetSpellData(spellID).sTownSpell) {
+	if (leveltype == DTYPE_TOWN && !GetSpellData(spellID).isAllowedInTown()) {
 		myPlayer.Say(HeroSpeech::ICantCastThatHere);
 		return;
 	}

@@ -1472,7 +1472,7 @@ size_t OnSpellWall(const TCmd *pCmd, Player &player)
 		LogError(_("{:s} has cast an invalid spell."), player._pName);
 		return sizeof(message);
 	}
-	if (leveltype == DTYPE_TOWN && !GetSpellData(spell).sTownSpell) {
+	if (leveltype == DTYPE_TOWN && !GetSpellData(spell).isAllowedInTown()) {
 		LogError(_("{:s} has cast an illegal spell."), player._pName);
 		return sizeof(message);
 	}
@@ -1513,7 +1513,7 @@ size_t OnSpellTile(const TCmd *pCmd, Player &player)
 		LogError(_("{:s} has cast an invalid spell."), player._pName);
 		return sizeof(message);
 	}
-	if (leveltype == DTYPE_TOWN && !GetSpellData(spell).sTownSpell) {
+	if (leveltype == DTYPE_TOWN && !GetSpellData(spell).isAllowedInTown()) {
 		LogError(_("{:s} has cast an illegal spell."), player._pName);
 		return sizeof(message);
 	}
@@ -1548,7 +1548,7 @@ size_t OnTargetSpellTile(const TCmd *pCmd, Player &player)
 		return sizeof(message);
 
 	auto spell = static_cast<SpellID>(wParam1);
-	if (leveltype == DTYPE_TOWN && !GetSpellData(spell).sTownSpell) {
+	if (leveltype == DTYPE_TOWN && !GetSpellData(spell).isAllowedInTown()) {
 		LogError(_("{:s} has cast an illegal spell."), player._pName);
 		return sizeof(message);
 	}
@@ -1663,7 +1663,7 @@ size_t OnSpellMonster(const TCmd *pCmd, Player &player)
 		LogError(_("{:s} has cast an invalid spell."), player._pName);
 		return sizeof(message);
 	}
-	if (leveltype == DTYPE_TOWN && !GetSpellData(spell).sTownSpell) {
+	if (leveltype == DTYPE_TOWN && !GetSpellData(spell).isAllowedInTown()) {
 		LogError(_("{:s} has cast an illegal spell."), player._pName);
 		return sizeof(message);
 	}
@@ -1702,7 +1702,7 @@ size_t OnSpellPlayer(const TCmd *pCmd, Player &player)
 		LogError(_("{:s} has cast an invalid spell."), player._pName);
 		return sizeof(message);
 	}
-	if (leveltype == DTYPE_TOWN && !GetSpellData(spell).sTownSpell) {
+	if (leveltype == DTYPE_TOWN && !GetSpellData(spell).isAllowedInTown()) {
 		LogError(_("{:s} has cast an illegal spell."), player._pName);
 		return sizeof(message);
 	}
@@ -1737,7 +1737,7 @@ size_t OnTargetSpellMonster(const TCmd *pCmd, Player &player)
 		return sizeof(message);
 
 	auto spell = static_cast<SpellID>(wParam2);
-	if (leveltype == DTYPE_TOWN && !GetSpellData(spell).sTownSpell) {
+	if (leveltype == DTYPE_TOWN && !GetSpellData(spell).isAllowedInTown()) {
 		LogError(_("{:s} has cast an illegal spell."), player._pName);
 		return sizeof(message);
 	}
@@ -1772,7 +1772,7 @@ size_t OnTargetSpellPlayer(const TCmd *pCmd, Player &player)
 		return sizeof(message);
 
 	auto spell = static_cast<SpellID>(wParam2);
-	if (leveltype == DTYPE_TOWN && !GetSpellData(spell).sTownSpell) {
+	if (leveltype == DTYPE_TOWN && !GetSpellData(spell).isAllowedInTown()) {
 		LogError(_("{:s} has cast an illegal spell."), player._pName);
 		return sizeof(message);
 	}

@@ -613,7 +613,7 @@ void GetBookSpell(Item &item, int lvl)
 		lvl = 5;
 
 	int s = static_cast<int8_t>(SpellID::Firebolt);
-	enum SpellID bs = SpellID::Firebolt;
+	SpellID bs = SpellID::Firebolt;
 	while (rv > 0) {
 		int sLevel = GetSpellBookLevel(static_cast<SpellID>(s));
 		if (sLevel != -1 && lvl >= sLevel) {
@@ -638,15 +638,21 @@ void GetBookSpell(Item &item, int lvl)
 	CopyUtf8(item._iName + iNameLen, spellName, sizeof(item._iName) - iNameLen);
 	CopyUtf8(item._iIName + iINameLen, spellName, sizeof(item._iIName) - iINameLen);
 	item._iSpell = bs;
-	item._iMinMag = GetSpellData(bs).sMinInt;
-	item._ivalue += GetSpellData(bs).sBookCost;
-	item._iIvalue += GetSpellData(bs).sBookCost;
-	if (GetSpellData(bs).sType == MagicType::Fire)
+	const SpellData &spellData = GetSpellData(bs);
+	item._iMinMag = spellData.minInt;
+	item._ivalue += spellData.bookCost();
+	item._iIvalue += spellData.bookCost();
+	switch (spellData.type()) {
+	case MagicType::Fire:
 		item._iCurs = ICURS_BOOK_RED;
-	else if (GetSpellData(bs).sType == MagicType::Lightning)
+		break;
+	case MagicType::Lightning:
 		item._iCurs = ICURS_BOOK_BLUE;
-	else if (GetSpellData(bs).sType == MagicType::Magic)
+		break;
+	case MagicType::Magic:
 		item._iCurs = ICURS_BOOK_GREY;
+		break;
+	}
 }
 
 int RndPL(int param1, int param2)
@@ -1211,7 +1217,7 @@ void GetStaffSpell(const Player &player, Item &item, int lvl, bool onlygood)
 		lvl = 10;
 
 	int s = static_cast<int8_t>(SpellID::Firebolt);
-	enum SpellID bs = SpellID::Null;
+	SpellID bs = SpellID::Null;
 	while (rv > 0) {
 		int sLevel = GetSpellStaffLevel(static_cast<SpellID>(s));
 		if (sLevel != -1 && l >= sLevel) {
@@ -1233,8 +1239,8 @@ void GetStaffSpell(const Player &player, Item &item, int lvl, bool onlygood)
 	item._iCharges = minc + GenerateRnd(maxc);
 	item._iMaxCharges = item._iCharges;
 
-	item._iMinMag = GetSpellData(bs).sMinInt;
-	int v = item._iCharges * GetSpellData(bs).sStaffCost / 5;
+	item._iMinMag = GetSpellData(bs).minInt;
+	int v = item._iCharges * GetSpellData(bs).staffCost() / 5;
 	item._ivalue += v;
 	item._iIvalue += v;
 	GetStaffPower(player, item, lvl, bs, onlygood);
@@ -3825,7 +3831,7 @@ void UseItem(size_t pnum, item_misc_id mid, SpellID spl)
 		break;
 	case IMISC_SCROLL:
 	case IMISC_SCROLLT:
-		if (ControlMode == ControlTypes::KeyboardAndMouse && GetSpellData(spl).sTargeted) {
+		if (ControlMode == ControlTypes::KeyboardAndMouse && GetSpellData(spl).isTargeted()) {
 			player._pTSpell = spl;
 			if (&player == MyPlayer)
 				NewCursor(CURSOR_TELEPORT);
@@ -4498,7 +4504,7 @@ void Item::setNewAnimation(bool showAnimation)
 void Item::updateRequiredStatsCacheForPlayer(const Player &player)
 {
 	if (_itype == ItemType::Misc && _iMiscId == IMISC_BOOK) {
-		_iMinMag = GetSpellData(_iSpell).sMinInt;
+		_iMinMag = GetSpellData(_iSpell).minInt;
 		int8_t spellLevel = player._pSplLvl[static_cast<int8_t>(_iSpell)];
 		while (spellLevel != 0) {
 			_iMinMag += 20 * _iMinMag / 100;
