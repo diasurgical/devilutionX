@@ -305,7 +305,7 @@ _sfx_id ItemDropSnds[] = {
 	IS_FBODY,
 	IS_FBODY,
 	IS_FMUSH,
-	IS_ISIGN,
+	IS_FSIGN,
 	IS_FBLST,
 	IS_FANVL,
 	IS_FSTAF,
