@@ -190,6 +190,10 @@ enum _cmd_id : uint8_t {
 	// body (TCmdParam1):
 	//    int16_t portal_num
 	CMD_WARP,
+	// Cheat: give player level down.
+	//
+	// body (TCmd)
+	CMD_CHEAT_REMOVE_EXPERIENCE,
 	// Cheat: give player level up.
 	//
 	// body (TCmd)

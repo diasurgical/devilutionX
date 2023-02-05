@@ -525,6 +525,14 @@ std::string DebugCmdQuest(const string_view parameter)
 	return StrCat(QuestsData[questId]._qlstr, " enabled.");
 }
 
+std::string DebugCmdLevelDown(const string_view parameter)
+{
+	int levels = std::max(1, atoi(parameter.data()));
+	for (int i = 0; i < levels; i++)
+		NetSendCmd(true, CMD_CHEAT_REMOVE_EXPERIENCE);
+	return "Don't eat the lead paint.";
+}
+
 std::string DebugCmdLevelUp(const string_view parameter)
 {
 	int levels = std::max(1, atoi(parameter.data()));
@@ -1010,6 +1018,7 @@ std::vector<DebugCmdItem> DebugCmdList = {
 	{ "help", "Prints help overview or help for a specific command.", "({command})", &DebugCmdHelp },
 	{ "givegold", "Fills the inventory with gold.", "", &DebugCmdGiveGoldCheat },
 	{ "givexp", "Levels the player up (min 1 level or {levels}).", "({levels})", &DebugCmdLevelUp },
+	{ "takexp", "Levels the player up (min 1 level or {levels}).", "({levels})", &DebugCmdLevelDown },
 	{ "maxstats", "Sets all stat values to maximum.", "", &DebugCmdMaxStats },
 	{ "minstats", "Sets all stat values to minimum.", "", &DebugCmdMinStats },
 	{ "setspells", "Set spell level to {level} for all spells.", "{level}", &DebugCmdSetSpellsLevel },

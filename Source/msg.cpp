@@ -2440,6 +2440,22 @@ size_t OnSyncQuest(const TCmd *pCmd, size_t pnum)
 	return sizeof(message);
 }
 
+size_t OnCheatRemoveExperience(const TCmd *pCmd, size_t pnum) // NOLINT(misc-unused-parameters)
+{
+#ifdef _DEBUG
+	if (gbBufferMsgs == 1)
+		SendPacket(pnum, pCmd, sizeof(*pCmd));
+	else if (Players[pnum]._pLevel > 1) {
+		Players[pnum]._pExperience = ExpLvlsTbl[Players[pnum]._pLevel - 2];
+		if (*sgOptions.Gameplay.experienceBar) {
+			RedrawEverything();
+		}
+		PreviousPlrLevel(Players[pnum]);
+	}
+#endif
+	return sizeof(*pCmd);
+}
+
 size_t OnCheatExperience(const TCmd *pCmd, size_t pnum) // NOLINT(misc-unused-parameters)
 {
 #ifdef _DEBUG
@@ -3443,6 +3459,8 @@ size_t ParseCmd(size_t pnum, const TCmd *pCmd)
 		return OnFriendlyMode(pCmd, player);
 	case CMD_SYNCQUEST:
 		return OnSyncQuest(pCmd, pnum);
+	case CMD_CHEAT_REMOVE_EXPERIENCE:
+		return OnCheatRemoveExperience(pCmd, pnum);
 	case CMD_CHEAT_EXPERIENCE:
 		return OnCheatExperience(pCmd, pnum);
 	case CMD_CHEAT_SPELL_LEVEL:

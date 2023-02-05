@@ -2629,6 +2629,52 @@ int CalcStatDiff(Player &player)
 	return diff;
 }
 
+void PreviousPlrLevel(Player &player)
+{
+#ifdef _DEBUG
+	player._pLevel--;
+	player._pMaxLvl--;
+
+	CalcPlrInv(player, true);
+
+	player._pNextExper = ExpLvlsTbl[player._pLevel];
+
+	int hp = player._pClass == HeroClass::Sorcerer ? 64 : 128;
+
+	player._pMaxHP -= hp;
+	player._pHitPoints = player._pMaxHP;
+	player._pMaxHPBase -= hp;
+	player._pHPBase = player._pMaxHPBase;
+
+	if (&player == MyPlayer) {
+		RedrawComponent(PanelDrawComponent::Health);
+	}
+
+	int mana = 128;
+	if (player._pClass == HeroClass::Warrior)
+		mana = 64;
+	else if (player._pClass == HeroClass::Barbarian)
+		mana = 0;
+
+	player._pMaxMana -= mana;
+	player._pMaxManaBase -= mana;
+
+	if (HasNoneOf(player._pIFlags, ItemSpecialEffect::NoMana)) {
+		player._pMana = player._pMaxMana;
+		player._pManaBase = player._pMaxManaBase;
+	}
+
+	if (&player == MyPlayer) {
+		RedrawComponent(PanelDrawComponent::Mana);
+	}
+
+	if (ControlMode != ControlTypes::KeyboardAndMouse)
+		FocusOnCharInfo();
+
+	CalcPlrInv(player, true);
+#endif
+}
+
 void NextPlrLevel(Player &player)
 {
 	player._pLevel++;
