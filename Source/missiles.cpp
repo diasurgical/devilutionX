@@ -2074,7 +2074,9 @@ void AddFlameWave(Missile &missile, AddMissileParameter &parameter)
 	missile._midam = GenerateRnd(10) + Players[missile._misource]._pLevel + 1;
 	UpdateMissileVelocity(missile, parameter.dst, 16);
 	missile._mirange = 255;
-	missile.position.tile += Displacement { 1, 1 };
+
+	// Adjust missile's position for rendering
+	missile.position.tile += Direction::South;
 	missile.position.offset.deltaY -= 32;
 }
 
@@ -3403,6 +3405,10 @@ void ProcessFlameWave(Missile &missile)
 {
 	constexpr int ExpLight[14] = { 2, 3, 4, 5, 5, 6, 7, 8, 9, 10, 11, 12, 12 };
 
+	// Adjust missile's position for processing
+	missile.position.tile += Direction::North;
+	missile.position.offset.deltaY += 32;
+
 	missile.var1++;
 	if (missile.var1 == missile._miAnimLen) {
 		SetMissDir(missile, 1);
@@ -3428,6 +3434,7 @@ void ProcessFlameWave(Missile &missile)
 		ChangeLight(missile._mlid, missile.position.tile, ExpLight[missile.var2]);
 		missile.var2++;
 	}
+	// Adjust missile's position for rendering
 	missile.position.tile += Direction::South;
 	missile.position.offset.deltaY -= 32;
 	PutMissile(missile);
