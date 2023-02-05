@@ -157,6 +157,7 @@ enum _sfx_id : int16_t {
 	IS_FROCK,
 	IS_FSCRL,
 	IS_FSHLD,
+	IS_FSIGN,
 	IS_FSTAF,
 	IS_FSWOR,
 	IS_GOLD,
