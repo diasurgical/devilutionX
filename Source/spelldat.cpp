@@ -9,7 +9,7 @@
 namespace devilution {
 
 /** Data related to each spell ID. */
-const SpellData spelldata[] = {
+const SpellData SpellsData[] = {
 	// clang-format off
 // sName,                     sManaCost, sType,                sNameText,                          sBookLvl,  sStaffLvl, sTargeted,  sTownSpell,   sMinInt, sSFX,     { sMissiles[3],                                                }            sManaAdj,  sMinMana,  sStaffMin,  sStaffMax,  sBookCost,  sStaffCost
 { SpellID::Null,                      0, MagicType::Fire,      nullptr,                                   0,          0, false,      false,              0, SFX_NONE, { MissileID::Null,                 MissileID::Null,     MissileID::Null },         0,         0,         40,         80,          0,           0 },

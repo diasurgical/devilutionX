@@ -68,7 +68,7 @@ SpellType GetSBookTrans(SpellID ii, bool townok)
 			st = SpellType::Invalid;
 		}
 	}
-	if (townok && leveltype == DTYPE_TOWN && st != SpellType::Invalid && !spelldata[static_cast<int8_t>(ii)].sTownSpell) {
+	if (townok && leveltype == DTYPE_TOWN && st != SpellType::Invalid && !GetSpellData(ii).sTownSpell) {
 		st = SpellType::Invalid;
 	}
 
@@ -140,7 +140,7 @@ void DrawSpellBook(const Surface &out)
 
 			const Point line0 { 0, yp + textPaddingTop };
 			const Point line1 { 0, yp + textPaddingTop + lineHeight };
-			PrintSBookStr(out, line0, pgettext("spell", spelldata[static_cast<int8_t>(sn)].sNameText));
+			PrintSBookStr(out, line0, pgettext("spell", GetSpellData(sn).sNameText));
 			switch (GetSBookTrans(sn, false)) {
 			case SpellType::Skill:
 				PrintSBookStr(out, line1, _("Skill"));
