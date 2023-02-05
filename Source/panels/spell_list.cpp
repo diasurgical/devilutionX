@@ -94,7 +94,7 @@ void DrawSpell(const Surface &out)
 			st = SpellType::Invalid;
 	}
 
-	if (leveltype == DTYPE_TOWN && st != SpellType::Invalid && !GetSpellData(spl).sTownSpell)
+	if (leveltype == DTYPE_TOWN && st != SpellType::Invalid && !GetSpellData(spl).isAllowedInTown())
 		st = SpellType::Invalid;
 
 	SetSpellTrans(st);
@@ -117,7 +117,7 @@ void DrawSpellList(const Surface &out)
 		SpellType transType = spellListItem.type;
 		int spellLevel = 0;
 		const SpellData &spellDataItem = GetSpellData(spellListItem.id);
-		if (leveltype == DTYPE_TOWN && !spellDataItem.sTownSpell) {
+		if (leveltype == DTYPE_TOWN && !spellDataItem.isAllowedInTown()) {
 			transType = SpellType::Invalid;
 		}
 		if (spellListItem.type == SpellType::Spell) {

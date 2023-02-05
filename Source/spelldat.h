@@ -6,8 +6,10 @@
 #pragma once
 
 #include <cstdint>
+#include <type_traits>
 
 #include "effects.h"
+#include "utils/enum_traits.h"
 
 namespace devilution {
 
@@ -203,24 +205,56 @@ enum class MissileID : int8_t {
 	// clang-format on
 };
 
+enum class SpellDataFlags : uint8_t {
+	// The lower 2 bytes are used to store MagicType.
+	Fire = static_cast<uint8_t>(MagicType::Fire),
+	Lightning = static_cast<uint8_t>(MagicType::Lightning),
+	Magic = static_cast<uint8_t>(MagicType::Magic),
+	Targeted = 1U << 2,
+	AllowedInTown = 1U << 3,
+};
+use_enum_as_flags(SpellDataFlags);
+
 struct SpellData {
-	SpellID sName;
-	uint8_t sManaCost;
-	MagicType sType;
 	const char *sNameText;
+	_sfx_id sSFX;
+	uint16_t bookCost10;
+	uint8_t staffCost10;
+	uint8_t sManaCost;
+	SpellDataFlags flags;
 	int8_t sBookLvl;
 	int8_t sStaffLvl;
-	bool sTargeted;
-	bool sTownSpell;
-	int16_t sMinInt;
-	_sfx_id sSFX;
-	MissileID sMissiles[3];
+	uint8_t minInt;
+	MissileID sMissiles[2];
 	uint8_t sManaAdj;
 	uint8_t sMinMana;
 	uint8_t sStaffMin;
 	uint8_t sStaffMax;
-	uint32_t sBookCost;
-	uint16_t sStaffCost;
+
+	[[nodiscard]] MagicType type() const
+	{
+		return static_cast<MagicType>(static_cast<std::underlying_type<SpellDataFlags>::type>(flags) & 0b11U);
+	}
+
+	[[nodiscard]] uint32_t bookCost() const
+	{
+		return bookCost10 * 10;
+	}
+
+	[[nodiscard]] uint16_t staffCost() const
+	{
+		return staffCost10 * 10;
+	}
+
+	[[nodiscard]] bool isTargeted() const
+	{
+		return HasAnyOf(flags, SpellDataFlags::Targeted);
+	}
+
+	[[nodiscard]] bool isAllowedInTown() const
+	{
+		return HasAnyOf(flags, SpellDataFlags::AllowedInTown);
+	}
 };
 
 extern const SpellData SpellsData[];
