@@ -325,6 +325,7 @@ public:
 	[[nodiscard]] string_view GetListDescription(size_t index) const override;
 	[[nodiscard]] size_t GetActiveListIndex() const override;
 	void SetActiveListIndex(size_t index) override;
+	void InvalidateList();
 
 	Size operator*() const
 	{

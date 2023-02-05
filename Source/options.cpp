@@ -292,6 +292,16 @@ void OptionEnemyHealthBarChanged()
 		FreeMonsterHealthBar();
 }
 
+#if !defined(USE_SDL1) || defined(__3DS__)
+void OptionFitToScreenChanged()
+{
+	ResizeWindow();
+#ifndef __3DS__
+	sgOptions.Graphics.resolution.InvalidateList();
+#endif
+}
+#endif
+
 void OptionShowFPSChanged()
 {
 	if (*sgOptions.Graphics.showFPS)
@@ -681,6 +691,11 @@ void OptionEntryResolution::SaveToIni(string_view category) const
 	SetIniValue(category.data(), "Height", size.height);
 }
 
+void OptionEntryResolution::InvalidateList()
+{
+	resolutions.clear();
+}
+
 void OptionEntryResolution::CheckResolutionsAreInitialized() const
 {
 	if (!resolutions.empty())
@@ -724,6 +739,22 @@ void OptionEntryResolution::CheckResolutionsAreInitialized() const
 	// Ensures that the vanilla/default resolution is always present
 	sizes.emplace_back(Size { DEFAULT_WIDTH, DEFAULT_HEIGHT });
 
+#ifndef USE_SDL1
+	if (*sgOptions.Graphics.fitToScreen) {
+		SDL_DisplayMode mode;
+		if (SDL_GetDesktopDisplayMode(0, &mode) != 0) {
+			ErrSdl();
+		}
+		for (auto &size : sizes) {
+			// Ensure that the ini specified resolution remains present in the resolution list
+			if (size.height == this->size.height)
+				size.width = this->size.width;
+			else
+				size.width = size.height * mode.w / mode.h;
+		}
+	}
+#endif
+
 	// Sort by width then by height
 	std::sort(sizes.begin(), sizes.end(),
 	    [](const Size &x, const Size &y) -> bool {
@@ -735,6 +766,12 @@ void OptionEntryResolution::CheckResolutionsAreInitialized() const
 	sizes.erase(std::unique(sizes.begin(), sizes.end()), sizes.end());
 
 	for (auto &size : sizes) {
+#ifndef USE_SDL1
+		if (*sgOptions.Graphics.fitToScreen) {
+			resolutions.emplace_back(size, StrCat(size.height, "p"));
+			continue;
+		}
+#endif
 		resolutions.emplace_back(size, StrCat(size.width, "x", size.height));
 	}
 }
@@ -946,7 +983,7 @@ GraphicsOptions::GraphicsOptions()
 	resolution.SetValueChangedCallback(ResizeWindow);
 	fullscreen.SetValueChangedCallback(SetFullscreenMode);
 #if !defined(USE_SDL1) || defined(__3DS__)
-	fitToScreen.SetValueChangedCallback(ResizeWindow);
+	fitToScreen.SetValueChangedCallback(OptionFitToScreenChanged);
 #endif
 #ifndef USE_SDL1
 	upscale.SetValueChangedCallback(ResizeWindow);
