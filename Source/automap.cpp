@@ -13,6 +13,7 @@
 #include "engine/render/automap_render.hpp"
 #include "levels/gendung.h"
 #include "levels/setmaps.h"
+#include "options.h"
 #include "player.h"
 #include "utils/language.h"
 #include "utils/stdcompat/algorithm.hpp"
@@ -775,7 +776,10 @@ std::unique_ptr<AutomapTile[]> LoadAutomapData(size_t &tileCount)
 {
 	switch (leveltype) {
 	case DTYPE_TOWN:
-		return LoadFileInMem<AutomapTile>("levels\\towndata\\automap.amp", &tileCount);
+		if (*sgOptions.Graphics.showTownMap)
+			return LoadFileInMem<AutomapTile>("levels\\towndata\\automap.amp", &tileCount);
+		else
+			return nullptr;
 	case DTYPE_CATHEDRAL:
 		return LoadFileInMem<AutomapTile>("levels\\l1data\\l1.amp", &tileCount);
 	case DTYPE_CATACOMBS:
@@ -869,6 +873,10 @@ void AutomapZoomOut()
 
 void DrawAutomap(const Surface &out)
 {
+	if (!*sgOptions.Graphics.showTownMap && leveltype == DTYPE_TOWN) {
+		DrawAutomapText(out);
+		return;
+	}
 	Automap = { (ViewPosition.x - 8) / 2, (ViewPosition.y - 8) / 2 };
 	if (leveltype != DTYPE_TOWN) {
 		Automap += { -4, -4 };

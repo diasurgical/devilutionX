@@ -522,6 +522,9 @@ struct GraphicsOptions : OptionCategoryBase {
 	OptionEntryBoolean showHealthValues;
 	/** @brief Display current/max mana values on mana globe. */
 	OptionEntryBoolean showManaValues;
+	/** @brief Show town map when automap is enabled. */
+	OptionEntryBoolean showTownMap;
+
 };
 
 struct GameplayOptions : OptionCategoryBase {

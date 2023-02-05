@@ -979,6 +979,7 @@ GraphicsOptions::GraphicsOptions()
     , showItemGraphicsInStores("Show Item Graphics in Stores", OptionEntryFlags::None, N_("Show Item Graphics in Stores"), N_("Show item graphics to the left of item descriptions in store menus."), false)
     , showHealthValues("Show health values", OptionEntryFlags::None, N_("Show health values"), N_("Displays current / max health value on health globe."), false)
     , showManaValues("Show mana values", OptionEntryFlags::None, N_("Show mana values"), N_("Displays current / max mana value on mana globe."), false)
+    , showTownMap("Show town map", OptionEntryFlags::None, N_("Show town map"), N_("Show town map when automap is enabled."), true)
 {
 	resolution.SetValueChangedCallback(ResizeWindow);
 	fullscreen.SetValueChangedCallback(SetFullscreenMode);
@@ -1019,6 +1020,7 @@ std::vector<OptionEntryBase *> GraphicsOptions::GetEntries()
 		&showManaValues,
 		&colorCycling,
 		&alternateNestArt,
+		&showTownMap,
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 		&hardwareCursor,
 		&hardwareCursorForItems,
