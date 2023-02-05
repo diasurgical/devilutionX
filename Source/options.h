@@ -524,7 +524,6 @@ struct GraphicsOptions : OptionCategoryBase {
 	OptionEntryBoolean showManaValues;
 	/** @brief Show town map when automap is enabled. */
 	OptionEntryBoolean showTownMap;
-
 };
 
 struct GameplayOptions : OptionCategoryBase {
