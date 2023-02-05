@@ -162,32 +162,32 @@ const std::array<uint8_t, 16> MissileAnimLengths[] {
 	Repeat(19),
 	Repeat(20),
 	{ 9, 4 },
-	{ 15, 4, 3 },
+	{ 15, 14, 3 },
 	{ 13, 11 },
 	{ 16, 16, 16, 16, 16, 16, 16, 16, 8 }
 };
 
-constexpr uint8_t AnimLen_0 = 0;       // NOLINT(readability-identifier-naming)
-constexpr uint8_t AnimLen_1 = 1;       // NOLINT(readability-identifier-naming)
-constexpr uint8_t AnimLen_4 = 2;       // NOLINT(readability-identifier-naming)
-constexpr uint8_t AnimLen_5 = 3;       // NOLINT(readability-identifier-naming)
-constexpr uint8_t AnimLen_6 = 4;       // NOLINT(readability-identifier-naming)
-constexpr uint8_t AnimLen_7 = 5;       // NOLINT(readability-identifier-naming)
-constexpr uint8_t AnimLen_8 = 6;       // NOLINT(readability-identifier-naming)
-constexpr uint8_t AnimLen_9 = 7;       // NOLINT(readability-identifier-naming)
-constexpr uint8_t AnimLen_10 = 8;      // NOLINT(readability-identifier-naming)
-constexpr uint8_t AnimLen_12 = 9;      // NOLINT(readability-identifier-naming)
-constexpr uint8_t AnimLen_13 = 10;     // NOLINT(readability-identifier-naming)
-constexpr uint8_t AnimLen_14 = 11;     // NOLINT(readability-identifier-naming)
-constexpr uint8_t AnimLen_15 = 12;     // NOLINT(readability-identifier-naming)
-constexpr uint8_t AnimLen_16 = 13;     // NOLINT(readability-identifier-naming)
-constexpr uint8_t AnimLen_17 = 14;     // NOLINT(readability-identifier-naming)
-constexpr uint8_t AnimLen_19 = 15;     // NOLINT(readability-identifier-naming)
-constexpr uint8_t AnimLen_20 = 16;     // NOLINT(readability-identifier-naming)
-constexpr uint8_t AnimLen_9_4 = 17;    // NOLINT(readability-identifier-naming)
-constexpr uint8_t AnimLen_15_4_3 = 18; // NOLINT(readability-identifier-naming)
-constexpr uint8_t AnimLen_13_11 = 19;  // NOLINT(readability-identifier-naming)
-constexpr uint8_t AnimLen_16x8_8 = 20; // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_0 = 0;        // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_1 = 1;        // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_4 = 2;        // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_5 = 3;        // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_6 = 4;        // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_7 = 5;        // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_8 = 6;        // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_9 = 7;        // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_10 = 8;       // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_12 = 9;       // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_13 = 10;      // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_14 = 11;      // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_15 = 12;      // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_16 = 13;      // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_17 = 14;      // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_19 = 15;      // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_20 = 16;      // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_9_4 = 17;     // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_15_14_3 = 18; // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_13_11 = 19;   // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_16x8_8 = 20;  // NOLINT(readability-identifier-naming)
 
 } // namespace
 
@@ -197,7 +197,7 @@ MissileFileData MissileSpriteData[] = {
 // id                          sprites,   animWidth,  animWidth2, name,        animFAmt, flags,                           animDelayIdx, animLenIdx
 /*Arrow*/                    { {},               96,          16, "arrows",           1, MissileDataFlags::NotAnimated,              0, AnimLen_16     },
 /*Fireball*/                 { {},               96,          16, "fireba",          16, MissileDataFlags::None,                     0, AnimLen_14     },
-/*Guardian*/                 { {},               96,          16, "guard",            3, MissileDataFlags::None,                     1, AnimLen_15_4_3 },
+/*Guardian*/                 { {},               96,          16, "guard",            3, MissileDataFlags::None,                     1, AnimLen_15_14_3 },
 /*Lightning*/                { {},               96,          16, "lghning",          1, MissileDataFlags::None,                     0, AnimLen_8      },
 /*FireWall*/                 { {},              128,          32, "firewal",          2, MissileDataFlags::None,                     0, AnimLen_13_11  },
 /*MagmaBallExplosion*/       { {},              128,          32, "magblos",          1, MissileDataFlags::None,                     1, AnimLen_10     },
