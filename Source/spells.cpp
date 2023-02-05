@@ -139,21 +139,21 @@ int GetManaAmount(const Player &player, SpellID sn)
 	int sl = std::max(player.GetSpellLevel(sn) - 1, 0);
 
 	if (sl > 0) {
-		adj = sl * spelldata[static_cast<int8_t>(sn)].sManaAdj;
+		adj = sl * GetSpellData(sn).sManaAdj;
 	}
 	if (sn == SpellID::Firebolt) {
 		adj /= 2;
 	}
 	if (sn == SpellID::Resurrect && sl > 0) {
-		adj = sl * (spelldata[static_cast<int8_t>(SpellID::Resurrect)].sManaCost / 8);
+		adj = sl * (GetSpellData(SpellID::Resurrect).sManaCost / 8);
 	}
 
 	if (sn == SpellID::Healing || sn == SpellID::HealOther) {
-		ma = (spelldata[static_cast<int8_t>(SpellID::Healing)].sManaCost + 2 * player._pLevel - adj);
-	} else if (spelldata[static_cast<int8_t>(sn)].sManaCost == 255) {
+		ma = (GetSpellData(SpellID::Healing).sManaCost + 2 * player._pLevel - adj);
+	} else if (GetSpellData(sn).sManaCost == 255) {
 		ma = (player._pMaxManaBase >> 6) - adj;
 	} else {
-		ma = (spelldata[static_cast<int8_t>(sn)].sManaCost - adj);
+		ma = (GetSpellData(sn).sManaCost - adj);
 	}
 
 	ma = std::max(ma, 0);
@@ -165,8 +165,8 @@ int GetManaAmount(const Player &player, SpellID sn)
 		ma -= ma / 4;
 	}
 
-	if (spelldata[static_cast<int8_t>(sn)].sMinMana > ma >> 6) {
-		ma = spelldata[static_cast<int8_t>(sn)].sMinMana << 6;
+	if (GetSpellData(sn).sMinMana > ma >> 6) {
+		ma = GetSpellData(sn).sMinMana << 6;
 	}
 
 	return ma;
@@ -245,8 +245,8 @@ void CastSpell(int id, SpellID spl, int sx, int sy, int dx, int dy, int spllvl)
 	}
 
 	bool fizzled = false;
-	for (int i = 0; i < 3 && spelldata[static_cast<int8_t>(spl)].sMissiles[i] != MissileID::Null; i++) {
-		Missile *missile = AddMissile({ sx, sy }, { dx, dy }, dir, spelldata[static_cast<int8_t>(spl)].sMissiles[i], TARGET_MONSTERS, id, 0, spllvl);
+	for (int i = 0; i < 3 && GetSpellData(spl).sMissiles[i] != MissileID::Null; i++) {
+		Missile *missile = AddMissile({ sx, sy }, { dx, dy }, dir, GetSpellData(spl).sMissiles[i], TARGET_MONSTERS, id, 0, spllvl);
 		fizzled |= (missile == nullptr);
 	}
 	if (spl == SpellID::ChargedBolt) {
@@ -360,7 +360,7 @@ int GetSpellBookLevel(SpellID s)
 		}
 	}
 
-	return spelldata[static_cast<int8_t>(s)].sBookLvl;
+	return GetSpellData(s).sBookLvl;
 }
 
 int GetSpellStaffLevel(SpellID s)
@@ -383,7 +383,7 @@ int GetSpellStaffLevel(SpellID s)
 	if (!gbIsHellfire && s > SpellID::LastDiablo)
 		return -1;
 
-	return spelldata[static_cast<int8_t>(s)].sStaffLvl;
+	return GetSpellData(s).sStaffLvl;
 }
 
 } // namespace devilution

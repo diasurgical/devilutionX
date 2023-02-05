@@ -223,6 +223,11 @@ struct SpellData {
 	uint16_t sStaffCost;
 };
 
-extern const SpellData spelldata[];
+extern const SpellData SpellsData[];
+
+inline const SpellData &GetSpellData(SpellID spellId)
+{
+	return SpellsData[static_cast<std::underlying_type<SpellID>::type>(spellId)];
+}
 
 } // namespace devilution

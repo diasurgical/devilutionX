@@ -432,7 +432,7 @@ void StartRangeAttack(Player &player, Direction d, WorldTileCoord cx, WorldTileC
 
 player_graphic GetPlayerGraphicForSpell(SpellID spellId)
 {
-	switch (spelldata[static_cast<int8_t>(spellId)].sType) {
+	switch (GetSpellData(spellId).sType) {
 	case MagicType::Fire:
 		return player_graphic::Fire;
 	case MagicType::Lightning:
@@ -474,7 +474,7 @@ void StartSpell(Player &player, Direction d, WorldTileCoord cx, WorldTileCoord c
 		animationFlags = static_cast<AnimationDistributionFlags>(animationFlags | AnimationDistributionFlags::RepeatedAction);
 	NewPlrAnim(player, GetPlayerGraphicForSpell(player.queuedSpell.spellId), d, animationFlags, 0, player._pSFNum);
 
-	PlaySfxLoc(spelldata[static_cast<int8_t>(player.queuedSpell.spellId)].sSFX, player.position.tile);
+	PlaySfxLoc(GetSpellData(player.queuedSpell.spellId).sSFX, player.position.tile);
 
 	player._pmode = PM_SPELL;
 
@@ -2018,7 +2018,7 @@ player_graphic Player::getGraphic() const
 	case PM_BLOCK:
 		return player_graphic::Block;
 	case PM_SPELL:
-		switch (spelldata[static_cast<int8_t>(executedSpell.spellId)].sType) {
+		switch (GetSpellData(executedSpell.spellId).sType) {
 		case MagicType::Fire:
 			return player_graphic::Fire;
 		case MagicType::Lightning:
@@ -3453,7 +3453,7 @@ void CheckPlrSpell(bool isShiftHeld, SpellID spellID, SpellType spellType)
 		}
 	}
 
-	if (leveltype == DTYPE_TOWN && !spelldata[static_cast<int8_t>(spellID)].sTownSpell) {
+	if (leveltype == DTYPE_TOWN && !GetSpellData(spellID).sTownSpell) {
 		myPlayer.Say(HeroSpeech::ICantCastThatHere);
 		return;
 	}

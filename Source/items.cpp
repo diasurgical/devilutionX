@@ -632,20 +632,20 @@ void GetBookSpell(Item &item, int lvl)
 		if (s == maxSpells)
 			s = 1;
 	}
-	const string_view spellName = pgettext("spell", spelldata[static_cast<int8_t>(bs)].sNameText);
+	const string_view spellName = pgettext("spell", GetSpellData(bs).sNameText);
 	const size_t iNameLen = string_view(item._iName).size();
 	const size_t iINameLen = string_view(item._iIName).size();
 	CopyUtf8(item._iName + iNameLen, spellName, sizeof(item._iName) - iNameLen);
 	CopyUtf8(item._iIName + iINameLen, spellName, sizeof(item._iIName) - iINameLen);
 	item._iSpell = bs;
-	item._iMinMag = spelldata[static_cast<int8_t>(bs)].sMinInt;
-	item._ivalue += spelldata[static_cast<int8_t>(bs)].sBookCost;
-	item._iIvalue += spelldata[static_cast<int8_t>(bs)].sBookCost;
-	if (spelldata[static_cast<int8_t>(bs)].sType == MagicType::Fire)
+	item._iMinMag = GetSpellData(bs).sMinInt;
+	item._ivalue += GetSpellData(bs).sBookCost;
+	item._iIvalue += GetSpellData(bs).sBookCost;
+	if (GetSpellData(bs).sType == MagicType::Fire)
 		item._iCurs = ICURS_BOOK_RED;
-	else if (spelldata[static_cast<int8_t>(bs)].sType == MagicType::Lightning)
+	else if (GetSpellData(bs).sType == MagicType::Lightning)
 		item._iCurs = ICURS_BOOK_BLUE;
-	else if (spelldata[static_cast<int8_t>(bs)].sType == MagicType::Magic)
+	else if (GetSpellData(bs).sType == MagicType::Magic)
 		item._iCurs = ICURS_BOOK_GREY;
 }
 
@@ -1084,7 +1084,7 @@ void GetStaffPower(const Player &player, Item &item, int lvl, SpellID bs, bool o
 
 	string_view baseName = _(AllItemsList[item.IDidx].iName);
 	string_view shortName = _(AllItemsList[item.IDidx].iSName);
-	string_view spellName = pgettext("spell", spelldata[static_cast<int8_t>(bs)].sNameText);
+	string_view spellName = pgettext("spell", GetSpellData(bs).sNameText);
 	string_view normalFmt = pgettext("spell", /* TRANSLATORS: Constructs item names. Format: {Item} of {Spell}. Example: War Staff of Firewall */ "{0} of {1}");
 
 	CopyUtf8(item._iName, fmt::format(fmt::runtime(normalFmt), baseName, spellName), sizeof(item._iName));
@@ -1227,14 +1227,14 @@ void GetStaffSpell(const Player &player, Item &item, int lvl, bool onlygood)
 			s = static_cast<int8_t>(SpellID::Firebolt);
 	}
 
-	int minc = spelldata[static_cast<int8_t>(bs)].sStaffMin;
-	int maxc = spelldata[static_cast<int8_t>(bs)].sStaffMax - minc + 1;
+	int minc = GetSpellData(bs).sStaffMin;
+	int maxc = GetSpellData(bs).sStaffMax - minc + 1;
 	item._iSpell = bs;
 	item._iCharges = minc + GenerateRnd(maxc);
 	item._iMaxCharges = item._iCharges;
 
-	item._iMinMag = spelldata[static_cast<int8_t>(bs)].sMinInt;
-	int v = item._iCharges * spelldata[static_cast<int8_t>(bs)].sStaffCost / 5;
+	item._iMinMag = GetSpellData(bs).sMinInt;
+	int v = item._iCharges * GetSpellData(bs).sStaffCost / 5;
 	item._ivalue += v;
 	item._iIvalue += v;
 	GetStaffPower(player, item, lvl, bs, onlygood);
@@ -3476,7 +3476,7 @@ bool DoOil(Player &player, int cii)
 	case IPL_CHARGES:
 		return _("Extra charges");
 	case IPL_SPELL:
-		return fmt::format(fmt::runtime(ngettext("{:d} {:s} charge", "{:d} {:s} charges", item._iMaxCharges)), item._iMaxCharges, pgettext("spell", spelldata[static_cast<int8_t>(item._iSpell)].sNameText));
+		return fmt::format(fmt::runtime(ngettext("{:d} {:s} charge", "{:d} {:s} charges", item._iMaxCharges)), item._iMaxCharges, pgettext("spell", GetSpellData(item._iSpell).sNameText));
 	case IPL_FIREDAM:
 		if (item._iFMinDam == item._iFMaxDam)
 			return fmt::format(fmt::runtime(_("Fire hit damage: {:d}")), item._iFMinDam);
@@ -3811,7 +3811,7 @@ void UseItem(size_t pnum, item_misc_id mid, SpellID spl)
 		break;
 	case IMISC_SCROLL:
 	case IMISC_SCROLLT:
-		if (ControlMode == ControlTypes::KeyboardAndMouse && spelldata[static_cast<int8_t>(spl)].sTargeted) {
+		if (ControlMode == ControlTypes::KeyboardAndMouse && GetSpellData(spl).sTargeted) {
 			player._pTSpell = spl;
 			if (&player == MyPlayer)
 				NewCursor(CURSOR_TELEPORT);
@@ -3832,9 +3832,9 @@ void UseItem(size_t pnum, item_misc_id mid, SpellID spl)
 		if (player._pSplLvl[static_cast<int8_t>(spl)] < MaxSpellLevel)
 			player._pSplLvl[static_cast<int8_t>(spl)]++;
 		if (HasNoneOf(player._pIFlags, ItemSpecialEffect::NoMana)) {
-			player._pMana += spelldata[static_cast<int8_t>(spl)].sManaCost << 6;
+			player._pMana += GetSpellData(spl).sManaCost << 6;
 			player._pMana = std::min(player._pMana, player._pMaxMana);
-			player._pManaBase += spelldata[static_cast<int8_t>(spl)].sManaCost << 6;
+			player._pManaBase += GetSpellData(spl).sManaCost << 6;
 			player._pManaBase = std::min(player._pManaBase, player._pMaxManaBase);
 		}
 		if (&player == MyPlayer) {
@@ -4484,7 +4484,7 @@ void Item::setNewAnimation(bool showAnimation)
 void Item::updateRequiredStatsCacheForPlayer(const Player &player)
 {
 	if (_itype == ItemType::Misc && _iMiscId == IMISC_BOOK) {
-		_iMinMag = spelldata[static_cast<int8_t>(_iSpell)].sMinInt;
+		_iMinMag = GetSpellData(_iSpell).sMinInt;
 		int8_t spellLevel = player._pSplLvl[static_cast<int8_t>(_iSpell)];
 		while (spellLevel != 0) {
 			_iMinMag += 20 * _iMinMag / 100;

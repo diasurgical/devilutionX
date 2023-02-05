@@ -1970,7 +1970,7 @@ void ConsumeScroll(Player &player)
 
 bool CanUseScroll(Player &player, SpellID spell)
 {
-	if (leveltype == DTYPE_TOWN && !spelldata[static_cast<int8_t>(spell)].sTownSpell)
+	if (leveltype == DTYPE_TOWN && !GetSpellData(spell).sTownSpell)
 		return false;
 
 	return HasInventoryOrBeltItem(player, [spell](const Item &item) {
@@ -2099,7 +2099,7 @@ bool UseInvItem(size_t pnum, int cii)
 		dropGoldValue = 0;
 	}
 
-	if (item->isScroll() && leveltype == DTYPE_TOWN && !spelldata[static_cast<int8_t>(item->_iSpell)].sTownSpell) {
+	if (item->isScroll() && leveltype == DTYPE_TOWN && !GetSpellData(item->_iSpell).sTownSpell) {
 		return true;
 	}
 
