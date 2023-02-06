@@ -4247,8 +4247,8 @@ msgstr "목표물을 뒤로 밀침"
 
 #: Source/items.cpp:3672
 #, no-c-format
-msgid "+200% damage vs. demons"
-msgstr "악마 상대 시 +200% 피해"
+msgid "+{:d}% damage vs. demons"
+msgstr "악마 상대 시 +{:d}% 피해"
 
 #: Source/items.cpp:3674
 msgid "All Resistance equals 0"
