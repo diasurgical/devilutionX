@@ -144,11 +144,13 @@ If you'd like to use this option, scan the QR code below.
 
 <details><summary>Xbox One/Series</summary>
 
-- Open https://gamr13.github.io/ in the Microsoft Edge browser on the console and install the Gamr13 Appstore
-- Install DevilutionX and FTP-server from the Gamr13 Appstore
+- Go to https://gamr13.github.io/ and follow the instructions in the Discord server
+- Install DevilutionX and FTP-server from the given URLs
 - Open DevilutionX
 - Open and start the FTP-server
-- Copy the MPQ files to `/LOCALFOLDER/*Gamr13*DevilutionX*/LocalState/diasurgical/devilution` using a FTP-client on your PC
+- Press `View` on DevilutionX and select `Manage game and add-ons`
+- Go to `File info` and note `FullName`
+- Copy the MPQ files to `/LOCALFOLDER/*FullName*/LocalState/diasurgical/devilution` using a FTP-client on your PC
   
 ![image](https://user-images.githubusercontent.com/204594/187104388-fc5648da-5629-4335-ae8b-403600721e2a.png)
 
