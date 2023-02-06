@@ -4545,8 +4545,8 @@ msgstr "hace retroceder al objetivo"
 
 #: Source/items.cpp:3550
 #, no-c-format
-msgid "+200% damage vs. demons"
-msgstr "+200% de daño contra demonios"
+msgid "+{:d}% damage vs. demons"
+msgstr "+{:d}% de daño contra demonios"
 
 #: Source/items.cpp:3552
 msgid "All Resistance equals 0"
