@@ -4494,8 +4494,8 @@ msgstr "ノック​バック​効果"
 
 #: Source/items.cpp:3616
 #, no-c-format
-msgid "+200% damage vs. demons"
-msgstr "対​悪魔​族​ダメージ​+200​%"
+msgid "+{:d}% damage vs. demons"
+msgstr "対​悪魔​族​ダメージ​+{:d}​%"
 
 #: Source/items.cpp:3618
 msgid "All Resistance equals 0"
