@@ -4271,8 +4271,8 @@ msgstr "Zurückstoßung"
 
 #: Source/items.cpp:3666
 #, no-c-format
-msgid "+200% damage vs. demons"
-msgstr "+200% Schaden gegen Dämonen"
+msgid "+{:d}% damage vs. demons"
+msgstr "+{:d}% Schaden gegen Dämonen"
 
 #: Source/items.cpp:3668
 msgid "All Resistance equals 0"
