@@ -4273,8 +4273,8 @@ msgstr "избутва целта назад"
 
 #: Source/items.cpp:3666
 #, no-c-format
-msgid "+200% damage vs. demons"
-msgstr "+200% щети срещу демони"
+msgid "+{:d}% damage vs. demons"
+msgstr "+{:d}% щети срещу демони"
 
 #: Source/items.cpp:3668
 msgid "All Resistance equals 0"
