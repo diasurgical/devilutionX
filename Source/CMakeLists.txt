@@ -73,12 +73,12 @@ set(libdevilutionx_SRCS
   DiabloUI/credits_lines.cpp
   DiabloUI/diabloui.cpp
   DiabloUI/dialogs.cpp
+  DiabloUI/hero/selhero.cpp
   DiabloUI/mainmenu.cpp
+  DiabloUI/multi/selconn.cpp
+  DiabloUI/multi/selgame.cpp
   DiabloUI/progress.cpp
   DiabloUI/scrollbar.cpp
-  DiabloUI/selconn.cpp
-  DiabloUI/selgame.cpp
-  DiabloUI/selhero.cpp
   DiabloUI/selok.cpp
   DiabloUI/selstart.cpp
   DiabloUI/selyesno.cpp
