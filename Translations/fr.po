@@ -4281,8 +4281,8 @@ msgstr "repousse la cible"
 
 #: Source/items.cpp:3638
 #, no-c-format
-msgid "+200% damage vs. demons"
-msgstr "+200% dégâts vs. démons"
+msgid "+{:d}% damage vs. demons"
+msgstr "+{:d}% dégâts vs. démons"
 
 #: Source/items.cpp:3640
 msgid "All Resistance equals 0"
