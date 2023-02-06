@@ -4527,8 +4527,8 @@ msgstr "відбиває ворога назад"
 
 #: Source/items.cpp:3550
 #, no-c-format
-msgid "+200% damage vs. demons"
-msgstr "+200% шкоди проти демонів"
+msgid "+{:d}% damage vs. demons"
+msgstr "+{:d}% шкоди проти демонів"
 
 #: Source/items.cpp:3552
 msgid "All Resistance equals 0"
