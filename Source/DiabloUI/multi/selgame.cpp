@@ -1,11 +1,11 @@
-#include "selgame.h"
+#include "DiabloUI/multi/selgame.h"
 
 #include <fmt/format.h>
 
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/dialogs.h"
+#include "DiabloUI/hero/selhero.h"
 #include "DiabloUI/scrollbar.h"
-#include "DiabloUI/selhero.h"
 #include "DiabloUI/selok.h"
 #include "config.h"
 #include "control.h"
