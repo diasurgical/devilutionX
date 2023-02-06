@@ -2286,6 +2286,9 @@ void InitItems()
 			SpawnQuestItem(IDI_BROWNSUIT, { 25, 25 }, 3, 1, false);
 		if (sgGameInitInfo.bCowQuest != 0 && currlevel == 19)
 			SpawnQuestItem(IDI_GREYSUIT, { 25, 25 }, 3, 1, false);
+		// In multiplayer items spawn during level generation to avoid desyncs
+		if (gbIsMultiplayer && Quests[Q_MUSHROOM].IsAvailable())
+			SpawnQuestItem(IDI_FUNGALTM, { 0, 0 }, 5, 1, false);
 		if (currlevel > 0 && currlevel < 16)
 			AddInitItems();
 		if (currlevel >= 21 && currlevel <= 23)
