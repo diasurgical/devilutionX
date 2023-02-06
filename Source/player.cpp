@@ -35,6 +35,7 @@
 #include "objects.h"
 #include "options.h"
 #include "player.h"
+#include "playerdat.hpp"
 #include "qol/autopickup.h"
 #include "qol/floatingnumbers.h"
 #include "qol/stash.h"
@@ -62,109 +63,6 @@ const int8_t plrxoff2[9] = { 0, 1, 0, 1, 2, 0, 1, 2, 2 };
 /** Specifies the Y-coordinate delta from a player, used for instance when casting resurrect. */
 const int8_t plryoff2[9] = { 0, 0, 1, 1, 0, 2, 2, 1, 2 };
 
-/** Maps from player_class to starting stat in strength. */
-const int StrengthTbl[enum_size<HeroClass>::value] = {
-	30,
-	20,
-	15,
-	25,
-	20,
-	40,
-};
-/** Maps from player_class to starting stat in magic. */
-const int MagicTbl[enum_size<HeroClass>::value] = {
-	// clang-format off
-	10,
-	15,
-	35,
-	15,
-	20,
-	 0,
-	// clang-format on
-};
-/** Maps from player_class to starting stat in dexterity. */
-const int DexterityTbl[enum_size<HeroClass>::value] = {
-	20,
-	30,
-	15,
-	25,
-	25,
-	20,
-};
-/** Maps from player_class to starting stat in vitality. */
-const int VitalityTbl[enum_size<HeroClass>::value] = {
-	25,
-	20,
-	20,
-	20,
-	20,
-	25,
-};
-/** Specifies the chance to block bonus of each player class.*/
-const int BlockBonuses[enum_size<HeroClass>::value] = {
-	30,
-	20,
-	10,
-	25,
-	25,
-	30,
-};
-
-/** Specifies the experience point limit of each level. */
-const uint32_t ExpLvlsTbl[MaxCharacterLevel + 1] = {
-	0,
-	2000,
-	4620,
-	8040,
-	12489,
-	18258,
-	25712,
-	35309,
-	47622,
-	63364,
-	83419,
-	108879,
-	141086,
-	181683,
-	231075,
-	313656,
-	424067,
-	571190,
-	766569,
-	1025154,
-	1366227,
-	1814568,
-	2401895,
-	3168651,
-	4166200,
-	5459523,
-	7130496,
-	9281874,
-	12042092,
-	15571031,
-	20066900,
-	25774405,
-	32994399,
-	42095202,
-	53525811,
-	67831218,
-	85670061,
-	107834823,
-	135274799,
-	169122009,
-	210720231,
-	261657253,
-	323800420,
-	399335440,
-	490808349,
-	601170414,
-	733825617,
-	892680222,
-	1082908612,
-	1310707109,
-	1583495809
-};
-
 namespace {
 
 struct DirectionSettings {
@@ -173,25 +71,6 @@ struct DirectionSettings {
 	DisplacementOf<int8_t> map;
 	PLR_MODE walkMode;
 	void (*walkModeHandler)(Player &, const DirectionSettings &);
-};
-
-/** Specifies the frame of each animation for which an action is triggered, for each player class. */
-constexpr int8_t PlrGFXAnimLens[enum_size<HeroClass>::value][11] = {
-	{ 10, 16, 8, 2, 20, 20, 6, 20, 8, 9, 14 },
-	{ 8, 18, 8, 4, 20, 16, 7, 20, 8, 10, 12 },
-	{ 8, 16, 8, 6, 20, 12, 8, 20, 8, 12, 8 },
-	{ 8, 16, 8, 3, 20, 18, 6, 20, 8, 12, 13 },
-	{ 8, 18, 8, 4, 20, 16, 7, 20, 8, 10, 12 },
-	{ 10, 16, 8, 2, 20, 20, 6, 20, 8, 9, 14 },
-};
-
-const char *const ClassPathTbl[] = {
-	"warrior",
-	"rogue",
-	"sorceror",
-	"monk",
-	"rogue",
-	"warrior",
 };
 
 void PmChangeLightOff(Player &player)
@@ -250,17 +129,6 @@ void WalkSideways(Player &player, const DirectionSettings &walkParams)
 
 	player.position.temp = player.position.future;
 }
-
-constexpr _sfx_id herosounds[enum_size<HeroClass>::value][enum_size<HeroSpeech>::value] = {
-	// clang-format off
-	{ PS_WARR1,  PS_WARR2,  PS_WARR3,  PS_WARR4,  PS_WARR5,  PS_WARR6,  PS_WARR7,  PS_WARR8,  PS_WARR9,  PS_WARR10,  PS_WARR11,  PS_WARR12,  PS_WARR13,  PS_WARR14,  PS_WARR15,  PS_WARR16,  PS_WARR17,  PS_WARR18,  PS_WARR19,  PS_WARR20,  PS_WARR21,  PS_WARR22,  PS_WARR23,  PS_WARR24,  PS_WARR25,  PS_WARR26,  PS_WARR27,  PS_WARR28,  PS_WARR29,  PS_WARR30,  PS_WARR31,  PS_WARR32,  PS_WARR33,  PS_WARR34,  PS_WARR35,  PS_WARR36,  PS_WARR37,  PS_WARR38,  PS_WARR39,  PS_WARR40,  PS_WARR41,  PS_WARR42,  PS_WARR43,  PS_WARR44,  PS_WARR45,  PS_WARR46,  PS_WARR47,  PS_WARR48,  PS_WARR49,  PS_WARR50,  PS_WARR51,  PS_WARR52,  PS_WARR53,  PS_WARR54,  PS_WARR55,  PS_WARR56,  PS_WARR57,  PS_WARR58,  PS_WARR59,  PS_WARR60,  PS_WARR61,  PS_WARR62,  PS_WARR63,  PS_WARR64,  PS_WARR65,  PS_WARR66,  PS_WARR67,  PS_WARR68,  PS_WARR69,  PS_WARR70,  PS_WARR71,  PS_WARR72,  PS_WARR73,  PS_WARR74,  PS_WARR75,  PS_WARR76,  PS_WARR77,  PS_WARR78,  PS_WARR79,  PS_WARR80,  PS_WARR81,  PS_WARR82,  PS_WARR83,  PS_WARR84,  PS_WARR85,  PS_WARR86,  PS_WARR87,  PS_WARR88,  PS_WARR89,  PS_WARR90,  PS_WARR91,  PS_WARR92,  PS_WARR93,  PS_WARR94,  PS_WARR95,  PS_WARR96B,  PS_WARR97,  PS_WARR98,  PS_WARR99,  PS_WARR100,  PS_WARR101,  PS_WARR102,  PS_DEAD    },
-	{ PS_ROGUE1, PS_ROGUE2, PS_ROGUE3, PS_ROGUE4, PS_ROGUE5, PS_ROGUE6, PS_ROGUE7, PS_ROGUE8, PS_ROGUE9, PS_ROGUE10, PS_ROGUE11, PS_ROGUE12, PS_ROGUE13, PS_ROGUE14, PS_ROGUE15, PS_ROGUE16, PS_ROGUE17, PS_ROGUE18, PS_ROGUE19, PS_ROGUE20, PS_ROGUE21, PS_ROGUE22, PS_ROGUE23, PS_ROGUE24, PS_ROGUE25, PS_ROGUE26, PS_ROGUE27, PS_ROGUE28, PS_ROGUE29, PS_ROGUE30, PS_ROGUE31, PS_ROGUE32, PS_ROGUE33, PS_ROGUE34, PS_ROGUE35, PS_ROGUE36, PS_ROGUE37, PS_ROGUE38, PS_ROGUE39, PS_ROGUE40, PS_ROGUE41, PS_ROGUE42, PS_ROGUE43, PS_ROGUE44, PS_ROGUE45, PS_ROGUE46, PS_ROGUE47, PS_ROGUE48, PS_ROGUE49, PS_ROGUE50, PS_ROGUE51, PS_ROGUE52, PS_ROGUE53, PS_ROGUE54, PS_ROGUE55, PS_ROGUE56, PS_ROGUE57, PS_ROGUE58, PS_ROGUE59, PS_ROGUE60, PS_ROGUE61, PS_ROGUE62, PS_ROGUE63, PS_ROGUE64, PS_ROGUE65, PS_ROGUE66, PS_ROGUE67, PS_ROGUE68, PS_ROGUE69, PS_ROGUE70, PS_ROGUE71, PS_ROGUE72, PS_ROGUE73, PS_ROGUE74, PS_ROGUE75, PS_ROGUE76, PS_ROGUE77, PS_ROGUE78, PS_ROGUE79, PS_ROGUE80, PS_ROGUE81, PS_ROGUE82, PS_ROGUE83, PS_ROGUE84, PS_ROGUE85, PS_ROGUE86, PS_ROGUE87, PS_ROGUE88, PS_ROGUE89, PS_ROGUE90, PS_ROGUE91, PS_ROGUE92, PS_ROGUE93, PS_ROGUE94, PS_ROGUE95, PS_ROGUE96,  PS_ROGUE97, PS_ROGUE98, PS_ROGUE99, PS_ROGUE100, PS_ROGUE101, PS_ROGUE102, PS_ROGUE71 },
-	{ PS_MAGE1,  PS_MAGE2,  PS_MAGE3,  PS_MAGE4,  PS_MAGE5,  PS_MAGE6,  PS_MAGE7,  PS_MAGE8,  PS_MAGE9,  PS_MAGE10,  PS_MAGE11,  PS_MAGE12,  PS_MAGE13,  PS_MAGE14,  PS_MAGE15,  PS_MAGE16,  PS_MAGE17,  PS_MAGE18,  PS_MAGE19,  PS_MAGE20,  PS_MAGE21,  PS_MAGE22,  PS_MAGE23,  PS_MAGE24,  PS_MAGE25,  PS_MAGE26,  PS_MAGE27,  PS_MAGE28,  PS_MAGE29,  PS_MAGE30,  PS_MAGE31,  PS_MAGE32,  PS_MAGE33,  PS_MAGE34,  PS_MAGE35,  PS_MAGE36,  PS_MAGE37,  PS_MAGE38,  PS_MAGE39,  PS_MAGE40,  PS_MAGE41,  PS_MAGE42,  PS_MAGE43,  PS_MAGE44,  PS_MAGE45,  PS_MAGE46,  PS_MAGE47,  PS_MAGE48,  PS_MAGE49,  PS_MAGE50,  PS_MAGE51,  PS_MAGE52,  PS_MAGE53,  PS_MAGE54,  PS_MAGE55,  PS_MAGE56,  PS_MAGE57,  PS_MAGE58,  PS_MAGE59,  PS_MAGE60,  PS_MAGE61,  PS_MAGE62,  PS_MAGE63,  PS_MAGE64,  PS_MAGE65,  PS_MAGE66,  PS_MAGE67,  PS_MAGE68,  PS_MAGE69,  PS_MAGE70,  PS_MAGE71,  PS_MAGE72,  PS_MAGE73,  PS_MAGE74,  PS_MAGE75,  PS_MAGE76,  PS_MAGE77,  PS_MAGE78,  PS_MAGE79,  PS_MAGE80,  PS_MAGE81,  PS_MAGE82,  PS_MAGE83,  PS_MAGE84,  PS_MAGE85,  PS_MAGE86,  PS_MAGE87,  PS_MAGE88,  PS_MAGE89,  PS_MAGE90,  PS_MAGE91,  PS_MAGE92,  PS_MAGE93,  PS_MAGE94,  PS_MAGE95,  PS_MAGE96,   PS_MAGE97,  PS_MAGE98,  PS_MAGE99,  PS_MAGE100,  PS_MAGE101,  PS_MAGE102,  PS_MAGE71  },
-	{ PS_MONK1,  SFX_NONE,  SFX_NONE,  SFX_NONE,  SFX_NONE,  SFX_NONE,  SFX_NONE,  PS_MONK8,  PS_MONK9,  PS_MONK10,  PS_MONK11,  PS_MONK12,  PS_MONK13,  PS_MONK14,  PS_MONK15,  PS_MONK16,  SFX_NONE,  SFX_NONE,    SFX_NONE,   SFX_NONE,   SFX_NONE,   SFX_NONE,   SFX_NONE,   PS_MONK24,  SFX_NONE,   SFX_NONE,   PS_MONK27,  SFX_NONE,   PS_MONK29,  SFX_NONE,   SFX_NONE,   SFX_NONE,   SFX_NONE,   PS_MONK34,  PS_MONK35,  SFX_NONE,   SFX_NONE,   SFX_NONE,   SFX_NONE,   SFX_NONE,   SFX_NONE,   SFX_NONE,   PS_MONK43,  SFX_NONE,   SFX_NONE,   PS_MONK46,  SFX_NONE,   SFX_NONE,   PS_MONK49,  PS_MONK50,  SFX_NONE,   PS_MONK52,  SFX_NONE,   PS_MONK54,  PS_MONK55,  PS_MONK56,  SFX_NONE,   SFX_NONE,   SFX_NONE,   SFX_NONE,   PS_MONK61,  PS_MONK62,  SFX_NONE,   SFX_NONE,   SFX_NONE,   SFX_NONE,   SFX_NONE,   PS_MONK68,  PS_MONK69,  PS_MONK70,  PS_MONK71,  SFX_NONE,   SFX_NONE,   SFX_NONE,   SFX_NONE,   SFX_NONE,   SFX_NONE,   SFX_NONE,   PS_MONK79,  PS_MONK80,  SFX_NONE,   PS_MONK82,  PS_MONK83,  SFX_NONE,   SFX_NONE,   SFX_NONE,   PS_MONK87,  PS_MONK88,  PS_MONK89,  SFX_NONE,   PS_MONK91,  PS_MONK92,  SFX_NONE,   PS_MONK94,  PS_MONK95,  PS_MONK96,   PS_MONK97,  PS_MONK98,  PS_MONK99,  SFX_NONE,    SFX_NONE,    SFX_NONE,    PS_MONK71  },
-	{ PS_ROGUE1, PS_ROGUE2, PS_ROGUE3, PS_ROGUE4, PS_ROGUE5, PS_ROGUE6, PS_ROGUE7, PS_ROGUE8, PS_ROGUE9, PS_ROGUE10, PS_ROGUE11, PS_ROGUE12, PS_ROGUE13, PS_ROGUE14, PS_ROGUE15, PS_ROGUE16, PS_ROGUE17, PS_ROGUE18, PS_ROGUE19, PS_ROGUE20, PS_ROGUE21, PS_ROGUE22, PS_ROGUE23, PS_ROGUE24, PS_ROGUE25, PS_ROGUE26, PS_ROGUE27, PS_ROGUE28, PS_ROGUE29, PS_ROGUE30, PS_ROGUE31, PS_ROGUE32, PS_ROGUE33, PS_ROGUE34, PS_ROGUE35, PS_ROGUE36, PS_ROGUE37, PS_ROGUE38, PS_ROGUE39, PS_ROGUE40, PS_ROGUE41, PS_ROGUE42, PS_ROGUE43, PS_ROGUE44, PS_ROGUE45, PS_ROGUE46, PS_ROGUE47, PS_ROGUE48, PS_ROGUE49, PS_ROGUE50, PS_ROGUE51, PS_ROGUE52, PS_ROGUE53, PS_ROGUE54, PS_ROGUE55, PS_ROGUE56, PS_ROGUE57, PS_ROGUE58, PS_ROGUE59, PS_ROGUE60, PS_ROGUE61, PS_ROGUE62, PS_ROGUE63, PS_ROGUE64, PS_ROGUE65, PS_ROGUE66, PS_ROGUE67, PS_ROGUE68, PS_ROGUE69, PS_ROGUE70, PS_ROGUE71, PS_ROGUE72, PS_ROGUE73, PS_ROGUE74, PS_ROGUE75, PS_ROGUE76, PS_ROGUE77, PS_ROGUE78, PS_ROGUE79, PS_ROGUE80, PS_ROGUE81, PS_ROGUE82, PS_ROGUE83, PS_ROGUE84, PS_ROGUE85, PS_ROGUE86, PS_ROGUE87, PS_ROGUE88, PS_ROGUE89, PS_ROGUE90, PS_ROGUE91, PS_ROGUE92, PS_ROGUE93, PS_ROGUE94, PS_ROGUE95, PS_ROGUE96,  PS_ROGUE97, PS_ROGUE98, PS_ROGUE99, PS_ROGUE100, PS_ROGUE101, PS_ROGUE102, PS_ROGUE71 },
-	{ PS_WARR1,  PS_WARR2,  PS_WARR3,  PS_WARR4,  PS_WARR5,  PS_WARR6,  PS_WARR7,  PS_WARR8,  PS_WARR9,  PS_WARR10,  PS_WARR11,  PS_WARR12,  PS_WARR13,  PS_WARR14,  PS_WARR15,  PS_WARR16,  PS_WARR17,  PS_WARR18,  PS_WARR19,  PS_WARR20,  PS_WARR21,  PS_WARR22,  PS_WARR23,  PS_WARR24,  PS_WARR25,  PS_WARR26,  PS_WARR27,  PS_WARR28,  PS_WARR29,  PS_WARR30,  PS_WARR31,  PS_WARR32,  PS_WARR33,  PS_WARR34,  PS_WARR35,  PS_WARR36,  PS_WARR37,  PS_WARR38,  PS_WARR39,  PS_WARR40,  PS_WARR41,  PS_WARR42,  PS_WARR43,  PS_WARR44,  PS_WARR45,  PS_WARR46,  PS_WARR47,  PS_WARR48,  PS_WARR49,  PS_WARR50,  PS_WARR51,  PS_WARR52,  PS_WARR53,  PS_WARR54,  PS_WARR55,  PS_WARR56,  PS_WARR57,  PS_WARR58,  PS_WARR59,  PS_WARR60,  PS_WARR61,  PS_WARR62,  PS_WARR63,  PS_WARR64,  PS_WARR65,  PS_WARR66,  PS_WARR67,  PS_WARR68,  PS_WARR69,  PS_WARR70,  PS_WARR71,  PS_WARR72,  PS_WARR73,  PS_WARR74,  PS_WARR75,  PS_WARR76,  PS_WARR77,  PS_WARR78,  PS_WARR79,  PS_WARR80,  PS_WARR81,  PS_WARR82,  PS_WARR83,  PS_WARR84,  PS_WARR85,  PS_WARR86,  PS_WARR87,  PS_WARR88,  PS_WARR89,  PS_WARR90,  PS_WARR91,  PS_WARR92,  PS_WARR93,  PS_WARR94,  PS_WARR95,  PS_WARR96B,  PS_WARR97,  PS_WARR98,  PS_WARR99,  PS_WARR100,  PS_WARR101,  PS_WARR102,  PS_WARR71  },
-	// clang-format on
-};
 
 constexpr std::array<const DirectionSettings, 8> WalkSettings { {
 	// clang-format off
@@ -1751,6 +1619,7 @@ PlayerWeaponGraphic GetPlayerWeaponGraphic(player_graphic graphic, PlayerWeaponG
 
 uint16_t GetPlayerSpriteWidth(HeroClass cls, player_graphic graphic, PlayerWeaponGraphic weaponGraphic)
 {
+	// todo: modify function to read sprite width from playerdat.cpp
 	switch (graphic) {
 	case player_graphic::Stand:
 	case player_graphic::Walk:
@@ -1890,18 +1759,18 @@ int Player::GetCurrentAttributeValue(CharacterAttribute attribute) const
 
 int Player::GetMaximumAttributeValue(CharacterAttribute attribute) const
 {
-	static const int MaxStats[enum_size<HeroClass>::value][enum_size<CharacterAttribute>::value] = {
-		// clang-format off
-		{ 250,  50,  60, 100 },
-		{  55,  70, 250,  80 },
-		{  45, 250,  85,  80 },
-		{ 150,  80, 150,  80 },
-		{ 120, 120, 120, 100 },
-		{ 255,   0,  55, 150 },
-		// clang-format on
-	};
-
-	return MaxStats[static_cast<std::size_t>(_pClass)][static_cast<std::size_t>(attribute)];
+	PlayerData plrData = PlayersData[static_cast<std::size_t>(_pClass)];
+	switch (attribute) {
+	case CharacterAttribute::Strength:
+		return plrData.maxStr;
+	case CharacterAttribute::Magic:
+		return plrData.maxMag;
+	case CharacterAttribute::Dexterity:
+		return plrData.maxDex;
+	case CharacterAttribute::Vitality:
+		return plrData.maxVit;
+	}
+	app_fatal("Unsupported attribute");
 }
 
 Point Player::GetTargetPosition() const
@@ -2248,7 +2117,7 @@ void LoadPlrGFX(Player &player, player_graphic graphic)
 	const HeroClass cls = GetPlayerSpriteClass(player._pClass);
 	const PlayerWeaponGraphic animWeaponId = GetPlayerWeaponGraphic(graphic, static_cast<PlayerWeaponGraphic>(player._pgfxnum & 0xF));
 
-	const char *path = ClassPathTbl[static_cast<std::size_t>(cls)];
+	const char *path = PlayersData[static_cast<std::size_t>(cls)].classPath;
 
 	const char *szCel;
 	switch (graphic) {
@@ -2362,112 +2231,68 @@ void NewPlrAnim(Player &player, player_graphic graphic, Direction dir, Animation
 void SetPlrAnims(Player &player)
 {
 	HeroClass pc = player._pClass;
+	PlayerData plrData = PlayersData[static_cast<uint8_t>(pc)];
+	PlayerAttackAnimData plrAtkAnimData = PlayersAttackAnimData[static_cast<uint8_t>(pc)];
+	auto gn = static_cast<PlayerWeaponGraphic>(player._pgfxnum & 0xFU);
 
 	if (leveltype == DTYPE_TOWN) {
-		player._pNFrames = PlrGFXAnimLens[static_cast<std::size_t>(pc)][7];
-		player._pWFrames = PlrGFXAnimLens[static_cast<std::size_t>(pc)][8];
-		player._pDFrames = PlrGFXAnimLens[static_cast<std::size_t>(pc)][4];
-		player._pSFrames = PlrGFXAnimLens[static_cast<std::size_t>(pc)][5];
+		player._pNFrames = plrData.TNFrames;
+		player._pWFrames = plrData.TWFrames;
+		player._pDFrames = plrData.DFrames;
+		player._pSFrames = plrData.SFrames;
 	} else {
-		player._pNFrames = PlrGFXAnimLens[static_cast<std::size_t>(pc)][0];
-		player._pWFrames = PlrGFXAnimLens[static_cast<std::size_t>(pc)][2];
-		player._pAFrames = PlrGFXAnimLens[static_cast<std::size_t>(pc)][1];
-		player._pHFrames = PlrGFXAnimLens[static_cast<std::size_t>(pc)][6];
-		player._pSFrames = PlrGFXAnimLens[static_cast<std::size_t>(pc)][5];
-		player._pDFrames = PlrGFXAnimLens[static_cast<std::size_t>(pc)][4];
-		player._pBFrames = PlrGFXAnimLens[static_cast<std::size_t>(pc)][3];
-		player._pAFNum = PlrGFXAnimLens[static_cast<std::size_t>(pc)][9];
-	}
-	player._pSFNum = PlrGFXAnimLens[static_cast<std::size_t>(pc)][10];
-
-	auto gn = static_cast<PlayerWeaponGraphic>(player._pgfxnum & 0xFU);
-	int armorGraphicIndex = player._pgfxnum & ~0xFU;
-	if (pc == HeroClass::Warrior) {
-		if (gn == PlayerWeaponGraphic::Bow) {
-			if (leveltype != DTYPE_TOWN) {
-				player._pNFrames = 8;
-			}
-			player._pAFNum = 11;
-		} else if (gn == PlayerWeaponGraphic::Axe) {
-			player._pAFrames = 20;
-			player._pAFNum = 10;
-		} else if (gn == PlayerWeaponGraphic::Staff) {
-			player._pAFrames = 16;
-			player._pAFNum = 11;
-		}
-		if (armorGraphicIndex > 0)
-			player._pDFrames = 15;
-	} else if (pc == HeroClass::Rogue) {
-		if (gn == PlayerWeaponGraphic::Axe) {
-			player._pAFrames = 22;
-			player._pAFNum = 13;
-		} else if (gn == PlayerWeaponGraphic::Bow) {
-			player._pAFrames = 12;
-			player._pAFNum = 7;
-		} else if (gn == PlayerWeaponGraphic::Staff) {
-			player._pAFrames = 16;
-			player._pAFNum = 11;
-		}
-	} else if (pc == HeroClass::Sorcerer) {
-		if (gn == PlayerWeaponGraphic::Unarmed) {
-			player._pAFrames = 20;
-		} else if (gn == PlayerWeaponGraphic::UnarmedShield) {
-			player._pAFNum = 9;
-		} else if (gn == PlayerWeaponGraphic::Bow) {
-			player._pAFrames = 20;
-			player._pAFNum = 16;
-		} else if (gn == PlayerWeaponGraphic::Axe) {
-			player._pAFrames = 24;
-			player._pAFNum = 16;
-		}
-	} else if (pc == HeroClass::Monk) {
+		player._pNFrames = plrData.NFrames;
+		player._pWFrames = plrData.WFrames;
+		player._pHFrames = plrData.HFrames;
+		player._pSFrames = plrData.SFrames;
+		player._pDFrames = plrData.DFrames;
+		player._pBFrames = plrData.BFrames;
 		switch (gn) {
 		case PlayerWeaponGraphic::Unarmed:
+			player._pAFrames = plrAtkAnimData.AFramesUnarmed;
+			player._pAFNum = plrAtkAnimData.AFNumUnarmed;
+			break;
 		case PlayerWeaponGraphic::UnarmedShield:
-			player._pAFrames = 12;
-			player._pAFNum = 7;
+			player._pAFrames = plrAtkAnimData.AFramesUnarmedShield;
+			player._pAFNum = plrAtkAnimData.AFNumUnarmedShield;
+			break;
+		case PlayerWeaponGraphic::Sword:
+			player._pAFrames = plrAtkAnimData.AFramesSword;
+			player._pAFNum = plrAtkAnimData.AFNumSword;
+			break;
+		case PlayerWeaponGraphic::SwordShield:
+			player._pAFrames = plrAtkAnimData.AFramesSwordShield;
+			player._pAFNum = plrAtkAnimData.AFNumSwordShield;
 			break;
 		case PlayerWeaponGraphic::Bow:
-			player._pAFrames = 20;
-			player._pAFNum = 14;
+			player._pAFrames = plrAtkAnimData.AFramesBow;
+			player._pAFNum = plrAtkAnimData.AFNumBow;
 			break;
 		case PlayerWeaponGraphic::Axe:
-			player._pAFrames = 23;
-			player._pAFNum = 14;
+			player._pAFrames = plrAtkAnimData.AFramesAxe;
+			player._pAFNum = plrAtkAnimData.AFNumAxe;
+			break;
+		case PlayerWeaponGraphic::Mace:
+			player._pAFrames = plrAtkAnimData.AFramesMace;
+			player._pAFNum = plrAtkAnimData.AFNumMace;
+			break;
+		case PlayerWeaponGraphic::MaceShield:
+			player._pAFrames = plrAtkAnimData.AFramesMaceShield;
+			player._pAFNum = plrAtkAnimData.AFNumMaceShield;
 			break;
 		case PlayerWeaponGraphic::Staff:
-			player._pAFrames = 13;
-			player._pAFNum = 8;
+			player._pAFrames = plrAtkAnimData.AFramesStaff;
+			player._pAFNum = plrAtkAnimData.AFNumStaff;
 			break;
 		default:
 			break;
 		}
-	} else if (pc == HeroClass::Bard) {
-		if (gn == PlayerWeaponGraphic::Axe) {
-			player._pAFrames = 22;
-			player._pAFNum = 13;
-		} else if (gn == PlayerWeaponGraphic::Bow) {
-			player._pAFrames = 12;
-			player._pAFNum = 11;
-		} else if (gn == PlayerWeaponGraphic::Staff) {
-			player._pAFrames = 16;
-			player._pAFNum = 11;
-		}
-	} else if (pc == HeroClass::Barbarian) {
-		if (gn == PlayerWeaponGraphic::Axe) {
-			player._pAFrames = 20;
-			player._pAFNum = 8;
-		} else if (gn == PlayerWeaponGraphic::Bow) {
-			if (leveltype != DTYPE_TOWN) {
-				player._pNFrames = 8;
-			}
-			player._pAFNum = 11;
-		} else if (gn == PlayerWeaponGraphic::Staff) {
-			player._pAFrames = 16;
-			player._pAFNum = 11;
-		} else if (gn == PlayerWeaponGraphic::Mace || gn == PlayerWeaponGraphic::MaceShield) {
-			player._pAFNum = 8;
-		}
+	}
+	player._pSFNum = plrData.SFNum;
+	int armorGraphicIndex = player._pgfxnum & ~0xFU;
+	if (IsAnyOf(pc, HeroClass::Warrior, HeroClass::Barbarian)) {
+		if (gn == PlayerWeaponGraphic::Bow && leveltype != DTYPE_TOWN)
+			player._pNFrames = 8;
 		if (armorGraphicIndex > 0)
 			player._pDFrames = 15;
 	}
@@ -2484,16 +2309,16 @@ void CreatePlayer(Player &player, HeroClass c)
 
 	player._pClass = c;
 
-	player._pBaseStr = StrengthTbl[static_cast<std::size_t>(c)];
+	player._pBaseStr = PlayersData[static_cast<std::size_t>(c)].baseStr;
 	player._pStrength = player._pBaseStr;
 
-	player._pBaseMag = MagicTbl[static_cast<std::size_t>(c)];
+	player._pBaseMag = PlayersData[static_cast<std::size_t>(c)].baseMag;
 	player._pMagic = player._pBaseMag;
 
-	player._pBaseDex = DexterityTbl[static_cast<std::size_t>(c)];
+	player._pBaseDex = PlayersData[static_cast<std::size_t>(c)].baseDex;
 	player._pDexterity = player._pBaseDex;
 
-	player._pBaseVit = VitalityTbl[static_cast<std::size_t>(c)];
+	player._pBaseVit = PlayersData[static_cast<std::size_t>(c)].baseVit;
 	player._pVitality = player._pBaseVit;
 
 	player._pStatPts = 0;
@@ -2506,7 +2331,7 @@ void CreatePlayer(Player &player, HeroClass c)
 
 	player._pLevel = 1;
 
-	player._pBaseToBlk = BlockBonuses[static_cast<std::size_t>(c)];
+	player._pBaseToBlk = PlayersData[static_cast<std::size_t>(c)].blockBonus;
 
 	player._pHitPoints = (player._pVitality + 10) << 6;
 	if (player._pClass == HeroClass::Warrior || player._pClass == HeroClass::Barbarian) {
@@ -2539,6 +2364,7 @@ void CreatePlayer(Player &player, HeroClass c)
 	player._pLightRad = 10;
 	player._pInfraFlag = false;
 
+	// todo: rebase for SpellID and add class skill to playerdat.cpp table to reduce else if spam
 	player._pRSplType = SpellType::Skill;
 	if (c == HeroClass::Warrior) {
 		player._pAblSpells = GetSpellBitmask(SpellID::ItemRepair);
@@ -2631,6 +2457,7 @@ int CalcStatDiff(Player &player)
 
 void NextPlrLevel(Player &player)
 {
+	// todo: move life and mana from here to playerdat.cpp
 	player._pLevel++;
 	player._pMaxLvl++;
 
@@ -2812,6 +2639,7 @@ void InitPlayer(Player &player, bool firstTime)
 		player._pvid = AddVision(player.position.tile, player._pLightRad, &player == MyPlayer);
 	}
 
+	// todo: move this shit to playerdat.cpp table
 	if (player._pClass == HeroClass::Warrior) {
 		player._pAblSpells = GetSpellBitmask(SpellID::ItemRepair);
 	} else if (player._pClass == HeroClass::Rogue) {
@@ -3600,12 +3428,8 @@ void ModifyPlrMag(Player &player, int l)
 	player._pMagic += l;
 	player._pBaseMag += l;
 
-	int ms = l << 6;
-	if (player._pClass == HeroClass::Sorcerer) {
-		ms *= 2;
-	} else if (player._pClass == HeroClass::Bard) {
-		ms += ms / 2;
-	}
+	int ms = l;
+	ms *= PlayersData[static_cast<size_t>(player._pClass)].chrMana;
 
 	player._pMaxManaBase += ms;
 	player._pMaxMana += ms;
@@ -3641,10 +3465,8 @@ void ModifyPlrVit(Player &player, int l)
 	player._pVitality += l;
 	player._pBaseVit += l;
 
-	int ms = l << 6;
-	if (player._pClass == HeroClass::Warrior || player._pClass == HeroClass::Barbarian) {
-		ms *= 2;
-	}
+	int ms = l;
+	ms *= PlayersData[static_cast<size_t>(player._pClass)].chrLife;
 
 	player._pHPBase += ms;
 	player._pMaxHPBase += ms;
@@ -3678,12 +3500,8 @@ void SetPlrMag(Player &player, int v)
 {
 	player._pBaseMag = v;
 
-	int m = v << 6;
-	if (player._pClass == HeroClass::Sorcerer) {
-		m *= 2;
-	} else if (player._pClass == HeroClass::Bard) {
-		m += m / 2;
-	}
+	int m = v;
+	m *= PlayersData[static_cast<size_t>(player._pClass)].chrMana;
 
 	player._pMaxManaBase = m;
 	player._pMaxMana = m;
@@ -3700,10 +3518,8 @@ void SetPlrVit(Player &player, int v)
 {
 	player._pBaseVit = v;
 
-	int hp = v << 6;
-	if (player._pClass == HeroClass::Warrior || player._pClass == HeroClass::Barbarian) {
-		hp *= 2;
-	}
+	int hp = v;
+	hp *= PlayersData[static_cast<size_t>(player._pClass)].chrLife;
 
 	player._pHPBase = hp;
 	player._pMaxHPBase = hp;

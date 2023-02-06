@@ -11,6 +11,7 @@
 #include "engine/render/text_render.hpp"
 #include "panels/ui_panels.hpp"
 #include "player.h"
+#include "playerdat.hpp"
 #include "utils/display.h"
 #include "utils/format_int.hpp"
 #include "utils/language.h"
@@ -20,16 +21,6 @@
 namespace devilution {
 
 OptionalOwnedClxSpriteList pChrButtons;
-
-/** Map of hero class names */
-const char *const ClassStrTbl[] = {
-	N_("Warrior"),
-	N_("Rogue"),
-	N_("Sorcerer"),
-	N_("Monk"),
-	N_("Bard"),
-	N_("Barbarian"),
-};
 
 namespace {
 
@@ -128,7 +119,7 @@ PanelEntry panelEntries[] = {
 	{ "", { 9, 14 }, 150, 0,
 	    []() { return StyledText { UiFlags::ColorWhite, MyPlayer->_pName }; } },
 	{ "", { 161, 14 }, 149, 0,
-	    []() { return StyledText { UiFlags::ColorWhite, std::string(_(ClassStrTbl[static_cast<std::size_t>(MyPlayer->_pClass)])) }; } },
+	    []() { return StyledText { UiFlags::ColorWhite, std::string(_(PlayersData[static_cast<std::size_t>(MyPlayer->_pClass)].className)) }; } },
 
 	{ N_("Level"), { 57, 52 }, 57, 45,
 	    []() { return StyledText { UiFlags::ColorWhite, StrCat(MyPlayer->_pLevel) }; } },

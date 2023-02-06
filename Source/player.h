@@ -31,6 +31,7 @@ namespace devilution {
 
 constexpr int InventoryGridCells = 40;
 constexpr int MaxBeltItems = 8;
+// todo: move to playerdat.hpp?
 constexpr int MaxResistance = 75;
 constexpr int MaxCharacterLevel = 50;
 constexpr int MaxSpellLevel = 15;
@@ -54,6 +55,7 @@ enum {
 	// clang-format on
 };
 
+// todo: move to playerdat.hpp?
 enum class HeroClass : uint8_t {
 	Warrior,
 	Rogue,
@@ -763,7 +765,6 @@ extern DVL_API_FOR_TEST size_t MyPlayerId;
 extern DVL_API_FOR_TEST Player *MyPlayer;
 extern DVL_API_FOR_TEST std::vector<Player> Players;
 extern bool MyPlayerIsDead;
-extern const int BlockBonuses[enum_size<HeroClass>::value];
 
 Player *PlayerAtPosition(Point position);
 
@@ -840,10 +841,5 @@ extern const int8_t plrxoff[9];
 extern const int8_t plryoff[9];
 extern const int8_t plrxoff2[9];
 extern const int8_t plryoff2[9];
-extern const int StrengthTbl[enum_size<HeroClass>::value];
-extern const int MagicTbl[enum_size<HeroClass>::value];
-extern const int DexterityTbl[enum_size<HeroClass>::value];
-extern const int VitalityTbl[enum_size<HeroClass>::value];
-extern const uint32_t ExpLvlsTbl[MaxCharacterLevel + 1];
 
 } // namespace devilution
