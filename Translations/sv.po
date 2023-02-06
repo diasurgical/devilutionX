@@ -4266,8 +4266,8 @@ msgstr "knuffar målet bakåt"
 
 #: Source/items.cpp:3666
 #, no-c-format
-msgid "+200% damage vs. demons"
-msgstr "+200% skada mot demoner"
+msgid "+{:d}% damage vs. demons"
+msgstr "+{:d}% skada mot demoner"
 
 #: Source/items.cpp:3668
 msgid "All Resistance equals 0"
