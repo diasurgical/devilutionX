@@ -3240,8 +3240,8 @@ void SpawnQuestItem(_item_indexes itemid, Point position, int randarea, int self
 	if (sendmsg)
 		NetSendCmdPItem(true, CMD_SPAWNITEM, item.position, item);
 	else {
-		DeltaAddItem(ii);
 		item._iCreateInfo |= CF_PREGEN;
+		DeltaAddItem(ii);
 	}
 }
 
