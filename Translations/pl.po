@@ -4267,8 +4267,8 @@ msgstr "odrzuca przeciwnika"
 
 #: Source/items.cpp:3675
 #, no-c-format
-msgid "+200% damage vs. demons"
-msgstr "+200% obrażeń wobec demonów"
+msgid "+{:d}% damage vs. demons"
+msgstr "+{:d}% obrażeń wobec demonów"
 
 #: Source/items.cpp:3677
 msgid "All Resistance equals 0"
