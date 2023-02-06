@@ -4276,8 +4276,8 @@ msgstr "empurra alvo para trás"
 
 #: Source/items.cpp:3666
 #, no-c-format
-msgid "+200% damage vs. demons"
-msgstr "+200% de dano vs. demônios"
+msgid "+{:d}% damage vs. demons"
+msgstr "+{:d}% de dano vs. demônios"
 
 #: Source/items.cpp:3668
 msgid "All Resistance equals 0"
