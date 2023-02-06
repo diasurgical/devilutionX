@@ -4537,8 +4537,8 @@ msgstr "respinge il bersaglio"
 
 #: Source/items.cpp:3550
 #, no-c-format
-msgid "+200% damage vs. demons"
-msgstr "+200% danno contro demoni"
+msgid "+{:d}% damage vs. demons"
+msgstr "+{:d}% danno contro demoni"
 
 #: Source/items.cpp:3552
 msgid "All Resistance equals 0"
