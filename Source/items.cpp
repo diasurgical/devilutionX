@@ -2993,6 +2993,7 @@ void SpawnItem(Monster &monster, Point position, bool sendmsg)
 	bool onlygood = true;
 
 	bool dropsSpecialTreasure = (monster.data().treasure & T_UNIQ) != 0;
+	bool dropBrain = Quests[Q_MUSHROOM]._qactive == QUEST_ACTIVE && Quests[Q_MUSHROOM]._qvar1 == QS_MUSHGIVEN;
 
 	if (dropsSpecialTreasure && !gbIsMultiplayer) {
 		Item *uniqueItem = SpawnUnique(static_cast<_unique_items>(monster.data().treasure & T_MASK), position, false);
@@ -3002,11 +3003,21 @@ void SpawnItem(Monster &monster, Point position, bool sendmsg)
 	} else if (monster.isUnique() || dropsSpecialTreasure) {
 		// Unqiue monster is killed => use better item base (for example no gold)
 		idx = RndUItem(&monster);
-	} else if (Quests[Q_MUSHROOM]._qactive == QUEST_ACTIVE && Quests[Q_MUSHROOM]._qvar1 == QS_MUSHGIVEN) {
+	} else if (dropBrain && !gbIsMultiplayer) {
 		// Normal monster is killed => need to drop brain to progress the quest
-		idx = IDI_BRAIN;
 		Quests[Q_MUSHROOM]._qvar1 = QS_BRAINSPAWNED;
+		NetSendCmdQuest(true, Quests[Q_MUSHROOM]);
+		// brain replaces normal drop
+		idx = IDI_BRAIN;
 	} else {
+		if (dropBrain && gbIsMultiplayer && sendmsg) {
+			Quests[Q_MUSHROOM]._qvar1 = QS_BRAINSPAWNED;
+			NetSendCmdQuest(true, Quests[Q_MUSHROOM]);
+			// Drop the brain as extra item to ensure that all clients see the brain drop
+			// When executing SpawnItem is not reliable, cause another client can already have the quest state updated before SpawnItem is executed
+			Point posBrain = GetSuperItemLoc(position);
+			SpawnQuestItem(IDI_BRAIN, posBrain, false, false, true);
+		}
 		// Normal monster
 		if ((monster.data().treasure & T_NODROP) != 0)
 			return;
