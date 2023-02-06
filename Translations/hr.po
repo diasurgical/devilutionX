@@ -4288,7 +4288,7 @@ msgstr ""
 
 #: Source/items.cpp:3641
 #, no-c-format
-msgid "+200% damage vs. demons"
+msgid "+{:d}% damage vs. demons"
 msgstr ""
 
 #: Source/items.cpp:3643
