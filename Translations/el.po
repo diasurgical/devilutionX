@@ -4301,8 +4301,8 @@ msgstr "σπρώχνει τον στόχο πίσω"
 
 #: Source/items.cpp:3657
 #, no-c-format
-msgid "+200% damage vs. demons"
-msgstr "+200% ζημιά εναντίων δαιμονων"
+msgid "+{:d}% damage vs. demons"
+msgstr "+{:d}% ζημιά εναντίων δαιμονων"
 
 #: Source/items.cpp:3659
 msgid "All Resistance equals 0"
