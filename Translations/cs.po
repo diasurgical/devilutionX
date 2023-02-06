@@ -4268,8 +4268,8 @@ msgstr "odhodí nepřítele dozadu"
 
 #: Source/items.cpp:3666
 #, no-c-format
-msgid "+200% damage vs. demons"
-msgstr "+200% poškození proti démonům"
+msgid "+{:d}% damage vs. demons"
+msgstr "+{:d}% poškození proti démonům"
 
 #: Source/items.cpp:3668
 msgid "All Resistance equals 0"
