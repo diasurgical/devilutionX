@@ -4222,8 +4222,8 @@ msgstr "击​退​目标"
 
 #: Source/items.cpp:3666
 #, no-c-format
-msgid "+200% damage vs. demons"
-msgstr "+200​% 对​恶魔​的​伤害"
+msgid "+{:d}% damage vs. demons"
+msgstr "+{:d}​% 对​恶魔​的​伤害"
 
 #: Source/items.cpp:3668
 msgid "All Resistance equals 0"
