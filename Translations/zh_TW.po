@@ -4365,8 +4365,8 @@ msgstr "擊​退目標"
 
 #: Source/items.cpp:3666
 #, no-c-format
-msgid "+200% damage vs. demons"
-msgstr "+​對​惡​魔​造成​200​%​傷害"
+msgid "+{:d}% damage vs. demons"
+msgstr "+​對​惡​魔​造成​{:d}​%​傷害"
 
 #: Source/items.cpp:3668
 msgid "All Resistance equals 0"
