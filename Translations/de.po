@@ -4285,12 +4285,12 @@ msgstr "Stoppt Monsterheilung"
 #: Source/items.cpp:3673
 #, no-c-format
 msgid "hit steals {:d}% mana"
-msgstr "3% Manaabsaugung"
+msgstr "{:d}% Manaabsaugung"
 
 #: Source/items.cpp:3679
 #, no-c-format
 msgid "hit steals {:d}% life"
-msgstr "3% Lebensabsaugung"
+msgstr "{:d}% Lebensabsaugung"
 
 #: Source/items.cpp:3684
 msgid "penetrates target's armor"

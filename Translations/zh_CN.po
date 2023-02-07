@@ -4236,12 +4236,12 @@ msgstr "命​中​怪物​无法​自愈"
 #: Source/items.cpp:3673
 #, no-c-format
 msgid "hit steals {:d}% mana"
-msgstr "命​中时​3​%法力​偷取"
+msgstr "命​中时​{:d}​%法力​偷取"
 
 #: Source/items.cpp:3679
 #, no-c-format
 msgid "hit steals {:d}% life"
-msgstr "命​中时​3​%​生命​偷取"
+msgstr "命​中时{:d}​%​生命​偷取"
 
 #: Source/items.cpp:3684
 msgid "penetrates target's armor"
