@@ -87,7 +87,6 @@ struct PlayerData {
 	uint8_t swMagic;
 	/* Sprite width: Death */
 	uint8_t swDeath;
-
 };
 
 struct PlayerAttackAnimData {
