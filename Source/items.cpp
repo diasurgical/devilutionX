@@ -3887,10 +3887,38 @@ void UseItem(size_t pnum, item_misc_id mid, SpellID spl)
 		NewCursor(CURSOR_OIL);
 		break;
 	case IMISC_SPECELIX:
-		ModifyPlrStr(player, 3);
-		ModifyPlrMag(player, 3);
-		ModifyPlrDex(player, 3);
-		ModifyPlrVit(player, 3);
+		if (!gbIsMultiplayer || FlipCoin(10)) { // Don't give the full bonus every time in multiplayer
+			ModifyPlrStr(player, 3);
+			ModifyPlrMag(player, 3);
+			ModifyPlrDex(player, 3);
+			ModifyPlrVit(player, 3);
+		} else {
+			// Find attributes that can increased
+			std::vector<CharacterAttribute> increasableAttributes;
+			for (auto attribute : enum_values<CharacterAttribute>()) {
+				if (player.GetBaseAttributeValue(attribute) >= player.GetMaximumAttributeValue(attribute))
+					continue; // attribute can't be increased
+				increasableAttributes.push_back(attribute);
+			}
+			if (increasableAttributes.empty())
+				break; // no attributes to increase
+			size_t index = static_cast<size_t>(RandomIntLessThan(increasableAttributes.size()));
+			CharacterAttribute attributeToIncrease = increasableAttributes[index];
+			switch (attributeToIncrease) {
+			case CharacterAttribute::Strength:
+				ModifyPlrStr(player, 3);
+				break;
+			case CharacterAttribute::Magic:
+				ModifyPlrMag(player, 3);
+				break;
+			case CharacterAttribute::Dexterity:
+				ModifyPlrDex(player, 3);
+				break;
+			case CharacterAttribute::Vitality:
+				ModifyPlrVit(player, 3);
+				break;
+			}
+		}
 		break;
 	case IMISC_RUNEF:
 		player._pTSpell = SpellID::RuneOfFire;
