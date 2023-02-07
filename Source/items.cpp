@@ -16,6 +16,8 @@
 #include <fmt/compile.h>
 #include <fmt/format.h>
 
+#include <iterator>
+
 #include "DiabloUI/ui_flags.hpp"
 #include "controls/plrctrls.h"
 #include "cursor.h"
@@ -1011,12 +1013,12 @@ int SaveItemPower(const Player &player, Item &item, ItemPower &power)
 		item._iDamAcFlags |= ItemSpecialEffectHf::ACAgainstUndead;
 		break;
 	case IPL_MANATOLIFE: {
-		int portion = ((player._pMaxManaBase >> 6) * 50 / 100) << 6;
+		int portion = ((player._pMaxManaBase >> 6) * power.param1 / 100) << 6;
 		item._iPLMana -= portion;
 		item._iPLHP += portion;
 	} break;
 	case IPL_LIFETOMANA: {
-		int portion = ((player._pMaxHPBase >> 6) * 40 / 100) << 6;
+		int portion = ((player._pMaxHPBase >> 6) * power.param1 / 100) << 6;
 		item._iPLHP -= portion;
 		item._iPLMana += portion;
 	} break;
@@ -3441,6 +3443,38 @@ bool DoOil(Player &player, int cii)
 
 [[nodiscard]] StringOrView PrintItemPower(char plidx, const Item &item)
 {
+	int param1, param2;
+	bool keepGoing = true;
+
+	if (item._iMagical == ITEM_QUALITY_UNIQUE) {
+		for (const UniqueItem *unique = UniqueItems; unique->UIName[0]; ++unique) {
+			for (const ItemPower &power : unique->powers) {
+				if (power.type == plidx) {
+					param1 = power.param1;
+					param2 = power.param2;
+				}
+			}
+		}
+	} else {
+		for (const PLStruct *prefix = ItemPrefixes; prefix->PLName[0]; ++prefix) {
+			if (prefix->power.type == plidx) {
+				param1 = prefix->power.param1;
+				param2 = prefix->power.param2;
+				keepGoing = false;
+				break;
+			}
+		}
+		if (keepGoing) {
+			for (const PLStruct *suffix = ItemSuffixes; suffix->PLName[0]; ++suffix) {
+				if (suffix->power.type == plidx) {
+					param1 = suffix->power.param1;
+					param2 = suffix->power.param2;
+					if (HasNoneOf(item._iFlags, ItemSpecialEffect::StealMana5 | ItemSpecialEffect::StealLife5))
+						break;
+				}
+			}
+		}
+	}
 	switch (plidx) {
 	case IPL_TOHIT:
 	case IPL_TOHIT_CURSE:
@@ -3553,7 +3587,7 @@ bool DoOil(Player &player, int cii)
 		else
 			return fmt::format(fmt::runtime(_("fireball damage: {:d}-{:d}")), item._iFMinDam, item._iFMaxDam);
 	case IPL_THORNS:
-		return _("attacker takes 1-3 damage");
+		return fmt::format(fmt::runtime(_("attacker takes {:d}-{:d} damage")), param1, param2);
 	case IPL_NOMANA:
 		return _("user loses all mana");
 	case IPL_ABSHALFTRAP:
@@ -3561,20 +3595,21 @@ bool DoOil(Player &player, int cii)
 	case IPL_KNOCKBACK:
 		return _("knocks target back");
 	case IPL_3XDAMVDEM:
+		// parameters exist but are not used
 		return _(/*xgettext:no-c-format*/ "+200% damage vs. demons");
 	case IPL_ALLRESZERO:
 		return _("All Resistance equals 0");
 	case IPL_STEALMANA:
 		if (HasAnyOf(item._iFlags, ItemSpecialEffect::StealMana3))
-			return _(/*xgettext:no-c-format*/ "hit steals 3% mana");
+			return fmt::format(fmt::runtime(_("hit steals {:d}% mana")), param1);
 		if (HasAnyOf(item._iFlags, ItemSpecialEffect::StealMana5))
-			return _(/*xgettext:no-c-format*/ "hit steals 5% mana");
+			return fmt::format(fmt::runtime(_("hit steals {:d}% mana")), param1);
 		return {};
 	case IPL_STEALLIFE:
 		if (HasAnyOf(item._iFlags, ItemSpecialEffect::StealLife3))
-			return _(/*xgettext:no-c-format*/ "hit steals 3% life");
+			return fmt::format(fmt::runtime(_("hit steals 3% life")), param1);
 		if (HasAnyOf(item._iFlags, ItemSpecialEffect::StealLife5))
-			return _(/*xgettext:no-c-format*/ "hit steals 5% life");
+			return fmt::format(fmt::runtime(_("hit steals 5% life")), param1);
 		return {};
 	case IPL_TARGAC:
 		return _("penetrates target's armor");
@@ -3640,9 +3675,9 @@ bool DoOil(Player &player, int cii)
 	case IPL_ACUNDEAD:
 		return _("extra AC vs undead");
 	case IPL_MANATOLIFE:
-		return _("50% Mana moved to Health");
+		return fmt::format(fmt::runtime(_("{:d}% Mana moved to Health")), param1);
 	case IPL_LIFETOMANA:
-		return _("40% Health moved to Mana");
+		return fmt::format(fmt::runtime(_("{:d}% Health moved to Mana")), param1);
 	default:
 		return _("Another ability (NW)");
 	}
