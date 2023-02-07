@@ -2351,9 +2351,8 @@ void SaveGameData(SaveWriter &saveWriter)
 		SavePortal(&file, i);
 	for (int monstkill : MonsterKillCounts)
 		file.WriteBE<int32_t>(monstkill);
-	// add padding for vanilla save compatibility (Related to bugfix where MonsterKillCounts[MaxMonsters] is was changed to MonsterKillCounts[NUM_MTYPES]
-	for (int i = 0; i < MaxMonsters - NUM_MTYPES; i++)
-		file.WriteBE<int32_t>(0);
+	// add padding for vanilla save compatibility (Related to bugfix where MonsterKillCounts[MaxMonsters] was changed to MonsterKillCounts[NUM_MTYPES]
+	file.Skip(4 * (MaxMonsters - NUM_MTYPES));
 
 	if (leveltype != DTYPE_TOWN) {
 		for (int monsterId : ActiveMonsters)
