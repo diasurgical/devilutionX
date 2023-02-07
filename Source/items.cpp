@@ -3447,35 +3447,37 @@ bool DoOil(Player &player, int cii)
 	bool keepGoing = true;
 
 	// Find the parameters from itemdat.cpp that match plidx
-	// Iterate item powers from the UniqueItems table
-	if (item._iMagical == ITEM_QUALITY_UNIQUE) {
-		for (const UniqueItem *unique = UniqueItems; unique->UIName[0]; ++unique) {
-			for (const ItemPower &power : unique->powers) {
-				if (power.type == plidx) {
-					param1 = power.param1;
-					param2 = power.param2;
+	if (IsAnyOf(plidx, IPL_THORNS, IPL_STEALMANA, IPL_STEALLIFE, IPL_MANATOLIFE, IPL_LIFETOMANA)) {
+		// Iterate item powers from the UniqueItems table
+		if (item._iMagical == ITEM_QUALITY_UNIQUE) {
+			for (const UniqueItem *unique = UniqueItems; unique->UIName[0]; ++unique) {
+				for (const ItemPower &power : unique->powers) {
+					if (power.type == plidx) {
+						param1 = power.param1;
+						param2 = power.param2;
+					}
 				}
 			}
-		}
-	} else {
-		// Iterate prefix powers from ItemPrefixes
-		for (const PLStruct *prefix = ItemPrefixes; prefix->PLName[0]; ++prefix) {
-			if (prefix->power.type == plidx) {
-				param1 = prefix->power.param1;
-				param2 = prefix->power.param2;
-				keepGoing = false;
-				break;
+		} else {
+			// Iterate prefix powers from ItemPrefixes
+			for (const PLStruct *prefix = ItemPrefixes; prefix->PLName[0]; ++prefix) {
+				if (prefix->power.type == plidx) {
+					param1 = prefix->power.param1;
+					param2 = prefix->power.param2;
+					keepGoing = false;
+					break;
+				}
 			}
-		}
-		if (keepGoing) {
-			// Iterate suffix powers from ItemSuffixes if a prefix power isn't found
-			for (const PLStruct *suffix = ItemSuffixes; suffix->PLName[0]; ++suffix) {
-				if (suffix->power.type == plidx) {
-					param1 = suffix->power.param1;
-					param2 = suffix->power.param2;
-					// Since loop grabs the first params for the applicable item power, we need to keep iterating for StealMana5 and StealLife5 so we don't end up with StealMana3 or StealLife3 params
-					if (HasNoneOf(item._iFlags, ItemSpecialEffect::StealMana5 | ItemSpecialEffect::StealLife5))
-						break;
+			if (keepGoing) {
+				// Iterate suffix powers from ItemSuffixes if a prefix power isn't found
+				for (const PLStruct *suffix = ItemSuffixes; suffix->PLName[0]; ++suffix) {
+					if (suffix->power.type == plidx) {
+						param1 = suffix->power.param1;
+						param2 = suffix->power.param2;
+						// Since loop grabs the first params for the applicable item power, we need to keep iterating for StealMana5 and StealLife5 so we don't end up with StealMana3 or StealLife3 params
+						if (HasNoneOf(item._iFlags, ItemSpecialEffect::StealMana5 | ItemSpecialEffect::StealLife5))
+							break;
+					}
 				}
 			}
 		}
