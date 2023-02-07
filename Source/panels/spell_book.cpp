@@ -135,7 +135,6 @@ void DrawSpellBook(const Surface &out)
 	for (int i = 1; i < 8; i++) {
 		SpellID sn = SpellPages[sbooktab][i - 1];
 
->>>>>>> d87240e2d (Revise Spell Book Colors and Text)
 		if (IsValidSpell(sn) && (spl & GetSpellBitmask(sn)) != 0) {
 			SpellType st = GetSBookTrans(sn, true);
 			SetSpellTrans(st);
@@ -163,17 +162,17 @@ void DrawSpellBook(const Surface &out)
 
 			const Point line0 { 0, yp + textPaddingTop };
 			const Point line1 { 0, yp + textPaddingTop + lineHeight };
-<<<<<<< HEAD
 			PrintSBookStr(out, line0, pgettext("spell", GetSpellData(sn).sNameText));
+
 			switch (GetSBookTrans(sn, false)) {
 			case SpellType::Skill:
 				PrintSBookStr(out, line1, _("Skill"));
 				break;
-			case SpellType::Charges: {
-				int charges = player.InvBody[INVLOC_HAND_LEFT]._iCharges;
+			case SpellType::Charges:
+				charges = player.InvBody[INVLOC_HAND_LEFT]._iCharges;
 				PrintSBookStr(out, line1, fmt::format(fmt::runtime(ngettext("Staff ({:d} charge)", "Staff ({:d} charges)", charges)), charges));
-			} break;
-			default: {
+				break;
+			default:
 				int mana = GetManaAmount(player, sn) >> 6;
 				int lvl = player.GetSpellLevel(sn);
 				PrintSBookStr(out, line0, fmt::format(fmt::runtime(pgettext(/* TRANSLATORS: UI constraints, keep short please.*/ "spellbook", "Level {:d}")), lvl), UiFlags::AlignRight);
@@ -190,8 +189,13 @@ void DrawSpellBook(const Surface &out)
 							} else {
 								PrintSBookStr(out, line1, fmt::format(fmt::runtime(_(/* TRANSLATORS: UI constraints, keep short please.*/ "Damage: {:d} - {:d}")), min, max), UiFlags::AlignRight);
 							}
-=======
-			PrintSBookStr(out, line0, pgettext("spell", spelldata[sn].sNameText), UiFlags::ColorWhite);
+						}
+					}
+				}
+				break;
+			}
+
+			PrintSBookStr(out, line0, pgettext("spell", GetSpellData(sn).sNameText), UiFlags::ColorWhite);
 
 			if (GetSBookTrans(sn, false) == SpellType::Skill)
 				isSkill = true;
@@ -219,11 +223,10 @@ void DrawSpellBook(const Surface &out)
 					GetDamageAmt(sn, &min, &max);
 
 					if (min != -1) {
-						if (sn == SPL_HEAL || sn == SPL_HEALOTHER) {
+						if (sn == SpellID::Healing || sn == SpellID::HealOther) {
 							PrintSBookStr(out, line1, fmt::format(fmt::runtime(_(/* TRANSLATORS: UI constraints, keep short please.*/ "Heals: {:d} - {:d}")), min, max), UiFlags::AlignRight | UiFlags::ColorWhite);
 						} else {
 							PrintSBookStr(out, line1, fmt::format(fmt::runtime(_(/* TRANSLATORS: UI constraints, keep short please.*/ "Damage: {:d} - {:d}")), min, max), UiFlags::AlignRight | UiFlags::ColorWhite);
->>>>>>> d87240e2d (Revise Spell Book Colors and Text)
 						}
 					}
 				}
