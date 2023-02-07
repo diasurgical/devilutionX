@@ -4539,17 +4539,7 @@ msgstr "Всі Спротиви рівні 0"
 msgid "hit steals {:d}% mana"
 msgstr "удар краде {:d}% мани"
 
-#: Source/items.cpp:3557
-#, no-c-format
-msgid "hit steals {:d}% mana"
-msgstr "удар краде {:d}% мани"
-
 #: Source/items.cpp:3561
-#, no-c-format
-msgid "hit steals {:d}% life"
-msgstr "удар краде {:d}% життя"
-
-#: Source/items.cpp:3563
 #, no-c-format
 msgid "hit steals {:d}% life"
 msgstr "удар краде {:d}% життя"

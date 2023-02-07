@@ -4317,20 +4317,10 @@ msgstr "ο κτύπος δεν επιτρέπει θεραπεία"
 msgid "hit steals {:d}% mana"
 msgstr "με κτύπο κλέβει 3% μάνα"
 
-#: Source/items.cpp:3666
-#, no-c-format
-msgid "hit steals {:d}% mana"
-msgstr "με κτύπο κλέβει 5% μάνα"
-
 #: Source/items.cpp:3670
 #, no-c-format
 msgid "hit steals {:d}% life"
 msgstr "με κτύπο κλέβει 3% ζωή"
-
-#: Source/items.cpp:3672
-#, no-c-format
-msgid "hit steals {:d}% life"
-msgstr "με κτύπο κλέβει 5% ζωή"
 
 #: Source/items.cpp:3675
 msgid "penetrates target's armor"

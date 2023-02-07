@@ -3446,6 +3446,8 @@ bool DoOil(Player &player, int cii)
 	int param1, param2;
 	bool keepGoing = true;
 
+	// Find the parameters from itemdat.cpp that match plidx
+	// Iterate item powers from the UniqueItems table
 	if (item._iMagical == ITEM_QUALITY_UNIQUE) {
 		for (const UniqueItem *unique = UniqueItems; unique->UIName[0]; ++unique) {
 			for (const ItemPower &power : unique->powers) {
@@ -3456,6 +3458,7 @@ bool DoOil(Player &player, int cii)
 			}
 		}
 	} else {
+		// Iterate prefix powers from ItemPrefixes
 		for (const PLStruct *prefix = ItemPrefixes; prefix->PLName[0]; ++prefix) {
 			if (prefix->power.type == plidx) {
 				param1 = prefix->power.param1;
@@ -3465,10 +3468,12 @@ bool DoOil(Player &player, int cii)
 			}
 		}
 		if (keepGoing) {
+			// Iterate suffix powers from ItemSuffixes if a prefix power isn't found
 			for (const PLStruct *suffix = ItemSuffixes; suffix->PLName[0]; ++suffix) {
 				if (suffix->power.type == plidx) {
 					param1 = suffix->power.param1;
 					param2 = suffix->power.param2;
+					// Since loop grabs the first params for the applicable item power, we need to keep iterating for StealMana5 and StealLife5 so we don't end up with StealMana3 or StealLife3 params
 					if (HasNoneOf(item._iFlags, ItemSpecialEffect::StealMana5 | ItemSpecialEffect::StealLife5))
 						break;
 				}
@@ -3600,17 +3605,9 @@ bool DoOil(Player &player, int cii)
 	case IPL_ALLRESZERO:
 		return _("All Resistance equals 0");
 	case IPL_STEALMANA:
-		if (HasAnyOf(item._iFlags, ItemSpecialEffect::StealMana3))
-			return fmt::format(fmt::runtime(_("hit steals {:d}% mana")), param1);
-		if (HasAnyOf(item._iFlags, ItemSpecialEffect::StealMana5))
-			return fmt::format(fmt::runtime(_("hit steals {:d}% mana")), param1);
-		return {};
+		return fmt::format(fmt::runtime(_("hit steals {:d}% mana")), param1);
 	case IPL_STEALLIFE:
-		if (HasAnyOf(item._iFlags, ItemSpecialEffect::StealLife3))
-			return fmt::format(fmt::runtime(_("hit steals 3% life")), param1);
-		if (HasAnyOf(item._iFlags, ItemSpecialEffect::StealLife5))
-			return fmt::format(fmt::runtime(_("hit steals 5% life")), param1);
-		return {};
+		return fmt::format(fmt::runtime(_("hit steals {:d}% life")), param1);
 	case IPL_TARGAC:
 		return _("penetrates target's armor");
 	case IPL_FASTATTACK:

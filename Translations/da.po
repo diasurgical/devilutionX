@@ -4535,17 +4535,7 @@ msgstr ""
 msgid "hit steals {:d}% mana"
 msgstr ""
 
-#: Source/items.cpp:3675
-#, no-c-format
-msgid "hit steals {:d}% mana"
-msgstr ""
-
 #: Source/items.cpp:3679
-#, no-c-format
-msgid "hit steals {:d}% life"
-msgstr ""
-
-#: Source/items.cpp:3681
 #, no-c-format
 msgid "hit steals {:d}% life"
 msgstr ""

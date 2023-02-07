@@ -4506,17 +4506,7 @@ msgstr "全て​の​耐性​を​失う"
 msgid "hit steals {:d}% mana"
 msgstr "マナ​を​{:d}​%​吸収"
 
-#: Source/items.cpp:3623
-#, no-c-format
-msgid "hit steals {:d}% mana"
-msgstr "マナ​を​{:d}​%​吸収"
-
 #: Source/items.cpp:3627
-#, no-c-format
-msgid "hit steals {:d}% life"
-msgstr "ライフ​を​{:d}​%​吸収"
-
-#: Source/items.cpp:3629
 #, no-c-format
 msgid "hit steals {:d}% life"
 msgstr "ライフ​を​{:d}​%​吸収"

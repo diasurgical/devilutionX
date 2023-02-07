@@ -4297,17 +4297,7 @@ msgstr "le monstre touché ne guérit pas"
 msgid "hit steals {:d}% mana"
 msgstr "frapper vole {:d}% de mana"
 
-#: Source/items.cpp:3647
-#, no-c-format
-msgid "hit steals {:d}% mana"
-msgstr "frapper vole {:d}% de mana"
-
 #: Source/items.cpp:3651
-#, no-c-format
-msgid "hit steals {:d}% life"
-msgstr "frapper vole {:d}% de vie"
-
-#: Source/items.cpp:3653
 #, no-c-format
 msgid "hit steals {:d}% life"
 msgstr "frapper vole {:d}% de vie"

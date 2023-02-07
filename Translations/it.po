@@ -4549,17 +4549,7 @@ msgstr "Ogni Resistenza è 0"
 msgid "hit steals {:d}% mana"
 msgstr "colpo ruba {:d}% mana"
 
-#: Source/items.cpp:3557
-#, no-c-format
-msgid "hit steals {:d}% mana"
-msgstr "colpo ruba {:d}% mana"
-
 #: Source/items.cpp:3561
-#, no-c-format
-msgid "hit steals {:d}% life"
-msgstr "colpo ruba {:d}% vita"
-
-#: Source/items.cpp:3563
 #, no-c-format
 msgid "hit steals {:d}% life"
 msgstr "colpo ruba {:d}% vita"

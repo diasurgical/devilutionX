@@ -4289,17 +4289,7 @@ msgstr "поразен враг не може да се лекува"
 msgid "hit steals {:d}% mana"
 msgstr "удар отнема {:d}% мана"
 
-#: Source/items.cpp:3675
-#, no-c-format
-msgid "hit steals {:d}% mana"
-msgstr "удар отнема {:d}% мана"
-
 #: Source/items.cpp:3679
-#, no-c-format
-msgid "hit steals {:d}% life"
-msgstr "удар отнема {:d}% жизненост"
-
-#: Source/items.cpp:3681
 #, no-c-format
 msgid "hit steals {:d}% life"
 msgstr "удар отнема {:d}% жизненост"

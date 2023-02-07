@@ -4263,17 +4263,7 @@ msgstr "적중 시 괴물이 회복하지 않음"
 msgid "hit steals {:d}% mana"
 msgstr "적중 시 마나 {:d}% 흡수"
 
-#: Source/items.cpp:3681
-#, no-c-format
-msgid "hit steals {:d}% mana"
-msgstr "적중 시 마나 {:d}% 흡수"
-
 #: Source/items.cpp:3685
-#, no-c-format
-msgid "hit steals {:d}% life"
-msgstr "적중 시 생명력 {:d}% 흡수"
-
-#: Source/items.cpp:3687
 #, no-c-format
 msgid "hit steals {:d}% life"
 msgstr "적중 시 생명력 {:d}% 흡수"

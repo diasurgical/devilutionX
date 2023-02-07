@@ -4343,17 +4343,7 @@ msgstr "удар по монстру не исцеляет"
 msgid "hit steals {:d}% mana"
 msgstr "удар крадёт {:d}% маны"
 
-#: Source/items.cpp:3675
-#, no-c-format
-msgid "hit steals {:d}% mana"
-msgstr "удар крадёт {:d}% маны"
-
 #: Source/items.cpp:3679
-#, no-c-format
-msgid "hit steals {:d}% life"
-msgstr "удар крадёт {:d}% жизни"
-
-#: Source/items.cpp:3681
 #, no-c-format
 msgid "hit steals {:d}% life"
 msgstr "удар крадёт {:d}% жизни"

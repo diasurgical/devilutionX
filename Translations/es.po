@@ -4557,20 +4557,10 @@ msgstr "Toda la Resistencia es igual a 0"
 msgid "hit steals {:d}% mana"
 msgstr "el golpe roba {:d}% de maná"
 
-#: Source/items.cpp:3557
-#, no-c-format
-msgid "hit steals {:d}% mana"
-msgstr "el golpe roba {:d}% de maná"
-
 #: Source/items.cpp:3561
 #, no-c-format
 msgid "hit steals {:d}% life"
 msgstr "el golpe roba el {:d}% de vida"
-
-#: Source/items.cpp:3563
-#, no-c-format
-msgid "hit steals {:d}% life"
-msgstr "el golpe roba {:d}% de vida"
 
 #: Source/items.cpp:3566
 msgid "penetrates target's armor"

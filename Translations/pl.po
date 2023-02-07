@@ -4283,17 +4283,7 @@ msgstr "ranny potwór się nie ulecza"
 msgid "hit steals {:d}% mana"
 msgstr "uderzenie kradnie {:d}% many"
 
-#: Source/items.cpp:3684
-#, no-c-format
-msgid "hit steals {:d}% mana"
-msgstr "uderzenie kradnie {:d}% many"
-
 #: Source/items.cpp:3688
-#, no-c-format
-msgid "hit steals {:d}% life"
-msgstr "uderzenie kradnie {:d}% życia"
-
-#: Source/items.cpp:3690
 #, no-c-format
 msgid "hit steals {:d}% life"
 msgstr "uderzenie kradnie {:d}% życia"
