@@ -31,7 +31,6 @@ namespace devilution {
 
 constexpr int InventoryGridCells = 40;
 constexpr int MaxBeltItems = 8;
-// todo: move to playerdat.hpp?
 constexpr int MaxResistance = 75;
 constexpr int MaxCharacterLevel = 50;
 constexpr int MaxSpellLevel = 15;
