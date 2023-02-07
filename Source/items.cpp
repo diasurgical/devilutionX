@@ -3553,7 +3553,7 @@ bool DoOil(Player &player, int cii)
 		else
 			return fmt::format(fmt::runtime(_("fireball damage: {:d}-{:d}")), item._iFMinDam, item._iFMaxDam);
 	case IPL_THORNS:
-		return fmt::format(fmt::runtime(_("attacker takes {:d}-{:d} damage")), 1, 3);
+		return _("attacker takes 1-3 damage");
 	case IPL_NOMANA:
 		return _("user loses all mana");
 	case IPL_ABSHALFTRAP:
@@ -3628,9 +3628,9 @@ bool DoOil(Player &player, int cii)
 	case IPL_DECAY:
 		return fmt::format(fmt::runtime(_(/*xgettext:no-c-format*/ "decaying {:+d}% damage")), item._iPLDam);
 	case IPL_PERIL:
-		return fmt::format(fmt::runtime(_("{:d}x dmg to monst, {:d}x to you")), 2, 1);
+		return _("2x dmg to monst, 1x to you");
 	case IPL_JESTERS:
-		return fmt::format(fmt::runtime(_(/*xgettext:no-c-format*/ "Random {:d} - {:d}% damage")), 0, 600);
+		return _("Random 0 - 600% damage");
 	case IPL_CRYSTALLINE:
 		return fmt::format(fmt::runtime(_(/*xgettext:no-c-format*/ "low dur, {:+d}% damage")), item._iPLDam);
 	case IPL_DOPPELGANGER:
@@ -3640,9 +3640,9 @@ bool DoOil(Player &player, int cii)
 	case IPL_ACUNDEAD:
 		return _("extra AC vs undead");
 	case IPL_MANATOLIFE:
-		return fmt::format(fmt::runtime(_("{:+d}% Mana moved to Health")), 50);
+		return fmt::format(fmt::runtime(_(/*xgettext:no-c-format*/ "{:+d}% Mana moved to Health")), 50);
 	case IPL_LIFETOMANA:
-		return fmt::format(fmt::runtime(_("{:+d}% Health moved to Mana")), 40);
+		return fmt::format(fmt::runtime(_(/*xgettext:no-c-format*/ "{:+d}% Health moved to Mana")), 40);
 	default:
 		return _("Another ability (NW)");
 	}

@@ -4263,17 +4263,7 @@ msgstr "적중 시 괴물이 회복하지 않음"
 msgid "hit steals {:d}% mana"
 msgstr "적중 시 마나 {:d}% 흡수"
 
-#: Source/items.cpp:3681
-#, no-c-format
-msgid "hit steals {:d}% mana"
-msgstr "적중 시 마나 {:d}% 흡수"
-
 #: Source/items.cpp:3685
-#, no-c-format
-msgid "hit steals {:d}% life"
-msgstr "적중 시 생명력 {:d}% 흡수"
-
-#: Source/items.cpp:3687
 #, no-c-format
 msgid "hit steals {:d}% life"
 msgstr "적중 시 생명력 {:d}% 흡수"
@@ -4404,10 +4394,12 @@ msgid "extra AC vs undead"
 msgstr "언데드 상대 시 추가 방어력"
 
 #: Source/items.cpp:3765
+#, no-c-format
 msgid "{:d}% Mana moved to Health"
 msgstr "마나 {:d}%를 생명력으로 전환"
 
 #: Source/items.cpp:3767
+#, no-c-format
 msgid "{:d}% Health moved to Mana"
 msgstr "생명력 {:d}%를 마나로 전환"
 

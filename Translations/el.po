@@ -4317,17 +4317,7 @@ msgstr "ο κτύπος δεν επιτρέπει θεραπεία"
 msgid "hit steals {:d}% mana"
 msgstr "με κτύπο κλέβει {:d}% μάνα"
 
-#: Source/items.cpp:3666
-#, no-c-format
-msgid "hit steals {:d}% mana"
-msgstr "με κτύπο κλέβει {:d}% μάνα"
-
 #: Source/items.cpp:3670
-#, no-c-format
-msgid "hit steals {:d}% life"
-msgstr "με κτύπο κλέβει {:d}% ζωή"
-
-#: Source/items.cpp:3672
 #, no-c-format
 msgid "hit steals {:d}% life"
 msgstr "με κτύπο κλέβει {:d}% ζωή"
@@ -4458,10 +4448,12 @@ msgid "extra AC vs undead"
 msgstr "επιπλέον ΚΘ εναντίων απέθαντων"
 
 #: Source/items.cpp:3747
+#, no-c-format
 msgid "{:d}% Mana moved to Health"
 msgstr "{:d}% των Μάνα πάει στην Ζωή"
 
 #: Source/items.cpp:3749
+#, no-c-format
 msgid "{:d}% Health moved to Mana"
 msgstr "{:d}% Ζωής πάει στα Μάνα"
 

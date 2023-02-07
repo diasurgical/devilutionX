@@ -4284,17 +4284,7 @@ msgstr "zasažený nepřítel se nemůže léčit"
 msgid "hit steals {:d}% mana"
 msgstr "zásah vysaje {:d}% many"
 
-#: Source/items.cpp:3675
-#, no-c-format
-msgid "hit steals {:d}% mana"
-msgstr "zásah vysaje {:d}% many"
-
 #: Source/items.cpp:3679
-#, no-c-format
-msgid "hit steals {:d}% life"
-msgstr "zásah vysaje {:d}% životů"
-
-#: Source/items.cpp:3681
 #, no-c-format
 msgid "hit steals {:d}% life"
 msgstr "zásah vysaje {:d}% životů"
@@ -4426,10 +4416,12 @@ msgid "extra AC vs undead"
 msgstr "extra OČ proti nemrtvým"
 
 #: Source/items.cpp:3756
+#, no-c-format
 msgid "{:d}% Mana moved to Health"
 msgstr "{:d}% Many přesunuto do Životů"
 
 #: Source/items.cpp:3758
+#, no-c-format
 msgid "{:d}% Health moved to Mana"
 msgstr "{:d}% Životů přesunuto do Many"
 

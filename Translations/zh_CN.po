@@ -4238,17 +4238,7 @@ msgstr "命​中​怪物​无法​自愈"
 msgid "hit steals {:d}% mana"
 msgstr "命​中时​{:d}​%法力​偷取"
 
-#: Source/items.cpp:3675
-#, no-c-format
-msgid "hit steals {:d}% mana"
-msgstr "命​中时​{:d}​%​法力​偷取"
-
 #: Source/items.cpp:3679
-#, no-c-format
-msgid "hit steals {:d}% life"
-msgstr "命​中时​{:d}​%​生命​偷取"
-
-#: Source/items.cpp:3681
 #, no-c-format
 msgid "hit steals {:d}% life"
 msgstr "命​中时​{:d}​%​生命​偷取"
@@ -4378,10 +4368,12 @@ msgid "extra AC vs undead"
 msgstr "对抗​亡灵​的​额外​精准"
 
 #: Source/items.cpp:3756
+#, no-c-format
 msgid "{:d}% Mana moved to Health"
 msgstr "{:d}​%​法​力值​转换​至​生命​值"
 
 #: Source/items.cpp:3758
+#, no-c-format
 msgid "{:d}% Health moved to Mana"
 msgstr "{:d}​%​的​生命值​转换​至​法力值"
 

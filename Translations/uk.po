@@ -4539,17 +4539,7 @@ msgstr "Всі Спротиви рівні 0"
 msgid "hit steals {:d}% mana"
 msgstr "удар краде {:d}% мани"
 
-#: Source/items.cpp:3557
-#, no-c-format
-msgid "hit steals {:d}% mana"
-msgstr "удар краде {:d}% мани"
-
 #: Source/items.cpp:3561
-#, no-c-format
-msgid "hit steals {:d}% life"
-msgstr "удар краде {:d}% життя"
-
-#: Source/items.cpp:3563
 #, no-c-format
 msgid "hit steals {:d}% life"
 msgstr "удар краде {:d}% життя"
@@ -4676,10 +4666,12 @@ msgid "extra AC vs undead"
 msgstr "додат. ШУ проти нечисті"
 
 #: Source/items.cpp:3629
+#, no-c-format
 msgid "{:d}% Mana moved to Health"
 msgstr "{:d}% Мани перенесене в Здоров'я"
 
 #: Source/items.cpp:3631
+#, no-c-format
 msgid "{:d}% Health moved to Mana"
 msgstr "{:d}% Здоров'я перенесене в Ману"
 

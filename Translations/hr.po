@@ -4304,17 +4304,7 @@ msgstr ""
 msgid "hit steals {:d}% mana"
 msgstr ""
 
-#: Source/items.cpp:3650
-#, no-c-format
-msgid "hit steals {:d}% mana"
-msgstr ""
-
 #: Source/items.cpp:3654
-#, no-c-format
-msgid "hit steals {:d}% life"
-msgstr ""
-
-#: Source/items.cpp:3656
 #, no-c-format
 msgid "hit steals {:d}% life"
 msgstr ""
@@ -4446,10 +4436,12 @@ msgid "extra AC vs undead"
 msgstr "dodatna AC protiv nemrtvih"
 
 #: Source/items.cpp:3731
+#, no-c-format
 msgid "{:d}% Mana moved to Health"
 msgstr "{:d}% Mane premješteno u Zdravlje"
 
 #: Source/items.cpp:3733
+#, no-c-format
 msgid "{:d}% Health moved to Mana"
 msgstr "{:d}% Zdravlja premješteno u Manu"
 

@@ -4506,17 +4506,7 @@ msgstr "全て​の​耐性​を​失う"
 msgid "hit steals {:d}% mana"
 msgstr "マナ​を​{:d}​%​吸収"
 
-#: Source/items.cpp:3623
-#, no-c-format
-msgid "hit steals {:d}% mana"
-msgstr "マナ​を​{:d}​%​吸収"
-
 #: Source/items.cpp:3627
-#, no-c-format
-msgid "hit steals {:d}% life"
-msgstr "ライフ​を​{:d}​%​吸収"
-
-#: Source/items.cpp:3629
 #, no-c-format
 msgid "hit steals {:d}% life"
 msgstr "ライフ​を​{:d}​%​吸収"
@@ -4638,10 +4628,12 @@ msgid "extra AC vs undead"
 msgstr "対​アンデッド​用​の​追加​AC"
 
 #: Source/items.cpp:3695
+#, no-c-format
 msgid "{:d}% Mana moved to Health"
 msgstr "{:d}​%​の​マナ​を​ヘルス​に​移動"
 
 #: Source/items.cpp:3697
+#, no-c-format
 msgid "{:d}% Health moved to Mana"
 msgstr "{:d}​%​の​ヘルス​を​マナ​に​移動"
 
