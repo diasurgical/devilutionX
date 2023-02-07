@@ -1035,11 +1035,15 @@ int SaveItemPower(const Player &player, Item &item, ItemPower &power)
 		item._iDamAcFlags |= ItemSpecialEffectHf::ACAgainstUndead;
 		break;
 	case IPL_MANATOLIFE: {
+		item._iDamAcFlags |= ItemSpecialEffectHf::ManaToLife;
+		// Calculate for reverse compatibility
 		int portion = ((player._pMaxManaBase >> 6) * 50 / 100) << 6;
 		item._iPLMana -= portion;
 		item._iPLHP += portion;
 	} break;
 	case IPL_LIFETOMANA: {
+		item._iDamAcFlags |= ItemSpecialEffectHf::LifeToMana;
+		// Calculate for reverse compatibility
 		int portion = ((player._pMaxHPBase >> 6) * 40 / 100) << 6;
 		item._iPLHP -= portion;
 		item._iPLMana += portion;
@@ -2633,8 +2637,22 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 				dmod += item._iPLDamMod;
 				ghit += item._iPLGetHit;
 				lrad += item._iPLLight;
-				ihp += item._iPLHP;
-				imana += item._iPLMana;
+
+				if (IsAnyOf(item._iDamAcFlags, ItemSpecialEffectHf::ManaToLife)) {
+					int portion = ((player._pMaxManaBase >> 6) * 50 / 100) << 6;
+					imana -= portion;
+					ihp += portion;
+				}
+				if (IsAnyOf(item._iDamAcFlags, ItemSpecialEffectHf::LifeToMana)) {
+					int portion = ((player._pMaxHPBase >> 6) * 40 / 100) << 6;
+					ihp -= portion;
+					imana += portion;
+				}
+				if (IsNoneOf(item._iDamAcFlags, ItemSpecialEffectHf::ManaToLife, ItemSpecialEffectHf::LifeToMana)) {
+					ihp += item._iPLHP;
+					imana += item._iPLMana;
+				}
+
 				spllvladd += item._iSplLvlAdd;
 				enac += item._iPLEnAc;
 				fmin += item._iFMinDam;
