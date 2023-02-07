@@ -67,6 +67,27 @@ struct PlayerData {
 	int8_t SFNum;
 	/* Class Skill */
 	SpellID skill;
+	/* Sprite width: Stand */
+	uint8_t swStand;
+	/* Sprite width: Walk */
+	uint8_t swWalk;
+	/* Sprite width: Attack */
+	uint8_t swAttack;
+	/* Sprite width: Attack (Bow) */
+	uint8_t swBow;
+	/* Sprite width: Hit Recovery */
+	uint8_t swHit;
+	/* Sprite width: Block */
+	uint8_t swBlock;
+	/* Sprite width: Cast Lightning Spell */
+	uint8_t swLightning;
+	/* Sprite width: Cast Fire Spell */
+	uint8_t swFire;
+	/* Sprite width: Cast Magic Spell */
+	uint8_t swMagic;
+	/* Sprite width: Death */
+	uint8_t swDeath;
+
 };
 
 struct PlayerAttackAnimData {

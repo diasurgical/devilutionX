@@ -1619,37 +1619,31 @@ PlayerWeaponGraphic GetPlayerWeaponGraphic(player_graphic graphic, PlayerWeaponG
 
 uint16_t GetPlayerSpriteWidth(HeroClass cls, player_graphic graphic, PlayerWeaponGraphic weaponGraphic)
 {
-	// todo: modify function to read sprite width from playerdat.cpp
+	PlayerData plrData = PlayersData[static_cast<size_t>(cls)];
+
 	switch (graphic) {
 	case player_graphic::Stand:
+		return plrData.swStand;
 	case player_graphic::Walk:
-		if (cls == HeroClass::Monk)
-			return 112;
-		break;
+		return plrData.swWalk;
 	case player_graphic::Attack:
-		if (cls == HeroClass::Monk)
-			return 130;
-		else if (weaponGraphic != PlayerWeaponGraphic::Bow || !(cls == HeroClass::Warrior || cls == HeroClass::Barbarian))
-			return 128;
-		break;
+		if (weaponGraphic == PlayerWeaponGraphic::Bow)
+			return plrData.swBow;
+		return plrData.swAttack;
 	case player_graphic::Hit:
+		return plrData.swHit;
 	case player_graphic::Block:
-		if (cls == HeroClass::Monk)
-			return 98;
-		break;
+		return plrData.swBlock;
 	case player_graphic::Lightning:
+		return plrData.swLightning;
 	case player_graphic::Fire:
+		return plrData.swFire;
 	case player_graphic::Magic:
-		if (cls == HeroClass::Monk)
-			return 114;
-		else if (cls == HeroClass::Sorcerer)
-			return 128;
-		break;
+		return plrData.swMagic;
 	case player_graphic::Death:
-		return (cls == HeroClass::Monk) ? 160 : 128;
-		break;
+		return plrData.swDeath;
 	}
-	return 96;
+	app_fatal("Invalid player_graphic");
 }
 
 } // namespace
@@ -2364,7 +2358,6 @@ void CreatePlayer(Player &player, HeroClass c)
 	player._pLightRad = 10;
 	player._pInfraFlag = false;
 
-	// todo: rebase for SpellID and add class skill to playerdat.cpp table to reduce else if spam
 	player._pRSplType = SpellType::Skill;
 	SpellID s = PlayersData[static_cast<size_t>(c)].skill;
 	player._pAblSpells = GetSpellBitmask(s);
@@ -2441,7 +2434,6 @@ int CalcStatDiff(Player &player)
 
 void NextPlrLevel(Player &player)
 {
-	// todo: move life and mana from here to playerdat.cpp
 	player._pLevel++;
 	player._pMaxLvl++;
 
@@ -2455,7 +2447,7 @@ void NextPlrLevel(Player &player)
 
 	player._pNextExper = ExpLvlsTbl[player._pLevel];
 
-	int hp = player._pClass == HeroClass::Sorcerer ? 64 : 128;
+	int hp = PlayersData[static_cast<size_t>(player._pClass)].lvlUpLife;
 
 	player._pMaxHP += hp;
 	player._pHitPoints = player._pMaxHP;
@@ -2466,11 +2458,7 @@ void NextPlrLevel(Player &player)
 		RedrawComponent(PanelDrawComponent::Health);
 	}
 
-	int mana = 128;
-	if (player._pClass == HeroClass::Warrior)
-		mana = 64;
-	else if (player._pClass == HeroClass::Barbarian)
-		mana = 0;
+	int mana = PlayersData[static_cast<size_t>(player._pClass)].lvlUpMana;
 
 	player._pMaxMana += mana;
 	player._pMaxManaBase += mana;
@@ -2623,20 +2611,8 @@ void InitPlayer(Player &player, bool firstTime)
 		player._pvid = AddVision(player.position.tile, player._pLightRad, &player == MyPlayer);
 	}
 
-	// todo: move this shit to playerdat.cpp table
-	if (player._pClass == HeroClass::Warrior) {
-		player._pAblSpells = GetSpellBitmask(SpellID::ItemRepair);
-	} else if (player._pClass == HeroClass::Rogue) {
-		player._pAblSpells = GetSpellBitmask(SpellID::TrapDisarm);
-	} else if (player._pClass == HeroClass::Sorcerer) {
-		player._pAblSpells = GetSpellBitmask(SpellID::StaffRecharge);
-	} else if (player._pClass == HeroClass::Monk) {
-		player._pAblSpells = GetSpellBitmask(SpellID::Search);
-	} else if (player._pClass == HeroClass::Bard) {
-		player._pAblSpells = GetSpellBitmask(SpellID::Identify);
-	} else if (player._pClass == HeroClass::Barbarian) {
-		player._pAblSpells = GetSpellBitmask(SpellID::Rage);
-	}
+	SpellID s = PlayersData[static_cast<size_t>(player._pClass)].skill;
+	player._pAblSpells = GetSpellBitmask(s);
 
 	player._pNextExper = ExpLvlsTbl[player._pLevel];
 	player._pInvincible = false;
