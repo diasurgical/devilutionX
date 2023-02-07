@@ -364,7 +364,7 @@ enum class ItemSpecialEffect : uint32_t {
 };
 use_enum_as_flags(ItemSpecialEffect);
 
-enum class ItemSpecialEffectHf : uint8_t {
+enum class ItemSpecialEffectHf : uint16_t {
 	// clang-format off
 	None               = 0,
 	Devastation        = 1 << 0,
@@ -374,6 +374,8 @@ enum class ItemSpecialEffectHf : uint8_t {
 	Doppelganger       = 1 << 4,
 	ACAgainstDemons    = 1 << 5,
 	ACAgainstUndead    = 1 << 6,
+	ManaToLife         = 1 << 7,
+	LifeToMana         = 1 << 8,
 	// clang-format on
 };
 use_enum_as_flags(ItemSpecialEffectHf);
