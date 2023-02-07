@@ -4377,22 +4377,22 @@ msgstr ""
 
 #: Source/items.cpp:3673
 #, no-c-format
-msgid "hit steals 3% mana"
+msgid "hit steals {:d}% mana"
 msgstr ""
 
 #: Source/items.cpp:3675
 #, no-c-format
-msgid "hit steals 5% mana"
+msgid "hit steals {:d}% mana"
 msgstr ""
 
 #: Source/items.cpp:3679
 #, no-c-format
-msgid "hit steals 3% life"
+msgid "hit steals {:d}% life"
 msgstr ""
 
 #: Source/items.cpp:3681
 #, no-c-format
-msgid "hit steals 5% life"
+msgid "hit steals {:d}% life"
 msgstr ""
 
 #: Source/items.cpp:3684
@@ -4522,11 +4522,11 @@ msgid "extra AC vs undead"
 msgstr ""
 
 #: Source/items.cpp:3756
-msgid "50% Mana moved to Health"
+msgid "{:d}% Mana moved to Health"
 msgstr ""
 
 #: Source/items.cpp:3758
-msgid "40% Health moved to Mana"
+msgid "{:d}% Health moved to Mana"
 msgstr ""
 
 #: Source/items.cpp:3795 Source/items.cpp:3833

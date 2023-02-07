@@ -4554,23 +4554,23 @@ msgstr "Toda la Resistencia es igual a 0"
 
 #: Source/items.cpp:3555
 #, no-c-format
-msgid "hit steals 3% mana"
-msgstr "el golpe roba 3% de maná"
+msgid "hit steals {:d}% mana"
+msgstr "el golpe roba {:d}% de maná"
 
 #: Source/items.cpp:3557
 #, no-c-format
-msgid "hit steals 5% mana"
-msgstr "el golpe roba 5% de maná"
+msgid "hit steals {:d}% mana"
+msgstr "el golpe roba {:d}% de maná"
 
 #: Source/items.cpp:3561
 #, no-c-format
-msgid "hit steals 3% life"
-msgstr "el golpe roba el 3% de vida"
+msgid "hit steals {:d}% life"
+msgstr "el golpe roba el {:d}% de vida"
 
 #: Source/items.cpp:3563
 #, no-c-format
-msgid "hit steals 5% life"
-msgstr "el golpe roba 5% de vida"
+msgid "hit steals {:d}% life"
+msgstr "el golpe roba {:d}% de vida"
 
 #: Source/items.cpp:3566
 msgid "penetrates target's armor"
@@ -4690,12 +4690,12 @@ msgid "extra AC vs undead"
 msgstr "extra CA contra muertos vivientes"
 
 #: Source/items.cpp:3629
-msgid "50% Mana moved to Health"
-msgstr "50% de Maná se movió a Salud"
+msgid "{:d}% Mana moved to Health"
+msgstr "{:d}% de Maná se movió a Salud"
 
 #: Source/items.cpp:3631
-msgid "40% Health moved to Mana"
-msgstr "40% de Salud se movió a Maná"
+msgid "{:d}% Health moved to Mana"
+msgstr "{:d}% de Salud se movió a Maná"
 
 #: Source/items.cpp:3671 Source/items.cpp:3712
 msgid "damage: {:d}  Indestructible"

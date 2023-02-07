@@ -4260,23 +4260,23 @@ msgstr "적중 시 괴물이 회복하지 않음"
 
 #: Source/items.cpp:3679
 #, no-c-format
-msgid "hit steals 3% mana"
-msgstr "적중 시 마나 3% 흡수"
+msgid "hit steals {:d}% mana"
+msgstr "적중 시 마나 {:d}% 흡수"
 
 #: Source/items.cpp:3681
 #, no-c-format
-msgid "hit steals 5% mana"
-msgstr "적중 시 마나 5% 흡수"
+msgid "hit steals {:d}% mana"
+msgstr "적중 시 마나 {:d}% 흡수"
 
 #: Source/items.cpp:3685
 #, no-c-format
-msgid "hit steals 3% life"
-msgstr "적중 시 생명력 3% 흡수"
+msgid "hit steals {:d}% life"
+msgstr "적중 시 생명력 {:d}% 흡수"
 
 #: Source/items.cpp:3687
 #, no-c-format
-msgid "hit steals 5% life"
-msgstr "적중 시 생명력 5% 흡수"
+msgid "hit steals {:d}% life"
+msgstr "적중 시 생명력 {:d}% 흡수"
 
 #: Source/items.cpp:3691 Source/items.cpp:3693
 msgid "penetrates target's armor"
@@ -4404,12 +4404,12 @@ msgid "extra AC vs undead"
 msgstr "언데드 상대 시 추가 방어력"
 
 #: Source/items.cpp:3765
-msgid "50% Mana moved to Health"
-msgstr "마나 50%를 생명력으로 전환"
+msgid "{:d}% Mana moved to Health"
+msgstr "마나 {:d}%를 생명력으로 전환"
 
 #: Source/items.cpp:3767
-msgid "40% Health moved to Mana"
-msgstr "생명력 40%를 마나로 전환"
+msgid "{:d}% Health moved to Mana"
+msgstr "생명력 {:d}%를 마나로 전환"
 
 #: Source/items.cpp:3804 Source/items.cpp:3842
 msgid "damage: {:d}  Indestructible"

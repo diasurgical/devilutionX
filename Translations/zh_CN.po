@@ -4235,23 +4235,23 @@ msgstr "命​中​怪物​无法​自愈"
 
 #: Source/items.cpp:3673
 #, no-c-format
-msgid "hit steals 3% mana"
-msgstr "命​中时​3​%法力​偷取"
+msgid "hit steals {:d}% mana"
+msgstr "命​中时​{:d}​%法力​偷取"
 
 #: Source/items.cpp:3675
 #, no-c-format
-msgid "hit steals 5% mana"
-msgstr "命​中时​5​%​法力​偷取"
+msgid "hit steals {:d}% mana"
+msgstr "命​中时​{:d}​%​法力​偷取"
 
 #: Source/items.cpp:3679
 #, no-c-format
-msgid "hit steals 3% life"
-msgstr "命​中时​3​%​生命​偷取"
+msgid "hit steals {:d}% life"
+msgstr "命​中时​{:d}​%​生命​偷取"
 
 #: Source/items.cpp:3681
 #, no-c-format
-msgid "hit steals 5% life"
-msgstr "命​中时​5​%​生命​偷取"
+msgid "hit steals {:d}% life"
+msgstr "命​中时​{:d}​%​生命​偷取"
 
 #: Source/items.cpp:3684
 msgid "penetrates target's armor"
@@ -4378,12 +4378,12 @@ msgid "extra AC vs undead"
 msgstr "对抗​亡灵​的​额外​精准"
 
 #: Source/items.cpp:3756
-msgid "50% Mana moved to Health"
-msgstr "50​%​法​力值​转换​至​生命​值"
+msgid "{:d}% Mana moved to Health"
+msgstr "{:d}​%​法​力值​转换​至​生命​值"
 
 #: Source/items.cpp:3758
-msgid "40% Health moved to Mana"
-msgstr "40​%​的​生命值​转换​至​法力值"
+msgid "{:d}% Health moved to Mana"
+msgstr "{:d}​%​的​生命值​转换​至​法力值"
 
 #: Source/items.cpp:3795 Source/items.cpp:3833
 msgid "damage: {:d}  Indestructible"

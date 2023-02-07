@@ -3539,7 +3539,7 @@ bool DoOil(Player &player, int cii)
 		else
 			return fmt::format(fmt::runtime(_("fireball damage: {:d}-{:d}")), item._iFMinDam, item._iFMaxDam);
 	case IPL_THORNS:
-		return _("attacker takes 1-3 damage");
+		return fmt::format(fmt::runtime(_("attacker takes {:d}-{:d} damage")), 1, 3);
 	case IPL_NOMANA:
 		return _("user loses all mana");
 	case IPL_ABSHALFTRAP:
@@ -3552,15 +3552,15 @@ bool DoOil(Player &player, int cii)
 		return _("All Resistance equals 0");
 	case IPL_STEALMANA:
 		if (HasAnyOf(item._iFlags, ItemSpecialEffect::StealMana3))
-			return _(/*xgettext:no-c-format*/ "hit steals 3% mana");
+			return fmt::format(fmt::runtime(_(/*xgettext:no-c-format*/ "hit steals {:d}% mana")), 3);
 		if (HasAnyOf(item._iFlags, ItemSpecialEffect::StealMana5))
-			return _(/*xgettext:no-c-format*/ "hit steals 5% mana");
+			return fmt::format(fmt::runtime(_(/*xgettext:no-c-format*/ "hit steals {:d}% mana")), 5);
 		return {};
 	case IPL_STEALLIFE:
 		if (HasAnyOf(item._iFlags, ItemSpecialEffect::StealLife3))
-			return _(/*xgettext:no-c-format*/ "hit steals 3% life");
+			return fmt::format(fmt::runtime(_(/*xgettext:no-c-format*/ "hit steals {:d}% life")), 3);
 		if (HasAnyOf(item._iFlags, ItemSpecialEffect::StealLife5))
-			return _(/*xgettext:no-c-format*/ "hit steals 5% life");
+			return fmt::format(fmt::runtime(_(/*xgettext:no-c-format*/ "hit steals {:d}% life")), 5);
 		return {};
 	case IPL_TARGAC:
 		return _("penetrates target's armor");
@@ -3614,9 +3614,9 @@ bool DoOil(Player &player, int cii)
 	case IPL_DECAY:
 		return fmt::format(fmt::runtime(_(/*xgettext:no-c-format*/ "decaying {:+d}% damage")), item._iPLDam);
 	case IPL_PERIL:
-		return _("2x dmg to monst, 1x to you");
+		return fmt::format(fmt::runtime(_("{:d}x dmg to monst, {:d}x to you")), 2, 1);
 	case IPL_JESTERS:
-		return std::string(_(/*xgettext:no-c-format*/ "Random 0 - 600% damage"));
+		return fmt::format(fmt::runtime(_(/*xgettext:no-c-format*/ "Random {:d} - {:d}% damage")), 0, 600);
 	case IPL_CRYSTALLINE:
 		return fmt::format(fmt::runtime(_(/*xgettext:no-c-format*/ "low dur, {:+d}% damage")), item._iPLDam);
 	case IPL_DOPPELGANGER:
@@ -3626,9 +3626,9 @@ bool DoOil(Player &player, int cii)
 	case IPL_ACUNDEAD:
 		return _("extra AC vs undead");
 	case IPL_MANATOLIFE:
-		return _("50% Mana moved to Health");
+		return fmt::format(fmt::runtime(_("{:+d}% Mana moved to Health")), 50);
 	case IPL_LIFETOMANA:
-		return _("40% Health moved to Mana");
+		return fmt::format(fmt::runtime(_("{:+d}% Health moved to Mana")), 40);
 	default:
 		return _("Another ability (NW)");
 	}

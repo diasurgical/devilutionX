@@ -4280,23 +4280,23 @@ msgstr "ranny potwór się nie ulecza"
 
 #: Source/items.cpp:3682
 #, no-c-format
-msgid "hit steals 3% mana"
-msgstr "uderzenie kradnie 3% many"
+msgid "hit steals {:d}% mana"
+msgstr "uderzenie kradnie {:d}% many"
 
 #: Source/items.cpp:3684
 #, no-c-format
-msgid "hit steals 5% mana"
-msgstr "uderzenie kradnie 5% many"
+msgid "hit steals {:d}% mana"
+msgstr "uderzenie kradnie {:d}% many"
 
 #: Source/items.cpp:3688
 #, no-c-format
-msgid "hit steals 3% life"
-msgstr "uderzenie kradnie 3% życia"
+msgid "hit steals {:d}% life"
+msgstr "uderzenie kradnie {:d}% życia"
 
 #: Source/items.cpp:3690
 #, no-c-format
-msgid "hit steals 5% life"
-msgstr "uderzenie kradnie 5% życia"
+msgid "hit steals {:d}% life"
+msgstr "uderzenie kradnie {:d}% życia"
 
 #: Source/items.cpp:3693
 msgid "penetrates target's armor"
@@ -4425,12 +4425,12 @@ msgid "extra AC vs undead"
 msgstr "ekstra pancerz przeciwko nieumarłym"
 
 #: Source/items.cpp:3765
-msgid "50% Mana moved to Health"
-msgstr "50% Many przechodzi do Życia"
+msgid "{:d}% Mana moved to Health"
+msgstr "{:d}% Many przechodzi do Życia"
 
 #: Source/items.cpp:3767
-msgid "40% Health moved to Mana"
-msgstr "40% Życia przechodzi do Many"
+msgid "{:d}% Health moved to Mana"
+msgstr "{:d}% Życia przechodzi do Many"
 
 #: Source/items.cpp:3804 Source/items.cpp:3842
 msgid "damage: {:d}  Indestructible"

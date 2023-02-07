@@ -4284,23 +4284,23 @@ msgstr "Stoppt Monsterheilung"
 
 #: Source/items.cpp:3673
 #, no-c-format
-msgid "hit steals 3% mana"
-msgstr "3% Manaabsaugung"
+msgid "hit steals {:d}% mana"
+msgstr "{:d}% Manaabsaugung"
 
 #: Source/items.cpp:3675
 #, no-c-format
-msgid "hit steals 5% mana"
-msgstr "5% Manaabsaugung"
+msgid "hit steals {:d}% mana"
+msgstr "{:d}% Manaabsaugung"
 
 #: Source/items.cpp:3679
 #, no-c-format
-msgid "hit steals 3% life"
-msgstr "3% Lebensabsaugung"
+msgid "hit steals {:d}% life"
+msgstr "{:d}% Lebensabsaugung"
 
 #: Source/items.cpp:3681
 #, no-c-format
-msgid "hit steals 5% life"
-msgstr "3% Lebensabsaugung"
+msgid "hit steals {:d}% life"
+msgstr "{:d}% Lebensabsaugung"
 
 #: Source/items.cpp:3684
 msgid "penetrates target's armor"
@@ -4428,12 +4428,12 @@ msgid "extra AC vs undead"
 msgstr "Extra-Rüstung gegen Untote"
 
 #: Source/items.cpp:3756
-msgid "50% Mana moved to Health"
-msgstr "50% Mana wird zu Leben"
+msgid "{:d}% Mana moved to Health"
+msgstr "{:d}% Mana wird zu Leben"
 
 #: Source/items.cpp:3758
-msgid "40% Health moved to Mana"
-msgstr "40% Leben wird zu Mana"
+msgid "{:d}% Health moved to Mana"
+msgstr "{:d}% Leben wird zu Mana"
 
 #: Source/items.cpp:3795 Source/items.cpp:3833
 msgid "damage: {:d}  Indestructible"

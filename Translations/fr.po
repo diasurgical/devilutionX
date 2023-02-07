@@ -4294,23 +4294,23 @@ msgstr "le monstre touché ne guérit pas"
 
 #: Source/items.cpp:3645
 #, no-c-format
-msgid "hit steals 3% mana"
-msgstr "frapper vole 3% de mana"
+msgid "hit steals {:d}% mana"
+msgstr "frapper vole {:d}% de mana"
 
 #: Source/items.cpp:3647
 #, no-c-format
-msgid "hit steals 5% mana"
-msgstr "frapper vole 5% de mana"
+msgid "hit steals {:d}% mana"
+msgstr "frapper vole {:d}% de mana"
 
 #: Source/items.cpp:3651
 #, no-c-format
-msgid "hit steals 3% life"
-msgstr "frapper vole 3% de vie"
+msgid "hit steals {:d}% life"
+msgstr "frapper vole {:d}% de vie"
 
 #: Source/items.cpp:3653
 #, no-c-format
-msgid "hit steals 5% life"
-msgstr "frapper vole 5% de vie"
+msgid "hit steals {:d}% life"
+msgstr "frapper vole {:d}% de vie"
 
 #: Source/items.cpp:3656
 msgid "penetrates target's armor"
@@ -4438,12 +4438,12 @@ msgid "extra AC vs undead"
 msgstr "extra CA vs Morts-Vivants"
 
 #: Source/items.cpp:3728
-msgid "50% Mana moved to Health"
-msgstr "50% de mana transféré à la santé"
+msgid "{:d}% Mana moved to Health"
+msgstr "{:d}% de mana transféré à la santé"
 
 #: Source/items.cpp:3730
-msgid "40% Health moved to Mana"
-msgstr "40% de santé transféré au Mana"
+msgid "{:d}% Health moved to Mana"
+msgstr "{:d}% de santé transféré au Mana"
 
 #: Source/items.cpp:3767 Source/items.cpp:3805
 msgid "damage: {:d}  Indestructible"

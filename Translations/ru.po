@@ -4340,23 +4340,23 @@ msgstr "удар по монстру не исцеляет"
 
 #: Source/items.cpp:3673
 #, no-c-format
-msgid "hit steals 3% mana"
-msgstr "удар крадёт 3% маны"
+msgid "hit steals {:d}% mana"
+msgstr "удар крадёт {:d}% маны"
 
 #: Source/items.cpp:3675
 #, no-c-format
-msgid "hit steals 5% mana"
-msgstr "удар крадёт 5% маны"
+msgid "hit steals {:d}% mana"
+msgstr "удар крадёт {:d}% маны"
 
 #: Source/items.cpp:3679
 #, no-c-format
-msgid "hit steals 3% life"
-msgstr "удар крадёт 3% жизни"
+msgid "hit steals {:d}% life"
+msgstr "удар крадёт {:d}% жизни"
 
 #: Source/items.cpp:3681
 #, no-c-format
-msgid "hit steals 5% life"
-msgstr "удар крадёт 5% жизни"
+msgid "hit steals {:d}% life"
+msgstr "удар крадёт {:d}% жизни"
 
 #: Source/items.cpp:3684
 msgid "penetrates target's armor"
@@ -4488,12 +4488,12 @@ msgid "extra AC vs undead"
 msgstr "дополнительные ОБ против нежити"
 
 #: Source/items.cpp:3756
-msgid "50% Mana moved to Health"
-msgstr "50% маны становятся здоровьем"
+msgid "{:d}% Mana moved to Health"
+msgstr "{:d}% маны становятся здоровьем"
 
 #: Source/items.cpp:3758
-msgid "40% Health moved to Mana"
-msgstr "40% здоровья становятся маной"
+msgid "{:d}% Health moved to Mana"
+msgstr "{:d}% здоровья становятся маной"
 
 #: Source/items.cpp:3795 Source/items.cpp:3833
 msgid "damage: {:d}  Indestructible"

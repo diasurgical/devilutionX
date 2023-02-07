@@ -4314,23 +4314,23 @@ msgstr "ο κτύπος δεν επιτρέπει θεραπεία"
 
 #: Source/items.cpp:3664
 #, no-c-format
-msgid "hit steals 3% mana"
-msgstr "με κτύπο κλέβει 3% μάνα"
+msgid "hit steals {:d}% mana"
+msgstr "με κτύπο κλέβει {:d}% μάνα"
 
 #: Source/items.cpp:3666
 #, no-c-format
-msgid "hit steals 5% mana"
-msgstr "με κτύπο κλέβει 5% μάνα"
+msgid "hit steals {:d}% mana"
+msgstr "με κτύπο κλέβει {:d}% μάνα"
 
 #: Source/items.cpp:3670
 #, no-c-format
-msgid "hit steals 3% life"
-msgstr "με κτύπο κλέβει 3% ζωή"
+msgid "hit steals {:d}% life"
+msgstr "με κτύπο κλέβει {:d}% ζωή"
 
 #: Source/items.cpp:3672
 #, no-c-format
-msgid "hit steals 5% life"
-msgstr "με κτύπο κλέβει 5% ζωή"
+msgid "hit steals {:d}% life"
+msgstr "με κτύπο κλέβει {:d}% ζωή"
 
 #: Source/items.cpp:3675
 msgid "penetrates target's armor"
@@ -4458,12 +4458,12 @@ msgid "extra AC vs undead"
 msgstr "επιπλέον ΚΘ εναντίων απέθαντων"
 
 #: Source/items.cpp:3747
-msgid "50% Mana moved to Health"
-msgstr "50% των Μάνα πάει στην Ζωή"
+msgid "{:d}% Mana moved to Health"
+msgstr "{:d}% των Μάνα πάει στην Ζωή"
 
 #: Source/items.cpp:3749
-msgid "40% Health moved to Mana"
-msgstr "40% Ζωής πάει στα Μάνα"
+msgid "{:d}% Health moved to Mana"
+msgstr "{:d}% Ζωής πάει στα Μάνα"
 
 #: Source/items.cpp:3786 Source/items.cpp:3824
 msgid "damage: {:d}  Indestructible"
