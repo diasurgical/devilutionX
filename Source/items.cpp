@@ -3443,7 +3443,7 @@ bool DoOil(Player &player, int cii)
 
 [[nodiscard]] StringOrView PrintItemPower(char plidx, const Item &item)
 {
-	int param1, param2;
+	int param1, param2 = 0;
 	bool keepGoing = true;
 
 	// Find the parameters from itemdat.cpp that match plidx
