@@ -2366,25 +2366,9 @@ void CreatePlayer(Player &player, HeroClass c)
 
 	// todo: rebase for SpellID and add class skill to playerdat.cpp table to reduce else if spam
 	player._pRSplType = SpellType::Skill;
-	if (c == HeroClass::Warrior) {
-		player._pAblSpells = GetSpellBitmask(SpellID::ItemRepair);
-		player._pRSpell = SpellID::ItemRepair;
-	} else if (c == HeroClass::Rogue) {
-		player._pAblSpells = GetSpellBitmask(SpellID::TrapDisarm);
-		player._pRSpell = SpellID::TrapDisarm;
-	} else if (c == HeroClass::Sorcerer) {
-		player._pAblSpells = GetSpellBitmask(SpellID::StaffRecharge);
-		player._pRSpell = SpellID::StaffRecharge;
-	} else if (c == HeroClass::Monk) {
-		player._pAblSpells = GetSpellBitmask(SpellID::Search);
-		player._pRSpell = SpellID::Search;
-	} else if (c == HeroClass::Bard) {
-		player._pAblSpells = GetSpellBitmask(SpellID::Identify);
-		player._pRSpell = SpellID::Identify;
-	} else if (c == HeroClass::Barbarian) {
-		player._pAblSpells = GetSpellBitmask(SpellID::Rage);
-		player._pRSpell = SpellID::Rage;
-	}
+	SpellID s = PlayersData[static_cast<size_t>(c)].skill;
+	player._pAblSpells = GetSpellBitmask(s);
+	player._pRSpell = s;
 
 	if (c == HeroClass::Sorcerer) {
 		player._pMemSpells = GetSpellBitmask(SpellID::Firebolt);

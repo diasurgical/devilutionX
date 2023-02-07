@@ -65,6 +65,8 @@ struct PlayerData {
 	int8_t TWFrames;
 	/* Spellcasting action frame number */
 	int8_t SFNum;
+	/* Class Skill */
+	SpellID skill;
 };
 
 struct PlayerAttackAnimData {
