@@ -132,19 +132,15 @@ void DrawSpellBook(const Surface &out)
 
 	int yp = 12;
 	const int textPaddingTop = 7;
-
 	for (int i = 1; i < 8; i++) {
-<<<<<<< HEAD
 		SpellID sn = SpellPages[sbooktab][i - 1];
-=======
-		spell_id sn = SpellPages[sbooktab][i - 1];
 
 >>>>>>> d87240e2d (Revise Spell Book Colors and Text)
 		if (IsValidSpell(sn) && (spl & GetSpellBitmask(sn)) != 0) {
 			SpellType st = GetSBookTrans(sn, true);
 			SetSpellTrans(st);
 			const Point spellCellPosition = GetPanelPosition(UiPanels::Spell, { 11, yp + SpellBookDescription.height });
-			DrawSpellCel(out, spellCellPosition, *pSBkIconCels, SpellITbl[sn]);
+			DrawSmallSpellIcon(out, spellCellPosition, sn);
 
 			bool isSkill = false;
 			bool isStaff = false;
