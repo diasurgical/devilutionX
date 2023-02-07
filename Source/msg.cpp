@@ -203,6 +203,7 @@ struct MultiQuests {
 	uint8_t qlog;
 	uint8_t qvar1;
 	uint8_t qvar2;
+	int16_t qmsg;
 };
 
 struct DJunk {
@@ -536,6 +537,7 @@ byte *DeltaExportJunk(byte *dst)
 		sgJunk.quests[q].qstate = quest._qactive;
 		sgJunk.quests[q].qvar1 = quest._qvar1;
 		sgJunk.quests[q].qvar2 = quest._qvar2;
+		sgJunk.quests[q].qmsg = static_cast<int16_t>(quest._qmsg);
 		memcpy(dst, &sgJunk.quests[q], sizeof(MultiQuests));
 		dst += sizeof(MultiQuests);
 		q++;
@@ -2431,7 +2433,7 @@ size_t OnSyncQuest(const TCmd *pCmd, size_t pnum)
 		SendPacket(pnum, &message, sizeof(message));
 	} else {
 		if (pnum != MyPlayerId && message.q < MAXQUESTS && message.qstate <= QUEST_HIVE_DONE)
-			SetMultiQuest(message.q, message.qstate, message.qlog != 0, message.qvar1, message.qvar2);
+			SetMultiQuest(message.q, message.qstate, message.qlog != 0, message.qvar1, message.qvar2, message.qmsg);
 		sgbDeltaChanged = true;
 	}
 
@@ -2732,6 +2734,7 @@ void DeltaSyncJunk()
 			quest._qactive = sgJunk.quests[q].qstate;
 			quest._qvar1 = sgJunk.quests[q].qvar1;
 			quest._qvar2 = sgJunk.quests[q].qvar2;
+			quest._qmsg = static_cast<_speech_id>(sgJunk.quests[q].qmsg);
 		}
 		q++;
 	}
@@ -3125,6 +3128,7 @@ void NetSendCmdQuest(bool bHiPri, const Quest &quest)
 	cmd.qlog = quest._qlog ? 1 : 0;
 	cmd.qvar1 = quest._qvar1;
 	cmd.qvar2 = quest._qvar2;
+	cmd.qmsg = quest._qmsg;
 
 	if (bHiPri)
 		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));

@@ -897,6 +897,7 @@ void CheckQuestItem(Player &player, Item &questItem)
 	if (questItem.IDidx == IDI_MUSHROOM && Quests[Q_MUSHROOM]._qactive == QUEST_ACTIVE && Quests[Q_MUSHROOM]._qvar1 == QS_MUSHSPAWNED) {
 		player.Say(HeroSpeech::NowThatsOneBigMushroom, 10); // BUGFIX: Voice for this quest might be wrong in MP
 		Quests[Q_MUSHROOM]._qvar1 = QS_MUSHPICKED;
+		NetSendCmdQuest(true, Quests[Q_MUSHROOM]);
 	}
 
 	if (questItem.IDidx == IDI_ANVIL && Quests[Q_ANVIL]._qactive != QUEST_NOTAVAIL) {

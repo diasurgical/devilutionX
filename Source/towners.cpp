@@ -421,6 +421,7 @@ void TalkToWitch(Player &player, Towner & /*witch*/)
 			Quests[Q_MUSHROOM]._qactive = QUEST_ACTIVE;
 			Quests[Q_MUSHROOM]._qlog = true;
 			Quests[Q_MUSHROOM]._qvar1 = QS_TOMEGIVEN;
+			NetSendCmdQuest(true, Quests[Q_MUSHROOM]);
 			InitQTextMsg(TEXT_MUSH8);
 			return;
 		}
@@ -431,11 +432,13 @@ void TalkToWitch(Player &player, Towner & /*witch*/)
 					QuestDialogTable[TOWN_HEALER][Q_MUSHROOM] = TEXT_MUSH3;
 					QuestDialogTable[TOWN_WITCH][Q_MUSHROOM] = TEXT_NONE;
 					Quests[Q_MUSHROOM]._qmsg = TEXT_MUSH10;
+					NetSendCmdQuest(true, Quests[Q_MUSHROOM]);
 					InitQTextMsg(TEXT_MUSH10);
 					return;
 				}
 				if (Quests[Q_MUSHROOM]._qmsg != TEXT_MUSH9) {
 					Quests[Q_MUSHROOM]._qmsg = TEXT_MUSH9;
+					NetSendCmdQuest(true, Quests[Q_MUSHROOM]);
 					InitQTextMsg(TEXT_MUSH9);
 					return;
 				}
@@ -443,13 +446,17 @@ void TalkToWitch(Player &player, Towner & /*witch*/)
 			if (Quests[Q_MUSHROOM]._qvar1 >= QS_MUSHGIVEN) {
 				if (HasInventoryItemWithId(player, IDI_BRAIN)) {
 					Quests[Q_MUSHROOM]._qmsg = TEXT_MUSH11;
+					NetSendCmdQuest(true, Quests[Q_MUSHROOM]);
 					InitQTextMsg(TEXT_MUSH11);
 					return;
 				}
 				if (HasInventoryOrBeltItemWithId(player, IDI_SPECELIX)) {
-					InitQTextMsg(TEXT_MUSH12);
 					Quests[Q_MUSHROOM]._qactive = QUEST_DONE;
-					AllItemsList[IDI_SPECELIX].iUsable = true; /// BUGFIX: This will cause the elixir to be usable in the next game
+					NetSendCmdQuest(true, Quests[Q_MUSHROOM]);
+					// Ensure Spectral Elixir is usable after the quest is finished
+					for (Item &item : InventoryAndBeltPlayerItemsRange { player }) {
+						item.updateRequiredStatsCacheForPlayer(player);
+					}
 					return;
 				}
 			}
@@ -505,6 +512,7 @@ void TalkToHealer(Player &player, Towner &healer)
 			InitQTextMsg(TEXT_MUSH4);
 			Quests[Q_MUSHROOM]._qvar1 = QS_BRAINGIVEN;
 			QuestDialogTable[TOWN_HEALER][Q_MUSHROOM] = TEXT_NONE;
+			NetSendCmdQuest(true, Quests[Q_MUSHROOM]);
 			return;
 		}
 	}

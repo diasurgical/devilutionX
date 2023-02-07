@@ -285,6 +285,9 @@ void InitQuests()
 	Quests[Q_LTBANNER]._qvar1 = 1;
 	if (UseMultiplayerQuests())
 		Quests[Q_BETRAYER]._qvar1 = 2;
+	// In multiplayer items spawn during level generation to avoid desyncs
+	if (gbIsMultiplayer && Quests[Q_MUSHROOM]._qactive == QUEST_INIT)
+		Quests[Q_MUSHROOM]._qvar1 = QS_TOMESPAWNED;
 }
 
 void InitialiseQuestPools(uint32_t seed, Quest quests[])
@@ -658,10 +661,11 @@ void ResyncQuests()
 			}
 		}
 	}
-	if (currlevel == Quests[Q_MUSHROOM]._qlevel) {
+	if (currlevel == Quests[Q_MUSHROOM]._qlevel && !setlevel) {
 		if (Quests[Q_MUSHROOM]._qactive == QUEST_INIT && Quests[Q_MUSHROOM]._qvar1 == QS_INIT) {
-			SpawnQuestItem(IDI_FUNGALTM, { 0, 0 }, 5, 1, false);
+			SpawnQuestItem(IDI_FUNGALTM, { 0, 0 }, 5, 1, true);
 			Quests[Q_MUSHROOM]._qvar1 = QS_TOMESPAWNED;
+			NetSendCmdQuest(true, Quests[Q_MUSHROOM]);
 		} else {
 			if (Quests[Q_MUSHROOM]._qactive == QUEST_ACTIVE) {
 				if (Quests[Q_MUSHROOM]._qvar1 >= QS_MUSHGIVEN) {
@@ -830,7 +834,7 @@ void QuestlogESC()
 	}
 }
 
-void SetMultiQuest(int q, quest_state s, bool log, int v1, int v2)
+void SetMultiQuest(int q, quest_state s, bool log, int v1, int v2, int16_t qmsg)
 {
 	if (gbIsSpawn)
 		return;
@@ -846,6 +850,7 @@ void SetMultiQuest(int q, quest_state s, bool log, int v1, int v2)
 	if (v1 > quest._qvar1)
 		quest._qvar1 = v1;
 	quest._qvar2 = v2;
+	quest._qmsg = static_cast<_speech_id>(qmsg);
 	if (!UseMultiplayerQuests()) {
 		// Ensure that changes on another client is also updated on our own
 		ResyncQuests();
