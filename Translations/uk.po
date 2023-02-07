@@ -4510,8 +4510,8 @@ msgid "fireball damage: {:d}-{:d}"
 msgstr "шкода кулі вогню: {:d}-{:d}"
 
 #: Source/items.cpp:3542
-msgid "attacker takes 1-3 damage"
-msgstr "нападник отримує 1-3 шкоди"
+msgid "attacker takes {:d}-{:d} damage"
+msgstr "нападник отримує {:d}-{:d} шкоди"
 
 #: Source/items.cpp:3544
 msgid "user loses all mana"
@@ -4536,23 +4536,23 @@ msgstr "Всі Спротиви рівні 0"
 
 #: Source/items.cpp:3555
 #, no-c-format
-msgid "hit steals 3% mana"
-msgstr "удар краде 3% мани"
+msgid "hit steals {:d}% mana"
+msgstr "удар краде {:d}% мани"
 
 #: Source/items.cpp:3557
 #, no-c-format
-msgid "hit steals 5% mana"
-msgstr "удар краде 5% мани"
+msgid "hit steals {:d}% mana"
+msgstr "удар краде {:d}% мани"
 
 #: Source/items.cpp:3561
 #, no-c-format
-msgid "hit steals 3% life"
-msgstr "удар краде 3% життя"
+msgid "hit steals {:d}% life"
+msgstr "удар краде {:d}% життя"
 
 #: Source/items.cpp:3563
 #, no-c-format
-msgid "hit steals 5% life"
-msgstr "удар краде 5% життя"
+msgid "hit steals {:d}% life"
+msgstr "удар краде {:d}% життя"
 
 #: Source/items.cpp:3566
 msgid "penetrates target's armor"
@@ -4676,12 +4676,12 @@ msgid "extra AC vs undead"
 msgstr "додат. ШУ проти нечисті"
 
 #: Source/items.cpp:3629
-msgid "50% Mana moved to Health"
-msgstr "50% Мани перенесене в Здоров'я"
+msgid "{:d}% Mana moved to Health"
+msgstr "{:d}% Мани перенесене в Здоров'я"
 
 #: Source/items.cpp:3631
-msgid "40% Health moved to Mana"
-msgstr "40% Здоров'я перенесене в Ману"
+msgid "{:d}% Health moved to Mana"
+msgstr "{:d}% Здоров'я перенесене в Ману"
 
 #: Source/items.cpp:3671 Source/items.cpp:3712
 msgid "damage: {:d}  Indestructible"

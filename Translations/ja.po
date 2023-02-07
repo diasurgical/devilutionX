@@ -4477,8 +4477,8 @@ msgid "fireball damage: {:d}-{:d}"
 msgstr "ファイヤーボールダメージ: {:d}-{:d}"
 
 #: Source/items.cpp:3608
-msgid "attacker takes 1-3 damage"
-msgstr "ダメージ​時​に​反撃:1-3"
+msgid "attacker takes {:d}-{:d} damage"
+msgstr "ダメージ​時​に​反撃:{:d}-{:d}"
 
 #: Source/items.cpp:3610
 msgid "user loses all mana"
@@ -4503,23 +4503,23 @@ msgstr "全て​の​耐性​を​失う"
 
 #: Source/items.cpp:3621
 #, no-c-format
-msgid "hit steals 3% mana"
-msgstr "マナ​を​3​%​吸収"
+msgid "hit steals {:d}% mana"
+msgstr "マナ​を​{:d}​%​吸収"
 
 #: Source/items.cpp:3623
 #, no-c-format
-msgid "hit steals 5% mana"
-msgstr "マナ​を​5​%​吸収"
+msgid "hit steals {:d}% mana"
+msgstr "マナ​を​{:d}​%​吸収"
 
 #: Source/items.cpp:3627
 #, no-c-format
-msgid "hit steals 3% life"
-msgstr "ライフ​を​3​%​吸収"
+msgid "hit steals {:d}% life"
+msgstr "ライフ​を​{:d}​%​吸収"
 
 #: Source/items.cpp:3629
 #, no-c-format
-msgid "hit steals 5% life"
-msgstr "ライフ​を​5​%​吸収"
+msgid "hit steals {:d}% life"
+msgstr "ライフ​を​{:d}​%​吸収"
 
 #: Source/items.cpp:3632
 msgid "penetrates target's armor"
@@ -4638,12 +4638,12 @@ msgid "extra AC vs undead"
 msgstr "対​アンデッド​用​の​追加​AC"
 
 #: Source/items.cpp:3695
-msgid "50% Mana moved to Health"
-msgstr "50​%​の​マナ​を​ヘルス​に​移動"
+msgid "{:d}% Mana moved to Health"
+msgstr "{:d}​%​の​マナ​を​ヘルス​に​移動"
 
 #: Source/items.cpp:3697
-msgid "40% Health moved to Mana"
-msgstr "40​%​の​ヘルス​を​マナ​に​移動"
+msgid "{:d}% Health moved to Mana"
+msgstr "{:d}​%​の​ヘルス​を​マナ​に​移動"
 
 #: Source/items.cpp:3737 Source/items.cpp:3778
 msgid "damage: {:d}  Indestructible"

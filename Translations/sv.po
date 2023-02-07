@@ -4245,8 +4245,8 @@ msgid "fireball damage: {:d}-{:d}"
 msgstr "eldklotsskada: {:d}-{:d}"
 
 #: Source/items.cpp:3656
-msgid "attacker takes 1-3 damage"
-msgstr "anfallare tar 1-3 skada"
+msgid "attacker takes {:d}-{:d} damage"
+msgstr "anfallare tar {:d}-{:d} skada"
 
 #: Source/items.cpp:3658
 msgid "user loses all mana"
@@ -4279,23 +4279,23 @@ msgstr "träffade monster läker inte"
 
 #: Source/items.cpp:3673
 #, no-c-format
-msgid "hit steals 3% mana"
-msgstr "träff stjäl 3% mana"
+msgid "hit steals {:d}% mana"
+msgstr "träff stjäl {:d}% mana"
 
 #: Source/items.cpp:3675
 #, no-c-format
-msgid "hit steals 5% mana"
-msgstr "träff stjäl 5% mana"
+msgid "hit steals {:d}% mana"
+msgstr "träff stjäl {:d}% mana"
 
 #: Source/items.cpp:3679
 #, no-c-format
-msgid "hit steals 3% life"
-msgstr "träff stjäl 3% liv"
+msgid "hit steals {:d}% life"
+msgstr "träff stjäl {:d}% liv"
 
 #: Source/items.cpp:3681
 #, no-c-format
-msgid "hit steals 5% life"
-msgstr "träff stjäl 5% liv"
+msgid "hit steals {:d}% life"
+msgstr "träff stjäl {:d}% liv"
 
 #: Source/items.cpp:3684
 msgid "penetrates target's armor"
@@ -4423,12 +4423,12 @@ msgid "extra AC vs undead"
 msgstr "extra PK mot vandöda"
 
 #: Source/items.cpp:3756
-msgid "50% Mana moved to Health"
-msgstr "50% Mana flyttas till Liv"
+msgid "{:d}% Mana moved to Health"
+msgstr "{:d}% Mana flyttas till Liv"
 
 #: Source/items.cpp:3758
-msgid "40% Health moved to Mana"
-msgstr "40% Liv flyttas till Mana"
+msgid "{:d}% Health moved to Mana"
+msgstr "{:d}% Liv flyttas till Mana"
 
 #: Source/items.cpp:3795 Source/items.cpp:3833
 msgid "damage: {:d}  Indestructible"

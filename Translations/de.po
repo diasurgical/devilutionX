@@ -4250,8 +4250,8 @@ msgid "fireball damage: {:d}-{:d}"
 msgstr "Feuerballschaden: {:d}-{:d}"
 
 #: Source/items.cpp:3656
-msgid "attacker takes 1-3 damage"
-msgstr "Angreifer erleidet 1-3 Schaden"
+msgid "attacker takes {:d}-{:d} damage"
+msgstr "Angreifer erleidet {:d}-{:d} Schaden"
 
 #: Source/items.cpp:3658
 msgid "user loses all mana"
@@ -4284,22 +4284,22 @@ msgstr "Stoppt Monsterheilung"
 
 #: Source/items.cpp:3673
 #, no-c-format
-msgid "hit steals 3% mana"
+msgid "hit steals {:d}% mana"
 msgstr "3% Manaabsaugung"
 
 #: Source/items.cpp:3675
 #, no-c-format
-msgid "hit steals 5% mana"
+msgid "hit steals {:d}% mana"
 msgstr "5% Manaabsaugung"
 
 #: Source/items.cpp:3679
 #, no-c-format
-msgid "hit steals 3% life"
+msgid "hit steals {:d}% life"
 msgstr "3% Lebensabsaugung"
 
 #: Source/items.cpp:3681
 #, no-c-format
-msgid "hit steals 5% life"
+msgid "hit steals {:d}% life"
 msgstr "3% Lebensabsaugung"
 
 #: Source/items.cpp:3684
@@ -4428,12 +4428,12 @@ msgid "extra AC vs undead"
 msgstr "Extra-Rüstung gegen Untote"
 
 #: Source/items.cpp:3756
-msgid "50% Mana moved to Health"
-msgstr "50% Mana wird zu Leben"
+msgid "{:d}% Mana moved to Health"
+msgstr "{:d}% Mana wird zu Leben"
 
 #: Source/items.cpp:3758
-msgid "40% Health moved to Mana"
-msgstr "40% Leben wird zu Mana"
+msgid "{:d}% Health moved to Mana"
+msgstr "{:d}% Leben wird zu Mana"
 
 #: Source/items.cpp:3795 Source/items.cpp:3833
 msgid "damage: {:d}  Indestructible"
