@@ -3586,7 +3586,7 @@ bool DoOil(Player &player, int cii)
 		}
 		if (HasAnyOf(item._iFlags, ItemSpecialEffect::FastAttack)) {
 			if (gbIsHellfire && item._itype == ItemType::Bow)
-				return _("fires fast speed arrows");
+				return _("fires fast arrows");
 			return _("fast attack");
 		}
 		if (HasAnyOf(item._iFlags, ItemSpecialEffect::FasterAttack))
