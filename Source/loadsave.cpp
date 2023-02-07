@@ -706,7 +706,7 @@ void LoadMissile(LoadHelper *file)
 	missile._miDelFlag = file->NextBool32();
 	missile._miAnimType = static_cast<MissileGraphicID>(file->NextLE<uint8_t>());
 	file->Skip(3); // Alignment
-	missile._miAnimFlags = static_cast<MissileDataFlags>(file->NextLE<int32_t>());
+	missile._miAnimFlags = static_cast<MissileGraphicsFlags>(file->NextLE<int32_t>());
 	file->Skip(4); // Skip pointer _miAnimData
 	missile._miAnimDelay = file->NextLE<int32_t>();
 	missile._miAnimLen = file->NextLE<int32_t>();

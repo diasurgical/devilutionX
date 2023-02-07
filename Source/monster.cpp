@@ -4609,7 +4609,7 @@ bool Monster::isWalking() const
 
 bool Monster::isImmune(MissileID missileType) const
 {
-	DamageType missileElement = GetMissileData(missileType).damageType;
+	DamageType missileElement = GetMissileData(missileType).damageType();
 
 	if (((resistance & IMMUNE_MAGIC) != 0 && missileElement == DamageType::Magic)
 	    || ((resistance & IMMUNE_FIRE) != 0 && missileElement == DamageType::Fire)
@@ -4623,7 +4623,7 @@ bool Monster::isImmune(MissileID missileType) const
 
 bool Monster::isResistant(MissileID missileType) const
 {
-	DamageType missileElement = GetMissileData(missileType).damageType;
+	DamageType missileElement = GetMissileData(missileType).damageType();
 
 	if (((resistance & RESIST_MAGIC) != 0 && missileElement == DamageType::Magic)
 	    || ((resistance & RESIST_FIRE) != 0 && missileElement == DamageType::Fire)
