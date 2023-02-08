@@ -1476,12 +1476,12 @@ void CheckCheatStats(Player &player)
 		player._pVitality = 750;
 	}
 
-	if (player._pHitPoints > 128000) {
-		player._pHitPoints = 128000;
+	if (player._pHitPoints > player._pMaxHP) {
+		player._pHitPoints = player._pMaxHP;
 	}
 
-	if (player._pMana > 128000) {
-		player._pMana = 128000;
+	if (player._pMana > player._pMaxMana) {
+		player._pMana = player._pMaxMana;
 	}
 }
 
