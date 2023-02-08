@@ -1979,6 +1979,8 @@ void Player::RestorePartialLife()
 
 void Player::RestorePartialMana()
 {
+	if (_pMana <= 0)
+		return;
 	int wholeManaPoints = _pMaxMana >> 6;
 	int l = ((wholeManaPoints / 8) + GenerateRnd(wholeManaPoints / 4)) << 6;
 	if (_pClass == HeroClass::Sorcerer)
