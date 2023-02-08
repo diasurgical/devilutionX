@@ -2414,10 +2414,11 @@ void OperateShrineHidden(Player &player)
 
 			player.InvBody[r]._iDurability -= 20;
 			player.InvBody[r]._iMaxDur -= 20;
-			if (player.InvBody[r]._iDurability <= 0)
-				player.InvBody[r]._iDurability = 1;
-			if (player.InvBody[r]._iMaxDur <= 0)
-				player.InvBody[r]._iMaxDur = 1;
+
+			for (auto& item : player.InvBody) {
+				item._iDurability = clamp(item._iDurability, 1, 255);
+				item._iMaxDur = clamp(item._iMaxDur, 1, 255);
+			}
 			break;
 		}
 	}
