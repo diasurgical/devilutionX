@@ -518,7 +518,7 @@ bool DamageWeapon(Player &player, unsigned damageFrequency)
 	Item rightHandItem = rightHandItem;
 
 	if (!leftHandItem.isEmpty() && leftHandItem._iClass == ICLASS_WEAPON) {
-		if (IsAnyOf(leftHandItem._iFlags, ItemSpecialEffect::Indestructible)) {
+		if (HasAnyOf(leftHandItem._iFlags, ItemSpecialEffect::Indestructible)) {
 			return false;
 		}
 
@@ -531,7 +531,7 @@ bool DamageWeapon(Player &player, unsigned damageFrequency)
 	}
 
 	if (!rightHandItem.isEmpty() && rightHandItem._iClass == ICLASS_WEAPON) {
-		if (IsAnyOf(rightHandItem._iFlags, ItemSpecialEffect::Indestructible)) {
+		if (HasAnyOf(rightHandItem._iFlags, ItemSpecialEffect::Indestructible)) {
 			return false;
 		}
 
@@ -544,7 +544,7 @@ bool DamageWeapon(Player &player, unsigned damageFrequency)
 	}
 
 	if (leftHandItem.isEmpty() && rightHandItem._itype == ItemType::Shield) {
-		if (IsAnyOf(rightHandItem._iFlags, ItemSpecialEffect::Indestructible)) {
+		if (HasAnyOf(rightHandItem._iFlags, ItemSpecialEffect::Indestructible)) {
 			return false;
 		}
 
@@ -557,7 +557,7 @@ bool DamageWeapon(Player &player, unsigned damageFrequency)
 	}
 
 	if (rightHandItem.isEmpty() && leftHandItem._itype == ItemType::Shield) {
-		if (IsAnyOf(leftHandItem._iFlags, ItemSpecialEffect::Indestructible)) {
+		if (HasAnyOf(leftHandItem._iFlags, ItemSpecialEffect::Indestructible)) {
 			return false;
 		}
 
@@ -978,7 +978,7 @@ void DamageParryItem(Player &player)
 	Item rightHandItem = player.InvBody[INVLOC_HAND_RIGHT];
 
 	if (leftHandItem._itype == ItemType::Shield || leftHandItem._itype == ItemType::Staff) {
-		if (IsAnyOf(leftHandItem._iFlags, ItemSpecialEffect::Indestructible)) {
+		if (HasAnyOf(leftHandItem._iFlags, ItemSpecialEffect::Indestructible)) {
 			return;
 		}
 
@@ -990,7 +990,7 @@ void DamageParryItem(Player &player)
 	}
 
 	if (rightHandItem._itype == ItemType::Shield) {
-		if (IsAnyOf(rightHandItem._iFlags, ItemSpecialEffect::Indestructible)) {
+		if (HasAnyOf(rightHandItem._iFlags, ItemSpecialEffect::Indestructible)) {
 			return;
 		}
 
@@ -1044,7 +1044,7 @@ void DamageArmor(Player &player)
 	} else {
 		pi = &chestItem;
 	}
-	if (IsAnyOf(pi->_iFlags, ItemSpecialEffect::Indestructible)) {
+	if (HasAnyOf(pi->_iFlags, ItemSpecialEffect::Indestructible)) {
 		return;
 	}
 

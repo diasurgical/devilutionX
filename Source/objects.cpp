@@ -2409,7 +2409,7 @@ void OperateShrineHidden(Player &player)
 			if (cnt == 0)
 				break;
 			int r = GenerateRnd(NUM_INVLOC);
-			if (player.InvBody[r].isEmpty() || IsAnyOf(player.InvBody[r]._iFlags, ItemSpecialEffect::Indestructible) || player.InvBody[r]._iMaxDur == 0)
+			if (player.InvBody[r].isEmpty() || HasAnyOf(player.InvBody[r]._iFlags, ItemSpecialEffect::Indestructible) || player.InvBody[r]._iMaxDur == 0)
 				continue;
 
 			player.InvBody[r]._iDurability -= 20;
