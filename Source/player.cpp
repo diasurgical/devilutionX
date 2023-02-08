@@ -1460,29 +1460,30 @@ void ValidatePlayer()
 
 void CheckCheatStats(Player &player)
 {
-	if (player._pStrength > 750) {
+	if (player._pStrength > 750)
 		player._pStrength = 750;
-	}
 
-	if (player._pDexterity > 750) {
+	if (player._pDexterity > 750)
 		player._pDexterity = 750;
-	}
 
-	if (player._pMagic > 750) {
+	if (player._pMagic > 750)
 		player._pMagic = 750;
-	}
 
-	if (player._pVitality > 750) {
+	if (player._pVitality > 750)
 		player._pVitality = 750;
-	}
 
-	if (player._pHitPoints > player._pMaxHP) {
+	if (player._pMaxHP > (2000 << 6))
+		player._pMaxHP = (2000 << 6);
+
+	if (player._pMaxMana > (2000 << 6))
+		player._pMaxMana = (2000 << 6);
+
+
+	if (player._pHitPoints > player._pMaxHP)
 		player._pHitPoints = player._pMaxHP;
-	}
 
-	if (player._pMana > player._pMaxMana) {
+	if (player._pMana > player._pMaxMana)
 		player._pMana = player._pMaxMana;
-	}
 }
 
 HeroClass GetPlayerSpriteClass(HeroClass cls)
