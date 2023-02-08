@@ -2391,7 +2391,7 @@ void OperateShrineHidden(Player &player)
 	if (cnt > 0) {
 		for (auto &item : player.InvBody) {
 			if (!item.isEmpty()
-			    && item._iMaxDur != DUR_INDESTRUCTIBLE
+			    && IsNoneOf(item._iFlags, ItemSpecialEffect::Indestructible)
 			    && item._iMaxDur != 0) {
 				item._iDurability += 10;
 				item._iMaxDur += 10;
@@ -2402,14 +2402,14 @@ void OperateShrineHidden(Player &player)
 		while (true) {
 			cnt = 0;
 			for (auto &item : player.InvBody) {
-				if (!item.isEmpty() && item._iMaxDur != DUR_INDESTRUCTIBLE && item._iMaxDur != 0) {
+				if (!item.isEmpty() && IsNoneOf(item._iFlags, ItemSpecialEffect::Indestructible) && item._iMaxDur != 0) {
 					cnt++;
 				}
 			}
 			if (cnt == 0)
 				break;
 			int r = GenerateRnd(NUM_INVLOC);
-			if (player.InvBody[r].isEmpty() || player.InvBody[r]._iMaxDur == DUR_INDESTRUCTIBLE || player.InvBody[r]._iMaxDur == 0)
+			if (player.InvBody[r].isEmpty() || IsAnyOf(player.InvBody[r]._iFlags, ItemSpecialEffect::Indestructible) || player.InvBody[r]._iMaxDur == 0)
 				continue;
 
 			player.InvBody[r]._iDurability -= 20;
@@ -3070,7 +3070,7 @@ void OperateShrineMurphys(Player &player)
 	bool broke = false;
 	for (auto &item : player.InvBody) {
 		if (!item.isEmpty() && FlipCoin(3)) {
-			if (item._iDurability != DUR_INDESTRUCTIBLE) {
+			if (IsNoneOf(item._iFlags, ItemSpecialEffect::Indestructible)) {
 				if (item._iDurability > 0) {
 					item._iDurability /= 2;
 					broke = true;

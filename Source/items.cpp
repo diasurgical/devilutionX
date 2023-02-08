@@ -869,6 +869,7 @@ int SaveItemPower(const Player &player, Item &item, ItemPower &power)
 		item._iDurability = item._iMaxDur;
 		break;
 	case IPL_INDESTRUCTIBLE:
+		item._iFlags |= ItemSpecialEffect::Indestructible;
 		item._iDurability = DUR_INDESTRUCTIBLE;
 		item._iMaxDur = DUR_INDESTRUCTIBLE;
 		break;
@@ -1501,7 +1502,7 @@ void GetUniqueItem(const Player &player, Item &item, _unique_items uid)
 
 void ItemRndDur(Item &item)
 {
-	if (item._iDurability > 0 && item._iDurability != DUR_INDESTRUCTIBLE)
+	if (item._iDurability > 0 && IsNoneOf(item._iFlags, ItemSpecialEffect::Indestructible))
 		item._iDurability = GenerateRnd(item._iMaxDur / 2) + (item._iMaxDur / 4) + 1;
 }
 
@@ -2622,6 +2623,23 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 				lmax += item._iLMaxDam;
 			}
 		}
+
+		// Creates reserve compatibility, since items with IPL_INDESTRUCTIBLE from older versions/vanilla won't have ItemSpecialEffect::Indestructible
+		switch (item._iMagical) {
+		case ITEM_QUALITY_UNIQUE:
+			for (const ItemPower &power : UniqueItems[item._iUid].powers) {
+					if (power.type == IPL_INDESTRUCTIBLE && IsNoneOf(item._iFlags, ItemSpecialEffect::Indestructible)) {
+						item._iFlags |= ItemSpecialEffect::Indestructible;
+					    break;
+					}
+				}
+			break;
+		case ITEM_QUALITY_MAGIC:
+			if (item._iSufPower == IPL_INDESTRUCTIBLE && IsNoneOf(item._iFlags, ItemSpecialEffect::Indestructible)) {
+				item._iFlags |= ItemSpecialEffect::Indestructible;
+			}
+			break;
+		}
 	}
 
 	if (mind == 0 && maxd == 0) {
@@ -2878,6 +2896,8 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 			MaxGold = GOLD_MAX_LIMIT * 2;
 		}
 	}
+
+
 
 	RedrawComponent(PanelDrawComponent::Mana);
 	RedrawComponent(PanelDrawComponent::Health);
@@ -3943,19 +3963,19 @@ void PrintItemDetails(const Item &item)
 
 	if (item._iClass == ICLASS_WEAPON) {
 		if (item._iMinDam == item._iMaxDam) {
-			if (item._iMaxDur == DUR_INDESTRUCTIBLE)
+			if (IsAnyOf(item._iFlags, ItemSpecialEffect::Indestructible))
 				AddPanelString(fmt::format(fmt::runtime(_("damage: {:d}  Indestructible")), item._iMinDam));
 			else
 				AddPanelString(fmt::format(fmt::runtime(_(/* TRANSLATORS: Dur: is durability */ "damage: {:d}  Dur: {:d}/{:d}")), item._iMinDam, item._iDurability, item._iMaxDur));
 		} else {
-			if (item._iMaxDur == DUR_INDESTRUCTIBLE)
+			if (IsAnyOf(item._iFlags, ItemSpecialEffect::Indestructible))
 				AddPanelString(fmt::format(fmt::runtime(_("damage: {:d}-{:d}  Indestructible")), item._iMinDam, item._iMaxDam));
 			else
 				AddPanelString(fmt::format(fmt::runtime(_(/* TRANSLATORS: Dur: is durability */ "damage: {:d}-{:d}  Dur: {:d}/{:d}")), item._iMinDam, item._iMaxDam, item._iDurability, item._iMaxDur));
 		}
 	}
 	if (item._iClass == ICLASS_ARMOR) {
-		if (item._iMaxDur == DUR_INDESTRUCTIBLE)
+		if (IsAnyOf(item._iFlags, ItemSpecialEffect::Indestructible))
 			AddPanelString(fmt::format(fmt::runtime(_("armor: {:d}  Indestructible")), item._iAC));
 		else
 			AddPanelString(fmt::format(fmt::runtime(_(/* TRANSLATORS: Dur: is durability */ "armor: {:d}  Dur: {:d}/{:d}")), item._iAC, item._iDurability, item._iMaxDur));
@@ -3984,12 +4004,12 @@ void PrintItemDur(const Item &item)
 
 	if (item._iClass == ICLASS_WEAPON) {
 		if (item._iMinDam == item._iMaxDam) {
-			if (item._iMaxDur == DUR_INDESTRUCTIBLE)
+			if (IsAnyOf(item._iFlags, ItemSpecialEffect::Indestructible))
 				AddPanelString(fmt::format(fmt::runtime(_("damage: {:d}  Indestructible")), item._iMinDam));
 			else
 				AddPanelString(fmt::format(fmt::runtime(_("damage: {:d}  Dur: {:d}/{:d}")), item._iMinDam, item._iDurability, item._iMaxDur));
 		} else {
-			if (item._iMaxDur == DUR_INDESTRUCTIBLE)
+			if (IsAnyOf(item._iFlags, ItemSpecialEffect::Indestructible))
 				AddPanelString(fmt::format(fmt::runtime(_("damage: {:d}-{:d}  Indestructible")), item._iMinDam, item._iMaxDam));
 			else
 				AddPanelString(fmt::format(fmt::runtime(_("damage: {:d}-{:d}  Dur: {:d}/{:d}")), item._iMinDam, item._iMaxDam, item._iDurability, item._iMaxDur));
@@ -4001,7 +4021,7 @@ void PrintItemDur(const Item &item)
 			AddPanelString(_("Not Identified"));
 	}
 	if (item._iClass == ICLASS_ARMOR) {
-		if (item._iMaxDur == DUR_INDESTRUCTIBLE)
+		if (IsAnyOf(item._iFlags, ItemSpecialEffect::Indestructible))
 			AddPanelString(fmt::format(fmt::runtime(_("armor: {:d}  Indestructible")), item._iAC));
 		else
 			AddPanelString(fmt::format(fmt::runtime(_("armor: {:d}  Dur: {:d}/{:d}")), item._iAC, item._iDurability, item._iMaxDur));
@@ -4942,7 +4962,7 @@ bool ApplyOilToItem(Item &item, Player &player)
 		item._iMinDex = std::max(0, item._iMinDex - r);
 		break;
 	case IMISC_OILBSMTH:
-		if (item._iMaxDur == DUR_INDESTRUCTIBLE)
+		if (IsAnyOf(item._iFlags, ItemSpecialEffect::Indestructible))
 			return true;
 		if (item._iDurability < item._iMaxDur) {
 			item._iDurability = (item._iMaxDur + 4) / 5 + item._iDurability;
@@ -4956,13 +4976,14 @@ bool ApplyOilToItem(Item &item, Player &player)
 		}
 		break;
 	case IMISC_OILFORT:
-		if (item._iMaxDur != DUR_INDESTRUCTIBLE && item._iMaxDur < 200) {
+		if (IsNoneOf(item._iFlags, ItemSpecialEffect::Indestructible) && item._iMaxDur < 200) {
 			r = GenerateRnd(41) + 10;
 			item._iMaxDur += r;
 			item._iDurability += r;
 		}
 		break;
 	case IMISC_OILPERM:
+		item._iFlags |= ItemSpecialEffect::Indestructible;
 		item._iDurability = DUR_INDESTRUCTIBLE;
 		item._iMaxDur = DUR_INDESTRUCTIBLE;
 		break;

@@ -514,52 +514,55 @@ bool DamageWeapon(Player &player, unsigned damageFrequency)
 		return false;
 	}
 
-	if (!player.InvBody[INVLOC_HAND_LEFT].isEmpty() && player.InvBody[INVLOC_HAND_LEFT]._iClass == ICLASS_WEAPON) {
-		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability == DUR_INDESTRUCTIBLE) {
+	Item leftHandItem = leftHandItem;
+	Item rightHandItem = rightHandItem;
+
+	if (!leftHandItem.isEmpty() && leftHandItem._iClass == ICLASS_WEAPON) {
+		if (IsAnyOf(leftHandItem._iFlags, ItemSpecialEffect::Indestructible)) {
 			return false;
 		}
 
-		player.InvBody[INVLOC_HAND_LEFT]._iDurability--;
-		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability <= 0) {
+		leftHandItem._iDurability--;
+		if (leftHandItem._iDurability <= 0) {
 			RemoveEquipment(player, INVLOC_HAND_LEFT, true);
 			CalcPlrInv(player, true);
 			return true;
 		}
 	}
 
-	if (!player.InvBody[INVLOC_HAND_RIGHT].isEmpty() && player.InvBody[INVLOC_HAND_RIGHT]._iClass == ICLASS_WEAPON) {
-		if (player.InvBody[INVLOC_HAND_RIGHT]._iDurability == DUR_INDESTRUCTIBLE) {
+	if (!rightHandItem.isEmpty() && rightHandItem._iClass == ICLASS_WEAPON) {
+		if (IsAnyOf(rightHandItem._iFlags, ItemSpecialEffect::Indestructible)) {
 			return false;
 		}
 
-		player.InvBody[INVLOC_HAND_RIGHT]._iDurability--;
-		if (player.InvBody[INVLOC_HAND_RIGHT]._iDurability == 0) {
+		rightHandItem._iDurability--;
+		if (rightHandItem._iDurability <= 0) {
 			RemoveEquipment(player, INVLOC_HAND_RIGHT, true);
 			CalcPlrInv(player, true);
 			return true;
 		}
 	}
 
-	if (player.InvBody[INVLOC_HAND_LEFT].isEmpty() && player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Shield) {
-		if (player.InvBody[INVLOC_HAND_RIGHT]._iDurability == DUR_INDESTRUCTIBLE) {
+	if (leftHandItem.isEmpty() && rightHandItem._itype == ItemType::Shield) {
+		if (IsAnyOf(rightHandItem._iFlags, ItemSpecialEffect::Indestructible)) {
 			return false;
 		}
 
-		player.InvBody[INVLOC_HAND_RIGHT]._iDurability--;
-		if (player.InvBody[INVLOC_HAND_RIGHT]._iDurability == 0) {
+		rightHandItem._iDurability--;
+		if (rightHandItem._iDurability <= 0) {
 			RemoveEquipment(player, INVLOC_HAND_RIGHT, true);
 			CalcPlrInv(player, true);
 			return true;
 		}
 	}
 
-	if (player.InvBody[INVLOC_HAND_RIGHT].isEmpty() && player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Shield) {
-		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability == DUR_INDESTRUCTIBLE) {
+	if (rightHandItem.isEmpty() && leftHandItem._itype == ItemType::Shield) {
+		if (IsAnyOf(leftHandItem._iFlags, ItemSpecialEffect::Indestructible)) {
 			return false;
 		}
 
-		player.InvBody[INVLOC_HAND_LEFT]._iDurability--;
-		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability == 0) {
+		leftHandItem._iDurability--;
+		if (leftHandItem._iDurability <= 0) {
 			RemoveEquipment(player, INVLOC_HAND_LEFT, true);
 			CalcPlrInv(player, true);
 			return true;
@@ -971,26 +974,30 @@ void DamageParryItem(Player &player)
 	if (&player != MyPlayer) {
 		return;
 	}
+	Item leftHandItem = player.InvBody[INVLOC_HAND_LEFT];
+	Item rightHandItem = player.InvBody[INVLOC_HAND_RIGHT];
 
-	if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Shield || player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Staff) {
-		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability == DUR_INDESTRUCTIBLE) {
+	if (leftHandItem._itype == ItemType::Shield || leftHandItem._itype == ItemType::Staff) {
+		if (IsAnyOf(leftHandItem._iFlags, ItemSpecialEffect::Indestructible)) {
 			return;
 		}
 
-		player.InvBody[INVLOC_HAND_LEFT]._iDurability--;
-		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability == 0) {
+		leftHandItem._iDurability--;
+		if (leftHandItem._iDurability <= 0) {
 			RemoveEquipment(player, INVLOC_HAND_LEFT, true);
 			CalcPlrInv(player, true);
 		}
 	}
 
-	if (player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Shield) {
-		if (player.InvBody[INVLOC_HAND_RIGHT]._iDurability != DUR_INDESTRUCTIBLE) {
-			player.InvBody[INVLOC_HAND_RIGHT]._iDurability--;
-			if (player.InvBody[INVLOC_HAND_RIGHT]._iDurability == 0) {
-				RemoveEquipment(player, INVLOC_HAND_RIGHT, true);
-				CalcPlrInv(player, true);
-			}
+	if (rightHandItem._itype == ItemType::Shield) {
+		if (IsAnyOf(rightHandItem._iFlags, ItemSpecialEffect::Indestructible)) {
+			return;
+		}
+
+		rightHandItem._iDurability--;
+		if (rightHandItem._iDurability <= 0) {
+			RemoveEquipment(player, INVLOC_HAND_RIGHT, true);
+			CalcPlrInv(player, true);
 		}
 	}
 }
@@ -1016,30 +1023,33 @@ void DamageArmor(Player &player)
 		return;
 	}
 
-	if (player.InvBody[INVLOC_CHEST].isEmpty() && player.InvBody[INVLOC_HEAD].isEmpty()) {
+	Item chestItem = player.InvBody[INVLOC_CHEST];
+	Item headItem = player.InvBody[INVLOC_HEAD];
+
+	if (chestItem.isEmpty() && headItem.isEmpty()) {
 		return;
 	}
 
 	bool targetHead = FlipCoin(3);
-	if (!player.InvBody[INVLOC_CHEST].isEmpty() && player.InvBody[INVLOC_HEAD].isEmpty()) {
+	if (!chestItem.isEmpty() && headItem.isEmpty()) {
 		targetHead = false;
 	}
-	if (player.InvBody[INVLOC_CHEST].isEmpty() && !player.InvBody[INVLOC_HEAD].isEmpty()) {
+	if (chestItem.isEmpty() && !headItem.isEmpty()) {
 		targetHead = true;
 	}
 
 	Item *pi;
 	if (targetHead) {
-		pi = &player.InvBody[INVLOC_HEAD];
+		pi = &headItem;
 	} else {
-		pi = &player.InvBody[INVLOC_CHEST];
+		pi = &chestItem;
 	}
-	if (pi->_iDurability == DUR_INDESTRUCTIBLE) {
+	if (IsAnyOf(pi->_iFlags, ItemSpecialEffect::Indestructible)) {
 		return;
 	}
 
 	pi->_iDurability--;
-	if (pi->_iDurability != 0) {
+	if (pi->_iDurability > 0) {
 		return;
 	}
 
