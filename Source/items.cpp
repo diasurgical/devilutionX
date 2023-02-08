@@ -870,8 +870,8 @@ int SaveItemPower(const Player &player, Item &item, ItemPower &power)
 		break;
 	case IPL_INDESTRUCTIBLE:
 		item._iFlags |= ItemSpecialEffect::Indestructible;
-		item._iDurability = DUR_INDESTRUCTIBLE;
-		item._iMaxDur = DUR_INDESTRUCTIBLE;
+		item._iDurability = DUR_MAX;
+		item._iMaxDur = DUR_MAX;
 		break;
 	case IPL_LIGHT:
 		item._iPLLight += power.param1;
@@ -4984,8 +4984,8 @@ bool ApplyOilToItem(Item &item, Player &player)
 		break;
 	case IMISC_OILPERM:
 		item._iFlags |= ItemSpecialEffect::Indestructible;
-		item._iDurability = DUR_INDESTRUCTIBLE;
-		item._iMaxDur = DUR_INDESTRUCTIBLE;
+		item._iDurability = DUR_MAX;
+		item._iMaxDur = DUR_MAX;
 		break;
 	case IMISC_OILHARD:
 		if (item._iAC < 60) {

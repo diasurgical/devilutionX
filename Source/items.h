@@ -25,8 +25,8 @@ namespace devilution {
 #define GOLD_MEDIUM_LIMIT 2500
 #define GOLD_MAX_LIMIT 5000
 
-// Item indestructible durability
-#define DUR_INDESTRUCTIBLE 255
+// Item maximum durability
+#define DUR_MAX 255
 
 enum item_quality : uint8_t {
 	ITEM_QUALITY_NORMAL,
