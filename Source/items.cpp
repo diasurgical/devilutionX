@@ -1502,7 +1502,7 @@ void GetUniqueItem(const Player &player, Item &item, _unique_items uid)
 
 void ItemRndDur(Item &item)
 {
-	if (item._iDurability > 0 && IsNoneOf(item._iFlags, ItemSpecialEffect::Indestructible))
+	if (item._iDurability > 0 && HasNoneOf(item._iFlags, ItemSpecialEffect::Indestructible))
 		item._iDurability = GenerateRnd(item._iMaxDur / 2) + (item._iMaxDur / 4) + 1;
 }
 
@@ -2628,14 +2628,14 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 		switch (item._iMagical) {
 		case ITEM_QUALITY_UNIQUE:
 			for (const ItemPower &power : UniqueItems[item._iUid].powers) {
-					if (power.type == IPL_INDESTRUCTIBLE && IsNoneOf(item._iFlags, ItemSpecialEffect::Indestructible)) {
+					if (power.type == IPL_INDESTRUCTIBLE && HasNoneOf(item._iFlags, ItemSpecialEffect::Indestructible)) {
 						item._iFlags |= ItemSpecialEffect::Indestructible;
 					    break;
 					}
 				}
 			break;
 		case ITEM_QUALITY_MAGIC:
-			if (item._iSufPower == IPL_INDESTRUCTIBLE && IsNoneOf(item._iFlags, ItemSpecialEffect::Indestructible)) {
+			if (item._iSufPower == IPL_INDESTRUCTIBLE && HasNoneOf(item._iFlags, ItemSpecialEffect::Indestructible)) {
 				item._iFlags |= ItemSpecialEffect::Indestructible;
 			}
 			break;
@@ -4976,7 +4976,7 @@ bool ApplyOilToItem(Item &item, Player &player)
 		}
 		break;
 	case IMISC_OILFORT:
-		if (IsNoneOf(item._iFlags, ItemSpecialEffect::Indestructible) && item._iMaxDur < 200) {
+		if (HasNoneOf(item._iFlags, ItemSpecialEffect::Indestructible) && item._iMaxDur < 200) {
 			r = GenerateRnd(41) + 10;
 			item._iMaxDur += r;
 			item._iDurability += r;
