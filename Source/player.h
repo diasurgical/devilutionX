@@ -789,7 +789,7 @@ void SetPlrAnims(Player &player);
 void CreatePlayer(Player &player, HeroClass c);
 int CalcStatDiff(Player &player);
 #ifdef _DEBUG
-void NextPlrLevel(Player &player);
+void NextPlrLevel(Player &player, int8_t numLvls = 1);
 #endif
 void AddPlrExperience(Player &player, int lvl, int exp);
 void AddPlrMonstExper(int lvl, int exp, char pmask);

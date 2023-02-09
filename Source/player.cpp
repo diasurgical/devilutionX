@@ -2629,54 +2629,56 @@ int CalcStatDiff(Player &player)
 	return diff;
 }
 
-void NextPlrLevel(Player &player)
+void NextPlrLevel(Player &player, int8_t numLvls /*= 1*/)
 {
-	player._pLevel++;
-	player._pMaxLvl++;
+	for (int8_t i = 0; i < numLvls; i++) {
+		player._pLevel++;
+		player._pMaxLvl++;
 
-	CalcPlrInv(player, true);
+		CalcPlrInv(player, true);
 
-	if (CalcStatDiff(player) < 5) {
-		player._pStatPts = CalcStatDiff(player);
-	} else {
-		player._pStatPts += 5;
+		if (CalcStatDiff(player) < 5) {
+			player._pStatPts = CalcStatDiff(player);
+		} else {
+			player._pStatPts += 5;
+		}
+
+		player._pNextExper = ExpLvlsTbl[player._pLevel];
+
+		int hp = player._pClass == HeroClass::Sorcerer ? (1 << 6) : (2 << 6);
+
+		player._pMaxHP += hp;
+		player._pHitPoints = player._pMaxHP;
+		player._pMaxHPBase += hp;
+		player._pHPBase = player._pMaxHPBase;
+
+		if (&player == MyPlayer) {
+			RedrawComponent(PanelDrawComponent::Health);
+		}
+
+		int mana = 2 << 6;
+		if (player._pClass == HeroClass::Warrior)
+			mana = 1 << 6;
+		else if (player._pClass == HeroClass::Barbarian)
+			mana = 0;
+
+		player._pMaxMana += mana;
+		player._pMaxManaBase += mana;
+
+		if (HasNoneOf(player._pIFlags, ItemSpecialEffect::NoMana)) {
+			player._pMana = player._pMaxMana;
+			player._pManaBase = player._pMaxManaBase;
+		}
+
+		if (&player == MyPlayer) {
+			RedrawComponent(PanelDrawComponent::Mana);
+		}
+
+		if (ControlMode != ControlTypes::KeyboardAndMouse)
+			FocusOnCharInfo();
+
+		CalcPlrInv(player, true);
 	}
-
-	player._pNextExper = ExpLvlsTbl[player._pLevel];
-
-	int hp = player._pClass == HeroClass::Sorcerer ? 64 : 128;
-
-	player._pMaxHP += hp;
-	player._pHitPoints = player._pMaxHP;
-	player._pMaxHPBase += hp;
-	player._pHPBase = player._pMaxHPBase;
-
-	if (&player == MyPlayer) {
-		RedrawComponent(PanelDrawComponent::Health);
-	}
-
-	int mana = 128;
-	if (player._pClass == HeroClass::Warrior)
-		mana = 64;
-	else if (player._pClass == HeroClass::Barbarian)
-		mana = 0;
-
-	player._pMaxMana += mana;
-	player._pMaxManaBase += mana;
-
-	if (HasNoneOf(player._pIFlags, ItemSpecialEffect::NoMana)) {
-		player._pMana = player._pMaxMana;
-		player._pManaBase = player._pMaxManaBase;
-	}
-
-	if (&player == MyPlayer) {
-		RedrawComponent(PanelDrawComponent::Mana);
-	}
-
-	if (ControlMode != ControlTypes::KeyboardAndMouse)
-		FocusOnCharInfo();
-
-	CalcPlrInv(player, true);
 }
 
 void AddPlrExperience(Player &player, int lvl, int exp)
@@ -2687,6 +2689,7 @@ void AddPlrExperience(Player &player, int lvl, int exp)
 
 	// If player level is MaxCharacterLevel, exit the function early and do give experience points
 	if (player._pLevel >= MaxCharacterLevel) {
+		player._pExperience = ExpLvlsTbl[MaxCharacterLevel - 1];
 		return;
 	}
 
@@ -2716,18 +2719,14 @@ void AddPlrExperience(Player &player, int lvl, int exp)
 	}
 
 	// Increase player level if applicable
-	int newLvl = 0;
-	while (player._pExperience >= ExpLvlsTbl[newLvl]) {
+	int8_t newLvl = 0;
+	while (newLvl < MaxCharacterLevel && player._pExperience >= ExpLvlsTbl[newLvl]) {
 		newLvl++;
 	}
-	if (newLvl != player._pLevel) {
-		for (int i = newLvl - player._pLevel; i > 0; i--) {
-			NextPlrLevel(player);
-		}
-	}
 
-	if (player._pLevel >= MaxCharacterLevel) {
-		player._pExperience = ExpLvlsTbl[MaxCharacterLevel - 1];
+	// Level up player if necessary
+	if (newLvl > player._pLevel) {
+		NextPlrLevel(player, newLvl - player._pLevel);
 	}
 
 	NetSendCmdParam1(false, CMD_PLRLEVEL, player._pLevel);

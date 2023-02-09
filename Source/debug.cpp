@@ -530,6 +530,14 @@ std::string DebugCmdLevelUp(const string_view parameter)
 	int levels = std::max(1, atoi(parameter.data()));
 	for (int i = 0; i < levels; i++)
 		NetSendCmd(true, CMD_CHEAT_EXPERIENCE);
+	return "Faster than FireIceTalon!";
+}
+
+std::string DebugCmdGiveExperience(const string_view parameter)
+{
+	int experience = std::max(1, atoi(parameter.data()));
+	Player &myPlayer = *MyPlayer;
+	AddPlrExperience(myPlayer, myPlayer._pLevel, experience);
 	return "New experience leads to new insights.";
 }
 
@@ -1009,7 +1017,8 @@ std::string DebugCmdChangeTRN(const string_view parameter)
 std::vector<DebugCmdItem> DebugCmdList = {
 	{ "help", "Prints help overview or help for a specific command.", "({command})", &DebugCmdHelp },
 	{ "givegold", "Fills the inventory with gold.", "", &DebugCmdGiveGoldCheat },
-	{ "givexp", "Levels the player up (min 1 level or {levels}).", "({levels})", &DebugCmdLevelUp },
+	{ "givelvl", "Levels the player up (min 1 level or {levels}).", "({levels})", &DebugCmdLevelUp },
+	{ "givexp", "Gives experience points (min 1 experience or {exp}).", "({exp})", &DebugCmdGiveExperience },
 	{ "maxstats", "Sets all stat values to maximum.", "", &DebugCmdMaxStats },
 	{ "minstats", "Sets all stat values to minimum.", "", &DebugCmdMinStats },
 	{ "setspells", "Set spell level to {level} for all spells.", "{level}", &DebugCmdSetSpellsLevel },
