@@ -791,7 +791,7 @@ int CalcStatDiff(Player &player);
 #ifdef _DEBUG
 void NextPlrLevel(Player &player);
 #endif
-void AddPlrExperience(Player &player, int lvl, int exp, int debug = false);
+void AddPlrExperience(Player &player, int lvl, int exp, bool debug = false);
 void AddPlrMonstExper(int lvl, int exp, char pmask);
 void ApplyPlrDamage(DamageType damageType, Player &player, int dam, int minHP = 0, int frac = 0, int earflag = 0);
 void InitPlayer(Player &player, bool FirstTime);
