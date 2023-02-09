@@ -2715,11 +2715,9 @@ void AddPlrExperience(Player &player, int lvl, int exp)
 	if (*sgOptions.Gameplay.experienceBar) {
 		RedrawEverything();
 	}
-
-	/* set player level to MaxCharacterLevel if the experience value for MaxCharacterLevel is reached, which exits the function early
-	and does not call NextPlrLevel(), which is responsible for giving Attribute points and Life/Mana on level up */
-	if (player._pExperience >= ExpLvlsTbl[MaxCharacterLevel]) {
-		player._pLevel = MaxCharacterLevel;
+	
+	// If player level is MaxCharacterLevel, exit the function early and do not call NextPlrLevel()
+	if (player._pLevel >= MaxCharacterLevel) {
 		return;
 	}
 
