@@ -1023,8 +1023,8 @@ void DamageArmor(Player &player)
 		return;
 	}
 
-	Item chestItem = player.InvBody[INVLOC_CHEST];
-	Item headItem = player.InvBody[INVLOC_HEAD];
+	Item &chestItem = player.InvBody[INVLOC_CHEST];
+	Item &headItem = player.InvBody[INVLOC_HEAD];
 
 	if (chestItem.isEmpty() && headItem.isEmpty()) {
 		return;
