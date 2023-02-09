@@ -135,6 +135,9 @@ PanelEntry panelEntries[] = {
 	{ N_("Experience"), { TopRightLabelX, 52 }, 99, 91,
 	    []() {
 	        int spacing = ((MyPlayer->_pExperience >= 1000000000) ? 0 : 1);
+	        if (MyPlayer->_pLevel == MaxCharacterLevel) {
+		        return StyledText { UiFlags::ColorWhitegold, FormatInteger(MyPlayer->_pExperience), spacing };
+	        }
 	        return StyledText { UiFlags::ColorWhite, FormatInteger(MyPlayer->_pExperience), spacing };
 	    } },
 	{ N_("Next level"), { TopRightLabelX, 80 }, 99, 198,

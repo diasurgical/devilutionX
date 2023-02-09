@@ -2685,9 +2685,8 @@ void AddPlrExperience(Player &player, int lvl, int exp)
 		return;
 	}
 
-	// exit function early if player is unable to gain more experience by checking final index of ExpLvlsTbl
-	int expLvlsTblSize = sizeof(ExpLvlsTbl) / sizeof(ExpLvlsTbl[0]);
-	if (player._pExperience >= ExpLvlsTbl[expLvlsTblSize - 1]) {
+	// If player level is MaxCharacterLevel, exit the function early and do give experience points
+	if (player._pLevel >= MaxCharacterLevel) {
 		return;
 	}
 
@@ -2716,11 +2715,6 @@ void AddPlrExperience(Player &player, int lvl, int exp)
 		RedrawEverything();
 	}
 
-	// If player level is MaxCharacterLevel, exit the function early and do not call NextPlrLevel()
-	if (player._pLevel >= MaxCharacterLevel) {
-		return;
-	}
-
 	// Increase player level if applicable
 	int newLvl = 0;
 	while (player._pExperience >= ExpLvlsTbl[newLvl]) {
@@ -2730,6 +2724,10 @@ void AddPlrExperience(Player &player, int lvl, int exp)
 		for (int i = newLvl - player._pLevel; i > 0; i--) {
 			NextPlrLevel(player);
 		}
+	}
+
+	if (player._pLevel >= MaxCharacterLevel) {
+		player._pExperience = ExpLvlsTbl[MaxCharacterLevel - 1];
 	}
 
 	NetSendCmdParam1(false, CMD_PLRLEVEL, player._pLevel);
