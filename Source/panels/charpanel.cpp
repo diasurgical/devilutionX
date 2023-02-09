@@ -131,7 +131,12 @@ PanelEntry panelEntries[] = {
 	    []() { return StyledText { UiFlags::ColorWhite, std::string(_(ClassStrTbl[static_cast<std::size_t>(MyPlayer->_pClass)])) }; } },
 
 	{ N_("Level"), { 57, 52 }, 57, 45,
-	    []() { return StyledText { UiFlags::ColorWhite, StrCat(MyPlayer->_pLevel) }; } },
+	    []() {
+	        if (MyPlayer->_pLevel == MaxCharacterLevel) {
+		        return StyledText { UiFlags::ColorWhitegold, StrCat(MyPlayer->_pLevel) };
+	        }
+			return StyledText { UiFlags::ColorWhite, StrCat(MyPlayer->_pLevel) }; 
+		} },
 	{ N_("Experience"), { TopRightLabelX, 52 }, 99, 91,
 	    []() {
 	        int spacing = ((MyPlayer->_pExperience >= 1000000000) ? 0 : 1);
