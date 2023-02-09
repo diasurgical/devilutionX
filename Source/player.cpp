@@ -2642,6 +2642,8 @@ void NextPlrLevel(Player &player)
 	}
 	if (player._pLevel < MaxCharacterLevel)
 		player._pNextExper = ExpLvlsTbl[player._pLevel];
+	else
+		player._pNextExper = ExpLvlsTbl[MaxCharacterLevel - 1];
 
 	int hp = player._pClass == HeroClass::Sorcerer ? 64 : 128;
 
@@ -2813,7 +2815,10 @@ void InitPlayer(Player &player, bool firstTime)
 		player._pAblSpells = GetSpellBitmask(SpellID::Rage);
 	}
 
-	player._pNextExper = ExpLvlsTbl[player._pLevel];
+	int level = player._pLevel;
+	if (player._pLevel >= MaxCharacterLevel)
+		level = MaxCharacterLevel - 1;
+	player._pNextExper = ExpLvlsTbl[level];
 	player._pInvincible = false;
 
 	if (&player == MyPlayer) {
