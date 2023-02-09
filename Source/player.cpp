@@ -2715,7 +2715,7 @@ void AddPlrExperience(Player &player, int lvl, int exp)
 	if (*sgOptions.Gameplay.experienceBar) {
 		RedrawEverything();
 	}
-	
+
 	// If player level is MaxCharacterLevel, exit the function early and do not call NextPlrLevel()
 	if (player._pLevel >= MaxCharacterLevel) {
 		return;
