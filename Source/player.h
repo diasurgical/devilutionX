@@ -846,6 +846,6 @@ extern const int StrengthTbl[enum_size<HeroClass>::value];
 extern const int MagicTbl[enum_size<HeroClass>::value];
 extern const int DexterityTbl[enum_size<HeroClass>::value];
 extern const int VitalityTbl[enum_size<HeroClass>::value];
-extern const uint32_t ExpLvlsTbl[MaxCharacterLevel + 1];
+extern const uint32_t ExpLvlsTbl[MaxCharacterLevel];
 
 } // namespace devilution

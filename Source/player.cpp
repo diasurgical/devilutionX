@@ -111,7 +111,7 @@ const int BlockBonuses[enum_size<HeroClass>::value] = {
 };
 
 /** Specifies the experience point limit of each level. */
-const uint32_t ExpLvlsTbl[MaxCharacterLevel + 1] = {
+const uint32_t ExpLvlsTbl[MaxCharacterLevel] = {
 	0,
 	2000,
 	4620,
@@ -161,8 +161,7 @@ const uint32_t ExpLvlsTbl[MaxCharacterLevel + 1] = {
 	733825617,
 	892680222,
 	1082908612,
-	1310707109,
-	1583495809
+	1310707109
 };
 
 namespace {
@@ -2641,8 +2640,8 @@ void NextPlrLevel(Player &player)
 	} else {
 		player._pStatPts += 5;
 	}
-
-	player._pNextExper = ExpLvlsTbl[player._pLevel];
+	if (player._pLevel < MaxCharacterLevel)
+		player._pNextExper = ExpLvlsTbl[player._pLevel];
 
 	int hp = player._pClass == HeroClass::Sorcerer ? 64 : 128;
 
@@ -2681,19 +2680,14 @@ void NextPlrLevel(Player &player)
 
 void AddPlrExperience(Player &player, int lvl, int exp)
 {
-	if (&player != MyPlayer) {
+	if (&player != MyPlayer || player._pHitPoints <= 0)
+		return;
+	if (player._pLevel > MaxCharacterLevel) {
+		player._pLevel = MaxCharacterLevel;
 		return;
 	}
-
-	// exit function early if player is unable to gain more experience by checking final index of ExpLvlsTbl
-	int expLvlsTblSize = sizeof(ExpLvlsTbl) / sizeof(ExpLvlsTbl[0]);
-	if (player._pExperience >= ExpLvlsTbl[expLvlsTblSize - 1]) {
+	if (player._pLevel == MaxCharacterLevel)
 		return;
-	}
-
-	if (player._pHitPoints <= 0) {
-		return;
-	}
 
 	// Adjust xp based on difference in level between player and monster
 	uint32_t clampedExp = std::max(static_cast<int>(exp * (1 + (lvl - player._pLevel) / 10.0)), 0);
@@ -2707,25 +2701,18 @@ void AddPlrExperience(Player &player, int lvl, int exp)
 		clampedExp = std::min({ clampedExp, /* level 0-5: */ ExpLvlsTbl[clampedPlayerLevel] / 20U, /* level 6-50: */ 200U * clampedPlayerLevel });
 	}
 
-	constexpr uint32_t MaxExperience = 2000000000U;
+	const uint32_t MaxExperience = ExpLvlsTbl[MaxCharacterLevel - 1];
 
-	// Overflow is only possible if a kill grants more than (2^32-1 - MaxExperience) XP in one go, which doesn't happen in normal gameplay
+	// Overflow is only possible if a kill grants more than (2^32-1 - MaxExperience) XP in one go, which doesn't happen in normal gameplay. Clamp to experience required to reach max level
 	player._pExperience = std::min(player._pExperience + clampedExp, MaxExperience);
 
 	if (*sgOptions.Gameplay.experienceBar) {
 		RedrawEverything();
 	}
 
-	/* set player level to MaxCharacterLevel if the experience value for MaxCharacterLevel is reached, which exits the function early
-	and does not call NextPlrLevel(), which is responsible for giving Attribute points and Life/Mana on level up */
-	if (player._pExperience >= ExpLvlsTbl[MaxCharacterLevel - 1]) {
-		player._pLevel = MaxCharacterLevel;
-		return;
-	}
-
 	// Increase player level if applicable
-	int newLvl = 0;
-	while (player._pExperience >= ExpLvlsTbl[newLvl]) {
+	int newLvl = player._pLevel;
+	while (newLvl < MaxCharacterLevel && player._pExperience >= ExpLvlsTbl[newLvl]) {
 		newLvl++;
 	}
 	if (newLvl != player._pLevel) {
