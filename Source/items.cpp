@@ -2628,11 +2628,11 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 		switch (item._iMagical) {
 		case ITEM_QUALITY_UNIQUE:
 			for (const ItemPower &power : UniqueItems[item._iUid].powers) {
-					if (power.type == IPL_INDESTRUCTIBLE && HasNoneOf(item._iFlags, ItemSpecialEffect::Indestructible)) {
-						item._iFlags |= ItemSpecialEffect::Indestructible;
-					    break;
-					}
+				if (power.type == IPL_INDESTRUCTIBLE && HasNoneOf(item._iFlags, ItemSpecialEffect::Indestructible)) {
+					item._iFlags |= ItemSpecialEffect::Indestructible;
+					break;
 				}
+			}
 			break;
 		case ITEM_QUALITY_MAGIC:
 			if (item._iSufPower == IPL_INDESTRUCTIBLE && HasNoneOf(item._iFlags, ItemSpecialEffect::Indestructible)) {
