@@ -647,7 +647,7 @@ void DrawItem(const Surface &out, Point tilePosition, Point targetBufferPosition
 	const ClxSprite sprite = item.AnimInfo.currentSprite();
 	int px = targetBufferPosition.x - CalculateWidth2(sprite.width());
 	const Point position { px, targetBufferPosition.y };
-	if (stextflag == STORE_NONE && (bItem - 1 == pcursitem || AutoMapShowItems)) {
+	if (stextflag == TalkID::None && (bItem - 1 == pcursitem || AutoMapShowItems)) {
 		ClxDrawOutlineSkipColorZero(out, GetOutlineColor(item, false), position, sprite);
 	}
 	ClxDrawLight(out, position, sprite);
@@ -1190,7 +1190,7 @@ void DrawView(const Surface &out, Point startPosition)
 	DrawItemNameLabels(out);
 	DrawFloatingNumbers(out, startPosition, offset);
 
-	if (stextflag != STORE_NONE && !qtextflag)
+	if (stextflag != TalkID::None && !qtextflag)
 		DrawSText(out);
 	if (invflag) {
 		DrawInv(out);

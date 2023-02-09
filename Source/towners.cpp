@@ -343,7 +343,7 @@ void TalkToBarOwner(Player &player, Towner &barOwner)
 	}
 
 	TownerTalk(TEXT_OGDEN1);
-	StartStore(STORE_TAVERN);
+	StartStore(TalkID::Tavern);
 }
 
 void TalkToDeadguy(Player &player, Towner & /*deadguy*/)
@@ -411,7 +411,7 @@ void TalkToBlackSmith(Player &player, Towner &blackSmith)
 	}
 
 	TownerTalk(TEXT_GRISWOLD1);
-	StartStore(STORE_SMITH);
+	StartStore(TalkID::Blacksmith);
 }
 
 void TalkToWitch(Player &player, Towner & /*witch*/)
@@ -464,7 +464,7 @@ void TalkToWitch(Player &player, Towner & /*witch*/)
 	}
 
 	TownerTalk(TEXT_ADRIA1);
-	StartStore(STORE_WITCH);
+	StartStore(TalkID::Witch);
 }
 
 void TalkToBarmaid(Player &player, Towner & /*barmaid*/)
@@ -478,13 +478,13 @@ void TalkToBarmaid(Player &player, Towner & /*barmaid*/)
 	}
 
 	TownerTalk(TEXT_GILLIAN1);
-	StartStore(STORE_BARMAID);
+	StartStore(TalkID::Barmaid);
 }
 
 void TalkToDrunk(Player & /*player*/, Towner & /*drunk*/)
 {
 	TownerTalk(TEXT_FARNHAM1);
-	StartStore(STORE_DRUNK);
+	StartStore(TalkID::Drunk);
 }
 
 void TalkToHealer(Player &player, Towner &healer)
@@ -518,13 +518,13 @@ void TalkToHealer(Player &player, Towner &healer)
 	}
 
 	TownerTalk(TEXT_PEPIN1);
-	StartStore(STORE_HEALER);
+	StartStore(TalkID::Healer);
 }
 
 void TalkToBoy(Player & /*player*/, Towner & /*boy*/)
 {
 	TownerTalk(TEXT_WIRT1);
-	StartStore(STORE_BOY);
+	StartStore(TalkID::Boy);
 }
 
 void TalkToStoryteller(Player &player, Towner & /*storyteller*/)
@@ -560,7 +560,7 @@ void TalkToStoryteller(Player &player, Towner & /*storyteller*/)
 	}
 
 	TownerTalk(TEXT_STORY1);
-	StartStore(STORE_STORY);
+	StartStore(TalkID::Storyteller);
 }
 
 void TalkToCow(Player &player, Towner &cow)

@@ -2014,7 +2014,7 @@ bool UseInvItem(size_t pnum, int cii)
 		return true;
 	if (pcurs != CURSOR_HAND)
 		return true;
-	if (stextflag != STORE_NONE)
+	if (stextflag != TalkID::None)
 		return true;
 	if (cii < INVITEM_INV_FIRST)
 		return false;
