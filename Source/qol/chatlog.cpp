@@ -97,7 +97,7 @@ void ToggleChatLog()
 	if (ChatLogFlag) {
 		ChatLogFlag = false;
 	} else {
-		stextflag = STORE_NONE;
+		stextflag = TalkID::None;
 		CloseInventory();
 		chrflag = false;
 		sbookflag = false;

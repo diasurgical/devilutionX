@@ -91,7 +91,7 @@ void ResetItemlabelHighlighted()
 
 bool IsHighlightingLabelsEnabled()
 {
-	return stextflag == STORE_NONE && altPressed != *sgOptions.Gameplay.showItemLabels;
+	return stextflag == TalkID::None && altPressed != *sgOptions.Gameplay.showItemLabels;
 }
 
 void AddItemToLabelQueue(int id, Point position)
@@ -190,7 +190,7 @@ void DrawItemNameLabels(const Surface &out)
 			if (!gmenu_is_active()
 			    && PauseMode == 0
 			    && !MyPlayerIsDead
-			    && stextflag == STORE_NONE
+			    && stextflag == TalkID::None
 			    && IsMouseOverGameArea()
 			    && LastMouseButtonAction == MouseActionType::None) {
 				isLabelHighlighted = true;
@@ -198,7 +198,7 @@ void DrawItemNameLabels(const Surface &out)
 				pcursitem = label.id;
 			}
 		}
-		if (pcursitem == label.id && stextflag == STORE_NONE)
+		if (pcursitem == label.id && stextflag == TalkID::None)
 			FillRect(clippedOut, label.pos.x, label.pos.y + MarginY, label.width, Height, PAL8_BLUE + 6);
 		else
 			DrawHalfTransparentRectTo(clippedOut, label.pos.x, label.pos.y + MarginY, label.width, Height);
