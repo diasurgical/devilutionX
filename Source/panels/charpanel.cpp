@@ -135,7 +135,7 @@ PanelEntry panelEntries[] = {
 	        if (MyPlayer->_pLevel == MaxCharacterLevel) {
 		        return StyledText { UiFlags::ColorWhitegold, StrCat(MyPlayer->_pLevel) };
 	        }
-			return StyledText { UiFlags::ColorWhite, StrCat(MyPlayer->_pLevel) }; 
+			return StyledText { UiFlags::ColorWhite, StrCat(MyPlayer->_pLevel) };
 		} },
 	{ N_("Experience"), { TopRightLabelX, 52 }, 99, 91,
 	    []() {
