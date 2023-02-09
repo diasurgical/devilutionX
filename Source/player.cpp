@@ -2687,7 +2687,7 @@ void AddPlrExperience(Player &player, int lvl, int exp)
 		return;
 	}
 
-	// If player level is MaxCharacterLevel, exit the function early and do give experience points
+	// If player level is MaxCharacterLevel, exit the function early and do not give experience points
 	if (player._pLevel >= MaxCharacterLevel) {
 		player._pExperience = ExpLvlsTbl[MaxCharacterLevel - 1];
 		return;
@@ -2723,8 +2723,6 @@ void AddPlrExperience(Player &player, int lvl, int exp)
 	while (newLvl < MaxCharacterLevel && player._pExperience >= ExpLvlsTbl[newLvl]) {
 		newLvl++;
 	}
-
-	// Level up player if necessary
 	if (newLvl > player._pLevel) {
 		NextPlrLevel(player, newLvl - player._pLevel);
 	}
