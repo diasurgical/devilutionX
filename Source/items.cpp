@@ -2624,7 +2624,7 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 			}
 		}
 
-		// Creates reserve compatibility, since items with IPL_INDESTRUCTIBLE from older versions/vanilla won't have ItemSpecialEffect::Indestructible
+		// Creates reverse compatibility, since items with IPL_INDESTRUCTIBLE from older versions/vanilla won't have ItemSpecialEffect::Indestructible
 		switch (item._iMagical) {
 		case ITEM_QUALITY_UNIQUE:
 			for (const ItemPower &power : UniqueItems[item._iUid].powers) {
