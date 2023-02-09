@@ -2897,8 +2897,6 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 		}
 	}
 
-
-
 	RedrawComponent(PanelDrawComponent::Mana);
 	RedrawComponent(PanelDrawComponent::Health);
 }
