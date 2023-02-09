@@ -2418,8 +2418,8 @@ void OperateShrineHidden(Player &player)
 			break;
 		}
 		for (auto &item : player.InvBody) {
-			item._iDurability = clamp(item._iDurability, 1, 255);
-			item._iMaxDur = clamp(item._iMaxDur, 1, 255);
+			item._iDurability = clamp(item._iDurability, 1, DUR_MAX);
+			item._iMaxDur = clamp(item._iMaxDur, 1, DUR_MAX);
 		}
 	}
 
