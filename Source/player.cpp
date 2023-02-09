@@ -514,8 +514,8 @@ bool DamageWeapon(Player &player, unsigned damageFrequency)
 		return false;
 	}
 
-	Item leftHandItem = leftHandItem;
-	Item rightHandItem = rightHandItem;
+	Item &leftHandItem = player.InvBody[INVLOC_HAND_LEFT];
+	Item &rightHandItem = player.InvBody[INVLOC_HAND_RIGHT];
 
 	if (!leftHandItem.isEmpty() && leftHandItem._iClass == ICLASS_WEAPON) {
 		if (HasAnyOf(leftHandItem._iFlags, ItemSpecialEffect::Indestructible)) {
@@ -974,8 +974,8 @@ void DamageParryItem(Player &player)
 	if (&player != MyPlayer) {
 		return;
 	}
-	Item leftHandItem = player.InvBody[INVLOC_HAND_LEFT];
-	Item rightHandItem = player.InvBody[INVLOC_HAND_RIGHT];
+	Item &leftHandItem = player.InvBody[INVLOC_HAND_LEFT];
+	Item &rightHandItem = player.InvBody[INVLOC_HAND_RIGHT];
 
 	if (leftHandItem._itype == ItemType::Shield || leftHandItem._itype == ItemType::Staff) {
 		if (HasAnyOf(leftHandItem._iFlags, ItemSpecialEffect::Indestructible)) {
