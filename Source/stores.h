@@ -21,10 +21,10 @@ namespace devilution {
 
 enum class TalkID : uint8_t {
 	None,
-	Blacksmith,
-	BlacksmithBuy,
-	BlacksmithSell,
-	BlacksmithRepair,
+	Smith,
+	SmithBuy,
+	SmithSell,
+	SmithRepair,
 	Witch,
 	WitchBuy,
 	WitchSell,
@@ -40,7 +40,7 @@ enum class TalkID : uint8_t {
 	StorytellerIdentify,
 	SmithPremiumBuy,
 	Gossip,
-	StorytellerShow,
+	StorytellerIdentifyShow,
 	Tavern,
 	Drunk,
 	Barmaid,
