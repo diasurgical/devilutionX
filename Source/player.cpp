@@ -2679,7 +2679,7 @@ void NextPlrLevel(Player &player)
 	CalcPlrInv(player, true);
 }
 
-void AddPlrExperience(Player &player, int lvl, int exp)
+void AddPlrExperience(Player &player, int lvl, int exp, bool debug /*= false*/)
 {
 	if (&player != MyPlayer) {
 		return;
@@ -2699,7 +2699,7 @@ void AddPlrExperience(Player &player, int lvl, int exp)
 	uint32_t clampedExp = std::max(static_cast<int>(exp * (1 + (lvl - player._pLevel) / 10.0)), 0);
 
 	// Prevent power leveling
-	if (gbIsMultiplayer) {
+	if (gbIsMultiplayer && !debug) {
 		const uint32_t clampedPlayerLevel = clamp(static_cast<int>(player._pLevel), 1, MaxCharacterLevel);
 
 		// for low level characters experience gain is capped to 1/20 of current levels xp
