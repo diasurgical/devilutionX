@@ -468,7 +468,7 @@ bool StartSmithPremiumBuy()
 		storenumh++;
 	}
 	if (storenumh == 0) {
-		StartStore(TalkID::Blacksmith);
+		StartStore(TalkID::Smith);
 		stextsel = 14;
 		return false;
 	}
@@ -987,11 +987,11 @@ void StoreConfirm(Item &item)
 	if (stextshold == TalkID::StorytellerIdentify)
 		idprint = false;
 	if (item._iMagical != ITEM_QUALITY_NORMAL && !item._iIdentified) {
-		if (stextshold == TalkID::BlacksmithSell)
+		if (stextshold == TalkID::SmithSell)
 			idprint = false;
 		if (stextshold == TalkID::WitchSell)
 			idprint = false;
-		if (stextshold == TalkID::BlacksmithRepair)
+		if (stextshold == TalkID::SmithRepair)
 			idprint = false;
 		if (stextshold == TalkID::WitchRecharge)
 			idprint = false;
@@ -1016,17 +1016,17 @@ void StoreConfirm(Item &item)
 	case TalkID::HealerBuy:
 	case TalkID::SmithPremiumBuy:
 	case TalkID::WitchBuy:
-	case TalkID::BlacksmithBuy:
+	case TalkID::SmithBuy:
 		prompt = _("Are you sure you want to buy this item?");
 		break;
 	case TalkID::WitchRecharge:
 		prompt = _("Are you sure you want to recharge this item?");
 		break;
-	case TalkID::BlacksmithSell:
+	case TalkID::SmithSell:
 	case TalkID::WitchSell:
 		prompt = _("Are you sure you want to sell this item?");
 		break;
-	case TalkID::BlacksmithRepair:
+	case TalkID::SmithRepair:
 		prompt = _("Are you sure you want to repair this item?");
 		break;
 	default:
@@ -1380,22 +1380,22 @@ void SmithEnter()
 	case 10:
 		talker = TOWN_SMITH;
 		stextlhold = 10;
-		stextshold = TalkID::Blacksmith;
+		stextshold = TalkID::Smith;
 		gossipstart = TEXT_GRISWOLD2;
 		gossipend = TEXT_GRISWOLD13;
 		StartStore(TalkID::Gossip);
 		break;
 	case 12:
-		StartStore(TalkID::BlacksmithBuy);
+		StartStore(TalkID::SmithBuy);
 		break;
 	case 14:
 		StartStore(TalkID::SmithPremiumBuy);
 		break;
 	case 16:
-		StartStore(TalkID::BlacksmithSell);
+		StartStore(TalkID::SmithSell);
 		break;
 	case 18:
-		StartStore(TalkID::BlacksmithRepair);
+		StartStore(TalkID::SmithRepair);
 		break;
 	case 20:
 		stextflag = TalkID::None;
@@ -1427,14 +1427,14 @@ void SmithBuyItem(Item &item)
 void SmithBuyEnter()
 {
 	if (stextsel == BackButtonLine()) {
-		StartStore(TalkID::Blacksmith);
+		StartStore(TalkID::Smith);
 		stextsel = 12;
 		return;
 	}
 
 	stextlhold = stextsel;
 	stextvhold = stextsval;
-	stextshold = TalkID::BlacksmithBuy;
+	stextshold = TalkID::SmithBuy;
 
 	int idx = stextsval + ((stextsel - stextup) / 4);
 	if (!PlayerCanAfford(smithitem[idx]._iIvalue)) {
@@ -1478,7 +1478,7 @@ void SmithBuyPItem(Item &item)
 void SmithPremiumBuyEnter()
 {
 	if (stextsel == BackButtonLine()) {
-		StartStore(TalkID::Blacksmith);
+		StartStore(TalkID::Smith);
 		stextsel = 14;
 		return;
 	}
@@ -1555,13 +1555,13 @@ void StoreSellItem()
 void SmithSellEnter()
 {
 	if (stextsel == BackButtonLine()) {
-		StartStore(TalkID::Blacksmith);
+		StartStore(TalkID::Smith);
 		stextsel = 16;
 		return;
 	}
 
 	stextlhold = stextsel;
-	stextshold = TalkID::BlacksmithSell;
+	stextshold = TalkID::SmithSell;
 	stextvhold = stextsval;
 
 	int idx = stextsval + ((stextsel - stextup) / 4);
@@ -1607,12 +1607,12 @@ void SmithRepairItem(int price)
 void SmithRepairEnter()
 {
 	if (stextsel == BackButtonLine()) {
-		StartStore(TalkID::Blacksmith);
+		StartStore(TalkID::Smith);
 		stextsel = 18;
 		return;
 	}
 
-	stextshold = TalkID::BlacksmithRepair;
+	stextshold = TalkID::SmithRepair;
 	stextlhold = stextsel;
 	stextvhold = stextsval;
 
@@ -1914,14 +1914,14 @@ void ConfirmEnter(Item &item)
 {
 	if (stextsel == 18) {
 		switch (stextshold) {
-		case TalkID::BlacksmithBuy:
+		case TalkID::SmithBuy:
 			SmithBuyItem(item);
 			break;
-		case TalkID::BlacksmithSell:
+		case TalkID::SmithSell:
 		case TalkID::WitchSell:
 			StoreSellItem();
 			break;
-		case TalkID::BlacksmithRepair:
+		case TalkID::SmithRepair:
 			SmithRepairItem(item._iIvalue);
 			break;
 		case TalkID::WitchBuy:
@@ -1938,7 +1938,7 @@ void ConfirmEnter(Item &item)
 			break;
 		case TalkID::StorytellerIdentify:
 			StorytellerIdentifyItem(item);
-			StartStore(TalkID::StorytellerShow);
+			StartStore(TalkID::StorytellerIdentifyShow);
 			return;
 		case TalkID::SmithPremiumBuy:
 			SmithBuyPItem(item);
@@ -2372,10 +2372,10 @@ void StartStore(TalkID s)
 	ClearSText(0, STORE_LINES);
 	ReleaseStoreBtn();
 	switch (s) {
-	case TalkID::Blacksmith:
+	case TalkID::Smith:
 		StartSmith();
 		break;
-	case TalkID::BlacksmithBuy: {
+	case TalkID::SmithBuy: {
 		bool hasAnyItems = false;
 		for (int i = 0; !smithitem[i].isEmpty(); i++) {
 			hasAnyItems = true;
@@ -2384,17 +2384,17 @@ void StartStore(TalkID s)
 		if (hasAnyItems)
 			StartSmithBuy();
 		else {
-			stextflag = TalkID::BlacksmithBuy;
+			stextflag = TalkID::SmithBuy;
 			stextlhold = 12;
 			StoreESC();
 			return;
 		}
 		break;
 	}
-	case TalkID::BlacksmithSell:
+	case TalkID::SmithSell:
 		StartSmithSell();
 		break;
-	case TalkID::BlacksmithRepair:
+	case TalkID::SmithRepair:
 		StartSmithRepair();
 		break;
 	case TalkID::Witch:
@@ -2445,7 +2445,7 @@ void StartStore(TalkID s)
 	case TalkID::Gossip:
 		StartTalk();
 		break;
-	case TalkID::StorytellerShow:
+	case TalkID::StorytellerIdentifyShow:
 		StartStorytellerIdentifyShow(StoreItem);
 		break;
 	case TalkID::Tavern:
@@ -2481,11 +2481,11 @@ void DrawSText(const Surface &out)
 
 	if (stextscrl) {
 		switch (stextflag) {
-		case TalkID::BlacksmithBuy:
+		case TalkID::SmithBuy:
 			ScrollSmithBuy(stextsval);
 			break;
-		case TalkID::BlacksmithSell:
-		case TalkID::BlacksmithRepair:
+		case TalkID::SmithSell:
+		case TalkID::SmithRepair:
 		case TalkID::WitchSell:
 		case TalkID::WitchRecharge:
 		case TalkID::StorytellerIdentify:
@@ -2532,7 +2532,7 @@ void StoreESC()
 	}
 
 	switch (stextflag) {
-	case TalkID::Blacksmith:
+	case TalkID::Smith:
 	case TalkID::Witch:
 	case TalkID::Boy:
 	case TalkID::BoyBuy:
@@ -2547,20 +2547,20 @@ void StoreESC()
 		StartStore(stextshold);
 		stextsel = stextlhold;
 		break;
-	case TalkID::BlacksmithBuy:
-		StartStore(TalkID::Blacksmith);
+	case TalkID::SmithBuy:
+		StartStore(TalkID::Smith);
 		stextsel = 12;
 		break;
 	case TalkID::SmithPremiumBuy:
-		StartStore(TalkID::Blacksmith);
+		StartStore(TalkID::Smith);
 		stextsel = 14;
 		break;
-	case TalkID::BlacksmithSell:
-		StartStore(TalkID::Blacksmith);
+	case TalkID::SmithSell:
+		StartStore(TalkID::Smith);
 		stextsel = 16;
 		break;
-	case TalkID::BlacksmithRepair:
-		StartStore(TalkID::Blacksmith);
+	case TalkID::SmithRepair:
+		StartStore(TalkID::Smith);
 		stextsel = 18;
 		break;
 	case TalkID::WitchBuy:
@@ -2583,7 +2583,7 @@ void StoreESC()
 		StartStore(TalkID::Storyteller);
 		stextsel = 14;
 		break;
-	case TalkID::StorytellerShow:
+	case TalkID::StorytellerIdentifyShow:
 		StartStore(TalkID::StorytellerIdentify);
 		break;
 	case TalkID::NoMoney:
@@ -2726,19 +2726,19 @@ void StoreEnter()
 
 	PlaySFX(IS_TITLSLCT);
 	switch (stextflag) {
-	case TalkID::Blacksmith:
+	case TalkID::Smith:
 		SmithEnter();
 		break;
 	case TalkID::SmithPremiumBuy:
 		SmithPremiumBuyEnter();
 		break;
-	case TalkID::BlacksmithBuy:
+	case TalkID::SmithBuy:
 		SmithBuyEnter();
 		break;
-	case TalkID::BlacksmithSell:
+	case TalkID::SmithSell:
 		SmithSellEnter();
 		break;
-	case TalkID::BlacksmithRepair:
+	case TalkID::SmithRepair:
 		SmithRepairEnter();
 		break;
 	case TalkID::Witch:
@@ -2783,7 +2783,7 @@ void StoreEnter()
 	case TalkID::Gossip:
 		TalkEnter();
 		break;
-	case TalkID::StorytellerShow:
+	case TalkID::StorytellerIdentifyShow:
 		StartStore(TalkID::StorytellerIdentify);
 		break;
 	case TalkID::Drunk:

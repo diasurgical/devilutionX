@@ -411,7 +411,7 @@ void TalkToBlackSmith(Player &player, Towner &blackSmith)
 	}
 
 	TownerTalk(TEXT_GRISWOLD1);
-	StartStore(TalkID::Blacksmith);
+	StartStore(TalkID::Smith);
 }
 
 void TalkToWitch(Player &player, Towner & /*witch*/)
