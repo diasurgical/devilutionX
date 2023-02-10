@@ -171,6 +171,7 @@ set(devilutionx_assets
   levels/towndata/automap.amp
   nlevels/l5data/cornerstone.dun
   nlevels/l5data/uberroom.dun
+  sfx/items/flipsign.wav
   ui_art/diablo.pal
   ui_art/hellfire.pal
   ui_art/creditsw.clx
