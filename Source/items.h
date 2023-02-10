@@ -414,6 +414,8 @@ struct Item {
 		}
 	}
 
+	[[nodiscard]] bool isUsable() const;
+
 	[[nodiscard]] bool keyAttributesMatch(int32_t seed, _item_indexes itemIndex, uint16_t createInfo) const
 	{
 		return _iSeed == seed && IDidx == itemIndex && _iCreateInfo == createInfo;

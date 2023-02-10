@@ -1058,7 +1058,7 @@ bool CanBePlacedOnBelt(const Item &item)
 	return FitsInBeltSlot(item)
 	    && item._itype != ItemType::Gold
 	    && MyPlayer->CanUseItem(item)
-	    && AllItemsList[item.IDidx].iUsable;
+	    && item.isUsable();
 }
 
 void FreeInvGFX()
@@ -1210,7 +1210,7 @@ void DrawInvBelt(const Surface &out)
 
 		DrawItem(myPlayer.SpdList[i], out, position, sprite);
 
-		if (AllItemsList[myPlayer.SpdList[i].IDidx].iUsable
+		if (myPlayer.SpdList[i].isUsable()
 		    && myPlayer.SpdList[i]._itype != ItemType::Gold) {
 			DrawString(out, StrCat(i + 1), { position - Displacement { 0, 12 }, InventorySlotSizeInPixels }, UiFlags::ColorWhite | UiFlags::AlignRight);
 		}
@@ -2082,7 +2082,7 @@ bool UseInvItem(size_t pnum, int cii)
 		}
 	}
 
-	if (!AllItemsList[item->IDidx].iUsable)
+	if (!item->isUsable())
 		return false;
 
 	if (!player.CanUseItem(*item)) {

@@ -4482,6 +4482,11 @@ std::string DebugSpawnUniqueItem(std::string itemName)
 }
 #endif
 
+bool Item::isUsable() const
+{
+	return AllItemsList[IDidx].iUsable;
+}
+
 void Item::setNewAnimation(bool showAnimation)
 {
 	int8_t it = ItemCAnimTbl[_iCurs];
