@@ -467,7 +467,7 @@ bool UseStashItem(uint16_t c)
 		return true;
 	}
 
-	if (!AllItemsList[item->IDidx].iUsable)
+	if (!item->isUsable())
 		return false;
 
 	if (!MyPlayer->CanUseItem(*item)) {
