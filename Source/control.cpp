@@ -38,6 +38,7 @@
 #include "panels/spell_book.hpp"
 #include "panels/spell_icons.hpp"
 #include "panels/spell_list.hpp"
+#include "playerdat.hpp"
 #include "qol/stash.h"
 #include "qol/xpbar.h"
 #include "stores.h"
@@ -1042,7 +1043,7 @@ void DrawInfoBox(const Surface &out)
 			InfoColor = UiFlags::ColorWhitegold;
 			auto &target = Players[pcursplr];
 			InfoString = string_view(target._pName);
-			AddPanelString(fmt::format(fmt::runtime(_("{:s}, Level: {:d}")), _(ClassStrTbl[static_cast<std::size_t>(target._pClass)]), target._pLevel));
+			AddPanelString(fmt::format(fmt::runtime(_("{:s}, Level: {:d}")), _(PlayersData[static_cast<std::size_t>(target._pClass)].className), target._pLevel));
 			AddPanelString(fmt::format(fmt::runtime(_("Hit Points {:d} of {:d}")), target._pHitPoints >> 6, target._pMaxHP >> 6));
 		}
 	}

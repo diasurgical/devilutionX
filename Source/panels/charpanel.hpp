@@ -6,7 +6,6 @@
 namespace devilution {
 
 extern OptionalOwnedClxSpriteList pChrButtons;
-extern const char *const ClassStrTbl[];
 
 void DrawChr(const Surface &);
 void LoadCharPanel();
