@@ -47,90 +47,94 @@ struct PlayerData {
 	uint16_t itmLife;
 	/* Mana from item bonus Magic */
 	uint16_t itmMana;
-	/* Nothing (Idle) frame count */
-	int8_t NFrames;
-	/* Walking frame count */
-	int8_t WFrames;
-	/* Blocking frame count */
-	int8_t BFrames;
-	/* Death frame count */
-	int8_t DFrames;
-	/* Spellcasting frame count */
-	int8_t SFrames;
-	/* Hit Recovery frame count */
-	int8_t HFrames;
-	/* Town Nothing (Idle) frame count */
-	int8_t TNFrames;
-	/* Town Walking frame count */
-	int8_t TWFrames;
-	/* Spellcasting action frame number */
-	int8_t SFNum;
 	/* Class Skill */
 	SpellID skill;
+};
+
+struct PlayerSpriteData {
 	/* Sprite width: Stand */
-	uint8_t swStand;
+	uint8_t stand;
 	/* Sprite width: Walk */
-	uint8_t swWalk;
+	uint8_t walk;
 	/* Sprite width: Attack */
-	uint8_t swAttack;
+	uint8_t attack;
 	/* Sprite width: Attack (Bow) */
-	uint8_t swBow;
+	uint8_t bow;
 	/* Sprite width: Hit Recovery */
 	uint8_t swHit;
 	/* Sprite width: Block */
-	uint8_t swBlock;
+	uint8_t block;
 	/* Sprite width: Cast Lightning Spell */
-	uint8_t swLightning;
+	uint8_t lightning;
 	/* Sprite width: Cast Fire Spell */
-	uint8_t swFire;
+	uint8_t fire;
 	/* Sprite width: Cast Magic Spell */
-	uint8_t swMagic;
+	uint8_t magic;
 	/* Sprite width: Death */
-	uint8_t swDeath;
+	uint8_t death;
 };
 
-struct PlayerAttackAnimData {
+struct PlayerAnimData {
 	/* Unarmed frame count */
-	int8_t AFramesUnarmed;
+	int8_t unarmedFrames;
 	/* Unarmed action frame number */
-	int8_t AFNumUnarmed;
+	int8_t unarmedActionFrame;
 	/* UnarmedShield frame count */
-	int8_t AFramesUnarmedShield;
+	int8_t unarmedShieldFrames;
 	/* UnarmedShield action frame number */
-	int8_t AFNumUnarmedShield;
+	int8_t unarmedShieldActionFrame;
 	/* Sword frame count */
-	int8_t AFramesSword;
+	int8_t swordFrames;
 	/* Sword action frame number */
-	int8_t AFNumSword;
+	int8_t swordActionFrame;
 	/* SwordShield frame count */
-	int8_t AFramesSwordShield;
+	int8_t swordShieldFrames;
 	/* SwordShield action frame number */
-	int8_t AFNumSwordShield;
+	int8_t swordShieldActionFrame;
 	/* Bow frame count */
-	int8_t AFramesBow;
+	int8_t bowFrames;
 	/* Bow action frame number */
-	int8_t AFNumBow;
+	int8_t bowActionFrame;
 	/* Axe frame count */
-	int8_t AFramesAxe;
+	int8_t axeFrames;
 	/* Axe action frame number */
-	int8_t AFNumAxe;
+	int8_t axeActionFrame;
 	/* Mace frame count */
-	int8_t AFramesMace;
+	int8_t maceFrames;
 	/* Mace action frame */
-	int8_t AFNumMace;
+	int8_t maceActionFrame;
 	/* MaceShield frame count */
-	int8_t AFramesMaceShield;
+	int8_t maceShieldFrames;
 	/* MaceShield action frame number */
-	int8_t AFNumMaceShield;
+	int8_t maceShieldActionFrame;
 	/* Staff frame count */
-	int8_t AFramesStaff;
+	int8_t staffFrames;
 	/* Staff action frame number */
-	int8_t AFNumStaff;
+	int8_t staffActionFrame;
+	/* Nothing (Idle) frame count */
+	int8_t idleFrames;
+	/* Walking frame count */
+	int8_t walkingFrames;
+	/* Blocking frame count */
+	int8_t blockingFrames;
+	/* Death frame count */
+	int8_t deathFrames;
+	/* Spellcasting frame count */
+	int8_t castingFrames;
+	/* Hit Recovery frame count */
+	int8_t recoveryFrames;
+	/* Town Nothing (Idle) frame count */
+	int8_t townIdleFrames;
+	/* Town Walking frame count */
+	int8_t townWalkingFrames;
+	/* Spellcasting action frame number */
+	int8_t castingActionFrame;
 };
 
 extern const _sfx_id herosounds[enum_size<HeroClass>::value][enum_size<HeroSpeech>::value];
 extern const uint32_t ExpLvlsTbl[MaxCharacterLevel + 1];
 extern const PlayerData PlayersData[];
-extern const PlayerAttackAnimData PlayersAttackAnimData[];
+extern const PlayerSpriteData PlayersSpriteData[];
+extern const PlayerAnimData PlayersAnimData[];
 
 } // namespace devilution

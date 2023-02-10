@@ -1619,29 +1619,29 @@ PlayerWeaponGraphic GetPlayerWeaponGraphic(player_graphic graphic, PlayerWeaponG
 
 uint16_t GetPlayerSpriteWidth(HeroClass cls, player_graphic graphic, PlayerWeaponGraphic weaponGraphic)
 {
-	PlayerData plrData = PlayersData[static_cast<size_t>(cls)];
+	PlayerSpriteData spriteData = PlayersSpriteData[static_cast<size_t>(cls)];
 
 	switch (graphic) {
 	case player_graphic::Stand:
-		return plrData.swStand;
+		return spriteData.stand;
 	case player_graphic::Walk:
-		return plrData.swWalk;
+		return spriteData.walk;
 	case player_graphic::Attack:
 		if (weaponGraphic == PlayerWeaponGraphic::Bow)
-			return plrData.swBow;
-		return plrData.swAttack;
+			return spriteData.bow;
+		return spriteData.attack;
 	case player_graphic::Hit:
-		return plrData.swHit;
+		return spriteData.swHit;
 	case player_graphic::Block:
-		return plrData.swBlock;
+		return spriteData.block;
 	case player_graphic::Lightning:
-		return plrData.swLightning;
+		return spriteData.lightning;
 	case player_graphic::Fire:
-		return plrData.swFire;
+		return spriteData.fire;
 	case player_graphic::Magic:
-		return plrData.swMagic;
+		return spriteData.magic;
 	case player_graphic::Death:
-		return plrData.swDeath;
+		return spriteData.death;
 	}
 	app_fatal("Invalid player_graphic");
 }
@@ -2225,64 +2225,60 @@ void NewPlrAnim(Player &player, player_graphic graphic, Direction dir, Animation
 void SetPlrAnims(Player &player)
 {
 	HeroClass pc = player._pClass;
-	PlayerData plrData = PlayersData[static_cast<uint8_t>(pc)];
-	PlayerAttackAnimData plrAtkAnimData = PlayersAttackAnimData[static_cast<uint8_t>(pc)];
+	PlayerAnimData plrAtkAnimData = PlayersAnimData[static_cast<uint8_t>(pc)];
 	auto gn = static_cast<PlayerWeaponGraphic>(player._pgfxnum & 0xFU);
 
 	if (leveltype == DTYPE_TOWN) {
-		player._pNFrames = plrData.TNFrames;
-		player._pWFrames = plrData.TWFrames;
-		player._pDFrames = plrData.DFrames;
-		player._pSFrames = plrData.SFrames;
+		player._pNFrames = plrAtkAnimData.townIdleFrames;
+		player._pWFrames = plrAtkAnimData.townWalkingFrames;
 	} else {
-		player._pNFrames = plrData.NFrames;
-		player._pWFrames = plrData.WFrames;
-		player._pHFrames = plrData.HFrames;
-		player._pSFrames = plrData.SFrames;
-		player._pDFrames = plrData.DFrames;
-		player._pBFrames = plrData.BFrames;
+		player._pNFrames = plrAtkAnimData.idleFrames;
+		player._pWFrames = plrAtkAnimData.walkingFrames;
+		player._pHFrames = plrAtkAnimData.recoveryFrames;
+		player._pBFrames = plrAtkAnimData.blockingFrames;
 		switch (gn) {
 		case PlayerWeaponGraphic::Unarmed:
-			player._pAFrames = plrAtkAnimData.AFramesUnarmed;
-			player._pAFNum = plrAtkAnimData.AFNumUnarmed;
+			player._pAFrames = plrAtkAnimData.unarmedFrames;
+			player._pAFNum = plrAtkAnimData.unarmedActionFrame;
 			break;
 		case PlayerWeaponGraphic::UnarmedShield:
-			player._pAFrames = plrAtkAnimData.AFramesUnarmedShield;
-			player._pAFNum = plrAtkAnimData.AFNumUnarmedShield;
+			player._pAFrames = plrAtkAnimData.unarmedShieldFrames;
+			player._pAFNum = plrAtkAnimData.unarmedShieldActionFrame;
 			break;
 		case PlayerWeaponGraphic::Sword:
-			player._pAFrames = plrAtkAnimData.AFramesSword;
-			player._pAFNum = plrAtkAnimData.AFNumSword;
+			player._pAFrames = plrAtkAnimData.swordFrames;
+			player._pAFNum = plrAtkAnimData.swordActionFrame;
 			break;
 		case PlayerWeaponGraphic::SwordShield:
-			player._pAFrames = plrAtkAnimData.AFramesSwordShield;
-			player._pAFNum = plrAtkAnimData.AFNumSwordShield;
+			player._pAFrames = plrAtkAnimData.swordShieldFrames;
+			player._pAFNum = plrAtkAnimData.swordShieldActionFrame;
 			break;
 		case PlayerWeaponGraphic::Bow:
-			player._pAFrames = plrAtkAnimData.AFramesBow;
-			player._pAFNum = plrAtkAnimData.AFNumBow;
+			player._pAFrames = plrAtkAnimData.bowFrames;
+			player._pAFNum = plrAtkAnimData.bowActionFrame;
 			break;
 		case PlayerWeaponGraphic::Axe:
-			player._pAFrames = plrAtkAnimData.AFramesAxe;
-			player._pAFNum = plrAtkAnimData.AFNumAxe;
+			player._pAFrames = plrAtkAnimData.axeFrames;
+			player._pAFNum = plrAtkAnimData.axeActionFrame;
 			break;
 		case PlayerWeaponGraphic::Mace:
-			player._pAFrames = plrAtkAnimData.AFramesMace;
-			player._pAFNum = plrAtkAnimData.AFNumMace;
+			player._pAFrames = plrAtkAnimData.maceFrames;
+			player._pAFNum = plrAtkAnimData.maceActionFrame;
 			break;
 		case PlayerWeaponGraphic::MaceShield:
-			player._pAFrames = plrAtkAnimData.AFramesMaceShield;
-			player._pAFNum = plrAtkAnimData.AFNumMaceShield;
+			player._pAFrames = plrAtkAnimData.maceShieldFrames;
+			player._pAFNum = plrAtkAnimData.maceShieldActionFrame;
 			break;
 		case PlayerWeaponGraphic::Staff:
-			player._pAFrames = plrAtkAnimData.AFramesStaff;
-			player._pAFNum = plrAtkAnimData.AFNumStaff;
-			break;
-		default:
+			player._pAFrames = plrAtkAnimData.staffFrames;
+			player._pAFNum = plrAtkAnimData.staffActionFrame;
 			break;
 		}
 	}
-	player._pSFNum = plrData.SFNum;
+
+	player._pDFrames = plrAtkAnimData.deathFrames;
+	player._pSFrames = plrAtkAnimData.castingFrames;
+	player._pSFNum = plrAtkAnimData.castingActionFrame;
 	int armorGraphicIndex = player._pgfxnum & ~0xFU;
 	if (IsAnyOf(pc, HeroClass::Warrior, HeroClass::Barbarian)) {
 		if (gn == PlayerWeaponGraphic::Bow && leveltype != DTYPE_TOWN)
