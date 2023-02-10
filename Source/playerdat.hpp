@@ -132,7 +132,7 @@ struct PlayerAnimData {
 };
 
 extern const _sfx_id herosounds[enum_size<HeroClass>::value][enum_size<HeroSpeech>::value];
-extern const uint32_t ExpLvlsTbl[MaxCharacterLevel + 1];
+extern const uint32_t ExpLvlsTbl[MaxCharacterLevel];
 extern const PlayerData PlayersData[];
 extern const PlayerSpriteData PlayersSpriteData[];
 extern const PlayerAnimData PlayersAnimData[];
