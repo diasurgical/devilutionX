@@ -54,7 +54,6 @@ enum {
 	// clang-format on
 };
 
-// todo: move to playerdat.hpp?
 enum class HeroClass : uint8_t {
 	Warrior,
 	Rogue,
