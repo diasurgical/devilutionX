@@ -42,6 +42,7 @@ set(libdevilutionx_SRCS
   pack.cpp
   pfile.cpp
   player.cpp
+  playerdat.cpp
   plrmsg.cpp
   portal.cpp
   quests.cpp

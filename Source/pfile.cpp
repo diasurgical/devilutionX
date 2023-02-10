@@ -19,6 +19,7 @@
 #include "menu.h"
 #include "mpq/mpq_common.hpp"
 #include "pack.h"
+#include "playerdat.hpp"
 #include "qol/stash.h"
 #include "utils/endian.hpp"
 #include "utils/file_util.h"
@@ -683,10 +684,10 @@ bool pfile_ui_set_hero_infos(bool (*uiAddHeroInfo)(_uiheroinfo *))
 
 void pfile_ui_set_class_stats(unsigned int playerClass, _uidefaultstats *classStats)
 {
-	classStats->strength = StrengthTbl[playerClass];
-	classStats->magic = MagicTbl[playerClass];
-	classStats->dexterity = DexterityTbl[playerClass];
-	classStats->vitality = VitalityTbl[playerClass];
+	classStats->strength = PlayersData[playerClass].baseStr;
+	classStats->magic = PlayersData[playerClass].baseMag;
+	classStats->dexterity = PlayersData[playerClass].baseDex;
+	classStats->vitality = PlayersData[playerClass].baseVit;
 }
 
 uint32_t pfile_ui_get_first_unused_save_num()

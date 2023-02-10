@@ -36,6 +36,7 @@
 #include "panels/info_box.hpp"
 #include "panels/ui_panels.hpp"
 #include "player.h"
+#include "playerdat.hpp"
 #include "qol/stash.h"
 #include "spells.h"
 #include "stores.h"
@@ -387,6 +388,21 @@ bool IsSuffixValidForItemType(int i, AffixItemType flgs)
 
 int ItemsGetCurrlevel()
 {
+	if (setlevel) {
+		switch (setlvlnum) {
+		case SL_SKELKING:
+			return Quests[Q_SKELKING]._qlevel;
+		case SL_BONECHAMB:
+			return Quests[Q_SCHAMB]._qlevel;
+		case SL_POISONWATER:
+			return Quests[Q_PWATER]._qlevel;
+		case SL_VILEBETRAYER:
+			return Quests[Q_BETRAYER]._qlevel;
+		default:
+			return 1;
+		}
+	}
+
 	if (leveltype == DTYPE_NEST)
 		return currlevel - 8;
 
@@ -613,7 +629,7 @@ void GetBookSpell(Item &item, int lvl)
 		lvl = 5;
 
 	int s = static_cast<int8_t>(SpellID::Firebolt);
-	enum SpellID bs = SpellID::Firebolt;
+	SpellID bs = SpellID::Firebolt;
 	while (rv > 0) {
 		int sLevel = GetSpellBookLevel(static_cast<SpellID>(s));
 		if (sLevel != -1 && lvl >= sLevel) {
@@ -638,15 +654,21 @@ void GetBookSpell(Item &item, int lvl)
 	CopyUtf8(item._iName + iNameLen, spellName, sizeof(item._iName) - iNameLen);
 	CopyUtf8(item._iIName + iINameLen, spellName, sizeof(item._iIName) - iINameLen);
 	item._iSpell = bs;
-	item._iMinMag = GetSpellData(bs).sMinInt;
-	item._ivalue += GetSpellData(bs).sBookCost;
-	item._iIvalue += GetSpellData(bs).sBookCost;
-	if (GetSpellData(bs).sType == MagicType::Fire)
+	const SpellData &spellData = GetSpellData(bs);
+	item._iMinMag = spellData.minInt;
+	item._ivalue += spellData.bookCost();
+	item._iIvalue += spellData.bookCost();
+	switch (spellData.type()) {
+	case MagicType::Fire:
 		item._iCurs = ICURS_BOOK_RED;
-	else if (GetSpellData(bs).sType == MagicType::Lightning)
+		break;
+	case MagicType::Lightning:
 		item._iCurs = ICURS_BOOK_BLUE;
-	else if (GetSpellData(bs).sType == MagicType::Magic)
+		break;
+	case MagicType::Magic:
 		item._iCurs = ICURS_BOOK_GREY;
+		break;
+	}
 }
 
 int RndPL(int param1, int param2)
@@ -1211,7 +1233,7 @@ void GetStaffSpell(const Player &player, Item &item, int lvl, bool onlygood)
 		lvl = 10;
 
 	int s = static_cast<int8_t>(SpellID::Firebolt);
-	enum SpellID bs = SpellID::Null;
+	SpellID bs = SpellID::Null;
 	while (rv > 0) {
 		int sLevel = GetSpellStaffLevel(static_cast<SpellID>(s));
 		if (sLevel != -1 && l >= sLevel) {
@@ -1233,8 +1255,8 @@ void GetStaffSpell(const Player &player, Item &item, int lvl, bool onlygood)
 	item._iCharges = minc + GenerateRnd(maxc);
 	item._iMaxCharges = item._iCharges;
 
-	item._iMinMag = GetSpellData(bs).sMinInt;
-	int v = item._iCharges * GetSpellData(bs).sStaffCost / 5;
+	item._iMinMag = GetSpellData(bs).minInt;
+	int v = item._iCharges * GetSpellData(bs).staffCost() / 5;
 	item._ivalue += v;
 	item._iIvalue += v;
 	GetStaffPower(player, item, lvl, bs, onlygood);
@@ -2509,24 +2531,10 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	player._pFireResist = clamp(fr, 0, MaxResistance);
 	player._pLghtResist = clamp(lr, 0, MaxResistance);
 
-	if (player._pClass == HeroClass::Warrior) {
-		vadd *= 2;
-	} else if (player._pClass == HeroClass::Barbarian) {
-		vadd += vadd;
-		vadd += (vadd / 4);
-	} else if (IsAnyOf(player._pClass, HeroClass::Rogue, HeroClass::Monk, HeroClass::Bard)) {
-		vadd += vadd / 2;
-	}
+	vadd = (vadd * PlayersData[static_cast<size_t>(player._pClass)].itmLife) >> 6;
 	ihp += (vadd << 6); // BUGFIX: blood boil can cause negative shifts here (see line 757)
 
-	if (player._pClass == HeroClass::Sorcerer) {
-		madd *= 2;
-	}
-	if (IsAnyOf(player._pClass, HeroClass::Rogue, HeroClass::Monk)) {
-		madd += madd / 2;
-	} else if (player._pClass == HeroClass::Bard) {
-		madd += (madd / 4) + (madd / 2);
-	}
+	madd = (madd * PlayersData[static_cast<size_t>(player._pClass)].itmMana) >> 6;
 	imana += (madd << 6);
 
 	player._pMaxHP = ihp + player._pMaxHPBase;
@@ -3825,7 +3833,7 @@ void UseItem(size_t pnum, item_misc_id mid, SpellID spl)
 		break;
 	case IMISC_SCROLL:
 	case IMISC_SCROLLT:
-		if (ControlMode == ControlTypes::KeyboardAndMouse && GetSpellData(spl).sTargeted) {
+		if (ControlMode == ControlTypes::KeyboardAndMouse && GetSpellData(spl).isTargeted()) {
 			player._pTSpell = spl;
 			if (&player == MyPlayer)
 				NewCursor(CURSOR_TELEPORT);
@@ -4474,6 +4482,13 @@ std::string DebugSpawnUniqueItem(std::string itemName)
 }
 #endif
 
+bool Item::isUsable() const
+{
+	if (IDidx == IDI_SPECELIX && Quests[Q_MUSHROOM]._qactive != QUEST_DONE)
+		return false;
+	return AllItemsList[IDidx].iUsable;
+}
+
 void Item::setNewAnimation(bool showAnimation)
 {
 	int8_t it = ItemCAnimTbl[_iCurs];
@@ -4498,7 +4513,7 @@ void Item::setNewAnimation(bool showAnimation)
 void Item::updateRequiredStatsCacheForPlayer(const Player &player)
 {
 	if (_itype == ItemType::Misc && _iMiscId == IMISC_BOOK) {
-		_iMinMag = GetSpellData(_iSpell).sMinInt;
+		_iMinMag = GetSpellData(_iSpell).minInt;
 		int8_t spellLevel = player._pSplLvl[static_cast<int8_t>(_iSpell)];
 		while (spellLevel != 0) {
 			_iMinMag += 20 * _iMinMag / 100;

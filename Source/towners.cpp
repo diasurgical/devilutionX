@@ -453,10 +453,7 @@ void TalkToWitch(Player &player, Towner & /*witch*/)
 				if (HasInventoryOrBeltItemWithId(player, IDI_SPECELIX)) {
 					Quests[Q_MUSHROOM]._qactive = QUEST_DONE;
 					NetSendCmdQuest(true, Quests[Q_MUSHROOM]);
-					// Ensure Spectral Elixir is usable after the quest is finished
-					for (Item &item : InventoryAndBeltPlayerItemsRange { player }) {
-						item.updateRequiredStatsCacheForPlayer(player);
-					}
+					InitQTextMsg(TEXT_MUSH12);
 					return;
 				}
 			}
