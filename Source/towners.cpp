@@ -457,6 +457,7 @@ void TalkToWitch(Player &player, Towner & /*witch*/)
 					for (Item &item : InventoryAndBeltPlayerItemsRange { player }) {
 						item.updateRequiredStatsCacheForPlayer(player);
 					}
+					InitQTextMsg(TEXT_MUSH12);
 					return;
 				}
 			}
