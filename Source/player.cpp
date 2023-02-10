@@ -2679,7 +2679,7 @@ void NextPlrLevel(Player &player)
 	CalcPlrInv(player, true);
 }
 
-void AddPlrExperience(Player &player, int lvl, int exp, bool debug /*= false*/)
+void AddPlrExperience(Player &player, int lvl, int exp)
 {
 	if (&player != MyPlayer) {
 		return;
