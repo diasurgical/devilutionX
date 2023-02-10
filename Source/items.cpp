@@ -4484,6 +4484,8 @@ std::string DebugSpawnUniqueItem(std::string itemName)
 
 bool Item::isUsable() const
 {
+	if (IDidx == IDI_SPECELIX && Quests[Q_MUSHROOM]._qactive != QUEST_DONE)
+		return false;
 	return AllItemsList[IDidx].iUsable;
 }
 
