@@ -361,7 +361,7 @@ void ReinitializeTexture()
 	auto quality = StrCat(static_cast<int>(*sgOptions.Graphics.scaleQuality));
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, quality.c_str());
 
-	texture = SDLWrap::CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, gnScreenWidth, gnScreenHeight);
+	texture = SDLWrap::CreateTexture(renderer, SDL_PIXELFORMAT_RGB565, SDL_TEXTUREACCESS_STREAMING, gnScreenWidth, gnScreenHeight);
 }
 
 void ReinitializeIntegerScale()
