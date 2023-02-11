@@ -10,6 +10,11 @@
 #include <memory>
 #include <mutex>
 
+#ifdef PS2
+#include <loadfile.h>
+#include <ps2snd.h>
+#endif
+
 #include <SDL.h>
 
 #include "engine/assets.hpp"
@@ -244,6 +249,31 @@ void snd_init()
 	duplicateSoundsMutex.emplace();
 #else
 	audsrv_set_volume(MAX_VOLUME);
+
+	if (SifLoadModule("host:ps2snd.irx", 0, NULL) < 0) {
+		LogError(LogCategory::Audio, "Failed to initialize audio: ps2snd");
+	}
+
+	if (sceSdInit(0) < 0) {
+		LogError(LogCategory::Audio, "Failed to initialize audio: sceSdInit");
+	}
+
+	///* Setup master volumes for both cores */
+	sceSdSetParam(0 | SD_PARAM_MVOLL, 0x3fff);
+	sceSdSetParam(0 | SD_PARAM_MVOLR, 0x3fff);
+	sceSdSetParam(1 | SD_PARAM_MVOLL, 0x3fff);
+	sceSdSetParam(1 | SD_PARAM_MVOLR, 0x3fff);
+
+	if (sndStreamOpen("host:spawn/music/slvla.adp", SD_VOICE(0,22) | (SD_VOICE(0,23)<<16), STREAM_END_CLOSE, 2097152-1024*32, 1024)<0)
+	{
+		LogError(LogCategory::Audio, "Failed to open stream");
+	}
+
+	if (sndStreamPlay()<0)
+	{
+		LogError(LogCategory::Audio, "Failed to play stream");
+	}
+
 #endif
 	gbSndInited = true;
 }

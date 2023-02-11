@@ -282,7 +282,7 @@ endif()
 
 if(NOT NOSOUND)
   if(PS2)
-    target_link_libraries(libdevilutionx PUBLIC audsrv)
+    target_link_libraries(libdevilutionx PUBLIC audsrv ps2snd)
   else()
     target_link_libraries(libdevilutionx PUBLIC SDL_audiolib::SDL_audiolib)
   endif()
