@@ -1905,7 +1905,7 @@ void OperateLever(Object &object, bool sendmsg)
 		NetSendCmdLoc(MyPlayerId, false, CMD_OPERATEOBJ, object.position);
 }
 
-void OperateBook(Player &player, Object &book)
+void OperateBook(Player &player, Object &book, bool sendmsg)
 {
 	if (book._oSelFlag == 0) {
 		return;
@@ -1943,7 +1943,8 @@ void OperateBook(Player &player, Object &book)
 	book._oSelFlag = 0;
 	book._oAnimFrame++;
 
-	NetSendCmdLoc(MyPlayerId, false, CMD_OPERATEOBJ, book.position);
+	if (sendmsg)
+		NetSendCmdLoc(MyPlayerId, false, CMD_OPERATEOBJ, book.position);
 
 	if (!setlevel) {
 		return;
@@ -1953,7 +1954,10 @@ void OperateBook(Player &player, Object &book)
 		player._pMemSpells |= GetSpellBitmask(SpellID::Guardian);
 		if (player._pSplLvl[static_cast<int8_t>(SpellID::Guardian)] < MaxSpellLevel)
 			player._pSplLvl[static_cast<int8_t>(SpellID::Guardian)]++;
-		Quests[Q_SCHAMB]._qactive = QUEST_DONE;
+		if (sendmsg) {
+			Quests[Q_SCHAMB]._qactive = QUEST_DONE;
+			NetSendCmdQuest(true, Quests[Q_SCHAMB]);
+		}
 		PlaySfxLoc(IS_QUESTDN, book.position);
 		InitDiabloMsg(EMSG_BONECHAMB);
 		AddMissile(
@@ -2021,7 +2025,7 @@ void OperateBookLever(Object &questBook, bool sendmsg)
 	}
 }
 
-void OperateChamberOfBoneBook(Object &questBook)
+void OperateChamberOfBoneBook(Object &questBook, bool sendmsg)
 {
 	if (questBook._oSelFlag == 0 || qtextflag) {
 		return;
@@ -2060,7 +2064,11 @@ void OperateChamberOfBoneBook(Object &questBook)
 		textdef = TEXT_BONER;
 		break;
 	}
-	Quests[Q_SCHAMB]._qmsg = textdef;
+	if (sendmsg) {
+		Quests[Q_SCHAMB]._qmsg = textdef;
+		NetSendCmdQuest(true, Quests[Q_SCHAMB]);
+		NetSendCmdLoc(MyPlayerId, false, CMD_OPERATEOBJ, questBook.position);
+	}
 	InitQTextMsg(textdef);
 }
 
@@ -4394,10 +4402,10 @@ void OperateObject(Player &player, Object &object)
 		OperateLever(object, sendmsg);
 		break;
 	case OBJ_BOOK2L:
-		OperateBook(player, object);
+		OperateBook(player, object, sendmsg);
 		break;
 	case OBJ_BOOK2R:
-		OperateChamberOfBoneBook(object);
+		OperateChamberOfBoneBook(object, sendmsg);
 		break;
 	case OBJ_CHEST1:
 	case OBJ_CHEST2:
@@ -4519,6 +4527,7 @@ void DeltaSyncOpObject(Object &object)
 	case OBJ_BLINDBOOK:
 	case OBJ_BLOODBOOK:
 	case OBJ_STEELTOME:
+	case OBJ_BOOK2R:
 		object._oAnimFrame = object._oVar6;
 		SyncQSTLever(object);
 		break;
