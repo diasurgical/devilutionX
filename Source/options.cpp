@@ -1703,6 +1703,16 @@ void PadmapperOptions::ButtonReleased(ControllerButton button, bool invokeAction
 	buttonToReleaseAction[static_cast<size_t>(button)] = nullptr;
 }
 
+void PadmapperOptions::ReleaseAllActiveButtons()
+{
+	for (auto *action : buttonToReleaseAction) {
+		if (action == nullptr)
+			continue;
+		ControllerButton button = action->boundInput.button;
+		ButtonReleased(button, true);
+	}
+}
+
 bool PadmapperOptions::IsActive(string_view actionName) const
 {
 	for (const Action &action : actions) {

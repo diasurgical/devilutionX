@@ -759,6 +759,7 @@ struct PadmapperOptions : OptionCategoryBase {
 	void CommitActions();
 	void ButtonPressed(ControllerButton button);
 	void ButtonReleased(ControllerButton button, bool invokeAction = true);
+	void ReleaseAllActiveButtons();
 	bool IsActive(string_view actionName) const;
 	string_view ActionNameTriggeredByButtonEvent(ControllerButtonEvent ctrlEvent) const;
 	string_view InputNameForAction(string_view actionName) const;
