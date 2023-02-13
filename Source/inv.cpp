@@ -1925,7 +1925,9 @@ int8_t CheckInvHLight()
 	} else {
 		InfoColor = pi->getTextColor();
 		if (pi->_iIdentified) {
-			InfoString = string_view(pi->_iIName);
+			char itemName[64];
+			CopyUtf8(itemName, GetIdentifiedItemString(*pi).c_str(), 64);
+			InfoString = string_view(itemName);
 			PrintItemDetails(*pi);
 		} else {
 			InfoString = string_view(pi->_iName);

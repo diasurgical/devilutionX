@@ -379,7 +379,9 @@ void ScrollSmithBuy(int idx)
 			UiFlags itemColor = smithitem[idx].getTextColorWithStatCheck();
 
 			if (smithitem[idx]._iMagical != ITEM_QUALITY_NORMAL) {
-				AddSText(20, l, smithitem[idx]._iIName, itemColor, true, smithitem[idx]._iCurs, true);
+				char itemName[64];
+				CopyUtf8(itemName, GetIdentifiedItemString(smithitem[idx]).c_str(), sizeof(itemName));
+				AddSText(20, l, itemName, itemColor, true, smithitem[idx]._iCurs, true);
 			} else {
 				AddSText(20, l, smithitem[idx]._iName, itemColor, true, smithitem[idx]._iCurs, true);
 			}
@@ -444,7 +446,9 @@ void ScrollSmithPremiumBuy(int boughtitems)
 	for (int l = 5; l < 20 && idx < SMITH_PREMIUM_ITEMS; l += 4) {
 		if (!premiumitems[idx].isEmpty()) {
 			UiFlags itemColor = premiumitems[idx].getTextColorWithStatCheck();
-			AddSText(20, l, premiumitems[idx]._iIName, itemColor, true, premiumitems[idx]._iCurs, true);
+			char itemName[64];
+			CopyUtf8(itemName, GetIdentifiedItemString(premiumitems[idx]).c_str(), sizeof(itemName));
+			AddSText(20, l, itemName, itemColor, true, premiumitems[idx]._iCurs, true);
 			AddSTextVal(l, premiumitems[idx]._iIvalue);
 			PrintStoreItem(premiumitems[idx], l + 1, itemColor, true);
 			stextdown = l;
@@ -531,7 +535,9 @@ void ScrollSmithSell(int idx)
 			UiFlags itemColor = storehold[idx].getTextColorWithStatCheck();
 
 			if (storehold[idx]._iMagical != ITEM_QUALITY_NORMAL && storehold[idx]._iIdentified) {
-				AddSText(20, l, storehold[idx]._iIName, itemColor, true, storehold[idx]._iCurs, true);
+				char itemName[64];
+				CopyUtf8(itemName, GetIdentifiedItemString(storehold[idx]).c_str(), sizeof(itemName));
+				AddSText(20, l, itemName, itemColor, true, storehold[idx]._iCurs, true);
 				AddSTextVal(l, storehold[idx]._iIvalue);
 			} else {
 				AddSText(20, l, storehold[idx]._iName, itemColor, true, storehold[idx]._iCurs, true);
@@ -732,7 +738,9 @@ void ScrollWitchBuy(int idx)
 			UiFlags itemColor = witchitem[idx].getTextColorWithStatCheck();
 
 			if (witchitem[idx]._iMagical != ITEM_QUALITY_NORMAL) {
-				AddSText(20, l, witchitem[idx]._iIName, itemColor, true, witchitem[idx]._iCurs, true);
+				char itemName[64];
+				CopyUtf8(itemName, GetIdentifiedItemString(witchitem[idx]).c_str(), sizeof(itemName));
+				AddSText(20, l, itemName, itemColor, true, witchitem[idx]._iCurs, true);
 			} else {
 				AddSText(20, l, witchitem[idx]._iName, itemColor, true, witchitem[idx]._iCurs, true);
 			}
@@ -996,10 +1004,13 @@ void StoreConfirm(Item &item)
 		if (stextshold == TalkID::WitchRecharge)
 			idprint = false;
 	}
-	if (idprint)
-		AddSText(20, 8, item._iIName, itemColor, false);
-	else
+	if (idprint) {
+		char itemName[64];
+		CopyUtf8(itemName, GetIdentifiedItemString(item).c_str(), sizeof(itemName));
+		AddSText(20, 8, itemName, itemColor, false);
+	} else {
 		AddSText(20, 8, item._iName, itemColor, false);
+	}
 
 	AddSTextVal(8, item._iIvalue);
 	PrintStoreItem(item, 9, itemColor);
@@ -1068,10 +1079,13 @@ void SStartBoyBuy()
 	boyitem._iStatFlag = MyPlayer->CanUseItem(boyitem);
 	UiFlags itemColor = boyitem.getTextColorWithStatCheck();
 
-	if (boyitem._iMagical != ITEM_QUALITY_NORMAL)
-		AddSText(20, 10, boyitem._iIName, itemColor, true, boyitem._iCurs, true);
-	else
+	if (boyitem._iMagical != ITEM_QUALITY_NORMAL) {
+		char itemName[64];
+		CopyUtf8(itemName, GetIdentifiedItemString(boyitem).c_str(), sizeof(itemName));
+		AddSText(20, 10, itemName, itemColor, true, boyitem._iCurs, true);
+	} else {
 		AddSText(20, 10, boyitem._iName, itemColor, true, boyitem._iCurs, true);
+	}
 
 	if (gbIsHellfire)
 		AddSTextVal(10, boyitem._iIvalue - (boyitem._iIvalue / 4));
@@ -1288,7 +1302,9 @@ void StartStorytellerIdentifyShow(Item &item)
 	UiFlags itemColor = item.getTextColorWithStatCheck();
 
 	AddSText(0, 7, _("This item is:"), UiFlags::ColorWhite | UiFlags::AlignCenter, false);
-	AddSText(20, 11, item._iIName, itemColor, false);
+	char itemName[64];
+	CopyUtf8(itemName, GetIdentifiedItemString(item).c_str(), sizeof(itemName));
+	AddSText(20, 11, itemName, itemColor, false);
 	PrintStoreItem(item, 12, itemColor);
 	AddSText(0, 18, _("Done"), UiFlags::ColorWhite | UiFlags::AlignCenter, true);
 }

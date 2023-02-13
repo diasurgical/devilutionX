@@ -435,7 +435,9 @@ uint16_t CheckStashHLight(Point mousePosition)
 
 	InfoColor = item.getTextColor();
 	if (item._iIdentified) {
-		InfoString = string_view(item._iIName);
+		char itemName[64];
+		CopyUtf8(itemName, GetIdentifiedItemString(item).c_str(), sizeof(itemName));
+		InfoString = std::string(itemName);
 		PrintItemDetails(item);
 	} else {
 		InfoString = string_view(item._iName);

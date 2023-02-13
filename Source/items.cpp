@@ -3375,14 +3375,36 @@ void GetItemFrm(Item &item)
 		item.AnimInfo.sprites.emplace(*itemanims[it]);
 }
 
+std::string GetIdentifiedItemString(Item &item)
+{
+	if (!*sgOptions.Gameplay.disableAffixNameFix) {
+		return item._iIName;
+	}
+	char itemName[64];
+	CopyUtf8(itemName, item._iIName, 64);
+
+	std::string itemNameString = itemName;
+	if (itemNameString.find("Sturdy") != std::string::npos) {
+		size_t pos = itemNameString.find("Sturdy");
+		itemNameString.replace(pos, 6, "Fine");
+	} else if (itemNameString.find("Burgundy") != std::string::npos) {
+		size_t pos = itemNameString.find("Burgundy");
+		itemNameString.replace(pos, 8, "Crimson");
+	}
+
+	return itemNameString;
+}
+
 void GetItemStr(Item &item)
 {
 	if (item._itype != ItemType::Gold) {
-		if (item._iIdentified)
-			InfoString = string_view(item._iIName);
-		else
+		if (item._iIdentified) {
+			char itemName[64];
+			CopyUtf8(itemName, GetIdentifiedItemString(item).c_str(), sizeof(itemName));
+			InfoString = std::string(itemName);
+		} else {
 			InfoString = string_view(item._iName);
-
+		}
 		InfoColor = item.getTextColor();
 	} else {
 		int nGold = item._ivalue;

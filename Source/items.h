@@ -517,6 +517,7 @@ void DeleteItem(int i);
 void ProcessItems();
 void FreeItemGFX();
 void GetItemFrm(Item &item);
+std::string GetIdentifiedItemString(Item &item);
 void GetItemStr(Item &item);
 void CheckIdentify(Player &player, int cii);
 void DoRepair(Player &player, int cii);

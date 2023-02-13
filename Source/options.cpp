@@ -1068,6 +1068,7 @@ GameplayOptions::GameplayOptions()
               { FloatingNumbers::Random, N_("Random Angles") },
               { FloatingNumbers::Vertical, N_("Vertical Only") },
           })
+    , disableAffixNameFix("Disable Duplicate Affix Names Fix", OptionEntryFlags::None, N_("Disable Duplicate Affix Names Fix"), N_("Disables the fixes to the affixes Fine and Crimson."), false)
 {
 	grabInput.SetValueChangedCallback(OptionGrabInputChanged);
 	experienceBar.SetValueChangedCallback(OptionExperienceBarChanged);
@@ -1109,6 +1110,7 @@ std::vector<OptionEntryBase *> GameplayOptions::GetEntries()
 		&numRejuPotionPickup,
 		&numFullRejuPotionPickup,
 		&enableFloatingNumbers,
+		&disableAffixNameFix,
 	};
 }
 
