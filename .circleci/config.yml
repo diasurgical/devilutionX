@@ -55,6 +55,18 @@ jobs:
       - run: cmake -S. -Bbuild -DM68K_CPU=68040 -DM68K_FPU=hard -DM68K_COMMON="-s -fbbb=- -ffast-math -O2"
       - run: cd build && make -j2
       - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_m68k}
+  ps2:
+    docker:
+      - image: ps2dev/ps2dev:latest
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run: apk --no-cache add git cmake make gmp mpc1 mpfr
+      - run: git clone https://github.com/fjtrujy/ps2_drivers
+      - run: cd ps2_drivers && make clean all install
+      - run: cmake -S. -Bbuild -DCMAKE_TOOLCHAIN_FILE=/usr/local/ps2dev/ps2sdk/ps2dev.cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo
+      - run: cmake --build build -j 2
+      - store_artifacts: {path: ./build/devilutionx.elf, destination: devilutionx.elf}
   vita:
     docker:
       - image: vitasdk/vitasdk
@@ -74,4 +86,5 @@ workflows:
       - switch
       - 3ds
       - amigaos-m68k
+      - ps2
       - vita

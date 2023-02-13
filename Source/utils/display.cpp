@@ -361,7 +361,11 @@ void ReinitializeTexture()
 	auto quality = StrCat(static_cast<int>(*sgOptions.Graphics.scaleQuality));
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, quality.c_str());
 
+#ifndef PS2
 	texture = SDLWrap::CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, gnScreenWidth, gnScreenHeight);
+#else
+	texture = SDLWrap::CreateTexture(renderer, SDL_PIXELFORMAT_ABGR1555, SDL_TEXTUREACCESS_STREAMING, gnScreenWidth, gnScreenHeight);
+#endif
 }
 
 void ReinitializeIntegerScale()

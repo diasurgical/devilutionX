@@ -6,15 +6,19 @@
 
 #include <SmackerDecoder.h>
 
+#ifndef PS2
 #ifndef NOSOUND
 #include "utils/push_aulib_decoder.h"
+#endif
 #endif
 
 #include "engine/assets.hpp"
 #include "engine/dx.h"
 #include "engine/palette.h"
 #include "options.h"
+#ifndef PS2
 #include "utils/aulib.hpp"
+#endif
 #include "utils/display.h"
 #include "utils/log.hpp"
 #include "utils/sdl_compat.h"
@@ -24,11 +28,13 @@
 namespace devilution {
 namespace {
 
+#ifndef PS2
 #ifndef NOSOUND
 std::optional<Aulib::Stream> SVidAudioStream;
 PushAulibDecoder *SVidAudioDecoder;
 std::uint8_t SVidAudioDepth;
 std::unique_ptr<int16_t[]> SVidAudioBuffer;
+#endif
 #endif
 
 uint32_t SVidWidth, SVidHeight;
@@ -109,11 +115,13 @@ void TrySetVideoModeToSVidForSDL1()
 }
 #endif
 
+#ifndef PS2
 #ifndef NOSOUND
 bool HasAudio()
 {
 	return SVidAudioStream && SVidAudioStream->isPlaying();
 }
+#endif
 #endif
 
 bool SVidLoadNextFrame()
@@ -247,6 +255,7 @@ bool SVidPlayBegin(const char *filename, int flags)
 		return false;
 	}
 
+#ifndef PS2
 #ifndef NOSOUND
 	const bool enableAudio = (flags & 0x1000000) == 0;
 
@@ -277,6 +286,7 @@ bool SVidPlayBegin(const char *filename, int flags)
 		}
 	}
 #endif
+#endif
 
 	SVidFrameLength = 1000000.0 / Smacker_GetFrameRate(SVidHandle);
 	Smacker_GetFrameSize(SVidHandle, SVidWidth, SVidHeight);
@@ -285,7 +295,11 @@ bool SVidPlayBegin(const char *filename, int flags)
 	if (renderer != nullptr) {
 		int renderWidth = static_cast<int>(SVidWidth);
 		int renderHeight = static_cast<int>(SVidHeight);
+#ifndef PS2
 		texture = SDLWrap::CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, renderWidth, renderHeight);
+#else
+		texture = SDLWrap::CreateTexture(renderer, SDL_PIXELFORMAT_ABGR1555, SDL_TEXTUREACCESS_STREAMING, renderWidth, renderHeight);
+#endif
 		if (SDL_RenderSetLogicalSize(renderer, renderWidth, renderHeight) <= -1) {
 			ErrSdl();
 		}
@@ -333,6 +347,7 @@ bool SVidPlayContinue()
 		return SVidLoadNextFrame(); // Skip video and audio if the system is to slow
 	}
 
+#ifndef PS2
 #ifndef NOSOUND
 	if (HasAudio()) {
 		std::int16_t *buf = SVidAudioBuffer.get();
@@ -343,6 +358,7 @@ bool SVidPlayContinue()
 			SVidAudioDecoder->PushSamples(reinterpret_cast<const std::uint8_t *>(buf), len);
 		}
 	}
+#endif
 #endif
 
 	if (SDL_GetTicks() * 1000.0 >= SVidFrameEnd) {
@@ -362,12 +378,14 @@ bool SVidPlayContinue()
 
 void SVidPlayEnd()
 {
+#ifndef PS2
 #ifndef NOSOUND
 	if (HasAudio()) {
 		SVidAudioStream = std::nullopt;
 		SVidAudioDecoder = nullptr;
 		SVidAudioBuffer = nullptr;
 	}
+#endif
 #endif
 
 	if (SVidHandle.isValid)
@@ -379,7 +397,11 @@ void SVidPlayEnd()
 
 #ifndef USE_SDL1
 	if (renderer != nullptr) {
+#ifndef PS2
 		texture = SDLWrap::CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, gnScreenWidth, gnScreenHeight);
+#else
+		texture = SDLWrap::CreateTexture(renderer, SDL_PIXELFORMAT_ABGR1555, SDL_TEXTUREACCESS_STREAMING, gnScreenWidth, gnScreenHeight);
+#endif
 		if (renderer != nullptr && SDL_RenderSetLogicalSize(renderer, gnScreenWidth, gnScreenHeight) <= -1) {
 			ErrSdl();
 		}
@@ -394,17 +416,21 @@ void SVidPlayEnd()
 
 void SVidMute()
 {
+#ifndef PS2
 #ifndef NOSOUND
 	if (SVidAudioStream)
 		SVidAudioStream->mute();
+#endif
 #endif
 }
 
 void SVidUnmute()
 {
+#ifndef PS2
 #ifndef NOSOUND
 	if (SVidAudioStream)
 		SVidAudioStream->unmute();
+#endif
 #endif
 }
 
