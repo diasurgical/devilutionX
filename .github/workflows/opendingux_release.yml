@@ -2,12 +2,16 @@ name: OpenDingux Release Build
 
 on:
   release:
-    types: [created]
+    types: [published]
   workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   gcw0:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -18,9 +22,10 @@ jobs:
       run: >
         sudo apt-get update &&
         sudo apt-get install -y curl cmake git squashfs-tools &&
-        curl -L http://od.abstraction.se/opendingux/toolchain/opendingux-gcw0-toolchain.2021-03-10.tar.xz -o gcw0-toolchain.tar.xz &&
+        curl -L https://github.com/OpenDingux/buildroot/releases/download/od-2022.09.22/opendingux-gcw0-toolchain.2022-09-22.tar.xz -o gcw0-toolchain.tar.xz &&
         sudo mkdir -p /opt/gcw0-toolchain && sudo chown -R "${USER}:" /opt/gcw0-toolchain &&
-        tar -C /opt -xf gcw0-toolchain.tar.xz
+        tar -C /opt -xf gcw0-toolchain.tar.xz &&
+        cd /opt/gcw0-toolchain && ./relocate-sdk.sh
 
     - name: Build
       working-directory: ${{github.workspace}}
@@ -37,18 +42,14 @@ jobs:
         path: build-rg350/devilutionx-rg350.opk
 
     - name: Update Release
-      if: ${{ github.event_name == 'release' && github.event.action == 'created' && !env.ACT }}
-      uses: ncipollo/release-action@v1
+      if: ${{ github.event_name == 'release' && !env.ACT }}
+      uses: svenstaro/upload-release-action@v2
       with:
-        artifacts: "build-rg350/devilutionx-rg350.opk"
-        allowUpdates: true
-        omitBody: true
-        omitName: true
-        omitPrereleaseDuringUpdate: true
-        token: ${{ secrets.GITHUB_TOKEN }}
+        file: "build-rg350/devilutionx-rg350.opk"
+        overwrite: true
 
   lepus:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -59,9 +60,10 @@ jobs:
       run: >
         sudo apt update &&
         sudo apt install -y curl cmake git squashfs-tools &&
-        curl -L http://od.abstraction.se/opendingux/toolchain/opendingux-lepus-toolchain.2021-03-11.tar.xz -o lepus-toolchain.tar.xz &&
+        curl -L https://github.com/OpenDingux/buildroot/releases/download/od-2022.09.22/opendingux-lepus-toolchain.2022-09-22.tar.xz -o lepus-toolchain.tar.xz &&
         sudo mkdir -p /opt/lepus-toolchain && sudo chown -R "${USER}:" /opt/lepus-toolchain &&
-        tar -C /opt -xf lepus-toolchain.tar.xz
+        tar -C /opt -xf lepus-toolchain.tar.xz &&
+        cd /opt/lepus-toolchain && ./relocate-sdk.sh
 
     - name: Build
       working-directory: ${{github.workspace}}
@@ -78,12 +80,8 @@ jobs:
         path: build-lepus/devilutionx-lepus.opk
 
     - name: Update Release
-      if: ${{ github.event_name == 'release' && github.event.action == 'created' && !env.ACT }}
-      uses: ncipollo/release-action@v1
+      if: ${{ github.event_name == 'release' && !env.ACT }}
+      uses: svenstaro/upload-release-action@v2
       with:
-        artifacts: "build-lepus/devilutionx-lepus.opk"
-        allowUpdates: true
-        omitBody: true
-        omitName: true
-        omitPrereleaseDuringUpdate: true
-        token: ${{ secrets.GITHUB_TOKEN }}
+        file: "build-lepus/devilutionx-lepus.opk"
+        overwrite: true

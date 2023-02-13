@@ -1127,10 +1127,10 @@ msgstr[1] "Understøttede spillere: {:d}"
 
 #: Source/control.cpp:860 Source/inv.cpp:1998 Source/items.cpp:3480
 #, fuzzy
-msgid "{:d} gold piece"
-msgid_plural "{:d} gold pieces"
-msgstr[0] "Understøttede spillere: {:d}"
-msgstr[1] "Understøttede spillere: {:d}"
+msgid "{:s} gold piece"
+msgid_plural "{:s} gold pieces"
+msgstr[0] "Understøttede spillere: {:s}"
+msgstr[1] "Understøttede spillere: {:s}"
 
 #: Source/control.cpp:863
 #, fuzzy
@@ -1156,8 +1156,8 @@ msgstr "Niveau:"
 
 #. TRANSLATORS: {:d} is a number. Dialog is shown when splitting a stash of Gold.
 #: Source/control.cpp:1040
-msgid "You have {:d} gold piece. How many do you want to remove?"
-msgid_plural "You have {:d} gold pieces. How many do you want to remove?"
+msgid "You have {:s} gold piece. How many do you want to remove?"
+msgid_plural "You have {:s} gold pieces. How many do you want to remove?"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -1216,7 +1216,7 @@ msgstr "Har du lyst til:"
 #: Source/diablo.cpp:821
 #, fuzzy
 #| msgid "Options"
-msgid "Options:\n"
+msgid "Options:"
 msgstr "Indstillinger"
 
 #. TRANSLATORS: Commandline Option
@@ -1283,9 +1283,7 @@ msgstr ""
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:833
-msgid ""
-"\n"
-"Game selection:\n"
+msgid "Game selection:"
 msgstr ""
 
 #. TRANSLATORS: Commandline Option
@@ -1308,15 +1306,11 @@ msgstr "Afslut Hellfire"
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:837
 #, fuzzy
-msgid ""
-"\n"
-"Hellfire options:\n"
+msgid "Hellfire options:"
 msgstr "Indstillinger"
 
 #: Source/diablo.cpp:843
-msgid ""
-"\n"
-"Report bugs at https://github.com/diasurgical/devilutionX/\n"
+msgid "Report bugs at https://github.com/diasurgical/devilutionX/"
 msgstr ""
 
 #: Source/diablo.cpp:955
@@ -4673,7 +4667,7 @@ msgstr ""
 
 #: Source/items.cpp:3746
 #, no-c-format
-msgid "Random 0 - 500% damage"
+msgid "Random 0 - 600% damage"
 msgstr ""
 
 #: Source/items.cpp:3748
@@ -7167,7 +7161,7 @@ msgid_plural "Staff ({:d} charges)"
 msgstr[0] "Understøttede spillere: {:d}"
 msgstr[1] "Understøttede spillere: {:d}"
 
-#. TRANSLATORS: UI constrains, keep short please.
+#. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:164
 #, fuzzy
 #| msgid "Level:"
@@ -7179,24 +7173,24 @@ msgstr "Niveau:"
 msgid "Unusable"
 msgstr ""
 
-#. TRANSLATORS: UI constrains, keep short please.
+#. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:174
 #, fuzzy
 msgid "Heals: {:d} - {:d}"
 msgstr "Understøttede spillere: {:d}"
 
-#. TRANSLATORS: UI constrains, keep short please.
+#. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:176
 #, fuzzy
 msgid "Damage: {:d} - {:d}"
 msgstr "Understøttede spillere: {:d}"
 
-#. TRANSLATORS: UI constrains, keep short please.
+#. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:180
 msgid "Dmg: 1/3 target hp"
 msgstr ""
 
-#. TRANSLATORS: UI constrains, keep short please.
+#. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:182
 #, fuzzy
 msgctxt "spellbook"
@@ -7277,8 +7271,8 @@ msgstr ""
 
 #: Source/qol/itemlabels.cpp:72
 #, fuzzy
-msgid "{:d} gold"
-msgstr "Understøttede spillere: {:d}"
+msgid "{:s} gold"
+msgstr "Understøttede spillere: {:s}"
 
 #: Source/qol/stash.cpp:586
 msgid "How many gold pieces do you want to withdraw?"
@@ -7816,7 +7810,7 @@ msgstr "Køb varer"
 msgid "Leave the shop"
 msgstr "Forlad healers hjem"
 
-msgid "Your gold: {:d}"
+msgid "Your gold: {:s}"
 msgstr ""
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!

@@ -8,15 +8,14 @@
 #include <cstdint>
 
 #include "engine.h"
-#include "engine/cel_sprite.hpp"
+#include "engine/clx_sprite.hpp"
 #include "engine/point.hpp"
-#include "gendung.h"
+#include "levels/gendung.h"
 #include "monster.h"
 #include "objdat.h"
 #include "panels/info_box.hpp"
 #include "textdat.h"
 #include "utils/attributes.h"
-#include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
 
@@ -74,7 +73,7 @@ struct QuestData {
 };
 
 extern bool QuestLogIsOpen;
-extern std::optional<OwnedCelSprite> pQLogCel;
+extern OptionalOwnedClxSpriteList pQLogCel;
 extern DVL_API_FOR_TEST Quest Quests[MAXQUESTS];
 extern Point ReturnLvlPosition;
 extern dungeon_type ReturnLevelType;
@@ -91,7 +90,7 @@ void InitialiseQuestPools(uint32_t seed, Quest quests[]);
 void CheckQuests();
 bool ForceQuests();
 void CheckQuestKill(const Monster &monster, bool sendmsg);
-void DRLG_CheckQuests(int x, int y);
+void DRLG_CheckQuests(Point position);
 void SetReturnLvlPos();
 void GetReturnLvlPos();
 void LoadPWaterPalette();
@@ -104,7 +103,8 @@ void QuestlogUp();
 void QuestlogDown();
 void QuestlogEnter();
 void QuestlogESC();
-void SetMultiQuest(int q, quest_state s, bool log, int v1);
+void SetMultiQuest(int q, quest_state s, bool log, int v1, int v2, int16_t qmsg);
+bool UseMultiplayerQuests();
 
 /* rdata */
 extern QuestData QuestsData[];

@@ -4,15 +4,18 @@
  * Implementation of the screenshot function.
  */
 #include <cstdint>
+#include <fmt/chrono.h>
 #include <fstream>
 
 #include "DiabloUI/diabloui.h"
-#include "dx.h"
-#include "palette.h"
+#include "engine/backbuffer_state.hpp"
+#include "engine/dx.h"
+#include "engine/palette.h"
 #include "utils/file_util.h"
 #include "utils/log.hpp"
 #include "utils/paths.h"
 #include "utils/pcx.hpp"
+#include "utils/str_cat.hpp"
 #include "utils/ui_fwd.h"
 
 namespace devilution {
@@ -53,7 +56,7 @@ bool CaptureHdr(int16_t width, int16_t height, std::ofstream *out)
  */
 bool CapturePal(SDL_Color *palette, std::ofstream *out)
 {
-	BYTE pcxPalette[1 + 256 * 3];
+	uint8_t pcxPalette[1 + 256 * 3];
 
 	pcxPalette[0] = 12;
 	for (int i = 0; i < 256; i++) {
@@ -74,12 +77,12 @@ bool CapturePal(SDL_Color *palette, std::ofstream *out)
 
  * @return Output buffer
  */
-BYTE *CaptureEnc(BYTE *src, BYTE *dst, int width)
+uint8_t *CaptureEnc(uint8_t *src, uint8_t *dst, int width)
 {
 	int rleLength;
 
 	do {
-		BYTE rlePixel = *src;
+		uint8_t rlePixel = *src;
 		src++;
 		rleLength = 1;
 
@@ -110,16 +113,18 @@ BYTE *CaptureEnc(BYTE *src, BYTE *dst, int width)
 
 /**
  * @brief Write the pixel data to the PCX file
- * @param buf Buffer
+ *
+ * @param buf Pixel data
+ * @param out File stream for the PCX file.
  * @return True if successful, else false
  */
 bool CapturePix(const Surface &buf, std::ofstream *out)
 {
 	int width = buf.w();
-	std::unique_ptr<BYTE[]> pBuffer { new BYTE[2 * width] };
-	BYTE *pixels = buf.begin();
+	std::unique_ptr<uint8_t[]> pBuffer { new uint8_t[2 * width] };
+	uint8_t *pixels = buf.begin();
 	for (int height = buf.h(); height > 0; height--) {
-		const BYTE *pBufferEnd = CaptureEnc(pixels, pBuffer.get(), width);
+		const uint8_t *pBufferEnd = CaptureEnc(pixels, pBuffer.get(), width);
 		pixels += buf.pitch();
 		out->write(reinterpret_cast<const char *>(pBuffer.get()), pBufferEnd - pBuffer.get());
 		if (out->fail())
@@ -130,15 +135,16 @@ bool CapturePix(const Surface &buf, std::ofstream *out)
 
 std::ofstream CaptureFile(std::string *dstPath)
 {
-	char filename[sizeof("screen00.PCX") / sizeof(char)];
-	for (int i = 0; i <= 99; ++i) {
-		snprintf(filename, sizeof(filename) / sizeof(char), "screen%02d.PCX", i);
-		*dstPath = paths::PrefPath() + filename;
-		if (!FileExists(dstPath->c_str())) {
-			return std::ofstream(*dstPath, std::ios::binary | std::ios::trunc);
-		}
+	std::time_t tt = std::time(nullptr);
+	std::tm *tm = std::localtime(&tt);
+	std::string filename = fmt::format("Screenshot from {:%Y-%m-%d %H-%M-%S}", *tm);
+	*dstPath = StrCat(paths::PrefPath(), filename, ".pcx");
+	int i = 0;
+	while (FileExists(dstPath->c_str())) {
+		i++;
+		*dstPath = StrCat(paths::PrefPath(), filename, "-", i, ".pcx");
 	}
-	return {};
+	return std::ofstream(*dstPath, std::ios::binary | std::ios::trunc);
 }
 
 /**
@@ -181,7 +187,7 @@ void CaptureScreen()
 
 	if (!success) {
 		Log("Failed to save screenshot at {}", fileName);
-		RemoveFile(fileName);
+		RemoveFile(fileName.c_str());
 	} else {
 		Log("Screenshot saved at {}", fileName);
 	}
@@ -190,7 +196,7 @@ void CaptureScreen()
 		system_palette[i] = palette[i];
 	}
 	palette_update();
-	force_redraw = 255;
+	RedrawEverything();
 }
 
 } // namespace devilution

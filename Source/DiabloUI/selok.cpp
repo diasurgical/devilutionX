@@ -23,7 +23,7 @@ std::vector<std::unique_ptr<UiItemBase>> vecSelOkDialog;
 
 void selok_Free()
 {
-	ArtBackground.Unload();
+	ArtBackground = std::nullopt;
 
 	vecSelOkDialogItems.clear();
 
@@ -43,31 +43,33 @@ void selok_Esc()
 void UiSelOkDialog(const char *title, const char *body, bool background)
 {
 	if (!background) {
-		LoadBackgroundArt("ui_art\\black.pcx");
+		UiLoadBlackBackground();
 	} else {
 		if (!gbIsSpawn) {
-			LoadBackgroundArt("ui_art\\mainmenu.pcx");
+			LoadBackgroundArt("ui_art\\mainmenu");
 		} else {
-			LoadBackgroundArt("ui_art\\swmmenu.pcx");
+			LoadBackgroundArt("ui_art\\swmmenu");
 		}
 	}
 
 	UiAddBackground(&vecSelOkDialog);
 	UiAddLogo(&vecSelOkDialog);
 
+	const Point uiPosition = GetUIRectangle().position;
+
 	if (title != nullptr) {
-		SDL_Rect rect1 = { (Sint16)(PANEL_LEFT + 24), (Sint16)(UI_OFFSET_Y + 161), 590, 35 };
+		SDL_Rect rect1 = { (Sint16)(uiPosition.x + 24), (Sint16)(uiPosition.y + 161), 590, 35 };
 		vecSelOkDialog.push_back(std::make_unique<UiArtText>(title, rect1, UiFlags::AlignCenter | UiFlags::FontSize30 | UiFlags::ColorUiSilver, 3));
 
-		SDL_Rect rect2 = { (Sint16)(PANEL_LEFT + 140), (Sint16)(UI_OFFSET_Y + 210), 560, 168 };
+		SDL_Rect rect2 = { (Sint16)(uiPosition.x + 140), (Sint16)(uiPosition.y + 210), 560, 168 };
 		vecSelOkDialog.push_back(std::make_unique<UiArtText>(dialogText, rect2, UiFlags::FontSize24 | UiFlags::ColorUiSilver));
 	} else {
-		SDL_Rect rect1 = { (Sint16)(PANEL_LEFT + 140), (Sint16)(UI_OFFSET_Y + 197), 560, 168 };
+		SDL_Rect rect1 = { (Sint16)(uiPosition.x + 140), (Sint16)(uiPosition.y + 197), 560, 168 };
 		vecSelOkDialog.push_back(std::make_unique<UiArtText>(dialogText, rect1, UiFlags::FontSize24 | UiFlags::ColorUiSilver));
 	}
 
 	vecSelOkDialogItems.push_back(std::make_unique<UiListItem>(_("OK"), 0));
-	vecSelOkDialog.push_back(std::make_unique<UiList>(vecSelOkDialogItems, 1, PANEL_LEFT + 230, (UI_OFFSET_Y + 390), 180, 35, UiFlags::AlignCenter | UiFlags::FontSize30 | UiFlags::ColorUiGold));
+	vecSelOkDialog.push_back(std::make_unique<UiList>(vecSelOkDialogItems, 1, uiPosition.x + 230, (uiPosition.y + 390), 180, 35, UiFlags::AlignCenter | UiFlags::FontSize30 | UiFlags::ColorUiGold));
 
 	CopyUtf8(dialogText, WordWrapString(body, MESSAGE_WIDTH, GameFont24), sizeof(dialogText));
 

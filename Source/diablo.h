@@ -10,8 +10,8 @@
 #ifdef _DEBUG
 #include "monstdat.h"
 #endif
-#include "gendung.h"
 #include "init.h"
+#include "levels/gendung.h"
 #include "utils/attributes.h"
 #include "utils/endian.hpp"
 
@@ -34,7 +34,7 @@ enum clicktype : int8_t {
 /**
  * @brief Specifices what game logic step is currently executed
  */
-enum class GameLogicStep {
+enum class GameLogicStep : uint8_t {
 	None,
 	ProcessPlayers,
 	ProcessMonsters,
@@ -46,7 +46,7 @@ enum class GameLogicStep {
 	ProcessMissilesTown,
 };
 
-enum class MouseActionType : int {
+enum class MouseActionType : uint8_t {
 	None,
 	Walk,
 	Spell,
@@ -58,33 +58,31 @@ enum class MouseActionType : int {
 	OperateObject,
 };
 
-extern SDL_Window *ghMainWnd;
 extern uint32_t glSeedTbl[NUMLEVELS];
-extern dungeon_type gnLevelTypeTbl[NUMLEVELS];
 extern Point MousePosition;
-extern bool gbRunGame;
+extern DVL_API_FOR_TEST bool gbRunGame;
 extern bool gbRunGameResult;
 extern bool ReturnToMainMenu;
-extern DVL_API_FOR_TEST bool zoomflag;
 extern bool gbProcessPlayers;
-extern bool gbLoadGame;
+extern DVL_API_FOR_TEST bool gbLoadGame;
 extern bool cineflag;
-extern int force_redraw;
 /* These are defined in fonts.h */
 extern void FontsCleanup();
 extern DVL_API_FOR_TEST int PauseMode;
 extern bool gbBard;
 extern bool gbBarbarian;
 /**
- * @brief Don't show Messageboxes or other user-interaction. Needed for UnitTests.
+ * @brief Don't load UI or show Messageboxes or other user-interaction. Needed for UnitTests.
  */
-extern DVL_API_FOR_TEST bool gbQuietMode;
+extern DVL_API_FOR_TEST bool HeadlessMode;
 extern clicktype sgbMouseDown;
 extern uint16_t gnTickDelay;
 extern char gszProductName[64];
 
 extern MouseActionType LastMouseButtonAction;
 
+void InitKeymapActions();
+void SetCursorPos(Point position);
 void FreeGameMem();
 bool StartGame(bool bNewGame, bool bSinglePlayer);
 [[noreturn]] void diablo_quit(int exitStatus);
@@ -95,13 +93,14 @@ bool diablo_is_focused();
 void diablo_focus_pause();
 void diablo_focus_unpause();
 bool PressEscKey();
-void DisableInputWndProc(uint32_t uMsg, int32_t wParam, int32_t lParam);
+void DisableInputEventHandler(const SDL_Event &event, uint16_t modState);
 void LoadGameLevel(bool firstflag, lvl_entry lvldir);
+bool IsDiabloAlive(bool playSFX);
 
 /**
  * @param bStartup Process additional ticks before returning
  */
-void game_loop(bool bStartup);
+bool game_loop(bool bStartup);
 void diablo_color_cyc_logic();
 
 /* rdata */
@@ -119,7 +118,6 @@ struct QuickMessage {
 
 constexpr size_t QUICK_MESSAGE_OPTIONS = 4;
 extern QuickMessage QuickMessages[QUICK_MESSAGE_OPTIONS];
-extern bool gbFriendlyMode;
 /**
  * @brief Specifices what game logic step is currently executed
  */

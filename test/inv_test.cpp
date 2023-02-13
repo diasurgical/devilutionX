@@ -3,15 +3,26 @@
 #include "cursor.h"
 #include "inv.h"
 #include "player.h"
+#include "storm/storm_net.hpp"
 
-using namespace devilution;
+namespace devilution {
+namespace {
+
+class InvTest : public ::testing::Test {
+public:
+	void SetUp() override
+	{
+		Players.resize(1);
+		MyPlayer = &Players[0];
+	}
+};
 
 /* Set up a given item as a spell scroll, allowing for its usage. */
-void set_up_scroll(Item &item, spell_id spell)
+void set_up_scroll(Item &item, SpellID spell)
 {
 	pcurs = CURSOR_HAND;
 	leveltype = DTYPE_CATACOMBS;
-	Players[MyPlayerId]._pRSpell = static_cast<spell_id>(spell);
+	MyPlayer->_pRSpell = static_cast<SpellID>(spell);
 	item._itype = ItemType::Misc;
 	item._iMiscId = IMISC_SCROLL;
 	item._iSpell = spell;
@@ -20,212 +31,257 @@ void set_up_scroll(Item &item, spell_id spell)
 /* Clear the inventory of MyPlayerId. */
 void clear_inventory()
 {
-	for (int i = 0; i < NUM_INV_GRID_ELEM; i++) {
-		Players[MyPlayerId].InvList[i] = {};
-		Players[MyPlayerId].InvGrid[i] = 0;
+	for (int i = 0; i < InventoryGridCells; i++) {
+		MyPlayer->InvList[i] = {};
+		MyPlayer->InvGrid[i] = 0;
 	}
-	Players[MyPlayerId]._pNumInv = 0;
+	MyPlayer->_pNumInv = 0;
 }
 
 // Test that the scroll is used in the inventory in correct conditions
-TEST(Inv, UseScroll_from_inventory)
+TEST_F(InvTest, UseScroll_from_inventory)
 {
-	set_up_scroll(Players[MyPlayerId].InvList[2], SPL_FIREBOLT);
-	Players[MyPlayerId]._pNumInv = 5;
-	EXPECT_TRUE(UseScroll(Players[MyPlayerId]._pRSpell));
+	set_up_scroll(MyPlayer->InvList[2], SpellID::Firebolt);
+	MyPlayer->_pNumInv = 5;
+	EXPECT_TRUE(CanUseScroll(*MyPlayer, SpellID::Firebolt));
 }
 
 // Test that the scroll is used in the belt in correct conditions
-TEST(Inv, UseScroll_from_belt)
+TEST_F(InvTest, UseScroll_from_belt)
 {
-	set_up_scroll(Players[MyPlayerId].SpdList[2], SPL_FIREBOLT);
-	EXPECT_TRUE(UseScroll(Players[MyPlayerId]._pRSpell));
+	set_up_scroll(MyPlayer->SpdList[2], SpellID::Firebolt);
+	EXPECT_TRUE(CanUseScroll(*MyPlayer, SpellID::Firebolt));
 }
 
 // Test that the scroll is not used in the inventory for each invalid condition
-TEST(Inv, UseScroll_from_inventory_invalid_conditions)
+TEST_F(InvTest, UseScroll_from_inventory_invalid_conditions)
 {
 	// Empty the belt to prevent using a scroll from the belt
-	for (int i = 0; i < MAXBELTITEMS; i++) {
-		Players[MyPlayerId].SpdList[i].Clear();
+	for (int i = 0; i < MaxBeltItems; i++) {
+		MyPlayer->SpdList[i].clear();
 	}
 
-	set_up_scroll(Players[MyPlayerId].InvList[2], SPL_FIREBOLT);
-	pcurs = CURSOR_IDENTIFY;
-	EXPECT_FALSE(UseScroll(Players[MyPlayerId]._pRSpell));
+	// Adjust inventory size
+	MyPlayer->_pNumInv = 5;
 
-	set_up_scroll(Players[MyPlayerId].InvList[2], SPL_FIREBOLT);
+	set_up_scroll(MyPlayer->InvList[2], SpellID::Firebolt);
 	leveltype = DTYPE_TOWN;
-	EXPECT_FALSE(UseScroll(Players[MyPlayerId]._pRSpell));
+	EXPECT_FALSE(CanUseScroll(*MyPlayer, SpellID::Firebolt));
 
-	set_up_scroll(Players[MyPlayerId].InvList[2], SPL_FIREBOLT);
-	Players[MyPlayerId]._pRSpell = static_cast<spell_id>(SPL_HEAL);
-	EXPECT_FALSE(UseScroll(Players[MyPlayerId]._pRSpell));
+	set_up_scroll(MyPlayer->InvList[2], SpellID::Firebolt);
+	MyPlayer->_pRSpell = SpellID::Healing;
+	EXPECT_FALSE(CanUseScroll(*MyPlayer, SpellID::Healing));
 
-	set_up_scroll(Players[MyPlayerId].InvList[2], SPL_FIREBOLT);
-	Players[MyPlayerId].InvList[2]._iMiscId = IMISC_STAFF;
-	EXPECT_FALSE(UseScroll(Players[MyPlayerId]._pRSpell));
+	set_up_scroll(MyPlayer->InvList[2], SpellID::Firebolt);
+	MyPlayer->InvList[2]._iMiscId = IMISC_STAFF;
+	EXPECT_FALSE(CanUseScroll(*MyPlayer, SpellID::Firebolt));
 
-	set_up_scroll(Players[MyPlayerId].InvList[2], SPL_FIREBOLT);
-	Players[MyPlayerId].InvList[2].Clear();
-	EXPECT_FALSE(UseScroll(Players[MyPlayerId]._pRSpell));
+	set_up_scroll(MyPlayer->InvList[2], SpellID::Firebolt);
+	MyPlayer->InvList[2].clear();
+	EXPECT_FALSE(CanUseScroll(*MyPlayer, SpellID::Firebolt));
 }
 
 // Test that the scroll is not used in the belt for each invalid condition
-TEST(Inv, UseScroll_from_belt_invalid_conditions)
+TEST_F(InvTest, UseScroll_from_belt_invalid_conditions)
 {
 	// Disable the inventory to prevent using a scroll from the inventory
-	Players[MyPlayerId]._pNumInv = 0;
+	MyPlayer->_pNumInv = 0;
 
-	set_up_scroll(Players[MyPlayerId].SpdList[2], SPL_FIREBOLT);
-	pcurs = CURSOR_IDENTIFY;
-	EXPECT_FALSE(UseScroll(Players[MyPlayerId]._pRSpell));
-
-	set_up_scroll(Players[MyPlayerId].SpdList[2], SPL_FIREBOLT);
+	set_up_scroll(MyPlayer->SpdList[2], SpellID::Firebolt);
 	leveltype = DTYPE_TOWN;
-	EXPECT_FALSE(UseScroll(Players[MyPlayerId]._pRSpell));
+	EXPECT_FALSE(CanUseScroll(*MyPlayer, SpellID::Firebolt));
 
-	set_up_scroll(Players[MyPlayerId].SpdList[2], SPL_FIREBOLT);
-	Players[MyPlayerId]._pRSpell = static_cast<spell_id>(SPL_HEAL);
-	EXPECT_FALSE(UseScroll(Players[MyPlayerId]._pRSpell));
+	set_up_scroll(MyPlayer->SpdList[2], SpellID::Firebolt);
+	MyPlayer->_pRSpell = SpellID::Healing;
+	EXPECT_FALSE(CanUseScroll(*MyPlayer, SpellID::Healing));
 
-	set_up_scroll(Players[MyPlayerId].SpdList[2], SPL_FIREBOLT);
-	Players[MyPlayerId].SpdList[2]._iMiscId = IMISC_STAFF;
-	EXPECT_FALSE(UseScroll(Players[MyPlayerId]._pRSpell));
+	set_up_scroll(MyPlayer->SpdList[2], SpellID::Firebolt);
+	MyPlayer->SpdList[2]._iMiscId = IMISC_STAFF;
+	EXPECT_FALSE(CanUseScroll(*MyPlayer, SpellID::Firebolt));
 
-	set_up_scroll(Players[MyPlayerId].SpdList[2], SPL_FIREBOLT);
-	Players[MyPlayerId].SpdList[2].Clear();
-	EXPECT_FALSE(UseScroll(Players[MyPlayerId]._pRSpell));
+	set_up_scroll(MyPlayer->SpdList[2], SpellID::Firebolt);
+	MyPlayer->SpdList[2].clear();
+	EXPECT_FALSE(CanUseScroll(*MyPlayer, SpellID::Firebolt));
 }
 
 // Test gold calculation
-TEST(Inv, CalculateGold)
+TEST_F(InvTest, CalculateGold)
 {
-	Players[MyPlayerId]._pNumInv = 10;
+	MyPlayer->_pNumInv = 10;
 	// Set up 4 slots of gold in the inventory
-	Players[MyPlayerId].InvList[1]._itype = ItemType::Gold;
-	Players[MyPlayerId].InvList[5]._itype = ItemType::Gold;
-	Players[MyPlayerId].InvList[2]._itype = ItemType::Gold;
-	Players[MyPlayerId].InvList[3]._itype = ItemType::Gold;
+	MyPlayer->InvList[1]._itype = ItemType::Gold;
+	MyPlayer->InvList[5]._itype = ItemType::Gold;
+	MyPlayer->InvList[2]._itype = ItemType::Gold;
+	MyPlayer->InvList[3]._itype = ItemType::Gold;
 	// Set the gold amount to arbitrary values
-	Players[MyPlayerId].InvList[1]._ivalue = 100;
-	Players[MyPlayerId].InvList[5]._ivalue = 200;
-	Players[MyPlayerId].InvList[2]._ivalue = 3;
-	Players[MyPlayerId].InvList[3]._ivalue = 30;
+	MyPlayer->InvList[1]._ivalue = 100;
+	MyPlayer->InvList[5]._ivalue = 200;
+	MyPlayer->InvList[2]._ivalue = 3;
+	MyPlayer->InvList[3]._ivalue = 30;
 
-	EXPECT_EQ(CalculateGold(Players[MyPlayerId]), 333);
+	EXPECT_EQ(CalculateGold(*MyPlayer), 333);
 }
 
 // Test automatic gold placing
-TEST(Inv, GoldAutoPlace)
+TEST_F(InvTest, GoldAutoPlace)
 {
+	SNetInitializeProvider(SELCONN_LOOPBACK, nullptr);
+
 	// Empty the inventory
 	clear_inventory();
 
 	// Put gold into the inventory:
 	// | 1000 | ... | ...
-	Players[MyPlayerId].InvList[0]._itype = ItemType::Gold;
-	Players[MyPlayerId].InvList[0]._ivalue = 1000;
-	Players[MyPlayerId]._pNumInv = 1;
+	MyPlayer->InvList[0]._itype = ItemType::Gold;
+	MyPlayer->InvList[0]._ivalue = 1000;
+	MyPlayer->_pNumInv = 1;
 	// Put (max gold - 100) gold, which is 4900, into the player's hand
-	Players[MyPlayerId].HoldItem._itype = ItemType::Gold;
-	Players[MyPlayerId].HoldItem._ivalue = GOLD_MAX_LIMIT - 100;
+	MyPlayer->HoldItem._itype = ItemType::Gold;
+	MyPlayer->HoldItem._ivalue = GOLD_MAX_LIMIT - 100;
 
-	GoldAutoPlace(Players[MyPlayerId], Players[MyPlayerId].HoldItem);
+	GoldAutoPlace(*MyPlayer, MyPlayer->HoldItem);
 	// We expect the inventory:
 	// | 5000 | 900 | ...
-	EXPECT_EQ(Players[MyPlayerId].InvList[0]._ivalue, GOLD_MAX_LIMIT);
-	EXPECT_EQ(Players[MyPlayerId].InvList[1]._ivalue, 900);
+	EXPECT_EQ(MyPlayer->InvList[0]._ivalue, GOLD_MAX_LIMIT);
+	EXPECT_EQ(MyPlayer->InvList[1]._ivalue, 900);
 }
 
 // Test removing an item from inventory with no other items.
-TEST(Inv, RemoveInvItem)
+TEST_F(InvTest, RemoveInvItem)
 {
+	SNetInitializeProvider(SELCONN_LOOPBACK, nullptr);
+
 	clear_inventory();
 	// Put a two-slot misc item into the inventory:
 	// | (item) | (item) | ... | ...
-	Players[MyPlayerId]._pNumInv = 1;
-	Players[MyPlayerId].InvGrid[0] = 1;
-	Players[MyPlayerId].InvGrid[1] = -1;
-	Players[MyPlayerId].InvList[0]._itype = ItemType::Misc;
+	MyPlayer->_pNumInv = 1;
+	MyPlayer->InvGrid[0] = 1;
+	MyPlayer->InvGrid[1] = -1;
+	MyPlayer->InvList[0]._itype = ItemType::Misc;
 
-	Players[MyPlayerId].RemoveInvItem(0);
-	EXPECT_EQ(Players[MyPlayerId].InvGrid[0], 0);
-	EXPECT_EQ(Players[MyPlayerId].InvGrid[1], 0);
-	EXPECT_EQ(Players[MyPlayerId]._pNumInv, 0);
+	MyPlayer->RemoveInvItem(0);
+	EXPECT_EQ(MyPlayer->InvGrid[0], 0);
+	EXPECT_EQ(MyPlayer->InvGrid[1], 0);
+	EXPECT_EQ(MyPlayer->_pNumInv, 0);
 }
 
 // Test removing an item from inventory with other items in it.
-TEST(Inv, RemoveInvItem_other_item)
+TEST_F(InvTest, RemoveInvItem_other_item)
 {
+	SNetInitializeProvider(SELCONN_LOOPBACK, nullptr);
+
 	clear_inventory();
 	// Put a two-slot misc item and a ring into the inventory:
 	// | (item) | (item) | (ring) | ...
-	Players[MyPlayerId]._pNumInv = 2;
-	Players[MyPlayerId].InvGrid[0] = 1;
-	Players[MyPlayerId].InvGrid[1] = -1;
-	Players[MyPlayerId].InvList[0]._itype = ItemType::Misc;
+	MyPlayer->_pNumInv = 2;
+	MyPlayer->InvGrid[0] = 1;
+	MyPlayer->InvGrid[1] = -1;
+	MyPlayer->InvList[0]._itype = ItemType::Misc;
 
-	Players[MyPlayerId].InvGrid[2] = 2;
-	Players[MyPlayerId].InvList[1]._itype = ItemType::Ring;
+	MyPlayer->InvGrid[2] = 2;
+	MyPlayer->InvList[1]._itype = ItemType::Ring;
 
-	Players[MyPlayerId].RemoveInvItem(0);
-	EXPECT_EQ(Players[MyPlayerId].InvGrid[0], 0);
-	EXPECT_EQ(Players[MyPlayerId].InvGrid[1], 0);
-	EXPECT_EQ(Players[MyPlayerId].InvGrid[2], 1);
-	EXPECT_EQ(Players[MyPlayerId].InvList[0]._itype, ItemType::Ring);
-	EXPECT_EQ(Players[MyPlayerId]._pNumInv, 1);
+	MyPlayer->RemoveInvItem(0);
+	EXPECT_EQ(MyPlayer->InvGrid[0], 0);
+	EXPECT_EQ(MyPlayer->InvGrid[1], 0);
+	EXPECT_EQ(MyPlayer->InvGrid[2], 1);
+	EXPECT_EQ(MyPlayer->InvList[0]._itype, ItemType::Ring);
+	EXPECT_EQ(MyPlayer->_pNumInv, 1);
 }
 
 // Test removing an item from the belt
-TEST(Inv, RemoveSpdBarItem)
+TEST_F(InvTest, RemoveSpdBarItem)
 {
+	SNetInitializeProvider(SELCONN_LOOPBACK, nullptr);
+
 	// Clear the belt
-	for (int i = 0; i < MAXBELTITEMS; i++) {
-		Players[MyPlayerId].SpdList[i].Clear();
+	for (int i = 0; i < MaxBeltItems; i++) {
+		MyPlayer->SpdList[i].clear();
 	}
 	// Put an item in the belt: | x | x | item | x | x | x | x | x |
-	Players[MyPlayerId].SpdList[3]._itype = ItemType::Misc;
+	MyPlayer->SpdList[3]._itype = ItemType::Misc;
 
-	Players[MyPlayerId].RemoveSpdBarItem(3);
-	EXPECT_TRUE(Players[MyPlayerId].SpdList[3].isEmpty());
+	MyPlayer->RemoveSpdBarItem(3);
+	EXPECT_TRUE(MyPlayer->SpdList[3].isEmpty());
 }
 
 // Test removing a scroll from the inventory
-TEST(Inv, RemoveScroll_inventory)
+TEST_F(InvTest, RemoveCurrentSpellScrollFromInventory)
 {
 	clear_inventory();
 
 	// Put a firebolt scroll into the inventory
-	Players[MyPlayerId]._pNumInv = 1;
-	Players[MyPlayerId]._pSpell = static_cast<spell_id>(SPL_FIREBOLT);
-	Players[MyPlayerId].InvList[0]._itype = ItemType::Misc;
-	Players[MyPlayerId].InvList[0]._iMiscId = IMISC_SCROLL;
-	Players[MyPlayerId].InvList[0]._iSpell = SPL_FIREBOLT;
+	MyPlayer->_pNumInv = 1;
+	MyPlayer->executedSpell.spellId = SpellID::Firebolt;
+	MyPlayer->executedSpell.spellFrom = INVITEM_INV_FIRST;
+	MyPlayer->InvList[0]._itype = ItemType::Misc;
+	MyPlayer->InvList[0]._iMiscId = IMISC_SCROLL;
+	MyPlayer->InvList[0]._iSpell = SpellID::Firebolt;
 
-	RemoveScroll(Players[MyPlayerId]);
-	EXPECT_EQ(Players[MyPlayerId].InvGrid[0], 0);
-	EXPECT_EQ(Players[MyPlayerId]._pNumInv, 0);
+	ConsumeScroll(*MyPlayer);
+	EXPECT_EQ(MyPlayer->InvGrid[0], 0);
+	EXPECT_EQ(MyPlayer->_pNumInv, 0);
+}
+
+// Test removing the first matching scroll from inventory
+TEST_F(InvTest, RemoveCurrentSpellScrollFromInventoryFirstMatch)
+{
+	clear_inventory();
+
+	// Put a firebolt scroll into the inventory
+	MyPlayer->_pNumInv = 1;
+	MyPlayer->executedSpell.spellId = SpellID::Firebolt;
+	MyPlayer->executedSpell.spellFrom = 0; // any matching scroll
+	MyPlayer->InvList[0]._itype = ItemType::Misc;
+	MyPlayer->InvList[0]._iMiscId = IMISC_SCROLL;
+	MyPlayer->InvList[0]._iSpell = SpellID::Firebolt;
+
+	ConsumeScroll(*MyPlayer);
+	EXPECT_EQ(MyPlayer->InvGrid[0], 0);
+	EXPECT_EQ(MyPlayer->_pNumInv, 0);
 }
 
 // Test removing a scroll from the belt
-TEST(Inv, RemoveScroll_belt)
+TEST_F(InvTest, RemoveCurrentSpellScroll_belt)
 {
+	SNetInitializeProvider(SELCONN_LOOPBACK, nullptr);
+
 	// Clear the belt
-	for (int i = 0; i < MAXBELTITEMS; i++) {
-		Players[MyPlayerId].SpdList[i].Clear();
+	for (int i = 0; i < MaxBeltItems; i++) {
+		MyPlayer->SpdList[i].clear();
 	}
 	// Put a firebolt scroll into the belt
-	Players[MyPlayerId]._pSpell = static_cast<spell_id>(SPL_FIREBOLT);
-	Players[MyPlayerId].SpdList[3]._itype = ItemType::Misc;
-	Players[MyPlayerId].SpdList[3]._iMiscId = IMISC_SCROLL;
-	Players[MyPlayerId].SpdList[3]._iSpell = SPL_FIREBOLT;
+	MyPlayer->executedSpell.spellId = SpellID::Firebolt;
+	MyPlayer->executedSpell.spellFrom = INVITEM_BELT_FIRST + 3;
+	MyPlayer->SpdList[3]._itype = ItemType::Misc;
+	MyPlayer->SpdList[3]._iMiscId = IMISC_SCROLL;
+	MyPlayer->SpdList[3]._iSpell = SpellID::Firebolt;
 
-	RemoveScroll(Players[MyPlayerId]);
-	EXPECT_TRUE(Players[MyPlayerId].SpdList[3].isEmpty());
+	ConsumeScroll(*MyPlayer);
+	EXPECT_TRUE(MyPlayer->SpdList[3].isEmpty());
 }
 
-TEST(Inv, ItemSize)
+// Test removing the first matching scroll from the belt
+TEST_F(InvTest, RemoveCurrentSpellScrollFirstMatchFromBelt)
+{
+	SNetInitializeProvider(SELCONN_LOOPBACK, nullptr);
+
+	// Clear the belt
+	for (int i = 0; i < MaxBeltItems; i++) {
+		MyPlayer->SpdList[i].clear();
+	}
+	// Put a firebolt scroll into the belt
+	MyPlayer->executedSpell.spellId = SpellID::Firebolt;
+	MyPlayer->executedSpell.spellFrom = 0; // any matching scroll
+	MyPlayer->SpdList[3]._itype = ItemType::Misc;
+	MyPlayer->SpdList[3]._iMiscId = IMISC_SCROLL;
+	MyPlayer->SpdList[3]._iSpell = SpellID::Firebolt;
+
+	ConsumeScroll(*MyPlayer);
+	EXPECT_TRUE(MyPlayer->SpdList[3].isEmpty());
+}
+
+TEST_F(InvTest, ItemSize)
 {
 	Item testItem {};
 
@@ -246,3 +302,6 @@ TEST(Inv, ItemSize)
 	InitializeItem(testItem, IDI_GOLD);
 	EXPECT_EQ(GetInventorySize(testItem), Size(1, 1));
 }
+
+} // namespace
+} // namespace devilution

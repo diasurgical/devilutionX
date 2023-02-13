@@ -77,7 +77,7 @@ struct Surface {
 
 	/**
 	 * @brief Set the value of a single pixel if it is in bounds.
-	 * @param point Target buffer coordinate
+	 * @param position Target buffer coordinate
 	 * @param col Color index from current palette
 	 */
 	void SetPixel(Point position, std::uint8_t col) const
@@ -90,7 +90,7 @@ struct Surface {
 	 * @brief Line width of the raw underlying byte buffer.
 	 * May be wider than its logical width (for power-of-2 alignment).
 	 */
-	int pitch() const
+	[[nodiscard]] uint16_t pitch() const
 	{
 		return surface->pitch;
 	}

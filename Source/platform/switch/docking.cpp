@@ -3,45 +3,51 @@
 #include <SDL.h>
 #include <switch.h>
 
-#include "diablo.h"
 #include "utils/display.h"
 
 namespace devilution {
-
-static int currently_docked = -1; // keep track of docked or handheld mode
+namespace {
+enum class OperationMode : int8_t {
+	Handheld,
+	Docked,
+	Uninitialized = -1
+};
+}
 
 /**
  * @brief Do a manual window resize when docking/undocking the Switch
  */
 void HandleDocking()
 {
-	int docked;
+	static OperationMode currentMode = OperationMode::Uninitialized; // keep track of docked or handheld mode
+
+	OperationMode newMode;
 	switch (appletGetOperationMode()) {
-	case AppletOperationMode_Handheld:
-		docked = 0;
-		break;
 	case AppletOperationMode_Console:
-		docked = 1;
+		newMode = OperationMode::Docked;
 		break;
+	case AppletOperationMode_Handheld:
 	default:
-		docked = 0;
+		newMode = OperationMode::Handheld;
 	}
 
-	int display_width;
-	int display_height;
-	if ((currently_docked == -1) || (docked && !currently_docked) || (!docked && currently_docked)) {
+	if (currentMode != newMode) {
+		int display_width;
+		int display_height;
+
 		// docked mode has changed, update window size
-		if (docked) {
+		if (newMode == OperationMode::Docked) {
 			display_width = 1920;
 			display_height = 1080;
-			currently_docked = 1;
 		} else {
 			display_width = 1280;
 			display_height = 720;
-			currently_docked = 0;
 		}
-		// remove leftover-garbage on screen
-		for (int i = 0; i < 3; i++) {
+		currentMode = newMode;
+
+		// remove leftover-garbage on screen. Need to perform three clears to ensure all buffers get cleared, otherwise
+		//  the display flickers showing a stale frame at certain refresh rates/dock modes.
+		for (auto i = 0; i < 3; i++) {
 			SDL_RenderClear(renderer);
 			SDL_RenderPresent(renderer);
 		}

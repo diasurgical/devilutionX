@@ -2,6 +2,7 @@
 
 #include <SDL.h>
 #include <cstdint>
+#include <vector>
 
 namespace devilution {
 
@@ -20,7 +21,7 @@ enum MenuAction : uint8_t {
 	MenuAction_PAGE_DOWN,
 };
 
-MenuAction GetMenuAction(const SDL_Event &event);
+std::vector<MenuAction> GetMenuActions(const SDL_Event &event);
 
 /** Menu action from holding the left stick or DPad. */
 MenuAction GetMenuHeldUpDownAction();

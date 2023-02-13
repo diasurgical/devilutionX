@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cmath>
+#include <type_traits>
 #ifdef BUILD_TESTING
 #include <ostream>
 #endif
@@ -12,91 +13,84 @@
 
 namespace devilution {
 
-struct Point {
-	int x;
-	int y;
+template <typename CoordT>
+struct PointOf;
 
-	constexpr bool operator==(const Point &other) const
+using Point = PointOf<int>;
+
+template <typename PointCoordT, typename OtherPointCoordT>
+constexpr DisplacementOf<PointCoordT> operator-(PointOf<PointCoordT> a, PointOf<OtherPointCoordT> b);
+
+template <typename CoordT>
+struct PointOf {
+	CoordT x;
+	CoordT y;
+
+	PointOf() = default;
+
+	template <typename PointCoordT>
+	constexpr PointOf(PointOf<PointCoordT> other)
+	    : x(other.x)
+	    , y(other.y)
+	{
+	}
+
+	constexpr PointOf(CoordT x, CoordT y)
+	    : x(x)
+	    , y(y)
+	{
+	}
+
+	template <typename PointCoordT>
+	constexpr bool operator==(const PointOf<PointCoordT> &other) const
 	{
 		return x == other.x && y == other.y;
 	}
 
-	constexpr bool operator!=(const Point &other) const
+	template <typename PointCoordT>
+	constexpr bool operator!=(const PointOf<PointCoordT> &other) const
 	{
 		return !(*this == other);
 	}
 
-	constexpr Point &operator+=(const Displacement &displacement)
+	template <typename DisplacementDeltaT = int>
+	constexpr PointOf<CoordT> &operator+=(const DisplacementOf<DisplacementDeltaT> &displacement)
 	{
 		x += displacement.deltaX;
 		y += displacement.deltaY;
 		return *this;
 	}
 
-	constexpr Point &operator+=(Direction direction)
+	constexpr PointOf<CoordT> &operator+=(Direction direction)
 	{
-		return (*this) += Displacement(direction);
+		return (*this) += DisplacementOf<typename std::make_signed<CoordT>::type>(direction);
 	}
 
-	constexpr Point &operator-=(const Displacement &displacement)
+	template <typename DisplacementDeltaT = int>
+	constexpr PointOf<CoordT> &operator-=(const DisplacementOf<DisplacementDeltaT> &displacement)
 	{
 		x -= displacement.deltaX;
 		y -= displacement.deltaY;
 		return *this;
 	}
 
-	constexpr Point &operator*=(const float factor)
+	constexpr PointOf<CoordT> &operator*=(const float factor)
 	{
 		x = static_cast<int>(x * factor);
 		y = static_cast<int>(y * factor);
 		return *this;
 	}
 
-	constexpr Point &operator*=(const int factor)
+	constexpr PointOf<CoordT> &operator*=(const int factor)
 	{
 		x *= factor;
 		y *= factor;
 		return *this;
 	}
 
-	constexpr friend Point operator+(Point a, Displacement displacement)
+	constexpr PointOf<CoordT> operator-() const
 	{
-		a += displacement;
-		return a;
-	}
-
-	constexpr friend Point operator+(Point a, Direction direction)
-	{
-		a += direction;
-		return a;
-	}
-
-	constexpr friend Displacement operator-(Point a, const Point &b)
-	{
-		return { a.x - b.x, a.y - b.y };
-	}
-
-	constexpr friend Point operator-(const Point &a)
-	{
-		return { -a.x, -a.y };
-	}
-
-	constexpr friend Point operator-(Point a, Displacement displacement)
-	{
-		a -= displacement;
-		return a;
-	}
-
-	constexpr friend Point operator*(Point a, const float factor)
-	{
-		a *= factor;
-		return a;
-	}
-
-	constexpr friend Point operator*(Point a, const int factor)
-	{
-		a *= factor;
-		return a;
+		return { -x, -y };
 	}
 
 	/**
@@ -105,9 +99,10 @@ struct Point {
 	 * @return Magnitude of vector this -> other
 	 */
 
-	constexpr int ApproxDistance(Point other) const
+	template <typename PointCoordT>
+	constexpr int ApproxDistance(PointOf<PointCoordT> other) const
 	{
-		Displacement offset = abs(other - *this);
+		const Displacement offset = abs(Point(*this) - Point(other));
 		auto minMax = std::minmax(offset.deltaX, offset.deltaY);
 		int min = minMax.first;
 		int max = minMax.second;
@@ -126,45 +121,106 @@ struct Point {
 	 * @param other Point to which we want the distance
 	 * @return Exact magnitude of vector this -> other
 	 */
-	int ExactDistance(Point other) const
+	template <typename PointCoordT>
+	int ExactDistance(PointOf<PointCoordT> other) const
 	{
-		auto vector = *this - other; // No need to call abs() as we square the values anyway
+		const Displacement vector = Point(*this) - Point(other); // No need to call abs() as we square the values anyway
 
 		// Casting multiplication operands to a wide type to address overflow warnings
 		return static_cast<int>(std::sqrt(static_cast<int64_t>(vector.deltaX) * vector.deltaX + static_cast<int64_t>(vector.deltaY) * vector.deltaY));
 	}
 
-	constexpr friend Point abs(Point a)
+	template <typename PointCoordT>
+	constexpr int ManhattanDistance(PointOf<PointCoordT> other) const
 	{
-		return { abs(a.x), abs(a.y) };
+		return abs(static_cast<int>(x) - static_cast<int>(other.x))
+		    + abs(static_cast<int>(y) - static_cast<int>(other.y));
 	}
 
-	constexpr int ManhattanDistance(Point other) const
+	template <typename PointCoordT>
+	constexpr int WalkingDistance(PointOf<PointCoordT> other) const
 	{
-		Displacement offset = abs(*this - other);
-
-		return offset.deltaX + offset.deltaY;
+		return std::max<int>(
+		    abs(static_cast<int>(x) - static_cast<int>(other.x)),
+		    abs(static_cast<int>(y) - static_cast<int>(other.y)));
 	}
 
-	constexpr int WalkingDistance(Point other) const
+	/**
+	 * @brief Converts a coordinate in megatiles to the northmost of the 4 corresponding world tiles
+	 */
+	constexpr PointOf<CoordT> megaToWorld() const
 	{
-		Displacement offset = abs(*this - other);
-
-		return std::max<int>(offset.deltaX, offset.deltaY);
+		return { static_cast<CoordT>(16 + 2 * x), static_cast<CoordT>(16 + 2 * y) };
 	}
+
+	/**
+	 * @brief Converts a coordinate in world tiles back to the corresponding megatile
+	 */
+	constexpr PointOf<CoordT> worldToMega() const
+	{
+		return { static_cast<CoordT>((x - 16) / 2), static_cast<CoordT>((y - 16) / 2) };
+	}
+};
 
 #ifdef BUILD_TESTING
-	/**
-	 * @brief Format points nicely in test failure messages
-	 * @param stream output stream, expected to have overloads for int and char*
-	 * @param point Object to display
-	 * @return the stream, to allow chaining
-	 */
-	friend std::ostream &operator<<(std::ostream &stream, const Point &point)
-	{
-		return stream << "(x: " << point.x << ", y: " << point.y << ")";
-	}
+/**
+ * @brief Format points nicely in test failure messages
+ * @param stream output stream, expected to have overloads for int and char*
+ * @param point Object to display
+ * @return the stream, to allow chaining
+ */
+template <typename PointCoordT>
+std::ostream &operator<<(std::ostream &stream, const PointOf<PointCoordT> &point)
+{
+	return stream << "(x: " << point.x << ", y: " << point.y << ")";
+}
 #endif
-};
+
+template <typename PointCoordT, typename DisplacementDeltaT>
+constexpr PointOf<PointCoordT> operator+(PointOf<PointCoordT> a, DisplacementOf<DisplacementDeltaT> displacement)
+{
+	a += displacement;
+	return a;
+}
+
+template <typename PointCoordT>
+constexpr PointOf<PointCoordT> operator+(PointOf<PointCoordT> a, Direction direction)
+{
+	a += direction;
+	return a;
+}
+
+template <typename PointCoordT, typename OtherPointCoordT>
+constexpr DisplacementOf<PointCoordT> operator-(PointOf<PointCoordT> a, PointOf<OtherPointCoordT> b)
+{
+	return { static_cast<PointCoordT>(a.x - b.x), static_cast<PointCoordT>(a.y - b.y) };
+}
+
+template <typename PointCoordT, typename DisplacementDeltaT>
+constexpr PointOf<PointCoordT> operator-(PointOf<PointCoordT> a, DisplacementOf<DisplacementDeltaT> displacement)
+{
+	a -= displacement;
+	return a;
+}
+
+template <typename PointCoordT>
+constexpr PointOf<PointCoordT> operator*(PointOf<PointCoordT> a, const float factor)
+{
+	a *= factor;
+	return a;
+}
+
+template <typename PointCoordT>
+constexpr PointOf<PointCoordT> operator*(PointOf<PointCoordT> a, const int factor)
+{
+	a *= factor;
+	return a;
+}
+
+template <typename PointCoordT>
+constexpr PointOf<PointCoordT> abs(PointOf<PointCoordT> a)
+{
+	return { abs(a.x), abs(a.y) };
+}
 
 } // namespace devilution

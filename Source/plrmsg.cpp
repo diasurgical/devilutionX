@@ -73,21 +73,21 @@ void EventPlrMsg(string_view text, UiFlags style)
 	message.text = std::string(text);
 	message.from = string_view(message.text.data(), 0);
 	message.lineHeight = GetLineHeight(message.text, GameFont12) + 3;
-	AddMessageToChatLog(std::string(text));
+	AddMessageToChatLog(text);
 }
 
 void SendPlrMsg(Player &player, string_view text)
 {
 	PlayerMessage &message = GetNextMessage();
 
-	std::string from = fmt::format(_("{:s} (lvl {:d}): "), player._pName, player._pLevel);
+	std::string from = fmt::format(fmt::runtime(_("{:s} (lvl {:d}): ")), player._pName, player._pLevel);
 
 	message.style = UiFlags::ColorWhite;
 	message.time = SDL_GetTicks();
 	message.text = from + std::string(text);
 	message.from = string_view(message.text.data(), from.size());
 	message.lineHeight = GetLineHeight(message.text, GameFont12) + 3;
-	AddMessageToChatLog(std::string(text), &player);
+	AddMessageToChatLog(text, &player);
 }
 
 void InitPlrMsg()
@@ -101,14 +101,14 @@ void DrawPlrMsg(const Surface &out)
 		return;
 
 	int x = 10;
-	int y = PANEL_TOP - 13;
+	int y = GetMainPanel().position.y - 13;
 	int width = gnScreenWidth - 20;
 
-	if (!talkflag && (chrflag || QuestLogIsOpen || IsStashOpen)) {
+	if (!talkflag && IsLeftPanelOpen()) {
 		x += GetLeftPanel().position.x + GetLeftPanel().size.width;
 		width -= GetLeftPanel().size.width;
 	}
-	if (!talkflag && (invflag || sbookflag))
+	if (!talkflag && IsRightPanelOpen())
 		width -= gnScreenWidth - GetRightPanel().position.x;
 
 	if (width < 300)

@@ -7,7 +7,8 @@
 
 #include <cstdint>
 
-#include "gendung.h"
+#include "levels/gendung.h"
+#include "utils/enum_traits.h"
 
 namespace devilution {
 
@@ -89,6 +90,15 @@ enum object_graphic_id : int8_t {
 	OFILE_BKSLBRNT,
 	OFILE_MUSHPTCH,
 	OFILE_LZSTAND,
+	OFILE_POD,
+	OFILE_PODEX,
+	OFILE_L5DOORS,
+	OFILE_L5LEVER,
+	OFILE_L5CANDLE,
+	OFILE_L5SARC,
+	OFILE_URN,
+	OFILE_URNEX,
+	OFILE_L5BOOKS,
 	OFILE_NULL = -1,
 };
 
@@ -166,7 +176,7 @@ enum _object_id : int8_t {
 	OBJ_TCHEST3,
 	OBJ_BLINDBOOK,
 	OBJ_BLOODBOOK,
-	OBJ_PEDISTAL,
+	OBJ_PEDESTAL,
 	OBJ_L3LDOOR,
 	OBJ_L3RDOOR,
 	OBJ_PURIFYINGFTN,
@@ -192,6 +202,16 @@ enum _object_id : int8_t {
 	OBJ_SLAINHERO,
 	OBJ_SIGNCHEST,
 	OBJ_BOOKSHELFR,
+	OBJ_POD,
+	OBJ_PODEX,
+	OBJ_URN,
+	OBJ_URNEX,
+	OBJ_L5BOOKS,
+	OBJ_L5CANDLE,
+	OBJ_L5LDOOR,
+	OBJ_L5RDOOR,
+	OBJ_L5LEVER,
+	OBJ_L5SARC,
 	OBJ_NULL = -1,
 };
 
@@ -223,30 +243,62 @@ enum quest_id : int8_t {
 	Q_INVALID = -1,
 };
 
+enum class ObjectDataFlags : uint8_t {
+	Animated = 1U,
+	Solid = 1U << 1,
+	MissilesPassThrough = 1U << 2,
+	Light = 1U << 3,
+	Trap = 1U << 4,
+	Breakable = 1U << 5,
+};
+use_enum_as_flags(ObjectDataFlags);
+
 struct ObjectData {
-	int oload; // Todo create enum
 	object_graphic_id ofindex;
-	int8_t ominlvl;
-	int8_t omaxlvl;
+	int8_t minlvl;
+	int8_t maxlvl;
 	dungeon_type olvltype;
 	theme_id otheme;
 	quest_id oquest;
-	int oAnimFlag;  // TODO Create enum
-	int oAnimDelay; // Tick length of each frame in the current animation
-	int oAnimLen;   // Number of frames in current animation
-	uint16_t oAnimWidth;
-	bool oSolidFlag;
-	bool oMissFlag;
-	bool oLightFlag;
-	int8_t oBreak;   // TODO Create enum
-	int8_t oSelFlag; // TODO Create enum
-	bool oTrapFlag;
+	ObjectDataFlags flags;
+	uint8_t animDelay; // Tick length of each frame in the current animation
+	uint8_t animLen;   // Number of frames in current animation
+	uint8_t animWidth;
+	int8_t selFlag; // TODO Create enum
+
+	[[nodiscard]] bool isAnimated() const
+	{
+		return HasAnyOf(flags, ObjectDataFlags::Animated);
+	}
+
+	[[nodiscard]] bool isSolid() const
+	{
+		return HasAnyOf(flags, ObjectDataFlags::Solid);
+	}
+
+	[[nodiscard]] bool missilesPassThrough() const
+	{
+		return HasAnyOf(flags, ObjectDataFlags::MissilesPassThrough);
+	}
+
+	[[nodiscard]] bool isLight() const
+	{
+		return HasAnyOf(flags, ObjectDataFlags::Light);
+	}
+
+	[[nodiscard]] bool isTrap() const
+	{
+		return HasAnyOf(flags, ObjectDataFlags::Trap);
+	}
+
+	[[nodiscard]] bool isBreakable() const
+	{
+		return HasAnyOf(flags, ObjectDataFlags::Breakable);
+	}
 };
 
 extern const _object_id ObjTypeConv[];
-extern const ObjectData AllObjects[];
+extern const ObjectData AllObjects[109];
 extern const char *const ObjMasterLoadList[];
-extern const char *ObjCryptLoadList[];
-extern const char *ObjHiveLoadList[];
 
 } // namespace devilution

@@ -18,9 +18,13 @@ void UnlockControllerState(const SDL_Event &event)
 		controller->UnlockTriggerState();
 	}
 #endif
+	Joystick *const joystick = Joystick::Get(event);
+	if (joystick != nullptr) {
+		joystick->UnlockHatState();
+	}
 }
 
-ControllerButtonEvent ToControllerButtonEvent(const SDL_Event &event)
+StaticVector<ControllerButtonEvent, 4> ToControllerButtonEvents(const SDL_Event &event)
 {
 	ControllerButtonEvent result { ControllerButton_NONE, false };
 	switch (event.type) {
@@ -37,7 +41,7 @@ ControllerButtonEvent ToControllerButtonEvent(const SDL_Event &event)
 #if HAS_KBCTRL == 1
 	result.button = KbCtrlToControllerButton(event);
 	if (result.button != ControllerButton_NONE)
-		return result;
+		return { result };
 #endif
 #ifndef USE_SDL1
 	GameController *const controller = GameController::Get(event);
@@ -47,17 +51,17 @@ ControllerButtonEvent ToControllerButtonEvent(const SDL_Event &event)
 			if (result.button == ControllerButton_AXIS_TRIGGERLEFT || result.button == ControllerButton_AXIS_TRIGGERRIGHT) {
 				result.up = !controller->IsPressed(result.button);
 			}
-			return result;
+			return { result };
 		}
 	}
 #endif
 
 	const Joystick *joystick = Joystick::Get(event);
 	if (joystick != nullptr) {
-		result.button = devilution::Joystick::ToControllerButton(event);
+		return devilution::Joystick::ToControllerButtonEvents(event);
 	}
 
-	return result;
+	return { result };
 }
 
 bool IsControllerButtonPressed(ControllerButton button)
@@ -71,6 +75,12 @@ bool IsControllerButtonPressed(ControllerButton button)
 		return true;
 #endif
 	return Joystick::IsPressedOnAnyJoystick(button);
+}
+
+bool IsControllerButtonComboPressed(ControllerButtonCombo combo)
+{
+	return IsControllerButtonPressed(combo.button)
+	    && (combo.modifier == ControllerButton_NONE || IsControllerButtonPressed(combo.modifier));
 }
 
 bool HandleControllerAddedOrRemovedEvent(const SDL_Event &event)

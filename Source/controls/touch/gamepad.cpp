@@ -2,7 +2,6 @@
 
 #include "control.h"
 #include "controls/touch/gamepad.h"
-#include "diablo.h"
 #include "quests.h"
 #include "utils/display.h"
 #include "utils/ui_fwd.h"
@@ -220,7 +219,7 @@ void VirtualDirectionPad::UpdatePosition(Point touchCoordinates)
 		return;
 	}
 
-	if (!area.Contains(position)) {
+	if (!area.contains(position)) {
 		int x = diff.deltaX;
 		int y = diff.deltaY;
 		double dist = sqrt(x * x + y * y);

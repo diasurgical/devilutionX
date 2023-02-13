@@ -956,8 +956,8 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: Source/control.cpp:860 Source/inv.cpp:2004 Source/items.cpp:3486
-msgid "{:d} gold piece"
-msgid_plural "{:d} gold pieces"
+msgid "{:s} gold piece"
+msgid_plural "{:s} gold pieces"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -979,8 +979,8 @@ msgstr ""
 
 #. TRANSLATORS: {:d} is a number. Dialog is shown when splitting a stash of Gold.
 #: Source/control.cpp:1039
-msgid "You have {:d} gold piece. How many do you want to remove?"
-msgid_plural "You have {:d} gold pieces. How many do you want to remove?"
+msgid "You have {:s} gold piece. How many do you want to remove?"
+msgid_plural "You have {:s} gold pieces. How many do you want to remove?"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -1030,7 +1030,7 @@ msgstr ""
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:822
-msgid "Options:\n"
+msgid "Options:"
 msgstr ""
 
 #. TRANSLATORS: Commandline Option
@@ -1090,9 +1090,7 @@ msgstr ""
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:834
-msgid ""
-"\n"
-"Game selection:\n"
+msgid "Game selection:"
 msgstr ""
 
 #. TRANSLATORS: Commandline Option
@@ -1112,15 +1110,11 @@ msgstr ""
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:838
-msgid ""
-"\n"
-"Hellfire options:\n"
+msgid "Hellfire options:"
 msgstr ""
 
 #: Source/diablo.cpp:844
-msgid ""
-"\n"
-"Report bugs at https://github.com/diasurgical/devilutionX/\n"
+msgid "Report bugs at https://github.com/diasurgical/devilutionX/"
 msgstr ""
 
 #: Source/diablo.cpp:956
@@ -4252,7 +4246,7 @@ msgstr ""
 
 #: Source/items.cpp:3755
 #, no-c-format
-msgid "Random 0 - 500% damage"
+msgid "Random 0 - 600% damage"
 msgstr ""
 
 #: Source/items.cpp:3757
@@ -6596,7 +6590,7 @@ msgid_plural "Staff ({:d} charges)"
 msgstr[0] ""
 msgstr[1] ""
 
-#. TRANSLATORS: UI constrains, keep short please.
+#. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:164
 msgctxt "spellbook"
 msgid "Level {:d}"
@@ -6606,22 +6600,22 @@ msgstr ""
 msgid "Unusable"
 msgstr ""
 
-#. TRANSLATORS: UI constrains, keep short please.
+#. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:174
 msgid "Heals: {:d} - {:d}"
 msgstr ""
 
-#. TRANSLATORS: UI constrains, keep short please.
+#. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:176
 msgid "Damage: {:d} - {:d}"
 msgstr ""
 
-#. TRANSLATORS: UI constrains, keep short please.
+#. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:180
 msgid "Dmg: 1/3 target hp"
 msgstr ""
 
-#. TRANSLATORS: UI constrains, keep short please.
+#. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:182
 msgctxt "spellbook"
 msgid "Mana: {:d}"
@@ -6676,7 +6670,7 @@ msgid "Chat History (Messages: {:d})"
 msgstr ""
 
 #: Source/qol/itemlabels.cpp:72
-msgid "{:d} gold"
+msgid "{:s} gold"
 msgstr ""
 
 #: Source/qol/stash.cpp:619
@@ -7403,7 +7397,7 @@ msgid "Say Goodbye"
 msgstr ""
 
 #: Source/stores.cpp:2458
-msgid "Your gold: {:d}"
+msgid "Your gold: {:s}"
 msgstr ""
 
 #. TRANSLATORS: Quest dialog spoken by Cain

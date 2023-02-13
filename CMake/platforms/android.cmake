@@ -25,8 +25,3 @@ set(UBSAN OFF)
 
 # Disable in-game options to exit the game.
 set(NOEXIT ON)
-
-if(CMAKE_BUILD_TYPE STREQUAL "Release")
-  # Work around a linker bug in clang: https://github.com/android/ndk/issues/721
-  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -flto=full")
-endif()

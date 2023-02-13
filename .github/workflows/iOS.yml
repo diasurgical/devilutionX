@@ -5,7 +5,13 @@ on:
     branches:
       - master
   pull_request:
-    types: [ opened, synchronize ]
+    types: [opened, synchronize]
+  release:
+    types: [published]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -24,8 +30,8 @@ jobs:
       uses: actions/cache@v2
       with:
         path: build
-        key: ios-cmake-v2-${{ github.sha }}
-        restore-keys: ios-cmake-v2-
+        key: ios-cmake-v3-${{ github.sha }}
+        restore-keys: ios-cmake-v3-
 
     - name: Configure CMake
       # Use a bash shell so we can use the same syntax for environment variable
@@ -51,3 +57,10 @@ jobs:
       with:
         name: devilutionx.ipa
         path: build/devilutionx.ipa
+
+    - name: Update Release
+      if: ${{ github.event_name == 'release' && !env.ACT }}
+      uses: svenstaro/upload-release-action@v2
+      with:
+        file: build/devilutionx.ipa
+        overwrite: true

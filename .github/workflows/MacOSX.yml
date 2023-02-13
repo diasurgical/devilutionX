@@ -7,6 +7,10 @@ on:
   pull_request:
     types: [ opened, synchronize ]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
@@ -31,8 +35,8 @@ jobs:
       uses: actions/cache@v2
       with:
         path: build
-        key: macos-cmake-v2-${{ github.sha }}
-        restore-keys: macos-cmake-v2-
+        key: macos-cmake-v3-${{ github.sha }}
+        restore-keys: macos-cmake-v3-
 
     - name: Configure CMake
       # Use a bash shell so we can use the same syntax for environment variable

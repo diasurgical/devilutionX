@@ -10,6 +10,10 @@
 #include "platform/ctr/display.hpp"
 #endif
 
+#ifdef NXDK
+#include <hal/video.h>
+#endif
+
 #include "DiabloUI/diabloui.h"
 #include "control.h"
 #include "controls/controller.h"
@@ -20,10 +24,13 @@
 #include "controls/devices/kbcontroller.h"
 #include "controls/game_controls.h"
 #include "controls/touch/gamepad.h"
-#include "dx.h"
+#include "engine/backbuffer_state.hpp"
+#include "engine/dx.h"
 #include "options.h"
 #include "utils/log.hpp"
+#include "utils/sdl_geometry.h"
 #include "utils/sdl_wrap.h"
+#include "utils/str_cat.hpp"
 
 #ifdef USE_SDL1
 #ifndef SDL1_VIDEO_MODE_BPP
@@ -37,6 +44,9 @@
 namespace devilution {
 
 extern SDLSurfaceUniquePtr RendererTextureSurface; /** defined in dx.cpp */
+SDL_Window *ghMainWnd;
+
+Size forceResolution;
 
 Uint16 gnScreenWidth;
 Uint16 gnScreenHeight;
@@ -55,6 +65,12 @@ Uint16 GetScreenHeight()
 Uint16 GetViewportHeight()
 {
 	return gnViewportHeight;
+}
+
+Rectangle UIRectangle;
+const Rectangle &GetUIRectangle()
+{
+	return UIRectangle;
 }
 
 namespace {
@@ -90,7 +106,7 @@ void CalculatePreferredWindowSize(int &width, int &height)
 
 void FreeRenderer()
 {
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(NXDK)
 	bool wasD3D9 = false;
 	bool wasD3D11 = false;
 	if (renderer != nullptr) {
@@ -106,7 +122,7 @@ void FreeRenderer()
 		renderer = nullptr;
 	}
 
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(NXDK)
 	// On Windows 11 the directx9 VSYNC timer doesn't get recreated properly, see https://github.com/libsdl-org/SDL/issues/5099
 	// Furthermore, the direct3d11 driver "poisons" the window so it can't be used by another renderer
 	if ((wasD3D9 && *sgOptions.Graphics.upscale && *sgOptions.Graphics.vSync) || (wasD3D11 && !*sgOptions.Graphics.upscale)) {
@@ -130,21 +146,18 @@ void FreeRenderer()
 }
 #endif
 
-void AdjustToScreenGeometry(Size windowSize)
+void CalculateUIRectangle()
 {
-	gnScreenWidth = windowSize.width;
-	gnScreenHeight = windowSize.height;
-
-	gnViewportHeight = gnScreenHeight;
-	if (gnScreenWidth <= PANEL_WIDTH) {
-		// Part of the screen is fully obscured by the UI
-		gnViewportHeight -= PANEL_HEIGHT;
-	}
+	constexpr Size UISize { 640, 480 };
+	UIRectangle = {
+		{ (gnScreenWidth - UISize.width) / 2, (gnScreenHeight - UISize.height) / 2 },
+		UISize
+	};
 }
 
 Size GetPreferredWindowSize()
 {
-	Size windowSize = *sgOptions.Graphics.resolution;
+	Size windowSize = forceResolution.width != 0 ? forceResolution : *sgOptions.Graphics.resolution;
 
 #ifndef USE_SDL1
 	if (*sgOptions.Graphics.upscale && *sgOptions.Graphics.fitToScreen) {
@@ -156,6 +169,14 @@ Size GetPreferredWindowSize()
 }
 
 } // namespace
+
+void AdjustToScreenGeometry(Size windowSize)
+{
+	gnScreenWidth = windowSize.width;
+	gnScreenHeight = windowSize.height;
+	CalculateUIRectangle();
+	CalculatePanelAreas();
+}
 
 float GetDpiScalingFactor()
 {
@@ -222,7 +243,22 @@ bool SpawnWindow(const char *lpWindowName)
 #ifdef __vita__
 	scePowerSetArmClockFrequency(444);
 #endif
+#ifdef NXDK
+	{
+		Size windowSize = forceResolution.width != 0 ? forceResolution : *sgOptions.Graphics.resolution;
+		VIDEO_MODE xmode;
+		void *p = nullptr;
+		while (XVideoListModes(&xmode, 0, 0, &p)) {
+			if (windowSize.width >= xmode.width && windowSize.height == xmode.height)
+				break;
+		}
+		XVideoSetMode(xmode.width, xmode.height, xmode.bpp, xmode.refresh);
+	}
+#endif
 
+#if SDL_VERSION_ATLEAST(2, 0, 4)
+	SDL_SetHint(SDL_HINT_IME_INTERNAL_EDITING, "1");
+#endif
 #if SDL_VERSION_ATLEAST(2, 0, 6) && defined(__vita__)
 	SDL_SetHint(SDL_HINT_TOUCH_MOUSE_EVENTS, "0");
 #endif
@@ -231,6 +267,9 @@ bool SpawnWindow(const char *lpWindowName)
 #endif
 #if SDL_VERSION_ATLEAST(2, 0, 2)
 	SDL_SetHint(SDL_HINT_ACCELEROMETER_AS_JOYSTICK, "0");
+#endif
+#if SDL_VERSION_ATLEAST(2, 0, 12)
+	SDL_SetHint(SDL_HINT_GAMECONTROLLER_USE_BUTTON_LABELS, "0");
 #endif
 
 	int initFlags = SDL_INIT_VIDEO | SDL_INIT_JOYSTICK;
@@ -245,6 +284,7 @@ bool SpawnWindow(const char *lpWindowName)
 	if (SDL_Init(initFlags) <= -1) {
 		ErrSdl();
 	}
+	RegisterCustomEvents();
 
 #ifndef USE_SDL1
 	if (sgOptions.Controller.szMapping[0] != '\0') {
@@ -252,9 +292,6 @@ bool SpawnWindow(const char *lpWindowName)
 	}
 #endif
 
-#ifdef USE_SDL1
-	SDL_EnableUNICODE(1);
-#endif
 #ifdef USE_SDL1
 	// On SDL 1, there are no ADDED/REMOVED events.
 	// Always try to initialize the first joystick.
@@ -321,7 +358,7 @@ void ReinitializeTexture()
 	if (renderer == nullptr)
 		return;
 
-	auto quality = fmt::format("{}", static_cast<int>(*sgOptions.Graphics.scaleQuality));
+	auto quality = StrCat(static_cast<int>(*sgOptions.Graphics.scaleQuality));
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, quality.c_str());
 
 	texture = SDLWrap::CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, gnScreenWidth, gnScreenHeight);
@@ -415,7 +452,7 @@ void SetFullscreenMode()
 	}
 	InitializeVirtualGamepad();
 #endif
-	force_redraw = 255;
+	RedrawEverything();
 }
 
 void ResizeWindow()
@@ -439,7 +476,7 @@ void ResizeWindow()
 #endif
 
 	CreateBackBuffer();
-	force_redraw = 255;
+	RedrawEverything();
 }
 
 SDL_Surface *GetOutputSurface()
@@ -462,6 +499,8 @@ SDL_Surface *GetOutputSurface()
 bool OutputRequiresScaling()
 {
 #ifdef USE_SDL1
+	if (HeadlessMode)
+		return false;
 	return gnScreenWidth != GetOutputSurface()->w || gnScreenHeight != GetOutputSurface()->h;
 #else // SDL2, scaling handled by renderer.
 	return false;
@@ -484,7 +523,7 @@ namespace {
 
 SDLSurfaceUniquePtr CreateScaledSurface(SDL_Surface *src)
 {
-	SDL_Rect stretched_rect = { 0, 0, static_cast<Uint16>(src->w), static_cast<Uint16>(src->h) };
+	SDL_Rect stretched_rect = MakeSdlRect(0, 0, src->w, src->h);
 	ScaleOutputRect(&stretched_rect);
 	SDLSurfaceUniquePtr stretched = SDLWrap::CreateRGBSurface(
 	    SDL_SWSURFACE, stretched_rect.w, stretched_rect.h, src->format->BitsPerPixel,

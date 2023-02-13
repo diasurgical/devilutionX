@@ -73,7 +73,7 @@ const char *packet_type_to_string(uint8_t packetType)
 	case PT_ECHO_REQUEST:
 		return "PT_ECHO_REQUEST";
 	case PT_ECHO_REPLY:
-		return "PT_ECHO_REQUEST";
+		return "PT_ECHO_REPLY";
 	default:
 		return nullptr;
 	}
@@ -107,7 +107,11 @@ void CheckPacketTypeOneOf(std::initializer_list<packet_type> expectedTypes, std:
 	for (std::uint8_t packetType : expectedTypes)
 		if (actualType == packetType)
 			return;
+#if DVL_EXCEPTIONS
 	throw wrong_packet_type_exception(expectedTypes, actualType);
+#else
+	app_fatal("wrong packet type");
+#endif
 }
 
 } // namespace
@@ -191,7 +195,11 @@ void packet_in::Create(buffer_t buf)
 {
 	assert(!have_encrypted && !have_decrypted);
 	if (buf.size() < sizeof(packet_type) + 2 * sizeof(plr_t))
+#if DVL_EXCEPTIONS
 		throw packet_exception();
+#else
+		app_fatal("invalid packet");
+#endif
 
 	decrypted_buffer = std::move(buf);
 	have_decrypted = true;

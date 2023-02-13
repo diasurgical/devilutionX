@@ -8,8 +8,7 @@
 #include <cstdint>
 #include <type_traits>
 
-#include "engine/cel_sprite.hpp"
-#include "utils/stdcompat/optional.hpp"
+#include "engine/clx_sprite.hpp"
 
 namespace devilution {
 
@@ -19,7 +18,7 @@ namespace devilution {
 enum AnimationDistributionFlags : uint8_t {
 	None = 0,
 	/**
-	 * @brief ProcessAnimation will be called after SetNewAnimation (in same game tick as NewPlrAnim)
+	 * @brief processAnimation will be called after setNewAnimation (in same game tick as NewPlrAnim)
 	 */
 	ProcessAnimationPending = 1 << 0,
 	/**
@@ -40,42 +39,52 @@ public:
 	/**
 	 * @brief Animation sprite
 	 */
-	std::optional<CelSprite> celSprite;
+	OptionalClxSpriteList sprites;
 	/**
 	 * @brief How many game ticks are needed to advance one Animation Frame
 	 */
-	int TicksPerFrame;
+	int8_t ticksPerFrame;
 	/**
-	 * @brief Increases by one each game tick, counting how close we are to TicksPerFrame
+	 * @brief Increases by one each game tick, counting how close we are to ticksPerFrame
 	 */
-	int TickCounterOfCurrentFrame;
+	int8_t tickCounterOfCurrentFrame;
 	/**
 	 * @brief Number of frames in current animation
 	 */
-	int NumberOfFrames;
+	int8_t numberOfFrames;
 	/**
 	 * @brief Current frame of animation
 	 */
-	int CurrentFrame;
+	int8_t currentFrame;
 	/**
 	 * @brief Is the animation currently petrified and shouldn't advance with gfProgressToNextGameTick
 	 */
-	bool IsPetrified;
+	bool isPetrified;
+
+	[[nodiscard]] ClxSprite currentSprite() const
+	{
+		return (*sprites)[getFrameToUseForRendering()];
+	}
+
+	[[nodiscard]] bool isLastFrame() const
+	{
+		return currentFrame >= (numberOfFrames - 1);
+	}
 
 	/**
 	 * @brief Calculates the Frame to use for the Animation rendering
 	 * @return The Frame to use for rendering
 	 */
-	int GetFrameToUseForRendering() const;
+	[[nodiscard]] int8_t getFrameToUseForRendering() const;
 
 	/**
-	 * @brief Calculates the progress of the current animation as a fraction (0.0f to 1.0f)
+	 * @brief Calculates the progress of the current animation as a fraction (see baseValueFraction)
 	 */
-	float GetAnimationProgress() const;
+	[[nodiscard]] uint8_t getAnimationProgress() const;
 
 	/**
 	 * @brief Sets the new Animation with all relevant information for rendering
-	 * @param celSprite Pointer to Animation Sprite
+	 * @param sprites Animation sprites
 	 * @param numberOfFrames Number of Frames in Animation
 	 * @param ticksPerFrame How many game ticks are needed to advance one Animation Frame
 	 * @param flags Specifies what special logics are applied to this Animation
@@ -83,45 +92,49 @@ public:
 	 * @param distributeFramesBeforeFrame Distribute the numSkippedFrames only before this frame
 	 * @param previewShownGameTickFragments Defines how long (in game ticks fraction) the preview animation was shown
 	 */
-	void SetNewAnimation(std::optional<CelSprite> celSprite, int numberOfFrames, int ticksPerFrame, AnimationDistributionFlags flags = AnimationDistributionFlags::None, int numSkippedFrames = 0, int distributeFramesBeforeFrame = 0, float previewShownGameTickFragments = 0.F);
+	void setNewAnimation(OptionalClxSpriteList sprites, int8_t numberOfFrames, int8_t ticksPerFrame, AnimationDistributionFlags flags = AnimationDistributionFlags::None, int8_t numSkippedFrames = 0, int8_t distributeFramesBeforeFrame = 0, uint8_t previewShownGameTickFragments = 0);
 
 	/**
 	 * @brief Changes the Animation Data on-the-fly. This is needed if a animation is currently in progress and the player changes his gear.
-	 * @param celSprite Pointer to Animation Sprite
+	 * @param sprites Animation sprites
 	 * @param numberOfFrames Number of Frames in Animation
 	 * @param ticksPerFrame How many game ticks are needed to advance one Animation Frame
 	 */
-	void ChangeAnimationData(std::optional<CelSprite> celSprite, int numberOfFrames, int ticksPerFrame);
+	void changeAnimationData(OptionalClxSpriteList sprites, int8_t numberOfFrames, int8_t ticksPerFrame);
 
 	/**
 	 * @brief Process the Animation for a game tick (for example advances the frame)
 	 * @param reverseAnimation Play the animation backwards (for example is used for "unseen" monster fading)
-	 * @param dontProgressAnimation Increase TickCounterOfCurrentFrame but don't change CurrentFrame
 	 */
-	void ProcessAnimation(bool reverseAnimation = false, bool dontProgressAnimation = false);
+	void processAnimation(bool reverseAnimation = false);
+
+	/**
+	 * @brief Fractions in AnimationInfo are stored as fixed point (baseValueFraction/128 correspondents to 1/100%).
+	 */
+	constexpr static uint8_t baseValueFraction = 128;
 
 private:
 	/**
-	 * @brief returns the progress as a fraction (0.0f to 1.0f) in time to the next game tick or 0.0f if the animation is frozen
+	 * @brief returns the progress as a fraction in time to the next game tick or no progress if the animation is frozen (see baseValueFraction)
 	 */
-	float GetProgressToNextGameTick() const;
+	[[nodiscard]] uint8_t getProgressToNextGameTick() const;
 
-	/**
-	 * @brief Specifies how many animations-fractions are displayed between two game ticks. this can be > 0, if animations are skipped or < 0 if the same animation is shown in multiple times (delay specified).
-	 */
-	float TickModifier;
-	/**
-	 * @brief Number of game ticks after the current animation sequence started
-	 */
-	float TicksSinceSequenceStarted;
 	/**
 	 * @brief Animation Frames that will be adjusted for the skipped Frames/game ticks
 	 */
-	int RelevantFramesForDistributing;
+	int8_t relevantFramesForDistributing_;
 	/**
 	 * @brief Animation Frames that wasn't shown from previous Animation
 	 */
-	int SkippedFramesFromPreviousAnimation;
+	int8_t skippedFramesFromPreviousAnimation_;
+	/**
+	 * @brief Specifies how many animations-fractions (see baseValueFraction) are displayed between two game ticks. this can be more than one frame, if animations are skipped or less than one frame if the same animation is shown in multiple times (delay specified).
+	 */
+	uint16_t tickModifier_;
+	/**
+	 * @brief Number of game ticks after the current animation sequence started
+	 */
+	int16_t ticksSinceSequenceStarted_;
 };
 
 } // namespace devilution

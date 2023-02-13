@@ -30,13 +30,27 @@ inline char32_t ConsumeFirstUtf8CodePoint(string_view *input)
 }
 
 /**
+ * Returns true if the character is part of the Basic Latin set.
+ *
+ * This includes ASCII punctuation, symbols, math operators, digits, and both uppercase/lowercase latin alphabets
+ */
+constexpr bool IsBasicLatin(char x)
+{
+	return x >= '\x20' && x <= '\x7E';
+}
+
+/**
  * Returns true if this is a trailing byte in a UTF-8 code point encoding.
  *
- * A trailing byte is any byte that is not the heading byte.
+ * Trailing bytes all begin with 10 as the most significant bits, meaning they generally fall in the range 0x80 to
+ * 0xBF. Please note that certain 3 and 4 byte sequences use a narrower range for the second byte, this function is
+ * not intended to guarantee the character is valid within the sequence (or that the sequence is well-formed).
  */
 inline bool IsTrailUtf8CodeUnit(char x)
 {
-	return static_cast<signed char>(x) < -0x40;
+	// The following is equivalent to a bitmask test (x & 0xC0) == 0x80
+	// On x86_64 architectures it ends up being one instruction shorter
+	return static_cast<signed char>(x) < static_cast<signed char>('\xC0');
 }
 
 /**
@@ -55,8 +69,12 @@ inline std::size_t FindLastUtf8Symbols(string_view input)
 
 /**
  * @brief Copy up to a given number of bytes from a UTF8 string, and zero terminate string
+ * @param dest The destination buffer
+ * @param source The source string
  * @param bytes Max number of bytes to copy
  */
 void CopyUtf8(char *dest, string_view source, std::size_t bytes);
+
+void AppendUtf8(char32_t codepoint, std::string &out);
 
 } // namespace devilution

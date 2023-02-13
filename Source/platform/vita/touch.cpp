@@ -2,7 +2,6 @@
 
 #include <cmath>
 
-#include "miniwin/miniwin.h"
 #include "options.h"
 #include "utils/display.h"
 #include "utils/ui_fwd.h"
@@ -65,7 +64,7 @@ struct Touch {
 
 Touch finger[TOUCH_PORT_MAX_NUM][MaxNumFingers]; // keep track of finger status
 
-enum DraggingType {
+enum DraggingType : uint8_t {
 	DragNone,
 	DragTwoFinger,
 	DragThreeFinger,
@@ -94,6 +93,19 @@ void InitTouch()
 	visible_width = (current.h * devilution::gnScreenWidth) / devilution::gnScreenHeight;
 	x_borderwidth = (current.w - visible_width) / 2;
 	y_borderwidth = (current.h - visible_height) / 2;
+}
+
+void SetMouseButtonEvent(SDL_Event &event, uint32_t type, uint8_t button, Point position)
+{
+	event.type = type;
+	event.button.button = button;
+	if (type == SDL_MOUSEBUTTONDOWN) {
+		event.button.state = SDL_PRESSED;
+	} else {
+		event.button.state = SDL_RELEASED;
+	}
+	event.button.x = position.x;
+	event.button.y = position.y;
 }
 
 void PreprocessFingerDown(SDL_Event *event)

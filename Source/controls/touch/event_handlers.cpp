@@ -5,11 +5,11 @@
 #include "cursor.h"
 #include "diablo.h"
 #include "engine.h"
+#include "engine/render/scrollrt.h"
 #include "gmenu.h"
 #include "inv.h"
 #include "panels/spell_book.hpp"
 #include "qol/stash.h"
-#include "scrollrt.h"
 #include "stores.h"
 #include "utils/ui_fwd.h"
 
@@ -31,9 +31,9 @@ void SimulateMouseMovement(const SDL_Event &event)
 {
 	Point position = ScaleToScreenCoordinates(event.tfinger.x, event.tfinger.y);
 
-	bool isInMainPanel = GetMainPanel().Contains(position);
-	bool isInLeftPanel = GetLeftPanel().Contains(position);
-	bool isInRightPanel = GetRightPanel().Contains(position);
+	bool isInMainPanel = GetMainPanel().contains(position);
+	bool isInLeftPanel = GetLeftPanel().contains(position);
+	bool isInRightPanel = GetRightPanel().contains(position);
 	if (IsStashOpen) {
 		if (!spselflag && !isInMainPanel && !isInLeftPanel && !isInRightPanel)
 			return;
@@ -62,7 +62,7 @@ bool HandleGameMenuInteraction(const SDL_Event &event)
 
 bool HandleStoreInteraction(const SDL_Event &event)
 {
-	if (stextflag == STORE_NONE)
+	if (stextflag == TalkID::None)
 		return false;
 	if (event.type == SDL_FINGERDOWN)
 		CheckStoreBtn();
@@ -89,7 +89,7 @@ bool HandleSpeedBookInteraction(const SDL_Event &event)
 
 void HandleBottomPanelInteraction(const SDL_Event &event)
 {
-	if (!MyPlayer->HoldItem.isEmpty())
+	if (!gbRunGame || !MyPlayer->HoldItem.isEmpty())
 		return;
 
 	ClearPanBtn();
@@ -118,7 +118,7 @@ void HandleCharacterPanelInteraction(const SDL_Event &event)
 
 void HandleStashPanelInteraction(const SDL_Event &event)
 {
-	if (!MyPlayer->HoldItem.isEmpty())
+	if (!IsStashOpen || !MyPlayer->HoldItem.isEmpty())
 		return;
 
 	if (event.type != SDL_FINGERUP) {
@@ -234,7 +234,7 @@ bool VirtualDirectionPadEventHandler::HandleFingerDown(const SDL_TouchFingerEven
 	float y = event.y;
 
 	Point touchCoordinates = ScaleToScreenCoordinates(x, y);
-	if (!virtualDirectionPad->area.Contains(touchCoordinates))
+	if (!virtualDirectionPad->area.contains(touchCoordinates))
 		return false;
 
 	virtualDirectionPad->UpdatePosition(touchCoordinates);
@@ -301,7 +301,7 @@ bool VirtualButtonEventHandler::HandleFingerDown(const SDL_TouchFingerEvent &eve
 	float y = event.y;
 
 	Point touchCoordinates = ScaleToScreenCoordinates(x, y);
-	if (!virtualButton->Contains(touchCoordinates))
+	if (!virtualButton->contains(touchCoordinates))
 		return false;
 
 	if (toggles)
@@ -343,7 +343,7 @@ bool VirtualButtonEventHandler::HandleFingerMotion(const SDL_TouchFingerEvent &e
 	Point touchCoordinates = ScaleToScreenCoordinates(x, y);
 
 	bool wasHeld = virtualButton->isHeld;
-	virtualButton->isHeld = virtualButton->Contains(touchCoordinates);
+	virtualButton->isHeld = virtualButton->contains(touchCoordinates);
 	virtualButton->didStateChange = virtualButton->isHeld != wasHeld;
 
 	return true;

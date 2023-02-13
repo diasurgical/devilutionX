@@ -1,6 +1,7 @@
 #include "dvlnet/loopback.h"
 
 #include "multi.h"
+#include "player.h"
 #include "utils/language.h"
 #include "utils/stubs.h"
 
@@ -17,7 +18,7 @@ int loopback::join(std::string /*addrstr*/)
 	ABORT();
 }
 
-bool loopback::SNetReceiveMessage(int *sender, void **data, uint32_t *size)
+bool loopback::SNetReceiveMessage(uint8_t *sender, void **data, uint32_t *size)
 {
 	if (message_queue.empty())
 		return false;
@@ -41,7 +42,7 @@ bool loopback::SNetSendMessage(int dest, void *data, unsigned int size)
 
 bool loopback::SNetReceiveTurns(char **data, size_t *size, uint32_t * /*status*/)
 {
-	for (auto i = 0; i < MAX_PLRS; ++i) {
+	for (size_t i = 0; i < Players.size(); ++i) {
 		size[i] = 0;
 		data[i] = nullptr;
 	}

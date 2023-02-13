@@ -8,6 +8,13 @@
 
 namespace devilution {
 
+enum class GamepadLayout : uint8_t {
+	Generic,
+	Nintendo,
+	PlayStation,
+	Xbox,
+};
+
 enum GameActionType : uint8_t {
 	GameActionType_NONE,
 	GameActionType_USE_HEALTH_POTION,
@@ -21,20 +28,10 @@ enum GameActionType : uint8_t {
 	GameActionType_TOGGLE_SPELL_BOOK,
 	GameActionType_TOGGLE_QUEST_LOG,
 	GameActionType_SEND_KEY,
-	GameActionType_SEND_MOUSE_CLICK,
 };
 
 struct GameActionSendKey {
-	Uint32 vk_code;
-	bool up;
-};
-
-struct GameActionSendMouseClick {
-	enum Button : uint8_t {
-		LEFT,
-		RIGHT,
-	};
-	Button button;
+	uint32_t vk_code;
 	bool up;
 };
 
@@ -57,28 +54,29 @@ struct GameAction {
 	{
 	}
 
-	GameAction(GameActionSendMouseClick send_mouse_click)
-	    : type(GameActionType_SEND_MOUSE_CLICK)
-	    , send_mouse_click(send_mouse_click)
-	{
-	}
-
 	union {
 		GameActionSendKey send_key;
-		GameActionSendMouseClick send_mouse_click;
 	};
 };
 
-bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, GameAction *action);
+ControllerButton TranslateTo(GamepadLayout layout, ControllerButton button);
+
+bool SkipsMovie(ControllerButtonEvent ctrlEvent);
 
 bool IsSimulatedMouseClickBinding(ControllerButtonEvent ctrlEvent);
 
 AxisDirection GetMoveDirection();
 
-extern bool start_modifier_active;
-extern bool select_modifier_active;
-extern const ControllerButton ControllerButtonPrimary;
-extern const ControllerButton ControllerButtonSecondary;
-extern const ControllerButton ControllerButtonTertiary;
+bool HandleControllerButtonEvent(const SDL_Event &event, const ControllerButtonEvent ctrlEvent, GameAction &action);
+
+extern bool PadMenuNavigatorActive;
+extern bool PadHotspellMenuActive;
+
+// Tracks the button most recently used as a modifier for another button.
+//
+// If two buttons are pressed simultaneously, SDL sends two events for which both buttons are in the pressed state.
+// The event processor may interpret the second event's button as a modifier for the action taken when processing the first event.
+// The code for the modifier will be stored here, and the event processor can check this value when processing the second event to suppress it.
+extern ControllerButton SuppressedButton;
 
 } // namespace devilution

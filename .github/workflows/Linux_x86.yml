@@ -1,4 +1,4 @@
-name: Linux_x86
+name: Linux x86
 
 on:
   push:
@@ -7,9 +7,13 @@ on:
   pull_request:
     types: [ opened, synchronize ]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -26,8 +30,8 @@ jobs:
       uses: actions/cache@v2
       with:
         path: build
-        key: linux-x86-cmake-v4-${{ github.sha }}
-        restore-keys: linux-x86-cmake-v4-
+        key: linux-x86-cmake-v5-${{ github.sha }}
+        restore-keys: linux-x86-cmake-v5-
 
     - name: Configure CMake
       shell: bash

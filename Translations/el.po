@@ -1071,10 +1071,10 @@ msgstr[0] "{:d} Φορτίο"
 msgstr[1] "{:d} Φορτία"
 
 #: Source/control.cpp:860 Source/inv.cpp:1991 Source/items.cpp:3471
-msgid "{:d} gold piece"
-msgid_plural "{:d} gold pieces"
-msgstr[0] "{:d} χρυσό νόμισμα"
-msgstr[1] "{:d} χρυσά νομίσματα"
+msgid "{:s} gold piece"
+msgid_plural "{:s} gold pieces"
+msgstr[0] "{:s} χρυσό νόμισμα"
+msgstr[1] "{:s} χρυσά νομίσματα"
 
 #: Source/control.cpp:862
 msgid "Requirements not met"
@@ -1094,10 +1094,10 @@ msgstr "Νέο Επίπεδο"
 
 #. TRANSLATORS: {:d} is a number. Dialog is shown when splitting a stash of Gold.
 #: Source/control.cpp:1039
-msgid "You have {:d} gold piece. How many do you want to remove?"
-msgid_plural "You have {:d} gold pieces. How many do you want to remove?"
-msgstr[0] "Έχεις {:d} χρυσό νόμισμα. Πόσα θέλεις να αφαιρέσεις;"
-msgstr[1] "Έχεις {:d} χρυσά νομίσματα. Πόσα θέλεις να αφαιρέσεις;"
+msgid "You have {:s} gold piece. How many do you want to remove?"
+msgid_plural "You have {:s} gold pieces. How many do you want to remove?"
+msgstr[0] "Έχεις {:s} χρυσό νόμισμα. Πόσα θέλεις να αφαιρέσεις;"
+msgstr[1] "Έχεις {:s} χρυσά νομίσματα. Πόσα θέλεις να αφαιρέσεις;"
 
 #: Source/controls/modifier_hints.cpp:177 Source/qol/monhealthbar.cpp:36
 #: Source/qol/xpbar.cpp:76
@@ -1150,8 +1150,8 @@ msgstr "Τώρα θα ΠΕΘΑΝΕΙΣ!"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:822
-msgid "Options:\n"
-msgstr "Επιλογές\n"
+msgid "Options:"
+msgstr "Επιλογές"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:823
@@ -1210,12 +1210,8 @@ msgstr "Απενεργοποίηση ορίων καρέ κατά την ανα�
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:834
-msgid ""
-"\n"
-"Game selection:\n"
-msgstr ""
-"\n"
-"Επιλογή παιχνιδιού:\n"
+msgid "Game selection:"
+msgstr "Επιλογή παιχνιδιού:"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:835
@@ -1234,20 +1230,12 @@ msgstr "Εξαναγκαστική κατάστασή σε Hellfire"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:838
-msgid ""
-"\n"
-"Hellfire options:\n"
-msgstr ""
-"\n"
-"Επιλογές Χελφάϊερ:\n"
+msgid "Hellfire options:"
+msgstr "Επιλογές Χελφάϊερ:"
 
 #: Source/diablo.cpp:844
-msgid ""
-"\n"
-"Report bugs at https://github.com/diasurgical/devilutionX/\n"
-msgstr ""
-"\n"
-"Αναφορά σφαλμάτων στην σελίδα https://github.com/diasurgical/devilutionX/\n"
+msgid "Report bugs at https://github.com/diasurgical/devilutionX/"
+msgstr "Αναφορά σφαλμάτων στην σελίδα https://github.com/diasurgical/devilutionX/"
 
 #: Source/diablo.cpp:956
 msgid "version {:s}"
@@ -4453,8 +4441,8 @@ msgstr "2x ζημ στους εχθρούς, 1x σε σένα"
 
 #: Source/items.cpp:3737
 #, no-c-format
-msgid "Random 0 - 500% damage"
-msgstr "Τυχαία ζημιά 0 - 500%"
+msgid "Random 0 - 600% damage"
+msgstr "Τυχαία ζημιά 0 - 600%"
 
 #: Source/items.cpp:3739
 #, no-c-format
@@ -6878,7 +6866,7 @@ msgid_plural "Staff ({:d} charges)"
 msgstr[0] "Ράβδος ({:d} φορτίο}"
 msgstr[1] "Ράβδος ({:d} φορτία}"
 
-#. TRANSLATORS: UI constrains, keep short please.
+#. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:164
 msgctxt "spellbook"
 msgid "Level {:d}"
@@ -6888,22 +6876,22 @@ msgstr "Επίπ. {:d}"
 msgid "Unusable"
 msgstr "Άχρηστο"
 
-#. TRANSLATORS: UI constrains, keep short please.
+#. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:174
 msgid "Heals: {:d} - {:d}"
 msgstr "Θεραπεύει {:d} - {:d}"
 
-#. TRANSLATORS: UI constrains, keep short please.
+#. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:176
 msgid "Damage: {:d} - {:d}"
 msgstr "Ζημια: {:d} - {:d}"
 
-#. TRANSLATORS: UI constrains, keep short please.
+#. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:180
 msgid "Dmg: 1/3 target hp"
 msgstr "Ζημιά: 1/3 ζωής"
 
-#. TRANSLATORS: UI constrains, keep short please.
+#. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:182
 msgctxt "spellbook"
 msgid "Mana: {:d}"
@@ -6958,14 +6946,14 @@ msgid "Chat History (Messages: {:d})"
 msgstr ""
 
 #: Source/qol/itemlabels.cpp:72
-msgid "{:d} gold"
-msgstr "{:d} χρυσά"
+msgid "{:s} gold"
+msgstr "{:s} χρυσά"
 
 #: Source/qol/stash.cpp:619
 #, fuzzy
-#| msgid "You have {:d} gold piece. How many do you want to remove?"
+#| msgid "You have {:s} gold piece. How many do you want to remove?"
 msgid "How many gold pieces do you want to withdraw?"
-msgstr "Έχεις {:d} χρυσό νόμισμα. Πόσα θέλεις να αφαιρέσεις;"
+msgstr "Έχεις {:s} χρυσό νόμισμα. Πόσα θέλεις να αφαιρέσεις;"
 
 #. TRANSLATORS: Thousands separator
 #: Source/qol/xpbar.cpp:61
@@ -7474,8 +7462,8 @@ msgstr "Φύγεις από το Μαγαζί"
 msgid "I have these items for sale:"
 msgstr "Έχω τα παρακάτω για πώληση:"
 
-msgid "Your gold: {:d}"
-msgstr "Ο χρυσός σου: {:d}"
+msgid "Your gold: {:s}"
+msgstr "Ο χρυσός σου: {:s}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:425
@@ -7633,8 +7621,8 @@ msgstr "Δεν έχεις τίποτα για ταυτοποίηση."
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:1225
-msgid "Identify which item?             Your gold: {:d}"
-msgstr "Πιο αντικείμενο θέλεις να ταυτοποιήσω;   Ο χρυσός σου: {:d}"
+msgid "Identify which item?"
+msgstr "Πιο αντικείμενο θέλεις να ταυτοποιήσω;"
 
 #: Source/stores.cpp:1242
 msgid "This item is:"

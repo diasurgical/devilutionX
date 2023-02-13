@@ -1,14 +1,11 @@
-cmake_minimum_required(VERSION 3.13)
+cmake_minimum_required(VERSION 3.15)
 
-if(POLICY CMP0092)
-  cmake_policy(SET CMP0092 NEW)
-endif()
-if(POLICY CMP0083)
-  cmake_policy(SET CMP0083 NEW)
-endif()
-if(POLICY CMP0111)
-  cmake_policy(SET CMP0111 NEW)
-endif()
+foreach(_policy CMP0111 CMP0126 CMP0135)
+  if(POLICY ${_policy})
+    cmake_policy(SET ${_policy} NEW)
+    set(CMAKE_POLICY_DEFAULT_${_policy} NEW)
+  endif()
+endforeach()
 
 # Projects added via `add_subdirectory` or `FetchContent` may have a lower
 # `cmake_minimum_required` than we set here. Set policies that we require
@@ -32,63 +29,24 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMake")
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMake/finders")
 include(functions/genex)
 
-DEBUG_OPTION(ASAN "Enable address sanitizer")
-DEBUG_OPTION(UBSAN "Enable undefined behaviour sanitizer")
-option(TSAN "Enable thread sanitizer (not compatible with ASAN=ON)" OFF)
-DEBUG_OPTION(DEBUG "Enable debug mode in engine")
-option(GPERF "Build with GPerfTools profiler" OFF)
-cmake_dependent_option(GPERF_HEAP_FIRST_GAME_ITERATION "Save heap profile of the first game iteration" OFF "GPERF" OFF)
-option(BUILD_TESTING "Build tests." ON)
-option(DISABLE_LTO "Disable link-time optimization (by default enabled in release mode)" OFF)
-cmake_dependent_option(PIE "Generate position-independent code" OFF "BUILD_TESTING" ON)
-option(MACOSX_STANDALONE_APP_BUNDLE "Generate a portable app bundle to use on other devices (requires sudo)" OFF)
+# Options required by `VcPkgManifestFeatures`, which must be included before the `project` call.
 option(USE_SDL1 "Use SDL1.2 instead of SDL2" OFF)
 option(NONET "Disable network support" OFF)
-RELEASE_OPTION(DEVILUTIONX_STATIC_CXX_STDLIB "Link C++ standard library statically (if available)")
-cmake_dependent_option(DISABLE_TCP "Disable TCP multiplayer option" OFF "NOT NONET" ON)
-cmake_dependent_option(DISABLE_ZERO_TIER "Disable ZeroTier multiplayer option" OFF "NOT NONET" ON)
 cmake_dependent_option(PACKET_ENCRYPTION "Encrypt network packets" ON "NOT NONET" OFF)
-option(NOSOUND "Disable sound support" OFF)
-option(ENABLE_CODECOVERAGE "Instrument code for code coverage (only enabled with BUILD_TESTING)" OFF)
-option(DISCORD_INTEGRATION "Build with Discord SDK for rich presence support" OFF)
-
-option(DISABLE_STREAMING_MUSIC "Disable streaming music (to work around broken platform implementations)" OFF)
-mark_as_advanced(DISABLE_STREAMING_MUSIC)
-option(DISABLE_STREAMING_SOUNDS "Disable streaming sounds (to work around broken platform implementations)" OFF)
-mark_as_advanced(DISABLE_STREAMING_SOUNDS)
-option(STREAM_ALL_AUDIO "Stream all the audio. For extremely RAM-constrained platforms.")
-mark_as_advanced(STREAM_ALL_AUDIO)
-
-option(DEVILUTIONX_MASKED_ART_RLE "RLE-compress masked art in memory (e.g. fonts). Slightly lower RAM usage at a significant performance cost." OFF)
-
-if(TSAN)
-  set(ASAN OFF)
-endif()
-
-# By default, devilutionx.mpq is built only if smpq is installed.
-if(NOT DEFINED BUILD_ASSETS_MPQ AND NOT SRC_DIST)
-  find_program(SMPQ smpq)
-elseif(BUILD_ASSETS_MPQ)
-  find_program(SMPQ smpq REQUIRED)
-endif()
-if(SMPQ)
-  set(_has_smpq ON)
-else()
-  set(_has_smpq OFF)
-endif()
-option(BUILD_ASSETS_MPQ "If true, assets are packaged into devilutionx.mpq." ${_has_smpq})
-
 # The gettext[tools] package takes a very long time to install
 if(CMAKE_TOOLCHAIN_FILE MATCHES "vcpkg.cmake$")
   option(USE_GETTEXT_FROM_VCPKG "Add vcpkg dependency for gettext[tools] for compiling translations" OFF)
 endif()
-
-RELEASE_OPTION(CPACK "Configure CPack")
+option(BUILD_TESTING "Build tests." ON)
 
 # These must be included after the options above but before the `project` call.
 include(VcPkgManifestFeatures)
 
-# Set up the `project` early so that properties such as `TARGET_SUPPORTS_SHARED_LIBS` are defined.
+# Set up the `project` before the rest of the options so that:
+#
+# 1. Properties such as `TARGET_SUPPORTS_SHARED_LIBS` are defined.
+# 2. Toolchain file is evaluated, required for `Platforms.cmake`,
+#    which can override the options.
 if(NOT VERSION_NUM)
   include(functions/git)
   get_git_tag(VERSION_NUM)
@@ -112,12 +70,9 @@ else()
 endif()
 set(PROJECT_VERSION_WITH_SUFFIX "${PROJECT_VERSION}$<$<CONFIG:Debug>:-${VERSION_SUFFIX}>")
 
-if(MSVC AND NOT CMAKE_BUILD_TYPE STREQUAL "Debug" AND NOT DISABLE_LTO)
-  # Work around MSVC + CMake bug when LTO is enabled.
-  # See https://github.com/diasurgical/devilutionX/issues/3778
-  # and https://gitlab.kitware.com/cmake/cmake/-/issues/23035
-  set(BUILD_TESTING OFF)
-endif()
+# Platform definitions can override options and we want `cmake_dependent_option` to see the effects.
+# Note that a few options are still defined before this because they're needed by `VcPkgManifestFeatures.cmake`.
+include(Platforms)
 
 # This built-in CMake module adds a BUILD_TESTING option (ON by default).
 # Must be included in the top-level `CMakeLists.txt` after calling `project`.
@@ -125,40 +80,162 @@ endif()
 # we add a BUILD_TESTING option ourselves above as well.
 include(CTest)
 
-# Platform definitions can override options and we want `cmake_dependent_option` to see the effects,
-# so ideally we would include Platforms.cmake before definining the options.
-#
-# However, `Platforms` require `project` to have been called (to get access to toolchain defs),
-# but `project` must be called after `VcPkgManifestFeatures`, and `VcPkgManifestFeatures` need
-# to be after the options.
-include(Platforms)
+# Debugging / profiling options
+DEBUG_OPTION(ASAN "Enable address sanitizer")
+DEBUG_OPTION(UBSAN "Enable undefined behaviour sanitizer")
+option(TSAN "Enable thread sanitizer (not compatible with ASAN=ON)" OFF)
+DEBUG_OPTION(DEBUG "Enable debug mode in engine")
+option(GPERF "Build with GPerfTools profiler" OFF)
+cmake_dependent_option(GPERF_HEAP_FIRST_GAME_ITERATION "Save heap profile of the first game iteration" OFF "GPERF" OFF)
+option(ENABLE_CODECOVERAGE "Instrument code for code coverage (only enabled with BUILD_TESTING)" OFF)
+
+# Packaging options
+RELEASE_OPTION(CPACK "Configure CPack")
+option(MACOSX_STANDALONE_APP_BUNDLE "Generate a portable app bundle to use on other devices (requires sudo)" OFF)
+
+# Network options
+cmake_dependent_option(DISABLE_TCP "Disable TCP multiplayer option" OFF "NOT NONET" ON)
+cmake_dependent_option(DISABLE_ZERO_TIER "Disable ZeroTier multiplayer option" OFF "NOT NONET" ON)
+
+# Sound options
+option(NOSOUND "Disable sound support" OFF)
+option(DEVILUTIONX_RESAMPLER_SPEEX "Build with Speex resampler" ON)
+cmake_dependent_option(DEVILUTIONX_RESAMPLER_SDL "Build with SDL resampler" ON "NOT USE_SDL1" OFF)
+if(DEVILUTIONX_RESAMPLER_SPEEX)
+  list(APPEND _resamplers Speex)
+endif()
+if(DEVILUTIONX_RESAMPLER_SDL)
+  list(APPEND _resamplers SDL)
+endif()
+list(GET _resamplers 0 _default_resampler)
+set(DEVILUTIONX_DEFAULT_RESAMPLER ${_default_resampler} CACHE STRING "Default resampler")
+set_property(CACHE DEVILUTIONX_DEFAULT_RESAMPLER PROPERTY STRINGS ${_resamplers})
+
+# Optimization / link options
+option(DISABLE_LTO "Disable link-time optimization (by default enabled in release mode)" OFF)
+option(PIE "Generate position-independent code" OFF)
+cmake_dependent_option(DEVILUTIONX_DISABLE_RTTI "Disable RTTI" ON "NONET" OFF)
+cmake_dependent_option(DEVILUTIONX_DISABLE_EXCEPTIONS "Disable exceptions" ON "NONET" OFF)
+RELEASE_OPTION(DEVILUTIONX_STATIC_CXX_STDLIB "Link C++ standard library statically (if available)")
+option(DEVILUTIONX_PROFILE_GENERATE "Build a binary that generates the profile for PGO" OFF)
+option(DEVILUTIONX_PROFILE_USE "Build with PGO using the given profile file" OFF)
+set(DEVILUTIONX_PROFILE_DIR "" CACHE STRING "Directory where the profile is stored")
+
+include(MoldLinker)
+
+# Memory / performance trade-off options
+option(UNPACKED_MPQS "Expect MPQs to be unpacked and the data converted with devilutionx-mpq-tools" OFF)
+option(UNPACKED_SAVES "Uses unpacked save files instead of MPQ .sv/.hsv files" OFF)
+option(DISABLE_STREAMING_MUSIC "Disable streaming music (to work around broken platform implementations)" OFF)
+mark_as_advanced(DISABLE_STREAMING_MUSIC)
+option(DISABLE_STREAMING_SOUNDS "Disable streaming sounds (to work around broken platform implementations)" OFF)
+mark_as_advanced(DISABLE_STREAMING_SOUNDS)
+set(STREAM_ALL_AUDIO_MIN_FILE_SIZE "" CACHE STRING "If set, stream all the audio files larger than this size")
+mark_as_advanced(STREAM_ALL_AUDIO_MIN_FILE_SIZE)
+option(DEVILUTIONX_PALETTE_TRANSPARENCY_BLACK_16_LUT "Whether to use a lookup table for transparency blending with black. This improves performance of blending transparent black overlays, such as quest dialog background, at the cost of 128 KiB of RAM." ON)
+mark_as_advanced(DEVILUTIONX_PALETTE_TRANSPARENCY_BLACK_16_LUT)
+
+# Additional features
+option(DISABLE_DEMOMODE "Disable demo mode support" OFF)
+option(DISCORD_INTEGRATION "Build with Discord SDK for rich presence support" OFF)
+
+# By default, devilutionx.mpq is built only if smpq is installed.
+if(NOT DEFINED BUILD_ASSETS_MPQ AND NOT SRC_DIST)
+  find_program(SMPQ smpq)
+elseif(BUILD_ASSETS_MPQ)
+  find_program(SMPQ smpq REQUIRED)
+endif()
+if(SMPQ)
+  set(_has_smpq ON)
+else()
+  set(_has_smpq OFF)
+endif()
+option(BUILD_ASSETS_MPQ "If true, assets are packaged into devilutionx.mpq." ${_has_smpq})
+
+# === Option overrides ===
+# TSAN is not compatible with ASAN.
+if(TSAN)
+  set(ASAN OFF)
+endif()
+
+if(MSVC AND NOT CMAKE_BUILD_TYPE STREQUAL "Debug" AND NOT DISABLE_LTO)
+  # Work around MSVC + CMake bug when LTO is enabled.
+  # See https://github.com/diasurgical/devilutionX/issues/3778
+  # and https://gitlab.kitware.com/cmake/cmake/-/issues/23035
+  set(BUILD_TESTING OFF)
+endif()
 
 # Note: `CMAKE_CROSSCOMPILING` is only available after the `project` call.
 if(CMAKE_CROSSCOMPILING)
   set(BUILD_TESTING OFF)
 endif()
 
-# Recalculate the dependent options after including the Platforms:
+if(DISABLE_DEMOMODE)
+  # Testing requires demomode.
+  set(BUILD_TESTING OFF)
+endif()
+
 if(BUILD_TESTING)
-  # For tests, we build a libdevilutionx.so shared library.
-  # When this libdevilutionx.so is linked against certain static libraries,
-  # they must be compiled with `-fPIC`.
+  # When tests are enabled, we build a shared devilutionx_so library, which needs to be PIC to link.
   set(PIE ON)
 endif()
+
+# Recalculate the dependent options that are defined before `include(Platforms)`:
+if(NONET)
+  # PACKET_ENCRYPTION is defined before `Platforms.cmake` is included.
+  # This means that if a `Platforms.cmake` sets NONET to OFF, PACKET_ENCRYPTION will not automatically
+  # reflect that.
+  set(PACKET_ENCRYPTION OFF)
+endif()
+# === End of option overrides ===
 
 if(PIE)
   set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
 endif()
 
-if(NONET)
-  set(DISABLE_TCP ON)
-  set(DISABLE_ZERO_TIER ON)
-  set(PACKET_ENCRYPTION OFF)
-endif()
-
 find_program(CCACHE_PROGRAM ccache)
 if(CCACHE_PROGRAM)
-  set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_PROGRAM}")
+  set(CMAKE_C_COMPILER_LAUNCHER "${CCACHE_PROGRAM}")
+  set(CMAKE_CXX_COMPILER_LAUNCHER "${CCACHE_PROGRAM}")
+endif()
+
+if(DEVILUTIONX_DISABLE_RTTI)
+  if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti")
+  elseif(MSVC)
+    string(REGEX REPLACE "/GR" "/GR-" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+  endif()
+endif()
+
+if(DEVILUTIONX_DISABLE_EXCEPTIONS)
+  if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-exceptions")
+  elseif(MSVC)
+    string(REGEX REPLACE "/EHsc" "/EHs-c-" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+  endif()
+endif()
+
+# Remove unused symbols in non-debug mode.
+# This is useful even with LTO (-84 KiB with MinSizeRel).
+#
+# PS4 toolchain crashes in `create-fself` when linking with these flags, so we exclude it:
+# https://github.com/PacBrew/ps4-openorbis/issues/8
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang" AND NOT PS4)
+  add_compile_options("$<$<NOT:$<CONFIG:Debug>>:-ffunction-sections;-fdata-sections>")
+  if(APPLE)
+    add_link_options("$<$<NOT:$<CONFIG:Debug>>:LINKER:-dead_strip>")
+  else()
+    add_link_options("$<$<NOT:$<CONFIG:Debug>>:LINKER:--gc-sections,--as-needed>")
+  endif()
+endif()
+
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+  add_compile_options("$<$<BOOL:${DEVILUTIONX_PROFILE_GENERATE}>:-fprofile-generate>")
+  add_link_options("$<$<BOOL:${DEVILUTIONX_PROFILE_GENERATE}>:-fprofile-generate>")
+  add_compile_options("$<$<BOOL:${DEVILUTIONX_PROFILE_USE}>:-fprofile-use>")
+  add_link_options("$<$<BOOL:${DEVILUTIONX_PROFILE_USE}>:-fprofile-use>")
+  add_compile_options("$<$<BOOL:${DEVILUTIONX_PROFILE_DIR}>:-fprofile-dir=${DEVILUTIONX_PROFILE_DIR};-fprofile-prefix-path=${CMAKE_CURRENT_BINARY_DIR}>")
+  add_link_options("$<$<BOOL:${DEVILUTIONX_PROFILE_DIR}>:-fprofile-dir=${DEVILUTIONX_PROFILE_DIR};-fprofile-prefix-path=${CMAKE_CURRENT_BINARY_DIR}>")
 endif()
 
 # Not a genexp because CMake doesn't support it
@@ -191,9 +268,12 @@ if(GPERF)
   endif()
 endif()
 
-set(CMAKE_CXX_STANDARD 17)
+# Despite setting C++ standard to 20, features from this version are not being used.
+# The oldest compiler used is GCC 6.5 - and that defines our C++ feature set (meaning most of C++17).
+# It's present only to take advantage of fmt::format build time errors.
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_STANDARD_REQUIRED OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # for clang-tidy
 set(CMAKE_THREAD_PREFER_PTHREAD ON)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
@@ -222,6 +302,15 @@ else()
     Packaging/windows/devilutionx.rc
     Packaging/apple/AppIcon.icns
     Packaging/apple/LaunchScreen.storyboard)
+
+    if(CMAKE_STRIP AND NOT DEVILUTIONX_DISABLE_STRIP)
+      add_custom_command(
+        TARGET ${BIN_TARGET} POST_BUILD
+        DEPENDS ${BIN_TARGET}
+        COMMAND $<$<CONFIG:Release>:${CMAKE_STRIP}>
+                $<$<CONFIG:MinSizeRel>:${CMAKE_STRIP}>
+        ARGS $<TARGET_FILE:${BIN_TARGET}>)
+    endif()
 endif()
 
 if(NOT UWP_LIB)
@@ -261,9 +350,11 @@ if(APPLE)
   set(MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION})
   set(MACOSX_BUNDLE_LONG_VERSION_STRING "Version ${PROJECT_VERSION}")
   if(IOS)
+    set(MACOSX_BUNDLE_REQUIRED_PLATFORM IPhoneOS)
     set_target_properties(${BIN_TARGET} PROPERTIES XCODE_ATTRIBUTE_TARGETED_DEVICE_FAMILY "1,2")
     set(CMAKE_OSX_DEPLOYMENT_TARGET "9.0")
   else()
+    set(MACOSX_BUNDLE_REQUIRED_PLATFORM Carbon)
     set(CMAKE_OSX_DEPLOYMENT_TARGET "10.12.0")
   endif()
   set_target_properties(${BIN_TARGET} PROPERTIES MACOSX_BUNDLE_ICON_FILE "AppIcon.icns")
@@ -290,21 +381,6 @@ if(APPLE)
 endif()
 
 if(NINTENDO_SWITCH)
-  set(APP_ROMFS       "${CMAKE_BINARY_DIR}/romfs")
-
-  add_custom_target(romfs_directory
-    COMMAND ${CMAKE_COMMAND} -E make_directory ${APP_ROMFS})
-
-  add_custom_target(romfs_files
-    COMMAND ${CMAKE_COMMAND} -E copy ${DEVILUTIONX_MPQ} ${APP_ROMFS}
-    DEPENDS ${DEVILUTIONX_MPQ})
-
-  # the romfs_directory target will create this directory at build time,
-  # but the nx_create_nro function requires it to also exist at configure time
-  file(MAKE_DIRECTORY ${APP_ROMFS})
-
-  add_dependencies(romfs_files romfs_directory devilutionx_mpq)
-
   nx_generate_nacp (${BIN_TARGET}.nacp
     NAME    "DevilutionX"
     AUTHOR  "Devilution Team"
@@ -314,11 +390,8 @@ if(NINTENDO_SWITCH)
   nx_create_nro(${BIN_TARGET}
     NACP  ${BIN_TARGET}.nacp
     ICON  "${PROJECT_SOURCE_DIR}/Packaging/switch/icon.jpg"
-    ROMFS ${APP_ROMFS}
+    ROMFS ${DEVILUTIONX_ASSETS_OUTPUT_DIRECTORY}
   )
-
-  add_dependencies(${BIN_TARGET}_nro romfs_files)
-
 endif()
 
 if(VITA)
@@ -364,8 +437,6 @@ if(NINTENDO_3DS)
   set(APP_BANNER      "${PROJECT_SOURCE_DIR}/Packaging/ctr/banner.png")
   set(APP_AUDIO       "${CMAKE_BINARY_DIR}/banner_audio.wav")
   set(APP_RSF         "${PROJECT_SOURCE_DIR}/Packaging/ctr/template.rsf")
-  set(APP_ROMFS       "${CMAKE_BINARY_DIR}/romfs")
-  list(APPEND APP_ROMFS_FILES ${DEVILUTIONX_MPQ})
   set(APP_VERSION ${PROJECT_VERSION})
 
   find_program(FFMPEG ffmpeg)
@@ -381,26 +452,28 @@ if(NINTENDO_3DS)
       VERBATIM)
   endif()
 
-  add_custom_target(romfs_directory
-    COMMAND ${CMAKE_COMMAND} -E make_directory ${APP_ROMFS})
-
-  add_custom_target(romfs_files
-    COMMAND ${CMAKE_COMMAND} -E copy ${APP_ROMFS_FILES} ${APP_ROMFS}
-    DEPENDS ${APP_ROMFS_FILES})
-
-  add_dependencies(romfs_files romfs_directory devilutionx_mpq)
-
   include(Tools3DS)
   add_3dsx_target(${BIN_TARGET})
   add_cia_target(${BIN_TARGET} ${APP_RSF} ${APP_BANNER} ${APP_AUDIO})
-
-  get_filename_component(APP_TARGET_PREFIX ${BIN_TARGET} NAME_WE)
-  add_dependencies(${APP_TARGET_PREFIX}_3dsx romfs_files)
-  add_dependencies(${APP_TARGET_PREFIX}_cia romfs_files)
 endif()
 
 if(UWP_LIB)
   target_compile_definitions(libdevilutionx PRIVATE __UWP__=1)
+endif()
+
+if(NXDK)
+  target_link_libraries(${BIN_TARGET} PRIVATE "${NXDK_DIR}/lib/libnxdk_automount_d.lib")
+  target_link_options(${BIN_TARGET} PRIVATE "-include:_automount_d_drive")
+
+  set(_nxdk_pkg_dir "${CMAKE_BINARY_DIR}/pkg")
+  set(_xbe_path "${_nxdk_pkg_dir}/default.xbe")
+  add_custom_command(
+    OUTPUT "${_xbe_path}"
+    COMMAND "${CMAKE_COMMAND}" -E make_directory "${_nxdk_pkg_dir}"
+    COMMAND "${NXDK_DIR}/tools/cxbe/cxbe" "-OUT:${_xbe_path}" -TITLE:DevilutionX "-Logo:${PROJECT_SOURCE_DIR}/Packaging/xbox_nxdk/xbe_logo.pgm" "${CMAKE_BINARY_DIR}/${BIN_TARGET}.exe"
+    DEPENDS "${BIN_TARGET}"
+  )
+  add_custom_target(nxdk_xbe DEPENDS "${_xbe_path}")
 endif()
 
 if(CPACK AND (APPLE OR BUILD_ASSETS_MPQ OR SRC_DIST))
@@ -487,6 +560,10 @@ if(CPACK AND (APPLE OR BUILD_ASSETS_MPQ OR SRC_DIST))
     install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/hellfire.png"
       DESTINATION "share/icons/hicolor/512x512/apps"
       RENAME "${project_name}-hellfire.png"
+    )
+    install(FILES "${PROJECT_SOURCE_DIR}/Packaging/nix/devilutionx.metainfo.xml"
+      DESTINATION "share/metainfo"
+      RENAME "${project_name}.metainfo.xml"
     )
 
     # -G DEB

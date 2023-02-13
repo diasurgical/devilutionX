@@ -37,6 +37,7 @@ import sys
 # 2. Require devilutionx forks (all others).
 _DEPS = ['asio', 'libmpq', 'libsmackerdec',
          'libzt', 'sdl_audiolib', 'simpleini']
+_ALWAYS_VENDORED_DEPS = ['asio', 'libmpq', 'libsmackerdec', 'libzt']
 
 # These dependencies are not vendored by default.
 # Run with `--fully_vendored` to include them.
@@ -82,6 +83,8 @@ def main():
 
 	configure_args = [f'-S{_ROOT_DIR}',
                    f'-B{_BUILD_DIR}', '-DBUILD_ASSETS_MPQ=ON']
+	for dep in sorted(set(_DEPS) - set(_ALWAYS_VENDORED_DEPS)):
+		configure_args.append(f'-DDEVILUTIONX_SYSTEM_{dep.upper()}=OFF')
 	if args.fully_vendored:
 		for dep in _DEPS_NOT_VENDORED_BY_DEFAULT:
 			configure_args.append(f'-DDEVILUTIONX_SYSTEM_{dep.upper()}=OFF')
@@ -144,7 +147,7 @@ def ignore_dep_src(src, names):
 		# SDL_audiolib currently fails to compile if any of the files are missing.
 		# TODO: Fix this in SDL_audiolib by making this optional:
 		# https://github.com/realnc/SDL_audiolib/blob/5a700ba556d3a5b5c531c2fa1f45fc0c3214a16b/CMakeLists.txt#L399-L401
-		return []
+		return [name for name in names if src.endswith('/sdl_audiolib-src/3rdparty/fmt')]
 
 	if _IGNORE_DEP_DIR_RE.search(src):
 		_LOGGER.debug(f'Excluded directory {src}')

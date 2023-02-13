@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>org.diasurgical.DevilutionX</id>
+  
+  <name>DevilutionX</name>
+  <summary>Diablo/Hellfire source port for modern operating systems</summary>
+  
+  <metadata_license>CC-BY-SA-4.0</metadata_license>
+  <project_license>LicenseRef=https://github.com/diasurgical/devilutionX/blob/master/LICENSE.md</project_license>
+  
+  <supports>
+    <control>pointing</control>
+    <control>keyboard</control>
+    <control>touch</control>
+    <control>gamepad</control>
+  </supports>
+  
+  <description>
+    <p>
+      DevilutionX is a source port of Diablo and Hellfire that strives to make it simple to run the game while providing engine improvements, bugfixes, and some optional quality of life features. This includes support for modern operating systems and higher resolutions, controller and touch control support, stash, optional experience and enemy health bars, etc.
+    </p>
+    <p>
+      Note: DevilutionX requires data files from original Diablo/Hellfire. Alternatively, a demo version of Diablo can be downloaded.
+    </p>
+  </description>
+  
+  <launchable type="desktop-id">devilutionx.desktop</launchable>
+  <screenshots>
+    <screenshot type="default">
+      <image>https://cdn.discordapp.com/attachments/518541192993046562/965941731579277312/unknown.png</image>
+    </screenshot>
+    <screenshot>
+      <image>https://cdn.discordapp.com/attachments/518541192993046562/965941904086818826/unknown.png</image>
+    </screenshot>
+    <screenshot>
+      <image>https://cdn.discordapp.com/attachments/518541192993046562/965942617223348284/unknown.png</image>
+    </screenshot>
+  </screenshots>
+</component>

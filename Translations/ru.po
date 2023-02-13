@@ -1069,11 +1069,11 @@ msgstr[1] "{:d} заряда"
 msgstr[2] "{:d} зарядов"
 
 #: Source/control.cpp:860 Source/inv.cpp:1998 Source/items.cpp:3480
-msgid "{:d} gold piece"
-msgid_plural "{:d} gold pieces"
-msgstr[0] "{:d} золотой"
-msgstr[1] "{:d} золотых"
-msgstr[2] "{:d} золотых"
+msgid "{:s} gold piece"
+msgid_plural "{:s} gold pieces"
+msgstr[0] "{:s} золотой"
+msgstr[1] "{:s} золотых"
+msgstr[2] "{:s} золотых"
 
 #: Source/control.cpp:863
 msgid "Requirements not met"
@@ -1093,11 +1093,11 @@ msgstr "Новый уровень"
 
 #. TRANSLATORS: {:d} is a number. Dialog is shown when splitting a stash of Gold.
 #: Source/control.cpp:1040
-msgid "You have {:d} gold piece. How many do you want to remove?"
-msgid_plural "You have {:d} gold pieces. How many do you want to remove?"
-msgstr[0] "У вас {:d} золотой. Сколько вы хотите забрать?"
-msgstr[1] "У вас {:d} золотых. Сколько вы хотите забрать?"
-msgstr[2] "У вас {:d} золотых. Сколько вы хотите забрать?"
+msgid "You have {:s} gold piece. How many do you want to remove?"
+msgid_plural "You have {:s} gold pieces. How many do you want to remove?"
+msgstr[0] "У вас {:s} золотой. Сколько вы хотите забрать?"
+msgstr[1] "У вас {:s} золотых. Сколько вы хотите забрать?"
+msgstr[2] "У вас {:s} золотых. Сколько вы хотите забрать?"
 
 #: Source/controls/modifier_hints.cpp:176 Source/qol/monhealthbar.cpp:36
 #: Source/qol/xpbar.cpp:76
@@ -1148,8 +1148,8 @@ msgstr "А теперь УМРИ!"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:821
-msgid "Options:\n"
-msgstr "Параметры:\n"
+msgid "Options:"
+msgstr "Параметры:"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:822
@@ -1208,12 +1208,8 @@ msgstr "Отключить лимит кадров во время проигр�
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:833
-msgid ""
-"\n"
-"Game selection:\n"
-msgstr ""
-"\n"
-"Выбор игры:\n"
+msgid "Game selection:"
+msgstr "Выбор игры:"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:834
@@ -1232,20 +1228,12 @@ msgstr "Запустить в режиме Hellfire"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:837
-msgid ""
-"\n"
-"Hellfire options:\n"
-msgstr ""
-"\n"
-"Параметры Hellfire:\n"
+msgid "Hellfire options:"
+msgstr "Параметры Hellfire:"
 
 #: Source/diablo.cpp:843
-msgid ""
-"\n"
-"Report bugs at https://github.com/diasurgical/devilutionX/\n"
-msgstr ""
-"\n"
-"Сообщайте об ошибках на https://github.com/diasurgical/devilutionX/\n"
+msgid "Report bugs at https://github.com/diasurgical/devilutionX/"
+msgstr "Сообщайте об ошибках на https://github.com/diasurgical/devilutionX/"
 
 #: Source/diablo.cpp:955
 msgid "version {:s}"
@@ -4482,8 +4470,8 @@ msgstr "2x урона монстрам, 1x вам"
 
 #: Source/items.cpp:3746
 #, no-c-format
-msgid "Random 0 - 500% damage"
-msgstr "Случайные 0 - 500% урона"
+msgid "Random 0 - 600% damage"
+msgstr "Случайные 0 - 600% урона"
 
 #: Source/items.cpp:3748
 #, no-c-format
@@ -6314,6 +6302,7 @@ msgstr "Качество передискретизации, от 0 (самое 
 msgid "Resolution"
 msgstr "Разрешение"
 
+# Полный корректный перевод не влазит в 3 строки.
 #: Source/options.cpp:641
 msgid ""
 "Affect the game's internal resolution and determine your view area. Note: "
@@ -6321,9 +6310,8 @@ msgid ""
 "Fit to Screen is used."
 msgstr ""
 "Влияет на внутреннее разрешение игры и определяет область просмотра. "
-"Примечание: может отличаться от разрешения экрана при использовании "
-"масштабирования, целочисленного масштабирования или растягивания по размеру "
-"экрана."
+"Примечание: зависит от использованного типа масштабирования (Upscaling, "
+"Integer Scaling или Fit to Screen)."
 
 #: Source/options.cpp:737
 msgid "Graphics"
@@ -6484,9 +6472,10 @@ msgstr "Отображать FPS в верхнем левом углу экра�
 msgid "Show health values"
 msgstr "Показать значение здоровья"
 
+# Здесь и ниже – приведение к единообразию во всём меню.
 #: Source/options.cpp:763
 msgid "Displays current / max health value on health globe."
-msgstr "Отображает текущее / максимальное значение здоровья на шаре здоровья."
+msgstr "Отображает текущее/максимальное значение здоровья на шаре здоровья."
 
 #: Source/options.cpp:764
 msgid "Show mana values"
@@ -6494,7 +6483,7 @@ msgstr "Показать значение маны"
 
 #: Source/options.cpp:764
 msgid "Displays current / max mana value on mana globe."
-msgstr "Отображает текущее / максимальное значение маны на шаре маны."
+msgstr "Отображает текущее/максимальное значение маны на шаре маны."
 
 #: Source/options.cpp:813
 msgid "Gameplay"
@@ -6956,7 +6945,7 @@ msgstr[0] "Посох ({:d} заряд)"
 msgstr[1] "Посох ({:d} заряда)"
 msgstr[2] "Посох ({:d} зарядов)"
 
-#. TRANSLATORS: UI constrains, keep short please.
+#. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:164
 msgctxt "spellbook"
 msgid "Level {:d}"
@@ -6966,22 +6955,22 @@ msgstr "Уровень {:d}"
 msgid "Unusable"
 msgstr "Неиспользовано"
 
-#. TRANSLATORS: UI constrains, keep short please.
+#. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:174
 msgid "Heals: {:d} - {:d}"
 msgstr "Лечение: {:d} - {:d}"
 
-#. TRANSLATORS: UI constrains, keep short please.
+#. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:176
 msgid "Damage: {:d} - {:d}"
 msgstr "Урон: {:d} - {:d}"
 
-#. TRANSLATORS: UI constrains, keep short please.
+#. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:180
 msgid "Dmg: 1/3 target hp"
 msgstr "Урн: 1/3 здр цели"
 
-#. TRANSLATORS: UI constrains, keep short please.
+#. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:182
 msgctxt "spellbook"
 msgid "Mana: {:d}"
@@ -7037,8 +7026,8 @@ msgid "Chat History (Messages: {:d})"
 msgstr "История чата (Сообщения: {:d})"
 
 #: Source/qol/itemlabels.cpp:72
-msgid "{:d} gold"
-msgstr "{:d} золота"
+msgid "{:s} gold"
+msgstr "{:s} золота"
 
 #: Source/qol/stash.cpp:586
 msgid "How many gold pieces do you want to withdraw?"
@@ -7552,8 +7541,8 @@ msgstr "Покинуть магазин"
 msgid "I have these items for sale:"
 msgstr "У меня есть на продажу:"
 
-msgid "Your gold: {:d}"
-msgstr "Ваше золото: {:d}"
+msgid "Your gold: {:s}"
+msgstr "Ваше золото: {:s}"
 
 # “премиальные прдеметы” не влезают в длину строки
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
@@ -7707,16 +7696,13 @@ msgstr "Поговорить с Каином"
 msgid "Identify an item"
 msgstr "Идентифицировать предмет"
 
-#. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:1214
 msgid "You have nothing to identify."
 msgstr "У вас нечего идентифицировать."
 
-# Нужно выровнять с остальными строками
-#. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:1225
-msgid "Identify which item?             Your gold: {:d}"
-msgstr "Какой предмет идентифицировать? Ваше золото: {:d}"
+msgid "Identify which item?"
+msgstr "Какой предмет идентифицировать?"
 
 #: Source/stores.cpp:1242
 msgid "This item is:"

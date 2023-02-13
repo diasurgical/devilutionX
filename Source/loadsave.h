@@ -5,6 +5,7 @@
  */
 #pragma once
 
+#include "pfile.h"
 #include "player.h"
 #include "utils/attributes.h"
 
@@ -23,7 +24,7 @@ void LoadHotkeys();
 void LoadHeroItems(Player &player);
 /**
  * @brief Remove invalid inventory items from the inventory grid
- * @param pnum The id of the player
+ * @param player The player to remove invalid items from
  */
 void RemoveEmptyInventory(Player &player);
 
@@ -32,13 +33,14 @@ void RemoveEmptyInventory(Player &player);
  * @param firstflag Can be set to false if we are simply reloading the current game
  */
 void LoadGame(bool firstflag);
-void SaveHotkeys();
-void SaveHeroItems(Player &player);
-void SaveGameData();
+void SaveHotkeys(SaveWriter &saveWriter, const Player &player);
+void SaveHeroItems(SaveWriter &saveWriter, Player &player);
+void SaveGameData(SaveWriter &saveWriter);
 void SaveGame();
-void SaveLevel();
+void SaveLevel(SaveWriter &saveWriter);
 void LoadLevel();
+void ConvertLevels(SaveWriter &saveWriter);
 void LoadStash();
-void SaveStash();
+void SaveStash(SaveWriter &stashWriter);
 
 } // namespace devilution

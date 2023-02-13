@@ -11,7 +11,10 @@
 #include "engine.h"
 #include "utils/endian.hpp"
 #include "utils/file_util.h"
+#include "utils/language.h"
 #include "utils/log.hpp"
+#include "utils/stdcompat/filesystem.hpp"
+#include "utils/str_cat.hpp"
 
 namespace devilution {
 
@@ -83,16 +86,27 @@ bool IsUnallocatedBlock(const MpqBlockEntry *block)
 
 } // namespace
 
-bool MpqWriter::Open(const char *path)
+MpqWriter::MpqWriter(const char *path)
 {
-	Close(/*clearTables=*/false);
+#ifdef DVL_HAS_FILESYSTEM
+	{
+		std::error_code error;
+		std::filesystem::create_directories(std::filesystem::path(path).parent_path(), error);
+		if (error) {
+			LogError("failed to create directory: {}", error.message());
+		}
+	}
+#endif
 	LogVerbose("Opening {}", path);
-	exists_ = FileExists(path);
-	std::ios::openmode mode = std::ios::in | std::ios::out | std::ios::binary;
-	if (exists_) {
+	std::string error;
+	bool exists = FileExists(path);
+	std::ios::openmode mode = std::ios::out | std::ios::binary;
+	if (exists) {
+		mode |= std::ios::in;
 		if (!GetFileSize(path, &size_)) {
-			Log(R"(GetFileSize("{}") failed with "{}")", path, std::strerror(errno));
-			return false;
+			error = R"(GetFileSize failed: "{}")";
+			LogError(error, path, std::strerror(errno));
+			goto on_error;
 		}
 		LogVerbose("GetFileSize(\"{}\") = {}", path, size_);
 	} else {
@@ -100,37 +114,42 @@ bool MpqWriter::Open(const char *path)
 	}
 	if (!stream_.Open(path, mode)) {
 		stream_.Close();
-		return false;
+		error = "Failed to open fstream";
+		goto on_error;
 	}
-	modified_ = !exists_;
 
 	name_ = path;
 
 	if (blockTable_ == nullptr || hashTable_ == nullptr) {
 		MpqFileHeader fhdr;
-		if (!exists_) {
+		if (!exists) {
 			InitDefaultMpqHeader(&fhdr);
 		} else if (!ReadMPQHeader(&fhdr)) {
+			error = "Failed to read MPQ header";
 			goto on_error;
 		}
-		blockTable_ = new MpqBlockEntry[BlockEntriesCount];
-		std::memset(blockTable_, 0, BlockEntriesCount * sizeof(MpqBlockEntry));
+		blockTable_ = std::make_unique<MpqBlockEntry[]>(BlockEntriesCount);
+		std::memset(blockTable_.get(), 0, BlockEntriesCount * sizeof(MpqBlockEntry));
 		if (fhdr.blockEntriesCount > 0) {
-			if (!stream_.Read(reinterpret_cast<char *>(blockTable_), static_cast<std::streamsize>(fhdr.blockEntriesCount * sizeof(MpqBlockEntry))))
+			if (!stream_.Read(reinterpret_cast<char *>(blockTable_.get()), static_cast<std::streamsize>(fhdr.blockEntriesCount * sizeof(MpqBlockEntry)))) {
+				error = "Failed to read block table";
 				goto on_error;
+			}
 			uint32_t key = Hash("(block table)", 3);
-			Decrypt(reinterpret_cast<uint32_t *>(blockTable_), fhdr.blockEntriesCount * sizeof(MpqBlockEntry), key);
+			Decrypt(reinterpret_cast<uint32_t *>(blockTable_.get()), fhdr.blockEntriesCount * sizeof(MpqBlockEntry), key);
 		}
-		hashTable_ = new MpqHashEntry[HashEntriesCount];
+		hashTable_ = std::make_unique<MpqHashEntry[]>(HashEntriesCount);
 
 		// We fill with 0xFF so that the `block` field defaults to -1 (a null block pointer).
-		std::memset(hashTable_, 0xFF, HashEntriesCount * sizeof(MpqHashEntry));
+		std::memset(hashTable_.get(), 0xFF, HashEntriesCount * sizeof(MpqHashEntry));
 
 		if (fhdr.hashEntriesCount > 0) {
-			if (!stream_.Read(reinterpret_cast<char *>(hashTable_), static_cast<std::streamsize>(fhdr.hashEntriesCount * sizeof(MpqHashEntry))))
+			if (!stream_.Read(reinterpret_cast<char *>(hashTable_.get()), static_cast<std::streamsize>(fhdr.hashEntriesCount * sizeof(MpqHashEntry)))) {
+				error = "Failed to read hash entries";
 				goto on_error;
+			}
 			uint32_t key = Hash("(hash table)", 3);
-			Decrypt(reinterpret_cast<uint32_t *>(hashTable_), fhdr.hashEntriesCount * sizeof(MpqHashEntry), key);
+			Decrypt(reinterpret_cast<uint32_t *>(hashTable_.get()), fhdr.hashEntriesCount * sizeof(MpqHashEntry), key);
 		}
 
 #ifndef CAN_SEEKP_BEYOND_EOF
@@ -143,38 +162,31 @@ bool MpqWriter::Open(const char *path)
 
 		// Write garbage header and tables because some platforms cannot `Seekp` beyond EOF.
 		// The data is incorrect at this point, it will be overwritten on Close.
-		if (!exists_)
+		if (!exists)
 			WriteHeaderAndTables();
 #endif
 	}
-	return true;
+	return;
 on_error:
-	Close(/*clearTables=*/true);
-	return false;
+	app_fatal(StrCat(_("Failed to open archive for writing."), "\n", path, "\n", error));
 }
 
-bool MpqWriter::Close(bool clearTables)
+MpqWriter::~MpqWriter()
 {
 	if (!stream_.IsOpen())
-		return true;
-	LogVerbose("Closing {} with clearTables={}", name_, clearTables);
+		return;
+	LogVerbose("Closing {}", name_);
 
 	bool result = true;
-	if (modified_ && !(stream_.Seekp(0, std::ios::beg) && WriteHeaderAndTables()))
+	if (!(stream_.Seekp(0, std::ios::beg) && WriteHeaderAndTables()))
 		result = false;
 	stream_.Close();
-	if (modified_ && result && size_ != 0) {
+	if (result && size_ != 0) {
 		LogVerbose("ResizeFile(\"{}\", {})", name_, size_);
 		result = ResizeFile(name_.c_str(), size_);
 	}
-	name_.clear();
-	if (clearTables) {
-		delete[] hashTable_;
-		hashTable_ = nullptr;
-		delete[] blockTable_;
-		blockTable_ = nullptr;
-	}
-	return result;
+	if (!result)
+		LogVerbose("Closing failed {}", name_);
 }
 
 uint32_t MpqWriter::FetchHandle(const char *filename) const
@@ -190,7 +202,6 @@ void MpqWriter::InitDefaultMpqHeader(MpqFileHeader *hdr)
 	hdr->blockSizeFactor = BlockSizeFactor;
 	hdr->version = 0;
 	size_ = MpqHashEntryOffset + HashEntrySize;
-	modified_ = true;
 }
 
 bool MpqWriter::IsValidMpqHeader(MpqFileHeader *hdr) const
@@ -222,7 +233,7 @@ bool MpqWriter::ReadMPQHeader(MpqFileHeader *hdr)
 
 MpqBlockEntry *MpqWriter::NewBlock(uint32_t *blockIndex)
 {
-	MpqBlockEntry *blockEntry = blockTable_;
+	MpqBlockEntry *blockEntry = blockTable_.get();
 
 	for (unsigned i = 0; i < BlockEntriesCount; ++i, ++blockEntry) {
 		if (!IsUnallocatedBlock(blockEntry))
@@ -242,7 +253,7 @@ void MpqWriter::AllocBlock(uint32_t blockOffset, uint32_t blockSize)
 	MpqBlockEntry *block;
 	bool expand;
 	do {
-		block = blockTable_;
+		block = blockTable_.get();
 		expand = false;
 		for (unsigned i = BlockEntriesCount; i-- != 0; ++block) {
 			// Expand to adjacent blocks.
@@ -282,7 +293,7 @@ uint32_t MpqWriter::FindFreeBlock(uint32_t size)
 {
 	uint32_t result;
 
-	MpqBlockEntry *block = blockTable_;
+	MpqBlockEntry *block = blockTable_.get();
 	for (unsigned i = 0; i < BlockEntriesCount; ++i, ++block) {
 		// Find a block entry to use space from.
 		if (!IsAllocatedUnusedBlock(block) || block->packedSize < size)
@@ -334,7 +345,7 @@ MpqBlockEntry *MpqWriter::AddFile(const char *filename, MpqBlockEntry *block, ui
 	uint32_t h2 = Hash(filename, 1);
 	uint32_t h3 = Hash(filename, 2);
 	if (GetHashIndex(h1, h2, h3) != HashEntryNotFound)
-		app_fatal("Hash collision between \"%s\" and existing file\n", filename);
+		app_fatal(StrCat("Hash collision between \"", filename, "\" and existing file\n"));
 	unsigned int hIdx = h1 & 0x7FF;
 
 	bool hasSpace = false;
@@ -464,17 +475,17 @@ bool MpqWriter::WriteHeader()
 
 bool MpqWriter::WriteBlockTable()
 {
-	Encrypt(reinterpret_cast<uint32_t *>(blockTable_), BlockEntrySize, Hash("(block table)", 3));
-	const bool success = stream_.Write(reinterpret_cast<const char *>(blockTable_), BlockEntrySize);
-	Decrypt(reinterpret_cast<uint32_t *>(blockTable_), BlockEntrySize, Hash("(block table)", 3));
+	Encrypt(reinterpret_cast<uint32_t *>(blockTable_.get()), BlockEntrySize, Hash("(block table)", 3));
+	const bool success = stream_.Write(reinterpret_cast<const char *>(blockTable_.get()), BlockEntrySize);
+	Decrypt(reinterpret_cast<uint32_t *>(blockTable_.get()), BlockEntrySize, Hash("(block table)", 3));
 	return success;
 }
 
 bool MpqWriter::WriteHashTable()
 {
-	Encrypt(reinterpret_cast<uint32_t *>(hashTable_), HashEntrySize, Hash("(hash table)", 3));
-	const bool success = stream_.Write(reinterpret_cast<const char *>(hashTable_), HashEntrySize);
-	Decrypt(reinterpret_cast<uint32_t *>(hashTable_), HashEntrySize, Hash("(hash table)", 3));
+	Encrypt(reinterpret_cast<uint32_t *>(hashTable_.get()), HashEntrySize, Hash("(hash table)", 3));
+	const bool success = stream_.Write(reinterpret_cast<const char *>(hashTable_.get()), HashEntrySize);
+	Decrypt(reinterpret_cast<uint32_t *>(hashTable_.get()), HashEntrySize, Hash("(hash table)", 3));
 	return success;
 }
 
@@ -492,12 +503,11 @@ void MpqWriter::RemoveHashEntry(const char *filename)
 	const uint32_t blockSize = block->packedSize;
 	memset(block, 0, sizeof(*block));
 	AllocBlock(blockOffset, blockSize);
-	modified_ = true;
 }
 
 void MpqWriter::RemoveHashEntries(bool (*fnGetName)(uint8_t, char *))
 {
-	char pszFileName[MAX_PATH];
+	char pszFileName[MaxMpqPathSize];
 
 	for (uint8_t i = 0; fnGetName(i, pszFileName); i++) {
 		RemoveHashEntry(pszFileName);
@@ -508,7 +518,6 @@ bool MpqWriter::WriteFile(const char *filename, const byte *data, size_t size)
 {
 	MpqBlockEntry *blockEntry;
 
-	modified_ = true;
 	RemoveHashEntry(filename);
 	blockEntry = AddFile(filename, nullptr, 0);
 	if (!WriteFileContents(filename, data, size, blockEntry)) {
@@ -530,7 +539,6 @@ void MpqWriter::RenameFile(const char *name, const char *newName) // NOLINT(bugp
 	MpqBlockEntry *blockEntry = &blockTable_[block];
 	hashEntry->block = MpqHashEntry::DeletedBlock;
 	AddFile(newName, blockEntry, block);
-	modified_ = true;
 }
 
 bool MpqWriter::HasFile(const char *name) const

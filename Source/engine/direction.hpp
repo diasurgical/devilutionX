@@ -16,6 +16,7 @@ enum class Direction : std::uint8_t {
 	NorthEast,
 	East,
 	SouthEast,
+	NoDirection
 };
 
 /** Maps from direction to a left turn from the direction. */

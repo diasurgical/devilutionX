@@ -1048,10 +1048,10 @@ msgstr[0] "{:d} Заряд"
 msgstr[1] "{:d} Заряди"
 
 #: Source/control.cpp:860 Source/inv.cpp:1991 Source/items.cpp:3480
-msgid "{:d} gold piece"
-msgid_plural "{:d} gold pieces"
-msgstr[0] "{:d} златна монета"
-msgstr[1] "{:d} златни монети"
+msgid "{:s} gold piece"
+msgid_plural "{:s} gold pieces"
+msgstr[0] "{:s} златна монета"
+msgstr[1] "{:s} златни монети"
 
 #: Source/control.cpp:863
 msgid "Requirements not met"
@@ -1071,10 +1071,10 @@ msgstr "Ново ниво"
 
 #. TRANSLATORS: {:d} is a number. Dialog is shown when splitting a stash of Gold.
 #: Source/control.cpp:1040
-msgid "You have {:d} gold piece. How many do you want to remove?"
-msgid_plural "You have {:d} gold pieces. How many do you want to remove?"
-msgstr[0] "Имате {:d} златна монета. Колко искате да отделите?"
-msgstr[1] "Имате {:d} златни монети. Колко искате да отделите?"
+msgid "You have {:s} gold piece. How many do you want to remove?"
+msgid_plural "You have {:s} gold pieces. How many do you want to remove?"
+msgstr[0] "Имате {:s} златна монета. Колко искате да отделите?"
+msgstr[1] "Имате {:s} златни монети. Колко искате да отделите?"
 
 #: Source/controls/modifier_hints.cpp:176 Source/qol/monhealthbar.cpp:36
 #: Source/qol/xpbar.cpp:76
@@ -1125,8 +1125,8 @@ msgstr "Сега ще УМРЕШ!"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:821
-msgid "Options:\n"
-msgstr "Настройки:\n"
+msgid "Options:"
+msgstr "Настройки:"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:822
@@ -1185,12 +1185,8 @@ msgstr "Забраняване на всички лимити на кадри п
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:833
-msgid ""
-"\n"
-"Game selection:\n"
-msgstr ""
-"\n"
-"Избор на игра:\n"
+msgid "Game selection:"
+msgstr "Избор на игра:"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:834
@@ -1209,20 +1205,12 @@ msgstr "Принудителен режим Hellfire"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:837
-msgid ""
-"\n"
-"Hellfire options:\n"
-msgstr ""
-"\n"
-"Настройки на Hellfire:\n"
+msgid "Hellfire options:"
+msgstr "Настройки на Hellfire:"
 
 #: Source/diablo.cpp:843
-msgid ""
-"\n"
-"Report bugs at https://github.com/diasurgical/devilutionX/\n"
-msgstr ""
-"\n"
-"Докладвайте несъответствия на https://github.com/diasurgical/devilutionX/\n"
+msgid "Report bugs at https://github.com/diasurgical/devilutionX/"
+msgstr "Докладвайте несъответствия на https://github.com/diasurgical/devilutionX/"
 
 #: Source/diablo.cpp:955
 msgid "version {:s}"
@@ -4425,8 +4413,8 @@ msgstr "2x щети за чуд., 1x за играч"
 
 #: Source/items.cpp:3746
 #, no-c-format
-msgid "Random 0 - 500% damage"
-msgstr "Произволни 0 - 500% щети"
+msgid "Random 0 - 600% damage"
+msgstr "Произволни 0 - 600% щети"
 
 #: Source/items.cpp:3748
 #, no-c-format
@@ -6852,7 +6840,7 @@ msgid_plural "Staff ({:d} charges)"
 msgstr[0] "Жезъл ({:d} заряд)"
 msgstr[1] "Жезъл ({:d} заряди)"
 
-#. TRANSLATORS: UI constrains, keep short please.
+#. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:164
 msgctxt "spellbook"
 msgid "Level {:d}"
@@ -6862,22 +6850,22 @@ msgstr "Ниво {:d}"
 msgid "Unusable"
 msgstr "Неизползваемо"
 
-#. TRANSLATORS: UI constrains, keep short please.
+#. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:174
 msgid "Heals: {:d} - {:d}"
 msgstr "Лекува: {:d}/{:d}"
 
-#. TRANSLATORS: UI constrains, keep short please.
+#. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:176
 msgid "Damage: {:d} - {:d}"
 msgstr "Щети: {:d}-{:d}"
 
-#. TRANSLATORS: UI constrains, keep short please.
+#. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:180
 msgid "Dmg: 1/3 target hp"
 msgstr "Щети: 1/3 ж.т.цел"
 
-#. TRANSLATORS: UI constrains, keep short please.
+#. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:182
 msgctxt "spellbook"
 msgid "Mana: {:d}"
@@ -6932,8 +6920,8 @@ msgid "Chat History (Messages: {:d})"
 msgstr "История на Чата (Съобщения: {:d})"
 
 #: Source/qol/itemlabels.cpp:72
-msgid "{:d} gold"
-msgstr "{:d} злато"
+msgid "{:s} gold"
+msgstr "{:s} злато"
 
 #: Source/qol/stash.cpp:619
 msgid "How many gold pieces do you want to withdraw?"
@@ -7446,8 +7434,8 @@ msgstr "Напуснете ателието"
 msgid "I have these items for sale:"
 msgstr "Продавам тези предмети."
 
-msgid "Your gold: {:d}"
-msgstr "Вашето злато: {:d}"
+msgid "Your gold: {:s}"
+msgstr "Вашето злато: {:s}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:425

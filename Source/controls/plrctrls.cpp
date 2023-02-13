@@ -25,8 +25,11 @@
 #include "hwcursor.hpp"
 #include "inv.h"
 #include "items.h"
+#include "levels/town.h"
+#include "levels/trigs.h"
 #include "minitext.h"
 #include "missiles.h"
+#include "panels/spell_icons.hpp"
 #include "panels/spell_list.hpp"
 #include "panels/ui_panels.hpp"
 #include "qol/chatlog.h"
@@ -34,16 +37,24 @@
 #include "stores.h"
 #include "towners.h"
 #include "track.h"
-#include "trigs.h"
 #include "utils/log.hpp"
-
-#define SPLICONLENGTH 56
+#include "utils/str_cat.hpp"
 
 namespace devilution {
 
 ControlTypes ControlMode = ControlTypes::None;
 ControlTypes ControlDevice = ControlTypes::None;
-ControllerButton ControllerButtonHeld = ControllerButton_NONE;
+GameActionType ControllerActionHeld = GameActionType_NONE;
+GamepadLayout GamepadType =
+#if defined(DEVILUTIONX_GAMEPAD_TYPE)
+    GamepadLayout::
+        DEVILUTIONX_GAMEPAD_TYPE;
+#else
+    GamepadLayout::Generic;
+#endif
+
+bool StandToggle = false;
+
 int pcurstrig = -1;
 Missile *pcursmissile = nullptr;
 quest_id pcursquest = Q_INVALID;
@@ -53,14 +64,14 @@ quest_id pcursquest = Q_INVALID;
  */
 bool InGameMenu()
 {
-	return stextflag != STORE_NONE
+	return stextflag != TalkID::None
 	    || HelpFlag
 	    || ChatLogFlag
 	    || talkflag
 	    || qtextflag
 	    || gmenu_is_active()
 	    || PauseMode == 2
-	    || Players[MyPlayerId]._pInvincible;
+	    || (MyPlayer != nullptr && MyPlayer->_pInvincible && MyPlayer->_pHitPoints == 0);
 }
 
 namespace {
@@ -84,7 +95,7 @@ const Direction FaceDir[3][3] = {
  */
 int GetRotaryDistance(Point destination)
 {
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	if (myPlayer.position.future == destination)
 		return -1;
@@ -101,11 +112,11 @@ int GetRotaryDistance(Point destination)
 
 /**
  * @brief Get the best case walking steps to coordinates
- * @param Position Tile coordinates
+ * @param position Tile coordinates
  */
 int GetMinDistance(Point position)
 {
-	return Players[MyPlayerId].position.future.WalkingDistance(position);
+	return MyPlayer->position.future.WalkingDistance(position);
 }
 
 /**
@@ -120,8 +131,8 @@ int GetDistance(Point destination, int maxDistance)
 		return 0;
 	}
 
-	int8_t walkpath[MAX_PATH_LENGTH];
-	auto &myPlayer = Players[MyPlayerId];
+	int8_t walkpath[MaxPathLength];
+	Player &myPlayer = *MyPlayer;
 	int steps = FindPath([&myPlayer](Point position) { return PosOkPlayer(myPlayer, position); }, myPlayer.position.future, destination, walkpath);
 	if (steps > maxDistance)
 		return 0;
@@ -135,17 +146,17 @@ int GetDistance(Point destination, int maxDistance)
  */
 int GetDistanceRanged(Point destination)
 {
-	return Players[MyPlayerId].position.future.ExactDistance(destination);
+	return MyPlayer->position.future.ExactDistance(destination);
 }
 
 void FindItemOrObject()
 {
-	Point futurePosition = Players[MyPlayerId].position.future;
+	WorldTilePosition futurePosition = MyPlayer->position.future;
 	int rotations = 5;
 
-	auto searchArea = PointsInRectangleRangeColMajor { Rectangle { futurePosition, 1 } };
+	auto searchArea = PointsInRectangleColMajor(WorldTileRectangle { futurePosition, 1 });
 
-	for (Point targetPosition : searchArea) {
+	for (WorldTilePosition targetPosition : searchArea) {
 		// As the player can not stand on the edge of the map this is safe from OOB
 		int8_t itemId = dItem[targetPosition.x][targetPosition.y] - 1;
 		if (itemId < 0) {
@@ -175,8 +186,8 @@ void FindItemOrObject()
 		return; // Don't look for objects in town
 	}
 
-	for (Point targetPosition : searchArea) {
-		Object *object = ObjectAtPosition(targetPosition);
+	for (WorldTilePosition targetPosition : searchArea) {
+		Object *object = FindObjectAtPosition(targetPosition);
 		if (object == nullptr || object->_oSelFlag == 0) {
 			// No object or non-interactive object
 			continue;
@@ -198,7 +209,7 @@ void FindItemOrObject()
 		}
 
 		rotations = newRotations;
-		pcursobj = object->GetId();
+		ObjectUnderCursor = object;
 		cursPosition = targetPosition;
 	}
 }
@@ -215,20 +226,22 @@ void CheckTownersNearby()
 
 bool HasRangedSpell()
 {
-	int spl = Players[MyPlayerId]._pRSpell;
+	SpellID spl = MyPlayer->_pRSpell;
 
-	return spl != SPL_INVALID
-	    && spl != SPL_TOWN
-	    && spl != SPL_TELEPORT
-	    && spelldata[spl].sTargeted
-	    && !spelldata[spl].sTownSpell;
+	return spl != SpellID::Invalid
+	    && spl != SpellID::TownPortal
+	    && spl != SpellID::Teleport
+	    && GetSpellData(spl).isTargeted()
+	    && !GetSpellData(spl).isAllowedInTown();
 }
 
 bool CanTargetMonster(const Monster &monster)
 {
-	if ((monster._mFlags & (MFLAG_HIDDEN | MFLAG_GOLEM)) != 0)
+	if ((monster.flags & MFLAG_HIDDEN) != 0)
 		return false;
-	if (monster._mhitpoints >> 6 <= 0) // dead
+	if (monster.isPlayerMinion())
+		return false;
+	if (monster.hitPoints >> 6 <= 0) // dead
 		return false;
 
 	if (!IsTileLit(monster.position.tile)) // not visible
@@ -248,7 +261,7 @@ void FindRangedTarget()
 	int distance = 0;
 	bool canTalk = false;
 
-	for (int i = 0; i < ActiveMonsterCount; i++) {
+	for (size_t i = 0; i < ActiveMonsterCount; i++) {
 		int mi = ActiveMonsters[i];
 		const auto &monster = Monsters[mi];
 
@@ -286,7 +299,7 @@ void FindMeleeTarget()
 	};
 	std::list<SearchNode> queue;
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	{
 		const int startX = myPlayer.position.future.x;
@@ -345,7 +358,7 @@ void FindMeleeTarget()
 
 void CheckMonstersNearby()
 {
-	if (Players[MyPlayerId].UsesRangedWeapon() || HasRangedSpell()) {
+	if (MyPlayer->UsesRangedWeapon() || HasRangedSpell()) {
 		FindRangedTarget();
 		return;
 	}
@@ -362,24 +375,24 @@ void CheckPlayerNearby()
 	if (pcursmonst != -1)
 		return;
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
-	int spl = myPlayer._pRSpell;
-	if (gbFriendlyMode && spl != SPL_RESURRECT && spl != SPL_HEALOTHER)
+	SpellID spl = myPlayer._pRSpell;
+	if (myPlayer.friendlyMode && spl != SpellID::Resurrect && spl != SpellID::HealOther)
 		return;
 
-	for (int i = 0; i < MAX_PLRS; i++) {
-		if (i == MyPlayerId)
+	for (size_t i = 0; i < Players.size(); i++) {
+		const Player &player = Players[i];
+		if (&player == MyPlayer)
 			continue;
-		const auto &player = Players[i];
 		const int mx = player.position.future.x;
 		const int my = player.position.future.y;
 		if (dPlayer[mx][my] == 0
 		    || !IsTileLit(player.position.future)
-		    || (player._pHitPoints == 0 && spl != SPL_RESURRECT))
+		    || (player._pHitPoints == 0 && spl != SpellID::Resurrect))
 			continue;
 
-		if (myPlayer.UsesRangedWeapon() || HasRangedSpell() || spl == SPL_HEALOTHER) {
+		if (myPlayer.UsesRangedWeapon() || HasRangedSpell() || spl == SpellID::HealOther) {
 			newDdistance = GetDistanceRanged(player.position.future);
 		} else {
 			newDdistance = GetDistance(player.position.future, distance);
@@ -415,11 +428,11 @@ void FindTrigger()
 	int rotations = 0;
 	int distance = 0;
 
-	if (pcursitem != -1 || pcursobj != -1)
+	if (pcursitem != -1 || ObjectUnderCursor != nullptr)
 		return; // Prefer showing items/objects over triggers (use of cursm* conflicts)
 
 	for (auto &missile : Missiles) {
-		if (missile._mitype == MIS_TOWN || missile._mitype == MIS_RPORTAL) {
+		if (missile._mitype == MissileID::TownPortal || missile._mitype == MissileID::RedPortal) {
 			const int newDistance = GetDistance(missile.position.tile, 2);
 			if (newDistance == 0)
 				continue;
@@ -476,15 +489,20 @@ void Interact()
 		return;
 	}
 
-	bool stand = false;
+	bool stand = StandToggle;
 #ifndef USE_SDL1
+	if (ControlMode == ControlTypes::Gamepad) {
+		ControllerButtonCombo standGroundCombo = sgOptions.Padmapper.ButtonComboForAction("StandGround");
+		stand = IsControllerButtonComboPressed(standGroundCombo);
+	}
 	if (ControlMode == ControlTypes::VirtualGamepad) {
 		stand = VirtualGamepadState.standButton.isHeld;
 	}
 #endif
 
+	Player &myPlayer = *MyPlayer;
+
 	if (leveltype != DTYPE_TOWN && stand) {
-		auto &myPlayer = Players[MyPlayerId];
 		Direction pdir = myPlayer._pdir;
 		AxisDirection moveDir = GetMoveDirection();
 		bool motion = moveDir.x != AxisDirectionX_NONE || moveDir.y != AxisDirectionY_NONE;
@@ -497,13 +515,13 @@ void Interact()
 			position = Monsters[pcursmonst].position.tile;
 		}
 
-		NetSendCmdLoc(MyPlayerId, true, Players[MyPlayerId].UsesRangedWeapon() ? CMD_RATTACKXY : CMD_SATTACKXY, position);
+		NetSendCmdLoc(MyPlayerId, true, myPlayer.UsesRangedWeapon() ? CMD_RATTACKXY : CMD_SATTACKXY, position);
 		LastMouseButtonAction = MouseActionType::Attack;
 		return;
 	}
 
 	if (pcursmonst != -1) {
-		if (!Players[MyPlayerId].UsesRangedWeapon() || CanTalkToMonst(Monsters[pcursmonst])) {
+		if (!myPlayer.UsesRangedWeapon() || CanTalkToMonst(Monsters[pcursmonst])) {
 			NetSendCmdParam1(true, CMD_ATTACKID, pcursmonst);
 		} else {
 			NetSendCmdParam1(true, CMD_RATTACKID, pcursmonst);
@@ -512,14 +530,14 @@ void Interact()
 		return;
 	}
 
-	if (leveltype != DTYPE_TOWN && pcursplr != -1 && !gbFriendlyMode) {
-		NetSendCmdParam1(true, Players[MyPlayerId].UsesRangedWeapon() ? CMD_RATTACKPID : CMD_ATTACKPID, pcursplr);
+	if (leveltype != DTYPE_TOWN && pcursplr != -1 && !myPlayer.friendlyMode) {
+		NetSendCmdParam1(true, myPlayer.UsesRangedWeapon() ? CMD_RATTACKPID : CMD_ATTACKPID, pcursplr);
 		LastMouseButtonAction = MouseActionType::AttackPlayerTarget;
 		return;
 	}
 
-	if (pcursobj != -1) {
-		NetSendCmdLocParam1(true, CMD_OPOBJXY, cursPosition, pcursobj);
+	if (ObjectUnderCursor != nullptr) {
+		NetSendCmdLoc(MyPlayerId, true, CMD_OPOBJXY, cursPosition);
 		LastMouseButtonAction = MouseActionType::OperateObject;
 		return;
 	}
@@ -532,7 +550,7 @@ void AttrIncBtnSnap(AxisDirection dir)
 	if (dir.y == AxisDirectionY_NONE)
 		return;
 
-	if (chrbtnactive && Players[MyPlayerId]._pStatPts <= 0)
+	if (chrbtnactive && MyPlayer->_pStatPts <= 0)
 		return;
 
 	// first, find our cursor location
@@ -541,7 +559,7 @@ void AttrIncBtnSnap(AxisDirection dir)
 	for (int i = 0; i < 4; i++) {
 		button = ChrBtnsRect[i];
 		button.position = GetPanelPosition(UiPanels::Character, button.position);
-		if (button.Contains(MousePosition)) {
+		if (button.contains(MousePosition)) {
 			slot = i;
 			break;
 		}
@@ -688,7 +706,7 @@ Point FindFirstStashSlotOnItem(StashStruct::StashCell itemInvId)
 	if (itemInvId == StashStruct::EmptyCell)
 		return InvalidStashPoint;
 
-	for (auto point : PointsInRectangleRange({ { 0, 0 }, { 10, 10 } })) {
+	for (WorldTilePosition point : PointsInRectangle(WorldTileRectangle { { 0, 0 }, { 10, 10 } })) {
 		if (Stash.GetItemIdAtPosition(point) == itemInvId)
 			return point;
 	}
@@ -757,7 +775,7 @@ Point FindClosestStashSlot(Point mousePos)
 	Point bestSlot = {};
 	mousePos += Displacement { -INV_SLOT_HALF_SIZE_PX, -INV_SLOT_HALF_SIZE_PX };
 
-	for (auto point : PointsInRectangleRange({ { 0, 0 }, { 10, 10 } })) {
+	for (Point point : PointsInRectangle(Rectangle { { 0, 0 }, Size { 10, 10 } })) {
 		int distance = mousePos.ManhattanDistance(GetStashSlotCoord(point));
 		if (distance < shortestDistance) {
 			shortestDistance = distance;
@@ -1044,6 +1062,28 @@ void CheckInventoryMove(AxisDirection dir)
 	InventoryMove(dir);
 }
 
+/**
+ * @brief Try to clean the inventory related cursor states.
+ * @return True if it is safe to close the inventory
+ */
+bool BlurInventory()
+{
+	if (!MyPlayer->HoldItem.isEmpty()) {
+		if (!TryDropItem()) {
+			MyPlayer->Say(HeroSpeech::WhereWouldIPutThis);
+			return false;
+		}
+	}
+
+	CloseInventory();
+	if (pcurs > CURSOR_HAND)
+		NewCursor(CURSOR_HAND);
+	if (chrflag)
+		FocusOnCharInfo();
+
+	return true;
+}
+
 void StashMove(AxisDirection dir)
 {
 	static AxisDirectionRepeater repeater(/*min_interval_ms=*/150);
@@ -1255,14 +1295,14 @@ bool IsPathBlocked(Point position, Direction dir)
 	if (IsTileNotSolid(leftStep) && IsTileNotSolid(rightStep))
 		return false;
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	return !PosOkPlayer(myPlayer, leftStep) && !PosOkPlayer(myPlayer, rightStep);
 }
 
-void WalkInDir(int playerId, AxisDirection dir)
+void WalkInDir(size_t playerId, AxisDirection dir)
 {
-	auto &player = Players[playerId];
+	Player &player = Players[playerId];
 
 	if (dir.x == AxisDirectionX_NONE && dir.y == AxisDirectionY_NONE) {
 		if (ControlMode != ControlTypes::KeyboardAndMouse && player.walkpath[0] != WALK_NONE && player.destAction == ACTION_NONE)
@@ -1273,14 +1313,14 @@ void WalkInDir(int playerId, AxisDirection dir)
 	const Direction pdir = FaceDir[static_cast<std::size_t>(dir.x)][static_cast<std::size_t>(dir.y)];
 	const auto delta = player.position.future + pdir;
 
-	if (!player.IsWalking() && player.CanChangeAction())
+	if (!player.isWalking() && player.CanChangeAction())
 		player._pdir = pdir;
 
 #ifndef USE_SDL1
 	if (ControlMode == ControlTypes::VirtualGamepad) {
 		if (VirtualGamepadState.standButton.isHeld) {
 			if (player._pmode == PM_STAND)
-				StartStand(playerId, pdir);
+				StartStand(player, pdir);
 			return;
 		}
 	}
@@ -1288,7 +1328,7 @@ void WalkInDir(int playerId, AxisDirection dir)
 
 	if (PosOkPlayer(player, delta) && IsPathBlocked(player.position.future, pdir)) {
 		if (player._pmode == PM_STAND)
-			StartStand(playerId, pdir);
+			StartStand(player, pdir);
 		return; // Don't start backtrack around obstacles
 	}
 
@@ -1325,7 +1365,7 @@ HandleLeftStickOrDPadFn GetLeftStickOrDPadGameUIHandler()
 	if (invflag) {
 		return &CheckInventoryMove;
 	}
-	if (chrflag && Players[MyPlayerId]._pStatPts > 0) {
+	if (chrflag && MyPlayer->_pStatPts > 0) {
 		return &AttrIncBtnSnap;
 	}
 	if (spselflag) {
@@ -1337,7 +1377,7 @@ HandleLeftStickOrDPadFn GetLeftStickOrDPadGameUIHandler()
 	if (QuestLogIsOpen) {
 		return &QuestLogMove;
 	}
-	if (stextflag != STORE_NONE) {
+	if (stextflag != TalkID::None) {
 		return &StoreMove;
 	}
 	return nullptr;
@@ -1347,14 +1387,12 @@ void ProcessLeftStickOrDPadGameUI()
 {
 	HandleLeftStickOrDPadFn handler = GetLeftStickOrDPadGameUIHandler();
 	if (handler != nullptr)
-		handler(GetLeftStickOrDpadDirection(true));
+		handler(GetLeftStickOrDpadDirection(false));
 }
 
-void Movement(int playerId)
+void Movement(size_t playerId)
 {
-	if (InGameMenu()
-	    || IsControllerButtonPressed(ControllerButton_BUTTON_START)
-	    || IsControllerButtonPressed(ControllerButton_BUTTON_BACK))
+	if (PadMenuNavigatorActive || PadHotspellMenuActive || InGameMenu())
 		return;
 
 	if (GetLeftStickOrDPadGameUIHandler() == nullptr) {
@@ -1441,7 +1479,7 @@ float rightStickLastMove = 0;
 
 bool ContinueSimulatedMouseEvent(const SDL_Event &event, const ControllerButtonEvent &gamepadEvent)
 {
-	if (IsAutomapActive())
+	if (AutomapActive)
 		return false;
 
 #if !defined(USE_SDL1) && !defined(JOY_AXIS_RIGHTX) && !defined(JOY_AXIS_RIGHTY)
@@ -1456,24 +1494,8 @@ bool ContinueSimulatedMouseEvent(const SDL_Event &event, const ControllerButtonE
 		return true;
 	}
 
-	return SimulatingMouseWithSelectAndDPad || IsSimulatedMouseClickBinding(gamepadEvent);
+	return SimulatingMouseWithPadmapper || IsSimulatedMouseClickBinding(gamepadEvent);
 }
-
-void LogControlDeviceAndModeChange(ControlTypes newControlDevice, ControlTypes newControlMode)
-{
-	if (SDL_LOG_PRIORITY_VERBOSE < SDL_LogGetPriority(SDL_LOG_CATEGORY_APPLICATION))
-		return;
-	if (newControlDevice == ControlDevice && newControlMode == ControlMode)
-		return;
-	constexpr auto DebugChange = [](ControlTypes before, ControlTypes after) -> std::string {
-		if (before == after)
-			return std::string { ControlTypeToString(before) };
-		return fmt::format("{} -> {}", ControlTypeToString(before), ControlTypeToString(after));
-	};
-	LogVerbose("Control: device {}, mode {}", DebugChange(ControlDevice, newControlDevice), DebugChange(ControlMode, newControlMode));
-}
-
-} // namespace
 
 string_view ControlTypeToString(ControlTypes controlType)
 {
@@ -1490,6 +1512,51 @@ string_view ControlTypeToString(ControlTypes controlType)
 	return "Invalid";
 }
 
+void LogControlDeviceAndModeChange(ControlTypes newControlDevice, ControlTypes newControlMode)
+{
+	if (SDL_LOG_PRIORITY_VERBOSE < SDL_LogGetPriority(SDL_LOG_CATEGORY_APPLICATION))
+		return;
+	if (newControlDevice == ControlDevice && newControlMode == ControlMode)
+		return;
+	constexpr auto DebugChange = [](ControlTypes before, ControlTypes after) -> std::string {
+		if (before == after)
+			return std::string { ControlTypeToString(before) };
+		return StrCat(ControlTypeToString(before), " -> ", ControlTypeToString(after));
+	};
+	LogVerbose("Control: device {}, mode {}", DebugChange(ControlDevice, newControlDevice), DebugChange(ControlMode, newControlMode));
+}
+
+#ifndef USE_SDL1
+string_view GamepadTypeToString(GamepadLayout gamepadLayout)
+{
+	switch (gamepadLayout) {
+	case GamepadLayout::Nintendo:
+		return "Nintendo";
+	case GamepadLayout::PlayStation:
+		return "PlayStation";
+	case GamepadLayout::Xbox:
+		return "Xbox";
+	case GamepadLayout::Generic:
+		return "Unknown";
+	}
+	return "Invalid";
+}
+
+void LogGamepadChange(GamepadLayout newGamepad)
+{
+	if (SDL_LOG_PRIORITY_VERBOSE < SDL_LogGetPriority(SDL_LOG_CATEGORY_APPLICATION))
+		return;
+	constexpr auto DebugChange = [](GamepadLayout before, GamepadLayout after) -> std::string {
+		if (before == after)
+			return std::string { GamepadTypeToString(before) };
+		return StrCat(GamepadTypeToString(before), " -> ", GamepadTypeToString(after));
+	};
+	LogVerbose("Control: gamepad {}", DebugChange(GamepadType, newGamepad));
+}
+#endif
+
+} // namespace
+
 void DetectInputMethod(const SDL_Event &event, const ControllerButtonEvent &gamepadEvent)
 {
 	ControlTypes inputType = GetInputTypeFromEvent(event);
@@ -1504,7 +1571,7 @@ void DetectInputMethod(const SDL_Event &event, const ControllerButtonEvent &game
 #endif
 
 #if HAS_KBCTRL == 1
-	if (inputType == ControlTypes::KeyboardAndMouse && IsNoneOf(gamepadEvent.button, ControllerButton_NONE, ControllerButton_IGNORE)) {
+	if (inputType == ControlTypes::KeyboardAndMouse && gamepadEvent.button != ControllerButton_NONE) {
 		inputType = ControlTypes::Gamepad;
 	}
 #endif
@@ -1527,6 +1594,13 @@ void DetectInputMethod(const SDL_Event &event, const ControllerButtonEvent &game
 		} else {
 			ResetCursor();
 		}
+		if (ControlDevice == ControlTypes::Gamepad) {
+			GamepadLayout newGamepadLayout = GameController::getLayout(event);
+			if (newGamepadLayout != GamepadType) {
+				LogGamepadChange(newGamepadLayout);
+				GamepadType = newGamepadLayout;
+			}
+		}
 #endif
 	}
 
@@ -1536,9 +1610,83 @@ void DetectInputMethod(const SDL_Event &event, const ControllerButtonEvent &game
 	}
 }
 
-bool IsAutomapActive()
+void ProcessGameAction(const GameAction &action)
 {
-	return AutomapActive && leveltype != DTYPE_TOWN;
+	switch (action.type) {
+	case GameActionType_NONE:
+	case GameActionType_SEND_KEY:
+		break;
+	case GameActionType_USE_HEALTH_POTION:
+		UseBeltItem(BLT_HEALING);
+		break;
+	case GameActionType_USE_MANA_POTION:
+		UseBeltItem(BLT_MANA);
+		break;
+	case GameActionType_PRIMARY_ACTION:
+		PerformPrimaryAction();
+		break;
+	case GameActionType_SECONDARY_ACTION:
+		PerformSecondaryAction();
+		break;
+	case GameActionType_CAST_SPELL:
+		PerformSpellAction();
+		break;
+	case GameActionType_TOGGLE_QUICK_SPELL_MENU:
+		if (!invflag || BlurInventory()) {
+			if (!spselflag)
+				DoSpeedBook();
+			else
+				spselflag = false;
+			chrflag = false;
+			QuestLogIsOpen = false;
+			sbookflag = false;
+			CloseGoldWithdraw();
+			IsStashOpen = false;
+		}
+		break;
+	case GameActionType_TOGGLE_CHARACTER_INFO:
+		chrflag = !chrflag;
+		if (chrflag) {
+			QuestLogIsOpen = false;
+			CloseGoldWithdraw();
+			IsStashOpen = false;
+			spselflag = false;
+			if (pcurs == CURSOR_DISARM)
+				NewCursor(CURSOR_HAND);
+			FocusOnCharInfo();
+		}
+		break;
+	case GameActionType_TOGGLE_QUEST_LOG:
+		if (!QuestLogIsOpen) {
+			StartQuestlog();
+			chrflag = false;
+			CloseGoldWithdraw();
+			IsStashOpen = false;
+			spselflag = false;
+		} else {
+			QuestLogIsOpen = false;
+		}
+		break;
+	case GameActionType_TOGGLE_INVENTORY:
+		if (invflag) {
+			BlurInventory();
+		} else {
+			sbookflag = false;
+			spselflag = false;
+			invflag = true;
+			if (pcurs == CURSOR_DISARM)
+				NewCursor(CURSOR_HAND);
+			FocusOnInventory();
+		}
+		break;
+	case GameActionType_TOGGLE_SPELL_BOOK:
+		if (BlurInventory()) {
+			CloseInventory();
+			spselflag = false;
+			sbookflag = !sbookflag;
+		}
+		break;
+	}
 }
 
 void HandleRightStickMotion()
@@ -1550,7 +1698,7 @@ void HandleRightStickMotion()
 		return;
 	}
 
-	if (IsAutomapActive()) { // move map
+	if (AutomapActive) { // move map
 		int dx = 0;
 		int dy = 0;
 		acc.Pool(&dx, &dy, 32);
@@ -1618,10 +1766,10 @@ void plrctrls_after_check_curs_move()
 	}
 
 	// While holding the button down we should retain target (but potentially lose it if it dies, goes out of view, etc)
-	if (ControllerButtonHeld != ControllerButton_NONE && IsNoneOf(LastMouseButtonAction, MouseActionType::None, MouseActionType::Attack, MouseActionType::Spell)) {
+	if (ControllerActionHeld != GameActionType_NONE && IsNoneOf(LastMouseButtonAction, MouseActionType::None, MouseActionType::Attack, MouseActionType::Spell)) {
 		InvalidateTargets();
 
-		if (pcursmonst == -1 && pcursobj == -1 && pcursitem == -1 && pcursinvitem == -1 && pcursstashitem == uint16_t(-1) && pcursplr == -1) {
+		if (pcursmonst == -1 && ObjectUnderCursor == nullptr && pcursitem == -1 && pcursinvitem == -1 && pcursstashitem == uint16_t(-1) && pcursplr == -1) {
 			FindTrigger();
 		}
 		return;
@@ -1631,21 +1779,20 @@ void plrctrls_after_check_curs_move()
 	pcursplr = -1;
 	pcursmonst = -1;
 	pcursitem = -1;
-	pcursobj = -1;
+	ObjectUnderCursor = nullptr;
 
 	pcursmissile = nullptr;
 	pcurstrig = -1;
 	pcursquest = Q_INVALID;
 	cursPosition = { -1, -1 };
-	if (Players[MyPlayerId]._pInvincible) {
+	if (MyPlayer->_pInvincible) {
 		return;
 	}
 	if (DoomFlag) {
 		return;
 	}
 	if (!invflag) {
-		InfoString.clear();
-		ClearPanel();
+		InfoString = {};
 		FindActor();
 		FindItemOrObject();
 		FindTrigger();
@@ -1665,14 +1812,14 @@ void plrctrls_after_game_logic()
 
 void UseBeltItem(int type)
 {
-	for (int i = 0; i < MAXBELTITEMS; i++) {
-		Item &item = Players[MyPlayerId].SpdList[i];
+	for (int i = 0; i < MaxBeltItems; i++) {
+		Item &item = MyPlayer->SpdList[i];
 		if (item.isEmpty()) {
 			continue;
 		}
 
 		bool isRejuvenation = IsAnyOf(item._iMiscId, IMISC_REJUV, IMISC_FULLREJUV);
-		bool isHealing = isRejuvenation || IsAnyOf(item._iMiscId, IMISC_HEAL, IMISC_FULLHEAL) || item.IsScrollOf(SPL_HEAL);
+		bool isHealing = isRejuvenation || IsAnyOf(item._iMiscId, IMISC_HEAL, IMISC_FULLHEAL) || item.isScrollOf(SpellID::Healing);
 		bool isMana = isRejuvenation || IsAnyOf(item._iMiscId, IMISC_MANA, IMISC_FULLMANA);
 
 		if ((type == BLT_HEALING && isHealing) || (type == BLT_MANA && isMana)) {
@@ -1688,7 +1835,7 @@ void PerformPrimaryAction()
 		if (pcurs > CURSOR_HAND && pcurs < CURSOR_FIRSTITEM) {
 			TryIconCurs();
 			NewCursor(CURSOR_HAND);
-		} else if (GetRightPanel().Contains(MousePosition) || GetMainPanel().Contains(MousePosition)) {
+		} else if (GetRightPanel().contains(MousePosition) || GetMainPanel().contains(MousePosition)) {
 			int inventorySlot = (Slot >= 0) ? Slot : FindClosestInventorySlot(MousePosition);
 
 			const Size cursorSizeInCells = MyPlayer->HoldItem.isEmpty() ? Size { 1, 1 } : GetInventorySize(MyPlayer->HoldItem);
@@ -1724,7 +1871,7 @@ void PerformPrimaryAction()
 				Slot = jumpSlot;
 				SetCursorPos(mousePos);
 			}
-		} else if (IsStashOpen && GetLeftPanel().Contains(MousePosition)) {
+		} else if (IsStashOpen && GetLeftPanel().contains(MousePosition)) {
 			Point stashSlot = (ActiveStashSlot != InvalidStashPoint) ? ActiveStashSlot : FindClosestStashSlot(MousePosition);
 
 			const Size cursorSizeInCells = MyPlayer->HoldItem.isEmpty() ? Size { 1, 1 } : GetInventorySize(MyPlayer->HoldItem);
@@ -1733,7 +1880,7 @@ void PerformPrimaryAction()
 			StashStruct::StashCell itemUnderCursor = [](Point stashSlot, Size cursorSizeInCells) -> StashStruct::StashCell {
 				if (stashSlot != InvalidStashPoint)
 					return StashStruct::EmptyCell;
-				for (Point slotUnderCursor : PointsInRectangleRange { { stashSlot, cursorSizeInCells } }) {
+				for (Point slotUnderCursor : PointsInRectangle(Rectangle { stashSlot, cursorSizeInCells })) {
 					if (slotUnderCursor.x >= 10 || slotUnderCursor.y >= 10)
 						continue;
 					StashStruct::StashCell itemId = Stash.GetItemIdAtPosition(slotUnderCursor);
@@ -1766,7 +1913,7 @@ void PerformPrimaryAction()
 		return;
 	}
 
-	if (chrflag && !chrbtnactive && Players[MyPlayerId]._pStatPts > 0) {
+	if (chrflag && !chrbtnactive && MyPlayer->_pStatPts > 0) {
 		CheckChrBtns();
 		if (chrbtnactive)
 			ReleaseChrBtns(false);
@@ -1778,8 +1925,8 @@ void PerformPrimaryAction()
 
 bool SpellHasActorTarget()
 {
-	spell_id spl = Players[MyPlayerId]._pRSpell;
-	if (spl == SPL_TOWN || spl == SPL_TELEPORT)
+	SpellID spl = MyPlayer->_pRSpell;
+	if (spl == SpellID::TownPortal || spl == SpellID::Teleport)
 		return false;
 
 	if (IsWallSpell(spl) && pcursmonst != -1) {
@@ -1789,7 +1936,7 @@ bool SpellHasActorTarget()
 	return pcursplr != -1 || pcursmonst != -1;
 }
 
-void UpdateSpellTarget(spell_id spell)
+void UpdateSpellTarget(SpellID spell)
 {
 	if (SpellHasActorTarget())
 		return;
@@ -1797,9 +1944,9 @@ void UpdateSpellTarget(spell_id spell)
 	pcursplr = -1;
 	pcursmonst = -1;
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
-	int range = spell == SPL_TELEPORT ? 4 : 1;
+	int range = spell == SpellID::Teleport ? 4 : 1;
 
 	cursPosition = myPlayer.position.future + Displacement(myPlayer._pdir) * range;
 }
@@ -1809,39 +1956,35 @@ void UpdateSpellTarget(spell_id spell)
  */
 bool TryDropItem()
 {
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	if (myPlayer.HoldItem.isEmpty()) {
 		return false;
 	}
 
-	if (currlevel == 0) {
+	if (leveltype == DTYPE_TOWN) {
 		if (UseItemOpensHive(myPlayer.HoldItem, myPlayer.position.tile)) {
-			NetSendCmdPItem(true, CMD_PUTITEM, { 79, 61 }, myPlayer.HoldItem);
-			myPlayer.HoldItem.Clear();
+			OpenHive();
 			NewCursor(CURSOR_HAND);
 			return true;
 		}
-		if (UseItemOpensCrypt(myPlayer.HoldItem, myPlayer.position.tile)) {
-			NetSendCmdPItem(true, CMD_PUTITEM, { 35, 20 }, myPlayer.HoldItem);
-			myPlayer.HoldItem.Clear();
+		if (UseItemOpensGrave(myPlayer.HoldItem, myPlayer.position.tile)) {
+			OpenGrave();
 			NewCursor(CURSOR_HAND);
 			return true;
 		}
 	}
 
-	cursPosition = myPlayer.position.future + Direction::SouthEast;
-	if (!DropItemBeforeTrig()) {
-		// Try to drop on the other side
-		cursPosition = myPlayer.position.future + Direction::SouthWest;
-		DropItemBeforeTrig();
-	}
-
-	if (pcurs != CURSOR_HAND) {
+	std::optional<Point> itemTile = FindAdjacentPositionForItem(myPlayer.position.future, myPlayer._pdir);
+	if (!itemTile) {
 		myPlayer.Say(HeroSpeech::WhereWouldIPutThis);
+		return false;
 	}
 
-	return pcurs == CURSOR_HAND;
+	NetSendCmdPItem(true, CMD_PUTITEM, *itemTile, myPlayer.HoldItem);
+	myPlayer.HoldItem.clear();
+	NewCursor(CURSOR_HAND);
+	return true;
 }
 
 void PerformSpellAction()
@@ -1876,10 +2019,10 @@ void PerformSpellAction()
 		return;
 	}
 
-	const auto &myPlayer = Players[MyPlayerId];
-	int spl = myPlayer._pRSpell;
-	if ((pcursplr == -1 && (spl == SPL_RESURRECT || spl == SPL_HEALOTHER))
-	    || (pcursobj == -1 && spl == SPL_DISARM)) {
+	const Player &myPlayer = *MyPlayer;
+	SpellID spl = myPlayer._pRSpell;
+	if ((pcursplr == -1 && (spl == SpellID::Resurrect || spl == SpellID::HealOther))
+	    || (ObjectUnderCursor == nullptr && spl == SpellID::TrapDisarm)) {
 		myPlayer.Say(HeroSpeech::ICantCastThatHere);
 		return;
 	}
@@ -1900,13 +2043,13 @@ void CtrlUseInvItem()
 		return;
 	}
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 	Item &item = GetInventoryItem(myPlayer, pcursinvitem);
-	if (item.IsScroll()) {
+	if (item.isScroll()) {
 		if (TargetsMonster(item._iSpell)) {
 			return;
 		}
-		if (spelldata[item._iSpell].sTargeted) {
+		if (GetSpellData(item._iSpell).isTargeted()) {
 			UpdateSpellTarget(item._iSpell);
 		}
 	}
@@ -1929,11 +2072,11 @@ void CtrlUseStashItem()
 	}
 
 	const Item &item = Stash.stashList[pcursstashitem];
-	if (item.IsScroll()) {
+	if (item.isScroll()) {
 		if (TargetsMonster(item._iSpell)) {
 			return;
 		}
-		if (spelldata[item._iSpell].sTargeted) {
+		if (GetSpellData(item._iSpell).isTargeted()) {
 			UpdateSpellTarget(item._iSpell);
 		}
 	}
@@ -1948,7 +2091,7 @@ void CtrlUseStashItem()
 
 void PerformSecondaryAction()
 {
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 	if (invflag) {
 		if (pcurs > CURSOR_HAND && pcurs < CURSOR_FIRSTITEM) {
 			TryIconCurs();
@@ -1972,8 +2115,8 @@ void PerformSecondaryAction()
 
 	if (pcursitem != -1) {
 		NetSendCmdLocParam1(true, CMD_GOTOAGETITEM, cursPosition, pcursitem);
-	} else if (pcursobj != -1) {
-		NetSendCmdLocParam1(true, CMD_OPOBJXY, cursPosition, pcursobj);
+	} else if (ObjectUnderCursor != nullptr) {
+		NetSendCmdLoc(MyPlayerId, true, CMD_OPOBJXY, cursPosition);
 		LastMouseButtonAction = MouseActionType::OperateObject;
 	} else {
 		if (pcursmissile != nullptr) {
@@ -1991,21 +2134,17 @@ void PerformSecondaryAction()
 
 void QuickCast(size_t slot)
 {
-	auto &myPlayer = Players[MyPlayerId];
-	spell_id spell = myPlayer._pSplHotKey[slot];
-	spell_type spellType = myPlayer._pSplTHotKey[slot];
+	MouseActionType prevMouseButtonAction = LastMouseButtonAction;
+	Player &myPlayer = *MyPlayer;
+	SpellID spell = myPlayer._pSplHotKey[slot];
+	SpellType spellType = myPlayer._pSplTHotKey[slot];
 
 	if (ControlMode != ControlTypes::KeyboardAndMouse) {
 		UpdateSpellTarget(spell);
 	}
 
 	CheckPlrSpell(false, spell, spellType);
-	if (pcursplr != -1)
-		LastMouseButtonAction = MouseActionType::SpellPlayerTarget;
-	else if (pcursmonst != -1)
-		LastMouseButtonAction = MouseActionType::SpellMonsterTarget;
-	else
-		LastMouseButtonAction = MouseActionType::Spell;
+	LastMouseButtonAction = prevMouseButtonAction;
 }
 
 } // namespace devilution

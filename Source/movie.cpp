@@ -7,9 +7,11 @@
 #include "controls/plrctrls.h"
 #include "diablo.h"
 #include "effects.h"
+#include "engine/backbuffer_state.hpp"
 #include "engine/demomode.h"
+#include "engine/events.hpp"
+#include "engine/sound.h"
 #include "hwcursor.hpp"
-#include "sound.h"
 #include "storm/storm_svid.h"
 #include "utils/display.h"
 
@@ -29,24 +31,31 @@ void play_movie(const char *pszMovie, bool userCanClose)
 
 	sound_disable_music(true);
 	stream_stop();
-	effects_play_sound("Sfx\\Misc\\blank.wav");
 
 	if (IsHardwareCursorEnabled() && ControlDevice == ControlTypes::KeyboardAndMouse) {
 		SetHardwareCursorVisible(false);
 	}
 
 	if (SVidPlayBegin(pszMovie, loop_movie ? 0x100C0808 : 0x10280808)) {
-		tagMSG msg;
+		SDL_Event event;
+		uint16_t modState;
 		while (movie_playing) {
-			while (movie_playing && FetchMessage(&msg)) {
-				switch (msg.message) {
-				case DVL_WM_KEYDOWN:
-				case DVL_WM_LBUTTONUP:
-				case DVL_WM_RBUTTONUP:
-					if (userCanClose || (msg.message == DVL_WM_KEYDOWN && msg.wParam == DVL_VK_ESCAPE))
+			while (movie_playing && FetchMessage(&event, &modState)) {
+				if (userCanClose) {
+					for (ControllerButtonEvent ctrlEvent : ToControllerButtonEvents(event)) {
+						if (!SkipsMovie(ctrlEvent))
+							continue;
+						movie_playing = false;
+						break;
+					}
+				}
+				switch (event.type) {
+				case SDL_KEYDOWN:
+				case SDL_MOUSEBUTTONUP:
+					if (userCanClose || (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE))
 						movie_playing = false;
 					break;
-				case DVL_WM_QUIT:
+				case SDL_QUIT:
 					SVidPlayEnd();
 					diablo_quit(0);
 				}
@@ -63,6 +72,7 @@ void play_movie(const char *pszMovie, bool userCanClose)
 
 	SDL_GetMouseState(&MousePosition.x, &MousePosition.y);
 	OutputToLogical(&MousePosition.x, &MousePosition.y);
+	InitBackbufferState();
 }
 
 void PlayInGameMovie(const char *pszMovie)
@@ -70,10 +80,10 @@ void PlayInGameMovie(const char *pszMovie)
 	PaletteFadeOut(8);
 	play_movie(pszMovie, false);
 	ClearScreenBuffer();
-	force_redraw = 255;
+	RedrawEverything();
 	scrollrt_draw_game_screen();
 	PaletteFadeIn(8);
-	force_redraw = 255;
+	RedrawEverything();
 }
 
 } // namespace devilution

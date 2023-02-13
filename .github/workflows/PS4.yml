@@ -5,14 +5,20 @@ on:
     branches:
       - master
   pull_request:
-    types: [ opened, synchronize ]
+    types: [opened, synchronize]
+  release:
+    types: [published]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   ps4:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         fetch-depth: 0
 
@@ -20,8 +26,8 @@ jobs:
       run: >
         sudo apt-get update &&
         sudo apt-get install -y wget cmake git gettext smpq &&
-        wget https://github.com/PacBrew/pacbrew-pacman/releases/download/pacbrew-release-1.0/pacbrew-pacman-1.0.deb &&
-        sudo dpkg -i pacbrew-pacman-1.0.deb && sudo pacbrew-pacman -Sy &&
+        wget https://github.com/PacBrew/pacbrew-pacman/releases/download/v1.1/pacbrew-pacman-1.1.deb &&
+        sudo dpkg -i pacbrew-pacman-1.1.deb && sudo pacbrew-pacman -Sy &&
         sudo pacbrew-pacman --noconfirm -S ps4-openorbis ps4-openorbis-portlibs &&
         echo "#include <endian.h>" | sudo tee /opt/pacbrew/ps4/openorbis/include/sys/endian.h
 
@@ -34,6 +40,13 @@ jobs:
       if: ${{ !env.ACT }}
       uses: actions/upload-artifact@v2
       with:
-        name: devilutionx.pkg
+        name: devilutionx-ps4.pkg
         path: build-ps4/devilutionx.pkg
 
+    - name: Update Release
+      if: ${{ github.event_name == 'release' && !env.ACT }}
+      uses: svenstaro/upload-release-action@v2
+      with:
+        asset_name: devilutionx-ps4.pkg
+        file: build-ps4/devilutionx.pkg
+        overwrite: true

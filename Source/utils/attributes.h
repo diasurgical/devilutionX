@@ -50,3 +50,15 @@
 #else
 #define DVL_REINITIALIZES
 #endif
+
+#if ((defined(__GNUC__) || defined(__clang__)) && !defined(__EXCEPTIONS)) || defined(_MSC_VER) && !_HAS_EXCEPTIONS
+#define DVL_EXCEPTIONS 0
+#else
+#define DVL_EXCEPTIONS 1
+#endif
+
+#if defined(_MSC_VER)
+#define DVL_RESTRICT __restrict
+#else
+#define DVL_RESTRICT __restrict__
+#endif

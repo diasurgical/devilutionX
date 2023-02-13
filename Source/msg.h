@@ -17,7 +17,6 @@
 namespace devilution {
 
 #define MAX_SEND_STR_LEN 80
-#define MAXMULTIQUESTS 10
 
 enum _cmd_id : uint8_t {
 	// Player mode standing.
@@ -86,7 +85,7 @@ enum _cmd_id : uint8_t {
 	// body (TCmdLocParam2):
 	//    int8_t x
 	//    int8_t y
-	//    int16_t spell_id
+	//    int16_t SpellID
 	//    int16_t spell_lvl
 	CMD_SPELLXY,
 	// Cast targetted spell at target location.
@@ -94,22 +93,20 @@ enum _cmd_id : uint8_t {
 	// body (TCmdLocParam2):
 	//    int8_t x
 	//    int8_t y
-	//    int16_t spell_id
+	//    int16_t SpellID
 	//    int16_t spell_lvl
 	CMD_TSPELLXY,
 	// Operate object at location.
 	//
-	// body (TCmdLocParam1):
+	// body (TCmdLoc):
 	//    int8_t x
 	//    int8_t y
-	//    int16_t object_num
 	CMD_OPOBJXY,
 	// Disarm trap at location.
 	//
-	// body (TCmdLocParam1):
+	// body (TCmdLoc):
 	//    int8_t x
 	//    int8_t y
-	//    int16_t object_num
 	CMD_DISARMXY,
 	// Attack target monster.
 	//
@@ -135,28 +132,28 @@ enum _cmd_id : uint8_t {
 	//
 	// body (TCmdParam3):
 	//    int16_t monster_num
-	//    int16_t spell_id
+	//    int16_t SpellID
 	//    int16_t spell_lvl
 	CMD_SPELLID,
 	// Cast spell on target player.
 	//
 	// body (TCmdParam3):
 	//    int16_t player_num
-	//    int16_t spell_id
+	//    int16_t SpellID
 	//    int16_t spell_lvl
 	CMD_SPELLPID,
 	// Cast targetted spell on target monster.
 	//
 	// body (TCmdParam3):
 	//    int16_t monster_num
-	//    int16_t spell_id
+	//    int16_t SpellID
 	//    int16_t spell_lvl
 	CMD_TSPELLID,
 	// Cast targetted spell on target player.
 	//
 	// body (TCmdParam3):
 	//    int16_t player_num
-	//    int16_t spell_id
+	//    int16_t SpellID
 	//    int16_t spell_lvl
 	CMD_TSPELLPID,
 	// Cast resurrect spell on target player.
@@ -166,8 +163,9 @@ enum _cmd_id : uint8_t {
 	CMD_RESURRECT,
 	// Operate object using telekinesis.
 	//
-	// body (TCmdParam1):
-	//    int16_t object_num
+	// body (TCmdLoc):
+	//    int8_t x
+	//    int8_t y
 	CMD_OPOBJT,
 	// Knockback target monster using telekinesis.
 	//
@@ -251,30 +249,27 @@ enum _cmd_id : uint8_t {
 	CMD_GOTOAGETITEM,
 	// Open target door.
 	//
-	// body (TCmdParam1):
-	//    int16_t object_num
+	// body (TCmdLoc):
+	//    int8_t x
+	//    int8_t y
 	CMD_OPENDOOR,
 	// Close target door.
 	//
-	// body (TCmdParam1):
-	//    int16_t object_num
+	// body (TCmdLoc):
+	//    int8_t x
+	//    int8_t y
 	CMD_CLOSEDOOR,
 	// Operate object.
 	//
-	// body (TCmdParam1):
-	//    int16_t object_num
+	// body (TCmdLoc):
+	//    int8_t x
+	//    int8_t y
 	CMD_OPERATEOBJ,
-	// Player operate object.
-	//
-	// body (TCmdParam2):
-	//    int16_t player_num
-	//    int16_t object_num
-	CMD_PLROPOBJ,
 	// Break object.
 	//
-	// body (TCmdParam2):
-	//    int16_t player_num
-	//    int16_t object_num
+	// body (TCmdLoc):
+	//    int8_t x
+	//    int8_t y
 	CMD_BREAKOBJ,
 	// Equip item for player.
 	//
@@ -285,6 +280,22 @@ enum _cmd_id : uint8_t {
 	//
 	// body (TCmdDelItem)
 	CMD_DELPLRITEMS,
+	// Put item into player's backpack.
+	//
+	// body (TCmdChItem)
+	CMD_CHANGEINVITEMS,
+	// Remove item from player's backpack.
+	//
+	// body (TCmdParam1)
+	CMD_DELINVITEMS,
+	// Put item into player's belt.
+	//
+	// body (TCmdChItem)
+	CMD_CHANGEBELTITEMS,
+	// Remove item from player's belt.
+	//
+	// body (TCmdParam1)
+	CMD_DELBELTITEMS,
 	// Damage target player.
 	//
 	// body (TCmdDamage)
@@ -327,34 +338,10 @@ enum _cmd_id : uint8_t {
 	//
 	// body (TCmd)
 	CMD_DEACTIVATEPORTAL,
-	// Delta information for dungeon level 0 through 24.
+	// Delta information for a dungeon level.
 	//
 	// body (TCmdPlrInfoHdr)
-	CMD_DLEVEL_0,
-	CMD_DLEVEL_1,
-	CMD_DLEVEL_2,
-	CMD_DLEVEL_3,
-	CMD_DLEVEL_4,
-	CMD_DLEVEL_5,
-	CMD_DLEVEL_6,
-	CMD_DLEVEL_7,
-	CMD_DLEVEL_8,
-	CMD_DLEVEL_9,
-	CMD_DLEVEL_10,
-	CMD_DLEVEL_11,
-	CMD_DLEVEL_12,
-	CMD_DLEVEL_13,
-	CMD_DLEVEL_14,
-	CMD_DLEVEL_15,
-	CMD_DLEVEL_16,
-	CMD_DLEVEL_17,
-	CMD_DLEVEL_18,
-	CMD_DLEVEL_19,
-	CMD_DLEVEL_20,
-	CMD_DLEVEL_21,
-	CMD_DLEVEL_22,
-	CMD_DLEVEL_23,
-	CMD_DLEVEL_24,
+	CMD_DLEVEL,
 	// Delta information of quest and portal states.
 	//
 	// body (TCmdPlrInfoHdr)
@@ -372,6 +359,10 @@ enum _cmd_id : uint8_t {
 	//
 	// body (TCmdString)
 	CMD_STRING,
+	// Toggles friendly Mode
+	//
+	// body (TCmd)
+	CMD_FRIENDLYMODE,
 	// Set player strength.
 	//
 	// body (TCmdParam1):
@@ -401,7 +392,7 @@ enum _cmd_id : uint8_t {
 	// body (TCmdLocParam3):
 	//    int8_t x
 	//    int8_t y
-	//    int16_t spell_id
+	//    int16_t SpellID
 	//    int16_t dir
 	//    int16_t spell_lvl
 	CMD_SPELLXYD,
@@ -445,7 +436,7 @@ enum _cmd_id : uint8_t {
 	CMD_SETREFLECT,
 	CMD_NAKRUL,
 	CMD_OPENHIVE,
-	CMD_OPENCRYPT,
+	CMD_OPENGRAVE,
 	// Fake command; set current player for succeeding mega pkt buffer messages.
 	//
 	// body (TFakeCmdPlr)
@@ -545,19 +536,17 @@ struct TCmdQuest {
 	quest_state qstate;
 	uint8_t qlog;
 	uint8_t qvar1;
+	uint8_t qvar2;
+	int16_t qmsg;
 };
 
-/**
- * Represents an item being picked up from the ground
- */
-struct TCmdGItem {
-	_cmd_id bCmd;
-	uint8_t bMaster;
-	uint8_t bPnum;
-	uint8_t bCursitem;
-	uint8_t bLevel;
-	uint8_t x;
-	uint8_t y;
+struct TItemDef {
+	_item_indexes wIndx;
+	uint16_t wCI;
+	int32_t dwSeed;
+};
+
+struct TItem {
 	_item_indexes wIndx;
 	uint16_t wCI;
 	int32_t dwSeed;
@@ -568,13 +557,41 @@ struct TCmdGItem {
 	uint8_t bMCh;
 	uint16_t wValue;
 	uint32_t dwBuff;
-	int32_t dwTime;
 	uint16_t wToHit;
 	uint16_t wMaxDam;
 	uint8_t bMinStr;
 	uint8_t bMinMag;
 	uint8_t bMinDex;
 	int16_t bAC;
+};
+
+struct TEar {
+	_item_indexes wIndx;
+	uint16_t wCI;
+	int32_t dwSeed;
+	uint8_t bCursval;
+	char heroname[17];
+};
+
+/**
+ * Represents an item being picked up from the ground
+ */
+struct TCmdGItem {
+	_cmd_id bCmd;
+	uint8_t x;
+	uint8_t y;
+
+	union {
+		TItemDef def;
+		TItem item;
+		TEar ear;
+	};
+
+	uint8_t bMaster;
+	uint8_t bPnum;
+	uint8_t bCursitem;
+	uint8_t bLevel;
+	int32_t dwTime;
 };
 
 /**
@@ -584,26 +601,12 @@ struct TCmdPItem {
 	_cmd_id bCmd;
 	uint8_t x;
 	uint8_t y;
-	_item_indexes wIndx;
-	uint16_t wCI;
-	/**
-	 * Item identifier
-	 * @see Item::_iSeed
-	 */
-	int32_t dwSeed;
-	uint8_t bId;
-	uint8_t bDur;
-	uint8_t bMDur;
-	uint8_t bCh;
-	uint8_t bMCh;
-	uint16_t wValue;
-	uint32_t dwBuff;
-	uint16_t wToHit;
-	uint16_t wMaxDam;
-	uint8_t bMinStr;
-	uint8_t bMinMag;
-	uint8_t bMinDex;
-	int16_t bAC;
+
+	union {
+		TItemDef def;
+		TItem item;
+		TEar ear;
+	};
 
 	/**
 	 * Items placed during dungeon generation
@@ -624,11 +627,12 @@ struct TCmdPItem {
 struct TCmdChItem {
 	_cmd_id bCmd;
 	uint8_t bLoc;
-	uint16_t wIndx;
-	uint16_t wCI;
-	int32_t dwSeed;
-	uint8_t bId;
-	uint32_t dwBuff;
+
+	union {
+		TItemDef def;
+		TItem item;
+		TEar ear;
+	};
 };
 
 struct TCmdDelItem {
@@ -640,6 +644,7 @@ struct TCmdDamage {
 	_cmd_id bCmd;
 	uint8_t bPlr;
 	uint32_t dwDam;
+	DamageType damageType;
 };
 
 struct TCmdMonDamage {
@@ -724,49 +729,6 @@ struct TPkt {
 	TPktHdr hdr;
 	byte body[493];
 };
-
-struct DMonsterStr {
-	uint8_t _mx;
-	uint8_t _my;
-	Direction _mdir;
-	uint8_t _menemy;
-	uint8_t _mactive;
-	int32_t _mhitpoints;
-	int8_t mWhoHit;
-};
-
-struct DObjectStr {
-	_cmd_id bCmd;
-};
-
-struct DLevel {
-	TCmdPItem item[MAXITEMS];
-	DObjectStr object[MAXOBJECTS];
-	DMonsterStr monster[MAXMONSTERS];
-};
-
-struct LocalLevel {
-	uint8_t automapsv[DMAXX][DMAXY];
-};
-
-struct DPortal {
-	uint8_t x;
-	uint8_t y;
-	uint8_t level;
-	uint8_t ltype;
-	uint8_t setlvl;
-};
-
-struct MultiQuests {
-	quest_state qstate;
-	uint8_t qlog;
-	uint8_t qvar1;
-};
-
-struct DJunk {
-	DPortal portal[MAXPORTAL];
-	MultiQuests quests[MAXMULTIQUESTS];
-};
 #pragma pack(pop)
 
 struct TBuffer {
@@ -774,7 +736,6 @@ struct TBuffer {
 	byte bData[4096];
 };
 
-extern bool deltaload;
 extern uint8_t gbBufferMsgs;
 extern int dwRecCount;
 
@@ -784,15 +745,21 @@ void run_delta_info();
 void DeltaExportData(int pnum);
 void DeltaSyncJunk();
 void delta_init();
-void delta_kill_monster(int mi, Point position, uint8_t bLevel);
-void delta_monster_hp(int mi, int hp, uint8_t bLevel);
+void DeltaClearLevel(uint8_t level);
+void delta_kill_monster(const Monster &monster, Point position, const Player &player);
+void delta_monster_hp(const Monster &monster, const Player &player);
 void delta_sync_monster(const TSyncMonster &monsterSync, uint8_t level);
+uint8_t GetLevelForMultiplayer(const Player &player);
+bool IsValidLevelForMultiplayer(uint8_t level);
+bool IsValidLevel(uint8_t level, bool isSetLevel);
 void DeltaAddItem(int ii);
 void DeltaSaveLevel();
 void DeltaLoadLevel();
+/** @brief Clears last sent player command for the local player. This is used when a game tick changes. */
+void ClearLastSentPlayerCmd();
 void NetSendCmd(bool bHiPri, _cmd_id bCmd);
 void NetSendCmdGolem(uint8_t mx, uint8_t my, Direction dir, uint8_t menemy, int hp, uint8_t cl);
-void NetSendCmdLoc(int playerId, bool bHiPri, _cmd_id bCmd, Point position);
+void NetSendCmdLoc(size_t playerId, bool bHiPri, _cmd_id bCmd, Point position);
 void NetSendCmdLocParam1(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wParam1);
 void NetSendCmdLocParam2(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wParam1, uint16_t wParam2);
 void NetSendCmdLocParam3(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wParam1, uint16_t wParam2, uint16_t wParam3);
@@ -802,14 +769,17 @@ void NetSendCmdParam2(bool bHiPri, _cmd_id bCmd, uint16_t wParam1, uint16_t wPar
 void NetSendCmdParam3(bool bHiPri, _cmd_id bCmd, uint16_t wParam1, uint16_t wParam2, uint16_t wParam3);
 void NetSendCmdParam4(bool bHiPri, _cmd_id bCmd, uint16_t wParam1, uint16_t wParam2, uint16_t wParam3, uint16_t wParam4);
 void NetSendCmdQuest(bool bHiPri, const Quest &quest);
-void NetSendCmdGItem(bool bHiPri, _cmd_id bCmd, uint8_t mast, uint8_t pnum, uint8_t ii);
+void NetSendCmdGItem(bool bHiPri, _cmd_id bCmd, uint8_t pnum, uint8_t ii);
 void NetSendCmdPItem(bool bHiPri, _cmd_id bCmd, Point position, const Item &item);
+void NetSyncInvItem(const Player &player, int invListIndex);
 void NetSendCmdChItem(bool bHiPri, uint8_t bLoc);
 void NetSendCmdDelItem(bool bHiPri, uint8_t bLoc);
-void NetSendCmdDamage(bool bHiPri, uint8_t bPlr, uint32_t dwDam);
+void NetSendCmdChInvItem(bool bHiPri, int invGridIndex);
+void NetSendCmdChBeltItem(bool bHiPri, int invGridIndex);
+void NetSendCmdDamage(bool bHiPri, uint8_t bPlr, uint32_t dwDam, DamageType damageType);
 void NetSendCmdMonDmg(bool bHiPri, uint16_t wMon, uint32_t dwDam);
 void NetSendCmdString(uint32_t pmask, const char *pszStr);
 void delta_close_portal(int pnum);
-uint32_t ParseCmd(int pnum, const TCmd *pCmd);
+size_t ParseCmd(size_t pnum, const TCmd *pCmd);
 
 } // namespace devilution

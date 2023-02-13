@@ -10,10 +10,10 @@
 #include "utils/push_aulib_decoder.h"
 #endif
 
-#include "dx.h"
 #include "engine/assets.hpp"
+#include "engine/dx.h"
+#include "engine/palette.h"
 #include "options.h"
-#include "palette.h"
 #include "utils/aulib.hpp"
 #include "utils/display.h"
 #include "utils/log.hpp"
@@ -241,7 +241,7 @@ bool SVidPlayBegin(const char *filename, int flags)
 	// 0x800000 // Edge detection
 	// 0x200800 // Clear FB
 
-	SDL_RWops *videoStream = OpenAsset(filename);
+	SDL_RWops *videoStream = OpenAssetAsSdlRwOps(filename);
 	SVidHandle = Smacker_Open(videoStream);
 	if (!SVidHandle.isValid) {
 		return false;
@@ -260,7 +260,7 @@ bool SVidPlayBegin(const char *filename, int flags)
 		SVidAudioBuffer = std::unique_ptr<int16_t[]> { new int16_t[audioInfo.idealBufferSize] };
 		auto decoder = std::make_unique<PushAulibDecoder>(audioInfo.nChannels, audioInfo.sampleRate);
 		SVidAudioDecoder = decoder.get();
-		SVidAudioStream.emplace(/*rwops=*/nullptr, std::move(decoder), CreateAulibResampler(), /*closeRw=*/false);
+		SVidAudioStream.emplace(/*rwops=*/nullptr, std::move(decoder), CreateAulibResampler(audioInfo.sampleRate), /*closeRw=*/false);
 		const float volume = static_cast<float>(*sgOptions.Audio.soundVolume - VOLUME_MIN) / -VOLUME_MIN;
 		SVidAudioStream->setVolume(volume);
 		if (!diablo_is_focused())

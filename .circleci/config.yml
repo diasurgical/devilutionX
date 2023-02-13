@@ -2,14 +2,14 @@ version: 2
 jobs:
   linux_x86_64:
     docker:
-      - image: debian:stretch-backports
+      - image: debian:buster
     working_directory: ~/repo
     steps:
       - checkout
-      - run: echo deb http://deb.debian.org/debian stretch-backports-sloppy main >> /etc/apt/sources.list.d/debian-backports.list
+      - run: echo deb http://deb.debian.org/debian buster-backports main >> /etc/apt/sources.list.d/debian-backports.list
       - run: apt-get update -y
-      - run: apt-get install -y g++ libsdl2-dev libbz2-dev git rpm wget smpq
-      - run: apt-get install -y -t 'stretch-backports*' cmake libsodium-dev libpng-dev
+      - run: apt-get install -y -t 'buster-backports*' cmake
+      - run: apt-get install -y g++ libsdl2-dev libbz2-dev git rpm wget smpq cmake libsodium-dev libpng-dev file
       - run: cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_TESTING=OFF -DCPACK=ON -DCMAKE_INSTALL_PREFIX=/usr
       - run: cmake --build build -j 2 --target package
       - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_linux_x86_64}
@@ -17,20 +17,6 @@ jobs:
       - run: Packaging/nix/AppImage.sh
       - store_artifacts: {path: ./devilutionx.appimage, destination: devilutionx_linux_x86_64.appimage}
       - store_artifacts: {path: ./devilutionx.tar.xz, destination: devilutionx_linux_x86_64.tar.xz}
-  linux_x86_64_test:
-    docker:
-      - image: debian:testing
-    working_directory: ~/repo
-    steps:
-      - checkout
-      - run: apt-get update -y
-      - run: apt-get install -y cmake curl g++ git lcov libgtest-dev libgmock-dev libfmt-dev libsdl2-dev libsodium-dev libpng-dev libbz2-dev
-      - run: cmake -S. -Bbuild -DENABLE_CODECOVERAGE=ON
-      - run: cmake --build build -j 2
-      - run: cd build && ctest --output-on-failure
-      - run: bash <(curl -s https://codecov.io/bash)
-    environment:
-      CTEST_OUTPUT_ON_FAILURE: 1
   switch:
     docker:
       - image: devkitpro/devkita64:latest
@@ -50,7 +36,7 @@ jobs:
       - checkout
       - run: apt-get update -y
       - run: apt-get install -y ffmpeg gettext smpq
-      - run: wget https://github.com/Steveice10/bannertool/releases/download/1.2.0/bannertool.zip
+      - run: wget https://github.com/diasurgical/bannertool/releases/download/1.2.0/bannertool.zip
       - run: unzip -j "bannertool.zip" "linux-x86_64/bannertool" -d "/opt/devkitpro/tools/bin"
       - run: wget https://github.com/3DSGuy/Project_CTR/releases/download/makerom-v0.18/makerom-v0.18-ubuntu_x86_64.zip
       - run: unzip "makerom-v0.18-ubuntu_x86_64.zip" "makerom" -d "/opt/devkitpro/tools/bin"
@@ -66,12 +52,12 @@ jobs:
     steps:
       - checkout
       - run: Packaging/amiga/prep.sh
-      - run: PKG_CONFIG_PATH=/opt/m68k-amigaos/lib/pkgconfig/:/opt/m68k-amigaos/share/pkgconfig/ cmake -S. -Bbuild -DM68K_CPU=68040 -DM68K_FPU=hard -DM68K_COMMON="-s -ffast-math -O3 -noixemul -D__BIG_ENDIAN__ -D__AMIGA__ -fpermissive" ..
+      - run: cmake -S. -Bbuild -DM68K_CPU=68040 -DM68K_FPU=hard -DM68K_COMMON="-s -fbbb=- -ffast-math -O2"
       - run: cd build && make -j2
       - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_m68k}
   vita:
     docker:
-      - image: vitasdk/vitasdk:latest
+      - image: vitasdk/vitasdk
     working_directory: ~/repo
     steps:
       - checkout
@@ -85,7 +71,6 @@ workflows:
   testflow:
     jobs:
       - linux_x86_64
-      - linux_x86_64_test
       - switch
       - 3ds
       - amigaos-m68k

@@ -2,21 +2,21 @@
 
 #include <cstddef>
 
-#include "DiabloUI/art_draw.h"
 #include "DiabloUI/ui_flags.hpp"
 #include "control.h"
 #include "controls/controller_motion.h"
 #include "controls/game_controls.h"
 #include "controls/plrctrls.h"
-#include "engine/load_cel.hpp"
+#include "engine/clx_sprite.hpp"
+#include "engine/load_clx.hpp"
+#include "engine/render/clx_render.hpp"
 #include "engine/render/text_render.hpp"
 #include "options.h"
+#include "panels/spell_book.hpp"
 #include "panels/spell_icons.hpp"
 #include "utils/language.h"
 
 namespace devilution {
-
-extern std::optional<OwnedCelSprite> pSBkIconCels;
 
 namespace {
 
@@ -41,9 +41,9 @@ constexpr int IconSizeTextMarginTop = 2;
 constexpr int HintBoxSize = 39;
 constexpr int HintBoxMargin = 5;
 
-Art hintBox;
-Art hintBoxBackground;
-Art hintIcons;
+OptionalOwnedClxSpriteList hintBox;
+OptionalOwnedClxSpriteList hintBoxBackground;
+OptionalOwnedClxSpriteList hintIcons;
 
 enum HintIcon : uint8_t {
 	IconChar,
@@ -97,9 +97,9 @@ void DrawCircleMenuHint(const Surface &out, const CircleMenuHint &hint, const Po
 		if (iconIndices[slot] == HintIcon::IconNull)
 			continue;
 
-		DrawArt(out, iconPositions[slot], &hintBoxBackground);
-		DrawArt(out, iconPositions[slot], &hintIcons, iconIndices[slot], 37, 38);
-		DrawArt(out, hintBoxPositions[slot], &hintBox);
+		RenderClxSprite(out, (*hintBoxBackground)[0], iconPositions[slot]);
+		RenderClxSprite(out.subregion(iconPositions[slot].x, iconPositions[slot].y, 37, 38), (*hintIcons)[iconIndices[slot]], { 0, 0 });
+		RenderClxSprite(out, (*hintBox)[0], hintBoxPositions[slot]);
 	}
 }
 
@@ -110,7 +110,7 @@ void DrawCircleMenuHint(const Surface &out, const CircleMenuHint &hint, const Po
  */
 void DrawSpellsCircleMenuHint(const Surface &out, const Point &origin)
 {
-	const auto &myPlayer = Players[MyPlayerId];
+	const Player &myPlayer = *MyPlayer;
 	const Displacement spellIconDisplacement = { (HintBoxSize - IconSize) / 2 + 1, HintBoxSize - (HintBoxSize - IconSize) / 2 - 1 };
 	Point hintBoxPositions[4] = {
 		origin + Displacement { 0, LineHeight - HintBoxSize },
@@ -125,73 +125,65 @@ void DrawSpellsCircleMenuHint(const Surface &out, const Point &origin)
 		hintBoxPositions[3] + spellIconDisplacement,
 	};
 	uint64_t spells = myPlayer._pAblSpells | myPlayer._pMemSpells | myPlayer._pScrlSpells | myPlayer._pISpells;
-	spell_id splId;
-	spell_type splType;
+	SpellID splId;
+	SpellType splType;
 
 	for (int slot = 0; slot < 4; ++slot) {
 		splId = myPlayer._pSplHotKey[slot];
 
-		if (splId != SPL_INVALID && splId != SPL_NULL && (spells & GetSpellBitmask(splId)) != 0)
-			splType = (currlevel == 0 && !spelldata[splId].sTownSpell) ? RSPLTYPE_INVALID : myPlayer._pSplTHotKey[slot];
+		if (IsValidSpell(splId) && (spells & GetSpellBitmask(splId)) != 0)
+			splType = (leveltype == DTYPE_TOWN && !GetSpellData(splId).isAllowedInTown()) ? SpellType::Invalid : myPlayer._pSplTHotKey[slot];
 		else {
-			splType = RSPLTYPE_INVALID;
-			splId = SPL_NULL;
+			splType = SpellType::Invalid;
+			splId = SpellID::Null;
 		}
 
 		SetSpellTrans(splType);
-		DrawSpellCel(out, spellIconPositions[slot], *pSBkIconCels, SpellITbl[splId]);
-		DrawArt(out, hintBoxPositions[slot], &hintBox);
+		DrawSmallSpellIcon(out, spellIconPositions[slot], splId);
+		RenderClxSprite(out, (*hintBox)[0], hintBoxPositions[slot]);
 	}
 }
 
-void DrawStartModifierMenu(const Surface &out)
+void DrawGamepadMenuNavigator(const Surface &out)
 {
-	if (!start_modifier_active)
+	if (!PadMenuNavigatorActive || SimulatingMouseWithPadmapper)
 		return;
 	static const CircleMenuHint DPad(/*top=*/HintIcon::IconMenu, /*right=*/HintIcon::IconInv, /*bottom=*/HintIcon::IconMap, /*left=*/HintIcon::IconChar);
 	static const CircleMenuHint Buttons(/*top=*/HintIcon::IconNull, /*right=*/HintIcon::IconNull, /*bottom=*/HintIcon::IconSpells, /*left=*/HintIcon::IconQuests);
-	DrawCircleMenuHint(out, DPad, { PANEL_LEFT + CircleMarginX, PANEL_TOP - CircleTop });
-	DrawCircleMenuHint(out, Buttons, { PANEL_LEFT + PANEL_WIDTH - HintBoxSize * 3 - CircleMarginX - HintBoxMargin * 2, PANEL_TOP - CircleTop });
+	const Rectangle &mainPanel = GetMainPanel();
+	DrawCircleMenuHint(out, DPad, { mainPanel.position.x + CircleMarginX, mainPanel.position.y - CircleTop });
+	DrawCircleMenuHint(out, Buttons, { mainPanel.position.x + mainPanel.size.width - HintBoxSize * 3 - CircleMarginX - HintBoxMargin * 2, mainPanel.position.y - CircleTop });
 }
 
-void DrawSelectModifierMenu(const Surface &out)
+void DrawGamepadHotspellMenu(const Surface &out)
 {
-	if (!select_modifier_active || SimulatingMouseWithSelectAndDPad)
+	if (!PadHotspellMenuActive || SimulatingMouseWithPadmapper)
 		return;
 
-	if (sgOptions.Controller.bDpadHotkeys) {
-		DrawSpellsCircleMenuHint(out, { PANEL_LEFT + CircleMarginX, PANEL_TOP - CircleTop });
-	}
-	DrawSpellsCircleMenuHint(out, { PANEL_LEFT + PANEL_WIDTH - HintBoxSize * 3 - CircleMarginX - HintBoxMargin * 2, PANEL_TOP - CircleTop });
+	const Rectangle &mainPanel = GetMainPanel();
+	DrawSpellsCircleMenuHint(out, { mainPanel.position.x + mainPanel.size.width - HintBoxSize * 3 - CircleMarginX - HintBoxMargin * 2, mainPanel.position.y - CircleTop });
 }
 
 } // namespace
 
 void InitModifierHints()
 {
-	LoadMaskedArt("data\\hintbox.pcx", &hintBox, 1, 1);
-	LoadMaskedArt("data\\hintboxbackground.pcx", &hintBoxBackground, 1, 1);
-	LoadMaskedArt("data\\hinticons.pcx", &hintIcons, 6, 1);
-
-	if (hintBox.surface == nullptr || hintBoxBackground.surface == nullptr) {
-		app_fatal("%s", _("Failed to load UI resources.\n"
-		                  "\n"
-		                  "Make sure devilutionx.mpq is in the game folder and that it is up to date.")
-		                    .c_str());
-	}
+	hintBox = LoadClx("data\\hintbox.clx");
+	hintBoxBackground = LoadClx("data\\hintboxbackground.clx");
+	hintIcons = LoadClx("data\\hinticons.clx");
 }
 
 void FreeModifierHints()
 {
-	hintBox.Unload();
-	hintBoxBackground.Unload();
-	hintIcons.Unload();
+	hintIcons = std::nullopt;
+	hintBoxBackground = std::nullopt;
+	hintBox = std::nullopt;
 }
 
 void DrawControllerModifierHints(const Surface &out)
 {
-	DrawStartModifierMenu(out);
-	DrawSelectModifierMenu(out);
+	DrawGamepadMenuNavigator(out);
+	DrawGamepadHotspellMenu(out);
 }
 
 } // namespace devilution

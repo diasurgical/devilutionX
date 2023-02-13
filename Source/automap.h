@@ -10,7 +10,7 @@
 #include "engine.h"
 #include "engine/displacement.hpp"
 #include "engine/point.hpp"
-#include "gendung.h"
+#include "levels/gendung.h"
 #include "utils/attributes.h"
 
 namespace devilution {
@@ -35,11 +35,13 @@ extern uint8_t AutomapView[DMAXX][DMAXY];
 /** Specifies the scale of the automap. */
 extern DVL_API_FOR_TEST int AutoMapScale;
 extern DVL_API_FOR_TEST Displacement AutomapOffset;
-extern DVL_API_FOR_TEST int AmLine64;
-extern DVL_API_FOR_TEST int AmLine32;
-extern DVL_API_FOR_TEST int AmLine16;
-extern DVL_API_FOR_TEST int AmLine8;
-extern DVL_API_FOR_TEST int AmLine4;
+
+inline int AmLine(int x)
+{
+	assert(x >= 4 && x <= 64);
+	assert((x & (x - 1)) == 0);
+	return AutoMapScale * x / 100;
+}
 
 /**
  * @brief Initializes the automap.

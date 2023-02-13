@@ -23,7 +23,7 @@ void RepeatWalk(Player &player)
 	if (!InDungeonBounds(cursPosition))
 		return;
 
-	if (player._pmode != PM_STAND && !(player.IsWalking() && player.AnimInfo.GetFrameToUseForRendering() > 6))
+	if (player._pmode != PM_STAND && !(player.isWalking() && player.AnimInfo.getFrameToUseForRendering() > 6))
 		return;
 
 	const Point target = player.GetTargetPosition();
@@ -39,22 +39,20 @@ void InvalidateTargets()
 {
 	if (pcursmonst != -1) {
 		const Monster &monster = Monsters[pcursmonst];
-		if (monster._mDelFlag || monster._mhitpoints >> 6 <= 0
-		    || (monster._mFlags & MFLAG_HIDDEN) != 0
+		if (monster.isInvalid || monster.hitPoints >> 6 <= 0
+		    || (monster.flags & MFLAG_HIDDEN) != 0
 		    || !IsTileLit(monster.position.tile)) {
 			pcursmonst = -1;
 		}
 	}
 
-	if (pcursobj != -1) {
-		if (Objects[pcursobj]._oSelFlag < 1)
-			pcursobj = -1;
-	}
+	if (ObjectUnderCursor != nullptr && ObjectUnderCursor->_oSelFlag < 1)
+		ObjectUnderCursor = nullptr;
 
 	if (pcursplr != -1) {
 		Player &targetPlayer = Players[pcursplr];
 		if (targetPlayer._pmode == PM_DEATH || targetPlayer._pmode == PM_QUIT || !targetPlayer.plractive
-		    || currlevel != targetPlayer.plrlevel || targetPlayer._pHitPoints >> 6 <= 0
+		    || !targetPlayer.isOnActiveLevel() || targetPlayer._pHitPoints >> 6 <= 0
 		    || !IsTileLit(targetPlayer.position.tile))
 			pcursplr = -1;
 	}
@@ -65,16 +63,16 @@ void RepeatMouseAction()
 	if (pcurs != CURSOR_HAND)
 		return;
 
-	if (sgbMouseDown == CLICK_NONE && ControllerButtonHeld == ControllerButton_NONE)
+	if (sgbMouseDown == CLICK_NONE && ControllerActionHeld == GameActionType_NONE)
 		return;
 
-	if (stextflag != STORE_NONE)
+	if (stextflag != TalkID::None)
 		return;
 
 	if (LastMouseButtonAction == MouseActionType::None)
 		return;
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 	if (myPlayer.destAction != ACTION_NONE)
 		return;
 	if (myPlayer._pInvincible)
@@ -93,7 +91,7 @@ void RepeatMouseAction()
 			NetSendCmdParam1(true, rangedAttack ? CMD_RATTACKID : CMD_ATTACKID, pcursmonst);
 		break;
 	case MouseActionType::AttackPlayerTarget:
-		if (pcursplr != -1 && !gbFriendlyMode)
+		if (pcursplr != -1 && !myPlayer.friendlyMode)
 			NetSendCmdParam1(true, rangedAttack ? CMD_RATTACKPID : CMD_ATTACKPID, pcursplr);
 		break;
 	case MouseActionType::Spell:
@@ -107,15 +105,12 @@ void RepeatMouseAction()
 			CheckPlrSpell(false);
 		break;
 	case MouseActionType::SpellPlayerTarget:
-		if (pcursplr != -1 && !gbFriendlyMode)
+		if (pcursplr != -1 && !myPlayer.friendlyMode)
 			CheckPlrSpell(false);
 		break;
 	case MouseActionType::OperateObject:
-		if (pcursobj != -1) {
-			auto &object = Objects[pcursobj];
-			if (object.IsDoor())
-				break;
-			NetSendCmdLocParam1(true, CMD_OPOBJXY, object.position, pcursobj);
+		if (ObjectUnderCursor != nullptr && !ObjectUnderCursor->isDoor()) {
+			NetSendCmdLoc(MyPlayerId, true, CMD_OPOBJXY, cursPosition);
 		}
 		break;
 	case MouseActionType::Walk:

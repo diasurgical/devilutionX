@@ -4,6 +4,7 @@ codecov:
     wait_for_ci: no
 comment: no
 coverage:
+  range: "45...85"
   status:
     project:
       default:
@@ -13,3 +14,6 @@ coverage:
 ignore:
   - "3rdParty"
   - "test"
+flag_management:
+  default_rules:
+    carryforward: false

@@ -8,20 +8,20 @@
 #include <unordered_map>
 
 #include "engine.h"
-#include "engine/cel_sprite.hpp"
-#include "miniwin/miniwin.h"
-#include "utils/stdcompat/optional.hpp"
+#include "engine/clx_sprite.hpp"
 #include "utils/stdcompat/string_view.hpp"
 
 namespace devilution {
 
-extern std::optional<OwnedCelSprite> pSquareCel;
+extern std::string TestMapPath;
+extern OptionalOwnedClxSpriteList pSquareCel;
 extern bool DebugToggle;
 extern bool DebugGodMode;
 extern bool DebugVision;
 extern bool DebugGrid;
 extern std::unordered_map<int, Point> DebugCoordsMap;
 extern bool DebugScrollViewEnabled;
+extern std::string debugTRN;
 
 void FreeDebugGFX();
 void LoadDebugGFX();

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstddef>
 #include <cstdint>
 
 namespace devilution {
@@ -24,5 +25,7 @@ struct PCXHeader {
 	uint16_t VscreenSize;
 	uint8_t Filler[54];
 };
+
+static constexpr size_t PcxHeaderSize = 128;
 
 } // namespace devilution
