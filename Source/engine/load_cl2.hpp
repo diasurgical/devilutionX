@@ -26,17 +26,17 @@ OwnedClxSpriteListOrSheet LoadCl2ListOrSheet(const char *pszName, PointerOrValue
 template <size_t MaxCount>
 OwnedClxSpriteSheet LoadMultipleCl2Sheet(tl::function_ref<const char *(size_t)> filenames, size_t count, uint16_t width)
 {
-	StaticVector<AssetHandle, MaxCount> files;
+	StaticVector<AssetRef, MaxCount> files;
 	StaticVector<size_t, MaxCount> fileSizes;
 	const size_t sheetHeaderSize = 4 * count;
 	size_t totalSize = sheetHeaderSize;
 	for (size_t i = 0; i < count; ++i) {
 		const char *filename = filenames(i);
-		size_t size;
-		files.emplace_back(OpenAsset(filename, size));
-		if (!files.back().ok()) {
-			app_fatal(StrCat("Failed to open file:\n", filename, "\n\n", files.back().error()));
+		AssetRef file = FindAsset(filename);
+		if (!file.ok()) {
+			app_fatal(StrCat("Failed to open file:\n", filename, "\n\n", file.error()));
 		}
+		size_t size = file.size();
 		fileSizes.emplace_back(size);
 		totalSize += size;
 	}
@@ -47,8 +47,9 @@ OwnedClxSpriteSheet LoadMultipleCl2Sheet(tl::function_ref<const char *(size_t)> 
 	size_t accumulatedSize = sheetHeaderSize;
 	for (size_t i = 0; i < count; ++i) {
 		const size_t size = fileSizes[i];
-		if (!files[i].read(&data[accumulatedSize], size))
-			app_fatal(StrCat("Read failed:\n", files[i].error()));
+		AssetHandle file = OpenAsset(filenames(i));
+		if (!file.read(&data[accumulatedSize], size))
+			app_fatal(StrCat("Read failed:\n", file.error()));
 		WriteLE32(&data[i * 4], accumulatedSize);
 #ifndef UNPACKED_MPQS
 		[[maybe_unused]] const uint16_t numLists = Cl2ToClx(&data[accumulatedSize], size, frameWidth);
