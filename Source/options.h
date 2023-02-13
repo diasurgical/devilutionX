@@ -594,8 +594,10 @@ struct GameplayOptions : OptionCategoryBase {
 	OptionEntryInt<int> numFullRejuPotionPickup;
 	/** @brief Enable floating numbers. */
 	OptionEntryEnum<FloatingNumbers> enableFloatingNumbers;
-	/** @brief Disable fix for duplicate affix names */
-	OptionEntryBoolean disableAffixNameFix;
+	/** @brief Disable fix to Fine affix */
+	OptionEntryBoolean disableFineAffixFix;
+	/** @brief Disable fix to Crimson affix */
+	OptionEntryBoolean disableCrimsonAffixFix;
 };
 
 struct ControllerOptions : OptionCategoryBase {

@@ -3377,22 +3377,21 @@ void GetItemFrm(Item &item)
 
 std::string GetIdentifiedItemString(Item &item)
 {
-	if (!*sgOptions.Gameplay.disableAffixNameFix) {
-		return item._iIName;
-	}
 	char itemName[64];
-	CopyUtf8(itemName, item._iIName, 64);
-
+	CopyUtf8(itemName, item._iIName, sizeof(itemName));
 	std::string itemNameString = itemName;
-	if (itemNameString.find("Sturdy") != std::string::npos) {
+
+	if ((itemNameString.find("Sturdy") != std::string::npos) && *sgOptions.Gameplay.disableFineAffixFix) {
 		size_t pos = itemNameString.find("Sturdy");
 		itemNameString.replace(pos, 6, "Fine");
-	} else if (itemNameString.find("Burgundy") != std::string::npos) {
+		return itemNameString;
+	}
+	if ((itemNameString.find("Burgundy") != std::string::npos) && *sgOptions.Gameplay.disableCrimsonAffixFix) {
 		size_t pos = itemNameString.find("Burgundy");
 		itemNameString.replace(pos, 8, "Crimson");
+		return itemNameString;
 	}
-
-	return itemNameString;
+	return item._iIName;
 }
 
 void GetItemStr(Item &item)
