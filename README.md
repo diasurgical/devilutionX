@@ -4,9 +4,9 @@
 
 ---
 
-[![Discord Channel](https://img.shields.io/discord/518540764754608128?color=%237289DA&logo=discord&logoColor=%23FFFFFF)](https://discord.gg/devilutionx)
-[![Downloads](https://img.shields.io/github/downloads/diasurgical/devilutionX/total.svg)](https://github.com/diasurgical/devilutionX/releases/latest)
-[![Codecov](https://codecov.io/gh/diasurgical/devilutionX/branch/master/graph/badge.svg)](https://codecov.io/gh/diasurgical/devilutionX)
+[![Discord Channel](https://img.shields.io/discord/1074510941112238180?color=%237289DA&logo=discord&logoColor=%23FFFFFF)](https://discord.gg/9rykuV4x9K)
+[![Downloads](https://img.shields.io/github/downloads/kp-development/lord-of-terror/total.svg)](https://github.com/kp-development/lord-of-terror/releases/latest)
+[![Codecov](https://codecov.io/gh/kp-development/lord-of-terror/branch/master/graph/badge.svg)](https://codecov.io/gh/kp-development/lord-of-terror)
 
 <p align="center">
 <img width="838" src="https://user-images.githubusercontent.com/204594/113578478-26912400-9623-11eb-9ff6-9bd9717462b6.png">
