@@ -1068,8 +1068,8 @@ GameplayOptions::GameplayOptions()
               { FloatingNumbers::Random, N_("Random Angles") },
               { FloatingNumbers::Vertical, N_("Vertical Only") },
           })
-    , disableFineAffixFix("Disable Fine Affix Fix", OptionEntryFlags::None, N_("Disable Fine Affix Fix"), N_("Disables the fix to the affix Fine."), false)
-    , disableCrimsonAffixFix("Disable Burgundy Affix Fix", OptionEntryFlags::None, N_("Disable Crimson Affix Fix"), N_("Disables the fix to the affix Crimson."), false)
+    , disableFineAffixFix("Disable Fine Affix Fix", OptionEntryFlags::None, N_("Disable Fine Affix Fix"), N_("Disables the fix to the affix Fine."), true)
+    , disableCrimsonAffixFix("Disable Burgundy Affix Fix", OptionEntryFlags::None, N_("Disable Crimson Affix Fix"), N_("Disables the fix to the affix Crimson."), true)
 {
 	grabInput.SetValueChangedCallback(OptionGrabInputChanged);
 	experienceBar.SetValueChangedCallback(OptionExperienceBarChanged);
