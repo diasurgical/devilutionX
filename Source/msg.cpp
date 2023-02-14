@@ -1525,6 +1525,7 @@ size_t OnSpellTile(const TCmd *pCmd, Player &player)
 	player.destParam3 = SDL_SwapLE16(message.wParam3);
 	player.queuedSpell.spellId = spell;
 	player.queuedSpell.spellType = static_cast<SpellType>(wParam2);
+	player.queuedSpell.spellFrom = 0;
 
 	return sizeof(message);
 }
@@ -2484,7 +2485,7 @@ size_t OnNova(const TCmd *pCmd, Player &player)
 			ClrPlrPath(player);
 			player.queuedSpell.spellId = SpellID::Nova;
 			player.queuedSpell.spellType = SpellType::Scroll;
-			player.queuedSpell.spellFrom = 3;
+			player.queuedSpell.spellFrom = 0;
 			player.destAction = ACTION_SPELL;
 			player.destParam1 = position.x;
 			player.destParam2 = position.y;
