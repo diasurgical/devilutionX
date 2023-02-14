@@ -258,11 +258,12 @@ class FmtArgParser {
 public:
 	FmtArgParser(string_view fmt,
 	    DrawStringFormatArg *args,
-	    std::size_t len)
+	    size_t len,
+	    size_t offset = 0)
 	    : fmt_(fmt)
 	    , args_(args)
 	    , len_(len)
-	    , next_(0)
+	    , next_(offset)
 	{
 	}
 
@@ -302,6 +303,11 @@ public:
 			rest.remove_prefix(fmtLen);
 		}
 		return result;
+	}
+
+	size_t offset() const
+	{
+		return next_;
 	}
 
 private:
@@ -481,7 +487,7 @@ int GetLineWidth(string_view text, GameFontTables size, int spacing, int *charac
 	return lineWidth != 0 ? (lineWidth - spacing) : 0;
 }
 
-int GetLineWidth(string_view fmt, DrawStringFormatArg *args, std::size_t argsLen, GameFontTables size, int spacing, int *charactersInLine)
+int GetLineWidth(string_view fmt, DrawStringFormatArg *args, std::size_t argsLen, size_t argsOffset, GameFontTables size, int spacing, int *charactersInLine)
 {
 	int lineWidth = 0;
 
@@ -491,7 +497,7 @@ int GetLineWidth(string_view fmt, DrawStringFormatArg *args, std::size_t argsLen
 	char32_t prev = U'\0';
 	char32_t next;
 
-	FmtArgParser fmtArgParser { fmt, args, argsLen };
+	FmtArgParser fmtArgParser { fmt, args, argsLen, argsOffset };
 	string_view rest = fmt;
 	while (!rest.empty()) {
 		if ((prev == U'{' || prev == U'}') && static_cast<char>(prev) == rest[0]) {
@@ -693,7 +699,7 @@ void DrawStringWithColors(const Surface &out, string_view fmt, DrawStringFormatA
 	int charactersInLine = 0;
 	int lineWidth = 0;
 	if (HasAnyOf(flags, (UiFlags::AlignCenter | UiFlags::AlignRight | UiFlags::KerningFitSpacing)))
-		lineWidth = GetLineWidth(fmt, args, argsLen, size, spacing, &charactersInLine);
+		lineWidth = GetLineWidth(fmt, args, argsLen, 0, size, spacing, &charactersInLine);
 
 	int maxSpacing = spacing;
 	if (HasAnyOf(flags, UiFlags::KerningFitSpacing))
@@ -764,7 +770,7 @@ void DrawStringWithColors(const Surface &out, string_view fmt, DrawStringFormatA
 			if (HasAnyOf(flags, (UiFlags::AlignCenter | UiFlags::AlignRight))) {
 				lineWidth = (*kerning)[frame];
 				if (remaining.size() > cpLen)
-					lineWidth += spacing + GetLineWidth(remaining.substr(cpLen), size, spacing);
+					lineWidth += spacing + GetLineWidth(remaining.substr(cpLen), args, argsLen, fmtArgParser.offset(), size, spacing);
 			}
 			characterPosition.x = GetLineStartX(flags, rect, lineWidth);
 
