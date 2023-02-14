@@ -212,12 +212,27 @@ struct AssetHandle {
 };
 #endif
 
+[[noreturn]] inline void FailedToOpenFileError(const char *path, const char *error)
+{
+	app_fatal(StrCat("Failed to open file:\n", path, "\n\n", error));
+}
+
+inline bool ValidatAssetRef(const char *path, const AssetRef &ref)
+{
+	if (ref.ok())
+		return true;
+	if (!HeadlessMode) {
+		FailedToOpenFileError(path, ref.error());
+	}
+	return false;
+}
+
 inline bool ValidateHandle(const char *path, const AssetHandle &handle)
 {
 	if (handle.ok())
 		return true;
 	if (!HeadlessMode) {
-		app_fatal(StrCat("Failed to open file:\n", path, "\n\n", handle.error()));
+		FailedToOpenFileError(path, handle.error());
 	}
 	return false;
 }
