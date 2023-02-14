@@ -3,6 +3,7 @@
 #include <array>
 #include <cstddef>
 #include <cstdint>
+#include <cstring>
 #include <memory>
 
 #include <fmt/core.h>
@@ -10,6 +11,7 @@
 #include "appfat.h"
 #include "diablo.h"
 #include "engine/assets.hpp"
+#include "mpq/mpq_common.hpp"
 #include "utils/static_vector.hpp"
 #include "utils/stdcompat/cstddef.hpp"
 #include "utils/str_cat.hpp"
@@ -99,18 +101,24 @@ struct MultiFileLoader {
 	[[nodiscard]] std::unique_ptr<byte[]> operator()(size_t numFiles, PathFn &&pathFn, uint32_t *outOffsets,
 	    FilterFn filterFn = DefaultFilterFn {})
 	{
-		StaticVector<AssetHandle, MaxFiles> files;
+		StaticVector<std::array<char, MaxMpqPathSize>, MaxFiles> paths;
+		StaticVector<AssetRef, MaxFiles> files;
 		StaticVector<uint32_t, MaxFiles> sizes;
 		size_t totalSize = 0;
 		for (size_t i = 0, j = 0; i < numFiles; ++i) {
 			if (!filterFn(i))
 				continue;
-			size_t size;
-			const char *path = pathFn(i);
-			files.emplace_back(OpenAsset(path, size));
-			if (!ValidateHandle(path, files.back()))
+			{
+				const char *path = pathFn(i);
+				paths.emplace_back();
+				memcpy(paths.back().data(), path, strlen(path) + 1);
+			}
+			const char *path = paths.back().data();
+			files.emplace_back(FindAsset(path));
+			if (!ValidatAssetRef(path, files.back()))
 				return nullptr;
 
+			const size_t size = files.back().size();
 			sizes.emplace_back(static_cast<uint32_t>(size));
 			outOffsets[j] = static_cast<uint32_t>(totalSize);
 			totalSize += size;
@@ -121,7 +129,10 @@ struct MultiFileLoader {
 		for (size_t i = 0, j = 0; i < numFiles; ++i) {
 			if (!filterFn(i))
 				continue;
-			files[j].read(&buf[outOffsets[j]], sizes[j]);
+			AssetHandle handle = OpenAsset(std::move(files[j]));
+			if (!handle.ok() || !handle.read(&buf[outOffsets[j]], sizes[j])) {
+				FailedToOpenFileError(paths[j].data(), handle.error());
+			}
 			++j;
 		}
 		return buf;

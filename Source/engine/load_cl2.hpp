@@ -1,12 +1,15 @@
 #pragma once
 
+#include <array>
 #include <cstdint>
+#include <cstring>
 
 #include <function_ref.hpp>
 
 #include "appfat.h"
 #include "engine/clx_sprite.hpp"
 #include "engine/load_file.hpp"
+#include "mpq/mpq_common.hpp"
 #include "utils/cl2_to_clx.hpp"
 #include "utils/endian.hpp"
 #include "utils/pointer_value_union.hpp"
@@ -26,17 +29,23 @@ OwnedClxSpriteListOrSheet LoadCl2ListOrSheet(const char *pszName, PointerOrValue
 template <size_t MaxCount>
 OwnedClxSpriteSheet LoadMultipleCl2Sheet(tl::function_ref<const char *(size_t)> filenames, size_t count, uint16_t width)
 {
-	StaticVector<AssetHandle, MaxCount> files;
+	StaticVector<std::array<char, MaxMpqPathSize>, MaxCount> paths;
+	StaticVector<AssetRef, MaxCount> files;
 	StaticVector<size_t, MaxCount> fileSizes;
 	const size_t sheetHeaderSize = 4 * count;
 	size_t totalSize = sheetHeaderSize;
 	for (size_t i = 0; i < count; ++i) {
-		const char *filename = filenames(i);
-		size_t size;
-		files.emplace_back(OpenAsset(filename, size));
-		if (!files.back().ok()) {
-			app_fatal(StrCat("Failed to open file:\n", filename, "\n\n", files.back().error()));
+		{
+			const char *path = filenames(i);
+			paths.emplace_back();
+			memcpy(paths.back().data(), path, strlen(path) + 1);
 		}
+		const char *path = paths.back().data();
+		files.emplace_back(FindAsset(path));
+		if (!files.back().ok()) {
+			FailedToOpenFileError(path, files.back().error());
+		}
+		const size_t size = files.back().size();
 		fileSizes.emplace_back(size);
 		totalSize += size;
 	}
@@ -47,8 +56,10 @@ OwnedClxSpriteSheet LoadMultipleCl2Sheet(tl::function_ref<const char *(size_t)> 
 	size_t accumulatedSize = sheetHeaderSize;
 	for (size_t i = 0; i < count; ++i) {
 		const size_t size = fileSizes[i];
-		if (!files[i].read(&data[accumulatedSize], size))
-			app_fatal(StrCat("Read failed:\n", files[i].error()));
+		AssetHandle handle = OpenAsset(std::move(files[i]));
+		if (!handle.ok() || !handle.read(&data[accumulatedSize], size)) {
+			FailedToOpenFileError(paths[i].data(), handle.error());
+		}
 		WriteLE32(&data[i * 4], accumulatedSize);
 #ifndef UNPACKED_MPQS
 		[[maybe_unused]] const uint16_t numLists = Cl2ToClx(&data[accumulatedSize], size, frameWidth);
