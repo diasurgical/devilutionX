@@ -96,6 +96,8 @@ void CheckStashPaste(Point cursorPosition)
 	}
 
 	if (player.HoldItem._itype == ItemType::Gold) {
+		if (Stash.gold > std::numeric_limits<int>::max() - player.HoldItem._ivalue)
+			return;
 		Stash.gold += player.HoldItem._ivalue;
 		player.HoldItem.clear();
 		PlaySFX(IS_GOLD);
@@ -668,6 +670,8 @@ void GoldWithdrawNewText(string_view text)
 bool AutoPlaceItemInStash(Player &player, const Item &item, bool persistItem)
 {
 	if (item._itype == ItemType::Gold) {
+		if (Stash.gold > std::numeric_limits<int>::max() - item._ivalue)
+			return false;
 		if (persistItem) {
 			Stash.gold += item._ivalue;
 			Stash.dirty = true;
