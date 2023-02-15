@@ -1692,11 +1692,12 @@ void UpdateFlameTrap(Object &trap)
 
 		int x = trap.position.x;
 		int y = trap.position.y;
+		constexpr MissileID TrapMissile = MissileID::FireWallControl;
 		if (dMonster[x][y] > 0)
-			MonsterTrapHit(dMonster[x][y] - 1, mindam / 2, maxdam / 2, 0, MissileID::FireWallControl, false);
+			MonsterTrapHit(dMonster[x][y] - 1, mindam / 2, maxdam / 2, 0, TrapMissile, GetMissileData(TrapMissile).damageType(), false);
 		if (dPlayer[x][y] > 0) {
 			bool unused;
-			PlayerMHit(dPlayer[x][y] - 1, nullptr, 0, mindam, maxdam, MissileID::FireWallControl, false, 0, &unused);
+			PlayerMHit(dPlayer[x][y] - 1, nullptr, 0, mindam, maxdam, TrapMissile, GetMissileData(TrapMissile).damageType(), false, 0, &unused);
 		}
 
 		if (trap._oAnimFrame == trap._oAnimLen)
@@ -3511,12 +3512,13 @@ void BreakBarrel(const Player &player, Object &barrel, bool forcebreak, bool sen
 			PlaySfxLoc(IS_BARLFIRE, barrel.position);
 		for (int yp = barrel.position.y - 1; yp <= barrel.position.y + 1; yp++) {
 			for (int xp = barrel.position.x - 1; xp <= barrel.position.x + 1; xp++) {
+				constexpr MissileID TrapMissile = MissileID::Firebolt;
 				if (dMonster[xp][yp] > 0) {
-					MonsterTrapHit(dMonster[xp][yp] - 1, 1, 4, 0, MissileID::Firebolt, false);
+					MonsterTrapHit(dMonster[xp][yp] - 1, 1, 4, 0, TrapMissile, GetMissileData(TrapMissile).damageType(), false);
 				}
 				if (dPlayer[xp][yp] > 0) {
 					bool unused;
-					PlayerMHit(dPlayer[xp][yp] - 1, nullptr, 0, 8, 16, MissileID::Firebolt, false, 0, &unused);
+					PlayerMHit(dPlayer[xp][yp] - 1, nullptr, 0, 8, 16, TrapMissile, GetMissileData(TrapMissile).damageType(), false, 0, &unused);
 				}
 				// don't really need to exclude large objects as explosive barrels are single tile objects, but using considerLargeObjects == false as this matches the old logic.
 				Object *adjacentObject = FindObjectAtPosition({ xp, yp }, false);

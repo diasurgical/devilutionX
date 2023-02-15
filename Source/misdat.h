@@ -152,13 +152,6 @@ struct MissileData {
 	{
 		return static_cast<DamageType>(static_cast<std::underlying_type<MissileDataFlags>::type>(flags) & 0b111U);
 	}
-
-	void setDamageType(DamageType damageType)
-	{
-		flags = static_cast<MissileDataFlags>(
-		    (static_cast<std::underlying_type<MissileDataFlags>::type>(flags) & 0b11111000U)
-		    | static_cast<std::underlying_type<DamageType>::type>(damageType));
-	}
 };
 
 enum class MissileGraphicsFlags : uint8_t {
@@ -203,9 +196,9 @@ struct MissileFileData {
 	}
 };
 
-extern MissileData MissilesData[];
+extern const MissileData MissilesData[];
 
-inline MissileData &GetMissileData(MissileID missileId)
+inline const MissileData &GetMissileData(MissileID missileId)
 {
 	return MissilesData[static_cast<std::underlying_type<MissileID>::type>(missileId)];
 }
