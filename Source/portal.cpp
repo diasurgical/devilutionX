@@ -49,10 +49,7 @@ void SetPortalStats(int i, bool o, int x, int y, int lvl, dungeon_type lvltype, 
 
 void AddWarpMissile(int i, Point position, bool sync)
 {
-	MissileData &missileData = GetMissileData(MissileID::TownPortal);
-	missileData.mlSFX = SFX_NONE;
-
-	auto *missile = AddMissile({ 0, 0 }, position, Direction::South, MissileID::TownPortal, TARGET_MONSTERS, i, 0, 0);
+	auto *missile = AddMissile({ 0, 0 }, position, Direction::South, MissileID::TownPortal, TARGET_MONSTERS, i, 0, 0, /*parent=*/nullptr, SFX_NONE);
 	if (missile != nullptr) {
 		// Don't show portal opening animation if we sync existing portals
 		if (sync)
@@ -61,8 +58,6 @@ void AddWarpMissile(int i, Point position, bool sync)
 		if (leveltype != DTYPE_TOWN)
 			missile->_mlid = AddLight(missile->position.tile, 15);
 	}
-
-	missileData.mlSFX = LS_SENTINEL;
 }
 
 void SyncPortals()
