@@ -5,11 +5,10 @@
  */
 
 #include <cstdint>
-#include <fstream>
+#include <cstdio>
 
 #include <fmt/format.h>
 
-#define SI_SUPPORT_IOSTREAMS
 #define SI_NO_CONVERSION
 #include <SimpleIni.h>
 
@@ -92,11 +91,13 @@ CSimpleIni &GetIni()
 	static bool isIniLoaded = false;
 	if (!isIniLoaded) {
 		auto path = GetIniPath();
-		auto stream = CreateFileStream(path.c_str(), std::fstream::in | std::fstream::binary);
+		FILE *file = OpenFile(path.c_str(), "rb");
 		ini.SetSpaces(false);
 		ini.SetMultiKey();
-		if (stream)
-			ini.LoadData(*stream);
+		if (file != nullptr) {
+			ini.LoadFile(file);
+			std::fclose(file);
+		}
 		isIniLoaded = true;
 	}
 	return ini;
@@ -244,9 +245,14 @@ void SaveIni()
 		}
 	}
 #endif
-	auto iniPath = GetIniPath();
-	auto stream = CreateFileStream(iniPath.c_str(), std::fstream::out | std::fstream::trunc | std::fstream::binary);
-	GetIni().Save(*stream, true);
+	const std::string iniPath = GetIniPath();
+	FILE *file = OpenFile(iniPath.c_str(), "wb");
+	if (file != nullptr) {
+		GetIni().SaveFile(file, true);
+		std::fclose(file);
+	} else {
+		LogError("Failed to write ini file to {}: {}", iniPath, std::strerror(errno));
+	}
 	IniChanged = false;
 }
 

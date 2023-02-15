@@ -5,7 +5,6 @@
  */
 #include "pfile.h"
 
-#include <sstream>
 #include <string>
 #include <unordered_map>
 
@@ -28,6 +27,7 @@
 #include "utils/stdcompat/abs.hpp"
 #include "utils/stdcompat/string_view.hpp"
 #include "utils/str_cat.hpp"
+#include "utils/str_split.hpp"
 #include "utils/utf8.hpp"
 
 #ifdef UNPACKED_SAVES
@@ -162,14 +162,8 @@ SaveWriter GetStashWriter()
 #ifndef DISABLE_DEMOMODE
 void CopySaveFile(uint32_t saveNum, std::string targetPath)
 {
-	std::string savePath = GetSavePath(saveNum);
-	auto saveStream = CreateFileStream(savePath.c_str(), std::fstream::in | std::fstream::binary);
-	if (!saveStream)
-		return;
-	auto targetStream = CreateFileStream(targetPath.c_str(), std::fstream::out | std::fstream::binary | std::fstream::trunc);
-	if (!targetStream)
-		return;
-	*targetStream << saveStream->rdbuf();
+	const std::string savePath = GetSavePath(saveNum);
+	CopyFileOverwrite(savePath.c_str(), targetPath.c_str());
 }
 #endif
 
@@ -236,15 +230,6 @@ std::optional<SaveReader> CreateSaveReader(std::string &&path)
 }
 
 #ifndef DISABLE_DEMOMODE
-class MemoryBuffer : public std::basic_streambuf<char> {
-public:
-	MemoryBuffer(char *data, size_t byteCount)
-	{
-		setg(data, data, data + byteCount);
-		setp(data, data + byteCount);
-	}
-};
-
 struct CompareInfo {
 	std::unique_ptr<byte[]> &data;
 	size_t currentPosition;
@@ -269,11 +254,11 @@ struct CompareCounter {
 	}
 };
 
-inline bool string_ends_with(std::string const &value, std::string const &ending)
+inline bool string_ends_with(string_view value, string_view suffix)
 {
-	if (ending.size() > value.size())
+	if (suffix.size() > value.size())
 		return false;
-	return std::equal(ending.rbegin(), ending.rend(), value.rbegin());
+	return std::equal(suffix.rbegin(), suffix.rend(), value.rbegin());
 }
 
 void CreateDetailDiffs(string_view prefix, string_view memoryMapFile, CompareInfo &compareInfoReference, CompareInfo &compareInfoActual, std::unordered_map<std::string, size_t> &foundDiffs)
@@ -290,9 +275,7 @@ void CreateDetailDiffs(string_view prefix, string_view memoryMapFile, CompareInf
 	size_t readBytes = SDL_RWsize(handle);
 	std::unique_ptr<byte[]> memoryMapFileData { new byte[readBytes] };
 	SDL_RWread(handle, memoryMapFileData.get(), readBytes, 1);
-
-	MemoryBuffer buffer(reinterpret_cast<char *>(memoryMapFileData.get()), readBytes);
-	std::istream reader(&buffer);
+	const string_view buffer(reinterpret_cast<const char *>(memoryMapFileData.get()), readBytes);
 
 	std::unordered_map<std::string, CompareCounter> counter;
 
@@ -341,15 +324,18 @@ void CreateDetailDiffs(string_view prefix, string_view memoryMapFile, CompareInf
 		return value;
 	};
 
-	std::string line;
-	while (std::getline(reader, line)) {
-		if (line.size() > 0 && line[line.size() - 1] == '\r')
-			line.resize(line.size() - 1);
-		if (line.size() == 0)
+	for (string_view line : SplitByChar(buffer, '\n')) {
+		if (!line.empty() && line.back() == '\r')
+			line.remove_suffix(1);
+		if (line.empty())
 			continue;
-		std::stringstream lineStream(line);
-		std::string command;
-		std::getline(lineStream, command, ' ');
+		const auto tokens = SplitByChar(line, ' ');
+		auto it = tokens.begin();
+		const auto end = tokens.end();
+		if (it == end)
+			continue;
+
+		string_view command = *it;
 
 		bool dataExistsReference = compareInfoReference.dataExists;
 		bool dataExistsActual = compareInfoActual.dataExists;
@@ -357,12 +343,12 @@ void CreateDetailDiffs(string_view prefix, string_view memoryMapFile, CompareInf
 		if (string_ends_with(command, "_HF")) {
 			if (!gbIsHellfire)
 				continue;
-			command.resize(command.size() - 3);
+			command.remove_suffix(3);
 		}
 		if (string_ends_with(command, "_DA")) {
 			if (gbIsHellfire)
 				continue;
-			command.resize(command.size() - 3);
+			command.remove_suffix(3);
 		}
 		if (string_ends_with(command, "_DL")) {
 			if (compareInfoReference.isTownLevel && compareInfoActual.isTownLevel)
@@ -371,14 +357,11 @@ void CreateDetailDiffs(string_view prefix, string_view memoryMapFile, CompareInf
 				compareInfoReference.dataExists = false;
 			if (compareInfoActual.isTownLevel)
 				compareInfoActual.dataExists = false;
-			command.resize(command.size() - 3);
+			command.remove_suffix(3);
 		}
 		if (command == "R" || command == "LT" || command == "LC" || command == "LC_LE") {
-			std::string bitsAsString;
-			std::getline(lineStream, bitsAsString, ' ');
-			std::string comment;
-			std::getline(lineStream, comment);
-
+			const auto bitsAsString = std::string(*++it);
+			const auto comment = std::string(*++it);
 			size_t bytes = static_cast<size_t>(std::stoi(bitsAsString) / 8);
 
 			if (command == "LT") {
@@ -392,7 +375,7 @@ void CreateDetailDiffs(string_view prefix, string_view memoryMapFile, CompareInf
 				int32_t valueReference = read32BitInt(compareInfoReference, command == "LC_LE");
 				int32_t valueActual = read32BitInt(compareInfoActual, command == "LC_LE");
 				assert(sizeof(valueReference) == bytes);
-				counter.insert_or_assign(comment, CompareCounter { valueReference, valueActual });
+				counter.insert_or_assign(std::string(comment), CompareCounter { valueReference, valueActual });
 			}
 
 			if (!compareBytes(bytes)) {
@@ -400,12 +383,9 @@ void CreateDetailDiffs(string_view prefix, string_view memoryMapFile, CompareInf
 				addDiff(diffKey);
 			}
 		} else if (command == "M") {
-			std::string countAsString;
-			std::getline(lineStream, countAsString, ' ');
-			std::string bitsAsString;
-			std::getline(lineStream, bitsAsString, ' ');
-			std::string comment;
-			std::getline(lineStream, comment);
+			const auto countAsString = std::string(*++it);
+			const auto bitsAsString = std::string(*++it);
+			string_view comment = *++it;
 
 			CompareCounter count = getCounter(countAsString);
 			size_t bytes = static_cast<size_t>(std::stoi(bitsAsString) / 8);
@@ -417,12 +397,9 @@ void CreateDetailDiffs(string_view prefix, string_view memoryMapFile, CompareInf
 				}
 			}
 		} else if (command == "C") {
-			std::string countAsString;
-			std::getline(lineStream, countAsString, ' ');
-			std::string subMemoryMapFile;
-			std::getline(lineStream, subMemoryMapFile, ' ');
-			std::string comment;
-			std::getline(lineStream, comment);
+			const auto countAsString = std::string(*++it);
+			auto subMemoryMapFile = std::string(*++it);
+			const auto comment = std::string(*++it);
 
 			CompareCounter count = getCounter(countAsString);
 			subMemoryMapFile.erase(std::remove(subMemoryMapFile.begin(), subMemoryMapFile.end(), '\r'), subMemoryMapFile.end());

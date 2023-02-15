@@ -2,7 +2,6 @@
 
 #include <cstdint>
 #include <cstdio>
-#include <fstream>
 #include <vector>
 
 #include <SDL_endian.h>
@@ -12,6 +11,7 @@
 #include "loadsave.h"
 #include "pack.h"
 #include "pfile.h"
+#include "utils/file_util.h"
 #include "utils/paths.h"
 
 namespace devilution {
@@ -389,9 +389,17 @@ TEST(Writehero, pfile_write_hero)
 	AssertPlayer(Players[0]);
 	pfile_write_hero();
 
-	std::ifstream f("multi_0.sv", std::ios::binary);
+	const char *path = "multi_0.sv";
+	uintmax_t size;
+	ASSERT_TRUE(GetFileSize(path, &size));
+	FILE *f = std::fopen(path, "rb");
+	ASSERT_TRUE(f != nullptr);
+	std::unique_ptr<char[]> data { new char[size] };
+	ASSERT_EQ(std::fread(data.get(), size, 1, f), 1);
+	std::fclose(f);
+
 	std::vector<unsigned char> s(picosha2::k_digest_size);
-	picosha2::hash256(f, s.begin(), s.end());
+	picosha2::hash256(data.get(), data.get() + size, s.begin(), s.end());
 	EXPECT_EQ(picosha2::bytes_to_hex_string(s.begin(), s.end()),
 	    "a79367caae6192d54703168d82e0316aa289b2a33251255fad8abe34889c1d3a");
 }

@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <fstream>
-#include <iostream>
+#include <cstdio>
 
 #include "utils/file_util.h"
 
@@ -11,13 +10,15 @@ namespace {
 
 void WriteDummyFile(const char *name, std::uintmax_t size)
 {
-	std::ofstream test_file(name, std::ios::out | std::ios::trunc | std::ios::binary);
-	ASSERT_FALSE(test_file.fail());
+	std::printf("Writing test file %s\n", name);
+	FILE *test_file = std::fopen(name, "wb");
+	ASSERT_TRUE(test_file != nullptr);
 	const char c = '\0';
 	for (std::uintmax_t i = 0; i < size; ++i) {
-		test_file.write(&c, 1);
-		ASSERT_FALSE(test_file.fail());
+		std::fwrite(&c, sizeof(c), 1, test_file);
+		ASSERT_EQ(std::ferror(test_file), 0);
 	}
+	std::fclose(test_file);
 }
 
 std::string GetTmpPathName(const char *suffix = ".tmp")
@@ -34,7 +35,6 @@ std::string GetTmpPathName(const char *suffix = ".tmp")
 TEST(FileUtil, GetFileSize)
 {
 	const std::string path = GetTmpPathName();
-	std::cout << path << std::endl;
 	WriteDummyFile(path.c_str(), 42);
 	std::uintmax_t result;
 	ASSERT_TRUE(GetFileSize(path.c_str(), &result));
@@ -45,7 +45,6 @@ TEST(FileUtil, FileExists)
 {
 	EXPECT_FALSE(FileExists("this-file-should-not-exist"));
 	const std::string path = GetTmpPathName();
-	std::cout << path << std::endl;
 	WriteDummyFile(path.c_str(), 42);
 	EXPECT_TRUE(FileExists(path.c_str()));
 }
@@ -53,7 +52,6 @@ TEST(FileUtil, FileExists)
 TEST(FileUtil, ResizeFile)
 {
 	const std::string path = GetTmpPathName();
-	std::cout << path << std::endl;
 	WriteDummyFile(path.c_str(), 42);
 	std::uintmax_t size;
 	ASSERT_TRUE(GetFileSize(path.c_str(), &size));
