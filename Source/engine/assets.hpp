@@ -81,7 +81,7 @@ struct AssetHandle {
 		return std::fread(buffer, len, 1, handle) == 1;
 	}
 
-	bool seek(std::ios::pos_type pos)
+	bool seek(long pos)
 	{
 		return std::fseek(handle, pos, SEEK_SET) == 0;
 	}
@@ -193,7 +193,7 @@ struct AssetHandle {
 		return handle->read(handle, buffer, len, 1) == 1;
 	}
 
-	bool seek(std::ios::pos_type pos)
+	bool seek(long pos)
 	{
 		return handle->seek(handle, pos, RW_SEEK_SET) != -1;
 	}

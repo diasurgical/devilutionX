@@ -6,8 +6,7 @@
 
 #ifdef _DEBUG
 
-#include <fstream>
-#include <sstream>
+#include <cstdio>
 
 #include "debug.h"
 
@@ -29,9 +28,11 @@
 #include "spells.h"
 #include "towners.h"
 #include "utils/endian_stream.hpp"
+#include "utils/file_util.h"
 #include "utils/language.h"
 #include "utils/log.hpp"
 #include "utils/str_cat.hpp"
+#include "utils/str_split.hpp"
 
 namespace devilution {
 
@@ -262,21 +263,20 @@ std::string DebugCmdLoadMap(const string_view parameter)
 	int mapType = 0;
 	Point spawn = {};
 
-	std::stringstream paramsStream(parameter.data());
 	int count = 0;
-	for (std::string tmp; std::getline(paramsStream, tmp, ' ');) {
+	for (string_view arg : SplitByChar(parameter, ' ')) {
 		switch (count) {
 		case 0:
-			TestMapPath = StrCat(tmp, ".dun");
+			TestMapPath = StrCat(arg, ".dun");
 			break;
 		case 1:
-			mapType = atoi(tmp.c_str());
+			mapType = atoi(std::string(arg).c_str());
 			break;
 		case 2:
-			spawn.x = atoi(tmp.c_str());
+			spawn.x = atoi(std::string(arg).c_str());
 			break;
 		case 3:
-			spawn.y = atoi(tmp.c_str());
+			spawn.y = atoi(std::string(arg).c_str());
 			break;
 		}
 		count++;
@@ -299,11 +299,9 @@ std::string DebugCmdLoadMap(const string_view parameter)
 
 std::string ExportDun(const string_view parameter)
 {
-	std::ofstream dunFile;
-
 	std::string levelName = StrCat(currlevel, "-", glSeedTbl[currlevel], ".dun");
 
-	dunFile.open(levelName, std::ios::out | std::ios::app | std::ios::binary);
+	FILE *dunFile = OpenFile(levelName.c_str(), "ab");
 
 	WriteLE16(dunFile, DMAXX);
 	WriteLE16(dunFile, DMAXY);
@@ -361,7 +359,7 @@ std::string ExportDun(const string_view parameter)
 			WriteLE16(dunFile, dTransVal[x][y]);
 		}
 	}
-	dunFile.close();
+	std::fclose(dunFile);
 
 	return StrCat(levelName, " saved. Happy mapping!");
 }
@@ -424,18 +422,18 @@ std::string DebugCmdResetLevel(const string_view parameter)
 {
 	Player &myPlayer = *MyPlayer;
 
-	std::stringstream paramsStream(parameter.data());
-	std::string singleParameter;
-	if (!std::getline(paramsStream, singleParameter, ' '))
+	auto args = SplitByChar(parameter, ' ');
+	auto it = args.begin();
+	if (it == args.end())
 		return "What level do you want to visit?";
-	auto level = atoi(singleParameter.c_str());
+	auto level = atoi(std::string(*it).c_str());
 	if (level < 0 || level > (gbIsHellfire ? 24 : 16))
 		return StrCat("Level ", level, " is not known. Do you want to write an extension mod?");
 	myPlayer._pLvlVisited[level] = false;
 	DeltaClearLevel(level);
 
-	if (std::getline(paramsStream, singleParameter, ' ')) {
-		uint32_t seed = static_cast<uint32_t>(std::stoul(singleParameter));
+	if (++it != args.end()) {
+		const auto seed = static_cast<uint32_t>(std::stoul(std::string(*it)));
 		glSeedTbl[level] = seed;
 	}
 
@@ -682,15 +680,16 @@ std::string DebugCmdSpawnUniqueMonster(const string_view parameter)
 	if (leveltype == DTYPE_TOWN)
 		return "Do you want to kill the towners?!?";
 
-	std::stringstream paramsStream(parameter.data());
 	std::string name;
 	int count = 1;
-	for (std::string tmp; std::getline(paramsStream, tmp, ' '); name += tmp + " ") {
-		int num = atoi(tmp.c_str());
+	for (string_view arg : SplitByChar(parameter, ' ')) {
+		const int num = atoi(std::string(arg).c_str());
 		if (num > 0) {
 			count = num;
 			break;
 		}
+		AppendStrView(name, arg);
+		name += ' ';
 	}
 	if (name.empty())
 		return "Monster name cannot be empty. Duh.";
@@ -769,15 +768,16 @@ std::string DebugCmdSpawnMonster(const string_view parameter)
 	if (leveltype == DTYPE_TOWN)
 		return "Do you want to kill the towners?!?";
 
-	std::stringstream paramsStream(parameter.data());
 	std::string name;
 	int count = 1;
-	for (std::string tmp; std::getline(paramsStream, tmp, ' '); name += tmp + " ") {
-		int num = atoi(tmp.c_str());
+	for (string_view arg : SplitByChar(parameter, ' ')) {
+		const int num = atoi(std::string(arg).c_str());
 		if (num > 0) {
 			count = num;
 			break;
 		}
+		AppendStrView(name, arg);
+		name += ' ';
 	}
 	if (name.empty())
 		return "Monster name cannot be empty. Duh.";
@@ -979,21 +979,22 @@ std::string DebugCmdToggleFPS(const string_view parameter)
 
 std::string DebugCmdChangeTRN(const string_view parameter)
 {
-	std::stringstream paramsStream(parameter.data());
-	std::string first;
 	std::string out;
-	if (std::getline(paramsStream, first, ' ')) {
-		std::string second;
-		if (std::getline(paramsStream, second, ' ')) {
-			std::string prefix;
+	const auto parts = SplitByChar(parameter, ' ');
+	auto it = parts.begin();
+	if (it != parts.end()) {
+		const string_view first = *it;
+		if (++it != parts.end()) {
+			const string_view second = *it;
+			string_view prefix;
 			if (first == "mon") {
 				prefix = "monsters\\monsters\\";
 			} else if (first == "plr") {
 				prefix = "plrgfx\\";
 			}
-			debugTRN = prefix + second + ".trn";
+			debugTRN = StrCat(prefix, second, ".trn");
 		} else {
-			debugTRN = first + ".trn";
+			debugTRN = StrCat(first, ".trn");
 		}
 		out = fmt::format("I am a pretty butterfly. \n(Loading TRN: {:s})", debugTRN);
 	} else {

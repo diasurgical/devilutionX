@@ -1,9 +1,7 @@
 #include "engine/demomode.h"
 
+#include <cstdio>
 #include <deque>
-#include <fstream>
-#include <iostream>
-#include <sstream>
 
 #ifdef USE_SDL1
 #include "utils/sdl2_to_1_2_backports.h"
@@ -76,7 +74,7 @@ bool Timedemo = false;
 int RecordNumber = -1;
 bool CreateDemoReference = false;
 
-std::ofstream DemoRecording;
+FILE *DemoRecording;
 std::deque<DemoMsg> Demo_Message_Queue;
 uint32_t DemoModeLastTick = 0;
 
@@ -277,9 +275,9 @@ void LogDemoMessage(const DemoMsg &msg)
 
 bool LoadDemoMessages(int i)
 {
-	std::ifstream demofile;
-	demofile.open(StrCat(paths::PrefPath(), "demo_", i, ".dmo"), std::fstream::binary);
-	if (!demofile.is_open()) {
+	const std::string path = StrCat(paths::PrefPath(), "demo_", i, ".dmo");
+	FILE *demofile = OpenFile(path.c_str(), "rb");
+	if (demofile == nullptr) {
 		return false;
 	}
 
@@ -294,7 +292,7 @@ bool LoadDemoMessages(int i)
 
 	while (true) {
 		const uint32_t typeNum = ReadLE32(demofile);
-		if (demofile.eof())
+		if (std::feof(demofile))
 			break;
 		const auto type = static_cast<DemoMsgType>(typeNum);
 
@@ -343,7 +341,7 @@ bool LoadDemoMessages(int i)
 		}
 	}
 
-	demofile.close();
+	std::fclose(demofile);
 
 	DemoModeLastTick = SDL_GetTicks();
 
@@ -496,7 +494,7 @@ void RecordGameLoopResult(bool runGameLoop)
 
 void RecordMessage(const SDL_Event &event, uint16_t modState)
 {
-	if (!gbRunGame || !DemoRecording.is_open())
+	if (!gbRunGame || DemoRecording == nullptr)
 		return;
 	if (CurrentEventHandler == DisableInputEventHandler)
 		return;
@@ -553,7 +551,13 @@ void RecordMessage(const SDL_Event &event, uint16_t modState)
 void NotifyGameLoopStart()
 {
 	if (IsRecording()) {
-		DemoRecording.open(StrCat(paths::PrefPath(), "demo_", RecordNumber, ".dmo"), std::fstream::trunc | std::fstream::binary);
+		const std::string path = StrCat(paths::PrefPath(), "demo_", RecordNumber, ".dmo");
+		DemoRecording = OpenFile(path.c_str(), "wb");
+		if (DemoRecording == nullptr) {
+			RecordNumber = -1;
+			LogError("Failed to open {} for writing", path);
+			return;
+		}
 		constexpr uint8_t Version = 0;
 		WriteByte(DemoRecording, Version);
 		WriteLE32(DemoRecording, gSaveNumber);
@@ -570,7 +574,8 @@ void NotifyGameLoopStart()
 void NotifyGameLoopEnd()
 {
 	if (IsRecording()) {
-		DemoRecording.close();
+		std::fclose(DemoRecording);
+		DemoRecording = nullptr;
 		if (CreateDemoReference)
 			pfile_write_hero_demo(RecordNumber);
 

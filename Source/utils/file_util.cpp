@@ -1,5 +1,8 @@
 #include "utils/file_util.h"
 
+#include <cerrno>
+#include <cstring>
+
 #include <algorithm>
 #include <string>
 
@@ -7,6 +10,7 @@
 
 #include "utils/log.hpp"
 #include "utils/stdcompat/filesystem.hpp"
+#include "utils/stdcompat/string_view.hpp"
 
 #ifdef USE_SDL1
 #include "utils/sdl2_to_1_2_backports.h"
@@ -28,6 +32,10 @@
 #if (_POSIX_C_SOURCE >= 200112L || defined(_BSD_SOURCE) || defined(__APPLE__)) && !defined(NXDK)
 #include <sys/stat.h>
 #include <unistd.h>
+#endif
+
+#ifdef __APPLE__
+#include <copyfile.h>
 #endif
 
 namespace devilution {
@@ -203,9 +211,58 @@ void RenameFile(const char *from, const char *to)
 	::MoveFileW(&fromUtf16[0], &toUtf16[0]);
 #elif defined(DVL_HAS_FILESYSTEM)
 	std::error_code ec;
-	return std::filesystem::rename(from, to);
+	std::filesystem::rename(from, to, ec);
 #else
 	::rename(from, to);
+#endif
+}
+
+void CopyFileOverwrite(const char *from, const char *to)
+{
+#if defined(NXDK)
+	if (!::CopyFile(from, to, /*bFailIfExists=*/false)) {
+		LogError("Failed to copy {} to {}", from, to);
+	}
+#elif defined(_WIN64) || defined(_WIN32)
+	const auto fromUtf16 = ToWideChar(from);
+	const auto toUtf16 = ToWideChar(to);
+	if (fromUtf16 == nullptr || toUtf16 == nullptr) {
+		LogError("UTF-8 -> UTF-16 conversion error code {}", ::GetLastError());
+		return;
+	}
+	if (!::CopyFileW(&fromUtf16[0], &toUtf16[0], /*bFailIfExists=*/false)) {
+		LogError("Failed to copy {} to {}", from, to);
+	}
+#elif defined(__APPLE__)
+	::copyfile(from, to, nullptr, COPYFILE_ALL);
+#elif defined(DVL_HAS_FILESYSTEM)
+	std::error_code error;
+	std::filesystem::copy_file(from, to, std::filesystem::copy_options::overwrite_existing, error);
+	if (error) {
+		LogError("Failed to copy {} to {}: {}", from, to, error.message());
+	}
+#else
+	FILE *infile = OpenFile(from, "rb");
+	if (infile == nullptr) {
+		LogError("Failed to open {} for reading: {}", from, std::strerror(errno));
+		return;
+	}
+	FILE *outfile = OpenFile(to, "wb");
+	if (outfile == nullptr) {
+		LogError("Failed to open {} for writing: {}", to, std::strerror(errno));
+		std::fclose(infile);
+		return;
+	}
+	char buffer[4096];
+	size_t numRead;
+	while ((numRead = std::fread(buffer, sizeof(char), sizeof(buffer), infile)) > 0) {
+		if (std::fwrite(buffer, sizeof(char), numRead, outfile) != numRead) {
+			LogError("Write failed {}: {}", to, std::strerror(errno));
+			break;
+		}
+	}
+	std::fclose(infile);
+	std::fclose(outfile);
 #endif
 }
 
@@ -232,20 +289,6 @@ void RemoveFile(const char *path)
 	} else {
 		LogVerbose("Failed to remove file: {}", name);
 	}
-#endif
-}
-
-std::optional<std::fstream> CreateFileStream(const char *path, std::ios::openmode mode)
-{
-#if (defined(_WIN64) || defined(_WIN32)) && !defined(NXDK)
-	const auto pathUtf16 = ToWideChar(path);
-	if (pathUtf16 == nullptr) {
-		LogError("UTF-8 -> UTF-16 conversion error code {}", ::GetLastError());
-		return {};
-	}
-	return { std::fstream(pathUtf16.get(), mode) };
-#else
-	return { std::fstream(path, mode) };
 #endif
 }
 
