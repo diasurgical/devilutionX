@@ -129,6 +129,16 @@ extern OptionalOwnedClxSpriteList pSPentSpn2Cels;
 void LoadSmallSelectionSpinner();
 
 /**
+ * @brief Calculate highest pixel width from all lines of text, respecting kerning
+ * @param text Text to check, will read until first eol or terminator
+ * @param size Font size to use
+ * @param spacing Extra spacing to add per character
+ * @param charactersInLine Receives characters read until newline or terminator
+ * @return Line width in pixels
+ */
+int GetMaxLineWidth(string_view text, GameFontTables size = GameFont12, int spacing = 1, int *charactersInLine = nullptr);
+
+/**
  * @brief Calculate pixel width of first line of text, respecting kerning
  * @param text Text to check, will read until first eol or terminator
  * @param size Font size to use
