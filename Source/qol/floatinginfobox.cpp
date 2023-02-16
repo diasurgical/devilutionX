@@ -297,6 +297,8 @@ void DrawFloatingInfoBox(const Surface &out, Point position)
 	}
 }
 
+namespace {
+
 void PrintFloatingItemInfo(const Item &item)
 {
 	PrintItemMisc(item);
@@ -318,6 +320,8 @@ void PrintFloatingItemInfo(const Item &item)
 		}
 	}
 }
+
+} // namespace
 
 void PrintFloatingItemDetails(const Item &item)
 {
