@@ -1,13 +1,9 @@
 package org.diasurgical.devilutionx;
 
-import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -34,7 +30,7 @@ public class DevilutionXSDLActivity extends SDLActivity {
 		if (Build.VERSION.SDK_INT >= 25)
 			trackVisibleSpace();
 
-		externalDir = getExternalFilesDir(null).getAbsolutePath();
+		externalDir = chooseExternalFilesDir();
 
 		migrateSaveGames();
 
@@ -65,6 +61,27 @@ public class DevilutionXSDLActivity extends SDLActivity {
 		if (!noExit) {
 			System.exit(0);
 		}
+	}
+
+	private String chooseExternalFilesDir() {
+		if (Build.VERSION.SDK_INT >= 19) {
+			File[] externalDirs = getExternalFilesDirs(null);
+
+			for (int i = 0; i < externalDirs.length; i++) {
+				File dir = externalDirs[i];
+				File[] iniFiles = dir.listFiles((dir1, name) -> name == "diablo.ini");
+				if (iniFiles.length > 0)
+					return dir.getAbsolutePath();
+			}
+
+			for (int i = 0; i < externalDirs.length; i++) {
+				File dir = externalDirs[i];
+				if (dir.listFiles().length > 0)
+					return dir.getAbsolutePath();
+			}
+		}
+
+		return getExternalFilesDir(null).getAbsolutePath();
 	}
 
 	private void trackVisibleSpace() {
