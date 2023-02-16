@@ -481,43 +481,6 @@ void UnloadFonts()
 	FontKerns.clear();
 }
 
-int GetMaxLineWidth(string_view text, GameFontTables size, int spacing, int *charactersInLine)
-{
-	int lineWidth = 0;
-	int maxLineWidth = 0;
-
-	uint32_t codepoints = 0;
-	uint32_t currentUnicodeRow = 0;
-	std::array<uint8_t, 256> *kerning = nullptr;
-	char32_t next;
-	while (!text.empty()) {
-		next = ConsumeFirstUtf8CodePoint(&text);
-		if (next == Utf8DecodeError)
-			break;
-
-		if (next == '\n' || next == ZWSP) {
-			maxLineWidth = std::max(lineWidth, maxLineWidth);
-			lineWidth = 0;
-			continue;
-		}
-
-		uint8_t frame = next & 0xFF;
-		const uint32_t unicodeRow = GetUnicodeRow(next);
-		if (unicodeRow != currentUnicodeRow || kerning == nullptr) {
-			kerning = LoadFontKerning(size, unicodeRow);
-			currentUnicodeRow = unicodeRow;
-		}
-		lineWidth += (*kerning)[frame] + spacing;
-		codepoints++;
-	}
-	maxLineWidth = std::max(lineWidth, maxLineWidth);
-
-	if (charactersInLine != nullptr)
-		*charactersInLine = codepoints;
-
-	return maxLineWidth != 0 ? (maxLineWidth - spacing) : 0;
-}
-
 int GetLineWidth(string_view text, GameFontTables size, int spacing, int *charactersInLine)
 {
 	int lineWidth = 0;
@@ -609,6 +572,25 @@ int GetLineHeight(string_view text, GameFontTables fontIndex)
 		return SmallFontTallLineHeight;
 	}
 	return LineHeights[fontIndex];
+}
+
+int GetLongestLineWidth(string_view text, GameFontTables size, int spacing)
+{
+	int maxWidth = 0;
+	string_view line;
+	while (!text.empty()) {
+		const auto lineEnd = text.find_first_of("\n\r");
+		const auto lineStart = text.substr(0, lineEnd);
+		const auto lineWidth = GetLineWidth(lineStart, size, spacing, nullptr);
+		if (lineWidth > maxWidth) {
+			maxWidth = lineWidth;
+			line = lineStart;
+		}
+		if (lineEnd == string_view::npos)
+			break;
+		text = text.substr(lineEnd + 1);
+	}
+	return maxWidth + 1;
 }
 
 int AdjustSpacingToFitHorizontally(int &lineWidth, int maxSpacing, int charactersInLine, int availableWidth)

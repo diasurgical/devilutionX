@@ -41,11 +41,11 @@ void DrawFloatingInfoBox(const Surface &out, Point position)
 	const int spacing = space[spaceIndex];
 	// GetLineHeight always returns 12 in this function
 	const int lineHeight = GetLineHeight(InfoString, GameFontTables::GameFont12) + spacing;
-	const Size infoBoxPadding = { 48, 24 };
+	const Size infoBoxPadding = { 1, 0 };
 
 	Size infoBoxSize {
 		// width of the longest line of text + horizontal padding
-		GetMaxLineWidth(InfoString) + infoBoxPadding.width,
+		GetLongestLineWidth(InfoString, GameFontTables::GameFont12, 2) + infoBoxPadding.width,
 		// the height of the number of lines with spacing + vertical padding
 		(newLineCount * lineHeight) + infoBoxPadding.height
 	};

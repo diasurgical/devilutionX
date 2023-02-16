@@ -129,16 +129,6 @@ extern OptionalOwnedClxSpriteList pSPentSpn2Cels;
 void LoadSmallSelectionSpinner();
 
 /**
- * @brief Calculate highest pixel width from all lines of text, respecting kerning
- * @param text Text to check, will read until first eol or terminator
- * @param size Font size to use
- * @param spacing Extra spacing to add per character
- * @param charactersInLine Receives characters read until newline or terminator
- * @return Line width in pixels
- */
-int GetMaxLineWidth(string_view text, GameFontTables size = GameFont12, int spacing = 1, int *charactersInLine = nullptr);
-
-/**
  * @brief Calculate pixel width of first line of text, respecting kerning
  * @param text Text to check, will read until first eol or terminator
  * @param size Font size to use
@@ -162,6 +152,16 @@ int GetLineWidth(string_view text, GameFontTables size = GameFont12, int spacing
 int GetLineWidth(string_view fmt, DrawStringFormatArg *args, size_t argsLen, size_t argsOffset, GameFontTables size, int spacing, int *charactersInLine = nullptr);
 
 int GetLineHeight(string_view text, GameFontTables fontIndex);
+
+/**
+ * @brief Calculate pixel width of longest line of text, respecting kerning
+ * @param text Text to check, will read until terminator
+ * @param size Font size to use
+ * @param spacing Extra spacing to add per character
+ * @param[out] longestLine Receives the longest line found
+ * @return Longest line width in pixels
+ */
+int GetLongestLineWidth(string_view text, GameFontTables size = GameFont12, int spacing = 1);
 
 /**
  * @brief Builds a multi-line version of the given text so it'll fit within the given width.
