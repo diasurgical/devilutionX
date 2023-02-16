@@ -1083,6 +1083,7 @@ GameplayOptions::GameplayOptions()
               { FloatingNumbers::Random, N_("Random Angles") },
               { FloatingNumbers::Vertical, N_("Vertical Only") },
           })
+    , enableFloatingInfoBox("Enable Floating Info Box", OptionEntryFlags::None, N_("Enable Floating Info Box"), N_("Moves information from the control panel to a floating box."), false)
 {
 	grabInput.SetValueChangedCallback(OptionGrabInputChanged);
 	experienceBar.SetValueChangedCallback(OptionExperienceBarChanged);
@@ -1128,6 +1129,7 @@ std::vector<OptionEntryBase *> GameplayOptions::GetEntries()
 		&disableCripplingShrines,
 		&adriaRefillsMana,
 		&grabInput,
+		&enableFloatingInfoBox,
 	};
 }
 

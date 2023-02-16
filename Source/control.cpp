@@ -44,6 +44,7 @@
 #include "panels/spell_icons.hpp"
 #include "panels/spell_list.hpp"
 #include "playerdat.hpp"
+#include "qol/floatinginfobox.hpp"
 #include "qol/stash.h"
 #include "qol/xpbar.h"
 #include "stores.h"
@@ -1233,8 +1234,16 @@ void DrawInfoBox(const Surface &out)
 			AddPanelString(fmt::format(fmt::runtime(_("Hit Points {:d} of {:d}")), target._pHitPoints >> 6, target._pMaxHP >> 6));
 		}
 	}
-	if (!InfoString.empty())
+
+	if (*sgOptions.Gameplay.enableFloatingInfoBox) {
+		if (pcursinvitem != -1 || pcursstashitem != StashStruct::EmptyCell) {
+			return;
+		}
+	}
+
+	if (!InfoString.empty()) {
 		PrintInfo(out);
+	}
 }
 
 void CheckLvlBtn()
@@ -1488,6 +1497,96 @@ void DrawTalkPan(const Surface &out)
 		}
 
 		talkBtn++;
+	}
+}
+
+void DrawInvFloatingInfo(const Surface &out)
+{
+	Player &myPlayer = *InspectPlayer;
+
+	Point slotPos[] = {
+		{ 133, 59 },  // head
+		{ 48, 205 },  // left ring
+		{ 249, 205 }, // right ring
+		{ 205, 60 },  // amulet
+		{ 17, 160 },  // left hand
+		{ 248, 160 }, // right hand
+		{ 133, 160 }, // chest
+	};
+
+	// Equipment
+	for (int slot = INVLOC_HEAD; slot < NUM_INVLOC; slot++) {
+		if (!myPlayer.InvBody[slot].isEmpty()) {
+			int screenX = slotPos[slot].x;
+			int screenY = slotPos[slot].y;
+
+			const int cursId = myPlayer.InvBody[slot]._iCurs + CURSOR_FIRSTITEM;
+
+			auto frameSize = GetInvItemSize(cursId);
+
+			if (slot == INVLOC_HAND_LEFT) {
+				screenX += frameSize.width == InventorySlotSizeInPixels.width ? INV_SLOT_HALF_SIZE_PX : 0;
+				screenY += frameSize.height == (3 * InventorySlotSizeInPixels.height) ? 0 : -INV_SLOT_HALF_SIZE_PX;
+			} else if (slot == INVLOC_HAND_RIGHT) {
+				screenX += frameSize.width == InventorySlotSizeInPixels.width ? (INV_SLOT_HALF_SIZE_PX - 1) : 1;
+				screenY += frameSize.height == (3 * InventorySlotSizeInPixels.height) ? 0 : -INV_SLOT_HALF_SIZE_PX;
+			}
+
+			const Point position = GetPanelPosition(UiPanels::Inventory, { screenX, screenY });
+
+			if (pcursinvitem == slot) {
+				DrawFloatingItemInfoBox(out, position);
+			}
+		}
+	}
+
+	// Inventory
+	for (int j = 0; j < InventoryGridCells; j++) {
+		if (myPlayer.InvGrid[j] > 0) {
+			int ii = myPlayer.InvGrid[j] - 1;
+
+			const Point position = GetPanelPosition(UiPanels::Inventory, InvRect[j + SLOTXY_INV_FIRST].position) + Displacement { 0, -1 + INV_SLOT_SIZE_PX };
+			if (pcursinvitem == ii + INVITEM_INV_FIRST) {
+				DrawFloatingItemInfoBox(out, position);
+			}
+		}
+	}
+
+	// Belt
+	for (int i = 0; i < MaxBeltItems; i++) {
+		if (myPlayer.SpdList[i].isEmpty()) {
+			continue;
+		}
+
+		const Point mainPanelPosition = GetMainPanel().position;
+		const Point position { InvRect[i + SLOTXY_BELT_FIRST].position.x + mainPanelPosition.x, InvRect[i + SLOTXY_BELT_FIRST].position.y + mainPanelPosition.y + InventorySlotSizeInPixels.height };
+
+		if (pcursinvitem == i + INVITEM_BELT_FIRST) {
+			DrawFloatingItemInfoBox(out, position);
+		}
+	}
+}
+
+void DrawStashFloatingInfo(const Surface &out)
+{
+	constexpr Displacement offset { 0, INV_SLOT_SIZE_PX - 1 };
+
+	for (auto slot : StashGridRange) {
+		StashStruct::StashCell itemId = Stash.GetItemIdAtPosition(slot);
+		if (itemId == StashStruct::EmptyCell) {
+			continue;
+		}
+
+		Item &item = Stash.stashList[itemId];
+		if (item.position != slot) {
+			continue;
+		}
+
+		const Point position = GetStashSlotCoord(item.position) + offset;
+
+		if (pcursstashitem == itemId) {
+			DrawFloatingItemInfoBox(out, position);
+		}
 	}
 }
 
