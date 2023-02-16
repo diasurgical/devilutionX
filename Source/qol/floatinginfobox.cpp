@@ -1,3 +1,11 @@
+/**
+ * @file floatinginfobox.cpp
+ *
+ * Adds floating info box QoL feature
+ */
+
+#include "qol/floatinginfobox.hpp"
+
 #include "itemlabels.h"
 
 #include <algorithm>
@@ -9,6 +17,7 @@
 #include <fmt/format.h>
 
 #include "control.h"
+#include "controls/plrctrls.h"
 #include "cursor.h"
 #include "engine/point.hpp"
 #include "engine/render/clx_render.hpp"
@@ -29,25 +38,22 @@ void DrawFloatingInfoBox(const Surface &out, Point position)
 
 	Player &myPlayer = *MyPlayer;
 
-	const int space[] = { 18, 12, 6, 3, 0 };
-
 	Rectangle infoBoxRect {
 		{ 0, 0 },
 		{ 0, 0 }
 	};
 
 	const int newLineCount = std::count(InfoString.str().begin(), InfoString.str().end(), '\n');
-	const int spaceIndex = std::min(4, newLineCount);
-	const int spacing = space[spaceIndex];
+	const int spacing = 4;
 	// GetLineHeight always returns 12 in this function
-	const int lineHeight = GetLineHeight(InfoString, GameFontTables::GameFont12) + spacing;
-	const Size infoBoxPadding = { 1, 0 };
+	const int lineHeight = 12 + spacing;
+	const Size infoBoxPadding = { 16, 16 };
 
 	Size infoBoxSize {
 		// width of the longest line of text + horizontal padding
 		GetLongestLineWidth(InfoString, GameFontTables::GameFont12, 2) + infoBoxPadding.width,
 		// the height of the number of lines with spacing + vertical padding
-		(newLineCount * lineHeight) + infoBoxPadding.height
+		((newLineCount + 1) * lineHeight) + infoBoxPadding.height
 	};
 
 	if (pcursinvitem != -1) {
@@ -88,12 +94,8 @@ void DrawFloatingInfoBox(const Surface &out, Point position)
 	// Adjusting the line height to add spacing between lines
 	// will also add additional space beneath the last line
 	// which throws off the vertical centering
+	infoBoxRect.position.y += infoBoxPadding.height / 2;
 	infoBoxRect.position.y += spacing / 2;
-
-	//DrawString(out, InfoString, infoBoxRect, InfoColor | UiFlags::AlignCenter | UiFlags::VerticalCenter, 2, lineHeight);
-
-	//std::string infoString(InfoString.str());
-	//SDL_Log("%s", infoString.c_str());
 
 	if (pcursinvitem != -1) {
 		// Lines from InfoString are added into the lines vector with a newline at the end of each line, except the last line
@@ -236,7 +238,7 @@ void DrawFloatingInfoBox(const Surface &out, Point position)
 			// Item name and base item name should match the item quality color, normally found in InfoColor
 			// Note: Split lines are both considered separate lines, even though in game they appear on the same line visually
 			if (line.find(item._iIName) != std::string::npos || line.find(item._iName) != std::string::npos) {
-				color = InfoColor;
+				color = item.getTextColor();
 			} else if (line.find("Armor:") != std::string::npos || line.find("Damage:") != std::string::npos || line.find("Durability:") != std::string::npos) {
 				color = UiFlags::ColorWhite;
 			} else if ((i > 0 && lines[i - 1].find("Armor:") != std::string::npos)) {
@@ -251,6 +253,8 @@ void DrawFloatingInfoBox(const Surface &out, Point position)
 				color = reqDex;
 			} else if ((line.find("Required Magic:") != std::string::npos) || (i > 0 && lines[i - 1].find("Required Magic:") != std::string::npos)) {
 				color = reqMag;
+			} else if (line.find("Not Identified") != std::string::npos) {
+				color = UiFlags::ColorWhite;
 			} else if (item._iMagical != ITEM_QUALITY_NORMAL) {
 				// All remaining lines for non-normal items will be powers, so set all to blue
 				color = UiFlags::ColorBlue;
@@ -287,10 +291,183 @@ void DrawFloatingInfoBox(const Surface &out, Point position)
 		    linesBase,
 		    linesWithColor,
 		    infoBoxRect,
-		    UiFlags::AlignCenter | UiFlags::VerticalCenter,
+		    UiFlags::AlignCenter,
 		    2,
 		    lineHeight);
 	}
+}
+
+void PrintFloatingItemInfo(const Item &item)
+{
+	PrintItemMisc(item);
+	uint8_t str = item._iMinStr;
+	uint8_t dex = item._iMinDex;
+	uint8_t mag = item._iMinMag;
+	if (str != 0 || mag != 0 || dex != 0) {
+		if (str != 0) {
+			std::string textStr = fmt::format(fmt::runtime(_("Required Strength: {:d}")), str);
+			AddPanelString(textStr);
+		}
+		if (mag != 0) {
+			std::string textMag = fmt::format(fmt::runtime(_("Required Magic: {:d}")), mag);
+			AddPanelString(textMag);
+		}
+		if (dex != 0) {
+			std::string textDex = fmt::format(fmt::runtime(_("Required Dexterity: {:d}")), dex);
+			AddPanelString(textDex);
+		}
+	}
+}
+
+void PrintFloatingItemDetails(const Item &item)
+{
+	if (HeadlessMode)
+		return;
+
+	//Player &player = *MyPlayer;
+
+	// Base Item
+	if (strcmp(item._iIName, item._iName) != 0)
+		AddPanelString(_(item._iName));
+
+	int16_t modifiedVals[3] = {
+		item._iMinDam,
+		item._iMaxDam,
+		item._iAC
+	};
+
+	if (item._iMagical == ITEM_QUALITY_UNIQUE) {
+		const UniqueItem &uitem = UniqueItems[item._iUid];
+		assert(uitem.UINumPL <= sizeof(uitem.powers) / sizeof(*uitem.powers));
+		for (const auto &power : uitem.powers) {
+			switch (power.type) {
+			case IPL_ACP:
+			case IPL_ACP_CURSE:
+				modifiedVals[MIV_AC] *= item._iPLAC;
+				modifiedVals[MIV_AC] /= 100;
+				modifiedVals[MIV_AC] += item._iAC;
+				break;
+			case IPL_DAMP:
+			case IPL_DAMP_CURSE:
+			case IPL_TOHIT_DAMP:
+			case IPL_TOHIT_DAMP_CURSE:
+				modifiedVals[MIV_MINDAM] *= item._iPLDam;
+				modifiedVals[MIV_MINDAM] /= 100;
+				modifiedVals[MIV_MINDAM] += item._iMinDam;
+
+				modifiedVals[MIV_MAXDAM] *= item._iPLDam;
+				modifiedVals[MIV_MAXDAM] /= 100;
+				modifiedVals[MIV_MAXDAM] += item._iMaxDam;
+				break;
+			case IPL_DAMMOD:
+				modifiedVals[MIV_MINDAM] += item._iPLDamMod;
+				modifiedVals[MIV_MAXDAM] += item._iPLDamMod;
+				break;
+			default:
+				break;
+			}
+		}
+	} else if (item._iMagical == ITEM_QUALITY_MAGIC) {
+		switch (item._iPrePower) {
+		case IPL_ACP:
+		case IPL_ACP_CURSE:
+			modifiedVals[MIV_AC] *= item._iPLAC;
+			modifiedVals[MIV_AC] /= 100;
+			modifiedVals[MIV_AC] += item._iAC;
+			break;
+		case IPL_DAMP:
+		case IPL_DAMP_CURSE:
+		case IPL_TOHIT_DAMP:
+		case IPL_TOHIT_DAMP_CURSE:
+			modifiedVals[MIV_MINDAM] *= item._iPLDam;
+			modifiedVals[MIV_MINDAM] /= 100;
+			modifiedVals[MIV_MINDAM] += item._iMinDam;
+
+			modifiedVals[MIV_MAXDAM] *= item._iPLDam;
+			modifiedVals[MIV_MAXDAM] /= 100;
+			modifiedVals[MIV_MAXDAM] += item._iMaxDam;
+			break;
+		default:
+			break;
+		}
+
+		switch (item._iSufPower) {
+		case IPL_DAMMOD:
+			modifiedVals[MIV_MINDAM] += item._iPLDamMod;
+			modifiedVals[MIV_MAXDAM] += item._iPLDamMod;
+			break;
+		default:
+			break;
+		}
+	}
+
+	if (item._iClass == ICLASS_WEAPON) {
+		if (item._iMinDam == item._iMaxDam) {
+			AddPanelString(fmt::format(fmt::runtime(_("Damage: {:d}")), modifiedVals[MIV_MINDAM]));
+		} else {
+			AddPanelString(fmt::format(fmt::runtime(_("Damage: {:d} to {:d}")), modifiedVals[MIV_MINDAM], modifiedVals[MIV_MAXDAM]));
+		}
+	}
+	if (item._iClass == ICLASS_ARMOR) {
+		AddPanelString(fmt::format(fmt::runtime(_("Armor: {:d}")), modifiedVals[MIV_AC]));
+	}
+	if (item._iMaxDur != DUR_INDESTRUCTIBLE && (item._iClass == ICLASS_WEAPON || item._iClass == ICLASS_ARMOR)) {
+		AddPanelString(fmt::format(fmt::runtime(_("Durability: {:d} of {:d}")), item._iDurability, item._iMaxDur));
+	}
+	if (item._iMiscId == IMISC_STAFF && item._iMaxCharges != 0) {
+		const char *spellName = GetSpellData(item._iSpell).sNameText;
+		AddPanelString(fmt::format(fmt::runtime(_("{:s} ({:d}/{:d} Charges)")), spellName, item._iCharges, item._iMaxCharges));
+	}
+
+	PrintFloatingItemInfo(item);
+
+	if (item._iPrePower != -1) {
+		AddPanelString(PrintItemPower(item._iPrePower, item));
+	}
+	if (item._iSufPower != -1) {
+		AddPanelString(PrintItemPower(item._iSufPower, item));
+	}
+	if (item._iMagical == ITEM_QUALITY_UNIQUE) {
+		const UniqueItem &uitem = UniqueItems[item._iUid];
+		assert(uitem.UINumPL <= sizeof(uitem.powers) / sizeof(*uitem.powers));
+		for (const auto &power : uitem.powers) {
+			if (power.type == IPL_INVALID || power.type == IPL_INVCURS)
+				break;
+			AddPanelString(PrintItemPower(power.type, item));
+		}
+	}
+}
+
+void PrintFloatingItemDur(const Item &item)
+{
+	if (HeadlessMode)
+		return;
+
+	if (item._iClass == ICLASS_WEAPON) {
+		if (item._iMinDam == item._iMaxDam) {
+			AddPanelString(fmt::format(fmt::runtime(_("Damage: {:d}")), item._iMinDam));
+		} else {
+			AddPanelString(fmt::format(fmt::runtime(_("Damage: {:d} to {:d}")), item._iMinDam, item._iMaxDam));
+		}
+		if (item._iMiscId == IMISC_STAFF && item._iMaxCharges != 0) {
+			const char *spellName = GetSpellData(item._iSpell).sNameText;
+			AddPanelString(fmt::format(fmt::runtime(_("{:s} ({:d}/{:d} Charges)")), spellName, item._iCharges, item._iMaxCharges));
+		}
+		if (item._iMagical != ITEM_QUALITY_NORMAL)
+			AddPanelString(_("Not Identified"));
+	}
+	if (item._iClass == ICLASS_ARMOR) {
+		AddPanelString(fmt::format(fmt::runtime(_("Armor: {:d}")), item._iAC));
+		if (item._iMagical != ITEM_QUALITY_NORMAL)
+			AddPanelString(_("Not Identified"));
+		if (item._iMiscId == IMISC_STAFF && item._iMaxCharges != 0) {
+			const char *spellName = GetSpellData(item._iSpell).sNameText;
+			AddPanelString(fmt::format(fmt::runtime(_("{:s} ({:d}/{:d} Charges)")), spellName, item._iCharges, item._iMaxCharges));
+		}
+	}
+	if (IsAnyOf(item._itype, ItemType::Ring, ItemType::Amulet))
+		AddPanelString(_("Not Identified"));
+	PrintFloatingItemInfo(item);
 }
 
 namespace {

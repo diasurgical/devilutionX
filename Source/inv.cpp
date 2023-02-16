@@ -1929,11 +1929,21 @@ int8_t CheckInvHLight()
 		InfoString = fmt::format(fmt::runtime(ngettext("{:s} gold piece", "{:s} gold pieces", nGold)), FormatInteger(nGold));
 	} else {
 		InfoColor = pi->getTextColor();
-		InfoString = pi->getName();
+
 		if (pi->_iIdentified) {
-			PrintItemDetails(*pi);
+			InfoString = string_view(pi->_iIName);
+			if (!*sgOptions.Gameplay.enableFloatingInfoBox) {
+				PrintItemDetails(*pi);
+			} else {
+				PrintFloatingItemDetails(*pi);
+			}
 		} else {
-			PrintItemDur(*pi);
+			InfoString = string_view(pi->_iName);
+			if (!*sgOptions.Gameplay.enableFloatingInfoBox) {
+				PrintItemDur(*pi);
+			} else {
+				PrintFloatingItemDur(*pi);
+			}
 		}
 	}
 

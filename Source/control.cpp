@@ -1207,6 +1207,8 @@ void DrawInfoBox(const Surface &out)
 			AddPanelString(fmt::format(fmt::runtime(_("Hit Points {:d} of {:d}")), target._pHitPoints >> 6, target._pMaxHP >> 6));
 		}
 	}
+	if (*sgOptions.Gameplay.enableFloatingInfoBox && !(pcursinvitem == -1 || pcursstashitem == -1))
+		return;
 	if (!InfoString.empty())
 		PrintInfo(out);
 }

@@ -534,6 +534,7 @@ void DoRepair(Player &player, int cii);
 void DoRecharge(Player &player, int cii);
 bool DoOil(Player &player, int cii);
 [[nodiscard]] StringOrView PrintItemPower(char plidx, const Item &item);
+void PrintItemMisc(const Item &item);
 void DrawUniqueInfo(const Surface &out);
 void PrintItemDetails(const Item &item);
 void PrintItemDur(const Item &item);

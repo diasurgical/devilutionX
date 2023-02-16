@@ -17,6 +17,7 @@
 #include "engine/size.hpp"
 #include "hwcursor.hpp"
 #include "minitext.h"
+#include "qol/floatinginfobox.hpp"
 #include "stores.h"
 #include "utils/format_int.hpp"
 #include "utils/language.h"
@@ -446,11 +447,21 @@ uint16_t CheckStashHLight(Point mousePosition)
 	}
 
 	InfoColor = item.getTextColor();
-	InfoString = item.getName();
+
 	if (item._iIdentified) {
-		PrintItemDetails(item);
+		InfoString = string_view(item._iIName);
+		if (!*sgOptions.Gameplay.enableFloatingInfoBox) {
+			PrintItemDetails(item);
+		} else {
+			PrintFloatingItemDetails(item);
+		}
 	} else {
-		PrintItemDur(item);
+		InfoString = string_view(item._iName);
+		if (!*sgOptions.Gameplay.enableFloatingInfoBox) {
+			PrintItemDur(item);
+		} else {
+			PrintFloatingItemDur(item);
+		}
 	}
 
 	return itemId;

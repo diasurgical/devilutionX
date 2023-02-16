@@ -1862,56 +1862,6 @@ void printItemMiscGamepad(const Item &item, bool isOil, bool isCastOnTarget)
 	}
 }
 
-void PrintItemMisc(const Item &item)
-{
-	if (item._iMiscId == IMISC_EAR) {
-		AddPanelString(fmt::format(fmt::runtime(pgettext("player", "Level: {:d}")), item._ivalue));
-		return;
-	}
-	if (item._iMiscId == IMISC_AURIC) {
-		AddPanelString(_("Doubles gold capacity"));
-		return;
-	}
-	const bool isOil = (item._iMiscId >= IMISC_USEFIRST && item._iMiscId <= IMISC_USELAST)
-	    || (item._iMiscId > IMISC_OILFIRST && item._iMiscId < IMISC_OILLAST)
-	    || (item._iMiscId > IMISC_RUNEFIRST && item._iMiscId < IMISC_RUNELAST)
-	    || item._iMiscId == IMISC_ARENAPOT;
-	const bool isCastOnTarget = (item._iMiscId == IMISC_SCROLLT && item._iSpell != SpellID::Flash)
-	    || (item._iMiscId == IMISC_SCROLL && IsAnyOf(item._iSpell, SpellID::TownPortal, SpellID::Identify));
-
-	switch (ControlMode) {
-	case ControlTypes::None:
-		break;
-	case ControlTypes::KeyboardAndMouse:
-		printItemMiscKBM(item, isOil, isCastOnTarget);
-		break;
-	case ControlTypes::VirtualGamepad:
-		printItemMiscGenericGamepad(item, isOil, isCastOnTarget);
-		break;
-	case ControlTypes::Gamepad:
-		printItemMiscGamepad(item, isOil, isCastOnTarget);
-		break;
-	}
-}
-
-void PrintItemInfo(const Item &item)
-{
-	PrintItemMisc(item);
-	uint8_t str = item._iMinStr;
-	uint8_t dex = item._iMinDex;
-	uint8_t mag = item._iMinMag;
-	if (str != 0 || mag != 0 || dex != 0) {
-		std::string text = std::string(_("Required:"));
-		if (str != 0)
-			text.append(fmt::format(fmt::runtime(_(" {:d} Str")), str));
-		if (mag != 0)
-			text.append(fmt::format(fmt::runtime(_(" {:d} Mag")), mag));
-		if (dex != 0)
-			text.append(fmt::format(fmt::runtime(_(" {:d} Dex")), dex));
-		AddPanelString(text);
-	}
-}
-
 bool SmithItemOk(const Player &player, const ItemData &item)
 {
 	if (item.itype == ItemType::Misc)
@@ -3937,121 +3887,82 @@ void DrawUniqueInfo(const Surface &out)
 	}
 }
 
+void PrintItemMisc(const Item &item)
+{
+	if (item._iMiscId == IMISC_EAR) {
+		AddPanelString(fmt::format(fmt::runtime(pgettext("player", "Level: {:d}")), item._ivalue));
+		return;
+	}
+	if (item._iMiscId == IMISC_AURIC) {
+		AddPanelString(_("Doubles gold capacity"));
+		return;
+	}
+	const bool isOil = (item._iMiscId >= IMISC_USEFIRST && item._iMiscId <= IMISC_USELAST)
+	    || (item._iMiscId > IMISC_OILFIRST && item._iMiscId < IMISC_OILLAST)
+	    || (item._iMiscId > IMISC_RUNEFIRST && item._iMiscId < IMISC_RUNELAST);
+	const bool isCastOnTarget = (item._iMiscId == IMISC_SCROLLT && item._iSpell != SpellID::Flash)
+	    || (item._iMiscId == IMISC_SCROLL && IsAnyOf(item._iSpell, SpellID::TownPortal, SpellID::Identify));
+
+	switch (ControlMode) {
+	case ControlTypes::None:
+		break;
+	case ControlTypes::KeyboardAndMouse:
+		printItemMiscKBM(item, isOil, isCastOnTarget);
+		break;
+	case ControlTypes::VirtualGamepad:
+		printItemMiscGenericGamepad(item, isOil, isCastOnTarget);
+		break;
+	case ControlTypes::Gamepad:
+		printItemMiscGamepad(item, isOil, isCastOnTarget);
+		break;
+	}
+}
+
+void PrintItemInfo(const Item &item)
+{
+	PrintItemMisc(item);
+	uint8_t str = item._iMinStr;
+	uint8_t dex = item._iMinDex;
+	uint8_t mag = item._iMinMag;
+	if (str != 0 || mag != 0 || dex != 0) {
+		std::string text = std::string(_("Required:"));
+		if (str != 0)
+			text.append(fmt::format(fmt::runtime(_(" {:d} Str")), str));
+		if (mag != 0)
+			text.append(fmt::format(fmt::runtime(_(" {:d} Mag")), mag));
+		if (dex != 0)
+			text.append(fmt::format(fmt::runtime(_(" {:d} Dex")), dex));
+		AddPanelString(text);
+	}
+}
+
 void PrintItemDetails(const Item &item)
 {
 	if (HeadlessMode)
 		return;
 
-	// Base Item
-	if (strcmp(item._iIName, item._iName) != 0)
-		AddPanelString(_(item._iName));
-
-	// Modify damage string?
-
-	int modMinDam = item._iMinDam;
-	int modMaxDam = item._iMaxDam;
-	int modAC = item._iAC;
-
-	if (item._iMagical == ITEM_QUALITY_UNIQUE) {
-		const UniqueItem &uitem = UniqueItems[item._iUid];
-		assert(uitem.UINumPL <= sizeof(uitem.powers) / sizeof(*uitem.powers));
-		for (const auto &power : uitem.powers) {
-			switch (power.type) {
-			case IPL_ACP:
-				modAC = modAC * (100 + item._iPLAC) / 100;
-				break;
-			case IPL_ACP_CURSE:
-				modAC = modAC * (100 - item._iPLAC) / 100;
-				break;
-			case IPL_DAMP:
-			case IPL_TOHIT_DAMP:
-				modMinDam = modMinDam * (100 + item._iPLDam) / 100;
-				modMaxDam = modMaxDam * (100 + item._iPLDam) / 100;
-				break;
-			case IPL_DAMP_CURSE:
-			case IPL_TOHIT_DAMP_CURSE:
-				modMinDam = modMinDam * (100 - item._iPLDam) / 100;
-				modMaxDam = modMaxDam * (100 - item._iPLDam) / 100;
-				break;
-			case IPL_DAMMOD:
-				modMinDam += item._iPLDamMod;
-				modMaxDam += item._iPLDamMod;
-				break;
-			default:
-				break;
-			}
-		}
-	} else if (item._iMagical == ITEM_QUALITY_MAGIC) {
-		switch (item._iPrePower) {
-		case IPL_ACP:
-			modAC = modAC * (100 + item._iPLAC) / 100;
-			break;
-		case IPL_ACP_CURSE:
-			modAC = modAC * (100 - item._iPLAC) / 100;
-			break;
-		case IPL_DAMP:
-		case IPL_TOHIT_DAMP:
-			modMinDam = modMinDam * (100 + item._iPLDam) / 100;
-			modMaxDam = modMaxDam * (100 + item._iPLDam) / 100;
-			break;
-		case IPL_DAMP_CURSE:
-		case IPL_TOHIT_DAMP_CURSE:
-			modMinDam = modMinDam * (100 - item._iPLDam) / 100;
-			modMaxDam = modMaxDam * (100 - item._iPLDam) / 100;
-			break;
-		default:
-			break;
-		}
-
-		switch (item._iSufPower) {
-		case IPL_DAMMOD:
-			modMinDam += item._iPLDamMod;
-			modMaxDam += item._iPLDamMod;
-			break;
-		default:
-			break;
-		}
-	}
-
-
 	if (item._iClass == ICLASS_WEAPON) {
 		if (item._iMinDam == item._iMaxDam) {
-			AddPanelString(fmt::format(fmt::runtime(_("Damage: {:d}")), modMinDam));
+			if (item._iMaxDur == DUR_INDESTRUCTIBLE)
+				AddPanelString(fmt::format(fmt::runtime(_("damage: {:d}  Indestructible")), item._iMinDam));
+			else
+				AddPanelString(fmt::format(fmt::runtime(_(/* TRANSLATORS: Dur: is durability */ "damage: {:d}  Dur: {:d}/{:d}")), item._iMinDam, item._iDurability, item._iMaxDur));
 		} else {
-			AddPanelString(fmt::format(fmt::runtime(_("Damage: {:d} to {:d}")), modMinDam, modMaxDam));
+			if (item._iMaxDur == DUR_INDESTRUCTIBLE)
+				AddPanelString(fmt::format(fmt::runtime(_("damage: {:d}-{:d}  Indestructible")), item._iMinDam, item._iMaxDam));
+			else
+				AddPanelString(fmt::format(fmt::runtime(_(/* TRANSLATORS: Dur: is durability */ "damage: {:d}-{:d}  Dur: {:d}/{:d}")), item._iMinDam, item._iMaxDam, item._iDurability, item._iMaxDur));
 		}
 	}
 	if (item._iClass == ICLASS_ARMOR) {
-		AddPanelString(fmt::format(fmt::runtime(_("Armor: {:d}")), modAC));
-	}
-	if (item._iMaxDur != DUR_INDESTRUCTIBLE && (item._iClass == ICLASS_WEAPON || item._iClass == ICLASS_ARMOR)) {
-		AddPanelString(fmt::format(fmt::runtime(_("Durability: {:d} of {:d}")), item._iDurability, item._iMaxDur));
+		if (item._iMaxDur == DUR_INDESTRUCTIBLE)
+			AddPanelString(fmt::format(fmt::runtime(_("armor: {:d}  Indestructible")), item._iAC));
+		else
+			AddPanelString(fmt::format(fmt::runtime(_(/* TRANSLATORS: Dur: is durability */ "armor: {:d}  Dur: {:d}/{:d}")), item._iAC, item._iDurability, item._iMaxDur));
 	}
 	if (item._iMiscId == IMISC_STAFF && item._iMaxCharges != 0) {
-		const char *spellName = GetSpellData(item._iSpell).sNameText;
-		AddPanelString(fmt::format(fmt::runtime(_("{:s} ({:d}/{:d} Charges)")), spellName, item._iCharges, item._iMaxCharges));
+		AddPanelString(fmt::format(fmt::runtime(_("Charges: {:d}/{:d}")), item._iCharges, item._iMaxCharges));
 	}
-
-	PrintItemMisc(item);
-
-	uint8_t str = item._iMinStr;
-	uint8_t dex = item._iMinDex;
-	uint8_t mag = item._iMinMag;
-	if (str != 0 || mag != 0 || dex != 0) {
-		if (str != 0) {
-			std::string textStr = fmt::format(fmt::runtime(_("Required Strength: {:d}")), str);
-			AddPanelString(textStr);
-		}
-		if (mag != 0) {
-			std::string textMag = fmt::format(fmt::runtime(_("Required Magic: {:d}")), mag);
-			AddPanelString(textMag);
-		}
-		if (dex != 0) {
-			std::string textDex = fmt::format(fmt::runtime(_("Required Dexterity: {:d}")), dex);
-			AddPanelString(textDex);
-		}
-	}
-
 	if (item._iPrePower != -1) {
 		AddPanelString(PrintItemPower(item._iPrePower, item));
 	}
@@ -4059,15 +3970,11 @@ void PrintItemDetails(const Item &item)
 		AddPanelString(PrintItemPower(item._iSufPower, item));
 	}
 	if (item._iMagical == ITEM_QUALITY_UNIQUE) {
+		AddPanelString(_("unique item"));
+		ShowUniqueItemInfoBox = true;
 		curruitem = item;
-		const UniqueItem &uitem = UniqueItems[curruitem._iUid];
-		assert(uitem.UINumPL <= sizeof(uitem.powers) / sizeof(*uitem.powers));
-		for (const auto &power : uitem.powers) {
-			if (power.type == IPL_INVALID || power.type == IPL_INVCURS)
-				break;
-			AddPanelString(PrintItemPower(power.type, curruitem));
-		}
 	}
+	PrintItemInfo(item);
 }
 
 void PrintItemDur(const Item &item)
