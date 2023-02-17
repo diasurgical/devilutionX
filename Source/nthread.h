@@ -32,7 +32,7 @@ void nthread_ignore_mutex(bool bStart);
  * @brief Checks if it's time for the logic to advance
  * @return True if the engine should tick
  */
-bool nthread_has_500ms_passed();
+bool nthread_has_500ms_passed(bool *drawGame = nullptr);
 /**
  * @brief Updates the progress in time to the next game tick
  */
