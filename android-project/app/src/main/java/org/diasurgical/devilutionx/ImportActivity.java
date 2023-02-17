@@ -12,6 +12,7 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.provider.DocumentFile;
 import android.util.Log;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -65,8 +66,8 @@ public class ImportActivity extends Activity {
 
 		DocumentFile file = Objects.requireNonNull(DocumentFile.fromSingleUri(getApplicationContext(), fileUri));
 		String fileName = file.getName();
-		String externalFilesDir = getExternalFilesDir(null).getAbsolutePath();
-		String externalFilesPath = externalFilesDir + "/" + fileName;
+		ExternalFilesManager fileManager = new ExternalFilesManager(this);
+		File externalFile = fileManager.getFile(fileName);
 
 		try {
 			InputStream inputStream = null;
@@ -75,7 +76,7 @@ public class ImportActivity extends Activity {
 			try {
 				ContentResolver contentResolver = getContentResolver();
 				inputStream = contentResolver.openInputStream(fileUri);
-				outputStream = new FileOutputStream(externalFilesPath);
+				outputStream = new FileOutputStream(externalFile);
 
 				// Transfer bytes from in to out
 				byte[] buf = new byte[4096];
