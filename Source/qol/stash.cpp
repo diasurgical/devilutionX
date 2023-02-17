@@ -355,10 +355,11 @@ void DrawStash(const Surface &out)
 
 	for (auto slot : StashGridRange) {
 		StashStruct::StashCell itemId = Stash.GetItemIdAtPosition(slot);
-		Item &item = Stash.stashList[itemId];
-		if (Stash.IsItemAtPosition(slot)) {
-			InvDrawSlotBack(out, GetStashSlotCoord(slot) + offset, InventorySlotSizeInPixels, item._iMagical);
+		if (itemId == StashStruct::EmptyCell) {
+			continue; // No item in the given slot
 		}
+		Item &item = Stash.stashList[itemId];
+		InvDrawSlotBack(out, GetStashSlotCoord(slot) + offset, InventorySlotSizeInPixels, item._iMagical);
 	}
 
 	for (auto slot : StashGridRange) {
