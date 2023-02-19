@@ -43,7 +43,7 @@ enum {
 	QS_GHARBAD_ATTACKING,
 };
 
-/** @brief States of the zhar the ma the week quest for multiplayer sync */
+/** @brief States of Zhar the Mad quest for multiplayer sync */
 enum {
 	QS_ZHAR_INIT,
 	QS_ZHAR_ITEM_SPAWNED,
