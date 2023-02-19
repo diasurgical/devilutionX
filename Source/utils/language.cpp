@@ -378,6 +378,8 @@ void LanguageInitialize()
 		        "Please download fonts.mpq from:\n"
 		        "github.com/diasurgical/\ndevilutionx-assets/releases"));
 		forceLocale = "en";
+		GetLocalPluralId = PluralIfNotOne;
+		return;
 	}
 
 	AssetHandle handle;
