@@ -33,6 +33,16 @@ enum {
 	QS_BRAINGIVEN,
 };
 
+/** @brief States of the gharbad the week quest for multiplayer sync */
+enum {
+	QS_GHARBAD_INIT,
+	QS_GHARBAD_FIRST_ITEM_READY,
+	QS_GHARBAD_FIRST_ITEM_SPAWNED,
+	QS_GHARBAD_SECOND_ITEM_NEARLY_DONE,
+	QS_GHARBAD_SECOND_ITEM_READY,
+	QS_GHARBAD_ATTACKING,
+};
+
 enum quest_state : uint8_t {
 	QUEST_NOTAVAIL, // quest did not spawn this game
 	QUEST_INIT,     // quest has spawned, waiting to trigger

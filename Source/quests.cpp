@@ -426,6 +426,7 @@ void CheckQuestKill(const Monster &monster, bool sendmsg)
 			NetSendCmdQuest(true, quest);
 	} else if (monster.uniqueType == UniqueMonsterType::Garbud) { //"Gharbad the Weak"
 		Quests[Q_GARBUD]._qactive = QUEST_DONE;
+		NetSendCmdQuest(true, Quests[Q_GARBUD]);
 		myPlayer.Say(HeroSpeech::ImNotImpressed, 30);
 	} else if (monster.uniqueType == UniqueMonsterType::Zhar) { //"Zhar the Mad"
 		Quests[Q_ZHAR]._qactive = QUEST_DONE;
@@ -719,6 +720,37 @@ void ResyncQuests()
 	    && Quests[Q_PWATER]._qactive == QUEST_DONE
 	    && gbIsMultiplayer) {
 		CleanTownFountain();
+	}
+	if (Quests[Q_GARBUD].IsAvailable() && gbIsMultiplayer) {
+		Monster *garbud = FindUniqueMonster(UniqueMonsterType::Garbud);
+		if (garbud != nullptr && Quests[Q_GARBUD]._qvar1 != QS_GHARBAD_INIT) {
+			switch (Quests[Q_GARBUD]._qvar1) {
+			case QS_GHARBAD_FIRST_ITEM_READY:
+				garbud->goal = MonsterGoal::Inquiring;
+				break;
+			case QS_GHARBAD_FIRST_ITEM_SPAWNED:
+				garbud->talkMsg = TEXT_GARBUD2;
+				garbud->flags |= MFLAG_QUEST_COMPLETE;
+				garbud->goal = MonsterGoal::Talking;
+				break;
+			case QS_GHARBAD_SECOND_ITEM_NEARLY_DONE:
+				garbud->talkMsg = TEXT_GARBUD3;
+				garbud->flags |= MFLAG_QUEST_COMPLETE;
+				garbud->goal = MonsterGoal::Inquiring;
+				break;
+			case QS_GHARBAD_SECOND_ITEM_READY:
+				garbud->talkMsg = TEXT_GARBUD4;
+				garbud->flags |= MFLAG_QUEST_COMPLETE;
+				garbud->goal = MonsterGoal::Inquiring;
+				break;
+			case QS_GHARBAD_ATTACKING:
+				garbud->talkMsg = TEXT_NONE;
+				garbud->flags |= MFLAG_QUEST_COMPLETE;
+				garbud->goal = MonsterGoal::Normal;
+				garbud->activeForTicks = UINT8_MAX;
+				break;
+			}
+		}
 	}
 }
 
