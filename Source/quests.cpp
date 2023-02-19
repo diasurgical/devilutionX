@@ -430,6 +430,7 @@ void CheckQuestKill(const Monster &monster, bool sendmsg)
 		myPlayer.Say(HeroSpeech::ImNotImpressed, 30);
 	} else if (monster.uniqueType == UniqueMonsterType::Zhar) { //"Zhar the Mad"
 		Quests[Q_ZHAR]._qactive = QUEST_DONE;
+		NetSendCmdQuest(true, Quests[Q_ZHAR]);
 		myPlayer.Say(HeroSpeech::ImSorryDidIBreakYourConcentration, 30);
 	} else if (monster.uniqueType == UniqueMonsterType::Lazarus) { //"Arch-Bishop Lazarus"
 		auto &betrayerQuest = Quests[Q_BETRAYER];
@@ -748,6 +749,27 @@ void ResyncQuests()
 				garbud->flags |= MFLAG_QUEST_COMPLETE;
 				garbud->goal = MonsterGoal::Normal;
 				garbud->activeForTicks = UINT8_MAX;
+				break;
+			}
+		}
+	}
+	if (Quests[Q_ZHAR].IsAvailable() && gbIsMultiplayer) {
+		Monster *zhar = FindUniqueMonster(UniqueMonsterType::Zhar);
+		if (zhar != nullptr && Quests[Q_ZHAR]._qvar1 != QS_ZHAR_INIT) {
+			zhar->flags |= MFLAG_QUEST_COMPLETE;
+
+			switch (Quests[Q_ZHAR]._qvar1) {
+			case QS_ZHAR_ITEM_SPAWNED:
+				zhar->goal = MonsterGoal::Talking;
+				break;
+			case QS_ZHAR_ANGRY:
+				zhar->talkMsg = TEXT_ZHAR2;
+				zhar->goal = MonsterGoal::Inquiring;
+				break;
+			case QS_ZHAR_ATTACKING:
+				zhar->talkMsg = TEXT_NONE;
+				zhar->goal = MonsterGoal::Normal;
+				zhar->activeForTicks = UINT8_MAX;
 				break;
 			}
 		}

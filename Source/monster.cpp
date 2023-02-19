@@ -1423,8 +1423,10 @@ void MonsterTalk(Monster &monster)
 	    && (monster.flags & MFLAG_QUEST_COMPLETE) == 0) {
 		Quests[Q_ZHAR]._qactive = QUEST_ACTIVE;
 		Quests[Q_ZHAR]._qlog = true;
+		Quests[Q_ZHAR]._qvar1 = QS_ZHAR_ITEM_SPAWNED;
 		CreateTypeItem(monster.position.tile + Displacement { 1, 1 }, false, ItemType::Misc, IMISC_BOOK, true, false);
 		monster.flags |= MFLAG_QUEST_COMPLETE;
+		NetSendCmdQuest(true, Quests[Q_ZHAR]);
 	}
 	if (monster.uniqueType == UniqueMonsterType::SnotSpill) {
 		if (monster.talkMsg == TEXT_BANNER10 && (monster.flags & MFLAG_QUEST_COMPLETE) == 0) {
@@ -2709,6 +2711,8 @@ void ZharAi(Monster &monster)
 	if (monster.talkMsg == TEXT_ZHAR1 && !IsTileVisible(monster.position.tile) && monster.goal == MonsterGoal::Talking) {
 		monster.talkMsg = TEXT_ZHAR2;
 		monster.goal = MonsterGoal::Inquiring;
+		Quests[Q_ZHAR]._qvar1 = QS_ZHAR_ANGRY;
+		NetSendCmdQuest(true, Quests[Q_ZHAR]);
 	}
 
 	if (IsTileVisible(monster.position.tile)) {
@@ -2717,6 +2721,8 @@ void ZharAi(Monster &monster)
 				monster.activeForTicks = UINT8_MAX;
 				monster.talkMsg = TEXT_NONE;
 				monster.goal = MonsterGoal::Normal;
+				Quests[Q_ZHAR]._qvar1 = QS_ZHAR_ATTACKING;
+				NetSendCmdQuest(true, Quests[Q_ZHAR]);
 			}
 		}
 	}
