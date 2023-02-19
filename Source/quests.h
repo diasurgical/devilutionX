@@ -43,6 +43,14 @@ enum {
 	QS_GHARBAD_ATTACKING,
 };
 
+/** @brief States of Zhar the Mad quest for multiplayer sync */
+enum {
+	QS_ZHAR_INIT,
+	QS_ZHAR_ITEM_SPAWNED,
+	QS_ZHAR_ANGRY,
+	QS_ZHAR_ATTACKING,
+};
+
 enum quest_state : uint8_t {
 	QUEST_NOTAVAIL, // quest did not spawn this game
 	QUEST_INIT,     // quest has spawned, waiting to trigger
