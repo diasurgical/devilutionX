@@ -1408,11 +1408,14 @@ void MonsterTalk(Monster &monster)
 	if (monster.uniqueType == UniqueMonsterType::Garbud) {
 		if (monster.talkMsg == TEXT_GARBUD1) {
 			Quests[Q_GARBUD]._qactive = QUEST_ACTIVE;
-			Quests[Q_GARBUD]._qlog = true; // BUGFIX: (?) for other quests qactive and qlog go together, maybe this should actually go into the if above (fixed)
+			Quests[Q_GARBUD]._qlog = true;
+			NetSendCmdQuest(true, Quests[Q_GARBUD]);
 		}
 		if (monster.talkMsg == TEXT_GARBUD2 && (monster.flags & MFLAG_QUEST_COMPLETE) == 0) {
 			SpawnItem(monster, monster.position.tile + Displacement { 1, 1 }, true);
 			monster.flags |= MFLAG_QUEST_COMPLETE;
+			Quests[Q_GARBUD]._qvar1 = QS_GHARBAD_FIRST_ITEM_SPAWNED;
+			NetSendCmdQuest(true, Quests[Q_GARBUD]);
 		}
 	}
 	if (monster.uniqueType == UniqueMonsterType::Zhar
@@ -2505,12 +2508,18 @@ void GharbadAi(Monster &monster)
 		switch (monster.talkMsg) {
 		case TEXT_GARBUD1:
 			monster.talkMsg = TEXT_GARBUD2;
+			Quests[Q_GARBUD]._qvar1 = QS_GHARBAD_FIRST_ITEM_READY;
+			NetSendCmdQuest(true, Quests[Q_GARBUD]);
 			break;
 		case TEXT_GARBUD2:
 			monster.talkMsg = TEXT_GARBUD3;
+			Quests[Q_GARBUD]._qvar1 = QS_GHARBAD_SECOND_ITEM_NEARLY_DONE;
+			NetSendCmdQuest(true, Quests[Q_GARBUD]);
 			break;
 		case TEXT_GARBUD3:
 			monster.talkMsg = TEXT_GARBUD4;
+			Quests[Q_GARBUD]._qvar1 = QS_GHARBAD_SECOND_ITEM_READY;
+			NetSendCmdQuest(true, Quests[Q_GARBUD]);
 			break;
 		default:
 			break;
@@ -2523,6 +2532,8 @@ void GharbadAi(Monster &monster)
 				monster.goal = MonsterGoal::Normal;
 				monster.activeForTicks = UINT8_MAX;
 				monster.talkMsg = TEXT_NONE;
+				Quests[Q_GARBUD]._qvar1 = QS_GHARBAD_ATTACKING;
+				NetSendCmdQuest(true, Quests[Q_GARBUD]);
 			}
 		}
 	}
