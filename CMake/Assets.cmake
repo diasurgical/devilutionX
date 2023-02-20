@@ -173,6 +173,7 @@ set(devilutionx_assets
   nlevels/l5data/uberroom.dun
   ui_art/diablo.pal
   ui_art/hellfire.pal
+  ui_art/bnconnbgw.clx
   ui_art/creditsw.clx
   ui_art/dvl_but_sml.clx
   ui_art/dvl_lrpopup.clx

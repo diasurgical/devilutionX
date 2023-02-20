@@ -8,6 +8,7 @@
 
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/dialogs.h"
+#include "DiabloUI/hub/hub.h"
 #include "DiabloUI/multi/selgame.h"
 #include "DiabloUI/scrollbar.h"
 #include "DiabloUI/selok.h"
@@ -336,6 +337,7 @@ void SelheroLoadSelect(int value)
 	}
 
 	if (!selhero_isMultiPlayer) {
+		// TODO fix this :(
 		// This is part of a dangerous hack to enable difficulty selection in single-player.
 		// FIXME: Dialogs should not refer to each other's variables.
 
@@ -350,7 +352,7 @@ void SelheroLoadSelect(int value)
 		selhero_isSavegame = false;
 
 		SelheroFree();
-		LoadBackgroundArt("ui_art\\selgame");
+		LoadBackgroundArt("ui_art\\bnconnbg");
 		selgame_GameSelection_Select(0);
 	}
 

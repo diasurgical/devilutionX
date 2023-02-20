@@ -89,6 +89,7 @@ bool UiCreditsDialog();
 bool UiSupportDialog();
 bool UiMainMenuDialog(const char *name, _mainmenu_selections *pdwResult, int attractTimeOut);
 bool UiProgressDialog(int (*fnfunc)());
+bool UiHubMain();
 bool UiSelectGame(GameData *gameData, int *playerId);
 bool UiSelectProvider(GameData *gameData);
 void UiFadeIn();

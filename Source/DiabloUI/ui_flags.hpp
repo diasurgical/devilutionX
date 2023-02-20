@@ -21,6 +21,7 @@ enum class UiFlags : uint32_t {
 	ColorUiSilver      = 1 << 7,
 	ColorUiGoldDark    = 1 << 8,
 	ColorUiSilverDark  = 1 << 9,
+	ColorUiGreen       = 1 << 6,
 	ColorDialogWhite   = 1 << 10,
 	ColorYellow        = 1 << 11,
 	ColorGold          = 1 << 12,

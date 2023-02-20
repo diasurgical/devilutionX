@@ -818,7 +818,11 @@ void Render(const UiImageClx &uiImage)
 	if (uiImage.isCentered()) {
 		x += GetCenterOffset(sprite.width(), uiImage.m_rect.w);
 	}
-	RenderClxSprite(Surface(DiabloUiSurface()), sprite, { x, uiImage.m_rect.y });
+	const Surface &out = Surface(DiabloUiSurface());
+	if (uiImage.m_rect.w != 0)
+		RenderClxSprite(out.subregion(x, 0, uiImage.m_rect.w, out.h()), sprite, { 0, uiImage.m_rect.y });
+	else
+		RenderClxSprite(out, sprite, { x, uiImage.m_rect.y });
 }
 
 void Render(const UiImageAnimatedClx &uiImage)
@@ -863,7 +867,7 @@ void Render(const UiScrollbar &uiSb)
 	{
 		const int bgY = uiSb.m_rect.y + uiSb.m_arrow[0].height();
 		const int bgH = DownArrowRect(uiSb).y - bgY;
-		const Surface backgroundOut = out.subregion(uiSb.m_rect.x, bgY, ScrollBarBgWidth, bgH);
+		const Surface backgroundOut = out.subregion(uiSb.m_rect.x, bgY, ScrollBarWidth, bgH);
 		int y = 0;
 		while (y < bgH) {
 			RenderClxSprite(backgroundOut, uiSb.m_bg, { 0, y });
@@ -874,13 +878,13 @@ void Render(const UiScrollbar &uiSb)
 	// Arrows:
 	{
 		const SDL_Rect rect = UpArrowRect(uiSb);
-		const auto frame = static_cast<uint16_t>(scrollBarState.upArrowPressed ? ScrollBarArrowFrame_UP_ACTIVE : ScrollBarArrowFrame_UP);
-		RenderClxSprite(out.subregion(rect.x, 0, ScrollBarArrowWidth, out.h()), uiSb.m_arrow[frame], { 0, rect.y });
+		const uint16_t frame = scrollBarState.upArrowPressed ? ScrollBarArrowFrame_UP_ACTIVE : ScrollBarArrowFrame_UP;
+		RenderClxSprite(out.subregion(rect.x, 0, ScrollBarWidth, out.h()), uiSb.m_arrow[frame], { 0, rect.y });
 	}
 	{
 		const SDL_Rect rect = DownArrowRect(uiSb);
-		const auto frame = static_cast<uint16_t>(scrollBarState.downArrowPressed ? ScrollBarArrowFrame_DOWN_ACTIVE : ScrollBarArrowFrame_DOWN);
-		RenderClxSprite(out.subregion(rect.x, 0, ScrollBarArrowWidth, out.h()), uiSb.m_arrow[frame], { 0, rect.y });
+		const uint16_t frame = scrollBarState.downArrowPressed ? ScrollBarArrowFrame_DOWN_ACTIVE : ScrollBarArrowFrame_DOWN;
+		RenderClxSprite(out.subregion(rect.x, 0, ScrollBarWidth, out.h()), uiSb.m_arrow[frame], { 0, rect.y });
 	}
 
 	// Thumb:

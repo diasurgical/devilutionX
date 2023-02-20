@@ -73,6 +73,11 @@ set(libdevilutionx_SRCS
   DiabloUI/diabloui.cpp
   DiabloUI/dialogs.cpp
   DiabloUI/hero/selhero.cpp
+  DiabloUI/hub/chat.cpp
+  DiabloUI/hub/create.cpp
+  DiabloUI/hub/friends.cpp
+  DiabloUI/hub/hub.cpp
+  DiabloUI/hub/join.cpp
   DiabloUI/mainmenu.cpp
   DiabloUI/multi/selconn.cpp
   DiabloUI/multi/selgame.cpp

@@ -11,23 +11,19 @@ namespace devilution {
 extern OptionalOwnedClxSpriteList ArtScrollBarBackground;
 extern OptionalOwnedClxSpriteList ArtScrollBarThumb;
 extern OptionalOwnedClxSpriteList ArtScrollBarArrow;
-constexpr Uint16 ScrollBarBgWidth = 25;
+extern Uint16 ScrollBarWidth;
 
-enum ScrollBarArrowFrame : uint8_t {
-	ScrollBarArrowFrame_UP_ACTIVE,
-	ScrollBarArrowFrame_UP,
-	ScrollBarArrowFrame_DOWN_ACTIVE,
-	ScrollBarArrowFrame_DOWN,
-};
-
-constexpr Uint16 ScrollBarArrowWidth = 25;
+extern uint16_t ScrollBarArrowFrame_UP_ACTIVE;
+extern uint16_t ScrollBarArrowFrame_UP;
+extern uint16_t ScrollBarArrowFrame_DOWN_ACTIVE;
+extern uint16_t ScrollBarArrowFrame_DOWN;
 
 inline SDL_Rect UpArrowRect(const UiScrollbar &bar)
 {
 	return MakeSdlRect(
 	    bar.m_rect.x,
 	    bar.m_rect.y,
-	    ScrollBarArrowWidth,
+	    ScrollBarWidth,
 	    bar.m_arrow[0].height());
 }
 
@@ -36,7 +32,7 @@ inline SDL_Rect DownArrowRect(const UiScrollbar &bar)
 	return MakeSdlRect(
 	    bar.m_rect.x,
 	    bar.m_rect.y + bar.m_rect.h - bar.m_arrow[0].height(),
-	    ScrollBarArrowWidth,
+	    ScrollBarWidth,
 	    bar.m_arrow[0].height());
 }
 
@@ -50,7 +46,7 @@ inline SDL_Rect BarRect(const UiScrollbar &bar)
 	return MakeSdlRect(
 	    bar.m_rect.x,
 	    bar.m_rect.y + bar.m_arrow[0].height(),
-	    ScrollBarArrowWidth,
+	    ScrollBarWidth,
 	    BarHeight(bar));
 }
 

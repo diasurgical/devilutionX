@@ -13,6 +13,8 @@ namespace devilution {
 namespace {
 
 OptionalOwnedClxSpriteList ButtonSprites;
+OptionalOwnedClxSpriteList ButtonXsSprites;
+OptionalOwnedClxSpriteList ButtonBnSprites;
 
 } // namespace
 
@@ -22,11 +24,21 @@ void LoadDialogButtonGraphics()
 	if (!ButtonSprites) {
 		ButtonSprites = LoadPcxSpriteList("ui_art\\but_sml", 15);
 	}
+	ButtonXsSprites = LoadOptionalClx("ui_art\\but_xsm.clx");
+	if (!ButtonXsSprites) {
+		ButtonXsSprites = LoadPcxSpriteList("ui_art\\but_xsm", -35);
+	}
+	ButtonBnSprites = LoadOptionalClx("ui_art\\bnbuttns.clx");
+	if (!ButtonBnSprites) {
+		ButtonBnSprites = LoadPcxSpriteList("ui_art\\bnbuttns", -71);
+	}
 }
 
 void FreeDialogButtonGraphics()
 {
 	ButtonSprites = std::nullopt;
+	ButtonXsSprites = std::nullopt;
+	ButtonBnSprites = std::nullopt;
 }
 
 ClxSprite ButtonSprite(bool pressed)

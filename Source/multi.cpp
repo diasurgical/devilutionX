@@ -440,6 +440,8 @@ bool InitSingle(GameData *gameData)
 	return true;
 }
 
+extern int provider;
+
 bool InitMulti(GameData *gameData)
 {
 	Players.resize(MAX_PLRS);
@@ -452,8 +454,13 @@ bool InitMulti(GameData *gameData)
 		}
 
 		RegisterNetEventHandlers();
-		if (UiSelectGame(gameData, &playerId))
-			break;
+		if (true) {
+			if (UiHubMain())
+				break;
+		} else {
+			if (UiSelectGame(gameData, &playerId))
+				break;
+		}
 
 		gbSelectProvider = true;
 	}
