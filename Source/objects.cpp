@@ -2002,10 +2002,11 @@ void OperateBookLever(Object &questBook, bool sendmsg)
 			if (sendmsg)
 				SpawnQuestItem(IDI_BLDSTONE, SetPiece.position.megaToWorld() + Displacement { 9, 17 }, 0, 1, true);
 		}
-		if (questBook._otype == OBJ_STEELTOME && Quests[Q_WARLORD]._qvar1 == 0) {
+		if (questBook._otype == OBJ_STEELTOME && Quests[Q_WARLORD]._qvar1 == QS_WARLORD_INIT) {
 			Quests[Q_WARLORD]._qactive = QUEST_ACTIVE;
 			Quests[Q_WARLORD]._qlog = true;
-			Quests[Q_WARLORD]._qvar1 = 1;
+			Quests[Q_WARLORD]._qvar1 = QS_WARLORD_STEELTOME_READ;
+			NetSendCmdQuest(true, Quests[Q_WARLORD]);
 		}
 		if (questBook._oAnimFrame != questBook._oVar6) {
 			if (questBook._otype != OBJ_BLOODBOOK)

@@ -461,6 +461,7 @@ void CheckQuestKill(const Monster &monster, bool sendmsg)
 		}
 	} else if (monster.uniqueType == UniqueMonsterType::WarlordOfBlood) {
 		Quests[Q_WARLORD]._qactive = QUEST_DONE;
+		NetSendCmdQuest(true, Quests[Q_WARLORD]);
 		myPlayer.Say(HeroSpeech::YourReignOfPainHasEnded, 30);
 	}
 }
@@ -772,6 +773,14 @@ void ResyncQuests()
 				zhar->activeForTicks = UINT8_MAX;
 				break;
 			}
+		}
+	}
+	if (Quests[Q_WARLORD].IsAvailable() && gbIsMultiplayer) {
+		Monster *warlord = FindUniqueMonster(UniqueMonsterType::WarlordOfBlood);
+		if (warlord != nullptr && Quests[Q_WARLORD]._qvar1 == QS_WARLORD_ATTACKING) {
+			warlord->activeForTicks = UINT8_MAX;
+			warlord->talkMsg = TEXT_NONE;
+			warlord->goal = MonsterGoal::Normal;
 		}
 	}
 }

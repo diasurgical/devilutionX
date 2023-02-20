@@ -1455,8 +1455,10 @@ void MonsterTalk(Monster &monster)
 			monster.flags |= MFLAG_QUEST_COMPLETE;
 		}
 	}
-	if (monster.uniqueType == UniqueMonsterType::WarlordOfBlood)
-		Quests[Q_WARLORD]._qvar1 = 2;
+	if (monster.uniqueType == UniqueMonsterType::WarlordOfBlood) {
+		Quests[Q_WARLORD]._qvar1 = QS_WARLORD_TALKING;
+		NetSendCmdQuest(true, Quests[Q_WARLORD]);
+	}
 	if (monster.uniqueType == UniqueMonsterType::Lazarus && UseMultiplayerQuests()) {
 		Quests[Q_BETRAYER]._qvar1 = 6;
 		monster.goal = MonsterGoal::Normal;
@@ -2906,6 +2908,8 @@ void WarlordAi(Monster &monster)
 			monster.activeForTicks = UINT8_MAX;
 			monster.talkMsg = TEXT_NONE;
 			monster.goal = MonsterGoal::Normal;
+			Quests[Q_WARLORD]._qvar1 = QS_WARLORD_ATTACKING;
+			NetSendCmdQuest(true, Quests[Q_WARLORD]);
 		}
 	}
 
