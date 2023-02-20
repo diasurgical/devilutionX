@@ -251,7 +251,6 @@ void FirstRoom()
 	WorldTileRectangle room { { 0, 0 }, { 14, 14 } };
 	if (currlevel != 16) {
 		if (currlevel == Quests[Q_WARLORD]._qlevel && Quests[Q_WARLORD]._qactive != QUEST_NOTAVAIL) {
-			assert(!gbIsMultiplayer);
 			room.size = { 11, 11 };
 		} else if (currlevel == Quests[Q_BETRAYER]._qlevel && UseMultiplayerQuests()) {
 			room.size = { 11, 11 };

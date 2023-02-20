@@ -51,6 +51,15 @@ enum {
 	QS_ZHAR_ATTACKING,
 };
 
+/** @brief States of the Warlord of Blood quest */
+enum {
+	QS_WARLORD_INIT,
+	QS_WARLORD_STEELTOME_READ,
+	QS_WARLORD_TALKING,
+	/** @brief State only added for multiplayer quests. Doesn't affect vanilla compatibility. */
+	QS_WARLORD_ATTACKING,
+};
+
 enum quest_state : uint8_t {
 	QUEST_NOTAVAIL, // quest did not spawn this game
 	QUEST_INIT,     // quest has spawned, waiting to trigger
