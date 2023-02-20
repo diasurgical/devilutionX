@@ -1117,15 +1117,6 @@ void ApplicationInit()
 	init_create_window();
 	was_window_init = true;
 
-	if (forceSpawn || *sgOptions.StartUp.shareware)
-		gbIsSpawn = true;
-	if (forceDiablo || *sgOptions.StartUp.gameMode == StartUpGameMode::Diablo)
-		gbIsHellfire = false;
-	if (forceHellfire)
-		gbIsHellfire = true;
-
-	gbIsHellfireSaveGame = gbIsHellfire;
-
 	LanguageInitialize();
 
 	SetApplicationVersions();
@@ -1135,6 +1126,15 @@ void ApplicationInit()
 
 void DiabloInit()
 {
+	if (forceSpawn || *sgOptions.StartUp.shareware)
+		gbIsSpawn = true;
+	if (forceDiablo || *sgOptions.StartUp.gameMode == StartUpGameMode::Diablo)
+		gbIsHellfire = false;
+	if (forceHellfire)
+		gbIsHellfire = true;
+
+	gbIsHellfireSaveGame = gbIsHellfire;
+
 	for (size_t i = 0; i < QUICK_MESSAGE_OPTIONS; i++) {
 		auto &messages = sgOptions.Chat.szHotKeyMsgs[i];
 		if (messages.empty()) {
