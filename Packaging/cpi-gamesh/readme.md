@@ -14,6 +14,8 @@ When the compile is finished and the diabdat.mpq is in place at '/home/cpi/.loca
  - For the Polish voice pack download https://github.com/diasurgical/devilutionx-assets/releases/download/v1/pl.mpq.
 Enjoy!
 
+For ClockworkOS v0.5, buster-backports are required to have updated libraries: https://backports.debian.org/Instructions/
+
 ## Play devilutionX on the CPi GameShell
 
 When the game is compiled and the mpq files are in place, you can press "A" in the devilutionX menu to play.
