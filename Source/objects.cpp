@@ -2060,7 +2060,7 @@ void OperateChamberOfBoneBook(Object &questBook, bool sendmsg)
 		textdef = TEXT_HBONER;
 		break;
 	case HeroClass::Bard:
-		textdef = TEXT_BBONER;
+		textdef = TEXT_RBONER;
 		break;
 	case HeroClass::Barbarian:
 		textdef = TEXT_BONER;
@@ -3877,7 +3877,7 @@ void InitObjects()
 					spId = TEXT_HBLINDING;
 					break;
 				case HeroClass::Bard:
-					spId = TEXT_BBLINDING;
+					spId = TEXT_RBLINDING;
 					break;
 				case HeroClass::Barbarian:
 					spId = TEXT_BLINDING;
@@ -3903,7 +3903,7 @@ void InitObjects()
 					spId = TEXT_HBLOODY;
 					break;
 				case HeroClass::Bard:
-					spId = TEXT_BBLOODY;
+					spId = TEXT_RBLOODY;
 					break;
 				case HeroClass::Barbarian:
 					spId = TEXT_BLOODY;
@@ -3936,7 +3936,7 @@ void InitObjects()
 					spId = TEXT_HBLOODWAR;
 					break;
 				case HeroClass::Bard:
-					spId = TEXT_BBLOODWAR;
+					spId = TEXT_RBLOODWAR;
 					break;
 				case HeroClass::Barbarian:
 					spId = TEXT_BLOODWAR;
