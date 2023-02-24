@@ -1449,10 +1449,7 @@ void MonsterTalk(Monster &monster)
 		if (monster.talkMsg == TEXT_VEIL9) {
 			Quests[Q_VEIL]._qactive = QUEST_ACTIVE;
 			Quests[Q_VEIL]._qlog = true;
-		}
-		if (monster.talkMsg == TEXT_VEIL11 && (monster.flags & MFLAG_QUEST_COMPLETE) == 0) {
-			SpawnUnique(UITEM_STEELVEIL, monster.position.tile + Direction::South);
-			monster.flags |= MFLAG_QUEST_COMPLETE;
+			NetSendCmdQuest(true, Quests[Q_VEIL]);
 		}
 	}
 	if (monster.uniqueType == UniqueMonsterType::WarlordOfBlood) {
@@ -2879,6 +2876,8 @@ void LachdananAi(Monster &monster)
 	if (monster.talkMsg == TEXT_VEIL9 && !IsTileVisible(monster.position.tile) && monster.goal == MonsterGoal::Talking) {
 		monster.talkMsg = TEXT_VEIL10;
 		monster.goal = MonsterGoal::Inquiring;
+		Quests[Q_VEIL]._qvar2 = QS_VEIL_EARLY_RETURN;
+		NetSendCmdQuest(true, Quests[Q_VEIL]);
 	}
 
 	if (IsTileVisible(monster.position.tile)) {
@@ -2887,6 +2886,7 @@ void LachdananAi(Monster &monster)
 				monster.talkMsg = TEXT_NONE;
 				Quests[Q_VEIL]._qactive = QUEST_DONE;
 				MonsterDeath(monster, monster.direction, true);
+				NetSendCmdQuest(true, Quests[Q_VEIL]);
 			}
 		}
 	}
@@ -4506,9 +4506,15 @@ void TalktoMonster(Player &player, Monster &monster)
 		}
 	}
 	if (Quests[Q_VEIL].IsAvailable() && monster.talkMsg >= TEXT_VEIL9) {
-		if (RemoveInventoryItemById(player, IDI_GLDNELIX)) {
+		if (RemoveInventoryItemById(player, IDI_GLDNELIX) && (monster.flags & MFLAG_QUEST_COMPLETE) == 0) {
 			monster.talkMsg = TEXT_VEIL11;
 			monster.goal = MonsterGoal::Inquiring;
+			monster.flags |= MFLAG_QUEST_COMPLETE;
+			if (MyPlayer == &player) {
+				SpawnUnique(UITEM_STEELVEIL, monster.position.tile + Direction::South);
+				Quests[Q_VEIL]._qvar2 = QS_VEIL_ITEM_SPAWNED;
+				NetSendCmdQuest(true, Quests[Q_VEIL]);
+			}
 		}
 	}
 }

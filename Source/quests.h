@@ -60,6 +60,13 @@ enum {
 	QS_WARLORD_ATTACKING,
 };
 
+/** @brief States of Lachdanan quest for multiplayer sync */
+enum {
+	QS_VEIL_INIT,
+	QS_VEIL_EARLY_RETURN,
+	QS_VEIL_ITEM_SPAWNED,
+};
+
 enum quest_state : uint8_t {
 	QUEST_NOTAVAIL, // quest did not spawn this game
 	QUEST_INIT,     // quest has spawned, waiting to trigger

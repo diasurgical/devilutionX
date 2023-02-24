@@ -680,9 +680,10 @@ void ResyncQuests()
 			}
 		}
 	}
-	if (currlevel == Quests[Q_VEIL]._qlevel + 1 && Quests[Q_VEIL]._qactive == QUEST_ACTIVE && Quests[Q_VEIL]._qvar1 == 0) {
+	if (currlevel == Quests[Q_VEIL]._qlevel + 1 && Quests[Q_VEIL]._qactive == QUEST_ACTIVE && Quests[Q_VEIL]._qvar1 == 0 && !gbIsMultiplayer) {
 		Quests[Q_VEIL]._qvar1 = 1;
-		SpawnQuestItem(IDI_GLDNELIX, { 0, 0 }, 5, 1, false);
+		SpawnQuestItem(IDI_GLDNELIX, { 0, 0 }, 5, 1, true);
+		NetSendCmdQuest(true, Quests[Q_VEIL]);
 	}
 	if (setlevel && setlvlnum == SL_VILEBETRAYER) {
 		if (Quests[Q_BETRAYER]._qvar1 >= 4)
@@ -781,6 +782,24 @@ void ResyncQuests()
 			warlord->activeForTicks = UINT8_MAX;
 			warlord->talkMsg = TEXT_NONE;
 			warlord->goal = MonsterGoal::Normal;
+		}
+	}
+	if (Quests[Q_VEIL].IsAvailable() && gbIsMultiplayer) {
+		Monster *lachdan = FindUniqueMonster(UniqueMonsterType::Lachdan);
+		if (lachdan != nullptr) {
+			switch (Quests[Q_VEIL]._qvar2) {
+			case QS_VEIL_EARLY_RETURN:
+				lachdan->talkMsg = TEXT_VEIL10;
+				lachdan->goal = MonsterGoal::Inquiring;
+				break;
+			case QS_VEIL_ITEM_SPAWNED:
+				if (lachdan->talkMsg == TEXT_VEIL11)
+					break;
+				lachdan->talkMsg = TEXT_VEIL11;
+				lachdan->flags |= MFLAG_QUEST_COMPLETE;
+				lachdan->goal = MonsterGoal::Inquiring;
+				break;
+			}
 		}
 	}
 }
