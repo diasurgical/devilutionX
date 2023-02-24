@@ -575,7 +575,7 @@ void DrawAutomapTile(const Surface &out, Point center, Point map)
 	}
 }
 
-void SearchAutomapItem(const Surface &out, const Displacement &myPlayerOffset)
+void SearchAutomapItem(const Surface &out, const Displacement &myPlayerOffset, int searchRadius, tl::function_ref<bool(Point position)> highlightTile)
 {
 	const Player &player = *MyPlayer;
 	Point tile = player.position.tile;
@@ -587,15 +587,15 @@ void SearchAutomapItem(const Surface &out, const Displacement &myPlayerOffset)
 			tile.y++;
 	}
 
-	const int startX = clamp(tile.x - 8, 0, MAXDUNX);
-	const int startY = clamp(tile.y - 8, 0, MAXDUNY);
+	const int startX = clamp(tile.x - searchRadius, 0, MAXDUNX);
+	const int startY = clamp(tile.y - searchRadius, 0, MAXDUNY);
 
-	const int endX = clamp(tile.x + 8, 0, MAXDUNX);
-	const int endY = clamp(tile.y + 8, 0, MAXDUNY);
+	const int endX = clamp(tile.x + searchRadius, 0, MAXDUNX);
+	const int endY = clamp(tile.y + searchRadius, 0, MAXDUNY);
 
 	for (int i = startX; i < endX; i++) {
 		for (int j = startY; j < endY; j++) {
-			if (dItem[i][j] == 0)
+			if (!highlightTile({ i, j }))
 				continue;
 
 			int px = i - 2 * AutomapOffset.deltaX - ViewPosition.x;
@@ -958,7 +958,7 @@ void DrawAutomap(const Surface &out)
 	}
 
 	if (AutoMapShowItems)
-		SearchAutomapItem(out, myPlayerOffset);
+		SearchAutomapItem(out, myPlayerOffset, 8, [](Point position) { return dItem[position.x][position.y] != 0; });
 
 	DrawAutomapText(out);
 }
