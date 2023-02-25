@@ -19,6 +19,10 @@
 #include "utils/ui_fwd.h"
 #include "utils/utf8.hpp"
 
+#ifdef _DEBUG
+#include "debug.h"
+#endif
+
 namespace devilution {
 
 namespace {
@@ -959,6 +963,10 @@ void DrawAutomap(const Surface &out)
 
 	if (AutoMapShowItems)
 		SearchAutomapItem(out, myPlayerOffset, 8, [](Point position) { return dItem[position.x][position.y] != 0; });
+#ifdef _DEBUG
+	if (IsDebugAutomapHighlightNeeded())
+		SearchAutomapItem(out, myPlayerOffset, std::max(MAXDUNX, MAXDUNY), ShouldHighlightDebugAutomapTile);
+#endif
 
 	DrawAutomapText(out);
 }
