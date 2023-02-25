@@ -16,6 +16,7 @@
 #include "objdat.h"
 #include "textdat.h"
 #include "utils/attributes.h"
+#include "utils/string_or_view.hpp"
 
 namespace devilution {
 
@@ -246,6 +247,11 @@ struct Object {
 	{
 		return IsAnyOf(_otype, _object_id::OBJ_TRAPL, _object_id::OBJ_TRAPR);
 	}
+
+	/**
+	 * @brief Returns the name of the object as shown in the info box
+	 */
+	[[nodiscard]] StringOrView name() const;
 };
 
 extern DVL_API_FOR_TEST Object Objects[MAXOBJECTS];
