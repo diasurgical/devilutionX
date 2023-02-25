@@ -4765,19 +4765,17 @@ void SyncObjectAnim(Object &object)
 	}
 }
 
-void GetObjectStr(const Object &object)
+StringOrView Object::name() const
 {
-	switch (object._otype) {
+	switch (_otype) {
 	case OBJ_CRUX1:
 	case OBJ_CRUX2:
 	case OBJ_CRUX3:
-		InfoString = _("Crucified Skeleton");
-		break;
+		return _("Crucified Skeleton");
 	case OBJ_LEVER:
 	case OBJ_L5LEVER:
 	case OBJ_FLAMELVR:
-		InfoString = _("Lever");
-		break;
+		return _("Lever");
 	case OBJ_L1LDOOR:
 	case OBJ_L1RDOOR:
 	case OBJ_L2LDOOR:
@@ -4786,133 +4784,107 @@ void GetObjectStr(const Object &object)
 	case OBJ_L3RDOOR:
 	case OBJ_L5LDOOR:
 	case OBJ_L5RDOOR:
-		if (object._oVar4 == DOOR_OPEN)
-			InfoString = _("Open Door");
-		if (object._oVar4 == DOOR_CLOSED)
-			InfoString = _("Closed Door");
-		if (object._oVar4 == DOOR_BLOCKED)
-			InfoString = _("Blocked Door");
+		if (_oVar4 == DOOR_OPEN)
+			return _("Open Door");
+		if (_oVar4 == DOOR_CLOSED)
+			return _("Closed Door");
+		if (_oVar4 == DOOR_BLOCKED)
+			return _("Blocked Door");
 		break;
 	case OBJ_BOOK2L:
 		if (setlevel) {
 			if (setlvlnum == SL_BONECHAMB) {
-				InfoString = _("Ancient Tome");
+				return _("Ancient Tome");
 			} else if (setlvlnum == SL_VILEBETRAYER) {
-				InfoString = _("Book of Vileness");
+				return _("Book of Vileness");
 			}
 		}
 		break;
 	case OBJ_SWITCHSKL:
-		InfoString = _("Skull Lever");
-		break;
+		return _("Skull Lever");
 	case OBJ_BOOK2R:
-		InfoString = _("Mythical Book");
-		break;
+		return _("Mythical Book");
 	case OBJ_CHEST1:
 	case OBJ_TCHEST1:
-		InfoString = _("Small Chest");
-		break;
+		return _("Small Chest");
 	case OBJ_CHEST2:
 	case OBJ_TCHEST2:
-		InfoString = _("Chest");
-		break;
+		return _("Chest");
 	case OBJ_CHEST3:
 	case OBJ_TCHEST3:
 	case OBJ_SIGNCHEST:
-		InfoString = _("Large Chest");
-		break;
+		return _("Large Chest");
 	case OBJ_SARC:
 	case OBJ_L5SARC:
-		InfoString = _("Sarcophagus");
-		break;
+		return _("Sarcophagus");
 	case OBJ_BOOKSHELF:
-		InfoString = _("Bookshelf");
-		break;
+		return _("Bookshelf");
 	case OBJ_BOOKCASEL:
 	case OBJ_BOOKCASER:
-		InfoString = _("Bookcase");
-		break;
+		return _("Bookcase");
 	case OBJ_BARREL:
 	case OBJ_BARRELEX:
-		InfoString = _("Barrel");
-		break;
+		return _("Barrel");
 	case OBJ_POD:
 	case OBJ_PODEX:
-		InfoString = _("Pod");
-		break;
+		return _("Pod");
 	case OBJ_URN:
 	case OBJ_URNEX:
-		InfoString = _("Urn");
-		break;
+		return _("Urn");
 	case OBJ_SHRINEL:
 	case OBJ_SHRINER:
-		InfoString = fmt::format(fmt::runtime(_(/* TRANSLATORS: {:s} will be a name from the Shrine block above */ "{:s} Shrine")), _(ShrineNames[object._oVar1]));
-		break;
+		return fmt::format(fmt::runtime(_(/* TRANSLATORS: {:s} will be a name from the Shrine block above */ "{:s} Shrine")), _(ShrineNames[_oVar1]));
 	case OBJ_SKELBOOK:
-		InfoString = _("Skeleton Tome");
-		break;
+		return _("Skeleton Tome");
 	case OBJ_BOOKSTAND:
-		InfoString = _("Library Book");
-		break;
+		return _("Library Book");
 	case OBJ_BLOODFTN:
-		InfoString = _("Blood Fountain");
-		break;
+		return _("Blood Fountain");
 	case OBJ_DECAP:
-		InfoString = _("Decapitated Body");
-		break;
+		return _("Decapitated Body");
 	case OBJ_BLINDBOOK:
-		InfoString = _("Book of the Blind");
-		break;
+		return _("Book of the Blind");
 	case OBJ_BLOODBOOK:
-		InfoString = _("Book of Blood");
-		break;
+		return _("Book of Blood");
 	case OBJ_PURIFYINGFTN:
-		InfoString = _("Purifying Spring");
-		break;
+		return _("Purifying Spring");
 	case OBJ_ARMORSTAND:
 	case OBJ_WARARMOR:
-		InfoString = _("Armor");
-		break;
+		return _("Armor");
 	case OBJ_WARWEAP:
-		InfoString = _("Weapon Rack");
-		break;
+		return _("Weapon Rack");
 	case OBJ_GOATSHRINE:
-		InfoString = _("Goat Shrine");
-		break;
+		return _("Goat Shrine");
 	case OBJ_CAULDRON:
-		InfoString = _("Cauldron");
-		break;
+		return _("Cauldron");
 	case OBJ_MURKYFTN:
-		InfoString = _("Murky Pool");
-		break;
+		return _("Murky Pool");
 	case OBJ_TEARFTN:
-		InfoString = _("Fountain of Tears");
-		break;
+		return _("Fountain of Tears");
 	case OBJ_STEELTOME:
-		InfoString = _("Steel Tome");
-		break;
+		return _("Steel Tome");
 	case OBJ_PEDESTAL:
-		InfoString = _("Pedestal of Blood");
-		break;
+		return _("Pedestal of Blood");
 	case OBJ_STORYBOOK:
 	case OBJ_L5BOOKS:
-		InfoString = _(StoryBookName[object._oVar3]);
-		break;
+		return _(StoryBookName[_oVar3]);
 	case OBJ_WEAPONRACK:
-		InfoString = _("Weapon Rack");
-		break;
+		return _("Weapon Rack");
 	case OBJ_MUSHPATCH:
-		InfoString = _("Mushroom Patch");
-		break;
+		return _("Mushroom Patch");
 	case OBJ_LAZSTAND:
-		InfoString = _("Vile Stand");
-		break;
+		return _("Vile Stand");
 	case OBJ_SLAINHERO:
-		InfoString = _("Slain Hero");
-		break;
+		return _("Slain Hero");
 	default:
 		break;
 	}
+	return string_view();
+}
+
+void GetObjectStr(const Object &object)
+{
+	InfoString = object.name();
 	if (MyPlayer->_pClass == HeroClass::Rogue) {
 		if (object._oTrapFlag) {
 			InfoString = fmt::format(fmt::runtime(_(/* TRANSLATORS: {:s} will either be a chest or a door */ "Trapped {:s}")), InfoString);
