@@ -32,5 +32,7 @@ bool CheckDebugTextCommand(const string_view text);
 bool IsDebugGridTextNeeded();
 bool IsDebugGridInMegatiles();
 bool GetDebugGridText(Point dungeonCoords, char *debugGridTextBuffer);
+bool IsDebugAutomapHighlightNeeded();
+bool ShouldHighlightDebugAutomapTile(Point position);
 
 } // namespace devilution

@@ -82,6 +82,10 @@ DebugGridTextItem SelectedDebugGridTextItem;
 
 int DebugMonsterId;
 
+std::vector<std::string> SearchMonsters;
+std::vector<std::string> SearchItems;
+std::vector<std::string> SearchObjects;
+
 // Used for debugging level generation
 uint32_t glMid1Seed[NUMLEVELS];
 uint32_t glMid2Seed[NUMLEVELS];
@@ -1007,6 +1011,60 @@ std::string DebugCmdChangeTRN(const string_view parameter)
 	return out;
 }
 
+std::string DebugCmdSearchMonster(const string_view parameter)
+{
+	if (parameter.empty()) {
+		std::string ret = "What should I search? I'm too lazy to search for everything... you must provide a monster name!";
+		return ret;
+	}
+
+	std::string name;
+	AppendStrView(name, parameter);
+	std::transform(name.begin(), name.end(), name.begin(), [](unsigned char c) { return std::tolower(c); });
+	SearchMonsters.push_back(name);
+
+	return "We will find this bastard!";
+}
+
+std::string DebugCmdSearchItem(const string_view parameter)
+{
+	if (parameter.empty()) {
+		std::string ret = "What should I search? I'm too lazy to search for everything... you must provide a item name!";
+		return ret;
+	}
+
+	std::string name;
+	AppendStrView(name, parameter);
+	std::transform(name.begin(), name.end(), name.begin(), [](unsigned char c) { return std::tolower(c); });
+	SearchItems.push_back(name);
+
+	return "Are you greedy? Anyway I will help you.";
+}
+
+std::string DebugCmdSearchObject(const string_view parameter)
+{
+	if (parameter.empty()) {
+		std::string ret = "What should I search? I'm too lazy to search for everything... you must provide a object name!";
+		return ret;
+	}
+
+	std::string name;
+	AppendStrView(name, parameter);
+	std::transform(name.begin(), name.end(), name.begin(), [](unsigned char c) { return std::tolower(c); });
+	SearchObjects.push_back(name);
+
+	return "I will look for the pyramids. Oh sorry, I'm looking for what you want, of course.";
+}
+
+std::string DebugCmdClearSearch(const string_view parameter)
+{
+	SearchMonsters.clear();
+	SearchItems.clear();
+	SearchObjects.clear();
+
+	return "Now you have to find it yourself.";
+}
+
 std::vector<DebugCmdItem> DebugCmdList = {
 	{ "help", "Prints help overview or help for a specific command.", "({command})", &DebugCmdHelp },
 	{ "givegold", "Fills the inventory with gold.", "", &DebugCmdGiveGoldCheat },
@@ -1046,6 +1104,10 @@ std::vector<DebugCmdItem> DebugCmdList = {
 	{ "playerinfo", "Shows info of player.", "{playerid}", &DebugCmdPlayerInfo },
 	{ "fps", "Toggles displaying FPS", "", &DebugCmdToggleFPS },
 	{ "trn", "Makes player use TRN {trn} - Write 'plr' before it to look in plrgfx\\ or 'mon' to look in monsters\\monsters\\ - example: trn plr infra is equal to 'plrgfx\\infra.trn'", "{trn}", &DebugCmdChangeTRN },
+	{ "searchmonster", "Searches the automap for {monster}", "{monster}", &DebugCmdSearchMonster },
+	{ "searchitem", "Searches the automap for {item}", "{item}", &DebugCmdSearchItem },
+	{ "searchobject", "Searches the automap for {object}", "{object}", &DebugCmdSearchObject },
+	{ "clearsearch", "Search in the auto map is cleared", "", &DebugCmdClearSearch },
 };
 
 } // namespace
@@ -1206,6 +1268,48 @@ bool GetDebugGridText(Point dungeonCoords, char *debugGridTextBuffer)
 		return false;
 	*BufCopy(debugGridTextBuffer, info) = '\0';
 	return true;
+}
+
+bool IsDebugAutomapHighlightNeeded()
+{
+	return SearchMonsters.size() > 0 || SearchItems.size() > 0 || SearchObjects.size() > 0;
+}
+
+bool ShouldHighlightDebugAutomapTile(Point position)
+{
+	auto matchesSearched = [](const string_view name, const std::vector<std::string> &searchedNames) {
+		std::string nameToLower;
+		StrAppend(nameToLower, name);
+		std::transform(nameToLower.begin(), nameToLower.end(), nameToLower.begin(), [](unsigned char c) { return std::tolower(c); });
+		for (const auto &searchedName : searchedNames) {
+			if (nameToLower.find(searchedName) != std::string::npos) {
+				return true;
+			}
+		}
+		return false;
+	};
+
+	if (SearchMonsters.size() > 0 && dMonster[position.x][position.y] != 0) {
+		const int mi = abs(dMonster[position.x][position.y]) - 1;
+		const Monster &monster = Monsters[mi];
+		if (matchesSearched(monster.name(), SearchMonsters))
+			return true;
+	}
+
+	if (SearchItems.size() > 0 && dItem[position.x][position.y] != 0) {
+		const int itemId = abs(dItem[position.x][position.y]) - 1;
+		const Item &item = Items[itemId];
+		if (matchesSearched(item._iIName, SearchItems))
+			return true;
+	}
+
+	if (SearchObjects.size() > 0 && IsObjectAtPosition(position)) {
+		const Object &object = ObjectAtPosition(position);
+		if (matchesSearched(object.name(), SearchObjects))
+			return true;
+	}
+
+	return false;
 }
 
 } // namespace devilution
