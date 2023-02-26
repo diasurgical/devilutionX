@@ -3,7 +3,6 @@
 
 #include "drlg_test.hpp"
 #include "levels/gendung.h"
-#include "quests.h"
 
 using namespace devilution;
 
@@ -28,7 +27,7 @@ TEST(Drlg_l2, CreateL2Dungeon_diablo_5_68685319)
 {
 	LoadExpectedLevelData("diablo/5-68685319.dun");
 
-	InitQuests();
+	TestInitGame();
 	Quests[Q_BLOOD]._qactive = QUEST_INIT;
 
 	TestCreateDungeon(5, 68685319, ENTRY_MAIN);
@@ -43,7 +42,7 @@ TEST(Drlg_l2, CreateL2Dungeon_diablo_6_2034738122)
 {
 	LoadExpectedLevelData("diablo/6-2034738122.dun");
 
-	InitQuests();
+	TestInitGame();
 	Quests[Q_SCHAMB]._qactive = QUEST_NOTAVAIL;
 
 	TestCreateDungeon(6, 2034738122, ENTRY_MAIN);
@@ -56,7 +55,7 @@ TEST(Drlg_l2, CreateL2Dungeon_diablo_6_1824554527)
 {
 	LoadExpectedLevelData("diablo/6-1824554527.dun");
 
-	InitQuests();
+	TestInitGame();
 	Quests[Q_SCHAMB]._qactive = QUEST_INIT;
 
 	TestCreateDungeon(6, 1824554527, ENTRY_MAIN);
@@ -69,7 +68,7 @@ TEST(Drlg_l2, CreateL2Dungeon_diablo_6_2033265779)
 {
 	LoadExpectedLevelData("diablo/6-2033265779.dun");
 
-	InitQuests();
+	TestInitGame();
 	Quests[Q_SCHAMB]._qactive = QUEST_INIT;
 
 	TestCreateDungeon(6, 2033265779, ENTRY_MAIN);
@@ -82,7 +81,7 @@ TEST(Drlg_l2, CreateL2Dungeon_diablo_7_680552750)
 {
 	LoadExpectedLevelData("diablo/7-680552750.dun");
 
-	InitQuests();
+	TestInitGame();
 	Quests[Q_BLIND]._qactive = QUEST_NOTAVAIL;
 
 	TestCreateDungeon(7, 680552750, ENTRY_MAIN);
@@ -95,7 +94,7 @@ TEST(Drlg_l2, CreateL2Dungeon_diablo_7_1607627156)
 {
 	LoadExpectedLevelData("diablo/7-1607627156.dun");
 
-	InitQuests();
+	TestInitGame();
 	Quests[Q_BLIND]._qactive = QUEST_INIT;
 
 	TestCreateDungeon(7, 1607627156, ENTRY_MAIN);
@@ -107,6 +106,8 @@ TEST(Drlg_l2, CreateL2Dungeon_diablo_7_1607627156)
 TEST(Drlg_l2, CreateL2Dungeon_diablo_8_1999936419)
 {
 	LoadExpectedLevelData("diablo/8-1999936419.dun");
+
+	TestInitGame();
 
 	TestCreateDungeon(8, 1999936419, ENTRY_MAIN);
 	EXPECT_EQ(ViewPosition, Point(39, 74));
