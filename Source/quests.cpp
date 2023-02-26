@@ -945,7 +945,7 @@ void SetMultiQuest(int q, quest_state s, bool log, int v1, int v2, int16_t qmsg)
 
 bool UseMultiplayerQuests()
 {
-	return gbIsMultiplayer;
+	return sgGameInitInfo.fullQuests == 0;
 }
 
 bool Quest::IsAvailable()
