@@ -327,6 +327,7 @@ void SyncOpObject(Player &player, int cmd, Object &object);
 void BreakObjectMissile(const Player *player, Object &object);
 void BreakObject(const Player &player, Object &object);
 void DeltaSyncOpObject(Object &object);
+void DeltaSyncCloseObj(Object &object);
 void DeltaSyncBreakObj(Object &object);
 void SyncBreakObj(const Player &player, Object &object);
 void SyncObjectAnim(Object &object);
