@@ -464,6 +464,7 @@ struct CornerStoneStruct {
 	Point position;
 	bool activated;
 	Item item;
+	bool isAvailable();
 };
 
 /** Contains the items on ground in the current game. */
