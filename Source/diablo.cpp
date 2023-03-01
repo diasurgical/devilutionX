@@ -2929,7 +2929,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 	}
 
 	if (leveltype == DTYPE_CRYPT) {
-		if (currlevel == 21) {
+		if (CornerStone.isAvailable()) {
 			CornerstoneLoad(CornerStone.position);
 		}
 		if (Quests[Q_NAKRUL]._qactive == QUEST_DONE && currlevel == 24) {

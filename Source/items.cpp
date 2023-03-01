@@ -4531,6 +4531,11 @@ void Item::updateRequiredStatsCacheForPlayer(const Player &player)
 	_iStatFlag = player.CanUseItem(*this);
 }
 
+bool CornerStoneStruct::isAvailable()
+{
+	return currlevel == 21;
+}
+
 void initItemGetRecords()
 {
 	memset(itemrecord, 0, sizeof(itemrecord));
