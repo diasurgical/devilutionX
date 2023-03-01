@@ -4533,7 +4533,7 @@ void Item::updateRequiredStatsCacheForPlayer(const Player &player)
 
 bool CornerStoneStruct::isAvailable()
 {
-	return currlevel == 21;
+	return currlevel == 21 && !gbIsMultiplayer;
 }
 
 void initItemGetRecords()
