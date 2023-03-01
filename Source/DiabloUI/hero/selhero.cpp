@@ -1,4 +1,4 @@
-#include "selhero.h"
+#include "DiabloUI/hero/selhero.h"
 
 #include <algorithm>
 #include <chrono>
@@ -8,8 +8,8 @@
 
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/dialogs.h"
+#include "DiabloUI/multi/selgame.h"
 #include "DiabloUI/scrollbar.h"
-#include "DiabloUI/selgame.h"
 #include "DiabloUI/selok.h"
 #include "DiabloUI/selyesno.h"
 #include "control.h"

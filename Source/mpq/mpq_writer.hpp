@@ -67,7 +67,7 @@ private:
 #endif
 
 #ifndef CAN_SEEKP_BEYOND_EOF
-	std::streampos streamBegin_;
+	long streamBegin_;
 #endif
 };
 

@@ -1692,11 +1692,12 @@ void UpdateFlameTrap(Object &trap)
 
 		int x = trap.position.x;
 		int y = trap.position.y;
+		constexpr MissileID TrapMissile = MissileID::FireWallControl;
 		if (dMonster[x][y] > 0)
-			MonsterTrapHit(dMonster[x][y] - 1, mindam / 2, maxdam / 2, 0, MissileID::FireWallControl, false);
+			MonsterTrapHit(dMonster[x][y] - 1, mindam / 2, maxdam / 2, 0, TrapMissile, GetMissileData(TrapMissile).damageType(), false);
 		if (dPlayer[x][y] > 0) {
 			bool unused;
-			PlayerMHit(dPlayer[x][y] - 1, nullptr, 0, mindam, maxdam, MissileID::FireWallControl, false, 0, &unused);
+			PlayerMHit(dPlayer[x][y] - 1, nullptr, 0, mindam, maxdam, TrapMissile, GetMissileData(TrapMissile).damageType(), false, 0, &unused);
 		}
 
 		if (trap._oAnimFrame == trap._oAnimLen)
@@ -1905,7 +1906,7 @@ void OperateLever(Object &object, bool sendmsg)
 		NetSendCmdLoc(MyPlayerId, false, CMD_OPERATEOBJ, object.position);
 }
 
-void OperateBook(Player &player, Object &book)
+void OperateBook(Player &player, Object &book, bool sendmsg)
 {
 	if (book._oSelFlag == 0) {
 		return;
@@ -1943,17 +1944,21 @@ void OperateBook(Player &player, Object &book)
 	book._oSelFlag = 0;
 	book._oAnimFrame++;
 
-	NetSendCmdLoc(MyPlayerId, false, CMD_OPERATEOBJ, book.position);
+	if (sendmsg)
+		NetSendCmdLoc(MyPlayerId, false, CMD_OPERATEOBJ, book.position);
 
 	if (!setlevel) {
 		return;
 	}
 
 	if (setlvlnum == SL_BONECHAMB) {
-		player._pMemSpells |= GetSpellBitmask(SPL_GUARDIAN);
-		if (player._pSplLvl[SPL_GUARDIAN] < MaxSpellLevel)
-			player._pSplLvl[SPL_GUARDIAN]++;
-		Quests[Q_SCHAMB]._qactive = QUEST_DONE;
+		player._pMemSpells |= GetSpellBitmask(SpellID::Guardian);
+		if (player._pSplLvl[static_cast<int8_t>(SpellID::Guardian)] < MaxSpellLevel)
+			player._pSplLvl[static_cast<int8_t>(SpellID::Guardian)]++;
+		if (sendmsg) {
+			Quests[Q_SCHAMB]._qactive = QUEST_DONE;
+			NetSendCmdQuest(true, Quests[Q_SCHAMB]);
+		}
 		PlaySfxLoc(IS_QUESTDN, book.position);
 		InitDiabloMsg(EMSG_BONECHAMB);
 		AddMissile(
@@ -1997,10 +2002,11 @@ void OperateBookLever(Object &questBook, bool sendmsg)
 			if (sendmsg)
 				SpawnQuestItem(IDI_BLDSTONE, SetPiece.position.megaToWorld() + Displacement { 9, 17 }, 0, 1, true);
 		}
-		if (questBook._otype == OBJ_STEELTOME && Quests[Q_WARLORD]._qvar1 == 0) {
+		if (questBook._otype == OBJ_STEELTOME && Quests[Q_WARLORD]._qvar1 == QS_WARLORD_INIT) {
 			Quests[Q_WARLORD]._qactive = QUEST_ACTIVE;
 			Quests[Q_WARLORD]._qlog = true;
-			Quests[Q_WARLORD]._qvar1 = 1;
+			Quests[Q_WARLORD]._qvar1 = QS_WARLORD_STEELTOME_READ;
+			NetSendCmdQuest(true, Quests[Q_WARLORD]);
 		}
 		if (questBook._oAnimFrame != questBook._oVar6) {
 			if (questBook._otype != OBJ_BLOODBOOK)
@@ -2021,7 +2027,7 @@ void OperateBookLever(Object &questBook, bool sendmsg)
 	}
 }
 
-void OperateChamberOfBoneBook(Object &questBook)
+void OperateChamberOfBoneBook(Object &questBook, bool sendmsg)
 {
 	if (questBook._oSelFlag == 0 || qtextflag) {
 		return;
@@ -2054,13 +2060,17 @@ void OperateChamberOfBoneBook(Object &questBook)
 		textdef = TEXT_HBONER;
 		break;
 	case HeroClass::Bard:
-		textdef = TEXT_BBONER;
+		textdef = TEXT_RBONER;
 		break;
 	case HeroClass::Barbarian:
 		textdef = TEXT_BONER;
 		break;
 	}
-	Quests[Q_SCHAMB]._qmsg = textdef;
+	if (sendmsg) {
+		Quests[Q_SCHAMB]._qmsg = textdef;
+		NetSendCmdQuest(true, Quests[Q_SCHAMB]);
+		NetSendCmdLoc(MyPlayerId, false, CMD_OPERATEOBJ, questBook.position);
+	}
 	InitQTextMsg(textdef);
 }
 
@@ -2140,8 +2150,13 @@ void OperateMushroomPatch(const Player &player, Object &mushroomPatch)
 
 	PlaySfxLoc(IS_CHEST, mushroomPatch.position);
 	Point pos = GetSuperItemLoc(mushroomPatch.position);
-	SpawnQuestItem(IDI_MUSHROOM, pos, 0, 0, true);
-	Quests[Q_MUSHROOM]._qvar1 = QS_MUSHSPAWNED;
+
+	if (&player == MyPlayer) {
+		SpawnQuestItem(IDI_MUSHROOM, pos, 0, 0, true);
+		Quests[Q_MUSHROOM]._qvar1 = QS_MUSHSPAWNED;
+		NetSendCmdQuest(true, Quests[Q_MUSHROOM]);
+		NetSendCmdLoc(MyPlayerId, false, CMD_OPERATEOBJ, mushroomPatch.position);
+	}
 }
 
 void OperateInnSignChest(const Player &player, Object &questContainer, bool sendmsg)
@@ -2185,7 +2200,7 @@ void OperateSlainHero(const Player &player, Object &corpse)
 	} else if (player._pClass == HeroClass::Rogue) {
 		CreateMagicWeapon(corpse.position, ItemType::Bow, ICURS_LONG_BATTLE_BOW, true, false);
 	} else if (player._pClass == HeroClass::Sorcerer) {
-		CreateSpellBook(corpse.position, SPL_LIGHTNING, true, false);
+		CreateSpellBook(corpse.position, SpellID::Lightning, true, false);
 	} else if (player._pClass == HeroClass::Monk) {
 		CreateMagicWeapon(corpse.position, ItemType::Staff, ICURS_WAR_STAFF, true, false);
 	} else if (player._pClass == HeroClass::Bard) {
@@ -2491,7 +2506,7 @@ void OperateShrineEnchanted(Player &player)
 	}
 	if (cnt > 1) {
 		spell = 1;
-		for (int j = SPL_FIREBOLT; j < maxSpells; j++) { // BUGFIX: < MAX_SPELLS, there is no spell with MAX_SPELLS index (fixed)
+		for (int j = static_cast<int8_t>(SpellID::Firebolt); j < maxSpells; j++) { // BUGFIX: < MAX_SPELLS, there is no spell with MAX_SPELLS index (fixed)
 			if ((player._pMemSpells & spell) != 0) {
 				if (player._pSplLvl[j] < MaxSpellLevel)
 					player._pSplLvl[j]++;
@@ -2501,7 +2516,7 @@ void OperateShrineEnchanted(Player &player)
 		int r;
 		do {
 			r = GenerateRnd(maxSpells);
-		} while ((player._pMemSpells & GetSpellBitmask(r + 1)) == 0);
+		} while ((player._pMemSpells & GetSpellBitmask(static_cast<SpellID>(r + 1))) == 0);
 		if (player._pSplLvl[r + 1] >= 2)
 			player._pSplLvl[r + 1] -= 2;
 		else
@@ -2528,17 +2543,17 @@ void OperateShrineThaumaturgic(const Player &player)
 	InitDiabloMsg(EMSG_SHRINE_THAUMATURGIC);
 }
 
-void OperateShrineCostOfWisdom(Player &player, spell_id spellId, diablo_message message)
+void OperateShrineCostOfWisdom(Player &player, SpellID spellId, diablo_message message)
 {
 	if (&player != MyPlayer)
 		return;
 
 	player._pMemSpells |= GetSpellBitmask(spellId);
 
-	if (player._pSplLvl[spellId] < MaxSpellLevel)
-		player._pSplLvl[spellId]++;
-	if (player._pSplLvl[spellId] < MaxSpellLevel)
-		player._pSplLvl[spellId]++;
+	if (player._pSplLvl[static_cast<int8_t>(spellId)] < MaxSpellLevel)
+		player._pSplLvl[static_cast<int8_t>(spellId)]++;
+	if (player._pSplLvl[static_cast<int8_t>(spellId)] < MaxSpellLevel)
+		player._pSplLvl[static_cast<int8_t>(spellId)]++;
 
 	uint32_t t = player._pMaxManaBase / 10;
 	int v1 = player._pMana - player._pManaBase;
@@ -3049,7 +3064,7 @@ void OperateShrine(Player &player, Object &shrine, _sfx_id sType)
 		OperateShrineThaumaturgic(player);
 		break;
 	case ShrineFascinating:
-		OperateShrineCostOfWisdom(player, SPL_FIREBOLT, EMSG_SHRINE_FASCINATING);
+		OperateShrineCostOfWisdom(player, SpellID::Firebolt, EMSG_SHRINE_FASCINATING);
 		break;
 	case ShrineCryptic:
 		OperateShrineCryptic(player);
@@ -3067,7 +3082,7 @@ void OperateShrine(Player &player, Object &shrine, _sfx_id sType)
 		OperateShrineHoly(player);
 		break;
 	case ShrineSacred:
-		OperateShrineCostOfWisdom(player, SPL_CBOLT, EMSG_SHRINE_SACRED);
+		OperateShrineCostOfWisdom(player, SpellID::ChargedBolt, EMSG_SHRINE_SACRED);
 		break;
 	case ShrineSpiritual:
 		OperateShrineSpiritual(player);
@@ -3088,7 +3103,7 @@ void OperateShrine(Player &player, Object &shrine, _sfx_id sType)
 		OperateShrineSecluded(player);
 		break;
 	case ShrineOrnate:
-		OperateShrineCostOfWisdom(player, SPL_HBOLT, EMSG_SHRINE_ORNATE);
+		OperateShrineCostOfWisdom(player, SpellID::HolyBolt, EMSG_SHRINE_ORNATE);
 		break;
 	case ShrineGlimmering:
 		OperateShrineGlimmering(player);
@@ -3498,12 +3513,13 @@ void BreakBarrel(const Player &player, Object &barrel, bool forcebreak, bool sen
 			PlaySfxLoc(IS_BARLFIRE, barrel.position);
 		for (int yp = barrel.position.y - 1; yp <= barrel.position.y + 1; yp++) {
 			for (int xp = barrel.position.x - 1; xp <= barrel.position.x + 1; xp++) {
+				constexpr MissileID TrapMissile = MissileID::Firebolt;
 				if (dMonster[xp][yp] > 0) {
-					MonsterTrapHit(dMonster[xp][yp] - 1, 1, 4, 0, MissileID::Firebolt, false);
+					MonsterTrapHit(dMonster[xp][yp] - 1, 1, 4, 0, TrapMissile, GetMissileData(TrapMissile).damageType(), false);
 				}
 				if (dPlayer[xp][yp] > 0) {
 					bool unused;
-					PlayerMHit(dPlayer[xp][yp] - 1, nullptr, 0, 8, 16, MissileID::Firebolt, false, 0, &unused);
+					PlayerMHit(dPlayer[xp][yp] - 1, nullptr, 0, 8, 16, TrapMissile, GetMissileData(TrapMissile).damageType(), false, 0, &unused);
 				}
 				// don't really need to exclude large objects as explosive barrels are single tile objects, but using considerLargeObjects == false as this matches the old logic.
 				Object *adjacentObject = FindObjectAtPosition({ xp, yp }, false);
@@ -3810,7 +3826,7 @@ void InitObjects()
 		AdvanceRndSeed();
 		if (currlevel == 9 && !gbIsMultiplayer)
 			AddSlainHero();
-		if (currlevel == Quests[Q_MUSHROOM]._qlevel && Quests[Q_MUSHROOM]._qactive == QUEST_INIT)
+		if (Quests[Q_MUSHROOM].IsAvailable())
 			AddMushPatch();
 
 		if (currlevel == 4 || currlevel == 8 || currlevel == 12)
@@ -3861,7 +3877,7 @@ void InitObjects()
 					spId = TEXT_HBLINDING;
 					break;
 				case HeroClass::Bard:
-					spId = TEXT_BBLINDING;
+					spId = TEXT_RBLINDING;
 					break;
 				case HeroClass::Barbarian:
 					spId = TEXT_BLINDING;
@@ -3887,7 +3903,7 @@ void InitObjects()
 					spId = TEXT_HBLOODY;
 					break;
 				case HeroClass::Bard:
-					spId = TEXT_BBLOODY;
+					spId = TEXT_RBLOODY;
 					break;
 				case HeroClass::Barbarian:
 					spId = TEXT_BLOODY;
@@ -3920,7 +3936,7 @@ void InitObjects()
 					spId = TEXT_HBLOODWAR;
 					break;
 				case HeroClass::Bard:
-					spId = TEXT_BBLOODWAR;
+					spId = TEXT_RBLOODWAR;
 					break;
 				case HeroClass::Barbarian:
 					spId = TEXT_BLOODWAR;
@@ -4154,7 +4170,7 @@ bool UpdateTrapState(Object &trap)
 	case OBJ_L3RDOOR:
 	case OBJ_L5LDOOR:
 	case OBJ_L5RDOOR:
-		if (trigger._oVar4 == DOOR_CLOSED)
+		if (trigger._oVar4 == DOOR_CLOSED && trigger._oTrapFlag)
 			return false;
 		break;
 	case OBJ_LEVER:
@@ -4165,7 +4181,7 @@ bool UpdateTrapState(Object &trap)
 	case OBJ_SARC:
 	case OBJ_L5LEVER:
 	case OBJ_L5SARC:
-		if (trigger._oSelFlag != 0)
+		if (trigger._oSelFlag != 0 && trigger._oTrapFlag)
 			return false;
 		break;
 	default:
@@ -4389,10 +4405,10 @@ void OperateObject(Player &player, Object &object)
 		OperateLever(object, sendmsg);
 		break;
 	case OBJ_BOOK2L:
-		OperateBook(player, object);
+		OperateBook(player, object, sendmsg);
 		break;
 	case OBJ_BOOK2R:
-		OperateChamberOfBoneBook(object);
+		OperateChamberOfBoneBook(object, sendmsg);
 		break;
 	case OBJ_CHEST1:
 	case OBJ_CHEST2:
@@ -4514,6 +4530,7 @@ void DeltaSyncOpObject(Object &object)
 	case OBJ_BLINDBOOK:
 	case OBJ_BLOODBOOK:
 	case OBJ_STEELTOME:
+	case OBJ_BOOK2R:
 		object._oAnimFrame = object._oVar6;
 		SyncQSTLever(object);
 		break;
@@ -4538,7 +4555,7 @@ void DeltaSyncOpObject(Object &object)
 		UpdateState(object, 3);
 		break;
 	case OBJ_MUSHPATCH:
-		if (Quests[Q_MUSHROOM]._qactive == QUEST_ACTIVE) {
+		if (Quests[Q_MUSHROOM]._qvar1 >= QS_MUSHSPAWNED) {
 			UpdateState(object, object._oAnimFrame + 1);
 		}
 		break;
@@ -4553,6 +4570,13 @@ void DeltaSyncOpObject(Object &object)
 	default:
 		break;
 	}
+}
+
+void DeltaSyncCloseObj(Object &object)
+{
+	// Object was closed.
+	// That means it was opened once, so all traps have been activated.
+	object._oTrapFlag = false;
 }
 
 void SyncOpObject(Player &player, int cmd, Object &object)
@@ -4748,19 +4772,17 @@ void SyncObjectAnim(Object &object)
 	}
 }
 
-void GetObjectStr(const Object &object)
+StringOrView Object::name() const
 {
-	switch (object._otype) {
+	switch (_otype) {
 	case OBJ_CRUX1:
 	case OBJ_CRUX2:
 	case OBJ_CRUX3:
-		InfoString = _("Crucified Skeleton");
-		break;
+		return _("Crucified Skeleton");
 	case OBJ_LEVER:
 	case OBJ_L5LEVER:
 	case OBJ_FLAMELVR:
-		InfoString = _("Lever");
-		break;
+		return _("Lever");
 	case OBJ_L1LDOOR:
 	case OBJ_L1RDOOR:
 	case OBJ_L2LDOOR:
@@ -4769,133 +4791,107 @@ void GetObjectStr(const Object &object)
 	case OBJ_L3RDOOR:
 	case OBJ_L5LDOOR:
 	case OBJ_L5RDOOR:
-		if (object._oVar4 == DOOR_OPEN)
-			InfoString = _("Open Door");
-		if (object._oVar4 == DOOR_CLOSED)
-			InfoString = _("Closed Door");
-		if (object._oVar4 == DOOR_BLOCKED)
-			InfoString = _("Blocked Door");
+		if (_oVar4 == DOOR_OPEN)
+			return _("Open Door");
+		if (_oVar4 == DOOR_CLOSED)
+			return _("Closed Door");
+		if (_oVar4 == DOOR_BLOCKED)
+			return _("Blocked Door");
 		break;
 	case OBJ_BOOK2L:
 		if (setlevel) {
 			if (setlvlnum == SL_BONECHAMB) {
-				InfoString = _("Ancient Tome");
+				return _("Ancient Tome");
 			} else if (setlvlnum == SL_VILEBETRAYER) {
-				InfoString = _("Book of Vileness");
+				return _("Book of Vileness");
 			}
 		}
 		break;
 	case OBJ_SWITCHSKL:
-		InfoString = _("Skull Lever");
-		break;
+		return _("Skull Lever");
 	case OBJ_BOOK2R:
-		InfoString = _("Mythical Book");
-		break;
+		return _("Mythical Book");
 	case OBJ_CHEST1:
 	case OBJ_TCHEST1:
-		InfoString = _("Small Chest");
-		break;
+		return _("Small Chest");
 	case OBJ_CHEST2:
 	case OBJ_TCHEST2:
-		InfoString = _("Chest");
-		break;
+		return _("Chest");
 	case OBJ_CHEST3:
 	case OBJ_TCHEST3:
 	case OBJ_SIGNCHEST:
-		InfoString = _("Large Chest");
-		break;
+		return _("Large Chest");
 	case OBJ_SARC:
 	case OBJ_L5SARC:
-		InfoString = _("Sarcophagus");
-		break;
+		return _("Sarcophagus");
 	case OBJ_BOOKSHELF:
-		InfoString = _("Bookshelf");
-		break;
+		return _("Bookshelf");
 	case OBJ_BOOKCASEL:
 	case OBJ_BOOKCASER:
-		InfoString = _("Bookcase");
-		break;
+		return _("Bookcase");
 	case OBJ_BARREL:
 	case OBJ_BARRELEX:
-		InfoString = _("Barrel");
-		break;
+		return _("Barrel");
 	case OBJ_POD:
 	case OBJ_PODEX:
-		InfoString = _("Pod");
-		break;
+		return _("Pod");
 	case OBJ_URN:
 	case OBJ_URNEX:
-		InfoString = _("Urn");
-		break;
+		return _("Urn");
 	case OBJ_SHRINEL:
 	case OBJ_SHRINER:
-		InfoString = fmt::format(fmt::runtime(_(/* TRANSLATORS: {:s} will be a name from the Shrine block above */ "{:s} Shrine")), _(ShrineNames[object._oVar1]));
-		break;
+		return fmt::format(fmt::runtime(_(/* TRANSLATORS: {:s} will be a name from the Shrine block above */ "{:s} Shrine")), _(ShrineNames[_oVar1]));
 	case OBJ_SKELBOOK:
-		InfoString = _("Skeleton Tome");
-		break;
+		return _("Skeleton Tome");
 	case OBJ_BOOKSTAND:
-		InfoString = _("Library Book");
-		break;
+		return _("Library Book");
 	case OBJ_BLOODFTN:
-		InfoString = _("Blood Fountain");
-		break;
+		return _("Blood Fountain");
 	case OBJ_DECAP:
-		InfoString = _("Decapitated Body");
-		break;
+		return _("Decapitated Body");
 	case OBJ_BLINDBOOK:
-		InfoString = _("Book of the Blind");
-		break;
+		return _("Book of the Blind");
 	case OBJ_BLOODBOOK:
-		InfoString = _("Book of Blood");
-		break;
+		return _("Book of Blood");
 	case OBJ_PURIFYINGFTN:
-		InfoString = _("Purifying Spring");
-		break;
+		return _("Purifying Spring");
 	case OBJ_ARMORSTAND:
 	case OBJ_WARARMOR:
-		InfoString = _("Armor");
-		break;
+		return _("Armor");
 	case OBJ_WARWEAP:
-		InfoString = _("Weapon Rack");
-		break;
+		return _("Weapon Rack");
 	case OBJ_GOATSHRINE:
-		InfoString = _("Goat Shrine");
-		break;
+		return _("Goat Shrine");
 	case OBJ_CAULDRON:
-		InfoString = _("Cauldron");
-		break;
+		return _("Cauldron");
 	case OBJ_MURKYFTN:
-		InfoString = _("Murky Pool");
-		break;
+		return _("Murky Pool");
 	case OBJ_TEARFTN:
-		InfoString = _("Fountain of Tears");
-		break;
+		return _("Fountain of Tears");
 	case OBJ_STEELTOME:
-		InfoString = _("Steel Tome");
-		break;
+		return _("Steel Tome");
 	case OBJ_PEDESTAL:
-		InfoString = _("Pedestal of Blood");
-		break;
+		return _("Pedestal of Blood");
 	case OBJ_STORYBOOK:
 	case OBJ_L5BOOKS:
-		InfoString = _(StoryBookName[object._oVar3]);
-		break;
+		return _(StoryBookName[_oVar3]);
 	case OBJ_WEAPONRACK:
-		InfoString = _("Weapon Rack");
-		break;
+		return _("Weapon Rack");
 	case OBJ_MUSHPATCH:
-		InfoString = _("Mushroom Patch");
-		break;
+		return _("Mushroom Patch");
 	case OBJ_LAZSTAND:
-		InfoString = _("Vile Stand");
-		break;
+		return _("Vile Stand");
 	case OBJ_SLAINHERO:
-		InfoString = _("Slain Hero");
-		break;
+		return _("Slain Hero");
 	default:
 		break;
 	}
+	return string_view();
+}
+
+void GetObjectStr(const Object &object)
+{
+	InfoString = object.name();
 	if (MyPlayer->_pClass == HeroClass::Rogue) {
 		if (object._oTrapFlag) {
 			InfoString = fmt::format(fmt::runtime(_(/* TRANSLATORS: {:s} will either be a chest or a door */ "Trapped {:s}")), InfoString);

@@ -229,6 +229,11 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang" AND NOT PS4)
   endif()
 endif()
 
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+  # -fipa-pta and -fdevirtualize-at-ltrans improve performance.
+  add_compile_options("$<$<NOT:$<CONFIG:Debug>>:-fipa-pta;-fdevirtualize-at-ltrans>")
+endif()
+
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
   add_compile_options("$<$<BOOL:${DEVILUTIONX_PROFILE_GENERATE}>:-fprofile-generate>")
   add_link_options("$<$<BOOL:${DEVILUTIONX_PROFILE_GENERATE}>:-fprofile-generate>")

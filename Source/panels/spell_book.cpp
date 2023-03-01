@@ -26,14 +26,14 @@ namespace {
 OptionalOwnedClxSpriteList pSBkBtnCel;
 OptionalOwnedClxSpriteList pSpellBkCel;
 
-/** Maps from spellbook page number and position to spell_id. */
-spell_id SpellPages[6][7] = {
-	{ SPL_NULL, SPL_FIREBOLT, SPL_CBOLT, SPL_HBOLT, SPL_HEAL, SPL_HEALOTHER, SPL_FLAME },
-	{ SPL_RESURRECT, SPL_FIREWALL, SPL_TELEKINESIS, SPL_LIGHTNING, SPL_TOWN, SPL_FLASH, SPL_STONE },
-	{ SPL_RNDTELEPORT, SPL_MANASHIELD, SPL_ELEMENT, SPL_FIREBALL, SPL_WAVE, SPL_CHAIN, SPL_GUARDIAN },
-	{ SPL_NOVA, SPL_GOLEM, SPL_TELEPORT, SPL_APOCA, SPL_BONESPIRIT, SPL_FLARE, SPL_ETHEREALIZE },
-	{ SPL_LIGHTWALL, SPL_IMMOLAT, SPL_WARP, SPL_REFLECT, SPL_BERSERK, SPL_FIRERING, SPL_SEARCH },
-	{ SPL_INVALID, SPL_INVALID, SPL_INVALID, SPL_INVALID, SPL_INVALID, SPL_INVALID, SPL_INVALID }
+/** Maps from spellbook page number and position to SpellID. */
+SpellID SpellPages[6][7] = {
+	{ SpellID::Null, SpellID::Firebolt, SpellID::ChargedBolt, SpellID::HolyBolt, SpellID::Healing, SpellID::HealOther, SpellID::Inferno },
+	{ SpellID::Resurrect, SpellID::FireWall, SpellID::Telekinesis, SpellID::Lightning, SpellID::TownPortal, SpellID::Flash, SpellID::StoneCurse },
+	{ SpellID::Phasing, SpellID::ManaShield, SpellID::Elemental, SpellID::Fireball, SpellID::FlameWave, SpellID::ChainLightning, SpellID::Guardian },
+	{ SpellID::Nova, SpellID::Golem, SpellID::Teleport, SpellID::Apocalypse, SpellID::BoneSpirit, SpellID::BloodStar, SpellID::Etherealize },
+	{ SpellID::LightningWall, SpellID::Immolation, SpellID::Warp, SpellID::Reflect, SpellID::Berserk, SpellID::RingOfFire, SpellID::Search },
+	{ SpellID::Invalid, SpellID::Invalid, SpellID::Invalid, SpellID::Invalid, SpellID::Invalid, SpellID::Invalid, SpellID::Invalid }
 };
 
 constexpr Size SpellBookDescription { 250, 43 };
@@ -48,28 +48,28 @@ void PrintSBookStr(const Surface &out, Point position, string_view text, UiFlags
 	    UiFlags::ColorWhite | flags);
 }
 
-spell_type GetSBookTrans(spell_id ii, bool townok)
+SpellType GetSBookTrans(SpellID ii, bool townok)
 {
 	Player &player = *MyPlayer;
-	if ((player._pClass == HeroClass::Monk) && (ii == SPL_SEARCH))
-		return RSPLTYPE_SKILL;
-	spell_type st = RSPLTYPE_SPELL;
+	if ((player._pClass == HeroClass::Monk) && (ii == SpellID::Search))
+		return SpellType::Skill;
+	SpellType st = SpellType::Spell;
 	if ((player._pISpells & GetSpellBitmask(ii)) != 0) {
-		st = RSPLTYPE_CHARGES;
+		st = SpellType::Charges;
 	}
 	if ((player._pAblSpells & GetSpellBitmask(ii)) != 0) {
-		st = RSPLTYPE_SKILL;
+		st = SpellType::Skill;
 	}
-	if (st == RSPLTYPE_SPELL) {
+	if (st == SpellType::Spell) {
 		if (CheckSpell(*MyPlayer, ii, st, true) != SpellCheckResult::Success) {
-			st = RSPLTYPE_INVALID;
+			st = SpellType::Invalid;
 		}
 		if (player.GetSpellLevel(ii) == 0) {
-			st = RSPLTYPE_INVALID;
+			st = SpellType::Invalid;
 		}
 	}
-	if (townok && leveltype == DTYPE_TOWN && st != RSPLTYPE_INVALID && !spelldata[ii].sTownSpell) {
-		st = RSPLTYPE_INVALID;
+	if (townok && leveltype == DTYPE_TOWN && st != SpellType::Invalid && !GetSpellData(ii).isAllowedInTown()) {
+		st = SpellType::Invalid;
 	}
 
 	return st;
@@ -85,17 +85,17 @@ void InitSpellBook()
 
 	Player &player = *MyPlayer;
 	if (player._pClass == HeroClass::Warrior) {
-		SpellPages[0][0] = SPL_REPAIR;
+		SpellPages[0][0] = SpellID::ItemRepair;
 	} else if (player._pClass == HeroClass::Rogue) {
-		SpellPages[0][0] = SPL_DISARM;
+		SpellPages[0][0] = SpellID::TrapDisarm;
 	} else if (player._pClass == HeroClass::Sorcerer) {
-		SpellPages[0][0] = SPL_RECHARGE;
+		SpellPages[0][0] = SpellID::StaffRecharge;
 	} else if (player._pClass == HeroClass::Monk) {
-		SpellPages[0][0] = SPL_SEARCH;
+		SpellPages[0][0] = SpellID::Search;
 	} else if (player._pClass == HeroClass::Bard) {
-		SpellPages[0][0] = SPL_IDENTIFY;
+		SpellPages[0][0] = SpellID::Identify;
 	} else if (player._pClass == HeroClass::Barbarian) {
-		SpellPages[0][0] = SPL_BLODBOIL;
+		SpellPages[0][0] = SpellID::Rage;
 	}
 }
 
@@ -127,25 +127,25 @@ void DrawSpellBook(const Surface &out)
 	int yp = 12;
 	const int textPaddingTop = 7;
 	for (int i = 1; i < 8; i++) {
-		spell_id sn = SpellPages[sbooktab][i - 1];
+		SpellID sn = SpellPages[sbooktab][i - 1];
 		if (IsValidSpell(sn) && (spl & GetSpellBitmask(sn)) != 0) {
-			spell_type st = GetSBookTrans(sn, true);
+			SpellType st = GetSBookTrans(sn, true);
 			SetSpellTrans(st);
 			const Point spellCellPosition = GetPanelPosition(UiPanels::Spell, { 11, yp + SpellBookDescription.height });
 			DrawSmallSpellIcon(out, spellCellPosition, sn);
 			if (sn == player._pRSpell && st == player._pRSplType) {
-				SetSpellTrans(RSPLTYPE_SKILL);
+				SetSpellTrans(SpellType::Skill);
 				DrawSmallSpellIconBorder(out, spellCellPosition);
 			}
 
 			const Point line0 { 0, yp + textPaddingTop };
 			const Point line1 { 0, yp + textPaddingTop + lineHeight };
-			PrintSBookStr(out, line0, pgettext("spell", spelldata[sn].sNameText));
+			PrintSBookStr(out, line0, pgettext("spell", GetSpellData(sn).sNameText));
 			switch (GetSBookTrans(sn, false)) {
-			case RSPLTYPE_SKILL:
+			case SpellType::Skill:
 				PrintSBookStr(out, line1, _("Skill"));
 				break;
-			case RSPLTYPE_CHARGES: {
+			case SpellType::Charges: {
 				int charges = player.InvBody[INVLOC_HAND_LEFT]._iCharges;
 				PrintSBookStr(out, line1, fmt::format(fmt::runtime(ngettext("Staff ({:d} charge)", "Staff ({:d} charges)", charges)), charges));
 			} break;
@@ -156,12 +156,12 @@ void DrawSpellBook(const Surface &out)
 				if (lvl == 0) {
 					PrintSBookStr(out, line1, _("Unusable"), UiFlags::AlignRight);
 				} else {
-					if (sn != SPL_BONESPIRIT) {
+					if (sn != SpellID::BoneSpirit) {
 						int min;
 						int max;
 						GetDamageAmt(sn, &min, &max);
 						if (min != -1) {
-							if (sn == SPL_HEAL || sn == SPL_HEALOTHER) {
+							if (sn == SpellID::Healing || sn == SpellID::HealOther) {
 								PrintSBookStr(out, line1, fmt::format(fmt::runtime(_(/* TRANSLATORS: UI constraints, keep short please.*/ "Heals: {:d} - {:d}")), min, max), UiFlags::AlignRight);
 							} else {
 								PrintSBookStr(out, line1, fmt::format(fmt::runtime(_(/* TRANSLATORS: UI constraints, keep short please.*/ "Damage: {:d} - {:d}")), min, max), UiFlags::AlignRight);
@@ -187,16 +187,16 @@ void CheckSBook()
 	// padding from the end of the area.
 	Rectangle iconArea = { GetPanelPosition(UiPanels::Spell, { 11, 18 }), Size { 37, SpellBookDescription.height * 7 - 5 } };
 	if (iconArea.contains(MousePosition)) {
-		spell_id sn = SpellPages[sbooktab][(MousePosition.y - iconArea.position.y) / SpellBookDescription.height];
+		SpellID sn = SpellPages[sbooktab][(MousePosition.y - iconArea.position.y) / SpellBookDescription.height];
 		Player &player = *MyPlayer;
 		uint64_t spl = player._pMemSpells | player._pISpells | player._pAblSpells;
 		if (IsValidSpell(sn) && (spl & GetSpellBitmask(sn)) != 0) {
-			spell_type st = RSPLTYPE_SPELL;
+			SpellType st = SpellType::Spell;
 			if ((player._pISpells & GetSpellBitmask(sn)) != 0) {
-				st = RSPLTYPE_CHARGES;
+				st = SpellType::Charges;
 			}
 			if ((player._pAblSpells & GetSpellBitmask(sn)) != 0) {
-				st = RSPLTYPE_SKILL;
+				st = SpellType::Skill;
 			}
 			player._pRSpell = sn;
 			player._pRSplType = st;

@@ -453,7 +453,7 @@ struct ItemData {
 	uint8_t iMinDex;
 	ItemSpecialEffect iFlags; // ItemSpecialEffect as bit flags
 	enum item_misc_id iMiscId;
-	enum spell_id iSpell;
+	SpellID iSpell;
 	bool iUsable;
 	uint16_t iValue;
 };
@@ -590,7 +590,7 @@ struct UniqueItem {
 	ItemPower powers[6];
 };
 
-extern ItemData AllItemsList[];
+extern const ItemData AllItemsList[];
 extern const PLStruct ItemPrefixes[];
 extern const PLStruct ItemSuffixes[];
 extern const UniqueItem UniqueItems[];

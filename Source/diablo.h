@@ -82,6 +82,7 @@ extern char gszProductName[64];
 extern MouseActionType LastMouseButtonAction;
 
 void InitKeymapActions();
+void SetCursorPos(Point position);
 void FreeGameMem();
 bool StartGame(bool bNewGame, bool bSinglePlayer);
 [[noreturn]] void diablo_quit(int exitStatus);
@@ -94,6 +95,7 @@ void diablo_focus_unpause();
 bool PressEscKey();
 void DisableInputEventHandler(const SDL_Event &event, uint16_t modState);
 void LoadGameLevel(bool firstflag, lvl_entry lvldir);
+bool IsDiabloAlive(bool playSFX);
 
 /**
  * @param bStartup Process additional ticks before returning

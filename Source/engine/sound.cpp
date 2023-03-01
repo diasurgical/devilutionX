@@ -49,9 +49,11 @@ std::string GetMp3Path(const char *path)
 bool LoadAudioFile(const char *path, bool stream, bool errorDialog, SoundSample &result)
 {
 	bool isMp3 = true;
-	AssetRef ref = FindAsset(GetMp3Path(path).c_str());
+	std::string foundPath = GetMp3Path(path);
+	AssetRef ref = FindAsset(foundPath.c_str());
 	if (!ref.ok()) {
 		ref = FindAsset(path);
+		foundPath = path;
 		isMp3 = false;
 	}
 	if (!ref.ok())
@@ -70,9 +72,9 @@ bool LoadAudioFile(const char *path, bool stream, bool errorDialog, SoundSample 
 #endif
 
 	if (stream) {
-		if (result.SetChunkStream(path, isMp3, /*logErrors=*/true) != 0) {
+		if (result.SetChunkStream(foundPath, isMp3, /*logErrors=*/true) != 0) {
 			if (errorDialog) {
-				ErrDlg("Failed to load audio file", StrCat(path, "\n", SDL_GetError(), "\n"), __FILE__, __LINE__);
+				ErrDlg("Failed to load audio file", StrCat(foundPath, "\n", SDL_GetError(), "\n"), __FILE__, __LINE__);
 			}
 			return false;
 		}
@@ -83,13 +85,13 @@ bool LoadAudioFile(const char *path, bool stream, bool errorDialog, SoundSample 
 		AssetHandle handle = OpenAsset(std::move(ref));
 		if (!handle.ok()) {
 			if (errorDialog)
-				ErrDlg("Failed to load audio file", StrCat(path, "\n", SDL_GetError(), "\n"), __FILE__, __LINE__);
+				ErrDlg("Failed to load audio file", StrCat(foundPath, "\n", SDL_GetError(), "\n"), __FILE__, __LINE__);
 			return false;
 		}
 		auto waveFile = MakeArraySharedPtr<std::uint8_t>(size);
 		if (!handle.read(waveFile.get(), size)) {
 			if (errorDialog)
-				ErrDlg("Failed to read file", StrCat(path, ": ", SDL_GetError()), __FILE__, __LINE__);
+				ErrDlg("Failed to read file", StrCat(foundPath, ": ", SDL_GetError()), __FILE__, __LINE__);
 			return false;
 		}
 		const int error = result.SetChunk(waveFile, size, isMp3);

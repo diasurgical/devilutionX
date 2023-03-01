@@ -31,7 +31,7 @@
 
 namespace devilution {
 
-talk_id stextflag;
+TalkID stextflag;
 
 int storenumh;
 int8_t storehidx[48];
@@ -118,7 +118,7 @@ int8_t stextscrlubtn;
 int8_t stextscrldbtn;
 
 /** Remember current store while displaying a dialog */
-talk_id stextshold;
+TalkID stextshold;
 
 /** Start of possible gossip dialogs for current store */
 _speech_id gossipstart;
@@ -468,7 +468,7 @@ bool StartSmithPremiumBuy()
 		storenumh++;
 	}
 	if (storenumh == 0) {
-		StartStore(STORE_SMITH);
+		StartStore(TalkID::Smith);
 		stextsel = 14;
 		return false;
 	}
@@ -752,8 +752,8 @@ void WitchBookLevel(Item &bookItem)
 {
 	if (bookItem._iMiscId != IMISC_BOOK)
 		return;
-	bookItem._iMinMag = spelldata[bookItem._iSpell].sMinInt;
-	int8_t spellLevel = MyPlayer->_pSplLvl[bookItem._iSpell];
+	bookItem._iMinMag = GetSpellData(bookItem._iSpell).minInt;
+	int8_t spellLevel = MyPlayer->_pSplLvl[static_cast<int8_t>(bookItem._iSpell)];
 	while (spellLevel > 0) {
 		bookItem._iMinMag += 20 * bookItem._iMinMag / 100;
 		spellLevel--;
@@ -901,7 +901,7 @@ bool WitchRechargeOk(int i)
 void AddStoreHoldRecharge(Item itm, int8_t i)
 {
 	storehold[storenumh] = itm;
-	storehold[storenumh]._ivalue += spelldata[itm._iSpell].sStaffCost;
+	storehold[storenumh]._ivalue += GetSpellData(itm._iSpell).staffCost();
 	storehold[storenumh]._ivalue = storehold[storenumh]._ivalue * (storehold[storenumh]._iMaxCharges - storehold[storenumh]._iCharges) / (storehold[storenumh]._iMaxCharges * 2);
 	storehold[storenumh]._iIvalue = storehold[storenumh]._ivalue;
 	storehidx[storenumh] = i;
@@ -984,16 +984,16 @@ void StoreConfirm(Item &item)
 
 	bool idprint = item._iMagical != ITEM_QUALITY_NORMAL;
 
-	if (stextshold == STORE_SIDENTIFY)
+	if (stextshold == TalkID::StorytellerIdentify)
 		idprint = false;
 	if (item._iMagical != ITEM_QUALITY_NORMAL && !item._iIdentified) {
-		if (stextshold == STORE_SSELL)
+		if (stextshold == TalkID::SmithSell)
 			idprint = false;
-		if (stextshold == STORE_WSELL)
+		if (stextshold == TalkID::WitchSell)
 			idprint = false;
-		if (stextshold == STORE_SREPAIR)
+		if (stextshold == TalkID::SmithRepair)
 			idprint = false;
-		if (stextshold == STORE_WRECHARGE)
+		if (stextshold == TalkID::WitchRecharge)
 			idprint = false;
 	}
 	if (idprint)
@@ -1007,26 +1007,26 @@ void StoreConfirm(Item &item)
 	string_view prompt;
 
 	switch (stextshold) {
-	case STORE_BBOY:
+	case TalkID::BoyBuy:
 		prompt = _("Do we have a deal?");
 		break;
-	case STORE_SIDENTIFY:
+	case TalkID::StorytellerIdentify:
 		prompt = _("Are you sure you want to identify this item?");
 		break;
-	case STORE_HBUY:
-	case STORE_SPBUY:
-	case STORE_WBUY:
-	case STORE_SBUY:
+	case TalkID::HealerBuy:
+	case TalkID::SmithPremiumBuy:
+	case TalkID::WitchBuy:
+	case TalkID::SmithBuy:
 		prompt = _("Are you sure you want to buy this item?");
 		break;
-	case STORE_WRECHARGE:
+	case TalkID::WitchRecharge:
 		prompt = _("Are you sure you want to recharge this item?");
 		break;
-	case STORE_SSELL:
-	case STORE_WSELL:
+	case TalkID::SmithSell:
+	case TalkID::WitchSell:
 		prompt = _("Are you sure you want to sell this item?");
 		break;
-	case STORE_SREPAIR:
+	case TalkID::SmithRepair:
 		prompt = _("Are you sure you want to repair this item?");
 		break;
 	default:
@@ -1380,25 +1380,25 @@ void SmithEnter()
 	case 10:
 		talker = TOWN_SMITH;
 		stextlhold = 10;
-		stextshold = STORE_SMITH;
+		stextshold = TalkID::Smith;
 		gossipstart = TEXT_GRISWOLD2;
 		gossipend = TEXT_GRISWOLD13;
-		StartStore(STORE_GOSSIP);
+		StartStore(TalkID::Gossip);
 		break;
 	case 12:
-		StartStore(STORE_SBUY);
+		StartStore(TalkID::SmithBuy);
 		break;
 	case 14:
-		StartStore(STORE_SPBUY);
+		StartStore(TalkID::SmithPremiumBuy);
 		break;
 	case 16:
-		StartStore(STORE_SSELL);
+		StartStore(TalkID::SmithSell);
 		break;
 	case 18:
-		StartStore(STORE_SREPAIR);
+		StartStore(TalkID::SmithRepair);
 		break;
 	case 20:
-		stextflag = STORE_NONE;
+		stextflag = TalkID::None;
 		break;
 	}
 }
@@ -1427,28 +1427,28 @@ void SmithBuyItem(Item &item)
 void SmithBuyEnter()
 {
 	if (stextsel == BackButtonLine()) {
-		StartStore(STORE_SMITH);
+		StartStore(TalkID::Smith);
 		stextsel = 12;
 		return;
 	}
 
 	stextlhold = stextsel;
 	stextvhold = stextsval;
-	stextshold = STORE_SBUY;
+	stextshold = TalkID::SmithBuy;
 
 	int idx = stextsval + ((stextsel - stextup) / 4);
 	if (!PlayerCanAfford(smithitem[idx]._iIvalue)) {
-		StartStore(STORE_NOMONEY);
+		StartStore(TalkID::NoMoney);
 		return;
 	}
 
 	if (!StoreAutoPlace(smithitem[idx], false)) {
-		StartStore(STORE_NOROOM);
+		StartStore(TalkID::NoRoom);
 		return;
 	}
 
 	StoreItem = smithitem[idx];
-	StartStore(STORE_CONFIRM);
+	StartStore(TalkID::Confirm);
 }
 
 /**
@@ -1478,12 +1478,12 @@ void SmithBuyPItem(Item &item)
 void SmithPremiumBuyEnter()
 {
 	if (stextsel == BackButtonLine()) {
-		StartStore(STORE_SMITH);
+		StartStore(TalkID::Smith);
 		stextsel = 14;
 		return;
 	}
 
-	stextshold = STORE_SPBUY;
+	stextshold = TalkID::SmithPremiumBuy;
 	stextlhold = stextsel;
 	stextvhold = stextsval;
 
@@ -1497,17 +1497,17 @@ void SmithPremiumBuyEnter()
 	}
 
 	if (!PlayerCanAfford(premiumitems[idx]._iIvalue)) {
-		StartStore(STORE_NOMONEY);
+		StartStore(TalkID::NoMoney);
 		return;
 	}
 
 	if (!StoreAutoPlace(premiumitems[idx], false)) {
-		StartStore(STORE_NOROOM);
+		StartStore(TalkID::NoRoom);
 		return;
 	}
 
 	StoreItem = premiumitems[idx];
-	StartStore(STORE_CONFIRM);
+	StartStore(TalkID::Confirm);
 }
 
 bool StoreGoldFit(Item &item)
@@ -1555,24 +1555,24 @@ void StoreSellItem()
 void SmithSellEnter()
 {
 	if (stextsel == BackButtonLine()) {
-		StartStore(STORE_SMITH);
+		StartStore(TalkID::Smith);
 		stextsel = 16;
 		return;
 	}
 
 	stextlhold = stextsel;
-	stextshold = STORE_SSELL;
+	stextshold = TalkID::SmithSell;
 	stextvhold = stextsval;
 
 	int idx = stextsval + ((stextsel - stextup) / 4);
 
 	if (!StoreGoldFit(storehold[idx])) {
-		StartStore(STORE_NOROOM);
+		StartStore(TalkID::NoRoom);
 		return;
 	}
 
 	StoreItem = storehold[idx];
-	StartStore(STORE_CONFIRM);
+	StartStore(TalkID::Confirm);
 }
 
 /**
@@ -1607,24 +1607,24 @@ void SmithRepairItem(int price)
 void SmithRepairEnter()
 {
 	if (stextsel == BackButtonLine()) {
-		StartStore(STORE_SMITH);
+		StartStore(TalkID::Smith);
 		stextsel = 18;
 		return;
 	}
 
-	stextshold = STORE_SREPAIR;
+	stextshold = TalkID::SmithRepair;
 	stextlhold = stextsel;
 	stextvhold = stextsval;
 
 	int idx = stextsval + ((stextsel - stextup) / 4);
 
 	if (!PlayerCanAfford(storehold[idx]._iIvalue)) {
-		StartStore(STORE_NOMONEY);
+		StartStore(TalkID::NoMoney);
 		return;
 	}
 
 	StoreItem = storehold[idx];
-	StartStore(STORE_CONFIRM);
+	StartStore(TalkID::Confirm);
 }
 
 void WitchEnter()
@@ -1633,22 +1633,22 @@ void WitchEnter()
 	case 12:
 		stextlhold = 12;
 		talker = TOWN_WITCH;
-		stextshold = STORE_WITCH;
+		stextshold = TalkID::Witch;
 		gossipstart = TEXT_ADRIA2;
 		gossipend = TEXT_ADRIA13;
-		StartStore(STORE_GOSSIP);
+		StartStore(TalkID::Gossip);
 		break;
 	case 14:
-		StartStore(STORE_WBUY);
+		StartStore(TalkID::WitchBuy);
 		break;
 	case 16:
-		StartStore(STORE_WSELL);
+		StartStore(TalkID::WitchSell);
 		break;
 	case 18:
-		StartStore(STORE_WRECHARGE);
+		StartStore(TalkID::WitchRecharge);
 		break;
 	case 20:
-		stextflag = STORE_NONE;
+		stextflag = TalkID::None;
 		break;
 	}
 }
@@ -1683,52 +1683,52 @@ void WitchBuyItem(Item &item)
 void WitchBuyEnter()
 {
 	if (stextsel == BackButtonLine()) {
-		StartStore(STORE_WITCH);
+		StartStore(TalkID::Witch);
 		stextsel = 14;
 		return;
 	}
 
 	stextlhold = stextsel;
 	stextvhold = stextsval;
-	stextshold = STORE_WBUY;
+	stextshold = TalkID::WitchBuy;
 
 	int idx = stextsval + ((stextsel - stextup) / 4);
 
 	if (!PlayerCanAfford(witchitem[idx]._iIvalue)) {
-		StartStore(STORE_NOMONEY);
+		StartStore(TalkID::NoMoney);
 		return;
 	}
 
 	if (!StoreAutoPlace(witchitem[idx], false)) {
-		StartStore(STORE_NOROOM);
+		StartStore(TalkID::NoRoom);
 		return;
 	}
 
 	StoreItem = witchitem[idx];
-	StartStore(STORE_CONFIRM);
+	StartStore(TalkID::Confirm);
 }
 
 void WitchSellEnter()
 {
 	if (stextsel == BackButtonLine()) {
-		StartStore(STORE_WITCH);
+		StartStore(TalkID::Witch);
 		stextsel = 16;
 		return;
 	}
 
 	stextlhold = stextsel;
-	stextshold = STORE_WSELL;
+	stextshold = TalkID::WitchSell;
 	stextvhold = stextsval;
 
 	int idx = stextsval + ((stextsel - stextup) / 4);
 
 	if (!StoreGoldFit(storehold[idx])) {
-		StartStore(STORE_NOROOM);
+		StartStore(TalkID::NoRoom);
 		return;
 	}
 
 	StoreItem = storehold[idx];
-	StartStore(STORE_CONFIRM);
+	StartStore(TalkID::Confirm);
 }
 
 /**
@@ -1755,52 +1755,52 @@ void WitchRechargeItem(int price)
 void WitchRechargeEnter()
 {
 	if (stextsel == BackButtonLine()) {
-		StartStore(STORE_WITCH);
+		StartStore(TalkID::Witch);
 		stextsel = 18;
 		return;
 	}
 
-	stextshold = STORE_WRECHARGE;
+	stextshold = TalkID::WitchRecharge;
 	stextlhold = stextsel;
 	stextvhold = stextsval;
 
 	int idx = stextsval + ((stextsel - stextup) / 4);
 
 	if (!PlayerCanAfford(storehold[idx]._iIvalue)) {
-		StartStore(STORE_NOMONEY);
+		StartStore(TalkID::NoMoney);
 		return;
 	}
 
 	StoreItem = storehold[idx];
-	StartStore(STORE_CONFIRM);
+	StartStore(TalkID::Confirm);
 }
 
 void BoyEnter()
 {
 	if (!boyitem.isEmpty() && stextsel == 18) {
 		if (!PlayerCanAfford(50)) {
-			stextshold = STORE_BOY;
+			stextshold = TalkID::Boy;
 			stextlhold = 18;
 			stextvhold = stextsval;
-			StartStore(STORE_NOMONEY);
+			StartStore(TalkID::NoMoney);
 		} else {
 			TakePlrsMoney(50);
-			StartStore(STORE_BBOY);
+			StartStore(TalkID::BoyBuy);
 		}
 		return;
 	}
 
 	if ((stextsel != 8 && !boyitem.isEmpty()) || (stextsel != 12 && boyitem.isEmpty())) {
-		stextflag = STORE_NONE;
+		stextflag = TalkID::None;
 		return;
 	}
 
 	talker = TOWN_PEGBOY;
-	stextshold = STORE_BOY;
+	stextshold = TalkID::Boy;
 	stextlhold = stextsel;
 	gossipstart = TEXT_WIRT2;
 	gossipend = TEXT_WIRT12;
-	StartStore(STORE_GOSSIP);
+	StartStore(TalkID::Gossip);
 }
 
 void BoyBuyItem(Item &item)
@@ -1808,7 +1808,7 @@ void BoyBuyItem(Item &item)
 	TakePlrsMoney(item._iIvalue);
 	StoreAutoPlace(item, true);
 	boyitem.clear();
-	stextshold = STORE_BOY;
+	stextshold = TalkID::Boy;
 	CalcPlrInv(*MyPlayer, true);
 	stextlhold = 12;
 }
@@ -1854,11 +1854,11 @@ void HealerBuyItem(Item &item)
 void BoyBuyEnter()
 {
 	if (stextsel != 10) {
-		stextflag = STORE_NONE;
+		stextflag = TalkID::None;
 		return;
 	}
 
-	stextshold = STORE_BBOY;
+	stextshold = TalkID::BoyBuy;
 	stextvhold = stextsval;
 	stextlhold = 10;
 	int price = boyitem._iIvalue;
@@ -1868,18 +1868,18 @@ void BoyBuyEnter()
 		price += boyitem._iIvalue / 2;
 
 	if (!PlayerCanAfford(price)) {
-		StartStore(STORE_NOMONEY);
+		StartStore(TalkID::NoMoney);
 		return;
 	}
 
 	if (!StoreAutoPlace(boyitem, false)) {
-		StartStore(STORE_NOROOM);
+		StartStore(TalkID::NoRoom);
 		return;
 	}
 
 	StoreItem = boyitem;
 	StoreItem._iIvalue = price;
-	StartStore(STORE_CONFIRM);
+	StartStore(TalkID::Confirm);
 }
 
 void StorytellerIdentifyItem(Item &item)
@@ -1914,33 +1914,33 @@ void ConfirmEnter(Item &item)
 {
 	if (stextsel == 18) {
 		switch (stextshold) {
-		case STORE_SBUY:
+		case TalkID::SmithBuy:
 			SmithBuyItem(item);
 			break;
-		case STORE_SSELL:
-		case STORE_WSELL:
+		case TalkID::SmithSell:
+		case TalkID::WitchSell:
 			StoreSellItem();
 			break;
-		case STORE_SREPAIR:
+		case TalkID::SmithRepair:
 			SmithRepairItem(item._iIvalue);
 			break;
-		case STORE_WBUY:
+		case TalkID::WitchBuy:
 			WitchBuyItem(item);
 			break;
-		case STORE_WRECHARGE:
+		case TalkID::WitchRecharge:
 			WitchRechargeItem(item._iIvalue);
 			break;
-		case STORE_BBOY:
+		case TalkID::BoyBuy:
 			BoyBuyItem(item);
 			break;
-		case STORE_HBUY:
+		case TalkID::HealerBuy:
 			HealerBuyItem(item);
 			break;
-		case STORE_SIDENTIFY:
+		case TalkID::StorytellerIdentify:
 			StorytellerIdentifyItem(item);
-			StartStore(STORE_IDSHOW);
+			StartStore(TalkID::StorytellerIdentifyShow);
 			return;
-		case STORE_SPBUY:
+		case TalkID::SmithPremiumBuy:
 			SmithBuyPItem(item);
 			break;
 		default:
@@ -1967,16 +1967,16 @@ void HealerEnter()
 	case 12:
 		stextlhold = 12;
 		talker = TOWN_HEALER;
-		stextshold = STORE_HEALER;
+		stextshold = TalkID::Healer;
 		gossipstart = TEXT_PEPIN2;
 		gossipend = TEXT_PEPIN11;
-		StartStore(STORE_GOSSIP);
+		StartStore(TalkID::Gossip);
 		break;
 	case 14:
-		StartStore(STORE_HBUY);
+		StartStore(TalkID::HealerBuy);
 		break;
 	case 18:
-		stextflag = STORE_NONE;
+		stextflag = TalkID::None;
 		break;
 	}
 }
@@ -1984,29 +1984,29 @@ void HealerEnter()
 void HealerBuyEnter()
 {
 	if (stextsel == BackButtonLine()) {
-		StartStore(STORE_HEALER);
+		StartStore(TalkID::Healer);
 		stextsel = 14;
 		return;
 	}
 
 	stextlhold = stextsel;
 	stextvhold = stextsval;
-	stextshold = STORE_HBUY;
+	stextshold = TalkID::HealerBuy;
 
 	int idx = stextsval + ((stextsel - stextup) / 4);
 
 	if (!PlayerCanAfford(healitem[idx]._iIvalue)) {
-		StartStore(STORE_NOMONEY);
+		StartStore(TalkID::NoMoney);
 		return;
 	}
 
 	if (!StoreAutoPlace(healitem[idx], false)) {
-		StartStore(STORE_NOROOM);
+		StartStore(TalkID::NoRoom);
 		return;
 	}
 
 	StoreItem = healitem[idx];
-	StartStore(STORE_CONFIRM);
+	StartStore(TalkID::Confirm);
 }
 
 void StorytellerEnter()
@@ -2015,16 +2015,16 @@ void StorytellerEnter()
 	case 12:
 		stextlhold = 12;
 		talker = TOWN_STORY;
-		stextshold = STORE_STORY;
+		stextshold = TalkID::Storyteller;
 		gossipstart = TEXT_STORY2;
 		gossipend = TEXT_STORY11;
-		StartStore(STORE_GOSSIP);
+		StartStore(TalkID::Gossip);
 		break;
 	case 14:
-		StartStore(STORE_SIDENTIFY);
+		StartStore(TalkID::StorytellerIdentify);
 		break;
 	case 18:
-		stextflag = STORE_NONE;
+		stextflag = TalkID::None;
 		break;
 	}
 }
@@ -2032,24 +2032,24 @@ void StorytellerEnter()
 void StorytellerIdentifyEnter()
 {
 	if (stextsel == BackButtonLine()) {
-		StartStore(STORE_STORY);
+		StartStore(TalkID::Storyteller);
 		stextsel = 14;
 		return;
 	}
 
-	stextshold = STORE_SIDENTIFY;
+	stextshold = TalkID::StorytellerIdentify;
 	stextlhold = stextsel;
 	stextvhold = stextsval;
 
 	int idx = stextsval + ((stextsel - stextup) / 4);
 
 	if (!PlayerCanAfford(storehold[idx]._iIvalue)) {
-		StartStore(STORE_NOMONEY);
+		StartStore(TalkID::NoMoney);
 		return;
 	}
 
 	StoreItem = storehold[idx];
-	StartStore(STORE_CONFIRM);
+	StartStore(TalkID::Confirm);
 }
 
 void TalkEnter()
@@ -2096,13 +2096,13 @@ void TavernEnter()
 	case 12:
 		stextlhold = 12;
 		talker = TOWN_TAVERN;
-		stextshold = STORE_TAVERN;
+		stextshold = TalkID::Tavern;
 		gossipstart = TEXT_OGDEN2;
 		gossipend = TEXT_OGDEN10;
-		StartStore(STORE_GOSSIP);
+		StartStore(TalkID::Gossip);
 		break;
 	case 18:
-		stextflag = STORE_NONE;
+		stextflag = TalkID::None;
 		break;
 	}
 }
@@ -2113,13 +2113,13 @@ void BarmaidEnter()
 	case 12:
 		stextlhold = 12;
 		talker = TOWN_BMAID;
-		stextshold = STORE_BARMAID;
+		stextshold = TalkID::Barmaid;
 		gossipstart = TEXT_GILLIAN2;
 		gossipend = TEXT_GILLIAN10;
-		StartStore(STORE_GOSSIP);
+		StartStore(TalkID::Gossip);
 		break;
 	case 14:
-		stextflag = STORE_NONE;
+		stextflag = TalkID::None;
 		IsStashOpen = true;
 		Stash.RefreshItemStatFlags();
 		invflag = true;
@@ -2130,7 +2130,7 @@ void BarmaidEnter()
 		}
 		break;
 	case 18:
-		stextflag = STORE_NONE;
+		stextflag = TalkID::None;
 		break;
 	}
 }
@@ -2141,13 +2141,13 @@ void DrunkEnter()
 	case 12:
 		stextlhold = 12;
 		talker = TOWN_DRUNK;
-		stextshold = STORE_DRUNK;
+		stextshold = TalkID::Drunk;
 		gossipstart = TEXT_FARNHAM2;
 		gossipend = TEXT_FARNHAM13;
-		StartStore(STORE_GOSSIP);
+		StartStore(TalkID::Gossip);
 		break;
 	case 18:
-		stextflag = STORE_NONE;
+		stextflag = TalkID::None;
 		break;
 	}
 }
@@ -2218,7 +2218,7 @@ void AddStoreHoldRepair(Item *itm, int8_t i)
 void InitStores()
 {
 	ClearSText(0, STORE_LINES);
-	stextflag = STORE_NONE;
+	stextflag = TalkID::None;
 	stextsize = false;
 	stextscrl = false;
 	numpremium = 0;
@@ -2259,7 +2259,7 @@ void FreeStoreMem()
 	if (*sgOptions.Graphics.showItemGraphicsInStores) {
 		FreeHalfSizeItemSprites();
 	}
-	stextflag = STORE_NONE;
+	stextflag = TalkID::None;
 	for (STextStruct &entry : stext) {
 		entry.text.clear();
 		entry.text.shrink_to_fit();
@@ -2358,7 +2358,7 @@ void ClearSText(int s, int e)
 	}
 }
 
-void StartStore(talk_id s)
+void StartStore(TalkID s)
 {
 	if (*sgOptions.Graphics.showItemGraphicsInStores) {
 		CreateHalfSizeItemSprites();
@@ -2372,10 +2372,10 @@ void StartStore(talk_id s)
 	ClearSText(0, STORE_LINES);
 	ReleaseStoreBtn();
 	switch (s) {
-	case STORE_SMITH:
+	case TalkID::Smith:
 		StartSmith();
 		break;
-	case STORE_SBUY: {
+	case TalkID::SmithBuy: {
 		bool hasAnyItems = false;
 		for (int i = 0; !smithitem[i].isEmpty(); i++) {
 			hasAnyItems = true;
@@ -2384,80 +2384,80 @@ void StartStore(talk_id s)
 		if (hasAnyItems)
 			StartSmithBuy();
 		else {
-			stextflag = STORE_SBUY;
+			stextflag = TalkID::SmithBuy;
 			stextlhold = 12;
 			StoreESC();
 			return;
 		}
 		break;
 	}
-	case STORE_SSELL:
+	case TalkID::SmithSell:
 		StartSmithSell();
 		break;
-	case STORE_SREPAIR:
+	case TalkID::SmithRepair:
 		StartSmithRepair();
 		break;
-	case STORE_WITCH:
+	case TalkID::Witch:
 		StartWitch();
 		break;
-	case STORE_WBUY:
+	case TalkID::WitchBuy:
 		if (storenumh > 0)
 			StartWitchBuy();
 		break;
-	case STORE_WSELL:
+	case TalkID::WitchSell:
 		StartWitchSell();
 		break;
-	case STORE_WRECHARGE:
+	case TalkID::WitchRecharge:
 		StartWitchRecharge();
 		break;
-	case STORE_NOMONEY:
+	case TalkID::NoMoney:
 		StoreNoMoney();
 		break;
-	case STORE_NOROOM:
+	case TalkID::NoRoom:
 		StoreNoRoom();
 		break;
-	case STORE_CONFIRM:
+	case TalkID::Confirm:
 		StoreConfirm(StoreItem);
 		break;
-	case STORE_BOY:
+	case TalkID::Boy:
 		StartBoy();
 		break;
-	case STORE_BBOY:
+	case TalkID::BoyBuy:
 		SStartBoyBuy();
 		break;
-	case STORE_HEALER:
+	case TalkID::Healer:
 		StartHealer();
 		break;
-	case STORE_STORY:
+	case TalkID::Storyteller:
 		StartStoryteller();
 		break;
-	case STORE_HBUY:
+	case TalkID::HealerBuy:
 		if (storenumh > 0)
 			StartHealerBuy();
 		break;
-	case STORE_SIDENTIFY:
+	case TalkID::StorytellerIdentify:
 		StartStorytellerIdentify();
 		break;
-	case STORE_SPBUY:
+	case TalkID::SmithPremiumBuy:
 		if (!StartSmithPremiumBuy())
 			return;
 		break;
-	case STORE_GOSSIP:
+	case TalkID::Gossip:
 		StartTalk();
 		break;
-	case STORE_IDSHOW:
+	case TalkID::StorytellerIdentifyShow:
 		StartStorytellerIdentifyShow(StoreItem);
 		break;
-	case STORE_TAVERN:
+	case TalkID::Tavern:
 		StartTavern();
 		break;
-	case STORE_DRUNK:
+	case TalkID::Drunk:
 		StartDrunk();
 		break;
-	case STORE_BARMAID:
+	case TalkID::Barmaid:
 		StartBarmaid();
 		break;
-	case STORE_NONE:
+	case TalkID::None:
 		break;
 	}
 
@@ -2481,23 +2481,23 @@ void DrawSText(const Surface &out)
 
 	if (stextscrl) {
 		switch (stextflag) {
-		case STORE_SBUY:
+		case TalkID::SmithBuy:
 			ScrollSmithBuy(stextsval);
 			break;
-		case STORE_SSELL:
-		case STORE_SREPAIR:
-		case STORE_WSELL:
-		case STORE_WRECHARGE:
-		case STORE_SIDENTIFY:
+		case TalkID::SmithSell:
+		case TalkID::SmithRepair:
+		case TalkID::WitchSell:
+		case TalkID::WitchRecharge:
+		case TalkID::StorytellerIdentify:
 			ScrollSmithSell(stextsval);
 			break;
-		case STORE_WBUY:
+		case TalkID::WitchBuy:
 			ScrollWitchBuy(stextsval);
 			break;
-		case STORE_HBUY:
+		case TalkID::HealerBuy:
 			ScrollHealerBuy(stextsval);
 			break;
-		case STORE_SPBUY:
+		case TalkID::SmithPremiumBuy:
 			ScrollSmithPremiumBuy(stextsval);
 			break;
 		default:
@@ -2532,68 +2532,68 @@ void StoreESC()
 	}
 
 	switch (stextflag) {
-	case STORE_SMITH:
-	case STORE_WITCH:
-	case STORE_BOY:
-	case STORE_BBOY:
-	case STORE_HEALER:
-	case STORE_STORY:
-	case STORE_TAVERN:
-	case STORE_DRUNK:
-	case STORE_BARMAID:
-		stextflag = STORE_NONE;
+	case TalkID::Smith:
+	case TalkID::Witch:
+	case TalkID::Boy:
+	case TalkID::BoyBuy:
+	case TalkID::Healer:
+	case TalkID::Storyteller:
+	case TalkID::Tavern:
+	case TalkID::Drunk:
+	case TalkID::Barmaid:
+		stextflag = TalkID::None;
 		break;
-	case STORE_GOSSIP:
+	case TalkID::Gossip:
 		StartStore(stextshold);
 		stextsel = stextlhold;
 		break;
-	case STORE_SBUY:
-		StartStore(STORE_SMITH);
+	case TalkID::SmithBuy:
+		StartStore(TalkID::Smith);
 		stextsel = 12;
 		break;
-	case STORE_SPBUY:
-		StartStore(STORE_SMITH);
+	case TalkID::SmithPremiumBuy:
+		StartStore(TalkID::Smith);
 		stextsel = 14;
 		break;
-	case STORE_SSELL:
-		StartStore(STORE_SMITH);
+	case TalkID::SmithSell:
+		StartStore(TalkID::Smith);
 		stextsel = 16;
 		break;
-	case STORE_SREPAIR:
-		StartStore(STORE_SMITH);
+	case TalkID::SmithRepair:
+		StartStore(TalkID::Smith);
 		stextsel = 18;
 		break;
-	case STORE_WBUY:
-		StartStore(STORE_WITCH);
+	case TalkID::WitchBuy:
+		StartStore(TalkID::Witch);
 		stextsel = 14;
 		break;
-	case STORE_WSELL:
-		StartStore(STORE_WITCH);
+	case TalkID::WitchSell:
+		StartStore(TalkID::Witch);
 		stextsel = 16;
 		break;
-	case STORE_WRECHARGE:
-		StartStore(STORE_WITCH);
+	case TalkID::WitchRecharge:
+		StartStore(TalkID::Witch);
 		stextsel = 18;
 		break;
-	case STORE_HBUY:
-		StartStore(STORE_HEALER);
+	case TalkID::HealerBuy:
+		StartStore(TalkID::Healer);
 		stextsel = 14;
 		break;
-	case STORE_SIDENTIFY:
-		StartStore(STORE_STORY);
+	case TalkID::StorytellerIdentify:
+		StartStore(TalkID::Storyteller);
 		stextsel = 14;
 		break;
-	case STORE_IDSHOW:
-		StartStore(STORE_SIDENTIFY);
+	case TalkID::StorytellerIdentifyShow:
+		StartStore(TalkID::StorytellerIdentify);
 		break;
-	case STORE_NOMONEY:
-	case STORE_NOROOM:
-	case STORE_CONFIRM:
+	case TalkID::NoMoney:
+	case TalkID::NoRoom:
+	case TalkID::Confirm:
 		StartStore(stextshold);
 		stextsel = stextlhold;
 		stextsval = stextvhold;
 		break;
-	case STORE_NONE:
+	case TalkID::None:
 		break;
 	}
 }
@@ -2726,76 +2726,76 @@ void StoreEnter()
 
 	PlaySFX(IS_TITLSLCT);
 	switch (stextflag) {
-	case STORE_SMITH:
+	case TalkID::Smith:
 		SmithEnter();
 		break;
-	case STORE_SPBUY:
+	case TalkID::SmithPremiumBuy:
 		SmithPremiumBuyEnter();
 		break;
-	case STORE_SBUY:
+	case TalkID::SmithBuy:
 		SmithBuyEnter();
 		break;
-	case STORE_SSELL:
+	case TalkID::SmithSell:
 		SmithSellEnter();
 		break;
-	case STORE_SREPAIR:
+	case TalkID::SmithRepair:
 		SmithRepairEnter();
 		break;
-	case STORE_WITCH:
+	case TalkID::Witch:
 		WitchEnter();
 		break;
-	case STORE_WBUY:
+	case TalkID::WitchBuy:
 		WitchBuyEnter();
 		break;
-	case STORE_WSELL:
+	case TalkID::WitchSell:
 		WitchSellEnter();
 		break;
-	case STORE_WRECHARGE:
+	case TalkID::WitchRecharge:
 		WitchRechargeEnter();
 		break;
-	case STORE_NOMONEY:
-	case STORE_NOROOM:
+	case TalkID::NoMoney:
+	case TalkID::NoRoom:
 		StartStore(stextshold);
 		stextsel = stextlhold;
 		stextsval = stextvhold;
 		break;
-	case STORE_CONFIRM:
+	case TalkID::Confirm:
 		ConfirmEnter(StoreItem);
 		break;
-	case STORE_BOY:
+	case TalkID::Boy:
 		BoyEnter();
 		break;
-	case STORE_BBOY:
+	case TalkID::BoyBuy:
 		BoyBuyEnter();
 		break;
-	case STORE_HEALER:
+	case TalkID::Healer:
 		HealerEnter();
 		break;
-	case STORE_STORY:
+	case TalkID::Storyteller:
 		StorytellerEnter();
 		break;
-	case STORE_HBUY:
+	case TalkID::HealerBuy:
 		HealerBuyEnter();
 		break;
-	case STORE_SIDENTIFY:
+	case TalkID::StorytellerIdentify:
 		StorytellerIdentifyEnter();
 		break;
-	case STORE_GOSSIP:
+	case TalkID::Gossip:
 		TalkEnter();
 		break;
-	case STORE_IDSHOW:
-		StartStore(STORE_SIDENTIFY);
+	case TalkID::StorytellerIdentifyShow:
+		StartStore(TalkID::StorytellerIdentify);
 		break;
-	case STORE_DRUNK:
+	case TalkID::Drunk:
 		DrunkEnter();
 		break;
-	case STORE_TAVERN:
+	case TalkID::Tavern:
 		TavernEnter();
 		break;
-	case STORE_BARMAID:
+	case TalkID::Barmaid:
 		BarmaidEnter();
 		break;
-	case STORE_NONE:
+	case TalkID::None:
 		break;
 	}
 }

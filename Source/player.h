@@ -207,8 +207,8 @@ struct PlayerAnimationData {
 };
 
 struct SpellCastInfo {
-	spell_id spellId;
-	spell_type spellType;
+	SpellID spellId;
+	SpellType spellType;
 	/* @brief Inventory location for scrolls */
 	int8_t spellFrom;
 	/* @brief Used for spell level */
@@ -322,10 +322,10 @@ struct Player {
 	SpellCastInfo queuedSpell;
 	/** @brief The spell that is currently being cast */
 	SpellCastInfo executedSpell;
-	spell_id _pTSpell;
-	spell_id _pRSpell;
-	spell_type _pRSplType;
-	spell_id _pSBkSpell;
+	SpellID _pTSpell;
+	SpellID _pRSpell;
+	SpellType _pRSplType;
+	SpellID _pSBkSpell;
 	int8_t _pSplLvl[64];
 	/** @brief Bitmask of staff spell */
 	uint64_t _pISpells;
@@ -336,8 +336,8 @@ struct Player {
 	/** @brief Bitmask of spells available via scrolls */
 	uint64_t _pScrlSpells;
 	SpellFlag _pSpellFlags;
-	spell_id _pSplHotKey[NumHotkeys];
-	spell_type _pSplTHotKey[NumHotkeys];
+	SpellID _pSplHotKey[NumHotkeys];
+	SpellType _pSplTHotKey[NumHotkeys];
 	bool _pBlockFlag;
 	bool _pInvincible;
 	int8_t _pLightRad;
@@ -349,7 +349,7 @@ struct Player {
 	int8_t _pFireResist;
 	int8_t _pLghtResist;
 	bool _pInfraFlag;
-	/** Player's direction when ending movement. Also used for casting direction of SPL_FIREWALL. */
+	/** Player's direction when ending movement. Also used for casting direction of SpellID::FireWall. */
 	Direction tempDirection;
 
 	bool _pLvlVisited[NUMLEVELS];
@@ -572,12 +572,12 @@ struct Player {
 
 	/**
 	 * @brief Gets the effective spell level for the player, considering item bonuses
-	 * @param spell spell_id enum member identifying the spell
+	 * @param spell SpellID enum member identifying the spell
 	 * @return effective spell level
 	 */
-	int GetSpellLevel(spell_id spell) const
+	int GetSpellLevel(SpellID spell) const
 	{
-		if (spell == SPL_INVALID || static_cast<std::size_t>(spell) >= sizeof(_pSplLvl)) {
+		if (spell == SpellID::Invalid || static_cast<std::size_t>(spell) >= sizeof(_pSplLvl)) {
 			return 0;
 		}
 
@@ -763,7 +763,6 @@ extern DVL_API_FOR_TEST size_t MyPlayerId;
 extern DVL_API_FOR_TEST Player *MyPlayer;
 extern DVL_API_FOR_TEST std::vector<Player> Players;
 extern bool MyPlayerIsDead;
-extern const int BlockBonuses[enum_size<HeroClass>::value];
 
 Player *PlayerAtPosition(Point position);
 
@@ -817,7 +816,7 @@ void ClrPlrPath(Player &player);
 bool PosOkPlayer(const Player &player, Point position);
 void MakePlrPath(Player &player, Point targetPosition, bool endspace);
 void CalcPlrStaff(Player &player);
-void CheckPlrSpell(bool isShiftHeld, spell_id spellID = MyPlayer->_pRSpell, spell_type spellType = MyPlayer->_pRSplType);
+void CheckPlrSpell(bool isShiftHeld, SpellID spellID = MyPlayer->_pRSpell, SpellType spellType = MyPlayer->_pRSplType);
 void SyncPlrAnim(Player &player);
 void SyncInitPlrPos(Player &player);
 void SyncInitPlr(Player &player);
@@ -840,10 +839,5 @@ extern const int8_t plrxoff[9];
 extern const int8_t plryoff[9];
 extern const int8_t plrxoff2[9];
 extern const int8_t plryoff2[9];
-extern const int StrengthTbl[enum_size<HeroClass>::value];
-extern const int MagicTbl[enum_size<HeroClass>::value];
-extern const int DexterityTbl[enum_size<HeroClass>::value];
-extern const int VitalityTbl[enum_size<HeroClass>::value];
-extern const uint32_t ExpLvlsTbl[MaxCharacterLevel + 1];
 
 } // namespace devilution

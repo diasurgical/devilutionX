@@ -18,6 +18,7 @@
 #include "multi.h"
 #include "panels/charpanel.hpp"
 #include "player.h"
+#include "playerdat.hpp"
 #include "utils/language.h"
 #include "utils/str_cat.hpp"
 
@@ -87,7 +88,7 @@ std::string GetLocationString()
 
 std::string GetCharacterString()
 {
-	const string_view charClassStr = _(ClassStrTbl[static_cast<int>(MyPlayer->_pClass)]);
+	const string_view charClassStr = _(PlayersData[static_cast<int>(MyPlayer->_pClass)].className);
 	return fmt::format(fmt::runtime(_(/* TRANSLATORS: Discord character, i.e. "Lv 6 Warrior" */ "Lv {} {}")), tracked_data.playerLevel, charClassStr);
 }
 

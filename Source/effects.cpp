@@ -70,6 +70,7 @@ TSFX sgSFX[] = {
 /*IS_FROCK*/      { sfx_MISC,                  "sfx\\items\\fliprock.wav",    nullptr },
 /*IS_FSCRL*/      { sfx_MISC,                  "sfx\\items\\flipscrl.wav",    nullptr },
 /*IS_FSHLD*/      { sfx_MISC,                  "sfx\\items\\flipshld.wav",    nullptr },
+/*IS_FSIGN*/      { sfx_MISC,                  "sfx\\items\\flipsign.wav",    nullptr },
 /*IS_FSTAF*/      { sfx_MISC,                  "sfx\\items\\flipstaf.wav",    nullptr },
 /*IS_FSWOR*/      { sfx_MISC,                  "sfx\\items\\flipswor.wav",    nullptr },
 /*IS_GOLD*/       { sfx_MISC,                  "sfx\\items\\gold.wav",        nullptr },

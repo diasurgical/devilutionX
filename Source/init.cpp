@@ -16,8 +16,8 @@
 #include "engine/assets.hpp"
 #include "engine/backbuffer_state.hpp"
 #include "engine/dx.h"
+#include "engine/events.hpp"
 #include "hwcursor.hpp"
-#include "miniwin/misc_msg.h"
 #include "options.h"
 #include "pfile.h"
 #include "utils/file_util.h"
@@ -41,8 +41,6 @@ namespace devilution {
 
 /** True if the game is the current active window */
 bool gbActive;
-/** The current input handler function */
-EventHandler CurrentEventHandler;
 /** Indicate if we only have access to demo data */
 bool gbIsSpawn;
 /** Indicate if we have loaded the Hellfire expansion data */
@@ -373,13 +371,6 @@ void MainWndProc(const SDL_Event &event)
 			diablo_focus_unpause();
 	}
 #endif
-}
-
-EventHandler SetEventHandler(EventHandler eventHandler)
-{
-	EventHandler previousHandler = CurrentEventHandler;
-	CurrentEventHandler = eventHandler;
-	return previousHandler;
 }
 
 } // namespace devilution

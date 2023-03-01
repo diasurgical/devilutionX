@@ -16,7 +16,7 @@ namespace devilution {
  * @param position Buffer coordinates (bottom-left).
  * @param spell Spell ID.
  */
-void DrawLargeSpellIcon(const Surface &out, Point position, spell_id spell);
+void DrawLargeSpellIcon(const Surface &out, Point position, SpellID spell);
 
 /**
  * Draw a small (37x38) spell icon onto the given buffer.
@@ -25,7 +25,7 @@ void DrawLargeSpellIcon(const Surface &out, Point position, spell_id spell);
  * @param position Buffer coordinates (bottom-left).
  * @param spell Spell ID.
  */
-void DrawSmallSpellIcon(const Surface &out, Point position, spell_id spell);
+void DrawSmallSpellIcon(const Surface &out, Point position, SpellID spell);
 
 /**
  * Draw an inset 2px border for a large (56x56) spell icon.
@@ -48,7 +48,7 @@ void DrawSmallSpellIconBorder(const Surface &out, Point position);
 /**
  * @brief Set the color mapping for the `Draw(Small|Large)SpellIcon(Border)` calls.
  */
-void SetSpellTrans(spell_type t);
+void SetSpellTrans(SpellType t);
 
 void LoadLargeSpellIcons();
 void FreeLargeSpellIcons();

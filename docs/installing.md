@@ -77,17 +77,17 @@ Once the App is installed, launch it once. It will say that it cannot find the d
 
 There are 3 way to get install the MPQs. Make sure to have installed the app and have launched it once before attempting to copy over the MPQ files.
 
-Method 1: Using the files.app
+~~Method 1~~ (***May no longer work***): ~~Using the files.app~~
 
-- Using the files.app, navigate to "On My iPhone / On My iPad"
+~~- Using the files.app, navigate to "On My iPhone / On My iPad"~~
 
 ![ios_mpq_files01](https://user-images.githubusercontent.com/1339414/145088910-5664aed6-3a53-43f4-8088-834796792f68.png)
 
-- Copy the MPQs to the devilutionx directory. Your directory should look like on the picture below
+~~- Copy the MPQs to the devilutionx directory. Your directory should look like on the picture below~~
 
 ![ios_mpq_files02](https://user-images.githubusercontent.com/1339414/145089068-2c87887b-58c3-4759-9270-9d8934fe90bb.png)
 
-- Go back to your home screen and launch the game
+~~- Go back to your home screen and launch the game~~
 
 Method 2: Using Finder (MacOS)
 
@@ -144,11 +144,13 @@ If you'd like to use this option, scan the QR code below.
 
 <details><summary>Xbox One/Series</summary>
 
-- Open https://gamr13.github.io/ in the Microsoft Edge browser on the console and install the Gamr13 Appstore
-- Install DevilutionX and FTP-server from the Gamr13 Appstore
+- Go to https://gamr13.github.io/ and follow the instructions in the Discord server
+- Install DevilutionX and FTP-server from the given URLs
 - Open DevilutionX
 - Open and start the FTP-server
-- Copy the MPQ files to `/LOCALFOLDER/*Gamr13*DevilutionX*/LocalState/diasurgical/devilution` using a FTP-client on your PC
+- Press `View` on DevilutionX and select `Manage game and add-ons`
+- Go to `File info` and note `FullName`
+- Copy the MPQ files to `/LOCALFOLDER/*FullName*/LocalState/diasurgical/devilution` using a FTP-client on your PC
   
 ![image](https://user-images.githubusercontent.com/204594/187104388-fc5648da-5629-4335-ae8b-403600721e2a.png)
 

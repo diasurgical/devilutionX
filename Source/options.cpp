@@ -5,11 +5,10 @@
  */
 
 #include <cstdint>
-#include <fstream>
+#include <cstdio>
 
 #include <fmt/format.h>
 
-#define SI_SUPPORT_IOSTREAMS
 #define SI_NO_CONVERSION
 #include <SimpleIni.h>
 
@@ -92,11 +91,13 @@ CSimpleIni &GetIni()
 	static bool isIniLoaded = false;
 	if (!isIniLoaded) {
 		auto path = GetIniPath();
-		auto stream = CreateFileStream(path.c_str(), std::fstream::in | std::fstream::binary);
+		FILE *file = OpenFile(path.c_str(), "rb");
 		ini.SetSpaces(false);
 		ini.SetMultiKey();
-		if (stream)
-			ini.LoadData(*stream);
+		if (file != nullptr) {
+			ini.LoadFile(file);
+			std::fclose(file);
+		}
 		isIniLoaded = true;
 	}
 	return ini;
@@ -244,9 +245,14 @@ void SaveIni()
 		}
 	}
 #endif
-	auto iniPath = GetIniPath();
-	auto stream = CreateFileStream(iniPath.c_str(), std::fstream::out | std::fstream::trunc | std::fstream::binary);
-	GetIni().Save(*stream, true);
+	const std::string iniPath = GetIniPath();
+	FILE *file = OpenFile(iniPath.c_str(), "wb");
+	if (file != nullptr) {
+		GetIni().SaveFile(file, true);
+		std::fclose(file);
+	} else {
+		LogError("Failed to write ini file to {}: {}", iniPath, std::strerror(errno));
+	}
 	IniChanged = false;
 }
 
@@ -291,6 +297,16 @@ void OptionEnemyHealthBarChanged()
 	else
 		FreeMonsterHealthBar();
 }
+
+#if !defined(USE_SDL1) || defined(__3DS__)
+void ResizeWindowAndUpdateResolutionOptions()
+{
+	ResizeWindow();
+#ifndef __3DS__
+	sgOptions.Graphics.resolution.InvalidateList();
+#endif
+}
+#endif
 
 void OptionShowFPSChanged()
 {
@@ -681,6 +697,11 @@ void OptionEntryResolution::SaveToIni(string_view category) const
 	SetIniValue(category.data(), "Height", size.height);
 }
 
+void OptionEntryResolution::InvalidateList()
+{
+	resolutions.clear();
+}
+
 void OptionEntryResolution::CheckResolutionsAreInitialized() const
 {
 	if (!resolutions.empty())
@@ -690,10 +711,13 @@ void OptionEntryResolution::CheckResolutionsAreInitialized() const
 	float scaleFactor = GetDpiScalingFactor();
 
 	// Add resolutions
+	bool supportsAnyResolution = false;
 #ifdef USE_SDL1
 	auto *modes = SDL_ListModes(nullptr, SDL_FULLSCREEN | SDL_HWPALETTE);
 	// SDL_ListModes returns -1 if any resolution is allowed (for example returned on 3DS)
-	if (modes != nullptr && modes != (SDL_Rect **)-1) {
+	if (modes == (SDL_Rect **)-1) {
+		supportsAnyResolution = true;
+	} else if (modes != nullptr) {
 		for (size_t i = 0; modes[i] != nullptr; i++) {
 			if (modes[i]->w < modes[i]->h) {
 				std::swap(modes[i]->w, modes[i]->h);
@@ -717,12 +741,45 @@ void OptionEntryResolution::CheckResolutionsAreInitialized() const
 		    static_cast<int>(mode.w * scaleFactor),
 		    static_cast<int>(mode.h * scaleFactor) });
 	}
+	supportsAnyResolution = *sgOptions.Graphics.upscale;
 #endif
 
+	if (supportsAnyResolution && sizes.size() == 1) {
+		// Attempt to provide sensible options for 4:3 and the native aspect ratio
+		const int width = sizes[0].width;
+		const int height = sizes[0].height;
+		const int commonHeights[] = { 480, 540, 720, 960, 1080, 1440, 2160 };
+		for (int commonHeight : commonHeights) {
+			if (commonHeight > height)
+				break;
+			sizes.emplace_back(Size { commonHeight * 4 / 3, commonHeight });
+			if (commonHeight * width % height == 0)
+				sizes.emplace_back(Size { commonHeight * width / height, commonHeight });
+		}
+	}
 	// Ensures that the ini specified resolution is present in resolution list even if it doesn't match a monitor resolution (for example if played in window mode)
 	sizes.push_back(this->size);
-	// Ensures that the vanilla/default resolution is always present
+	// Ensures that the platform's preferred default resolution is always present
 	sizes.emplace_back(Size { DEFAULT_WIDTH, DEFAULT_HEIGHT });
+	// Ensures that the vanilla Diablo resolution is present on systems that would support it
+	if (supportsAnyResolution)
+		sizes.emplace_back(Size { 640, 480 });
+
+#ifndef USE_SDL1
+	if (*sgOptions.Graphics.fitToScreen) {
+		SDL_DisplayMode mode;
+		if (SDL_GetDesktopDisplayMode(0, &mode) != 0) {
+			ErrSdl();
+		}
+		for (auto &size : sizes) {
+			// Ensure that the ini specified resolution remains present in the resolution list
+			if (size.height == this->size.height)
+				size.width = this->size.width;
+			else
+				size.width = size.height * mode.w / mode.h;
+		}
+	}
+#endif
 
 	// Sort by width then by height
 	std::sort(sizes.begin(), sizes.end(),
@@ -735,6 +792,12 @@ void OptionEntryResolution::CheckResolutionsAreInitialized() const
 	sizes.erase(std::unique(sizes.begin(), sizes.end()), sizes.end());
 
 	for (auto &size : sizes) {
+#ifndef USE_SDL1
+		if (*sgOptions.Graphics.fitToScreen) {
+			resolutions.emplace_back(size, StrCat(size.height, "p"));
+			continue;
+		}
+#endif
 		resolutions.emplace_back(size, StrCat(size.width, "x", size.height));
 	}
 }
@@ -946,10 +1009,10 @@ GraphicsOptions::GraphicsOptions()
 	resolution.SetValueChangedCallback(ResizeWindow);
 	fullscreen.SetValueChangedCallback(SetFullscreenMode);
 #if !defined(USE_SDL1) || defined(__3DS__)
-	fitToScreen.SetValueChangedCallback(ResizeWindow);
+	fitToScreen.SetValueChangedCallback(ResizeWindowAndUpdateResolutionOptions);
 #endif
 #ifndef USE_SDL1
-	upscale.SetValueChangedCallback(ResizeWindow);
+	upscale.SetValueChangedCallback(ResizeWindowAndUpdateResolutionOptions);
 	scaleQuality.SetValueChangedCallback(ReinitializeTexture);
 	integerScaling.SetValueChangedCallback(ReinitializeIntegerScale);
 	vSync.SetValueChangedCallback(ReinitializeRenderer);
@@ -999,6 +1062,7 @@ GameplayOptions::GameplayOptions()
     , theoQuest("Theo Quest", OptionEntryFlags::CantChangeInGame | OptionEntryFlags::OnlyHellfire, N_("Theo Quest"), N_("Enable Little Girl quest."), false)
     , cowQuest("Cow Quest", OptionEntryFlags::CantChangeInGame | OptionEntryFlags::OnlyHellfire, N_("Cow Quest"), N_("Enable Jersey's quest. Lester the farmer is replaced by the Complete Nut."), false)
     , friendlyFire("Friendly Fire", OptionEntryFlags::CantChangeInMultiPlayer, N_("Friendly Fire"), N_("Allow arrow/spell damage between players in multiplayer even when the friendly mode is on."), true)
+    , multiplayerFullQuests("MultiplayerFullQuests", OptionEntryFlags::CantChangeInMultiPlayer, N_("Full quests in Multiplayer"), N_("Enables the full/uncut singleplayer version of quests."), false)
     , testBard("Test Bard", OptionEntryFlags::CantChangeInGame, N_("Test Bard"), N_("Force the Bard character type to appear in the hero selection menu."), false)
     , testBarbarian("Test Barbarian", OptionEntryFlags::CantChangeInGame, N_("Test Barbarian"), N_("Force the Barbarian character type to appear in the hero selection menu."), false)
     , experienceBar("Experience Bar", OptionEntryFlags::None, N_("Experience Bar"), N_("Experience Bar is added to the UI at the bottom of the screen."), false)
@@ -1025,7 +1089,12 @@ GameplayOptions::GameplayOptions()
     , numFullManaPotionPickup("Full Mana Potion Pickup", OptionEntryFlags::None, N_("Full Mana Potion Pickup"), N_("Number of Full Mana potions to pick up automatically."), 0, { 0, 1, 2, 4, 8, 16 })
     , numRejuPotionPickup("Rejuvenation Potion Pickup", OptionEntryFlags::None, N_("Rejuvenation Potion Pickup"), N_("Number of Rejuvenation potions to pick up automatically."), 0, { 0, 1, 2, 4, 8, 16 })
     , numFullRejuPotionPickup("Full Rejuvenation Potion Pickup", OptionEntryFlags::None, N_("Full Rejuvenation Potion Pickup"), N_("Number of Full Rejuvenation potions to pick up automatically."), 0, { 0, 1, 2, 4, 8, 16 })
-    , enableFloatingNumbers("Enable floating numbers", OptionEntryFlags::None, "Enable floating numbers", N_("Enables floating numbers on gaining XP / dealing damage etc."), false)
+    , enableFloatingNumbers("Enable floating numbers", OptionEntryFlags::None, N_("Enable floating numbers"), N_("Enables floating numbers on gaining XP / dealing damage etc."), FloatingNumbers::Off,
+          {
+              { FloatingNumbers::Off, N_("Off") },
+              { FloatingNumbers::Random, N_("Random Angles") },
+              { FloatingNumbers::Vertical, N_("Vertical Only") },
+          })
 {
 	grabInput.SetValueChangedCallback(OptionGrabInputChanged);
 	experienceBar.SetValueChangedCallback(OptionExperienceBarChanged);
@@ -1042,6 +1111,7 @@ std::vector<OptionEntryBase *> GameplayOptions::GetEntries()
 		&theoQuest,
 		&cowQuest,
 		&friendlyFire,
+		&multiplayerFullQuests,
 		&testBard,
 		&testBarbarian,
 		&experienceBar,
@@ -1639,6 +1709,16 @@ void PadmapperOptions::ButtonReleased(ControllerButton button, bool invokeAction
 			action->actionReleased();
 	}
 	buttonToReleaseAction[static_cast<size_t>(button)] = nullptr;
+}
+
+void PadmapperOptions::ReleaseAllActiveButtons()
+{
+	for (auto *action : buttonToReleaseAction) {
+		if (action == nullptr)
+			continue;
+		ControllerButton button = action->boundInput.button;
+		ButtonReleased(button, true);
+	}
 }
 
 bool PadmapperOptions::IsActive(string_view actionName) const

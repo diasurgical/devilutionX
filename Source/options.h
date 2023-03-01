@@ -12,7 +12,6 @@
 #include "controls/controller_buttons.h"
 #include "controls/game_controls.h"
 #include "engine/sound_defs.hpp"
-#include "miniwin/misc_msg.h"
 #include "pack.h"
 #include "utils/enum_traits.h"
 #include "utils/stdcompat/optional.hpp"
@@ -60,6 +59,15 @@ enum class Resampler : uint8_t {
 
 string_view ResamplerToString(Resampler resampler);
 std::optional<Resampler> ResamplerFromString(string_view resampler);
+
+enum class FloatingNumbers : uint8_t {
+	/** @brief Show no floating numbers. */
+	Off = 0,
+	/** @brief Show floating numbers at random angles. */
+	Random = 1,
+	/** @brief Show floating numbers vertically only. */
+	Vertical = 2,
+};
 
 enum class OptionEntryType : uint8_t {
 	Boolean,
@@ -317,6 +325,7 @@ public:
 	[[nodiscard]] string_view GetListDescription(size_t index) const override;
 	[[nodiscard]] size_t GetActiveListIndex() const override;
 	void SetActiveListIndex(size_t index) override;
+	void InvalidateList();
 
 	Size operator*() const
 	{
@@ -531,6 +540,8 @@ struct GameplayOptions : OptionCategoryBase {
 	OptionEntryBoolean cowQuest;
 	/** @brief Will players still damage other players in non-PvP mode. */
 	OptionEntryBoolean friendlyFire;
+	/** @brief Enables the full/uncut singleplayer version of quests. */
+	OptionEntryBoolean multiplayerFullQuests;
 	/** @brief Enable the bard hero class. */
 	OptionEntryBoolean testBard;
 	/** @brief Enable the babarian hero class. */
@@ -584,7 +595,7 @@ struct GameplayOptions : OptionCategoryBase {
 	/** @brief Number of Full Rejuvenating potions to pick up automatically */
 	OptionEntryInt<int> numFullRejuPotionPickup;
 	/** @brief Enable floating numbers. */
-	OptionEntryBoolean enableFloatingNumbers;
+	OptionEntryEnum<FloatingNumbers> enableFloatingNumbers;
 };
 
 struct ControllerOptions : OptionCategoryBase {
@@ -750,6 +761,7 @@ struct PadmapperOptions : OptionCategoryBase {
 	void CommitActions();
 	void ButtonPressed(ControllerButton button);
 	void ButtonReleased(ControllerButton button, bool invokeAction = true);
+	void ReleaseAllActiveButtons();
 	bool IsActive(string_view actionName) const;
 	string_view ActionNameTriggeredByButtonEvent(ControllerButtonEvent ctrlEvent) const;
 	string_view InputNameForAction(string_view actionName) const;

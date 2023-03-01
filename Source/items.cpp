@@ -36,6 +36,7 @@
 #include "panels/info_box.hpp"
 #include "panels/ui_panels.hpp"
 #include "player.h"
+#include "playerdat.hpp"
 #include "qol/stash.h"
 #include "spells.h"
 #include "stores.h"
@@ -62,7 +63,7 @@ int8_t ItemCAnimTbl[] = {
 	20, 16, 16, 16, 4, 4, 4, 12, 12, 12,
 	12, 12, 12, 12, 12, 21, 21, 25, 12, 28,
 	28, 28, 38, 38, 38, 32, 38, 38, 38, 24,
-	24, 26, 2, 25, 22, 23, 24, 25, 27, 27,
+	24, 26, 2, 25, 22, 23, 24, 21, 27, 27,
 	29, 0, 0, 0, 12, 12, 12, 12, 12, 0,
 	8, 8, 0, 8, 8, 8, 8, 8, 8, 6,
 	8, 8, 8, 6, 8, 8, 6, 8, 8, 6,
@@ -305,7 +306,7 @@ _sfx_id ItemDropSnds[] = {
 	IS_FBODY,
 	IS_FBODY,
 	IS_FMUSH,
-	IS_ISIGN,
+	IS_FSIGN,
 	IS_FBLST,
 	IS_FANVL,
 	IS_FSTAF,
@@ -387,6 +388,21 @@ bool IsSuffixValidForItemType(int i, AffixItemType flgs)
 
 int ItemsGetCurrlevel()
 {
+	if (setlevel) {
+		switch (setlvlnum) {
+		case SL_SKELKING:
+			return Quests[Q_SKELKING]._qlevel;
+		case SL_BONECHAMB:
+			return Quests[Q_SCHAMB]._qlevel;
+		case SL_POISONWATER:
+			return Quests[Q_PWATER]._qlevel;
+		case SL_VILEBETRAYER:
+			return Quests[Q_BETRAYER]._qlevel;
+		default:
+			return 1;
+		}
+	}
+
 	if (leveltype == DTYPE_NEST)
 		return currlevel - 8;
 
@@ -612,41 +628,47 @@ void GetBookSpell(Item &item, int lvl)
 	if (gbIsSpawn && lvl > 5)
 		lvl = 5;
 
-	int s = SPL_FIREBOLT;
-	enum spell_id bs = SPL_FIREBOLT;
+	int s = static_cast<int8_t>(SpellID::Firebolt);
+	SpellID bs = SpellID::Firebolt;
 	while (rv > 0) {
-		int sLevel = GetSpellBookLevel(static_cast<spell_id>(s));
+		int sLevel = GetSpellBookLevel(static_cast<SpellID>(s));
 		if (sLevel != -1 && lvl >= sLevel) {
 			rv--;
-			bs = static_cast<spell_id>(s);
+			bs = static_cast<SpellID>(s);
 		}
 		s++;
 		if (!gbIsMultiplayer) {
-			if (s == SPL_RESURRECT)
-				s = SPL_TELEKINESIS;
+			if (s == static_cast<int8_t>(SpellID::Resurrect))
+				s = static_cast<int8_t>(SpellID::Telekinesis);
 		}
 		if (!gbIsMultiplayer) {
-			if (s == SPL_HEALOTHER)
-				s = SPL_FLARE;
+			if (s == static_cast<int8_t>(SpellID::HealOther))
+				s = static_cast<int8_t>(SpellID::BloodStar);
 		}
 		if (s == maxSpells)
 			s = 1;
 	}
-	const string_view spellName = pgettext("spell", spelldata[bs].sNameText);
+	const string_view spellName = pgettext("spell", GetSpellData(bs).sNameText);
 	const size_t iNameLen = string_view(item._iName).size();
 	const size_t iINameLen = string_view(item._iIName).size();
 	CopyUtf8(item._iName + iNameLen, spellName, sizeof(item._iName) - iNameLen);
 	CopyUtf8(item._iIName + iINameLen, spellName, sizeof(item._iIName) - iINameLen);
 	item._iSpell = bs;
-	item._iMinMag = spelldata[bs].sMinInt;
-	item._ivalue += spelldata[bs].sBookCost;
-	item._iIvalue += spelldata[bs].sBookCost;
-	if (spelldata[bs].sType == MagicType::Fire)
+	const SpellData &spellData = GetSpellData(bs);
+	item._iMinMag = spellData.minInt;
+	item._ivalue += spellData.bookCost();
+	item._iIvalue += spellData.bookCost();
+	switch (spellData.type()) {
+	case MagicType::Fire:
 		item._iCurs = ICURS_BOOK_RED;
-	else if (spelldata[bs].sType == MagicType::Lightning)
+		break;
+	case MagicType::Lightning:
 		item._iCurs = ICURS_BOOK_BLUE;
-	else if (spelldata[bs].sType == MagicType::Magic)
+		break;
+	case MagicType::Magic:
 		item._iCurs = ICURS_BOOK_GREY;
+		break;
+	}
 }
 
 int RndPL(int param1, int param2)
@@ -754,7 +776,7 @@ int SaveItemPower(const Player &player, Item &item, ItemPower &power)
 		item._iMaxCharges = item._iCharges;
 		break;
 	case IPL_SPELL:
-		item._iSpell = static_cast<spell_id>(power.param1);
+		item._iSpell = static_cast<SpellID>(power.param1);
 		item._iCharges = power.param2;
 		item._iMaxCharges = power.param2;
 		break;
@@ -1056,7 +1078,7 @@ void SaveItemAffix(const Player &player, Item &item, const PLStruct &affix)
 	}
 }
 
-void GetStaffPower(const Player &player, Item &item, int lvl, int bs, bool onlygood)
+void GetStaffPower(const Player &player, Item &item, int lvl, SpellID bs, bool onlygood)
 {
 	int preidx = -1;
 	if (FlipCoin(10) || onlygood) {
@@ -1084,7 +1106,7 @@ void GetStaffPower(const Player &player, Item &item, int lvl, int bs, bool onlyg
 
 	string_view baseName = _(AllItemsList[item.IDidx].iName);
 	string_view shortName = _(AllItemsList[item.IDidx].iSName);
-	string_view spellName = pgettext("spell", spelldata[bs].sNameText);
+	string_view spellName = pgettext("spell", GetSpellData(bs).sNameText);
 	string_view normalFmt = pgettext("spell", /* TRANSLATORS: Constructs item names. Format: {Item} of {Spell}. Example: War Staff of Firewall */ "{0} of {1}");
 
 	CopyUtf8(item._iName, fmt::format(fmt::runtime(normalFmt), baseName, spellName), sizeof(item._iName));
@@ -1210,31 +1232,31 @@ void GetStaffSpell(const Player &player, Item &item, int lvl, bool onlygood)
 	if (gbIsSpawn && lvl > 10)
 		lvl = 10;
 
-	int s = SPL_FIREBOLT;
-	enum spell_id bs = SPL_NULL;
+	int s = static_cast<int8_t>(SpellID::Firebolt);
+	SpellID bs = SpellID::Null;
 	while (rv > 0) {
-		int sLevel = GetSpellStaffLevel(static_cast<spell_id>(s));
+		int sLevel = GetSpellStaffLevel(static_cast<SpellID>(s));
 		if (sLevel != -1 && l >= sLevel) {
 			rv--;
-			bs = static_cast<spell_id>(s);
+			bs = static_cast<SpellID>(s);
 		}
 		s++;
-		if (!gbIsMultiplayer && s == SPL_RESURRECT)
-			s = SPL_TELEKINESIS;
-		if (!gbIsMultiplayer && s == SPL_HEALOTHER)
-			s = SPL_FLARE;
+		if (!gbIsMultiplayer && s == static_cast<int8_t>(SpellID::Resurrect))
+			s = static_cast<int8_t>(SpellID::Telekinesis);
+		if (!gbIsMultiplayer && s == static_cast<int8_t>(SpellID::HealOther))
+			s = static_cast<int8_t>(SpellID::BloodStar);
 		if (s == maxSpells)
-			s = SPL_FIREBOLT;
+			s = static_cast<int8_t>(SpellID::Firebolt);
 	}
 
-	int minc = spelldata[bs].sStaffMin;
-	int maxc = spelldata[bs].sStaffMax - minc + 1;
+	int minc = GetSpellData(bs).sStaffMin;
+	int maxc = GetSpellData(bs).sStaffMax - minc + 1;
 	item._iSpell = bs;
 	item._iCharges = minc + GenerateRnd(maxc);
 	item._iMaxCharges = item._iCharges;
 
-	item._iMinMag = spelldata[bs].sMinInt;
-	int v = item._iCharges * spelldata[bs].sStaffCost / 5;
+	item._iMinMag = GetSpellData(bs).minInt;
+	int v = item._iCharges * GetSpellData(bs).staffCost() / 5;
 	item._ivalue += v;
 	item._iIvalue += v;
 	GetStaffPower(player, item, lvl, bs, onlygood);
@@ -1318,7 +1340,7 @@ _item_indexes GetItemIndexForDroppableItem(bool considerDropRate, tl::function_r
 		const ItemData &item = AllItemsList[i];
 		if (item.iRnd == IDROP_NEVER)
 			continue;
-		if (IsAnyOf(item.iSpell, SPL_RESURRECT, SPL_HEALOTHER) && !gbIsMultiplayer)
+		if (IsAnyOf(item.iSpell, SpellID::Resurrect, SpellID::HealOther) && !gbIsMultiplayer)
 			continue;
 		if (!isItemOkay(item))
 			continue;
@@ -1797,8 +1819,8 @@ void PrintItemMisc(const Item &item)
 	const bool isOil = (item._iMiscId >= IMISC_USEFIRST && item._iMiscId <= IMISC_USELAST)
 	    || (item._iMiscId > IMISC_OILFIRST && item._iMiscId < IMISC_OILLAST)
 	    || (item._iMiscId > IMISC_RUNEFIRST && item._iMiscId < IMISC_RUNELAST);
-	const bool isCastOnTarget = (item._iMiscId == IMISC_SCROLLT && item._iSpell != SPL_FLASH)
-	    || (item._iMiscId == IMISC_SCROLL && IsAnyOf(item._iSpell, SPL_TOWN, SPL_IDENTIFY));
+	const bool isCastOnTarget = (item._iMiscId == IMISC_SCROLLT && item._iSpell != SpellID::Flash)
+	    || (item._iMiscId == IMISC_SCROLL && IsAnyOf(item._iSpell, SpellID::TownPortal, SpellID::Identify));
 
 	switch (ControlMode) {
 	case ControlTypes::None:
@@ -1993,7 +2015,7 @@ bool WitchItemOk(const Player &player, const ItemData &item)
 		return false;
 	if (item.iMiscId == IMISC_FULLMANA)
 		return false;
-	if (item.iSpell == SPL_TOWN)
+	if (item.iSpell == SpellID::TownPortal)
 		return false;
 	if (item.iMiscId == IMISC_FULLHEAL)
 		return false;
@@ -2001,9 +2023,9 @@ bool WitchItemOk(const Player &player, const ItemData &item)
 		return false;
 	if (item.iMiscId > IMISC_OILFIRST && item.iMiscId < IMISC_OILLAST)
 		return false;
-	if (item.iSpell == SPL_RESURRECT && !gbIsMultiplayer)
+	if (item.iSpell == SpellID::Resurrect && !gbIsMultiplayer)
 		return false;
-	if (item.iSpell == SPL_HEALOTHER && !gbIsMultiplayer)
+	if (item.iSpell == SpellID::HealOther && !gbIsMultiplayer)
 		return false;
 
 	return true;
@@ -2025,9 +2047,9 @@ bool HealerItemOk(const Player &player, const ItemData &item)
 		return false;
 
 	if (item.iMiscId == IMISC_SCROLL)
-		return item.iSpell == SPL_HEAL;
+		return item.iSpell == SpellID::Healing;
 	if (item.iMiscId == IMISC_SCROLLT)
-		return item.iSpell == SPL_HEALOTHER && gbIsMultiplayer;
+		return item.iSpell == SpellID::HealOther && gbIsMultiplayer;
 
 	if (!gbIsMultiplayer) {
 		if (item.iMiscId == IMISC_ELIXSTR)
@@ -2286,6 +2308,13 @@ void InitItems()
 			SpawnQuestItem(IDI_BROWNSUIT, { 25, 25 }, 3, 1, false);
 		if (sgGameInitInfo.bCowQuest != 0 && currlevel == 19)
 			SpawnQuestItem(IDI_GREYSUIT, { 25, 25 }, 3, 1, false);
+		// In multiplayer items spawn during level generation to avoid desyncs
+		if (gbIsMultiplayer) {
+			if (Quests[Q_MUSHROOM].IsAvailable())
+				SpawnQuestItem(IDI_FUNGALTM, { 0, 0 }, 5, 1, false);
+			if (currlevel == Quests[Q_VEIL]._qlevel + 1 && Quests[Q_VEIL]._qactive != QUEST_NOTAVAIL)
+				SpawnQuestItem(IDI_GLDNELIX, { 0, 0 }, 5, 1, false);
+		}
 		if (currlevel > 0 && currlevel < 16)
 			AddInitItems();
 		if (currlevel >= 21 && currlevel <= 23)
@@ -2506,24 +2535,10 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	player._pFireResist = clamp(fr, 0, MaxResistance);
 	player._pLghtResist = clamp(lr, 0, MaxResistance);
 
-	if (player._pClass == HeroClass::Warrior) {
-		vadd *= 2;
-	} else if (player._pClass == HeroClass::Barbarian) {
-		vadd += vadd;
-		vadd += (vadd / 4);
-	} else if (IsAnyOf(player._pClass, HeroClass::Rogue, HeroClass::Monk, HeroClass::Bard)) {
-		vadd += vadd / 2;
-	}
+	vadd = (vadd * PlayersData[static_cast<size_t>(player._pClass)].itmLife) >> 6;
 	ihp += (vadd << 6); // BUGFIX: blood boil can cause negative shifts here (see line 757)
 
-	if (player._pClass == HeroClass::Sorcerer) {
-		madd *= 2;
-	}
-	if (IsAnyOf(player._pClass, HeroClass::Rogue, HeroClass::Monk)) {
-		madd += madd / 2;
-	} else if (player._pClass == HeroClass::Bard) {
-		madd += (madd / 4) + (madd / 2);
-	}
+	madd = (madd * PlayersData[static_cast<size_t>(player._pClass)].itmMana) >> 6;
 	imana += (madd << 6);
 
 	player._pMaxHP = ihp + player._pMaxHPBase;
@@ -2990,6 +3005,7 @@ void SpawnItem(Monster &monster, Point position, bool sendmsg)
 	bool onlygood = true;
 
 	bool dropsSpecialTreasure = (monster.data().treasure & T_UNIQ) != 0;
+	bool dropBrain = Quests[Q_MUSHROOM]._qactive == QUEST_ACTIVE && Quests[Q_MUSHROOM]._qvar1 == QS_MUSHGIVEN;
 
 	if (dropsSpecialTreasure && !gbIsMultiplayer) {
 		Item *uniqueItem = SpawnUnique(static_cast<_unique_items>(monster.data().treasure & T_MASK), position, false);
@@ -2999,11 +3015,21 @@ void SpawnItem(Monster &monster, Point position, bool sendmsg)
 	} else if (monster.isUnique() || dropsSpecialTreasure) {
 		// Unqiue monster is killed => use better item base (for example no gold)
 		idx = RndUItem(&monster);
-	} else if (Quests[Q_MUSHROOM]._qactive == QUEST_ACTIVE && Quests[Q_MUSHROOM]._qvar1 == QS_MUSHGIVEN) {
+	} else if (dropBrain && !gbIsMultiplayer) {
 		// Normal monster is killed => need to drop brain to progress the quest
-		idx = IDI_BRAIN;
 		Quests[Q_MUSHROOM]._qvar1 = QS_BRAINSPAWNED;
+		NetSendCmdQuest(true, Quests[Q_MUSHROOM]);
+		// brain replaces normal drop
+		idx = IDI_BRAIN;
 	} else {
+		if (dropBrain && gbIsMultiplayer && sendmsg) {
+			Quests[Q_MUSHROOM]._qvar1 = QS_BRAINSPAWNED;
+			NetSendCmdQuest(true, Quests[Q_MUSHROOM]);
+			// Drop the brain as extra item to ensure that all clients see the brain drop
+			// When executing SpawnItem is not reliable, cause another client can already have the quest state updated before SpawnItem is executed
+			Point posBrain = GetSuperItemLoc(position);
+			SpawnQuestItem(IDI_BRAIN, posBrain, false, false, true);
+		}
 		// Normal monster
 		if ((monster.data().treasure & T_NODROP) != 0)
 			return;
@@ -3237,8 +3263,8 @@ void SpawnQuestItem(_item_indexes itemid, Point position, int randarea, int self
 	if (sendmsg)
 		NetSendCmdPItem(true, CMD_SPAWNITEM, item.position, item);
 	else {
-		DeltaAddItem(ii);
 		item._iCreateInfo |= CF_PREGEN;
+		DeltaAddItem(ii);
 	}
 }
 
@@ -3476,7 +3502,7 @@ bool DoOil(Player &player, int cii)
 	case IPL_CHARGES:
 		return _("Extra charges");
 	case IPL_SPELL:
-		return fmt::format(fmt::runtime(ngettext("{:d} {:s} charge", "{:d} {:s} charges", item._iMaxCharges)), item._iMaxCharges, pgettext("spell", spelldata[item._iSpell].sNameText));
+		return fmt::format(fmt::runtime(ngettext("{:d} {:s} charge", "{:d} {:s} charges", item._iMaxCharges)), item._iMaxCharges, pgettext("spell", GetSpellData(item._iSpell).sNameText));
 	case IPL_FIREDAM:
 		if (item._iFMinDam == item._iFMaxDam)
 			return fmt::format(fmt::runtime(_("Fire hit damage: {:d}")), item._iFMinDam);
@@ -3740,7 +3766,7 @@ void PrintItemDur(const Item &item)
 	PrintItemInfo(item);
 }
 
-void UseItem(size_t pnum, item_misc_id mid, spell_id spl)
+void UseItem(size_t pnum, item_misc_id mid, SpellID spl)
 {
 	Player &player = Players[pnum];
 
@@ -3811,30 +3837,30 @@ void UseItem(size_t pnum, item_misc_id mid, spell_id spl)
 		break;
 	case IMISC_SCROLL:
 	case IMISC_SCROLLT:
-		if (ControlMode == ControlTypes::KeyboardAndMouse && spelldata[spl].sTargeted) {
+		if (ControlMode == ControlTypes::KeyboardAndMouse && GetSpellData(spl).isTargeted()) {
 			player._pTSpell = spl;
 			if (&player == MyPlayer)
 				NewCursor(CURSOR_TELEPORT);
 		} else {
 			ClrPlrPath(player);
 			player.queuedSpell.spellId = spl;
-			player.queuedSpell.spellType = RSPLTYPE_SCROLL;
+			player.queuedSpell.spellType = SpellType::Scroll;
 			player.queuedSpell.spellFrom = 0;
 			player.destAction = ACTION_SPELL;
 			player.destParam1 = cursPosition.x;
 			player.destParam2 = cursPosition.y;
-			if (&player == MyPlayer && spl == SPL_NOVA)
+			if (&player == MyPlayer && spl == SpellID::Nova)
 				NetSendCmdLoc(pnum, true, CMD_NOVA, cursPosition);
 		}
 		break;
 	case IMISC_BOOK:
 		player._pMemSpells |= GetSpellBitmask(spl);
-		if (player._pSplLvl[spl] < MaxSpellLevel)
-			player._pSplLvl[spl]++;
+		if (player._pSplLvl[static_cast<int8_t>(spl)] < MaxSpellLevel)
+			player._pSplLvl[static_cast<int8_t>(spl)]++;
 		if (HasNoneOf(player._pIFlags, ItemSpecialEffect::NoMana)) {
-			player._pMana += spelldata[spl].sManaCost << 6;
+			player._pMana += GetSpellData(spl).sManaCost << 6;
 			player._pMana = std::min(player._pMana, player._pMaxMana);
-			player._pManaBase += spelldata[spl].sManaCost << 6;
+			player._pManaBase += GetSpellData(spl).sManaCost << 6;
 			player._pManaBase = std::min(player._pManaBase, player._pMaxManaBase);
 		}
 		if (&player == MyPlayer) {
@@ -3879,27 +3905,27 @@ void UseItem(size_t pnum, item_misc_id mid, spell_id spl)
 		ModifyPlrVit(player, 3);
 		break;
 	case IMISC_RUNEF:
-		player._pTSpell = SPL_RUNEFIRE;
+		player._pTSpell = SpellID::RuneOfFire;
 		if (&player == MyPlayer)
 			NewCursor(CURSOR_TELEPORT);
 		break;
 	case IMISC_RUNEL:
-		player._pTSpell = SPL_RUNELIGHT;
+		player._pTSpell = SpellID::RuneOfLight;
 		if (&player == MyPlayer)
 			NewCursor(CURSOR_TELEPORT);
 		break;
 	case IMISC_GR_RUNEL:
-		player._pTSpell = SPL_RUNENOVA;
+		player._pTSpell = SpellID::RuneOfNova;
 		if (&player == MyPlayer)
 			NewCursor(CURSOR_TELEPORT);
 		break;
 	case IMISC_GR_RUNEF:
-		player._pTSpell = SPL_RUNEIMMOLAT;
+		player._pTSpell = SpellID::RuneOfImmolation;
 		if (&player == MyPlayer)
 			NewCursor(CURSOR_TELEPORT);
 		break;
 	case IMISC_RUNES:
-		player._pTSpell = SPL_RUNESTONE;
+		player._pTSpell = SpellID::RuneOfStone;
 		if (&player == MyPlayer)
 			NewCursor(CURSOR_TELEPORT);
 		break;
@@ -4232,7 +4258,7 @@ int ItemNoFlippy()
 	return r;
 }
 
-void CreateSpellBook(Point position, spell_id ispell, bool sendmsg, bool delta)
+void CreateSpellBook(Point position, SpellID ispell, bool sendmsg, bool delta)
 {
 	int lvl = currlevel;
 
@@ -4460,6 +4486,13 @@ std::string DebugSpawnUniqueItem(std::string itemName)
 }
 #endif
 
+bool Item::isUsable() const
+{
+	if (IDidx == IDI_SPECELIX && Quests[Q_MUSHROOM]._qactive != QUEST_DONE)
+		return false;
+	return AllItemsList[IDidx].iUsable;
+}
+
 void Item::setNewAnimation(bool showAnimation)
 {
 	int8_t it = ItemCAnimTbl[_iCurs];
@@ -4484,8 +4517,8 @@ void Item::setNewAnimation(bool showAnimation)
 void Item::updateRequiredStatsCacheForPlayer(const Player &player)
 {
 	if (_itype == ItemType::Misc && _iMiscId == IMISC_BOOK) {
-		_iMinMag = spelldata[_iSpell].sMinInt;
-		int8_t spellLevel = player._pSplLvl[_iSpell];
+		_iMinMag = GetSpellData(_iSpell).minInt;
+		int8_t spellLevel = player._pSplLvl[static_cast<int8_t>(_iSpell)];
 		while (spellLevel != 0) {
 			_iMinMag += 20 * _iMinMag / 100;
 			spellLevel--;
@@ -4536,7 +4569,7 @@ void RechargeItem(Item &item, Player &player)
 	if (item._iCharges == item._iMaxCharges)
 		return;
 
-	int r = GetSpellBookLevel(item._iSpell);
+	int r = GetSpellStaffLevel(item._iSpell);
 	r = GenerateRnd(player._pLevel / r) + 1;
 
 	do {

@@ -203,6 +203,7 @@ struct MultiQuests {
 	uint8_t qlog;
 	uint8_t qvar1;
 	uint8_t qvar2;
+	int16_t qmsg;
 };
 
 struct DJunk {
@@ -536,6 +537,7 @@ byte *DeltaExportJunk(byte *dst)
 		sgJunk.quests[q].qstate = quest._qactive;
 		sgJunk.quests[q].qvar1 = quest._qvar1;
 		sgJunk.quests[q].qvar2 = quest._qvar2;
+		sgJunk.quests[q].qmsg = static_cast<int16_t>(quest._qmsg);
 		memcpy(dst, &sgJunk.quests[q], sizeof(MultiQuests));
 		dst += sizeof(MultiQuests);
 		q++;
@@ -698,10 +700,7 @@ void DeltaSyncObject(WorldTilePosition position, _cmd_id bCmd, const Player &pla
 
 	sgbDeltaChanged = true;
 	auto &objectDeltas = GetDeltaLevel(player).object;
-	if (bCmd == _cmd_id::CMD_CLOSEDOOR)
-		objectDeltas.erase(position);
-	else
-		objectDeltas[position].bCmd = bCmd;
+	objectDeltas[position].bCmd = bCmd;
 }
 
 bool DeltaGetItem(const TCmdGItem &message, uint8_t bLevel)
@@ -1459,18 +1458,18 @@ size_t OnSpellWall(const TCmd *pCmd, Player &player)
 		return sizeof(message);
 
 	const uint16_t wParam1 = SDL_SwapLE16(message.wParam1);
-	if (wParam1 > SPL_LAST)
+	if (wParam1 > static_cast<int8_t>(SpellID::LAST))
 		return sizeof(message);
 	const uint16_t wParam2 = SDL_SwapLE16(message.wParam2);
-	if (wParam2 > RSPLTYPE_INVALID)
+	if (wParam2 > static_cast<uint8_t>(SpellType::Invalid))
 		return sizeof(message);
 
-	auto spell = static_cast<spell_id>(wParam1);
+	auto spell = static_cast<SpellID>(wParam1);
 	if (!IsValidSpell(spell)) {
 		LogError(_("{:s} has cast an invalid spell."), player._pName);
 		return sizeof(message);
 	}
-	if (leveltype == DTYPE_TOWN && !spelldata[spell].sTownSpell) {
+	if (leveltype == DTYPE_TOWN && !GetSpellData(spell).isAllowedInTown()) {
 		LogError(_("{:s} has cast an illegal spell."), player._pName);
 		return sizeof(message);
 	}
@@ -1482,7 +1481,7 @@ size_t OnSpellWall(const TCmd *pCmd, Player &player)
 	player.destParam3 = SDL_SwapLE16(message.wParam3);
 	player.destParam4 = SDL_SwapLE16(message.wParam4);
 	player.queuedSpell.spellId = spell;
-	player.queuedSpell.spellType = static_cast<spell_type>(wParam2);
+	player.queuedSpell.spellType = static_cast<SpellType>(wParam2);
 	player.queuedSpell.spellFrom = 0;
 
 	return sizeof(message);
@@ -1500,18 +1499,18 @@ size_t OnSpellTile(const TCmd *pCmd, Player &player)
 	if (!InDungeonBounds(position))
 		return sizeof(message);
 	const uint16_t wParam1 = SDL_SwapLE16(message.wParam1);
-	if (wParam1 > SPL_LAST)
+	if (wParam1 > static_cast<int8_t>(SpellID::LAST))
 		return sizeof(message);
 	const uint16_t wParam2 = SDL_SwapLE16(message.wParam2);
-	if (wParam2 > RSPLTYPE_INVALID)
+	if (wParam2 > static_cast<uint8_t>(SpellType::Invalid))
 		return sizeof(message);
 
-	auto spell = static_cast<spell_id>(wParam1);
+	auto spell = static_cast<SpellID>(wParam1);
 	if (!IsValidSpell(spell)) {
 		LogError(_("{:s} has cast an invalid spell."), player._pName);
 		return sizeof(message);
 	}
-	if (leveltype == DTYPE_TOWN && !spelldata[spell].sTownSpell) {
+	if (leveltype == DTYPE_TOWN && !GetSpellData(spell).isAllowedInTown()) {
 		LogError(_("{:s} has cast an illegal spell."), player._pName);
 		return sizeof(message);
 	}
@@ -1522,7 +1521,8 @@ size_t OnSpellTile(const TCmd *pCmd, Player &player)
 	player.destParam2 = position.y;
 	player.destParam3 = SDL_SwapLE16(message.wParam3);
 	player.queuedSpell.spellId = spell;
-	player.queuedSpell.spellType = static_cast<spell_type>(wParam2);
+	player.queuedSpell.spellType = static_cast<SpellType>(wParam2);
+	player.queuedSpell.spellFrom = 0;
 
 	return sizeof(message);
 }
@@ -1539,14 +1539,14 @@ size_t OnTargetSpellTile(const TCmd *pCmd, Player &player)
 	if (!InDungeonBounds(position))
 		return sizeof(message);
 	const uint16_t wParam1 = SDL_SwapLE16(message.wParam1);
-	if (wParam1 > SPL_LAST)
+	if (wParam1 > static_cast<int8_t>(SpellID::LAST))
 		return sizeof(message);
 	const uint16_t wParam3 = SDL_SwapLE16(message.wParam3);
 	if (wParam3 > INVITEM_BELT_LAST)
 		return sizeof(message);
 
-	auto spell = static_cast<spell_id>(wParam1);
-	if (leveltype == DTYPE_TOWN && !spelldata[spell].sTownSpell) {
+	auto spell = static_cast<SpellID>(wParam1);
+	if (leveltype == DTYPE_TOWN && !GetSpellData(spell).isAllowedInTown()) {
 		LogError(_("{:s} has cast an illegal spell."), player._pName);
 		return sizeof(message);
 	}
@@ -1557,7 +1557,7 @@ size_t OnTargetSpellTile(const TCmd *pCmd, Player &player)
 	player.destParam2 = position.y;
 	player.destParam3 = SDL_SwapLE16(message.wParam2);
 	player.queuedSpell.spellId = spell;
-	player.queuedSpell.spellType = RSPLTYPE_SCROLL;
+	player.queuedSpell.spellType = SpellType::Scroll;
 	player.queuedSpell.spellFrom = static_cast<int8_t>(wParam3);
 
 	return sizeof(message);
@@ -1650,18 +1650,18 @@ size_t OnSpellMonster(const TCmd *pCmd, Player &player)
 	if (monsterIdx >= MaxMonsters)
 		return sizeof(message);
 	const uint16_t wParam2 = SDL_SwapLE16(message.wParam2);
-	if (wParam2 > SPL_LAST)
+	if (wParam2 > static_cast<int8_t>(SpellID::LAST))
 		return sizeof(message);
 	const uint16_t wParam3 = SDL_SwapLE16(message.wParam3);
-	if (wParam3 > RSPLTYPE_INVALID)
+	if (wParam3 > static_cast<uint8_t>(SpellType::Invalid))
 		return sizeof(message);
 
-	auto spell = static_cast<spell_id>(wParam2);
+	auto spell = static_cast<SpellID>(wParam2);
 	if (!IsValidSpell(spell)) {
 		LogError(_("{:s} has cast an invalid spell."), player._pName);
 		return sizeof(message);
 	}
-	if (leveltype == DTYPE_TOWN && !spelldata[spell].sTownSpell) {
+	if (leveltype == DTYPE_TOWN && !GetSpellData(spell).isAllowedInTown()) {
 		LogError(_("{:s} has cast an illegal spell."), player._pName);
 		return sizeof(message);
 	}
@@ -1671,7 +1671,7 @@ size_t OnSpellMonster(const TCmd *pCmd, Player &player)
 	player.destParam1 = monsterIdx;
 	player.destParam2 = SDL_SwapLE16(message.wParam4);
 	player.queuedSpell.spellId = spell;
-	player.queuedSpell.spellType = static_cast<spell_type>(wParam3);
+	player.queuedSpell.spellType = static_cast<SpellType>(wParam3);
 	player.queuedSpell.spellFrom = 0;
 
 	return sizeof(message);
@@ -1689,18 +1689,18 @@ size_t OnSpellPlayer(const TCmd *pCmd, Player &player)
 	if (playerIdx >= Players.size())
 		return sizeof(message);
 	const uint16_t wParam2 = SDL_SwapLE16(message.wParam2);
-	if (wParam2 > SPL_LAST)
+	if (wParam2 > static_cast<int8_t>(SpellID::LAST))
 		return sizeof(message);
 	const uint16_t wParam3 = SDL_SwapLE16(message.wParam3);
-	if (wParam3 > RSPLTYPE_INVALID)
+	if (wParam3 > static_cast<uint8_t>(SpellType::Invalid))
 		return sizeof(message);
 
-	auto spell = static_cast<spell_id>(wParam2);
+	auto spell = static_cast<SpellID>(wParam2);
 	if (!IsValidSpell(spell)) {
 		LogError(_("{:s} has cast an invalid spell."), player._pName);
 		return sizeof(message);
 	}
-	if (leveltype == DTYPE_TOWN && !spelldata[spell].sTownSpell) {
+	if (leveltype == DTYPE_TOWN && !GetSpellData(spell).isAllowedInTown()) {
 		LogError(_("{:s} has cast an illegal spell."), player._pName);
 		return sizeof(message);
 	}
@@ -1710,7 +1710,7 @@ size_t OnSpellPlayer(const TCmd *pCmd, Player &player)
 	player.destParam1 = playerIdx;
 	player.destParam2 = SDL_SwapLE16(message.wParam4);
 	player.queuedSpell.spellId = spell;
-	player.queuedSpell.spellType = static_cast<spell_type>(wParam3);
+	player.queuedSpell.spellType = static_cast<SpellType>(wParam3);
 	player.queuedSpell.spellFrom = 0;
 
 	return sizeof(message);
@@ -1728,14 +1728,14 @@ size_t OnTargetSpellMonster(const TCmd *pCmd, Player &player)
 	if (monsterIdx >= MaxMonsters)
 		return sizeof(message);
 	const uint16_t wParam2 = SDL_SwapLE16(message.wParam2);
-	if (wParam2 > SPL_LAST)
+	if (wParam2 > static_cast<int8_t>(SpellID::LAST))
 		return sizeof(message);
 	const uint16_t wParam4 = SDL_SwapLE16(message.wParam4);
 	if (wParam4 > INVITEM_BELT_LAST)
 		return sizeof(message);
 
-	auto spell = static_cast<spell_id>(wParam2);
-	if (leveltype == DTYPE_TOWN && !spelldata[spell].sTownSpell) {
+	auto spell = static_cast<SpellID>(wParam2);
+	if (leveltype == DTYPE_TOWN && !GetSpellData(spell).isAllowedInTown()) {
 		LogError(_("{:s} has cast an illegal spell."), player._pName);
 		return sizeof(message);
 	}
@@ -1745,7 +1745,7 @@ size_t OnTargetSpellMonster(const TCmd *pCmd, Player &player)
 	player.destParam1 = monsterIdx;
 	player.destParam2 = SDL_SwapLE16(message.wParam3);
 	player.queuedSpell.spellId = spell;
-	player.queuedSpell.spellType = RSPLTYPE_SCROLL;
+	player.queuedSpell.spellType = SpellType::Scroll;
 	player.queuedSpell.spellFrom = static_cast<int8_t>(wParam4);
 
 	return sizeof(message);
@@ -1763,14 +1763,14 @@ size_t OnTargetSpellPlayer(const TCmd *pCmd, Player &player)
 	if (playerIdx >= Players.size())
 		return sizeof(message);
 	const uint16_t wParam2 = SDL_SwapLE16(message.wParam2);
-	if (wParam2 > SPL_LAST)
+	if (wParam2 > static_cast<int8_t>(SpellID::LAST))
 		return sizeof(message);
 	const uint16_t wParam4 = SDL_SwapLE16(message.wParam4);
 	if (wParam4 > INVITEM_BELT_LAST)
 		return sizeof(message);
 
-	auto spell = static_cast<spell_id>(wParam2);
-	if (leveltype == DTYPE_TOWN && !spelldata[spell].sTownSpell) {
+	auto spell = static_cast<SpellID>(wParam2);
+	if (leveltype == DTYPE_TOWN && !GetSpellData(spell).isAllowedInTown()) {
 		LogError(_("{:s} has cast an illegal spell."), player._pName);
 		return sizeof(message);
 	}
@@ -1780,7 +1780,7 @@ size_t OnTargetSpellPlayer(const TCmd *pCmd, Player &player)
 	player.destParam1 = playerIdx;
 	player.destParam2 = SDL_SwapLE16(message.wParam3);
 	player.queuedSpell.spellId = spell;
-	player.queuedSpell.spellType = RSPLTYPE_SCROLL;
+	player.queuedSpell.spellType = SpellType::Scroll;
 	player.queuedSpell.spellFrom = static_cast<int8_t>(wParam4);
 
 	return sizeof(message);
@@ -2431,7 +2431,7 @@ size_t OnSyncQuest(const TCmd *pCmd, size_t pnum)
 		SendPacket(pnum, &message, sizeof(message));
 	} else {
 		if (pnum != MyPlayerId && message.q < MAXQUESTS && message.qstate <= QUEST_HIVE_DONE)
-			SetMultiQuest(message.q, message.qstate, message.qlog != 0, message.qvar1, message.qvar2);
+			SetMultiQuest(message.q, message.qstate, message.qlog != 0, message.qvar1, message.qvar2, message.qmsg);
 		sgbDeltaChanged = true;
 	}
 
@@ -2461,7 +2461,7 @@ size_t OnCheatSpellLevel(const TCmd *pCmd, size_t pnum) // NOLINT(misc-unused-pa
 		SendPacket(pnum, pCmd, sizeof(*pCmd));
 	} else {
 		Player &player = Players[pnum];
-		player._pSplLvl[player._pRSpell]++;
+		player._pSplLvl[static_cast<int8_t>(player._pRSpell)]++;
 	}
 #endif
 	return sizeof(*pCmd);
@@ -2480,9 +2480,9 @@ size_t OnNova(const TCmd *pCmd, Player &player)
 	if (gbBufferMsgs != 1) {
 		if (player.isOnActiveLevel() && &player != MyPlayer && InDungeonBounds(position)) {
 			ClrPlrPath(player);
-			player.queuedSpell.spellId = SPL_NOVA;
-			player.queuedSpell.spellType = RSPLTYPE_SCROLL;
-			player.queuedSpell.spellFrom = 3;
+			player.queuedSpell.spellId = SpellID::Nova;
+			player.queuedSpell.spellType = SpellType::Scroll;
+			player.queuedSpell.spellFrom = 0;
 			player.destAction = ACTION_SPELL;
 			player.destParam1 = position.x;
 			player.destParam2 = position.y;
@@ -2732,6 +2732,7 @@ void DeltaSyncJunk()
 			quest._qactive = sgJunk.quests[q].qstate;
 			quest._qvar1 = sgJunk.quests[q].qvar1;
 			quest._qvar2 = sgJunk.quests[q].qvar2;
+			quest._qmsg = static_cast<_speech_id>(sgJunk.quests[q].qmsg);
 		}
 		q++;
 	}
@@ -2831,7 +2832,7 @@ void DeltaLoadLevel()
 			}
 			if (deltaLevel.monster[i].hitPoints == 0) {
 				M_ClearSquares(monster);
-				if (monster.ai != AI_DIABLO) {
+				if (monster.ai != MonsterAIID::Diablo) {
 					if (monster.isUnique()) {
 						AddCorpse(monster.position.tile, monster.corpseId, monster.direction);
 					} else {
@@ -2872,6 +2873,10 @@ void DeltaLoadLevel()
 			case CMD_OPENDOOR:
 			case CMD_OPERATEOBJ:
 				DeltaSyncOpObject(*object);
+				it++;
+				break;
+			case CMD_CLOSEDOOR:
+				DeltaSyncCloseObj(*object);
 				it++;
 				break;
 			case CMD_BREAKOBJ:
@@ -3125,6 +3130,7 @@ void NetSendCmdQuest(bool bHiPri, const Quest &quest)
 	cmd.qlog = quest._qlog ? 1 : 0;
 	cmd.qvar1 = quest._qvar1;
 	cmd.qvar2 = quest._qvar2;
+	cmd.qmsg = quest._qmsg;
 
 	if (bHiPri)
 		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));

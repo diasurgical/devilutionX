@@ -7,8 +7,6 @@
 
 #include <SDL.h>
 
-#include "miniwin/misc_msg.h"
-
 namespace devilution {
 
 namespace demo {

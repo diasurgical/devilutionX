@@ -42,6 +42,7 @@ set(libdevilutionx_SRCS
   pack.cpp
   pfile.cpp
   player.cpp
+  playerdat.cpp
   plrmsg.cpp
   portal.cpp
   quests.cpp
@@ -72,12 +73,12 @@ set(libdevilutionx_SRCS
   DiabloUI/credits_lines.cpp
   DiabloUI/diabloui.cpp
   DiabloUI/dialogs.cpp
+  DiabloUI/hero/selhero.cpp
   DiabloUI/mainmenu.cpp
+  DiabloUI/multi/selconn.cpp
+  DiabloUI/multi/selgame.cpp
   DiabloUI/progress.cpp
   DiabloUI/scrollbar.cpp
-  DiabloUI/selconn.cpp
-  DiabloUI/selgame.cpp
-  DiabloUI/selhero.cpp
   DiabloUI/selok.cpp
   DiabloUI/selstart.cpp
   DiabloUI/selyesno.cpp
@@ -98,6 +99,7 @@ set(libdevilutionx_SRCS
   engine/backbuffer_state.cpp
   engine/direction.cpp
   engine/dx.cpp
+  engine/events.cpp
   engine/load_cel.cpp
   engine/load_cl2.cpp
   engine/load_clx.cpp
@@ -125,8 +127,6 @@ set(libdevilutionx_SRCS
   levels/themes.cpp
   levels/town.cpp
   levels/trigs.cpp
-
-  miniwin/misc_msg.cpp
 
   panels/charpanel.cpp
   panels/info_box.cpp

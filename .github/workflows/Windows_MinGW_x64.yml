@@ -50,19 +50,6 @@ jobs:
       shell: bash
       run: mkdir artifacts_dir && unzip build/devilutionx.zip -d artifacts_dir && mkdir artifacts_dir/exe_dir && mv artifacts_dir/devilutionx/devilutionx.exe artifacts_dir/exe_dir && zip -m artifacts_dir/exe_dir/build.zip artifacts_dir/exe_dir/devilutionx.exe
 
-    - name: Pushes exe to another repository
-      if: ${{ !env.ACT && github.ref == 'refs/heads/master' && github.event_name != 'pull_request' && github.repository == 'diasurgical/devilutionX' }}
-      uses: cpina/github-action-push-to-another-repository@main
-      env:
-        SSH_DEPLOY_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
-      with:
-        source-directory: artifacts_dir/exe_dir
-        destination-github-username: 'artifacts-storage'
-        destination-repository-name: 'devilutionx-artifacts'
-        target-directory: ${{ github.sha }}
-        commit-message: "[EXE] ${{ github.event.head_commit.message }}"
-        target-branch: master
-
     - name: Pushes DLLs and devilutionx.mpq to another repository
       if: ${{ !env.ACT && github.ref == 'refs/heads/master' && github.event_name != 'pull_request' && github.repository == 'diasurgical/devilutionX' }}
       uses: cpina/github-action-push-to-another-repository@main
@@ -74,4 +61,17 @@ jobs:
         destination-repository-name: 'devilutionx-artifacts'
         target-directory: data
         commit-message: "[DATA] ${{ github.event.head_commit.message }}"
+        target-branch: master
+
+    - name: Pushes exe to another repository
+      if: ${{ !env.ACT && github.ref == 'refs/heads/master' && github.event_name != 'pull_request' && github.repository == 'diasurgical/devilutionX' }}
+      uses: cpina/github-action-push-to-another-repository@main
+      env:
+        SSH_DEPLOY_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
+      with:
+        source-directory: artifacts_dir/exe_dir
+        destination-github-username: 'artifacts-storage'
+        destination-repository-name: 'devilutionx-artifacts'
+        target-directory: ${{ github.sha }}
+        commit-message: "[EXE] ${{ github.event.head_commit.message }}"
         target-branch: master

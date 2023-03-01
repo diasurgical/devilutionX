@@ -16,7 +16,6 @@
 #include "engine/size.hpp"
 #include "hwcursor.hpp"
 #include "minitext.h"
-#include "miniwin/misc_msg.h"
 #include "stores.h"
 #include "utils/format_int.hpp"
 #include "utils/language.h"
@@ -81,6 +80,8 @@ void CheckStashPaste(Point cursorPosition)
 	}
 
 	if (player.HoldItem._itype == ItemType::Gold) {
+		if (Stash.gold > std::numeric_limits<int>::max() - player.HoldItem._ivalue)
+			return;
 		Stash.gold += player.HoldItem._ivalue;
 		player.HoldItem.clear();
 		PlaySFX(IS_GOLD);
@@ -406,7 +407,7 @@ bool UseStashItem(uint16_t itemIndex)
 		return true;
 	if (pcurs != CURSOR_HAND)
 		return true;
-	if (stextflag != STORE_NONE)
+	if (stextflag != TalkID::None)
 		return true;
 
 	Item *item = &Stash.stashList[itemIndex];
@@ -422,7 +423,7 @@ bool UseStashItem(uint16_t itemIndex)
 		return true;
 	}
 
-	if (!AllItemsList[item->IDidx].iUsable)
+	if (!item->isUsable())
 		return false;
 
 	if (!MyPlayer->CanUseItem(*item)) {
@@ -646,6 +647,8 @@ void UpdateStashGrid(unsigned page, Point startPoint, Size itemSize, StashStruct
 bool AutoPlaceItemInStash(Player &player, const Item &item, bool persistItem)
 {
 	if (item._itype == ItemType::Gold) {
+		if (Stash.gold > std::numeric_limits<int>::max() - item._ivalue)
+			return false;
 		if (persistItem) {
 			Stash.gold += item._ivalue;
 			Stash.dirty = true;

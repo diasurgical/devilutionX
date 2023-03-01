@@ -1,6 +1,7 @@
 # DevilutionX (Diablo 1) for Microsoft Xbox One/Series
 
 ## Installation
+### Dev Mode
 1. Download and unzip [devilutionx-xbox-one-series.zip
 ](https://github.com/diasurgical/devilutionX/releases/latest/download/devilutionx-xbox-one-series.zip
 ).
@@ -11,9 +12,11 @@
 6. Copy `diabdat.mpq` from your CD (or GoG install folder) to it.
 7. In the Xbox press `View` on DevilutionX and select `Details` and there change the type from `App` to `Game`.
 
-## Usage
-
-Launch `DevilutionX` from the Dev Mode home.
+### Retail Mode
+1. Press `View` on DevilutionX and select `Manage game and add-ons`
+2. Go to `File info` and note `FullName`
+3. Connect to the Xbox via FTP and go to the folder `/LOCALFOLDER/*FullName*/LocalState/diasurgical/devilution`
+4. Send `diabdat.mpq`
 
 ## Controls
 

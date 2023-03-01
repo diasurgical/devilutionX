@@ -4,8 +4,9 @@
  * Implementation of the screenshot function.
  */
 #include <cstdint>
+#include <cstdio>
+
 #include <fmt/chrono.h>
-#include <fstream>
 
 #include "DiabloUI/diabloui.h"
 #include "engine/backbuffer_state.hpp"
@@ -28,7 +29,7 @@ namespace {
  * @param out File stream to write to
  * @return True on success
  */
-bool CaptureHdr(int16_t width, int16_t height, std::ofstream *out)
+bool CaptureHdr(int16_t width, int16_t height, FILE *out)
 {
 	PCXHeader buffer;
 
@@ -44,8 +45,7 @@ bool CaptureHdr(int16_t width, int16_t height, std::ofstream *out)
 	buffer.NPlanes = 1;
 	buffer.BytesPerLine = SDL_SwapLE16(width);
 
-	out->write(reinterpret_cast<const char *>(&buffer), sizeof(buffer));
-	return !out->fail();
+	return std::fwrite(&buffer, sizeof(buffer), 1, out) == 1;
 }
 
 /**
@@ -54,7 +54,7 @@ bool CaptureHdr(int16_t width, int16_t height, std::ofstream *out)
  * @param out File stream for the PCX file.
  * @return True if successful, else false
  */
-bool CapturePal(SDL_Color *palette, std::ofstream *out)
+bool CapturePal(SDL_Color *palette, FILE *out)
 {
 	uint8_t pcxPalette[1 + 256 * 3];
 
@@ -65,8 +65,7 @@ bool CapturePal(SDL_Color *palette, std::ofstream *out)
 		pcxPalette[1 + 3 * i + 2] = palette[i].b;
 	}
 
-	out->write(reinterpret_cast<const char *>(pcxPalette), sizeof(pcxPalette));
-	return !out->fail();
+	return std::fwrite(pcxPalette, sizeof(pcxPalette), 1, out) == 1;
 }
 
 /**
@@ -118,7 +117,7 @@ uint8_t *CaptureEnc(uint8_t *src, uint8_t *dst, int width)
  * @param out File stream for the PCX file.
  * @return True if successful, else false
  */
-bool CapturePix(const Surface &buf, std::ofstream *out)
+bool CapturePix(const Surface &buf, FILE *out)
 {
 	int width = buf.w();
 	std::unique_ptr<uint8_t[]> pBuffer { new uint8_t[2 * width] };
@@ -126,14 +125,13 @@ bool CapturePix(const Surface &buf, std::ofstream *out)
 	for (int height = buf.h(); height > 0; height--) {
 		const uint8_t *pBufferEnd = CaptureEnc(pixels, pBuffer.get(), width);
 		pixels += buf.pitch();
-		out->write(reinterpret_cast<const char *>(pBuffer.get()), pBufferEnd - pBuffer.get());
-		if (out->fail())
+		if (std::fwrite(pBuffer.get(), pBufferEnd - pBuffer.get(), 1, out) != 1)
 			return false;
 	}
 	return true;
 }
 
-std::ofstream CaptureFile(std::string *dstPath)
+FILE *CaptureFile(std::string *dstPath)
 {
 	std::time_t tt = std::time(nullptr);
 	std::tm *tm = std::localtime(&tt);
@@ -144,7 +142,7 @@ std::ofstream CaptureFile(std::string *dstPath)
 		i++;
 		*dstPath = StrCat(paths::PrefPath(), filename, "-", i, ".pcx");
 	}
-	return std::ofstream(*dstPath, std::ios::binary | std::ios::trunc);
+	return OpenFile(dstPath->c_str(), "wb");
 }
 
 /**
@@ -168,22 +166,22 @@ void CaptureScreen()
 	std::string fileName;
 	bool success;
 
-	std::ofstream outStream = CaptureFile(&fileName);
-	if (!outStream.is_open())
+	FILE *outStream = CaptureFile(&fileName);
+	if (outStream == nullptr)
 		return;
 	DrawAndBlit();
 	PaletteGetEntries(256, palette);
 	RedPalette();
 
 	const Surface &buf = GlobalBackBuffer();
-	success = CaptureHdr(buf.w(), buf.h(), &outStream);
+	success = CaptureHdr(buf.w(), buf.h(), outStream);
 	if (success) {
-		success = CapturePix(buf, &outStream);
+		success = CapturePix(buf, outStream);
 	}
 	if (success) {
-		success = CapturePal(palette, &outStream);
+		success = CapturePal(palette, outStream);
 	}
-	outStream.close();
+	std::fclose(outStream);
 
 	if (!success) {
 		Log("Failed to save screenshot at {}", fileName);

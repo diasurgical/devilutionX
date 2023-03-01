@@ -19,7 +19,7 @@ import java.io.File;
 import java.util.Locale;
 
 public class DataActivity extends Activity {
-	private String externalDir;
+	private ExternalFilesManager fileManager;
 	private DownloadReceiver mReceiver;
 	private boolean isDownloadingSpawn = false;
 	private boolean isDownloadingTranslation = false;
@@ -38,7 +38,7 @@ public class DataActivity extends Activity {
 	protected void onResume() {
 		super.onResume();
 
-		externalDir = getExternalFilesDir(null).getAbsolutePath();
+		fileManager = new ExternalFilesManager(this);
 
 		startGame();
 	}
@@ -48,7 +48,7 @@ public class DataActivity extends Activity {
 	}
 
 	private void startGame() {
-		if (missingGameData()) {
+		if (isMissingGameData()) {
 			Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.missing_game_data), Toast.LENGTH_SHORT);
 			toast.show();
 			return;
@@ -72,8 +72,8 @@ public class DataActivity extends Activity {
 			return false;
 		}
 
-		File translationFile = new File(externalDir + "/" + language + ".mpq");
-		if (translationFile.exists()) {
+		String translationFile = language + ".mpq";
+		if (fileManager.hasFile(translationFile)) {
 			isDownloadingTranslation = false;
 			return false;
 		}
@@ -95,14 +95,14 @@ public class DataActivity extends Activity {
 	/**
 	 * Check if the game data is present
 	 */
-	private boolean missingGameData() {
+	private boolean isMissingGameData() {
 		String lang = Locale.getDefault().toString();
 		if (pendingTranslationFile("pl") || pendingTranslationFile("ru")) {
 			return true;
 		}
 
 		if (lang.startsWith("ko") || lang.startsWith("zh") || lang.startsWith("ja")) {
-			File fonts_mpq = new File(externalDir + "/fonts.mpq");
+			File fonts_mpq = fileManager.getFile("/fonts.mpq");
 			if (!fonts_mpq.exists() || fonts_mpq.length() == 53991069 /* v2 */) {
 				if (!isDownloadingFonts) {
 					fonts_mpq.delete();
@@ -117,11 +117,9 @@ public class DataActivity extends Activity {
 			}
 		}
 
-		File fileLower = new File(externalDir + "/diabdat.mpq");
-		File fileUpper = new File(externalDir + "/DIABDAT.MPQ");
-		File spawnFile = new File(externalDir + "/spawn.mpq");
-
-		return !fileUpper.exists() && !fileLower.exists() && (!spawnFile.exists() || isDownloadingSpawn);
+		return !fileManager.hasFile("diabdat.mpq") &&
+				!fileManager.hasFile("DIABDAT.MPQ") &&
+				(!fileManager.hasFile("spawn.mpq") || isDownloadingSpawn);
 	}
 
 	/**
@@ -147,7 +145,9 @@ public class DataActivity extends Activity {
 				.setDescription(description)
 				.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
 
-		request.setDestinationInExternalFilesDir(this, null, fileName);
+		File file = fileManager.getFile(fileName);
+		Uri destination = Uri.fromFile(file);
+		request.setDestinationUri(destination);
 
 		if (mReceiver == null) {
 			mReceiver = new DownloadReceiver();

@@ -10,7 +10,6 @@
 #include "controls/remap_keyboard.h"
 #include "engine/render/text_render.hpp"
 #include "hwcursor.hpp"
-#include "miniwin/misc_msg.h"
 #include "options.h"
 #include "utils/language.h"
 #include "utils/stdcompat/optional.hpp"
@@ -79,7 +78,7 @@ std::vector<DrawStringFormatArg> CreateDrawStringFormatArgForEntry(OptionEntryBa
 /** @brief Check if the option text can't fit in one list line (list width minus drawn selector) */
 bool NeedsTwoLinesToDisplayOption(std::vector<DrawStringFormatArg> &formatArgs)
 {
-	return GetLineWidth("{}: {}", formatArgs.data(), formatArgs.size(), GameFontTables::GameFont24, 1) >= (rectList.size.width - 90);
+	return GetLineWidth("{}: {}", formatArgs.data(), formatArgs.size(), 0, GameFontTables::GameFont24, 1) >= (rectList.size.width - 90);
 }
 
 void CleanUpSettingsUI()

@@ -1,14 +1,9 @@
 package org.diasurgical.devilutionx;
 
-import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.ViewTreeObserver;
@@ -16,16 +11,10 @@ import android.view.ViewTreeObserver;
 import org.libsdl.app.SDLActivity;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Locale;
-import java.util.Objects;
 
 public class DevilutionXSDLActivity extends SDLActivity {
-	private String externalDir;
+	private ExternalFilesManager fileManager;
 	private boolean noExit;
 
 	protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +23,7 @@ public class DevilutionXSDLActivity extends SDLActivity {
 		if (Build.VERSION.SDK_INT >= 25)
 			trackVisibleSpace();
 
-		externalDir = getExternalFilesDir(null).getAbsolutePath();
+		fileManager = new ExternalFilesManager(this);
 
 		migrateSaveGames();
 
@@ -47,7 +36,7 @@ public class DevilutionXSDLActivity extends SDLActivity {
 	protected void onStart() {
 		super.onStart();
 
-		if (missingGameData()) {
+		if (isMissingGameData()) {
 			Intent intent = new Intent(this, DataActivity.class);
 			startActivity(intent);
 			noExit = true;
@@ -83,80 +72,20 @@ public class DevilutionXSDLActivity extends SDLActivity {
 		});
 	}
 
-	private boolean missingGameData() {
+	private boolean isMissingGameData() {
 		String lang = Locale.getDefault().toString();
-		if (lang.startsWith("pl")) {
-			File pl_mpq = new File(externalDir + "/pl.mpq");
-			if (!pl_mpq.exists()) {
-				return true;
-			}
-		}
-		if (lang.startsWith("ru")) {
-			File ru_mpq = new File(externalDir + "/ru.mpq");
-			if (!ru_mpq.exists()) {
-				return true;
-			}
-		}
+		if (lang.startsWith("pl") && !fileManager.hasFile("pl.mpq"))
+			return true;
+		if (lang.startsWith("ru") && !fileManager.hasFile("ru.mpq"))
+			return true;
 		if (lang.startsWith("ko") || lang.startsWith("zh") || lang.startsWith("ja")) {
-			File fonts_mpq = new File(externalDir + "/fonts.mpq");
-			if (!fonts_mpq.exists()) {
+			if (!fileManager.hasFile("fonts.mpq"))
 				return true;
-			}
 		}
 
-		File fileLower = new File(externalDir + "/diabdat.mpq");
-		File fileUpper = new File(externalDir + "/DIABDAT.MPQ");
-		File spawnFile = new File(externalDir + "/spawn.mpq");
-
-		return !fileUpper.exists() && !fileLower.exists() && !spawnFile.exists();
-	}
-
-	private boolean copyFile(File src, File dst) {
-		try {
-			InputStream in = new FileInputStream(src);
-			try {
-				OutputStream out = new FileOutputStream(dst);
-				try {
-					// Transfer bytes from in to out
-					byte[] buf = new byte[1024];
-					int len;
-					while ((len = in.read(buf)) > 0) {
-						out.write(buf, 0, len);
-					}
-				} finally {
-					out.close();
-				}
-			} finally {
-				in.close();
-			}
-		} catch (IOException exception) {
-			Log.e("copyFile", Objects.requireNonNull(exception.getMessage()));
-			if (dst.exists()) {
-				//noinspection ResultOfMethodCallIgnored
-				dst.delete();
-			}
-			return false;
-		}
-
-		return  true;
-	}
-
-	private void migrateFile(File file) {
-		File newPath = new File(externalDir + "/" + file.getName());
-
-		if (newPath.exists()) {
-			if (file.canWrite()) {
-				//noinspection ResultOfMethodCallIgnored
-				file.delete();
-			}
-			return;
-		}
-		if (!file.renameTo(newPath)) {
-			if (copyFile(file, newPath) && file.canWrite()) {
-				//noinspection ResultOfMethodCallIgnored
-				file.delete();
-			}
-		}
+		return !fileManager.hasFile("diabdat.mpq") &&
+				!fileManager.hasFile("DIABDAT.MPQ") &&
+				!fileManager.hasFile("spawn.mpq");
 	}
 
 	private void migrateSaveGames() {
@@ -164,7 +93,7 @@ public class DevilutionXSDLActivity extends SDLActivity {
 		if (files == null)
 			return;
 		for (File internalFile : files) {
-			migrateFile(internalFile);
+			fileManager.migrateFile(internalFile);
 		}
 	}
 
@@ -177,6 +106,8 @@ public class DevilutionXSDLActivity extends SDLActivity {
 	}
 
 	protected String[] getArguments() {
+		String externalDir = fileManager.getExternalFilesDirectory();
+
 		if (BuildConfig.DEBUG) {
 			return new String[]{
 				"--data-dir",

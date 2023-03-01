@@ -31,7 +31,6 @@
 #include "levels/trigs.h"
 #include "lighting.h"
 #include "minitext.h"
-#include "miniwin/misc_msg.h"
 #include "missiles.h"
 #include "options.h"
 #include "panels/charpanel.hpp"
@@ -39,6 +38,7 @@
 #include "panels/spell_book.hpp"
 #include "panels/spell_icons.hpp"
 #include "panels/spell_list.hpp"
+#include "playerdat.hpp"
 #include "qol/stash.h"
 #include "qol/xpbar.h"
 #include "stores.h"
@@ -492,7 +492,7 @@ bool IsLevelUpButtonVisible()
 	if (ControlMode == ControlTypes::VirtualGamepad) {
 		return false;
 	}
-	if (stextflag != STORE_NONE || IsStashOpen) {
+	if (stextflag != TalkID::None || IsStashOpen) {
 		return false;
 	}
 	if (QuestLogIsOpen && GetLeftPanel().contains(GetMainPanel().position + Displacement { 0, -74 })) {
@@ -551,6 +551,26 @@ bool IsChatAvailable()
 #else
 	return gbIsMultiplayer;
 #endif
+}
+
+void FocusOnCharInfo()
+{
+	Player &myPlayer = *MyPlayer;
+
+	if (invflag || myPlayer._pStatPts <= 0)
+		return;
+
+	// Find the first incrementable stat.
+	int stat = -1;
+	for (auto attribute : enum_values<CharacterAttribute>()) {
+		if (myPlayer.GetBaseAttributeValue(attribute) >= myPlayer.GetMaximumAttributeValue(attribute))
+			continue;
+		stat = static_cast<int>(attribute);
+	}
+	if (stat == -1)
+		return;
+
+	SetCursorPos(ChrBtnsRect[stat].Center());
 }
 
 void AddPanelString(string_view str)
@@ -772,8 +792,8 @@ void DoPanBtn()
 	if (!spselflag && MousePosition.x >= 565 + mainPanelPosition.x && MousePosition.x < 621 + mainPanelPosition.x && MousePosition.y >= 64 + mainPanelPosition.y && MousePosition.y < 120 + mainPanelPosition.y) {
 		if ((SDL_GetModState() & KMOD_SHIFT) != 0) {
 			Player &myPlayer = *MyPlayer;
-			myPlayer._pRSpell = SPL_INVALID;
-			myPlayer._pRSplType = RSPLTYPE_INVALID;
+			myPlayer._pRSpell = SpellID::Invalid;
+			myPlayer._pRSplType = SpellType::Invalid;
 			RedrawEverything();
 			return;
 		}
@@ -840,30 +860,30 @@ void CheckPanelInfo()
 		panelflag = true;
 		AddPanelString(_("Hotkey: 's'"));
 		Player &myPlayer = *MyPlayer;
-		const spell_id spellId = myPlayer._pRSpell;
+		const SpellID spellId = myPlayer._pRSpell;
 		if (IsValidSpell(spellId)) {
 			switch (myPlayer._pRSplType) {
-			case RSPLTYPE_SKILL:
-				AddPanelString(fmt::format(fmt::runtime(_("{:s} Skill")), pgettext("spell", spelldata[spellId].sNameText)));
+			case SpellType::Skill:
+				AddPanelString(fmt::format(fmt::runtime(_("{:s} Skill")), pgettext("spell", GetSpellData(spellId).sNameText)));
 				break;
-			case RSPLTYPE_SPELL: {
-				AddPanelString(fmt::format(fmt::runtime(_("{:s} Spell")), pgettext("spell", spelldata[spellId].sNameText)));
+			case SpellType::Spell: {
+				AddPanelString(fmt::format(fmt::runtime(_("{:s} Spell")), pgettext("spell", GetSpellData(spellId).sNameText)));
 				const int spellLevel = myPlayer.GetSpellLevel(spellId);
 				AddPanelString(spellLevel == 0 ? _("Spell Level 0 - Unusable") : fmt::format(fmt::runtime(_("Spell Level {:d}")), spellLevel));
 			} break;
-			case RSPLTYPE_SCROLL: {
-				AddPanelString(fmt::format(fmt::runtime(_("Scroll of {:s}")), pgettext("spell", spelldata[spellId].sNameText)));
+			case SpellType::Scroll: {
+				AddPanelString(fmt::format(fmt::runtime(_("Scroll of {:s}")), pgettext("spell", GetSpellData(spellId).sNameText)));
 				const InventoryAndBeltPlayerItemsRange items { myPlayer };
 				const int scrollCount = std::count_if(items.begin(), items.end(), [spellId](const Item &item) {
 					return item.isScrollOf(spellId);
 				});
 				AddPanelString(fmt::format(fmt::runtime(ngettext("{:d} Scroll", "{:d} Scrolls", scrollCount)), scrollCount));
 			} break;
-			case RSPLTYPE_CHARGES:
-				AddPanelString(fmt::format(fmt::runtime(_("Staff of {:s}")), pgettext("spell", spelldata[spellId].sNameText)));
+			case SpellType::Charges:
+				AddPanelString(fmt::format(fmt::runtime(_("Staff of {:s}")), pgettext("spell", GetSpellData(spellId).sNameText)));
 				AddPanelString(fmt::format(fmt::runtime(ngettext("{:d} Charge", "{:d} Charges", myPlayer.InvBody[INVLOC_HAND_LEFT]._iCharges)), myPlayer.InvBody[INVLOC_HAND_LEFT]._iCharges));
 				break;
-			case RSPLTYPE_INVALID:
+			case SpellType::Invalid:
 				break;
 			}
 		}
@@ -1023,7 +1043,7 @@ void DrawInfoBox(const Surface &out)
 			InfoColor = UiFlags::ColorWhitegold;
 			auto &target = Players[pcursplr];
 			InfoString = string_view(target._pName);
-			AddPanelString(fmt::format(fmt::runtime(_("{:s}, Level: {:d}")), _(ClassStrTbl[static_cast<std::size_t>(target._pClass)]), target._pLevel));
+			AddPanelString(fmt::format(fmt::runtime(_("{:s}, Level: {:d}")), _(PlayersData[static_cast<std::size_t>(target._pClass)].className), target._pLevel));
 			AddPanelString(fmt::format(fmt::runtime(_("Hit Points {:d} of {:d}")), target._pHitPoints >> 6, target._pMaxHP >> 6));
 		}
 	}

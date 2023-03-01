@@ -143,12 +143,13 @@ int GetLineWidth(string_view text, GameFontTables size = GameFont12, int spacing
  * @param fmt An fmt::format string.
  * @param args Format arguments.
  * @param argsLen Number of format arguments.
+ * @param argsOffset Index of the first unprocessed format argument.
  * @param size Font size to use
  * @param spacing Extra spacing to add per character
  * @param charactersInLine Receives characters read until newline or terminator
  * @return Line width in pixels
  */
-int GetLineWidth(string_view fmt, DrawStringFormatArg *args, std::size_t argsLen, GameFontTables size, int spacing, int *charactersInLine = nullptr);
+int GetLineWidth(string_view fmt, DrawStringFormatArg *args, size_t argsLen, size_t argsOffset, GameFontTables size, int spacing, int *charactersInLine = nullptr);
 
 int GetLineHeight(string_view text, GameFontTables fontIndex);
 

@@ -7,6 +7,7 @@
 
 #include "cursor.h"
 #include "engine/backbuffer_state.hpp"
+#include "engine/events.hpp"
 #include "engine/sound.h"
 #include "engine/sound_defs.hpp"
 #include "error.h"
