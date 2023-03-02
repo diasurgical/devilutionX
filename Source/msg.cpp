@@ -823,27 +823,6 @@ void DeltaPutItem(const TCmdPItem &message, Point position, const Player &player
 	}
 }
 
-bool IOwnLevel(const Player &player)
-{
-	for (const Player &other : Players) {
-		if (!other.plractive)
-			continue;
-		if (other._pLvlChanging)
-			continue;
-		if (other._pmode == PM_NEWLVL)
-			continue;
-		if (other.plrlevel != player.plrlevel)
-			continue;
-		if (other.plrIsOnSetLevel != player.plrIsOnSetLevel)
-			continue;
-		if (&other == MyPlayer && gbBufferMsgs != 0)
-			continue;
-		return &other == MyPlayer;
-	}
-
-	return false;
-}
-
 void DeltaOpenPortal(size_t pnum, Point position, uint8_t bLevel, dungeon_type bLType, bool bSetLvl)
 {
 	sgJunk.portal[pnum].x = position.x;
@@ -1139,7 +1118,7 @@ size_t OnRequestGetItem(const TCmd *pCmd, Player &player)
 {
 	const auto &message = *reinterpret_cast<const TCmdGItem *>(pCmd);
 
-	if (gbBufferMsgs != 1 && IOwnLevel(player) && IsGItemValid(message)) {
+	if (gbBufferMsgs != 1 && player.isLevelOwnedByLocalClient() && IsGItemValid(message)) {
 		const Point position { message.x, message.y };
 		const uint32_t dwSeed = SDL_SwapLE32(message.def.dwSeed);
 		const uint16_t wCI = SDL_SwapLE16(message.def.wCI);
@@ -1231,7 +1210,7 @@ size_t OnRequestAutoGetItem(const TCmd *pCmd, Player &player)
 {
 	const auto &message = *reinterpret_cast<const TCmdGItem *>(pCmd);
 
-	if (gbBufferMsgs != 1 && IOwnLevel(player) && IsGItemValid(message)) {
+	if (gbBufferMsgs != 1 && player.isLevelOwnedByLocalClient() && IsGItemValid(message)) {
 		const Point position { message.x, message.y };
 		const uint32_t dwSeed = SDL_SwapLE32(message.def.dwSeed);
 		const uint16_t wCI = SDL_SwapLE16(message.def.wCI);

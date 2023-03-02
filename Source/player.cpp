@@ -2075,6 +2075,27 @@ void Player::occupyTile(Point position, bool isMoving) const
 	dPlayer[position.x][position.y] = isMoving ? -id : id;
 }
 
+bool Player::isLevelOwnedByLocalClient() const
+{
+	for (const Player &other : Players) {
+		if (!other.plractive)
+			continue;
+		if (other._pLvlChanging)
+			continue;
+		if (other._pmode == PM_NEWLVL)
+			continue;
+		if (other.plrlevel != this->plrlevel)
+			continue;
+		if (other.plrIsOnSetLevel != this->plrIsOnSetLevel)
+			continue;
+		if (&other == MyPlayer && gbBufferMsgs != 0)
+			continue;
+		return &other == MyPlayer;
+	}
+
+	return false;
+}
+
 Player *PlayerAtPosition(Point position, bool ignoreMovingPlayers /*= false*/)
 {
 	if (!InDungeonBounds(position))

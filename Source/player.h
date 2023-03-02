@@ -891,6 +891,9 @@ public:
 	 * @param isMoving specifies whether the player is moving or not (true/moving results in a negative index in dPlayer)
 	 */
 	void occupyTile(Point position, bool isMoving) const;
+
+	/** @brief Checks if the player level is owned by local client. */
+	bool isLevelOwnedByLocalClient() const;
 };
 
 extern DVL_API_FOR_TEST uint8_t MyPlayerId;
