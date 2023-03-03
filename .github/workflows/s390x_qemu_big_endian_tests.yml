@@ -4,6 +4,8 @@ name: s390x qemu tests (big-endian)
 on:
   release:
     types: [published]
+    paths-ignore:
+      - '*.md'
   workflow_dispatch:
 
 concurrency:
