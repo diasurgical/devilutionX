@@ -4252,8 +4252,8 @@ msgid "fireball damage: {:d}-{:d}"
 msgstr "щети огнено кълбо {:d}-{:d}"
 
 #: Source/items.cpp:3656
-msgid "attacker takes 1-3 damage"
-msgstr "атакуващият получава 1-3 щети"
+msgid "attacker takes {:d}-{:d} damage"
+msgstr "атакуващият получава {:d}-{:d} щети"
 
 #: Source/items.cpp:3658
 msgid "user loses all mana"
@@ -4286,23 +4286,13 @@ msgstr "поразен враг не може да се лекува"
 
 #: Source/items.cpp:3673
 #, no-c-format
-msgid "hit steals 3% mana"
-msgstr "удар отнема 3% мана"
-
-#: Source/items.cpp:3675
-#, no-c-format
-msgid "hit steals 5% mana"
-msgstr "удар отнема 5% мана"
+msgid "hit steals {:d}% mana"
+msgstr "удар отнема {:d}% мана"
 
 #: Source/items.cpp:3679
 #, no-c-format
-msgid "hit steals 3% life"
-msgstr "удар отнема 3% жизненост"
-
-#: Source/items.cpp:3681
-#, no-c-format
-msgid "hit steals 5% life"
-msgstr "удар отнема 5% жизненост"
+msgid "hit steals {:d}% life"
+msgstr "удар отнема {:d}% жизненост"
 
 #: Source/items.cpp:3684
 msgid "penetrates target's armor"
@@ -4430,12 +4420,12 @@ msgid "extra AC vs undead"
 msgstr "допълнително КБ с/у немъртви"
 
 #: Source/items.cpp:3756
-msgid "50% Mana moved to Health"
-msgstr "50% Мана пренесена в Живот"
+msgid "{:d}% Mana moved to Health"
+msgstr "{:d}% Мана пренесена в Живот"
 
 #: Source/items.cpp:3758
-msgid "40% Health moved to Mana"
-msgstr "40% Живот пренесен в Мана"
+msgid "{:d}% Health moved to Mana"
+msgstr "{:d}% Живот пренесен в Мана"
 
 #: Source/items.cpp:3795 Source/items.cpp:3833
 msgid "damage: {:d}  Indestructible"

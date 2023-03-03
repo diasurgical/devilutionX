@@ -4255,8 +4255,8 @@ msgid "fireball damage: {:d}-{:d}"
 msgstr "dano das bolas de fogo: {:d}-{:d}"
 
 #: Source/items.cpp:3656
-msgid "attacker takes 1-3 damage"
-msgstr "atacante leva 1-3 de dano"
+msgid "attacker takes {:d}-{:d} damage"
+msgstr "atacante leva {:d}-{:d} de dano"
 
 #: Source/items.cpp:3658
 msgid "user loses all mana"
@@ -4289,23 +4289,13 @@ msgstr "monstro acertado não cura"
 
 #: Source/items.cpp:3673
 #, no-c-format
-msgid "hit steals 3% mana"
-msgstr "acerto rouba 3% de mana"
-
-#: Source/items.cpp:3675
-#, no-c-format
-msgid "hit steals 5% mana"
-msgstr "acerto rouba 5% de mana"
+msgid "hit steals {:d}% mana"
+msgstr "acerto rouba {:d}% de mana"
 
 #: Source/items.cpp:3679
 #, no-c-format
-msgid "hit steals 3% life"
-msgstr "acerto rouba 3% de vida"
-
-#: Source/items.cpp:3681
-#, no-c-format
-msgid "hit steals 5% life"
-msgstr "acerto rouba 5% de vida"
+msgid "hit steals {:d}% life"
+msgstr "acerto rouba {:d}% de vida"
 
 #: Source/items.cpp:3684
 msgid "penetrates target's armor"
@@ -4433,12 +4423,12 @@ msgid "extra AC vs undead"
 msgstr "AC extra vs mortos vivos"
 
 #: Source/items.cpp:3756
-msgid "50% Mana moved to Health"
-msgstr "50% de Mana foi para a Vida"
+msgid "{:d}% Mana moved to Health"
+msgstr "{:d}% de Mana foi para a Vida"
 
 #: Source/items.cpp:3758
-msgid "40% Health moved to Mana"
-msgstr "40% de Mana foi para a Vida"
+msgid "{:d}% Health moved to Mana"
+msgstr "{:d}% de Mana foi para a Vida"
 
 #: Source/items.cpp:3795 Source/items.cpp:3833
 msgid "damage: {:d}  Indestructible"
