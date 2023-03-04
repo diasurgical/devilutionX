@@ -254,6 +254,9 @@ uint32_t sync_all_monsters(byte *pbBuf, uint32_t dwMaxLen)
 	if (dwMaxLen < sizeof(TSyncHeader) + sizeof(TSyncMonster)) {
 		return dwMaxLen;
 	}
+	if (MyPlayer->_pLvlChanging) {
+		return dwMaxLen;
+	}
 
 	auto *pHdr = (TSyncHeader *)pbBuf;
 	pbBuf += sizeof(TSyncHeader);
