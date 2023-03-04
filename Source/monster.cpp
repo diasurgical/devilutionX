@@ -2885,8 +2885,10 @@ void LachdananAi(Monster &monster)
 			if (!effect_is_playing(USFX_LACH3) && monster.goal == MonsterGoal::Talking) {
 				monster.talkMsg = TEXT_NONE;
 				Quests[Q_VEIL]._qactive = QUEST_DONE;
-				MonsterDeath(monster, monster.direction, true);
 				NetSendCmdQuest(true, Quests[Q_VEIL]);
+				MonsterDeath(monster, monster.direction, true);
+				delta_kill_monster(monster, monster.position.tile, *MyPlayer);
+				NetSendCmdLocParam1(false, CMD_MONSTDEATH, monster.position.tile, monster.getId());
 			}
 		}
 	}
