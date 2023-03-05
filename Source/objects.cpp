@@ -2266,8 +2266,17 @@ void OperatePedestal(Player &player, Object &pedestal, bool sendmsg)
 		return;
 	}
 
-	if (pedestal._oVar6 == 3 || !RemoveInventoryItemById(player, IDI_BLDSTONE)) {
+	if (pedestal._oVar6 == 3 || (sendmsg && !RemoveInventoryItemById(player, IDI_BLDSTONE))) {
 		return;
+	}
+
+	if (sendmsg) {
+		NetSendCmdLoc(MyPlayerId, false, CMD_OPERATEOBJ, pedestal.position);
+		if (gbIsMultiplayer) {
+			// Store added stones to pedestal in qvar2, cause we get only one CMD_OPERATEOBJ from DeltaLoadLevel even if we add multiple stones
+			Quests[Q_BLOOD]._qvar2++;
+			NetSendCmdQuest(true, Quests[Q_BLOOD]);
+		}
 	}
 
 	pedestal._oAnimFrame++;
@@ -2291,15 +2300,6 @@ void OperatePedestal(Player &player, Object &pedestal, bool sendmsg)
 		if (sendmsg)
 			SpawnUnique(UITEM_ARMOFVAL, SetPiece.position.megaToWorld() + Displacement { 9, 3 });
 		pedestal._oSelFlag = 0;
-	}
-
-	if (sendmsg) {
-		NetSendCmdLoc(MyPlayerId, false, CMD_OPERATEOBJ, pedestal.position);
-		if (gbIsMultiplayer) {
-			// Store added stones to pedestal in qvar2, cause we get only one CMD_OPERATEOBJ from DeltaLoadLevel even if we add multiple stones
-			Quests[Q_BLOOD]._qvar2++;
-			NetSendCmdQuest(true, Quests[Q_BLOOD]);
-		}
 	}
 }
 
@@ -4467,7 +4467,8 @@ void OperateObject(Player &player, Object &object)
 			OperateStoryBook(object);
 		break;
 	case OBJ_PEDESTAL:
-		OperatePedestal(player, object, sendmsg);
+		if (sendmsg)
+			OperatePedestal(player, object, sendmsg);
 		break;
 	case OBJ_WARWEAP:
 	case OBJ_WEAPONRACK:
@@ -4657,7 +4658,8 @@ void SyncOpObject(Player &player, int cmd, Object &object)
 			OperateStoryBook(object);
 		break;
 	case OBJ_PEDESTAL:
-		OperatePedestal(player, object, sendmsg);
+		if (!sendmsg)
+			OperatePedestal(player, object, sendmsg);
 		break;
 	case OBJ_WARWEAP:
 	case OBJ_WEAPONRACK:
