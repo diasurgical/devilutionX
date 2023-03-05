@@ -1744,10 +1744,13 @@ void WitchRechargeItem(int price)
 	Player &myPlayer = *MyPlayer;
 
 	int8_t i = storehidx[idx];
-	if (i < 0)
+	if (i < 0) {
 		myPlayer.InvBody[INVLOC_HAND_LEFT]._iCharges = myPlayer.InvBody[INVLOC_HAND_LEFT]._iMaxCharges;
-	else
+		NetSendCmdChItem(true, INVLOC_HAND_LEFT);
+	} else {
 		myPlayer.InvList[i]._iCharges = myPlayer.InvList[i]._iMaxCharges;
+		NetSyncInvItem(myPlayer, i);
+	}
 
 	CalcPlrInv(myPlayer, true);
 }
