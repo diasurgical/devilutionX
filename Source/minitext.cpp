@@ -14,6 +14,7 @@
 #include "engine/load_cel.hpp"
 #include "engine/render/clx_render.hpp"
 #include "engine/render/text_render.hpp"
+#include "playerdat.hpp"
 #include "textdat.h"
 #include "utils/language.h"
 #include "utils/stdcompat/optional.hpp"
@@ -131,14 +132,39 @@ void InitQuestText()
 
 void InitQTextMsg(_speech_id m)
 {
+	_sfx_id sfxnr = Speeches[m].sfxnr;
+	const _sfx_id *classSounds = herosounds[static_cast<size_t>(MyPlayer->_pClass)];
+	switch (sfxnr) {
+	case PS_WARR1:
+		sfxnr = classSounds[static_cast<size_t>(HeroSpeech::ChamberOfBoneLore)];
+		break;
+	case PS_WARR10:
+		sfxnr = classSounds[static_cast<size_t>(HeroSpeech::ValorLore)];
+		break;
+	case PS_WARR11:
+		sfxnr = classSounds[static_cast<size_t>(HeroSpeech::HallsOfTheBlindLore)];
+		break;
+	case PS_WARR12:
+		sfxnr = classSounds[static_cast<size_t>(HeroSpeech::WarlordOfBloodLore)];
+		break;
+	case PS_WARR54:
+		sfxnr = classSounds[static_cast<size_t>(HeroSpeech::InSpirituSanctum)];
+		break;
+	case PS_WARR55:
+		sfxnr = classSounds[static_cast<size_t>(HeroSpeech::PraedictumOtium)];
+		break;
+	case PS_WARR56:
+		sfxnr = classSounds[static_cast<size_t>(HeroSpeech::EfficioObitusUtInimicus)];
+		break;
+	}
 	if (Speeches[m].scrlltxt) {
 		QuestLogIsOpen = false;
 		LoadText(_(Speeches[m].txtstr));
 		qtextflag = true;
-		qtextSpd = CalculateTextSpeed(Speeches[m].sfxnr);
+		qtextSpd = CalculateTextSpeed(sfxnr);
 		ScrollStart = SDL_GetTicks();
 	}
-	PlaySFX(Speeches[m].sfxnr);
+	PlaySFX(sfxnr);
 }
 
 void DrawQTextBack(const Surface &out)
