@@ -2299,7 +2299,7 @@ msgstr "Неможливо створити головне вікно"
 
 #: Source/itemdat.cpp:53 Source/itemdat.cpp:235 Source/panels/charpanel.cpp:162
 msgid "Gold"
-msgstr "Золото"
+msgstr "Золотий"
 
 #: Source/itemdat.cpp:54 Source/itemdat.cpp:172
 msgid "Short Sword"
@@ -3114,7 +3114,7 @@ msgstr "Багряний"
 
 #: Source/itemdat.cpp:278
 msgid "Burgundy"
-msgstr ""
+msgstr "Бургундський"
 
 #: Source/itemdat.cpp:279
 msgid "Garnet"
@@ -4254,8 +4254,8 @@ msgid ""
 "Right-click to read, then\n"
 "left-click to target"
 msgstr ""
-"Клацніть правою кнопкою миші, щоб прочитати, потім\n"
-"клацніть лівою кнопкою миші, щоб вибрати ціль"
+"Правий клік, щоб прочитати,\n"
+"лівий клік, щоб вибрати ціль"
 
 #: Source/items.cpp:1749
 msgid "Right-click to read"
@@ -4526,7 +4526,7 @@ msgstr "поглинає всю ману"
 
 #: Source/items.cpp:3572
 msgid "absorbs half of trap damage"
-msgstr "полгинає половину шкоди пасток"
+msgstr "поглинає 50% шкоди пасток"
 
 #: Source/items.cpp:3574
 msgid "knocks target back"
@@ -6760,11 +6760,11 @@ msgstr "Показує лічильник кадрів в секунду в ве
 
 #: Source/options.cpp:1005
 msgid "Show Item Graphics in Stores"
-msgstr ""
+msgstr "Показувати Іконку Предмету в Магазині"
 
 #: Source/options.cpp:1005
 msgid "Show item graphics to the left of item descriptions in store menus."
-msgstr ""
+msgstr "Показувати іконку предмету зліва від його опису в меню магазину."
 
 #: Source/options.cpp:1006
 msgid "Show health values"
@@ -6840,14 +6840,12 @@ msgstr ""
 "дружній режим."
 
 #: Source/options.cpp:1065
-#, fuzzy
-#| msgid "No pause in multiplayer"
 msgid "Full quests in Multiplayer"
-msgstr "Пауза недоступна в мережевій грі"
+msgstr "Повні квести в Мережевій Грі"
 
 #: Source/options.cpp:1065
 msgid "Enables the full/uncut singleplayer version of quests."
-msgstr ""
+msgstr "Вмикає повні/неурізані версії квестів з одиночної гри."
 
 #: Source/options.cpp:1066
 msgid "Test Bard"
@@ -7079,27 +7077,23 @@ msgstr "Кількість Зілля Повного Омолодження що
 
 #: Source/options.cpp:1092
 msgid "Enable floating numbers"
-msgstr ""
+msgstr "Ввімкнути Плаваючі Числа"
 
 #: Source/options.cpp:1092
 msgid "Enables floating numbers on gaining XP / dealing damage etc."
-msgstr ""
+msgstr "Вмикає плаваючі числа при отриманні XP / нанесенні шкоди тощо."
 
 #: Source/options.cpp:1094
 msgid "Off"
-msgstr ""
+msgstr "Вимк"
 
 #: Source/options.cpp:1095
-#, fuzzy
-#| msgid "Randomize Quests"
 msgid "Random Angles"
-msgstr "Рандомізація Квестів"
+msgstr "Випадкові Кути"
 
 #: Source/options.cpp:1096
-#, fuzzy
-#| msgid "Vertical Sync"
 msgid "Vertical Only"
-msgstr "Вертикальна Синхронізація"
+msgstr "Тільки Вертикально"
 
 #: Source/options.cpp:1144
 msgid "Controller"
@@ -10958,9 +10952,9 @@ msgid ""
 "fulfill his endless sacrifices to the Dark ones who scream for one thing - "
 "blood."
 msgstr ""
-"Збройниці пекла є домом для Воєводи Крові. За ним лежали понівечені тіла "
-"тисяч. Ангели і люди були вирубані, щоб здійснити його нескінченні жертви "
-"Темним, що кричать про одне – кров."
+"Збройниці Пекла — дім Воєводи Крові. За ним лежать тисячі понівечених тіл. "
+"Ангелів і людей вирізали, щоб принести його нескінченні жертви Темним, які "
+"вимагають лише одне – кров."
 
 #. TRANSLATORS: Book read aloud
 #: Source/textdat.cpp:505
@@ -11186,21 +11180,15 @@ msgstr ""
 
 #. TRANSLATORS: Quest text spoken aloud from a book by player
 #: Source/textdat.cpp:531 Source/textdat.cpp:539
-#, fuzzy
-#| msgid ""
-#| "The armories of Hell are home to the Warlord of Blood.  In his wake lay "
-#| "the mutilated bodies of thousands.  Angels and man alike have been cut "
-#| "down to fulfill his endless sacrifices to the Dark ones who scream for "
-#| "one thing - blood."
 msgid ""
 "The armories of Hell are home to the Warlord of Blood. In his wake lay the "
 "mutilated bodies of thousands. Angels and man alike have been cut down to "
 "fulfill his endless sacrifices to the Dark ones who scream for one thing - "
 "blood."
 msgstr ""
-"Збройниці Пекла — дім для Воєводи Крові. За ним лежали понівечені тіла "
-"тисяч. Ангели і люди були вирізані, щоб виконати його нескінченні жертви "
-"Темним, які кричать про одне – кров."
+"Збройниці Пекла — дім Воєводи Крові. За ним лежать тисячі понівечених тіл. "
+"Ангелів і людей вирізали, щоб принести його нескінченні жертви Темним, які "
+"вимагають лише одне – кров."
 
 #. TRANSLATORS: Quest text spoken by Adria
 #: Source/textdat.cpp:541
