@@ -52,6 +52,7 @@ namespace devilution {
 size_t MyPlayerId;
 Player *MyPlayer;
 std::vector<Player> Players;
+Player *InspectPlayer;
 bool MyPlayerIsDead;
 
 /** Specifies the X-coordinate delta from the player start location in Tristram. */

@@ -244,6 +244,9 @@ void PlayerLeftMsg(int pnum, bool left)
 {
 	Player &player = Players[pnum];
 
+	if (&player == InspectPlayer)
+		InspectPlayer = MyPlayer;
+
 	if (&player == MyPlayer)
 		return;
 	if (!player.plractive)
@@ -437,6 +440,7 @@ bool InitSingle(GameData *gameData)
 
 	MyPlayerId = 0;
 	MyPlayer = &Players[MyPlayerId];
+	InspectPlayer = MyPlayer;
 	gbIsMultiplayer = false;
 
 	pfile_read_player_from_save(gSaveNumber, *MyPlayer);
@@ -467,6 +471,7 @@ bool InitMulti(GameData *gameData)
 	}
 	MyPlayerId = playerId;
 	MyPlayer = &Players[MyPlayerId];
+	InspectPlayer = MyPlayer;
 	gbIsMultiplayer = true;
 
 	pfile_read_player_from_save(gSaveNumber, *MyPlayer);

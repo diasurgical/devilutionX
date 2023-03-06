@@ -376,7 +376,7 @@ void PotionButtonRenderer::RenderPotion(RenderFunction renderFunction, const But
 
 std::optional<VirtualGamepadPotionType> PotionButtonRenderer::GetPotionType()
 {
-	for (const Item &item : MyPlayer->SpdList) {
+	for (const Item &item : InspectPlayer->SpdList) {
 		if (item.isEmpty()) {
 			continue;
 		}
