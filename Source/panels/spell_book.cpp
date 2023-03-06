@@ -43,7 +43,7 @@ SpellID GetSpellFromSpellPage(size_t page, size_t entry)
 {
 	assert(page <= SpellBookPages && entry <= SpellBookPageEntries);
 	if (page == 0 && entry == 0) {
-		switch (MyPlayer->_pClass) {
+		switch (InspectPlayer->_pClass) {
 		case HeroClass::Warrior:
 			return SpellID::ItemRepair;
 		case HeroClass::Rogue:
@@ -75,7 +75,7 @@ void PrintSBookStr(const Surface &out, Point position, string_view text, UiFlags
 
 SpellType GetSBookTrans(SpellID ii, bool townok)
 {
-	Player &player = *MyPlayer;
+	Player &player = *InspectPlayer;
 	if ((player._pClass == HeroClass::Monk) && (ii == SpellID::Search))
 		return SpellType::Skill;
 	SpellType st = SpellType::Spell;
@@ -86,7 +86,7 @@ SpellType GetSBookTrans(SpellID ii, bool townok)
 		st = SpellType::Skill;
 	}
 	if (st == SpellType::Spell) {
-		if (CheckSpell(*MyPlayer, ii, st, true) != SpellCheckResult::Success) {
+		if (CheckSpell(*InspectPlayer, ii, st, true) != SpellCheckResult::Success) {
 			st = SpellType::Invalid;
 		}
 		if (player.GetSpellLevel(ii) == 0) {
@@ -129,7 +129,7 @@ void DrawSpellBook(const Surface &out)
 		}
 		ClxDraw(out, GetPanelPosition(UiPanels::Spell, { sx, 348 }), (*pSBkBtnCel)[sbooktab]);
 	}
-	Player &player = *MyPlayer;
+	Player &player = *InspectPlayer;
 	uint64_t spl = player._pMemSpells | player._pISpells | player._pAblSpells;
 
 	const int lineHeight = 18;
@@ -143,7 +143,7 @@ void DrawSpellBook(const Surface &out)
 			SetSpellTrans(st);
 			const Point spellCellPosition = GetPanelPosition(UiPanels::Spell, { 11, yp + SpellBookDescription.height });
 			DrawSmallSpellIcon(out, spellCellPosition, sn);
-			if (sn == player._pRSpell && st == player._pRSplType) {
+			if (sn == player._pRSpell && st == player._pRSplType && !IsInspectingPlayer()) {
 				SetSpellTrans(SpellType::Skill);
 				DrawSmallSpellIconBorder(out, spellCellPosition);
 			}
@@ -196,9 +196,9 @@ void CheckSBook()
 	// enough to the height of the space given to spell descriptions that we can reuse that value and subtract the
 	// padding from the end of the area.
 	Rectangle iconArea = { GetPanelPosition(UiPanels::Spell, { 11, 18 }), Size { 37, SpellBookDescription.height * 7 - 5 } };
-	if (iconArea.contains(MousePosition)) {
+	if (iconArea.contains(MousePosition) && !IsInspectingPlayer()) {
 		SpellID sn = GetSpellFromSpellPage(sbooktab, (MousePosition.y - iconArea.position.y) / SpellBookDescription.height);
-		Player &player = *MyPlayer;
+		Player &player = *InspectPlayer;
 		uint64_t spl = player._pMemSpells | player._pISpells | player._pAblSpells;
 		if (IsValidSpell(sn) && (spl & GetSpellBitmask(sn)) != 0) {
 			SpellType st = SpellType::Spell;

@@ -243,7 +243,7 @@ void FreeHalfSizeItemSprites()
 
 void DrawItem(const Item &item, const Surface &out, Point position, ClxSprite clx)
 {
-	const bool usable = item._iStatFlag;
+	const bool usable = !IsInspectingPlayer() ? item._iStatFlag : InspectPlayer->CanUseItem(item);
 	if (usable) {
 		ClxDraw(out, position, clx);
 	} else {

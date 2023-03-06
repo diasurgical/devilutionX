@@ -1015,13 +1015,13 @@ void InvDrawSlotBack(const Surface &out, Point targetPosition, Size size, item_q
 			if (pix >= PAL16_GRAY) {
 				switch (itemQuality) {
 				case ITEM_QUALITY_MAGIC:
-					pix -= PAL16_GRAY - PAL16_BLUE - 1;
+					pix -= PAL16_GRAY - (!IsInspectingPlayer() ? PAL16_BLUE : PAL16_ORANGE) - 1;
 					break;
 				case ITEM_QUALITY_UNIQUE:
-					pix -= PAL16_GRAY - PAL16_YELLOW - 1;
+					pix -= PAL16_GRAY - (!IsInspectingPlayer() ? PAL16_YELLOW : PAL16_ORANGE) - 1;
 					break;
 				default:
-					pix -= PAL16_GRAY - PAL16_BEIGE - 1;
+					pix -= PAL16_GRAY - (!IsInspectingPlayer() ? PAL16_BEIGE : PAL16_ORANGE) - 1;
 					break;
 				}
 			}
@@ -1087,7 +1087,7 @@ void DrawInv(const Surface &out)
 		{ 133, 160 }, // chest
 	};
 
-	Player &myPlayer = *MyPlayer;
+	Player &myPlayer = *InspectPlayer;
 
 	for (int slot = INVLOC_HEAD; slot < NUM_INVLOC; slot++) {
 		if (!myPlayer.InvBody[slot].isEmpty()) {
@@ -1163,7 +1163,7 @@ void DrawInvBelt(const Surface &out)
 
 	DrawPanelBox(out, { 205, 21, 232, 28 }, mainPanelPosition + Displacement { 205, 5 });
 
-	Player &myPlayer = *MyPlayer;
+	Player &myPlayer = *InspectPlayer;
 
 	for (int i = 0; i < MaxBeltItems; i++) {
 		if (myPlayer.SpdList[i].isEmpty()) {
@@ -1522,6 +1522,8 @@ void TransferItemToStash(Player &player, int location)
 
 void CheckInvItem(bool isShiftHeld, bool isCtrlHeld)
 {
+	if (IsInspectingPlayer())
+		return;
 	if (!MyPlayer->HoldItem.isEmpty()) {
 		CheckInvPaste(*MyPlayer, MousePosition);
 	} else if (IsStashOpen && isCtrlHeld) {
@@ -1843,7 +1845,7 @@ int8_t CheckInvHLight()
 	int8_t rv = -1;
 	InfoColor = UiFlags::ColorWhite;
 	Item *pi = nullptr;
-	Player &myPlayer = *MyPlayer;
+	Player &myPlayer = *InspectPlayer;
 
 	if (r == SLOTXY_HEAD) {
 		rv = INVLOC_HEAD;
@@ -1978,6 +1980,9 @@ Item &GetInventoryItem(Player &player, int location)
 
 bool UseInvItem(int cii)
 {
+	if (IsInspectingPlayer())
+		return false;
+
 	Player &player = *MyPlayer;
 
 	if (player._pInvincible && player._pHitPoints == 0 && &player == MyPlayer)
