@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
-"POT-Creation-Date: 2023-03-05 20:35+0200\n"
+"POT-Creation-Date: 2023-03-10 12:42+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Oleksandr Kalko (tsunami_state) <tsunami.wave@ukr.net>\n"
 "Language-Team: \n"
@@ -8024,7 +8024,7 @@ msgstr "Поговорити з Фарнхемом"
 msgid "Say Goodbye"
 msgstr "Попрощатися"
 
-#: Source/stores.cpp:2518
+#: Source/stores.cpp:2521
 msgid "Your gold: {:s}"
 msgstr "Ваше золото: {:s}"
 
@@ -10946,6 +10946,7 @@ msgstr ""
 
 #. TRANSLATORS: Quest text spoken aloud from a book by player
 #: Source/textdat.cpp:477 Source/textdat.cpp:485 Source/textdat.cpp:493
+#: Source/textdat.cpp:531 Source/textdat.cpp:539
 msgid ""
 "The armories of Hell are home to the Warlord of Blood. In his wake lay the "
 "mutilated bodies of thousands. Angels and men alike have been cut down to "
@@ -11177,18 +11178,6 @@ msgstr ""
 "щоб знайти церкву і врятуй кого зможеш.\n"
 " \n"
 "Я розповім більше, коли ми знову поговоримо. Удачі."
-
-#. TRANSLATORS: Quest text spoken aloud from a book by player
-#: Source/textdat.cpp:531 Source/textdat.cpp:539
-msgid ""
-"The armories of Hell are home to the Warlord of Blood. In his wake lay the "
-"mutilated bodies of thousands. Angels and man alike have been cut down to "
-"fulfill his endless sacrifices to the Dark ones who scream for one thing - "
-"blood."
-msgstr ""
-"Збройниці Пекла — дім Воєводи Крові. За ним лежать тисячі понівечених тіл. "
-"Ангелів і людей вирізали, щоб принести його нескінченні жертви Темним, які "
-"вимагають лише одне – кров."
 
 #. TRANSLATORS: Quest text spoken by Adria
 #: Source/textdat.cpp:541
@@ -11835,12 +11824,3 @@ msgstr "Вбитий Житель"
 #: Source/utils/format_int.cpp:29
 msgid ","
 msgstr ","
-
-#~ msgid ""
-#~ "Beyond the Hall of Heroes lies the Chamber of Bone.  Eternal death awaits "
-#~ "any who would seek to steal the treasures secured within this room.  So "
-#~ "speaks the Lord of Terror, and so it is written."
-#~ msgstr ""
-#~ "За Залом Героїв стоїть Палата Кості.  Вічна смерть чекає кожного, хто "
-#~ "захоче вкрасти скарби, що в цій кімнаті.  Так говорить Володар Жахів, і "
-#~ "так написано."
