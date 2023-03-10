@@ -74,7 +74,7 @@ jobs:
       - run: apk --no-cache add git cmake gettext
       - run: psp-cmake -S. -Bbuild  -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_PRX=1 -DENC_PRX=1
       - run: cmake --build build -j 2
-      - store_artifacts: {path: ./EBOOT.PBP, destination: EBOOT.PBP}
+      - store_artifacts: {path: ./build/EBOOT.PBP, destination: EBOOT.PBP}
 
 workflows:
   version: 2
