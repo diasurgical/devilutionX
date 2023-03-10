@@ -662,8 +662,10 @@ void multi_process_network_packets()
 		}
 		HandleAllPackets(playerId, (const byte *)(pkt + 1), dwMsgSize - sizeof(TPktHdr));
 	}
+#ifndef PSP
 	if (SErrGetLastError() != STORM_ERROR_NO_MESSAGES_WAITING)
 		nthread_terminate_game("SNetReceiveMsg");
+#endif
 	CheckPlayerInfoTimeouts();
 }
 

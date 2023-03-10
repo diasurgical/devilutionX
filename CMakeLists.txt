@@ -220,7 +220,7 @@ endif()
 #
 # PS4 toolchain crashes in `create-fself` when linking with these flags, so we exclude it:
 # https://github.com/PacBrew/ps4-openorbis/issues/8
-if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang" AND NOT PS4)
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang" AND NOT PS4 AND NOT PSP)
   add_compile_options("$<$<NOT:$<CONFIG:Debug>>:-ffunction-sections;-fdata-sections>")
   if(APPLE)
     add_link_options("$<$<NOT:$<CONFIG:Debug>>:LINKER:-dead_strip>")
@@ -479,6 +479,16 @@ if(NXDK)
     DEPENDS "${BIN_TARGET}"
   )
   add_custom_target(nxdk_xbe DEPENDS "${_xbe_path}")
+endif()
+
+if(PSP)
+  create_pbp_file(
+    TARGET ${BIN_TARGET}
+    ICON_PATH "${PROJECT_SOURCE_DIR}/Packaging/psp/icon.png"
+    BACKGROUND_PATH "${PROJECT_SOURCE_DIR}/Packaging/psp/background.png"
+    PREVIEW_PATH NULL
+    TITLE ${PROJECT_NAME}
+  )
 endif()
 
 if(CPACK AND (APPLE OR BUILD_ASSETS_MPQ OR SRC_DIST))
