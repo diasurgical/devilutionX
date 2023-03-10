@@ -285,7 +285,11 @@ bool SVidPlayBegin(const char *filename, int flags)
 	if (renderer != nullptr) {
 		int renderWidth = static_cast<int>(SVidWidth);
 		int renderHeight = static_cast<int>(SVidHeight);
+#ifdef PSP
+		texture = SDLWrap::CreateTexture(renderer, SDL_PIXELFORMAT_ABGR1555, SDL_TEXTUREACCESS_STREAMING, renderWidth, renderHeight);
+#else
 		texture = SDLWrap::CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, renderWidth, renderHeight);
+#endif
 		if (SDL_RenderSetLogicalSize(renderer, renderWidth, renderHeight) <= -1) {
 			ErrSdl();
 		}
@@ -379,7 +383,11 @@ void SVidPlayEnd()
 
 #ifndef USE_SDL1
 	if (renderer != nullptr) {
+#ifdef PSP
+		texture = SDLWrap::CreateTexture(renderer, SDL_PIXELFORMAT_ABGR1555, SDL_TEXTUREACCESS_STREAMING, gnScreenWidth, gnScreenHeight);
+#else
 		texture = SDLWrap::CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, gnScreenWidth, gnScreenHeight);
+#endif
 		if (renderer != nullptr && SDL_RenderSetLogicalSize(renderer, gnScreenWidth, gnScreenHeight) <= -1) {
 			ErrSdl();
 		}
