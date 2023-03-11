@@ -5,6 +5,7 @@
 
 #include <algorithm>
 #include <string>
+#include <vector>
 
 #include <SDL.h>
 
@@ -38,6 +39,13 @@
 #include <copyfile.h>
 #endif
 
+// We include sys/stat.h for mkdir where available.
+#if !defined(DVL_HAS_FILESYSTEM) && defined(__has_include) && !defined(_WIN32)
+#if __has_include(<sys/stat.h>)
+#include <sys/stat.h>
+#endif
+#endif
+
 namespace devilution {
 
 #if (defined(_WIN64) || defined(_WIN32)) && !defined(NXDK)
@@ -54,6 +62,18 @@ std::unique_ptr<wchar_t[]> ToWideChar(string_view path)
 	return utf16;
 }
 #endif
+
+string_view Dirname(string_view path)
+{
+	while (path.size() > 1 && path.back() == DirectorySeparator)
+		path.remove_suffix(1);
+	if (path.size() == 1 && path.back() == DirectorySeparator)
+		return DIRECTORY_SEPARATOR_STR;
+	const size_t sep = path.find_last_of(DIRECTORY_SEPARATOR_STR);
+	if (sep == string_view::npos)
+		return ".";
+	return string_view { path.data(), sep };
+}
 
 bool FileExists(const char *path)
 {
@@ -95,9 +115,10 @@ bool FileExists(const char *path)
 #endif
 }
 
-bool FileExistsAndIsWriteable(const char *path)
-{
 #if defined(_WIN64) || defined(_WIN32)
+namespace {
+DWORD WindowsGetFileAttributes(const char *path)
+{
 #if defined(NXDK)
 	const DWORD attr = ::GetFileAttributesA(path);
 #else
@@ -108,8 +129,7 @@ bool FileExistsAndIsWriteable(const char *path)
 	}
 	const DWORD attr = ::GetFileAttributesW(&pathUtf16[0]);
 #endif
-	const bool exists = attr != INVALID_FILE_ATTRIBUTES;
-	if (!exists) {
+	if (attr == INVALID_FILE_ATTRIBUTES) {
 		if (::GetLastError() == ERROR_FILE_NOT_FOUND || ::GetLastError() == ERROR_PATH_NOT_FOUND) {
 			::SetLastError(ERROR_SUCCESS);
 		} else {
@@ -120,7 +140,31 @@ bool FileExistsAndIsWriteable(const char *path)
 #endif
 		}
 	}
-	return exists && (attr & FILE_ATTRIBUTE_READONLY) == 0;
+	return attr;
+}
+} // namespace
+
+#endif
+
+bool DirectoryExists(const char *path)
+{
+#if defined(_WIN64) || defined(_WIN32)
+	const DWORD attr = WindowsGetFileAttributes(path);
+	return attr != INVALID_FILE_ATTRIBUTES && (attr & FILE_ATTRIBUTE_DIRECTORY) != 0;
+#elif defined(DVL_HAS_FILESYSTEM)
+	std::error_code error;
+	return std::filesystem::is_directory(path, error);
+#elif (_POSIX_C_SOURCE >= 200112L || defined(_BSD_SOURCE) || defined(__APPLE__)) && !defined(__ANDROID__)
+	struct ::stat statResult;
+	return ::stat(path, &statResult) == 0 && S_ISDIR(statResult.st_mode);
+#endif
+}
+
+bool FileExistsAndIsWriteable(const char *path)
+{
+#if defined(_WIN64) || defined(_WIN32)
+	const DWORD attr = WindowsGetFileAttributes(path);
+	return attr != INVALID_FILE_ATTRIBUTES && (attr & FILE_ATTRIBUTE_READONLY) == 0;
 #elif (_POSIX_C_SOURCE >= 200112L || defined(_BSD_SOURCE) || defined(__APPLE__)) && !defined(__ANDROID__)
 	return ::access(path, W_OK) == 0;
 #else
@@ -161,6 +205,74 @@ bool GetFileSize(const char *path, std::uintmax_t *size)
 		return false;
 	*size = static_cast<uintmax_t>(statResult.st_size);
 	return true;
+#endif
+}
+
+bool CreateDir(const char *path)
+{
+#ifdef DVL_HAS_FILESYSTEM
+	std::error_code error;
+	std::filesystem::create_directory(path, error);
+	if (error) {
+		LogError("failed to create directory {}: {}", path, error.message());
+		return false;
+	}
+	return true;
+#elif defined(_WIN64) || defined(_WIN32)
+#ifdef NXDK
+	if (::CreateDirectoryA(path, /*lpSecurityAttributes=*/nullptr) != 0)
+		return true;
+	if (::GetLastError() == ERROR_ALREADY_EXISTS)
+		return true;
+	LogError("failed to create directory {}", path);
+	return false;
+#else
+	const auto pathUtf16 = ToWideChar(path);
+	if (pathUtf16 == nullptr) {
+		LogError("UTF-8 -> UTF-16 conversion error code {}", ::GetLastError());
+		return false;
+	}
+	if (::CreateDirectoryW(&pathUtf16[0], /*lpSecurityAttributes=*/nullptr) != 0)
+		return true;
+	if (::GetLastError() == ERROR_ALREADY_EXISTS)
+		return true;
+	LogError("failed to create directory {}", path);
+	return false;
+#endif
+#else
+	const int result = ::mkdir(path, 0777);
+	if (result != 0 && result != EEXIST) {
+		LogError("failed to create directory {}", path);
+		return false;
+	}
+	return true;
+#endif
+}
+
+void RecursivelyCreateDir(const char *path)
+{
+#ifdef DVL_HAS_FILESYSTEM
+	std::error_code error;
+	std::filesystem::create_directories(path, error);
+	if (error) {
+		LogError("failed to create directory {}: {}", path, error.message());
+	}
+#else
+	if (DirectoryExists(path))
+		return;
+	std::vector<std::string> paths;
+	std::string cur { path };
+	do {
+		paths.push_back(cur);
+		string_view parent = Dirname(cur);
+		if (parent == cur)
+			break;
+		cur.assign(parent.data(), parent.size());
+	} while (!DirectoryExists(cur.c_str()));
+	for (auto it = std::rbegin(paths); it != std::rend(paths); ++it) {
+		if (!CreateDir(it->c_str()))
+			return;
+	}
 #endif
 }
 

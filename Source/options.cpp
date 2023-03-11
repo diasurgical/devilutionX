@@ -236,15 +236,7 @@ void SaveIni()
 {
 	if (!IniChanged)
 		return;
-#ifdef DVL_HAS_FILESYSTEM
-	{
-		std::error_code error;
-		std::filesystem::create_directories(paths::ConfigPath(), error);
-		if (error) {
-			LogError("failed to create directory: {}", error.message());
-		}
-	}
-#endif
+	RecursivelyCreateDir(paths::ConfigPath().c_str());
 	const std::string iniPath = GetIniPath();
 	FILE *file = OpenFile(iniPath.c_str(), "wb");
 	if (file != nullptr) {
