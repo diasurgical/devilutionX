@@ -61,4 +61,25 @@ TEST(FileUtil, ResizeFile)
 	EXPECT_EQ(size, 30);
 }
 
+TEST(FileUtil, Dirname)
+{
+	EXPECT_EQ(Dirname(""), ".");
+	EXPECT_EQ(Dirname("abc"), ".");
+	EXPECT_EQ(Dirname(DIRECTORY_SEPARATOR_STR), DIRECTORY_SEPARATOR_STR);
+	EXPECT_EQ(Dirname(DIRECTORY_SEPARATOR_STR DIRECTORY_SEPARATOR_STR), DIRECTORY_SEPARATOR_STR);
+	EXPECT_EQ(Dirname("a" DIRECTORY_SEPARATOR_STR "b"), "a");
+	EXPECT_EQ(Dirname("a" DIRECTORY_SEPARATOR_STR "b" DIRECTORY_SEPARATOR_STR "c"),
+	    "a" DIRECTORY_SEPARATOR_STR "b");
+	EXPECT_EQ(Dirname("a" DIRECTORY_SEPARATOR_STR "b" DIRECTORY_SEPARATOR_STR "c"),
+	    "a" DIRECTORY_SEPARATOR_STR "b");
+}
+
+TEST(FileUtil, RecursivelyCreateDir)
+{
+	const std::string path = GetTmpPathName(/*suffix=*/"") + DIRECTORY_SEPARATOR_STR
+	    + "a" + DIRECTORY_SEPARATOR_STR + "b" + DIRECTORY_SEPARATOR_STR + "c";
+	RecursivelyCreateDir(path.c_str());
+	EXPECT_TRUE(DirectoryExists(path.c_str()));
+}
+
 } // namespace

@@ -74,15 +74,18 @@
 	"testPresets": [
 		{
 			"name": "ninja-vcpkg-debug",
-			"configurePreset": "ninja-vcpkg-debug"
+			"configurePreset": "ninja-vcpkg-debug",
+			"output": {"outputOnFailure": true}
 		},
 		{
 			"name": "ninja-vcpkg-relwithdebinfo",
-			"configurePreset": "ninja-vcpkg-relwithdebinfo"
+			"configurePreset": "ninja-vcpkg-relwithdebinfo",
+			"output": {"outputOnFailure": true}
 		},
 		{
 			"name": "ninja-vcpkg-discord-relwithdebinfo",
-			"configurePreset": "ninja-vcpkg-discord-relwithdebinfo"
+			"configurePreset": "ninja-vcpkg-discord-relwithdebinfo",
+			"output": {"outputOnFailure": true}
 		}
 	]
 }
