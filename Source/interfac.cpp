@@ -371,7 +371,10 @@ void ShowProgress(interface_mode uMsg)
 		IncProgress();
 		break;
 	case WM_DIABSETLVL:
-		SetReturnLvlPos();
+		// Note: ReturnLevel, ReturnLevelType and ReturnLvlPosition is only set to ensure vanilla compatibility
+		ReturnLevel = GetMapReturnLevel();
+		ReturnLevelType = GetLevelType(ReturnLevel);
+		ReturnLvlPosition = GetMapReturnPosition();
 		IncProgress();
 		if (!gbIsMultiplayer) {
 			pfile_save_level();
@@ -398,7 +401,8 @@ void ShowProgress(interface_mode uMsg)
 		setlevel = false;
 		FreeGameMem();
 		IncProgress();
-		GetReturnLvlPos();
+		currlevel = GetMapReturnLevel();
+		leveltype = GetLevelType(currlevel);
 		LoadGameLevel(false, ENTRY_RTNLVL);
 		IncProgress();
 		break;
