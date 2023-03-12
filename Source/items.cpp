@@ -4597,7 +4597,7 @@ void RechargeItem(Item &item, Player &player)
 		NetSendCmdChItem(true, INVLOC_HAND_RIGHT);
 		return;
 	}
-	for (size_t i = 0; i < player._pNumInv; i++) {
+	for (int i = 0; i < player._pNumInv; i++) {
 		if (&item == &player.InvList[i]) {
 			NetSyncInvItem(player, i);
 			break;

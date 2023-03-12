@@ -13,7 +13,6 @@
 #include "utils/file_util.h"
 #include "utils/language.h"
 #include "utils/log.hpp"
-#include "utils/stdcompat/filesystem.hpp"
 #include "utils/str_cat.hpp"
 
 namespace devilution {
