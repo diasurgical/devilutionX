@@ -2759,8 +2759,11 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 
 		IncProgress();
 
-		if (lvldir == ENTRY_RTNLVL)
-			GetReturnLvlPos();
+		if (lvldir == ENTRY_RTNLVL) {
+			ViewPosition = GetMapReturnPosition();
+			if (Quests[Q_BETRAYER]._qactive == QUEST_DONE)
+				Quests[Q_BETRAYER]._qvar2 = 2;
+		}
 		if (lvldir == ENTRY_WARPLVL)
 			GetPortalLvlPos();
 

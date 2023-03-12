@@ -242,16 +242,6 @@ std::string DebugCmdLoadQuestMap(const string_view parameter)
 		if (level != quest._qslvl)
 			continue;
 
-		if (!MyPlayer->isOnLevel(quest._qlevel)) {
-			StartNewLvl(*MyPlayer, (quest._qlevel != 21) ? interface_mode::WM_DIABNEXTLVL : interface_mode::WM_DIABTOWNWARP, quest._qlevel);
-			ProcessMessages();
-			// Workaround for SDL_PollEvent:
-			// StartNewLvl pushes a new event with SDL_PushEvent.
-			// ProcessMessages calls SDL_PollEvent but SDL ignores the new pushed event.
-			// Calling SDL_PollEvent again fixes this.
-			ProcessMessages();
-		}
-
 		setlvltype = quest._qlvltype;
 		StartNewLvl(*MyPlayer, WM_DIABSETLVL, level);
 
@@ -288,10 +278,6 @@ std::string DebugCmdLoadMap(const string_view parameter)
 
 	if (TestMapPath.empty() || mapType < DTYPE_CATHEDRAL || mapType > DTYPE_LAST || !InDungeonBounds(spawn))
 		return "Directions not understood";
-
-	ReturnLvlPosition = ViewPosition;
-	ReturnLevel = currlevel;
-	ReturnLevelType = leveltype;
 
 	setlvltype = static_cast<dungeon_type>(mapType);
 	ViewPosition = spawn;
