@@ -337,8 +337,7 @@ void CheckQuests()
 	    && quest._qvar1 >= 2
 	    && (quest._qactive == QUEST_ACTIVE || quest._qactive == QUEST_DONE)
 	    && (quest._qvar2 == 0 || quest._qvar2 == 2)) {
-		// Move the quest trigger into world space, then spawn a portal at the same location
-		quest.position = quest.position.megaToWorld();
+		// Spawn a portal at the quest trigger location
 		AddMissile(quest.position, quest.position, Direction::South, MissileID::RedPortal, TARGET_MONSTERS, MyPlayerId, 0, 0);
 		quest._qvar2 = 1;
 		if (quest._qactive == QUEST_ACTIVE && quest._qvar1 == 2) {

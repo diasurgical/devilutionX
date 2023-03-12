@@ -1188,7 +1188,7 @@ void GenerateLevel(lvl_entry entry)
 				if (IsAnyOf(dungeon[i][j], 98, 107)) {
 					Make_SetPC({ WorldTilePosition(i - 1, j - 1), { 5, 5 } });
 					// Set the portal position to the location of the northmost pentagram tile.
-					Quests[Q_BETRAYER].position = { i, j };
+					Quests[Q_BETRAYER].position = Point(i, j).megaToWorld();
 				}
 			}
 		}
