@@ -156,6 +156,8 @@ void InitQTextMsg(_speech_id m)
 	case PS_WARR56:
 		sfxnr = classSounds[static_cast<size_t>(HeroSpeech::EfficioObitusUtInimicus)];
 		break;
+	default:
+		break;
 	}
 	if (Speeches[m].scrlltxt) {
 		QuestLogIsOpen = false;
