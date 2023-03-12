@@ -12,15 +12,16 @@ else()
 endif()
 include(FetchContent)
 if(NXDK)
-  # branch: nxdk-2022-07-19
+  # branch: nxdk-v9.1.0
   FetchContent_Declare(libfmt
-    URL https://github.com/diasurgical/fmt/archive/16d67608437f4fb9d293e561b4ddbccf3815a097.tar.gz
-    URL_HASH MD5=7ef45573ef301c250717c60458aa7536
+    URL https://github.com/diasurgical/fmt/archive/f69d48bf4049bbdfa74afca02fac3c81bb609dc8.tar.gz
+    URL_HASH MD5=310c79c7a5cda3ad8f4e0d44d9fc1c57
   )
 else()
+  # master on 2022-03-12
   FetchContent_Declare(libfmt
-    URL https://github.com/fmtlib/fmt/archive/688a627d6c4d1fb6dfe070397b7cd4bf55a0024e.tar.gz
-    URL_HASH MD5=55a7ac3c12ee83cc86b76275fd1e5f6b
+    URL https://github.com/fmtlib/fmt/archive/7f882918eba6430a0509b5e8547de21611264c5c.tar.gz
+    URL_HASH MD5=03fd08aeabf9021c6bf19fbd84d5e62e
   )
 endif()
 FetchContent_MakeAvailableExcludeFromAll(libfmt)
