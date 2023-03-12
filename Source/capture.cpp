@@ -5,8 +5,9 @@
  */
 #include <cstdint>
 #include <cstdio>
+#include <ctime>
 
-#include <fmt/chrono.h>
+#include <fmt/format.h>
 
 #include "DiabloUI/diabloui.h"
 #include "engine/backbuffer_state.hpp"
@@ -133,9 +134,12 @@ bool CapturePix(const Surface &buf, FILE *out)
 
 FILE *CaptureFile(std::string *dstPath)
 {
-	std::time_t tt = std::time(nullptr);
-	std::tm *tm = std::localtime(&tt);
-	std::string filename = fmt::format("Screenshot from {:%Y-%m-%d %H-%M-%S}", *tm);
+	const std::time_t tt = std::time(nullptr);
+	const std::tm *tm = std::localtime(&tt);
+	const std::string filename = tm != nullptr
+	    ? fmt::format("Screenshot from {:04}-{:02}-{:02} {:02}-{:02}-{:02}",
+	        tm->tm_year, tm->tm_mon + 1, tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec)
+	    : "Screenshot";
 	*dstPath = StrCat(paths::PrefPath(), filename, ".pcx");
 	int i = 0;
 	while (FileExists(dstPath->c_str())) {
