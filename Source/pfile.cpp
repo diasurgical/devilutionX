@@ -8,7 +8,7 @@
 #include <string>
 #include <unordered_map>
 
-#include <fmt/compile.h>
+#include <fmt/core.h>
 
 #include "codec.h"
 #include "engine.h"
@@ -89,7 +89,7 @@ bool GetSaveNames(uint8_t index, string_view prefix, char *out)
 		return false;
 	}
 
-	*fmt::format_to(out, FMT_COMPILE("{}{}{:02d}"), prefix, suf, index) = '\0';
+	*fmt::format_to(out, "{}{}{:02d}", prefix, suf, index) = '\0';
 	return true;
 }
 
