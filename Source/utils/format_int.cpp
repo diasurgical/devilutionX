@@ -1,8 +1,5 @@
 #include "utils/format_int.hpp"
 
-#include <fmt/compile.h>
-#include <fmt/core.h>
-
 #include "utils/language.h"
 #include "utils/stdcompat/string_view.hpp"
 #include "utils/str_cat.hpp"

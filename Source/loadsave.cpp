@@ -11,7 +11,7 @@
 #include <unordered_map>
 
 #include <SDL.h>
-#include <fmt/compile.h>
+#include <fmt/core.h>
 
 #include "automap.h"
 #include "codec.h"
@@ -901,7 +901,7 @@ void GetLevelNames(string_view prefix, char *out)
 		suf = 'l';
 		num = currlevel;
 	}
-	*fmt::format_to(out, FMT_COMPILE("{}{}{:02d}"), prefix, suf, num) = '\0';
+	*fmt::format_to(out, "{}{}{:02d}", prefix, suf, num) = '\0';
 }
 
 void GetTempLevelNames(char *szTemp)

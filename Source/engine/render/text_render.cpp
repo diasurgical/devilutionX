@@ -10,7 +10,7 @@
 #include <unordered_map>
 #include <utility>
 
-#include <fmt/compile.h>
+#include <fmt/core.h>
 
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/ui_item.h"
@@ -143,7 +143,7 @@ bool IsSmallFontTallRow(uint16_t row)
 
 void GetFontPath(GameFontTables size, uint16_t row, string_view ext, char *out)
 {
-	*fmt::format_to(out, FMT_COMPILE(R"(fonts\{}-{:02x}.{})"), FontSizes[size], row, ext) = '\0';
+	*fmt::format_to(out, R"(fonts\{}-{:02x}.{})", FontSizes[size], row, ext) = '\0';
 }
 
 uint32_t GetFontId(GameFontTables size, uint16_t row)
