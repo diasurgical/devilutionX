@@ -31,11 +31,10 @@ jobs:
         sudo apt-get install -y cmake file g++-multilib git libfmt-dev:i386 libsdl2-dev:i386 libsodium-dev:i386 libpng-dev:i386 libbz2-dev:i386 rpm wget smpq
 
     - name: Cache CMake build folder
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: build
-        key: linux-x86-cmake-v5-${{ github.sha }}
-        restore-keys: linux-x86-cmake-v5-
+        key: ${{ github.workflow }}-v1
 
     - name: Configure CMake
       shell: bash

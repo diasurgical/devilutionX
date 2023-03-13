@@ -33,11 +33,10 @@ jobs:
         fetch-depth: 0
 
     - name: Cache CMake build folder
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: build
-        key: ios-cmake-v3-${{ github.sha }}
-        restore-keys: ios-cmake-v3-
+        key: ${{ github.workflow }}-v1
 
     - name: Configure CMake
       # Use a bash shell so we can use the same syntax for environment variable

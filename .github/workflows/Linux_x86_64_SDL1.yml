@@ -30,11 +30,10 @@ jobs:
         sudo apt-get install -y cmake file g++ git libfmt-dev libsdl1.2-dev libsodium-dev libpng-dev libbz2-dev rpm smpq
 
     - name: Cache CMake build folder
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: build
-        key: linux-x86_64-sdl1-cmake-v5-${{ github.sha }}
-        restore-keys: linux-x86_64-sdl1-cmake-v5-
+        key: ${{ github.workflow }}-v1
 
     - name: Configure CMake
       shell: bash
