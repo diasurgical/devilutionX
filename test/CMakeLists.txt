@@ -37,6 +37,7 @@ set(tests
   rectangle_test
   scrollrt_test
   stores_test
+  str_cat_test
   timedemo_test
   utf8_test
   writehero_test
