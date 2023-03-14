@@ -122,7 +122,7 @@ This file will be used later to install the game on the 3DS console.
 
 Copy the MPQ files to the `devilutionx` subfolder under the `3ds` folder on your SD card (`/3ds/devilutionx`). The game will read these files from this location.
 You do not need a copy of `devilutionx.mpq` on your SD card to run the game on 3DS.
-To avoid errors when you run the game, if you have an old version of `devilutionx.mpq` in the folder, you should remove it now.
+To avoid errors when you run the game, if you have an old version of `devilutionx.mpq` in the folder, you should remove it now. Note, all file and folder names should be lowercase, as shown in the example screenshot below.
 
 ![image](https://user-images.githubusercontent.com/9203145/141046152-61be39dc-d14e-4b10-accf-1755a93972f7.png)
 
