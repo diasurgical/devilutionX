@@ -162,6 +162,7 @@ set(devilutionx_assets
   fonts/whitegold.trn
   fonts/white.trn
   fonts/yellow.trn
+  gendata/cutl1dw.clx
   gendata/cutportlw.clx
   gendata/cutportrw.clx
   gendata/cutstartw.clx
