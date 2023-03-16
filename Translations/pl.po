@@ -7931,15 +7931,21 @@ msgid ""
 "no leave with life! You kill big uglies and give back Magic. Go past corner "
 "and door, find uglies. You give, you go!"
 msgstr ""
-"Hej - Ty co zabijać wszystkich! Ty zdobyć mi Czarodziejski Znak albo my "
-"atakować! Ty nie odejść żywo! Ty zabić dużych brzydali i przynieść nam "
-"Magia. Iść za róg i drzwi, znaleźć brzydali. Ty dać, ty odejść!"
+"Hej - Ty co zabijać wszystkich!  Ty zdobyć mi Czarodziejski Znak albo my "
+"atakować!  Ty nie odejść żywo!  \n"
+" \n"
+"Ty zabić dużych brzydali i przynieść nam Magia. Iść za róg i drzwi, znaleźć "
+"brzydali. \n"
+" \n"
+"Ty dać, ty odejść!"
 
 #. TRANSLATORS: Quest dialog spoken by Snotspill (Hostile)
 #: Source/textdat.cpp:57
 msgid "You kill uglies, get banner. You bring to me, or else..."
 msgstr ""
-"Ty zabić brzydali, zdobyć znak. Ty mi go przynieść, bo inaczej..."
+"Ty zabić brzydali, zdobyć znak. \n"
+" \n"
+"Ty mi go przynieść, bo inaczej..."
 
 #. TRANSLATORS: Quest dialog spoken by Snotspill (Hostile)
 #: Source/textdat.cpp:59
