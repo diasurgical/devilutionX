@@ -4044,12 +4044,8 @@ msgid "Right-click to read, then\nleft-click to target"
 msgstr "Δεξί-κλικ για διάβασμα, και\nαριστερό-κλικ στον στόχο"
 
 #: Source/items.cpp:1826
-msgid "Select from spell book, then"
-msgstr ""
-
-#: Source/items.cpp:1827
-msgid "cast spell to read"
-msgstr ""
+msgid "Select from spell book, then\ncast spell to read"
+msgstr "Επιλέξτε από το βιβλίο με τα ξόρκια και μετά\nκάντε ξόρκι για ανάγνωση"
 
 #: Source/items.cpp:1840
 msgid "Right-click to use"

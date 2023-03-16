@@ -4242,7 +4242,7 @@ msgstr "アクティベート​し​て​使う"
 #: Source/items.cpp:1764
 msgid ""
 "Select from spell book, then\n"
-"cast to read"
+"cast spell to read"
 msgstr ""
 "スペル​ブック​から​選択​し​\n"
 "​読ん​で​キャスト"

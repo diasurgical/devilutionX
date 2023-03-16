@@ -4276,7 +4276,7 @@ msgstr "Активуйте щоб використати"
 #: Source/items.cpp:1765
 msgid ""
 "Select from spell book, then\n"
-"cast to read"
+"cast spell to read"
 msgstr ""
 "Виберіть з книги чарувань, а потім\n"
 "чаруйте, щоб прочитати"

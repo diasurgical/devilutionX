@@ -1762,7 +1762,7 @@ void printItemMiscGenericGamepad(const Item &item, const bool isOil, bool isCast
 			AddPanelString(_("Activate to use"));
 		}
 	} else if (isCastOnTarget) {
-		AddPanelString(_("Select from spell book, then\ncast to read"));
+		AddPanelString(_("Select from spell book, then\ncast spell to read"));
 	} else if (IsAnyOf(item._iMiscId, IMISC_BOOK, IMISC_NOTE, IMISC_SCROLL, IMISC_SCROLLT)) {
 		AddPanelString(_("Activate to read"));
 	}

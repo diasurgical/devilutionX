@@ -3848,11 +3848,7 @@ msgstr ""
 msgid "Right-click to read, then\nleft-click to target"
 
 #: Source/items.cpp:1841
-msgid "Select from spell book, then"
-msgstr ""
-
-#: Source/items.cpp:1842
-msgid "cast spell to read"
+msgid "Select from spell book, then\ncast spell to read"
 msgstr ""
 
 #: Source/items.cpp:1855

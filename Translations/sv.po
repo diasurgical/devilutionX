@@ -3997,12 +3997,8 @@ msgid "Right-click to read"
 msgstr "Högerklicka för att läsa"
 
 #: Source/items.cpp:1814 Source/items.cpp:1835
-msgid "Select from spell book, then"
-msgstr "Välj från magibok, därefter"
-
-#: Source/items.cpp:1815 Source/items.cpp:1836
-msgid "cast spell to read"
-msgstr "använd trollformel för att läsa"
+msgid "Select from spell book, then\ncast spell to read"
+msgstr "Välj från magibok, därefter\nanvänd trollformel för att läsa"
 
 #: Source/items.cpp:1817 Source/items.cpp:1838 Source/items.cpp:1852
 msgid "Open inventory to use"
