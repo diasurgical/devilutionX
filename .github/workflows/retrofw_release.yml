@@ -3,6 +3,8 @@ name: RetroFW Release Build
 on:
   release:
     types: [published]
+    paths-ignore:
+      - '*.md'
   workflow_dispatch:
 
 concurrency:

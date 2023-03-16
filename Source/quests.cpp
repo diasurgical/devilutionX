@@ -337,8 +337,7 @@ void CheckQuests()
 	    && quest._qvar1 >= 2
 	    && (quest._qactive == QUEST_ACTIVE || quest._qactive == QUEST_DONE)
 	    && (quest._qvar2 == 0 || quest._qvar2 == 2)) {
-		// Move the quest trigger into world space, then spawn a portal at the same location
-		quest.position = quest.position.megaToWorld();
+		// Spawn a portal at the quest trigger location
 		AddMissile(quest.position, quest.position, Direction::South, MissileID::RedPortal, TARGET_MONSTERS, MyPlayerId, 0, 0);
 		quest._qvar2 = 1;
 		if (quest._qactive == QUEST_ACTIVE && quest._qvar1 == 2) {
@@ -499,50 +498,36 @@ void DRLG_CheckQuests(Point position)
 	}
 }
 
-void SetReturnLvlPos()
+int GetMapReturnLevel()
 {
 	switch (setlvlnum) {
 	case SL_SKELKING:
-		ReturnLvlPosition = Quests[Q_SKELKING].position + Direction::SouthEast;
-		ReturnLevel = Quests[Q_SKELKING]._qlevel;
-		ReturnLevelType = DTYPE_CATHEDRAL;
-		break;
+		return Quests[Q_SKELKING]._qlevel;
 	case SL_BONECHAMB:
-		ReturnLvlPosition = Quests[Q_SCHAMB].position + Direction::SouthEast;
-		ReturnLevel = Quests[Q_SCHAMB]._qlevel;
-		ReturnLevelType = DTYPE_CATACOMBS;
-		break;
-	case SL_MAZE:
-		break;
+		return Quests[Q_SCHAMB]._qlevel;
 	case SL_POISONWATER:
-		ReturnLvlPosition = Quests[Q_PWATER].position + Direction::SouthWest;
-		ReturnLevel = Quests[Q_PWATER]._qlevel;
-		ReturnLevelType = DTYPE_CATHEDRAL;
-		break;
+		return Quests[Q_PWATER]._qlevel;
 	case SL_VILEBETRAYER:
-		ReturnLvlPosition = Quests[Q_BETRAYER].position + Direction::South;
-		ReturnLevel = Quests[Q_BETRAYER]._qlevel;
-		ReturnLevelType = DTYPE_HELL;
-		break;
-	case SL_NONE:
-		break;
+		return Quests[Q_BETRAYER]._qlevel;
 	default:
-		if (IsArenaLevel(setlvlnum)) {
-			ReturnLvlPosition = Towners[TOWN_DRUNK].position + Displacement { 1, 0 };
-			ReturnLevel = 0;
-			ReturnLevelType = DTYPE_TOWN;
-		}
-		break;
+		return 0;
 	}
 }
 
-void GetReturnLvlPos()
+Point GetMapReturnPosition()
 {
-	if (Quests[Q_BETRAYER]._qactive == QUEST_DONE)
-		Quests[Q_BETRAYER]._qvar2 = 2;
-	ViewPosition = ReturnLvlPosition;
-	currlevel = ReturnLevel;
-	leveltype = ReturnLevelType;
+	switch (setlvlnum) {
+	case SL_SKELKING:
+		return Quests[Q_SKELKING].position + Direction::SouthEast;
+	case SL_BONECHAMB:
+		return Quests[Q_SCHAMB].position + Direction::SouthEast;
+	case SL_POISONWATER:
+		return Quests[Q_PWATER].position + Direction::SouthWest;
+	case SL_VILEBETRAYER:
+		return Quests[Q_BETRAYER].position + Direction::South;
+	default:
+		return Towners[TOWN_DRUNK].position + Displacement { 1, 0 };
+	}
 }
 
 void LoadPWaterPalette()

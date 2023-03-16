@@ -30,7 +30,6 @@
 #include "utils/log.hpp"
 #include "utils/paths.h"
 #include "utils/stdcompat/algorithm.hpp"
-#include "utils/stdcompat/filesystem.hpp"
 #include "utils/str_cat.hpp"
 #include "utils/str_split.hpp"
 #include "utils/utf8.hpp"
@@ -236,15 +235,7 @@ void SaveIni()
 {
 	if (!IniChanged)
 		return;
-#ifdef DVL_HAS_FILESYSTEM
-	{
-		std::error_code error;
-		std::filesystem::create_directories(paths::ConfigPath(), error);
-		if (error) {
-			LogError("failed to create directory: {}", error.message());
-		}
-	}
-#endif
+	RecursivelyCreateDir(paths::ConfigPath().c_str());
 	const std::string iniPath = GetIniPath();
 	FILE *file = OpenFile(iniPath.c_str(), "wb");
 	if (file != nullptr) {
@@ -1001,8 +992,8 @@ GraphicsOptions::GraphicsOptions()
     , hardwareCursorMaxSize("Hardware Cursor Maximum Size", OptionEntryFlags::CantChangeInGame | OptionEntryFlags::RecreateUI | (HardwareCursorSupported() ? OptionEntryFlags::None : OptionEntryFlags::Invisible), N_("Hardware Cursor Maximum Size"), N_("Maximum width / height for the hardware cursor. Larger cursors fall back to software."), 128, { 0, 64, 128, 256, 512 })
 #endif
     , limitFPS("FPS Limiter", OptionEntryFlags::None, N_("FPS Limiter"), N_("FPS is limited to avoid high CPU load. Limit considers refresh rate."), true)
-    , showFPS("Show FPS", OptionEntryFlags::None, N_("Show FPS"), N_("Displays the FPS in the upper left corner of the screen."), false)
     , showItemGraphicsInStores("Show Item Graphics in Stores", OptionEntryFlags::None, N_("Show Item Graphics in Stores"), N_("Show item graphics to the left of item descriptions in store menus."), false)
+    , showFPS("Show FPS", OptionEntryFlags::None, N_("Show FPS"), N_("Displays the FPS in the upper left corner of the screen."), false)
     , showHealthValues("Show health values", OptionEntryFlags::None, N_("Show health values"), N_("Displays current / max health value on health globe."), false)
     , showManaValues("Show mana values", OptionEntryFlags::None, N_("Show mana values"), N_("Displays current / max mana value on mana globe."), false)
 {

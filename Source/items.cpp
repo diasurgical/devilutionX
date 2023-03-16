@@ -13,7 +13,7 @@
 #include <climits>
 #include <cstdint>
 
-#include <fmt/compile.h>
+#include <fmt/core.h>
 #include <fmt/format.h>
 
 #include "DiabloUI/ui_flags.hpp"
@@ -3169,7 +3169,7 @@ void CornerstoneSave()
 		PackItem(id, CornerStone.item, (CornerStone.item.dwBuff & CF_HELLFIRE) != 0);
 		const auto *buffer = reinterpret_cast<uint8_t *>(&id);
 		for (size_t i = 0; i < sizeof(ItemPack); i++) {
-			fmt::format_to(&sgOptions.Hellfire.szItem[i * 2], FMT_COMPILE("{:02X}"), buffer[i]);
+			fmt::format_to(&sgOptions.Hellfire.szItem[i * 2], "{:02X}", buffer[i]);
 		}
 		sgOptions.Hellfire.szItem[sizeof(sgOptions.Hellfire.szItem) - 1] = '\0';
 	} else {
@@ -4531,6 +4531,11 @@ void Item::updateRequiredStatsCacheForPlayer(const Player &player)
 	_iStatFlag = player.CanUseItem(*this);
 }
 
+bool CornerStoneStruct::isAvailable()
+{
+	return currlevel == 21 && !gbIsMultiplayer;
+}
+
 void initItemGetRecords()
 {
 	memset(itemrecord, 0, sizeof(itemrecord));
@@ -4581,6 +4586,23 @@ void RechargeItem(Item &item, Player &player)
 	} while (item._iCharges < item._iMaxCharges);
 
 	item._iCharges = std::min(item._iCharges, item._iMaxCharges);
+
+	if (&player != MyPlayer)
+		return;
+	if (&item == &player.InvBody[INVLOC_HAND_LEFT]) {
+		NetSendCmdChItem(true, INVLOC_HAND_LEFT);
+		return;
+	}
+	if (&item == &player.InvBody[INVLOC_HAND_RIGHT]) {
+		NetSendCmdChItem(true, INVLOC_HAND_RIGHT);
+		return;
+	}
+	for (int i = 0; i < player._pNumInv; i++) {
+		if (&item == &player.InvList[i]) {
+			NetSyncInvItem(player, i);
+			break;
+		}
+	}
 }
 
 bool ApplyOilToItem(Item &item, Player &player)

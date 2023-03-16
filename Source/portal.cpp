@@ -142,7 +142,7 @@ void GetPortalLevel()
 		setlvlnum = (_setlevels)Portals[portalindex].level;
 		currlevel = Portals[portalindex].level;
 		MyPlayer->setLevel(setlvlnum);
-		leveltype = Portals[portalindex].ltype;
+		setlvltype = leveltype = Portals[portalindex].ltype;
 	} else {
 		setlevel = false;
 		currlevel = Portals[portalindex].level;

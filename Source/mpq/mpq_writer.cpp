@@ -13,7 +13,6 @@
 #include "utils/file_util.h"
 #include "utils/language.h"
 #include "utils/log.hpp"
-#include "utils/stdcompat/filesystem.hpp"
 #include "utils/str_cat.hpp"
 
 namespace devilution {
@@ -88,15 +87,8 @@ bool IsUnallocatedBlock(const MpqBlockEntry *block)
 
 MpqWriter::MpqWriter(const char *path)
 {
-#ifdef DVL_HAS_FILESYSTEM
-	{
-		std::error_code error;
-		std::filesystem::create_directories(std::filesystem::path(path).parent_path(), error);
-		if (error) {
-			LogError("failed to create directory: {}", error.message());
-		}
-	}
-#endif
+	const std::string dir = std::string(Dirname(path));
+	RecursivelyCreateDir(dir.c_str());
 	LogVerbose("Opening {}", path);
 	std::string error;
 	bool exists = FileExists(path);

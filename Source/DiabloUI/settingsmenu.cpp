@@ -176,6 +176,8 @@ void ItemFocused(int value)
 		auto *pOption = vecOptions[vecItem->m_value];
 		UpdateDescription(*pOption);
 	} break;
+	default:
+		break;
 	}
 }
 

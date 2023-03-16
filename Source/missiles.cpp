@@ -3385,7 +3385,7 @@ void ProcessFlashTop(Missile &missile)
 
 	constexpr Direction Offsets[] = {
 		Direction::North,
-		Direction::North,
+		Direction::NorthEast,
 		Direction::East
 	};
 	for (Direction offset : Offsets)

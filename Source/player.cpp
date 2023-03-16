@@ -6,7 +6,7 @@
 #include <algorithm>
 #include <cstdint>
 
-#include <fmt/compile.h>
+#include <fmt/core.h>
 
 #include "control.h"
 #include "controls/plrctrls.h"
@@ -2157,7 +2157,7 @@ void LoadPlrGFX(Player &player, player_graphic graphic)
 
 	char prefix[3] = { CharChar[static_cast<std::size_t>(cls)], ArmourChar[player._pgfxnum >> 4], WepChar[static_cast<std::size_t>(animWeaponId)] };
 	char pszName[256];
-	*fmt::format_to(pszName, FMT_COMPILE(R"(plrgfx\{0}\{1}\{1}{2})"), path, string_view(prefix, 3), szCel) = 0;
+	*fmt::format_to(pszName, R"(plrgfx\{0}\{1}\{1}{2})", path, string_view(prefix, 3), szCel) = 0;
 	const uint16_t animationWidth = GetPlayerSpriteWidth(cls, graphic, animWeaponId);
 	animationData.sprites = LoadCl2Sheet(pszName, animationWidth);
 	std::optional<std::array<uint8_t, 256>> trn = GetClassTRN(player);

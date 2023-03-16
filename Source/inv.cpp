@@ -947,7 +947,7 @@ void CleanupItems(int ii)
 	auto &item = Items[ii];
 	dItem[item.position.x][item.position.y] = 0;
 
-	if (currlevel == 21 && item.position == CornerStone.position) {
+	if (CornerStone.isAvailable() && item.position == CornerStone.position) {
 		CornerStone.item.clear();
 		CornerStone.item._iSelFlag = 0;
 		CornerStone.item.position = { 0, 0 };
@@ -1776,7 +1776,7 @@ int InvPutItem(const Player &player, Point position, const Item &item)
 	Items[ii].position = *itemTile;
 	RespawnItem(Items[ii], true);
 
-	if (currlevel == 21 && *itemTile == CornerStone.position) {
+	if (CornerStone.isAvailable() && *itemTile == CornerStone.position) {
 		CornerStone.item = Items[ii];
 		InitQTextMsg(TEXT_CORNSTN);
 		Quests[Q_CORNSTN]._qlog = false;
@@ -1813,7 +1813,7 @@ int SyncDropItem(Point position, _item_indexes idx, uint16_t icreateinfo, int is
 	item.position = position;
 	RespawnItem(item, true);
 
-	if (currlevel == 21 && position == CornerStone.position) {
+	if (CornerStone.isAvailable() && position == CornerStone.position) {
 		CornerStone.item = item;
 		InitQTextMsg(TEXT_CORNSTN);
 		Quests[Q_CORNSTN]._qlog = false;
@@ -1835,7 +1835,7 @@ int SyncDropEar(Point position, uint16_t icreateinfo, int iseed, uint8_t cursval
 	item.position = position;
 	RespawnItem(item, true);
 
-	if (currlevel == 21 && position == CornerStone.position) {
+	if (CornerStone.isAvailable() && position == CornerStone.position) {
 		CornerStone.item = item;
 		InitQTextMsg(TEXT_CORNSTN);
 		Quests[Q_CORNSTN]._qlog = false;
@@ -2149,7 +2149,7 @@ void CloseInventory()
 
 void DoTelekinesis()
 {
-	if (ObjectUnderCursor != nullptr)
+	if (ObjectUnderCursor != nullptr && !ObjectUnderCursor->IsDisabled())
 		NetSendCmdLoc(MyPlayerId, true, CMD_OPOBJT, cursPosition);
 	if (pcursitem != -1)
 		NetSendCmdGItem(true, CMD_REQUESTAGITEM, MyPlayerId, pcursitem);

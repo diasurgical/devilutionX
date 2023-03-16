@@ -1010,7 +1010,7 @@ void FillChambers()
 	if (leveltype == DTYPE_CRYPT) {
 		if (currlevel == 24) {
 			SetCryptRoom();
-		} else if (currlevel == 21) {
+		} else if (CornerStone.isAvailable()) {
 			SetCornerRoom();
 		}
 	} else if (pSetPiece != nullptr) {
