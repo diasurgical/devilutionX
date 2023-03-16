@@ -4013,12 +4013,8 @@ msgid "Activate to read"
 msgstr "Aktivera för att läsa"
 
 #: Source/items.cpp:1825
-msgid "Right-click to read, then"
-msgstr "Högerklicka för att läsa, därefter"
-
-#: Source/items.cpp:1826
-msgid "left-click to target"
-msgstr "vänsterklicka för att ange mål"
+msgid "Right-click to read, then\nleft-click to target"
+msgstr "Högerklicka för att läsa, därefter\nvänsterklicka för att ange mål"
 
 #: Source/items.cpp:1849
 msgid "Right-click to use"

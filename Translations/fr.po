@@ -4020,12 +4020,8 @@ msgid "Activate to read"
 msgstr "Activer pour lire"
 
 #: Source/items.cpp:1794
-msgid "Right-click to read, then"
-msgstr "Clic-droit pour lire, puis"
-
-#: Source/items.cpp:1795
-msgid "left-click to target"
-msgstr "clic-gauche pour la cible"
+msgid "Right-click to read, then\nleft-click to target"
+msgstr "Clic-droit pour lire, puis\nclic-gauche pour la cible"
 
 #: Source/items.cpp:1798
 msgid "Select from spell book, then"

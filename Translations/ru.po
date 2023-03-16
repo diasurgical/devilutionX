@@ -4070,12 +4070,8 @@ msgid "Activate to read"
 msgstr "Активируйте для чтения"
 
 #: Source/items.cpp:1825
-msgid "Right-click to read, then"
-msgstr "Правый клик для чтения, затем"
-
-#: Source/items.cpp:1826
-msgid "left-click to target"
-msgstr "левый клик по цели"
+msgid "Right-click to read, then\nleft-click to target"
+msgstr "Правый клик для чтения, затем\nлевый клик по цели"
 
 #: Source/items.cpp:1849
 msgid "Right-click to use"

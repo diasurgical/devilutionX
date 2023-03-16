@@ -4108,12 +4108,8 @@ msgid "Activate to read"
 msgstr ""
 
 #: Source/items.cpp:1825
-msgid "Right-click to read, then"
-msgstr "Clic-dreapta citire, și apoi"
-
-#: Source/items.cpp:1826
-msgid "left-click to target"
-msgstr "clic-stânga țintire"
+msgid "Right-click to read, then\nleft-click to target"
+msgstr "Clic-dreapta citire, și apoi\nclic-stânga țintire"
 
 #: Source/items.cpp:1849
 msgid "Right-click to use"

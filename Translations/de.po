@@ -4018,12 +4018,8 @@ msgid "Activate to read"
 msgstr "Linksklick zum Lesen"
 
 #: Source/items.cpp:1825
-msgid "Right-click to read, then"
-msgstr "Rechtsklick zum Lesen, dann"
-
-#: Source/items.cpp:1826
-msgid "left-click to target"
-msgstr "Linksklick zum Zielen"
+msgid "Right-click to read, then\nleft-click to target"
+msgstr "Rechtsklick zum Lesen, dann Linksklick zum Zielen"
 
 #: Source/items.cpp:1849
 msgid "Right-click to use"

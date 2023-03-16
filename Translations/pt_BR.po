@@ -4023,12 +4023,8 @@ msgid "Activate to read"
 msgstr "Ative para ler"
 
 #: Source/items.cpp:1825
-msgid "Right-click to read, then"
-msgstr "Clique direito para ler e então"
-
-#: Source/items.cpp:1826
-msgid "left-click to target"
-msgstr "clique esquerdo para golpear"
+msgid "Right-click to read, then\nleft-click to target"
+msgstr "Clique direito para ler e então\nclique esquerdo para golpear"
 
 #: Source/items.cpp:1849
 msgid "Right-click to use"

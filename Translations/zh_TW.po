@@ -4101,12 +4101,8 @@ msgid "Activate to read"
 msgstr ""
 
 #: Source/items.cpp:1825
-msgid "Right-click to read, then"
-msgstr "右​擊​閱讀，然​後"
-
-#: Source/items.cpp:1826
-msgid "left-click to target"
-msgstr "左​擊目標"
+msgid "Right-click to read, then\nleft-click to target"
+msgstr "右​擊​閱讀，然​後\n左​擊目標"
 
 #: Source/items.cpp:1849
 msgid "Right-click to use"

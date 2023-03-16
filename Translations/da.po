@@ -4228,13 +4228,8 @@ msgid "Activate to read"
 msgstr ""
 
 #: Source/items.cpp:1825
-#, fuzzy
-msgid "Right-click to read, then"
-msgstr "Skrivebeskyttet mappe fejl"
-
-#: Source/items.cpp:1826
-msgid "left-click to target"
-msgstr ""
+msgid "Right-click to read, then\nleft-click to target"
+msgstr "Højreklik for at læse, og\nvenstreklik derefter for at målrette"
 
 #: Source/items.cpp:1849
 msgid "Right-click to use"

@@ -4020,12 +4020,8 @@ msgid "Activate to read"
 msgstr "Активиране за прочит"
 
 #: Source/items.cpp:1825
-msgid "Right-click to read, then"
-msgstr "Десен клик за прочитане, "
-
-#: Source/items.cpp:1826
-msgid "left-click to target"
-msgstr "следван от ляв клик върху цел"
+msgid "Right-click to read, then\nleft-click to target"
+msgstr "Десен клик за прочитане,\nследван от ляв клик върху цел"
 
 #: Source/items.cpp:1849
 msgid "Right-click to use"
