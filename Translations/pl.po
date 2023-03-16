@@ -7945,7 +7945,13 @@ msgstr ""
 #: Source/textdat.cpp:59
 msgid "You give! Yes, good! Go now, we strong. We kill all with big Magic!"
 msgstr ""
-"Oddać! O taak! Już odejść, my potężni. My zniszczyć wszystkich! Duża magia!"
+"Oddać!  O taak! \n"
+" \n"
+"Już odejść, my potężni. \n"
+" \n"
+"My zniszczyć wszystkich! \n"
+" \n"
+"Duża magia!"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:61
