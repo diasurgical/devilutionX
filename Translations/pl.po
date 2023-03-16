@@ -8584,7 +8584,7 @@ msgid ""
 msgstr ""
 "Złoty eliksir, hm. Nigdy wcześniej nie przyrządzałem mikstury w takim "
 "kolorze. Trudno mi przewidzieć, jak mógłby na ciebie zadziałać, więc lepiej "
-"go NIE PRóBUJ. Najlepiej będzie jak po prostu spełnisz ostatnią wolę "
+"go NIE PRÓBUJ. Najlepiej będzie jak po prostu spełnisz ostatnią wolę "
 "Lachdanana."
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
