@@ -4024,20 +4024,12 @@ msgid "Activate to read"
 msgstr "Aktiviraj za čitanje"
 
 #: Source/items.cpp:1798
-msgid "Right-click to read, then"
-msgstr "Desno klikni za čitanje, zatim"
-
-#: Source/items.cpp:1799
-msgid "left-click to target"
-msgstr "lijevo klikni na metu"
+msgid "Right-click to read, then\nleft-click to target"
+msgstr "Desno klikni za čitanje, zatim\nlijevo klikni na metu"
 
 #: Source/items.cpp:1802
-msgid "Select from spell book, then"
-msgstr "Odaberi iz knjige čarolije, zatim"
-
-#: Source/items.cpp:1803
-msgid "cast spell to read"
-msgstr "bacite čaroliju za čitanje"
+msgid "Select from spell book, then\ncast spell to read"
+msgstr "Odaberi iz knjige čarolije, zatim\nbacite čaroliju za čitanje"
 
 #: Source/items.cpp:1816
 msgid "Right-click to use"

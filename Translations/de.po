@@ -4002,12 +4002,8 @@ msgid "Right-click to read"
 msgstr "Rechtsklick zum Lesen"
 
 #: Source/items.cpp:1814 Source/items.cpp:1835
-msgid "Select from spell book, then"
-msgstr "Aus dem Zauberbuch wählen, dann"
-
-#: Source/items.cpp:1815 Source/items.cpp:1836
-msgid "cast spell to read"
-msgstr "Zaubern zum Lesen"
+msgid "Select from spell book, then\ncast spell to read"
+msgstr "Aus dem Zauberbuch wählen, dann\nZaubern zum Lesen"
 
 #: Source/items.cpp:1817 Source/items.cpp:1838 Source/items.cpp:1852
 msgid "Open inventory to use"
@@ -4018,12 +4014,8 @@ msgid "Activate to read"
 msgstr "Linksklick zum Lesen"
 
 #: Source/items.cpp:1825
-msgid "Right-click to read, then"
-msgstr "Rechtsklick zum Lesen, dann"
-
-#: Source/items.cpp:1826
-msgid "left-click to target"
-msgstr "Linksklick zum Zielen"
+msgid "Right-click to read, then\nleft-click to target"
+msgstr "Rechtsklick zum Lesen, dann Linksklick zum Zielen"
 
 #: Source/items.cpp:1849
 msgid "Right-click to use"

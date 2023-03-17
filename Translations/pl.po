@@ -4003,20 +4003,12 @@ msgid "Activate to read"
 msgstr "Aktywuj, aby przeczytać"
 
 #: Source/items.cpp:1837
-msgid "Right-click to read, then"
-msgstr "PPM by odczytać, następnie"
-
-#: Source/items.cpp:1838
-msgid "left-click to target"
-msgstr "LPM na cel"
+msgid "Right-click to read, then\nleft-click to target"
+msgstr "PPM by odczytać, następnie\nLPM na cel"
 
 #: Source/items.cpp:1841
-msgid "Select from spell book, then"
-msgstr "Wybierz z księgi zaklęć, a następnie"
-
-#: Source/items.cpp:1842
-msgid "cast spell to read"
-msgstr "rzuć zaklęcie, aby przeczytać"
+msgid "Select from spell book, then\ncast spell to read"
+msgstr "Wybierz z księgi zaklęć, a następnie\nrzuć zaklęcie, aby przeczytać"
 
 #: Source/items.cpp:1855
 msgid "Right-click to use"

@@ -4289,7 +4289,7 @@ msgstr "Attiva per usare"
 #: Source/items.cpp:1765
 msgid ""
 "Select from spell book, then\n"
-"cast to read"
+"cast spell to read"
 msgstr ""
 "Seleziona dal libro di magia, poi\n"
 "lancia per leggere"

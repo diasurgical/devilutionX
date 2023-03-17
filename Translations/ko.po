@@ -3988,20 +3988,12 @@ msgstr "활성화해서 읽기"
 
 # 조합 방식 확인 필요
 #: Source/items.cpp:1837
-msgid "Right-click to read, then"
-msgstr "우클릭으로 읽고"
-
-#: Source/items.cpp:1838
-msgid "left-click to target"
-msgstr "좌클릭으로 목표 지정"
+msgid "Right-click to read, then\nleft-click to target"
+msgstr "우클릭으로 읽고\n좌클릭으로 목표 지정"
 
 #: Source/items.cpp:1841
-msgid "Select from spell book, then"
-msgstr "주문서에서 선택 후"
-
-#: Source/items.cpp:1842
-msgid "cast spell to read"
-msgstr "주문 시전"
+msgid "Select from spell book, then\ncast spell to read"
+msgstr "주문서에서 선택 후\n주문 시전"
 
 #: Source/items.cpp:1855
 msgid "Right-click to use"
