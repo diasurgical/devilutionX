@@ -139,18 +139,29 @@ mark_as_advanced(DEVILUTIONX_PALETTE_TRANSPARENCY_BLACK_16_LUT)
 option(DISABLE_DEMOMODE "Disable demo mode support" OFF)
 option(DISCORD_INTEGRATION "Build with Discord SDK for rich presence support" OFF)
 
-# By default, devilutionx.mpq is built only if smpq is installed.
-if(NOT DEFINED BUILD_ASSETS_MPQ AND NOT SRC_DIST)
-  find_program(SMPQ smpq)
-elseif(BUILD_ASSETS_MPQ)
-  find_program(SMPQ smpq REQUIRED)
-endif()
-if(SMPQ)
-  set(_has_smpq ON)
+# If both UNPACKED_MPQS and UNPACKED_SAVES are enabled, we completely remove MPQ support.
+if(UNPACKED_MPQS AND UNPACKED_SAVES)
+  set(SUPPORTS_MPQ OFF)
 else()
-  set(_has_smpq OFF)
+  set(SUPPORTS_MPQ ON)
 endif()
-option(BUILD_ASSETS_MPQ "If true, assets are packaged into devilutionx.mpq." ${_has_smpq})
+
+# By default, devilutionx.mpq is built only if smpq is installed and MPQ support is enabled.
+if(SUPPORTS_MPQ)
+  if(NOT DEFINED BUILD_ASSETS_MPQ AND NOT SRC_DIST)
+    find_program(SMPQ smpq)
+  elseif(BUILD_ASSETS_MPQ)
+    find_program(SMPQ smpq REQUIRED)
+  endif()
+  if(SMPQ)
+    set(_has_smpq ON)
+  else()
+    set(_has_smpq OFF)
+  endif()
+  option(BUILD_ASSETS_MPQ "If true, assets are packaged into devilutionx.mpq." ${_has_smpq})
+else()
+  set(BUILD_ASSETS_MPQS OFF)
+endif()
 
 # === Option overrides ===
 # TSAN is not compatible with ASAN.
