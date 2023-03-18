@@ -11,6 +11,7 @@
 #include "controls/game_controls.h"
 #include "controls/plrctrls.h"
 #include "controls/touch/gamepad.h"
+#include "engine/demomode.h"
 #include "options.h"
 #include "utils/log.hpp"
 
