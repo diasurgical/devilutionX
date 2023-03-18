@@ -23,7 +23,7 @@ struct Portal {
 extern Portal Portals[MAXPORTAL];
 
 void InitPortals();
-void SetPortalStats(int i, bool o, int x, int y, int lvl, dungeon_type lvltype, bool isSetLevel);
+void SetPortalStats(int i, bool o, Point position, int lvl, dungeon_type lvltype, bool isSetLevel);
 void AddWarpMissile(int i, Point position, bool sync);
 void SyncPortals();
 void AddInTownPortal(int i);
@@ -34,6 +34,6 @@ void RemovePortalMissile(int id);
 void SetCurrentPortal(size_t p);
 void GetPortalLevel();
 void GetPortalLvlPos();
-bool PosOkPortal(int lvl, int x, int y);
+bool PosOkPortal(int lvl, Point position);
 
 } // namespace devilution
