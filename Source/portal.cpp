@@ -38,10 +38,10 @@ void InitPortals()
 	}
 }
 
-void SetPortalStats(int i, bool o, int x, int y, int lvl, dungeon_type lvltype, bool isSetLevel)
+void SetPortalStats(int i, bool o, Point position, int lvl, dungeon_type lvltype, bool isSetLevel)
 {
 	Portals[i].open = o;
-	Portals[i].position = { x, y };
+	Portals[i].position = position;
 	Portals[i].level = lvl;
 	Portals[i].ltype = lvltype;
 	Portals[i].setlvl = isSetLevel;
@@ -170,10 +170,13 @@ void GetPortalLvlPos()
 	}
 }
 
-bool PosOkPortal(int lvl, int x, int y)
+bool PosOkPortal(int lvl, Point position)
 {
 	for (auto &portal : Portals) {
-		if (portal.open && portal.level == lvl && ((portal.position.x == x && portal.position.y == y) || (portal.position.x == x - 1 && portal.position.y == y - 1)))
+		if (portal.open
+		    && portal.level == lvl
+		    && ((portal.position == position)
+		        || (portal.position == position - Displacement { 1, 1 })))
 			return true;
 	}
 	return false;

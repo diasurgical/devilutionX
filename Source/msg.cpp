@@ -2709,13 +2709,12 @@ void DeltaSyncJunk()
 {
 	for (int i = 0; i < MAXPORTAL; i++) {
 		if (sgJunk.portal[i].x == 0xFF) {
-			SetPortalStats(i, false, 0, 0, 0, DTYPE_TOWN, false);
+			SetPortalStats(i, false, { 0, 0 }, 0, DTYPE_TOWN, false);
 		} else {
 			SetPortalStats(
 			    i,
 			    true,
-			    sgJunk.portal[i].x,
-			    sgJunk.portal[i].y,
+			    { sgJunk.portal[i].x, sgJunk.portal[i].y },
 			    sgJunk.portal[i].level,
 			    (dungeon_type)sgJunk.portal[i].ltype,
 			    sgJunk.portal[i].setlvl);

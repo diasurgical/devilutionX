@@ -1491,41 +1491,41 @@ void AddTorturedBody(Object &torturedBody)
 	torturedBody._oPreFlag = true;
 }
 
-void GetRndObjLoc(int randarea, int *xx, int *yy)
+Point GetRndObjLoc(int randarea)
 {
 	if (randarea == 0)
-		return;
+		return { 0, 0 };
 
 	int tries = 0;
+	int x;
+	int y;
 	while (true) {
 		tries++;
 		if (tries > 1000 && randarea > 1)
 			randarea--;
-		*xx = GenerateRnd(MAXDUNX);
-		*yy = GenerateRnd(MAXDUNY);
+		x = GenerateRnd(MAXDUNX);
+		y = GenerateRnd(MAXDUNY);
 		bool failed = false;
 		for (int i = 0; i < randarea && !failed; i++) {
 			for (int j = 0; j < randarea && !failed; j++) {
-				failed = !RndLocOk(i + *xx, j + *yy);
+				failed = !RndLocOk(i + x, j + y);
 			}
 		}
 		if (!failed)
 			break;
 	}
+	return { x, y };
 }
 
 void AddMushPatch()
 {
-	int y;
-	int x;
-
 	if (ActiveObjectCount < MAXOBJECTS) {
 		int i = AvailableObjects[0];
-		GetRndObjLoc(5, &x, &y);
-		dObject[x + 1][y + 1] = -(i + 1);
-		dObject[x + 2][y + 1] = -(i + 1);
-		dObject[x + 1][y + 2] = -(i + 1);
-		AddObject(OBJ_MUSHPATCH, { x + 2, y + 2 });
+		const Point loc = GetRndObjLoc(5);
+		dObject[loc.x + 1][loc.y + 1] = -(i + 1);
+		dObject[loc.x + 2][loc.y + 1] = -(i + 1);
+		dObject[loc.x + 1][loc.y + 2] = -(i + 1);
+		AddObject(OBJ_MUSHPATCH, { loc.x + 2, loc.y + 2 });
 	}
 }
 
@@ -3808,11 +3808,8 @@ void AddCryptObjects(int x1, int y1, int x2, int y2)
 
 void AddSlainHero()
 {
-	int x;
-	int y;
-
-	GetRndObjLoc(5, &x, &y);
-	AddObject(OBJ_SLAINHERO, { x + 2, y + 2 });
+	Point rndObjLoc = GetRndObjLoc(5);
+	AddObject(OBJ_SLAINHERO, rndObjLoc + Displacement { 2, 2 });
 }
 
 void InitObjects()
