@@ -3308,7 +3308,7 @@ void SyncInitPlrPos(Player &player)
 
 		std::optional<Point> nearPosition = FindClosestValidPosition(
 		    [&player](Point testPosition) {
-			    return PosOkPlayer(player, testPosition) && !PosOkPortal(currlevel, testPosition.x, testPosition.y);
+			    return PosOkPlayer(player, testPosition) && !PosOkPortal(currlevel, testPosition);
 		    },
 		    player.position.tile,
 		    1, // skip the starting tile since that was checked in the previous loop
