@@ -75,6 +75,34 @@ bool Timedemo = false;
 int RecordNumber = -1;
 bool CreateDemoReference = false;
 
+// These options affect gameplay and are stored in the demo file.
+struct {
+	uint8_t tickRate = 20;
+	bool runInTown = false;
+	bool theoQuest = false;
+	bool cowQuest = false;
+	bool autoGoldPickup = false;
+	bool autoElixirPickup = false;
+	bool autoOilPickup = false;
+	bool autoPickupInTown = false;
+	bool adriaRefillsMana = false;
+	bool autoEquipWeapons = false;
+	bool autoEquipArmor = false;
+	bool autoEquipHelms = false;
+	bool autoEquipShields = false;
+	bool autoEquipJewelry = false;
+	bool randomizeQuests = false;
+	bool showItemLabels = false;
+	bool autoRefillBelt = false;
+	bool disableCripplingShrines = false;
+	uint8_t numHealPotionPickup = 0;
+	uint8_t numFullHealPotionPickup = 0;
+	uint8_t numManaPotionPickup = 0;
+	uint8_t numFullManaPotionPickup = 0;
+	uint8_t numRejuPotionPickup = 0;
+	uint8_t numFullRejuPotionPickup = 0;
+} DemoSettings;
+
 FILE *DemoRecording;
 std::deque<DemoMsg> Demo_Message_Queue;
 uint32_t DemoModeLastTick = 0;
@@ -84,6 +112,68 @@ int StartTime = 0;
 
 uint16_t DemoGraphicsWidth = 640;
 uint16_t DemoGraphicsHeight = 480;
+
+void ReadSettings(FILE *in, uint8_t version)
+{
+	DemoGraphicsWidth = ReadLE16(in);
+	DemoGraphicsHeight = ReadLE16(in);
+	if (version > 0) {
+		DemoSettings.runInTown = ReadByte(in) != 0;
+		DemoSettings.theoQuest = ReadByte(in) != 0;
+		DemoSettings.cowQuest = ReadByte(in) != 0;
+		DemoSettings.autoGoldPickup = ReadByte(in) != 0;
+		DemoSettings.autoElixirPickup = ReadByte(in) != 0;
+		DemoSettings.autoOilPickup = ReadByte(in) != 0;
+		DemoSettings.autoPickupInTown = ReadByte(in) != 0;
+		DemoSettings.adriaRefillsMana = ReadByte(in) != 0;
+		DemoSettings.autoEquipWeapons = ReadByte(in) != 0;
+		DemoSettings.autoEquipArmor = ReadByte(in) != 0;
+		DemoSettings.autoEquipHelms = ReadByte(in) != 0;
+		DemoSettings.autoEquipShields = ReadByte(in) != 0;
+		DemoSettings.autoEquipJewelry = ReadByte(in) != 0;
+		DemoSettings.randomizeQuests = ReadByte(in) != 0;
+		DemoSettings.showItemLabels = ReadByte(in) != 0;
+		DemoSettings.autoRefillBelt = ReadByte(in) != 0;
+		DemoSettings.disableCripplingShrines = ReadByte(in) != 0;
+		DemoSettings.numHealPotionPickup = ReadByte(in);
+		DemoSettings.numFullHealPotionPickup = ReadByte(in);
+		DemoSettings.numManaPotionPickup = ReadByte(in);
+		DemoSettings.numFullManaPotionPickup = ReadByte(in);
+		DemoSettings.numRejuPotionPickup = ReadByte(in);
+		DemoSettings.numFullRejuPotionPickup = ReadByte(in);
+	} else {
+		DemoSettings = {};
+	}
+}
+
+void WriteSettings(FILE *out)
+{
+	WriteLE16(out, gnScreenWidth);
+	WriteLE16(out, gnScreenHeight);
+	WriteByte(out, *sgOptions.Gameplay.runInTown);
+	WriteByte(out, *sgOptions.Gameplay.theoQuest);
+	WriteByte(out, *sgOptions.Gameplay.cowQuest);
+	WriteByte(out, *sgOptions.Gameplay.autoGoldPickup);
+	WriteByte(out, *sgOptions.Gameplay.autoElixirPickup);
+	WriteByte(out, *sgOptions.Gameplay.autoOilPickup);
+	WriteByte(out, *sgOptions.Gameplay.autoPickupInTown);
+	WriteByte(out, *sgOptions.Gameplay.adriaRefillsMana);
+	WriteByte(out, *sgOptions.Gameplay.autoEquipWeapons);
+	WriteByte(out, *sgOptions.Gameplay.autoEquipArmor);
+	WriteByte(out, *sgOptions.Gameplay.autoEquipHelms);
+	WriteByte(out, *sgOptions.Gameplay.autoEquipShields);
+	WriteByte(out, *sgOptions.Gameplay.autoEquipJewelry);
+	WriteByte(out, *sgOptions.Gameplay.randomizeQuests);
+	WriteByte(out, *sgOptions.Gameplay.showItemLabels);
+	WriteByte(out, *sgOptions.Gameplay.autoRefillBelt);
+	WriteByte(out, *sgOptions.Gameplay.disableCripplingShrines);
+	WriteByte(out, *sgOptions.Gameplay.numHealPotionPickup);
+	WriteByte(out, *sgOptions.Gameplay.numFullHealPotionPickup);
+	WriteByte(out, *sgOptions.Gameplay.numManaPotionPickup);
+	WriteByte(out, *sgOptions.Gameplay.numFullManaPotionPickup);
+	WriteByte(out, *sgOptions.Gameplay.numRejuPotionPickup);
+	WriteByte(out, *sgOptions.Gameplay.numFullRejuPotionPickup);
+}
 
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 bool CreateSdlEvent(const DemoMsg &dmsg, SDL_Event &event, uint16_t &modState)
@@ -293,8 +383,7 @@ bool LoadDemoMessages(int i)
 	}
 
 	gSaveNumber = ReadLE32(demofile);
-	DemoGraphicsWidth = ReadLE16(demofile);
-	DemoGraphicsHeight = ReadLE16(demofile);
+	ReadSettings(demofile, version);
 
 	while (true) {
 		const uint32_t typeNum = ReadLE32(demofile);
@@ -396,6 +485,30 @@ void OverrideOptions()
 		sgOptions.Graphics.limitFPS.SetValue(false);
 	}
 	forceResolution = Size(DemoGraphicsWidth, DemoGraphicsHeight);
+
+	sgOptions.Gameplay.runInTown.SetValue(DemoSettings.runInTown);
+	sgOptions.Gameplay.theoQuest.SetValue(DemoSettings.theoQuest);
+	sgOptions.Gameplay.cowQuest.SetValue(DemoSettings.cowQuest);
+	sgOptions.Gameplay.autoGoldPickup.SetValue(DemoSettings.autoGoldPickup);
+	sgOptions.Gameplay.autoElixirPickup.SetValue(DemoSettings.autoElixirPickup);
+	sgOptions.Gameplay.autoOilPickup.SetValue(DemoSettings.autoOilPickup);
+	sgOptions.Gameplay.autoPickupInTown.SetValue(DemoSettings.autoPickupInTown);
+	sgOptions.Gameplay.adriaRefillsMana.SetValue(DemoSettings.adriaRefillsMana);
+	sgOptions.Gameplay.autoEquipWeapons.SetValue(DemoSettings.autoEquipWeapons);
+	sgOptions.Gameplay.autoEquipArmor.SetValue(DemoSettings.autoEquipArmor);
+	sgOptions.Gameplay.autoEquipHelms.SetValue(DemoSettings.autoEquipHelms);
+	sgOptions.Gameplay.autoEquipShields.SetValue(DemoSettings.autoEquipShields);
+	sgOptions.Gameplay.autoEquipJewelry.SetValue(DemoSettings.autoEquipJewelry);
+	sgOptions.Gameplay.randomizeQuests.SetValue(DemoSettings.randomizeQuests);
+	sgOptions.Gameplay.showItemLabels.SetValue(DemoSettings.showItemLabels);
+	sgOptions.Gameplay.autoRefillBelt.SetValue(DemoSettings.autoRefillBelt);
+	sgOptions.Gameplay.disableCripplingShrines.SetValue(DemoSettings.disableCripplingShrines);
+	sgOptions.Gameplay.numHealPotionPickup.SetValue(DemoSettings.numHealPotionPickup);
+	sgOptions.Gameplay.numFullHealPotionPickup.SetValue(DemoSettings.numFullHealPotionPickup);
+	sgOptions.Gameplay.numManaPotionPickup.SetValue(DemoSettings.numManaPotionPickup);
+	sgOptions.Gameplay.numFullManaPotionPickup.SetValue(DemoSettings.numFullManaPotionPickup);
+	sgOptions.Gameplay.numRejuPotionPickup.SetValue(DemoSettings.numRejuPotionPickup);
+	sgOptions.Gameplay.numFullRejuPotionPickup.SetValue(DemoSettings.numFullRejuPotionPickup);
 }
 
 bool IsRunning()
@@ -564,11 +677,10 @@ void NotifyGameLoopStart()
 			LogError("Failed to open {} for writing", path);
 			return;
 		}
-		constexpr uint8_t Version = 0;
+		constexpr uint8_t Version = 1;
 		WriteByte(DemoRecording, Version);
 		WriteLE32(DemoRecording, gSaveNumber);
-		WriteLE16(DemoRecording, gnScreenWidth);
-		WriteLE16(DemoRecording, gnScreenHeight);
+		WriteSettings(DemoRecording);
 	}
 
 	if (IsRunning()) {
