@@ -1521,7 +1521,7 @@ void AddMushPatch()
 {
 	if (ActiveObjectCount < MAXOBJECTS) {
 		int i = AvailableObjects[0];
-		const Point loc = GetRndObjLoc(5)
+		const Point loc = GetRndObjLoc(5);
 		dObject[loc.x + 1][loc.y + 1] = -(i + 1);
 		dObject[loc.x + 2][loc.y + 1] = -(i + 1);
 		dObject[loc.x + 1][loc.y + 2] = -(i + 1);
