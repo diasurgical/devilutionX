@@ -1521,11 +1521,11 @@ void AddMushPatch()
 {
 	if (ActiveObjectCount < MAXOBJECTS) {
 		int i = AvailableObjects[0];
-		auto [x, y] = GetRndObjLoc(5);
-		dObject[x + 1][y + 1] = -(i + 1);
-		dObject[x + 2][y + 1] = -(i + 1);
-		dObject[x + 1][y + 2] = -(i + 1);
-		AddObject(OBJ_MUSHPATCH, { x + 2, y + 2 });
+		const Point loc = GetRndObjLoc(5)
+		dObject[loc.x + 1][loc.y + 1] = -(i + 1);
+		dObject[loc.x + 2][loc.y + 1] = -(i + 1);
+		dObject[loc.x + 1][loc.y + 2] = -(i + 1);
+		AddObject(OBJ_MUSHPATCH, { loc.x + 2, loc.y + 2 });
 	}
 }
 
