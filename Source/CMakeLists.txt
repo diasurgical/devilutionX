@@ -164,7 +164,7 @@ set(libdevilutionx_SRCS
   utils/surface_to_clx.cpp
   utils/utf8.cpp)
 
-if(NOT (UNPACKED_MPQS AND UNPACKED_SAVES))
+if(SUPPORTS_MPQ)
   list(APPEND libdevilutionx_DEPS libmpq)
   list(APPEND libdevilutionx_SRCS
     mpq/mpq_reader.cpp
@@ -172,7 +172,7 @@ if(NOT (UNPACKED_MPQS AND UNPACKED_SAVES))
     mpq/mpq_writer.cpp)
 endif()
 
-if(NOT (UNPACKED_MPQS AND UNPACKED_SAVES AND NONET))
+if(SUPPORTS_MPQ OR NOT NONET)
   list(APPEND libdevilutionx_DEPS PKWare)
   list(APPEND libdevilutionx_SRCS encrypt.cpp)
 endif()

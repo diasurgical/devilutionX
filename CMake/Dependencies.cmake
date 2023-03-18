@@ -12,12 +12,15 @@ else()
   endif()
 endif()
 
-if(EMSCRIPTEN)
-  emscripten_system_library("bzip2" BZip2::BZip2 USE_BZIP2=1)
-else()
-  dependency_options("bzip2" DEVILUTIONX_SYSTEM_BZIP2 ON DEVILUTIONX_STATIC_BZIP2)
-  if(NOT DEVILUTIONX_SYSTEM_BZIP2)
-    add_subdirectory(3rdParty/bzip2)
+if(SUPPORTS_MPQ)
+  # bzip2 is a libmpq dependency.
+  if(EMSCRIPTEN)
+    emscripten_system_library("bzip2" BZip2::BZip2 USE_BZIP2=1)
+  else()
+    dependency_options("bzip2" DEVILUTIONX_SYSTEM_BZIP2 ON DEVILUTIONX_STATIC_BZIP2)
+    if(NOT DEVILUTIONX_SYSTEM_BZIP2)
+      add_subdirectory(3rdParty/bzip2)
+    endif()
   endif()
 endif()
 
@@ -182,7 +185,7 @@ else()
   add_subdirectory(3rdParty/simpleini)
 endif()
 
-if(NOT (UNPACKED_MPQS AND UNPACKED_SAVES))
+if(SUPPORTS_MPQ)
   add_subdirectory(3rdParty/libmpq)
 endif()
 
@@ -190,7 +193,7 @@ add_subdirectory(3rdParty/tl)
 
 add_subdirectory(3rdParty/hoehrmann_utf8)
 
-if(NOT (UNPACKED_MPQS AND UNPACKED_SAVES AND NONET))
+if(SUPPORTS_MPQ OR NOT NONET)
   add_subdirectory(3rdParty/PKWare)
 endif()
 
