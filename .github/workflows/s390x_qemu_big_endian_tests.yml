@@ -25,7 +25,8 @@ jobs:
       uses: actions/cache@v3
       with:
         path: .ccache
-        key: ${{ github.workflow }}-ccache
+        key: ${{ github.workflow }}-v1-${{ github.sha }}
+        restore-keys: ${{ github.workflow }}-v1-
 
     - name: Get the qemu container
       run: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
