@@ -129,7 +129,11 @@ byte *ReceivePacket(TBuffer *pBuf, byte *body, size_t *size)
 void NetReceivePlayerData(TPkt *pkt)
 {
 	const Player &myPlayer = *MyPlayer;
-	const Point target = myPlayer.GetTargetPosition();
+	Point target = myPlayer.GetTargetPosition();
+	// Don't send desired target position when we will change our position soon.
+	// This prevents a desync where the remote client starts a walking to the old target position when the teleport is finished but the the new position isn't received yet.
+	if (myPlayer._pmode == PM_SPELL && IsAnyOf(myPlayer.executedSpell.spellId, SpellID::Teleport, SpellID::Phasing, SpellID::Warp))
+		target = {};
 
 	pkt->hdr.wCheck = HeaderCheckVal;
 	pkt->hdr.px = myPlayer.position.tile.x;
@@ -653,7 +657,9 @@ void multi_process_network_packets()
 					if (player.position.future.WalkingDistance(player.position.tile) > 1) {
 						player.position.future = player.position.tile;
 					}
-					MakePlrPath(player, { pkt->targx, pkt->targy }, true);
+					Point target = { pkt->targx, pkt->targy };
+					if (target != Point {}) // does the client send a desired (future) position of remote player?
+						MakePlrPath(player, target, true);
 				} else {
 					player.position.tile = syncPosition;
 					player.position.future = syncPosition;
