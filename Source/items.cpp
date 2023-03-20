@@ -1727,6 +1727,10 @@ void PrintItemOil(char iDidx)
 	case IMISC_FULLREJUV:
 		AddPanelString(_("restore all life and mana"));
 		break;
+	case IMISC_ARENAPOT:
+		AddPanelString(_("restore all life and mana"));
+		AddPanelString(_("(works only in arenas)"));
+		break;
 	}
 }
 
@@ -1818,7 +1822,8 @@ void PrintItemMisc(const Item &item)
 	}
 	const bool isOil = (item._iMiscId >= IMISC_USEFIRST && item._iMiscId <= IMISC_USELAST)
 	    || (item._iMiscId > IMISC_OILFIRST && item._iMiscId < IMISC_OILLAST)
-	    || (item._iMiscId > IMISC_RUNEFIRST && item._iMiscId < IMISC_RUNELAST);
+	    || (item._iMiscId > IMISC_RUNEFIRST && item._iMiscId < IMISC_RUNELAST)
+	    || item._iMiscId == IMISC_ARENAPOT;
 	const bool isCastOnTarget = (item._iMiscId == IMISC_SCROLLT && item._iSpell != SpellID::Flash)
 	    || (item._iMiscId == IMISC_SCROLL && IsAnyOf(item._iSpell, SpellID::TownPortal, SpellID::Identify));
 
@@ -3828,6 +3833,7 @@ void UseItem(size_t pnum, item_misc_id mid, SpellID spl)
 		}
 	} break;
 	case IMISC_FULLREJUV:
+	case IMISC_ARENAPOT:
 		player.RestoreFullLife();
 		player.RestoreFullMana();
 		if (&player == MyPlayer) {
