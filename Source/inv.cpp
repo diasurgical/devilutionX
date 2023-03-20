@@ -2078,6 +2078,11 @@ bool UseInvItem(size_t pnum, int cii)
 		return true;
 	}
 
+	if (item->_iMiscId == IMISC_ARENAPOT && !player.isOnArenaLevel()) {
+		player.Say(HeroSpeech::ThatWontWorkHere);
+		return true;
+	}
+
 	int idata = ItemCAnimTbl[item->_iCurs];
 	if (item->_iMiscId == IMISC_BOOK)
 		PlaySFX(IS_RBOOK);

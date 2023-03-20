@@ -83,6 +83,11 @@ Point FindSlotUnderCursor(Point cursorPosition)
 	return InvalidStashPoint;
 }
 
+bool IsItemAllowedInStash(const Item &item)
+{
+	return item._iMiscId != IMISC_ARENAPOT;
+}
+
 void CheckStashPaste(Point cursorPosition)
 {
 	Player &player = *MyPlayer;
@@ -94,6 +99,9 @@ void CheckStashPaste(Point cursorPosition)
 		//  into an inventory grid, so compensate for the adjusted hot pixel of hardware cursors.
 		cursorPosition -= hotPixelOffset;
 	}
+
+	if (!IsItemAllowedInStash(player.HoldItem))
+		return;
 
 	if (player.HoldItem._itype == ItemType::Gold) {
 		if (Stash.gold > std::numeric_limits<int>::max() - player.HoldItem._ivalue)
@@ -669,6 +677,9 @@ void GoldWithdrawNewText(string_view text)
 
 bool AutoPlaceItemInStash(Player &player, const Item &item, bool persistItem)
 {
+	if (!IsItemAllowedInStash(item))
+		return false;
+
 	if (item._itype == ItemType::Gold) {
 		if (Stash.gold > std::numeric_limits<int>::max() - item._ivalue)
 			return false;

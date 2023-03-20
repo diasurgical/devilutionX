@@ -39,7 +39,8 @@ void VerifyGoldSeeds(Player &player)
 void PackItem(ItemPack &packedItem, const Item &item, bool isHellfire)
 {
 	packedItem = {};
-	if (item.isEmpty()) {
+	// Arena potions don't exist in vanilla so don't save them to stay backward compatible
+	if (item.isEmpty() || item._iMiscId == IMISC_ARENAPOT) {
 		packedItem.idx = 0xFFFF;
 	} else {
 		auto idx = item.IDidx;
