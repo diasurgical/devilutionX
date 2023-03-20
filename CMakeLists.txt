@@ -123,6 +123,11 @@ set(DEVILUTIONX_PROFILE_DIR "" CACHE STRING "Directory where the profile is stor
 
 include(MoldLinker)
 
+option(ENABLE_HUGETLBFS "Link with hugetlbfs and run hugedit on the final binary" OFF)
+mark_as_advanced(ENABLE_HUGETLBFS)
+set(PAGE_SIZE "0" CACHE STRING "Sets -zcommon-page-size and -zmax-page-size linker flags to the given value")
+mark_as_advanced(PAGE_SIZE)
+
 # Memory / performance trade-off options
 option(UNPACKED_MPQS "Expect MPQs to be unpacked and the data converted with devilutionx-mpq-tools" OFF)
 option(UNPACKED_SAVES "Uses unpacked save files instead of MPQ .sv/.hsv files" OFF)
@@ -331,6 +336,21 @@ endif()
 
 if(NOT UWP_LIB)
   target_link_libraries(${BIN_TARGET} PRIVATE libdevilutionx)
+endif()
+
+if(NOT PAGE_SIZE STREQUAL "0")
+  target_link_options(${BIN_TARGET} PRIVATE "-Wl,-zcommon-page-size=${PAGE_SIZE}" "-Wl,-zmax-page-size=${PAGE_SIZE}")
+endif()
+if(ENABLE_HUGETLBFS)
+  target_link_options(${BIN_TARGET} PUBLIC -lhugetlbfs)
+  find_program(HUGEEDIT hugeedit REQUIRED)
+  add_custom_command(
+    COMMENT "Running ${HUGEEDIT}"
+    TARGET ${BIN_TARGET}
+    POST_BUILD
+    "${HUGEEDIT}" --text --data ${BIN_TARGET}
+    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
+    VERBATIM)
 endif()
 
 if(GPERF)
