@@ -356,33 +356,38 @@ cmake --build build -j $(getconf _NPROCESSORS_ONLN)
 
 <details><summary>OpenDingux / RetroFW</summary>
 
-DevilutionX uses buildroot to build packages for OpenDingux and RetroFW.
+DevilutionX uses buildroot-based toolchains to build packages for OpenDingux and RetroFW.
 
-The build script does the following:
+For OpenDingux / RetroFW builds, `mksquashfs` needs to be installed on your machine.
 
-1. Downloads and configures the buildroot if necessary.
-2. Builds the executable (using CMake).
-3. Packages the executable and all related resources into an `.ipk` or `.opk` package.
-
-The buildroot uses ~2.5 GiB of disk space and can take 20 minutes to build.
-
-For OpenDingux builds `mksquashfs` needs to be installed.
-
-To build, run the following command
+To build, run the following command:
 
 ~~~ bash
-Packaging/OpenDingux/build.sh <platform>
+TOOLCHAIN=<path/to/toolchain> Packaging/OpenDingux/build.sh <platform>
 ~~~
 
-Replace `<platform>` with one of: `retrofw`, `rg350`, or `gkd350h`.
+Replace `<platform>` with one of: `lepus`, `retrofw`, `rg99`, `rg350`, or `gkd350h`.
 
-This prepares and uses the buildroot at `$HOME/buildroot-$PLATFORM-devilutionx`.
+For example:
 
-End-user manuals are available here:
+~~~ bash
+TOOLCHAIN=/opt/gcw0-toolchain Packaging/OpenDingux/build.sh rg350
+~~~
 
-* [RetroFW manual](docs/manual/platforms/retrofw.md)
-* [RG-350 manual](docs/manual/platforms/rg350.md)
-* [GKD350h manual](docs/manual/platforms/gkd350h.md)
+You can download the prebuilt toolchains for `x86_64` hosts here:
+
+* OpenDingux: https://github.com/OpenDingux/buildroot/releases
+* RetroFW: https://github.com/Poligraf/retrofw_buildroot_gcc11/releases
+
+Remember to run `./relocate-sdk.sh` in the toolchain directory after unpacking it.
+
+Alternatively, if you do not set `TOOLCHAIN`, the script will
+download and compile a partial buildroot toolchain for you
+(stored at `$HOME/buildroot-$PLATFORM-devilutionx`).
+This requires 8 GiB+ disk space and takes a while.
+
+End-user manuals are available [here](manual/platforms) and
+in the package help section.
 
 </details>
 
