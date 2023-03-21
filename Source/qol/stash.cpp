@@ -277,7 +277,7 @@ void InitStash()
 
 void TransferItemToInventory(Player &player, uint16_t itemId)
 {
-	if (itemId == uint16_t(-1)) {
+	if (itemId == StashStruct::EmptyCell) {
 		return;
 	}
 
