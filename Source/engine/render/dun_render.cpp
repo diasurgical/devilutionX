@@ -18,6 +18,7 @@
 #include <climits>
 #include <cstdint>
 
+#include "engine/render/blit_impl.hpp"
 #include "lighting.h"
 #include "options.h"
 #include "utils/attributes.h"
@@ -152,55 +153,64 @@ enum class LightType : uint8_t {
 };
 
 template <LightType Light>
-DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLineOpaque(uint8_t *DVL_RESTRICT dst, const uint8_t *DVL_RESTRICT src, uint_fast8_t n, const uint8_t *DVL_RESTRICT tbl)
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLineOpaque(uint8_t *DVL_RESTRICT dst, const uint8_t *DVL_RESTRICT src, uint_fast8_t n, const uint8_t *DVL_RESTRICT tbl);
+
+template <>
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLineOpaque<LightType::FullyDark>(uint8_t *DVL_RESTRICT dst, [[maybe_unused]] const uint8_t *DVL_RESTRICT src, uint_fast8_t n, [[maybe_unused]] const uint8_t *DVL_RESTRICT tbl)
 {
-	if (Light == LightType::FullyDark) {
-		memset(dst, 0, n);
-	} else if (Light == LightType::FullyLit) {
-#ifndef DEBUG_RENDER_COLOR
-		memcpy(dst, src, n);
-#else
-		memset(dst, DBGCOLOR, n);
-#endif
-	} else { // Partially lit
-#ifndef DEBUG_RENDER_COLOR
-		while (n-- != 0) {
-			*dst++ = tbl[*src++];
-		}
-#else
-		memset(dst, tbl[DBGCOLOR], n);
-#endif
-	}
+	BlitFillDirect(dst, n, 0);
 }
 
+template <>
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLineOpaque<LightType::FullyLit>(uint8_t *DVL_RESTRICT dst, const uint8_t *DVL_RESTRICT src, uint_fast8_t n, [[maybe_unused]] const uint8_t *DVL_RESTRICT tbl)
+{
+#ifndef DEBUG_RENDER_COLOR
+	BlitPixelsDirect(dst, src, n);
+#else
+	BlitFillDirect(dst, n, DBGCOLOR);
+#endif
+}
+
+template <>
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLineOpaque<LightType::PartiallyLit>(uint8_t *DVL_RESTRICT dst, const uint8_t *DVL_RESTRICT src, uint_fast8_t n, const uint8_t *DVL_RESTRICT tbl)
+{
+#ifndef DEBUG_RENDER_COLOR
+	BlitPixelsWithMap(dst, src, n, tbl);
+#else
+	BlitFillDirect(dst, n, tbl[DBGCOLOR]);
+#endif
+}
+
+#ifndef DEBUG_RENDER_COLOR
+template <LightType Light>
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLineTransparent(uint8_t *DVL_RESTRICT dst, const uint8_t *DVL_RESTRICT src, uint_fast8_t n, const uint8_t *DVL_RESTRICT tbl);
+
+template <>
+void RenderLineTransparent<LightType::FullyDark>(uint8_t *DVL_RESTRICT dst, [[maybe_unused]] const uint8_t *DVL_RESTRICT src, uint_fast8_t n, [[maybe_unused]] const uint8_t *DVL_RESTRICT tbl)
+{
+	BlitFillBlended(dst, n, 0);
+}
+
+template <>
+void RenderLineTransparent<LightType::FullyLit>(uint8_t *DVL_RESTRICT dst, const uint8_t *DVL_RESTRICT src, uint_fast8_t n, [[maybe_unused]] const uint8_t *DVL_RESTRICT tbl)
+{
+	BlitPixelsBlended(dst, src, n);
+}
+
+template <>
+void RenderLineTransparent<LightType::PartiallyLit>(uint8_t *DVL_RESTRICT dst, const uint8_t *DVL_RESTRICT src, uint_fast8_t n, const uint8_t *DVL_RESTRICT tbl)
+{
+	BlitPixelsBlendedWithMap(dst, src, n, tbl);
+}
+#else // DEBUG_RENDER_COLOR
 template <LightType Light>
 DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLineTransparent(uint8_t *DVL_RESTRICT dst, const uint8_t *DVL_RESTRICT src, uint_fast8_t n, const uint8_t *DVL_RESTRICT tbl)
 {
-#ifndef DEBUG_RENDER_COLOR
-	if (Light == LightType::FullyDark) {
-		while (n-- != 0) {
-			*dst = paletteTransparencyLookup[0][*dst];
-			++dst;
-		}
-	} else if (Light == LightType::FullyLit) {
-		while (n-- != 0) {
-			*dst = paletteTransparencyLookup[*dst][*src];
-			++dst;
-			++src;
-		}
-	} else { // Partially lit
-		while (n-- != 0) {
-			*dst = paletteTransparencyLookup[*dst][tbl[*src]];
-			++dst;
-			++src;
-		}
-	}
-#else
 	for (size_t i = 0; i < n; i++) {
 		dst[i] = paletteTransparencyLookup[dst[i]][tbl[DBGCOLOR + 4]];
 	}
-#endif
 }
+#endif
 
 template <LightType Light, bool Transparent>
 DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLineTransparentOrOpaque(uint8_t *DVL_RESTRICT dst, const uint8_t *DVL_RESTRICT src, uint_fast8_t width, const uint8_t *DVL_RESTRICT tbl)

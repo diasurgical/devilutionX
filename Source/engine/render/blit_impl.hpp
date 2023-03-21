@@ -26,13 +26,13 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void BlitFillDirect(uint8_t *dst, unsigned l
 	std::memset(dst, color, length);
 }
 
-DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void BlitPixelsDirect(uint8_t *dst, const uint8_t *src, unsigned length)
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void BlitPixelsDirect(uint8_t *DVL_RESTRICT dst, const uint8_t *DVL_RESTRICT src, unsigned length)
 {
 	std::memcpy(dst, src, length);
 }
 
 struct BlitDirect {
-	DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void operator()(BlitCommand cmd, uint8_t *dst, const uint8_t *src)
+	DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void operator()(BlitCommand cmd, uint8_t *DVL_RESTRICT dst, const uint8_t *DVL_RESTRICT src)
 	{
 		switch (cmd.type) {
 		case BlitType::Fill:
@@ -47,21 +47,68 @@ struct BlitDirect {
 	}
 };
 
-DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void BlitFillWithMap(uint8_t *dst, unsigned length, uint8_t color, const uint8_t *colorMap)
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void BlitFillWithMap(uint8_t *dst, unsigned length, uint8_t color, const uint8_t *DVL_RESTRICT colorMap)
 {
 	std::memset(dst, colorMap[color], length);
 }
 
-DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void BlitPixelsWithMap(uint8_t *dst, const uint8_t *src, unsigned length, const uint8_t *colorMap)
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void BlitPixelsWithMap(uint8_t *DVL_RESTRICT dst, const uint8_t *DVL_RESTRICT src, unsigned length, const uint8_t *DVL_RESTRICT colorMap)
 {
-	while (length-- > 0)
+	const uint8_t *end = src + length;
+	while (src < end - 3) {
 		*dst++ = colorMap[*src++];
+		*dst++ = colorMap[*src++];
+		*dst++ = colorMap[*src++];
+		*dst++ = colorMap[*src++];
+	}
+	while (src < end) {
+		*dst++ = colorMap[*src++];
+	}
+}
+
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void BlitFillBlended(uint8_t *dst, unsigned length, uint8_t color)
+{
+	const uint8_t *end = dst + length;
+	const uint8_t *tbl = paletteTransparencyLookup[color];
+	while (dst < end - 3) {
+		*dst = tbl[*dst];
+		++dst;
+		*dst = tbl[*dst];
+		++dst;
+		*dst = tbl[*dst];
+		++dst;
+		*dst = tbl[*dst];
+		++dst;
+	}
+	while (dst < end) {
+		*dst = tbl[*dst];
+		++dst;
+	}
+}
+
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void BlitPixelsBlended(uint8_t *DVL_RESTRICT dst, const uint8_t *DVL_RESTRICT src, unsigned length)
+{
+	const uint8_t *end = src + length;
+	while (src < end - 3) {
+		*dst = paletteTransparencyLookup[*dst][*src++];
+		++dst;
+		*dst = paletteTransparencyLookup[*dst][*src++];
+		++dst;
+		*dst = paletteTransparencyLookup[*dst][*src++];
+		++dst;
+		*dst = paletteTransparencyLookup[*dst][*src++];
+		++dst;
+	}
+	while (src < end) {
+		*dst = paletteTransparencyLookup[*dst][*src++];
+		++dst;
+	}
 }
 
 struct BlitWithMap {
-	const uint8_t *colorMap;
+	const uint8_t *DVL_RESTRICT colorMap;
 
-	DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void operator()(BlitCommand cmd, uint8_t *dst, const uint8_t *src) const
+	DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void operator()(BlitCommand cmd, uint8_t *DVL_RESTRICT dst, const uint8_t *DVL_RESTRICT src) const
 	{
 		switch (cmd.type) {
 		case BlitType::Fill:
@@ -76,18 +123,20 @@ struct BlitWithMap {
 	}
 };
 
-DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void BlitFillBlendedWithMap(uint8_t *dst, unsigned length, uint8_t color, const uint8_t *colorMap)
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void BlitPixelsBlendedWithMap(uint8_t *DVL_RESTRICT dst, const uint8_t *DVL_RESTRICT src, unsigned length, const uint8_t *DVL_RESTRICT colorMap)
 {
-	color = colorMap[color];
-	while (length-- > 0) {
-		*dst = paletteTransparencyLookup[*dst][color];
+	const uint8_t *end = src + length;
+	while (src < end - 3) {
+		*dst = paletteTransparencyLookup[*dst][colorMap[*src++]];
+		++dst;
+		*dst = paletteTransparencyLookup[*dst][colorMap[*src++]];
+		++dst;
+		*dst = paletteTransparencyLookup[*dst][colorMap[*src++]];
+		++dst;
+		*dst = paletteTransparencyLookup[*dst][colorMap[*src++]];
 		++dst;
 	}
-}
-
-DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void BlitPixelsBlendedWithMap(uint8_t *dst, const uint8_t *src, unsigned length, const uint8_t *colorMap)
-{
-	while (length-- > 0) {
+	while (src < end) {
 		*dst = paletteTransparencyLookup[*dst][colorMap[*src++]];
 		++dst;
 	}
@@ -96,11 +145,11 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void BlitPixelsBlendedWithMap(uint8_t *dst, 
 struct BlitBlendedWithMap {
 	const uint8_t *colorMap;
 
-	DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void operator()(BlitCommand cmd, uint8_t *dst, const uint8_t *src) const
+	DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void operator()(BlitCommand cmd, uint8_t *DVL_RESTRICT dst, const uint8_t *DVL_RESTRICT src) const
 	{
 		switch (cmd.type) {
 		case BlitType::Fill:
-			BlitFillBlendedWithMap(dst, cmd.length, cmd.color, colorMap);
+			BlitFillBlended(dst, cmd.length, colorMap[cmd.color]);
 			return;
 		case BlitType::Pixels:
 			BlitPixelsBlendedWithMap(dst, src, cmd.length, colorMap);
