@@ -90,11 +90,13 @@ bool CreateSdlEvent(const DemoMsg &dmsg, SDL_Event &event, uint16_t &modState)
 	event.type = dmsg.eventType;
 	switch (static_cast<SDL_EventType>(dmsg.eventType)) {
 	case SDL_MOUSEMOTION:
+		event.motion.which = 0;
 		event.motion.x = dmsg.motion.x;
 		event.motion.y = dmsg.motion.y;
 		return true;
 	case SDL_MOUSEBUTTONDOWN:
 	case SDL_MOUSEBUTTONUP:
+		event.button.which = 0;
 		event.button.button = dmsg.button.button;
 		event.button.state = dmsg.eventType == SDL_MOUSEBUTTONDOWN ? SDL_PRESSED : SDL_RELEASED;
 		event.button.x = dmsg.button.x;
@@ -102,6 +104,7 @@ bool CreateSdlEvent(const DemoMsg &dmsg, SDL_Event &event, uint16_t &modState)
 		modState = dmsg.button.mod;
 		return true;
 	case SDL_MOUSEWHEEL:
+		event.wheel.which = 0;
 		event.wheel.x = dmsg.wheel.x;
 		event.wheel.y = dmsg.wheel.y;
 		modState = dmsg.wheel.mod;
@@ -176,6 +179,7 @@ bool CreateSdlEvent(const DemoMsg &dmsg, SDL_Event &event, uint16_t &modState)
 	switch (dmsg.eventType) {
 	case 0x400:
 		event.type = SDL_MOUSEMOTION;
+		event.motion.which = 0;
 		event.motion.x = dmsg.motion.x;
 		event.motion.y = dmsg.motion.y;
 		return true;
@@ -195,6 +199,7 @@ bool CreateSdlEvent(const DemoMsg &dmsg, SDL_Event &event, uint16_t &modState)
 			return false;
 		}
 		event.type = SDL_MOUSEBUTTONDOWN;
+		event.button.which = 0;
 		event.button.button = dmsg.wheel.y > 0 ? SDL_BUTTON_WHEELUP : SDL_BUTTON_WHEELDOWN;
 		modState = dmsg.wheel.mod;
 		return true;
