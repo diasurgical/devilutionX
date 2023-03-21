@@ -49,11 +49,13 @@ struct BlitDirect {
 
 DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void BlitFillWithMap(uint8_t *dst, unsigned length, uint8_t color, const uint8_t *DVL_RESTRICT colorMap)
 {
+	assert(length != 0);
 	std::memset(dst, colorMap[color], length);
 }
 
 DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void BlitPixelsWithMap(uint8_t *DVL_RESTRICT dst, const uint8_t *DVL_RESTRICT src, unsigned length, const uint8_t *DVL_RESTRICT colorMap)
 {
+	assert(length != 0);
 	const uint8_t *end = src + length;
 	while (src < end - 3) {
 		*dst++ = colorMap[*src++];
@@ -68,6 +70,7 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void BlitPixelsWithMap(uint8_t *DVL_RESTRICT
 
 DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void BlitFillBlended(uint8_t *dst, unsigned length, uint8_t color)
 {
+	assert(length != 0);
 	const uint8_t *end = dst + length;
 	const uint8_t *tbl = paletteTransparencyLookup[color];
 	while (dst < end - 3) {
@@ -88,6 +91,7 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void BlitFillBlended(uint8_t *dst, unsigned 
 
 DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void BlitPixelsBlended(uint8_t *DVL_RESTRICT dst, const uint8_t *DVL_RESTRICT src, unsigned length)
 {
+	assert(length != 0);
 	const uint8_t *end = src + length;
 	while (src < end - 3) {
 		*dst = paletteTransparencyLookup[*dst][*src++];
@@ -125,6 +129,7 @@ struct BlitWithMap {
 
 DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void BlitPixelsBlendedWithMap(uint8_t *DVL_RESTRICT dst, const uint8_t *DVL_RESTRICT src, unsigned length, const uint8_t *DVL_RESTRICT colorMap)
 {
+	assert(length != 0);
 	const uint8_t *end = src + length;
 	while (src < end - 3) {
 		*dst = paletteTransparencyLookup[*dst][colorMap[*src++]];

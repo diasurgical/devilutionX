@@ -241,8 +241,16 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLine(uint8_t *DVL_RESTRICT dst, c
 {
 	if (PrefixIncrement == 0) {
 		RenderLineTransparentOrOpaque<Light, OpaquePrefix>(dst, src, n, tbl);
-	} else {
-		RenderLineTransparentAndOpaque<Light, OpaquePrefix, PrefixIncrement>(dst, src, clamp<int8_t>(prefix, 0, n), n, tbl);
+	} else if (prefix >= n) {
+		// We clamp the prefix to (0, n] and avoid calling `RenderLineTransparent/Opaque` with width=0.
+		if (OpaquePrefix) {
+			RenderLineOpaque<Light>(dst, src, n, tbl);
+		} else {
+			if (!SkipTransparentPixels<OpaquePrefix, PrefixIncrement>)
+				RenderLineTransparent<Light>(dst, src, n, tbl);
+		}
+	} else if (prefix > 0) {
+		RenderLineTransparentAndOpaque<Light, OpaquePrefix, PrefixIncrement>(dst, src, prefix, n, tbl);
 	}
 }
 
@@ -713,12 +721,40 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderRightTriangle(uint8_t *DVL_RESTRI
 
 template <LightType Light, bool OpaquePrefix, int8_t PrefixIncrement>
 DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderTrapezoidUpperHalf(uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl) {
-	uint_fast8_t prefixWidth = PrefixIncrement < 0 ? 32 : 0;
-	for (auto i = 0; i < TrapezoidUpperHeight; ++i, dst -= dstPitch) {
-		RenderLineTransparentAndOpaque<Light, OpaquePrefix, PrefixIncrement>(dst, src, prefixWidth, Width, tbl);
-		if (PrefixIncrement != 0)
-			prefixWidth += PrefixIncrement;
+	if (PrefixIncrement != 0) {
+		// The first and the last line are always fully transparent/opaque (or vice-versa).
+		// We handle them specially to avoid calling the blitter with width=0.
+		const uint8_t *srcEnd = src + Width * (TrapezoidUpperHeight - 1);
+		constexpr bool FirstLineIsTransparent = OpaquePrefix ^ (PrefixIncrement < 0);
+		constexpr bool LastLineIsTransparent = !FirstLineIsTransparent;
+		if (FirstLineIsTransparent) {
+			if (!SkipTransparentPixels<OpaquePrefix, PrefixIncrement>)
+				RenderLineTransparent<Light>(dst, src, Width, tbl);
+		} else {
+			RenderLineOpaque<Light>(dst, src, Width, tbl);
+		}
 		src += Width;
+		dst -= dstPitch;
+		uint8_t prefixWidth = (PrefixIncrement < 0 ? 32 : 0) + PrefixIncrement;
+		do {
+			RenderLineTransparentAndOpaque<Light, OpaquePrefix, PrefixIncrement>(dst, src, prefixWidth, Width, tbl);
+			prefixWidth += PrefixIncrement;
+			src += Width;
+			dst -= dstPitch;
+		} while (src != srcEnd);
+		if (LastLineIsTransparent) {
+			if (!SkipTransparentPixels<OpaquePrefix, PrefixIncrement>)
+				RenderLineTransparent<Light>(dst, src, Width, tbl);
+		} else {
+			RenderLineOpaque<Light>(dst, src, Width, tbl);
+		}
+	} else { // PrefixIncrement == 0;
+		const uint8_t *srcEnd = src + Width * TrapezoidUpperHeight;
+		do {
+			RenderLineTransparentOrOpaque<Light, OpaquePrefix>(dst, src, Width, tbl);
+			src += Width;
+			dst -= dstPitch;
+		} while (src != srcEnd);
 	}
 }
 
