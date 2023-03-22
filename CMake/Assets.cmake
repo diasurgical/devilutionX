@@ -163,6 +163,7 @@ set(devilutionx_assets
   fonts/white.trn
   fonts/yellow.trn
   gendata/cut2w.clx
+  gendata/cut3w.clx
   gendata/cutl1dw.clx
   gendata/cutportlw.clx
   gendata/cutportrw.clx

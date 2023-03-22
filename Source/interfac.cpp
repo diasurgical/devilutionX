@@ -139,6 +139,7 @@ void LoadCutsceneBackground(interface_mode uMsg)
 		progress_id = 2;
 		break;
 	case CutLevel3:
+		ArtCutsceneWidescreen = LoadOptionalClx("gendata\\cut3w.clx");
 		celPath = "gendata\\cut3";
 		palPath = "gendata\\cut3.pal";
 		progress_id = 1;
