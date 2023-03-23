@@ -1078,7 +1078,7 @@ void SaveItemAffix(const Player &player, Item &item, const PLStruct &affix)
 	}
 }
 
-void GetStaffPower(const Player &player, Item &item, int lvl, SpellID bs, bool onlygood)
+int GetStaffPrefixId(int lvl, bool onlygood)
 {
 	int preidx = -1;
 	if (FlipCoin(10) || onlygood) {
@@ -1098,10 +1098,18 @@ void GetStaffPower(const Player &player, Item &item, int lvl, SpellID bs, bool o
 		}
 		if (nl != 0) {
 			preidx = l[GenerateRnd(nl)];
-			item._iMagical = ITEM_QUALITY_MAGIC;
-			SaveItemAffix(player, item, ItemPrefixes[preidx]);
-			item._iPrePower = ItemPrefixes[preidx].power.type;
 		}
+	}
+	return preidx;
+}
+
+void GetStaffPower(const Player &player, Item &item, int lvl, SpellID bs, bool onlygood)
+{
+	int preidx = GetStaffPrefixId(lvl, onlygood);
+	if (preidx != -1) {
+		item._iMagical = ITEM_QUALITY_MAGIC;
+		SaveItemAffix(player, item, ItemPrefixes[preidx]);
+		item._iPrePower = ItemPrefixes[preidx].power.type;
 	}
 
 	string_view baseName = _(AllItemsList[item.IDidx].iName);
