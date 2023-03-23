@@ -302,37 +302,23 @@ bool AutoEquip(Player &player, const Item &item, inv_body_loc bodyLocation, bool
 
 int FindSlotUnderCursor(Point cursorPosition, Size itemSize)
 {
-	int i = cursorPosition.x;
-	int j = cursorPosition.y;
-
+	Point hotSpot = cursorPosition;
 	if (!IsHardwareCursor()) {
 		// offset the cursor position to match the hot pixel we'd use for a hardware cursor
-		i += itemSize.width * INV_SLOT_HALF_SIZE_PX;
-		j += itemSize.height * INV_SLOT_HALF_SIZE_PX;
+		hotSpot += Displacement { itemSize.width * INV_SLOT_HALF_SIZE_PX, itemSize.height * INV_SLOT_HALF_SIZE_PX };
 	}
 
 	for (int r = 0; r < NUM_XY_SLOTS; r++) {
-		int xo = GetRightPanel().position.x;
-		int yo = GetRightPanel().position.y;
-		if (r >= SLOTXY_BELT_FIRST) {
-			xo = GetMainPanel().position.x;
-			yo = GetMainPanel().position.y;
-		}
+		Point panel = r < SLOTXY_BELT_FIRST ? GetRightPanel().position : GetMainPanel().position;
 
-		if (i >= InvRect[r].x + xo && i <= InvRect[r].x + xo + InventorySlotSizeInPixels.width) {
-			if (j >= InvRect[r].y + yo - InventorySlotSizeInPixels.height - 1 && j < InvRect[r].y + yo) {
-				return r;
-			}
-		}
-		if (r == SLOTXY_CHEST_LAST) {
-			if (itemSize.width % 2 == 0)
-				i -= INV_SLOT_HALF_SIZE_PX;
-			if (itemSize.height % 2 == 0)
-				j -= INV_SLOT_HALF_SIZE_PX;
-		}
-		if (r == SLOTXY_INV_LAST && itemSize.height % 2 == 0)
-			j += INV_SLOT_HALF_SIZE_PX;
+		Rectangle slot {
+			panel + Displacement { InvRect[r].x, InvRect[r].y - InventorySlotSizeInPixels.height },
+			InventorySlotSizeInPixels
+		};
+		if (slot.contains(hotSpot))
+			return r;
 	}
+
 	return NUM_XY_SLOTS;
 }
 
