@@ -241,7 +241,7 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLine(uint8_t *DVL_RESTRICT dst, c
 {
 	if (PrefixIncrement == 0) {
 		RenderLineTransparentOrOpaque<Light, OpaquePrefix>(dst, src, n, tbl);
-	} else if (prefix >= n) {
+	} else if (prefix >= static_cast<int8_t>(n)) {
 		// We clamp the prefix to (0, n] and avoid calling `RenderLineTransparent/Opaque` with width=0.
 		if (OpaquePrefix) {
 			RenderLineOpaque<Light>(dst, src, n, tbl);
@@ -249,7 +249,14 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLine(uint8_t *DVL_RESTRICT dst, c
 			if (!SkipTransparentPixels<OpaquePrefix, PrefixIncrement>)
 				RenderLineTransparent<Light>(dst, src, n, tbl);
 		}
-	} else if (prefix > 0) {
+	} else if (prefix <= 0) {
+		if (!OpaquePrefix) {
+			RenderLineOpaque<Light>(dst, src, n, tbl);
+		} else {
+			if (!SkipTransparentPixels<OpaquePrefix, PrefixIncrement>)
+				RenderLineTransparent<Light>(dst, src, n, tbl);
+		}
+	} else {
 		RenderLineTransparentAndOpaque<Light, OpaquePrefix, PrefixIncrement>(dst, src, prefix, n, tbl);
 	}
 }
@@ -724,9 +731,8 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderTrapezoidUpperHalf(uint8_t *DVL_R
 	if (PrefixIncrement != 0) {
 		// The first and the last line are always fully transparent/opaque (or vice-versa).
 		// We handle them specially to avoid calling the blitter with width=0.
-		const uint8_t *srcEnd = src + Width * (TrapezoidUpperHeight - 1);
+		const uint8_t *srcEnd = src + Width * TrapezoidUpperHeight;
 		constexpr bool FirstLineIsTransparent = OpaquePrefix ^ (PrefixIncrement < 0);
-		constexpr bool LastLineIsTransparent = !FirstLineIsTransparent;
 		if (FirstLineIsTransparent) {
 			if (!SkipTransparentPixels<OpaquePrefix, PrefixIncrement>)
 				RenderLineTransparent<Light>(dst, src, Width, tbl);
@@ -742,12 +748,6 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderTrapezoidUpperHalf(uint8_t *DVL_R
 			src += Width;
 			dst -= dstPitch;
 		} while (src != srcEnd);
-		if (LastLineIsTransparent) {
-			if (!SkipTransparentPixels<OpaquePrefix, PrefixIncrement>)
-				RenderLineTransparent<Light>(dst, src, Width, tbl);
-		} else {
-			RenderLineOpaque<Light>(dst, src, Width, tbl);
-		}
 	} else { // PrefixIncrement == 0;
 		const uint8_t *srcEnd = src + Width * TrapezoidUpperHeight;
 		do {
