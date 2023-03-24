@@ -122,6 +122,7 @@ void LoadCutsceneBackground(interface_mode uMsg)
 		progress_id = 1;
 		break;
 	case CutTown:
+		ArtCutsceneWidescreen = LoadOptionalClx("gendata\\cutttw.clx");
 		celPath = "gendata\\cuttt";
 		palPath = "gendata\\cuttt.pal";
 		progress_id = 1;
