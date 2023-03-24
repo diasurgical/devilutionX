@@ -168,6 +168,7 @@ set(devilutionx_assets
   gendata/cutportlw.clx
   gendata/cutportrw.clx
   gendata/cutstartw.clx
+  gendata/cutttw.clx
   levels/l1data/sklkngt.dun
   levels/l2data/bonechat.dun
   levels/towndata/automap.dun
