@@ -57,7 +57,7 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void BlitPixelsWithMap(uint8_t *DVL_RESTRICT
 {
 	assert(length != 0);
 	const uint8_t *end = src + length;
-	while (src < end - 3) {
+	while (src + 3 < end) {
 		*dst++ = colorMap[*src++];
 		*dst++ = colorMap[*src++];
 		*dst++ = colorMap[*src++];
@@ -73,7 +73,7 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void BlitFillBlended(uint8_t *dst, unsigned 
 	assert(length != 0);
 	const uint8_t *end = dst + length;
 	const uint8_t *tbl = paletteTransparencyLookup[color];
-	while (dst < end - 3) {
+	while (dst + 3 < end) {
 		*dst = tbl[*dst];
 		++dst;
 		*dst = tbl[*dst];
@@ -93,7 +93,7 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void BlitPixelsBlended(uint8_t *DVL_RESTRICT
 {
 	assert(length != 0);
 	const uint8_t *end = src + length;
-	while (src < end - 3) {
+	while (src + 3 < end) {
 		*dst = paletteTransparencyLookup[*dst][*src++];
 		++dst;
 		*dst = paletteTransparencyLookup[*dst][*src++];
@@ -131,7 +131,7 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void BlitPixelsBlendedWithMap(uint8_t *DVL_R
 {
 	assert(length != 0);
 	const uint8_t *end = src + length;
-	while (src < end - 3) {
+	while (src + 3 < end) {
 		*dst = paletteTransparencyLookup[*dst][colorMap[*src++]];
 		++dst;
 		*dst = paletteTransparencyLookup[*dst][colorMap[*src++]];
