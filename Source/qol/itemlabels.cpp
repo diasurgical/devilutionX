@@ -27,7 +27,7 @@ namespace {
 struct ItemLabel {
 	int id, width;
 	Point pos;
-	std::string text;
+	StringOrView text;
 };
 
 std::vector<ItemLabel> labelQueue;
@@ -100,11 +100,11 @@ void AddItemToLabelQueue(int id, Point position)
 		return;
 	Item &item = Items[id];
 
-	std::string textOnGround;
+	StringOrView textOnGround;
 	if (item._itype == ItemType::Gold) {
 		textOnGround = fmt::format(fmt::runtime(_("{:s} gold")), FormatInteger(item._ivalue));
 	} else {
-		textOnGround = item._iIdentified ? item._iIName : item._iName;
+		textOnGround = item.getName();
 	}
 
 	int nameWidth = GetLineWidth(textOnGround);
@@ -122,7 +122,7 @@ void AddItemToLabelQueue(int id, Point position)
 	}
 	position.x -= nameWidth / 2;
 	position.y -= Height;
-	labelQueue.push_back(ItemLabel { id, nameWidth, position, textOnGround });
+	labelQueue.push_back(ItemLabel { id, nameWidth, position, std::move(textOnGround) });
 }
 
 bool IsMouseOverGameArea()

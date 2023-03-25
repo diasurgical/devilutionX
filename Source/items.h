@@ -451,6 +451,9 @@ struct Item {
 	 * @param player Player to compare stats against requirements
 	 */
 	void updateRequiredStatsCacheForPlayer(const Player &player);
+
+	/** @brief Returns the translated item name to display (respects identified flag) */
+	StringOrView getName() const;
 };
 
 struct ItemGetRecordStruct {

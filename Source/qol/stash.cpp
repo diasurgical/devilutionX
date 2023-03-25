@@ -437,11 +437,10 @@ uint16_t CheckStashHLight(Point mousePosition)
 	}
 
 	InfoColor = item.getTextColor();
+	InfoString = item.getName();
 	if (item._iIdentified) {
-		InfoString = string_view(item._iIName);
 		PrintItemDetails(item);
 	} else {
-		InfoString = string_view(item._iName);
 		PrintItemDur(item);
 	}
 

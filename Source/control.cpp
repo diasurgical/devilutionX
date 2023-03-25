@@ -1013,10 +1013,7 @@ void DrawInfoBox(const Surface &out)
 		} else if (!myPlayer.CanUseItem(myPlayer.HoldItem)) {
 			InfoString = _("Requirements not met");
 		} else {
-			if (myPlayer.HoldItem._iIdentified)
-				InfoString = string_view(myPlayer.HoldItem._iIName);
-			else
-				InfoString = string_view(myPlayer.HoldItem._iName);
+			InfoString = myPlayer.HoldItem.getName();
 			InfoColor = myPlayer.HoldItem.getTextColor();
 		}
 	} else {
