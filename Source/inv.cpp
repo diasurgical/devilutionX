@@ -1895,11 +1895,10 @@ int8_t CheckInvHLight()
 		InfoString = fmt::format(fmt::runtime(ngettext("{:s} gold piece", "{:s} gold pieces", nGold)), FormatInteger(nGold));
 	} else {
 		InfoColor = pi->getTextColor();
+		InfoString = pi->getName();
 		if (pi->_iIdentified) {
-			InfoString = string_view(pi->_iIName);
 			PrintItemDetails(*pi);
 		} else {
-			InfoString = string_view(pi->_iName);
 			PrintItemDur(*pi);
 		}
 	}

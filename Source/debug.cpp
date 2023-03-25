@@ -1285,7 +1285,7 @@ bool ShouldHighlightDebugAutomapTile(Point position)
 	if (SearchItems.size() > 0 && dItem[position.x][position.y] != 0) {
 		const int itemId = abs(dItem[position.x][position.y]) - 1;
 		const Item &item = Items[itemId];
-		if (matchesSearched(item._iIName, SearchItems))
+		if (matchesSearched(item.getName(), SearchItems))
 			return true;
 	}
 

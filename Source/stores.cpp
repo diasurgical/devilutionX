@@ -377,13 +377,7 @@ void ScrollSmithBuy(int idx)
 	for (int l = 5; l < 20; l += 4) {
 		if (!smithitem[idx].isEmpty()) {
 			UiFlags itemColor = smithitem[idx].getTextColorWithStatCheck();
-
-			if (smithitem[idx]._iMagical != ITEM_QUALITY_NORMAL) {
-				AddSText(20, l, smithitem[idx]._iIName, itemColor, true, smithitem[idx]._iCurs, true);
-			} else {
-				AddSText(20, l, smithitem[idx]._iName, itemColor, true, smithitem[idx]._iCurs, true);
-			}
-
+			AddSText(20, l, smithitem[idx].getName(), itemColor, true, smithitem[idx]._iCurs, true);
 			AddSTextVal(l, smithitem[idx]._iIvalue);
 			PrintStoreItem(smithitem[idx], l + 1, itemColor, true);
 			stextdown = l;
@@ -444,7 +438,7 @@ void ScrollSmithPremiumBuy(int boughtitems)
 	for (int l = 5; l < 20 && idx < SMITH_PREMIUM_ITEMS; l += 4) {
 		if (!premiumitems[idx].isEmpty()) {
 			UiFlags itemColor = premiumitems[idx].getTextColorWithStatCheck();
-			AddSText(20, l, premiumitems[idx]._iIName, itemColor, true, premiumitems[idx]._iCurs, true);
+			AddSText(20, l, premiumitems[idx].getName(), itemColor, true, premiumitems[idx]._iCurs, true);
 			AddSTextVal(l, premiumitems[idx]._iIvalue);
 			PrintStoreItem(premiumitems[idx], l + 1, itemColor, true);
 			stextdown = l;
@@ -531,10 +525,10 @@ void ScrollSmithSell(int idx)
 			UiFlags itemColor = storehold[idx].getTextColorWithStatCheck();
 
 			if (storehold[idx]._iMagical != ITEM_QUALITY_NORMAL && storehold[idx]._iIdentified) {
-				AddSText(20, l, storehold[idx]._iIName, itemColor, true, storehold[idx]._iCurs, true);
+				AddSText(20, l, storehold[idx].getName(), itemColor, true, storehold[idx]._iCurs, true);
 				AddSTextVal(l, storehold[idx]._iIvalue);
 			} else {
-				AddSText(20, l, storehold[idx]._iName, itemColor, true, storehold[idx]._iCurs, true);
+				AddSText(20, l, storehold[idx].getName(), itemColor, true, storehold[idx]._iCurs, true);
 				AddSTextVal(l, storehold[idx]._ivalue);
 			}
 
@@ -730,13 +724,7 @@ void ScrollWitchBuy(int idx)
 	for (int l = 5; l < 20; l += 4) {
 		if (!witchitem[idx].isEmpty()) {
 			UiFlags itemColor = witchitem[idx].getTextColorWithStatCheck();
-
-			if (witchitem[idx]._iMagical != ITEM_QUALITY_NORMAL) {
-				AddSText(20, l, witchitem[idx]._iIName, itemColor, true, witchitem[idx]._iCurs, true);
-			} else {
-				AddSText(20, l, witchitem[idx]._iName, itemColor, true, witchitem[idx]._iCurs, true);
-			}
-
+			AddSText(20, l, witchitem[idx].getName(), itemColor, true, witchitem[idx]._iCurs, true);
 			AddSTextVal(l, witchitem[idx]._iIvalue);
 			PrintStoreItem(witchitem[idx], l + 1, itemColor, true);
 			stextdown = l;
@@ -981,26 +969,7 @@ void StoreConfirm(Item &item)
 	ClearSText(5, 23);
 
 	UiFlags itemColor = item.getTextColorWithStatCheck();
-
-	bool idprint = item._iMagical != ITEM_QUALITY_NORMAL;
-
-	if (stextshold == TalkID::StorytellerIdentify)
-		idprint = false;
-	if (item._iMagical != ITEM_QUALITY_NORMAL && !item._iIdentified) {
-		if (stextshold == TalkID::SmithSell)
-			idprint = false;
-		if (stextshold == TalkID::WitchSell)
-			idprint = false;
-		if (stextshold == TalkID::SmithRepair)
-			idprint = false;
-		if (stextshold == TalkID::WitchRecharge)
-			idprint = false;
-	}
-	if (idprint)
-		AddSText(20, 8, item._iIName, itemColor, false);
-	else
-		AddSText(20, 8, item._iName, itemColor, false);
-
+	AddSText(20, 8, item.getName(), itemColor, false);
 	AddSTextVal(8, item._iIvalue);
 	PrintStoreItem(item, 9, itemColor);
 
@@ -1067,12 +1036,7 @@ void SStartBoyBuy()
 
 	boyitem._iStatFlag = MyPlayer->CanUseItem(boyitem);
 	UiFlags itemColor = boyitem.getTextColorWithStatCheck();
-
-	if (boyitem._iMagical != ITEM_QUALITY_NORMAL)
-		AddSText(20, 10, boyitem._iIName, itemColor, true, boyitem._iCurs, true);
-	else
-		AddSText(20, 10, boyitem._iName, itemColor, true, boyitem._iCurs, true);
-
+	AddSText(20, 10, boyitem.getName(), itemColor, true, boyitem._iCurs, true);
 	if (gbIsHellfire)
 		AddSTextVal(10, boyitem._iIvalue - (boyitem._iIvalue / 4));
 	else
@@ -1123,8 +1087,7 @@ void ScrollHealerBuy(int idx)
 	for (int l = 5; l < 20; l += 4) {
 		if (!healitem[idx].isEmpty()) {
 			UiFlags itemColor = healitem[idx].getTextColorWithStatCheck();
-
-			AddSText(20, l, healitem[idx]._iName, itemColor, true, healitem[idx]._iCurs, true);
+			AddSText(20, l, healitem[idx].getName(), itemColor, true, healitem[idx]._iCurs, true);
 			AddSTextVal(l, healitem[idx]._iIvalue);
 			PrintStoreItem(healitem[idx], l + 1, itemColor, true);
 			stextdown = l;
@@ -1288,7 +1251,7 @@ void StartStorytellerIdentifyShow(Item &item)
 	UiFlags itemColor = item.getTextColorWithStatCheck();
 
 	AddSText(0, 7, _("This item is:"), UiFlags::ColorWhite | UiFlags::AlignCenter, false);
-	AddSText(20, 11, item._iIName, itemColor, false);
+	AddSText(20, 11, item.getName(), itemColor, false);
 	PrintStoreItem(item, 12, itemColor);
 	AddSText(0, 18, _("Done"), UiFlags::ColorWhite | UiFlags::AlignCenter, true);
 }

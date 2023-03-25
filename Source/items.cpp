@@ -3405,11 +3405,7 @@ void GetItemFrm(Item &item)
 void GetItemStr(Item &item)
 {
 	if (item._itype != ItemType::Gold) {
-		if (item._iIdentified)
-			InfoString = string_view(item._iIName);
-		else
-			InfoString = string_view(item._iName);
-
+		InfoString = item.getName();
 		InfoColor = item.getTextColor();
 	} else {
 		int nGold = item._ivalue;
@@ -4552,6 +4548,15 @@ void Item::updateRequiredStatsCacheForPlayer(const Player &player)
 		}
 	}
 	_iStatFlag = player.CanUseItem(*this);
+}
+
+StringOrView Item::getName() const
+{
+	string_view view;
+	if (_iIdentified)
+		view = _iIName;
+	view = _iName;
+	return view;
 }
 
 bool CornerStoneStruct::isAvailable()
