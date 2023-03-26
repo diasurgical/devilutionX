@@ -1186,8 +1186,8 @@ void DrawView(const Surface &out, Point startPosition)
 		}
 	}
 #endif
-	DrawMonsterHealthBar(out);
 	DrawItemNameLabels(out);
+	DrawMonsterHealthBar(out);
 	DrawFloatingNumbers(out, startPosition, offset);
 
 	if (stextflag != TalkID::None && !qtextflag)
