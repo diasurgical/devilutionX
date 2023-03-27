@@ -13,6 +13,7 @@ enum class GamepadLayout : uint8_t {
 	Nintendo,
 	PlayStation,
 	Xbox,
+	Generic2,
 };
 
 enum GameActionType : uint8_t {

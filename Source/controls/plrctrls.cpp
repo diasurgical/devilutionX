@@ -1525,6 +1525,8 @@ string_view GamepadTypeToString(GamepadLayout gamepadLayout)
 		return "Xbox";
 	case GamepadLayout::Generic:
 		return "Unknown";
+	case GamepadLayout::Generic2:
+		return "Unknown";
 	}
 	return "Invalid";
 }

@@ -1520,6 +1520,9 @@ PadmapperOptions::PadmapperOptions()
 	      /*ControllerButton_BUTTON_DPAD_DOWN*/ "Down",
 	      /*ControllerButton_BUTTON_DPAD_LEFT*/ "Left",
 	      /*ControllerButton_BUTTON_DPAD_RIGHT*/ "Right",
+	      /*ControllerButton_BUTTON_DPAD_MENU*/ "Menu",
+	      /*ControllerButton_BUTTON_DPAD_VOLUME_UP*/ "Volume Up",
+	      /*ControllerButton_BUTTON_DPAD_VOLUME_DOWN*/ "Volume Down",
 	  } }
 {
 	buttonNameToButton.reserve(buttonToButtonName.size());

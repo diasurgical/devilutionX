@@ -1,0 +1,44 @@
+name: RG35xx-GarlicOS Release Build
+
+on:
+  release:
+    types: [published]
+    paths-ignore:
+      - '*.md'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  rg35xx-garlic:
+    runs-on: ubuntu-22.04
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name:  Install toolchain
+      working-directory: ${{github.workspace}}
+      run: sudo Packaging/rg35xx_garlic/setup_toolchain.sh
+
+    - name:  Build
+      working-directory: ${{github.workspace}}
+      run: Packaging/rg35xx_garlic/build.sh
+
+    - name: Upload-GarlicOS-Package
+      if: ${{ !env.ACT }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: devilutionx-rg35xx-garlic-os.zip
+        path: build-rg35xx-garlic/devilutionx-rg35xx-garlic-os.zip
+
+    - name: Update Release
+      if: ${{ github.event_name == 'release' && !env.ACT }}
+      uses: svenstaro/upload-release-action@v2
+      with:
+        file: "build-rg35xx-garlic/devilutionx-rg35xx-garlic-os.zip"
+        file_glob: true
+        overwrite: true

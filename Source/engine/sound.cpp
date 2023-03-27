@@ -320,6 +320,28 @@ int sound_get_or_set_music_volume(int volume)
 	return *sgOptions.Audio.musicVolume;
 }
 
+void increasevolume()
+{
+	int volumem=sound_get_or_set_music_volume(1)+VOLUME_STEPS;
+	int volumes=sound_get_or_set_sound_volume(1)+VOLUME_STEPS;
+	if (volumem>VOLUME_MAX)volumem=VOLUME_MAX;
+	if (volumes>VOLUME_MAX)volumes=VOLUME_MAX;
+	sound_get_or_set_music_volume(volumem);
+	sound_get_or_set_sound_volume(volumes);
+	SaveOptions();
+}
+
+void decreasevolume()
+{
+	int volumem=sound_get_or_set_music_volume(1)-VOLUME_STEPS;
+	int volumes=sound_get_or_set_sound_volume(1)-VOLUME_STEPS;
+	if (volumem<VOLUME_MIN)volumem=VOLUME_MIN;
+	if (volumes<VOLUME_MIN)volumes=VOLUME_MIN;
+	sound_get_or_set_music_volume(volumem);
+	sound_get_or_set_sound_volume(volumes);
+	SaveOptions();
+}
+
 int sound_get_or_set_sound_volume(int volume)
 {
 	if (volume == 1)

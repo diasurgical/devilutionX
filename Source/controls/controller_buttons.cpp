@@ -260,6 +260,62 @@ string_view ToGenericButtonText(ControllerButton button)
 		return "LS";
 	case devilution::ControllerButton_BUTTON_RIGHTSTICK:
 		return "RS";
+	case devilution::ControllerButton_BUTTON_MENU:
+		return "Menu";
+	case devilution::ControllerButton_BUTTON_VOLUME_UP:
+		return "Volume Up";
+	case devilution::ControllerButton_BUTTON_VOLUME_DOWN:
+		return "Volume Down";
+	case devilution::ControllerButton_BUTTON_DPAD_UP:
+		return "Up";
+	case devilution::ControllerButton_BUTTON_DPAD_DOWN:
+		return "Down";
+	case devilution::ControllerButton_BUTTON_DPAD_LEFT:
+		return "Left";
+	case devilution::ControllerButton_BUTTON_DPAD_RIGHT:
+		return "Right";
+	case devilution::ControllerButton_NONE:
+		return "None";
+	case devilution::ControllerButton_IGNORE:
+		return "Ignored";
+	default:
+		return "Unknown";
+	}
+}
+
+string_view ToGenericButtonText2(ControllerButton button)
+{
+	switch (button) {
+	case devilution::ControllerButton_BUTTON_A:
+		return "B";
+	case devilution::ControllerButton_BUTTON_B:
+		return "A";
+	case devilution::ControllerButton_BUTTON_X:
+		return "Y";
+	case devilution::ControllerButton_BUTTON_Y:
+		return "X";
+	case devilution::ControllerButton_BUTTON_START:
+		return "Start";
+	case devilution::ControllerButton_BUTTON_BACK:
+		return "Select";
+	case devilution::ControllerButton_AXIS_TRIGGERLEFT:
+		return "L2";
+	case devilution::ControllerButton_AXIS_TRIGGERRIGHT:
+		return "R2";
+	case devilution::ControllerButton_BUTTON_LEFTSHOULDER:
+		return "L1";
+	case devilution::ControllerButton_BUTTON_RIGHTSHOULDER:
+		return "R1";
+	case devilution::ControllerButton_BUTTON_LEFTSTICK:
+		return "LS";
+	case devilution::ControllerButton_BUTTON_RIGHTSTICK:
+		return "RS";
+	case devilution::ControllerButton_BUTTON_MENU:
+		return "Menu";
+	case devilution::ControllerButton_BUTTON_VOLUME_UP:
+		return "Volume Up";
+	case devilution::ControllerButton_BUTTON_VOLUME_DOWN:
+		return "Volume Down";
 	case devilution::ControllerButton_BUTTON_DPAD_UP:
 		return "Up";
 	case devilution::ControllerButton_BUTTON_DPAD_DOWN:
@@ -286,6 +342,8 @@ string_view ToString(ControllerButton button)
 		return ToNintendoIcon(button);
 	case devilution::GamepadLayout::Xbox:
 		return ToXboxIcon(button);
+	case devilution::GamepadLayout::Generic2:
+		return ToGenericButtonText2(button);
 	default:
 	case devilution::GamepadLayout::Generic:
 		return ToGenericButtonText(button);

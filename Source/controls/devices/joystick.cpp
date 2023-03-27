@@ -5,10 +5,15 @@
 #include "controls/controller_motion.h"
 #include "utils/log.hpp"
 #include "utils/stubs.h"
+#if defined(JOY_BUTTON_VOLUME_DOWN) || defined(JOY_BUTTON_VOLUME_UP)
+	#include "engine/sound.h"
+#endif
 
 namespace devilution {
 
 std::vector<Joystick> Joystick::joysticks_;
+
+int leftTriggerAxisValue,rightTriggerAxisValue;
 
 StaticVector<ControllerButtonEvent, 4> Joystick::ToControllerButtonEvents(const SDL_Event &event)
 {
@@ -65,6 +70,20 @@ StaticVector<ControllerButtonEvent, 4> Joystick::ToControllerButtonEvents(const 
 		case JOY_BUTTON_BACK:
 			return { ControllerButtonEvent { ControllerButton_BUTTON_BACK, up } };
 #endif
+#ifdef JOY_BUTTON_MENU
+		case JOY_BUTTON_MENU:
+			return { ControllerButtonEvent { ControllerButton_BUTTON_MENU, up } };
+#endif
+#ifdef JOY_BUTTON_VOLUME_UP
+		case JOY_BUTTON_VOLUME_UP:
+			if(up)increasevolume();
+			return { ControllerButtonEvent { ControllerButton_BUTTON_VOLUME_UP, up } };
+#endif
+#ifdef JOY_BUTTON_VOLUME_DOWN
+		case JOY_BUTTON_VOLUME_DOWN:
+			if(up)decreasevolume();
+			return { ControllerButtonEvent { ControllerButton_BUTTON_VOLUME_DOWN, up } };
+#endif
 #ifdef JOY_BUTTON_DPAD_LEFT
 		case JOY_BUTTON_DPAD_LEFT:
 			return { ControllerButtonEvent { ControllerButton_BUTTON_DPAD_LEFT, up } };
@@ -94,6 +113,33 @@ StaticVector<ControllerButtonEvent, 4> Joystick::ToControllerButtonEvents(const 
 		return joystick->GetHatEvents();
 	}
 	case SDL_JOYAXISMOTION:
+	{
+		printf("Axis Motion: %d = value: %d\n",event.jaxis.axis,event.jaxis.value);
+		switch(event.jaxis.axis){
+			#ifdef JOY_AXIS_LEFTTRIGGER
+				case JOY_AXIS_LEFTTRIGGER:{
+					if(event.jaxis.value>0 && leftTriggerAxisValue<=0){
+						leftTriggerAxisValue=event.jaxis.value;
+						return { ControllerButtonEvent { ControllerButton_AXIS_TRIGGERLEFT, false } };
+					}else if(event.jaxis.value<=0 && leftTriggerAxisValue>0){
+						leftTriggerAxisValue=event.jaxis.value;
+						return { ControllerButtonEvent { ControllerButton_AXIS_TRIGGERLEFT, true } };
+					}
+				}
+			#endif
+			#ifdef JOY_AXIS_RIGHTTRIGGER
+				case JOY_AXIS_RIGHTTRIGGER:{
+					if(event.jaxis.value>0 && rightTriggerAxisValue<=0){
+						rightTriggerAxisValue=event.jaxis.value;
+						return { ControllerButtonEvent { ControllerButton_AXIS_TRIGGERRIGHT, false } };
+					}else if(event.jaxis.value<=0 && rightTriggerAxisValue>0){
+						rightTriggerAxisValue=event.jaxis.value;
+						return { ControllerButtonEvent { ControllerButton_AXIS_TRIGGERRIGHT, true } };
+					}
+				}
+			#endif
+		}
+	}
 	case SDL_JOYBALLMOTION:
 		// ProcessAxisMotion() requires a ControllerButtonEvent parameter
 		// so provide one here using ControllerButton_NONE
@@ -215,6 +261,18 @@ int Joystick::ToSdlJoyButton(ControllerButton button)
 #ifdef JOY_BUTTON_TRIGGERRIGHT
 	case ControllerButton_AXIS_TRIGGERRIGHT:
 		return JOY_BUTTON_TRIGGERRIGHT;
+#endif
+#ifdef JOY_BUTTON_MENU
+		case ControllerButton_BUTTON_MENU:
+			return JOY_BUTTON_MENU;
+#endif
+#ifdef JOY_BUTTON_VOLUME_UP
+		case ControllerButton_BUTTON_VOLUME_UP:
+			return JOY_BUTTON_VOLUME_UP;
+#endif
+#ifdef JOY_BUTTON_VOLUME_DOWN
+		case ControllerButton_BUTTON_VOLUME_DOWN:
+			return JOY_BUTTON_VOLUME_DOWN;
 #endif
 #ifdef JOY_BUTTON_DPAD_UP
 	case ControllerButton_BUTTON_DPAD_UP:
