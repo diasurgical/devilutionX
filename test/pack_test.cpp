@@ -110,6 +110,21 @@ typedef struct TestItemStruct {
 	int IDidx;
 } TestItemStruct;
 
+static void TestItemNameGeneration(const Item &item)
+{
+	bool allowIdentified = (item._iMiscId != IMISC_EAR); // Ears can't be identified. Item::getName() doesn't handle it, so don't test it.
+	ASSERT_EQ(allowIdentified & item._iIdentified, item._iIdentified);
+
+	Item testItem = item;
+
+	testItem._iIdentified = false;
+	ASSERT_STREQ(testItem.getName().str().data(), testItem._iName) << "unidentified name";
+	if (allowIdentified) {
+		testItem._iIdentified = true;
+		ASSERT_STREQ(testItem.getName().str().data(), testItem._iIName) << "identified name";
+	}
+}
+
 static void CompareItems(const Item &item1, const TestItemStruct &item2)
 {
 	ASSERT_STREQ(item1._iIName, item2._iIName);
@@ -378,6 +393,7 @@ TEST_F(PackTest, UnPackItem_diablo)
 		const ItemPack packed = SwappedLE(PackedDiabloItems[i]);
 		UnPackItem(packed, *MyPlayer, id, false);
 		CompareItems(id, DiabloItems[i]);
+		TestItemNameGeneration(id);
 
 		PackItem(is, id, gbIsHellfire);
 		ComparePackedItems(is, packed);
@@ -450,6 +466,7 @@ TEST_F(PackTest, UnPackItem_spawn)
 		const ItemPack packed = SwappedLE(PackedSpawnItems[i]);
 		UnPackItem(packed, *MyPlayer, id, false);
 		CompareItems(id, SpawnItems[i]);
+		TestItemNameGeneration(id);
 
 		PackItem(is, id, gbIsHellfire);
 		ComparePackedItems(is, packed);
@@ -495,6 +512,7 @@ TEST_F(PackTest, UnPackItem_diablo_multiplayer)
 		const ItemPack packed = SwappedLE(PackedDiabloMPItems[i]);
 		UnPackItem(packed, *MyPlayer, id, false);
 		CompareItems(id, DiabloMPItems[i]);
+		TestItemNameGeneration(id);
 
 		PackItem(is, id, gbIsHellfire);
 		ComparePackedItems(is, packed);
@@ -576,7 +594,7 @@ const ItemPack PackedHellfireItems[] = {
 	{ 1403842263,         858,  70,   5,   90,    90,   0,    0,      0,      0 }, // Demon Plate Armor
 	{ 1543909415,         284,  86,   0,    0,     0,   0,    0,      0,      0 }, // Oil of Fortitude
 	{ 1572202402,         769, 157,   5,    0,     0,   0,    0,      0,      0 }, // Ring of Regha
-	{ 1572202657,         257, 156,   5,    0,     0,   0,    0,      0,      0 }, // Bronze Ring of dexterity
+	{ 1572202657,         257, 156,   3,    0,     0,   0,    0,      0,      0 }, // Bronze Ring of dexterity
 	{ 1642077210,         264,  84,   0,    0,     0,   0,    0,      0,      0 }, // Oil of Accuracy
 	{ 2049461998,         388,  35,   0,    0,     0,   0,    0,      0,      0 }, // Blacksmith Oil
 	{ 2054447852,        2050, 151,   3,   25,    25,   0,    0,      0,      0 }, // Spider's Staff of devastation
@@ -709,6 +727,7 @@ TEST_F(PackTest, UnPackItem_hellfire)
 		const ItemPack packed = SwappedLE(PackedHellfireItems[i]);
 		UnPackItem(packed, *MyPlayer, id, true);
 		CompareItems(id, HellfireItems[i]);
+		TestItemNameGeneration(id);
 
 		PackItem(is, id, gbIsHellfire);
 		is.dwBuff &= ~CF_HELLFIRE;
@@ -726,6 +745,7 @@ TEST_F(PackTest, UnPackItem_diablo_strip_hellfire_items)
 	gbIsSpawn = false;
 
 	UnPackItem(is, *MyPlayer, id, true);
+	TestItemNameGeneration(id);
 
 	ASSERT_EQ(id._itype, ItemType::None);
 }
@@ -736,6 +756,7 @@ TEST_F(PackTest, UnPackItem_empty)
 	Item id;
 
 	UnPackItem(is, *MyPlayer, id, false);
+	TestItemNameGeneration(id);
 
 	ASSERT_EQ(id._itype, ItemType::None);
 }
@@ -752,6 +773,7 @@ TEST_F(PackTest, PackItem_empty)
 	// Copy the value out before comparing to avoid loading a misaligned address.
 	const auto idx = is.idx;
 	ASSERT_EQ(SDL_SwapLE16(idx), 0xFFFF);
+	TestItemNameGeneration(id);
 }
 
 static void compareGold(const ItemPack &is, int iCurs)
@@ -765,6 +787,7 @@ static void compareGold(const ItemPack &is, int iCurs)
 	ASSERT_EQ(id._ivalue, wvalue);
 	ASSERT_EQ(id._itype, ItemType::Gold);
 	ASSERT_EQ(id._iClass, ICLASS_GOLD);
+	TestItemNameGeneration(id);
 
 	ItemPack is2;
 	PackItem(is2, id, gbIsHellfire);
@@ -797,6 +820,7 @@ TEST_F(PackTest, UnPackItem_ear)
 	UnPackItem(is, *MyPlayer, id, false);
 	ASSERT_STREQ(id._iName, "Ear of Dead-RogueDM");
 	ASSERT_EQ(id._ivalue, 3);
+	TestItemNameGeneration(id);
 
 	ItemPack is2;
 	PackItem(is2, id, gbIsHellfire);
