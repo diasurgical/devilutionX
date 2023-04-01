@@ -1,5 +1,7 @@
 # Theodore-s-Lair
-![tumblr_nvuco6755B1tdo940o1_1280](https://user-images.githubusercontent.com/116229514/228376917-5e714529-0a2f-4a70-ab67-3cec3ae4fef0.png)
+[![Discord Channel](https://img.shields.io/discord/518540764754608128?color=%237289DA&logo=discord&logoColor=%23FFFFFF)]([https://discord.gg/YQKCAYQ](https://discord.gg/9EXmpkVxsf))
+[![Download]([https://img.shields.io/discord/518540764754608128?color=%237289DA&logo=discord&logoColor=%23FFFFFF]([https://img.shields.io/github/downloads/diasurgical/devilutionX/total.svg))](https://discord.gg/YQKCAYQ](https://github.com/dinde451/Theodore-s-Lair/releases/tag/v1.0.0))
+[![Theodore's lair website](https://img.shields.io/discord/518540764754608128?color=%237289DA&logo=discord&logoColor=%23FFFFFF)]([https://discord.gg/YQKCAYQ](https://dinde451.github.io/Theodore-s-Lair/))
 
 Theodore's lair is a mod for Diablo 1 and Hellfire (Hellfire is recommended) that aims to increase the difficulty of the game and add more content based on the germanic folklore. We add some germanic monsters and we rename others, we add some unique item with variables and we add some new bosses.
 
