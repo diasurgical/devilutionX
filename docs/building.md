@@ -46,6 +46,24 @@ cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release
 cmake --build build -j $(getconf _NPROCESSORS_ONLN)
 ```
 
+### Cross-compiling for arm64 (aarch64) on Debian or Ubuntu
+
+First, set up the dependencies for cross-compilation:
+
+```bash
+Packaging/nix/debian-cross-aarch64-prep.sh
+```
+
+Then, build DevilutionX using the cross-compilation CMake toolchain file:
+
+```bash
+cmake -S. -Bbuild-aarch64-rel \
+  -DCMAKE_TOOLCHAIN_FILE=../CMake/platforms/aarch64-linux-gnu.toolchain.cmake \
+  -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DCPACK=ON \
+  -DDEVILUTIONX_SYSTEM_LIBFMT=OFF
+cmake --build build-aarch64-rel -j $(getconf _NPROCESSORS_ONLN) --target package
+```
+
 </details>
 
 <details><summary>macOS</summary>

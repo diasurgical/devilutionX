@@ -22,6 +22,9 @@ comparer-config.toml
 # Extra files in the source distribution (see make_src_dist.py)
 /dist/
 
+*.appimage
+*.AppImage
+
 # ELF object file, shared library and object archive.
 *.o
 *.so
