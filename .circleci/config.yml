@@ -65,6 +65,22 @@ jobs:
       - run: cmake -S. -Bbuild -GNinja -DCMAKE_TOOLCHAIN_FILE=${VITASDK}/share/vita.toolchain.cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo
       - run: cmake --build build -j 2
       - store_artifacts: {path: ./build/devilutionx.vpk, destination: devilutionx.vpk}
+  linux_aarch64:
+    machine:
+      image: ubuntu-2004:current
+    resource_class: arm.medium
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run: sudo apt-get update -y
+      - run: sudo apt-get install -y cmake g++ libsdl2-dev libbz2-dev git rpm wget cmake libsodium-dev libpng-dev file
+      - run: sudo apt-get remove -y smpq
+      - run: sudo ./tools/build_and_install_smpq.sh
+      - run: cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_TESTING=OFF -DCPACK=ON -DCMAKE_INSTALL_PREFIX=/usr
+      - run: cmake --build build -j 2 --target package
+      - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_linux_aarch64}
+      - run: Packaging/nix/LinuxReleasePackaging.sh
+      - store_artifacts: {path: ./devilutionx.tar.xz, destination: devilutionx_linux_aarch64.tar.xz}
 
 workflows:
   version: 2
@@ -75,3 +91,5 @@ workflows:
       - 3ds
       - amigaos-m68k
       - vita
+      - linux_aarch64
+      
