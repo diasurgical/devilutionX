@@ -58,9 +58,9 @@ std::string GetSavePath(uint32_t saveNum, string_view savePrefix = {})
 	        : (gbIsMultiplayer ? "multi_" : "single_"),
 	    saveNum,
 #ifdef UNPACKED_SAVES
-	    gbIsHellfire ? "_hsv" DIRECTORY_SEPARATOR_STR : "_sv" DIRECTORY_SEPARATOR_STR
+	    gbIsHellfire ? "_sv" DIRECTORY_SEPARATOR_STR : "_sv" DIRECTORY_SEPARATOR_STR
 #else
-	    gbIsHellfire ? ".hsv" : ".sv"
+	    gbIsHellfire ? ".sv" : ".sv"
 #endif
 	);
 }
