@@ -482,6 +482,20 @@ void FindTrigger()
 	CheckRportal();
 }
 
+bool IsStandingGround()
+{
+	if (ControlMode == ControlTypes::Gamepad) {
+		ControllerButtonCombo standGroundCombo = sgOptions.Padmapper.ButtonComboForAction("StandGround");
+		return StandToggle || IsControllerButtonComboPressed(standGroundCombo);
+	}
+#ifndef USE_SDL1
+	if (ControlMode == ControlTypes::VirtualGamepad) {
+		return VirtualGamepadState.standButton.isHeld;
+	}
+#endif
+	return false;
+}
+
 void Interact()
 {
 	if (leveltype == DTYPE_TOWN && pcursmonst != -1) {
@@ -489,20 +503,9 @@ void Interact()
 		return;
 	}
 
-	bool stand = StandToggle;
-#ifndef USE_SDL1
-	if (ControlMode == ControlTypes::Gamepad) {
-		ControllerButtonCombo standGroundCombo = sgOptions.Padmapper.ButtonComboForAction("StandGround");
-		stand = IsControllerButtonComboPressed(standGroundCombo);
-	}
-	if (ControlMode == ControlTypes::VirtualGamepad) {
-		stand = VirtualGamepadState.standButton.isHeld;
-	}
-#endif
-
 	Player &myPlayer = *MyPlayer;
 
-	if (leveltype != DTYPE_TOWN && stand) {
+	if (leveltype != DTYPE_TOWN && IsStandingGround()) {
 		Direction pdir = myPlayer._pdir;
 		AxisDirection moveDir = GetMoveDirection();
 		bool motion = moveDir.x != AxisDirectionX_NONE || moveDir.y != AxisDirectionY_NONE;
@@ -1303,15 +1306,11 @@ void WalkInDir(size_t playerId, AxisDirection dir)
 	if (!player.isWalking() && player.CanChangeAction())
 		player._pdir = pdir;
 
-#ifndef USE_SDL1
-	if (ControlMode == ControlTypes::VirtualGamepad) {
-		if (VirtualGamepadState.standButton.isHeld) {
-			if (player._pmode == PM_STAND)
-				StartStand(player, pdir);
-			return;
-		}
+	if (IsStandingGround()) {
+		if (player._pmode == PM_STAND)
+			StartStand(player, pdir);
+		return;
 	}
-#endif
 
 	if (PosOkPlayer(player, delta) && IsPathBlocked(player.position.future, pdir)) {
 		if (player._pmode == PM_STAND)
