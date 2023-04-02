@@ -62,11 +62,11 @@ bool sgbSaveSoundOn;
 
 namespace {
 
-constexpr int NightmareToHitBonus = 85;
-constexpr int HellToHitBonus = 120;
+constexpr int NightmareToHitBonus = 170;
+constexpr int HellToHitBonus = 240;
 
-constexpr int NightmareAcBonus = 50;
-constexpr int HellAcBonus = 80;
+constexpr int NightmareAcBonus = 100;
+constexpr int HellAcBonus = 160;
 
 /** Tracks which missile files are already loaded */
 size_t totalmonsters;
@@ -176,7 +176,7 @@ void InitMonster(Monster &monster, Direction rd, size_t typeIndex, Point positio
 	}
 
 	if (sgGameInitInfo.nDifficulty == DIFF_NIGHTMARE) {
-		monster.maxHitPoints = 3 * monster.maxHitPoints;
+		monster.maxHitPoints = 6 * monster.maxHitPoints;
 		if (gbIsHellfire)
 			monster.maxHitPoints += (gbIsMultiplayer ? 100 : 50) << 6;
 		else
@@ -3165,7 +3165,7 @@ void PrepareUniqueMonst(Monster &monster, UniqueMonsterType monsterType, size_t 
 	}
 
 	if (sgGameInitInfo.nDifficulty == DIFF_NIGHTMARE) {
-		monster.maxHitPoints = 3 * monster.maxHitPoints;
+		monster.maxHitPoints = 6 * monster.maxHitPoints;
 		if (gbIsHellfire)
 			monster.maxHitPoints += (gbIsMultiplayer ? 100 : 50) << 6;
 		else
@@ -4253,11 +4253,11 @@ void PrintMonstHistory(int mt)
 			hpBonusHell = (!gbIsMultiplayer ? 100 : 200);
 		}
 		if (sgGameInitInfo.nDifficulty == DIFF_NIGHTMARE) {
-			minHP = 3 * minHP + hpBonusNightmare;
-			maxHP = 3 * maxHP + hpBonusNightmare;
+			minHP = 6 * minHP + hpBonusNightmare;
+			maxHP = 6 * maxHP + hpBonusNightmare;
 		} else if (sgGameInitInfo.nDifficulty == DIFF_HELL) {
-			minHP = 4 * minHP + hpBonusHell;
-			maxHP = 4 * maxHP + hpBonusHell;
+			minHP = 8 * minHP + hpBonusHell;
+			maxHP = 8 * maxHP + hpBonusHell;
 		}
 		AddPanelString(fmt::format(fmt::runtime(_("Hit Points: {:d}-{:d}")), minHP, maxHP));
 	}
