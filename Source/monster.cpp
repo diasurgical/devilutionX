@@ -196,10 +196,10 @@ void InitMonster(Monster &monster, Direction rd, size_t typeIndex, Point positio
 			monster.maxHitPoints += 192;
 		monster.hitPoints = monster.maxHitPoints;
 		monster.toHit += HellToHitBonus;
-		monster.minDamage = 8 * monster.minDamage + 6;
-		monster.maxDamage = 8 * monster.maxDamage + 6;
-		monster.minDamageSpecial = 8 * monster.minDamageSpecial + 6;
-		monster.maxDamageSpecial = 8 * monster.maxDamageSpecial + 6;
+		monster.minDamage = 6 * monster.minDamage + 6;
+		monster.maxDamage = 6 * monster.maxDamage + 6;
+		monster.minDamageSpecial = 6 * monster.minDamageSpecial + 6;
+		monster.maxDamageSpecial = 6 * monster.maxDamageSpecial + 6;
 		monster.armorClass += HellAcBonus;
 		monster.resistance = monster.data().resistanceHell;
 	}
@@ -3182,10 +3182,10 @@ void PrepareUniqueMonst(Monster &monster, UniqueMonsterType monsterType, size_t 
 		else
 			monster.maxHitPoints += 192;
 		monster.hitPoints = monster.maxHitPoints;
-		monster.minDamage = 8 * monster.minDamage + 6;
-		monster.maxDamage = 8 * monster.maxDamage + 6;
-		monster.minDamageSpecial = 8 * monster.minDamageSpecial + 6;
-		monster.maxDamageSpecial = 8 * monster.maxDamageSpecial + 6;
+		monster.minDamage = 6 * monster.minDamage + 6;
+		monster.maxDamage = 6 * monster.maxDamage + 6;
+		monster.minDamageSpecial = 6 * monster.minDamageSpecial + 6;
+		monster.maxDamageSpecial = 6 * monster.maxDamageSpecial + 6;
 	}
 
 	InitTRNForUniqueMonster(monster);
