@@ -62,11 +62,11 @@ bool sgbSaveSoundOn;
 
 namespace {
 
-constexpr int NightmareToHitBonus = 170;
-constexpr int HellToHitBonus = 240;
+constexpr int NightmareToHitBonus = 85;
+constexpr int HellToHitBonus = 120;
 
-constexpr int NightmareAcBonus = 100;
-constexpr int HellAcBonus = 160;
+constexpr int NightmareAcBonus = 50;
+constexpr int HellAcBonus = 80;
 
 /** Tracks which missile files are already loaded */
 size_t totalmonsters;
@@ -176,30 +176,30 @@ void InitMonster(Monster &monster, Direction rd, size_t typeIndex, Point positio
 	}
 
 	if (sgGameInitInfo.nDifficulty == DIFF_NIGHTMARE) {
-		monster.maxHitPoints = 6 * monster.maxHitPoints;
+		monster.maxHitPoints = 3 * monster.maxHitPoints;
 		if (gbIsHellfire)
 			monster.maxHitPoints += (gbIsMultiplayer ? 100 : 50) << 6;
 		else
 			monster.maxHitPoints += 64;
 		monster.hitPoints = monster.maxHitPoints;
 		monster.toHit += NightmareToHitBonus;
-		monster.minDamage = 4 * (monster.minDamage + 4);
-		monster.maxDamage = 4 * (monster.maxDamage + 4);
-		monster.minDamageSpecial = 4 * (monster.minDamageSpecial + 4);
-		monster.maxDamageSpecial = 4 * (monster.maxDamageSpecial + 4);
+		monster.minDamage = 2 * (monster.minDamage + 2);
+		monster.maxDamage = 2 * (monster.maxDamage + 2);
+		monster.minDamageSpecial = 2 * (monster.minDamageSpecial + 2);
+		monster.maxDamageSpecial = 2 * (monster.maxDamageSpecial + 2);
 		monster.armorClass += NightmareAcBonus;
 	} else if (sgGameInitInfo.nDifficulty == DIFF_HELL) {
-		monster.maxHitPoints = 8 * monster.maxHitPoints;
+		monster.maxHitPoints = 4 * monster.maxHitPoints;
 		if (gbIsHellfire)
 			monster.maxHitPoints += (gbIsMultiplayer ? 200 : 100) << 6;
 		else
 			monster.maxHitPoints += 192;
 		monster.hitPoints = monster.maxHitPoints;
 		monster.toHit += HellToHitBonus;
-		monster.minDamage = 6 * monster.minDamage + 6;
-		monster.maxDamage = 6 * monster.maxDamage + 6;
-		monster.minDamageSpecial = 6 * monster.minDamageSpecial + 6;
-		monster.maxDamageSpecial = 6 * monster.maxDamageSpecial + 6;
+		monster.minDamage = 4 * monster.minDamage + 6;
+		monster.maxDamage = 4 * monster.maxDamage + 6;
+		monster.minDamageSpecial = 4 * monster.minDamageSpecial + 6;
+		monster.maxDamageSpecial = 4 * monster.maxDamageSpecial + 6;
 		monster.armorClass += HellAcBonus;
 		monster.resistance = monster.data().resistanceHell;
 	}
@@ -3165,27 +3165,27 @@ void PrepareUniqueMonst(Monster &monster, UniqueMonsterType monsterType, size_t 
 	}
 
 	if (sgGameInitInfo.nDifficulty == DIFF_NIGHTMARE) {
-		monster.maxHitPoints = 6 * monster.maxHitPoints;
+		monster.maxHitPoints = 3 * monster.maxHitPoints;
 		if (gbIsHellfire)
 			monster.maxHitPoints += (gbIsMultiplayer ? 100 : 50) << 6;
 		else
 			monster.maxHitPoints += 64;
 		monster.hitPoints = monster.maxHitPoints;
-		monster.minDamage = 4 * (monster.minDamage + 4);
-		monster.maxDamage = 4 * (monster.maxDamage + 4);
-		monster.minDamageSpecial = 4 * (monster.minDamageSpecial + 4);
-		monster.maxDamageSpecial = 4 * (monster.maxDamageSpecial + 4);
+		monster.minDamage = 2 * (monster.minDamage + 2);
+		monster.maxDamage = 2 * (monster.maxDamage + 2);
+		monster.minDamageSpecial = 2 * (monster.minDamageSpecial + 2);
+		monster.maxDamageSpecial = 2 * (monster.maxDamageSpecial + 2);
 	} else if (sgGameInitInfo.nDifficulty == DIFF_HELL) {
-		monster.maxHitPoints = 8 * monster.maxHitPoints;
+		monster.maxHitPoints = 4 * monster.maxHitPoints;
 		if (gbIsHellfire)
 			monster.maxHitPoints += (gbIsMultiplayer ? 200 : 100) << 6;
 		else
 			monster.maxHitPoints += 192;
 		monster.hitPoints = monster.maxHitPoints;
-		monster.minDamage = 6 * monster.minDamage + 6;
-		monster.maxDamage = 6 * monster.maxDamage + 6;
-		monster.minDamageSpecial = 6 * monster.minDamageSpecial + 6;
-		monster.maxDamageSpecial = 6 * monster.maxDamageSpecial + 6;
+		monster.minDamage = 4 * monster.minDamage + 6;
+		monster.maxDamage = 4 * monster.maxDamage + 6;
+		monster.minDamageSpecial = 4 * monster.minDamageSpecial + 6;
+		monster.maxDamageSpecial = 4 * monster.maxDamageSpecial + 6;
 	}
 
 	InitTRNForUniqueMonster(monster);
@@ -4253,11 +4253,11 @@ void PrintMonstHistory(int mt)
 			hpBonusHell = (!gbIsMultiplayer ? 100 : 200);
 		}
 		if (sgGameInitInfo.nDifficulty == DIFF_NIGHTMARE) {
-			minHP = 6 * minHP + hpBonusNightmare;
-			maxHP = 6 * maxHP + hpBonusNightmare;
+			minHP = 3 * minHP + hpBonusNightmare;
+			maxHP = 3 * maxHP + hpBonusNightmare;
 		} else if (sgGameInitInfo.nDifficulty == DIFF_HELL) {
-			minHP = 8 * minHP + hpBonusHell;
-			maxHP = 8 * maxHP + hpBonusHell;
+			minHP = 4 * minHP + hpBonusHell;
+			maxHP = 4 * maxHP + hpBonusHell;
 		}
 		AddPanelString(fmt::format(fmt::runtime(_("Hit Points: {:d}-{:d}")), minHP, maxHP));
 	}
