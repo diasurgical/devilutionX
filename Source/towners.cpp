@@ -274,7 +274,7 @@ void TownDead(Towner &towner)
 
 	if ((Quests[Q_BUTCHER]._qactive == QUEST_DONE || Quests[Q_BUTCHER]._qvar1 == 1) && towner._tAnimLen != 1) {
 		towner._tAnimLen = 1;
-		towner.name = _("Slain Townsman");
+		towner.name = _("Dead Meat");
 	}
 }
 
