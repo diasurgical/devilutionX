@@ -165,6 +165,7 @@ set(devilutionx_assets
   gendata/cut2w.clx
   gendata/cut3w.clx
   gendata/cut4w.clx
+  gendata/cutgatew.clx
   gendata/cutl1dw.clx
   gendata/cutportlw.clx
   gendata/cutportrw.clx

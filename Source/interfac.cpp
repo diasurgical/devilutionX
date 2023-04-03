@@ -174,6 +174,7 @@ void LoadCutsceneBackground(interface_mode uMsg)
 		progress_id = 1;
 		break;
 	case CutGate:
+		ArtCutsceneWidescreen = LoadOptionalClx("gendata\\cutgatew.clx");
 		celPath = "gendata\\cutgate";
 		palPath = "gendata\\cutgate.pal";
 		progress_id = 1;
