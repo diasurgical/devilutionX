@@ -122,6 +122,17 @@ static void TestItemNameGeneration(const Item &item)
 	if (allowIdentified) {
 		testItem._iIdentified = true;
 		ASSERT_STREQ(testItem.getName().str().data(), testItem._iIName) << "identified name";
+
+		// Check that UpdateHellfireFlag ensures that dwBuff is updated to get the correct name
+		if (item._iMagical == ITEM_QUALITY_MAGIC) {
+			bool isHellfireItem = (testItem.dwBuff & CF_HELLFIRE);
+			testItem.dwBuff = 0;
+			UpdateHellfireFlag(testItem, testItem._iIName);
+
+			testItem._iIdentified = true;
+			ASSERT_STREQ(testItem.getName().str().data(), testItem._iIName) << "identified name with UpdateHellfireFlag";
+			ASSERT_TRUE(isHellfireItem || ((item.dwBuff & CF_HELLFIRE) != CF_HELLFIRE)) << "item was wrongly converted to hellfire";
+		}
 	}
 }
 

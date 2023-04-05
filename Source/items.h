@@ -556,6 +556,10 @@ void initItemGetRecords();
 void RepairItem(Item &item, int lvl);
 void RechargeItem(Item &item, Player &player);
 bool ApplyOilToItem(Item &item, Player &player);
+/**
+ * @brief Checks if the item is generated in vanilla hellfire. If yes it updates dwBuff to include CF_HELLFIRE.
+ */
+void UpdateHellfireFlag(Item &item, const char *identifiedItemName);
 
 #ifdef _DEBUG
 std::string DebugSpawnItem(std::string itemName);
