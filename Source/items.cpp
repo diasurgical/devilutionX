@@ -1117,7 +1117,7 @@ std::string GenerateStaffName(const ItemData &baseItemData, SpellID spellId, boo
 	return name;
 }
 
-std::string GenerateStaffNameMagical(const ItemData &baseItemData, SpellID spellId, int preidx, bool translate)
+std::string GenerateStaffNameMagical(const ItemData &baseItemData, SpellID spellId, int preidx, bool translate, std::optional<bool> forceNameLengthCheck)
 {
 	string_view baseName = translate ? _(baseItemData.iName) : baseItemData.iName;
 	string_view magicFmt = translate ? pgettext("spell", /* TRANSLATORS: Constructs item names. Format: {Prefix} {Item} of {Spell}. Example: King's War Staff of Firewall */ "{0} {1} of {2}") : "{0} {1} of {2}";
@@ -1125,7 +1125,7 @@ std::string GenerateStaffNameMagical(const ItemData &baseItemData, SpellID spell
 	string_view prefixName = translate ? _(ItemPrefixes[preidx].PLName) : ItemPrefixes[preidx].PLName;
 
 	std::string identifiedName = fmt::format(fmt::runtime(magicFmt), prefixName, baseName, spellName);
-	if (!StringInPanel(identifiedName.c_str())) {
+	if (forceNameLengthCheck ? *forceNameLengthCheck : !StringInPanel(identifiedName.c_str())) {
 		string_view shortName = translate ? _(baseItemData.iSName) : baseItemData.iSName;
 		identifiedName = fmt::format(fmt::runtime(magicFmt), prefixName, shortName, spellName);
 	}
@@ -1146,7 +1146,7 @@ void GetStaffPower(const Player &player, Item &item, int lvl, SpellID bs, bool o
 
 	CopyUtf8(item._iName, staffName, sizeof(item._iName));
 	if (preidx != -1) {
-		std::string staffNameMagical = GenerateStaffNameMagical(baseItemData, item._iSpell, preidx, false);
+		std::string staffNameMagical = GenerateStaffNameMagical(baseItemData, item._iSpell, preidx, false, std::nullopt);
 		CopyUtf8(item._iIName, staffNameMagical, sizeof(item._iIName));
 	} else {
 		CopyUtf8(item._iIName, item._iName, sizeof(item._iIName));
@@ -2287,7 +2287,7 @@ StringOrView GetTranslatedItemName(const Item &item)
 	}
 }
 
-std::string GetTranslatedItemNameMagical(const Item &item)
+std::string GetTranslatedItemNameMagical(const Item &item, bool hellfireItem, bool translate, std::optional<bool> forceNameLengthCheck)
 {
 	std::string identifiedName;
 	const auto &baseItemData = AllItemsList[static_cast<size_t>(item.IDidx)];
@@ -2331,7 +2331,6 @@ std::string GetTranslatedItemNameMagical(const Item &item)
 	if (minlvl > 25)
 		minlvl = 25;
 
-	bool hellfireItem = (item.dwBuff & CF_HELLFIRE) == CF_HELLFIRE;
 	AffixItemType affixItemType = AffixItemType::None;
 
 	switch (item._itype) {
@@ -2365,11 +2364,16 @@ std::string GetTranslatedItemNameMagical(const Item &item)
 
 			int preidx = GetStaffPrefixId(maxlvl, onlygood, hellfireItem);
 			if (preidx == -1 || item._iSpell == SpellID::Null) {
-				// This can happen, if the item is hacked or a bug in the logic exists
-				LogWarn("GetTranslatedItemNameMagical failed for item '{}' with preidx '{}' and spellid '{}'", item._iIName, preidx, static_cast<std::underlying_type_t<SpellID>>(item._iSpell));
-				identifiedName = item._iIName;
+				if (forceNameLengthCheck) {
+					// We generate names to check if it's a diablo or hellfire item. This checks fails => invalid item => don't generate a item name
+					identifiedName.clear();
+				} else {
+					// This can happen, if the item is hacked or a bug in the logic exists
+					LogWarn("GetTranslatedItemNameMagical failed for item '{}' with preidx '{}' and spellid '{}'", item._iIName, preidx, static_cast<std::underlying_type_t<SpellID>>(item._iSpell));
+					identifiedName = item._iIName;
+				}
 			} else {
-				identifiedName = GenerateStaffNameMagical(baseItemData, item._iSpell, preidx, true);
+				identifiedName = GenerateStaffNameMagical(baseItemData, item._iSpell, preidx, translate, forceNameLengthCheck);
 			}
 		}
 		break;
@@ -2407,9 +2411,9 @@ std::string GetTranslatedItemNameMagical(const Item &item)
 			    pSufix = &suffix;
 		    });
 
-		identifiedName = GenerateMagicItemName(_(baseItemData.iName), pPrefix, pSufix, true);
-		if (!StringInPanel(identifiedName.c_str())) {
-			identifiedName = GenerateMagicItemName(_(baseItemData.iSName), pPrefix, pSufix, true);
+		identifiedName = GenerateMagicItemName(_(baseItemData.iName), pPrefix, pSufix, translate);
+		if (forceNameLengthCheck ? *forceNameLengthCheck : !StringInPanel(identifiedName.c_str())) {
+			identifiedName = GenerateMagicItemName(_(baseItemData.iSName), pPrefix, pSufix, translate);
 		}
 	}
 
@@ -4737,7 +4741,7 @@ StringOrView Item::getName() const
 		const auto &baseItemData = AllItemsList[static_cast<size_t>(IDidx)];
 		return _(UniqueItems[_iUid].UIName);
 	} else {
-		return GetTranslatedItemNameMagical(*this);
+		return GetTranslatedItemNameMagical(*this, dwBuff & CF_HELLFIRE, true, std::nullopt);
 	}
 }
 
@@ -4922,6 +4926,33 @@ bool ApplyOilToItem(Item &item, Player &player)
 		return false;
 	}
 	return true;
+}
+
+void UpdateHellfireFlag(Item &item, const char *identifiedItemName)
+{
+	// DevilutionX support vanilla and hellfire items in one save file and for that introduced CF_HELLFIRE
+	// But vanilla hellfire items don't have CF_HELLFIRE set in Item::dwBuff
+	// This functions tries to set this flag for vanilla hellfire items based on the item name
+	// This ensures that Item::getName() returns the correct translated item name
+	if (item.dwBuff & CF_HELLFIRE)
+		return; // Item is already a hellfire item
+	if (item._iMagical != ITEM_QUALITY_MAGIC)
+		return; // Only magic item's name can differ between diablo and hellfire
+	if (gbIsMultiplayer)
+		return; // Vanilla hellfire multiplayer is not supported in devilutionX, so there can't be items with missing dwBuff from there
+	// We need to test both short and long name, cause StringInPanel can return a different result (other font and some bugfixes)
+	std::string diabloItemNameShort = GetTranslatedItemNameMagical(item, false, false, false);
+	if (diabloItemNameShort == identifiedItemName)
+		return; // Diablo item name is identical => not a hellfire specific item
+	std::string diabloItemNameLong = GetTranslatedItemNameMagical(item, false, false, true);
+	if (diabloItemNameLong == identifiedItemName)
+		return; // Diablo item name is identical => not a hellfire specific item
+	std::string hellfireItemNameShort = GetTranslatedItemNameMagical(item, true, false, false);
+	std::string hellfireItemNameLong = GetTranslatedItemNameMagical(item, true, false, true);
+	if (hellfireItemNameShort == identifiedItemName || hellfireItemNameLong == identifiedItemName) {
+		// This item should be a vanilla hellfire item that has CF_HELLFIRE missing, cause only then the item name matches
+		item.dwBuff |= CF_HELLFIRE;
+	}
 }
 
 } // namespace devilution

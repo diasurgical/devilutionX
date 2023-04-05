@@ -315,6 +315,7 @@ void LoadItemData(LoadHelper &file, Item &item)
 		item._iDamAcFlags = static_cast<ItemSpecialEffectHf>(file.NextLE<uint32_t>());
 	else
 		item._iDamAcFlags = ItemSpecialEffectHf::None;
+	UpdateHellfireFlag(item, item._iIName);
 
 	RemoveInvalidItem(item);
 }
