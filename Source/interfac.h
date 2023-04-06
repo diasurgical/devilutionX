@@ -11,29 +11,32 @@
 
 namespace devilution {
 
-inline Sint16 GetUIOffsetY()
-{
-	return ((Sint16)((GetScreenHeight() - 480) / 2));
-}
-#define UI_OFFSET_Y (GetUIOffsetY())
-
+/**
+ * @brief Custom events.
+ */
 enum interface_mode : uint16_t {
-	// clang-format off
-	WM_DIABNEXTLVL  = 0x402, // WM_USER+2
-	WM_DIABPREVLVL  = 0x403,
-	WM_DIABRTNLVL   = 0x404,
-	WM_DIABSETLVL   = 0x405,
-	WM_DIABWARPLVL  = 0x406,
-	WM_DIABTOWNWARP = 0x407,
-	WM_DIABTWARPUP  = 0x408,
-	WM_DIABRETOWN   = 0x409,
-	WM_DIABNEWGAME  = 0x40A,
-	WM_DIABLOADGAME = 0x40B,
-	// clang-format on
+	WM_DIABNEXTLVL = 0,
+	WM_DIABPREVLVL,
+	WM_DIABRTNLVL,
+	WM_DIABSETLVL,
+	WM_DIABWARPLVL,
+	WM_DIABTOWNWARP,
+	WM_DIABTWARPUP,
+	WM_DIABRETOWN,
+	WM_DIABNEWGAME,
+	WM_DIABLOADGAME,
 
 	WM_FIRST = WM_DIABNEXTLVL,
 	WM_LAST = WM_DIABLOADGAME,
 };
+
+void RegisterCustomEvents();
+
+bool IsCustomEvent(uint32_t eventType);
+
+interface_mode GetCustomEvent(uint32_t eventType);
+
+uint32_t CustomEventToSdlEvent(interface_mode eventType);
 
 enum Cutscenes : uint8_t {
 	CutStart,
@@ -50,7 +53,8 @@ enum Cutscenes : uint8_t {
 };
 
 void interface_msg_pump();
-bool IncProgress();
+void IncProgress();
+void CompleteProgress();
 void ShowProgress(interface_mode uMsg);
 
 } // namespace devilution

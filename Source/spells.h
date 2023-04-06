@@ -16,10 +16,12 @@ enum class SpellCheckResult : uint8_t {
 	Fail_Busy,
 };
 
-bool IsWallSpell(spell_id spl);
-int GetManaAmount(Player &player, spell_id sn);
-void UseMana(int id, spell_id sn);
-SpellCheckResult CheckSpell(int id, spell_id sn, spell_type st, bool manaonly);
+bool IsValidSpell(SpellID spl);
+bool IsWallSpell(SpellID spl);
+bool TargetsMonster(SpellID id);
+int GetManaAmount(const Player &player, SpellID sn);
+void ConsumeSpell(Player &player, SpellID sn);
+SpellCheckResult CheckSpell(const Player &player, SpellID sn, SpellType st, bool manaonly);
 
 /**
  * @brief Ensures the player's current readied spell is a valid selection for the character. If the current selection is
@@ -29,16 +31,16 @@ SpellCheckResult CheckSpell(int id, spell_id sn, spell_type st, bool manaonly);
  * @param player The player whose readied spell is to be checked.
  */
 void EnsureValidReadiedSpell(Player &player);
-void CastSpell(int id, spell_id spl, int sx, int sy, int dx, int dy, int spllvl);
+void CastSpell(int id, SpellID spl, int sx, int sy, int dx, int dy, int spllvl);
 
 /**
  * @param pnum player index
  * @param rid target player index
  */
-void DoResurrect(int pnum, uint16_t rid);
-void DoHealOther(int pnum, uint16_t rid);
-int GetSpellBookLevel(spell_id s);
-int GetSpellStaffLevel(spell_id s);
+void DoResurrect(size_t pnum, Player &target);
+void DoHealOther(const Player &caster, Player &target);
+int GetSpellBookLevel(SpellID s);
+int GetSpellStaffLevel(SpellID s);
 
 /**
  * @brief Gets a value that represents the specified spellID in 64bit bitmask format.
@@ -48,9 +50,9 @@ int GetSpellStaffLevel(spell_id s);
  * @param spellId The id of the spell to get a bitmask for.
  * @return A 64bit bitmask representation for the specified spell.
  */
-constexpr uint64_t GetSpellBitmask(int spellId)
+constexpr uint64_t GetSpellBitmask(SpellID spellId)
 {
-	return 1ULL << (spellId - 1);
+	return 1ULL << (static_cast<int8_t>(spellId) - 1);
 }
 
 } // namespace devilution

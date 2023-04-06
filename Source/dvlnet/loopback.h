@@ -12,7 +12,7 @@ class loopback : public abstract_net {
 private:
 	std::queue<buffer_t> message_queue;
 	buffer_t message_last;
-	int plr_single;
+	uint8_t plr_single;
 
 public:
 	loopback()
@@ -22,7 +22,7 @@ public:
 
 	virtual int create(std::string addrstr);
 	virtual int join(std::string addrstr);
-	virtual bool SNetReceiveMessage(int *sender, void **data, uint32_t *size);
+	virtual bool SNetReceiveMessage(uint8_t *sender, void **data, uint32_t *size);
 	virtual bool SNetSendMessage(int dest, void *data, unsigned int size);
 	virtual bool SNetReceiveTurns(char **data, size_t *size, uint32_t *status);
 	virtual bool SNetSendTurn(char *data, unsigned int size);

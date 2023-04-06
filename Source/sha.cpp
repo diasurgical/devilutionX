@@ -1,16 +1,7 @@
-/**
- * @file sha.cpp
- *
- * Implementation of functionality for calculating X-SHA-1 (a flawed implementation of SHA-1).
- */
 #include "sha.h"
 
 #include <cstdint>
 #include <cstring>
-
-#include <SDL.h>
-
-#include "appfat.h"
 
 namespace devilution {
 
@@ -19,21 +10,11 @@ namespace devilution {
 
 namespace {
 
-struct SHA1Context {
-	uint32_t state[SHA1HashSize / sizeof(uint32_t)];
-	uint32_t buffer[BlockSize / sizeof(uint32_t)];
-};
-
-SHA1Context sgSHA1[3];
-
 /**
  * Diablo-"SHA1" circular left shift, portable version.
  */
 uint32_t SHA1CircularShift(uint32_t word, size_t bits)
 {
-	assert(bits < 32);
-	assert(bits > 0);
-
 	// The SHA-like algorithm as originally implemented treated word as a signed value and used arithmetic right shifts
 	//  (sign-extending). This results in the high 32-`bits` bits being set to 1.
 	if ((word & (1 << 31)) != 0)
@@ -41,22 +22,11 @@ uint32_t SHA1CircularShift(uint32_t word, size_t bits)
 	return (word << bits) | (word >> (32 - bits));
 }
 
-void SHA1Init(SHA1Context *context)
-{
-	context->state[0] = 0x67452301;
-	context->state[1] = 0xEFCDAB89;
-	context->state[2] = 0x98BADCFE;
-	context->state[3] = 0x10325476;
-	context->state[4] = 0xC3D2E1F0;
-}
-
 void SHA1ProcessMessageBlock(SHA1Context *context)
 {
 	std::uint32_t w[80];
 
-	for (int i = 0; i < 16; i++)
-		w[i] = SDL_SwapLE32(context->buffer[i]);
-
+	memcpy(w, context->buffer, BlockSize * sizeof(uint32_t));
 	for (int i = 16; i < 80; i++) {
 		w[i] = w[i - 16] ^ w[i - 14] ^ w[i - 8] ^ w[i - 3];
 	}
@@ -110,43 +80,17 @@ void SHA1ProcessMessageBlock(SHA1Context *context)
 	context->state[4] += e;
 }
 
-void SHA1Input(SHA1Context *context, const byte *messageArray, std::size_t len)
-{
-	for (auto i = len / BlockSize; i != 0; i--) {
-		memcpy(context->buffer, messageArray, BlockSize);
-		SHA1ProcessMessageBlock(context);
-		messageArray += BlockSize;
-	}
-}
-
 } // namespace
 
-void SHA1Clear()
+void SHA1Result(SHA1Context &context, uint32_t messageDigest[SHA1HashSize])
 {
-	memset(sgSHA1, 0, sizeof(sgSHA1));
+	memcpy(messageDigest, context.state, sizeof(context.state));
 }
 
-void SHA1Result(int n, byte messageDigest[SHA1HashSize])
+void SHA1Calculate(SHA1Context &context, const uint32_t data[BlockSize])
 {
-	std::uint32_t *messageDigestBlock = reinterpret_cast<std::uint32_t *>(messageDigest);
-	if (messageDigest != nullptr) {
-		for (auto &block : sgSHA1[n].state) {
-			*messageDigestBlock = SDL_SwapLE32(block);
-			messageDigestBlock++;
-		}
-	}
-}
-
-void SHA1Calculate(int n, const byte data[BlockSize], byte messageDigest[SHA1HashSize])
-{
-	SHA1Input(&sgSHA1[n], data, BlockSize);
-	if (messageDigest != nullptr)
-		SHA1Result(n, messageDigest);
-}
-
-void SHA1Reset(int n)
-{
-	SHA1Init(&sgSHA1[n]);
+	memcpy(&context.buffer[0], data, BlockSize * sizeof(uint32_t));
+	SHA1ProcessMessageBlock(&context);
 }
 
 } // namespace devilution

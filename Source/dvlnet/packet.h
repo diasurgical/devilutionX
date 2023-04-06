@@ -10,7 +10,9 @@
 #include <sodium.h>
 #endif
 
+#include "appfat.h"
 #include "dvlnet/abstract_net.h"
+#include "utils/attributes.h"
 #include "utils/stubs.h"
 
 namespace devilution {
@@ -26,6 +28,8 @@ enum packet_type : uint8_t {
 	PT_DISCONNECT   = 0x14,
 	PT_INFO_REQUEST = 0x21,
 	PT_INFO_REPLY   = 0x22,
+	PT_ECHO_REQUEST = 0x31,
+	PT_ECHO_REPLY   = 0x32,
 	// clang-format on
 };
 
@@ -33,8 +37,9 @@ enum packet_type : uint8_t {
 const char *packet_type_to_string(uint8_t packetType);
 
 typedef uint8_t plr_t;
+typedef uint8_t seq_t;
 typedef uint32_t cookie_t;
-typedef int turn_t;      // change int to something else in devilution code later
+typedef uint32_t timestamp_t;
 typedef int leaveinfo_t; // also change later
 #ifdef PACKET_ENCRYPTION
 typedef std::array<unsigned char, crypto_secretbox_KEYBYTES> key_t;
@@ -42,6 +47,11 @@ typedef std::array<unsigned char, crypto_secretbox_KEYBYTES> key_t;
 // Stub out the key_t defintion as we're not doing any encryption.
 using key_t = uint8_t;
 #endif
+
+struct turn_t {
+	seq_t SequenceNumber;
+	int32_t Value;
+};
 
 static constexpr plr_t PLR_MASTER = 0xFE;
 static constexpr plr_t PLR_BROADCAST = 0xFF;
@@ -76,6 +86,7 @@ protected:
 	turn_t m_turn;
 	cookie_t m_cookie;
 	plr_t m_newplr;
+	timestamp_t m_time;
 	buffer_t m_info;
 	leaveinfo_t m_leaveinfo;
 
@@ -98,6 +109,7 @@ public:
 	turn_t Turn();
 	cookie_t Cookie();
 	plr_t NewPlayer();
+	timestamp_t Time();
 	const buffer_t &Info();
 	leaveinfo_t LeaveInfo();
 };
@@ -149,7 +161,8 @@ void packet_proc<P>::process_data()
 		self.process_element(m_message);
 		break;
 	case PT_TURN:
-		self.process_element(m_turn);
+		self.process_element(m_turn.SequenceNumber);
+		self.process_element(m_turn.Value);
 		break;
 	case PT_JOIN_REQUEST:
 		self.process_element(m_cookie);
@@ -173,6 +186,10 @@ void packet_proc<P>::process_data()
 		break;
 	case PT_INFO_REQUEST:
 		break;
+	case PT_ECHO_REQUEST:
+	case PT_ECHO_REPLY:
+		self.process_element(m_time);
+		break;
 	}
 }
 
@@ -186,7 +203,11 @@ template <class T>
 void packet_in::process_element(T &x)
 {
 	if (decrypted_buffer.size() < sizeof(T))
+#if DVL_EXCEPTIONS
 		throw packet_exception();
+#else
+		app_fatal("invalid packet");
+#endif
 	std::memcpy(&x, decrypted_buffer.data(), sizeof(T));
 	decrypted_buffer.erase(decrypted_buffer.begin(),
 	    decrypted_buffer.begin() + sizeof(T));
@@ -305,6 +326,30 @@ inline void packet_out::create<PT_DISCONNECT>(plr_t s, plr_t d, plr_t n,
 	m_dest = d;
 	m_newplr = n;
 	m_leaveinfo = l;
+}
+
+template <>
+inline void packet_out::create<PT_ECHO_REQUEST>(plr_t s, plr_t d, timestamp_t t)
+{
+	if (have_encrypted || have_decrypted)
+		ABORT();
+	have_decrypted = true;
+	m_type = PT_ECHO_REQUEST;
+	m_src = s;
+	m_dest = d;
+	m_time = t;
+}
+
+template <>
+inline void packet_out::create<PT_ECHO_REPLY>(plr_t s, plr_t d, timestamp_t t)
+{
+	if (have_encrypted || have_decrypted)
+		ABORT();
+	have_decrypted = true;
+	m_type = PT_ECHO_REPLY;
+	m_src = s;
+	m_dest = d;
+	m_time = t;
 }
 
 inline void packet_out::process_element(buffer_t &x)

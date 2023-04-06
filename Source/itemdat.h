@@ -9,6 +9,7 @@
 
 #include "objdat.h"
 #include "spelldat.h"
+#include "utils/stdcompat/string_view.hpp"
 
 namespace devilution {
 
@@ -64,7 +65,13 @@ enum _item_indexes : int16_t { // TODO defines all indexes in AllItemsList
 	IDI_FULLNOTE,
 	IDI_BROWNSUIT,
 	IDI_GREYSUIT,
-	IDI_SORCERER_DIABLO = 166,
+	IDI_BOOK1 = 114,
+	IDI_BOOK2,
+	IDI_BOOK3,
+	IDI_BOOK4,
+	IDI_BARBARIAN = 139,
+	IDI_RUNEOFSTONE = 165,
+	IDI_SORCERER_DIABLO,
 
 	IDI_LAST = IDI_SORCERER_DIABLO,
 	IDI_NONE = -1,
@@ -244,6 +251,8 @@ enum class ItemType : int8_t {
 	None = -1,
 };
 
+string_view ItemTypeToString(ItemType itemType);
+
 enum unique_base_item : int8_t {
 	UITYPE_NONE,
 	UITYPE_SHORTBOW,
@@ -318,75 +327,72 @@ enum unique_base_item : int8_t {
 	UITYPE_INVALID = -1,
 };
 
-enum item_special_effect {
+enum class ItemSpecialEffect : uint32_t {
 	// clang-format off
-	ISPL_NONE           = 0,
-	ISPL_INFRAVISION    = 1 << 0,
-	ISPL_RNDSTEALLIFE   = 1 << 1,
-	ISPL_RNDARROWVEL    = 1 << 2,
-	ISPL_FIRE_ARROWS    = 1 << 3,
-	ISPL_FIREDAM        = 1 << 4,
-	ISPL_LIGHTDAM       = 1 << 5,
-	ISPL_DRAINLIFE      = 1 << 6,
-	ISPL_UNKNOWN_1      = 1 << 7,
-	ISPL_NOHEALPLR      = 1 << 8,
-	ISPL_MULT_ARROWS    = 1 << 9,
-	ISPL_UNKNOWN_3      = 1 << 10,
-	ISPL_KNOCKBACK      = 1 << 11,
-	ISPL_NOHEALMON      = 1 << 12,
-	ISPL_STEALMANA_3    = 1 << 13,
-	ISPL_STEALMANA_5    = 1 << 14,
-	ISPL_STEALLIFE_3    = 1 << 15,
-	ISPL_STEALLIFE_5    = 1 << 16,
-	ISPL_QUICKATTACK    = 1 << 17,
-	ISPL_FASTATTACK     = 1 << 18,
-	ISPL_FASTERATTACK   = 1 << 19,
-	ISPL_FASTESTATTACK  = 1 << 20,
-	ISPL_FASTRECOVER    = 1 << 21,
-	ISPL_FASTERRECOVER  = 1 << 22,
-	ISPL_FASTESTRECOVER = 1 << 23,
-	ISPL_FASTBLOCK      = 1 << 24,
-	ISPL_LIGHT_ARROWS   = 1 << 25,
-	ISPL_THORNS         = 1 << 26,
-	ISPL_NOMANA         = 1 << 27,
-	ISPL_ABSHALFTRAP    = 1 << 28,
-	ISPL_UNKNOWN_4      = 1 << 29,
-	ISPL_3XDAMVDEM      = 1 << 30,
-	ISPL_ALLRESZERO     = 1 << 31,
+	None                   = 0,
+	RandomStealLife        = 1 << 1,
+	RandomArrowVelocity    = 1 << 2,
+	FireArrows             = 1 << 3,
+	FireDamage             = 1 << 4,
+	LightningDamage        = 1 << 5,
+	DrainLife              = 1 << 6,
+	MultipleArrows         = 1 << 9,
+	Knockback              = 1 << 11,
+	StealMana3             = 1 << 13,
+	StealMana5             = 1 << 14,
+	StealLife3             = 1 << 15,
+	StealLife5             = 1 << 16,
+	QuickAttack            = 1 << 17,
+	FastAttack             = 1 << 18,
+	FasterAttack           = 1 << 19,
+	FastestAttack          = 1 << 20,
+	FastHitRecovery        = 1 << 21,
+	FasterHitRecovery      = 1 << 22,
+	FastestHitRecovery     = 1 << 23,
+	FastBlock              = 1 << 24,
+	LightningArrows        = 1 << 25,
+	Thorns                 = 1 << 26,
+	NoMana                 = 1 << 27,
+	HalfTrapDamage         = 1 << 28,
+	TripleDemonDamage      = 1 << 30,
+	ZeroResistance         = 1U << 31,
 	// clang-format on
 };
+use_enum_as_flags(ItemSpecialEffect);
 
-typedef enum item_special_effect_hf {
+enum class ItemSpecialEffectHf : uint8_t {
 	// clang-format off
-	ISPLHF_DEVASTATION  = 1 << 0,
-	ISPLHF_DECAY        = 1 << 1,
-	ISPLHF_PERIL        = 1 << 2,
-	ISPLHF_JESTERS      = 1 << 3,
-	ISPLHF_DOPPELGANGER = 1 << 4,
-	ISPLHF_ACDEMON      = 1 << 5,
-	ISPLHF_ACUNDEAD     = 1 << 6,
+	None               = 0,
+	Devastation        = 1 << 0,
+	Decay              = 1 << 1,
+	Peril              = 1 << 2,
+	Jesters            = 1 << 3,
+	Doppelganger       = 1 << 4,
+	ACAgainstDemons    = 1 << 5,
+	ACAgainstUndead    = 1 << 6,
 	// clang-format on
-} item_special_effect_hf;
+};
+use_enum_as_flags(ItemSpecialEffectHf);
 
 enum item_misc_id : int8_t {
 	IMISC_NONE,
 	IMISC_USEFIRST,
 	IMISC_FULLHEAL,
 	IMISC_HEAL,
-	IMISC_OLDHEAL,
-	IMISC_DEADHEAL,
+	IMISC_0x4, // Unused
+	IMISC_0x5, // Unused
 	IMISC_MANA,
 	IMISC_FULLMANA,
-	IMISC_POTEXP,  /* add experience */
-	IMISC_POTFORG, /* remove experience */
+	IMISC_0x8, // Unused
+	IMISC_0x9, // Unused
 	IMISC_ELIXSTR,
 	IMISC_ELIXMAG,
 	IMISC_ELIXDEX,
 	IMISC_ELIXVIT,
-	IMISC_ELIXWEAK, /* double check with alpha */
-	IMISC_ELIXDIS,
-	IMISC_ELIXCLUM,
-	IMISC_ELIXSICK,
+	IMISC_0xE,  // Unused
+	IMISC_0xF,  // Unused
+	IMISC_0x10, // Unused
+	IMISC_0x11, // Unused
 	IMISC_REJUV,
 	IMISC_FULLREJUV,
 	IMISC_USELAST,
@@ -397,7 +403,7 @@ enum item_misc_id : int8_t {
 	IMISC_RING,
 	IMISC_AMULET,
 	IMISC_UNIQUE,
-	IMISC_FOOD, /* from demo/PSX */
+	IMISC_0x1C, // Unused
 	IMISC_OILFIRST,
 	IMISC_OILOF, /* oils are beta or hellfire only */
 	IMISC_OILACC,
@@ -414,7 +420,7 @@ enum item_misc_id : int8_t {
 	IMISC_MAPOFDOOM,
 	IMISC_EAR,
 	IMISC_SPECELIX,
-	IMISC_0x2D, // Unknown
+	IMISC_0x2D, // Unused
 	IMISC_RUNEFIRST,
 	IMISC_RUNEF,
 	IMISC_RUNEL,
@@ -445,9 +451,9 @@ struct ItemData {
 	uint8_t iMinStr;
 	uint8_t iMinMag;
 	uint8_t iMinDex;
-	uint32_t iFlags; // item_special_effect as bit flags
+	ItemSpecialEffect iFlags; // ItemSpecialEffect as bit flags
 	enum item_misc_id iMiscId;
-	enum spell_id iSpell;
+	SpellID iSpell;
 	bool iUsable;
 	uint16_t iValue;
 };
@@ -465,14 +471,11 @@ enum item_effect_type : int8_t {
 	IPL_LIGHTRES,
 	IPL_MAGICRES,
 	IPL_ALLRES,
-	IPL_SPLCOST, /* only used in beta */
-	IPL_SPLDUR,  /* only used in beta */
-	IPL_SPLLVLADD,
+	IPL_SPLLVLADD = 14,
 	IPL_CHARGES,
 	IPL_FIREDAM,
 	IPL_LIGHTDAM,
-	IPL_0x12, // Unknown
-	IPL_STR,
+	IPL_STR = 19,
 	IPL_STR_CURSE,
 	IPL_MAG,
 	IPL_MAG_CURSE,
@@ -493,22 +496,16 @@ enum item_effect_type : int8_t {
 	IPL_INDESTRUCTIBLE,
 	IPL_LIGHT,
 	IPL_LIGHT_CURSE,
-	IPL_0x28,        // Unknown
-	IPL_MULT_ARROWS, /* only used in hellfire */
+	IPL_MULT_ARROWS = 41, /* only used in hellfire */
 	IPL_FIRE_ARROWS,
 	IPL_LIGHT_ARROWS,
 	IPL_INVCURS,
 	IPL_THORNS,
 	IPL_NOMANA,
-	IPL_NOHEALPLR, // unused
-	IPL_0x30,      // Unknown
-	IPL_0x31,      // Unknown
-	IPL_FIREBALL,  /* only used in hellfire */
-	IPL_0x33,      // Unknown
-	IPL_ABSHALFTRAP,
+	IPL_FIREBALL = 50, /* only used in hellfire */
+	IPL_ABSHALFTRAP = 52,
 	IPL_KNOCKBACK,
-	IPL_NOHEALMON, // unused
-	IPL_STEALMANA,
+	IPL_STEALMANA = 55,
 	IPL_STEALLIFE,
 	IPL_TARGAC,
 	IPL_FASTATTACK,
@@ -520,25 +517,20 @@ enum item_effect_type : int8_t {
 	IPL_SETDUR,
 	IPL_NOMINSTR,
 	IPL_SPELL,
-	IPL_FASTSWING, // unused
-	IPL_ONEHAND,
+	IPL_ONEHAND = 68,
 	IPL_3XDAMVDEM,
 	IPL_ALLRESZERO,
-	IPL_0x47, // Unknown
-	IPL_DRAINLIFE,
+	IPL_DRAINLIFE = 72,
 	IPL_RNDSTEALLIFE,
-	IPL_INFRAVISION, // unused
-	IPL_SETAC,
+	IPL_SETAC = 75,
 	IPL_ADDACLIFE,
 	IPL_ADDMANAAC,
-	IPL_FIRERESCLVL, // unused
-	IPL_AC_CURSE,
+	IPL_AC_CURSE = 79,
 	IPL_LASTDIABLO = IPL_AC_CURSE,
 	IPL_FIRERES_CURSE,
 	IPL_LIGHTRES_CURSE,
 	IPL_MAGICRES_CURSE,
-	IPL_ALLRES_CURSE, // unused
-	IPL_DEVASTATION,
+	IPL_DEVASTATION = 84,
 	IPL_DECAY,
 	IPL_PERIL,
 	IPL_JESTERS,
@@ -557,28 +549,30 @@ enum goodorevil : uint8_t {
 	GOE_GOOD,
 };
 
-enum affix_item_type : uint8_t {
+enum class AffixItemType : uint8_t {
 	// clang-format off
-	PLT_MISC  = 1 << 0,
-	PLT_BOW   = 1 << 1,
-	PLT_STAFF = 1 << 2,
-	PLT_WEAP  = 1 << 3,
-	PLT_SHLD  = 1 << 4,
-	PLT_ARMO  = 1 << 5,
+	None      = 0,
+	Misc      = 1 << 0,
+	Bow       = 1 << 1,
+	Staff     = 1 << 2,
+	Weapon    = 1 << 3,
+	Shield    = 1 << 4,
+	Armor     = 1 << 5,
 	// clang-format on
 };
+use_enum_as_flags(AffixItemType);
 
 struct ItemPower {
-	item_effect_type type;
-	int param1;
-	int param2;
+	item_effect_type type = IPL_INVALID;
+	int param1 = 0;
+	int param2 = 0;
 };
 
 struct PLStruct {
 	const char *PLName;
 	ItemPower power;
 	int8_t PLMinLvl;
-	int PLIType; // affix_item_type as bit flags
+	AffixItemType PLIType; // AffixItemType as bit flags
 	enum goodorevil PLGOE;
 	bool PLDouble;
 	bool PLOk;
@@ -596,7 +590,7 @@ struct UniqueItem {
 	ItemPower powers[6];
 };
 
-extern ItemData AllItemsList[];
+extern const ItemData AllItemsList[];
 extern const PLStruct ItemPrefixes[];
 extern const PLStruct ItemSuffixes[];
 extern const UniqueItem UniqueItems[];

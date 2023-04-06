@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 
+#include "multi.h"
 #include "storm/storm_net.hpp"
 
 namespace devilution {
@@ -24,7 +25,7 @@ class abstract_net {
 public:
 	virtual int create(std::string addrstr) = 0;
 	virtual int join(std::string addrstr) = 0;
-	virtual bool SNetReceiveMessage(int *sender, void **data, uint32_t *size) = 0;
+	virtual bool SNetReceiveMessage(uint8_t *sender, void **data, uint32_t *size) = 0;
 	virtual bool SNetSendMessage(int dest, void *data, unsigned int size) = 0;
 	virtual bool SNetReceiveTurns(char **data, size_t *size, uint32_t *status) = 0;
 	virtual bool SNetSendTurn(char *data, unsigned int size) = 0;
@@ -48,17 +49,18 @@ public:
 	{
 	}
 
-	virtual void send_info_request()
+	virtual bool send_info_request()
 	{
+		return true;
 	}
 
 	virtual void clear_gamelist()
 	{
 	}
 
-	virtual std::vector<std::string> get_gamelist()
+	virtual std::vector<GameInfo> get_gamelist()
 	{
-		return std::vector<std::string>();
+		return std::vector<GameInfo>();
 	}
 
 	static std::unique_ptr<abstract_net> MakeNet(provider_t provider);

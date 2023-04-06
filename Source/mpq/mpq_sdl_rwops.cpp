@@ -105,7 +105,6 @@ static SizeType MpqFileRwRead(struct SDL_RWops *context, void *ptr, SizeType siz
 	uint32_t blockNumber = data.position / data.blockSize;
 	while (remainingSize > 0) {
 		if (data.position == data.size) {
-			SDL_SetError("MpqFileRwRead beyond EOF by %u bytes", static_cast<unsigned>(remainingSize));
 			break;
 		}
 

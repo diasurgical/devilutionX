@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+	<shortcut
+		android:shortcutId="import"
+		android:enabled="true"
+		android:icon="@mipmap/ic_launcher_import_data"
+		android:shortcutShortLabel="@string/import_short_label">
+		<intent
+			android:action="android.intent.action.VIEW"
+			android:targetPackage="org.diasurgical.devilutionx"
+			android:targetClass="org.diasurgical.devilutionx.ImportActivity" />
+	</shortcut>
+</shortcuts>

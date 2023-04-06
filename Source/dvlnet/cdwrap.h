@@ -26,7 +26,7 @@ private:
 public:
 	virtual int create(std::string addrstr);
 	virtual int join(std::string addrstr);
-	virtual bool SNetReceiveMessage(int *sender, void **data, uint32_t *size);
+	virtual bool SNetReceiveMessage(uint8_t *sender, void **data, uint32_t *size);
 	virtual bool SNetSendMessage(int dest, void *data, unsigned int size);
 	virtual bool SNetReceiveTurns(char **data, size_t *size, uint32_t *status);
 	virtual bool SNetSendTurn(char *data, unsigned int size);
@@ -40,9 +40,9 @@ public:
 	virtual bool SNetGetTurnsInTransit(uint32_t *turns);
 	virtual void setup_gameinfo(buffer_t info);
 	virtual std::string make_default_gamename();
-	virtual void send_info_request();
+	virtual bool send_info_request();
 	virtual void clear_gamelist();
-	virtual std::vector<std::string> get_gamelist();
+	virtual std::vector<GameInfo> get_gamelist();
 	virtual void setup_password(std::string pw);
 	virtual void clear_password();
 
@@ -95,7 +95,7 @@ void cdwrap<T>::setup_gameinfo(buffer_t info)
 }
 
 template <class T>
-bool cdwrap<T>::SNetReceiveMessage(int *sender, void **data, uint32_t *size)
+bool cdwrap<T>::SNetReceiveMessage(uint8_t *sender, void **data, uint32_t *size)
 {
 	return dvlnet_wrap->SNetReceiveMessage(sender, data, size);
 }
@@ -175,9 +175,9 @@ std::string cdwrap<T>::make_default_gamename()
 }
 
 template <class T>
-void cdwrap<T>::send_info_request()
+bool cdwrap<T>::send_info_request()
 {
-	dvlnet_wrap->send_info_request();
+	return dvlnet_wrap->send_info_request();
 }
 
 template <class T>
@@ -187,7 +187,7 @@ void cdwrap<T>::clear_gamelist()
 }
 
 template <class T>
-std::vector<std::string> cdwrap<T>::get_gamelist()
+std::vector<GameInfo> cdwrap<T>::get_gamelist()
 {
 	return dvlnet_wrap->get_gamelist();
 }

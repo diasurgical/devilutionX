@@ -1,31 +1,39 @@
 #pragma once
 
+#include <array>
+#include <cstddef>
 #include <cstdint>
+#include <forward_list>
 #include <unordered_map>
 
 #include <SDL_version.h>
 
+#include "controls/controller.h"
+#include "controls/controller_buttons.h"
+#include "controls/game_controls.h"
+#include "engine/sound_defs.hpp"
 #include "pack.h"
 #include "utils/enum_traits.h"
+#include "utils/stdcompat/optional.hpp"
 #include "utils/stdcompat/string_view.hpp"
 
 namespace devilution {
 
-enum class StartUpGameMode {
-	/** @brief If hellfire is present, asks the user what game he wants to start. */
+enum class StartUpGameMode : uint8_t {
+	/** @brief If hellfire is present, asks the user what game they want to start. */
 	Ask = 0,
 	Hellfire = 1,
 	Diablo = 2,
 };
 
-enum class StartUpIntro {
+enum class StartUpIntro : uint8_t {
 	Off = 0,
 	Once = 1,
 	On = 2,
 };
 
 /** @brief Defines what splash screen should be shown at startup. */
-enum class StartUpSplash {
+enum class StartUpSplash : uint8_t {
 	/** @brief Show no splash screen. */
 	None = 0,
 	/** @brief Show only TitleDialog. */
@@ -34,19 +42,41 @@ enum class StartUpSplash {
 	LogoAndTitleDialog = 2,
 };
 
-enum class ScalingQuality {
+enum class ScalingQuality : uint8_t {
 	NearestPixel,
 	BilinearFiltering,
 	AnisotropicFiltering,
 };
 
-enum class OptionEntryType {
+enum class Resampler : uint8_t {
+#ifdef DEVILUTIONX_RESAMPLER_SPEEX
+	Speex = 0,
+#endif
+#ifdef DVL_AULIB_SUPPORTS_SDL_RESAMPLER
+	SDL,
+#endif
+};
+
+string_view ResamplerToString(Resampler resampler);
+std::optional<Resampler> ResamplerFromString(string_view resampler);
+
+enum class FloatingNumbers : uint8_t {
+	/** @brief Show no floating numbers. */
+	Off = 0,
+	/** @brief Show floating numbers at random angles. */
+	Random = 1,
+	/** @brief Show floating numbers vertically only. */
+	Vertical = 2,
+};
+
+enum class OptionEntryType : uint8_t {
 	Boolean,
 	List,
 	Key,
+	PadButton,
 };
 
-enum class OptionEntryFlags {
+enum class OptionEntryFlags : uint8_t {
 	/** @brief No special logic. */
 	None = 0,
 	/** @brief Shouldn't be shown in settings dialog. */
@@ -70,9 +100,9 @@ use_enum_as_flags(OptionEntryFlags);
 
 class OptionEntryBase {
 public:
-	OptionEntryBase(string_view key, OptionEntryFlags flags, string_view name, string_view description)
-	    : key(key)
-	    , flags(flags)
+	OptionEntryBase(string_view key, OptionEntryFlags flags, const char *name, const char *description)
+	    : flags(flags)
+	    , key(key)
 	    , name(name)
 	    , description(description)
 	{
@@ -88,11 +118,12 @@ public:
 	virtual void LoadFromIni(string_view category) = 0;
 	virtual void SaveToIni(string_view category) const = 0;
 
+	OptionEntryFlags flags;
+
 protected:
 	string_view key;
-	OptionEntryFlags flags;
-	string_view name;
-	string_view description;
+	const char *name;
+	const char *description;
 	void NotifyValueChanged();
 
 private:
@@ -101,7 +132,7 @@ private:
 
 class OptionEntryBoolean : public OptionEntryBase {
 public:
-	OptionEntryBoolean(string_view key, OptionEntryFlags flags, string_view name, string_view description, bool defaultValue)
+	OptionEntryBoolean(string_view key, OptionEntryFlags flags, const char *name, const char *description, bool defaultValue)
 	    : OptionEntryBase(key, flags, name, description)
 	    , defaultValue(defaultValue)
 	    , value(defaultValue)
@@ -134,7 +165,7 @@ public:
 	[[nodiscard]] string_view GetValueDescription() const override;
 
 protected:
-	OptionEntryListBase(string_view key, OptionEntryFlags flags, string_view name, string_view description)
+	OptionEntryListBase(string_view key, OptionEntryFlags flags, const char *name, const char *description)
 	    : OptionEntryBase(key, flags, name, description)
 	{
 	}
@@ -151,7 +182,7 @@ public:
 	void SetActiveListIndex(size_t index) override;
 
 protected:
-	OptionEntryEnumBase(string_view key, OptionEntryFlags flags, string_view name, string_view description, int defaultValue)
+	OptionEntryEnumBase(string_view key, OptionEntryFlags flags, const char *name, const char *description, int defaultValue)
 	    : OptionEntryListBase(key, flags, name, description)
 	    , defaultValue(defaultValue)
 	    , value(defaultValue)
@@ -176,7 +207,7 @@ private:
 template <typename T>
 class OptionEntryEnum : public OptionEntryEnumBase {
 public:
-	OptionEntryEnum(string_view key, OptionEntryFlags flags, string_view name, string_view description, T defaultValue, std::initializer_list<std::pair<T, string_view>> entries)
+	OptionEntryEnum(string_view key, OptionEntryFlags flags, const char *name, const char *description, T defaultValue, std::initializer_list<std::pair<T, string_view>> entries)
 	    : OptionEntryEnumBase(key, flags, name, description, static_cast<int>(defaultValue))
 	{
 		for (auto entry : entries) {
@@ -204,7 +235,7 @@ public:
 	void SetActiveListIndex(size_t index) override;
 
 protected:
-	OptionEntryIntBase(string_view key, OptionEntryFlags flags, string_view name, string_view description, int defaultValue)
+	OptionEntryIntBase(string_view key, OptionEntryFlags flags, const char *name, const char *description, int defaultValue)
 	    : OptionEntryListBase(key, flags, name, description)
 	    , defaultValue(defaultValue)
 	    , value(defaultValue)
@@ -229,12 +260,16 @@ private:
 template <typename T>
 class OptionEntryInt : public OptionEntryIntBase {
 public:
-	OptionEntryInt(string_view key, OptionEntryFlags flags, string_view name, string_view description, T defaultValue, std::initializer_list<T> entries)
+	OptionEntryInt(string_view key, OptionEntryFlags flags, const char *name, const char *description, T defaultValue, std::initializer_list<T> entries)
 	    : OptionEntryIntBase(key, flags, name, description, static_cast<int>(defaultValue))
 	{
 		for (auto entry : entries) {
 			AddEntry(static_cast<int>(entry));
 		}
+	}
+	OptionEntryInt(string_view key, OptionEntryFlags flags, const char *name, const char *description, T defaultValue)
+	    : OptionEntryInt(key, flags, name, description, defaultValue, { defaultValue })
+	{
 	}
 	[[nodiscard]] T operator*() const
 	{
@@ -263,6 +298,14 @@ public:
 		return szCode;
 	}
 
+	OptionEntryLanguageCode &operator=(string_view code)
+	{
+		assert(code.size() < 6);
+		memcpy(szCode, code.data(), code.size());
+		szCode[code.size()] = '\0';
+		return *this;
+	}
+
 private:
 	/** @brief Language code (ISO-15897) for text. */
 	char szCode[6];
@@ -282,6 +325,7 @@ public:
 	[[nodiscard]] string_view GetListDescription(size_t index) const override;
 	[[nodiscard]] size_t GetActiveListIndex() const override;
 	void SetActiveListIndex(size_t index) override;
+	void InvalidateList();
 
 	Size operator*() const
 	{
@@ -296,8 +340,64 @@ private:
 	void CheckResolutionsAreInitialized() const;
 };
 
+class OptionEntryResampler : public OptionEntryListBase {
+public:
+	OptionEntryResampler();
+
+	void LoadFromIni(string_view category) override;
+	void SaveToIni(string_view category) const override;
+
+	[[nodiscard]] size_t GetListSize() const override;
+	[[nodiscard]] string_view GetListDescription(size_t index) const override;
+	[[nodiscard]] size_t GetActiveListIndex() const override;
+	void SetActiveListIndex(size_t index) override;
+
+	Resampler operator*() const
+	{
+		return resampler_;
+	}
+
+private:
+	void UpdateDependentOptions() const;
+
+	Resampler resampler_;
+};
+
+class OptionEntryAudioDevice : public OptionEntryListBase {
+public:
+	OptionEntryAudioDevice();
+
+	void LoadFromIni(string_view category) override;
+	void SaveToIni(string_view category) const override;
+
+	[[nodiscard]] size_t GetListSize() const override;
+	[[nodiscard]] string_view GetListDescription(size_t index) const override;
+	[[nodiscard]] size_t GetActiveListIndex() const override;
+	void SetActiveListIndex(size_t index) override;
+
+	std::string operator*() const
+	{
+		for (size_t i = 0; i < GetListSize(); i++) {
+			string_view deviceName = GetDeviceName(i);
+			if (deviceName == deviceName_)
+				return deviceName_;
+		}
+		return "";
+	}
+
+private:
+	string_view GetDeviceName(size_t index) const;
+
+	std::string deviceName_;
+};
+
 struct OptionCategoryBase {
-	OptionCategoryBase(string_view key, string_view name, string_view description);
+	OptionCategoryBase(string_view key, const char *name, const char *description)
+	    : key(key)
+	    , name(name)
+	    , description(description)
+	{
+	}
 
 	[[nodiscard]] string_view GetKey() const;
 	[[nodiscard]] string_view GetName() const;
@@ -307,8 +407,8 @@ struct OptionCategoryBase {
 
 protected:
 	string_view key;
-	string_view name;
-	string_view description;
+	const char *name;
+	const char *description;
 };
 
 struct StartUpOptions : OptionCategoryBase {
@@ -329,9 +429,9 @@ struct DiabloOptions : OptionCategoryBase {
 	std::vector<OptionEntryBase *> GetEntries() override;
 
 	/** @brief Remembers what singleplayer hero/save was last used. */
-	std::uint32_t lastSinglePlayerHero;
+	OptionEntryInt<std::uint32_t> lastSinglePlayerHero;
 	/** @brief Remembers what multiplayer hero/save was last used. */
-	std::uint32_t lastMultiplayerHero;
+	OptionEntryInt<std::uint32_t> lastMultiplayerHero;
 };
 
 struct HellfireOptions : OptionCategoryBase {
@@ -341,9 +441,9 @@ struct HellfireOptions : OptionCategoryBase {
 	/** @brief Cornerstone of the world item. */
 	char szItem[sizeof(ItemPack) * 2 + 1];
 	/** @brief Remembers what singleplayer hero/save was last used. */
-	std::uint32_t lastSinglePlayerHero;
+	OptionEntryInt<std::uint32_t> lastSinglePlayerHero;
 	/** @brief Remembers what multiplayer hero/save was last used. */
-	std::uint32_t lastMultiplayerHero;
+	OptionEntryInt<std::uint32_t> lastMultiplayerHero;
 };
 
 struct AudioOptions : OptionCategoryBase {
@@ -351,9 +451,9 @@ struct AudioOptions : OptionCategoryBase {
 	std::vector<OptionEntryBase *> GetEntries() override;
 
 	/** @brief Movie and SFX volume. */
-	int nSoundVolume;
+	OptionEntryInt<int> soundVolume;
 	/** @brief Music volume. */
-	int nMusicVolume;
+	OptionEntryInt<int> musicVolume;
 	/** @brief Player emits sound when walking. */
 	OptionEntryBoolean walkingSound;
 	/** @brief Automatically equipping items on pickup emits the equipment sound. */
@@ -361,14 +461,18 @@ struct AudioOptions : OptionCategoryBase {
 	/** @brief Picking up items emits the items pickup sound. */
 	OptionEntryBoolean itemPickupSound;
 
-	/** @brief Output sample rate (Hz) */
+	/** @brief Output sample rate (Hz). */
 	OptionEntryInt<std::uint32_t> sampleRate;
 	/** @brief The number of output channels (1 or 2) */
 	OptionEntryInt<std::uint8_t> channels;
 	/** @brief Buffer size (number of frames per channel) */
 	OptionEntryInt<std::uint32_t> bufferSize;
-	/** @brief Quality of the resampler, from 0 (lowest) to 10 (highest) */
+	/** @brief Resampler implementation. */
+	OptionEntryResampler resampler;
+	/** @brief Quality of the resampler, from 0 (lowest) to 10 (highest). Available for the speex resampler only. */
 	OptionEntryInt<std::uint8_t> resamplingQuality;
+	/** @brief Audio device. */
+	OptionEntryAudioDevice device;
 };
 
 struct GraphicsOptions : OptionCategoryBase {
@@ -393,9 +497,13 @@ struct GraphicsOptions : OptionCategoryBase {
 	OptionEntryBoolean vSync;
 #endif
 	/** @brief Gamma correction level. */
-	int nGammaCorrection;
+	OptionEntryInt<int> gammaCorrection;
+	/** @brief Zoom on start. */
+	OptionEntryBoolean zoom;
 	/** @brief Enable color cycling animations. */
 	OptionEntryBoolean colorCycling;
+	/** @brief Use alternate nest palette. */
+	OptionEntryBoolean alternateNestArt;
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 	/** @brief Use a hardware cursor (SDL2 only). */
 	OptionEntryBoolean hardwareCursor;
@@ -406,8 +514,14 @@ struct GraphicsOptions : OptionCategoryBase {
 #endif
 	/** @brief Enable FPS Limiter. */
 	OptionEntryBoolean limitFPS;
+	/** @brief Show item graphics to the left of item descriptions in store menus. */
+	OptionEntryBoolean showItemGraphicsInStores;
 	/** @brief Show FPS, even without the -f command line flag. */
 	OptionEntryBoolean showFPS;
+	/** @brief Display current/max health values on health globe. */
+	OptionEntryBoolean showHealthValues;
+	/** @brief Display current/max mana values on mana globe. */
+	OptionEntryBoolean showManaValues;
 };
 
 struct GameplayOptions : OptionCategoryBase {
@@ -415,7 +529,7 @@ struct GameplayOptions : OptionCategoryBase {
 	std::vector<OptionEntryBase *> GetEntries() override;
 
 	/** @brief Gameplay ticks per second. */
-	int nTickRate;
+	OptionEntryInt<int> tickRate;
 	/** @brief Enable double walk speed when in town. */
 	OptionEntryBoolean runInTown;
 	/** @brief Do not let the mouse leave the application window. */
@@ -426,6 +540,8 @@ struct GameplayOptions : OptionCategoryBase {
 	OptionEntryBoolean cowQuest;
 	/** @brief Will players still damage other players in non-PvP mode. */
 	OptionEntryBoolean friendlyFire;
+	/** @brief Enables the full/uncut singleplayer version of quests. */
+	OptionEntryBoolean multiplayerFullQuests;
 	/** @brief Enable the bard hero class. */
 	OptionEntryBoolean testBard;
 	/** @brief Enable the babarian hero class. */
@@ -438,6 +554,8 @@ struct GameplayOptions : OptionCategoryBase {
 	OptionEntryBoolean autoGoldPickup;
 	/** @brief Auto-pickup elixirs */
 	OptionEntryBoolean autoElixirPickup;
+	/** @brief Auto-pickup oils */
+	OptionEntryBoolean autoOilPickup;
 	/** @brief Enable or Disable auto-pickup in town */
 	OptionEntryBoolean autoPickupInTown;
 	/** @brief Recover mana when talking to Adria. */
@@ -456,6 +574,8 @@ struct GameplayOptions : OptionCategoryBase {
 	OptionEntryBoolean randomizeQuests;
 	/** @brief Indicates whether or not monster type (Animal, Demon, Undead) is shown along with other monster information. */
 	OptionEntryBoolean showMonsterType;
+	/** @brief Displays item labels for items on the ground.  */
+	OptionEntryBoolean showItemLabels;
 	/** @brief Refill belt from inventory, or rather, use potions/scrolls from inventory first when belt item is consumed.  */
 	OptionEntryBoolean autoRefillBelt;
 	/** @brief Locally disable clicking on shrines which permanently cripple character. */
@@ -476,6 +596,8 @@ struct GameplayOptions : OptionCategoryBase {
 	OptionEntryInt<int> numFullRejuPotionPickup;
 	/** @brief Allow items to reach 0 Current Durability */
 	OptionEntryBoolean allowZeroDurabilityItems;
+	/** @brief Enable floating numbers. */
+	OptionEntryEnum<FloatingNumbers> enableFloatingNumbers;
 };
 
 struct ControllerOptions : OptionCategoryBase {
@@ -484,10 +606,6 @@ struct ControllerOptions : OptionCategoryBase {
 
 	/** @brief SDL Controller mapping, see SDL_GameControllerDB. */
 	char szMapping[1024];
-	/** @brief Use dpad for spell hotkeys without holding "start" */
-	bool bDpadHotkeys;
-	/** @brief Shoulder gamepad shoulder buttons act as potions by default */
-	bool bSwapShoulderButtonMode;
 	/** @brief Configure gamepad joysticks deadzone */
 	float fDeadzone;
 #ifdef __vita__
@@ -502,10 +620,12 @@ struct NetworkOptions : OptionCategoryBase {
 
 	/** @brief Optionally bind to a specific network interface. */
 	char szBindAddress[129];
+	/** @brief Most recently entered ZeroTier Game ID. */
+	char szPreviousZTGame[129];
 	/** @brief Most recently entered Hostname in join dialog. */
 	char szPreviousHost[129];
 	/** @brief What network port to use. */
-	uint16_t nPort;
+	OptionEntryInt<uint16_t> port;
 };
 
 struct ChatOptions : OptionCategoryBase {
@@ -523,6 +643,8 @@ struct LanguageOptions : OptionCategoryBase {
 	OptionEntryLanguageCode code;
 };
 
+constexpr uint32_t KeymapperMouseButtonMask = 1 << 31;
+
 /** The Keymapper maps keys to actions. */
 struct KeymapperOptions : OptionCategoryBase {
 	/**
@@ -531,6 +653,12 @@ struct KeymapperOptions : OptionCategoryBase {
 	 */
 	class Action final : public OptionEntryBase {
 	public:
+		// OptionEntryBase::key may be referencing Action::dynamicKey.
+		// The implicit copy constructor would copy that reference instead of referencing the copy.
+		Action(const Action &) = delete;
+
+		Action(string_view key, const char *name, const char *description, uint32_t defaultKey, std::function<void()> actionPressed, std::function<void()> actionReleased, std::function<bool()> enable, unsigned index);
+
 		[[nodiscard]] string_view GetName() const override;
 		[[nodiscard]] OptionEntryType GetType() const override
 		{
@@ -545,12 +673,12 @@ struct KeymapperOptions : OptionCategoryBase {
 		bool SetValue(int value);
 
 	private:
-		Action(string_view key, string_view name, string_view description, int defaultKey, std::function<void()> action, std::function<bool()> enable, int index);
-		int defaultKey;
-		std::function<void()> action;
+		uint32_t defaultKey;
+		std::function<void()> actionPressed;
+		std::function<void()> actionReleased;
 		std::function<bool()> enable;
-		int boundKey = DVL_VK_INVALID;
-		int dynamicIndex;
+		uint32_t boundKey = SDLK_UNKNOWN;
+		unsigned dynamicIndex;
 		std::string dynamicKey;
 		mutable std::string dynamicName;
 
@@ -561,16 +689,94 @@ struct KeymapperOptions : OptionCategoryBase {
 	std::vector<OptionEntryBase *> GetEntries() override;
 
 	void AddAction(
-	    string_view key, string_view name, string_view description, int defaultKey,
-	    std::function<void()> action, std::function<bool()> enable = [] { return true; }, int index = -1);
-	void KeyPressed(int key) const;
+	    string_view key, const char *name, const char *description, uint32_t defaultKey,
+	    std::function<void()> actionPressed,
+	    std::function<void()> actionReleased = nullptr,
+	    std::function<bool()> enable = nullptr,
+	    unsigned index = 0);
+	void CommitActions();
+	void KeyPressed(uint32_t key) const;
+	void KeyReleased(uint32_t key) const;
 	string_view KeyNameForAction(string_view actionName) const;
+	uint32_t KeyForAction(string_view actionName) const;
 
 private:
-	std::vector<std::unique_ptr<Action>> actions;
-	std::unordered_map<int, std::reference_wrapper<Action>> keyIDToAction;
-	std::unordered_map<int, std::string> keyIDToKeyName;
-	std::unordered_map<std::string, int> keyNameToKeyID;
+	std::forward_list<Action> actions;
+	std::unordered_map<uint32_t, std::reference_wrapper<Action>> keyIDToAction;
+	std::unordered_map<uint32_t, std::string> keyIDToKeyName;
+	std::unordered_map<std::string, uint32_t> keyNameToKeyID;
+};
+
+/** The Padmapper maps gamepad buttons to actions. */
+struct PadmapperOptions : OptionCategoryBase {
+	/**
+	 * Action represents an action that can be triggered using a gamepad
+	 * button combo.
+	 */
+	class Action final : public OptionEntryBase {
+	public:
+		Action(string_view key, const char *name, const char *description, ControllerButtonCombo defaultInput, std::function<void()> actionPressed, std::function<void()> actionReleased, std::function<bool()> enable, unsigned index);
+
+		// OptionEntryBase::key may be referencing Action::dynamicKey.
+		// The implicit copy constructor would copy that reference instead of referencing the copy.
+		Action(const Action &) = delete;
+
+		[[nodiscard]] string_view GetName() const override;
+		[[nodiscard]] OptionEntryType GetType() const override
+		{
+			return OptionEntryType::PadButton;
+		}
+
+		void LoadFromIni(string_view category) override;
+		void SaveToIni(string_view category) const override;
+
+		[[nodiscard]] string_view GetValueDescription() const override;
+
+		bool SetValue(ControllerButtonCombo value);
+
+	private:
+		ControllerButtonCombo defaultInput;
+		std::function<void()> actionPressed;
+		std::function<void()> actionReleased;
+		std::function<bool()> enable;
+		ControllerButtonCombo boundInput {};
+		mutable GamepadLayout boundInputDescriptionType = GamepadLayout::Generic;
+		mutable std::string boundInputDescription;
+		unsigned dynamicIndex;
+		std::string dynamicKey;
+		mutable std::string dynamicName;
+
+		void UpdateValueDescription() const;
+
+		friend struct PadmapperOptions;
+	};
+
+	PadmapperOptions();
+	std::vector<OptionEntryBase *> GetEntries() override;
+
+	void AddAction(
+	    string_view key, const char *name, const char *description, ControllerButtonCombo defaultInput,
+	    std::function<void()> actionPressed,
+	    std::function<void()> actionReleased = nullptr,
+	    std::function<bool()> enable = nullptr,
+	    unsigned index = 0);
+	void CommitActions();
+	void ButtonPressed(ControllerButton button);
+	void ButtonReleased(ControllerButton button, bool invokeAction = true);
+	void ReleaseAllActiveButtons();
+	bool IsActive(string_view actionName) const;
+	string_view ActionNameTriggeredByButtonEvent(ControllerButtonEvent ctrlEvent) const;
+	string_view InputNameForAction(string_view actionName) const;
+	ControllerButtonCombo ButtonComboForAction(string_view actionName) const;
+
+private:
+	std::forward_list<Action> actions;
+	std::array<const Action *, enum_size<ControllerButton>::value> buttonToReleaseAction;
+	std::array<std::string, enum_size<ControllerButton>::value> buttonToButtonName;
+	std::unordered_map<std::string, ControllerButton> buttonNameToButton;
+	bool committed = false;
+
+	const Action *FindAction(ControllerButton button) const;
 };
 
 struct Options {
@@ -585,27 +791,28 @@ struct Options {
 	ChatOptions Chat;
 	LanguageOptions Language;
 	KeymapperOptions Keymapper;
+	PadmapperOptions Padmapper;
 
 	[[nodiscard]] std::vector<OptionCategoryBase *> GetCategories()
 	{
 		return {
+			&Language,
 			&StartUp,
+			&Graphics,
+			&Audio,
 			&Diablo,
 			&Hellfire,
-			&Audio,
 			&Gameplay,
-			&Graphics,
 			&Controller,
 			&Network,
 			&Chat,
-			&Language,
 			&Keymapper,
+			&Padmapper,
 		};
 	}
 };
 
 extern DVL_API_FOR_TEST Options sgOptions;
-extern bool sbWasOptionsLoaded;
 
 bool HardwareCursorSupported();
 

@@ -5,90 +5,93 @@
 using namespace devilution;
 
 namespace devilution {
-extern bool TestPlayerDoGotHit(int pnum);
+extern bool TestPlayerDoGotHit(Player &player);
 }
 
-int RunBlockTest(int frames, int flags)
+int RunBlockTest(int frames, ItemSpecialEffect flags)
 {
-	int pnum = 0;
-	auto &player = Players[pnum];
+	Player &player = Players[0];
 
 	player._pHFrames = frames;
 	player._pIFlags = flags;
-	StartPlrHit(pnum, 5, false);
+	StartPlrHit(player, 5, false);
 
 	int i = 1;
 	for (; i < 100; i++) {
-		TestPlayerDoGotHit(pnum);
+		TestPlayerDoGotHit(player);
 		if (player._pmode != PM_GOTHIT)
 			break;
-		player.AnimInfo.CurrentFrame++;
+		player.AnimInfo.currentFrame++;
 	}
 
 	return i;
 }
 
-#define NORM 0
-#define BAL ISPL_FASTRECOVER
-#define STA ISPL_FASTERRECOVER
-#define HAR ISPL_FASTESTRECOVER
-#define BALSTA (ISPL_FASTRECOVER | ISPL_FASTERRECOVER)
-#define BALHAR (ISPL_FASTRECOVER | ISPL_FASTESTRECOVER)
-#define STAHAR (ISPL_FASTERRECOVER | ISPL_FASTESTRECOVER)
-#define ZEN (ISPL_FASTRECOVER | ISPL_FASTERRECOVER | ISPL_FASTESTRECOVER)
-#define WAR 6
-#define ROU 7
-#define SRC 8
+constexpr ItemSpecialEffect Normal = ItemSpecialEffect::None;
+constexpr ItemSpecialEffect Balance = ItemSpecialEffect::FastHitRecovery;
+constexpr ItemSpecialEffect Stability = ItemSpecialEffect::FasterHitRecovery;
+constexpr ItemSpecialEffect Harmony = ItemSpecialEffect::FastestHitRecovery;
+constexpr ItemSpecialEffect BalanceStability = Balance | Stability;
+constexpr ItemSpecialEffect BalanceHarmony = Balance | Harmony;
+constexpr ItemSpecialEffect StabilityHarmony = Stability | Harmony;
 
-int BlockData[][3] = {
-	{ 6, WAR, NORM },
-	{ 7, ROU, NORM },
-	{ 8, SRC, NORM },
+constexpr int Warrior = 6;
+constexpr int Rogue = 7;
+constexpr int Sorcerer = 8;
 
-	{ 5, WAR, BAL },
-	{ 6, ROU, BAL },
-	{ 7, SRC, BAL },
+struct BlockTestCase {
+	int expectedRecoveryFrame;
+	int maxRecoveryFrame;
+	ItemSpecialEffect itemFlags;
+};
 
-	{ 4, WAR, STA },
-	{ 5, ROU, STA },
-	{ 6, SRC, STA },
+BlockTestCase BlockData[] = {
+	{ 6, Warrior, Normal },
+	{ 7, Rogue, Normal },
+	{ 8, Sorcerer, Normal },
 
-	{ 3, WAR, HAR },
-	{ 4, ROU, HAR },
-	{ 5, SRC, HAR },
+	{ 5, Warrior, Balance },
+	{ 6, Rogue, Balance },
+	{ 7, Sorcerer, Balance },
 
-	{ 4, WAR, BALSTA },
-	{ 5, ROU, BALSTA },
-	{ 6, SRC, BALSTA },
+	{ 4, Warrior, Stability },
+	{ 5, Rogue, Stability },
+	{ 6, Sorcerer, Stability },
 
-	{ 3, WAR, BALHAR },
-	{ 4, ROU, BALHAR },
-	{ 5, SRC, BALHAR },
+	{ 3, Warrior, Harmony },
+	{ 4, Rogue, Harmony },
+	{ 5, Sorcerer, Harmony },
 
-	{ 3, WAR, STAHAR },
-	{ 4, ROU, STAHAR },
-	{ 5, SRC, STAHAR },
+	{ 4, Warrior, BalanceStability },
+	{ 5, Rogue, BalanceStability },
+	{ 6, Sorcerer, BalanceStability },
 
-	{ 2, WAR, ZEN },
-	{ 3, ROU, ZEN },
-	{ 4, SRC, ZEN },
+	{ 3, Warrior, BalanceHarmony },
+	{ 4, Rogue, BalanceHarmony },
+	{ 5, Sorcerer, BalanceHarmony },
+
+	{ 3, Warrior, StabilityHarmony },
+	{ 4, Rogue, StabilityHarmony },
+	{ 5, Sorcerer, StabilityHarmony },
 };
 
 TEST(Player, PM_DoGotHit)
 {
+	Players.resize(1);
+	MyPlayer = &Players[0];
 	for (size_t i = 0; i < sizeof(BlockData) / sizeof(*BlockData); i++) {
-		EXPECT_EQ(BlockData[i][0], RunBlockTest(BlockData[i][1], BlockData[i][2]));
+		EXPECT_EQ(BlockData[i].expectedRecoveryFrame, RunBlockTest(BlockData[i].maxRecoveryFrame, BlockData[i].itemFlags));
 	}
 }
 
 static void AssertPlayer(Player &player)
 {
 	ASSERT_EQ(Count8(player._pSplLvl, 64), 0);
-	ASSERT_EQ(Count8(player.InvGrid, NUM_INV_GRID_ELEM), 1);
+	ASSERT_EQ(Count8(player.InvGrid, InventoryGridCells), 1);
 	ASSERT_EQ(CountItems(player.InvBody, NUM_INVLOC), 1);
-	ASSERT_EQ(CountItems(player.InvList, NUM_INV_GRID_ELEM), 1);
-	ASSERT_EQ(CountItems(player.SpdList, MAXBELTITEMS), 2);
-	ASSERT_EQ(CountItems(&player.HoldItem, 1), 1);
+	ASSERT_EQ(CountItems(player.InvList, InventoryGridCells), 1);
+	ASSERT_EQ(CountItems(player.SpdList, MaxBeltItems), 2);
+	ASSERT_EQ(CountItems(&player.HoldItem, 1), 0);
 
 	ASSERT_EQ(player.position.tile.x, 0);
 	ASSERT_EQ(player.position.tile.y, 0);
@@ -126,20 +129,20 @@ static void AssertPlayer(Player &player)
 	ASSERT_EQ(player.pBattleNet, 0);
 	ASSERT_EQ(player.pManaShield, 0);
 	ASSERT_EQ(player.pDifficulty, 0);
-	ASSERT_EQ(player.pDamAcFlags, 0);
+	ASSERT_EQ(player.pDamAcFlags, ItemSpecialEffectHf::None);
 
 	ASSERT_EQ(player._pmode, 0);
-	ASSERT_EQ(Count8(player.walkpath, MAX_PATH_LENGTH), 0);
-	ASSERT_EQ(player._pSpell, 0);
-	ASSERT_EQ(player._pSplType, 0);
-	ASSERT_EQ(player._pSplFrom, 0);
-	ASSERT_EQ(player._pTSpell, 0);
-	ASSERT_EQ(player._pRSpell, 28);
-	ASSERT_EQ(player._pRSplType, 0);
-	ASSERT_EQ(player._pSBkSpell, 0);
+	ASSERT_EQ(Count8(player.walkpath, MaxPathLength), 0);
+	ASSERT_EQ(player.queuedSpell.spellId, SpellID::Null);
+	ASSERT_EQ(player.queuedSpell.spellType, SpellType::Skill);
+	ASSERT_EQ(player.queuedSpell.spellFrom, 0);
+	ASSERT_EQ(player._pTSpell, SpellID::Null);
+	ASSERT_EQ(player._pRSpell, SpellID::TrapDisarm);
+	ASSERT_EQ(player._pRSplType, SpellType::Skill);
+	ASSERT_EQ(player._pSBkSpell, SpellID::Null);
 	ASSERT_EQ(player._pAblSpells, 134217728);
 	ASSERT_EQ(player._pScrlSpells, 0);
-	ASSERT_EQ(player._pSpellFlags, 0);
+	ASSERT_EQ(player._pSpellFlags, SpellFlag::None);
 	ASSERT_EQ(player._pBlockFlag, 0);
 	ASSERT_EQ(player._pLightRad, 10);
 	ASSERT_EQ(player._pDamageMod, 0);
@@ -161,7 +164,7 @@ static void AssertPlayer(Player &player)
 	ASSERT_EQ(player._pIBonusAC, 0);
 	ASSERT_EQ(player._pIBonusDamMod, 0);
 	ASSERT_EQ(player._pISpells, 0);
-	ASSERT_EQ(player._pIFlags, 0);
+	ASSERT_EQ(player._pIFlags, ItemSpecialEffect::None);
 	ASSERT_EQ(player._pIGetHit, 0);
 	ASSERT_EQ(player._pISplLvlAdd, 0);
 	ASSERT_EQ(player._pISplDur, 0);
@@ -174,6 +177,7 @@ static void AssertPlayer(Player &player)
 
 TEST(Player, CreatePlayer)
 {
-	CreatePlayer(0, HeroClass::Rogue);
+	Players.resize(1);
+	CreatePlayer(Players[0], HeroClass::Rogue);
 	AssertPlayer(Players[0]);
 }

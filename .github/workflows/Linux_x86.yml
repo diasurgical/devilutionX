@@ -1,15 +1,23 @@
-name: Linux_x86
+name: Linux x86
 
 on:
   push:
     branches:
       - master
+    paths-ignore:
+      - '*.md'
   pull_request:
     types: [ opened, synchronize ]
+    paths-ignore:
+      - '*.md'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -19,15 +27,15 @@ jobs:
     - name: Create Build Environment
       run: >
         sudo dpkg --add-architecture i386 &&
-        sudo apt update -y &&
-        sudo apt install -y cmake file g++-multilib git libfmt-dev:i386 libsdl2-dev:i386 libsodium-dev:i386 libpng-dev:i386 libbz2-dev:i386 rpm wget smpq
+        sudo apt-get update -y &&
+        sudo apt-get install -y cmake file g++-multilib git libfmt-dev:i386 libsdl2-dev:i386 libsodium-dev:i386 libpng-dev:i386 libbz2-dev:i386 rpm wget smpq
 
     - name: Cache CMake build folder
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: build
-        key: linux-x86-cmake-v3-${{ github.sha }}
-        restore-keys: linux-x86-cmake-v3-
+        key: ${{ github.workflow }}-v1-${{ github.sha }}
+        restore-keys: ${{ github.workflow }}-v1-
 
     - name: Configure CMake
       shell: bash

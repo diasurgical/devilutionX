@@ -5,6 +5,7 @@
 #include <SDL.h>
 
 #include "controls/controller_buttons.h"
+#include "controls/game_controls.h"
 
 namespace devilution {
 
@@ -17,7 +18,7 @@ public:
 	static GameController *Get(SDL_JoystickID instanceId);
 	static GameController *Get(const SDL_Event &event);
 	static const std::vector<GameController> &All();
-	static bool IsPressedOnAnyController(ControllerButton button);
+	static bool IsPressedOnAnyController(ControllerButton button, SDL_JoystickID *which = nullptr);
 
 	// Must be called exactly once at the start of each SDL input event.
 	void UnlockTriggerState();
@@ -26,10 +27,10 @@ public:
 
 	bool IsPressed(ControllerButton button) const;
 	static bool ProcessAxisMotion(const SDL_Event &event);
+	static SDL_GameControllerButton ToSdlGameControllerButton(ControllerButton button);
+	static GamepadLayout getLayout(const SDL_Event &event);
 
 private:
-	static SDL_GameControllerButton ToSdlGameControllerButton(ControllerButton button);
-
 	SDL_GameController *sdl_game_controller_ = NULL;
 	SDL_JoystickID instance_id_ = -1;
 

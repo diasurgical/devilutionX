@@ -42,3 +42,23 @@
 #else
 #define DVL_API_FOR_TEST
 #endif
+
+#if defined(__clang__)
+#define DVL_REINITIALIZES [[clang::reinitializes]]
+#elif DVL_HAVE_ATTRIBUTE(reinitializes)
+#define DVL_REINITIALIZES __attribute__((reinitializes))
+#else
+#define DVL_REINITIALIZES
+#endif
+
+#if ((defined(__GNUC__) || defined(__clang__)) && !defined(__EXCEPTIONS)) || defined(_MSC_VER) && !_HAS_EXCEPTIONS
+#define DVL_EXCEPTIONS 0
+#else
+#define DVL_EXCEPTIONS 1
+#endif
+
+#if defined(_MSC_VER)
+#define DVL_RESTRICT __restrict
+#else
+#define DVL_RESTRICT __restrict__
+#endif

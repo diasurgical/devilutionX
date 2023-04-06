@@ -4,10 +4,13 @@ Copy diabdat.mpq from your CD (or GoG install folder) to:
 For Hellfire, also copy hellfire.mpq, hfmonk.mpq, hfmusic.mpq, and hfvoice.mpq.
 
 For Chinese, Japanese, and Korean text support copy:
-https://github.com/diasurgical/devilutionx-assets/releases/download/v1/fonts.mpq
+https://github.com/diasurgical/devilutionx-assets/releases/download/v2/fonts.mpq
 
 For the Polish voice pack copy:
-https://github.com/diasurgical/devilutionx-assets/releases/download/v1/pl.mpq
+https://github.com/diasurgical/devilutionx-assets/releases/download/v2/pl.mpq
+
+For the Russian voice pack copy:
+https://github.com/diasurgical/devilutionx-assets/releases/download/v2/ru.mpq
 
 Game saves and diablo.ini are located at:
 ~/.local/share/diasurgical/devilution

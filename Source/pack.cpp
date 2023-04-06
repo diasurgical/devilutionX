@@ -8,6 +8,7 @@
 #include "engine/random.hpp"
 #include "init.h"
 #include "loadsave.h"
+#include "playerdat.hpp"
 #include "stores.h"
 #include "utils/endian.hpp"
 
@@ -35,14 +36,14 @@ void VerifyGoldSeeds(Player &player)
 
 } // namespace
 
-void PackItem(ItemPack &packedItem, const Item &item)
+void PackItem(ItemPack &packedItem, const Item &item, bool isHellfire)
 {
 	packedItem = {};
 	if (item.isEmpty()) {
 		packedItem.idx = 0xFFFF;
 	} else {
 		auto idx = item.IDidx;
-		if (!gbIsHellfire) {
+		if (!isHellfire) {
 			idx = RemapItemIdxToDiablo(idx);
 		}
 		if (gbIsSpawn) {
@@ -50,15 +51,15 @@ void PackItem(ItemPack &packedItem, const Item &item)
 		}
 		packedItem.idx = SDL_SwapLE16(idx);
 		if (item.IDidx == IDI_EAR) {
-			packedItem.iCreateInfo = item._iName[8] | (item._iName[7] << 8);
-			packedItem.iSeed = LoadBE32(&item._iName[9]);
-			packedItem.bId = item._iName[13];
-			packedItem.bDur = item._iName[14];
-			packedItem.bMDur = item._iName[15];
-			packedItem.bCh = item._iName[16];
-			packedItem.bMCh = item._iName[17];
-			packedItem.wValue = SDL_SwapLE16(item._ivalue | (item._iName[18] << 8) | ((item._iCurs - ICURS_EAR_SORCERER) << 6));
-			packedItem.dwBuff = LoadBE32(&item._iName[19]);
+			packedItem.iCreateInfo = SDL_SwapLE16(item._iIName[1] | (item._iIName[0] << 8));
+			packedItem.iSeed = SDL_SwapLE32(LoadBE32(&item._iIName[2]));
+			packedItem.bId = item._iIName[6];
+			packedItem.bDur = item._iIName[7];
+			packedItem.bMDur = item._iIName[8];
+			packedItem.bCh = item._iIName[9];
+			packedItem.bMCh = item._iIName[10];
+			packedItem.wValue = SDL_SwapLE16(item._ivalue | (item._iIName[11] << 8) | ((item._iCurs - ICURS_EAR_SORCERER) << 6));
+			packedItem.dwBuff = SDL_SwapLE32(LoadBE32(&item._iIName[12]));
 		} else {
 			packedItem.iSeed = SDL_SwapLE32(item._iSeed);
 			packedItem.iCreateInfo = SDL_SwapLE16(item._iCreateInfo);
@@ -74,7 +75,7 @@ void PackItem(ItemPack &packedItem, const Item &item)
 	}
 }
 
-void PackPlayer(PlayerPack *pPack, const Player &player, bool manashield)
+void PackPlayer(PlayerPack *pPack, const Player &player, bool manashield, bool netSync)
 {
 	memset(pPack, 0, sizeof(*pPack));
 	pPack->destAction = player.destAction;
@@ -109,24 +110,30 @@ void PackPlayer(PlayerPack *pPack, const Player &player, bool manashield)
 		pPack->pSplLvl2[i - 37] = player._pSplLvl[i];
 
 	for (int i = 0; i < NUM_INVLOC; i++) {
-		PackItem(pPack->InvBody[i], player.InvBody[i]);
+		const Item &item = player.InvBody[i];
+		bool isHellfire = netSync ? ((item.dwBuff & CF_HELLFIRE) != 0) : gbIsHellfire;
+		PackItem(pPack->InvBody[i], item, isHellfire);
 	}
 
 	pPack->_pNumInv = player._pNumInv;
 	for (int i = 0; i < pPack->_pNumInv; i++) {
-		PackItem(pPack->InvList[i], player.InvList[i]);
+		const Item &item = player.InvList[i];
+		bool isHellfire = netSync ? ((item.dwBuff & CF_HELLFIRE) != 0) : gbIsHellfire;
+		PackItem(pPack->InvList[i], item, isHellfire);
 	}
 
-	for (int i = 0; i < NUM_INV_GRID_ELEM; i++)
+	for (int i = 0; i < InventoryGridCells; i++)
 		pPack->InvGrid[i] = player.InvGrid[i];
 
-	for (int i = 0; i < MAXBELTITEMS; i++) {
-		PackItem(pPack->SpdList[i], player.SpdList[i]);
+	for (int i = 0; i < MaxBeltItems; i++) {
+		const Item &item = player.SpdList[i];
+		bool isHellfire = netSync ? ((item.dwBuff & CF_HELLFIRE) != 0) : gbIsHellfire;
+		PackItem(pPack->SpdList[i], item, isHellfire);
 	}
 
 	pPack->wReflections = SDL_SwapLE16(player.wReflections);
 	pPack->pDifficulty = SDL_SwapLE32(player.pDifficulty);
-	pPack->pDamAcFlags = SDL_SwapLE32(player.pDamAcFlags);
+	pPack->pDamAcFlags = SDL_SwapLE32(static_cast<uint32_t>(player.pDamAcFlags));
 	pPack->pDiabloKillLevel = SDL_SwapLE32(player.pDiabloKillLevel);
 	pPack->bIsHellfire = gbIsHellfire ? 1 : 0;
 
@@ -136,7 +143,7 @@ void PackPlayer(PlayerPack *pPack, const Player &player, bool manashield)
 		pPack->pManaShield = 0;
 }
 
-void UnPackItem(const ItemPack &packedItem, Item &item, bool isHellfire)
+void UnPackItem(const ItemPack &packedItem, const Player &player, Item &item, bool isHellfire)
 {
 	auto idx = static_cast<_item_indexes>(SDL_SwapLE16(packedItem.idx));
 
@@ -148,25 +155,39 @@ void UnPackItem(const ItemPack &packedItem, Item &item, bool isHellfire)
 	}
 
 	if (!IsItemAvailable(idx)) {
-		item._itype = ItemType::None;
+		item.clear();
 		return;
 	}
 
 	if (idx == IDI_EAR) {
-		RecreateEar(
-		    item,
-		    SDL_SwapLE16(packedItem.iCreateInfo),
-		    SDL_SwapLE32(packedItem.iSeed),
-		    packedItem.bId,
-		    packedItem.bDur,
-		    packedItem.bMDur,
-		    packedItem.bCh,
-		    packedItem.bMCh,
-		    SDL_SwapLE16(packedItem.wValue),
-		    SDL_SwapLE32(packedItem.dwBuff));
+		uint16_t ic = SDL_SwapLE16(packedItem.iCreateInfo);
+		uint32_t iseed = SDL_SwapLE32(packedItem.iSeed);
+		uint16_t ivalue = SDL_SwapLE16(packedItem.wValue);
+		int32_t ibuff = SDL_SwapLE32(packedItem.dwBuff);
+
+		char heroName[17];
+		heroName[0] = static_cast<char>((ic >> 8) & 0x7F);
+		heroName[1] = static_cast<char>(ic & 0x7F);
+		heroName[2] = static_cast<char>((iseed >> 24) & 0x7F);
+		heroName[3] = static_cast<char>((iseed >> 16) & 0x7F);
+		heroName[4] = static_cast<char>((iseed >> 8) & 0x7F);
+		heroName[5] = static_cast<char>(iseed & 0x7F);
+		heroName[6] = static_cast<char>(packedItem.bId & 0x7F);
+		heroName[7] = static_cast<char>(packedItem.bDur & 0x7F);
+		heroName[8] = static_cast<char>(packedItem.bMDur & 0x7F);
+		heroName[9] = static_cast<char>(packedItem.bCh & 0x7F);
+		heroName[10] = static_cast<char>(packedItem.bMCh & 0x7F);
+		heroName[11] = static_cast<char>((ivalue >> 8) & 0x7F);
+		heroName[12] = static_cast<char>((ibuff >> 24) & 0x7F);
+		heroName[13] = static_cast<char>((ibuff >> 16) & 0x7F);
+		heroName[14] = static_cast<char>((ibuff >> 8) & 0x7F);
+		heroName[15] = static_cast<char>(ibuff & 0x7F);
+		heroName[16] = '\0';
+
+		RecreateEar(item, ic, iseed, ivalue & 0xFF, heroName);
 	} else {
 		item = {};
-		RecreateItem(item, idx, SDL_SwapLE16(packedItem.iCreateInfo), SDL_SwapLE32(packedItem.iSeed), SDL_SwapLE16(packedItem.wValue), isHellfire);
+		RecreateItem(player, item, idx, SDL_SwapLE16(packedItem.iCreateInfo), SDL_SwapLE32(packedItem.iSeed), SDL_SwapLE16(packedItem.wValue), isHellfire);
 		item._iMagical = static_cast<item_quality>(packedItem.bId >> 1);
 		item._iIdentified = (packedItem.bId & 1) != 0;
 		item._iDurability = packedItem.bDur;
@@ -200,7 +221,7 @@ bool UnPackPlayer(const PlayerPack *pPack, Player &player, bool netSync)
 	}
 	auto heroClass = static_cast<HeroClass>(pPack->pClass);
 
-	if (pPack->pLevel >= MAXCHARLEVEL || pPack->pLevel < 1) {
+	if (pPack->pLevel > MaxCharacterLevel || pPack->pLevel < 1) {
 		return false;
 	}
 	uint32_t difficulty = SDL_SwapLE32(pPack->pDifficulty);
@@ -212,7 +233,7 @@ bool UnPackPlayer(const PlayerPack *pPack, Player &player, bool netSync)
 
 	player.position.tile = position;
 	player.position.future = position;
-	player.plrlevel = dungeonLevel;
+	player.setLevel(dungeonLevel);
 
 	player._pClass = heroClass;
 
@@ -237,7 +258,7 @@ bool UnPackPlayer(const PlayerPack *pPack, Player &player, bool netSync)
 	player._pGold = SDL_SwapLE32(pPack->pGold);
 	player._pMaxHPBase = SDL_SwapLE32(pPack->pMaxHPBase);
 	player._pHPBase = SDL_SwapLE32(pPack->pHPBase);
-	player._pBaseToBlk = BlockBonuses[static_cast<std::size_t>(player._pClass)];
+	player._pBaseToBlk = PlayersData[static_cast<std::size_t>(player._pClass)].blockBonus;
 	if (!netSync)
 		if ((int)(player._pHPBase & 0xFFFFFFC0) < 64)
 			player._pHPBase = 64;
@@ -254,25 +275,25 @@ bool UnPackPlayer(const PlayerPack *pPack, Player &player, bool netSync)
 	for (int i = 0; i < NUM_INVLOC; i++) {
 		auto packedItem = pPack->InvBody[i];
 		bool isHellfire = netSync ? ((packedItem.dwBuff & CF_HELLFIRE) != 0) : (pPack->bIsHellfire != 0);
-		UnPackItem(packedItem, player.InvBody[i], isHellfire);
+		UnPackItem(packedItem, player, player.InvBody[i], isHellfire);
 	}
 
 	player._pNumInv = pPack->_pNumInv;
 	for (int i = 0; i < player._pNumInv; i++) {
 		auto packedItem = pPack->InvList[i];
 		bool isHellfire = netSync ? ((packedItem.dwBuff & CF_HELLFIRE) != 0) : (pPack->bIsHellfire != 0);
-		UnPackItem(packedItem, player.InvList[i], isHellfire);
+		UnPackItem(packedItem, player, player.InvList[i], isHellfire);
 	}
 
-	for (int i = 0; i < NUM_INV_GRID_ELEM; i++)
+	for (int i = 0; i < InventoryGridCells; i++)
 		player.InvGrid[i] = pPack->InvGrid[i];
 
 	VerifyGoldSeeds(player);
 
-	for (int i = 0; i < MAXBELTITEMS; i++) {
+	for (int i = 0; i < MaxBeltItems; i++) {
 		auto packedItem = pPack->SpdList[i];
 		bool isHellfire = netSync ? ((packedItem.dwBuff & CF_HELLFIRE) != 0) : (pPack->bIsHellfire != 0);
-		UnPackItem(packedItem, player.SpdList[i], isHellfire);
+		UnPackItem(packedItem, player, player.SpdList[i], isHellfire);
 	}
 
 	CalcPlrInv(player, false);
@@ -285,7 +306,7 @@ bool UnPackPlayer(const PlayerPack *pPack, Player &player, bool netSync)
 	player.pBattleNet = pPack->pBattleNet != 0;
 	player.pManaShield = pPack->pManaShield != 0;
 	player.pDifficulty = static_cast<_difficulty>(difficulty);
-	player.pDamAcFlags = SDL_SwapLE32(pPack->pDamAcFlags);
+	player.pDamAcFlags = static_cast<ItemSpecialEffectHf>(SDL_SwapLE32(static_cast<uint32_t>(pPack->pDamAcFlags)));
 
 	return true;
 }

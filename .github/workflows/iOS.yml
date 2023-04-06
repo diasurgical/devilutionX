@@ -4,8 +4,20 @@ on:
   push:
     branches:
       - master
+    paths-ignore:
+      - '*.md'
   pull_request:
-    types: [ opened, synchronize ]
+    types: [opened, synchronize]
+    paths-ignore:
+      - '*.md'
+  release:
+    types: [published]
+    paths-ignore:
+      - '*.md'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -21,11 +33,11 @@ jobs:
         fetch-depth: 0
 
     - name: Cache CMake build folder
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: build
-        key: ios-cmake-v2-${{ github.sha }}
-        restore-keys: ios-cmake-v2-
+        key: ${{ github.workflow }}-v1-${{ github.sha }}
+        restore-keys: ${{ github.workflow }}-v1-
 
     - name: Configure CMake
       # Use a bash shell so we can use the same syntax for environment variable
@@ -51,3 +63,10 @@ jobs:
       with:
         name: devilutionx.ipa
         path: build/devilutionx.ipa
+
+    - name: Update Release
+      if: ${{ github.event_name == 'release' && !env.ACT }}
+      uses: svenstaro/upload-release-action@v2
+      with:
+        file: build/devilutionx.ipa
+        overwrite: true

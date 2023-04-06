@@ -1,0 +1,49 @@
+R 32 dwLowDateTime
+R 32 dwHighDateTime
+R 8 destAction
+R 8 destParam1
+R 8 destParam2
+R 8 plrlevel
+R 8 px
+R 8 py
+R 8 targx
+R 8 targy
+R 256 _pName
+R 8 pClass
+R 8 pBaseStr
+R 8 pBaseMag
+R 8 pBaseDex
+R 8 pBaseVit
+R 8 pLevel
+R 8 pStatPts
+R 32 pExperience
+R 32 pGold
+R 32 pHPBase
+R 32 pMaxHPBase
+R 32 pManaBase
+R 32 pMaxManaBase
+M 37 8 pSplLvl
+R 64 pMemSpells
+C 7 itemPack InvBody
+C 40 itemPack InvList
+M 40 8 InvGrid
+R 8 _pNumInv
+C 8 itemPack SpdList
+R 8 pTownWarps
+R 8 pDungMsgs
+R 8 pLvlLoad
+R 8 pBattleNet
+R 8 pManaShield
+R 8 pDungMsgs2
+R 8 bIsHellfire
+R 8 reserved
+R 16 wReflections
+R 16 reserved
+M 10 8 pSplLvl2
+R 16 reserved
+R 32 pDiabloKillLevel
+R 32 pDifficulty
+R 32 pDamAcFlags
+R 8 friendlyMode
+R 8 isOnSetLevel
+M 18 8 reserved

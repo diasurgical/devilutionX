@@ -1,8 +1,8 @@
 #pragma once
 
 #include <cerrno>
+#include <cstdio>
 #include <cstring>
-#include <fstream>
 #include <string>
 
 #include "utils/file_util.h"
@@ -11,63 +11,60 @@
 
 namespace devilution {
 
-// A wrapper around `std::fstream` that logs errors.
+// A wrapper around `FILE *` that logs errors.
 struct LoggedFStream {
 public:
-	bool Open(const char *path, std::ios::openmode mode)
+	bool Open(const char *path, const char *mode)
 	{
-		s_ = CreateFileStream(path, mode);
-		return CheckError("new std::fstream(\"{}\", {})", path, OpenModeToString(mode).c_str());
+		s_ = OpenFile(path, mode);
+		return CheckError("fopen(\"{}\", \"{}\")", path, mode);
 	}
 
 	void Close()
 	{
-		s_ = std::nullopt;
+		if (s_ != nullptr) {
+			std::fclose(s_);
+			s_ = nullptr;
+		}
 	}
 
 	[[nodiscard]] bool IsOpen() const
 	{
-		return s_ != std::nullopt;
+		return s_ != nullptr;
 	}
 
-	bool Seekp(std::streampos pos)
+	bool Seekp(long pos, int dir = SEEK_SET)
 	{
-		s_->seekp(pos);
-		return CheckError("seekp({})", pos);
+		std::fseek(s_, pos, dir);
+		return CheckError("fseek({}, {})", pos, DirToString(dir));
 	}
 
-	bool Seekp(std::streamoff pos, std::ios::seekdir dir)
+	bool Tellp(long *result)
 	{
-		s_->seekp(pos, dir);
-		return CheckError("seekp({}, {})", pos, DirToString(dir));
+		*result = std::ftell(s_);
+		return CheckError("ftell() = {}", *result);
 	}
 
-	bool Tellp(std::streampos *result)
+	bool Write(const char *data, size_t size)
 	{
-		*result = s_->tellp();
-		return CheckError("tellp() = {}", *result);
+		std::fwrite(data, size, 1, s_);
+		return CheckError("fwrite(data, {})", size);
 	}
 
-	bool Write(const char *data, std::streamsize size)
+	bool Read(char *out, size_t size)
 	{
-		s_->write(data, size);
-		return CheckError("write(data, {})", size);
-	}
-
-	bool Read(char *out, std::streamsize size)
-	{
-		s_->read(out, size);
-		return CheckError("read(out, {})", size);
+		std::fread(out, size, 1, s_);
+		return CheckError("fread(out, {})", size);
 	}
 
 private:
-	static const char *DirToString(std::ios::seekdir dir);
-	static std::string OpenModeToString(std::ios::openmode mode);
+	static const char *DirToString(int dir);
 
 	template <typename... PrintFArgs>
 	bool CheckError(const char *fmt, PrintFArgs... args)
 	{
-		if (s_->fail()) {
+		const bool ok = s_ != nullptr && std::ferror(s_) == 0;
+		if (!ok) {
 			std::string fmtWithError = fmt;
 			fmtWithError.append(": failed with \"{}\"");
 			const char *errorMessage = std::strerror(errno);
@@ -77,10 +74,10 @@ private:
 		} else {
 			LogVerbose(LogCategory::System, fmt, args...);
 		}
-		return !s_->fail();
+		return ok;
 	}
 
-	std::optional<std::fstream> s_;
+	FILE *s_ = nullptr;
 };
 
 } // namespace devilution

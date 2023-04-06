@@ -6,7 +6,7 @@
 namespace devilution {
 
 // Apple Clang 12 has a buggy implementation that fails to compile `std::shared_ptr<T[]>(new T[size])`.
-#if __cplusplus >= 201611L && (!defined(__clang_major__) || __clang_major__ >= 13)
+#if (__cplusplus >= 201611L && (!defined(__clang_major__) || __clang_major__ >= 13)) && !defined(NXDK)
 template <typename T>
 using ArraySharedPtr = std::shared_ptr<T[]>;
 

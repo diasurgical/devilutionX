@@ -17,7 +17,7 @@ For Japanese, uses [Sudachi](https://github.com/WorksApplications/sudachi.rs).
 3. Python packages:
 
    ```shell
-   pip install -r tools/segmenter/requirements.txt
+   pip install --upgrade -r tools/segmenter/requirements.txt
    ```
 
 ## Usage

@@ -5,7 +5,7 @@
 
 #include "./console.h"
 
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(NXDK)
 #define WIN32_LEAN_AND_MEAN
 #define NOMINMAX 1
 #define UNICODE 1
@@ -165,9 +165,9 @@ void SDL_LogMessageV(int category, SDL_LogPriority priority, const char *fmt, va
 	if (static_cast<int>(priority) < 0 || priority >= SDL_NUM_LOG_PRIORITIES || priority < SDL_LogGetPriority(category))
 		return;
 
-	::devilution::printInConsole("%s: ", SDL_priority_prefixes[priority]);
-	::devilution::printInConsoleV(fmt, ap);
-	::devilution::printInConsole("\n");
+	::devilution::printfInConsole("%s: ", SDL_priority_prefixes[priority]);
+	::devilution::vprintfInConsole(fmt, ap);
+	::devilution::printNewlineInConsole();
 }
 
 namespace {
@@ -505,7 +505,7 @@ Sint64 SDL_RWsize(SDL_RWops *context)
 	return end - begin;
 }
 
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(NXDK)
 
 namespace {
 
@@ -696,7 +696,7 @@ char *SDL_GetPrefPath(const char *org, const char *app)
 #else
 
 namespace {
-#if !defined(__QNXNTO__)
+#if !defined(__QNXNTO__) && !defined(__amigaos__)
 char *readSymLink(const char *path)
 {
 	// From sdl2-2.0.9/src/filesystem/unix/SDL_sysfilesystem.c
@@ -778,8 +778,9 @@ char *SDL_GetBasePath()
 #endif
 #if defined(__3DS__)
 	retval = SDL_strdup("file:sdmc:/3ds/devilutionx/");
-	return retval;
-#endif
+#elif defined(__amigaos__)
+	retval = SDL_strdup("PROGDIR:");
+#else
 
 	/* is a Linux-style /proc filesystem available? */
 	if (!retval && (access("/proc", F_OK) == 0)) {
@@ -826,7 +827,7 @@ char *SDL_GetBasePath()
 		if (ptr != NULL)
 			retval = ptr; /* oh well if it failed. */
 	}
-
+#endif
 	return retval;
 }
 
@@ -848,6 +849,9 @@ char *SDL_GetPrefPath(const char *org, const char *app)
 
 #if defined(__3DS__)
 	retval = SDL_strdup("sdmc:/3ds/devilutionx/");
+	return retval;
+#elif defined(__amigaos__)
+	retval = SDL_strdup("PROGDIR:");
 	return retval;
 #endif
 

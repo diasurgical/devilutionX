@@ -20,24 +20,31 @@ uint32_t gSaveNumber;
 
 namespace {
 
-/** The active music track id for the main menu. */
-uint8_t menu_music_track_id = TMUSIC_INTRO;
+_music_id NextTrack()
+{
+	if (gbIsSpawn) {
+		return TMUSIC_INTRO;
+	}
+
+	switch (sgnMusicTrack) {
+	case TMUSIC_INTRO:
+		return TMUSIC_CATACOMBS;
+	case TMUSIC_CATACOMBS:
+		return TMUSIC_CAVES;
+	case TMUSIC_CAVES:
+		return TMUSIC_HELL;
+	case TMUSIC_HELL:
+		return gbIsHellfire ? TMUSIC_NEST : TMUSIC_INTRO;
+	case TMUSIC_NEST:
+		return gbIsHellfire ? TMUSIC_CRYPT : TMUSIC_INTRO;
+	default:
+		return TMUSIC_INTRO;
+	}
+}
 
 void RefreshMusic()
 {
-	music_start(menu_music_track_id);
-
-	if (gbIsSpawn && !gbIsHellfire) {
-		return;
-	}
-
-	do {
-		menu_music_track_id++;
-		if (menu_music_track_id == NUM_MUSIC || (!gbIsHellfire && menu_music_track_id > TMUSIC_L4))
-			menu_music_track_id = TMUSIC_L2;
-		if (gbIsSpawn && menu_music_track_id > TMUSIC_L1)
-			menu_music_track_id = TMUSIC_L5;
-	} while (menu_music_track_id == TMUSIC_TOWN || menu_music_track_id == TMUSIC_L1);
+	music_start(NextTrack());
 }
 
 bool InitMenu(_selhero_selections type)
@@ -46,8 +53,6 @@ bool InitMenu(_selhero_selections type)
 
 	if (type == SELHERO_PREVIOUS)
 		return true;
-
-	music_stop();
 
 	success = StartGame(type != SELHERO_CONTINUE, type != SELHERO_CONNECT);
 	if (success)
@@ -87,14 +92,14 @@ bool DummyGetHeroInfo(_uiheroinfo * /*pInfo*/)
 
 bool mainmenu_select_hero_dialog(GameData *gameData)
 {
-	uint32_t *pSaveNumberFromOptions = nullptr;
+	OptionEntryInt<uint32_t> *pSaveNumberFromOptions = nullptr;
 	_selhero_selections dlgresult = SELHERO_NEW_DUNGEON;
 	if (demo::IsRunning()) {
 		pfile_ui_set_hero_infos(DummyGetHeroInfo);
 		gbLoadGame = true;
 	} else if (!gbIsMultiplayer) {
 		pSaveNumberFromOptions = gbIsHellfire ? &sgOptions.Hellfire.lastSinglePlayerHero : &sgOptions.Diablo.lastSinglePlayerHero;
-		gSaveNumber = *pSaveNumberFromOptions;
+		gSaveNumber = **pSaveNumberFromOptions;
 		UiSelHeroSingDialog(
 		    pfile_ui_set_hero_infos,
 		    pfile_ui_save_create,
@@ -107,7 +112,7 @@ bool mainmenu_select_hero_dialog(GameData *gameData)
 		gbLoadGame = (dlgresult == SELHERO_CONTINUE);
 	} else {
 		pSaveNumberFromOptions = gbIsHellfire ? &sgOptions.Hellfire.lastMultiplayerHero : &sgOptions.Diablo.lastMultiplayerHero;
-		gSaveNumber = *pSaveNumberFromOptions;
+		gSaveNumber = **pSaveNumberFromOptions;
 		UiSelHeroMultDialog(
 		    pfile_ui_set_hero_infos,
 		    pfile_ui_save_create,
@@ -122,9 +127,7 @@ bool mainmenu_select_hero_dialog(GameData *gameData)
 	}
 
 	if (pSaveNumberFromOptions != nullptr)
-		*pSaveNumberFromOptions = gSaveNumber;
-
-	pfile_read_player_from_save(gSaveNumber, Players[MyPlayerId]);
+		pSaveNumberFromOptions->SetValue(gSaveNumber);
 
 	return true;
 }
@@ -147,8 +150,8 @@ void mainmenu_loop()
 		_mainmenu_selections menu = MAINMENU_NONE;
 		if (demo::IsRunning())
 			menu = MAINMENU_SINGLE_PLAYER;
-		else if (!UiMainMenuDialog(gszProductName, &menu, effects_play_sound, 30))
-			app_fatal("%s", _("Unable to display mainmenu"));
+		else if (!UiMainMenuDialog(gszProductName, &menu, 30))
+			app_fatal(_("Unable to display mainmenu"));
 
 		switch (menu) {
 		case MAINMENU_NONE:
@@ -162,7 +165,7 @@ void mainmenu_loop()
 				done = true;
 			break;
 		case MAINMENU_ATTRACT_MODE:
-			if (gbIsSpawn && !diabdat_mpq)
+			if (gbIsSpawn && !HaveDiabdat())
 				done = false;
 			else if (gbActive)
 				PlayIntro();

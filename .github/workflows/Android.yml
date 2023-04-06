@@ -4,15 +4,23 @@ on:
   push:
     branches:
       - master
+    paths-ignore:
+      - '*.md'
   pull_request:
     types: [ opened, synchronize ]
+    paths-ignore:
+      - '*.md'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
     - name: Install gettext
-      run: sudo apt update && sudo apt install -y gettext
+      run: sudo apt-get update && sudo apt-get install -y gettext
 
     - name: Checkout
       uses: actions/checkout@v2
@@ -26,17 +34,12 @@ jobs:
         distribution: 'adopt'
         cache: gradle
 
-    # CMake version 3.21.3 causes gradle to throw a NullPointerException during the build
-    # Removing it will cause gradle to fall back on 3.18.1 installed by the Android SDK
-    - name: Create Build Environment
-      run: rm /usr/local/bin/cmake
-
     - name: Cache CMake build folder
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: android-project/app/.cxx
-        key: android-cmake-v2-${{ github.sha }}
-        restore-keys: android-cmake-v2-
+        key: ${{ github.workflow }}-v1-${{ github.sha }}
+        restore-keys: ${{ github.workflow }}-v1-
 
     - name: Build
       working-directory: ${{github.workspace}}

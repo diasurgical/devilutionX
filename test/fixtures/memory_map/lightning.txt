@@ -1,0 +1,13 @@
+R 32 positionX
+R 32 positionY
+R 32 _lradius
+R 32 _lid
+R 32 _ldel
+R 32 _lunflag
+R 32 unused
+R 32 oldX
+R 32 oldY
+R 32 oldRadius
+R 32 offsetX
+R 32 offsetY
+R 32 _lflags

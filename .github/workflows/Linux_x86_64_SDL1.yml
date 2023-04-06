@@ -1,15 +1,23 @@
-name: Linux_x86_64_SDL1
+name: Linux x64 SDL1
 
 on:
   push:
     branches:
       - master
+    paths-ignore:
+      - '*.md'
   pull_request:
     types: [ opened, synchronize ]
+    paths-ignore:
+      - '*.md'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -18,15 +26,15 @@ jobs:
 
     - name: Create Build Environment
       run: >
-        sudo apt update &&
-        sudo apt install -y cmake file g++ git libfmt-dev libsdl-dev libsodium-dev libpng-dev libbz2-dev rpm smpq
+        sudo apt-get update &&
+        sudo apt-get install -y cmake file g++ git libfmt-dev libsdl1.2-dev libsodium-dev libpng-dev libbz2-dev rpm smpq
 
     - name: Cache CMake build folder
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: build
-        key: linux-x86_64-sdl1-cmake-v2-${{ github.sha }}
-        restore-keys: linux-x86_64-sdl1-cmake-v2-
+        key: ${{ github.workflow }}-v1-${{ github.sha }}
+        restore-keys: ${{ github.workflow }}-v1-
 
     - name: Configure CMake
       shell: bash

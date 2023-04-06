@@ -4,8 +4,16 @@ on:
   push:
     branches:
       - master
+    paths-ignore:
+      - '*.md'
   pull_request:
     types: [ opened, synchronize ]
+    paths-ignore:
+      - '*.md'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
@@ -28,11 +36,11 @@ jobs:
       run: brew bundle install
 
     - name: Cache CMake build folder
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: build
-        key: macos-cmake-v2-${{ github.sha }}
-        restore-keys: macos-cmake-v2-
+        key: ${{ github.workflow }}-v1-${{ github.sha }}
+        restore-keys: ${{ github.workflow }}-v1-
 
     - name: Configure CMake
       # Use a bash shell so we can use the same syntax for environment variable
@@ -47,10 +55,9 @@ jobs:
       # Execute the build.  You can specify a specific target with "--target <NAME>"
       run: cmake --build build -j $(sysctl -n hw.physicalcpu) --target package
 
-    - name: Release
-      uses: softprops/action-gh-release@v1
-      if: startsWith(github.ref, 'refs/tags/')
+    - name: Upload-Package
+      if: ${{ !env.ACT }}
+      uses: actions/upload-artifact@v2
       with:
-        files: ${{github.workspace}}/build/devilutionx.dmg
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        name: devilutionx.dmg
+        path: ${{github.workspace}}/build/devilutionx.dmg

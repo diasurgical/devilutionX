@@ -8,12 +8,12 @@
 namespace devilution {
 namespace {
 
-enum class DirectionX {
+enum class DirectionX : int8_t {
 	EAST = 1,
 	WEST = -1,
 };
 
-enum class DirectionY {
+enum class DirectionY : int8_t {
 	SOUTH = 1,
 	NORTH = -1,
 };

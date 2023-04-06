@@ -6,39 +6,45 @@
 
 #ifdef _DEBUG
 
-#include <sstream>
-
-#include <fmt/format.h>
+#include <cstdio>
 
 #include "debug.h"
 
 #include "automap.h"
 #include "control.h"
 #include "cursor.h"
+#include "engine/backbuffer_state.hpp"
+#include "engine/events.hpp"
 #include "engine/load_cel.hpp"
 #include "engine/point.hpp"
 #include "error.h"
 #include "inv.h"
+#include "levels/setmaps.h"
 #include "lighting.h"
 #include "monstdat.h"
 #include "monster.h"
 #include "plrmsg.h"
 #include "quests.h"
-#include "setmaps.h"
 #include "spells.h"
 #include "towners.h"
+#include "utils/endian_stream.hpp"
+#include "utils/file_util.h"
 #include "utils/language.h"
 #include "utils/log.hpp"
+#include "utils/str_cat.hpp"
+#include "utils/str_split.hpp"
 
 namespace devilution {
 
-std::optional<CelSprite> pSquareCel;
+std::string TestMapPath;
+OptionalOwnedClxSpriteList pSquareCel;
 bool DebugToggle = false;
 bool DebugGodMode = false;
 bool DebugVision = false;
 bool DebugGrid = false;
 std::unordered_map<int, Point> DebugCoordsMap;
 bool DebugScrollViewEnabled = false;
+std::string debugTRN;
 
 namespace {
 
@@ -61,22 +67,24 @@ enum class DebugGridTextItem : uint16_t {
 	objectindex,
 
 	// take dPiece as index
-	nBlockTable,
-	nSolidTable,
-	nTransTable,
-	nMissileTable,
-	nTrapTable,
+	Solid,
+	Transparent,
+	Trap,
 
 	// megatiles
 	AutomapView,
 	dungeon,
 	pdungeon,
-	dflags,
+	Protected,
 };
 
 DebugGridTextItem SelectedDebugGridTextItem;
 
 int DebugMonsterId;
+
+std::vector<std::string> SearchMonsters;
+std::vector<std::string> SearchItems;
+std::vector<std::string> SearchObjects;
 
 // Used for debugging level generation
 uint32_t glMid1Seed[NUMLEVELS];
@@ -84,51 +92,46 @@ uint32_t glMid2Seed[NUMLEVELS];
 uint32_t glMid3Seed[NUMLEVELS];
 uint32_t glEndSeed[NUMLEVELS];
 
-void SetSpellLevelCheat(spell_id spl, int spllvl)
+void SetSpellLevelCheat(SpellID spl, int spllvl)
 {
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	myPlayer._pMemSpells |= GetSpellBitmask(spl);
-	myPlayer._pSplLvl[spl] = spllvl;
+	myPlayer._pSplLvl[static_cast<int8_t>(spl)] = spllvl;
 }
 
-void PrintDebugMonster(int m)
+void PrintDebugMonster(const Monster &monster)
 {
-	auto &monster = Monsters[m];
-
-	EventPlrMsg(fmt::format(
-	                "Monster {:i} = {:s}\nX = {:i}, Y = {:i}\nEnemy = {:i}, HP = {:i}\nMode = {:i}, Var1 = {:i}",
-	                m,
-	                monster.mName,
-	                monster.position.tile.x,
-	                monster.position.tile.y,
-	                monster._menemy,
-	                monster._mhitpoints,
-	                static_cast<int>(monster._mmode),
-	                monster._mVar1),
+	EventPlrMsg(StrCat(
+	                "Monster ", static_cast<int>(monster.getId()), " = ", monster.name(),
+	                "\nX = ", monster.position.tile.x, ", Y = ", monster.position.tile.y,
+	                "\nEnemy = ", monster.enemy, ", HP = ", monster.hitPoints,
+	                "\nMode = ", static_cast<int>(monster.mode), ", Var1 = ", monster.var1),
 	    UiFlags::ColorWhite);
 
 	bool bActive = false;
 
-	for (int i = 0; i < ActiveMonsterCount; i++) {
-		if (ActiveMonsters[i] == m)
+	for (size_t i = 0; i < ActiveMonsterCount; i++) {
+		if (&Monsters[ActiveMonsters[i]] == &monster) {
 			bActive = true;
+			break;
+		}
 	}
 
-	EventPlrMsg(fmt::format("Active List = {:i}, Squelch = {:i}", bActive ? 1 : 0, monster._msquelch), UiFlags::ColorWhite);
+	EventPlrMsg(StrCat("Active List = ", bActive ? 1 : 0, ", Squelch = ", monster.activeForTicks), UiFlags::ColorWhite);
 }
 
 void ProcessMessages()
 {
-	tagMSG msg;
-	while (FetchMessage(&msg)) {
-		if (msg.message == DVL_WM_QUIT) {
+	SDL_Event event;
+	uint16_t modState;
+	while (FetchMessage(&event, &modState)) {
+		if (event.type == SDL_QUIT) {
 			gbRunGameResult = false;
 			gbRunGame = false;
 			break;
 		}
-		TranslateMessage(&msg);
-		PushMessage(&msg);
+		HandleMessage(event, modState);
 	}
 }
 
@@ -154,32 +157,30 @@ std::string DebugCmdHelp(const string_view parameter)
 			ret.append(std::string(dbgCmd.text));
 		}
 		return ret;
-	} else {
-		auto debugCmdIterator = std::find_if(DebugCmdList.begin(), DebugCmdList.end(), [&](const DebugCmdItem &elem) { return elem.text == parameter; });
-		if (debugCmdIterator == DebugCmdList.end())
-			return fmt::format("Debug command {} wasn't found", parameter);
-		auto &dbgCmdItem = *debugCmdIterator;
-		if (dbgCmdItem.requiredParameter.empty())
-			return fmt::format("Description: {}\nParameters: No additional parameter needed.", dbgCmdItem.description);
-		return fmt::format("Description: {}\nParameters: {}", dbgCmdItem.description, dbgCmdItem.requiredParameter);
 	}
+	auto debugCmdIterator = std::find_if(DebugCmdList.begin(), DebugCmdList.end(), [&](const DebugCmdItem &elem) { return elem.text == parameter; });
+	if (debugCmdIterator == DebugCmdList.end())
+		return StrCat("Debug command ", parameter, " wasn't found");
+	auto &dbgCmdItem = *debugCmdIterator;
+	if (dbgCmdItem.requiredParameter.empty())
+		return StrCat("Description: ", dbgCmdItem.description, "\nParameters: No additional parameter needed.");
+	return StrCat("Description: ", dbgCmdItem.description, "\nParameters: ", dbgCmdItem.requiredParameter);
 }
 
 std::string DebugCmdGiveGoldCheat(const string_view parameter)
 {
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
-	for (int8_t &itemId : myPlayer.InvGrid) {
-		if (itemId != 0)
+	for (int8_t &itemIndex : myPlayer.InvGrid) {
+		if (itemIndex != 0)
 			continue;
 
-		int ni = myPlayer._pNumInv++;
-		SetPlrHandItem(myPlayer.InvList[ni], IDI_GOLD);
-		GetPlrHandSeed(&myPlayer.InvList[ni]);
-		myPlayer.InvList[ni]._ivalue = GOLD_MAX_LIMIT;
-		myPlayer.InvList[ni]._iCurs = ICURS_GOLD_LARGE;
-		myPlayer._pGold += GOLD_MAX_LIMIT;
-		itemId = myPlayer._pNumInv;
+		Item &goldItem = myPlayer.InvList[myPlayer._pNumInv];
+		MakeGoldStack(goldItem, GOLD_MAX_LIMIT);
+		myPlayer._pNumInv++;
+		itemIndex = myPlayer._pNumInv;
+
+		myPlayer._pGold += goldItem._ivalue;
 	}
 	CalcPlrInv(myPlayer, true);
 
@@ -188,17 +189,17 @@ std::string DebugCmdGiveGoldCheat(const string_view parameter)
 
 std::string DebugCmdTakeGoldCheat(const string_view parameter)
 {
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
-	for (auto itemId : myPlayer.InvGrid) {
-		itemId -= 1;
+	for (auto itemIndex : myPlayer.InvGrid) {
+		itemIndex -= 1;
 
-		if (itemId < 0)
+		if (itemIndex < 0)
 			continue;
-		if (myPlayer.InvList[itemId]._itype != ItemType::Gold)
+		if (myPlayer.InvList[itemIndex]._itype != ItemType::Gold)
 			continue;
 
-		myPlayer.RemoveInvItem(itemId);
+		myPlayer.RemoveInvItem(itemIndex);
 	}
 
 	myPlayer._pGold = 0;
@@ -208,49 +209,149 @@ std::string DebugCmdTakeGoldCheat(const string_view parameter)
 
 std::string DebugCmdWarpToLevel(const string_view parameter)
 {
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 	auto level = atoi(parameter.data());
 	if (level < 0 || level > (gbIsHellfire ? 24 : 16))
-		return fmt::format("Level {} is not known. Do you want to write a mod?", level);
-	if (!setlevel && myPlayer.plrlevel == level)
-		return fmt::format("I did nothing but fulfilled your wish. You are already at level {}.", level);
+		return StrCat("Level ", level, " is not known. Do you want to write a mod?");
+	if (!setlevel && myPlayer.isOnLevel(level))
+		return StrCat("I did nothing but fulfilled your wish. You are already at level ", level, ".");
 
-	StartNewLvl(MyPlayerId, (level != 21) ? interface_mode::WM_DIABNEXTLVL : interface_mode::WM_DIABTOWNWARP, level);
-	return fmt::format("Welcome to level {}.", level);
+	StartNewLvl(myPlayer, (level != 21) ? interface_mode::WM_DIABNEXTLVL : interface_mode::WM_DIABTOWNWARP, level);
+	return StrCat("Welcome to level ", level, ".");
 }
 
-std::string DebugCmdLoadMap(const string_view parameter)
+std::string DebugCmdLoadQuestMap(const string_view parameter)
 {
 	if (parameter.empty()) {
 		std::string ret = "What mapid do you want to visit?";
 		for (auto &quest : Quests) {
 			if (quest._qslvl <= 0)
 				continue;
-			ret.append(fmt::format(" {} ({})", quest._qslvl, QuestLevelNames[quest._qslvl]));
+			StrAppend(ret, " ", quest._qslvl, " (", QuestLevelNames[quest._qslvl], ")");
 		}
 		return ret;
 	}
 
 	auto level = atoi(parameter.data());
 	if (level < 1)
-		return fmt::format("Map id must be 1 or higher", level);
+		return "Map id must be 1 or higher";
 	if (setlevel && setlvlnum == level)
-		return fmt::format("I did nothing but fulfilled your wish. You are already at mapid {}.", level);
+		return StrCat("I did nothing but fulfilled your wish. You are already at mapid .", level);
 
 	for (auto &quest : Quests) {
 		if (level != quest._qslvl)
 			continue;
 
-		StartNewLvl(MyPlayerId, (quest._qlevel != 21) ? interface_mode::WM_DIABNEXTLVL : interface_mode::WM_DIABTOWNWARP, quest._qlevel);
-		ProcessMessages();
-
 		setlvltype = quest._qlvltype;
-		StartNewLvl(MyPlayerId, WM_DIABSETLVL, level);
+		StartNewLvl(*MyPlayer, WM_DIABSETLVL, level);
 
-		return fmt::format("Welcome to {}.", QuestLevelNames[level]);
+		return StrCat("Welcome to ", QuestLevelNames[level], ".");
 	}
 
-	return fmt::format("Mapid {} is not known. Do you want to write a mod?", level);
+	return StrCat("Mapid ", level, " is not known. Do you want to write a mod?");
+}
+
+std::string DebugCmdLoadMap(const string_view parameter)
+{
+	TestMapPath.clear();
+	int mapType = 0;
+	Point spawn = {};
+
+	int count = 0;
+	for (string_view arg : SplitByChar(parameter, ' ')) {
+		switch (count) {
+		case 0:
+			TestMapPath = StrCat(arg, ".dun");
+			break;
+		case 1:
+			mapType = atoi(std::string(arg).c_str());
+			break;
+		case 2:
+			spawn.x = atoi(std::string(arg).c_str());
+			break;
+		case 3:
+			spawn.y = atoi(std::string(arg).c_str());
+			break;
+		}
+		count++;
+	}
+
+	if (TestMapPath.empty() || mapType < DTYPE_CATHEDRAL || mapType > DTYPE_LAST || !InDungeonBounds(spawn))
+		return "Directions not understood";
+
+	setlvltype = static_cast<dungeon_type>(mapType);
+	ViewPosition = spawn;
+
+	StartNewLvl(*MyPlayer, WM_DIABSETLVL, SL_NONE);
+
+	return "Welcome to this unique place.";
+}
+
+std::string ExportDun(const string_view parameter)
+{
+	std::string levelName = StrCat(currlevel, "-", glSeedTbl[currlevel], ".dun");
+
+	FILE *dunFile = OpenFile(levelName.c_str(), "ab");
+
+	WriteLE16(dunFile, DMAXX);
+	WriteLE16(dunFile, DMAXY);
+
+	/** Tiles. */
+	for (int y = 0; y < DMAXY; y++) {
+		for (int x = 0; x < DMAXX; x++) {
+			WriteLE16(dunFile, dungeon[x][y]);
+		}
+	}
+
+	/** Padding */
+	for (int y = 16; y < MAXDUNY - 16; y++) {
+		for (int x = 16; x < MAXDUNX - 16; x++) {
+			WriteLE16(dunFile, 0);
+		}
+	}
+
+	/** Monsters */
+	for (int y = 16; y < MAXDUNY - 16; y++) {
+		for (int x = 16; x < MAXDUNX - 16; x++) {
+			uint16_t monsterId = 0;
+			if (dMonster[x][y] > 0) {
+				for (int i = 0; i < 157; i++) {
+					if (MonstConvTbl[i] == Monsters[abs(dMonster[x][y]) - 1].type().type) {
+						monsterId = i + 1;
+						break;
+					}
+				}
+			}
+			WriteLE16(dunFile, monsterId);
+		}
+	}
+
+	/** Objects */
+	for (int y = 16; y < MAXDUNY - 16; y++) {
+		for (int x = 16; x < MAXDUNX - 16; x++) {
+			uint16_t objectId = 0;
+			Object *object = FindObjectAtPosition({ x, y }, false);
+			if (object != nullptr) {
+				for (int i = 0; i < 147; i++) {
+					if (ObjTypeConv[i] == object->_otype) {
+						objectId = i;
+						break;
+					}
+				}
+			}
+			WriteLE16(dunFile, objectId);
+		}
+	}
+
+	/** Transparency */
+	for (int y = 16; y < MAXDUNY - 16; y++) {
+		for (int x = 16; x < MAXDUNX - 16; x++) {
+			WriteLE16(dunFile, dTransVal[x][y]);
+		}
+	}
+	std::fclose(dunFile);
+
+	return StrCat(levelName, " saved. Happy mapping!");
 }
 
 std::unordered_map<string_view, _talker_id> TownerShortNameToTownerId = {
@@ -269,9 +370,9 @@ std::unordered_map<string_view, _talker_id> TownerShortNameToTownerId = {
 
 std::string DebugCmdVisitTowner(const string_view parameter)
 {
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
-	if (setlevel || myPlayer.plrlevel != 0)
+	if (setlevel || !myPlayer.isOnLevel(0))
 		return "What kind of friends do you have in dungeons?";
 
 	if (parameter.empty()) {
@@ -286,7 +387,7 @@ std::string DebugCmdVisitTowner(const string_view parameter)
 
 	auto it = TownerShortNameToTownerId.find(parameter);
 	if (it == TownerShortNameToTownerId.end())
-		return fmt::format("{} is unknown. Perhaps he is a ninja?", parameter);
+		return StrCat(parameter, " is unknown. Perhaps he is a ninja?");
 
 	for (auto &towner : Towners) {
 		if (towner._ttype != it->second)
@@ -294,40 +395,41 @@ std::string DebugCmdVisitTowner(const string_view parameter)
 
 		CastSpell(
 		    MyPlayerId,
-		    SPL_TELEPORT,
+		    SpellID::Teleport,
 		    myPlayer.position.tile.x,
 		    myPlayer.position.tile.y,
 		    towner.position.x,
 		    towner.position.y,
 		    1);
 
-		return fmt::format("Say hello to {} from me.", parameter);
+		return StrCat("Say hello to ", parameter, " from me.");
 	}
 
-	return fmt::format("Couldn't find {}.", parameter);
+	return StrCat("Couldn't find ", parameter, ".");
 }
 
 std::string DebugCmdResetLevel(const string_view parameter)
 {
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
-	std::stringstream paramsStream(parameter.data());
-	std::string singleParameter;
-	if (!std::getline(paramsStream, singleParameter, ' '))
+	auto args = SplitByChar(parameter, ' ');
+	auto it = args.begin();
+	if (it == args.end())
 		return "What level do you want to visit?";
-	auto level = atoi(singleParameter.c_str());
+	auto level = atoi(std::string(*it).c_str());
 	if (level < 0 || level > (gbIsHellfire ? 24 : 16))
-		return fmt::format("Level {} is not known. Do you want to write an extension mod?", level);
+		return StrCat("Level ", level, " is not known. Do you want to write an extension mod?");
 	myPlayer._pLvlVisited[level] = false;
+	DeltaClearLevel(level);
 
-	if (std::getline(paramsStream, singleParameter, ' ')) {
-		uint32_t seed = static_cast<uint32_t>(std::stoul(singleParameter));
+	if (++it != args.end()) {
+		const auto seed = static_cast<uint32_t>(std::stoul(std::string(*it)));
 		glSeedTbl[level] = seed;
 	}
 
-	if (myPlayer.plrlevel == level)
-		return fmt::format("Level {} can't be cleaned, cause you still occupy it!", level);
-	return fmt::format("Level {} was restored and looks fabulous.", level);
+	if (myPlayer.isOnLevel(level))
+		return StrCat("Level ", level, " can't be cleaned, cause you still occupy it!");
+	return StrCat("Level ", level, " was restored and looks fabulous.");
 }
 
 std::string DebugCmdGodMode(const string_view parameter)
@@ -379,7 +481,7 @@ std::string DebugCmdQuest(const string_view parameter)
 		for (auto &quest : Quests) {
 			if (IsNoneOf(quest._qactive, QUEST_NOTAVAIL, QUEST_INIT))
 				continue;
-			ret.append(fmt::format(", {} ({})", quest._qidx, QuestsData[quest._qidx]._qlstr));
+			StrAppend(ret, ", ", quest._qidx, " (", QuestsData[quest._qidx]._qlstr, ")");
 		}
 		return ret;
 	}
@@ -399,16 +501,16 @@ std::string DebugCmdQuest(const string_view parameter)
 	int questId = atoi(parameter.data());
 
 	if (questId >= MAXQUESTS)
-		return fmt::format("Quest {} is not known. Do you want to write a mod?", questId);
+		return StrCat("Quest ", questId, " is not known. Do you want to write a mod?");
 	auto &quest = Quests[questId];
 
 	if (IsNoneOf(quest._qactive, QUEST_NOTAVAIL, QUEST_INIT))
-		return fmt::format("{} was already given.", QuestsData[questId]._qlstr);
+		return StrCat(QuestsData[questId]._qlstr, " was already given.");
 
 	quest._qactive = QUEST_ACTIVE;
 	quest._qlog = true;
 
-	return fmt::format("{} enabled.", QuestsData[questId]._qlstr);
+	return StrCat(QuestsData[questId]._qlstr, " enabled.");
 }
 
 std::string DebugCmdLevelUp(const string_view parameter)
@@ -419,31 +521,87 @@ std::string DebugCmdLevelUp(const string_view parameter)
 	return "New experience leads to new insights.";
 }
 
+std::string DebugCmdMaxStats(const string_view parameter)
+{
+	Player &myPlayer = *MyPlayer;
+	ModifyPlrStr(myPlayer, myPlayer.GetMaximumAttributeValue(CharacterAttribute::Strength) - myPlayer._pBaseStr);
+	ModifyPlrMag(myPlayer, myPlayer.GetMaximumAttributeValue(CharacterAttribute::Magic) - myPlayer._pBaseMag);
+	ModifyPlrDex(myPlayer, myPlayer.GetMaximumAttributeValue(CharacterAttribute::Dexterity) - myPlayer._pBaseDex);
+	ModifyPlrVit(myPlayer, myPlayer.GetMaximumAttributeValue(CharacterAttribute::Vitality) - myPlayer._pBaseVit);
+	return "Who needs elixirs anyway?";
+}
+
+std::string DebugCmdMinStats(const string_view parameter)
+{
+	Player &myPlayer = *MyPlayer;
+	ModifyPlrStr(myPlayer, -myPlayer._pBaseStr);
+	ModifyPlrMag(myPlayer, -myPlayer._pBaseMag);
+	ModifyPlrDex(myPlayer, -myPlayer._pBaseDex);
+	ModifyPlrVit(myPlayer, -myPlayer._pBaseVit);
+	return "From hero to zero.";
+}
+
 std::string DebugCmdSetSpellsLevel(const string_view parameter)
 {
 	int level = std::max(0, atoi(parameter.data()));
-	for (int i = SPL_FIREBOLT; i < MAX_SPELLS; i++) {
-		if (GetSpellBookLevel((spell_id)i) != -1) {
-			SetSpellLevelCheat((spell_id)i, level);
+	for (int i = static_cast<int8_t>(SpellID::Firebolt); i < MAX_SPELLS; i++) {
+		if (GetSpellBookLevel(static_cast<SpellID>(i)) != -1) {
+			SetSpellLevelCheat(static_cast<SpellID>(i), level);
 		}
 	}
 	if (level == 0)
-		Players[MyPlayerId]._pMemSpells = 0;
+		MyPlayer->_pMemSpells = 0;
 
 	return "Knowledge is power.";
 }
 
 std::string DebugCmdRefillHealthMana(const string_view parameter)
 {
-	auto &myPlayer = Players[MyPlayerId];
-	myPlayer._pMana = myPlayer._pMaxMana;
-	myPlayer._pManaBase = myPlayer._pMaxManaBase;
-	myPlayer._pHitPoints = myPlayer._pMaxHP;
-	myPlayer._pHPBase = myPlayer._pMaxHPBase;
-	drawhpflag = true;
-	drawmanaflag = true;
+	Player &myPlayer = *MyPlayer;
+	myPlayer.RestoreFullLife();
+	myPlayer.RestoreFullMana();
+	RedrawComponent(PanelDrawComponent::Health);
+	RedrawComponent(PanelDrawComponent::Mana);
 
 	return "Ready for more.";
+}
+
+std::string DebugCmdChangeHealth(const string_view parameter)
+{
+	Player &myPlayer = *MyPlayer;
+	int change = -1;
+
+	if (!parameter.empty())
+		change = atoi(parameter.data());
+
+	if (change == 0)
+		return "Health hasn't changed.";
+
+	int newHealth = myPlayer._pHitPoints + (change * 64);
+	SetPlayerHitPoints(myPlayer, newHealth);
+	if (newHealth <= 0)
+		SyncPlrKill(myPlayer, 0);
+
+	return "Health has changed.";
+}
+
+std::string DebugCmdChangeMana(const string_view parameter)
+{
+	Player &myPlayer = *MyPlayer;
+	int change = -1;
+
+	if (!parameter.empty())
+		change = atoi(parameter.data());
+
+	if (change == 0)
+		return "Mana hasn't changed.";
+
+	int newMana = myPlayer._pMana + (change * 64);
+	myPlayer._pMana = newMana;
+	myPlayer._pManaBase = myPlayer._pMana + myPlayer._pMaxManaBase - myPlayer._pMaxMana;
+	RedrawComponent(PanelDrawComponent::Mana);
+
+	return "Mana has changed.";
 }
 
 std::string DebugCmdGenerateUniqueItem(const string_view parameter)
@@ -465,19 +623,19 @@ std::string DebugCmdExit(const string_view parameter)
 
 std::string DebugCmdArrow(const string_view parameter)
 {
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
-	myPlayer._pIFlags &= ~ISPL_FIRE_ARROWS;
-	myPlayer._pIFlags &= ~ISPL_LIGHT_ARROWS;
+	myPlayer._pIFlags &= ~ItemSpecialEffect::FireArrows;
+	myPlayer._pIFlags &= ~ItemSpecialEffect::LightningArrows;
 
 	if (parameter == "normal") {
 		// we removed the parameter at the top
 	} else if (parameter == "fire") {
-		myPlayer._pIFlags |= ISPL_FIRE_ARROWS;
+		myPlayer._pIFlags |= ItemSpecialEffect::FireArrows;
 	} else if (parameter == "lightning") {
-		myPlayer._pIFlags |= ISPL_LIGHT_ARROWS;
+		myPlayer._pIFlags |= ItemSpecialEffect::LightningArrows;
 	} else if (parameter == "explosion") {
-		myPlayer._pIFlags |= (ISPL_FIRE_ARROWS | ISPL_LIGHT_ARROWS);
+		myPlayer._pIFlags |= (ItemSpecialEffect::FireArrows | ItemSpecialEffect::LightningArrows);
 	} else {
 		return "Unknown is sometimes similar to nothing (unkown effect).";
 	}
@@ -504,65 +662,53 @@ std::string DebugCmdShowGrid(const string_view parameter)
 
 std::string DebugCmdLevelSeed(const string_view parameter)
 {
-	return fmt::format("Seedinfo for level {}\nseed: {}\nMid1: {}\nMid2: {}\nMid3: {}\nEnd: {}", currlevel, glSeedTbl[currlevel], glMid1Seed[currlevel], glMid2Seed[currlevel], glMid3Seed[currlevel], glEndSeed[currlevel]);
+	return StrCat("Seedinfo for level ", currlevel, "\nseed: ", glSeedTbl[currlevel], "\nMid1: ", glMid1Seed[currlevel], "\nMid2: ", glMid2Seed[currlevel], "\nMid3: ", glMid3Seed[currlevel], "\nEnd: ", glEndSeed[currlevel]);
 }
 
-std::string DebugCmdSpawnMonster(const string_view parameter)
+std::string DebugCmdSpawnUniqueMonster(const string_view parameter)
 {
-	if (currlevel == 0)
+	if (leveltype == DTYPE_TOWN)
 		return "Do you want to kill the towners?!?";
 
-	std::stringstream paramsStream(parameter.data());
 	std::string name;
 	int count = 1;
-	if (std::getline(paramsStream, name, ' ')) {
-		count = atoi(name.c_str());
-		if (count > 0)
-			name.clear();
-		else
-			count = 1;
-		std::getline(paramsStream, name, ' ');
+	for (string_view arg : SplitByChar(parameter, ' ')) {
+		const int num = atoi(std::string(arg).c_str());
+		if (num > 0) {
+			count = num;
+			break;
+		}
+		AppendStrView(name, arg);
+		name += ' ';
 	}
+	if (name.empty())
+		return "Monster name cannot be empty. Duh.";
 
-	std::string singleWord;
-	while (std::getline(paramsStream, singleWord, ' ')) {
-		name.append(" ");
-		name.append(singleWord);
-	}
-
+	name.pop_back(); // remove last space
 	std::transform(name.begin(), name.end(), name.begin(), [](unsigned char c) { return std::tolower(c); });
 
 	int mtype = -1;
-	for (int i = 0; i < 138; i++) {
-		auto mondata = MonstersData[i];
+	UniqueMonsterType uniqueIndex = UniqueMonsterType::None;
+	for (size_t i = 0; UniqueMonstersData[i].mtype != MT_INVALID; i++) {
+		auto mondata = UniqueMonstersData[i];
 		std::string monsterName(mondata.mName);
 		std::transform(monsterName.begin(), monsterName.end(), monsterName.begin(), [](unsigned char c) { return std::tolower(c); });
 		if (monsterName.find(name) == std::string::npos)
 			continue;
-		mtype = i;
-		break;
-	}
-
-	if (mtype == -1) {
-		for (int i = 0; i < 100; i++) {
-			auto mondata = UniqueMonstersData[i];
-			std::string monsterName(mondata.mName);
-			std::transform(monsterName.begin(), monsterName.end(), monsterName.begin(), [](unsigned char c) { return std::tolower(c); });
-			if (monsterName.find(name) == std::string::npos)
-				continue;
-			mtype = mondata.mtype;
+		mtype = mondata.mtype;
+		uniqueIndex = static_cast<UniqueMonsterType>(i);
+		if (monsterName == name) // to support partial name matching but always choose the correct monster if full name is given
 			break;
-		}
 	}
 
 	if (mtype == -1)
 		return "Monster not found!";
 
-	int id = MAX_LVLMTYPES - 1;
+	size_t id = MaxLvlMTypes - 1;
 	bool found = false;
 
-	for (int i = 0; i < LevelMonsterTypeCount; i++) {
-		if (LevelMonsterTypes[i].mtype == mtype) {
+	for (size_t i = 0; i < LevelMonsterTypeCount; i++) {
+		if (LevelMonsterTypes[i].type == mtype) {
 			id = i;
 			found = true;
 			break;
@@ -570,35 +716,125 @@ std::string DebugCmdSpawnMonster(const string_view parameter)
 	}
 
 	if (!found) {
-		LevelMonsterTypes[id].mtype = static_cast<_monster_id>(mtype);
-		InitMonsterGFX(id);
-		LevelMonsterTypes[id].mPlaceFlags |= PLACE_SCATTER;
-		LevelMonsterTypes[id].mdeadval = 1;
+		CMonster &monsterType = LevelMonsterTypes[id];
+		monsterType.type = static_cast<_monster_id>(mtype);
+		InitMonsterGFX(monsterType);
+		InitMonsterSND(monsterType);
+		monsterType.placeFlags |= PLACE_SCATTER;
+		monsterType.corpseId = 1;
 	}
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	int spawnedMonster = 0;
 
-	for (int k : CrawlNum) {
-		int ck = k + 2;
-		for (auto j = static_cast<uint8_t>(CrawlTable[k]); j > 0; j--, ck += 2) {
-			Point pos = myPlayer.position.tile + Displacement { CrawlTable[ck - 1], CrawlTable[ck] };
-			if (dPlayer[pos.x][pos.y] != 0 || dMonster[pos.x][pos.y] != 0)
-				continue;
-			if (!IsTileWalkable(pos))
-				continue;
+	auto ret = Crawl(0, MaxCrawlRadius, [&](Displacement displacement) -> std::optional<std::string> {
+		Point pos = myPlayer.position.tile + displacement;
+		if (dPlayer[pos.x][pos.y] != 0 || dMonster[pos.x][pos.y] != 0)
+			return {};
+		if (!IsTileWalkable(pos))
+			return {};
 
-			if (AddMonster(pos, myPlayer._pdir, id, true) < 0)
-				return fmt::format("I could only summon {} Monsters. The rest strike for shorter working hours.", spawnedMonster);
-			spawnedMonster += 1;
+		Monster *monster = AddMonster(pos, myPlayer._pdir, id, true);
+		if (monster == nullptr)
+			return StrCat("I could only summon ", spawnedMonster, " Monsters. The rest strike for shorter working hours.");
+		PrepareUniqueMonst(*monster, uniqueIndex, 0, 0, UniqueMonstersData[static_cast<size_t>(uniqueIndex)]);
+		monster->corpseId = 1;
+		spawnedMonster += 1;
 
-			if (spawnedMonster >= count)
-				return "Let the fighting begin!";
+		if (spawnedMonster >= count)
+			return "Let the fighting begin!";
+
+		return {};
+	});
+
+	if (!ret)
+		ret = StrCat("I could only summon ", spawnedMonster, " Monsters. The rest strike for shorter working hours.");
+	return *ret;
+}
+
+std::string DebugCmdSpawnMonster(const string_view parameter)
+{
+	if (leveltype == DTYPE_TOWN)
+		return "Do you want to kill the towners?!?";
+
+	std::string name;
+	int count = 1;
+	for (string_view arg : SplitByChar(parameter, ' ')) {
+		const int num = atoi(std::string(arg).c_str());
+		if (num > 0) {
+			count = num;
+			break;
+		}
+		AppendStrView(name, arg);
+		name += ' ';
+	}
+	if (name.empty())
+		return "Monster name cannot be empty. Duh.";
+
+	name.pop_back(); // remove last space
+	std::transform(name.begin(), name.end(), name.begin(), [](unsigned char c) { return std::tolower(c); });
+
+	int mtype = -1;
+
+	for (int i = 0; i < NUM_MTYPES; i++) {
+		auto mondata = MonstersData[i];
+		std::string monsterName(mondata.name);
+		std::transform(monsterName.begin(), monsterName.end(), monsterName.begin(), [](unsigned char c) { return std::tolower(c); });
+		if (monsterName.find(name) == std::string::npos)
+			continue;
+		mtype = i;
+		if (monsterName == name) // to support partial name matching but always choose the correct monster if full name is given
+			break;
+	}
+
+	if (mtype == -1)
+		return "Monster not found!";
+
+	size_t id = MaxLvlMTypes - 1;
+	bool found = false;
+
+	for (size_t i = 0; i < LevelMonsterTypeCount; i++) {
+		if (LevelMonsterTypes[i].type == mtype) {
+			id = i;
+			found = true;
+			break;
 		}
 	}
 
-	return fmt::format("I could only summon {} Monsters. The rest strike for shorter working hours.", spawnedMonster);
+	if (!found) {
+		CMonster &monsterType = LevelMonsterTypes[id];
+		monsterType.type = static_cast<_monster_id>(mtype);
+		InitMonsterGFX(monsterType);
+		InitMonsterSND(monsterType);
+		monsterType.placeFlags |= PLACE_SCATTER;
+		monsterType.corpseId = 1;
+	}
+
+	Player &myPlayer = *MyPlayer;
+
+	int spawnedMonster = 0;
+
+	auto ret = Crawl(0, MaxCrawlRadius, [&](Displacement displacement) -> std::optional<std::string> {
+		Point pos = myPlayer.position.tile + displacement;
+		if (dPlayer[pos.x][pos.y] != 0 || dMonster[pos.x][pos.y] != 0)
+			return {};
+		if (!IsTileWalkable(pos))
+			return {};
+
+		if (AddMonster(pos, myPlayer._pdir, id, true) == nullptr)
+			return StrCat("I could only summon ", spawnedMonster, " Monsters. The rest strike for shorter working hours.");
+		spawnedMonster += 1;
+
+		if (spawnedMonster >= count)
+			return "Let the fighting begin!";
+
+		return {};
+	});
+
+	if (!ret)
+		ret = StrCat("I could only summon ", spawnedMonster, " Monsters. The rest strike for shorter working hours.");
+	return *ret;
 }
 
 std::string DebugCmdShowTileData(const string_view parameter)
@@ -618,15 +854,13 @@ std::string DebugCmdShowTileData(const string_view parameter)
 		"coords",
 		"cursorcoords",
 		"objectindex",
-		"nBlockTable",
-		"nSolidTable",
-		"nTransTable",
-		"nMissileTable",
-		"nTrapTable",
+		"solid",
+		"transparent",
+		"trap",
 		"AutomapView",
 		"dungeon",
 		"pdungeon",
-		"dflags",
+		"Protected",
 	};
 
 	if (parameter == "clear") {
@@ -672,9 +906,9 @@ std::string DebugCmdScrollView(const string_view parameter)
 
 std::string DebugCmdItemInfo(const string_view parameter)
 {
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 	Item *pItem = nullptr;
-	if (pcurs >= CURSOR_FIRSTITEM) {
+	if (!myPlayer.HoldItem.isEmpty()) {
 		pItem = &myPlayer.HoldItem;
 	} else if (pcursinvitem != -1) {
 		if (pcursinvitem <= INVITEM_INV_LAST)
@@ -685,9 +919,9 @@ std::string DebugCmdItemInfo(const string_view parameter)
 		pItem = &Items[pcursitem];
 	}
 	if (pItem != nullptr) {
-		return fmt::format("Name: {}\nIDidx: {}\nSeed: {}\nCreateInfo: {}", pItem->_iIName, pItem->IDidx, pItem->_iSeed, pItem->_iCreateInfo);
+		return StrCat("Name: ", pItem->_iIName, "\nIDidx: ", pItem->IDidx, "\nSeed: ", pItem->_iSeed, "\nCreateInfo: ", pItem->_iCreateInfo);
 	}
-	return fmt::format("Numitems: {}", ActiveItemCount);
+	return StrCat("Numitems: ", ActiveItemCount);
 }
 
 std::string DebugCmdQuestInfo(const string_view parameter)
@@ -697,7 +931,7 @@ std::string DebugCmdQuestInfo(const string_view parameter)
 		for (auto &quest : Quests) {
 			if (IsNoneOf(quest._qactive, QUEST_NOTAVAIL, QUEST_INIT))
 				continue;
-			ret.append(fmt::format(" {} ({})", quest._qidx, QuestsData[quest._qidx]._qlstr));
+			StrAppend(ret, ", ", quest._qidx, " (", QuestsData[quest._qidx]._qlstr, ")");
 		}
 		return ret;
 	}
@@ -705,27 +939,26 @@ std::string DebugCmdQuestInfo(const string_view parameter)
 	int questId = atoi(parameter.data());
 
 	if (questId >= MAXQUESTS)
-		return fmt::format("Quest {} is not known. Do you want to write a mod?", questId);
+		return StrCat("Quest ", questId, " is not known. Do you want to write a mod?");
 	auto &quest = Quests[questId];
-	return fmt::format("\nQuest: {}\nActive: {} Var1: {} Var2: {}", QuestsData[quest._qidx]._qlstr, quest._qactive, quest._qvar1, quest._qvar2);
+	return StrCat("\nQuest: ", QuestsData[quest._qidx]._qlstr, "\nActive: ", quest._qactive, " Var1: ", quest._qvar1, " Var2: ", quest._qvar2);
 }
 
 std::string DebugCmdPlayerInfo(const string_view parameter)
 {
 	int playerId = atoi(parameter.data());
-	if (playerId < 0 || playerId >= MAX_PLRS)
+	if (static_cast<size_t>(playerId) >= Players.size())
 		return "My friend, we need a valid playerId.";
-	auto &player = Players[playerId];
+	Player &player = Players[playerId];
 	if (!player.plractive)
 		return "Player is not active";
 
 	const Point target = player.GetTargetPosition();
-	return fmt::format("Plr {} is {}\nLvl: {} Changing: {}\nTile.x: {} Tile.y: {} Target.x: {} Target.y: {}\nMode: {} destAction: {} walkpath[0]: {}\nInvincible:{} HitPoints:{}",
-	    playerId, player._pName,
-	    player.plrlevel, player._pLvlChanging,
-	    player.position.tile.x, player.position.tile.y, target.x, target.y,
-	    player._pmode, player.destAction, player.walkpath[0],
-	    player._pInvincible ? 1 : 0, player._pHitPoints);
+	return StrCat("Plr ", playerId, " is ", player._pName,
+	    "\nLvl: ", player.plrlevel, " Changing: ", player._pLvlChanging,
+	    "\nTile.x: ", player.position.tile.x, " Tile.y: ", player.position.tile.y, " Target.x: ", target.x, " Target.y: ", target.y,
+	    "\nMode: ", player._pmode, " destAction: ", player.destAction, " walkpath[0]: ", player.walkpath[0],
+	    "\nInvincible:", player._pInvincible ? 1 : 0, " HitPoints:", player._pHitPoints);
 }
 
 std::string DebugCmdToggleFPS(const string_view parameter)
@@ -734,23 +967,113 @@ std::string DebugCmdToggleFPS(const string_view parameter)
 	return "";
 }
 
+std::string DebugCmdChangeTRN(const string_view parameter)
+{
+	std::string out;
+	const auto parts = SplitByChar(parameter, ' ');
+	auto it = parts.begin();
+	if (it != parts.end()) {
+		const string_view first = *it;
+		if (++it != parts.end()) {
+			const string_view second = *it;
+			string_view prefix;
+			if (first == "mon") {
+				prefix = "monsters\\monsters\\";
+			} else if (first == "plr") {
+				prefix = "plrgfx\\";
+			}
+			debugTRN = StrCat(prefix, second, ".trn");
+		} else {
+			debugTRN = StrCat(first, ".trn");
+		}
+		out = fmt::format("I am a pretty butterfly. \n(Loading TRN: {:s})", debugTRN);
+	} else {
+		debugTRN = "";
+		out = "I am a big brown potato.";
+	}
+	auto &player = *MyPlayer;
+	InitPlayerGFX(player);
+	StartStand(player, player._pdir);
+	return out;
+}
+
+std::string DebugCmdSearchMonster(const string_view parameter)
+{
+	if (parameter.empty()) {
+		std::string ret = "What should I search? I'm too lazy to search for everything... you must provide a monster name!";
+		return ret;
+	}
+
+	std::string name;
+	AppendStrView(name, parameter);
+	std::transform(name.begin(), name.end(), name.begin(), [](unsigned char c) { return std::tolower(c); });
+	SearchMonsters.push_back(name);
+
+	return "We will find this bastard!";
+}
+
+std::string DebugCmdSearchItem(const string_view parameter)
+{
+	if (parameter.empty()) {
+		std::string ret = "What should I search? I'm too lazy to search for everything... you must provide a item name!";
+		return ret;
+	}
+
+	std::string name;
+	AppendStrView(name, parameter);
+	std::transform(name.begin(), name.end(), name.begin(), [](unsigned char c) { return std::tolower(c); });
+	SearchItems.push_back(name);
+
+	return "Are you greedy? Anyway I will help you.";
+}
+
+std::string DebugCmdSearchObject(const string_view parameter)
+{
+	if (parameter.empty()) {
+		std::string ret = "What should I search? I'm too lazy to search for everything... you must provide a object name!";
+		return ret;
+	}
+
+	std::string name;
+	AppendStrView(name, parameter);
+	std::transform(name.begin(), name.end(), name.begin(), [](unsigned char c) { return std::tolower(c); });
+	SearchObjects.push_back(name);
+
+	return "I will look for the pyramids. Oh sorry, I'm looking for what you want, of course.";
+}
+
+std::string DebugCmdClearSearch(const string_view parameter)
+{
+	SearchMonsters.clear();
+	SearchItems.clear();
+	SearchObjects.clear();
+
+	return "Now you have to find it yourself.";
+}
+
 std::vector<DebugCmdItem> DebugCmdList = {
 	{ "help", "Prints help overview or help for a specific command.", "({command})", &DebugCmdHelp },
-	{ "give gold", "Fills the inventory with gold.", "", &DebugCmdGiveGoldCheat },
-	{ "give xp", "Levels the player up (min 1 level or {levels}).", "({levels})", &DebugCmdLevelUp },
+	{ "givegold", "Fills the inventory with gold.", "", &DebugCmdGiveGoldCheat },
+	{ "givexp", "Levels the player up (min 1 level or {levels}).", "({levels})", &DebugCmdLevelUp },
+	{ "maxstats", "Sets all stat values to maximum.", "", &DebugCmdMaxStats },
+	{ "minstats", "Sets all stat values to minimum.", "", &DebugCmdMinStats },
 	{ "setspells", "Set spell level to {level} for all spells.", "{level}", &DebugCmdSetSpellsLevel },
-	{ "take gold", "Removes all gold from inventory.", "", &DebugCmdTakeGoldCheat },
-	{ "give quest", "Enable a given quest.", "({id})", &DebugCmdQuest },
-	{ "give map", "Reveal the map.", "", &DebugCmdMapReveal },
-	{ "take map", "Hide the map.", "", &DebugCmdMapHide },
-	{ "changelevel", "Moves to specifided {level} (use 0 for town).", "{level}", &DebugCmdWarpToLevel },
-	{ "map", "Load a quest level {level}.", "{level}", &DebugCmdLoadMap },
+	{ "takegold", "Removes all gold from inventory.", "", &DebugCmdTakeGoldCheat },
+	{ "givequest", "Enable a given quest.", "({id})", &DebugCmdQuest },
+	{ "givemap", "Reveal the map.", "", &DebugCmdMapReveal },
+	{ "takemap", "Hide the map.", "", &DebugCmdMapHide },
+	{ "goto", "Moves to specifided {level} (use 0 for town).", "{level}", &DebugCmdWarpToLevel },
+	{ "questmap", "Load a quest level {level}.", "{level}", &DebugCmdLoadQuestMap },
+	{ "map", "Load custom level from a given {path}.dun.", "{path} {type} {x} {y}", &DebugCmdLoadMap },
+	{ "exportdun", "Save the current level as a dun-file.", "", &ExportDun },
 	{ "visit", "Visit a towner.", "{towner}", &DebugCmdVisitTowner },
 	{ "restart", "Resets specified {level}.", "{level} ({seed})", &DebugCmdResetLevel },
 	{ "god", "Toggles godmode.", "", &DebugCmdGodMode },
-	{ "r_drawvision", "Toggles vision debug rendering.", "", &DebugCmdVision },
-	{ "r_fullbright", "Toggles whether light shading is in effect.", "", &DebugCmdLighting },
+	{ "drawvision", "Toggles vision debug rendering.", "", &DebugCmdVision },
+	{ "fullbright", "Toggles whether light shading is in effect.", "", &DebugCmdLighting },
 	{ "fill", "Refills health and mana.", "", &DebugCmdRefillHealthMana },
+	{ "changehp", "Changes health by {value} (Use a negative value to remove health).", "{value}", &DebugCmdChangeHealth },
+	{ "changemp", "Changes mana by {value} (Use a negative value to remove mana).", "{value}", &DebugCmdChangeMana },
 	{ "dropu", "Attempts to generate unique item {name}.", "{name}", &DebugCmdGenerateUniqueItem },
 	{ "drop", "Attempts to generate item {name}.", "{name}", &DebugCmdGenerateItem },
 	{ "talkto", "Interacts with a NPC whose name contains {name}.", "{name}", &DebugCmdTalkToTowner },
@@ -758,20 +1081,26 @@ std::vector<DebugCmdItem> DebugCmdList = {
 	{ "arrow", "Changes arrow effect (normal, fire, lightning, explosion).", "{effect}", &DebugCmdArrow },
 	{ "grid", "Toggles showing grid.", "", &DebugCmdShowGrid },
 	{ "seedinfo", "Show seed infos for current level.", "", &DebugCmdLevelSeed },
-	{ "spawn", "Spawns monster {name}.", "({count}) {name}", &DebugCmdSpawnMonster },
+	{ "spawnu", "Spawns unique monster {name}.", "{name} ({count})", &DebugCmdSpawnUniqueMonster },
+	{ "spawn", "Spawns monster {name}.", "{name} ({count})", &DebugCmdSpawnMonster },
 	{ "tiledata", "Toggles showing tile data {name} (leave name empty to see a list).", "{name}", &DebugCmdShowTileData },
 	{ "scrollview", "Toggles scroll view feature (with shift+mouse).", "", &DebugCmdScrollView },
 	{ "iteminfo", "Shows info of currently selected item.", "", &DebugCmdItemInfo },
 	{ "questinfo", "Shows info of quests.", "{id}", &DebugCmdQuestInfo },
 	{ "playerinfo", "Shows info of player.", "{playerid}", &DebugCmdPlayerInfo },
 	{ "fps", "Toggles displaying FPS", "", &DebugCmdToggleFPS },
+	{ "trn", "Makes player use TRN {trn} - Write 'plr' before it to look in plrgfx\\ or 'mon' to look in monsters\\monsters\\ - example: trn plr infra is equal to 'plrgfx\\infra.trn'", "{trn}", &DebugCmdChangeTRN },
+	{ "searchmonster", "Searches the automap for {monster}", "{monster}", &DebugCmdSearchMonster },
+	{ "searchitem", "Searches the automap for {item}", "{item}", &DebugCmdSearchItem },
+	{ "searchobject", "Searches the automap for {object}", "{object}", &DebugCmdSearchObject },
+	{ "clearsearch", "Search in the auto map is cleared", "", &DebugCmdClearSearch },
 };
 
 } // namespace
 
 void LoadDebugGFX()
 {
-	pSquareCel = LoadCel("Data\\Square.CEL", 64);
+	pSquareCel = LoadCel("data\\square", 64);
 }
 
 void FreeDebugGFX()
@@ -781,25 +1110,23 @@ void FreeDebugGFX()
 
 void GetDebugMonster()
 {
-	int mi1 = pcursmonst;
-	if (mi1 == -1) {
-		int mi2 = dMonster[cursPosition.x][cursPosition.y];
-		if (mi2 != 0) {
-			mi1 = abs(mi2) - 1;
-		} else {
-			mi1 = DebugMonsterId;
-		}
-	}
-	PrintDebugMonster(mi1);
+	int monsterIndex = pcursmonst;
+	if (monsterIndex == -1)
+		monsterIndex = abs(dMonster[cursPosition.x][cursPosition.y]) - 1;
+
+	if (monsterIndex == -1)
+		monsterIndex = DebugMonsterId;
+
+	PrintDebugMonster(Monsters[monsterIndex]);
 }
 
 void NextDebugMonster()
 {
 	DebugMonsterId++;
-	if (DebugMonsterId == MAXMONSTERS)
+	if (DebugMonsterId == MaxMonsters)
 		DebugMonsterId = 0;
 
-	EventPlrMsg(fmt::format("Current debug monster = {:i}", DebugMonsterId), UiFlags::ColorWhite);
+	EventPlrMsg(StrCat("Current debug monster = ", DebugMonsterId), UiFlags::ColorWhite);
 }
 
 void SetDebugLevelSeedInfos(uint32_t mid1Seed, uint32_t mid2Seed, uint32_t mid3Seed, uint32_t endSeed)
@@ -838,7 +1165,7 @@ bool IsDebugGridInMegatiles()
 	case DebugGridTextItem::AutomapView:
 	case DebugGridTextItem::dungeon:
 	case DebugGridTextItem::pdungeon:
-	case DebugGridTextItem::dflags:
+	case DebugGridTextItem::Protected:
 		return true;
 	default:
 		return false;
@@ -848,19 +1175,19 @@ bool IsDebugGridInMegatiles()
 bool GetDebugGridText(Point dungeonCoords, char *debugGridTextBuffer)
 {
 	int info = 0;
-	Point megaCoords = { (dungeonCoords.x - 16) / 2, (dungeonCoords.y - 16) / 2 };
+	Point megaCoords = dungeonCoords.worldToMega();
 	switch (SelectedDebugGridTextItem) {
 	case DebugGridTextItem::coords:
-		sprintf(debugGridTextBuffer, "%d:%d", dungeonCoords.x, dungeonCoords.y);
+		*BufCopy(debugGridTextBuffer, dungeonCoords.x, ":", dungeonCoords.y) = '\0';
 		return true;
 	case DebugGridTextItem::cursorcoords:
 		if (dungeonCoords != cursPosition)
 			return false;
-		sprintf(debugGridTextBuffer, "%d:%d", dungeonCoords.x, dungeonCoords.y);
+		*BufCopy(debugGridTextBuffer, dungeonCoords.x, ":", dungeonCoords.y) = '\0';
 		return true;
 	case DebugGridTextItem::objectindex: {
 		info = 0;
-		Object *object = ObjectAtPosition(dungeonCoords);
+		Object *object = FindObjectAtPosition(dungeonCoords);
 		if (object != nullptr) {
 			info = static_cast<int>(object->_otype);
 		}
@@ -899,20 +1226,14 @@ bool GetDebugGridText(Point dungeonCoords, char *debugGridTextBuffer)
 	case DebugGridTextItem::dObject:
 		info = dObject[dungeonCoords.x][dungeonCoords.y];
 		break;
-	case DebugGridTextItem::nBlockTable:
-		info = nBlockTable[dPiece[dungeonCoords.x][dungeonCoords.y]];
+	case DebugGridTextItem::Solid:
+		info = TileHasAny(dPiece[dungeonCoords.x][dungeonCoords.y], TileProperties::Solid) << 0 | TileHasAny(dPiece[dungeonCoords.x][dungeonCoords.y], TileProperties::BlockLight) << 1 | TileHasAny(dPiece[dungeonCoords.x][dungeonCoords.y], TileProperties::BlockMissile) << 2;
 		break;
-	case DebugGridTextItem::nSolidTable:
-		info = nSolidTable[dPiece[dungeonCoords.x][dungeonCoords.y]];
+	case DebugGridTextItem::Transparent:
+		info = TileHasAny(dPiece[dungeonCoords.x][dungeonCoords.y], TileProperties::Transparent) << 0 | TileHasAny(dPiece[dungeonCoords.x][dungeonCoords.y], TileProperties::TransparentLeft) << 1 | TileHasAny(dPiece[dungeonCoords.x][dungeonCoords.y], TileProperties::TransparentRight) << 2;
 		break;
-	case DebugGridTextItem::nTransTable:
-		info = nTransTable[dPiece[dungeonCoords.x][dungeonCoords.y]];
-		break;
-	case DebugGridTextItem::nMissileTable:
-		info = nMissileTable[dPiece[dungeonCoords.x][dungeonCoords.y]];
-		break;
-	case DebugGridTextItem::nTrapTable:
-		info = nTrapTable[dPiece[dungeonCoords.x][dungeonCoords.y]];
+	case DebugGridTextItem::Trap:
+		info = TileHasAny(dPiece[dungeonCoords.x][dungeonCoords.y], TileProperties::Trap);
 		break;
 	case DebugGridTextItem::AutomapView:
 		info = AutomapView[megaCoords.x][megaCoords.y];
@@ -923,16 +1244,58 @@ bool GetDebugGridText(Point dungeonCoords, char *debugGridTextBuffer)
 	case DebugGridTextItem::pdungeon:
 		info = pdungeon[megaCoords.x][megaCoords.y];
 		break;
-	case DebugGridTextItem::dflags:
-		info = dflags[megaCoords.x][megaCoords.y];
+	case DebugGridTextItem::Protected:
+		info = Protected.test(megaCoords.x, megaCoords.y);
 		break;
 	case DebugGridTextItem::None:
 		return false;
 	}
 	if (info == 0)
 		return false;
-	sprintf(debugGridTextBuffer, "%d", info);
+	*BufCopy(debugGridTextBuffer, info) = '\0';
 	return true;
+}
+
+bool IsDebugAutomapHighlightNeeded()
+{
+	return SearchMonsters.size() > 0 || SearchItems.size() > 0 || SearchObjects.size() > 0;
+}
+
+bool ShouldHighlightDebugAutomapTile(Point position)
+{
+	auto matchesSearched = [](const string_view name, const std::vector<std::string> &searchedNames) {
+		std::string nameToLower;
+		StrAppend(nameToLower, name);
+		std::transform(nameToLower.begin(), nameToLower.end(), nameToLower.begin(), [](unsigned char c) { return std::tolower(c); });
+		for (const auto &searchedName : searchedNames) {
+			if (nameToLower.find(searchedName) != std::string::npos) {
+				return true;
+			}
+		}
+		return false;
+	};
+
+	if (SearchMonsters.size() > 0 && dMonster[position.x][position.y] != 0) {
+		const int mi = abs(dMonster[position.x][position.y]) - 1;
+		const Monster &monster = Monsters[mi];
+		if (matchesSearched(monster.name(), SearchMonsters))
+			return true;
+	}
+
+	if (SearchItems.size() > 0 && dItem[position.x][position.y] != 0) {
+		const int itemId = abs(dItem[position.x][position.y]) - 1;
+		const Item &item = Items[itemId];
+		if (matchesSearched(item._iIName, SearchItems))
+			return true;
+	}
+
+	if (SearchObjects.size() > 0 && IsObjectAtPosition(position)) {
+		const Object &object = ObjectAtPosition(position);
+		if (matchesSearched(object.name(), SearchObjects))
+			return true;
+	}
+
+	return false;
 }
 
 } // namespace devilution

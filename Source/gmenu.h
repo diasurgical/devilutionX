@@ -18,6 +18,56 @@ struct TMenuItem {
 	uint32_t dwFlags;
 	const char *pszStr;
 	void (*fnMenu)(bool);
+
+	[[nodiscard]] bool enabled() const
+	{
+		return (dwFlags & GMENU_ENABLED) != 0;
+	}
+
+	[[nodiscard]] bool isSlider() const
+	{
+		return (dwFlags & GMENU_SLIDER) != 0;
+	}
+
+	[[nodiscard]] uint16_t sliderStep() const
+	{
+		return dwFlags & 0xFFF;
+	}
+
+	void setSliderStep(uint16_t step)
+	{
+		dwFlags &= 0xFFFFF000;
+		dwFlags |= step;
+	}
+
+	[[nodiscard]] uint16_t sliderSteps() const
+	{
+		return (dwFlags & 0xFFF000) >> 12;
+	}
+
+	void setSliderSteps(uint16_t steps)
+	{
+		dwFlags |= (steps << 12) & 0xFFF000;
+	}
+
+	void addFlags(uint32_t flags)
+	{
+		dwFlags |= flags;
+	}
+
+	void removeFlags(uint32_t flags)
+	{
+		dwFlags &= ~flags;
+	}
+
+	void setEnabled(bool enabled)
+	{
+		if (enabled) {
+			addFlags(GMENU_ENABLED);
+		} else {
+			removeFlags(GMENU_ENABLED);
+		}
+	}
 };
 
 extern TMenuItem *sgpCurrentMenu;
@@ -28,10 +78,9 @@ void gmenu_init_menu();
 bool gmenu_is_active();
 void gmenu_set_items(TMenuItem *pItem, void (*gmFunc)());
 void gmenu_draw(const Surface &out);
-bool gmenu_presskeys(int vkey);
+bool gmenu_presskeys(SDL_Keycode vkey);
 bool gmenu_on_mouse_move();
 bool gmenu_left_mouse(bool isDown);
-void gmenu_enable(TMenuItem *pMenuItem, bool enable);
 
 /**
  * @brief Set the TMenuItem slider position based on the given value

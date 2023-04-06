@@ -113,20 +113,19 @@ TEST(RandomTest, ShiftModDistributionSingleRange)
 	ASSERT_EQ(GenerateRnd(1), 0) << "Interval [0, 1) must return 0 when AbsDistribution yields INT_MIN";
 }
 
-// When called with an upper bound less than 0xFFFF this distribution function discards the low 16 bits of the output
+// When called with an upper bound less than or equal to 0x7FFF this distribution function discards the low 16 bits of the output
 // from the default distribution by performing a shift right of 16 bits. This relies on implementation defined
 // behaviour for negative numbers, the expectation is shift right uses sign carry. See C++17 [expr.shift]
 TEST(RandomTest, ShiftModDistributionSignCarry)
 {
-	// This distribution is used when the upper bound is a value in [1, 65535)
+	// This distribution is used when the upper bound is a value in [1, 32768)
 	// Using an upper bound of 1 means the result always maps to 0, see RandomTest_ShiftModDistributionSingleRange
 
-	// The only negative value return from AbsDistribution is -2147483648
+	// The only negative value returned from AbsDistribution is -2147483648
 	// A sign-preserving shift right of 16 bits gives a result of -32768.
-	SetRndSeed(1457187811); // Test mod with no division
-	ASSERT_EQ(GenerateRnd(65535 - 1), -32768) << "Distribution must map negative numbers using sign carry shifts";
+	// This is greater in magnitude than the limit so always results in a division.
 	SetRndSeed(1457187811); // Test mod when a division occurs
-	ASSERT_EQ(GenerateRnd(32768 - 1), -1) << "Distribution must map negative numbers using sign carry shifts";
+	ASSERT_EQ(GenerateRnd(32767), -1) << "Distribution must map negative numbers using sign carry shifts";
 }
 
 // The Diablo LCG implementation attempts to improve the quality of generated numbers that would only use the low
@@ -134,99 +133,103 @@ TEST(RandomTest, ShiftModDistributionSignCarry)
 // be an inconsistency with the implementation in devilutionx, see the comment for RandomTest_ShiftModDistributionHighBits
 TEST(RandomTest, ShiftModDistributionLowBits)
 {
-	// All the following seeds generate values less than 2^16, so after shifting they give a 0 value
-	constexpr auto maxBound = 65534;
+	constexpr auto maxBound = 32767;
 
+	// All the following seeds generate values less than 2^16, so after shifting they give a 0 value
 	SetRndSeed(3604671459U); // yields 0
-	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution";
+	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution when generator yields 0";
 	SetRndSeed(0); // yields 1
-	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution";
+	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution when generator yields 1";
 	SetRndSeed(2914375622U); // yields -1
-	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution";
+	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution when generator yields -1";
 	SetRndSeed(538964771); // yields 64
-	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution";
+	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution when generator yields 64";
 	SetRndSeed(2375410851U); // yields -64
-	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution";
+	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution when generator yields -64";
 	SetRndSeed(1229260608); // yields 65
-	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution";
+	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution when generator yields 65";
 	SetRndSeed(1685115014); // yields -65
-	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution";
+	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution when generator yields -65";
 	SetRndSeed(1768225379); // yields 128
-	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution";
+	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution when generator yields 128";
 	SetRndSeed(1146150243); // yields -128
-	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution";
+	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution when generator yields -128";
 	SetRndSeed(1480523688); // yields 7625
-	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution";
+	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution when generator yields 7625";
 	SetRndSeed(1433851934); // yields -7625
-	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution";
+	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution when generator yields -7625";
 	SetRndSeed(2382565573U); // yields 32458
-	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution";
+	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution when generator yields 32458";
 	SetRndSeed(531810049); // yields -32458
-	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution";
+	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution when generator yields -32458";
 	SetRndSeed(1625910243); // yields 32768
-	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution";
+	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution when generator yields 32768";
 	SetRndSeed(1288465379); // yields -32768
-	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution";
+	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution when generator yields -32768";
 
 	// -1 from the max bound for the next two to ensure it's not due to a mod with no remainder
 	SetRndSeed(2561524649U); // yields 65534
-	ASSERT_EQ(GenerateRnd(maxBound - 1), 0) << "Invalid distribution";
+	ASSERT_EQ(GenerateRnd(maxBound - 1), 0) << "Invalid distribution when generator yields 65534";
 	SetRndSeed(352850973U); // yields -65534
-	ASSERT_EQ(GenerateRnd(maxBound - 1), 0) << "Invalid distribution";
+	ASSERT_EQ(GenerateRnd(maxBound - 1), 0) << "Invalid distribution when generator yields -65534";
 
 	SetRndSeed(3251820486U); // yields 65535
-	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution";
+	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution when generator yields 65535";
 	SetRndSeed(3957522432U); // yields -65535
-	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution";
+	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution when generator yields -65535";
 }
 
 // The highest value GenerateRnd can return is 32767 (0x7FFF). I suspect this is the Borland rand() implementation
-// This may mean that devilutionx is using an incorrect version as that function was implemented as the following:
+// Diablo appears to have reimplemented this method incorrectly as that function was implemented as the following:
 // uint seed = mult * seed + inc
 // return (seed >> 16) & 0x7FFF
 // i.e., no cast from unsigned to signed, no modulo when building the return value.
 TEST(RandomTest, ShiftModDistributionHighBits)
 {
-	constexpr auto maxBound = 65534;
+	constexpr auto maxBound = 32767;
 	SetRndSeed(3267226595U); // yields 65536
-	ASSERT_EQ(GenerateRnd(maxBound), 1) << "Invalid distribution";
+	ASSERT_EQ(GenerateRnd(maxBound), 1) << "Invalid distribution when generator yields 65536";
 	SetRndSeed(3942116323U); // yields -65536
-	ASSERT_EQ(GenerateRnd(maxBound), 1) << "Invalid distribution";
+	ASSERT_EQ(GenerateRnd(maxBound), 1) << "Invalid distribution when generator yields -65536";
 	SetRndSeed(4279561187U); // yields 131072
-	ASSERT_EQ(GenerateRnd(maxBound), 2) << "Invalid distribution";
+	ASSERT_EQ(GenerateRnd(maxBound), 2) << "Invalid distribution when generator yields 131072";
 	SetRndSeed(2929781731U); // yields -131072
-	ASSERT_EQ(GenerateRnd(maxBound), 2) << "Invalid distribution";
+	ASSERT_EQ(GenerateRnd(maxBound), 2) << "Invalid distribution when generator yields -131072";
 	SetRndSeed(659483619); // yields 262144
-	ASSERT_EQ(GenerateRnd(maxBound), 4) << "Invalid distribution";
+	ASSERT_EQ(GenerateRnd(maxBound), 4) << "Invalid distribution when generator yields 262144";
 	SetRndSeed(2254892003U); // yields -262144
-	ASSERT_EQ(GenerateRnd(maxBound), 4) << "Invalid distribution";
+	ASSERT_EQ(GenerateRnd(maxBound), 4) << "Invalid distribution when generator yields -262144";
 	SetRndSeed(3604671458U); // yields 22695477
-	ASSERT_EQ(GenerateRnd(maxBound), 346) << "Invalid distribution";
+	ASSERT_EQ(GenerateRnd(maxBound), 346) << "Invalid distribution when generator yields 22695477";
 	SetRndSeed(3604671460U); // yields -22695477
-	ASSERT_EQ(GenerateRnd(maxBound), 346) << "Invalid distribution";
+	ASSERT_EQ(GenerateRnd(maxBound), 346) << "Invalid distribution when generator yields -22695477";
 	SetRndSeed(1012371854); // yields 429496729
-	ASSERT_EQ(GenerateRnd(maxBound), 6553) << "Invalid distribution";
+	ASSERT_EQ(GenerateRnd(maxBound), 6553) << "Invalid distribution when generator yields 429496729";
 	SetRndSeed(1902003768); // yields -429496729
-	ASSERT_EQ(GenerateRnd(maxBound), 6553) << "Invalid distribution";
+	ASSERT_EQ(GenerateRnd(maxBound), 6553) << "Invalid distribution when generator yields -429496729";
 	SetRndSeed(189776845); // yields 1212022642
-	ASSERT_EQ(GenerateRnd(maxBound), 18493) << "Invalid distribution";
+	ASSERT_EQ(GenerateRnd(maxBound), 18493) << "Invalid distribution when generator yields 1212022642";
 	SetRndSeed(2724598777); // yields -1212022642
-	ASSERT_EQ(GenerateRnd(maxBound), 18493) << "Invalid distribution";
+	ASSERT_EQ(GenerateRnd(maxBound), 18493) << "Invalid distribution when generator yields -1212022642";
 	SetRndSeed(76596137); // yields 2147483646
-	ASSERT_EQ(GenerateRnd(maxBound), 32767) << "Invalid distribution";
+	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution when generator yields 2147483646";
 	SetRndSeed(2837779485); // yields -2147483646
-	ASSERT_EQ(GenerateRnd(maxBound), 32767) << "Invalid distribution";
+	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution when generator yields -2147483646";
 	SetRndSeed(766891974); // yields 2147483647
-	ASSERT_EQ(GenerateRnd(maxBound), 32767) << "Invalid distribution";
+	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution when generator yields 2147483647";
 	SetRndSeed(2147483648); // yields -2147483647
-	ASSERT_EQ(GenerateRnd(maxBound), 32767) << "Invalid distribution";
+	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution when generator yields -2147483647";
 }
 
 TEST(RandomTest, ModDistributionSignPreserving)
 {
-	// This distribution is used when the upper bound is a value in [65535, 2147483647]
+	// This distribution is used when the upper bound is a value in [32768, 2147483647]
 
 	// Sign preserving modulo when no division is performed cannot be tested in isolation with the current implementation.
+	SetRndSeed(1457187811);
+	ASSERT_EQ(GenerateRnd(32768), 0) << "Distribution must map negative numbers using sign preserving modulo";
+	SetRndSeed(1457187811);
+	ASSERT_EQ(GenerateRnd(32769), -2) << "Distribution must map negative numbers using sign preserving modulo";
 	SetRndSeed(1457187811);
 	ASSERT_EQ(GenerateRnd(65535), -32768) << "Distribution must map negative numbers using sign preserving modulo";
 	SetRndSeed(1457187811);
@@ -234,4 +237,54 @@ TEST(RandomTest, ModDistributionSignPreserving)
 	    << "Distribution must map negative numbers using sign preserving modulo";
 }
 
+TEST(RandomTest, NegativeReturnValues)
+{
+	// The bug in vanilla RNG stemming from mod instead of bitmasking means that negative values are possible for
+	// non-power of 2 arguments to GenerateRnd
+	SetRndSeed(1457187811);
+	EXPECT_EQ(GenerateRnd(3), -2) << "Unexpected return value for a limit of 3";
+
+	SetRndSeed(1457187811);
+	EXPECT_EQ(GenerateRnd(5), -3) << "Unexpected return value for a limit of 5";
+	SetRndSeed(1457187811);
+	EXPECT_EQ(GenerateRnd(6), -2) << "Unexpected return value for a limit of 6";
+	SetRndSeed(1457187811);
+	EXPECT_EQ(GenerateRnd(7), -1) << "Unexpected return value for a limit of 7";
+
+	SetRndSeed(1457187811);
+	EXPECT_EQ(GenerateRnd(11), -10) << "Unexpected return value for a limit of 11";
+
+	SetRndSeed(1457187811);
+	EXPECT_EQ(GenerateRnd(17), -9) << "Unexpected return value for a limit of 17";
+
+	SetRndSeed(1457187811);
+	EXPECT_EQ(GenerateRnd(19), -12) << "Unexpected return value for a limit of 19";
+
+	SetRndSeed(1457187811);
+	EXPECT_EQ(GenerateRnd(22), -10) << "Unexpected return value for a limit of 22";
+	SetRndSeed(1457187811);
+	EXPECT_EQ(GenerateRnd(23), -16) << "Unexpected return value for a limit of 23";
+
+	SetRndSeed(1457187811);
+	EXPECT_EQ(GenerateRnd(25), -18) << "Unexpected return value for a limit of 25";
+
+	SetRndSeed(1457187811);
+	EXPECT_EQ(GenerateRnd(27), -17) << "Unexpected return value for a limit of 27";
+
+	SetRndSeed(1457187811);
+	EXPECT_EQ(GenerateRnd(29), -27) << "Unexpected return value for a limit of 29";
+
+	SetRndSeed(1457187811);
+	EXPECT_EQ(GenerateRnd(31), -1) << "Unexpected return value for a limit of 31";
+
+	for (int i : { 9, 10, 12, 13, 14, 15, 18, 20, 21, 24, 26, 28, 30 }) {
+		SetRndSeed(1457187811);
+		EXPECT_EQ(GenerateRnd(i), -8) << "Unexpected return value for a limit of " << i;
+	}
+
+	for (int i = 1; i < 32768; i *= 2) {
+		SetRndSeed(1457187811);
+		EXPECT_EQ(GenerateRnd(i), 0) << "Expect powers of 2 such as " << i << " to cleanly divide the int_min RNG value ";
+	}
+}
 } // namespace devilution

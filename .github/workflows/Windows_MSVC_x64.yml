@@ -1,0 +1,66 @@
+name: Windows MSVC x64
+
+on:
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - '*.md'
+  pull_request:
+    types: [ opened, synchronize ]
+    paths-ignore:
+      - '*.md'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: ccache
+      uses: hendrikmuhs/ccache-action@v1.2
+
+    - name: Install latest CMake
+      uses: lukka/get-cmake@latest
+
+    - name: Restore or setup vcpkg
+      uses: lukka/run-vcpkg@v10
+      with:
+        vcpkgGitCommitId: '98f8d00e89fb6a8019c2045cfa1edbe9d92d3405'
+
+    - name: Fetch test data
+      run: |
+          mkdir build-ninja-vcpkg-relwithdebinfo
+          Invoke-WebRequest -Uri "https://github.com/diasurgical/devilutionx-assets/releases/download/v2/spawn.mpq" -OutFile "build-ninja-vcpkg-relwithdebinfo/spawn.mpq" -Resume
+
+    - name: Get CMakePresets.json
+      run: cp Packaging/windows/CMakePresets.json .
+
+    - name: Run CMake consuming CMakePresets.json and vcpkg.json by mean of vcpkg.
+      uses: lukka/run-cmake@v10
+      with:
+        configurePreset: 'ninja-vcpkg-relwithdebinfo'
+        buildPreset: 'ninja-vcpkg-relwithdebinfo'
+        testPreset: 'ninja-vcpkg-relwithdebinfo'
+
+    - name: Upload-Package
+      if: ${{ !env.ACT }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: devilutionx.exe
+        path: |
+            build-ninja-vcpkg-relwithdebinfo/devilutionx.exe
+            build-ninja-vcpkg-relwithdebinfo/bz2.dll
+            build-ninja-vcpkg-relwithdebinfo/fmt.dll
+            build-ninja-vcpkg-relwithdebinfo/libpng16.dll
+            build-ninja-vcpkg-relwithdebinfo/libsodium.dll
+            build-ninja-vcpkg-relwithdebinfo/SDL2.dll
+            build-ninja-vcpkg-relwithdebinfo/SDL2_image.dll
+            build-ninja-vcpkg-relwithdebinfo/zlib1.dll

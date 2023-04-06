@@ -13,6 +13,7 @@
 #include "storm/storm_net.hpp"
 #include "utils/language.h"
 #include "utils/sdl_thread.h"
+#include "utils/str_cat.hpp"
 #include "utils/ui_fwd.h"
 
 namespace devilution {
@@ -23,20 +24,6 @@ namespace {
 bool Terminating = false;
 /** Thread id of the last callee to FreeDlg(). */
 SDL_threadID CleanupThreadId;
-
-/**
- * @brief Displays an error message box based on the given format string and variable argument list.
- * @param pszFmt Error message format
- * @param va Additional parameters for message format
- */
-void MsgBox(const char *pszFmt, va_list va)
-{
-	char text[256];
-
-	vsnprintf(text, sizeof(text), pszFmt, va);
-
-	UiErrorOkDialog(_("Error"), text);
-}
 
 /**
  * @brief Cleans up after a fatal application error.
@@ -59,79 +46,48 @@ void FreeDlg()
 
 } // namespace
 
-void app_fatal(const char *pszFmt, ...)
+void app_fatal(string_view str)
 {
-	va_list va;
-
-	va_start(va, pszFmt);
 	FreeDlg();
-
-	if (pszFmt != nullptr)
-		MsgBox(pszFmt, va);
-
-	va_end(va);
-
+	UiErrorOkDialog(_("Error"), str);
 	diablo_quit(1);
-}
-
-void DrawDlg(const char *pszFmt, ...)
-{
-	char text[256];
-	va_list va;
-
-	va_start(va, pszFmt);
-	vsnprintf(text, sizeof(text), pszFmt, va);
-	va_end(va);
-
-	UiErrorOkDialog(PROJECT_NAME, text, false);
 }
 
 #ifdef _DEBUG
 void assert_fail(int nLineNo, const char *pszFile, const char *pszFail)
 {
-	app_fatal("assertion failed (%s:%i)\n%s", pszFile, nLineNo, pszFail);
+	app_fatal(StrCat("assertion failed (", pszFile, ":", nLineNo, ")\n", pszFail));
 }
 #endif
 
-void ErrDlg(const char *title, const char *error, const char *logFilePath, int logLineNr)
+void ErrDlg(const char *title, string_view error, string_view logFilePath, int logLineNr)
 {
-	char text[1024];
-
 	FreeDlg();
 
-	strcpy(text, fmt::format(_(/* TRANSLATORS: Error message that displays relevant information for bug report */ "{:s}\n\nThe error occurred at: {:s} line {:d}"), error, logFilePath, logLineNr).c_str());
+	std::string text = fmt::format(fmt::runtime(_(/* TRANSLATORS: Error message that displays relevant information for bug report */ "{:s}\n\nThe error occurred at: {:s} line {:d}")), error, logFilePath, logLineNr);
 
 	UiErrorOkDialog(title, text);
-	app_fatal(nullptr);
+	diablo_quit(1);
 }
 
-void InsertCDDlg(const char *archiveName)
+void InsertCDDlg(string_view archiveName)
 {
-	char text[1024];
-
-	snprintf(
-	    text,
-	    sizeof(text),
-	    "%s",
-	    fmt::format(
-	        _("Unable to open main data archive ({:s}).\n"
-	          "\n"
-	          "Make sure that it is in the game folder."),
-	        archiveName)
-	        .c_str());
+	std::string text = fmt::format(
+	    fmt::runtime(_("Unable to open main data archive ({:s}).\n"
+	                   "\n"
+	                   "Make sure that it is in the game folder.")),
+	    archiveName);
 
 	UiErrorOkDialog(_("Data File Error"), text);
-	app_fatal(nullptr);
+	diablo_quit(1);
 }
 
-void DirErrorDlg(const char *error)
+void DirErrorDlg(string_view error)
 {
-	char text[1024];
-
-	strcpy(text, fmt::format(_(/* TRANSLATORS: Error when Program is not allowed to write data */ "Unable to write to location:\n{:s}"), error).c_str());
+	std::string text = fmt::format(fmt::runtime(_(/* TRANSLATORS: Error when Program is not allowed to write data */ "Unable to write to location:\n{:s}")), error);
 
 	UiErrorOkDialog(_("Read-Only Directory Error"), text);
-	app_fatal(nullptr);
+	diablo_quit(1);
 }
 
 } // namespace devilution

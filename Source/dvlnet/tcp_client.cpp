@@ -6,7 +6,6 @@
 #include <exception>
 #include <functional>
 #include <memory>
-#include <sstream>
 #include <stdexcept>
 #include <system_error>
 
@@ -18,7 +17,7 @@ namespace net {
 int tcp_client::create(std::string addrstr)
 {
 	try {
-		auto port = sgOptions.Network.nPort;
+		auto port = *sgOptions.Network.port;
 		local_server = std::make_unique<tcp_server>(ioc, addrstr, port, *pktfty);
 		return join(local_server->LocalhostSelf());
 	} catch (std::system_error &e) {
@@ -34,7 +33,7 @@ int tcp_client::join(std::string addrstr)
 
 	try {
 		std::stringstream port;
-		port << sgOptions.Network.nPort;
+		port << *sgOptions.Network.port;
 		asio::connect(sock, resolver.resolve(addrstr, port.str()));
 		asio::ip::tcp::no_delay option(true);
 		sock.set_option(option);
@@ -62,11 +61,16 @@ int tcp_client::join(std::string addrstr)
 		}
 	}
 	if (plr_self == PLR_BROADCAST) {
-		SDL_SetError("%s", _("Unable to connect"));
+		SDL_SetError("%s", _("Unable to connect").data());
 		return -1;
 	}
 
 	return plr_self;
+}
+
+bool tcp_client::IsGameHost()
+{
+	return local_server != nullptr;
 }
 
 void tcp_client::poll()
@@ -83,7 +87,7 @@ void tcp_client::HandleReceive(const asio::error_code &error, size_t bytesRead)
 		return;
 	}
 	if (bytesRead == 0) {
-		throw std::runtime_error(_("error: read 0 bytes from server"));
+		throw std::runtime_error(_("error: read 0 bytes from server").data());
 	}
 	recv_buffer.resize(bytesRead);
 	recv_queue.Write(std::move(recv_buffer));

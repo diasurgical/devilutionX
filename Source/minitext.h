@@ -10,6 +10,7 @@
 
 namespace devilution {
 
+/** Specify if the quest dialog window is being shown */
 extern bool qtextflag;
 
 /**

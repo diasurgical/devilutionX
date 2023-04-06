@@ -14,14 +14,14 @@
 namespace devilution {
 class MpqWriter {
 public:
-	bool Open(const char *path);
-
-	bool Close(bool clearTables = true);
-
-	~MpqWriter()
+	explicit MpqWriter(const char *path);
+	explicit MpqWriter(const std::string &path)
+	    : MpqWriter(path.c_str())
 	{
-		Close();
 	}
+	MpqWriter(MpqWriter &&other) = default;
+	MpqWriter &operator=(MpqWriter &&other) = default;
+	~MpqWriter();
 
 	bool HasFile(const char *name) const;
 
@@ -56,11 +56,9 @@ private:
 
 	LoggedFStream stream_;
 	std::string name_;
-	std::uintmax_t size_;
-	bool modified_;
-	bool exists_;
-	MpqHashEntry *hashTable_;
-	MpqBlockEntry *blockTable_;
+	std::uintmax_t size_ {};
+	std::unique_ptr<MpqHashEntry[]> hashTable_;
+	std::unique_ptr<MpqBlockEntry[]> blockTable_;
 
 // Amiga cannot Seekp beyond EOF.
 // See https://github.com/bebbo/libnix/issues/30
@@ -69,7 +67,7 @@ private:
 #endif
 
 #ifndef CAN_SEEKP_BEYOND_EOF
-	std::streampos streamBegin_;
+	long streamBegin_;
 #endif
 };
 

@@ -11,4 +11,5 @@
 	<string name="missing_game_data">Game data missing</string>
 	<string name="download_started">Download started</string>
 	<string name="shareware_data">Diablo Demo Data</string>
+	<string name="import_short_label">Import Data</string>
 </resources>

@@ -10,6 +10,7 @@
 #include "utils/sdl2_backports.h"
 #endif
 
+#include "utils/attributes.h"
 #include "utils/sdl_ptrs.h"
 #include "utils/ui_fwd.h"
 
@@ -17,6 +18,7 @@ namespace devilution {
 
 extern int refreshDelay; // Screen refresh rate in nanoseconds
 extern SDL_Window *window;
+extern SDL_Window *ghMainWnd;
 extern SDL_Renderer *renderer;
 #ifndef USE_SDL1
 extern SDLTextureUniquePtr texture;
@@ -25,6 +27,7 @@ extern SDLTextureUniquePtr texture;
 extern SDLPaletteUniquePtr Palette;
 extern SDL_Surface *PalSurface;
 extern unsigned int pal_surface_palette_version;
+extern DVL_API_FOR_TEST Size forceResolution;
 
 #ifdef USE_SDL1
 void SetVideoMode(int width, int height, int bpp, uint32_t flags);
@@ -58,10 +61,13 @@ void OutputToLogical(T *x, T *y)
 #ifndef USE_SDL1
 	if (!renderer)
 		return;
+
 	float scaleX;
 	SDL_RenderGetScale(renderer, &scaleX, NULL);
-	*x = static_cast<T>(*x / scaleX);
-	*y = static_cast<T>(*y / scaleX);
+	float scaleDpi = GetDpiScalingFactor();
+	float scale = scaleX / scaleDpi;
+	*x = static_cast<T>(*x / scale);
+	*y = static_cast<T>(*y / scale);
 
 	SDL_Rect view;
 	SDL_RenderGetViewport(renderer, &view);
@@ -91,8 +97,10 @@ void LogicalToOutput(T *x, T *y)
 
 	float scaleX;
 	SDL_RenderGetScale(renderer, &scaleX, NULL);
-	*x = static_cast<T>(*x * scaleX);
-	*y = static_cast<T>(*y * scaleX);
+	float scaleDpi = GetDpiScalingFactor();
+	float scale = scaleX / scaleDpi;
+	*x = static_cast<T>(*x * scale);
+	*y = static_cast<T>(*y * scale);
 #else
 	if (!OutputRequiresScaling())
 		return;

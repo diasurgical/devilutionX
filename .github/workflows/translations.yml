@@ -4,8 +4,16 @@ on:
   push:
     branches:
       - master
+    paths-ignore:
+      - '*.md'
   pull_request:
     types: [ opened, synchronize ]
+    paths-ignore:
+      - '*.md'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   fmt-check:
@@ -17,7 +25,7 @@ jobs:
         fetch-depth: 0
 
     - name: Install polib
-      run: sudo apt update && sudo apt install -y python3-polib
+      run: sudo apt-get update && sudo apt-get install -y python3-polib
 
     - name: Check
       working-directory: ${{github.workspace}}

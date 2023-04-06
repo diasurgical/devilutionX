@@ -5,7 +5,6 @@
 #include <utility>
 #include <vector>
 
-#include "inv.h"
 #include "items.h"
 #include "player.h"
 
@@ -31,7 +30,7 @@ public:
 		    , count_(count)
 		    , index_(index)
 		{
-			AdvancePastEmpty();
+			advancePastEmpty();
 		}
 
 		pointer operator->() const
@@ -47,7 +46,7 @@ public:
 		Iterator &operator++()
 		{
 			++index_;
-			AdvancePastEmpty();
+			advancePastEmpty();
 			return *this;
 		}
 
@@ -68,18 +67,18 @@ public:
 			return !(*this == other);
 		}
 
-		[[nodiscard]] bool AtEnd() const
+		[[nodiscard]] bool atEnd() const
 		{
 			return index_ == count_;
 		}
 
-		[[nodiscard]] std::size_t Index() const
+		[[nodiscard]] std::size_t index() const
 		{
 			return index_;
 		}
 
 	private:
-		void AdvancePastEmpty()
+		void advancePastEmpty()
 		{
 			while (index_ < count_ && items_[index_].isEmpty()) {
 				++index_;
@@ -97,12 +96,12 @@ public:
 	{
 	}
 
-	[[nodiscard]] Iterator begin() const // NOLINT(readability-identifier-naming)
+	[[nodiscard]] Iterator begin() const
 	{
 		return Iterator { items_, count_, 0 };
 	}
 
-	[[nodiscard]] Iterator end() const // NOLINT(readability-identifier-naming)
+	[[nodiscard]] Iterator end() const
 	{
 		return Iterator { nullptr, count_, count_ };
 	}
@@ -130,7 +129,7 @@ public:
 		explicit Iterator(std::vector<ItemsContainerRange::Iterator> iterators)
 		    : iterators_(std::move(iterators))
 		{
-			AdvancePastEmpty();
+			advancePastEmpty();
 		}
 
 		pointer operator->() const
@@ -146,7 +145,7 @@ public:
 		Iterator &operator++()
 		{
 			++iterators_[current_];
-			AdvancePastEmpty();
+			advancePastEmpty();
 			return *this;
 		}
 
@@ -167,9 +166,9 @@ public:
 		}
 
 	private:
-		void AdvancePastEmpty()
+		void advancePastEmpty()
 		{
-			while (current_ + 1 < iterators_.size() && iterators_[current_].AtEnd()) {
+			while (current_ + 1 < iterators_.size() && iterators_[current_].atEnd()) {
 				++current_;
 			}
 		}
@@ -189,18 +188,18 @@ public:
 	{
 	}
 
-	[[nodiscard]] ItemsContainerRange::Iterator begin() const // NOLINT(readability-identifier-naming)
+	[[nodiscard]] ItemsContainerRange::Iterator begin() const
 	{
-		return ItemsContainerRange::Iterator { &player_->InvBody[0], ContainerSize(), 0 };
+		return ItemsContainerRange::Iterator { &player_->InvBody[0], containerSize(), 0 };
 	}
 
-	[[nodiscard]] ItemsContainerRange::Iterator end() const // NOLINT(readability-identifier-naming)
+	[[nodiscard]] ItemsContainerRange::Iterator end() const
 	{
-		return ItemsContainerRange::Iterator { nullptr, ContainerSize(), ContainerSize() };
+		return ItemsContainerRange::Iterator { nullptr, containerSize(), containerSize() };
 	}
 
 private:
-	[[nodiscard]] std::size_t ContainerSize() const
+	[[nodiscard]] std::size_t containerSize() const
 	{
 		return sizeof(player_->InvBody) / sizeof(player_->InvBody[0]);
 	}
@@ -218,18 +217,18 @@ public:
 	{
 	}
 
-	[[nodiscard]] ItemsContainerRange::Iterator begin() const // NOLINT(readability-identifier-naming)
+	[[nodiscard]] ItemsContainerRange::Iterator begin() const
 	{
-		return ItemsContainerRange::Iterator { &player_->InvList[0], ContainerSize(), 0 };
+		return ItemsContainerRange::Iterator { &player_->InvList[0], containerSize(), 0 };
 	}
 
-	[[nodiscard]] ItemsContainerRange::Iterator end() const // NOLINT(readability-identifier-naming)
+	[[nodiscard]] ItemsContainerRange::Iterator end() const
 	{
-		return ItemsContainerRange::Iterator { nullptr, ContainerSize(), ContainerSize() };
+		return ItemsContainerRange::Iterator { nullptr, containerSize(), containerSize() };
 	}
 
 private:
-	[[nodiscard]] std::size_t ContainerSize() const
+	[[nodiscard]] std::size_t containerSize() const
 	{
 		return static_cast<std::size_t>(player_->_pNumInv);
 	}
@@ -247,18 +246,18 @@ public:
 	{
 	}
 
-	[[nodiscard]] ItemsContainerRange::Iterator begin() const // NOLINT(readability-identifier-naming)
+	[[nodiscard]] ItemsContainerRange::Iterator begin() const
 	{
-		return ItemsContainerRange::Iterator { &player_->SpdList[0], ContainerSize(), 0 };
+		return ItemsContainerRange::Iterator { &player_->SpdList[0], containerSize(), 0 };
 	}
 
-	[[nodiscard]] ItemsContainerRange::Iterator end() const // NOLINT(readability-identifier-naming)
+	[[nodiscard]] ItemsContainerRange::Iterator end() const
 	{
-		return ItemsContainerRange::Iterator { nullptr, ContainerSize(), ContainerSize() };
+		return ItemsContainerRange::Iterator { nullptr, containerSize(), containerSize() };
 	}
 
 private:
-	[[nodiscard]] std::size_t ContainerSize() const
+	[[nodiscard]] std::size_t containerSize() const
 	{
 		return sizeof(player_->SpdList) / sizeof(player_->SpdList[0]);
 	}
@@ -276,7 +275,7 @@ public:
 	{
 	}
 
-	[[nodiscard]] ItemsContainerListRange::Iterator begin() const // NOLINT(readability-identifier-naming)
+	[[nodiscard]] ItemsContainerListRange::Iterator begin() const
 	{
 		return ItemsContainerListRange::Iterator({
 		    InventoryPlayerItemsRange(*player_).begin(),
@@ -284,7 +283,7 @@ public:
 		});
 	}
 
-	[[nodiscard]] ItemsContainerListRange::Iterator end() const // NOLINT(readability-identifier-naming)
+	[[nodiscard]] ItemsContainerListRange::Iterator end() const
 	{
 		return ItemsContainerListRange::Iterator({
 		    InventoryPlayerItemsRange(*player_).end(),
@@ -306,7 +305,7 @@ public:
 	{
 	}
 
-	[[nodiscard]] ItemsContainerListRange::Iterator begin() const // NOLINT(readability-identifier-naming)
+	[[nodiscard]] ItemsContainerListRange::Iterator begin() const
 	{
 		return ItemsContainerListRange::Iterator({
 		    EquippedPlayerItemsRange(*player_).begin(),
@@ -315,7 +314,7 @@ public:
 		});
 	}
 
-	[[nodiscard]] ItemsContainerListRange::Iterator end() const // NOLINT(readability-identifier-naming)
+	[[nodiscard]] ItemsContainerListRange::Iterator end() const
 	{
 		return ItemsContainerListRange::Iterator({
 		    EquippedPlayerItemsRange(*player_).end(),

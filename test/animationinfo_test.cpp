@@ -5,17 +5,24 @@
 
 using namespace devilution;
 
+enum class TestDataType {
+	SetNewAnimation,
+	GameTick,
+	Rendering
+};
+
 /**
  * @brief Represents a Action in the game_logic or rendering.
  */
 struct TestData {
 	virtual ~TestData() = default;
+	virtual TestDataType type() const = 0;
 };
 
 /**
- * @brief Represents a call to SetNewAnimation
+ * @brief Represents a call to setNewAnimation
  */
-struct SetNewAnimationData : TestData {
+struct SetNewAnimationData : public TestData {
 	SetNewAnimationData(int numberOfFrames, int delayLen, AnimationDistributionFlags params = AnimationDistributionFlags::None, int numSkippedFrames = 0, int distributeFramesBeforeFrame = 0)
 	{
 		_NumberOfFrames = numberOfFrames;
@@ -24,6 +31,12 @@ struct SetNewAnimationData : TestData {
 		_NumSkippedFrames = numSkippedFrames;
 		_DistributeFramesBeforeFrame = distributeFramesBeforeFrame;
 	}
+
+	TestDataType type() const override
+	{
+		return TestDataType::SetNewAnimation;
+	}
+
 	int _NumberOfFrames;
 	int _DelayLen;
 	AnimationDistributionFlags _Params;
@@ -32,7 +45,7 @@ struct SetNewAnimationData : TestData {
 };
 
 /**
- * @brief Represents a GameTick, this includes skipping of Frames (for example because of Fastest Attack Modifier) and ProcessAnimation (which also updates Animation Frame/Count).
+ * @brief Represents a GameTick, this includes skipping of Frames (for example because of Fastest Attack Modifier) and processAnimation (which also updates Animation Frame/Count).
  */
 struct GameTickData : TestData {
 	int _ExpectedAnimationFrame;
@@ -41,6 +54,11 @@ struct GameTickData : TestData {
 	{
 		_ExpectedAnimationFrame = expectedAnimationFrame;
 		_ExpectedAnimationCnt = expectedAnimationCnt;
+	}
+
+	TestDataType type() const override
+	{
+		return TestDataType::GameTick;
 	}
 };
 
@@ -59,6 +77,11 @@ struct RenderingData : TestData {
 		this->_fProgressToNextGameTick = fProgressToNextGameTick;
 		this->_ExpectedRenderingFrame = expectedRenderingFrame;
 	}
+
+	TestDataType type() const override
+	{
+		return TestDataType::Rendering;
+	}
 };
 
 /**
@@ -73,28 +96,28 @@ void RunAnimationTest(const std::vector<TestData *> &vecTestData)
 
 	int currentGameTick = 0;
 	for (TestData *x : vecTestData) {
-		auto setNewAnimationData = dynamic_cast<SetNewAnimationData *>(x);
-		if (setNewAnimationData != nullptr) {
-			animInfo.SetNewAnimation(nullptr, setNewAnimationData->_NumberOfFrames, setNewAnimationData->_DelayLen, setNewAnimationData->_Params, setNewAnimationData->_NumSkippedFrames, setNewAnimationData->_DistributeFramesBeforeFrame);
-		}
-
-		auto gameTickData = dynamic_cast<GameTickData *>(x);
-		if (gameTickData != nullptr) {
+		switch (x->type()) {
+		case TestDataType::SetNewAnimation: {
+			auto setNewAnimationData = static_cast<SetNewAnimationData *>(x);
+			animInfo.setNewAnimation(std::nullopt, setNewAnimationData->_NumberOfFrames, setNewAnimationData->_DelayLen, setNewAnimationData->_Params, setNewAnimationData->_NumSkippedFrames, setNewAnimationData->_DistributeFramesBeforeFrame);
+		} break;
+		case TestDataType::GameTick: {
+			auto gameTickData = static_cast<GameTickData *>(x);
 			currentGameTick += 1;
-			animInfo.ProcessAnimation();
-			EXPECT_EQ(animInfo.CurrentFrame, gameTickData->_ExpectedAnimationFrame);
-			EXPECT_EQ(animInfo.TickCounterOfCurrentFrame, gameTickData->_ExpectedAnimationCnt);
-		}
-
-		auto renderingData = dynamic_cast<RenderingData *>(x);
-		if (renderingData != nullptr) {
-			gfProgressToNextGameTick = renderingData->_fProgressToNextGameTick;
-			EXPECT_EQ(animInfo.GetFrameToUseForRendering(), renderingData->_ExpectedRenderingFrame)
+			animInfo.processAnimation();
+			EXPECT_EQ(animInfo.currentFrame, gameTickData->_ExpectedAnimationFrame);
+			EXPECT_EQ(animInfo.tickCounterOfCurrentFrame, gameTickData->_ExpectedAnimationCnt);
+		} break;
+		case TestDataType::Rendering: {
+			auto renderingData = static_cast<RenderingData *>(x);
+			ProgressToNextGameTick = static_cast<uint8_t>(renderingData->_fProgressToNextGameTick * AnimationInfo::baseValueFraction);
+			EXPECT_EQ(animInfo.getFrameToUseForRendering(), renderingData->_ExpectedRenderingFrame)
 			    << std::fixed << std::setprecision(2)
 			    << "ProgressToNextGameTick: " << renderingData->_fProgressToNextGameTick
-			    << " CurrentFrame: " << animInfo.CurrentFrame
-			    << " DelayCounter: " << animInfo.TickCounterOfCurrentFrame
+			    << " currentFrame: " << animInfo.currentFrame
+			    << " DelayCounter: " << animInfo.tickCounterOfCurrentFrame
 			    << " GameTick: " << currentGameTick;
+		} break;
 		}
 	}
 	for (TestData *x : vecTestData) {
@@ -107,12 +130,17 @@ TEST(AnimationInfo, AttackSwordWarrior) // ProcessAnimationPending should be con
 	RunAnimationTest(
 	    {
 	        new SetNewAnimationData(16, 1, AnimationDistributionFlags::ProcessAnimationPending, 0, 9),
-	        // ProcessAnimation directly after StartAttack (in same GameTick). So we don't see any rendering before.
+	        // processAnimation directly after StartAttack (in same GameTick). So we don't see any rendering before.
+	        new GameTickData(1, 0),
+	        new RenderingData(0.0f, 0),
+	        new RenderingData(0.3f, 0),
+	        new RenderingData(0.6f, 0),
+	        new RenderingData(0.8f, 0),
 	        new GameTickData(2, 0),
 	        new RenderingData(0.0f, 1),
 	        new RenderingData(0.3f, 1),
 	        new RenderingData(0.6f, 1),
-	        new RenderingData(0.8f, 1),
+	        new RenderingData(0.8f, 2),
 	        new GameTickData(3, 0),
 	        new RenderingData(0.0f, 2),
 	        new RenderingData(0.3f, 2),
@@ -121,7 +149,7 @@ TEST(AnimationInfo, AttackSwordWarrior) // ProcessAnimationPending should be con
 	        new GameTickData(4, 0),
 	        new RenderingData(0.0f, 3),
 	        new RenderingData(0.3f, 3),
-	        new RenderingData(0.6f, 3),
+	        new RenderingData(0.6f, 4),
 	        new RenderingData(0.8f, 4),
 	        new GameTickData(5, 0),
 	        new RenderingData(0.0f, 4),
@@ -130,7 +158,7 @@ TEST(AnimationInfo, AttackSwordWarrior) // ProcessAnimationPending should be con
 	        new RenderingData(0.8f, 5),
 	        new GameTickData(6, 0),
 	        new RenderingData(0.0f, 5),
-	        new RenderingData(0.3f, 5),
+	        new RenderingData(0.3f, 6),
 	        new RenderingData(0.6f, 6),
 	        new RenderingData(0.8f, 6),
 	        new GameTickData(7, 0),
@@ -138,30 +166,25 @@ TEST(AnimationInfo, AttackSwordWarrior) // ProcessAnimationPending should be con
 	        new RenderingData(0.3f, 7),
 	        new RenderingData(0.6f, 7),
 	        new RenderingData(0.8f, 7),
-	        new GameTickData(8, 0),
-	        new RenderingData(0.0f, 7),
-	        new RenderingData(0.3f, 8),
-	        new RenderingData(0.6f, 8),
-	        new RenderingData(0.8f, 8),
 
 	        // After this GameTick, the Animation Distribution Logic is disabled
+	        new GameTickData(8, 0),
+	        new RenderingData(0.1f, 8),
 	        new GameTickData(9, 0),
-	        new RenderingData(0.1f, 9),
+	        new RenderingData(0.4f, 9),
 	        new GameTickData(10, 0),
 	        new RenderingData(0.4f, 10),
 	        new GameTickData(11, 0),
-	        new RenderingData(0.4f, 11),
+	        new RenderingData(0.3f, 11),
 	        new GameTickData(12, 0),
-	        new RenderingData(0.3f, 12),
+	        new RenderingData(0.0f, 12),
 	        new GameTickData(13, 0),
-	        new RenderingData(0.0f, 13),
+	        new RenderingData(0.6f, 13),
 	        new GameTickData(14, 0),
 	        new RenderingData(0.6f, 14),
 	        new GameTickData(15, 0),
 	        new RenderingData(0.6f, 15),
-	        new GameTickData(16, 0),
-	        new RenderingData(0.6f, 16),
-	        // Animation stopped cause PM_DoAttack would stop the Animation "if (plr[pnum].AnimInfo.CurrentFrame == plr[pnum]._pAFrames) {"
+	        // Animation stopped cause PM_DoAttack would stop the Animation "if (plr[pnum].AnimInfo.currentFrame == plr[pnum]._pAFrames - 1) {"
 	    });
 }
 
@@ -170,51 +193,51 @@ TEST(AnimationInfo, AttackSwordWarriorWithFastestAttack) // Skipped frames and P
 	RunAnimationTest(
 	    {
 	        new SetNewAnimationData(16, 1, AnimationDistributionFlags::ProcessAnimationPending, 2, 9),
-	        // ProcessAnimation directly after StartAttack (in same GameTick). So we don't see any rendering before.
+	        // processAnimation directly after StartAttack (in same GameTick). So we don't see any rendering before.
+	        new GameTickData(3, 0),
+	        new RenderingData(0.0f, 0),
+	        new RenderingData(0.3f, 0),
+	        new RenderingData(0.6f, 0),
+	        new RenderingData(0.8f, 1),
 	        new GameTickData(4, 0),
 	        new RenderingData(0.0f, 1),
-	        new RenderingData(0.3f, 1),
-	        new RenderingData(0.6f, 1),
+	        new RenderingData(0.3f, 2),
+	        new RenderingData(0.6f, 2),
 	        new RenderingData(0.8f, 2),
 	        new GameTickData(5, 0),
-	        new RenderingData(0.0f, 2),
+	        new RenderingData(0.0f, 3),
 	        new RenderingData(0.3f, 3),
-	        new RenderingData(0.6f, 3),
-	        new RenderingData(0.8f, 3),
+	        new RenderingData(0.6f, 4),
+	        new RenderingData(0.8f, 4),
 	        new GameTickData(6, 0),
 	        new RenderingData(0.0f, 4),
-	        new RenderingData(0.3f, 4),
+	        new RenderingData(0.3f, 5),
 	        new RenderingData(0.6f, 5),
-	        new RenderingData(0.8f, 5),
+	        new RenderingData(0.8f, 6),
 	        new GameTickData(7, 0),
-	        new RenderingData(0.0f, 5),
+	        new RenderingData(0.0f, 6),
 	        new RenderingData(0.3f, 6),
-	        new RenderingData(0.6f, 6),
+	        new RenderingData(0.6f, 7),
 	        new RenderingData(0.8f, 7),
-	        new GameTickData(8, 0),
-	        new RenderingData(0.0f, 7),
-	        new RenderingData(0.3f, 7),
-	        new RenderingData(0.6f, 8),
-	        new RenderingData(0.8f, 8),
 
 	        // After this GameTick, the Animation Distribution Logic is disabled
+	        new GameTickData(8, 0),
+	        new RenderingData(0.1f, 8),
 	        new GameTickData(9, 0),
-	        new RenderingData(0.1f, 9),
+	        new RenderingData(0.4f, 9),
 	        new GameTickData(10, 0),
 	        new RenderingData(0.4f, 10),
 	        new GameTickData(11, 0),
-	        new RenderingData(0.4f, 11),
+	        new RenderingData(0.3f, 11),
 	        new GameTickData(12, 0),
-	        new RenderingData(0.3f, 12),
+	        new RenderingData(0.0f, 12),
 	        new GameTickData(13, 0),
-	        new RenderingData(0.0f, 13),
+	        new RenderingData(0.6f, 13),
 	        new GameTickData(14, 0),
 	        new RenderingData(0.6f, 14),
 	        new GameTickData(15, 0),
 	        new RenderingData(0.6f, 15),
-	        new GameTickData(16, 0),
-	        new RenderingData(0.6f, 16),
-	        // Animation stopped cause PM_DoAttack would stop the Animation "if (plr[pnum].AnimInfo.CurrentFrame == plr[pnum]._pAFrames) {"
+	        // Animation stopped cause PM_DoAttack would stop the Animation "if (plr[pnum].AnimInfo.currentFrame == plr[pnum]._pAFrames - 1) {"
 	    });
 }
 
@@ -226,18 +249,152 @@ TEST(AnimationInfo, AttackSwordWarriorRepeated)
 	RunAnimationTest(
 	    {
 	        new SetNewAnimationData(16, 1, AnimationDistributionFlags::ProcessAnimationPending, 0, 9),
-	        // ProcessAnimation directly after StartAttack (in same GameTick). So we don't see any rendering before.
+	        // processAnimation directly after StartAttack (in same GameTick). So we don't see any rendering before.
+	        new GameTickData(1, 0),
+	        new RenderingData(0.0f, 0),
+	        new RenderingData(0.3f, 0),
+	        new RenderingData(0.6f, 0),
+	        new RenderingData(0.8f, 0),
 	        new GameTickData(2, 0),
 	        new RenderingData(0.0f, 1),
 	        new RenderingData(0.3f, 1),
 	        new RenderingData(0.6f, 1),
-	        new RenderingData(0.8f, 1),
+	        new RenderingData(0.8f, 2),
 	        new GameTickData(3, 0),
 	        new RenderingData(0.0f, 2),
 	        new RenderingData(0.3f, 2),
 	        new RenderingData(0.6f, 2),
 	        new RenderingData(0.8f, 3),
 	        new GameTickData(4, 0),
+	        new RenderingData(0.0f, 3),
+	        new RenderingData(0.3f, 3),
+	        new RenderingData(0.6f, 4),
+	        new RenderingData(0.8f, 4),
+	        new GameTickData(5, 0),
+	        new RenderingData(0.0f, 4),
+	        new RenderingData(0.3f, 4),
+	        new RenderingData(0.6f, 5),
+	        new RenderingData(0.8f, 5),
+	        new GameTickData(6, 0),
+	        new RenderingData(0.0f, 5),
+	        new RenderingData(0.3f, 6),
+	        new RenderingData(0.6f, 6),
+	        new RenderingData(0.8f, 6),
+	        new GameTickData(7, 0),
+	        new RenderingData(0.0f, 6),
+	        new RenderingData(0.3f, 7),
+	        new RenderingData(0.6f, 7),
+	        new RenderingData(0.8f, 7),
+
+	        // After this GameTick, the Animation Distribution Logic is disabled
+	        new GameTickData(8, 0),
+	        new RenderingData(0.1f, 8),
+	        new GameTickData(9, 0),
+	        new RenderingData(0.3f, 9),
+
+	        // Start of repeated attack, cause plr[pnum].AnimInfo.currentFrame > plr[myplr]._pAFNum
+	        new SetNewAnimationData(16, 1, static_cast<AnimationDistributionFlags>(AnimationDistributionFlags::ProcessAnimationPending | AnimationDistributionFlags::RepeatedAction), 0, 9),
+	        // processAnimation directly after StartAttack (in same GameTick). So we don't see any rendering before.
+	        new GameTickData(1, 0),
+	        new RenderingData(0.0f, 10),
+	        new RenderingData(0.3f, 10),
+	        new RenderingData(0.6f, 11),
+	        new RenderingData(0.8f, 11),
+	        new GameTickData(2, 0),
+	        new RenderingData(0.0f, 12),
+	        new RenderingData(0.3f, 12),
+	        new RenderingData(0.6f, 13),
+	        new RenderingData(0.8f, 13),
+	        new GameTickData(3, 0),
+	        new RenderingData(0.0f, 14),
+	        new RenderingData(0.3f, 14),
+	        new RenderingData(0.6f, 15),
+	        new RenderingData(0.8f, 15),
+	        new GameTickData(4, 0),
+	        new RenderingData(0.0f, 0),
+	        new RenderingData(0.3f, 0),
+	        new RenderingData(0.6f, 1),
+	        new RenderingData(0.8f, 1),
+	        new GameTickData(5, 0),
+	        new RenderingData(0.0f, 2),
+	        new RenderingData(0.3f, 2),
+	        new RenderingData(0.6f, 3),
+	        new RenderingData(0.8f, 3),
+	        new GameTickData(6, 0),
+	        new RenderingData(0.0f, 4),
+	        new RenderingData(0.3f, 4),
+	        new RenderingData(0.6f, 5),
+	        new RenderingData(0.8f, 5),
+	        new GameTickData(7, 0),
+	        new RenderingData(0.0f, 6),
+	        new RenderingData(0.3f, 6),
+	        new RenderingData(0.6f, 7),
+	        new RenderingData(0.8f, 7),
+
+	        // After this GameTick, the Animation Distribution Logic is disabled
+	        new GameTickData(8, 0),
+	        new RenderingData(0.1f, 8),
+	        new GameTickData(9, 0),
+	        new RenderingData(0.4f, 9),
+	        new GameTickData(10, 0),
+	        new RenderingData(0.4f, 10),
+	        new GameTickData(11, 0),
+	        new RenderingData(0.3f, 11),
+	        new GameTickData(12, 0),
+	        new RenderingData(0.0f, 12),
+	        new GameTickData(13, 0),
+	        new RenderingData(0.6f, 13),
+	        new GameTickData(14, 0),
+	        new RenderingData(0.6f, 14),
+	        new GameTickData(15, 0),
+	        new RenderingData(0.6f, 15),
+	        // Animation stopped cause PM_DoAttack would stop the Animation "if (plr[pnum].AnimInfo.currentFrame == plr[pnum]._pAFrames - 1) {"
+	    });
+}
+
+TEST(AnimationInfo, BlockingWarriorNormal) // Ignored delay for last Frame should be considered by distribution logic
+{
+	RunAnimationTest(
+	    {
+	        new SetNewAnimationData(2, 3, AnimationDistributionFlags::SkipsDelayOfLastFrame),
+	        new RenderingData(0.0f, 0),
+	        new RenderingData(0.3f, 0),
+	        new RenderingData(0.6f, 0),
+	        new RenderingData(0.8f, 0),
+	        new GameTickData(0, 1),
+	        new RenderingData(0.0f, 0),
+	        new RenderingData(0.3f, 0),
+	        new RenderingData(0.6f, 0),
+	        new RenderingData(0.8f, 0),
+	        new GameTickData(0, 2),
+	        new RenderingData(0.0f, 1),
+	        new RenderingData(0.3f, 1),
+	        new RenderingData(0.6f, 1),
+	        new RenderingData(0.8f, 1),
+	        new GameTickData(1, 0),
+	        new RenderingData(0.0f, 1),
+	        new RenderingData(0.3f, 1),
+	        new RenderingData(0.6f, 1),
+	        new RenderingData(0.8f, 1),
+	        // Animation stopped cause PM_DoBlock would stop the Animation "if (plr[pnum].AnimInfo.currentFrame >= plr[pnum]._pBFrames) {"
+	    });
+}
+
+TEST(AnimationInfo, BlockingSorcererWithFastBlock) // Skipped frames and ignored delay for last Frame should be considered by distribution logic
+{
+	RunAnimationTest(
+	    {
+	        new SetNewAnimationData(6, 3, AnimationDistributionFlags::SkipsDelayOfLastFrame, 4),
+	        new RenderingData(0.0f, 0),
+	        new RenderingData(0.3f, 0),
+	        new RenderingData(0.6f, 0),
+	        new RenderingData(0.8f, 1),
+	        new GameTickData(4, 1),
+	        new RenderingData(0.0f, 1),
+	        new RenderingData(0.3f, 1),
+	        new RenderingData(0.6f, 2),
+	        new RenderingData(0.8f, 2),
+	        new GameTickData(4, 2),
 	        new RenderingData(0.0f, 3),
 	        new RenderingData(0.3f, 3),
 	        new RenderingData(0.6f, 3),
@@ -247,169 +404,40 @@ TEST(AnimationInfo, AttackSwordWarriorRepeated)
 	        new RenderingData(0.3f, 4),
 	        new RenderingData(0.6f, 5),
 	        new RenderingData(0.8f, 5),
+	        // Animation stopped cause PM_DoBlock would stop the Animation "if (plr[pnum].AnimInfo.currentFrame >= plr[pnum]._pBFrames) {"
+	    });
+}
+
+TEST(AnimationInfo, HitRecoverySorcererHarmony) // Skipped frames and ignored delay for last Frame should be considered by distribution logic
+{
+	RunAnimationTest(
+	    {
+	        new SetNewAnimationData(8, 1, AnimationDistributionFlags::None, 3),
+	        new RenderingData(0.0f, 0),
+	        new RenderingData(0.3f, 0),
+	        new RenderingData(0.6f, 0),
+	        new RenderingData(0.8f, 1),
+	        new GameTickData(4, 0),
+	        new RenderingData(0.0f, 1),
+	        new RenderingData(0.3f, 2),
+	        new RenderingData(0.6f, 2),
+	        new RenderingData(0.8f, 2),
+	        new GameTickData(5, 0),
+	        new RenderingData(0.0f, 3),
+	        new RenderingData(0.3f, 3),
+	        new RenderingData(0.6f, 4),
+	        new RenderingData(0.8f, 4),
 	        new GameTickData(6, 0),
-	        new RenderingData(0.0f, 5),
+	        new RenderingData(0.0f, 4),
 	        new RenderingData(0.3f, 5),
-	        new RenderingData(0.6f, 6),
+	        new RenderingData(0.6f, 5),
 	        new RenderingData(0.8f, 6),
 	        new GameTickData(7, 0),
 	        new RenderingData(0.0f, 6),
-	        new RenderingData(0.3f, 7),
+	        new RenderingData(0.3f, 6),
 	        new RenderingData(0.6f, 7),
 	        new RenderingData(0.8f, 7),
-	        new GameTickData(8, 0),
-	        new RenderingData(0.0f, 7),
-	        new RenderingData(0.3f, 8),
-	        new RenderingData(0.6f, 8),
-	        new RenderingData(0.8f, 8),
-
-	        // After this GameTick, the Animation Distribution Logic is disabled
-	        new GameTickData(9, 0),
-	        new RenderingData(0.1f, 9),
-	        new GameTickData(10, 0),
-	        new RenderingData(0.3f, 10),
-
-	        // Start of repeated attack, cause plr[pnum].AnimInfo.CurrentFrame > plr[myplr]._pAFNum
-	        new SetNewAnimationData(16, 1, static_cast<AnimationDistributionFlags>(AnimationDistributionFlags::ProcessAnimationPending | AnimationDistributionFlags::RepeatedAction), 0, 9),
-	        // ProcessAnimation directly after StartAttack (in same GameTick). So we don't see any rendering before.
-	        new GameTickData(2, 0),
-	        new RenderingData(0.0f, 11),
-	        new RenderingData(0.3f, 11),
-	        new RenderingData(0.6f, 12),
-	        new RenderingData(0.8f, 12),
-	        new GameTickData(3, 0),
-	        new RenderingData(0.0f, 13),
-	        new RenderingData(0.3f, 13),
-	        new RenderingData(0.6f, 14),
-	        new RenderingData(0.8f, 14),
-	        new GameTickData(4, 0),
-	        new RenderingData(0.0f, 15),
-	        new RenderingData(0.3f, 15),
-	        new RenderingData(0.6f, 16),
-	        new RenderingData(0.8f, 16),
-	        new GameTickData(5, 0),
-	        new RenderingData(0.0f, 1),
-	        new RenderingData(0.3f, 1),
-	        new RenderingData(0.6f, 2),
-	        new RenderingData(0.8f, 2),
-	        new GameTickData(6, 0),
-	        new RenderingData(0.0f, 3),
-	        new RenderingData(0.3f, 3),
-	        new RenderingData(0.6f, 4),
-	        new RenderingData(0.8f, 4),
-	        new GameTickData(7, 0),
-	        new RenderingData(0.0f, 5),
-	        new RenderingData(0.3f, 5),
-	        new RenderingData(0.6f, 6),
-	        new RenderingData(0.8f, 6),
-	        new GameTickData(8, 0),
-	        new RenderingData(0.0f, 7),
-	        new RenderingData(0.3f, 7),
-	        new RenderingData(0.6f, 8),
-	        new RenderingData(0.8f, 8),
-
-	        // After this GameTick, the Animation Distribution Logic is disabled
-	        new GameTickData(9, 0),
-	        new RenderingData(0.1f, 9),
-	        new GameTickData(10, 0),
-	        new RenderingData(0.4f, 10),
-	        new GameTickData(11, 0),
-	        new RenderingData(0.4f, 11),
-	        new GameTickData(12, 0),
-	        new RenderingData(0.3f, 12),
-	        new GameTickData(13, 0),
-	        new RenderingData(0.0f, 13),
-	        new GameTickData(14, 0),
-	        new RenderingData(0.6f, 14),
-	        new GameTickData(15, 0),
-	        new RenderingData(0.6f, 15),
-	        new GameTickData(16, 0),
-	        new RenderingData(0.6f, 16),
-	        // Animation stopped cause PM_DoAttack would stop the Animation "if (plr[pnum].AnimInfo.CurrentFrame == plr[pnum]._pAFrames) {"
-	    });
-}
-
-TEST(AnimationInfo, BlockingWarriorNormal) // Ignored delay for last Frame should be considered by distribution logic
-{
-	RunAnimationTest(
-	    {
-	        new SetNewAnimationData(2, 3, AnimationDistributionFlags::SkipsDelayOfLastFrame),
-	        new RenderingData(0.0f, 1),
-	        new RenderingData(0.3f, 1),
-	        new RenderingData(0.6f, 1),
-	        new RenderingData(0.8f, 1),
-	        new GameTickData(1, 1),
-	        new RenderingData(0.0f, 1),
-	        new RenderingData(0.3f, 1),
-	        new RenderingData(0.6f, 1),
-	        new RenderingData(0.8f, 1),
-	        new GameTickData(1, 2),
-	        new RenderingData(0.0f, 2),
-	        new RenderingData(0.3f, 2),
-	        new RenderingData(0.6f, 2),
-	        new RenderingData(0.8f, 2),
-	        new GameTickData(2, 0),
-	        new RenderingData(0.0f, 2),
-	        new RenderingData(0.3f, 2),
-	        new RenderingData(0.6f, 2),
-	        new RenderingData(0.8f, 2),
-	        // Animation stopped cause PM_DoBlock would stop the Animation "if (plr[pnum].AnimInfo.CurrentFrame >= plr[pnum]._pBFrames) {"
-	    });
-}
-
-TEST(AnimationInfo, BlockingSorcererWithFastBlock) // Skipped frames and ignored delay for last Frame should be considered by distribution logic
-{
-	RunAnimationTest(
-	    {
-	        new SetNewAnimationData(6, 3, AnimationDistributionFlags::SkipsDelayOfLastFrame, 4),
-	        new RenderingData(0.0f, 1),
-	        new RenderingData(0.3f, 1),
-	        new RenderingData(0.6f, 1),
-	        new RenderingData(0.8f, 2),
-	        new GameTickData(5, 1),
-	        new RenderingData(0.0f, 2),
-	        new RenderingData(0.3f, 2),
-	        new RenderingData(0.6f, 3),
-	        new RenderingData(0.8f, 3),
-	        new GameTickData(5, 2),
-	        new RenderingData(0.0f, 4),
-	        new RenderingData(0.3f, 4),
-	        new RenderingData(0.6f, 4),
-	        new RenderingData(0.8f, 5),
-	        new GameTickData(6, 0),
-	        new RenderingData(0.0f, 5),
-	        new RenderingData(0.3f, 5),
-	        new RenderingData(0.6f, 6),
-	        new RenderingData(0.8f, 6),
-	        // Animation stopped cause PM_DoBlock would stop the Animation "if (plr[pnum].AnimInfo.CurrentFrame >= plr[pnum]._pBFrames) {"
-	    });
-}
-
-TEST(AnimationInfo, HitRecoverySorcererZenMode) // Skipped frames and ignored delay for last Frame should be considered by distribution logic
-{
-	RunAnimationTest(
-	    {
-	        new SetNewAnimationData(8, 1, AnimationDistributionFlags::None, 4),
-	        new RenderingData(0.0f, 1),
-	        new RenderingData(0.3f, 1),
-	        new RenderingData(0.6f, 2),
-	        new RenderingData(0.8f, 2),
-	        new GameTickData(6, 0),
-	        new RenderingData(0.0f, 3),
-	        new RenderingData(0.3f, 3),
-	        new RenderingData(0.6f, 4),
-	        new RenderingData(0.8f, 4),
-	        new GameTickData(7, 0),
-	        new RenderingData(0.0f, 5),
-	        new RenderingData(0.3f, 5),
-	        new RenderingData(0.6f, 6),
-	        new RenderingData(0.8f, 6),
-	        new GameTickData(8, 0),
-	        new RenderingData(0.0f, 7),
-	        new RenderingData(0.3f, 7),
-	        new RenderingData(0.6f, 8),
-	        new RenderingData(0.8f, 8),
-	        // Animation stopped cause PM_DoGotHit would stop the Animation "if (plr[pnum].AnimInfo.CurrentFrame >= plr[pnum]._pHFrames) {"
+	        // Animation stopped cause PM_DoGotHit would stop the Animation "if (plr[pnum].AnimInfo.currentFrame >= plr[pnum]._pHFrames) {"
 	    });
 }
 TEST(AnimationInfo, Stand) // Distribution Logic shouldn't change anything here
@@ -417,7 +445,16 @@ TEST(AnimationInfo, Stand) // Distribution Logic shouldn't change anything here
 	RunAnimationTest(
 	    {
 	        new SetNewAnimationData(10, 4),
-	        new RenderingData(0.1f, 1),
+	        new RenderingData(0.1f, 0),
+	        new GameTickData(0, 1),
+	        new RenderingData(0.6f, 0),
+	        new GameTickData(0, 2),
+	        new RenderingData(0.6f, 0),
+	        new GameTickData(0, 3),
+	        new RenderingData(0.6f, 0),
+
+	        new GameTickData(1, 0),
+	        new RenderingData(0.6f, 1),
 	        new GameTickData(1, 1),
 	        new RenderingData(0.6f, 1),
 	        new GameTickData(1, 2),
@@ -497,23 +534,14 @@ TEST(AnimationInfo, Stand) // Distribution Logic shouldn't change anything here
 	        new GameTickData(9, 3),
 	        new RenderingData(0.6f, 9),
 
-	        new GameTickData(10, 0),
-	        new RenderingData(0.6f, 10),
-	        new GameTickData(10, 1),
-	        new RenderingData(0.6f, 10),
-	        new GameTickData(10, 2),
-	        new RenderingData(0.6f, 10),
-	        new GameTickData(10, 3),
-	        new RenderingData(0.6f, 10),
-
 	        // Animation starts again
-	        new GameTickData(1, 0),
-	        new RenderingData(0.1f, 1),
-	        new GameTickData(1, 1),
-	        new RenderingData(0.6f, 1),
-	        new GameTickData(1, 2),
-	        new RenderingData(0.6f, 1),
-	        new GameTickData(1, 3),
-	        new RenderingData(0.6f, 1),
+	        new GameTickData(0, 0),
+	        new RenderingData(0.1f, 0),
+	        new GameTickData(0, 1),
+	        new RenderingData(0.6f, 0),
+	        new GameTickData(0, 2),
+	        new RenderingData(0.6f, 0),
+	        new GameTickData(0, 3),
+	        new RenderingData(0.6f, 0),
 	    });
 }

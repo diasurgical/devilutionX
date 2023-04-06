@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=DevilutionX
+Comment=Diablo 1 for RG99
+Exec=devilutionx
+Terminal=false
+Type=Application
+StartupNotify=true
+Icon=icon_32
+Categories=games;
+X-OD-Manual=readme.rg99.txt
+X-OD-NeedsDownscaling=true
