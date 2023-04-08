@@ -2188,28 +2188,30 @@ void OperateInnSignChest(const Player &player, Object &questContainer, bool send
 	}
 }
 
-void OperateSlainHero(const Player &player, Object &corpse)
+void OperateSlainHero(const Player &player, Object &corpse, bool sendmsg)
 {
 	if (corpse._oSelFlag == 0) {
 		return;
 	}
 	corpse._oSelFlag = 0;
 
+	SetRndSeed(corpse._oRndSeed);
+
 	if (player._pClass == HeroClass::Warrior) {
-		CreateMagicArmor(corpse.position, ItemType::HeavyArmor, ICURS_BREAST_PLATE, true, false);
+		CreateMagicArmor(corpse.position, ItemType::HeavyArmor, ICURS_BREAST_PLATE, sendmsg, false);
 	} else if (player._pClass == HeroClass::Rogue) {
-		CreateMagicWeapon(corpse.position, ItemType::Bow, ICURS_LONG_BATTLE_BOW, true, false);
+		CreateMagicWeapon(corpse.position, ItemType::Bow, ICURS_LONG_BATTLE_BOW, sendmsg, false);
 	} else if (player._pClass == HeroClass::Sorcerer) {
-		CreateSpellBook(corpse.position, SpellID::Lightning, true, false);
+		CreateSpellBook(corpse.position, SpellID::Lightning, sendmsg, false);
 	} else if (player._pClass == HeroClass::Monk) {
-		CreateMagicWeapon(corpse.position, ItemType::Staff, ICURS_WAR_STAFF, true, false);
+		CreateMagicWeapon(corpse.position, ItemType::Staff, ICURS_WAR_STAFF, sendmsg, false);
 	} else if (player._pClass == HeroClass::Bard) {
-		CreateMagicWeapon(corpse.position, ItemType::Sword, ICURS_BASTARD_SWORD, true, false);
+		CreateMagicWeapon(corpse.position, ItemType::Sword, ICURS_BASTARD_SWORD, sendmsg, false);
 	} else if (player._pClass == HeroClass::Barbarian) {
-		CreateMagicWeapon(corpse.position, ItemType::Axe, ICURS_BATTLE_AXE, true, false);
+		CreateMagicWeapon(corpse.position, ItemType::Axe, ICURS_BATTLE_AXE, sendmsg, false);
 	}
 	MyPlayer->Say(HeroSpeech::RestInPeaceMyFriend);
-	if (&player == MyPlayer)
+	if (sendmsg)
 		NetSendCmdLoc(MyPlayerId, false, CMD_OPERATEOBJ, corpse.position);
 }
 
@@ -3821,7 +3823,7 @@ void InitObjects()
 	} else {
 		ApplyObjectLighting = true;
 		AdvanceRndSeed();
-		if (currlevel == 9 && !gbIsMultiplayer)
+		if (currlevel == 9 && !UseMultiplayerQuests())
 			AddSlainHero();
 		if (Quests[Q_MUSHROOM].IsAvailable())
 			AddMushPatch();
@@ -4106,6 +4108,7 @@ Object *AddObject(_object_id objType, Point objPos)
 	case OBJ_GOATSHRINE:
 	case OBJ_CAULDRON:
 	case OBJ_TEARFTN:
+	case OBJ_SLAINHERO:
 		object._oRndSeed = AdvanceRndSeed();
 		break;
 	case OBJ_DECAP:
@@ -4479,7 +4482,7 @@ void OperateObject(Player &player, Object &object)
 			OperateLazStand(object);
 		break;
 	case OBJ_SLAINHERO:
-		OperateSlainHero(player, object);
+		OperateSlainHero(player, object, sendmsg);
 		break;
 	case OBJ_SIGNCHEST:
 		OperateInnSignChest(player, object, sendmsg);
@@ -4666,7 +4669,7 @@ void SyncOpObject(Player &player, int cmd, Object &object)
 		OperateMushroomPatch(player, object);
 		break;
 	case OBJ_SLAINHERO:
-		OperateSlainHero(player, object);
+		OperateSlainHero(player, object, sendmsg);
 		break;
 	case OBJ_SIGNCHEST:
 		OperateInnSignChest(player, object, sendmsg);
