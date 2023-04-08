@@ -50,6 +50,7 @@ jobs:
       - run: /opt/devkitpro/portlibs/wiiu/bin/powerpc-eabi-cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=RelWithDebInfo
       - run: cmake --build build -j 2
       - store_artifacts: {path: ./build/devilutionx.rpx, destination: devilutionx.rpx}
+      - store_artifacts: {path: ./build/devilutionx.wuhb, destination: devilutionx.wuhb}
   3ds:
     docker:
       - image: devkitpro/devkitarm:latest

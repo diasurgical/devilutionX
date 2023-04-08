@@ -460,6 +460,12 @@ endif()
 
 if(WIIU)
 	wut_create_rpx(${BIN_TARGET})
+  wut_create_wuhb(${BIN_TARGET}
+	  NAME       "DevilutionX port for Wii U"
+    SHORTNAME  "DevilutionX"
+    AUTHOR     "Diasurgical Team"
+    ICON       "${PROJECT_SOURCE_DIR}/Packaging/resources/icon_solid.png"
+  )
 endif()
 
 if(NINTENDO_3DS)
