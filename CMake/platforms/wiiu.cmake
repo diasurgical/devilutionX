@@ -19,5 +19,10 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/threads-stub")
 
 list(APPEND DEVILUTIONX_PLATFORM_COMPILE_DEFINITIONS __WIIU__)
 
-# The 3ds build handles the stripping in a custom way.
+# The wiiU build handles the stripping in a custom way.
 set(DEVILUTIONX_DISABLE_STRIP ON)
+
+# The SDL2 version in the pacman repos is currently several versions behind.
+# The Wii U build is using a custom version for now.
+# TODO: remove this once this version is upstreamed to the pacman repos
+set(DEVILUTIONX_SYSTEM_SDL2 OFF)
