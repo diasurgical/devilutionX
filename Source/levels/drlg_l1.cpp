@@ -1304,7 +1304,7 @@ void CreateL5Dungeon(uint32_t rseed, lvl_entry entry)
 
 void LoadPreL1Dungeon(const char *path)
 {
-	memset(dungeon, Dirt, sizeof(dungeon));
+	InitDungeonFlags();
 
 	auto dunData = LoadFileInMem<uint16_t>(path);
 	PlaceDunTiles(dunData.get(), { 0, 0 }, Floor);
