@@ -1309,7 +1309,7 @@ void LoadPreL1Dungeon(const char *path)
 	auto dunData = LoadFileInMem<uint16_t>(path);
 	PlaceDunTiles(dunData.get(), { 0, 0 }, Floor);
 
-	if (leveltype == DTYPE_CATHEDRAL)
+	if (setlvltype == DTYPE_CATHEDRAL)
 		FillFloor();
 
 	memcpy(pdungeon, dungeon, sizeof(pdungeon));
@@ -1319,12 +1319,12 @@ void LoadL1Dungeon(const char *path, Point spawn)
 {
 	LoadDungeonBase(path, spawn, Floor, Dirt);
 
-	if (leveltype == DTYPE_CATHEDRAL)
+	if (setlvltype == DTYPE_CATHEDRAL)
 		FillFloor();
 
 	Pass3();
 
-	if (leveltype == DTYPE_CRYPT)
+	if (setlvltype == DTYPE_CRYPT)
 		AddCryptObjects(0, 0, MAXDUNX, MAXDUNY);
 	else
 		AddL1Objs(0, 0, MAXDUNX, MAXDUNY);
