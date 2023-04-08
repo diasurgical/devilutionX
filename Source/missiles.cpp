@@ -2460,12 +2460,11 @@ void AddFlameWaveControl(Missile &missile, AddMissileParameter &parameter)
 
 void AddNova(Missile &missile, AddMissileParameter &parameter)
 {
-	Player &player = Players[missile._misource];
-
 	missile.var1 = parameter.dst.x;
 	missile.var2 = parameter.dst.y;
 
 	if (!missile.IsTrap()) {
+		Player &player = Players[missile._misource];
 		int dmg = GenerateRndSum(6, 5) + player._pLevel + 5;
 		missile._midam = ScaleSpellEffect(dmg / 2, missile._mispllvl);
 	} else {
