@@ -1272,7 +1272,7 @@ void LoadLvlGFX()
 void LoadAllGFX()
 {
 	IncProgress();
-#if !defined(USE_SDL1) && !defined(__vita__)
+#if !defined(USE_SDL1) && !defined(__vita__) && !defined(__WIIU__)
 	InitVirtualGamepadGFX(renderer);
 #endif
 	IncProgress();
@@ -2748,7 +2748,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 				LoadAllGFX();
 		} else if (!HeadlessMode) {
 			IncProgress();
-#if !defined(USE_SDL1) && !defined(__vita__)
+#if !defined(USE_SDL1) && !defined(__vita__) && !defined(__WIIU__)
 			InitVirtualGamepadGFX(renderer);
 #endif
 			IncProgress();
@@ -2859,7 +2859,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		InitMonsters();
 		IncProgress();
 		if (!HeadlessMode) {
-#if !defined(USE_SDL1) && !defined(__vita__)
+#if !defined(USE_SDL1) && !defined(__vita__) && !defined(__WIIU__)
 			InitVirtualGamepadGFX(renderer);
 #endif
 			InitMissileGFX(gbIsHellfire);
