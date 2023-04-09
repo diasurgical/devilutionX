@@ -227,7 +227,6 @@ byte sgRecvBuf[1U + sizeof(DLevel::item) + sizeof(uint8_t) + (sizeof(WorldTilePo
 _cmd_id sgbRecvCmd;
 std::unordered_map<uint8_t, LocalLevel> LocalLevels;
 DJunk sgJunk;
-bool sgbDeltaChanged;
 uint8_t sgbDeltaChunks;
 std::list<TMegaPkt> MegaPktList;
 Item ItemLimbo;
@@ -606,7 +605,6 @@ void DeltaImportData(_cmd_id cmd, uint32_t recvOffset)
 	}
 
 	sgbDeltaChunks++;
-	sgbDeltaChanged = true;
 }
 
 size_t OnLevelData(int pnum, const TCmd *pCmd)
@@ -657,7 +655,6 @@ void DeltaSyncGolem(const TCmdGolem &message, int pnum, uint8_t level)
 	if (!gbIsMultiplayer)
 		return;
 
-	sgbDeltaChanged = true;
 	DMonsterStr &monster = GetDeltaLevel(level).monster[pnum];
 	monster.position.x = message._mx;
 	monster.position.y = message._my;
@@ -682,7 +679,6 @@ void DeltaLeaveSync(uint8_t bLevel)
 		auto &monster = Monsters[ma];
 		if (monster.hitPoints == 0)
 			continue;
-		sgbDeltaChanged = true;
 		DMonsterStr &delta = deltaLevel.monster[ma];
 		delta.position = monster.position.tile;
 		delta._menemy = encode_enemy(monster);
@@ -698,7 +694,6 @@ void DeltaSyncObject(WorldTilePosition position, _cmd_id bCmd, const Player &pla
 	if (!gbIsMultiplayer)
 		return;
 
-	sgbDeltaChanged = true;
 	auto &objectDeltas = GetDeltaLevel(player).object;
 	objectDeltas[position].bCmd = bCmd;
 }
@@ -720,12 +715,10 @@ bool DeltaGetItem(const TCmdGItem &message, uint8_t bLevel)
 			return true;
 		}
 		if (item.bCmd == TCmdPItem::FloorItem) {
-			sgbDeltaChanged = true;
 			item.bCmd = TCmdPItem::PickedUpItem;
 			return true;
 		}
 		if (item.bCmd == TCmdPItem::DroppedItem) {
-			sgbDeltaChanged = true;
 			item.bCmd = CMD_INVALID;
 			return true;
 		}
@@ -738,7 +731,6 @@ bool DeltaGetItem(const TCmdGItem &message, uint8_t bLevel)
 
 	for (TCmdPItem &delta : deltaLevel.item) {
 		if (delta.bCmd == CMD_INVALID) {
-			sgbDeltaChanged = true;
 			delta.bCmd = TCmdPItem::PickedUpItem;
 			delta.x = message.x;
 			delta.y = message.y;
@@ -790,7 +782,6 @@ void DeltaPutItem(const TCmdPItem &message, Point position, const Player &player
 
 	for (TCmdPItem &item : deltaLevel.item) {
 		if (item.bCmd == CMD_INVALID) {
-			sgbDeltaChanged = true;
 			memcpy(&item, &message, sizeof(TCmdPItem));
 			item.bCmd = TCmdPItem::DroppedItem;
 			item.x = position.x;
@@ -823,7 +814,6 @@ bool IOwnLevel(const Player &player)
 
 void DeltaOpenPortal(int pnum, Point position, uint8_t bLevel, dungeon_type bLType, bool bSetLvl)
 {
-	sgbDeltaChanged = true;
 	sgJunk.portal[pnum].x = position.x;
 	sgJunk.portal[pnum].y = position.y;
 	sgJunk.portal[pnum].level = bLevel;
@@ -2432,7 +2422,6 @@ size_t OnSyncQuest(const TCmd *pCmd, size_t pnum)
 	} else {
 		if (pnum != MyPlayerId && message.q < MAXQUESTS && message.qstate <= QUEST_HIVE_DONE)
 			SetMultiQuest(message.q, message.qstate, message.qlog != 0, message.qvar1, message.qvar2, message.qmsg);
-		sgbDeltaChanged = true;
 	}
 
 	return sizeof(message);
@@ -2616,34 +2605,32 @@ void run_delta_info()
 
 void DeltaExportData(int pnum)
 {
-	if (sgbDeltaChanged) {
-		for (auto &it : DeltaLevels) {
-			DLevel &deltaLevel = it.second;
+	for (auto &it : DeltaLevels) {
+		DLevel &deltaLevel = it.second;
 
-			const size_t bufferSize = 1U                                                      /* marker byte, always 0 */
-			    + sizeof(uint8_t)                                                             /* level id */
-			    + sizeof(deltaLevel.item)                                                     /* items spawned during dungeon generation which have been picked up, and items dropped by a player during a game */
-			    + sizeof(uint8_t)                                                             /* count of object interactions which caused a state change since dungeon generation */
-			    + (sizeof(WorldTilePosition) + sizeof(DObjectStr)) * deltaLevel.object.size() /* location/action pairs for the object interactions */
-			    + sizeof(deltaLevel.monster);                                                 /* latest monster state */
-			std::unique_ptr<byte[]> dst { new byte[bufferSize] };
+		const size_t bufferSize = 1U                                                      /* marker byte, always 0 */
+		    + sizeof(uint8_t)                                                             /* level id */
+		    + sizeof(deltaLevel.item)                                                     /* items spawned during dungeon generation which have been picked up, and items dropped by a player during a game */
+		    + sizeof(uint8_t)                                                             /* count of object interactions which caused a state change since dungeon generation */
+		    + (sizeof(WorldTilePosition) + sizeof(DObjectStr)) * deltaLevel.object.size() /* location/action pairs for the object interactions */
+		    + sizeof(deltaLevel.monster);                                                 /* latest monster state */
+		std::unique_ptr<byte[]> dst { new byte[bufferSize] };
 
-			byte *dstEnd = &dst.get()[1];
-			*dstEnd = static_cast<byte>(it.first);
-			dstEnd += sizeof(uint8_t);
-			dstEnd = DeltaExportItem(dstEnd, deltaLevel.item);
-			dstEnd = DeltaExportObject(dstEnd, deltaLevel.object);
-			dstEnd = DeltaExportMonster(dstEnd, deltaLevel.monster);
-			uint32_t size = CompressData(dst.get(), dstEnd);
-			multi_send_zero_packet(pnum, CMD_DLEVEL, dst.get(), size);
-		}
-
-		byte dst[sizeof(DJunk) + 1];
-		byte *dstEnd = &dst[1];
-		dstEnd = DeltaExportJunk(dstEnd);
-		uint32_t size = CompressData(dst, dstEnd);
-		multi_send_zero_packet(pnum, CMD_DLEVEL_JUNK, dst, size);
+		byte *dstEnd = &dst.get()[1];
+		*dstEnd = static_cast<byte>(it.first);
+		dstEnd += sizeof(uint8_t);
+		dstEnd = DeltaExportItem(dstEnd, deltaLevel.item);
+		dstEnd = DeltaExportObject(dstEnd, deltaLevel.object);
+		dstEnd = DeltaExportMonster(dstEnd, deltaLevel.monster);
+		uint32_t size = CompressData(dst.get(), dstEnd);
+		multi_send_zero_packet(pnum, CMD_DLEVEL, dst.get(), size);
 	}
+
+	byte dst[sizeof(DJunk) + 1];
+	byte *dstEnd = &dst[1];
+	dstEnd = DeltaExportJunk(dstEnd);
+	uint32_t size = CompressData(dst, dstEnd);
+	multi_send_zero_packet(pnum, CMD_DLEVEL_JUNK, dst, size);
 
 	byte src[1] = { static_cast<byte>(0) };
 	multi_send_zero_packet(pnum, CMD_DLEVEL_END, src, 1);
@@ -2651,7 +2638,6 @@ void DeltaExportData(int pnum)
 
 void delta_init()
 {
-	sgbDeltaChanged = false;
 	memset(&sgJunk, 0xFF, sizeof(sgJunk));
 	DeltaLevels.clear();
 	LocalLevels.clear();
@@ -2668,7 +2654,6 @@ void delta_kill_monster(const Monster &monster, Point position, const Player &pl
 	if (!gbIsMultiplayer)
 		return;
 
-	sgbDeltaChanged = true;
 	DMonsterStr *pD = &GetDeltaLevel(player).monster[monster.getId()];
 	pD->position = position;
 	pD->hitPoints = 0;
@@ -2679,7 +2664,6 @@ void delta_monster_hp(const Monster &monster, const Player &player)
 	if (!gbIsMultiplayer)
 		return;
 
-	sgbDeltaChanged = true;
 	DMonsterStr *pD = &GetDeltaLevel(player).monster[monster.getId()];
 	if (pD->hitPoints > monster.hitPoints)
 		pD->hitPoints = monster.hitPoints;
@@ -2691,7 +2675,6 @@ void delta_sync_monster(const TSyncMonster &monsterSync, uint8_t level)
 		return;
 
 	assert(level <= MAX_MULTIPLAYERLEVELS);
-	sgbDeltaChanged = true;
 
 	DMonsterStr &monster = GetDeltaLevel(level).monster[monsterSync._mndx];
 	if (monster.hitPoints == 0)
@@ -2759,7 +2742,6 @@ void DeltaAddItem(int ii)
 		if (delta.bCmd != CMD_INVALID)
 			continue;
 
-		sgbDeltaChanged = true;
 		delta.bCmd = TCmdPItem::FloorItem;
 		delta.x = Items[ii].position.x;
 		delta.y = Items[ii].position.y;
@@ -3287,7 +3269,6 @@ void NetSendCmdString(uint32_t pmask, const char *pszStr)
 void delta_close_portal(int pnum)
 {
 	memset(&sgJunk.portal[pnum], 0xFF, sizeof(sgJunk.portal[pnum]));
-	sgbDeltaChanged = true;
 }
 
 size_t ParseCmd(size_t pnum, const TCmd *pCmd)
