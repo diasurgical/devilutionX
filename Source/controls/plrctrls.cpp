@@ -1809,7 +1809,7 @@ void UseBeltItem(int type)
 		bool isMana = isRejuvenation || IsAnyOf(item._iMiscId, IMISC_MANA, IMISC_FULLMANA);
 
 		if ((type == BLT_HEALING && isHealing) || (type == BLT_MANA && isMana)) {
-			UseInvItem(MyPlayerId, INVITEM_BELT_FIRST + i);
+			UseInvItem(INVITEM_BELT_FIRST + i);
 			break;
 		}
 	}
@@ -2043,7 +2043,7 @@ void CtrlUseInvItem()
 	if (item.isEquipment()) {
 		CheckInvItem(true, false); // auto-equip if it's an equipment
 	} else {
-		UseInvItem(MyPlayerId, pcursinvitem);
+		UseInvItem(pcursinvitem);
 	}
 	if (itemId != GetItemIdOnSlot(Slot)) {
 		ResetInvCursorPosition();

@@ -1976,9 +1976,9 @@ Item &GetInventoryItem(Player &player, int location)
 	return player.SpdList[location - INVITEM_BELT_FIRST];
 }
 
-bool UseInvItem(size_t pnum, int cii)
+bool UseInvItem(int cii)
 {
-	Player &player = Players[pnum];
+	Player &player = *MyPlayer;
 
 	if (player._pInvincible && player._pHitPoints == 0 && &player == MyPlayer)
 		return true;
@@ -2089,7 +2089,7 @@ bool UseInvItem(size_t pnum, int cii)
 	else if (&player == MyPlayer)
 		PlaySFX(ItemInvSnds[idata]);
 
-	UseItem(pnum, item->_iMiscId, item->_iSpell);
+	UseItem(player.getId(), item->_iMiscId, item->_iSpell);
 
 	if (speedlist) {
 		if (player.SpdList[c]._iMiscId == IMISC_NOTE) {

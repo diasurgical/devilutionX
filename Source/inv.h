@@ -226,7 +226,7 @@ bool CanUseScroll(Player &player, SpellID spell);
 void ConsumeStaffCharge(Player &player);
 bool CanUseStaff(Player &player, SpellID spellId);
 Item &GetInventoryItem(Player &player, int location);
-bool UseInvItem(size_t pnum, int cii);
+bool UseInvItem(int cii);
 void DoTelekinesis();
 int CalculateGold(Player &player);
 
