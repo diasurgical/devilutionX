@@ -71,8 +71,16 @@ inline void AppendCl2PixelsOrFillRun(const uint8_t *src, unsigned length, std::v
 		}
 		++src;
 	}
-	AppendCl2PixelsRun(begin, prevColorBegin - begin, out);
-	AppendCl2FillRun(prevColor, prevColorRunLength, out);
+
+	// Here we use 2 instead of `MinFillRunLength` because we know that this run
+	// is followed by transparent pixels.
+	// Width=2 Fill command takes 2 bytes, while the Pixels command is 3 bytes.
+	if (prevColorRunLength >= 2) {
+		AppendCl2PixelsRun(begin, prevColorBegin - begin, out);
+		AppendCl2FillRun(prevColor, prevColorRunLength, out);
+	} else {
+		AppendCl2PixelsRun(begin, prevColorBegin - begin + prevColorRunLength, out);
+	}
 }
 
 } // namespace devilution
