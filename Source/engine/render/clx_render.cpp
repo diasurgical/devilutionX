@@ -11,6 +11,12 @@
 #include "engine/render/scrollrt.h"
 #include "utils/attributes.h"
 
+#ifdef DEBUG_CLX
+#include <fmt/format.h>
+
+#include "utils/str_cat.hpp"
+#endif
+
 namespace devilution {
 namespace {
 
@@ -734,6 +740,35 @@ std::pair<int, int> ClxMeasureSolidHorizontalBounds(ClxSprite clx)
 	}
 	return { xBegin, xEnd };
 }
+
+#ifdef DEBUG_CLX
+std::string ClxDescribe(ClxSprite clx)
+{
+	std::string out = StrCat(
+	    "CLX sprite: ", clx.width(), "x", clx.height(), " pixelDataSize=", clx.pixelDataSize(),
+	    "b\n\n"
+	    "command | width | bytes | color(s)\n"
+	    "--------|------:|------:|---------\n");
+	const uint8_t *src = clx.pixelData();
+	const uint8_t *end = src + clx.pixelDataSize();
+	while (src < end) {
+		BlitCommand cmd = Cl2GetBlitCommand(src);
+		switch (cmd.type) {
+		case BlitType::Transparent:
+			out.append(fmt::format("Transp. | {:>5} | {:>5} |\n", cmd.length, cmd.srcEnd - src));
+			break;
+		case BlitType::Fill:
+			out.append(fmt::format("Fill    | {:>5} | {:>5} | {}\n", cmd.length, cmd.srcEnd - src, cmd.color));
+			break;
+		case BlitType::Pixels:
+			out.append(fmt::format("Pixels  | {:>5} | {:>5} | {}\n", cmd.length, cmd.srcEnd - src, fmt::join(src + 1, src + 1 + cmd.length, " ")));
+			break;
+		}
+		src = cmd.srcEnd;
+	}
+	return out;
+}
+#endif // DEBUG_CLX
 
 void ClxDraw(const Surface &out, Point position, ClxSprite clx)
 {
