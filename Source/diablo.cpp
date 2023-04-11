@@ -2086,60 +2086,58 @@ void InitPadmapActions()
 	    N_("Simulates rightward mouse movement."),
 	    { ControllerButton_BUTTON_BACK, ControllerButton_BUTTON_DPAD_RIGHT },
 	    [] {});
+	auto leftMouseDown = [] {
+		ControllerButtonCombo standGroundCombo = sgOptions.Padmapper.ButtonComboForAction("StandGround");
+		bool standGround = StandToggle || IsControllerButtonComboPressed(standGroundCombo);
+		sgbMouseDown = CLICK_LEFT;
+		LeftMouseDown(standGround ? KMOD_SHIFT : KMOD_NONE);
+	};
+	auto leftMouseUp = [] {
+		ControllerButtonCombo standGroundCombo = sgOptions.Padmapper.ButtonComboForAction("StandGround");
+		bool standGround = StandToggle || IsControllerButtonComboPressed(standGroundCombo);
+		LastMouseButtonAction = MouseActionType::None;
+		sgbMouseDown = CLICK_NONE;
+		LeftMouseUp(standGround ? KMOD_SHIFT : KMOD_NONE);
+	};
 	sgOptions.Padmapper.AddAction(
 	    "LeftMouseClick1",
 	    N_("Left mouse click"),
 	    N_("Simulates the left mouse button."),
 	    ControllerButton_BUTTON_RIGHTSTICK,
-	    [] {
-		    sgbMouseDown = CLICK_LEFT;
-		    LeftMouseDown(KMOD_NONE);
-	    },
-	    [] {
-		    LastMouseButtonAction = MouseActionType::None;
-		    sgbMouseDown = CLICK_NONE;
-		    LeftMouseUp(KMOD_NONE);
-	    });
+	    leftMouseDown,
+	    leftMouseUp);
 	sgOptions.Padmapper.AddAction(
 	    "LeftMouseClick2",
 	    N_("Left mouse click"),
 	    N_("Simulates the left mouse button."),
 	    { ControllerButton_BUTTON_BACK, ControllerButton_BUTTON_LEFTSHOULDER },
-	    [] {
-		    sgbMouseDown = CLICK_LEFT;
-		    LeftMouseDown(KMOD_NONE);
-	    },
-	    [] {
-		    LastMouseButtonAction = MouseActionType::None;
-		    sgbMouseDown = CLICK_NONE;
-		    LeftMouseUp(KMOD_NONE);
-	    });
+	    leftMouseDown,
+	    leftMouseUp);
+	auto rightMouseDown = [] {
+		ControllerButtonCombo standGroundCombo = sgOptions.Padmapper.ButtonComboForAction("StandGround");
+		bool standGround = StandToggle || IsControllerButtonComboPressed(standGroundCombo);
+		LastMouseButtonAction = MouseActionType::None;
+		sgbMouseDown = CLICK_RIGHT;
+		RightMouseDown(standGround);
+	};
+	auto rightMouseUp = [] {
+		LastMouseButtonAction = MouseActionType::None;
+		sgbMouseDown = CLICK_NONE;
+	};
 	sgOptions.Padmapper.AddAction(
 	    "RightMouseClick1",
 	    N_("Right mouse click"),
 	    N_("Simulates the right mouse button."),
 	    { ControllerButton_BUTTON_BACK, ControllerButton_BUTTON_RIGHTSTICK },
-	    [] {
-		    sgbMouseDown = CLICK_RIGHT;
-		    RightMouseDown(false);
-	    },
-	    [] {
-		    LastMouseButtonAction = MouseActionType::None;
-		    sgbMouseDown = CLICK_NONE;
-	    });
+	    rightMouseDown,
+	    rightMouseUp);
 	sgOptions.Padmapper.AddAction(
 	    "RightMouseClick2",
 	    N_("Right mouse click"),
 	    N_("Simulates the right mouse button."),
 	    { ControllerButton_BUTTON_BACK, ControllerButton_BUTTON_RIGHTSHOULDER },
-	    [] {
-		    sgbMouseDown = CLICK_RIGHT;
-		    RightMouseDown(false);
-	    },
-	    [] {
-		    LastMouseButtonAction = MouseActionType::None;
-		    sgbMouseDown = CLICK_NONE;
-	    });
+	    rightMouseDown,
+	    rightMouseUp);
 	sgOptions.Padmapper.AddAction(
 	    "PadHotspellMenu",
 	    N_("Gamepad hotspell menu"),
