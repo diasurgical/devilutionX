@@ -2331,7 +2331,7 @@ void StartStore(TalkID s)
 	}
 	sbookflag = false;
 	CloseInventory();
-	chrflag = false;
+	CloseCharPanel();
 	RenderGold = false;
 	QuestLogIsOpen = false;
 	CloseGoldDrop();

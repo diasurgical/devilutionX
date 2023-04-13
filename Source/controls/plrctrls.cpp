@@ -1623,7 +1623,7 @@ void ProcessGameAction(const GameAction &action)
 				DoSpeedBook();
 			else
 				spselflag = false;
-			chrflag = false;
+			CloseCharPanel();
 			QuestLogIsOpen = false;
 			sbookflag = false;
 			CloseGoldWithdraw();
@@ -1631,11 +1631,8 @@ void ProcessGameAction(const GameAction &action)
 		}
 		break;
 	case GameActionType_TOGGLE_CHARACTER_INFO:
-		chrflag = !chrflag;
+		ToggleCharPanel();
 		if (chrflag) {
-			QuestLogIsOpen = false;
-			CloseGoldWithdraw();
-			IsStashOpen = false;
 			spselflag = false;
 			if (pcurs == CURSOR_DISARM)
 				NewCursor(CURSOR_HAND);
@@ -1645,7 +1642,7 @@ void ProcessGameAction(const GameAction &action)
 	case GameActionType_TOGGLE_QUEST_LOG:
 		if (!QuestLogIsOpen) {
 			StartQuestlog();
-			chrflag = false;
+			CloseCharPanel();
 			CloseGoldWithdraw();
 			IsStashOpen = false;
 			spselflag = false;

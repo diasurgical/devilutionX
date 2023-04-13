@@ -454,7 +454,7 @@ void ClosePanels()
 		}
 	}
 	CloseInventory();
-	chrflag = false;
+	CloseCharPanel();
 	sbookflag = false;
 	QuestLogIsOpen = false;
 }
@@ -1448,7 +1448,7 @@ void HelpKeyPressed()
 		LastMouseButtonAction = MouseActionType::None;
 	} else {
 		CloseInventory();
-		chrflag = false;
+		CloseCharPanel();
 		sbookflag = false;
 		spselflag = false;
 		if (qtextflag && leveltype == DTYPE_TOWN) {
@@ -1488,9 +1488,8 @@ void CharacterSheetKeyPressed()
 {
 	if (stextflag != TalkID::None)
 		return;
-	chrflag = !chrflag;
 	if (!IsRightPanelOpen() && CanPanelsCoverView()) {
-		if (!chrflag) { // We closed the character sheet
+		if (chrflag) { // We are closing the character sheet
 			if (MousePosition.x > 160 && MousePosition.y < GetMainPanel().position.y) {
 				SetCursorPos(MousePosition - Displacement { 160, 0 });
 			}
@@ -1500,9 +1499,7 @@ void CharacterSheetKeyPressed()
 			}
 		}
 	}
-	QuestLogIsOpen = false;
-	CloseGoldWithdraw();
-	IsStashOpen = false;
+	ToggleCharPanel();
 }
 
 void QuestLogKeyPressed()
@@ -1525,7 +1522,7 @@ void QuestLogKeyPressed()
 			}
 		}
 	}
-	chrflag = false;
+	CloseCharPanel();
 	CloseGoldWithdraw();
 	IsStashOpen = false;
 }
@@ -1534,7 +1531,7 @@ void DisplaySpellsKeyPressed()
 {
 	if (stextflag != TalkID::None)
 		return;
-	chrflag = false;
+	CloseCharPanel();
 	QuestLogIsOpen = false;
 	CloseInventory();
 	sbookflag = false;

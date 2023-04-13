@@ -99,7 +99,7 @@ void ToggleChatLog()
 	} else {
 		stextflag = TalkID::None;
 		CloseInventory();
-		chrflag = false;
+		CloseCharPanel();
 		sbookflag = false;
 		spselflag = false;
 		if (qtextflag && leveltype == DTYPE_TOWN) {

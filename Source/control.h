@@ -64,6 +64,9 @@ bool IsChatAvailable();
  * @brief Moves the mouse to the first attribute "+" button.
  */
 void FocusOnCharInfo();
+void OpenCharPanel();
+void CloseCharPanel();
+void ToggleCharPanel();
 
 /**
  * @brief Check if the UI can cover the game area entierly
