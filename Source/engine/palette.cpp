@@ -5,7 +5,7 @@
  */
 #include "engine/palette.h"
 
-#include <fmt/compile.h>
+#include <fmt/core.h>
 
 #include "engine/backbuffer_state.hpp"
 #include "engine/demomode.h"
@@ -265,9 +265,9 @@ void LoadRndLvlPal(dungeon_type l)
 		if (!*sgOptions.Graphics.alternateNestArt) {
 			rv++;
 		}
-		*fmt::format_to(szFileName, FMT_COMPILE(R"(nlevels\l{0}data\l{0}base{1}.pal)"), 6, rv) = '\0';
+		*fmt::format_to(szFileName, R"(nlevels\l{0}data\l{0}base{1}.pal)", 6, rv) = '\0';
 	} else {
-		*fmt::format_to(szFileName, FMT_COMPILE(R"(levels\l{0}data\l{0}_{1}.pal)"), l, rv) = '\0';
+		*fmt::format_to(szFileName, R"(levels\l{0}data\l{0}_{1}.pal)", static_cast<int>(l), rv) = '\0';
 	}
 	LoadPalette(szFileName);
 }

@@ -4,10 +4,16 @@ on:
   push:
     branches:
       - master
+    paths-ignore:
+      - '*.md'
   pull_request:
     types: [opened, synchronize]
+    paths-ignore:
+      - '*.md'
   release:
     types: [published]
+    paths-ignore:
+      - '*.md'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -27,11 +33,11 @@ jobs:
         fetch-depth: 0
 
     - name: Cache CMake build folder
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: build
-        key: ios-cmake-v3-${{ github.sha }}
-        restore-keys: ios-cmake-v3-
+        key: ${{ github.workflow }}-v1-${{ github.sha }}
+        restore-keys: ${{ github.workflow }}-v1-
 
     - name: Configure CMake
       # Use a bash shell so we can use the same syntax for environment variable

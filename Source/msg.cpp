@@ -203,6 +203,7 @@ struct MultiQuests {
 	uint8_t qlog;
 	uint8_t qvar1;
 	uint8_t qvar2;
+	int16_t qmsg;
 };
 
 struct DJunk {
@@ -226,7 +227,6 @@ byte sgRecvBuf[1U + sizeof(DLevel::item) + sizeof(uint8_t) + (sizeof(WorldTilePo
 _cmd_id sgbRecvCmd;
 std::unordered_map<uint8_t, LocalLevel> LocalLevels;
 DJunk sgJunk;
-bool sgbDeltaChanged;
 uint8_t sgbDeltaChunks;
 std::list<TMegaPkt> MegaPktList;
 Item ItemLimbo;
@@ -536,6 +536,7 @@ byte *DeltaExportJunk(byte *dst)
 		sgJunk.quests[q].qstate = quest._qactive;
 		sgJunk.quests[q].qvar1 = quest._qvar1;
 		sgJunk.quests[q].qvar2 = quest._qvar2;
+		sgJunk.quests[q].qmsg = static_cast<int16_t>(quest._qmsg);
 		memcpy(dst, &sgJunk.quests[q], sizeof(MultiQuests));
 		dst += sizeof(MultiQuests);
 		q++;
@@ -604,7 +605,6 @@ void DeltaImportData(_cmd_id cmd, uint32_t recvOffset)
 	}
 
 	sgbDeltaChunks++;
-	sgbDeltaChanged = true;
 }
 
 size_t OnLevelData(int pnum, const TCmd *pCmd)
@@ -655,7 +655,6 @@ void DeltaSyncGolem(const TCmdGolem &message, int pnum, uint8_t level)
 	if (!gbIsMultiplayer)
 		return;
 
-	sgbDeltaChanged = true;
 	DMonsterStr &monster = GetDeltaLevel(level).monster[pnum];
 	monster.position.x = message._mx;
 	monster.position.y = message._my;
@@ -680,7 +679,6 @@ void DeltaLeaveSync(uint8_t bLevel)
 		auto &monster = Monsters[ma];
 		if (monster.hitPoints == 0)
 			continue;
-		sgbDeltaChanged = true;
 		DMonsterStr &delta = deltaLevel.monster[ma];
 		delta.position = monster.position.tile;
 		delta._menemy = encode_enemy(monster);
@@ -696,12 +694,8 @@ void DeltaSyncObject(WorldTilePosition position, _cmd_id bCmd, const Player &pla
 	if (!gbIsMultiplayer)
 		return;
 
-	sgbDeltaChanged = true;
 	auto &objectDeltas = GetDeltaLevel(player).object;
-	if (bCmd == _cmd_id::CMD_CLOSEDOOR)
-		objectDeltas.erase(position);
-	else
-		objectDeltas[position].bCmd = bCmd;
+	objectDeltas[position].bCmd = bCmd;
 }
 
 bool DeltaGetItem(const TCmdGItem &message, uint8_t bLevel)
@@ -721,12 +715,10 @@ bool DeltaGetItem(const TCmdGItem &message, uint8_t bLevel)
 			return true;
 		}
 		if (item.bCmd == TCmdPItem::FloorItem) {
-			sgbDeltaChanged = true;
 			item.bCmd = TCmdPItem::PickedUpItem;
 			return true;
 		}
 		if (item.bCmd == TCmdPItem::DroppedItem) {
-			sgbDeltaChanged = true;
 			item.bCmd = CMD_INVALID;
 			return true;
 		}
@@ -739,7 +731,6 @@ bool DeltaGetItem(const TCmdGItem &message, uint8_t bLevel)
 
 	for (TCmdPItem &delta : deltaLevel.item) {
 		if (delta.bCmd == CMD_INVALID) {
-			sgbDeltaChanged = true;
 			delta.bCmd = TCmdPItem::PickedUpItem;
 			delta.x = message.x;
 			delta.y = message.y;
@@ -791,7 +782,6 @@ void DeltaPutItem(const TCmdPItem &message, Point position, const Player &player
 
 	for (TCmdPItem &item : deltaLevel.item) {
 		if (item.bCmd == CMD_INVALID) {
-			sgbDeltaChanged = true;
 			memcpy(&item, &message, sizeof(TCmdPItem));
 			item.bCmd = TCmdPItem::DroppedItem;
 			item.x = position.x;
@@ -824,7 +814,6 @@ bool IOwnLevel(const Player &player)
 
 void DeltaOpenPortal(int pnum, Point position, uint8_t bLevel, dungeon_type bLType, bool bSetLvl)
 {
-	sgbDeltaChanged = true;
 	sgJunk.portal[pnum].x = position.x;
 	sgJunk.portal[pnum].y = position.y;
 	sgJunk.portal[pnum].level = bLevel;
@@ -1459,18 +1448,18 @@ size_t OnSpellWall(const TCmd *pCmd, Player &player)
 		return sizeof(message);
 
 	const uint16_t wParam1 = SDL_SwapLE16(message.wParam1);
-	if (wParam1 > SPL_LAST)
+	if (wParam1 > static_cast<int8_t>(SpellID::LAST))
 		return sizeof(message);
 	const uint16_t wParam2 = SDL_SwapLE16(message.wParam2);
 	if (wParam2 > static_cast<uint8_t>(SpellType::Invalid))
 		return sizeof(message);
 
-	auto spell = static_cast<spell_id>(wParam1);
+	auto spell = static_cast<SpellID>(wParam1);
 	if (!IsValidSpell(spell)) {
 		LogError(_("{:s} has cast an invalid spell."), player._pName);
 		return sizeof(message);
 	}
-	if (leveltype == DTYPE_TOWN && !spelldata[spell].sTownSpell) {
+	if (leveltype == DTYPE_TOWN && !GetSpellData(spell).isAllowedInTown()) {
 		LogError(_("{:s} has cast an illegal spell."), player._pName);
 		return sizeof(message);
 	}
@@ -1500,18 +1489,18 @@ size_t OnSpellTile(const TCmd *pCmd, Player &player)
 	if (!InDungeonBounds(position))
 		return sizeof(message);
 	const uint16_t wParam1 = SDL_SwapLE16(message.wParam1);
-	if (wParam1 > SPL_LAST)
+	if (wParam1 > static_cast<int8_t>(SpellID::LAST))
 		return sizeof(message);
 	const uint16_t wParam2 = SDL_SwapLE16(message.wParam2);
 	if (wParam2 > static_cast<uint8_t>(SpellType::Invalid))
 		return sizeof(message);
 
-	auto spell = static_cast<spell_id>(wParam1);
+	auto spell = static_cast<SpellID>(wParam1);
 	if (!IsValidSpell(spell)) {
 		LogError(_("{:s} has cast an invalid spell."), player._pName);
 		return sizeof(message);
 	}
-	if (leveltype == DTYPE_TOWN && !spelldata[spell].sTownSpell) {
+	if (leveltype == DTYPE_TOWN && !GetSpellData(spell).isAllowedInTown()) {
 		LogError(_("{:s} has cast an illegal spell."), player._pName);
 		return sizeof(message);
 	}
@@ -1523,6 +1512,7 @@ size_t OnSpellTile(const TCmd *pCmd, Player &player)
 	player.destParam3 = SDL_SwapLE16(message.wParam3);
 	player.queuedSpell.spellId = spell;
 	player.queuedSpell.spellType = static_cast<SpellType>(wParam2);
+	player.queuedSpell.spellFrom = 0;
 
 	return sizeof(message);
 }
@@ -1539,14 +1529,14 @@ size_t OnTargetSpellTile(const TCmd *pCmd, Player &player)
 	if (!InDungeonBounds(position))
 		return sizeof(message);
 	const uint16_t wParam1 = SDL_SwapLE16(message.wParam1);
-	if (wParam1 > SPL_LAST)
+	if (wParam1 > static_cast<int8_t>(SpellID::LAST))
 		return sizeof(message);
 	const uint16_t wParam3 = SDL_SwapLE16(message.wParam3);
 	if (wParam3 > INVITEM_BELT_LAST)
 		return sizeof(message);
 
-	auto spell = static_cast<spell_id>(wParam1);
-	if (leveltype == DTYPE_TOWN && !spelldata[spell].sTownSpell) {
+	auto spell = static_cast<SpellID>(wParam1);
+	if (leveltype == DTYPE_TOWN && !GetSpellData(spell).isAllowedInTown()) {
 		LogError(_("{:s} has cast an illegal spell."), player._pName);
 		return sizeof(message);
 	}
@@ -1650,18 +1640,18 @@ size_t OnSpellMonster(const TCmd *pCmd, Player &player)
 	if (monsterIdx >= MaxMonsters)
 		return sizeof(message);
 	const uint16_t wParam2 = SDL_SwapLE16(message.wParam2);
-	if (wParam2 > SPL_LAST)
+	if (wParam2 > static_cast<int8_t>(SpellID::LAST))
 		return sizeof(message);
 	const uint16_t wParam3 = SDL_SwapLE16(message.wParam3);
 	if (wParam3 > static_cast<uint8_t>(SpellType::Invalid))
 		return sizeof(message);
 
-	auto spell = static_cast<spell_id>(wParam2);
+	auto spell = static_cast<SpellID>(wParam2);
 	if (!IsValidSpell(spell)) {
 		LogError(_("{:s} has cast an invalid spell."), player._pName);
 		return sizeof(message);
 	}
-	if (leveltype == DTYPE_TOWN && !spelldata[spell].sTownSpell) {
+	if (leveltype == DTYPE_TOWN && !GetSpellData(spell).isAllowedInTown()) {
 		LogError(_("{:s} has cast an illegal spell."), player._pName);
 		return sizeof(message);
 	}
@@ -1689,18 +1679,18 @@ size_t OnSpellPlayer(const TCmd *pCmd, Player &player)
 	if (playerIdx >= Players.size())
 		return sizeof(message);
 	const uint16_t wParam2 = SDL_SwapLE16(message.wParam2);
-	if (wParam2 > SPL_LAST)
+	if (wParam2 > static_cast<int8_t>(SpellID::LAST))
 		return sizeof(message);
 	const uint16_t wParam3 = SDL_SwapLE16(message.wParam3);
 	if (wParam3 > static_cast<uint8_t>(SpellType::Invalid))
 		return sizeof(message);
 
-	auto spell = static_cast<spell_id>(wParam2);
+	auto spell = static_cast<SpellID>(wParam2);
 	if (!IsValidSpell(spell)) {
 		LogError(_("{:s} has cast an invalid spell."), player._pName);
 		return sizeof(message);
 	}
-	if (leveltype == DTYPE_TOWN && !spelldata[spell].sTownSpell) {
+	if (leveltype == DTYPE_TOWN && !GetSpellData(spell).isAllowedInTown()) {
 		LogError(_("{:s} has cast an illegal spell."), player._pName);
 		return sizeof(message);
 	}
@@ -1728,14 +1718,14 @@ size_t OnTargetSpellMonster(const TCmd *pCmd, Player &player)
 	if (monsterIdx >= MaxMonsters)
 		return sizeof(message);
 	const uint16_t wParam2 = SDL_SwapLE16(message.wParam2);
-	if (wParam2 > SPL_LAST)
+	if (wParam2 > static_cast<int8_t>(SpellID::LAST))
 		return sizeof(message);
 	const uint16_t wParam4 = SDL_SwapLE16(message.wParam4);
 	if (wParam4 > INVITEM_BELT_LAST)
 		return sizeof(message);
 
-	auto spell = static_cast<spell_id>(wParam2);
-	if (leveltype == DTYPE_TOWN && !spelldata[spell].sTownSpell) {
+	auto spell = static_cast<SpellID>(wParam2);
+	if (leveltype == DTYPE_TOWN && !GetSpellData(spell).isAllowedInTown()) {
 		LogError(_("{:s} has cast an illegal spell."), player._pName);
 		return sizeof(message);
 	}
@@ -1763,14 +1753,14 @@ size_t OnTargetSpellPlayer(const TCmd *pCmd, Player &player)
 	if (playerIdx >= Players.size())
 		return sizeof(message);
 	const uint16_t wParam2 = SDL_SwapLE16(message.wParam2);
-	if (wParam2 > SPL_LAST)
+	if (wParam2 > static_cast<int8_t>(SpellID::LAST))
 		return sizeof(message);
 	const uint16_t wParam4 = SDL_SwapLE16(message.wParam4);
 	if (wParam4 > INVITEM_BELT_LAST)
 		return sizeof(message);
 
-	auto spell = static_cast<spell_id>(wParam2);
-	if (leveltype == DTYPE_TOWN && !spelldata[spell].sTownSpell) {
+	auto spell = static_cast<SpellID>(wParam2);
+	if (leveltype == DTYPE_TOWN && !GetSpellData(spell).isAllowedInTown()) {
 		LogError(_("{:s} has cast an illegal spell."), player._pName);
 		return sizeof(message);
 	}
@@ -2431,8 +2421,7 @@ size_t OnSyncQuest(const TCmd *pCmd, size_t pnum)
 		SendPacket(pnum, &message, sizeof(message));
 	} else {
 		if (pnum != MyPlayerId && message.q < MAXQUESTS && message.qstate <= QUEST_HIVE_DONE)
-			SetMultiQuest(message.q, message.qstate, message.qlog != 0, message.qvar1, message.qvar2);
-		sgbDeltaChanged = true;
+			SetMultiQuest(message.q, message.qstate, message.qlog != 0, message.qvar1, message.qvar2, message.qmsg);
 	}
 
 	return sizeof(message);
@@ -2461,7 +2450,7 @@ size_t OnCheatSpellLevel(const TCmd *pCmd, size_t pnum) // NOLINT(misc-unused-pa
 		SendPacket(pnum, pCmd, sizeof(*pCmd));
 	} else {
 		Player &player = Players[pnum];
-		player._pSplLvl[player._pRSpell]++;
+		player._pSplLvl[static_cast<int8_t>(player._pRSpell)]++;
 	}
 #endif
 	return sizeof(*pCmd);
@@ -2480,9 +2469,9 @@ size_t OnNova(const TCmd *pCmd, Player &player)
 	if (gbBufferMsgs != 1) {
 		if (player.isOnActiveLevel() && &player != MyPlayer && InDungeonBounds(position)) {
 			ClrPlrPath(player);
-			player.queuedSpell.spellId = SPL_NOVA;
+			player.queuedSpell.spellId = SpellID::Nova;
 			player.queuedSpell.spellType = SpellType::Scroll;
-			player.queuedSpell.spellFrom = 3;
+			player.queuedSpell.spellFrom = 0;
 			player.destAction = ACTION_SPELL;
 			player.destParam1 = position.x;
 			player.destParam2 = position.y;
@@ -2616,34 +2605,32 @@ void run_delta_info()
 
 void DeltaExportData(int pnum)
 {
-	if (sgbDeltaChanged) {
-		for (auto &it : DeltaLevels) {
-			DLevel &deltaLevel = it.second;
+	for (auto &it : DeltaLevels) {
+		DLevel &deltaLevel = it.second;
 
-			const size_t bufferSize = 1U                                                      /* marker byte, always 0 */
-			    + sizeof(uint8_t)                                                             /* level id */
-			    + sizeof(deltaLevel.item)                                                     /* items spawned during dungeon generation which have been picked up, and items dropped by a player during a game */
-			    + sizeof(uint8_t)                                                             /* count of object interactions which caused a state change since dungeon generation */
-			    + (sizeof(WorldTilePosition) + sizeof(DObjectStr)) * deltaLevel.object.size() /* location/action pairs for the object interactions */
-			    + sizeof(deltaLevel.monster);                                                 /* latest monster state */
-			std::unique_ptr<byte[]> dst { new byte[bufferSize] };
+		const size_t bufferSize = 1U                                                      /* marker byte, always 0 */
+		    + sizeof(uint8_t)                                                             /* level id */
+		    + sizeof(deltaLevel.item)                                                     /* items spawned during dungeon generation which have been picked up, and items dropped by a player during a game */
+		    + sizeof(uint8_t)                                                             /* count of object interactions which caused a state change since dungeon generation */
+		    + (sizeof(WorldTilePosition) + sizeof(DObjectStr)) * deltaLevel.object.size() /* location/action pairs for the object interactions */
+		    + sizeof(deltaLevel.monster);                                                 /* latest monster state */
+		std::unique_ptr<byte[]> dst { new byte[bufferSize] };
 
-			byte *dstEnd = &dst.get()[1];
-			*dstEnd = static_cast<byte>(it.first);
-			dstEnd += sizeof(uint8_t);
-			dstEnd = DeltaExportItem(dstEnd, deltaLevel.item);
-			dstEnd = DeltaExportObject(dstEnd, deltaLevel.object);
-			dstEnd = DeltaExportMonster(dstEnd, deltaLevel.monster);
-			uint32_t size = CompressData(dst.get(), dstEnd);
-			multi_send_zero_packet(pnum, CMD_DLEVEL, dst.get(), size);
-		}
-
-		byte dst[sizeof(DJunk) + 1];
-		byte *dstEnd = &dst[1];
-		dstEnd = DeltaExportJunk(dstEnd);
-		uint32_t size = CompressData(dst, dstEnd);
-		multi_send_zero_packet(pnum, CMD_DLEVEL_JUNK, dst, size);
+		byte *dstEnd = &dst.get()[1];
+		*dstEnd = static_cast<byte>(it.first);
+		dstEnd += sizeof(uint8_t);
+		dstEnd = DeltaExportItem(dstEnd, deltaLevel.item);
+		dstEnd = DeltaExportObject(dstEnd, deltaLevel.object);
+		dstEnd = DeltaExportMonster(dstEnd, deltaLevel.monster);
+		uint32_t size = CompressData(dst.get(), dstEnd);
+		multi_send_zero_packet(pnum, CMD_DLEVEL, dst.get(), size);
 	}
+
+	byte dst[sizeof(DJunk) + 1];
+	byte *dstEnd = &dst[1];
+	dstEnd = DeltaExportJunk(dstEnd);
+	uint32_t size = CompressData(dst, dstEnd);
+	multi_send_zero_packet(pnum, CMD_DLEVEL_JUNK, dst, size);
 
 	byte src[1] = { static_cast<byte>(0) };
 	multi_send_zero_packet(pnum, CMD_DLEVEL_END, src, 1);
@@ -2651,7 +2638,6 @@ void DeltaExportData(int pnum)
 
 void delta_init()
 {
-	sgbDeltaChanged = false;
 	memset(&sgJunk, 0xFF, sizeof(sgJunk));
 	DeltaLevels.clear();
 	LocalLevels.clear();
@@ -2668,7 +2654,6 @@ void delta_kill_monster(const Monster &monster, Point position, const Player &pl
 	if (!gbIsMultiplayer)
 		return;
 
-	sgbDeltaChanged = true;
 	DMonsterStr *pD = &GetDeltaLevel(player).monster[monster.getId()];
 	pD->position = position;
 	pD->hitPoints = 0;
@@ -2679,7 +2664,6 @@ void delta_monster_hp(const Monster &monster, const Player &player)
 	if (!gbIsMultiplayer)
 		return;
 
-	sgbDeltaChanged = true;
 	DMonsterStr *pD = &GetDeltaLevel(player).monster[monster.getId()];
 	if (pD->hitPoints > monster.hitPoints)
 		pD->hitPoints = monster.hitPoints;
@@ -2691,7 +2675,6 @@ void delta_sync_monster(const TSyncMonster &monsterSync, uint8_t level)
 		return;
 
 	assert(level <= MAX_MULTIPLAYERLEVELS);
-	sgbDeltaChanged = true;
 
 	DMonsterStr &monster = GetDeltaLevel(level).monster[monsterSync._mndx];
 	if (monster.hitPoints == 0)
@@ -2709,13 +2692,12 @@ void DeltaSyncJunk()
 {
 	for (int i = 0; i < MAXPORTAL; i++) {
 		if (sgJunk.portal[i].x == 0xFF) {
-			SetPortalStats(i, false, 0, 0, 0, DTYPE_TOWN, false);
+			SetPortalStats(i, false, { 0, 0 }, 0, DTYPE_TOWN, false);
 		} else {
 			SetPortalStats(
 			    i,
 			    true,
-			    sgJunk.portal[i].x,
-			    sgJunk.portal[i].y,
+			    { sgJunk.portal[i].x, sgJunk.portal[i].y },
 			    sgJunk.portal[i].level,
 			    (dungeon_type)sgJunk.portal[i].ltype,
 			    sgJunk.portal[i].setlvl);
@@ -2732,6 +2714,7 @@ void DeltaSyncJunk()
 			quest._qactive = sgJunk.quests[q].qstate;
 			quest._qvar1 = sgJunk.quests[q].qvar1;
 			quest._qvar2 = sgJunk.quests[q].qvar2;
+			quest._qmsg = static_cast<_speech_id>(sgJunk.quests[q].qmsg);
 		}
 		q++;
 	}
@@ -2759,7 +2742,6 @@ void DeltaAddItem(int ii)
 		if (delta.bCmd != CMD_INVALID)
 			continue;
 
-		sgbDeltaChanged = true;
 		delta.bCmd = TCmdPItem::FloorItem;
 		delta.x = Items[ii].position.x;
 		delta.y = Items[ii].position.y;
@@ -2872,6 +2854,10 @@ void DeltaLoadLevel()
 			case CMD_OPENDOOR:
 			case CMD_OPERATEOBJ:
 				DeltaSyncOpObject(*object);
+				it++;
+				break;
+			case CMD_CLOSEDOOR:
+				DeltaSyncCloseObj(*object);
 				it++;
 				break;
 			case CMD_BREAKOBJ:
@@ -3125,6 +3111,7 @@ void NetSendCmdQuest(bool bHiPri, const Quest &quest)
 	cmd.qlog = quest._qlog ? 1 : 0;
 	cmd.qvar1 = quest._qvar1;
 	cmd.qvar2 = quest._qvar2;
+	cmd.qmsg = quest._qmsg;
 
 	if (bHiPri)
 		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
@@ -3282,7 +3269,6 @@ void NetSendCmdString(uint32_t pmask, const char *pszStr)
 void delta_close_portal(int pnum)
 {
 	memset(&sgJunk.portal[pnum], 0xFF, sizeof(sgJunk.portal[pnum]));
-	sgbDeltaChanged = true;
 }
 
 size_t ParseCmd(size_t pnum, const TCmd *pCmd)

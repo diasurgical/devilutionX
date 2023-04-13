@@ -162,9 +162,15 @@ set(devilutionx_assets
   fonts/whitegold.trn
   fonts/white.trn
   fonts/yellow.trn
+  gendata/cut2w.clx
+  gendata/cut3w.clx
+  gendata/cut4w.clx
+  gendata/cutgatew.clx
+  gendata/cutl1dw.clx
   gendata/cutportlw.clx
   gendata/cutportrw.clx
   gendata/cutstartw.clx
+  gendata/cutttw.clx
   levels/l1data/sklkngt.dun
   levels/l2data/bonechat.dun
   levels/towndata/automap.dun

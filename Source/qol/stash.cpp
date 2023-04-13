@@ -96,6 +96,8 @@ void CheckStashPaste(Point cursorPosition)
 	}
 
 	if (player.HoldItem._itype == ItemType::Gold) {
+		if (Stash.gold > std::numeric_limits<int>::max() - player.HoldItem._ivalue)
+			return;
 		Stash.gold += player.HoldItem._ivalue;
 		player.HoldItem.clear();
 		PlaySFX(IS_GOLD);
@@ -275,7 +277,7 @@ void InitStash()
 
 void TransferItemToInventory(Player &player, uint16_t itemId)
 {
-	if (itemId == uint16_t(-1)) {
+	if (itemId == StashStruct::EmptyCell) {
 		return;
 	}
 
@@ -355,10 +357,11 @@ void DrawStash(const Surface &out)
 
 	for (auto slot : StashGridRange) {
 		StashStruct::StashCell itemId = Stash.GetItemIdAtPosition(slot);
-		Item &item = Stash.stashList[itemId];
-		if (Stash.IsItemAtPosition(slot)) {
-			InvDrawSlotBack(out, GetStashSlotCoord(slot) + offset, InventorySlotSizeInPixels, item._iMagical);
+		if (itemId == StashStruct::EmptyCell) {
+			continue; // No item in the given slot
 		}
+		Item &item = Stash.stashList[itemId];
+		InvDrawSlotBack(out, GetStashSlotCoord(slot) + offset, InventorySlotSizeInPixels, item._iMagical);
 	}
 
 	for (auto slot : StashGridRange) {
@@ -434,11 +437,10 @@ uint16_t CheckStashHLight(Point mousePosition)
 	}
 
 	InfoColor = item.getTextColor();
+	InfoString = item.getName();
 	if (item._iIdentified) {
-		InfoString = string_view(item._iIName);
 		PrintItemDetails(item);
 	} else {
-		InfoString = string_view(item._iName);
 		PrintItemDur(item);
 	}
 
@@ -451,7 +453,7 @@ bool UseStashItem(uint16_t c)
 		return true;
 	if (pcurs != CURSOR_HAND)
 		return true;
-	if (stextflag != STORE_NONE)
+	if (stextflag != TalkID::None)
 		return true;
 
 	Item *item = &Stash.stashList[c];
@@ -467,7 +469,7 @@ bool UseStashItem(uint16_t c)
 		return true;
 	}
 
-	if (!AllItemsList[item->IDidx].iUsable)
+	if (!item->isUsable())
 		return false;
 
 	if (!MyPlayer->CanUseItem(*item)) {
@@ -668,6 +670,8 @@ void GoldWithdrawNewText(string_view text)
 bool AutoPlaceItemInStash(Player &player, const Item &item, bool persistItem)
 {
 	if (item._itype == ItemType::Gold) {
+		if (Stash.gold > std::numeric_limits<int>::max() - item._ivalue)
+			return false;
 		if (persistItem) {
 			Stash.gold += item._ivalue;
 			Stash.dirty = true;

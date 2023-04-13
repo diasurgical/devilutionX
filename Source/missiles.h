@@ -14,6 +14,7 @@
 #include "monster.h"
 #include "player.h"
 #include "spelldat.h"
+#include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
 
@@ -98,8 +99,8 @@ struct Missile {
 	int _mimfnum; // The direction of the missile (direction enum)
 	int _mispllvl;
 	bool _miDelFlag; // Indicate whether the missile should be deleted
-	uint8_t _miAnimType;
-	MissileDataFlags _miAnimFlags;
+	MissileGraphicID _miAnimType;
+	MissileGraphicsFlags _miAnimFlags;
 	OptionalClxSpriteList _miAnimData;
 	int _miAnimDelay; // Tick length of each frame in the current animation
 	int _miAnimLen;   // Number of frames in current animation
@@ -175,7 +176,7 @@ struct Missile {
 extern std::list<Missile> Missiles;
 extern bool MissilePreFlag;
 
-void GetDamageAmt(spell_id i, int *mind, int *maxd);
+void GetDamageAmt(SpellID i, int *mind, int *maxd);
 
 /**
  * @brief Returns the direction a vector from p1(x1, y1) to p2(x2, y2) is pointing to.
@@ -197,8 +198,8 @@ void GetDamageAmt(spell_id i, int *mind, int *maxd);
  * @return the direction of the p1->p2 vector
  */
 Direction16 GetDirection16(Point p1, Point p2);
-bool MonsterTrapHit(int monsterId, int mindam, int maxdam, int dist, MissileID t, bool shift);
-bool PlayerMHit(int pnum, Monster *monster, int dist, int mind, int maxd, MissileID mtype, bool shift, int earflag, bool *blocked);
+bool MonsterTrapHit(int monsterId, int mindam, int maxdam, int dist, MissileID t, DamageType damageType, bool shift);
+bool PlayerMHit(int pnum, Monster *monster, int dist, int mind, int maxd, MissileID mtype, DamageType damageType, bool shift, int earflag, bool *blocked);
 
 /**
  * @brief Could the missile collide with solid objects? (like walls or closed doors)
@@ -385,7 +386,9 @@ void AddTelekinesis(Missile &missile, AddMissileParameter &parameter);
 void AddBoneSpirit(Missile &missile, AddMissileParameter &parameter);
 void AddRedPortal(Missile &missile, AddMissileParameter &parameter);
 void AddDiabloApocalypse(Missile &missile, AddMissileParameter &parameter);
-Missile *AddMissile(Point src, Point dst, Direction midir, MissileID mitype, mienemy_type micaster, int id, int midam, int spllvl, Missile *pParent = nullptr);
+Missile *AddMissile(Point src, Point dst, Direction midir, MissileID mitype,
+    mienemy_type micaster, int id, int midam, int spllvl,
+    Missile *parent = nullptr, std::optional<_sfx_id> lSFX = std::nullopt);
 void ProcessElementalArrow(Missile &missile);
 void ProcessArrow(Missile &missile);
 void ProcessGenericProjectile(Missile &missile);

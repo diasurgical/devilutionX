@@ -4088,14 +4088,8 @@ msgid "Right-click to read"
 msgstr "Clic-dreapta citire"
 
 #: Source/items.cpp:1814 Source/items.cpp:1835
-#, fuzzy
-#| msgid "Select current spell button"
-msgid "Select from spell book, then"
-msgstr "Selectați buton curent de vrajă"
-
-#: Source/items.cpp:1815 Source/items.cpp:1836
-msgid "cast spell to read"
-msgstr ""
+msgid "Select from spell book, then\ncast spell to read"
+msgstr "Selectați din cartea de vrăji, apoi\nvrăjiți pentru a citi"
 
 #: Source/items.cpp:1817 Source/items.cpp:1838 Source/items.cpp:1852
 #, fuzzy
@@ -4108,12 +4102,8 @@ msgid "Activate to read"
 msgstr ""
 
 #: Source/items.cpp:1825
-msgid "Right-click to read, then"
-msgstr "Clic-dreapta citire, și apoi"
-
-#: Source/items.cpp:1826
-msgid "left-click to target"
-msgstr "clic-stânga țintire"
+msgid "Right-click to read, then\nleft-click to target"
+msgstr "Clic-dreapta citire, și apoi\nclic-stânga țintire"
 
 #: Source/items.cpp:1849
 msgid "Right-click to use"

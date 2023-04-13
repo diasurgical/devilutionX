@@ -66,7 +66,7 @@ void RepeatMouseAction()
 	if (sgbMouseDown == CLICK_NONE && ControllerActionHeld == GameActionType_NONE)
 		return;
 
-	if (stextflag != STORE_NONE)
+	if (stextflag != TalkID::None)
 		return;
 
 	if (LastMouseButtonAction == MouseActionType::None)

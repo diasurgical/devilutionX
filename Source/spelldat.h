@@ -6,8 +6,10 @@
 #pragma once
 
 #include <cstdint>
+#include <type_traits>
 
 #include "effects.h"
+#include "utils/enum_traits.h"
 
 namespace devilution {
 
@@ -23,63 +25,64 @@ enum class SpellType : uint8_t {
 	Invalid,
 };
 
-enum spell_id : int8_t {
-	SPL_NULL,
-	SPL_FIREBOLT,
-	SPL_HEAL,
-	SPL_LIGHTNING,
-	SPL_FLASH,
-	SPL_IDENTIFY,
-	SPL_FIREWALL,
-	SPL_TOWN,
-	SPL_STONE,
-	SPL_INFRA,
-	SPL_RNDTELEPORT,
-	SPL_MANASHIELD,
-	SPL_FIREBALL,
-	SPL_GUARDIAN,
-	SPL_CHAIN,
-	SPL_WAVE,
-	SPL_DOOMSERP,
-	SPL_BLODRIT,
-	SPL_NOVA,
-	SPL_INVISIBIL,
-	SPL_FLAME,
-	SPL_GOLEM,
-	SPL_BLODBOIL,
-	SPL_TELEPORT,
-	SPL_APOCA,
-	SPL_ETHEREALIZE,
-	SPL_REPAIR,
-	SPL_RECHARGE,
-	SPL_DISARM,
-	SPL_ELEMENT,
-	SPL_CBOLT,
-	SPL_HBOLT,
-	SPL_RESURRECT,
-	SPL_TELEKINESIS,
-	SPL_HEALOTHER,
-	SPL_FLARE,
-	SPL_BONESPIRIT,
-	SPL_LASTDIABLO = SPL_BONESPIRIT,
-	SPL_MANA,
-	SPL_MAGI,
-	SPL_JESTER,
-	SPL_LIGHTWALL,
-	SPL_IMMOLAT,
-	SPL_WARP,
-	SPL_REFLECT,
-	SPL_BERSERK,
-	SPL_FIRERING,
-	SPL_SEARCH,
-	SPL_RUNEFIRE,
-	SPL_RUNELIGHT,
-	SPL_RUNENOVA,
-	SPL_RUNEIMMOLAT,
-	SPL_RUNESTONE,
+enum class SpellID : int8_t {
+	Null,
+	FIRST = Null,
+	Firebolt,
+	Healing,
+	Lightning,
+	Flash,
+	Identify,
+	FireWall,
+	TownPortal,
+	StoneCurse,
+	Infravision,
+	Phasing,
+	ManaShield,
+	Fireball,
+	Guardian,
+	ChainLightning,
+	FlameWave,
+	DoomSerpents,
+	BloodRitual,
+	Nova,
+	Invisibility,
+	Inferno,
+	Golem,
+	Rage,
+	Teleport,
+	Apocalypse,
+	Etherealize,
+	ItemRepair,
+	StaffRecharge,
+	TrapDisarm,
+	Elemental,
+	ChargedBolt,
+	HolyBolt,
+	Resurrect,
+	Telekinesis,
+	HealOther,
+	BloodStar,
+	BoneSpirit,
+	LastDiablo = BoneSpirit,
+	Mana,
+	Magi,
+	Jester,
+	LightningWall,
+	Immolation,
+	Warp,
+	Reflect,
+	Berserk,
+	RingOfFire,
+	Search,
+	RuneOfFire,
+	RuneOfLight,
+	RuneOfNova,
+	RuneOfImmolation,
+	RuneOfStone,
 
-	SPL_LAST = SPL_RUNESTONE,
-	SPL_INVALID = -1,
+	LAST = RuneOfStone,
+	Invalid = -1,
 };
 
 enum class MagicType : uint8_t {
@@ -202,26 +205,63 @@ enum class MissileID : int8_t {
 	// clang-format on
 };
 
+enum class SpellDataFlags : uint8_t {
+	// The lower 2 bytes are used to store MagicType.
+	Fire = static_cast<uint8_t>(MagicType::Fire),
+	Lightning = static_cast<uint8_t>(MagicType::Lightning),
+	Magic = static_cast<uint8_t>(MagicType::Magic),
+	Targeted = 1U << 2,
+	AllowedInTown = 1U << 3,
+};
+use_enum_as_flags(SpellDataFlags);
+
 struct SpellData {
-	spell_id sName;
-	uint8_t sManaCost;
-	MagicType sType;
 	const char *sNameText;
+	_sfx_id sSFX;
+	uint16_t bookCost10;
+	uint8_t staffCost10;
+	uint8_t sManaCost;
+	SpellDataFlags flags;
 	int8_t sBookLvl;
 	int8_t sStaffLvl;
-	bool sTargeted;
-	bool sTownSpell;
-	int16_t sMinInt;
-	_sfx_id sSFX;
-	MissileID sMissiles[3];
+	uint8_t minInt;
+	MissileID sMissiles[2];
 	uint8_t sManaAdj;
 	uint8_t sMinMana;
 	uint8_t sStaffMin;
 	uint8_t sStaffMax;
-	uint32_t sBookCost;
-	uint16_t sStaffCost;
+
+	[[nodiscard]] MagicType type() const
+	{
+		return static_cast<MagicType>(static_cast<std::underlying_type<SpellDataFlags>::type>(flags) & 0b11U);
+	}
+
+	[[nodiscard]] uint32_t bookCost() const
+	{
+		return bookCost10 * 10;
+	}
+
+	[[nodiscard]] uint16_t staffCost() const
+	{
+		return staffCost10 * 10;
+	}
+
+	[[nodiscard]] bool isTargeted() const
+	{
+		return HasAnyOf(flags, SpellDataFlags::Targeted);
+	}
+
+	[[nodiscard]] bool isAllowedInTown() const
+	{
+		return HasAnyOf(flags, SpellDataFlags::AllowedInTown);
+	}
 };
 
-extern const SpellData spelldata[];
+extern const SpellData SpellsData[];
+
+inline const SpellData &GetSpellData(SpellID spellId)
+{
+	return SpellsData[static_cast<std::underlying_type<SpellID>::type>(spellId)];
+}
 
 } // namespace devilution

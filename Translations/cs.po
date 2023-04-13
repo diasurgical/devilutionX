@@ -3996,12 +3996,8 @@ msgid "Right-click to read"
 msgstr "Přečtení - klikni Pravým"
 
 #: Source/items.cpp:1814 Source/items.cpp:1835
-msgid "Select from spell book, then"
-msgstr "Vyber si z knihy kouzel, a poté"
-
-#: Source/items.cpp:1815 Source/items.cpp:1836
-msgid "cast spell to read"
-msgstr "vyčaruj kouzlo pro přečtení"
+msgid "Select from spell book, then\ncast spell to read"
+msgstr "Vyber si z knihy kouzel, a poté\nvyčaruj kouzlo pro přečtení"
 
 #: Source/items.cpp:1817 Source/items.cpp:1838 Source/items.cpp:1852
 msgid "Open inventory to use"
@@ -4012,12 +4008,8 @@ msgid "Activate to read"
 msgstr "Aktivuj pro přečtení"
 
 #: Source/items.cpp:1825
-msgid "Right-click to read, then"
-msgstr "Přečtení - klikni Pravým, poté"
-
-#: Source/items.cpp:1826
-msgid "left-click to target"
-msgstr "klikni Levým na cíl"
+msgid "Right-click to read, then\nleft-click to target"
+msgstr "Přečtení - klikni Pravým, poté\nklikni Levým na cíl"
 
 #: Source/items.cpp:1849
 msgid "Right-click to use"

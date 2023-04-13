@@ -251,7 +251,6 @@ void FirstRoom()
 	WorldTileRectangle room { { 0, 0 }, { 14, 14 } };
 	if (currlevel != 16) {
 		if (currlevel == Quests[Q_WARLORD]._qlevel && Quests[Q_WARLORD]._qactive != QUEST_NOTAVAIL) {
-			assert(!gbIsMultiplayer);
 			room.size = { 11, 11 };
 		} else if (currlevel == Quests[Q_BETRAYER]._qlevel && UseMultiplayerQuests()) {
 			room.size = { 11, 11 };
@@ -1189,7 +1188,7 @@ void GenerateLevel(lvl_entry entry)
 				if (IsAnyOf(dungeon[i][j], 98, 107)) {
 					Make_SetPC({ WorldTilePosition(i - 1, j - 1), { 5, 5 } });
 					// Set the portal position to the location of the northmost pentagram tile.
-					Quests[Q_BETRAYER].position = { i, j };
+					Quests[Q_BETRAYER].position = Point(i, j).megaToWorld();
 				}
 			}
 		}

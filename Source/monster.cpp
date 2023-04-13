@@ -10,7 +10,7 @@
 #include <algorithm>
 #include <array>
 
-#include <fmt/compile.h>
+#include <fmt/core.h>
 #include <fmt/format.h>
 
 #include "control.h"
@@ -888,7 +888,7 @@ void SpawnLoot(Monster &monster, bool sendmsg)
 		CreateMagicWeapon(monster.position.tile, ItemType::Sword, ICURS_GREAT_SWORD, sendmsg, false);
 		CreateMagicWeapon(monster.position.tile, ItemType::Staff, ICURS_WAR_STAFF, sendmsg, false);
 		CreateMagicWeapon(monster.position.tile, ItemType::Bow, ICURS_LONG_WAR_BOW, sendmsg, false);
-		CreateSpellBook(monster.position.tile, SPL_APOCA, sendmsg, false);
+		CreateSpellBook(monster.position.tile, SpellID::Apocalypse, sendmsg, false);
 	} else if (!monster.isPlayerMinion()) {
 		SpawnItem(monster, monster.position.tile, sendmsg);
 	}
@@ -1408,10 +1408,13 @@ void MonsterTalk(Monster &monster)
 		if (monster.talkMsg == TEXT_GARBUD1) {
 			Quests[Q_GARBUD]._qactive = QUEST_ACTIVE;
 			Quests[Q_GARBUD]._qlog = true;
+			NetSendCmdQuest(true, Quests[Q_GARBUD]);
 		}
 		if (monster.talkMsg == TEXT_GARBUD2 && (monster.flags & MFLAG_QUEST_COMPLETE) == 0) {
 			SpawnItem(monster, monster.position.tile + Displacement { 1, 1 }, true);
 			monster.flags |= MFLAG_QUEST_COMPLETE;
+			Quests[Q_GARBUD]._qvar1 = QS_GHARBAD_FIRST_ITEM_SPAWNED;
+			NetSendCmdQuest(true, Quests[Q_GARBUD]);
 		}
 	}
 	if (monster.uniqueType == UniqueMonsterType::Zhar
@@ -1419,8 +1422,10 @@ void MonsterTalk(Monster &monster)
 	    && (monster.flags & MFLAG_QUEST_COMPLETE) == 0) {
 		Quests[Q_ZHAR]._qactive = QUEST_ACTIVE;
 		Quests[Q_ZHAR]._qlog = true;
+		Quests[Q_ZHAR]._qvar1 = QS_ZHAR_ITEM_SPAWNED;
 		CreateTypeItem(monster.position.tile + Displacement { 1, 1 }, false, ItemType::Misc, IMISC_BOOK, true, false);
 		monster.flags |= MFLAG_QUEST_COMPLETE;
+		NetSendCmdQuest(true, Quests[Q_ZHAR]);
 	}
 	if (monster.uniqueType == UniqueMonsterType::SnotSpill) {
 		if (monster.talkMsg == TEXT_BANNER10 && (monster.flags & MFLAG_QUEST_COMPLETE) == 0) {
@@ -1443,14 +1448,13 @@ void MonsterTalk(Monster &monster)
 		if (monster.talkMsg == TEXT_VEIL9) {
 			Quests[Q_VEIL]._qactive = QUEST_ACTIVE;
 			Quests[Q_VEIL]._qlog = true;
-		}
-		if (monster.talkMsg == TEXT_VEIL11 && (monster.flags & MFLAG_QUEST_COMPLETE) == 0) {
-			SpawnUnique(UITEM_STEELVEIL, monster.position.tile + Direction::South);
-			monster.flags |= MFLAG_QUEST_COMPLETE;
+			NetSendCmdQuest(true, Quests[Q_VEIL]);
 		}
 	}
-	if (monster.uniqueType == UniqueMonsterType::WarlordOfBlood)
-		Quests[Q_WARLORD]._qvar1 = 2;
+	if (monster.uniqueType == UniqueMonsterType::WarlordOfBlood) {
+		Quests[Q_WARLORD]._qvar1 = QS_WARLORD_TALKING;
+		NetSendCmdQuest(true, Quests[Q_WARLORD]);
+	}
 	if (monster.uniqueType == UniqueMonsterType::Lazarus && UseMultiplayerQuests()) {
 		Quests[Q_BETRAYER]._qvar1 = 6;
 		monster.goal = MonsterGoal::Normal;
@@ -2503,12 +2507,18 @@ void GharbadAi(Monster &monster)
 		switch (monster.talkMsg) {
 		case TEXT_GARBUD1:
 			monster.talkMsg = TEXT_GARBUD2;
+			Quests[Q_GARBUD]._qvar1 = QS_GHARBAD_FIRST_ITEM_READY;
+			NetSendCmdQuest(true, Quests[Q_GARBUD]);
 			break;
 		case TEXT_GARBUD2:
 			monster.talkMsg = TEXT_GARBUD3;
+			Quests[Q_GARBUD]._qvar1 = QS_GHARBAD_SECOND_ITEM_NEARLY_DONE;
+			NetSendCmdQuest(true, Quests[Q_GARBUD]);
 			break;
 		case TEXT_GARBUD3:
 			monster.talkMsg = TEXT_GARBUD4;
+			Quests[Q_GARBUD]._qvar1 = QS_GHARBAD_SECOND_ITEM_READY;
+			NetSendCmdQuest(true, Quests[Q_GARBUD]);
 			break;
 		default:
 			break;
@@ -2521,6 +2531,8 @@ void GharbadAi(Monster &monster)
 				monster.goal = MonsterGoal::Normal;
 				monster.activeForTicks = UINT8_MAX;
 				monster.talkMsg = TEXT_NONE;
+				Quests[Q_GARBUD]._qvar1 = QS_GHARBAD_ATTACKING;
+				NetSendCmdQuest(true, Quests[Q_GARBUD]);
 			}
 		}
 	}
@@ -2696,6 +2708,8 @@ void ZharAi(Monster &monster)
 	if (monster.talkMsg == TEXT_ZHAR1 && !IsTileVisible(monster.position.tile) && monster.goal == MonsterGoal::Talking) {
 		monster.talkMsg = TEXT_ZHAR2;
 		monster.goal = MonsterGoal::Inquiring;
+		Quests[Q_ZHAR]._qvar1 = QS_ZHAR_ANGRY;
+		NetSendCmdQuest(true, Quests[Q_ZHAR]);
 	}
 
 	if (IsTileVisible(monster.position.tile)) {
@@ -2704,6 +2718,8 @@ void ZharAi(Monster &monster)
 				monster.activeForTicks = UINT8_MAX;
 				monster.talkMsg = TEXT_NONE;
 				monster.goal = MonsterGoal::Normal;
+				Quests[Q_ZHAR]._qvar1 = QS_ZHAR_ATTACKING;
+				NetSendCmdQuest(true, Quests[Q_ZHAR]);
 			}
 		}
 	}
@@ -2858,6 +2874,8 @@ void LachdananAi(Monster &monster)
 	if (monster.talkMsg == TEXT_VEIL9 && !IsTileVisible(monster.position.tile) && monster.goal == MonsterGoal::Talking) {
 		monster.talkMsg = TEXT_VEIL10;
 		monster.goal = MonsterGoal::Inquiring;
+		Quests[Q_VEIL]._qvar2 = QS_VEIL_EARLY_RETURN;
+		NetSendCmdQuest(true, Quests[Q_VEIL]);
 	}
 
 	if (IsTileVisible(monster.position.tile)) {
@@ -2865,7 +2883,10 @@ void LachdananAi(Monster &monster)
 			if (!effect_is_playing(USFX_LACH3) && monster.goal == MonsterGoal::Talking) {
 				monster.talkMsg = TEXT_NONE;
 				Quests[Q_VEIL]._qactive = QUEST_DONE;
+				NetSendCmdQuest(true, Quests[Q_VEIL]);
 				MonsterDeath(monster, monster.direction, true);
+				delta_kill_monster(monster, monster.position.tile, *MyPlayer);
+				NetSendCmdLocParam1(false, CMD_MONSTDEATH, monster.position.tile, monster.getId());
 			}
 		}
 	}
@@ -2887,6 +2908,8 @@ void WarlordAi(Monster &monster)
 			monster.activeForTicks = UINT8_MAX;
 			monster.talkMsg = TEXT_NONE;
 			monster.goal = MonsterGoal::Normal;
+			Quests[Q_WARLORD]._qvar1 = QS_WARLORD_ATTACKING;
+			NetSendCmdQuest(true, Quests[Q_WARLORD]);
 		}
 	}
 
@@ -3377,46 +3400,46 @@ void InitMonsterGFX(CMonster &monsterType)
 	}
 
 	if (IsAnyOf(mtype, MT_NMAGMA, MT_YMAGMA, MT_BMAGMA, MT_WMAGMA))
-		MissileSpriteData[MFILE_MAGBALL].LoadGFX();
+		GetMissileSpriteData(MissileGraphicID::MagmaBall).LoadGFX();
 	if (IsAnyOf(mtype, MT_STORM, MT_RSTORM, MT_STORML, MT_MAEL))
-		MissileSpriteData[MFILE_THINLGHT].LoadGFX();
+		GetMissileSpriteData(MissileGraphicID::ThinLightning).LoadGFX();
 	if (mtype == MT_SNOWWICH) {
-		MissileSpriteData[MFILE_SCUBMISB].LoadGFX();
-		MissileSpriteData[MFILE_SCBSEXPB].LoadGFX();
+		GetMissileSpriteData(MissileGraphicID::BloodStarBlue).LoadGFX();
+		GetMissileSpriteData(MissileGraphicID::BloodStarBlueExplosion).LoadGFX();
 	}
 	if (mtype == MT_HLSPWN) {
-		MissileSpriteData[MFILE_SCUBMISD].LoadGFX();
-		MissileSpriteData[MFILE_SCBSEXPD].LoadGFX();
+		GetMissileSpriteData(MissileGraphicID::BloodStarRed).LoadGFX();
+		GetMissileSpriteData(MissileGraphicID::BloodStarRedExplosion).LoadGFX();
 	}
 	if (mtype == MT_SOLBRNR) {
-		MissileSpriteData[MFILE_SCUBMISC].LoadGFX();
-		MissileSpriteData[MFILE_SCBSEXPC].LoadGFX();
+		GetMissileSpriteData(MissileGraphicID::BloodStarYellow).LoadGFX();
+		GetMissileSpriteData(MissileGraphicID::BloodStarYellowExplosion).LoadGFX();
 	}
 	if (IsAnyOf(mtype, MT_NACID, MT_RACID, MT_BACID, MT_XACID, MT_SPIDLORD)) {
-		MissileSpriteData[MFILE_ACIDBF].LoadGFX();
-		MissileSpriteData[MFILE_ACIDSPLA].LoadGFX();
-		MissileSpriteData[MFILE_ACIDPUD].LoadGFX();
+		GetMissileSpriteData(MissileGraphicID::Acid).LoadGFX();
+		GetMissileSpriteData(MissileGraphicID::AcidSplat).LoadGFX();
+		GetMissileSpriteData(MissileGraphicID::AcidPuddle).LoadGFX();
 	}
 	if (mtype == MT_LICH) {
-		MissileSpriteData[MFILE_LICH].LoadGFX();
-		MissileSpriteData[MFILE_EXORA1].LoadGFX();
+		GetMissileSpriteData(MissileGraphicID::OrangeFlare).LoadGFX();
+		GetMissileSpriteData(MissileGraphicID::OrangeFlareExplosion).LoadGFX();
 	}
 	if (mtype == MT_ARCHLICH) {
-		MissileSpriteData[MFILE_ARCHLICH].LoadGFX();
-		MissileSpriteData[MFILE_EXYEL2].LoadGFX();
+		GetMissileSpriteData(MissileGraphicID::YellowFlare).LoadGFX();
+		GetMissileSpriteData(MissileGraphicID::YellowFlareExplosion).LoadGFX();
 	}
 	if (IsAnyOf(mtype, MT_PSYCHORB, MT_BONEDEMN))
-		MissileSpriteData[MFILE_BONEDEMON].LoadGFX();
+		GetMissileSpriteData(MissileGraphicID::BlueFlare2).LoadGFX();
 	if (mtype == MT_NECRMORB) {
-		MissileSpriteData[MFILE_NECROMORB].LoadGFX();
-		MissileSpriteData[MFILE_EXRED3].LoadGFX();
+		GetMissileSpriteData(MissileGraphicID::RedFlare).LoadGFX();
+		GetMissileSpriteData(MissileGraphicID::RedFlareExplosion).LoadGFX();
 	}
 	if (mtype == MT_PSYCHORB)
-		MissileSpriteData[MFILE_EXBL2].LoadGFX();
+		GetMissileSpriteData(MissileGraphicID::BlueFlareExplosion).LoadGFX();
 	if (mtype == MT_BONEDEMN)
-		MissileSpriteData[MFILE_EXBL3].LoadGFX();
+		GetMissileSpriteData(MissileGraphicID::BlueFlareExplosion2).LoadGFX();
 	if (mtype == MT_DIABLO)
-		MissileSpriteData[MFILE_FIREPLAR].LoadGFX();
+		GetMissileSpriteData(MissileGraphicID::DiabloApocalypseBoom).LoadGFX();
 }
 
 void WeakenNaKrul()
@@ -4487,9 +4510,15 @@ void TalktoMonster(Player &player, Monster &monster)
 		}
 	}
 	if (Quests[Q_VEIL].IsAvailable() && monster.talkMsg >= TEXT_VEIL9) {
-		if (RemoveInventoryItemById(player, IDI_GLDNELIX)) {
+		if (RemoveInventoryItemById(player, IDI_GLDNELIX) && (monster.flags & MFLAG_QUEST_COMPLETE) == 0) {
 			monster.talkMsg = TEXT_VEIL11;
 			monster.goal = MonsterGoal::Inquiring;
+			monster.flags |= MFLAG_QUEST_COMPLETE;
+			if (MyPlayer == &player) {
+				SpawnUnique(UITEM_STEELVEIL, monster.position.tile + Direction::South);
+				Quests[Q_VEIL]._qvar2 = QS_VEIL_ITEM_SPAWNED;
+				NetSendCmdQuest(true, Quests[Q_VEIL]);
+			}
 		}
 	}
 }
@@ -4609,10 +4638,8 @@ bool Monster::isWalking() const
 	}
 }
 
-bool Monster::isImmune(MissileID missileType) const
+bool Monster::isImmune(MissileID missileType, DamageType missileElement) const
 {
-	DamageType missileElement = MissilesData[static_cast<int8_t>(missileType)].damageType;
-
 	if (((resistance & IMMUNE_MAGIC) != 0 && missileElement == DamageType::Magic)
 	    || ((resistance & IMMUNE_FIRE) != 0 && missileElement == DamageType::Fire)
 	    || ((resistance & IMMUNE_LIGHTNING) != 0 && missileElement == DamageType::Lightning)
@@ -4623,10 +4650,8 @@ bool Monster::isImmune(MissileID missileType) const
 	return false;
 }
 
-bool Monster::isResistant(MissileID missileType) const
+bool Monster::isResistant(MissileID missileType, DamageType missileElement) const
 {
-	DamageType missileElement = MissilesData[static_cast<int8_t>(missileType)].damageType;
-
 	if (((resistance & RESIST_MAGIC) != 0 && missileElement == DamageType::Magic)
 	    || ((resistance & RESIST_FIRE) != 0 && missileElement == DamageType::Fire)
 	    || ((resistance & RESIST_LIGHTNING) != 0 && missileElement == DamageType::Lightning))

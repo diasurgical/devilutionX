@@ -22,7 +22,7 @@ OptionalOwnedClxSpriteList LargeSpellIcons;
 
 uint8_t SplTransTbl[256];
 
-/** Maps from spell_id to spelicon.cel frame number. */
+/** Maps from SpellID to spelicon.cel frame number. */
 const uint8_t SpellITbl[] = {
 	26,
 	0,
@@ -126,20 +126,20 @@ void FreeSmallSpellIcons()
 	SmallSpellIcons = std::nullopt;
 }
 
-void DrawLargeSpellIcon(const Surface &out, Point position, spell_id spell)
+void DrawLargeSpellIcon(const Surface &out, Point position, SpellID spell)
 {
 #ifdef UNPACKED_MPQS
 	ClxDrawTRN(out, position, (*LargeSpellIconsBackground)[0], SplTransTbl);
 #endif
-	ClxDrawTRN(out, position, (*LargeSpellIcons)[SpellITbl[spell]], SplTransTbl);
+	ClxDrawTRN(out, position, (*LargeSpellIcons)[SpellITbl[static_cast<int8_t>(spell)]], SplTransTbl);
 }
 
-void DrawSmallSpellIcon(const Surface &out, Point position, spell_id spell)
+void DrawSmallSpellIcon(const Surface &out, Point position, SpellID spell)
 {
 #ifdef UNPACKED_MPQS
 	ClxDrawTRN(out, position, (*SmallSpellIconsBackground)[0], SplTransTbl);
 #endif
-	ClxDrawTRN(out, position, (*SmallSpellIcons)[SpellITbl[spell]], SplTransTbl);
+	ClxDrawTRN(out, position, (*SmallSpellIcons)[SpellITbl[static_cast<int8_t>(spell)]], SplTransTbl);
 }
 
 void DrawLargeSpellIconBorder(const Surface &out, Point position, uint8_t color)

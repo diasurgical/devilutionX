@@ -335,7 +335,7 @@ void LeftMouseDown(uint16_t modState)
 		return;
 	}
 
-	if (stextflag != STORE_NONE) {
+	if (stextflag != TalkID::None) {
 		CheckStoreBtn();
 		return;
 	}
@@ -399,7 +399,7 @@ void LeftMouseUp(uint16_t modState)
 	}
 	if (lvlbtndown)
 		ReleaseLvlBtn();
-	if (stextflag != STORE_NONE)
+	if (stextflag != TalkID::None)
 		ReleaseStoreBtn();
 }
 
@@ -415,7 +415,7 @@ void RightMouseDown(bool isShiftHeld)
 		doom_close();
 		return;
 	}
-	if (stextflag != STORE_NONE)
+	if (stextflag != TalkID::None)
 		return;
 	if (spselflag) {
 		SetSpell();
@@ -427,7 +427,7 @@ void RightMouseDown(bool isShiftHeld)
 		return;
 	if (pcursinvitem != -1 && UseInvItem(MyPlayerId, pcursinvitem))
 		return;
-	if (pcursstashitem != uint16_t(-1) && UseStashItem(pcursstashitem))
+	if (pcursstashitem != StashStruct::EmptyCell && UseStashItem(pcursstashitem))
 		return;
 	if (pcurs == CURSOR_HAND) {
 		CheckPlrSpell(isShiftHeld);
@@ -556,7 +556,7 @@ void PressKey(SDL_Keycode vkey, uint16_t modState)
 		if ((modState & KMOD_ALT) != 0) {
 			sgOptions.Graphics.fullscreen.SetValue(!IsFullScreen());
 			SaveOptions();
-		} else if (stextflag != STORE_NONE) {
+		} else if (stextflag != TalkID::None) {
 			StoreEnter();
 		} else if (QuestLogIsOpen) {
 			QuestlogEnter();
@@ -565,7 +565,7 @@ void PressKey(SDL_Keycode vkey, uint16_t modState)
 		}
 		return;
 	case SDLK_UP:
-		if (stextflag != STORE_NONE) {
+		if (stextflag != TalkID::None) {
 			StoreUp();
 		} else if (QuestLogIsOpen) {
 			QuestlogUp();
@@ -580,7 +580,7 @@ void PressKey(SDL_Keycode vkey, uint16_t modState)
 		}
 		return;
 	case SDLK_DOWN:
-		if (stextflag != STORE_NONE) {
+		if (stextflag != TalkID::None) {
 			StoreDown();
 		} else if (QuestLogIsOpen) {
 			QuestlogDown();
@@ -595,14 +595,14 @@ void PressKey(SDL_Keycode vkey, uint16_t modState)
 		}
 		return;
 	case SDLK_PAGEUP:
-		if (stextflag != STORE_NONE) {
+		if (stextflag != TalkID::None) {
 			StorePrior();
 		} else if (ChatLogFlag) {
 			ChatLogScrollTop();
 		}
 		return;
 	case SDLK_PAGEDOWN:
-		if (stextflag != STORE_NONE) {
+		if (stextflag != TalkID::None) {
 			StoreNext();
 		} else if (ChatLogFlag) {
 			ChatLogScrollBottom();
@@ -623,7 +623,7 @@ void PressKey(SDL_Keycode vkey, uint16_t modState)
 
 void HandleMouseButtonDown(Uint8 button, uint16_t modState)
 {
-	if (stextflag != STORE_NONE && (button == SDL_BUTTON_X1
+	if (stextflag != TalkID::None && (button == SDL_BUTTON_X1
 #if !SDL_VERSION_ATLEAST(2, 0, 0)
 	        || button == 8
 #endif
@@ -841,7 +841,7 @@ void RunGameLoop(interface_mode uMsg)
 
 		bool drawGame = true;
 		bool processInput = true;
-		bool runGameLoop = demo::IsRunning() ? demo::GetRunGameLoop(drawGame, processInput) : nthread_has_500ms_passed();
+		bool runGameLoop = demo::IsRunning() ? demo::GetRunGameLoop(drawGame, processInput) : nthread_has_500ms_passed(&drawGame);
 		if (demo::IsRecording())
 			demo::RecordGameLoopResult(runGameLoop);
 
@@ -1109,7 +1109,7 @@ void CheckArchivesUpToDate()
 	}
 }
 
-void DiabloInit()
+void ApplicationInit()
 {
 	if (*sgOptions.Graphics.showFPS)
 		EnableFrameCount();
@@ -1117,6 +1117,15 @@ void DiabloInit()
 	init_create_window();
 	was_window_init = true;
 
+	LanguageInitialize();
+
+	SetApplicationVersions();
+
+	ReadOnlyTest();
+}
+
+void DiabloInit()
+{
 	if (forceSpawn || *sgOptions.StartUp.shareware)
 		gbIsSpawn = true;
 	if (forceDiablo || *sgOptions.StartUp.gameMode == StartUpGameMode::Diablo)
@@ -1125,10 +1134,6 @@ void DiabloInit()
 		gbIsHellfire = true;
 
 	gbIsHellfireSaveGame = gbIsHellfire;
-
-	LanguageInitialize();
-
-	SetApplicationVersions();
 
 	for (size_t i = 0; i < QUICK_MESSAGE_OPTIONS; i++) {
 		auto &messages = sgOptions.Chat.szHotKeyMsgs[i];
@@ -1143,8 +1148,6 @@ void DiabloInit()
 
 	UiInitialize();
 	was_ui_init = true;
-
-	ReadOnlyTest();
 
 	if (gbIsHellfire && !forceHellfire && *sgOptions.StartUp.gameMode == StartUpGameMode::Ask) {
 		UiSelStartUpGameOption();
@@ -1438,7 +1441,7 @@ void HelpKeyPressed()
 {
 	if (HelpFlag) {
 		HelpFlag = false;
-	} else if (stextflag != STORE_NONE) {
+	} else if (stextflag != TalkID::None) {
 		InfoString = {};
 		AddPanelString(_("No help available")); /// BUGFIX: message isn't displayed
 		AddPanelString(_("while in stores"));
@@ -1462,7 +1465,7 @@ void HelpKeyPressed()
 
 void InventoryKeyPressed()
 {
-	if (stextflag != STORE_NONE)
+	if (stextflag != TalkID::None)
 		return;
 	invflag = !invflag;
 	if (!IsLeftPanelOpen() && CanPanelsCoverView()) {
@@ -1483,7 +1486,7 @@ void InventoryKeyPressed()
 
 void CharacterSheetKeyPressed()
 {
-	if (stextflag != STORE_NONE)
+	if (stextflag != TalkID::None)
 		return;
 	chrflag = !chrflag;
 	if (!IsRightPanelOpen() && CanPanelsCoverView()) {
@@ -1504,7 +1507,7 @@ void CharacterSheetKeyPressed()
 
 void QuestLogKeyPressed()
 {
-	if (stextflag != STORE_NONE)
+	if (stextflag != TalkID::None)
 		return;
 	if (!QuestLogIsOpen) {
 		StartQuestlog();
@@ -1529,7 +1532,7 @@ void QuestLogKeyPressed()
 
 void DisplaySpellsKeyPressed()
 {
-	if (stextflag != STORE_NONE)
+	if (stextflag != TalkID::None)
 		return;
 	chrflag = false;
 	QuestLogIsOpen = false;
@@ -1545,7 +1548,7 @@ void DisplaySpellsKeyPressed()
 
 void SpellBookKeyPressed()
 {
-	if (stextflag != STORE_NONE)
+	if (stextflag != TalkID::None)
 		return;
 	sbookflag = !sbookflag;
 	if (!IsLeftPanelOpen() && CanPanelsCoverView()) {
@@ -1655,7 +1658,7 @@ void InitKeymapActions()
 	    SDLK_F3,
 	    [] { gamemenu_load_game(false); },
 	    nullptr,
-	    [&]() { return !gbIsMultiplayer && gbValidSaveFile && stextflag == STORE_NONE && IsGameRunning(); });
+	    [&]() { return !gbIsMultiplayer && gbValidSaveFile && stextflag == TalkID::None && IsGameRunning(); });
 #ifndef NOEXIT
 	sgOptions.Keymapper.AddAction(
 	    "QuitGame",
@@ -1986,8 +1989,8 @@ void InitPadmapActions()
 	    N_("Toggle stand ground"),
 	    N_("Toggle whether the player moves."),
 	    ControllerButton_NONE,
-	    [] { StandToggle = true; },
-	    [] { StandToggle = false; },
+	    [] { StandToggle = !StandToggle; },
+	    nullptr,
 	    CanPlayerTakeAction);
 	sgOptions.Padmapper.AddAction(
 	    "UseHealthPotion",
@@ -2083,60 +2086,58 @@ void InitPadmapActions()
 	    N_("Simulates rightward mouse movement."),
 	    { ControllerButton_BUTTON_BACK, ControllerButton_BUTTON_DPAD_RIGHT },
 	    [] {});
+	auto leftMouseDown = [] {
+		ControllerButtonCombo standGroundCombo = sgOptions.Padmapper.ButtonComboForAction("StandGround");
+		bool standGround = StandToggle || IsControllerButtonComboPressed(standGroundCombo);
+		sgbMouseDown = CLICK_LEFT;
+		LeftMouseDown(standGround ? KMOD_SHIFT : KMOD_NONE);
+	};
+	auto leftMouseUp = [] {
+		ControllerButtonCombo standGroundCombo = sgOptions.Padmapper.ButtonComboForAction("StandGround");
+		bool standGround = StandToggle || IsControllerButtonComboPressed(standGroundCombo);
+		LastMouseButtonAction = MouseActionType::None;
+		sgbMouseDown = CLICK_NONE;
+		LeftMouseUp(standGround ? KMOD_SHIFT : KMOD_NONE);
+	};
 	sgOptions.Padmapper.AddAction(
 	    "LeftMouseClick1",
 	    N_("Left mouse click"),
 	    N_("Simulates the left mouse button."),
 	    ControllerButton_BUTTON_RIGHTSTICK,
-	    [] {
-		    sgbMouseDown = CLICK_LEFT;
-		    LeftMouseDown(KMOD_NONE);
-	    },
-	    [] {
-		    LastMouseButtonAction = MouseActionType::None;
-		    sgbMouseDown = CLICK_NONE;
-		    LeftMouseUp(KMOD_NONE);
-	    });
+	    leftMouseDown,
+	    leftMouseUp);
 	sgOptions.Padmapper.AddAction(
 	    "LeftMouseClick2",
 	    N_("Left mouse click"),
 	    N_("Simulates the left mouse button."),
 	    { ControllerButton_BUTTON_BACK, ControllerButton_BUTTON_LEFTSHOULDER },
-	    [] {
-		    sgbMouseDown = CLICK_LEFT;
-		    LeftMouseDown(KMOD_NONE);
-	    },
-	    [] {
-		    LastMouseButtonAction = MouseActionType::None;
-		    sgbMouseDown = CLICK_NONE;
-		    LeftMouseUp(KMOD_NONE);
-	    });
+	    leftMouseDown,
+	    leftMouseUp);
+	auto rightMouseDown = [] {
+		ControllerButtonCombo standGroundCombo = sgOptions.Padmapper.ButtonComboForAction("StandGround");
+		bool standGround = StandToggle || IsControllerButtonComboPressed(standGroundCombo);
+		LastMouseButtonAction = MouseActionType::None;
+		sgbMouseDown = CLICK_RIGHT;
+		RightMouseDown(standGround);
+	};
+	auto rightMouseUp = [] {
+		LastMouseButtonAction = MouseActionType::None;
+		sgbMouseDown = CLICK_NONE;
+	};
 	sgOptions.Padmapper.AddAction(
 	    "RightMouseClick1",
 	    N_("Right mouse click"),
 	    N_("Simulates the right mouse button."),
 	    { ControllerButton_BUTTON_BACK, ControllerButton_BUTTON_RIGHTSTICK },
-	    [] {
-		    sgbMouseDown = CLICK_RIGHT;
-		    RightMouseDown(false);
-	    },
-	    [] {
-		    LastMouseButtonAction = MouseActionType::None;
-		    sgbMouseDown = CLICK_NONE;
-	    });
+	    rightMouseDown,
+	    rightMouseUp);
 	sgOptions.Padmapper.AddAction(
 	    "RightMouseClick2",
 	    N_("Right mouse click"),
 	    N_("Simulates the right mouse button."),
 	    { ControllerButton_BUTTON_BACK, ControllerButton_BUTTON_RIGHTSHOULDER },
-	    [] {
-		    sgbMouseDown = CLICK_RIGHT;
-		    RightMouseDown(false);
-	    },
-	    [] {
-		    LastMouseButtonAction = MouseActionType::None;
-		    sgbMouseDown = CLICK_NONE;
-	    });
+	    rightMouseDown,
+	    rightMouseUp);
 	sgOptions.Padmapper.AddAction(
 	    "PadHotspellMenu",
 	    N_("Gamepad hotspell menu"),
@@ -2193,7 +2194,7 @@ void InitPadmapActions()
 	    ControllerButton_NONE,
 	    [] { gamemenu_load_game(false); },
 	    nullptr,
-	    [&]() { return !gbIsMultiplayer && gbValidSaveFile && stextflag == STORE_NONE && IsGameRunning(); });
+	    [&]() { return !gbIsMultiplayer && gbValidSaveFile && stextflag == TalkID::None && IsGameRunning(); });
 	sgOptions.Padmapper.AddAction(
 	    "Item Highlighting",
 	    N_("Item highlighting"),
@@ -2414,6 +2415,9 @@ int DiabloMain(int argc, char **argv)
 	// Then look for a voice pack file based on the selected translation
 	LoadLanguageArchive();
 
+	ApplicationInit();
+	SaveOptions();
+
 	// Finally load game data
 	LoadGameArchives();
 
@@ -2462,7 +2466,7 @@ bool TryIconCurs()
 	if (pcurs == CURSOR_IDENTIFY) {
 		if (pcursinvitem != -1)
 			CheckIdentify(myPlayer, pcursinvitem);
-		else if (pcursstashitem != uint16_t(-1)) {
+		else if (pcursstashitem != StashStruct::EmptyCell) {
 			Item &item = Stash.stashList[pcursstashitem];
 			item._iIdentified = true;
 		}
@@ -2473,7 +2477,7 @@ bool TryIconCurs()
 	if (pcurs == CURSOR_REPAIR) {
 		if (pcursinvitem != -1)
 			DoRepair(myPlayer, pcursinvitem);
-		else if (pcursstashitem != uint16_t(-1)) {
+		else if (pcursstashitem != StashStruct::EmptyCell) {
 			Item &item = Stash.stashList[pcursstashitem];
 			RepairItem(item, myPlayer._pLevel);
 		}
@@ -2484,7 +2488,7 @@ bool TryIconCurs()
 	if (pcurs == CURSOR_RECHARGE) {
 		if (pcursinvitem != -1)
 			DoRecharge(myPlayer, pcursinvitem);
-		else if (pcursstashitem != uint16_t(-1)) {
+		else if (pcursstashitem != StashStruct::EmptyCell) {
 			Item &item = Stash.stashList[pcursstashitem];
 			RechargeItem(item, myPlayer);
 		}
@@ -2496,7 +2500,7 @@ bool TryIconCurs()
 		bool changeCursor = true;
 		if (pcursinvitem != -1)
 			changeCursor = DoOil(myPlayer, pcursinvitem);
-		else if (pcursstashitem != uint16_t(-1)) {
+		else if (pcursstashitem != StashStruct::EmptyCell) {
 			Item &item = Stash.stashList[pcursstashitem];
 			changeCursor = ApplyOilToItem(item, myPlayer);
 		}
@@ -2507,11 +2511,11 @@ bool TryIconCurs()
 
 	if (pcurs == CURSOR_TELEPORT) {
 		if (pcursmonst != -1)
-			NetSendCmdParam4(true, CMD_TSPELLID, pcursmonst, myPlayer._pTSpell, myPlayer.GetSpellLevel(myPlayer._pTSpell), myPlayer.queuedSpell.spellFrom);
+			NetSendCmdParam4(true, CMD_TSPELLID, pcursmonst, static_cast<int8_t>(myPlayer._pTSpell), myPlayer.GetSpellLevel(myPlayer._pTSpell), myPlayer.queuedSpell.spellFrom);
 		else if (pcursplr != -1)
-			NetSendCmdParam4(true, CMD_TSPELLPID, pcursplr, myPlayer._pTSpell, myPlayer.GetSpellLevel(myPlayer._pTSpell), myPlayer.queuedSpell.spellFrom);
+			NetSendCmdParam4(true, CMD_TSPELLPID, pcursplr, static_cast<int8_t>(myPlayer._pTSpell), myPlayer.GetSpellLevel(myPlayer._pTSpell), myPlayer.queuedSpell.spellFrom);
 		else
-			NetSendCmdLocParam3(true, CMD_TSPELLXY, cursPosition, myPlayer._pTSpell, myPlayer.GetSpellLevel(myPlayer._pTSpell), myPlayer.queuedSpell.spellFrom);
+			NetSendCmdLocParam3(true, CMD_TSPELLXY, cursPosition, static_cast<int8_t>(myPlayer._pTSpell), myPlayer.GetSpellLevel(myPlayer._pTSpell), myPlayer.queuedSpell.spellFrom);
 		NewCursor(CURSOR_HAND);
 		return true;
 	}
@@ -2610,7 +2614,7 @@ bool PressEscKey()
 		rv = true;
 	}
 
-	if (stextflag != STORE_NONE) {
+	if (stextflag != TalkID::None) {
 		StoreESC();
 		rv = true;
 	}
@@ -2704,7 +2708,14 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		InitStores();
 		InitAutomapOnce();
 	}
-	SetRndSeed(glSeedTbl[currlevel]);
+	if (!setlevel) {
+		SetRndSeed(glSeedTbl[currlevel]);
+	} else {
+		// Maps are not randomly generated, but the monsters max hitpoints are.
+		// So we need to ensure that we have a stable seed when generating quest/set-maps.
+		// For this purpose we reuse the normal dungeon seeds.
+		SetRndSeed(glSeedTbl[static_cast<size_t>(setlvlnum)]);
+	}
 
 	if (leveltype == DTYPE_TOWN) {
 		SetupTownStores();
@@ -2753,8 +2764,11 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 
 		IncProgress();
 
-		if (lvldir == ENTRY_RTNLVL)
-			GetReturnLvlPos();
+		if (lvldir == ENTRY_RTNLVL) {
+			ViewPosition = GetMapReturnPosition();
+			if (Quests[Q_BETRAYER]._qactive == QUEST_DONE)
+				Quests[Q_BETRAYER]._qvar2 = 2;
+		}
 		if (lvldir == ENTRY_WARPLVL)
 			GetPortalLvlPos();
 
@@ -2923,7 +2937,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 	}
 
 	if (leveltype == DTYPE_CRYPT) {
-		if (currlevel == 21) {
+		if (CornerStone.isAvailable()) {
 			CornerstoneLoad(CornerStone.position);
 		}
 		if (Quests[Q_NAKRUL]._qactive == QUEST_DONE && currlevel == 24) {

@@ -251,7 +251,7 @@ bool base::SNetReceiveTurns(char **data, size_t *size, uint32_t *status)
 		std::deque<turn_t> &turnQueue = playerState.turnQueue;
 		while (!turnQueue.empty()) {
 			const turn_t &turn = turnQueue.front();
-			seq_t diff = turn.SequenceNumber - next_turn;
+			seq_t diff = turn.SequenceNumber - current_turn;
 			if (diff <= 0x7F)
 				break;
 			turnQueue.pop_front();
@@ -269,7 +269,7 @@ bool base::SNetReceiveTurns(char **data, size_t *size, uint32_t *status)
 				continue;
 
 			const turn_t &turn = turnQueue.front();
-			if (turn.SequenceNumber != next_turn)
+			if (turn.SequenceNumber != current_turn)
 				continue;
 
 			playerState.lastTurnValue = turn.Value;
@@ -281,7 +281,7 @@ bool base::SNetReceiveTurns(char **data, size_t *size, uint32_t *status)
 			data[i] = reinterpret_cast<char *>(&playerState.lastTurnValue);
 		}
 
-		next_turn++;
+		current_turn++;
 
 		return true;
 	}
@@ -309,6 +309,7 @@ bool base::SNetSendTurn(char *data, unsigned int size)
 	turn_t turn;
 	turn.SequenceNumber = next_turn;
 	std::memcpy(&turn.Value, data, size);
+	next_turn++;
 
 	PlayerState &playerState = playerStateTable_[plr_self];
 	std::deque<turn_t> &turnQueue = playerState.turnQueue;
@@ -338,9 +339,10 @@ void base::SendFirstTurnIfReady(plr_t player)
 	if (turnQueue.empty())
 		return;
 
-	turn_t turn = turnQueue.back();
-	auto pkt = pktfty->make_packet<PT_TURN>(plr_self, player, turn);
-	send(*pkt);
+	for (turn_t turn : turnQueue) {
+		auto pkt = pktfty->make_packet<PT_TURN>(plr_self, player, turn);
+		send(*pkt);
+	}
 }
 
 void base::MakeReady(seq_t sequenceNumber)
@@ -348,14 +350,15 @@ void base::MakeReady(seq_t sequenceNumber)
 	if (!awaitingSequenceNumber_)
 		return;
 
+	current_turn = sequenceNumber;
 	next_turn = sequenceNumber;
 	awaitingSequenceNumber_ = false;
 
 	PlayerState &playerState = playerStateTable_[plr_self];
 	std::deque<turn_t> &turnQueue = playerState.turnQueue;
-	if (!turnQueue.empty()) {
-		turn_t &turn = turnQueue.front();
+	for (turn_t &turn : turnQueue) {
 		turn.SequenceNumber = next_turn;
+		next_turn++;
 		SendTurnIfReady(turn);
 	}
 }
@@ -370,7 +373,7 @@ void base::SNetGetProviderCaps(struct _SNETCAPS *caps)
 	caps->bytessec = 1000000;        // ?
 	caps->latencyms = 0;             // unused
 	caps->defaultturnssec = 10;      // ?
-	caps->defaultturnsintransit = 1; // maximum acceptable number
+	caps->defaultturnsintransit = 2; // maximum acceptable number
 	                                 // of turns in queue?
 }
 

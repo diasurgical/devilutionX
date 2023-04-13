@@ -10,6 +10,10 @@
 #include <array>
 #include <utility>
 
+#ifdef DEBUG_CLX
+#include <string>
+#endif
+
 #include "engine.h"
 #include "engine/clx_sprite.hpp"
 #include "engine/point.hpp"
@@ -111,5 +115,9 @@ inline void ClxDrawLightBlended(const Surface &out, Point position, ClxSprite cl
  * of fully transparent columns in the sprite.
  */
 std::pair<int, int> ClxMeasureSolidHorizontalBounds(ClxSprite clx);
+
+#ifdef DEBUG_CLX
+std::string ClxDescribe(ClxSprite clx);
+#endif
 
 } // namespace devilution

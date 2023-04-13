@@ -5,11 +5,10 @@
  */
 
 #include <cstdint>
-#include <fstream>
+#include <cstdio>
 
 #include <fmt/format.h>
 
-#define SI_SUPPORT_IOSTREAMS
 #define SI_NO_CONVERSION
 #include <SimpleIni.h>
 
@@ -31,7 +30,6 @@
 #include "utils/log.hpp"
 #include "utils/paths.h"
 #include "utils/stdcompat/algorithm.hpp"
-#include "utils/stdcompat/filesystem.hpp"
 #include "utils/str_cat.hpp"
 #include "utils/str_split.hpp"
 #include "utils/utf8.hpp"
@@ -92,11 +90,13 @@ CSimpleIni &GetIni()
 	static bool isIniLoaded = false;
 	if (!isIniLoaded) {
 		auto path = GetIniPath();
-		auto stream = CreateFileStream(path.c_str(), std::fstream::in | std::fstream::binary);
+		FILE *file = OpenFile(path.c_str(), "rb");
 		ini.SetSpaces(false);
 		ini.SetMultiKey();
-		if (stream)
-			ini.LoadData(*stream);
+		if (file != nullptr) {
+			ini.LoadFile(file);
+			std::fclose(file);
+		}
 		isIniLoaded = true;
 	}
 	return ini;
@@ -235,18 +235,15 @@ void SaveIni()
 {
 	if (!IniChanged)
 		return;
-#ifdef DVL_HAS_FILESYSTEM
-	{
-		std::error_code error;
-		std::filesystem::create_directories(paths::ConfigPath(), error);
-		if (error) {
-			LogError("failed to create directory: {}", error.message());
-		}
+	RecursivelyCreateDir(paths::ConfigPath().c_str());
+	const std::string iniPath = GetIniPath();
+	FILE *file = OpenFile(iniPath.c_str(), "wb");
+	if (file != nullptr) {
+		GetIni().SaveFile(file, true);
+		std::fclose(file);
+	} else {
+		LogError("Failed to write ini file to {}: {}", iniPath, std::strerror(errno));
 	}
-#endif
-	auto iniPath = GetIniPath();
-	auto stream = CreateFileStream(iniPath.c_str(), std::fstream::out | std::fstream::trunc | std::fstream::binary);
-	GetIni().Save(*stream, true);
 	IniChanged = false;
 }
 
@@ -291,6 +288,16 @@ void OptionEnemyHealthBarChanged()
 	else
 		FreeMonsterHealthBar();
 }
+
+#if !defined(USE_SDL1) || defined(__3DS__)
+void ResizeWindowAndUpdateResolutionOptions()
+{
+	ResizeWindow();
+#ifndef __3DS__
+	sgOptions.Graphics.resolution.InvalidateList();
+#endif
+}
+#endif
 
 void OptionShowFPSChanged()
 {
@@ -681,6 +688,11 @@ void OptionEntryResolution::SaveToIni(string_view category) const
 	SetIniValue(category.data(), "Height", size.height);
 }
 
+void OptionEntryResolution::InvalidateList()
+{
+	resolutions.clear();
+}
+
 void OptionEntryResolution::CheckResolutionsAreInitialized() const
 {
 	if (!resolutions.empty())
@@ -690,10 +702,13 @@ void OptionEntryResolution::CheckResolutionsAreInitialized() const
 	float scaleFactor = GetDpiScalingFactor();
 
 	// Add resolutions
+	bool supportsAnyResolution = false;
 #ifdef USE_SDL1
 	auto *modes = SDL_ListModes(nullptr, SDL_FULLSCREEN | SDL_HWPALETTE);
 	// SDL_ListModes returns -1 if any resolution is allowed (for example returned on 3DS)
-	if (modes != nullptr && modes != (SDL_Rect **)-1) {
+	if (modes == (SDL_Rect **)-1) {
+		supportsAnyResolution = true;
+	} else if (modes != nullptr) {
 		for (size_t i = 0; modes[i] != nullptr; i++) {
 			if (modes[i]->w < modes[i]->h) {
 				std::swap(modes[i]->w, modes[i]->h);
@@ -717,12 +732,45 @@ void OptionEntryResolution::CheckResolutionsAreInitialized() const
 		    static_cast<int>(mode.w * scaleFactor),
 		    static_cast<int>(mode.h * scaleFactor) });
 	}
+	supportsAnyResolution = *sgOptions.Graphics.upscale;
 #endif
 
+	if (supportsAnyResolution && sizes.size() == 1) {
+		// Attempt to provide sensible options for 4:3 and the native aspect ratio
+		const int width = sizes[0].width;
+		const int height = sizes[0].height;
+		const int commonHeights[] = { 480, 540, 720, 960, 1080, 1440, 2160 };
+		for (int commonHeight : commonHeights) {
+			if (commonHeight > height)
+				break;
+			sizes.emplace_back(Size { commonHeight * 4 / 3, commonHeight });
+			if (commonHeight * width % height == 0)
+				sizes.emplace_back(Size { commonHeight * width / height, commonHeight });
+		}
+	}
 	// Ensures that the ini specified resolution is present in resolution list even if it doesn't match a monitor resolution (for example if played in window mode)
 	sizes.push_back(this->size);
-	// Ensures that the vanilla/default resolution is always present
+	// Ensures that the platform's preferred default resolution is always present
 	sizes.emplace_back(Size { DEFAULT_WIDTH, DEFAULT_HEIGHT });
+	// Ensures that the vanilla Diablo resolution is present on systems that would support it
+	if (supportsAnyResolution)
+		sizes.emplace_back(Size { 640, 480 });
+
+#ifndef USE_SDL1
+	if (*sgOptions.Graphics.fitToScreen) {
+		SDL_DisplayMode mode;
+		if (SDL_GetDesktopDisplayMode(0, &mode) != 0) {
+			ErrSdl();
+		}
+		for (auto &size : sizes) {
+			// Ensure that the ini specified resolution remains present in the resolution list
+			if (size.height == this->size.height)
+				size.width = this->size.width;
+			else
+				size.width = size.height * mode.w / mode.h;
+		}
+	}
+#endif
 
 	// Sort by width then by height
 	std::sort(sizes.begin(), sizes.end(),
@@ -735,6 +783,12 @@ void OptionEntryResolution::CheckResolutionsAreInitialized() const
 	sizes.erase(std::unique(sizes.begin(), sizes.end()), sizes.end());
 
 	for (auto &size : sizes) {
+#ifndef USE_SDL1
+		if (*sgOptions.Graphics.fitToScreen) {
+			resolutions.emplace_back(size, StrCat(size.height, "p"));
+			continue;
+		}
+#endif
 		resolutions.emplace_back(size, StrCat(size.width, "x", size.height));
 	}
 }
@@ -938,18 +992,18 @@ GraphicsOptions::GraphicsOptions()
     , hardwareCursorMaxSize("Hardware Cursor Maximum Size", OptionEntryFlags::CantChangeInGame | OptionEntryFlags::RecreateUI | (HardwareCursorSupported() ? OptionEntryFlags::None : OptionEntryFlags::Invisible), N_("Hardware Cursor Maximum Size"), N_("Maximum width / height for the hardware cursor. Larger cursors fall back to software."), 128, { 0, 64, 128, 256, 512 })
 #endif
     , limitFPS("FPS Limiter", OptionEntryFlags::None, N_("FPS Limiter"), N_("FPS is limited to avoid high CPU load. Limit considers refresh rate."), true)
-    , showFPS("Show FPS", OptionEntryFlags::None, N_("Show FPS"), N_("Displays the FPS in the upper left corner of the screen."), false)
     , showItemGraphicsInStores("Show Item Graphics in Stores", OptionEntryFlags::None, N_("Show Item Graphics in Stores"), N_("Show item graphics to the left of item descriptions in store menus."), false)
+    , showFPS("Show FPS", OptionEntryFlags::None, N_("Show FPS"), N_("Displays the FPS in the upper left corner of the screen."), false)
     , showHealthValues("Show health values", OptionEntryFlags::None, N_("Show health values"), N_("Displays current / max health value on health globe."), false)
     , showManaValues("Show mana values", OptionEntryFlags::None, N_("Show mana values"), N_("Displays current / max mana value on mana globe."), false)
 {
 	resolution.SetValueChangedCallback(ResizeWindow);
 	fullscreen.SetValueChangedCallback(SetFullscreenMode);
 #if !defined(USE_SDL1) || defined(__3DS__)
-	fitToScreen.SetValueChangedCallback(ResizeWindow);
+	fitToScreen.SetValueChangedCallback(ResizeWindowAndUpdateResolutionOptions);
 #endif
 #ifndef USE_SDL1
-	upscale.SetValueChangedCallback(ResizeWindow);
+	upscale.SetValueChangedCallback(ResizeWindowAndUpdateResolutionOptions);
 	scaleQuality.SetValueChangedCallback(ReinitializeTexture);
 	integerScaling.SetValueChangedCallback(ReinitializeIntegerScale);
 	vSync.SetValueChangedCallback(ReinitializeRenderer);
@@ -999,6 +1053,7 @@ GameplayOptions::GameplayOptions()
     , theoQuest("Theo Quest", OptionEntryFlags::CantChangeInGame | OptionEntryFlags::OnlyHellfire, N_("Theo Quest"), N_("Enable Little Girl quest."), false)
     , cowQuest("Cow Quest", OptionEntryFlags::CantChangeInGame | OptionEntryFlags::OnlyHellfire, N_("Cow Quest"), N_("Enable Jersey's quest. Lester the farmer is replaced by the Complete Nut."), false)
     , friendlyFire("Friendly Fire", OptionEntryFlags::CantChangeInMultiPlayer, N_("Friendly Fire"), N_("Allow arrow/spell damage between players in multiplayer even when the friendly mode is on."), true)
+    , multiplayerFullQuests("MultiplayerFullQuests", OptionEntryFlags::CantChangeInMultiPlayer, N_("Full quests in Multiplayer"), N_("Enables the full/uncut singleplayer version of quests."), false)
     , testBard("Test Bard", OptionEntryFlags::CantChangeInGame, N_("Test Bard"), N_("Force the Bard character type to appear in the hero selection menu."), false)
     , testBarbarian("Test Barbarian", OptionEntryFlags::CantChangeInGame, N_("Test Barbarian"), N_("Force the Barbarian character type to appear in the hero selection menu."), false)
     , experienceBar("Experience Bar", OptionEntryFlags::None, N_("Experience Bar"), N_("Experience Bar is added to the UI at the bottom of the screen."), false)
@@ -1047,6 +1102,7 @@ std::vector<OptionEntryBase *> GameplayOptions::GetEntries()
 		&theoQuest,
 		&cowQuest,
 		&friendlyFire,
+		&multiplayerFullQuests,
 		&testBard,
 		&testBarbarian,
 		&experienceBar,
@@ -1644,6 +1700,16 @@ void PadmapperOptions::ButtonReleased(ControllerButton button, bool invokeAction
 			action->actionReleased();
 	}
 	buttonToReleaseAction[static_cast<size_t>(button)] = nullptr;
+}
+
+void PadmapperOptions::ReleaseAllActiveButtons()
+{
+	for (auto *action : buttonToReleaseAction) {
+		if (action == nullptr)
+			continue;
+		ControllerButton button = action->boundInput.button;
+		ButtonReleased(button, true);
+	}
 }
 
 bool PadmapperOptions::IsActive(string_view actionName) const

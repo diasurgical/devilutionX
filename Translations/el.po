@@ -4040,20 +4040,12 @@ msgid "Activate to read"
 msgstr ""
 
 #: Source/items.cpp:1822
-msgid "Right-click to read, then"
-msgstr "Δεξί-κλικ για διάβασμα, και"
-
-#: Source/items.cpp:1823
-msgid "left-click to target"
-msgstr "αριστερό-κλικ στον στόχο"
+msgid "Right-click to read, then\nleft-click to target"
+msgstr "Δεξί-κλικ για διάβασμα, και\nαριστερό-κλικ στον στόχο"
 
 #: Source/items.cpp:1826
-msgid "Select from spell book, then"
-msgstr ""
-
-#: Source/items.cpp:1827
-msgid "cast spell to read"
-msgstr ""
+msgid "Select from spell book, then\ncast spell to read"
+msgstr "Επιλέξτε από το βιβλίο με τα ξόρκια και μετά\nκάντε ξόρκι για ανάγνωση"
 
 #: Source/items.cpp:1840
 msgid "Right-click to use"

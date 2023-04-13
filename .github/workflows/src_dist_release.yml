@@ -3,6 +3,8 @@ name: Build source tarball
 on:
   release:
     types: [published]
+    paths-ignore:
+      - '*.md'
   workflow_dispatch:
 
 concurrency:

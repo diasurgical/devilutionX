@@ -42,9 +42,9 @@ void PrintSBookHotkey(const Surface &out, Point position, const string_view text
 	DrawString(out, text, position, UiFlags::ColorWhite | UiFlags::Outlined);
 }
 
-bool GetSpellListSelection(spell_id &pSpell, SpellType &pSplType)
+bool GetSpellListSelection(SpellID &pSpell, SpellType &pSplType)
 {
-	pSpell = spell_id::SPL_INVALID;
+	pSpell = SpellID::Invalid;
 	pSplType = SpellType::Invalid;
 	Player &myPlayer = *MyPlayer;
 
@@ -52,7 +52,7 @@ bool GetSpellListSelection(spell_id &pSpell, SpellType &pSplType)
 		if (spellListItem.isSelected) {
 			pSpell = spellListItem.id;
 			pSplType = spellListItem.type;
-			if (myPlayer._pClass == HeroClass::Monk && spellListItem.id == SPL_SEARCH)
+			if (myPlayer._pClass == HeroClass::Monk && spellListItem.id == SpellID::Search)
 				pSplType = SpellType::Skill;
 			return true;
 		}
@@ -61,7 +61,7 @@ bool GetSpellListSelection(spell_id &pSpell, SpellType &pSplType)
 	return false;
 }
 
-std::optional<string_view> GetHotkeyName(spell_id spellId, SpellType spellType)
+std::optional<string_view> GetHotkeyName(SpellID spellId, SpellType spellType)
 {
 	Player &myPlayer = *MyPlayer;
 	for (size_t t = 0; t < NumHotkeys; t++) {
@@ -78,12 +78,12 @@ std::optional<string_view> GetHotkeyName(spell_id spellId, SpellType spellType)
 void DrawSpell(const Surface &out)
 {
 	Player &myPlayer = *MyPlayer;
-	spell_id spl = myPlayer._pRSpell;
+	SpellID spl = myPlayer._pRSpell;
 	SpellType st = myPlayer._pRSplType;
 
 	if (!IsValidSpell(spl)) {
 		st = SpellType::Invalid;
-		spl = SPL_NULL;
+		spl = SpellID::Null;
 	}
 
 	if (st == SpellType::Spell) {
@@ -94,7 +94,7 @@ void DrawSpell(const Surface &out)
 			st = SpellType::Invalid;
 	}
 
-	if (leveltype == DTYPE_TOWN && st != SpellType::Invalid && !spelldata[spl].sTownSpell)
+	if (leveltype == DTYPE_TOWN && st != SpellType::Invalid && !GetSpellData(spl).isAllowedInTown())
 		st = SpellType::Invalid;
 
 	SetSpellTrans(st);
@@ -113,11 +113,11 @@ void DrawSpellList(const Surface &out)
 	Player &myPlayer = *MyPlayer;
 
 	for (auto &spellListItem : GetSpellListItems()) {
-		const spell_id spellId = spellListItem.id;
+		const SpellID spellId = spellListItem.id;
 		SpellType transType = spellListItem.type;
 		int spellLevel = 0;
-		const SpellData &spellDataItem = spelldata[static_cast<size_t>(spellListItem.id)];
-		if (leveltype == DTYPE_TOWN && !spellDataItem.sTownSpell) {
+		const SpellData &spellDataItem = GetSpellData(spellListItem.id);
+		if (leveltype == DTYPE_TOWN && !spellDataItem.isAllowedInTown()) {
 			transType = SpellType::Invalid;
 		}
 		if (spellListItem.type == SpellType::Spell) {
@@ -151,7 +151,7 @@ void DrawSpellList(const Surface &out)
 			}
 			PrintSBookSpellType(out, spellListItem.location, _("Spell"), spellColor);
 			InfoString = fmt::format(fmt::runtime(_("{:s} Spell")), pgettext("spell", spellDataItem.sNameText));
-			if (spellId == SPL_HBOLT) {
+			if (spellId == SpellID::HolyBolt) {
 				AddPanelString(_("Damages undead only"));
 			}
 			if (spellLevel == 0)
@@ -217,14 +217,14 @@ std::vector<SpellListItem> GetSpellListItems()
 		default:
 			continue;
 		}
-		int8_t j = SPL_FIREBOLT;
+		int8_t j = static_cast<int8_t>(SpellID::Firebolt);
 		for (uint64_t spl = 1; j < MAX_SPELLS; spl <<= 1, j++) {
 			if ((mask & spl) == 0)
 				continue;
 			int lx = x;
 			int ly = y - SPLICONLENGTH;
 			bool isSelected = (MousePosition.x >= lx && MousePosition.x < lx + SPLICONLENGTH && MousePosition.y >= ly && MousePosition.y < ly + SPLICONLENGTH);
-			spellListItems.emplace_back(SpellListItem { { x, y }, static_cast<SpellType>(i), (spell_id)j, isSelected });
+			spellListItems.emplace_back(SpellListItem { { x, y }, static_cast<SpellType>(i), static_cast<SpellID>(j), isSelected });
 			x -= SPLICONLENGTH;
 			if (x == mainPanelPosition.x + 12 - SPLICONLENGTH) {
 				x = mainPanelPosition.x + 12 + SPLICONLENGTH * SPLROWICONLS;
@@ -244,7 +244,7 @@ std::vector<SpellListItem> GetSpellListItems()
 
 void SetSpell()
 {
-	spell_id pSpell;
+	SpellID pSpell;
 	SpellType pSplType;
 
 	spselflag = false;
@@ -261,7 +261,7 @@ void SetSpell()
 
 void SetSpeedSpell(size_t slot)
 {
-	spell_id pSpell;
+	SpellID pSpell;
 	SpellType pSplType;
 
 	if (!GetSpellListSelection(pSpell, pSplType)) {
@@ -270,7 +270,7 @@ void SetSpeedSpell(size_t slot)
 	Player &myPlayer = *MyPlayer;
 	for (size_t i = 0; i < NumHotkeys; ++i) {
 		if (myPlayer._pSplHotKey[i] == pSpell && myPlayer._pSplTHotKey[i] == pSplType)
-			myPlayer._pSplHotKey[i] = SPL_INVALID;
+			myPlayer._pSplHotKey[i] = SpellID::Invalid;
 	}
 	myPlayer._pSplHotKey[slot] = pSpell;
 	myPlayer._pSplTHotKey[slot] = pSplType;
@@ -282,7 +282,7 @@ void ToggleSpell(size_t slot)
 
 	Player &myPlayer = *MyPlayer;
 
-	const spell_id spellId = myPlayer._pSplHotKey[slot];
+	const SpellID spellId = myPlayer._pSplHotKey[slot];
 	if (!IsValidSpell(spellId)) {
 		return;
 	}
@@ -344,7 +344,7 @@ void DoSpeedBook()
 			uint64_t spell = 1;
 			for (int j = 1; j < MAX_SPELLS; j++) {
 				if ((spell & spells) != 0) {
-					if (j == myPlayer._pRSpell && static_cast<SpellType>(i) == myPlayer._pRSplType) {
+					if (j == static_cast<int8_t>(myPlayer._pRSpell) && static_cast<SpellType>(i) == myPlayer._pRSplType) {
 						x = xo + SPLICONLENGTH / 2;
 						y = yo - SPLICONLENGTH / 2;
 					}

@@ -13,7 +13,6 @@
 #include "utils/file_util.h"
 #include "utils/language.h"
 #include "utils/log.hpp"
-#include "utils/stdcompat/filesystem.hpp"
 #include "utils/str_cat.hpp"
 
 namespace devilution {
@@ -48,8 +47,8 @@ constexpr uint32_t HashEntrySize = BlockEntriesCount * sizeof(MpqHashEntry);
 
 // We store the block and the hash entry tables immediately after the header.
 // This is unlike most other MPQ archives, that store these at the end of the file.
-constexpr std::ios::off_type MpqBlockEntryOffset = sizeof(MpqFileHeader);
-constexpr std::ios::off_type MpqHashEntryOffset = MpqBlockEntryOffset + BlockEntrySize;
+constexpr long MpqBlockEntryOffset = sizeof(MpqFileHeader);
+constexpr long MpqHashEntryOffset = MpqBlockEntryOffset + BlockEntrySize;
 
 // Special return value for `GetHashIndex` and `GetHandle`.
 constexpr uint32_t HashEntryNotFound = -1;
@@ -88,33 +87,24 @@ bool IsUnallocatedBlock(const MpqBlockEntry *block)
 
 MpqWriter::MpqWriter(const char *path)
 {
-#ifdef DVL_HAS_FILESYSTEM
-	{
-		std::error_code error;
-		std::filesystem::create_directories(std::filesystem::path(path).parent_path(), error);
-		if (error) {
-			LogError("failed to create directory: {}", error.message());
-		}
-	}
-#endif
+	const std::string dir = std::string(Dirname(path));
+	RecursivelyCreateDir(dir.c_str());
 	LogVerbose("Opening {}", path);
 	std::string error;
 	bool exists = FileExists(path);
-	std::ios::openmode mode = std::ios::out | std::ios::binary;
+	const char *mode = "wb";
 	if (exists) {
-		mode |= std::ios::in;
+		mode = "r+b";
 		if (!GetFileSize(path, &size_)) {
 			error = R"(GetFileSize failed: "{}")";
 			LogError(error, path, std::strerror(errno));
 			goto on_error;
 		}
 		LogVerbose("GetFileSize(\"{}\") = {}", path, size_);
-	} else {
-		mode |= std::ios::trunc;
 	}
 	if (!stream_.Open(path, mode)) {
 		stream_.Close();
-		error = "Failed to open fstream";
+		error = "Failed to open file";
 		goto on_error;
 	}
 
@@ -131,7 +121,7 @@ MpqWriter::MpqWriter(const char *path)
 		blockTable_ = std::make_unique<MpqBlockEntry[]>(BlockEntriesCount);
 		std::memset(blockTable_.get(), 0, BlockEntriesCount * sizeof(MpqBlockEntry));
 		if (fhdr.blockEntriesCount > 0) {
-			if (!stream_.Read(reinterpret_cast<char *>(blockTable_.get()), static_cast<std::streamsize>(fhdr.blockEntriesCount * sizeof(MpqBlockEntry)))) {
+			if (!stream_.Read(reinterpret_cast<char *>(blockTable_.get()), static_cast<size_t>(fhdr.blockEntriesCount * sizeof(MpqBlockEntry)))) {
 				error = "Failed to read block table";
 				goto on_error;
 			}
@@ -144,7 +134,7 @@ MpqWriter::MpqWriter(const char *path)
 		std::memset(hashTable_.get(), 0xFF, HashEntriesCount * sizeof(MpqHashEntry));
 
 		if (fhdr.hashEntriesCount > 0) {
-			if (!stream_.Read(reinterpret_cast<char *>(hashTable_.get()), static_cast<std::streamsize>(fhdr.hashEntriesCount * sizeof(MpqHashEntry)))) {
+			if (!stream_.Read(reinterpret_cast<char *>(hashTable_.get()), static_cast<size_t>(fhdr.hashEntriesCount * sizeof(MpqHashEntry)))) {
 				error = "Failed to read hash entries";
 				goto on_error;
 			}
@@ -153,7 +143,7 @@ MpqWriter::MpqWriter(const char *path)
 		}
 
 #ifndef CAN_SEEKP_BEYOND_EOF
-		if (!stream_.Seekp(0, std::ios::beg))
+		if (!stream_.Seekp(0, SEEK_SET))
 			goto on_error;
 
 		// Memorize stream begin, we'll need it for calculations later.
@@ -178,7 +168,7 @@ MpqWriter::~MpqWriter()
 	LogVerbose("Closing {}", name_);
 
 	bool result = true;
-	if (!(stream_.Seekp(0, std::ios::beg) && WriteHeaderAndTables()))
+	if (!(stream_.Seekp(0, SEEK_SET) && WriteHeaderAndTables()))
 		result = false;
 	stream_.Close();
 	if (result && size_ != 0) {
@@ -395,12 +385,12 @@ bool MpqWriter::WriteFileContents(const char *filename, const byte *fileData, si
 	std::unique_ptr<uint32_t[]> offsetTable { new uint32_t[numSectors + 1] };
 
 #ifdef CAN_SEEKP_BEYOND_EOF
-	if (!stream_.Seekp(block->offset + offsetTableByteSize, std::ios::beg))
+	if (!stream_.Seekp(block->offset + offsetTableByteSize, SEEK_SET))
 		return false;
 #else
 	// Ensure we do not Seekp beyond EOF by filling the missing space.
-	std::streampos stream_end;
-	if (!stream_.Seekp(0, std::ios::end) || !stream_.Tellp(&stream_end))
+	long stream_end;
+	if (!stream_.Seekp(0, SEEK_END) || !stream_.Tellp(&stream_end))
 		return false;
 	const std::uintmax_t cur_size = stream_end - streamBegin_;
 	if (cur_size < block->offset + offsetTableByteSize) {
@@ -412,7 +402,7 @@ bool MpqWriter::WriteFileContents(const char *filename, const byte *fileData, si
 		if (!stream_.Write(reinterpret_cast<const char *>(offsetTable.get()), offsetTableByteSize))
 			return false;
 	} else {
-		if (!stream_.Seekp(block->offset + offsetTableByteSize, std::ios::beg))
+		if (!stream_.Seekp(block->offset + offsetTableByteSize, SEEK_SET))
 			return false;
 	}
 #endif
@@ -436,11 +426,11 @@ bool MpqWriter::WriteFileContents(const char *filename, const byte *fileData, si
 	}
 
 	offsetTable[numSectors] = SDL_SwapLE32(destSize);
-	if (!stream_.Seekp(block->offset, std::ios::beg))
+	if (!stream_.Seekp(block->offset, SEEK_SET))
 		return false;
 	if (!stream_.Write(reinterpret_cast<const char *>(offsetTable.get()), offsetTableByteSize))
 		return false;
-	if (!stream_.Seekp(destSize - offsetTableByteSize, std::ios::cur))
+	if (!stream_.Seekp(destSize - offsetTableByteSize, SEEK_CUR))
 		return false;
 
 	if (destSize < block->packedSize) {

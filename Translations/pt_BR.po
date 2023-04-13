@@ -4005,12 +4005,8 @@ msgid "Right-click to read"
 msgstr "Clique direito para ler"
 
 #: Source/items.cpp:1814 Source/items.cpp:1835
-msgid "Select from spell book, then"
-msgstr "Selecionar feitiço atual, então"
-
-#: Source/items.cpp:1815 Source/items.cpp:1836
-msgid "cast spell to read"
-msgstr "lance o feitiço para ler"
+msgid "Select from spell book, then\ncast spell to read"
+msgstr "Selecionar feitiço atual, então\nlance o feitiço para ler"
 
 #: Source/items.cpp:1817 Source/items.cpp:1838 Source/items.cpp:1852
 #, fuzzy
@@ -4023,12 +4019,8 @@ msgid "Activate to read"
 msgstr "Ative para ler"
 
 #: Source/items.cpp:1825
-msgid "Right-click to read, then"
-msgstr "Clique direito para ler e então"
-
-#: Source/items.cpp:1826
-msgid "left-click to target"
-msgstr "clique esquerdo para golpear"
+msgid "Right-click to read, then\nleft-click to target"
+msgstr "Clique direito para ler e então\nclique esquerdo para golpear"
 
 #: Source/items.cpp:1849
 msgid "Right-click to use"

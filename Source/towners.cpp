@@ -343,7 +343,7 @@ void TalkToBarOwner(Player &player, Towner &barOwner)
 	}
 
 	TownerTalk(TEXT_OGDEN1);
-	StartStore(STORE_TAVERN);
+	StartStore(TalkID::Tavern);
 }
 
 void TalkToDeadguy(Player &player, Towner & /*deadguy*/)
@@ -411,7 +411,7 @@ void TalkToBlackSmith(Player &player, Towner &blackSmith)
 	}
 
 	TownerTalk(TEXT_GRISWOLD1);
-	StartStore(STORE_SMITH);
+	StartStore(TalkID::Smith);
 }
 
 void TalkToWitch(Player &player, Towner & /*witch*/)
@@ -421,6 +421,7 @@ void TalkToWitch(Player &player, Towner & /*witch*/)
 			Quests[Q_MUSHROOM]._qactive = QUEST_ACTIVE;
 			Quests[Q_MUSHROOM]._qlog = true;
 			Quests[Q_MUSHROOM]._qvar1 = QS_TOMEGIVEN;
+			NetSendCmdQuest(true, Quests[Q_MUSHROOM]);
 			InitQTextMsg(TEXT_MUSH8);
 			return;
 		}
@@ -431,11 +432,13 @@ void TalkToWitch(Player &player, Towner & /*witch*/)
 					QuestDialogTable[TOWN_HEALER][Q_MUSHROOM] = TEXT_MUSH3;
 					QuestDialogTable[TOWN_WITCH][Q_MUSHROOM] = TEXT_NONE;
 					Quests[Q_MUSHROOM]._qmsg = TEXT_MUSH10;
+					NetSendCmdQuest(true, Quests[Q_MUSHROOM]);
 					InitQTextMsg(TEXT_MUSH10);
 					return;
 				}
 				if (Quests[Q_MUSHROOM]._qmsg != TEXT_MUSH9) {
 					Quests[Q_MUSHROOM]._qmsg = TEXT_MUSH9;
+					NetSendCmdQuest(true, Quests[Q_MUSHROOM]);
 					InitQTextMsg(TEXT_MUSH9);
 					return;
 				}
@@ -443,13 +446,14 @@ void TalkToWitch(Player &player, Towner & /*witch*/)
 			if (Quests[Q_MUSHROOM]._qvar1 >= QS_MUSHGIVEN) {
 				if (HasInventoryItemWithId(player, IDI_BRAIN)) {
 					Quests[Q_MUSHROOM]._qmsg = TEXT_MUSH11;
+					NetSendCmdQuest(true, Quests[Q_MUSHROOM]);
 					InitQTextMsg(TEXT_MUSH11);
 					return;
 				}
 				if (HasInventoryOrBeltItemWithId(player, IDI_SPECELIX)) {
-					InitQTextMsg(TEXT_MUSH12);
 					Quests[Q_MUSHROOM]._qactive = QUEST_DONE;
-					AllItemsList[IDI_SPECELIX].iUsable = true; /// BUGFIX: This will cause the elixir to be usable in the next game
+					NetSendCmdQuest(true, Quests[Q_MUSHROOM]);
+					InitQTextMsg(TEXT_MUSH12);
 					return;
 				}
 			}
@@ -457,7 +461,7 @@ void TalkToWitch(Player &player, Towner & /*witch*/)
 	}
 
 	TownerTalk(TEXT_ADRIA1);
-	StartStore(STORE_WITCH);
+	StartStore(TalkID::Witch);
 }
 
 void TalkToBarmaid(Player &player, Towner & /*barmaid*/)
@@ -471,13 +475,13 @@ void TalkToBarmaid(Player &player, Towner & /*barmaid*/)
 	}
 
 	TownerTalk(TEXT_GILLIAN1);
-	StartStore(STORE_BARMAID);
+	StartStore(TalkID::Barmaid);
 }
 
 void TalkToDrunk(Player & /*player*/, Towner & /*drunk*/)
 {
 	TownerTalk(TEXT_FARNHAM1);
-	StartStore(STORE_DRUNK);
+	StartStore(TalkID::Drunk);
 }
 
 void TalkToHealer(Player &player, Towner &healer)
@@ -505,18 +509,19 @@ void TalkToHealer(Player &player, Towner &healer)
 			InitQTextMsg(TEXT_MUSH4);
 			Quests[Q_MUSHROOM]._qvar1 = QS_BRAINGIVEN;
 			QuestDialogTable[TOWN_HEALER][Q_MUSHROOM] = TEXT_NONE;
+			NetSendCmdQuest(true, Quests[Q_MUSHROOM]);
 			return;
 		}
 	}
 
 	TownerTalk(TEXT_PEPIN1);
-	StartStore(STORE_HEALER);
+	StartStore(TalkID::Healer);
 }
 
 void TalkToBoy(Player & /*player*/, Towner & /*boy*/)
 {
 	TownerTalk(TEXT_WIRT1);
-	StartStore(STORE_BOY);
+	StartStore(TalkID::Boy);
 }
 
 void TalkToStoryteller(Player &player, Towner & /*storyteller*/)
@@ -552,7 +557,7 @@ void TalkToStoryteller(Player &player, Towner & /*storyteller*/)
 	}
 
 	TownerTalk(TEXT_STORY1);
-	StartStore(STORE_STORY);
+	StartStore(TalkID::Storyteller);
 }
 
 void TalkToCow(Player &player, Towner &cow)

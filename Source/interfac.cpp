@@ -122,26 +122,31 @@ void LoadCutsceneBackground(interface_mode uMsg)
 		progress_id = 1;
 		break;
 	case CutTown:
+		ArtCutsceneWidescreen = LoadOptionalClx("gendata\\cutttw.clx");
 		celPath = "gendata\\cuttt";
 		palPath = "gendata\\cuttt.pal";
 		progress_id = 1;
 		break;
 	case CutLevel1:
+		ArtCutsceneWidescreen = LoadOptionalClx("gendata\\cutl1dw.clx");
 		celPath = "gendata\\cutl1d";
 		palPath = "gendata\\cutl1d.pal";
 		progress_id = 0;
 		break;
 	case CutLevel2:
+		ArtCutsceneWidescreen = LoadOptionalClx("gendata\\cut2w.clx");
 		celPath = "gendata\\cut2";
 		palPath = "gendata\\cut2.pal";
 		progress_id = 2;
 		break;
 	case CutLevel3:
+		ArtCutsceneWidescreen = LoadOptionalClx("gendata\\cut3w.clx");
 		celPath = "gendata\\cut3";
 		palPath = "gendata\\cut3.pal";
 		progress_id = 1;
 		break;
 	case CutLevel4:
+		ArtCutsceneWidescreen = LoadOptionalClx("gendata\\cut4w.clx");
 		celPath = "gendata\\cut4";
 		palPath = "gendata\\cut4.pal";
 		progress_id = 1;
@@ -169,6 +174,7 @@ void LoadCutsceneBackground(interface_mode uMsg)
 		progress_id = 1;
 		break;
 	case CutGate:
+		ArtCutsceneWidescreen = LoadOptionalClx("gendata\\cutgatew.clx");
 		celPath = "gendata\\cutgate";
 		palPath = "gendata\\cutgate.pal";
 		progress_id = 1;
@@ -371,7 +377,10 @@ void ShowProgress(interface_mode uMsg)
 		IncProgress();
 		break;
 	case WM_DIABSETLVL:
-		SetReturnLvlPos();
+		// Note: ReturnLevel, ReturnLevelType and ReturnLvlPosition is only set to ensure vanilla compatibility
+		ReturnLevel = GetMapReturnLevel();
+		ReturnLevelType = GetLevelType(ReturnLevel);
+		ReturnLvlPosition = GetMapReturnPosition();
 		IncProgress();
 		if (!gbIsMultiplayer) {
 			pfile_save_level();
@@ -398,7 +407,8 @@ void ShowProgress(interface_mode uMsg)
 		setlevel = false;
 		FreeGameMem();
 		IncProgress();
-		GetReturnLvlPos();
+		currlevel = GetMapReturnLevel();
+		leveltype = GetLevelType(currlevel);
 		LoadGameLevel(false, ENTRY_RTNLVL);
 		IncProgress();
 		break;

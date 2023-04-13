@@ -42,34 +42,30 @@ enum inv_item : int8_t {
  */
 enum inv_xy_slot : uint8_t {
 	// clang-format off
-	SLOTXY_HEAD_FIRST       = 0,
-	SLOTXY_HEAD_LAST        = 3,
-	SLOTXY_RING_LEFT        = 4,
-	SLOTXY_RING_RIGHT       = 5,
-	SLOTXY_AMULET           = 6,
-	SLOTXY_HAND_LEFT_FIRST  = 7,
-	SLOTXY_HAND_LEFT_LAST   = 12,
-	SLOTXY_HAND_RIGHT_FIRST = 13,
-	SLOTXY_HAND_RIGHT_LAST  = 18,
-	SLOTXY_CHEST_FIRST      = 19,
-	SLOTXY_CHEST_LAST       = 24,
+	SLOTXY_HEAD           = 0,
+	SLOTXY_RING_LEFT      = 1,
+	SLOTXY_RING_RIGHT     = 2,
+	SLOTXY_AMULET         = 3,
+	SLOTXY_HAND_LEFT      = 4,
+	SLOTXY_HAND_RIGHT     = 5,
+	SLOTXY_CHEST          = 6,
 
 	// regular inventory
-	SLOTXY_INV_FIRST        = 25,
-	SLOTXY_INV_ROW1_FIRST   = SLOTXY_INV_FIRST,
-	SLOTXY_INV_ROW1_LAST    = 34,
-	SLOTXY_INV_ROW2_FIRST   = 35,
-	SLOTXY_INV_ROW2_LAST    = 44,
-	SLOTXY_INV_ROW3_FIRST   = 45,
-	SLOTXY_INV_ROW3_LAST    = 54,
-	SLOTXY_INV_ROW4_FIRST   = 55,
-	SLOTXY_INV_ROW4_LAST    = 64,
-	SLOTXY_INV_LAST         = SLOTXY_INV_ROW4_LAST,
+	SLOTXY_INV_FIRST      = 7,
+	SLOTXY_INV_ROW1_FIRST = SLOTXY_INV_FIRST,
+	SLOTXY_INV_ROW1_LAST  = 16,
+	SLOTXY_INV_ROW2_FIRST = 17,
+	SLOTXY_INV_ROW2_LAST  = 26,
+	SLOTXY_INV_ROW3_FIRST = 27,
+	SLOTXY_INV_ROW3_LAST  = 36,
+	SLOTXY_INV_ROW4_FIRST = 37,
+	SLOTXY_INV_ROW4_LAST  = 46,
+	SLOTXY_INV_LAST       = SLOTXY_INV_ROW4_LAST,
 
 	// belt items
-	SLOTXY_BELT_FIRST       = 65,
-	SLOTXY_BELT_LAST        = 72,
-	NUM_XY_SLOTS            = 73
+	SLOTXY_BELT_FIRST     = 47,
+	SLOTXY_BELT_LAST      = 54,
+	NUM_XY_SLOTS          = 55
 	// clang-format on
 };
 
@@ -83,7 +79,7 @@ enum item_color : uint8_t {
 };
 
 extern bool invflag;
-extern const Point InvRect[73];
+extern const Rectangle InvRect[73];
 
 void InvDrawSlotBack(const Surface &out, Point targetPosition, Size size, item_quality itemQuality);
 /**
@@ -226,9 +222,9 @@ int InvPutItem(const Player &player, Point position, const Item &item);
 int SyncDropItem(Point position, _item_indexes idx, uint16_t icreateinfo, int iseed, int id, int dur, int mdur, int ch, int mch, int ivalue, uint32_t ibuff, int toHit, int maxDam, int minStr, int minMag, int minDex, int ac);
 int SyncDropEar(Point position, uint16_t icreateinfo, int iseed, uint8_t cursval, string_view heroname);
 int8_t CheckInvHLight();
-bool CanUseScroll(Player &player, spell_id spell);
+bool CanUseScroll(Player &player, SpellID spell);
 void ConsumeStaffCharge(Player &player);
-bool CanUseStaff(Player &player, spell_id spellId);
+bool CanUseStaff(Player &player, SpellID spellId);
 Item &GetInventoryItem(Player &player, int location);
 bool UseInvItem(size_t pnum, int cii);
 void DoTelekinesis();

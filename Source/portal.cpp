@@ -38,10 +38,10 @@ void InitPortals()
 	}
 }
 
-void SetPortalStats(int i, bool o, int x, int y, int lvl, dungeon_type lvltype, bool isSetLevel)
+void SetPortalStats(int i, bool o, Point position, int lvl, dungeon_type lvltype, bool isSetLevel)
 {
 	Portals[i].open = o;
-	Portals[i].position = { x, y };
+	Portals[i].position = position;
 	Portals[i].level = lvl;
 	Portals[i].ltype = lvltype;
 	Portals[i].setlvl = isSetLevel;
@@ -49,10 +49,7 @@ void SetPortalStats(int i, bool o, int x, int y, int lvl, dungeon_type lvltype, 
 
 void AddWarpMissile(int i, Point position, bool sync)
 {
-	MissileData &missileData = MissilesData[static_cast<int8_t>(MissileID::TownPortal)];
-	missileData.mlSFX = SFX_NONE;
-
-	auto *missile = AddMissile({ 0, 0 }, position, Direction::South, MissileID::TownPortal, TARGET_MONSTERS, i, 0, 0);
+	auto *missile = AddMissile({ 0, 0 }, position, Direction::South, MissileID::TownPortal, TARGET_MONSTERS, i, 0, 0, /*parent=*/nullptr, SFX_NONE);
 	if (missile != nullptr) {
 		// Don't show portal opening animation if we sync existing portals
 		if (sync)
@@ -61,8 +58,6 @@ void AddWarpMissile(int i, Point position, bool sync)
 		if (leveltype != DTYPE_TOWN)
 			missile->_mlid = AddLight(missile->position.tile, 15);
 	}
-
-	missileData.mlSFX = LS_SENTINEL;
 }
 
 void SyncPortals()
@@ -147,7 +142,7 @@ void GetPortalLevel()
 		setlvlnum = (_setlevels)Portals[portalindex].level;
 		currlevel = Portals[portalindex].level;
 		MyPlayer->setLevel(setlvlnum);
-		leveltype = Portals[portalindex].ltype;
+		setlvltype = leveltype = Portals[portalindex].ltype;
 	} else {
 		setlevel = false;
 		currlevel = Portals[portalindex].level;
@@ -175,10 +170,13 @@ void GetPortalLvlPos()
 	}
 }
 
-bool PosOkPortal(int lvl, int x, int y)
+bool PosOkPortal(int lvl, Point position)
 {
 	for (auto &portal : Portals) {
-		if (portal.open && portal.level == lvl && ((portal.position.x == x && portal.position.y == y) || (portal.position.x == x - 1 && portal.position.y == y - 1)))
+		if (portal.open
+		    && portal.level == lvl
+		    && ((portal.position == position)
+		        || (portal.position == position - Displacement { 1, 1 })))
 			return true;
 	}
 	return false;

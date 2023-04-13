@@ -133,13 +133,13 @@ static void AssertPlayer(Player &player)
 
 	ASSERT_EQ(player._pmode, 0);
 	ASSERT_EQ(Count8(player.walkpath, MaxPathLength), 0);
-	ASSERT_EQ(player.queuedSpell.spellId, 0);
+	ASSERT_EQ(player.queuedSpell.spellId, SpellID::Null);
 	ASSERT_EQ(player.queuedSpell.spellType, SpellType::Skill);
 	ASSERT_EQ(player.queuedSpell.spellFrom, 0);
-	ASSERT_EQ(player._pTSpell, 0);
-	ASSERT_EQ(player._pRSpell, 28);
+	ASSERT_EQ(player._pTSpell, SpellID::Null);
+	ASSERT_EQ(player._pRSpell, SpellID::TrapDisarm);
 	ASSERT_EQ(player._pRSplType, SpellType::Skill);
-	ASSERT_EQ(player._pSBkSpell, 0);
+	ASSERT_EQ(player._pSBkSpell, SpellID::Null);
 	ASSERT_EQ(player._pAblSpells, 134217728);
 	ASSERT_EQ(player._pScrlSpells, 0);
 	ASSERT_EQ(player._pSpellFlags, SpellFlag::None);
