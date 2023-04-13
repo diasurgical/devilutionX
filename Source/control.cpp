@@ -598,6 +598,27 @@ void FocusOnCharInfo()
 	SetCursorPos(ChrBtnsRect[stat].Center());
 }
 
+void OpenCharPanel()
+{
+	QuestLogIsOpen = false;
+	CloseGoldWithdraw();
+	IsStashOpen = false;
+	chrflag = true;
+}
+
+void CloseCharPanel()
+{
+	chrflag = false;
+}
+
+void ToggleCharPanel()
+{
+	if (chrflag)
+		CloseCharPanel();
+	else
+		OpenCharPanel();
+}
+
 void AddPanelString(string_view str)
 {
 	if (InfoString.empty())
@@ -742,7 +763,7 @@ void InitControlPan()
 	InfoString = {};
 	RedrawComponent(PanelDrawComponent::Health);
 	RedrawComponent(PanelDrawComponent::Mana);
-	chrflag = false;
+	CloseCharPanel();
 	spselflag = false;
 	sbooktab = 0;
 	sbookflag = false;
@@ -945,13 +966,10 @@ void CheckBtnUp()
 
 		switch (i) {
 		case PanelButtonCharinfo:
-			QuestLogIsOpen = false;
-			CloseGoldWithdraw();
-			IsStashOpen = false;
-			chrflag = !chrflag;
+			ToggleCharPanel();
 			break;
 		case PanelButtonQlog:
-			chrflag = false;
+			CloseCharPanel();
 			CloseGoldWithdraw();
 			IsStashOpen = false;
 			if (!QuestLogIsOpen)
@@ -1088,10 +1106,7 @@ void ReleaseLvlBtn()
 {
 	const Point mainPanelPosition = GetMainPanel().position;
 	if (MousePosition.x >= 40 + mainPanelPosition.x && MousePosition.x <= 81 + mainPanelPosition.x && MousePosition.y >= -39 + mainPanelPosition.y && MousePosition.y <= -17 + mainPanelPosition.y) {
-		QuestLogIsOpen = false;
-		CloseGoldWithdraw();
-		IsStashOpen = false;
-		chrflag = true;
+		OpenCharPanel();
 	}
 	lvlbtndown = false;
 }
