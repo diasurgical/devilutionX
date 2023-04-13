@@ -2745,11 +2745,19 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	madd = (madd * PlayersData[static_cast<size_t>(player._pClass)].itmMana) >> 6;
 	imana += (madd << 6);
 
+	if (ihp + player._pMaxHPBase < (1 << 6)) {
+		ihp = (1 << 6) - player._pMaxHPBase;
+	}
+
 	player._pMaxHP = ihp + player._pMaxHPBase;
 	player._pHitPoints = std::min(ihp + player._pHPBase, player._pMaxHP);
 
 	if (&player == MyPlayer && (player._pHitPoints >> 6) <= 0) {
 		SetPlayerHitPoints(player, 0);
+	}
+
+	if (imana + player._pMaxManaBase < 0) {
+		imana = -player._pMaxManaBase;
 	}
 
 	player._pMaxMana = imana + player._pMaxManaBase;
