@@ -2757,15 +2757,21 @@ StartPlayerKill(Player &player, DeathReason deathReason)
 		NetSendCmdParam1(true, CMD_PLRDEAD, static_cast<uint16_t>(deathReason));
 	}
 
-	bool diablolevel = gbIsMultiplayer && (player.isOnLevel(16) || player.isOnArenaLevel());
+	const bool dropGold = !gbIsMultiplayer || !(player.isOnLevel(16) || player.isOnArenaLevel());
+	const bool dropItems = dropGold && deathReason == DeathReason::MonsterOrTrap;
+	const bool dropEar = dropGold && deathReason == DeathReason::Player;
 
 	player.Say(HeroSpeech::AuughUh);
 
+	// Are the current animations item dependend?
 	if (player._pgfxnum != 0) {
-		if (diablolevel || deathReason != DeathReason::MonsterOrTrap)
-			player._pgfxnum &= ~0xFU;
-		else
+		if (dropItems) {
+			// Ensure death animation show the player without weapon and armor, because they drop on death
 			player._pgfxnum = 0;
+		} else {
+			// Death animation aren't weapon specific, so always use the unarmed animations
+			player._pgfxnum &= ~0xFU;
+		}
 		ResetPlayerGFX(player);
 		SetPlrAnims(player);
 	}
@@ -2777,7 +2783,9 @@ StartPlayerKill(Player &player, DeathReason deathReason)
 	player._pInvincible = true;
 	SetPlayerHitPoints(player, 0);
 
-	if (&player != MyPlayer && deathReason == DeathReason::MonsterOrTrap && !diablolevel) {
+	if (&player != MyPlayer && dropItems) {
+		// Ensure that items are removed for remote players
+		// The dropped items will be synced seperatly (by the remote client)
 		for (auto &item : player.InvBody) {
 			item.clear();
 		}
@@ -2790,6 +2798,8 @@ StartPlayerKill(Player &player, DeathReason deathReason)
 		dFlags[player.position.tile.x][player.position.tile.y] |= DungeonFlag::DeadPlayer;
 		SetPlayerOld(player);
 
+		// Only generate drops once (for the local player)
+		// For remote players we get seperated sync messages (by the remote client)
 		if (&player == MyPlayer) {
 			RedrawComponent(PanelDrawComponent::Health);
 
@@ -2797,47 +2807,45 @@ StartPlayerKill(Player &player, DeathReason deathReason)
 				DeadItem(player, std::move(player.HoldItem), { 0, 0 });
 				NewCursor(CURSOR_HAND);
 			}
-
-			if (!diablolevel) {
+			if (dropGold) {
 				DropHalfPlayersGold(player);
-				if (deathReason != DeathReason::Unknown) {
-					if (deathReason == DeathReason::Player) {
-						Item ear;
-						InitializeItem(ear, IDI_EAR);
-						CopyUtf8(ear._iName, fmt::format(fmt::runtime(_("Ear of {:s}")), player._pName), sizeof(ear._iName));
-						CopyUtf8(ear._iIName, player._pName, sizeof(ear._iIName));
-						switch (player._pClass) {
-						case HeroClass::Sorcerer:
-							ear._iCurs = ICURS_EAR_SORCERER;
-							break;
-						case HeroClass::Warrior:
-							ear._iCurs = ICURS_EAR_WARRIOR;
-							break;
-						case HeroClass::Rogue:
-						case HeroClass::Monk:
-						case HeroClass::Bard:
-						case HeroClass::Barbarian:
-							ear._iCurs = ICURS_EAR_ROGUE;
-							break;
-						}
-
-						ear._iCreateInfo = player._pName[0] << 8 | player._pName[1];
-						ear._iSeed = player._pName[2] << 24 | player._pName[3] << 16 | player._pName[4] << 8 | player._pName[5];
-						ear._ivalue = player._pLevel;
-
-						if (FindGetItem(ear._iSeed, IDI_EAR, ear._iCreateInfo) == -1) {
-							DeadItem(player, std::move(ear), { 0, 0 });
-						}
-					} else {
-						Direction pdd = player._pdir;
-						for (auto &item : player.InvBody) {
-							pdd = Left(pdd);
-							DeadItem(player, item.pop(), Displacement(pdd));
-						}
-
-						CalcPlrInv(player, false);
-					}
+			}
+			if (dropEar) {
+				Item ear;
+				InitializeItem(ear, IDI_EAR);
+				CopyUtf8(ear._iName, fmt::format(fmt::runtime("Ear of {:s}"), player._pName), sizeof(ear._iName));
+				CopyUtf8(ear._iIName, player._pName, sizeof(ear._iIName));
+				switch (player._pClass) {
+				case HeroClass::Sorcerer:
+					ear._iCurs = ICURS_EAR_SORCERER;
+					break;
+				case HeroClass::Warrior:
+					ear._iCurs = ICURS_EAR_WARRIOR;
+					break;
+				case HeroClass::Rogue:
+				case HeroClass::Monk:
+				case HeroClass::Bard:
+				case HeroClass::Barbarian:
+					ear._iCurs = ICURS_EAR_ROGUE;
+					break;
 				}
+
+				ear._iCreateInfo = player._pName[0] << 8 | player._pName[1];
+				ear._iSeed = player._pName[2] << 24 | player._pName[3] << 16 | player._pName[4] << 8 | player._pName[5];
+				ear._ivalue = player._pLevel;
+
+				if (FindGetItem(ear._iSeed, IDI_EAR, ear._iCreateInfo) == -1) {
+					DeadItem(player, std::move(ear), { 0, 0 });
+				}
+			}
+			if (dropItems) {
+				Direction pdd = player._pdir;
+				for (auto &item : player.InvBody) {
+					pdd = Left(pdd);
+					DeadItem(player, item.pop(), Displacement(pdd));
+				}
+
+				CalcPlrInv(player, false);
 			}
 		}
 	}
