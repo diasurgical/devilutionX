@@ -198,7 +198,7 @@ void StartWalkAnimation(Player &player, Direction dir, bool pmWillBeCalled)
 void StartWalk(Player &player, Direction dir, bool pmWillBeCalled)
 {
 	if (player._pInvincible && player._pHitPoints == 0 && &player == MyPlayer) {
-		SyncPlrKill(player, -1);
+		SyncPlrKill(player, DeathReason::Unknown);
 		return;
 	}
 
@@ -231,7 +231,7 @@ void ChangeOffset(Player &player)
 void StartAttack(Player &player, Direction d, bool includesFirstFrame)
 {
 	if (player._pInvincible && player._pHitPoints == 0 && &player == MyPlayer) {
-		SyncPlrKill(player, -1);
+		SyncPlrKill(player, DeathReason::Unknown);
 		return;
 	}
 
@@ -274,7 +274,7 @@ void StartAttack(Player &player, Direction d, bool includesFirstFrame)
 void StartRangeAttack(Player &player, Direction d, WorldTileCoord cx, WorldTileCoord cy, bool includesFirstFrame)
 {
 	if (player._pInvincible && player._pHitPoints == 0 && &player == MyPlayer) {
-		SyncPlrKill(player, -1);
+		SyncPlrKill(player, DeathReason::Unknown);
 		return;
 	}
 
@@ -314,7 +314,7 @@ player_graphic GetPlayerGraphicForSpell(SpellID spellId)
 void StartSpell(Player &player, Direction d, WorldTileCoord cx, WorldTileCoord cy)
 {
 	if (player._pInvincible && player._pHitPoints == 0 && &player == MyPlayer) {
-		SyncPlrKill(player, -1);
+		SyncPlrKill(player, DeathReason::Unknown);
 		return;
 	}
 
@@ -2661,7 +2661,7 @@ void FixPlayerLocation(Player &player, Direction bDir)
 void StartStand(Player &player, Direction dir)
 {
 	if (player._pInvincible && player._pHitPoints == 0 && &player == MyPlayer) {
-		SyncPlrKill(player, -1);
+		SyncPlrKill(player, DeathReason::Unknown);
 		return;
 	}
 
@@ -2676,7 +2676,7 @@ void StartStand(Player &player, Direction dir)
 void StartPlrBlock(Player &player, Direction dir)
 {
 	if (player._pInvincible && player._pHitPoints == 0 && &player == MyPlayer) {
-		SyncPlrKill(player, -1);
+		SyncPlrKill(player, DeathReason::Unknown);
 		return;
 	}
 
@@ -2706,7 +2706,7 @@ void FixPlrWalkTags(const Player &player)
 void StartPlrHit(Player &player, int dam, bool forcehit)
 {
 	if (player._pInvincible && player._pHitPoints == 0 && &player == MyPlayer) {
-		SyncPlrKill(player, -1);
+		SyncPlrKill(player, DeathReason::Unknown);
 		return;
 	}
 
@@ -2747,14 +2747,14 @@ void StartPlrHit(Player &player, int dam, bool forcehit)
 __attribute__((no_sanitize("shift-base")))
 #endif
 void
-StartPlayerKill(Player &player, int earflag)
+StartPlayerKill(Player &player, DeathReason deathReason)
 {
 	if (player._pHitPoints <= 0 && player._pmode == PM_DEATH) {
 		return;
 	}
 
 	if (&player == MyPlayer) {
-		NetSendCmdParam1(true, CMD_PLRDEAD, earflag);
+		NetSendCmdParam1(true, CMD_PLRDEAD, static_cast<uint16_t>(deathReason));
 	}
 
 	bool diablolevel = gbIsMultiplayer && (player.isOnLevel(16) || player.isOnArenaLevel());
@@ -2762,7 +2762,7 @@ StartPlayerKill(Player &player, int earflag)
 	player.Say(HeroSpeech::AuughUh);
 
 	if (player._pgfxnum != 0) {
-		if (diablolevel || earflag != 0)
+		if (diablolevel || deathReason != DeathReason::MonsterOrTrap)
 			player._pgfxnum &= ~0xFU;
 		else
 			player._pgfxnum = 0;
@@ -2777,7 +2777,7 @@ StartPlayerKill(Player &player, int earflag)
 	player._pInvincible = true;
 	SetPlayerHitPoints(player, 0);
 
-	if (&player != MyPlayer && earflag == 0 && !diablolevel) {
+	if (&player != MyPlayer && deathReason == DeathReason::MonsterOrTrap && !diablolevel) {
 		for (auto &item : player.InvBody) {
 			item.clear();
 		}
@@ -2800,8 +2800,8 @@ StartPlayerKill(Player &player, int earflag)
 
 			if (!diablolevel) {
 				DropHalfPlayersGold(player);
-				if (earflag != -1) {
-					if (earflag != 0) {
+				if (deathReason != DeathReason::Unknown) {
+					if (deathReason == DeathReason::Player) {
 						Item ear;
 						InitializeItem(ear, IDI_EAR);
 						CopyUtf8(ear._iName, fmt::format(fmt::runtime(_("Ear of {:s}")), player._pName), sizeof(ear._iName));
@@ -2862,7 +2862,7 @@ void StripTopGold(Player &player)
 	player._pGold = CalculateGold(player);
 }
 
-void ApplyPlrDamage(DamageType damageType, Player &player, int dam, int minHP /*= 0*/, int frac /*= 0*/, int earflag /*= 0*/)
+void ApplyPlrDamage(DamageType damageType, Player &player, int dam, int minHP /*= 0*/, int frac /*= 0*/, DeathReason deathReason /*= DeathReason::MonsterOrTrap*/)
 {
 	int totalDamage = (dam << 6) + frac;
 	if (&player == MyPlayer) {
@@ -2906,11 +2906,11 @@ void ApplyPlrDamage(DamageType damageType, Player &player, int dam, int minHP /*
 		SetPlayerHitPoints(player, minHitPoints);
 	}
 	if (player._pHitPoints >> 6 <= 0) {
-		SyncPlrKill(player, earflag);
+		SyncPlrKill(player, deathReason);
 	}
 }
 
-void SyncPlrKill(Player &player, int earflag)
+void SyncPlrKill(Player &player, DeathReason deathReason)
 {
 	if (player._pHitPoints <= 0 && leveltype == DTYPE_TOWN) {
 		SetPlayerHitPoints(player, 64);
@@ -2918,7 +2918,7 @@ void SyncPlrKill(Player &player, int earflag)
 	}
 
 	SetPlayerHitPoints(player, 0);
-	StartPlayerKill(player, earflag);
+	StartPlayerKill(player, deathReason);
 }
 
 void RemovePlrMissiles(const Player &player)
@@ -3072,7 +3072,7 @@ void ProcessPlayers()
 			CheckCheatStats(player);
 
 			if (!PlrDeathModeOK(player) && (player._pHitPoints >> 6) <= 0) {
-				SyncPlrKill(player, -1);
+				SyncPlrKill(player, DeathReason::Unknown);
 			}
 
 			if (&player == MyPlayer) {

@@ -442,11 +442,11 @@ void CheckMissileCol(Missile &missile, DamageType damageType, int minDamage, int
 					isPlayerHit = Plr2PlrMHit(Players[missile._misource], pid - 1, minDamage, maxDamage, missile._midist, missile._mitype, damageType, isDamageShifted, &blocked);
 			} else {
 				Monster &monster = Monsters[missile._misource];
-				isPlayerHit = PlayerMHit(pid - 1, &monster, missile._midist, minDamage, maxDamage, missile._mitype, damageType, isDamageShifted, 0, &blocked);
+				isPlayerHit = PlayerMHit(pid - 1, &monster, missile._midist, minDamage, maxDamage, missile._mitype, damageType, isDamageShifted, DeathReason::MonsterOrTrap, &blocked);
 			}
 		} else {
-			int earflag = (!missile.IsTrap() && (missile._miAnimType == MissileGraphicID::FireWall || missile._miAnimType == MissileGraphicID::Lightning)) ? 1 : 0;
-			isPlayerHit = PlayerMHit(pid - 1, nullptr, missile._midist, minDamage, maxDamage, missile._mitype, damageType, isDamageShifted, earflag, &blocked);
+			DeathReason deathReason = (!missile.IsTrap() && (missile._miAnimType == MissileGraphicID::FireWall || missile._miAnimType == MissileGraphicID::Lightning)) ? DeathReason::Player : DeathReason::MonsterOrTrap;
+			isPlayerHit = PlayerMHit(pid - 1, nullptr, missile._midist, minDamage, maxDamage, missile._mitype, damageType, isDamageShifted, deathReason, &blocked);
 		}
 	}
 
@@ -968,7 +968,7 @@ bool MonsterTrapHit(int monsterId, int mindam, int maxdam, int dist, MissileID t
 	return true;
 }
 
-bool PlayerMHit(int pnum, Monster *monster, int dist, int mind, int maxd, MissileID mtype, DamageType damageType, bool shift, int earflag, bool *blocked)
+bool PlayerMHit(int pnum, Monster *monster, int dist, int mind, int maxd, MissileID mtype, DamageType damageType, bool shift, DeathReason deathReason, bool *blocked)
 {
 	*blocked = false;
 
@@ -1087,7 +1087,7 @@ bool PlayerMHit(int pnum, Monster *monster, int dist, int mind, int maxd, Missil
 	if (resper > 0) {
 		dam -= dam * resper / 100;
 		if (&player == MyPlayer) {
-			ApplyPlrDamage(damageType, player, 0, 0, dam, earflag);
+			ApplyPlrDamage(damageType, player, 0, 0, dam, deathReason);
 		}
 
 		if (player._pHitPoints >> 6 > 0) {
@@ -1097,7 +1097,7 @@ bool PlayerMHit(int pnum, Monster *monster, int dist, int mind, int maxd, Missil
 	}
 
 	if (&player == MyPlayer) {
-		ApplyPlrDamage(damageType, player, 0, 0, dam, earflag);
+		ApplyPlrDamage(damageType, player, 0, 0, dam, deathReason);
 	}
 
 	if (player._pHitPoints >> 6 > 0) {

@@ -1971,12 +1971,12 @@ size_t OnMonstDamage(const TCmd *pCmd, size_t pnum)
 size_t OnPlayerDeath(const TCmd *pCmd, size_t pnum)
 {
 	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
-	const uint16_t earFlag = SDL_SwapLE16(message.wParam1);
+	const DeathReason deathReason = static_cast<DeathReason>(SDL_SwapLE16(message.wParam1));
 
 	if (gbBufferMsgs != 1) {
 		Player &player = Players[pnum];
 		if (&player != MyPlayer)
-			StartPlayerKill(player, earFlag);
+			StartPlayerKill(player, deathReason);
 		else
 			pfile_update(true);
 	} else {
@@ -1994,7 +1994,7 @@ size_t OnPlayerDamage(const TCmd *pCmd, Player &player)
 	Player &target = Players[message.bPlr];
 	if (&target == MyPlayer && leveltype != DTYPE_TOWN && gbBufferMsgs != 1) {
 		if (player.isOnActiveLevel() && damage <= 192000 && target._pHitPoints >> 6 > 0) {
-			ApplyPlrDamage(message.damageType, target, 0, 0, damage, 1);
+			ApplyPlrDamage(message.damageType, target, 0, 0, damage, DeathReason::Player);
 		}
 	}
 

@@ -1699,7 +1699,7 @@ void UpdateFlameTrap(Object &trap)
 			MonsterTrapHit(dMonster[x][y] - 1, mindam / 2, maxdam / 2, 0, TrapMissile, GetMissileData(TrapMissile).damageType(), false);
 		if (dPlayer[x][y] > 0) {
 			bool unused;
-			PlayerMHit(dPlayer[x][y] - 1, nullptr, 0, mindam, maxdam, TrapMissile, GetMissileData(TrapMissile).damageType(), false, 0, &unused);
+			PlayerMHit(dPlayer[x][y] - 1, nullptr, 0, mindam, maxdam, TrapMissile, GetMissileData(TrapMissile).damageType(), false, DeathReason::MonsterOrTrap, &unused);
 		}
 
 		if (trap._oAnimFrame == trap._oAnimLen)
@@ -3517,7 +3517,7 @@ void BreakBarrel(const Player &player, Object &barrel, bool forcebreak, bool sen
 				}
 				if (dPlayer[xp][yp] > 0) {
 					bool unused;
-					PlayerMHit(dPlayer[xp][yp] - 1, nullptr, 0, 8, 16, TrapMissile, GetMissileData(TrapMissile).damageType(), false, 0, &unused);
+					PlayerMHit(dPlayer[xp][yp] - 1, nullptr, 0, 8, 16, TrapMissile, GetMissileData(TrapMissile).damageType(), false, DeathReason::MonsterOrTrap, &unused);
 				}
 				// don't really need to exclude large objects as explosive barrels are single tile objects, but using considerLargeObjects == false as this matches the old logic.
 				Object *adjacentObject = FindObjectAtPosition({ xp, yp }, false);
