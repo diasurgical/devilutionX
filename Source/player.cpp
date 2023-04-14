@@ -3006,9 +3006,9 @@ void RestartTownLvl(Player &player)
 	player._pManaBase = player._pMana - (player._pMaxMana - player._pMaxManaBase);
 
 	CalcPlrInv(player, false);
+	player._pmode = PM_NEWLVL;
 
 	if (&player == MyPlayer) {
-		player._pmode = PM_NEWLVL;
 		player._pInvincible = true;
 		SDL_Event event;
 		event.type = CustomEventToSdlEvent(WM_DIABRETOWN);
