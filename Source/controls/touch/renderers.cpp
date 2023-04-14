@@ -116,6 +116,7 @@ void LoadPotionArt(ButtonTexture *potionArt, SDL_Renderer *renderer)
 		ICURS_POTION_OF_FULL_HEALING,
 		ICURS_POTION_OF_FULL_MANA,
 		ICURS_POTION_OF_FULL_REJUVENATION,
+		ICURS_ARENA_POTION,
 		ICURS_SCROLL_OF
 	};
 
@@ -401,6 +402,8 @@ std::optional<VirtualGamepadPotionType> PotionButtonRenderer::GetPotionType()
 			return GAMEPAD_REJUVENATION;
 		if (item._iMiscId == IMISC_FULLREJUV)
 			return GAMEPAD_FULL_REJUVENATION;
+		if (item._iMiscId == IMISC_ARENAPOT && MyPlayer->isOnArenaLevel())
+			return GAMEPAD_ARENA_POTION;
 	}
 
 	return std::nullopt;
