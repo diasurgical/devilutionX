@@ -3,6 +3,7 @@
 #include <fmt/format.h>
 
 #include "control.h"
+#include "controls/plrctrls.h"
 #include "engine.h"
 #include "engine/backbuffer_state.hpp"
 #include "engine/palette.h"
@@ -61,13 +62,15 @@ bool GetSpellListSelection(SpellID &pSpell, SpellType &pSplType)
 	return false;
 }
 
-std::optional<string_view> GetHotkeyName(SpellID spellId, SpellType spellType)
+std::optional<string_view> GetHotkeyName(SpellID spellId, SpellType spellType, bool useShortName = false)
 {
 	Player &myPlayer = *MyPlayer;
 	for (size_t t = 0; t < NumHotkeys; t++) {
 		if (myPlayer._pSplHotKey[t] != spellId || myPlayer._pSplTHotKey[t] != spellType)
 			continue;
 		auto quickSpellActionKey = StrCat("QuickSpell", t + 1);
+		if (ControlMode == ControlTypes::Gamepad)
+			return sgOptions.Padmapper.InputNameForAction(quickSpellActionKey, useShortName);
 		return sgOptions.Keymapper.KeyNameForAction(quickSpellActionKey);
 	}
 	return {};
@@ -101,7 +104,7 @@ void DrawSpell(const Surface &out)
 	const Point position = GetMainPanel().position + Displacement { 565, 119 };
 	DrawLargeSpellIcon(out, position, spl);
 
-	std::optional<string_view> hotkeyName = GetHotkeyName(spl, myPlayer._pRSplType);
+	std::optional<string_view> hotkeyName = GetHotkeyName(spl, myPlayer._pRSplType, true);
 	if (hotkeyName)
 		PrintSBookHotkey(out, position, *hotkeyName);
 }
@@ -129,10 +132,10 @@ void DrawSpellList(const Surface &out)
 		SetSpellTrans(transType);
 		DrawLargeSpellIcon(out, spellListItem.location, spellId);
 
-		std::optional<string_view> hotkeyName = GetHotkeyName(spellId, spellListItem.type);
+		std::optional<string_view> shortHotkeyName = GetHotkeyName(spellId, spellListItem.type, true);
 
-		if (hotkeyName)
-			PrintSBookHotkey(out, spellListItem.location, *hotkeyName);
+		if (shortHotkeyName)
+			PrintSBookHotkey(out, spellListItem.location, *shortHotkeyName);
 
 		if (!spellListItem.isSelected)
 			continue;
@@ -183,8 +186,9 @@ void DrawSpellList(const Surface &out)
 		case SpellType::Invalid:
 			break;
 		}
-		if (hotkeyName) {
-			AddPanelString(fmt::format(fmt::runtime(_("Spell Hotkey {:s}")), *hotkeyName));
+		std::optional<string_view> fullHotkeyName = GetHotkeyName(spellId, spellListItem.type);
+		if (fullHotkeyName) {
+			AddPanelString(fmt::format(fmt::runtime(_("Spell Hotkey {:s}")), *fullHotkeyName));
 		}
 	}
 }

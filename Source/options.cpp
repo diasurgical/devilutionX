@@ -1634,22 +1634,44 @@ void PadmapperOptions::Action::UpdateValueDescription() const
 	boundInputDescriptionType = GamepadType;
 	if (boundInput.button == ControllerButton_NONE) {
 		boundInputDescription = "";
+		boundInputShortDescription = "";
 		return;
 	}
 	string_view buttonName = ToString(boundInput.button);
 	if (boundInput.modifier == ControllerButton_NONE) {
 		boundInputDescription = std::string(buttonName);
+		boundInputShortDescription = std::string(Shorten(buttonName));
 		return;
 	}
 	string_view modifierName = ToString(boundInput.modifier);
 	boundInputDescription = StrCat(modifierName, "+", buttonName);
+	boundInputShortDescription = StrCat(Shorten(modifierName), "+", Shorten(buttonName));
+}
+
+string_view PadmapperOptions::Action::Shorten(string_view buttonName) const
+{
+	size_t index = 0;
+	size_t chars = 0;
+	while (index < buttonName.size()) {
+		if (!IsTrailUtf8CodeUnit(buttonName[index]))
+			chars++;
+		if (chars == 3)
+			break;
+		index++;
+	}
+	return string_view(buttonName.data(), index);
 }
 
 string_view PadmapperOptions::Action::GetValueDescription() const
 {
+	return GetValueDescription(false);
+}
+
+string_view PadmapperOptions::Action::GetValueDescription(bool useShortName) const
+{
 	if (GamepadType != boundInputDescriptionType)
 		UpdateValueDescription();
-	return boundInputDescription;
+	return useShortName ? boundInputShortDescription : boundInputDescription;
 }
 
 bool PadmapperOptions::Action::SetValue(ControllerButtonCombo value)
@@ -1738,11 +1760,11 @@ string_view PadmapperOptions::ActionNameTriggeredByButtonEvent(ControllerButtonE
 	return releaseAction->key;
 }
 
-string_view PadmapperOptions::InputNameForAction(string_view actionName) const
+string_view PadmapperOptions::InputNameForAction(string_view actionName, bool useShortName) const
 {
 	for (const Action &action : actions) {
 		if (action.key == actionName && action.boundInput.button != ControllerButton_NONE) {
-			return action.GetValueDescription();
+			return action.GetValueDescription(useShortName);
 		}
 	}
 	return "";
