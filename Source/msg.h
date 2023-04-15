@@ -82,20 +82,14 @@ enum _cmd_id : uint8_t {
 	CMD_RATTACKXY,
 	// Cast spell at target location.
 	//
-	// body (TCmdLocParam2):
+	// body (TCmdLocParam4):
 	//    int8_t x
 	//    int8_t y
-	//    int16_t SpellID
-	//    int16_t spell_lvl
+	//    int16_t spellID
+	//    int16_t spellType
+	//    int16_t spellLevel
+	//    int16_t spellFrom
 	CMD_SPELLXY,
-	// Cast targetted spell at target location.
-	//
-	// body (TCmdLocParam2):
-	//    int8_t x
-	//    int8_t y
-	//    int16_t SpellID
-	//    int16_t spell_lvl
-	CMD_TSPELLXY,
 	// Operate object at location.
 	//
 	// body (TCmdLoc):
@@ -130,32 +124,22 @@ enum _cmd_id : uint8_t {
 	CMD_RATTACKPID,
 	// Cast spell on target monster.
 	//
-	// body (TCmdParam3):
+	// body (TCmdParam5):
 	//    int16_t monster_num
-	//    int16_t SpellID
-	//    int16_t spell_lvl
+	//    int16_t spellID
+	//    int16_t spellType
+	//    int16_t spellLevel
+	//    int16_t spellFrom
 	CMD_SPELLID,
 	// Cast spell on target player.
 	//
-	// body (TCmdParam3):
+	// body (TCmdParam5):
 	//    int16_t player_num
-	//    int16_t SpellID
-	//    int16_t spell_lvl
+	//    int16_t spellID
+	//    int16_t spellType
+	//    int16_t spellLevel
+	//    int16_t spellFrom
 	CMD_SPELLPID,
-	// Cast targetted spell on target monster.
-	//
-	// body (TCmdParam3):
-	//    int16_t monster_num
-	//    int16_t SpellID
-	//    int16_t spell_lvl
-	CMD_TSPELLID,
-	// Cast targetted spell on target player.
-	//
-	// body (TCmdParam3):
-	//    int16_t player_num
-	//    int16_t SpellID
-	//    int16_t spell_lvl
-	CMD_TSPELLPID,
 	// Cast resurrect spell on target player.
 	//
 	// body (TCmdParam1):
@@ -389,12 +373,14 @@ enum _cmd_id : uint8_t {
 	CMD_RETOWN,
 	// Cast spell with direction at target location (e.g. firewall).
 	//
-	// body (TCmdLocParam3):
+	// body (TCmdLocParam5):
 	//    int8_t x
 	//    int8_t y
-	//    int16_t SpellID
-	//    int16_t dir
-	//    int16_t spell_lvl
+	//    int16_t spellID
+	//    int16_t spellType
+	//    int16_t direction
+	//    int16_t spellLevel
+	//    int16_t spellFrom
 	CMD_SPELLXYD,
 	// Track (dungeon generated) item looted by other player on dungeon level not
 	// yet visited by player. The item is tracked as "already taken" in the delta
@@ -421,10 +407,6 @@ enum _cmd_id : uint8_t {
 	//
 	// body (TCmdGolem)
 	CMD_AWAKEGOLEM,
-	// Cast nova spell at target location.
-	//
-	// body (TCmdLoc)
-	CMD_NOVA,
 	// Enable mana shield of player (render).
 	//
 	// body (TCmd)
@@ -494,6 +476,17 @@ struct TCmdLocParam4 {
 	uint16_t wParam4;
 };
 
+struct TCmdLocParam5 {
+	_cmd_id bCmd;
+	uint8_t x;
+	uint8_t y;
+	uint16_t wParam1;
+	uint16_t wParam2;
+	uint16_t wParam3;
+	uint16_t wParam4;
+	uint16_t wParam5;
+};
+
 struct TCmdParam1 {
 	_cmd_id bCmd;
 	uint16_t wParam1;
@@ -505,19 +498,13 @@ struct TCmdParam2 {
 	uint16_t wParam2;
 };
 
-struct TCmdParam3 {
-	_cmd_id bCmd;
-	uint16_t wParam1;
-	uint16_t wParam2;
-	uint16_t wParam3;
-};
-
-struct TCmdParam4 {
+struct TCmdParam5 {
 	_cmd_id bCmd;
 	uint16_t wParam1;
 	uint16_t wParam2;
 	uint16_t wParam3;
 	uint16_t wParam4;
+	uint16_t wParam5;
 };
 
 struct TCmdGolem {
@@ -764,10 +751,10 @@ void NetSendCmdLocParam1(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wPa
 void NetSendCmdLocParam2(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wParam1, uint16_t wParam2);
 void NetSendCmdLocParam3(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wParam1, uint16_t wParam2, uint16_t wParam3);
 void NetSendCmdLocParam4(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wParam1, uint16_t wParam2, uint16_t wParam3, uint16_t wParam4);
+void NetSendCmdLocParam5(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wParam1, uint16_t wParam2, uint16_t wParam3, uint16_t wParam4, uint16_t wParam5);
 void NetSendCmdParam1(bool bHiPri, _cmd_id bCmd, uint16_t wParam1);
 void NetSendCmdParam2(bool bHiPri, _cmd_id bCmd, uint16_t wParam1, uint16_t wParam2);
-void NetSendCmdParam3(bool bHiPri, _cmd_id bCmd, uint16_t wParam1, uint16_t wParam2, uint16_t wParam3);
-void NetSendCmdParam4(bool bHiPri, _cmd_id bCmd, uint16_t wParam1, uint16_t wParam2, uint16_t wParam3, uint16_t wParam4);
+void NetSendCmdParam5(bool bHiPri, _cmd_id bCmd, uint16_t wParam1, uint16_t wParam2, uint16_t wParam3, uint16_t wParam4, uint16_t wParam5);
 void NetSendCmdQuest(bool bHiPri, const Quest &quest);
 void NetSendCmdGItem(bool bHiPri, _cmd_id bCmd, uint8_t pnum, uint8_t ii);
 void NetSendCmdPItem(bool bHiPri, _cmd_id bCmd, Point position, const Item &item);

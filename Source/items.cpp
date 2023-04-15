@@ -4051,15 +4051,10 @@ void UseItem(size_t pnum, item_misc_id mid, SpellID spellID, int spellFrom)
 		if (ControlMode == ControlTypes::KeyboardAndMouse && GetSpellData(spellID).isTargeted()) {
 			prepareSpellID = spellID;
 		} else {
-			ClrPlrPath(player);
-			player.queuedSpell.spellId = spellID;
-			player.queuedSpell.spellType = SpellType::Scroll;
-			player.queuedSpell.spellFrom = 0;
-			player.destAction = ACTION_SPELL;
-			player.destParam1 = cursPosition.x;
-			player.destParam2 = cursPosition.y;
-			if (&player == MyPlayer && spellID == SpellID::Nova)
-				NetSendCmdLoc(pnum, true, CMD_NOVA, cursPosition);
+			const int spellLevel = player.GetSpellLevel(spellID);
+			// Use CMD_SPELLXY, because tile coords aren't used anyway and it's the same behavior as normal casting
+			assert(IsValidSpellFrom(spellFrom));
+			NetSendCmdLocParam4(true, CMD_SPELLXY, cursPosition, static_cast<int8_t>(spellID), static_cast<uint8_t>(SpellType::Scroll), spellLevel, static_cast<uint16_t>(spellFrom));
 		}
 		break;
 	case IMISC_BOOK:
