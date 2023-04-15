@@ -2507,12 +2507,20 @@ bool TryIconCurs()
 	}
 
 	if (pcurs == CURSOR_TELEPORT) {
-		if (pcursmonst != -1)
-			NetSendCmdParam4(true, CMD_TSPELLID, pcursmonst, static_cast<int8_t>(myPlayer.inventorySpell), myPlayer.GetSpellLevel(myPlayer.inventorySpell), myPlayer.spellFrom);
-		else if (pcursplr != -1)
-			NetSendCmdParam4(true, CMD_TSPELLPID, pcursplr, static_cast<int8_t>(myPlayer.inventorySpell), myPlayer.GetSpellLevel(myPlayer.inventorySpell), myPlayer.spellFrom);
-		else
-			NetSendCmdLocParam3(true, CMD_TSPELLXY, cursPosition, static_cast<int8_t>(myPlayer.inventorySpell), myPlayer.GetSpellLevel(myPlayer.inventorySpell), myPlayer.spellFrom);
+		const SpellID spellID = myPlayer.inventorySpell;
+		const SpellType spellType = SpellType::Scroll;
+		const int spellLevel = myPlayer.GetSpellLevel(spellID);
+		const int spellFrom = myPlayer.spellFrom;
+		if (IsWallSpell(spellID)) {
+			Direction sd = GetDirection(myPlayer.position.tile, cursPosition);
+			NetSendCmdLocParam5(true, CMD_SPELLXYD, cursPosition, static_cast<int8_t>(spellID), static_cast<uint8_t>(spellType), static_cast<uint16_t>(sd), spellLevel, spellFrom);
+		} else if (pcursmonst != -1) {
+			NetSendCmdParam5(true, CMD_SPELLID, pcursmonst, static_cast<int8_t>(spellID), static_cast<uint8_t>(spellType), spellLevel, spellFrom);
+		} else if (pcursplr != -1 && !myPlayer.friendlyMode) {
+			NetSendCmdParam5(true, CMD_SPELLPID, pcursplr, static_cast<int8_t>(spellID), static_cast<uint8_t>(spellType), spellLevel, spellFrom);
+		} else {
+			NetSendCmdLocParam4(true, CMD_SPELLXY, cursPosition, static_cast<int8_t>(spellID), static_cast<uint8_t>(spellType), spellLevel, spellFrom);
+		}
 		NewCursor(CURSOR_HAND);
 		return true;
 	}
