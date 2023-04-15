@@ -4581,10 +4581,7 @@ std::string DebugSpawnItem(std::string itemName)
 
 	std::transform(itemName.begin(), itemName.end(), itemName.begin(), [](unsigned char c) { return std::tolower(c); });
 
-	int ii = AllocateItem();
-	auto &item = Items[ii];
-	Point pos = MyPlayer->position.tile;
-	GetSuperItemSpace(pos, ii);
+	Item testItem;
 
 	uint32_t begin = SDL_GetTicks();
 	int i = 0;
@@ -4603,19 +4600,22 @@ std::string DebugSpawnItem(std::string itemName)
 		if (IsAnyOf(idx, IDI_NONE, IDI_GOLD))
 			continue;
 
-		Point bkp = item.position;
-		item = {};
-		item.position = bkp;
-		SetupAllItems(*MyPlayer, item, idx, AdvanceRndSeed(), monsterLevel, 1, false, false, false);
+		testItem = {};
+		SetupAllItems(*MyPlayer, testItem, idx, AdvanceRndSeed(), monsterLevel, 1, false, false, false);
 
-		std::string tmp(item._iIName);
+		std::string tmp(testItem._iIName);
 		std::transform(tmp.begin(), tmp.end(), tmp.begin(), [](unsigned char c) { return std::tolower(c); });
 		if (tmp.find(itemName) != std::string::npos)
 			break;
 	}
 
+	int ii = AllocateItem();
+	auto &item = Items[ii];
+	item = testItem.pop();
 	item._iIdentified = true;
-	NetSendCmdPItem(false, CMD_DROPITEM, item.position, item);
+	Point pos = MyPlayer->position.tile;
+	GetSuperItemSpace(pos, ii);
+	NetSendCmdPItem(false, CMD_SPAWNITEM, item.position, item);
 	return StrCat("Item generated successfully - iterations: ", i);
 }
 
@@ -4649,14 +4649,18 @@ std::string DebugSpawnUniqueItem(std::string itemName)
 	for (std::underlying_type_t<_item_indexes> j = IDI_GOLD; j <= IDI_LAST; j++) {
 		if (!IsItemAvailable(j))
 			continue;
-		if (AllItemsList[j].iItemId == uniqueItem.UIItemId)
+		if (AllItemsList[j].iItemId == uniqueItem.UIItemId) {
 			uniqueBaseIndex = static_cast<_item_indexes>(j);
+			break;
+		}
 	}
 
-	int ii = AllocateItem();
-	auto &item = Items[ii];
-	Point pos = MyPlayer->position.tile;
-	GetSuperItemSpace(pos, ii);
+	if (uniqueBaseIndex == IDI_GOLD)
+		return "Base item not available";
+
+	auto &baseItemData = AllItemsList[static_cast<size_t>(uniqueBaseIndex)];
+
+	Item testItem;
 
 	int i = 0;
 	for (uint32_t begin = SDL_GetTicks();; i++) {
@@ -4668,30 +4672,34 @@ std::string DebugSpawnUniqueItem(std::string itemName)
 		if (i > max_iter)
 			return StrCat("Item not found in ", max_iter, " tries!");
 
-		Point bkp = item.position;
-		item = {};
-		item.position = bkp;
+		testItem = {};
+		testItem._iMiscId = baseItemData.iMiscId;
 		std::uniform_int_distribution<int32_t> dist(0, INT_MAX);
 		SetRndSeed(dist(BetterRng));
 		for (auto &flag : UniqueItemFlags)
 			flag = true;
 		UniqueItemFlags[uniqueIndex] = false;
-		SetupAllItems(*MyPlayer, item, uniqueBaseIndex, AdvanceRndSeed(), uniqueItem.UIMinLvl, 1, false, false, false);
+		SetupAllItems(*MyPlayer, testItem, uniqueBaseIndex, testItem._iMiscId == IMISC_UNIQUE ? uniqueIndex : AdvanceRndSeed(), uniqueItem.UIMinLvl, 1, false, false, false);
 		for (auto &flag : UniqueItemFlags)
 			flag = false;
 
-		if (item._iMagical != ITEM_QUALITY_UNIQUE)
+		if (testItem._iMagical != ITEM_QUALITY_UNIQUE)
 			continue;
 
-		std::string tmp(item._iIName);
+		std::string tmp(testItem._iIName);
 		std::transform(tmp.begin(), tmp.end(), tmp.begin(), [](unsigned char c) { return std::tolower(c); });
 		if (tmp.find(itemName) != std::string::npos)
 			break;
 		return "Impossible to generate!";
 	}
 
+	int ii = AllocateItem();
+	auto &item = Items[ii];
+	item = testItem.pop();
+	Point pos = MyPlayer->position.tile;
+	GetSuperItemSpace(pos, ii);
 	item._iIdentified = true;
-	NetSendCmdPItem(false, CMD_DROPITEM, item.position, item);
+	NetSendCmdPItem(false, CMD_SPAWNITEM, item.position, item);
 	return StrCat("Item generated successfully - iterations: ", i);
 }
 #endif
