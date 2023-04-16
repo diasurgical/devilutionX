@@ -4248,8 +4248,8 @@ void PrintMonstHistory(int mt)
 		if (maxHP < 1)
 			maxHP = 1;
 
-		int hpBonusNightmare = 1;
-		int hpBonusHell = 3;
+		int hpBonusNightmare = 100;
+		int hpBonusHell = 200;
 		if (gbIsHellfire) {
 			hpBonusNightmare = (!gbIsMultiplayer ? 50 : 100);
 			hpBonusHell = (!gbIsMultiplayer ? 100 : 200);
