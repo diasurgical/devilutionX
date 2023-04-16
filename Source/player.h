@@ -61,6 +61,7 @@ enum class HeroClass : uint8_t {
 	Monk,
 	Bard,
 	Barbarian,
+	Cleric,
 
 	LAST = Barbarian
 };
