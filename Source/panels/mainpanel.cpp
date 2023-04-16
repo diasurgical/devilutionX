@@ -92,13 +92,12 @@ void LoadMainPanel()
 	if (IsChatAvailable()) {
 		OptionalOwnedClxSpriteList talkButton = LoadClx("data\\talkbutton.clx");
 		const int talkButtonWidth = (*talkButton)[0].width();
-		const int talkButtonHeight = (*talkButton)[0].height();
-		constexpr uint16_t NumTalkButtonSprites = 3;
 
-		// Render the empty button to pBtmBuff.
+		constexpr size_t NumOtherPlayers = 3;
+		// Render the unpressed voice buttons to pBtmBuff.
 		string_view text = _("voice");
 		const int textWidth = GetLineWidth(text, GameFont12, 1);
-		for (size_t i = 0; i < 3; ++i) {
+		for (size_t i = 0; i < NumOtherPlayers; ++i) {
 			Point position { 176, static_cast<int>(GetMainPanel().size.height + 101 + 18 * i) };
 			RenderClxSprite(*pBtmBuff, (*talkButton)[0], position);
 			int width = std::min<int>(textWidth, (*PanelButton)[0].width());
@@ -106,12 +105,15 @@ void LoadMainPanel()
 			DrawButtonText(*pBtmBuff, text, { position, { talkButtonWidth, 0 } }, UiFlags::ColorButtonface);
 		}
 
+		const int talkButtonHeight = 16; // (*talkButton)[0].height();
+		constexpr uint16_t NumTalkButtonSprites = 3;
 		OwnedSurface talkSurface(talkButtonWidth, talkButtonHeight * NumTalkButtonSprites);
-		int y = 0;
-		for (ClxSprite sprite : ClxSpriteList(*talkButton)) {
-			RenderClxSprite(talkSurface, sprite, { 0, y });
-			y += sprite.height();
-		}
+
+		// Prerender translated versions of the other button states for voice buttons
+		RenderClxSprite(talkSurface, (*talkButton)[0], { 0, 0 }); // background for unpressed mute button
+		// RenderClxSprite(talkSurface, (*talkButton)[1], { 0, talkButtonHeight }); // background for pressed mute button
+		// RenderClxSprite(talkSurface, (*talkButton)[1], { 0, talkButtonHeight * 2 }); // background for pressed voice button
+
 		talkButton = std::nullopt;
 
 		int muteWidth = GetLineWidth(_("mute"), GameFont12, 2);
