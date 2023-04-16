@@ -2,6 +2,7 @@
 
 #include <cmath>
 
+#include "control.h"
 #include "controls/controller.h"
 #ifndef USE_SDL1
 #include "controls/devices/game_controller.h"
@@ -63,6 +64,34 @@ void ScaleJoystickAxes(float *x, float *y, float deadzone)
 		*x = 0;
 		*y = 0;
 	}
+}
+
+bool IsMovementOverriddenByPadmapper(ControllerButton button)
+{
+	ControllerButtonEvent releaseEvent { button, true };
+	string_view actionName = sgOptions.Padmapper.ActionNameTriggeredByButtonEvent(releaseEvent);
+	ControllerButtonCombo buttonCombo = sgOptions.Padmapper.ButtonComboForAction(actionName);
+	return buttonCombo.modifier != ControllerButton_NONE;
+}
+
+bool TriggersQuickSpellAction(ControllerButton button)
+{
+	ControllerButtonEvent releaseEvent { button, true };
+	string_view actionName = sgOptions.Padmapper.ActionNameTriggeredByButtonEvent(releaseEvent);
+
+	string_view prefix { "QuickSpell" };
+	if (actionName.size() < prefix.size())
+		return false;
+	string_view truncatedActionName { actionName.data(), prefix.size() };
+	return truncatedActionName == prefix;
+}
+
+bool IsPressedForMovement(ControllerButton button)
+{
+	return !PadMenuNavigatorActive
+	    && IsControllerButtonPressed(button)
+	    && !IsMovementOverriddenByPadmapper(button)
+	    && !(spselflag && TriggersQuickSpellAction(button));
 }
 
 void SetSimulatingMouseWithPadmapper(bool value)
@@ -181,10 +210,10 @@ AxisDirection GetLeftStickOrDpadDirection(bool usePadmapper)
 		isLeftPressed |= sgOptions.Padmapper.IsActive("MoveLeft");
 		isRightPressed |= sgOptions.Padmapper.IsActive("MoveRight");
 	} else if (!SimulatingMouseWithPadmapper) {
-		isUpPressed |= IsControllerButtonPressed(ControllerButton_BUTTON_DPAD_UP);
-		isDownPressed |= IsControllerButtonPressed(ControllerButton_BUTTON_DPAD_DOWN);
-		isLeftPressed |= IsControllerButtonPressed(ControllerButton_BUTTON_DPAD_LEFT);
-		isRightPressed |= IsControllerButtonPressed(ControllerButton_BUTTON_DPAD_RIGHT);
+		isUpPressed |= IsPressedForMovement(ControllerButton_BUTTON_DPAD_UP);
+		isDownPressed |= IsPressedForMovement(ControllerButton_BUTTON_DPAD_DOWN);
+		isLeftPressed |= IsPressedForMovement(ControllerButton_BUTTON_DPAD_LEFT);
+		isRightPressed |= IsPressedForMovement(ControllerButton_BUTTON_DPAD_RIGHT);
 	}
 
 #ifndef USE_SDL1
