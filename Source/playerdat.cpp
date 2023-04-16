@@ -91,9 +91,10 @@ const PlayerData PlayersData[] = {
 /* HeroClass::Monk */      { N_("Monk"),      "monk",           25,      15,         25,        20,       150,     80,        150,        80,         25,  (2 << 6),  (2 << 6), (1 << 6),                    (1 << 6), static_cast<int>(1.5F * 64),  static_cast<int>(1.5F * 64), SpellID::Reflect,       },
 /* HeroClass::Bard */      { N_("Bard"),      "rogue",          20,      20,         25,        20,       120,    120,        120,       100,         25,  (2 << 6),  (2 << 6), (1 << 6), static_cast<int>(1.5F * 64), static_cast<int>(1.5F * 64), static_cast<int>(1.75F * 64), SpellID::Identify      },
 /* HeroClass::Barbarian */ { N_("Barbarian"), "warrior",        40,       0,         20,        25,       255,      0,         55,       150,         30,  (2 << 6),  (0 << 6), (2 << 6),                    (1 << 6), static_cast<int>(2.5F * 64),                     (1 << 6), SpellID::Rage          },
+/* HeroClass::Cleric */    { N_("Cleric"),    "warrior",        15,       15,         10,        20,       150,      50,         55,       150,         10,  (2 << 6),  (0 << 6), (2 << 6),                    (1 << 6), static_cast<int>(2.5F * 64),                     (1 << 6), SpellID::HealOther    },
 	// clang-format on
 };
-
+15
 /** Contains the data related to each player class. */
 const PlayerSpriteData PlayersSpriteData[] = {
 	// clang-format off
@@ -106,6 +107,7 @@ const PlayerSpriteData PlayersSpriteData[] = {
 /* HeroClass::Monk */      {     112,    112,      130,   128,    98,      98,         114,    114,     114,     160 },
 /* HeroClass::Bard */      {      96,     96,      128,   128,    96,      96,          96,     96,      96,     128 },
 /* HeroClass::Barbarian */ {      96,     96,      128,    96,    96,      96,          96,     96,      96,     128 },
+/* HeroClass::Cleric */ {      96,     96,      128,    96,    96,      96,          96,     96,      96,     128 },
 	// clang-format on
 };
 
@@ -118,6 +120,7 @@ const PlayerAnimData PlayersAnimData[] = {
 /* HeroClass::Monk */      {           12,                  7,                  12,                        7,          16,               12,                16,                     12,        20,             14,        23,             14,         16,              12,               16,                    12,          13,                8,          8,              8,              3,          20,            18,              6,             20,                 8,                 13 },
 /* HeroClass::Bard */      {           18,                 10,                  18,                       10,          18,               10,                18,                     10,        12,             11,        22,             13,         18,              10,               18,                    10,          16,               11,          8,              8,              4,          20,            16,              7,             20,                 8,                 12 },
 /* HeroClass::Barbarian */ {           16,                  9,                  16,                        9,          16,                9,                16,                      9,        16,             11,        20,              8,         16,               8,               16,                     8,          16,               11,         10,              8,              2,          20,            20,              6,             20,                 8,                 14 },
+/* HeroClass::Cleric */ {           16,                  9,                  16,                        9,          16,                9,                16,                      9,        16,             11,        20,              8,         16,               8,               16,                     8,          16,               11,         10,              8,              2,          20,            20,              6,             20,                 8,                 14 },
 	// clang-format on
 };
 
