@@ -174,11 +174,5 @@ bool IsKbCtrlButtonPressed(ControllerButton button)
 #endif
 }
 
-bool ProcessKbCtrlAxisMotion(const SDL_Event &event)
-{
-	// Mapping keyboard to right stick axis not implemented.
-	return false;
-}
-
 } // namespace devilution
 #endif

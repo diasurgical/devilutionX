@@ -22,9 +22,15 @@ extern float leftStickX, leftStickY, rightStickX, rightStickY;
 extern bool leftStickNeedsScaling, rightStickNeedsScaling;
 
 // Updates motion state for mouse and joystick sticks.
-bool ProcessControllerMotion(const SDL_Event &event, ControllerButtonEvent ctrlEvent);
+void ProcessControllerMotion(const SDL_Event &event);
+
+// Indicates whether the event represents movement of an analog thumbstick.
+bool IsControllerMotion(const SDL_Event &event);
 
 // Returns direction of the left thumb stick or DPad (if allow_dpad = true).
 AxisDirection GetLeftStickOrDpadDirection(bool usePadmapper);
+
+// Simulates right-stick movement based on input from padmapper mouse movement actions.
+void SimulateRightStickWithPadmapper(ControllerButtonEvent ctrlEvent);
 
 } // namespace devilution
