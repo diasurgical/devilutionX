@@ -152,6 +152,7 @@ void SelheroListSelect(int value)
 		vecSelHeroDlgItems.push_back(std::make_unique<UiListItem>(_("Warrior"), static_cast<int>(HeroClass::Warrior)));
 		vecSelHeroDlgItems.push_back(std::make_unique<UiListItem>(_("Rogue"), static_cast<int>(HeroClass::Rogue)));
 		vecSelHeroDlgItems.push_back(std::make_unique<UiListItem>(_("Sorcerer"), static_cast<int>(HeroClass::Sorcerer)));
+		vecSelHeroD1gItems.push_back(std::make_unique<UiListItem>(_("Cleric"), static_cast<int>(HeroClass::Cleric)));
 		if (gbIsHellfire) {
 			vecSelHeroDlgItems.push_back(std::make_unique<UiListItem>(_("Monk"), static_cast<int>(HeroClass::Monk)));
 		}
@@ -427,6 +428,19 @@ const char *SelheroGenerateName(HeroClass heroClass)
 		},
 		{
 		    // Barbarian
+		    "Alaric",
+		    "Barloc",
+		    "Egtheow",
+		    "Guthlaf",
+		    "Heorogar",
+		    "Hrothgar",
+		    "Oslaf",
+		    "Qual-Kehk",
+		    "Ragnar",
+		    "Ulf",
+		},
+		{
+		    // Cleric
 		    "Alaric",
 		    "Barloc",
 		    "Egtheow",
