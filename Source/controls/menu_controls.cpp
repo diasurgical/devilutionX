@@ -32,7 +32,7 @@ std::vector<MenuAction> GetMenuActions(const SDL_Event &event)
 			continue;
 		}
 
-		bool isGamepadMotion = ProcessControllerMotion(event, ctrlEvent);
+		bool isGamepadMotion = IsControllerMotion(event);
 		DetectInputMethod(event, ctrlEvent);
 		if (isGamepadMotion) {
 			menuActions.push_back(GetMenuHeldUpDownAction());

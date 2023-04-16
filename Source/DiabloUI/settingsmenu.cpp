@@ -479,7 +479,7 @@ void UiSettingsMenu()
 
 				StaticVector<ControllerButtonEvent, 4> ctrlEvents = ToControllerButtonEvents(event);
 				for (ControllerButtonEvent ctrlEvent : ctrlEvents) {
-					bool isGamepadMotion = ProcessControllerMotion(event, ctrlEvent);
+					bool isGamepadMotion = IsControllerMotion(event);
 					DetectInputMethod(event, ctrlEvent);
 					if (event.type == SDL_KEYUP && event.key.keysym.sym == SDLK_ESCAPE) {
 						StopPadEntryTimer();
