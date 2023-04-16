@@ -3975,9 +3975,10 @@ void PrintItemDur(const Item &item)
 	PrintItemInfo(item);
 }
 
-void UseItem(size_t pnum, item_misc_id mid, SpellID spl)
+void UseItem(size_t pnum, item_misc_id mid, SpellID spellID, int spellFrom)
 {
 	Player &player = Players[pnum];
+	std::optional<SpellID> prepareSpellID;
 
 	switch (mid) {
 	case IMISC_HEAL:
@@ -4047,30 +4048,28 @@ void UseItem(size_t pnum, item_misc_id mid, SpellID spl)
 		break;
 	case IMISC_SCROLL:
 	case IMISC_SCROLLT:
-		if (ControlMode == ControlTypes::KeyboardAndMouse && GetSpellData(spl).isTargeted()) {
-			player._pTSpell = spl;
-			if (&player == MyPlayer)
-				NewCursor(CURSOR_TELEPORT);
+		if (ControlMode == ControlTypes::KeyboardAndMouse && GetSpellData(spellID).isTargeted()) {
+			prepareSpellID = spellID;
 		} else {
 			ClrPlrPath(player);
-			player.queuedSpell.spellId = spl;
+			player.queuedSpell.spellId = spellID;
 			player.queuedSpell.spellType = SpellType::Scroll;
 			player.queuedSpell.spellFrom = 0;
 			player.destAction = ACTION_SPELL;
 			player.destParam1 = cursPosition.x;
 			player.destParam2 = cursPosition.y;
-			if (&player == MyPlayer && spl == SpellID::Nova)
+			if (&player == MyPlayer && spellID == SpellID::Nova)
 				NetSendCmdLoc(pnum, true, CMD_NOVA, cursPosition);
 		}
 		break;
 	case IMISC_BOOK:
-		player._pMemSpells |= GetSpellBitmask(spl);
-		if (player._pSplLvl[static_cast<int8_t>(spl)] < MaxSpellLevel)
-			player._pSplLvl[static_cast<int8_t>(spl)]++;
+		player._pMemSpells |= GetSpellBitmask(spellID);
+		if (player._pSplLvl[static_cast<int8_t>(spellID)] < MaxSpellLevel)
+			player._pSplLvl[static_cast<int8_t>(spellID)]++;
 		if (HasNoneOf(player._pIFlags, ItemSpecialEffect::NoMana)) {
-			player._pMana += GetSpellData(spl).sManaCost << 6;
+			player._pMana += GetSpellData(spellID).sManaCost << 6;
 			player._pMana = std::min(player._pMana, player._pMaxMana);
-			player._pManaBase += GetSpellData(spl).sManaCost << 6;
+			player._pManaBase += GetSpellData(spellID).sManaCost << 6;
 			player._pManaBase = std::min(player._pManaBase, player._pMaxManaBase);
 		}
 		if (&player == MyPlayer) {
@@ -4115,32 +4114,30 @@ void UseItem(size_t pnum, item_misc_id mid, SpellID spl)
 		ModifyPlrVit(player, 3);
 		break;
 	case IMISC_RUNEF:
-		player._pTSpell = SpellID::RuneOfFire;
-		if (&player == MyPlayer)
-			NewCursor(CURSOR_TELEPORT);
+		prepareSpellID = SpellID::RuneOfFire;
 		break;
 	case IMISC_RUNEL:
-		player._pTSpell = SpellID::RuneOfLight;
-		if (&player == MyPlayer)
-			NewCursor(CURSOR_TELEPORT);
+		prepareSpellID = SpellID::RuneOfLight;
 		break;
 	case IMISC_GR_RUNEL:
-		player._pTSpell = SpellID::RuneOfNova;
-		if (&player == MyPlayer)
-			NewCursor(CURSOR_TELEPORT);
+		prepareSpellID = SpellID::RuneOfNova;
 		break;
 	case IMISC_GR_RUNEF:
-		player._pTSpell = SpellID::RuneOfImmolation;
-		if (&player == MyPlayer)
-			NewCursor(CURSOR_TELEPORT);
+		prepareSpellID = SpellID::RuneOfImmolation;
 		break;
 	case IMISC_RUNES:
-		player._pTSpell = SpellID::RuneOfStone;
-		if (&player == MyPlayer)
-			NewCursor(CURSOR_TELEPORT);
+		prepareSpellID = SpellID::RuneOfStone;
 		break;
 	default:
 		break;
+	}
+
+	if (prepareSpellID) {
+		assert(IsValidSpellFrom(spellFrom));
+		player.inventorySpell = *prepareSpellID;
+		player.spellFrom = spellFrom;
+		if (&player == MyPlayer)
+			NewCursor(CURSOR_TELEPORT);
 	}
 }
 

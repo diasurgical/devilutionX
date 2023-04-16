@@ -113,6 +113,17 @@ bool IsValidSpell(SpellID spl)
 	    && (spl <= SpellID::LastDiablo || gbIsHellfire);
 }
 
+bool IsValidSpellFrom(int spellFrom)
+{
+	if (spellFrom == 0)
+		return true;
+	if (spellFrom >= INVITEM_INV_FIRST && spellFrom <= INVITEM_INV_LAST)
+		return true;
+	if (spellFrom >= INVITEM_BELT_FIRST && spellFrom <= INVITEM_BELT_LAST)
+		return true;
+	return false;
+}
+
 bool IsWallSpell(SpellID spl)
 {
 	return spl == SpellID::FireWall || spl == SpellID::LightningWall;

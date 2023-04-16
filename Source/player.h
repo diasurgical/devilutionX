@@ -332,7 +332,10 @@ struct Player {
 	SpellCastInfo queuedSpell;
 	/** @brief The spell that is currently being cast */
 	SpellCastInfo executedSpell;
-	SpellID _pTSpell;
+	/* @brief Which spell should be executed with CURSOR_TELEPORT */
+	SpellID inventorySpell;
+	/* @brief Inventory location for scrolls with CURSOR_TELEPORT */
+	int8_t spellFrom;
 	SpellID _pRSpell;
 	SpellType _pRSplType;
 	SpellID _pSBkSpell;

@@ -2094,7 +2094,7 @@ bool UseInvItem(int cii)
 	else if (&player == MyPlayer)
 		PlaySFX(ItemInvSnds[idata]);
 
-	UseItem(player.getId(), item->_iMiscId, item->_iSpell);
+	UseItem(player.getId(), item->_iMiscId, item->_iSpell, cii);
 
 	if (speedlist) {
 		if (player.SpdList[c]._iMiscId == IMISC_NOTE) {
@@ -2104,8 +2104,6 @@ bool UseInvItem(int cii)
 		}
 		if (!item->isScroll() && !item->isRune())
 			player.RemoveSpdBarItem(c);
-		else
-			player.queuedSpell.spellFrom = cii;
 		return true;
 	}
 	if (player.InvList[c]._iMiscId == IMISC_MAPOFDOOM)
@@ -2117,8 +2115,6 @@ bool UseInvItem(int cii)
 	}
 	if (!item->isScroll() && !item->isRune())
 		player.RemoveInvItem(c);
-	else
-		player.queuedSpell.spellFrom = cii;
 
 	return true;
 }
