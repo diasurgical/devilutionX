@@ -136,7 +136,7 @@ static void AssertPlayer(Player &player)
 	ASSERT_EQ(player.queuedSpell.spellId, SpellID::Null);
 	ASSERT_EQ(player.queuedSpell.spellType, SpellType::Skill);
 	ASSERT_EQ(player.queuedSpell.spellFrom, 0);
-	ASSERT_EQ(player._pTSpell, SpellID::Null);
+	ASSERT_EQ(player.inventorySpell, SpellID::Null);
 	ASSERT_EQ(player._pRSpell, SpellID::TrapDisarm);
 	ASSERT_EQ(player._pRSplType, SpellType::Skill);
 	ASSERT_EQ(player._pSBkSpell, SpellID::Null);

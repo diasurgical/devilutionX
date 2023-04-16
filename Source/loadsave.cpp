@@ -360,9 +360,13 @@ void LoadPlayer(LoadHelper &file, Player &player)
 
 	player.queuedSpell.spellId = static_cast<SpellID>(file.NextLE<int32_t>());
 	player.queuedSpell.spellType = static_cast<SpellType>(file.NextLE<int8_t>());
-	player.queuedSpell.spellFrom = file.NextLE<int8_t>();
+	auto spellFrom = file.NextLE<int8_t>();
+	if (!IsValidSpellFrom(spellFrom))
+		spellFrom = 0;
+	player.spellFrom = spellFrom;
+	player.queuedSpell.spellFrom = spellFrom;
 	file.Skip(2); // Alignment
-	player._pTSpell = static_cast<SpellID>(file.NextLE<int32_t>());
+	player.inventorySpell = static_cast<SpellID>(file.NextLE<int32_t>());
 	file.Skip<int8_t>(); // Skip _pTSplType
 	file.Skip(3);        // Alignment
 	player._pRSpell = static_cast<SpellID>(file.NextLE<int32_t>());
@@ -1136,7 +1140,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.WriteLE<int8_t>(static_cast<int8_t>(player.queuedSpell.spellType));
 	file.WriteLE<int8_t>(player.queuedSpell.spellFrom);
 	file.Skip(2); // Alignment
-	file.WriteLE<int32_t>(static_cast<int8_t>(player._pTSpell));
+	file.WriteLE<int32_t>(static_cast<int8_t>(player.inventorySpell));
 	file.Skip<int8_t>(); // Skip _pTSplType
 	file.Skip(3);        // Alignment
 	file.WriteLE<int32_t>(static_cast<int8_t>(player._pRSpell));

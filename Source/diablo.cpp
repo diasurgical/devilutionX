@@ -2508,11 +2508,11 @@ bool TryIconCurs()
 
 	if (pcurs == CURSOR_TELEPORT) {
 		if (pcursmonst != -1)
-			NetSendCmdParam4(true, CMD_TSPELLID, pcursmonst, static_cast<int8_t>(myPlayer._pTSpell), myPlayer.GetSpellLevel(myPlayer._pTSpell), myPlayer.queuedSpell.spellFrom);
+			NetSendCmdParam4(true, CMD_TSPELLID, pcursmonst, static_cast<int8_t>(myPlayer.inventorySpell), myPlayer.GetSpellLevel(myPlayer.inventorySpell), myPlayer.spellFrom);
 		else if (pcursplr != -1)
-			NetSendCmdParam4(true, CMD_TSPELLPID, pcursplr, static_cast<int8_t>(myPlayer._pTSpell), myPlayer.GetSpellLevel(myPlayer._pTSpell), myPlayer.queuedSpell.spellFrom);
+			NetSendCmdParam4(true, CMD_TSPELLPID, pcursplr, static_cast<int8_t>(myPlayer.inventorySpell), myPlayer.GetSpellLevel(myPlayer.inventorySpell), myPlayer.spellFrom);
 		else
-			NetSendCmdLocParam3(true, CMD_TSPELLXY, cursPosition, static_cast<int8_t>(myPlayer._pTSpell), myPlayer.GetSpellLevel(myPlayer._pTSpell), myPlayer.queuedSpell.spellFrom);
+			NetSendCmdLocParam3(true, CMD_TSPELLXY, cursPosition, static_cast<int8_t>(myPlayer.inventorySpell), myPlayer.GetSpellLevel(myPlayer.inventorySpell), myPlayer.spellFrom);
 		NewCursor(CURSOR_HAND);
 		return true;
 	}
