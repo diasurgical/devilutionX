@@ -110,8 +110,8 @@ void LoadMainPanel()
 		OwnedSurface talkSurface(talkButtonWidth, talkButtonHeight * NumTalkButtonSprites);
 
 		// Prerender translated versions of the other button states for voice buttons
-		RenderClxSprite(talkSurface, (*talkButton)[0], { 0, 0 }); // background for unpressed mute button
-		RenderClxSprite(talkSurface, (*talkButton)[1], { 0, talkButtonHeight }); // background for pressed mute button
+		RenderClxSprite(talkSurface, (*talkButton)[0], { 0, 0 });                    // background for unpressed mute button
+		RenderClxSprite(talkSurface, (*talkButton)[1], { 0, talkButtonHeight });     // background for pressed mute button
 		RenderClxSprite(talkSurface, (*talkButton)[1], { 0, talkButtonHeight * 2 }); // background for pressed voice button
 
 		talkButton = std::nullopt;

@@ -1342,7 +1342,8 @@ void DrawTalkPan(const Surface &out)
 		UiFlags color = player.friendlyMode ? UiFlags::ColorWhitegold : UiFlags::ColorRed;
 		const Point talkPanPosition = mainPanelPosition + Displacement { 172, 84 + 18 * talkBtn };
 		if (WhisperList[i]) {
-			if (TalkButtonsDown[talkBtn]) { // the normal (unpressed) voice button is pre-rendered on the panel, only need to draw over it when the button is held
+			// the normal (unpressed) voice button is pre-rendered on the panel, only need to draw over it when the button is held
+			if (TalkButtonsDown[talkBtn]) {
 				unsigned spriteIndex = talkBtn == 0 ? 2 : 3; // the first button sprite includes a tip from the devils wing so is different to the rest.
 				ClxDraw(out, talkPanPosition, (*talkButtons)[spriteIndex]);
 
