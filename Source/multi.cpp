@@ -657,6 +657,7 @@ void multi_process_network_packets()
 						player.position.future = syncPosition;
 						if (player.isWalking())
 							player.position.temp = syncPosition;
+						SetPlayerOld(player);
 						dPlayer[player.position.tile.x][player.position.tile.y] = playerId + 1;
 					}
 					if (player.position.future.WalkingDistance(player.position.tile) > 1) {
@@ -668,6 +669,7 @@ void multi_process_network_packets()
 				} else {
 					player.position.tile = syncPosition;
 					player.position.future = syncPosition;
+					SetPlayerOld(player);
 				}
 			}
 		}
