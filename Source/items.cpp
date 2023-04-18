@@ -2403,6 +2403,8 @@ std::string GetTranslatedItemNameMagical(const Item &item, bool hellfireItem, bo
 			    case IPL_TOHIT_DAMP_CURSE:
 				    AdvanceRndSeed();
 				    break;
+			    default:
+				    break;
 			    }
 		    },
 		    [&pSufix](const PLStruct &suffix) {
@@ -4741,7 +4743,6 @@ StringOrView Item::getName() const
 	} else if (!_iIdentified || _iCreateInfo == 0 || _iMagical == ITEM_QUALITY_NORMAL) {
 		return GetTranslatedItemName(*this);
 	} else if (_iMagical == ITEM_QUALITY_UNIQUE) {
-		const auto &baseItemData = AllItemsList[static_cast<size_t>(IDidx)];
 		return _(UniqueItems[_iUid].UIName);
 	} else {
 		return GetTranslatedItemNameMagical(*this, dwBuff & CF_HELLFIRE, true, std::nullopt);

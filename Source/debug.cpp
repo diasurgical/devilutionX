@@ -121,20 +121,6 @@ void PrintDebugMonster(const Monster &monster)
 	EventPlrMsg(StrCat("Active List = ", bActive ? 1 : 0, ", Squelch = ", monster.activeForTicks), UiFlags::ColorWhite);
 }
 
-void ProcessMessages()
-{
-	SDL_Event event;
-	uint16_t modState;
-	while (FetchMessage(&event, &modState)) {
-		if (event.type == SDL_QUIT) {
-			gbRunGameResult = false;
-			gbRunGame = false;
-			break;
-		}
-		HandleMessage(event, modState);
-	}
-}
-
 struct DebugCmdItem {
 	const string_view text;
 	const string_view description;
