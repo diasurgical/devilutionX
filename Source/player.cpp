@@ -2432,10 +2432,7 @@ void NextPlrLevel(Player &player)
 	} else {
 		player._pStatPts += 5;
 	}
-	if (player._pLevel < MaxCharacterLevel)
-		player._pNextExper = ExpLvlsTbl[player._pLevel];
-	else
-		player._pNextExper = ExpLvlsTbl[MaxCharacterLevel - 1];
+	player._pNextExper = ExpLvlsTbl[std::min<int8_t>(player._pLevel, MaxCharacterLevel - 1)];
 
 	int hp = PlayersData[static_cast<size_t>(player._pClass)].lvlUpLife;
 
@@ -2472,12 +2469,11 @@ void AddPlrExperience(Player &player, int lvl, int exp)
 {
 	if (&player != MyPlayer || player._pHitPoints <= 0)
 		return;
-	if (player._pLevel > MaxCharacterLevel) {
+
+	if (player._pLevel >= MaxCharacterLevel) {
 		player._pLevel = MaxCharacterLevel;
 		return;
 	}
-	if (player._pLevel == MaxCharacterLevel)
-		return;
 
 	// Adjust xp based on difference in level between player and monster
 	uint32_t clampedExp = std::max(static_cast<int>(exp * (1 + (lvl - player._pLevel) / 10.0)), 0);
@@ -2592,10 +2588,7 @@ void InitPlayer(Player &player, bool firstTime)
 	SpellID s = PlayersData[static_cast<size_t>(player._pClass)].skill;
 	player._pAblSpells = GetSpellBitmask(s);
 
-	int level = player._pLevel;
-	if (player._pLevel >= MaxCharacterLevel)
-		level = MaxCharacterLevel - 1;
-	player._pNextExper = ExpLvlsTbl[level];
+	player._pNextExper = ExpLvlsTbl[std::min<int8_t>(player._pLevel, MaxCharacterLevel - 1)];
 	player._pInvincible = false;
 
 	if (&player == MyPlayer) {
