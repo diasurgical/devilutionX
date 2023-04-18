@@ -4315,7 +4315,7 @@ void RedoPlayerVision()
 {
 	for (const Player &player : Players) {
 		if (player.plractive && player.isOnActiveLevel()) {
-			ChangeVisionXY(player.getId(), player.position.tile);
+			ChangeLightXY(player.lightId, player.position.tile, true);
 		}
 	}
 }

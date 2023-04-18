@@ -111,7 +111,7 @@ void WalkSouthwards(Player &player, const DirectionSettings & /*walkParams*/)
 	player.position.tile = player.position.future; // Move player to the next tile to maintain correct render order
 	dPlayer[player.position.tile.x][player.position.tile.y] = playerId + 1;
 	// BUGFIX: missing `if (leveltype != DTYPE_TOWN) {` for call to ChangeLightXY and PM_ChangeLightOff.
-	ChangeLightXY(player.lightId, player.position.tile);
+	ChangeLightXY(player.lightId, player.position.tile, true);
 	PmChangeLightOff(player);
 }
 
@@ -124,7 +124,7 @@ void WalkSideways(Player &player, const DirectionSettings &walkParams)
 	dPlayer[player.position.future.x][player.position.future.y] = playerId + 1;
 
 	if (leveltype != DTYPE_TOWN) {
-		ChangeLightXY(player.lightId, nextPosition);
+		ChangeLightXY(player.lightId, nextPosition, true);
 		PmChangeLightOff(player);
 	}
 
@@ -505,8 +505,7 @@ bool DoWalk(Player &player, int variant)
 
 	// Update the coordinates for lighting and vision entries for the player
 	if (leveltype != DTYPE_TOWN) {
-		ChangeLightXY(player.lightId, player.position.tile);
-		ChangeVisionXY(player.getId(), player.position.tile);
+		ChangeLightXY(player.lightId, player.position.tile, true);
 	}
 
 	if (player.walkpath[0] != WALK_NONE) {
@@ -2576,12 +2575,11 @@ void InitPlayer(Player &player, bool firstTime)
 		player.destAction = ACTION_NONE;
 
 		if (&player == MyPlayer) {
-			player.lightId = AddLight(player.position.tile, player._pLightRad);
-			ChangeLightXY(player.lightId, player.position.tile); // fix for a bug where old light is still visible at the entrance after reentering level
+			player.lightId = AddLight(player.position.tile, player._pLightRad, true);
+			ChangeLightXY(player.lightId, player.position.tile, true); // fix for a bug where old light is still visible at the entrance after reentering level
 		} else {
-			player.lightId = NO_LIGHT;
+			player.lightId = AddLight(player.position.tile, player._pLightRad, true, true);
 		}
-		ActivateVision(player.position.tile, player._pLightRad, player.getId());
 	}
 
 	SpellID s = PlayersData[static_cast<size_t>(player._pClass)].skill;
@@ -2638,8 +2636,7 @@ void FixPlayerLocation(Player &player, Direction bDir)
 	if (&player == MyPlayer) {
 		ViewPosition = player.position.tile;
 	}
-	ChangeLightXY(player.lightId, player.position.tile);
-	ChangeVisionXY(player.getId(), player.position.tile);
+	ChangeLightXY(player.lightId, player.position.tile, true);
 }
 
 void StartStand(Player &player, Direction dir)

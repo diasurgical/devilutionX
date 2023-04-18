@@ -3622,8 +3622,7 @@ void ProcessTeleport(Missile &missile)
 	missile.var1 = 1;
 	dPlayer[player.position.tile.x][player.position.tile.y] = id + 1;
 	if (leveltype != DTYPE_TOWN) {
-		ChangeLightXY(player.lightId, player.position.tile);
-		ChangeVisionXY(player.getId(), player.position.tile);
+		ChangeLightXY(player.lightId, player.position.tile, true);
 	}
 	if (&player == MyPlayer) {
 		ViewPosition = player.position.tile;

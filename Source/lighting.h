@@ -20,7 +20,6 @@
 namespace devilution {
 
 #define MAXLIGHTS 32
-#define MAXVISION 4
 /** @brief Number of supported light levels */
 constexpr size_t NumLightingLevels = 16;
 #define NO_LIGHT -1
@@ -39,10 +38,9 @@ struct Light {
 	uint8_t oldRadius;
 	bool isInvalid;
 	bool hasChanged;
+	bool isRemote;
 };
 
-extern Light VisionList[MAXVISION];
-extern std::array<bool, MAXVISION> VisionActive;
 extern Light Lights[MAXLIGHTS];
 extern std::array<uint8_t, MAXLIGHTS> ActiveLights;
 extern int ActiveLightCount;
@@ -55,6 +53,7 @@ extern std::array<uint8_t, 256> PauseTable;
 extern bool DisableLighting;
 #endif
 extern bool UpdateLighting;
+extern bool UpdateVision;
 
 void DoLighting(Point position, uint8_t radius, int Lnum);
 void DoUnVision(Point position, uint8_t radius);
@@ -64,18 +63,14 @@ void MakeLightTable();
 void ToggleLighting();
 #endif
 void InitLighting();
-int AddLight(Point position, uint8_t radius);
+int AddLight(Point position, uint8_t radius, bool updateVision = false, bool isRemote = false);
 void AddUnLight(int i);
-void ChangeLightRadius(int i, uint8_t radius);
-void ChangeLightXY(int i, Point position);
+void ChangeLightRadius(int i, uint8_t radius, bool updateVision = false);
+void ChangeLightXY(int i, Point position, bool updateVision = false);
 void ChangeLightOffset(int i, Displacement offset);
 void ChangeLight(int i, Point position, uint8_t radius);
 void ProcessLightList();
 void SavePreLighting();
-void ActivateVision(Point position, int r, int id);
-void ChangeVisionRadius(int id, int r);
-void ChangeVisionXY(int id, Point position);
-void ProcessVisionList();
 void lighting_color_cycling();
 
 constexpr int MaxCrawlRadius = 18;

@@ -16,8 +16,6 @@
 
 namespace devilution {
 
-std::array<bool, MAXVISION> VisionActive;
-Light VisionList[MAXVISION];
 Light Lights[MAXLIGHTS];
 std::array<uint8_t, MAXLIGHTS> ActiveLights;
 int ActiveLightCount;
@@ -29,6 +27,7 @@ std::array<uint8_t, 256> PauseTable;
 bool DisableLighting;
 #endif
 bool UpdateLighting;
+bool UpdateVision;
 
 namespace {
 
@@ -68,7 +67,6 @@ const DisplacementOf<int8_t> VisionCrawlTable[23][15] = {
 constexpr size_t NumLightRadiuses = 16;
 /** Falloff tables for the light cone */
 uint8_t LightFalloffs[NumLightRadiuses][128];
-bool UpdateVision;
 /** interpolations of a 32x32 (16x16 mirrored) light circle moving between tiles in steps of 1/8 of a tile */
 uint8_t LightConeInterpolations[8][8][16][16];
 
@@ -173,6 +171,41 @@ void DoVisionFlags(Point position, MapExplorationType doAutomap, bool visible)
 	if (visible)
 		dFlags[position.x][position.y] |= DungeonFlag::Lit;
 	dFlags[position.x][position.y] |= DungeonFlag::Visible;
+}
+
+void ProcessVision()
+{
+	if (!UpdateVision)
+		return;
+
+	for (int i = 0; i < TransVal; i++) {
+		TransList[i] = false;
+	}
+
+	for (const Player &player : Players) {
+		if (player.lightId == NO_LIGHT)
+			continue;
+		const Light &vision = Lights[player.lightId];
+		if (vision.hasChanged) {
+			DoUnVision(vision.position.old, vision.oldRadius);
+		}
+		if (vision.isInvalid || !player.plractive || !player.isOnActiveLevel()) {
+			DoUnVision(vision.position.tile, vision.radius);
+			continue;
+		}
+		MapExplorationType doautomap = MAP_EXP_SELF;
+		if (&player != MyPlayer) {
+			// Check that player allows automap sharing
+			doautomap = player.friendlyMode ? MAP_EXP_OTHERS : MAP_EXP_NONE;
+		}
+		DoVision(
+		    vision.position.tile,
+		    vision.radius,
+		    doautomap,
+		    &player == MyPlayer);
+	}
+
+	UpdateVision = false;
 }
 
 } // namespace
@@ -447,6 +480,10 @@ void ToggleLighting()
 
 void InitLighting()
 {
+#ifdef _DEBUG
+	DisableLighting = false;
+#endif
+
 	ActiveLightCount = 0;
 	UpdateLighting = false;
 	UpdateVision = false;
@@ -459,10 +496,10 @@ void InitLighting()
 	TransList = {};
 }
 
-int AddLight(Point position, uint8_t radius)
+int AddLight(Point position, uint8_t radius, bool updateVision, bool isRemote)
 {
 #ifdef _DEBUG
-	if (DisableLighting)
+	if (DisableLighting && !updateVision)
 		return NO_LIGHT;
 #endif
 	if (ActiveLightCount >= MAXLIGHTS)
@@ -475,7 +512,9 @@ int AddLight(Point position, uint8_t radius)
 	light.position.offset = { 0, 0 };
 	light.isInvalid = false;
 	light.hasChanged = false;
+	light.isRemote = isRemote;
 
+	UpdateVision = updateVision || UpdateVision;
 	UpdateLighting = true;
 
 	return lid;
@@ -495,10 +534,10 @@ void AddUnLight(int i)
 	UpdateLighting = true;
 }
 
-void ChangeLightRadius(int i, uint8_t radius)
+void ChangeLightRadius(int i, uint8_t radius, bool updateVision)
 {
 #ifdef _DEBUG
-	if (DisableLighting)
+	if (DisableLighting && !updateVision)
 		return;
 #endif
 	if (i == NO_LIGHT)
@@ -510,13 +549,14 @@ void ChangeLightRadius(int i, uint8_t radius)
 	light.oldRadius = light.radius;
 	light.radius = radius;
 
+	UpdateVision = updateVision || UpdateVision;
 	UpdateLighting = true;
 }
 
-void ChangeLightXY(int i, Point position)
+void ChangeLightXY(int i, Point position, bool updateVision)
 {
 #ifdef _DEBUG
-	if (DisableLighting)
+	if (DisableLighting && !updateVision)
 		return;
 #endif
 	if (i == NO_LIGHT)
@@ -528,6 +568,7 @@ void ChangeLightXY(int i, Point position)
 	light.oldRadius = light.radius;
 	light.position.tile = position;
 
+	UpdateVision = updateVision || UpdateVision;
 	UpdateLighting = true;
 }
 
@@ -570,14 +611,20 @@ void ChangeLight(int i, Point position, uint8_t radius)
 
 void ProcessLightList()
 {
+	if (!UpdateLighting)
+		return;
+
+	ProcessVision();
+
 #ifdef _DEBUG
 	if (DisableLighting)
 		return;
 #endif
-	if (!UpdateLighting)
-		return;
+
 	for (int i = 0; i < ActiveLightCount; i++) {
 		Light &light = Lights[ActiveLights[i]];
+		if (light.isRemote)
+			continue;
 		if (light.isInvalid) {
 			DoUnLight(light.position.tile, light.radius);
 		}
@@ -587,20 +634,18 @@ void ProcessLightList()
 		}
 	}
 	for (int i = 0; i < ActiveLightCount; i++) {
-		int j = ActiveLights[i];
-		Light &light = Lights[j];
-		if (!light.isInvalid) {
-			DoLighting(light.position.tile, light.radius, j);
-		}
-	}
-	int i = 0;
-	while (i < ActiveLightCount) {
 		if (Lights[ActiveLights[i]].isInvalid) {
 			ActiveLightCount--;
 			std::swap(ActiveLights[ActiveLightCount], ActiveLights[i]);
-		} else {
-			i++;
+			i--;
 		}
+	}
+	for (int i = 0; i < ActiveLightCount; i++) {
+		int j = ActiveLights[i];
+		Light &light = Lights[j];
+		if (light.isRemote)
+			continue;
+		DoLighting(light.position.tile, light.radius, j);
 	}
 
 	UpdateLighting = false;
@@ -609,74 +654,6 @@ void ProcessLightList()
 void SavePreLighting()
 {
 	memcpy(dPreLight, dLight, sizeof(dPreLight));
-}
-
-void ActivateVision(Point position, int r, int id)
-{
-	auto &vision = VisionList[id];
-	vision.position.tile = position;
-	vision.radius = r;
-	vision.isInvalid = false;
-	vision.hasChanged = false;
-	VisionActive[id] = true;
-
-	UpdateVision = true;
-}
-
-void ChangeVisionRadius(int id, int r)
-{
-	auto &vision = VisionList[id];
-	vision.hasChanged = true;
-	vision.position.old = vision.position.tile;
-	vision.oldRadius = vision.radius;
-	vision.radius = r;
-	UpdateVision = true;
-}
-
-void ChangeVisionXY(int id, Point position)
-{
-	auto &vision = VisionList[id];
-	vision.hasChanged = true;
-	vision.position.old = vision.position.tile;
-	vision.oldRadius = vision.radius;
-	vision.position.tile = position;
-	UpdateVision = true;
-}
-
-void ProcessVisionList()
-{
-	if (!UpdateVision)
-		return;
-
-	for (int i = 0; i < TransVal; i++) {
-		TransList[i] = false;
-	}
-
-	for (const Player &player : Players) {
-		int id = player.getId();
-		if (!VisionActive[id])
-			continue;
-		Light &vision = VisionList[id];
-		if (!player.plractive || !player.isOnActiveLevel()) {
-			DoUnVision(vision.position.tile, vision.radius);
-			VisionActive[id] = false;
-			continue;
-		}
-		if (vision.hasChanged) {
-			DoUnVision(vision.position.old, vision.oldRadius);
-			vision.hasChanged = false;
-		}
-		MapExplorationType doautomap = MAP_EXP_SELF;
-		if (&player != MyPlayer)
-			doautomap = player.friendlyMode ? MAP_EXP_OTHERS : MAP_EXP_NONE;
-		DoVision(
-		    vision.position.tile,
-		    vision.radius,
-		    doautomap,
-		    &player == MyPlayer);
-	}
-
-	UpdateVision = false;
 }
 
 void lighting_color_cycling()

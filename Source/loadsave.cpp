@@ -1134,7 +1134,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.WriteLE<int32_t>(CalculateWidth2(animWidth));
 	file.Skip<uint32_t>(); // Skip _peflag
 	file.WriteLE<int32_t>(player.lightId);
-	file.WriteLE<int32_t>(1); // _pvid
+	file.WriteLE<int32_t>(player.lightId != NO_LIGHT ? 1 : 0); // _pvid
 
 	file.WriteLE<int32_t>(static_cast<int8_t>(player.queuedSpell.spellId));
 	file.WriteLE<int8_t>(static_cast<int8_t>(player.queuedSpell.spellType));
@@ -2159,10 +2159,8 @@ void LoadGame(bool firstflag)
 		file.Skip<int32_t>(); // VisionId
 		int visionCount = file.NextBE<int32_t>();
 
-		for (int i = 0; i < visionCount; i++) {
-			LoadLighting(&file, &VisionList[i]);
-			VisionActive[i] = true;
-		}
+		for (int i = 0; i < visionCount; i++)
+			file.Skip<uint32_t>(13); // VisionList
 	}
 
 	LoadDroppedItems(file, savedItemCount);
@@ -2231,7 +2229,6 @@ void LoadGame(bool firstflag)
 
 	if (leveltype != DTYPE_TOWN) {
 		RedoPlayerVision();
-		ProcessVisionList();
 		ProcessLightList();
 	}
 
@@ -2426,7 +2423,7 @@ void SaveGameData(SaveWriter &saveWriter)
 		file.WriteBE<int32_t>(visionCount);
 
 		for (const Player &player : Players)
-			SaveLighting(&file, &VisionList[player.getId()], true);
+			SaveLighting(&file, &Lights[player.lightId], true);
 	}
 
 	auto itemIndexes = SaveDroppedItems(file);
@@ -2654,6 +2651,7 @@ void LoadLevel()
 		ResyncQuests();
 		RedoMissileFlags();
 		UpdateLighting = true;
+		UpdateVision = true;
 	}
 
 	for (Player &player : Players) {

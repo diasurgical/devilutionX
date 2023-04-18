@@ -1386,7 +1386,6 @@ void GameLogic()
 		gGameLogicStep = GameLogicStep::ProcessItems;
 		ProcessItems();
 		ProcessLightList();
-		ProcessVisionList();
 	} else {
 		gGameLogicStep = GameLogicStep::ProcessTowners;
 		ProcessTowners();
@@ -2937,7 +2936,6 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 	UnstuckChargers();
 	if (leveltype != DTYPE_TOWN) {
 		ProcessLightList();
-		ProcessVisionList();
 	}
 
 	if (leveltype == DTYPE_CRYPT) {

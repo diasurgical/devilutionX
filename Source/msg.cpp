@@ -2117,7 +2117,7 @@ size_t OnPlayerJoinLevel(const TCmd *pCmd, size_t pnum)
 				dFlags[player.position.tile.x][player.position.tile.y] |= DungeonFlag::DeadPlayer;
 			}
 
-			ActivateVision(player.position.tile, player._pLightRad, player.getId());
+			player.lightId = AddLight(player.position.tile, player._pLightRad, true, true);
 		}
 	}
 
