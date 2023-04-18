@@ -1976,9 +1976,6 @@ _item_indexes RndPremiumItem(const Player &player, int minlvl, int maxlvl)
 
 void SpawnOnePremium(Item &premiumItem, int plvl, const Player &player)
 {
-	int itemValue = 0;
-	bool keepGoing = false;
-
 	int strength = std::max(player.GetMaximumAttributeValue(CharacterAttribute::Strength), player._pStrength);
 	int dexterity = std::max(player.GetMaximumAttributeValue(CharacterAttribute::Dexterity), player._pDexterity);
 	int magic = std::max(player.GetMaximumAttributeValue(CharacterAttribute::Magic), player._pMagic);
@@ -1988,10 +1985,9 @@ void SpawnOnePremium(Item &premiumItem, int plvl, const Player &player)
 
 	plvl = clamp(plvl, 1, 30);
 
-	int count = 0;
-
-	do {
-		keepGoing = false;
+	int maxCount = 150;
+	const bool unlimited = !gbIsHellfire; // TODO: This could lead to an infinite loop if a suitable item can never be generated
+	for (int count = 0; unlimited || count < maxCount; count++) {
 		premiumItem = {};
 		premiumItem._iSeed = AdvanceRndSeed();
 		SetRndSeed(premiumItem._iSeed);
@@ -2000,55 +1996,52 @@ void SpawnOnePremium(Item &premiumItem, int plvl, const Player &player)
 		GetItemBonus(player, premiumItem, plvl / 2, plvl, true, !gbIsHellfire);
 
 		if (!gbIsHellfire) {
-			if (premiumItem._iIvalue > 140000) {
-				keepGoing = true; // prevent breaking the do/while loop too early by failing hellfire's condition in while
-				continue;
+			if (premiumItem._iIvalue <= 140000) {
+				break;
 			}
-			break;
-		}
+		} else {
+			int itemValue = 0;
+			switch (premiumItem._itype) {
+			case ItemType::LightArmor:
+			case ItemType::MediumArmor:
+			case ItemType::HeavyArmor: {
+				const auto *const mostValuablePlayerArmor = player.GetMostValuableItem(
+				    [](const Item &item) {
+					    return IsAnyOf(item._itype, ItemType::LightArmor, ItemType::MediumArmor, ItemType::HeavyArmor);
+				    });
 
-		switch (premiumItem._itype) {
-		case ItemType::LightArmor:
-		case ItemType::MediumArmor:
-		case ItemType::HeavyArmor: {
-			const auto *const mostValuablePlayerArmor = player.GetMostValuableItem(
-			    [](const Item &item) {
-				    return IsAnyOf(item._itype, ItemType::LightArmor, ItemType::MediumArmor, ItemType::HeavyArmor);
-			    });
+				itemValue = mostValuablePlayerArmor == nullptr ? 0 : mostValuablePlayerArmor->_iIvalue;
+				break;
+			}
+			case ItemType::Shield:
+			case ItemType::Axe:
+			case ItemType::Bow:
+			case ItemType::Mace:
+			case ItemType::Sword:
+			case ItemType::Helm:
+			case ItemType::Staff:
+			case ItemType::Ring:
+			case ItemType::Amulet: {
+				const auto *const mostValuablePlayerItem = player.GetMostValuableItem(
+				    [filterType = premiumItem._itype](const Item &item) { return item._itype == filterType; });
 
-			itemValue = mostValuablePlayerArmor == nullptr ? 0 : mostValuablePlayerArmor->_iIvalue;
-			break;
+				itemValue = mostValuablePlayerItem == nullptr ? 0 : mostValuablePlayerItem->_iIvalue;
+				break;
+			}
+			default:
+				itemValue = 0;
+				break;
+			}
+			itemValue = itemValue * 4 / 5; // avoids forced int > float > int conversion
+			if (premiumItem._iIvalue <= 200000
+			    && premiumItem._iMinStr <= strength
+			    && premiumItem._iMinMag <= magic
+			    && premiumItem._iMinDex <= dexterity
+			    && premiumItem._iIvalue >= itemValue) {
+				break;
+			}
 		}
-		case ItemType::Shield:
-		case ItemType::Axe:
-		case ItemType::Bow:
-		case ItemType::Mace:
-		case ItemType::Sword:
-		case ItemType::Helm:
-		case ItemType::Staff:
-		case ItemType::Ring:
-		case ItemType::Amulet: {
-			const auto *const mostValuablePlayerItem = player.GetMostValuableItem(
-			    [filterType = premiumItem._itype](const Item &item) { return item._itype == filterType; });
-
-			itemValue = mostValuablePlayerItem == nullptr ? 0 : mostValuablePlayerItem->_iIvalue;
-			break;
-		}
-		default:
-			itemValue = 0;
-			break;
-		}
-		itemValue = itemValue * 4 / 5; // avoids forced int > float > int conversion
-
-		count++;
-	} while (keepGoing
-	    || ((
-	            premiumItem._iIvalue > 200000
-	            || premiumItem._iMinStr > strength
-	            || premiumItem._iMinMag > magic
-	            || premiumItem._iMinDex > dexterity
-	            || premiumItem._iIvalue < itemValue)
-	        && count < 150));
+	}
 	premiumItem._iCreateInfo = plvl | CF_SMITHPREMIUM;
 	premiumItem._iIdentified = true;
 	premiumItem._iStatFlag = player.CanUseItem(premiumItem);
