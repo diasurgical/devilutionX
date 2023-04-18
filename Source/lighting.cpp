@@ -108,7 +108,8 @@ char GetLight(Point position)
 
 void DoUnLight(int nXPos, int nYPos, int nRadius)
 {
-	nRadius += 2; // If lights moved at a diagonal it can result in som extra tiles being lit
+	nRadius++;
+	nRadius++; // If lights moved at a diagonal it can result in some extra tiles being lit
 
 	int minX = nXPos - nRadius;
 	int maxX = nXPos + nRadius;
