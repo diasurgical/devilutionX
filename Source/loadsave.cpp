@@ -1545,7 +1545,30 @@ void SaveObject(SaveHelper &file, const Object &object)
 	file.WriteLE<uint32_t>(object._oDoorFlag ? 1 : 0);
 	file.WriteLE<int32_t>(object._olid);
 	file.WriteLE<uint32_t>(object._oRndSeed);
-	file.WriteLE<int32_t>(object._oVar1);
+
+	/* Make dynamic light sources unseen when saving level data for level change */
+	int32_t var1 = object._oVar1;
+	switch (object._otype) {
+	case OBJ_L1LIGHT:
+	case OBJ_SKFIRE:
+	case OBJ_CANDLE1:
+	case OBJ_CANDLE2:
+	case OBJ_BOOKCANDLE:
+	case OBJ_STORYCANDLE:
+	case OBJ_L5CANDLE:
+	case OBJ_TORCHL:
+	case OBJ_TORCHR:
+	case OBJ_TORCHL2:
+	case OBJ_TORCHR2:
+	case OBJ_BCROSS:
+	case OBJ_TBCROSS:
+		if (var1 != -1)
+			var1 = 0;
+		break;
+	default:
+		break;
+	}
+	file.WriteLE<int32_t>(var1);
 	file.WriteLE<int32_t>(object._oVar2);
 	file.WriteLE<int32_t>(object._oVar3);
 	file.WriteLE<int32_t>(object._oVar4);
@@ -2506,26 +2529,7 @@ void SaveLevel(SaveWriter &saveWriter)
 		for (int objectId : AvailableObjects)
 			file.WriteLE<int8_t>(objectId);
 		for (int i = 0; i < ActiveObjectCount; i++) {
-			/* make dynamic light sources unseen when saving level data for level change */
-			Object &object = Objects[ActiveObjects[i]];
-			switch (object._otype) {
-			case OBJ_L1LIGHT:
-			case OBJ_SKFIRE:
-			case OBJ_CANDLE1:
-			case OBJ_CANDLE2:
-			case OBJ_BOOKCANDLE:
-			case OBJ_STORYCANDLE:
-			case OBJ_TORCHL:
-			case OBJ_TORCHR:
-			case OBJ_TORCHL2:
-			case OBJ_TORCHR2:
-			case OBJ_BCROSS:
-			case OBJ_TBCROSS:
-				if (object._oVar1 != -1)
-					object._oVar1 = 0;
-				break;
-			}
-			SaveObject(file, object);
+			SaveObject(file, Objects[ActiveObjects[i]]);
 		}
 	}
 
