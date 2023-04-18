@@ -1348,7 +1348,7 @@ void AddTrap(Object &trap)
 void AddObjectLight(Object &object, int r)
 {
 	if (ApplyObjectLighting) {
-		DoLighting(object.position, r, -1);
+		DoLighting(object.position, r, {});
 		object._oVar1 = -1;
 	} else {
 		object._oVar1 = 0;

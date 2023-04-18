@@ -2150,11 +2150,11 @@ void PlaceCaveLights()
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++) {
 			if (dPiece[i][j] >= 55 && dPiece[i][j] <= 146) {
-				DoLighting({ i, j }, 7, -1);
+				DoLighting({ i, j }, 7, {});
 			} else if (dPiece[i][j] >= 153 && dPiece[i][j] <= 160) {
-				DoLighting({ i, j }, 7, -1);
+				DoLighting({ i, j }, 7, {});
 			} else if (IsAnyOf(dPiece[i][j], 149, 151)) {
-				DoLighting({ i, j }, 7, -1);
+				DoLighting({ i, j }, 7, {});
 			}
 		}
 	}
@@ -2166,7 +2166,7 @@ void PlaceHiveLights()
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++) {
 			if (dPiece[i][j] >= 381 && dPiece[i][j] <= 456) {
-				DoLighting({ i, j }, 9, -1);
+				DoLighting({ i, j }, 9, {});
 			}
 		}
 	}

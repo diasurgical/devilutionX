@@ -75,28 +75,21 @@ uint8_t LightConeInterpolations[8][8][16][16];
 /** RadiusAdj maps from VisionCrawlTable index to lighting vision radius adjustment. */
 const uint8_t RadiusAdj[23] = { 0, 0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 4, 3, 2, 2, 2, 1, 1, 1, 0, 0, 0, 0 };
 
-void RotateRadius(int *x, int *y, int *dx, int *dy, int *lx, int *ly, int *bx, int *by)
+void RotateRadius(DisplacementOf<int8_t> &offset, DisplacementOf<int8_t> &dist, DisplacementOf<int8_t> &light, DisplacementOf<int8_t> &block)
 {
-	*bx = 0;
-	*by = 0;
+	dist = { static_cast<int8_t>(7 - dist.deltaY), dist.deltaX };
+	light = { static_cast<int8_t>(7 - light.deltaY), light.deltaX };
+	offset = { static_cast<int8_t>(dist.deltaX - light.deltaX), static_cast<int8_t>(dist.deltaY - light.deltaY) };
 
-	int swap = *dx;
-	*dx = 7 - *dy;
-	*dy = swap;
-	swap = *lx;
-	*lx = 7 - *ly;
-	*ly = swap;
-
-	*x = *dx - *lx;
-	*y = *dy - *ly;
-
-	if (*x < 0) {
-		*x += 8;
-		*bx = 1;
+	block.deltaX = 0;
+	if (offset.deltaX < 0) {
+		offset.deltaX += 8;
+		block.deltaX = 1;
 	}
-	if (*y < 0) {
-		*y += 8;
-		*by = 1;
+	block.deltaY = 0;
+	if (offset.deltaY < 0) {
+		offset.deltaY += 8;
+		block.deltaY = 1;
 	}
 }
 
@@ -210,34 +203,24 @@ bool DoCrawl(unsigned minRadius, unsigned maxRadius, tl::function_ref<bool(Displ
 	return true;
 }
 
-void DoLighting(Point position, uint8_t radius, int Lnum)
+void DoLighting(Point position, uint8_t radius, DisplacementOf<int8_t> offset)
 {
 	assert(radius >= 0 && radius <= NumLightRadiuses);
 	assert(InDungeonBounds(position));
 
-	int xoff = 0;
-	int yoff = 0;
-	int lightX = 0;
-	int lightY = 0;
-	int blockX = 0;
-	int blockY = 0;
+	DisplacementOf<int8_t> light = {};
+	DisplacementOf<int8_t> block = {};
 
-	if (Lnum >= 0) {
-		Light &light = Lights[Lnum];
-		xoff = light.position.offset.deltaX;
-		yoff = light.position.offset.deltaY;
-		if (xoff < 0) {
-			xoff += 8;
-			position -= { 1, 0 };
-		}
-		if (yoff < 0) {
-			yoff += 8;
-			position -= { 0, 1 };
-		}
+	if (offset.deltaX < 0) {
+		offset.deltaX += 8;
+		position -= { 1, 0 };
+	}
+	if (offset.deltaY < 0) {
+		offset.deltaY += 8;
+		position -= { 0, 1 };
 	}
 
-	int distX = xoff;
-	int distY = yoff;
+	DisplacementOf<int8_t> dist = offset;
 
 	int minX = 15;
 	if (position.x - 15 < 0) {
@@ -267,7 +250,7 @@ void DoLighting(Point position, uint8_t radius, int Lnum)
 		int xBound = i < 2 ? maxX : minX;
 		for (int y = 0; y < yBound; y++) {
 			for (int x = 1; x < xBound; x++) {
-				int linearDistance = LightConeInterpolations[xoff][yoff][x + blockX][y + blockY];
+				int linearDistance = LightConeInterpolations[offset.deltaX][offset.deltaY][x + block.deltaX][y + block.deltaY];
 				if (linearDistance >= 128)
 					continue;
 				Point temp = position + (Displacement { x, y }).Rotate(-i);
@@ -278,7 +261,7 @@ void DoLighting(Point position, uint8_t radius, int Lnum)
 					SetLight(temp, v);
 			}
 		}
-		RotateRadius(&xoff, &yoff, &distX, &distY, &lightX, &lightY, &blockX, &blockY);
+		RotateRadius(offset, dist, light, block);
 	}
 }
 
@@ -439,7 +422,7 @@ void ToggleLighting()
 	memcpy(dLight, dPreLight, sizeof(dLight));
 	for (const Player &player : Players) {
 		if (player.plractive && player.isOnActiveLevel()) {
-			DoLighting(player.position.tile, player._pLightRad, -1);
+			DoLighting(player.position.tile, player._pLightRad, {});
 		}
 	}
 }
@@ -587,20 +570,14 @@ void ProcessLightList()
 		}
 	}
 	for (int i = 0; i < ActiveLightCount; i++) {
-		int j = ActiveLights[i];
-		Light &light = Lights[j];
-		if (!light.isInvalid) {
-			DoLighting(light.position.tile, light.radius, j);
-		}
-	}
-	int i = 0;
-	while (i < ActiveLightCount) {
-		if (Lights[ActiveLights[i]].isInvalid) {
+		const Light &light = Lights[ActiveLights[i]];
+		if (light.isInvalid) {
 			ActiveLightCount--;
 			std::swap(ActiveLights[ActiveLightCount], ActiveLights[i]);
-		} else {
-			i++;
+			i--;
+			continue;
 		}
+		DoLighting(light.position.tile, light.radius, light.position.offset);
 	}
 
 	UpdateLighting = false;
@@ -648,9 +625,7 @@ void ProcessVisionList()
 	if (!UpdateVision)
 		return;
 
-	for (int i = 0; i < TransVal; i++) {
-		TransList[i] = false;
-	}
+	TransList = {};
 
 	for (const Player &player : Players) {
 		int id = player.getId();
