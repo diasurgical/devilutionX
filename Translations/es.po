@@ -2325,7 +2325,7 @@ msgstr "Espada Corta"
 
 #: Source/itemdat.cpp:55 Source/itemdat.cpp:124
 msgid "Buckler"
-msgstr "Escudo"
+msgstr "Rodela"
 
 #: Source/itemdat.cpp:56 Source/itemdat.cpp:192 Source/itemdat.cpp:193
 msgid "Club"
@@ -2413,7 +2413,7 @@ msgstr "Corazón"
 
 #: Source/itemdat.cpp:77 Source/itemdat.cpp:130
 msgid "Potion of Healing"
-msgstr "Poción de Curación"
+msgstr "Poción Curativa"
 
 #: Source/itemdat.cpp:78 Source/itemdat.cpp:132
 msgid "Potion of Mana"
@@ -2421,11 +2421,11 @@ msgstr "Poción de Maná"
 
 #: Source/itemdat.cpp:79 Source/itemdat.cpp:147
 msgid "Scroll of Identify"
-msgstr "Pergamino de la identidad"
+msgstr "Pergamino de la Identidad"
 
 #: Source/itemdat.cpp:80 Source/itemdat.cpp:151
 msgid "Scroll of Town Portal"
-msgstr "Pergamino de portal a el pueblo"
+msgstr "Pergamino del Portal de la Ciudad"
 
 #: Source/itemdat.cpp:81 Source/itemdat.cpp:440
 msgid "Arkaine's Valor"
@@ -2433,11 +2433,11 @@ msgstr "Valor de Arkaine"
 
 #: Source/itemdat.cpp:82 Source/itemdat.cpp:131
 msgid "Potion of Full Healing"
-msgstr "Poción de curación completa"
+msgstr "Poción Curativa Completa"
 
 #: Source/itemdat.cpp:83 Source/itemdat.cpp:133
 msgid "Potion of Full Mana"
-msgstr "Poción de Maná Completo"
+msgstr "Poción de Maná Completa"
 
 #: Source/itemdat.cpp:84 Source/itemdat.cpp:441
 msgid "Griswold's Edge"
@@ -2516,7 +2516,7 @@ msgstr "Gorro"
 
 #: Source/itemdat.cpp:102
 msgid "Skull Cap"
-msgstr "Gorro de Calavera"
+msgstr "Gorro Metálico"
 
 #: Source/itemdat.cpp:103 Source/itemdat.cpp:104 Source/itemdat.cpp:106
 msgid "Helm"
@@ -2536,19 +2536,19 @@ msgstr "Gran Yelmo"
 
 #: Source/itemdat.cpp:107
 msgid "Cape"
-msgstr "Capucha"
+msgstr "Capa"
 
 #: Source/itemdat.cpp:108
 msgid "Rags"
-msgstr "Harapos"
+msgstr "Andrajo"
 
 #: Source/itemdat.cpp:109
 msgid "Cloak"
-msgstr "Capa"
+msgstr "Manto"
 
 #: Source/itemdat.cpp:110
 msgid "Robe"
-msgstr "Vestido"
+msgstr "Túnica"
 
 #: Source/itemdat.cpp:111
 msgid "Quilted Armor"
@@ -2569,16 +2569,16 @@ msgstr "Armadura de Cuero Duro"
 
 #: Source/itemdat.cpp:114
 msgid "Studded Leather Armor"
-msgstr "Armadura de Cuero con Tachuelas"
+msgstr "Cuero Tachonado"
 
 #: Source/itemdat.cpp:115
 msgid "Ring Mail"
-msgstr "Coraza de Anillos"
+msgstr "Cota de Anillos"
 
 #: Source/itemdat.cpp:115 Source/itemdat.cpp:116 Source/itemdat.cpp:117
 #: Source/itemdat.cpp:119
 msgid "Mail"
-msgstr "Correo"
+msgstr "Cota"
 
 #: Source/itemdat.cpp:116
 msgid "Chain Mail"
@@ -2586,36 +2586,36 @@ msgstr "Cota de Malla"
 
 #: Source/itemdat.cpp:117
 msgid "Scale Mail"
-msgstr "Armadura de Escamas"
+msgstr "Cota de Escamas"
 
 #: Source/itemdat.cpp:118
 msgid "Breast Plate"
-msgstr "Peto"
+msgstr "Coraza Blindada"
 
 #: Source/itemdat.cpp:118 Source/itemdat.cpp:120 Source/itemdat.cpp:121
 #: Source/itemdat.cpp:122 Source/itemdat.cpp:123
 msgid "Plate"
-msgstr "Armadura de Placa"
+msgstr "Coraza"
 
 #: Source/itemdat.cpp:119
 msgid "Splint Mail"
-msgstr "Coraza Laminar"
+msgstr "Cota de Láminas"
 
 #: Source/itemdat.cpp:120
 msgid "Plate Mail"
-msgstr "Armadura de Placas"
+msgstr "Cota de Placas"
 
 #: Source/itemdat.cpp:121
 msgid "Field Plate"
-msgstr "Coraza de Campo"
+msgstr "Coraza de Campaña"
 
 #: Source/itemdat.cpp:122
 msgid "Gothic Plate"
-msgstr "Armadura Gótica"
+msgstr "Coraza Gótica"
 
 #: Source/itemdat.cpp:123
 msgid "Full Plate Mail"
-msgstr "Armadura Entera de Placas"
+msgstr "Cota de Placas Completa"
 
 #: Source/itemdat.cpp:124 Source/itemdat.cpp:125 Source/itemdat.cpp:126
 #: Source/itemdat.cpp:127 Source/itemdat.cpp:128 Source/itemdat.cpp:129
@@ -2632,11 +2632,11 @@ msgstr "Escudo Grande"
 
 #: Source/itemdat.cpp:127
 msgid "Kite Shield"
-msgstr "Escudo de Lágrima"
+msgstr "Escudo de Vértices"
 
 #: Source/itemdat.cpp:128
 msgid "Tower Shield"
-msgstr "Escudo de Torre"
+msgstr "Escudo de la Torre"
 
 #: Source/itemdat.cpp:129
 msgid "Gothic Shield"
@@ -2644,11 +2644,11 @@ msgstr "Escudo Gótico"
 
 #: Source/itemdat.cpp:134
 msgid "Potion of Rejuvenation"
-msgstr "Poción de Rejuvenecimiento"
+msgstr "Poción Rejuvenecedora"
 
 #: Source/itemdat.cpp:135
 msgid "Potion of Full Rejuvenation"
-msgstr "Poción de Rejuvenecimiento Completo"
+msgstr "Poción Rejuvenecedora Completa"
 
 #: Source/itemdat.cpp:137 Source/items.cpp:171
 msgid "Oil of Accuracy"
@@ -2757,7 +2757,7 @@ msgstr "Libro de "
 
 #: Source/itemdat.cpp:173
 msgid "Falchion"
-msgstr "Bracamarte"
+msgstr "Chafarote"
 
 #: Source/itemdat.cpp:174
 msgid "Scimitar"
@@ -2769,7 +2769,7 @@ msgstr "Claymore"
 
 #: Source/itemdat.cpp:176
 msgid "Blade"
-msgstr "Blade"
+msgstr "Hoja"
 
 #: Source/itemdat.cpp:177
 msgid "Sabre"
@@ -2789,7 +2789,7 @@ msgstr "Espada Bastarda"
 
 #: Source/itemdat.cpp:181
 msgid "Two-Handed Sword"
-msgstr "Espada de Dos Manos"
+msgstr "Mandoble"
 
 #: Source/itemdat.cpp:182
 msgid "Great Sword"
@@ -2826,7 +2826,7 @@ msgstr "Maza"
 
 #: Source/itemdat.cpp:190
 msgid "Morning Star"
-msgstr "Lucero del Alba"
+msgstr "Estrella del Alba"
 
 #: Source/itemdat.cpp:191
 msgid "War Hammer"
@@ -2842,11 +2842,11 @@ msgstr "Porra con puntas"
 
 #: Source/itemdat.cpp:194
 msgid "Flail"
-msgstr "Mayal"
+msgstr "Rompecabezas"
 
 #: Source/itemdat.cpp:195
 msgid "Maul"
-msgstr "Gran Maza"
+msgstr "Almádena"
 
 #: Source/itemdat.cpp:196 Source/itemdat.cpp:197 Source/itemdat.cpp:198
 #: Source/itemdat.cpp:199 Source/itemdat.cpp:200 Source/itemdat.cpp:201
@@ -2856,7 +2856,7 @@ msgstr "Arco"
 
 #: Source/itemdat.cpp:197
 msgid "Hunter's Bow"
-msgstr "Arco de Caza"
+msgstr "Arco de Cazador"
 
 #: Source/itemdat.cpp:198
 msgid "Long Bow"
@@ -2868,41 +2868,41 @@ msgstr "Arco Compuesto"
 
 #: Source/itemdat.cpp:200
 msgid "Short Battle Bow"
-msgstr "Arco de Batalla Corto"
+msgstr "Arco Corto de Batalla"
 
 #: Source/itemdat.cpp:201
 msgid "Long Battle Bow"
-msgstr "Arco de Batalla Largo"
+msgstr "Arco Largo de Batalla"
 
 #: Source/itemdat.cpp:202
 msgid "Short War Bow"
-msgstr "Arco de Guerra Corto"
+msgstr "Arco Corto de Guerra"
 
 #: Source/itemdat.cpp:203
 msgid "Long War Bow"
-msgstr "Arco de Guerra Largo"
+msgstr "Arco Largo de Guerra"
 
 #: Source/itemdat.cpp:204 Source/itemdat.cpp:205 Source/itemdat.cpp:206
 #: Source/itemdat.cpp:207 Source/itemdat.cpp:208
 #: Source/panels/spell_list.cpp:179
 msgid "Staff"
-msgstr "Vara"
+msgstr "Bastón"
 
 #: Source/itemdat.cpp:205
 msgid "Long Staff"
-msgstr "Vara Larga"
+msgstr "Bastón Largo"
 
 #: Source/itemdat.cpp:206
 msgid "Composite Staff"
-msgstr "Vara Compuesta"
+msgstr "Bastón Plegable"
 
 #: Source/itemdat.cpp:207
 msgid "Quarter Staff"
-msgstr "Lanza Larga"
+msgstr "Bastón de Mando"
 
 #: Source/itemdat.cpp:208
 msgid "War Staff"
-msgstr "Vara de Guerra"
+msgstr "Bastón de Guerra"
 
 #: Source/itemdat.cpp:209 Source/itemdat.cpp:210 Source/itemdat.cpp:211
 msgid "Ring"
