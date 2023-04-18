@@ -1161,6 +1161,7 @@ bool IsDebugGridInMegatiles()
 bool GetDebugGridText(Point dungeonCoords, char *debugGridTextBuffer)
 {
 	int info = 0;
+	int blankValue = 0;
 	Point megaCoords = dungeonCoords.worldToMega();
 	switch (SelectedDebugGridTextItem) {
 	case DebugGridTextItem::coords:
@@ -1187,9 +1188,11 @@ bool GetDebugGridText(Point dungeonCoords, char *debugGridTextBuffer)
 		break;
 	case DebugGridTextItem::dLight:
 		info = dLight[dungeonCoords.x][dungeonCoords.y];
+		blankValue = LightsMax;
 		break;
 	case DebugGridTextItem::dPreLight:
 		info = dPreLight[dungeonCoords.x][dungeonCoords.y];
+		blankValue = LightsMax;
 		break;
 	case DebugGridTextItem::dFlags:
 		info = static_cast<int>(dFlags[dungeonCoords.x][dungeonCoords.y]);
@@ -1236,7 +1239,7 @@ bool GetDebugGridText(Point dungeonCoords, char *debugGridTextBuffer)
 	case DebugGridTextItem::None:
 		return false;
 	}
-	if (info == 0)
+	if (info == blankValue)
 		return false;
 	*BufCopy(debugGridTextBuffer, info) = '\0';
 	return true;
