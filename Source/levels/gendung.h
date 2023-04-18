@@ -193,8 +193,8 @@ extern DVL_API_FOR_TEST uint16_t dPiece[MAXDUNX][MAXDUNY];
 extern MICROS DPieceMicros[MAXTILES];
 /** Specifies the transparency at each coordinate of the map. */
 extern DVL_API_FOR_TEST int8_t dTransVal[MAXDUNX][MAXDUNY];
-extern char dLight[MAXDUNX][MAXDUNY];
-extern char dPreLight[MAXDUNX][MAXDUNY];
+extern uint8_t dLight[MAXDUNX][MAXDUNY];
+extern uint8_t dPreLight[MAXDUNX][MAXDUNY];
 /** Holds various information about dungeon tiles, @see DungeonFlag */
 extern DungeonFlag dFlags[MAXDUNX][MAXDUNY];
 

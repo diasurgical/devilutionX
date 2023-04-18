@@ -90,7 +90,7 @@ void RotateRadius(int *x, int *y, int *dx, int *dy, int *lx, int *ly, int *bx, i
 	}
 }
 
-void SetLight(Point position, char v)
+void SetLight(Point position, uint8_t v)
 {
 	if (LoadingMapObjects)
 		dPreLight[position.x][position.y] = v;
@@ -98,7 +98,7 @@ void SetLight(Point position, char v)
 		dLight[position.x][position.y] = v;
 }
 
-char GetLight(Point position)
+uint8_t GetLight(Point position)
 {
 	if (LoadingMapObjects)
 		return dPreLight[position.x][position.y];
@@ -270,7 +270,7 @@ void DoLighting(Point position, int nRadius, int lnum)
 				if (radiusBlock >= 128)
 					continue;
 				Point temp = position + (Displacement { x, y }).Rotate(-i);
-				int8_t v = lightradius[nRadius][radiusBlock];
+				uint8_t v = lightradius[nRadius][radiusBlock];
 				if (!InDungeonBounds(temp))
 					continue;
 				if (v < GetLight(temp))
