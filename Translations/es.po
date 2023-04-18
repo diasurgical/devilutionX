@@ -2413,7 +2413,7 @@ msgstr "Corazón"
 
 #: Source/itemdat.cpp:77 Source/itemdat.cpp:130
 msgid "Potion of Healing"
-msgstr "Poción de Curación"
+msgstr "Poción Curativa"
 
 #: Source/itemdat.cpp:78 Source/itemdat.cpp:132
 msgid "Potion of Mana"
@@ -2433,11 +2433,11 @@ msgstr "Valor de Arkaine"
 
 #: Source/itemdat.cpp:82 Source/itemdat.cpp:131
 msgid "Potion of Full Healing"
-msgstr "Poción de curación completa"
+msgstr "Poción Curativa Completa"
 
 #: Source/itemdat.cpp:83 Source/itemdat.cpp:133
 msgid "Potion of Full Mana"
-msgstr "Poción de Maná Completo"
+msgstr "Poción de Maná Completa"
 
 #: Source/itemdat.cpp:84 Source/itemdat.cpp:441
 msgid "Griswold's Edge"
@@ -2644,11 +2644,11 @@ msgstr "Escudo Gótico"
 
 #: Source/itemdat.cpp:134
 msgid "Potion of Rejuvenation"
-msgstr "Poción de Rejuvenecimiento"
+msgstr "Poción Rejuvenecedora"
 
 #: Source/itemdat.cpp:135
 msgid "Potion of Full Rejuvenation"
-msgstr "Poción de Rejuvenecimiento Completo"
+msgstr "Poción Rejuvenecedora Completa"
 
 #: Source/itemdat.cpp:137 Source/items.cpp:171
 msgid "Oil of Accuracy"
