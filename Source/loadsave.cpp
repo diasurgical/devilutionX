@@ -2149,7 +2149,7 @@ void LoadGame(bool firstflag)
 
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
-			dLight[i][j] = file.NextLE<int8_t>();
+			dLight[i][j] = file.NextLE<uint8_t>();
 	}
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
@@ -2177,12 +2177,12 @@ void LoadGame(bool firstflag)
 				dObject[i][j] = file.NextLE<int8_t>();
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
-			for (int i = 0; i < MAXDUNX; i++)         // NOLINT(modernize-loop-convert)
-				dLight[i][j] = file.NextLE<int8_t>(); // BUGFIX: dLight got loaded already
+			for (int i = 0; i < MAXDUNX; i++)          // NOLINT(modernize-loop-convert)
+				dLight[i][j] = file.NextLE<uint8_t>(); // BUGFIX: dLight got loaded already
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
 			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
-				dPreLight[i][j] = file.NextLE<int8_t>();
+				dPreLight[i][j] = file.NextLE<uint8_t>();
 		}
 		for (int j = 0; j < DMAXY; j++) {
 			for (int i = 0; i < DMAXX; i++) // NOLINT(modernize-loop-convert)
@@ -2409,7 +2409,7 @@ void SaveGameData(SaveWriter &saveWriter)
 
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
-			file.WriteLE<int8_t>(dLight[i][j]);
+			file.WriteLE<uint8_t>(dLight[i][j]);
 	}
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
@@ -2436,12 +2436,12 @@ void SaveGameData(SaveWriter &saveWriter)
 				file.WriteLE<int8_t>(dObject[i][j]);
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
-			for (int i = 0; i < MAXDUNX; i++)       // NOLINT(modernize-loop-convert)
-				file.WriteLE<int8_t>(dLight[i][j]); // BUGFIX: dLight got saved already
+			for (int i = 0; i < MAXDUNX; i++)        // NOLINT(modernize-loop-convert)
+				file.WriteLE<uint8_t>(dLight[i][j]); // BUGFIX: dLight got saved already
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
 			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
-				file.WriteLE<int8_t>(dPreLight[i][j]);
+				file.WriteLE<uint8_t>(dPreLight[i][j]);
 		}
 		for (int j = 0; j < DMAXY; j++) {
 			for (int i = 0; i < DMAXX; i++) // NOLINT(modernize-loop-convert)
@@ -2548,11 +2548,11 @@ void SaveLevel(SaveWriter &saveWriter)
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
 			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
-				file.WriteLE<int8_t>(dLight[i][j]);
+				file.WriteLE<uint8_t>(dLight[i][j]);
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
 			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
-				file.WriteLE<int8_t>(dPreLight[i][j]);
+				file.WriteLE<uint8_t>(dPreLight[i][j]);
 		}
 		for (int j = 0; j < DMAXY; j++) {
 			for (int i = 0; i < DMAXX; i++) // NOLINT(modernize-loop-convert)
@@ -2627,11 +2627,11 @@ void LoadLevel()
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
 			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
-				dLight[i][j] = file.NextLE<int8_t>();
+				dLight[i][j] = file.NextLE<uint8_t>();
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
 			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
-				dPreLight[i][j] = file.NextLE<int8_t>();
+				dPreLight[i][j] = file.NextLE<uint8_t>();
 		}
 		for (int j = 0; j < DMAXY; j++) {
 			for (int i = 0; i < DMAXX; i++) { // NOLINT(modernize-loop-convert)
