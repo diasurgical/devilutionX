@@ -1,7 +1,7 @@
 R 32 _otype
 R 32 positionX
 R 32 positionY
-R 32 _oLight
+R 32 applyLighting
 R 32 _oAnimFlag
 R 32 _oAnimData
 R 32 _oAnimDelay

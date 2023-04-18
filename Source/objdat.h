@@ -281,7 +281,7 @@ struct ObjectData {
 		return HasAnyOf(flags, ObjectDataFlags::MissilesPassThrough);
 	}
 
-	[[nodiscard]] bool isLight() const
+	[[nodiscard]] bool applyLighting() const
 	{
 		return HasAnyOf(flags, ObjectDataFlags::Light);
 	}

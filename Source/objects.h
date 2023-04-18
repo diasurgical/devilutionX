@@ -24,7 +24,7 @@ namespace devilution {
 
 struct Object {
 	_object_id _otype = OBJ_NULL;
-	bool _oLight = false;
+	bool applyLighting = false;
 	bool _oTrapFlag = false;
 	bool _oDoorFlag = false;
 

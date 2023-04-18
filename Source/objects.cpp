@@ -804,7 +804,7 @@ void SetupObject(Object &object, Point position, _object_id ot)
 	object._oAnimWidth = objectData.animWidth;
 	object._oSolidFlag = objectData.isSolid() ? 1 : 0;
 	object._oMissFlag = objectData.missilesPassThrough() ? 1 : 0;
-	object._oLight = objectData.isLight() ? 1 : 0;
+	object.applyLighting = objectData.applyLighting();
 	object._oDelFlag = false;
 	object._oBreak = objectData.isBreakable() ? 1 : 0;
 	object._oSelFlag = objectData.selFlag;
