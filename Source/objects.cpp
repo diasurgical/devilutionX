@@ -4224,9 +4224,8 @@ void ProcessObjects()
 		Object &object = Objects[ActiveObjects[i]];
 		switch (object._otype) {
 		case OBJ_L1LIGHT:
-			UpdateObjectLight(object, 10);
-			break;
 		case OBJ_SKFIRE:
+		case OBJ_CANDLE1:
 		case OBJ_CANDLE2:
 		case OBJ_BOOKCANDLE:
 			UpdateObjectLight(object, 5);
@@ -4281,7 +4280,7 @@ void ProcessObjects()
 			break;
 		case OBJ_BCROSS:
 		case OBJ_TBCROSS:
-			UpdateObjectLight(object, 10);
+			UpdateObjectLight(object, 5);
 			UpdateBurningCrossDamage(object);
 			break;
 		default:

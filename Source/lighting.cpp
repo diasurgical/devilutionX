@@ -239,10 +239,11 @@ void DoLighting(Point position, uint8_t radius, DisplacementOf<int8_t> offset)
 		maxY = MAXDUNY - position.y;
 	}
 
-	if (IsNoneOf(leveltype, DTYPE_NEST, DTYPE_CRYPT)) {
-		SetLight(position, 0);
-	} else if (GetLight(position) > LightFalloffs[radius][0]) {
+	// Allow for dim lights in crypt and nest
+	if (IsAnyOf(leveltype, DTYPE_NEST, DTYPE_CRYPT)) {
 		SetLight(position, LightFalloffs[radius][0]);
+	} else if (GetLight(position) > LightFalloffs[radius][0]) {
+		SetLight(position, 0);
 	}
 
 	for (int i = 0; i < 4; i++) {
