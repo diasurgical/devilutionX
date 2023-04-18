@@ -32,6 +32,7 @@ android {
 			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 		}
 	}
+	namespace 'org.diasurgical.devilutionx'
 	applicationVariants.all { variant ->
 		tasks["merge${variant.name.capitalize()}Assets"]
 			.dependsOn("externalNativeBuild${variant.name.capitalize()}")
