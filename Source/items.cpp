@@ -1939,12 +1939,8 @@ void SpawnOnePremium(Item &premiumItem, int plvl, const Player &player)
 	plvl = clamp(plvl, 1, 30);
 
 	int maxCount = 150;
-	if (!gbIsHellfire) {
-		// Diablo logic could lead to an infinite loop if a suitable item can never be generated, using an arbitrary cutoff here to let the game continue.
-		maxCount = 65000;
-	}
-
-	for (int count = 0; count < maxCount; count++) {
+	const bool unlimited = !gbIsHellfire; // TODO: This could lead to an infinite loop if a suitable item can never be generated
+	for (int count = 0; unlimited || count < maxCount; count++) {
 		premiumItem = {};
 		premiumItem._iSeed = AdvanceRndSeed();
 		SetRndSeed(premiumItem._iSeed);
