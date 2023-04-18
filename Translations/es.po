@@ -2325,7 +2325,7 @@ msgstr "Espada Corta"
 
 #: Source/itemdat.cpp:55 Source/itemdat.cpp:124
 msgid "Buckler"
-msgstr "Escudo"
+msgstr "Rodela"
 
 #: Source/itemdat.cpp:56 Source/itemdat.cpp:192 Source/itemdat.cpp:193
 msgid "Club"
