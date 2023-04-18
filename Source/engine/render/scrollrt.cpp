@@ -483,7 +483,7 @@ void DrawObject(const Surface &out, Point tilePosition, Point targetBufferPositi
 	if (&objectToDraw == ObjectUnderCursor) {
 		ClxDrawOutlineSkipColorZero(out, 194, screenPosition, sprite);
 	}
-	if (objectToDraw._oLight) {
+	if (objectToDraw.applyLighting) {
 		ClxDrawLight(out, screenPosition, sprite);
 	} else {
 		ClxDraw(out, screenPosition, sprite);

@@ -791,7 +791,7 @@ void LoadObject(LoadHelper &file, Object &object)
 	object._otype = ConvertFromHellfireObject(static_cast<_object_id>(file.NextLE<int32_t>()));
 	object.position.x = file.NextLE<int32_t>();
 	object.position.y = file.NextLE<int32_t>();
-	object._oLight = file.NextBool32();
+	object.applyLighting = file.NextBool32();
 	object._oAnimFlag = file.NextBool32();
 	file.Skip(4); // Skip pointer _oAnimData
 	object._oAnimDelay = file.NextLE<int32_t>();
@@ -1523,7 +1523,7 @@ void SaveObject(SaveHelper &file, const Object &object)
 	file.WriteLE<int32_t>(ConvertToHellfireObject(object._otype));
 	file.WriteLE<int32_t>(object.position.x);
 	file.WriteLE<int32_t>(object.position.y);
-	file.WriteLE<uint32_t>(object._oLight ? 1 : 0);
+	file.WriteLE<uint32_t>(object.applyLighting ? 1 : 0);
 	file.WriteLE<uint32_t>(object._oAnimFlag ? 1 : 0);
 	file.Skip(4); // Skip pointer _oAnimData
 	file.WriteLE<int32_t>(object._oAnimDelay);
