@@ -2507,7 +2507,8 @@ void SaveLevel(SaveWriter &saveWriter)
 			file.WriteLE<int8_t>(objectId);
 		for (int i = 0; i < ActiveObjectCount; i++) {
 			/* make dynamic light sources unseen when saving level data for level change */
-			switch (Objects[ActiveObjects[i]]._otype) {
+			Object &object = Objects[ActiveObjects[i]];
+			switch (object._otype) {
 			case OBJ_L1LIGHT:
 			case OBJ_SKFIRE:
 			case OBJ_CANDLE1:
@@ -2518,9 +2519,13 @@ void SaveLevel(SaveWriter &saveWriter)
 			case OBJ_TORCHR:
 			case OBJ_TORCHL2:
 			case OBJ_TORCHR2:
-				Objects[ActiveObjects[i]]._oVar1 = 0;
+			case OBJ_BCROSS:
+			case OBJ_TBCROSS:
+				if (object._oVar1 != -1)
+					object._oVar1 = 0;
+				break;
 			}
-			SaveObject(file, Objects[ActiveObjects[i]]);
+			SaveObject(file, object);
 		}
 	}
 
