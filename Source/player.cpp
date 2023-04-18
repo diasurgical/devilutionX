@@ -2430,8 +2430,7 @@ void NextPlrLevel(Player &player)
 	} else {
 		player._pStatPts += 5;
 	}
-
-	player._pNextExper = ExpLvlsTbl[player._pLevel];
+	player._pNextExper = ExpLvlsTbl[std::min<int8_t>(player._pLevel, MaxCharacterLevel - 1)];
 
 	int hp = PlayersData[static_cast<size_t>(player._pClass)].lvlUpLife;
 
@@ -2466,17 +2465,11 @@ void NextPlrLevel(Player &player)
 
 void AddPlrExperience(Player &player, int lvl, int exp)
 {
-	if (&player != MyPlayer) {
+	if (&player != MyPlayer || player._pHitPoints <= 0)
 		return;
-	}
 
-	// exit function early if player is unable to gain more experience by checking final index of ExpLvlsTbl
-	int expLvlsTblSize = sizeof(ExpLvlsTbl) / sizeof(ExpLvlsTbl[0]);
-	if (player._pExperience >= ExpLvlsTbl[expLvlsTblSize - 1]) {
-		return;
-	}
-
-	if (player._pHitPoints <= 0) {
+	if (player._pLevel >= MaxCharacterLevel) {
+		player._pLevel = MaxCharacterLevel;
 		return;
 	}
 
@@ -2492,25 +2485,18 @@ void AddPlrExperience(Player &player, int lvl, int exp)
 		clampedExp = std::min({ clampedExp, /* level 0-5: */ ExpLvlsTbl[clampedPlayerLevel] / 20U, /* level 6-50: */ 200U * clampedPlayerLevel });
 	}
 
-	constexpr uint32_t MaxExperience = 2000000000U;
+	const uint32_t MaxExperience = ExpLvlsTbl[MaxCharacterLevel - 1];
 
-	// Overflow is only possible if a kill grants more than (2^32-1 - MaxExperience) XP in one go, which doesn't happen in normal gameplay
+	// Overflow is only possible if a kill grants more than (2^32-1 - MaxExperience) XP in one go, which doesn't happen in normal gameplay. Clamp to experience required to reach max level
 	player._pExperience = std::min(player._pExperience + clampedExp, MaxExperience);
 
 	if (*sgOptions.Gameplay.experienceBar) {
 		RedrawEverything();
 	}
 
-	/* set player level to MaxCharacterLevel if the experience value for MaxCharacterLevel is reached, which exits the function early
-	and does not call NextPlrLevel(), which is responsible for giving Attribute points and Life/Mana on level up */
-	if (player._pExperience >= ExpLvlsTbl[MaxCharacterLevel - 1]) {
-		player._pLevel = MaxCharacterLevel;
-		return;
-	}
-
 	// Increase player level if applicable
-	int newLvl = 0;
-	while (player._pExperience >= ExpLvlsTbl[newLvl]) {
+	int newLvl = player._pLevel;
+	while (newLvl < MaxCharacterLevel && player._pExperience >= ExpLvlsTbl[newLvl]) {
 		newLvl++;
 	}
 	if (newLvl != player._pLevel) {
@@ -2601,7 +2587,7 @@ void InitPlayer(Player &player, bool firstTime)
 	SpellID s = PlayersData[static_cast<size_t>(player._pClass)].skill;
 	player._pAblSpells = GetSpellBitmask(s);
 
-	player._pNextExper = ExpLvlsTbl[player._pLevel];
+	player._pNextExper = ExpLvlsTbl[std::min<int8_t>(player._pLevel, MaxCharacterLevel - 1)];
 	player._pInvincible = false;
 
 	if (&player == MyPlayer) {
