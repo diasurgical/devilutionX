@@ -2421,11 +2421,11 @@ msgstr "Poción de Maná"
 
 #: Source/itemdat.cpp:79 Source/itemdat.cpp:147
 msgid "Scroll of Identify"
-msgstr "Pergamino de la identidad"
+msgstr "Pergamino de la Identidad"
 
 #: Source/itemdat.cpp:80 Source/itemdat.cpp:151
 msgid "Scroll of Town Portal"
-msgstr "Pergamino de portal a el pueblo"
+msgstr "Pergamino del Portal de la Ciudad"
 
 #: Source/itemdat.cpp:81 Source/itemdat.cpp:440
 msgid "Arkaine's Valor"
