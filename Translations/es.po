@@ -1112,19 +1112,19 @@ msgstr "Tecla de acceso rápido: 's'"
 
 #: Source/control.cpp:847 Source/panels/spell_list.cpp:147
 msgid "{:s} Skill"
-msgstr "{:s} Habilidad"
+msgstr "Habilidad {:s}"
 
 #: Source/control.cpp:850 Source/panels/spell_list.cpp:154
 msgid "{:s} Spell"
-msgstr "{:s} Hechizo"
+msgstr "Hechizo {:s}"
 
 #: Source/control.cpp:852 Source/panels/spell_list.cpp:159
 msgid "Spell Level 0 - Unusable"
-msgstr "Nivel de Hechizo 0: Inutilizable"
+msgstr "Nivel 0 - Inutilizable"
 
 #: Source/control.cpp:852 Source/panels/spell_list.cpp:161
 msgid "Spell Level {:d}"
-msgstr "Nivel de Hechizo {:d}"
+msgstr "Nivel {:d}"
 
 #: Source/control.cpp:855 Source/panels/spell_list.cpp:168
 msgid "Scroll of {:s}"
@@ -6443,7 +6443,7 @@ msgstr "Héroe Asesinado"
 #. TRANSLATORS: {:s} will either be a chest or a door
 #: Source/objects.cpp:4901
 msgid "Trapped {:s}"
-msgstr "{:s} Atrapado"
+msgstr "{:s} Trampa"
 
 #. TRANSLATORS: If user enabled diablo.ini setting "Disable Crippling Shrines" is set to 1; also used for Na-Kruls lever
 #: Source/objects.cpp:4906
