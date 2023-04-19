@@ -4330,19 +4330,19 @@ msgstr "Duplica la capacidad de oro"
 
 #: Source/items.cpp:1825 Source/stores.cpp:322
 msgid "Required:"
-msgstr "Requerido:"
+msgstr "Requiere:"
 
 #: Source/items.cpp:1827 Source/stores.cpp:324
 msgid " {:d} Str"
-msgstr " {:d} Fuerza"
+msgstr " {:d} Fue"
 
 #: Source/items.cpp:1829 Source/stores.cpp:326
 msgid " {:d} Mag"
-msgstr " {:d} Magia"
+msgstr " {:d} Mag"
 
 #: Source/items.cpp:1831 Source/stores.cpp:328
 msgid " {:d} Dex"
-msgstr " {:d} Destreza"
+msgstr " {:d} Des"
 
 #. TRANSLATORS: {:s} will be a Character Name
 #: Source/items.cpp:3126 Source/player.cpp:3003
@@ -4699,7 +4699,7 @@ msgstr "40% de Salud se movió a Maná"
 
 #: Source/items.cpp:3671 Source/items.cpp:3712
 msgid "damage: {:d}  Indestructible"
-msgstr "daño: {:d} Indestructible"
+msgstr "daño: {:d}  Indestructible"
 
 #. TRANSLATORS: Dur: is durability
 #: Source/items.cpp:3673 Source/items.cpp:3714
@@ -4708,21 +4708,21 @@ msgstr "daño: {:d}  Dur: {:d}/{:d}"
 
 #: Source/items.cpp:3676 Source/items.cpp:3717
 msgid "damage: {:d}-{:d}  Indestructible"
-msgstr "daño: {:d}-{:d} Indestructible"
+msgstr "daño: {:d}-{:d}  Indestructible"
 
 #. TRANSLATORS: Dur: is durability
 #: Source/items.cpp:3678 Source/items.cpp:3719
 msgid "damage: {:d}-{:d}  Dur: {:d}/{:d}"
-msgstr "daño: {:d}-{:d} Dur: {:d}/{:d}"
+msgstr "daño: {:d}-{:d}  Dur: {:d}/{:d}"
 
 #: Source/items.cpp:3683 Source/items.cpp:3729
 msgid "armor: {:d}  Indestructible"
-msgstr "armadura: {:d} Indestructible"
+msgstr "defensa: {:d}  Indestructible"
 
 #. TRANSLATORS: Dur: is durability
 #: Source/items.cpp:3685 Source/items.cpp:3731
 msgid "armor: {:d}  Dur: {:d}/{:d}"
-msgstr "armadura: {:d} Dur: {:d}/{:d}"
+msgstr "defensa: {:d}  Dur: {:d}/{:d}"
 
 #: Source/items.cpp:3688 Source/items.cpp:3722 Source/items.cpp:3735
 #: Source/stores.cpp:296
@@ -7753,19 +7753,19 @@ msgstr ",  "
 
 #: Source/stores.cpp:306
 msgid "Damage: {:d}-{:d}  "
-msgstr "Daño: {:d}-{:d} "
+msgstr "Daño: {:d}-{:d}  "
 
 #: Source/stores.cpp:308
 msgid "Armor: {:d}  "
-msgstr "Armadura:{:d} "
+msgstr "Defensa: {:d}  "
 
 #: Source/stores.cpp:310
 msgid "Dur: {:d}/{:d},  "
-msgstr "Dur:  {:d}/ {:d}, "
+msgstr "Dur: {:d}/{:d},  "
 
 #: Source/stores.cpp:312
 msgid "Indestructible,  "
-msgstr "Indestructible, "
+msgstr "Indestructible,  "
 
 #: Source/stores.cpp:320
 msgid "No required attributes"
