@@ -455,31 +455,8 @@ void MakeLightTable()
 	LoadFileInMem("plrgfx\\stone.trn", tbl, 256);
 	tbl += 256;
 
-	for (int i = 0; i < 8; i++) {
-		for (uint8_t col = 226; col < 239; col++) {
-			if (i != 0 || col != 226) {
-				*tbl++ = col;
-			} else {
-				*tbl++ = 0;
-			}
-		}
-		*tbl++ = 0;
-		*tbl++ = 0;
-		*tbl++ = 0;
-	}
-	for (int i = 0; i < 4; i++) {
-		uint8_t col = 224;
-		for (int j = 224; j < 239; j += 2) {
-			*tbl++ = col;
-			col += 2;
-		}
-	}
-	for (int i = 0; i < 6; i++) {
-		for (uint8_t col = 224; col < 239; col++) {
-			*tbl++ = col;
-		}
-		*tbl++ = 0;
-	}
+	LoadFileInMem("gendata\\pause.trn", tbl, 256);
+	tbl += 256;
 
 	for (int j = 0; j < 16; j++) {
 		for (int i = 0; i < 128; i++) {
