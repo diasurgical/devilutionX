@@ -6443,7 +6443,7 @@ msgstr "Héroe Asesinado"
 #. TRANSLATORS: {:s} will either be a chest or a door
 #: Source/objects.cpp:4901
 msgid "Trapped {:s}"
-msgstr "{:s} Atrapado"
+msgstr "{:s} Trampa"
 
 #. TRANSLATORS: If user enabled diablo.ini setting "Disable Crippling Shrines" is set to 1; also used for Na-Kruls lever
 #: Source/objects.cpp:4906
