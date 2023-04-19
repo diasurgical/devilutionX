@@ -1138,7 +1138,7 @@ msgstr[1] "{:d} Pergaminos"
 
 #: Source/control.cpp:863 Source/panels/spell_list.cpp:180
 msgid "Staff of {:s}"
-msgstr "Vara de {:s}"
+msgstr "Bastón de {:s}"
 
 #: Source/control.cpp:864 Source/panels/spell_list.cpp:182
 msgid "{:d} Charge"
@@ -2939,7 +2939,7 @@ msgstr "Runa de Piedra"
 
 #: Source/itemdat.cpp:219
 msgid "Short Staff of Charged Bolt"
-msgstr "Vara Corta de la Centella"
+msgstr "Bastón Corto de la Centella"
 
 #. TRANSLATORS: Item prefix section.
 #: Source/itemdat.cpp:229
@@ -3852,7 +3852,7 @@ msgstr "Brida de Ensueño"
 
 #: Source/itemdat.cpp:487
 msgid "Staff of Shadows"
-msgstr "Vara de las Sombras"
+msgstr "Bastón de las Sombras"
 
 #: Source/itemdat.cpp:488
 msgid "Immolator"
@@ -7263,8 +7263,8 @@ msgstr "Habilidad"
 #: Source/panels/spell_book.cpp:150
 msgid "Staff ({:d} charge)"
 msgid_plural "Staff ({:d} charges)"
-msgstr[0] "Vara ({:d} carga)"
-msgstr[1] "Vara ({:d} cargas)"
+msgstr[0] "Bastón ({:d} carga)"
+msgstr[1] "Bastón ({:d} cargas)"
 
 #. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:155
@@ -7589,7 +7589,7 @@ msgstr "Reparación de Artículo"
 #: Source/spelldat.cpp:42
 msgctxt "spell"
 msgid "Staff Recharge"
-msgstr "Recarga de Vara"
+msgstr "Recarga de Bastón"
 
 #: Source/spelldat.cpp:43
 msgctxt "spell"
@@ -7847,7 +7847,7 @@ msgstr "Comprar artículos"
 
 #: Source/stores.cpp:712
 msgid "Recharge staves"
-msgstr "Varas de Recarga"
+msgstr "Recargar Bastones"
 
 #: Source/stores.cpp:713
 msgid "Leave the shack"
