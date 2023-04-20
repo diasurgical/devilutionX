@@ -4646,6 +4646,10 @@ void SyncOpObject(Player &player, int cmd, Object &object)
 	case OBJ_GOATSHRINE:
 		OperateGoatShrine(player, object, LS_GSHRINE);
 		break;
+	case OBJ_LAZSTAND:
+		if (!sendmsg)
+			UpdateState(object, object._oAnimFrame + 1);
+		break;
 	case OBJ_CAULDRON:
 		OperateCauldron(player, object, LS_CALDRON);
 		break;
