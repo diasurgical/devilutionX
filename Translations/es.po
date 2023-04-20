@@ -3027,7 +3027,7 @@ msgstr "atroz"
 
 #: Source/itemdat.cpp:248
 msgid "Brutal"
-msgstr "Brutal"
+msgstr "brutal"
 
 #: Source/itemdat.cpp:249
 msgid "Massive"
