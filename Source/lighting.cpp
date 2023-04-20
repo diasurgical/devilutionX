@@ -65,7 +65,7 @@ const DisplacementOf<int8_t> VisionCrawlTable[23][15] = {
 uint8_t LightFalloffs[16][128];
 bool dovision;
 /** interpolations of a 32x32 (16x16 mirrored) light circle moving between tiles in steps of 1/8 of a tile */
-uint8_t LightConeInterpolations[64][16][16];
+uint8_t LightConeInterpolations[8][8][16][16];
 
 /** RadiusAdj maps from VisionCrawlTable index to lighting vision radius adjustment. */
 const uint8_t RadiusAdj[23] = { 0, 0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 4, 3, 2, 2, 2, 1, 1, 1, 0, 0, 0, 0 };
@@ -267,16 +267,15 @@ void DoLighting(Point position, int nRadius, int lnum)
 	}
 
 	for (int i = 0; i < 4; i++) {
-		int mult = xoff + 8 * yoff;
 		int yBound = i > 0 && i < 3 ? maxY : minY;
 		int xBound = i < 2 ? maxX : minX;
 		for (int y = 0; y < yBound; y++) {
 			for (int x = 1; x < xBound; x++) {
-				int radiusBlock = LightConeInterpolations[mult][y + blockY][x + blockX];
-				if (radiusBlock >= 128)
+				int linearDistance = LightConeInterpolations[xoff][yoff][x + blockX][y + blockY];
+				if (linearDistance >= 128)
 					continue;
 				Point temp = position + (Displacement { x, y }).Rotate(-i);
-				uint8_t v = LightFalloffs[nRadius][radiusBlock];
+				uint8_t v = LightFalloffs[nRadius][linearDistance];
 				if (!InDungeonBounds(temp))
 					continue;
 				if (v < GetLight(temp))
@@ -483,13 +482,15 @@ void MakeLightTable()
 			}
 		}
 	}
-	for (int j = 0; j < 8; j++) {
-		for (int i = 0; i < 8; i++) {
-			for (int k = 0; k < 16; k++) {
-				for (int l = 0; l < 16; l++) {
-					int a = (8 * l - j);
-					int b = (8 * k - i);
-					LightConeInterpolations[j * 8 + i][k][l] = static_cast<uint8_t>(sqrt(a * a + b * b));
+
+	// Generate the linght cone interpolations
+	for (int offsetY = 0; offsetY < 8; offsetY++) {
+		for (int offsetX = 0; offsetX < 8; offsetX++) {
+			for (int y = 0; y < 16; y++) {
+				for (int x = 0; x < 16; x++) {
+					int a = (8 * x - offsetY);
+					int b = (8 * y - offsetX);
+					LightConeInterpolations[offsetX][offsetY][x][y] = static_cast<uint8_t>(sqrt(a * a + b * b));
 				}
 			}
 		}
