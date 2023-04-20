@@ -6,6 +6,7 @@
 #include "lighting.h"
 
 #include <algorithm>
+#include <numeric>
 
 #include "automap.h"
 #include "diablo.h"
@@ -438,19 +439,13 @@ void MakeLightTable()
 			*tbl++ = 1;
 		}
 		tbl += 224;
-	}
-	if (IsAnyOf(leveltype, DTYPE_NEST, DTYPE_CRYPT)) {
-		tbl = LightTables[0].data();
-		for (int i = 0; i < lights; i++) {
-			*tbl++ = 0;
-			for (int j = 1; j < 16; j++)
-				*tbl++ = j;
-			tbl += 240;
 		}
-		*tbl++ = 0;
-		for (int j = 1; j < 16; j++)
-			*tbl++ = 1;
-		tbl += 240;
+	} else if (IsAnyOf(leveltype, DTYPE_NEST, DTYPE_CRYPT)) {
+		// Make the lava fully bright
+		for (auto &lightTable : LightTables)
+			std::iota(lightTable.begin(), lightTable.begin() + 16, 0);
+		LightTables[15][0] = 0;
+		std::fill_n(LightTables[15].begin() + 1, 15, 1);
 	}
 
 	LoadFileInMem("plrgfx\\infra.trn", InfravisionTable);
