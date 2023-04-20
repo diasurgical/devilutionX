@@ -400,45 +400,17 @@ void MakeLightTable()
 	}
 
 	if (leveltype == DTYPE_HELL) {
-		uint8_t blood[16];
-		tbl = LightTables[0].data();
-		for (int i = 0; i < lights; i++) {
-			int l1 = lights - i;
-			int l2 = l1;
-			int div = lights / l1;
-			int rem = lights % l1;
-			int cnt = 0;
-			blood[0] = 0;
-			uint8_t col = 1;
-			for (int j = 1; j < 16; j++) {
-				blood[j] = col;
-				l2 += rem;
-				if (l2 > l1 && j < 15) {
-					j++;
-					blood[j] = col;
-					l2 -= l1;
-				}
-				cnt++;
-				if (cnt == div) {
-					col++;
-					cnt = 0;
-				}
+		// Blood wall lighting
+		const int shades = LightTables.size() - 1;
+		for (int i = 0; i < shades; i++) {
+			auto &lightTable = LightTables[i];
+			constexpr int range = 16;
+			for (int j = 0; j < range; j++) {
+				uint8_t color = ((range - 1) << 4) / shades * (shades - i) / range * (j + 1);
+				color = 1 + (color >> 4);
+				lightTable[j + 1] = color;
+				lightTable[31 - j] = color;
 			}
-			*tbl++ = 0;
-			for (int j = 1; j <= 15; j++) {
-				*tbl++ = blood[j];
-			}
-			for (int j = 15; j > 0; j--) {
-				*tbl++ = blood[j];
-			}
-			*tbl++ = 1;
-			tbl += 224;
-		}
-		*tbl++ = 0;
-		for (int j = 0; j < 31; j++) {
-			*tbl++ = 1;
-		}
-		tbl += 224;
 		}
 	} else if (IsAnyOf(leveltype, DTYPE_NEST, DTYPE_CRYPT)) {
 		// Make the lava fully bright
