@@ -341,63 +341,31 @@ void DoVision(Point position, int radius, MapExplorationType doAutomap, bool vis
 
 void MakeLightTable()
 {
-	uint8_t *tbl = LightTables[0].data();
-	int shade = 0;
-	int lights = 15;
-
-	for (int i = 0; i < lights; i++) {
-		*tbl++ = 0;
-		for (int j = 0; j < 8; j++) {
-			uint8_t col = 16 * j + shade;
-			uint8_t max = 16 * j + 15;
-			for (int k = 0; k < 16; k++) {
-				if (k != 0 || j != 0) {
-					*tbl++ = col;
+	// Generate 16 gradually darker translation tables for doing lighting
+	uint8_t shade = 0;
+	constexpr uint8_t black = 0;
+	constexpr uint8_t white = 255;
+	for (auto &lightTable : LightTables) {
+		uint8_t colorIndex = 0;
+		for (uint8_t steps : { 16, 16, 16, 16, 16, 16, 16, 16, 8, 8, 8, 8, 16, 16, 16, 16, 16, 16 }) {
+			const uint8_t shading = shade * steps / 16;
+			const uint8_t shadeStart = colorIndex;
+			const uint8_t shadeEnd = shadeStart + steps - 1;
+			for (uint8_t step = 0; step < steps; step++) {
+				if (colorIndex == black) {
+					lightTable[colorIndex++] = black;
+					continue;
 				}
-				if (col < max) {
-					col++;
-				} else {
-					max = 0;
-					col = 0;
-				}
-			}
-		}
-		for (int j = 16; j < 20; j++) {
-			uint8_t col = 8 * j + (shade >> 1);
-			uint8_t max = 8 * j + 7;
-			for (int k = 0; k < 8; k++) {
-				*tbl++ = col;
-				if (col < max) {
-					col++;
-				} else {
-					max = 0;
-					col = 0;
-				}
-			}
-		}
-		for (int j = 10; j < 16; j++) {
-			uint8_t col = 16 * j + shade;
-			uint8_t max = 16 * j + 15;
-			for (int k = 0; k < 16; k++) {
-				*tbl++ = col;
-				if (col < max) {
-					col++;
-				} else {
-					max = 0;
-					col = 0;
-				}
-				if (col == 255) {
-					max = 0;
-					col = 0;
-				}
+				int color = shadeStart + step + shading;
+				if (color > shadeEnd || color == white)
+					color = black;
+				lightTable[colorIndex++] = color;
 			}
 		}
 		shade++;
 	}
 
-	for (int i = 0; i < 256; i++) {
-		*tbl++ = 0;
-	}
+	LightTables[15] = {}; // Make last shade pitch black
 
 	if (leveltype == DTYPE_HELL) {
 		// Blood wall lighting
