@@ -61,9 +61,11 @@ const DisplacementOf<int8_t> VisionCrawlTable[23][15] = {
 	// clang-format on
 };
 
-uint8_t lightradius[16][128];
+/** 16 falloff tables for the light cone */
+uint8_t LightFalloffs[16][128];
 bool dovision;
-uint8_t lightblock[64][16][16];
+/** interpolations of a 32x32 (16x16 mirrored) light circle moving between tiles in steps of 1/8 of a tile */
+uint8_t LightConeInterpolations[64][16][16];
 
 /** RadiusAdj maps from VisionCrawlTable index to lighting vision radius adjustment. */
 const uint8_t RadiusAdj[23] = { 0, 0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 4, 3, 2, 2, 2, 1, 1, 1, 0, 0, 0, 0 };
@@ -259,8 +261,8 @@ void DoLighting(Point position, int nRadius, int lnum)
 	if (InDungeonBounds(position)) {
 		if (IsNoneOf(leveltype, DTYPE_NEST, DTYPE_CRYPT)) {
 			SetLight(position, 0);
-		} else if (GetLight(position) > lightradius[nRadius][0]) {
-			SetLight(position, lightradius[nRadius][0]);
+		} else if (GetLight(position) > LightFalloffs[nRadius][0]) {
+			SetLight(position, LightFalloffs[nRadius][0]);
 		}
 	}
 
@@ -270,11 +272,11 @@ void DoLighting(Point position, int nRadius, int lnum)
 		int xBound = i < 2 ? maxX : minX;
 		for (int y = 0; y < yBound; y++) {
 			for (int x = 1; x < xBound; x++) {
-				int radiusBlock = lightblock[mult][y + blockY][x + blockX];
+				int radiusBlock = LightConeInterpolations[mult][y + blockY][x + blockX];
 				if (radiusBlock >= 128)
 					continue;
 				Point temp = position + (Displacement { x, y }).Rotate(-i);
-				uint8_t v = lightradius[nRadius][radiusBlock];
+				uint8_t v = LightFalloffs[nRadius][radiusBlock];
 				if (!InDungeonBounds(temp))
 					continue;
 				if (v < GetLight(temp))
@@ -459,10 +461,10 @@ void MakeLightTable()
 	for (int j = 0; j < 16; j++) {
 		for (int i = 0; i < 128; i++) {
 			if (i > (j + 1) * 8) {
-				lightradius[j][i] = 15;
+				LightFalloffs[j][i] = 15;
 			} else {
 				double fs = (double)15 * i / ((double)8 * (j + 1));
-				lightradius[j][i] = static_cast<uint8_t>(fs + 0.5);
+				LightFalloffs[j][i] = static_cast<uint8_t>(fs + 0.5);
 			}
 		}
 	}
@@ -472,12 +474,12 @@ void MakeLightTable()
 			double fa = (sqrt((double)(16 - j))) / 128;
 			fa *= fa;
 			for (int i = 0; i < 128; i++) {
-				lightradius[15 - j][i] = 15 - static_cast<uint8_t>(fa * (double)((128 - i) * (128 - i)));
-				if (lightradius[15 - j][i] > 15)
-					lightradius[15 - j][i] = 0;
-				lightradius[15 - j][i] = lightradius[15 - j][i] - static_cast<uint8_t>((15 - j) / 2);
-				if (lightradius[15 - j][i] > 15)
-					lightradius[15 - j][i] = 0;
+				LightFalloffs[15 - j][i] = 15 - static_cast<uint8_t>(fa * (double)((128 - i) * (128 - i)));
+				if (LightFalloffs[15 - j][i] > 15)
+					LightFalloffs[15 - j][i] = 0;
+				LightFalloffs[15 - j][i] = LightFalloffs[15 - j][i] - static_cast<uint8_t>((15 - j) / 2);
+				if (LightFalloffs[15 - j][i] > 15)
+					LightFalloffs[15 - j][i] = 0;
 			}
 		}
 	}
@@ -487,7 +489,7 @@ void MakeLightTable()
 				for (int l = 0; l < 16; l++) {
 					int a = (8 * l - j);
 					int b = (8 * k - i);
-					lightblock[j * 8 + i][k][l] = static_cast<uint8_t>(sqrt(a * a + b * b));
+					LightConeInterpolations[j * 8 + i][k][l] = static_cast<uint8_t>(sqrt(a * a + b * b));
 				}
 			}
 		}
