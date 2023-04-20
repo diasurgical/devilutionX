@@ -725,21 +725,12 @@ void ProcessVisionList()
 
 void lighting_color_cycling()
 {
-	if (leveltype != DTYPE_HELL) {
-		return;
-	}
-
-	uint8_t *tbl = LightTables[0].data();
-
-	for (int j = 0; j < 16; j++) {
-		tbl++;
-		uint8_t col = *tbl;
-		for (int i = 0; i < 30; i++) {
-			tbl[0] = tbl[1];
-			tbl++;
+	for (auto &lightTable : LightTables) {
+		uint8_t firstColor = lightTable[1];
+		for (int colorIndex = 1; colorIndex < 31; colorIndex++) {
+			lightTable[colorIndex] = lightTable[colorIndex + 1];
 		}
-		*tbl = col;
-		tbl += 225;
+		lightTable[31] = firstColor;
 	}
 }
 
