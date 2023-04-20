@@ -20,7 +20,10 @@ int VisionId;
 Light Lights[MAXLIGHTS];
 uint8_t ActiveLights[MAXLIGHTS];
 int ActiveLightCount;
-std::array<uint8_t, LIGHTSIZE> LightTables;
+std::array<std::array<uint8_t, 256>, NumLightingLevels> LightTables;
+std::array<uint8_t, 256> InfravisionTable;
+std::array<uint8_t, 256> StoneTable;
+std::array<uint8_t, 256> PauseTable;
 bool DisableLighting;
 bool UpdateLighting;
 
@@ -336,7 +339,7 @@ void DoVision(Point position, int radius, MapExplorationType doAutomap, bool vis
 
 void MakeLightTable()
 {
-	uint8_t *tbl = LightTables.data();
+	uint8_t *tbl = LightTables[0].data();
 	int shade = 0;
 	int lights = 15;
 
@@ -396,7 +399,7 @@ void MakeLightTable()
 
 	if (leveltype == DTYPE_HELL) {
 		uint8_t blood[16];
-		tbl = LightTables.data();
+		tbl = LightTables[0].data();
 		for (int i = 0; i < lights; i++) {
 			int l1 = lights - i;
 			int l2 = l1;
@@ -436,7 +439,7 @@ void MakeLightTable()
 		tbl += 224;
 	}
 	if (IsAnyOf(leveltype, DTYPE_NEST, DTYPE_CRYPT)) {
-		tbl = LightTables.data();
+		tbl = LightTables[0].data();
 		for (int i = 0; i < lights; i++) {
 			*tbl++ = 0;
 			for (int j = 1; j < 16; j++)
@@ -449,14 +452,9 @@ void MakeLightTable()
 		tbl += 240;
 	}
 
-	LoadFileInMem("plrgfx\\infra.trn", tbl, 256);
-	tbl += 256;
-
-	LoadFileInMem("plrgfx\\stone.trn", tbl, 256);
-	tbl += 256;
-
-	LoadFileInMem("gendata\\pause.trn", tbl, 256);
-	tbl += 256;
+	LoadFileInMem("plrgfx\\infra.trn", InfravisionTable);
+	LoadFileInMem("plrgfx\\stone.trn", StoneTable);
+	LoadFileInMem("gendata\\pause.trn", PauseTable);
 
 	for (int j = 0; j < 16; j++) {
 		for (int i = 0; i < 128; i++) {
@@ -788,7 +786,7 @@ void lighting_color_cycling()
 		return;
 	}
 
-	uint8_t *tbl = LightTables.data();
+	uint8_t *tbl = LightTables[0].data();
 
 	for (int j = 0; j < 16; j++) {
 		tbl++;

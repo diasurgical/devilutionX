@@ -262,7 +262,7 @@ string_view MaskTypeToString(MaskType maskType);
  * @param position Target buffer coordinates
  * @param levelCelBlock The MIN block of the level CEL file.
  * @param maskType The mask to use,
- * @param lightTableIndex The light level to use for rendering (index into LightTables / 256).
+ * @param lightTableIndex The light level to use for rendering (index into LightTables).
  */
 void RenderTile(const Surface &out, Point position,
     LevelCelBlock levelCelBlock, MaskType maskType, uint8_t lightTableIndex);
