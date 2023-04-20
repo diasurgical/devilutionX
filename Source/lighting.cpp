@@ -457,28 +457,30 @@ void MakeLightTable()
 	LoadFileInMem("plrgfx\\stone.trn", StoneTable);
 	LoadFileInMem("gendata\\pause.trn", PauseTable);
 
-	for (int j = 0; j < 16; j++) {
-		for (int i = 0; i < 128; i++) {
-			if (i > (j + 1) * 8) {
-				LightFalloffs[j][i] = 15;
-			} else {
-				double fs = (double)15 * i / ((double)8 * (j + 1));
-				LightFalloffs[j][i] = static_cast<uint8_t>(fs + 0.5);
-			}
-		}
-	}
-
+	// Generate light falloffs ranges
 	if (IsAnyOf(leveltype, DTYPE_NEST, DTYPE_CRYPT)) {
 		for (int j = 0; j < 16; j++) {
 			double fa = (sqrt((double)(16 - j))) / 128;
 			fa *= fa;
 			for (int i = 0; i < 128; i++) {
-				LightFalloffs[15 - j][i] = 15 - static_cast<uint8_t>(fa * (double)((128 - i) * (128 - i)));
-				if (LightFalloffs[15 - j][i] > 15)
-					LightFalloffs[15 - j][i] = 0;
-				LightFalloffs[15 - j][i] = LightFalloffs[15 - j][i] - static_cast<uint8_t>((15 - j) / 2);
-				if (LightFalloffs[15 - j][i] > 15)
-					LightFalloffs[15 - j][i] = 0;
+				uint8_t color = 15 - static_cast<uint8_t>(fa * (double)((128 - i) * (128 - i)));
+				if (color > 15)
+					color = 0;
+				color -= static_cast<uint8_t>((15 - j) / 2);
+				if (color > 15)
+					color = 0;
+				LightFalloffs[15 - j][i] = color;
+			}
+		}
+	} else {
+		for (int j = 0; j < 16; j++) {
+			for (int i = 0; i < 128; i++) {
+				if (i > (j + 1) * 8) {
+					LightFalloffs[j][i] = 15;
+				} else {
+					double fs = (double)15 * i / ((double)8 * (j + 1));
+					LightFalloffs[j][i] = static_cast<uint8_t>(fs + 0.5);
+				}
 			}
 		}
 	}
