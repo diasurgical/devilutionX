@@ -94,7 +94,7 @@ extern int LightTableIndex;
 inline void ClxDrawLight(const Surface &out, Point position, ClxSprite clx)
 {
 	if (LightTableIndex != 0)
-		ClxDrawTRN(out, position, clx, &LightTables[LightTableIndex * 256]);
+		ClxDrawTRN(out, position, clx, LightTables[LightTableIndex].data());
 	else
 		ClxDraw(out, position, clx);
 }
@@ -107,7 +107,7 @@ inline void ClxDrawLight(const Surface &out, Point position, ClxSprite clx)
  */
 inline void ClxDrawLightBlended(const Surface &out, Point position, ClxSprite clx)
 {
-	ClxDrawBlendedTRN(out, position, clx, &LightTables[LightTableIndex * 256]);
+	ClxDrawBlendedTRN(out, position, clx, LightTables[LightTableIndex].data());
 }
 
 /**

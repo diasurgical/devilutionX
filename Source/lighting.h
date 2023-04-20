@@ -21,8 +21,8 @@ namespace devilution {
 
 #define MAXLIGHTS 32
 #define MAXVISION 32
-/** 16 light levels + infravision + stone curse + red for pause/death screen */
-#define LIGHTSIZE (19 * 256)
+/** @brief Number of supported light levels */
+constexpr size_t NumLightingLevels = 16;
 #define NO_LIGHT -1
 
 struct LightPosition {
@@ -50,7 +50,10 @@ extern Light Lights[MAXLIGHTS];
 extern uint8_t ActiveLights[MAXLIGHTS];
 extern int ActiveLightCount;
 constexpr char LightsMax = 15;
-extern std::array<uint8_t, LIGHTSIZE> LightTables;
+extern std::array<std::array<uint8_t, 256>, NumLightingLevels> LightTables;
+extern std::array<uint8_t, 256> InfravisionTable;
+extern std::array<uint8_t, 256> StoneTable;
+extern std::array<uint8_t, 256> PauseTable;
 extern bool DisableLighting;
 extern bool UpdateLighting;
 
