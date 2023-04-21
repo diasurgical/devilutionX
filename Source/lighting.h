@@ -20,7 +20,7 @@
 namespace devilution {
 
 #define MAXLIGHTS 32
-#define MAXVISION 32
+#define MAXVISION 4
 /** @brief Number of supported light levels */
 constexpr size_t NumLightingLevels = 16;
 #define NO_LIGHT -1
@@ -39,15 +39,12 @@ struct Light {
 	uint8_t oldRadius;
 	bool isInvalid;
 	bool hasChanged;
-	int _lid;
-	bool _lflags;
 };
 
 extern Light VisionList[MAXVISION];
-extern int VisionCount;
-extern int VisionId;
+extern std::array<bool, MAXVISION> VisionActive;
 extern Light Lights[MAXLIGHTS];
-extern uint8_t ActiveLights[MAXLIGHTS];
+extern std::array<uint8_t, MAXLIGHTS> ActiveLights;
 extern int ActiveLightCount;
 constexpr char LightsMax = 15;
 extern std::array<std::array<uint8_t, 256>, NumLightingLevels> LightTables;
@@ -75,7 +72,7 @@ void ChangeLightOffset(int i, Displacement offset);
 void ChangeLight(int i, Point position, uint8_t radius);
 void ProcessLightList();
 void SavePreLighting();
-int AddVision(Point position, int r, bool mine);
+void ActivateVision(Point position, int r, int id);
 void ChangeVisionRadius(int id, int r);
 void ChangeVisionXY(int id, Point position);
 void ProcessVisionList();

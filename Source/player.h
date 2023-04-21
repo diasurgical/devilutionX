@@ -237,7 +237,6 @@ struct Player {
 	Item HoldItem;
 
 	int lightId;
-	int _pvid;
 
 	int _pNumInv;
 	int _pStrength;
