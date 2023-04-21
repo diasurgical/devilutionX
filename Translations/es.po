@@ -3369,7 +3369,7 @@ msgstr "de fuerza"
 
 #: Source/itemdat.cpp:341
 msgid "might"
-msgstr "de poder"
+msgstr "del poder"
 
 #: Source/itemdat.cpp:342
 msgid "power"
