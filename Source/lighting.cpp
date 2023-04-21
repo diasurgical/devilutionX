@@ -11,6 +11,7 @@
 #include "automap.h"
 #include "diablo.h"
 #include "engine/load_file.hpp"
+#include "engine/points_in_rectangle_range.hpp"
 #include "player.h"
 
 namespace devilution {
@@ -116,26 +117,16 @@ uint8_t GetLight(Point position)
 	return dLight[position.x][position.y];
 }
 
-void DoUnLight(int nXPos, int nYPos, int radius)
+void DoUnLight(Point position, uint8_t radius)
 {
 	radius++;
 	radius++; // If lights moved at a diagonal it can result in some extra tiles being lit
 
-	int minX = nXPos - radius;
-	int maxX = nXPos + radius;
-	int minY = nYPos - radius;
-	int maxY = nYPos + radius;
+	auto searchArea = PointsInRectangle(WorldTileRectangle { position, radius });
 
-	minX = std::max(minX, 0);
-	maxX = std::max(maxX, MAXDUNX);
-	minY = std::max(minY, 0);
-	maxY = std::max(maxY, MAXDUNY);
-
-	for (int y = minY; y < maxY; y++) {
-		for (int x = minX; x < maxX; x++) {
-			if (InDungeonBounds({ x, y }))
-				dLight[x][y] = dPreLight[x][y];
-		}
+	for (WorldTilePosition targetPosition : searchArea) {
+		if (InDungeonBounds(targetPosition))
+			dLight[targetPosition.x][targetPosition.y] = dPreLight[targetPosition.x][targetPosition.y];
 	}
 }
 
@@ -296,15 +287,12 @@ void DoUnVision(Point position, uint8_t radius)
 {
 	radius++;
 	radius++; // increasing the radius even further here prevents leaving stray vision tiles behind and doesn't seem to affect monster AI - applying new vision happens in the same tick
-	int x1 = std::max(position.x - radius, 0);
-	int y1 = std::max(position.y - radius, 0);
-	int x2 = std::min(position.x + radius, MAXDUNX);
-	int y2 = std::min(position.y + radius, MAXDUNY);
 
-	for (int i = x1; i < x2; i++) {
-		for (int j = y1; j < y2; j++) {
-			dFlags[i][j] &= ~(DungeonFlag::Visible | DungeonFlag::Lit);
-		}
+	auto searchArea = PointsInRectangle(WorldTileRectangle { position, radius });
+
+	for (WorldTilePosition targetPosition : searchArea) {
+		if (InDungeonBounds(targetPosition))
+			dFlags[targetPosition.x][targetPosition.y] &= ~(DungeonFlag::Visible | DungeonFlag::Lit);
 	}
 }
 
@@ -598,10 +586,10 @@ void ProcessLightList()
 	for (int i = 0; i < ActiveLightCount; i++) {
 		Light &light = Lights[ActiveLights[i]];
 		if (light.isInvalid) {
-			DoUnLight(light.position.tile.x, light.position.tile.y, light.radius);
+			DoUnLight(light.position.tile, light.radius);
 		}
 		if (light.hasChanged) {
-			DoUnLight(light.position.old.x, light.position.old.y, light.oldRadius);
+			DoUnLight(light.position.old, light.oldRadius);
 			light.hasChanged = false;
 		}
 	}
