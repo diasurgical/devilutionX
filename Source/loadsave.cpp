@@ -355,7 +355,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	player.AnimInfo.numberOfFrames = file.NextLENarrow<int32_t, int8_t>();
 	player.AnimInfo.currentFrame = file.NextLENarrow<int32_t, int8_t>(-1);
 	file.Skip<uint32_t>(3); // Skip _pAnimWidth, _pAnimWidth2, _peflag
-	player._plid = file.NextLE<int32_t>();
+	player.lightId = file.NextLE<int32_t>();
 	player._pvid = file.NextLE<int32_t>();
 
 	player.queuedSpell.spellId = static_cast<SpellID>(file.NextLE<int32_t>());
@@ -870,10 +870,10 @@ void LoadLighting(LoadHelper *file, Light *pLight)
 {
 	pLight->position.tile.x = file->NextLE<int32_t>();
 	pLight->position.tile.y = file->NextLE<int32_t>();
-	pLight->_lradius = file->NextLE<int32_t>();
+	pLight->radius = file->NextLE<int32_t>();
 	pLight->_lid = file->NextLE<int32_t>();
-	pLight->_ldel = file->NextBool32();
-	pLight->_lunflag = file->NextBool32();
+	pLight->isInvalid = file->NextBool32();
+	pLight->hasChanged = file->NextBool32();
 	file->Skip(4); // Unused
 	pLight->position.old.x = file->NextLE<int32_t>();
 	pLight->position.old.y = file->NextLE<int32_t>();
@@ -1133,7 +1133,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	// write _pAnimWidth2 for vanilla compatibility
 	file.WriteLE<int32_t>(CalculateWidth2(animWidth));
 	file.Skip<uint32_t>(); // Skip _peflag
-	file.WriteLE<int32_t>(player._plid);
+	file.WriteLE<int32_t>(player.lightId);
 	file.WriteLE<int32_t>(player._pvid);
 
 	file.WriteLE<int32_t>(static_cast<int8_t>(player.queuedSpell.spellId));
@@ -1614,10 +1614,10 @@ void SaveLighting(SaveHelper *file, Light *pLight)
 {
 	file->WriteLE<int32_t>(pLight->position.tile.x);
 	file->WriteLE<int32_t>(pLight->position.tile.y);
-	file->WriteLE<int32_t>(pLight->_lradius);
+	file->WriteLE<int32_t>(pLight->radius);
 	file->WriteLE<int32_t>(pLight->_lid);
-	file->WriteLE<uint32_t>(pLight->_ldel ? 1 : 0);
-	file->WriteLE<uint32_t>(pLight->_lunflag ? 1 : 0);
+	file->WriteLE<uint32_t>(pLight->isInvalid ? 1 : 0);
+	file->WriteLE<uint32_t>(pLight->hasChanged ? 1 : 0);
 	file->Skip(4); // Unused
 	file->WriteLE<int32_t>(pLight->position.old.x);
 	file->WriteLE<int32_t>(pLight->position.old.y);
@@ -2654,7 +2654,7 @@ void LoadLevel()
 
 	for (Player &player : Players) {
 		if (player.plractive && player.isOnActiveLevel())
-			Lights[player._plid]._lunflag = true;
+			Lights[player.lightId].hasChanged = true;
 	}
 }
 
