@@ -66,7 +66,7 @@ const DisplacementOf<int8_t> VisionCrawlTable[23][15] = {
 constexpr size_t NumLightRadiuses = 16;
 /** Falloff tables for the light cone */
 uint8_t LightFalloffs[NumLightRadiuses][128];
-bool dovision;
+bool UpdateVision;
 /** interpolations of a 32x32 (16x16 mirrored) light circle moving between tiles in steps of 1/8 of a tile */
 uint8_t LightConeInterpolations[8][8][16][16];
 
@@ -114,15 +114,15 @@ uint8_t GetLight(Point position)
 	return dLight[position.x][position.y];
 }
 
-void DoUnLight(int nXPos, int nYPos, int nRadius)
+void DoUnLight(int nXPos, int nYPos, int radius)
 {
-	nRadius++;
-	nRadius++; // If lights moved at a diagonal it can result in some extra tiles being lit
+	radius++;
+	radius++; // If lights moved at a diagonal it can result in some extra tiles being lit
 
-	int minX = nXPos - nRadius;
-	int maxX = nXPos + nRadius;
-	int minY = nYPos - nRadius;
-	int maxY = nYPos + nRadius;
+	int minX = nXPos - radius;
+	int maxX = nXPos + radius;
+	int minY = nYPos - radius;
+	int maxY = nYPos + radius;
 
 	minX = std::max(minX, 0);
 	maxX = std::max(maxX, MAXDUNX);
@@ -218,9 +218,9 @@ bool DoCrawl(unsigned minRadius, unsigned maxRadius, tl::function_ref<bool(Displ
 	return true;
 }
 
-void DoLighting(Point position, int nRadius, int lnum)
+void DoLighting(Point position, uint8_t radius, int Lnum)
 {
-	assert(nRadius >= 0 && nRadius <= NumLightRadiuses);
+	assert(radius >= 0 && radius <= NumLightRadiuses);
 	assert(InDungeonBounds(position));
 
 	int xoff = 0;
@@ -230,8 +230,8 @@ void DoLighting(Point position, int nRadius, int lnum)
 	int blockX = 0;
 	int blockY = 0;
 
-	if (lnum >= 0) {
-		Light &light = Lights[lnum];
+	if (Lnum >= 0) {
+		Light &light = Lights[Lnum];
 		xoff = light.position.offset.deltaX;
 		yoff = light.position.offset.deltaY;
 		if (xoff < 0) {
@@ -266,8 +266,8 @@ void DoLighting(Point position, int nRadius, int lnum)
 
 	if (IsNoneOf(leveltype, DTYPE_NEST, DTYPE_CRYPT)) {
 		SetLight(position, 0);
-	} else if (GetLight(position) > LightFalloffs[nRadius][0]) {
-		SetLight(position, LightFalloffs[nRadius][0]);
+	} else if (GetLight(position) > LightFalloffs[radius][0]) {
+		SetLight(position, LightFalloffs[radius][0]);
 	}
 
 	for (int i = 0; i < 4; i++) {
@@ -279,7 +279,7 @@ void DoLighting(Point position, int nRadius, int lnum)
 				if (linearDistance >= 128)
 					continue;
 				Point temp = position + (Displacement { x, y }).Rotate(-i);
-				uint8_t v = LightFalloffs[nRadius][linearDistance];
+				uint8_t v = LightFalloffs[radius][linearDistance];
 				if (!InDungeonBounds(temp))
 					continue;
 				if (v < GetLight(temp))
@@ -290,14 +290,14 @@ void DoLighting(Point position, int nRadius, int lnum)
 	}
 }
 
-void DoUnVision(Point position, int nRadius)
+void DoUnVision(Point position, uint8_t radius)
 {
-	nRadius++;
-	nRadius++; // increasing the radius even further here prevents leaving stray vision tiles behind and doesn't seem to affect monster AI - applying new vision happens in the same tick
-	int x1 = std::max(position.x - nRadius, 0);
-	int y1 = std::max(position.y - nRadius, 0);
-	int x2 = std::min(position.x + nRadius, MAXDUNX);
-	int y2 = std::min(position.y + nRadius, MAXDUNY);
+	radius++;
+	radius++; // increasing the radius even further here prevents leaving stray vision tiles behind and doesn't seem to affect monster AI - applying new vision happens in the same tick
+	int x1 = std::max(position.x - radius, 0);
+	int y1 = std::max(position.y - radius, 0);
+	int x2 = std::min(position.x + radius, MAXDUNX);
+	int y2 = std::min(position.y + radius, MAXDUNY);
 
 	for (int i = x1; i < x2; i++) {
 		for (int j = y1; j < y2; j++) {
@@ -306,7 +306,7 @@ void DoUnVision(Point position, int nRadius)
 	}
 }
 
-void DoVision(Point position, int radius, MapExplorationType doAutomap, bool visible)
+void DoVision(Point position, uint8_t radius, MapExplorationType doAutomap, bool visible)
 {
 	DoVisionFlags(position, doAutomap, visible);
 
@@ -397,7 +397,7 @@ void MakeLightTable()
 
 	// Generate light falloffs ranges
 	if (IsAnyOf(leveltype, DTYPE_NEST, DTYPE_CRYPT)) {
-		for (int j = 0; j < NumLightRadiuses; j++) {
+		for (size_t j = 0; j < NumLightRadiuses; j++) {
 			double fa = (sqrt((double)(16 - j))) / 128;
 			fa *= fa;
 			for (int i = 0; i < 128; i++) {
@@ -411,8 +411,8 @@ void MakeLightTable()
 			}
 		}
 	} else {
-		for (int j = 0; j < NumLightRadiuses; j++) {
-			for (int i = 0; i < 128; i++) {
+		for (size_t j = 0; j < NumLightRadiuses; j++) {
+			for (size_t i = 0; i < 128; i++) {
 				if (i > (j + 1) * 8) {
 					LightFalloffs[j][i] = 15;
 				} else {
@@ -423,7 +423,7 @@ void MakeLightTable()
 		}
 	}
 
-	// Generate the linght cone interpolations
+	// Generate the light cone interpolations
 	for (int offsetY = 0; offsetY < 8; offsetY++) {
 		for (int offsetX = 0; offsetX < 8; offsetX++) {
 			for (int y = 0; y < 16; y++) {
@@ -460,33 +460,36 @@ void InitLighting()
 {
 	ActiveLightCount = 0;
 	UpdateLighting = false;
+	UpdateVision = false;
+	VisionCount = 0;
+	VisionId = 1;
 	DisableLighting = false;
 
 	for (int i = 0; i < MAXLIGHTS; i++) {
 		ActiveLights[i] = i;
 	}
+
+	for (int i = 0; i < TransVal; i++) {
+		TransList[i] = false;
+	}
 }
 
-int AddLight(Point position, int r)
+int AddLight(Point position, uint8_t radius)
 {
-	int lid;
-
-	if (DisableLighting) {
+	if (DisableLighting)
 		return NO_LIGHT;
-	}
+	if (ActiveLightCount >= MAXLIGHTS)
+		return NO_LIGHT;
 
-	lid = NO_LIGHT;
+	int lid = ActiveLights[ActiveLightCount++];
+	Light &light = Lights[lid];
+	light.position.tile = position;
+	light.radius = radius;
+	light.position.offset = { 0, 0 };
+	light.isInvalid = false;
+	light.hasChanged = false;
 
-	if (ActiveLightCount < MAXLIGHTS) {
-		lid = ActiveLights[ActiveLightCount++];
-		Light &light = Lights[lid];
-		light.position.tile = position;
-		light._lradius = r;
-		light.position.offset = { 0, 0 };
-		light._ldel = false;
-		light._lunflag = false;
-		UpdateLighting = true;
-	}
+	UpdateLighting = true;
 
 	return lid;
 }
@@ -497,21 +500,23 @@ void AddUnLight(int i)
 		return;
 	}
 
-	Lights[i]._ldel = true;
+	Lights[i].isInvalid = true;
+
 	UpdateLighting = true;
 }
 
-void ChangeLightRadius(int i, int r)
+void ChangeLightRadius(int i, uint8_t radius)
 {
 	if (DisableLighting || i == NO_LIGHT) {
 		return;
 	}
 
 	Light &light = Lights[i];
-	light._lunflag = true;
+	light.hasChanged = true;
 	light.position.old = light.position.tile;
-	light.oldRadius = light._lradius;
-	light._lradius = r;
+	light.oldRadius = light.radius;
+	light.radius = radius;
+
 	UpdateLighting = true;
 }
 
@@ -522,10 +527,11 @@ void ChangeLightXY(int i, Point position)
 	}
 
 	Light &light = Lights[i];
-	light._lunflag = true;
+	light.hasChanged = true;
 	light.position.old = light.position.tile;
-	light.oldRadius = light._lradius;
+	light.oldRadius = light.radius;
 	light.position.tile = position;
+
 	UpdateLighting = true;
 }
 
@@ -536,60 +542,60 @@ void ChangeLightOffset(int i, Displacement offset)
 	}
 
 	Light &light = Lights[i];
-	light._lunflag = true;
+	light.hasChanged = true;
 	light.position.old = light.position.tile;
-	light.oldRadius = light._lradius;
+	light.oldRadius = light.radius;
 	light.position.offset = offset;
+
 	UpdateLighting = true;
 }
 
-void ChangeLight(int i, Point position, int r)
+void ChangeLight(int i, Point position, uint8_t radius)
 {
 	if (DisableLighting || i == NO_LIGHT) {
 		return;
 	}
 
 	Light &light = Lights[i];
-	light._lunflag = true;
+	light.hasChanged = true;
 	light.position.old = light.position.tile;
-	light.oldRadius = light._lradius;
+	light.oldRadius = light.radius;
 	light.position.tile = position;
-	light._lradius = r;
+	light.radius = radius;
+
 	UpdateLighting = true;
 }
 
 void ProcessLightList()
 {
-	if (DisableLighting) {
+	if (DisableLighting)
 		return;
+	if (!UpdateLighting)
+		return;
+	for (int i = 0; i < ActiveLightCount; i++) {
+		Light &light = Lights[ActiveLights[i]];
+		if (light.isInvalid) {
+			DoUnLight(light.position.tile.x, light.position.tile.y, light.radius);
+		}
+		if (light.hasChanged) {
+			DoUnLight(light.position.old.x, light.position.old.y, light.oldRadius);
+			light.hasChanged = false;
+		}
 	}
-
-	if (UpdateLighting) {
-		for (int i = 0; i < ActiveLightCount; i++) {
-			Light &light = Lights[ActiveLights[i]];
-			if (light._ldel) {
-				DoUnLight(light.position.tile.x, light.position.tile.y, light._lradius);
-			}
-			if (light._lunflag) {
-				DoUnLight(light.position.old.x, light.position.old.y, light.oldRadius);
-				light._lunflag = false;
-			}
+	for (int i = 0; i < ActiveLightCount; i++) {
+		int j = ActiveLights[i];
+		Light &light = Lights[j];
+		if (!light.isInvalid) {
+			DoLighting(light.position.tile, light.radius, j);
 		}
-		for (int i = 0; i < ActiveLightCount; i++) {
-			int j = ActiveLights[i];
-			Light &light = Lights[j];
-			if (!light._ldel) {
-				DoLighting(light.position.tile, light._lradius, j);
-			}
-		}
-		int i = 0;
-		while (i < ActiveLightCount) {
-			if (Lights[ActiveLights[i]]._ldel) {
-				ActiveLightCount--;
-				std::swap(ActiveLights[ActiveLightCount], ActiveLights[i]);
-			} else {
-				i++;
-			}
+	}
+	int i = 0;
+	while (i < ActiveLightCount) {
+		if (Lights[ActiveLights[i]].isInvalid) {
+			ActiveLightCount--;
+			std::swap(ActiveLights[ActiveLightCount], ActiveLights[i]);
+		} else {
+			i++;
 		}
 	}
 
@@ -601,17 +607,6 @@ void SavePreLighting()
 	memcpy(dPreLight, dLight, sizeof(dPreLight));
 }
 
-void InitVision()
-{
-	VisionCount = 0;
-	dovision = false;
-	VisionId = 1;
-
-	for (int i = 0; i < TransVal; i++) {
-		TransList[i] = false;
-	}
-}
-
 int AddVision(Point position, int r, bool mine)
 {
 	if (VisionCount >= MAXVISION)
@@ -619,15 +614,15 @@ int AddVision(Point position, int r, bool mine)
 
 	auto &vision = VisionList[VisionCount];
 	vision.position.tile = position;
-	vision._lradius = r;
+	vision.radius = r;
 	vision._lid = VisionId;
-	vision._ldel = false;
-	vision._lunflag = false;
+	vision.isInvalid = false;
+	vision.hasChanged = false;
 	vision._lflags = mine;
 
 	VisionId++;
 	VisionCount++;
-	dovision = true;
+	UpdateVision = true;
 
 	return vision._lid;
 }
@@ -639,11 +634,11 @@ void ChangeVisionRadius(int id, int r)
 		if (vision._lid != id)
 			continue;
 
-		vision._lunflag = true;
+		vision.hasChanged = true;
 		vision.position.old = vision.position.tile;
-		vision.oldRadius = vision._lradius;
-		vision._lradius = r;
-		dovision = true;
+		vision.oldRadius = vision.radius;
+		vision.radius = r;
+		UpdateVision = true;
 	}
 }
 
@@ -654,27 +649,27 @@ void ChangeVisionXY(int id, Point position)
 		if (vision._lid != id)
 			continue;
 
-		vision._lunflag = true;
+		vision.hasChanged = true;
 		vision.position.old = vision.position.tile;
-		vision.oldRadius = vision._lradius;
+		vision.oldRadius = vision.radius;
 		vision.position.tile = position;
-		dovision = true;
+		UpdateVision = true;
 	}
 }
 
 void ProcessVisionList()
 {
-	if (!dovision)
+	if (!UpdateVision)
 		return;
 
 	for (int i = 0; i < VisionCount; i++) {
 		auto &vision = VisionList[i];
-		if (vision._ldel) {
-			DoUnVision(vision.position.tile, vision._lradius);
+		if (vision.isInvalid) {
+			DoUnVision(vision.position.tile, vision.radius);
 		}
-		if (vision._lunflag) {
+		if (vision.hasChanged) {
 			DoUnVision(vision.position.old, vision.oldRadius);
-			vision._lunflag = false;
+			vision.hasChanged = false;
 		}
 	}
 	for (int i = 0; i < TransVal; i++) {
@@ -682,7 +677,7 @@ void ProcessVisionList()
 	}
 	for (int i = 0; i < VisionCount; i++) {
 		auto &vision = VisionList[i];
-		if (vision._ldel)
+		if (vision.isInvalid)
 			continue;
 
 		MapExplorationType doautomap = MAP_EXP_SELF;
@@ -700,7 +695,7 @@ void ProcessVisionList()
 		}
 		DoVision(
 		    vision.position.tile,
-		    vision._lradius,
+		    vision.radius,
 		    doautomap,
 		    vision._lflags);
 	}
@@ -709,7 +704,7 @@ void ProcessVisionList()
 		delflag = false;
 		for (int i = 0; i < VisionCount; i++) {
 			auto &vision = VisionList[i];
-			if (!vision._ldel)
+			if (!vision.isInvalid)
 				continue;
 
 			VisionCount--;
@@ -720,7 +715,7 @@ void ProcessVisionList()
 		}
 	} while (delflag);
 
-	dovision = false;
+	UpdateVision = false;
 }
 
 void lighting_color_cycling()

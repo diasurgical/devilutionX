@@ -33,7 +33,7 @@ R 32 currentFrame
 R 32 _pAnimWidth
 R 32 _pAnimWidth2
 R 32 _peflag
-R 32 _plid
+R 32 lightId
 R 32 _pvid
 R 32 _pSpell
 R 8 _pSplType

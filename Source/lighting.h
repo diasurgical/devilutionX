@@ -26,20 +26,20 @@ constexpr size_t NumLightingLevels = 16;
 #define NO_LIGHT -1
 
 struct LightPosition {
-	Point tile;
+	WorldTilePosition tile;
 	/** Pixel offset from tile. */
-	Displacement offset;
+	DisplacementOf<int8_t> offset;
 	/** Prevous position. */
-	Point old;
+	WorldTilePosition old;
 };
 
 struct Light {
 	LightPosition position;
-	int _lradius;
+	uint8_t radius;
+	uint8_t oldRadius;
+	bool isInvalid;
+	bool hasChanged;
 	int _lid;
-	bool _ldel;
-	bool _lunflag;
-	int oldRadius;
 	bool _lflags;
 };
 
@@ -57,23 +57,22 @@ extern std::array<uint8_t, 256> PauseTable;
 extern bool DisableLighting;
 extern bool UpdateLighting;
 
-void DoLighting(Point position, int nRadius, int Lnum);
-void DoUnVision(Point position, int nRadius);
-void DoVision(Point position, int radius, MapExplorationType doAutomap, bool visible);
+void DoLighting(Point position, uint8_t radius, int Lnum);
+void DoUnVision(Point position, uint8_t radius);
+void DoVision(Point position, uint8_t radius, MapExplorationType doAutomap, bool visible);
 void MakeLightTable();
 #ifdef _DEBUG
 void ToggleLighting();
 #endif
 void InitLighting();
-int AddLight(Point position, int r);
+int AddLight(Point position, uint8_t radius);
 void AddUnLight(int i);
-void ChangeLightRadius(int i, int r);
+void ChangeLightRadius(int i, uint8_t radius);
 void ChangeLightXY(int i, Point position);
 void ChangeLightOffset(int i, Displacement offset);
-void ChangeLight(int i, Point position, int r);
+void ChangeLight(int i, Point position, uint8_t radius);
 void ProcessLightList();
 void SavePreLighting();
-void InitVision();
 int AddVision(Point position, int r, bool mine);
 void ChangeVisionRadius(int id, int r);
 void ChangeVisionXY(int id, Point position);

@@ -76,10 +76,10 @@ struct DirectionSettings {
 
 void PmChangeLightOff(Player &player)
 {
-	if (player._plid == NO_LIGHT)
+	if (player.lightId == NO_LIGHT)
 		return;
 
-	const Light *l = &Lights[player._plid];
+	const Light *l = &Lights[player.lightId];
 	WorldTileDisplacement offset = player.position.CalculateWalkingOffset(player._pdir, player.AnimInfo);
 	int x = 2 * offset.deltaY + offset.deltaX;
 	int y = 2 * offset.deltaY - offset.deltaX;
@@ -94,7 +94,7 @@ void PmChangeLightOff(Player &player)
 	if (abs(lx - offx) < 3 && abs(ly - offy) < 3)
 		return;
 
-	ChangeLightOffset(player._plid, { x, y });
+	ChangeLightOffset(player.lightId, { x, y });
 }
 
 void WalkNorthwards(Player &player, const DirectionSettings &walkParams)
@@ -111,7 +111,7 @@ void WalkSouthwards(Player &player, const DirectionSettings & /*walkParams*/)
 	player.position.tile = player.position.future; // Move player to the next tile to maintain correct render order
 	dPlayer[player.position.tile.x][player.position.tile.y] = playerId + 1;
 	// BUGFIX: missing `if (leveltype != DTYPE_TOWN) {` for call to ChangeLightXY and PM_ChangeLightOff.
-	ChangeLightXY(player._plid, player.position.tile);
+	ChangeLightXY(player.lightId, player.position.tile);
 	PmChangeLightOff(player);
 }
 
@@ -124,7 +124,7 @@ void WalkSideways(Player &player, const DirectionSettings &walkParams)
 	dPlayer[player.position.future.x][player.position.future.y] = playerId + 1;
 
 	if (leveltype != DTYPE_TOWN) {
-		ChangeLightXY(player._plid, nextPosition);
+		ChangeLightXY(player.lightId, nextPosition);
 		PmChangeLightOff(player);
 	}
 
@@ -505,7 +505,7 @@ bool DoWalk(Player &player, int variant)
 
 	// Update the coordinates for lighting and vision entries for the player
 	if (leveltype != DTYPE_TOWN) {
-		ChangeLightXY(player._plid, player.position.tile);
+		ChangeLightXY(player.lightId, player.position.tile);
 		ChangeVisionXY(player._pvid, player.position.tile);
 	}
 
@@ -519,7 +519,7 @@ bool DoWalk(Player &player, int variant)
 
 	// Reset the "sub-tile" position of the player's light entry to 0
 	if (leveltype != DTYPE_TOWN) {
-		ChangeLightOffset(player._plid, { 0, 0 });
+		ChangeLightOffset(player.lightId, { 0, 0 });
 	}
 
 	AutoPickup(player);
@@ -2576,10 +2576,10 @@ void InitPlayer(Player &player, bool firstTime)
 		player.destAction = ACTION_NONE;
 
 		if (&player == MyPlayer) {
-			player._plid = AddLight(player.position.tile, player._pLightRad);
-			ChangeLightXY(player._plid, player.position.tile); // fix for a bug where old light is still visible at the entrance after reentering level
+			player.lightId = AddLight(player.position.tile, player._pLightRad);
+			ChangeLightXY(player.lightId, player.position.tile); // fix for a bug where old light is still visible at the entrance after reentering level
 		} else {
-			player._plid = NO_LIGHT;
+			player.lightId = NO_LIGHT;
 		}
 		player._pvid = AddVision(player.position.tile, player._pLightRad, &player == MyPlayer);
 	}
@@ -2638,7 +2638,7 @@ void FixPlayerLocation(Player &player, Direction bDir)
 	if (&player == MyPlayer) {
 		ViewPosition = player.position.tile;
 	}
-	ChangeLightXY(player._plid, player.position.tile);
+	ChangeLightXY(player.lightId, player.position.tile);
 	ChangeVisionXY(player._pvid, player.position.tile);
 }
 
@@ -3335,7 +3335,7 @@ void SyncInitPlr(Player &player)
 	SetPlrAnims(player);
 	SyncInitPlrPos(player);
 	if (&player != MyPlayer)
-		player._plid = NO_LIGHT;
+		player.lightId = NO_LIGHT;
 }
 
 void CheckStats(Player &player)
