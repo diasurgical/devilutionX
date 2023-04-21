@@ -356,7 +356,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	player.AnimInfo.currentFrame = file.NextLENarrow<int32_t, int8_t>(-1);
 	file.Skip<uint32_t>(3); // Skip _pAnimWidth, _pAnimWidth2, _peflag
 	player.lightId = file.NextLE<int32_t>();
-	player._pvid = file.NextLE<int32_t>();
+	file.Skip<int32_t>(); // _pvid
 
 	player.queuedSpell.spellId = static_cast<SpellID>(file.NextLE<int32_t>());
 	player.queuedSpell.spellType = static_cast<SpellType>(file.NextLE<int8_t>());
@@ -871,7 +871,7 @@ void LoadLighting(LoadHelper *file, Light *pLight)
 	pLight->position.tile.x = file->NextLE<int32_t>();
 	pLight->position.tile.y = file->NextLE<int32_t>();
 	pLight->radius = file->NextLE<int32_t>();
-	pLight->_lid = file->NextLE<int32_t>();
+	file->Skip<int32_t>(); // _lid
 	pLight->isInvalid = file->NextBool32();
 	pLight->hasChanged = file->NextBool32();
 	file->Skip(4); // Unused
@@ -880,7 +880,7 @@ void LoadLighting(LoadHelper *file, Light *pLight)
 	pLight->oldRadius = file->NextLE<int32_t>();
 	pLight->position.offset.deltaX = file->NextLE<int32_t>();
 	pLight->position.offset.deltaY = file->NextLE<int32_t>();
-	pLight->_lflags = file->NextBool32();
+	file->Skip<uint32_t>(); // _lflags
 }
 
 void LoadPortal(LoadHelper *file, int i)
@@ -1134,7 +1134,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.WriteLE<int32_t>(CalculateWidth2(animWidth));
 	file.Skip<uint32_t>(); // Skip _peflag
 	file.WriteLE<int32_t>(player.lightId);
-	file.WriteLE<int32_t>(player._pvid);
+	file.WriteLE<int32_t>(1); // _pvid
 
 	file.WriteLE<int32_t>(static_cast<int8_t>(player.queuedSpell.spellId));
 	file.WriteLE<int8_t>(static_cast<int8_t>(player.queuedSpell.spellType));
@@ -1610,12 +1610,12 @@ void SaveQuest(SaveHelper *file, int i)
 	file->Skip(sizeof(int32_t)); // Skip DoomQuestState
 }
 
-void SaveLighting(SaveHelper *file, Light *pLight)
+void SaveLighting(SaveHelper *file, Light *pLight, bool vision = false)
 {
 	file->WriteLE<int32_t>(pLight->position.tile.x);
 	file->WriteLE<int32_t>(pLight->position.tile.y);
 	file->WriteLE<int32_t>(pLight->radius);
-	file->WriteLE<int32_t>(pLight->_lid);
+	file->WriteLE<int32_t>(vision ? 1 : 0); // _lid
 	file->WriteLE<uint32_t>(pLight->isInvalid ? 1 : 0);
 	file->WriteLE<uint32_t>(pLight->hasChanged ? 1 : 0);
 	file->Skip(4); // Unused
@@ -1624,7 +1624,7 @@ void SaveLighting(SaveHelper *file, Light *pLight)
 	file->WriteLE<int32_t>(pLight->oldRadius);
 	file->WriteLE<int32_t>(pLight->position.offset.deltaX);
 	file->WriteLE<int32_t>(pLight->position.offset.deltaY);
-	file->WriteLE<uint32_t>(pLight->_lflags ? 1 : 0);
+	file->WriteLE<uint32_t>(vision ? 1 : 0);
 }
 
 void SavePortal(SaveHelper *file, int i)
@@ -2156,11 +2156,13 @@ void LoadGame(bool firstflag)
 		for (int i = 0; i < ActiveLightCount; i++)
 			LoadLighting(&file, &Lights[ActiveLights[i]]);
 
-		VisionId = file.NextBE<int32_t>();
-		VisionCount = file.NextBE<int32_t>();
+		file.Skip<int32_t>(); // VisionId
+		int visionCount = file.NextBE<int32_t>();
 
-		for (int i = 0; i < VisionCount; i++)
+		for (int i = 0; i < visionCount; i++) {
 			LoadLighting(&file, &VisionList[i]);
+			VisionActive[i] = true;
+		}
 	}
 
 	LoadDroppedItems(file, savedItemCount);
@@ -2419,11 +2421,12 @@ void SaveGameData(SaveWriter &saveWriter)
 		for (int i = 0; i < ActiveLightCount; i++)
 			SaveLighting(&file, &Lights[ActiveLights[i]]);
 
-		file.WriteBE<int32_t>(VisionId);
-		file.WriteBE<int32_t>(VisionCount);
+		int visionCount = Players.size();
+		file.WriteBE<int32_t>(visionCount + 1); // VisionId
+		file.WriteBE<int32_t>(visionCount);
 
-		for (int i = 0; i < VisionCount; i++)
-			SaveLighting(&file, &VisionList[i]);
+		for (const Player &player : Players)
+			SaveLighting(&file, &VisionList[player.getId()], true);
 	}
 
 	auto itemIndexes = SaveDroppedItems(file);

@@ -506,7 +506,7 @@ bool DoWalk(Player &player, int variant)
 	// Update the coordinates for lighting and vision entries for the player
 	if (leveltype != DTYPE_TOWN) {
 		ChangeLightXY(player.lightId, player.position.tile);
-		ChangeVisionXY(player._pvid, player.position.tile);
+		ChangeVisionXY(player.getId(), player.position.tile);
 	}
 
 	if (player.walkpath[0] != WALK_NONE) {
@@ -2581,7 +2581,7 @@ void InitPlayer(Player &player, bool firstTime)
 		} else {
 			player.lightId = NO_LIGHT;
 		}
-		player._pvid = AddVision(player.position.tile, player._pLightRad, &player == MyPlayer);
+		ActivateVision(player.position.tile, player._pLightRad, player.getId());
 	}
 
 	SpellID s = PlayersData[static_cast<size_t>(player._pClass)].skill;
@@ -2639,7 +2639,7 @@ void FixPlayerLocation(Player &player, Direction bDir)
 		ViewPosition = player.position.tile;
 	}
 	ChangeLightXY(player.lightId, player.position.tile);
-	ChangeVisionXY(player._pvid, player.position.tile);
+	ChangeVisionXY(player.getId(), player.position.tile);
 }
 
 void StartStand(Player &player, Direction dir)

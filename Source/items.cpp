@@ -2661,7 +2661,7 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 
 	if (player._pLightRad != lrad) {
 		ChangeLightRadius(player.lightId, lrad);
-		ChangeVisionRadius(player._pvid, lrad);
+		ChangeVisionRadius(player.getId(), lrad);
 		player._pLightRad = lrad;
 	}
 

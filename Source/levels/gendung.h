@@ -186,7 +186,7 @@ extern DVL_API_FOR_TEST Point ViewPosition;
 extern uint_fast8_t MicroTileLen;
 extern int8_t TransVal;
 /** Specifies the active transparency indices. */
-extern bool TransList[256];
+extern std::array<bool, 256> TransList;
 /** Contains the piece IDs of each tile on the map. */
 extern DVL_API_FOR_TEST uint16_t dPiece[MAXDUNX][MAXDUNY];
 /** Map of micros that comprises a full tile for any given dungeon piece. */

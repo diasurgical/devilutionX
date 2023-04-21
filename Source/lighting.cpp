@@ -16,11 +16,10 @@
 
 namespace devilution {
 
+std::array<bool, MAXVISION> VisionActive;
 Light VisionList[MAXVISION];
-int VisionCount;
-int VisionId;
 Light Lights[MAXLIGHTS];
-uint8_t ActiveLights[MAXLIGHTS];
+std::array<uint8_t, MAXLIGHTS> ActiveLights;
 int ActiveLightCount;
 std::array<std::array<uint8_t, 256>, NumLightingLevels> LightTables;
 std::array<uint8_t, 256> InfravisionTable;
@@ -451,19 +450,13 @@ void InitLighting()
 	ActiveLightCount = 0;
 	UpdateLighting = false;
 	UpdateVision = false;
-	VisionCount = 0;
-	VisionId = 1;
 #ifdef _DEBUG
 	DisableLighting = false;
 #endif
 
-	for (int i = 0; i < MAXLIGHTS; i++) {
-		ActiveLights[i] = i;
-	}
-
-	for (int i = 0; i < TransVal; i++) {
-		TransList[i] = false;
-	}
+	std::iota(ActiveLights.begin(), ActiveLights.end(), 0);
+	VisionActive = {};
+	TransList = {};
 }
 
 int AddLight(Point position, uint8_t radius)
@@ -618,54 +611,36 @@ void SavePreLighting()
 	memcpy(dPreLight, dLight, sizeof(dPreLight));
 }
 
-int AddVision(Point position, int r, bool mine)
+void ActivateVision(Point position, int r, int id)
 {
-	if (VisionCount >= MAXVISION)
-		return -1;
-
-	auto &vision = VisionList[VisionCount];
+	auto &vision = VisionList[id];
 	vision.position.tile = position;
 	vision.radius = r;
-	vision._lid = VisionId;
 	vision.isInvalid = false;
 	vision.hasChanged = false;
-	vision._lflags = mine;
+	VisionActive[id] = true;
 
-	VisionId++;
-	VisionCount++;
 	UpdateVision = true;
-
-	return vision._lid;
 }
 
 void ChangeVisionRadius(int id, int r)
 {
-	for (int i = 0; i < VisionCount; i++) {
-		auto &vision = VisionList[i];
-		if (vision._lid != id)
-			continue;
-
-		vision.hasChanged = true;
-		vision.position.old = vision.position.tile;
-		vision.oldRadius = vision.radius;
-		vision.radius = r;
-		UpdateVision = true;
-	}
+	auto &vision = VisionList[id];
+	vision.hasChanged = true;
+	vision.position.old = vision.position.tile;
+	vision.oldRadius = vision.radius;
+	vision.radius = r;
+	UpdateVision = true;
 }
 
 void ChangeVisionXY(int id, Point position)
 {
-	for (int i = 0; i < VisionCount; i++) {
-		auto &vision = VisionList[i];
-		if (vision._lid != id)
-			continue;
-
-		vision.hasChanged = true;
-		vision.position.old = vision.position.tile;
-		vision.oldRadius = vision.radius;
-		vision.position.tile = position;
-		UpdateVision = true;
-	}
+	auto &vision = VisionList[id];
+	vision.hasChanged = true;
+	vision.position.old = vision.position.tile;
+	vision.oldRadius = vision.radius;
+	vision.position.tile = position;
+	UpdateVision = true;
 }
 
 void ProcessVisionList()
@@ -673,58 +648,33 @@ void ProcessVisionList()
 	if (!UpdateVision)
 		return;
 
-	for (int i = 0; i < VisionCount; i++) {
-		auto &vision = VisionList[i];
-		if (vision.isInvalid) {
+	for (int i = 0; i < TransVal; i++) {
+		TransList[i] = false;
+	}
+
+	for (const Player &player : Players) {
+		int id = player.getId();
+		if (!VisionActive[id])
+			continue;
+		Light &vision = VisionList[id];
+		if (!player.plractive || !player.isOnActiveLevel()) {
 			DoUnVision(vision.position.tile, vision.radius);
+			VisionActive[id] = false;
+			continue;
 		}
 		if (vision.hasChanged) {
 			DoUnVision(vision.position.old, vision.oldRadius);
 			vision.hasChanged = false;
 		}
-	}
-	for (int i = 0; i < TransVal; i++) {
-		TransList[i] = false;
-	}
-	for (int i = 0; i < VisionCount; i++) {
-		auto &vision = VisionList[i];
-		if (vision.isInvalid)
-			continue;
-
 		MapExplorationType doautomap = MAP_EXP_SELF;
-		if (!vision._lflags) {
-			doautomap = MAP_EXP_OTHERS;
-			for (const Player &player : Players) {
-				// Find player for this vision
-				if (!player.plractive || !player.isOnActiveLevel() || player._pvid != vision._lid)
-					continue;
-				// Check that player allows automap sharing
-				if (!player.friendlyMode)
-					doautomap = MAP_EXP_NONE;
-				break;
-			}
-		}
+		if (&player != MyPlayer)
+			doautomap = player.friendlyMode ? MAP_EXP_OTHERS : MAP_EXP_NONE;
 		DoVision(
 		    vision.position.tile,
 		    vision.radius,
 		    doautomap,
-		    vision._lflags);
+		    &player == MyPlayer);
 	}
-	bool delflag;
-	do {
-		delflag = false;
-		for (int i = 0; i < VisionCount; i++) {
-			auto &vision = VisionList[i];
-			if (!vision.isInvalid)
-				continue;
-
-			VisionCount--;
-			if (VisionCount > 0 && i != VisionCount) {
-				vision = VisionList[VisionCount];
-			}
-			delflag = true;
-		}
-	} while (delflag);
 
 	UpdateVision = false;
 }
