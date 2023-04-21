@@ -54,7 +54,9 @@ extern std::array<std::array<uint8_t, 256>, NumLightingLevels> LightTables;
 extern std::array<uint8_t, 256> InfravisionTable;
 extern std::array<uint8_t, 256> StoneTable;
 extern std::array<uint8_t, 256> PauseTable;
+#ifdef _DEBUG
 extern bool DisableLighting;
+#endif
 extern bool UpdateLighting;
 
 void DoLighting(Point position, uint8_t radius, int Lnum);

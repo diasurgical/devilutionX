@@ -25,7 +25,9 @@ std::array<std::array<uint8_t, 256>, NumLightingLevels> LightTables;
 std::array<uint8_t, 256> InfravisionTable;
 std::array<uint8_t, 256> StoneTable;
 std::array<uint8_t, 256> PauseTable;
+#ifdef _DEBUG
 bool DisableLighting;
+#endif
 bool UpdateLighting;
 
 namespace {
@@ -463,7 +465,9 @@ void InitLighting()
 	UpdateVision = false;
 	VisionCount = 0;
 	VisionId = 1;
+#ifdef _DEBUG
 	DisableLighting = false;
+#endif
 
 	for (int i = 0; i < MAXLIGHTS; i++) {
 		ActiveLights[i] = i;
@@ -476,8 +480,10 @@ void InitLighting()
 
 int AddLight(Point position, uint8_t radius)
 {
+#ifdef _DEBUG
 	if (DisableLighting)
 		return NO_LIGHT;
+#endif
 	if (ActiveLightCount >= MAXLIGHTS)
 		return NO_LIGHT;
 
@@ -496,9 +502,12 @@ int AddLight(Point position, uint8_t radius)
 
 void AddUnLight(int i)
 {
-	if (DisableLighting || i == NO_LIGHT) {
+#ifdef _DEBUG
+	if (DisableLighting)
 		return;
-	}
+#endif
+	if (i == NO_LIGHT)
+		return;
 
 	Lights[i].isInvalid = true;
 
@@ -507,9 +516,12 @@ void AddUnLight(int i)
 
 void ChangeLightRadius(int i, uint8_t radius)
 {
-	if (DisableLighting || i == NO_LIGHT) {
+#ifdef _DEBUG
+	if (DisableLighting)
 		return;
-	}
+#endif
+	if (i == NO_LIGHT)
+		return;
 
 	Light &light = Lights[i];
 	light.hasChanged = true;
@@ -522,9 +534,12 @@ void ChangeLightRadius(int i, uint8_t radius)
 
 void ChangeLightXY(int i, Point position)
 {
-	if (DisableLighting || i == NO_LIGHT) {
+#ifdef _DEBUG
+	if (DisableLighting)
 		return;
-	}
+#endif
+	if (i == NO_LIGHT)
+		return;
 
 	Light &light = Lights[i];
 	light.hasChanged = true;
@@ -537,9 +552,12 @@ void ChangeLightXY(int i, Point position)
 
 void ChangeLightOffset(int i, Displacement offset)
 {
-	if (DisableLighting || i == NO_LIGHT) {
+#ifdef _DEBUG
+	if (DisableLighting)
 		return;
-	}
+#endif
+	if (i == NO_LIGHT)
+		return;
 
 	Light &light = Lights[i];
 	light.hasChanged = true;
@@ -552,9 +570,12 @@ void ChangeLightOffset(int i, Displacement offset)
 
 void ChangeLight(int i, Point position, uint8_t radius)
 {
-	if (DisableLighting || i == NO_LIGHT) {
+#ifdef _DEBUG
+	if (DisableLighting)
 		return;
-	}
+#endif
+	if (i == NO_LIGHT)
+		return;
 
 	Light &light = Lights[i];
 	light.hasChanged = true;
@@ -568,8 +589,10 @@ void ChangeLight(int i, Point position, uint8_t radius)
 
 void ProcessLightList()
 {
+#ifdef _DEBUG
 	if (DisableLighting)
 		return;
+#endif
 	if (!UpdateLighting)
 		return;
 	for (int i = 0; i < ActiveLightCount; i++) {

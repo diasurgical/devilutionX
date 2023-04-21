@@ -1529,28 +1529,35 @@ void AddMushPatch()
 	}
 }
 
+bool IsLightVisible(Object &light, int lightRadius)
+{
+#ifdef _DEBUG
+	if (!DisableLighting)
+		return false;
+#endif
+
+	for (const Player &player : Players) {
+		if (!player.plractive)
+			continue;
+
+		if (!player.isOnActiveLevel())
+			continue;
+
+		if (player.position.tile.WalkingDistance(light.position) < lightRadius + 10) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
 void UpdateObjectLight(Object &light, int lightRadius)
 {
 	if (light._oVar1 == -1) {
 		return;
 	}
 
-	bool turnon = false;
-	if (!DisableLighting) {
-		for (const Player &player : Players) {
-			if (!player.plractive)
-				continue;
-
-			if (!player.isOnActiveLevel())
-				continue;
-
-			if (player.position.tile.WalkingDistance(light.position) < lightRadius + 10) {
-				turnon = true;
-				break;
-			}
-		}
-	}
-	if (turnon) {
+	if (IsLightVisible(light, lightRadius)) {
 		if (light._oVar1 == 0)
 			light._olid = AddLight(light.position, lightRadius);
 		light._oVar1 = 1;
