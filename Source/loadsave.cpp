@@ -2227,11 +2227,12 @@ void LoadGame(bool firstflag)
 	AutomapZoomReset();
 	ResyncQuests();
 
-	if (leveltype != DTYPE_TOWN)
+	if (leveltype != DTYPE_TOWN) {
+		RedoPlayerVision();
+		ProcessVisionList();
 		ProcessLightList();
+	}
 
-	RedoPlayerVision();
-	ProcessVisionList();
 	// convert stray manashield missiles into pManaShield flag
 	for (auto &missile : Missiles) {
 		if (missile._mitype == MissileID::ManaShield && !missile._miDelFlag) {
