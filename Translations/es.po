@@ -3617,7 +3617,7 @@ msgstr "de la corrupción"
 
 #: Source/itemdat.cpp:403
 msgid "thieves"
-msgstr "de los ladrones"
+msgstr "del ladrón"
 
 #: Source/itemdat.cpp:404
 msgid "the bear"
