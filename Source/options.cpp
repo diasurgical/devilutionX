@@ -1704,6 +1704,8 @@ void PadmapperOptions::ButtonPressed(ControllerButton button)
 	const Action *action = FindAction(button);
 	if (action == nullptr)
 		return;
+	if (IsMovementHandlerActive() && CanDeferToMovementHandler(*action))
+		return;
 	if (action->actionPressed)
 		action->actionPressed();
 	SuppressedButton = action->boundInput.modifier;
@@ -1809,6 +1811,28 @@ const PadmapperOptions::Action *PadmapperOptions::FindAction(ControllerButton bu
 	}
 
 	return nullptr;
+}
+
+bool PadmapperOptions::CanDeferToMovementHandler(const Action &action) const
+{
+	if (action.boundInput.modifier != ControllerButton_NONE)
+		return false;
+
+	if (spselflag) {
+		const string_view prefix { "QuickSpell" };
+		const string_view key { action.key };
+		if (key.size() >= prefix.size()) {
+			const string_view truncated { key.data(), prefix.size() };
+			if (truncated == prefix)
+				return false;
+		}
+	}
+
+	return IsAnyOf(action.boundInput.button,
+	    ControllerButton_BUTTON_DPAD_UP,
+	    ControllerButton_BUTTON_DPAD_DOWN,
+	    ControllerButton_BUTTON_DPAD_LEFT,
+	    ControllerButton_BUTTON_DPAD_RIGHT);
 }
 
 namespace {

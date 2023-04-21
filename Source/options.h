@@ -778,6 +778,7 @@ private:
 	bool committed = false;
 
 	const Action *FindAction(ControllerButton button) const;
+	bool CanDeferToMovementHandler(const Action &action) const;
 };
 
 struct Options {
