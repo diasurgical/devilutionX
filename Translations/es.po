@@ -2979,6 +2979,7 @@ msgid "Mithril"
 msgstr "de mithril"
 
 #: Source/itemdat.cpp:238
+# **
 msgid "Meteoric"
 msgstr "meteórico"
 
