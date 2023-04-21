@@ -2941,733 +2941,761 @@ msgstr "Runa de Piedra"
 msgid "Short Staff of Charged Bolt"
 msgstr "Bastón Corto de la Centella"
 
+
+
 #. TRANSLATORS: Item prefix section.
+# ** Adjetivo sensible a cambio de género, terminaciones o/a
+
 #: Source/itemdat.cpp:229
 msgid "Tin"
-msgstr "Estaño"
+msgstr "de estaño"
 
 #: Source/itemdat.cpp:230
 msgid "Brass"
-msgstr "Latón"
+msgstr "de latón"
 
 #: Source/itemdat.cpp:231
 msgid "Bronze"
-msgstr "Bronce"
+msgstr "de bronce"
 
 #: Source/itemdat.cpp:232
 msgid "Iron"
-msgstr "Hierro"
+msgstr "de hierro"
 
 #: Source/itemdat.cpp:233
 msgid "Steel"
-msgstr "Acero"
+msgstr "de acero"
 
 #: Source/itemdat.cpp:234
 msgid "Silver"
-msgstr "Plata"
+msgstr "de plata"
 
 #: Source/itemdat.cpp:236
 msgid "Platinum"
-msgstr "Platino"
+msgstr "de platino"
 
 #: Source/itemdat.cpp:237
 msgid "Mithril"
-msgstr "Mithril"
+msgstr "de mithril"
 
 #: Source/itemdat.cpp:238
+# **
 msgid "Meteoric"
-msgstr "Meteórico"
+msgstr "meteórico"
 
 #: Source/itemdat.cpp:239 Source/objects.cpp:124
+# **
 msgid "Weird"
-msgstr "Raro"
+msgstr "misterioso"
 
 #: Source/itemdat.cpp:240
+# **
 msgid "Strange"
-msgstr "Extraño"
+msgstr "extraño"
 
 #: Source/itemdat.cpp:241
+# **
 msgid "Useless"
-msgstr "Inútil"
+msgstr "estropeado"
 
 #: Source/itemdat.cpp:242
+# **
 msgid "Bent"
-msgstr "Curvo"
+msgstr "mellado"
 
 #: Source/itemdat.cpp:243
+# **
 msgid "Weak"
-msgstr "Débil"
+msgstr "desgastado"
 
 #: Source/itemdat.cpp:244
+# **
 msgid "Jagged"
-msgstr "Dentado"
+msgstr "dentado"
 
 #: Source/itemdat.cpp:245
 msgid "Deadly"
-msgstr "Mortal"
+msgstr "mortal"
 
 #: Source/itemdat.cpp:246
+# **
 msgid "Heavy"
-msgstr "Pesado"
+msgstr "pesado"
 
 #: Source/itemdat.cpp:247
 msgid "Vicious"
-msgstr "Vicioso"
+msgstr "atroz"
 
 #: Source/itemdat.cpp:248
 msgid "Brutal"
-msgstr "Brutal"
+msgstr "brutal"
 
 #: Source/itemdat.cpp:249
 msgid "Massive"
-msgstr "Masivo"
+msgstr "descomunal"
 
 #: Source/itemdat.cpp:250
 msgid "Savage"
-msgstr "Salvaje"
+msgstr "cruel"
 
 #: Source/itemdat.cpp:251
 msgid "Ruthless"
-msgstr "Implacable"
+msgstr "implacable"
 
 #: Source/itemdat.cpp:252
+# **
 msgid "Merciless"
-msgstr "Despiadado"
+msgstr "despiadado"
 
 #: Source/itemdat.cpp:253
+# **
 msgid "Clumsy"
-msgstr "Torpe"
+msgstr "roñoso"
 
 #: Source/itemdat.cpp:254
+# **
 msgid "Dull"
-msgstr "Tedioso"
+msgstr "mohoso"
 
 #: Source/itemdat.cpp:255
+# **
 msgid "Sharp"
-msgstr "Afilado"
+msgstr "afilado"
 
 #: Source/itemdat.cpp:256 Source/itemdat.cpp:266
+# **
 msgid "Fine"
-msgstr "Pequeño"
+msgstr "fino"
 
 #: Source/itemdat.cpp:257
 msgid "Warrior's"
-msgstr "Del Guerrero"
+msgstr "de guerrero"
 
 #: Source/itemdat.cpp:258
 msgid "Soldier's"
-msgstr "Del Soldado"
+msgstr "de soldado"
 
 #: Source/itemdat.cpp:259
 msgid "Lord's"
-msgstr "Del Señor"
+msgstr "del señor"
 
 #: Source/itemdat.cpp:260
 msgid "Knight's"
-msgstr "Del Caballero"
+msgstr "de caballero"
 
 #: Source/itemdat.cpp:261
 msgid "Master's"
-msgstr "Del Maestro"
+msgstr "de maestro"
 
 #: Source/itemdat.cpp:262
 msgid "Champion's"
-msgstr "Del Campeón"
+msgstr "de campeón"
 
 #: Source/itemdat.cpp:263
 msgid "King's"
-msgstr "Del Rey"
+msgstr "real"
 
 #: Source/itemdat.cpp:264
 msgid "Vulnerable"
-msgstr "Vulnerable"
+msgstr "frágil"
 
 #: Source/itemdat.cpp:265
+# **
 msgid "Rusted"
-msgstr "Oxidado"
+msgstr "oxidado"
 
 #: Source/itemdat.cpp:267
 msgid "Strong"
-msgstr "Fuerte"
+msgstr "fuerte"
 
 #: Source/itemdat.cpp:268
+# **
 msgid "Grand"
-msgstr "Grande"
+msgstr "grandioso"
 
 #: Source/itemdat.cpp:269
 msgid "Valiant"
-msgstr "Valiente"
+msgstr "valiente"
 
 #: Source/itemdat.cpp:270
+# **
 msgid "Glorious"
-msgstr "Glorioso"
+msgstr "glorioso"
 
 #: Source/itemdat.cpp:271
+# **
 msgid "Blessed"
-msgstr "Bendito"
+msgstr "bendito"
 
 #: Source/itemdat.cpp:272
+# **
 msgid "Saintly"
-msgstr "Santo"
+msgstr "santo"
 
 #: Source/itemdat.cpp:273
+# **
 msgid "Awesome"
-msgstr "Increíble"
+msgstr "asombroso"
 
 #: Source/itemdat.cpp:274 Source/objects.cpp:136
+# **
 msgid "Holy"
-msgstr "Santo"
+msgstr "sagrado"
 
 #: Source/itemdat.cpp:275
+# **
 msgid "Godly"
-msgstr "Piadoso"
+msgstr "piadoso"
 
 #: Source/itemdat.cpp:276
+# **
 msgid "Red"
-msgstr "Rojo"
+msgstr "rojo"
 
 #: Source/itemdat.cpp:277 Source/itemdat.cpp:278
 msgid "Crimson"
-msgstr "Carmesí"
+msgstr "carmesí"
 
 #: Source/itemdat.cpp:279
 msgid "Garnet"
-msgstr "Granate"
+msgstr "granate"
 
 #: Source/itemdat.cpp:280
 msgid "Ruby"
-msgstr "Rubí"
+msgstr "rubí"
 
 #: Source/itemdat.cpp:281
 msgid "Blue"
-msgstr "Azul"
+msgstr "azul"
 
 #: Source/itemdat.cpp:282
 msgid "Azure"
-msgstr "Azur"
+msgstr "celeste"
 
 #: Source/itemdat.cpp:283
 msgid "Lapis"
-msgstr "Lapis Lazuli"
+msgstr "lapislázuli"
 
 #: Source/itemdat.cpp:284
 msgid "Cobalt"
-msgstr "Cobalto"
+msgstr "cobalto"
 
 #: Source/itemdat.cpp:285
 msgid "Sapphire"
-msgstr "Zafiro"
+msgstr "zafiro"
 
 #: Source/itemdat.cpp:286
+# **
 msgid "White"
-msgstr "Blanco"
+msgstr "blanco"
 
 #: Source/itemdat.cpp:287
 msgid "Pearl"
-msgstr "Perla"
+msgstr "perla"
 
 #: Source/itemdat.cpp:288
 msgid "Ivory"
-msgstr "Marfil"
+msgstr "marfil"
 
 #: Source/itemdat.cpp:289
 msgid "Crystal"
-msgstr "Cristal"
+msgstr "cristal"
 
 #: Source/itemdat.cpp:290
 msgid "Diamond"
-msgstr "Diamante"
+msgstr "diamante"
 
 #: Source/itemdat.cpp:291
 msgid "Topaz"
-msgstr "Topacio"
+msgstr "topacio"
 
 #: Source/itemdat.cpp:292
 msgid "Amber"
-msgstr "Ámbar"
+msgstr "ámbar"
 
 #: Source/itemdat.cpp:293
 msgid "Jade"
-msgstr "Jade"
+msgstr "jade"
 
 #: Source/itemdat.cpp:294
 msgid "Obsidian"
-msgstr "Obsidiana"
+msgstr "obsidiana"
 
 #: Source/itemdat.cpp:295
 msgid "Emerald"
-msgstr "Esmeralda"
+msgstr "esmeralda"
 
 #: Source/itemdat.cpp:296
 msgid "Hyena's"
-msgstr "De la Hiena"
+msgstr "de la hiena"
 
 #: Source/itemdat.cpp:297
 msgid "Frog's"
-msgstr "De la Rana"
+msgstr "de la rana"
 
 #: Source/itemdat.cpp:298
 msgid "Spider's"
-msgstr "De la Araña"
+msgstr "de la araña"
 
 #: Source/itemdat.cpp:299
 msgid "Raven's"
-msgstr "Del Cuervo"
+msgstr "del cuervo"
 
 #: Source/itemdat.cpp:300
 msgid "Snake's"
-msgstr "De la Serpiente"
+msgstr "de la culebra"
 
 #: Source/itemdat.cpp:301
 msgid "Serpent's"
-msgstr "De la Sierpe"
+msgstr "de la serpiente"
 
 #: Source/itemdat.cpp:302
 msgid "Drake's"
-msgstr "De Drake"
+msgstr "del pequeño dragón"
 
 #: Source/itemdat.cpp:303
 msgid "Dragon's"
-msgstr "Del dragón"
+msgstr "del dragón"
 
 #: Source/itemdat.cpp:304
 msgid "Wyrm's"
-msgstr "Del Wyrm"
+msgstr "del gran dragón"
 
 #: Source/itemdat.cpp:305
 msgid "Hydra's"
-msgstr "De la Hidra"
+msgstr "de la hidra"
 
 #: Source/itemdat.cpp:306
 msgid "Angel's"
-msgstr "Del Ángel"
+msgstr "del ángel"
 
 #: Source/itemdat.cpp:307
 msgid "Arch-Angel's"
-msgstr "Del Arcangel"
+msgstr "del arcángel"
 
 #: Source/itemdat.cpp:308
 msgid "Plentiful"
-msgstr "Abundante"
+msgstr "cuantioso"
 
 #: Source/itemdat.cpp:309
 msgid "Bountiful"
-msgstr "Generoso"
+msgstr "colmado"
 
 #: Source/itemdat.cpp:310
 msgid "Flaming"
-msgstr "Llameante"
+msgstr "llameante"
 
 #: Source/itemdat.cpp:311
 msgid "Lightning"
-msgstr "Relámpago"
+msgstr "centelleante"
 
 #: Source/itemdat.cpp:312
 msgid "Jester's"
-msgstr "Del Bufón"
+msgstr "del bufón"
 
 #: Source/itemdat.cpp:313
+# **
 msgid "Crystalline"
-msgstr "Cristalino"
+msgstr "cristalino"
 
 #. TRANSLATORS: Item prefix section end.
 #: Source/itemdat.cpp:315
 msgid "Doppelganger's"
-msgstr "Del Doppelganger"
+msgstr "del doppelgänger"
 
 #. TRANSLATORS: Item suffix section. All items will have a word binding word. (Format: {:s} of {:s} - e.g. Rags of Valor)
 #: Source/itemdat.cpp:325
 msgid "quality"
-msgstr "calidad"
+msgstr "de la calidad"
 
 #: Source/itemdat.cpp:326
 msgid "maiming"
-msgstr "mutilando"
+msgstr "de la mutilación"
 
 #: Source/itemdat.cpp:327
 msgid "slaying"
-msgstr "matando"
+msgstr "del asesinato"
 
 #: Source/itemdat.cpp:328
 msgid "gore"
-msgstr "sangre"
+msgstr "de sangre"
 
 #: Source/itemdat.cpp:329
 msgid "carnage"
-msgstr "carnicería"
+msgstr "de la matanza"
 
 #: Source/itemdat.cpp:330
 msgid "slaughter"
-msgstr "sacrificio"
+msgstr "de la tortura"
 
 #: Source/itemdat.cpp:331
 msgid "pain"
-msgstr "dolor"
+msgstr "del dolor"
 
 #: Source/itemdat.cpp:332
 msgid "tears"
-msgstr "lágrimas"
+msgstr "del llanto"
 
 #: Source/itemdat.cpp:333
 msgid "health"
-msgstr "salud"
+msgstr "de salud"
 
 #: Source/itemdat.cpp:334
 msgid "protection"
-msgstr "proteccion"
+msgstr "de protección"
 
 #: Source/itemdat.cpp:335
 msgid "absorption"
-msgstr "absorción"
+msgstr "de absorción"
 
 #: Source/itemdat.cpp:336
 msgid "deflection"
-msgstr "deflexión"
+msgstr "de desvío"
 
 #: Source/itemdat.cpp:337
 msgid "osmosis"
-msgstr "ósmosis"
+msgstr "de ósmosis"
 
 #: Source/itemdat.cpp:338
 msgid "frailty"
-msgstr "fragilidad"
+msgstr "de la endeblez"
 
 #: Source/itemdat.cpp:339
 msgid "weakness"
-msgstr "debilidad"
+msgstr "de la debilidad"
 
 #: Source/itemdat.cpp:340
 msgid "strength"
-msgstr "fuerza"
+msgstr "de fuerza"
 
 #: Source/itemdat.cpp:341
 msgid "might"
-msgstr "poderío"
+msgstr "del poder"
 
 #: Source/itemdat.cpp:342
 msgid "power"
-msgstr "poder"
+msgstr "del buey"
 
 #: Source/itemdat.cpp:343
 msgid "giants"
-msgstr "gigantes"
+msgstr "del gigante"
 
 #: Source/itemdat.cpp:344
 msgid "titans"
-msgstr "titanes"
+msgstr "del titán"
 
 #: Source/itemdat.cpp:345
 msgid "paralysis"
-msgstr "parálisis"
+msgstr "de la parálisis"
 
 #: Source/itemdat.cpp:346
 msgid "atrophy"
-msgstr "atrofia"
+msgstr "de la atrofia"
 
 #: Source/itemdat.cpp:347
 msgid "dexterity"
-msgstr "destreza"
+msgstr "de la destreza"
 
 #: Source/itemdat.cpp:348
 msgid "skill"
-msgstr "habilidad"
+msgstr "de la habilidad"
 
 #: Source/itemdat.cpp:349
 msgid "accuracy"
-msgstr "exactitud"
+msgstr "de la exactitud"
 
 #: Source/itemdat.cpp:350
 msgid "precision"
-msgstr "precisión"
+msgstr "de la precisión"
 
 #: Source/itemdat.cpp:351
 msgid "perfection"
-msgstr "perfección"
+msgstr "de la perfección"
 
 #: Source/itemdat.cpp:352
 msgid "the fool"
-msgstr "el tonto"
+msgstr "del mentecato"
 
 #: Source/itemdat.cpp:353
 msgid "dyslexia"
-msgstr "dislexia"
+msgstr "de la dislexia"
 
 #: Source/itemdat.cpp:354
 msgid "magic"
-msgstr "magia"
+msgstr "de la energía"
 
 #: Source/itemdat.cpp:355
 msgid "the mind"
-msgstr "la mente"
+msgstr "de la mente"
 
 #: Source/itemdat.cpp:356
 msgid "brilliance"
-msgstr "brillantez"
+msgstr "de la brillantez"
 
 #: Source/itemdat.cpp:357
 msgid "sorcery"
-msgstr "brujería"
+msgstr "de la brujería"
 
 #: Source/itemdat.cpp:358
 msgid "wizardry"
-msgstr "hechicería"
+msgstr "de la hechicería"
 
 #: Source/itemdat.cpp:359
 msgid "illness"
-msgstr "dolencia"
+msgstr "de la dolencia"
 
 #: Source/itemdat.cpp:360
 msgid "disease"
-msgstr "enfermedad"
+msgstr "de la enfermedad"
 
 #: Source/itemdat.cpp:361
 msgid "vitality"
-msgstr "vitalidad"
+msgstr "de la vitalidad"
 
 #: Source/itemdat.cpp:362
 msgid "zest"
-msgstr "ánimo"
+msgstr "de la vivacidad"
 
 #: Source/itemdat.cpp:363
 msgid "vim"
-msgstr "empuje"
+msgstr "del brío"
 
 #: Source/itemdat.cpp:364
 msgid "vigor"
-msgstr "vigor"
+msgstr "del vigor"
 
 #: Source/itemdat.cpp:365
 msgid "life"
-msgstr "vida"
+msgstr "de la vida"
 
 #: Source/itemdat.cpp:366
 msgid "trouble"
-msgstr "problema"
+msgstr "del problema"
 
 #: Source/itemdat.cpp:367
 msgid "the pit"
-msgstr "el hoyo"
+msgstr "del hoyo"
 
 #: Source/itemdat.cpp:368
 msgid "the sky"
-msgstr "el cielo"
+msgstr "del cielo"
 
 #: Source/itemdat.cpp:369
 msgid "the moon"
-msgstr "la luna"
+msgstr "de la luna"
 
 #: Source/itemdat.cpp:370
 msgid "the stars"
-msgstr "las estrellas"
+msgstr "de las estrellas"
 
 #: Source/itemdat.cpp:371
 msgid "the heavens"
-msgstr "los cielos"
+msgstr "de los cielos"
 
 #: Source/itemdat.cpp:372
 msgid "the zodiac"
-msgstr "el zodiaco"
+msgstr "del zodiaco"
 
 #: Source/itemdat.cpp:373
 msgid "the vulture"
-msgstr "el buitre"
+msgstr "del buitre"
 
 #: Source/itemdat.cpp:374
 msgid "the jackal"
-msgstr "el chacal"
+msgstr "del chacal"
 
 #: Source/itemdat.cpp:375
 msgid "the fox"
-msgstr "el zorro"
+msgstr "del zorro"
 
 #: Source/itemdat.cpp:376
 msgid "the jaguar"
-msgstr "el jaguar"
+msgstr "del jaguar"
 
 #: Source/itemdat.cpp:377
 msgid "the eagle"
-msgstr "el águila"
+msgstr "del águila"
 
 #: Source/itemdat.cpp:378
 msgid "the wolf"
-msgstr "el lobo"
+msgstr "del lobo"
 
 #: Source/itemdat.cpp:379
 msgid "the tiger"
-msgstr "el tigre"
+msgstr "del tigre"
 
 #: Source/itemdat.cpp:380
 msgid "the lion"
-msgstr "el león"
+msgstr "del león"
 
 #: Source/itemdat.cpp:381
 msgid "the mammoth"
-msgstr "el mamut"
+msgstr "del mamut"
 
 #: Source/itemdat.cpp:382
 msgid "the whale"
-msgstr "la ballena"
+msgstr "de la ballena"
 
 #: Source/itemdat.cpp:383
 msgid "fragility"
-msgstr "fragilidad"
+msgstr "de la fragilidad"
 
 #: Source/itemdat.cpp:384
 msgid "brittleness"
-msgstr "endeblez"
+msgstr "de la inconsistencia"
 
 #: Source/itemdat.cpp:385
 msgid "sturdiness"
-msgstr "robustez"
+msgstr "de la robustez"
 
 #: Source/itemdat.cpp:386
 msgid "craftsmanship"
-msgstr "artesanía"
+msgstr "de la artesanía"
 
 #: Source/itemdat.cpp:387
 msgid "structure"
-msgstr "estructura"
+msgstr "de la solidez"
 
 #: Source/itemdat.cpp:388
 msgid "the ages"
-msgstr "las edades"
+msgstr "de las eras"
 
 #: Source/itemdat.cpp:389
 msgid "the dark"
-msgstr "la oscuridad"
+msgstr "de la oscuridad"
 
 #: Source/itemdat.cpp:390
 msgid "the night"
-msgstr "la noche"
+msgstr "de la noche"
 
 #: Source/itemdat.cpp:391
 msgid "light"
-msgstr "luz"
+msgstr "de la luz"
 
 #: Source/itemdat.cpp:392
 msgid "radiance"
-msgstr "resplandor"
+msgstr "del resplandor"
 
 #: Source/itemdat.cpp:393
 msgid "flame"
-msgstr "llama"
+msgstr "de la llama"
 
 #: Source/itemdat.cpp:394
 msgid "fire"
-msgstr "fuego"
+msgstr "del fuego"
 
 #: Source/itemdat.cpp:395
 msgid "burning"
-msgstr "ardiente"
+msgstr "de la combustión"
 
 #: Source/itemdat.cpp:396
 msgid "shock"
-msgstr "choque"
+msgstr "de la conmoción"
 
 #: Source/itemdat.cpp:397
 msgid "lightning"
-msgstr "rayo"
+msgstr "del relámpago"
 
 #: Source/itemdat.cpp:398
 msgid "thunder"
-msgstr "trueno"
+msgstr "del trueno"
 
 #: Source/itemdat.cpp:399
 msgid "many"
-msgstr "muchos"
+msgstr "de la abundancia"
 
 #: Source/itemdat.cpp:400
 msgid "plenty"
-msgstr "mucho"
+msgstr "de la infinidad"
 
 #: Source/itemdat.cpp:401
 msgid "thorns"
-msgstr "espinas"
+msgstr "de espinas"
 
 #: Source/itemdat.cpp:402
 msgid "corruption"
-msgstr "corrupción"
+msgstr "de la corrupción"
 
 #: Source/itemdat.cpp:403
 msgid "thieves"
-msgstr "ladrones"
+msgstr "del ladrón"
 
 #: Source/itemdat.cpp:404
 msgid "the bear"
-msgstr "el oso"
+msgstr "del oso"
 
 #: Source/itemdat.cpp:405
 msgid "the bat"
-msgstr "el murciélago"
+msgstr "del murciélago"
 
 #: Source/itemdat.cpp:406
 msgid "vampires"
-msgstr "vampiros"
+msgstr "del vampiro"
 
 #: Source/itemdat.cpp:407
 msgid "the leech"
-msgstr "la sanguijuela"
+msgstr "de la sanguijuela"
 
 #: Source/itemdat.cpp:408
 msgid "blood"
-msgstr "sangre"
+msgstr "de la langosta"
 
 #: Source/itemdat.cpp:409
 msgid "piercing"
-msgstr "perforación"
+msgstr "de la perforación"
 
 #: Source/itemdat.cpp:410
 msgid "puncturing"
-msgstr "pinchando"
+msgstr "del pinchazo"
 
 #: Source/itemdat.cpp:411
 msgid "bashing"
-msgstr "paliza"
+msgstr "del golpe"
 
 #: Source/itemdat.cpp:412
 msgid "readiness"
-msgstr "presteza"
+msgstr "de la buena voluntad"
 
 #: Source/itemdat.cpp:413
 msgid "swiftness"
-msgstr "rapidez"
+msgstr "de la presteza"
 
 #: Source/itemdat.cpp:414
 msgid "speed"
-msgstr "velocidad"
+msgstr "de la velocidad"
 
 #: Source/itemdat.cpp:415
 msgid "haste"
-msgstr "prisa"
+msgstr "de la rapidez"
 
 #: Source/itemdat.cpp:416
 msgid "balance"
-msgstr "balance"
+msgstr "del equilibrio"
 
 #: Source/itemdat.cpp:417
 msgid "stability"
-msgstr "estabilidad"
+msgstr "de la estabilidad"
 
 #: Source/itemdat.cpp:418
 msgid "harmony"
-msgstr "armonía"
+msgstr "de la armonía"
 
 #: Source/itemdat.cpp:419
 msgid "blocking"
-msgstr "bloqueo"
+msgstr "de bloqueo"
 
 #: Source/itemdat.cpp:420
 msgid "devastation"
-msgstr "devastación"
+msgstr "de la devastación"
 
 #: Source/itemdat.cpp:421
 msgid "decay"
-msgstr "decaer"
+msgstr "de la decadencia"
 
 #. TRANSLATORS: Item suffix section end.
 #: Source/itemdat.cpp:423
 msgid "peril"
-msgstr "riesgo"
+msgstr "del riesgo"
 
 #. TRANSLATORS: Unique Item section
 #: Source/itemdat.cpp:433
@@ -4113,22 +4141,22 @@ msgstr "{0} de {1}"
 #: Source/items.cpp:1096
 msgctxt "spell"
 msgid "{0} {1} of {2}"
-msgstr "{0} {1} de {2}"
+msgstr "{1} {0} de {2}"
 
 #. TRANSLATORS: Constructs item names. Format: {Prefix} {Item} of {Suffix}. Example: King's Long Sword of the Whale
 #: Source/items.cpp:1112
 msgid "{0} {1} of {2}"
-msgstr "{0} {1} de {2}"
+msgstr "{1} {0} {2}"
 
 #. TRANSLATORS: Constructs item names. Format: {Prefix} {Item}. Example: King's Long Sword
 #: Source/items.cpp:1115
 msgid "{0} {1}"
-msgstr "{0} {1}"
+msgstr "{1} {0}"
 
 #. TRANSLATORS: Constructs item names. Format: {Item} of {Suffix}. Example: Long Sword of the Whale
 #: Source/items.cpp:1118
 msgid "{0} of {1}"
-msgstr "{0} de {1}"
+msgstr "{0} {1}"
 
 #: Source/items.cpp:1627 Source/items.cpp:1635
 msgid "increases a weapon's"
