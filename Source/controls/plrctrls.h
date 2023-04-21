@@ -63,6 +63,7 @@ bool InGameMenu();
 void SetPointAndClick(bool value);
 
 bool IsPointAndClick();
+bool IsMovementHandlerActive();
 
 void DetectInputMethod(const SDL_Event &event, const ControllerButtonEvent &gamepadEvent);
 void ProcessGameAction(const GameAction &action);

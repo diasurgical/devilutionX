@@ -1741,6 +1741,11 @@ bool IsPointAndClick()
 	return PointAndClickState;
 }
 
+bool IsMovementHandlerActive()
+{
+	return GetLeftStickOrDPadGameUIHandler() != nullptr;
+}
+
 void plrctrls_after_check_curs_move()
 {
 	// check for monsters first, then items, then towners.
