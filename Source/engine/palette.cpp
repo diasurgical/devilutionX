@@ -135,13 +135,13 @@ void CycleColors(int from, int to)
  */
 void CycleColorsReverse(int from, int to)
 {
-	std::rotate(system_palette.begin() + from + 1, system_palette.begin() + from, system_palette.begin() + to);
+	std::rotate(system_palette.begin() + from, system_palette.begin() + to, system_palette.begin() + to + 1);
 
 	for (auto &palette : paletteTransparencyLookup) {
-		std::rotate(palette.begin() + from + 1, palette.begin() + from, palette.begin() + to);
+		std::rotate(palette.begin() + from, palette.begin() + to, palette.begin() + to + 1);
 	}
 
-	std::rotate(paletteTransparencyLookup.begin() + from + 1, paletteTransparencyLookup.begin() + from, paletteTransparencyLookup.begin() + to);
+	std::rotate(paletteTransparencyLookup.begin() + from, paletteTransparencyLookup.begin() + to, paletteTransparencyLookup.begin() + to + 1);
 }
 
 } // namespace
