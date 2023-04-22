@@ -642,6 +642,12 @@ void ProcessVisionList()
 			DoUnVision(vision.position.old, vision.oldRadius);
 			vision.hasChanged = false;
 		}
+	}
+	for (const Player &player : Players) {
+		int id = player.getId();
+		if (!VisionActive[id])
+			continue;
+		Light &vision = VisionList[id];
 		MapExplorationType doautomap = MAP_EXP_SELF;
 		if (&player != MyPlayer)
 			doautomap = player.friendlyMode ? MAP_EXP_OTHERS : MAP_EXP_NONE;
