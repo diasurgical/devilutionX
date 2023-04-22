@@ -5,6 +5,7 @@
  */
 #pragma once
 
+#include <array>
 #include <cstdint>
 
 #include "levels/gendung.h"
@@ -31,11 +32,11 @@ namespace devilution {
 #define PAL16_RED 224
 #define PAL16_GRAY 240
 
-extern SDL_Color logical_palette[256];
-extern SDL_Color system_palette[256];
-extern SDL_Color orig_palette[256];
+extern std::array<SDL_Color, 256> logical_palette;
+extern std::array<SDL_Color, 256> system_palette;
+extern std::array<SDL_Color, 256> orig_palette;
 /** Lookup table for transparency */
-extern Uint8 paletteTransparencyLookup[256][256];
+extern std::array<std::array<Uint8, 256>, 256> paletteTransparencyLookup;
 
 #if DEVILUTIONX_PALETTE_TRANSPARENCY_BLACK_16_LUT
 /**
@@ -55,7 +56,7 @@ void palette_init();
 void LoadPalette(const char *pszFileName, bool blend = true);
 void LoadRndLvlPal(dungeon_type l);
 void IncreaseGamma();
-void ApplyGamma(SDL_Color *dst, const SDL_Color *src, int n);
+void ApplyGamma(std::array<SDL_Color, 256> &dst, const std::array<SDL_Color, 256> &src, int n);
 void DecreaseGamma();
 int UpdateGamma(int gamma);
 void BlackPalette();
