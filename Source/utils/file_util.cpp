@@ -105,7 +105,7 @@ bool FileExists(const char *path)
 	return ::access(path, F_OK) == 0;
 #elif defined(DVL_HAS_FILESYSTEM)
 	std::error_code ec;
-	return std::filesystem::exists(path, ec);
+	return std::filesystem::exists(std::filesystem::u8path(path), ec);
 #else
 	SDL_RWops *file = SDL_RWFromFile(path, "r+b");
 	if (file == nullptr)
@@ -153,7 +153,7 @@ bool DirectoryExists(const char *path)
 	return attr != INVALID_FILE_ATTRIBUTES && (attr & FILE_ATTRIBUTE_DIRECTORY) != 0;
 #elif defined(DVL_HAS_FILESYSTEM)
 	std::error_code error;
-	return std::filesystem::is_directory(path, error);
+	return std::filesystem::is_directory(std::filesystem::u8path(path), error);
 #elif (_POSIX_C_SOURCE >= 200112L || defined(_BSD_SOURCE) || defined(__APPLE__)) && !defined(__ANDROID__)
 	struct ::stat statResult;
 	return ::stat(path, &statResult) == 0 && S_ISDIR(statResult.st_mode);
@@ -212,7 +212,7 @@ bool CreateDir(const char *path)
 {
 #ifdef DVL_HAS_FILESYSTEM
 	std::error_code error;
-	std::filesystem::create_directory(path, error);
+	std::filesystem::create_directory(std::filesystem::u8path(path), error);
 	if (error) {
 		LogError("failed to create directory {}: {}", path, error.message());
 		return false;
@@ -253,7 +253,7 @@ void RecursivelyCreateDir(const char *path)
 {
 #ifdef DVL_HAS_FILESYSTEM
 	std::error_code error;
-	std::filesystem::create_directories(path, error);
+	std::filesystem::create_directories(std::filesystem::u8path(path), error);
 	if (error) {
 		LogError("failed to create directory {}: {}", path, error.message());
 	}
@@ -323,7 +323,7 @@ void RenameFile(const char *from, const char *to)
 	::MoveFileW(&fromUtf16[0], &toUtf16[0]);
 #elif defined(DVL_HAS_FILESYSTEM)
 	std::error_code ec;
-	std::filesystem::rename(from, to, ec);
+	std::filesystem::rename(std::filesystem::u8path(from), std::filesystem::u8path(to), ec);
 #else
 	::rename(from, to);
 #endif
@@ -349,7 +349,7 @@ void CopyFileOverwrite(const char *from, const char *to)
 	::copyfile(from, to, nullptr, COPYFILE_ALL);
 #elif defined(DVL_HAS_FILESYSTEM)
 	std::error_code error;
-	std::filesystem::copy_file(from, to, std::filesystem::copy_options::overwrite_existing, error);
+	std::filesystem::copy_file(std::filesystem::u8path(from), std::filesystem::u8path(to), std::filesystem::copy_options::overwrite_existing, error);
 	if (error) {
 		LogError("Failed to copy {} to {}: {}", from, to, error.message());
 	}
