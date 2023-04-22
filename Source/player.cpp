@@ -1825,7 +1825,7 @@ bool Player::isWalking() const
 
 int Player::GetManaShieldDamageReduction()
 {
-	constexpr int8_t Max = 7;
+	constexpr uint8_t Max = 7;
 	return 24 - std::min(_pSplLvl[static_cast<int8_t>(SpellID::ManaShield)], Max) * 3;
 }
 
@@ -2357,7 +2357,7 @@ void CreatePlayer(Player &player, HeroClass c)
 		player._pMemSpells = 0;
 	}
 
-	for (int8_t &spellLevel : player._pSplLvl) {
+	for (uint8_t &spellLevel : player._pSplLvl) {
 		spellLevel = 0;
 	}
 
@@ -2871,7 +2871,7 @@ void ApplyPlrDamage(DamageType damageType, Player &player, int dam, int minHP /*
 		AddFloatingNumber(damageType, player, totalDamage);
 	}
 	if (totalDamage > 0 && player.pManaShield) {
-		int8_t manaShieldLevel = player._pSplLvl[static_cast<int8_t>(SpellID::ManaShield)];
+		uint8_t manaShieldLevel = player._pSplLvl[static_cast<int8_t>(SpellID::ManaShield)];
 		if (manaShieldLevel > 0) {
 			totalDamage += totalDamage / -player.GetManaShieldDamageReduction();
 		}

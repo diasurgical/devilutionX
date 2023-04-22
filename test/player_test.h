@@ -12,30 +12,20 @@ using namespace devilution;
 
 static int CountItems(Item *items, int n)
 {
-	int count = n;
-	for (int i = 0; i < n; i++)
-		if (items[i].isEmpty())
-			count--;
-
-	return count;
+	return std::count_if(items, items + n, [](Item x) { return !x.isEmpty(); });
 }
 
 static int Count8(int8_t *ints, int n)
 {
-	int count = n;
-	for (int i = 0; i < n; i++)
-		if (ints[i] == 0)
-			count--;
+	return std::count_if(ints, ints + n, [](int8_t x) { return x != 0; });
+}
 
-	return count;
+static int CountU8(uint8_t *ints, int n)
+{
+	return std::count_if(ints, ints + n, [](uint8_t x) { return x != 0; });
 }
 
 static int CountBool(bool *bools, int n)
 {
-	int count = n;
-	for (int i = 0; i < n; i++)
-		if (!bools[i])
-			count--;
-
-	return count;
+	return std::count_if(bools, bools + n, [](bool x) { return x; });
 }
