@@ -1532,7 +1532,7 @@ void AddMushPatch()
 bool IsLightVisible(Object &light, int lightRadius)
 {
 #ifdef _DEBUG
-	if (!DisableLighting)
+	if (DisableLighting)
 		return false;
 #endif
 
