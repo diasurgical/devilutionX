@@ -52,7 +52,7 @@ struct PlayerPack {
 	int32_t pMaxHPBase;
 	int32_t pManaBase;
 	int32_t pMaxManaBase;
-	int8_t pSplLvl[37]; // Should be MAX_SPELLS but set to 37 to make save games compatible
+	uint8_t pSplLvl[37]; // Should be MAX_SPELLS but set to 37 to make save games compatible
 	uint64_t pMemSpells;
 	ItemPack InvBody[NUM_INVLOC];
 	ItemPack InvList[InventoryGridCells];
@@ -69,9 +69,9 @@ struct PlayerPack {
 	int8_t bIsHellfire;
 	int8_t bReserved; // For future use
 	uint16_t wReflections;
-	int16_t wReserved2;  // For future use
-	int8_t pSplLvl2[10]; // Hellfire spells
-	int16_t wReserved8;  // For future use
+	int16_t wReserved2;   // For future use
+	uint8_t pSplLvl2[10]; // Hellfire spells
+	int16_t wReserved8;   // For future use
 	uint32_t pDiabloKillLevel;
 	uint32_t pDifficulty;
 	uint32_t pDamAcFlags; // `ItemSpecialEffectHf` is 1 byte but this is 4 bytes.
