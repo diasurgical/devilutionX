@@ -1758,7 +1758,7 @@ msgstr "error: leidos 0 bytes del servidor"
 
 #: Source/error.cpp:53
 msgid "No automap available in town"
-msgstr "No hay automapa disponible en el pueblo"
+msgstr "Automapa no disponible en la ciudad"
 
 #: Source/error.cpp:54
 msgid "No multiplayer functions in demo"
