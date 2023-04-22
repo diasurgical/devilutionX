@@ -26,7 +26,7 @@ namespace {
 void DrawHalfTransparentUnalignedBlendedRectTo(const Surface &out, unsigned sx, unsigned sy, unsigned width, unsigned height)
 {
 	uint8_t *pix = out.at(static_cast<int>(sx), static_cast<int>(sy));
-	const uint8_t *lookupTable = paletteTransparencyLookup[0];
+	const std::array<uint8_t, 256> &lookupTable = paletteTransparencyLookup[0];
 	const unsigned skipX = out.pitch() - width;
 	for (unsigned y = 0; y < height; ++y) {
 		for (unsigned x = 0; x < width; ++x, ++pix) {

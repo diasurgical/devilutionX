@@ -682,11 +682,8 @@ void ProcessVisionList()
 void lighting_color_cycling()
 {
 	for (auto &lightTable : LightTables) {
-		uint8_t firstColor = lightTable[1];
-		for (int colorIndex = 1; colorIndex < 31; colorIndex++) {
-			lightTable[colorIndex] = lightTable[colorIndex + 1];
-		}
-		lightTable[31] = firstColor;
+		// shift elements between indexes 1-31 to left
+		std::rotate(lightTable.begin() + 1, lightTable.begin() + 2, lightTable.begin() + 32);
 	}
 }
 

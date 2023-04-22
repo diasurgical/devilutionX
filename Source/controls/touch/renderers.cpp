@@ -131,7 +131,7 @@ void LoadPotionArt(ButtonTexture *potionArt, SDL_Renderer *renderer)
 	    SDL_PIXELFORMAT_INDEX8);
 
 	auto palette = SDLWrap::AllocPalette();
-	if (SDLC_SetSurfaceAndPaletteColors(surface.get(), palette.get(), orig_palette, 0, 256) < 0)
+	if (SDLC_SetSurfaceAndPaletteColors(surface.get(), palette.get(), orig_palette.data(), 0, 256) < 0)
 		ErrSdl();
 
 	Uint32 bgColor = SDL_MapRGB(surface->format, orig_palette[1].r, orig_palette[1].g, orig_palette[1].b);

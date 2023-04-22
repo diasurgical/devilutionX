@@ -72,7 +72,7 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void BlitFillBlended(uint8_t *dst, unsigned 
 {
 	assert(length != 0);
 	const uint8_t *end = dst + length;
-	const uint8_t *tbl = paletteTransparencyLookup[color];
+	const std::array<uint8_t, 256> &tbl = paletteTransparencyLookup[color];
 	while (dst + 3 < end) {
 		*dst = tbl[*dst];
 		++dst;
