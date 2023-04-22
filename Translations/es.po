@@ -337,7 +337,7 @@ msgstr "Multijugador"
 
 #: Source/DiabloUI/mainmenu.cpp:39 Source/DiabloUI/settingsmenu.cpp:363
 msgid "Settings"
-msgstr "Configuraciones"
+msgstr "Ajustes"
 
 #: Source/DiabloUI/mainmenu.cpp:40
 msgid "Support"
@@ -349,11 +349,11 @@ msgstr "Créditos"
 
 #: Source/DiabloUI/mainmenu.cpp:43
 msgid "Exit Hellfire"
-msgstr "Salir de Hellfire"
+msgstr "Salir"
 
 #: Source/DiabloUI/mainmenu.cpp:43
 msgid "Exit Diablo"
-msgstr "Salir de Diablo"
+msgstr "Salir"
 
 #: Source/DiabloUI/mainmenu.cpp:61
 msgid "Shareware"
@@ -714,12 +714,12 @@ msgstr "Existe juego guardado"
 
 #: Source/DiabloUI/selhero.cpp:190 Source/gamemenu.cpp:40
 msgid "Load Game"
-msgstr "Cargar Juego"
+msgstr "Cargar"
 
 #: Source/DiabloUI/selhero.cpp:191 Source/gamemenu.cpp:39
 #: Source/gamemenu.cpp:50 Source/multi.cpp:779
 msgid "New Game"
-msgstr "Nuevo Juego"
+msgstr "Nueva Partida"
 
 #: Source/DiabloUI/selhero.cpp:201 Source/DiabloUI/selhero.cpp:534
 msgid "Single Player Characters"
@@ -1397,7 +1397,7 @@ msgstr "Cargar el Juego."
 
 #: Source/diablo.cpp:1652
 msgid "Quit game"
-msgstr "Salir del juego"
+msgstr "Salir"
 
 #: Source/diablo.cpp:1653
 msgid "Closes the game."
@@ -2010,7 +2010,7 @@ msgstr "Aquello que puede romper la voluntad."
 
 #: Source/gamemenu.cpp:37
 msgid "Save Game"
-msgstr "Guardar Juego"
+msgstr "Guardar"
 
 #: Source/gamemenu.cpp:38 Source/gamemenu.cpp:49
 msgid "Options"
@@ -2018,7 +2018,7 @@ msgstr "Opciones"
 
 #: Source/gamemenu.cpp:41 Source/gamemenu.cpp:52
 msgid "Quit Game"
-msgstr "Salir del juego"
+msgstr "Salir"
 
 #: Source/gamemenu.cpp:51
 msgid "Restart In Town"
