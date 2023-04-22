@@ -173,7 +173,7 @@ void ApplyGamma(std::array<SDL_Color, 256> &dst, const std::array<SDL_Color, 256
 void palette_init()
 {
 	LoadGamma();
-	memcpy(system_palette.data(), orig_palette.data(), sizeof(orig_palette));
+	system_palette = orig_palette;
 	InitPalette();
 }
 
@@ -321,7 +321,7 @@ void PaletteFadeIn(int fr)
 		RenderPresent();
 	}
 
-	memcpy(logical_palette.data(), orig_palette.data(), orig_palette.size());
+	logical_palette = orig_palette;
 
 	sgbFadedIn = true;
 }
