@@ -119,28 +119,13 @@ void GenerateBlendedLookupTable(std::array<SDL_Color, 256> &palette, int skipFro
  */
 void CycleColors(int from, int to)
 {
-	{
-		SDL_Color col = system_palette[from];
-		for (int i = from; i < to; i++) {
-			system_palette[i] = system_palette[i + 1];
-		}
-		system_palette[to] = col;
-	}
+	std::rotate(system_palette.begin() + from, system_palette.begin() + from + 1, system_palette.begin() + to + 1);
 
 	for (auto &palette : paletteTransparencyLookup) {
-		Uint8 col = palette[from];
-		for (int j = from; j < to; j++) {
-			palette[j] = palette[j + 1];
-		}
-		palette[to] = col;
+		std::rotate(palette.begin() + from, palette.begin() + from + 1, palette.begin() + to + 1);
 	}
 
-	Uint8 colRow[256];
-	memcpy(colRow, &paletteTransparencyLookup[from], paletteTransparencyLookup[from].size());
-	for (int i = from; i < to; i++) {
-		memcpy(&paletteTransparencyLookup[i], &paletteTransparencyLookup[i + 1], paletteTransparencyLookup[i].size());
-	}
-	memcpy(&paletteTransparencyLookup[to], colRow, sizeof(colRow));
+	std::rotate(paletteTransparencyLookup.begin() + from, paletteTransparencyLookup.begin() + from + 1, paletteTransparencyLookup.begin() + to + 1);
 }
 
 /**
@@ -150,28 +135,13 @@ void CycleColors(int from, int to)
  */
 void CycleColorsReverse(int from, int to)
 {
-	{
-		SDL_Color col = system_palette[to];
-		for (int i = to; i > from; i--) {
-			system_palette[i] = system_palette[i - 1];
-		}
-		system_palette[from] = col;
-	}
+	std::rotate(system_palette.begin() + from + 1, system_palette.begin() + from, system_palette.begin() + to);
 
 	for (auto &palette : paletteTransparencyLookup) {
-		Uint8 col = palette[to];
-		for (int j = to; j > from; j--) {
-			palette[j] = palette[j - 1];
-		}
-		palette[from] = col;
+		std::rotate(palette.begin() + from + 1, palette.begin() + from, palette.begin() + to);
 	}
 
-	Uint8 colRow[256];
-	memcpy(colRow, &paletteTransparencyLookup[to], paletteTransparencyLookup[to].size());
-	for (int i = to; i > from; i--) {
-		memcpy(&paletteTransparencyLookup[i], &paletteTransparencyLookup[i - 1], paletteTransparencyLookup[i].size());
-	}
-	memcpy(&paletteTransparencyLookup[from], colRow, sizeof(colRow));
+	std::rotate(paletteTransparencyLookup.begin() + from + 1, paletteTransparencyLookup.begin() + from, paletteTransparencyLookup.begin() + to);
 }
 
 } // namespace
