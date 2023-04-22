@@ -7307,7 +7307,7 @@ msgstr "Inutilizable"
 #. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:165
 msgid "Heals: {:d} - {:d}"
-msgstr "Curas: {:d}/{:d}"
+msgstr "Sana: {:d} - {:d}"
 
 #. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:167
