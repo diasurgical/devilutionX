@@ -1370,6 +1370,10 @@ void AddObjectLight(Object &object)
 	}
 
 	DoLighting(object.position, radius, {});
+	if (LoadingMapObjects) {
+		DoUnLight(object.position, radius);
+		UpdateLighting = true;
+	}
 	object._oVar1 = -1;
 }
 
