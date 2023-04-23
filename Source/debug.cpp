@@ -92,14 +92,6 @@ uint32_t glMid2Seed[NUMLEVELS];
 uint32_t glMid3Seed[NUMLEVELS];
 uint32_t glEndSeed[NUMLEVELS];
 
-void SetSpellLevelCheat(SpellID spl, uint8_t spllvl)
-{
-	Player &myPlayer = *MyPlayer;
-
-	myPlayer._pMemSpells |= GetSpellBitmask(spl);
-	myPlayer._pSplLvl[static_cast<int8_t>(spl)] = spllvl;
-}
-
 void PrintDebugMonster(const Monster &monster)
 {
 	EventPlrMsg(StrCat(
@@ -530,9 +522,9 @@ std::string DebugCmdMinStats(const string_view parameter)
 std::string DebugCmdSetSpellsLevel(const string_view parameter)
 {
 	uint8_t level = static_cast<uint8_t>(std::max(0, atoi(parameter.data())));
-	for (int i = static_cast<int8_t>(SpellID::Firebolt); i < MAX_SPELLS; i++) {
+	for (uint8_t i = static_cast<uint8_t>(SpellID::Firebolt); i < MAX_SPELLS; i++) {
 		if (GetSpellBookLevel(static_cast<SpellID>(i)) != -1) {
-			SetSpellLevelCheat(static_cast<SpellID>(i), level);
+			NetSendCmdParam2(true, CMD_CHANGE_SPELL_LEVEL, i, level);
 		}
 	}
 	if (level == 0)

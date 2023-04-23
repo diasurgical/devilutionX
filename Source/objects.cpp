@@ -1979,10 +1979,11 @@ void OperateBook(Player &player, Object &book, bool sendmsg)
 	}
 
 	if (setlvlnum == SL_BONECHAMB) {
-		player._pMemSpells |= GetSpellBitmask(SpellID::Guardian);
-		if (player._pSplLvl[static_cast<int8_t>(SpellID::Guardian)] < MaxSpellLevel)
-			player._pSplLvl[static_cast<int8_t>(SpellID::Guardian)]++;
 		if (sendmsg) {
+			uint8_t newSpellLevel = player._pSplLvl[static_cast<int8_t>(SpellID::Guardian)] + 1;
+			if (newSpellLevel <= MaxSpellLevel)
+				NetSendCmdParam2(true, CMD_CHANGE_SPELL_LEVEL, static_cast<uint16_t>(SpellID::Guardian), newSpellLevel);
+
 			Quests[Q_SCHAMB]._qactive = QUEST_DONE;
 			NetSendCmdQuest(true, Quests[Q_SCHAMB]);
 		}
@@ -2526,30 +2527,29 @@ void OperateShrineEnchanted(Player &player)
 
 	int cnt = 0;
 	uint64_t spell = 1;
-	int maxSpells = gbIsHellfire ? MAX_SPELLS : 37;
+	uint8_t maxSpells = gbIsHellfire ? MAX_SPELLS : 37;
 	uint64_t spells = player._pMemSpells;
-	for (int j = 0; j < maxSpells; j++) {
+	for (uint16_t j = 0; j < maxSpells; j++) {
 		if ((spell & spells) != 0)
 			cnt++;
 		spell *= 2;
 	}
 	if (cnt > 1) {
+		int spellToReduce;
+		do {
+			spellToReduce = GenerateRnd(maxSpells) + 1;
+		} while ((player._pMemSpells & GetSpellBitmask(static_cast<SpellID>(spellToReduce))) == 0);
+
 		spell = 1;
-		for (int j = static_cast<int8_t>(SpellID::Firebolt); j < maxSpells; j++) { // BUGFIX: < MAX_SPELLS, there is no spell with MAX_SPELLS index (fixed)
-			if ((player._pMemSpells & spell) != 0) {
-				if (player._pSplLvl[j] < MaxSpellLevel)
-					player._pSplLvl[j]++;
+		for (uint8_t j = static_cast<uint8_t>(SpellID::Firebolt); j < maxSpells; j++) { // BUGFIX: < MAX_SPELLS, there is no spell with MAX_SPELLS index (fixed)
+			if ((player._pMemSpells & spell) != 0 && player._pSplLvl[j] < MaxSpellLevel && j != spellToReduce) {
+				NetSendCmdParam2(true, CMD_CHANGE_SPELL_LEVEL, j, static_cast<uint8_t>(player._pSplLvl[j] + 1));
 			}
 			spell *= 2;
 		}
-		int r;
-		do {
-			r = GenerateRnd(maxSpells);
-		} while ((player._pMemSpells & GetSpellBitmask(static_cast<SpellID>(r + 1))) == 0);
-		if (player._pSplLvl[r + 1] >= 2)
-			player._pSplLvl[r + 1] -= 2;
-		else
-			player._pSplLvl[r + 1] = 0;
+
+		if (player._pSplLvl[spellToReduce] > 0)
+			NetSendCmdParam2(true, CMD_CHANGE_SPELL_LEVEL, spellToReduce, player._pSplLvl[spellToReduce] - 1);
 	}
 
 	InitDiabloMsg(EMSG_SHRINE_ENCHANTED);
@@ -2579,10 +2579,11 @@ void OperateShrineCostOfWisdom(Player &player, SpellID spellId, diablo_message m
 
 	player._pMemSpells |= GetSpellBitmask(spellId);
 
-	if (player._pSplLvl[static_cast<int8_t>(spellId)] < MaxSpellLevel)
-		player._pSplLvl[static_cast<int8_t>(spellId)]++;
-	if (player._pSplLvl[static_cast<int8_t>(spellId)] < MaxSpellLevel)
-		player._pSplLvl[static_cast<int8_t>(spellId)]++;
+	uint8_t curSpellLevel = player._pSplLvl[static_cast<int8_t>(spellId)];
+	if (curSpellLevel < MaxSpellLevel) {
+		uint8_t newSpellLevel = std::min(static_cast<uint8_t>(curSpellLevel + 2), MaxSpellLevel);
+		NetSendCmdParam2(true, CMD_CHANGE_SPELL_LEVEL, static_cast<uint16_t>(spellId), newSpellLevel);
+	}
 
 	uint32_t t = player._pMaxManaBase / 10;
 	int v1 = player._pMana - player._pManaBase;
