@@ -604,6 +604,8 @@ void ResyncQuests()
 	if (gbIsSpawn)
 		return;
 
+	LoadingMapObjects = true;
+
 	if (Quests[Q_LTBANNER].IsAvailable()) {
 		Monster *snotSpill = FindUniqueMonster(UniqueMonsterType::SnotSpill);
 		if (Quests[Q_LTBANNER]._qvar1 == 1) {
@@ -787,6 +789,8 @@ void ResyncQuests()
 			}
 		}
 	}
+
+	LoadingMapObjects = false;
 }
 
 void DrawQuestLog(const Surface &out)

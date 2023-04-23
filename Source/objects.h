@@ -258,7 +258,7 @@ extern DVL_API_FOR_TEST Object Objects[MAXOBJECTS];
 extern int AvailableObjects[MAXOBJECTS];
 extern int ActiveObjects[MAXOBJECTS];
 extern int ActiveObjectCount;
-extern bool ApplyObjectLighting;
+/** @brief Indicates that objects are being loaded during gameplay and pre calculated data should be updated. */
 extern bool LoadingMapObjects;
 
 /**

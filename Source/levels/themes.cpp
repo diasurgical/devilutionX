@@ -913,7 +913,6 @@ void CreateThemeRooms()
 		return;
 	}
 
-	ApplyObjectLighting = true;
 	for (int i = 0; i < numthemes; i++) {
 		themex = 0;
 		themey = 0;
@@ -973,7 +972,6 @@ void CreateThemeRooms()
 			app_fatal(StrCat("Unknown theme type: ", static_cast<int>(themes[i].ttype)));
 		}
 	}
-	ApplyObjectLighting = false;
 	if (leveltype == DTYPE_HELL && themeCount > 0) {
 		UpdateL4Trans();
 	}

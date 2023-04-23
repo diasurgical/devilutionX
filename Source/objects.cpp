@@ -49,7 +49,6 @@ Object Objects[MAXOBJECTS];
 int AvailableObjects[MAXOBJECTS];
 int ActiveObjects[MAXOBJECTS];
 int ActiveObjectCount;
-bool ApplyObjectLighting;
 bool LoadingMapObjects;
 
 namespace {
@@ -651,7 +650,6 @@ void AddChestTraps()
 void LoadMapObjects(const char *path, Point start, WorldTileRectangle mapRange = {}, int leveridx = 0)
 {
 	LoadingMapObjects = true;
-	ApplyObjectLighting = true;
 
 	auto dunData = LoadFileInMem<uint16_t>(path);
 
@@ -678,7 +676,6 @@ void LoadMapObjects(const char *path, Point start, WorldTileRectangle mapRange =
 		}
 	}
 
-	ApplyObjectLighting = false;
 	LoadingMapObjects = false;
 }
 
@@ -1347,12 +1344,8 @@ void AddTrap(Object &trap)
 
 void AddObjectLight(Object &object, int r)
 {
-	if (ApplyObjectLighting) {
-		DoLighting(object.position, r, {});
-		object._oVar1 = -1;
-	} else {
-		object._oVar1 = 0;
-	}
+	DoLighting(object.position, r, {});
+	object._oVar1 = -1;
 }
 
 void AddBarrel(Object &barrel)
@@ -1595,7 +1588,9 @@ void UpdateCircle(Object &circle)
 	if (circle.position == Point { 35, 36 } && circle._oVar5 == 3) {
 		circle._oVar6 = 4;
 		if (Quests[Q_BETRAYER]._qvar1 <= 4) {
+			LoadingMapObjects = true;
 			ObjChangeMap(circle._oVar1, circle._oVar2, circle._oVar3, circle._oVar4);
+			LoadingMapObjects = false;
 			Quests[Q_BETRAYER]._qvar1 = 4;
 			NetSendCmdQuest(true, Quests[Q_BETRAYER]);
 		}
@@ -3824,7 +3819,6 @@ void InitObjects()
 	if (currlevel == 16) {
 		AddDiabObjs();
 	} else {
-		ApplyObjectLighting = true;
 		AdvanceRndSeed();
 		if (currlevel == 9 && !UseMultiplayerQuests())
 			AddSlainHero();
@@ -3968,7 +3962,6 @@ void InitObjects()
 			AddObjTraps();
 		if (IsAnyOf(leveltype, DTYPE_CATACOMBS, DTYPE_CAVES, DTYPE_HELL, DTYPE_NEST))
 			AddChestTraps();
-		ApplyObjectLighting = false;
 	}
 }
 
@@ -3977,7 +3970,6 @@ void SetMapObjects(const uint16_t *dunData, int startx, int starty)
 	uint16_t filesWidths[65] = {};
 
 	ClrAllObjects();
-	ApplyObjectLighting = true;
 
 	int width = SDL_SwapLE16(dunData[0]);
 	int height = SDL_SwapLE16(dunData[1]);
@@ -4010,8 +4002,6 @@ void SetMapObjects(const uint16_t *dunData, int startx, int starty)
 			}
 		}
 	}
-
-	ApplyObjectLighting = false;
 }
 
 Object *AddObject(_object_id objType, Point objPos)
