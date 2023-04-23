@@ -575,6 +575,8 @@ void ProcessLightList()
 			i--;
 			continue;
 		}
+		if (TileHasAny(dPiece[light.position.tile.x][light.position.tile.y], TileProperties::Solid))
+			continue; // Monster hidden in a wall, don't spoil the surprise
 		DoLighting(light.position.tile, light.radius, light.position.offset);
 	}
 
