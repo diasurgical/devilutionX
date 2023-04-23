@@ -56,6 +56,7 @@ extern bool DisableLighting;
 #endif
 extern bool UpdateLighting;
 
+void DoUnLight(Point position, uint8_t radius);
 void DoLighting(Point position, uint8_t radius, DisplacementOf<int8_t> offset);
 void DoUnVision(Point position, uint8_t radius);
 void DoVision(Point position, uint8_t radius, MapExplorationType doAutomap, bool visible);

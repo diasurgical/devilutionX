@@ -109,19 +109,6 @@ uint8_t GetLight(Point position)
 	return dLight[position.x][position.y];
 }
 
-void DoUnLight(Point position, uint8_t radius)
-{
-	radius++;
-	radius++; // If lights moved at a diagonal it can result in some extra tiles being lit
-
-	auto searchArea = PointsInRectangle(WorldTileRectangle { position, radius });
-
-	for (WorldTilePosition targetPosition : searchArea) {
-		if (InDungeonBounds(targetPosition))
-			dLight[targetPosition.x][targetPosition.y] = dPreLight[targetPosition.x][targetPosition.y];
-	}
-}
-
 bool CrawlFlipsX(Displacement mirrored, tl::function_ref<bool(Displacement)> function)
 {
 	for (const Displacement displacement : { mirrored.flipX(), mirrored }) {
@@ -201,6 +188,19 @@ bool DoCrawl(unsigned minRadius, unsigned maxRadius, tl::function_ref<bool(Displ
 			return false;
 	}
 	return true;
+}
+
+void DoUnLight(Point position, uint8_t radius)
+{
+	radius++;
+	radius++; // If lights moved at a diagonal it can result in some extra tiles being lit
+
+	auto searchArea = PointsInRectangle(WorldTileRectangle { position, radius });
+
+	for (WorldTilePosition targetPosition : searchArea) {
+		if (InDungeonBounds(targetPosition))
+			dLight[targetPosition.x][targetPosition.y] = dPreLight[targetPosition.x][targetPosition.y];
+	}
 }
 
 void DoLighting(Point position, uint8_t radius, DisplacementOf<int8_t> offset)
