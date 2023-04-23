@@ -178,10 +178,12 @@ enum _cmd_id : uint8_t {
 	//
 	// body (TCmd)
 	CMD_CHEAT_EXPERIENCE,
-	// Cheat: increase active spell level of player.
+	// Change spell level of player.
 	//
-	// body (TCmd)
-	CMD_CHEAT_SPELL_LEVEL,
+	// body (TCmdParam2)
+	//    int16_t spellID
+	//    int16_t spellLevel
+	CMD_CHANGE_SPELL_LEVEL,
 	// Debug command (nop).
 	//
 	// body (TCmd)

@@ -2304,17 +2304,21 @@ size_t OnCheatExperience(const TCmd *pCmd, size_t pnum) // NOLINT(misc-unused-pa
 	return sizeof(*pCmd);
 }
 
-size_t OnCheatSpellLevel(const TCmd *pCmd, size_t pnum) // NOLINT(misc-unused-parameters)
+size_t OnChangeSpellLevel(const TCmd *pCmd, size_t pnum) // NOLINT(misc-unused-parameters)
 {
-#ifdef _DEBUG
+	const auto &message = *reinterpret_cast<const TCmdParam2 *>(pCmd);
+	const SpellID spellID = static_cast<SpellID>(SDL_SwapLE16(message.wParam1));
+	const uint8_t spellLevel = std::min(static_cast<uint8_t>(SDL_SwapLE16(message.wParam2)), MaxSpellLevel);
+
 	if (gbBufferMsgs == 1) {
 		SendPacket(pnum, pCmd, sizeof(*pCmd));
 	} else {
 		Player &player = Players[pnum];
-		player._pSplLvl[static_cast<int8_t>(player._pRSpell)]++;
+		player._pMemSpells |= GetSpellBitmask(spellID);
+		player._pSplLvl[static_cast<size_t>(spellID)] = spellLevel;
 	}
-#endif
-	return sizeof(*pCmd);
+
+	return sizeof(message);
 }
 
 size_t OnDebug(const TCmd *pCmd)
@@ -3267,8 +3271,8 @@ size_t ParseCmd(size_t pnum, const TCmd *pCmd)
 		return OnSyncQuest(pCmd, pnum);
 	case CMD_CHEAT_EXPERIENCE:
 		return OnCheatExperience(pCmd, pnum);
-	case CMD_CHEAT_SPELL_LEVEL:
-		return OnCheatSpellLevel(pCmd, pnum);
+	case CMD_CHANGE_SPELL_LEVEL:
+		return OnChangeSpellLevel(pCmd, pnum);
 	case CMD_SETSHIELD:
 		return OnSetShield(pCmd, player);
 	case CMD_REMSHIELD:
