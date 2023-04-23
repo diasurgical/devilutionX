@@ -1342,9 +1342,34 @@ void AddTrap(Object &trap)
 	trap._oVar4 = 0;
 }
 
-void AddObjectLight(Object &object, int r)
+void AddObjectLight(Object &object)
 {
-	DoLighting(object.position, r, {});
+	int radius;
+	switch (object._otype) {
+	case OBJ_STORYCANDLE:
+	case OBJ_L5CANDLE:
+		radius = 3;
+		break;
+	case OBJ_L1LIGHT:
+	case OBJ_SKFIRE:
+	case OBJ_CANDLE1:
+	case OBJ_CANDLE2:
+	case OBJ_BOOKCANDLE:
+	case OBJ_BCROSS:
+	case OBJ_TBCROSS:
+		radius = 5;
+		break;
+	case OBJ_TORCHL:
+	case OBJ_TORCHR:
+	case OBJ_TORCHL2:
+	case OBJ_TORCHR2:
+		radius = 8;
+		break;
+	default:
+		return;
+	}
+
+	DoLighting(object.position, radius, {});
 	object._oVar1 = -1;
 }
 
@@ -4016,23 +4041,6 @@ Object *AddObject(_object_id objType, Point objPos)
 	Object &object = Objects[oi];
 	SetupObject(object, objPos, objType);
 	switch (object._otype) {
-	case OBJ_L1LIGHT:
-	case OBJ_SKFIRE:
-	case OBJ_CANDLE1:
-	case OBJ_CANDLE2:
-	case OBJ_BOOKCANDLE:
-		AddObjectLight(object, 5);
-		break;
-	case OBJ_STORYCANDLE:
-	case OBJ_L5CANDLE:
-		AddObjectLight(object, 3);
-		break;
-	case OBJ_TORCHL:
-	case OBJ_TORCHR:
-	case OBJ_TORCHL2:
-	case OBJ_TORCHR2:
-		AddObjectLight(object, 8);
-		break;
 	case OBJ_L1LDOOR:
 	case OBJ_L1RDOOR:
 	case OBJ_L2LDOOR:
@@ -4129,7 +4137,6 @@ Object *AddObject(_object_id objType, Point objPos)
 	case OBJ_BCROSS:
 	case OBJ_TBCROSS:
 		object._oRndSeed = AdvanceRndSeed();
-		AddObjectLight(object, 5);
 		break;
 	case OBJ_PEDESTAL:
 		AddPedestalOfBlood(object);
@@ -4144,6 +4151,9 @@ Object *AddObject(_object_id objType, Point objPos)
 	default:
 		break;
 	}
+
+	AddObjectLight(object);
+
 	ActiveObjectCount++;
 	return &object;
 }
