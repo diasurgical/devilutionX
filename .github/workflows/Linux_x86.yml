@@ -52,14 +52,14 @@ jobs:
 
     - name: Upload-Package
       if: ${{ !env.ACT }}
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: devilutionx_linux_x86.tar.xz
         path: devilutionx.tar.xz
 
     - name: Upload-AppImage
       if: ${{ !env.ACT }}
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: devilutionx_linux_x86.appimage
         path: devilutionx.appimage

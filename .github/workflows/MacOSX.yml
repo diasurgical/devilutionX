@@ -57,7 +57,7 @@ jobs:
 
     - name: Upload-Package
       if: ${{ !env.ACT }}
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: devilutionx.dmg
         path: ${{github.workspace}}/build/devilutionx.dmg
