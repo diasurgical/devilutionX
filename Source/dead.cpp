@@ -28,6 +28,19 @@ void InitDeadAnimationFromMonster(Corpse &corpse, const CMonster &mon)
 	corpse.frame = animData.frames - 1;
 	corpse.width = animData.width;
 }
+
+void MoveLightToCorpse(Monster &monster)
+{
+	for (int dx = 0; dx < MAXDUNX; dx++) {
+		for (int dy = 0; dy < MAXDUNY; dy++) {
+			if ((dCorpse[dx][dy] & 0x1F) == monster.corpseId) {
+				ChangeLightXY(monster.lightId, { dx, dy });
+				return;
+			}
+		}
+	}
+	AddUnLight(monster.lightId);
+}
 } // namespace
 
 void InitCorpses()
@@ -79,18 +92,13 @@ void AddCorpse(Point tilePosition, int8_t dv, Direction ddir)
 	dCorpse[tilePosition.x][tilePosition.y] = (dv & 0x1F) + (static_cast<int>(ddir) << 5);
 }
 
-void SyncUniqDead()
+void MoveLightsToCorpses()
 {
 	for (size_t i = 0; i < ActiveMonsterCount; i++) {
 		auto &monster = Monsters[ActiveMonsters[i]];
 		if (!monster.isUnique())
 			continue;
-		for (int dx = 0; dx < MAXDUNX; dx++) {
-			for (int dy = 0; dy < MAXDUNY; dy++) {
-				if ((dCorpse[dx][dy] & 0x1F) == monster.corpseId)
-					ChangeLightXY(monster.lightId, { dx, dy });
-			}
-		}
+		MoveLightToCorpse(monster);
 	}
 }
 
