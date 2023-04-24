@@ -381,7 +381,7 @@ void MakeLightTable()
 				float scaled;
 				if (IsAnyOf(leveltype, DTYPE_NEST, DTYPE_CRYPT)) {
 					// quardratic falloff with over exposure
-					const float brightness = radius * 1.5;
+					const float brightness = radius * 1.25;
 					scaled = factor * factor * brightness + (maxDarkness - brightness);
 					scaled = std::max(maxBrightness, scaled);
 				} else {

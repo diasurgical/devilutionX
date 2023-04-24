@@ -1298,6 +1298,7 @@ void CreateL5Dungeon(uint32_t rseed, lvl_entry entry)
 	Pass3();
 
 	if (leveltype == DTYPE_CRYPT) {
+		PlaceCryptLights();
 		SetCryptSetPieceRoom();
 	}
 }
@@ -1324,10 +1325,12 @@ void LoadL1Dungeon(const char *path, Point spawn)
 
 	Pass3();
 
-	if (setlvltype == DTYPE_CRYPT)
+	if (setlvltype == DTYPE_CRYPT) {
 		AddCryptObjects(0, 0, MAXDUNX, MAXDUNY);
-	else
+		PlaceCryptLights();
+	} else {
 		AddL1Objs(0, 0, MAXDUNX, MAXDUNY);
+	}
 }
 
 } // namespace devilution
