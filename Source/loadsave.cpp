@@ -2590,7 +2590,7 @@ void LoadLevel()
 			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
 				dCorpse[i][j] = file.NextLE<int8_t>();
 		}
-		SyncUniqDead();
+		MoveLightsToCorpses();
 	}
 
 	ActiveMonsterCount = file.NextBE<int32_t>();

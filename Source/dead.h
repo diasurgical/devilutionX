@@ -39,6 +39,6 @@ extern int8_t stonendx;
 
 void InitCorpses();
 void AddCorpse(Point tilePosition, int8_t dv, Direction ddir);
-void SyncUniqDead();
+void MoveLightsToCorpses();
 
 } // namespace devilution
