@@ -193,19 +193,19 @@ extern DVL_API_FOR_TEST uint16_t dPiece[MAXDUNX][MAXDUNY];
 extern MICROS DPieceMicros[MAXTILES];
 /** Specifies the transparency at each coordinate of the map. */
 extern DVL_API_FOR_TEST int8_t dTransVal[MAXDUNX][MAXDUNY];
-/**  Current realtime lighting, per tile*/
+/** Current realtime lighting. Per tile. */
 extern uint8_t dLight[MAXDUNX][MAXDUNY];
-/**  Precalculated static lights. dLight uses this as a base before applying lights. Per tile*/
+/** Precalculated static lights. dLight uses this as a base before applying lights. Per tile. */
 extern uint8_t dPreLight[MAXDUNX][MAXDUNY];
 /** Holds various information about dungeon tiles, @see DungeonFlag */
 extern DungeonFlag dFlags[MAXDUNX][MAXDUNY];
-/** Contains the player numbers (players array indices) of the map. negative id indicates player moving*/
+/** Contains the player numbers (players array indices) of the map. negative id indicates player moving. */
 extern int8_t dPlayer[MAXDUNX][MAXDUNY];
 /**
  * Contains the NPC numbers of the map. The NPC number represents a
  * towner number (towners array index) in Tristram and a monster number
  * (monsters array index) in the dungeon.
- * Negative id indicates monster moving
+ * Negative id indicates monsters moving.
  */
 extern int16_t dMonster[MAXDUNX][MAXDUNY];
 /**
@@ -216,9 +216,9 @@ extern int16_t dMonster[MAXDUNX][MAXDUNY];
  */
 extern DVL_API_FOR_TEST int8_t dCorpse[MAXDUNX][MAXDUNY];
 /** 
-* Contains the object numbers (objects array indices) of the map.
-* Large objects have negative id for its extended area
-*/
+ * Contains the object numbers (objects array indices) of the map.
+ * Large objects have negative id for there extended area.
+ */
 extern DVL_API_FOR_TEST int8_t dObject[MAXDUNX][MAXDUNY];
 /**
  * Contains the arch frame numbers of the map from the special tileset
