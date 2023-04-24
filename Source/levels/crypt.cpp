@@ -4,6 +4,7 @@
 #include "engine/point.hpp"
 #include "items.h"
 #include "levels/drlg_l1.h"
+#include "lighting.h"
 
 namespace devilution {
 
@@ -806,6 +807,29 @@ void SetCryptSetPieceRoom()
 			}
 			if (dPiece[i][j] == 316) {
 				CornerStone.position = { i, j };
+			}
+		}
+	}
+}
+
+void PlaceCryptLights()
+{
+	constexpr int lavaTiles[] = {
+		124, 128, 130, 132, 133, 134, 135, 139, 141, 143, 145, 156, 164, 166,
+		167, 168, 169, 170, 182, 190, 192, 195, 196, 199, 200, 254, 266, 273,
+		276, 281, 282, 283, 284, 285, 286, 287, 288, 290, 302, 316, 434, 435,
+		436, 437, 445, 446, 447, 453, 457, 460, 466, 470, 477, 479, 484, 485,
+		486, 490, 507, 537, 557, 559, 561, 563, 564, 568, 569, 572, 578, 580,
+		584, 585, 589, 592, 593, 594, 595, 596, 597, 598, 599, 600, 601
+	};
+
+	for (int j = 0; j < MAXDUNY; j++) {
+		for (int i = 0; i < MAXDUNX; i++) {
+			for (const int lavaTile : lavaTiles) {
+				if (dPiece[i][j] == lavaTile) {
+					DoLighting({ i, j }, 3, {});
+					break;
+				}
 			}
 		}
 	}
