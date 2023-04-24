@@ -32,7 +32,7 @@ jobs:
       uses: hendrikmuhs/ccache-action@v1.2
 
     - name: Add msbuild to PATH
-      uses: microsoft/setup-msbuild@v1.1
+      uses: microsoft/setup-msbuild@v1.3
       with:
         msbuild-architecture: x64
 
