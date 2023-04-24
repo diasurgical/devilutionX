@@ -215,7 +215,7 @@ extern int16_t dMonster[MAXDUNX][MAXDUNY];
  * dDead[x][y] >> 0x5 - direction
  */
 extern DVL_API_FOR_TEST int8_t dCorpse[MAXDUNX][MAXDUNY];
-/** 
+/**
  * Contains the object numbers (objects array indices) of the map.
  * Large objects have negative id for their extended area.
  */
