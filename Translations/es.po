@@ -337,7 +337,7 @@ msgstr "Multijugador"
 
 #: Source/DiabloUI/mainmenu.cpp:39 Source/DiabloUI/settingsmenu.cpp:363
 msgid "Settings"
-msgstr "Configuraciones"
+msgstr "Ajustes"
 
 #: Source/DiabloUI/mainmenu.cpp:40
 msgid "Support"
@@ -349,11 +349,11 @@ msgstr "Créditos"
 
 #: Source/DiabloUI/mainmenu.cpp:43
 msgid "Exit Hellfire"
-msgstr "Salir de Hellfire"
+msgstr "Salir"
 
 #: Source/DiabloUI/mainmenu.cpp:43
 msgid "Exit Diablo"
-msgstr "Salir de Diablo"
+msgstr "Salir"
 
 #: Source/DiabloUI/mainmenu.cpp:61
 msgid "Shareware"
@@ -714,12 +714,12 @@ msgstr "Existe juego guardado"
 
 #: Source/DiabloUI/selhero.cpp:190 Source/gamemenu.cpp:40
 msgid "Load Game"
-msgstr "Cargar Juego"
+msgstr "Cargar"
 
 #: Source/DiabloUI/selhero.cpp:191 Source/gamemenu.cpp:39
 #: Source/gamemenu.cpp:50 Source/multi.cpp:779
 msgid "New Game"
-msgstr "Nuevo Juego"
+msgstr "Nueva Partida"
 
 #: Source/DiabloUI/selhero.cpp:201 Source/DiabloUI/selhero.cpp:534
 msgid "Single Player Characters"
@@ -1397,7 +1397,7 @@ msgstr "Cargar el Juego."
 
 #: Source/diablo.cpp:1652
 msgid "Quit game"
-msgstr "Salir del juego"
+msgstr "Salir"
 
 #: Source/diablo.cpp:1653
 msgid "Closes the game."
@@ -1758,7 +1758,7 @@ msgstr "error: leidos 0 bytes del servidor"
 
 #: Source/error.cpp:53
 msgid "No automap available in town"
-msgstr "No hay automapa disponible en el pueblo"
+msgstr "Automapa no disponible en la ciudad"
 
 #: Source/error.cpp:54
 msgid "No multiplayer functions in demo"
@@ -2010,7 +2010,7 @@ msgstr "Aquello que puede romper la voluntad."
 
 #: Source/gamemenu.cpp:37
 msgid "Save Game"
-msgstr "Guardar Juego"
+msgstr "Guardar"
 
 #: Source/gamemenu.cpp:38 Source/gamemenu.cpp:49
 msgid "Options"
@@ -2018,7 +2018,7 @@ msgstr "Opciones"
 
 #: Source/gamemenu.cpp:41 Source/gamemenu.cpp:52
 msgid "Quit Game"
-msgstr "Salir del juego"
+msgstr "Salir"
 
 #: Source/gamemenu.cpp:51
 msgid "Restart In Town"
@@ -4245,11 +4245,11 @@ msgstr "establece trampa de petrificación"
 
 #: Source/items.cpp:1679
 msgid "restore all life"
-msgstr "recuperar toda la vida"
+msgstr "restaura toda la vida"
 
 #: Source/items.cpp:1682
 msgid "restore some life"
-msgstr "recuperar algo de vida"
+msgstr "restaura algo de vida"
 
 #: Source/items.cpp:1685
 msgid "restore some mana"
@@ -4277,11 +4277,11 @@ msgstr "aumenta la vitalidad"
 
 #: Source/items.cpp:1703
 msgid "restore some life and mana"
-msgstr "recupera algo de vida y maná"
+msgstr "restaura algo de vida y maná"
 
 #: Source/items.cpp:1706
 msgid "restore all life and mana"
-msgstr "recupera toda la vida y maná"
+msgstr "restaura toda la vida y maná"
 
 #: Source/items.cpp:1720
 msgid "Right-click to view"
@@ -7307,7 +7307,7 @@ msgstr "Inutilizable"
 #. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:165
 msgid "Heals: {:d} - {:d}"
-msgstr "Curas: {:d}/{:d}"
+msgstr "Sana: {:d} - {:d}"
 
 #. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:167
