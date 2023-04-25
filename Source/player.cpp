@@ -2678,23 +2678,17 @@ void StartPlrBlock(Player &player, Direction dir)
 	SetPlayerOld(player);
 }
 
+/**
+ * @todo Figure out why clearing player.position.old sometimes fails
+ */
 void FixPlrWalkTags(const Player &player)
 {
-	for (Point searchTile : PointsInRectangle(Rectangle { player.position.old, 1 })) {
-		if (PlayerAtPosition(searchTile) == &player) {
-			dPlayer[searchTile.x][searchTile.y] = 0;
-		}
-	}
-
-#ifdef _DEBUG
-	// Checks that FixPlrWalkTags really removes player from all dPlayer tiles
-	// FixPlrWalkTags could fail if player.position.old is not updated correctly
 	for (int y = 0; y < MAXDUNY; y++) {
 		for (int x = 0; x < MAXDUNX; x++) {
-			assert(PlayerAtPosition({ x, y }) != &player);
+			if (PlayerAtPosition({ x, y }) != &player)
+				dPlayer[x][y] = 0;
 		}
 	}
-#endif
 }
 
 void StartPlrHit(Player &player, int dam, bool forcehit)
