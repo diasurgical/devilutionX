@@ -2600,8 +2600,12 @@ void LoadLevel()
 	if (leveltype != DTYPE_TOWN) {
 		for (int &monsterId : ActiveMonsters)
 			monsterId = file.NextBE<int32_t>();
-		for (size_t i = 0; i < ActiveMonsterCount; i++)
-			LoadMonster(&file, Monsters[ActiveMonsters[i]]);
+		for (size_t i = 0; i < ActiveMonsterCount; i++) {
+			Monster &monster = Monsters[ActiveMonsters[i]];
+			LoadMonster(&file, monster);
+			if (monster.isUnique() && monster.lightId != NO_LIGHT)
+				Lights[monster.lightId].isInvalid = false;
+		}
 		for (int &objectId : ActiveObjects)
 			objectId = file.NextLE<int8_t>();
 		for (int &objectId : AvailableObjects)
