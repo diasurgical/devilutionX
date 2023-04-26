@@ -2685,7 +2685,7 @@ void FixPlrWalkTags(const Player &player)
 {
 	for (int y = 0; y < MAXDUNY; y++) {
 		for (int x = 0; x < MAXDUNX; x++) {
-			if (PlayerAtPosition({ x, y }) != &player)
+			if (PlayerAtPosition({ x, y }) == &player)
 				dPlayer[x][y] = 0;
 		}
 	}
