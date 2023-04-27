@@ -1059,22 +1059,20 @@ msgid "To enter a arena, you need to be in town or another arena."
 msgstr "Щоб потрапити на арену, треба бути в місті або іншій арені."
 
 #: Source/control.cpp:434
-#, fuzzy
-#| msgid "Arenas are only supported in multiplayer."
 msgid "Inspecting only supported in multiplayer."
-msgstr "Арени підтримуються тільки в мережевій грі."
+msgstr "Огляд гравців підтримується тільки в мережевій грі."
 
 #: Source/control.cpp:439 Source/control.cpp:670
 msgid "Stopped inspecting players."
-msgstr ""
+msgstr "Припинив огляд гравців."
 
 #: Source/control.cpp:451
 msgid "Inspecting player: "
-msgstr ""
+msgstr "Огляд гравця: "
 
 #: Source/control.cpp:460
 msgid "No players found with such a name"
-msgstr ""
+msgstr "Гравців з таким ім'ям не знайдено"
 
 #: Source/control.cpp:465
 msgid "/help"
@@ -1101,35 +1099,28 @@ msgid "{arena-number}"
 msgstr "{arena-number}"
 
 #: Source/control.cpp:467
-#, fuzzy
-#| msgid "/arena"
 msgid "/arenapot"
-msgstr "/arena"
+msgstr "/arenapot"
 
 #: Source/control.cpp:467
 msgid "Gives Arena Potions."
-msgstr ""
+msgstr "Дає Зілля Арени."
 
 #: Source/control.cpp:467
-#, fuzzy
-#| msgid "{arena-number}"
 msgid "{number}"
-msgstr "{arena-number}"
+msgstr "{number}"
 
 #: Source/control.cpp:468
 msgid "/inspect"
-msgstr ""
+msgstr "/inspect"
 
 #: Source/control.cpp:468
 msgid "Inspects stats and equipment of another player."
-msgstr ""
+msgstr "Оглядає статистику та спорядження іншого гравця."
 
 #: Source/control.cpp:468
-#, fuzzy
-#| msgctxt "monster"
-#| msgid "Flayed One"
 msgid "{player name}"
-msgstr "Облуплений"
+msgstr "{player name}"
 
 #: Source/control.cpp:478
 msgid "Command \""
@@ -2973,10 +2964,8 @@ msgid "Short Staff of Charged Bolt"
 msgstr "Короткий Посох Зарядженої Стріли"
 
 #: Source/itemdat.cpp:220
-#, fuzzy
-#| msgid "Use mana potion"
 msgid "Arena Potion"
-msgstr "Використати зілля Мани"
+msgstr "Зілля Арени"
 
 #. TRANSLATORS: Item prefix section.
 #: Source/itemdat.cpp:230
@@ -4294,7 +4283,7 @@ msgstr "відновлює все життя і ману"
 
 #: Source/items.cpp:1774
 msgid "(works only in arenas)"
-msgstr ""
+msgstr "(працює тільки на аренах)"
 
 #: Source/items.cpp:1788
 msgid "Right-click to view"
