@@ -15,6 +15,7 @@ export M68K_CXXFLAGS="${M68K_CPU_FPU} ${M68K_COMMON}"
 
 mkdir -p /opt/m68k-amigaos/bin/
 ln -s /opt/m68k-amigaos-gcc10/bin/m68k-amigaos-gcc /opt/m68k-amigaos/bin/m68k-amigaos-gcc
+ln -s /opt/m68k-amigaos-gcc10/bin/m68k-amigaos-as /opt/m68k-amigaos/bin/m68k-amigaos-as
 
 PARALLELISM="$(getconf _NPROCESSORS_ONLN)"
 
