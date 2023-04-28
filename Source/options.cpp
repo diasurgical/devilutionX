@@ -1473,7 +1473,7 @@ void KeymapperOptions::KeyReleased(uint32_t key) const
 
 	// Check that the action can be triggered and that the chat textbox is not
 	// open.
-	if (!action.actionReleased || (action.enable && !action.enable()) || talkflag)
+	if (!action.actionReleased || (action.enable && !action.enable()) || ((talkflag || dropGoldFlag) && action.key != "Screenshot"))
 		return;
 
 	action.actionReleased();

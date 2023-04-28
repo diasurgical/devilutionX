@@ -440,7 +440,7 @@ void RightMouseDown(bool isShiftHeld)
 void ReleaseKey(SDL_Keycode vkey)
 {
 	remap_keyboard_key(&vkey);
-	if ((sgnTimeoutCurs != CURSOR_NONE || dropGoldFlag) && vkey != SDLK_PRINTSCREEN)
+	if (sgnTimeoutCurs != CURSOR_NONE)
 		return;
 	sgOptions.Keymapper.KeyReleased(vkey);
 }

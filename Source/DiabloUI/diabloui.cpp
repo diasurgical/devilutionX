@@ -463,8 +463,8 @@ void UiHandleEvents(SDL_Event *event)
 		return;
 	}
 
-	if (event->type == SDL_KEYUP && event->key.keysym.sym == SDLK_PRINTSCREEN) {
-		PrintScreen(SDLK_PRINTSCREEN);
+	if (event->type == SDL_KEYUP && sgOptions.Keymapper.KeyForAction("Screenshot") == event->key.keysym.sym) {
+		PrintScreen(event->key.keysym.sym);
 		return;
 	}
 
