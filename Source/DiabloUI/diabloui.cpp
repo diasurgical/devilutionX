@@ -3,7 +3,6 @@
 #include <algorithm>
 #include <string>
 
-#include "diablo.h"
 #include "DiabloUI/button.h"
 #include "DiabloUI/dialogs.h"
 #include "DiabloUI/scrollbar.h"
@@ -11,6 +10,7 @@
 #include "controls/input.h"
 #include "controls/menu_controls.h"
 #include "controls/plrctrls.h"
+#include "diablo.h"
 #include "discord/discord.h"
 #include "engine/assets.hpp"
 #include "engine/clx_sprite.hpp"
@@ -462,7 +462,7 @@ void UiHandleEvents(SDL_Event *event)
 		return;
 	}
 
-		if (event->type == SDL_KEYUP && event->key.keysym.sym == SDLK_PRINTSCREEN) {
+	if (event->type == SDL_KEYUP && event->key.keysym.sym == SDLK_PRINTSCREEN) {
 		PrintScreen(SDLK_PRINTSCREEN);
 		return;
 	}
