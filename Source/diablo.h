@@ -96,6 +96,7 @@ bool PressEscKey();
 void DisableInputEventHandler(const SDL_Event &event, uint16_t modState);
 void LoadGameLevel(bool firstflag, lvl_entry lvldir);
 bool IsDiabloAlive(bool playSFX);
+void PrintScreen(SDL_Keycode vkey);
 
 /**
  * @param bStartup Process additional ticks before returning

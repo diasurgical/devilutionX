@@ -439,7 +439,7 @@ void RightMouseDown(bool isShiftHeld)
 void ReleaseKey(SDL_Keycode vkey)
 {
 	remap_keyboard_key(&vkey);
-	if (sgnTimeoutCurs != CURSOR_NONE || dropGoldFlag)
+	if ((sgnTimeoutCurs != CURSOR_NONE || dropGoldFlag) && vkey != SDLK_PRINTSCREEN)
 		return;
 	sgOptions.Keymapper.KeyReleased(vkey);
 }
@@ -3023,6 +3023,11 @@ bool IsDiabloAlive(bool playSFX)
 	}
 
 	return true;
+}
+
+void PrintScreen(SDL_Keycode vkey)
+{
+	ReleaseKey(vkey);
 }
 
 } // namespace devilution
