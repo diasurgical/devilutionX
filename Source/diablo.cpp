@@ -3025,4 +3025,9 @@ bool IsDiabloAlive(bool playSFX)
 	return true;
 }
 
+void PrintScreen(SDL_Keycode vkey)
+{
+	ReleaseKey(vkey);
+}
+
 } // namespace devilution

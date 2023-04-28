@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <string>
 
+#include "diablo.h"
 #include "DiabloUI/button.h"
 #include "DiabloUI/dialogs.h"
 #include "DiabloUI/scrollbar.h"
@@ -458,6 +459,11 @@ void UiHandleEvents(SDL_Event *event)
 		OutputToLogical(&event->motion.x, &event->motion.y);
 #endif
 		MousePosition = { event->motion.x, event->motion.y };
+		return;
+	}
+
+		if (event->type == SDL_KEYUP && event->key.keysym.sym == SDLK_PRINTSCREEN) {
+		PrintScreen(SDLK_PRINTSCREEN);
 		return;
 	}
 
