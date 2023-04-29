@@ -513,7 +513,7 @@ void ChangeLightXY(int i, Point position)
 	UpdateLighting = true;
 }
 
-void ChangeLightOffset(int i, Displacement offset)
+void ChangeLightOffset(int i, DisplacementOf<int8_t> offset)
 {
 #ifdef _DEBUG
 	if (DisableLighting)
@@ -523,6 +523,9 @@ void ChangeLightOffset(int i, Displacement offset)
 		return;
 
 	Light &light = Lights[i];
+	if (light.position.offset == offset)
+		return;
+
 	light.hasChanged = true;
 	light.position.old = light.position.tile;
 	light.oldRadius = light.radius;

@@ -69,7 +69,7 @@ int AddLight(Point position, uint8_t radius);
 void AddUnLight(int i);
 void ChangeLightRadius(int i, uint8_t radius);
 void ChangeLightXY(int i, Point position);
-void ChangeLightOffset(int i, Displacement offset);
+void ChangeLightOffset(int i, DisplacementOf<int8_t> offset);
 void ChangeLight(int i, Point position, uint8_t radius);
 void ProcessLightList();
 void SavePreLighting();
