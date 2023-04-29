@@ -11,6 +11,7 @@
 #include "controls/input.h"
 #include "controls/menu_controls.h"
 #include "controls/plrctrls.h"
+#include "controls/remap_keyboard.h"
 #include "diablo.h"
 #include "discord/discord.h"
 #include "engine/assets.hpp"
@@ -463,8 +464,14 @@ void UiHandleEvents(SDL_Event *event)
 		return;
 	}
 
-	if (event->type == SDL_KEYUP && sgOptions.Keymapper.KeyForAction("Screenshot") == event->key.keysym.sym) {
-		PrintScreen(event->key.keysym.sym);
+	SDL_Keycode vkey = event->key.keysym.sym;
+	remap_keyboard_key(&vkey);
+	bool textKey = sgOptions.Keymapper.IsTextEntryKey(vkey);
+	if (vkey >= SDLK_a && vkey <= SDLK_z)
+		vkey -= 'a' - 'A';
+
+	if (event->type == SDL_KEYUP && sgOptions.Keymapper.KeyForAction("Screenshot") == vkey && (!textInputActive || !textKey)) {
+		PrintScreen(vkey);
 		return;
 	}
 
