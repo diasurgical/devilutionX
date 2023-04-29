@@ -50,6 +50,19 @@ TEST(Drlg_l4, CreateL4Dungeon_diablo_14_717625719)
 	EXPECT_EQ(ViewPosition, Point(51, 29));
 }
 
+// Level which rooms extends to the edge of the quardrant
+TEST(Drlg_l4, CreateL4Dungeon_diablo_14_815743776)
+{
+	LoadExpectedLevelData("diablo/14-815743776.dun");
+
+	TestInitGame();
+
+	TestCreateDungeon(14, 815743776, ENTRY_MAIN);
+	EXPECT_EQ(ViewPosition, Point(66, 60));
+	TestCreateDungeon(14, 815743776, ENTRY_PREV);
+	EXPECT_EQ(ViewPosition, Point(27, 75));
+}
+
 TEST(Drlg_l4, CreateL4Dungeon_diablo_15_1583642716)
 {
 	LoadExpectedLevelData("diablo/15-1583642716.dun");

@@ -861,7 +861,9 @@ void PrepareInnerBorders()
 			if (!DungeonMask.test(x, y)) {
 				hallok[y] = false;
 			} else {
-				hallok[y] = x + 1 < DMAXX / 2 && y + 1 < DMAXY / 2 && DungeonMask.test(x, y + 1) && !DungeonMask.test(x + 1, y + 1);
+				bool hasSouthWestRoom = y + 1 < DMAXY / 2 && DungeonMask.test(x, y + 1);
+				bool hasSouthRoom = x + 1 < DMAXX / 2 && y + 1 < DMAXY / 2 && DungeonMask.test(x + 1, y + 1);
+				hallok[y] = hasSouthWestRoom && !hasSouthRoom;
 				x = 0;
 			}
 		}
@@ -892,7 +894,9 @@ void PrepareInnerBorders()
 			if (!DungeonMask.test(x, y)) {
 				hallok[x] = false;
 			} else {
-				hallok[x] = x + 1 < DMAXX / 2 && y + 1 < DMAXY / 2 && DungeonMask.test(x + 1, y) && !DungeonMask.test(x + 1, y + 1);
+				bool hasSouthEastRoom = x + 1 < DMAXX / 2 && DungeonMask.test(x + 1, y);
+				bool hasSouthRoom = x + 1 < DMAXX / 2 && y + 1 < DMAXY / 2 && DungeonMask.test(x + 1, y + 1);
+				hallok[x] = hasSouthEastRoom && !hasSouthRoom;
 				y = 0;
 			}
 		}
