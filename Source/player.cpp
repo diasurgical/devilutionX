@@ -66,27 +66,13 @@ struct DirectionSettings {
 	void (*walkModeHandler)(Player &, const DirectionSettings &);
 };
 
-void PmChangeLightOff(Player &player)
+void UpdatePlayerLightOffset(Player &player)
 {
 	if (player.lightId == NO_LIGHT)
 		return;
 
-	const Light *l = &Lights[player.lightId];
-	WorldTileDisplacement offset = player.position.CalculateWalkingOffset(player._pdir, player.AnimInfo);
-	int x = 2 * offset.deltaY + offset.deltaX;
-	int y = 2 * offset.deltaY - offset.deltaX;
-
-	x = (x / 8) * (x < 0 ? 1 : -1);
-	y = (y / 8) * (y < 0 ? 1 : -1);
-	int lx = x + (l->position.tile.x * 8);
-	int ly = y + (l->position.tile.y * 8);
-	int offx = l->position.offset.deltaX + (l->position.tile.x * 8);
-	int offy = l->position.offset.deltaY + (l->position.tile.y * 8);
-
-	if (abs(lx - offx) < 3 && abs(ly - offy) < 3)
-		return;
-
-	ChangeLightOffset(player.lightId, { x, y });
+	const WorldTileDisplacement offset = player.position.CalculateWalkingOffset(player._pdir, player.AnimInfo);
+	ChangeLightOffset(player.lightId, offset.screenToLight());
 }
 
 void WalkNorthwards(Player &player, const DirectionSettings &walkParams)
@@ -104,7 +90,7 @@ void WalkSouthwards(Player &player, const DirectionSettings & /*walkParams*/)
 	dPlayer[player.position.tile.x][player.position.tile.y] = playerId + 1;
 	// BUGFIX: missing `if (leveltype != DTYPE_TOWN) {` for call to ChangeLightXY and PM_ChangeLightOff.
 	ChangeLightXY(player.lightId, player.position.tile);
-	PmChangeLightOff(player);
+	UpdatePlayerLightOffset(player);
 }
 
 void WalkSideways(Player &player, const DirectionSettings &walkParams)
@@ -117,7 +103,7 @@ void WalkSideways(Player &player, const DirectionSettings &walkParams)
 
 	if (leveltype != DTYPE_TOWN) {
 		ChangeLightXY(player.lightId, nextPosition);
-		PmChangeLightOff(player);
+		UpdatePlayerLightOffset(player);
 	}
 
 	player.position.temp = player.position.future;
@@ -213,11 +199,6 @@ void StartWalkStand(Player &player)
 	if (&player == MyPlayer) {
 		ViewPosition = player.position.tile;
 	}
-}
-
-void ChangeOffset(Player &player)
-{
-	PmChangeLightOff(player);
 }
 
 void StartAttack(Player &player, Direction d, bool includesFirstFrame)
@@ -473,7 +454,7 @@ bool DoWalk(Player &player, int variant)
 
 	if (!player.AnimInfo.isLastFrame()) {
 		// We didn't reach new tile so update player's "sub-tile" position
-		ChangeOffset(player);
+		UpdatePlayerLightOffset(player);
 		return false;
 	}
 

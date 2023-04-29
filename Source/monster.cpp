@@ -1012,7 +1012,10 @@ void StartHeal(Monster &monster)
 
 void SyncLightPosition(Monster &monster)
 {
-	Displacement offset = monster.position.CalculateWalkingOffset(monster.direction, monster.animInfo);
+	if (monster.lightId == NO_LIGHT)
+		return;
+
+	const WorldTileDisplacement offset = monster.position.CalculateWalkingOffset(monster.direction, monster.animInfo);
 	ChangeLightOffset(monster.lightId, offset.screenToLight());
 }
 

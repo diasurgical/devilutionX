@@ -170,7 +170,7 @@ struct DisplacementOf {
 	constexpr DisplacementOf<DeltaT> screenToLight() const
 	{
 		static_assert(std::is_signed<DeltaT>::value, "DeltaT must be signed for transformations involving a rotation");
-		return { (2 * deltaY + deltaX) / 8, (2 * deltaY - deltaX) / 8 };
+		return { static_cast<DeltaT>((2 * deltaY + deltaX) / 8), static_cast<DeltaT>((2 * deltaY - deltaX) / 8) };
 	}
 
 	/**
