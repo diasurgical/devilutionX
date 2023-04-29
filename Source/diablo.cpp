@@ -2916,10 +2916,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 	for (Player &player : Players) {
 		if (player.plractive && player.isOnActiveLevel() && (!player._pLvlChanging || &player == MyPlayer)) {
 			if (player._pHitPoints > 0) {
-				if (!gbIsMultiplayer)
-					dPlayer[player.position.tile.x][player.position.tile.y] = player.getId() + 1;
-				else
-					SyncInitPlrPos(player);
+				SyncInitPlrPos(player);
 			} else {
 				dFlags[player.position.tile.x][player.position.tile.y] |= DungeonFlag::DeadPlayer;
 			}

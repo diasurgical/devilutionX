@@ -362,13 +362,12 @@ void SetupLocalPositions()
 	leveltype = DTYPE_TOWN;
 	setlevel = false;
 
-	const auto x = static_cast<WorldTileCoord>(75 + plrxoff[MyPlayerId]);
-	const auto y = static_cast<WorldTileCoord>(68 + plryoff[MyPlayerId]);
+	const WorldTilePosition spawns[9] = { { 75, 68 }, { 77, 70 }, { 75, 70 }, { 77, 68 }, { 76, 69 }, { 75, 69 }, { 76, 68 }, { 77, 69 }, { 76, 70 } };
 
 	Player &myPlayer = *MyPlayer;
 
-	myPlayer.position.tile = WorldTilePosition { x, y };
-	myPlayer.position.future = WorldTilePosition { x, y };
+	myPlayer.position.tile = spawns[MyPlayerId];
+	myPlayer.position.future = myPlayer.position.tile;
 	myPlayer.setLevel(currlevel);
 	myPlayer._pLvlChanging = true;
 	myPlayer.pLvlLoad = 0;
