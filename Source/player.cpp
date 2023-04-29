@@ -27,6 +27,7 @@
 #include "help.h"
 #include "init.h"
 #include "inv_iterators.hpp"
+#include "levels/trigs.h"
 #include "lighting.h"
 #include "loadsave.h"
 #include "minitext.h"
@@ -54,15 +55,6 @@ Player *MyPlayer;
 std::vector<Player> Players;
 Player *InspectPlayer;
 bool MyPlayerIsDead;
-
-/** Specifies the X-coordinate delta from the player start location in Tristram. */
-const int8_t plrxoff[9] = { 0, 2, 0, 2, 1, 0, 1, 2, 1 };
-/** Specifies the Y-coordinate delta from the player start location in Tristram. */
-const int8_t plryoff[9] = { 0, 2, 2, 0, 1, 1, 0, 1, 2 };
-/** Specifies the X-coordinate delta from a player, used for instance when casting resurrect. */
-const int8_t plrxoff2[9] = { 0, 1, 0, 1, 2, 0, 1, 2, 2 };
-/** Specifies the Y-coordinate delta from a player, used for instance when casting resurrect. */
-const int8_t plryoff2[9] = { 0, 0, 1, 1, 0, 2, 2, 1, 2 };
 
 namespace {
 
@@ -2558,19 +2550,10 @@ void InitPlayer(Player &player, bool firstTime)
 
 		player._pdir = Direction::South;
 
-		if (&player == MyPlayer) {
-			if (!firstTime || leveltype != DTYPE_TOWN) {
-				player.position.tile = ViewPosition;
-			}
-		} else {
-			unsigned i;
-			for (i = 0; i < 8 && !PosOkPlayer(player, player.position.tile + Displacement { plrxoff2[i], plryoff2[i] }); i++)
-				;
-			player.position.tile.x += plrxoff2[i];
-			player.position.tile.y += plryoff2[i];
+		if (&player == MyPlayer && (!firstTime || leveltype != DTYPE_TOWN)) {
+			player.position.tile = ViewPosition;
 		}
 
-		player.position.future = player.position.tile;
 		SetPlayerOld(player);
 		player.walkpath[0] = WALK_NONE;
 		player.destAction = ACTION_NONE;
@@ -3293,19 +3276,24 @@ void SyncPlrAnim(Player &player)
 
 void SyncInitPlrPos(Player &player)
 {
-	if (!gbIsMultiplayer || !player.isOnActiveLevel()) {
+	if (!player.isOnActiveLevel())
 		return;
-	}
+
+	const WorldTileDisplacement offset[9] = { { 0, 0 }, { 1, 0 }, { 0, 1 }, { 1, 1 }, { 2, 0 }, { 0, 2 }, { 1, 2 }, { 2, 1 }, { 2, 2 } };
 
 	Point position = [&]() {
 		for (int i = 0; i < 8; i++) {
-			Point position = player.position.tile + Displacement { plrxoff2[i], plryoff2[i] };
+			Point position = player.position.tile + offset[i];
 			if (PosOkPlayer(player, position))
 				return position;
 		}
 
 		std::optional<Point> nearPosition = FindClosestValidPosition(
 		    [&player](Point testPosition) {
+			    for (int i = 0; i < numtrigs; i++) {
+				    if (trigs[i].position == testPosition)
+					    return false;
+			    }
 			    return PosOkPlayer(player, testPosition) && !PosOkPortal(currlevel, testPosition);
 		    },
 		    player.position.tile,
@@ -3317,9 +3305,9 @@ void SyncInitPlrPos(Player &player)
 
 	player.position.tile = position;
 	dPlayer[position.x][position.y] = player.getId() + 1;
+	player.position.future = position;
 
 	if (&player == MyPlayer) {
-		player.position.future = position;
 		ViewPosition = position;
 	}
 }

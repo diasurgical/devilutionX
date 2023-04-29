@@ -852,11 +852,4 @@ void SetPlrVit(Player &player, int v);
 void InitDungMsgs(Player &player);
 void PlayDungMsgs();
 
-/* data */
-
-extern const int8_t plrxoff[9];
-extern const int8_t plryoff[9];
-extern const int8_t plrxoff2[9];
-extern const int8_t plryoff2[9];
-
 } // namespace devilution

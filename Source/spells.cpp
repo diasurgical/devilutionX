@@ -65,45 +65,6 @@ void ClearReadiedSpell(Player &player)
 	}
 }
 
-void PlacePlayer(Player &player)
-{
-	if (!player.isOnActiveLevel())
-		return;
-
-	Point newPosition = [&]() {
-		Point okPosition = {};
-
-		for (int i = 0; i < 8; i++) {
-			okPosition = player.position.tile + Displacement { plrxoff2[i], plryoff2[i] };
-			if (PosOkPlayer(player, okPosition))
-				return okPosition;
-		}
-
-		for (int max = 1, min = -1; min > -50; max++, min--) {
-			for (int y = min; y <= max; y++) {
-				okPosition.y = player.position.tile.y + y;
-
-				for (int x = min; x <= max; x++) {
-					okPosition.x = player.position.tile.x + x;
-
-					if (PosOkPlayer(player, okPosition))
-						return okPosition;
-				}
-			}
-		}
-
-		return okPosition;
-	}();
-
-	player.position.tile = newPosition;
-
-	dPlayer[newPosition.x][newPosition.y] = player.getId() + 1;
-
-	if (&player == MyPlayer) {
-		ViewPosition = newPosition;
-	}
-}
-
 } // namespace
 
 bool IsValidSpell(SpellID spl)
@@ -293,7 +254,7 @@ void DoResurrect(size_t pnum, Player &target)
 	ClrPlrPath(target);
 	target.destAction = ACTION_NONE;
 	target._pInvincible = false;
-	PlacePlayer(target);
+	SyncInitPlrPos(target);
 
 	int hp = 10 << 6;
 	if (target._pMaxHPBase < (10 << 6)) {
