@@ -24,6 +24,7 @@ set(devilutionx_fixtures
   diablo/13-428074402.dun
   diablo/13-594689775.dun
   diablo/14-717625719.dun
+  diablo/14-815743776.dun
   diablo/15-1256511996.dun
   diablo/15-1583642716.dun
   diablo/15-1583642716-changed.dun
