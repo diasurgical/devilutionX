@@ -620,6 +620,8 @@ const ItemPack PackedHellfireItems[] = {
 	{ 1100844414,  2 | CF_USEFUL                          ,   25,    0,     0,      0,    0,     0,       0,       0 }, // Potion of Mana
 	{ 1944120644,  2 | CF_USEFUL                          ,   27,    0,     0,      0,    0,     0,       0,       0 }, // Scroll of Town Portal
 	{  525564945,  1 | CF_USEFUL                          ,   25,    0,     0,      0,    0,     0,       0,       0 }, // Potion of Mana
+	{ 1988162817,  1 | CF_USEFUL                          ,   24,    0,     0,      0,    0,     0,       0,       0 }, // Potion of Healing
+	{ 1191207687,  1 | CF_USEFUL                          ,   24,    0,     0,      0,    0,     0,       0,       0 }, // Potion of Healing
 	// clang-format on
 };
 
@@ -718,6 +720,8 @@ const TestItemStruct HellfireItems[] = {
 	{ "Potion of Mana",                 ItemType::Misc,               3,      39,        50,         0,         0,     0, ItemSpecialEffect::None,                      6, SpellID::Null,                 0,             0,             0,         0,        0,          0,       0,        0,        0,        0,        0,       0,       0,       0,         0,       0,           0,           0,          0,            0,      0,          0,          0,          0,          0,          -1,          -1,         0,         0,         0,     25 },
 	{ "Scroll of Town Portal",          ItemType::Misc,               3,       1,       200,         0,         0,     0, ItemSpecialEffect::None,                     21, SpellID::TownPortal,           0,             0,             0,         0,        0,          0,       0,        0,        0,        0,        0,       0,       0,       0,         0,       0,           0,           0,          0,            0,      0,          0,          0,          0,          0,          -1,          -1,         0,         0,         0,     27 },
 	{ "Potion of Mana",                 ItemType::Misc,               3,      39,        50,         0,         0,     0, ItemSpecialEffect::None,                      6, SpellID::Null,                 0,             0,             0,         0,        0,          0,       0,        0,        0,        0,        0,       0,       0,       0,         0,       0,           0,           0,          0,            0,      0,          0,          0,          0,          0,          -1,          -1,         0,         0,         0,     25 },
+	{ "Potion of Healing",              ItemType::Misc,               3,      32,        50,         0,         0,     0, ItemSpecialEffect::None,                      3, SpellID::Null,                 0,             0,             0,         0,        0,          0,       0,        0,        0,        0,        0,       0,       0,       0,         0,       0,           0,           0,          0,            0,      0,          0,          0,          0,          0,          -1,          -1,         0,         0,         0,     24 },
+	{ "Potion of Healing",              ItemType::Misc,               3,      32,        50,         0,         0,     0, ItemSpecialEffect::None,                      3, SpellID::Null,                 0,             0,             0,         0,        0,          0,       0,        0,        0,        0,        0,       0,       0,       0,         0,       0,           0,           0,          0,            0,      0,          0,          0,          0,          0,          -1,          -1,         0,         0,         0,     24 },
 	// clang-format on
 };
 
