@@ -414,7 +414,7 @@ TEST_F(PackTest, UnPackItem_diablo)
 TEST_F(PackTest, UnPackItem_diablo_unique_bug)
 {
 	const auto pkItemBug = SwappedLE(ItemPack { 6, 15 | CF_UPER1 | CF_UPER15 | CF_UNIQUE, 14, 5, 60, 60, 0, 0, 0, 0 }); // Veil of Steel - with morph bug
-	const auto pkItem = SwappedLE(ItemPack { 6, 15 | CF_UPER15 | CF_UNIQUE, 14, 5, 60, 60, 0, 0, 0, 0 });    // Veil of Steel - fixed
+	const auto pkItem = SwappedLE(ItemPack { 6, 15 | CF_UPER15 | CF_UNIQUE, 14, 5, 60, 60, 0, 0, 0, 0 });               // Veil of Steel - fixed
 
 	gbIsHellfire = false;
 	gbIsMultiplayer = false;
