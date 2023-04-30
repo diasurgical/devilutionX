@@ -2172,10 +2172,7 @@ void LoadGame(bool firstflag)
 	for (bool &uniqueItemFlag : UniqueItemFlags)
 		uniqueItemFlag = file.NextBool8();
 
-	for (int j = 0; j < MAXDUNY; j++) {
-		for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
-			dLight[i][j] = file.NextLE<uint8_t>();
-	}
+	file.Skip<uint8_t>(MAXDUNY * MAXDUNX); // dLight
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
 			dFlags[i][j] = static_cast<DungeonFlag>(file.NextLE<uint8_t>()) & DungeonFlag::LoadedFlags;
@@ -2201,10 +2198,7 @@ void LoadGame(bool firstflag)
 			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
 				dObject[i][j] = file.NextLE<int8_t>();
 		}
-		for (int j = 0; j < MAXDUNY; j++) {
-			for (int i = 0; i < MAXDUNX; i++)          // NOLINT(modernize-loop-convert)
-				dLight[i][j] = file.NextLE<uint8_t>(); // BUGFIX: dLight got loaded already
-		}
+		file.Skip<uint8_t>(MAXDUNY * MAXDUNX); // dLight
 		for (int j = 0; j < MAXDUNY; j++) {
 			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
 				dPreLight[i][j] = file.NextLE<uint8_t>();
@@ -2214,6 +2208,12 @@ void LoadGame(bool firstflag)
 				AutomapView[i][j] = file.NextLE<uint8_t>();
 		}
 		file.Skip(MAXDUNX * MAXDUNY); // dMissile
+
+		// No need to load dLight, we can recreate it accurately from LightList
+		memcpy(dLight, dPreLight, sizeof(dLight));               // resets the light on entering a level to get rid of incorrect light
+		ChangeLightXY(myPlayer.lightId, myPlayer.position.tile); // forces player light refresh
+	} else {
+		memset(dLight, 0, sizeof(dLight));
 	}
 
 	numpremium = file.NextBE<int32_t>();
@@ -2637,10 +2637,7 @@ void LoadLevel()
 			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
 				dObject[i][j] = file.NextLE<int8_t>();
 		}
-		for (int j = 0; j < MAXDUNY; j++) {
-			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
-				dLight[i][j] = file.NextLE<uint8_t>();
-		}
+		file.Skip<uint8_t>(MAXDUNY * MAXDUNX); // dLight
 		for (int j = 0; j < MAXDUNY; j++) {
 			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
 				dPreLight[i][j] = file.NextLE<uint8_t>();
@@ -2651,9 +2648,12 @@ void LoadLevel()
 				AutomapView[i][j] = automapView == MAP_EXP_OLD ? MAP_EXP_SELF : automapView;
 			}
 		}
-		// no need to load dLight, we can recreate it accurately from LightList
+
+		// No need to load dLight, we can recreate it accurately from LightList
 		memcpy(dLight, dPreLight, sizeof(dLight));                                     // resets the light on entering a level to get rid of incorrect light
 		ChangeLightXY(Players[MyPlayerId].lightId, Players[MyPlayerId].position.tile); // forces player light refresh
+	} else {
+		memset(dLight, 0, sizeof(dLight));
 	}
 
 	if (!gbSkipSync) {
