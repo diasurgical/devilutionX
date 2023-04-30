@@ -2204,8 +2204,10 @@ void LoadGame(bool firstflag)
 				dPreLight[i][j] = file.NextLE<uint8_t>();
 		}
 		for (int j = 0; j < DMAXY; j++) {
-			for (int i = 0; i < DMAXX; i++) // NOLINT(modernize-loop-convert)
-				AutomapView[i][j] = file.NextLE<uint8_t>();
+			for (int i = 0; i < DMAXX; i++) { // NOLINT(modernize-loop-convert)
+				const auto automapView = static_cast<MapExplorationType>(file.NextLE<uint8_t>());
+				AutomapView[i][j] = automapView == MAP_EXP_OLD ? MAP_EXP_SELF : automapView;
+			}
 		}
 		file.Skip(MAXDUNX * MAXDUNY); // dMissile
 
