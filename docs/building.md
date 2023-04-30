@@ -152,6 +152,31 @@ cmake --build build -j $(sysctl -n hw.ncpuonline)
 
 <details><summary>Windows via MinGW</summary>
 
+<details><summary>Installing Windows Subsystem for Linux</summary>
+
+If you are building on Windows and do not have WSL already setup this will install WSL and Ubuntu by default (Requires Windows 10 2004 or higher or Windows 11)
+
+In an Administrator Command Prompt or Powershell
+
+```wsl --install```
+
+Reboot
+
+Wait for Command Prompt to pop up and say installing when complete enter your new Linux password
+
+You can launch WSL anytime by typing wsl or ubuntu in a Command Prompt or Powershell or in the Start Menu launch the Ubuntu App
+
+### Setup git and clone DevilutionX
+
+In a WSL terminal run these commands to get the source code for DevilutionX
+
+```
+sudo apt install git
+git clone https://github.com/diasurgical/devilutionx
+cd devilutionx
+```
+</details>
+
 ### Installing dependencies on WSL, Debian and Ubuntu
 
 ### 32-bit
