@@ -13,8 +13,6 @@ export M68K_COMMON="-s -ffast-math -fomit-frame-pointer -fbbb=-"
 export M68K_CFLAGS="${M68K_CPU_FPU} ${M68K_COMMON}"
 export M68K_CXXFLAGS="${M68K_CPU_FPU} ${M68K_COMMON}"
 
-ln -s /opt/m68k-amigaos-gcc10 /opt/m68k-amigaos
-
 PARALLELISM="$(getconf _NPROCESSORS_ONLN)"
 
 mkdir -p deps
