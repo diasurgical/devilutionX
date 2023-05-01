@@ -581,6 +581,9 @@ if(CPACK AND (APPLE OR BUILD_ASSETS_MPQ OR SRC_DIST))
       DESTINATION "share/metainfo"
       RENAME "${project_name}.metainfo.xml"
     )
+    if(DISCORD_SHARED_LIB)
+      install(FILES "${DISCORD_SHARED_LIB}" DESTINATION "lib")
+    endif()
 
     # -G DEB
     set(CPACK_PACKAGE_CONTACT "anders@jenbo.dk")
