@@ -1,22 +1,5 @@
 version: 2
 jobs:
-  linux_x86_64:
-    docker:
-      - image: debian:buster
-    working_directory: ~/repo
-    steps:
-      - checkout
-      - run: echo deb http://deb.debian.org/debian buster-backports main >> /etc/apt/sources.list.d/debian-backports.list
-      - run: apt-get update -y
-      - run: apt-get install -y -t 'buster-backports*' cmake
-      - run: apt-get install -y g++ libsdl2-dev libbz2-dev git rpm wget smpq cmake libsodium-dev libpng-dev file
-      - run: cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_TESTING=OFF -DCPACK=ON -DCMAKE_INSTALL_PREFIX=/usr
-      - run: cmake --build build -j 2 --target package
-      - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_linux_x86_64}
-      - run: Packaging/nix/LinuxReleasePackaging.sh
-      - run: Packaging/nix/AppImage.sh
-      - store_artifacts: {path: ./devilutionx.appimage, destination: devilutionx_linux_x86_64.appimage}
-      - store_artifacts: {path: ./devilutionx.tar.xz, destination: devilutionx_linux_x86_64.tar.xz}
   switch:
     docker:
       - image: devkitpro/devkita64:latest
@@ -70,7 +53,6 @@ workflows:
   version: 2
   testflow:
     jobs:
-      - linux_x86_64
       - switch
       - 3ds
       - amigaos-m68k

@@ -12,8 +12,16 @@ if ! which "$APPIMAGE_BUILDER"; then
 		wget -q https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage -N
 		chmod +x linuxdeploy-x86_64.AppImage
 	fi
-	APPIMAGE_BUILDER=./linuxdeploy-x86_64.AppImage
+	APPIMAGE_BUILDER=../linuxdeploy-x86_64.AppImage
 fi
-"$APPIMAGE_BUILDER" --appimage-extract-and-run --appdir="$BUILD_DIR"/AppDir --custom-apprun=Packaging/nix/AppRun -d Packaging/nix/devilutionx.desktop -o appimage
 
-mv DevilutionX*.AppImage devilutionx.appimage
+SRC_DIR="${PWD}"
+cd "$BUILD_DIR"
+LD_LIBRARY_PATH="${PWD}/AppDir/usr/lib" "$APPIMAGE_BUILDER" --appimage-extract-and-run \
+	--appdir=AppDir \
+	--custom-apprun="${SRC_DIR}/Packaging/nix/AppRun" \
+	-d "${SRC_DIR}/Packaging/nix/devilutionx.desktop" \
+	-o appimage
+cd -
+
+mv "${BUILD_DIR}/"DevilutionX*.AppImage devilutionx.appimage

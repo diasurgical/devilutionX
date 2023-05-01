@@ -38,8 +38,12 @@ find_library(
 message("-- 📚 discord_game_sdk: ${DISCORD_LIB}")
 
 # Copy the dll so that tests and Debug builds can find it on Windows.
+# We also need it at this location to link to `discord_game_sdk.so` rather
+# than `_deps/discordsrc-src/lib/x86_64/discord_game_sdk.so` on Linux.
 file(COPY "${DISCORD_SHARED_LIB}" DESTINATION "${CMAKE_BINARY_DIR}")
 
 add_library(discord_game_sdk SHARED IMPORTED GLOBAL)
-set_property(TARGET discord_game_sdk PROPERTY IMPORTED_IMPLIB "${DISCORD_LIB}")
-set_property(TARGET discord_game_sdk PROPERTY IMPORTED_LOCATION "${DISCORD_SHARED_LIB}")
+set_target_properties(discord_game_sdk PROPERTIES
+  IMPORTED_IMPLIB "${DISCORD_LIB}"
+  IMPORTED_LOCATION "${CMAKE_BINARY_DIR}/${DISCORD_SHARED_LIB_FILENAME}"
+)
