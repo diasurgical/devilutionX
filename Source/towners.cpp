@@ -486,30 +486,34 @@ void TalkToDrunk(Player & /*player*/, Towner & /*drunk*/)
 
 void TalkToHealer(Player &player, Towner &healer)
 {
-	if (Quests[Q_PWATER]._qactive != QUEST_NOTAVAIL) {
-		if ((player._pLvlVisited[1] || player._pLvlVisited[5]) && Quests[Q_PWATER]._qactive == QUEST_INIT) {
-			Quests[Q_PWATER]._qactive = QUEST_ACTIVE;
-			Quests[Q_PWATER]._qlog = true;
-			Quests[Q_PWATER]._qmsg = TEXT_POISON3;
+	Quest &poisonWater = Quests[Q_PWATER];
+	if (poisonWater._qactive != QUEST_NOTAVAIL) {
+		if ((poisonWater._qactive == QUEST_INIT && (player._pLvlVisited[1] || player._pLvlVisited[5])) || (poisonWater._qactive == QUEST_ACTIVE && !poisonWater._qlog)) {
+			// Play the dialog and make the quest visible in the log if the player has not started the quest but has
+			// visited the dungeon at least once, or if they've found the poison water cave before speaking to pepin
+			poisonWater._qactive = QUEST_ACTIVE;
+			poisonWater._qlog = true;
+			poisonWater._qmsg = TEXT_POISON3;
 			InitQTextMsg(TEXT_POISON3);
-			NetSendCmdQuest(true, Quests[Q_PWATER]);
+			NetSendCmdQuest(true, poisonWater);
 			return;
 		}
-		if (Quests[Q_PWATER]._qactive == QUEST_DONE && Quests[Q_PWATER]._qvar1 != 2) {
-			Quests[Q_PWATER]._qvar1 = 2;
+		if (poisonWater._qactive == QUEST_DONE && poisonWater._qvar1 != 2) {
+			poisonWater._qvar1 = 2;
 			InitQTextMsg(TEXT_POISON5);
 			SpawnUnique(UITEM_TRING, healer.position + Direction::SouthWest);
-			NetSendCmdQuest(true, Quests[Q_PWATER]);
+			NetSendCmdQuest(true, poisonWater);
 			return;
 		}
 	}
-	if (Quests[Q_MUSHROOM]._qactive == QUEST_ACTIVE) {
-		if (Quests[Q_MUSHROOM]._qvar1 >= QS_MUSHGIVEN && Quests[Q_MUSHROOM]._qvar1 < QS_BRAINGIVEN && RemoveInventoryItemById(player, IDI_BRAIN)) {
+	Quest &blackMushroom = Quests[Q_MUSHROOM];
+	if (blackMushroom._qactive == QUEST_ACTIVE) {
+		if (blackMushroom._qvar1 >= QS_MUSHGIVEN && blackMushroom._qvar1 < QS_BRAINGIVEN && RemoveInventoryItemById(player, IDI_BRAIN)) {
 			SpawnQuestItem(IDI_SPECELIX, healer.position + Displacement { 0, 1 }, 0, 0, true);
 			InitQTextMsg(TEXT_MUSH4);
-			Quests[Q_MUSHROOM]._qvar1 = QS_BRAINGIVEN;
+			blackMushroom._qvar1 = QS_BRAINGIVEN;
 			QuestDialogTable[TOWN_HEALER][Q_MUSHROOM] = TEXT_NONE;
-			NetSendCmdQuest(true, Quests[Q_MUSHROOM]);
+			NetSendCmdQuest(true, blackMushroom);
 			return;
 		}
 	}
