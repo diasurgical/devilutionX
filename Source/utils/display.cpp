@@ -144,6 +144,31 @@ void FreeRenderer()
 	}
 #endif
 }
+
+SDL_DisplayMode GetNearestDisplayMode(Size preferredSize)
+{
+	SDL_DisplayMode nearestDisplayMode;
+	if (SDL_GetWindowDisplayMode(ghMainWnd, &nearestDisplayMode) != 0)
+		ErrSdl();
+
+	int displayIndex = SDL_GetWindowDisplayIndex(ghMainWnd);
+	int modeCount = SDL_GetNumDisplayModes(displayIndex);
+	for (int modeIndex = 0; modeIndex < modeCount; modeIndex++) {
+		SDL_DisplayMode displayMode;
+		if (SDL_GetDisplayMode(displayIndex, modeIndex, &displayMode) != 0)
+			continue;
+
+		int diffHeight = std::abs(nearestDisplayMode.h - preferredSize.height) - std::abs(displayMode.h - preferredSize.height);
+		int diffWidth = std::abs(nearestDisplayMode.w - preferredSize.width) - std::abs(displayMode.w - preferredSize.width);
+		if (diffHeight < 0)
+			continue;
+		if (diffHeight == 0 && diffWidth < 0)
+			continue;
+		nearestDisplayMode = displayMode;
+	}
+
+	return nearestDisplayMode;
+}
 #endif
 
 void CalculateUIRectangle()
@@ -438,17 +463,35 @@ void SetFullscreenMode()
 		ErrSdl();
 	}
 #else
+	// When switching from windowed to "true fullscreen",
+	// update the display mode of the window before changing the
+	// fullscreen mode so that the display mode only has to change once
+	if (*sgOptions.Graphics.fullscreen && !*sgOptions.Graphics.upscale) {
+		Size windowSize = GetPreferredWindowSize();
+		SDL_DisplayMode displayMode = GetNearestDisplayMode(windowSize);
+		if (SDL_SetWindowDisplayMode(ghMainWnd, &displayMode) != 0) {
+			ErrSdl();
+		}
+	}
+
 	Uint32 flags = 0;
 	if (*sgOptions.Graphics.fullscreen) {
-		flags = renderer != nullptr ? SDL_WINDOW_FULLSCREEN_DESKTOP : SDL_WINDOW_FULLSCREEN;
+		flags = *sgOptions.Graphics.upscale ? SDL_WINDOW_FULLSCREEN_DESKTOP : SDL_WINDOW_FULLSCREEN;
 	}
 	if (SDL_SetWindowFullscreen(ghMainWnd, flags) != 0) {
 		ErrSdl();
 	}
-	if (renderer != nullptr && !*sgOptions.Graphics.fullscreen) {
+
+	if (!*sgOptions.Graphics.fullscreen) {
 		SDL_RestoreWindow(ghMainWnd); // Avoid window being maximized before resizing
 		Size windowSize = GetPreferredWindowSize();
 		SDL_SetWindowSize(ghMainWnd, windowSize.width, windowSize.height);
+	}
+	if (!*sgOptions.Graphics.upscale) {
+		// Because "true fullscreen" is locked into specific resolutions based on the modes
+		// supported by the display, the resolution may have changed when fullscreen was toggled
+		ReinitializeRenderer();
+		CreateBackBuffer();
 	}
 	InitializeVirtualGamepad();
 #endif
@@ -465,7 +508,26 @@ void ResizeWindow()
 #ifdef USE_SDL1
 	SetVideoModeToPrimary(*sgOptions.Graphics.fullscreen, windowSize.width, windowSize.height);
 #else
-	SDL_SetWindowSize(ghMainWnd, windowSize.width, windowSize.height);
+	// For "true fullscreen" windows, the window resizes automatically based on the display mode
+	bool trueFullscreen = *sgOptions.Graphics.fullscreen && !*sgOptions.Graphics.upscale;
+	if (trueFullscreen) {
+		SDL_DisplayMode displayMode = GetNearestDisplayMode(windowSize);
+		if (SDL_SetWindowDisplayMode(ghMainWnd, &displayMode) != 0)
+			ErrSdl();
+	}
+
+	// Handle switching between "fake fullscreen" and "true fullscreen" when upscale is toggled
+	bool upscaleChanged = *sgOptions.Graphics.upscale != (renderer != nullptr);
+	if (upscaleChanged && *sgOptions.Graphics.fullscreen) {
+		Uint32 flags = *sgOptions.Graphics.upscale ? SDL_WINDOW_FULLSCREEN_DESKTOP : SDL_WINDOW_FULLSCREEN;
+		if (SDL_SetWindowFullscreen(ghMainWnd, flags) != 0)
+			ErrSdl();
+		if (!*sgOptions.Graphics.fullscreen)
+			SDL_RestoreWindow(ghMainWnd); // Avoid window being maximized before resizing
+	}
+
+	if (!trueFullscreen)
+		SDL_SetWindowSize(ghMainWnd, windowSize.width, windowSize.height);
 #endif
 
 	ReinitializeRenderer();
