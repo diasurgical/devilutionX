@@ -355,13 +355,15 @@ void CheckQuests()
 	}
 
 	if (setlevel) {
-		if (setlvlnum == Quests[Q_PWATER]._qslvl
-		    && Quests[Q_PWATER]._qactive != QUEST_INIT
-		    && leveltype == Quests[Q_PWATER]._qlvltype
+		Quest &poisonWater = Quests[Q_PWATER];
+		if (setlvlnum == poisonWater._qslvl
+		    && poisonWater._qactive != QUEST_INIT
+		    && leveltype == poisonWater._qlvltype
 		    && ActiveMonsterCount == 4
-		    && Quests[Q_PWATER]._qactive != QUEST_DONE) {
-			Quests[Q_PWATER]._qactive = QUEST_DONE;
-			NetSendCmdQuest(true, Quests[Q_PWATER]);
+		    && poisonWater._qactive != QUEST_DONE) {
+			poisonWater._qactive = QUEST_DONE;
+			poisonWater._qlog = true; // even if the player skips talking to Pepin completely they should at least notice the water being purified once they cleanse the level
+			NetSendCmdQuest(true, poisonWater);
 			StartPWaterPurify();
 		}
 	} else if (MyPlayer->_pmode == PM_STAND) {
