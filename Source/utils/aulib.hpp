@@ -17,8 +17,10 @@
 
 namespace devilution {
 
-inline std::unique_ptr<Aulib::Resampler> CreateAulibResampler()
+inline std::unique_ptr<Aulib::Resampler> CreateAulibResampler(int sourceRate)
 {
+	if (Aulib::sampleRate() == sourceRate)
+		return nullptr;
 	switch (*sgOptions.Audio.resampler) {
 #ifdef DEVILUTIONX_RESAMPLER_SPEEX
 	case Resampler::Speex:

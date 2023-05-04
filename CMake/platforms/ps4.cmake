@@ -16,4 +16,6 @@ set(BUILD_ASSETS_MPQ ON)
 # or simply use the in-tree copy as follows:
 set(DEVILUTIONX_SYSTEM_SDL_IMAGE OFF)
 
-
+# If the executable is stripped, create-fself fails with:
+# Failed to build FSELF: no symbol section
+set(DEVILUTIONX_DISABLE_STRIP ON)

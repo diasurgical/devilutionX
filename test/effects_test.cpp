@@ -1,12 +1,15 @@
 #include <gtest/gtest.h>
 
 #include "effects.h"
+#include "engine/sound_position.hpp"
 #include "player.h"
 
 using namespace devilution;
 
 TEST(Effects, CalculateSoundPosition_center)
 {
+	Players.resize(1);
+	MyPlayer = &Players[0];
 	MyPlayer->position.tile = { 50, 50 };
 	int plVolume = 0;
 	int plPan = 0;
@@ -17,6 +20,8 @@ TEST(Effects, CalculateSoundPosition_center)
 
 TEST(Effects, CalculateSoundPosition_near)
 {
+	Players.resize(1);
+	MyPlayer = &Players[0];
 	MyPlayer->position.tile = { 50, 50 };
 	int plVolume = 0;
 	int plPan = 0;
@@ -27,6 +32,8 @@ TEST(Effects, CalculateSoundPosition_near)
 
 TEST(Effects, CalculateSoundPosition_out_of_range)
 {
+	Players.resize(1);
+	MyPlayer = &Players[0];
 	MyPlayer->position.tile = { 12, 12 };
 	int plVolume = 1234;
 	int plPan = 0;
@@ -37,6 +44,8 @@ TEST(Effects, CalculateSoundPosition_out_of_range)
 
 TEST(Effects, CalculateSoundPosition_extreme_right)
 {
+	Players.resize(1);
+	MyPlayer = &Players[0];
 	MyPlayer->position.tile = { 50, 50 };
 	int plVolume = 0;
 	int plPan = 0;
@@ -47,6 +56,8 @@ TEST(Effects, CalculateSoundPosition_extreme_right)
 
 TEST(Effects, CalculateSoundPosition_extreme_left)
 {
+	Players.resize(1);
+	MyPlayer = &Players[0];
 	MyPlayer->position.tile = { 50, 50 };
 	int plVolume = 0;
 	int plPan = 0;

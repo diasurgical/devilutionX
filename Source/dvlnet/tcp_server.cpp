@@ -6,6 +6,7 @@
 #include <utility>
 
 #include "dvlnet/base.h"
+#include "player.h"
 #include "utils/log.hpp"
 
 namespace devilution {
@@ -44,7 +45,7 @@ tcp_server::scc tcp_server::MakeConnection()
 
 plr_t tcp_server::NextFree()
 {
-	for (plr_t i = 0; i < MAX_PLRS; ++i)
+	for (plr_t i = 0; i < Players.size(); ++i)
 		if (!connections[i])
 			return i;
 	return PLR_BROADCAST;
@@ -52,7 +53,7 @@ plr_t tcp_server::NextFree()
 
 bool tcp_server::Empty()
 {
-	for (plr_t i = 0; i < MAX_PLRS; ++i)
+	for (plr_t i = 0; i < Players.size(); ++i)
 		if (connections[i])
 			return false;
 	return true;
@@ -108,7 +109,7 @@ void tcp_server::HandleReceiveNewPlayer(const scc &con, packet &pkt)
 	if (Empty())
 		game_init_info = pkt.Info();
 
-	for (plr_t player = 0; player < MAX_PLRS; player++) {
+	for (plr_t player = 0; player < Players.size(); player++) {
 		if (connections[player]) {
 			auto playerPacket = pktfty.make_packet<PT_CONNECT>(PLR_MASTER, PLR_BROADCAST, newplr);
 			StartSend(connections[player], *playerPacket);
@@ -135,7 +136,7 @@ void tcp_server::HandleReceivePacket(packet &pkt)
 void tcp_server::SendPacket(packet &pkt)
 {
 	if (pkt.Destination() == PLR_BROADCAST) {
-		for (auto i = 0; i < MAX_PLRS; ++i)
+		for (size_t i = 0; i < Players.size(); ++i)
 			if (i != pkt.Source() && connections[i])
 				StartSend(connections[i], pkt);
 	} else {

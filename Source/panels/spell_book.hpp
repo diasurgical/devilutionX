@@ -1,5 +1,6 @@
 #pragma once
 
+#include "engine/clx_sprite.hpp"
 #include "engine/surface.hpp"
 
 namespace devilution {

@@ -5,28 +5,33 @@
  */
 
 #include <cstdint>
-#include <fstream>
+#include <cstdio>
 
 #include <fmt/format.h>
 
-#define SI_SUPPORT_IOSTREAMS
+#define SI_NO_CONVERSION
 #include <SimpleIni.h>
 
 #include "control.h"
+#include "controls/controller.h"
+#include "controls/game_controls.h"
+#include "controls/plrctrls.h"
 #include "discord/discord.h"
 #include "engine/demomode.h"
+#include "engine/sound_defs.hpp"
 #include "hwcursor.hpp"
 #include "options.h"
 #include "platform/locale.hpp"
 #include "qol/monhealthbar.h"
 #include "qol/xpbar.h"
-#include "sound_defs.hpp"
 #include "utils/display.h"
 #include "utils/file_util.h"
 #include "utils/language.h"
 #include "utils/log.hpp"
 #include "utils/paths.h"
 #include "utils/stdcompat/algorithm.hpp"
+#include "utils/str_cat.hpp"
+#include "utils/str_split.hpp"
 #include "utils/utf8.hpp"
 
 namespace devilution {
@@ -85,11 +90,13 @@ CSimpleIni &GetIni()
 	static bool isIniLoaded = false;
 	if (!isIniLoaded) {
 		auto path = GetIniPath();
-		auto stream = CreateFileStream(path.c_str(), std::fstream::in | std::fstream::binary);
+		FILE *file = OpenFile(path.c_str(), "rb");
 		ini.SetSpaces(false);
 		ini.SetMultiKey();
-		if (stream)
-			ini.LoadData(*stream);
+		if (file != nullptr) {
+			ini.LoadFile(file);
+			std::fclose(file);
+		}
 		isIniLoaded = true;
 	}
 	return ini;
@@ -228,9 +235,15 @@ void SaveIni()
 {
 	if (!IniChanged)
 		return;
-	auto iniPath = GetIniPath();
-	auto stream = CreateFileStream(iniPath.c_str(), std::fstream::out | std::fstream::trunc | std::fstream::binary);
-	GetIni().Save(*stream, true);
+	RecursivelyCreateDir(paths::ConfigPath().c_str());
+	const std::string iniPath = GetIniPath();
+	FILE *file = OpenFile(iniPath.c_str(), "wb");
+	if (file != nullptr) {
+		GetIni().SaveFile(file, true);
+		std::fclose(file);
+	} else {
+		LogError("Failed to write ini file to {}: {}", iniPath, std::strerror(errno));
+	}
 	IniChanged = false;
 }
 
@@ -275,6 +288,16 @@ void OptionEnemyHealthBarChanged()
 	else
 		FreeMonsterHealthBar();
 }
+
+#if !defined(USE_SDL1) || defined(__3DS__)
+void ResizeWindowAndUpdateResolutionOptions()
+{
+	ResizeWindow();
+#ifndef __3DS__
+	sgOptions.Graphics.resolution.InvalidateList();
+#endif
+}
+#endif
 
 void OptionShowFPSChanged()
 {
@@ -350,8 +373,6 @@ void LoadOptions()
 		GetIniStringVector("NetMsg", QuickMessages[i].key, sgOptions.Chat.szHotKeyMsgs[i]);
 
 	GetIniValue("Controller", "Mapping", sgOptions.Controller.szMapping, sizeof(sgOptions.Controller.szMapping), "");
-	sgOptions.Controller.bSwapShoulderButtonMode = GetIniBool("Controller", "Swap Shoulder Button Mode", false);
-	sgOptions.Controller.bDpadHotkeys = GetIniBool("Controller", "Dpad Hotkeys", false);
 	sgOptions.Controller.fDeadzone = GetIniFloat("Controller", "deadzone", 0.07F);
 #ifdef __vita__
 	sgOptions.Controller.bRearTouch = GetIniBool("Controller", "Enable Rear Touchpad", true);
@@ -382,8 +403,6 @@ void SaveOptions()
 		SetIniValue("NetMsg", QuickMessages[i].key, sgOptions.Chat.szHotKeyMsgs[i]);
 
 	SetIniValue("Controller", "Mapping", sgOptions.Controller.szMapping);
-	SetIniValue("Controller", "Swap Shoulder Button Mode", sgOptions.Controller.bSwapShoulderButtonMode);
-	SetIniValue("Controller", "Dpad Hotkeys", sgOptions.Controller.bDpadHotkeys);
 	SetIniValue("Controller", "deadzone", sgOptions.Controller.fDeadzone);
 #ifdef __vita__
 	SetIniValue("Controller", "Enable Rear Touchpad", sgOptions.Controller.bRearTouch);
@@ -394,11 +413,11 @@ void SaveOptions()
 
 string_view OptionEntryBase::GetName() const
 {
-	return _(name.data());
+	return _(name);
 }
 string_view OptionEntryBase::GetDescription() const
 {
-	return _(description.data());
+	return _(description);
 }
 OptionEntryFlags OptionEntryBase::GetFlags() const
 {
@@ -514,7 +533,7 @@ string_view OptionEntryIntBase::GetListDescription(size_t index) const
 {
 	if (entryNames.empty()) {
 		for (auto value : entryValues) {
-			entryNames.push_back(fmt::format("{}", value));
+			entryNames.push_back(StrCat(value));
 		}
 	}
 	return entryNames[index].data();
@@ -532,23 +551,17 @@ void OptionEntryIntBase::SetActiveListIndex(size_t index)
 	this->NotifyValueChanged();
 }
 
-OptionCategoryBase::OptionCategoryBase(string_view key, string_view name, string_view description)
-    : key(key)
-    , name(name)
-    , description(description)
-{
-}
 string_view OptionCategoryBase::GetKey() const
 {
 	return key;
 }
 string_view OptionCategoryBase::GetName() const
 {
-	return _(name.data());
+	return _(name);
 }
 string_view OptionCategoryBase::GetDescription() const
 {
-	return _(description.data());
+	return _(description);
 }
 
 StartUpOptions::StartUpOptions()
@@ -675,6 +688,11 @@ void OptionEntryResolution::SaveToIni(string_view category) const
 	SetIniValue(category.data(), "Height", size.height);
 }
 
+void OptionEntryResolution::InvalidateList()
+{
+	resolutions.clear();
+}
+
 void OptionEntryResolution::CheckResolutionsAreInitialized() const
 {
 	if (!resolutions.empty())
@@ -684,10 +702,13 @@ void OptionEntryResolution::CheckResolutionsAreInitialized() const
 	float scaleFactor = GetDpiScalingFactor();
 
 	// Add resolutions
+	bool supportsAnyResolution = false;
 #ifdef USE_SDL1
 	auto *modes = SDL_ListModes(nullptr, SDL_FULLSCREEN | SDL_HWPALETTE);
 	// SDL_ListModes returns -1 if any resolution is allowed (for example returned on 3DS)
-	if (modes != nullptr && modes != (SDL_Rect **)-1) {
+	if (modes == (SDL_Rect **)-1) {
+		supportsAnyResolution = true;
+	} else if (modes != nullptr) {
 		for (size_t i = 0; modes[i] != nullptr; i++) {
 			if (modes[i]->w < modes[i]->h) {
 				std::swap(modes[i]->w, modes[i]->h);
@@ -711,12 +732,45 @@ void OptionEntryResolution::CheckResolutionsAreInitialized() const
 		    static_cast<int>(mode.w * scaleFactor),
 		    static_cast<int>(mode.h * scaleFactor) });
 	}
+	supportsAnyResolution = *sgOptions.Graphics.upscale;
 #endif
 
+	if (supportsAnyResolution && sizes.size() == 1) {
+		// Attempt to provide sensible options for 4:3 and the native aspect ratio
+		const int width = sizes[0].width;
+		const int height = sizes[0].height;
+		const int commonHeights[] = { 480, 540, 720, 960, 1080, 1440, 2160 };
+		for (int commonHeight : commonHeights) {
+			if (commonHeight > height)
+				break;
+			sizes.emplace_back(Size { commonHeight * 4 / 3, commonHeight });
+			if (commonHeight * width % height == 0)
+				sizes.emplace_back(Size { commonHeight * width / height, commonHeight });
+		}
+	}
 	// Ensures that the ini specified resolution is present in resolution list even if it doesn't match a monitor resolution (for example if played in window mode)
 	sizes.push_back(this->size);
-	// Ensures that the vanilla/default resolution is always present
+	// Ensures that the platform's preferred default resolution is always present
 	sizes.emplace_back(Size { DEFAULT_WIDTH, DEFAULT_HEIGHT });
+	// Ensures that the vanilla Diablo resolution is present on systems that would support it
+	if (supportsAnyResolution)
+		sizes.emplace_back(Size { 640, 480 });
+
+#ifndef USE_SDL1
+	if (*sgOptions.Graphics.fitToScreen) {
+		SDL_DisplayMode mode;
+		if (SDL_GetDesktopDisplayMode(0, &mode) != 0) {
+			ErrSdl();
+		}
+		for (auto &size : sizes) {
+			// Ensure that the ini specified resolution remains present in the resolution list
+			if (size.height == this->size.height)
+				size.width = this->size.width;
+			else
+				size.width = size.height * mode.w / mode.h;
+		}
+	}
+#endif
 
 	// Sort by width then by height
 	std::sort(sizes.begin(), sizes.end(),
@@ -729,7 +783,13 @@ void OptionEntryResolution::CheckResolutionsAreInitialized() const
 	sizes.erase(std::unique(sizes.begin(), sizes.end()), sizes.end());
 
 	for (auto &size : sizes) {
-		resolutions.emplace_back(size, fmt::format("{}x{}", size.width, size.height));
+#ifndef USE_SDL1
+		if (*sgOptions.Graphics.fitToScreen) {
+			resolutions.emplace_back(size, StrCat(size.height, "p"));
+			continue;
+		}
+#endif
+		resolutions.emplace_back(size, StrCat(size.width, "x", size.height));
 	}
 }
 
@@ -847,7 +907,7 @@ size_t OptionEntryAudioDevice::GetListSize() const
 
 string_view OptionEntryAudioDevice::GetListDescription(size_t index) const
 {
-	constexpr size_t MaxWidth = 500;
+	constexpr int MaxWidth = 500;
 
 	string_view deviceName = GetDeviceName(index);
 	if (deviceName.empty())
@@ -893,7 +953,13 @@ GraphicsOptions::GraphicsOptions()
     , fitToScreen("Fit to Screen", OptionEntryFlags::CantChangeInGame | OptionEntryFlags::RecreateUI, N_("Fit to Screen"), N_("Automatically adjust the game window to your current desktop screen aspect ratio and resolution."), true)
 #endif
 #ifndef USE_SDL1
-    , upscale("Upscale", OnlyIfNoImplicitRenderer | OptionEntryFlags::CantChangeInGame | OptionEntryFlags::RecreateUI, N_("Upscale"), N_("Enables image scaling from the game resolution to your monitor resolution. Prevents changing the monitor resolution and allows window resizing."), true)
+    , upscale("Upscale", OnlyIfNoImplicitRenderer | OptionEntryFlags::CantChangeInGame | OptionEntryFlags::RecreateUI, N_("Upscale"), N_("Enables image scaling from the game resolution to your monitor resolution. Prevents changing the monitor resolution and allows window resizing."),
+#ifdef NXDK
+          false
+#else
+          true
+#endif
+          )
     , scaleQuality("Scaling Quality", OptionEntryFlags::None, N_("Scaling Quality"), N_("Enables optional filters to the output image when upscaling."), ScalingQuality::AnisotropicFiltering,
           {
               { ScalingQuality::NearestPixel, N_("Nearest Pixel") },
@@ -901,9 +967,23 @@ GraphicsOptions::GraphicsOptions()
               { ScalingQuality::AnisotropicFiltering, N_("Anisotropic") },
           })
     , integerScaling("Integer Scaling", OptionEntryFlags::CantChangeInGame | OptionEntryFlags::RecreateUI, N_("Integer Scaling"), N_("Scales the image using whole number pixel ratio."), false)
-    , vSync("Vertical Sync", OptionEntryFlags::RecreateUI, N_("Vertical Sync"), N_("Forces waiting for Vertical Sync. Prevents tearing effect when drawing a frame. Disabling it can help with mouse lag on some systems."), true)
+    , vSync("Vertical Sync",
+          OptionEntryFlags::RecreateUI
+#ifdef NXDK
+              | OptionEntryFlags::Invisible
+#endif
+          ,
+          N_("Vertical Sync"),
+          N_("Forces waiting for Vertical Sync. Prevents tearing effect when drawing a frame. Disabling it can help with mouse lag on some systems."),
+#ifdef NXDK
+          false
+#else
+          true
+#endif
+          )
 #endif
     , gammaCorrection("Gamma Correction", OptionEntryFlags::Invisible, "Gamma Correction", "Gamma correction level.", 100)
+    , zoom("Zoom", OptionEntryFlags::None, N_("Zoom"), N_("Zoom on when enabled."), false)
     , colorCycling("Color Cycling", OptionEntryFlags::None, N_("Color Cycling"), N_("Color cycling effect used for water, lava, and acid animation."), true)
     , alternateNestArt("Alternate nest art", OptionEntryFlags::OnlyHellfire | OptionEntryFlags::CantChangeInGame, N_("Alternate nest art"), N_("The game will use an alternative palette for Hellfire’s nest tileset."), false)
 #if SDL_VERSION_ATLEAST(2, 0, 0)
@@ -912,6 +992,7 @@ GraphicsOptions::GraphicsOptions()
     , hardwareCursorMaxSize("Hardware Cursor Maximum Size", OptionEntryFlags::CantChangeInGame | OptionEntryFlags::RecreateUI | (HardwareCursorSupported() ? OptionEntryFlags::None : OptionEntryFlags::Invisible), N_("Hardware Cursor Maximum Size"), N_("Maximum width / height for the hardware cursor. Larger cursors fall back to software."), 128, { 0, 64, 128, 256, 512 })
 #endif
     , limitFPS("FPS Limiter", OptionEntryFlags::None, N_("FPS Limiter"), N_("FPS is limited to avoid high CPU load. Limit considers refresh rate."), true)
+    , showItemGraphicsInStores("Show Item Graphics in Stores", OptionEntryFlags::None, N_("Show Item Graphics in Stores"), N_("Show item graphics to the left of item descriptions in store menus."), false)
     , showFPS("Show FPS", OptionEntryFlags::None, N_("Show FPS"), N_("Displays the FPS in the upper left corner of the screen."), false)
     , showHealthValues("Show health values", OptionEntryFlags::None, N_("Show health values"), N_("Displays current / max health value on health globe."), false)
     , showManaValues("Show mana values", OptionEntryFlags::None, N_("Show mana values"), N_("Displays current / max mana value on mana globe."), false)
@@ -919,10 +1000,10 @@ GraphicsOptions::GraphicsOptions()
 	resolution.SetValueChangedCallback(ResizeWindow);
 	fullscreen.SetValueChangedCallback(SetFullscreenMode);
 #if !defined(USE_SDL1) || defined(__3DS__)
-	fitToScreen.SetValueChangedCallback(ResizeWindow);
+	fitToScreen.SetValueChangedCallback(ResizeWindowAndUpdateResolutionOptions);
 #endif
 #ifndef USE_SDL1
-	upscale.SetValueChangedCallback(ResizeWindow);
+	upscale.SetValueChangedCallback(ResizeWindowAndUpdateResolutionOptions);
 	scaleQuality.SetValueChangedCallback(ReinitializeTexture);
 	integerScaling.SetValueChangedCallback(ReinitializeIntegerScale);
 	vSync.SetValueChangedCallback(ReinitializeRenderer);
@@ -947,8 +1028,10 @@ std::vector<OptionEntryBase *> GraphicsOptions::GetEntries()
 		&vSync,
 #endif
 		&gammaCorrection,
+		&zoom,
 		&limitFPS,
 		&showFPS,
+		&showItemGraphicsInStores,
 		&showHealthValues,
 		&showManaValues,
 		&colorCycling,
@@ -970,12 +1053,14 @@ GameplayOptions::GameplayOptions()
     , theoQuest("Theo Quest", OptionEntryFlags::CantChangeInGame | OptionEntryFlags::OnlyHellfire, N_("Theo Quest"), N_("Enable Little Girl quest."), false)
     , cowQuest("Cow Quest", OptionEntryFlags::CantChangeInGame | OptionEntryFlags::OnlyHellfire, N_("Cow Quest"), N_("Enable Jersey's quest. Lester the farmer is replaced by the Complete Nut."), false)
     , friendlyFire("Friendly Fire", OptionEntryFlags::CantChangeInMultiPlayer, N_("Friendly Fire"), N_("Allow arrow/spell damage between players in multiplayer even when the friendly mode is on."), true)
+    , multiplayerFullQuests("MultiplayerFullQuests", OptionEntryFlags::CantChangeInMultiPlayer, N_("Full quests in Multiplayer"), N_("Enables the full/uncut singleplayer version of quests."), false)
     , testBard("Test Bard", OptionEntryFlags::CantChangeInGame, N_("Test Bard"), N_("Force the Bard character type to appear in the hero selection menu."), false)
     , testBarbarian("Test Barbarian", OptionEntryFlags::CantChangeInGame, N_("Test Barbarian"), N_("Force the Barbarian character type to appear in the hero selection menu."), false)
     , experienceBar("Experience Bar", OptionEntryFlags::None, N_("Experience Bar"), N_("Experience Bar is added to the UI at the bottom of the screen."), false)
     , enemyHealthBar("Enemy Health Bar", OptionEntryFlags::None, N_("Enemy Health Bar"), N_("Enemy Health Bar is displayed at the top of the screen."), false)
     , autoGoldPickup("Auto Gold Pickup", OptionEntryFlags::None, N_("Auto Gold Pickup"), N_("Gold is automatically collected when in close proximity to the player."), false)
     , autoElixirPickup("Auto Elixir Pickup", OptionEntryFlags::None, N_("Auto Elixir Pickup"), N_("Elixirs are automatically collected when in close proximity to the player."), false)
+    , autoOilPickup("Auto Oil Pickup", OptionEntryFlags::OnlyHellfire, N_("Auto Oil Pickup"), N_("Oils are automatically collected when in close proximity to the player."), false)
     , autoPickupInTown("Auto Pickup in Town", OptionEntryFlags::None, N_("Auto Pickup in Town"), N_("Automatically pickup items in town."), false)
     , adriaRefillsMana("Adria Refills Mana", OptionEntryFlags::None, N_("Adria Refills Mana"), N_("Adria will refill your mana when you visit her shop."), false)
     , autoEquipWeapons("Auto Equip Weapons", OptionEntryFlags::None, N_("Auto Equip Weapons"), N_("Weapons will be automatically equipped on pickup or purchase if enabled."), true)
@@ -985,6 +1070,7 @@ GameplayOptions::GameplayOptions()
     , autoEquipJewelry("Auto Equip Jewelry", OptionEntryFlags::None, N_("Auto Equip Jewelry"), N_("Jewelry will be automatically equipped on pickup or purchase if enabled."), false)
     , randomizeQuests("Randomize Quests", OptionEntryFlags::CantChangeInGame, N_("Randomize Quests"), N_("Randomly selecting available quests for new games."), true)
     , showMonsterType("Show Monster Type", OptionEntryFlags::None, N_("Show Monster Type"), N_("Hovering over a monster will display the type of monster in the description box in the UI."), false)
+    , showItemLabels("Show Item Labels", OptionEntryFlags::None, N_("Show Item Labels"), N_("Show labels for items on the ground when enabled."), false)
     , autoRefillBelt("Auto Refill Belt", OptionEntryFlags::None, N_("Auto Refill Belt"), N_("Refill belt from inventory when belt item is consumed."), false)
     , disableCripplingShrines("Disable Crippling Shrines", OptionEntryFlags::None, N_("Disable Crippling Shrines"), N_("When enabled Cauldrons, Fascinating Shrines, Goat Shrines, Ornate Shrines and Sacred Shrines are not able to be clicked on and labeled as disabled."), false)
     , quickCast("Quick Cast", OptionEntryFlags::None, N_("Quick Cast"), N_("Spell hotkeys instantly cast the spell, rather than switching the readied spell."), false)
@@ -994,6 +1080,12 @@ GameplayOptions::GameplayOptions()
     , numFullManaPotionPickup("Full Mana Potion Pickup", OptionEntryFlags::None, N_("Full Mana Potion Pickup"), N_("Number of Full Mana potions to pick up automatically."), 0, { 0, 1, 2, 4, 8, 16 })
     , numRejuPotionPickup("Rejuvenation Potion Pickup", OptionEntryFlags::None, N_("Rejuvenation Potion Pickup"), N_("Number of Rejuvenation potions to pick up automatically."), 0, { 0, 1, 2, 4, 8, 16 })
     , numFullRejuPotionPickup("Full Rejuvenation Potion Pickup", OptionEntryFlags::None, N_("Full Rejuvenation Potion Pickup"), N_("Number of Full Rejuvenation potions to pick up automatically."), 0, { 0, 1, 2, 4, 8, 16 })
+    , enableFloatingNumbers("Enable floating numbers", OptionEntryFlags::None, N_("Enable floating numbers"), N_("Enables floating numbers on gaining XP / dealing damage etc."), FloatingNumbers::Off,
+          {
+              { FloatingNumbers::Off, N_("Off") },
+              { FloatingNumbers::Random, N_("Random Angles") },
+              { FloatingNumbers::Vertical, N_("Vertical Only") },
+          })
 {
 	grabInput.SetValueChangedCallback(OptionGrabInputChanged);
 	experienceBar.SetValueChangedCallback(OptionExperienceBarChanged);
@@ -1010,17 +1102,20 @@ std::vector<OptionEntryBase *> GameplayOptions::GetEntries()
 		&theoQuest,
 		&cowQuest,
 		&friendlyFire,
+		&multiplayerFullQuests,
 		&testBard,
 		&testBarbarian,
 		&experienceBar,
 		&enemyHealthBar,
 		&showMonsterType,
+		&showItemLabels,
 		&disableCripplingShrines,
 		&quickCast,
 		&autoRefillBelt,
 		&autoPickupInTown,
 		&autoGoldPickup,
 		&autoElixirPickup,
+		&autoOilPickup,
 		&autoEquipWeapons,
 		&autoEquipArmor,
 		&autoEquipHelms,
@@ -1032,6 +1127,7 @@ std::vector<OptionEntryBase *> GameplayOptions::GetEntries()
 		&numFullManaPotionPickup,
 		&numRejuPotionPickup,
 		&numFullRejuPotionPickup,
+		&enableFloatingNumbers,
 	};
 }
 
@@ -1098,7 +1194,7 @@ void OptionEntryLanguageCode::LoadFromIni(string_view category)
 		}
 	}
 
-	LogVerbose("Found {} user preferred locales", locales);
+	LogVerbose("Found user preferred locales: {}", fmt::join(locales, ", "));
 
 	for (const auto &locale : locales) {
 		LogVerbose("Trying to load translation: {}", locale);
@@ -1134,7 +1230,7 @@ void OptionEntryLanguageCode::CheckLanguagesAreInitialized() const
 	languages.emplace_back("hr", "Hrvatski");
 	languages.emplace_back("it", "Italiano");
 
-	if (font_mpq) {
+	if (HaveExtraFonts()) {
 		languages.emplace_back("ja", "日本語");
 		languages.emplace_back("ko", "한국어");
 	}
@@ -1146,7 +1242,7 @@ void OptionEntryLanguageCode::CheckLanguagesAreInitialized() const
 	languages.emplace_back("sv", "Svenska");
 	languages.emplace_back("uk", "Українська");
 
-	if (font_mpq) {
+	if (HaveExtraFonts()) {
 		languages.emplace_back("zh_CN", "汉语");
 		languages.emplace_back("zh_TW", "漢語");
 	}
@@ -1205,20 +1301,20 @@ KeymapperOptions::KeymapperOptions()
 		keyIDToKeyName.emplace(c, std::string(1, c));
 	}
 	for (int i = 0; i < 12; ++i) {
-		keyIDToKeyName.emplace(DVL_VK_F1 + i, fmt::format("F{}", i + 1));
+		keyIDToKeyName.emplace(SDLK_F1 + i, StrCat("F", i + 1));
 	}
 
-	keyIDToKeyName.emplace(DVL_VK_LMENU, "LALT");
-	keyIDToKeyName.emplace(DVL_VK_RMENU, "RALT");
-	keyIDToKeyName.emplace(DVL_VK_SPACE, "SPACE");
-	keyIDToKeyName.emplace(DVL_VK_RCONTROL, "RCONTROL");
-	keyIDToKeyName.emplace(DVL_VK_LCONTROL, "LCONTROL");
-	keyIDToKeyName.emplace(DVL_VK_SNAPSHOT, "PRINT");
-	keyIDToKeyName.emplace(DVL_VK_PAUSE, "PAUSE");
-	keyIDToKeyName.emplace(DVL_VK_TAB, "TAB");
-	keyIDToKeyName.emplace(DVL_VK_MBUTTON, "MMOUSE");
-	keyIDToKeyName.emplace(DVL_VK_X1BUTTON, "X1MOUSE");
-	keyIDToKeyName.emplace(DVL_VK_X2BUTTON, "X2MOUSE");
+	keyIDToKeyName.emplace(SDLK_LALT, "LALT");
+	keyIDToKeyName.emplace(SDLK_RALT, "RALT");
+	keyIDToKeyName.emplace(SDLK_SPACE, "SPACE");
+	keyIDToKeyName.emplace(SDLK_RCTRL, "RCONTROL");
+	keyIDToKeyName.emplace(SDLK_LCTRL, "LCONTROL");
+	keyIDToKeyName.emplace(SDLK_PRINTSCREEN, "PRINT");
+	keyIDToKeyName.emplace(SDLK_PAUSE, "PAUSE");
+	keyIDToKeyName.emplace(SDLK_TAB, "TAB");
+	keyIDToKeyName.emplace(SDL_BUTTON_MIDDLE | KeymapperMouseButtonMask, "MMOUSE");
+	keyIDToKeyName.emplace(SDL_BUTTON_X1 | KeymapperMouseButtonMask, "X1MOUSE");
+	keyIDToKeyName.emplace(SDL_BUTTON_X2 | KeymapperMouseButtonMask, "X2MOUSE");
 
 	keyNameToKeyID.reserve(keyIDToKeyName.size());
 	for (const auto &kv : keyIDToKeyName) {
@@ -1229,13 +1325,13 @@ KeymapperOptions::KeymapperOptions()
 std::vector<OptionEntryBase *> KeymapperOptions::GetEntries()
 {
 	std::vector<OptionEntryBase *> entries;
-	for (auto &action : actions) {
-		entries.push_back(action.get());
+	for (Action &action : actions) {
+		entries.push_back(&action);
 	}
 	return entries;
 }
 
-KeymapperOptions::Action::Action(string_view key, string_view name, string_view description, int defaultKey, std::function<void()> actionPressed, std::function<void()> actionReleased, std::function<bool()> enable, unsigned index)
+KeymapperOptions::Action::Action(string_view key, const char *name, const char *description, uint32_t defaultKey, std::function<void()> actionPressed, std::function<void()> actionReleased, std::function<bool()> enable, unsigned index)
     : OptionEntryBase(key, OptionEntryFlags::None, name, description)
     , defaultKey(defaultKey)
     , actionPressed(std::move(actionPressed))
@@ -1244,7 +1340,7 @@ KeymapperOptions::Action::Action(string_view key, string_view name, string_view 
     , dynamicIndex(index)
 {
 	if (index != 0) {
-		dynamicKey = fmt::format(fmt::string_view(key.data(), key.size()), index);
+		dynamicKey = fmt::format(fmt::runtime(fmt::string_view(key.data(), key.size())), index);
 		this->key = dynamicKey;
 	}
 }
@@ -1252,8 +1348,8 @@ KeymapperOptions::Action::Action(string_view key, string_view name, string_view 
 string_view KeymapperOptions::Action::GetName() const
 {
 	if (dynamicIndex == 0)
-		return _(name.data());
-	dynamicName = fmt::format(_(name.data()), dynamicIndex);
+		return _(name);
+	dynamicName = fmt::format(fmt::runtime(_(name)), dynamicIndex);
 	return dynamicName;
 }
 
@@ -1267,7 +1363,7 @@ void KeymapperOptions::Action::LoadFromIni(string_view category)
 
 	std::string readKey = result.data();
 	if (readKey.empty()) {
-		SetValue(DVL_VK_INVALID);
+		SetValue(SDLK_UNKNOWN);
 		return;
 	}
 
@@ -1285,7 +1381,7 @@ void KeymapperOptions::Action::LoadFromIni(string_view category)
 }
 void KeymapperOptions::Action::SaveToIni(string_view category) const
 {
-	if (boundKey == DVL_VK_INVALID) {
+	if (boundKey == SDLK_UNKNOWN) {
 		// Just add an empty config entry if the action is unbound.
 		SetIniValue(category.data(), key.data(), "");
 	}
@@ -1299,7 +1395,7 @@ void KeymapperOptions::Action::SaveToIni(string_view category) const
 
 string_view KeymapperOptions::Action::GetValueDescription() const
 {
-	if (boundKey == DVL_VK_INVALID)
+	if (boundKey == SDLK_UNKNOWN)
 		return "";
 	auto keyNameIt = sgOptions.Keymapper.keyIDToKeyName.find(boundKey);
 	if (keyNameIt == sgOptions.Keymapper.keyIDToKeyName.end()) {
@@ -1310,24 +1406,24 @@ string_view KeymapperOptions::Action::GetValueDescription() const
 
 bool KeymapperOptions::Action::SetValue(int value)
 {
-	if (value != DVL_VK_INVALID && sgOptions.Keymapper.keyIDToKeyName.find(value) == sgOptions.Keymapper.keyIDToKeyName.end()) {
+	if (value != SDLK_UNKNOWN && sgOptions.Keymapper.keyIDToKeyName.find(value) == sgOptions.Keymapper.keyIDToKeyName.end()) {
 		// Ignore invalid key values
 		return false;
 	}
 
 	// Remove old key
-	if (boundKey != DVL_VK_INVALID) {
+	if (boundKey != SDLK_UNKNOWN) {
 		sgOptions.Keymapper.keyIDToAction.erase(boundKey);
-		boundKey = DVL_VK_INVALID;
+		boundKey = SDLK_UNKNOWN;
 	}
 
 	// Add new key
-	if (value != DVL_VK_INVALID) {
+	if (value != SDLK_UNKNOWN) {
 		auto it = sgOptions.Keymapper.keyIDToAction.find(value);
 		if (it != sgOptions.Keymapper.keyIDToAction.end()) {
 			// Warn about overwriting keys.
 			Log("Keymapper: key '{}' is already bound to action '{}', overwriting", value, it->second.get().name);
-			it->second.get().boundKey = DVL_VK_INVALID;
+			it->second.get().boundKey = SDLK_UNKNOWN;
 		}
 
 		sgOptions.Keymapper.keyIDToAction.insert_or_assign(value, *this);
@@ -1337,13 +1433,22 @@ bool KeymapperOptions::Action::SetValue(int value)
 	return true;
 }
 
-void KeymapperOptions::AddAction(string_view key, string_view name, string_view description, int defaultKey, std::function<void()> actionPressed, std::function<void()> actionReleased, std::function<bool()> enable, unsigned index)
+void KeymapperOptions::AddAction(string_view key, const char *name, const char *description, uint32_t defaultKey, std::function<void()> actionPressed, std::function<void()> actionReleased, std::function<bool()> enable, unsigned index)
 {
-	actions.push_back(std::unique_ptr<Action>(new Action(key, name, description, defaultKey, std::move(actionPressed), std::move(actionReleased), std::move(enable), index)));
+	actions.emplace_front(key, name, description, defaultKey, std::move(actionPressed), std::move(actionReleased), std::move(enable), index);
 }
 
-void KeymapperOptions::KeyPressed(int key) const
+void KeymapperOptions::CommitActions()
 {
+	actions.reverse();
+}
+
+void KeymapperOptions::KeyPressed(uint32_t key) const
+{
+	if (key >= SDLK_a && key <= SDLK_z) {
+		key -= 'a' - 'A';
+	}
+
 	auto it = keyIDToAction.find(key);
 	if (it == keyIDToAction.end())
 		return; // Ignore unmapped keys.
@@ -1358,7 +1463,7 @@ void KeymapperOptions::KeyPressed(int key) const
 	action.actionPressed();
 }
 
-void KeymapperOptions::KeyReleased(int key) const
+void KeymapperOptions::KeyReleased(uint32_t key) const
 {
 	auto it = keyIDToAction.find(key);
 	if (it == keyIDToAction.end())
@@ -1376,9 +1481,9 @@ void KeymapperOptions::KeyReleased(int key) const
 
 string_view KeymapperOptions::KeyNameForAction(string_view actionName) const
 {
-	for (const auto &action : actions) {
-		if (action->key == actionName && action->boundKey != DVL_VK_INVALID) {
-			return action->GetValueDescription();
+	for (const Action &action : actions) {
+		if (action.key == actionName && action.boundKey != SDLK_UNKNOWN) {
+			return action.GetValueDescription();
 		}
 	}
 	return "";
@@ -1386,12 +1491,348 @@ string_view KeymapperOptions::KeyNameForAction(string_view actionName) const
 
 uint32_t KeymapperOptions::KeyForAction(string_view actionName) const
 {
-	for (const auto &action : actions) {
-		if (action->key == actionName && action->boundKey != DVL_VK_INVALID) {
-			return action->boundKey;
+	for (const Action &action : actions) {
+		if (action.key == actionName && action.boundKey != SDLK_UNKNOWN) {
+			return action.boundKey;
 		}
 	}
-	return DVL_VK_INVALID;
+	return SDLK_UNKNOWN;
+}
+
+PadmapperOptions::PadmapperOptions()
+    : OptionCategoryBase("Padmapping", N_("Padmapping"), N_("Padmapping Settings"))
+    , buttonToButtonName { {
+	      /*ControllerButton_NONE*/ {},
+	      /*ControllerButton_IGNORE*/ {},
+	      /*ControllerButton_AXIS_TRIGGERLEFT*/ "LT",
+	      /*ControllerButton_AXIS_TRIGGERRIGHT*/ "RT",
+	      /*ControllerButton_BUTTON_A*/ "A",
+	      /*ControllerButton_BUTTON_B*/ "B",
+	      /*ControllerButton_BUTTON_X*/ "X",
+	      /*ControllerButton_BUTTON_Y*/ "Y",
+	      /*ControllerButton_BUTTON_LEFTSTICK*/ "LS",
+	      /*ControllerButton_BUTTON_RIGHTSTICK*/ "RS",
+	      /*ControllerButton_BUTTON_LEFTSHOULDER*/ "LB",
+	      /*ControllerButton_BUTTON_RIGHTSHOULDER*/ "RB",
+	      /*ControllerButton_BUTTON_START*/ "Start",
+	      /*ControllerButton_BUTTON_BACK*/ "Select",
+	      /*ControllerButton_BUTTON_DPAD_UP*/ "Up",
+	      /*ControllerButton_BUTTON_DPAD_DOWN*/ "Down",
+	      /*ControllerButton_BUTTON_DPAD_LEFT*/ "Left",
+	      /*ControllerButton_BUTTON_DPAD_RIGHT*/ "Right",
+	  } }
+{
+	buttonNameToButton.reserve(buttonToButtonName.size());
+	for (size_t i = 0; i < buttonToButtonName.size(); ++i) {
+		buttonNameToButton.emplace(buttonToButtonName[i], static_cast<ControllerButton>(i));
+	}
+}
+
+std::vector<OptionEntryBase *> PadmapperOptions::GetEntries()
+{
+	std::vector<OptionEntryBase *> entries;
+	for (Action &action : actions) {
+		entries.push_back(&action);
+	}
+	return entries;
+}
+
+PadmapperOptions::Action::Action(string_view key, const char *name, const char *description, ControllerButtonCombo defaultInput, std::function<void()> actionPressed, std::function<void()> actionReleased, std::function<bool()> enable, unsigned index)
+    : OptionEntryBase(key, OptionEntryFlags::None, name, description)
+    , defaultInput(defaultInput)
+    , actionPressed(std::move(actionPressed))
+    , actionReleased(std::move(actionReleased))
+    , enable(std::move(enable))
+    , dynamicIndex(index)
+{
+	if (index != 0) {
+		dynamicKey = fmt::format(fmt::runtime(fmt::string_view(key.data(), key.size())), index);
+		this->key = dynamicKey;
+	}
+}
+
+string_view PadmapperOptions::Action::GetName() const
+{
+	if (dynamicIndex == 0)
+		return _(name);
+	dynamicName = fmt::format(fmt::runtime(_(name)), dynamicIndex);
+	return dynamicName;
+}
+
+void PadmapperOptions::Action::LoadFromIni(string_view category)
+{
+	std::array<char, 64> result;
+	if (!GetIniValue(category.data(), key.data(), result.data(), result.size())) {
+		SetValue(defaultInput);
+		return; // Use the default button combo if no mapping has been set.
+	}
+
+	std::string modName;
+	std::string buttonName;
+	auto parts = SplitByChar(result.data(), '+');
+	auto it = parts.begin();
+	if (it == parts.end()) {
+		SetValue(ControllerButtonCombo {});
+		return;
+	}
+	buttonName = std::string(*it);
+	if (++it != parts.end()) {
+		modName = std::move(buttonName);
+		buttonName = std::string(*it);
+	}
+
+	ControllerButtonCombo input {};
+	if (!modName.empty()) {
+		auto modifierIt = sgOptions.Padmapper.buttonNameToButton.find(modName);
+		if (modifierIt == sgOptions.Padmapper.buttonNameToButton.end()) {
+			// Use the default button combo if the modifier name is unknown.
+			LogWarn("Padmapper: unknown button '{}'", modName);
+			SetValue(defaultInput);
+			return;
+		}
+		input.modifier = modifierIt->second;
+	}
+
+	auto buttonIt = sgOptions.Padmapper.buttonNameToButton.find(buttonName);
+	if (buttonIt == sgOptions.Padmapper.buttonNameToButton.end()) {
+		// Use the default button combo if the button name is unknown.
+		LogWarn("Padmapper: unknown button '{}'", buttonName);
+		SetValue(defaultInput);
+		return;
+	}
+	input.button = buttonIt->second;
+
+	// Store the input in action.boundInput and in the map so we can save()
+	// the actions while keeping the same order as they have been added.
+	SetValue(input);
+}
+void PadmapperOptions::Action::SaveToIni(string_view category) const
+{
+	if (boundInput.button == ControllerButton_NONE) {
+		// Just add an empty config entry if the action is unbound.
+		SetIniValue(category.data(), key.data(), "");
+		return;
+	}
+	std::string inputName = sgOptions.Padmapper.buttonToButtonName[static_cast<size_t>(boundInput.button)];
+	if (inputName.empty()) {
+		LogVerbose("Padmapper: no name found for key '{}'", key);
+		return;
+	}
+	if (boundInput.modifier != ControllerButton_NONE) {
+		const std::string &modifierName = sgOptions.Padmapper.buttonToButtonName[static_cast<size_t>(boundInput.modifier)];
+		if (modifierName.empty()) {
+			LogVerbose("Padmapper: no name found for key '{}'", key);
+			return;
+		}
+		inputName = StrCat(modifierName, "+", inputName);
+	}
+	SetIniValue(category.data(), key.data(), inputName.data());
+}
+
+void PadmapperOptions::Action::UpdateValueDescription() const
+{
+	boundInputDescriptionType = GamepadType;
+	if (boundInput.button == ControllerButton_NONE) {
+		boundInputDescription = "";
+		boundInputShortDescription = "";
+		return;
+	}
+	string_view buttonName = ToString(boundInput.button);
+	if (boundInput.modifier == ControllerButton_NONE) {
+		boundInputDescription = std::string(buttonName);
+		boundInputShortDescription = std::string(Shorten(buttonName));
+		return;
+	}
+	string_view modifierName = ToString(boundInput.modifier);
+	boundInputDescription = StrCat(modifierName, "+", buttonName);
+	boundInputShortDescription = StrCat(Shorten(modifierName), "+", Shorten(buttonName));
+}
+
+string_view PadmapperOptions::Action::Shorten(string_view buttonName) const
+{
+	size_t index = 0;
+	size_t chars = 0;
+	while (index < buttonName.size()) {
+		if (!IsTrailUtf8CodeUnit(buttonName[index]))
+			chars++;
+		if (chars == 3)
+			break;
+		index++;
+	}
+	return string_view(buttonName.data(), index);
+}
+
+string_view PadmapperOptions::Action::GetValueDescription() const
+{
+	return GetValueDescription(false);
+}
+
+string_view PadmapperOptions::Action::GetValueDescription(bool useShortName) const
+{
+	if (GamepadType != boundInputDescriptionType)
+		UpdateValueDescription();
+	return useShortName ? boundInputShortDescription : boundInputDescription;
+}
+
+bool PadmapperOptions::Action::SetValue(ControllerButtonCombo value)
+{
+	if (boundInput.button != ControllerButton_NONE)
+		boundInput = {};
+	if (value.button != ControllerButton_NONE)
+		boundInput = value;
+	UpdateValueDescription();
+	return true;
+}
+
+void PadmapperOptions::AddAction(string_view key, const char *name, const char *description, ControllerButtonCombo defaultInput, std::function<void()> actionPressed, std::function<void()> actionReleased, std::function<bool()> enable, unsigned index)
+{
+	if (committed)
+		return;
+	actions.emplace_front(key, name, description, defaultInput, std::move(actionPressed), std::move(actionReleased), std::move(enable), index);
+}
+
+void PadmapperOptions::CommitActions()
+{
+	if (committed)
+		return;
+	actions.reverse();
+	committed = true;
+}
+
+void PadmapperOptions::ButtonPressed(ControllerButton button)
+{
+	const Action *action = FindAction(button);
+	if (action == nullptr)
+		return;
+	if (IsMovementHandlerActive() && CanDeferToMovementHandler(*action))
+		return;
+	if (action->actionPressed)
+		action->actionPressed();
+	SuppressedButton = action->boundInput.modifier;
+	buttonToReleaseAction[static_cast<size_t>(button)] = action;
+}
+
+void PadmapperOptions::ButtonReleased(ControllerButton button, bool invokeAction)
+{
+	if (invokeAction) {
+		const Action *action = buttonToReleaseAction[static_cast<size_t>(button)];
+		if (action == nullptr)
+			return; // Ignore unmapped buttons.
+
+		// Check that the action can be triggered.
+		if (action->actionReleased && (!action->enable || action->enable()))
+			action->actionReleased();
+	}
+	buttonToReleaseAction[static_cast<size_t>(button)] = nullptr;
+}
+
+void PadmapperOptions::ReleaseAllActiveButtons()
+{
+	for (auto *action : buttonToReleaseAction) {
+		if (action == nullptr)
+			continue;
+		ControllerButton button = action->boundInput.button;
+		ButtonReleased(button, true);
+	}
+}
+
+bool PadmapperOptions::IsActive(string_view actionName) const
+{
+	for (const Action &action : actions) {
+		if (action.key != actionName)
+			continue;
+		const Action *releaseAction = buttonToReleaseAction[static_cast<size_t>(action.boundInput.button)];
+		return releaseAction != nullptr && releaseAction->key == actionName;
+	}
+	return false;
+}
+
+string_view PadmapperOptions::ActionNameTriggeredByButtonEvent(ControllerButtonEvent ctrlEvent) const
+{
+	if (!gbRunGame)
+		return "";
+
+	if (!ctrlEvent.up) {
+		const Action *pressAction = FindAction(ctrlEvent.button);
+		return pressAction != nullptr ? pressAction->key : "";
+	}
+	const Action *releaseAction = buttonToReleaseAction[static_cast<size_t>(ctrlEvent.button)];
+	if (releaseAction == nullptr)
+		return "";
+	return releaseAction->key;
+}
+
+string_view PadmapperOptions::InputNameForAction(string_view actionName, bool useShortName) const
+{
+	for (const Action &action : actions) {
+		if (action.key == actionName && action.boundInput.button != ControllerButton_NONE) {
+			return action.GetValueDescription(useShortName);
+		}
+	}
+	return "";
+}
+
+ControllerButtonCombo PadmapperOptions::ButtonComboForAction(string_view actionName) const
+{
+	for (const auto &action : actions) {
+		if (action.key == actionName && action.boundInput.button != ControllerButton_NONE) {
+			return action.boundInput;
+		}
+	}
+	return ControllerButton_NONE;
+}
+
+const PadmapperOptions::Action *PadmapperOptions::FindAction(ControllerButton button) const
+{
+	// To give preference to button combinations,
+	// first pass ignores mappings where no modifier is bound
+	for (const Action &action : actions) {
+		ControllerButtonCombo combo = action.boundInput;
+		if (combo.modifier == ControllerButton_NONE)
+			continue;
+		if (button != combo.button)
+			continue;
+		if (!IsControllerButtonPressed(combo.modifier))
+			continue;
+		if (action.enable && !action.enable())
+			continue;
+		return &action;
+	}
+
+	for (const Action &action : actions) {
+		ControllerButtonCombo combo = action.boundInput;
+		if (combo.modifier != ControllerButton_NONE)
+			continue;
+		if (button != combo.button)
+			continue;
+		if (action.enable && !action.enable())
+			continue;
+		return &action;
+	}
+
+	return nullptr;
+}
+
+bool PadmapperOptions::CanDeferToMovementHandler(const Action &action) const
+{
+	if (action.boundInput.modifier != ControllerButton_NONE)
+		return false;
+
+	if (spselflag) {
+		const string_view prefix { "QuickSpell" };
+		const string_view key { action.key };
+		if (key.size() >= prefix.size()) {
+			const string_view truncated { key.data(), prefix.size() };
+			if (truncated == prefix)
+				return false;
+		}
+	}
+
+	return IsAnyOf(action.boundInput.button,
+	    ControllerButton_BUTTON_DPAD_UP,
+	    ControllerButton_BUTTON_DPAD_DOWN,
+	    ControllerButton_BUTTON_DPAD_LEFT,
+	    ControllerButton_BUTTON_DPAD_RIGHT);
 }
 
 namespace {

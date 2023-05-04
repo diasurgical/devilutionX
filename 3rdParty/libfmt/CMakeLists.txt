@@ -11,8 +11,17 @@ else()
   set(BUILD_SHARED_LIBS ON)
 endif()
 include(FetchContent)
-FetchContent_Declare(libfmt
-  URL https://github.com/fmtlib/fmt/archive/22d31b31f0e9b4e4654ba67ee881f3564c2cc297.tar.gz
-  URL_HASH MD5=d4e8744846cb9e94a80aca932ed2d5c0
-)
+if(NXDK)
+  # branch: nxdk-v9.1.0
+  FetchContent_Declare(libfmt
+    URL https://github.com/diasurgical/fmt/archive/f69d48bf4049bbdfa74afca02fac3c81bb609dc8.tar.gz
+    URL_HASH MD5=310c79c7a5cda3ad8f4e0d44d9fc1c57
+  )
+else()
+  # master on 2022-03-12
+  FetchContent_Declare(libfmt
+    URL https://github.com/fmtlib/fmt/archive/7f882918eba6430a0509b5e8547de21611264c5c.tar.gz
+    URL_HASH MD5=03fd08aeabf9021c6bf19fbd84d5e62e
+  )
+endif()
 FetchContent_MakeAvailableExcludeFromAll(libfmt)

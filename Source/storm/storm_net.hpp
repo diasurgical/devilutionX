@@ -9,11 +9,6 @@
 
 namespace devilution {
 
-enum game_info : uint8_t {
-	GAMEINFO_NAME,
-	GAMEINFO_PASSWORD,
-};
-
 enum conn_type : uint8_t {
 	SELCONN_ZT,
 	SELCONN_TCP,
@@ -47,13 +42,6 @@ struct _SNETEVENT {
 	uint32_t databytes;
 };
 
-// Game states
-#define GAMESTATE_PRIVATE 0x01
-#define GAMESTATE_FULL 0x02
-#define GAMESTATE_ACTIVE 0x04
-#define GAMESTATE_STARTED 0x08
-#define GAMESTATE_REPLAY 0x80
-
 #define PS_CONNECTED 0x10000
 #define PS_TURN_ARRIVED 0x20000
 #define PS_ACTIVE 0x40000
@@ -74,19 +62,6 @@ bool SNetDestroy();
  *  Returns true if the function was called successfully and false otherwise.
  */
 bool SNetDropPlayer(int playerid, uint32_t flags);
-
-/*  SNetGetGameInfo @ 107
- *
- *  Retrieves specific game information from Storm, such as name, password,
- *  stats, mode, game template, and players.
- *
- *  type:         The type of data to retrieve. See GAMEINFO_ flags.
- *  dst:          The destination buffer for the data.
- *  length:       The maximum size of the destination buffer.
- *
- *  Returns true if the function was called successfully and false otherwise.
- */
-bool SNetGetGameInfo(game_info type, void *dst, unsigned int length);
 
 /*  SNetGetTurnsInTransit @ 115
  *
@@ -112,7 +87,7 @@ bool SNetJoinGame(char *gameName, char *gamePassword, int *playerid);
  */
 bool SNetLeaveGame(int type);
 
-bool SNetReceiveMessage(int *senderplayerid, void **data, uint32_t *databytes);
+bool SNetReceiveMessage(uint8_t *senderplayerid, void **data, uint32_t *databytes);
 bool SNetReceiveTurns(int arraysize, char **arraydata, size_t *arraydatabytes, uint32_t *arrayplayerstatus);
 
 typedef void (*SEVTHANDLER)(struct _SNETEVENT *);

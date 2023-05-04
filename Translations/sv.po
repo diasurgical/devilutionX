@@ -1045,10 +1045,10 @@ msgstr[0] "{:d} Laddning"
 msgstr[1] "{:d} Laddningar"
 
 #: Source/control.cpp:860 Source/inv.cpp:1998 Source/items.cpp:3480
-msgid "{:d} gold piece"
-msgid_plural "{:d} gold pieces"
-msgstr[0] "{:d} guldmynt"
-msgstr[1] "{:d} guldmynt"
+msgid "{:s} gold piece"
+msgid_plural "{:s} gold pieces"
+msgstr[0] "{:s} guldmynt"
+msgstr[1] "{:s} guldmynt"
 
 #: Source/control.cpp:863
 msgid "Requirements not met"
@@ -1068,10 +1068,10 @@ msgstr "Nivåökning"
 
 #. TRANSLATORS: {:d} is a number. Dialog is shown when splitting a stash of Gold.
 #: Source/control.cpp:1040
-msgid "You have {:d} gold piece. How many do you want to remove?"
-msgid_plural "You have {:d} gold pieces. How many do you want to remove?"
-msgstr[0] "Du har {:d} guldmynt. Hur många vill du dra ifrån?"
-msgstr[1] "Du har {:d} guldmynt. Hur många vill du dra ifrån?"
+msgid "You have {:s} gold piece. How many do you want to remove?"
+msgid_plural "You have {:s} gold pieces. How many do you want to remove?"
+msgstr[0] "Du har {:s} guldmynt. Hur många vill du dra ifrån?"
+msgstr[1] "Du har {:s} guldmynt. Hur många vill du dra ifrån?"
 
 #: Source/controls/modifier_hints.cpp:176 Source/qol/monhealthbar.cpp:36
 #: Source/qol/xpbar.cpp:76
@@ -3997,12 +3997,8 @@ msgid "Right-click to read"
 msgstr "Högerklicka för att läsa"
 
 #: Source/items.cpp:1814 Source/items.cpp:1835
-msgid "Select from spell book, then"
-msgstr "Välj från magibok, därefter"
-
-#: Source/items.cpp:1815 Source/items.cpp:1836
-msgid "cast spell to read"
-msgstr "använd trollformel för att läsa"
+msgid "Select from spell book, then\ncast spell to read"
+msgstr "Välj från magibok, därefter\nanvänd trollformel för att läsa"
 
 #: Source/items.cpp:1817 Source/items.cpp:1838 Source/items.cpp:1852
 msgid "Open inventory to use"
@@ -4013,12 +4009,8 @@ msgid "Activate to read"
 msgstr "Aktivera för att läsa"
 
 #: Source/items.cpp:1825
-msgid "Right-click to read, then"
-msgstr "Högerklicka för att läsa, därefter"
-
-#: Source/items.cpp:1826
-msgid "left-click to target"
-msgstr "vänsterklicka för att ange mål"
+msgid "Right-click to read, then\nleft-click to target"
+msgstr "Högerklicka för att läsa, därefter\nvänsterklicka för att ange mål"
 
 #: Source/items.cpp:1849
 msgid "Right-click to use"
@@ -4406,8 +4398,8 @@ msgstr "dubbel monsterskada, enkel till dig"
 
 #: Source/items.cpp:3746
 #, no-c-format
-msgid "Random 0 - 500% damage"
-msgstr "Slumpvis 0 - 500% skada"
+msgid "Random 0 - 600% damage"
+msgstr "Slumpvis 0 - 600% skada"
 
 #: Source/items.cpp:3748
 #, no-c-format
@@ -6898,8 +6890,8 @@ msgid "Chat History (Messages: {:d})"
 msgstr "Chatthistorik (Meddelanden: {:d})"
 
 #: Source/qol/itemlabels.cpp:72
-msgid "{:d} gold"
-msgstr "{:d} guld"
+msgid "{:s} gold"
+msgstr "{:s} guld"
 
 #: Source/qol/stash.cpp:586
 msgid "How many gold pieces do you want to withdraw?"
@@ -7412,8 +7404,8 @@ msgstr "Lämna butiken"
 msgid "I have these items for sale:"
 msgstr "Jag har dessa föremål till salu:"
 
-msgid "Your gold: {:d}"
-msgstr "Ditt guld: {:d}"
+msgid "Your gold: {:s}"
+msgstr "Ditt guld: {:s}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:425

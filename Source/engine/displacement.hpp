@@ -5,147 +5,117 @@
 #include <ostream>
 #endif
 
-#include "direction.hpp"
-#include "size.hpp"
+#include "engine/direction.hpp"
+#include "engine/size.hpp"
 #include "utils/stdcompat/abs.hpp"
 
 namespace devilution {
 
-struct Displacement {
-	int deltaX;
-	int deltaY;
+template <typename DeltaT>
+struct DisplacementOf;
 
-	Displacement() = default;
+using Displacement = DisplacementOf<int>;
 
-	constexpr Displacement(int deltaX, int deltaY)
+template <typename DeltaT>
+struct DisplacementOf {
+	DeltaT deltaX;
+	DeltaT deltaY;
+
+	DisplacementOf() = default;
+
+	template <typename DisplacementDeltaT>
+	constexpr DisplacementOf(DisplacementOf<DisplacementDeltaT> other)
+	    : deltaX(other.deltaX)
+	    , deltaY(other.deltaY)
+	{
+	}
+
+	constexpr DisplacementOf(DeltaT deltaX, DeltaT deltaY)
 	    : deltaX(deltaX)
 	    , deltaY(deltaY)
 	{
 	}
 
-	explicit constexpr Displacement(int delta)
+	explicit constexpr DisplacementOf(DeltaT delta)
 	    : deltaX(delta)
 	    , deltaY(delta)
 	{
 	}
 
-	explicit constexpr Displacement(const Size &size)
+	template <typename SizeT>
+	explicit constexpr DisplacementOf(const SizeOf<SizeT> &size)
 	    : deltaX(size.width)
 	    , deltaY(size.height)
 	{
 	}
 
-	explicit constexpr Displacement(Direction direction)
-	    : Displacement(fromDirection(direction))
+	explicit constexpr DisplacementOf(Direction direction)
+	    : DisplacementOf(fromDirection(direction))
 	{
 	}
 
-	constexpr bool operator==(const Displacement &other) const
+	template <typename DisplacementDeltaT>
+	constexpr bool operator==(const DisplacementOf<DisplacementDeltaT> &other) const
 	{
 		return deltaX == other.deltaX && deltaY == other.deltaY;
 	}
 
-	constexpr bool operator!=(const Displacement &other) const
+	template <typename DisplacementDeltaT>
+	constexpr bool operator!=(const DisplacementOf<DisplacementDeltaT> &other) const
 	{
 		return !(*this == other);
 	}
 
-	constexpr Displacement &operator+=(const Displacement &displacement)
+	template <typename DisplacementDeltaT = DeltaT>
+	constexpr DisplacementOf<DeltaT> &operator+=(DisplacementOf<DisplacementDeltaT> displacement)
 	{
 		deltaX += displacement.deltaX;
 		deltaY += displacement.deltaY;
 		return *this;
 	}
 
-	constexpr Displacement &operator-=(const Displacement &displacement)
+	template <typename DisplacementDeltaT = DeltaT>
+	constexpr DisplacementOf<DeltaT> &operator-=(DisplacementOf<DisplacementDeltaT> displacement)
 	{
 		deltaX -= displacement.deltaX;
 		deltaY -= displacement.deltaY;
 		return *this;
 	}
 
-	constexpr Displacement &operator*=(const int factor)
+	constexpr DisplacementOf<DeltaT> &operator*=(const int factor)
 	{
 		deltaX *= factor;
 		deltaY *= factor;
 		return *this;
 	}
 
-	constexpr Displacement &operator*=(const float factor)
+	constexpr DisplacementOf<DeltaT> &operator*=(const float factor)
 	{
-		deltaX = static_cast<int>(deltaX * factor);
-		deltaY = static_cast<int>(deltaY * factor);
+		deltaX = static_cast<DeltaT>(deltaX * factor);
+		deltaY = static_cast<DeltaT>(deltaY * factor);
 		return *this;
 	}
 
-	constexpr Displacement &operator/=(const int factor)
+	template <typename DeltaU>
+	constexpr DisplacementOf<DeltaT> &operator*=(const DisplacementOf<DeltaU> factor)
+	{
+		deltaX = static_cast<DeltaT>(deltaX * factor.deltaX);
+		deltaY = static_cast<DeltaT>(deltaY * factor.deltaY);
+		return *this;
+	}
+
+	constexpr DisplacementOf<DeltaT> &operator/=(const int factor)
 	{
 		deltaX /= factor;
 		deltaY /= factor;
 		return *this;
 	}
 
-	constexpr Displacement &operator/=(const float factor)
+	constexpr DisplacementOf<DeltaT> &operator/=(const float factor)
 	{
-		deltaX = static_cast<int>(deltaX / factor);
-		deltaY = static_cast<int>(deltaY / factor);
+		deltaX = static_cast<DeltaT>(deltaX / factor);
+		deltaY = static_cast<DeltaT>(deltaY / factor);
 		return *this;
-	}
-
-	constexpr friend Displacement operator+(Displacement a, Displacement b)
-	{
-		a += b;
-		return a;
-	}
-
-	constexpr friend Displacement operator-(Displacement a, Displacement b)
-	{
-		a -= b;
-		return a;
-	}
-
-	constexpr friend Displacement operator*(Displacement a, const int factor)
-	{
-		a *= factor;
-		return a;
-	}
-
-	constexpr friend Displacement operator*(Displacement a, const float factor)
-	{
-		a *= factor;
-		return a;
-	}
-
-	constexpr friend Displacement operator/(Displacement a, const int factor)
-	{
-		a /= factor;
-		return a;
-	}
-
-	constexpr friend Displacement operator/(Displacement a, const float factor)
-	{
-		a /= factor;
-		return a;
-	}
-
-	constexpr friend Displacement operator-(const Displacement &a)
-	{
-		return { -a.deltaX, -a.deltaY };
-	}
-
-	constexpr friend Displacement operator<<(Displacement a, unsigned factor)
-	{
-		return { a.deltaX << factor, a.deltaY << factor };
-	}
-
-	constexpr friend Displacement operator>>(Displacement a, unsigned factor)
-	{
-		return { a.deltaX >> factor, a.deltaY >> factor };
-	}
-
-	constexpr friend Displacement abs(Displacement a)
-	{
-		return { abs(a.deltaX), abs(a.deltaY) };
 	}
 
 	float magnitude() const
@@ -164,8 +134,9 @@ struct Displacement {
 	 *
 	 * @return A representation of the original displacement in screen coordinates.
 	 */
-	constexpr Displacement worldToScreen() const
+	constexpr DisplacementOf<DeltaT> worldToScreen() const
 	{
+		static_assert(std::is_signed<DeltaT>::value, "DeltaT must be signed for transformations involving a rotation");
 		return { (deltaY - deltaX) * 32, (deltaY + deltaX) * -16 };
 	}
 
@@ -176,23 +147,30 @@ struct Displacement {
 	 *
 	 * @return A representation of the original displacement in world coordinates.
 	 */
-	constexpr Displacement screenToWorld() const
+	constexpr DisplacementOf<DeltaT> screenToWorld() const
 	{
+		static_assert(std::is_signed<DeltaT>::value, "DeltaT must be signed for transformations involving a rotation");
 		return { (2 * deltaY + deltaX) / -64, (2 * deltaY - deltaX) / -64 };
 	}
 
 	/**
 	 * @brief Missiles flip the axes for some reason -_-
-	 * @return negated world displacement, for use with missile movement routines.
+	 * @return negated and rounded world displacement, for use with missile movement routines.
 	 */
-	constexpr Displacement screenToMissile() const
+	constexpr DisplacementOf<DeltaT> screenToMissile() const
 	{
-		return -screenToWorld();
+		static_assert(std::is_signed<DeltaT>::value, "DeltaT must be signed for transformations involving a rotation");
+		DeltaT xNumerator = 2 * deltaY + deltaX;
+		DeltaT yNumerator = 2 * deltaY - deltaX;
+		DeltaT xOffset = (xNumerator >= 0) ? 32 : -32;
+		DeltaT yOffset = (yNumerator >= 0) ? 32 : -32;
+		return { (xNumerator + xOffset) / 64, (yNumerator + yOffset) / 64 };
 	}
 
-	constexpr Displacement screenToLight() const
+	constexpr DisplacementOf<DeltaT> screenToLight() const
 	{
-		return { (2 * deltaY + deltaX) / 8, (2 * deltaY - deltaX) / 8 };
+		static_assert(std::is_signed<DeltaT>::value, "DeltaT must be signed for transformations involving a rotation");
+		return { static_cast<DeltaT>((2 * deltaY + deltaX) / 8), static_cast<DeltaT>((2 * deltaY - deltaX) / 8) };
 	}
 
 	/**
@@ -200,14 +178,15 @@ struct Displacement {
 	 *
 	 * This will return a displacement of the form (-1.0 to 1.0, -0.5 to 0.5), to get a full tile offset you can multiply by 16
 	 */
-	Displacement worldToNormalScreen() const
+	[[nodiscard]] Displacement worldToNormalScreen() const
 	{
+		static_assert(std::is_signed<DeltaT>::value, "DeltaT must be signed for transformations involving a rotation");
 		// Most transformations between world and screen space take shortcuts when scaling to simplify the math. This
 		//  routine is typically used with missiles where we want a normal vector that can be multiplied with a target
 		//  velocity (given in pixels). We could normalize the vector first but then we'd need to scale it during
 		//  rotation from world to screen space. To save performing unnecessary divisions we rotate first without
 		//  correcting the scaling. This gives a vector in elevation projection aligned with screen space.
-		Displacement rotated { (deltaY - deltaX), -(deltaY + deltaX) };
+		DisplacementOf<DeltaT> rotated { deltaY - deltaX, -(deltaY + deltaX) };
 		// then normalize this vector
 		Displacement rotatedAndNormalized = rotated.normalized();
 		// and finally scale the y axis to bring it to isometric projection
@@ -217,42 +196,43 @@ struct Displacement {
 	/**
 	 * @brief Calculates a 16 bit fixed point normalized displacement (having magnitude of ~1.0) from the current Displacement
 	 */
-	Displacement normalized() const
-	{
-		float magnitude = this->magnitude();
-		Displacement normalDisplacement = *this << 16;
-		normalDisplacement /= magnitude;
-		return normalDisplacement;
-	}
+	[[nodiscard]] Displacement normalized() const;
 
-	constexpr Displacement Rotate(int quadrants)
+	[[nodiscard]] constexpr DisplacementOf<DeltaT> Rotate(int quadrants) const
 	{
-		constexpr int Sines[] = { 0, 1, 0, -1 };
+		static_assert(std::is_signed<DeltaT>::value, "DeltaT must be signed for Rotate");
+		constexpr DeltaT Sines[] = { 0, 1, 0, -1 };
 
 		quadrants = (quadrants % 4 + 4) % 4;
 
-		int sine = Sines[quadrants];
-		int cosine = Sines[(quadrants + 1) % 4];
+		DeltaT sine = Sines[quadrants];
+		DeltaT cosine = Sines[(quadrants + 1) % 4];
 
-		return Displacement { deltaX * cosine - deltaY * sine, deltaX * sine + deltaY * cosine };
+		return DisplacementOf { deltaX * cosine - deltaY * sine, deltaX * sine + deltaY * cosine };
 	}
 
-#ifdef BUILD_TESTING
-	/**
-	 * @brief Format displacements nicely in test failure messages
-	 * @param stream output stream, expected to have overloads for int and char*
-	 * @param offset Object to display
-	 * @return the stream, to allow chaining
-	 */
-	friend std::ostream &operator<<(std::ostream &stream, const Displacement &offset)
+	[[nodiscard]] constexpr DisplacementOf<DeltaT> flipX() const
 	{
-		return stream << "(x: " << offset.deltaX << ", y: " << offset.deltaY << ")";
+		static_assert(std::is_signed<DeltaT>::value, "DeltaT must be signed for flipX");
+		return { static_cast<DeltaT>(-deltaX), deltaY };
 	}
-#endif
+
+	[[nodiscard]] constexpr DisplacementOf<DeltaT> flipY() const
+	{
+		static_assert(std::is_signed<DeltaT>::value, "DeltaT must be signed for flipY");
+		return { deltaX, static_cast<DeltaT>(-deltaY) };
+	}
+
+	[[nodiscard]] constexpr DisplacementOf<DeltaT> flipXY() const
+	{
+		static_assert(std::is_signed<DeltaT>::value, "DeltaT must be signed for flipXY");
+		return { static_cast<DeltaT>(-deltaX), static_cast<DeltaT>(-deltaY) };
+	}
 
 private:
-	static constexpr Displacement fromDirection(Direction direction)
+	static constexpr DisplacementOf<DeltaT> fromDirection(Direction direction)
 	{
+		static_assert(std::is_signed<DeltaT>::value, "DeltaT must be signed for conversion from Direction");
 		switch (direction) {
 		case Direction::South:
 			return { 1, 1 };
@@ -270,10 +250,108 @@ private:
 			return { 1, -1 };
 		case Direction::SouthEast:
 			return { 1, 0 };
+		case Direction::NoDirection:
+			return { 0, 0 };
 		default:
 			return { 0, 0 };
 		}
 	};
 };
+
+#ifdef BUILD_TESTING
+/**
+ * @brief Format displacements nicely in test failure messages
+ * @param stream output stream, expected to have overloads for int and char*
+ * @param offset Object to display
+ * @return the stream, to allow chaining
+ */
+template <typename DisplacementDeltaT>
+std::ostream &operator<<(std::ostream &stream, const DisplacementOf<DisplacementDeltaT> &offset)
+{
+	return stream << "(x: " << offset.deltaX << ", y: " << offset.deltaY << ")";
+}
+#endif
+
+template <typename DisplacementDeltaT, typename OtherDisplacementDeltaT>
+constexpr DisplacementOf<DisplacementDeltaT> operator+(DisplacementOf<DisplacementDeltaT> a, DisplacementOf<OtherDisplacementDeltaT> b)
+{
+	a += b;
+	return a;
+}
+
+template <typename DisplacementDeltaT, typename OtherDisplacementDeltaT>
+constexpr DisplacementOf<DisplacementDeltaT> operator-(DisplacementOf<DisplacementDeltaT> a, DisplacementOf<OtherDisplacementDeltaT> b)
+{
+	a -= b;
+	return a;
+}
+
+template <typename DisplacementDeltaT>
+constexpr DisplacementOf<DisplacementDeltaT> operator*(DisplacementOf<DisplacementDeltaT> a, const int factor)
+{
+	a *= factor;
+	return a;
+}
+
+template <typename DisplacementDeltaT>
+constexpr DisplacementOf<DisplacementDeltaT> operator*(DisplacementOf<DisplacementDeltaT> a, const float factor)
+{
+	a *= factor;
+	return a;
+}
+
+template <typename DisplacementDeltaT, typename DisplacementDeltaU>
+constexpr DisplacementOf<DisplacementDeltaT> operator*(DisplacementOf<DisplacementDeltaT> a, const DisplacementOf<DisplacementDeltaU> factor)
+{
+	a *= factor;
+	return a;
+}
+
+template <typename DisplacementDeltaT>
+constexpr DisplacementOf<DisplacementDeltaT> operator/(DisplacementOf<DisplacementDeltaT> a, const int factor)
+{
+	a /= factor;
+	return a;
+}
+
+template <typename DisplacementDeltaT>
+constexpr DisplacementOf<DisplacementDeltaT> operator/(DisplacementOf<DisplacementDeltaT> a, const float factor)
+{
+	a /= factor;
+	return a;
+}
+
+template <typename DisplacementDeltaT>
+constexpr DisplacementOf<DisplacementDeltaT> operator-(DisplacementOf<DisplacementDeltaT> a)
+{
+	return { -a.deltaX, -a.deltaY };
+}
+
+template <typename DisplacementDeltaT>
+constexpr DisplacementOf<DisplacementDeltaT> operator<<(DisplacementOf<DisplacementDeltaT> a, unsigned factor)
+{
+	return { a.deltaX << factor, a.deltaY << factor };
+}
+
+template <typename DisplacementDeltaT>
+constexpr DisplacementOf<DisplacementDeltaT> operator>>(DisplacementOf<DisplacementDeltaT> a, unsigned factor)
+{
+	return { a.deltaX >> factor, a.deltaY >> factor };
+}
+
+template <typename DisplacementDeltaT>
+constexpr DisplacementOf<DisplacementDeltaT> abs(DisplacementOf<DisplacementDeltaT> a)
+{
+	return { abs(a.deltaX), abs(a.deltaY) };
+}
+
+template <typename DeltaT>
+Displacement DisplacementOf<DeltaT>::normalized() const
+{
+	const float magnitude = this->magnitude();
+	Displacement normalDisplacement = Displacement(*this) << 16u;
+	normalDisplacement /= magnitude;
+	return normalDisplacement;
+}
 
 } // namespace devilution

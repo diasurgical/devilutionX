@@ -1,10 +1,13 @@
 #pragma once
 
+#include <cstddef>
 #include <cstdint>
 
 #include "utils/endian.hpp"
 
 namespace devilution {
+
+constexpr size_t MaxMpqPathSize = 256;
 
 #pragma pack(push, 1)
 struct MpqFileHeader {

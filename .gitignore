@@ -22,6 +22,9 @@ comparer-config.toml
 # Extra files in the source distribution (see make_src_dist.py)
 /dist/
 
+*.appimage
+*.AppImage
+
 # ELF object file, shared library and object archive.
 *.o
 *.so
@@ -459,3 +462,4 @@ uwp-project/Assets/fonts
 uwp-project/Assets/gendata
 uwp-project/Assets/ui_art
 !uwp-project/devilutionX_TemporaryKey.pfx
+/.s390x-ccache/

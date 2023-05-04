@@ -63,6 +63,20 @@ bool DoPickup(Item item)
 		case IMISC_ELIXDEX:
 		case IMISC_ELIXVIT:
 			return *sgOptions.Gameplay.autoElixirPickup;
+		case IMISC_OILFIRST:
+		case IMISC_OILOF:
+		case IMISC_OILACC:
+		case IMISC_OILMAST:
+		case IMISC_OILSHARP:
+		case IMISC_OILDEATH:
+		case IMISC_OILSKILL:
+		case IMISC_OILBSMTH:
+		case IMISC_OILFORT:
+		case IMISC_OILPERM:
+		case IMISC_OILHARD:
+		case IMISC_OILIMP:
+		case IMISC_OILLAST:
+			return *sgOptions.Gameplay.autoOilPickup;
 		default:
 			return false;
 		}
@@ -73,20 +87,20 @@ bool DoPickup(Item item)
 
 } // namespace
 
-void AutoPickup(int pnum)
+void AutoPickup(const Player &player)
 {
-	if (pnum != MyPlayerId)
+	if (&player != MyPlayer)
 		return;
 	if (leveltype == DTYPE_TOWN && !*sgOptions.Gameplay.autoPickupInTown)
 		return;
 
 	for (auto pathDir : PathDirs) {
-		Point tile = Players[pnum].position.tile + pathDir;
+		Point tile = player.position.tile + pathDir;
 		if (dItem[tile.x][tile.y] != 0) {
 			int itemIndex = dItem[tile.x][tile.y] - 1;
 			auto &item = Items[itemIndex];
 			if (DoPickup(item)) {
-				NetSendCmdGItem(true, CMD_REQUESTAGITEM, pnum, pnum, itemIndex);
+				NetSendCmdGItem(true, CMD_REQUESTAGITEM, player.getId(), itemIndex);
 				item._iRequest = true;
 			}
 		}

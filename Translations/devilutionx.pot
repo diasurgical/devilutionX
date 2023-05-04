@@ -956,8 +956,8 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: Source/control.cpp:860 Source/inv.cpp:2004 Source/items.cpp:3486
-msgid "{:d} gold piece"
-msgid_plural "{:d} gold pieces"
+msgid "{:s} gold piece"
+msgid_plural "{:s} gold pieces"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -979,8 +979,8 @@ msgstr ""
 
 #. TRANSLATORS: {:d} is a number. Dialog is shown when splitting a stash of Gold.
 #: Source/control.cpp:1039
-msgid "You have {:d} gold piece. How many do you want to remove?"
-msgid_plural "You have {:d} gold pieces. How many do you want to remove?"
+msgid "You have {:s} gold piece. How many do you want to remove?"
+msgid_plural "You have {:s} gold pieces. How many do you want to remove?"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -3845,19 +3845,10 @@ msgid "Activate to read"
 msgstr ""
 
 #: Source/items.cpp:1837
-msgid "Right-click to read, then"
-msgstr ""
-
-#: Source/items.cpp:1838
-msgid "left-click to target"
-msgstr ""
+msgid "Right-click to read, then\nleft-click to target"
 
 #: Source/items.cpp:1841
-msgid "Select from spell book, then"
-msgstr ""
-
-#: Source/items.cpp:1842
-msgid "cast spell to read"
+msgid "Select from spell book, then\ncast spell to read"
 msgstr ""
 
 #: Source/items.cpp:1855
@@ -4246,7 +4237,7 @@ msgstr ""
 
 #: Source/items.cpp:3755
 #, no-c-format
-msgid "Random 0 - 500% damage"
+msgid "Random 0 - 600% damage"
 msgstr ""
 
 #: Source/items.cpp:3757
@@ -6670,7 +6661,7 @@ msgid "Chat History (Messages: {:d})"
 msgstr ""
 
 #: Source/qol/itemlabels.cpp:72
-msgid "{:d} gold"
+msgid "{:s} gold"
 msgstr ""
 
 #: Source/qol/stash.cpp:619
@@ -7397,7 +7388,7 @@ msgid "Say Goodbye"
 msgstr ""
 
 #: Source/stores.cpp:2458
-msgid "Your gold: {:d}"
+msgid "Your gold: {:s}"
 msgstr ""
 
 #. TRANSLATORS: Quest dialog spoken by Cain

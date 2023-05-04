@@ -1,0 +1,55 @@
+R 32 header
+R 8 setlevel
+R 32 setlvlnum
+R 32 currlevel
+LT 32 leveltype
+R 32 viewX
+R 32 viewY
+R 8 invflag
+R 8 chrflag
+LC 32 NumMonsters
+LC 32 ItemCount
+LC 32 NumMissiles
+LC 32 NumObjects
+C_DA 17 levelSeed levelSeeds
+C_HF 25 levelSeed levelSeeds
+C 1 player player
+C_DA 16 quest quests
+C_HF 24 quest quests
+C 4 portal portals
+M 200 32 MonsterKillCounts
+M_DL 200 32 ActiveMonsters
+C_DL NumMonsters monster monsters
+M_DL 125 8 ActiveMissiles
+M_DL 125 8 AvailableMissiles
+C_DL NumMissiles missile missiles
+M_DL 127 8 ActiveObjects
+M_DL 127 8 AvailableObjects
+C_DL NumObjects object objects
+LC_DL 32 ActiveLightCount
+M_DL 32 8 ActiveLights
+C_DL ActiveLightCount lightning lightning
+R_DL 32 VisionId
+LC_DL 32 VisionCount
+C_DL VisionCount lightning vision
+M 127 8 ActiveItems
+M 127 8 AvailableItems
+C ItemCount item items
+M 128 8 UniqueItemFlags
+M 12544 8 dLight
+M 12544 8 dFlags
+M 12544 8 dPlayer
+M 12544 8 dItem
+M_DL 12544 32 dMonster
+M_DL 12544 8 dCorpse
+M_DL 12544 8 dObject
+M_DL 12544 8 dLight
+M_DL 12544 8 dPreLight
+M_DL 1600 8 AutomapView
+M_DL 12544 8 dMissile
+R 32 numpremium
+R 32 premiumlevel
+C_DA 6 item PremiumItems
+C_HF 15 item PremiumItems
+R 8 AutomapActive
+R 32 AutoMapScale

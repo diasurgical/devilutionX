@@ -18,6 +18,7 @@ Uint16 GetViewportHeight();
 /** @brief Returns the UI (Menus, Messages, Help) can use. Currently this is 640x480 like vanilla. */
 const Rectangle &GetUIRectangle();
 
+void AdjustToScreenGeometry(Size windowSize);
 float GetDpiScalingFactor();
 /**
  * @brief Set the screen to fullscreen or windowe if fullsc
@@ -30,6 +31,6 @@ void ReinitializeIntegerScale();
 #endif
 void ReinitializeRenderer();
 void ResizeWindow();
-void UiErrorOkDialog(const char *caption, const char *text, bool error = true);
+void UiErrorOkDialog(string_view caption, string_view text, bool error = true);
 
 } // namespace devilution

@@ -46,9 +46,15 @@ int32_t GenerateRnd(int32_t v)
 {
 	if (v <= 0)
 		return 0;
-	if (v < 0xFFFF)
+	if (v <= 0x7FFF) // use the high bits to correct for LCG bias
 		return (AdvanceRndSeed() >> 16) % v;
 	return AdvanceRndSeed() % v;
+}
+
+bool FlipCoin(unsigned frequency)
+{
+	// Casting here because GenerateRnd takes a signed argument when it should take and yield unsigned.
+	return GenerateRnd(static_cast<int32_t>(frequency)) == 0;
 }
 
 } // namespace devilution

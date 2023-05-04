@@ -1,0 +1,6 @@
+R 32 open
+R 32 positionX
+R 32 positionY
+R 32 level
+R 32 ltype
+R 32 setlvl

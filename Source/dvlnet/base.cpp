@@ -4,6 +4,8 @@
 #include <cstring>
 #include <memory>
 
+#include "player.h"
+
 namespace devilution {
 namespace net {
 
@@ -182,7 +184,7 @@ void base::RecvLocal(packet &pkt)
 	}
 }
 
-bool base::SNetReceiveMessage(int *sender, void **data, uint32_t *size)
+bool base::SNetReceiveMessage(uint8_t *sender, void **data, uint32_t *size)
 {
 	poll();
 	if (message_queue.empty())
@@ -218,7 +220,7 @@ bool base::SNetSendMessage(int playerId, void *data, unsigned int size)
 
 bool base::AllTurnsArrived()
 {
-	for (auto i = 0; i < MAX_PLRS; ++i) {
+	for (size_t i = 0; i < Players.size(); ++i) {
 		PlayerState &playerState = playerStateTable_[i];
 		if (!playerState.isConnected)
 			continue;
@@ -237,7 +239,7 @@ bool base::SNetReceiveTurns(char **data, size_t *size, uint32_t *status)
 {
 	poll();
 
-	for (auto i = 0; i < MAX_PLRS; ++i) {
+	for (size_t i = 0; i < Players.size(); ++i) {
 		status[i] = 0;
 
 		PlayerState &playerState = playerStateTable_[i];
@@ -249,7 +251,7 @@ bool base::SNetReceiveTurns(char **data, size_t *size, uint32_t *status)
 		std::deque<turn_t> &turnQueue = playerState.turnQueue;
 		while (!turnQueue.empty()) {
 			const turn_t &turn = turnQueue.front();
-			seq_t diff = turn.SequenceNumber - next_turn;
+			seq_t diff = turn.SequenceNumber - current_turn;
 			if (diff <= 0x7F)
 				break;
 			turnQueue.pop_front();
@@ -257,7 +259,7 @@ bool base::SNetReceiveTurns(char **data, size_t *size, uint32_t *status)
 	}
 
 	if (AllTurnsArrived()) {
-		for (auto i = 0; i < MAX_PLRS; ++i) {
+		for (size_t i = 0; i < Players.size(); ++i) {
 			PlayerState &playerState = playerStateTable_[i];
 			if (!playerState.isConnected)
 				continue;
@@ -267,24 +269,24 @@ bool base::SNetReceiveTurns(char **data, size_t *size, uint32_t *status)
 				continue;
 
 			const turn_t &turn = turnQueue.front();
-			if (turn.SequenceNumber != next_turn)
+			if (turn.SequenceNumber != current_turn)
 				continue;
 
 			playerState.lastTurnValue = turn.Value;
 			turnQueue.pop_front();
 
-			size[i] = sizeof(int32_t);
 			status[i] |= PS_ACTIVE;
 			status[i] |= PS_TURN_ARRIVED;
+			size[i] = sizeof(int32_t);
 			data[i] = reinterpret_cast<char *>(&playerState.lastTurnValue);
 		}
 
-		next_turn++;
+		current_turn++;
 
 		return true;
 	}
 
-	for (auto i = 0; i < MAX_PLRS; ++i) {
+	for (size_t i = 0; i < Players.size(); ++i) {
 		PlayerState &playerState = playerStateTable_[i];
 		if (!playerState.isConnected)
 			continue;
@@ -307,6 +309,7 @@ bool base::SNetSendTurn(char *data, unsigned int size)
 	turn_t turn;
 	turn.SequenceNumber = next_turn;
 	std::memcpy(&turn.Value, data, size);
+	next_turn++;
 
 	PlayerState &playerState = playerStateTable_[plr_self];
 	std::deque<turn_t> &turnQueue = playerState.turnQueue;
@@ -336,9 +339,10 @@ void base::SendFirstTurnIfReady(plr_t player)
 	if (turnQueue.empty())
 		return;
 
-	turn_t turn = turnQueue.back();
-	auto pkt = pktfty->make_packet<PT_TURN>(plr_self, player, turn);
-	send(*pkt);
+	for (turn_t turn : turnQueue) {
+		auto pkt = pktfty->make_packet<PT_TURN>(plr_self, player, turn);
+		send(*pkt);
+	}
 }
 
 void base::MakeReady(seq_t sequenceNumber)
@@ -346,14 +350,15 @@ void base::MakeReady(seq_t sequenceNumber)
 	if (!awaitingSequenceNumber_)
 		return;
 
+	current_turn = sequenceNumber;
 	next_turn = sequenceNumber;
 	awaitingSequenceNumber_ = false;
 
 	PlayerState &playerState = playerStateTable_[plr_self];
 	std::deque<turn_t> &turnQueue = playerState.turnQueue;
-	if (!turnQueue.empty()) {
-		turn_t &turn = turnQueue.front();
+	for (turn_t &turn : turnQueue) {
 		turn.SequenceNumber = next_turn;
+		next_turn++;
 		SendTurnIfReady(turn);
 	}
 }
@@ -368,7 +373,7 @@ void base::SNetGetProviderCaps(struct _SNETCAPS *caps)
 	caps->bytessec = 1000000;        // ?
 	caps->latencyms = 0;             // unused
 	caps->defaultturnssec = 10;      // ?
-	caps->defaultturnsintransit = 1; // maximum acceptable number
+	caps->defaultturnsintransit = 2; // maximum acceptable number
 	                                 // of turns in queue?
 }
 
@@ -414,7 +419,7 @@ bool base::SNetDropPlayer(int playerid, uint32_t flags)
 
 plr_t base::GetOwner()
 {
-	for (auto i = 0; i < MAX_PLRS; ++i) {
+	for (size_t i = 0; i < Players.size(); ++i) {
 		if (IsConnected(i)) {
 			return i;
 		}

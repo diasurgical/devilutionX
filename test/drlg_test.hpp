@@ -6,7 +6,10 @@
 #pragma once
 
 #include "engine/load_file.hpp"
-#include "themes.h"
+#include "levels/themes.h"
+#include "multi.h"
+#include "player.h"
+#include "quests.h"
 #include "utils/paths.h"
 
 using namespace devilution;
@@ -45,7 +48,19 @@ void LoadExpectedLevelData(const char *fixture)
 	dunPath.append(fixture);
 	DunData = LoadFileInMem<uint16_t>(dunPath.c_str());
 	ASSERT_NE(DunData, nullptr) << "Unable to load test fixture " << dunPath;
-	ASSERT_EQ(Size(DMAXX, DMAXY), Size(DunData[0], DunData[1]));
+	ASSERT_EQ(Size(DMAXX, DMAXY), Size(SDL_SwapLE16(DunData[0]), SDL_SwapLE16(DunData[1])));
+}
+
+void TestInitGame(bool fullQuests = true, bool originalCathedral = true)
+{
+	Players.resize(1);
+	MyPlayer = &Players[0];
+	MyPlayer->pOriginalCathedral = originalCathedral;
+
+	sgGameInitInfo.fullQuests = fullQuests ? 1 : 0;
+	gbIsMultiplayer = !fullQuests;
+
+	InitQuests();
 }
 
 void TestCreateDungeon(int level, uint32_t seed, lvl_entry entry)

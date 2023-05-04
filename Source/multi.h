@@ -31,6 +31,7 @@ struct GameData {
 	uint8_t bTheoQuest;
 	uint8_t bCowQuest;
 	uint8_t bFriendlyFire;
+	uint8_t fullQuests;
 };
 
 /* @brief Contains info of running public game (for game list browsing) */
@@ -41,16 +42,16 @@ struct GameInfo {
 };
 
 extern bool gbSomebodyWonGameKludge;
-extern char szPlayerDescript[128];
 extern uint16_t sgwPackPlrOffsetTbl[MAX_PLRS];
-extern BYTE gbActivePlayers;
+extern uint8_t gbActivePlayers;
 extern bool gbGameDestroyed;
-extern GameData sgGameInitInfo;
+extern DVL_API_FOR_TEST GameData sgGameInitInfo;
 extern bool gbSelectProvider;
 extern DVL_API_FOR_TEST bool gbIsMultiplayer;
-extern char szPlayerName[128];
+extern std::string GameName;
+extern std::string GamePassword;
 extern bool PublicGame;
-extern BYTE gbDeltaSender;
+extern uint8_t gbDeltaSender;
 extern uint32_t player_state[MAX_PLRS];
 
 void InitGameInfo();
@@ -66,7 +67,7 @@ void multi_net_ping();
  */
 bool multi_handle_delta();
 void multi_process_network_packets();
-void multi_send_zero_packet(int pnum, _cmd_id bCmd, const byte *data, size_t size);
+void multi_send_zero_packet(size_t pnum, _cmd_id bCmd, const byte *data, size_t size);
 void NetClose();
 bool NetInit(bool bSinglePlayer);
 void recv_plrinfo(int pnum, const TCmdPlrInfoHdr &header, bool recv);

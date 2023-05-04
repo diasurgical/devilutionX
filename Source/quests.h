@@ -8,15 +8,14 @@
 #include <cstdint>
 
 #include "engine.h"
-#include "engine/cel_sprite.hpp"
+#include "engine/clx_sprite.hpp"
 #include "engine/point.hpp"
-#include "gendung.h"
+#include "levels/gendung.h"
 #include "monster.h"
 #include "objdat.h"
 #include "panels/info_box.hpp"
 #include "textdat.h"
 #include "utils/attributes.h"
-#include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
 
@@ -32,6 +31,40 @@ enum {
 	QS_MUSHGIVEN,
 	QS_BRAINSPAWNED,
 	QS_BRAINGIVEN,
+};
+
+/** @brief States of the gharbad the week quest for multiplayer sync */
+enum {
+	QS_GHARBAD_INIT,
+	QS_GHARBAD_FIRST_ITEM_READY,
+	QS_GHARBAD_FIRST_ITEM_SPAWNED,
+	QS_GHARBAD_SECOND_ITEM_NEARLY_DONE,
+	QS_GHARBAD_SECOND_ITEM_READY,
+	QS_GHARBAD_ATTACKING,
+};
+
+/** @brief States of Zhar the Mad quest for multiplayer sync */
+enum {
+	QS_ZHAR_INIT,
+	QS_ZHAR_ITEM_SPAWNED,
+	QS_ZHAR_ANGRY,
+	QS_ZHAR_ATTACKING,
+};
+
+/** @brief States of the Warlord of Blood quest */
+enum {
+	QS_WARLORD_INIT,
+	QS_WARLORD_STEELTOME_READ,
+	QS_WARLORD_TALKING,
+	/** @brief State only added for multiplayer quests. Doesn't affect vanilla compatibility. */
+	QS_WARLORD_ATTACKING,
+};
+
+/** @brief States of Lachdanan quest for multiplayer sync */
+enum {
+	QS_VEIL_INIT,
+	QS_VEIL_EARLY_RETURN,
+	QS_VEIL_ITEM_SPAWNED,
 };
 
 enum quest_state : uint8_t {
@@ -74,7 +107,7 @@ struct QuestData {
 };
 
 extern bool QuestLogIsOpen;
-extern std::optional<OwnedCelSprite> pQLogCel;
+extern OptionalOwnedClxSpriteList pQLogCel;
 extern DVL_API_FOR_TEST Quest Quests[MAXQUESTS];
 extern Point ReturnLvlPosition;
 extern dungeon_type ReturnLevelType;
@@ -91,9 +124,9 @@ void InitialiseQuestPools(uint32_t seed, Quest quests[]);
 void CheckQuests();
 bool ForceQuests();
 void CheckQuestKill(const Monster &monster, bool sendmsg);
-void DRLG_CheckQuests(int x, int y);
-void SetReturnLvlPos();
-void GetReturnLvlPos();
+void DRLG_CheckQuests(Point position);
+int GetMapReturnLevel();
+Point GetMapReturnPosition();
 void LoadPWaterPalette();
 void UpdatePWaterPalette();
 void ResyncMPQuests();
@@ -104,7 +137,8 @@ void QuestlogUp();
 void QuestlogDown();
 void QuestlogEnter();
 void QuestlogESC();
-void SetMultiQuest(int q, quest_state s, bool log, int v1);
+void SetMultiQuest(int q, quest_state s, bool log, int v1, int v2, int16_t qmsg);
+bool UseMultiplayerQuests();
 
 /* rdata */
 extern QuestData QuestsData[];

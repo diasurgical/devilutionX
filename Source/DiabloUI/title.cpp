@@ -3,32 +3,35 @@
 #include "controls/input.h"
 #include "controls/menu_controls.h"
 #include "discord/discord.h"
-#include "engine/load_pcx_as_cel.hpp"
+#include "engine/load_clx.hpp"
+#include "engine/load_pcx.hpp"
 #include "utils/language.h"
+#include "utils/sdl_geometry.h"
+#include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
 namespace {
+
+OptionalOwnedClxSpriteList DiabloTitleLogo;
 
 std::vector<std::unique_ptr<UiItemBase>> vecTitleScreen;
 
 void TitleLoad()
 {
 	if (gbIsHellfire) {
-		// This is a 2.4 MiB PCX file without transparency (4.6 MiB as an SDL surface).
-		LoadBackgroundArt("ui_art\\hf_logo1.pcx", 16);
-
-		LoadArt("ui_art\\hf_titlew.pcx", &ArtBackgroundWidescreen);
+		LoadBackgroundArt("ui_art\\hf_logo1", 16);
+		ArtBackgroundWidescreen = LoadOptionalClx("ui_art\\hf_titlew.clx");
 	} else {
-		LoadBackgroundArt("ui_art\\title.pcx");
-		ArtLogos[LOGO_BIG] = LoadPcxAssetAsCel("ui_art\\logo.pcx", /*numFrames=*/15, /*generateFrameHeaders=*/false, /*transparentColorIndex=*/250);
+		LoadBackgroundArt("ui_art\\title");
+		DiabloTitleLogo = LoadPcxSpriteList("ui_art\\logo", /*numFrames=*/15, /*transparentColor=*/250);
 	}
 }
 
 void TitleFree()
 {
-	ArtBackground.Unload();
-	ArtBackgroundWidescreen.Unload();
-	ArtLogos[LOGO_BIG] = std::nullopt;
+	ArtBackground = std::nullopt;
+	ArtBackgroundWidescreen = std::nullopt;
+	DiabloTitleLogo = std::nullopt;
 
 	vecTitleScreen.clear();
 }
@@ -40,15 +43,18 @@ void UiTitleDialog()
 	TitleLoad();
 	const Point uiPosition = GetUIRectangle().position;
 	if (gbIsHellfire) {
-		SDL_Rect rect = { 0, uiPosition.y, 0, 0 };
-		vecTitleScreen.push_back(std::make_unique<UiImage>(&ArtBackgroundWidescreen, rect, UiFlags::AlignCenter, /*bAnimated=*/true));
-		vecTitleScreen.push_back(std::make_unique<UiImage>(&ArtBackground, rect, UiFlags::AlignCenter, /*bAnimated=*/true));
+		SDL_Rect rect = MakeSdlRect(0, uiPosition.y, 0, 0);
+		if (ArtBackgroundWidescreen)
+			vecTitleScreen.push_back(std::make_unique<UiImageClx>((*ArtBackgroundWidescreen)[0], rect, UiFlags::AlignCenter));
+		vecTitleScreen.push_back(std::make_unique<UiImageAnimatedClx>(*ArtBackground, rect, UiFlags::AlignCenter));
 	} else {
 		UiAddBackground(&vecTitleScreen);
-		UiAddLogo(&vecTitleScreen, LOGO_BIG, 182);
 
-		SDL_Rect rect = { (Sint16)(uiPosition.x), (Sint16)(uiPosition.y + 410), 640, 26 };
-		vecTitleScreen.push_back(std::make_unique<UiArtText>(_("Copyright © 1996-2001 Blizzard Entertainment").c_str(), rect, UiFlags::AlignCenter | UiFlags::FontSize24 | UiFlags::ColorUiSilver));
+		vecTitleScreen.push_back(std::make_unique<UiImageAnimatedClx>(
+		    *DiabloTitleLogo, MakeSdlRect(0, uiPosition.y + 182, 0, 0), UiFlags::AlignCenter));
+
+		SDL_Rect rect = MakeSdlRect(uiPosition.x, uiPosition.y + 410, 640, 26);
+		vecTitleScreen.push_back(std::make_unique<UiArtText>(_("Copyright © 1996-2001 Blizzard Entertainment").data(), rect, UiFlags::AlignCenter | UiFlags::FontSize24 | UiFlags::ColorUiSilver));
 	}
 
 	bool endMenu = false;
@@ -62,7 +68,8 @@ void UiTitleDialog()
 		discord_manager::UpdateMenu();
 
 		while (PollEvent(&event) != 0) {
-			if (GetMenuAction(event) != MenuAction_NONE) {
+			std::vector<MenuAction> menuActions = GetMenuActions(event);
+			if (std::any_of(menuActions.begin(), menuActions.end(), [](auto menuAction) { return menuAction != MenuAction_NONE; })) {
 				endMenu = true;
 				break;
 			}

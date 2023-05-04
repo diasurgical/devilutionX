@@ -1,9 +1,9 @@
 # Sets the __FILE__ macro value to be relative to CMAKE_SOURCE_DIR.
 function(set_relative_file_macro TARGET)
   if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-    if((CMAKE_CXX_COMPILER_ID MATCHES "CLANG" AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 12)
+    if((CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 12)
         OR (CMAKE_CXX_COMPILER_ID MATCHES "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 8))
-      target_compile_options(${TARGET} PUBLIC "-ffile-prefix-map=${CMAKE_SOURCE_DIR}/=")
+      target_compile_options(${TARGET} PUBLIC "-fmacro-prefix-map=${CMAKE_SOURCE_DIR}/=")
     else()
       get_target_property(_srcs ${TARGET} SOURCES)
       foreach(_src ${_srcs})

@@ -19,7 +19,7 @@ std::vector<std::unique_ptr<UiItemBase>> vecSelYesNoDialog;
 
 void SelyesnoFree()
 {
-	ArtBackground.Unload();
+	ArtBackground = std::nullopt;
 
 	vecSelYesNoDialogItems.clear();
 
@@ -42,7 +42,7 @@ void SelyesnoEsc()
 
 bool UiSelHeroYesNoDialog(const char *title, const char *body)
 {
-	LoadBackgroundArt("ui_art\\black.pcx");
+	UiLoadBlackBackground();
 	UiAddBackground(&vecSelYesNoDialog);
 	UiAddLogo(&vecSelYesNoDialog);
 

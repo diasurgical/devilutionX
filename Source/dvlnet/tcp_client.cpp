@@ -6,7 +6,6 @@
 #include <exception>
 #include <functional>
 #include <memory>
-#include <sstream>
 #include <stdexcept>
 #include <system_error>
 
@@ -62,7 +61,7 @@ int tcp_client::join(std::string addrstr)
 		}
 	}
 	if (plr_self == PLR_BROADCAST) {
-		SDL_SetError("%s", _("Unable to connect").c_str());
+		SDL_SetError("%s", _("Unable to connect").data());
 		return -1;
 	}
 
@@ -88,7 +87,7 @@ void tcp_client::HandleReceive(const asio::error_code &error, size_t bytesRead)
 		return;
 	}
 	if (bytesRead == 0) {
-		throw std::runtime_error(_("error: read 0 bytes from server"));
+		throw std::runtime_error(_("error: read 0 bytes from server").data());
 	}
 	recv_buffer.resize(bytesRead);
 	recv_queue.Write(std::move(recv_buffer));

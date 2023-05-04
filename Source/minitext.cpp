@@ -8,12 +8,13 @@
 
 #include "DiabloUI/ui_flags.hpp"
 #include "control.h"
-#include "dx.h"
 #include "engine.h"
-#include "engine/cel_sprite.hpp"
+#include "engine/clx_sprite.hpp"
+#include "engine/dx.h"
 #include "engine/load_cel.hpp"
-#include "engine/render/cel_render.hpp"
+#include "engine/render/clx_render.hpp"
 #include "engine/render/text_render.hpp"
+#include "playerdat.hpp"
 #include "textdat.h"
 #include "utils/language.h"
 #include "utils/stdcompat/optional.hpp"
@@ -21,7 +22,6 @@
 
 namespace devilution {
 
-/** Specify if the quest dialog window is being shown */
 bool qtextflag;
 
 namespace {
@@ -31,7 +31,7 @@ int qtextSpd;
 /** Start time of scrolling */
 Uint32 ScrollStart;
 /** Graphics for the window border */
-std::optional<OwnedCelSprite> pTextBoxCels;
+OptionalOwnedClxSpriteList pTextBoxCels;
 
 /** Pixels for a line of text and the empty space under it. */
 const int LineHeight = 38;
@@ -127,26 +127,52 @@ void FreeQuestText()
 
 void InitQuestText()
 {
-	pTextBoxCels = LoadCel("Data\\TextBox.CEL", 591);
-	qtextflag = false;
+	pTextBoxCels = LoadCel("data\\textbox", 591);
 }
 
 void InitQTextMsg(_speech_id m)
 {
+	_sfx_id sfxnr = Speeches[m].sfxnr;
+	const _sfx_id *classSounds = herosounds[static_cast<size_t>(MyPlayer->_pClass)];
+	switch (sfxnr) {
+	case PS_WARR1:
+		sfxnr = classSounds[static_cast<size_t>(HeroSpeech::ChamberOfBoneLore)];
+		break;
+	case PS_WARR10:
+		sfxnr = classSounds[static_cast<size_t>(HeroSpeech::ValorLore)];
+		break;
+	case PS_WARR11:
+		sfxnr = classSounds[static_cast<size_t>(HeroSpeech::HallsOfTheBlindLore)];
+		break;
+	case PS_WARR12:
+		sfxnr = classSounds[static_cast<size_t>(HeroSpeech::WarlordOfBloodLore)];
+		break;
+	case PS_WARR54:
+		sfxnr = classSounds[static_cast<size_t>(HeroSpeech::InSpirituSanctum)];
+		break;
+	case PS_WARR55:
+		sfxnr = classSounds[static_cast<size_t>(HeroSpeech::PraedictumOtium)];
+		break;
+	case PS_WARR56:
+		sfxnr = classSounds[static_cast<size_t>(HeroSpeech::EfficioObitusUtInimicus)];
+		break;
+	default:
+		break;
+	}
 	if (Speeches[m].scrlltxt) {
 		QuestLogIsOpen = false;
 		LoadText(_(Speeches[m].txtstr));
 		qtextflag = true;
-		qtextSpd = CalculateTextSpeed(Speeches[m].sfxnr);
+		qtextSpd = CalculateTextSpeed(sfxnr);
 		ScrollStart = SDL_GetTicks();
 	}
-	PlaySFX(Speeches[m].sfxnr);
+	PlaySFX(sfxnr);
 }
 
 void DrawQTextBack(const Surface &out)
 {
 	const Point uiPosition = GetUIRectangle().position;
-	CelDrawTo(out, uiPosition + Displacement { 24, 327 }, *pTextBoxCels, 0);
+	ClxDraw(out, uiPosition + Displacement { 24, 327 }, (*pTextBoxCels)[0]);
 	DrawHalfTransparentRectTo(out, uiPosition.x + 27, uiPosition.y + 28, 585, 297);
 }
 

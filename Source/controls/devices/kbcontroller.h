@@ -21,7 +21,5 @@ SDL_Keycode ControllerButtonToKbCtrlKeyCode(ControllerButton button);
 
 bool IsKbCtrlButtonPressed(ControllerButton button);
 
-bool ProcessKbCtrlAxisMotion(const SDL_Event &event);
-
 } // namespace devilution
 #endif

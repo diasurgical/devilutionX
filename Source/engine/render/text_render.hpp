@@ -14,7 +14,7 @@
 
 #include "DiabloUI/ui_flags.hpp"
 #include "engine.h"
-#include "engine/cel_sprite.hpp"
+#include "engine/clx_sprite.hpp"
 #include "engine/rectangle.hpp"
 #include "utils/stdcompat/optional.hpp"
 #include "utils/stdcompat/string_view.hpp"
@@ -37,7 +37,7 @@ enum text_color : uint8_t {
 	ColorUiSilverDark,
 
 	ColorDialogWhite,
-	ColorDialogYellow,
+	ColorYellow,
 
 	ColorGold,
 	ColorBlack,
@@ -46,6 +46,7 @@ enum text_color : uint8_t {
 	ColorWhitegold,
 	ColorRed,
 	ColorBlue,
+	ColorOrange,
 
 	ColorButtonface,
 	ColorButtonpushed,
@@ -56,7 +57,7 @@ enum text_color : uint8_t {
  */
 class DrawStringFormatArg {
 public:
-	enum class Type {
+	enum class Type : uint8_t {
 		StringView,
 		Int
 	};
@@ -123,11 +124,9 @@ private:
  *
  * Also used in the stores and the quest log.
  */
-extern std::optional<OwnedCelSprite> pSPentSpn2Cels;
+extern OptionalOwnedClxSpriteList pSPentSpn2Cels;
 
 void LoadSmallSelectionSpinner();
-
-void UnloadFonts(GameFontTables size, text_color color);
 
 /**
  * @brief Calculate pixel width of first line of text, respecting kerning
@@ -143,12 +142,14 @@ int GetLineWidth(string_view text, GameFontTables size = GameFont12, int spacing
  * @brief Calculate pixel width of first line of text, respecting kerning
  * @param fmt An fmt::format string.
  * @param args Format arguments.
+ * @param argsLen Number of format arguments.
+ * @param argsOffset Index of the first unprocessed format argument.
  * @param size Font size to use
  * @param spacing Extra spacing to add per character
  * @param charactersInLine Receives characters read until newline or terminator
  * @return Line width in pixels
  */
-int GetLineWidth(string_view fmt, DrawStringFormatArg *args, std::size_t argsLen, GameFontTables size, int spacing, int *charactersInLine = nullptr);
+int GetLineWidth(string_view fmt, DrawStringFormatArg *args, size_t argsLen, size_t argsOffset, GameFontTables size, int spacing, int *charactersInLine = nullptr);
 
 int GetLineHeight(string_view text, GameFontTables fontIndex);
 
@@ -210,12 +211,13 @@ inline void DrawString(const Surface &out, string_view text, const Point &positi
 /**
  * @brief Draws a line of text with different colors for certain parts of the text.
  *
- * @example DrawStringWithColors(out, "Press {} to start", {{"Ⓧ", UiFlags::ColorBlue}}, UiFlags::ColorWhite)
+ *     DrawStringWithColors(out, "Press {} to start", {{"Ⓧ", UiFlags::ColorBlue}}, UiFlags::ColorWhite)
  *
  * @param out Output buffer to draw the text on.
  * @param fmt An fmt::format string.
  * @param args Format arguments.
- * @param position Location of the top left corner of the string relative to the top left corner of the output buffer.
+ * @param argsLen Number of format arguments.
+ * @param rect Clipping region relative to the output buffer describing where to draw the text and when to wrap long lines.
  * @param flags A combination of UiFlags to describe font size, color, alignment, etc. See ui_items.h for available options
  * @param spacing Additional space to add between characters.
  *                This value may be adjusted if the flag UIS_FIT_SPACING is passed in the flags parameter.

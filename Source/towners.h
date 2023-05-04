@@ -36,13 +36,18 @@ enum _talker_id : uint8_t {
 };
 
 struct Towner {
-	byte *_tNAnim[8];
-	std::unique_ptr<byte[]> data;
-	byte *_tAnimData;
-	/** Used to get a voice line and text related to active quests when the player speaks to a town npc */
-	int16_t seed;
+	OptionalOwnedClxSpriteList ownedAnim;
+	OptionalClxSpriteList anim;
+	/** Specifies the animation frame sequence. */
+	const uint8_t *animOrder; // unowned
+	void (*talk)(Player &player, Towner &towner);
+
+	string_view name;
+
 	/** Tile position of NPC */
 	Point position;
+	/** Used to get a voice line and text related to active quests when the player speaks to a town npc */
+	int16_t seed;
 	uint16_t _tAnimWidth;
 	/** Tick length of each frame in the current animation */
 	int16_t _tAnimDelay;
@@ -53,16 +58,12 @@ struct Towner {
 	/** Current frame of animation. */
 	uint8_t _tAnimFrame;
 	uint8_t _tAnimFrameCnt;
-	string_view name;
-	/** Specifies the animation frame sequence. */
-	const uint8_t *animOrder; // unowned
-	std::size_t animOrderSize;
-	void (*talk)(Player &player, Towner &towner);
+	uint8_t animOrderSize;
 	_talker_id _ttype;
 
-	CelSprite Sprite() const
+	ClxSprite currentSprite() const
 	{
-		return CelSprite { _tAnimData, _tAnimWidth };
+		return (*anim)[_tAnimFrame];
 	}
 };
 

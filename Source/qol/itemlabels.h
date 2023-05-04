@@ -12,8 +12,9 @@ namespace devilution {
 void ToggleItemLabelHighlight();
 void AltPressed(bool pressed);
 bool IsItemLabelHighlighted();
+void ResetItemlabelHighlighted();
 bool IsHighlightingLabelsEnabled();
-void AddItemToLabelQueue(int id, int x, int y);
+void AddItemToLabelQueue(int id, Point position);
 void DrawItemNameLabels(const Surface &out);
 
 } // namespace devilution

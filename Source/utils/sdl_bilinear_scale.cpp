@@ -148,4 +148,41 @@ void BilinearScale32(SDL_Surface *src, SDL_Surface *dst)
 	}
 }
 
+void BilinearDownscaleByHalf8(const SDL_Surface *src, const std::array<std::array<Uint8, 256>, 256> &paletteBlendingTable, SDL_Surface *dst, uint8_t transparentIndex)
+{
+	const auto *const srcPixelsBegin = static_cast<const uint8_t *>(src->pixels)
+	    + static_cast<size_t>(src->clip_rect.y * src->pitch + src->clip_rect.x);
+	auto *const dstPixelsBegin = static_cast<uint8_t *>(dst->pixels)
+	    + static_cast<size_t>(dst->clip_rect.y * dst->pitch + dst->clip_rect.x);
+	for (unsigned y = 0, h = static_cast<unsigned>(dst->clip_rect.h); y < h; ++y) {
+		const uint8_t *srcPixels = srcPixelsBegin + static_cast<size_t>(2 * y * src->pitch);
+		uint8_t *dstPixels = dstPixelsBegin + static_cast<size_t>(y * dst->pitch);
+		for (unsigned x = 0, w = static_cast<unsigned>(dst->clip_rect.w); x < w; ++x) {
+			uint8_t quad[] = {
+				srcPixels[0],
+				srcPixels[1],
+				srcPixels[src->pitch],
+				srcPixels[src->pitch + 1]
+			};
+			// Attempt to avoid blending with transparent pixels
+			if (quad[0] == transparentIndex)
+				quad[0] = quad[1];
+			if (quad[1] == transparentIndex)
+				quad[1] = quad[0];
+			if (quad[2] == transparentIndex)
+				quad[2] = quad[3];
+			if (quad[3] == transparentIndex)
+				quad[3] = quad[2];
+			uint8_t top = paletteBlendingTable[quad[0]][quad[1]];
+			uint8_t bottom = paletteBlendingTable[quad[2]][quad[3]];
+			if (top == transparentIndex)
+				top = bottom;
+			if (bottom == transparentIndex)
+				bottom = top;
+			*dstPixels++ = paletteBlendingTable[top][bottom];
+			srcPixels += 2;
+		}
+	}
+}
+
 } // namespace devilution

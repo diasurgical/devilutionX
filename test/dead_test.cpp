@@ -2,7 +2,7 @@
 
 #include "dead.h"
 #include "engine.h"
-#include "gendung.h"
+#include "levels/gendung.h"
 
 using namespace devilution;
 

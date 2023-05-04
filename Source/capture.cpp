@@ -4,16 +4,20 @@
  * Implementation of the screenshot function.
  */
 #include <cstdint>
-#include <fmt/chrono.h>
-#include <fstream>
+#include <cstdio>
+#include <ctime>
+
+#include <fmt/format.h>
 
 #include "DiabloUI/diabloui.h"
-#include "dx.h"
-#include "palette.h"
+#include "engine/backbuffer_state.hpp"
+#include "engine/dx.h"
+#include "engine/palette.h"
 #include "utils/file_util.h"
 #include "utils/log.hpp"
 #include "utils/paths.h"
 #include "utils/pcx.hpp"
+#include "utils/str_cat.hpp"
 #include "utils/ui_fwd.h"
 
 namespace devilution {
@@ -26,7 +30,7 @@ namespace {
  * @param out File stream to write to
  * @return True on success
  */
-bool CaptureHdr(int16_t width, int16_t height, std::ofstream *out)
+bool CaptureHdr(int16_t width, int16_t height, FILE *out)
 {
 	PCXHeader buffer;
 
@@ -42,8 +46,7 @@ bool CaptureHdr(int16_t width, int16_t height, std::ofstream *out)
 	buffer.NPlanes = 1;
 	buffer.BytesPerLine = SDL_SwapLE16(width);
 
-	out->write(reinterpret_cast<const char *>(&buffer), sizeof(buffer));
-	return !out->fail();
+	return std::fwrite(&buffer, sizeof(buffer), 1, out) == 1;
 }
 
 /**
@@ -52,9 +55,9 @@ bool CaptureHdr(int16_t width, int16_t height, std::ofstream *out)
  * @param out File stream for the PCX file.
  * @return True if successful, else false
  */
-bool CapturePal(SDL_Color *palette, std::ofstream *out)
+bool CapturePal(SDL_Color *palette, FILE *out)
 {
-	BYTE pcxPalette[1 + 256 * 3];
+	uint8_t pcxPalette[1 + 256 * 3];
 
 	pcxPalette[0] = 12;
 	for (int i = 0; i < 256; i++) {
@@ -63,8 +66,7 @@ bool CapturePal(SDL_Color *palette, std::ofstream *out)
 		pcxPalette[1 + 3 * i + 2] = palette[i].b;
 	}
 
-	out->write(reinterpret_cast<const char *>(pcxPalette), sizeof(pcxPalette));
-	return !out->fail();
+	return std::fwrite(pcxPalette, sizeof(pcxPalette), 1, out) == 1;
 }
 
 /**
@@ -75,12 +77,12 @@ bool CapturePal(SDL_Color *palette, std::ofstream *out)
 
  * @return Output buffer
  */
-BYTE *CaptureEnc(BYTE *src, BYTE *dst, int width)
+uint8_t *CaptureEnc(uint8_t *src, uint8_t *dst, int width)
 {
 	int rleLength;
 
 	do {
-		BYTE rlePixel = *src;
+		uint8_t rlePixel = *src;
 		src++;
 		rleLength = 1;
 
@@ -111,36 +113,40 @@ BYTE *CaptureEnc(BYTE *src, BYTE *dst, int width)
 
 /**
  * @brief Write the pixel data to the PCX file
- * @param buf Buffer
+ *
+ * @param buf Pixel data
+ * @param out File stream for the PCX file.
  * @return True if successful, else false
  */
-bool CapturePix(const Surface &buf, std::ofstream *out)
+bool CapturePix(const Surface &buf, FILE *out)
 {
 	int width = buf.w();
-	std::unique_ptr<BYTE[]> pBuffer { new BYTE[2 * width] };
-	BYTE *pixels = buf.begin();
+	std::unique_ptr<uint8_t[]> pBuffer { new uint8_t[2 * width] };
+	uint8_t *pixels = buf.begin();
 	for (int height = buf.h(); height > 0; height--) {
-		const BYTE *pBufferEnd = CaptureEnc(pixels, pBuffer.get(), width);
+		const uint8_t *pBufferEnd = CaptureEnc(pixels, pBuffer.get(), width);
 		pixels += buf.pitch();
-		out->write(reinterpret_cast<const char *>(pBuffer.get()), pBufferEnd - pBuffer.get());
-		if (out->fail())
+		if (std::fwrite(pBuffer.get(), pBufferEnd - pBuffer.get(), 1, out) != 1)
 			return false;
 	}
 	return true;
 }
 
-std::ofstream CaptureFile(std::string *dstPath)
+FILE *CaptureFile(std::string *dstPath)
 {
-	std::time_t tt = std::time(nullptr);
-	std::tm *tm = std::localtime(&tt);
-	std::string filename = fmt::format("Screenshot from {:%Y-%m-%d %H-%M-%S}", *tm);
-	*dstPath = paths::PrefPath() + filename + ".PCX";
+	const std::time_t tt = std::time(nullptr);
+	const std::tm *tm = std::localtime(&tt);
+	const std::string filename = tm != nullptr
+	    ? fmt::format("Screenshot from {:04}-{:02}-{:02} {:02}-{:02}-{:02}",
+	        tm->tm_year + 1900, tm->tm_mon + 1, tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec)
+	    : "Screenshot";
+	*dstPath = StrCat(paths::PrefPath(), filename, ".pcx");
 	int i = 0;
 	while (FileExists(dstPath->c_str())) {
 		i++;
-		*dstPath = paths::PrefPath() + filename + "-" + std::to_string(i) + ".PCX";
+		*dstPath = StrCat(paths::PrefPath(), filename, "-", i, ".pcx");
 	}
-	return std::ofstream(*dstPath, std::ios::binary | std::ios::trunc);
+	return OpenFile(dstPath->c_str(), "wb");
 }
 
 /**
@@ -164,26 +170,26 @@ void CaptureScreen()
 	std::string fileName;
 	bool success;
 
-	std::ofstream outStream = CaptureFile(&fileName);
-	if (!outStream.is_open())
+	FILE *outStream = CaptureFile(&fileName);
+	if (outStream == nullptr)
 		return;
 	DrawAndBlit();
 	PaletteGetEntries(256, palette);
 	RedPalette();
 
 	const Surface &buf = GlobalBackBuffer();
-	success = CaptureHdr(buf.w(), buf.h(), &outStream);
+	success = CaptureHdr(buf.w(), buf.h(), outStream);
 	if (success) {
-		success = CapturePix(buf, &outStream);
+		success = CapturePix(buf, outStream);
 	}
 	if (success) {
-		success = CapturePal(palette, &outStream);
+		success = CapturePal(palette, outStream);
 	}
-	outStream.close();
+	std::fclose(outStream);
 
 	if (!success) {
 		Log("Failed to save screenshot at {}", fileName);
-		RemoveFile(fileName);
+		RemoveFile(fileName.c_str());
 	} else {
 		Log("Screenshot saved at {}", fileName);
 	}
@@ -192,7 +198,7 @@ void CaptureScreen()
 		system_palette[i] = palette[i];
 	}
 	palette_update();
-	force_redraw = 255;
+	RedrawEverything();
 }
 
 } // namespace devilution

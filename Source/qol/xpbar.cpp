@@ -7,12 +7,16 @@
 
 #include <array>
 
-#include <fmt/format.h>
+#include <fmt/core.h>
 
-#include "DiabloUI/art_draw.h"
 #include "control.h"
+#include "engine/clx_sprite.hpp"
+#include "engine/load_clx.hpp"
 #include "engine/point.hpp"
+#include "engine/render/clx_render.hpp"
 #include "options.h"
+#include "playerdat.hpp"
+#include "utils/format_int.hpp"
 #include "utils/language.h"
 
 namespace devilution {
@@ -28,7 +32,7 @@ constexpr ColorGradient SilverGradient = { 0xFE, 0xFD, 0xFC, 0xFB, 0xFA, 0xF9, 0
 constexpr int BackWidth = 313;
 constexpr int BackHeight = 9;
 
-Art xpbarArt;
+OptionalOwnedClxSpriteList xpbarArt;
 
 void DrawBar(const Surface &out, Point screenPosition, int width, const ColorGradient &gradient)
 {
@@ -44,46 +48,18 @@ void DrawEndCap(const Surface &out, Point point, int idx, const ColorGradient &g
 	out.SetPixel({ point.x, point.y + 3 }, gradient[idx / 2]);
 }
 
-/**
- * @brief Prints integer with thousands separator.
- */
-std::string PrintWithSeparator(int n)
-{
-	std::string number = fmt::format("{:d}", n);
-	std::string out = "";
-
-	int length = number.length();
-	int mlength = length % 3;
-	if (mlength == 0)
-		mlength = 3;
-	out.append(number.substr(0, mlength));
-	for (int i = mlength; i < length; i += 3) {
-		out.append(_(/* TRANSLATORS: Thousands separator */ ","));
-		out.append(number.substr(i, 3));
-	}
-
-	return out;
-}
-
 } // namespace
 
 void InitXPBar()
 {
 	if (*sgOptions.Gameplay.experienceBar) {
-		LoadMaskedArt("data\\xpbar.pcx", &xpbarArt, 1, 1);
-
-		if (xpbarArt.surface == nullptr) {
-			app_fatal("%s", _("Failed to load UI resources.\n"
-			                  "\n"
-			                  "Make sure devilutionx.mpq is in the game folder and that it is up to date.")
-			                    .c_str());
-		}
+		xpbarArt = LoadClx("data\\xpbar.clx");
 	}
 }
 
 void FreeXPBar()
 {
-	xpbarArt.Unload();
+	xpbarArt = std::nullopt;
 }
 
 void DrawXPBar(const Surface &out)
@@ -97,11 +73,11 @@ void DrawXPBar(const Surface &out)
 	const Point back = { mainPanel.position.x + mainPanel.size.width / 2 - 155, mainPanel.position.y + mainPanel.size.height - 11 };
 	const Point position = back + Displacement { 3, 2 };
 
-	DrawArt(out, back, &xpbarArt);
+	RenderClxSprite(out, (*xpbarArt)[0], back);
 
 	const int8_t charLevel = player._pLevel;
 
-	if (charLevel == MAXCHARLEVEL) {
+	if (charLevel == MaxCharacterLevel) {
 		// Draw a nice golden bar for max level characters.
 		DrawBar(out, position, BarWidth, GoldGradient);
 
@@ -145,13 +121,13 @@ bool CheckXPBarInfo()
 
 	const int8_t charLevel = player._pLevel;
 
-	AddPanelString(fmt::format(_("Level {:d}"), charLevel));
+	AddPanelString(fmt::format(fmt::runtime(_("Level {:d}")), charLevel));
 
-	if (charLevel == MAXCHARLEVEL) {
+	if (charLevel == MaxCharacterLevel) {
 		// Show a maximum level indicator for max level players.
 		InfoColor = UiFlags::ColorWhitegold;
 
-		AddPanelString(fmt::format(_("Experience: {:s}"), PrintWithSeparator(ExpLvlsTbl[charLevel - 1])));
+		AddPanelString(fmt::format(fmt::runtime(_("Experience: {:s}")), FormatInteger(ExpLvlsTbl[charLevel - 1])));
 		AddPanelString(_("Maximum Level"));
 
 		return true;
@@ -159,9 +135,9 @@ bool CheckXPBarInfo()
 
 	InfoColor = UiFlags::ColorWhite;
 
-	AddPanelString(fmt::format(_("Experience: {:s}"), PrintWithSeparator(player._pExperience)));
-	AddPanelString(fmt::format(_("Next Level: {:s}"), PrintWithSeparator(ExpLvlsTbl[charLevel])));
-	AddPanelString(fmt::format(_("{:s} to Level {:d}"), PrintWithSeparator(ExpLvlsTbl[charLevel] - player._pExperience), charLevel + 1));
+	AddPanelString(fmt::format(fmt::runtime(_("Experience: {:s}")), FormatInteger(player._pExperience)));
+	AddPanelString(fmt::format(fmt::runtime(_("Next Level: {:s}")), FormatInteger(ExpLvlsTbl[charLevel])));
+	AddPanelString(fmt::format(fmt::runtime(_("{:s} to Level {:d}")), FormatInteger(ExpLvlsTbl[charLevel] - player._pExperience), charLevel + 1));
 
 	return true;
 }

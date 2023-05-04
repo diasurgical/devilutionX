@@ -1044,11 +1044,11 @@ msgstr[1] "{:d} Použití"
 msgstr[2] "{:d} Použití"
 
 #: Source/control.cpp:860 Source/inv.cpp:1998 Source/items.cpp:3480
-msgid "{:d} gold piece"
-msgid_plural "{:d} gold pieces"
-msgstr[0] "{:d} zlaťák"
-msgstr[1] "{:d} zlaťáky"
-msgstr[2] "{:d} zlaťáků"
+msgid "{:s} gold piece"
+msgid_plural "{:s} gold pieces"
+msgstr[0] "{:s} zlaťák"
+msgstr[1] "{:s} zlaťáky"
+msgstr[2] "{:s} zlaťáků"
 
 #: Source/control.cpp:863
 msgid "Requirements not met"
@@ -1068,11 +1068,11 @@ msgstr "Nová úroveň"
 
 #. TRANSLATORS: {:d} is a number. Dialog is shown when splitting a stash of Gold.
 #: Source/control.cpp:1040
-msgid "You have {:d} gold piece. How many do you want to remove?"
-msgid_plural "You have {:d} gold pieces. How many do you want to remove?"
-msgstr[0] "Máš {:d} zlaťák. Kolik jich chceš odebrat?"
-msgstr[1] "Máš {:d} zlaťáky. Kolik jich chceš odebrat?"
-msgstr[2] "Máš {:d} zlaťáků. Kolik jich chceš odebrat?"
+msgid "You have {:s} gold piece. How many do you want to remove?"
+msgid_plural "You have {:s} gold pieces. How many do you want to remove?"
+msgstr[0] "Máš {:s} zlaťák. Kolik jich chceš odebrat?"
+msgstr[1] "Máš {:s} zlaťáky. Kolik jich chceš odebrat?"
+msgstr[2] "Máš {:s} zlaťáků. Kolik jich chceš odebrat?"
 
 #: Source/controls/modifier_hints.cpp:176 Source/qol/monhealthbar.cpp:36
 #: Source/qol/xpbar.cpp:76
@@ -3996,12 +3996,8 @@ msgid "Right-click to read"
 msgstr "Přečtení - klikni Pravým"
 
 #: Source/items.cpp:1814 Source/items.cpp:1835
-msgid "Select from spell book, then"
-msgstr "Vyber si z knihy kouzel, a poté"
-
-#: Source/items.cpp:1815 Source/items.cpp:1836
-msgid "cast spell to read"
-msgstr "vyčaruj kouzlo pro přečtení"
+msgid "Select from spell book, then\ncast spell to read"
+msgstr "Vyber si z knihy kouzel, a poté\nvyčaruj kouzlo pro přečtení"
 
 #: Source/items.cpp:1817 Source/items.cpp:1838 Source/items.cpp:1852
 msgid "Open inventory to use"
@@ -4012,12 +4008,8 @@ msgid "Activate to read"
 msgstr "Aktivuj pro přečtení"
 
 #: Source/items.cpp:1825
-msgid "Right-click to read, then"
-msgstr "Přečtení - klikni Pravým, poté"
-
-#: Source/items.cpp:1826
-msgid "left-click to target"
-msgstr "klikni Levým na cíl"
+msgid "Right-click to read, then\nleft-click to target"
+msgstr "Přečtení - klikni Pravým, poté\nklikni Levým na cíl"
 
 #: Source/items.cpp:1849
 msgid "Right-click to use"
@@ -4409,8 +4401,8 @@ msgstr "2x poškození do nepřítele, 1x do tebe"
 
 #: Source/items.cpp:3746
 #, no-c-format
-msgid "Random 0 - 500% damage"
-msgstr "Náhodné 0 - 500% poškození"
+msgid "Random 0 - 600% damage"
+msgstr "Náhodné 0 - 600% poškození"
 
 #: Source/items.cpp:3748
 #, no-c-format
@@ -6885,8 +6877,8 @@ msgid "Chat History (Messages: {:d})"
 msgstr "Historie Chatu (Zprávy: {:d})"
 
 #: Source/qol/itemlabels.cpp:72
-msgid "{:d} gold"
-msgstr "{:d} zlaťáků"
+msgid "{:s} gold"
+msgstr "{:s} zlaťáků"
 
 #: Source/qol/stash.cpp:586
 msgid "How many gold pieces do you want to withdraw?"
@@ -7399,8 +7391,8 @@ msgstr "Odejít z obchodu"
 msgid "I have these items for sale:"
 msgstr "Mám na prodej tyto věci:"
 
-msgid "Your gold: {:d}"
-msgstr "Tvoje zlaťáky: {:d}"
+msgid "Your gold: {:s}"
+msgstr "Tvoje zlaťáky: {:s}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:425

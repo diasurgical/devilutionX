@@ -6,7 +6,7 @@
 #pragma once
 
 #include "engine/point.hpp"
-#include "gendung.h"
+#include "levels/gendung.h"
 
 namespace devilution {
 
@@ -23,17 +23,17 @@ struct Portal {
 extern Portal Portals[MAXPORTAL];
 
 void InitPortals();
-void SetPortalStats(int i, bool o, int x, int y, int lvl, dungeon_type lvltype);
-void AddWarpMissile(int i, Point position);
+void SetPortalStats(int i, bool o, Point position, int lvl, dungeon_type lvltype, bool isSetLevel);
+void AddWarpMissile(int i, Point position, bool sync);
 void SyncPortals();
 void AddInTownPortal(int i);
 void ActivatePortal(int i, Point position, int lvl, dungeon_type lvltype, bool sp);
 void DeactivatePortal(int i);
-bool PortalOnLevel(int i);
+bool PortalOnLevel(size_t i);
 void RemovePortalMissile(int id);
-void SetCurrentPortal(int p);
+void SetCurrentPortal(size_t p);
 void GetPortalLevel();
 void GetPortalLvlPos();
-bool PosOkPortal(int lvl, int x, int y);
+bool PosOkPortal(int lvl, Point position);
 
 } // namespace devilution

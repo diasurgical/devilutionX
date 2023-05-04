@@ -23,7 +23,7 @@ std::vector<std::unique_ptr<UiItemBase>> vecSelOkDialog;
 
 void selok_Free()
 {
-	ArtBackground.Unload();
+	ArtBackground = std::nullopt;
 
 	vecSelOkDialogItems.clear();
 
@@ -43,12 +43,12 @@ void selok_Esc()
 void UiSelOkDialog(const char *title, const char *body, bool background)
 {
 	if (!background) {
-		LoadBackgroundArt("ui_art\\black.pcx");
+		UiLoadBlackBackground();
 	} else {
 		if (!gbIsSpawn) {
-			LoadBackgroundArt("ui_art\\mainmenu.pcx");
+			LoadBackgroundArt("ui_art\\mainmenu");
 		} else {
-			LoadBackgroundArt("ui_art\\swmmenu.pcx");
+			LoadBackgroundArt("ui_art\\swmmenu");
 		}
 	}
 

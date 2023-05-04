@@ -55,7 +55,7 @@ if (UNIX OR CMAKE_SYSTEM_NAME STREQUAL "Generic" OR AMIGA)
     endif()
 
     if(sodium_USE_STATIC_LIBS)
-      if(sodium_PKG_STATIC_LIBRARIES)
+      if(sodium_PKG_STATIC_FOUND)
         # Create a temporary list to manipulate the list of libraries we found
         set(sodium_PKG_STATIC_LIBRARIES_TMP "")
 
@@ -77,7 +77,7 @@ if (UNIX OR CMAKE_SYSTEM_NAME STREQUAL "Generic" OR AMIGA)
 
       set(XPREFIX sodium_PKG_STATIC)
     else()
-      if(sodium_PKG_LIBRARIES STREQUAL "")
+      if(sodium_PKG_FOUND)
         set(sodium_PKG_LIBRARIES sodium)
       endif()
 

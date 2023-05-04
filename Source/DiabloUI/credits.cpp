@@ -2,14 +2,14 @@
 #include <memory>
 #include <vector>
 
-#include "DiabloUI/art.h"
-#include "DiabloUI/art_draw.h"
 #include "DiabloUI/credits_lines.h"
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/support_lines.h"
 #include "control.h"
 #include "controls/input.h"
 #include "controls/menu_controls.h"
+#include "engine/load_clx.hpp"
+#include "engine/render/clx_render.hpp"
 #include "engine/render/text_render.hpp"
 #include "hwcursor.hpp"
 #include "utils/display.h"
@@ -63,8 +63,8 @@ public:
 
 	~CreditsRenderer()
 	{
-		ArtBackgroundWidescreen.Unload();
-		ArtBackground.Unload();
+		ArtBackgroundWidescreen = std::nullopt;
+		ArtBackground = std::nullopt;
 	}
 
 	void Render();
@@ -95,8 +95,9 @@ void CreditsRenderer::Render()
 
 	SDL_FillRect(DiabloUiSurface(), nullptr, 0x000000);
 	const Point uiPosition = GetUIRectangle().position;
-	DrawArt(uiPosition - Displacement { 320, 0 }, &ArtBackgroundWidescreen);
-	DrawArt(uiPosition, &ArtBackground);
+	if (ArtBackgroundWidescreen)
+		RenderClxSprite(Surface(DiabloUiSurface()), (*ArtBackgroundWidescreen)[0], uiPosition - Displacement { 320, 0 });
+	RenderClxSprite(Surface(DiabloUiSurface()), (*ArtBackground)[0], uiPosition);
 
 	const std::size_t linesBegin = std::max(offsetY / LINE_H, 0);
 	const std::size_t linesEnd = std::min(linesBegin + MAX_VISIBLE_LINES, linesToRender.size());
@@ -111,7 +112,6 @@ void CreditsRenderer::Render()
 	viewport.x += uiPosition.x;
 	viewport.y += uiPosition.y;
 	ScaleOutputRect(&viewport);
-	SDL_SetClipRect(DiabloUiSurface(), &viewport);
 
 	// We use unscaled coordinates for calculation throughout.
 	Sint16 destY = uiPosition.y + VIEWPORT.y - (offsetY - linesBegin * LINE_H);
@@ -122,10 +122,12 @@ void CreditsRenderer::Render()
 
 		SDL_Rect dstRect = MakeSdlRect(destX + lineContent.offset, destY, 0, 0);
 		ScaleOutputRect(&dstRect);
-		const Surface &out = Surface(DiabloUiSurface());
+		dstRect.x -= viewport.x;
+		dstRect.y -= viewport.y;
+
+		const Surface &out = Surface(DiabloUiSurface(), viewport);
 		DrawString(out, lineContent.text, Point { dstRect.x, dstRect.y }, UiFlags::FontSizeDialog | UiFlags::ColorDialogWhite, -1);
 	}
-	SDL_SetClipRect(DiabloUiSurface(), nullptr);
 }
 
 bool TextDialog(char const *const *text, std::size_t textLines)
@@ -147,14 +149,13 @@ bool TextDialog(char const *const *text, std::size_t textLines)
 				endMenu = true;
 				break;
 			default:
-				switch (GetMenuAction(event)) {
-				case MenuAction_BACK:
-				case MenuAction_SELECT:
+				for (MenuAction menuAction : GetMenuActions(event)) {
+					if (IsNoneOf(menuAction, MenuAction_BACK, MenuAction_SELECT))
+						continue;
 					endMenu = true;
 					break;
-				default:
-					break;
 				}
+				break;
 			}
 			UiHandleEvents(&event);
 		}
@@ -167,8 +168,8 @@ bool TextDialog(char const *const *text, std::size_t textLines)
 
 bool UiCreditsDialog()
 {
-	LoadArt("ui_art\\creditsw.pcx", &ArtBackgroundWidescreen);
-	LoadBackgroundArt("ui_art\\credits.pcx");
+	ArtBackgroundWidescreen = LoadOptionalClx("ui_art\\creditsw.clx");
+	LoadBackgroundArt("ui_art\\credits");
 
 	return TextDialog(CreditLines, CreditLinesSize);
 }
@@ -176,11 +177,11 @@ bool UiCreditsDialog()
 bool UiSupportDialog()
 {
 	if (gbIsHellfire) {
-		LoadArt("ui_art\\supportw.pcx", &ArtBackgroundWidescreen);
-		LoadBackgroundArt("ui_art\\support.pcx");
+		ArtBackgroundWidescreen = LoadOptionalClx("ui_art\\supportw.clx");
+		LoadBackgroundArt("ui_art\\support");
 	} else {
-		LoadArt("ui_art\\creditsw.pcx", &ArtBackgroundWidescreen);
-		LoadBackgroundArt("ui_art\\credits.pcx");
+		ArtBackgroundWidescreen = LoadOptionalClx("ui_art\\creditsw.clx");
+		LoadBackgroundArt("ui_art\\credits");
 	}
 
 	return TextDialog(SupportLines, SupportLinesSize);

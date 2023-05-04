@@ -5,11 +5,14 @@
 #include <cstddef>
 #include <cstdint>
 
-#include "DiabloUI/art.h"
+#include <function_ref.hpp>
+
 #include "DiabloUI/ui_item.h"
-#include "engine/cel_sprite.hpp"
+#include "engine/clx_sprite.hpp"
+#include "engine/load_pcx.hpp" // IWYU pragma: export
 #include "player.h"
 #include "utils/display.h"
+#include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
 
@@ -20,12 +23,6 @@ enum _artFocus : uint8_t {
 	FOCUS_SMALL,
 	FOCUS_MED,
 	FOCUS_BIG,
-};
-
-enum _artLogo : uint8_t {
-	LOGO_SMALL,
-	LOGO_MED,
-	LOGO_BIG,
 };
 
 enum _mainmenu_selections : uint8_t {
@@ -67,14 +64,13 @@ struct _uiheroinfo {
 	bool spawned;
 };
 
-extern std::array<std::optional<OwnedCelSpriteWithFrameHeight>, 3> ArtLogos;
-extern std::array<std::optional<OwnedCelSpriteWithFrameHeight>, 3> ArtFocus;
-extern Art ArtBackground;
-extern Art ArtBackgroundWidescreen;
-extern Art ArtCursor;
-extern Art ArtHero;
+extern OptionalOwnedClxSpriteList ArtLogo;
+extern std::array<OptionalOwnedClxSpriteList, 2> DifficultyIndicator;
+extern std::array<OptionalOwnedClxSpriteList, 3> ArtFocus;
+extern OptionalOwnedClxSpriteList ArtBackgroundWidescreen;
+extern OptionalOwnedClxSpriteList ArtBackground;
+extern OptionalOwnedClxSpriteList ArtCursor;
 
-extern void (*gfnSoundFunction)(const char *file);
 extern bool (*gfnHeroInfo)(bool (*fninfofunc)(_uiheroinfo *));
 
 inline SDL_Surface *DiabloUiSurface()
@@ -86,12 +82,12 @@ void UiDestroy();
 void UiTitleDialog();
 void UnloadUiGFX();
 void UiInitialize();
-bool UiValidPlayerName(const char *name); /* check */
+bool UiValidPlayerName(string_view name); /* check */
 void UiSelHeroMultDialog(bool (*fninfo)(bool (*fninfofunc)(_uiheroinfo *)), bool (*fncreate)(_uiheroinfo *), bool (*fnremove)(_uiheroinfo *), void (*fnstats)(unsigned int, _uidefaultstats *), _selhero_selections *dlgresult, uint32_t *saveNumber);
 void UiSelHeroSingDialog(bool (*fninfo)(bool (*fninfofunc)(_uiheroinfo *)), bool (*fncreate)(_uiheroinfo *), bool (*fnremove)(_uiheroinfo *), void (*fnstats)(unsigned int, _uidefaultstats *), _selhero_selections *dlgresult, uint32_t *saveNumber, _difficulty *difficulty);
 bool UiCreditsDialog();
 bool UiSupportDialog();
-bool UiMainMenuDialog(const char *name, _mainmenu_selections *pdwResult, void (*fnSound)(const char *file), int attractTimeOut);
+bool UiMainMenuDialog(const char *name, _mainmenu_selections *pdwResult, int attractTimeOut);
 bool UiProgressDialog(int (*fnfunc)());
 bool UiSelectGame(GameData *gameData, int *playerId);
 bool UiSelectProvider(GameData *gameData);
@@ -102,18 +98,25 @@ bool UiItemMouseEvents(SDL_Event *event, const std::vector<std::unique_ptr<UiIte
 Sint16 GetCenterOffset(Sint16 w, Sint16 bw = 0);
 void LoadPalInMem(const SDL_Color *pPal);
 void DrawMouse();
+void UiLoadDefaultPalette();
+bool UiLoadBlackBackground();
 void LoadBackgroundArt(const char *pszFile, int frames = 1);
 void UiAddBackground(std::vector<std::unique_ptr<UiItemBase>> *vecDialog);
-void UiAddLogo(std::vector<std::unique_ptr<UiItemBase>> *vecDialog, int size = LOGO_MED, int y = 0);
+void UiAddLogo(std::vector<std::unique_ptr<UiItemBase>> *vecDialog);
 void UiFocusNavigationSelect();
 void UiFocusNavigationEsc();
 void UiFocusNavigationYesNo();
+
 void UiInitList(void (*fnFocus)(int value), void (*fnSelect)(int value), void (*fnEsc)(), const std::vector<std::unique_ptr<UiItemBase>> &items, bool wraps = false, void (*fnFullscreen)() = nullptr, bool (*fnYesNo)() = nullptr, size_t selectedItem = 0);
+void UiRenderListItems();
+void UiInitList_clear();
+
 void UiClearScreen();
-void UiPollAndRender(std::function<bool(SDL_Event &)> eventHandler = nullptr);
+void UiPollAndRender(std::optional<tl::function_ref<bool(SDL_Event &)>> eventHandler = std::nullopt);
+void UiRenderItem(const UiItemBase &item);
 void UiRenderItems(const std::vector<UiItemBase *> &items);
 void UiRenderItems(const std::vector<std::unique_ptr<UiItemBase>> &items);
-void UiInitList_clear();
+ClxSprite UiGetHeroDialogSprite(size_t heroClassIndex);
 
 void mainmenu_restart_repintro();
 } // namespace devilution

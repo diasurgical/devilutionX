@@ -6,7 +6,7 @@ set(CMAKE_C_FLAGS -m32 CACHE STRING "")
 # Affects pkg-config
 set_property(GLOBAL PROPERTY FIND_LIBRARY_USE_LIB32_PATHS TRUE)
 # Used by pkg-config on Debian
-set(CMAKE_LIBRARY_ARCHITECTURE i386-linux-gnu) 
+set(CMAKE_LIBRARY_ARCHITECTURE i386-linux-gnu)
 # Silly hack required to get the pkg-config path code to activate
 list(APPEND CMAKE_PREFIX_PATH /usr)
 
@@ -22,5 +22,8 @@ if(DIR)
     # set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE NEVER)
 endif()
 
+set(PKG_CONFIG_EXECUTABLE "${CMAKE_CURRENT_LIST_DIR}/i386-linux-gnu-pkg-config" CACHE STRING "Path to pkg-config")
+
 # 32-bit NASM
 set(CMAKE_ASM_NASM_OBJECT_FORMAT elf)
+set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE i386)

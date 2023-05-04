@@ -3,6 +3,7 @@ if(NOT DEFINED DEVILUTIONX_TEST_FIXTURES_OUTPUT_DIRECTORY)
 endif()
 
 set(devilutionx_fixtures
+  diablo/1-2588.dun
   diablo/1-743271966.dun
   diablo/2-1383137027.dun
   diablo/3-844660068.dun
@@ -11,6 +12,7 @@ set(devilutionx_fixtures
   diablo/5-1677631846.dun
   diablo/6-1824554527.dun
   diablo/6-2034738122.dun
+  diablo/6-2033265779.dun
   diablo/7-680552750.dun
   diablo/7-1607627156.dun
   diablo/8-1999936419.dun
@@ -22,13 +24,16 @@ set(devilutionx_fixtures
   diablo/13-428074402.dun
   diablo/13-594689775.dun
   diablo/14-717625719.dun
+  diablo/14-815743776.dun
   diablo/15-1256511996.dun
   diablo/15-1583642716.dun
   diablo/15-1583642716-changed.dun
   diablo/16-741281013.dun
   hellfire/1-401921334.dun
+  hellfire/1-536340718.dun
   hellfire/2-128964898.dun
   hellfire/2-1180526547.dun
+  hellfire/3-1369955278.dun
   hellfire/3-1512491184.dun
   hellfire/3-1799396623.dun
   hellfire/4-1190318991.dun
@@ -41,25 +46,43 @@ set(devilutionx_fixtures
   hellfire/22-1191662129.dun
   hellfire/23-97055268.dun
   hellfire/24-1324803725.dun
-  Levels/L1Data/Banner1.DUN
-  Levels/L1Data/Banner2.DUN
-  Levels/L1Data/rnd6.DUN
-  Levels/L1Data/SKngDO.DUN
-  Levels/L2Data/Blind1.DUN
-  Levels/L2Data/Blood1.DUN
-  Levels/L2Data/Blood2.DUN
-  Levels/L2Data/Bonestr1.DUN
-  Levels/L2Data/Bonestr2.DUN
-  Levels/L4Data/diab1.DUN
-  Levels/L4Data/diab2a.DUN
-  Levels/L4Data/diab2b.DUN
-  Levels/L4Data/diab3a.DUN
-  Levels/L4Data/diab3b.DUN
-  Levels/L4Data/diab4a.DUN
-  Levels/L4Data/diab4b.DUN
-  Levels/L4Data/Vile1.DUN
-  Levels/L4Data/Warlord.DUN
-  Levels/L4Data/Warlord2.DUN
+  levels/l1data/banner1.dun
+  levels/l1data/banner2.dun
+  levels/l1data/rnd6.dun
+  levels/l1data/skngdo.dun
+  levels/l2data/blind1.dun
+  levels/l2data/blood1.dun
+  levels/l2data/blood2.dun
+  levels/l2data/bonestr1.dun
+  levels/l2data/bonestr2.dun
+  levels/l3data/anvil.dun
+  levels/l4data/diab1.dun
+  levels/l4data/diab2a.dun
+  levels/l4data/diab2b.dun
+  levels/l4data/diab3a.dun
+  levels/l4data/diab3b.dun
+  levels/l4data/diab4a.dun
+  levels/l4data/diab4b.dun
+  levels/l4data/vile1.dun
+  levels/l4data/warlord.dun
+  levels/l4data/warlord2.dun
+  memory_map/additionalMissiles.txt
+  memory_map/game.txt
+  memory_map/hero.txt
+  memory_map/item.txt
+  memory_map/itemPack.txt
+  memory_map/level.txt
+  memory_map/levelSeed.txt
+  memory_map/lightning.txt
+  memory_map/missile.txt
+  memory_map/monster.txt
+  memory_map/object.txt
+  memory_map/player.txt
+  memory_map/portal.txt
+  memory_map/quest.txt
+  timedemo/WarriorLevel1to2/demo_0.dmo
+  timedemo/WarriorLevel1to2/demo_0_reference_spawn_0.sv
+  timedemo/WarriorLevel1to2/spawn_0.sv
 )
 
 foreach(fixture ${devilutionx_fixtures})

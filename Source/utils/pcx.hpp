@@ -3,8 +3,6 @@
 #include <cstddef>
 #include <cstdint>
 
-#include <SDL.h>
-
 namespace devilution {
 
 struct PCXHeader {
@@ -29,9 +27,5 @@ struct PCXHeader {
 };
 
 static constexpr size_t PcxHeaderSize = 128;
-
-bool LoadPcxMeta(SDL_RWops *handle, int &width, int &height, uint8_t &bpp);
-bool LoadPcxPixelsAndPalette(SDL_RWops *handle, int width, int height, std::uint8_t bpp,
-    uint8_t *buffer, std::ptrdiff_t bufferPitch, SDL_Color *palette);
 
 } // namespace devilution

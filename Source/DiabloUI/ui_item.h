@@ -5,21 +5,20 @@
 #include <string>
 #include <vector>
 
-#include "DiabloUI/art.h"
 #include "DiabloUI/ui_flags.hpp"
-#include "engine/cel_sprite.hpp"
+#include "engine/clx_sprite.hpp"
 #include "engine/render/text_render.hpp"
 #include "utils/enum_traits.h"
 #include "utils/stubs.h"
 
 namespace devilution {
 
-enum class UiType {
+enum class UiType : uint8_t {
 	Text,
 	ArtText,
 	ArtTextButton,
-	Image,
-	ImageCel,
+	ImageClx,
+	ImageAnimatedClx,
 	Button,
 	List,
 	Scrollbar,
@@ -89,88 +88,59 @@ private:
 };
 
 //=============================================================================
-
-class UiImage : public UiItemBase {
+class UiImageClx : public UiItemBase {
 public:
-	UiImage(Art *art, SDL_Rect rect, UiFlags flags = UiFlags::None, bool animated = false, int frame = 0)
-	    : UiItemBase(UiType::Image, rect, flags)
-	    , art_(art)
-	    , animated_(animated)
-	    , frame_(frame)
-	{
-	}
-
-	[[nodiscard]] bool IsCentered() const
-	{
-		return HasAnyOf(GetFlags(), UiFlags::AlignCenter);
-	}
-
-	[[nodiscard]] Art *GetArt() const
-	{
-		return art_;
-	}
-
-	[[nodiscard]] bool IsAnimated() const
-	{
-		return animated_;
-	}
-
-	[[nodiscard]] int GetFrame() const
-	{
-		return frame_;
-	}
-
-	void SetFrame(int frame)
-	{
-		frame_ = frame;
-	}
-
-private:
-	Art *art_;
-	bool animated_;
-	int frame_;
-};
-
-//=============================================================================
-class UiImageCel : public UiItemBase {
-public:
-	UiImageCel(CelSpriteWithFrameHeight sprite, SDL_Rect rect, UiFlags flags = UiFlags::None, bool animated = false, int frame = 0)
-	    : UiItemBase(UiType::ImageCel, rect, flags)
+	UiImageClx(ClxSprite sprite, SDL_Rect rect, UiFlags flags = UiFlags::None)
+	    : UiItemBase(UiType::ImageClx, rect, flags)
 	    , sprite_(sprite)
-	    , animated_(animated)
-	    , frame_(frame)
 	{
 	}
 
-	[[nodiscard]] bool IsCentered() const
+	[[nodiscard]] bool isCentered() const
 	{
 		return HasAnyOf(GetFlags(), UiFlags::AlignCenter);
 	}
 
-	[[nodiscard]] CelSpriteWithFrameHeight GetSprite() const
+	[[nodiscard]] ClxSprite sprite() const
 	{
 		return sprite_;
 	}
 
-	[[nodiscard]] bool IsAnimated() const
+	void setSprite(ClxSprite sprite)
 	{
-		return animated_;
-	}
-
-	[[nodiscard]] int GetFrame() const
-	{
-		return frame_;
-	}
-
-	void SetFrame(int frame)
-	{
-		frame_ = frame;
+		sprite_ = sprite;
 	}
 
 private:
-	CelSpriteWithFrameHeight sprite_;
-	bool animated_;
-	int frame_;
+	ClxSprite sprite_;
+};
+
+//=============================================================================
+class UiImageAnimatedClx : public UiItemBase {
+public:
+	UiImageAnimatedClx(ClxSpriteList list, SDL_Rect rect, UiFlags flags = UiFlags::None)
+	    : UiItemBase(UiType::ImageAnimatedClx, rect, flags)
+	    , list_(list)
+	{
+	}
+
+	[[nodiscard]] bool isCentered() const
+	{
+		return HasAnyOf(GetFlags(), UiFlags::AlignCenter);
+	}
+
+	[[nodiscard]] ClxSprite sprite(uint16_t frame) const
+	{
+		return list_[frame];
+	}
+
+	[[nodiscard]] uint16_t numFrames() const
+	{
+		return list_.numSprites();
+	}
+
+private:
+	ClxSpriteList list_;
 };
 
 //=============================================================================
@@ -182,6 +152,8 @@ public:
 	 * @param text Pointer to the first character of a c-string
 	 * @param rect screen region defining the area to draw the text
 	 * @param flags UiFlags controlling color/alignment/size
+	 * @param spacing Spacing between characters
+	 * @param lineHeight Vertical distance between text lines
 	 */
 	UiArtText(const char *text, SDL_Rect rect, UiFlags flags = UiFlags::None, int spacing = 1, int lineHeight = -1)
 	    : UiItemBase(UiType::ArtText, rect, flags)
@@ -196,6 +168,8 @@ public:
 	 * @param ptext Pointer to a c-string (pointer to a pointer to the first character)
 	 * @param rect screen region defining the area to draw the text
 	 * @param flags UiFlags controlling color/alignment/size
+	 * @param spacing Spacing between characters
+	 * @param lineHeight Vertical distance between text lines
 	 */
 	UiArtText(const char **ptext, SDL_Rect rect, UiFlags flags = UiFlags::None, int spacing = 1, int lineHeight = -1)
 	    : UiItemBase(UiType::ArtText, rect, flags)
@@ -233,7 +207,7 @@ private:
 
 class UiScrollbar : public UiItemBase {
 public:
-	UiScrollbar(Art *bg, Art *thumb, Art *arrow, SDL_Rect rect, UiFlags flags = UiFlags::None)
+	UiScrollbar(ClxSprite bg, ClxSprite thumb, ClxSpriteList arrow, SDL_Rect rect, UiFlags flags = UiFlags::None)
 	    : UiItemBase(UiType::Scrollbar, rect, flags)
 	    , m_bg(bg)
 	    , m_thumb(thumb)
@@ -242,9 +216,9 @@ public:
 	}
 
 	// private:
-	Art *m_bg;
-	Art *m_thumb;
-	Art *m_arrow;
+	ClxSprite m_bg;
+	ClxSprite m_thumb;
+	ClxSpriteList m_arrow;
 };
 
 //=============================================================================
@@ -329,24 +303,12 @@ class UiButton : public UiItemBase {
 public:
 	using Callback = void (*)();
 
-	UiButton(Art *art, string_view text, Callback action, SDL_Rect rect, UiFlags flags = UiFlags::None)
+	UiButton(string_view text, Callback action, SDL_Rect rect, UiFlags flags = UiFlags::None)
 	    : UiItemBase(UiType::Button, rect, flags)
-	    , art_(art)
 	    , text_(text)
 	    , action_(action)
 	    , pressed_(false)
 	{
-	}
-
-	[[nodiscard]] int GetFrame() const
-	{
-		// Frame 1 is a held button sprite, frame 0 is the default
-		return IsPressed() ? 1 : 0;
-	}
-
-	[[nodiscard]] Art *GetArt() const
-	{
-		return art_;
 	}
 
 	[[nodiscard]] string_view GetText() const
@@ -375,8 +337,6 @@ public:
 	}
 
 private:
-	Art *art_;
-
 	string_view text_;
 	Callback action_;
 

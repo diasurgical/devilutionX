@@ -14,8 +14,8 @@
 #include <array>
 #include <cassert>
 #include <cstdint>
+#include <cstring>
 
-#include "engine/render/common_impl.h"
 #include "lighting.h"
 #include "movie.h"
 #include "options.h"
@@ -23,6 +23,20 @@
 namespace devilution {
 namespace {
 
+void DrawHalfTransparentUnalignedBlendedRectTo(const Surface &out, unsigned sx, unsigned sy, unsigned width, unsigned height)
+{
+	uint8_t *pix = out.at(static_cast<int>(sx), static_cast<int>(sy));
+	const std::array<uint8_t, 256> &lookupTable = paletteTransparencyLookup[0];
+	const unsigned skipX = out.pitch() - width;
+	for (unsigned y = 0; y < height; ++y) {
+		for (unsigned x = 0; x < width; ++x, ++pix) {
+			*pix = lookupTable[*pix];
+		}
+		pix += skipX;
+	}
+}
+
+#if DEVILUTIONX_PALETTE_TRANSPARENCY_BLACK_16_LUT
 // Expects everything to be 4-byte aligned.
 void DrawHalfTransparentAligned32BlendedRectTo(const Surface &out, unsigned sx, unsigned sy, unsigned width, unsigned height)
 {
@@ -43,19 +57,6 @@ void DrawHalfTransparentAligned32BlendedRectTo(const Surface &out, unsigned sx, 
 #else
 			*pix = lookupTable[(v >> 16) & 0xFFFF] | (lookupTable[v & 0xFFFF] << 16);
 #endif
-		}
-		pix += skipX;
-	}
-}
-
-void DrawHalfTransparentUnalignedBlendedRectTo(const Surface &out, unsigned sx, unsigned sy, unsigned width, unsigned height)
-{
-	uint8_t *pix = out.at(static_cast<int>(sx), static_cast<int>(sy));
-	const uint8_t *lookupTable = paletteTransparencyLookup[0];
-	const unsigned skipX = out.pitch() - width;
-	for (unsigned y = 0; y < height; ++y) {
-		for (unsigned x = 0; x < width; ++x, ++pix) {
-			*pix = lookupTable[*pix];
 		}
 		pix += skipX;
 	}
@@ -87,6 +88,10 @@ void DrawHalfTransparentBlendedRectTo(const Surface &out, unsigned sx, unsigned 
 	// Now everything is divisible by 4. Draw the aligned part.
 	DrawHalfTransparentAligned32BlendedRectTo(out, sx, sy, width, height);
 }
+#else
+#define DrawHalfTransparentBlendedRectTo DrawHalfTransparentUnalignedBlendedRectTo
+#endif
+
 } // namespace
 
 void DrawHorizontalLine(const Surface &out, Point from, int width, std::uint8_t colorIndex)
@@ -158,23 +163,25 @@ void DrawHalfTransparentRectTo(const Surface &out, int sx, int sy, int width, in
 	DrawHalfTransparentBlendedRectTo(out, sx, sy, width, height);
 }
 
-/**
- * @brief Returns the direction a vector from p1(x1, y1) to p2(x2, y2) is pointing to.
- *
- *      W    SW     S
- *            ^
- *            |
- *     NW ----+---> SE
- *            |
- *            |
- *      N    NE     E
- *
- * @param x1 the x coordinate of p1
- * @param y1 the y coordinate of p1
- * @param x2 the x coordinate of p2
- * @param y2 the y coordinate of p2
- * @return the direction of the p1->p2 vector
- */
+void UnsafeDrawBorder2px(const Surface &out, Rectangle rect, uint8_t color)
+{
+	const size_t width = rect.size.width;
+	const size_t height = rect.size.height;
+	uint8_t *buf = &out[rect.position];
+	std::memset(buf, color, width);
+	buf += out.pitch();
+	std::memset(buf, color, width);
+	buf += out.pitch();
+	for (size_t i = 4; i < height; ++i) {
+		buf[0] = buf[1] = color;
+		buf[width - 2] = buf[width - 1] = color;
+		buf += out.pitch();
+	}
+	std::memset(buf, color, width);
+	buf += out.pitch();
+	std::memset(buf, color, width);
+}
+
 Direction GetDirection(Point start, Point destination)
 {
 	Direction md;

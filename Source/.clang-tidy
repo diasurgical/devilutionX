@@ -47,6 +47,7 @@ Checks: >
   portability-*,
   readability-*,
   -readability-magic-numbers,
+  -misc-non-private-member-variables-in-classes,
   -modernize-avoid-c-arrays,
   -modernize-use-trailing-return-type,
   -modernize-concat-nested-namespaces,
@@ -87,4 +88,4 @@ CheckOptions:
   # `int8_t` aren't used as chars, disable misleading warning.
   - { key: bugprone-signed-char-misuse.CharTypdefsToIgnore, value: "std::int8_t" }
 
-  - { key: misc-non-private-member-variables-in-classes.IgnoreClassesWithAllMemberVariablesBeingPublic, value: true }
+  - { key: readability-identifier-length.MinimumLoopCounterNameLength, value: 1 }

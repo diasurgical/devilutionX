@@ -8,6 +8,12 @@
 #include <cstddef>
 #include <cstdint>
 
+#include <SDL.h>
+
+#ifdef USE_SDL1
+#include "utils/sdl2_to_1_2_backports.h"
+#endif
+
 #include "DiabloUI/ui_flags.hpp"
 #include "engine.h"
 #include "engine/point.hpp"
@@ -19,29 +25,25 @@
 #include "utils/attributes.h"
 #include "utils/stdcompat/optional.hpp"
 #include "utils/stdcompat/string_view.hpp"
+#include "utils/string_or_view.hpp"
 #include "utils/ui_fwd.h"
 
 namespace devilution {
 
-#define SPANEL_WIDTH 320
-#define SPANEL_HEIGHT 352
+constexpr Size SidePanelSize { 320, 352 };
 
-extern bool drawhpflag;
 extern bool dropGoldFlag;
 extern bool chrbtn[4];
 extern bool lvlbtndown;
 extern int dropGoldValue;
-extern bool drawmanaflag;
 extern bool chrbtnactive;
-extern DVL_API_FOR_TEST int pnumlines;
 extern UiFlags InfoColor;
 extern int sbooktab;
 extern int8_t initialDropGoldIndex;
 extern bool talkflag;
 extern bool sbookflag;
 extern bool chrflag;
-extern bool drawbtnflag;
-extern std::string InfoString;
+extern StringOrView InfoString;
 extern bool panelflag;
 extern int initialDropGoldValue;
 extern bool panbtndown;
@@ -52,18 +54,27 @@ const Rectangle &GetRightPanel();
 bool IsLeftPanelOpen();
 bool IsRightPanelOpen();
 extern std::optional<OwnedSurface> pBtmBuff;
-extern std::optional<OwnedCelSprite> pGBoxBuff;
+extern OptionalOwnedClxSpriteList pGBoxBuff;
 extern SDL_Rect PanBtnPos[8];
 
 void CalculatePanelAreas();
 bool IsChatAvailable();
+
+/**
+ * @brief Moves the mouse to the first attribute "+" button.
+ */
+void FocusOnCharInfo();
+void OpenCharPanel();
+void CloseCharPanel();
+void ToggleCharPanel();
+
 /**
  * @brief Check if the UI can cover the game area entierly
  */
 inline bool CanPanelsCoverView()
 {
 	const Rectangle &mainPanel = GetMainPanel();
-	return GetScreenWidth() <= mainPanel.size.width && GetScreenHeight() <= SPANEL_HEIGHT + mainPanel.size.height;
+	return GetScreenWidth() <= mainPanel.size.width && GetScreenHeight() <= SidePanelSize.height + mainPanel.size.height;
 }
 void DrawSpellList(const Surface &out);
 void SetSpell();
@@ -71,7 +82,7 @@ void SetSpeedSpell(size_t slot);
 void ToggleSpell(size_t slot);
 
 void AddPanelString(string_view str);
-void ClearPanel();
+void AddPanelString(std::string &&str);
 void DrawPanelBox(const Surface &out, SDL_Rect srcRect, Point targetPosition);
 Point GetPanelPosition(UiPanels panel, Point offset = { 0, 0 });
 
@@ -169,7 +180,7 @@ void DrawDurIcon(const Surface &out);
 void RedBack(const Surface &out);
 void DrawSpellBook(const Surface &out);
 void DrawGoldSplit(const Surface &out, int amount);
-void control_drop_gold(char vkey);
+void control_drop_gold(SDL_Keycode vkey);
 void DrawTalkPan(const Surface &out);
 bool control_check_talk_btn();
 void control_release_talk_btn();
@@ -177,7 +188,7 @@ void control_type_message();
 void control_reset_talk();
 bool IsTalkActive();
 void control_new_text(string_view text);
-bool control_presskeys(int vkey);
+bool control_presskeys(SDL_Keycode vkey);
 void DiabloHotkeyMsg(uint32_t dwMsg);
 void CloseGoldDrop();
 void GoldDropNewText(string_view text);

@@ -5,11 +5,14 @@ import android.content.ClipData;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.support.annotation.Nullable;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v4.provider.DocumentFile;
 import android.util.Log;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,6 +23,7 @@ public class ImportActivity extends Activity {
 
 	private static final int IMPORT_REQUEST_CODE = 0xD1AB70;
 
+	@RequiresApi(api = Build.VERSION_CODES.KITKAT)
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -60,10 +64,10 @@ public class ImportActivity extends Activity {
 		if (fileUri == null)
 			return;
 
-		DocumentFile file = DocumentFile.fromSingleUri(getApplicationContext(), fileUri);
+		DocumentFile file = Objects.requireNonNull(DocumentFile.fromSingleUri(getApplicationContext(), fileUri));
 		String fileName = file.getName();
-		String externalFilesDir = getExternalFilesDir(null).getAbsolutePath();
-		String externalFilesPath = externalFilesDir + "/" + fileName;
+		ExternalFilesManager fileManager = new ExternalFilesManager(this);
+		File externalFile = fileManager.getFile(fileName);
 
 		try {
 			InputStream inputStream = null;
@@ -72,7 +76,7 @@ public class ImportActivity extends Activity {
 			try {
 				ContentResolver contentResolver = getContentResolver();
 				inputStream = contentResolver.openInputStream(fileUri);
-				outputStream = new FileOutputStream(externalFilesPath);
+				outputStream = new FileOutputStream(externalFile);
 
 				// Transfer bytes from in to out
 				byte[] buf = new byte[4096];
@@ -87,7 +91,12 @@ public class ImportActivity extends Activity {
 					outputStream.close();
 			}
 		} catch (IOException exception) {
-			Log.e("importFile", Objects.requireNonNull(exception.getMessage()));
+			String message = exception.getMessage();
+			if (message == null) {
+				Log.e("importFile", "IOException", exception);
+			} else {
+				Log.e("importFile", message);
+			}
 		}
 	}
 }

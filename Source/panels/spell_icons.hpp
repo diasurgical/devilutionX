@@ -1,6 +1,6 @@
 #pragma once
 
-#include "engine/cel_sprite.hpp"
+#include "engine/clx_sprite.hpp"
 #include "engine/point.hpp"
 #include "engine/surface.hpp"
 #include "spelldat.h"
@@ -9,29 +9,51 @@
 
 namespace devilution {
 
-/** Maps from spell_id to spelicon.cel frame number. */
-extern const char SpellITbl[];
+/**
+ * Draw a large (56x56) spell icon onto the given buffer.
+ *
+ * @param out Output buffer.
+ * @param position Buffer coordinates (bottom-left).
+ * @param spell Spell ID.
+ */
+void DrawLargeSpellIcon(const Surface &out, Point position, SpellID spell);
 
 /**
- * Draw spell icon onto the given buffer.
+ * Draw a small (37x38) spell icon onto the given buffer.
+ *
  * @param out Output buffer.
- * @param position Buffer coordinates.
- * @param nCel Index of the cel frame to draw. 0 based.
+ * @param position Buffer coordinates (bottom-left).
+ * @param spell Spell ID.
  */
-void DrawSpellCel(const Surface &out, Point position, int nCel);
+void DrawSmallSpellIcon(const Surface &out, Point position, SpellID spell);
 
 /**
- * Draw spell icon onto the given buffer.
+ * Draw an inset 2px border for a large (56x56) spell icon.
+ *
  * @param out Output buffer.
- * @param position Buffer coordinates.
- * @param sprite Icons sprite sheet.
- * @param nCel Index of the cel frame to draw. 0 based.
+ * @param position Buffer coordinates (bottom-left).
+ * @param spell Spell ID.
  */
-void DrawSpellCel(const Surface &out, Point position, const OwnedCelSprite &sprite, int nCel);
+void DrawLargeSpellIconBorder(const Surface &out, Point position, uint8_t color);
 
-void SetSpellTrans(spell_type t);
+/**
+ * Draw an inset 2px border for a small (37x38) spell icon.
+ *
+ * @param out Output buffer.
+ * @param position Buffer coordinates (bottom-left).
+ * @param spell Spell ID.
+ */
+void DrawSmallSpellIconBorder(const Surface &out, Point position);
 
-void LoadSpellIcons();
-void FreeSpellIcons();
+/**
+ * @brief Set the color mapping for the `Draw(Small|Large)SpellIcon(Border)` calls.
+ */
+void SetSpellTrans(SpellType t);
+
+void LoadLargeSpellIcons();
+void FreeLargeSpellIcons();
+
+void LoadSmallSpellIcons();
+void FreeSmallSpellIcons();
 
 } // namespace devilution

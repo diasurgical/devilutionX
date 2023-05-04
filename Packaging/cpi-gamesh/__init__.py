@@ -23,7 +23,7 @@ class DevilutionPage(Page):
 
 	_GameName = "devilutionX"
 	_GamePath = "/home/cpi/games/devilutionX"
-	_GameExecutable = _GamePath + "/bin/devilutionx"
+	_GameExecutable = _GamePath + "/build/devilutionx"
 	_GameExecutableRevision = _GameExecutable + ".rev"
 	_GameBuildScript = _GamePath + "/Packaging/cpi-gamesh/build.sh -t " + pipes.quote(os.path.dirname(os.path.abspath( __file__ )))
 	_GamePNG = _GamePath + "/Packaging/cpi-gamesh/Devilution.png"

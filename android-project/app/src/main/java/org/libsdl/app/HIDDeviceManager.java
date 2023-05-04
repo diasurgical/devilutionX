@@ -170,7 +170,7 @@ public class HIDDeviceManager {
                 Log.i(TAG,"  Interface protocol: " + mUsbInterface.getInterfaceProtocol());
                 Log.i(TAG,"  Endpoint count: " + mUsbInterface.getEndpointCount());
 
-                // Get endpoint details 
+                // Get endpoint details
                 for (int epi = 0; epi < mUsbInterface.getEndpointCount(); epi++)
                 {
                     UsbEndpoint mEndpoint = mUsbInterface.getEndpoint(epi);
@@ -248,7 +248,10 @@ public class HIDDeviceManager {
             0x1689, // Razer Onza
             0x1949, // Lab126, Inc.
             0x1bad, // Harmonix
+            0x20d6, // PowerA
             0x24c6, // PowerA
+            0x2c22, // Qanba
+            0x2dc8, // 8BitDo
         };
 
         if (usbInterface.getInterfaceClass() == UsbConstants.USB_CLASS_VENDOR_SPEC &&
@@ -269,12 +272,16 @@ public class HIDDeviceManager {
         final int XB1_IFACE_SUBCLASS = 71;
         final int XB1_IFACE_PROTOCOL = 208;
         final int[] SUPPORTED_VENDORS = {
+            0x044f, // Thrustmaster
             0x045e, // Microsoft
             0x0738, // Mad Catz
             0x0e6f, // PDP
             0x0f0d, // Hori
+            0x10f5, // Turtle Beach
             0x1532, // Razer Wildcat
+            0x20d6, // PowerA
             0x24c6, // PowerA
+            0x2dc8, // 8BitDo
             0x2e24, // Hyperkin
         };
 
@@ -520,7 +527,7 @@ public class HIDDeviceManager {
             for (HIDDevice device : mDevicesById.values()) {
                 device.setFrozen(frozen);
             }
-        }        
+        }
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////

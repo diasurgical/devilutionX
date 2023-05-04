@@ -7,16 +7,17 @@
 
 namespace devilution {
 
+template <typename CoordT>
 class PointsInRectangleIteratorBase {
 public:
 	using iterator_category = std::random_access_iterator_tag;
-	using difference_type = int;
-	using value_type = Point;
+	using difference_type = CoordT;
+	using value_type = PointOf<CoordT>;
 	using pointer = void;
 	using reference = value_type;
 
 protected:
-	PointsInRectangleIteratorBase(Point origin, int majorDimension, int majorIndex, int minorIndex)
+	constexpr PointsInRectangleIteratorBase(PointOf<CoordT> origin, int majorDimension, int majorIndex, int minorIndex)
 	    : origin(origin)
 	    , majorDimension(majorDimension)
 	    , majorIndex(majorIndex)
@@ -24,7 +25,7 @@ protected:
 	{
 	}
 
-	explicit PointsInRectangleIteratorBase(Point origin, int majorDimension, int index = 0)
+	explicit constexpr PointsInRectangleIteratorBase(PointOf<CoordT> origin, int majorDimension, int index = 0)
 	    : PointsInRectangleIteratorBase(origin, majorDimension, index / majorDimension, index % majorDimension)
 	{
 	}
@@ -57,7 +58,7 @@ protected:
 		}
 	}
 
-	Point origin;
+	PointOf<CoordT> origin;
 
 	int majorDimension;
 
@@ -65,21 +66,26 @@ protected:
 	int minorIndex;
 };
 
+template <typename CoordT>
 class PointsInRectangleRange {
 public:
-	using const_iterator = class PointsInRectangleIterator : public PointsInRectangleIteratorBase {
+	using const_iterator = class PointsInRectangleIterator : public PointsInRectangleIteratorBase<CoordT> {
 	public:
-		PointsInRectangleIterator() = default;
+		using iterator_category = typename PointsInRectangleIteratorBase<CoordT>::iterator_category;
+		using difference_type = typename PointsInRectangleIteratorBase<CoordT>::difference_type;
+		using value_type = typename PointsInRectangleIteratorBase<CoordT>::value_type;
+		using pointer = typename PointsInRectangleIteratorBase<CoordT>::pointer;
+		using reference = typename PointsInRectangleIteratorBase<CoordT>::reference;
 
-		PointsInRectangleIterator(Rectangle region, int index = 0)
-		    : PointsInRectangleIteratorBase(region.position, region.size.width, index)
+		constexpr PointsInRectangleIterator(RectangleOf<CoordT> region, int index = 0)
+		    : PointsInRectangleIteratorBase<CoordT>(region.position, region.size.width, index)
 		{
 		}
 
 		value_type operator*() const
 		{
 			// Row-major iteration e.g. {0, 0}, {1, 0}, {2, 0}, {0, 1}, {1, 1}, ...
-			return origin + Displacement { minorIndex, majorIndex };
+			return this->origin + Displacement { this->minorIndex, this->majorIndex };
 		}
 
 		// Equality comparable concepts
@@ -116,13 +122,13 @@ public:
 
 		difference_type operator-(const PointsInRectangleIterator &rhs) const
 		{
-			return (this->majorIndex - rhs.majorIndex) * majorDimension + (this->minorIndex - rhs.minorIndex);
+			return (this->majorIndex - rhs.majorIndex) * this->majorDimension + (this->minorIndex - rhs.minorIndex);
 		}
 
 		// Forward concepts
 		PointsInRectangleIterator &operator++()
 		{
-			Increment();
+			this->Increment();
 			return *this;
 		}
 
@@ -136,7 +142,7 @@ public:
 		// Bidirectional concepts
 		PointsInRectangleIterator &operator--()
 		{
-			Decrement();
+			this->Decrement();
 			return *this;
 		}
 
@@ -156,7 +162,7 @@ public:
 
 		PointsInRectangleIterator &operator+=(difference_type delta)
 		{
-			Offset(delta);
+			this->Offset(delta);
 			return *this;
 		}
 
@@ -182,7 +188,7 @@ public:
 		}
 	};
 
-	PointsInRectangleRange(Rectangle region)
+	constexpr PointsInRectangleRange(RectangleOf<CoordT> region)
 	    : region(region)
 	{
 	}
@@ -230,24 +236,35 @@ public:
 	}
 
 protected:
-	Rectangle region;
+	RectangleOf<CoordT> region;
 };
 
-class PointsInRectangleRangeColMajor {
-public:
-	using const_iterator = class PointsInRectangleIteratorColMajor : public PointsInRectangleIteratorBase {
-	public:
-		PointsInRectangleIteratorColMajor() = default;
+template <typename CoordT>
+constexpr PointsInRectangleRange<CoordT> PointsInRectangle(RectangleOf<CoordT> region)
+{
+	return PointsInRectangleRange<CoordT> { region };
+}
 
-		PointsInRectangleIteratorColMajor(Rectangle region, int index = 0)
-		    : PointsInRectangleIteratorBase(region.position, region.size.height, index)
+template <typename CoordT>
+class PointsInRectangleColMajorRange {
+public:
+	using const_iterator = class PointsInRectangleIteratorColMajor : public PointsInRectangleIteratorBase<CoordT> {
+	public:
+		using iterator_category = typename PointsInRectangleIteratorBase<CoordT>::iterator_category;
+		using difference_type = typename PointsInRectangleIteratorBase<CoordT>::difference_type;
+		using value_type = typename PointsInRectangleIteratorBase<CoordT>::value_type;
+		using pointer = typename PointsInRectangleIteratorBase<CoordT>::pointer;
+		using reference = typename PointsInRectangleIteratorBase<CoordT>::reference;
+
+		constexpr PointsInRectangleIteratorColMajor(RectangleOf<CoordT> region, int index = 0)
+		    : PointsInRectangleIteratorBase<CoordT>(region.position, region.size.height, index)
 		{
 		}
 
 		value_type operator*() const
 		{
 			// Col-major iteration e.g. {0, 0}, {0, 1}, {0, 2}, {1, 0}, {1, 1}, ...
-			return origin + Displacement { majorIndex, minorIndex };
+			return this->origin + Displacement { this->majorIndex, this->minorIndex };
 		}
 
 		// Equality comparable concepts
@@ -284,13 +301,13 @@ public:
 
 		difference_type operator-(const PointsInRectangleIteratorColMajor &rhs) const
 		{
-			return (this->majorIndex - rhs.majorIndex) * majorDimension + (this->minorIndex - rhs.minorIndex);
+			return (this->majorIndex - rhs.majorIndex) * this->majorDimension + (this->minorIndex - rhs.minorIndex);
 		}
 
 		// Forward concepts
 		PointsInRectangleIteratorColMajor &operator++()
 		{
-			Increment();
+			this->Increment();
 			return *this;
 		}
 
@@ -304,7 +321,7 @@ public:
 		// Bidirectional concepts
 		PointsInRectangleIteratorColMajor &operator--()
 		{
-			Decrement();
+			this->Decrement();
 			return *this;
 		}
 
@@ -324,7 +341,7 @@ public:
 
 		PointsInRectangleIteratorColMajor &operator+=(difference_type delta)
 		{
-			Offset(delta);
+			this->Offset(delta);
 			return *this;
 		}
 
@@ -351,7 +368,7 @@ public:
 	};
 
 	// gcc6 needs a defined constructor?
-	PointsInRectangleRangeColMajor(Rectangle region)
+	constexpr PointsInRectangleColMajorRange(RectangleOf<CoordT> region)
 	    : region(region)
 	{
 	}
@@ -399,7 +416,13 @@ public:
 	}
 
 protected:
-	Rectangle region;
+	RectangleOf<CoordT> region;
 };
+
+template <typename CoordT = int>
+constexpr PointsInRectangleColMajorRange<CoordT> PointsInRectangleColMajor(RectangleOf<CoordT> region)
+{
+	return PointsInRectangleColMajorRange<CoordT> { region };
+}
 
 } // namespace devilution

@@ -1,19 +1,29 @@
 #include "panels/spell_icons.hpp"
 
+#include "engine.h"
 #include "engine/load_cel.hpp"
-#include "engine/render/cel_render.hpp"
+#include "engine/load_clx.hpp"
+#include "engine/palette.h"
+#include "engine/render/clx_render.hpp"
 #include "init.h"
-#include "palette.h"
 #include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
 
 namespace {
-std::optional<OwnedCelSprite> pSpellCels;
-uint8_t SplTransTbl[256];
-} // namespace
 
-const char SpellITbl[] = {
+#ifdef UNPACKED_MPQS
+OptionalOwnedClxSpriteList LargeSpellIconsBackground;
+OptionalOwnedClxSpriteList SmallSpellIconsBackground;
+#endif
+
+OptionalOwnedClxSpriteList SmallSpellIcons;
+OptionalOwnedClxSpriteList LargeSpellIcons;
+
+uint8_t SplTransTbl[256];
+
+/** Maps from SpellID to spelicon.cel frame number. */
+const uint8_t SpellITbl[] = {
 	26,
 	0,
 	1,
@@ -68,33 +78,87 @@ const char SpellITbl[] = {
 	34,
 };
 
-void LoadSpellIcons()
+} // namespace
+
+void LoadLargeSpellIcons()
 {
-	if (!gbIsHellfire)
-		pSpellCels = LoadCel("CtrlPan\\SpelIcon.CEL", SPLICONLENGTH);
-	else
-		pSpellCels = LoadCel("Data\\SpelIcon.CEL", SPLICONLENGTH);
-	SetSpellTrans(RSPLTYPE_SKILL);
+	if (!gbIsHellfire) {
+#ifdef UNPACKED_MPQS
+		LargeSpellIcons = LoadClx("ctrlpan\\spelicon_fg.clx");
+		LargeSpellIconsBackground = LoadClx("ctrlpan\\spelicon_bg.clx");
+#else
+		LargeSpellIcons = LoadCel("ctrlpan\\spelicon", SPLICONLENGTH);
+#endif
+	} else {
+#ifdef UNPACKED_MPQS
+		LargeSpellIcons = LoadClx("data\\spelicon_fg.clx");
+		LargeSpellIconsBackground = LoadClx("data\\spelicon_bg.clx");
+#else
+		LargeSpellIcons = LoadCel("data\\spelicon", SPLICONLENGTH);
+#endif
+	}
+	SetSpellTrans(SpellType::Skill);
 }
 
-void FreeSpellIcons()
+void FreeLargeSpellIcons()
 {
-	pSpellCels = std::nullopt;
+#ifdef UNPACKED_MPQS
+	LargeSpellIconsBackground = std::nullopt;
+#endif
+	LargeSpellIcons = std::nullopt;
 }
 
-void DrawSpellCel(const Surface &out, Point position, int nCel)
+void LoadSmallSpellIcons()
 {
-	DrawSpellCel(out, position, *pSpellCels, nCel);
+#ifdef UNPACKED_MPQS
+	SmallSpellIcons = LoadClx("data\\spelli2_fg.clx");
+	SmallSpellIconsBackground = LoadClx("data\\spelli2_bg.clx");
+#else
+	SmallSpellIcons = LoadCel("data\\spelli2", 37);
+#endif
 }
 
-void DrawSpellCel(const Surface &out, Point position, const OwnedCelSprite &sprite, int nCel)
+void FreeSmallSpellIcons()
 {
-	CelDrawLightTo(out, position, sprite, nCel, SplTransTbl);
+#ifdef UNPACKED_MPQS
+	SmallSpellIconsBackground = std::nullopt;
+#endif
+	SmallSpellIcons = std::nullopt;
 }
 
-void SetSpellTrans(spell_type t)
+void DrawLargeSpellIcon(const Surface &out, Point position, SpellID spell)
 {
-	if (t == RSPLTYPE_SKILL) {
+#ifdef UNPACKED_MPQS
+	ClxDrawTRN(out, position, (*LargeSpellIconsBackground)[0], SplTransTbl);
+#endif
+	ClxDrawTRN(out, position, (*LargeSpellIcons)[SpellITbl[static_cast<int8_t>(spell)]], SplTransTbl);
+}
+
+void DrawSmallSpellIcon(const Surface &out, Point position, SpellID spell)
+{
+#ifdef UNPACKED_MPQS
+	ClxDrawTRN(out, position, (*SmallSpellIconsBackground)[0], SplTransTbl);
+#endif
+	ClxDrawTRN(out, position, (*SmallSpellIcons)[SpellITbl[static_cast<int8_t>(spell)]], SplTransTbl);
+}
+
+void DrawLargeSpellIconBorder(const Surface &out, Point position, uint8_t color)
+{
+	const int width = (*LargeSpellIcons)[0].width();
+	const int height = (*LargeSpellIcons)[0].height();
+	UnsafeDrawBorder2px(out, Rectangle { Point { position.x, position.y - height + 1 }, Size { width, height } }, color);
+}
+
+void DrawSmallSpellIconBorder(const Surface &out, Point position)
+{
+	const int width = (*SmallSpellIcons)[0].width();
+	const int height = (*SmallSpellIcons)[0].height();
+	UnsafeDrawBorder2px(out, Rectangle { Point { position.x, position.y - height + 1 }, Size { width, height } }, SplTransTbl[PAL8_YELLOW + 2]);
+}
+
+void SetSpellTrans(SpellType t)
+{
+	if (t == SpellType::Skill) {
 		for (int i = 0; i < 128; i++)
 			SplTransTbl[i] = i;
 	}
@@ -103,7 +167,7 @@ void SetSpellTrans(spell_type t)
 	SplTransTbl[255] = 0;
 
 	switch (t) {
-	case RSPLTYPE_SPELL:
+	case SpellType::Spell:
 		SplTransTbl[PAL8_YELLOW] = PAL16_BLUE + 1;
 		SplTransTbl[PAL8_YELLOW + 1] = PAL16_BLUE + 3;
 		SplTransTbl[PAL8_YELLOW + 2] = PAL16_BLUE + 5;
@@ -113,7 +177,7 @@ void SetSpellTrans(spell_type t)
 			SplTransTbl[PAL16_ORANGE - PAL16_BLUE + i] = i;
 		}
 		break;
-	case RSPLTYPE_SCROLL:
+	case SpellType::Scroll:
 		SplTransTbl[PAL8_YELLOW] = PAL16_BEIGE + 1;
 		SplTransTbl[PAL8_YELLOW + 1] = PAL16_BEIGE + 3;
 		SplTransTbl[PAL8_YELLOW + 2] = PAL16_BEIGE + 5;
@@ -122,7 +186,7 @@ void SetSpellTrans(spell_type t)
 			SplTransTbl[PAL16_ORANGE - PAL16_BEIGE + i] = i;
 		}
 		break;
-	case RSPLTYPE_CHARGES:
+	case SpellType::Charges:
 		SplTransTbl[PAL8_YELLOW] = PAL16_ORANGE + 1;
 		SplTransTbl[PAL8_YELLOW + 1] = PAL16_ORANGE + 3;
 		SplTransTbl[PAL8_YELLOW + 2] = PAL16_ORANGE + 5;
@@ -131,7 +195,7 @@ void SetSpellTrans(spell_type t)
 			SplTransTbl[PAL16_YELLOW - PAL16_ORANGE + i] = i;
 		}
 		break;
-	case RSPLTYPE_INVALID:
+	case SpellType::Invalid:
 		SplTransTbl[PAL8_YELLOW] = PAL16_GRAY + 1;
 		SplTransTbl[PAL8_YELLOW + 1] = PAL16_GRAY + 3;
 		SplTransTbl[PAL8_YELLOW + 2] = PAL16_GRAY + 5;
@@ -144,7 +208,7 @@ void SetSpellTrans(spell_type t)
 		SplTransTbl[PAL16_YELLOW + 15] = 0;
 		SplTransTbl[PAL16_ORANGE + 15] = 0;
 		break;
-	case RSPLTYPE_SKILL:
+	case SpellType::Skill:
 		break;
 	}
 }

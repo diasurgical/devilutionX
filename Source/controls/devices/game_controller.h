@@ -5,6 +5,7 @@
 #include <SDL.h>
 
 #include "controls/controller_buttons.h"
+#include "controls/game_controls.h"
 
 namespace devilution {
 
@@ -27,6 +28,7 @@ public:
 	bool IsPressed(ControllerButton button) const;
 	static bool ProcessAxisMotion(const SDL_Event &event);
 	static SDL_GameControllerButton ToSdlGameControllerButton(ControllerButton button);
+	static GamepadLayout getLayout(const SDL_Event &event);
 
 private:
 	SDL_GameController *sdl_game_controller_ = NULL;

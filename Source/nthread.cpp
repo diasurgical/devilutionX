@@ -3,35 +3,37 @@
  *
  * Implementation of functions for managing game ticks.
  */
-
 #include "nthread.h"
+
+#include <fmt/core.h>
+
 #include "diablo.h"
 #include "engine/demomode.h"
 #include "gmenu.h"
 #include "storm/storm_net.hpp"
 #include "utils/sdl_mutex.h"
 #include "utils/sdl_thread.h"
+#include "utils/str_cat.hpp"
 
 namespace devilution {
 
-BYTE sgbNetUpdateRate;
+uint8_t sgbNetUpdateRate;
 size_t gdwMsgLenTbl[MAX_PLRS];
 uint32_t gdwTurnsInTransit;
 uintptr_t glpMsgTbl[MAX_PLRS];
 uint32_t gdwLargestMsgSize;
 uint32_t gdwNormalMsgSize;
 int last_tick;
-float gfProgressToNextGameTick = 0.0;
+uint8_t ProgressToNextGameTick = 0;
 
 namespace {
 
 SdlMutex MemCrit;
-DWORD gdwDeltaBytesSec;
 bool nthread_should_run;
-char sgbSyncCountdown;
+int8_t sgbSyncCountdown;
 uint32_t turn_upper_bit;
 bool sgbTicsOutOfSync;
-char sgbPacketCountdown;
+int8_t sgbPacketCountdown;
 bool sgbThreadIsRunning;
 SdlThread Thread;
 
@@ -68,7 +70,7 @@ void nthread_terminate_game(const char *pszFcn)
 		return;
 	}
 	if (sErr != STORM_ERROR_GAME_TERMINATED && sErr != STORM_ERROR_NOT_IN_GAME) {
-		app_fatal("%s:\n%s", pszFcn, SDL_GetError());
+		app_fatal(StrCat(pszFcn, ":\n", pszFcn));
 	}
 
 	gbGameDestroyed = true;
@@ -164,7 +166,6 @@ void nthread_start(bool setTurnUpperBit)
 	uint32_t largestMsgSize = 512;
 	if (caps.maxmessagesize < 0x200)
 		largestMsgSize = caps.maxmessagesize;
-	gdwDeltaBytesSec = caps.bytessec / 4;
 	gdwLargestMsgSize = largestMsgSize;
 	gdwNormalMsgSize = caps.bytessec * sgbNetUpdateRate / 20;
 	gdwNormalMsgSize *= 3;
@@ -211,13 +212,34 @@ void nthread_ignore_mutex(bool bStart)
 	sgbThreadIsRunning = bStart;
 }
 
-bool nthread_has_500ms_passed()
+bool nthread_has_500ms_passed(bool *drawGame /*= nullptr*/)
 {
 	int currentTickCount = SDL_GetTicks();
 	int ticksElapsed = currentTickCount - last_tick;
-	if (!gbIsMultiplayer && ticksElapsed > gnTickDelay * 10) {
-		last_tick = currentTickCount;
-		ticksElapsed = 0;
+	// Check if we missed multiple game ticks (> 10)
+	if (ticksElapsed > gnTickDelay * 10) {
+		bool resetLastTick = true;
+		if (gbIsMultiplayer) {
+			for (size_t i = 0; i < Players.size(); i++) {
+				if ((player_state[i] & PS_CONNECTED) != 0 && i != MyPlayerId) {
+					// Reset last tick is not allowed when other players are connected, cause the elapsed time is needed to sync the game ticks between the clients
+					resetLastTick = false;
+					break;
+				}
+			}
+		}
+		if (resetLastTick) {
+			// Reset last tick to avoid catching up with all missed game ticks (game speed is dramatically increased for a short time)
+			last_tick = currentTickCount;
+			ticksElapsed = 0;
+		}
+	}
+	if (drawGame != nullptr) {
+		// Check if we missed a game tick.
+		// This can happen when we run a low-end device that can't render fast enough (typically 20fps).
+		// If this happens, try to speed-up the game by skipping the rendering.
+		// This avoids desyncs and hourglasses when running multiplayer and slowdowns in singleplayer.
+		*drawGame = ticksElapsed <= gnTickDelay;
 	}
 	return ticksElapsed >= 0;
 }
@@ -227,18 +249,15 @@ void nthread_UpdateProgressToNextGameTick()
 	if (!gbRunGame || PauseMode != 0 || (!gbIsMultiplayer && gmenu_is_active()) || !gbProcessPlayers || demo::IsRunning()) // if game is not running or paused there is no next gametick in the near future
 		return;
 	int currentTickCount = SDL_GetTicks();
-	int ticksElapsed = last_tick - currentTickCount;
-	if (ticksElapsed <= 0) {
-		gfProgressToNextGameTick = 1.0; // game tick is due
+	int ticksMissing = last_tick - currentTickCount;
+	if (ticksMissing <= 0) {
+		ProgressToNextGameTick = AnimationInfo::baseValueFraction; // game tick is due
 		return;
 	}
-	int ticksAdvanced = gnTickDelay - ticksElapsed;
-	float fraction = (float)ticksAdvanced / (float)gnTickDelay;
-	if (fraction > 1.0)
-		gfProgressToNextGameTick = 1.0;
-	if (fraction < 0.0)
-		gfProgressToNextGameTick = 0.0;
-	gfProgressToNextGameTick = fraction;
+	int ticksAdvanced = gnTickDelay - ticksMissing;
+	int32_t fraction = ticksAdvanced * AnimationInfo::baseValueFraction / gnTickDelay;
+	fraction = clamp<int32_t>(fraction, 0, AnimationInfo::baseValueFraction);
+	ProgressToNextGameTick = static_cast<uint8_t>(fraction);
 }
 
 } // namespace devilution

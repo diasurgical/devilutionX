@@ -6,14 +6,17 @@
 #include "gamemenu.h"
 
 #include "cursor.h"
+#include "engine/backbuffer_state.hpp"
+#include "engine/events.hpp"
+#include "engine/sound.h"
+#include "engine/sound_defs.hpp"
 #include "error.h"
 #include "gmenu.h"
 #include "init.h"
 #include "loadsave.h"
 #include "options.h"
 #include "pfile.h"
-#include "sound.h"
-#include "sound_defs.hpp"
+#include "qol/floatingnumbers.h"
 #include "utils/language.h"
 
 namespace devilution {
@@ -76,16 +79,16 @@ const char *const SoundToggleNames[] = {
 
 void GamemenuUpdateSingle()
 {
-	gmenu_enable(&sgSingleMenu[3], gbValidSaveFile);
+	sgSingleMenu[3].setEnabled(gbValidSaveFile);
 
 	bool enable = MyPlayer->_pmode != PM_DEATH && !MyPlayerIsDead;
 
-	gmenu_enable(&sgSingleMenu[0], enable);
+	sgSingleMenu[0].setEnabled(enable);
 }
 
 void GamemenuUpdateMulti()
 {
-	gmenu_enable(&sgMultiMenu[2], MyPlayerIsDead);
+	sgMultiMenu[2].setEnabled(MyPlayerIsDead);
 }
 
 void GamemenuPrevious(bool /*bActivate*/)
@@ -101,8 +104,10 @@ void GamemenuNewGame(bool /*bActivate*/)
 	}
 
 	MyPlayerIsDead = false;
-	force_redraw = 255;
-	scrollrt_draw_game_screen();
+	if (!HeadlessMode) {
+		RedrawEverything();
+		scrollrt_draw_game_screen();
+	}
 	CornerStone.activated = false;
 	gbRunGame = false;
 	gamemenu_off();
@@ -116,14 +121,14 @@ void GamemenuRestartTown(bool /*bActivate*/)
 void GamemenuSoundMusicToggle(const char *const *names, TMenuItem *menuItem, int volume)
 {
 	if (gbSndInited) {
-		menuItem->dwFlags |= GMENU_ENABLED | GMENU_SLIDER;
+		menuItem->addFlags(GMENU_ENABLED | GMENU_SLIDER);
 		menuItem->pszStr = names[0];
 		gmenu_slider_steps(menuItem, VOLUME_STEPS);
 		gmenu_slider_set(menuItem, VOLUME_MIN, VOLUME_MAX, volume);
 		return;
 	}
 
-	menuItem->dwFlags &= ~(GMENU_ENABLED | GMENU_SLIDER);
+	menuItem->removeFlags(GMENU_ENABLED | GMENU_SLIDER);
 	menuItem->pszStr = names[1];
 }
 
@@ -151,21 +156,21 @@ void GamemenuGetGamma()
 void GamemenuGetSpeed()
 {
 	if (gbIsMultiplayer) {
-		sgOptionsMenu[3].dwFlags &= ~(GMENU_ENABLED | GMENU_SLIDER);
+		sgOptionsMenu[3].removeFlags(GMENU_ENABLED | GMENU_SLIDER);
 		if (sgGameInitInfo.nTickRate >= 50)
-			sgOptionsMenu[3].pszStr = _("Speed: Fastest").c_str();
+			sgOptionsMenu[3].pszStr = _("Speed: Fastest").data();
 		else if (sgGameInitInfo.nTickRate >= 40)
-			sgOptionsMenu[3].pszStr = _("Speed: Faster").c_str();
+			sgOptionsMenu[3].pszStr = _("Speed: Faster").data();
 		else if (sgGameInitInfo.nTickRate >= 30)
-			sgOptionsMenu[3].pszStr = _("Speed: Fast").c_str();
+			sgOptionsMenu[3].pszStr = _("Speed: Fast").data();
 		else if (sgGameInitInfo.nTickRate == 20)
-			sgOptionsMenu[3].pszStr = _("Speed: Normal").c_str();
+			sgOptionsMenu[3].pszStr = _("Speed: Normal").data();
 		return;
 	}
 
-	sgOptionsMenu[3].dwFlags |= GMENU_ENABLED | GMENU_SLIDER;
+	sgOptionsMenu[3].addFlags(GMENU_ENABLED | GMENU_SLIDER);
 
-	sgOptionsMenu[3].pszStr = _("Speed").c_str();
+	sgOptionsMenu[3].pszStr = _("Speed").data();
 	gmenu_slider_steps(&sgOptionsMenu[3], 46);
 	gmenu_slider_set(&sgOptionsMenu[3], 20, 50, sgGameInitInfo.nTickRate);
 }
@@ -287,24 +292,25 @@ void gamemenu_quit_game(bool bActivate)
 
 void gamemenu_load_game(bool /*bActivate*/)
 {
-	WNDPROC saveProc = SetWindowProc(DisableInputWndProc);
+	EventHandler saveProc = SetEventHandler(DisableInputEventHandler);
 	gamemenu_off();
+	ClearFloatingNumbers();
 	NewCursor(CURSOR_NONE);
 	InitDiabloMsg(EMSG_LOADING);
-	force_redraw = 255;
+	RedrawEverything();
 	DrawAndBlit();
 	LoadGame(false);
 	ClrDiabloMsg();
 	CornerStone.activated = false;
 	PaletteFadeOut(8);
 	MyPlayerIsDead = false;
-	force_redraw = 255;
+	RedrawEverything();
 	DrawAndBlit();
 	LoadPWaterPalette();
 	PaletteFadeIn(8);
 	NewCursor(CURSOR_HAND);
 	interface_msg_pump();
-	SetWindowProc(saveProc);
+	SetEventHandler(saveProc);
 }
 
 void gamemenu_save_game(bool /*bActivate*/)
@@ -318,22 +324,22 @@ void gamemenu_save_game(bool /*bActivate*/)
 		return;
 	}
 
-	WNDPROC saveProc = SetWindowProc(DisableInputWndProc);
+	EventHandler saveProc = SetEventHandler(DisableInputEventHandler);
 	NewCursor(CURSOR_NONE);
 	gamemenu_off();
 	InitDiabloMsg(EMSG_SAVING);
-	force_redraw = 255;
+	RedrawEverything();
 	DrawAndBlit();
 	SaveGame();
 	ClrDiabloMsg();
-	force_redraw = 255;
+	RedrawEverything();
 	NewCursor(CURSOR_HAND);
 	if (CornerStone.activated) {
 		CornerstoneSave();
 		SaveOptions();
 	}
 	interface_msg_pump();
-	SetWindowProc(saveProc);
+	SetEventHandler(saveProc);
 }
 
 void gamemenu_on()

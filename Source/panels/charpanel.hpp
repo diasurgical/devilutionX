@@ -1,13 +1,11 @@
 #pragma once
 
-#include "engine/cel_sprite.hpp"
+#include "engine/clx_sprite.hpp"
 #include "engine/surface.hpp"
-#include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
 
-extern std::optional<OwnedCelSprite> pChrButtons;
-extern const char *const ClassStrTbl[];
+extern OptionalOwnedClxSpriteList pChrButtons;
 
 void DrawChr(const Surface &);
 void LoadCharPanel();

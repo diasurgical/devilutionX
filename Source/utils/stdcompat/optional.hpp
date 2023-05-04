@@ -7,6 +7,7 @@
 #include <experimental/optional> // IWYU pragma: export
 #define optional experimental::optional
 #define nullopt experimental::nullopt
+#define nullopt_t experimental::nullopt_t
 #else
 #error "Missing support for <optional> or <experimental/optional>"
 #endif

@@ -1078,9 +1078,9 @@ msgstr[0] "生命點{:d}的{:d}"
 
 #: Source/control.cpp:860 Source/inv.cpp:1998 Source/items.cpp:3480
 #, fuzzy
-#| msgid "{:d} gold piece"
-msgid "{:d} gold piece"
-msgid_plural "{:d} gold pieces"
+#| msgid "{:s} gold piece"
+msgid "{:s} gold piece"
+msgid_plural "{:s} gold pieces"
 msgstr[0] "金幣"
 
 #: Source/control.cpp:863
@@ -1101,8 +1101,8 @@ msgstr "升級"
 
 #. TRANSLATORS: {:d} is a number. Dialog is shown when splitting a stash of Gold.
 #: Source/control.cpp:1040
-msgid "You have {:d} gold piece. How many do you want to remove?"
-msgid_plural "You have {:d} gold pieces. How many do you want to remove?"
+msgid "You have {:s} gold piece. How many do you want to remove?"
+msgid_plural "You have {:s} gold pieces. How many do you want to remove?"
 msgstr[0] ""
 
 #: Source/controls/modifier_hints.cpp:176 Source/qol/monhealthbar.cpp:36
@@ -4083,14 +4083,8 @@ msgid "Right-click to read"
 msgstr "右​擊閱讀"
 
 #: Source/items.cpp:1814 Source/items.cpp:1835
-#, fuzzy
-#| msgid "Select current spell button"
-msgid "Select from spell book, then"
-msgstr "選​擇​目前​法術​按​鈕"
-
-#: Source/items.cpp:1815 Source/items.cpp:1836
-msgid "cast spell to read"
-msgstr ""
+msgid "Select from spell book, then\ncast spell to read"
+msgstr "從拼寫書中選擇​, 然後\n施放拼寫來閱讀"
 
 #: Source/items.cpp:1817 Source/items.cpp:1838 Source/items.cpp:1852
 msgid "Open inventory to use"
@@ -4101,12 +4095,8 @@ msgid "Activate to read"
 msgstr ""
 
 #: Source/items.cpp:1825
-msgid "Right-click to read, then"
-msgstr "右​擊​閱讀，然​後"
-
-#: Source/items.cpp:1826
-msgid "left-click to target"
-msgstr "左​擊目標"
+msgid "Right-click to read, then\nleft-click to target"
+msgstr "右​擊​閱讀, 然​後\n左​擊目標"
 
 #: Source/items.cpp:1849
 msgid "Right-click to use"
@@ -4507,8 +4497,8 @@ msgstr "2x 對​怪物​傷害，1x 反噬​自身"
 
 #: Source/items.cpp:3746
 #, no-c-format
-msgid "Random 0 - 500% damage"
-msgstr "隨​機​0-500​%​傷害"
+msgid "Random 0 - 600% damage"
+msgstr "隨​機​0-600​%​傷害"
 
 #: Source/items.cpp:3748
 #, fuzzy, no-c-format
@@ -7522,7 +7512,7 @@ msgid "Chat History (Messages: {:d})"
 msgstr ""
 
 #: Source/qol/itemlabels.cpp:72
-msgid "{:d} gold"
+msgid "{:s} gold"
 msgstr ""
 
 #: Source/qol/stash.cpp:586
@@ -8151,8 +8141,8 @@ msgstr "修理​專案"
 msgid "Leave the shop"
 msgstr "離​開​商店"
 
-msgid "Your gold: {:d}"
-msgstr "你​的​金幣: {:d}"
+msgid "Your gold: {:s}"
+msgstr "你​的​金幣: {:s}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:360 Source/stores.cpp:725 Source/stores.cpp:1096

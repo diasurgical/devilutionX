@@ -1,3 +1,3 @@
 # DevilutionX OpenDingux Port
 
-See README.md in the root directory for build instructions.
+See docs/building.md for build instructions.

@@ -34,9 +34,9 @@ _music_id NextTrack()
 	case TMUSIC_CAVES:
 		return TMUSIC_HELL;
 	case TMUSIC_HELL:
-		return TMUSIC_NEST;
+		return gbIsHellfire ? TMUSIC_NEST : TMUSIC_INTRO;
 	case TMUSIC_NEST:
-		return TMUSIC_CRYPT;
+		return gbIsHellfire ? TMUSIC_CRYPT : TMUSIC_INTRO;
 	default:
 		return TMUSIC_INTRO;
 	}
@@ -150,8 +150,8 @@ void mainmenu_loop()
 		_mainmenu_selections menu = MAINMENU_NONE;
 		if (demo::IsRunning())
 			menu = MAINMENU_SINGLE_PLAYER;
-		else if (!UiMainMenuDialog(gszProductName, &menu, effects_play_sound, 30))
-			app_fatal("%s", _("Unable to display mainmenu").c_str());
+		else if (!UiMainMenuDialog(gszProductName, &menu, 30))
+			app_fatal(_("Unable to display mainmenu"));
 
 		switch (menu) {
 		case MAINMENU_NONE:
@@ -165,7 +165,7 @@ void mainmenu_loop()
 				done = true;
 			break;
 		case MAINMENU_ATTRACT_MODE:
-			if (gbIsSpawn && !diabdat_mpq)
+			if (gbIsSpawn && !HaveDiabdat())
 				done = false;
 			else if (gbActive)
 				PlayIntro();

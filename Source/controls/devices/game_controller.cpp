@@ -25,8 +25,9 @@ ControllerButton GameController::ToControllerButton(const SDL_Event &event)
 	case SDL_CONTROLLERAXISMOTION:
 		switch (event.caxis.axis) {
 		case SDL_CONTROLLER_AXIS_TRIGGERLEFT:
-			if (event.caxis.value < 8192) { // 25% pressed
+			if (event.caxis.value < 8192 && trigger_left_is_down_) { // 25% pressed
 				trigger_left_is_down_ = false;
+				trigger_left_state_ = ControllerButton_AXIS_TRIGGERLEFT;
 			}
 			if (event.caxis.value > 16384 && !trigger_left_is_down_) { // 50% pressed
 				trigger_left_is_down_ = true;
@@ -34,8 +35,9 @@ ControllerButton GameController::ToControllerButton(const SDL_Event &event)
 			}
 			return trigger_left_state_;
 		case SDL_CONTROLLER_AXIS_TRIGGERRIGHT:
-			if (event.caxis.value < 8192) { // 25% pressed
+			if (event.caxis.value < 8192 && trigger_right_is_down_) { // 25% pressed
 				trigger_right_is_down_ = false;
+				trigger_right_state_ = ControllerButton_AXIS_TRIGGERRIGHT;
 			}
 			if (event.caxis.value > 16384 && !trigger_right_is_down_) { // 50% pressed
 				trigger_right_is_down_ = true;
@@ -230,6 +232,50 @@ bool GameController::IsPressedOnAnyController(ControllerButton button, SDL_Joyst
 			return true;
 		}
 	return false;
+}
+
+GamepadLayout GameController::getLayout(const SDL_Event &event)
+{
+#if defined(DEVILUTIONX_GAMEPAD_TYPE)
+	return GamepadLayout::
+	    DEVILUTIONX_GAMEPAD_TYPE;
+#else // !defined(DEVILUTIONX_GAMEPAD_TYPE)
+#if SDL_VERSION_ATLEAST(2, 0, 12)
+	const int index = event.cdevice.which;
+	const SDL_GameControllerType gamepadType = SDL_GameControllerTypeForIndex(index);
+	switch (gamepadType) {
+	case SDL_CONTROLLER_TYPE_NINTENDO_SWITCH_PRO:
+#if SDL_VERSION_ATLEAST(2, 24, 0)
+	case SDL_CONTROLLER_TYPE_NINTENDO_SWITCH_JOYCON_LEFT:
+	case SDL_CONTROLLER_TYPE_NINTENDO_SWITCH_JOYCON_RIGHT:
+	case SDL_CONTROLLER_TYPE_NINTENDO_SWITCH_JOYCON_PAIR:
+#endif
+		return GamepadLayout::Nintendo;
+	case SDL_CONTROLLER_TYPE_PS3:
+	case SDL_CONTROLLER_TYPE_PS4:
+#if SDL_VERSION_ATLEAST(2, 0, 14)
+	case SDL_CONTROLLER_TYPE_PS5:
+#endif
+		return GamepadLayout::PlayStation;
+	case SDL_CONTROLLER_TYPE_XBOXONE:
+	case SDL_CONTROLLER_TYPE_XBOX360:
+#if SDL_VERSION_ATLEAST(2, 0, 16)
+	case SDL_CONTROLLER_TYPE_GOOGLE_STADIA:
+	case SDL_CONTROLLER_TYPE_AMAZON_LUNA:
+#if SDL_VERSION_ATLEAST(2, 24, 0)
+	case SDL_CONTROLLER_TYPE_NVIDIA_SHIELD:
+#endif
+#endif
+		return GamepadLayout::Xbox;
+#if SDL_VERSION_ATLEAST(2, 0, 14)
+	case SDL_CONTROLLER_TYPE_VIRTUAL:
+#endif
+	case SDL_CONTROLLER_TYPE_UNKNOWN:
+		return GamepadLayout::Generic;
+	}
+#endif
+	return GamepadLayout::Generic;
+#endif // !defined(DEVILUTIONX_GAMEPAD_TYPE)
 }
 
 } // namespace devilution

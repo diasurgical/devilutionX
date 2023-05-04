@@ -8,6 +8,8 @@
 #include <SDL_video.h>
 #endif
 
+#include <array>
+
 namespace devilution {
 
 /**
@@ -15,5 +17,11 @@ namespace devilution {
  * Requires `src` and `dst` to have the same pixel format (ARGB8888 or RGBA8888).
  */
 void BilinearScale32(SDL_Surface *src, SDL_Surface *dst);
+
+/**
+ * @brief Streamlined bilinear downscaling using blended transparency table.
+ * Requires `src` and `dst` to have the same pixel format (INDEX8).
+ */
+void BilinearDownscaleByHalf8(const SDL_Surface *src, const std::array<std::array<Uint8, 256>, 256> &paletteBlendingTable, SDL_Surface *dst, uint8_t transparentIndex);
 
 } // namespace devilution
