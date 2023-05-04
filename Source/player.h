@@ -379,7 +379,7 @@ struct Player {
 	uint16_t wReflections;
 	_difficulty pDifficulty;
 	ItemSpecialEffectHf pDamAcFlags;
-	missile_id _pSpecEffect = MIS_ARROW;
+	MissileID _pSpecEffect = MissileID::Arrow;
 	uint8_t _pSpecEffectMinDam = 0;
 	uint8_t _pSpecEffectMaxDam = 0;
 

@@ -896,10 +896,10 @@ int SaveItemPower(const Player &player, Item &item, ItemPower &power)
 		item._iFMaxDam = 0;
 		break;
 	case IPL_FIREBALL:
-		item._iFlags |= ItemSpecialEffect::SpecialArrows;
+		item._iFlags |= ItemSpecialEffect::SpecialAttack;
 		item._iSpecEffectMinDam = power.param1;
 		item._iSpecEffectMaxDam = power.param2;
-		item._iSpecEffect = MIS_FIRENOVA;
+		item._iSpecEffect = MissileID::FireballBow;
 		break;
 	case IPL_THORNS:
 		item._iFlags |= ItemSpecialEffect::Thorns;
@@ -991,16 +991,16 @@ int SaveItemPower(const Player &player, Item &item, ItemPower &power)
 		item._iCurs = power.param1;
 		break;
 	case IPL_LIGHTNING:
-		item._iFlags |= ItemSpecialEffect::SpecialArrows;
+		item._iFlags |= ItemSpecialEffect::SpecialAttack;
 		item._iSpecEffectMinDam = power.param1;
 		item._iSpecEffectMaxDam = power.param2;
-		item._iSpecEffect = MIS_LIGHTARROW;
+		item._iSpecEffect = MissileID::LightningBow;
 		break;
 	case IPL_CHARGEDBOLT:
-		item._iFlags |= ItemSpecialEffect::SpecialArrows;
+		item._iFlags |= ItemSpecialEffect::SpecialAttack;
 		item._iSpecEffectMinDam = power.param1;
 		item._iSpecEffectMaxDam = power.param2;
-		item._iSpecEffect = MIS_CBOLTARROW;
+		item._iSpecEffect = MissileID::ChargedBoltBow;
 		break;
 	case IPL_FIRERES_CURSE:
 		item._iPLFR -= r;
@@ -2569,7 +2569,7 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	int lmax = 0; // maximum lightning damage
 	int smin = 0; // minimum special effect damage
 	int smax = 0; // maximum special effect damage
-	missile_id SpecEffect = MIS_ARROW;
+	MissileID SpecEffect = MissileID::Arrow;
 
 	for (auto &item : player.InvBody) {
 		if (!item.isEmpty() && item._iStatFlag) {
@@ -2615,7 +2615,7 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 				lmax += item._iLMaxDam;
 				smin += item._iSpecEffectMinDam;
 				smax += item._iSpecEffectMaxDam;
-				if (item._iSpecEffect != MIS_ARROW)
+				if (item._iSpecEffect != MissileID::Arrow)
 					SpecEffect = item._iSpecEffect;
 			}
 		}

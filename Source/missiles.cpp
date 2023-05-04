@@ -3254,7 +3254,7 @@ void ProcessSpectralArrow(Missile &missile)
 		dir = player._pdir;
 		micaster = TARGET_MONSTERS;
 
-		mitype = (missile_id)missile.var7;
+		mitype = (MissileID)missile.var7;
 	}
 	AddMissile(src, dst, dir, mitype, micaster, id, dam, spllvl);
 	if (mitype == MissileID::ChargedBoltBow) {
