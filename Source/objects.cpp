@@ -3600,7 +3600,8 @@ void SyncLever(const Object &lever)
 void SyncQSTLever(const Object &qstLever)
 {
 	if (qstLever._oAnimFrame == qstLever._oVar6) {
-		ObjChangeMapResync(qstLever._oVar1, qstLever._oVar2, qstLever._oVar3, qstLever._oVar4);
+		if (qstLever._otype != OBJ_BLOODBOOK)
+			ObjChangeMapResync(qstLever._oVar1, qstLever._oVar2, qstLever._oVar3, qstLever._oVar4);
 		if (qstLever._otype == OBJ_BLINDBOOK) {
 			auto tren = TransVal;
 			TransVal = 9;
@@ -4436,7 +4437,8 @@ void OperateObject(Player &player, Object &object)
 	case OBJ_BLINDBOOK:
 	case OBJ_BLOODBOOK:
 	case OBJ_STEELTOME:
-		OperateBookLever(object, sendmsg);
+		if (sendmsg)
+			OperateBookLever(object, sendmsg);
 		break;
 	case OBJ_SHRINEL:
 	case OBJ_SHRINER:
@@ -4633,7 +4635,10 @@ void SyncOpObject(Player &player, int cmd, Object &object)
 	case OBJ_BLINDBOOK:
 	case OBJ_BLOODBOOK:
 	case OBJ_STEELTOME:
-		OperateBookLever(object, sendmsg);
+		if (sendmsg)
+			break;
+		object._oAnimFrame = object._oVar6;
+		SyncQSTLever(object);
 		break;
 	case OBJ_SHRINEL:
 	case OBJ_SHRINER:
