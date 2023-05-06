@@ -3,47 +3,71 @@
 #include <limits>
 #include <random>
 
-#include "utils/stdcompat/abs.hpp"
+#include "engine/random_distribution.hpp"
 
 namespace devilution {
 
-/** Current game seed */
-uint32_t sglGameSeed;
-
+namespace {
 /** Borland C/C++ psuedo-random number generator needed for vanilla compatibility */
-std::linear_congruential_engine<uint32_t, 0x015A4E35, 1, 0> diabloGenerator;
+using BorlandEngine = std::linear_congruential_engine<uint32_t, 0x015A4E35, 1, 0>;
+
+class DiabloGenerator {
+public:
+	using result_type = uint32_t;
+
+	constexpr result_type min() const
+	{
+		return std::numeric_limits<uint32_t>::min();
+	}
+
+	constexpr result_type max() const
+	{
+		return std::numeric_limits<uint32_t>::max();
+	}
+
+	result_type operator()()
+	{
+		seed_ = engine_();
+		return seed_;
+	}
+
+	void seed(result_type seed)
+	{
+		engine_.seed(seed);
+		seed_ = seed;
+	}
+
+	result_type seed() const
+	{
+		return seed_;
+	}
+
+private:
+	BorlandEngine engine_;
+	result_type seed_; /** Current game seed, for debugging purposes */
+};
+
+DiabloGenerator generator;
+} // namespace
 
 void SetRndSeed(uint32_t seed)
 {
-	diabloGenerator.seed(seed);
-	sglGameSeed = seed;
+	generator.seed(seed);
 }
 
 uint32_t GetLCGEngineState()
 {
-	return sglGameSeed;
-}
-
-int32_t GetRndSeed()
-{
-	const int32_t seed = static_cast<int32_t>(sglGameSeed);
-	// since abs(INT_MIN) is undefined behavior, handle this value specially
-	return seed == std::numeric_limits<int32_t>::min() ? std::numeric_limits<int32_t>::min() : abs(seed);
+	return generator.seed();
 }
 
 int32_t AdvanceRndSeed()
 {
-	sglGameSeed = diabloGenerator();
-	return GetRndSeed();
+	return AbsoluteDistribution(true)(generator);
 }
 
 int32_t GenerateRnd(int32_t v)
 {
-	if (v <= 0)
-		return 0;
-	if (v <= 0x7FFF) // use the high bits to correct for LCG bias
-		return (AdvanceRndSeed() >> 16) % v;
-	return AdvanceRndSeed() % v;
+	return DiabloDistribution(v, true)(generator);
 }
 
 bool FlipCoin(unsigned frequency)
