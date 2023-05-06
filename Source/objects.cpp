@@ -3644,6 +3644,21 @@ void SyncDoor(Object &door)
 	}
 }
 
+void ResyncDoors(WorldTilePosition p1, WorldTilePosition p2)
+{
+	const WorldTileSize size { static_cast<WorldTileCoord>(p2.x - p1.x), static_cast<WorldTileCoord>(p2.y - p1.y) };
+	const WorldTileRectangle area { p1, size };
+
+	for (WorldTilePosition p : PointsInRectangleRange<WorldTileCoord> { area }) {
+		Object *obj = FindObjectAtPosition(p);
+		if (obj == nullptr)
+			continue;
+		if (IsNoneOf(obj->_otype, OBJ_L1LDOOR, OBJ_L1RDOOR, OBJ_L2LDOOR, OBJ_L2RDOOR, OBJ_L3LDOOR, OBJ_L3RDOOR, OBJ_L5LDOOR, OBJ_L5RDOOR))
+			continue;
+		SyncDoor(*obj);
+	}
+}
+
 void UpdateState(Object &object, int frame)
 {
 	if (object._oSelFlag == 0) {
@@ -4350,8 +4365,8 @@ void ObjChangeMap(int x1, int y1, int x2, int y2)
 		}
 	}
 
-	WorldTilePosition mega1 { x1, y1 };
-	WorldTilePosition mega2 { x2, y2 };
+	WorldTilePosition mega1 { static_cast<WorldTileCoord>(x1), static_cast<WorldTileCoord>(y1) };
+	WorldTilePosition mega2 { static_cast<WorldTileCoord>(x2), static_cast<WorldTileCoord>(y2) };
 	WorldTilePosition world1 = mega1.megaToWorld();
 	WorldTilePosition world2 = mega2.megaToWorld() + Displacement { 1, 1 };
 	if (leveltype == DTYPE_CATHEDRAL) {
@@ -4368,6 +4383,7 @@ void ObjChangeMap(int x1, int y1, int x2, int y2)
 	if (leveltype == DTYPE_CRYPT) {
 		AddCryptObjects(world1.x, world1.y, world2.x, world2.y);
 	}
+	ResyncDoors(world1, world2);
 }
 
 void ObjChangeMapResync(int x1, int y1, int x2, int y2)
@@ -4379,8 +4395,8 @@ void ObjChangeMapResync(int x1, int y1, int x2, int y2)
 		}
 	}
 
-	WorldTilePosition mega1 { x1, y1 };
-	WorldTilePosition mega2 { x2, y2 };
+	WorldTilePosition mega1 { static_cast<WorldTileCoord>(x1), static_cast<WorldTileCoord>(y1) };
+	WorldTilePosition mega2 { static_cast<WorldTileCoord>(x2), static_cast<WorldTileCoord>(y2) };
 	WorldTilePosition world1 = mega1.megaToWorld();
 	WorldTilePosition world2 = mega2.megaToWorld() + Displacement { 1, 1 };
 	if (leveltype == DTYPE_CATHEDRAL) {
@@ -4389,6 +4405,7 @@ void ObjChangeMapResync(int x1, int y1, int x2, int y2)
 	if (leveltype == DTYPE_CATACOMBS) {
 		ObjL2Special(world1.x, world1.y, world2.x, world2.y);
 	}
+	ResyncDoors(world1, world2);
 }
 
 _item_indexes ItemMiscIdIdx(item_misc_id imiscid)
