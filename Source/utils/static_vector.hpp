@@ -73,11 +73,7 @@ public:
 	~StaticVector()
 	{
 		for (std::size_t pos = 0; pos < size_; ++pos) {
-#if __cplusplus >= 201703L
 			std::destroy_at(data_[pos].ptr());
-#else
-			data_[pos].ptr()->~T();
-#endif
 		}
 	}
 
@@ -87,20 +83,12 @@ private:
 
 		const T *ptr() const
 		{
-#if __cplusplus >= 201703L
 			return std::launder(reinterpret_cast<const T *>(data));
-#else
-			return reinterpret_cast<const T *>(data);
-#endif
 		}
 
 		T *ptr()
 		{
-#if __cplusplus >= 201703L
 			return std::launder(reinterpret_cast<T *>(data));
-#else
-			return reinterpret_cast<T *>(data);
-#endif
 		}
 	};
 	AlignedStorage data_[N];

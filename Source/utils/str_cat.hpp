@@ -54,38 +54,19 @@ inline void StrAppend(std::string &out, const char *str)
 	AppendStrView(out, string_view(str != nullptr ? str : "(nullptr)"));
 }
 
-#if __cplusplus >= 201703L
 template <typename... Args>
 typename std::enable_if<(sizeof...(Args) > 1), char *>::type
 BufCopy(char *out, Args &&...args)
 {
 	return ((out = BufCopy(out, std::forward<Args>(args))), ...);
 }
-#else
-template <typename Arg, typename... Args>
-inline typename std::enable_if<(sizeof...(Args) > 0), char *>::type
-BufCopy(char *out, Arg &&arg, Args &&...args)
-{
-	return BufCopy(BufCopy(out, std::forward<Arg>(arg)), std::forward<Args>(args)...);
-}
-#endif
 
-#if __cplusplus >= 201703L
 template <typename... Args>
 typename std::enable_if<(sizeof...(Args) > 1), void>::type
 StrAppend(std::string &out, Args &&...args)
 {
 	(StrAppend(out, std::forward<Args>(args)), ...);
 }
-#else
-template <typename Arg, typename... Args>
-typename std::enable_if<(sizeof...(Args) > 0), void>::type
-StrAppend(std::string &out, Arg &&arg, Args &&...args)
-{
-	StrAppend(out, std::forward<Arg>(arg));
-	StrAppend(out, std::forward<Args>(args)...);
-}
-#endif
 
 template <typename... Args>
 std::string StrCat(Args &&...args)
