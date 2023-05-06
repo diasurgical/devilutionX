@@ -1669,7 +1669,7 @@ void AutoGetItem(Player &player, Item *itemPointer, int ii)
 	NetSendCmdPItem(true, CMD_RESPAWNITEM, item.position, item);
 }
 
-int FindGetItem(int32_t iseed, _item_indexes idx, uint16_t createInfo)
+int FindGetItem(uint32_t iseed, _item_indexes idx, uint16_t createInfo)
 {
 	for (uint8_t i = 0; i < ActiveItemCount; i++) {
 		auto &item = Items[ActiveItems[i]];
@@ -1681,7 +1681,7 @@ int FindGetItem(int32_t iseed, _item_indexes idx, uint16_t createInfo)
 	return -1;
 }
 
-void SyncGetItem(Point position, int32_t iseed, _item_indexes idx, uint16_t ci)
+void SyncGetItem(Point position, uint32_t iseed, _item_indexes idx, uint16_t ci)
 {
 	// Check what the local client has at the target position
 	int ii = dItem[position.x][position.y] - 1;
@@ -1801,7 +1801,7 @@ int SyncDropItem(Point position, _item_indexes idx, uint16_t icreateinfo, int is
 	return ii;
 }
 
-int SyncDropEar(Point position, uint16_t icreateinfo, int iseed, uint8_t cursval, string_view heroname)
+int SyncDropEar(Point position, uint16_t icreateinfo, uint32_t iseed, uint8_t cursval, string_view heroname)
 {
 	if (ActiveItemCount >= MAXITEMS)
 		return -1;

@@ -1517,7 +1517,7 @@ int GetItemBLevel(int lvl, item_misc_id miscId, bool onlygood, bool uper15)
 	return iblvl;
 }
 
-void SetupAllItems(const Player &player, Item &item, _item_indexes idx, int iseed, int lvl, int uper, bool onlygood, bool recreate, bool pregen)
+void SetupAllItems(const Player &player, Item &item, _item_indexes idx, uint32_t iseed, int lvl, int uper, bool onlygood, bool recreate, bool pregen)
 {
 	item._iSeed = iseed;
 	SetRndSeed(iseed);
@@ -3301,7 +3301,7 @@ void CreateTypeItem(Point position, bool onlygood, ItemType itemType, int imisc,
 	SetupBaseItem(position, idx, onlygood, sendmsg, delta);
 }
 
-void RecreateItem(const Player &player, Item &item, _item_indexes idx, uint16_t icreateinfo, int iseed, int ivalue, bool isHellfire)
+void RecreateItem(const Player &player, Item &item, _item_indexes idx, uint16_t icreateinfo, uint32_t iseed, int ivalue, bool isHellfire)
 {
 	bool tmpIsHellfire = gbIsHellfire;
 	gbIsHellfire = isHellfire;
@@ -3353,7 +3353,7 @@ void RecreateItem(const Player &player, Item &item, _item_indexes idx, uint16_t 
 	gbIsHellfire = tmpIsHellfire;
 }
 
-void RecreateEar(Item &item, uint16_t ic, int iseed, uint8_t bCursval, string_view heroName)
+void RecreateEar(Item &item, uint16_t ic, uint32_t iseed, uint8_t bCursval, string_view heroName)
 {
 	InitializeItem(item, IDI_EAR);
 
@@ -4509,7 +4509,7 @@ void CreateMagicWeapon(Point position, ItemType itemType, int icurs, bool sendms
 	CreateMagicItem(position, curlv, itemType, imid, icurs, sendmsg, delta);
 }
 
-bool GetItemRecord(int nSeed, uint16_t wCI, int nIndex)
+bool GetItemRecord(uint32_t nSeed, uint16_t wCI, int nIndex)
 {
 	uint32_t ticks = SDL_GetTicks();
 
@@ -4526,7 +4526,7 @@ bool GetItemRecord(int nSeed, uint16_t wCI, int nIndex)
 	return true;
 }
 
-void SetItemRecord(int nSeed, uint16_t wCI, int nIndex)
+void SetItemRecord(uint32_t nSeed, uint16_t wCI, int nIndex)
 {
 	uint32_t ticks = SDL_GetTicks();
 
@@ -4541,7 +4541,7 @@ void SetItemRecord(int nSeed, uint16_t wCI, int nIndex)
 	gnNumGetRecords++;
 }
 
-void PutItemRecord(int nSeed, uint16_t wCI, int nIndex)
+void PutItemRecord(uint32_t nSeed, uint16_t wCI, int nIndex)
 {
 	uint32_t ticks = SDL_GetTicks();
 
