@@ -46,8 +46,8 @@ struct Towner {
 
 	/** Tile position of NPC */
 	Point position;
-	/** Used to get a voice line and text related to active quests when the player speaks to a town npc */
-	int16_t seed;
+	/** Randomly chosen topic for discussion (picked when loading into town) */
+	_speech_id gossip;
 	uint16_t _tAnimWidth;
 	/** Tick length of each frame in the current animation */
 	int16_t _tAnimDelay;
