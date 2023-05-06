@@ -17,23 +17,20 @@ TEST(RandomTest, RandomEngineParams)
 	SetRndSeed(0);
 
 	// Starting from a seed of 0 means the multiplicand is dropped and the state advances by increment only
-	AdvanceRndSeed();
-	ASSERT_EQ(GetLCGEngineState(), increment) << "Increment factor is incorrect";
+	ASSERT_EQ(GenerateSeed(), increment) << "Increment factor is incorrect";
 
 	// LCGs use a formula of mult * seed + inc. Using a long form in the code to document the expected factors.
-	AdvanceRndSeed();
-	ASSERT_EQ(GetLCGEngineState(), (multiplicand * 1) + increment) << "Multiplicand factor is incorrect";
+	ASSERT_EQ(GenerateSeed(), (multiplicand * 1) + increment) << "Multiplicand factor is incorrect";
 
 	// C++11 defines the default seed for a LCG engine as 1. The ten thousandth value is commonly used for sanity checking
-	// a sequence, so as we've had one round since state 1 we need to discard another 9999 values to get to the 10000th state.
-	// This loop has an off by one error, so test the 9999th value as well as 10000th
-	for (auto i = 2; i < 10000; i++)
-		AdvanceRndSeed();
+	// a sequence, so as we've had one round since state 1 we need to discard another 9998 values to get to the 10000th state.
+	// To make off by one errors more visible test the 9999th value as well as 10000th
+	for (auto i = 2; i <= 9998; i++)
+		GenerateSeed();
 	uint32_t expectedState = 3495122800U;
-	ASSERT_EQ(GetLCGEngineState(), expectedState) << "Wrong engine state after 9999 invocations";
-	AdvanceRndSeed();
+	EXPECT_EQ(GenerateSeed(), expectedState) << "Wrong engine state after 9999 invocations";
 	expectedState = 3007658545U;
-	ASSERT_EQ(GetLCGEngineState(), expectedState) << "Wrong engine state after 10000 invocations";
+	ASSERT_EQ(GenerateSeed(), expectedState) << "Wrong engine state after 10000 invocations";
 }
 
 TEST(RandomTest, AbsDistribution)

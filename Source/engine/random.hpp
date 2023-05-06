@@ -30,6 +30,11 @@ void SetRndSeed(uint32_t seed);
 uint32_t GetLCGEngineState();
 
 /**
+ * @brief Advances the global RandomNumberEngine state and returns the new value
+ */
+uint32_t GenerateSeed();
+
+/**
  * @brief Generates a random non-negative integer (most of the time) using the vanilla RNG
  *
  * This advances the engine state then interprets the new engine state as a signed value and calls std::abs to try
