@@ -177,7 +177,7 @@ struct Player;
 
 struct Item {
 	/** Randomly generated identifier */
-	int32_t _iSeed = 0;
+	uint32_t _iSeed = 0;
 	uint16_t _iCreateInfo = 0;
 	ItemType _itype = ItemType::None;
 	bool _iAnimFlag = false;
@@ -416,7 +416,7 @@ struct Item {
 
 	[[nodiscard]] bool isUsable() const;
 
-	[[nodiscard]] bool keyAttributesMatch(int32_t seed, _item_indexes itemIndex, uint16_t createInfo) const
+	[[nodiscard]] bool keyAttributesMatch(uint32_t seed, _item_indexes itemIndex, uint16_t createInfo) const
 	{
 		return _iSeed == seed && IDidx == itemIndex && _iCreateInfo == createInfo;
 	}
@@ -457,7 +457,7 @@ struct Item {
 };
 
 struct ItemGetRecordStruct {
-	int32_t nSeed;
+	uint32_t nSeed;
 	uint16_t wCI;
 	int nIndex;
 	uint32_t dwTimestamp;
@@ -507,8 +507,8 @@ void SpawnItem(Monster &monster, Point position, bool sendmsg);
 void CreateRndItem(Point position, bool onlygood, bool sendmsg, bool delta);
 void CreateRndUseful(Point position, bool sendmsg);
 void CreateTypeItem(Point position, bool onlygood, ItemType itemType, int imisc, bool sendmsg, bool delta);
-void RecreateItem(const Player &player, Item &item, _item_indexes idx, uint16_t icreateinfo, int iseed, int ivalue, bool isHellfire);
-void RecreateEar(Item &item, uint16_t ic, int iseed, uint8_t bCursval, string_view heroName);
+void RecreateItem(const Player &player, Item &item, _item_indexes idx, uint16_t icreateinfo, uint32_t iseed, int ivalue, bool isHellfire);
+void RecreateEar(Item &item, uint16_t ic, uint32_t iseed, uint8_t bCursval, string_view heroName);
 void CornerstoneSave();
 void CornerstoneLoad(Point position);
 void SpawnQuestItem(_item_indexes itemid, Point position, int randarea, int selflag, bool sendmsg);
@@ -544,9 +544,9 @@ void CreateSpellBook(Point position, SpellID ispell, bool sendmsg, bool delta);
 void CreateMagicArmor(Point position, ItemType itemType, int icurs, bool sendmsg, bool delta);
 void CreateAmulet(Point position, int lvl, bool sendmsg, bool delta);
 void CreateMagicWeapon(Point position, ItemType itemType, int icurs, bool sendmsg, bool delta);
-bool GetItemRecord(int nSeed, uint16_t wCI, int nIndex);
-void SetItemRecord(int nSeed, uint16_t wCI, int nIndex);
-void PutItemRecord(int nSeed, uint16_t wCI, int nIndex);
+bool GetItemRecord(uint32_t nSeed, uint16_t wCI, int nIndex);
+void SetItemRecord(uint32_t nSeed, uint16_t wCI, int nIndex);
+void PutItemRecord(uint32_t nSeed, uint16_t wCI, int nIndex);
 
 /**
  * @brief Resets item get records.

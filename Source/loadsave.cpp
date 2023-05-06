@@ -231,7 +231,7 @@ public:
 
 void LoadItemData(LoadHelper &file, Item &item)
 {
-	item._iSeed = file.NextLE<int32_t>();
+	item._iSeed = file.NextLE<uint32_t>();
 	item._iCreateInfo = file.NextLE<uint16_t>();
 	file.Skip(2); // Alignment
 	item._itype = static_cast<ItemType>(file.NextLE<uint32_t>());
@@ -1000,7 +1000,7 @@ void SaveItem(SaveHelper &file, const Item &item)
 		iType = ItemType::None;
 	}
 
-	file.WriteLE<int32_t>(item._iSeed);
+	file.WriteLE<uint32_t>(item._iSeed);
 	file.WriteLE<int16_t>(item._iCreateInfo);
 	file.Skip(2); // Alignment
 	file.WriteLE<int32_t>(static_cast<int32_t>(iType));
