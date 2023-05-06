@@ -76,4 +76,14 @@ bool FlipCoin(unsigned frequency)
 	return GenerateRnd(static_cast<int32_t>(frequency)) == 0;
 }
 
+int32_t RandomIntLessThan(int32_t v)
+{
+	return DiabloDistribution(v)(generator);
+}
+
+int32_t RandomIntBetween(int32_t min, int32_t max, bool halfOpen)
+{
+	return DiabloDistribution(min, max + (halfOpen ? 0 : 1))(generator);
+}
+
 } // namespace devilution
