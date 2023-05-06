@@ -120,11 +120,6 @@ int8_t stextscrldbtn;
 /** Remember current store while displaying a dialog */
 TalkID stextshold;
 
-/** Start of possible gossip dialogs for current store */
-_speech_id gossipstart;
-/** End of possible gossip dialogs for current store */
-_speech_id gossipend;
-
 /** Temporary item used to hold the the item being traided */
 Item StoreItem;
 
@@ -1344,8 +1339,6 @@ void SmithEnter()
 		talker = TOWN_SMITH;
 		stextlhold = 10;
 		stextshold = TalkID::Smith;
-		gossipstart = TEXT_GRISWOLD2;
-		gossipend = TEXT_GRISWOLD13;
 		StartStore(TalkID::Gossip);
 		break;
 	case 12:
@@ -1597,8 +1590,6 @@ void WitchEnter()
 		stextlhold = 12;
 		talker = TOWN_WITCH;
 		stextshold = TalkID::Witch;
-		gossipstart = TEXT_ADRIA2;
-		gossipend = TEXT_ADRIA13;
 		StartStore(TalkID::Gossip);
 		break;
 	case 14:
@@ -1764,8 +1755,6 @@ void BoyEnter()
 	talker = TOWN_PEGBOY;
 	stextshold = TalkID::Boy;
 	stextlhold = stextsel;
-	gossipstart = TEXT_WIRT2;
-	gossipend = TEXT_WIRT12;
 	StartStore(TalkID::Gossip);
 }
 
@@ -1934,8 +1923,6 @@ void HealerEnter()
 		stextlhold = 12;
 		talker = TOWN_HEALER;
 		stextshold = TalkID::Healer;
-		gossipstart = TEXT_PEPIN2;
-		gossipend = TEXT_PEPIN11;
 		StartStore(TalkID::Gossip);
 		break;
 	case 14:
@@ -1982,8 +1969,6 @@ void StorytellerEnter()
 		stextlhold = 12;
 		talker = TOWN_STORY;
 		stextshold = TalkID::Storyteller;
-		gossipstart = TEXT_STORY2;
-		gossipend = TEXT_STORY11;
 		StartStore(TalkID::Gossip);
 		break;
 	case 14:
@@ -2040,9 +2025,7 @@ void TalkEnter()
 	}
 
 	if (stextsel == sn - 2) {
-		SetRndSeed(Towners[talker].seed);
-		auto tq = static_cast<_speech_id>(gossipstart + GenerateRnd(gossipend - gossipstart + 1));
-		InitQTextMsg(tq);
+		InitQTextMsg(Towners[talker].gossip);
 		return;
 	}
 
@@ -2063,8 +2046,6 @@ void TavernEnter()
 		stextlhold = 12;
 		talker = TOWN_TAVERN;
 		stextshold = TalkID::Tavern;
-		gossipstart = TEXT_OGDEN2;
-		gossipend = TEXT_OGDEN10;
 		StartStore(TalkID::Gossip);
 		break;
 	case 18:
@@ -2080,8 +2061,6 @@ void BarmaidEnter()
 		stextlhold = 12;
 		talker = TOWN_BMAID;
 		stextshold = TalkID::Barmaid;
-		gossipstart = TEXT_GILLIAN2;
-		gossipend = TEXT_GILLIAN10;
 		StartStore(TalkID::Gossip);
 		break;
 	case 14:
@@ -2108,8 +2087,6 @@ void DrunkEnter()
 		stextlhold = 12;
 		talker = TOWN_DRUNK;
 		stextshold = TalkID::Drunk;
-		gossipstart = TEXT_FARNHAM2;
-		gossipend = TEXT_FARNHAM13;
 		StartStore(TalkID::Gossip);
 		break;
 	case 18:
