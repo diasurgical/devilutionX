@@ -4349,19 +4349,24 @@ void ObjChangeMap(int x1, int y1, int x2, int y2)
 			dungeon[i][j] = pdungeon[i][j];
 		}
 	}
+
+	WorldTilePosition mega1 { x1, y1 };
+	WorldTilePosition mega2 { x2, y2 };
+	WorldTilePosition world1 = mega1.megaToWorld();
+	WorldTilePosition world2 = mega2.megaToWorld() + Displacement { 1, 1 };
 	if (leveltype == DTYPE_CATHEDRAL) {
-		ObjL1Special(2 * x1 + 16, 2 * y1 + 16, 2 * x2 + 17, 2 * y2 + 17);
-		AddL1Objs(2 * x1 + 16, 2 * y1 + 16, 2 * x2 + 17, 2 * y2 + 17);
+		ObjL1Special(world1.x, world1.y, world2.x, world2.y);
+		AddL1Objs(world1.x, world1.y, world2.x, world2.y);
 	}
 	if (leveltype == DTYPE_CATACOMBS) {
-		ObjL2Special(2 * x1 + 16, 2 * y1 + 16, 2 * x2 + 17, 2 * y2 + 17);
-		AddL2Objs(2 * x1 + 16, 2 * y1 + 16, 2 * x2 + 17, 2 * y2 + 17);
+		ObjL2Special(world1.x, world1.y, world2.x, world2.y);
+		AddL2Objs(world1.x, world1.y, world2.x, world2.y);
 	}
 	if (leveltype == DTYPE_CAVES) {
-		AddL3Objs(2 * x1 + 16, 2 * y1 + 16, 2 * x2 + 17, 2 * y2 + 17);
+		AddL3Objs(world1.x, world1.y, world2.x, world2.y);
 	}
 	if (leveltype == DTYPE_CRYPT) {
-		AddCryptObjects(2 * x1 + 16, 2 * y1 + 16, 2 * x2 + 17, 2 * y2 + 17);
+		AddCryptObjects(world1.x, world1.y, world2.x, world2.y);
 	}
 }
 
@@ -4373,11 +4378,16 @@ void ObjChangeMapResync(int x1, int y1, int x2, int y2)
 			dungeon[i][j] = pdungeon[i][j];
 		}
 	}
+
+	WorldTilePosition mega1 { x1, y1 };
+	WorldTilePosition mega2 { x2, y2 };
+	WorldTilePosition world1 = mega1.megaToWorld();
+	WorldTilePosition world2 = mega2.megaToWorld() + Displacement { 1, 1 };
 	if (leveltype == DTYPE_CATHEDRAL) {
-		ObjL1Special(2 * x1 + 16, 2 * y1 + 16, 2 * x2 + 17, 2 * y2 + 17);
+		ObjL1Special(world1.x, world1.y, world2.x, world2.y);
 	}
 	if (leveltype == DTYPE_CATACOMBS) {
-		ObjL2Special(2 * x1 + 16, 2 * y1 + 16, 2 * x2 + 17, 2 * y2 + 17);
+		ObjL2Special(world1.x, world1.y, world2.x, world2.y);
 	}
 }
 
