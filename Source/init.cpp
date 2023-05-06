@@ -331,13 +331,12 @@ void MainWndProc(const SDL_Event &event)
 		return;
 	switch (event.window.event) {
 	case SDL_WINDOWEVENT_HIDDEN:
+	case SDL_WINDOWEVENT_MINIMIZED:
 		gbActive = false;
 		break;
 	case SDL_WINDOWEVENT_SHOWN:
-		gbActive = false;
-		RedrawEverything();
-		break;
 	case SDL_WINDOWEVENT_EXPOSED:
+		gbActive = true;
 		RedrawEverything();
 		break;
 	case SDL_WINDOWEVENT_SIZE_CHANGED:
