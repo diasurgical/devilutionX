@@ -38,7 +38,7 @@ jobs:
         apk add --update-cache g++ ninja cmake ccache sdl2-dev sdl2_image-dev fmt-dev libpng-dev bzip2-dev gtest-dev wget &&
         cd /host &&
         export CCACHE_DIR=/host/.ccache &&
-        cmake -S. -Bbuild -G Ninja -DNONET=ON -DNOSOUND=ON -DVERSION_NUM=1.0.0 -DVERSION_SUFFIX=FFFFFFF &&
+        cmake -S. -Bbuild -G Ninja -DNONET=ON -DNOSOUND=ON &&
         wget -nv -nc https://github.com/diasurgical/devilutionx-assets/releases/download/v2/spawn.mpq -P build &&
         cmake --build build -j $(nproc) &&
         ctest --test-dir build --output-on-failure -j $(nproc)

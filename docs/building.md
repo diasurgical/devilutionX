@@ -5,12 +5,6 @@ all the dependencies that must be vendored, the version information, and `devilu
 This is the version most appropriate for packaging DevilutionX for Linux distributions.
 For other use cases, use the git repository.
 
-Note: If you do not use git or `devilutionx-src.tar.xz` to get the source you must provide the version to CMake manually:
-
-```bash
-cmake -S. -Bbuild -DVERSION_NUM=1.0.0 -DVERSION_SUFFIX=FFFFFFF -DCMAKE_BUILD_TYPE=Release
-```
-
 <details><summary>Linux</summary>
 
 Note that ```pkg-config``` is an optional dependency for finding libsodium, although we have a fallback if necessary.

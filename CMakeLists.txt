@@ -48,27 +48,30 @@ include(VcPkgManifestFeatures)
 # 2. Toolchain file is evaluated, required for `Platforms.cmake`,
 #    which can override the options.
 if(NOT VERSION_NUM)
-  include(functions/git)
-  get_git_tag(VERSION_NUM)
-  if(NOT "${VERSION_NUM}" STREQUAL "")
-    string(REGEX MATCH "([0-9]+\\.[0-9]+\\.[0-9]+)" VERSION_NUM ${VERSION_NUM} )
-  endif()
-  if(NOT VERSION_SUFFIX)
-    get_git_commit_hash(GIT_COMMIT_HASH)
-    set(VERSION_SUFFIX "${GIT_COMMIT_HASH}")
+  file(STRINGS "VERSION" VERSION_STR)
+  if(NOT "${VERSION_STR}" STREQUAL "")
+    string(REGEX MATCH "([0-9]+\\.[0-9]+\\.[0-9]+)(.*)?" VERSION_PREFIX ${VERSION_STR})
+    set(VERSION_NUM ${CMAKE_MATCH_1})
   endif()
 endif()
+
 if(NOT VERSION_SUFFIX)
-  set(VERSION_SUFFIX "debug")
+  set(VERSION_SUFFIX "-$<CONFIG>")
+  if(VERSION_PREFIX MATCHES "-")
+    if(NOT GIT_COMMIT_HASH)
+      include(functions/git)
+      get_git_commit_hash(GIT_COMMIT_HASH)
+    endif()
+    if(GIT_COMMIT_HASH)
+      set(VERSION_SUFFIX "${VERSION_SUFFIX}-${GIT_COMMIT_HASH}")
+    endif()
+  endif()
 endif()
-if(VERSION_NUM MATCHES untagged)
-  project(DevilutionX LANGUAGES C CXX)
-else()
-  project(DevilutionX
-    VERSION ${VERSION_NUM}
-    LANGUAGES C CXX)
-endif()
-set(PROJECT_VERSION_WITH_SUFFIX "${PROJECT_VERSION}$<$<CONFIG:Debug>:-${VERSION_SUFFIX}>")
+
+project(DevilutionX
+  VERSION ${VERSION_NUM}
+  LANGUAGES C CXX)
+set(PROJECT_VERSION_WITH_SUFFIX "${VERSION_PREFIX}$<$<NOT:$<CONFIG:Release>>:${VERSION_SUFFIX}>")
 
 # Platform definitions can override options and we want `cmake_dependent_option` to see the effects.
 # Note that a few options are still defined before this because they're needed by `VcPkgManifestFeatures.cmake`.

@@ -40,8 +40,8 @@ jobs:
       uses: actions/cache@v3
       with:
         path: build
-        key: ${{ github.workflow }}-v2-${{ github.sha }}
-        restore-keys: ${{ github.workflow }}-v2-
+        key: ${{ github.workflow }}-v3-${{ github.sha }}
+        restore-keys: ${{ github.workflow }}-v3-
 
     - name: Build
       working-directory: ${{github.workspace}}
@@ -86,3 +86,6 @@ jobs:
         file: devilutionx-i386-linux-gnu.*
         file_glob: true
         overwrite: true
+
+    - name: Clean up artifacts
+      run: rm -rf build/package build/*.deb build/*.rpm build/*.appimage build/*.tar.xz
