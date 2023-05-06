@@ -5,7 +5,7 @@ set -x
 BUILD_DIR="${1-build}"
 
 mkdir -p "${BUILD_DIR}/package"
-find "${BUILD_DIR}/_CPack_Packages/Linux/7Z/" -name 'devilutionx' -exec cp "{}" "${BUILD_DIR}/devilutionx" \;
+find "${BUILD_DIR}/_CPack_Packages/Linux/7Z/" -type f -name 'devilutionx' -exec cp "{}" "${BUILD_DIR}/devilutionx" \;
 cp "${BUILD_DIR}/devilutionx" "${BUILD_DIR}/package/devilutionx"
 cp "${BUILD_DIR}/devilutionx.mpq" "${BUILD_DIR}/package/devilutionx.mpq"
 
