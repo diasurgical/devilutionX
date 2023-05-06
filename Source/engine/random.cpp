@@ -1,6 +1,7 @@
 #include "engine/random.hpp"
 
 #include <limits>
+#include <random>
 
 #include "utils/stdcompat/abs.hpp"
 
@@ -9,18 +10,12 @@ namespace devilution {
 /** Current game seed */
 uint32_t sglGameSeed;
 
-/**
- * Specifies the increment used in the Borland C/C++ pseudo-random number generator algorithm.
- */
-const uint32_t RndInc = 1;
-
-/**
- * Specifies the multiplier used in the Borland C/C++ pseudo-random number generator algorithm.
- */
-const uint32_t RndMult = 0x015A4E35;
+/** Borland C/C++ psuedo-random number generator needed for vanilla compatibility */
+std::linear_congruential_engine<uint32_t, 0x015A4E35, 1, 0> diabloGenerator;
 
 void SetRndSeed(uint32_t seed)
 {
+	diabloGenerator.seed(seed);
 	sglGameSeed = seed;
 }
 
@@ -39,7 +34,7 @@ void DiscardRandomValues(unsigned count)
 
 uint32_t GenerateSeed()
 {
-	sglGameSeed = (RndMult * sglGameSeed) + RndInc;
+	sglGameSeed = diabloGenerator();
 	return sglGameSeed;
 }
 
