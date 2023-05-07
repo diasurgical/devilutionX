@@ -1765,7 +1765,7 @@ int SyncDropItem(Point position, _item_indexes idx, uint16_t icreateinfo, int is
 	item._iAC = ac;
 	item.dwBuff = ibuff;
 
-	return PlaceItemInWorld(item, position);
+	return PlaceItemInWorld(std::move(item), position);
 }
 
 int SyncDropEar(Point position, uint16_t icreateinfo, uint32_t iseed, uint8_t cursval, string_view heroname)
@@ -1776,7 +1776,7 @@ int SyncDropEar(Point position, uint16_t icreateinfo, uint32_t iseed, uint8_t cu
 	Item item;
 	RecreateEar(item, icreateinfo, iseed, cursval, heroname);
 
-	return PlaceItemInWorld(item, position);
+	return PlaceItemInWorld(std::move(item), position);
 }
 
 int8_t CheckInvHLight()

@@ -1315,7 +1315,7 @@ size_t OnPutItem(const TCmd *pCmd, size_t pnum)
 			if (isSelf) {
 				std::optional<Point> itemTile = FindAdjacentPositionForItem(player.position.tile, GetDirection(player.position.tile, position));
 				if (itemTile)
-					ii = PlaceItemInWorld(ItemLimbo, *itemTile);
+					ii = PlaceItemInWorld(std::move(ItemLimbo), *itemTile);
 				else
 					ii = -1;
 			} else
