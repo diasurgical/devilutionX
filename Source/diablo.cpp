@@ -2816,12 +2816,11 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 #ifdef _DEBUG
 				SetDebugLevelSeedInfos(mid1Seed, mid2Seed, mid3Seed, GetLCGEngineState());
 #endif
+				SavePreLighting();
+				IncProgress();
 
 				if (gbIsMultiplayer)
 					DeltaLoadLevel();
-
-				IncProgress();
-				SavePreLighting();
 			} else {
 				HoldThemeRooms();
 				InitGolems();
