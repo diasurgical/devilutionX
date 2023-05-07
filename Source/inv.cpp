@@ -1742,14 +1742,8 @@ bool CanPut(Point position)
 	return true;
 }
 
-int InvPutItem(const Player &player, Point position, const Item &item)
+int PlaceItemInWorld(const Item &item, WorldTilePosition position)
 {
-	std::optional<Point> itemTile = FindAdjacentPositionForItem(player.position.tile, GetDirection(player.position.tile, position));
-	if (!itemTile)
-		return -1;
-
-	Point position = *itemTile;
-
 	int ii = AllocateItem();
 
 	dItem[position.x][position.y] = ii + 1;
@@ -1766,6 +1760,15 @@ int InvPutItem(const Player &player, Point position, const Item &item)
 	}
 
 	return ii;
+}
+
+int InvPutItem(const Player &player, Point position, const Item &item)
+{
+	std::optional<Point> itemTile = FindAdjacentPositionForItem(player.position.tile, GetDirection(player.position.tile, position));
+	if (!itemTile)
+		return -1;
+
+	return PlaceItemInWorld(item, *itemTile);
 }
 
 int SyncDropItem(Point position, _item_indexes idx, uint16_t icreateinfo, int iseed, int id, int dur, int mdur, int ch, int mch, int ivalue, uint32_t ibuff, int toHit, int maxDam, int minStr, int minMag, int minDex, int ac)
@@ -1790,22 +1793,7 @@ int SyncDropItem(Point position, _item_indexes idx, uint16_t icreateinfo, int is
 	item._iAC = ac;
 	item.dwBuff = ibuff;
 
-	int ii = AllocateItem();
-
-	dItem[position.x][position.y] = ii + 1;
-	auto &item_ = Items[ii];
-	item_ = item;
-	item_.position = position;
-	RespawnItem(item_, true);
-
-	if (CornerStone.isAvailable() && position == CornerStone.position) {
-		CornerStone.item = item_;
-		InitQTextMsg(TEXT_CORNSTN);
-		Quests[Q_CORNSTN]._qlog = false;
-		Quests[Q_CORNSTN]._qactive = QUEST_DONE;
-	}
-
-	return ii;
+	return PlaceItemInWorld(item, position);
 }
 
 int SyncDropEar(Point position, uint16_t icreateinfo, uint32_t iseed, uint8_t cursval, string_view heroname)
@@ -1816,22 +1804,7 @@ int SyncDropEar(Point position, uint16_t icreateinfo, uint32_t iseed, uint8_t cu
 	Item item;
 	RecreateEar(item, icreateinfo, iseed, cursval, heroname);
 
-	int ii = AllocateItem();
-
-	dItem[position.x][position.y] = ii + 1;
-	auto &item_ = Items[ii];
-	item_ = item;
-	item_.position = position;
-	RespawnItem(item_, true);
-
-	if (CornerStone.isAvailable() && position == CornerStone.position) {
-		CornerStone.item = item_;
-		InitQTextMsg(TEXT_CORNSTN);
-		Quests[Q_CORNSTN]._qlog = false;
-		Quests[Q_CORNSTN]._qactive = QUEST_DONE;
-	}
-
-	return ii;
+	return PlaceItemInWorld(item, position);
 }
 
 int8_t CheckInvHLight()
