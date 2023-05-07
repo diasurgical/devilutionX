@@ -1364,27 +1364,6 @@ size_t OnSyncPutItem(const TCmd *pCmd, size_t pnum)
 	return sizeof(message);
 }
 
-size_t OnRespawnItem(const TCmd *pCmd, size_t pnum)
-{
-	const auto &message = *reinterpret_cast<const TCmdPItem *>(pCmd);
-
-	if (gbBufferMsgs == 1) {
-		SendPacket(pnum, &message, sizeof(message));
-	} else if (IsPItemValid(message)) {
-		Player &player = Players[pnum];
-		if (player.isOnActiveLevel() && &player != MyPlayer) {
-			SyncDropItem(message);
-		}
-		const int32_t dwSeed = SDL_SwapLE32(message.def.dwSeed);
-		const uint16_t wCI = SDL_SwapLE16(message.def.wCI);
-		const _item_indexes wIndx = static_cast<_item_indexes>(SDL_SwapLE16(message.def.wIndx));
-		PutItemRecord(dwSeed, wCI, wIndx);
-		DeltaPutItem(message, { message.x, message.y }, player);
-	}
-
-	return sizeof(message);
-}
-
 size_t OnAttackTile(const TCmd *pCmd, Player &player)
 {
 	const auto &message = *reinterpret_cast<const TCmdLoc *>(pCmd);
@@ -3166,8 +3145,6 @@ size_t ParseCmd(size_t pnum, const TCmd *pCmd)
 		return OnSyncPutItem(pCmd, pnum);
 	case CMD_SPAWNITEM:
 		return OnSpawnItem(pCmd, pnum);
-	case CMD_RESPAWNITEM:
-		return OnRespawnItem(pCmd, pnum);
 	case CMD_ATTACKXY:
 		return OnAttackTile(pCmd, player);
 	case CMD_SATTACKXY:

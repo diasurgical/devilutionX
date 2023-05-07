@@ -1666,7 +1666,7 @@ void AutoGetItem(Player &player, Item *itemPointer, int ii)
 		player.Say(HeroSpeech::ICantCarryAnymore);
 	}
 	RespawnItem(item, true);
-	NetSendCmdPItem(true, CMD_RESPAWNITEM, item.position, item);
+	NetSendCmdPItem(true, CMD_SPAWNITEM, item.position, item);
 }
 
 int FindGetItem(uint32_t iseed, _item_indexes idx, uint16_t createInfo)

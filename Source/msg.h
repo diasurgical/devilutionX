@@ -63,15 +63,10 @@ enum _cmd_id : uint8_t {
 	//
 	// body (TCmdPItem)
 	CMD_PUTITEM,
-	// Spawn item on ground (place quest items).
-	//
+	// Spawn item on ground (place quest items, drop dead player item, or drop
+	// attempted loot item when inventory is full).
 	// body (TCmdPItem)
 	CMD_SPAWNITEM,
-	// Respawn item on ground (drop dead player item, or drop attempted loot item
-	// when inventory is full).
-	//
-	// body (TCmdPItem)
-	CMD_RESPAWNITEM,
 	// Attack target location.
 	//
 	// body (TCmdLoc)
