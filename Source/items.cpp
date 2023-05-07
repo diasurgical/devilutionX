@@ -3113,13 +3113,16 @@ int AllocateItem()
 	return inum;
 }
 
-int PlaceItemInWorld(Item &&item, WorldTilePosition position)
+uint8_t PlaceItemInWorld(Item &&item, WorldTilePosition position)
 {
-	int ii = AllocateItem();
+	assert(ActiveItemCount < MAXITEMS);
+
+	uint8_t ii = ActiveItems[ActiveItemCount];
+	ActiveItemCount++;
 
 	dItem[position.x][position.y] = ii + 1;
 	auto &item_ = Items[ii];
-	item_ = item;
+	item_ = std::move(item);
 	item_.position = position;
 	RespawnItem(item_, true);
 
