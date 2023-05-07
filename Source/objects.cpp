@@ -3644,7 +3644,7 @@ void SyncDoor(Object &door)
 	}
 }
 
-void ResyncDoors(WorldTilePosition p1, WorldTilePosition p2)
+void ResyncDoors(WorldTilePosition p1, WorldTilePosition p2, bool sendmsg)
 {
 	const WorldTileSize size { static_cast<WorldTileCoord>(p2.x - p1.x), static_cast<WorldTileCoord>(p2.y - p1.y) };
 	const WorldTileRectangle area { p1, size };
@@ -3656,6 +3656,10 @@ void ResyncDoors(WorldTilePosition p1, WorldTilePosition p2)
 		if (IsNoneOf(obj->_otype, OBJ_L1LDOOR, OBJ_L1RDOOR, OBJ_L2LDOOR, OBJ_L2RDOOR, OBJ_L3LDOOR, OBJ_L3RDOOR, OBJ_L5LDOOR, OBJ_L5RDOOR))
 			continue;
 		SyncDoor(*obj);
+		if (sendmsg) {
+			bool isOpen = obj->_oVar4 == DOOR_OPEN;
+			NetSendCmdLoc(MyPlayerId, true, isOpen ? CMD_OPENDOOR : CMD_CLOSEDOOR, obj->position);
+		}
 	}
 }
 
@@ -4383,7 +4387,7 @@ void ObjChangeMap(int x1, int y1, int x2, int y2)
 	if (leveltype == DTYPE_CRYPT) {
 		AddCryptObjects(world1.x, world1.y, world2.x, world2.y);
 	}
-	ResyncDoors(world1, world2);
+	ResyncDoors(world1, world2, true);
 }
 
 void ObjChangeMapResync(int x1, int y1, int x2, int y2)
@@ -4405,7 +4409,7 @@ void ObjChangeMapResync(int x1, int y1, int x2, int y2)
 	if (leveltype == DTYPE_CATACOMBS) {
 		ObjL2Special(world1.x, world1.y, world2.x, world2.y);
 	}
-	ResyncDoors(world1, world2);
+	ResyncDoors(world1, world2, false);
 }
 
 _item_indexes ItemMiscIdIdx(item_misc_id imiscid)
