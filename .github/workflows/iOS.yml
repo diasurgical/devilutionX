@@ -36,8 +36,8 @@ jobs:
       uses: actions/cache@v3
       with:
         path: build
-        key: ${{ github.workflow }}-v1-${{ github.sha }}
-        restore-keys: ${{ github.workflow }}-v1-
+        key: ${{ github.workflow }}-v2-${{ github.sha }}
+        restore-keys: ${{ github.workflow }}-v2-
 
     - name: Configure CMake
       # Use a bash shell so we can use the same syntax for environment variable
@@ -52,21 +52,23 @@ jobs:
       run: >
         cmake --build build -j $(sysctl -n hw.physicalcpu) --config Release &&
         cd build &&
-        rm -rf Payload devilutionx.ipa &&
         mkdir Payload &&
         mv devilutionx.app Payload &&
-        zip -r devilutionx.ipa Payload
+        zip -r devilutionx-iOS.ipa Payload
 
     - name: Upload-Package
       if: ${{ !env.ACT }}
       uses: actions/upload-artifact@v3
       with:
-        name: devilutionx.ipa
-        path: build/devilutionx.ipa
+        name: devilutionx-iOS.ipa
+        path: build/devilutionx-iOS.ipa
 
     - name: Update Release
       if: ${{ github.event_name == 'release' && !env.ACT }}
       uses: svenstaro/upload-release-action@v2
       with:
-        file: build/devilutionx.ipa
+        file: build/devilutionx-iOS.ipa
         overwrite: true
+
+    - name: Clean up artifacts
+      run: rm -rf build/Payload build/*.ipa
