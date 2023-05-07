@@ -57,4 +57,4 @@ jobs:
         path: devilutionx.tar.xz
 
     - name: Clean up artifacts
-      run: rm -rf build/package build/*.deb build/*.rpm build/*.appimage build/*.tar.xz
+      run: rm -rf build/_CPack_Packages build/package build/*.deb build/*.rpm build/*.appimage build/*.tar.xz
