@@ -30,7 +30,7 @@ void SetRndSeed(uint32_t seed);
 uint32_t GetLCGEngineState();
 
 /**
- * @brief Generates a random non-negative integer (most of the time) using the vanilla RNG
+ * @brief Generates a random non-negative integer (most of the time) using the vanilla RNG/distribution function
  *
  * This advances the engine state then interprets the new engine state as a signed value and calls std::abs to try
  * discard the high bit of the result. This usually returns a positive number but may very rarely return -2^31.
@@ -39,6 +39,7 @@ uint32_t GetLCGEngineState();
  * as the returned value is transformed about 50% of values do not reflect the actual engine state. It would be more
  * appropriate to use GetLCGEngineState() in these cases but that may break compatibility with the base game.
  *
+ * @see AbsoluteDistribution
  * @return A random number in the range [0,2^31) or -2^31
  */
 int32_t AdvanceRndSeed();
@@ -51,7 +52,7 @@ int32_t AdvanceRndSeed();
  * Limits between 32768 and 65534 should be avoided as a bug in vanilla means this function always returns a value
  * less than 32768 for limits in that range.
  *
- * This can very rarely return a negative value in the range (-v, -1] due to the bug in AdvanceRndSeed()
+ * This can very rarely return a negative value in the range (-v, -1] due to the bug described in AdvanceRndSeed()
  *
  * @see AdvanceRndSeed()
  * @param v The upper limit for the return value
@@ -71,30 +72,13 @@ int32_t GenerateRnd(int32_t v);
 bool FlipCoin(unsigned frequency = 2);
 
 /**
- * @brief Picks one of the elements in the list randomly.
- *
- * @param values The values to pick from
- * @return A random value from the 'values' list.
- */
-template <typename T>
-const T PickRandomlyAmong(const std::initializer_list<T> &values)
-{
-	const auto index { std::max<int32_t>(GenerateRnd(static_cast<int32_t>(values.size())), 0) };
-
-	return *(values.begin() + index);
-}
-
-/**
  * @brief Generates a random non-negative integer
  *
  * Effectively the same as GenerateRnd but will never return a negative value
  * @param v upper limit for the return value
  * @return a value between 0 and v-1 inclusive, i.e. the range [0, v)
  */
-inline int32_t RandomIntLessThan(int32_t v)
-{
-	return std::max<int32_t>(GenerateRnd(v), 0);
-}
+int32_t RandomIntLessThan(int32_t v);
 
 /**
  * @brief Randomly chooses a value somewhere within the given range
@@ -103,9 +87,18 @@ inline int32_t RandomIntLessThan(int32_t v)
  * @param halfOpen whether to use the limits as a half-open range or not
  * @return a randomly selected integer
  */
-inline int32_t RandomIntBetween(int32_t min, int32_t max, bool halfOpen = false)
+int32_t RandomIntBetween(int32_t min, int32_t max, bool halfOpen = false);
+
+/**
+ * @brief Picks one of the elements in the list randomly.
+ *
+ * @param values The values to pick from
+ * @return A random value from the 'values' list.
+ */
+template <typename T>
+const T PickRandomlyAmong(const std::initializer_list<T> &values)
 {
-	return RandomIntLessThan(max - min + (halfOpen ? 0 : 1)) + min;
+	return *(values.begin() + RandomIntLessThan(static_cast<int32_t>(values.size())));
 }
 
 } // namespace devilution
