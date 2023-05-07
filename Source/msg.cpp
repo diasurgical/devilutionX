@@ -1312,9 +1312,13 @@ size_t OnPutItem(const TCmd *pCmd, size_t pnum)
 		const _item_indexes wIndx = static_cast<_item_indexes>(SDL_SwapLE16(message.def.wIndx));
 		if (player.isOnActiveLevel()) {
 			int ii;
-			if (isSelf)
-				ii = InvPutItem(player, position, ItemLimbo);
-			else
+			if (isSelf) {
+				std::optional<Point> itemTile = FindAdjacentPositionForItem(player.position.tile, GetDirection(player.position.tile, position));
+				if (itemTile)
+					ii = PlaceItemInWorld(ItemLimbo, *itemTile);
+				else
+					ii = -1;
+			} else
 				ii = SyncDropItem(message);
 			if (ii != -1) {
 				PutItemRecord(dwSeed, wCI, wIndx);

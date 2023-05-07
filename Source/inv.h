@@ -218,7 +218,6 @@ void SyncGetItem(Point position, uint32_t iseed, _item_indexes idx, uint16_t ci)
  */
 bool CanPut(Point position);
 
-int InvPutItem(const Player &player, Point position, const Item &item);
 int SyncDropItem(Point position, _item_indexes idx, uint16_t icreateinfo, int iseed, int id, int dur, int mdur, int ch, int mch, int ivalue, uint32_t ibuff, int toHit, int maxDam, int minStr, int minMag, int minDex, int ac);
 int SyncDropEar(Point position, uint16_t icreateinfo, uint32_t iseed, uint8_t cursval, string_view heroname);
 int8_t CheckInvHLight();
