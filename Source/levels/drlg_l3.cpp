@@ -1683,7 +1683,7 @@ void Fence()
 	for (WorldTileCoord j = 1; j < DMAXY; j++) {     // BUGFIX: Change '0' to '1' (fixed)
 		for (WorldTileCoord i = 1; i < DMAXX; i++) { // BUGFIX: Change '0' to '1' (fixed)
 			// note the comma operator is used here to advance the RNG state
-			if (dungeon[i][j] == 7 && (AdvanceRndSeed(), !IsNearThemeRoom({ i, j }))) {
+			if (dungeon[i][j] == 7 && (DiscardRandomValues(1), !IsNearThemeRoom({ i, j }))) {
 				if (FlipCoin()) {
 					int y1 = j;
 					// BUGFIX: Check `y1 >= 0` first (fixed)

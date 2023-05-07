@@ -25,8 +25,8 @@ TEST(RandomTest, RandomEngineParams)
 	// C++11 defines the default seed for a LCG engine as 1. The ten thousandth value is commonly used for sanity checking
 	// a sequence, so as we've had one round since state 1 we need to discard another 9998 values to get to the 10000th state.
 	// To make off by one errors more visible test the 9999th value as well as 10000th
-	for (auto i = 2; i <= 9998; i++)
-		GenerateSeed();
+	DiscardRandomValues(9997);
+
 	uint32_t expectedState = 3495122800U;
 	EXPECT_EQ(GenerateSeed(), expectedState) << "Wrong engine state after 9999 invocations";
 	expectedState = 3007658545U;

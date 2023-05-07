@@ -30,6 +30,14 @@ void SetRndSeed(uint32_t seed);
 uint32_t GetLCGEngineState();
 
 /**
+ * @brief Advance the global RandomNumberEngine state by the specified number of rounds
+ *
+ * Only used to maintain vanilla compatibility until logic requiring reproducable random number generation is isolated.
+ * @param count How many values to discard
+ */
+void DiscardRandomValues(unsigned count);
+
+/**
  * @brief Advances the global RandomNumberEngine state and returns the new value
  */
 uint32_t GenerateSeed();
@@ -46,7 +54,7 @@ uint32_t GenerateSeed();
  *
  * @return A random number in the range [0,2^31) or -2^31
  */
-int32_t AdvanceRndSeed();
+[[nodiscard]] int32_t AdvanceRndSeed();
 
 /**
  * @brief Generates a random integer less than the given limit using the vanilla RNG

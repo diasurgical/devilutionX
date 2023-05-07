@@ -29,6 +29,14 @@ uint32_t GetLCGEngineState()
 	return sglGameSeed;
 }
 
+void DiscardRandomValues(unsigned count)
+{
+	while (count != 0) {
+		GenerateSeed();
+		count--;
+	}
+}
+
 uint32_t GenerateSeed()
 {
 	sglGameSeed = (RndMult * sglGameSeed) + RndInc;
