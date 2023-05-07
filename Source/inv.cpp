@@ -1749,15 +1749,18 @@ int InvPutItem(const Player &player, Point position, const Item &item)
 	if (!itemTile)
 		return -1;
 
+	Point position = *itemTile;
+
 	int ii = AllocateItem();
 
-	dItem[itemTile->x][itemTile->y] = ii + 1;
-	Items[ii] = item;
-	Items[ii].position = *itemTile;
-	RespawnItem(Items[ii], true);
+	dItem[position.x][position.y] = ii + 1;
+	auto &item_ = Items[ii];
+	item_ = item;
+	item_.position = position;
+	RespawnItem(item_, true);
 
-	if (CornerStone.isAvailable() && *itemTile == CornerStone.position) {
-		CornerStone.item = Items[ii];
+	if (CornerStone.isAvailable() && position == CornerStone.position) {
+		CornerStone.item = item_;
 		InitQTextMsg(TEXT_CORNSTN);
 		Quests[Q_CORNSTN]._qlog = false;
 		Quests[Q_CORNSTN]._qactive = QUEST_DONE;
@@ -1771,10 +1774,7 @@ int SyncDropItem(Point position, _item_indexes idx, uint16_t icreateinfo, int is
 	if (ActiveItemCount >= MAXITEMS)
 		return -1;
 
-	int ii = AllocateItem();
-	auto &item = Items[ii];
-
-	dItem[position.x][position.y] = ii + 1;
+	Item item;
 
 	RecreateItem(*MyPlayer, item, idx, icreateinfo, iseed, ivalue, (ibuff & CF_HELLFIRE) != 0);
 	if (id != 0)
@@ -1790,15 +1790,22 @@ int SyncDropItem(Point position, _item_indexes idx, uint16_t icreateinfo, int is
 	item._iMinDex = minDex;
 	item._iAC = ac;
 	item.dwBuff = ibuff;
-	item.position = position;
-	RespawnItem(item, true);
+
+	int ii = AllocateItem();
+
+	dItem[position.x][position.y] = ii + 1;
+	auto &item_ = Items[ii];
+	item_ = item;
+	item_.position = position;
+	RespawnItem(item_, true);
 
 	if (CornerStone.isAvailable() && position == CornerStone.position) {
-		CornerStone.item = item;
+		CornerStone.item = item_;
 		InitQTextMsg(TEXT_CORNSTN);
 		Quests[Q_CORNSTN]._qlog = false;
 		Quests[Q_CORNSTN]._qactive = QUEST_DONE;
 	}
+
 	return ii;
 }
 
@@ -1807,20 +1814,24 @@ int SyncDropEar(Point position, uint16_t icreateinfo, uint32_t iseed, uint8_t cu
 	if (ActiveItemCount >= MAXITEMS)
 		return -1;
 
+	Item item;
+	RecreateEar(item, icreateinfo, iseed, cursval, heroname);
+
 	int ii = AllocateItem();
-	auto &item = Items[ii];
 
 	dItem[position.x][position.y] = ii + 1;
-	RecreateEar(item, icreateinfo, iseed, cursval, heroname);
-	item.position = position;
-	RespawnItem(item, true);
+	auto &item_ = Items[ii];
+	item_ = item;
+	item_.position = position;
+	RespawnItem(item_, true);
 
 	if (CornerStone.isAvailable() && position == CornerStone.position) {
-		CornerStone.item = item;
+		CornerStone.item = item_;
 		InitQTextMsg(TEXT_CORNSTN);
 		Quests[Q_CORNSTN]._qlog = false;
 		Quests[Q_CORNSTN]._qactive = QUEST_DONE;
 	}
+
 	return ii;
 }
 
