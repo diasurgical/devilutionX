@@ -340,7 +340,7 @@ void RespawnDeadItem(Item &&itm, Point target)
 	Items[ii] = itm;
 	Items[ii].position = target;
 	RespawnItem(Items[ii], true);
-	NetSendCmdPItem(false, CMD_RESPAWNITEM, target, Items[ii]);
+	NetSendCmdPItem(false, CMD_SPAWNITEM, target, Items[ii]);
 }
 
 void DeadItem(Player &player, Item &&itm, Displacement direction)
