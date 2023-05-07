@@ -1742,26 +1742,6 @@ bool CanPut(Point position)
 	return true;
 }
 
-int PlaceItemInWorld(const Item &item, WorldTilePosition position)
-{
-	int ii = AllocateItem();
-
-	dItem[position.x][position.y] = ii + 1;
-	auto &item_ = Items[ii];
-	item_ = item;
-	item_.position = position;
-	RespawnItem(item_, true);
-
-	if (CornerStone.isAvailable() && position == CornerStone.position) {
-		CornerStone.item = item_;
-		InitQTextMsg(TEXT_CORNSTN);
-		Quests[Q_CORNSTN]._qlog = false;
-		Quests[Q_CORNSTN]._qactive = QUEST_DONE;
-	}
-
-	return ii;
-}
-
 int InvPutItem(const Player &player, Point position, const Item &item)
 {
 	std::optional<Point> itemTile = FindAdjacentPositionForItem(player.position.tile, GetDirection(player.position.tile, position));
