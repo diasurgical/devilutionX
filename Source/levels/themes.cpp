@@ -514,7 +514,7 @@ void Theme_Treasure(int t)
 	int treasrnd[4] = { 4, 9, 7, 10 };
 	int monstrnd[4] = { 6, 8, 3, 7 };
 
-	AdvanceRndSeed();
+	DiscardRandomValues(1);
 	for (int yp = 0; yp < MAXDUNY; yp++) {
 		for (int xp = 0; xp < MAXDUNX; xp++) {
 			if (dTransVal[xp][yp] == themes[t].ttval && IsTileNotSolid({ xp, yp })) {

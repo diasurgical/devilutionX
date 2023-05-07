@@ -701,42 +701,42 @@ void AddWall()
 				continue;
 
 			if (dungeon[i][j] == Corner) {
-				AdvanceRndSeed();
+				DiscardRandomValues(1);
 				int maxX = HorizontalWallOk({ i, j });
 				if (maxX != -1) {
 					HorizontalWall({ i, j }, HWall, maxX);
 				}
 			}
 			if (dungeon[i][j] == Corner) {
-				AdvanceRndSeed();
+				DiscardRandomValues(1);
 				int maxY = VerticalWallOk({ i, j });
 				if (maxY != -1) {
 					VerticalWall({ i, j }, VWall, maxY);
 				}
 			}
 			if (dungeon[i][j] == VWallEnd) {
-				AdvanceRndSeed();
+				DiscardRandomValues(1);
 				int maxX = HorizontalWallOk({ i, j });
 				if (maxX != -1) {
 					HorizontalWall({ i, j }, DWall, maxX);
 				}
 			}
 			if (dungeon[i][j] == HWallEnd) {
-				AdvanceRndSeed();
+				DiscardRandomValues(1);
 				int maxY = VerticalWallOk({ i, j });
 				if (maxY != -1) {
 					VerticalWall({ i, j }, DWall, maxY);
 				}
 			}
 			if (dungeon[i][j] == HWall) {
-				AdvanceRndSeed();
+				DiscardRandomValues(1);
 				int maxX = HorizontalWallOk({ i, j });
 				if (maxX != -1) {
 					HorizontalWall({ i, j }, HWall, maxX);
 				}
 			}
 			if (dungeon[i][j] == VWall) {
-				AdvanceRndSeed();
+				DiscardRandomValues(1);
 				int maxY = VerticalWallOk({ i, j });
 				if (maxY != -1) {
 					VerticalWall({ i, j }, VWall, maxY);

@@ -446,7 +446,7 @@ void AddWall()
 			}
 			for (auto d : { 10, 12, 13, 15, 16, 21, 22 }) {
 				if (d == dungeon[i][j]) {
-					AdvanceRndSeed();
+					DiscardRandomValues(1);
 					int x = HorizontalWallOk(i, j);
 					if (x != -1) {
 						HorizontalWall(i, j, x);
@@ -455,7 +455,7 @@ void AddWall()
 			}
 			for (auto d : { 8, 9, 11, 14, 15, 16, 21, 23 }) {
 				if (d == dungeon[i][j]) {
-					AdvanceRndSeed();
+					DiscardRandomValues(1);
 					int y = VerticalWallOk(i, j);
 					if (y != -1) {
 						VerticalWall(i, j, y);
