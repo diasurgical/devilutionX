@@ -499,6 +499,13 @@ void SetPlrHandGoldCurs(Item &gold);
 void CreatePlrItems(Player &player);
 bool ItemSpaceOk(Point position);
 int AllocateItem();
+/**
+ * @brief Puts the item onto the floor of the current dungeon level
+ * @param item The source of the item data
+ * @param position Coordinates of the tile to place the item on
+ * @return The index assigned to the item
+ */
+int PlaceItemInWorld(const Item &item, WorldTilePosition position);
 Point GetSuperItemLoc(Point position);
 void GetItemAttrs(Item &item, _item_indexes itemData, int lvl);
 void SetupItem(Item &item);
