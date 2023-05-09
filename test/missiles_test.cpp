@@ -1,9 +1,27 @@
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include "engine/random.hpp"
 #include "missiles.h"
 
 using namespace devilution;
+using ::testing::AllOf;
+using ::testing::Gt;
+using ::testing::Lt;
+using ::testing::Pair;
+using ::testing::UnorderedElementsAre;
+
+void TestMissileRotatesUniformly(Missile &missile, int startingFrame, int leftFrame, int rightFrame)
+{
+	std::unordered_map<int, unsigned> observed {};
+	for (auto i = 0; i < 100; i++) {
+		missile._miAnimFrame = startingFrame;
+		TestRotateBlockedMissile(missile);
+		observed[missile._miAnimFrame]++;
+	}
+
+	EXPECT_THAT(observed, UnorderedElementsAre(Pair(leftFrame, AllOf(Gt(30), Lt(70))), Pair(rightFrame, AllOf(Gt(30), Lt(70))))) << "Arrows should rotate either direction roughly 50% of the time";
+}
 
 TEST(Missiles, RotateBlockedMissileArrow)
 {
@@ -17,18 +35,9 @@ TEST(Missiles, RotateBlockedMissileArrow)
 	Missile missile = *AddMissile({ 0, 0 }, { 0, 0 }, Direction::South, MissileID::Arrow, TARGET_MONSTERS, player.getId(), 0, 0);
 	EXPECT_EQ(missile._miAnimFrame, 1);
 
-	SetRndSeed(0);
-	TestRotateBlockedMissile(missile);
-	EXPECT_EQ(missile._miAnimFrame, 16);
-
-	SetRndSeed(3210);
-	TestRotateBlockedMissile(missile);
-	EXPECT_EQ(missile._miAnimFrame, 1);
-
-	missile._miAnimFrame = 5;
-	SetRndSeed(1234);
-	TestRotateBlockedMissile(missile);
-	EXPECT_EQ(missile._miAnimFrame, 6);
+	TestMissileRotatesUniformly(missile, 5, 4, 6);
+	TestMissileRotatesUniformly(missile, 1, 16, 2);
+	TestMissileRotatesUniformly(missile, 16, 15, 1);
 }
 
 TEST(Missiles, GetDirection8)
