@@ -1,6 +1,7 @@
 #include "push_aulib_decoder.h"
 
 #include <algorithm>
+#include <cstdint>
 #include <cstring>
 #include <limits>
 #include <mutex>

@@ -1,5 +1,7 @@
 #include "panels/spell_icons.hpp"
 
+#include <cstdint>
+
 #include "engine.h"
 #include "engine/load_cel.hpp"
 #include "engine/load_clx.hpp"

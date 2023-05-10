@@ -1,5 +1,7 @@
 #include "levels/town.h"
 
+#include <cstdint>
+
 #include "engine/load_file.hpp"
 #include "engine/random.hpp"
 #include "init.h"

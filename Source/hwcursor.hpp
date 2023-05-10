@@ -3,6 +3,10 @@
  *
  * Hardware cursor (SDL2 only).
  */
+#pragma once
+
+#include <cstdint>
+
 #include <SDL_version.h>
 
 #include "options.h"

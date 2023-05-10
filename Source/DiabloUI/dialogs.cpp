@@ -1,5 +1,6 @@
 #include "DiabloUI/dialogs.h"
 
+#include <cstdint>
 #include <utility>
 
 #include "DiabloUI/button.h"

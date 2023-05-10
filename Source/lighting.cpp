@@ -6,6 +6,7 @@
 #include "lighting.h"
 
 #include <algorithm>
+#include <cstdint>
 #include <numeric>
 
 #include "automap.h"

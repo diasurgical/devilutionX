@@ -2,6 +2,7 @@
 
 #include <chrono>
 #include <cmath>
+#include <cstdint>
 #include <utility>
 
 #include <Aulib/DecoderDrmp3.h>

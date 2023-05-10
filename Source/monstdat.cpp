@@ -4,8 +4,10 @@
  * Implementation of all monster data.
  */
 #include "monstdat.h"
-#include "items.h"
 
+#include <cstdint>
+
+#include "items.h"
 #include "monster.h"
 #include "textdat.h"
 #include "utils/language.h"

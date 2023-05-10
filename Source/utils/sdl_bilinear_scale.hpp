@@ -1,5 +1,8 @@
 #pragma once
 
+#include <array>
+#include <cstdint>
+
 #include <SDL_version.h>
 
 #if SDL_VERSION_ATLEAST(2, 0, 0)
@@ -7,8 +10,6 @@
 #else
 #include <SDL_video.h>
 #endif
-
-#include <array>
 
 namespace devilution {
 

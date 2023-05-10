@@ -6,6 +6,7 @@
 #include "clx_render.hpp"
 
 #include <algorithm>
+#include <cstdint>
 
 #include "engine/render/blit_impl.hpp"
 #include "engine/render/scrollrt.h"

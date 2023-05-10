@@ -1,13 +1,14 @@
+#include "dvlnet/packet.h"
+
+#include <cassert>
+#include <cstdint>
+
 #ifdef PACKET_ENCRYPTION
 #include <sodium.h>
 #else
 #include <chrono>
 #include <random>
 #endif
-
-#include <cassert>
-
-#include "dvlnet/packet.h"
 
 namespace devilution {
 namespace net {

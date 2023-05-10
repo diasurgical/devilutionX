@@ -1,5 +1,7 @@
 #include "levels/crypt.h"
 
+#include <cstdint>
+
 #include "engine/load_file.hpp"
 #include "engine/point.hpp"
 #include "items.h"

@@ -5,6 +5,8 @@
  */
 #include "levels/trigs.h"
 
+#include <cstdint>
+
 #include <fmt/format.h>
 
 #include "control.h"

@@ -5,6 +5,8 @@
  */
 #include "cursor.h"
 
+#include <cstdint>
+
 #include <fmt/format.h>
 
 #include "DiabloUI/diabloui.h"

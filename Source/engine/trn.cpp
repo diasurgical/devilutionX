@@ -1,11 +1,14 @@
-#include <fmt/format.h>
+#include "engine/trn.hpp"
+
+#include <cstdint>
 #include <unordered_map>
+
+#include <fmt/format.h>
 
 #ifdef _DEBUG
 #include "debug.h"
 #endif
 #include "engine/load_file.hpp"
-#include "engine/trn.hpp"
 #include "lighting.h"
 
 namespace devilution {

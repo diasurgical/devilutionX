@@ -5,6 +5,8 @@
  */
 #include "engine/render/automap_render.hpp"
 
+#include <cstdint>
+
 namespace devilution {
 namespace {
 

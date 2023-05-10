@@ -6,6 +6,7 @@
 #include "missiles.h"
 
 #include <climits>
+#include <cstdint>
 
 #include "control.h"
 #include "controls/plrctrls.h"

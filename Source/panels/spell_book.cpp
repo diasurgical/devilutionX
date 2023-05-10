@@ -1,5 +1,7 @@
 #include "panels/spell_book.hpp"
 
+#include <cstdint>
+
 #include <fmt/format.h>
 
 #include "control.h"

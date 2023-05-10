@@ -1,5 +1,7 @@
 #include "panels/mainpanel.hpp"
 
+#include <cstdint>
+
 #include "control.h"
 #include "engine/clx_sprite.hpp"
 #include "engine/load_clx.hpp"

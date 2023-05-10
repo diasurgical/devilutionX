@@ -1,5 +1,6 @@
 #include "panels/charpanel.hpp"
 
+#include <cstdint>
 #include <string>
 
 #include <fmt/format.h>

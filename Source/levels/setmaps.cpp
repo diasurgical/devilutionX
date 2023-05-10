@@ -1,5 +1,7 @@
 #include "levels/setmaps.h"
 
+#include <cstdint>
+
 #ifdef _DEBUG
 #include "debug.h"
 #endif

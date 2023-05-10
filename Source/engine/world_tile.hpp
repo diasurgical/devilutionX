@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 #include "engine/point.hpp"
 #include "engine/rectangle.hpp"
 #include "engine/size.hpp"

@@ -4,6 +4,8 @@
  * Implementation of video playback.
  */
 
+#include <cstdint>
+
 #include "controls/plrctrls.h"
 #include "diablo.h"
 #include "effects.h"

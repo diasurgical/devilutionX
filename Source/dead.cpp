@@ -5,6 +5,8 @@
  */
 #include "dead.h"
 
+#include <cstdint>
+
 #include "diablo.h"
 #include "levels/gendung.h"
 #include "lighting.h"

@@ -1,5 +1,7 @@
 #include "platform/switch/docking.h"
 
+#include <cstdint>
+
 #include <SDL.h>
 #include <switch.h>
 
