@@ -6,6 +6,7 @@
 #include "loadsave.h"
 
 #include <climits>
+#include <cstdint>
 #include <cstring>
 #include <numeric>
 #include <unordered_map>

@@ -1,5 +1,6 @@
 #include "floatingnumbers.h"
 
+#include <cstdint>
 #include <ctime>
 #include <deque>
 #include <fmt/format.h>

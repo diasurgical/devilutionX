@@ -1,5 +1,6 @@
 #include "platform/ctr/sockets.hpp"
 
+#include <cstdint>
 #include <malloc.h>
 
 #include <3ds.h>

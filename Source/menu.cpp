@@ -4,6 +4,8 @@
  * Implementation of functions for interacting with the main menu.
  */
 
+#include <cstdint>
+
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/settingsmenu.h"
 #include "engine/demomode.h"

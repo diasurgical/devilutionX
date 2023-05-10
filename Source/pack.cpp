@@ -5,6 +5,8 @@
  */
 #include "pack.h"
 
+#include <cstdint>
+
 #include "engine/random.hpp"
 #include "init.h"
 #include "loadsave.h"

@@ -5,6 +5,8 @@
  */
 #include "engine/palette.h"
 
+#include <cstdint>
+
 #include <fmt/core.h>
 
 #include "engine/backbuffer_state.hpp"

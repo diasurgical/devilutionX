@@ -1,5 +1,7 @@
 #include "DiabloUI/multi/selgame.h"
 
+#include <cstdint>
+
 #include <fmt/format.h>
 
 #include "DiabloUI/diabloui.h"

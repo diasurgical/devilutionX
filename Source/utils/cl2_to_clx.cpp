@@ -1,5 +1,6 @@
 #include "utils/cl2_to_clx.hpp"
 
+#include <cstdint>
 #include <cstring>
 
 #include "utils/endian.hpp"

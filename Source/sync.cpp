@@ -4,6 +4,7 @@
  * Implementation of functionality for syncing game state with other players.
  */
 #include <climits>
+#include <cstdint>
 
 #include "levels/gendung.h"
 #include "monster.h"

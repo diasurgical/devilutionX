@@ -1,5 +1,7 @@
 #include "levels/drlg_l1.h"
 
+#include <cstdint>
+
 #include "engine/load_file.hpp"
 #include "engine/point.hpp"
 #include "engine/random.hpp"

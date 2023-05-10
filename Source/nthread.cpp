@@ -5,6 +5,8 @@
  */
 #include "nthread.h"
 
+#include <cstdint>
+
 #include <fmt/core.h>
 
 #include "diablo.h"

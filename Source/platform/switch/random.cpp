@@ -1,5 +1,6 @@
 #include "platform/switch/random.hpp"
 
+#include <cstdint>
 #include <sys/types.h>
 
 #include <sodium.h>

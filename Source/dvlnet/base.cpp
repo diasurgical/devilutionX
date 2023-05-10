@@ -1,6 +1,7 @@
 #include "dvlnet/base.h"
 
 #include <algorithm>
+#include <cstdint>
 #include <cstring>
 #include <memory>
 

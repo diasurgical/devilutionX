@@ -1,6 +1,7 @@
 #include "platform/vita/touch.h"
 
 #include <cmath>
+#include <cstdint>
 
 #include "options.h"
 #include "utils/display.h"

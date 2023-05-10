@@ -1,5 +1,7 @@
 #include "dvlnet/loopback.h"
 
+#include <cstdint>
+
 #include "multi.h"
 #include "player.h"
 #include "utils/language.h"

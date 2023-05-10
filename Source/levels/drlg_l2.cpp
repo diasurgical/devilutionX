@@ -5,6 +5,7 @@
  */
 #include "levels/drlg_l2.h"
 
+#include <cstdint>
 #include <list>
 
 #include "diablo.h"

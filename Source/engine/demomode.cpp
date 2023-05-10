@@ -1,5 +1,6 @@
 #include "engine/demomode.h"
 
+#include <cstdint>
 #include <cstdio>
 #include <deque>
 

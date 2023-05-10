@@ -1,6 +1,7 @@
 #include "utils/file_util.h"
 
 #include <cerrno>
+#include <cstdint>
 #include <cstring>
 
 #include <algorithm>

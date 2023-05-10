@@ -4,6 +4,7 @@
  * Implementation of in-game message functions.
  */
 
+#include <cstdint>
 #include <deque>
 
 #include "error.h"

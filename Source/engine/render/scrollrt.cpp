@@ -5,6 +5,8 @@
  */
 #include "engine/render/scrollrt.h"
 
+#include <cstdint>
+
 #include "DiabloUI/ui_flags.hpp"
 #include "automap.h"
 #include "controls/plrctrls.h"

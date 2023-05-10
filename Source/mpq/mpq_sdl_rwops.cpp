@@ -1,5 +1,6 @@
 #include "mpq/mpq_sdl_rwops.hpp"
 
+#include <cstdint>
 #include <cstring>
 #include <memory>
 #include <vector>

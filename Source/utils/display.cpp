@@ -1,6 +1,7 @@
 #include "utils/display.h"
 
 #include <algorithm>
+#include <cstdint>
 
 #ifdef __vita__
 #include <psp2/power.h>

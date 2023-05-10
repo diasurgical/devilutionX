@@ -1,3 +1,4 @@
+#include <cstdint>
 #include <psp2/kernel/rng.h>
 #include <sodium.h>
 #include <sys/types.h>

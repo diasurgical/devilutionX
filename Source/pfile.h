@@ -5,6 +5,8 @@
  */
 #pragma once
 
+#include <cstdint>
+
 #include "DiabloUI/diabloui.h"
 #include "player.h"
 

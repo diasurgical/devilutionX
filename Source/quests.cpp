@@ -5,6 +5,8 @@
  */
 #include "quests.h"
 
+#include <cstdint>
+
 #include <fmt/format.h>
 
 #include "DiabloUI/ui_flags.hpp"

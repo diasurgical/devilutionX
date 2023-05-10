@@ -6,6 +6,7 @@
 #include "engine/path.h"
 
 #include <array>
+#include <cstdint>
 
 #include <function_ref.hpp>
 

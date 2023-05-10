@@ -1,6 +1,7 @@
-#include <stack>
-
 #include "levels/gendung.h"
+
+#include <cstdint>
+#include <stack>
 
 #include "engine/load_file.hpp"
 #include "engine/random.hpp"

@@ -4,10 +4,11 @@
  * Implementation of functions for keeping multiplaye games in sync.
  */
 
+#include <cstdint>
+#include <ctime>
+
 #include <SDL.h>
 #include <config.h>
-
-#include <ctime>
 #include <fmt/format.h>
 
 #include "DiabloUI/diabloui.h"

@@ -5,6 +5,8 @@
  */
 #pragma once
 
+#include <cstdint>
+
 #include "engine/world_tile.hpp"
 #include "levels/gendung.h"
 
