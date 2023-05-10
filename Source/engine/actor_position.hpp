@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 #include "engine/animationinfo.h"
 #include "engine/point.hpp"
 #include "engine/world_tile.hpp"

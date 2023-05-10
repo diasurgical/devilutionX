@@ -3,6 +3,9 @@
  *
  * Adds monster health bar QoL feature
  */
+#include "monhealthbar.h"
+
+#include <cstdint>
 
 #include <fmt/format.h>
 

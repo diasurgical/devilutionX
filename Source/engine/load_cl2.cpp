@@ -1,5 +1,6 @@
 #include "engine/load_cl2.hpp"
 
+#include <cstdint>
 #include <memory>
 #include <utility>
 

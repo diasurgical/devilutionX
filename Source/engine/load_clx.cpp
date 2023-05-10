@@ -1,5 +1,7 @@
 #include "engine/load_clx.hpp"
 
+#include <cstdint>
+
 #include <SDL.h>
 
 #ifdef USE_SDL1

@@ -1,5 +1,6 @@
 #include "qol/stash.h"
 
+#include <cstdint>
 #include <utility>
 
 #include <fmt/format.h>

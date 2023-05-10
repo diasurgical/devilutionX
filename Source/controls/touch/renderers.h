@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 #include <SDL.h>
 
 #include "controls/plrctrls.h"

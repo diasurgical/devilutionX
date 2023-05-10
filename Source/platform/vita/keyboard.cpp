@@ -1,5 +1,6 @@
 #include "platform/vita/keyboard.h"
 
+#include <cstdint>
 #include <cstring>
 
 #include <SDL.h>

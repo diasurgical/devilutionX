@@ -5,6 +5,8 @@
  */
 #include "effects.h"
 
+#include <cstdint>
+
 #include "engine/random.hpp"
 #include "engine/sound.h"
 #include "engine/sound_defs.hpp"

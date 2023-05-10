@@ -3,10 +3,14 @@
  *
  * Implementation of routines for initializing the environment, disable screen saver, load MPQ.
  */
-#include <SDL.h>
-#include <config.h>
+#include "init.h"
+
+#include <cstdint>
 #include <string>
 #include <vector>
+
+#include <SDL.h>
+#include <config.h>
 
 #if (defined(_WIN64) || defined(_WIN32)) && !defined(__UWP__) && !defined(NXDK)
 #include <find_steam_game.h>

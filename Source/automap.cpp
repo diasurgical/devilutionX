@@ -5,6 +5,8 @@
  */
 #include "automap.h"
 
+#include <cstdint>
+
 #include <fmt/format.h>
 
 #include "control.h"

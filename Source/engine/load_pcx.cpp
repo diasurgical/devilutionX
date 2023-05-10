@@ -1,6 +1,7 @@
 #include "engine/load_pcx.hpp"
 
 #include <cstddef>
+#include <cstdint>
 #include <cstring>
 #include <memory>
 #include <utility>

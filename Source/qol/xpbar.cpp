@@ -6,6 +6,7 @@
 #include "xpbar.h"
 
 #include <array>
+#include <cstdint>
 
 #include <fmt/core.h>
 

@@ -1,5 +1,8 @@
 #include "engine/load_cel.hpp"
 
+#include <cstddef>
+#include <cstdint>
+
 #ifdef DEBUG_CEL_TO_CL2_SIZE
 #include <iostream>
 #endif

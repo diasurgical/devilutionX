@@ -1,6 +1,7 @@
 #include "controls/modifier_hints.h"
 
 #include <cstddef>
+#include <cstdint>
 
 #include "DiabloUI/ui_flags.hpp"
 #include "control.h"

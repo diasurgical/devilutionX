@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 #include "engine/clx_sprite.hpp"
 #include "engine/point.hpp"
 #include "engine/surface.hpp"

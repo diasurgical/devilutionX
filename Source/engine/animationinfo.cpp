@@ -5,6 +5,9 @@
  */
 
 #include "animationinfo.h"
+
+#include <cstdint>
+
 #include "appfat.h"
 #include "nthread.h"
 #include "utils/log.hpp"

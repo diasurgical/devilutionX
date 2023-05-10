@@ -1,5 +1,7 @@
 #include "engine/events.hpp"
 
+#include <cstdint>
+
 #include "controls/input.h"
 #include "engine.h"
 #include "engine/demomode.h"

@@ -1,6 +1,7 @@
 #include "actor_position.hpp"
 
 #include <array>
+#include <cstdint>
 
 namespace devilution {
 

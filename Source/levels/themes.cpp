@@ -5,6 +5,8 @@
  */
 #include "levels/themes.h"
 
+#include <cstdint>
+
 #include <fmt/core.h>
 
 #include "engine/path.h"

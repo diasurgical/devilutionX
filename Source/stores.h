@@ -5,6 +5,8 @@
  */
 #pragma once
 
+#include <cstdint>
+
 #include "DiabloUI/ui_flags.hpp"
 #include "control.h"
 #include "engine.h"

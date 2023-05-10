@@ -1,5 +1,6 @@
 #include "engine/surface.hpp"
 
+#include <cstdint>
 #include <cstring>
 
 namespace devilution {

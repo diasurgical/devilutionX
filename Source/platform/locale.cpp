@@ -1,5 +1,7 @@
 #include "locale.hpp"
 
+#include <cstdint>
+
 #ifdef __ANDROID__
 #include "SDL.h"
 #include <jni.h>

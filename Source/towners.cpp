@@ -1,5 +1,7 @@
 #include "towners.h"
 
+#include <cstdint>
+
 #include "cursor.h"
 #include "engine/clx_sprite.hpp"
 #include "engine/load_cel.hpp"

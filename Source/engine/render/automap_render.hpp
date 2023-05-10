@@ -10,6 +10,8 @@
  */
 #pragma once
 
+#include <cstdint>
+
 #include "engine.h"
 #include "engine/point.hpp"
 

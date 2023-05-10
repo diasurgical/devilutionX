@@ -5,6 +5,8 @@
  */
 #include "misdat.h"
 
+#include <cstdint>
+
 #include "engine/load_cl2.hpp"
 #include "engine/load_clx.hpp"
 #include "missiles.h"

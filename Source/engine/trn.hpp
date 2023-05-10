@@ -5,6 +5,8 @@
  */
 #pragma once
 
+#include <cstdint>
+
 #include "player.h"
 #include "utils/stdcompat/optional.hpp"
 
