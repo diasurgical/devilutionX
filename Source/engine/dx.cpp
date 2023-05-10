@@ -6,6 +6,7 @@
 #include "engine/dx.h"
 
 #include <SDL.h>
+#include <cstdint>
 
 #include "controls/plrctrls.h"
 #include "engine.h"

@@ -4,6 +4,7 @@
  * Implementation of the main game initialization functions.
  */
 #include <array>
+#include <cstdint>
 
 #include <fmt/format.h>
 

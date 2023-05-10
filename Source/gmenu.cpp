@@ -5,6 +5,8 @@
  */
 #include "gmenu.h"
 
+#include <cstdint>
+
 #include "DiabloUI/ui_flags.hpp"
 #include "control.h"
 #include "controls/axis_direction.h"

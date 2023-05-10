@@ -3,6 +3,7 @@
  *
  * Implementation of scrolling dialog text.
  */
+#include <cstdint>
 #include <string>
 #include <vector>
 

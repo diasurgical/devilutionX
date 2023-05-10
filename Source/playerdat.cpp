@@ -6,6 +6,8 @@
 
 #include "playerdat.hpp"
 
+#include <cstdint>
+
 #include "items.h"
 #include "player.h"
 #include "textdat.h"

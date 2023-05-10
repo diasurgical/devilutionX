@@ -4,6 +4,7 @@
  * Implementation of function for sending and reciving network messages.
  */
 #include <climits>
+#include <cstdint>
 #include <list>
 #include <memory>
 #include <unordered_map>

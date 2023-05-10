@@ -3,9 +3,10 @@
  *
  * Implementation of player inventory.
  */
+#include <algorithm>
+#include <cstdint>
 #include <utility>
 
-#include <algorithm>
 #include <fmt/format.h>
 
 #include "DiabloUI/ui_flags.hpp"

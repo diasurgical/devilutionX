@@ -5,6 +5,8 @@
  */
 #include "levels/drlg_l4.h"
 
+#include <cstdint>
+
 #include "engine/load_file.hpp"
 #include "engine/random.hpp"
 #include "levels/gendung.h"

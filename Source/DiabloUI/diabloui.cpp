@@ -1,6 +1,7 @@
 #include "DiabloUI/diabloui.h"
 
 #include <algorithm>
+#include <cstdint>
 #include <string>
 
 #include "DiabloUI/button.h"

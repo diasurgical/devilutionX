@@ -6,6 +6,7 @@
 
 #ifdef _DEBUG
 
+#include <cstdint>
 #include <cstdio>
 
 #include "debug.h"

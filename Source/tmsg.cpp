@@ -5,6 +5,8 @@
  */
 #include <list>
 
+#include <cstdint>
+
 #include "diablo.h"
 #include "tmsg.h"
 

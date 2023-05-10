@@ -1,4 +1,5 @@
 #include <3ds.h>
+#include <cstdint>
 #include <sodium.h>
 #include <sys/types.h>
 

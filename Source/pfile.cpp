@@ -5,6 +5,7 @@
  */
 #include "pfile.h"
 
+#include <cstdint>
 #include <string>
 #include <unordered_map>
 

@@ -1,6 +1,7 @@
 #include "platform/ctr/display.hpp"
 #include <SDL.h>
 
+#include <cstdint>
 uint32_t Get3DSScalingFlag(bool fitToScreen, int width, int height)
 {
 	if (fitToScreen)

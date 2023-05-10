@@ -1,4 +1,7 @@
+#include "levels/drlg_l3.h"
+
 #include <algorithm>
+#include <cstdint>
 
 #include "engine/load_file.hpp"
 #include "engine/points_in_rectangle_range.hpp"

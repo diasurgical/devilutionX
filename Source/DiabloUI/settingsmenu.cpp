@@ -1,5 +1,7 @@
 #include "selstart.h"
 
+#include <cstdint>
+
 #include <function_ref.hpp>
 
 #include "DiabloUI/diabloui.h"

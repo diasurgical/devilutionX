@@ -1,3 +1,4 @@
+#include <cstdint>
 
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/selok.h"

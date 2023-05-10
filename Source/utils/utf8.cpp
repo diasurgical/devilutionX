@@ -1,6 +1,7 @@
 #include "utils/utf8.hpp"
 
 #include <cstddef>
+#include <cstdint>
 #include <cstring>
 
 #include <hoehrmann_utf8.h>

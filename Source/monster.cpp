@@ -6,6 +6,7 @@
 #include "monster.h"
 
 #include <climits>
+#include <cstdint>
 
 #include <algorithm>
 #include <array>

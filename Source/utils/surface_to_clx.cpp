@@ -1,5 +1,6 @@
 #include "utils/surface_to_clx.hpp"
 
+#include <cstdint>
 #include <cstring>
 #include <vector>
 
