@@ -1143,7 +1143,7 @@ void RenderTile(const Surface &out, Point position,
 	if (clip.width <= 0 || clip.height <= 0)
 		return;
 
-	const uint8_t *tbl = LightTables[LightTableIndex].data();
+	const uint8_t *tbl = LightTables[lightTableIndex].data();
 	const auto *pFrameTable = reinterpret_cast<const uint32_t *>(pDungeonCels.get());
 	const auto *src = reinterpret_cast<const uint8_t *>(&pDungeonCels[SDL_SwapLE32(pFrameTable[levelCelBlock.frame()])]);
 	uint8_t *dst = out.at(static_cast<int>(position.x + clip.left), static_cast<int>(position.y - clip.bottom));
