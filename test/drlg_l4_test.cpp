@@ -50,7 +50,7 @@ TEST(Drlg_l4, CreateL4Dungeon_diablo_14_717625719)
 	EXPECT_EQ(ViewPosition, Point(51, 29));
 }
 
-// Level which rooms extends to the edge of the quardrant
+// Level which rooms extend to the edge of the quadrant
 TEST(Drlg_l4, CreateL4Dungeon_diablo_14_815743776)
 {
 	LoadExpectedLevelData("diablo/14-815743776.dun");

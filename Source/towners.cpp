@@ -499,7 +499,7 @@ void TalkToHealer(Player &player, Towner &healer)
 	if (poisonWater._qactive != QUEST_NOTAVAIL) {
 		if ((poisonWater._qactive == QUEST_INIT && (player._pLvlVisited[1] || player._pLvlVisited[5])) || (poisonWater._qactive == QUEST_ACTIVE && !poisonWater._qlog)) {
 			// Play the dialog and make the quest visible in the log if the player has not started the quest but has
-			// visited the dungeon at least once, or if they've found the poison water cave before speaking to pepin
+			// visited the dungeon at least once, or if they've found the poison water cave before speaking to Pepin
 			poisonWater._qactive = QUEST_ACTIVE;
 			poisonWater._qlog = true;
 			poisonWater._qmsg = TEXT_POISON3;

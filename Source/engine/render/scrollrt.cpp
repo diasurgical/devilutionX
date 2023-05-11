@@ -770,17 +770,15 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 	}
 
 	if (LightTableIndex < LightsMax && bDead != 0) {
-		do {
-			Corpse &corpse = Corpses[(bDead & 0x1F) - 1];
-			const Point position { targetBufferPosition.x - CalculateWidth2(corpse.width), targetBufferPosition.y };
-			const ClxSprite sprite = corpse.spritesForDirection(static_cast<Direction>((bDead >> 5) & 7))[corpse.frame];
-			if (corpse.translationPaletteIndex != 0) {
-				const uint8_t *trn = Monsters[corpse.translationPaletteIndex - 1].uniqueMonsterTRN.get();
-				ClxDrawTRN(out, position, sprite, trn);
-			} else {
-				ClxDrawLight(out, position, sprite);
-			}
-		} while (false);
+		Corpse &corpse = Corpses[(bDead & 0x1F) - 1];
+		const Point position { targetBufferPosition.x - CalculateWidth2(corpse.width), targetBufferPosition.y };
+		const ClxSprite sprite = corpse.spritesForDirection(static_cast<Direction>((bDead >> 5) & 7))[corpse.frame];
+		if (corpse.translationPaletteIndex != 0) {
+			const uint8_t *trn = Monsters[corpse.translationPaletteIndex - 1].uniqueMonsterTRN.get();
+			ClxDrawTRN(out, position, sprite, trn);
+		} else {
+			ClxDrawLight(out, position, sprite);
+		}
 	}
 	DrawObject(out, tilePosition, targetBufferPosition, true);
 	DrawItem(out, tilePosition, targetBufferPosition, true);

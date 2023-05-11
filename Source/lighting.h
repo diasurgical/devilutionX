@@ -30,7 +30,7 @@ struct LightPosition {
 	WorldTilePosition tile;
 	/** Pixel offset from tile. */
 	DisplacementOf<int8_t> offset;
-	/** Prevous position. */
+	/** Previous position. */
 	WorldTilePosition old;
 };
 

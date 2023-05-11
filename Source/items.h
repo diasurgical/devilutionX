@@ -134,11 +134,11 @@ enum _unique_items : int8_t {
  7th bit stores uper15 flag - uper means unique percent, this flag is true for unique monsters and loot from them has 15% to become unique
  8th bit stores uper1 flag - this is loot from normal monsters, which has 1% to become unique
  9th bit stores info if item is unique
- 10th bit stores info if item is a basic one from griswold
- 11th bit stores info if item is a premium one from griswold
- 12th bit stores info if item is from wirt
- 13th bit stores info if item is from adria
- 14th bit stores info if item is from pepin
+ 10th bit stores info if item is a basic one from Griswold
+ 11th bit stores info if item is a premium one from Griswold
+ 12th bit stores info if item is from Wirt
+ 13th bit stores info if item is from Adria
+ 14th bit stores info if item is from Pepin
  15th bit stores pregen flag
 
  combining CF_UPER15 and CF_UPER1 flags (CF_USEFUL) is used to mark potions and town portal scrolls created on the ground
