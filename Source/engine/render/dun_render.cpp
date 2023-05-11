@@ -1125,7 +1125,7 @@ string_view MaskTypeToString(MaskType maskType)
 #endif
 
 void RenderTile(const Surface &out, Point position,
-    LevelCelBlock levelCelBlock, MaskType maskType, uint8_t lightTableIndex)
+    LevelCelBlock levelCelBlock, MaskType maskType, uint8_t lightTableIndex, const uint8_t *tbl)
 {
 	const TileType tile = levelCelBlock.type();
 
@@ -1143,7 +1143,9 @@ void RenderTile(const Surface &out, Point position,
 	if (clip.width <= 0 || clip.height <= 0)
 		return;
 
-	const uint8_t *tbl = LightTables[lightTableIndex].data();
+	if (tbl == nullptr)
+		tbl = LightTables[lightTableIndex].data();
+
 	const auto *pFrameTable = reinterpret_cast<const uint32_t *>(pDungeonCels.get());
 	const auto *src = reinterpret_cast<const uint8_t *>(&pDungeonCels[SDL_SwapLE32(pFrameTable[levelCelBlock.frame()])]);
 	uint8_t *dst = out.at(static_cast<int>(position.x + clip.left), static_cast<int>(position.y - clip.bottom));
