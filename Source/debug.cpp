@@ -42,6 +42,7 @@ OptionalOwnedClxSpriteList pSquareCel;
 bool DebugToggle = false;
 bool DebugGodMode = false;
 bool DebugVision = false;
+bool DebugPath = false;
 bool DebugGrid = false;
 std::unordered_map<int, Point> DebugCoordsMap;
 bool DebugScrollViewEnabled = false;
@@ -451,6 +452,15 @@ std::string DebugCmdVision(const string_view parameter)
 		return "You see as I do.";
 
 	return "My path is set.";
+}
+
+std::string DebugCmdPath(const string_view parameter)
+{
+	DebugPath = !DebugPath;
+	if (DebugPath)
+		return "The mushroom trail.";
+
+	return "The path is hidden.";
 }
 
 std::string DebugCmdQuest(const string_view parameter)
@@ -1049,6 +1059,7 @@ std::vector<DebugCmdItem> DebugCmdList = {
 	{ "restart", "Resets specified {level}.", "{level} ({seed})", &DebugCmdResetLevel },
 	{ "god", "Toggles godmode.", "", &DebugCmdGodMode },
 	{ "drawvision", "Toggles vision debug rendering.", "", &DebugCmdVision },
+	{ "drawpath", "Toggles path debug rendering.", "", &DebugCmdPath },
 	{ "fullbright", "Toggles whether light shading is in effect.", "", &DebugCmdLighting },
 	{ "fill", "Refills health and mana.", "", &DebugCmdRefillHealthMana },
 	{ "changehp", "Changes health by {value} (Use a negative value to remove health).", "{value}", &DebugCmdChangeHealth },

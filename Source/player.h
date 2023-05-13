@@ -460,6 +460,11 @@ struct Player {
 	Point GetTargetPosition() const;
 
 	/**
+	 * @brief Check if position is in player's path.
+	 */
+	bool IsPositionInPath(Point position);
+
+	/**
 	 * @brief Says a speech line.
 	 * @todo BUGFIX Prevent more than one speech to be played at a time (reject new requests).
 	 */
