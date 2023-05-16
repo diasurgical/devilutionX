@@ -453,14 +453,14 @@ void CheckQuestKill(const Monster &monster, bool sendmsg)
 					}
 				}
 			}
-			if (sendmsg) {
-				NetSendCmdQuest(true, betrayerQuest);
-				NetSendCmdQuest(true, diabloQuest);
-			}
 		} else {
 			InitVPTriggers();
 			betrayerQuest._qvar2 = 4;
 			AddMissile({ 35, 32 }, { 35, 32 }, Direction::South, MissileID::RedPortal, TARGET_MONSTERS, MyPlayerId, 0, 0);
+		}
+		if (sendmsg) {
+			NetSendCmdQuest(true, betrayerQuest);
+			NetSendCmdQuest(true, diabloQuest);
 		}
 	} else if (monster.uniqueType == UniqueMonsterType::WarlordOfBlood) {
 		Quests[Q_WARLORD]._qactive = QUEST_DONE;
