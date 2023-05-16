@@ -1427,7 +1427,7 @@ void MonsterTalk(Monster &monster)
 		Quests[Q_ZHAR]._qactive = QUEST_ACTIVE;
 		Quests[Q_ZHAR]._qlog = true;
 		Quests[Q_ZHAR]._qvar1 = QS_ZHAR_ITEM_SPAWNED;
-		CreateTypeItem(monster.position.tile + Displacement { 1, 1 }, false, ItemType::Misc, IMISC_BOOK, true, false);
+		CreateTypeItem(monster.position.tile + Displacement { 1, 1 }, false, ItemType::Misc, IMISC_BOOK, false, false, true);
 		monster.flags |= MFLAG_QUEST_COMPLETE;
 		NetSendCmdQuest(true, Quests[Q_ZHAR]);
 	}
