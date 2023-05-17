@@ -10,6 +10,10 @@ on:
     types: [ opened, synchronize ]
     paths-ignore:
       - '*.md'
+  release:
+    types: [published]
+    paths-ignore:
+      - '*.md'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -42,13 +46,21 @@ jobs:
         restore-keys: ${{ github.workflow }}-v1-
 
     - name: Build
-      working-directory: ${{github.workspace}}
+      working-directory: ${{github.workspace}}/android-project
       shell: bash
-      run: cd android-project && ./gradlew assembleDebug
+      run: ./gradlew ${{github.event_name == 'release' && 'assembleDebug' || 'assembleRelease'}}
 
     - name: Upload-Package
       if: ${{ !env.ACT }}
       uses: actions/upload-artifact@v3
       with:
-        name: devilutionx-debug.apk
-        path: android-project/app/build/outputs/apk/debug/app-debug.apk
+        name: devilutionx-${{github.event_name == 'release' && 'release' || 'debug'}}.apk
+        path: android-project/app/build/outputs/apk/${{github.event_name == 'release' && 'release' || 'debug'}}/app-${{github.event_name == 'release' && 'release' || 'debug'}}.apk
+
+    - name: Update Release
+      if: ${{ github.event_name == 'release' && !env.ACT }}
+      uses: svenstaro/upload-release-action@v2
+      with:
+        file: android-project/app/build/outputs/apk/release/app-release.apk
+        asset_name: devilutionx-android.apk
+        overwrite: true
