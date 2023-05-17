@@ -18,10 +18,9 @@ if(NXDK)
     URL_HASH MD5=310c79c7a5cda3ad8f4e0d44d9fc1c57
   )
 else()
-  # master on 2022-03-12
   FetchContent_Declare(libfmt
-    URL https://github.com/fmtlib/fmt/archive/7f882918eba6430a0509b5e8547de21611264c5c.tar.gz
-    URL_HASH MD5=03fd08aeabf9021c6bf19fbd84d5e62e
+    URL https://github.com/fmtlib/fmt/archive/refs/tags/10.0.0.tar.gz
+    URL_HASH MD5=fa629bc1178918b7af4b2ea6b6a271dc
   )
 endif()
 FetchContent_MakeAvailableExcludeFromAll(libfmt)
