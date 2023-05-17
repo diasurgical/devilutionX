@@ -24,7 +24,7 @@ jobs:
       run: >
         sudo apt-get update &&
         sudo apt-get install -y curl cmake git squashfs-tools gettext &&
-        curl -L https://github.com/Poligraf/retrofw_buildroot_gcc11/releases/download/2.3.2/host.tar.gz -o retrofw-toolchain.tar.gz &&
+        curl -L https://github.com/retrofw/retrofw.github.io/releases/download/v2.3/mipsel-RetroFW-linux-uclibc_sdk-buildroot.tar.gz -o retrofw-toolchain.tar.gz &&
         sudo mkdir -p /opt/retrofw-toolchain && sudo chown -R "${USER}:" /opt/retrofw-toolchain &&
         tar -C /opt/retrofw-toolchain --strip-components=1 -xf retrofw-toolchain.tar.gz &&
         cd /opt/retrofw-toolchain && ./relocate-sdk.sh
