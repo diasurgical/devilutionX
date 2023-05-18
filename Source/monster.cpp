@@ -1421,16 +1421,6 @@ void MonsterTalk(Monster &monster)
 			NetSendCmdQuest(true, Quests[Q_GARBUD]);
 		}
 	}
-	if (monster.uniqueType == UniqueMonsterType::Zhar
-	    && monster.talkMsg == TEXT_ZHAR1
-	    && (monster.flags & MFLAG_QUEST_COMPLETE) == 0) {
-		Quests[Q_ZHAR]._qactive = QUEST_ACTIVE;
-		Quests[Q_ZHAR]._qlog = true;
-		Quests[Q_ZHAR]._qvar1 = QS_ZHAR_ITEM_SPAWNED;
-		CreateTypeItem(monster.position.tile + Displacement { 1, 1 }, false, ItemType::Misc, IMISC_BOOK, false, false, true);
-		monster.flags |= MFLAG_QUEST_COMPLETE;
-		NetSendCmdQuest(true, Quests[Q_ZHAR]);
-	}
 	if (monster.uniqueType == UniqueMonsterType::SnotSpill) {
 		if (monster.talkMsg == TEXT_BANNER10 && (monster.flags & MFLAG_QUEST_COMPLETE) == 0) {
 			ObjChangeMap(SetPiece.position.x, SetPiece.position.y, SetPiece.position.x + (SetPiece.size.width / 2) + 2, SetPiece.position.y + (SetPiece.size.height / 2) - 2);
@@ -4503,7 +4493,8 @@ Monster *PreSpawnSkeleton()
 void TalktoMonster(Player &player, Monster &monster)
 {
 	monster.mode = MonsterMode::Talk;
-	if (monster.ai != MonsterAIID::Snotspill && monster.ai != MonsterAIID::Lachdanan) {
+
+	if (IsNoneOf(monster.ai, MonsterAIID::Snotspill, MonsterAIID::Lachdanan, MonsterAIID::Zhar)) {
 		return;
 	}
 
@@ -4525,6 +4516,18 @@ void TalktoMonster(Player &player, Monster &monster)
 				Quests[Q_VEIL]._qvar2 = QS_VEIL_ITEM_SPAWNED;
 				NetSendCmdQuest(true, Quests[Q_VEIL]);
 			}
+		}
+	}
+	if (monster.uniqueType == UniqueMonsterType::Zhar
+	    && monster.talkMsg == TEXT_ZHAR1
+	    && (monster.flags & MFLAG_QUEST_COMPLETE) == 0) {
+		if (MyPlayer == &player) {
+			Quests[Q_ZHAR]._qactive = QUEST_ACTIVE;
+			Quests[Q_ZHAR]._qlog = true;
+			Quests[Q_ZHAR]._qvar1 = QS_ZHAR_ITEM_SPAWNED;
+			CreateTypeItem(monster.position.tile + Displacement { 1, 1 }, false, ItemType::Misc, IMISC_BOOK, false, false, true);
+			monster.flags |= MFLAG_QUEST_COMPLETE;
+			NetSendCmdQuest(true, Quests[Q_ZHAR]);
 		}
 	}
 }
