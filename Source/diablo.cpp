@@ -1678,8 +1678,8 @@ void InitKeymapActions()
 	    N_("Item highlighting"),
 	    N_("Show/hide items on ground."),
 	    SDLK_LALT,
-	    [] { AltPressed(true); },
-	    [] { AltPressed(false); });
+	    [] { HighlightKeyPressed(true); },
+	    [] { HighlightKeyPressed(false); });
 	sgOptions.Keymapper.AddAction(
 	    "Toggle Item Highlighting",
 	    N_("Toggle item highlighting"),
@@ -2198,8 +2198,8 @@ void InitPadmapActions()
 	    N_("Item highlighting"),
 	    N_("Show/hide items on ground."),
 	    ControllerButton_NONE,
-	    [] { AltPressed(true); },
-	    [] { AltPressed(false); });
+	    [] { HighlightKeyPressed(true); },
+	    [] { HighlightKeyPressed(false); });
 	sgOptions.Padmapper.AddAction(
 	    "Toggle Item Highlighting",
 	    N_("Toggle item highlighting"),

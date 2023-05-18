@@ -32,7 +32,7 @@ struct ItemLabel {
 
 std::vector<ItemLabel> labelQueue;
 
-bool altPressed = false;
+bool highlightKeyPressed = false;
 bool isLabelHighlighted = false;
 std::array<std::optional<int>, ITEMTYPES> labelCenterOffsets;
 
@@ -74,9 +74,9 @@ void ToggleItemLabelHighlight()
 	sgOptions.Gameplay.showItemLabels.SetValue(!*sgOptions.Gameplay.showItemLabels);
 }
 
-void AltPressed(bool pressed)
+void HighlightKeyPressed(bool pressed)
 {
-	altPressed = pressed;
+	highlightKeyPressed = pressed;
 }
 
 bool IsItemLabelHighlighted()
@@ -91,7 +91,7 @@ void ResetItemlabelHighlighted()
 
 bool IsHighlightingLabelsEnabled()
 {
-	return stextflag == TalkID::None && altPressed != *sgOptions.Gameplay.showItemLabels;
+	return stextflag == TalkID::None && highlightKeyPressed != *sgOptions.Gameplay.showItemLabels;
 }
 
 void AddItemToLabelQueue(int id, Point position)
