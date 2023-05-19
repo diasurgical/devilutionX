@@ -191,16 +191,6 @@ void ClearStateVariables(Player &player)
 	player.queuedSpell.spellLevel = 0;
 }
 
-void StartWalkStand(Player &player)
-{
-	player._pmode = PM_STAND;
-	player.position.future = player.position.tile;
-
-	if (&player == MyPlayer) {
-		ViewPosition = player.position.tile;
-	}
-}
-
 void StartAttack(Player &player, Direction d, bool includesFirstFrame)
 {
 	if (player._pInvincible && player._pHitPoints == 0 && &player == MyPlayer) {
@@ -482,11 +472,7 @@ bool DoWalk(Player &player, int variant)
 		ChangeVisionXY(player.getId(), player.position.tile);
 	}
 
-	if (player.walkpath[0] != WALK_NONE) {
-		StartWalkStand(player);
-	} else {
-		StartStand(player, player.tempDirection);
-	}
+	StartStand(player, player.tempDirection);
 
 	ClearStateVariables(player);
 
