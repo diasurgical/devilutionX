@@ -102,8 +102,11 @@ bool SetHardwareCursorFromSurface(SDL_Surface *surface, HotpointPosition hotpoin
 		const Point hotpoint = GetHotpointPosition(*scaledSurface, hotpointPosition);
 		newCursor = SDLCursorUniquePtr { SDL_CreateColorCursor(scaledSurface.get(), hotpoint.x, hotpoint.y) };
 	}
-	if (newCursor == nullptr)
+	if (newCursor == nullptr) {
+		LogError("SDL_CreateColorCursor: {}", SDL_GetError());
+		SDL_ClearError();
 		return false;
+	}
 	SDL_SetCursor(newCursor.get());
 	CurrentCursor = std::move(newCursor);
 	return true;
