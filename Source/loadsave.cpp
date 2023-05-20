@@ -935,19 +935,58 @@ bool LevelFileExists(SaveWriter &archive)
 	return archive.HasFile(szName);
 }
 
-void LoadMatchingItems(LoadHelper &file, const int n, Item *pItem)
+bool IsShopPriceValid(const Item &item)
 {
-	Item tempItem;
+	const int boyPriceLimit = 90000;
+	if (!gbIsHellfire && (item._iCreateInfo & CF_BOY) != 0 && item._iIvalue > boyPriceLimit)
+		return false;
+
+	const int premiumPriceLimit = 140000;
+	if (!gbIsHellfire && (item._iCreateInfo & CF_SMITHPREMIUM) != 0 && item._iIvalue > premiumPriceLimit)
+		return false;
+
+	const uint16_t smithOrWitch = CF_SMITH | CF_WITCH;
+	const int smithAndWitchPriceLimit = gbIsHellfire ? 200000 : 140000;
+	if ((item._iCreateInfo & smithOrWitch) != 0 && item._iIvalue > smithAndWitchPriceLimit)
+		return false;
+
+	return true;
+}
+
+void RevertEffectsOfMultiplayerOils(Item &heroItem, const Item &unpackedItem)
+{
+	heroItem._iPLToHit = unpackedItem._iPLToHit; // Oil of Accuracy
+	heroItem._iMaxDam = unpackedItem._iMaxDam;   // Oil of Sharpness
+}
+
+void LoadMatchingItems(LoadHelper &file, const Player &player, const int n, Item *pItem)
+{
+	Item heroItem;
 
 	for (int i = 0; i < n; i++) {
-		LoadItemData(file, tempItem);
-		if (pItem[i].isEmpty() || tempItem.isEmpty())
+		Item &unpackedItem = pItem[i];
+		LoadItemData(file, heroItem);
+		if (unpackedItem.isEmpty() || heroItem.isEmpty())
 			continue;
-		if (pItem[i]._iSeed != tempItem._iSeed)
+		if (unpackedItem._iSeed != heroItem._iSeed)
 			continue;
-		if (tempItem.IDidx == IDI_EAR)
+		if (heroItem.IDidx == IDI_EAR)
 			continue;
-		pItem[i] = tempItem;
+		if (gbIsMultiplayer) {
+			// Ensure that the unpacked item was regenerated using the appropriate
+			// game's item generation logic before attempting to use it for validation
+			if ((heroItem.dwBuff & CF_HELLFIRE) != (unpackedItem.dwBuff & CF_HELLFIRE)) {
+				unpackedItem = {};
+				RecreateItem(player, unpackedItem, heroItem.IDidx, heroItem._iCreateInfo, heroItem._iSeed, heroItem._ivalue, (heroItem.dwBuff & CF_HELLFIRE) != 0);
+			}
+			if (!IsShopPriceValid(unpackedItem)) {
+				unpackedItem.clear();
+				continue;
+			}
+			if (!gbIsHellfire)
+				RevertEffectsOfMultiplayerOils(heroItem, unpackedItem);
+		}
+		unpackedItem = heroItem;
 	}
 }
 
@@ -1995,9 +2034,9 @@ void LoadHeroItems(Player &player)
 
 	gbIsHellfireSaveGame = file.NextBool8();
 
-	LoadMatchingItems(file, NUM_INVLOC, player.InvBody);
-	LoadMatchingItems(file, InventoryGridCells, player.InvList);
-	LoadMatchingItems(file, MaxBeltItems, player.SpdList);
+	LoadMatchingItems(file, player, NUM_INVLOC, player.InvBody);
+	LoadMatchingItems(file, player, InventoryGridCells, player.InvList);
+	LoadMatchingItems(file, player, MaxBeltItems, player.SpdList);
 
 	gbIsHellfireSaveGame = gbIsHellfire;
 }
