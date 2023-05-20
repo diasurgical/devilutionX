@@ -11,6 +11,12 @@
 
 #include "options.h"
 
+// Set this to 1 to log the hardware cursor state changes.
+#define LOG_HWCURSOR 0
+#if LOG_HWCURSOR
+#include "utils/log.hpp"
+#endif
+
 namespace devilution {
 
 // Whether the hardware cursor is enabled in settings.
@@ -29,6 +35,12 @@ inline bool IsHardwareCursorEnabled()
 inline bool SetHardwareCursorVisible(bool visible)
 {
 #if SDL_VERSION_ATLEAST(2, 0, 0)
+#if LOG_HWCURSOR
+	const bool isVisible = SDL_ShowCursor(SDL_QUERY) == SDL_ENABLE;
+	if (isVisible != visible) {
+		Log("hwcursor: SetHardwareCursorVisible {}", visible);
+	}
+#endif
 	return SDL_ShowCursor(visible ? SDL_ENABLE : SDL_DISABLE) == 1;
 #else
 	return false;
@@ -77,6 +89,9 @@ public:
 
 	void SetEnabled(bool value)
 	{
+#if LOG_HWCURSOR
+		Log("hwcursor: SetEnabled {}", value);
+#endif
 		enabled_ = value;
 	}
 
@@ -117,6 +132,9 @@ void SetHardwareCursor(CursorInfo cursorInfo);
 
 inline void ReinitializeHardwareCursor()
 {
+#if LOG_HWCURSOR
+	Log("hwcursor: ReinitializeHardwareCursor");
+#endif
 	SetHardwareCursor(GetCurrentCursorInfo());
 }
 
