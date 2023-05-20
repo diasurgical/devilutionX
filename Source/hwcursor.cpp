@@ -151,7 +151,7 @@ bool SetHardwareCursorFromSprite(int pcurs)
 
 } // namespace
 
-CursorInfo GetCurrentCursorInfo()
+CursorInfo &GetCurrentCursorInfo()
 {
 	return CurrentCursorInfo;
 }
@@ -160,6 +160,7 @@ void SetHardwareCursor(CursorInfo cursorInfo)
 {
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 	CurrentCursorInfo = cursorInfo;
+	CurrentCursorInfo.setNeedsReinitialization(false);
 	switch (cursorInfo.type()) {
 	case CursorType::Game:
 #if LOG_HWCURSOR
