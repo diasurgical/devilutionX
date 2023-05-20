@@ -178,6 +178,7 @@ void SelheroListSelect(int value)
 		selhero_heroInfo.saveNumber = pfile_ui_get_first_unused_save_num();
 		SelheroSetStats();
 		title = selhero_isMultiPlayer ? _("New Multi Player Hero").data() : _("New Single Player Hero").data();
+		selhero_isSavegame = false;
 		return;
 	}
 
