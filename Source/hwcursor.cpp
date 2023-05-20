@@ -153,11 +153,6 @@ void SetHardwareCursor(CursorInfo cursorInfo)
 		CurrentCursorInfo.SetEnabled(SetHardwareCursorFromSprite(cursorInfo.id()));
 		break;
 	case CursorType::UserInterface:
-		// ArtCursor is null while loading the game on the progress screen,
-		// called via palette fade from ShowProgress.
-		CurrentCursorInfo.SetEnabled(
-		    ArtCursor && IsCursorSizeAllowed(Size { (*ArtCursor)[0].width(), (*ArtCursor)[0].height() })
-		    && SetHardwareCursor((*ArtCursor)[0], HotpointPosition::TopLeft));
 		break;
 	case CursorType::Unknown:
 		CurrentCursorInfo.SetEnabled(false);
