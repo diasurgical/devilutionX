@@ -69,13 +69,16 @@ bool ShouldUseBilinearScaling()
 	return *sgOptions.Graphics.scaleQuality != ScalingQuality::NearestPixel;
 }
 
-bool SetHardwareCursor(SDL_Surface *surface, HotpointPosition hotpointPosition)
+bool SetHardwareCursorFromSurface(SDL_Surface *surface, HotpointPosition hotpointPosition)
 {
 	SDLCursorUniquePtr newCursor;
 	const Size size { surface->w, surface->h };
 	const Size scaledSize = ScaledSize(size);
 
 	if (size == scaledSize) {
+#if LOG_HWCURSOR
+		Log("hwcursor: SetHardwareCursorFromSurface {}x{}", size.width, size.height);
+#endif
 		const Point hotpoint = GetHotpointPosition(*surface, hotpointPosition);
 		newCursor = SDLCursorUniquePtr { SDL_CreateColorCursor(surface, hotpoint.x, hotpoint.y) };
 	} else {
@@ -84,8 +87,16 @@ bool SetHardwareCursor(SDL_Surface *surface, HotpointPosition hotpointPosition)
 
 		SDLSurfaceUniquePtr scaledSurface = SDLWrap::CreateRGBSurfaceWithFormat(0, scaledSize.width, scaledSize.height, 32, SDL_PIXELFORMAT_ARGB8888);
 		if (ShouldUseBilinearScaling()) {
+#if LOG_HWCURSOR
+			Log("hwcursor: SetHardwareCursorFromSurface {}x{} scaled to {}x{} using bilinear scaling",
+			    size.width, size.height, scaledSize.width, scaledSize.height);
+#endif
 			BilinearScale32(converted.get(), scaledSurface.get());
 		} else {
+#if LOG_HWCURSOR
+			Log("hwcursor: SetHardwareCursorFromSurface {}x{} scaled to {}x{} using nearest neighbour scaling",
+			    size.width, size.height, scaledSize.width, scaledSize.height);
+#endif
 			SDL_BlitScaled(converted.get(), nullptr, scaledSurface.get(), nullptr);
 		}
 		const Point hotpoint = GetHotpointPosition(*scaledSurface, hotpointPosition);
@@ -98,13 +109,13 @@ bool SetHardwareCursor(SDL_Surface *surface, HotpointPosition hotpointPosition)
 	return true;
 }
 
-bool SetHardwareCursor(ClxSprite sprite, HotpointPosition hotpointPosition)
+bool SetHardwareCursorFromClxSprite(ClxSprite sprite, HotpointPosition hotpointPosition)
 {
 	OwnedSurface surface { sprite.width(), sprite.height() };
 	SDL_SetSurfacePalette(surface.surface, Palette.get());
 	SDL_SetColorKey(surface.surface, SDL_TRUE, 0);
 	RenderClxSprite(surface, sprite, { 0, 0 });
-	return SetHardwareCursor(surface.surface, hotpointPosition);
+	return SetHardwareCursorFromSurface(surface.surface, hotpointPosition);
 }
 
 bool SetHardwareCursorFromSprite(int pcurs)
@@ -132,7 +143,8 @@ bool SetHardwareCursorFromSprite(int pcurs)
 	SDL_SetColorKey(out.surface, 1, TransparentColor);
 	DrawSoftwareCursor(out, { outlineWidth, size.height - outlineWidth }, pcurs);
 
-	const bool result = SetHardwareCursor(out.surface, isItem ? HotpointPosition::Center : HotpointPosition::TopLeft);
+	const bool result = SetHardwareCursorFromSurface(
+	    out.surface, isItem ? HotpointPosition::Center : HotpointPosition::TopLeft);
 	return result;
 }
 #endif
@@ -150,16 +162,25 @@ void SetHardwareCursor(CursorInfo cursorInfo)
 	CurrentCursorInfo = cursorInfo;
 	switch (cursorInfo.type()) {
 	case CursorType::Game:
+#if LOG_HWCURSOR
+		Log("hwcursor: SetHardwareCursor Game");
+#endif
 		CurrentCursorInfo.SetEnabled(SetHardwareCursorFromSprite(cursorInfo.id()));
 		break;
 	case CursorType::UserInterface:
+#if LOG_HWCURSOR
+		Log("hwcursor: SetHardwareCursor UserInterface");
+#endif
 		// ArtCursor is null while loading the game on the progress screen,
 		// called via palette fade from ShowProgress.
 		CurrentCursorInfo.SetEnabled(
 		    ArtCursor && IsCursorSizeAllowed(Size { (*ArtCursor)[0].width(), (*ArtCursor)[0].height() })
-		    && SetHardwareCursor((*ArtCursor)[0], HotpointPosition::TopLeft));
+		    && SetHardwareCursorFromClxSprite((*ArtCursor)[0], HotpointPosition::TopLeft));
 		break;
 	case CursorType::Unknown:
+#if LOG_HWCURSOR
+		Log("hwcursor: SetHardwareCursor Unknown");
+#endif
 		CurrentCursorInfo.SetEnabled(false);
 		break;
 	}
