@@ -491,7 +491,12 @@ void UiHandleEvents(SDL_Event *event)
 		} else if (IsAnyOf(event->window.event, SDL_WINDOWEVENT_HIDDEN, SDL_WINDOWEVENT_MINIMIZED)) {
 			gbActive = false;
 		} else if (event->window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
-			ReinitializeHardwareCursor();
+			// We reinitialize immediately (by calling `DoReinitializeHardwareCursor` instead of `ReinitializeHardwareCursor`)
+			// because the cursor's Enabled state may have changed, resulting in changes to visibility.
+			//
+			// For example, if the previous size was too large for a hardware cursor then it was invisible
+			// but may now become visible.
+			DoReinitializeHardwareCursor();
 		} else if (event->window.event == SDL_WINDOWEVENT_FOCUS_LOST) {
 			music_mute();
 		} else if (event->window.event == SDL_WINDOWEVENT_FOCUS_GAINED) {
