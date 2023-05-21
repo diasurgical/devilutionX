@@ -12,10 +12,10 @@ else()
 endif()
 include(FetchContent)
 if(NXDK)
-  # branch: nxdk-v9.1.0
+  # branch: nxdk-v10.0.0
   FetchContent_Declare(libfmt
-    URL https://github.com/diasurgical/fmt/archive/f69d48bf4049bbdfa74afca02fac3c81bb609dc8.tar.gz
-    URL_HASH MD5=310c79c7a5cda3ad8f4e0d44d9fc1c57
+    URL https://github.com/diasurgical/fmt/archive/e421e854efcb21ee641349bab604d91b34af26b8.tar.gz
+    URL_HASH MD5=ebaac86fca56d4ef4a162ef125433f6f
   )
 else()
   FetchContent_Declare(libfmt
