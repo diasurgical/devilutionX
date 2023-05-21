@@ -295,6 +295,10 @@ void ShowProgress(interface_mode uMsg)
 		interface_msg_pump();
 		ClearScreenBuffer();
 		scrollrt_draw_game_screen();
+
+		if (IsHardwareCursor())
+			SetHardwareCursorVisible(false);
+
 		BlackPalette();
 
 		// Blit the background once and then free it.
@@ -314,9 +318,6 @@ void ShowProgress(interface_mode uMsg)
 			}
 		}
 		FreeCutsceneBackground();
-
-		if (IsHardwareCursor())
-			SetHardwareCursorVisible(false);
 
 		PaletteFadeIn(8);
 		IncProgress();

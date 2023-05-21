@@ -331,11 +331,11 @@ void UiOnBackgroundChange()
 	fadeTc = 0;
 	fadeValue = 0;
 
+	BlackPalette();
+
 	if (IsHardwareCursorEnabled() && ArtCursor && ControlDevice == ControlTypes::KeyboardAndMouse && GetCurrentCursorInfo().type() != CursorType::UserInterface) {
 		SetHardwareCursor(CursorInfo::UserInterfaceCursor());
 	}
-
-	BlackPalette();
 
 	SDL_FillRect(DiabloUiSurface(), nullptr, 0x000000);
 	if (DiabloUiSurface() == PalSurface)
@@ -749,8 +749,10 @@ void UiFadeIn()
 			fadeValue = 256;
 			fadeTc = 0;
 		}
-		if (fadeValue != prevFadeValue)
-			SetFadeLevel(fadeValue);
+		if (fadeValue != prevFadeValue) {
+			// We can skip hardware cursor update for fade level 0 (everything is black).
+			SetFadeLevel(fadeValue, /*updateHardwareCursor=*/fadeValue != 0);
+		}
 	}
 
 	if (DiabloUiSurface() == PalSurface)
@@ -796,8 +798,9 @@ void UiPollAndRender(std::optional<tl::function_ref<bool(SDL_Event &)>> eventHan
 	DrawMouse();
 	UiFadeIn();
 
-	// Must happen after the very first UiFadeIn, which sets the cursor.
-	if (IsHardwareCursor())
+	// Must happen after at least one call to `UiFadeIn` with non-zero fadeValue.
+	// `UiFadeIn` calls `SetFadeLevel` which reinitializes the hardware cursor.
+	if (IsHardwareCursor() && fadeValue != 0)
 		SetHardwareCursorVisible(ControlDevice == ControlTypes::KeyboardAndMouse);
 
 #ifdef __3DS__

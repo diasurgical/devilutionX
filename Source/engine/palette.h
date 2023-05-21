@@ -60,7 +60,7 @@ void ApplyGamma(std::array<SDL_Color, 256> &dst, const std::array<SDL_Color, 256
 void DecreaseGamma();
 int UpdateGamma(int gamma);
 void BlackPalette();
-void SetFadeLevel(int fadeval);
+void SetFadeLevel(int fadeval, bool updateHardwareCursor = true);
 /**
  * @brief Fade screen from black
  * @param fr Steps per 50ms
