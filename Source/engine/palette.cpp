@@ -274,7 +274,7 @@ int UpdateGamma(int gamma)
 	return 130 - *sgOptions.Graphics.gammaCorrection;
 }
 
-void SetFadeLevel(int fadeval)
+void SetFadeLevel(int fadeval, bool updateHardwareCursor)
 {
 	if (HeadlessMode)
 		return;
@@ -285,14 +285,17 @@ void SetFadeLevel(int fadeval)
 		system_palette[i].b = (fadeval * logical_palette[i].b) / 256;
 	}
 	palette_update();
-	if (IsHardwareCursor()) {
+	if (updateHardwareCursor && IsHardwareCursor()) {
 		ReinitializeHardwareCursor();
 	}
 }
 
 void BlackPalette()
 {
-	SetFadeLevel(0);
+	// With fade level 0 updating the hardware cursor may be redundant
+	// since everything is black. The caller should update the cursor
+	// when needed instead.
+	SetFadeLevel(0, /*updateHardwareCursor=*/false);
 }
 
 void PaletteFadeIn(int fr)
@@ -310,7 +313,8 @@ void PaletteFadeIn(int fr)
 		uint32_t prevFadeValue = 255;
 		for (uint32_t i = 0; i < 256; i = fr * (SDL_GetTicks() - tc) / 50) {
 			if (i != prevFadeValue) {
-				SetFadeLevel(i);
+				// We can skip hardware cursor update for fade level 0 (everything is black).
+				SetFadeLevel(i, /*updateHardwareCursor=*/i != 0u);
 				prevFadeValue = i;
 			}
 			BltFast(nullptr, nullptr);
