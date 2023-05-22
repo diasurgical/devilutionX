@@ -841,6 +841,15 @@ bool IsTownerPresent(_talker_id npc)
 	}
 }
 
+Towner* GetTowner(_talker_id type)
+{
+	for (Towner& towner : Towners) {
+		if (towner._ttype == type)
+			return &towner;
+	}
+	return nullptr;
+}
+
 void InitTowners()
 {
 	assert(!CowSprites);

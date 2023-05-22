@@ -2026,7 +2026,9 @@ void TalkEnter()
 	}
 
 	if (stextsel == sn - 2) {
-		InitQTextMsg(Towners[talker].gossip);
+		Towner *target = GetTowner(talker);
+		assert(target != nullptr);
+		InitQTextMsg(target->gossip);
 		return;
 	}
 
