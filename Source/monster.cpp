@@ -1415,7 +1415,7 @@ void MonsterTalk(Monster &monster)
 			NetSendCmdQuest(true, Quests[Q_GARBUD]);
 		}
 		if (monster.talkMsg == TEXT_GARBUD2 && (monster.flags & MFLAG_QUEST_COMPLETE) == 0) {
-			SpawnItem(monster, monster.position.tile + Displacement { 1, 1 }, true);
+			SpawnItem(monster, monster.position.tile + Displacement { 1, 1 }, false, true);
 			monster.flags |= MFLAG_QUEST_COMPLETE;
 			Quests[Q_GARBUD]._qvar1 = QS_GHARBAD_FIRST_ITEM_SPAWNED;
 			NetSendCmdQuest(true, Quests[Q_GARBUD]);

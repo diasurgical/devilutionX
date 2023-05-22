@@ -3228,7 +3228,7 @@ Item *SpawnUnique(_unique_items uid, Point position, bool sendmsg /*= true*/)
 	return &item;
 }
 
-void SpawnItem(Monster &monster, Point position, bool sendmsg)
+void SpawnItem(Monster &monster, Point position, bool sendmsg, bool spawn /*= false*/)
 {
 	_item_indexes idx;
 	bool onlygood = true;
@@ -3285,6 +3285,8 @@ void SpawnItem(Monster &monster, Point position, bool sendmsg)
 
 	if (sendmsg)
 		NetSendCmdPItem(false, CMD_DROPITEM, item.position, item);
+	if (spawn)
+		NetSendCmdPItem(false, CMD_SPAWNITEM, item.position, item);
 }
 
 void CreateRndItem(Point position, bool onlygood, bool sendmsg, bool delta)
