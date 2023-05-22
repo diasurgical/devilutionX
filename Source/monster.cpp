@@ -1408,19 +1408,6 @@ void MonsterTalk(Monster &monster)
 	if (effect_is_playing(Speeches[monster.talkMsg].sfxnr))
 		return;
 	InitQTextMsg(monster.talkMsg);
-	if (monster.uniqueType == UniqueMonsterType::Garbud) {
-		if (monster.talkMsg == TEXT_GARBUD1) {
-			Quests[Q_GARBUD]._qactive = QUEST_ACTIVE;
-			Quests[Q_GARBUD]._qlog = true;
-			NetSendCmdQuest(true, Quests[Q_GARBUD]);
-		}
-		if (monster.talkMsg == TEXT_GARBUD2 && (monster.flags & MFLAG_QUEST_COMPLETE) == 0) {
-			SpawnItem(monster, monster.position.tile + Displacement { 1, 1 }, false, true);
-			monster.flags |= MFLAG_QUEST_COMPLETE;
-			Quests[Q_GARBUD]._qvar1 = QS_GHARBAD_FIRST_ITEM_SPAWNED;
-			NetSendCmdQuest(true, Quests[Q_GARBUD]);
-		}
-	}
 	if (monster.uniqueType == UniqueMonsterType::SnotSpill) {
 		if (monster.talkMsg == TEXT_BANNER10 && (monster.flags & MFLAG_QUEST_COMPLETE) == 0) {
 			ObjChangeMap(SetPiece.position.x, SetPiece.position.y, SetPiece.position.x + (SetPiece.size.width / 2) + 2, SetPiece.position.y + (SetPiece.size.height / 2) - 2);
@@ -4494,7 +4481,7 @@ void TalktoMonster(Player &player, Monster &monster)
 {
 	monster.mode = MonsterMode::Talk;
 
-	if (IsNoneOf(monster.ai, MonsterAIID::Snotspill, MonsterAIID::Lachdanan, MonsterAIID::Zhar)) {
+	if (IsNoneOf(monster.ai, MonsterAIID::Snotspill, MonsterAIID::Lachdanan, MonsterAIID::Zhar, MonsterAIID::Gharbad)) {
 		return;
 	}
 
@@ -4528,6 +4515,20 @@ void TalktoMonster(Player &player, Monster &monster)
 			CreateTypeItem(monster.position.tile + Displacement { 1, 1 }, false, ItemType::Misc, IMISC_BOOK, false, false, true);
 			monster.flags |= MFLAG_QUEST_COMPLETE;
 			NetSendCmdQuest(true, Quests[Q_ZHAR]);
+		}
+	}
+
+	if (monster.uniqueType == UniqueMonsterType::Garbud && MyPlayer == &player) {
+		if (monster.talkMsg == TEXT_GARBUD1) {
+			Quests[Q_GARBUD]._qactive = QUEST_ACTIVE;
+			Quests[Q_GARBUD]._qlog = true;
+			NetSendCmdQuest(true, Quests[Q_GARBUD]);
+		}
+		if (monster.talkMsg == TEXT_GARBUD2 && (monster.flags & MFLAG_QUEST_COMPLETE) == 0) {
+			SpawnItem(monster, monster.position.tile + Displacement { 1, 1 }, false, true);
+			monster.flags |= MFLAG_QUEST_COMPLETE;
+			Quests[Q_GARBUD]._qvar1 = QS_GHARBAD_FIRST_ITEM_SPAWNED;
+			NetSendCmdQuest(true, Quests[Q_GARBUD]);
 		}
 	}
 }
