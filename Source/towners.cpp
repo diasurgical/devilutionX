@@ -39,15 +39,20 @@ void NewTownerAnim(Towner &towner, ClxSpriteList sprites, uint8_t numFrames, int
 	towner._tAnimDelay = delay;
 }
 
-void InitTownerInfo(int i, const TownerData &townerData)
+void InitTownerInfo(const TownerData &townerData)
 {
-	auto &towner = Towners[i];
+	// _talker_id is used to select the active towner when selecting store dialog options, if the
+	// chosen option is Gossip this ends up being used in a lookup later based on a raw cast. Use
+	// the same basis for indexing here so that games without The Butcher quest (and as a result
+	// without the dead guy in town) don't end up using the wrong dialog for the remaining towners.
+	uint8_t townerIndex = static_cast<uint8_t>(townerData.type);
+	auto &towner = Towners[townerIndex];
 
 	towner._ttype = townerData.type;
 	towner.position = townerData.position;
 	towner.talk = townerData.talk;
 
-	dMonster[towner.position.x][towner.position.y] = i + 1;
+	dMonster[towner.position.x][towner.position.y] = townerIndex + 1;
 
 	townerData.init(towner, townerData);
 }
@@ -847,13 +852,11 @@ void InitTowners()
 
 	CowSprites.emplace(LoadCelSheet("towners\\animals\\cow", 128));
 
-	int i = 0;
 	for (const auto &townerData : TownersData) {
 		if (!IsTownerPresent(townerData.type))
 			continue;
 
-		InitTownerInfo(i, townerData);
-		i++;
+		InitTownerInfo(townerData);
 	}
 }
 
