@@ -44,6 +44,7 @@ bool touch_initialized = false;
 unsigned int simulated_click_start_time[TOUCH_PORT_MAX_NUM][2]; // initiation time of last simulated left or right click (zero if no click)
 bool direct_touch = true;                                       // pointer jumps to finger
 Point Mouse;                                                    // always reflects current mouse position
+uint32_t IgnoreEvent = SDL_USEREVENT;                           // custom event type to signal events that should be ignored
 
 enum {
 	// clang-format off
@@ -94,6 +95,8 @@ void InitTouch()
 	visible_width = (current.h * devilution::gnScreenWidth) / devilution::gnScreenHeight;
 	x_borderwidth = (current.w - visible_width) / 2;
 	y_borderwidth = (current.h - visible_height) / 2;
+
+	IgnoreEvent = SDL_RegisterEvents(1);
 }
 
 void SetMouseButtonEvent(SDL_Event &event, uint32_t type, uint8_t button, Point position)
@@ -440,8 +443,7 @@ void HandleTouchEvent(SDL_Event *event, Point mousePosition)
 	}
 	PreprocessEvents(event);
 	if (event->type == SDL_FINGERDOWN || event->type == SDL_FINGERUP || event->type == SDL_FINGERMOTION) {
-		event->type = SDL_USEREVENT;
-		event->user.code = -1; // ensure this event is ignored;
+		event->type = IgnoreEvent;
 	}
 }
 
