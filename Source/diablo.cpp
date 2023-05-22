@@ -710,6 +710,11 @@ void GameEventHandler(const SDL_Event &event, uint16_t modState)
 		return;
 	}
 
+	// Ignore invalid userevents
+	if (event.type == SDL_USEREVENT && event.user.code < 0) {
+		return;
+	}
+
 	switch (event.type) {
 	case SDL_KEYDOWN: {
 #ifdef USE_SDL1
