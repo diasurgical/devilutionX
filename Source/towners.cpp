@@ -648,7 +648,6 @@ void TalkToFarmer(Player &player, Towner &farmer)
 		InitQTextMsg(TEXT_FARMER4);
 		SpawnRewardItem(IDI_AURIC, farmer.position + Displacement { 1, 0 }, true);
 		quest._qactive = QUEST_HIVE_DONE;
-		quest._qlog = false;
 		if (gbIsMultiplayer)
 			NetSendCmdQuest(true, quest);
 		break;
@@ -751,7 +750,6 @@ void TalkToGirl(Player &player, Towner &girl)
 	if (quest._qactive != QUEST_DONE && RemoveInventoryItemById(player, IDI_THEODORE)) {
 		InitQTextMsg(TEXT_GIRL4);
 		CreateAmulet(girl.position, 13, true, false);
-		quest._qlog = false;
 		quest._qactive = QUEST_DONE;
 		auto curFrame = girl._tAnimFrame;
 		LoadTownerAnimations(girl, "towners\\girl\\girls1", 20, 6);

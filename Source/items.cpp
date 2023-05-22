@@ -3126,7 +3126,6 @@ uint8_t PlaceItemInWorld(Item &&item, WorldTilePosition position)
 	if (CornerStone.isAvailable() && position == CornerStone.position) {
 		CornerStone.item = item_;
 		InitQTextMsg(TEXT_CORNSTN);
-		Quests[Q_CORNSTN]._qlog = false;
 		Quests[Q_CORNSTN]._qactive = QUEST_DONE;
 	}
 
