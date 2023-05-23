@@ -750,11 +750,9 @@ void TalkToGirl(Player &player, Towner &girl)
 
 	if (quest._qactive != QUEST_DONE && RemoveInventoryItemById(player, IDI_THEODORE)) {
 		InitQTextMsg(TEXT_GIRL4);
-		CreateAmulet(girl.position, 13, true, false);
+		CreateAmulet(girl.position, 13, false, false, true);
 		quest._qactive = QUEST_DONE;
-		auto curFrame = girl._tAnimFrame;
-		LoadTownerAnimations(girl, "towners\\girl\\girls1", 20, 6);
-		girl._tAnimFrame = std::min<uint8_t>(curFrame, girl._tAnimLen - 1);
+		UpdateGirlAnimAfterQuestComplete();
 		if (gbIsMultiplayer)
 			NetSendCmdQuest(true, quest);
 		return;
@@ -915,6 +913,16 @@ void TalkToTowner(Player &player, int t)
 	}
 
 	towner.talk(player, towner);
+}
+
+void UpdateGirlAnimAfterQuestComplete()
+{
+	Towner *girl = GetTowner(TOWN_GIRL);
+	if (girl == nullptr || !girl->ownedAnim)
+		return; // Girl is not spawned in town yet
+	auto curFrame = girl->_tAnimFrame;
+	LoadTownerAnimations(*girl, "towners\\girl\\girls1", 20, 6);
+	girl->_tAnimFrame = std::min<uint8_t>(curFrame, girl->_tAnimLen - 1);
 }
 
 #ifdef _DEBUG

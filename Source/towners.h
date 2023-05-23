@@ -80,6 +80,8 @@ void FreeTownerGFX();
 void ProcessTowners();
 void TalkToTowner(Player &player, int t);
 
+void UpdateGirlAnimAfterQuestComplete();
+
 #ifdef _DEBUG
 bool DebugTalkToTowner(std::string targetName);
 #endif

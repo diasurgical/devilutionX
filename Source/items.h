@@ -549,7 +549,7 @@ void MakeGoldStack(Item &goldItem, int value);
 int ItemNoFlippy();
 void CreateSpellBook(Point position, SpellID ispell, bool sendmsg, bool delta);
 void CreateMagicArmor(Point position, ItemType itemType, int icurs, bool sendmsg, bool delta);
-void CreateAmulet(Point position, int lvl, bool sendmsg, bool delta);
+void CreateAmulet(Point position, int lvl, bool sendmsg, bool delta, bool spawn = false);
 void CreateMagicWeapon(Point position, ItemType itemType, int icurs, bool sendmsg, bool delta);
 bool GetItemRecord(uint32_t nSeed, uint16_t wCI, int nIndex);
 void SetItemRecord(uint32_t nSeed, uint16_t wCI, int nIndex);
