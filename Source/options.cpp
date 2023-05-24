@@ -29,6 +29,7 @@
 #include "utils/language.h"
 #include "utils/log.hpp"
 #include "utils/paths.h"
+#include "utils/sdl_compat.h"
 #include "utils/stdcompat/algorithm.hpp"
 #include "utils/str_cat.hpp"
 #include "utils/str_split.hpp"
@@ -1484,12 +1485,12 @@ void KeymapperOptions::KeyReleased(uint32_t key) const
 
 bool KeymapperOptions::IsTextEntryKey(SDL_Keycode vkey) const
 {
-	return ((vkey >= 0 && vkey < 128) || vkey == SDLK_LSHIFT || vkey == SDLK_RSHIFT || vkey == SDLK_KP_BACKSPACE);
+	return ((vkey >= 0 && vkey < 128) || vkey == SDLC_KEYSTATE_LEFTSHIFT || vkey == SDLC_KEYSTATE_RIGHTSHIFT || vkey == SDLK_BACKSPACE);
 }
 
 bool KeymapperOptions::IsNumberEntryKey(SDL_Keycode vkey) const
 {
-	return ((vkey >= SDLK_0 && vkey <= SDLK_9) || vkey == SDLK_KP_BACKSPACE);
+	return ((vkey >= SDLK_0 && vkey <= SDLK_9) || vkey == SDLK_BACKSPACE);
 }
 
 string_view KeymapperOptions::KeyNameForAction(string_view actionName) const
