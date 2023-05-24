@@ -464,17 +464,6 @@ void UiHandleEvents(SDL_Event *event)
 		return;
 	}
 
-	SDL_Keycode vkey = event->key.keysym.sym;
-	remap_keyboard_key(&vkey);
-	bool textKey = sgOptions.Keymapper.IsTextEntryKey(vkey);
-	if (vkey >= SDLK_a && vkey <= SDLK_z)
-		vkey -= 'a' - 'A';
-
-	if (event->type == SDL_KEYUP && sgOptions.Keymapper.KeyForAction("Screenshot") == vkey && (!textInputActive || !textKey)) {
-		PrintScreen(vkey);
-		return;
-	}
-
 	if (event->type == SDL_KEYDOWN && event->key.keysym.sym == SDLK_RETURN) {
 		const Uint8 *state = SDLC_GetKeyState();
 		if (state[SDLC_KEYSTATE_LALT] != 0 || state[SDLC_KEYSTATE_RALT] != 0) {
