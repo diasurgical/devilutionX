@@ -1467,7 +1467,7 @@ void KeymapperOptions::KeyPressed(uint32_t key) const
 void KeymapperOptions::KeyReleased(SDL_Keycode key) const
 {
 	if (key >= SDLK_a && key <= SDLK_z) {
-		key -= static_cast<SDL_Keycode>('a' - 'A');
+		key = static_cast<SDL_Keycode>(static_cast<Sint32>(key) - ('a' - 'A'));
 	}
 	auto it = keyIDToAction.find(key);
 	if (it == keyIDToAction.end())
