@@ -1467,7 +1467,7 @@ void KeymapperOptions::KeyPressed(uint32_t key) const
 void KeymapperOptions::KeyReleased(SDL_Keycode key) const
 {
 	if (key >= SDLK_a && key <= SDLK_z) {
-		key -= 'a' - 'A';
+		key -= static_cast<SDL_Keycode>('a' - 'A');
 	}
 	auto it = keyIDToAction.find(key);
 	if (it == keyIDToAction.end())
@@ -1485,7 +1485,7 @@ void KeymapperOptions::KeyReleased(SDL_Keycode key) const
 
 bool KeymapperOptions::IsTextEntryKey(SDL_Keycode vkey) const
 {
-	return ((vkey >= 0 && vkey < 128) || vkey == SDLC_KEYSTATE_LEFTSHIFT || vkey == SDLC_KEYSTATE_RIGHTSHIFT || vkey == SDLK_BACKSPACE);
+	return ((static_cast<Sint32>(vkey) >= 0 && static_cast<Sint32>(vkey) < 128) || vkey == SDLC_KEYSTATE_LEFTSHIFT || vkey == SDLC_KEYSTATE_RIGHTSHIFT || vkey == SDLK_BACKSPACE);
 }
 
 bool KeymapperOptions::IsNumberEntryKey(SDL_Keycode vkey) const
