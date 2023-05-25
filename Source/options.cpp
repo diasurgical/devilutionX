@@ -29,7 +29,6 @@
 #include "utils/language.h"
 #include "utils/log.hpp"
 #include "utils/paths.h"
-#include "utils/sdl_compat.h"
 #include "utils/stdcompat/algorithm.hpp"
 #include "utils/str_cat.hpp"
 #include "utils/str_split.hpp"

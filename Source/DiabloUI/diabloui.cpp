@@ -11,7 +11,6 @@
 #include "controls/input.h"
 #include "controls/menu_controls.h"
 #include "controls/plrctrls.h"
-#include "controls/remap_keyboard.h"
 #include "diablo.h"
 #include "discord/discord.h"
 #include "engine/assets.hpp"
