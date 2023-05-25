@@ -1831,13 +1831,15 @@ void Player::RestorePartialMana()
 	}
 }
 
-void Player::ReadySpellFromEquipment(inv_body_loc bodyLocation)
+void Player::ReadySpellFromEquipment(inv_body_loc bodyLocation, bool forceSpell)
 {
 	auto &item = InvBody[bodyLocation];
 	if (item._itype == ItemType::Staff && IsValidSpell(item._iSpell) && item._iCharges > 0) {
-		_pRSpell = item._iSpell;
-		_pRSplType = SpellType::Charges;
-		RedrawEverything();
+		if (forceSpell || _pRSpell == SpellID::Invalid || _pRSplType == SpellType::Invalid) {
+			_pRSpell = item._iSpell;
+			_pRSplType = SpellType::Charges;
+			RedrawEverything();
+		}
 	}
 }
 
