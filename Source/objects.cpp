@@ -2503,6 +2503,8 @@ void OperateShrineStone(Player &player)
 			item._iCharges = item._iMaxCharges;
 	}
 
+	CalcPlrInv(player, true);
+
 	RedrawEverything();
 
 	InitDiabloMsg(EMSG_SHRINE_STONE);
