@@ -1485,7 +1485,7 @@ void KeymapperOptions::KeyReleased(SDL_Keycode key) const
 
 bool KeymapperOptions::IsTextEntryKey(SDL_Keycode vkey) const
 {
-	return ((static_cast<Sint32>(vkey) >= 0 && static_cast<Sint32>(vkey) < 128) || vkey == SDLC_KEYSTATE_LEFTSHIFT || vkey == SDLC_KEYSTATE_RIGHTSHIFT || vkey == SDLK_BACKSPACE);
+	return IsAnyOf(vkey, SDLK_ESCAPE, SDLK_RETURN, SDLK_KP_ENTER, SDLK_BACKSPACE, SDLK_DOWN, SDLK_UP) || (vkey >= SDLK_SPACE && vkey <= SDLK_z);
 }
 
 bool KeymapperOptions::IsNumberEntryKey(SDL_Keycode vkey) const
