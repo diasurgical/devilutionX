@@ -1907,7 +1907,7 @@ size_t OnChangePlayerItems(const TCmd *pCmd, size_t pnum)
 		CheckInvSwap(player, bodyLocation);
 	}
 
-	player.ReadySpellFromEquipment(bodyLocation);
+	player.ReadySpellFromEquipment(bodyLocation, message.forceSpell);
 
 	return sizeof(message);
 }
@@ -2990,7 +2990,7 @@ void NetSendCmdPItem(bool bHiPri, _cmd_id bCmd, Point position, const Item &item
 		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
 }
 
-void NetSendCmdChItem(bool bHiPri, uint8_t bLoc)
+void NetSendCmdChItem(bool bHiPri, uint8_t bLoc, bool forceSpellChange)
 {
 	TCmdChItem cmd {};
 
@@ -2998,6 +2998,7 @@ void NetSendCmdChItem(bool bHiPri, uint8_t bLoc)
 
 	cmd.bCmd = CMD_CHANGEPLRITEMS;
 	cmd.bLoc = bLoc;
+	cmd.forceSpell = forceSpellChange;
 	PrepareItemForNetwork(item, cmd);
 
 	if (bHiPri)

@@ -700,8 +700,9 @@ struct Player {
 	/**
 	 * @brief Sets the readied spell to the spell in the specified equipment slot. Does nothing if the item does not have a valid spell.
 	 * @param bodyLocation - the body location whose item will be checked for the spell.
+	 * @param forceSpell - if true, always change active spell, if false, only when current spell slot is empty
 	 */
-	void ReadySpellFromEquipment(inv_body_loc bodyLocation);
+	void ReadySpellFromEquipment(inv_body_loc bodyLocation, bool forceSpell);
 
 	/**
 	 * @brief Does the player currently have a ranged weapon equipped?
