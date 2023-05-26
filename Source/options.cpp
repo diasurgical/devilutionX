@@ -1463,20 +1463,33 @@ void KeymapperOptions::KeyPressed(uint32_t key) const
 	action.actionPressed();
 }
 
-void KeymapperOptions::KeyReleased(uint32_t key) const
+void KeymapperOptions::KeyReleased(SDL_Keycode key) const
 {
+	if (key >= SDLK_a && key <= SDLK_z) {
+		key = static_cast<SDL_Keycode>(static_cast<Sint32>(key) - ('a' - 'A'));
+	}
 	auto it = keyIDToAction.find(key);
 	if (it == keyIDToAction.end())
 		return; // Ignore unmapped keys.
 
 	const Action &action = it->second.get();
 
-	// Check that the action can be triggered and that the chat textbox is not
-	// open.
-	if (!action.actionReleased || (action.enable && !action.enable()) || talkflag)
+	// Check that the action can be triggered and that the chat or gold textbox is not
+	// open. If either of those textboxes are open, only return if the key can be used for entry into the box
+	if (!action.actionReleased || (action.enable && !action.enable()) || ((talkflag && IsTextEntryKey(key)) || (dropGoldFlag && IsNumberEntryKey(key))))
 		return;
 
 	action.actionReleased();
+}
+
+bool KeymapperOptions::IsTextEntryKey(SDL_Keycode vkey) const
+{
+	return IsAnyOf(vkey, SDLK_ESCAPE, SDLK_RETURN, SDLK_KP_ENTER, SDLK_BACKSPACE, SDLK_DOWN, SDLK_UP) || (vkey >= SDLK_SPACE && vkey <= SDLK_z);
+}
+
+bool KeymapperOptions::IsNumberEntryKey(SDL_Keycode vkey) const
+{
+	return ((vkey >= SDLK_0 && vkey <= SDLK_9) || vkey == SDLK_BACKSPACE);
 }
 
 string_view KeymapperOptions::KeyNameForAction(string_view actionName) const

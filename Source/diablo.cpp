@@ -440,7 +440,7 @@ void RightMouseDown(bool isShiftHeld)
 void ReleaseKey(SDL_Keycode vkey)
 {
 	remap_keyboard_key(&vkey);
-	if ((sgnTimeoutCurs != CURSOR_NONE || dropGoldFlag) && vkey != SDLK_PRINTSCREEN)
+	if (sgnTimeoutCurs != CURSOR_NONE)
 		return;
 	sgOptions.Keymapper.KeyReleased(vkey);
 }
@@ -660,7 +660,7 @@ void HandleMouseButtonUp(Uint8 button, uint16_t modState)
 		LastMouseButtonAction = MouseActionType::None;
 		sgbMouseDown = CLICK_NONE;
 	} else {
-		sgOptions.Keymapper.KeyReleased(button | KeymapperMouseButtonMask);
+		sgOptions.Keymapper.KeyReleased(static_cast<SDL_Keycode>(button | KeymapperMouseButtonMask));
 	}
 }
 

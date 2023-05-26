@@ -694,7 +694,9 @@ struct KeymapperOptions : OptionCategoryBase {
 	    unsigned index = 0);
 	void CommitActions();
 	void KeyPressed(uint32_t key) const;
-	void KeyReleased(uint32_t key) const;
+	void KeyReleased(SDL_Keycode key) const;
+	bool IsTextEntryKey(SDL_Keycode vkey) const;
+	bool IsNumberEntryKey(SDL_Keycode vkey) const;
 	string_view KeyNameForAction(string_view actionName) const;
 	uint32_t KeyForAction(string_view actionName) const;
 

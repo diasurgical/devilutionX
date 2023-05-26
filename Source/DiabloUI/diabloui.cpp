@@ -463,11 +463,6 @@ void UiHandleEvents(SDL_Event *event)
 		return;
 	}
 
-	if (event->type == SDL_KEYUP && event->key.keysym.sym == SDLK_PRINTSCREEN) {
-		PrintScreen(SDLK_PRINTSCREEN);
-		return;
-	}
-
 	if (event->type == SDL_KEYDOWN && event->key.keysym.sym == SDLK_RETURN) {
 		const Uint8 *state = SDLC_GetKeyState();
 		if (state[SDLC_KEYSTATE_LALT] != 0 || state[SDLC_KEYSTATE_RALT] != 0) {
