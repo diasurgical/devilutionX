@@ -7805,53 +7805,53 @@ msgstr "Bienvenido a la"
 
 #: Source/stores.cpp:353
 msgid "Blacksmith's shop"
-msgstr "Tienda de Herrería"
+msgstr "Herrería"
 
 #: Source/stores.cpp:354 Source/stores.cpp:708 Source/stores.cpp:1104
 #: Source/stores.cpp:1162 Source/stores.cpp:1338 Source/stores.cpp:1350
 #: Source/stores.cpp:1363
 msgid "Would you like to:"
-msgstr "Le gustaría:"
+msgstr "Te gustaría:"
 
 #: Source/stores.cpp:355
 msgid "Talk to Griswold"
-msgstr "Hablar con Griswold"
+msgstr "Hablar"
 
 #: Source/stores.cpp:356
 msgid "Buy basic items"
-msgstr "Comprar artículos básicos"
+msgstr "Comprar"
 
 #: Source/stores.cpp:357
 msgid "Buy premium items"
-msgstr "Comprar artículos premium"
+msgstr "Comprar mercancía selecta"
 
 #: Source/stores.cpp:358 Source/stores.cpp:711
 msgid "Sell items"
-msgstr "Vender artículos"
+msgstr "Vender"
 
 #: Source/stores.cpp:359
 msgid "Repair items"
-msgstr "Reparar artículos"
+msgstr "Reparar"
 
 #: Source/stores.cpp:360
 msgid "Leave the shop"
-msgstr "Salir de la tienda"
+msgstr "Dejar la herrería"
 
 #: Source/stores.cpp:409 Source/stores.cpp:768 Source/stores.cpp:1139
 msgid "I have these items for sale:"
-msgstr "Tengo estos artículos a la venta:"
+msgstr "Tengo esto a la venta:"
 
 #: Source/stores.cpp:474
 msgid "I have these premium items for sale:"
-msgstr "Tengo estos artículos premium a la venta:"
+msgstr "Ésta es mi mercancía de primera calidad:"
 
 #: Source/stores.cpp:593 Source/stores.cpp:861
 msgid "You have nothing I want."
-msgstr "No tienes nada que yo quiera."
+msgstr "No tienes nada que me interese."
 
 #: Source/stores.cpp:604 Source/stores.cpp:873
 msgid "Which item is for sale?"
-msgstr "¿Qué artículo está a la venta?"
+msgstr "¿Qué tienes a la venta?"
 
 #: Source/stores.cpp:669
 msgid "You have nothing to repair."
@@ -7859,7 +7859,7 @@ msgstr "No tienes nada que reparar."
 
 #: Source/stores.cpp:680
 msgid "Repair which item?"
-msgstr "¿Reparar qué artículo?"
+msgstr "¿Qué objeto quieres reparar?"
 
 #: Source/stores.cpp:707
 msgid "Witch's shack"
@@ -7867,19 +7867,19 @@ msgstr "Choza de la Bruja"
 
 #: Source/stores.cpp:709
 msgid "Talk to Adria"
-msgstr "Hablar con Adria"
+msgstr "Hablar"
 
 #: Source/stores.cpp:710 Source/stores.cpp:1106
 msgid "Buy items"
-msgstr "Comprar artículos"
+msgstr "Comprar"
 
 #: Source/stores.cpp:712
 msgid "Recharge staves"
-msgstr "Recargar Bastones"
+msgstr "Recargar bastones"
 
 #: Source/stores.cpp:713
 msgid "Leave the shack"
-msgstr "Deja la choza"
+msgstr "Dejar la choza"
 
 #: Source/stores.cpp:935
 msgid "You have nothing to recharge."
@@ -7887,15 +7887,15 @@ msgstr "No tienes nada que recargar."
 
 #: Source/stores.cpp:946
 msgid "Recharge which item?"
-msgstr "¿Recargar qué artículo?"
+msgstr "¿Qué objeto quieres recargar?"
 
 #: Source/stores.cpp:959
 msgid "You do not have enough gold"
-msgstr "No tiene suficiente oro"
+msgstr "No tienes oro suficiente"
 
 #: Source/stores.cpp:967
 msgid "You do not have enough room in inventory"
-msgstr "No tienes suficiente espacio en el inventario"
+msgstr "No tienes espacio suficiente en el inventario"
 
 #: Source/stores.cpp:1004
 msgid "Do we have a deal?"
@@ -7903,23 +7903,23 @@ msgstr "¿Tenemos un trato?"
 
 #: Source/stores.cpp:1007
 msgid "Are you sure you want to identify this item?"
-msgstr "¿Estás seguro de que quieres identificar este artículo?"
+msgstr "¿Seguro que quieres identificar esto?"
 
 #: Source/stores.cpp:1013
 msgid "Are you sure you want to buy this item?"
-msgstr "¿Estás seguro de que quieres comprar este artículo?"
+msgstr "¿Seguro que quieres comprar esto?"
 
 #: Source/stores.cpp:1016
 msgid "Are you sure you want to recharge this item?"
-msgstr "¿Estás seguro de que deseas recargar este artículo?"
+msgstr "¿Seguro que quieres recargar esto?"
 
 #: Source/stores.cpp:1020
 msgid "Are you sure you want to sell this item?"
-msgstr "¿Estás seguro de que quieres vender este artículo?"
+msgstr "¿Seguro que quieres vender esto?"
 
 #: Source/stores.cpp:1023
 msgid "Are you sure you want to repair this item?"
-msgstr "¿Está seguro de que desea reparar este artículo?"
+msgstr "¿Seguro que quieres reparar esto?"
 
 #: Source/stores.cpp:1037 Source/towners.cpp:152
 msgid "Wirt the Peg-legged boy"
@@ -7927,7 +7927,7 @@ msgstr "Wirt el Patapalo"
 
 #: Source/stores.cpp:1040 Source/stores.cpp:1047
 msgid "Talk to Wirt"
-msgstr "Hablar con Wirt"
+msgstr "Hablar"
 
 #: Source/stores.cpp:1041
 msgid "I have something for sale,"
@@ -7935,40 +7935,40 @@ msgstr "Tengo algo en venta,"
 
 #: Source/stores.cpp:1042
 msgid "but it will cost 50 gold"
-msgstr "pero costará 50 de oro"
+msgstr "te costará 50 de oro"
 
 #: Source/stores.cpp:1043
 msgid "just to take a look. "
-msgstr "solo para echar un vistazo. "
+msgstr "sólo echar un vistazo. "
 
 #: Source/stores.cpp:1044
 msgid "What have you got?"
-msgstr "¿Qué tienes?"
+msgstr "¿Qué es lo que tienes?"
 
 #: Source/stores.cpp:1045 Source/stores.cpp:1048 Source/stores.cpp:1165
 #: Source/stores.cpp:1353
 msgid "Say goodbye"
-msgstr "Decir adiós"
+msgstr "Despedirte"
 
 #: Source/stores.cpp:1058
 msgid "I have this item for sale:"
-msgstr "Tengo este artículo a la venta:"
+msgstr "Esto es lo que tengo:"
 
 #: Source/stores.cpp:1080
 msgid "Leave"
-msgstr "Dejar"
+msgstr "Irse"
 
 #: Source/stores.cpp:1103
 msgid "Healer's home"
-msgstr "La casa del Curandero"
+msgstr "Botica"
 
 #: Source/stores.cpp:1105
 msgid "Talk to Pepin"
-msgstr "Hablar con Pepin"
+msgstr "Hablar"
 
 #: Source/stores.cpp:1107
 msgid "Leave Healer's home"
-msgstr "Dejar la casa del Curandero"
+msgstr "Dejar la Botica"
 
 #: Source/stores.cpp:1161
 msgid "The Town Elder"
@@ -7976,11 +7976,11 @@ msgstr "El Sabio del Pueblo"
 
 #: Source/stores.cpp:1163
 msgid "Talk to Cain"
-msgstr "Hablar con Cain"
+msgstr "Hablar"
 
 #: Source/stores.cpp:1164
 msgid "Identify an item"
-msgstr "Identificar un artículo"
+msgstr "Identificar objetos"
 
 #: Source/stores.cpp:1257
 msgid "You have nothing to identify."
@@ -7988,11 +7988,11 @@ msgstr "No tienes nada que identificar."
 
 #: Source/stores.cpp:1268
 msgid "Identify which item?"
-msgstr "¿Identificac cúal artículo?"
+msgstr "¿Qué objeto quieres identificar?"
 
 #: Source/stores.cpp:1283
 msgid "This item is:"
-msgstr "Este artículo es:"
+msgstr "Este objeto es:"
 
 #: Source/stores.cpp:1286
 msgid "Done"
@@ -8020,15 +8020,15 @@ msgstr "versión"
 
 #: Source/stores.cpp:1328
 msgid "Gossip"
-msgstr "Chisme"
+msgstr "Chismorrear"
 
 #: Source/stores.cpp:1337
 msgid "Rising Sun"
-msgstr "Sol Naciente"
+msgstr "Taberna del Sol Naciente"
 
 #: Source/stores.cpp:1339
 msgid "Talk to Ogden"
-msgstr "Hablar con Ogden"
+msgstr "Hablar"
 
 #: Source/stores.cpp:1340
 msgid "Leave the tavern"
@@ -8036,11 +8036,11 @@ msgstr "Dejar la taberna"
 
 #: Source/stores.cpp:1351
 msgid "Talk to Gillian"
-msgstr "Hablar con Gillian"
+msgstr "Hablar"
 
 #: Source/stores.cpp:1352
 msgid "Access Storage"
-msgstr "Acceder al almacenamiento"
+msgstr "Examinar Alijo"
 
 #: Source/stores.cpp:1362 Source/towners.cpp:207
 msgid "Farnham the Drunk"
@@ -8048,11 +8048,11 @@ msgstr "Farnham el Borracho"
 
 #: Source/stores.cpp:1364
 msgid "Talk to Farnham"
-msgstr "Hablar con Farnham"
+msgstr "Hablar"
 
 #: Source/stores.cpp:1365
 msgid "Say Goodbye"
-msgstr "Decir Adiós"
+msgstr "Despedirte"
 
 #: Source/stores.cpp:2476
 msgid "Your gold: {:s}"
@@ -11943,7 +11943,7 @@ msgstr "Griswold el Herrero"
 
 #: Source/towners.cpp:103
 msgid "Ogden the Tavern owner"
-msgstr "Ogden el propietario de la Taberna"
+msgstr "Ogden el Tabernero"
 
 #: Source/towners.cpp:112
 msgid "Wounded Townsman"
