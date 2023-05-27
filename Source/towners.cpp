@@ -673,9 +673,8 @@ void TalkToCowFarmer(Player &player, Towner &cowFarmer)
 		SpawnUnique(UITEM_BOVINE, cowFarmer.position + Direction::SouthEast);
 		InitQTextMsg(TEXT_JERSEY8);
 		quest._qactive = QUEST_DONE;
-		auto curFrame = cowFarmer._tAnimFrame;
-		LoadTownerAnimations(cowFarmer, "towners\\farmer\\mfrmrn2", 15, 3);
-		cowFarmer._tAnimFrame = std::min<uint8_t>(curFrame, cowFarmer._tAnimLen - 1);
+		UpdateCowFarmerAnimAfterQuestComplete();
+		NetSendCmdQuest(true, quest);
 		return;
 	}
 
@@ -685,6 +684,7 @@ void TalkToCowFarmer(Player &player, Towner &cowFarmer)
 		quest._qvar1 = 1;
 		quest._qmsg = TEXT_JERSEY4;
 		quest._qlog = true;
+		NetSendCmdQuest(true, quest);
 		return;
 	}
 
@@ -923,6 +923,14 @@ void UpdateGirlAnimAfterQuestComplete()
 	auto curFrame = girl->_tAnimFrame;
 	LoadTownerAnimations(*girl, "towners\\girl\\girls1", 20, 6);
 	girl->_tAnimFrame = std::min<uint8_t>(curFrame, girl->_tAnimLen - 1);
+}
+
+void UpdateCowFarmerAnimAfterQuestComplete()
+{
+	Towner *cowFarmer = GetTowner(TOWN_COWFARM);
+	auto curFrame = cowFarmer->_tAnimFrame;
+	LoadTownerAnimations(*cowFarmer, "towners\\farmer\\mfrmrn2", 15, 3);
+	cowFarmer->_tAnimFrame = std::min<uint8_t>(curFrame, cowFarmer->_tAnimLen - 1);
 }
 
 #ifdef _DEBUG

@@ -81,6 +81,7 @@ void ProcessTowners();
 void TalkToTowner(Player &player, int t);
 
 void UpdateGirlAnimAfterQuestComplete();
+void UpdateCowFarmerAnimAfterQuestComplete();
 
 #ifdef _DEBUG
 bool DebugTalkToTowner(std::string targetName);
