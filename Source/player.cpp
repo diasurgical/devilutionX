@@ -3487,6 +3487,7 @@ void PlayDungMsgs()
 		Quests[Q_DEFILER]._qactive = QUEST_ACTIVE;
 		Quests[Q_DEFILER]._qlog = true;
 		Quests[Q_DEFILER]._qmsg = TEXT_DEFILER1;
+		NetSendCmdQuest(true, Quests[Q_DEFILER]);
 		myPlayer.pDungMsgs2 |= 1;
 	} else if (!setlevel && currlevel == 19 && !myPlayer._pLvlVisited[19] && (myPlayer.pDungMsgs2 & 4) == 0) {
 		sfxdelay = 10;
