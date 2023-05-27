@@ -30,7 +30,7 @@ jobs:
       - store_artifacts: {path: ./build/devilutionx.cia, destination: devilutionx.cia}
   amigaos-m68k:
     docker:
-      - image: amigadev/crosstools:m68k-amigaos
+      - image: amigadev/crosstools@sha256:889cb157c71911bca24adcc3aa1ed0956e9e0df940127bf953dc33896d7546f6
     working_directory: ~/repo
     steps:
       - checkout
