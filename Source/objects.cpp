@@ -1933,6 +1933,7 @@ void OperateLever(Object &object, bool sendmsg)
 	if (currlevel == 24) {
 		PlaySfxLoc(IS_CROPEN, { UberRow, UberCol });
 		Quests[Q_NAKRUL]._qactive = QUEST_DONE;
+		NetSendCmdQuest(true, Quests[Q_NAKRUL]);
 	}
 
 	if (sendmsg)
@@ -3451,6 +3452,7 @@ void OperateStoryBook(Object &storyBook)
 		Quests[Q_NAKRUL]._qactive = QUEST_ACTIVE;
 		Quests[Q_NAKRUL]._qlog = true;
 		Quests[Q_NAKRUL]._qmsg = msg;
+		NetSendCmdQuest(true, Quests[Q_NAKRUL]);
 	}
 	InitQTextMsg(msg);
 	NetSendCmdLoc(MyPlayerId, false, CMD_OPERATEOBJ, storyBook.position);
@@ -4598,6 +4600,10 @@ void DeltaSyncOpObject(Object &object)
 		break;
 	case OBJ_CAULDRON:
 		UpdateState(object, 3);
+		break;
+	case OBJ_STORYBOOK:
+	case OBJ_L5BOOKS:
+		object._oAnimFrame = object._oVar4;
 		break;
 	case OBJ_MUSHPATCH:
 		if (Quests[Q_MUSHROOM]._qvar1 >= QS_MUSHSPAWNED) {
