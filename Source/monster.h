@@ -437,6 +437,14 @@ struct Monster { // note: missing field _mAFNum
 	}
 
 	bool tryLiftGargoyle();
+
+	/**
+	 * @brief Gets the visual/shown monster mode.
+	 *
+	 * When a monster is petrified it's monster mode is changed to MonsterMode::Petrified.
+	 * But for graphics and rendering we show the old/real mode.
+	 */
+	[[nodiscard]] MonsterMode getVisualMonsterMode() const;
 };
 
 extern size_t LevelMonsterTypeCount;
