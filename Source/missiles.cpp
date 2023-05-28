@@ -2296,6 +2296,13 @@ void AddStoneCurse(Missile &missile, AddMissileParameter &parameter)
 	// Petrify the targeted monster
 	int monsterId = abs(dMonster[targetMonsterPosition->x][targetMonsterPosition->y]) - 1;
 	auto &monster = Monsters[monsterId];
+
+	if (monster.mode == MonsterMode::Petrified) {
+		// Monster is already petrified and StoneCurse doesn't stack
+		missile._miDelFlag = true;
+		return;
+	}
+
 	missile.var1 = static_cast<int>(monster.mode);
 	missile.var2 = monsterId;
 	monster.petrify();

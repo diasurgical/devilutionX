@@ -669,6 +669,9 @@ void LoadMonster(LoadHelper *file, Monster &monster)
 
 	// Omit pointer name;
 
+	if (monster.mode == MonsterMode::Petrified)
+		monster.animInfo.isPetrified = true;
+
 	if (gbSkipSync)
 		return;
 

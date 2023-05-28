@@ -4146,7 +4146,7 @@ void SyncMonsterAnim(Monster &monster)
 	}
 	MonsterGraphic graphic = MonsterGraphic::Stand;
 
-	switch (monster.mode) {
+	switch (monster.getVisualMonsterMode()) {
 	case MonsterMode::Stand:
 	case MonsterMode::Delay:
 	case MonsterMode::Talk:
@@ -4637,7 +4637,7 @@ void Monster::petrify()
 
 bool Monster::isWalking() const
 {
-	switch (mode) {
+	switch (getVisualMonsterMode()) {
 	case MonsterMode::MoveNorthwards:
 	case MonsterMode::MoveSouthwards:
 	case MonsterMode::MoveSideways:
@@ -4697,6 +4697,21 @@ bool Monster::tryLiftGargoyle()
 		return true;
 	}
 	return false;
+}
+
+MonsterMode Monster::getVisualMonsterMode() const
+{
+	if (mode != MonsterMode::Petrified)
+		return mode;
+	size_t monsterId = this->getId();
+	for (auto &missile : Missiles) {
+		// Search the missile that will restore the original monster mode and use the saved/original monster mode from it
+		if (missile._mitype == MissileID::StoneCurse && missile.var2 == monsterId) {
+			return static_cast<MonsterMode>(missile.var1);
+		}
+	}
+	assert("getVisualMonsterMode: Found a monster that is infinited petrified (bug)");
+	return MonsterMode::Petrified;
 }
 
 unsigned int Monster::toHitSpecial(_difficulty difficulty) const
