@@ -4480,11 +4480,8 @@ void TalktoMonster(Player &player, Monster &monster)
 {
 	monster.mode = MonsterMode::Talk;
 
-	if (IsNoneOf(monster.ai, MonsterAIID::Snotspill, MonsterAIID::Lachdanan, MonsterAIID::Zhar, MonsterAIID::Gharbad)) {
-		return;
-	}
-
-	if (Quests[Q_LTBANNER].IsAvailable() && Quests[Q_LTBANNER]._qvar1 == 2) {
+	if (monster.uniqueType == UniqueMonsterType::SnotSpill
+	    && Quests[Q_LTBANNER].IsAvailable() && Quests[Q_LTBANNER]._qvar1 == 2) {
 		if (RemoveInventoryItemById(player, IDI_BANNER)) {
 			Quests[Q_LTBANNER]._qactive = QUEST_DONE;
 			monster.talkMsg = TEXT_BANNER12;
@@ -4492,7 +4489,8 @@ void TalktoMonster(Player &player, Monster &monster)
 			NetSendCmdQuest(true, Quests[Q_LTBANNER]);
 		}
 	}
-	if (Quests[Q_VEIL].IsAvailable() && monster.talkMsg >= TEXT_VEIL9) {
+	if (monster.uniqueType == UniqueMonsterType::Lachdan
+	    && Quests[Q_VEIL].IsAvailable() && monster.talkMsg >= TEXT_VEIL9) {
 		if (RemoveInventoryItemById(player, IDI_GLDNELIX) && (monster.flags & MFLAG_QUEST_COMPLETE) == 0) {
 			monster.talkMsg = TEXT_VEIL11;
 			monster.goal = MonsterGoal::Inquiring;
@@ -4710,7 +4708,6 @@ MonsterMode Monster::getVisualMonsterMode() const
 			return static_cast<MonsterMode>(missile.var1);
 		}
 	}
-	assert("getVisualMonsterMode: Found a monster that is infinited petrified (bug)");
 	return MonsterMode::Petrified;
 }
 
