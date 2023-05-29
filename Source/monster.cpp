@@ -3651,7 +3651,9 @@ void M_StartHit(Monster &monster, const Player &player, int dam)
 		monster.enemy = player.getId();
 		monster.enemyPosition = player.position.future;
 		monster.flags &= ~MFLAG_TARGETS_MONSTER;
-		monster.direction = GetMonsterDirection(monster);
+		if (monster.mode != MonsterMode::Petrified) {
+			monster.direction = GetMonsterDirection(monster);
+		}
 	}
 
 	M_StartHit(monster, dam);
