@@ -671,11 +671,6 @@ void LoadMonster(LoadHelper *file, Monster &monster)
 
 	if (monster.mode == MonsterMode::Petrified)
 		monster.animInfo.isPetrified = true;
-
-	if (gbSkipSync)
-		return;
-
-	SyncMonsterAnim(monster);
 }
 
 /**
@@ -748,13 +743,6 @@ void LoadMissile(LoadHelper *file)
 	missile.lastCollisionTargetHash = 0;
 	if (Missiles.size() < Missiles.max_size()) {
 		Missiles.push_back(missile);
-	}
-
-	// For petrified monsters, the data in missile.var1 must be used to
-	// load the appropriate animation data for the monster in missile.var2
-	if (missile._mitype == MissileID::StoneCurse) {
-		Monster &monster = Monsters[missile.var2];
-		SyncMonsterAnim(monster);
 	}
 }
 
@@ -2190,6 +2178,10 @@ void LoadGame(bool firstflag)
 		file.Skip<int8_t>(MaxMissilesForSaveGame);
 		for (int i = 0; i < tmpNummissiles; i++)
 			LoadMissile(&file);
+		// For petrified monsters, the data in missile.var1 must be used to
+		// load the appropriate animation data for the monster in missile.var2
+		for (size_t i = 0; i < ActiveMonsterCount; i++)
+			SyncMonsterAnim(Monsters[ActiveMonsters[i]]);
 		for (int &objectId : ActiveObjects)
 			objectId = file.NextLE<int8_t>();
 		for (int &objectId : AvailableObjects)
@@ -2657,6 +2649,10 @@ void LoadLevel()
 			LoadMonster(&file, monster);
 			if (monster.isUnique() && monster.lightId != NO_LIGHT)
 				Lights[monster.lightId].isInvalid = false;
+		}
+		if (!gbSkipSync) {
+			for (size_t i = 0; i < ActiveMonsterCount; i++)
+				SyncMonsterAnim(Monsters[ActiveMonsters[i]]);
 		}
 		for (int &objectId : ActiveObjects)
 			objectId = file.NextLE<int8_t>();
