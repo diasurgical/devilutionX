@@ -530,7 +530,7 @@ Point GetMapReturnPosition()
 	case SL_VILEBETRAYER:
 		return Quests[Q_BETRAYER].position + Direction::South;
 	default:
-		return Towners[TOWN_DRUNK].position + Displacement { 1, 0 };
+		return GetTowner(TOWN_DRUNK)->position + Direction::SouthEast;
 	}
 }
 
