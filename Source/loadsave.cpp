@@ -749,6 +749,13 @@ void LoadMissile(LoadHelper *file)
 	if (Missiles.size() < Missiles.max_size()) {
 		Missiles.push_back(missile);
 	}
+
+	// For petrified monsters, the data in missile.var1 must be used to
+	// load the appropriate animation data for the monster in missile.var2
+	if (missile._mitype == MissileID::StoneCurse) {
+		Monster &monster = Monsters[missile.var2];
+		SyncMonsterAnim(monster);
+	}
 }
 
 _object_id ConvertFromHellfireObject(_object_id type)
