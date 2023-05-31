@@ -177,6 +177,7 @@ set(devilutionx_assets
   levels/towndata/automap.dun
   levels/towndata/automap.amp
   nlevels/cutl5w.clx
+  nlevels/cutl6w.clx
   nlevels/l5data/cornerstone.dun
   nlevels/l5data/uberroom.dun
   ui_art/diablo.pal
