@@ -3205,14 +3205,19 @@ void SetupItem(Item &item)
 	item._iIdentified = false;
 }
 
-Item *SpawnUnique(_unique_items uid, Point position, std::optional<int> level /*= std::nullopt*/, bool sendmsg /*= true*/)
+Item *SpawnUnique(_unique_items uid, Point position, std::optional<int> level /*= std::nullopt*/, bool sendmsg /*= true*/, bool exactPosition /*= false*/)
 {
 	if (ActiveItemCount >= MAXITEMS)
 		return nullptr;
 
 	int ii = AllocateItem();
 	auto &item = Items[ii];
-	GetSuperItemSpace(position, ii);
+	if (exactPosition && CanPut(position)) {
+		item.position = position;
+		dItem[position.x][position.y] = ii + 1;
+	} else {
+		GetSuperItemSpace(position, ii);
+	}
 	int curlv = ItemsGetCurrlevel();
 
 	std::underlying_type_t<_item_indexes> idx = 0;
