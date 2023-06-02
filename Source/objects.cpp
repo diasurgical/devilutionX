@@ -3213,7 +3213,8 @@ void OperateBookcase(Object &bookcase, bool sendmsg, bool sendLootMsg)
 			zhar.talkMsg = TEXT_ZHAR2;
 			M_StartStand(zhar, zhar.direction); // BUGFIX: first parameter in call to M_StartStand should be MAX_PLRS, not 0. (fixed)
 			zhar.goal = MonsterGoal::Attack;
-			zhar.mode = MonsterMode::Talk;
+			if (sendmsg)
+				zhar.mode = MonsterMode::Talk;
 		}
 	}
 	if (sendmsg)
