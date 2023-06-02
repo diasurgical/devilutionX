@@ -2099,8 +2099,8 @@ void OperateChamberOfBoneBook(Object &questBook, bool sendmsg)
 		Quests[Q_SCHAMB]._qmsg = textdef;
 		NetSendCmdQuest(true, Quests[Q_SCHAMB]);
 		NetSendCmdLoc(MyPlayerId, false, CMD_OPERATEOBJ, questBook.position);
+		InitQTextMsg(textdef);
 	}
-	InitQTextMsg(textdef);
 }
 
 void OperateChest(const Player &player, Object &chest, bool sendLootMsg)
@@ -3213,7 +3213,8 @@ void OperateBookcase(Object &bookcase, bool sendmsg, bool sendLootMsg)
 			zhar.talkMsg = TEXT_ZHAR2;
 			M_StartStand(zhar, zhar.direction); // BUGFIX: first parameter in call to M_StartStand should be MAX_PLRS, not 0. (fixed)
 			zhar.goal = MonsterGoal::Attack;
-			zhar.mode = MonsterMode::Talk;
+			if (sendmsg)
+				zhar.mode = MonsterMode::Talk;
 		}
 	}
 	if (sendmsg)
