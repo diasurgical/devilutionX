@@ -377,7 +377,7 @@ void TalkToDeadguy(Player &player, Towner & /*deadguy*/)
 void TalkToBlackSmith(Player &player, Towner &blackSmith)
 {
 	if (Quests[Q_ROCK]._qactive != QUEST_NOTAVAIL) {
-		if (player._pLvlVisited[4] && Quests[Q_ROCK]._qactive != QUEST_DONE) {
+		if ((player._pLvlVisited[4] || player._pLvlVisited[5]) && Quests[Q_ROCK]._qactive != QUEST_DONE) {
 			if (Quests[Q_ROCK]._qvar2 == 0) {
 				Quests[Q_ROCK]._qvar2 = 1;
 				Quests[Q_ROCK]._qlog = true;
