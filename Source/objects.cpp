@@ -2099,8 +2099,8 @@ void OperateChamberOfBoneBook(Object &questBook, bool sendmsg)
 		Quests[Q_SCHAMB]._qmsg = textdef;
 		NetSendCmdQuest(true, Quests[Q_SCHAMB]);
 		NetSendCmdLoc(MyPlayerId, false, CMD_OPERATEOBJ, questBook.position);
+		InitQTextMsg(textdef);
 	}
-	InitQTextMsg(textdef);
 }
 
 void OperateChest(const Player &player, Object &chest, bool sendLootMsg)
