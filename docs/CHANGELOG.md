@@ -257,7 +257,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Multiplayer
 
-- Fix dsync in Hive
 - Open Crypt from the start
 - Restrict access to Hive and Crypt based on level
 - Reflect spell not being synced
