@@ -161,6 +161,7 @@ set(libdevilutionx_SRCS
   utils/sdl_bilinear_scale.cpp
   utils/sdl_thread.cpp
   utils/str_cat.cpp
+  utils/str_case.cpp
   utils/surface_to_clx.cpp
   utils/utf8.cpp)
 

@@ -49,6 +49,7 @@
 #include "utils/log.hpp"
 #include "utils/sdl_geometry.h"
 #include "utils/stdcompat/optional.hpp"
+#include "utils/str_case.hpp"
 #include "utils/str_cat.hpp"
 #include "utils/string_or_view.hpp"
 #include "utils/utf8.hpp"
@@ -442,11 +443,9 @@ std::string TextCmdInspect(const string_view parameter)
 		return ret;
 	}
 
-	std::string param { parameter.data() };
-	std::transform(param.begin(), param.end(), param.begin(), [](unsigned char c) { return std::tolower(c); });
+	const std::string param = AsciiStrToLower(parameter);
 	for (auto &player : Players) {
-		std::string playerName { player._pName };
-		std::transform(playerName.begin(), playerName.end(), playerName.begin(), [](unsigned char c) { return std::tolower(c); });
+		const std::string playerName = AsciiStrToLower(player._pName);
 		if (playerName.find(param) != std::string::npos) {
 			InspectPlayer = &player;
 			StrAppend(ret, _("Inspecting player: "));
