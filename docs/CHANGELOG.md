@@ -5,6 +5,93 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## DevilutionX 1.4.1
+
+### Features
+
+#### Graphics / Audio
+
+- Play gold sound effect when depositing in stash
+
+#### Controls
+
+- Add setting for showing item labels
+- Add setting for zoom by default
+
+#### Translations
+
+- Update Chinese Translation
+- Update French Translation
+- Update Japanese Translation
+- Update Polish Translation
+- Update Russian Translation
+- Update Ukrainian Translation
+
+### Bugfixes
+
+#### Gameplay
+
+- Correct behavior for elemental damage on weapons
+- Fallen retreat in the wrong direction
+- Show correct requirements for books in stash
+
+#### Multiplayer
+
+- Issues with joining multiplayer games
+- Refreshing store inventory on new games
+
+#### Platforms
+
+- 3DS: correct C-stick axis mapping
+- 3DS: Package info
+- iOS: Compatibility with Sideloadly
+- iOS/macOS/iPadOS: Show translated error messages
+- OpenDingux: Fix game not starting on some devices
+- PS4: Crashing on startup with no config file
+
+#### Graphics / Audio
+
+- Fix wide screen scenes missing on some platforms
+- Minor graphical issues
+- Misaligned player animation
+
+#### Controls
+
+- Quick cast interrupting the current action
+- Touch: Action buttons sometimes showing the wrong icon
+- Touch/Gamepad: Correct usage description for some spells
+- Touch/Gamepad: Fix targeting berserked monsters
+
+#### Stability / Performance / System
+
+- Improve general game stability
+- Incorrect handling of player names
+- Names on ears not being correct in some translations
+
+### Bugfixes for original Diablo bugs
+
+#### Gameplay
+
+- Fallen not seeing each other in a northern direction
+- Lazarus level resetting when using town portal
+- Shrines effects not being random
+
+#### Multiplayer
+
+- Solve more sources of desync
+
+#### Controls
+
+- Make spell feedback consistent in town and dungeon
+
+### Bugfixes for original Hellfire bugs
+
+#### Gameplay
+
+- Monsters not reacting to being attacked by berserked monster
+
+## DevilutionX 1.4.0
+
 ### Features
 
 #### Translations
@@ -205,7 +292,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - PS4: The games fail to launch without a default ini, please see https://github.com/diasurgical/devilutionX/issues/4443
 - Clicking an empty hero slot will crash the game
 - Xbo/s: Missing translation files (download and add [devilutionx.mpq](https://github.com/diasurgical/devilutionx-assets/releases/download/v2/devilutionx.mpq))
-
 
 ## DevilutionX 1.3.0
 
