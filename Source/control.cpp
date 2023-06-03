@@ -462,11 +462,49 @@ std::string TextCmdInspect(const string_view parameter)
 	return ret;
 }
 
+std::string TextCmdLevelSeed(const string_view parameter)
+{
+	string_view levelType = setlevel ? "set level" : "dungeon level";
+
+	char gameId[] = {
+		static_cast<char>((sgGameInitInfo.programid >> 24) & 0xFF),
+		static_cast<char>((sgGameInitInfo.programid >> 16) & 0xFF),
+		static_cast<char>((sgGameInitInfo.programid >> 8) & 0xFF),
+		static_cast<char>(sgGameInitInfo.programid & 0xFF),
+		'\0'
+	};
+
+	string_view mode = gbIsMultiplayer ? "MP" : "SP";
+
+	string_view questPool;
+	if (UseMultiplayerQuests())
+		questPool = "MP";
+	else if (*sgOptions.Gameplay.randomizeQuests)
+		questPool = "Random";
+	else
+		questPool = "All";
+
+	return StrCat(
+	    "Seedinfo for ", levelType, " ", currlevel, "\n",
+	    "seed: ", glSeedTbl[currlevel], "\n",
+#ifdef _DEBUG
+	    "Mid1: ", glMid1Seed[currlevel], "\n",
+	    "Mid2: ", glMid2Seed[currlevel], "\n",
+	    "Mid3: ", glMid3Seed[currlevel], "\n",
+	    "End: ", glEndSeed[currlevel], "\n",
+#endif
+	    "\n",
+	    gameId, " ", mode, "\n",
+	    questPool, " quests: ", glSeedTbl[15], "\n",
+	    "Storybook: ", glSeedTbl[16]);
+}
+
 std::vector<TextCmdItem> TextCmdList = {
 	{ N_("/help"), N_("Prints help overview or help for a specific command."), N_("({command})"), &TextCmdHelp },
 	{ N_("/arena"), N_("Enter a PvP Arena."), N_("{arena-number}"), &TextCmdArena },
 	{ N_("/arenapot"), N_("Gives Arena Potions."), N_("{number}"), &TextCmdArenaPot },
 	{ N_("/inspect"), N_("Inspects stats and equipment of another player."), N_("{player name}"), &TextCmdInspect },
+	{ N_("/seedinfo"), N_("Show seed infos for current level."), "", &TextCmdLevelSeed },
 };
 
 bool CheckTextCommand(const string_view text)
