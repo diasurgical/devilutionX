@@ -96,6 +96,7 @@ bool CanBePlacedOnBelt(const Item &item);
 using ItemFunc = void (*)(Item &);
 
 void CloseInventory();
+void CloseStash();
 void FreeInvGFX();
 void InitInv();
 

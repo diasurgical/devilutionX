@@ -2081,8 +2081,35 @@ bool UseInvItem(int cii)
 void CloseInventory()
 {
 	CloseGoldWithdraw();
-	IsStashOpen = false;
+	CloseStash();
 	invflag = false;
+}
+
+void CloseStash()
+{
+	if (!IsStashOpen)
+		return;
+
+	Player &myPlayer = *MyPlayer;
+	if (!myPlayer.HoldItem.isEmpty()) {
+		std::optional<Point> itemTile = FindAdjacentPositionForItem(myPlayer.position.future, myPlayer._pdir);
+		if (itemTile) {
+			NetSendCmdPItem(true, CMD_PUTITEM, *itemTile, myPlayer.HoldItem);
+		} else {
+			if (!AutoPlaceItemInBelt(myPlayer, myPlayer.HoldItem, true)
+			    && !AutoPlaceItemInInventory(myPlayer, myPlayer.HoldItem, true)
+			    && !AutoPlaceItemInStash(myPlayer, myPlayer.HoldItem, true)) {
+				// This can fail for max gold, arena potions and a stash that has been arranged
+				// to not have room for the item all 3 cases are extremely unlikely
+				app_fatal(_("No room for item"));
+			}
+			PlaySFX(ItemInvSnds[ItemCAnimTbl[myPlayer.HoldItem._iCurs]]);
+		}
+		myPlayer.HoldItem.clear();
+		NewCursor(CURSOR_HAND);
+	}
+
+	IsStashOpen = false;
 }
 
 void DoTelekinesis()
