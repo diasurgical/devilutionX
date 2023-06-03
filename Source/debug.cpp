@@ -33,6 +33,7 @@
 #include "utils/file_util.h"
 #include "utils/language.h"
 #include "utils/log.hpp"
+#include "utils/parse_int.hpp"
 #include "utils/str_case.hpp"
 #include "utils/str_cat.hpp"
 #include "utils/str_split.hpp"
@@ -192,8 +193,11 @@ std::string DebugCmdTakeGoldCheat(const string_view parameter)
 std::string DebugCmdWarpToLevel(const string_view parameter)
 {
 	Player &myPlayer = *MyPlayer;
-	auto level = atoi(parameter.data());
-	if (level < 0 || level > (gbIsHellfire ? 24 : 16))
+	const ParseIntResult<int> parsedParam = ParseInt<int>(parameter, /*min=*/0);
+	if (!parsedParam.ok())
+		return "Specify the level number";
+	const int level = parsedParam.value;
+	if (level > (gbIsHellfire ? 24 : 16))
 		return StrCat("Level ", level, " is not known. Do you want to write a mod?");
 	if (!setlevel && myPlayer.isOnLevel(level))
 		return StrCat("I did nothing but fulfilled your wish. You are already at level ", level, ".");
@@ -214,7 +218,10 @@ std::string DebugCmdLoadQuestMap(const string_view parameter)
 		return ret;
 	}
 
-	auto level = atoi(parameter.data());
+	const ParseIntResult<int> parsedParam = ParseInt<int>(parameter, /*min=*/0);
+	if (!parsedParam.ok())
+		return "Specify the level number";
+	const int level = parsedParam.value;
 	if (level < 1)
 		return "Map id must be 1 or higher";
 	if (setlevel && setlvlnum == level)
@@ -245,15 +252,24 @@ std::string DebugCmdLoadMap(const string_view parameter)
 		case 0:
 			TestMapPath = StrCat(arg, ".dun");
 			break;
-		case 1:
-			mapType = atoi(std::string(arg).c_str());
-			break;
-		case 2:
-			spawn.x = atoi(std::string(arg).c_str());
-			break;
-		case 3:
-			spawn.y = atoi(std::string(arg).c_str());
-			break;
+		case 1: {
+			const ParseIntResult<int> parsedArg = ParseInt<int>(arg, /*min=*/0);
+			if (!parsedArg.ok())
+				return "Failed to parse argument 1 as integer";
+			mapType = parsedArg.value;
+		} break;
+		case 2: {
+			const ParseIntResult<int> parsedArg = ParseInt<int>(arg);
+			if (!parsedArg.ok())
+				return "Failed to parse argument 2 as integer";
+			spawn.x = parsedArg.value;
+		} break;
+		case 3: {
+			const ParseIntResult<int> parsedArg = ParseInt<int>(arg);
+			if (!parsedArg.ok())
+				return "Failed to parse argument 3 as integer";
+			spawn.y = parsedArg.value;
+		} break;
 		}
 		count++;
 	}
@@ -398,15 +414,23 @@ std::string DebugCmdResetLevel(const string_view parameter)
 	auto it = args.begin();
 	if (it == args.end())
 		return "What level do you want to visit?";
-	auto level = atoi(std::string(*it).c_str());
-	if (level < 0 || level > (gbIsHellfire ? 24 : 16))
+	int level;
+	{
+		const ParseIntResult<int> parsedArg = ParseInt<int>(*it, /*min=*/0);
+		if (!parsedArg.ok())
+			return "Failed to parse argument 1 as integer";
+		level = parsedArg.value;
+	}
+	if (level > (gbIsHellfire ? 24 : 16))
 		return StrCat("Level ", level, " is not known. Do you want to write an extension mod?");
 	myPlayer._pLvlVisited[level] = false;
 	DeltaClearLevel(level);
 
 	if (++it != args.end()) {
-		const auto seed = static_cast<uint32_t>(std::stoul(std::string(*it)));
-		glSeedTbl[level] = seed;
+		const ParseIntResult<uint32_t> parsedArg = ParseInt<uint32_t>(*it);
+		if (!parsedArg.ok())
+			return "Failed to parse argument 2 as uint32_t";
+		glSeedTbl[level] = parsedArg.value;
 	}
 
 	if (myPlayer.isOnLevel(level))
@@ -489,7 +513,10 @@ std::string DebugCmdQuest(const string_view parameter)
 		return "Happy questing";
 	}
 
-	int questId = atoi(parameter.data());
+	const ParseIntResult<int> parsedArg = ParseInt<int>(parameter, /*min=*/0);
+	if (!parsedArg.ok())
+		return "Failed to parse argument as integer";
+	const int questId = parsedArg.value;
 
 	if (questId >= MAXQUESTS)
 		return StrCat("Quest ", questId, " is not known. Do you want to write a mod?");
@@ -506,7 +533,7 @@ std::string DebugCmdQuest(const string_view parameter)
 
 std::string DebugCmdLevelUp(const string_view parameter)
 {
-	int levels = std::max(1, atoi(parameter.data()));
+	const int levels = ParseInt<int>(parameter, /*min=*/1).value_or(1);
 	for (int i = 0; i < levels; i++)
 		NetSendCmd(true, CMD_CHEAT_EXPERIENCE);
 	return "New experience leads to new insights.";
@@ -534,7 +561,10 @@ std::string DebugCmdMinStats(const string_view parameter)
 
 std::string DebugCmdSetSpellsLevel(const string_view parameter)
 {
-	uint8_t level = static_cast<uint8_t>(std::max(0, atoi(parameter.data())));
+	const ParseIntResult<uint8_t> parsedArg = ParseInt<uint8_t>(parameter);
+	if (!parsedArg.ok())
+		return "Failed to parse argument as uint8_t";
+	const uint8_t level = parsedArg.value;
 	for (uint8_t i = static_cast<uint8_t>(SpellID::Firebolt); i < MAX_SPELLS; i++) {
 		if (GetSpellBookLevel(static_cast<SpellID>(i)) != -1) {
 			NetSendCmdParam2(true, CMD_CHANGE_SPELL_LEVEL, i, level);
@@ -562,8 +592,12 @@ std::string DebugCmdChangeHealth(const string_view parameter)
 	Player &myPlayer = *MyPlayer;
 	int change = -1;
 
-	if (!parameter.empty())
-		change = atoi(parameter.data());
+	if (!parameter.empty()) {
+		const ParseIntResult<int> parsedArg = ParseInt<int>(parameter);
+		if (!parsedArg.ok())
+			return "Failed to parse argument as integer";
+		change = parsedArg.value;
+	}
 
 	if (change == 0)
 		return "Health hasn't changed.";
@@ -581,8 +615,12 @@ std::string DebugCmdChangeMana(const string_view parameter)
 	Player &myPlayer = *MyPlayer;
 	int change = -1;
 
-	if (!parameter.empty())
-		change = atoi(parameter.data());
+	if (!parameter.empty()) {
+		const ParseIntResult<int> parsedArg = ParseInt<int>(parameter);
+		if (!parsedArg.ok())
+			return "Failed to parse argument as integer";
+		change = parsedArg.value;
+	}
 
 	if (change == 0)
 		return "Mana hasn't changed.";
@@ -659,7 +697,10 @@ std::string DebugCmdSpawnUniqueMonster(const string_view parameter)
 	std::string name;
 	int count = 1;
 	for (string_view arg : SplitByChar(parameter, ' ')) {
-		const int num = atoi(std::string(arg).c_str());
+		const ParseIntResult<int> parsedArg = ParseInt<int>(arg);
+		if (!parsedArg.ok())
+			return "Failed to parse argument as integer";
+		const int num = parsedArg.value;
 		if (num > 0) {
 			count = num;
 			break;
@@ -746,7 +787,10 @@ std::string DebugCmdSpawnMonster(const string_view parameter)
 	std::string name;
 	int count = 1;
 	for (string_view arg : SplitByChar(parameter, ' ')) {
-		const int num = atoi(std::string(arg).c_str());
+		const ParseIntResult<int> parsedArg = ParseInt<int>(arg);
+		if (!parsedArg.ok())
+			return "Failed to parse argument as integer";
+		const int num = parsedArg.value;
 		if (num > 0) {
 			count = num;
 			break;
@@ -920,7 +964,10 @@ std::string DebugCmdQuestInfo(const string_view parameter)
 		return ret;
 	}
 
-	int questId = atoi(parameter.data());
+	const ParseIntResult<int> parsedArg = ParseInt<int>(parameter, /*min=*/0);
+	if (!parsedArg.ok())
+		return "Failed to parse argument as integer";
+	const int questId = parsedArg.value;
 
 	if (questId >= MAXQUESTS)
 		return StrCat("Quest ", questId, " is not known. Do you want to write a mod?");
@@ -930,7 +977,14 @@ std::string DebugCmdQuestInfo(const string_view parameter)
 
 std::string DebugCmdPlayerInfo(const string_view parameter)
 {
-	int playerId = atoi(parameter.data());
+	if (parameter.empty()) {
+		return StrCat("Provide a player ID between 0 and ", Players.size() - 1);
+	}
+	const ParseIntResult<size_t> parsedArg = ParseInt<size_t>(parameter);
+	if (!parsedArg.ok()) {
+		return "Failed to parse argument as size_t in range";
+	}
+	const size_t playerId = parsedArg.value;
 	if (static_cast<size_t>(playerId) >= Players.size())
 		return "My friend, we need a valid playerId.";
 	Player &player = Players[playerId];

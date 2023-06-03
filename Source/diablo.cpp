@@ -79,6 +79,7 @@
 #include "utils/console.h"
 #include "utils/display.h"
 #include "utils/language.h"
+#include "utils/parse_int.hpp"
 #include "utils/paths.h"
 #include "utils/stdcompat/string_view.hpp"
 #include "utils/str_cat.hpp"
@@ -949,11 +950,16 @@ void PrintHelpOption(string_view flags, string_view description)
 	diablo_quit(0);
 }
 
-void PrintFlagsRequiresArgument(string_view flag)
+void PrintFlagMessage(string_view flag, string_view message)
 {
 	printInConsole(flag);
-	printInConsole(" requires an argument");
+	printInConsole(message);
 	printNewlineInConsole();
+}
+
+void PrintFlagRequiresArgument(string_view flag)
+{
+	PrintFlagMessage(flag, " requires an argument");
 }
 
 void DiabloParseFlags(int argc, char **argv)
@@ -980,44 +986,54 @@ void DiabloParseFlags(int argc, char **argv)
 			diablo_quit(0);
 		} else if (arg == "--data-dir") {
 			if (i + 1 == argc) {
-				PrintFlagsRequiresArgument("--data-dir");
+				PrintFlagRequiresArgument("--data-dir");
 				diablo_quit(64);
 			}
 			paths::SetBasePath(argv[++i]);
 		} else if (arg == "--save-dir") {
 			if (i + 1 == argc) {
-				PrintFlagsRequiresArgument("--save-dir");
+				PrintFlagRequiresArgument("--save-dir");
 				diablo_quit(64);
 			}
 			paths::SetPrefPath(argv[++i]);
 		} else if (arg == "--config-dir") {
 			if (i + 1 == argc) {
-				PrintFlagsRequiresArgument("--config-dir");
+				PrintFlagRequiresArgument("--config-dir");
 				diablo_quit(64);
 			}
 			paths::SetConfigPath(argv[++i]);
 		} else if (arg == "--lang") {
 			if (i + 1 == argc) {
-				PrintFlagsRequiresArgument("--lang");
+				PrintFlagRequiresArgument("--lang");
 				diablo_quit(64);
 			}
 			forceLocale = argv[++i];
 #ifndef DISABLE_DEMOMODE
 		} else if (arg == "--demo") {
 			if (i + 1 == argc) {
-				PrintFlagsRequiresArgument("--demo");
+				PrintFlagRequiresArgument("--demo");
 				diablo_quit(64);
 			}
-			demoNumber = SDL_atoi(argv[++i]);
+			ParseIntResult<int> parsedParam = ParseInt<int>(argv[++i]);
+			if (!parsedParam.ok()) {
+				PrintFlagMessage("--demo", " must be a number");
+				diablo_quit(64);
+			}
+			demoNumber = parsedParam.value;
 			gbShowIntro = false;
 		} else if (arg == "--timedemo") {
 			timedemo = true;
 		} else if (arg == "--record") {
 			if (i + 1 == argc) {
-				PrintFlagsRequiresArgument("--record");
+				PrintFlagRequiresArgument("--record");
 				diablo_quit(64);
 			}
-			recordNumber = SDL_atoi(argv[++i]);
+			ParseIntResult<int> parsedParam = ParseInt<int>(argv[++i]);
+			if (!parsedParam.ok()) {
+				PrintFlagMessage("--record", " must be a number");
+				diablo_quit(64);
+			}
+			recordNumber = parsedParam.value;
 		} else if (arg == "--create-reference") {
 			createDemoReference = true;
 #else

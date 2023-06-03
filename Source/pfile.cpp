@@ -24,6 +24,7 @@
 #include "utils/endian.hpp"
 #include "utils/file_util.h"
 #include "utils/language.h"
+#include "utils/parse_int.hpp"
 #include "utils/paths.h"
 #include "utils/stdcompat/abs.hpp"
 #include "utils/stdcompat/string_view.hpp"
@@ -284,8 +285,10 @@ void CreateDetailDiffs(string_view prefix, string_view memoryMapFile, CompareInf
 		auto it = counter.find(counterAsString);
 		if (it != counter.end())
 			return it->second;
-		int countFromMapFile = std::stoi(counterAsString);
-		return CompareCounter { countFromMapFile, countFromMapFile };
+		const ParseIntResult<int> countFromMapFile = ParseInt<int>(counterAsString);
+		if (!countFromMapFile.ok())
+			app_fatal(StrCat("Failed to parse ", counterAsString, " as int"));
+		return CompareCounter { countFromMapFile.value, countFromMapFile.value };
 	};
 	auto addDiff = [&](const std::string &diffKey) {
 		auto it = foundDiffs.find(diffKey);
@@ -363,7 +366,10 @@ void CreateDetailDiffs(string_view prefix, string_view memoryMapFile, CompareInf
 		if (command == "R" || command == "LT" || command == "LC" || command == "LC_LE") {
 			const auto bitsAsString = std::string(*++it);
 			const auto comment = std::string(*++it);
-			size_t bytes = static_cast<size_t>(std::stoi(bitsAsString) / 8);
+			const ParseIntResult<size_t> parsedBytes = ParseInt<size_t>(bitsAsString);
+			if (!parsedBytes.ok())
+				app_fatal(StrCat("Failed to parse ", bitsAsString, " as size_t"));
+			const size_t bytes = static_cast<size_t>(parsedBytes.value / 8);
 
 			if (command == "LT") {
 				int32_t valueReference = read32BitInt(compareInfoReference, false);
@@ -389,7 +395,10 @@ void CreateDetailDiffs(string_view prefix, string_view memoryMapFile, CompareInf
 			string_view comment = *++it;
 
 			CompareCounter count = getCounter(countAsString);
-			size_t bytes = static_cast<size_t>(std::stoi(bitsAsString) / 8);
+			const ParseIntResult<size_t> parsedBytes = ParseInt<size_t>(bitsAsString);
+			if (!parsedBytes.ok())
+				app_fatal(StrCat("Failed to parse ", bitsAsString, " as size_t"));
+			const size_t bytes = static_cast<size_t>(parsedBytes.value / 8);
 			for (int i = 0; i < count.max(); i++) {
 				count.checkIfDataExists(i, compareInfoReference, compareInfoActual);
 				if (!compareBytes(bytes)) {
