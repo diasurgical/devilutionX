@@ -24,7 +24,6 @@
 #include "lighting.h"
 #include "monstdat.h"
 #include "monster.h"
-#include "options.h"
 #include "plrmsg.h"
 #include "quests.h"
 #include "spells.h"
@@ -48,6 +47,12 @@ bool DebugGrid = false;
 std::unordered_map<int, Point> DebugCoordsMap;
 bool DebugScrollViewEnabled = false;
 std::string debugTRN;
+
+// Used for debugging level generation
+uint32_t glMid1Seed[NUMLEVELS];
+uint32_t glMid2Seed[NUMLEVELS];
+uint32_t glMid3Seed[NUMLEVELS];
+uint32_t glEndSeed[NUMLEVELS];
 
 namespace {
 
@@ -88,12 +93,6 @@ int DebugMonsterId;
 std::vector<std::string> SearchMonsters;
 std::vector<std::string> SearchItems;
 std::vector<std::string> SearchObjects;
-
-// Used for debugging level generation
-uint32_t glMid1Seed[NUMLEVELS];
-uint32_t glMid2Seed[NUMLEVELS];
-uint32_t glMid3Seed[NUMLEVELS];
-uint32_t glEndSeed[NUMLEVELS];
 
 void PrintDebugMonster(const Monster &monster)
 {
@@ -650,41 +649,6 @@ std::string DebugCmdShowGrid(const string_view parameter)
 	return "Back to boring.";
 }
 
-std::string DebugCmdLevelSeed(const string_view parameter)
-{
-	string_view levelType = setlevel ? "set level" : "dungeon level";
-
-	char gameId[] = {
-		static_cast<char>((sgGameInitInfo.programid >> 24) & 0xFF),
-		static_cast<char>((sgGameInitInfo.programid >> 16) & 0xFF),
-		static_cast<char>((sgGameInitInfo.programid >> 8) & 0xFF),
-		static_cast<char>(sgGameInitInfo.programid & 0xFF),
-		'\0'
-	};
-
-	string_view mode = gbIsMultiplayer ? "MP" : "SP";
-
-	string_view questPool;
-	if (UseMultiplayerQuests())
-		questPool = "MP";
-	else if (*sgOptions.Gameplay.randomizeQuests)
-		questPool = "Random";
-	else
-		questPool = "All";
-
-	return StrCat(
-	    "Seedinfo for ", levelType, " ", currlevel, "\n",
-	    "seed: ", glSeedTbl[currlevel], "\n",
-	    "Mid1: ", glMid1Seed[currlevel], "\n",
-	    "Mid2: ", glMid2Seed[currlevel], "\n",
-	    "Mid3: ", glMid3Seed[currlevel], "\n",
-	    "End: ", glEndSeed[currlevel], "\n",
-	    "\n",
-	    gameId, " ", mode, "\n",
-	    questPool, " quests: ", glSeedTbl[15], "\n",
-	    "Storybook: ", glSeedTbl[16]);
-}
-
 std::string DebugCmdSpawnUniqueMonster(const string_view parameter)
 {
 	if (leveltype == DTYPE_TOWN)
@@ -1101,7 +1065,6 @@ std::vector<DebugCmdItem> DebugCmdList = {
 	{ "exit", "Exits the game.", "", &DebugCmdExit },
 	{ "arrow", "Changes arrow effect (normal, fire, lightning, explosion).", "{effect}", &DebugCmdArrow },
 	{ "grid", "Toggles showing grid.", "", &DebugCmdShowGrid },
-	{ "seedinfo", "Show seed infos for current level.", "", &DebugCmdLevelSeed },
 	{ "spawnu", "Spawns unique monster {name}.", "{name} ({count})", &DebugCmdSpawnUniqueMonster },
 	{ "spawn", "Spawns monster {name}.", "{name} ({count})", &DebugCmdSpawnMonster },
 	{ "tiledata", "Toggles showing tile data {name} (leave name empty to see a list).", "{name}", &DebugCmdShowTileData },
