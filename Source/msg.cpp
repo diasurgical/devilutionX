@@ -2635,6 +2635,8 @@ void DeltaLoadLevel()
 				monster.position.tile = position;
 				monster.position.old = position;
 				monster.position.future = position;
+				if (monster.lightId != NO_LIGHT)
+					ChangeLightXY(monster.lightId, position);
 			}
 			if (deltaLevel.monster[i].hitPoints != -1) {
 				monster.hitPoints = deltaLevel.monster[i].hitPoints;
