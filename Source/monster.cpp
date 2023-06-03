@@ -2809,7 +2809,7 @@ void LazarusAi(Monster &monster)
 
 	if (IsAnyOf(monster.goal, MonsterGoal::Normal, MonsterGoal::Retreat, MonsterGoal::Move)) {
 		if (!UseMultiplayerQuests() && Quests[Q_BETRAYER]._qvar1 == 4 && monster.talkMsg == TEXT_NONE) { // Fix save games affected by teleport bug
-			ObjChangeMapResync(1, 18, 20, 24);
+			ObjChangeMap(1, 18, 20, 24, true);
 			RedoPlayerVision();
 			Quests[Q_BETRAYER]._qvar1 = 6;
 		}

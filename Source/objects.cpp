@@ -2063,7 +2063,7 @@ void OperateChamberOfBoneBook(Object &questBook, bool sendmsg)
 	}
 
 	if (questBook._oAnimFrame != questBook._oVar6) {
-		ObjChangeMapResync(questBook._oVar1, questBook._oVar2, questBook._oVar3, questBook._oVar4);
+		ObjChangeMap(questBook._oVar1, questBook._oVar2, questBook._oVar3, questBook._oVar4, true);
 		for (int j = 0; j < ActiveObjectCount; j++) {
 			SyncObjectAnim(Objects[ActiveObjects[j]]);
 		}
@@ -3609,7 +3609,7 @@ void SyncQSTLever(const Object &qstLever)
 {
 	if (qstLever._oAnimFrame == qstLever._oVar6) {
 		if (qstLever._otype != OBJ_BLOODBOOK)
-			ObjChangeMapResync(qstLever._oVar1, qstLever._oVar2, qstLever._oVar3, qstLever._oVar4);
+			ObjChangeMap(qstLever._oVar1, qstLever._oVar2, qstLever._oVar3, qstLever._oVar4, true);
 		if (qstLever._otype == OBJ_BLINDBOOK) {
 			auto tren = TransVal;
 			TransVal = 9;
@@ -3622,13 +3622,13 @@ void SyncQSTLever(const Object &qstLever)
 void SyncPedestal(const Object &pedestal)
 {
 	if (pedestal._oVar6 == 1)
-		ObjChangeMapResync(SetPiece.position.x, SetPiece.position.y + 3, SetPiece.position.x + 2, SetPiece.position.y + 7);
+		ObjChangeMap(SetPiece.position.x, SetPiece.position.y + 3, SetPiece.position.x + 2, SetPiece.position.y + 7, true);
 	if (pedestal._oVar6 == 2) {
-		ObjChangeMapResync(SetPiece.position.x, SetPiece.position.y + 3, SetPiece.position.x + 2, SetPiece.position.y + 7);
-		ObjChangeMapResync(SetPiece.position.x + 6, SetPiece.position.y + 3, SetPiece.position.x + SetPiece.size.width, SetPiece.position.y + 7);
+		ObjChangeMap(SetPiece.position.x, SetPiece.position.y + 3, SetPiece.position.x + 2, SetPiece.position.y + 7, true);
+		ObjChangeMap(SetPiece.position.x + 6, SetPiece.position.y + 3, SetPiece.position.x + SetPiece.size.width, SetPiece.position.y + 7, true);
 	}
 	if (pedestal._oVar6 >= 3) {
-		ObjChangeMapResync(pedestal._oVar1, pedestal._oVar2, pedestal._oVar3, pedestal._oVar4);
+		ObjChangeMap(pedestal._oVar1, pedestal._oVar2, pedestal._oVar3, pedestal._oVar4, true);
 		LoadMapObjects("levels\\l2data\\blood2.dun", SetPiece.position.megaToWorld());
 	}
 }
@@ -4368,7 +4368,7 @@ void MonstCheckDoors(const Monster &monster)
 	}
 }
 
-void ObjChangeMap(int x1, int y1, int x2, int y2)
+void ObjChangeMap(int x1, int y1, int x2, int y2, bool resync)
 {
 	for (int j = y1; j <= y2; j++) {
 		for (int i = x1; i <= x2; i++) {
@@ -4383,41 +4383,23 @@ void ObjChangeMap(int x1, int y1, int x2, int y2)
 	WorldTilePosition world2 = mega2.megaToWorld() + Displacement { 1, 1 };
 	if (leveltype == DTYPE_CATHEDRAL) {
 		ObjL1Special(world1.x, world1.y, world2.x, world2.y);
-		AddL1Objs(world1.x, world1.y, world2.x, world2.y);
+		if (!resync || gbIsMultiplayer)
+			AddL1Objs(world1.x, world1.y, world2.x, world2.y);
 	}
 	if (leveltype == DTYPE_CATACOMBS) {
 		ObjL2Special(world1.x, world1.y, world2.x, world2.y);
-		AddL2Objs(world1.x, world1.y, world2.x, world2.y);
+		if (!resync || gbIsMultiplayer)
+			AddL2Objs(world1.x, world1.y, world2.x, world2.y);
 	}
 	if (leveltype == DTYPE_CAVES) {
-		AddL3Objs(world1.x, world1.y, world2.x, world2.y);
+		if (!resync || gbIsMultiplayer)
+			AddL3Objs(world1.x, world1.y, world2.x, world2.y);
 	}
 	if (leveltype == DTYPE_CRYPT) {
-		AddCryptObjects(world1.x, world1.y, world2.x, world2.y);
+		if (!resync || gbIsMultiplayer)
+			AddCryptObjects(world1.x, world1.y, world2.x, world2.y);
 	}
-	ResyncDoors(world1, world2, true);
-}
-
-void ObjChangeMapResync(int x1, int y1, int x2, int y2)
-{
-	for (int j = y1; j <= y2; j++) {
-		for (int i = x1; i <= x2; i++) {
-			ObjSetMini({ i, j }, pdungeon[i][j]);
-			dungeon[i][j] = pdungeon[i][j];
-		}
-	}
-
-	WorldTilePosition mega1 { static_cast<WorldTileCoord>(x1), static_cast<WorldTileCoord>(y1) };
-	WorldTilePosition mega2 { static_cast<WorldTileCoord>(x2), static_cast<WorldTileCoord>(y2) };
-	WorldTilePosition world1 = mega1.megaToWorld();
-	WorldTilePosition world2 = mega2.megaToWorld() + Displacement { 1, 1 };
-	if (leveltype == DTYPE_CATHEDRAL) {
-		ObjL1Special(world1.x, world1.y, world2.x, world2.y);
-	}
-	if (leveltype == DTYPE_CATACOMBS) {
-		ObjL2Special(world1.x, world1.y, world2.x, world2.y);
-	}
-	ResyncDoors(world1, world2, false);
+	ResyncDoors(world1, world2, !resync);
 }
 
 _item_indexes ItemMiscIdIdx(item_misc_id imiscid)

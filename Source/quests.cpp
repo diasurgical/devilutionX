@@ -613,19 +613,21 @@ void ResyncQuests()
 	if (Quests[Q_LTBANNER].IsAvailable()) {
 		Monster *snotSpill = FindUniqueMonster(UniqueMonsterType::SnotSpill);
 		if (Quests[Q_LTBANNER]._qvar1 == 1) {
-			ObjChangeMapResync(
+			ObjChangeMap(
 			    SetPiece.position.x + SetPiece.size.width - 2,
 			    SetPiece.position.y + SetPiece.size.height - 2,
 			    SetPiece.position.x + SetPiece.size.width + 1,
-			    SetPiece.position.y + SetPiece.size.height + 1);
+			    SetPiece.position.y + SetPiece.size.height + 1,
+			    true);
 		}
 		if (Quests[Q_LTBANNER]._qvar1 == 2) {
-			ObjChangeMapResync(
+			ObjChangeMap(
 			    SetPiece.position.x + SetPiece.size.width - 2,
 			    SetPiece.position.y + SetPiece.size.height - 2,
 			    SetPiece.position.x + SetPiece.size.width + 1,
-			    SetPiece.position.y + SetPiece.size.height + 1);
-			ObjChangeMapResync(SetPiece.position.x, SetPiece.position.y, SetPiece.position.x + (SetPiece.size.width / 2) + 2, SetPiece.position.y + (SetPiece.size.height / 2) - 2);
+			    SetPiece.position.y + SetPiece.size.height + 1,
+			    true);
+			ObjChangeMap(SetPiece.position.x, SetPiece.position.y, SetPiece.position.x + (SetPiece.size.width / 2) + 2, SetPiece.position.y + (SetPiece.size.height / 2) - 2, true);
 			for (int i = 0; i < ActiveObjectCount; i++)
 				SyncObjectAnim(Objects[ActiveObjects[i]]);
 			auto tren = TransVal;
@@ -639,7 +641,7 @@ void ResyncQuests()
 			}
 		}
 		if (Quests[Q_LTBANNER]._qvar1 == 3) {
-			ObjChangeMapResync(SetPiece.position.x, SetPiece.position.y, SetPiece.position.x + SetPiece.size.width + 1, SetPiece.position.y + SetPiece.size.height + 1);
+			ObjChangeMap(SetPiece.position.x, SetPiece.position.y, SetPiece.position.x + SetPiece.size.width + 1, SetPiece.position.y + SetPiece.size.height + 1, true);
 			for (int i = 0; i < ActiveObjectCount; i++)
 				SyncObjectAnim(Objects[ActiveObjects[i]]);
 			auto tren = TransVal;
@@ -678,9 +680,9 @@ void ResyncQuests()
 	}
 	if (setlevel && setlvlnum == SL_VILEBETRAYER) {
 		if (Quests[Q_BETRAYER]._qvar1 >= 4)
-			ObjChangeMapResync(1, 11, 20, 18);
+			ObjChangeMap(1, 11, 20, 18, true);
 		if (Quests[Q_BETRAYER]._qvar1 >= 6) {
-			ObjChangeMapResync(1, 18, 20, 24);
+			ObjChangeMap(1, 18, 20, 24, true);
 			if (gbIsMultiplayer) {
 				Monster *lazarus = FindUniqueMonster(UniqueMonsterType::Lazarus);
 				if (lazarus != nullptr) {
@@ -707,7 +709,7 @@ void ResyncQuests()
 	    && Quests[Q_DIABLO]._qactive == QUEST_ACTIVE
 	    && gbIsMultiplayer) {
 		Point posPentagram = Quests[Q_DIABLO].position;
-		ObjChangeMapResync(posPentagram.x, posPentagram.y, posPentagram.x + 5, posPentagram.y + 5);
+		ObjChangeMap(posPentagram.x, posPentagram.y, posPentagram.x + 5, posPentagram.y + 5, true);
 		InitL4Triggers();
 	}
 	if (currlevel == 0
