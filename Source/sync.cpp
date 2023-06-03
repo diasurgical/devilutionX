@@ -7,6 +7,7 @@
 #include <cstdint>
 
 #include "levels/gendung.h"
+#include "lighting.h"
 #include "monster.h"
 #include "player.h"
 
@@ -191,6 +192,8 @@ void SyncMonster(bool isOwner, const TSyncMonster &monsterSync)
 		M_ClearSquares(monster);
 		dMonster[position.x][position.y] = monsterId + 1;
 		monster.position.tile = position;
+		if (monster.lightId != NO_LIGHT)
+			ChangeLightXY(monster.lightId, position);
 		decode_enemy(monster, enemyId);
 		Direction md = GetDirection(position, monster.enemyPosition);
 		M_StartStand(monster, md);
