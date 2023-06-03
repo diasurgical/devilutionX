@@ -24,6 +24,7 @@
 #include "lighting.h"
 #include "monstdat.h"
 #include "monster.h"
+#include "options.h"
 #include "plrmsg.h"
 #include "quests.h"
 #include "spells.h"
@@ -651,7 +652,37 @@ std::string DebugCmdShowGrid(const string_view parameter)
 
 std::string DebugCmdLevelSeed(const string_view parameter)
 {
-	return StrCat("Seedinfo for level ", currlevel, "\nseed: ", glSeedTbl[currlevel], "\nMid1: ", glMid1Seed[currlevel], "\nMid2: ", glMid2Seed[currlevel], "\nMid3: ", glMid3Seed[currlevel], "\nEnd: ", glEndSeed[currlevel]);
+	string_view levelType = setlevel ? "set level" : "dungeon level";
+
+	char gameId[] = {
+		static_cast<char>((sgGameInitInfo.programid >> 24) & 0xFF),
+		static_cast<char>((sgGameInitInfo.programid >> 16) & 0xFF),
+		static_cast<char>((sgGameInitInfo.programid >> 8) & 0xFF),
+		static_cast<char>(sgGameInitInfo.programid & 0xFF),
+		'\0'
+	};
+
+	string_view mode = gbIsMultiplayer ? "MP" : "SP";
+
+	string_view questPool;
+	if (UseMultiplayerQuests())
+		questPool = "MP";
+	else if (*sgOptions.Gameplay.randomizeQuests)
+		questPool = "Random";
+	else
+		questPool = "All";
+
+	return StrCat(
+	    "Seedinfo for ", levelType, " ", currlevel, "\n",
+	    "seed: ", glSeedTbl[currlevel], "\n",
+	    "Mid1: ", glMid1Seed[currlevel], "\n",
+	    "Mid2: ", glMid2Seed[currlevel], "\n",
+	    "Mid3: ", glMid3Seed[currlevel], "\n",
+	    "End: ", glEndSeed[currlevel], "\n",
+	    "\n",
+	    gameId, " ", mode, "\n",
+	    questPool, " quests: ", glSeedTbl[15], "\n",
+	    "Storybook: ", glSeedTbl[16]);
 }
 
 std::string DebugCmdSpawnUniqueMonster(const string_view parameter)
