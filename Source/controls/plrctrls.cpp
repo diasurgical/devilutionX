@@ -1627,7 +1627,7 @@ void ProcessGameAction(const GameAction &action)
 			QuestLogIsOpen = false;
 			sbookflag = false;
 			CloseGoldWithdraw();
-			IsStashOpen = false;
+			CloseStash();
 		}
 		break;
 	case GameActionType_TOGGLE_CHARACTER_INFO:
@@ -1644,7 +1644,7 @@ void ProcessGameAction(const GameAction &action)
 			StartQuestlog();
 			CloseCharPanel();
 			CloseGoldWithdraw();
-			IsStashOpen = false;
+			CloseStash();
 			spselflag = false;
 		} else {
 			QuestLogIsOpen = false;

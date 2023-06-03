@@ -227,7 +227,7 @@ void LeftMouseCmd(bool bShift)
 
 	if (leveltype == DTYPE_TOWN) {
 		CloseGoldWithdraw();
-		IsStashOpen = false;
+		CloseStash();
 		if (pcursitem != -1 && pcurs == CURSOR_HAND)
 			NetSendCmdLocParam1(true, invflag ? CMD_GOTOGETITEM : CMD_GOTOAGETITEM, cursPosition, pcursitem);
 		if (pcursmonst != -1)
@@ -1482,7 +1482,7 @@ void InventoryKeyPressed()
 	}
 	sbookflag = false;
 	CloseGoldWithdraw();
-	IsStashOpen = false;
+	CloseStash();
 }
 
 void CharacterSheetKeyPressed()
@@ -1525,7 +1525,7 @@ void QuestLogKeyPressed()
 	}
 	CloseCharPanel();
 	CloseGoldWithdraw();
-	IsStashOpen = false;
+	CloseStash();
 }
 
 void DisplaySpellsKeyPressed()
