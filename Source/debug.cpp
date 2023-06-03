@@ -32,6 +32,7 @@
 #include "utils/file_util.h"
 #include "utils/language.h"
 #include "utils/log.hpp"
+#include "utils/str_case.hpp"
 #include "utils/str_cat.hpp"
 #include "utils/str_split.hpp"
 
@@ -669,14 +670,13 @@ std::string DebugCmdSpawnUniqueMonster(const string_view parameter)
 		return "Monster name cannot be empty. Duh.";
 
 	name.pop_back(); // remove last space
-	std::transform(name.begin(), name.end(), name.begin(), [](unsigned char c) { return std::tolower(c); });
+	AsciiStrToLower(name);
 
 	int mtype = -1;
 	UniqueMonsterType uniqueIndex = UniqueMonsterType::None;
 	for (size_t i = 0; UniqueMonstersData[i].mtype != MT_INVALID; i++) {
 		auto mondata = UniqueMonstersData[i];
-		std::string monsterName(mondata.mName);
-		std::transform(monsterName.begin(), monsterName.end(), monsterName.begin(), [](unsigned char c) { return std::tolower(c); });
+		const std::string monsterName = AsciiStrToLower(mondata.mName);
 		if (monsterName.find(name) == std::string::npos)
 			continue;
 		mtype = mondata.mtype;
@@ -757,14 +757,13 @@ std::string DebugCmdSpawnMonster(const string_view parameter)
 		return "Monster name cannot be empty. Duh.";
 
 	name.pop_back(); // remove last space
-	std::transform(name.begin(), name.end(), name.begin(), [](unsigned char c) { return std::tolower(c); });
+	AsciiStrToLower(name);
 
 	int mtype = -1;
 
 	for (int i = 0; i < NUM_MTYPES; i++) {
 		auto mondata = MonstersData[i];
-		std::string monsterName(mondata.name);
-		std::transform(monsterName.begin(), monsterName.end(), monsterName.begin(), [](unsigned char c) { return std::tolower(c); });
+		const std::string monsterName = AsciiStrToLower(mondata.name);
 		if (monsterName.find(name) == std::string::npos)
 			continue;
 		mtype = i;
@@ -990,7 +989,7 @@ std::string DebugCmdSearchMonster(const string_view parameter)
 
 	std::string name;
 	AppendStrView(name, parameter);
-	std::transform(name.begin(), name.end(), name.begin(), [](unsigned char c) { return std::tolower(c); });
+	AsciiStrToLower(name);
 	SearchMonsters.push_back(name);
 
 	return "We will find this bastard!";
@@ -1005,7 +1004,7 @@ std::string DebugCmdSearchItem(const string_view parameter)
 
 	std::string name;
 	AppendStrView(name, parameter);
-	std::transform(name.begin(), name.end(), name.begin(), [](unsigned char c) { return std::tolower(c); });
+	AsciiStrToLower(name);
 	SearchItems.push_back(name);
 
 	return "Are you greedy? Anyway I will help you.";
@@ -1020,7 +1019,7 @@ std::string DebugCmdSearchObject(const string_view parameter)
 
 	std::string name;
 	AppendStrView(name, parameter);
-	std::transform(name.begin(), name.end(), name.begin(), [](unsigned char c) { return std::tolower(c); });
+	AsciiStrToLower(name);
 	SearchObjects.push_back(name);
 
 	return "I will look for the pyramids. Oh sorry, I'm looking for what you want, of course.";
@@ -1251,11 +1250,9 @@ bool IsDebugAutomapHighlightNeeded()
 bool ShouldHighlightDebugAutomapTile(Point position)
 {
 	auto matchesSearched = [](const string_view name, const std::vector<std::string> &searchedNames) {
-		std::string nameToLower;
-		StrAppend(nameToLower, name);
-		std::transform(nameToLower.begin(), nameToLower.end(), nameToLower.begin(), [](unsigned char c) { return std::tolower(c); });
+		const std::string lowercaseName = AsciiStrToLower(name);
 		for (const auto &searchedName : searchedNames) {
-			if (nameToLower.find(searchedName) != std::string::npos) {
+			if (lowercaseName.find(searchedName) != std::string::npos) {
 				return true;
 			}
 		}

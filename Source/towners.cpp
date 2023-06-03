@@ -11,6 +11,7 @@
 #include "minitext.h"
 #include "stores.h"
 #include "utils/language.h"
+#include "utils/str_case.hpp"
 
 namespace devilution {
 namespace {
@@ -937,7 +938,7 @@ void UpdateCowFarmerAnimAfterQuestComplete()
 bool DebugTalkToTowner(std::string targetName)
 {
 	SetupTownStores();
-	std::transform(targetName.begin(), targetName.end(), targetName.begin(), [](unsigned char c) { return std::tolower(c); });
+	AsciiStrToLower(targetName);
 	Player &myPlayer = *MyPlayer;
 	for (auto &townerData : TownersData) {
 		if (!IsTownerPresent(townerData.type))
@@ -948,8 +949,7 @@ bool DebugTalkToTowner(std::string targetName)
 		Towner fakeTowner;
 		townerData.init(fakeTowner, townerData);
 		fakeTowner.position = myPlayer.position.tile;
-		std::string npcName(fakeTowner.name);
-		std::transform(npcName.begin(), npcName.end(), npcName.begin(), [](unsigned char c) { return std::tolower(c); });
+		const std::string npcName = AsciiStrToLower(fakeTowner.name);
 		if (npcName.find(targetName) != std::string::npos) {
 			townerData.talk(myPlayer, fakeTowner);
 			return true;

@@ -46,6 +46,7 @@
 #include "utils/log.hpp"
 #include "utils/math.h"
 #include "utils/stdcompat/algorithm.hpp"
+#include "utils/str_case.hpp"
 #include "utils/str_cat.hpp"
 #include "utils/utf8.hpp"
 
@@ -4611,7 +4612,7 @@ std::string DebugSpawnItem(std::string itemName)
 	const int max_time = 3000;
 	const int max_iter = 1000000;
 
-	std::transform(itemName.begin(), itemName.end(), itemName.begin(), [](unsigned char c) { return std::tolower(c); });
+	AsciiStrToLower(itemName);
 
 	Item testItem;
 
@@ -4635,8 +4636,7 @@ std::string DebugSpawnItem(std::string itemName)
 		testItem = {};
 		SetupAllItems(*MyPlayer, testItem, idx, AdvanceRndSeed(), monsterLevel, 1, false, false, false);
 
-		std::string tmp(testItem._iIName);
-		std::transform(tmp.begin(), tmp.end(), tmp.begin(), [](unsigned char c) { return std::tolower(c); });
+		std::string tmp = AsciiStrToLower(testItem._iIName);
 		if (tmp.find(itemName) != std::string::npos)
 			break;
 	}
@@ -4656,7 +4656,7 @@ std::string DebugSpawnUniqueItem(std::string itemName)
 	if (ActiveItemCount >= MAXITEMS)
 		return "No space to generate the item!";
 
-	std::transform(itemName.begin(), itemName.end(), itemName.begin(), [](unsigned char c) { return std::tolower(c); });
+	AsciiStrToLower(itemName);
 	UniqueItem uniqueItem;
 	bool foundUnique = false;
 	int uniqueIndex = 0;
@@ -4664,8 +4664,7 @@ std::string DebugSpawnUniqueItem(std::string itemName)
 		if (!IsUniqueAvailable(j))
 			break;
 
-		std::string tmp(UniqueItems[j].UIName);
-		std::transform(tmp.begin(), tmp.end(), tmp.begin(), [](unsigned char c) { return std::tolower(c); });
+		const std::string tmp = AsciiStrToLower(UniqueItems[j].UIName);
 		if (tmp.find(itemName) != std::string::npos) {
 			itemName = tmp;
 			uniqueItem = UniqueItems[j];
@@ -4718,8 +4717,7 @@ std::string DebugSpawnUniqueItem(std::string itemName)
 		if (testItem._iMagical != ITEM_QUALITY_UNIQUE)
 			continue;
 
-		std::string tmp(testItem._iIName);
-		std::transform(tmp.begin(), tmp.end(), tmp.begin(), [](unsigned char c) { return std::tolower(c); });
+		const std::string tmp = AsciiStrToLower(testItem._iIName);
 		if (tmp.find(itemName) != std::string::npos)
 			break;
 		return "Impossible to generate!";
