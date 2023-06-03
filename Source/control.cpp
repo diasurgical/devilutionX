@@ -48,6 +48,7 @@
 #include "utils/format_int.hpp"
 #include "utils/language.h"
 #include "utils/log.hpp"
+#include "utils/parse_int.hpp"
 #include "utils/sdl_geometry.h"
 #include "utils/stdcompat/optional.hpp"
 #include "utils/str_case.hpp"
@@ -388,9 +389,9 @@ std::string TextCmdArena(const string_view parameter)
 		return ret;
 	}
 
-	int arenaNumber = atoi(parameter.data());
-	_setlevels arenaLevel = static_cast<_setlevels>(arenaNumber - 1 + SL_FIRST_ARENA);
-	if (arenaNumber < 0 || !IsArenaLevel(arenaLevel)) {
+	const ParseIntResult<int> parsedParam = ParseInt<int>(parameter, /*min=*/0);
+	const _setlevels arenaLevel = parsedParam.ok() ? static_cast<_setlevels>(parsedParam.value - 1 + SL_FIRST_ARENA) : _setlevels::SL_NONE;
+	if (!IsArenaLevel(arenaLevel)) {
 		StrAppend(ret, _("Invalid arena-number. Valid numbers are:"));
 		AppendArenaOverview(ret);
 		return ret;
@@ -413,10 +414,11 @@ std::string TextCmdArenaPot(const string_view parameter)
 		StrAppend(ret, _("Arenas are only supported in multiplayer."));
 		return ret;
 	}
+	int numPots = ParseInt<int>(parameter, /*min=*/1).value_or(1);
 
 	Player &myPlayer = *MyPlayer;
 
-	for (int potNumber = std::max(1, atoi(parameter.data())); potNumber > 0; potNumber--) {
+	for (int potNumber = numPots; potNumber > 0; potNumber--) {
 		Item item {};
 		InitializeItem(item, IDI_ARENAPOT);
 		GenerateNewSeed(item);
