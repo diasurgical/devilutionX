@@ -257,7 +257,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Multiplayer
 
-- Fix multiple dsync issues
+- Fix multiple desync issues
 
 #### Stability / Performance / System
 
@@ -492,12 +492,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Multiplayer
 
-- Correct dsync caused by incorrect vision range for other players
+- Correct desync caused by incorrect vision range for other players
 - Sync monster active state
 - Player attack speed being out of sync
-- Dsync when switching items without sufficient inventory space
+- Desync when switching items without sufficient inventory space
 - Compensate for desync cause related to player movement
-- Golem dsyncing if owner leaves level
+- Golem desyncing if owner leaves level
 - Prevent golems from fighting each other
 - Play the correct sound when a player is hit by missiles
 
