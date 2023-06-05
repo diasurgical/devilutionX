@@ -65,7 +65,7 @@ struct _uiheroinfo {
 };
 
 extern OptionalOwnedClxSpriteList ArtLogo;
-extern std::array<OptionalOwnedClxSpriteList, 2> DifficultyIndicator;
+extern OptionalOwnedClxSpriteList DifficultyIndicator;
 extern std::array<OptionalOwnedClxSpriteList, 3> ArtFocus;
 extern OptionalOwnedClxSpriteList ArtBackgroundWidescreen;
 extern OptionalOwnedClxSpriteList ArtBackground;
