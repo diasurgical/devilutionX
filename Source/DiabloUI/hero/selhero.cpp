@@ -95,10 +95,10 @@ void RenderDifficultyIndicators()
 	const uint16_t width = (*DifficultyIndicator)[0].width();
 	const uint16_t height = (*DifficultyIndicator)[0].height();
 	SDL_Rect rect = MakeSdlRect(
-		SELHERO_DIALOG_HERO_IMG->m_rect.x + 1,
-		SELHERO_DIALOG_HERO_IMG->m_rect.y + SELHERO_DIALOG_HERO_IMG->m_rect.h - height - 1,
-		width,
-		height);
+	    SELHERO_DIALOG_HERO_IMG->m_rect.x + 1,
+	    SELHERO_DIALOG_HERO_IMG->m_rect.y + SELHERO_DIALOG_HERO_IMG->m_rect.h - height - 1,
+	    width,
+	    height);
 	for (int i = 0; i <= DIFF_LAST; i++) {
 		if (i >= selhero_heroInfo.herorank)
 			break;
