@@ -462,6 +462,28 @@ std::string TextCmdInspect(const string_view parameter)
 	return ret;
 }
 
+bool IsQuestEnabled(const Quest &quest)
+{
+	switch (quest._qidx) {
+	case Q_FARMER:
+		return gbIsHellfire && !sgGameInitInfo.bCowQuest;
+	case Q_JERSEY:
+		return gbIsHellfire && sgGameInitInfo.bCowQuest;
+	case Q_GIRL:
+		return gbIsHellfire && sgGameInitInfo.bTheoQuest;
+	case Q_CORNSTN:
+		return gbIsHellfire && !gbIsMultiplayer;
+	case Q_GRAVE:
+	case Q_DEFILER:
+	case Q_NAKRUL:
+		return gbIsHellfire;
+	case Q_TRADER:
+		return false;
+	default:
+		return quest._qactive != QUEST_NOTAVAIL;
+	}
+}
+
 std::string TextCmdLevelSeed(const string_view parameter)
 {
 	string_view levelType = setlevel ? "set level" : "dungeon level";
@@ -475,14 +497,14 @@ std::string TextCmdLevelSeed(const string_view parameter)
 	};
 
 	string_view mode = gbIsMultiplayer ? "MP" : "SP";
+	string_view questPool = UseMultiplayerQuests() ? "MP" : "Full";
 
-	string_view questPool;
-	if (UseMultiplayerQuests())
-		questPool = "MP";
-	else if (*sgOptions.Gameplay.randomizeQuests)
-		questPool = "Random";
-	else
-		questPool = "All";
+	uint32_t questFlags = 0;
+	for (const Quest &quest : Quests) {
+		questFlags <<= 1;
+		if (IsQuestEnabled(quest))
+			questFlags |= 1;
+	}
 
 	return StrCat(
 	    "Seedinfo for ", levelType, " ", currlevel, "\n",
@@ -495,7 +517,7 @@ std::string TextCmdLevelSeed(const string_view parameter)
 #endif
 	    "\n",
 	    gameId, " ", mode, "\n",
-	    questPool, " quests: ", glSeedTbl[15], "\n",
+	    questPool, " quests: ", questFlags, "\n",
 	    "Storybook: ", glSeedTbl[16]);
 }
 
