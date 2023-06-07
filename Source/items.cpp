@@ -2397,6 +2397,7 @@ std::string GetTranslatedItemNameMagical(const Item &item, bool hellfireItem, bo
 			    // GenerateRnd(prefix.power.param2 - prefix.power.param2 + 1)
 			    DiscardRandomValues(1);
 			    switch (pPrefix->power.type) {
+			    case IPL_DOPPELGANGER:
 			    case IPL_TOHIT_DAMP:
 				    DiscardRandomValues(2);
 				    break;
