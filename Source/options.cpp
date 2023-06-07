@@ -80,7 +80,7 @@ constexpr size_t NumResamplers =
 
 std::string GetIniPath()
 {
-	auto path = paths::ConfigPath() + std::string("diablo.ini");
+	auto path = paths::ConfigPath() + paths::IniFile();
 	return path;
 }
 

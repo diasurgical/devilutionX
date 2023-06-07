@@ -917,7 +917,8 @@ void PrintHelpOption(string_view flags, string_view description)
 	PrintHelpOption("--version", _(/* TRANSLATORS: Commandline Option */ "Print the version and exit"));
 	PrintHelpOption("--data-dir", _(/* TRANSLATORS: Commandline Option */ "Specify the folder of diabdat.mpq"));
 	PrintHelpOption("--save-dir", _(/* TRANSLATORS: Commandline Option */ "Specify the folder of save files"));
-	PrintHelpOption("--config-dir", _(/* TRANSLATORS: Commandline Option */ "Specify the location of diablo.ini"));
+	PrintHelpOption("--config-dir", _(/* TRANSLATORS: Commandline Option */ "Specify the folder of configuration file"));
+  PrintHelpOption("--ini-file", _(/* TRANSLATORS: Commandline Option */ "Specify the name of ini file"));
 	PrintHelpOption("--lang", _(/* TRANSLATORS: Commandline Option */ "Specify the language code (e.g. en or pt_BR)"));
 	PrintHelpOption("-n", _(/* TRANSLATORS: Commandline Option */ "Skip startup videos"));
 	PrintHelpOption("-f", _(/* TRANSLATORS: Commandline Option */ "Display frames per second"));
@@ -995,6 +996,12 @@ void DiabloParseFlags(int argc, char **argv)
 				diablo_quit(64);
 			}
 			paths::SetConfigPath(argv[++i]);
+    } else if (arg == "--ini-file") {
+			if (i + 1 == argc) {
+				PrintFlagsRequiresArgument("--ini-file");
+				diablo_quit(64);
+			}
+			paths::SetIniFile(argv[++i]);
 		} else if (arg == "--lang") {
 			if (i + 1 == argc) {
 				PrintFlagsRequiresArgument("--lang");

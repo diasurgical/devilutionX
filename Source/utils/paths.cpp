@@ -30,6 +30,7 @@ namespace {
 std::optional<std::string> basePath;
 std::optional<std::string> prefPath;
 std::optional<std::string> configPath;
+std::optional<std::string> iniFile;
 std::optional<std::string> assetsPath;
 
 void AddTrailingSlash(std::string &path)
@@ -83,7 +84,7 @@ const std::string &PrefPath()
 #else
 		prefPath = FromSDL(SDL_GetPrefPath("diasurgical", "devilution"));
 #if !defined(__amigaos__)
-		if (FileExistsAndIsWriteable("diablo.ini")) {
+		if (FileExistsAndIsWriteable(paths::IniFile().c_str())) {
 			prefPath = std::string("." DIRECTORY_SEPARATOR_STR);
 		}
 #endif
@@ -102,13 +103,21 @@ const std::string &ConfigPath()
 #else
 		configPath = FromSDL(SDL_GetPrefPath("diasurgical", "devilution"));
 #if !defined(__amigaos__)
-		if (FileExistsAndIsWriteable("diablo.ini")) {
+		if (FileExistsAndIsWriteable(paths::IniFile().c_str())) {
 			configPath = std::string("." DIRECTORY_SEPARATOR_STR);
 		}
 #endif
 #endif
 	}
 	return *configPath;
+}
+
+const std::string &IniFile()
+{
+  // use default ini file name if not set with program argument
+	if (!iniFile) iniFile = "diablo.ini";
+  
+	return *iniFile;
 }
 
 const std::string &AssetsPath()
@@ -143,6 +152,11 @@ void SetConfigPath(const std::string &path)
 {
 	configPath = path;
 	AddTrailingSlash(*configPath);
+}
+
+void SetIniFile(const std::string &file)
+{
+	iniFile = file;	
 }
 
 void SetAssetsPath(const std::string &path)
