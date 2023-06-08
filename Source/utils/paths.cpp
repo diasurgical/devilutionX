@@ -114,9 +114,10 @@ const std::string &ConfigPath()
 
 const std::string &IniFile()
 {
-  // use default ini file name if not set with program argument
-	if (!iniFile) iniFile = "diablo.ini";
-  
+	// use default ini file name if not set with program argument
+	if (!iniFile)
+		iniFile = "diablo.ini";
+
 	return *iniFile;
 }
 
