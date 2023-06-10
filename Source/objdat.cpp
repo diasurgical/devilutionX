@@ -268,7 +268,7 @@ const ObjectData AllObjects[109] = {
 /*OBJ_MUSHPATCH*/    { OFILE_MUSHPTCH,       0,       0, DTYPE_NONE,      THEME_NONE,              Q_MUSHROOM, Solid | MissilesPassThrough | Light | Trap,               1,        0,         96,        3 },
 /*OBJ_LAZSTAND*/     { OFILE_LZSTAND,        0,       0, DTYPE_NONE,      THEME_NONE,              Q_BETRAYER, Solid | Light,                                            1,        0,        128,        3 },
 /*OBJ_SLAINHERO*/    { OFILE_DECAP,          9,       9, DTYPE_NONE,      THEME_NONE,              Q_INVALID,  Solid | MissilesPassThrough | Light,                      2,        0,         96,        1 },
-/*OBJ_SIGNCHEST*/    { OFILE_CHEST3,         0,       0, DTYPE_NONE,      THEME_NONE,              Q_INVALID,  Solid | MissilesPassThrough | Light | Trap,               1,        0,         96,        1 },
+/*OBJ_SIGNCHEST*/    { OFILE_CHEST3,         0,       0, DTYPE_NONE,      THEME_NONE,              Q_INVALID,  Solid | MissilesPassThrough | Light,                      1,        0,         96,        1 },
 /*OBJ_BOOKSHELFR*/   { OFILE_BCASE,          0,       0, DTYPE_NONE,      THEME_NONE,              Q_INVALID,  Solid | Light,                                            2,        0,         96,        0 },
 /*OBJ_POD*/          { OFILE_POD,           17,      20, DTYPE_NONE,      THEME_NONE,              Q_INVALID,  Solid | MissilesPassThrough | Light | Breakable,          1,        9,         96,        3 },
 /*OBJ_PODEX*/        { OFILE_PODEX,         17,      20, DTYPE_NONE,      THEME_NONE,              Q_INVALID,  Solid | MissilesPassThrough | Light | Breakable,          1,       10,         96,        3 },
