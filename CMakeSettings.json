@@ -76,6 +76,24 @@
       ]
     },
     {
+      "name": "x64-RelWithDebInfo",
+      "generator": "Ninja",
+      "configurationType": "RelWithDebInfo",
+      "buildRoot": "${workspaceRoot}\\build\\${name}",
+      "installRoot": "${env.USERPROFILE}\\CMakeBuilds\\${workspaceHash}\\install\\${name}",
+      "cmakeCommandArgs": "-DCPACK=ON",
+      "inheritEnvironments": [ "msvc_x64" ],
+      "intelliSenseMode": "windows-msvc-x64",
+      "enableClangTidyCodeAnalysis": true,
+      "variables": [
+        {
+          "name": "DISCORD_INTEGRATION",
+          "value": "True",
+          "type": "BOOL"
+        }
+      ]
+    },
+    {
       "name": "x86-Debug",
       "generator": "Ninja",
       "configurationType": "Debug",
