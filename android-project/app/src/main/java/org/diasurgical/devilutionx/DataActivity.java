@@ -101,8 +101,8 @@ public class DataActivity extends Activity {
 			return true;
 		}
 
-		if (lang.startsWith("ko") || lang.startsWith("zh") || lang.startsWith("ja")) {
-			File fonts_mpq = fileManager.getFile("/fonts.mpq");
+		File fonts_mpq = fileManager.getFile("/fonts.mpq");
+		if (lang.startsWith("ko") || lang.startsWith("zh") || lang.startsWith("ja") || fonts_mpq.exists()) {
 			if (!fonts_mpq.exists() || fonts_mpq.length() == 53991069 /* v2 */) {
 				if (!isDownloadingFonts) {
 					fonts_mpq.delete();
