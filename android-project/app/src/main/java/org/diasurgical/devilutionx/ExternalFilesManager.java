@@ -28,6 +28,11 @@ public class ExternalFilesManager {
 		return file.exists();
 	}
 
+	public long fileSize(String fileName) {
+		File file = getFile(fileName);
+		return file.length();
+	}
+
 	public File getFile(String fileName) {
 		return new File(externalFilesDirectory + "/" + fileName);
 	}
