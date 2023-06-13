@@ -82,7 +82,7 @@ public class DevilutionXSDLActivity extends SDLActivity {
 			if (!fileManager.hasFile("fonts.mpq"))
 				return true;
 		}
-		if (fileManager.fileSize("fonts.mpq") == 53991069 /* v2 */) {
+		if (fileManager.fileSize("fonts.mpq") == 70471463 /* v1 */ || fileManager.fileSize("fonts.mpq") == 53991069 /* v2 */) {
 			return true;
 		}
 
