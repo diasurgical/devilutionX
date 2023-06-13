@@ -17,8 +17,8 @@ android {
 		}
 		minSdkVersion 18
 		targetSdkVersion 32
-		versionCode 22
-		versionName "1.4.0"
+		versionCode 26
+		versionName "1.5.0"
 		externalNativeBuild {
 			cmake {
 				arguments "-DANDROID_STL=c++_static"
