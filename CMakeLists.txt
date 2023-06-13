@@ -70,7 +70,7 @@ if(NOT VERSION_SUFFIX)
   else()
     # For versions without a suffix, e.g. "1.5.0" rather than "1.5.0-dev",
     # only include the build type if it is a debug build.
-    set(VERSION_SUFFIX "$<IF:$<CONFIG:Debug>,$<CONFIG>,>")
+    set(VERSION_SUFFIX "$<$<CONFIG:Debug>:$<CONFIG>>")
   endif()
 endif()
 
