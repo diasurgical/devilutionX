@@ -61,6 +61,8 @@ public class ExternalFilesManager {
 
 			for (int i = 0; i < externalDirs.length; i++) {
 				File dir = externalDirs[i];
+				if (dir == null)
+					continue;
 				File[] iniFiles = dir.listFiles((dir1, name) -> name.equals("diablo.ini"));
 				if (iniFiles.length > 0)
 					return dir.getAbsolutePath();
@@ -68,6 +70,8 @@ public class ExternalFilesManager {
 
 			for (int i = 0; i < externalDirs.length; i++) {
 				File dir = externalDirs[i];
+				if (dir == null)
+					continue;
 				if (dir.listFiles().length > 0)
 					return dir.getAbsolutePath();
 			}
