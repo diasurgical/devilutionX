@@ -59,20 +59,28 @@ public class ExternalFilesManager {
 		if (Build.VERSION.SDK_INT >= 19) {
 			File[] externalDirs = context.getExternalFilesDirs(null);
 
-			for (int i = 0; i < externalDirs.length; i++) {
-				File dir = externalDirs[i];
+			for (File dir : externalDirs) {
+				if (dir == null) {
+					continue;
+				}
 				File[] iniFiles = dir.listFiles((dir1, name) -> name.equals("diablo.ini"));
-				if (iniFiles.length > 0)
+				if (iniFiles != null && iniFiles.length > 0) {
 					return dir.getAbsolutePath();
+				}
 			}
 
-			for (int i = 0; i < externalDirs.length; i++) {
-				File dir = externalDirs[i];
-				if (dir.listFiles().length > 0)
+			for (File dir : externalDirs) {
+				if (dir == null) {
+					continue;
+				}
+				File[] lastFiles = dir.listFiles();
+				if (lastFiles != null && lastFiles.length > 0) {
 					return dir.getAbsolutePath();
+				}
 			}
 		}
 
+		// Fallback to the primary external storage directory
 		return context.getExternalFilesDir(null).getAbsolutePath();
 	}
 
