@@ -45,7 +45,7 @@ jobs:
         CMAKE_BUILD_TYPE: ${{github.event_name == 'release' && 'Release' || 'RelWithDebInfo'}}
       run: |
         cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=${{env.CMAKE_BUILD_TYPE}} -DBUILD_TESTING=OFF \
-          -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64"
+          -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64" \
           -DMACOSX_STANDALONE_APP_BUNDLE=ON -DDISCORD_INTEGRATION=ON && \
         cmake --build build -j $(sysctl -n hw.physicalcpu) --target package && \
         mv build/devilutionx.dmg build/devilutionx-universal-macOS.dmg
