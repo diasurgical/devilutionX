@@ -71,6 +71,19 @@ TEST(Drlg_l1, CreateL5Dungeon_diablo_4_609325643)
 	EXPECT_EQ(ViewPosition, Point(55, 47));
 }
 
+TEST(Drlg_l1, CreateL5Dungeon_diablo_4_902156014)
+{
+	LoadExpectedLevelData("diablo/4-902156014.dun");
+
+	TestInitGame();
+	Quests[Q_LTBANNER]._qactive = QUEST_INIT;
+
+	TestCreateDungeon(4, 902156014, ENTRY_MAIN);
+	EXPECT_EQ(ViewPosition, Point(75, 56));
+	TestCreateDungeon(4, 902156014, ENTRY_PREV);
+	EXPECT_EQ(ViewPosition, Point(51, 59));
+}
+
 TEST(Drlg_l1, CreateL5Dungeon_hellfire_1_401921334)
 {
 	LoadExpectedLevelData("hellfire/1-401921334.dun");
