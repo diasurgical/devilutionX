@@ -37,6 +37,7 @@ When the transfer is done you can disconnect your device and press "Check again"
 
 <details><summary>Windows</summary>
 
+**Note**: if you have the GoG version installed on your Windows machine, you do not need to copy the MPQ files as described in the instructions.
 - Copy the MPQ files to the folder containing the DevilutionX exe, or to the data folder. The data folder path may differ, but will normally be `%AppData%\diasurgical\devilution`
 - Run `devilutionx.exe`
 
