@@ -1114,7 +1114,7 @@ msgstr "level 15"
 
 #: Source/diablo.cpp:120
 msgid "I need help! Come Here!"
-msgstr "J'ai besoin d'aide ! Venez ici !"
+msgstr "J'ai besoin d'aide ! Venez !"
 
 #: Source/diablo.cpp:121
 msgid "Follow me."
