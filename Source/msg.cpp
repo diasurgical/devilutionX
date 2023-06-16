@@ -1046,12 +1046,14 @@ void RecreateItem(const Player &player, const TItem &messageItem, Item &item)
 	item._iMaxDur = messageItem.bMDur;
 	item._iCharges = messageItem.bCh;
 	item._iMaxCharges = messageItem.bMCh;
-	item._iPLToHit = SDL_SwapLE16(messageItem.wToHit);
-	item._iMaxDam = SDL_SwapLE16(messageItem.wMaxDam);
-	item._iMinStr = messageItem.bMinStr;
-	item._iMinMag = messageItem.bMinMag;
-	item._iMinDex = messageItem.bMinDex;
-	item._iAC = SDL_SwapLE16(messageItem.bAC);
+	if (gbIsHellfire) {
+		item._iPLToHit = SDL_SwapLE16(messageItem.wToHit);
+		item._iMaxDam = SDL_SwapLE16(messageItem.wMaxDam);
+		item._iMinStr = messageItem.bMinStr;
+		item._iMinMag = messageItem.bMinMag;
+		item._iMinDex = messageItem.bMinDex;
+		item._iAC = SDL_SwapLE16(messageItem.bAC);
+	}
 	item.dwBuff = dwBuff;
 }
 
