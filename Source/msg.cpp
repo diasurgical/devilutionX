@@ -1033,13 +1033,13 @@ void RecreateItem(const Player &player, const TItem &messageItem, Item &item)
 	    SDL_SwapLE32(messageItem.dwSeed), SDL_SwapLE16(messageItem.wValue), (dwBuff & CF_HELLFIRE) != 0);
 	if (messageItem.bId != 0)
 		item._iIdentified = true;
-	item._iDurability = messageItem.bDur;
 	item._iMaxDur = messageItem.bMDur;
-	item._iCharges = messageItem.bCh;
-	item._iMaxCharges = messageItem.bMCh;
+	item._iDurability = clamp<int>(messageItem.bDur, 1, item._iMaxDur);
+	item._iMaxCharges = clamp<int>(messageItem.bMCh, 0, item._iMaxCharges);
+	item._iCharges = clamp<int>(messageItem.bCh, 0, item._iMaxCharges);
 	if (gbIsHellfire) {
-		item._iPLToHit = SDL_SwapLE16(messageItem.wToHit);
-		item._iMaxDam = SDL_SwapLE16(messageItem.wMaxDam);
+		item._iPLToHit = ClampToHit(item, SDL_SwapLE16(messageItem.wToHit));
+		item._iMaxDam = ClampMaxDam(item, SDL_SwapLE16(messageItem.wMaxDam));
 	}
 	item.dwBuff = dwBuff;
 }

@@ -1746,6 +1746,22 @@ bool CanPut(Point position)
 	return true;
 }
 
+int16_t ClampToHit(const Item &item, int16_t toHit)
+{
+	if (toHit < item._iPLToHit || toHit > 51)
+		return item._iPLToHit;
+
+	return toHit;
+}
+
+uint8_t ClampMaxDam(const Item &item, uint8_t maxDam)
+{
+	if (maxDam < item._iMaxDam || maxDam - item._iMinDam > 30)
+		return item._iMaxDam;
+
+	return maxDam;
+}
+
 int SyncDropItem(Point position, _item_indexes idx, uint16_t icreateinfo, int iseed, int id, int dur, int mdur, int ch, int mch, int ivalue, uint32_t ibuff, int toHit, int maxDam)
 {
 	if (ActiveItemCount >= MAXITEMS)
@@ -1756,13 +1772,13 @@ int SyncDropItem(Point position, _item_indexes idx, uint16_t icreateinfo, int is
 	RecreateItem(*MyPlayer, item, idx, icreateinfo, iseed, ivalue, (ibuff & CF_HELLFIRE) != 0);
 	if (id != 0)
 		item._iIdentified = true;
-	item._iDurability = dur;
 	item._iMaxDur = mdur;
-	item._iCharges = ch;
-	item._iMaxCharges = mch;
+	item._iDurability = clamp<int>(dur, 1, item._iMaxDur);
+	item._iMaxCharges = clamp<int>(mch, 0, item._iMaxCharges);
+	item._iCharges = clamp<int>(ch, 0, item._iMaxCharges);
 	if (gbIsHellfire) {
-		item._iPLToHit = toHit;
-		item._iMaxDam = maxDam;
+		item._iPLToHit = ClampToHit(item, toHit);
+		item._iMaxDam = ClampMaxDam(item, maxDam);
 	}
 	item.dwBuff = ibuff;
 
