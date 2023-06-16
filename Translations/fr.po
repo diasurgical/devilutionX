@@ -1485,7 +1485,7 @@ msgstr "Impossible de se connecter"
 
 #: Source/dvlnet/tcp_client.cpp:91
 msgid "error: read 0 bytes from server"
-msgstr "erreur: 0 byte lu du serveur"
+msgstr "erreur: 0 octet lu du serveur"
 
 #: Source/error.cpp:53
 msgid "No automap available in town"
