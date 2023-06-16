@@ -1760,12 +1760,14 @@ int SyncDropItem(Point position, _item_indexes idx, uint16_t icreateinfo, int is
 	item._iMaxDur = mdur;
 	item._iCharges = ch;
 	item._iMaxCharges = mch;
-	item._iPLToHit = toHit;
-	item._iMaxDam = maxDam;
-	item._iMinStr = minStr;
-	item._iMinMag = minMag;
-	item._iMinDex = minDex;
-	item._iAC = ac;
+	if (gbIsHellfire) {
+		item._iPLToHit = toHit;
+		item._iMaxDam = maxDam;
+		item._iMinStr = minStr;
+		item._iMinMag = minMag;
+		item._iMinDex = minDex;
+		item._iAC = ac;
+	}
 	item.dwBuff = ibuff;
 
 	return PlaceItemInWorld(std::move(item), position);
