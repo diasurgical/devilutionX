@@ -1746,7 +1746,7 @@ bool CanPut(Point position)
 	return true;
 }
 
-int SyncDropItem(Point position, _item_indexes idx, uint16_t icreateinfo, int iseed, int id, int dur, int mdur, int ch, int mch, int ivalue, uint32_t ibuff, int toHit, int maxDam, int minStr, int minMag, int minDex, int ac)
+int SyncDropItem(Point position, _item_indexes idx, uint16_t icreateinfo, int iseed, int id, int dur, int mdur, int ch, int mch, int ivalue, uint32_t ibuff, int toHit, int maxDam)
 {
 	if (ActiveItemCount >= MAXITEMS)
 		return -1;
@@ -1763,10 +1763,6 @@ int SyncDropItem(Point position, _item_indexes idx, uint16_t icreateinfo, int is
 	if (gbIsHellfire) {
 		item._iPLToHit = toHit;
 		item._iMaxDam = maxDam;
-		item._iMinStr = minStr;
-		item._iMinMag = minMag;
-		item._iMinDex = minDex;
-		item._iAC = ac;
 	}
 	item.dwBuff = ibuff;
 
