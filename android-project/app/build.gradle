@@ -18,7 +18,7 @@ android {
 		minSdkVersion 18
 		targetSdkVersion 32
 		versionCode 26
-		versionName "1.5.1-dev"
+		versionName project.file('../../VERSION').text.trim()
 		externalNativeBuild {
 			cmake {
 				arguments "-DANDROID_STL=c++_static"
