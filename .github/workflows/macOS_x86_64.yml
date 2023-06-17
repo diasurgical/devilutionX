@@ -45,7 +45,7 @@ jobs:
         CMAKE_BUILD_TYPE: ${{github.event_name == 'release' && 'Release' || 'RelWithDebInfo'}}
       run: |
         cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=${{env.CMAKE_BUILD_TYPE}} -DBUILD_TESTING=OFF \
-          -DMACOSX_STANDALONE_APP_BUNDLE=ON -DDISCORD_INTEGRATION=ON && \
+          -DMACOSX_STANDALONE_APP_BUNDLE=ON -DDISCORD_INTEGRATION=ON -DDEVILUTIONX_SYSTEM_LIBSODIUM=OFF && \
         cmake --build build -j $(sysctl -n hw.physicalcpu) --target package && \
         mv build/devilutionx.dmg build/devilutionx-x86_64-macOS.dmg
 
