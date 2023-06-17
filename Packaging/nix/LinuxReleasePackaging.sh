@@ -5,7 +5,22 @@ set -x
 BUILD_DIR="${1-build}"
 
 mkdir -p "${BUILD_DIR}/package"
-find "${BUILD_DIR}/_CPack_Packages/Linux/7Z/" -type f -name 'devilutionx' -exec cp "{}" "${BUILD_DIR}/devilutionx" \;
+
+PKG_PATH=("${BUILD_DIR}/_CPack_Packages/Linux/7Z/"devilutionx-*/)
+PKG_PATH="${PKG_PATH[@]}"
+PKG_PATH="${PKG_PATH%/}"
+
+cp "${PKG_PATH}/bin/devilutionx" "${BUILD_DIR}/package/devilutionx"
+if [[ -f "${PKG_PATH}/lib/discord_game_sdk.so" ]]; then
+	cp "${PKG_PATH}/lib/discord_game_sdk.so" "${BUILD_DIR}/package/"
+	cat <<'SH' > "${BUILD_DIR}/package/devilutionx.sh"
+#!/bin/sh
+BASEDIR="$(dirname "$(realpath "$0")")"
+LD_LIBRARY_PATH="$BASEDIR" "$BASEDIR"/devilutionx
+SH
+	chmod +x "${BUILD_DIR}/package/devilutionx.sh"
+fi
+
 cp "${BUILD_DIR}/devilutionx" "${BUILD_DIR}/package/devilutionx"
 cp "${BUILD_DIR}/devilutionx.mpq" "${BUILD_DIR}/package/devilutionx.mpq"
 
