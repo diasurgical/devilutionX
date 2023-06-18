@@ -1060,7 +1060,7 @@ msgstr[1] "{:s} pièces d'or"
 
 #: Source/control.cpp:863
 msgid "Requirements not met"
-msgstr "Requis non satisfaits"
+msgstr "Vous n'avez pas les conditions requises"
 
 #: Source/control.cpp:897
 msgid "{:s}, Level: {:d}"
