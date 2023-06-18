@@ -4087,9 +4087,14 @@ void UseItem(size_t pnum, item_misc_id mid, SpellID spellID, int spellFrom)
 			prepareSpellID = spellID;
 		} else {
 			const int spellLevel = player.GetSpellLevel(spellID);
-			// Use CMD_SPELLXY, because tile coords aren't used anyway and it's the same behavior as normal casting
+			// Find a valid target for the spell because tile coords
+			// will be validated when processing the network message
+			Point target = cursPosition;
+			if (!InDungeonBounds(target))
+				target = player.position.future + Displacement(player._pdir);
+			// Use CMD_SPELLXY because it's the same behavior as normal casting
 			assert(IsValidSpellFrom(spellFrom));
-			NetSendCmdLocParam4(true, CMD_SPELLXY, cursPosition, static_cast<int8_t>(spellID), static_cast<uint8_t>(SpellType::Scroll), spellLevel, static_cast<uint16_t>(spellFrom));
+			NetSendCmdLocParam4(true, CMD_SPELLXY, target, static_cast<int8_t>(spellID), static_cast<uint8_t>(SpellType::Scroll), spellLevel, static_cast<uint16_t>(spellFrom));
 		}
 		break;
 	case IMISC_BOOK: {
