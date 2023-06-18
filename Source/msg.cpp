@@ -1034,7 +1034,7 @@ void RecreateItem(const Player &player, const TItem &messageItem, Item &item)
 	if (messageItem.bId != 0)
 		item._iIdentified = true;
 	item._iMaxDur = messageItem.bMDur;
-	item._iDurability = clamp<int>(messageItem.bDur, 1, item._iMaxDur);
+	item._iDurability = ClampDurability(item, messageItem.bDur);
 	item._iMaxCharges = clamp<int>(messageItem.bMCh, 0, item._iMaxCharges);
 	item._iCharges = clamp<int>(messageItem.bCh, 0, item._iMaxCharges);
 	if (gbIsHellfire) {

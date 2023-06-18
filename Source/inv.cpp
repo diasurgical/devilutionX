@@ -1746,6 +1746,14 @@ bool CanPut(Point position)
 	return true;
 }
 
+int ClampDurability(const Item &item, int durability)
+{
+	if (item._iMaxDur == 0)
+		return 0;
+
+	return clamp<int>(durability, 1, item._iMaxDur);
+}
+
 int16_t ClampToHit(const Item &item, int16_t toHit)
 {
 	if (toHit < item._iPLToHit || toHit > 51)
@@ -1773,7 +1781,7 @@ int SyncDropItem(Point position, _item_indexes idx, uint16_t icreateinfo, int is
 	if (id != 0)
 		item._iIdentified = true;
 	item._iMaxDur = mdur;
-	item._iDurability = clamp<int>(dur, 1, item._iMaxDur);
+	item._iDurability = ClampDurability(item, dur);
 	item._iMaxCharges = clamp<int>(mch, 0, item._iMaxCharges);
 	item._iCharges = clamp<int>(ch, 0, item._iMaxCharges);
 	if (gbIsHellfire) {
