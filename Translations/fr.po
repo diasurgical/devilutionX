@@ -8124,7 +8124,7 @@ msgid ""
 "dead! Dead! Do you hear me? They just keep falling and falling... their "
 "blood spilling out all over the floor... all his fault..."
 msgstr ""
-"Ils plantent, puis mordent, puis ils sont tout autour de vous. Menteur ! "
+"Ils piquent, puis mordent, puis ils sont tout autour de vous. Menteur ! "
 "MENTEUR ! Ils sont tous morts ! Morts ! Vous m'entendez ? Ils tombaient, et "
 "tombaient encore... leur sang recouvrait le sol... tout est sa faute..."
 
