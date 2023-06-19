@@ -1,39 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop-application">
-  <id>org.diasurgical.DevilutionX</id>
-  
-  <name>DevilutionX</name>
-  <summary>Diablo/Hellfire source port for modern operating systems</summary>
-  
-  <metadata_license>CC-BY-SA-4.0</metadata_license>
-  <project_license>LicenseRef=https://github.com/diasurgical/devilutionX/blob/master/LICENSE.md</project_license>
-  
-  <supports>
-    <control>pointing</control>
-    <control>keyboard</control>
-    <control>touch</control>
-    <control>gamepad</control>
-  </supports>
-  
-  <description>
-    <p>
+	<id>org.diasurgical.DevilutionX</id>
+
+	<name>DevilutionX</name>
+	<summary>Diablo/Hellfire source port for modern operating systems</summary>
+
+	<metadata_license>CC-BY-SA-4.0</metadata_license>
+	<project_license>LicenseRef-proprietary</project_license>
+
+	<url type="homepage">https://github.com/diasurgical/devilutionX</url>
+	<url type="bugtracker">https://github.com/diasurgical/devilutionX/issues</url>
+	<url type="contact">https://discord.gg/YQKCAYQ</url>
+	<url type="vcs-browser">https://github.com/diasurgical/devilutionX</url>
+
+	<content_rating type="oars-1.1">
+		<content_attribute id="violence-fantasy">moderate</content_attribute>
+		<content_attribute id="drugs-alcohol">moderate</content_attribute>
+		<content_attribute id="sex-nudity">moderate</content_attribute>
+		<content_attribute id="sex-themes">moderate</content_attribute>
+		<content_attribute id="language-profanity">mild</content_attribute>
+		<content_attribute id="language-humor">mild</content_attribute>
+		<content_attribute id="social-chat">intense</content_attribute>
+	</content_rating>
+
+	<supports>
+		<control>pointing</control>
+		<control>keyboard</control>
+		<control>touch</control>
+		<control>gamepad</control>
+	</supports>
+
+	<description>
+		<p>
       DevilutionX is a source port of Diablo and Hellfire that strives to make it simple to run the game while providing engine improvements, bugfixes, and some optional quality of life features. This includes support for modern operating systems and higher resolutions, controller and touch control support, stash, optional experience and enemy health bars, etc.
-    </p>
-    <p>
-      Note: DevilutionX requires data files from original Diablo/Hellfire. Alternatively, a demo version of Diablo can be downloaded.
-    </p>
-  </description>
-  
-  <launchable type="desktop-id">devilutionx.desktop</launchable>
-  <screenshots>
-    <screenshot type="default">
-      <image>https://cdn.discordapp.com/attachments/518541192993046562/965941731579277312/unknown.png</image>
-    </screenshot>
-    <screenshot>
-      <image>https://cdn.discordapp.com/attachments/518541192993046562/965941904086818826/unknown.png</image>
-    </screenshot>
-    <screenshot>
-      <image>https://cdn.discordapp.com/attachments/518541192993046562/965942617223348284/unknown.png</image>
-    </screenshot>
-  </screenshots>
+		</p>
+		<p>
+      Note: DevilutionX requires data files from original Diablo/Hellfire. By default, a demo version of Diablo is installed.
+		</p>
+	</description>
+
+	<launchable type="desktop-id">devilutionx.desktop</launchable>
+	<screenshots>
+		<screenshot type="default">
+			<image>https://cdn.discordapp.com/attachments/518541192993046562/965941731579277312/unknown.png</image>
+		</screenshot>
+		<screenshot>
+			<image>https://cdn.discordapp.com/attachments/518541192993046562/965941904086818826/unknown.png</image>
+		</screenshot>
+		<screenshot>
+			<image>https://cdn.discordapp.com/attachments/518541192993046562/965942617223348284/unknown.png</image>
+		</screenshot>
+	</screenshots>
+	<releases>
+		<release version="1.5.0" date="2023-06-13"/>
+		<release version="1.4.1" date="2022-07-25"/>
+		<release version="1.4.0" date="2022-04-14"/>
+		<release version="1.3.0" date="2021-11-02"/>
+		<release version="1.2.1" date="2021-04-13"/>
+		<release version="1.2.0" date="2021-04-06"/>
+		<release version="1.1.0" date="2020-10-11"/>
+		<release version="1.0.3" date="2020-10-11"/>
+		<release version="1.0.2" date="2020-10-10"/>
+		<release version="1.0.1" date="2020-03-09"/>
+		<release version="1.0.0" date="2019-12-31"/>
+		<release version="0.5.0" date="2019-10-10"/>
+		<release version="0.4.0" date="2019-03-20"/>
+		<release version="0.3.1" date="2019-03-20"/>
+		<release version="0.3.0" date="2019-03-20"/>
+		<release version="0.2.0" date="2019-03-17"/>
+		<release version="0.1.0" date="2019-02-27"/>
+	</releases>
 </component>

@@ -22,9 +22,23 @@ modules:
         - -DCMAKE_BUILD_TYPE=Release
       sources:
         - type: archive
-          url: https://github.com/diasurgical/devilutionX/releases/download/1.4.1/devilutionx-src-fully-vendored.tar.xz
-          sha256: 80527c29cd1d369ce905be426b671350b400c9468b73ef8cfbe6a09a563aeac0
+          url: https://github.com/diasurgical/devilutionX/releases/download/1.5.0/devilutionx-src-fully-vendored.tar.xz
+          sha256: 18aee4324c71198a26f15fe2b342552411c2f62039b64cf9b2fa3e249f1bc4f9
+        # CJK fonts
+        - type: file
+          filename: fonts.mpq
+          url: https://github.com/diasurgical/devilutionx-assets/releases/download/v3/fonts.mpq
+          sha256: 6b62e03c42ae4427055e0f292a1beafb5e840c397adaf1f641b909be37b8653e
+          size: 58488019
+        # Diablo shareware demo
+        - type: file
+          filename: spawn.mpq
+          url: https://github.com/diasurgical/devilutionx-assets/releases/download/v3/spawn.mpq
+          sha256: 64427cd7c1ba904eaa2e0031c16a6b136d0ecef9abc888c5ff8344b459356e38
+          size: 25448219
       post-install:
         - "sed -i 's/Icon=devilutionx-hellfire/Icon=org.diasurgical.DevilutionX-hellfire/g' ${FLATPAK_DEST}/share/applications/devilutionx-hellfire.desktop"
         - "mv ${FLATPAK_DEST}/share/applications/devilutionx-hellfire.desktop ${FLATPAK_DEST}/share/applications/${FLATPAK_ID}-hellfire.desktop"
         - "mv ${FLATPAK_DEST}/share/icons/hicolor/512x512/apps/devilutionx-hellfire.png ${FLATPAK_DEST}/share/icons/hicolor/512x512/apps/${FLATPAK_ID}-hellfire.png"
+        - "mv fonts.mpq ${FLATPAK_DEST}/share/diasurgical/devilutionx"
+        - "mv spawn.mpq ${FLATPAK_DEST}/share/diasurgical/devilutionx"
