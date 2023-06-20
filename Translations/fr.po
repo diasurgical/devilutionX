@@ -8858,7 +8858,7 @@ msgid ""
 "be your best hope, and I am sure that I can make you one of legendary "
 "proportions."
 msgstr ""
-"Alors, toujours rien ? Alors continuez à chercher. Une arme forgée sur "
+"Toujours rien ? Alors continuez à chercher. Une arme forgée sur "
 "l'Enclume pourrait être votre meilleur espoir, et je suis sûr de pouvoir "
 "vous en faire une digne de légendes."
 
