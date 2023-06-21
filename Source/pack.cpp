@@ -78,7 +78,7 @@ void PackItem(ItemPack &packedItem, const Item &item, bool isHellfire)
 	}
 }
 
-void PackPlayer(PlayerPack *pPack, const Player &player, bool manashield, bool netSync)
+void PackPlayer(PlayerPack *pPack, const Player &player)
 {
 	memset(pPack, 0, sizeof(*pPack));
 	pPack->destAction = player.destAction;
@@ -114,14 +114,14 @@ void PackPlayer(PlayerPack *pPack, const Player &player, bool manashield, bool n
 
 	for (int i = 0; i < NUM_INVLOC; i++) {
 		const Item &item = player.InvBody[i];
-		bool isHellfire = netSync ? ((item.dwBuff & CF_HELLFIRE) != 0) : gbIsHellfire;
+		bool isHellfire = gbIsHellfire;
 		PackItem(pPack->InvBody[i], item, isHellfire);
 	}
 
 	pPack->_pNumInv = player._pNumInv;
 	for (int i = 0; i < pPack->_pNumInv; i++) {
 		const Item &item = player.InvList[i];
-		bool isHellfire = netSync ? ((item.dwBuff & CF_HELLFIRE) != 0) : gbIsHellfire;
+		bool isHellfire = gbIsHellfire;
 		PackItem(pPack->InvList[i], item, isHellfire);
 	}
 
@@ -130,7 +130,7 @@ void PackPlayer(PlayerPack *pPack, const Player &player, bool manashield, bool n
 
 	for (int i = 0; i < MaxBeltItems; i++) {
 		const Item &item = player.SpdList[i];
-		bool isHellfire = netSync ? ((item.dwBuff & CF_HELLFIRE) != 0) : gbIsHellfire;
+		bool isHellfire = gbIsHellfire;
 		PackItem(pPack->SpdList[i], item, isHellfire);
 	}
 
@@ -139,11 +139,53 @@ void PackPlayer(PlayerPack *pPack, const Player &player, bool manashield, bool n
 	pPack->pDamAcFlags = SDL_SwapLE32(static_cast<uint32_t>(player.pDamAcFlags));
 	pPack->pDiabloKillLevel = SDL_SwapLE32(player.pDiabloKillLevel);
 	pPack->bIsHellfire = gbIsHellfire ? 1 : 0;
+	pPack->pManaShield = 0;
+}
 
-	if (!gbIsMultiplayer || manashield)
-		pPack->pManaShield = SDL_SwapLE32(player.pManaShield);
-	else
-		pPack->pManaShield = 0;
+void PackNetPlayer(PlayerNetPack &packed, const Player &player)
+{
+	packed.plrlevel = player.plrlevel;
+	packed.px = player.position.tile.x;
+	packed.py = player.position.tile.y;
+	strcpy(packed.pName, player._pName);
+	packed.pClass = static_cast<int8_t>(player._pClass);
+	packed.pBaseStr = player._pBaseStr;
+	packed.pBaseMag = player._pBaseMag;
+	packed.pBaseDex = player._pBaseDex;
+	packed.pBaseVit = player._pBaseVit;
+	packed.pLevel = player._pLevel;
+	packed.pStatPts = player._pStatPts;
+	packed.pExperience = SDL_SwapLE32(player._pExperience);
+	packed.pGold = SDL_SwapLE32(player._pGold);
+	packed.pHPBase = SDL_SwapLE32(player._pHPBase);
+	packed.pMaxHPBase = SDL_SwapLE32(player._pMaxHPBase);
+	packed.pManaBase = SDL_SwapLE32(player._pManaBase);
+	packed.pMaxManaBase = SDL_SwapLE32(player._pMaxManaBase);
+	packed.pMemSpells = SDL_SwapLE64(player._pMemSpells);
+
+	for (int i = 0; i < MAX_SPELLS; i++)
+		packed.pSplLvl[i] = player._pSplLvl[i];
+
+	for (int i = 0; i < NUM_INVLOC; i++)
+		PrepareItemForNetwork(player.InvBody[i], packed.InvBody[i]);
+
+	packed._pNumInv = player._pNumInv;
+	for (int i = 0; i < packed._pNumInv; i++)
+		PrepareItemForNetwork(player.InvList[i], packed.InvList[i]);
+
+	for (int i = 0; i < InventoryGridCells; i++)
+		packed.InvGrid[i] = player.InvGrid[i];
+
+	for (int i = 0; i < MaxBeltItems; i++)
+		PrepareItemForNetwork(player.SpdList[i], packed.SpdList[i]);
+
+	packed.wReflections = SDL_SwapLE16(player.wReflections);
+	packed.pDifficulty = player.pDifficulty;
+	packed.pDamAcFlags = player.pDamAcFlags;
+	packed.pDiabloKillLevel = player.pDiabloKillLevel;
+	packed.pManaShield = player.pManaShield;
+	packed.friendlyMode = player.friendlyMode ? 1 : 0;
+	packed.isOnSetLevel = player.plrIsOnSetLevel;
 }
 
 void UnPackItem(const ItemPack &packedItem, const Player &player, Item &item, bool isHellfire)
@@ -207,38 +249,21 @@ void UnPackItem(const ItemPack &packedItem, const Player &player, Item &item, bo
 	}
 }
 
-bool UnPackPlayer(const PlayerPack *pPack, Player &player, bool netSync)
+void UnPackPlayer(const PlayerPack *pPack, Player &player)
 {
 	Point position { pPack->px, pPack->py };
-	if (!InDungeonBounds(position)) {
-		return false;
-	}
 
-	uint8_t dungeonLevel = pPack->plrlevel;
-	if (dungeonLevel >= NUMLEVELS) {
-		return false;
-	}
-
-	if (pPack->pClass >= enum_size<HeroClass>::value) {
-		return false;
-	}
-	auto heroClass = static_cast<HeroClass>(pPack->pClass);
-
-	if (pPack->pLevel > MaxCharacterLevel || pPack->pLevel < 1) {
-		return false;
-	}
-	uint32_t difficulty = SDL_SwapLE32(pPack->pDifficulty);
-	if (difficulty > DIFF_LAST) {
-		return false;
-	}
-
-	player._pLevel = pPack->pLevel;
-
+	player = {};
+	player._pLevel = clamp<int8_t>(pPack->pLevel, 1, MaxCharacterLevel);
+	player._pMaxHPBase = SDL_SwapLE32(pPack->pMaxHPBase);
+	player._pHPBase = SDL_SwapLE32(pPack->pHPBase);
+	player._pMaxHP = player._pMaxHPBase;
+	player._pHitPoints = player._pHPBase;
 	player.position.tile = position;
 	player.position.future = position;
-	player.setLevel(dungeonLevel);
+	player.setLevel(pPack->plrlevel);
 
-	player._pClass = heroClass;
+	player._pClass = static_cast<HeroClass>(clamp<uint8_t>(pPack->pClass, 0, enum_size<HeroClass>::value - 1));
 
 	ClrPlrPath(player);
 	player.destAction = ACTION_NONE;
@@ -259,12 +284,9 @@ bool UnPackPlayer(const PlayerPack *pPack, Player &player, bool netSync)
 	player._pStatPts = pPack->pStatPts;
 	player._pExperience = SDL_SwapLE32(pPack->pExperience);
 	player._pGold = SDL_SwapLE32(pPack->pGold);
-	player._pMaxHPBase = SDL_SwapLE32(pPack->pMaxHPBase);
-	player._pHPBase = SDL_SwapLE32(pPack->pHPBase);
 	player._pBaseToBlk = PlayersData[static_cast<std::size_t>(player._pClass)].blockBonus;
-	if (!netSync)
-		if ((int)(player._pHPBase & 0xFFFFFFC0) < 64)
-			player._pHPBase = 64;
+	if ((int)(player._pHPBase & 0xFFFFFFC0) < 64)
+		player._pHPBase = 64;
 
 	player._pMaxManaBase = SDL_SwapLE32(pPack->pMaxManaBase);
 	player._pManaBase = SDL_SwapLE32(pPack->pManaBase);
@@ -275,41 +297,120 @@ bool UnPackPlayer(const PlayerPack *pPack, Player &player, bool netSync)
 	for (int i = 37; i < 47; i++)
 		player._pSplLvl[i] = pPack->pSplLvl2[i - 37];
 
-	for (int i = 0; i < NUM_INVLOC; i++) {
-		auto packedItem = pPack->InvBody[i];
-		bool isHellfire = netSync ? ((packedItem.dwBuff & CF_HELLFIRE) != 0) : (pPack->bIsHellfire != 0);
-		UnPackItem(packedItem, player, player.InvBody[i], isHellfire);
-	}
+	bool isHellfire = pPack->bIsHellfire != 0;
+
+	for (int i = 0; i < NUM_INVLOC; i++)
+		UnPackItem(pPack->InvBody[i], player, player.InvBody[i], isHellfire);
 
 	player._pNumInv = pPack->_pNumInv;
-	for (int i = 0; i < player._pNumInv; i++) {
-		auto packedItem = pPack->InvList[i];
-		bool isHellfire = netSync ? ((packedItem.dwBuff & CF_HELLFIRE) != 0) : (pPack->bIsHellfire != 0);
-		UnPackItem(packedItem, player, player.InvList[i], isHellfire);
-	}
+	for (int i = 0; i < player._pNumInv; i++)
+		UnPackItem(pPack->InvList[i], player, player.InvList[i], isHellfire);
 
 	for (int i = 0; i < InventoryGridCells; i++)
 		player.InvGrid[i] = pPack->InvGrid[i];
 
 	VerifyGoldSeeds(player);
 
-	for (int i = 0; i < MaxBeltItems; i++) {
-		auto packedItem = pPack->SpdList[i];
-		bool isHellfire = netSync ? ((packedItem.dwBuff & CF_HELLFIRE) != 0) : (pPack->bIsHellfire != 0);
-		UnPackItem(packedItem, player, player.SpdList[i], isHellfire);
-	}
+	for (int i = 0; i < MaxBeltItems; i++)
+		UnPackItem(pPack->SpdList[i], player, player.SpdList[i], isHellfire);
 
 	CalcPlrInv(player, false);
 	player.wReflections = SDL_SwapLE16(pPack->wReflections);
+	player.pDiabloKillLevel = SDL_SwapLE32(pPack->pDiabloKillLevel);
+	player.pBattleNet = pPack->pBattleNet != 0;
+	player.pManaShield = false;
+	uint32_t difficulty = SDL_SwapLE32(pPack->pDifficulty);
+	player.pDifficulty = static_cast<_difficulty>(clamp<uint32_t>(difficulty, 0, DIFF_LAST));
+	player.pDamAcFlags = static_cast<ItemSpecialEffectHf>(SDL_SwapLE32(static_cast<uint32_t>(pPack->pDamAcFlags)));
+}
+
+bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
+{
+	Point position { packed.px, packed.py };
+	if (!InDungeonBounds(position)) {
+		return false;
+	}
+
+	uint8_t dungeonLevel = packed.plrlevel;
+	if (dungeonLevel >= NUMLEVELS) {
+		return false;
+	}
+
+	if (packed.pClass >= enum_size<HeroClass>::value) {
+		return false;
+	}
+
+	if (packed.pLevel > MaxCharacterLevel || packed.pLevel < 1) {
+		return false;
+	}
+	uint8_t difficulty = packed.pDifficulty;
+	if (difficulty > DIFF_LAST) {
+		return false;
+	}
+
+	player._pLevel = packed.pLevel;
+
+	player.position.tile = position;
+	player.position.future = position;
+	player.setLevel(dungeonLevel);
+
+	player._pClass = static_cast<HeroClass>(packed.pClass);
+
+	ClrPlrPath(player);
+	player.destAction = ACTION_NONE;
+
+	strcpy(player._pName, packed.pName);
+
+	InitPlayer(player, true);
+
+	player._pBaseStr = packed.pBaseStr;
+	player._pStrength = packed.pBaseStr;
+	player._pBaseMag = packed.pBaseMag;
+	player._pMagic = packed.pBaseMag;
+	player._pBaseDex = packed.pBaseDex;
+	player._pDexterity = packed.pBaseDex;
+	player._pBaseVit = packed.pBaseVit;
+	player._pVitality = packed.pBaseVit;
+
+	player._pStatPts = packed.pStatPts;
+	player._pExperience = SDL_SwapLE32(packed.pExperience);
+	player._pGold = SDL_SwapLE32(packed.pGold);
+	player._pMaxHPBase = SDL_SwapLE32(packed.pMaxHPBase);
+	player._pHPBase = SDL_SwapLE32(packed.pHPBase);
+	player._pBaseToBlk = PlayersData[static_cast<std::size_t>(player._pClass)].blockBonus;
+
+	player._pMaxManaBase = SDL_SwapLE32(packed.pMaxManaBase);
+	player._pManaBase = SDL_SwapLE32(packed.pManaBase);
+	player._pMemSpells = SDL_SwapLE64(packed.pMemSpells);
+
+	for (int i = 0; i < MAX_SPELLS; i++)
+		player._pSplLvl[i] = packed.pSplLvl[i];
+
+	for (int i = 0; i < NUM_INVLOC; i++)
+		RecreateItem(player, packed.InvBody[i], player.InvBody[i]);
+
+	player._pNumInv = packed._pNumInv;
+	for (int i = 0; i < player._pNumInv; i++)
+		RecreateItem(player, packed.InvList[i], player.InvList[i]);
+
+	for (int i = 0; i < InventoryGridCells; i++)
+		player.InvGrid[i] = packed.InvGrid[i];
+
+	for (int i = 0; i < MaxBeltItems; i++)
+		RecreateItem(player, packed.SpdList[i], player.SpdList[i]);
+
+	CalcPlrInv(player, false);
+	player.wReflections = SDL_SwapLE16(packed.wReflections);
 	player.pTownWarps = 0;
 	player.pDungMsgs = 0;
 	player.pDungMsgs2 = 0;
 	player.pLvlLoad = 0;
-	player.pDiabloKillLevel = SDL_SwapLE32(pPack->pDiabloKillLevel);
-	player.pBattleNet = pPack->pBattleNet != 0;
-	player.pManaShield = pPack->pManaShield != 0;
+	player.pDiabloKillLevel = packed.pDiabloKillLevel;
+	player.pManaShield = packed.pManaShield != 0;
 	player.pDifficulty = static_cast<_difficulty>(difficulty);
-	player.pDamAcFlags = static_cast<ItemSpecialEffectHf>(SDL_SwapLE32(static_cast<uint32_t>(pPack->pDamAcFlags)));
+	player.pDamAcFlags = packed.pDamAcFlags;
+	player.friendlyMode = packed.friendlyMode != 0;
+	player.plrIsOnSetLevel = packed.isOnSetLevel != 0;
 
 	return true;
 }

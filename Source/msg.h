@@ -720,6 +720,8 @@ struct TBuffer {
 extern uint8_t gbBufferMsgs;
 extern int dwRecCount;
 
+void PrepareItemForNetwork(const Item &item, TItem &messageItem);
+void RecreateItem(const Player &player, const TItem &messageItem, Item &item);
 void msg_send_drop_pkt(int pnum, int reason);
 bool msg_wait_resync();
 void run_delta_info();
