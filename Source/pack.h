@@ -9,6 +9,7 @@
 
 #include "inv.h"
 #include "items.h"
+#include "msg.h"
 #include "player.h"
 
 namespace devilution {
@@ -24,7 +25,7 @@ struct ItemPack {
 	uint8_t bCh;
 	uint8_t bMCh;
 	uint16_t wValue;
-	int32_t dwBuff;
+	uint32_t dwBuff;
 };
 
 struct PlayerPack {
@@ -67,24 +68,56 @@ struct PlayerPack {
 	uint8_t pDungMsgs2;
 	/** The format the charater is in, 0: Diablo, 1: Hellfire */
 	int8_t bIsHellfire;
-	int8_t bReserved; // For future use
+	uint8_t reserved; // For future use
 	uint16_t wReflections;
-	int16_t wReserved2;   // For future use
+	uint8_t reserved2[2]; // For future use
 	uint8_t pSplLvl2[10]; // Hellfire spells
 	int16_t wReserved8;   // For future use
 	uint32_t pDiabloKillLevel;
 	uint32_t pDifficulty;
-	uint32_t pDamAcFlags; // `ItemSpecialEffectHf` is 1 byte but this is 4 bytes.
-	/**@brief Only used in multiplayer sync (SendPlayerInfo/recv_plrinfo). Never used in save games (single- or multiplayer). */
+	uint32_t pDamAcFlags;  // `ItemSpecialEffectHf` is 1 byte but this is 4 bytes.
+	uint8_t reserved3[20]; // For future use
+};
+
+struct PlayerNetPack {
+	uint8_t plrlevel;
+	uint8_t px;
+	uint8_t py;
+	char pName[PlayerNameLength];
+	uint8_t pClass;
+	uint8_t pBaseStr;
+	uint8_t pBaseMag;
+	uint8_t pBaseDex;
+	uint8_t pBaseVit;
+	int8_t pLevel;
+	uint8_t pStatPts;
+	uint32_t pExperience;
+	int32_t pGold;
+	int32_t pHPBase;
+	int32_t pMaxHPBase;
+	int32_t pManaBase;
+	int32_t pMaxManaBase;
+	uint8_t pSplLvl[MAX_SPELLS];
+	uint64_t pMemSpells;
+	TItem InvBody[NUM_INVLOC];
+	TItem InvList[InventoryGridCells];
+	int8_t InvGrid[InventoryGridCells];
+	uint8_t _pNumInv;
+	TItem SpdList[MaxBeltItems];
+	uint8_t pManaShield;
+	uint16_t wReflections;
+	uint8_t pDiabloKillLevel;
+	uint8_t pDifficulty;
+	ItemSpecialEffectHf pDamAcFlags;
 	uint8_t friendlyMode;
-	/**@brief Only used in multiplayer sync (SendPlayerInfo/recv_plrinfo). Never used in save games (single- or multiplayer). */
 	uint8_t isOnSetLevel;
-	uint8_t dwReserved[18]; // For future use
 };
 #pragma pack(pop)
 
-void PackPlayer(PlayerPack *pPack, const Player &player, bool manashield, bool netSync);
-bool UnPackPlayer(const PlayerPack *pPack, Player &player, bool netSync);
+void PackPlayer(PlayerPack *pPack, const Player &player);
+void UnPackPlayer(const PlayerPack *pPack, Player &player);
+void PackNetPlayer(PlayerNetPack &packed, const Player &player);
+bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player);
 
 /**
  * @brief Save the attributes needed to recreate this item into an ItemPack struct

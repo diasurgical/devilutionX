@@ -349,12 +349,10 @@ void ProcessTmsgs()
 
 void SendPlayerInfo(int pnum, _cmd_id cmd)
 {
-	PlayerPack pPack;
+	PlayerNetPack packed;
 	Player &myPlayer = *MyPlayer;
-	PackPlayer(&pPack, myPlayer, true, true);
-	pPack.friendlyMode = myPlayer.friendlyMode ? 1 : 0;
-	pPack.isOnSetLevel = myPlayer.plrIsOnSetLevel;
-	multi_send_zero_packet(pnum, cmd, reinterpret_cast<byte *>(&pPack), sizeof(PlayerPack));
+	PackNetPlayer(packed, myPlayer);
+	multi_send_zero_packet(pnum, cmd, reinterpret_cast<byte *>(&packed), sizeof(PlayerNetPack));
 }
 
 void SetupLocalPositions()
@@ -803,7 +801,7 @@ bool NetInit(bool bSinglePlayer)
 
 void recv_plrinfo(int pnum, const TCmdPlrInfoHdr &header, bool recv)
 {
-	static PlayerPack PackedPlayerBuffer[MAX_PLRS];
+	static PlayerNetPack PackedPlayerBuffer[MAX_PLRS];
 
 	assert(pnum >= 0 && pnum < MAX_PLRS);
 	Player &player = Players[pnum];
@@ -831,11 +829,9 @@ void recv_plrinfo(int pnum, const TCmdPlrInfoHdr &header, bool recv)
 	sgwPackPlrOffsetTbl[pnum] = 0;
 
 	PlayerLeftMsg(pnum, false);
-	if (!UnPackPlayer(&packedPlayer, player, true)) {
+	if (!UnPackNetPlayer(packedPlayer, player)) {
 		return;
 	}
-	player.friendlyMode = packedPlayer.friendlyMode != 0;
-	player.plrIsOnSetLevel = packedPlayer.isOnSetLevel != 0;
 
 	if (!recv) {
 		return;
