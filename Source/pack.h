@@ -92,7 +92,6 @@ struct PlayerNetPack {
 	int8_t pLevel;
 	uint8_t pStatPts;
 	uint32_t pExperience;
-	int32_t pGold;
 	int32_t pHPBase;
 	int32_t pMaxHPBase;
 	int32_t pManaBase;
@@ -107,15 +106,13 @@ struct PlayerNetPack {
 	uint8_t pManaShield;
 	uint16_t wReflections;
 	uint8_t pDiabloKillLevel;
-	uint8_t pDifficulty;
-	ItemSpecialEffectHf pDamAcFlags;
 	uint8_t friendlyMode;
 	uint8_t isOnSetLevel;
 };
 #pragma pack(pop)
 
-void PackPlayer(PlayerPack *pPack, const Player &player);
-void UnPackPlayer(const PlayerPack *pPack, Player &player);
+void PackPlayer(PlayerPack &pPack, const Player &player);
+void UnPackPlayer(const PlayerPack &pPack, Player &player);
 void PackNetPlayer(PlayerNetPack &packed, const Player &player);
 bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player);
 

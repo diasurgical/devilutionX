@@ -531,10 +531,9 @@ void LoadPlayer(LoadHelper &file, Player &player)
 
 	if (gbIsHellfireSaveGame) {
 		player.pDungMsgs2 = file.NextLE<uint8_t>();
-		player.pBattleNet = false;
 	} else {
 		player.pDungMsgs2 = 0;
-		player.pBattleNet = file.NextBool8();
+		file.Skip(1); // pBattleNet
 	}
 	player.pManaShield = file.NextBool8();
 	if (gbIsHellfireSaveGame) {
@@ -548,7 +547,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	file.Skip(14); // Available bytes
 
 	player.pDiabloKillLevel = file.NextLE<uint32_t>();
-	player.pDifficulty = static_cast<_difficulty>(file.NextLE<uint32_t>());
+	sgGameInitInfo.nDifficulty = static_cast<_difficulty>(file.NextLE<uint32_t>());
 	player.pDamAcFlags = static_cast<ItemSpecialEffectHf>(file.NextLE<uint32_t>());
 	file.Skip(20); // Available bytes
 	CalcPlrItemVals(player, false);
@@ -1344,7 +1343,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	if (gbIsHellfire)
 		file.WriteLE<uint8_t>(player.pDungMsgs2);
 	else
-		file.WriteLE<uint8_t>(player.pBattleNet ? 1 : 0);
+		file.WriteLE<uint8_t>(0);
 	file.WriteLE<uint8_t>(player.pManaShield ? 1 : 0);
 	file.WriteLE<uint8_t>(player.pOriginalCathedral ? 1 : 0);
 	file.Skip(2); // Available bytes
@@ -1352,7 +1351,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.Skip(14); // Available bytes
 
 	file.WriteLE<uint32_t>(player.pDiabloKillLevel);
-	file.WriteLE<uint32_t>(player.pDifficulty);
+	file.WriteLE<uint32_t>(sgGameInitInfo.nDifficulty);
 	file.WriteLE<uint32_t>(static_cast<uint32_t>(player.pDamAcFlags));
 	file.Skip(20); // Available bytes
 
@@ -2138,7 +2137,6 @@ void LoadGame(bool firstflag)
 
 	LoadPlayer(file, myPlayer);
 
-	sgGameInitInfo.nDifficulty = myPlayer.pDifficulty;
 	if (sgGameInitInfo.nDifficulty < DIFF_NORMAL || sgGameInitInfo.nDifficulty > DIFF_HELL)
 		sgGameInitInfo.nDifficulty = DIFF_NORMAL;
 
@@ -2418,7 +2416,6 @@ void SaveGameData(SaveWriter &saveWriter)
 	}
 
 	Player &myPlayer = *MyPlayer;
-	myPlayer.pDifficulty = sgGameInitInfo.nDifficulty;
 	SavePlayer(file, myPlayer);
 
 	for (int i = 0; i < giNumberQuests; i++)
