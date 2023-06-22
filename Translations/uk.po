@@ -1124,11 +1124,11 @@ msgstr "{player name}"
 
 #: Source/control.cpp:528
 msgid "/seedinfo"
-msgstr ""
+msgstr "/seedinfo"
 
 #: Source/control.cpp:528
 msgid "Show seed infos for current level."
-msgstr ""
+msgstr "Показати інформацію про початкові значення ГВЧ для поточного рівня."
 
 #: Source/control.cpp:538
 msgid "Command \""
@@ -2347,7 +2347,7 @@ msgstr "Неможливо створити головне вікно"
 
 #: Source/inv.cpp:2126
 msgid "No room for item"
-msgstr ""
+msgstr "Немає місця для предмету"
 
 #: Source/itemdat.cpp:53 Source/itemdat.cpp:236 Source/panels/charpanel.cpp:163
 msgid "Gold"
