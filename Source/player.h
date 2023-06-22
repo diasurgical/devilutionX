@@ -371,13 +371,11 @@ struct Player {
 	uint8_t pTownWarps;
 	uint8_t pDungMsgs;
 	uint8_t pLvlLoad;
-	bool pBattleNet;
 	bool pManaShield;
 	uint8_t pDungMsgs2;
 	bool pOriginalCathedral;
 	uint8_t pDiabloKillLevel;
 	uint16_t wReflections;
-	_difficulty pDifficulty;
 	ItemSpecialEffectHf pDamAcFlags;
 
 	void CalcScrolls();

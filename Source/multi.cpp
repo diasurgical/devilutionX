@@ -156,7 +156,6 @@ bool IsNetPlayerValid(const Player &player)
 	    && player._pLevel <= MaxCharacterLevel
 	    && static_cast<uint8_t>(player._pClass) < enum_size<HeroClass>::value
 	    && player.plrlevel < NUMLEVELS
-	    && player.pDifficulty <= DIFF_LAST
 	    && InDungeonBounds(player.position.tile)
 	    && !string_view(player._pName).empty();
 }

@@ -126,9 +126,7 @@ static void AssertPlayer(Player &player)
 	ASSERT_EQ(player.pDungMsgs2, 0);
 	ASSERT_EQ(player.pLvlLoad, 0);
 	ASSERT_EQ(player.pDiabloKillLevel, 0);
-	ASSERT_EQ(player.pBattleNet, 0);
 	ASSERT_EQ(player.pManaShield, 0);
-	ASSERT_EQ(player.pDifficulty, 0);
 	ASSERT_EQ(player.pDamAcFlags, ItemSpecialEffectHf::None);
 
 	ASSERT_EQ(player._pmode, 0);

@@ -482,7 +482,7 @@ void pfile_write_hero(SaveWriter &saveWriter, bool writeGameData)
 	PlayerPack pkplr;
 	Player &myPlayer = *MyPlayer;
 
-	PackPlayer(&pkplr, myPlayer);
+	PackPlayer(pkplr, myPlayer);
 	EncodeHero(saveWriter, &pkplr);
 	if (!gbVanilla) {
 		SaveHotkeys(saveWriter, myPlayer);
@@ -643,7 +643,7 @@ bool pfile_ui_set_hero_infos(bool (*uiAddHeroInfo)(_uiheroinfo *))
 
 				Player &player = Players[0];
 
-				UnPackPlayer(&pkplr, player);
+				UnPackPlayer(pkplr, player);
 				LoadHeroItems(player);
 				RemoveEmptyInventory(player);
 				CalcPlrInv(player, false);
@@ -693,7 +693,7 @@ bool pfile_ui_save_create(_uiheroinfo *heroinfo)
 	Player &player = Players[0];
 	CreatePlayer(player, heroinfo->heroclass);
 	CopyUtf8(player._pName, heroinfo->name, PlayerNameLength);
-	PackPlayer(&pkplr, player);
+	PackPlayer(pkplr, player);
 	EncodeHero(saveWriter, &pkplr);
 	Game2UiPlayer(player, heroinfo, false);
 	if (!gbVanilla) {
@@ -729,7 +729,7 @@ void pfile_read_player_from_save(uint32_t saveNum, Player &player)
 			pkplr.bIsHellfire = gbIsHellfireSaveGame ? 1 : 0;
 	}
 
-	UnPackPlayer(&pkplr, player);
+	UnPackPlayer(pkplr, player);
 	LoadHeroItems(player);
 	RemoveEmptyInventory(player);
 	CalcPlrInv(player, false);
