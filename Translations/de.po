@@ -100,7 +100,7 @@ msgstr "Assoziierter Produzent"
 #. TRANSLATORS: Keep Strike Team as Name
 #: Source/DiabloUI/credits_lines.cpp:73
 msgid "Diablo Strike Team"
-msgstr "Diablo-Einsatzteam"
+msgstr "Diablo Strike Team"
 
 #: Source/DiabloUI/credits_lines.cpp:77 Source/gamemenu.cpp:71
 msgid "Music"
