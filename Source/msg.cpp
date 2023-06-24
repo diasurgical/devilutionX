@@ -1777,7 +1777,6 @@ size_t OnPlayerDeath(const TCmd *pCmd, size_t pnum)
 	Player &player = Players[pnum];
 
 	if (gbBufferMsgs != 1) {
-		
 		if (&player != MyPlayer)
 			StartPlayerKill(player, deathReason);
 		else
