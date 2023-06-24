@@ -947,12 +947,6 @@ bool IsShopPriceValid(const Item &item)
 	return true;
 }
 
-void RevertEffectsOfMultiplayerOils(Item &heroItem, const Item &unpackedItem)
-{
-	heroItem._iPLToHit = unpackedItem._iPLToHit; // Oil of Accuracy
-	heroItem._iMaxDam = unpackedItem._iMaxDam;   // Oil of Sharpness
-}
-
 void LoadMatchingItems(LoadHelper &file, const Player &player, const int n, Item *pItem)
 {
 	Item heroItem;
@@ -977,10 +971,13 @@ void LoadMatchingItems(LoadHelper &file, const Player &player, const int n, Item
 				unpackedItem.clear();
 				continue;
 			}
-			if (!gbIsHellfire)
-				RevertEffectsOfMultiplayerOils(heroItem, unpackedItem);
+			if (gbIsHellfire) {
+				unpackedItem._iPLToHit = ClampToHit(unpackedItem, heroItem._iPLToHit); // Oil of Accuracy
+				unpackedItem._iMaxDam = ClampMaxDam(unpackedItem, heroItem._iMaxDam);  // Oil of Sharpness
+			}
+		} else {
+			unpackedItem = heroItem;
 		}
-		unpackedItem = heroItem;
 	}
 }
 
