@@ -56,12 +56,5 @@ jobs:
         name: devilutionx-x86_64-macOS.dmg
         path: build/devilutionx-x86_64-macOS.dmg
 
-    - name: Update Release
-      if: ${{ github.event_name == 'release' && !env.ACT }}
-      uses: svenstaro/upload-release-action@v2
-      with:
-        file: build/devilutionx-x86_64-macOS.dmg
-        overwrite: true
-
     - name: Clean up artifacts
       run: rm -rf build/_CPack_Packages build/*.dmg
