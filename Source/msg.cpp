@@ -1678,17 +1678,21 @@ size_t OnMonstDeath(const TCmd *pCmd, size_t pnum)
 	const auto &message = *reinterpret_cast<const TCmdLocParam1 *>(pCmd);
 	const Point position { message.x, message.y };
 	const uint16_t monsterIdx = SDL_SwapLE16(message.wParam1);
+	Monster &monster = Monsters[monsterIdx];
 
 	if (gbBufferMsgs != 1) {
 		Player &player = Players[pnum];
 		if (&player != MyPlayer && InDungeonBounds(position) && monsterIdx < MaxMonsters) {
-			Monster &monster = Monsters[monsterIdx];
 			if (player.isOnActiveLevel())
 				M_SyncStartKill(monster, position, player);
 			delta_kill_monster(monster, position, player);
 		}
 	} else {
 		SendPacket(pnum, &message, sizeof(message));
+	}
+
+	if (monster.isUnique()) {
+		EventPlrMsg(fmt::format(fmt::runtime(_("{:s} has been defeated!")), monster.name()));
 	}
 
 	return sizeof(message);
@@ -1770,15 +1774,28 @@ size_t OnPlayerDeath(const TCmd *pCmd, size_t pnum)
 {
 	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 	const DeathReason deathReason = static_cast<DeathReason>(SDL_SwapLE16(message.wParam1));
+	Player &player = Players[pnum];
 
 	if (gbBufferMsgs != 1) {
-		Player &player = Players[pnum];
+		
 		if (&player != MyPlayer)
 			StartPlayerKill(player, deathReason);
 		else
 			pfile_update(true);
 	} else {
 		SendPacket(pnum, &message, sizeof(message));
+	}
+
+	switch (deathReason) {
+	case DeathReason::MonsterOrTrap:
+		EventPlrMsg(fmt::format(fmt::runtime(_("{:s} was slain while fighting the denizens of Diablo.")), player._pName));
+		break;
+	case DeathReason::Player:
+		EventPlrMsg(fmt::format(fmt::runtime(_("{:s} was slain by a fellow hero.")), player._pName));
+		break;
+	case DeathReason::Unknown:
+		EventPlrMsg(fmt::format(fmt::runtime(_("{:s} was slain.")), player._pName));
+		break;
 	}
 
 	return sizeof(message);
@@ -2207,6 +2224,8 @@ size_t OnString(const TCmd *pCmd, Player &player)
 size_t OnFriendlyMode(const TCmd *pCmd, Player &player) // NOLINT(misc-unused-parameters)
 {
 	player.friendlyMode = !player.friendlyMode;
+	if (&player != MyPlayer)
+		player.friendlyMode ? EventPlrMsg(fmt::format(fmt::runtime(_("{:s} has become friendly towards you.")), player._pName)) : EventPlrMsg(fmt::format(fmt::runtime(_("{:s} has expressed hostility towards you.")), player._pName));
 	RedrawEverything();
 	return sizeof(*pCmd);
 }
