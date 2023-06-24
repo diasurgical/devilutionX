@@ -1785,17 +1785,21 @@ size_t OnPlayerDeath(const TCmd *pCmd, size_t pnum)
 		SendPacket(pnum, &message, sizeof(message));
 	}
 
+	string_view szEvent;
+
 	switch (deathReason) {
 	case DeathReason::MonsterOrTrap:
-		EventPlrMsg(fmt::format(fmt::runtime(_("{:s} was slain while fighting the denizens of Diablo.")), player._pName));
+		szEvent = _("{:s} was slain while fighting the denizens of Diablo.");
 		break;
 	case DeathReason::Player:
-		EventPlrMsg(fmt::format(fmt::runtime(_("{:s} was slain by a fellow hero.")), player._pName));
+		szEvent = _("{:s} was slain by a fellow hero.");
 		break;
 	case DeathReason::Unknown:
-		EventPlrMsg(fmt::format(fmt::runtime(_("{:s} was slain.")), player._pName));
+		szEvent = _("{:s} was slain.");
 		break;
 	}
+
+	EventPlrMsg(fmt::format(fmt::runtime(szEvent), player._pName));
 
 	return sizeof(message);
 }
@@ -2223,9 +2227,15 @@ size_t OnString(const TCmd *pCmd, Player &player)
 size_t OnFriendlyMode(const TCmd *pCmd, Player &player) // NOLINT(misc-unused-parameters)
 {
 	player.friendlyMode = !player.friendlyMode;
+
+	string_view szEvent;
+
 	if (&player != MyPlayer)
-		player.friendlyMode ? EventPlrMsg(fmt::format(fmt::runtime(_("{:s} has become friendly towards you.")), player._pName)) : EventPlrMsg(fmt::format(fmt::runtime(_("{:s} has expressed hostility towards you.")), player._pName));
+		szEvent = player.friendlyMode ? _("{:s} has become friendly towards you.") : _("{:s} has expressed hostility towards you.");
+
+	EventPlrMsg(fmt::format(fmt::runtime(szEvent), player._pName));
 	RedrawEverything();
+
 	return sizeof(*pCmd);
 }
 

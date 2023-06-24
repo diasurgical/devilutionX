@@ -848,6 +848,11 @@ void recv_plrinfo(int pnum, const TCmdPlrInfoHdr &header, bool recv)
 	}
 	EventPlrMsg(fmt::format(fmt::runtime(szEvent), player._pName, player._pLevel));
 
+	if (&player != MyPlayer)
+		szEvent = player.friendlyMode ? _("{:s} is friendly.") : _("{:s} is hostile.");
+
+	EventPlrMsg(fmt::format(fmt::runtime(szEvent), player._pName));
+
 	SyncInitPlr(player);
 
 	if (!player.isOnActiveLevel()) {
