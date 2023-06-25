@@ -2694,7 +2694,8 @@ void StartPlrHit(Player &player, int dam, bool forcehit)
 #if defined(__clang__) || defined(__GNUC__)
 __attribute__((no_sanitize("shift-base")))
 #endif
-void StartPlayerKill(Player &player, DeathReason deathReason, uint16_t deathSourceIndex)
+void
+StartPlayerKill(Player &player, DeathReason deathReason, uint16_t deathSourceIndex)
 {
 	if (player._pHitPoints <= 0 && player._pmode == PM_DEATH) {
 		return;
