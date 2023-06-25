@@ -1501,23 +1501,25 @@ bool PlacePool()
 	return PlaceLavaPool();
 }
 
+/**
+ * @brief Fill lava pools correctly, cause River() only generates the edges.
+ */
 void PoolFix()
 {
-	for (int duny = 1; duny < DMAXY - 1; duny++) {     // BUGFIX: Change '0' to '1' and 'DMAXY' to 'DMAXY - 1' (fixed)
-		for (int dunx = 1; dunx < DMAXX - 1; dunx++) { // BUGFIX: Change '0' to '1' and 'DMAXX' to 'DMAXX - 1' (fixed)
-			if (dungeon[dunx][duny] == 8) {
-				if (dungeon[dunx - 1][duny - 1] >= 25 && dungeon[dunx - 1][duny - 1] <= 41
-				    && dungeon[dunx - 1][duny] >= 25 && dungeon[dunx - 1][duny] <= 41
-				    && dungeon[dunx - 1][duny + 1] >= 25 && dungeon[dunx - 1][duny + 1] <= 41
-				    && dungeon[dunx][duny - 1] >= 25 && dungeon[dunx][duny - 1] <= 41
-				    && dungeon[dunx][duny + 1] >= 25 && dungeon[dunx][duny + 1] <= 41
-				    && dungeon[dunx + 1][duny - 1] >= 25 && dungeon[dunx + 1][duny - 1] <= 41
-				    && dungeon[dunx + 1][duny] >= 25 && dungeon[dunx + 1][duny] <= 41
-				    && dungeon[dunx + 1][duny + 1] >= 25 && dungeon[dunx + 1][duny + 1] <= 41) {
-					dungeon[dunx][duny] = 33;
-				} else if (dungeon[dunx + 1][duny] == 35 || dungeon[dunx + 1][duny] == 37) {
-					dungeon[dunx][duny] = 33;
-				}
+	for (Point tile : PointsInRectangle(Rectangle { { 1, 1 }, { DMAXX - 2, DMAXY - 2 } })) {
+		// Check if the tile is a the default dirt ceiling tile
+		if (dungeon[tile.x][tile.y] != 8)
+			continue;
+
+		for (Point adjacentTiles : PointsInRectangle(Rectangle { tile - Displacement(1, 1), { 3, 3 } })) {
+			int tileId = dungeon[adjacentTiles.x][adjacentTiles.y];
+			// Check if the adjacent tile is a ground lava tile
+			if (tileId >= 25 && tileId <= 41) {
+				// A ground lava tile can never be directly connected to our ceiling tile.
+				// There must always be a kind of transition tile between (from ground to ceiling).
+				// That means our tile is part of a lava pool (and was missed in River()), so we should change our tile to a ground lava tile.
+				dungeon[tile.x][tile.y] = 33;
+				break;
 			}
 		}
 	}
@@ -2165,7 +2167,6 @@ void PlaceCaveLights()
 
 void PlaceHiveLights()
 {
-
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++) {
 			if (dPiece[i][j] >= 381 && dPiece[i][j] <= 456) {
