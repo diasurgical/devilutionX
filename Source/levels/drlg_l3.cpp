@@ -1514,7 +1514,7 @@ void PoolFix()
 		for (Point adjacentTiles : PointsInRectangle(Rectangle { tile - Displacement(1, 1), { 3, 3 } })) {
 			int tileId = dungeon[adjacentTiles.x][adjacentTiles.y];
 			// Check if the adjacent tile is a ground lava tile
-			if (25 <= tileId && tileId <= 41) {
+			if (tileId >= 25 && tileId <= 41) {
 				// A ground lava tile can never be directly connected to our ceiling tile.
 				// There must always be a kind of transition tile between (from ground to ceiling).
 				// That means our tile is part of a lava pool (and was missed in River()), so we should change our tile to a ground lava tile.
