@@ -203,8 +203,9 @@ enum _cmd_id : uint8_t {
 	CMD_MONSTDAMAGE,
 	// Player death.
 	//
-	// body (TCmdParam1):
+	// body (TCmdParam2):
 	//    int16_t ear_flag
+	//    int16_t death_source_index
 	CMD_PLRDEAD,
 	// Lift item to hand request.
 	//

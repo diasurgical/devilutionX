@@ -1772,13 +1772,14 @@ size_t OnMonstDamage(const TCmd *pCmd, size_t pnum)
 
 size_t OnPlayerDeath(const TCmd *pCmd, size_t pnum)
 {
-	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
+	const auto &message = *reinterpret_cast<const TCmdParam2 *>(pCmd);
 	const DeathReason deathReason = static_cast<DeathReason>(SDL_SwapLE16(message.wParam1));
+	const uint16_t deathSourceIndex = SDL_SwapLE16(message.wParam2);
 	Player &player = Players[pnum];
 
 	if (gbBufferMsgs != 1) {
 		if (&player != MyPlayer)
-			StartPlayerKill(player, deathReason);
+			StartPlayerKill(player, deathReason, deathSourceIndex);
 		else
 			pfile_update(true);
 	} else {
@@ -1788,18 +1789,25 @@ size_t OnPlayerDeath(const TCmd *pCmd, size_t pnum)
 	string_view szEvent;
 
 	switch (deathReason) {
-	case DeathReason::MonsterOrTrap:
-		szEvent = _("{:s} was slain while fighting the denizens of Diablo.");
-		break;
-	case DeathReason::Player:
-		szEvent = _("{:s} was slain by a fellow hero.");
-		break;
-	case DeathReason::Unknown:
-		szEvent = _("{:s} was slain.");
+	case DeathReason::Monster: {
+		Monster &monster = Monsters[deathSourceIndex];
+		EventPlrMsg(fmt::format(fmt::runtime(_("{:s} was slain by {:s}.")), player._pName, monster.name()));
 		break;
 	}
-
-	EventPlrMsg(fmt::format(fmt::runtime(szEvent), player._pName));
+	case DeathReason::Trap: {
+		EventPlrMsg(fmt::format(fmt::runtime(_("{:s} was slain by a trap.")), player._pName));
+		break;
+	}
+	case DeathReason::Player: {
+		Player &killer = Players[deathSourceIndex];
+		EventPlrMsg(fmt::format(fmt::runtime(_("{:s} was slain by {:s}.")), player._pName, killer._pName));
+		break;
+	}
+	case DeathReason::Unknown: {
+		EventPlrMsg(fmt::format(fmt::runtime(_("{:s} died.")), player._pName));
+		break;
+	}
+	}
 
 	return sizeof(message);
 }
@@ -1812,7 +1820,7 @@ size_t OnPlayerDamage(const TCmd *pCmd, Player &player)
 	Player &target = Players[message.bPlr];
 	if (&target == MyPlayer && leveltype != DTYPE_TOWN && gbBufferMsgs != 1) {
 		if (player.isOnActiveLevel() && damage <= 192000 && target._pHitPoints >> 6 > 0) {
-			ApplyPlrDamage(message.damageType, target, 0, 0, damage, DeathReason::Player);
+			ApplyPlrDamage(message.damageType, target, 0, 0, damage, DeathReason::Player, player.getId());
 		}
 	}
 

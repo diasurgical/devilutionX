@@ -671,7 +671,7 @@ bool PlrHitMonst(Player &player, Monster &monster, bool adjacentDamage = false)
 		if (HasAnyOf(player.pDamAcFlags, ItemSpecialEffectHf::Peril)) {
 			dam2 += player._pIGetHit << 6;
 			if (dam2 >= 0) {
-				ApplyPlrDamage(DamageType::Physical, player, 0, 1, dam2);
+				ApplyPlrDamage(DamageType::Physical, player, 0, 1, dam2, DeathReason::Unknown);
 			}
 			dam *= 2;
 		}
@@ -2694,19 +2694,18 @@ void StartPlrHit(Player &player, int dam, bool forcehit)
 #if defined(__clang__) || defined(__GNUC__)
 __attribute__((no_sanitize("shift-base")))
 #endif
-void
-StartPlayerKill(Player &player, DeathReason deathReason)
+void StartPlayerKill(Player &player, DeathReason deathReason, uint16_t deathSourceIndex)
 {
 	if (player._pHitPoints <= 0 && player._pmode == PM_DEATH) {
 		return;
 	}
 
 	if (&player == MyPlayer) {
-		NetSendCmdParam1(true, CMD_PLRDEAD, static_cast<uint16_t>(deathReason));
+		NetSendCmdParam2(true, CMD_PLRDEAD, static_cast<uint16_t>(deathReason), static_cast<uint16_t>(deathSourceIndex));
 	}
 
 	const bool dropGold = !gbIsMultiplayer || !(player.isOnLevel(16) || player.isOnArenaLevel());
-	const bool dropItems = dropGold && deathReason == DeathReason::MonsterOrTrap;
+	const bool dropItems = dropGold && (deathReason == DeathReason::Monster || deathReason == DeathReason::Trap);
 	const bool dropEar = dropGold && deathReason == DeathReason::Player;
 
 	player.Say(HeroSpeech::AuughUh);
@@ -2818,7 +2817,7 @@ void StripTopGold(Player &player)
 	player._pGold = CalculateGold(player);
 }
 
-void ApplyPlrDamage(DamageType damageType, Player &player, int dam, int minHP /*= 0*/, int frac /*= 0*/, DeathReason deathReason /*= DeathReason::MonsterOrTrap*/)
+void ApplyPlrDamage(DamageType damageType, Player &player, int dam, int minHP /*= 0*/, int frac /*= 0*/, DeathReason deathReason /*= DeathReason::Monster*/, uint16_t deathSourceIndex /*= 0*/)
 {
 	int totalDamage = (dam << 6) + frac;
 	if (&player == MyPlayer) {
@@ -2862,11 +2861,11 @@ void ApplyPlrDamage(DamageType damageType, Player &player, int dam, int minHP /*
 		SetPlayerHitPoints(player, minHitPoints);
 	}
 	if (player._pHitPoints >> 6 <= 0) {
-		SyncPlrKill(player, deathReason);
+		SyncPlrKill(player, deathReason, deathSourceIndex);
 	}
 }
 
-void SyncPlrKill(Player &player, DeathReason deathReason)
+void SyncPlrKill(Player &player, DeathReason deathReason, uint16_t deathSourceIndex /*= 0*/)
 {
 	if (player._pHitPoints <= 0 && leveltype == DTYPE_TOWN) {
 		SetPlayerHitPoints(player, 64);
@@ -2874,7 +2873,7 @@ void SyncPlrKill(Player &player, DeathReason deathReason)
 	}
 
 	SetPlayerHitPoints(player, 0);
-	StartPlayerKill(player, deathReason);
+	StartPlayerKill(player, deathReason, deathSourceIndex);
 }
 
 void RemovePlrMissiles(const Player &player)
@@ -3033,7 +3032,7 @@ void ProcessPlayers()
 
 			if (&player == MyPlayer) {
 				if (HasAnyOf(player._pIFlags, ItemSpecialEffect::DrainLife) && leveltype != DTYPE_TOWN) {
-					ApplyPlrDamage(DamageType::Physical, player, 0, 0, 4);
+					ApplyPlrDamage(DamageType::Physical, player, 0, 0, 4, DeathReason::Unknown);
 				}
 				if (HasAnyOf(player._pIFlags, ItemSpecialEffect::NoMana) && player._pManaBase > 0) {
 					player._pManaBase -= player._pMana;
