@@ -1118,8 +1118,8 @@ msgid "Inspects stats and equipment of another player."
 msgstr "Επιθεώρηση στατιστικών και αντικειμένων ενός άλλου παίκτη."
 
 #: Source/control.cpp:527
-msgid "{player name}"
-msgstr "{όνομα παίκτη}"
+msgid "<player name>"
+msgstr "<όνομα παίκτη>"
 
 #: Source/control.cpp:528
 msgid "/seedinfo"
