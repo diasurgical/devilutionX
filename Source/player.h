@@ -776,7 +776,7 @@ struct Player {
 		this->plrIsOnSetLevel = true;
 	}
 
-	const char* GetClassName();
+	const char *GetClassName();
 };
 
 extern DVL_API_FOR_TEST size_t MyPlayerId;

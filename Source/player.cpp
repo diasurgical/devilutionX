@@ -3497,7 +3497,7 @@ void PlayDungMsgs()
 	}
 }
 
-const char* Player::GetClassName()
+const char *Player::GetClassName()
 {
 	return PlayersData[static_cast<uint8_t>(_pClass)].className;
 }

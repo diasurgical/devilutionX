@@ -2251,7 +2251,6 @@ size_t OnFriendlyMode(const TCmd *pCmd, Player &player) // NOLINT(misc-unused-pa
 			textColor = UiFlags::ColorRed;
 			szEvent = _("{:s} has expressed hostility towards you.");
 		}
-		 
 	}
 
 	EventPlrMsg(fmt::format(fmt::runtime(szEvent), player._pName), textColor);
