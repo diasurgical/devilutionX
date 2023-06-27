@@ -1141,7 +1141,7 @@ void InitMissiles()
 				if (missile.sourcePlayer() == MyPlayer) {
 					int missingHP = myPlayer._pMaxHP - myPlayer._pHitPoints;
 					CalcPlrItemVals(myPlayer, true);
-					ApplyPlrDamage(DamageType::Physical, myPlayer, 0, 1, missingHP + missile.var2, DeathReason::Unknown);
+					ApplyPlrDamage(DamageType::Physical, myPlayer, 0, 1, missingHP + missile.var2, DeathReason::BloodMagic);
 				}
 			}
 		}
@@ -3857,7 +3857,7 @@ void ProcessRage(Missile &missile)
 	}
 
 	CalcPlrItemVals(player, true);
-	ApplyPlrDamage(DamageType::Physical, player, 0, 1, hpdif, DeathReason::Unknown);
+	ApplyPlrDamage(DamageType::Physical, player, 0, 1, hpdif, DeathReason::BloodMagic);
 	RedrawEverything();
 	player.Say(HeroSpeech::HeavyBreathing);
 }

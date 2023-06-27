@@ -168,9 +168,15 @@ enum class DeathReason {
 	Monster,
 	/* @brief Trap (dungeon) */
 	Trap,
-	/* @brief Other player or selfkill (for example firewall) */
+	/* @brief Other player or selfkill (for example, Fire Wall) */
 	Player,
-	/* @brief HP is zero but we don't know when or where this happend */
+	/* @brief Drain Life item effect */
+	DrainLife,
+	/* @brief Peril item effect */
+	Peril,
+	/* @brief Spell effect */
+	BloodMagic,
+	/* @brief HP is zero but we don't know when or where this happened */
 	Unknown,
 };
 

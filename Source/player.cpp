@@ -671,7 +671,7 @@ bool PlrHitMonst(Player &player, Monster &monster, bool adjacentDamage = false)
 		if (HasAnyOf(player.pDamAcFlags, ItemSpecialEffectHf::Peril)) {
 			dam2 += player._pIGetHit << 6;
 			if (dam2 >= 0) {
-				ApplyPlrDamage(DamageType::Physical, player, 0, 1, dam2, DeathReason::Unknown);
+				ApplyPlrDamage(DamageType::Physical, player, 0, 1, dam2, DeathReason::Peril);
 			}
 			dam *= 2;
 		}
@@ -3033,7 +3033,7 @@ void ProcessPlayers()
 
 			if (&player == MyPlayer) {
 				if (HasAnyOf(player._pIFlags, ItemSpecialEffect::DrainLife) && leveltype != DTYPE_TOWN) {
-					ApplyPlrDamage(DamageType::Physical, player, 0, 0, 4, DeathReason::Unknown);
+					ApplyPlrDamage(DamageType::Physical, player, 0, 0, 4, DeathReason::DrainLife);
 				}
 				if (HasAnyOf(player._pIFlags, ItemSpecialEffect::NoMana) && player._pManaBase > 0) {
 					player._pManaBase -= player._pMana;

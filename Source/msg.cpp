@@ -1808,6 +1808,18 @@ size_t OnPlayerDeath(const TCmd *pCmd, size_t pnum)
 		EventPlrMsg(fmt::format(fmt::runtime(_("{:s} was slain by {:s}.")), player._pName, killer._pName), textColor);
 		break;
 	}
+	case DeathReason::DrainLife: {
+		EventPlrMsg(fmt::format(fmt::runtime(_("{:s} succumbed to the curse of Constricting Ring.")), player._pName), textColor);
+		break;
+	}
+	case DeathReason::Peril: {
+		EventPlrMsg(fmt::format(fmt::runtime(_("{:s} was betrayed by their own weapon.")), player._pName), textColor);
+		break;
+	}
+	case DeathReason::BloodMagic: {
+		EventPlrMsg(fmt::format(fmt::runtime(_("{:s} perished from overuse of their lifeforce.")), player._pName), textColor);
+		break;
+	}
 	case DeathReason::Unknown: {
 		EventPlrMsg(fmt::format(fmt::runtime(_("{:s} died.")), player._pName), textColor);
 		break;
