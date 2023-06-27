@@ -2430,6 +2430,7 @@ void NextPlrLevel(Player &player)
 		FocusOnCharInfo();
 
 	CalcPlrInv(player, true);
+	PlaySFX(IS_IHARM);
 }
 
 void AddPlrExperience(Player &player, int lvl, int exp)
