@@ -1085,10 +1085,14 @@ bool PlayerMHit(int pnum, Monster *monster, int dist, int mind, int maxd, Missil
 		return true;
 	}
 
+	uint16_t monsterType = monster != nullptr ? static_cast<uint16_t>(monster->type().type) : -1;
+	uint16_t monsterUid = monster != nullptr ? static_cast<uint16_t>(monster->uniqueType) : -1;
+	bool isMonsterUnique = monster != nullptr ? monster->isUnique() : false;
+
 	if (resper > 0) {
 		dam -= dam * resper / 100;
 		if (&player == MyPlayer) {
-			ApplyPlrDamage(damageType, player, 0, 0, dam, deathReason, static_cast<uint16_t>(monster->type().type) ? monster != nullptr : -1, static_cast<uint16_t>(monster->uniqueType), monster->isUnique() ? monster != nullptr : false);
+			ApplyPlrDamage(damageType, player, 0, 0, dam, deathReason, monsterType, monsterUid, isMonsterUnique);
 		}
 
 		if (player._pHitPoints >> 6 > 0) {
@@ -1098,7 +1102,7 @@ bool PlayerMHit(int pnum, Monster *monster, int dist, int mind, int maxd, Missil
 	}
 
 	if (&player == MyPlayer) {
-		ApplyPlrDamage(damageType, player, 0, 0, dam, deathReason, static_cast<uint16_t>(monster->type().type) ? monster != nullptr : -1, static_cast<uint16_t>(monster->uniqueType), monster->isUnique() ? monster != nullptr : false);
+		ApplyPlrDamage(damageType, player, 0, 0, dam, deathReason, monsterType, monsterUid, isMonsterUnique);
 	}
 
 	if (player._pHitPoints >> 6 > 0) {
