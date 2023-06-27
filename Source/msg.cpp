@@ -1805,7 +1805,7 @@ size_t OnPlayerDeath(const TCmd *pCmd, size_t pnum)
 			szEvent = _("{:s} met a gruesome end at the hands of {:s}.");
 			break;
 		case 4:
-			szEvent = _("{:s} was obliterated by {:s}.");
+			szEvent = _("{:s} was disemboweled by {:s}.");
 			break;
 		case 5:
 			szEvent = _("In a brutal display, {:s} ripped apart {:s}.");
