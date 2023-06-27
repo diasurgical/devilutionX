@@ -1808,7 +1808,7 @@ size_t OnPlayerDeath(const TCmd *pCmd, size_t pnum)
 			szEvent = _("{:s} was disemboweled by {:s}.");
 			break;
 		case 5:
-			szEvent = _("In a brutal display, {:s} ripped apart {:s}.");
+			szEvent = _("In a brutal display, {:s} was ripped apart by {:s}.");
 			break;
 		case 6:
 			szEvent = _("{:s} was dragged into the abyss by {:s}.");
@@ -1817,7 +1817,7 @@ size_t OnPlayerDeath(const TCmd *pCmd, size_t pnum)
 			szEvent = _("{:s} was vanquished by {:s}, leaving no trace behind.");
 			break;
 		case 8:
-			szEvent = _("With a deadly strike, {:s} eradicated {:s}.");
+			szEvent = _("With a deadly strike, {:s} was eradicated by {:s}.");
 			break;
 		case 9:
 			szEvent = _("{:s} was torn limb from limb by {:s}.");
