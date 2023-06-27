@@ -775,6 +775,8 @@ struct Player {
 		this->plrlevel = static_cast<uint8_t>(level);
 		this->plrIsOnSetLevel = true;
 	}
+
+	const char* GetClassName();
 };
 
 extern DVL_API_FOR_TEST size_t MyPlayerId;
@@ -815,7 +817,7 @@ void NextPlrLevel(Player &player);
 #endif
 void AddPlrExperience(Player &player, int lvl, int exp);
 void AddPlrMonstExper(int lvl, int exp, char pmask);
-void ApplyPlrDamage(DamageType damageType, Player &player, int dam, int minHP = 0, int frac = 0, DeathReason deathReason = DeathReason::Monster, uint16_t deathSourceIndex = 0);
+void ApplyPlrDamage(DamageType damageType, Player &player, int dam, int minHP = 0, int frac = 0, DeathReason deathReason = DeathReason::Monster, uint16_t deathSourceIndex = -1, uint16_t monsterUid = -1, bool wasKilledByUnique = false);
 void InitPlayer(Player &player, bool FirstTime);
 void InitMultiView();
 void PlrClrTrans(Point position);
@@ -826,12 +828,12 @@ void StartStand(Player &player, Direction dir);
 void StartPlrBlock(Player &player, Direction dir);
 void FixPlrWalkTags(const Player &player);
 void StartPlrHit(Player &player, int dam, bool forcehit);
-void StartPlayerKill(Player &player, DeathReason deathReason, uint16_t deathSourceIndex);
+void StartPlayerKill(Player &player, DeathReason deathReason, uint16_t deathSourceIndex, uint16_t monsterUid, bool wasKilledByUnique);
 /**
  * @brief Strip the top off gold piles that are larger than MaxGold
  */
 void StripTopGold(Player &player);
-void SyncPlrKill(Player &player, DeathReason deathReason, uint16_t deathSourceIndex = 0);
+void SyncPlrKill(Player &player, DeathReason deathReason, uint16_t deathSource = -1, uint16_t monsterUid = -1, bool wasKilledByUnique = false);
 void RemovePlrMissiles(const Player &player);
 void StartNewLvl(Player &player, interface_mode fom, int lvl);
 void RestartTownLvl(Player &player);

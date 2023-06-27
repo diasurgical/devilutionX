@@ -1088,7 +1088,7 @@ bool PlayerMHit(int pnum, Monster *monster, int dist, int mind, int maxd, Missil
 	if (resper > 0) {
 		dam -= dam * resper / 100;
 		if (&player == MyPlayer) {
-			ApplyPlrDamage(damageType, player, 0, 0, dam, deathReason, monster->getId() ? monster != nullptr : 0);
+			ApplyPlrDamage(damageType, player, 0, 0, dam, deathReason, static_cast<uint16_t>(monster->type().type) ? monster != nullptr : -1, static_cast<uint16_t>(monster->uniqueType), monster->isUnique() ? monster != nullptr : false);
 		}
 
 		if (player._pHitPoints >> 6 > 0) {
@@ -1098,7 +1098,7 @@ bool PlayerMHit(int pnum, Monster *monster, int dist, int mind, int maxd, Missil
 	}
 
 	if (&player == MyPlayer) {
-		ApplyPlrDamage(damageType, player, 0, 0, dam, deathReason, monster->getId() ? monster != nullptr : 0);
+		ApplyPlrDamage(damageType, player, 0, 0, dam, deathReason, static_cast<uint16_t>(monster->type().type) ? monster != nullptr : -1, static_cast<uint16_t>(monster->uniqueType), monster->isUnique() ? monster != nullptr : false);
 	}
 
 	if (player._pHitPoints >> 6 > 0) {

@@ -34,6 +34,7 @@
 #include "objects.h"
 #include "options.h"
 #include "pfile.h"
+#include "playerdat.hpp"
 #include "plrmsg.h"
 #include "spells.h"
 #include "storm/storm_net.hpp"
@@ -1772,14 +1773,16 @@ size_t OnMonstDamage(const TCmd *pCmd, size_t pnum)
 
 size_t OnPlayerDeath(const TCmd *pCmd, size_t pnum)
 {
-	const auto &message = *reinterpret_cast<const TCmdParam2 *>(pCmd);
-	const DeathReason deathReason = static_cast<DeathReason>(SDL_SwapLE16(message.wParam1));
-	const uint16_t deathSourceIndex = SDL_SwapLE16(message.wParam2);
+	const auto &message = *reinterpret_cast<const TCmdPDeath *>(pCmd);
+	const auto deathReason = static_cast<DeathReason>(SDL_SwapLE16(message.wDeathReason));
+	const uint16_t deathSourceIndex = SDL_SwapLE16(message.wDeathSourceIndex);
+	const uint16_t monsterUid = SDL_SwapLE16(message.wMonsterUid);
+	const bool wasKilledByUnique = SDL_SwapLE16(message.bWasKilledByUnique);
 	Player &player = Players[pnum];
 
 	if (gbBufferMsgs != 1) {
 		if (&player != MyPlayer)
-			StartPlayerKill(player, deathReason, deathSourceIndex);
+			StartPlayerKill(player, deathReason, deathSourceIndex, monsterUid, wasKilledByUnique);
 		else
 			pfile_update(true);
 	} else {
@@ -1787,24 +1790,30 @@ size_t OnPlayerDeath(const TCmd *pCmd, size_t pnum)
 	}
 
 	string_view szEvent;
+	UiFlags textColor = UiFlags::ColorRed;
 
 	switch (deathReason) {
 	case DeathReason::Monster: {
-		Monster &monster = Monsters[deathSourceIndex];
-		EventPlrMsg(fmt::format(fmt::runtime(_("{:s} was slain by {:s}.")), player._pName, monster.name()));
+		if (monsterUid != -1) {
+			const UniqueMonsterData unique = UniqueMonstersData[monsterUid];
+			EventPlrMsg(fmt::format(fmt::runtime(_("{:s} was slain by {:s}.")), player._pName, unique.mName), textColor);
+		} else {
+			const MonsterData monster = MonstersData[deathSourceIndex];
+			EventPlrMsg(fmt::format(fmt::runtime(_("{:s} was slain by {:s}.")), player._pName, monster.name), textColor);
+		}
 		break;
 	}
 	case DeathReason::Trap: {
-		EventPlrMsg(fmt::format(fmt::runtime(_("{:s} was slain by a trap.")), player._pName));
+		EventPlrMsg(fmt::format(fmt::runtime(_("{:s} was slain by a trap.")), player._pName), textColor);
 		break;
 	}
 	case DeathReason::Player: {
-		Player &killer = Players[deathSourceIndex];
-		EventPlrMsg(fmt::format(fmt::runtime(_("{:s} was slain by {:s}.")), player._pName, killer._pName));
+		const Player &killer = Players[deathSourceIndex];
+		EventPlrMsg(fmt::format(fmt::runtime(_("{:s} was slain by {:s}.")), player._pName, killer._pName), textColor);
 		break;
 	}
 	case DeathReason::Unknown: {
-		EventPlrMsg(fmt::format(fmt::runtime(_("{:s} died.")), player._pName));
+		EventPlrMsg(fmt::format(fmt::runtime(_("{:s} died.")), player._pName), textColor);
 		break;
 	}
 	}
@@ -2059,7 +2068,7 @@ size_t OnPlayerJoinLevel(const TCmd *pCmd, size_t pnum)
 		ResetPlayerGFX(player);
 		player.plractive = true;
 		gbActivePlayers++;
-		EventPlrMsg(fmt::format(fmt::runtime(_("Player '{:s}' (level {:d}) just joined the game")), player._pName, player._pLevel));
+		EventPlrMsg(fmt::format(fmt::runtime(_("Player '{:s}' (level {:d} {:s}) just joined the game")), player._pName, player._pLevel, player.GetClassName()));
 	}
 
 	if (player.plractive && &player != MyPlayer) {
@@ -2237,11 +2246,19 @@ size_t OnFriendlyMode(const TCmd *pCmd, Player &player) // NOLINT(misc-unused-pa
 	player.friendlyMode = !player.friendlyMode;
 
 	string_view szEvent;
+	UiFlags textColor = UiFlags::ColorWhitegold;
 
-	if (&player != MyPlayer)
-		szEvent = player.friendlyMode ? _("{:s} has become friendly towards you.") : _("{:s} has expressed hostility towards you.");
+	if (&player != MyPlayer) {
+		if (player.friendlyMode) {
+			szEvent = _("{:s} has become friendly towards you.");
+		} else {
+			textColor = UiFlags::ColorRed;
+			szEvent = _("{:s} has expressed hostility towards you.");
+		}
+		 
+	}
 
-	EventPlrMsg(fmt::format(fmt::runtime(szEvent), player._pName));
+	EventPlrMsg(fmt::format(fmt::runtime(szEvent), player._pName), textColor);
 	RedrawEverything();
 
 	return sizeof(*pCmd);
@@ -2957,6 +2974,40 @@ void NetSendCmdParam5(bool bHiPri, _cmd_id bCmd, uint16_t wParam1, uint16_t wPar
 		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
 
 	MyPlayer->UpdatePreviewCelSprite(bCmd, {}, wParam1, wParam2);
+}
+
+void NetSendCmdPDeath(bool bHiPri, _cmd_id bCmd, uint16_t wDeathReason, uint16_t wDeathSourceIndex, uint16_t wMonsterUid, bool bWasKilledByUnique)
+{
+	if (WasPlayerCmdAlreadyRequested(bCmd, {}, wDeathReason, wDeathSourceIndex, wMonsterUid, bWasKilledByUnique))
+		return;
+
+	TCmdPDeath cmd;
+
+	cmd.bCmd = bCmd;
+	cmd.wDeathReason = SDL_SwapLE16(wDeathReason);
+	cmd.wDeathSourceIndex = SDL_SwapLE16(wDeathSourceIndex);
+	cmd.wMonsterUid = SDL_SwapLE16(wMonsterUid);
+	cmd.bWasKilledByUnique = SDL_SwapLE16(bWasKilledByUnique);
+	if (bHiPri)
+		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+	else
+		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+}
+
+void NetSendCmdMDeath(bool bHiPri, _cmd_id bCmd, uint16_t wMonsterUid, bool bIsMonsterUnique)
+{
+	if (WasPlayerCmdAlreadyRequested(bCmd, {}, wMonsterUid, bIsMonsterUnique))
+		return;
+
+	TCmdMDeath cmd;
+
+	cmd.bCmd = bCmd;
+	cmd.wMonsterUid = SDL_SwapLE16(wMonsterUid);
+	cmd.bIsMonsterUnique = SDL_SwapLE16(bIsMonsterUnique);
+	if (bHiPri)
+		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+	else
+		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
 }
 
 void NetSendCmdQuest(bool bHiPri, const Quest &quest)
