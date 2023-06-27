@@ -1790,22 +1790,115 @@ size_t OnPlayerDeath(const TCmd *pCmd, size_t pnum)
 
 	switch (deathReason) {
 	case DeathReason::Monster: {
-		if (monsterUid != -1) {
+		uint16_t rnd = GenerateRnd(9);
+		switch (rnd) {
+		case 0:
+			szEvent = _("{:s} was slain by {:s}.");
+			break;
+		case 1:
+			szEvent = _("{:s} was exsanguinated by {:s}.");
+			break;
+		case 2:
+			szEvent = _("{:s} was eviscerated by {:s}.");
+			break;
+		case 3:
+			szEvent = _("{:s} met a gruesome end at the hands of {:s}.");
+			break;
+		case 4:
+			szEvent = _("{:s} was obliterated by {:s}.");
+			break;
+		case 5:
+			szEvent = _("In a brutal display, {:s} ripped apart {:s}.");
+			break;
+		case 6:
+			szEvent = _("{:s} was dragged into the abyss by {:s}.");
+			break;
+		case 7:
+			szEvent = _("{:s} was vanquished by {:s}, leaving no trace behind.");
+			break;
+		case 8:
+			szEvent = _("With a deadly strike, {:s} eradicated {:s}.");
+			break;
+		case 9:
+			szEvent = _("{:s} was torn limb from limb by {:s}.");
+			break;
+		default:
+			szEvent = _("{:s} was slain by {:s}.");
+			break;
+		}
+		if (wasKilledByUnique) {
 			const UniqueMonsterData unique = UniqueMonstersData[monsterUid];
-			EventPlrMsg(fmt::format(fmt::runtime(_("{:s} was slain by {:s}.")), player._pName, unique.mName), textColor);
+			EventPlrMsg(fmt::format(fmt::runtime(szEvent), player._pName, unique.mName), textColor);
 		} else {
 			const MonsterData monster = MonstersData[deathSourceIndex];
-			EventPlrMsg(fmt::format(fmt::runtime(_("{:s} was slain by {:s}.")), player._pName, monster.name), textColor);
+			EventPlrMsg(fmt::format(fmt::runtime(szEvent), player._pName, monster.name), textColor);
 		}
 		break;
 	}
 	case DeathReason::Trap: {
-		EventPlrMsg(fmt::format(fmt::runtime(_("{:s} was slain by a trap.")), player._pName), textColor);
+		uint16_t rnd = GenerateRnd(4);
+		switch (rnd) {
+		case 0:
+			szEvent = _("{:s} was slain by a trap.");
+			break;
+		case 1:
+			szEvent = _("{:s} was ensnared by a deadly trap.");
+			break;
+		case 2:
+			szEvent = _("{:s} fell victim to a cunningly hidden trap.");
+			break;
+		case 3:
+			szEvent = _("{:s} was overwhelmed by a trap's deadly mechanism.");
+			break;
+		case 4:
+			szEvent = _("{:s} met a sudden demise from a devious trap.");
+			break;
+		default:
+			szEvent = _("{:s} was slain by a trap.");
+			break;
+		}
+		EventPlrMsg(fmt::format(fmt::runtime(szEvent), player._pName), textColor);
 		break;
 	}
 	case DeathReason::Player: {
+		uint16_t rnd = GenerateRnd(9);
+		switch (rnd) {
+		case 0:
+			szEvent = _("{:s} was slain by {:s}.");
+			break;
+		case 1:
+			szEvent = _("{:s} met their end at the hands of {:s}.");
+			break;
+		case 2:
+			szEvent = _("{:s} was vanquished by the might of {:s}.");
+			break;
+		case 3:
+			szEvent = _("{:s} fell victim to the treachery of {:s}.");
+			break;
+		case 4:
+			szEvent = _("{:s} was obliterated by the power of {:s}.");
+			break;
+		case 5:
+			szEvent = _("{:s} was annihilated by the wrath of {:s}.");
+			break;
+		case 6:
+			szEvent = _("{:s} was struck down by {:s}.");
+			break;
+		case 7:
+			szEvent = _("{:s} was executed by {:s}'s deadly assault.");
+			break;
+		case 8:
+			szEvent = _("{:s} was overpowered by {:s}'s devastating attack.");
+			break;
+		case 9:
+			szEvent = _("{:s} was defeated by {:s}'s cunning tactics.");
+			break;
+		default:
+			szEvent = _("{:s} was slain by {:s}.");
+			break;
+		}
 		const Player &killer = Players[deathSourceIndex];
-		EventPlrMsg(fmt::format(fmt::runtime(_("{:s} was slain by {:s}.")), player._pName, killer._pName), textColor);
+		EventPlrMsg(fmt::format(fmt::runtime(szEvent), player._pName, killer._pName), textColor);
 		break;
 	}
 	case DeathReason::DrainLife: {
