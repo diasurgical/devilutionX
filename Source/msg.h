@@ -514,12 +514,6 @@ struct TCmdPDeath {
 	bool bWasKilledByUnique;
 };
 
-struct TCmdMDeath {
-	_cmd_id bCmd;
-	uint16_t wMonsterUid;
-	bool bIsMonsterUnique;
-};
-
 struct TCmdGolem {
 	_cmd_id bCmd;
 	uint8_t _mx;

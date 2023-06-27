@@ -1692,10 +1692,6 @@ size_t OnMonstDeath(const TCmd *pCmd, size_t pnum)
 		SendPacket(pnum, &message, sizeof(message));
 	}
 
-	if (monster.isUnique()) {
-		EventPlrMsg(fmt::format(fmt::runtime(_("{:s} has been defeated!")), monster.name()));
-	}
-
 	return sizeof(message);
 }
 
@@ -2988,22 +2984,6 @@ void NetSendCmdPDeath(bool bHiPri, _cmd_id bCmd, uint16_t wDeathReason, uint16_t
 	cmd.wDeathSourceIndex = SDL_SwapLE16(wDeathSourceIndex);
 	cmd.wMonsterUid = SDL_SwapLE16(wMonsterUid);
 	cmd.bWasKilledByUnique = SDL_SwapLE16(bWasKilledByUnique);
-	if (bHiPri)
-		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
-	else
-		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
-}
-
-void NetSendCmdMDeath(bool bHiPri, _cmd_id bCmd, uint16_t wMonsterUid, bool bIsMonsterUnique)
-{
-	if (WasPlayerCmdAlreadyRequested(bCmd, {}, wMonsterUid, bIsMonsterUnique))
-		return;
-
-	TCmdMDeath cmd;
-
-	cmd.bCmd = bCmd;
-	cmd.wMonsterUid = SDL_SwapLE16(wMonsterUid);
-	cmd.bIsMonsterUnique = SDL_SwapLE16(bIsMonsterUnique);
 	if (bHiPri)
 		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
 	else
