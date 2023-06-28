@@ -108,6 +108,31 @@ struct PlayerNetPack {
 	uint8_t pDiabloKillLevel;
 	uint8_t friendlyMode;
 	uint8_t isOnSetLevel;
+
+	// For validation
+	int32_t pStrength;
+	int32_t pMagic;
+	int32_t pDexterity;
+	int32_t pVitality;
+	int32_t pHitPoints;
+	int32_t pMaxHP;
+	int32_t pMana;
+	int32_t pMaxMana;
+	int32_t pDamageMod;
+	int32_t pBaseToBlk;
+	int32_t pIMinDam;
+	int32_t pIMaxDam;
+	int32_t pIAC;
+	int32_t pIBonusDam;
+	int32_t pIBonusToHit;
+	int32_t pIBonusAC;
+	int32_t pIBonusDamMod;
+	int32_t pIGetHit;
+	int32_t pIEnAc;
+	int32_t pIFMinDam;
+	int32_t pIFMaxDam;
+	int32_t pILMinDam;
+	int32_t pILMaxDam;
 };
 #pragma pack(pop)
 
