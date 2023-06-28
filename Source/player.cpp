@@ -2431,6 +2431,7 @@ void NextPlrLevel(Player &player)
 
 	CalcPlrInv(player, true);
 	PlaySFX(IS_IHARM);
+	PlaySFX(IS_ISIGN);
 }
 
 void AddPlrExperience(Player &player, int lvl, int exp)
