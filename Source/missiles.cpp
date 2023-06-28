@@ -1869,8 +1869,6 @@ void AddFireWall(Missile &missile, AddMissileParameter &parameter)
 		missile._mirange *= i + 1;
 	if (missile._micaster == TARGET_PLAYERS || missile._misource < 0)
 		missile._mirange += currlevel;
-	else
-		missile._mirange += (Players[missile._misource]._pISplDur * missile._mirange) / 128;
 	missile._mirange *= 16;
 	missile.var1 = missile._mirange - missile._miAnimLen;
 }
@@ -2122,7 +2120,6 @@ void AddGuardian(Missile &missile, AddMissileParameter &parameter)
 
 	missile._mlid = AddLight(missile.position.tile, 1);
 	missile._mirange = missile._mispllvl + (player._pLevel / 2);
-	missile._mirange += (missile._mirange * player._pISplDur) / 128;
 
 	if (missile._mirange > 30)
 		missile._mirange = 30;
@@ -2313,7 +2310,6 @@ void AddStoneCurse(Missile &missile, AddMissileParameter &parameter)
 	missile.position.tile = *targetMonsterPosition;
 	missile.position.start = missile.position.tile;
 	missile._mirange = missile._mispllvl + 6;
-	missile._mirange += (missile._mirange * player._pISplDur) / 128;
 
 	if (missile._mirange > 15)
 		missile._mirange = 15;
@@ -2455,7 +2451,6 @@ void AddInfravision(Missile &missile, AddMissileParameter & /*parameter*/)
 	Player &player = Players[missile._misource];
 
 	missile._mirange = ScaleSpellEffect(1584, missile._mispllvl);
-	missile._mirange += missile._mirange * player._pISplDur / 128;
 }
 
 void AddFlameWaveControl(Missile &missile, AddMissileParameter &parameter)

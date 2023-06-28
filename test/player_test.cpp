@@ -165,7 +165,6 @@ static void AssertPlayer(Player &player)
 	ASSERT_EQ(player._pIFlags, ItemSpecialEffect::None);
 	ASSERT_EQ(player._pIGetHit, 0);
 	ASSERT_EQ(player._pISplLvlAdd, 0);
-	ASSERT_EQ(player._pISplDur, 0);
 	ASSERT_EQ(player._pIEnAc, 0);
 	ASSERT_EQ(player._pIFMinDam, 0);
 	ASSERT_EQ(player._pIFMaxDam, 0);

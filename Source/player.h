@@ -268,7 +268,6 @@ struct Player {
 	int _pIBonusAC;
 	int _pIBonusDamMod;
 	int _pIGetHit;
-	int _pISplDur;
 	int _pIEnAc;
 	int _pIFMinDam;
 	int _pIFMaxDam;
