@@ -121,8 +121,8 @@ void PackPlayer(PlayerPack &packed, const Player &player)
 	packed.pStatPts = player._pStatPts;
 	packed.pExperience = SDL_SwapLE32(player._pExperience);
 	packed.pGold = SDL_SwapLE32(player._pGold);
-	packed.pHPBase = SDL_SwapLE32(player._pHPBase);
-	packed.pMaxHPBase = SDL_SwapLE32(player._pMaxHPBase);
+	packed.pHPBase = SDL_SwapLE16(player._pHPBase);
+	packed.pMaxHPBase = SDL_SwapLE16(player._pMaxHPBase);
 	packed.pManaBase = SDL_SwapLE32(player._pManaBase);
 	packed.pMaxManaBase = SDL_SwapLE32(player._pMaxManaBase);
 	packed.pMemSpells = SDL_SwapLE64(player._pMemSpells);
@@ -165,8 +165,8 @@ void PackNetPlayer(PlayerNetPack &packed, const Player &player)
 	packed.pLevel = player._pLevel;
 	packed.pStatPts = player._pStatPts;
 	packed.pExperience = SDL_SwapLE32(player._pExperience);
-	packed.pHPBase = SDL_SwapLE32(player._pHPBase);
-	packed.pMaxHPBase = SDL_SwapLE32(player._pMaxHPBase);
+	packed.pHPBase = SDL_SwapLE16(player._pHPBase);
+	packed.pMaxHPBase = SDL_SwapLE16(player._pMaxHPBase);
 	packed.pManaBase = SDL_SwapLE32(player._pManaBase);
 	packed.pMaxManaBase = SDL_SwapLE32(player._pMaxManaBase);
 	packed.pMemSpells = SDL_SwapLE64(player._pMemSpells);
@@ -201,21 +201,21 @@ void PackNetPlayer(PlayerNetPack &packed, const Player &player)
 	packed.pMaxHP = SDL_SwapLE32(player._pMaxHP);
 	packed.pMana = SDL_SwapLE32(player._pMana);
 	packed.pMaxMana = SDL_SwapLE32(player._pMaxMana);
-	packed.pDamageMod = SDL_SwapLE32(player._pDamageMod);
-	packed.pBaseToBlk = SDL_SwapLE32(player._pBaseToBlk);
-	packed.pIMinDam = SDL_SwapLE32(player._pIMinDam);
-	packed.pIMaxDam = SDL_SwapLE32(player._pIMaxDam);
-	packed.pIAC = SDL_SwapLE32(player._pIAC);
-	packed.pIBonusDam = SDL_SwapLE32(player._pIBonusDam);
-	packed.pIBonusToHit = SDL_SwapLE32(player._pIBonusToHit);
-	packed.pIBonusAC = SDL_SwapLE32(player._pIBonusAC);
-	packed.pIBonusDamMod = SDL_SwapLE32(player._pIBonusDamMod);
-	packed.pIGetHit = SDL_SwapLE32(player._pIGetHit);
-	packed.pIEnAc = SDL_SwapLE32(player._pIEnAc);
-	packed.pIFMinDam = SDL_SwapLE32(player._pIFMinDam);
-	packed.pIFMaxDam = SDL_SwapLE32(player._pIFMaxDam);
-	packed.pILMinDam = SDL_SwapLE32(player._pILMinDam);
-	packed.pILMaxDam = SDL_SwapLE32(player._pILMaxDam);
+	packed.pDamageMod = player._pDamageMod;
+	packed.pBaseToBlk = player._pBaseToBlk;
+	packed.pIMinDam = SDL_SwapLE16(player._pIMinDam);
+	packed.pIMaxDam = SDL_SwapLE16(player._pIMaxDam);
+	packed.pIAC = SDL_SwapLE16(player._pIAC);
+	packed.pIBonusDam = SDL_SwapLE16(player._pIBonusDam);
+	packed.pIBonusToHit = SDL_SwapLE16(player._pIBonusToHit);
+	packed.pIBonusAC = SDL_SwapLE16(player._pIBonusAC);
+	packed.pIBonusDamMod = player._pIBonusDamMod;
+	packed.pIGetHit = player._pIGetHit;
+	packed.pIEnAc = player._pIEnAc;
+	packed.pIFMinDam = player._pIFMinDam;
+	packed.pIFMaxDam = player._pIFMaxDam;
+	packed.pILMinDam = player._pILMinDam;
+	packed.pILMaxDam = player._pILMaxDam;
 }
 
 void UnPackItem(const ItemPack &packedItem, const Player &player, Item &item, bool isHellfire)
@@ -285,9 +285,9 @@ void UnPackPlayer(const PlayerPack &packed, Player &player)
 
 	player = {};
 	player._pLevel = clamp<int8_t>(packed.pLevel, 1, MaxCharacterLevel);
-	player._pMaxHPBase = SDL_SwapLE32(packed.pMaxHPBase);
-	player._pHPBase = SDL_SwapLE32(packed.pHPBase);
-	player._pHPBase = clamp<int32_t>(player._pHPBase, 0, player._pMaxHPBase);
+	player._pMaxHPBase = SDL_SwapLE16(packed.pMaxHPBase);
+	player._pHPBase = SDL_SwapLE16(packed.pHPBase);
+	player._pHPBase = clamp<int16_t>(player._pHPBase, 0, player._pMaxHPBase);
 	player._pMaxHP = player._pMaxHPBase;
 	player._pHitPoints = player._pHPBase;
 	player.position.tile = position;
@@ -367,8 +367,8 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 	if (packed.pLevel > MaxCharacterLevel || packed.pLevel < 1)
 		return false;
 
-	int32_t baseHpMax = SDL_SwapLE32(packed.pMaxHPBase);
-	int32_t baseHp = SDL_SwapLE32(packed.pHPBase);
+	int16_t baseHpMax = SDL_SwapLE16(packed.pMaxHPBase);
+	int16_t baseHp = SDL_SwapLE16(packed.pHPBase);
 	if (baseHp > baseHpMax || baseHp < 0)
 		return false;
 
@@ -445,13 +445,13 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 	CalcPlrInv(player, false);
 	player._pGold = CalculateGold(player);
 
-	if (player._pStrength != SDL_SwapLE32(packed.pStrength))
+	if (player._pStrength != SDL_SwapLE16(packed.pStrength))
 		return false;
-	if (player._pMagic != SDL_SwapLE32(packed.pMagic))
+	if (player._pMagic != SDL_SwapLE16(packed.pMagic))
 		return false;
-	if (player._pDexterity != SDL_SwapLE32(packed.pDexterity))
+	if (player._pDexterity != SDL_SwapLE16(packed.pDexterity))
 		return false;
-	if (player._pVitality != SDL_SwapLE32(packed.pVitality))
+	if (player._pVitality != SDL_SwapLE16(packed.pVitality))
 		return false;
 	if (player._pHitPoints != SDL_SwapLE32(packed.pHitPoints))
 		return false;
@@ -461,35 +461,35 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 		return false;
 	if (player._pMaxMana != SDL_SwapLE32(packed.pMaxMana))
 		return false;
-	if (player._pDamageMod != SDL_SwapLE32(packed.pDamageMod))
+	if (player._pDamageMod != packed.pDamageMod)
 		return false;
-	if (player._pBaseToBlk != SDL_SwapLE32(packed.pBaseToBlk))
+	if (player._pBaseToBlk != packed.pBaseToBlk)
 		return false;
-	if (player._pIMinDam != SDL_SwapLE32(packed.pIMinDam))
+	if (player._pIMinDam != SDL_SwapLE16(packed.pIMinDam))
 		return false;
-	if (player._pIMaxDam != SDL_SwapLE32(packed.pIMaxDam))
+	if (player._pIMaxDam != SDL_SwapLE16(packed.pIMaxDam))
 		return false;
-	if (player._pIAC != SDL_SwapLE32(packed.pIAC))
+	if (player._pIAC != SDL_SwapLE16(packed.pIAC))
 		return false;
-	if (player._pIBonusDam != SDL_SwapLE32(packed.pIBonusDam))
+	if (player._pIBonusDam != SDL_SwapLE16(packed.pIBonusDam))
 		return false;
-	if (player._pIBonusToHit != SDL_SwapLE32(packed.pIBonusToHit))
+	if (player._pIBonusToHit != SDL_SwapLE16(packed.pIBonusToHit))
 		return false;
-	if (player._pIBonusAC != SDL_SwapLE32(packed.pIBonusAC))
+	if (player._pIBonusAC != SDL_SwapLE16(packed.pIBonusAC))
 		return false;
-	if (player._pIBonusDamMod != SDL_SwapLE32(packed.pIBonusDamMod))
+	if (player._pIBonusDamMod != packed.pIBonusDamMod)
 		return false;
-	if (player._pIGetHit != SDL_SwapLE32(packed.pIGetHit))
+	if (player._pIGetHit != packed.pIGetHit)
 		return false;
-	if (player._pIEnAc != SDL_SwapLE32(packed.pIEnAc))
+	if (player._pIEnAc != packed.pIEnAc)
 		return false;
-	if (player._pIFMinDam != SDL_SwapLE32(packed.pIFMinDam))
+	if (player._pIFMinDam != packed.pIFMinDam)
 		return false;
-	if (player._pIFMaxDam != SDL_SwapLE32(packed.pIFMaxDam))
+	if (player._pIFMaxDam != packed.pIFMaxDam)
 		return false;
-	if (player._pILMinDam != SDL_SwapLE32(packed.pILMinDam))
+	if (player._pILMinDam != packed.pILMinDam)
 		return false;
-	if (player._pILMaxDam != SDL_SwapLE32(packed.pILMaxDam))
+	if (player._pILMaxDam != packed.pILMaxDam)
 		return false;
 
 	return true;

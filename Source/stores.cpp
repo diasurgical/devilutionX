@@ -2649,7 +2649,7 @@ void TakePlrsMoney(int cost)
 {
 	Player &myPlayer = *MyPlayer;
 
-	myPlayer._pGold -= std::min(cost, myPlayer._pGold);
+	myPlayer._pGold -= std::min<int32_t>(cost, myPlayer._pGold);
 
 	cost = TakeGold(myPlayer, cost, true);
 	if (cost != 0) {

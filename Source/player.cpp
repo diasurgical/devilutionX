@@ -1813,8 +1813,8 @@ void Player::RestorePartialLife()
 		l *= 2;
 	if (IsAnyOf(_pClass, HeroClass::Rogue, HeroClass::Monk, HeroClass::Bard))
 		l += l / 2;
-	_pHitPoints = std::min(_pHitPoints + l, _pMaxHP);
-	_pHPBase = std::min(_pHPBase + l, _pMaxHPBase);
+	_pHitPoints = std::min<int32_t>(_pHitPoints + l, _pMaxHP);
+	_pHPBase = std::min<int16_t>(_pHPBase + l, _pMaxHPBase);
 }
 
 void Player::RestorePartialMana()
@@ -3303,16 +3303,16 @@ void CheckStats(Player &player)
 		int maxStatPoint = player.GetMaximumAttributeValue(attribute);
 		switch (attribute) {
 		case CharacterAttribute::Strength:
-			player._pBaseStr = clamp(player._pBaseStr, 0, maxStatPoint);
+			player._pBaseStr = clamp<int16_t>(player._pBaseStr, 0, maxStatPoint);
 			break;
 		case CharacterAttribute::Magic:
-			player._pBaseMag = clamp(player._pBaseMag, 0, maxStatPoint);
+			player._pBaseMag = clamp<int16_t>(player._pBaseMag, 0, maxStatPoint);
 			break;
 		case CharacterAttribute::Dexterity:
-			player._pBaseDex = clamp(player._pBaseDex, 0, maxStatPoint);
+			player._pBaseDex = clamp<int16_t>(player._pBaseDex, 0, maxStatPoint);
 			break;
 		case CharacterAttribute::Vitality:
-			player._pBaseVit = clamp(player._pBaseVit, 0, maxStatPoint);
+			player._pBaseVit = clamp<int16_t>(player._pBaseVit, 0, maxStatPoint);
 			break;
 		}
 	}
