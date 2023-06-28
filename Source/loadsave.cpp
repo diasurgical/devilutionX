@@ -516,9 +516,9 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	player._pIFlags = static_cast<ItemSpecialEffect>(file.NextLE<int32_t>());
 	player._pIGetHit = file.NextLE<int32_t>();
 	player._pISplLvlAdd = file.NextLE<int8_t>();
-	file.Skip(1); // Unused
-	file.Skip(2); // Alignment
-	player._pISplDur = file.NextLE<int32_t>();
+	file.Skip(1);         // Unused
+	file.Skip(2);         // Alignment
+	file.Skip<int32_t>(); // _pISplDur
 	player._pIEnAc = file.NextLE<int32_t>();
 	player._pIFMinDam = file.NextLE<int32_t>();
 	player._pIFMaxDam = file.NextLE<int32_t>();
@@ -1330,7 +1330,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.WriteLE<int8_t>(player._pISplLvlAdd);
 	file.Skip<uint8_t>(); // Skip _pISplCost
 	file.Skip(2);         // Alignment
-	file.WriteLE<int32_t>(player._pISplDur);
+	file.Skip<int32_t>(); // _pISplDur
 	file.WriteLE<int32_t>(player._pIEnAc);
 	file.WriteLE<int32_t>(player._pIFMinDam);
 	file.WriteLE<int32_t>(player._pIFMaxDam);
