@@ -284,7 +284,7 @@ void DrawFloatingInfoBox(const Surface &out, Point position)
 			previousLineHadColon = currentLineHasColon;
 		}
 
-		std::string_view linesBaseView(linesBase.data(), linesBase.length());
+		string_view linesBaseView(linesBase.data(), linesBase.length());
 
 		DrawStringWithColors(
 		    out,
@@ -327,8 +327,6 @@ void PrintFloatingItemDetails(const Item &item)
 {
 	if (HeadlessMode)
 		return;
-
-	//Player &player = *MyPlayer;
 
 	// Base Item
 	if (strcmp(item._iIName, item._iName) != 0)
