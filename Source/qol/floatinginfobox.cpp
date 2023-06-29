@@ -31,6 +31,111 @@
 
 namespace devilution {
 
+enum TextType {
+	DAMAGE,
+	DURABILITY,
+	ARMOR
+};
+
+std::map<TextType, UiFlags> GetItemBonusColors(const Item &item)
+{
+	std::map<TextType, UiFlags> itemBonusColors;
+
+	itemBonusColors[DAMAGE] = UiFlags::ColorWhite;
+	itemBonusColors[ARMOR] = UiFlags::ColorWhite;
+	itemBonusColors[DURABILITY] = UiFlags::ColorWhite;
+
+	ItemData itemData = AllItemsList[item.IDidx];
+
+	// Here we set the color for the numbers that follow Armor:, Damage:, and Durability:
+	if (item._iMagical == ITEM_QUALITY_UNIQUE) {
+		const UniqueItem &uitem = UniqueItems[item._iUid];
+		assert(uitem.UINumPL <= sizeof(uitem.powers) / sizeof(*uitem.powers));
+		for (const auto &power : uitem.powers) {
+			switch (power.type) {
+			case IPL_ACP:
+				itemBonusColors[ARMOR] = UiFlags::ColorBlue;
+				break;
+			case IPL_ACP_CURSE:
+				itemBonusColors[ARMOR] = UiFlags::ColorRed;
+				break;
+			case IPL_SETAC:
+				if (item._iAC > itemData.iMaxAC)
+					itemBonusColors[ARMOR] = UiFlags::ColorBlue;
+				else if (item._iAC < itemData.iMinAC)
+					itemBonusColors[ARMOR] = UiFlags::ColorRed;
+				else
+					itemBonusColors[ARMOR] = UiFlags::ColorWhite;
+				break;
+			case IPL_DAMMOD:
+			case IPL_DAMP:
+			case IPL_TOHIT_DAMP:
+				itemBonusColors[DAMAGE] = UiFlags::ColorBlue;
+				break;
+			case IPL_DAMP_CURSE:
+			case IPL_TOHIT_DAMP_CURSE:
+				itemBonusColors[DAMAGE] = UiFlags::ColorRed;
+				break;
+			case IPL_SETDAM:
+				if ((item._iMinDam > itemData.iMinDam) || (item._iMaxDam > itemData.iMaxDam))
+					itemBonusColors[DAMAGE] = UiFlags::ColorBlue;
+				else if ((item._iMinDam < itemData.iMinDam) || (item._iMaxDam < itemData.iMaxDam))
+					itemBonusColors[DAMAGE] = UiFlags::ColorRed;
+				break;
+			case IPL_DUR:
+				itemBonusColors[DURABILITY] = UiFlags::ColorBlue;
+				break;
+			case IPL_DUR_CURSE:
+				itemBonusColors[DURABILITY] = UiFlags::ColorRed;
+				break;
+			case IPL_SETDUR:
+				if (item._iMaxDur > itemData.iDurability)
+					itemBonusColors[DURABILITY] = UiFlags::ColorBlue;
+				else if (item._iMaxDur < itemData.iDurability)
+					itemBonusColors[DURABILITY] = UiFlags::ColorRed;
+				break;
+			default:
+				break;
+			}
+		}
+	} else if (item._iMagical == ITEM_QUALITY_MAGIC) {
+		switch (item._iPrePower) {
+		case IPL_ACP:
+			itemBonusColors[ARMOR] = UiFlags::ColorBlue;
+			break;
+		case IPL_DAMP:
+		case IPL_TOHIT_DAMP:
+			itemBonusColors[DAMAGE] = UiFlags::ColorBlue;
+			break;
+		case IPL_ACP_CURSE:
+			itemBonusColors[ARMOR] = UiFlags::ColorRed;
+			break;
+		case IPL_DAMP_CURSE:
+		case IPL_TOHIT_DAMP_CURSE:
+			itemBonusColors[DAMAGE] = UiFlags::ColorRed;
+			break;
+		default:
+			break;
+		}
+
+		switch (item._iSufPower) {
+		case IPL_DAMMOD:
+			itemBonusColors[DAMAGE] = UiFlags::ColorBlue;
+			break;
+		case IPL_DUR:
+			itemBonusColors[DURABILITY] = UiFlags::ColorBlue;
+			break;
+		case IPL_DUR_CURSE:
+			itemBonusColors[DURABILITY] = UiFlags::ColorRed;
+			break;
+		default:
+			break;
+		}
+	}
+
+	return itemBonusColors;
+}
+
 void DrawFloatingInfoBox(const Surface &out, Point position)
 {
 	if (InfoString.empty())
@@ -126,97 +231,8 @@ void DrawFloatingInfoBox(const Surface &out, Point position)
 		}
 
 		Item &item = GetInventoryItem(myPlayer, pcursinvitem);
-		ItemData iData = AllItemsList[item.IDidx];
 
-		UiFlags armorBonus = UiFlags::ColorWhite;
-		UiFlags damageBonus = UiFlags::ColorWhite;
-		UiFlags durBonus = UiFlags::ColorWhite;
-
-		// Here we set the color for the numbers that follow Armor:, Damage:, and Durability:
-		if (item._iMagical == ITEM_QUALITY_UNIQUE) {
-			const UniqueItem &uitem = UniqueItems[item._iUid];
-			assert(uitem.UINumPL <= sizeof(uitem.powers) / sizeof(*uitem.powers));
-			for (const auto &power : uitem.powers) {
-				switch (power.type) {
-				case IPL_ACP:
-					armorBonus = UiFlags::ColorBlue;
-					break;
-				case IPL_ACP_CURSE:
-					armorBonus = UiFlags::ColorRed;
-					break;
-				case IPL_SETAC:
-					if (item._iAC > iData.iMaxAC)
-						armorBonus = UiFlags::ColorBlue;
-					else if (item._iAC < iData.iMinAC)
-						armorBonus = UiFlags::ColorRed;
-					else
-						armorBonus = UiFlags::ColorWhite;
-					break;
-				case IPL_DAMMOD:
-				case IPL_DAMP:
-				case IPL_TOHIT_DAMP:
-					damageBonus = UiFlags::ColorBlue;
-					break;
-				case IPL_DAMP_CURSE:
-				case IPL_TOHIT_DAMP_CURSE:
-					damageBonus = UiFlags::ColorRed;
-					break;
-				case IPL_SETDAM:
-					if ((item._iMinDam > iData.iMinDam) || (item._iMaxDam > iData.iMaxDam))
-						damageBonus = UiFlags::ColorBlue;
-					else if ((item._iMinDam < iData.iMinDam) || (item._iMaxDam < iData.iMaxDam))
-						damageBonus = UiFlags::ColorRed;
-					break;
-				case IPL_DUR:
-					durBonus = UiFlags::ColorBlue;
-					break;
-				case IPL_DUR_CURSE:
-					durBonus = UiFlags::ColorRed;
-					break;
-				case IPL_SETDUR:
-					if (item._iMaxDur > iData.iDurability)
-						durBonus = UiFlags::ColorBlue;
-					else if (item._iMaxDur < iData.iDurability)
-						durBonus = UiFlags::ColorRed;
-					break;
-				default:
-					break;
-				}
-			}
-		} else if (item._iMagical == ITEM_QUALITY_MAGIC) {
-			switch (item._iPrePower) {
-			case IPL_ACP:
-				armorBonus = UiFlags::ColorBlue;
-				break;
-			case IPL_DAMP:
-			case IPL_TOHIT_DAMP:
-				damageBonus = UiFlags::ColorBlue;
-				break;
-			case IPL_ACP_CURSE:
-				armorBonus = UiFlags::ColorRed;
-				break;
-			case IPL_DAMP_CURSE:
-			case IPL_TOHIT_DAMP_CURSE:
-				damageBonus = UiFlags::ColorRed;
-				break;
-			default:
-				break;
-			}
-
-			switch (item._iSufPower) {
-			case IPL_DAMMOD:
-				damageBonus = UiFlags::ColorBlue;
-				break;
-			case IPL_DUR:
-				durBonus = UiFlags::ColorBlue;
-				break;
-			case IPL_DUR_CURSE:
-				durBonus = UiFlags::ColorRed;
-				break;
-			default:
-				break;
-			}
-		}
+		std::map<TextType, UiFlags> itemBonusColors = GetItemBonusColors(item);
 
 		UiFlags reqStr = UiFlags::ColorWhite;
 		UiFlags reqDex = UiFlags::ColorWhite;
@@ -242,11 +258,11 @@ void DrawFloatingInfoBox(const Surface &out, Point position)
 			} else if (line.find("Armor:") != std::string::npos || line.find("Damage:") != std::string::npos || line.find("Durability:") != std::string::npos) {
 				color = UiFlags::ColorWhite;
 			} else if ((i > 0 && lines[i - 1].find("Armor:") != std::string::npos)) {
-				color = armorBonus;
+				color = itemBonusColors[ARMOR];
 			} else if ((i > 0 && lines[i - 1].find("Damage:") != std::string::npos)) {
-				color = damageBonus;
+				color = itemBonusColors[DAMAGE];
 			} else if ((i > 0 && lines[i - 1].find("Durability:") != std::string::npos)) {
-				color = durBonus;
+				color = itemBonusColors[DURABILITY];
 			} else if ((line.find("Required Strength:") != std::string::npos) || (i > 0 && lines[i - 1].find("Required Strength:") != std::string::npos)) {
 				color = reqStr;
 			} else if ((line.find("Required Dexterity:") != std::string::npos) || (i > 0 && lines[i - 1].find("Required Dexterity:") != std::string::npos)) {
@@ -472,7 +488,4 @@ void PrintFloatingItemDur(const Item &item)
 	PrintFloatingItemInfo(item);
 }
 
-namespace {
-
-} // namespace
 } // namespace devilution
