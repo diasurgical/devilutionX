@@ -492,6 +492,17 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 	if (player._pILMaxDam != SDL_SwapLE32(packed.pILMaxDam))
 		return false;
 
+	PlayerData playerData = PlayersData[static_cast<size_t>(player._pClass)];
+	uint32_t maxValidatedHPBase = playerData.startLife + (playerData.baseVit * playerData.chrLife) + ((player._pLevel - 1) * playerData.lvlUpLife);
+
+	if (player._pMaxHPBase > maxValidatedHPBase)
+		return false;
+
+	uint32_t maxValidatedManaBase = playerData.startMana + (playerData.baseMag * playerData.chrMana) + ((player._pLevel - 1) * playerData.lvlUpMana);
+
+	if (player._pMaxManaBase > maxValidatedManaBase)
+		return false;
+
 	return true;
 }
 
