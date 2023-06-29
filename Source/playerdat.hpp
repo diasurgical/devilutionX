@@ -35,6 +35,10 @@ struct PlayerData {
 	uint8_t maxVit;
 	/* Class Block Bonus % */
 	uint8_t blockBonus;
+	/* Class Starting Life */
+	uint16_t startLife;
+	/* Class Starting Mana */
+	uint16_t startMana;
 	/* Life gained on level up */
 	uint16_t lvlUpLife;
 	/* Mana gained on level up */

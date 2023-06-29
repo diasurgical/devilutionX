@@ -2265,44 +2265,31 @@ void CreatePlayer(Player &player, HeroClass c)
 	player = {};
 	SetRndSeed(SDL_GetTicks());
 
-	player._pClass = c;
-
-	player._pBaseStr = PlayersData[static_cast<std::size_t>(c)].baseStr;
-	player._pStrength = player._pBaseStr;
-
-	player._pBaseMag = PlayersData[static_cast<std::size_t>(c)].baseMag;
-	player._pMagic = player._pBaseMag;
-
-	player._pBaseDex = PlayersData[static_cast<std::size_t>(c)].baseDex;
-	player._pDexterity = player._pBaseDex;
-
-	player._pBaseVit = PlayersData[static_cast<std::size_t>(c)].baseVit;
-	player._pVitality = player._pBaseVit;
+	PlayerData playerData = PlayersData[static_cast<size_t>(c)];
 
 	player._pLevel = 1;
+	player._pClass = c;
 
-	player._pBaseToBlk = PlayersData[static_cast<std::size_t>(c)].blockBonus;
+	player._pBaseStr = playerData.baseStr;
+	player._pStrength = player._pBaseStr;
 
-	player._pHitPoints = (player._pVitality + 10) << 6;
-	if (player._pClass == HeroClass::Warrior || player._pClass == HeroClass::Barbarian) {
-		player._pHitPoints *= 2;
-	} else if (player._pClass == HeroClass::Rogue || player._pClass == HeroClass::Monk || player._pClass == HeroClass::Bard) {
-		player._pHitPoints += player._pHitPoints / 2;
-	}
+	player._pBaseMag = playerData.baseMag;
+	player._pMagic = player._pBaseMag;
 
+	player._pBaseDex = playerData.baseDex;
+	player._pDexterity = player._pBaseDex;
+
+	player._pBaseVit = playerData.baseVit;
+	player._pVitality = player._pBaseVit;
+
+	player._pBaseToBlk = playerData.blockBonus;
+
+	player._pHitPoints = playerData.startLife + (playerData.chrLife * player._pBaseVit);
 	player._pMaxHP = player._pHitPoints;
 	player._pHPBase = player._pHitPoints;
 	player._pMaxHPBase = player._pHitPoints;
 
-	player._pMana = player._pMagic << 6;
-	if (player._pClass == HeroClass::Sorcerer) {
-		player._pMana *= 2;
-	} else if (player._pClass == HeroClass::Bard) {
-		player._pMana += player._pMana * 3 / 4;
-	} else if (player._pClass == HeroClass::Rogue || player._pClass == HeroClass::Monk) {
-		player._pMana += player._pMana / 2;
-	}
-
+	player._pMana = playerData.startMana + (playerData.chrMana * player._pBaseMag);
 	player._pMaxMana = player._pMana;
 	player._pManaBase = player._pMana;
 	player._pMaxManaBase = player._pMana;
@@ -2315,7 +2302,7 @@ void CreatePlayer(Player &player, HeroClass c)
 	player._pInfraFlag = false;
 
 	player._pRSplType = SpellType::Skill;
-	SpellID s = PlayersData[static_cast<size_t>(c)].skill;
+	SpellID s = playerData.skill;
 	player._pAblSpells = GetSpellBitmask(s);
 	player._pRSpell = s;
 
