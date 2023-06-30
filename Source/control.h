@@ -32,7 +32,7 @@
 
 namespace devilution {
 
-enum class InfoStringType : uint8_t {
+enum class InfoStringType : int8_t {
 	ItemName,
 	ItemIdentifiedName,
 	Damage,
