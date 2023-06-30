@@ -2479,7 +2479,7 @@ void AddPlrExperience(Player &player, int lvl, int exp)
 
 void AddPlrMonstExper(int lvl, int exp, char pmask)
 {
-	if (sgGameInitInfo.bSharedExperience != 0) {
+	if (sgGameInitInfo.bSharedExperience == 0) {
 		int totplrs = 0;
 		for (size_t i = 0; i < Players.size(); i++) {
 			if (((1 << i) & pmask) != 0) {
