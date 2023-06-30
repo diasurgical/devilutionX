@@ -1628,14 +1628,4 @@ void GoldDropNewText(string_view text)
 	}
 }
 
-void AddInfoStringLine()
-{
-
-}
-
-void ClearInfoString()
-{
-
-}
-
 } // namespace devilution
