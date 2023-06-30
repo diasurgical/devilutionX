@@ -43,7 +43,6 @@ enum ItemRequirementType {
 	MAG
 };
 
-
 std::map<ItemStatType, UiFlags> GetItemBonusColors(const Item &item)
 {
 	std::map<ItemStatType, UiFlags> itemBonusColors;
@@ -287,6 +286,8 @@ void DrawFloatingInfoBox(const Surface &out, Point position)
 				color = itemRequirementColors[DEX];
 			} else if ((line.find("Required Magic:") != std::string::npos) || (i > 0 && lines[i - 1].find("Required Magic:") != std::string::npos)) {
 				color = itemRequirementColors[MAG];
+			} else if ((line.find("Charges") != std::string::npos)) {
+				color = UiFlags::ColorBlue;
 			} else if (line.find("Not Identified") != std::string::npos) {
 				color = UiFlags::ColorWhite;
 			} else if (item._iMagical != ITEM_QUALITY_NORMAL) {
@@ -450,12 +451,13 @@ void PrintFloatingItemDetails(const Item &item)
 	if (item._iMaxDur != DUR_INDESTRUCTIBLE && (item._iClass == ICLASS_WEAPON || item._iClass == ICLASS_ARMOR)) {
 		AddPanelString(fmt::format(fmt::runtime(_("Durability: {:d} of {:d}")), item._iDurability, item._iMaxDur));
 	}
+
+	PrintFloatingItemInfo(item);
+
 	if (item._iMiscId == IMISC_STAFF && item._iMaxCharges != 0) {
 		const char *spellName = GetSpellData(item._iSpell).sNameText;
 		AddPanelString(fmt::format(fmt::runtime(_("{:s} ({:d}/{:d} Charges)")), spellName, item._iCharges, item._iMaxCharges));
 	}
-
-	PrintFloatingItemInfo(item);
 
 	if (item._iPrePower != -1) {
 		AddPanelString(PrintItemPower(item._iPrePower, item));
@@ -479,31 +481,36 @@ void PrintFloatingItemDur(const Item &item)
 	if (HeadlessMode)
 		return;
 
-	if (item._iClass == ICLASS_WEAPON) {
-		if (item._iMinDam == item._iMaxDam) {
-			AddPanelString(fmt::format(fmt::runtime(_("Damage: {:d}")), item._iMinDam));
-		} else {
-			AddPanelString(fmt::format(fmt::runtime(_("Damage: {:d} to {:d}")), item._iMinDam, item._iMaxDam));
-		}
-		if (item._iMiscId == IMISC_STAFF && item._iMaxCharges != 0) {
-			const char *spellName = GetSpellData(item._iSpell).sNameText;
-			AddPanelString(fmt::format(fmt::runtime(_("{:s} ({:d}/{:d} Charges)")), spellName, item._iCharges, item._iMaxCharges));
-		}
-		if (item._iMagical != ITEM_QUALITY_NORMAL)
-			AddPanelString(_("Not Identified"));
-	}
-	if (item._iClass == ICLASS_ARMOR) {
-		AddPanelString(fmt::format(fmt::runtime(_("Armor: {:d}")), item._iAC));
-		if (item._iMagical != ITEM_QUALITY_NORMAL)
-			AddPanelString(_("Not Identified"));
-		if (item._iMiscId == IMISC_STAFF && item._iMaxCharges != 0) {
-			const char *spellName = GetSpellData(item._iSpell).sNameText;
-			AddPanelString(fmt::format(fmt::runtime(_("{:s} ({:d}/{:d} Charges)")), spellName, item._iCharges, item._iMaxCharges));
-		}
-	}
 	if (IsAnyOf(item._itype, ItemType::Ring, ItemType::Amulet))
 		AddPanelString(_("Not Identified"));
+
+	if (IsAnyOf(item._iClass, ICLASS_WEAPON, ICLASS_ARMOR)) {
+		if (item._iClass == ICLASS_WEAPON) {
+			if (item._iMinDam == item._iMaxDam) {
+				AddPanelString(fmt::format(fmt::runtime(_("Damage: {:d}")), item._iMinDam));
+			} else {
+				AddPanelString(fmt::format(fmt::runtime(_("Damage: {:d} to {:d}")), item._iMinDam, item._iMaxDam));
+			}
+		}
+
+		if (item._iClass == ICLASS_ARMOR) {
+			AddPanelString(fmt::format(fmt::runtime(_("Armor: {:d}")), item._iAC));
+		}
+
+		if (item._iMaxDur != DUR_INDESTRUCTIBLE) {
+			AddPanelString(fmt::format(fmt::runtime(_("Durability: {:d} of {:d}")), item._iDurability, item._iMaxDur));
+		}
+
+		if (item._iMagical != ITEM_QUALITY_NORMAL)
+			AddPanelString(_("Not Identified"));
+	}
+
 	PrintFloatingItemInfo(item);
+
+	if (item._iMiscId == IMISC_STAFF && item._iMaxCharges != 0) {
+		const char *spellName = GetSpellData(item._iSpell).sNameText;
+		AddPanelString(fmt::format(fmt::runtime(_("{:s} ({:d}/{:d} Charges)")), spellName, item._iCharges, item._iMaxCharges));
+	}
 }
 
 } // namespace devilution
