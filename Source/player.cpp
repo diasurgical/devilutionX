@@ -2493,12 +2493,10 @@ void AddPlrMonstExper(int lvl, int exp, char pmask)
 				AddPlrExperience(*MyPlayer, lvl, e);
 		}
 	} else {
-		int totalPlayersInLevel = 0;
 		int playerLevelTotal = 0;
 
 		for (size_t i = 0; i < Players.size(); i++) {
 			if (Players[i].isOnActiveLevel()) {
-				totalPlayersInLevel++;
 				playerLevelTotal += Players[i]._pLevel;
 			}
 		}
