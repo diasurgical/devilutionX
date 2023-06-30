@@ -1878,7 +1878,8 @@ int8_t CheckInvHLight()
 		NewPanelString(fmt::format(fmt::runtime(ngettext("{:s} gold piece", "{:s} gold pieces", nGold)), FormatInteger(nGold)));
 	} else {
 		InfoColor = pi->getTextColor();
-		NewPanelString(std::string(pi->getName()));
+		std::string itemName = std::string(pi->getName());
+		NewPanelString(itemName);
 		if (pi->_iIdentified) {
 			PrintItemDetails(*pi);
 		} else {
