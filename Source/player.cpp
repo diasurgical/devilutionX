@@ -2501,7 +2501,7 @@ void AddPlrMonstExper(int lvl, int exp, char pmask)
 			}
 		}
 
-		int adjustedExp = (exp * ((Players[MyPlayerId]._pLevel * 100) / playerLevelTotal)) / 100;
+		int adjustedExp = exp * Players[MyPlayerId]._pLevel / playerLevelTotal;
 
 		AddPlrExperience(*MyPlayer, lvl, adjustedExp);
 	}
