@@ -739,35 +739,47 @@ void ToggleCharPanel()
 		OpenCharPanel();
 }
 
-void AddPanelString(string_view str)
+void AddInfoStringType(InfoStringTypes type)
 {
-	if (InfoString.empty())
+	InfoStringType.emplace_back(type);
+}
+
+void AddPanelString(string_view str, InfoStringTypes type)
+{
+	if (InfoString.empty()) {
 		InfoString = str;
-	else
+	} else {
 		InfoString = StrCat(InfoString, "\n", str);
+	}
+	AddInfoStringType(type);
 }
 
-void AddPanelString(std::string &&str)
+void AddPanelString(std::string &&str, InfoStringTypes type)
 {
-	if (InfoString.empty())
+	if (InfoString.empty()) {
 		InfoString = std::move(str);
-	else
+	} else {
 		InfoString = StrCat(InfoString, "\n", str);
+	}
+	AddInfoStringType(type);
 }
 
-void NewPanelString(string_view str)
+void NewPanelString(string_view str, InfoStringTypes type)
 {
 	InfoString = str;
+	AddInfoStringType(type);
 }
 
-void NewPanelString(std::string &&str)
+void NewPanelString(std::string &&str, InfoStringTypes type)
 {
 	InfoString = std::move(str);
+	AddInfoStringType(type);
 }
 
 void ClearPanelString()
 {
 	InfoString = {};
+	InfoStringType.clear();
 }
 
 Point GetPanelPosition(UiPanels panel, Point offset)

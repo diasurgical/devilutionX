@@ -32,9 +32,8 @@
 
 namespace devilution {
 
-enum class InfoStringType : int8_t {
+enum class InfoStringTypes : int8_t {
 	ItemName,
-	ItemIdentifiedName,
 	Damage,
 	ArmorClass,
 	Durability,
@@ -57,7 +56,7 @@ extern bool talkflag;
 extern bool sbookflag;
 extern bool chrflag;
 extern StringOrView InfoString;
-extern std::vector<InfoStringType> InfoStringDesc;
+extern std::vector<InfoStringTypes> InfoStringType;
 extern bool panelflag;
 extern int initialDropGoldValue;
 extern bool panbtndown;
@@ -95,10 +94,10 @@ void SetSpell();
 void SetSpeedSpell(size_t slot);
 void ToggleSpell(size_t slot);
 
-void AddPanelString(string_view str);
-void AddPanelString(std::string &&str);
-void NewPanelString(string_view str);
-void NewPanelString(std::string &&str);
+void AddPanelString(string_view str, InfoStringTypes type = InfoStringTypes::Other);
+void AddPanelString(std::string &&str, InfoStringTypes type = InfoStringTypes::Other);
+void NewPanelString(string_view str, InfoStringTypes type = InfoStringTypes::Other);
+void NewPanelString(std::string &&str, InfoStringTypes type = InfoStringTypes::Other);
 void ClearPanelString();
 void DrawPanelBox(const Surface &out, SDL_Rect srcRect, Point targetPosition);
 Point GetPanelPosition(UiPanels panel, Point offset = { 0, 0 });
