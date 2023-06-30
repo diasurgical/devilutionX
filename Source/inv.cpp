@@ -1190,7 +1190,7 @@ void DrawInv(const Surface &out)
 			if (myPlayer.InvGrid[j] > 0) { // first slot of an item
 				int ii = myPlayer.InvGrid[j] - 1;
 
-				const Point position = GetPanelPosition(UiPanels::Inventory, InvRect[j + SLOTXY_INV_FIRST].position) + Displacement { 0, -1 };
+				const Point position = GetPanelPosition(UiPanels::Inventory, InvRect[j + SLOTXY_INV_FIRST].position) + Displacement { 0, -1 + INV_SLOT_SIZE_PX };
 				if (pcursinvitem == ii + INVITEM_INV_FIRST) {
 					DrawFloatingInfoBox(out, position);
 				}
