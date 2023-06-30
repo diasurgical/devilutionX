@@ -95,6 +95,7 @@ struct {
 	bool showItemLabels = false;
 	bool autoRefillBelt = false;
 	bool disableCripplingShrines = false;
+	bool enableSharedExperience = false;
 	uint8_t numHealPotionPickup = 0;
 	uint8_t numFullHealPotionPickup = 0;
 	uint8_t numManaPotionPickup = 0;
@@ -135,6 +136,7 @@ void ReadSettings(FILE *in, uint8_t version)
 		DemoSettings.showItemLabels = ReadByte(in) != 0;
 		DemoSettings.autoRefillBelt = ReadByte(in) != 0;
 		DemoSettings.disableCripplingShrines = ReadByte(in) != 0;
+		DemoSettings.enableSharedExperience = ReadByte(in) != 0;
 		DemoSettings.numHealPotionPickup = ReadByte(in);
 		DemoSettings.numFullHealPotionPickup = ReadByte(in);
 		DemoSettings.numManaPotionPickup = ReadByte(in);
@@ -167,6 +169,7 @@ void WriteSettings(FILE *out)
 	WriteByte(out, *sgOptions.Gameplay.showItemLabels);
 	WriteByte(out, *sgOptions.Gameplay.autoRefillBelt);
 	WriteByte(out, *sgOptions.Gameplay.disableCripplingShrines);
+	WriteByte(out, *sgOptions.Gameplay.enableSharedExperience);
 	WriteByte(out, *sgOptions.Gameplay.numHealPotionPickup);
 	WriteByte(out, *sgOptions.Gameplay.numFullHealPotionPickup);
 	WriteByte(out, *sgOptions.Gameplay.numManaPotionPickup);
@@ -503,12 +506,14 @@ void OverrideOptions()
 	sgOptions.Gameplay.showItemLabels.SetValue(DemoSettings.showItemLabels);
 	sgOptions.Gameplay.autoRefillBelt.SetValue(DemoSettings.autoRefillBelt);
 	sgOptions.Gameplay.disableCripplingShrines.SetValue(DemoSettings.disableCripplingShrines);
+	sgOptions.Gameplay.enableSharedExperience.SetValue(DemoSettings.enableSharedExperience);
 	sgOptions.Gameplay.numHealPotionPickup.SetValue(DemoSettings.numHealPotionPickup);
 	sgOptions.Gameplay.numFullHealPotionPickup.SetValue(DemoSettings.numFullHealPotionPickup);
 	sgOptions.Gameplay.numManaPotionPickup.SetValue(DemoSettings.numManaPotionPickup);
 	sgOptions.Gameplay.numFullManaPotionPickup.SetValue(DemoSettings.numFullManaPotionPickup);
 	sgOptions.Gameplay.numRejuPotionPickup.SetValue(DemoSettings.numRejuPotionPickup);
 	sgOptions.Gameplay.numFullRejuPotionPickup.SetValue(DemoSettings.numFullRejuPotionPickup);
+	sgOptions.Gameplay.enableSharedExperience.SetValue(DemoSettings.enableSharedExperience);
 }
 
 bool IsRunning()

@@ -2479,17 +2479,33 @@ void AddPlrExperience(Player &player, int lvl, int exp)
 
 void AddPlrMonstExper(int lvl, int exp, char pmask)
 {
-	int totplrs = 0;
-	for (size_t i = 0; i < Players.size(); i++) {
-		if (((1 << i) & pmask) != 0) {
-			totplrs++;
+	if (sgGameInitInfo.bSharedExperience == 0) {
+		int totplrs = 0;
+		for (size_t i = 0; i < Players.size(); i++) {
+			if (((1 << i) & pmask) != 0) {
+				totplrs++;
+			}
 		}
-	}
 
-	if (totplrs != 0) {
-		int e = exp / totplrs;
-		if ((pmask & (1 << MyPlayerId)) != 0)
-			AddPlrExperience(*MyPlayer, lvl, e);
+		if (totplrs != 0) {
+			int e = exp / totplrs;
+			if ((pmask & (1 << MyPlayerId)) != 0)
+				AddPlrExperience(*MyPlayer, lvl, e);
+		}
+	} else {
+		int totalPlayersInLevel = 0;
+		int playerLevelTotal = 0;
+		
+		for (size_t i = 0; i < Players.size(); i++) {
+			if (Players[i].isOnActiveLevel()) {
+				totalPlayersInLevel++;
+				playerLevelTotal += Players[i]._pLevel;
+			}
+		}
+
+		int adjustedExp = (exp * ((Players[MyPlayerId]._pLevel * 100) / playerLevelTotal)) / 100;
+
+		AddPlrExperience(*MyPlayer, lvl, adjustedExp);
 	}
 }
 

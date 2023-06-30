@@ -1086,6 +1086,7 @@ GameplayOptions::GameplayOptions()
               { FloatingNumbers::Random, N_("Random Angles") },
               { FloatingNumbers::Vertical, N_("Vertical Only") },
           })
+    , enableSharedExperience("Enable Shared Experience", OptionEntryFlags::CantChangeInMultiPlayer, N_("Enable Shared Experience"), N_("Shares experience points from killed monsters with all players in the level."), false)
 {
 	grabInput.SetValueChangedCallback(OptionGrabInputChanged);
 	experienceBar.SetValueChangedCallback(OptionExperienceBarChanged);
@@ -1109,6 +1110,7 @@ std::vector<OptionEntryBase *> GameplayOptions::GetEntries()
 		&showMonsterType,
 		&showItemLabels,
 		&enableFloatingNumbers,
+		&enableSharedExperience,
 		&autoRefillBelt,
 		&autoEquipWeapons,
 		&autoEquipArmor,

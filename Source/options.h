@@ -596,6 +596,8 @@ struct GameplayOptions : OptionCategoryBase {
 	OptionEntryInt<int> numFullRejuPotionPickup;
 	/** @brief Enable floating numbers. */
 	OptionEntryEnum<FloatingNumbers> enableFloatingNumbers;
+	/** @brief Enable shared experience between players. */
+	OptionEntryBoolean enableSharedExperience;
 };
 
 struct ControllerOptions : OptionCategoryBase {
