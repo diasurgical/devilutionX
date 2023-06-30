@@ -3631,11 +3631,11 @@ void GetItemFrm(Item &item)
 void GetItemStr(Item &item)
 {
 	if (item._itype != ItemType::Gold) {
-		InfoString = item.getName();
+		NewPanelString(item.getName());
 		InfoColor = item.getTextColor();
 	} else {
 		int nGold = item._ivalue;
-		InfoString = fmt::format(fmt::runtime(ngettext("{:s} gold piece", "{:s} gold pieces", nGold)), FormatInteger(nGold));
+		NewPanelString(fmt::format(fmt::runtime(ngettext("{:s} gold piece", "{:s} gold pieces", nGold)), FormatInteger(nGold)));
 	}
 }
 

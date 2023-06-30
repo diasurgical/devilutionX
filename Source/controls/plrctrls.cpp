@@ -1780,7 +1780,7 @@ void plrctrls_after_check_curs_move()
 		return;
 	}
 	if (!invflag) {
-		InfoString = {};
+		ClearPanelString();
 		FindActor();
 		FindItemOrObject();
 		FindTrigger();

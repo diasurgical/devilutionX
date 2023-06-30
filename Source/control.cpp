@@ -755,6 +755,21 @@ void AddPanelString(std::string &&str)
 		InfoString = StrCat(InfoString, "\n", str);
 }
 
+void NewPanelString(string_view str)
+{
+	InfoString = str;
+}
+
+void NewPanelString(std::string &&str)
+{
+	InfoString = std::move(str);
+}
+
+void ClearPanelString()
+{
+	InfoString = {};
+}
+
 Point GetPanelPosition(UiPanels panel, Point offset)
 {
 	Displacement displacement { offset.x, offset.y };
@@ -880,7 +895,7 @@ void InitControlPan()
 	for (bool &buttonEnabled : chrbtn)
 		buttonEnabled = false;
 	chrbtnactive = false;
-	InfoString = {};
+	ClearPanelString();
 	RedrawComponent(PanelDrawComponent::Health);
 	RedrawComponent(PanelDrawComponent::Mana);
 	CloseCharPanel();
@@ -1006,12 +1021,12 @@ void CheckPanelInfo()
 		int yend = PanBtnPos[i].y + mainPanelPosition.y + PanBtnPos[i].h;
 		if (MousePosition.x >= PanBtnPos[i].x + mainPanelPosition.x && MousePosition.x <= xend && MousePosition.y >= PanBtnPos[i].y + mainPanelPosition.y && MousePosition.y <= yend) {
 			if (i != 7) {
-				InfoString = _(PanBtnStr[i]);
+				NewPanelString(_(PanBtnStr[i]));
 			} else {
 				if (MyPlayer->friendlyMode)
-					InfoString = _("Player friendly");
+					NewPanelString(_("Player friendly"));
 				else
-					InfoString = _("Player attack");
+					NewPanelString(_("Player attack"));
 			}
 			if (PanBtnHotKey[i] != nullptr) {
 				AddPanelString(fmt::format(fmt::runtime(_("Hotkey: {:s}")), _(PanBtnHotKey[i])));
@@ -1021,7 +1036,7 @@ void CheckPanelInfo()
 		}
 	}
 	if (!spselflag && MousePosition.x >= 565 + mainPanelPosition.x && MousePosition.x < 621 + mainPanelPosition.x && MousePosition.y >= 64 + mainPanelPosition.y && MousePosition.y < 120 + mainPanelPosition.y) {
-		InfoString = _("Select current spell button");
+		NewPanelString(_("Select current spell button"));
 		InfoColor = UiFlags::ColorWhite;
 		panelflag = true;
 		AddPanelString(_("Hotkey: 's'"));
@@ -1163,7 +1178,7 @@ void DrawInfoBox(const Surface &out)
 {
 	DrawPanelBox(out, { 177, 62, 288, 63 }, GetMainPanel().position + Displacement { 177, 46 });
 	if (!panelflag && !trigflag && pcursinvitem == -1 && pcursstashitem == StashStruct::EmptyCell && !spselflag) {
-		InfoString = {};
+		ClearPanelString();
 		InfoColor = UiFlags::ColorWhite;
 	}
 	Player &myPlayer = *MyPlayer;
@@ -1172,11 +1187,11 @@ void DrawInfoBox(const Surface &out)
 	} else if (!myPlayer.HoldItem.isEmpty()) {
 		if (myPlayer.HoldItem._itype == ItemType::Gold) {
 			int nGold = myPlayer.HoldItem._ivalue;
-			InfoString = fmt::format(fmt::runtime(ngettext("{:s} gold piece", "{:s} gold pieces", nGold)), FormatInteger(nGold));
+			NewPanelString(fmt::format(fmt::runtime(ngettext("{:s} gold piece", "{:s} gold pieces", nGold)), FormatInteger(nGold)));
 		} else if (!myPlayer.CanUseItem(myPlayer.HoldItem)) {
-			InfoString = _("Requirements not met");
+			NewPanelString(_("Requirements not met"));
 		} else {
-			InfoString = myPlayer.HoldItem.getName();
+			NewPanelString(myPlayer.HoldItem.getName());
 			InfoColor = myPlayer.HoldItem.getTextColor();
 		}
 	} else {
@@ -1188,7 +1203,7 @@ void DrawInfoBox(const Surface &out)
 			if (leveltype != DTYPE_TOWN) {
 				const auto &monster = Monsters[pcursmonst];
 				InfoColor = UiFlags::ColorWhite;
-				InfoString = monster.name();
+				NewPanelString(monster.name());
 				if (monster.isUnique()) {
 					InfoColor = UiFlags::ColorWhitegold;
 					PrintUniqueHistory();
@@ -1196,13 +1211,13 @@ void DrawInfoBox(const Surface &out)
 					PrintMonstHistory(monster.type().type);
 				}
 			} else if (pcursitem == -1) {
-				InfoString = string_view(Towners[pcursmonst].name);
+				NewPanelString(string_view(Towners[pcursmonst].name));
 			}
 		}
 		if (pcursplr != -1) {
 			InfoColor = UiFlags::ColorWhitegold;
 			auto &target = Players[pcursplr];
-			InfoString = string_view(target._pName);
+			NewPanelString(string_view(target._pName));
 			AddPanelString(fmt::format(fmt::runtime(_("{:s}, Level: {:d}")), _(PlayersData[static_cast<std::size_t>(target._pClass)].className), target._pLevel));
 			AddPanelString(fmt::format(fmt::runtime(_("Hit Points {:d} of {:d}")), target._pHitPoints >> 6, target._pMaxHP >> 6));
 		}
@@ -1611,6 +1626,16 @@ void GoldDropNewText(string_view text)
 			}
 		}
 	}
+}
+
+void AddInfoStringLine()
+{
+
+}
+
+void ClearInfoString()
+{
+
 }
 
 } // namespace devilution

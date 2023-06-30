@@ -323,7 +323,7 @@ void CheckTown()
 		if (missile._mitype == MissileID::TownPortal) {
 			if (EntranceBoundaryContains(missile.position.tile, cursPosition)) {
 				trigflag = true;
-				InfoString = _("Town Portal");
+				NewPanelString(_("Town Portal"));
 				AddPanelString(fmt::format(fmt::runtime(_("from {:s}")), Players[missile._misource]._pName));
 				cursPosition = missile.position.tile;
 			}
@@ -337,7 +337,7 @@ void CheckRportal()
 		if (missile._mitype == MissileID::RedPortal) {
 			if (EntranceBoundaryContains(missile.position.tile, cursPosition)) {
 				trigflag = true;
-				InfoString = _("Portal to");
+				NewPanelString(_("Portal to"));
 				AddPanelString(!setlevel ? _("The Unholy Altar") : _("level 15"));
 				cursPosition = missile.position.tile;
 			}

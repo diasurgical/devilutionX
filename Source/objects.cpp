@@ -4962,12 +4962,12 @@ void GetObjectStr(const Object &object)
 	InfoString = object.name();
 	if (MyPlayer->_pClass == HeroClass::Rogue) {
 		if (object._oTrapFlag) {
-			InfoString = fmt::format(fmt::runtime(_(/* TRANSLATORS: {:s} will either be a chest or a door */ "Trapped {:s}")), InfoString.str());
+			NewPanelString(fmt::format(fmt::runtime(_(/* TRANSLATORS: {:s} will either be a chest or a door */ "Trapped {:s}")), InfoString.str()));
 			InfoColor = UiFlags::ColorRed;
 		}
 	}
 	if (object.IsDisabled()) {
-		InfoString = fmt::format(fmt::runtime(_(/* TRANSLATORS: If user enabled diablo.ini setting "Disable Crippling Shrines" is set to 1; also used for Na-Kruls lever */ "{:s} (disabled)")), InfoString.str());
+		NewPanelString(fmt::format(fmt::runtime(_(/* TRANSLATORS: If user enabled diablo.ini setting "Disable Crippling Shrines" is set to 1; also used for Na-Kruls lever */ "{:s} (disabled)")), InfoString.str()));
 		InfoColor = UiFlags::ColorRed;
 	}
 }

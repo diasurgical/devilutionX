@@ -10,6 +10,8 @@
 
 #include <SDL.h>
 
+#include <vector>
+
 #ifdef USE_SDL1
 #include "utils/sdl2_to_1_2_backports.h"
 #endif
@@ -30,6 +32,17 @@
 
 namespace devilution {
 
+enum class InfoStringType : uint8_t {
+	ItemName,
+	ItemIdentifiedName,
+	Damage,
+	ArmorClass,
+	Durability,
+	Requirements,
+	ItemPower,
+	Other = -1
+};
+
 constexpr Size SidePanelSize { 320, 352 };
 
 extern bool dropGoldFlag;
@@ -44,6 +57,7 @@ extern bool talkflag;
 extern bool sbookflag;
 extern bool chrflag;
 extern StringOrView InfoString;
+extern std::vector<InfoStringType> InfoStringDesc;
 extern bool panelflag;
 extern int initialDropGoldValue;
 extern bool panbtndown;
@@ -83,6 +97,9 @@ void ToggleSpell(size_t slot);
 
 void AddPanelString(string_view str);
 void AddPanelString(std::string &&str);
+void NewPanelString(string_view str);
+void NewPanelString(std::string &&str);
+void ClearPanelString();
 void DrawPanelBox(const Surface &out, SDL_Rect srcRect, Point targetPosition);
 Point GetPanelPosition(UiPanels panel, Point offset = { 0, 0 });
 
