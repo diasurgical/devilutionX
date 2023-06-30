@@ -1815,10 +1815,9 @@ void InitKeymapActions()
 	    'V',
 	    [] {
 		    EventPlrMsg(fmt::format(
-		                    fmt::runtime(_(/* TRANSLATORS: {:s} means: Character Name, Game Version, Game Difficulty. */ "{:s} {:s} {:d}")),
+		                    fmt::runtime(_(/* TRANSLATORS: {:s} means: Character Name, Game Version, Game Difficulty. */ "{:s} {:s}")),
 		                    PROJECT_NAME,
-		                    PROJECT_VERSION,
-							sgGameInitInfo.bSharedExperience),
+		                    PROJECT_VERSION),
 		        UiFlags::ColorWhite);
 	    },
 	    nullptr,
