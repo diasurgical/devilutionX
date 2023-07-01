@@ -1745,7 +1745,7 @@ msgid "In Menu"
 msgstr "En Menú"
 
 #: Source/dvlnet/loopback.cpp:118
-msgid "Offline" 
+msgid "loopback" 
 msgstr "loopback"
 
 #: Source/dvlnet/tcp_client.cpp:65
