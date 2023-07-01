@@ -494,8 +494,8 @@ msgstr "Δωρεάν Έκδοση"
 msgid "Client-Server (TCP)"
 msgstr "Διακομιστή-πελάτη (TCP)"
 
-#: Source/DiabloUI/multi/selconn.cpp:15
-msgid "Offline" # Needs updated translation
+#: Source/DiabloUI/multi/selconn.cpp:15 # Needs updated translation
+msgid "Offline" 
 msgstr "Βρόχος επιστροφής"
 
 #: Source/DiabloUI/multi/selconn.cpp:56 Source/DiabloUI/multi/selgame.cpp:647

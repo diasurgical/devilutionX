@@ -368,7 +368,7 @@ msgid "Client-Server (TCP)"
 msgstr "Клиент-сървър (TCP)"
 
 #: Source/DiabloUI/selconn.cpp:15
-msgid "Offline" # Needs updated translation
+msgid "Offline" 
 msgstr "Обратна връзка"
 
 #: Source/DiabloUI/selconn.cpp:54 Source/DiabloUI/selgame.cpp:604

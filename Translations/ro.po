@@ -367,7 +367,7 @@ msgid "Client-Server (TCP)"
 msgstr "Client-Server (TCP)"
 
 #: Source/DiabloUI/selconn.cpp:15
-msgid "Offline" # Needs updated translation
+msgid "Offline" 
 msgstr "Local"
 
 #: Source/DiabloUI/selconn.cpp:54 Source/DiabloUI/selgame.cpp:604
