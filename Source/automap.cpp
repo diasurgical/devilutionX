@@ -718,7 +718,7 @@ void DrawAutomapText(const Surface &out)
 {
 	Point linePosition { 8, 8 };
 
-	if (gbIsMultiplayer) {
+	if (gbIsMultiplayer && !LoopbackGame) {
 		if (GameName != "0.0.0.0") {
 			std::string description = std::string(_("Game: "));
 			description.append(GameName);

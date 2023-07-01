@@ -113,7 +113,7 @@ bool loopback::SNetGetTurnsInTransit(uint32_t *turns)
 
 std::string loopback::make_default_gamename()
 {
-	return std::string(_("loopback"));
+	return std::string(_("Offline"));
 }
 
 } // namespace net

@@ -51,6 +51,7 @@ extern DVL_API_FOR_TEST bool gbIsMultiplayer;
 extern std::string GameName;
 extern std::string GamePassword;
 extern bool PublicGame;
+extern bool LoopbackGame;
 extern uint8_t gbDeltaSender;
 extern uint32_t player_state[MAX_PLRS];
 

@@ -58,6 +58,7 @@ bool sgbTimeout;
 std::string GameName;
 std::string GamePassword;
 bool PublicGame;
+bool LoopbackGame;
 uint8_t gbDeltaSender;
 bool sgbNetInited;
 uint32_t player_state[MAX_PLRS];
