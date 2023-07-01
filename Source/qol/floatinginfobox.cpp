@@ -252,8 +252,10 @@ void DrawFloatingInfoBox(const Surface &out, Point position)
 		}
 	}
 
+	std::string formattedString;
+
 	// Add Item Name
-	if (item._iIdentified) {
+	if (item._iIdentified && item._iMagical != ITEM_QUALITY_NORMAL) {
 		linesWithColor.emplace_back(item._iIName, item.getTextColor());
 	}
 	linesWithColor.emplace_back(item._iName, item.getTextColor());
@@ -262,11 +264,11 @@ void DrawFloatingInfoBox(const Surface &out, Point position)
 	if (item._iMinDam > 0 && item._iMaxDam > 0) {
 		linesWithColor.emplace_back(_("Damage:"), UiFlags::ColorWhite);
 		if (item._iMinDam == item._iMaxDam) {
-			linesWithColor.emplace_back((_("{:d}"), modifiedVals[MIV_MINDAM]), itemBonusColors[DAM]);
-		} else {
-			std::string formattedString = fmt::format("{:d} to {:d}", modifiedVals[MIV_MINDAM], modifiedVals[MIV_MAXDAM]);
+			formattedString = fmt::format(("{:d}"), modifiedVals[MIV_MINDAM]);
 			linesWithColor.emplace_back(formattedString, itemBonusColors[DAM]);
-
+		} else {
+			formattedString = fmt::format(("{:d} to {:d}"), modifiedVals[MIV_MINDAM], modifiedVals[MIV_MAXDAM]);
+			linesWithColor.emplace_back(formattedString, itemBonusColors[DAM]);
 		}
 	}
 
@@ -279,7 +281,8 @@ void DrawFloatingInfoBox(const Surface &out, Point position)
 	// Add Item Durability
 	if (item._iMaxDur != DUR_INDESTRUCTIBLE && (item._iClass == ICLASS_WEAPON || item._iClass == ICLASS_ARMOR)) {
 		linesWithColor.emplace_back(_("Durability:"), UiFlags::ColorWhite);
-		linesWithColor.emplace_back((_("{:d} of {:d}"), item._iDurability, item._iMaxDur), itemBonusColors[DUR]);
+		formattedString = fmt::format(("{:d} of {:d}"), item._iDurability, item._iMaxDur);
+		linesWithColor.emplace_back(formattedString, itemBonusColors[DUR]);
 	}
 
 	// Add Item Requirements
@@ -304,15 +307,18 @@ void DrawFloatingInfoBox(const Surface &out, Point position)
 	// Add Item Charges
 	if (item._iMaxCharges > 0) {
 		const char *spellName = GetSpellData(item._iSpell).sNameText;
-		linesWithColor.emplace_back((_("{:s} ({:d}/{:d} Charges)"), spellName, item._iCharges, item._iMaxCharges), UiFlags::ColorBlue);
+		formattedString = fmt::format(("{:s} ({:d}/{:d} Charges)"), spellName, item._iCharges, item._iMaxCharges);
+		linesWithColor.emplace_back(formattedString, UiFlags::ColorBlue);
 	}
 
 	// Add Item Bonuses
 	if (item._iPrePower != -1) {
-		linesWithColor.emplace_back(PrintItemPower(item._iPrePower, item), UiFlags::ColorBlue);
+		std::string formattedString1 = PrintItemPower(item._iPrePower, item).str().to_string();
+		linesWithColor.emplace_back(formattedString1, UiFlags::ColorBlue);
 	}
 	if (item._iSufPower != -1) {
-		linesWithColor.emplace_back(PrintItemPower(item._iSufPower, item), UiFlags::ColorBlue);
+		std::string formattedString3 = std::string(PrintItemPower(item._iSufPower, item).str());
+		linesWithColor.emplace_back(formattedString3, UiFlags::ColorBlue);
 	}
 	if (item._iMagical == ITEM_QUALITY_UNIQUE) {
 		const UniqueItem &uitem = UniqueItems[item._iUid];
