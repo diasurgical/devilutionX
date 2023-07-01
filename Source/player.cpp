@@ -2495,13 +2495,13 @@ void AddPlrMonstExper(int lvl, int exp, char pmask)
 	} else {
 		int playerLevelTotal = 0;
 
-		for (size_t i = 0; i < Players.size(); i++) {
-			if (Players[i].isOnActiveLevel()) {
-				playerLevelTotal += Players[i]._pLevel;
+		for (const auto &player : Players) {
+			if (player.isOnActiveLevel()) {
+				playerLevelTotal += player._pLevel;
 			}
 		}
 
-		int adjustedExp = exp * Players[MyPlayerId]._pLevel / playerLevelTotal;
+		int adjustedExp = exp * MyPlayer->_pLevel / playerLevelTotal;
 
 		AddPlrExperience(*MyPlayer, lvl, adjustedExp);
 	}
