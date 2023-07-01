@@ -365,7 +365,7 @@ msgstr "キャンセル"
 msgid "Client-Server (TCP)"
 msgstr "クライアント - サーバー (​TCP​)"
 
-#: Source/DiabloUI/selconn.cpp:15
+#: Source/DiabloUI/selconn.cpp:15 # Needs updated translation
 msgid "Offline" 
 msgstr "ループ​バック"
 

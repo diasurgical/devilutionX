@@ -369,7 +369,7 @@ msgstr "Cancelar"
 msgid "Client-Server (TCP)"
 msgstr "Cliente-Servidor (TCP)"
 
-#: Source/DiabloUI/selconn.cpp:15
+#: Source/DiabloUI/selconn.cpp:15 # Needs updated translation
 msgid "Offline" 
 msgstr "Loopback"
 

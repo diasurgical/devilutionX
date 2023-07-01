@@ -367,7 +367,7 @@ msgstr "取消"
 msgid "Client-Server (TCP)"
 msgstr "客户​端​-​服务器​(​TCP)"
 
-#: Source/DiabloUI/selconn.cpp:15
+#: Source/DiabloUI/selconn.cpp:15 # Needs updated translation
 msgid "Offline" 
 msgstr "回环"
 
