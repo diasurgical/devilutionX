@@ -505,7 +505,7 @@ msgid "Client-Server (TCP)"
 msgstr "Клієнт-Сервер (TCP)"
 
 #: Source/DiabloUI/multi/selconn.cpp:15
-msgid "Loopback"
+msgid "Offline" # Needs updated translation
 msgstr "Петльова адреса"
 
 #: Source/DiabloUI/multi/selconn.cpp:56 Source/DiabloUI/multi/selgame.cpp:647
@@ -1786,7 +1786,7 @@ msgid "In Menu"
 msgstr "В Меню"
 
 #: Source/dvlnet/loopback.cpp:116
-msgid "loopback"
+msgid "Offline" # Needs updated translation
 msgstr "петльова адреса"
 
 #: Source/dvlnet/tcp_client.cpp:67

@@ -495,7 +495,7 @@ msgid "Client-Server (TCP)"
 msgstr "Διακομιστή-πελάτη (TCP)"
 
 #: Source/DiabloUI/multi/selconn.cpp:15
-msgid "Loopback"
+msgid "Offline" # Needs updated translation
 msgstr "Βρόχος επιστροφής"
 
 #: Source/DiabloUI/multi/selconn.cpp:56 Source/DiabloUI/multi/selgame.cpp:647
@@ -1784,7 +1784,7 @@ msgid "In Menu"
 msgstr "Στο Μενού"
 
 #: Source/dvlnet/loopback.cpp:116
-msgid "loopback"
+msgid "Offline" # Needs updated translation
 msgstr "βρόχος επιστροφής"
 
 #: Source/dvlnet/tcp_client.cpp:67

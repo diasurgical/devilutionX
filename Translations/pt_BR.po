@@ -370,7 +370,7 @@ msgid "Client-Server (TCP)"
 msgstr "Cliente-Servidor (TCP)"
 
 #: Source/DiabloUI/selconn.cpp:15
-msgid "Loopback"
+msgid "Offline" # Needs updated translation
 msgstr "Loopback"
 
 #: Source/DiabloUI/selconn.cpp:54 Source/DiabloUI/selgame.cpp:604
@@ -1474,7 +1474,7 @@ msgid "In Menu"
 msgstr "No Menu"
 
 #: Source/dvlnet/loopback.cpp:113
-msgid "loopback"
+msgid "Offline" # Needs updated translation
 msgstr "loopback"
 
 #: Source/dvlnet/tcp_client.cpp:65
