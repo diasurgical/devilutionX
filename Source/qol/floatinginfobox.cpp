@@ -170,207 +170,21 @@ void DrawFloatingInfoBox(const Surface &out, Point position)
 
 	Player &myPlayer = *MyPlayer;
 
-	Rectangle infoBoxRect {
-		{ 0, 0 },
-		{ 0, 0 }
-	};
+	// CONSTRUCT A VECTOR THAT CONTAINS ALL ITEM TEXT ALONG WITH COLORS
 
-	const int newLineCount = std::count(InfoString.str().begin(), InfoString.str().end(), '\n');
-	const int spacing = 4;
-	// GetLineHeight always returns 12 in this function
-	const int lineHeight = 12 + spacing;
-	const Size infoBoxPadding = { 16, 16 };
+	Item &item = GetInventoryItem(myPlayer, pcursinvitem);
 
-	Size infoBoxSize {
-		// width of the longest line of text + horizontal padding
-		GetLongestLineWidth(InfoString, GameFontTables::GameFont12, 2) + infoBoxPadding.width,
-		// the height of the number of lines with spacing + vertical padding
-		((newLineCount + 1) * lineHeight) + infoBoxPadding.height
-	};
+	std::map<ItemStatType, UiFlags> itemBonusColors = GetItemBonusColors(item);
 
-	if (pcursinvitem != -1) {
-		// Get which item the cursor is currently over
-		Item &item = GetInventoryItem(myPlayer, pcursinvitem);
-		// Get how many slots the item occupies horizontally and vertically
-		Size itemSize = GetInventorySize(item);
-		// Padding between inventory slots
-		const int invSlotPadding = 1;
+	std::map<ItemRequirementType, UiFlags> itemRequirementColors = GetItemRequirementColors(item);
 
-		infoBoxRect = {
-			{ // Render box centered horiztonally
-			    position.x + ((itemSize.width * (INV_SLOT_SIZE_PX + invSlotPadding)) / 2) - (infoBoxSize.width / 2),
-			    // Render box on top of item
-			    position.y - (itemSize.height * (INV_SLOT_SIZE_PX + invSlotPadding)) - infoBoxSize.height },
-			{ infoBoxSize.width,
-			    infoBoxSize.height }
-		};
-		// Prevent top screen clipping by displaying the box on the bottom of the item, rather than the top
-		if (infoBoxRect.position.y < 0)
-			infoBoxRect.position.y += (itemSize.height * (INV_SLOT_SIZE_PX + invSlotPadding)) + infoBoxSize.height;
-	}
-
-	// Prevent top screen clipping for non inventory/stash items
-	if (infoBoxRect.position.y < 0)
-		infoBoxRect.position.y = 0;
-	// Prevent right screen clipping
-	if ((infoBoxRect.position.x + infoBoxRect.size.width) > GetScreenWidth())
-		infoBoxRect.position.x -= (infoBoxRect.position.x + infoBoxRect.size.width) - GetScreenWidth();
-	// Prevent left screen clipping
-	if (infoBoxRect.position.x < 0)
-		infoBoxRect.position.x = 0;
-
-	// Draw the transparent box
-	DrawHalfTransparentRectTo(out, infoBoxRect.position.x, infoBoxRect.position.y, infoBoxRect.size.width, infoBoxRect.size.height);
-	DrawHalfTransparentRectTo(out, infoBoxRect.position.x, infoBoxRect.position.y, infoBoxRect.size.width, infoBoxRect.size.height);
-
-	// Adjusting the line height to add spacing between lines
-	// will also add additional space beneath the last line
-	// which throws off the vertical centering
-	infoBoxRect.position.y += infoBoxPadding.height / 2;
-	infoBoxRect.position.y += spacing / 2;
-
-	if (pcursinvitem != -1) {
-		// Lines from InfoString are added into the lines vector with a newline at the end of each line, except the last line
-		// Lines that contain a ":" are split into two parts, so we are able to apply a different color to each part
-		// Lines that don't contain a ":" contain a single color for the entire line
-		std::vector<std::string> lines;
-		auto start = InfoString.str().begin();
-		while (start != InfoString.str().end()) {
-			auto end = std::find(start, InfoString.str().end(), '\n');
-			std::string line(start, end);
-
-			auto colon_pos = line.find(':');
-			if (colon_pos != std::string::npos) {
-				// Split the line based on the colon
-				std::string part1 = line.substr(0, colon_pos + 1);
-				std::string part2 = line.substr(colon_pos + 1);
-
-				lines.push_back(part1);
-				lines.push_back(part2);
-			} else {
-				lines.push_back(line);
-			}
-
-			if (end == InfoString.str().end()) {
-				break;
-			}
-			start = end + 1;
-		}
-
-		Item &item = GetInventoryItem(myPlayer, pcursinvitem);
-
-		std::map<ItemStatType, UiFlags> itemBonusColors = GetItemBonusColors(item);
-
-		std::map<ItemRequirementType, UiFlags> itemRequirementColors = GetItemRequirementColors(item);
-
-		// Add the lines vector contents into the linesWithColor vector, which contains both the strings and the colors that they will be
-		std::vector<DrawStringFormatArg> linesWithColor;
-		UiFlags color = UiFlags::ColorWhite;
-		for (size_t i = 0; i < lines.size(); i++) {
-			const auto &line = lines[i];
-			// Item name and base item name should match the item quality color, normally found in InfoColor
-			// Note: Split lines are both considered separate lines, even though in game they appear on the same line visually
-			if (line.find(item._iIName) != std::string::npos || line.find(item._iName) != std::string::npos) {
-				color = item.getTextColor();
-			} else if (line.find("Armor:") != std::string::npos || line.find("Damage:") != std::string::npos || line.find("Durability:") != std::string::npos) {
-				color = UiFlags::ColorWhite;
-			} else if ((i > 0 && lines[i - 1].find("Armor:") != std::string::npos)) {
-				color = itemBonusColors[AC];
-			} else if ((i > 0 && lines[i - 1].find("Damage:") != std::string::npos)) {
-				color = itemBonusColors[DAM];
-			} else if ((i > 0 && lines[i - 1].find("Durability:") != std::string::npos)) {
-				color = itemBonusColors[DUR];
-			} else if ((line.find("Required Strength:") != std::string::npos) || (i > 0 && lines[i - 1].find("Required Strength:") != std::string::npos)) {
-				color = itemRequirementColors[STR];
-			} else if ((line.find("Required Dexterity:") != std::string::npos) || (i > 0 && lines[i - 1].find("Required Dexterity:") != std::string::npos)) {
-				color = itemRequirementColors[DEX];
-			} else if ((line.find("Required Magic:") != std::string::npos) || (i > 0 && lines[i - 1].find("Required Magic:") != std::string::npos)) {
-				color = itemRequirementColors[MAG];
-			} else if ((line.find("Charges") != std::string::npos)) {
-				color = UiFlags::ColorBlue;
-			} else if (line.find("Not Identified") != std::string::npos) {
-				color = UiFlags::ColorWhite;
-			} else if (item._iMagical != ITEM_QUALITY_NORMAL) {
-				// All remaining lines for non-normal items will be powers, so set all to blue
-				color = UiFlags::ColorBlue;
-			}
-
-			linesWithColor.emplace_back(line, color);
-		}
-
-		// linesBase is used to place the {} and newlines to grab the actual string data
-		// Lines that contain a colon may have a different color for the second part, so two {}'s are added
-		std::string linesBase;
-		bool previousLineHadColon = false;
-		for (size_t i = 0; i < lines.size(); i++) {
-			bool currentLineHasColon = (lines[i].find(":") != std::string::npos);
-
-			if (!previousLineHadColon && (!currentLineHasColon || (i > 0 && currentLineHasColon))) {
-				if (currentLineHasColon) {
-					linesBase.append("{}{}");
-				} else {
-					linesBase.append("{}");
-				}
-				if (i != lines.size() - 1) {
-					linesBase.append("\n");
-				}
-			}
-
-			previousLineHadColon = currentLineHasColon;
-		}
-
-		string_view linesBaseView(linesBase.data(), linesBase.length());
-
-		DrawStringWithColors(
-		    out,
-		    linesBase,
-		    linesWithColor,
-		    infoBoxRect,
-		    UiFlags::AlignCenter,
-		    2,
-		    lineHeight);
-	}
-}
-
-namespace {
-
-void PrintFloatingItemInfo(const Item &item)
-{
-	PrintItemMisc(item);
-	uint8_t str = item._iMinStr;
-	uint8_t dex = item._iMinDex;
-	uint8_t mag = item._iMinMag;
-	if (str != 0 || mag != 0 || dex != 0) {
-		if (str != 0) {
-			std::string textStr = fmt::format(fmt::runtime(_("Required Strength: {:d}")), str);
-			AddPanelString(textStr);
-		}
-		if (mag != 0) {
-			std::string textMag = fmt::format(fmt::runtime(_("Required Magic: {:d}")), mag);
-			AddPanelString(textMag);
-		}
-		if (dex != 0) {
-			std::string textDex = fmt::format(fmt::runtime(_("Required Dexterity: {:d}")), dex);
-			AddPanelString(textDex);
-		}
-	}
-}
-
-} // namespace
-
-void PrintFloatingItemDetails(const Item &item)
-{
-	if (HeadlessMode)
-		return;
-
-	// Base Item
-	if (strcmp(item._iIName, item._iName) != 0)
-		AddPanelString(_(item._iName));
+	// Add the lines vector contents into the linesWithColor vector, which contains both the strings and the colors that they will be
+	std::vector<DrawStringFormatArg> linesWithColor;
 
 	int16_t modifiedVals[3] = {
 		item._iMinDam,
 		item._iMaxDam,
-		item._iAC
+		item._iAC,
 	};
 
 	if (item._iMagical == ITEM_QUALITY_UNIQUE) {
@@ -438,32 +252,67 @@ void PrintFloatingItemDetails(const Item &item)
 		}
 	}
 
-	if (item._iClass == ICLASS_WEAPON) {
+	// Add Item Name
+	if (item._iIdentified) {
+		linesWithColor.emplace_back(item._iIName, item.getTextColor());
+	}
+	linesWithColor.emplace_back(item._iName, item.getTextColor());
+
+	// Add Item Damage
+	if (item._iMinDam > 0 && item._iMaxDam > 0) {
+		linesWithColor.emplace_back(_("Damage:"), UiFlags::ColorWhite);
 		if (item._iMinDam == item._iMaxDam) {
-			AddPanelString(fmt::format(fmt::runtime(_("Damage: {:d}")), modifiedVals[MIV_MINDAM]));
+			linesWithColor.emplace_back((_("{:d}"), modifiedVals[MIV_MINDAM]), itemBonusColors[DAM]);
 		} else {
-			AddPanelString(fmt::format(fmt::runtime(_("Damage: {:d} to {:d}")), modifiedVals[MIV_MINDAM], modifiedVals[MIV_MAXDAM]));
+			std::string formattedString = fmt::format("{:d} to {:d}", modifiedVals[MIV_MINDAM], modifiedVals[MIV_MAXDAM]);
+			linesWithColor.emplace_back(formattedString, itemBonusColors[DAM]);
+
 		}
 	}
-	if (item._iClass == ICLASS_ARMOR) {
-		AddPanelString(fmt::format(fmt::runtime(_("Armor: {:d}")), modifiedVals[MIV_AC]));
+
+	// Add Item Armor
+	if (item._iAC > 0) {
+		linesWithColor.emplace_back(_("Armor:"), UiFlags::ColorWhite);
+		linesWithColor.emplace_back((_("{:d}"), modifiedVals[MIV_AC]), itemBonusColors[AC]);
 	}
+
+	// Add Item Durability
 	if (item._iMaxDur != DUR_INDESTRUCTIBLE && (item._iClass == ICLASS_WEAPON || item._iClass == ICLASS_ARMOR)) {
-		AddPanelString(fmt::format(fmt::runtime(_("Durability: {:d} of {:d}")), item._iDurability, item._iMaxDur));
+		linesWithColor.emplace_back(_("Durability:"), UiFlags::ColorWhite);
+		linesWithColor.emplace_back((_("{:d} of {:d}"), item._iDurability, item._iMaxDur), itemBonusColors[DUR]);
 	}
 
-	PrintFloatingItemInfo(item);
+	// Add Item Requirements
+	if (item._iMinStr > 0) {
+		linesWithColor.emplace_back(_("Required Strength:"), itemRequirementColors[STR]);
+		linesWithColor.emplace_back((_("{:d}"), item._iMinStr), itemRequirementColors[STR]);
+	}
+	if (item._iMinDex > 0) {
+		linesWithColor.emplace_back(_("Required Dexterity:"), itemRequirementColors[DEX]);
+		linesWithColor.emplace_back((_("{:d}"), item._iMinDex), itemRequirementColors[DEX]);
+	}
+	if (item._iMinMag > 0) {
+		linesWithColor.emplace_back(_("Required Magic:"), itemRequirementColors[MAG]);
+		linesWithColor.emplace_back((_("{:d}"), item._iMinMag), itemRequirementColors[MAG]);
+	}
 
-	if (item._iMiscId == IMISC_STAFF && item._iMaxCharges != 0) {
+	// Add Item Identification Status
+	if (!item._iIdentified && item._iMagical) {
+		linesWithColor.emplace_back(_("Not Identified"), UiFlags::ColorWhite);
+	}
+
+	// Add Item Charges
+	if (item._iMaxCharges > 0) {
 		const char *spellName = GetSpellData(item._iSpell).sNameText;
-		AddPanelString(fmt::format(fmt::runtime(_("{:s} ({:d}/{:d} Charges)")), spellName, item._iCharges, item._iMaxCharges));
+		linesWithColor.emplace_back((_("{:s} ({:d}/{:d} Charges)"), spellName, item._iCharges, item._iMaxCharges), UiFlags::ColorBlue);
 	}
 
+	// Add Item Bonuses
 	if (item._iPrePower != -1) {
-		AddPanelString(PrintItemPower(item._iPrePower, item));
+		linesWithColor.emplace_back(PrintItemPower(item._iPrePower, item), UiFlags::ColorBlue);
 	}
 	if (item._iSufPower != -1) {
-		AddPanelString(PrintItemPower(item._iSufPower, item));
+		linesWithColor.emplace_back(PrintItemPower(item._iSufPower, item), UiFlags::ColorBlue);
 	}
 	if (item._iMagical == ITEM_QUALITY_UNIQUE) {
 		const UniqueItem &uitem = UniqueItems[item._iUid];
@@ -471,10 +320,134 @@ void PrintFloatingItemDetails(const Item &item)
 		for (const auto &power : uitem.powers) {
 			if (power.type == IPL_INVALID || power.type == IPL_INVCURS)
 				break;
-			AddPanelString(PrintItemPower(power.type, item));
+			linesWithColor.emplace_back((PrintItemPower(power.type, item)), UiFlags::ColorBlue);
 		}
 	}
+
+	// CONSTRUCT STRING AS A BASE FOR UTILIZING LINESWITHCOLOR DATA
+	// linesBase is used to place the {} and newlines to grab the actual string data
+	// Lines that contain a colon may have a different color for the second part, so two {}'s are added
+	std::string linesBase;
+	bool previousLineHadColon = false;
+
+	for (const auto &arg : linesWithColor) {
+		const auto &formatted = arg.GetFormatted();
+		bool currentLineHasColon = !formatted.empty() && formatted.back() == ':';
+
+		if (!previousLineHadColon && (!currentLineHasColon || (!linesBase.empty() && currentLineHasColon))) {
+			if (currentLineHasColon) {
+				linesBase.append("{} {}");
+			} else {
+				linesBase.append("{}");
+			}
+			if (&arg != &linesWithColor.back()) {
+				linesBase.append("\n");
+			}
+		}
+
+		previousLineHadColon = currentLineHasColon;
+	}
+
+
+
+
+	// CONSTRUCT AND DRAW TRANSPARENT BOX
+
+	Rectangle infoBoxRect {
+		{ 0, 0 },
+		{ 0, 0 }
+	};
+
+	int totalLinesCount = 0;
+	for (char c : linesBase) {
+		if (c == '\n') {
+			totalLinesCount++;
+		}
+	}
+	totalLinesCount++;
+
+	const int spacing = 4;
+	// GetLineHeight always returns 12 in this function
+	const int lineHeight = 12 + spacing;
+	const Size infoBoxPadding = { 16, 16 };
+
+	int maxWidth = 0;
+	for (const auto &arg : linesWithColor) {
+		int lineWidth = GetLineWidth(arg.GetFormatted(), GameFontTables::GameFont12, 2);
+		maxWidth = std::max(maxWidth, lineWidth);
+	}
+
+	int infoBoxWidth = maxWidth + infoBoxPadding.width;
+
+	Size infoBoxSize {
+		// width of the longest line of text + horizontal padding
+		infoBoxWidth,
+		// the height of the number of lines with spacing + vertical padding
+		(totalLinesCount * lineHeight) + infoBoxPadding.height
+	};
+
+	if (pcursinvitem != -1) {
+		// Get which item the cursor is currently over
+		Item &item = GetInventoryItem(myPlayer, pcursinvitem);
+		// Get how many slots the item occupies horizontally and vertically
+		Size itemSize = GetInventorySize(item);
+		// Padding between inventory slots
+		const int invSlotPadding = 1;
+
+		infoBoxRect = {
+			{ // Render box centered horiztonally
+			    position.x + ((itemSize.width * (INV_SLOT_SIZE_PX + invSlotPadding)) / 2) - (infoBoxSize.width / 2),
+			    // Render box on top of item
+			    position.y - (itemSize.height * (INV_SLOT_SIZE_PX + invSlotPadding)) - infoBoxSize.height },
+			{ infoBoxSize.width,
+			    infoBoxSize.height }
+		};
+		// Prevent top screen clipping by displaying the box on the bottom of the item, rather than the top
+		if (infoBoxRect.position.y < 0)
+			infoBoxRect.position.y += (itemSize.height * (INV_SLOT_SIZE_PX + invSlotPadding)) + infoBoxSize.height;
+	}
+
+	// Prevent top screen clipping for non inventory/stash items
+	if (infoBoxRect.position.y < 0)
+		infoBoxRect.position.y = 0;
+	// Prevent right screen clipping
+	if ((infoBoxRect.position.x + infoBoxRect.size.width) > GetScreenWidth())
+		infoBoxRect.position.x -= (infoBoxRect.position.x + infoBoxRect.size.width) - GetScreenWidth();
+	// Prevent left screen clipping
+	if (infoBoxRect.position.x < 0)
+		infoBoxRect.position.x = 0;
+
+	// Draw the transparent box
+	DrawHalfTransparentRectTo(out, infoBoxRect.position.x, infoBoxRect.position.y, infoBoxRect.size.width, infoBoxRect.size.height);
+	DrawHalfTransparentRectTo(out, infoBoxRect.position.x, infoBoxRect.position.y, infoBoxRect.size.width, infoBoxRect.size.height);
+
+	// Adjusting the line height to add spacing between lines
+	// will also add additional space beneath the last line
+	// which throws off the vertical centering
+	infoBoxRect.position.y += infoBoxPadding.height / 2;
+	infoBoxRect.position.y += spacing / 2;
+
+
+	// FORMAT AND DISPLAY ITEM TEXT
+	if (pcursinvitem != -1) {
+		string_view linesBaseView(linesBase);
+
+		DrawStringWithColors(
+		    out,
+		    linesBaseView,
+		    linesWithColor,
+		    infoBoxRect,
+		    UiFlags::AlignCenter,
+		    2,
+		    lineHeight);
+
+
+	}
 }
+
+namespace {
+
+} // namespace
 
 void PrintFloatingItemDur(const Item &item)
 {
@@ -504,8 +477,6 @@ void PrintFloatingItemDur(const Item &item)
 		if (item._iMagical != ITEM_QUALITY_NORMAL)
 			AddPanelString(_("Not Identified"));
 	}
-
-	PrintFloatingItemInfo(item);
 
 	if (item._iMiscId == IMISC_STAFF && item._iMaxCharges != 0) {
 		const char *spellName = GetSpellData(item._iSpell).sNameText;

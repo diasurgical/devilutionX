@@ -452,15 +452,11 @@ uint16_t CheckStashHLight(Point mousePosition)
 		InfoString = string_view(item._iIName);
 		if (!*sgOptions.Gameplay.enableFloatingInfoBox) {
 			PrintItemDetails(item);
-		} else {
-			PrintFloatingItemDetails(item);
 		}
 	} else {
 		InfoString = string_view(item._iName);
 		if (!*sgOptions.Gameplay.enableFloatingInfoBox) {
 			PrintItemDur(item);
-		} else {
-			PrintFloatingItemDur(item);
 		}
 	}
 

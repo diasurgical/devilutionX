@@ -1934,14 +1934,10 @@ int8_t CheckInvHLight()
 		if (pi->_iIdentified) {
 			if (!*sgOptions.Gameplay.enableFloatingInfoBox) {
 				PrintItemDetails(*pi);
-			} else {
-				PrintFloatingItemDetails(*pi);
 			}
 		} else {
 			if (!*sgOptions.Gameplay.enableFloatingInfoBox) {
 				PrintItemDur(*pi);
-			} else {
-				PrintFloatingItemDur(*pi);
 			}
 		}
 	}
