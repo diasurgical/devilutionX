@@ -1785,7 +1785,7 @@ msgstr "{} Складність"
 msgid "In Menu"
 msgstr "В Меню"
 
-#: Source/dvlnet/loopback.cpp:116
+#: Source/dvlnet/loopback.cpp:118
 msgid "loopback"
 msgstr "петльова адреса"
 

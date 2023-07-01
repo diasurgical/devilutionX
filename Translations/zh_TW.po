@@ -1549,7 +1549,7 @@ msgstr "選​擇​難度"
 msgid "In Menu"
 msgstr "主​菜單"
 
-#: Source/dvlnet/loopback.cpp:116
+#: Source/dvlnet/loopback.cpp:118
 msgid "loopback"
 msgstr "環​回"
 

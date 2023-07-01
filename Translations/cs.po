@@ -1467,7 +1467,7 @@ msgstr "{} obtížnost"
 msgid "In Menu"
 msgstr "V Menu"
 
-#: Source/dvlnet/loopback.cpp:116
+#: Source/dvlnet/loopback.cpp:118
 msgid "loopback"
 msgstr "zpětná vazba"
 

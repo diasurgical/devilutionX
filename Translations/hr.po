@@ -1468,7 +1468,7 @@ msgstr "{} težina"
 msgid "In Menu"
 msgstr "U izbornik"
 
-#: Source/dvlnet/loopback.cpp:116
+#: Source/dvlnet/loopback.cpp:118
 msgid "loopback"
 msgstr "izvanmrežno"
 

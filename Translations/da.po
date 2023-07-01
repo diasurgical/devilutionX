@@ -1607,7 +1607,7 @@ msgstr "Vælg sværhedsgrad"
 msgid "In Menu"
 msgstr "Forrige menu"
 
-#: Source/dvlnet/loopback.cpp:116
+#: Source/dvlnet/loopback.cpp:118
 #, fuzzy
 #| msgid "loopback"
 msgid "loopback"

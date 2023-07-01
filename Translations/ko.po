@@ -1764,7 +1764,7 @@ msgstr "{} 난이도"
 msgid "In Menu"
 msgstr "메뉴"
 
-#: Source/dvlnet/loopback.cpp:116
+#: Source/dvlnet/loopback.cpp:118
 msgid "loopback"
 msgstr "루프백"
 

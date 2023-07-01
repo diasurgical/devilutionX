@@ -1498,7 +1498,7 @@ msgstr "{} сложность"
 msgid "In Menu"
 msgstr "В меню"
 
-#: Source/dvlnet/loopback.cpp:116
+#: Source/dvlnet/loopback.cpp:118
 msgid "loopback"
 msgstr "петля"
 

@@ -1475,7 +1475,7 @@ msgstr "{} Poziom Trudności"
 msgid "In Menu"
 msgstr "W Menu"
 
-#: Source/dvlnet/loopback.cpp:116
+#: Source/dvlnet/loopback.cpp:118
 msgid "loopback"
 msgstr "loopback"
 

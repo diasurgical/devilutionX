@@ -1744,7 +1744,7 @@ msgstr "{} dificultad"
 msgid "In Menu"
 msgstr "En Menú"
 
-#: Source/dvlnet/loopback.cpp:114
+#: Source/dvlnet/loopback.cpp:118
 msgid "Offline" # Needs updated translation
 msgstr "loopback"
 
