@@ -61,6 +61,12 @@ void TilesInView(int *columns, int *rows);
 void CalcViewportGeometry();
 
 /**
+ * @brief Calculate the screen position of a given tile
+ * @param tile Position of a dungeon tile
+ */
+Point GetScreenPosition(Point tile);
+
+/**
  * @brief Render the whole screen black
  */
 void ClearScreenBuffer();
