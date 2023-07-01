@@ -729,8 +729,7 @@ void DrawAutomapText(const Surface &out)
 		std::string description;
 		if (isLoopback) {
 			description = std::string(_("Offline Game"));
-		} else if (!PublicGame)
-			{
+		} else if (!PublicGame) {
 			description = std::string(_("Password: "));
 			description.append(GamePassword);
 		} else {
