@@ -1607,10 +1607,10 @@ msgstr "Vælg sværhedsgrad"
 msgid "In Menu"
 msgstr "Forrige menu"
 
-#: Source/dvlnet/loopback.cpp:113
+#: Source/dvlnet/loopback.cpp:116
 #, fuzzy
-#| msgid "Offline" # Needs updated translation
-msgid "Offline" # Needs updated translation
+#| msgid "loopback"
+msgid "loopback"
 msgstr "Loopback"
 
 #: Source/dvlnet/tcp_client.cpp:65

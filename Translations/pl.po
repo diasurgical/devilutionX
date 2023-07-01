@@ -1475,8 +1475,8 @@ msgstr "{} Poziom Trudności"
 msgid "In Menu"
 msgstr "W Menu"
 
-#: Source/dvlnet/loopback.cpp:113
-msgid "Offline" # Needs updated translation
+#: Source/dvlnet/loopback.cpp:116
+msgid "loopback"
 msgstr "loopback"
 
 #: Source/dvlnet/tcp_client.cpp:65

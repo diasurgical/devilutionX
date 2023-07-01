@@ -1468,8 +1468,8 @@ msgstr "{} težina"
 msgid "In Menu"
 msgstr "U izbornik"
 
-#: Source/dvlnet/loopback.cpp:113
-msgid "Offline" # Needs updated translation
+#: Source/dvlnet/loopback.cpp:116
+msgid "loopback"
 msgstr "izvanmrežno"
 
 #: Source/dvlnet/tcp_client.cpp:65

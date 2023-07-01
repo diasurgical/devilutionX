@@ -1475,8 +1475,8 @@ msgstr "Difficulté {}"
 msgid "In Menu"
 msgstr "Dans le Menu"
 
-#: Source/dvlnet/loopback.cpp:113
-msgid "Offline" # Needs updated translation
+#: Source/dvlnet/loopback.cpp:116
+msgid "loopback"
 msgstr "rebouclage (loopback)"
 
 #: Source/dvlnet/tcp_client.cpp:65

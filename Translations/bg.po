@@ -1469,8 +1469,8 @@ msgstr "{} трудност"
 msgid "In Menu"
 msgstr "В меню"
 
-#: Source/dvlnet/loopback.cpp:113
-msgid "Offline" # Needs updated translation
+#: Source/dvlnet/loopback.cpp:116
+msgid "loopback"
 msgstr "Обратна връзка"
 
 #: Source/dvlnet/tcp_client.cpp:65

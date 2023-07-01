@@ -1786,7 +1786,7 @@ msgid "In Menu"
 msgstr "В Меню"
 
 #: Source/dvlnet/loopback.cpp:116
-msgid "Offline" # Needs updated translation
+msgid "loopback"
 msgstr "петльова адреса"
 
 #: Source/dvlnet/tcp_client.cpp:67
