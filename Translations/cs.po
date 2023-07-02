@@ -366,7 +366,8 @@ msgstr "Zrušit"
 msgid "Client-Server (TCP)"
 msgstr "Klient-Server (TCP)"
 
-#: Source/DiabloUI/selconn.cpp:15 # Needs updated translation
+#: Source/DiabloUI/selconn.cpp:15
+#, fuzzy
 msgid "Offline" 
 msgstr "Smyčka"
 

@@ -504,7 +504,8 @@ msgstr "Демо-версія"
 msgid "Client-Server (TCP)"
 msgstr "Клієнт-Сервер (TCP)"
 
-#: Source/DiabloUI/multi/selconn.cpp:15 # Needs updated translation
+#: Source/DiabloUI/multi/selconn.cpp:15
+#, fuzzy
 msgid "Offline" 
 msgstr "Петльова адреса"
 

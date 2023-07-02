@@ -367,7 +367,8 @@ msgstr "Отказ"
 msgid "Client-Server (TCP)"
 msgstr "Клиент-сървър (TCP)"
 
-#: Source/DiabloUI/selconn.cpp:15 # Needs updated translation
+#: Source/DiabloUI/selconn.cpp:15
+#, fuzzy
 msgid "Offline" 
 msgstr "Обратна връзка"
 

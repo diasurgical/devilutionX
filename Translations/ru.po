@@ -376,7 +376,8 @@ msgstr "Отмена"
 msgid "Client-Server (TCP)"
 msgstr "Клиент-сервер (TCP)"
 
-#: Source/DiabloUI/selconn.cpp:15 # Needs updated translation
+#: Source/DiabloUI/selconn.cpp:15
+#, fuzzy
 msgid "Offline" 
 msgstr "Петля"
 
