@@ -482,43 +482,4 @@ void DrawFloatingInfoBox(const Surface &out, Point position)
 	}
 }
 
-namespace {
-
-} // namespace
-
-void PrintFloatingItemDur(const Item &item)
-{
-	if (HeadlessMode)
-		return;
-
-	if (IsAnyOf(item._itype, ItemType::Ring, ItemType::Amulet))
-		AddPanelString(_("Not Identified"));
-
-	if (IsAnyOf(item._iClass, ICLASS_WEAPON, ICLASS_ARMOR)) {
-		if (item._iClass == ICLASS_WEAPON) {
-			if (item._iMinDam == item._iMaxDam) {
-				AddPanelString(fmt::format(fmt::runtime(_("Damage: {:d}")), item._iMinDam));
-			} else {
-				AddPanelString(fmt::format(fmt::runtime(_("Damage: {:d} to {:d}")), item._iMinDam, item._iMaxDam));
-			}
-		}
-
-		if (item._iClass == ICLASS_ARMOR) {
-			AddPanelString(fmt::format(fmt::runtime(_("Armor: {:d}")), item._iAC));
-		}
-
-		if (item._iMaxDur != DUR_INDESTRUCTIBLE) {
-			AddPanelString(fmt::format(fmt::runtime(_("Durability: {:d} of {:d}")), item._iDurability, item._iMaxDur));
-		}
-
-		if (item._iMagical != ITEM_QUALITY_NORMAL)
-			AddPanelString(_("Not Identified"));
-	}
-
-	if (item._iMiscId == IMISC_STAFF && item._iMaxCharges != 0) {
-		const char *spellName = GetSpellData(item._iSpell).sNameText;
-		AddPanelString(fmt::format(fmt::runtime(_("{:s} ({:d}/{:d} Charges)")), spellName, item._iCharges, item._iMaxCharges));
-	}
-}
-
 } // namespace devilution
