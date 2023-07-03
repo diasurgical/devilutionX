@@ -252,8 +252,6 @@ void DrawFloatingInfoBox(const Surface &out, Point position)
 		}
 	}
 
-	std::string formattedString;
-
 	// Add Item Name
 	if (item._iIdentified && item._iMagical != ITEM_QUALITY_NORMAL) {
 		linesWithColor.emplace_back(item._iIName, item.getTextColor());
@@ -261,14 +259,15 @@ void DrawFloatingInfoBox(const Surface &out, Point position)
 	linesWithColor.emplace_back(item._iName, item.getTextColor());
 
 	// Add Item Damage
+	std::string formattedDam;
 	if (item._iMinDam > 0 && item._iMaxDam > 0) {
 		linesWithColor.emplace_back(_("Damage:"), UiFlags::ColorWhite);
 		if (item._iMinDam == item._iMaxDam) {
-			formattedString = fmt::format(("{:d}"), modifiedVals[MIV_MINDAM]);
-			linesWithColor.emplace_back(formattedString, itemBonusColors[DAM]);
+			formattedDam = fmt::format(fmt::runtime(_("{:d}")), modifiedVals[MIV_MINDAM]);
+			linesWithColor.emplace_back(formattedDam, itemBonusColors[DAM]);
 		} else {
-			formattedString = fmt::format(("{:d} to {:d}"), modifiedVals[MIV_MINDAM], modifiedVals[MIV_MAXDAM]);
-			linesWithColor.emplace_back(formattedString, itemBonusColors[DAM]);
+			formattedDam = fmt::format(fmt::runtime(_("{:d} to {:d}")), modifiedVals[MIV_MINDAM], modifiedVals[MIV_MAXDAM]);
+			linesWithColor.emplace_back(formattedDam, itemBonusColors[DAM]);
 		}
 	}
 
@@ -279,10 +278,11 @@ void DrawFloatingInfoBox(const Surface &out, Point position)
 	}
 
 	// Add Item Durability
+	std::string formattedDur;
 	if (item._iMaxDur != DUR_INDESTRUCTIBLE && (item._iClass == ICLASS_WEAPON || item._iClass == ICLASS_ARMOR)) {
 		linesWithColor.emplace_back(_("Durability:"), UiFlags::ColorWhite);
-		formattedString = fmt::format(("{:d} of {:d}"), item._iDurability, item._iMaxDur);
-		linesWithColor.emplace_back(formattedString, itemBonusColors[DUR]);
+		formattedDur = fmt::format(fmt::runtime(_("{:d} of {:d}")), item._iDurability, item._iMaxDur);
+		linesWithColor.emplace_back(formattedDur, itemBonusColors[DUR]);
 	}
 
 	// Add Item Requirements
@@ -305,30 +305,35 @@ void DrawFloatingInfoBox(const Surface &out, Point position)
 	}
 
 	// Add Item Charges
+	std::string formattedCharges;
 	if (item._iMaxCharges > 0) {
 		const char *spellName = GetSpellData(item._iSpell).sNameText;
-		formattedString = fmt::format(("{:s} ({:d}/{:d} Charges)"), spellName, item._iCharges, item._iMaxCharges);
-		linesWithColor.emplace_back(formattedString, UiFlags::ColorBlue);
+		formattedCharges = fmt::format("{:s} ({:d}/{:d} Charges)", spellName, item._iCharges, item._iMaxCharges);
+		linesWithColor.emplace_back(formattedCharges, UiFlags::ColorBlue);
 	}
 
 	// Add Item Bonuses
-	if (item._iPrePower != -1) {
-		std::string formattedString1 = PrintItemPower(item._iPrePower, item).str().to_string();
-		linesWithColor.emplace_back(formattedString1, UiFlags::ColorBlue);
+	StringOrView prePower;
+	if (item._iPrePower != -1 && item._iIdentified) {
+		prePower = PrintItemPower(item._iPrePower, item);
+		linesWithColor.emplace_back(prePower, UiFlags::ColorBlue);
 	}
-	if (item._iSufPower != -1) {
-		std::string formattedString3 = std::string(PrintItemPower(item._iSufPower, item).str());
-		linesWithColor.emplace_back(formattedString3, UiFlags::ColorBlue);
+
+	StringOrView sufPower;
+	if (item._iSufPower != -1 && item._iIdentified) {
+		sufPower = PrintItemPower(item._iSufPower, item);
+		linesWithColor.emplace_back(sufPower, UiFlags::ColorBlue);
 	}
-	if (item._iMagical == ITEM_QUALITY_UNIQUE) {
+
+	/* if (item._iMagical == ITEM_QUALITY_UNIQUE) {
 		const UniqueItem &uitem = UniqueItems[item._iUid];
 		assert(uitem.UINumPL <= sizeof(uitem.powers) / sizeof(*uitem.powers));
 		for (const auto &power : uitem.powers) {
 			if (power.type == IPL_INVALID || power.type == IPL_INVCURS)
 				break;
-			linesWithColor.emplace_back((PrintItemPower(power.type, item)), UiFlags::ColorBlue);
+			linesWithColor.emplace_back(PrintItemPower(power.type, item), UiFlags::ColorBlue);
 		}
-	}
+	}*/
 
 	// CONSTRUCT STRING AS A BASE FOR UTILIZING LINESWITHCOLOR DATA
 	// linesBase is used to place the {} and newlines to grab the actual string data
@@ -353,9 +358,6 @@ void DrawFloatingInfoBox(const Surface &out, Point position)
 
 		previousLineHadColon = currentLineHasColon;
 	}
-
-
-
 
 	// CONSTRUCT AND DRAW TRANSPARENT BOX
 
@@ -433,7 +435,6 @@ void DrawFloatingInfoBox(const Surface &out, Point position)
 	infoBoxRect.position.y += infoBoxPadding.height / 2;
 	infoBoxRect.position.y += spacing / 2;
 
-
 	// FORMAT AND DISPLAY ITEM TEXT
 	if (pcursinvitem != -1) {
 		string_view linesBaseView(linesBase);
@@ -446,8 +447,6 @@ void DrawFloatingInfoBox(const Surface &out, Point position)
 		    UiFlags::AlignCenter,
 		    2,
 		    lineHeight);
-
-
 	}
 }
 
