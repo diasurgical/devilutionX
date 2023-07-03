@@ -498,7 +498,8 @@ msgid "Client-Server (TCP)"
 msgstr "클라이언트-서버 (TCP)"
 
 #: Source/DiabloUI/multi/selconn.cpp:15
-msgid "Loopback"
+#, fuzzy
+msgid "Offline" 
 msgstr "루프백"
 
 #: Source/DiabloUI/multi/selconn.cpp:56 Source/DiabloUI/multi/selgame.cpp:647
@@ -1764,7 +1765,7 @@ msgstr "{} 난이도"
 msgid "In Menu"
 msgstr "메뉴"
 
-#: Source/dvlnet/loopback.cpp:116
+#: Source/dvlnet/loopback.cpp:118
 msgid "loopback"
 msgstr "루프백"
 

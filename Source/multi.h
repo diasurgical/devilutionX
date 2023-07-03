@@ -53,6 +53,7 @@ extern std::string GamePassword;
 extern bool PublicGame;
 extern uint8_t gbDeltaSender;
 extern uint32_t player_state[MAX_PLRS];
+extern bool IsLoopback;
 
 void InitGameInfo();
 void NetSendLoPri(int playerId, const byte *data, size_t size);

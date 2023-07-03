@@ -12,7 +12,7 @@ int provider;
 const char *ConnectionNames[] {
 	"ZeroTier",
 	N_("Client-Server (TCP)"),
-	N_("Loopback"),
+	N_("Offline"),
 };
 
 namespace {
