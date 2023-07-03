@@ -1066,7 +1066,8 @@ msgid "{:s}, Level: {:d}"
 msgstr "{:s}, Razina: {:d}"
 
 #: Source/control.cpp:926
-msgid "Hit Points {:d} of {:d}"
+#, fuzzy
+msgid "Life {:d} of {:d}"
 msgstr "Pogoci {:d} od {:d}"
 
 #: Source/control.cpp:960
@@ -4202,7 +4203,8 @@ msgid "{:+d} damage from enemies"
 msgstr "{:+d} na štetu od neprijatelja"
 
 #: Source/items.cpp:3599
-msgid "Hit Points: {:+d}"
+#, fuzzy
+msgid "Life: {:+d}"
 msgstr "Pogodci: {:+d}"
 
 #: Source/items.cpp:3602

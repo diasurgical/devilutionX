@@ -1043,7 +1043,8 @@ msgid "{:s}, Level: {:d}"
 msgstr "{:s}, 等级: {:d}"
 
 #: Source/control.cpp:898
-msgid "Hit Points {:d} of {:d}"
+#, fuzzy
+msgid "Life {:d} of {:d}"
 msgstr "生命值 {:d} 的 {:d}"
 
 #: Source/control.cpp:932
@@ -4136,7 +4137,8 @@ msgid "{:+d} damage from enemies"
 msgstr "{:+d} 来自​敌人​的​伤害"
 
 #: Source/items.cpp:3624
-msgid "Hit Points: {:+d}"
+#, fuzzy
+msgid "Life: {:+d}"
 msgstr "生命​值: {:+d}"
 
 #: Source/items.cpp:3627
