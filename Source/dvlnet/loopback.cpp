@@ -12,7 +12,7 @@ namespace net {
 
 int loopback::create(std::string /*addrstr*/)
 {
-	isLoopback = true;
+	IsLoopback = true;
 	return plr_single;
 }
 
@@ -88,7 +88,7 @@ bool loopback::SNetUnregisterEventHandler(event_type /*evtype*/)
 
 bool loopback::SNetLeaveGame(int /*type*/)
 {
-	isLoopback = false;
+	IsLoopback = false;
 	return true;
 }
 
