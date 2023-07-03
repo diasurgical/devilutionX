@@ -325,15 +325,47 @@ void DrawFloatingInfoBox(const Surface &out, Point position)
 		linesWithColor.emplace_back(sufPower, UiFlags::ColorBlue);
 	}
 
-	/* if (item._iMagical == ITEM_QUALITY_UNIQUE) {
+	StringOrView uPower1;
+	StringOrView uPower2;
+	StringOrView uPower3;
+	StringOrView uPower4;
+	StringOrView uPower5;
+	StringOrView uPower6;
+	if (item._iMagical == ITEM_QUALITY_UNIQUE) {
 		const UniqueItem &uitem = UniqueItems[item._iUid];
 		assert(uitem.UINumPL <= sizeof(uitem.powers) / sizeof(*uitem.powers));
-		for (const auto &power : uitem.powers) {
-			if (power.type == IPL_INVALID || power.type == IPL_INVCURS)
+		for (int i = 0; i < uitem.UINumPL; i++) {
+			if (uitem.powers[i].type == IPL_INVALID || uitem.powers[i].type == IPL_INVCURS) {
+				continue;
+			}
+			switch (i) {
+			case 0:
+				uPower1 = PrintItemPower(uitem.powers[i].type, item);
+				linesWithColor.emplace_back(uPower1, UiFlags::ColorBlue);
 				break;
-			linesWithColor.emplace_back(PrintItemPower(power.type, item), UiFlags::ColorBlue);
+			case 1:
+				uPower2 = PrintItemPower(uitem.powers[i].type, item);
+				linesWithColor.emplace_back(uPower2, UiFlags::ColorBlue);
+				break;
+			case 2:
+				uPower3 = PrintItemPower(uitem.powers[i].type, item);
+				linesWithColor.emplace_back(uPower3, UiFlags::ColorBlue);
+				break;
+			case 3:
+				uPower4 = PrintItemPower(uitem.powers[i].type, item);
+				linesWithColor.emplace_back(uPower4, UiFlags::ColorBlue);
+				break;
+			case 4:
+				uPower5 = PrintItemPower(uitem.powers[i].type, item);
+				linesWithColor.emplace_back(uPower5, UiFlags::ColorBlue);
+				break;
+			case 5:
+				uPower6 = PrintItemPower(uitem.powers[i].type, item);
+				linesWithColor.emplace_back(uPower6, UiFlags::ColorBlue);
+				break;
+			}
 		}
-	}*/
+	}
 
 	// CONSTRUCT STRING AS A BASE FOR UTILIZING LINESWITHCOLOR DATA
 	// linesBase is used to place the {} and newlines to grab the actual string data
