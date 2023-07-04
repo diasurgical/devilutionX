@@ -10,7 +10,6 @@
 #include <fmt/format.h>
 
 #include "control.h"
-#include "cursor.h"
 #include "engine/load_file.hpp"
 #include "engine/palette.h"
 #include "engine/render/automap_render.hpp"
@@ -776,7 +775,7 @@ void DrawAutomapText(const Surface &out)
 		break;
 	}
 
-	std::string difficultyString = fmt::format(fmt::runtime(_(/* TRANSLATORS: {:s} means: Game Difficulty. */ "Difficulty: {:s} {:d} {:d}")), difficulty, pcursinvitem, pcursstashitem);
+	std::string difficultyString = fmt::format(fmt::runtime(_(/* TRANSLATORS: {:s} means: Game Difficulty. */ "Difficulty: {:s}")), difficulty);
 	DrawString(out, difficultyString, linePosition);
 }
 
