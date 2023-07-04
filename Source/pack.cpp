@@ -491,20 +491,9 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 		return false;
 	if (player._pILMaxDam != SDL_SwapLE32(packed.pILMaxDam))
 		return false;
-
-	PlayerData playerData = PlayersData[static_cast<size_t>(player._pClass)];
-	// Note: Does not take into account the bug where players do not receive life and mana upon reaching level 50,
-	// therefore players end up having a point or two that they can exceed the natural limits before failing validation
-	// until the level up to 50 bug is patched.
-
-	uint32_t maxValidatedHPBase = playerData.startLife + (playerData.baseVit * playerData.chrLife) + ((player._pLevel - 1) * playerData.lvlUpLife);
-
-	if (player._pMaxHPBase > maxValidatedHPBase)
+	if (player._pMaxHPBase > player.calculateBaseLife())
 		return false;
-
-	uint32_t maxValidatedManaBase = playerData.startMana + (playerData.baseMag * playerData.chrMana) + ((player._pLevel - 1) * playerData.lvlUpMana);
-
-	if (player._pMaxManaBase > maxValidatedManaBase)
+	if (player._pMaxManaBase > player.calculateBaseMana())
 		return false;
 
 	return true;
