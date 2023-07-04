@@ -2055,6 +2055,18 @@ void Player::UpdatePreviewCelSprite(_cmd_id cmdId, Point point, uint16_t wParam1
 	}
 }
 
+uint16_t Player::calculateBaseLife() const
+{
+	const PlayerData playerData = PlayersData[static_cast<size_t>(_pClass)];
+	return playerData.startLife + (playerData.lvlUpLife * _pLevel) + (playerData.chrLife * _pBaseVit);
+}
+
+uint16_t Player::calculateBaseMana() const
+{
+	const PlayerData playerData = PlayersData[static_cast<size_t>(_pClass)];
+	return playerData.startMana + (playerData.lvlUpMana * _pLevel) + (playerData.chrMana * _pBaseMag);
+}
+
 Player *PlayerAtPosition(Point position)
 {
 	if (!InDungeonBounds(position))
@@ -2284,12 +2296,12 @@ void CreatePlayer(Player &player, HeroClass c)
 
 	player._pBaseToBlk = playerData.blockBonus;
 
-	player._pHitPoints = playerData.startLife + (playerData.chrLife * player._pBaseVit);
+	player._pHitPoints = player.calculateBaseLife();
 	player._pMaxHP = player._pHitPoints;
 	player._pHPBase = player._pHitPoints;
 	player._pMaxHPBase = player._pHitPoints;
 
-	player._pMana = playerData.startMana + (playerData.chrMana * player._pBaseMag);
+	player._pMana = player.calculateBaseMana();
 	player._pMaxMana = player._pMana;
 	player._pManaBase = player._pMana;
 	player._pMaxManaBase = player._pMana;
