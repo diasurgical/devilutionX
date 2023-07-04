@@ -310,6 +310,8 @@ void DrawFloatingItemInfoBox(const Surface &out, Point position)
 	}
 	linesWithColor.emplace_back(item._iName, item.getTextColor());
 
+	// InfoString = fmt::format(fmt::runtime(ngettext("{:s} gold piece", "{:s} gold pieces", nGold)), FormatInteger(nGold));
+	
 	// Add Item Damage
 	std::string formattedDam;
 	if (item._iMinDam > 0 && item._iMaxDam > 0) {

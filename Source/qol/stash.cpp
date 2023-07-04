@@ -403,6 +403,27 @@ void DrawStash(const Surface &out)
 
 	DrawString(out, StrCat(Stash.GetPage() + 1), { position + Displacement { 132, 0 }, { 57, 11 } }, UiFlags::AlignCenter | style);
 	DrawString(out, FormatInteger(Stash.gold), { position + Displacement { 122, 19 }, { 107, 13 } }, UiFlags::AlignRight | style);
+
+	if (*sgOptions.Gameplay.enableFloatingInfoBox) {
+		// Draw info box
+		for (auto slot : StashGridRange) {
+			StashStruct::StashCell itemId = Stash.GetItemIdAtPosition(slot);
+			if (itemId == StashStruct::EmptyCell) {
+				continue; // No item in the given slot
+			}
+
+			Item &item = Stash.stashList[itemId];
+			if (item.position != slot) {
+				continue; // Not the first slot of the item
+			}
+
+			const Point position = GetStashSlotCoord(item.position) + offset;
+
+			if (pcursstashitem == itemId) {
+				DrawFloatingItemInfoBox(out, position);
+			}
+		}
+	}
 }
 
 void CheckStashItem(Point mousePosition, bool isShiftHeld, bool isCtrlHeld)
