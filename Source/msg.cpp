@@ -970,12 +970,6 @@ bool IsPItemValid(const TCmdPItem &message)
 	return IsItemAvailable(static_cast<_item_indexes>(SDL_SwapLE16(message.def.wIndx)));
 }
 
-void PrepareEarForNetwork(const Item &item, TEar &ear)
-{
-	ear.bCursval = item._ivalue | ((item._iCurs - ICURS_EAR_SORCERER) << 6);
-	CopyUtf8(ear.heroname, item._iIName, sizeof(ear.heroname));
-}
-
 void PrepareItemForNetwork(const Item &item, TCmdGItem &message)
 {
 	message.def.wIndx = static_cast<_item_indexes>(SDL_SwapLE16(item.IDidx));
@@ -2338,6 +2332,12 @@ void PrepareItemForNetwork(const Item &item, TItem &messageItem)
 	messageItem.wToHit = SDL_SwapLE16(item._iPLToHit);
 	messageItem.wMaxDam = SDL_SwapLE16(item._iMaxDam);
 	messageItem.dwBuff = SDL_SwapLE32(item.dwBuff);
+}
+
+void PrepareEarForNetwork(const Item &item, TEar &ear)
+{
+	ear.bCursval = item._ivalue | ((item._iCurs - ICURS_EAR_SORCERER) << 6);
+	CopyUtf8(ear.heroname, item._iIName, sizeof(ear.heroname));
 }
 
 void RecreateItem(const Player &player, const TItem &messageItem, Item &item)
