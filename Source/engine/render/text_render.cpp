@@ -574,25 +574,6 @@ int GetLineHeight(string_view text, GameFontTables fontIndex)
 	return LineHeights[fontIndex];
 }
 
-int GetLongestLineWidth(string_view text, GameFontTables size, int spacing)
-{
-	int maxWidth = 0;
-	string_view line;
-	while (!text.empty()) {
-		const auto lineEnd = text.find_first_of("\n\r");
-		const auto lineStart = text.substr(0, lineEnd);
-		const auto lineWidth = GetLineWidth(lineStart, size, spacing, nullptr);
-		if (lineWidth > maxWidth) {
-			maxWidth = lineWidth;
-			line = lineStart;
-		}
-		if (lineEnd == string_view::npos)
-			break;
-		text = text.substr(lineEnd + 1);
-	}
-	return maxWidth + 1;
-}
-
 int AdjustSpacingToFitHorizontally(int &lineWidth, int maxSpacing, int charactersInLine, int availableWidth)
 {
 	if (lineWidth <= availableWidth || charactersInLine < 2)

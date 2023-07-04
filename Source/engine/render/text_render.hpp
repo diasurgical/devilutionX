@@ -154,16 +154,6 @@ int GetLineWidth(string_view fmt, DrawStringFormatArg *args, size_t argsLen, siz
 int GetLineHeight(string_view text, GameFontTables fontIndex);
 
 /**
- * @brief Calculate pixel width of longest line of text, respecting kerning
- * @param text Text to check, will read until terminator
- * @param size Font size to use
- * @param spacing Extra spacing to add per character
- * @param[out] longestLine Receives the longest line found
- * @return Longest line width in pixels
- */
-int GetLongestLineWidth(string_view text, GameFontTables size = GameFont12, int spacing = 1);
-
-/**
  * @brief Builds a multi-line version of the given text so it'll fit within the given width.
  *
  * This function will not break words, if the given width is smaller than the width of the longest word in the given
