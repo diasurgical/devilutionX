@@ -442,6 +442,7 @@ void DrawFloatingItemInfoBox(const Surface &out, Point position)
 	// Lines that contain a colon may have a different color for the second part, so two {}'s are added
 	std::string linesBase;
 	bool previousLineHadColon = false;
+	bool colonLine = false;
 
 	for (const auto &arg : linesWithColor) {
 		const auto &formatted = arg.GetFormatted();
@@ -456,6 +457,11 @@ void DrawFloatingItemInfoBox(const Surface &out, Point position)
 			if (&arg != &linesWithColor.back()) {
 				linesBase.append("\n");
 			}
+		}
+
+		// Check if the current line contains a colon
+		if (currentLineHasColon) {
+			colonLine = true;
 		}
 
 		previousLineHadColon = currentLineHasColon;
@@ -484,8 +490,19 @@ void DrawFloatingItemInfoBox(const Surface &out, Point position)
 	const Size infoBoxPadding = { 16, 16 };
 
 	int maxWidth = 0;
-	for (const auto &arg : linesWithColor) {
+	size_t numLines = linesWithColor.size();
+
+	for (size_t i = 0; i < numLines; i++) {
+		const auto &arg = linesWithColor[i];
 		int lineWidth = GetLineWidth(arg.GetFormatted(), GameFontTables::GameFont12, 2);
+
+		if (!arg.GetFormatted().empty() && arg.GetFormatted().back() == ':' && i < numLines - 1) {
+			const auto &nextArg = linesWithColor[i + 1];
+			std::string combinedText = std::string(arg.GetFormatted()) + " " + std::string(nextArg.GetFormatted());
+			// The addition of the infobox padding is a hack; I literally have no clue how to make this work without it.
+			lineWidth = GetLineWidth(combinedText, GameFontTables::GameFont12, 2) + infoBoxPadding.width;
+		}
+
 		maxWidth = std::max(maxWidth, lineWidth);
 	}
 
