@@ -1129,7 +1129,6 @@ std::vector<OptionEntryBase *> GameplayOptions::GetEntries()
 		&disableCripplingShrines,
 		&adriaRefillsMana,
 		&grabInput,
-		&enableFloatingNumbers,
 		&enableFloatingInfoBox,
 	};
 }
