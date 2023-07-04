@@ -172,36 +172,29 @@ enum class ItemStatModifier {
 	Armor
 };
 
-int16_t CalculateModifiedArmorValue(const Item &item)
+void CalculateArmorPercentMod(const Item &item, int16_t &modifiedArmor)
 {
-	int16_t newArmor = item._iAC;
-	newArmor *= item._iPLAC;
-	newArmor /= 100;
-	newArmor += item._iAC;
-	return newArmor;
+	modifiedArmor = modifiedArmor * (item._iPLAC + 100) / 100;
 }
 
-uint8_t CalculateModifiedMinDamageValue(const Item &item)
+void CalculateDamPercentMod(const Item &item, uint8_t &modifiedDam)
 {
-	uint8_t newMinDam = item._iMinDam;
-	newMinDam *= item._iPLDam;
-	newMinDam /= 100;
-	newMinDam += item._iMinDam;
-	return newMinDam;
+	modifiedDam = modifiedDam * (item._iPLDam + 100) / 100;
 }
 
-uint8_t CalculateModifiedMaxDamageValue(const Item &item)
+void CalculateDamMod(const Item &item, uint8_t &modifiedDam)
 {
-	uint8_t newMaxDam = item._iMaxDam;
-	newMaxDam *= item._iPLDam;
-	newMaxDam /= 100;
-	newMaxDam += item._iMaxDam;
-	return newMaxDam;
+	modifiedDam = modifiedDam + item._iPLDamMod;
 }
+
 
 uint8_t CalculateModifiedStatValue(const ItemStatModifier stat, const Item &item)
 {
 	assert(IsAnyOf(stat, ItemStatModifier::MinDamage, ItemStatModifier::MaxDamage, ItemStatModifier::Armor));
+
+	uint8_t modifiedMinDam = item._iMinDam;
+	uint8_t modifiedMaxDam = item._iMaxDam;
+	int16_t modifiedArmor = item._iAC;
 
 	if (item._iMagical == ITEM_QUALITY_UNIQUE) {
 		const UniqueItem &uitem = UniqueItems[item._iUid];
@@ -212,7 +205,7 @@ uint8_t CalculateModifiedStatValue(const ItemStatModifier stat, const Item &item
 			case IPL_ACP:
 			case IPL_ACP_CURSE:
 				if (stat == ItemStatModifier::Armor) {
-					return CalculateModifiedArmorValue(item);
+					CalculateArmorPercentMod(item, modifiedArmor);
 				}
 				break;
 			case IPL_DAMP:
@@ -220,25 +213,19 @@ uint8_t CalculateModifiedStatValue(const ItemStatModifier stat, const Item &item
 			case IPL_TOHIT_DAMP:
 			case IPL_TOHIT_DAMP_CURSE:
 				if (stat == ItemStatModifier::MinDamage) {
-					return CalculateModifiedMinDamageValue(item);
+					CalculateDamPercentMod(item, modifiedMinDam);
 				} else if (stat == ItemStatModifier::MaxDamage) {
-					return CalculateModifiedMaxDamageValue(item);
+					CalculateDamPercentMod(item, modifiedMaxDam);
 				}
 				break;
 			case IPL_DAMMOD:
-				if (stat == ItemStatModifier::MinDamage || stat == ItemStatModifier::MaxDamage) {
-					return item._iPLDamMod;
+				if (stat == ItemStatModifier::MinDamage) {
+					CalculateDamMod(item, modifiedMinDam);
+				} else if (stat == ItemStatModifier::MaxDamage) {
+					CalculateDamMod(item, modifiedMaxDam);
 				}
 				break;
 			default:
-				switch (stat) {
-				case ItemStatModifier::MinDamage:
-					return item._iMinDam;
-				case ItemStatModifier::MaxDamage:
-					return item._iMaxDam;
-				case ItemStatModifier::Armor:
-					return item._iAC;
-				}
 				break;
 			}
 		}
@@ -246,53 +233,46 @@ uint8_t CalculateModifiedStatValue(const ItemStatModifier stat, const Item &item
 		switch (item._iPrePower) {
 		case IPL_ACP:
 		case IPL_ACP_CURSE:
-			if (stat == ItemStatModifier::Armor) {
-				return CalculateModifiedArmorValue(item);
-			}
+		    if (stat == ItemStatModifier::Armor) {
+			    CalculateArmorPercentMod(item, modifiedArmor);
+		    }
 			break;
 		case IPL_DAMP:
 		case IPL_DAMP_CURSE:
 		case IPL_TOHIT_DAMP:
 		case IPL_TOHIT_DAMP_CURSE:
-			if (stat == ItemStatModifier::MinDamage) {
-				return CalculateModifiedMinDamageValue(item);
-			} else if (stat == ItemStatModifier::MaxDamage) {
-				return CalculateModifiedMaxDamageValue(item);
-			}
+		    if (stat == ItemStatModifier::MinDamage) {
+			    CalculateDamPercentMod(item, modifiedMinDam);
+		    } else if (stat == ItemStatModifier::MaxDamage) {
+			    CalculateDamPercentMod(item, modifiedMaxDam);
+		    }
 			break;
 		default:
-			switch (stat) {
-			case ItemStatModifier::MinDamage:
-				return item._iMinDam;
-			case ItemStatModifier::MaxDamage:
-				return item._iMaxDam;
-			case ItemStatModifier::Armor:
-				return item._iAC;
-			}
 			break;
 		}
 
 		switch (item._iSufPower) {
 		case IPL_DAMMOD:
-			if (stat == ItemStatModifier::MinDamage || stat == ItemStatModifier::MaxDamage) {
-				return item._iPLDamMod;
-			}
+		    if (stat == ItemStatModifier::MinDamage)
+			    CalculateDamPercentMod(item, modifiedMinDam);
+		    if (stat == ItemStatModifier::MaxDamage)
+			    CalculateDamPercentMod(item, modifiedMaxDam);
 			break;
 		default:
-			switch (stat) {
-			case ItemStatModifier::MinDamage:
-				return item._iMinDam;
-			case ItemStatModifier::MaxDamage:
-				return item._iMaxDam;
-			case ItemStatModifier::Armor:
-				return item._iAC;
-			}
 			break;
 		}
 	}
 
-	return 0;
+	switch (stat) {
+    case ItemStatModifier::MinDamage:
+	    return modifiedMinDam;
+    case ItemStatModifier::MaxDamage:
+	    return modifiedMaxDam;
+    case ItemStatModifier::Armor:
+	    return modifiedArmor;
+    }
 }
+
 
 void DrawFloatingItemInfoBox(const Surface &out, Point position)
 {
