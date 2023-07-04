@@ -285,12 +285,19 @@ void DrawFloatingItemInfoBox(const Surface &out, Point position)
 	Item &item = pcursinvitem != -1 ? GetInventoryItem(myPlayer, pcursinvitem) : Stash.stashList[pcursstashitem];
 
 	// Add Item Name
-	if (item._iIdentified && item._iMagical != ITEM_QUALITY_NORMAL) {
-		linesWithColor.emplace_back(item._iIName, item.getTextColor());
-	}
-	linesWithColor.emplace_back(item._iName, item.getTextColor());
+	
 
-	// InfoString = fmt::format(fmt::runtime(ngettext("{:s} gold piece", "{:s} gold pieces", nGold)), FormatInteger(nGold));
+	std::string formattedGold;
+	if (item._iClass == ICLASS_GOLD) {
+		int nGold = item._ivalue;
+		formattedGold = fmt::format(fmt::runtime(ngettext("{:s} gold piece", "{:s} gold pieces", nGold)), FormatInteger(nGold));
+		linesWithColor.emplace_back(formattedGold, UiFlags::ColorWhite);
+	} else {
+		if (item._iIdentified && item._iMagical != ITEM_QUALITY_NORMAL) {
+			linesWithColor.emplace_back(item._iIName, item.getTextColor());
+		}
+		linesWithColor.emplace_back(item._iName, item.getTextColor());
+	}
 	
 	// Add Item Damage
 	std::string formattedDam;
