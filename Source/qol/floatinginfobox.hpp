@@ -12,13 +12,6 @@
 
 namespace devilution {
 
-enum modified_item_val : uint8_t {
-	MIV_MINDAM,
-	MIV_MAXDAM,
-	MIV_AC,
-	MIV_DUR,
-};
-
-void DrawFloatingInfoBox(const Surface &out, Point position);
+void DrawFloatingItemInfoBox(const Surface &out, Point position);
 
 } // namespace devilution

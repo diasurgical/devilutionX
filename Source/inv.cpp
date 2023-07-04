@@ -1180,7 +1180,7 @@ void DrawInv(const Surface &out)
 				const Point position = GetPanelPosition(UiPanels::Inventory, { screenX, screenY });
 
 				if (pcursinvitem == slot) {
-					DrawFloatingInfoBox(out, position);
+					DrawFloatingItemInfoBox(out, position);
 				}
 			}
 		}
@@ -1192,7 +1192,7 @@ void DrawInv(const Surface &out)
 
 				const Point position = GetPanelPosition(UiPanels::Inventory, InvRect[j + SLOTXY_INV_FIRST].position) + Displacement { 0, -1 + INV_SLOT_SIZE_PX };
 				if (pcursinvitem == ii + INVITEM_INV_FIRST) {
-					DrawFloatingInfoBox(out, position);
+					DrawFloatingItemInfoBox(out, position);
 				}
 			}
 		}
@@ -1234,7 +1234,7 @@ void DrawInvBelt(const Surface &out)
 			// Draw info box
 			if (pcursinvitem == i + INVITEM_BELT_FIRST) {
 				if (ControlMode == ControlTypes::KeyboardAndMouse || invflag) {
-					DrawFloatingInfoBox(out, position);
+					DrawFloatingItemInfoBox(out, position);
 				}
 			}
 		}
