@@ -1862,6 +1862,55 @@ void printItemMiscGamepad(const Item &item, bool isOil, bool isCastOnTarget)
 	}
 }
 
+void PrintItemMisc(const Item &item)
+{
+	if (item._iMiscId == IMISC_EAR) {
+		AddPanelString(fmt::format(fmt::runtime(pgettext("player", "Level: {:d}")), item._ivalue));
+		return;
+	}
+	if (item._iMiscId == IMISC_AURIC) {
+		AddPanelString(_("Doubles gold capacity"));
+		return;
+	}
+	const bool isOil = (item._iMiscId >= IMISC_USEFIRST && item._iMiscId <= IMISC_USELAST)
+	    || (item._iMiscId > IMISC_OILFIRST && item._iMiscId < IMISC_OILLAST)
+	    || (item._iMiscId > IMISC_RUNEFIRST && item._iMiscId < IMISC_RUNELAST);
+	const bool isCastOnTarget = (item._iMiscId == IMISC_SCROLLT && item._iSpell != SpellID::Flash)
+	    || (item._iMiscId == IMISC_SCROLL && IsAnyOf(item._iSpell, SpellID::TownPortal, SpellID::Identify));
+
+	switch (ControlMode) {
+	case ControlTypes::None:
+		break;
+	case ControlTypes::KeyboardAndMouse:
+		printItemMiscKBM(item, isOil, isCastOnTarget);
+		break;
+	case ControlTypes::VirtualGamepad:
+		printItemMiscGenericGamepad(item, isOil, isCastOnTarget);
+		break;
+	case ControlTypes::Gamepad:
+		printItemMiscGamepad(item, isOil, isCastOnTarget);
+		break;
+	}
+}
+
+void PrintItemInfo(const Item &item)
+{
+	PrintItemMisc(item);
+	uint8_t str = item._iMinStr;
+	uint8_t dex = item._iMinDex;
+	uint8_t mag = item._iMinMag;
+	if (str != 0 || mag != 0 || dex != 0) {
+		std::string text = std::string(_("Required:"));
+		if (str != 0)
+			text.append(fmt::format(fmt::runtime(_(" {:d} Str")), str));
+		if (mag != 0)
+			text.append(fmt::format(fmt::runtime(_(" {:d} Mag")), mag));
+		if (dex != 0)
+			text.append(fmt::format(fmt::runtime(_(" {:d} Dex")), dex));
+		AddPanelString(text);
+	}
+}
+
 bool SmithItemOk(const Player &player, const ItemData &item)
 {
 	if (item.itype == ItemType::Misc)
@@ -3884,55 +3933,6 @@ void DrawUniqueInfo(const Surface &out)
 			break;
 		rect.position.y += 2 * 12;
 		DrawString(out, PrintItemPower(power.type, curruitem), rect, UiFlags::ColorWhite | UiFlags::AlignCenter);
-	}
-}
-
-void PrintItemMisc(const Item &item)
-{
-	if (item._iMiscId == IMISC_EAR) {
-		AddPanelString(fmt::format(fmt::runtime(pgettext("player", "Level: {:d}")), item._ivalue));
-		return;
-	}
-	if (item._iMiscId == IMISC_AURIC) {
-		AddPanelString(_("Doubles gold capacity"));
-		return;
-	}
-	const bool isOil = (item._iMiscId >= IMISC_USEFIRST && item._iMiscId <= IMISC_USELAST)
-	    || (item._iMiscId > IMISC_OILFIRST && item._iMiscId < IMISC_OILLAST)
-	    || (item._iMiscId > IMISC_RUNEFIRST && item._iMiscId < IMISC_RUNELAST);
-	const bool isCastOnTarget = (item._iMiscId == IMISC_SCROLLT && item._iSpell != SpellID::Flash)
-	    || (item._iMiscId == IMISC_SCROLL && IsAnyOf(item._iSpell, SpellID::TownPortal, SpellID::Identify));
-
-	switch (ControlMode) {
-	case ControlTypes::None:
-		break;
-	case ControlTypes::KeyboardAndMouse:
-		printItemMiscKBM(item, isOil, isCastOnTarget);
-		break;
-	case ControlTypes::VirtualGamepad:
-		printItemMiscGenericGamepad(item, isOil, isCastOnTarget);
-		break;
-	case ControlTypes::Gamepad:
-		printItemMiscGamepad(item, isOil, isCastOnTarget);
-		break;
-	}
-}
-
-void PrintItemInfo(const Item &item)
-{
-	PrintItemMisc(item);
-	uint8_t str = item._iMinStr;
-	uint8_t dex = item._iMinDex;
-	uint8_t mag = item._iMinMag;
-	if (str != 0 || mag != 0 || dex != 0) {
-		std::string text = std::string(_("Required:"));
-		if (str != 0)
-			text.append(fmt::format(fmt::runtime(_(" {:d} Str")), str));
-		if (mag != 0)
-			text.append(fmt::format(fmt::runtime(_(" {:d} Mag")), mag));
-		if (dex != 0)
-			text.append(fmt::format(fmt::runtime(_(" {:d} Dex")), dex));
-		AddPanelString(text);
 	}
 }
 
