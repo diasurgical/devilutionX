@@ -773,14 +773,10 @@ struct Player {
 		this->plrIsOnSetLevel = true;
 	}
 
-	/**
-	 * @brief Returns a character's life based on starting life, character level, and base vitality.
-	*/
+	/** @brief Returns a character's life based on starting life, character level, and base vitality. */
 	uint16_t calculateBaseLife() const;
 
-	/**
-	 * @brief Returns a character's mana based on starting mana, character level, and base magic.
-	*/
+	/** @brief Returns a character's mana based on starting mana, character level, and base magic. */
 	uint16_t calculateBaseMana() const;
 };
 
