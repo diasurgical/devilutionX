@@ -122,6 +122,10 @@ UiFlags GetItemBonusColors(const ItemStatType stat, const Item &item)
 			if (stat == ItemStatType::Damage)
 				color = UiFlags::ColorRed;
 			break;
+		default:
+			break;
+		}
+		switch (item._iSufPower) {
 		case IPL_DUR:
 			if (stat == ItemStatType::Durability)
 				color = UiFlags::ColorBlue;
@@ -302,7 +306,6 @@ void DrawFloatingItemInfoBox(const Surface &out, Point position)
 		uint8_t minDam = CalculateModifiedStatValue(ItemStatModifier::MinDamage, item);
 		uint8_t maxDam = CalculateModifiedStatValue(ItemStatModifier::MaxDamage, item);
 		UiFlags damColor = GetItemBonusColors(ItemStatType::Damage, item);
-
 		linesWithColor.emplace_back(_("Damage:"), UiFlags::ColorWhite);
 
 		if (item._iMinDam == item._iMaxDam) {
@@ -328,7 +331,6 @@ void DrawFloatingItemInfoBox(const Surface &out, Point position)
 	std::string formattedDur;
 	if (item._iMaxDur != DUR_INDESTRUCTIBLE && (item._iClass == ICLASS_WEAPON || item._iClass == ICLASS_ARMOR)) {
 		UiFlags durColor = GetItemBonusColors(ItemStatType::Durability, item);
-
 		linesWithColor.emplace_back(_("Durability:"), UiFlags::ColorWhite);
 		formattedDur = fmt::format(fmt::runtime(_("{:d} of {:d}")), item._iDurability, item._iMaxDur);
 		linesWithColor.emplace_back(formattedDur, durColor);
