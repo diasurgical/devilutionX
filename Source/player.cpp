@@ -2055,13 +2055,13 @@ void Player::UpdatePreviewCelSprite(_cmd_id cmdId, Point point, uint16_t wParam1
 	}
 }
 
-int16_t Player::calculateBaseLife() const
+int32_t Player::calculateBaseLife() const
 {
 	const PlayerData playerData = PlayersData[static_cast<size_t>(_pClass)];
 	return playerData.startLife + (playerData.lvlUpLife * _pLevel) + (playerData.chrLife * _pBaseVit);
 }
 
-int16_t Player::calculateBaseMana() const
+int32_t Player::calculateBaseMana() const
 {
 	const PlayerData playerData = PlayersData[static_cast<size_t>(_pClass)];
 	return playerData.startMana + (playerData.lvlUpMana * _pLevel) + (playerData.chrMana * _pBaseMag);

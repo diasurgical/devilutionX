@@ -774,10 +774,10 @@ struct Player {
 	}
 
 	/** @brief Returns a character's life based on starting life, character level, and base vitality. */
-	int16_t calculateBaseLife() const;
+	int32_t calculateBaseLife() const;
 
 	/** @brief Returns a character's mana based on starting mana, character level, and base magic. */
-	int16_t calculateBaseMana() const;
+	int32_t calculateBaseMana() const;
 };
 
 extern DVL_API_FOR_TEST size_t MyPlayerId;
