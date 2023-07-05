@@ -56,6 +56,7 @@ UiFlags GetItemBonusColors(const ItemStatType stat, const Item &item)
 					color = UiFlags::ColorRed;
 				break;
 			case IPL_SETAC:
+			case IPL_AC_CURSE:
 				if (stat == ItemStatType::Armor) {
 					if (item._iAC > iData.iMaxAC)
 						color = UiFlags::ColorBlue;
@@ -181,22 +182,22 @@ void CalculateArmorPercentMod(const Item &item, int16_t &modifiedArmor)
 	modifiedArmor = modifiedArmor * (item._iPLAC + 100) / 100;
 }
 
-void CalculateDamPercentMod(const Item &item, uint8_t &modifiedDam)
+void CalculateDamPercentMod(const Item &item, int16_t &modifiedDam)
 {
 	modifiedDam = modifiedDam * (item._iPLDam + 100) / 100;
 }
 
-void CalculateDamMod(const Item &item, uint8_t &modifiedDam)
+void CalculateDamMod(const Item &item, int16_t &modifiedDam)
 {
 	modifiedDam = modifiedDam + item._iPLDamMod;
 }
 
-uint8_t CalculateModifiedStatValue(const ItemStatModifier stat, const Item &item)
+int16_t CalculateModifiedStatValue(const ItemStatModifier stat, const Item &item)
 {
 	assert(IsAnyOf(stat, ItemStatModifier::MinDamage, ItemStatModifier::MaxDamage, ItemStatModifier::Armor));
 
-	uint8_t modifiedMinDam = item._iMinDam;
-	uint8_t modifiedMaxDam = item._iMaxDam;
+	int16_t modifiedMinDam = item._iMinDam;
+	int16_t modifiedMaxDam = item._iMaxDam;
 	int16_t modifiedArmor = item._iAC;
 
 	if (item._iMagical == ITEM_QUALITY_UNIQUE) {
@@ -302,7 +303,7 @@ void DrawFloatingItemInfoBox(const Surface &out, Point position)
 
 	// Add Item Damage
 	std::string formattedDam;
-	if (item._iMinDam > 0 && item._iMaxDam > 0) {
+	if (item._iClass == ICLASS_WEAPON || item._iMinDam != 0 || item._iMaxDam != 0) {
 		uint8_t minDam = CalculateModifiedStatValue(ItemStatModifier::MinDamage, item);
 		uint8_t maxDam = CalculateModifiedStatValue(ItemStatModifier::MaxDamage, item);
 		UiFlags damColor = GetItemBonusColors(ItemStatType::Damage, item);
@@ -319,7 +320,7 @@ void DrawFloatingItemInfoBox(const Surface &out, Point position)
 
 	// Add Item Armor
 	std::string formattedArmor;
-	if (item._iAC > 0) {
+	if (item._iClass == ICLASS_ARMOR || item._iAC != 0) {
 		int16_t armor = CalculateModifiedStatValue(ItemStatModifier::Armor, item);
 		UiFlags armorColor = GetItemBonusColors(ItemStatType::Armor, item);
 		linesWithColor.emplace_back(_("Armor:"), UiFlags::ColorWhite);
