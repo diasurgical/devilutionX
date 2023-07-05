@@ -427,8 +427,8 @@ void DrawFloatingItemInfoBox(const Surface &out, Point position)
 	// linesBase is used to place the {} and newlines to grab the actual string data
 	// Lines that contain a colon may have a different color for the second part, so two {}'s are added
 	std::string linesBase;
+	int totalLinesCount = 0;
 	bool previousLineHadColon = false;
-	bool colonLine = false;
 
 	for (const auto &arg : linesWithColor) {
 		const auto &formatted = arg.GetFormatted();
@@ -443,14 +443,15 @@ void DrawFloatingItemInfoBox(const Surface &out, Point position)
 			if (&arg != &linesWithColor.back()) {
 				linesBase.append("\n");
 			}
-		}
-
-		// Check if the current line contains a colon
-		if (currentLineHasColon) {
-			colonLine = true;
+			totalLinesCount++;
 		}
 
 		previousLineHadColon = currentLineHasColon;
+	}
+
+	// Adjust the total line count if the last line had a colon
+	if (previousLineHadColon) {
+		totalLinesCount--;
 	}
 
 	// CONSTRUCT AND DRAW TRANSPARENT BOX
@@ -459,16 +460,6 @@ void DrawFloatingItemInfoBox(const Surface &out, Point position)
 		{ 0, 0 },
 		{ 0, 0 }
 	};
-
-	// Count the total amount of lines to be displayed, so we know how large
-	// to make the transparent box.
-	int totalLinesCount = 0;
-	for (char c : linesBase) {
-		if (c == '\n') {
-			totalLinesCount++;
-		}
-	}
-	totalLinesCount++;
 
 	const int spacing = 4;
 	// GetLineHeight always returns 12 in this function
