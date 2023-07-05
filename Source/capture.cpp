@@ -45,7 +45,7 @@ void CaptureScreenshot(std::string path)
 
 	if (*sgOptions.Graphics.upscale) {
 		SDLSurfaceUniquePtr dstSurface = ScaleSurfaceToOutput(srcSurface);
-		// SDL_SavePNG doesnt appear anywhere in the solution
+
 		if (SDL_SavePNG(dstSurface.get(), path.c_str()) <= -1) {
 			ErrSdl();
 		}
