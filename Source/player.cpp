@@ -2058,13 +2058,13 @@ void Player::UpdatePreviewCelSprite(_cmd_id cmdId, Point point, uint16_t wParam1
 int32_t Player::calculateBaseLife() const
 {
 	const PlayerData playerData = PlayersData[static_cast<size_t>(_pClass)];
-	return playerData.startLife + (playerData.lvlUpLife * _pLevel) + (playerData.chrLife * _pBaseVit);
+	return playerData.adjLife + (playerData.lvlLife * _pLevel) + (playerData.chrLife * _pBaseVit);
 }
 
 int32_t Player::calculateBaseMana() const
 {
 	const PlayerData playerData = PlayersData[static_cast<size_t>(_pClass)];
-	return playerData.startMana + (playerData.lvlUpMana * _pLevel) + (playerData.chrMana * _pBaseMag);
+	return playerData.adjMana + (playerData.lvlMana * _pLevel) + (playerData.chrMana * _pBaseMag);
 }
 
 Player *PlayerAtPosition(Point position)
@@ -2400,7 +2400,7 @@ void NextPlrLevel(Player &player)
 	}
 	player._pNextExper = ExpLvlsTbl[std::min<int8_t>(player._pLevel, MaxCharacterLevel - 1)];
 
-	int hp = PlayersData[static_cast<size_t>(player._pClass)].lvlUpLife;
+	int hp = PlayersData[static_cast<size_t>(player._pClass)].lvlLife;
 
 	player._pMaxHP += hp;
 	player._pHitPoints = player._pMaxHP;
@@ -2411,7 +2411,7 @@ void NextPlrLevel(Player &player)
 		RedrawComponent(PanelDrawComponent::Health);
 	}
 
-	int mana = PlayersData[static_cast<size_t>(player._pClass)].lvlUpMana;
+	int mana = PlayersData[static_cast<size_t>(player._pClass)].lvlMana;
 
 	player._pMaxMana += mana;
 	player._pMaxManaBase += mana;

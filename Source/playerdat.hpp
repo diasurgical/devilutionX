@@ -35,14 +35,14 @@ struct PlayerData {
 	uint8_t maxVit;
 	/* Class Block Bonus % */
 	uint8_t blockBonus;
-	/* Class Starting Life */
-	int16_t startLife;
-	/* Class Starting Mana */
-	int16_t startMana;
+	/* Class Life Adjustment */
+	int16_t adjLife;
+	/* Class Mana Adjustment */
+	int16_t adjMana;
 	/* Life gained on level up */
-	int16_t lvlUpLife;
+	int16_t lvlLife;
 	/* Mana gained on level up */
-	int16_t lvlUpMana;
+	int16_t lvlMana;
 	/* Life from base Vitality */
 	int16_t chrLife;
 	/* Mana from base Magic */

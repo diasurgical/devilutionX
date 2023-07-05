@@ -83,7 +83,7 @@ const _sfx_id herosounds[enum_size<HeroClass>::value][enum_size<HeroSpeech>::val
 /** Contains the data related to each player class. */
 const PlayerData PlayersData[] = {
 	// clang-format off
-// HeroClass                 className,       classPath,   baseStr, baseMag,    baseDex,   baseVit,    maxStr, maxMag,     maxDex,    maxVit, blockBonus, startLife,                    startMana, lvlUpLife, lvlUpMana,  chrLife,                     chrMana,                     itmLife,                      itmMana, skill,
+// HeroClass                 className,       classPath,   baseStr, baseMag,    baseDex,   baseVit,    maxStr, maxMag,     maxDex,    maxVit, blockBonus,   adjLife,                      adjMana,   lvlLife,   lvlMana,  chrLife,                     chrMana,                     itmLife,                      itmMana, skill,
 
 // TRANSLATORS: Player Block start
 /* HeroClass::Warrior */   { N_("Warrior"),   "warrior",        30,      10,         20,        25,       250,     50,         60,       100,         30, (18 << 6),                    (-1 << 6),  (2 << 6),  (1 << 6), (2 << 6),                    (1 << 6),                    (2 << 6),                     (1 << 6), SpellID::ItemRepair    },
