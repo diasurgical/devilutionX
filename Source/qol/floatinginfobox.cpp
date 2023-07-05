@@ -391,7 +391,7 @@ void DrawFloatingItemInfoBox(const Surface &out, Point position)
 		const UniqueItem &uitem = UniqueItems[item._iUid];
 		assert(uitem.UINumPL <= sizeof(uitem.powers) / sizeof(*uitem.powers));
 		for (int i = 0; i < uitem.UINumPL; i++) {
-			if (uitem.powers[i].type == IPL_INVALID || uitem.powers[i].type == IPL_INVCURS) {
+			if (IsAnyOf(uitem.powers[i].type, IPL_INVALID, IPL_INVCURS)) {
 				continue;
 			}
 			switch (i) {
