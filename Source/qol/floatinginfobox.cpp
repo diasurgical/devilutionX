@@ -353,7 +353,7 @@ void DrawFloatingItemInfoBox(const Surface &out, Point position)
 
 	// Add Item Identification Status
 	if (!item._iIdentified && item._iMagical) {
-		linesWithColor.emplace_back(_("Not Identified"), UiFlags::ColorWhite);
+		linesWithColor.emplace_back(_("Not Identified"), UiFlags::ColorRed);
 	}
 
 	// Add Item Charges
