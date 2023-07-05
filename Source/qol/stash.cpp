@@ -10,7 +10,6 @@
 #include "cursor.h"
 #include "engine/clx_sprite.hpp"
 #include "engine/load_clx.hpp"
-#include "engine/points_in_rectangle_range.hpp"
 #include "engine/rectangle.hpp"
 #include "engine/render/clx_render.hpp"
 #include "engine/render/text_render.hpp"
@@ -50,8 +49,6 @@ constexpr Rectangle StashButtonRect[] = {
 	{ { 279, 19 }, ButtonSize }  // 10 right
 	// clang-format on
 };
-
-constexpr PointsInRectangleRange<int> StashGridRange { { { 0, 0 }, Size { 10, 10 } } };
 
 OptionalOwnedClxSpriteList StashPanelArt;
 OptionalOwnedClxSpriteList StashNavButtonArt;
@@ -403,27 +400,6 @@ void DrawStash(const Surface &out)
 
 	DrawString(out, StrCat(Stash.GetPage() + 1), { position + Displacement { 132, 0 }, { 57, 11 } }, UiFlags::AlignCenter | style);
 	DrawString(out, FormatInteger(Stash.gold), { position + Displacement { 122, 19 }, { 107, 13 } }, UiFlags::AlignRight | style);
-
-	if (*sgOptions.Gameplay.enableFloatingInfoBox) {
-		// Draw info box
-		for (auto slot : StashGridRange) {
-			StashStruct::StashCell itemId = Stash.GetItemIdAtPosition(slot);
-			if (itemId == StashStruct::EmptyCell) {
-				continue; // No item in the given slot
-			}
-
-			Item &item = Stash.stashList[itemId];
-			if (item.position != slot) {
-				continue; // Not the first slot of the item
-			}
-
-			const Point position = GetStashSlotCoord(item.position) + offset;
-
-			if (pcursstashitem == itemId) {
-				DrawFloatingItemInfoBox(out, position);
-			}
-		}
-	}
 }
 
 void CheckStashItem(Point mousePosition, bool isShiftHeld, bool isCtrlHeld)

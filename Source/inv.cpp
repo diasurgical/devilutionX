@@ -25,7 +25,6 @@
 #include "options.h"
 #include "panels/ui_panels.hpp"
 #include "plrmsg.h"
-#include "qol/floatinginfobox.hpp"
 #include "qol/stash.h"
 #include "stores.h"
 #include "towners.h"
@@ -1156,47 +1155,6 @@ void DrawInv(const Surface &out)
 			DrawItem(myPlayer.InvList[ii], out, position, sprite);
 		}
 	}
-
-	if (*sgOptions.Gameplay.enableFloatingInfoBox) {
-		// Draw Info Box
-		for (int slot = INVLOC_HEAD; slot < NUM_INVLOC; slot++) {
-			if (!myPlayer.InvBody[slot].isEmpty()) {
-				int screenX = slotPos[slot].x;
-				int screenY = slotPos[slot].y;
-
-				const int cursId = myPlayer.InvBody[slot]._iCurs + CURSOR_FIRSTITEM;
-
-				auto frameSize = GetInvItemSize(cursId);
-
-				// calc item offsets for weapons smaller than 2x3 slots
-				if (slot == INVLOC_HAND_LEFT) {
-					screenX += frameSize.width == InventorySlotSizeInPixels.width ? INV_SLOT_HALF_SIZE_PX : 0;
-					screenY += frameSize.height == (3 * InventorySlotSizeInPixels.height) ? 0 : -INV_SLOT_HALF_SIZE_PX;
-				} else if (slot == INVLOC_HAND_RIGHT) {
-					screenX += frameSize.width == InventorySlotSizeInPixels.width ? (INV_SLOT_HALF_SIZE_PX - 1) : 1;
-					screenY += frameSize.height == (3 * InventorySlotSizeInPixels.height) ? 0 : -INV_SLOT_HALF_SIZE_PX;
-				}
-
-				const Point position = GetPanelPosition(UiPanels::Inventory, { screenX, screenY });
-
-				if (pcursinvitem == slot) {
-					DrawFloatingItemInfoBox(out, position);
-				}
-			}
-		}
-
-		// Draw info box
-		for (int j = 0; j < InventoryGridCells; j++) {
-			if (myPlayer.InvGrid[j] > 0) { // first slot of an item
-				int ii = myPlayer.InvGrid[j] - 1;
-
-				const Point position = GetPanelPosition(UiPanels::Inventory, InvRect[j + SLOTXY_INV_FIRST].position) + Displacement { 0, -1 + INV_SLOT_SIZE_PX };
-				if (pcursinvitem == ii + INVITEM_INV_FIRST) {
-					DrawFloatingItemInfoBox(out, position);
-				}
-			}
-		}
-	}
 }
 
 void DrawInvBelt(const Surface &out)
@@ -1229,15 +1187,6 @@ void DrawInvBelt(const Surface &out)
 		}
 
 		DrawItem(myPlayer.SpdList[i], out, position, sprite);
-
-		if (*sgOptions.Gameplay.enableFloatingInfoBox) {
-			// Draw info box
-			if (pcursinvitem == i + INVITEM_BELT_FIRST) {
-				if (ControlMode == ControlTypes::KeyboardAndMouse || invflag) {
-					DrawFloatingItemInfoBox(out, position);
-				}
-			}
-		}
 
 		if (myPlayer.SpdList[i].isUsable()
 		    && myPlayer.SpdList[i]._itype != ItemType::Gold) {
