@@ -2437,6 +2437,27 @@ bool TryIconCurs()
 	Player &myPlayer = *MyPlayer;
 	bool consumeSpell = false;
 
+	bool isValid = true;
+	switch (myPlayer.executedSpell.spellType) {
+	case SpellType::Skill:
+	case SpellType::Spell:
+		isValid = CheckSpell(myPlayer, myPlayer.executedSpell.spellId, myPlayer.executedSpell.spellType, true) == SpellCheckResult::Success;
+		break;
+	case SpellType::Scroll:
+		isValid = CanUseScroll(myPlayer, myPlayer.executedSpell.spellId);
+		break;
+	case SpellType::Charges:
+		isValid = CanUseStaff(myPlayer, myPlayer.executedSpell.spellId);
+		break;
+	case SpellType::Invalid:
+		isValid = false;
+		break;
+	}
+	if (!isValid) {
+		NewCursor(CURSOR_HAND);
+		return true;
+	}
+
 	if (pcurs == CURSOR_RESURRECT) {
 		if (pcursplr != -1) {
 			ConsumeSpell(myPlayer, SpellID::Resurrect);
