@@ -154,6 +154,7 @@ set(libdevilutionx_SRCS
   utils/display.cpp
   utils/file_util.cpp
   utils/format_int.cpp
+  utils/image_utils.cpp
   utils/language.cpp
   utils/logged_fstream.cpp
   utils/paths.cpp

@@ -152,6 +152,11 @@ struct Surface {
 	 * Source pixels with index 0 are not copied.
 	 */
 	void BlitFromSkipColorIndexZero(const Surface &src, SDL_Rect srcRect, Point targetPosition) const;
+
+	SDL_Surface *getSDLSurface() const
+	{
+		return surface;
+	}
 };
 
 class OwnedSurface : public Surface {
