@@ -212,24 +212,29 @@ void CastSpell(int id, SpellID spl, int sx, int sy, int dx, int dy, int spllvl)
 {
 	Player &player = Players[id];
 	Direction dir = player._pdir;
+
 	if (IsWallSpell(spl)) {
 		dir = player.tempDirection;
 	}
 
 	bool fizzled = false;
 	const SpellData &spellData = GetSpellData(spl);
+
 	for (size_t i = 0; i < sizeof(spellData.sMissiles) / sizeof(spellData.sMissiles[0]) && spellData.sMissiles[i] != MissileID::Null; i++) {
 		Missile *missile = AddMissile({ sx, sy }, { dx, dy }, dir, spellData.sMissiles[i], TARGET_MONSTERS, id, 0, spllvl);
 		fizzled |= (missile == nullptr);
 	}
+
 	if (spl == SpellID::ChargedBolt) {
 		for (int i = (spllvl / 2) + 3; i > 0; i--) {
 			Missile *missile = AddMissile({ sx, sy }, { dx, dy }, dir, MissileID::ChargedBolt, TARGET_MONSTERS, id, 0, spllvl);
 			fizzled |= (missile == nullptr);
 		}
 	}
+
 	if (!fizzled) {
-		ConsumeSpell(player, spl);
+		if (IsNoneOf(pcurs, CURSOR_DISARM, CURSOR_HEALOTHER, CURSOR_IDENTIFY, CURSOR_RECHARGE, CURSOR_REPAIR, CURSOR_RESURRECT, CURSOR_TELEKINESIS, CURSOR_TELEPORT))
+			ConsumeSpell(player, spl);
 	}
 }
 

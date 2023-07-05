@@ -2434,10 +2434,15 @@ int DiabloMain(int argc, char **argv)
 
 bool TryIconCurs()
 {
+	Player &myPlayer = *MyPlayer;
+	bool consumeSpell = false;
+
 	if (pcurs == CURSOR_RESURRECT) {
 		if (pcursplr != -1) {
+			ConsumeSpell(myPlayer, SpellID::Resurrect);
 			NetSendCmdParam1(true, CMD_RESURRECT, pcursplr);
 			NewCursor(CURSOR_HAND);
+
 			return true;
 		}
 
@@ -2446,8 +2451,10 @@ bool TryIconCurs()
 
 	if (pcurs == CURSOR_HEALOTHER) {
 		if (pcursplr != -1) {
+			ConsumeSpell(myPlayer, SpellID::HealOther);
 			NetSendCmdParam1(true, CMD_HEALOTHER, pcursplr);
 			NewCursor(CURSOR_HAND);
+
 			return true;
 		}
 
@@ -2459,51 +2466,67 @@ bool TryIconCurs()
 		return true;
 	}
 
-	Player &myPlayer = *MyPlayer;
-
 	if (pcurs == CURSOR_IDENTIFY) {
-		if (pcursinvitem != -1 && !IsInspectingPlayer())
+		if (pcursinvitem != -1 && !IsInspectingPlayer()) {
+			consumeSpell = true;
 			CheckIdentify(myPlayer, pcursinvitem);
-		else if (pcursstashitem != StashStruct::EmptyCell) {
+		} else if (pcursstashitem != StashStruct::EmptyCell) {
+			consumeSpell = true;
 			Item &item = Stash.stashList[pcursstashitem];
 			item._iIdentified = true;
 		}
+
+		if (consumeSpell)
+			ConsumeSpell(myPlayer, SpellID::Identify);
 		NewCursor(CURSOR_HAND);
+
 		return true;
 	}
 
 	if (pcurs == CURSOR_REPAIR) {
-		if (pcursinvitem != -1 && !IsInspectingPlayer())
+		if (pcursinvitem != -1 && !IsInspectingPlayer()) {
+			consumeSpell = true;
 			DoRepair(myPlayer, pcursinvitem);
-		else if (pcursstashitem != StashStruct::EmptyCell) {
+		} else if (pcursstashitem != StashStruct::EmptyCell) {
+			consumeSpell = true;
 			Item &item = Stash.stashList[pcursstashitem];
 			RepairItem(item, myPlayer._pLevel);
 		}
+
+		if (consumeSpell)
+			ConsumeSpell(myPlayer, SpellID::ItemRepair);
 		NewCursor(CURSOR_HAND);
+
 		return true;
 	}
 
 	if (pcurs == CURSOR_RECHARGE) {
-		if (pcursinvitem != -1 && !IsInspectingPlayer())
+		if (pcursinvitem != -1 && !IsInspectingPlayer()) {
+			consumeSpell = true;
 			DoRecharge(myPlayer, pcursinvitem);
-		else if (pcursstashitem != StashStruct::EmptyCell) {
+		} else if (pcursstashitem != StashStruct::EmptyCell) {
+			consumeSpell = true;
 			Item &item = Stash.stashList[pcursstashitem];
 			RechargeItem(item, myPlayer);
 		}
+
+		ConsumeSpell(myPlayer, SpellID::StaffRecharge);
 		NewCursor(CURSOR_HAND);
+
 		return true;
 	}
 
 	if (pcurs == CURSOR_OIL) {
 		bool changeCursor = true;
-		if (pcursinvitem != -1 && !IsInspectingPlayer())
+		if (pcursinvitem != -1 && !IsInspectingPlayer()) {
 			changeCursor = DoOil(myPlayer, pcursinvitem);
-		else if (pcursstashitem != StashStruct::EmptyCell) {
+		} else if (pcursstashitem != StashStruct::EmptyCell) {
 			Item &item = Stash.stashList[pcursstashitem];
 			changeCursor = ApplyOilToItem(item, myPlayer);
 		}
 		if (changeCursor)
 			NewCursor(CURSOR_HAND);
+
 		return true;
 	}
 
@@ -2522,13 +2545,19 @@ bool TryIconCurs()
 		} else {
 			NetSendCmdLocParam4(true, CMD_SPELLXY, cursPosition, static_cast<int8_t>(spellID), static_cast<uint8_t>(spellType), spellLevel, spellFrom);
 		}
+
+		ConsumeSpell(myPlayer, spellID);
 		NewCursor(CURSOR_HAND);
+
 		return true;
 	}
 
 	if (pcurs == CURSOR_DISARM && ObjectUnderCursor == nullptr) {
 		NewCursor(CURSOR_HAND);
+
 		return true;
+	} else if (pcurs == CURSOR_DISARM) {
+		ConsumeSpell(myPlayer, SpellID::TrapDisarm);
 	}
 
 	return false;
