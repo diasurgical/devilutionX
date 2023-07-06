@@ -2590,6 +2590,7 @@ void OperateShrineCostOfWisdom(Player &player, SpellID spellId, diablo_message m
 	uint8_t curSpellLevel = player._pSplLvl[static_cast<int8_t>(spellId)];
 	if (curSpellLevel < MaxSpellLevel) {
 		uint8_t newSpellLevel = std::min(static_cast<uint8_t>(curSpellLevel + 2), MaxSpellLevel);
+		player._pSplLvl[static_cast<int8_t>(spellId)] = newSpellLevel;
 		NetSendCmdParam2(true, CMD_CHANGE_SPELL_LEVEL, static_cast<uint16_t>(spellId), newSpellLevel);
 	}
 
