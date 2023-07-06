@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
-"POT-Creation-Date: 2023-06-28 20:30+0900\n"
+"POT-Creation-Date: 2023-07-06 12:52+0900\n"
 "PO-Revision-Date: \n"
 "Last-Translator: NSM53PROJECT <nsm53project@gmail.com>\n"
 "Language-Team: \n"
@@ -378,7 +378,7 @@ msgid "Load Game"
 msgstr "게임 불러오기"
 
 #: Source/DiabloUI/hero/selhero.cpp:199 Source/gamemenu.cpp:41
-#: Source/gamemenu.cpp:52 Source/multi.cpp:795
+#: Source/gamemenu.cpp:52 Source/multi.cpp:796
 msgid "New Game"
 msgstr "새로운 게임"
 
@@ -498,9 +498,8 @@ msgid "Client-Server (TCP)"
 msgstr "클라이언트-서버 (TCP)"
 
 #: Source/DiabloUI/multi/selconn.cpp:15
-#, fuzzy
-msgid "Offline" 
-msgstr "루프백"
+msgid "Offline"
+msgstr "오프라인"
 
 #: Source/DiabloUI/multi/selconn.cpp:56 Source/DiabloUI/multi/selgame.cpp:647
 #: Source/DiabloUI/multi/selgame.cpp:671
@@ -636,25 +635,25 @@ msgstr "진행 중인 게임에 참여합니다."
 
 #: Source/DiabloUI/multi/selgame.cpp:234 Source/DiabloUI/multi/selgame.cpp:328
 #: Source/DiabloUI/multi/selgame.cpp:389 Source/DiabloUI/multi/selgame.cpp:495
-#: Source/DiabloUI/multi/selgame.cpp:515 Source/automap.cpp:766
+#: Source/DiabloUI/multi/selgame.cpp:515 Source/automap.cpp:768
 #: Source/discord/discord.cpp:102
 msgid "Normal"
 msgstr "보통"
 
 #: Source/DiabloUI/multi/selgame.cpp:237 Source/DiabloUI/multi/selgame.cpp:329
-#: Source/DiabloUI/multi/selgame.cpp:393 Source/automap.cpp:769
+#: Source/DiabloUI/multi/selgame.cpp:393 Source/automap.cpp:771
 #: Source/discord/discord.cpp:102
 msgid "Nightmare"
 msgstr "악몽"
 
 #: Source/DiabloUI/multi/selgame.cpp:240 Source/DiabloUI/multi/selgame.cpp:330
-#: Source/DiabloUI/multi/selgame.cpp:397 Source/automap.cpp:772
+#: Source/DiabloUI/multi/selgame.cpp:397 Source/automap.cpp:774
 #: Source/discord/discord.cpp:68 Source/discord/discord.cpp:102
 msgid "Hell"
 msgstr "지옥"
 
 #. TRANSLATORS: {:s} means: Game Difficulty.
-#: Source/DiabloUI/multi/selgame.cpp:243 Source/automap.cpp:776
+#: Source/DiabloUI/multi/selgame.cpp:243 Source/automap.cpp:778
 msgid "Difficulty: {:s}"
 msgstr "난이도: {:s}"
 
@@ -936,26 +935,30 @@ msgid "Game: "
 msgstr "게임: "
 
 #: Source/automap.cpp:731
+msgid "Offline Game"
+msgstr "오프라인 게임"
+
+#: Source/automap.cpp:733
 msgid "Password: "
 msgstr "패스워드: "
 
-#: Source/automap.cpp:734
+#: Source/automap.cpp:736
 msgid "Public Game"
 msgstr "공개 게임"
 
-#: Source/automap.cpp:748
+#: Source/automap.cpp:750
 msgid "Level: Nest {:d}"
 msgstr "둥지 지하 {:d}층"
 
-#: Source/automap.cpp:751
+#: Source/automap.cpp:753
 msgid "Level: Crypt {:d}"
 msgstr "지하성당 지하 {:d}층"
 
-#: Source/automap.cpp:754 Source/discord/discord.cpp:68 Source/objects.cpp:150
+#: Source/automap.cpp:756 Source/discord/discord.cpp:68 Source/objects.cpp:150
 msgid "Town"
 msgstr "마을"
 
-#: Source/automap.cpp:757
+#: Source/automap.cpp:759
 msgid "Level: {:d}"
 msgstr "지하 {:d}층"
 
@@ -1072,8 +1075,8 @@ msgid "Prints help overview or help for a specific command."
 msgstr "도움말 개요 또는 특정 명령어의 도움말을 표시합니다."
 
 #: Source/control.cpp:524
-msgid "({command})"
-msgstr "({command})"
+msgid "[command]"
+msgstr "[명령어]"
 
 #: Source/control.cpp:525
 msgid "/arena"
@@ -1084,8 +1087,8 @@ msgid "Enter a PvP Arena."
 msgstr "PvP 투기장에 입장합니다."
 
 #: Source/control.cpp:525
-msgid "{arena-number}"
-msgstr "{arena-number}"
+msgid "<arena-number>"
+msgstr "<arena-number>"
 
 #: Source/control.cpp:526
 msgid "/arenapot"
@@ -1096,8 +1099,8 @@ msgid "Gives Arena Potions."
 msgstr "투기장 물약을 제공합니다."
 
 #: Source/control.cpp:526
-msgid "{number}"
-msgstr "{number}"
+msgid "<number>"
+msgstr "<number>"
 
 #: Source/control.cpp:527
 msgid "/inspect"
@@ -1108,8 +1111,8 @@ msgid "Inspects stats and equipment of another player."
 msgstr "다른 플레이어의 상태와 장비를 확인합니다."
 
 #: Source/control.cpp:527
-msgid "{player name}"
-msgstr "{player name}"
+msgid "<player name>"
+msgstr "<player name>"
 
 #: Source/control.cpp:528
 msgid "/seedinfo"
@@ -6080,15 +6083,15 @@ msgstr "기록용 아카이브를 열지 못했습니다."
 msgid "Trying to drop a floor item?"
 msgstr "물품을 바닥에 떨구려 합니까?"
 
-#: Source/msg.cpp:1380
+#: Source/msg.cpp:1374
 msgid "{:s} has cast an invalid spell."
 msgstr "{:s}이(가) 확인되지 않은 주문을 시전했습니다."
 
-#: Source/msg.cpp:1384
+#: Source/msg.cpp:1378
 msgid "{:s} has cast an illegal spell."
 msgstr "{:s}이(가) 불법적인 주문을 시전했습니다."
 
-#: Source/msg.cpp:2034 Source/multi.cpp:796 Source/multi.cpp:845
+#: Source/msg.cpp:2028 Source/multi.cpp:797 Source/multi.cpp:847
 msgid "Player '{:s}' (level {:d}) just joined the game"
 msgstr "플레이어 '{:s}' (레벨 {:d})이(가) 게임에 참여했습니다"
 
@@ -6100,19 +6103,19 @@ msgstr "게임이 종료되었습니다"
 msgid "Unable to get level data"
 msgstr "레벨 데이터를 가져올 수 없습니다"
 
-#: Source/multi.cpp:261
+#: Source/multi.cpp:262
 msgid "Player '{:s}' just left the game"
 msgstr "플레이어 '{:s}'이(가) 게임을 퇴장했습니다"
 
-#: Source/multi.cpp:264
+#: Source/multi.cpp:265
 msgid "Player '{:s}' killed Diablo and left the game!"
 msgstr "플레이어 '{:s}'이(가) 디아블로를 물리치고 게임을 퇴장했습니다!"
 
-#: Source/multi.cpp:268
+#: Source/multi.cpp:269
 msgid "Player '{:s}' dropped due to timeout"
 msgstr "플레이어 '{:s}'이(가) 시간초과로 퇴장되었습니다"
 
-#: Source/multi.cpp:847
+#: Source/multi.cpp:849
 msgid "Player '{:s}' (level {:d}) is already in the game"
 msgstr "플레이어 '{:s}' (레벨 {:d})은(는) 이미 게임에 참여 중입니다"
 
@@ -8023,7 +8026,7 @@ msgstr "질리언과 대화"
 
 #: Source/stores.cpp:1318
 msgid "Access Storage"
-msgstr "스토리지 액세스"
+msgstr "창고 관리"
 
 #: Source/stores.cpp:1328 Source/towners.cpp:216
 msgid "Farnham the Drunk"
@@ -11675,6 +11678,9 @@ msgstr "살해당한 마을사람"
 #: Source/utils/format_int.cpp:26
 msgid ","
 msgstr ","
+
+#~ msgid "({command})"
+#~ msgstr "({command})"
 
 #~ msgid "Options:"
 #~ msgstr "선택 사항:"
