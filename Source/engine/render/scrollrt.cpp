@@ -1201,6 +1201,7 @@ void DrawView(const Surface &out, Point startPosition)
 	DrawItemNameLabels(out);
 	DrawMonsterHealthBar(out);
 	DrawFloatingNumbers(out, startPosition, offset);
+	DrawParty(out);
 
 	if (stextflag != TalkID::None && !qtextflag)
 		DrawSText(out);
