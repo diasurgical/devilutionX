@@ -1983,7 +1983,7 @@ void OperateBook(Player &player, Object &book, bool sendmsg)
 		if (sendmsg) {
 			uint8_t newSpellLevel = player._pSplLvl[static_cast<int8_t>(SpellID::Guardian)] + 1;
 			if (newSpellLevel <= MaxSpellLevel) {
-				player._pSplLvl[static_cast<int8_t>(SpellID::Guardian)]++;
+				player._pSplLvl[static_cast<int8_t>(SpellID::Guardian)] = newSpellLevel;
 				NetSendCmdParam2(true, CMD_CHANGE_SPELL_LEVEL, static_cast<uint16_t>(SpellID::Guardian), newSpellLevel);
 			}
 
@@ -2548,15 +2548,17 @@ void OperateShrineEnchanted(Player &player)
 		spell = 1;
 		for (uint8_t j = static_cast<uint8_t>(SpellID::Firebolt); j < maxSpells; j++) {
 			if ((player._pMemSpells & spell) != 0 && player._pSplLvl[j] < MaxSpellLevel && j != spellToReduce) {
-				player._pSplLvl[j]++;
-				NetSendCmdParam2(true, CMD_CHANGE_SPELL_LEVEL, j, static_cast<uint8_t>(player._pSplLvl[j] + 1));
+				uint8_t newSpellLevel = static_cast<uint8_t>(player._pSplLvl[j] + 1);
+				player._pSplLvl[j] = newSpellLevel;
+				NetSendCmdParam2(true, CMD_CHANGE_SPELL_LEVEL, j, newSpellLevel);
 			}
 			spell *= 2;
 		}
 
 		if (player._pSplLvl[spellToReduce] > 0) {
-			player._pSplLvl[spellToReduce]--;
-			NetSendCmdParam2(true, CMD_CHANGE_SPELL_LEVEL, spellToReduce, player._pSplLvl[spellToReduce] - 1);
+			uint8_t newSpellLevel = static_cast<uint8_t>(player._pSplLvl[spellToReduce] - 1);
+			player._pSplLvl[spellToReduce] = newSpellLevel;
+			NetSendCmdParam2(true, CMD_CHANGE_SPELL_LEVEL, spellToReduce, newSpellLevel);
 		}
 	}
 
