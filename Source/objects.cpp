@@ -1982,8 +1982,10 @@ void OperateBook(Player &player, Object &book, bool sendmsg)
 	if (setlvlnum == SL_BONECHAMB) {
 		if (sendmsg) {
 			uint8_t newSpellLevel = player._pSplLvl[static_cast<int8_t>(SpellID::Guardian)] + 1;
-			if (newSpellLevel <= MaxSpellLevel)
+			if (newSpellLevel <= MaxSpellLevel) {
+				player._pSplLvl[static_cast<int8_t>(SpellID::Guardian)]++;
 				NetSendCmdParam2(true, CMD_CHANGE_SPELL_LEVEL, static_cast<uint16_t>(SpellID::Guardian), newSpellLevel);
+			}
 
 			Quests[Q_SCHAMB]._qactive = QUEST_DONE;
 			NetSendCmdQuest(true, Quests[Q_SCHAMB]);
@@ -2544,15 +2546,18 @@ void OperateShrineEnchanted(Player &player)
 		} while ((player._pMemSpells & GetSpellBitmask(static_cast<SpellID>(spellToReduce))) == 0);
 
 		spell = 1;
-		for (uint8_t j = static_cast<uint8_t>(SpellID::Firebolt); j < maxSpells; j++) { // BUGFIX: < MAX_SPELLS, there is no spell with MAX_SPELLS index (fixed)
+		for (uint8_t j = static_cast<uint8_t>(SpellID::Firebolt); j < maxSpells; j++) {
 			if ((player._pMemSpells & spell) != 0 && player._pSplLvl[j] < MaxSpellLevel && j != spellToReduce) {
+				player._pSplLvl[j]++;
 				NetSendCmdParam2(true, CMD_CHANGE_SPELL_LEVEL, j, static_cast<uint8_t>(player._pSplLvl[j] + 1));
 			}
 			spell *= 2;
 		}
 
-		if (player._pSplLvl[spellToReduce] > 0)
+		if (player._pSplLvl[spellToReduce] > 0) {
+			player._pSplLvl[spellToReduce]--;
 			NetSendCmdParam2(true, CMD_CHANGE_SPELL_LEVEL, spellToReduce, player._pSplLvl[spellToReduce] - 1);
+		}
 	}
 
 	InitDiabloMsg(EMSG_SHRINE_ENCHANTED);
