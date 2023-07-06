@@ -1066,11 +1066,7 @@ void InitInv()
 		break;
 	}
 }
-/**
- * @brief Manually adjusts bad item sprite alignment
- * @param uint8_t iCurs
- * @return int8_t offset
-*/
+/** @brief Manually adjusts bad item sprite alignment */
 int8_t GetInvItemSpriteAdjustment(uint8_t iCurs)
 {
 	int8_t offset = 0;
