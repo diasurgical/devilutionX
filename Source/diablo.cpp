@@ -2478,10 +2478,8 @@ bool TryIconCurs()
 
 	if (pcurs == CURSOR_REPAIR) {
 		if (pcursinvitem != -1 && !IsInspectingPlayer()) {
-			consumeSpell = true;
 			DoRepair(myPlayer, pcursinvitem);
 		} else if (pcursstashitem != StashStruct::EmptyCell) {
-			consumeSpell = true;
 			Item &item = Stash.stashList[pcursstashitem];
 			RepairItem(item, myPlayer._pLevel);
 		}
@@ -2492,10 +2490,8 @@ bool TryIconCurs()
 
 	if (pcurs == CURSOR_RECHARGE) {
 		if (pcursinvitem != -1 && !IsInspectingPlayer()) {
-			consumeSpell = true;
 			DoRecharge(myPlayer, pcursinvitem);
 		} else if (pcursstashitem != StashStruct::EmptyCell) {
-			consumeSpell = true;
 			Item &item = Stash.stashList[pcursstashitem];
 			RechargeItem(item, myPlayer);
 		}
