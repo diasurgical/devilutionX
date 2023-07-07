@@ -2136,8 +2136,6 @@ void CloseStash()
 
 void DoTelekinesis()
 {
-	Player &myPlayer = *MyPlayer;
-
 	if (ObjectUnderCursor != nullptr && !ObjectUnderCursor->IsDisabled()) {
 		NetSendCmdLoc(MyPlayerId, true, CMD_OPOBJT, cursPosition);
 	}
