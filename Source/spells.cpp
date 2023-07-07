@@ -232,7 +232,7 @@ void CastSpell(int id, SpellID spl, int sx, int sy, int dx, int dy, int spllvl)
 		}
 	}
 
-	if (!fizzled && IsNoneOf(pcurs, CURSOR_DISARM, CURSOR_HEALOTHER, CURSOR_IDENTIFY, CURSOR_RECHARGE, CURSOR_REPAIR, CURSOR_RESURRECT, CURSOR_TELEKINESIS, CURSOR_TELEPORT))
+	if (!fizzled)
 		ConsumeSpell(player, spl);
 }
 
