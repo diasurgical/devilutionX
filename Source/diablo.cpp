@@ -2465,12 +2465,19 @@ bool TryIconCurs()
 	Player &myPlayer = *MyPlayer;
 	
 	if (pcurs == CURSOR_IDENTIFY) {
-		if (pcursinvitem != -1 && !IsInspectingPlayer()) {
-			CheckIdentify(myPlayer, pcursinvitem);
-		} else if (pcursstashitem != StashStruct::EmptyCell) {
-			Item &item = Stash.stashList[pcursstashitem];
-			item._iIdentified = true;
+		if (&player == MyPlayer) {
+			if (sbookflag)
+				sbookflag = false;
+			if (!invflag) {
+				invflag = true;
+				if (ControlMode != ControlTypes::KeyboardAndMouse)
+					FocusOnInventory();
+			}
 		}
+		const int spellLevel = myPlayer.GetSpellLevel(spellID);
+		const int spellFrom = myPlayer.spellFrom;
+		
+		NetSendCmdLocParam4(true, CMD_SPELLXY, cursPosition, static_cast<int8_t>(SpellID::Identify), static_cast<uint8_t>(player.executedSpell.spellType), spellLevel, spellFrom);
 		NewCursor(CURSOR_HAND);
 		
 		return true;
@@ -2483,6 +2490,7 @@ bool TryIconCurs()
 			Item &item = Stash.stashList[pcursstashitem];
 			RepairItem(item, myPlayer._pLevel);
 		}
+		
 		NewCursor(CURSOR_HAND);
 		
 		return true;
