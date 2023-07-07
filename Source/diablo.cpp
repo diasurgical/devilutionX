@@ -2435,35 +2435,12 @@ int DiabloMain(int argc, char **argv)
 bool TryIconCurs()
 {
 	Player &myPlayer = *MyPlayer;
-	bool consumeSpell = false;
-
-	bool isValid = true;
-	switch (myPlayer.executedSpell.spellType) {
-	case SpellType::Skill:
-	case SpellType::Spell:
-		isValid = CheckSpell(myPlayer, myPlayer.executedSpell.spellId, myPlayer.executedSpell.spellType, true) == SpellCheckResult::Success;
-		break;
-	case SpellType::Scroll:
-		isValid = CanUseScroll(myPlayer, myPlayer.executedSpell.spellId);
-		break;
-	case SpellType::Charges:
-		isValid = CanUseStaff(myPlayer, myPlayer.executedSpell.spellId);
-		break;
-	case SpellType::Invalid:
-		isValid = false;
-		break;
-	}
-	if (!isValid) {
-		NewCursor(CURSOR_HAND);
-		return true;
-	}
 
 	if (pcurs == CURSOR_RESURRECT) {
 		if (pcursplr != -1) {
-			ConsumeSpell(myPlayer, SpellID::Resurrect);
 			NetSendCmdParam1(true, CMD_RESURRECT, pcursplr);
 			NewCursor(CURSOR_HAND);
-
+			
 			return true;
 		}
 
@@ -2472,10 +2449,9 @@ bool TryIconCurs()
 
 	if (pcurs == CURSOR_HEALOTHER) {
 		if (pcursplr != -1) {
-			ConsumeSpell(myPlayer, SpellID::HealOther);
 			NetSendCmdParam1(true, CMD_HEALOTHER, pcursplr);
 			NewCursor(CURSOR_HAND);
-
+			
 			return true;
 		}
 
@@ -2484,23 +2460,19 @@ bool TryIconCurs()
 
 	if (pcurs == CURSOR_TELEKINESIS) {
 		DoTelekinesis();
+		
 		return true;
 	}
 
 	if (pcurs == CURSOR_IDENTIFY) {
 		if (pcursinvitem != -1 && !IsInspectingPlayer()) {
-			consumeSpell = true;
 			CheckIdentify(myPlayer, pcursinvitem);
 		} else if (pcursstashitem != StashStruct::EmptyCell) {
-			consumeSpell = true;
 			Item &item = Stash.stashList[pcursstashitem];
 			item._iIdentified = true;
 		}
-
-		if (consumeSpell)
-			ConsumeSpell(myPlayer, SpellID::Identify);
 		NewCursor(CURSOR_HAND);
-
+		
 		return true;
 	}
 
@@ -2513,11 +2485,8 @@ bool TryIconCurs()
 			Item &item = Stash.stashList[pcursstashitem];
 			RepairItem(item, myPlayer._pLevel);
 		}
-
-		if (consumeSpell)
-			ConsumeSpell(myPlayer, SpellID::ItemRepair);
 		NewCursor(CURSOR_HAND);
-
+		
 		return true;
 	}
 
@@ -2530,10 +2499,8 @@ bool TryIconCurs()
 			Item &item = Stash.stashList[pcursstashitem];
 			RechargeItem(item, myPlayer);
 		}
-
-		ConsumeSpell(myPlayer, SpellID::StaffRecharge);
 		NewCursor(CURSOR_HAND);
-
+		
 		return true;
 	}
 
@@ -2577,8 +2544,6 @@ bool TryIconCurs()
 		NewCursor(CURSOR_HAND);
 
 		return true;
-	} else if (pcurs == CURSOR_DISARM) {
-		ConsumeSpell(myPlayer, SpellID::TrapDisarm);
 	}
 
 	return false;
