@@ -2434,8 +2434,6 @@ int DiabloMain(int argc, char **argv)
 
 bool TryIconCurs()
 {
-	Player &myPlayer = *MyPlayer;
-
 	if (pcurs == CURSOR_RESURRECT) {
 		if (pcursplr != -1) {
 			NetSendCmdParam1(true, CMD_RESURRECT, pcursplr);
@@ -2464,6 +2462,8 @@ bool TryIconCurs()
 		return true;
 	}
 
+	Player &myPlayer = *MyPlayer;
+	
 	if (pcurs == CURSOR_IDENTIFY) {
 		if (pcursinvitem != -1 && !IsInspectingPlayer()) {
 			CheckIdentify(myPlayer, pcursinvitem);
