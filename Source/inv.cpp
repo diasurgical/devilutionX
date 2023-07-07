@@ -2137,25 +2137,18 @@ void CloseStash()
 void DoTelekinesis()
 {
 	Player &myPlayer = *MyPlayer;
-	bool consumeSpell = false;
 
 	if (ObjectUnderCursor != nullptr && !ObjectUnderCursor->IsDisabled()) {
 		NetSendCmdLoc(MyPlayerId, true, CMD_OPOBJT, cursPosition);
-		consumeSpell = true;
 	}
 	if (pcursitem != -1) {
 		NetSendCmdGItem(true, CMD_REQUESTAGITEM, MyPlayerId, pcursitem);
-		consumeSpell = true;
 	}
 	if (pcursmonst != -1) {
 		auto &monter = Monsters[pcursmonst];
 		if (!M_Talker(monter) && monter.talkMsg == TEXT_NONE)
 			NetSendCmdParam1(true, CMD_KNOCKBACK, pcursmonst);
-		consumeSpell = true;
 	}
-
-	if (consumeSpell)
-		ConsumeSpell(myPlayer, SpellID::Telekinesis);
 
 	NewCursor(CURSOR_HAND);
 }
