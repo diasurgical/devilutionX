@@ -2523,6 +2523,7 @@ bool TryIconCurs()
 		const SpellType spellType = SpellType::Scroll;
 		const int spellLevel = myPlayer.GetSpellLevel(spellID);
 		const int spellFrom = myPlayer.spellFrom;
+		
 		if (IsWallSpell(spellID)) {
 			Direction sd = GetDirection(myPlayer.position.tile, cursPosition);
 			NetSendCmdLocParam5(true, CMD_SPELLXYD, cursPosition, static_cast<int8_t>(spellID), static_cast<uint8_t>(spellType), static_cast<uint16_t>(sd), spellLevel, spellFrom);
@@ -2534,7 +2535,6 @@ bool TryIconCurs()
 			NetSendCmdLocParam4(true, CMD_SPELLXY, cursPosition, static_cast<int8_t>(spellID), static_cast<uint8_t>(spellType), spellLevel, spellFrom);
 		}
 
-		ConsumeSpell(myPlayer, spellID);
 		NewCursor(CURSOR_HAND);
 
 		return true;
