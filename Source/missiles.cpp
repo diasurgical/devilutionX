@@ -2410,15 +2410,11 @@ void AddIdentify(Missile &missile, AddMissileParameter & /*parameter*/)
 	Player &player = Players[missile._misource];
 
 	missile._miDelFlag = true;
-	if (&player == MyPlayer) {
-		if (sbookflag)
-			sbookflag = false;
-		if (!invflag) {
-			invflag = true;
-			if (ControlMode != ControlTypes::KeyboardAndMouse)
-				FocusOnInventory();
-		}
-		NewCursor(CURSOR_IDENTIFY);
+	if (pcursinvitem != -1 && !IsInspectingPlayer()) {
+		CheckIdentify(myPlayer, pcursinvitem);
+	} else if (pcursstashitem != StashStruct::EmptyCell) {
+		Item &item = Stash.stashList[pcursstashitem];
+		item._iIdentified = true;
 	}
 }
 
