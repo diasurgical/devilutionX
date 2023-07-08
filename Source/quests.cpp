@@ -373,7 +373,8 @@ void CheckQuests()
 			if (currlevel == quest._qlevel
 			    && quest._qslvl != 0
 			    && quest._qactive != QUEST_NOTAVAIL
-			    && MyPlayer->position.tile == quest.position) {
+			    && MyPlayer->position.tile == quest.position
+			    && (quest._qidx != Q_BETRAYER || quest._qvar1 >= 3)) {
 				if (quest._qlvltype != DTYPE_NONE) {
 					setlvltype = quest._qlvltype;
 				}
