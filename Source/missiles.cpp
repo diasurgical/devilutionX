@@ -24,6 +24,7 @@
 #include "levels/trigs.h"
 #include "lighting.h"
 #include "monster.h"
+#include "qol/stash.h"
 #include "spells.h"
 #include "utils/str_cat.hpp"
 
@@ -2405,17 +2406,23 @@ void AddElemental(Missile &missile, AddMissileParameter &parameter)
 
 extern void FocusOnInventory();
 
-void AddIdentify(Missile &missile, AddMissileParameter & /*parameter*/)
+void AddIdentify(Missile &missile, AddMissileParameter &parameter)
 {
 	Player &player = Players[missile._misource];
 
-	missile._miDelFlag = true;
-	if (pcursinvitem != -1 && !IsInspectingPlayer()) {
-		CheckIdentify(myPlayer, pcursinvitem);
-	} else if (pcursstashitem != StashStruct::EmptyCell) {
-		Item &item = Stash.stashList[pcursstashitem];
-		item._iIdentified = true;
+	if (&player == MyPlayer) {
+		if (pcursinvitem != -1 && !IsInspectingPlayer()) {
+			CheckIdentify(player, pcursinvitem);
+		} else if (pcursstashitem != StashStruct::EmptyCell) {
+			Item &item = Stash.stashList[pcursstashitem];
+			item._iIdentified = true;
+		} else {
+			missile._miDelFlag = true;
+			parameter.spellFizzled = true;
+		}
 	}
+
+	
 }
 
 void AddFireWallControl(Missile &missile, AddMissileParameter &parameter)

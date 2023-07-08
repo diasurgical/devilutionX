@@ -2432,13 +2432,14 @@ int DiabloMain(int argc, char **argv)
 	return 0;
 }
 
+/** @brief Checks on click if the cursor graphic is any targeted spell cursor graphic in order to execute spells */
 bool TryIconCurs()
 {
 	if (pcurs == CURSOR_RESURRECT) {
 		if (pcursplr != -1) {
 			NetSendCmdParam1(true, CMD_RESURRECT, pcursplr);
 			NewCursor(CURSOR_HAND);
-			
+
 			return true;
 		}
 
@@ -2449,7 +2450,7 @@ bool TryIconCurs()
 		if (pcursplr != -1) {
 			NetSendCmdParam1(true, CMD_HEALOTHER, pcursplr);
 			NewCursor(CURSOR_HAND);
-			
+
 			return true;
 		}
 
@@ -2458,29 +2459,25 @@ bool TryIconCurs()
 
 	if (pcurs == CURSOR_TELEKINESIS) {
 		DoTelekinesis();
-		
+
 		return true;
 	}
 
 	Player &myPlayer = *MyPlayer;
-	
+
 	if (pcurs == CURSOR_IDENTIFY) {
-		if (&player == MyPlayer) {
-			if (sbookflag)
-				sbookflag = false;
-			if (!invflag) {
-				invflag = true;
-				if (ControlMode != ControlTypes::KeyboardAndMouse)
-					FocusOnInventory();
-			}
+		if ((pcursinvitem != -1 || pcursstashitem != StashStruct::EmptyCell) && !IsInspectingPlayer()) {
+			const SpellType spellType = SpellType::Scroll;
+			const int spellLevel = myPlayer.GetSpellLevel(SpellID::Identify);
+			const int spellFrom = myPlayer.spellFrom;
+
+			NetSendCmdLocParam4(true, CMD_SPELLXY, cursPosition, static_cast<int8_t>(SpellID::Identify), static_cast<uint8_t>(myPlayer.executedSpell.spellType), spellLevel, spellFrom);
+			NewCursor(CURSOR_HAND);
+
+			return true;
 		}
-		const int spellLevel = myPlayer.GetSpellLevel(spellID);
-		const int spellFrom = myPlayer.spellFrom;
-		
-		NetSendCmdLocParam4(true, CMD_SPELLXY, cursPosition, static_cast<int8_t>(SpellID::Identify), static_cast<uint8_t>(player.executedSpell.spellType), spellLevel, spellFrom);
-		NewCursor(CURSOR_HAND);
-		
-		return true;
+
+		return false;
 	}
 
 	if (pcurs == CURSOR_REPAIR) {
@@ -2490,9 +2487,9 @@ bool TryIconCurs()
 			Item &item = Stash.stashList[pcursstashitem];
 			RepairItem(item, myPlayer._pLevel);
 		}
-		
+
 		NewCursor(CURSOR_HAND);
-		
+
 		return true;
 	}
 
@@ -2504,7 +2501,7 @@ bool TryIconCurs()
 			RechargeItem(item, myPlayer);
 		}
 		NewCursor(CURSOR_HAND);
-		
+
 		return true;
 	}
 
@@ -2527,7 +2524,7 @@ bool TryIconCurs()
 		const SpellType spellType = SpellType::Scroll;
 		const int spellLevel = myPlayer.GetSpellLevel(spellID);
 		const int spellFrom = myPlayer.spellFrom;
-		
+
 		if (IsWallSpell(spellID)) {
 			Direction sd = GetDirection(myPlayer.position.tile, cursPosition);
 			NetSendCmdLocParam5(true, CMD_SPELLXYD, cursPosition, static_cast<int8_t>(spellID), static_cast<uint8_t>(spellType), static_cast<uint16_t>(sd), spellLevel, spellFrom);
