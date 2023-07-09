@@ -146,22 +146,17 @@ int GetManaAmount(const Player &player, SpellID sn)
 
 void ConsumeSpell(Player &player, SpellID sn)
 {
-	SDL_Log("ConsumeSpell() called");
 	switch (player.executedSpell.spellType) {
 	case SpellType::Skill:
 	case SpellType::Invalid:
-		SDL_Log("switch selected SpellType::Skill/Invalid");
 		break;
 	case SpellType::Scroll:
-		SDL_Log("switch selected SpellType::Scroll");
 		ConsumeScroll(player);
 		break;
 	case SpellType::Charges:
-		SDL_Log("switch selected SpellType::Charges");
 		ConsumeStaffCharge(player);
 		break;
 	case SpellType::Spell:
-		SDL_Log("switch selected SpellType::Spell");
 #ifdef _DEBUG
 		if (DebugGodMode)
 			break;

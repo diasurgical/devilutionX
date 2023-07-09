@@ -2370,15 +2370,13 @@ void AddHealing(Missile &missile, AddMissileParameter & /*parameter*/)
 	RedrawComponent(PanelDrawComponent::Health);
 }
 
-void AddHealOther(Missile &missile, AddMissileParameter & /*parameter*/)
+void AddHealOther(Missile &missile, AddMissileParameter &parameter)
 {
-	Player &player = Players[missile._misource];
-
-	missile._miDelFlag = true;
-	if (&player == MyPlayer) {
-		NewCursor(CURSOR_HEALOTHER);
-		if (ControlMode != ControlTypes::KeyboardAndMouse)
-			TryIconCurs();
+	if (pcursplr != -1) {
+		NetSendCmdParam1(true, CMD_HEALOTHER, pcursplr);
+	} else {
+		missile._miDelFlag = true;
+		parameter.spellFizzled = true;
 	}
 }
 
@@ -2499,52 +2497,50 @@ void AddRage(Missile &missile, AddMissileParameter &parameter)
 	player.Say(HeroSpeech::Aaaaargh);
 }
 
-void AddItemRepair(Missile &missile, AddMissileParameter & /*parameter*/)
+void AddItemRepair(Missile &missile, AddMissileParameter &parameter)
 {
 	Player &player = Players[missile._misource];
 
-	missile._miDelFlag = true;
 	if (&player == MyPlayer) {
-		if (sbookflag)
-			sbookflag = false;
-		if (!invflag) {
-			invflag = true;
-			if (ControlMode != ControlTypes::KeyboardAndMouse)
-				FocusOnInventory();
+		if (pcursinvitem != -1 && !IsInspectingPlayer()) {
+			DoRepair(player, pcursinvitem);
+		} else if (pcursstashitem != StashStruct::EmptyCell) {
+			Item &item = Stash.stashList[pcursstashitem];
+			RepairItem(item, player._pLevel);
+		} else {
+			missile._miDelFlag = true;
+			parameter.spellFizzled = true;
 		}
-		NewCursor(CURSOR_REPAIR);
 	}
 }
 
-void AddStaffRecharge(Missile &missile, AddMissileParameter & /*parameter*/)
+void AddStaffRecharge(Missile &missile, AddMissileParameter &parameter)
 {
 	Player &player = Players[missile._misource];
 
-	missile._miDelFlag = true;
 	if (&player == MyPlayer) {
-		if (sbookflag)
-			sbookflag = false;
-		if (!invflag) {
-			invflag = true;
-			if (ControlMode != ControlTypes::KeyboardAndMouse)
-				FocusOnInventory();
+		if (pcursinvitem != -1 && !IsInspectingPlayer()) {
+			DoRecharge(player, pcursinvitem);
+		} else if (pcursstashitem != StashStruct::EmptyCell) {
+			Item &item = Stash.stashList[pcursstashitem];
+			RechargeItem(item, player);
+		} else {
+			missile._miDelFlag = true;
+			parameter.spellFizzled = true;
 		}
-		NewCursor(CURSOR_RECHARGE);
 	}
 }
 
-void AddTrapDisarm(Missile &missile, AddMissileParameter & /*parameter*/)
+void AddTrapDisarm(Missile &missile, AddMissileParameter &parameter)
 {
 	Player &player = Players[missile._misource];
 
-	missile._miDelFlag = true;
 	if (&player == MyPlayer) {
-		NewCursor(CURSOR_DISARM);
-		if (ControlMode != ControlTypes::KeyboardAndMouse) {
-			if (ObjectUnderCursor != nullptr)
-				NetSendCmdLoc(MyPlayerId, true, CMD_DISARMXY, cursPosition);
-			else
-				NewCursor(CURSOR_HAND);
+		if (ObjectUnderCursor != nullptr) {
+			NetSendCmdLoc(MyPlayerId, true, CMD_DISARMXY, cursPosition);
+		} else {
+			missile._miDelFlag = true;
+			parameter.spellFizzled = true;
 		}
 	}
 }
@@ -2636,9 +2632,9 @@ void AddHolyBolt(Missile &missile, AddMissileParameter &parameter)
 
 void AddResurrect(Missile &missile, AddMissileParameter &parameter)
 {
-	Player &player = Players[missile._misource];
-
-	if (pcursplr == -1) {
+	if (pcursplr != -1) {
+		NetSendCmdParam1(true, CMD_RESURRECT, pcursplr);
+	} else {
 		missile._miDelFlag = true;
 		parameter.spellFizzled = true;
 	}
@@ -2651,13 +2647,14 @@ void AddResurrectBeam(Missile &missile, AddMissileParameter &parameter)
 	missile._mirange = GetMissileSpriteData(MissileGraphicID::Resurrect).animLen(0);
 }
 
-void AddTelekinesis(Missile &missile, AddMissileParameter & /*parameter*/)
+void AddTelekinesis(Missile &missile, AddMissileParameter &parameter)
 {
-	Player &player = Players[missile._misource];
-
-	missile._miDelFlag = true;
-	if (&player == MyPlayer)
-		NewCursor(CURSOR_TELEKINESIS);
+	if ((ObjectUnderCursor != nullptr && !ObjectUnderCursor->IsDisabled()) || pcursitem != -1 || pcursmonst != -1) {
+		DoTelekinesis();
+	} else {
+		missile._miDelFlag = true;
+		parameter.spellFizzled = true;
+	}
 }
 
 void AddBoneSpirit(Missile &missile, AddMissileParameter &parameter)

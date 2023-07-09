@@ -424,8 +424,6 @@ void RightMouseDown(bool isShiftHeld)
 	}
 	if (sbookflag && GetRightPanel().contains(MousePosition))
 		return;
-	if (TryIconCurs())
-		return;
 	if (pcursinvitem != -1 && UseInvItem(pcursinvitem))
 		return;
 	if (pcursstashitem != StashStruct::EmptyCell && UseStashItem(pcursstashitem))
@@ -2435,15 +2433,41 @@ int DiabloMain(int argc, char **argv)
 /** @brief Checks on click if the cursor graphic is any targeted spell cursor graphic in order to execute spells */
 bool TryIconCurs()
 {
-	Player &myPlayer = *MyPlayer;
+	auto &myPlayer = *MyPlayer;
+	const auto &spellType = myPlayer.executedSpell.spellType;
+	auto &spellID = myPlayer.inventorySpell;
+	const auto &spellFrom = myPlayer.spellFrom;
+	const auto spellLevel = myPlayer.GetSpellLevel(spellID);
+
+	switch (pcurs) {
+	case CURSOR_RESURRECT:
+		spellID = SpellID::Resurrect;
+		break;
+	case CURSOR_HEALOTHER:
+		spellID = SpellID::HealOther;
+		break;
+	case CURSOR_TELEKINESIS:
+		spellID = SpellID::Telekinesis;
+		break;
+	case CURSOR_IDENTIFY:
+		spellID = SpellID::Identify;
+		break;
+	case CURSOR_REPAIR:
+		spellID = SpellID::ItemRepair;
+		break;
+	case CURSOR_RECHARGE:
+		spellID = SpellID::StaffRecharge;
+		break;
+	case CURSOR_DISARM:
+		spellID = SpellID::TrapDisarm;
+		break;
+	default:
+		break;
+	}
 
 	if (pcurs == CURSOR_RESURRECT) {
 		if (pcursplr != -1) {
-			const int spellLevel = myPlayer.GetSpellLevel(SpellID::Resurrect);
-			const int spellFrom = myPlayer.spellFrom; // FIXME: Not sure if this will need to be fixed for non-scrolls or not
-
-			NetSendCmdLocParam4(true, CMD_SPELLXY, cursPosition, static_cast<int8_t>(SpellID::Resurrect), static_cast<uint8_t>(myPlayer.executedSpell.spellType), spellLevel, spellFrom);
-			NetSendCmdParam1(true, CMD_RESURRECT, pcursplr);
+			NetSendCmdLocParam4(true, CMD_SPELLXY, cursPosition, static_cast<int8_t>(spellID), static_cast<uint8_t>(spellType), spellLevel, spellFrom);
 			NewCursor(CURSOR_HAND);
 
 			return true;
@@ -2454,7 +2478,7 @@ bool TryIconCurs()
 
 	if (pcurs == CURSOR_HEALOTHER) {
 		if (pcursplr != -1) {
-			NetSendCmdParam1(true, CMD_HEALOTHER, pcursplr);
+			NetSendCmdLocParam4(true, CMD_SPELLXY, cursPosition, static_cast<int8_t>(spellID), static_cast<uint8_t>(spellType), spellLevel, spellFrom);
 			NewCursor(CURSOR_HAND);
 
 			return true;
@@ -2464,17 +2488,19 @@ bool TryIconCurs()
 	}
 
 	if (pcurs == CURSOR_TELEKINESIS) {
-		DoTelekinesis();
+		if ((ObjectUnderCursor != nullptr && !ObjectUnderCursor->IsDisabled()) || pcursitem != -1 || pcursmonst != -1) {
+			NetSendCmdLocParam4(true, CMD_SPELLXY, cursPosition, static_cast<int8_t>(spellID), static_cast<uint8_t>(spellType), spellLevel, spellFrom);
+			NewCursor(CURSOR_HAND);
 
-		return true;
+			return true;
+		}
+
+		return false;
 	}
 
 	if (pcurs == CURSOR_IDENTIFY) {
 		if ((pcursinvitem != -1 || pcursstashitem != StashStruct::EmptyCell) && !IsInspectingPlayer()) {
-			const int spellLevel = myPlayer.GetSpellLevel(SpellID::Identify);
-			const int spellFrom = myPlayer.spellFrom; // FIXME: Not sure if this will need to be fixed for non-scrolls or not
-
-			NetSendCmdLocParam4(true, CMD_SPELLXY, cursPosition, static_cast<int8_t>(SpellID::Identify), static_cast<uint8_t>(myPlayer.executedSpell.spellType), spellLevel, spellFrom);
+			NetSendCmdLocParam4(true, CMD_SPELLXY, cursPosition, static_cast<int8_t>(spellID), static_cast<uint8_t>(spellType), spellLevel, spellFrom);
 			NewCursor(CURSOR_HAND);
 
 			return true;
@@ -2484,50 +2510,39 @@ bool TryIconCurs()
 	}
 
 	if (pcurs == CURSOR_REPAIR) {
-		if (pcursinvitem != -1 && !IsInspectingPlayer()) {
-			DoRepair(myPlayer, pcursinvitem);
-		} else if (pcursstashitem != StashStruct::EmptyCell) {
-			Item &item = Stash.stashList[pcursstashitem];
-			RepairItem(item, myPlayer._pLevel);
+		if ((pcursinvitem != -1 || pcursstashitem != StashStruct::EmptyCell) && !IsInspectingPlayer()) {
+			NetSendCmdLocParam4(true, CMD_SPELLXY, cursPosition, static_cast<int8_t>(spellID), static_cast<uint8_t>(spellType), spellLevel, spellFrom);
+			NewCursor(CURSOR_HAND);
+
+			return true;
 		}
 
-		NewCursor(CURSOR_HAND);
-
-		return true;
+		return false;
 	}
 
 	if (pcurs == CURSOR_RECHARGE) {
-		if (pcursinvitem != -1 && !IsInspectingPlayer()) {
-			DoRecharge(myPlayer, pcursinvitem);
-		} else if (pcursstashitem != StashStruct::EmptyCell) {
-			Item &item = Stash.stashList[pcursstashitem];
-			RechargeItem(item, myPlayer);
-		}
-		NewCursor(CURSOR_HAND);
-
-		return true;
-	}
-
-	if (pcurs == CURSOR_OIL) {
-		bool changeCursor = true;
-		if (pcursinvitem != -1 && !IsInspectingPlayer()) {
-			changeCursor = DoOil(myPlayer, pcursinvitem);
-		} else if (pcursstashitem != StashStruct::EmptyCell) {
-			Item &item = Stash.stashList[pcursstashitem];
-			changeCursor = ApplyOilToItem(item, myPlayer);
-		}
-		if (changeCursor)
+		if ((pcursinvitem != -1 || pcursstashitem != StashStruct::EmptyCell) && !IsInspectingPlayer()) {
+			NetSendCmdLocParam4(true, CMD_SPELLXY, cursPosition, static_cast<int8_t>(spellID), static_cast<uint8_t>(spellType), spellLevel, spellFrom);
 			NewCursor(CURSOR_HAND);
 
-		return true;
+			return true;
+		}
+
+		return false;
+	}
+
+	if (pcurs == CURSOR_DISARM) {
+		if (ObjectUnderCursor != nullptr && !ObjectUnderCursor->IsDisabled()) {
+			NetSendCmdLocParam4(true, CMD_SPELLXY, cursPosition, static_cast<int8_t>(spellID), static_cast<uint8_t>(spellType), spellLevel, spellFrom);
+			NewCursor(CURSOR_HAND);
+
+			return true;
+		}
+
+		return false;
 	}
 
 	if (pcurs == CURSOR_TELEPORT) {
-		const SpellID spellID = myPlayer.inventorySpell;
-		const SpellType spellType = SpellType::Scroll;
-		const int spellLevel = myPlayer.GetSpellLevel(spellID);
-		const int spellFrom = myPlayer.spellFrom;
-
 		if (IsWallSpell(spellID)) {
 			Direction sd = GetDirection(myPlayer.position.tile, cursPosition);
 			NetSendCmdLocParam5(true, CMD_SPELLXYD, cursPosition, static_cast<int8_t>(spellID), static_cast<uint8_t>(spellType), static_cast<uint16_t>(sd), spellLevel, spellFrom);
@@ -2544,8 +2559,16 @@ bool TryIconCurs()
 		return true;
 	}
 
-	if (pcurs == CURSOR_DISARM && ObjectUnderCursor == nullptr) {
-		NewCursor(CURSOR_HAND);
+	if (pcurs == CURSOR_OIL) {
+		bool changeCursor = true;
+		if (pcursinvitem != -1 && !IsInspectingPlayer()) {
+			changeCursor = DoOil(myPlayer, pcursinvitem);
+		} else if (pcursstashitem != StashStruct::EmptyCell) {
+			Item &item = Stash.stashList[pcursstashitem];
+			changeCursor = ApplyOilToItem(item, myPlayer);
+		}
+		if (changeCursor)
+			NewCursor(CURSOR_HAND);
 
 		return true;
 	}
