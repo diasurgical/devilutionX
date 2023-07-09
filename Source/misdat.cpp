@@ -28,6 +28,192 @@
 namespace devilution {
 
 namespace {
+constexpr auto Physical = MissileDataFlags::Physical;
+constexpr auto Fire = MissileDataFlags::Fire;
+constexpr auto Lightning = MissileDataFlags::Lightning;
+constexpr auto Magic = MissileDataFlags::Magic;
+constexpr auto Acid = MissileDataFlags::Acid;
+constexpr auto Arrow = MissileDataFlags::Arrow;
+constexpr auto Invisible = MissileDataFlags::Invisible;
+} // namespace
+
+/** Data related to each missile ID. */
+const MissileData MissilesData[] = {
+	// clang-format off
+// id                      mAddProc,                mProc,                        mlSFX,       miSFX,       mFileNum,                               flags,                 MovementDistribution;
+/*Arrow*/                { &AddArrow,               &ProcessArrow,                SFX_NONE,    SFX_NONE,    MissileGraphicID::Arrow,                Physical | Arrow,      MissileMovementDistribution::Blockable   },
+/*Firebolt*/             { &AddFirebolt,            &ProcessGenericProjectile,    LS_FBOLT1,   LS_FIRIMP2,  MissileGraphicID::Fireball,             Fire,                  MissileMovementDistribution::Blockable   },
+/*Guardian*/             { &AddGuardian,            &ProcessGuardian,             LS_GUARD,    LS_GUARDLAN, MissileGraphicID::Guardian,             Physical,              MissileMovementDistribution::Disabled    },
+/*Phasing*/              { &AddPhasing,             &ProcessTeleport,             LS_TELEPORT, SFX_NONE,    MissileGraphicID::None,                 Physical | Invisible,  MissileMovementDistribution::Disabled    },
+/*NovaBall*/             { &AddNovaBall,            &ProcessNovaBall,             SFX_NONE,    SFX_NONE,    MissileGraphicID::Lightning,            Lightning,             MissileMovementDistribution::Unblockable },
+/*FireWall*/             { &AddFireWall,            &ProcessFireWall,             LS_WALLLOOP, LS_FIRIMP2,  MissileGraphicID::FireWall,             Fire,                  MissileMovementDistribution::Disabled    },
+/*Fireball*/             { &AddFireball,            &ProcessFireball,             LS_FBOLT1,   LS_FIRIMP2,  MissileGraphicID::Fireball,             Fire,                  MissileMovementDistribution::Blockable   },
+/*LightningControl*/     { &AddLightningControl,    &ProcessLightningControl,     SFX_NONE,    SFX_NONE,    MissileGraphicID::Lightning,            Lightning | Invisible, MissileMovementDistribution::Disabled    },
+/*Lightning*/            { &AddLightning,           &ProcessLightning,            LS_LNING1,   LS_ELECIMP1, MissileGraphicID::Lightning,            Lightning,             MissileMovementDistribution::Disabled    },
+/*MagmaBallExplosion*/   { &AddMissileExplosion,    &ProcessMissileExplosion,     SFX_NONE,    SFX_NONE,    MissileGraphicID::MagmaBallExplosion,   Physical,              MissileMovementDistribution::Disabled    },
+/*TownPortal*/           { &AddTownPortal,          &ProcessTownPortal,           LS_SENTINEL, LS_ELEMENTL, MissileGraphicID::TownPortal,           Magic,                 MissileMovementDistribution::Disabled    },
+/*FlashBottom*/          { &AddFlashBottom,         &ProcessFlashBottom,          LS_NOVA,     LS_ELECIMP1, MissileGraphicID::FlashBottom,          Magic,                 MissileMovementDistribution::Disabled    },
+/*FlashTop*/             { &AddFlashTop,            &ProcessFlashTop,             SFX_NONE,    SFX_NONE,    MissileGraphicID::FlashTop,             Magic,                 MissileMovementDistribution::Disabled    },
+/*ManaShield*/           { &AddManaShield,          nullptr,                      LS_MSHIELD,  SFX_NONE,    MissileGraphicID::ManaShield,           Magic | Invisible,     MissileMovementDistribution::Disabled    },
+/*FlameWave*/            { &AddFlameWave,           &ProcessFlameWave,            SFX_NONE,    SFX_NONE,    MissileGraphicID::FireWall,             Fire,                  MissileMovementDistribution::Unblockable },
+/*ChainLightning*/       { &AddChainLightning,      &ProcessChainLightning,       LS_LNING1,   LS_ELECIMP1, MissileGraphicID::Lightning,            Lightning,             MissileMovementDistribution::Disabled    },
+/*ChainBall*/            { nullptr,                 nullptr,                      SFX_NONE,    SFX_NONE,    MissileGraphicID::Lightning,            Lightning,             MissileMovementDistribution::Disabled    },
+/*BloodHit*/             { nullptr,                 nullptr,                      LS_BLODSTAR, LS_BLSIMPT,  MissileGraphicID::BloodHit,             Physical,              MissileMovementDistribution::Disabled    },
+/*BoneHit*/              { nullptr,                 nullptr,                      SFX_NONE,    SFX_NONE,    MissileGraphicID::BoneHit,              Physical,              MissileMovementDistribution::Disabled    },
+/*MetalHit*/             { nullptr,                 nullptr,                      SFX_NONE,    SFX_NONE,    MissileGraphicID::MetalHit,             Physical,              MissileMovementDistribution::Disabled    },
+/*Rhino*/                { &AddRhino,               &ProcessRhino,                SFX_NONE,    SFX_NONE,    MissileGraphicID::None,                 Physical,              MissileMovementDistribution::Blockable   },
+/*MagmaBall*/            { &AddMagmaBall,           &ProcessGenericProjectile,    SFX_NONE,    SFX_NONE,    MissileGraphicID::MagmaBall,            Fire,                  MissileMovementDistribution::Blockable   },
+/*ThinLightningControl*/ { &AddLightningControl,    &ProcessLightningControl,     SFX_NONE,    SFX_NONE,    MissileGraphicID::ThinLightning,        Lightning | Invisible, MissileMovementDistribution::Disabled    },
+/*ThinLightning*/        { &AddLightning,           &ProcessLightning,            SFX_NONE,    SFX_NONE,    MissileGraphicID::ThinLightning,        Lightning,             MissileMovementDistribution::Disabled    },
+/*BloodStar*/            { &AddGenericMagicMissile, &ProcessGenericProjectile,    SFX_NONE,    SFX_NONE,    MissileGraphicID::BloodStar,            Magic,                 MissileMovementDistribution::Blockable   },
+/*BloodStarExplosion*/   { &AddMissileExplosion,    &ProcessMissileExplosion,     SFX_NONE,    SFX_NONE,    MissileGraphicID::BloodStarExplosion,   Magic,                 MissileMovementDistribution::Disabled    },
+/*Teleport*/             { &AddTeleport,            &ProcessTeleport,             LS_ELEMENTL, SFX_NONE,    MissileGraphicID::None,                 Physical | Invisible,  MissileMovementDistribution::Disabled    },
+/*FireArrow*/            { &AddElementalArrow,      &ProcessElementalArrow,       SFX_NONE,    SFX_NONE,    MissileGraphicID::FireArrow,            Fire | Arrow,          MissileMovementDistribution::Blockable   },
+/*DoomSerpents*/         { nullptr,                 nullptr,                      LS_DSERP,    SFX_NONE,    MissileGraphicID::DoomSerpents,         Magic | Invisible,     MissileMovementDistribution::Disabled    },
+/*FireOnly*/             { nullptr,                 nullptr,                      SFX_NONE,    SFX_NONE,    MissileGraphicID::FireWall,             Fire,                  MissileMovementDistribution::Disabled    },
+/*StoneCurse*/           { &AddStoneCurse,          &ProcessStoneCurse,           LS_SCURIMP,  SFX_NONE,    MissileGraphicID::None,                 Magic | Invisible,     MissileMovementDistribution::Disabled    },
+/*BloodRitual*/          { nullptr,                 nullptr,                      SFX_NONE,    SFX_NONE,    MissileGraphicID::None,                 Physical,              MissileMovementDistribution::Disabled    },
+/*Invisibility*/         { nullptr,                 nullptr,                      LS_INVISIBL, SFX_NONE,    MissileGraphicID::None,                 Physical | Invisible,  MissileMovementDistribution::Disabled    },
+/*Golem*/                { &AddGolem,               nullptr,                      LS_GOLUM,    SFX_NONE,    MissileGraphicID::None,                 Physical | Invisible,  MissileMovementDistribution::Disabled    },
+/*Etherealize*/          { nullptr,                 nullptr,                      LS_ETHEREAL, SFX_NONE,    MissileGraphicID::Etherealize,          Physical,              MissileMovementDistribution::Disabled    },
+/*Spurt*/                { nullptr,                 nullptr,                      SFX_NONE,    SFX_NONE,    MissileGraphicID::Spurt,                Physical,              MissileMovementDistribution::Disabled    },
+/*ApocalypseBoom*/       { &AddApocalypseBoom,      &ProcessApocalypseBoom,       SFX_NONE,    SFX_NONE,    MissileGraphicID::ApocalypseBoom,       Physical,              MissileMovementDistribution::Disabled    },
+/*Healing*/              { &AddHealing,             nullptr,                      SFX_NONE,    SFX_NONE,    MissileGraphicID::None,                 Physical | Invisible,  MissileMovementDistribution::Disabled    },
+/*FireWallControl*/      { &AddFireWallControl,     &ProcessFireWallControl,      SFX_NONE,    SFX_NONE,    MissileGraphicID::FireWall,             Fire | Invisible,      MissileMovementDistribution::Disabled    },
+/*Infravision*/          { &AddInfravision,         &ProcessInfravision,          LS_INFRAVIS, SFX_NONE,    MissileGraphicID::None,                 Physical | Invisible,  MissileMovementDistribution::Disabled    },
+/*Identify*/             { &AddIdentify,            nullptr,                      SFX_NONE,    SFX_NONE,    MissileGraphicID::None,                 Physical | Invisible,  MissileMovementDistribution::Disabled    },
+/*FlameWaveControl*/     { &AddFlameWaveControl,    &ProcessFlameWaveControl,     LS_FLAMWAVE, SFX_NONE,    MissileGraphicID::FireWall,             Fire,                  MissileMovementDistribution::Disabled    },
+/*Nova*/                 { &AddNova,                &ProcessNova,                 LS_NOVA,     SFX_NONE,    MissileGraphicID::Lightning,            Lightning,             MissileMovementDistribution::Disabled    },
+/*Rage*/                 { &AddRage,                &ProcessRage,                 SFX_NONE,    SFX_NONE,    MissileGraphicID::None,                 Physical | Invisible,  MissileMovementDistribution::Disabled    },
+/*Apocalypse*/           { &AddApocalypse,          &ProcessApocalypse,           LS_APOC,     SFX_NONE,    MissileGraphicID::ApocalypseBoom,       Magic,                 MissileMovementDistribution::Disabled    },
+/*ItemRepair*/           { &AddItemRepair,          nullptr,                      SFX_NONE,    SFX_NONE,    MissileGraphicID::None,                 Physical | Invisible,  MissileMovementDistribution::Disabled    },
+/*StaffRecharge*/        { &AddStaffRecharge,       nullptr,                      SFX_NONE,    SFX_NONE,    MissileGraphicID::None,                 Physical | Invisible,  MissileMovementDistribution::Disabled    },
+/*TrapDisarm*/           { &AddTrapDisarm,          nullptr,                      LS_TRAPDIS,  SFX_NONE,    MissileGraphicID::None,                 Physical | Invisible,  MissileMovementDistribution::Disabled    },
+/*Inferno*/              { &AddInferno,             &ProcessInferno,              LS_SPOUTSTR, SFX_NONE,    MissileGraphicID::Inferno,              Fire,                  MissileMovementDistribution::Disabled    },
+/*InfernoControl*/       { &AddInfernoControl,      &ProcessInfernoControl,       SFX_NONE,    SFX_NONE,    MissileGraphicID::None,                 Fire | Invisible,      MissileMovementDistribution::Disabled    },
+/*FireMan*/              { nullptr,                 nullptr,                      SFX_NONE,    SFX_NONE,    MissileGraphicID::None,                 Physical,              MissileMovementDistribution::Blockable   },
+/*Krull*/                { nullptr,                 nullptr,                      SFX_NONE,    SFX_NONE,    MissileGraphicID::Krull,                Fire | Arrow,          MissileMovementDistribution::Blockable   },
+/*ChargedBolt*/          { &AddChargedBolt,         &ProcessChargedBolt,          LS_CBOLT,    SFX_NONE,    MissileGraphicID::ChargedBolt,          Lightning,             MissileMovementDistribution::Blockable   },
+/*HolyBolt*/             { &AddHolyBolt,            &ProcessHolyBolt,             LS_HOLYBOLT, LS_ELECIMP1, MissileGraphicID::HolyBolt,             Physical,              MissileMovementDistribution::Blockable   },
+/*Resurrect*/            { &AddResurrect,           nullptr,                      SFX_NONE,    LS_RESUR,    MissileGraphicID::None,                 Magic | Invisible,     MissileMovementDistribution::Disabled    },
+/*Telekinesis*/          { &AddTelekinesis,         nullptr,                      LS_ETHEREAL, SFX_NONE,    MissileGraphicID::None,                 Physical | Invisible,  MissileMovementDistribution::Disabled    },
+/*LightningArrow*/       { &AddElementalArrow,      &ProcessElementalArrow,       SFX_NONE,    SFX_NONE,    MissileGraphicID::LightningArrow,       Lightning | Arrow,     MissileMovementDistribution::Blockable   },
+/*Acid*/                 { &AddAcid,                &ProcessGenericProjectile,    LS_ACID,     SFX_NONE,    MissileGraphicID::Acid,                 Acid,                  MissileMovementDistribution::Blockable   },
+/*AcidSplat*/            { &AddMissileExplosion,    &ProcessAcidSplate,           SFX_NONE,    SFX_NONE,    MissileGraphicID::AcidSplat,            Acid,                  MissileMovementDistribution::Disabled    },
+/*AcidPuddle*/           { &AddAcidPuddle,          &ProcessAcidPuddle,           LS_PUDDLE,   SFX_NONE,    MissileGraphicID::AcidPuddle,           Acid,                  MissileMovementDistribution::Disabled    },
+/*HealOther*/            { &AddHealOther,           nullptr,                      SFX_NONE,    SFX_NONE,    MissileGraphicID::None,                 Physical | Invisible,  MissileMovementDistribution::Disabled    },
+/*Elemental*/            { &AddElemental,           &ProcessElemental,            LS_ELEMENTL, SFX_NONE,    MissileGraphicID::Elemental,            Fire,                  MissileMovementDistribution::Unblockable },
+/*ResurrectBeam*/        { &AddResurrectBeam,       &ProcessResurrectBeam,        SFX_NONE,    SFX_NONE,    MissileGraphicID::Resurrect,            Physical,              MissileMovementDistribution::Disabled    },
+/*BoneSpirit*/           { &AddBoneSpirit,          &ProcessBoneSpirit,           LS_BONESP,   LS_BSIMPCT,  MissileGraphicID::BoneSpirit,           Magic,                 MissileMovementDistribution::Blockable   },
+/*WeaponExplosion*/      { &AddWeaponExplosion,     &ProcessWeaponExplosion,      SFX_NONE,    SFX_NONE,    MissileGraphicID::None,                 Physical,              MissileMovementDistribution::Disabled    },
+/*RedPortal*/            { &AddRedPortal,           &ProcessRedPortal,            LS_SENTINEL, LS_ELEMENTL, MissileGraphicID::RedPortal,            Physical,              MissileMovementDistribution::Disabled    },
+/*DiabloApocalypseBoom*/ { &AddApocalypseBoom,      &ProcessApocalypseBoom,       SFX_NONE,    SFX_NONE,    MissileGraphicID::DiabloApocalypseBoom, Physical,              MissileMovementDistribution::Disabled    },
+/*DiabloApocalypse*/     { &AddDiabloApocalypse,    nullptr,                      SFX_NONE,    SFX_NONE,    MissileGraphicID::None,                 Physical | Invisible,  MissileMovementDistribution::Disabled    },
+/*Mana*/                 { &AddMana,                nullptr,                      SFX_NONE,    SFX_NONE,    MissileGraphicID::None,                 Physical | Invisible,  MissileMovementDistribution::Disabled    },
+/*Magi*/                 { &AddMagi,                nullptr,                      SFX_NONE,    SFX_NONE,    MissileGraphicID::None,                 Physical | Invisible,  MissileMovementDistribution::Disabled    },
+/*LightningWall*/        { &AddLightningWall,       &ProcessLightningWall,        LS_LMAG,     LS_ELECIMP1, MissileGraphicID::Lightning,            Lightning,             MissileMovementDistribution::Disabled    },
+/*LightningWallControl*/ { &AddFireWallControl,     &ProcessLightningWallControl, SFX_NONE,    SFX_NONE,    MissileGraphicID::Lightning,            Lightning | Invisible, MissileMovementDistribution::Disabled    },
+/*Immolation*/           { &AddNova,                &ProcessImmolation,           LS_FBOLT1,   LS_FIRIMP2,  MissileGraphicID::Fireball,             Fire,                  MissileMovementDistribution::Disabled    },
+/*ItemMissile*/          { &AddItemMissile,         &ProcessItemMissile,          SFX_NONE,    SFX_NONE,    MissileGraphicID::Arrow,                Physical | Arrow,      MissileMovementDistribution::Disabled    },
+/*ItemFireball*/         { &AddImmolation,          &ProcessFireball,             IS_FBALLBOW, LS_FIRIMP2,  MissileGraphicID::Fireball,             Fire,                  MissileMovementDistribution::Blockable   },
+/*ItemLightning*/        { &AddItemLightning,       &ProcessItemLightning,        IS_FBALLBOW, SFX_NONE,    MissileGraphicID::Lightning,            Lightning | Invisible, MissileMovementDistribution::Disabled    },
+/*ItemChargedBolt*/      { &AddItemChargedBolt,     &ProcessChargedBolt,          LS_CBOLT,    SFX_NONE,    MissileGraphicID::ChargedBolt,          Lightning,             MissileMovementDistribution::Blockable   },
+/*ItemHolyBolt*/         { &AddHolyBolt,            &ProcessHolyBolt,             LS_HOLYBOLT, LS_ELECIMP1, MissileGraphicID::HolyBolt,             Physical,              MissileMovementDistribution::Blockable   },
+/*Warp*/                 { &AddWarp,                &ProcessTeleport,             LS_ETHEREAL, SFX_NONE,    MissileGraphicID::None,                 Physical | Invisible,  MissileMovementDistribution::Disabled    },
+/*Reflect*/              { &AddReflect,             nullptr,                      LS_MSHIELD,  SFX_NONE,    MissileGraphicID::Reflect,              Physical | Invisible,  MissileMovementDistribution::Disabled    },
+/*Berserk*/              { &AddBerserk,             nullptr,                      SFX_NONE,    SFX_NONE,    MissileGraphicID::None,                 Physical | Invisible,  MissileMovementDistribution::Disabled    },
+/*RingOfFire*/           { &AddRingOfFire,          &ProcessRingOfFire,           SFX_NONE,    SFX_NONE,    MissileGraphicID::FireWall,             Fire | Invisible,      MissileMovementDistribution::Disabled    },
+/*StealPotions*/         { &AddStealPotions,        nullptr,                      SFX_NONE,    SFX_NONE,    MissileGraphicID::None,                 Physical | Invisible,  MissileMovementDistribution::Disabled    },
+/*StealMana*/            { &AddStealMana,           nullptr,                      IS_CAST7,    SFX_NONE,    MissileGraphicID::None,                 Physical | Invisible,  MissileMovementDistribution::Disabled    },
+/*RingOfLightning*/      { nullptr,                 nullptr,                      SFX_NONE,    SFX_NONE,    MissileGraphicID::Lightning,            Lightning | Invisible, MissileMovementDistribution::Disabled    },
+/*Search*/               { &AddSearch,              &ProcessSearch,               SFX_NONE,    SFX_NONE,    MissileGraphicID::None,                 Physical | Invisible,  MissileMovementDistribution::Disabled    },
+/*Aura*/                 { nullptr,                 nullptr,                      SFX_NONE,    LS_ELECIMP1, MissileGraphicID::FlashBottom,          Magic | Invisible,     MissileMovementDistribution::Disabled    },
+/*Aura2*/                { nullptr,                 nullptr,                      SFX_NONE,    SFX_NONE,    MissileGraphicID::FlashTop,             Magic | Invisible,     MissileMovementDistribution::Disabled    },
+/*SpiralFireball*/       { nullptr,                 nullptr,                      LS_FBOLT1,   LS_FIRIMP2,  MissileGraphicID::Fireball,             Fire,                  MissileMovementDistribution::Disabled    },
+/*RuneOfFire*/           { &AddRuneOfFire,          &ProcessRune,                 SFX_NONE,    SFX_NONE,    MissileGraphicID::Rune,                 Physical,              MissileMovementDistribution::Disabled    },
+/*RuneOfLight*/          { &AddRuneOfLight,         &ProcessRune,                 SFX_NONE,    SFX_NONE,    MissileGraphicID::Rune,                 Physical,              MissileMovementDistribution::Disabled    },
+/*RuneOfNova*/           { &AddRuneOfNova,          &ProcessRune,                 SFX_NONE,    SFX_NONE,    MissileGraphicID::Rune,                 Physical,              MissileMovementDistribution::Disabled    },
+/*RuneOfImmolation*/     { &AddRuneOfImmolation,    &ProcessRune,                 SFX_NONE,    SFX_NONE,    MissileGraphicID::Rune,                 Physical,              MissileMovementDistribution::Disabled    },
+/*RuneOfStone*/          { &AddRuneOfStone,         &ProcessRune,                 SFX_NONE,    SFX_NONE,    MissileGraphicID::Rune,                 Physical,              MissileMovementDistribution::Disabled    },
+/*BigExplosion*/         { &AddBigExplosion,        &ProcessBigExplosion,         LS_NESTXPLD, LS_NESTXPLD, MissileGraphicID::BigExplosion,         Fire,                  MissileMovementDistribution::Disabled    },
+/*HorkSpawn*/            { &AddHorkSpawn,           &ProcessHorkSpawn,            SFX_NONE,    SFX_NONE,    MissileGraphicID::None,                 Physical | Invisible,  MissileMovementDistribution::Disabled    },
+/*Jester*/               { &AddJester,              nullptr,                      SFX_NONE,    SFX_NONE,    MissileGraphicID::None,                 Physical | Invisible,  MissileMovementDistribution::Disabled    },
+/*OpenNest*/             { &AddOpenNest,            nullptr,                      SFX_NONE,    SFX_NONE,    MissileGraphicID::None,                 Physical | Invisible,  MissileMovementDistribution::Disabled    },
+/*OrangeFlare*/          { &AddGenericMagicMissile, &ProcessGenericProjectile,    SFX_NONE,    SFX_NONE,    MissileGraphicID::OrangeFlare,          Magic,                 MissileMovementDistribution::Blockable   },
+/*BlueFlare*/            { &AddGenericMagicMissile, &ProcessGenericProjectile,    SFX_NONE,    SFX_NONE,    MissileGraphicID::BlueFlare2,           Magic,                 MissileMovementDistribution::Blockable   },
+/*RedFlare*/             { &AddGenericMagicMissile, &ProcessGenericProjectile,    SFX_NONE,    SFX_NONE,    MissileGraphicID::RedFlare,             Magic,                 MissileMovementDistribution::Blockable   },
+/*YellowFlare*/          { &AddGenericMagicMissile, &ProcessGenericProjectile,    SFX_NONE,    SFX_NONE,    MissileGraphicID::YellowFlare,          Magic,                 MissileMovementDistribution::Blockable   },
+/*BlueFlare2*/           { &AddGenericMagicMissile, &ProcessGenericProjectile,    SFX_NONE,    SFX_NONE,    MissileGraphicID::BlueFlare2,           Magic,                 MissileMovementDistribution::Blockable   },
+/*YellowExplosion*/      { &AddMissileExplosion,    &ProcessMissileExplosion,     LS_FIRIMP2,  SFX_NONE,    MissileGraphicID::YellowFlareExplosion, Physical,              MissileMovementDistribution::Disabled    },
+/*RedExplosion*/         { &AddMissileExplosion,    &ProcessMissileExplosion,     LS_FIRIMP2,  SFX_NONE,    MissileGraphicID::RedFlareExplosion,    Physical,              MissileMovementDistribution::Disabled    },
+/*BlueExplosion*/        { &AddMissileExplosion,    &ProcessMissileExplosion,     LS_FIRIMP2,  SFX_NONE,    MissileGraphicID::BlueFlareExplosion,   Physical,              MissileMovementDistribution::Disabled    },
+/*BlueExplosion2*/       { &AddMissileExplosion,    &ProcessMissileExplosion,     LS_FIRIMP2,  SFX_NONE,    MissileGraphicID::BlueFlareExplosion2,  Physical,              MissileMovementDistribution::Disabled    },
+/*OrangeExplosion*/      { &AddMissileExplosion,    &ProcessMissileExplosion,     LS_FIRIMP2,  SFX_NONE,    MissileGraphicID::OrangeFlareExplosion, Physical,              MissileMovementDistribution::Disabled    },
+	// clang-format on
+};
+
+namespace {
+
+constexpr std::array<uint8_t, 16> Repeat(uint8_t v) // NOLINT(readability-identifier-length)
+{
+	return { v, v, v, v, v, v, v, v, v, v, v, v, v, v, v, v };
+}
+
+const std::array<uint8_t, 16> MissileAnimDelays[] {
+	{},
+	Repeat(1),
+	Repeat(2),
+	{ 0, 1 },
+	{ 1 },
+};
+
+const std::array<uint8_t, 16> MissileAnimLengths[] {
+	{},
+	Repeat(1),
+	Repeat(4),
+	Repeat(5),
+	Repeat(6),
+	Repeat(7),
+	Repeat(8),
+	Repeat(9),
+	Repeat(10),
+	Repeat(12),
+	Repeat(13),
+	Repeat(14),
+	Repeat(15),
+	Repeat(16),
+	Repeat(17),
+	Repeat(19),
+	Repeat(20),
+	{ 9, 4 },
+	{ 15, 14, 3 },
+	{ 13, 11 },
+	{ 16, 16, 16, 16, 16, 16, 16, 16, 8 }
+};
+
+constexpr uint8_t AnimLen_0 = 0;        // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_1 = 1;        // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_4 = 2;        // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_5 = 3;        // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_6 = 4;        // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_7 = 5;        // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_8 = 6;        // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_9 = 7;        // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_10 = 8;       // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_12 = 9;       // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_13 = 10;      // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_14 = 11;      // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_15 = 12;      // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_16 = 13;      // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_17 = 14;      // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_19 = 15;      // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_20 = 16;      // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_9_4 = 17;     // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_15_14_3 = 18; // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_13_11 = 19;   // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_16x8_8 = 20;  // NOLINT(readability-identifier-naming)
+
+} // namespace
 
 /** Data related to each missile graphic ID. */
 std::vector<MissileFileData> MissileSpriteData;
