@@ -129,7 +129,7 @@ enum _unique_items : int8_t {
 };
 
 /*
- First 5 bits store level
+ First 6 bits store level
  6th bit stores onlygood flag
  7th bit stores uper15 flag - uper means unique percent, this flag is true for unique monsters and loot from them has 15% to become unique
  8th bit stores uper1 flag - this is loot from normal monsters, which has 1% to become unique
