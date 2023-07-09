@@ -844,11 +844,24 @@ void recv_plrinfo(int pnum, const TCmdPlrInfoHdr &header, bool recv)
 
 	string_view szEvent;
 	if (sgbPlayerTurnBitTbl[pnum]) {
-		szEvent = _("Player '{:s}' (level {:d}) just joined the game");
+		szEvent = _("Player '{:s}' (level {:d} {:s}) just joined the game");
 	} else {
-		szEvent = _("Player '{:s}' (level {:d}) is already in the game");
+		szEvent = _("Player '{:s}' (level {:d} {:s}) is already in the game");
 	}
-	EventPlrMsg(fmt::format(fmt::runtime(szEvent), player._pName, player._pLevel));
+	EventPlrMsg(fmt::format(fmt::runtime(szEvent), player._pName, player._pLevel, player.GetClassName()));
+
+	UiFlags textColor = UiFlags::ColorWhitegold;
+
+	if (&player != MyPlayer) {
+		if (player.friendlyMode) {
+			szEvent = _("{:s} is friendly.");
+		} else {
+			textColor = UiFlags::ColorRed;
+			szEvent = _("{:s} is hostile.");
+		}
+	}
+
+	EventPlrMsg(fmt::format(fmt::runtime(szEvent), player._pName), textColor);
 
 	SyncInitPlr(player);
 

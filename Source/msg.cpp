@@ -34,6 +34,7 @@
 #include "objects.h"
 #include "options.h"
 #include "pfile.h"
+#include "playerdat.hpp"
 #include "plrmsg.h"
 #include "spells.h"
 #include "storm/storm_net.hpp"
@@ -1672,11 +1673,11 @@ size_t OnMonstDeath(const TCmd *pCmd, size_t pnum)
 	const auto &message = *reinterpret_cast<const TCmdLocParam1 *>(pCmd);
 	const Point position { message.x, message.y };
 	const uint16_t monsterIdx = SDL_SwapLE16(message.wParam1);
+	Monster &monster = Monsters[monsterIdx];
 
 	if (gbBufferMsgs != 1) {
 		Player &player = Players[pnum];
 		if (&player != MyPlayer && InDungeonBounds(position) && monsterIdx < MaxMonsters) {
-			Monster &monster = Monsters[monsterIdx];
 			if (player.isOnActiveLevel())
 				M_SyncStartKill(monster, position, player);
 			delta_kill_monster(monster, position, player);
@@ -1762,17 +1763,154 @@ size_t OnMonstDamage(const TCmd *pCmd, size_t pnum)
 
 size_t OnPlayerDeath(const TCmd *pCmd, size_t pnum)
 {
-	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
-	const DeathReason deathReason = static_cast<DeathReason>(SDL_SwapLE16(message.wParam1));
+	const auto &message = *reinterpret_cast<const TCmdPDeath *>(pCmd);
+	const auto deathReason = static_cast<DeathReason>(SDL_SwapLE16(message.wDeathReason));
+	const uint16_t deathSourceIndex = SDL_SwapLE16(message.wDeathSourceIndex);
+	const uint16_t monsterUid = SDL_SwapLE16(message.wMonsterUid);
+	const bool wasKilledByUnique = SDL_SwapLE16(message.bWasKilledByUnique);
+	Player &player = Players[pnum];
 
 	if (gbBufferMsgs != 1) {
-		Player &player = Players[pnum];
 		if (&player != MyPlayer)
-			StartPlayerKill(player, deathReason);
+			StartPlayerKill(player, deathReason, deathSourceIndex, monsterUid, wasKilledByUnique);
 		else
 			pfile_update(true);
 	} else {
 		SendPacket(pnum, &message, sizeof(message));
+	}
+
+	string_view szEvent;
+	UiFlags textColor = UiFlags::ColorRed;
+
+	switch (deathReason) {
+	case DeathReason::Monster: {
+		uint16_t rnd = GenerateRnd(9);
+		switch (rnd) {
+		case 0:
+			szEvent = _("{:s} was slain by {:s}.");
+			break;
+		case 1:
+			szEvent = _("{:s} was exsanguinated by {:s}.");
+			break;
+		case 2:
+			szEvent = _("{:s} was eviscerated by {:s}.");
+			break;
+		case 3:
+			szEvent = _("{:s} met a gruesome end at the hands of {:s}.");
+			break;
+		case 4:
+			szEvent = _("{:s} was disemboweled by {:s}.");
+			break;
+		case 5:
+			szEvent = _("In a brutal display, {:s} was ripped apart by {:s}.");
+			break;
+		case 6:
+			szEvent = _("{:s} was dragged into the abyss by {:s}.");
+			break;
+		case 7:
+			szEvent = _("{:s} was vanquished by {:s}, leaving no trace behind.");
+			break;
+		case 8:
+			szEvent = _("With a deadly strike, {:s} was eradicated by {:s}.");
+			break;
+		case 9:
+			szEvent = _("{:s} was torn limb from limb by {:s}.");
+			break;
+		default:
+			szEvent = _("{:s} was slain by {:s}.");
+			break;
+		}
+		if (wasKilledByUnique) {
+			const UniqueMonsterData unique = UniqueMonstersData[monsterUid];
+			EventPlrMsg(fmt::format(fmt::runtime(szEvent), player._pName, unique.mName), textColor);
+		} else {
+			const MonsterData monster = MonstersData[deathSourceIndex];
+			EventPlrMsg(fmt::format(fmt::runtime(szEvent), player._pName, monster.name), textColor);
+		}
+		break;
+	}
+	case DeathReason::Trap: {
+		uint16_t rnd = GenerateRnd(4);
+		switch (rnd) {
+		case 0:
+			szEvent = _("{:s} was slain by a trap.");
+			break;
+		case 1:
+			szEvent = _("{:s} was ensnared by a deadly trap.");
+			break;
+		case 2:
+			szEvent = _("{:s} fell victim to a cunningly hidden trap.");
+			break;
+		case 3:
+			szEvent = _("{:s} was overwhelmed by a trap's deadly mechanism.");
+			break;
+		case 4:
+			szEvent = _("{:s} met a sudden demise from a devious trap.");
+			break;
+		default:
+			szEvent = _("{:s} was slain by a trap.");
+			break;
+		}
+		EventPlrMsg(fmt::format(fmt::runtime(szEvent), player._pName), textColor);
+		break;
+	}
+	case DeathReason::Player: {
+		uint16_t rnd = GenerateRnd(9);
+		switch (rnd) {
+		case 0:
+			szEvent = _("{:s} was slain by {:s}.");
+			break;
+		case 1:
+			szEvent = _("{:s} met their end at the hands of {:s}.");
+			break;
+		case 2:
+			szEvent = _("{:s} was vanquished by the might of {:s}.");
+			break;
+		case 3:
+			szEvent = _("{:s} fell victim to the treachery of {:s}.");
+			break;
+		case 4:
+			szEvent = _("{:s} was obliterated by the power of {:s}.");
+			break;
+		case 5:
+			szEvent = _("{:s} was annihilated by the wrath of {:s}.");
+			break;
+		case 6:
+			szEvent = _("{:s} was struck down by {:s}.");
+			break;
+		case 7:
+			szEvent = _("{:s} was executed by {:s}'s deadly assault.");
+			break;
+		case 8:
+			szEvent = _("{:s} was overpowered by {:s}'s devastating attack.");
+			break;
+		case 9:
+			szEvent = _("{:s} was defeated by {:s}'s cunning tactics.");
+			break;
+		default:
+			szEvent = _("{:s} was slain by {:s}.");
+			break;
+		}
+		const Player &killer = Players[deathSourceIndex];
+		EventPlrMsg(fmt::format(fmt::runtime(szEvent), player._pName, killer._pName), textColor);
+		break;
+	}
+	case DeathReason::DrainLife: {
+		EventPlrMsg(fmt::format(fmt::runtime(_("{:s} succumbed to the curse of Constricting Ring.")), player._pName), textColor);
+		break;
+	}
+	case DeathReason::Peril: {
+		EventPlrMsg(fmt::format(fmt::runtime(_("{:s} was betrayed by their own weapon.")), player._pName), textColor);
+		break;
+	}
+	case DeathReason::BloodMagic: {
+		EventPlrMsg(fmt::format(fmt::runtime(_("{:s} perished from overuse of their lifeforce.")), player._pName), textColor);
+		break;
+	}
+	case DeathReason::Unknown: {
+		EventPlrMsg(fmt::format(fmt::runtime(_("{:s} died.")), player._pName), textColor);
+		break;
+	}
 	}
 
 	return sizeof(message);
@@ -1786,7 +1924,7 @@ size_t OnPlayerDamage(const TCmd *pCmd, Player &player)
 	Player &target = Players[message.bPlr];
 	if (&target == MyPlayer && leveltype != DTYPE_TOWN && gbBufferMsgs != 1) {
 		if (player.isOnActiveLevel() && damage <= 192000 && target._pHitPoints >> 6 > 0) {
-			ApplyPlrDamage(message.damageType, target, 0, 0, damage, DeathReason::Player);
+			ApplyPlrDamage(message.damageType, target, 0, 0, damage, DeathReason::Player, player.getId());
 		}
 	}
 
@@ -2025,7 +2163,7 @@ size_t OnPlayerJoinLevel(const TCmd *pCmd, size_t pnum)
 		ResetPlayerGFX(player);
 		player.plractive = true;
 		gbActivePlayers++;
-		EventPlrMsg(fmt::format(fmt::runtime(_("Player '{:s}' (level {:d}) just joined the game")), player._pName, player._pLevel));
+		EventPlrMsg(fmt::format(fmt::runtime(_("Player '{:s}' (level {:d} {:s}) just joined the game")), player._pName, player._pLevel, player.GetClassName()));
 	}
 
 	if (player.plractive && &player != MyPlayer) {
@@ -2201,7 +2339,22 @@ size_t OnString(const TCmd *pCmd, Player &player)
 size_t OnFriendlyMode(const TCmd *pCmd, Player &player) // NOLINT(misc-unused-parameters)
 {
 	player.friendlyMode = !player.friendlyMode;
+
+	string_view szEvent;
+	UiFlags textColor = UiFlags::ColorWhitegold;
+
+	if (&player != MyPlayer) {
+		if (player.friendlyMode) {
+			szEvent = _("{:s} has become friendly towards you.");
+		} else {
+			textColor = UiFlags::ColorRed;
+			szEvent = _("{:s} has expressed hostility towards you.");
+		}
+	}
+
+	EventPlrMsg(fmt::format(fmt::runtime(szEvent), player._pName), textColor);
 	RedrawEverything();
+
 	return sizeof(*pCmd);
 }
 
@@ -2921,6 +3074,24 @@ void NetSendCmdParam5(bool bHiPri, _cmd_id bCmd, uint16_t wParam1, uint16_t wPar
 		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
 
 	MyPlayer->UpdatePreviewCelSprite(bCmd, {}, wParam1, wParam2);
+}
+
+void NetSendCmdPDeath(bool bHiPri, _cmd_id bCmd, uint16_t wDeathReason, uint16_t wDeathSourceIndex, uint16_t wMonsterUid, bool bWasKilledByUnique)
+{
+	if (WasPlayerCmdAlreadyRequested(bCmd, {}, wDeathReason, wDeathSourceIndex, wMonsterUid, bWasKilledByUnique))
+		return;
+
+	TCmdPDeath cmd;
+
+	cmd.bCmd = bCmd;
+	cmd.wDeathReason = SDL_SwapLE16(wDeathReason);
+	cmd.wDeathSourceIndex = SDL_SwapLE16(wDeathSourceIndex);
+	cmd.wMonsterUid = SDL_SwapLE16(wMonsterUid);
+	cmd.bWasKilledByUnique = SDL_SwapLE16(bWasKilledByUnique);
+	if (bHiPri)
+		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+	else
+		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
 }
 
 void NetSendCmdQuest(bool bHiPri, const Quest &quest)

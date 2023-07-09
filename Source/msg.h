@@ -203,8 +203,11 @@ enum _cmd_id : uint8_t {
 	CMD_MONSTDAMAGE,
 	// Player death.
 	//
-	// body (TCmdParam1):
-	//    int16_t ear_flag
+	// body (TCmdPDeath):
+	//    uint16_t wDeathReason;
+	//    uint16_t wDeathSourceIndex;
+	//    uint16_t wMonsterUid;
+	//    bool bWasKilledByUnique;
 	CMD_PLRDEAD,
 	// Lift item to hand request.
 	//
@@ -504,6 +507,14 @@ struct TCmdParam5 {
 	uint16_t wParam5;
 };
 
+struct TCmdPDeath {
+	_cmd_id bCmd;
+	uint16_t wDeathReason;
+	uint16_t wDeathSourceIndex;
+	uint16_t wMonsterUid;
+	bool bWasKilledByUnique;
+};
+
 struct TCmdGolem {
 	_cmd_id bCmd;
 	uint8_t _mx;
@@ -752,6 +763,8 @@ void NetSendCmdLocParam5(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wPa
 void NetSendCmdParam1(bool bHiPri, _cmd_id bCmd, uint16_t wParam1);
 void NetSendCmdParam2(bool bHiPri, _cmd_id bCmd, uint16_t wParam1, uint16_t wParam2);
 void NetSendCmdParam5(bool bHiPri, _cmd_id bCmd, uint16_t wParam1, uint16_t wParam2, uint16_t wParam3, uint16_t wParam4, uint16_t wParam5);
+void NetSendCmdPDeath(bool bHiPri, _cmd_id bCmd, uint16_t wDeathReason, uint16_t wDeathSourceIndex, uint16_t wMonsterUid, bool bWasKilledByUnique = false);
+void NetSendCmdMDeath(bool bHiPri, _cmd_id bCmd, uint16_t wMonsterUid, bool bIsMonsterUnique = false);
 void NetSendCmdQuest(bool bHiPri, const Quest &quest);
 void NetSendCmdGItem(bool bHiPri, _cmd_id bCmd, uint8_t pnum, uint8_t ii);
 void NetSendCmdPItem(bool bHiPri, _cmd_id bCmd, Point position, const Item &item);

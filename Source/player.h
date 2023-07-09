@@ -164,11 +164,19 @@ use_enum_as_flags(SpellFlag);
 
 /* @brief When the player dies, what is the reason/source why? */
 enum class DeathReason {
-	/* @brief Monster or Trap (dungeon) */
-	MonsterOrTrap,
-	/* @brief Other player or selfkill (for example firewall) */
+	/* @brief Monster (dungeon) */
+	Monster,
+	/* @brief Trap (dungeon) */
+	Trap,
+	/* @brief Other player or selfkill (for example, Fire Wall) */
 	Player,
-	/* @brief HP is zero but we don't know when or where this happend */
+	/* @brief Drain Life item effect */
+	DrainLife,
+	/* @brief Peril item effect */
+	Peril,
+	/* @brief Spell effect */
+	BloodMagic,
+	/* @brief HP is zero but we don't know when or where this happened */
 	Unknown,
 };
 
@@ -772,6 +780,8 @@ struct Player {
 		this->plrlevel = static_cast<uint8_t>(level);
 		this->plrIsOnSetLevel = true;
 	}
+
+	const char *GetClassName();
 };
 
 extern DVL_API_FOR_TEST size_t MyPlayerId;
@@ -812,7 +822,7 @@ void NextPlrLevel(Player &player);
 #endif
 void AddPlrExperience(Player &player, int lvl, int exp);
 void AddPlrMonstExper(int lvl, int exp, char pmask);
-void ApplyPlrDamage(DamageType damageType, Player &player, int dam, int minHP = 0, int frac = 0, DeathReason deathReason = DeathReason::MonsterOrTrap);
+void ApplyPlrDamage(DamageType damageType, Player &player, int dam, int minHP = 0, int frac = 0, DeathReason deathReason = DeathReason::Monster, uint16_t deathSourceIndex = -1, uint16_t monsterUid = -1, bool wasKilledByUnique = false);
 void InitPlayer(Player &player, bool FirstTime);
 void InitMultiView();
 void PlrClrTrans(Point position);
@@ -823,12 +833,12 @@ void StartStand(Player &player, Direction dir);
 void StartPlrBlock(Player &player, Direction dir);
 void FixPlrWalkTags(const Player &player);
 void StartPlrHit(Player &player, int dam, bool forcehit);
-void StartPlayerKill(Player &player, DeathReason deathReason);
+void StartPlayerKill(Player &player, DeathReason deathReason, uint16_t deathSourceIndex, uint16_t monsterUid, bool wasKilledByUnique);
 /**
  * @brief Strip the top off gold piles that are larger than MaxGold
  */
 void StripTopGold(Player &player);
-void SyncPlrKill(Player &player, DeathReason deathReason);
+void SyncPlrKill(Player &player, DeathReason deathReason, uint16_t deathSource = -1, uint16_t monsterUid = -1, bool wasKilledByUnique = false);
 void RemovePlrMissiles(const Player &player);
 void StartNewLvl(Player &player, interface_mode fom, int lvl);
 void RestartTownLvl(Player &player);

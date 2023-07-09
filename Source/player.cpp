@@ -671,7 +671,7 @@ bool PlrHitMonst(Player &player, Monster &monster, bool adjacentDamage = false)
 		if (HasAnyOf(player.pDamAcFlags, ItemSpecialEffectHf::Peril)) {
 			dam2 += player._pIGetHit << 6;
 			if (dam2 >= 0) {
-				ApplyPlrDamage(DamageType::Physical, player, 0, 1, dam2);
+				ApplyPlrDamage(DamageType::Physical, player, 0, 1, dam2, DeathReason::Peril);
 			}
 			dam *= 2;
 		}
@@ -2695,18 +2695,18 @@ void StartPlrHit(Player &player, int dam, bool forcehit)
 __attribute__((no_sanitize("shift-base")))
 #endif
 void
-StartPlayerKill(Player &player, DeathReason deathReason)
+StartPlayerKill(Player &player, DeathReason deathReason, uint16_t deathSource, uint16_t monsterUid, bool wasKilledByUnique)
 {
 	if (player._pHitPoints <= 0 && player._pmode == PM_DEATH) {
 		return;
 	}
 
 	if (&player == MyPlayer) {
-		NetSendCmdParam1(true, CMD_PLRDEAD, static_cast<uint16_t>(deathReason));
+		NetSendCmdPDeath(true, CMD_PLRDEAD, static_cast<uint16_t>(deathReason), deathSource, monsterUid, wasKilledByUnique);
 	}
 
 	const bool dropGold = !gbIsMultiplayer || !(player.isOnLevel(16) || player.isOnArenaLevel());
-	const bool dropItems = dropGold && deathReason == DeathReason::MonsterOrTrap;
+	const bool dropItems = dropGold && (deathReason == DeathReason::Monster || deathReason == DeathReason::Trap);
 	const bool dropEar = dropGold && deathReason == DeathReason::Player;
 
 	player.Say(HeroSpeech::AuughUh);
@@ -2818,7 +2818,7 @@ void StripTopGold(Player &player)
 	player._pGold = CalculateGold(player);
 }
 
-void ApplyPlrDamage(DamageType damageType, Player &player, int dam, int minHP /*= 0*/, int frac /*= 0*/, DeathReason deathReason /*= DeathReason::MonsterOrTrap*/)
+void ApplyPlrDamage(DamageType damageType, Player &player, int dam, int minHP /*= 0*/, int frac /*= 0*/, DeathReason deathReason /*= DeathReason::Monster*/, uint16_t deathSourceIndex /*= -1*/, uint16_t monsterUid /*= -1*/, bool wasKilledByUnique /*= false*/)
 {
 	int totalDamage = (dam << 6) + frac;
 	if (&player == MyPlayer) {
@@ -2862,11 +2862,11 @@ void ApplyPlrDamage(DamageType damageType, Player &player, int dam, int minHP /*
 		SetPlayerHitPoints(player, minHitPoints);
 	}
 	if (player._pHitPoints >> 6 <= 0) {
-		SyncPlrKill(player, deathReason);
+		SyncPlrKill(player, deathReason, deathSourceIndex, monsterUid, wasKilledByUnique);
 	}
 }
 
-void SyncPlrKill(Player &player, DeathReason deathReason)
+void SyncPlrKill(Player &player, DeathReason deathReason, uint16_t deathSourceIndex /*= -1*/, uint16_t monsterUid /*= -1*/, bool wasKilledByUnique /*= false*/)
 {
 	if (player._pHitPoints <= 0 && leveltype == DTYPE_TOWN) {
 		SetPlayerHitPoints(player, 64);
@@ -2874,7 +2874,7 @@ void SyncPlrKill(Player &player, DeathReason deathReason)
 	}
 
 	SetPlayerHitPoints(player, 0);
-	StartPlayerKill(player, deathReason);
+	StartPlayerKill(player, deathReason, deathSourceIndex, monsterUid, wasKilledByUnique);
 }
 
 void RemovePlrMissiles(const Player &player)
@@ -3033,7 +3033,7 @@ void ProcessPlayers()
 
 			if (&player == MyPlayer) {
 				if (HasAnyOf(player._pIFlags, ItemSpecialEffect::DrainLife) && leveltype != DTYPE_TOWN) {
-					ApplyPlrDamage(DamageType::Physical, player, 0, 0, 4);
+					ApplyPlrDamage(DamageType::Physical, player, 0, 0, 4, DeathReason::DrainLife);
 				}
 				if (HasAnyOf(player._pIFlags, ItemSpecialEffect::NoMana) && player._pManaBase > 0) {
 					player._pManaBase -= player._pMana;
@@ -3495,6 +3495,11 @@ void PlayDungMsgs()
 	} else {
 		sfxdelay = 0;
 	}
+}
+
+const char *Player::GetClassName()
+{
+	return PlayersData[static_cast<uint8_t>(_pClass)].className;
 }
 
 #ifdef BUILD_TESTING
