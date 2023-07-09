@@ -1692,8 +1692,6 @@ void AddElementalArrow(Missile &missile, AddMissileParameter &parameter)
 	missile.var2 = missile.position.start.y;
 	missile._mlid = AddLight(missile.position.start, 5);
 
-	bool errorFlag = false;
-
 	if (missile.sourceType() == MissileSource::Player) {
 		const auto &player = *missile.sourcePlayer();
 		missile._midam = player._pIMinDam; // min physical damage
@@ -1761,6 +1759,23 @@ void AddArrow(Missile &missile, AddMissileParameter &parameter)
 	UpdateMissileVelocity(missile, dst, av);
 	missile._miAnimFrame = static_cast<int>(GetDirection16(missile.position.start, dst)) + 1;
 	missile._mirange = 256;
+
+	switch (missile.sourceType()) {
+	case MissileSource::Player: {
+		const Player &player = *missile.sourcePlayer();
+		missile._midam = player._pIMinDam; // min damage
+		missile.var1 = player._pIMaxDam;   // max damage
+	} break;
+	case MissileSource::Monster: {
+		const Monster &monster = *missile.sourceMonster();
+		missile._midam = monster.minDamage; // min damage
+		missile.var1 = monster.maxDamage;   // max damage
+	} break;
+	case MissileSource::Trap:
+		missile._midam = currlevel;   // min damage
+		missile.var1 = 2 * currlevel; // max damage
+		break;
+	}
 }
 
 void UpdateVileMissPos(Missile &missile, Point dst)
@@ -2853,29 +2868,11 @@ void ProcessArrow(Missile &missile)
 	missile._mirange--;
 	missile._midist++;
 
-	int mind;
-	int maxd;
-	switch (missile.sourceType()) {
-	case MissileSource::Player: {
-		// BUGFIX: damage of missile should be encoded in missile struct; player can be dead/have left the game before missile arrives.
-		const Player &player = *missile.sourcePlayer();
-		mind = player._pIMinDam;
-		maxd = player._pIMaxDam;
-	} break;
-	case MissileSource::Monster: {
-		// BUGFIX: damage of missile should be encoded in missile struct; monster can be dead before missile arrives.
-		const Monster &monster = *missile.sourceMonster();
-		mind = monster.minDamage;
-		maxd = monster.maxDamage;
-	} break;
-	case MissileSource::Trap:
-		mind = currlevel;
-		maxd = 2 * currlevel;
-		break;
-	}
-	MoveMissileAndCheckMissileCol(missile, GetMissileData(missile._mitype).damageType(), mind, maxd, true, false);
+	MoveMissileAndCheckMissileCol(missile, GetMissileData(missile._mitype).damageType(), missile._midam, missile.var1, true, false);
+
 	if (missile._mirange == 0)
 		missile._miDelFlag = true;
+
 	PutMissile(missile);
 }
 
