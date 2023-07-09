@@ -115,6 +115,189 @@ const uint16_t InvItemHeight2[InvItems2Size] = {
 OptionalOwnedClxSpriteList *HalfSizeItemSprites;
 OptionalOwnedClxSpriteList *HalfSizeItemSpritesRed;
 
+bool IsValidMonsterForSelection(const Monster &monster)
+{
+	if (monster.hitPoints >> 6 <= 0)
+		return false;
+	if ((monster.flags & MFLAG_HIDDEN) != 0)
+		return false;
+	if (monster.isPlayerMinion())
+		return false;
+	return true;
+}
+
+bool TrySelectMonster(bool flipflag, Point tile, tl::function_ref<bool(const Monster &)> isValidMonster)
+{
+	auto checkPosition = [&](int8_t selectionType, Displacement displacement) {
+		Point posToCheck = tile + displacement;
+		if (!InDungeonBounds(posToCheck) || dMonster[posToCheck.x][posToCheck.y] == 0)
+			return;
+		const uint16_t monsterId = abs(dMonster[posToCheck.x][posToCheck.y]) - 1;
+		const Monster &monster = Monsters[monsterId];
+		if (IsTileLit(posToCheck) && (monster.data().selectionType & selectionType) != 0 && isValidMonster(monster)) {
+			cursPosition = posToCheck;
+			pcursmonst = monsterId;
+		}
+	};
+
+	if (!flipflag)
+		checkPosition(4, { 2, 1 });
+	if (flipflag)
+		checkPosition(4, { 1, 2 });
+	checkPosition(4, { 2, 2 });
+	if (!flipflag)
+		checkPosition(2, { 1, 0 });
+	if (flipflag)
+		checkPosition(2, { 0, 1 });
+	checkPosition(1, { 0, 0 });
+	checkPosition(2, { 1, 1 });
+	return pcursmonst != -1;
+}
+
+bool TrySelectTowner(bool flipflag, Point tile)
+{
+	auto checkPosition = [&](Displacement displacement) {
+		Point posToCheck = tile + displacement;
+		if (!InDungeonBounds(posToCheck) || dMonster[posToCheck.x][posToCheck.y] == 0)
+			return;
+		const uint16_t monsterId = abs(dMonster[posToCheck.x][posToCheck.y]) - 1;
+		cursPosition = posToCheck;
+		pcursmonst = monsterId;
+	};
+	if (!flipflag)
+		checkPosition({ 1, 0 });
+	if (flipflag)
+		checkPosition({ 0, 1 });
+	checkPosition({ 0, 0 });
+	checkPosition({ 1, 1 });
+	return pcursmonst != -1;
+}
+
+bool TrySelectPlayer(bool flipflag, int mx, int my)
+{
+	if (!flipflag && mx + 1 < MAXDUNX && dPlayer[mx + 1][my] != 0) {
+		const uint8_t playerId = abs(dPlayer[mx + 1][my]) - 1;
+		Player &player = Players[playerId];
+		if (&player != MyPlayer && player._pHitPoints != 0) {
+			cursPosition = Point { mx, my } + Displacement { 1, 0 };
+			pcursplr = static_cast<int8_t>(playerId);
+		}
+	}
+	if (flipflag && my + 1 < MAXDUNY && dPlayer[mx][my + 1] != 0) {
+		const uint8_t playerId = abs(dPlayer[mx][my + 1]) - 1;
+		Player &player = Players[playerId];
+		if (&player != MyPlayer && player._pHitPoints != 0) {
+			cursPosition = Point { mx, my } + Displacement { 0, 1 };
+			pcursplr = static_cast<int8_t>(playerId);
+		}
+	}
+	if (dPlayer[mx][my] != 0) {
+		const uint8_t playerId = abs(dPlayer[mx][my]) - 1;
+		if (playerId != MyPlayerId) {
+			cursPosition = { mx, my };
+			pcursplr = static_cast<int8_t>(playerId);
+		}
+	}
+	if (TileContainsDeadPlayer({ mx, my })) {
+		for (const Player &player : Players) {
+			if (player.position.tile == Point { mx, my } && &player != MyPlayer) {
+				cursPosition = { mx, my };
+				pcursplr = static_cast<int8_t>(player.getId());
+			}
+		}
+	}
+	if (pcurs == CURSOR_RESURRECT) {
+		for (int xx = -1; xx < 2; xx++) {
+			for (int yy = -1; yy < 2; yy++) {
+				if (TileContainsDeadPlayer({ mx + xx, my + yy })) {
+					for (const Player &player : Players) {
+						if (player.position.tile.x == mx + xx && player.position.tile.y == my + yy && &player != MyPlayer) {
+							cursPosition = Point { mx, my } + Displacement { xx, yy };
+							pcursplr = static_cast<int8_t>(player.getId());
+						}
+					}
+				}
+			}
+		}
+	}
+	if (mx + 1 < MAXDUNX && my + 1 < MAXDUNY && dPlayer[mx + 1][my + 1] != 0) {
+		const uint8_t playerId = abs(dPlayer[mx + 1][my + 1]) - 1;
+		const Player &player = Players[playerId];
+		if (&player != MyPlayer && player._pHitPoints != 0) {
+			cursPosition = Point { mx, my } + Displacement { 1, 1 };
+			pcursplr = static_cast<int8_t>(playerId);
+		}
+	}
+
+	return pcursplr != -1;
+}
+
+bool TrySelectObject(bool flipflag, Point tile)
+{
+	// No monsters or players under the cursor, try find an object starting with the tile below the current tile (tall
+	//  objects like doors)
+	Point testPosition = tile + Direction::South;
+	Object *object = FindObjectAtPosition(testPosition);
+
+	if (object == nullptr || object->_oSelFlag < 2) {
+		// Either no object or can't interact from the test position, try the current tile
+		testPosition = tile;
+		object = FindObjectAtPosition(testPosition);
+
+		if (object == nullptr || IsNoneOf(object->_oSelFlag, 1, 3)) {
+			// Still no object (that could be activated from this position), try the tile to the bottom left or right
+			//  (whichever is closest to the cursor as determined when we set flipflag earlier)
+			testPosition = tile + (flipflag ? Direction::SouthWest : Direction::SouthEast);
+			object = FindObjectAtPosition(testPosition);
+
+			if (object != nullptr && object->_oSelFlag < 2) {
+				// Found an object but it's not in range, clear the pointer
+				object = nullptr;
+			}
+		}
+	}
+	if (object == nullptr)
+		return false;
+
+	// found object that can be activated with the given cursor position
+	cursPosition = testPosition;
+	ObjectUnderCursor = object;
+	return true;
+}
+
+bool TrySelectItem(bool flipflag, int mx, int my)
+{
+	if (!flipflag && mx + 1 < MAXDUNX && dItem[mx + 1][my] > 0) {
+		const uint8_t itemId = dItem[mx + 1][my] - 1;
+		if (Items[itemId]._iSelFlag >= 2) {
+			cursPosition = Point { mx, my } + Displacement { 1, 0 };
+			pcursitem = static_cast<int8_t>(itemId);
+		}
+	}
+	if (flipflag && my + 1 < MAXDUNY && dItem[mx][my + 1] > 0) {
+		const uint8_t itemId = dItem[mx][my + 1] - 1;
+		if (Items[itemId]._iSelFlag >= 2) {
+			cursPosition = Point { mx, my } + Displacement { 0, 1 };
+			pcursitem = static_cast<int8_t>(itemId);
+		}
+	}
+	if (dItem[mx][my] > 0) {
+		const uint8_t itemId = dItem[mx][my] - 1;
+		if (Items[itemId]._iSelFlag == 1 || Items[itemId]._iSelFlag == 3) {
+			cursPosition = { mx, my };
+			pcursitem = static_cast<int8_t>(itemId);
+		}
+	}
+	if (mx + 1 < MAXDUNX && my + 1 < MAXDUNY && dItem[mx + 1][my + 1] > 0) {
+		const uint8_t itemId = dItem[mx + 1][my + 1] - 1;
+		if (Items[itemId]._iSelFlag >= 2) {
+			cursPosition = Point { mx, my } + Displacement { 1, 1 };
+			pcursitem = static_cast<int8_t>(itemId);
+		}
+	}
+	return pcursitem != -1;
+}
+
 } // namespace
 
 /** Current highlighted monster */
@@ -501,273 +684,58 @@ void CheckCursMove()
 		return;
 	}
 
-	if (leveltype != DTYPE_TOWN) {
-		if (pcurstemp != -1) {
-			if (!flipflag && mx + 2 < MAXDUNX && my + 1 < MAXDUNY && dMonster[mx + 2][my + 1] != 0 && IsTileLit({ mx + 2, my + 1 })) {
-				const uint16_t monsterId = abs(dMonster[mx + 2][my + 1]) - 1;
-				if (monsterId == pcurstemp && Monsters[monsterId].hitPoints >> 6 > 0 && (Monsters[monsterId].data().selectionType & 4) != 0) {
-					cursPosition = Point { mx, my } + Displacement { 2, 1 };
-					pcursmonst = monsterId;
-				}
-			}
-			if (flipflag && mx + 1 < MAXDUNX && my + 2 < MAXDUNY && dMonster[mx + 1][my + 2] != 0 && IsTileLit({ mx + 1, my + 2 })) {
-				const uint16_t monsterId = abs(dMonster[mx + 1][my + 2]) - 1;
-				if (monsterId == pcurstemp && Monsters[monsterId].hitPoints >> 6 > 0 && (Monsters[monsterId].data().selectionType & 4) != 0) {
-					cursPosition = Point { mx, my } + Displacement { 1, 2 };
-					pcursmonst = monsterId;
-				}
-			}
-			if (mx + 2 < MAXDUNX && my + 2 < MAXDUNY && dMonster[mx + 2][my + 2] != 0 && IsTileLit({ mx + 2, my + 2 })) {
-				const uint16_t monsterId = abs(dMonster[mx + 2][my + 2]) - 1;
-				if (monsterId == pcurstemp && Monsters[monsterId].hitPoints >> 6 > 0 && (Monsters[monsterId].data().selectionType & 4) != 0) {
-					cursPosition = Point { mx, my } + Displacement { 2, 2 };
-					pcursmonst = monsterId;
-				}
-			}
-			if (mx + 1 < MAXDUNX && !flipflag && dMonster[mx + 1][my] != 0 && IsTileLit({ mx + 1, my })) {
-				const uint16_t monsterId = abs(dMonster[mx + 1][my]) - 1;
-				if (monsterId == pcurstemp && Monsters[monsterId].hitPoints >> 6 > 0 && (Monsters[monsterId].data().selectionType & 2) != 0) {
-					cursPosition = Point { mx, my } + Displacement { 1, 0 };
-					pcursmonst = monsterId;
-				}
-			}
-			if (my + 1 < MAXDUNY && flipflag && dMonster[mx][my + 1] != 0 && IsTileLit({ mx, my + 1 })) {
-				const uint16_t monsterId = abs(dMonster[mx][my + 1]) - 1;
-				if (monsterId == pcurstemp && Monsters[monsterId].hitPoints >> 6 > 0 && (Monsters[monsterId].data().selectionType & 2) != 0) {
-					cursPosition = Point { mx, my } + Displacement { 0, 1 };
-					pcursmonst = monsterId;
-				}
-			}
-			if (dMonster[mx][my] != 0 && IsTileLit({ mx, my })) {
-				const uint16_t monsterId = abs(dMonster[mx][my]) - 1;
-				if (monsterId == pcurstemp && Monsters[monsterId].hitPoints >> 6 > 0 && (Monsters[monsterId].data().selectionType & 1) != 0) {
-					cursPosition = { mx, my };
-					pcursmonst = monsterId;
-				}
-			}
-			if (mx + 1 < MAXDUNX && my + 1 < MAXDUNY && dMonster[mx + 1][my + 1] != 0 && IsTileLit({ mx + 1, my + 1 })) {
-				const uint16_t monsterId = abs(dMonster[mx + 1][my + 1]) - 1;
-				if (monsterId == pcurstemp && Monsters[monsterId].hitPoints >> 6 > 0 && (Monsters[monsterId].data().selectionType & 2) != 0) {
-					cursPosition = Point { mx, my } + Displacement { 1, 1 };
-					pcursmonst = monsterId;
-				}
-			}
-			if (pcursmonst != -1 && (Monsters[pcursmonst].flags & MFLAG_HIDDEN) != 0) {
-				pcursmonst = -1;
-				cursPosition = { mx, my };
-			}
-			if (pcursmonst != -1 && Monsters[pcursmonst].isPlayerMinion()) {
-				pcursmonst = -1;
-			}
-			if (pcursmonst != -1) {
-				return;
-			}
-		}
-		if (!flipflag && mx + 2 < MAXDUNX && my + 1 < MAXDUNY && dMonster[mx + 2][my + 1] != 0 && IsTileLit({ mx + 2, my + 1 })) {
-			int monsterId = abs(dMonster[mx + 2][my + 1]) - 1;
-			if (Monsters[monsterId].hitPoints >> 6 > 0 && (Monsters[monsterId].data().selectionType & 4) != 0) {
-				cursPosition = Point { mx, my } + Displacement { 2, 1 };
-				pcursmonst = monsterId;
-			}
-		}
-		if (flipflag && mx + 1 < MAXDUNX && my + 2 < MAXDUNY && dMonster[mx + 1][my + 2] != 0 && IsTileLit({ mx + 1, my + 2 })) {
-			const uint16_t monsterId = abs(dMonster[mx + 1][my + 2]) - 1;
-			if (Monsters[monsterId].hitPoints >> 6 > 0 && (Monsters[monsterId].data().selectionType & 4) != 0) {
-				cursPosition = Point { mx, my } + Displacement { 1, 2 };
-				pcursmonst = monsterId;
-			}
-		}
-		if (mx + 2 < MAXDUNX && my + 2 < MAXDUNY && dMonster[mx + 2][my + 2] != 0 && IsTileLit({ mx + 2, my + 2 })) {
-			const uint16_t monsterId = abs(dMonster[mx + 2][my + 2]) - 1;
-			if (Monsters[monsterId].hitPoints >> 6 > 0 && (Monsters[monsterId].data().selectionType & 4) != 0) {
-				cursPosition = Point { mx, my } + Displacement { 2, 2 };
-				pcursmonst = monsterId;
-			}
-		}
-		if (!flipflag && mx + 1 < MAXDUNX && dMonster[mx + 1][my] != 0 && IsTileLit({ mx + 1, my })) {
-			const uint16_t monsterId = abs(dMonster[mx + 1][my]) - 1;
-			if (Monsters[monsterId].hitPoints >> 6 > 0 && (Monsters[monsterId].data().selectionType & 2) != 0) {
-				cursPosition = Point { mx, my } + Displacement { 1, 0 };
-				pcursmonst = monsterId;
-			}
-		}
-		if (flipflag && my + 1 < MAXDUNY && dMonster[mx][my + 1] != 0 && IsTileLit({ mx, my + 1 })) {
-			const uint16_t monsterId = abs(dMonster[mx][my + 1]) - 1;
-			if (Monsters[monsterId].hitPoints >> 6 > 0 && (Monsters[monsterId].data().selectionType & 2) != 0) {
-				cursPosition = Point { mx, my } + Displacement { 0, 1 };
-				pcursmonst = monsterId;
-			}
-		}
-		if (dMonster[mx][my] != 0 && IsTileLit({ mx, my })) {
-			const uint16_t monsterId = abs(dMonster[mx][my]) - 1;
-			if (Monsters[monsterId].hitPoints >> 6 > 0 && (Monsters[monsterId].data().selectionType & 1) != 0) {
-				cursPosition = { mx, my };
-				pcursmonst = monsterId;
-			}
-		}
-		if (mx + 1 < MAXDUNX && my + 1 < MAXDUNY && dMonster[mx + 1][my + 1] != 0 && IsTileLit({ mx + 1, my + 1 })) {
-			const uint16_t monsterId = abs(dMonster[mx + 1][my + 1]) - 1;
-			if (Monsters[monsterId].hitPoints >> 6 > 0 && (Monsters[monsterId].data().selectionType & 2) != 0) {
-				cursPosition = Point { mx, my } + Displacement { 1, 1 };
-				pcursmonst = monsterId;
-			}
-		}
-		if (pcursmonst != -1 && (Monsters[pcursmonst].flags & MFLAG_HIDDEN) != 0) {
-			pcursmonst = -1;
-			cursPosition = { mx, my };
-		}
-		if (pcursmonst != -1 && (Monsters[pcursmonst].isPlayerMinion() || IsAnyOf(pcurs, CURSOR_HEALOTHER, CURSOR_RESURRECT))) {
-			pcursmonst = -1;
-		}
-	} else {
-		if (!flipflag && mx + 1 < MAXDUNX && dMonster[mx + 1][my] > 0) {
-			pcursmonst = dMonster[mx + 1][my] - 1;
-			cursPosition = Point { mx, my } + Displacement { 1, 0 };
-		}
-		if (flipflag && my + 1 < MAXDUNY && dMonster[mx][my + 1] > 0) {
-			pcursmonst = dMonster[mx][my + 1] - 1;
-			cursPosition = Point { mx, my } + Displacement { 0, 1 };
-		}
-		if (dMonster[mx][my] > 0) {
-			pcursmonst = dMonster[mx][my] - 1;
-			cursPosition = { mx, my };
-		}
-		if (mx + 1 < MAXDUNX && my + 1 < MAXDUNY && dMonster[mx + 1][my + 1] > 0) {
-			pcursmonst = dMonster[mx + 1][my + 1] - 1;
-			cursPosition = Point { mx, my } + Displacement { 1, 1 };
-		}
-	}
-
-	if (pcursmonst == -1) {
-		if (!flipflag && mx + 1 < MAXDUNX && dPlayer[mx + 1][my] != 0) {
-			const uint8_t playerId = abs(dPlayer[mx + 1][my]) - 1;
-			Player &player = Players[playerId];
-			if (&player != MyPlayer && player._pHitPoints != 0) {
-				cursPosition = Point { mx, my } + Displacement { 1, 0 };
-				pcursplr = static_cast<int8_t>(playerId);
-			}
-		}
-		if (flipflag && my + 1 < MAXDUNY && dPlayer[mx][my + 1] != 0) {
-			const uint8_t playerId = abs(dPlayer[mx][my + 1]) - 1;
-			Player &player = Players[playerId];
-			if (&player != MyPlayer && player._pHitPoints != 0) {
-				cursPosition = Point { mx, my } + Displacement { 0, 1 };
-				pcursplr = static_cast<int8_t>(playerId);
-			}
-		}
-		if (dPlayer[mx][my] != 0) {
-			const uint8_t playerId = abs(dPlayer[mx][my]) - 1;
-			if (playerId != MyPlayerId) {
-				cursPosition = { mx, my };
-				pcursplr = static_cast<int8_t>(playerId);
-			}
-		}
-		if (TileContainsDeadPlayer({ mx, my })) {
-			for (const Player &player : Players) {
-				if (player.position.tile == Point { mx, my } && &player != MyPlayer) {
-					cursPosition = { mx, my };
-					pcursplr = static_cast<int8_t>(player.getId());
-				}
-			}
-		}
-		if (pcurs == CURSOR_RESURRECT) {
-			for (int xx = -1; xx < 2; xx++) {
-				for (int yy = -1; yy < 2; yy++) {
-					if (TileContainsDeadPlayer({ mx + xx, my + yy })) {
-						for (const Player &player : Players) {
-							if (player.position.tile.x == mx + xx && player.position.tile.y == my + yy && &player != MyPlayer) {
-								cursPosition = Point { mx, my } + Displacement { xx, yy };
-								pcursplr = static_cast<int8_t>(player.getId());
-							}
-						}
-					}
-				}
-			}
-		}
-		if (mx + 1 < MAXDUNX && my + 1 < MAXDUNY && dPlayer[mx + 1][my + 1] != 0) {
-			const uint8_t playerId = abs(dPlayer[mx + 1][my + 1]) - 1;
-			const Player &player = Players[playerId];
-			if (&player != MyPlayer && player._pHitPoints != 0) {
-				cursPosition = Point { mx, my } + Displacement { 1, 1 };
-				pcursplr = static_cast<int8_t>(playerId);
-			}
-		}
-	}
-	if (pcursmonst == -1 && pcursplr == -1) {
-		// No monsters or players under the cursor, try find an object starting with the tile below the current tile (tall
-		//  objects like doors)
-		Point testPosition = currentTile + Direction::South;
-		Object *object = FindObjectAtPosition(testPosition);
-
-		if (object == nullptr || object->_oSelFlag < 2) {
-			// Either no object or can't interact from the test position, try the current tile
-			testPosition = currentTile;
-			object = FindObjectAtPosition(testPosition);
-
-			if (object == nullptr || IsNoneOf(object->_oSelFlag, 1, 3)) {
-				// Still no object (that could be activated from this position), try the tile to the bottom left or right
-				//  (whichever is closest to the cursor as determined when we set flipflag earlier)
-				testPosition = currentTile + (flipflag ? Direction::SouthWest : Direction::SouthEast);
-				object = FindObjectAtPosition(testPosition);
-
-				if (object != nullptr && object->_oSelFlag < 2) {
-					// Found an object but it's not in range, clear the pointer
-					object = nullptr;
-				}
-			}
-		}
-		if (object != nullptr) {
-			// found object that can be activated with the given cursor position
-			cursPosition = testPosition;
-			ObjectUnderCursor = object;
-		}
-	}
-	if (pcursplr == -1 && ObjectUnderCursor == nullptr && pcursmonst == -1) {
-		if (!flipflag && mx + 1 < MAXDUNX && dItem[mx + 1][my] > 0) {
-			const uint8_t itemId = dItem[mx + 1][my] - 1;
-			if (Items[itemId]._iSelFlag >= 2) {
-				cursPosition = Point { mx, my } + Displacement { 1, 0 };
-				pcursitem = static_cast<int8_t>(itemId);
-			}
-		}
-		if (flipflag && my + 1 < MAXDUNY && dItem[mx][my + 1] > 0) {
-			const uint8_t itemId = dItem[mx][my + 1] - 1;
-			if (Items[itemId]._iSelFlag >= 2) {
-				cursPosition = Point { mx, my } + Displacement { 0, 1 };
-				pcursitem = static_cast<int8_t>(itemId);
-			}
-		}
-		if (dItem[mx][my] > 0) {
-			const uint8_t itemId = dItem[mx][my] - 1;
-			if (Items[itemId]._iSelFlag == 1 || Items[itemId]._iSelFlag == 3) {
-				cursPosition = { mx, my };
-				pcursitem = static_cast<int8_t>(itemId);
-			}
-		}
-		if (mx + 1 < MAXDUNX && my + 1 < MAXDUNY && dItem[mx + 1][my + 1] > 0) {
-			const uint8_t itemId = dItem[mx + 1][my + 1] - 1;
-			if (Items[itemId]._iSelFlag >= 2) {
-				cursPosition = Point { mx, my } + Displacement { 1, 1 };
-				pcursitem = static_cast<int8_t>(itemId);
-			}
-		}
-		if (pcursitem == -1) {
-			cursPosition = { mx, my };
-			CheckTrigForce();
-			CheckTown();
-			CheckRportal();
-		}
-	}
-
 	if (pcurs == CURSOR_IDENTIFY) {
 		ObjectUnderCursor = nullptr;
 		pcursmonst = -1;
 		pcursitem = -1;
 		cursPosition = { mx, my };
+		return;
 	}
-	if (pcursmonst != -1 && leveltype != DTYPE_TOWN && Monsters[pcursmonst].isPlayerMinion()) {
-		pcursmonst = -1;
+
+	if (leveltype != DTYPE_TOWN) {
+		// Never select a monster if a target-player-only spell is selected
+		if (IsNoneOf(pcurs, CURSOR_HEALOTHER, CURSOR_RESURRECT)) {
+			if (pcurstemp != -1 && TrySelectMonster(flipflag, currentTile, [](const Monster &monster) {
+				    if (!IsValidMonsterForSelection(monster))
+					    return false;
+				    if (monster.getId() != pcurstemp)
+					    return false;
+				    return true;
+			    })) {
+				// found a valid previous selected monster
+				return;
+			}
+			if (TrySelectMonster(flipflag, currentTile, IsValidMonsterForSelection)) {
+				// found a valid monster
+				return;
+			}
+		}
+	} else {
+		if (TrySelectTowner(flipflag, currentTile)) {
+			// found a towner
+			return;
+		}
 	}
+
+	if (TrySelectPlayer(flipflag, mx, my)) {
+		// found a player
+		return;
+	}
+
+	if (TrySelectObject(flipflag, currentTile)) {
+		// found a object
+		return;
+	}
+
+	if (TrySelectItem(flipflag, mx, my)) {
+		// found a item
+		return;
+	}
+
+	cursPosition = currentTile;
+	CheckTrigForce();
+	CheckTown();
+	CheckRportal();
 }
 
 } // namespace devilution
