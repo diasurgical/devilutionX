@@ -201,11 +201,6 @@ int ProjectileTrapDamage(Missile &missile)
 	return currlevel + GenerateRnd(2 * currlevel);
 }
 
-int ProjectileTrapElementalDamage(Missile &missile)
-{
-	return currlevel + GenerateRnd(2 * currlevel); // shit
-}
-
 bool MonsterMHit(int pnum, int monsterId, int mindam, int maxdam, int dist, MissileID t, DamageType damageType, bool shift)
 {
 	auto &monster = Monsters[monsterId];
