@@ -1694,39 +1694,37 @@ void AddElementalArrow(Missile &missile, AddMissileParameter &parameter)
 
 	bool errorFlag = false;
 
-	if (missile._midam == 0) {
-		if (missile.sourceType() == MissileSource::Player) {
-			const auto &player = *missile.sourcePlayer();
-			missile._midam = player._pIMinDam; // min physical damage
-			missile.var3 = player._pIMaxDam;   // max physical damage
+	if (missile.sourceType() == MissileSource::Player) {
+		const auto &player = *missile.sourcePlayer();
+		missile._midam = player._pIMinDam; // min physical damage
+		missile.var3 = player._pIMaxDam;   // max physical damage
 
-			switch (missile._mitype) {
-			case MissileID::LightningArrow:
-				missile.var4 = player._pILMinDam; // min lightning damage
-				missile.var5 = player._pILMaxDam; // max lightning damage
-				break;
-			case MissileID::FireArrow:
-				missile.var4 = player._pIFMinDam; // min fire damage
-				missile.var5 = player._pIFMaxDam; // max fire damage
-				break;
-			default:
-				app_fatal(StrCat("wrong missile ID ", static_cast<int>(missile._mitype)));
-				break;
-			}
-		} else if (missile.sourceType() == MissileSource::Trap) {
-			missile._midam = currlevel + GenerateRnd(10) + 1;     // min physical damage
-			missile.var3 = (currlevel * 2) + GenerateRnd(10) + 1; // max physical damage
+		switch (missile._mitype) {
+		case MissileID::LightningArrow:
+			missile.var4 = player._pILMinDam; // min lightning damage
+			missile.var5 = player._pILMaxDam; // max lightning damage
+			break;
+		case MissileID::FireArrow:
+			missile.var4 = player._pIFMinDam; // min fire damage
+			missile.var5 = player._pIFMaxDam; // max fire damage
+			break;
+		default:
+			app_fatal(StrCat("wrong missile ID ", static_cast<int>(missile._mitype)));
+			break;
+		}
+	} else if (missile.sourceType() == MissileSource::Trap) {
+		missile._midam = currlevel + GenerateRnd(10) + 1;     // min physical damage
+		missile.var3 = (currlevel * 2) + GenerateRnd(10) + 1; // max physical damage
 
-			switch (missile._mitype) {
-			case MissileID::LightningArrow:
-			case MissileID::FireArrow:
-				missile.var4 = currlevel + GenerateRnd(10) + 1;       // min elemental damage
-				missile.var5 = (currlevel * 2) + GenerateRnd(10) + 1; // max elemental damage
-				break;
-			default:
-				app_fatal(StrCat("wrong missile ID ", static_cast<int>(missile._mitype)));
-				break;
-			}
+		switch (missile._mitype) {
+		case MissileID::LightningArrow:
+		case MissileID::FireArrow:
+			missile.var4 = currlevel + GenerateRnd(10) + 1;       // min elemental damage
+			missile.var5 = (currlevel * 2) + GenerateRnd(10) + 1; // max elemental damage
+			break;
+		default:
+			app_fatal(StrCat("wrong missile ID ", static_cast<int>(missile._mitype)));
+			break;
 		}
 	}
 }
