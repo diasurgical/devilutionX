@@ -202,6 +202,11 @@ int ProjectileTrapDamage(Missile &missile)
 	return currlevel + GenerateRnd(2 * currlevel);
 }
 
+int ProjectileTrapElementalDamage(Missile &missile)
+{
+	return currlevel + GenerateRnd(2 * currlevel); // shit
+}
+
 bool MonsterMHit(int pnum, int monsterId, int mindam, int maxdam, int dist, MissileID t, DamageType damageType, bool shift)
 {
 	auto &monster = Monsters[monsterId];
@@ -1686,6 +1691,44 @@ void AddElementalArrow(Missile &missile, AddMissileParameter &parameter)
 	missile.var1 = missile.position.start.x;
 	missile.var2 = missile.position.start.y;
 	missile._mlid = AddLight(missile.position.start, 5);
+
+	bool errorFlag = false;
+
+	if (missile._midam == 0) {
+		if (missile.sourceType() == MissileSource::Player) {
+			const auto &player = *missile.sourcePlayer();
+			missile._midam = player._pIMinDam; // min physical damage
+			missile.var3 = player._pIMaxDam;   // max physical damage
+
+			switch (missile._mitype) {
+			case MissileID::LightningArrow:
+				missile.var4 = player._pILMinDam; // min lightning damage
+				missile.var5 = player._pILMaxDam; // max lightning damage
+				break;
+			case MissileID::FireArrow:
+				missile.var4 = player._pIFMinDam; // min fire damage
+				missile.var5 = player._pIFMaxDam; // max fire damage
+				break;
+			default:
+				app_fatal(StrCat("wrong missile ID ", static_cast<int>(missile._mitype)));
+				break;
+			}
+		} else if (missile.sourceType() == MissileSource::Trap) {
+			missile._midam = currlevel + GenerateRnd(10) + 1;     // min physical damage
+			missile.var3 = (currlevel * 2) + GenerateRnd(10) + 1; // max physical damage
+
+			switch (missile._mitype) {
+			case MissileID::LightningArrow:
+			case MissileID::FireArrow:
+				missile.var4 = currlevel + GenerateRnd(10) + 1;       // min elemental damage
+				missile.var5 = (currlevel * 2) + GenerateRnd(10) + 1; // max elemental damage
+				break;
+			default:
+				app_fatal(StrCat("wrong missile ID ", static_cast<int>(missile._mitype)));
+				break;
+			}
+		}
+	}
 }
 
 void AddArrow(Missile &missile, AddMissileParameter &parameter)
@@ -2767,69 +2810,31 @@ void ProcessElementalArrow(Missile &missile)
 	if (missile._miAnimType == MissileGraphicID::ChargedBolt || missile._miAnimType == MissileGraphicID::MagmaBallExplosion) {
 		ChangeLight(missile._mlid, missile.position.tile, missile._miAnimFrame + 5);
 	} else {
-		int mind;
-		int maxd;
-		int p = missile._misource;
 		missile._midist++;
-		if (!missile.IsTrap()) {
-			if (missile._micaster == TARGET_MONSTERS) {
-				// BUGFIX: damage of missile should be encoded in missile struct; player can be dead/have left the game before missile arrives.
-				const Player &player = Players[p];
-				mind = player._pIMinDam;
-				maxd = player._pIMaxDam;
-			} else {
-				// BUGFIX: damage of missile should be encoded in missile struct; monster can be dead before missile arrives.
-				Monster &monster = Monsters[p];
-				mind = monster.minDamage;
-				maxd = monster.maxDamage;
-			}
-		} else {
-			mind = GenerateRnd(10) + 1 + currlevel;
-			maxd = GenerateRnd(10) + 1 + currlevel * 2;
-		}
-		MoveMissileAndCheckMissileCol(missile, DamageType::Physical, mind, maxd, true, false);
+
+		MoveMissileAndCheckMissileCol(missile, DamageType::Physical, 0, 0, true, false);
+
 		if (missile._mirange == 0) {
 			missile._mimfnum = 0;
 			missile._mirange = missile._miAnimLen - 1;
 			missile.position.StopMissile();
 
-			int eMind;
-			int eMaxd;
 			MissileGraphicID eAnim;
 			DamageType damageType;
+
 			switch (missile._mitype) {
 			case MissileID::LightningArrow:
-				if (!missile.IsTrap()) {
-					// BUGFIX: damage of missile should be encoded in missile struct; player can be dead/have left the game before missile arrives.
-					const Player &player = Players[p];
-					eMind = player._pILMinDam;
-					eMaxd = player._pILMaxDam;
-				} else {
-					eMind = GenerateRnd(10) + 1 + currlevel;
-					eMaxd = GenerateRnd(10) + 1 + currlevel * 2;
-				}
 				eAnim = MissileGraphicID::ChargedBolt;
 				damageType = DamageType::Lightning;
 				break;
 			case MissileID::FireArrow:
-				if (!missile.IsTrap()) {
-					// BUGFIX: damage of missile should be encoded in missile struct; player can be dead/have left the game before missile arrives.
-					const Player &player = Players[p];
-					eMind = player._pIFMinDam;
-					eMaxd = player._pIFMaxDam;
-				} else {
-					eMind = GenerateRnd(10) + 1 + currlevel;
-					eMaxd = GenerateRnd(10) + 1 + currlevel * 2;
-				}
 				eAnim = MissileGraphicID::MagmaBallExplosion;
 				damageType = DamageType::Fire;
 				break;
-			default:
-				app_fatal(StrCat("wrong missile ID ", static_cast<int>(missile._mitype)));
-				break;
 			}
+
 			SetMissAnim(missile, eAnim);
-			CheckMissileCol(missile, damageType, eMind, eMaxd, false, missile.position.tile, true);
+			CheckMissileCol(missile, damageType, missile.var4, missile.var5, false, missile.position.tile, true);
 		} else {
 			if (missile.position.tile != Point { missile.var1, missile.var2 }) {
 				missile.var1 = missile.position.tile.x;
