@@ -1953,6 +1953,20 @@ void AddLightningControl(Missile &missile, AddMissileParameter &parameter)
 	UpdateMissileVelocity(missile, parameter.dst, 32);
 	missile._miAnimFrame = GenerateRnd(8) + 1;
 	missile._mirange = 256;
+
+	switch (missile.sourceType()) {
+	case MissileSource::Player: {
+		const Player &player = *missile.sourcePlayer();
+		missile._midam = (GenerateRnd(2) + GenerateRnd(player._pLevel) + 2) << 6;
+	} break;
+	case MissileSource::Monster: {
+		const Monster &monster = *missile.sourceMonster();
+		missile._midam = 2 * (monster.minDamage + GenerateRnd(monster.maxDamage - monster.minDamage + 1));
+	} break;
+	case MissileSource::Trap:
+		missile._midam = (2 * currlevel) + GenerateRnd(currlevel);
+		break;
+	}
 }
 
 void AddLightning(Missile &missile, AddMissileParameter &parameter)
@@ -3281,19 +3295,7 @@ void ProcessLightningControl(Missile &missile)
 {
 	missile._mirange--;
 
-	int dam;
-	if (missile.IsTrap()) {
-		// BUGFIX: damage of missile should be encoded in missile struct; monster can be dead before missile arrives.
-		dam = GenerateRnd(currlevel) + 2 * currlevel;
-	} else if (missile._micaster == TARGET_MONSTERS) {
-		// BUGFIX: damage of missile should be encoded in missile struct; player can be dead/have left the game before missile arrives.
-		dam = (GenerateRnd(2) + GenerateRnd(Players[missile._misource]._pLevel) + 2) << 6;
-	} else {
-		auto &monster = Monsters[missile._misource];
-		dam = 2 * (monster.minDamage + GenerateRnd(monster.maxDamage - monster.minDamage + 1));
-	}
-
-	SpawnLightning(missile, dam);
+	SpawnLightning(missile, missile._midam);
 }
 
 void ProcessLightning(Missile &missile)
