@@ -414,6 +414,11 @@ struct Item {
 		}
 	}
 
+	[[nodiscard]] bool isOil() const
+	{
+		return _iMiscId > IMISC_OILFIRST && _iMiscId < IMISC_OILLAST;
+	}
+
 	[[nodiscard]] bool isUsable() const;
 
 	[[nodiscard]] bool keyAttributesMatch(uint32_t seed, _item_indexes itemIndex, uint16_t createInfo) const

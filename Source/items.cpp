@@ -4188,6 +4188,7 @@ void UseItem(size_t pnum, item_misc_id mid, SpellID spellID, int spellFrom)
 				break;
 			case SpellID::Identify:
 				cursId = CURSOR_IDENTIFY;
+				break;
 			case SpellID::ItemRepair:
 				cursId = CURSOR_REPAIR;
 				break;
@@ -5012,6 +5013,7 @@ bool ApplyOilToItem(Item &item, Player &player)
 	default:
 		return false;
 	}
+
 	return true;
 }
 

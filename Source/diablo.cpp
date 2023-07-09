@@ -2567,9 +2567,10 @@ bool TryIconCurs()
 			Item &item = Stash.stashList[pcursstashitem];
 			changeCursor = ApplyOilToItem(item, myPlayer);
 		}
-		if (changeCursor)
+		if (changeCursor) {
+			myPlayer.RemoveInvItem(spellFrom); // FIXME
 			NewCursor(CURSOR_HAND);
-
+		}
 		return true;
 	}
 

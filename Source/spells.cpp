@@ -232,9 +232,7 @@ void CastSpell(int id, SpellID spl, int sx, int sy, int dx, int dy, int spllvl)
 		}
 	}
 
-	//if (spl == SpellID::Identify) { }
-
-	//if (!fizzled)
+	if (!fizzled)
 		ConsumeSpell(player, spl);
 }
 

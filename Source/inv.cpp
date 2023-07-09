@@ -2084,7 +2084,7 @@ bool UseInvItem(int cii)
 			CloseInventory();
 			return true;
 		}
-		if (!item->isScroll() && !item->isRune())
+		if (!item->isScroll() && !item->isRune() && !item->isOil())
 			player.RemoveSpdBarItem(c);
 		return true;
 	}
@@ -2095,7 +2095,7 @@ bool UseInvItem(int cii)
 		CloseInventory();
 		return true;
 	}
-	if (!item->isScroll() && !item->isRune())
+	if (!item->isScroll() && !item->isRune() && !item->isOil())
 		player.RemoveInvItem(c);
 
 	return true;
