@@ -375,14 +375,17 @@ bool HandleControllerButtonEvent(const SDL_Event &event, const ControllerButtonE
 		SuppressedButton = ControllerButton_NONE;
 	}
 
-	if (GetGameAction(event, ctrlEvent, &action)) {
+	if (ctrlEvent.up && sgOptions.Padmapper.ActionNameTriggeredByButtonEvent(ctrlEvent) != "") {
+		// Button press may have brought up a menu;
+		// don't confuse release of that button with intent to interact with the menu
+		sgOptions.Padmapper.ButtonReleased(ctrlEvent.button);
+		return true;
+	} else if (GetGameAction(event, ctrlEvent, &action)) {
 		ProcessGameAction(action);
 		return true;
 	} else if (ctrlEvent.button != ControllerButton_NONE) {
 		if (!ctrlEvent.up)
 			PressControllerButton(ctrlEvent.button);
-		else
-			sgOptions.Padmapper.ButtonReleased(ctrlEvent.button);
 		return true;
 	}
 
