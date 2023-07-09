@@ -1891,7 +1891,6 @@ int8_t CheckInvHLight()
 
 void ConsumeScroll(Player &player)
 {
-	SDL_Log("ConsumeScroll() called");
 	const SpellID spellId = player.executedSpell.spellId;
 
 	const auto isCurrentSpell = [spellId](const Item &item) {
