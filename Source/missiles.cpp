@@ -1654,12 +1654,16 @@ void AddChargedBoltBow(Missile &missile, AddMissileParameter &parameter)
 void AddElementalArrow(Missile &missile, AddMissileParameter &parameter)
 {
 	Point dst = parameter.dst;
+
 	if (missile.position.start == dst) {
 		dst += parameter.midir;
 	}
+
 	int av = 32;
-	if (missile._micaster == TARGET_MONSTERS) {
-		const Player &player = Players[missile._misource];
+
+	if (missile.sourceType() == MissileSource::Player) {
+		const auto &player = *missile.sourcePlayer();
+
 		if (player._pClass == HeroClass::Rogue)
 			av += (player.getCharacterLevel()) / 4;
 		else if (IsAnyOf(player._pClass, HeroClass::Warrior, HeroClass::Bard))
@@ -1678,17 +1682,7 @@ void AddElementalArrow(Missile &missile, AddMissileParameter &parameter)
 			if (IsAnyOf(player._pClass, HeroClass::Rogue, HeroClass::Warrior, HeroClass::Bard))
 				av -= 1;
 		}
-	}
-	UpdateMissileVelocity(missile, dst, av);
 
-	SetMissDir(missile, GetDirection16(missile.position.start, dst));
-	missile._mirange = 256;
-	missile.var1 = missile.position.start.x;
-	missile.var2 = missile.position.start.y;
-	missile._mlid = AddLight(missile.position.start, 5);
-
-	if (missile.sourceType() == MissileSource::Player) {
-		const auto &player = *missile.sourcePlayer();
 		missile._midam = player._pIMinDam; // min physical damage
 		missile.var3 = player._pIMaxDam;   // max physical damage
 
@@ -1720,6 +1714,14 @@ void AddElementalArrow(Missile &missile, AddMissileParameter &parameter)
 			break;
 		}
 	}
+
+	UpdateMissileVelocity(missile, dst, av);
+
+	SetMissDir(missile, GetDirection16(missile.position.start, dst));
+	missile._mirange = 256;
+	missile.var1 = missile.position.start.x;
+	missile.var2 = missile.position.start.y;
+	missile._mlid = AddLight(missile.position.start, 5);
 }
 
 void AddArrow(Missile &missile, AddMissileParameter &parameter)
@@ -2034,11 +2036,23 @@ void AddMissileExplosion(Missile &missile, AddMissileParameter &parameter)
 void AddWeaponExplosion(Missile &missile, AddMissileParameter &parameter)
 {
 	missile.var2 = parameter.dst.x;
-	if (parameter.dst.x == 1)
+
+	if (missile.var2 == 1)
 		SetMissAnim(missile, MissileGraphicID::MagmaBallExplosion);
 	else
 		SetMissAnim(missile, MissileGraphicID::ChargedBolt);
+
 	missile._mirange = missile._miAnimLen - 1;
+
+	const Player &player = *missile.sourcePlayer();
+
+	if (missile.var2 == 1) {
+		missile._midam = player._pIFMinDam; // min fire damage
+		missile.var3 = player._pIFMaxDam;   // max fire damage
+	} else {
+		missile._midam = player._pILMinDam; // min lightning damage
+		missile.var3 = player._pILMaxDam;   // max lightning damage
+	}
 }
 
 void AddTownPortal(Missile &missile, AddMissileParameter &parameter)
@@ -3545,29 +3559,27 @@ void ProcessWeaponExplosion(Missile &missile)
 	constexpr int ExpLight[10] = { 9, 10, 11, 12, 11, 10, 8, 6, 4, 2 };
 
 	missile._mirange--;
-	const Player &player = Players[missile._misource];
-	int mind;
-	int maxd;
+
+	const Player &player = *missile.sourcePlayer();
 	DamageType damageType;
+
 	if (missile.var2 == 1) {
-		// BUGFIX: damage of missile should be encoded in missile struct; player can be dead/have left the game before missile arrives.
-		mind = player._pIFMinDam;
-		maxd = player._pIFMaxDam;
 		damageType = DamageType::Fire;
 	} else {
-		// BUGFIX: damage of missile should be encoded in missile struct; player can be dead/have left the game before missile arrives.
-		mind = player._pILMinDam;
-		maxd = player._pILMaxDam;
 		damageType = DamageType::Lightning;
 	}
-	CheckMissileCol(missile, damageType, mind, maxd, false, missile.position.tile, false);
+
+	CheckMissileCol(missile, damageType, missile._midam, missile.var3, false, missile.position.tile, false);
+
 	if (missile.var1 == 0) {
 		missile._mlid = AddLight(missile.position.tile, 9);
 	} else {
 		if (missile._mirange != 0)
 			ChangeLight(missile._mlid, missile.position.tile, ExpLight[missile.var1]);
 	}
+
 	missile.var1++;
+
 	if (missile._mirange == 0) {
 		missile._miDelFlag = true;
 		AddUnLight(missile._mlid);
