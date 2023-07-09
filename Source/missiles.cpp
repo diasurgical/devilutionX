@@ -2421,8 +2421,6 @@ void AddIdentify(Missile &missile, AddMissileParameter &parameter)
 			parameter.spellFizzled = true;
 		}
 	}
-
-	
 }
 
 void AddFireWallControl(Missile &missile, AddMissileParameter &parameter)
@@ -2636,16 +2634,14 @@ void AddHolyBolt(Missile &missile, AddMissileParameter &parameter)
 	missile._midam = GenerateRnd(10) + player._pLevel + 9;
 }
 
-void AddResurrect(Missile &missile, AddMissileParameter & /*parameter*/)
+void AddResurrect(Missile &missile, AddMissileParameter &parameter)
 {
 	Player &player = Players[missile._misource];
 
-	if (&player == MyPlayer) {
-		NewCursor(CURSOR_RESURRECT);
-		if (ControlMode != ControlTypes::KeyboardAndMouse)
-			TryIconCurs();
+	if (pcursplr == -1) {
+		missile._miDelFlag = true;
+		parameter.spellFizzled = true;
 	}
-	missile._miDelFlag = true;
 }
 
 void AddResurrectBeam(Missile &missile, AddMissileParameter &parameter)

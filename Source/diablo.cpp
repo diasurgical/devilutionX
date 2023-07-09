@@ -2435,8 +2435,14 @@ int DiabloMain(int argc, char **argv)
 /** @brief Checks on click if the cursor graphic is any targeted spell cursor graphic in order to execute spells */
 bool TryIconCurs()
 {
+	Player &myPlayer = *MyPlayer;
+
 	if (pcurs == CURSOR_RESURRECT) {
 		if (pcursplr != -1) {
+			const int spellLevel = myPlayer.GetSpellLevel(SpellID::Resurrect);
+			const int spellFrom = myPlayer.spellFrom; // FIXME: Not sure if this will need to be fixed for non-scrolls or not
+
+			NetSendCmdLocParam4(true, CMD_SPELLXY, cursPosition, static_cast<int8_t>(SpellID::Resurrect), static_cast<uint8_t>(myPlayer.executedSpell.spellType), spellLevel, spellFrom);
 			NetSendCmdParam1(true, CMD_RESURRECT, pcursplr);
 			NewCursor(CURSOR_HAND);
 
@@ -2463,13 +2469,10 @@ bool TryIconCurs()
 		return true;
 	}
 
-	Player &myPlayer = *MyPlayer;
-
 	if (pcurs == CURSOR_IDENTIFY) {
 		if ((pcursinvitem != -1 || pcursstashitem != StashStruct::EmptyCell) && !IsInspectingPlayer()) {
-			const SpellType spellType = SpellType::Scroll;
 			const int spellLevel = myPlayer.GetSpellLevel(SpellID::Identify);
-			const int spellFrom = myPlayer.spellFrom;
+			const int spellFrom = myPlayer.spellFrom; // FIXME: Not sure if this will need to be fixed for non-scrolls or not
 
 			NetSendCmdLocParam4(true, CMD_SPELLXY, cursPosition, static_cast<int8_t>(SpellID::Identify), static_cast<uint8_t>(myPlayer.executedSpell.spellType), spellLevel, spellFrom);
 			NewCursor(CURSOR_HAND);

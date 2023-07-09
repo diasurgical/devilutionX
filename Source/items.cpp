@@ -4172,20 +4172,28 @@ void UseItem(size_t pnum, item_misc_id mid, SpellID spellID, int spellFrom)
 		assert(IsValidSpellFrom(spellFrom));
 		player.inventorySpell = *prepareSpellID;
 		player.spellFrom = spellFrom;
+		player.executedSpell.spellType = SpellType::Scroll;
 
 		if (&player == MyPlayer) {
 			switch (player.inventorySpell) {
+			case SpellID::Resurrect:
+				NewCursor(CURSOR_RESURRECT);
+
+				if (ControlMode != ControlTypes::KeyboardAndMouse)
+					TryIconCurs();
+
+				break;
 			case SpellID::Identify:
+				NewCursor(CURSOR_IDENTIFY);
+
 				if (sbookflag)
 					sbookflag = false;
+
 				if (!invflag) {
 					invflag = true;
 					if (ControlMode != ControlTypes::KeyboardAndMouse)
 						FocusOnInventory();
 				}
-
-				player.executedSpell.spellType = SpellType::Scroll;
-				NewCursor(CURSOR_IDENTIFY);
 
 				break;
 			default:
