@@ -267,12 +267,11 @@ void UnPackItem(const ItemPack &packedItem, const Player &player, Item &item, bo
 	} else {
 		item = {};
 		RecreateItem(player, item, idx, SDL_SwapLE16(packedItem.iCreateInfo), SDL_SwapLE32(packedItem.iSeed), SDL_SwapLE16(packedItem.wValue), isHellfire);
-		item._iMagical = static_cast<item_quality>(packedItem.bId >> 1);
 		item._iIdentified = (packedItem.bId & 1) != 0;
-		item._iDurability = packedItem.bDur;
 		item._iMaxDur = packedItem.bMDur;
-		item._iCharges = packedItem.bCh;
-		item._iMaxCharges = packedItem.bMCh;
+		item._iDurability = ClampDurability(item, packedItem.bDur);
+		item._iMaxCharges = clamp<int>(packedItem.bMCh, 0, item._iMaxCharges);
+		item._iCharges = clamp<int>(packedItem.bCh, 0, item._iMaxCharges);
 
 		RemoveInvalidItem(item);
 

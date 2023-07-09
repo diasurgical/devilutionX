@@ -1550,6 +1550,11 @@ void SetupAllItems(const Player &player, Item &item, _item_indexes idx, uint32_t
 			ItemRndDur(item);
 	} else {
 		if (item._iLoc != ILOC_UNEQUIPABLE) {
+			if (iseed > 109 || AllItemsList[static_cast<size_t>(idx)].iItemId != UniqueItems[iseed].UIItemId) {
+				item.clear();
+				return;
+			}
+
 			GetUniqueItem(player, item, (_unique_items)iseed); // uid is stored in iseed for uniques
 		}
 	}
