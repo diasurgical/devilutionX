@@ -1393,11 +1393,10 @@ void AddStealMana(Missile &missile, AddMissileParameter & /*parameter*/)
 
 void AddSpectralArrow(Missile &missile, AddMissileParameter &parameter)
 {
+	const Player &player = *missile.sourcePlayer();
 	int av = 0;
 
 	if (missile.sourceType() == MissileSource::Player) {
-		const Player &player = *missile.sourcePlayer();
-
 		if (player._pClass == HeroClass::Rogue)
 			av += (player.getCharacterLevel() - 1) / 4;
 		else if (player._pClass == HeroClass::Warrior || player._pClass == HeroClass::Bard)
@@ -1417,6 +1416,7 @@ void AddSpectralArrow(Missile &missile, AddMissileParameter &parameter)
 	missile.var1 = parameter.dst.x;
 	missile.var2 = parameter.dst.y;
 	missile.var3 = av;
+	missile._midam = player._pILMinDam;
 }
 
 void AddWarp(Missile &missile, AddMissileParameter &parameter)
@@ -3286,7 +3286,7 @@ void ProcessSpectralArrow(Missile &missile)
 		dir = player._pdir;
 		micaster = TARGET_MONSTERS;
 
-		switch (player._pILMinDam) {
+		switch (missile._midam) {
 		case 0:
 			mitype = MissileID::FireballBow;
 			break;
