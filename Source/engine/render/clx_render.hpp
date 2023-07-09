@@ -111,6 +111,11 @@ inline void ClxDrawLightBlended(const Surface &out, Point position, ClxSprite cl
 }
 
 /**
+ * Returns if cursor is within the CLX sprite (ignores shadow)
+ */
+bool IsPointWithinClx(Point position, ClxSprite clx);
+
+/**
  * Returns a pair of X coordinates containing the start (inclusive) and end (exclusive)
  * of fully transparent columns in the sprite.
  */

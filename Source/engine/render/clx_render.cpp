@@ -647,6 +647,59 @@ void ClxApplyTrans(ClxSpriteSheet sheet, const uint8_t *trn)
 	}
 }
 
+bool IsPointWithinClx(Point position, ClxSprite clx)
+{
+	const uint8_t *src = clx.pixelData();
+	const uint8_t *end = src + clx.pixelDataSize();
+	const uint16_t width = clx.width();
+
+	int xCur = 0;
+	int yCur = clx.height() - 1;
+	while (src < end) {
+		if (yCur != position.y) {
+			SkipSize skipSize {};
+			skipSize.xOffset = xCur;
+			src = SkipRestOfLineWithOverrun(src, width, skipSize);
+			yCur -= skipSize.wholeLines;
+			xCur = skipSize.xOffset;
+			if (yCur < position.y)
+				return false;
+			continue;
+		}
+
+		while (xCur < width) {
+			uint8_t val = *src++;
+			if (!IsClxOpaque(val)) {
+				// ignore transparent
+				xCur += val;
+				if (xCur > position.x)
+					return false;
+				continue;
+			}
+
+			if (IsClxOpaqueFill(val)) {
+				val = GetClxOpaqueFillWidth(val);
+				uint8_t color = *src++;
+				if (xCur <= position.x && position.x < xCur + val)
+					return color != 0; // ignore shadows
+				xCur += val;
+			} else {
+				val = GetClxOpaquePixelsWidth(val);
+				for (uint8_t pixel = 0; pixel < val; pixel++) {
+					uint8_t color = *src++;
+					if (xCur == position.x)
+						return color != 0; // ignore shadows
+					xCur++;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	return false;
+}
+
 std::pair<int, int> ClxMeasureSolidHorizontalBounds(ClxSprite clx)
 {
 	const uint8_t *src = clx.pixelData();
