@@ -2810,7 +2810,7 @@ void ProcessElementalArrow(Missile &missile)
 	} else {
 		missile._midist++;
 
-		MoveMissileAndCheckMissileCol(missile, DamageType::Physical, 0, 0, true, false);
+		MoveMissileAndCheckMissileCol(missile, DamageType::Physical, missile._midam, missile.var3, true, false);
 
 		if (missile._mirange == 0) {
 			missile._mimfnum = 0;
