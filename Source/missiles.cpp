@@ -2024,22 +2024,19 @@ void AddWeaponExplosion(Missile &missile, AddMissileParameter &parameter)
 {
 	missile.var2 = parameter.dst.x;
 
-	if (missile.var2 == 1)
-		SetMissAnim(missile, MissileGraphicID::MagmaBallExplosion);
-	else
-		SetMissAnim(missile, MissileGraphicID::ChargedBolt);
-
-	missile._mirange = missile._miAnimLen - 1;
-
 	const Player &player = *missile.sourcePlayer();
 
 	if (missile.var2 == 1) {
 		missile._midam = player._pIFMinDam; // min fire damage
 		missile.var3 = player._pIFMaxDam;   // max fire damage
+		SetMissAnim(missile, MissileGraphicID::MagmaBallExplosion);
 	} else {
 		missile._midam = player._pILMinDam; // min lightning damage
 		missile.var3 = player._pILMaxDam;   // max lightning damage
+		SetMissAnim(missile, MissileGraphicID::ChargedBolt);
 	}
+
+	missile._mirange = missile._miAnimLen - 1;
 }
 
 void AddTownPortal(Missile &missile, AddMissileParameter &parameter)
