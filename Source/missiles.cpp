@@ -1393,10 +1393,11 @@ void AddStealMana(Missile &missile, AddMissileParameter & /*parameter*/)
 
 void AddSpectralArrow(Missile &missile, AddMissileParameter &parameter)
 {
-	Player &player = *missile.sourcePlayer();
 	int av = 0;
 
 	if (missile.sourceType() == MissileSource::Player) {
+		Player &player = *missile.sourcePlayer();
+
 		if (player._pClass == HeroClass::Rogue)
 			av += (player.getCharacterLevel() - 1) / 4;
 		else if (player._pClass == HeroClass::Warrior || player._pClass == HeroClass::Bard)
