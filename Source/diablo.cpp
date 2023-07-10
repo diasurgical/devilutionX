@@ -191,6 +191,7 @@ void FreeGame()
 	FreeDebugGFX();
 #endif
 	FreeGameMem();
+	stream_stop();
 	music_stop();
 }
 

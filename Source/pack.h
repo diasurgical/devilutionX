@@ -79,6 +79,12 @@ struct PlayerPack {
 	uint8_t reserved3[20]; // For future use
 };
 
+union ItemNetPack {
+	TItemDef def;
+	TItem item;
+	TEar ear;
+};
+
 struct PlayerNetPack {
 	uint8_t plrlevel;
 	uint8_t px;
@@ -98,11 +104,11 @@ struct PlayerNetPack {
 	int32_t pMaxManaBase;
 	uint8_t pSplLvl[MAX_SPELLS];
 	uint64_t pMemSpells;
-	TItem InvBody[NUM_INVLOC];
-	TItem InvList[InventoryGridCells];
+	ItemNetPack InvBody[NUM_INVLOC];
+	ItemNetPack InvList[InventoryGridCells];
 	int8_t InvGrid[InventoryGridCells];
 	uint8_t _pNumInv;
-	TItem SpdList[MaxBeltItems];
+	ItemNetPack SpdList[MaxBeltItems];
 	uint8_t pManaShield;
 	uint16_t wReflections;
 	uint8_t pDiabloKillLevel;

@@ -369,7 +369,8 @@ msgid "Client-Server (TCP)"
 msgstr "Klijent-Poslužitelj (TCP)"
 
 #: Source/DiabloUI/selconn.cpp:15
-msgid "Loopback"
+#, fuzzy
+msgid "Offline" 
 msgstr "Izvanmrežno"
 
 #: Source/DiabloUI/selconn.cpp:56 Source/DiabloUI/selgame.cpp:634
@@ -1468,7 +1469,7 @@ msgstr "{} težina"
 msgid "In Menu"
 msgstr "U izbornik"
 
-#: Source/dvlnet/loopback.cpp:113
+#: Source/dvlnet/loopback.cpp:118
 msgid "loopback"
 msgstr "izvanmrežno"
 

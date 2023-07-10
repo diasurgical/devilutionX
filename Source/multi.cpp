@@ -62,6 +62,7 @@ uint8_t gbDeltaSender;
 bool sgbNetInited;
 uint32_t player_state[MAX_PLRS];
 Uint32 playerInfoTimers[MAX_PLRS];
+bool IsLoopback;
 
 /**
  * Contains the set of supported event types supported by the multiplayer

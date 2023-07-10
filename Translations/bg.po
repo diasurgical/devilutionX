@@ -368,7 +368,8 @@ msgid "Client-Server (TCP)"
 msgstr "Клиент-сървър (TCP)"
 
 #: Source/DiabloUI/selconn.cpp:15
-msgid "Loopback"
+#, fuzzy
+msgid "Offline" 
 msgstr "Обратна връзка"
 
 #: Source/DiabloUI/selconn.cpp:54 Source/DiabloUI/selgame.cpp:604
@@ -1469,7 +1470,7 @@ msgstr "{} трудност"
 msgid "In Menu"
 msgstr "В меню"
 
-#: Source/dvlnet/loopback.cpp:113
+#: Source/dvlnet/loopback.cpp:118
 msgid "loopback"
 msgstr "Обратна връзка"
 

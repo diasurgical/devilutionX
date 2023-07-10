@@ -37,23 +37,27 @@ void VerifyGoldSeeds(Player &player)
 	}
 }
 
-void PackNetItem(const Item &item, TItem &messageItem)
+void PackNetItem(const Item &item, ItemNetPack &packedItem)
 {
-	if (item.IDidx == IDI_EAR)
-		return;
-	messageItem.wIndx = static_cast<_item_indexes>(SDL_SwapLE16(item.IDidx));
-	messageItem.wCI = SDL_SwapLE16(item._iCreateInfo);
-	messageItem.dwSeed = SDL_SwapLE32(item._iSeed);
-	PrepareItemForNetwork(item, messageItem);
+	packedItem.def.wIndx = static_cast<_item_indexes>(SDL_SwapLE16(item.IDidx));
+	packedItem.def.wCI = SDL_SwapLE16(item._iCreateInfo);
+	packedItem.def.dwSeed = SDL_SwapLE32(item._iSeed);
+	if (item.IDidx != IDI_EAR)
+		PrepareItemForNetwork(item, packedItem.item);
+	else
+		PrepareEarForNetwork(item, packedItem.ear);
 }
 
-void UnPackNetItem(const Player &player, const TItem &messageItem, Item &item)
+void UnPackNetItem(const Player &player, const ItemNetPack &packedItem, Item &item)
 {
 	item = {};
-	_item_indexes idx = static_cast<_item_indexes>(SDL_SwapLE16(messageItem.wIndx));
-	if (idx < 0 || idx > IDI_LAST || idx == IDI_EAR)
+	_item_indexes idx = static_cast<_item_indexes>(SDL_SwapLE16(packedItem.def.wIndx));
+	if (idx < 0 || idx > IDI_LAST)
 		return;
-	RecreateItem(player, messageItem, item);
+	if (idx != IDI_EAR)
+		RecreateItem(player, packedItem.item, item);
+	else
+		RecreateEar(item, SDL_SwapLE16(packedItem.ear.wCI), SDL_SwapLE32(packedItem.ear.dwSeed), packedItem.ear.bCursval, packedItem.ear.heroname);
 }
 
 } // namespace
