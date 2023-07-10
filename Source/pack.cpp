@@ -495,6 +495,10 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 		return false;
 	if (player._pILMaxDam != SDL_SwapLE32(packed.pILMaxDam))
 		return false;
+	if (player._pMaxHPBase > player.calculateBaseLife())
+		return false;
+	if (player._pMaxManaBase > player.calculateBaseMana())
+		return false;
 
 	return true;
 }
