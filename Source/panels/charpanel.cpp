@@ -156,7 +156,7 @@ PanelEntry panelEntries[] = {
 	    []() { return StyledText { GetCurrentStatColor(CharacterAttribute::Vitality), StrCat(InspectPlayer->_pVitality) }; } },
 	{ N_("Points to distribute"), { LeftColumnLabelX, 248 }, 45, LeftColumnLabelWidth,
 	    []() {
-	        InspectPlayer->_pStatPts = std::min(CalcStatDiff(*InspectPlayer), InspectPlayer->_pStatPts);
+	        InspectPlayer->_pStatPts = std::min<uint8_t>(CalcStatDiff(*InspectPlayer), InspectPlayer->_pStatPts);
 	        return StyledText { UiFlags::ColorRed, (InspectPlayer->_pStatPts > 0 ? StrCat(InspectPlayer->_pStatPts) : "") };
 	    } },
 

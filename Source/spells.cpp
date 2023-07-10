@@ -297,8 +297,8 @@ void DoHealOther(const Player &caster, Player &target)
 		hp *= 3;
 	}
 
-	target._pHitPoints = std::min(target._pHitPoints + hp, target._pMaxHP);
-	target._pHPBase = std::min(target._pHPBase + hp, target._pMaxHPBase);
+	target._pHitPoints = std::min<int32_t>(target._pHitPoints + hp, target._pMaxHP);
+	target._pHPBase = std::min<int16_t>(target._pHPBase + hp, target._pMaxHPBase);
 
 	if (&target == MyPlayer) {
 		RedrawComponent(PanelDrawComponent::Health);

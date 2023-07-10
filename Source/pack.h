@@ -98,8 +98,8 @@ struct PlayerNetPack {
 	int8_t pLevel;
 	uint8_t pStatPts;
 	uint32_t pExperience;
-	int32_t pHPBase;
-	int32_t pMaxHPBase;
+	int16_t pHPBase;
+	int16_t pMaxHPBase;
 	int32_t pManaBase;
 	int32_t pMaxManaBase;
 	uint8_t pSplLvl[MAX_SPELLS];
@@ -116,29 +116,29 @@ struct PlayerNetPack {
 	uint8_t isOnSetLevel;
 
 	// For validation
-	int32_t pStrength;
-	int32_t pMagic;
-	int32_t pDexterity;
-	int32_t pVitality;
+	int16_t pStrength;
+	int16_t pMagic;
+	int16_t pDexterity;
+	int16_t pVitality;
 	int32_t pHitPoints;
 	int32_t pMaxHP;
 	int32_t pMana;
 	int32_t pMaxMana;
-	int32_t pDamageMod;
-	int32_t pBaseToBlk;
-	int32_t pIMinDam;
-	int32_t pIMaxDam;
-	int32_t pIAC;
-	int32_t pIBonusDam;
-	int32_t pIBonusToHit;
-	int32_t pIBonusAC;
-	int32_t pIBonusDamMod;
-	int32_t pIGetHit;
-	int32_t pIEnAc;
-	int32_t pIFMinDam;
-	int32_t pIFMaxDam;
-	int32_t pILMinDam;
-	int32_t pILMaxDam;
+	uint8_t pDamageMod;
+	uint8_t pBaseToBlk;
+	int16_t pIMinDam;
+	int16_t pIMaxDam;
+	int16_t pIAC;
+	int16_t pIBonusDam;
+	int16_t pIBonusToHit;
+	int16_t pIBonusAC;
+	int8_t pIBonusDamMod;
+	int8_t pIGetHit;
+	int8_t pIEnAc;
+	uint8_t pIFMinDam;
+	uint8_t pIFMaxDam;
+	uint8_t pILMinDam;
+	uint8_t pILMaxDam;
 };
 #pragma pack(pop)
 

@@ -236,54 +236,54 @@ struct Player {
 	Item SpdList[MaxBeltItems];
 	Item HoldItem;
 
-	int lightId;
+	int8_t lightId;
 
-	int _pNumInv;
-	int _pStrength;
-	int _pBaseStr;
-	int _pMagic;
-	int _pBaseMag;
-	int _pDexterity;
-	int _pBaseDex;
-	int _pVitality;
-	int _pBaseVit;
-	int _pStatPts;
-	int _pDamageMod;
-	int _pBaseToBlk;
-	int _pHPBase;
-	int _pMaxHPBase;
-	int _pHitPoints;
-	int _pMaxHP;
-	int _pHPPer;
-	int _pManaBase;
-	int _pMaxManaBase;
-	int _pMana;
-	int _pMaxMana;
-	int _pManaPer;
-	int _pIMinDam;
-	int _pIMaxDam;
-	int _pIAC;
-	int _pIBonusDam;
-	int _pIBonusToHit;
-	int _pIBonusAC;
-	int _pIBonusDamMod;
-	int _pIGetHit;
-	int _pIEnAc;
-	int _pIFMinDam;
-	int _pIFMaxDam;
-	int _pILMinDam;
-	int _pILMaxDam;
+	uint8_t _pNumInv;
+	uint8_t _pBaseStr;
+	uint8_t _pBaseMag;
+	uint8_t _pBaseDex;
+	uint8_t _pBaseVit;
+	uint8_t _pStatPts;
+	int16_t _pStrength;
+	int16_t _pMagic;
+	int16_t _pDexterity;
+	int16_t _pVitality;
+	uint8_t _pDamageMod;
+	uint8_t _pBaseToBlk;
+	int16_t _pHPBase;
+	int16_t _pMaxHPBase;
+	int32_t _pHitPoints;
+	int32_t _pMaxHP;
+	uint8_t _pHPPer;
+	int32_t _pManaBase;
+	int32_t _pMaxManaBase;
+	int32_t _pMana;
+	int32_t _pMaxMana;
+	uint8_t _pManaPer;
+	int16_t _pIMinDam;
+	int16_t _pIMaxDam;
+	int16_t _pIAC;
+	int16_t _pIBonusDam;
+	int16_t _pIBonusToHit;
+	int16_t _pIBonusAC;
+	int8_t _pIBonusDamMod;
+	int8_t _pIGetHit;
+	int8_t _pIEnAc;
+	uint8_t _pIFMinDam;
+	uint8_t _pIFMaxDam;
+	uint8_t _pILMinDam;
+	uint8_t _pILMaxDam;
 	uint32_t _pExperience;
 	uint32_t _pNextExper;
 	PLR_MODE _pmode;
 	int8_t walkpath[MaxPathLength];
 	bool plractive;
 	action_id destAction;
-	int destParam1;
-	int destParam2;
-	int destParam3;
-	int destParam4;
-	int _pGold;
+	uint8_t destParam1;
+	uint8_t destParam2;
+	uint8_t destParam3;
+	uint8_t destParam4;
+	int32_t _pGold;
 
 	/**
 	 * @brief Contains Information for current Animation
@@ -639,7 +639,7 @@ struct Player {
 			// Maximum achievable HP is approximately 1200. Diablo uses fixed point integers where the last 6 bits are
 			// fractional values. This means that we will never overflow HP values normally by doing this multiplication
 			// as the max value is representable in 17 bits and the multiplication result will be at most 23 bits
-			_pHPPer = clamp(_pHitPoints * 80 / _pMaxHP, 0, 80); // hp should never be greater than maxHP but just in case
+			_pHPPer = clamp<uint8_t>(_pHitPoints * 80 / _pMaxHP, 0, 80); // hp should never be greater than maxHP but just in case
 		}
 
 		return _pHPPer;
@@ -650,7 +650,7 @@ struct Player {
 		if (_pMaxMana <= 0) {
 			_pManaPer = 0;
 		} else {
-			_pManaPer = clamp(_pMana * 80 / _pMaxMana, 0, 80);
+			_pManaPer = clamp<uint8_t>(_pMana * 80 / _pMaxMana, 0, 80);
 		}
 
 		return _pManaPer;
