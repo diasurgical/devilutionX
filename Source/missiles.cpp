@@ -21,7 +21,6 @@
 #include "engine/random.hpp"
 #include "init.h"
 #include "inv.h"
-//#include "inv_iterators.hpp"
 #include "levels/trigs.h"
 #include "lighting.h"
 #include "monster.h"
