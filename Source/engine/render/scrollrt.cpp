@@ -353,8 +353,13 @@ void DrawMonster(const Surface &out, Point tilePosition, Point targetBufferPosit
 /**
  * @brief Helper for rendering a specific player icon (Mana Shield or Reflect)
  */
-void DrawPlayerIconHelper(const Surface &out, MissileGraphicID missileGraphicId, Point position, bool lighting, bool infraVision)
+void DrawPlayerIconHelper(const Surface &out, MissileGraphicID missileGraphicId, Point position, const Player &player, bool infraVision)
 {
+	bool lighting = &player != MyPlayer;
+
+	if (player.isWalking())
+		position += GetOffsetForWalking(player.AnimInfo, player._pdir);
+
 	position.x -= GetMissileSpriteData(missileGraphicId).animWidth2;
 
 	const ClxSprite sprite = (*GetMissileSpriteData(missileGraphicId).sprites).list()[0];
@@ -382,9 +387,9 @@ void DrawPlayerIconHelper(const Surface &out, MissileGraphicID missileGraphicId,
 void DrawPlayerIcons(const Surface &out, const Player &player, Point position, bool infraVision)
 {
 	if (player.pManaShield)
-		DrawPlayerIconHelper(out, MissileGraphicID::ManaShield, position, &player != MyPlayer, infraVision);
+		DrawPlayerIconHelper(out, MissileGraphicID::ManaShield, position, player, infraVision);
 	if (player.wReflections > 0)
-		DrawPlayerIconHelper(out, MissileGraphicID::Reflect, position + Displacement { 0, 16 }, &player != MyPlayer, infraVision);
+		DrawPlayerIconHelper(out, MissileGraphicID::Reflect, position + Displacement { 0, 16 }, player, infraVision);
 }
 
 /**
@@ -400,9 +405,8 @@ void DrawPlayer(const Surface &out, const Player &player, Point tilePosition, Po
 		return;
 	}
 
-	const ClxSprite sprite = player.previewCelSprite ? *player.previewCelSprite : player.AnimInfo.currentSprite();
-
-	Point spriteBufferPosition = targetBufferPosition - Displacement { CalculateWidth2(sprite.width()), 0 };
+	const ClxSprite sprite = player.currentSprite();
+	Point spriteBufferPosition = targetBufferPosition + player.getRenderingOffset(sprite);
 
 	if (static_cast<size_t>(pcursplr) < Players.size() && &player == &Players[pcursplr])
 		ClxDrawOutlineSkipColorZero(out, 165, spriteBufferPosition, sprite);
@@ -473,14 +477,9 @@ void DrawObject(const Surface &out, Point tilePosition, Point targetBufferPositi
 		return;
 	}
 
-	const ClxSprite sprite = (*objectToDraw._oAnimData)[objectToDraw._oAnimFrame - 1];
+	const ClxSprite sprite = objectToDraw.currentSprite();
 
-	Point screenPosition = targetBufferPosition - Displacement { CalculateWidth2(sprite.width()), 0 };
-	if (objectToDraw.position != tilePosition) {
-		// drawing a large or offset object, calculate the correct position for the center of the sprite
-		Displacement worldOffset = objectToDraw.position - tilePosition;
-		screenPosition -= worldOffset.worldToScreen();
-	}
+	Point screenPosition = targetBufferPosition + objectToDraw.getRenderingOffset(sprite, tilePosition);
 
 	if (&objectToDraw == ObjectUnderCursor) {
 		ClxDrawOutlineSkipColorZero(out, 194, screenPosition, sprite);
@@ -659,8 +658,7 @@ void DrawItem(const Surface &out, Point tilePosition, Point targetBufferPosition
 		return;
 
 	const ClxSprite sprite = item.AnimInfo.currentSprite();
-	int px = targetBufferPosition.x - CalculateWidth2(sprite.width());
-	const Point position { px, targetBufferPosition.y };
+	const Point position = targetBufferPosition + item.getRenderingOffset(sprite);
 	if (stextflag == TalkID::None && (bItem - 1 == pcursitem || AutoMapShowItems)) {
 		ClxDrawOutlineSkipColorZero(out, GetOutlineColor(item, false), position, sprite);
 	}
@@ -685,8 +683,7 @@ void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBuffe
 		if (isNegativeMonster)
 			return;
 		auto &towner = Towners[mi];
-		int px = targetBufferPosition.x - CalculateWidth2(towner._tAnimWidth);
-		const Point position { px, targetBufferPosition.y };
+		const Point position = targetBufferPosition + towner.getRenderingOffset();
 		const ClxSprite sprite = towner.currentSprite();
 		if (mi == pcursmonst) {
 			ClxDrawOutlineSkipColorZero(out, 166, position, sprite);
@@ -710,21 +707,20 @@ void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBuffe
 
 	const ClxSprite sprite = monster.animInfo.currentSprite();
 
-	Displacement offset = {};
+	Displacement offset = monster.getRenderingOffset(sprite);
 	if (monster.isWalking()) {
 		bool isSideWalkingToLeft = monster.mode == MonsterMode::MoveSideways && monster.direction == Direction::West;
 		if (isNegativeMonster && !isSideWalkingToLeft)
 			return;
 		if (!isNegativeMonster && isSideWalkingToLeft)
 			return;
-		offset = GetOffsetForWalking(monster.animInfo, monster.direction);
 		if (isSideWalkingToLeft)
 			offset -= Displacement { 64, 0 };
 	} else if (isNegativeMonster) {
 		return;
 	}
 
-	const Point monsterRenderPosition { targetBufferPosition + offset - Displacement { CalculateWidth2(sprite.width()), 0 } };
+	const Point monsterRenderPosition = targetBufferPosition + offset;
 	if (mi == pcursmonst) {
 		ClxDrawOutlineSkipColorZero(out, 233, monsterRenderPosition, sprite);
 	}
@@ -740,14 +736,7 @@ void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBuffe
  */
 void DrawPlayerHelper(const Surface &out, const Player &player, Point tilePosition, Point targetBufferPosition)
 {
-	Displacement offset = {};
-	if (player.isWalking()) {
-		offset = GetOffsetForWalking(player.AnimInfo, player._pdir);
-	}
-
-	const Point playerRenderPosition { targetBufferPosition + offset };
-
-	DrawPlayer(out, player, tilePosition, playerRenderPosition);
+	DrawPlayer(out, player, tilePosition, targetBufferPosition);
 }
 
 /**

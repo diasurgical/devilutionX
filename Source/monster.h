@@ -445,6 +445,14 @@ struct Monster { // note: missing field _mAFNum
 	 * But for graphics and rendering we show the old/real mode.
 	 */
 	[[nodiscard]] MonsterMode getVisualMonsterMode() const;
+
+	[[nodiscard]] Displacement getRenderingOffset(const ClxSprite sprite) const
+	{
+		Displacement offset = { -CalculateWidth2(sprite.width()), 0 };
+		if (isWalking())
+			offset += GetOffsetForWalking(animInfo, direction);
+		return offset;
+	}
 };
 
 extern size_t LevelMonsterTypeCount;

@@ -730,6 +730,18 @@ struct Player {
 
 	void getAnimationFramesAndTicksPerFrame(player_graphic graphics, int8_t &numberOfFrames, int8_t &ticksPerFrame) const;
 
+	[[nodiscard]] ClxSprite currentSprite() const
+	{
+		return previewCelSprite ? *previewCelSprite : AnimInfo.currentSprite();
+	}
+	[[nodiscard]] Displacement getRenderingOffset(const ClxSprite sprite) const
+	{
+		Displacement offset = { -CalculateWidth2(sprite.width()), 0 };
+		if (isWalking())
+			offset += GetOffsetForWalking(AnimInfo, _pdir);
+		return offset;
+	}
+
 	/**
 	 * @brief Updates previewCelSprite according to new requested command
 	 * @param cmdId What command is requested

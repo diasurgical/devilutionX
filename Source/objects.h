@@ -252,6 +252,21 @@ struct Object {
 	 * @brief Returns the name of the object as shown in the info box
 	 */
 	[[nodiscard]] StringOrView name() const;
+
+	[[nodiscard]] ClxSprite currentSprite() const
+	{
+		return (*_oAnimData)[_oAnimFrame - 1];
+	}
+	[[nodiscard]] Displacement getRenderingOffset(const ClxSprite sprite, Point tilePosition) const
+	{
+		Displacement offset = Displacement { -CalculateWidth2(sprite.width()), 0 };
+		if (position != tilePosition) {
+			// drawing a large or offset object, calculate the correct position for the center of the sprite
+			Displacement worldOffset = position - tilePosition;
+			offset -= worldOffset.worldToScreen();
+		}
+		return offset;
+	}
 };
 
 extern DVL_API_FOR_TEST Object Objects[MAXOBJECTS];

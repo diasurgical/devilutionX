@@ -61,9 +61,13 @@ struct Towner {
 	uint8_t animOrderSize;
 	_talker_id _ttype;
 
-	ClxSprite currentSprite() const
+	[[nodiscard]] ClxSprite currentSprite() const
 	{
 		return (*anim)[_tAnimFrame];
+	}
+	[[nodiscard]] Displacement getRenderingOffset() const
+	{
+		return { -CalculateWidth2(_tAnimWidth), 0 };
 	}
 };
 
