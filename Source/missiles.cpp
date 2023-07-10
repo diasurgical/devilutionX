@@ -21,6 +21,7 @@
 #include "engine/random.hpp"
 #include "init.h"
 #include "inv.h"
+//#include "inv_iterators.hpp"
 #include "levels/trigs.h"
 #include "lighting.h"
 #include "monster.h"
@@ -1659,7 +1660,7 @@ void AddElementalArrow(Missile &missile, AddMissileParameter &parameter)
 	int av = 32;
 
 	if (missile.sourceType() == MissileSource::Player) {
-		const auto &player = *missile.sourcePlayer();
+		auto &player = *missile.sourcePlayer();
 
 		if (player._pClass == HeroClass::Rogue)
 			av += (player._pLevel) / 4;
@@ -1680,17 +1681,38 @@ void AddElementalArrow(Missile &missile, AddMissileParameter &parameter)
 				av -= 1;
 		}
 
+		int16_t minFireDam = 0;
+		int16_t maxFireDam = 0;
+		int16_t minLightningDam = 0;
+		int16_t maxLightningDam = 0;
+
+		for (Item &item : EquippedPlayerItemsRange { player }) {
+			switch (missile._mitype) {
+			case MissileID::LightningArrow:
+				minLightningDam += item._iLMinDam;
+				maxLightningDam += item._iLMaxDam;
+				break;
+			case MissileID::FireArrow:
+				minFireDam += item._iFMinDam;
+				maxFireDam += item._iFMaxDam;
+				break;
+			default:
+				app_fatal(StrCat("wrong missile ID ", static_cast<int>(missile._mitype)));
+				break;
+			}
+		}
+
 		missile._midam = player._pIMinDam; // min physical damage
 		missile.var3 = player._pIMaxDam;   // max physical damage
 
 		switch (missile._mitype) {
 		case MissileID::LightningArrow:
-			missile.var4 = player._pILMinDam; // min lightning damage
-			missile.var5 = player._pILMaxDam; // max lightning damage
+			missile.var4 = minLightningDam; // min lightning damage
+			missile.var5 = maxLightningDam; // max lightning damage
 			break;
 		case MissileID::FireArrow:
-			missile.var4 = player._pIFMinDam; // min fire damage
-			missile.var5 = player._pIFMaxDam; // max fire damage
+			missile.var4 = minFireDam; // min fire damage
+			missile.var5 = maxFireDam; // max fire damage
 			break;
 		default:
 			app_fatal(StrCat("wrong missile ID ", static_cast<int>(missile._mitype)));
@@ -2034,15 +2056,32 @@ void AddWeaponExplosion(Missile &missile, AddMissileParameter &parameter)
 {
 	missile.var2 = parameter.dst.x;
 
-	const Player &player = *missile.sourcePlayer();
+	Player &player = *missile.sourcePlayer();
+
+	int16_t minFireDam = 0;
+	int16_t maxFireDam = 0;
+	int16_t minLightningDam = 0;
+	int16_t maxLightningDam = 0;
+
+	if (missile.sourceType() == MissileSource::Player) {
+		for (Item &item : EquippedPlayerItemsRange { player }) {
+			if (missile.var2 == 1) {
+				minFireDam += item._iFMinDam;
+				maxFireDam += item._iFMaxDam;
+			} else {
+				minLightningDam += item._iLMinDam;
+				maxLightningDam += item._iLMaxDam;
+			}
+		}
+	}
 
 	if (missile.var2 == 1) {
-		missile._midam = player._pIFMinDam; // min fire damage
-		missile.var3 = player._pIFMaxDam;   // max fire damage
+		missile._midam = minFireDam; // min fire damage
+		missile.var3 = maxFireDam;   // max fire damage
 		SetMissAnim(missile, MissileGraphicID::MagmaBallExplosion);
 	} else {
-		missile._midam = player._pILMinDam; // min lightning damage
-		missile.var3 = player._pILMaxDam;   // max lightning damage
+		missile._midam = minLightningDam; // min lightning damage
+		missile.var3 = maxLightningDam;   // max lightning damage
 		SetMissAnim(missile, MissileGraphicID::ChargedBolt);
 	}
 
@@ -3283,7 +3322,7 @@ void ProcessSpectralArrow(Missile &missile)
 	Direction dir = Direction::South;
 	mienemy_type micaster = TARGET_PLAYERS;
 	if (!missile.IsTrap()) {
-		const Player &player = Players[id];
+		Player &player = Players[id];
 		dir = player._pdir;
 		micaster = TARGET_MONSTERS;
 
