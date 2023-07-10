@@ -302,14 +302,15 @@ void UnPackPlayer(const PlayerPack &packed, Player &player)
 	player._pStatPts = packed.pStatPts;
 
 	player._pMaxHPBase = SDL_SwapLE32(packed.pMaxHPBase);
-	player._pMaxHPBase = std::min(player._pMaxHPBase, player.calculateBaseLife());
+	player._pMaxHPBase = std::min<int32_t>(player._pMaxHPBase, player.calculateBaseLife());
 	player._pHPBase = SDL_SwapLE32(packed.pHPBase);
 	player._pHPBase = clamp<int32_t>(player._pHPBase, 0, player._pMaxHPBase);
 	player._pMaxHP = player._pMaxHPBase;
 	player._pHitPoints = player._pHPBase;
 
 	player._pMaxManaBase = SDL_SwapLE32(packed.pMaxManaBase);
-	player._pMaxManaBase = std::min(player._pMaxManaBase, player.calculateBaseMana());
+	player._pMaxManaBase = std::min<int32_t>(player._pMaxManaBase, player.calculateBaseMana());
+
 	player._pManaBase = SDL_SwapLE32(packed.pManaBase);
 	player._pManaBase = std::min<int32_t>(player._pManaBase, player._pMaxManaBase);
 	player._pMemSpells = SDL_SwapLE64(packed.pMemSpells);
