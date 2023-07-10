@@ -77,7 +77,7 @@ void SyncPortals()
 	}
 }
 
-void AddInTownPortal(int i)
+void AddPortalInTown(int i)
 {
 	AddWarpMissile(i, WarpDrop[i], false);
 }

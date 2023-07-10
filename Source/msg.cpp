@@ -2072,7 +2072,7 @@ size_t OnActivatePortal(const TCmd *pCmd, size_t pnum)
 		Player &player = Players[pnum];
 		if (&player != MyPlayer) {
 			if (leveltype == DTYPE_TOWN) {
-				AddInTownPortal(pnum);
+				AddPortalInTown(pnum);
 			} else if (player.isOnActiveLevel()) {
 				bool addPortal = true;
 				for (auto &missile : Missiles) {
