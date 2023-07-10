@@ -1393,7 +1393,7 @@ void AddStealMana(Missile &missile, AddMissileParameter & /*parameter*/)
 
 void AddSpectralArrow(Missile &missile, AddMissileParameter &parameter)
 {
-	const Player &player = *missile.sourcePlayer();
+	Player &player = *missile.sourcePlayer();
 	int av = 0;
 
 	if (missile.sourceType() == MissileSource::Player) {
@@ -1416,7 +1416,16 @@ void AddSpectralArrow(Missile &missile, AddMissileParameter &parameter)
 	missile.var1 = parameter.dst.x;
 	missile.var2 = parameter.dst.y;
 	missile.var3 = av;
-	missile._midam = player._pILMinDam;
+	
+	int16_t spectralID = 0;
+
+	for (Item &item : EquippedPlayerItemsRange { player }) {
+		if (item.isWeapon()) {
+			spectralID = item._iLMinDam;
+			break;
+		}
+	}
+	missile._midam = spectralID;
 }
 
 void AddWarp(Missile &missile, AddMissileParameter &parameter)
