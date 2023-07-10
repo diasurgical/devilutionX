@@ -105,23 +105,23 @@ bool RenderGold;
 
 /** Does the current panel have a scrollbar */
 bool stextscrl;
-/** Remember last scoll position */
+/** Remember last scroll position */
 int stextvhold;
-/** Scoll position */
+/** Scroll position */
 int stextsval;
-/** Next scoll position */
+/** Next scroll position */
 int stextdown;
-/** Previous scoll position */
+/** Previous scroll position */
 int stextup;
-/** Count down for the push state of the scroll up button */
+/** Countdown for the push state of the scroll up button */
 int8_t stextscrlubtn;
-/** Count down for the push state of the scroll down button */
+/** Countdown for the push state of the scroll down button */
 int8_t stextscrldbtn;
 
 /** Remember current store while displaying a dialog */
 TalkID stextshold;
 
-/** Temporary item used to hold the the item being traided */
+/** Temporary item used to hold the item being traded */
 Item StoreItem;
 
 /** Maps from towner IDs to NPC names. */
