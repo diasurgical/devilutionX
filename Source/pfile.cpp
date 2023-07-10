@@ -298,9 +298,9 @@ void CreateDetailDiffs(string_view prefix, string_view memoryMapFile, CompareInf
 
 	auto compareBytes = [&](size_t countBytes) {
 		if (compareInfoReference.dataExists && compareInfoReference.currentPosition + countBytes > compareInfoReference.size)
-			app_fatal(StrCat("Comparsion failed. Too less bytes in reference to compare. Location: ", prefix));
+			app_fatal(StrCat("Comparison failed. Not enough bytes in reference to compare. Location: ", prefix));
 		if (compareInfoActual.dataExists && compareInfoActual.currentPosition + countBytes > compareInfoActual.size)
-			app_fatal(StrCat("Comparsion failed. Too less bytes in actual to compare. Location: ", prefix));
+			app_fatal(StrCat("Comparison failed. Not enough bytes in actual to compare. Location: ", prefix));
 		bool result = true;
 		if (compareInfoReference.dataExists && compareInfoActual.dataExists)
 			result = memcmp(compareInfoReference.data.get() + compareInfoReference.currentPosition, compareInfoActual.data.get() + compareInfoActual.currentPosition, countBytes) == 0;

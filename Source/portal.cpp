@@ -21,7 +21,7 @@ namespace {
 /** Current portal number (a portal array index). */
 size_t portalindex;
 
-/** Coordinate of each players portal in town. */
+/** Coordinate of each player's portal in town. */
 Point PortalTownPosition[MAXPORTAL] = {
 	{ 57, 40 },
 	{ 59, 40 },
