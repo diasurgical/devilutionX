@@ -95,7 +95,8 @@ void PackItem(ItemPack &packedItem, const Item &item, bool isHellfire)
 				packedItem.bMDur = 254;
 			else
 				packedItem.bMDur = item._iMaxDur;
-			packedItem.bDur = min<int32_t>(item._iDurability, packedItem.bMDur);
+			packedItem.bDur = std::min<int32_t>(item._iDurability, packedItem.bMDur);
+
 			packedItem.bCh = item._iCharges;
 			packedItem.bMCh = item._iMaxCharges;
 			if (item.IDidx == IDI_GOLD)
