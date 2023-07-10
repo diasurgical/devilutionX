@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
 "POT-Creation-Date: 2023-07-05 03:51+0200\n"
-"PO-Revision-Date: 2023-07-05 03:51+0200\n"
+"PO-Revision-Date: 2023-07-09 20:20-0700\n"
 "Last-Translator: Altieres Lima da Silva <altieres.lima@gmail.com>\n"
 "Language-Team: \n"
 "Language: pt_BR\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.3.2\n"
+"X-Generator: Poedit 3.2.2\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: _;N_;P_:1c,2\n"
 "X-Poedit-Basepath: ..\n"
@@ -822,7 +822,7 @@ msgstr "Não"
 
 #: Source/DiabloUI/settingsmenu.cpp:146
 msgid "Press gamepad buttons to change."
-msgstr "Pressione qualquer botão do controle para mudar."
+msgstr "Pressione qualquer botão do controle para alterar."
 
 #: Source/DiabloUI/settingsmenu.cpp:424
 msgid "Bound key:"
@@ -838,11 +838,11 @@ msgstr "Desassociar tecla"
 
 #: Source/DiabloUI/settingsmenu.cpp:466
 msgid "Bound button combo:"
-msgstr "Associar combo de botões:"
+msgstr "Combinação de botões associada:"
 
 #: Source/DiabloUI/settingsmenu.cpp:475
 msgid "Unbind button combo"
-msgstr "Desassociar combo de botões"
+msgstr "Remover combo de botões"
 
 #: Source/DiabloUI/settingsmenu.cpp:519 Source/gamemenu.cpp:65
 msgid "Previous Menu"
@@ -1029,7 +1029,7 @@ msgstr "Comando "
 
 #: Source/control.cpp:356
 msgid " is unkown."
-msgstr " não identificado."
+msgstr " é desconhecido."
 
 #: Source/control.cpp:359 Source/control.cpp:360
 msgid "Description: "
@@ -4349,7 +4349,7 @@ msgid ""
 "Select from spell book, then\n"
 "cast spell to read"
 msgstr ""
-"Selecionar feitiço atual, então\n"
+"Selecione do livro de feitiços, então\n"
 "lance o feitiço para ler"
 
 #: Source/items.cpp:1817
@@ -4817,7 +4817,7 @@ msgstr "Covil do Arcebispo Lázarus"
 
 #: Source/levels/setmaps.cpp:32
 msgid "Church Arena"
-msgstr "Arena da Masmorra"
+msgstr "Arena da Igreja"
 
 #: Source/levels/setmaps.cpp:33
 msgid "Hell Arena"
@@ -7287,7 +7287,7 @@ msgstr "Todas as quests no modo Multijogador"
 
 #: Source/options.cpp:1056
 msgid "Enables the full/uncut singleplayer version of quests."
-msgstr "Habilita todas as quests de um jogador no modo multiplayer."
+msgstr "Habilita a versão completa/sem cortes das missões de um jogador."
 
 #: Source/options.cpp:1057
 msgid "Test Bard"
