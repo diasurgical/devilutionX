@@ -2057,13 +2057,13 @@ void Player::UpdatePreviewCelSprite(_cmd_id cmdId, Point point, uint16_t wParam1
 
 int32_t Player::calculateBaseLife() const
 {
-	const PlayerData playerData = PlayersData[static_cast<size_t>(_pClass)];
+	const PlayerData &playerData = PlayersData[static_cast<size_t>(_pClass)];
 	return playerData.adjLife + (playerData.lvlLife * _pLevel) + (playerData.chrLife * _pBaseVit);
 }
 
 int32_t Player::calculateBaseMana() const
 {
-	const PlayerData playerData = PlayersData[static_cast<size_t>(_pClass)];
+	const PlayerData &playerData = PlayersData[static_cast<size_t>(_pClass)];
 	return playerData.adjMana + (playerData.lvlMana * _pLevel) + (playerData.chrMana * _pBaseMag);
 }
 
@@ -2277,7 +2277,7 @@ void CreatePlayer(Player &player, HeroClass c)
 	player = {};
 	SetRndSeed(SDL_GetTicks());
 
-	PlayerData playerData = PlayersData[static_cast<size_t>(c)];
+	const PlayerData &playerData = PlayersData[static_cast<size_t>(c)];
 
 	player._pLevel = 1;
 	player._pClass = c;
