@@ -289,23 +289,7 @@ void UnPackPlayer(const PlayerPack &packed, Player &player)
 
 	player = {};
 	player._pLevel = clamp<int8_t>(packed.pLevel, 1, MaxCharacterLevel);
-	player._pMaxHPBase = SDL_SwapLE32(packed.pMaxHPBase);
-	player._pHPBase = SDL_SwapLE32(packed.pHPBase);
-	player._pHPBase = clamp<int32_t>(player._pHPBase, 0, player._pMaxHPBase);
-	player._pMaxHP = player._pMaxHPBase;
-	player._pHitPoints = player._pHPBase;
-	player.position.tile = position;
-	player.position.future = position;
-	player.setLevel(clamp<int8_t>(packed.plrlevel, 0, NUMLEVELS));
-
 	player._pClass = static_cast<HeroClass>(clamp<uint8_t>(packed.pClass, 0, enum_size<HeroClass>::value - 1));
-
-	ClrPlrPath(player);
-	player.destAction = ACTION_NONE;
-
-	CopyUtf8(player._pName, packed.pName, sizeof(player._pName));
-
-	InitPlayer(player, true);
 
 	player._pBaseStr = std::min<uint8_t>(packed.pBaseStr, player.GetMaximumAttributeValue(CharacterAttribute::Strength));
 	player._pStrength = player._pBaseStr;
@@ -317,16 +301,38 @@ void UnPackPlayer(const PlayerPack &packed, Player &player)
 	player._pVitality = player._pBaseVit;
 	player._pStatPts = packed.pStatPts;
 
+	player._pMaxHPBase = SDL_SwapLE32(packed.pMaxHPBase);
+	player._pMaxHPBase = std::min(player._pMaxHPBase, player.calculateBaseLife());
+	player._pHPBase = SDL_SwapLE32(packed.pHPBase);
+	player._pHPBase = clamp<int32_t>(player._pHPBase, 0, player._pMaxHPBase);
+	player._pMaxHP = player._pMaxHPBase;
+	player._pHitPoints = player._pHPBase;
+
+	player._pMaxManaBase = SDL_SwapLE32(packed.pMaxManaBase);
+	player._pMaxManaBase = std::min(player._pMaxManaBase, player.calculateBaseMana());
+	player._pManaBase = SDL_SwapLE32(packed.pManaBase);
+	player._pManaBase = std::min<int32_t>(player._pManaBase, player._pMaxManaBase);
+	player._pMemSpells = SDL_SwapLE64(packed.pMemSpells);
+
+	player.position.tile = position;
+	player.position.future = position;
+	player.setLevel(clamp<int8_t>(packed.plrlevel, 0, NUMLEVELS));
+
+	ClrPlrPath(player);
+	player.destAction = ACTION_NONE;
+
+	CopyUtf8(player._pName, packed.pName, sizeof(player._pName));
+	if (strlen(player._pName) == 0) {
+		CopyUtf8(player._pName, "Unnamed", sizeof(player._pName));
+	}
+
+	InitPlayer(player, true);
+
 	player._pExperience = SDL_SwapLE32(packed.pExperience);
 	player._pGold = SDL_SwapLE32(packed.pGold);
 	player._pBaseToBlk = PlayersData[static_cast<std::size_t>(player._pClass)].blockBonus;
 	if ((int)(player._pHPBase & 0xFFFFFFC0) < 64)
 		player._pHPBase = 64;
-
-	player._pMaxManaBase = SDL_SwapLE32(packed.pMaxManaBase);
-	player._pManaBase = SDL_SwapLE32(packed.pManaBase);
-	player._pManaBase = std::min<int32_t>(player._pManaBase, player._pMaxManaBase);
-	player._pMemSpells = SDL_SwapLE64(packed.pMemSpells);
 
 	for (int i = 0; i < 37; i++) // Should be MAX_SPELLS but set to 36 to make save games compatible
 		player._pSplLvl[i] = packed.pSplLvl[i];
