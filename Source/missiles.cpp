@@ -1410,22 +1410,22 @@ void AddSpectralArrow(Missile &missile, AddMissileParameter &parameter)
 			av += 4;
 		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastestAttack))
 			av += 8;
+
+		int16_t spectralID = 0;
+
+		for (Item &item : EquippedPlayerItemsRange { player }) {
+			if (item.isWeapon()) {
+				spectralID = item._iLMinDam;
+				break;
+			}
+		}
+		missile._midam = spectralID;
 	}
 
 	missile._mirange = 1;
 	missile.var1 = parameter.dst.x;
 	missile.var2 = parameter.dst.y;
 	missile.var3 = av;
-	
-	int16_t spectralID = 0;
-
-	for (Item &item : EquippedPlayerItemsRange { player }) {
-		if (item.isWeapon()) {
-			spectralID = item._iLMinDam;
-			break;
-		}
-	}
-	missile._midam = spectralID;
 }
 
 void AddWarp(Missile &missile, AddMissileParameter &parameter)
