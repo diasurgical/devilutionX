@@ -454,6 +454,11 @@ struct Item {
 
 	/** @brief Returns the translated item name to display (respects identified flag) */
 	StringOrView getName() const;
+
+	[[nodiscard]] Displacement getRenderingOffset(const ClxSprite sprite) const
+	{
+		return { -CalculateWidth2(sprite.width()), 0 };
+	}
 };
 
 struct ItemGetRecordStruct {
