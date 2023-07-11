@@ -88,6 +88,13 @@ struct PointOf {
 		return *this;
 	}
 
+	constexpr PointOf<CoordT> &operator/=(const int factor)
+	{
+		x /= factor;
+		y /= factor;
+		return *this;
+	}
+
 	constexpr PointOf<CoordT> operator-() const
 	{
 		return { -x, -y };
