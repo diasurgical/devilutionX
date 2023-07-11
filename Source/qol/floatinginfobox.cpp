@@ -584,7 +584,10 @@ void DrawFloatingItemInfoBox(const Surface &out, Point position)
 		linesWithColor.emplace_back(illegalItemStr, UiFlags::ColorRed);
 	}
 
-
+	// Items over level 30 cannot exist unless sourced from Wirt, and items over level 50 cannot legally be obtained.
+	if (((item._iCreateInfo & CF_LEVEL) > 30) && ((item._iCreateInfo & CF_BOY) == 0) || ((item._iCreateInfo & CF_LEVEL) > 50) && ((item._iCreateInfo & CF_BOY) != 0)) {
+		linesWithColor.emplace_back(illegalItemStr, UiFlags::ColorRed);
+	}
 
 	// CONSTRUCT STRING AS A BASE FOR UTILIZING LINESWITHCOLOR DATA
 	// linesBase is used to place the {} and newlines to grab the actual string data
