@@ -15,8 +15,10 @@
 #include "doom.h"
 #include "engine.h"
 #include "engine/backbuffer_state.hpp"
+#include "engine/demomode.h"
 #include "engine/load_cel.hpp"
 #include "engine/point.hpp"
+#include "engine/points_in_rectangle_range.hpp"
 #include "engine/render/clx_render.hpp"
 #include "engine/trn.hpp"
 #include "hwcursor.hpp"
@@ -296,6 +298,134 @@ bool TrySelectItem(bool flipflag, int mx, int my)
 		}
 	}
 	return pcursitem != -1;
+}
+
+bool TrySelectPixelBased(Point tile)
+{
+	if (demo::IsRunning() || demo::IsRecording() || HeadlessMode) {
+		// Recorded demos can run headless, but headless mode doesn't support loading sprites that are needed for pixel perfect selection
+		// => Ensure demos are always compatible
+		// => Never use sprites for selection when handling demos
+		return false;
+	}
+
+	auto checkSprite = [](Point renderingTile, const ClxSprite sprite, Displacement renderingOffset) {
+		const Point renderPosition = GetScreenPosition(renderingTile) + renderingOffset;
+		Point spriteTopLeft = renderPosition - Displacement { 0, sprite.height() };
+		Size spriteSize = { sprite.width(), sprite.height() };
+		if (*sgOptions.Graphics.zoom) {
+			spriteSize *= 2;
+			spriteTopLeft *= 2;
+		}
+		const Rectangle spriteCoords = Rectangle(spriteTopLeft, spriteSize);
+		if (!spriteCoords.contains(MousePosition))
+			return false;
+		Point pointInSprite = Point { 0, 0 } + (MousePosition - spriteCoords.position);
+		if (*sgOptions.Graphics.zoom)
+			pointInSprite /= 2;
+		return IsPointWithinClx(pointInSprite, sprite);
+	};
+
+	auto convertFromRenderingToWorldTile = [](Point renderingPoint) {
+		// Columns
+		Displacement ret = Displacement(Direction::East) * renderingPoint.x;
+		// Rows
+		ret += Displacement(Direction::South) * renderingPoint.y / 2;
+		if (renderingPoint.y & 1)
+			ret.deltaY += 1;
+		return ret;
+	};
+
+	// Try to find the selected entity from rendered pixels.
+	// We search the rendered rows/columns backwards, because the last rendered tile overrides previous rendered pixels.
+	auto searchArea = PointsInRectangle(Rectangle { { -1, -1 }, { 3, 8 } });
+	for (auto it = searchArea.rbegin(); it != searchArea.rend(); ++it) {
+		Point renderingColumnRaw = *it;
+		Point adjacentTile = tile + convertFromRenderingToWorldTile(renderingColumnRaw);
+		if (!InDungeonBounds(adjacentTile))
+			continue;
+
+		int monsterId = dMonster[adjacentTile.x][adjacentTile.y];
+		// Never select a monster if a target-player-only spell is selected
+		if (monsterId != 0 && IsNoneOf(pcurs, CURSOR_HEALOTHER, CURSOR_RESURRECT)) {
+			monsterId = abs(monsterId) - 1;
+			if (leveltype == DTYPE_TOWN) {
+				const Towner &towner = Towners[monsterId];
+				const ClxSprite sprite = towner.currentSprite();
+				Displacement renderingOffset = towner.getRenderingOffset();
+				if (checkSprite(adjacentTile, sprite, renderingOffset)) {
+					cursPosition = adjacentTile;
+					pcursmonst = monsterId;
+					return true;
+				}
+			} else {
+				const Monster &monster = Monsters[monsterId];
+				if (IsValidMonsterForSelection(monster)) {
+					const ClxSprite sprite = monster.animInfo.currentSprite();
+					Displacement renderingOffset = monster.getRenderingOffset(sprite);
+					if (checkSprite(adjacentTile, sprite, renderingOffset)) {
+						cursPosition = adjacentTile;
+						pcursmonst = monsterId;
+						return true;
+					}
+				}
+			}
+		}
+
+		int playerId = dPlayer[adjacentTile.x][adjacentTile.y];
+		if (playerId != 0) {
+			playerId = abs(playerId) - 1;
+			if (playerId != MyPlayerId) {
+				const Player &player = Players[playerId];
+				const ClxSprite sprite = player.currentSprite();
+				Displacement renderingOffset = player.getRenderingOffset(sprite);
+				if (checkSprite(adjacentTile, sprite, renderingOffset)) {
+					cursPosition = adjacentTile;
+					pcursplr = playerId;
+					return true;
+				}
+			}
+		}
+		if (TileContainsDeadPlayer(adjacentTile)) {
+			for (const Player &player : Players) {
+				if (player.position.tile == adjacentTile && &player != MyPlayer) {
+					const ClxSprite sprite = player.currentSprite();
+					Displacement renderingOffset = player.getRenderingOffset(sprite);
+					if (checkSprite(adjacentTile, sprite, renderingOffset)) {
+						cursPosition = adjacentTile;
+						pcursplr = static_cast<int8_t>(player.getId());
+						return true;
+					}
+				}
+			}
+		}
+
+		Object *object = FindObjectAtPosition(adjacentTile);
+		if (object != nullptr && object->_oSelFlag != 0) {
+			const ClxSprite sprite = object->currentSprite();
+			Displacement renderingOffset = object->getRenderingOffset(sprite, adjacentTile);
+			if (checkSprite(adjacentTile, sprite, renderingOffset)) {
+				cursPosition = adjacentTile;
+				ObjectUnderCursor = object;
+				return true;
+			}
+		}
+
+		uint8_t itemId = dItem[adjacentTile.x][adjacentTile.y];
+		if (itemId != 0) {
+			itemId = itemId - 1;
+			const Item &item = Items[itemId];
+			const ClxSprite sprite = item.AnimInfo.currentSprite();
+			Displacement renderingOffset = item.getRenderingOffset(sprite);
+			if (checkSprite(adjacentTile, sprite, renderingOffset)) {
+				cursPosition = adjacentTile;
+				pcursitem = static_cast<int8_t>(itemId);
+				return true;
+			}
+		}
+	}
+
+	return false;
 }
 
 } // namespace
@@ -692,6 +822,9 @@ void CheckCursMove()
 		return;
 	}
 
+	if (TrySelectPixelBased(currentTile))
+		return;
+
 	if (leveltype != DTYPE_TOWN) {
 		// Never select a monster if a target-player-only spell is selected
 		if (IsNoneOf(pcurs, CURSOR_HEALOTHER, CURSOR_RESURRECT)) {
@@ -723,12 +856,12 @@ void CheckCursMove()
 	}
 
 	if (TrySelectObject(flipflag, currentTile)) {
-		// found a object
+		// found an object
 		return;
 	}
 
 	if (TrySelectItem(flipflag, mx, my)) {
-		// found a item
+		// found an item
 		return;
 	}
 
