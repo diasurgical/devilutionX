@@ -320,7 +320,7 @@ void FullscreenChanged()
 
 	for (auto &vecItem : vecDialogItems) {
 		int vecItemValue = vecItem->m_value;
-		if (vecItemValue < 0 || vecItemValue >= vecOptions.size())
+		if (vecItemValue < 0 || static_cast<size_t>(vecItemValue) >= vecOptions.size())
 			continue;
 
 		auto *pOption = vecOptions[vecItemValue];
