@@ -1550,6 +1550,11 @@ void SetupAllItems(const Player &player, Item &item, _item_indexes idx, uint32_t
 			ItemRndDur(item);
 	} else {
 		if (item._iLoc != ILOC_UNEQUIPABLE) {
+			if (iseed > 109 || AllItemsList[static_cast<size_t>(idx)].iItemId != UniqueItems[iseed].UIItemId) {
+				item.clear();
+				return;
+			}
+
 			GetUniqueItem(player, item, (_unique_items)iseed); // uid is stored in iseed for uniques
 		}
 	}
@@ -4100,8 +4105,10 @@ void UseItem(size_t pnum, item_misc_id mid, SpellID spellID, int spellFrom)
 		break;
 	case IMISC_BOOK: {
 		uint8_t newSpellLevel = player._pSplLvl[static_cast<int8_t>(spellID)] + 1;
-		if (newSpellLevel <= MaxSpellLevel)
+		if (newSpellLevel <= MaxSpellLevel) {
+			player._pSplLvl[static_cast<int8_t>(spellID)] = newSpellLevel;
 			NetSendCmdParam2(true, CMD_CHANGE_SPELL_LEVEL, static_cast<uint16_t>(spellID), newSpellLevel);
+		}
 		if (HasNoneOf(player._pIFlags, ItemSpecialEffect::NoMana)) {
 			player._pMana += GetSpellData(spellID).sManaCost << 6;
 			player._pMana = std::min(player._pMana, player._pMaxMana);

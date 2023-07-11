@@ -268,7 +268,6 @@ struct Player {
 	int _pIBonusAC;
 	int _pIBonusDamMod;
 	int _pIGetHit;
-	int _pISplDur;
 	int _pIEnAc;
 	int _pIFMinDam;
 	int _pIFMaxDam;
@@ -773,6 +772,12 @@ struct Player {
 		this->plrlevel = static_cast<uint8_t>(level);
 		this->plrIsOnSetLevel = true;
 	}
+
+	/** @brief Returns a character's life based on starting life, character level, and base vitality. */
+	int32_t calculateBaseLife() const;
+
+	/** @brief Returns a character's mana based on starting mana, character level, and base magic. */
+	int32_t calculateBaseMana() const;
 };
 
 extern DVL_API_FOR_TEST size_t MyPlayerId;

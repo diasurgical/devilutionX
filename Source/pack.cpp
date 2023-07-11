@@ -37,6 +37,29 @@ void VerifyGoldSeeds(Player &player)
 	}
 }
 
+void PackNetItem(const Item &item, ItemNetPack &packedItem)
+{
+	packedItem.def.wIndx = static_cast<_item_indexes>(SDL_SwapLE16(item.IDidx));
+	packedItem.def.wCI = SDL_SwapLE16(item._iCreateInfo);
+	packedItem.def.dwSeed = SDL_SwapLE32(item._iSeed);
+	if (item.IDidx != IDI_EAR)
+		PrepareItemForNetwork(item, packedItem.item);
+	else
+		PrepareEarForNetwork(item, packedItem.ear);
+}
+
+void UnPackNetItem(const Player &player, const ItemNetPack &packedItem, Item &item)
+{
+	item = {};
+	_item_indexes idx = static_cast<_item_indexes>(SDL_SwapLE16(packedItem.def.wIndx));
+	if (idx < 0 || idx > IDI_LAST)
+		return;
+	if (idx != IDI_EAR)
+		RecreateItem(player, packedItem.item, item);
+	else
+		RecreateEar(item, SDL_SwapLE16(packedItem.ear.wCI), SDL_SwapLE32(packedItem.ear.dwSeed), packedItem.ear.bCursval, packedItem.ear.heroname);
+}
+
 } // namespace
 
 void PackItem(ItemPack &packedItem, const Item &item, bool isHellfire)
@@ -68,8 +91,12 @@ void PackItem(ItemPack &packedItem, const Item &item, bool isHellfire)
 			packedItem.iSeed = SDL_SwapLE32(item._iSeed);
 			packedItem.iCreateInfo = SDL_SwapLE16(item._iCreateInfo);
 			packedItem.bId = (item._iMagical << 1) | (item._iIdentified ? 1 : 0);
-			packedItem.bDur = item._iDurability;
-			packedItem.bMDur = item._iMaxDur;
+			if (item._iMaxDur > 255)
+				packedItem.bMDur = 254;
+			else
+				packedItem.bMDur = item._iMaxDur;
+			packedItem.bDur = std::min<int32_t>(item._iDurability, packedItem.bMDur);
+
 			packedItem.bCh = item._iCharges;
 			packedItem.bMCh = item._iMaxCharges;
 			if (item.IDidx == IDI_GOLD)
@@ -156,23 +183,47 @@ void PackNetPlayer(PlayerNetPack &packed, const Player &player)
 		packed.pSplLvl[i] = player._pSplLvl[i];
 
 	for (int i = 0; i < NUM_INVLOC; i++)
-		PrepareItemForNetwork(player.InvBody[i], packed.InvBody[i]);
+		PackNetItem(player.InvBody[i], packed.InvBody[i]);
 
 	packed._pNumInv = player._pNumInv;
 	for (int i = 0; i < packed._pNumInv; i++)
-		PrepareItemForNetwork(player.InvList[i], packed.InvList[i]);
+		PackNetItem(player.InvList[i], packed.InvList[i]);
 
 	for (int i = 0; i < InventoryGridCells; i++)
 		packed.InvGrid[i] = player.InvGrid[i];
 
 	for (int i = 0; i < MaxBeltItems; i++)
-		PrepareItemForNetwork(player.SpdList[i], packed.SpdList[i]);
+		PackNetItem(player.SpdList[i], packed.SpdList[i]);
 
 	packed.wReflections = SDL_SwapLE16(player.wReflections);
 	packed.pDiabloKillLevel = player.pDiabloKillLevel;
 	packed.pManaShield = player.pManaShield;
 	packed.friendlyMode = player.friendlyMode ? 1 : 0;
 	packed.isOnSetLevel = player.plrIsOnSetLevel;
+
+	packed.pStrength = SDL_SwapLE32(player._pStrength);
+	packed.pMagic = SDL_SwapLE32(player._pMagic);
+	packed.pDexterity = SDL_SwapLE32(player._pDexterity);
+	packed.pVitality = SDL_SwapLE32(player._pVitality);
+	packed.pHitPoints = SDL_SwapLE32(player._pHitPoints);
+	packed.pMaxHP = SDL_SwapLE32(player._pMaxHP);
+	packed.pMana = SDL_SwapLE32(player._pMana);
+	packed.pMaxMana = SDL_SwapLE32(player._pMaxMana);
+	packed.pDamageMod = SDL_SwapLE32(player._pDamageMod);
+	packed.pBaseToBlk = SDL_SwapLE32(player._pBaseToBlk);
+	packed.pIMinDam = SDL_SwapLE32(player._pIMinDam);
+	packed.pIMaxDam = SDL_SwapLE32(player._pIMaxDam);
+	packed.pIAC = SDL_SwapLE32(player._pIAC);
+	packed.pIBonusDam = SDL_SwapLE32(player._pIBonusDam);
+	packed.pIBonusToHit = SDL_SwapLE32(player._pIBonusToHit);
+	packed.pIBonusAC = SDL_SwapLE32(player._pIBonusAC);
+	packed.pIBonusDamMod = SDL_SwapLE32(player._pIBonusDamMod);
+	packed.pIGetHit = SDL_SwapLE32(player._pIGetHit);
+	packed.pIEnAc = SDL_SwapLE32(player._pIEnAc);
+	packed.pIFMinDam = SDL_SwapLE32(player._pIFMinDam);
+	packed.pIFMaxDam = SDL_SwapLE32(player._pIFMaxDam);
+	packed.pILMinDam = SDL_SwapLE32(player._pILMinDam);
+	packed.pILMaxDam = SDL_SwapLE32(player._pILMaxDam);
 }
 
 void UnPackItem(const ItemPack &packedItem, const Player &player, Item &item, bool isHellfire)
@@ -220,12 +271,11 @@ void UnPackItem(const ItemPack &packedItem, const Player &player, Item &item, bo
 	} else {
 		item = {};
 		RecreateItem(player, item, idx, SDL_SwapLE16(packedItem.iCreateInfo), SDL_SwapLE32(packedItem.iSeed), SDL_SwapLE16(packedItem.wValue), isHellfire);
-		item._iMagical = static_cast<item_quality>(packedItem.bId >> 1);
 		item._iIdentified = (packedItem.bId & 1) != 0;
-		item._iDurability = packedItem.bDur;
 		item._iMaxDur = packedItem.bMDur;
-		item._iCharges = packedItem.bCh;
-		item._iMaxCharges = packedItem.bMCh;
+		item._iDurability = ClampDurability(item, packedItem.bDur);
+		item._iMaxCharges = clamp<int>(packedItem.bMCh, 0, item._iMaxCharges);
+		item._iCharges = clamp<int>(packedItem.bCh, 0, item._iMaxCharges);
 
 		RemoveInvalidItem(item);
 
@@ -343,6 +393,9 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 	if (packed.pBaseVit > player.GetMaximumAttributeValue(CharacterAttribute::Vitality))
 		return false;
 
+	if (packed._pNumInv >= InventoryGridCells)
+		return false;
+
 	player._pLevel = packed.pLevel;
 	player.position.tile = position;
 	player.position.future = position;
@@ -384,20 +437,71 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 		player._pSplLvl[i] = packed.pSplLvl[i];
 
 	for (int i = 0; i < NUM_INVLOC; i++)
-		RecreateItem(player, packed.InvBody[i], player.InvBody[i]);
+		UnPackNetItem(player, packed.InvBody[i], player.InvBody[i]);
 
 	player._pNumInv = packed._pNumInv;
 	for (int i = 0; i < player._pNumInv; i++)
-		RecreateItem(player, packed.InvList[i], player.InvList[i]);
+		UnPackNetItem(player, packed.InvList[i], player.InvList[i]);
 
 	for (int i = 0; i < InventoryGridCells; i++)
 		player.InvGrid[i] = packed.InvGrid[i];
 
 	for (int i = 0; i < MaxBeltItems; i++)
-		RecreateItem(player, packed.SpdList[i], player.SpdList[i]);
+		UnPackNetItem(player, packed.SpdList[i], player.SpdList[i]);
 
 	CalcPlrInv(player, false);
 	player._pGold = CalculateGold(player);
+
+	if (player._pStrength != SDL_SwapLE32(packed.pStrength))
+		return false;
+	if (player._pMagic != SDL_SwapLE32(packed.pMagic))
+		return false;
+	if (player._pDexterity != SDL_SwapLE32(packed.pDexterity))
+		return false;
+	if (player._pVitality != SDL_SwapLE32(packed.pVitality))
+		return false;
+	if (player._pHitPoints != SDL_SwapLE32(packed.pHitPoints))
+		return false;
+	if (player._pMaxHP != SDL_SwapLE32(packed.pMaxHP))
+		return false;
+	if (player._pMana != SDL_SwapLE32(packed.pMana))
+		return false;
+	if (player._pMaxMana != SDL_SwapLE32(packed.pMaxMana))
+		return false;
+	if (player._pDamageMod != SDL_SwapLE32(packed.pDamageMod))
+		return false;
+	if (player._pBaseToBlk != SDL_SwapLE32(packed.pBaseToBlk))
+		return false;
+	if (player._pIMinDam != SDL_SwapLE32(packed.pIMinDam))
+		return false;
+	if (player._pIMaxDam != SDL_SwapLE32(packed.pIMaxDam))
+		return false;
+	if (player._pIAC != SDL_SwapLE32(packed.pIAC))
+		return false;
+	if (player._pIBonusDam != SDL_SwapLE32(packed.pIBonusDam))
+		return false;
+	if (player._pIBonusToHit != SDL_SwapLE32(packed.pIBonusToHit))
+		return false;
+	if (player._pIBonusAC != SDL_SwapLE32(packed.pIBonusAC))
+		return false;
+	if (player._pIBonusDamMod != SDL_SwapLE32(packed.pIBonusDamMod))
+		return false;
+	if (player._pIGetHit != SDL_SwapLE32(packed.pIGetHit))
+		return false;
+	if (player._pIEnAc != SDL_SwapLE32(packed.pIEnAc))
+		return false;
+	if (player._pIFMinDam != SDL_SwapLE32(packed.pIFMinDam))
+		return false;
+	if (player._pIFMaxDam != SDL_SwapLE32(packed.pIFMaxDam))
+		return false;
+	if (player._pILMinDam != SDL_SwapLE32(packed.pILMinDam))
+		return false;
+	if (player._pILMaxDam != SDL_SwapLE32(packed.pILMaxDam))
+		return false;
+	if (player._pMaxHPBase > player.calculateBaseLife())
+		return false;
+	if (player._pMaxManaBase > player.calculateBaseMana())
+		return false;
 
 	return true;
 }
