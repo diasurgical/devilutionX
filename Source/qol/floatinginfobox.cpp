@@ -277,7 +277,7 @@ int16_t CalculateModifiedStatValue(const ItemStatModifier stat, const Item &item
 	}
 }
 
-void DrawFloatingItemInfoBox(const Surface &out, Point position)
+void DrawFloatingItemInfoBox(const Surface &out, Point position, bool isShiftHeld)
 {
 	Player &myPlayer = *MyPlayer;
 
@@ -304,8 +304,8 @@ void DrawFloatingItemInfoBox(const Surface &out, Point position)
 	// Add Item Damage
 	std::string formattedDam;
 	if (item._iClass == ICLASS_WEAPON || item._iMinDam != 0 || item._iMaxDam != 0) {
-		uint8_t minDam = CalculateModifiedStatValue(ItemStatModifier::MinDamage, item);
-		uint8_t maxDam = CalculateModifiedStatValue(ItemStatModifier::MaxDamage, item);
+		int16_t minDam = CalculateModifiedStatValue(ItemStatModifier::MinDamage, item);
+		int16_t maxDam = CalculateModifiedStatValue(ItemStatModifier::MaxDamage, item);
 		UiFlags damColor = GetItemBonusColors(ItemStatType::Damage, item);
 		linesWithColor.emplace_back(_("Damage:"), UiFlags::ColorWhite);
 
@@ -422,6 +422,90 @@ void DrawFloatingItemInfoBox(const Surface &out, Point position)
 				break;
 			}
 		}
+	}
+
+	// Add Item Value
+	std::string formattedValue;
+	if (item._iClass != ICLASS_GOLD) {
+		int32_t value = item._iIdentified ? item._iIvalue : item._ivalue;
+		linesWithColor.emplace_back(_("Value:"), UiFlags::ColorWhite);
+		formattedValue = fmt::format(fmt::runtime(_("{:d}")), value);
+		linesWithColor.emplace_back(formattedValue, UiFlags::ColorWhite);
+	}
+
+	// Add Create Info
+	std::string formattedLevel;
+	std::string formattedSourceOnlyGood;
+	std::string formattedSourceMonster;
+	std::string formattedSourceUnique;
+	std::string formattedSourceDungeon;
+	std::string formattedSourceSmith;
+	std::string formattedSourceSmithPremium;
+	std::string formattedSourceBoy;
+	std::string formattedSourceWitch;
+	std::string formattedSourceHealer;
+	std::string formattedSourcePregen;
+	std::string formattedGame;
+	if (isShiftHeld) {
+		uint8_t level = item._iCreateInfo & CF_LEVEL;
+		linesWithColor.emplace_back(_("Level:"), UiFlags::ColorWhite);
+		formattedLevel = fmt::format(fmt::runtime(_("{:d}")), level);
+		linesWithColor.emplace_back(formattedLevel, UiFlags::ColorWhite);
+
+		std::string source;
+		linesWithColor.emplace_back(_("Source:"), UiFlags::ColorWhite);
+		if (HasAllOf(item._iCreateInfo, CF_ONLYGOOD)) {
+			source = _("??? (OnlyGood)");
+			formattedSourceOnlyGood = fmt::format(fmt::runtime(_("{:s}")), source);
+			linesWithColor.emplace_back(formattedSourceOnlyGood, UiFlags::ColorOrange);
+		}
+		if (HasAllOf(item._iCreateInfo, CF_UPER1) && HasNoneOf(item._iCreateInfo, CF_UPER15)) {
+			source = _("Monster");
+			formattedSourceMonster = fmt::format(fmt::runtime(_("{:s}")), source);
+			linesWithColor.emplace_back(formattedSourceMonster, UiFlags::ColorOrange);
+		}
+		if (HasNoneOf(item._iCreateInfo, CF_UPER1) && HasAllOf(item._iCreateInfo, CF_UPER15)) {
+			source = _("Unique Monster");
+			formattedSourceUnique = fmt::format(fmt::runtime(_("{:s}")), source);
+			linesWithColor.emplace_back(formattedSourceUnique, UiFlags::ColorOrange);
+		}
+		if (HasAllOf(item._iCreateInfo, CF_USEFUL)) {
+			source = _("Dungeon Floor");
+			formattedSourceDungeon = fmt::format(fmt::runtime(_("{:s}")), source);
+			linesWithColor.emplace_back(formattedSourceDungeon, UiFlags::ColorOrange);
+		}
+		if (HasAllOf(item._iCreateInfo, CF_SMITH)) {
+			source = _("Griswold");
+			formattedSourceSmith = fmt::format(fmt::runtime(_("{:s}")), source);
+			linesWithColor.emplace_back(formattedSourceSmith, UiFlags::ColorOrange);
+		}
+		if (HasAllOf(item._iCreateInfo, CF_SMITHPREMIUM)) {
+			source = _("Griswold Premium");
+			formattedSourceSmithPremium = fmt::format(fmt::runtime(_("{:s}")), source);
+			linesWithColor.emplace_back(formattedSourceSmithPremium, UiFlags::ColorOrange);
+		}
+		if (HasAllOf(item._iCreateInfo, CF_BOY)) {
+			source = _("Wirt");
+			formattedSourceBoy = fmt::format(fmt::runtime(_("{:s}")), source);
+			linesWithColor.emplace_back(formattedSourceBoy, UiFlags::ColorOrange);
+		}
+		if (HasAllOf(item._iCreateInfo, CF_WITCH)) {
+			source = _("Adria");
+			formattedSourceWitch = fmt::format(fmt::runtime(_("{:s}")), source);
+			linesWithColor.emplace_back(formattedSourceWitch, UiFlags::ColorOrange);
+		}
+		if (HasAllOf(item._iCreateInfo, CF_HEALER)) {
+			source = _("Pepin");
+			formattedSourceHealer = fmt::format(fmt::runtime(_("{:s}")), source);
+			linesWithColor.emplace_back(formattedSourceHealer, UiFlags::ColorOrange);
+		}
+		if (HasAllOf(item._iCreateInfo, CF_PREGEN)) {
+			source = _("??? (Pregen)");
+			formattedSourcePregen = fmt::format(fmt::runtime(_("{:s}")), source);
+			linesWithColor.emplace_back(formattedSourcePregen, UiFlags::ColorOrange);
+		}
+	} else {
+		linesWithColor.emplace_back(_("Hold Shift to see extra info"), UiFlags::ColorOrange);
 	}
 
 	// CONSTRUCT STRING AS A BASE FOR UTILIZING LINESWITHCOLOR DATA

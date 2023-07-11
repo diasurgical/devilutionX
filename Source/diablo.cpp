@@ -767,7 +767,7 @@ void GameEventHandler(const SDL_Event &event, uint16_t modState)
 				while (IsRedrawEverything()) {
 					// In direct rendering mode with double/triple buffering, we need
 					// to prepare all buffers before fading in.
-					DrawAndBlit();
+					DrawAndBlit((modState & KMOD_SHIFT) != 0);
 				}
 			}
 

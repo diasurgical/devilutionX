@@ -9,9 +9,10 @@
 #include "engine/point.hpp"
 #include "engine/surface.hpp"
 #include "items.h"
+#include "utils/enum_traits.h"
 
 namespace devilution {
 
-void DrawFloatingItemInfoBox(const Surface &out, Point position);
+void DrawFloatingItemInfoBox(const Surface &out, Point position, bool isShiftHeld);
 
 } // namespace devilution
