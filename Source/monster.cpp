@@ -4707,7 +4707,7 @@ MonsterMode Monster::getVisualMonsterMode() const
 	size_t monsterId = this->getId();
 	for (auto &missile : Missiles) {
 		// Search the missile that will restore the original monster mode and use the saved/original monster mode from it
-		if (missile._mitype == MissileID::StoneCurse && missile.var2 == monsterId) {
+		if (missile._mitype == MissileID::StoneCurse && static_cast<size_t>(missile.var2) == monsterId) {
 			return static_cast<MonsterMode>(missile.var1);
 		}
 	}
