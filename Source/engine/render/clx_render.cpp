@@ -92,12 +92,19 @@ struct SkipSize {
 	int_fast16_t wholeLines;
 	int_fast16_t xOffset;
 };
-DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT SkipSize GetSkipSize(int_fast16_t overrun, int_fast16_t srcWidth)
+
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT SkipSize GetSkipSize(int_fast16_t remainingWidth, int_fast16_t srcWidth)
 {
-	SkipSize result;
-	result.wholeLines = overrun / srcWidth;
-	result.xOffset = overrun - srcWidth * result.wholeLines;
-	return result;
+	if (remainingWidth < 0) {
+		// If `remainingWidth` is negative, `-remainingWidth` is the overrun.
+		const int_fast16_t overrunLines = -remainingWidth / srcWidth;
+		return {
+			static_cast<int_fast16_t>(1 + overrunLines),
+			static_cast<int_fast16_t>(-remainingWidth - srcWidth * overrunLines)
+		};
+	}
+	// If `remainingWidth` is non-negative, then it is 0, meaning we drew a whole line.
+	return { 1, 0 };
 }
 
 DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT const uint8_t *SkipRestOfLineWithOverrun(
@@ -109,13 +116,7 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT const uint8_t *SkipRestOfLineWithOverrun(
 		src = cmd.srcEnd;
 		remainingWidth -= cmd.length;
 	}
-	if (remainingWidth < 0) {
-		skipSize = GetSkipSize(-remainingWidth, srcWidth);
-		++skipSize.wholeLines;
-	} else {
-		skipSize.wholeLines = 1;
-		skipSize.xOffset = 0;
-	}
+	skipSize = GetSkipSize(remainingWidth, srcWidth);
 	return src;
 }
 
@@ -123,7 +124,7 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT const uint8_t *SkipRestOfLineWithOverrun(
 DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT int_fast16_t SkipLinesForRenderBackwardsWithOverrun(
     Point &position, RenderSrc &src, int_fast16_t dstHeight)
 {
-	SkipSize skipSize = { 0, 0 };
+	SkipSize skipSize { 0, 0 };
 	while (position.y >= dstHeight && src.begin != src.end) {
 		src.begin = SkipRestOfLineWithOverrun(
 		    src.begin, static_cast<int_fast16_t>(src.width), skipSize);
@@ -154,15 +155,10 @@ void DoRenderBackwardsClipY(
 			dst += cmd.length;
 			remainingWidth -= cmd.length;
 		}
-		dst -= dstPitch + src.width - remainingWidth;
 
-		if (remainingWidth < 0) {
-			const auto skipSize = GetSkipSize(-remainingWidth, static_cast<int_fast16_t>(src.width));
-			xOffset = skipSize.xOffset;
-			dst -= skipSize.wholeLines * dstPitch;
-		} else {
-			xOffset = 0;
-		}
+		const SkipSize skipSize = GetSkipSize(remainingWidth, static_cast<int_fast16_t>(src.width));
+		xOffset = skipSize.xOffset;
+		dst -= skipSize.wholeLines * dstPitch + src.width - remainingWidth;
 	}
 }
 
@@ -213,25 +209,19 @@ void DoRenderBackwardsClipXY(
 			remainingWidth -= unclippedLength; // result can be negative
 		}
 
-		// We've advanced `dst` by `clipX.width`.
-		//
-		// Set dst to (position.y - 1, position.x)
-		dst -= dstPitch + clipX.width;
-
 		// `remainingWidth` can be negative, in which case it is the amount of pixels
 		// that the source has overran the line.
 		remainingWidth += clipX.right;
-		SkipSize skipSize { 0, 0 };
+		SkipSize skipSize;
 		if (remainingWidth > 0) {
 			skipSize.xOffset = static_cast<int_fast16_t>(src.width) - remainingWidth;
 			src.begin = SkipRestOfLineWithOverrun(
 			    src.begin, static_cast<int_fast16_t>(src.width), skipSize);
-			--skipSize.wholeLines;
-		} else if (remainingWidth < 0) {
-			skipSize = GetSkipSize(-remainingWidth, static_cast<int_fast16_t>(src.width));
+		} else {
+			skipSize = GetSkipSize(remainingWidth, static_cast<int_fast16_t>(src.width));
 		}
 		xOffset = skipSize.xOffset;
-		dst -= dstPitch * skipSize.wholeLines;
+		dst -= dstPitch * skipSize.wholeLines + clipX.width;
 	}
 }
 
@@ -293,7 +283,7 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderOutlineForPixels(uint8_t *dst, in
 		std::memset(dst + dstPitch, color, width);
 }
 
-template <bool North, bool West, bool South, bool East, bool SkipColorIndexZero = true>
+template <bool North, bool West, bool South, bool East, bool SkipColorIndexZero>
 DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderOutlineForPixels(uint8_t *dst, int dstPitch, int width, const uint8_t *src, uint8_t color)
 {
 	if (SkipColorIndexZero) {
@@ -305,7 +295,7 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderOutlineForPixels(uint8_t *dst, in
 }
 
 template <bool Fill, bool North, bool West, bool South, bool East, bool SkipColorIndexZero>
-uint8_t *RenderClxOutlinePixelsCheckFirstColumn(
+void RenderClxOutlinePixelsCheckFirstColumn(
     uint8_t *dst, int dstPitch, int dstX,
     const uint8_t *src, uint8_t width, uint8_t color)
 {
@@ -333,18 +323,16 @@ uint8_t *RenderClxOutlinePixelsCheckFirstColumn(
 		} else {
 			RenderOutlineForPixels<North, West, South, East, SkipColorIndexZero>(dst, dstPitch, width, src, color);
 		}
-		dst += width;
 	}
-	return dst;
 }
 
 template <bool Fill, bool North, bool West, bool South, bool East, bool SkipColorIndexZero>
-uint8_t *RenderClxOutlinePixelsCheckLastColumn(
+void RenderClxOutlinePixelsCheckLastColumn(
     uint8_t *dst, int dstPitch, int dstX, int dstW,
     const uint8_t *src, uint8_t width, uint8_t color)
 {
-	const bool lastPixel = dstX < dstW && width >= 1;
-	const bool oobPixel = dstX + width > dstW;
+	const bool lastPixel = dstX != dstW;
+	const bool oobPixel = dstX + width == dstW + 1;
 	const int numSpecialPixels = (lastPixel ? 1 : 0) + (oobPixel ? 1 : 0);
 	if (width > numSpecialPixels) {
 		width -= numSpecialPixels;
@@ -365,36 +353,32 @@ uint8_t *RenderClxOutlinePixelsCheckLastColumn(
 	}
 	if (oobPixel) {
 		if (Fill) {
-			RenderOutlineForPixel</*North=*/false, West, /*South=*/false, /*East=*/false>(dst++, dstPitch, color);
+			RenderOutlineForPixel</*North=*/false, West, /*South=*/false, /*East=*/false>(dst, dstPitch, color);
 		} else {
-			RenderOutlineForPixel</*North=*/false, West, /*South=*/false, /*East=*/false, SkipColorIndexZero>(dst++, dstPitch, *src++, color);
+			RenderOutlineForPixel</*North=*/false, West, /*South=*/false, /*East=*/false, SkipColorIndexZero>(dst, dstPitch, *src, color);
 		}
 	}
-	return dst;
 }
 
 template <bool Fill, bool North, bool West, bool South, bool East, bool SkipColorIndexZero, bool CheckFirstColumn, bool CheckLastColumn>
-uint8_t *RenderClxOutlinePixels(
+void RenderClxOutlinePixels(
     uint8_t *dst, int dstPitch, int dstX, int dstW,
     const uint8_t *src, uint8_t width, uint8_t color)
 {
 	if (SkipColorIndexZero && Fill && *src == 0)
-		return dst + width;
+		return;
 
 	if (CheckFirstColumn && dstX <= 0) {
-		return RenderClxOutlinePixelsCheckFirstColumn<Fill, North, West, South, East, SkipColorIndexZero>(
+		RenderClxOutlinePixelsCheckFirstColumn<Fill, North, West, South, East, SkipColorIndexZero>(
 		    dst, dstPitch, dstX, src, width, color);
-	}
-	if (CheckLastColumn && dstX + width >= dstW) {
-		return RenderClxOutlinePixelsCheckLastColumn<Fill, North, West, South, East, SkipColorIndexZero>(
+	} else if (CheckLastColumn && dstX + width >= dstW) {
+		RenderClxOutlinePixelsCheckLastColumn<Fill, North, West, South, East, SkipColorIndexZero>(
 		    dst, dstPitch, dstX, dstW, src, width, color);
-	}
-	if (Fill) {
+	} else if (Fill) {
 		RenderOutlineForPixels<North, West, South, East>(dst, dstPitch, width, color);
 	} else {
 		RenderOutlineForPixels<North, West, South, East, SkipColorIndexZero>(dst, dstPitch, width, src, color);
 	}
-	return dst + width;
 }
 
 template <bool North, bool West, bool South, bool East, bool SkipColorIndexZero,
@@ -411,14 +395,15 @@ const uint8_t *RenderClxOutlineRowClipped( // NOLINT(readability-function-cognit
 
 	const auto renderPixels = [&](bool fill, uint8_t w) {
 		if (fill) {
-			dst = RenderClxOutlinePixels</*Fill=*/true, North, West, South, East, SkipColorIndexZero, CheckFirstColumn, CheckLastColumn>(
+			RenderClxOutlinePixels</*Fill=*/true, North, West, South, East, SkipColorIndexZero, CheckFirstColumn, CheckLastColumn>(
 			    dst, dstPitch, position.x, out.w(), src, w, color);
 			++src;
 		} else {
-			dst = RenderClxOutlinePixels</*Fill=*/false, North, West, South, East, SkipColorIndexZero, CheckFirstColumn, CheckLastColumn>(
+			RenderClxOutlinePixels</*Fill=*/false, North, West, South, East, SkipColorIndexZero, CheckFirstColumn, CheckLastColumn>(
 			    dst, dstPitch, position.x, out.w(), src, w, color);
 			src += v;
 		}
+		dst += w;
 	};
 
 	if (ClipWidth) {
@@ -472,19 +457,10 @@ const uint8_t *RenderClxOutlineRowClipped( // NOLINT(readability-function-cognit
 		remainingWidth += clipX.right;
 		if (remainingWidth > 0) {
 			skipSize.xOffset = static_cast<int_fast16_t>(srcWidth) - remainingWidth;
-			src = SkipRestOfLineWithOverrun(src, static_cast<int_fast16_t>(srcWidth), skipSize);
-			if (skipSize.wholeLines > 1)
-				dst -= dstPitch * (skipSize.wholeLines - 1);
-			remainingWidth = -skipSize.xOffset;
+			return SkipRestOfLineWithOverrun(src, static_cast<int_fast16_t>(srcWidth), skipSize);
 		}
 	}
-	if (remainingWidth < 0) {
-		skipSize = GetSkipSize(-remainingWidth, static_cast<int_fast16_t>(srcWidth));
-		++skipSize.wholeLines;
-	} else {
-		skipSize.xOffset = 0;
-		skipSize.wholeLines = 1;
-	}
+	skipSize = GetSkipSize(remainingWidth, srcWidth);
 
 	return src;
 }
