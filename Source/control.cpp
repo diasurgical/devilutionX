@@ -1210,7 +1210,7 @@ void DrawInfoBox(const Surface &out)
 	}
 
 	if (*sgOptions.Gameplay.enableFloatingInfoBox) {
-		if (pcursinvitem != -1 || pcursstashitem != 65535) {
+		if (pcursinvitem != -1 || pcursstashitem != StashStruct::EmptyCell) {
 			return;
 		}
 	}
