@@ -456,64 +456,96 @@ void DrawFloatingItemInfoBox(const Surface &out, Point position)
 	std::string formattedSourceWitch;
 	std::string formattedSourceHealer;
 	std::string formattedSourcePregen;
+	std::string formattedSourceUnknown;
 	std::string formattedGame;
 	if (extraInfoKeyPressed) {
+		// Add Item Level
 		uint8_t level = item._iCreateInfo & CF_LEVEL;
 		linesWithColor.emplace_back(_("Level:"), UiFlags::ColorWhite);
 		formattedLevel = fmt::format(fmt::runtime(_("{:d}")), level);
 		linesWithColor.emplace_back(formattedLevel, UiFlags::ColorOrange);
 
+		// Add Item Source
 		std::string source;
+		bool hasSource = false;
 		linesWithColor.emplace_back(_("Source:"), UiFlags::ColorWhite);
 		if ((item._iCreateInfo & CF_ONLYGOOD) != 0) {
 			source = _("Armor Rack");
 			formattedSourceOnlyGood = fmt::format(fmt::runtime(_("{:s}")), source);
 			linesWithColor.emplace_back(formattedSourceOnlyGood, UiFlags::ColorOrange);
+			hasSource = true;
 		}
 		if (((item._iCreateInfo & CF_UPER1) != 0) && ((item._iCreateInfo & CF_UPER15) == 0)) {
 			source = _("Monster");
 			formattedSourceMonster = fmt::format(fmt::runtime(_("{:s}")), source);
 			linesWithColor.emplace_back(formattedSourceMonster, UiFlags::ColorOrange);
+			hasSource = true;
 		}
 		if (((item._iCreateInfo & CF_UPER1) == 0) && (item._iCreateInfo & CF_UPER15) != 0) {
 			source = _("Unique Monster");
 			formattedSourceUnique = fmt::format(fmt::runtime(_("{:s}")), source);
 			linesWithColor.emplace_back(formattedSourceUnique, UiFlags::ColorOrange);
+			hasSource = true;
 		}
 		if (((item._iCreateInfo & CF_UPER1) != 0) && (item._iCreateInfo & CF_UPER15) != 0) {
-			source = _("Dungeon Floor");
+			source = _("Dungeon");
 			formattedSourceDungeon = fmt::format(fmt::runtime(_("{:s}")), source);
 			linesWithColor.emplace_back(formattedSourceDungeon, UiFlags::ColorOrange);
+			hasSource = true;
 		}
 		if ((item._iCreateInfo & CF_SMITH) != 0) {
 			source = _("Griswold");
 			formattedSourceSmith = fmt::format(fmt::runtime(_("{:s}")), source);
 			linesWithColor.emplace_back(formattedSourceSmith, UiFlags::ColorOrange);
+			hasSource = true;
 		}
 		if ((item._iCreateInfo & CF_SMITHPREMIUM) != 0) {
 			source = _("Griswold Premium");
 			formattedSourceSmithPremium = fmt::format(fmt::runtime(_("{:s}")), source);
 			linesWithColor.emplace_back(formattedSourceSmithPremium, UiFlags::ColorOrange);
+			hasSource = true;
 		}
 		if ((item._iCreateInfo & CF_BOY) != 0) {
 			source = _("Wirt");
 			formattedSourceBoy = fmt::format(fmt::runtime(_("{:s}")), source);
 			linesWithColor.emplace_back(formattedSourceBoy, UiFlags::ColorOrange);
+			hasSource = true;
 		}
 		if ((item._iCreateInfo & CF_WITCH) != 0) {
 			source = _("Adria");
 			formattedSourceWitch = fmt::format(fmt::runtime(_("{:s}")), source);
 			linesWithColor.emplace_back(formattedSourceWitch, UiFlags::ColorOrange);
+			hasSource = true;
 		}
 		if ((item._iCreateInfo & CF_HEALER) != 0) {
 			source = _("Pepin");
 			formattedSourceHealer = fmt::format(fmt::runtime(_("{:s}")), source);
 			linesWithColor.emplace_back(formattedSourceHealer, UiFlags::ColorOrange);
+			hasSource = true;
 		}
 		if ((item._iCreateInfo & CF_PREGEN) != 0) {
 			source = _("Pregen");
 			formattedSourcePregen = fmt::format(fmt::runtime(_("{:s}")), source);
 			linesWithColor.emplace_back(formattedSourcePregen, UiFlags::ColorOrange);
+			hasSource = true;
+		}
+		if (!hasSource) {
+			source = _("Unknown");
+			formattedSourceUnknown = fmt::format(fmt::runtime(_("{:s}")), source);
+			linesWithColor.emplace_back(formattedSourceUnknown, UiFlags::ColorOrange);
+		}
+
+		// Add Item Game
+		std::string game;
+		linesWithColor.emplace_back(_("Game:"), UiFlags::ColorWhite);
+		if ((item.dwBuff & CF_HELLFIRE) == 0) {
+			game = _("Diablo");
+			formattedGame = fmt::format(fmt::runtime(_("{:s}")), game);
+			linesWithColor.emplace_back(formattedGame, UiFlags::ColorOrange);
+		} else {
+			game = _("Hellfire");
+			formattedGame = fmt::format(fmt::runtime(_("{:s}")), game);
+			linesWithColor.emplace_back(formattedGame, UiFlags::ColorOrange);
 		}
 	}
 
