@@ -88,6 +88,13 @@ struct PointOf {
 		return *this;
 	}
 
+	constexpr PointOf<CoordT> &operator/=(const int factor)
+	{
+		x /= factor;
+		y /= factor;
+		return *this;
+	}
+
 	constexpr PointOf<CoordT> operator-() const
 	{
 		static_assert(std::is_signed<CoordT>::value, "CoordT must be signed");
