@@ -577,10 +577,24 @@ void DrawFloatingItemInfoBox(const Surface &out, Point position)
 	}
 
 	// The flags for towner sourced items should never have more than one set at a time.
-	const int flagMask = CF_SMITH | CF_SMITHPREMIUM | CF_BOY | CF_WITCH | CF_HEALER;
-	const int numFlagsSet = CountSetBits(item._iCreateInfo & flagMask);
+	int flagMask = CF_SMITH | CF_SMITHPREMIUM | CF_BOY | CF_WITCH | CF_HEALER;
+	int numFlagsSet = CountSetBits(item._iCreateInfo & flagMask);
+	bool isCompatible = true;
 
-	if (numFlagsSet > 1) {
+	// Check if either CF_UPER15 or CF_UPER1 is set
+	bool isUper15Set = (item._iCreateInfo & CF_UPER15) != 0;
+	bool isUper1Set = (item._iCreateInfo & CF_UPER1) != 0;
+
+	// Check for compatibility conditions
+	if (isUper15Set || isUper1Set) {
+		if (numFlagsSet > 0)
+			isCompatible = false;
+	} else {
+		if (numFlagsSet > 1)
+			isCompatible = false;
+	}
+
+	if (!isCompatible) {
 		linesWithColor.emplace_back(illegalItemStr, UiFlags::ColorRed);
 	}
 
