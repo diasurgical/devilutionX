@@ -1493,7 +1493,7 @@ void DrawInvFloatingInfo(const Surface &out, bool isShiftHeld)
 			const Point position = GetPanelPosition(UiPanels::Inventory, { screenX, screenY });
 
 			if (pcursinvitem == slot) {
-				DrawFloatingItemInfoBox(out, position, isShiftHeld);
+				DrawFloatingItemInfoBox(out, position);
 			}
 		}
 	}
@@ -1505,7 +1505,7 @@ void DrawInvFloatingInfo(const Surface &out, bool isShiftHeld)
 
 			const Point position = GetPanelPosition(UiPanels::Inventory, InvRect[j + SLOTXY_INV_FIRST].position) + Displacement { 0, -1 + INV_SLOT_SIZE_PX };
 			if (pcursinvitem == ii + INVITEM_INV_FIRST) {
-				DrawFloatingItemInfoBox(out, position, isShiftHeld);
+				DrawFloatingItemInfoBox(out, position);
 			}
 		}
 	}
@@ -1520,7 +1520,7 @@ void DrawInvFloatingInfo(const Surface &out, bool isShiftHeld)
 		const Point position { InvRect[i + SLOTXY_BELT_FIRST].position.x + mainPanelPosition.x, InvRect[i + SLOTXY_BELT_FIRST].position.y + mainPanelPosition.y + InventorySlotSizeInPixels.height };
 
 		if (pcursinvitem == i + INVITEM_BELT_FIRST) {
-			DrawFloatingItemInfoBox(out, position, isShiftHeld);
+			DrawFloatingItemInfoBox(out, position);
 		}
 	}
 }
@@ -1543,7 +1543,7 @@ void DrawStashFloatingInfo(const Surface &out, bool isShiftHeld)
 		const Point position = GetStashSlotCoord(item.position) + offset;
 
 		if (pcursstashitem == itemId) {
-			DrawFloatingItemInfoBox(out, position, isShiftHeld);
+			DrawFloatingItemInfoBox(out, position);
 		}
 	}
 }

@@ -277,7 +277,7 @@ int16_t CalculateModifiedStatValue(const ItemStatModifier stat, const Item &item
 	}
 }
 
-void DrawFloatingItemInfoBox(const Surface &out, Point position, bool isShiftHeld)
+void DrawFloatingItemInfoBox(const Surface &out, Point position)
 {
 	Player &myPlayer = *MyPlayer;
 
@@ -446,7 +446,7 @@ void DrawFloatingItemInfoBox(const Surface &out, Point position, bool isShiftHel
 	std::string formattedSourceHealer;
 	std::string formattedSourcePregen;
 	std::string formattedGame;
-	if (isShiftHeld) {
+	if (true) {
 		uint8_t level = item._iCreateInfo & CF_LEVEL;
 		linesWithColor.emplace_back(_("Level:"), UiFlags::ColorWhite);
 		formattedLevel = fmt::format(fmt::runtime(_("{:d}")), level);

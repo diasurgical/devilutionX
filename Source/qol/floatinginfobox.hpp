@@ -13,6 +13,6 @@
 
 namespace devilution {
 
-void DrawFloatingItemInfoBox(const Surface &out, Point position, bool isShiftHeld);
+void DrawFloatingItemInfoBox(const Surface &out, Point position);
 
 } // namespace devilution
