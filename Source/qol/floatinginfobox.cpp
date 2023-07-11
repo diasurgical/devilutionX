@@ -440,7 +440,7 @@ void DrawFloatingItemInfoBox(const Surface &out, Point position)
 	if (item._iClass != ICLASS_GOLD) {
 		int32_t value = item._iIdentified ? item._iIvalue : item._ivalue;
 		linesWithColor.emplace_back(_("Value:"), UiFlags::ColorWhite);
-		formattedValue = fmt::format(fmt::runtime(_("{:d}")), value);
+		formattedValue = fmt::format(fmt::runtime(_("{:s}")), FormatInteger(value));
 		linesWithColor.emplace_back(formattedValue, UiFlags::ColorWhite);
 	}
 
@@ -461,62 +461,60 @@ void DrawFloatingItemInfoBox(const Surface &out, Point position)
 		uint8_t level = item._iCreateInfo & CF_LEVEL;
 		linesWithColor.emplace_back(_("Level:"), UiFlags::ColorWhite);
 		formattedLevel = fmt::format(fmt::runtime(_("{:d}")), level);
-		linesWithColor.emplace_back(formattedLevel, UiFlags::ColorWhite);
+		linesWithColor.emplace_back(formattedLevel, UiFlags::ColorOrange);
 
 		std::string source;
 		linesWithColor.emplace_back(_("Source:"), UiFlags::ColorWhite);
-		if (item._iCreateInfo & CF_ONLYGOOD) {
-			source = _("??? (OnlyGood)");
+		if ((item._iCreateInfo & CF_ONLYGOOD) != 0) {
+			source = _("Armor Rack");
 			formattedSourceOnlyGood = fmt::format(fmt::runtime(_("{:s}")), source);
 			linesWithColor.emplace_back(formattedSourceOnlyGood, UiFlags::ColorOrange);
 		}
-		if (item._iCreateInfo & CF_UPER1 && !(item._iCreateInfo & CF_UPER15)) {
+		if (((item._iCreateInfo & CF_UPER1) != 0) && ((item._iCreateInfo & CF_UPER15) == 0)) {
 			source = _("Monster");
 			formattedSourceMonster = fmt::format(fmt::runtime(_("{:s}")), source);
 			linesWithColor.emplace_back(formattedSourceMonster, UiFlags::ColorOrange);
 		}
-		if (!(item._iCreateInfo & CF_UPER1) && item._iCreateInfo & CF_UPER15) {
+		if (((item._iCreateInfo & CF_UPER1) == 0) && (item._iCreateInfo & CF_UPER15) != 0) {
 			source = _("Unique Monster");
 			formattedSourceUnique = fmt::format(fmt::runtime(_("{:s}")), source);
 			linesWithColor.emplace_back(formattedSourceUnique, UiFlags::ColorOrange);
 		}
-		if (item._iCreateInfo & CF_USEFUL) {
+		if (((item._iCreateInfo & CF_UPER1) != 0) && (item._iCreateInfo & CF_UPER15) != 0) {
 			source = _("Dungeon Floor");
 			formattedSourceDungeon = fmt::format(fmt::runtime(_("{:s}")), source);
 			linesWithColor.emplace_back(formattedSourceDungeon, UiFlags::ColorOrange);
 		}
-		if (item._iCreateInfo & CF_SMITH) {
+		if ((item._iCreateInfo & CF_SMITH) != 0) {
 			source = _("Griswold");
 			formattedSourceSmith = fmt::format(fmt::runtime(_("{:s}")), source);
 			linesWithColor.emplace_back(formattedSourceSmith, UiFlags::ColorOrange);
 		}
-		if (item._iCreateInfo & CF_SMITHPREMIUM) {
+		if ((item._iCreateInfo & CF_SMITHPREMIUM) != 0) {
 			source = _("Griswold Premium");
 			formattedSourceSmithPremium = fmt::format(fmt::runtime(_("{:s}")), source);
 			linesWithColor.emplace_back(formattedSourceSmithPremium, UiFlags::ColorOrange);
 		}
-		if (item._iCreateInfo & CF_BOY) {
+		if ((item._iCreateInfo & CF_BOY) != 0) {
 			source = _("Wirt");
 			formattedSourceBoy = fmt::format(fmt::runtime(_("{:s}")), source);
 			linesWithColor.emplace_back(formattedSourceBoy, UiFlags::ColorOrange);
 		}
-		if (item._iCreateInfo & CF_WITCH) {
+		if ((item._iCreateInfo & CF_WITCH) != 0) {
 			source = _("Adria");
 			formattedSourceWitch = fmt::format(fmt::runtime(_("{:s}")), source);
 			linesWithColor.emplace_back(formattedSourceWitch, UiFlags::ColorOrange);
 		}
-		if (item._iCreateInfo & CF_HEALER) {
+		if ((item._iCreateInfo & CF_HEALER) != 0) {
 			source = _("Pepin");
 			formattedSourceHealer = fmt::format(fmt::runtime(_("{:s}")), source);
 			linesWithColor.emplace_back(formattedSourceHealer, UiFlags::ColorOrange);
 		}
-		if (item._iCreateInfo & CF_PREGEN) {
-			source = _("??? (Pregen)");
+		if ((item._iCreateInfo & CF_PREGEN) != 0) {
+			source = _("Pregen");
 			formattedSourcePregen = fmt::format(fmt::runtime(_("{:s}")), source);
 			linesWithColor.emplace_back(formattedSourcePregen, UiFlags::ColorOrange);
 		}
-	} else {
-		linesWithColor.emplace_back(_("Hold Shift to see extra info"), UiFlags::ColorOrange);
 	}
 
 	// CONSTRUCT STRING AS A BASE FOR UTILIZING LINESWITHCOLOR DATA
