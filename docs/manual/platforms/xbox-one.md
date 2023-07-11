@@ -40,5 +40,5 @@
 
 ## Resources
 
-* Discord: https://discord.gg/YQKCAYQ
+* Discord: https://discord.gg/devilutionx
 * GitHub: https://github.com/diasurgical/devilutionX

@@ -33,7 +33,7 @@
  - See list of contributors https://github.com/diasurgical/devilutionX/graphs/contributors
 
 # Links
-Discord: https://discord.gg/YQKCAYQ
+Discord: https://discord.gg/devilutionx
 GitHub: https://github.com/diasurgical/devilutionX
 
 Check out the manual for what features are available and how best to take advantage of them: https://github.com/diasurgical/devilutionX/wiki

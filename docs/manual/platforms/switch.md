@@ -42,5 +42,5 @@ Launch `devilutionx.nro`. (Do not use album to launch; see the note below.)
 
 ## Resources
 
-* Discord: https://discord.gg/YQKCAYQ
+* Discord: https://discord.gg/devilutionx
 * GitHub: https://github.com/diasurgical/devilutionX
