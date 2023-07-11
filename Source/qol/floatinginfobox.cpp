@@ -454,52 +454,52 @@ void DrawFloatingItemInfoBox(const Surface &out, Point position, bool isShiftHel
 
 		std::string source;
 		linesWithColor.emplace_back(_("Source:"), UiFlags::ColorWhite);
-		if (HasAllOf(item._iCreateInfo, CF_ONLYGOOD)) {
+		if (item._iCreateInfo & CF_ONLYGOOD) {
 			source = _("??? (OnlyGood)");
 			formattedSourceOnlyGood = fmt::format(fmt::runtime(_("{:s}")), source);
 			linesWithColor.emplace_back(formattedSourceOnlyGood, UiFlags::ColorOrange);
 		}
-		if (HasAllOf(item._iCreateInfo, CF_UPER1) && HasNoneOf(item._iCreateInfo, CF_UPER15)) {
+		if (item._iCreateInfo & CF_UPER1 && !(item._iCreateInfo & CF_UPER15)) {
 			source = _("Monster");
 			formattedSourceMonster = fmt::format(fmt::runtime(_("{:s}")), source);
 			linesWithColor.emplace_back(formattedSourceMonster, UiFlags::ColorOrange);
 		}
-		if (HasNoneOf(item._iCreateInfo, CF_UPER1) && HasAllOf(item._iCreateInfo, CF_UPER15)) {
+		if (!(item._iCreateInfo & CF_UPER1) && item._iCreateInfo & CF_UPER15) {
 			source = _("Unique Monster");
 			formattedSourceUnique = fmt::format(fmt::runtime(_("{:s}")), source);
 			linesWithColor.emplace_back(formattedSourceUnique, UiFlags::ColorOrange);
 		}
-		if (HasAllOf(item._iCreateInfo, CF_USEFUL)) {
+		if (item._iCreateInfo & CF_USEFUL) {
 			source = _("Dungeon Floor");
 			formattedSourceDungeon = fmt::format(fmt::runtime(_("{:s}")), source);
 			linesWithColor.emplace_back(formattedSourceDungeon, UiFlags::ColorOrange);
 		}
-		if (HasAllOf(item._iCreateInfo, CF_SMITH)) {
+		if (item._iCreateInfo & CF_SMITH) {
 			source = _("Griswold");
 			formattedSourceSmith = fmt::format(fmt::runtime(_("{:s}")), source);
 			linesWithColor.emplace_back(formattedSourceSmith, UiFlags::ColorOrange);
 		}
-		if (HasAllOf(item._iCreateInfo, CF_SMITHPREMIUM)) {
+		if (item._iCreateInfo & CF_SMITHPREMIUM) {
 			source = _("Griswold Premium");
 			formattedSourceSmithPremium = fmt::format(fmt::runtime(_("{:s}")), source);
 			linesWithColor.emplace_back(formattedSourceSmithPremium, UiFlags::ColorOrange);
 		}
-		if (HasAllOf(item._iCreateInfo, CF_BOY)) {
+		if (item._iCreateInfo & CF_BOY) {
 			source = _("Wirt");
 			formattedSourceBoy = fmt::format(fmt::runtime(_("{:s}")), source);
 			linesWithColor.emplace_back(formattedSourceBoy, UiFlags::ColorOrange);
 		}
-		if (HasAllOf(item._iCreateInfo, CF_WITCH)) {
+		if (item._iCreateInfo & CF_WITCH) {
 			source = _("Adria");
 			formattedSourceWitch = fmt::format(fmt::runtime(_("{:s}")), source);
 			linesWithColor.emplace_back(formattedSourceWitch, UiFlags::ColorOrange);
 		}
-		if (HasAllOf(item._iCreateInfo, CF_HEALER)) {
+		if (item._iCreateInfo & CF_HEALER) {
 			source = _("Pepin");
 			formattedSourceHealer = fmt::format(fmt::runtime(_("{:s}")), source);
 			linesWithColor.emplace_back(formattedSourceHealer, UiFlags::ColorOrange);
 		}
-		if (HasAllOf(item._iCreateInfo, CF_PREGEN)) {
+		if (item._iCreateInfo & CF_PREGEN) {
 			source = _("??? (Pregen)");
 			formattedSourcePregen = fmt::format(fmt::runtime(_("{:s}")), source);
 			linesWithColor.emplace_back(formattedSourcePregen, UiFlags::ColorOrange);
