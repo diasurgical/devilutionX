@@ -1458,7 +1458,7 @@ void DrawTalkPan(const Surface &out)
 	}
 }
 
-void DrawInvFloatingInfo(const Surface &out, bool isShiftHeld)
+void DrawInvFloatingInfo(const Surface &out)
 {
 	Player &myPlayer = *InspectPlayer;
 
@@ -1525,7 +1525,7 @@ void DrawInvFloatingInfo(const Surface &out, bool isShiftHeld)
 	}
 }
 
-void DrawStashFloatingInfo(const Surface &out, bool isShiftHeld)
+void DrawStashFloatingInfo(const Surface &out)
 {
 	constexpr Displacement offset { 0, INV_SLOT_SIZE_PX - 1 };
 

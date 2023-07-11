@@ -1619,7 +1619,7 @@ void scrollrt_draw_game_screen()
 	RenderPresent();
 }
 
-void DrawAndBlit(bool isShiftHeld)
+void DrawAndBlit()
 {
 	if (!gbRunGame || HeadlessMode) {
 		return;
@@ -1683,8 +1683,8 @@ void DrawAndBlit(bool isShiftHeld)
 		DrawFlaskValues(out, { mainPanel.position.x + mainPanel.size.width - 138, mainPanel.position.y + 28 }, MyPlayer->_pMana >> 6, MyPlayer->_pMaxMana >> 6);
 
 	if (*sgOptions.Gameplay.enableFloatingInfoBox) {
-		DrawInvFloatingInfo(out, isShiftHeld);
-		DrawStashFloatingInfo(out, isShiftHeld);
+		DrawInvFloatingInfo(out);
+		DrawStashFloatingInfo(out);
 	}
 
 	DrawCursor(out);

@@ -1311,6 +1311,8 @@ KeymapperOptions::KeymapperOptions()
 	keyIDToKeyName.emplace(SDLK_SPACE, "SPACE");
 	keyIDToKeyName.emplace(SDLK_RCTRL, "RCONTROL");
 	keyIDToKeyName.emplace(SDLK_LCTRL, "LCONTROL");
+	keyIDToKeyName.emplace(SDLK_RSHIFT, "RSHIFT");
+	keyIDToKeyName.emplace(SDLK_LSHIFT, "LSHIFT");
 	keyIDToKeyName.emplace(SDLK_PRINTSCREEN, "PRINT");
 	keyIDToKeyName.emplace(SDLK_PAUSE, "PAUSE");
 	keyIDToKeyName.emplace(SDLK_TAB, "TAB");

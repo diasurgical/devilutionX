@@ -31,6 +31,17 @@
 
 namespace devilution {
 
+namespace {
+
+bool extraInfoKeyPressed = false;
+
+} // namespace
+
+void ExtraInfoKeyPressed(bool pressed)
+{
+	extraInfoKeyPressed = pressed;
+}
+
 enum class ItemStatType {
 	Damage,
 	Armor,
@@ -446,7 +457,7 @@ void DrawFloatingItemInfoBox(const Surface &out, Point position)
 	std::string formattedSourceHealer;
 	std::string formattedSourcePregen;
 	std::string formattedGame;
-	if (true) {
+	if (extraInfoKeyPressed) {
 		uint8_t level = item._iCreateInfo & CF_LEVEL;
 		linesWithColor.emplace_back(_("Level:"), UiFlags::ColorWhite);
 		formattedLevel = fmt::format(fmt::runtime(_("{:d}")), level);

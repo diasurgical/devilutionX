@@ -65,6 +65,7 @@
 #include "pfile.h"
 #include "plrmsg.h"
 #include "qol/chatlog.h"
+#include "qol/floatinginfobox.hpp"
 #include "qol/floatingnumbers.h"
 #include "qol/itemlabels.h"
 #include "qol/monhealthbar.h"
@@ -767,7 +768,7 @@ void GameEventHandler(const SDL_Event &event, uint16_t modState)
 				while (IsRedrawEverything()) {
 					// In direct rendering mode with double/triple buffering, we need
 					// to prepare all buffers before fading in.
-					DrawAndBlit((modState & KMOD_SHIFT) != 0);
+					DrawAndBlit();
 				}
 			}
 
@@ -1689,6 +1690,13 @@ void InitKeymapActions()
 	    nullptr,
 	    [] { ToggleItemLabelHighlight(); });
 	sgOptions.Keymapper.AddAction(
+	    "Show Extra Item Info",
+	    N_("Show Extra Item Info"),
+	    N_("Show extra item information in the floating info box."),
+	    SDLK_RSHIFT,
+	    [] { ExtraInfoKeyPressed(true); },
+	    [] { ExtraInfoKeyPressed(false); });
+	sgOptions.Keymapper.AddAction(
 	    "Toggle Automap",
 	    N_("Toggle automap"),
 	    N_("Toggles if automap is displayed."),
@@ -2208,6 +2216,13 @@ void InitPadmapActions()
 	    ControllerButton_NONE,
 	    nullptr,
 	    [] { ToggleItemLabelHighlight(); });
+	sgOptions.Padmapper.AddAction(
+	    "Show Extra Item Info",
+	    N_("Show Extra Item Info"),
+	    N_("Show extra item information in the floating info box."),
+	    ControllerButton_NONE,
+	    [] { ExtraInfoKeyPressed(true); },
+	    [] { ExtraInfoKeyPressed(false); });
 	sgOptions.Padmapper.AddAction(
 	    "Hide Info Screens",
 	    N_("Hide Info Screens"),
