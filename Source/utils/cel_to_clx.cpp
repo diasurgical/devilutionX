@@ -11,7 +11,7 @@
 #endif
 
 #include "appfat.h"
-#include "utils/clx_write.hpp"
+#include "utils/clx_encode.hpp"
 #include "utils/endian.hpp"
 
 namespace devilution {
@@ -101,9 +101,9 @@ OwnedClxSpriteListOrSheet CelToClx(const uint8_t *data, size_t size, PointerOrVa
 						val = GetCelTransparentWidth(val);
 						transparentRunWidth += val;
 					} else {
-						AppendCl2TransparentRun(transparentRunWidth, cl2Data);
+						AppendClxTransparentRun(transparentRunWidth, cl2Data);
 						transparentRunWidth = 0;
-						AppendCl2PixelsOrFillRun(src, val, cl2Data);
+						AppendClxPixelsOrFillRun(src, val, cl2Data);
 						src += val;
 					}
 					remainingCelWidth -= val;
@@ -112,7 +112,7 @@ OwnedClxSpriteListOrSheet CelToClx(const uint8_t *data, size_t size, PointerOrVa
 			}
 			WriteLE16(&cl2Data[frameHeaderPos + 4], frameHeight);
 			memset(&cl2Data[frameHeaderPos + 6], 0, 4);
-			AppendCl2TransparentRun(transparentRunWidth, cl2Data);
+			AppendClxTransparentRun(transparentRunWidth, cl2Data);
 		}
 
 		WriteLE32(&cl2Data[cl2DataOffset + 4 * (1 + static_cast<size_t>(numFrames))], static_cast<uint32_t>(cl2Data.size() - cl2DataOffset));
