@@ -6,7 +6,7 @@
 
 namespace devilution {
 
-inline void AppendCl2TransparentRun(unsigned width, std::vector<uint8_t> &out)
+inline void AppendClxTransparentRun(unsigned width, std::vector<uint8_t> &out)
 {
 	while (width >= 0x7F) {
 		out.push_back(0x7F);
@@ -17,7 +17,7 @@ inline void AppendCl2TransparentRun(unsigned width, std::vector<uint8_t> &out)
 	out.push_back(width);
 }
 
-inline void AppendCl2FillRun(uint8_t color, unsigned width, std::vector<uint8_t> &out)
+inline void AppendClxFillRun(uint8_t color, unsigned width, std::vector<uint8_t> &out)
 {
 	while (width >= 0x3F) {
 		out.push_back(0x80);
@@ -30,7 +30,7 @@ inline void AppendCl2FillRun(uint8_t color, unsigned width, std::vector<uint8_t>
 	out.push_back(color);
 }
 
-inline void AppendCl2PixelsRun(const uint8_t *src, unsigned width, std::vector<uint8_t> &out)
+inline void AppendClxPixelsRun(const uint8_t *src, unsigned width, std::vector<uint8_t> &out)
 {
 	while (width >= 0x41) {
 		out.push_back(0xBF);
@@ -46,7 +46,7 @@ inline void AppendCl2PixelsRun(const uint8_t *src, unsigned width, std::vector<u
 		out.push_back(src[i]);
 }
 
-inline void AppendCl2PixelsOrFillRun(const uint8_t *src, unsigned length, std::vector<uint8_t> &out)
+inline void AppendClxPixelsOrFillRun(const uint8_t *src, unsigned length, std::vector<uint8_t> &out)
 {
 	const uint8_t *begin = src;
 	const uint8_t *prevColorBegin = src;
@@ -61,8 +61,8 @@ inline void AppendCl2PixelsOrFillRun(const uint8_t *src, unsigned length, std::v
 			// 3 appears to be optimal for most of our data (much better than 2, rarely very slightly worse than 4).
 			constexpr unsigned MinFillRunLength = 3;
 			if (prevColorRunLength >= MinFillRunLength) {
-				AppendCl2PixelsRun(begin, prevColorBegin - begin, out);
-				AppendCl2FillRun(prevColor, prevColorRunLength, out);
+				AppendClxPixelsRun(begin, prevColorBegin - begin, out);
+				AppendClxFillRun(prevColor, prevColorRunLength, out);
 				begin = src;
 			}
 			prevColorBegin = src;
@@ -76,10 +76,10 @@ inline void AppendCl2PixelsOrFillRun(const uint8_t *src, unsigned length, std::v
 	// is followed by transparent pixels.
 	// Width=2 Fill command takes 2 bytes, while the Pixels command is 3 bytes.
 	if (prevColorRunLength >= 2) {
-		AppendCl2PixelsRun(begin, prevColorBegin - begin, out);
-		AppendCl2FillRun(prevColor, prevColorRunLength, out);
+		AppendClxPixelsRun(begin, prevColorBegin - begin, out);
+		AppendClxFillRun(prevColor, prevColorRunLength, out);
 	} else {
-		AppendCl2PixelsRun(begin, prevColorBegin - begin + prevColorRunLength, out);
+		AppendClxPixelsRun(begin, prevColorBegin - begin + prevColorRunLength, out);
 	}
 }
 

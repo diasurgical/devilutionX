@@ -3352,6 +3352,32 @@ void InitMonsterGFX(CMonster &monsterType)
 		    hasAnim);
 	}
 
+#ifndef UNPACKED_MPQS
+	if (!HeadlessMode) {
+		// Convert CL2 to CLX:
+		std::vector<std::vector<uint8_t>> clxData;
+		size_t accumulatedSize = 0;
+		for (size_t i = 0, j = 0; i < numAnims; ++i) {
+			if (!hasAnim(i))
+				continue;
+			const uint32_t begin = animOffsets[j];
+			const uint32_t end = animOffsets[j + 1];
+			clxData.emplace_back();
+			Cl2ToClx(reinterpret_cast<uint8_t *>(&monsterType.animData[begin]), end - begin,
+			    PointerOrValue<uint16_t> { monsterData.width }, clxData.back());
+			animOffsets[j] = accumulatedSize;
+			accumulatedSize += clxData.back().size();
+			++j;
+		}
+		animOffsets[clxData.size()] = accumulatedSize;
+		monsterType.animData = nullptr;
+		monsterType.animData = std::unique_ptr<byte[]>(new byte[accumulatedSize]);
+		for (size_t i = 0; i < clxData.size(); ++i) {
+			memcpy(&monsterType.animData[animOffsets[i]], clxData[i].data(), clxData[i].size());
+		}
+	}
+#endif
+
 	for (size_t i = 0, j = 0; i < numAnims; ++i) {
 		AnimStruct &anim = monsterType.anims[i];
 		if (!hasAnim(i)) {
@@ -3365,7 +3391,7 @@ void InitMonsterGFX(CMonster &monsterType)
 			const uint32_t begin = animOffsets[j];
 			const uint32_t end = animOffsets[j + 1];
 			auto spritesData = reinterpret_cast<uint8_t *>(&monsterType.animData[begin]);
-			const uint16_t numLists = Cl2ToClx(spritesData, end - begin, PointerOrValue<uint16_t> { monsterData.width });
+			const uint16_t numLists = GetNumListsFromClxListOrSheetBuffer(spritesData, end - begin);
 			anim.sprites = ClxSpriteListOrSheet { spritesData, numLists };
 		}
 		++j;
