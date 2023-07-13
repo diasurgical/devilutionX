@@ -173,7 +173,7 @@ PanelEntry panelEntries[] = {
 
 	{ N_("Armor class"), { RightColumnLabelX, 107 }, 57, RightColumnLabelWidth,
 	    []() { return StyledText { GetValueColor(InspectPlayer->_pIBonusAC), StrCat(InspectPlayer->GetArmor() + InspectPlayer->_pLevel * 2) }; } },
-	{ N_("To hit"), { RightColumnLabelX, 135 }, 57, RightColumnLabelWidth,
+	{ N_("Chance to hit"), { RightColumnLabelX, 135 }, 57, RightColumnLabelWidth,
 	    []() { return StyledText { GetValueColor(InspectPlayer->_pIBonusToHit), StrCat(InspectPlayer->InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Bow ? InspectPlayer->GetRangedToHit() : InspectPlayer->GetMeleeToHit(), "%") }; } },
 	{ N_("Damage"), { RightColumnLabelX, 163 }, 57, RightColumnLabelWidth,
 	    []() {
