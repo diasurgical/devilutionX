@@ -106,10 +106,10 @@ bool IsRightPanelOpen()
 constexpr Size IncrementAttributeButtonSize { 41, 22 };
 /** Maps from attribute_id to the rectangle on screen used for attribute increment buttons. */
 Rectangle ChrBtnsRect[4] = {
+	{ { 137, 110 }, IncrementAttributeButtonSize },
 	{ { 137, 138 }, IncrementAttributeButtonSize },
 	{ { 137, 166 }, IncrementAttributeButtonSize },
-	{ { 137, 195 }, IncrementAttributeButtonSize },
-	{ { 137, 223 }, IncrementAttributeButtonSize }
+	{ { 137, 195 }, IncrementAttributeButtonSize }
 };
 
 /** Positions of panel buttons. */
