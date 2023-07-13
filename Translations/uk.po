@@ -848,11 +848,11 @@ msgstr "Попереднє Меню"
 
 #: Source/DiabloUI/support_lines.cpp:8
 msgid ""
-"We maintain a chat server at Discord.gg/YQKCAYQ Follow the links to join our "
+"We maintain a chat server at Discord.gg/devilutionx Follow the links to join our "
 "community where we talk about things related to Diablo, and the Hellfire "
 "expansion."
 msgstr ""
-"У нас є чат-сервер за адресою Discord.gg/YQKCAYQ Переходьте по посиланням, "
+"У нас є чат-сервер за адресою Discord.gg/devilutionx Переходьте по посиланням, "
 "щоб приєднатися до нашої громади, де ми розмовляємо про Diablo та розширення "
 "Hellfire."
 

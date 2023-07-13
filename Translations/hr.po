@@ -833,11 +833,11 @@ msgstr "Prijašnji izbornik"
 
 #: Source/DiabloUI/support_lines.cpp:8
 msgid ""
-"We maintain a chat server at Discord.gg/YQKCAYQ Follow the links to join our "
+"We maintain a chat server at Discord.gg/devilutionx Follow the links to join our "
 "community where we talk about things related to Diablo, and the Hellfire "
 "expansion."
 msgstr ""
-"Mi održavamo poslužitelj razgovora na Discord.gg/YQKCAYQ Slijedite poveznice "
+"Mi održavamo poslužitelj razgovora na Discord.gg/devilutionx Slijedite poveznice "
 "kako bi se pridružili našoj zajednici gdje raspravljamo o stvarima "
 "povezanima s Diablom i Hellfire proširenjem."
 
