@@ -1135,7 +1135,8 @@ msgid "{:s}, Level: {:d}"
 msgstr "{:s}, Level: {:d}"
 
 #: Source/control.cpp:1027
-msgid "Hit Points {:d} of {:d}"
+#, fuzzy
+msgid "Life {:d} of {:d}"
 msgstr "ヒット​ポイント: {:d}/{:d}"
 
 #: Source/control.cpp:1061
@@ -4420,7 +4421,8 @@ msgid "{:+d} damage from enemies"
 msgstr "敵​から​受ける​ダメージ​{:+d}"
 
 #: Source/items.cpp:3576
-msgid "Hit Points: {:+d}"
+#, fuzzy
+msgid "Life: {:+d}"
 msgstr "ヒット​ポイント: {:+d}"
 
 #: Source/items.cpp:3579

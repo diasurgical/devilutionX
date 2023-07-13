@@ -1060,7 +1060,8 @@ msgid "{:s}, Level: {:d}"
 msgstr "{:s}, Nivå: {:d}"
 
 #: Source/control.cpp:898
-msgid "Hit Points {:d} of {:d}"
+#, fuzzy
+msgid "Life {:d} of {:d}"
 msgstr "Kroppspoäng {:d} av {:d}"
 
 #: Source/control.cpp:932
@@ -4180,7 +4181,8 @@ msgid "{:+d} damage from enemies"
 msgstr "{:+d} skada från fiender"
 
 #: Source/items.cpp:3624
-msgid "Hit Points: {:+d}"
+#, fuzzy
+msgid "Life: {:+d}"
 msgstr "Kroppspoäng: {:+d}"
 
 #: Source/items.cpp:3627

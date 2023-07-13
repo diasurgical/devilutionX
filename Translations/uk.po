@@ -1209,7 +1209,8 @@ msgid "{:s}, Level: {:d}"
 msgstr "{:s}, Рівень {:d}"
 
 #: Source/control.cpp:1207
-msgid "Hit Points {:d} of {:d}"
+#, fuzzy
+msgid "Life {:d} of {:d}"
 msgstr "Здоров'я {:d} з {:d}"
 
 #: Source/control.cpp:1238
@@ -4516,7 +4517,8 @@ msgid "{:+d} damage from enemies"
 msgstr "{:+d} шкоди від ворогів"
 
 #: Source/items.cpp:3781
-msgid "Hit Points: {:+d}"
+#, fuzzy
+msgid "Life: {:+d}"
 msgstr "Здоров'я {:+d}"
 
 #: Source/items.cpp:3784
