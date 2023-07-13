@@ -35,35 +35,35 @@ public:
 
 	bool Seekp(long pos, int dir = SEEK_SET)
 	{
-		std::fseek(s_, pos, dir);
-		return CheckError("fseek({}, {})", pos, DirToString(dir));
+		return CheckError(std::fseek(s_, pos, dir) == 0,
+		    "fseek({}, {})", pos, DirToString(dir));
 	}
 
 	bool Tellp(long *result)
 	{
 		*result = std::ftell(s_);
-		return CheckError("ftell() = {}", *result);
+		return CheckError(*result != -1L,
+		    "ftell() = {}", *result);
 	}
 
 	bool Write(const char *data, size_t size)
 	{
-		std::fwrite(data, size, 1, s_);
-		return CheckError("fwrite(data, {})", size);
+		return CheckError(std::fwrite(data, size, 1, s_) == 1,
+		    "fwrite(data, {})", size);
 	}
 
 	bool Read(char *out, size_t size)
 	{
-		std::fread(out, size, 1, s_);
-		return CheckError("fread(out, {})", size);
+		return CheckError(std::fread(out, size, 1, s_) == 1,
+		    "fread(out, {})", size);
 	}
 
 private:
 	static const char *DirToString(int dir);
 
 	template <typename... PrintFArgs>
-	bool CheckError(const char *fmt, PrintFArgs... args)
+	bool CheckError(bool ok, const char *fmt, PrintFArgs... args)
 	{
-		const bool ok = s_ != nullptr && std::ferror(s_) == 0;
 		if (!ok) {
 			std::string fmtWithError = fmt;
 			fmtWithError.append(": failed with \"{}\"");
