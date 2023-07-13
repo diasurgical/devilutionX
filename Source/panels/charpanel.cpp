@@ -10,6 +10,7 @@
 #include "engine/load_clx.hpp"
 #include "engine/render/clx_render.hpp"
 #include "engine/render/text_render.hpp"
+#include "inv_iterators.hpp"
 #include "panels/ui_panels.hpp"
 #include "player.h"
 #include "playerdat.hpp"
@@ -94,12 +95,52 @@ std::pair<int, int> GetDamage()
 
 std::pair<int, int> GetFireDamage()
 {
-	return { InspectPlayer->_pIFMinDam, InspectPlayer->_pIFMaxDam };
+	int minDam = InspectPlayer->_pIFMinDam;
+	int maxDam = InspectPlayer->_pIFMaxDam;
+
+	// These 3 Hellfire uniques set Fire Damage for their Missile Damage
+	// Therefore they should not be displayed
+	if (gbIsHellfire) {
+		for (Item &item : EquippedPlayerItemsRange { *InspectPlayer }) {
+			switch (item._iUid) {
+			case 99: // Flambeau
+				minDam -= UniqueItems[item._iUid].powers[0].param1;
+				maxDam -= UniqueItems[item._iUid].powers[0].param2;
+				break;
+			case 101: // Blitzen
+				minDam -= UniqueItems[item._iUid].powers[0].param1;
+				maxDam -= UniqueItems[item._iUid].powers[0].param2;
+				break;
+			case 102: // Thunderclap
+				minDam -= UniqueItems[item._iUid].powers[0].param1;
+				maxDam -= UniqueItems[item._iUid].powers[0].param2;
+				break;
+			}
+		}
+	}
+	return { minDam, maxDam };
 }
 
 std::pair<int, int> GetLightningDamage()
 {
-	return { InspectPlayer->_pILMinDam, InspectPlayer->_pILMaxDam };
+	int minDam = InspectPlayer->_pILMinDam;
+	int maxDam = InspectPlayer->_pILMaxDam;
+
+	// These 2 Hellfire uniques set Lightning damage to get MissileID
+	// Therefore they should not be displayed
+	if (gbIsHellfire) {
+		for (Item &item : EquippedPlayerItemsRange { *InspectPlayer }) {
+			switch (item._iUid) {
+			case 101: // Blitzen
+				minDam -= 1;
+				break;
+			case 102: // Thunderclap
+				minDam -= 2;
+				break;
+			}
+		}
+	}
+	return { minDam, maxDam };
 }
 
 StyledText GetResistInfo(int8_t resist)
