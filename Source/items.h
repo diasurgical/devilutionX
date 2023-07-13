@@ -129,21 +129,21 @@ enum _unique_items : int8_t {
 };
 
 /*
- First 6 bits store level
- 6th bit stores onlygood flag
- 7th bit stores uper15 flag - uper means unique percent, this flag is true for unique monsters and loot from them has 15% to become unique
- 8th bit stores uper1 flag - this is loot from normal monsters, which has 1% to become unique
- 9th bit stores info if item is unique
- 10th bit stores info if item is a basic one from Griswold
- 11th bit stores info if item is a premium one from Griswold
- 12th bit stores info if item is from Wirt
- 13th bit stores info if item is from Adria
- 14th bit stores info if item is from Pepin
- 15th bit stores pregen flag
+Bits 1-6: Item Level
+Bit 7: Item is not able to have affixes with PLOK set to false
+Bit 8: Item is from a Unique Monster and has 15% chance of being a Unique Item
+Bit 9: Item is from the dungeon and has a 1% chance of being a Unique Item
+Bit 10: Item is a Unique Item
+Bit 11: Item is from Griswold (Basic)
+Bit 12: Item is from Griswold (Premium)
+Bit 13: Item is from Wirt
+Bit 14: Item is from Adria
+Bit 15: Item is from Pepin
+Bit 16: Item is pre-generated, mostly associated with Quest items found in the dungeon or potions on the dungeon floor
 
- combining CF_UPER15 and CF_UPER1 flags (CF_USEFUL) is used to mark potions and town portal scrolls created on the ground
- CF_TOWN is combining all store flags and indicates if item has been bought from a NPC
- */
+Items that have both CF_UPER15 and CF_UPER1 are CF_USEFUL, which is used to generate Potions and Town Portal scrolls on the dungeon floor
+Items that have any of CF_SMITH, CF_SMITHPREMIUM, CF_BOY, CF_WICTH, and CF_HEALER are CF_TOWN, indicating the item is sourced from an NPC
+*/
 enum icreateinfo_flag {
 	// clang-format off
 	CF_LEVEL        = (1 << 6) - 1,
