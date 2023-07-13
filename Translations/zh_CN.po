@@ -820,11 +820,11 @@ msgstr "上​一​个​菜单"
 
 #: Source/DiabloUI/support_lines.cpp:8
 msgid ""
-"We maintain a chat server at Discord.gg/YQKCAYQ Follow the links to join our "
+"We maintain a chat server at Discord.gg/devilutionx Follow the links to join our "
 "community where we talk about things related to Diablo, and the Hellfire "
 "expansion."
 msgstr ""
-"我们​维护​的​聊天​服务器​部署​在 Discord.gg/YQKCAYQ ，点击​连接​加入​我们​的​社群，我们​"
+"我们​维护​的​聊天​服务器​部署​在 Discord.gg/devilutionx ，点击​连接​加入​我们​的​社群，我们​"
 "在​那里​谈论​有关​暗黑​破坏​神​以及​地狱火​资料片。"
 
 #: Source/DiabloUI/support_lines.cpp:10

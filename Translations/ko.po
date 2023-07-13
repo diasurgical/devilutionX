@@ -837,11 +837,11 @@ msgstr "이전 메뉴"
 
 #: Source/DiabloUI/support_lines.cpp:8
 msgid ""
-"We maintain a chat server at Discord.gg/YQKCAYQ Follow the links to join our "
+"We maintain a chat server at Discord.gg/devilutionx Follow the links to join our "
 "community where we talk about things related to Diablo, and the Hellfire "
 "expansion."
 msgstr ""
-"Discord.gg/YQKCAYQ에 채팅 서버를 개설해 놓았습니다. 링크를 따라 커뮤니티에 가"
+"Discord.gg/devilutionx에 채팅 서버를 개설해 놓았습니다. 링크를 따라 커뮤니티에 가"
 "입하여 디아블로와 헬파이어 확장팩에 관해 이야기를 나누세요."
 
 #: Source/DiabloUI/support_lines.cpp:10

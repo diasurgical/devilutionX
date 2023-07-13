@@ -827,11 +827,11 @@ msgstr "前​の​メニュー"
 
 #: Source/DiabloUI/support_lines.cpp:8
 msgid ""
-"We maintain a chat server at Discord.gg/YQKCAYQ Follow the links to join our "
+"We maintain a chat server at Discord.gg/devilutionx Follow the links to join our "
 "community where we talk about things related to Diablo, and the Hellfire "
 "expansion."
 msgstr ""
-"私たち​は​Discord.gg/YQKCAYQ​で​チャット​サーバー​を​管理​し​て​い​ます。リンク​を​たどっ​"
+"私たち​は​Discord.gg/devilutionx​で​チャット​サーバー​を​管理​し​て​い​ます。リンク​を​たどっ​"
 "て​コミュニティ​に​参加​し、Diablo​や​Hellfire​エクスパンション​に​関する​こと​を​話し​ま"
 "しょう。"
 

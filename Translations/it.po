@@ -857,11 +857,11 @@ msgstr "Menu Precedente"
 
 #: Source/DiabloUI/support_lines.cpp:8
 msgid ""
-"We maintain a chat server at Discord.gg/YQKCAYQ Follow the links to join our "
+"We maintain a chat server at Discord.gg/devilutionx Follow the links to join our "
 "community where we talk about things related to Diablo, and the Hellfire "
 "expansion."
 msgstr ""
-"Gestiamo un server di chat su Discord.gg/YQKCAYQ Segui i link per unirti "
+"Gestiamo un server di chat su Discord.gg/devilutionx Segui i link per unirti "
 "alla nostra community dove parliamo di cose relative a Diablo e "
 "all'espansione Hellfire."
 
