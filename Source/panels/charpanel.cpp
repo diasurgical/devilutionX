@@ -92,6 +92,17 @@ std::pair<int, int> GetDamage()
 	return { mindam, maxdam };
 }
 
+std::pair<int, int> GetFireDamage()
+{
+	return { InspectPlayer->_pIFMinDam, InspectPlayer->_pIFMaxDam };
+}
+
+std::pair<int, int> GetLightningDamage()
+{
+	return { InspectPlayer->_pILMinDam, InspectPlayer->_pILMaxDam };
+}
+
+
 StyledText GetResistInfo(int8_t resist)
 {
 	UiFlags style = UiFlags::ColorBlue;
@@ -162,13 +173,9 @@ PanelEntry panelEntries[] = {
 
 	{ N_("Armor class"), { RightColumnLabelX, 107 }, 57, RightColumnLabelWidth,
 	    []() { return StyledText { GetValueColor(InspectPlayer->_pIBonusAC), StrCat(InspectPlayer->GetArmor() + InspectPlayer->_pLevel * 2) }; } },
-	{ N_("Block chance"), { RightColumnLabelX, 135 }, 57, RightColumnLabelWidth,
-	    []() { return StyledText { UiFlags::ColorWhite, StrCat(InspectPlayer->_pBlockFlag ? InspectPlayer->GetBlockChance() : 0, "%") }; } },
-	{ N_("To hit"), { RightColumnLabelX, 163 }, 57, RightColumnLabelWidth,
+	{ N_("To hit"), { RightColumnLabelX, 135 }, 57, RightColumnLabelWidth,
 	    []() { return StyledText { GetValueColor(InspectPlayer->_pIBonusToHit), StrCat(InspectPlayer->InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Bow ? InspectPlayer->GetRangedToHit() : InspectPlayer->GetMeleeToHit(), "%") }; } },
-	{ N_("Magic to hit"), { RightColumnLabelX, 191 }, 57, RightColumnLabelWidth,
-	    []() { return StyledText { UiFlags::ColorWhite, StrCat(InspectPlayer->GetMagicToHit(), "%") }; } },
-	{ N_("Damage"), { RightColumnLabelX, 219 }, 57, RightColumnLabelWidth,
+	{ N_("Damage"), { RightColumnLabelX, 163 }, 57, RightColumnLabelWidth,
 	    []() {
 	        std::pair<int, int> dmg = GetDamage();
 	        int spacing = ((dmg.first >= 100) ? -1 : 1);
@@ -198,6 +205,24 @@ PanelEntry pointsToDistributeEntry[] = {
 	        InspectPlayer->_pStatPts = std::min(CalcStatDiff(*InspectPlayer), InspectPlayer->_pStatPts);
 	        return StyledText { UiFlags::ColorRed, (InspectPlayer->_pStatPts > 0 ? StrCat(InspectPlayer->_pStatPts) : "") };
 	    } }
+};
+
+PanelEntry fireDamageEntry[] = {
+	{ N_("Fire damage"), { RightColumnLabelX, 191 }, 57, RightColumnLabelWidth,
+	    []() {
+	        std::pair<int, int> dmg = GetFireDamage();
+	        int spacing = ((dmg.first >= 100) ? -1 : 1);
+	        return StyledText { UiFlags::ColorOrange, StrCat(dmg.first, "-", dmg.second), spacing };
+	    } },
+};
+
+PanelEntry lightningDamageEntry[] = {
+	{ N_("Lightning damage"), { RightColumnLabelX, 219 }, 57, RightColumnLabelWidth,
+	    []() {
+	        std::pair<int, int> dmg = GetLightningDamage();
+	        int spacing = ((dmg.first >= 100) ? -1 : 1);
+	        return StyledText { UiFlags::ColorYellow, StrCat(dmg.first, "-", dmg.second), spacing };
+	    } },
 };
 
 OptionalOwnedClxSpriteList Panel;
@@ -251,12 +276,11 @@ void DrawShadowString(const Surface &out, const PanelEntry &entry)
 void DrawStatButtons(const Surface &out)
 {
 	if (InspectPlayer->_pStatPts > 0 && !IsInspectingPlayer()) {
-		OwnedClxSpriteList boxLeft = LoadClx("data\\boxleftend.clx");
-		OwnedClxSpriteList boxMiddle = LoadClx("data\\boxmiddle.clx");
-		OwnedClxSpriteList boxRight = LoadClx("data\\boxrightend.clx");
-
 		auto &entry = pointsToDistributeEntry[0];
 		if (entry.statDisplayFunc) {
+			OwnedClxSpriteList boxLeft = LoadClx("data\\boxleftend.clx");
+			OwnedClxSpriteList boxMiddle = LoadClx("data\\boxmiddle.clx");
+			OwnedClxSpriteList boxRight = LoadClx("data\\boxrightend.clx");
 			Point pos = GetPanelPosition(UiPanels::Character, { 0, 0 });
 			StyledText tmp = (*entry.statDisplayFunc)();
 
@@ -325,6 +349,7 @@ void DrawChr(const Surface &out)
 {
 	Point pos = GetPanelPosition(UiPanels::Character, { 0, 0 });
 	RenderClxSprite(out, (*Panel)[0], pos);
+
 	for (auto &entry : panelEntries) {
 		if (entry.statDisplayFunc) {
 			StyledText tmp = (*entry.statDisplayFunc)();
@@ -335,6 +360,47 @@ void DrawChr(const Surface &out)
 			    UiFlags::AlignCenter | UiFlags::VerticalCenter | tmp.style, tmp.spacing);
 		}
 	}
+
+	OwnedClxSpriteList boxLeft = LoadClx("data\\boxleftend.clx");
+	OwnedClxSpriteList boxMiddle = LoadClx("data\\boxmiddle.clx");
+	OwnedClxSpriteList boxRight = LoadClx("data\\boxrightend.clx");
+
+	if (GetFireDamage().first > 0 || GetFireDamage().second > 0) {
+		auto &entry = fireDamageEntry[0];
+
+		if (entry.statDisplayFunc) {
+
+			StyledText tmp = (*entry.statDisplayFunc)();
+
+			DrawPanelField(out, entry.position, entry.length, boxLeft[0], boxMiddle[0], boxRight[0]);
+			DrawString(
+			    out,
+			    tmp.text,
+			    { entry.position + Displacement { pos.x, pos.y + PanelFieldPaddingTop }, { entry.length, PanelFieldInnerHeight } },
+			    UiFlags::AlignCenter | UiFlags::VerticalCenter | tmp.style, tmp.spacing);
+		}
+
+		DrawShadowString(out, entry);
+	}
+
+	if (GetLightningDamage().first > 0 || GetLightningDamage().second > 0) {
+		auto &entry = lightningDamageEntry[0];
+
+		if (entry.statDisplayFunc) {
+
+			StyledText tmp = (*entry.statDisplayFunc)();
+
+			DrawPanelField(out, entry.position, entry.length, boxLeft[0], boxMiddle[0], boxRight[0]);
+			DrawString(
+			    out,
+			    tmp.text,
+			    { entry.position + Displacement { pos.x, pos.y + PanelFieldPaddingTop }, { entry.length, PanelFieldInnerHeight } },
+			    UiFlags::AlignCenter | UiFlags::VerticalCenter | tmp.style, tmp.spacing);
+		}
+
+		DrawShadowString(out, entry);
+	}
+
 	DrawStatButtons(out);
 }
 
