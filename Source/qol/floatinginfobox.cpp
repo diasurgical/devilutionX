@@ -688,7 +688,7 @@ void DrawFloatingItemInfoBox(const Surface &out, Point position)
 	};
 
 	// Prevent top screen clipping for items
-	if (infoBoxRect.position.y < 0 && (pcursinvitem != -1 || pcursstashitem != -1)) {
+	if (infoBoxRect.position.y < 0 && (pcursinvitem != -1 || pcursstashitem != StashStruct::EmptyCell)) {
 		// Display box below item instead of above
 		infoBoxRect.position.y += (itemSize.height * (INV_SLOT_SIZE_PX + invSlotPadding)) + infoBoxSize.height;
 	}
