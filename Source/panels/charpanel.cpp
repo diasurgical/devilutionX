@@ -106,6 +106,8 @@ StyledText GetResistInfo(int8_t resist)
 }
 
 constexpr int LeftColumnLabelX = 88;
+constexpr int TopLeftLabelX = 9;
+constexpr int TopCenterLabelX = 110;
 constexpr int TopRightLabelX = 211;
 constexpr int RightColumnLabelX = 253;
 
@@ -113,30 +115,29 @@ constexpr int LeftColumnLabelWidth = 76;
 constexpr int RightColumnLabelWidth = 68;
 
 // Indices in `panelEntries`.
-constexpr unsigned AttributeHeaderEntryIndices[2] = { 5, 6 };
+constexpr unsigned ExperienceHeaderEntryIndices[2] = { 2, 4 };
+constexpr unsigned AttributeHeaderEntryIndices[2] = { 6, 7 };
 constexpr unsigned GoldHeaderEntryIndex = 16;
 
 PanelEntry panelEntries[] = {
 	{ "", { 9, 14 }, 150, 0,
 	    []() { return StyledText { UiFlags::ColorWhite, InspectPlayer->_pName }; } },
 	{ "", { 161, 14 }, 149, 0,
-	    []() { return StyledText { UiFlags::ColorWhite, std::string(_(PlayersData[static_cast<std::size_t>(InspectPlayer->_pClass)].className)) }; } },
+	    []() { return StyledText { UiFlags::ColorWhite, StrCat("Lvl ", InspectPlayer->_pLevel, " ", std::string(_(PlayersData[static_cast<std::size_t>(InspectPlayer->_pClass)].className))) }; } },
 
-	{ N_("Level"), { 57, 51 }, 57, 45,
-	    []() { return StyledText { UiFlags::ColorWhite, StrCat(InspectPlayer->_pLevel) }; } },
-	{ N_("Experience"), { TopRightLabelX, 51 }, 99, 91,
+	{ N_("Experience"), { TopCenterLabelX, /* set dynamically */ 0 }, 0, 99, {} },
+	{ "", { TopCenterLabelX, 62 }, 99, 0,
 	    []() {
-	        int spacing = ((InspectPlayer->_pExperience >= 1000000000) ? 0 : 1);
-	        return StyledText { UiFlags::ColorWhite, FormatInteger(InspectPlayer->_pExperience), spacing };
-	    } },
-	{ N_("Next level"), { TopRightLabelX, 79 }, 99, 198,
+			int spacing = ((InspectPlayer->_pExperience >= 1000000000) ? 0 : 1);
+			return StyledText { UiFlags::ColorWhite, FormatInteger(InspectPlayer->_pExperience), spacing }; } },
+	{ N_("Next level"), { TopRightLabelX, /* set dynamically */ 0 }, 0, 99, {} },
+	{ "", { TopRightLabelX, 62 }, 99, 0,
 	    []() {
-	        if (InspectPlayer->_pLevel == MaxCharacterLevel) {
+			if (InspectPlayer->_pLevel == MaxCharacterLevel) {
 		        return StyledText { UiFlags::ColorWhitegold, std::string(_("None")) };
 	        }
 	        int spacing = ((InspectPlayer->_pNextExper >= 1000000000) ? 0 : 1);
-	        return StyledText { UiFlags::ColorWhite, FormatInteger(InspectPlayer->_pNextExper), spacing };
-	    } },
+	        return StyledText { UiFlags::ColorWhite, FormatInteger(InspectPlayer->_pNextExper), spacing }; } },
 
 	{ N_("Base"), { LeftColumnLabelX, /* set dynamically */ 0 }, 0, 44, {} },
 	{ N_("Now"), { 135, /* set dynamically */ 0 }, 0, 44, {} },
@@ -154,18 +155,10 @@ PanelEntry panelEntries[] = {
 	{ N_("Vitality"), { LeftColumnLabelX, 219 }, 45, LeftColumnLabelWidth, []() { return StyledText { GetBaseStatColor(CharacterAttribute::Vitality), StrCat(InspectPlayer->_pBaseVit) }; } },
 	{ "", { 135, 219 }, 45, 0,
 	    []() { return StyledText { GetCurrentStatColor(CharacterAttribute::Vitality), StrCat(InspectPlayer->_pVitality) }; } },
-	{ N_("Points to distribute"), { LeftColumnLabelX, 248 }, 45, LeftColumnLabelWidth,
-	    []() {
-	        InspectPlayer->_pStatPts = std::min(CalcStatDiff(*InspectPlayer), InspectPlayer->_pStatPts);
-	        return StyledText { UiFlags::ColorRed, (InspectPlayer->_pStatPts > 0 ? StrCat(InspectPlayer->_pStatPts) : "") };
-	    } },
 
-	{ N_("Gold"), { 15, /* set dynamically */ 0 }, 0, 98, {} },
-	{ "", { 15, 93 }, 99, 0,
+	{ N_("Gold"), { TopLeftLabelX, /* set dynamically */ 0 }, 0, 98, {} },
+	{ "", { TopLeftLabelX, 62 }, 99, 0,
 	    []() { return StyledText { UiFlags::ColorWhite, FormatInteger(InspectPlayer->_pGold) }; } },
-
-			
-
 
 	{ N_("Armor class"), { RightColumnLabelX, 107 }, 57, RightColumnLabelWidth,
 	    []() { return StyledText { GetValueColor(InspectPlayer->_pIBonusAC), StrCat(InspectPlayer->GetArmor() + InspectPlayer->_pLevel * 2) }; } },
@@ -197,6 +190,14 @@ PanelEntry panelEntries[] = {
 	    []() { return GetResistInfo(InspectPlayer->_pFireResist); } },
 	{ N_("Resist lightning"), { RightColumnLabelX, 313 }, 57, RightColumnLabelWidth,
 	    []() { return GetResistInfo(InspectPlayer->_pLghtResist); } },
+};
+
+PanelEntry pointsToDistributeEntry[] = {
+	{ N_("Points to distribute"), { LeftColumnLabelX, 248 }, 45, LeftColumnLabelWidth,
+	    []() {
+	        InspectPlayer->_pStatPts = std::min(CalcStatDiff(*InspectPlayer), InspectPlayer->_pStatPts);
+	        return StyledText { UiFlags::ColorRed, (InspectPlayer->_pStatPts > 0 ? StrCat(InspectPlayer->_pStatPts) : "") };
+	    } }
 };
 
 OptionalOwnedClxSpriteList Panel;
@@ -250,6 +251,24 @@ void DrawShadowString(const Surface &out, const PanelEntry &entry)
 void DrawStatButtons(const Surface &out)
 {
 	if (InspectPlayer->_pStatPts > 0 && !IsInspectingPlayer()) {
+		OwnedClxSpriteList boxLeft = LoadClx("data\\boxleftend.clx");
+		OwnedClxSpriteList boxMiddle = LoadClx("data\\boxmiddle.clx");
+		OwnedClxSpriteList boxRight = LoadClx("data\\boxrightend.clx");
+
+		auto &entry = pointsToDistributeEntry[0];
+		if (entry.statDisplayFunc) {
+			Point pos = GetPanelPosition(UiPanels::Character, { 0, 0 });
+			StyledText tmp = (*entry.statDisplayFunc)();
+
+			DrawPanelField(out, entry.position, entry.length, boxLeft[0], boxMiddle[0], boxRight[0]);
+			DrawString(
+			    out,
+			    tmp.text,
+			    { entry.position + Displacement { pos.x, pos.y + PanelFieldPaddingTop }, { entry.length, PanelFieldInnerHeight } },
+			    UiFlags::AlignCenter | UiFlags::VerticalCenter | tmp.style, tmp.spacing);
+		}
+		DrawShadowString(out, entry);
+
 		if (InspectPlayer->_pBaseStr < InspectPlayer->GetMaximumAttributeValue(CharacterAttribute::Strength))
 			ClxDraw(out, GetPanelPosition(UiPanels::Character, { 137, 157 }), (*pChrButtons)[chrbtn[static_cast<size_t>(CharacterAttribute::Strength)] ? 2 : 1]);
 		if (InspectPlayer->_pBaseMag < InspectPlayer->GetMaximumAttributeValue(CharacterAttribute::Magic))
@@ -280,7 +299,11 @@ void LoadCharPanel()
 		for (unsigned i : AttributeHeaderEntryIndices) {
 			panelEntries[i].position.y = attributeHeadersY;
 		}
-		panelEntries[GoldHeaderEntryIndex].position.y = isSmallFontTall ? 71 : 72;
+		const int experienceHeadersY = isSmallFontTall ? 40 : 41;
+		for (unsigned i : ExperienceHeaderEntryIndices) {
+			panelEntries[i].position.y = experienceHeadersY;
+		}
+		panelEntries[GoldHeaderEntryIndex].position.y = isSmallFontTall ? 40 : 41;
 
 		for (auto &entry : panelEntries) {
 			if (entry.statDisplayFunc) {
