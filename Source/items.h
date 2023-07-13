@@ -129,17 +129,17 @@ enum _unique_items : int8_t {
 };
 
 /*
-Bits 1-6: Item Level
-Bit 7: Item is not able to have affixes with PLOK set to false
-Bit 8: Item is from a Unique Monster and has 15% chance of being a Unique Item
-Bit 9: Item is from the dungeon and has a 1% chance of being a Unique Item
-Bit 10: Item is a Unique Item
-Bit 11: Item is from Griswold (Basic)
-Bit 12: Item is from Griswold (Premium)
-Bit 13: Item is from Wirt
-Bit 14: Item is from Adria
-Bit 15: Item is from Pepin
-Bit 16: Item is pre-generated, mostly associated with Quest items found in the dungeon or potions on the dungeon floor
+Bits 0-5: Item Level
+Bit 6: Item is not able to have affixes with PLOK set to false
+Bit 7: Item is from a Unique Monster and has 15% chance of being a Unique Item
+Bit 8: Item is from the dungeon and has a 1% chance of being a Unique Item
+Bit 9: Item is a Unique Item
+Bit 10: Item is from Griswold (Basic)
+Bit 11: Item is from Griswold (Premium)
+Bit 12: Item is from Wirt
+Bit 13: Item is from Adria
+Bit 14: Item is from Pepin
+Bit 15: Item is pre-generated, mostly associated with Quest items found in the dungeon or potions on the dungeon floor
 
 Items that have both CF_UPER15 and CF_UPER1 are CF_USEFUL, which is used to generate Potions and Town Portal scrolls on the dungeon floor
 Items that have any of CF_SMITH, CF_SMITHPREMIUM, CF_BOY, CF_WICTH, and CF_HEALER are CF_TOWN, indicating the item is sourced from an NPC
