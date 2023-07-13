@@ -1,19 +1,36 @@
 #pragma once
 
+#include <cerrno>
+#include <cstddef>
 #include <cstdint>
 #include <cstdio>
 #include <cstring>
 
 #include "utils/endian.hpp"
+#include "utils/log.hpp"
 
 namespace devilution {
+
+inline void LoggedFread(void *buffer, size_t size, FILE *stream)
+{
+	if (std::fread(buffer, size, 1, stream) != 1) {
+		LogError("fread failed: {}", std::strerror(errno));
+	}
+}
+
+inline void LoggedFwrite(const void *buffer, size_t size, FILE *stream)
+{
+	if (std::fwrite(buffer, size, 1, stream) != 1) {
+		LogError("fwrite failed: {}", std::strerror(errno));
+	}
+}
 
 template <typename T = uint8_t>
 T ReadByte(FILE *stream)
 {
 	static_assert(sizeof(T) == 1, "invalid argument");
 	char buf;
-	std::fread(&buf, sizeof(buf), 1, stream);
+	LoggedFread(&buf, sizeof(buf), stream);
 	return static_cast<T>(buf);
 }
 
@@ -22,7 +39,7 @@ T ReadLE16(FILE *stream)
 {
 	static_assert(sizeof(T) == 2, "invalid argument");
 	char buf[2];
-	std::fread(buf, sizeof(buf), 1, stream);
+	LoggedFread(&buf, sizeof(buf), stream);
 	return static_cast<T>(LoadLE16(buf));
 }
 
@@ -31,7 +48,7 @@ T ReadLE32(FILE *stream)
 {
 	static_assert(sizeof(T) == 4, "invalid argument");
 	char buf[4];
-	std::fread(buf, sizeof(buf), 1, stream);
+	LoggedFread(&buf, sizeof(buf), stream);
 	return static_cast<T>(LoadLE32(buf));
 }
 
@@ -46,21 +63,21 @@ inline float ReadLEFloat(FILE *stream)
 
 inline void WriteByte(FILE *out, uint8_t val)
 {
-	std::fwrite(&val, sizeof(val), 1, out);
+	LoggedFwrite(&val, sizeof(val), out);
 }
 
 inline void WriteLE16(FILE *out, uint16_t val)
 {
 	char data[2];
 	WriteLE16(data, val);
-	std::fwrite(data, sizeof(data), 1, out);
+	LoggedFwrite(data, sizeof(data), out);
 }
 
 inline void WriteLE32(FILE *out, uint32_t val)
 {
 	char data[4];
 	WriteLE32(data, val);
-	std::fwrite(data, sizeof(data), 1, out);
+	LoggedFwrite(data, sizeof(data), out);
 }
 
 inline void WriteLEFloat(FILE *out, float val)
@@ -70,7 +87,7 @@ inline void WriteLEFloat(FILE *out, float val)
 	memcpy(&intVal, &val, sizeof(uint32_t));
 	char data[4];
 	WriteLE32(data, intVal);
-	std::fwrite(data, sizeof(data), 1, out);
+	LoggedFwrite(data, sizeof(data), out);
 }
 
 } // namespace devilution
