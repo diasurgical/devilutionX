@@ -164,9 +164,6 @@ PanelEntry panelEntries[] = {
 	{ "", { 15, 93 }, 99, 0,
 	    []() { return StyledText { UiFlags::ColorWhite, FormatInteger(InspectPlayer->_pGold) }; } },
 
-			
-
-
 	{ N_("Armor class"), { RightColumnLabelX, 107 }, 57, RightColumnLabelWidth,
 	    []() { return StyledText { GetValueColor(InspectPlayer->_pIBonusAC), StrCat(InspectPlayer->GetArmor() + InspectPlayer->_pLevel * 2) }; } },
 	{ N_("Block chance"), { RightColumnLabelX, 135 }, 57, RightColumnLabelWidth,
