@@ -160,10 +160,15 @@ PanelEntry panelEntries[] = {
 	        return StyledText { UiFlags::ColorRed, (InspectPlayer->_pStatPts > 0 ? StrCat(InspectPlayer->_pStatPts) : "") };
 	    } },
 
-	{ N_("Gold"), { TopRightLabelX, /* set dynamically */ 0 }, 0, 98, {} },
-	{ "", { TopRightLabelX, 127 }, 99, 0,
+	{ N_("Gold"), { 15, /* set dynamically */ 0 }, 0, 98, {} },
+	{ "", { 15, 93 }, 99, 0,
 	    []() { return StyledText { UiFlags::ColorWhite, FormatInteger(InspectPlayer->_pGold) }; } },
 
+			
+	{ N_("Magic to hit"), { RightColumnLabelX, 107 }, 57, RightColumnLabelWidth,
+	    []() { return StyledText { UiFlags::ColorWhite, StrCat(InspectPlayer->GetMagicToHit(), "%") }; } },
+	{ N_("Block chance"), { RightColumnLabelX, 135 }, 57, RightColumnLabelWidth,
+	    []() { return StyledText { UiFlags::ColorWhite, StrCat(InspectPlayer->_pBlockFlag ? InspectPlayer->GetBlockChance() : 0, "%") }; } },
 	{ N_("Armor class"), { RightColumnLabelX, 163 }, 57, RightColumnLabelWidth,
 	    []() { return StyledText { GetValueColor(InspectPlayer->_pIBonusAC), StrCat(InspectPlayer->GetArmor() + InspectPlayer->_pLevel * 2) }; } },
 	{ N_("To hit"), { RightColumnLabelX, 191 }, 57, RightColumnLabelWidth,
@@ -273,7 +278,7 @@ void LoadCharPanel()
 		for (unsigned i : AttributeHeaderEntryIndices) {
 			panelEntries[i].position.y = attributeHeadersY;
 		}
-		panelEntries[GoldHeaderEntryIndex].position.y = isSmallFontTall ? 105 : 106;
+		panelEntries[GoldHeaderEntryIndex].position.y = isSmallFontTall ? 71 : 72;
 
 		for (auto &entry : panelEntries) {
 			if (entry.statDisplayFunc) {
