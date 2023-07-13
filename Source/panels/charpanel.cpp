@@ -102,7 +102,6 @@ std::pair<int, int> GetLightningDamage()
 	return { InspectPlayer->_pILMinDam, InspectPlayer->_pILMaxDam };
 }
 
-
 StyledText GetResistInfo(int8_t resist)
 {
 	UiFlags style = UiFlags::ColorBlue;
