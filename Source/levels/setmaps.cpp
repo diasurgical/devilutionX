@@ -152,13 +152,13 @@ void LoadSetMap()
 		InitNoTriggers();
 		break;
 	case SL_ARENA_CHURCH:
-		LoadArenaMap("arena\\church.dun", { 37, 22 }, { 36, 20 });
+		LoadArenaMap("arena\\church.dun", { 29, 22 }, { 28, 20 });
 		break;
 	case SL_ARENA_HELL:
-		LoadArenaMap("arena\\hell.dun", { 44, 32 }, { 43, 32 });
+		LoadArenaMap("arena\\hell.dun", { 34, 26 }, { 33, 26 });
 		break;
 	case SL_ARENA_CIRCLE_OF_LIFE:
-		LoadArenaMap("arena\\circle_of_death.dun", { 48, 34 }, { 47, 34 });
+		LoadArenaMap("arena\\circle_of_death.dun", { 30, 26 }, { 29, 26 });
 		break;
 	case SL_NONE:
 #ifdef _DEBUG
