@@ -157,10 +157,8 @@ void InitMonster(Monster &monster, Direction rd, size_t typeIndex, Point positio
 	monster.aiSeed = AdvanceRndSeed();
 	monster.whoHit = 0;
 	monster.toHit = monster.data().toHit;
-	monster.minDamage = monster.data().minDamage;
-	monster.maxDamage = monster.data().maxDamage;
-	monster.minDamageSpecial = monster.data().minDamageSpecial;
-	monster.maxDamageSpecial = monster.data().maxDamageSpecial;
+	monster.damage = monster.data().damage;
+	monster.damageSpecial = monster.data().damageSpecial;
 	monster.armorClass = monster.data().armorClass;
 	monster.resistance = monster.data().resistance;
 	monster.leader = Monster::NoLeader;
@@ -183,10 +181,10 @@ void InitMonster(Monster &monster, Direction rd, size_t typeIndex, Point positio
 			monster.maxHitPoints += 100 << 6;
 		monster.hitPoints = monster.maxHitPoints;
 		monster.toHit += NightmareToHitBonus;
-		monster.minDamage = 2 * (monster.minDamage + 2);
-		monster.maxDamage = 2 * (monster.maxDamage + 2);
-		monster.minDamageSpecial = 2 * (monster.minDamageSpecial + 2);
-		monster.maxDamageSpecial = 2 * (monster.maxDamageSpecial + 2);
+		monster.damage.first = 2 * (monster.damage.first + 2);
+		monster.damage.second = 2 * (monster.damage.second + 2);
+		monster.damageSpecial.first = 2 * (monster.damageSpecial.first + 2);
+		monster.damageSpecial.second = 2 * (monster.damageSpecial.second + 2);
 		monster.armorClass += NightmareAcBonus;
 	} else if (sgGameInitInfo.nDifficulty == DIFF_HELL) {
 		monster.maxHitPoints = 4 * monster.maxHitPoints;
@@ -196,10 +194,10 @@ void InitMonster(Monster &monster, Direction rd, size_t typeIndex, Point positio
 			monster.maxHitPoints += 200 << 6;
 		monster.hitPoints = monster.maxHitPoints;
 		monster.toHit += HellToHitBonus;
-		monster.minDamage = 4 * monster.minDamage + 6;
-		monster.maxDamage = 4 * monster.maxDamage + 6;
-		monster.minDamageSpecial = 4 * monster.minDamageSpecial + 6;
-		monster.maxDamageSpecial = 4 * monster.maxDamageSpecial + 6;
+		monster.damage.first = 4 * monster.damage.first + 6;
+		monster.damage.second = 4 * monster.damage.second + 6;
+		monster.damageSpecial.first = 4 * monster.damageSpecial.first + 6;
+		monster.damageSpecial.second = 4 * monster.damageSpecial.second + 6;
 		monster.armorClass += HellAcBonus;
 		monster.resistance = monster.data().resistanceHell;
 	}
@@ -1248,17 +1246,17 @@ void MonsterAttackEnemy(Monster &monster, int hit, int minDam, int maxDam)
 bool MonsterAttack(Monster &monster)
 {
 	if (monster.animInfo.currentFrame == monster.data().animFrameNum - 1) {
-		MonsterAttackEnemy(monster, monster.toHit, monster.minDamage, monster.maxDamage);
+		MonsterAttackEnemy(monster, monster.toHit, monster.damage.first, monster.damage.second);
 		if (monster.ai != MonsterAIID::Snake)
 			PlayEffect(monster, MonsterSound::Attack);
 	}
 	if (IsAnyOf(monster.type().type, MT_NMAGMA, MT_YMAGMA, MT_BMAGMA, MT_WMAGMA) && monster.animInfo.currentFrame == 8) {
-		MonsterAttackEnemy(monster, monster.toHit + 10, monster.minDamage - 2, monster.maxDamage - 2);
+		MonsterAttackEnemy(monster, monster.toHit + 10, monster.damage.first - 2, monster.damage.second - 2);
 
 		PlayEffect(monster, MonsterSound::Attack);
 	}
 	if (IsAnyOf(monster.type().type, MT_STORM, MT_RSTORM, MT_STORML, MT_MAEL) && monster.animInfo.currentFrame == 12) {
-		MonsterAttackEnemy(monster, monster.toHit - 20, monster.minDamage + 4, monster.maxDamage + 4);
+		MonsterAttackEnemy(monster, monster.toHit - 20, monster.damage.first + 4, monster.damage.second + 4);
 
 		PlayEffect(monster, MonsterSound::Attack);
 	}
@@ -1339,7 +1337,7 @@ bool MonsterRangedSpecialAttack(Monster &monster)
 bool MonsterSpecialAttack(Monster &monster)
 {
 	if (monster.animInfo.currentFrame == monster.data().animFrameNumSpecial - 1) {
-		MonsterAttackEnemy(monster, monster.toHitSpecial(sgGameInitInfo.nDifficulty), monster.minDamageSpecial, monster.maxDamageSpecial);
+		MonsterAttackEnemy(monster, monster.toHitSpecial(sgGameInitInfo.nDifficulty), monster.damageSpecial.first, monster.damageSpecial.second);
 	}
 
 	if (monster.animInfo.isLastFrame()) {
@@ -2651,7 +2649,7 @@ void CounselorAi(Monster &monster)
 		if (distanceToEnemy >= 2) {
 			if (v < 5 * (monster.intelligence + 10) && LineClearMissile(monster.position.tile, monster.enemyPosition)) {
 				constexpr MissileID MissileTypes[4] = { MissileID::Firebolt, MissileID::ChargedBolt, MissileID::LightningControl, MissileID::Fireball };
-				StartRangedAttack(monster, MissileTypes[monster.intelligence], monster.minDamage + GenerateRnd(monster.maxDamage - monster.minDamage + 1));
+				StartRangedAttack(monster, MissileTypes[monster.intelligence], monster.damage.first + GenerateRnd(monster.damage.second - monster.damage.first + 1));
 			} else if (GenerateRnd(100) < 30) {
 				monster.goal = MonsterGoal::Move;
 				monster.goalVar1 = 0;
@@ -3120,10 +3118,8 @@ void PrepareUniqueMonst(Monster &monster, UniqueMonsterType monsterType, size_t 
 	monster.hitPoints = monster.maxHitPoints;
 	monster.ai = uniqueMonsterData.mAi;
 	monster.intelligence = uniqueMonsterData.mint;
-	monster.minDamage = uniqueMonsterData.mMinDamage;
-	monster.maxDamage = uniqueMonsterData.mMaxDamage;
-	monster.minDamageSpecial = uniqueMonsterData.mMinDamage;
-	monster.maxDamageSpecial = uniqueMonsterData.mMaxDamage;
+	monster.damage = uniqueMonsterData.mDamage;
+	monster.damageSpecial = uniqueMonsterData.mDamage;
 	monster.resistance = uniqueMonsterData.mMagicRes;
 	monster.talkMsg = uniqueMonsterData.mtalkmsg;
 	if (monsterType == UniqueMonsterType::HorkDemon)
@@ -3150,10 +3146,10 @@ void PrepareUniqueMonst(Monster &monster, UniqueMonsterType monsterType, size_t 
 		else
 			monster.maxHitPoints += 100 << 6;
 		monster.hitPoints = monster.maxHitPoints;
-		monster.minDamage = 2 * (monster.minDamage + 2);
-		monster.maxDamage = 2 * (monster.maxDamage + 2);
-		monster.minDamageSpecial = 2 * (monster.minDamageSpecial + 2);
-		monster.maxDamageSpecial = 2 * (monster.maxDamageSpecial + 2);
+		monster.damage.first = 2 * (monster.damage.first + 2);
+		monster.damage.second = 2 * (monster.damage.second + 2);
+		monster.damageSpecial.first = 2 * (monster.damageSpecial.first + 2);
+		monster.damageSpecial.second = 2 * (monster.damageSpecial.second + 2);
 	} else if (sgGameInitInfo.nDifficulty == DIFF_HELL) {
 		monster.maxHitPoints = 4 * monster.maxHitPoints;
 		if (gbIsHellfire)
@@ -3161,10 +3157,10 @@ void PrepareUniqueMonst(Monster &monster, UniqueMonsterType monsterType, size_t 
 		else
 			monster.maxHitPoints += 200 << 6;
 		monster.hitPoints = monster.maxHitPoints;
-		monster.minDamage = 4 * monster.minDamage + 6;
-		monster.maxDamage = 4 * monster.maxDamage + 6;
-		monster.minDamageSpecial = 4 * monster.minDamageSpecial + 6;
-		monster.maxDamageSpecial = 4 * monster.maxDamageSpecial + 6;
+		monster.damage.first = 4 * monster.damage.first + 6;
+		monster.damage.second = 4 * monster.damage.second + 6;
+		monster.damageSpecial.first = 4 * monster.damageSpecial.first + 6;
+		monster.damageSpecial.second = 4 * monster.damageSpecial.second + 6;
 	}
 
 	InitTRNForUniqueMonster(monster);
@@ -4347,7 +4343,7 @@ void MissToMonst(Missile &missile, Point position)
 
 		int pnum = dPlayer[oldPosition.x][oldPosition.y] - 1;
 		Player &player = Players[pnum];
-		MonsterAttackPlayer(monster, player, 500, monster.minDamageSpecial, monster.maxDamageSpecial);
+		MonsterAttackPlayer(monster, player, 500, monster.damageSpecial.first, monster.damageSpecial.second);
 
 		if (IsAnyOf(monster.type().type, MT_NSNAKE, MT_RSNAKE, MT_BSNAKE, MT_GSNAKE))
 			return;
@@ -4370,7 +4366,7 @@ void MissToMonst(Missile &missile, Point position)
 	if (target == nullptr)
 		return;
 
-	MonsterAttackMonster(monster, *target, 500, monster.minDamageSpecial, monster.maxDamageSpecial);
+	MonsterAttackMonster(monster, *target, 500, monster.damageSpecial.first, monster.damageSpecial.second);
 
 	if (IsAnyOf(monster.type().type, MT_NSNAKE, MT_RSNAKE, MT_BSNAKE, MT_GSNAKE))
 		return;
@@ -4544,8 +4540,8 @@ void SpawnGolem(Player &player, Monster &golem, Point position, Missile &missile
 	golem.hitPoints = golem.maxHitPoints;
 	golem.armorClass = 25;
 	golem.toHit = 5 * (missile._mispllvl + 8) + 2 * player._pLevel;
-	golem.minDamage = 2 * (missile._mispllvl + 4);
-	golem.maxDamage = 2 * (missile._mispllvl + 8);
+	golem.damage.first = 2 * (missile._mispllvl + 4);
+	golem.damage.second = 2 * (missile._mispllvl + 8);
 	golem.flags |= MFLAG_GOLEM;
 	StartSpecialStand(golem, Direction::South);
 	UpdateEnemy(golem);

@@ -258,8 +258,8 @@ void LoadItemData(LoadHelper &file, Item &item)
 	item._iCurs = file.NextLE<int32_t>();
 	item._ivalue = file.NextLE<int32_t>();
 	item._iIvalue = file.NextLE<int32_t>();
-	item._iMinDam = file.NextLE<int32_t>();
-	item._iMaxDam = file.NextLE<int32_t>();
+	item._iDam.first = file.NextLE<int32_t>();
+	item._iDam.second = file.NextLE<int32_t>();
 	item._iAC = file.NextLE<int32_t>();
 	item._iFlags = static_cast<ItemSpecialEffect>(file.NextLE<uint32_t>());
 	item._iMiscId = static_cast<item_misc_id>(file.NextLE<int32_t>());
@@ -287,10 +287,10 @@ void LoadItemData(LoadHelper &file, Item &item)
 	item._iRequest = file.NextBool8();
 	file.Skip(2); // Alignment
 	item._iUid = file.NextLE<int32_t>();
-	item._iFMinDam = file.NextLE<int32_t>();
-	item._iFMaxDam = file.NextLE<int32_t>();
-	item._iLMinDam = file.NextLE<int32_t>();
-	item._iLMaxDam = file.NextLE<int32_t>();
+	item._iFDam.first = file.NextLE<int32_t>();
+	item._iFDam.second = file.NextLE<int32_t>();
+	item._iLDam.first = file.NextLE<int32_t>();
+	item._iLDam.second = file.NextLE<int32_t>();
 	item._iPLEnAc = file.NextLE<int32_t>();
 	item._iPrePower = static_cast<item_effect_type>(file.NextLE<int8_t>());
 	item._iSufPower = static_cast<item_effect_type>(file.NextLE<int8_t>());
@@ -503,8 +503,8 @@ void LoadPlayer(LoadHelper &file, Player &player)
 
 	LoadItemData(file, player.HoldItem);
 
-	player._pIMinDam = file.NextLE<int32_t>();
-	player._pIMaxDam = file.NextLE<int32_t>();
+	player._pIDam.first = file.NextLE<int32_t>();
+	player._pIDam.second = file.NextLE<int32_t>();
 	player._pIAC = file.NextLE<int32_t>();
 	player._pIBonusDam = file.NextLE<int32_t>();
 	player._pIBonusToHit = file.NextLE<int32_t>();
@@ -520,10 +520,10 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	file.Skip(2);         // Alignment
 	file.Skip<int32_t>(); // _pISplDur
 	player._pIEnAc = file.NextLE<int32_t>();
-	player._pIFMinDam = file.NextLE<int32_t>();
-	player._pIFMaxDam = file.NextLE<int32_t>();
-	player._pILMinDam = file.NextLE<int32_t>();
-	player._pILMaxDam = file.NextLE<int32_t>();
+	player._pIFDam.first = file.NextLE<int32_t>();
+	player._pIFDam.second = file.NextLE<int32_t>();
+	player._pILDam.first = file.NextLE<int32_t>();
+	player._pILDam.second = file.NextLE<int32_t>();
 	player._pOilType = static_cast<item_misc_id>(file.NextLE<int32_t>());
 	player.pTownWarps = file.NextLE<uint8_t>();
 	player.pDungMsgs = file.NextLE<uint8_t>();
@@ -644,11 +644,11 @@ void LoadMonster(LoadHelper *file, Monster &monster)
 		monster.toHit = file->NextLE<uint8_t>();
 	else
 		file->Skip(1); // Skip hit as it's already initialized
-	monster.minDamage = file->NextLE<uint8_t>();
-	monster.maxDamage = file->NextLE<uint8_t>();
+	monster.damage.first = file->NextLE<uint8_t>();
+	monster.damage.second = file->NextLE<uint8_t>();
 	file->Skip(1); // Skip toHitSpecial as it's already initialized
-	monster.minDamageSpecial = file->NextLE<uint8_t>();
-	monster.maxDamageSpecial = file->NextLE<uint8_t>();
+	monster.damageSpecial.first = file->NextLE<uint8_t>();
+	monster.damageSpecial.second = file->NextLE<uint8_t>();
 	monster.armorClass = file->NextLE<uint8_t>();
 	file->Skip(1); // Alignment
 	monster.resistance = file->NextLE<uint16_t>();
@@ -973,7 +973,7 @@ void LoadMatchingItems(LoadHelper &file, const Player &player, const int n, Item
 			}
 			if (gbIsHellfire) {
 				unpackedItem._iPLToHit = ClampToHit(unpackedItem, heroItem._iPLToHit); // Oil of Accuracy
-				unpackedItem._iMaxDam = ClampMaxDam(unpackedItem, heroItem._iMaxDam);  // Oil of Sharpness
+				unpackedItem._iDam.second = ClampMaxDam(unpackedItem, heroItem._iDam.second);  // Oil of Sharpness
 			}
 		} else {
 			unpackedItem = heroItem;
@@ -1062,8 +1062,8 @@ void SaveItem(SaveHelper &file, const Item &item)
 	file.WriteLE<int32_t>(item._iCurs);
 	file.WriteLE<int32_t>(item._ivalue);
 	file.WriteLE<int32_t>(item._iIvalue);
-	file.WriteLE<int32_t>(item._iMinDam);
-	file.WriteLE<int32_t>(item._iMaxDam);
+	file.WriteLE<int32_t>(item._iDam.first);
+	file.WriteLE<int32_t>(item._iDam.second);
 	file.WriteLE<int32_t>(item._iAC);
 	file.WriteLE<uint32_t>(static_cast<uint32_t>(item._iFlags));
 	file.WriteLE<int32_t>(item._iMiscId);
@@ -1091,10 +1091,10 @@ void SaveItem(SaveHelper &file, const Item &item)
 	file.WriteLE<int8_t>(item._iRequest ? 1 : 0);
 	file.Skip(2); // Alignment
 	file.WriteLE<int32_t>(item._iUid);
-	file.WriteLE<int32_t>(item._iFMinDam);
-	file.WriteLE<int32_t>(item._iFMaxDam);
-	file.WriteLE<int32_t>(item._iLMinDam);
-	file.WriteLE<int32_t>(item._iLMaxDam);
+	file.WriteLE<int32_t>(item._iFDam.first);
+	file.WriteLE<int32_t>(item._iFDam.second);
+	file.WriteLE<int32_t>(item._iLDam.first);
+	file.WriteLE<int32_t>(item._iLDam.second);
 	file.WriteLE<int32_t>(item._iPLEnAc);
 	file.WriteLE<int8_t>(item._iPrePower);
 	file.WriteLE<int8_t>(item._iSufPower);
@@ -1311,8 +1311,8 @@ void SavePlayer(SaveHelper &file, const Player &player)
 
 	SaveItem(file, player.HoldItem);
 
-	file.WriteLE<int32_t>(player._pIMinDam);
-	file.WriteLE<int32_t>(player._pIMaxDam);
+	file.WriteLE<int32_t>(player._pIDam.first);
+	file.WriteLE<int32_t>(player._pIDam.second);
 	file.WriteLE<int32_t>(player._pIAC);
 	file.WriteLE<int32_t>(player._pIBonusDam);
 	file.WriteLE<int32_t>(player._pIBonusToHit);
@@ -1329,10 +1329,10 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.Skip(2);         // Alignment
 	file.Skip<int32_t>(); // _pISplDur
 	file.WriteLE<int32_t>(player._pIEnAc);
-	file.WriteLE<int32_t>(player._pIFMinDam);
-	file.WriteLE<int32_t>(player._pIFMaxDam);
-	file.WriteLE<int32_t>(player._pILMinDam);
-	file.WriteLE<int32_t>(player._pILMaxDam);
+	file.WriteLE<int32_t>(player._pIFDam.first);
+	file.WriteLE<int32_t>(player._pIFDam.second);
+	file.WriteLE<int32_t>(player._pILDam.first);
+	file.WriteLE<int32_t>(player._pILDam.second);
 	file.WriteLE<int32_t>(player._pOilType);
 	file.WriteLE<uint8_t>(player.pTownWarps);
 	file.WriteLE<uint8_t>(player.pDungMsgs);
@@ -1441,11 +1441,11 @@ void SaveMonster(SaveHelper *file, Monster &monster)
 	file->WriteLE<uint16_t>(static_cast<uint16_t>(std::min<unsigned>(std::numeric_limits<uint16_t>::max(), monster.exp(sgGameInitInfo.nDifficulty))));
 
 	file->WriteLE<uint8_t>(static_cast<uint8_t>(std::min<uint16_t>(monster.toHit, std::numeric_limits<uint8_t>::max()))); // For backwards compatibility
-	file->WriteLE<uint8_t>(monster.minDamage);
-	file->WriteLE<uint8_t>(monster.maxDamage);
+	file->WriteLE<uint8_t>(monster.damage.first);
+	file->WriteLE<uint8_t>(monster.damage.second);
 	file->WriteLE<uint8_t>(static_cast<uint8_t>(std::min<uint16_t>(monster.toHitSpecial(sgGameInitInfo.nDifficulty), std::numeric_limits<uint8_t>::max()))); // For backwards compatibility
-	file->WriteLE<uint8_t>(monster.minDamageSpecial);
-	file->WriteLE<uint8_t>(monster.maxDamageSpecial);
+	file->WriteLE<uint8_t>(monster.damageSpecial.first);
+	file->WriteLE<uint8_t>(monster.damageSpecial.second);
 	file->WriteLE<uint8_t>(monster.armorClass);
 	file->Skip(1); // Alignment
 	file->WriteLE<uint16_t>(monster.resistance);

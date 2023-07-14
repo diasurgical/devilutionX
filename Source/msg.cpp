@@ -2330,7 +2330,7 @@ void PrepareItemForNetwork(const Item &item, TItem &messageItem)
 	messageItem.bMCh = item._iMaxCharges;
 	messageItem.wValue = SDL_SwapLE16(item._ivalue);
 	messageItem.wToHit = SDL_SwapLE16(item._iPLToHit);
-	messageItem.wMaxDam = SDL_SwapLE16(item._iMaxDam);
+	messageItem.wMaxDam = SDL_SwapLE16(item._iDam.second);
 	messageItem.dwBuff = SDL_SwapLE32(item.dwBuff);
 }
 
@@ -2354,7 +2354,7 @@ void RecreateItem(const Player &player, const TItem &messageItem, Item &item)
 	item._iCharges = clamp<int>(messageItem.bCh, 0, item._iMaxCharges);
 	if (gbIsHellfire) {
 		item._iPLToHit = ClampToHit(item, SDL_SwapLE16(messageItem.wToHit));
-		item._iMaxDam = ClampMaxDam(item, SDL_SwapLE16(messageItem.wMaxDam));
+		item._iDam.second = ClampMaxDam(item, SDL_SwapLE16(messageItem.wMaxDam));
 	}
 	item.dwBuff = dwBuff;
 }

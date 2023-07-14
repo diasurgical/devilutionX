@@ -113,12 +113,10 @@ struct MonsterData {
 	uint8_t intelligence;
 	uint8_t toHit;
 	int8_t animFrameNum;
-	uint8_t minDamage;
-	uint8_t maxDamage;
+	std::pair<uint8_t, uint8_t> damage;
 	uint8_t toHitSpecial;
 	int8_t animFrameNumSpecial;
-	uint8_t minDamageSpecial;
-	uint8_t maxDamageSpecial;
+	std::pair<uint8_t, uint8_t> damageSpecial;
 	uint8_t armorClass;
 	MonsterClass monsterClass;
 	/** Using monster_resistance as bitflags */
@@ -300,8 +298,7 @@ struct UniqueMonsterData {
 	uint16_t mmaxhp;
 	MonsterAIID mAi;
 	uint8_t mint;
-	uint8_t mMinDamage;
-	uint8_t mMaxDamage;
+	std::pair<uint8_t, uint8_t> mDamage;
 	/** Using monster_resistance as bitflags */
 	uint16_t mMagicRes;
 	/**
