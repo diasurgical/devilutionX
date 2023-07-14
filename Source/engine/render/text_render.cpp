@@ -39,10 +39,7 @@ constexpr char32_t ZWSP = U'\u200B'; // Zero-width space
 
 std::unordered_map<uint32_t, OptionalOwnedClxSpriteList> Fonts;
 
-std::unordered_map<uint32_t, std::array<uint8_t, 256>> FontKerns;
 std::array<int, 6> FontSizes = { 12, 24, 30, 42, 46, 22 };
-std::array<uint8_t, 6> CJKWidth = { 17, 24, 28, 41, 47, 16 };
-std::array<uint8_t, 6> HangulWidth = { 15, 20, 24, 35, 39, 15 };
 constexpr std::array<int, 6> LineHeights = { 12, 26, 38, 42, 50, 22 };
 constexpr int SmallFontTallLineHeight = 16;
 std::array<int, 6> BaseLineOffset = { -3, -2, -3, -6, -7, 3 };
@@ -151,35 +148,6 @@ uint32_t GetFontId(GameFontTables size, uint16_t row)
 	return (size << 16) | row;
 }
 
-std::array<uint8_t, 256> *LoadFontKerning(GameFontTables size, uint16_t row)
-{
-	uint32_t fontId = GetFontId(size, row);
-
-	auto hotKerning = FontKerns.find(fontId);
-	if (hotKerning != FontKerns.end()) {
-		return &hotKerning->second;
-	}
-
-	char path[32];
-	GetFontPath(size, row, ".bin", &path[0]);
-
-	auto *kerning = &FontKerns[fontId];
-
-	if (IsCJK(row)) {
-		kerning->fill(CJKWidth[size]);
-	} else if (IsHangul(row)) {
-		kerning->fill(HangulWidth[size]);
-	} else {
-		AssetHandle handle = OpenAsset(path);
-		if (!handle.ok() || !handle.read(kerning, 256)) {
-			LogError("Missing font kerning: {}", path);
-			kerning->fill(CJKWidth[size]);
-		}
-	}
-
-	return kerning;
-}
-
 OptionalClxSpriteList LoadFont(GameFontTables size, text_color color, uint16_t row)
 {
 	if (ColorTranslations[color] != nullptr && !ColorTranslationsData[color]) {
@@ -218,7 +186,6 @@ OptionalClxSpriteList LoadFont(GameFontTables size, text_color color, uint16_t r
 class CurrentFont {
 public:
 	OptionalClxSpriteList sprite;
-	std::array<uint8_t, 256> *kerning = nullptr;
 
 	bool load(GameFontTables size, text_color color, char32_t next)
 	{
@@ -228,7 +195,6 @@ public:
 		}
 
 		sprite = LoadFont(size, color, unicodeRow);
-		kerning = LoadFontKerning(size, unicodeRow);
 		hasAttemptedLoad_ = true;
 		currentUnicodeRow_ = unicodeRow;
 
@@ -445,14 +411,15 @@ uint32_t DoDrawString(const Surface &out, string_view text, Rectangle rect, Poin
 		}
 
 		const uint8_t frame = next & 0xFF;
-		if (next == U'\n' || characterPosition.x + (*currentFont.kerning)[frame] > rightMargin) {
+		const uint16_t width = (*currentFont.sprite)[frame].width();
+		if (next == U'\n' || characterPosition.x + width > rightMargin) {
 			const int nextLineY = characterPosition.y + lineHeight;
 			if (nextLineY >= bottomMargin)
 				break;
 			characterPosition.y = nextLineY;
 
 			if (HasAnyOf(flags, (UiFlags::AlignCenter | UiFlags::AlignRight))) {
-				lineWidth = (*currentFont.kerning)[frame];
+				lineWidth = width;
 				if (remaining.size() > cpLen)
 					lineWidth += spacing + GetLineWidth(remaining.substr(cpLen), size, spacing);
 			}
@@ -463,7 +430,7 @@ uint32_t DoDrawString(const Surface &out, string_view text, Rectangle rect, Poin
 		}
 
 		DrawFont(out, characterPosition, *currentFont.sprite, color, frame, outline);
-		characterPosition.x += (*currentFont.kerning)[frame] + spacing;
+		characterPosition.x += width + spacing;
 	}
 	return remaining.data() - text.data();
 }
@@ -478,16 +445,13 @@ void LoadSmallSelectionSpinner()
 void UnloadFonts()
 {
 	Fonts.clear();
-	FontKerns.clear();
 }
 
 int GetLineWidth(string_view text, GameFontTables size, int spacing, int *charactersInLine)
 {
 	int lineWidth = 0;
-
+	CurrentFont currentFont;
 	uint32_t codepoints = 0;
-	uint32_t currentUnicodeRow = 0;
-	std::array<uint8_t, 256> *kerning = nullptr;
 	char32_t next;
 	while (!text.empty()) {
 		next = ConsumeFirstUtf8CodePoint(&text);
@@ -499,14 +463,16 @@ int GetLineWidth(string_view text, GameFontTables size, int spacing, int *charac
 		if (next == U'\n')
 			break;
 
-		uint8_t frame = next & 0xFF;
-		const uint32_t unicodeRow = GetUnicodeRow(next);
-		if (unicodeRow != currentUnicodeRow || kerning == nullptr) {
-			kerning = LoadFontKerning(size, unicodeRow);
-			currentUnicodeRow = unicodeRow;
+		if (!currentFont.load(size, text_color::ColorDialogWhite, next)) {
+			next = U'?';
+			if (!currentFont.load(size, text_color::ColorDialogWhite, next)) {
+				app_fatal("Missing fonts");
+			}
 		}
-		lineWidth += (*kerning)[frame] + spacing;
-		codepoints++;
+
+		const uint8_t frame = next & 0xFF;
+		lineWidth += (*currentFont.sprite)[frame].width() + spacing;
+		++codepoints;
 	}
 	if (charactersInLine != nullptr)
 		*charactersInLine = codepoints;
@@ -517,10 +483,9 @@ int GetLineWidth(string_view text, GameFontTables size, int spacing, int *charac
 int GetLineWidth(string_view fmt, DrawStringFormatArg *args, std::size_t argsLen, size_t argsOffset, GameFontTables size, int spacing, int *charactersInLine)
 {
 	int lineWidth = 0;
+	CurrentFont currentFont;
 
 	uint32_t codepoints = 0;
-	uint32_t currentUnicodeRow = 0;
-	std::array<uint8_t, 256> *kerning = nullptr;
 	char32_t prev = U'\0';
 	char32_t next;
 
@@ -550,13 +515,15 @@ int GetLineWidth(string_view fmt, DrawStringFormatArg *args, std::size_t argsLen
 		if (next == U'\n')
 			break;
 
-		uint8_t frame = next & 0xFF;
-		const uint32_t unicodeRow = GetUnicodeRow(next);
-		if (unicodeRow != currentUnicodeRow || kerning == nullptr) {
-			kerning = LoadFontKerning(size, unicodeRow);
-			currentUnicodeRow = unicodeRow;
+		if (!currentFont.load(size, text_color::ColorDialogWhite, next)) {
+			next = U'?';
+			if (!currentFont.load(size, text_color::ColorDialogWhite, next)) {
+				app_fatal("Missing fonts");
+			}
 		}
-		lineWidth += (*kerning)[frame] + spacing;
+
+		const uint8_t frame = next & 0xFF;
+		lineWidth += (*currentFont.sprite)[frame].width() + spacing;
 		codepoints++;
 		prev = next;
 	}
@@ -597,9 +564,8 @@ std::string WordWrapString(string_view text, unsigned width, GameFontTables size
 	string_view::size_type lastBreakablePos = string_view::npos;
 	std::size_t lastBreakableLen;
 	bool lastBreakableKeep = false;
-	uint32_t currentUnicodeRow = 0;
 	unsigned lineWidth = 0;
-	std::array<uint8_t, 256> *kerning = nullptr;
+	CurrentFont currentFont;
 
 	char32_t codepoint = U'\0'; // the current codepoint
 	char32_t nextCodepoint;     // the next codepoint
@@ -623,13 +589,15 @@ std::string WordWrapString(string_view text, unsigned width, GameFontTables size
 		}
 
 		if (codepoint != ZWSP) {
-			uint8_t frame = codepoint & 0xFF;
-			const uint32_t unicodeRow = GetUnicodeRow(codepoint);
-			if (unicodeRow != currentUnicodeRow || kerning == nullptr) {
-				kerning = LoadFontKerning(size, unicodeRow);
-				currentUnicodeRow = unicodeRow;
+			const uint8_t frame = codepoint & 0xFF;
+			if (!currentFont.load(size, text_color::ColorDialogWhite, codepoint)) {
+				codepoint = U'?';
+				if (!currentFont.load(size, text_color::ColorDialogWhite, codepoint)) {
+					app_fatal("Missing fonts");
+				}
 			}
-			lineWidth += (*kerning)[frame] + spacing;
+
+			lineWidth += (*currentFont.sprite)[frame].width() + spacing;
 		}
 
 		const bool isWhitespace = IsWhitespace(codepoint);
@@ -788,14 +756,15 @@ void DrawStringWithColors(const Surface &out, string_view fmt, DrawStringFormatA
 		}
 
 		const uint8_t frame = next & 0xFF;
-		if (next == U'\n' || characterPosition.x + (*currentFont.kerning)[frame] > rightMargin) {
+		const uint16_t width = (*currentFont.sprite)[frame].width();
+		if (next == U'\n' || characterPosition.x + width > rightMargin) {
 			const int nextLineY = characterPosition.y + lineHeight;
 			if (nextLineY >= bottomMargin)
 				break;
 			characterPosition.y = nextLineY;
 
 			if (HasAnyOf(flags, (UiFlags::AlignCenter | UiFlags::AlignRight))) {
-				lineWidth = (*currentFont.kerning)[frame];
+				lineWidth = width;
 				if (remaining.size() > cpLen)
 					lineWidth += spacing + GetLineWidth(remaining.substr(cpLen), args, argsLen, fmtArgParser.offset(), size, spacing);
 			}
@@ -806,7 +775,7 @@ void DrawStringWithColors(const Surface &out, string_view fmt, DrawStringFormatA
 		}
 
 		DrawFont(clippedOut, characterPosition, *currentFont.sprite, color, frame, outlined);
-		characterPosition.x += (*currentFont.kerning)[frame] + spacing;
+		characterPosition.x += width + spacing;
 	}
 
 	if (HasAnyOf(flags, UiFlags::PentaCursor)) {
