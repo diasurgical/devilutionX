@@ -21,7 +21,7 @@
 	do {                                                           \
 		if (!(condition)) {                                        \
 			LogFailedJoinAttempt(#condition, #logValue, logValue); \
-			EventFailedJoinAttempt();                              \
+			EventFailedJoinAttempt(player._pName);                 \
 			return false;                                          \
 		}                                                          \
 	} while (0)
@@ -30,7 +30,7 @@
 	do {                                                                                    \
 		if (!(condition)) {                                                                 \
 			LogFailedJoinAttempt(#condition, #logValue1, logValue1, #logValue2, logValue2); \
-			EventFailedJoinAttempt();                                                       \
+			EventFailedJoinAttempt(player._pName);                                          \
 			return false;                                                                   \
 		}                                                                                   \
 	} while (0)
@@ -80,9 +80,10 @@ void UnPackNetItem(const Player &player, const ItemNetPack &packedItem, Item &it
 		RecreateEar(item, SDL_SwapLE16(packedItem.ear.wCI), SDL_SwapLE32(packedItem.ear.dwSeed), packedItem.ear.bCursval, packedItem.ear.heroname);
 }
 
-void EventFailedJoinAttempt()
+void EventFailedJoinAttempt(const char *playerName)
 {
-	EventPlrMsg("Invalid player data received from player during attempt to join the game.");
+	std::string message = fmt::format("Player '{}' sent invalid player data during attempt to join the game.", playerName);
+	EventPlrMsg(message);
 }
 
 template <typename T>
@@ -397,6 +398,8 @@ void UnPackPlayer(const PlayerPack &packed, Player &player)
 
 bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 {
+	CopyUtf8(player._pName, packed.pName, sizeof(player._pName));
+
 	ValidateField(packed.pClass, packed.pClass < enum_size<HeroClass>::value);
 	player._pClass = static_cast<HeroClass>(packed.pClass);
 
@@ -432,8 +435,6 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 
 	ClrPlrPath(player);
 	player.destAction = ACTION_NONE;
-
-	CopyUtf8(player._pName, packed.pName, sizeof(player._pName));
 
 	InitPlayer(player, true);
 
