@@ -134,10 +134,8 @@ struct PlayerNetPack {
 	int32_t pIBonusDamMod;
 	int32_t pIGetHit;
 	int32_t pIEnAc;
-	int32_t pIFMinDam;
-	int32_t pIFMaxDam;
-	int32_t pILMinDam;
-	int32_t pILMaxDam;
+	std::pair<int32_t, int32_t> pIFDam;
+	std::pair<int32_t, int32_t> pILDam;
 };
 #pragma pack(pop)
 

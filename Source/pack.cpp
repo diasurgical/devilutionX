@@ -219,10 +219,8 @@ void PackNetPlayer(PlayerNetPack &packed, const Player &player)
 	packed.pIBonusDamMod = SDL_SwapLE32(player._pIBonusDamMod);
 	packed.pIGetHit = SDL_SwapLE32(player._pIGetHit);
 	packed.pIEnAc = SDL_SwapLE32(player._pIEnAc);
-	packed.pIFMinDam = SDL_SwapLE32(player._pIFMinDam);
-	packed.pIFMaxDam = SDL_SwapLE32(player._pIFMaxDam);
-	packed.pILMinDam = SDL_SwapLE32(player._pILMinDam);
-	packed.pILMaxDam = SDL_SwapLE32(player._pILMaxDam);
+	packed.pIFDam = SDL_SwapLE32(player._pIFDam);
+	packed.pILDam = SDL_SwapLE32(player._pILDam);
 }
 
 void UnPackItem(const ItemPack &packedItem, const Player &player, Item &item, bool isHellfire)
@@ -487,13 +485,9 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 		return false;
 	if (player._pIEnAc != SDL_SwapLE32(packed.pIEnAc))
 		return false;
-	if (player._pIFMinDam != SDL_SwapLE32(packed.pIFMinDam))
+	if (player._pIFDam != SDL_SwapLE32(packed.pIFDam))
 		return false;
-	if (player._pIFMaxDam != SDL_SwapLE32(packed.pIFMaxDam))
-		return false;
-	if (player._pILMinDam != SDL_SwapLE32(packed.pILMinDam))
-		return false;
-	if (player._pILMaxDam != SDL_SwapLE32(packed.pILMaxDam))
+	if (player._pILDam != SDL_SwapLE32(packed.pILDam))
 		return false;
 	if (player._pMaxHPBase > player.calculateBaseLife())
 		return false;

@@ -786,18 +786,18 @@ int SaveItemPower(const Player &player, Item &item, ItemPower &power)
 	case IPL_FIREDAM:
 		item._iFlags |= ItemSpecialEffect::FireDamage;
 		item._iFlags &= ~ItemSpecialEffect::LightningDamage;
-		item._iFMinDam = power.param1;
-		item._iFMaxDam = power.param2;
-		item._iLMinDam = 0;
-		item._iLMaxDam = 0;
+		item._iFDam.first = power.param1;
+		item._iFDam.second = power.param2;
+		item._iLDam.first = 0;
+		item._iLDam.second = 0;
 		break;
 	case IPL_LIGHTDAM:
 		item._iFlags |= ItemSpecialEffect::LightningDamage;
 		item._iFlags &= ~ItemSpecialEffect::FireDamage;
-		item._iLMinDam = power.param1;
-		item._iLMaxDam = power.param2;
-		item._iFMinDam = 0;
-		item._iFMaxDam = 0;
+		item._iLDam.first = power.param1;
+		item._iLDam.second = power.param2;
+		item._iFDam.first = 0;
+		item._iFDam.second = 0;
 		break;
 	case IPL_STR:
 		item._iPLStr += r;
@@ -884,25 +884,25 @@ int SaveItemPower(const Player &player, Item &item, ItemPower &power)
 	case IPL_FIRE_ARROWS:
 		item._iFlags |= ItemSpecialEffect::FireArrows;
 		item._iFlags &= ~ItemSpecialEffect::LightningArrows;
-		item._iFMinDam = power.param1;
-		item._iFMaxDam = power.param2;
-		item._iLMinDam = 0;
-		item._iLMaxDam = 0;
+		item._iFDam.first = power.param1;
+		item._iFDam.second = power.param2;
+		item._iLDam.first = 0;
+		item._iLDam.second = 0;
 		break;
 	case IPL_LIGHT_ARROWS:
 		item._iFlags |= ItemSpecialEffect::LightningArrows;
 		item._iFlags &= ~ItemSpecialEffect::FireArrows;
-		item._iLMinDam = power.param1;
-		item._iLMaxDam = power.param2;
-		item._iFMinDam = 0;
-		item._iFMaxDam = 0;
+		item._iLDam.first = power.param1;
+		item._iLDam.second = power.param2;
+		item._iFDam.first = 0;
+		item._iFDam.second = 0;
 		break;
 	case IPL_FIREBALL:
 		item._iFlags |= (ItemSpecialEffect::LightningArrows | ItemSpecialEffect::FireArrows);
-		item._iFMinDam = power.param1;
-		item._iFMaxDam = power.param2;
-		item._iLMinDam = 0;
-		item._iLMaxDam = 0;
+		item._iFDam.first = power.param1;
+		item._iFDam.second = power.param2;
+		item._iLDam.first = 0;
+		item._iLDam.second = 0;
 		break;
 	case IPL_THORNS:
 		item._iFlags |= ItemSpecialEffect::Thorns;
