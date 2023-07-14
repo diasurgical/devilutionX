@@ -198,8 +198,7 @@ struct Item {
 	uint8_t _iCurs = 0;
 	int _ivalue = 0;
 	int _iIvalue = 0;
-	uint8_t _iMinDam = 0;
-	uint8_t _iMaxDam = 0;
+	std::pair<uint8_t, uint8_t> _iDam = { 0, 0 };
 	int16_t _iAC = 0;
 	ItemSpecialEffect _iFlags = ItemSpecialEffect::None;
 	item_misc_id _iMiscId = IMISC_NONE;

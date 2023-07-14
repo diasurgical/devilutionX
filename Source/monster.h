@@ -261,10 +261,8 @@ struct Monster { // note: missing field _mAFNum
 	uint8_t uniqTrans;
 	int8_t corpseId;
 	int8_t whoHit;
-	uint8_t minDamage;
-	uint8_t maxDamage;
-	uint8_t minDamageSpecial;
-	uint8_t maxDamageSpecial;
+	std::pair<uint8_t, uint8_t> damage;
+	std::pair<uint8_t, uint8_t> damageSpecial;
 	uint8_t armorClass;
 	uint8_t leader;
 	LeaderRelation leaderRelation;

@@ -260,8 +260,7 @@ struct Player {
 	int _pMana;
 	int _pMaxMana;
 	int _pManaPer;
-	int _pIMinDam;
-	int _pIMaxDam;
+	std::pair<int, int> _pIDam;
 	int _pIAC;
 	int _pIBonusDam;
 	int _pIBonusToHit;
@@ -269,10 +268,8 @@ struct Player {
 	int _pIBonusDamMod;
 	int _pIGetHit;
 	int _pIEnAc;
-	int _pIFMinDam;
-	int _pIFMaxDam;
-	int _pILMinDam;
-	int _pILMaxDam;
+	std::pair<int, int> _pIFDam;
+	std::pair<int, int> _pILDam;
 	uint32_t _pExperience;
 	uint32_t _pNextExper;
 	PLR_MODE _pmode;

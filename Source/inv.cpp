@@ -1764,8 +1764,8 @@ int16_t ClampToHit(const Item &item, int16_t toHit)
 
 uint8_t ClampMaxDam(const Item &item, uint8_t maxDam)
 {
-	if (maxDam < item._iMaxDam || maxDam - item._iMinDam > 30)
-		return item._iMaxDam;
+	if (maxDam < item._iDam.second || maxDam - item._iDam.first > 30)
+		return item._iDam.second;
 
 	return maxDam;
 }
@@ -1786,7 +1786,7 @@ int SyncDropItem(Point position, _item_indexes idx, uint16_t icreateinfo, int is
 	item._iCharges = clamp<int>(ch, 0, item._iMaxCharges);
 	if (gbIsHellfire) {
 		item._iPLToHit = ClampToHit(item, toHit);
-		item._iMaxDam = ClampMaxDam(item, maxDam);
+		item._iDam.second = ClampMaxDam(item, maxDam);
 	}
 	item.dwBuff = ibuff;
 

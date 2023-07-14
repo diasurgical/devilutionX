@@ -2438,9 +2438,9 @@ void OperateShrineGloomy(Player &player)
 		case ItemType::Bow:
 		case ItemType::Mace:
 		case ItemType::Staff:
-			item._iMaxDam--;
-			if (item._iMaxDam < item._iMinDam)
-				item._iMaxDam = item._iMinDam;
+			item._iDam.second--;
+			if (item._iDam.second < item._iDam.first)
+				item._iDam.second = item._iDam.first;
 			break;
 		case ItemType::Shield:
 		case ItemType::Helm:
@@ -2465,9 +2465,9 @@ void OperateShrineWeird(Player &player)
 		return;
 
 	if (!player.InvBody[INVLOC_HAND_LEFT].isEmpty() && player.InvBody[INVLOC_HAND_LEFT]._itype != ItemType::Shield)
-		player.InvBody[INVLOC_HAND_LEFT]._iMaxDam++;
+		player.InvBody[INVLOC_HAND_LEFT]._iDam.second++;
 	if (!player.InvBody[INVLOC_HAND_RIGHT].isEmpty() && player.InvBody[INVLOC_HAND_RIGHT]._itype != ItemType::Shield)
-		player.InvBody[INVLOC_HAND_RIGHT]._iMaxDam++;
+		player.InvBody[INVLOC_HAND_RIGHT]._iDam.second++;
 
 	for (Item &item : InventoryPlayerItemsRange { player }) {
 		switch (item._itype) {
@@ -2476,7 +2476,7 @@ void OperateShrineWeird(Player &player)
 		case ItemType::Bow:
 		case ItemType::Mace:
 		case ItemType::Staff:
-			item._iMaxDam++;
+			item._iDam.second++;
 			break;
 		default:
 			break;

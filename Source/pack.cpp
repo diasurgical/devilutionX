@@ -211,8 +211,7 @@ void PackNetPlayer(PlayerNetPack &packed, const Player &player)
 	packed.pMaxMana = SDL_SwapLE32(player._pMaxMana);
 	packed.pDamageMod = SDL_SwapLE32(player._pDamageMod);
 	packed.pBaseToBlk = SDL_SwapLE32(player._pBaseToBlk);
-	packed.pIMinDam = SDL_SwapLE32(player._pIMinDam);
-	packed.pIMaxDam = SDL_SwapLE32(player._pIMaxDam);
+	packed.pIDam = SDL_SwapLE32(player._pIDam);
 	packed.pIAC = SDL_SwapLE32(player._pIAC);
 	packed.pIBonusDam = SDL_SwapLE32(player._pIBonusDam);
 	packed.pIBonusToHit = SDL_SwapLE32(player._pIBonusToHit);
@@ -472,9 +471,7 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 		return false;
 	if (player._pBaseToBlk != SDL_SwapLE32(packed.pBaseToBlk))
 		return false;
-	if (player._pIMinDam != SDL_SwapLE32(packed.pIMinDam))
-		return false;
-	if (player._pIMaxDam != SDL_SwapLE32(packed.pIMaxDam))
+	if (player._pIDam != SDL_SwapLE32(packed.pIDam))
 		return false;
 	if (player._pIAC != SDL_SwapLE32(packed.pIAC))
 		return false;

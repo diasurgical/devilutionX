@@ -447,8 +447,7 @@ struct ItemData {
 	const char *iSName;
 	uint8_t iMinMLvl;
 	uint8_t iDurability;
-	uint8_t iMinDam;
-	uint8_t iMaxDam;
+	std::pair<uint8_t, uint8_t> iDam;
 	uint8_t iMinAC;
 	uint8_t iMaxAC;
 	uint8_t iMinStr;

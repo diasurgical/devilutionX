@@ -126,8 +126,7 @@ struct PlayerNetPack {
 	int32_t pMaxMana;
 	int32_t pDamageMod;
 	int32_t pBaseToBlk;
-	int32_t pIMinDam;
-	int32_t pIMaxDam;
+	std::pair<int32_t, int32_t> pIDam;
 	int32_t pIAC;
 	int32_t pIBonusDam;
 	int32_t pIBonusToHit;

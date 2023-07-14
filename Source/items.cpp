@@ -2539,9 +2539,8 @@ void InitItems()
 
 void CalcPlrItemVals(Player &player, bool loadgfx)
 {
-	int mind = 0; // min damage
-	int maxd = 0; // max damage
-	int tac = 0;  // accuracy
+	std::pair<int, int> d = { 0, 0 }; // damage
+	int tac = 0;                      // accuracy
 
 	int bdam = 0;   // bonus damage
 	int btohit = 0; // bonus chance to hit
@@ -2581,8 +2580,8 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	for (auto &item : player.InvBody) {
 		if (!item.isEmpty() && item._iStatFlag) {
 
-			mind += item._iMinDam;
-			maxd += item._iMaxDam;
+			d.first += item._iDam.first;
+			d.second += item._iDam.second;
 			tac += item._iAC;
 
 			if (IsValidSpell(item._iSpell)) {
@@ -2624,21 +2623,19 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 		}
 	}
 
-	if (mind == 0 && maxd == 0) {
-		mind = 1;
-		maxd = 1;
+	if (d.first == 0 && d.second == 0) {
+		d = { 1, 1 };
 
 		if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Shield && player.InvBody[INVLOC_HAND_LEFT]._iStatFlag) {
-			maxd = 3;
+			d.second = 3;
 		}
 
 		if (player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Shield && player.InvBody[INVLOC_HAND_RIGHT]._iStatFlag) {
-			maxd = 3;
+			d.second = 3;
 		}
 
 		if (player._pClass == HeroClass::Monk) {
-			mind = std::max(mind, player._pLevel / 2);
-			maxd = std::max(maxd, (int)player._pLevel);
+			d = { std::max(d.first, player._pLevel / 2), std::max(d.second, (int)player._pLevel) };
 		}
 	}
 
@@ -2653,8 +2650,7 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 		vadd -= 2 * player._pLevel;
 	}
 
-	player._pIMinDam = mind;
-	player._pIMaxDam = maxd;
+	player._pIDam = d;
 	player._pIAC = tac;
 	player._pIBonusDam = bdam;
 	player._pIBonusToHit = btohit;
@@ -2923,8 +2919,7 @@ void InitializeItem(Item &item, _item_indexes itemData)
 	CopyUtf8(item._iIName, pAllItem.iName, sizeof(item._iIName));
 	item._iLoc = pAllItem.iLoc;
 	item._iClass = pAllItem.iClass;
-	item._iMinDam = pAllItem.iMinDam;
-	item._iMaxDam = pAllItem.iMaxDam;
+	item._iDam = pAllItem.iDam;
 	item._iAC = pAllItem.iMinAC;
 	item._iMiscId = pAllItem.iMiscId;
 	item._iSpell = pAllItem.iSpell;
@@ -3157,8 +3152,7 @@ void GetItemAttrs(Item &item, _item_indexes itemData, int lvl)
 	CopyUtf8(item._iIName, baseItemData.iName, sizeof(item._iIName));
 	item._iLoc = baseItemData.iLoc;
 	item._iClass = baseItemData.iClass;
-	item._iMinDam = baseItemData.iMinDam;
-	item._iMaxDam = baseItemData.iMaxDam;
+	item._iDam = baseItemData.iDam;
 	item._iAC = baseItemData.iMinAC + GenerateRnd(baseItemData.iMaxAC - baseItemData.iMinAC + 1);
 	item._iFlags = baseItemData.iFlags;
 	item._iMiscId = baseItemData.iMiscId;
@@ -3942,16 +3936,16 @@ void PrintItemDetails(const Item &item)
 		return;
 
 	if (item._iClass == ICLASS_WEAPON) {
-		if (item._iMinDam == item._iMaxDam) {
+		if (item._iDam.first == item._iDam.second) {
 			if (item._iMaxDur == DUR_INDESTRUCTIBLE)
-				AddPanelString(fmt::format(fmt::runtime(_("damage: {:d}  Indestructible")), item._iMinDam));
+				AddPanelString(fmt::format(fmt::runtime(_("damage: {:d}  Indestructible")), item._iDam.first));
 			else
-				AddPanelString(fmt::format(fmt::runtime(_(/* TRANSLATORS: Dur: is durability */ "damage: {:d}  Dur: {:d}/{:d}")), item._iMinDam, item._iDurability, item._iMaxDur));
+				AddPanelString(fmt::format(fmt::runtime(_(/* TRANSLATORS: Dur: is durability */ "damage: {:d}  Dur: {:d}/{:d}")), item._iDam.first, item._iDurability, item._iMaxDur));
 		} else {
 			if (item._iMaxDur == DUR_INDESTRUCTIBLE)
-				AddPanelString(fmt::format(fmt::runtime(_("damage: {:d}-{:d}  Indestructible")), item._iMinDam, item._iMaxDam));
+				AddPanelString(fmt::format(fmt::runtime(_("damage: {:d}-{:d}  Indestructible")), item._iDam.first, item._iDam.second));
 			else
-				AddPanelString(fmt::format(fmt::runtime(_(/* TRANSLATORS: Dur: is durability */ "damage: {:d}-{:d}  Dur: {:d}/{:d}")), item._iMinDam, item._iMaxDam, item._iDurability, item._iMaxDur));
+				AddPanelString(fmt::format(fmt::runtime(_(/* TRANSLATORS: Dur: is durability */ "damage: {:d}-{:d}  Dur: {:d}/{:d}")), item._iDam.first, item._iDam.second, item._iDurability, item._iMaxDur));
 		}
 	}
 	if (item._iClass == ICLASS_ARMOR) {
@@ -3983,16 +3977,16 @@ void PrintItemDur(const Item &item)
 		return;
 
 	if (item._iClass == ICLASS_WEAPON) {
-		if (item._iMinDam == item._iMaxDam) {
+		if (item._iDam.first == item._iDam.second) {
 			if (item._iMaxDur == DUR_INDESTRUCTIBLE)
-				AddPanelString(fmt::format(fmt::runtime(_("damage: {:d}  Indestructible")), item._iMinDam));
+				AddPanelString(fmt::format(fmt::runtime(_("damage: {:d}  Indestructible")), item._iDam.first));
 			else
-				AddPanelString(fmt::format(fmt::runtime(_("damage: {:d}  Dur: {:d}/{:d}")), item._iMinDam, item._iDurability, item._iMaxDur));
+				AddPanelString(fmt::format(fmt::runtime(_("damage: {:d}  Dur: {:d}/{:d}")), item._iDam.first, item._iDurability, item._iMaxDur));
 		} else {
 			if (item._iMaxDur == DUR_INDESTRUCTIBLE)
-				AddPanelString(fmt::format(fmt::runtime(_("damage: {:d}-{:d}  Indestructible")), item._iMinDam, item._iMaxDam));
+				AddPanelString(fmt::format(fmt::runtime(_("damage: {:d}-{:d}  Indestructible")), item._iDam.first, item._iDam.second));
 			else
-				AddPanelString(fmt::format(fmt::runtime(_("damage: {:d}-{:d}  Dur: {:d}/{:d}")), item._iMinDam, item._iMaxDam, item._iDurability, item._iMaxDur));
+				AddPanelString(fmt::format(fmt::runtime(_("damage: {:d}-{:d}  Dur: {:d}/{:d}")), item._iDam.first, item._iDam.second, item._iDurability, item._iMaxDur));
 		}
 		if (item._iMiscId == IMISC_STAFF && item._iMaxCharges > 0) {
 			AddPanelString(fmt::format(fmt::runtime(_("Charges: {:d}/{:d}")), item._iCharges, item._iMaxCharges));
@@ -4925,14 +4919,14 @@ bool ApplyOilToItem(Item &item, Player &player)
 		}
 		break;
 	case IMISC_OILSHARP:
-		if (item._iMaxDam - item._iMinDam < 30 && item._iMaxDam < 255) {
-			item._iMaxDam = item._iMaxDam + 1;
+		if (item._iDam.second - item._iDam.second < 30 && item._iDam.second < 255) {
+			item._iDam.second = item._iDam.second + 1;
 		}
 		break;
 	case IMISC_OILDEATH:
-		if (item._iMaxDam - item._iMinDam < 30 && item._iMaxDam < 254) {
-			item._iMinDam = item._iMinDam + 1;
-			item._iMaxDam = item._iMaxDam + 2;
+		if (item._iDam.second - item._iDam.first < 30 && item._iDam.second < 254) {
+			item._iDam.first = item._iDam.first + 1;
+			item._iDam.second = item._iDam.second + 2;
 		}
 		break;
 	case IMISC_OILSKILL:
