@@ -786,18 +786,14 @@ int SaveItemPower(const Player &player, Item &item, ItemPower &power)
 	case IPL_FIREDAM:
 		item._iFlags |= ItemSpecialEffect::FireDamage;
 		item._iFlags &= ~ItemSpecialEffect::LightningDamage;
-		item._iFDam.first = power.param1;
-		item._iFDam.second = power.param2;
-		item._iLDam.first = 0;
-		item._iLDam.second = 0;
+		item._iFDam = { power.param1, power.param2 };
+		item._iLDam = { 0, 0 };
 		break;
 	case IPL_LIGHTDAM:
 		item._iFlags |= ItemSpecialEffect::LightningDamage;
 		item._iFlags &= ~ItemSpecialEffect::FireDamage;
-		item._iLDam.first = power.param1;
-		item._iLDam.second = power.param2;
-		item._iFDam.first = 0;
-		item._iFDam.second = 0;
+		item._iLDam = { power.param1, power.param2 };
+		item._iFDam = { 0, 0 };
 		break;
 	case IPL_STR:
 		item._iPLStr += r;
@@ -884,25 +880,19 @@ int SaveItemPower(const Player &player, Item &item, ItemPower &power)
 	case IPL_FIRE_ARROWS:
 		item._iFlags |= ItemSpecialEffect::FireArrows;
 		item._iFlags &= ~ItemSpecialEffect::LightningArrows;
-		item._iFDam.first = power.param1;
-		item._iFDam.second = power.param2;
-		item._iLDam.first = 0;
-		item._iLDam.second = 0;
+		item._iFDam = { power.param1, power.param2 };
+		item._iLDam = { 0, 0 };
 		break;
 	case IPL_LIGHT_ARROWS:
 		item._iFlags |= ItemSpecialEffect::LightningArrows;
 		item._iFlags &= ~ItemSpecialEffect::FireArrows;
-		item._iLDam.first = power.param1;
-		item._iLDam.second = power.param2;
-		item._iFDam.first = 0;
-		item._iFDam.second = 0;
+		item._iLDam = { power.param1, power.param2 };
+		item._iFDam = { 0, 0 };
 		break;
 	case IPL_FIREBALL:
 		item._iFlags |= (ItemSpecialEffect::LightningArrows | ItemSpecialEffect::FireArrows);
-		item._iFDam.first = power.param1;
-		item._iFDam.second = power.param2;
-		item._iLDam.first = 0;
-		item._iLDam.second = 0;
+		item._iFDam = { power.param1, power.param2 };
+		item._iLDam = { 0, 0 };
 		break;
 	case IPL_THORNS:
 		item._iFlags |= ItemSpecialEffect::Thorns;
@@ -971,8 +961,7 @@ int SaveItemPower(const Player &player, Item &item, ItemPower &power)
 		item._iFlags |= ItemSpecialEffect::RandomArrowVelocity;
 		break;
 	case IPL_SETDAM:
-		item._iMinDam = power.param1;
-		item._iMaxDam = power.param2;
+		item._iDam = { power.param1, power.param2 };
 		break;
 	case IPL_SETDUR:
 		item._iDurability = power.param1;
@@ -995,17 +984,13 @@ int SaveItemPower(const Player &player, Item &item, ItemPower &power)
 		break;
 	case IPL_ADDACLIFE:
 		item._iFlags |= (ItemSpecialEffect::LightningArrows | ItemSpecialEffect::FireArrows);
-		item._iFMinDam = power.param1;
-		item._iFMaxDam = power.param2;
-		item._iLMinDam = 1;
-		item._iLMaxDam = 0;
+		item._iFDam = { power.param1, power.param2 };
+		item._iLDam = { 1, 0 };
 		break;
 	case IPL_ADDMANAAC:
 		item._iFlags |= (ItemSpecialEffect::LightningDamage | ItemSpecialEffect::FireDamage);
-		item._iFMinDam = power.param1;
-		item._iFMaxDam = power.param2;
-		item._iLMinDam = 2;
-		item._iLMaxDam = 0;
+		item._iFDam = { power.param1, power.param2 };
+		item._iLDam = { 2, 0 };
 		break;
 	case IPL_FIRERES_CURSE:
 		item._iPLFR -= r;
@@ -2572,7 +2557,7 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	int spllvladd = 0; // increased spell level
 	int enac = 0;      // enhanced accuracy
 
-	std::pair<int, int> f = { 0, 0 };    // fire damage
+	std::pair<int, int> f = { 0, 0 }; // fire damage
 	std::pair<int, int> l = { 0, 0 }; // lightning damage
 
 	for (auto &item : player.InvBody) {
