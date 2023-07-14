@@ -63,91 +63,52 @@ set(devilutionx_assets
   data/stashnavbtns.clx
   data/talkbutton.clx
   data/xpbar.clx
-  fonts/12-00.bin
   fonts/12-00.clx
-  fonts/12-01.bin
   fonts/12-01.clx
-  fonts/12-02.bin
   fonts/12-02.clx
-  fonts/12-03.bin
   fonts/12-03.clx
-  fonts/12-04.bin
   fonts/12-04.clx
   fonts/12-1f4.clx
   fonts/12-1f6.clx
   fonts/12-1f9.clx
-  fonts/12-20.bin
   fonts/12-20.clx
   fonts/12-26.clx
   fonts/12-e0.clx
-  fonts/12-e0.bin
-  fonts/22-00.bin
   fonts/22-00.clx
-  fonts/22-01.bin
   fonts/22-01.clx
-  fonts/22-02.bin
   fonts/22-02.clx
-  fonts/22-03.bin
   fonts/22-03.clx
-  fonts/22-04.bin
   fonts/22-04.clx
-  fonts/22-05.bin
   fonts/22-05.clx
-  fonts/22-20.bin
   fonts/22-20.clx
-  fonts/24-00.bin
   fonts/24-00.clx
-  fonts/24-01.bin
   fonts/24-01.clx
-  fonts/24-02.bin
   fonts/24-02.clx
-  fonts/24-03.bin
   fonts/24-03.clx
-  fonts/24-04.bin
   fonts/24-04.clx
   fonts/24-1f4.clx
   fonts/24-1f6.clx
   fonts/24-1f9.clx
-  fonts/24-20.bin
   fonts/24-20.clx
   fonts/24-26.clx
-  fonts/24-e0.bin
   fonts/24-e0.clx
-  fonts/30-00.bin
   fonts/30-00.clx
-  fonts/30-01.bin
   fonts/30-01.clx
-  fonts/30-02.bin
   fonts/30-02.clx
-  fonts/30-03.bin
   fonts/30-03.clx
-  fonts/30-04.bin
   fonts/30-04.clx
-  fonts/30-20.bin
   fonts/30-20.clx
-  fonts/42-00.bin
   fonts/42-00.clx
-  fonts/42-01.bin
   fonts/42-01.clx
-  fonts/42-02.bin
   fonts/42-02.clx
-  fonts/42-03.bin
   fonts/42-03.clx
-  fonts/42-04.bin
   fonts/42-04.clx
-  fonts/42-20.bin
   fonts/42-20.clx
-  fonts/46-00.bin
   fonts/46-00.clx
-  fonts/46-01.bin
   fonts/46-01.clx
-  fonts/46-02.bin
   fonts/46-02.clx
-  fonts/46-03.bin
   fonts/46-03.clx
-  fonts/46-04.bin
   fonts/46-04.clx
-  fonts/46-20.bin
   fonts/46-20.clx
   fonts/black.trn
   fonts/blue.trn

@@ -79,11 +79,12 @@ public class DevilutionXSDLActivity extends SDLActivity {
 		if (lang.startsWith("ru") && !fileManager.hasFile("ru.mpq"))
 			return true;
 		if (lang.startsWith("ko") || lang.startsWith("zh") || lang.startsWith("ja")) {
-			if (!fileManager.hasFile("fonts.mpq"))
+			if (!fileManager.hasFile("fonts.mpq") ||
+					fileManager.fileSize("fonts.mpq") == 70471463 /* v1 */ ||
+					fileManager.fileSize("fonts.mpq") == 53991069 /* v2 */ ||
+					fileManager.fileSize("fonts.mpq") == 58488019 /* v3 */) {
 				return true;
-		}
-		if (fileManager.fileSize("fonts.mpq") == 70471463 /* v1 */ || fileManager.fileSize("fonts.mpq") == 53991069 /* v2 */) {
-			return true;
+			}
 		}
 
 		return !fileManager.hasFile("diabdat.mpq") &&
