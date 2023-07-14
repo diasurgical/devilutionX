@@ -11,9 +11,29 @@
 #include "init.h"
 #include "loadsave.h"
 #include "playerdat.hpp"
+#include "plrmsg.h"
 #include "stores.h"
 #include "utils/endian.hpp"
+#include "utils/log.hpp"
 #include "utils/utf8.hpp"
+
+#define ValidateField(logValue, condition)                         \
+	do {                                                           \
+		if (!(condition)) {                                        \
+			LogFailedJoinAttempt(#condition, #logValue, logValue); \
+			EventFailedJoinAttempt(player._pName);                 \
+			return false;                                          \
+		}                                                          \
+	} while (0)
+
+#define ValidateFields(logValue1, logValue2, condition)                                     \
+	do {                                                                                    \
+		if (!(condition)) {                                                                 \
+			LogFailedJoinAttempt(#condition, #logValue1, logValue1, #logValue2, logValue2); \
+			EventFailedJoinAttempt(player._pName);                                          \
+			return false;                                                                   \
+		}                                                                                   \
+	} while (0)
 
 namespace devilution {
 
@@ -58,6 +78,24 @@ void UnPackNetItem(const Player &player, const ItemNetPack &packedItem, Item &it
 		RecreateItem(player, packedItem.item, item);
 	else
 		RecreateEar(item, SDL_SwapLE16(packedItem.ear.wCI), SDL_SwapLE32(packedItem.ear.dwSeed), packedItem.ear.bCursval, packedItem.ear.heroname);
+}
+
+void EventFailedJoinAttempt(const char *playerName)
+{
+	std::string message = fmt::format("Player '{}' sent invalid player data during attempt to join the game.", playerName);
+	EventPlrMsg(message);
+}
+
+template <typename T>
+void LogFailedJoinAttempt(const char *condition, const char *name, T value)
+{
+	LogDebug("Remote player validation failed: ValidateField({}: {}, {})", name, value, condition);
+}
+
+template <typename T1, typename T2>
+void LogFailedJoinAttempt(const char *condition, const char *name1, T1 value1, const char *name2, T2 value2)
+{
+	LogDebug("Remote player validation failed: ValidateFields({}: {}, {}: {}, {})", name1, value1, name2, value2, condition);
 }
 
 } // namespace
@@ -360,41 +398,30 @@ void UnPackPlayer(const PlayerPack &packed, Player &player)
 
 bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 {
-	if (packed.pClass >= enum_size<HeroClass>::value)
-		return false;
+	CopyUtf8(player._pName, packed.pName, sizeof(player._pName));
+
+	ValidateField(packed.pClass, packed.pClass < enum_size<HeroClass>::value);
 	player._pClass = static_cast<HeroClass>(packed.pClass);
 
 	Point position { packed.px, packed.py };
-	if (!InDungeonBounds(position))
-		return false;
-
-	if (packed.plrlevel >= NUMLEVELS)
-		return false;
-
-	if (packed.pLevel > MaxCharacterLevel || packed.pLevel < 1)
-		return false;
+	ValidateFields(position.x, position.y, InDungeonBounds(position));
+	ValidateField(packed.plrlevel, packed.plrlevel < NUMLEVELS);
+	ValidateField(packed.pLevel, packed.pLevel >= 1 && packed.pLevel <= MaxCharacterLevel);
 
 	int32_t baseHpMax = SDL_SwapLE32(packed.pMaxHPBase);
 	int32_t baseHp = SDL_SwapLE32(packed.pHPBase);
-	if (baseHp > baseHpMax || baseHp < 0)
-		return false;
+	ValidateFields(baseHp, baseHpMax, baseHp >= 0 && baseHp <= baseHpMax);
 
 	int32_t baseManaMax = SDL_SwapLE32(packed.pMaxManaBase);
 	int32_t baseMana = SDL_SwapLE32(packed.pManaBase);
-	if (baseMana > baseManaMax)
-		return false;
+	ValidateFields(baseMana, baseManaMax, baseMana <= baseManaMax);
 
-	if (packed.pBaseStr > player.GetMaximumAttributeValue(CharacterAttribute::Strength))
-		return false;
-	if (packed.pBaseMag > player.GetMaximumAttributeValue(CharacterAttribute::Magic))
-		return false;
-	if (packed.pBaseDex > player.GetMaximumAttributeValue(CharacterAttribute::Dexterity))
-		return false;
-	if (packed.pBaseVit > player.GetMaximumAttributeValue(CharacterAttribute::Vitality))
-		return false;
+	ValidateFields(packed.pClass, packed.pBaseStr, packed.pBaseStr <= player.GetMaximumAttributeValue(CharacterAttribute::Strength));
+	ValidateFields(packed.pClass, packed.pBaseMag, packed.pBaseStr <= player.GetMaximumAttributeValue(CharacterAttribute::Magic));
+	ValidateFields(packed.pClass, packed.pBaseDex, packed.pBaseStr <= player.GetMaximumAttributeValue(CharacterAttribute::Dexterity));
+	ValidateFields(packed.pClass, packed.pBaseVit, packed.pBaseStr <= player.GetMaximumAttributeValue(CharacterAttribute::Vitality));
 
-	if (packed._pNumInv >= InventoryGridCells)
-		return false;
+	ValidateField(packed._pNumInv, packed._pNumInv < InventoryGridCells);
 
 	player._pLevel = packed.pLevel;
 	player.position.tile = position;
@@ -408,8 +435,6 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 
 	ClrPlrPath(player);
 	player.destAction = ACTION_NONE;
-
-	CopyUtf8(player._pName, packed.pName, sizeof(player._pName));
 
 	InitPlayer(player, true);
 
@@ -452,56 +477,31 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 	CalcPlrInv(player, false);
 	player._pGold = CalculateGold(player);
 
-	if (player._pStrength != SDL_SwapLE32(packed.pStrength))
-		return false;
-	if (player._pMagic != SDL_SwapLE32(packed.pMagic))
-		return false;
-	if (player._pDexterity != SDL_SwapLE32(packed.pDexterity))
-		return false;
-	if (player._pVitality != SDL_SwapLE32(packed.pVitality))
-		return false;
-	if (player._pHitPoints != SDL_SwapLE32(packed.pHitPoints))
-		return false;
-	if (player._pMaxHP != SDL_SwapLE32(packed.pMaxHP))
-		return false;
-	if (player._pMana != SDL_SwapLE32(packed.pMana))
-		return false;
-	if (player._pMaxMana != SDL_SwapLE32(packed.pMaxMana))
-		return false;
-	if (player._pDamageMod != SDL_SwapLE32(packed.pDamageMod))
-		return false;
-	if (player._pBaseToBlk != SDL_SwapLE32(packed.pBaseToBlk))
-		return false;
-	if (player._pIMinDam != SDL_SwapLE32(packed.pIMinDam))
-		return false;
-	if (player._pIMaxDam != SDL_SwapLE32(packed.pIMaxDam))
-		return false;
-	if (player._pIAC != SDL_SwapLE32(packed.pIAC))
-		return false;
-	if (player._pIBonusDam != SDL_SwapLE32(packed.pIBonusDam))
-		return false;
-	if (player._pIBonusToHit != SDL_SwapLE32(packed.pIBonusToHit))
-		return false;
-	if (player._pIBonusAC != SDL_SwapLE32(packed.pIBonusAC))
-		return false;
-	if (player._pIBonusDamMod != SDL_SwapLE32(packed.pIBonusDamMod))
-		return false;
-	if (player._pIGetHit != SDL_SwapLE32(packed.pIGetHit))
-		return false;
-	if (player._pIEnAc != SDL_SwapLE32(packed.pIEnAc))
-		return false;
-	if (player._pIFMinDam != SDL_SwapLE32(packed.pIFMinDam))
-		return false;
-	if (player._pIFMaxDam != SDL_SwapLE32(packed.pIFMaxDam))
-		return false;
-	if (player._pILMinDam != SDL_SwapLE32(packed.pILMinDam))
-		return false;
-	if (player._pILMaxDam != SDL_SwapLE32(packed.pILMaxDam))
-		return false;
-	if (player._pMaxHPBase > player.calculateBaseLife())
-		return false;
-	if (player._pMaxManaBase > player.calculateBaseMana())
-		return false;
+	ValidateFields(player._pStrength, SDL_SwapLE32(packed.pStrength), player._pStrength == SDL_SwapLE32(packed.pStrength));
+	ValidateFields(player._pMagic, SDL_SwapLE32(packed.pMagic), player._pMagic == SDL_SwapLE32(packed.pMagic));
+	ValidateFields(player._pDexterity, SDL_SwapLE32(packed.pDexterity), player._pDexterity == SDL_SwapLE32(packed.pDexterity));
+	ValidateFields(player._pVitality, SDL_SwapLE32(packed.pVitality), player._pVitality == SDL_SwapLE32(packed.pVitality));
+	ValidateFields(player._pHitPoints, SDL_SwapLE32(packed.pHitPoints), player._pHitPoints == SDL_SwapLE32(packed.pHitPoints));
+	ValidateFields(player._pMaxHP, SDL_SwapLE32(packed.pMaxHP), player._pMaxHP == SDL_SwapLE32(packed.pMaxHP));
+	ValidateFields(player._pMana, SDL_SwapLE32(packed.pMana), player._pMana == SDL_SwapLE32(packed.pMana));
+	ValidateFields(player._pMaxMana, SDL_SwapLE32(packed.pMaxMana), player._pMaxMana == SDL_SwapLE32(packed.pMaxMana));
+	ValidateFields(player._pDamageMod, SDL_SwapLE32(packed.pDamageMod), player._pDamageMod == SDL_SwapLE32(packed.pDamageMod));
+	ValidateFields(player._pBaseToBlk, SDL_SwapLE32(packed.pBaseToBlk), player._pBaseToBlk == SDL_SwapLE32(packed.pBaseToBlk));
+	ValidateFields(player._pIMinDam, SDL_SwapLE32(packed.pIMinDam), player._pIMinDam == SDL_SwapLE32(packed.pIMinDam));
+	ValidateFields(player._pIMaxDam, SDL_SwapLE32(packed.pIMaxDam), player._pIMaxDam == SDL_SwapLE32(packed.pIMaxDam));
+	ValidateFields(player._pIAC, SDL_SwapLE32(packed.pIAC), player._pIAC == SDL_SwapLE32(packed.pIAC));
+	ValidateFields(player._pIBonusDam, SDL_SwapLE32(packed.pIBonusDam), player._pIBonusDam == SDL_SwapLE32(packed.pIBonusDam));
+	ValidateFields(player._pIBonusToHit, SDL_SwapLE32(packed.pIBonusToHit), player._pIBonusToHit == SDL_SwapLE32(packed.pIBonusToHit));
+	ValidateFields(player._pIBonusAC, SDL_SwapLE32(packed.pIBonusAC), player._pIBonusAC == SDL_SwapLE32(packed.pIBonusAC));
+	ValidateFields(player._pIBonusDamMod, SDL_SwapLE32(packed.pIBonusDamMod), player._pIBonusDamMod == SDL_SwapLE32(packed.pIBonusDamMod));
+	ValidateFields(player._pIGetHit, SDL_SwapLE32(packed.pIGetHit), player._pIGetHit == SDL_SwapLE32(packed.pIGetHit));
+	ValidateFields(player._pIEnAc, SDL_SwapLE32(packed.pIEnAc), player._pIEnAc == SDL_SwapLE32(packed.pIEnAc));
+	ValidateFields(player._pIFMinDam, SDL_SwapLE32(packed.pIFMinDam), player._pIFMinDam == SDL_SwapLE32(packed.pIFMinDam));
+	ValidateFields(player._pIFMaxDam, SDL_SwapLE32(packed.pIFMaxDam), player._pIFMaxDam == SDL_SwapLE32(packed.pIFMaxDam));
+	ValidateFields(player._pILMinDam, SDL_SwapLE32(packed.pILMinDam), player._pILMinDam == SDL_SwapLE32(packed.pILMinDam));
+	ValidateFields(player._pILMaxDam, SDL_SwapLE32(packed.pILMaxDam), player._pILMaxDam == SDL_SwapLE32(packed.pILMaxDam));
+	ValidateFields(player._pMaxHPBase, player.calculateBaseLife(), player._pMaxHPBase <= player.calculateBaseLife());
+	ValidateFields(player._pMaxManaBase, player.calculateBaseMana(), player._pMaxManaBase <= player.calculateBaseMana());
 
 	return true;
 }
