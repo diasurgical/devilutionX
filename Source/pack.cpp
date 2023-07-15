@@ -323,7 +323,7 @@ void UnPackPlayer(const PlayerPack &packed, Player &player)
 	player.destAction = ACTION_NONE;
 
 	CopyUtf8(player._pName, packed.pName, sizeof(player._pName));
-	if (strlen(player._pName) == 0) {
+	if (player._pName[0] == '\0') {
 		CopyUtf8(player._pName, "Unnamed", sizeof(player._pName));
 	}
 
