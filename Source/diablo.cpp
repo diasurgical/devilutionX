@@ -1094,23 +1094,10 @@ void CheckArchivesUpToDate()
 {
 #ifdef UNPACKED_MPQS
 	const bool devilutionxMpqOutOfDate = false;
-	const bool haveFonts { font_data_path };
 #else
 	const bool devilutionxMpqOutOfDate = devilutionx_mpq && (!devilutionx_mpq->HasFile("data\\charbg.clx") || devilutionx_mpq->HasFile("fonts\\12-00.bin"));
-	const bool haveFonts { font_mpq };
 #endif
-	bool fontsMpqOutOfDate = true;
-	if (haveFonts) {
-		size_t size;
-		AssetHandle handle = OpenAsset("fonts\\VERSION", size);
-		if (handle.ok()) {
-			std::unique_ptr<char[]> version_contents { new char[size] };
-			handle.read(version_contents.get(), size);
-			fontsMpqOutOfDate = string_view { version_contents.get(), size } != font_mpq_version;
-		}
-	} else {
-		fontsMpqOutOfDate = false;
-	}
+	const bool fontsMpqOutOfDate = AreExtraFontsOutOfDate();
 
 	if (devilutionxMpqOutOfDate && fontsMpqOutOfDate) {
 		app_fatal(_("Please update devilutionx.mpq and fonts.mpq to the latest version"));
