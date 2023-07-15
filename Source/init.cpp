@@ -74,9 +74,9 @@ std::optional<MpqArchive> lang_mpq;
 std::optional<MpqArchive> font_mpq;
 #endif
 
-char font_mpq_version[] = "1\n";
-
 namespace {
+
+constexpr char ExtraFontsVersion[] = "1\n";
 
 #ifdef UNPACKED_MPQS
 std::optional<std::string> FindUnpackedMpqData(const std::vector<std::string> &paths, string_view mpqName)
@@ -171,7 +171,47 @@ std::vector<std::string> GetMPQSearchPaths()
 	return paths;
 }
 
+bool CheckExtraFontsVersion(AssetRef &&ref)
+{
+	const size_t size = ref.size();
+	AssetHandle handle = OpenAsset(std::move(ref), false);
+	if (!handle.ok())
+		return true;
+
+	std::unique_ptr<char[]> version_contents { new char[size] };
+	if (!handle.read(version_contents.get(), size))
+		return true;
+
+	return string_view { version_contents.get(), size } != ExtraFontsVersion;
+}
+
 } // namespace
+
+#ifdef UNPACKED_MPQS
+bool AreExtraFontsOutOfDate(const std::string &path)
+{
+	const std::string versionPath = path + "fonts" DIRECTORY_SEPARATOR_STR "VERSION";
+	if (versionPath.size() + 1 > AssetRef::PathBufSize)
+		app_fatal("Path too long");
+	AssetRef ref;
+	*BufCopy(ref.path, versionPath) = '\0';
+	return CheckExtraFontsVersion(std::move(ref));
+}
+#else
+bool AreExtraFontsOutOfDate(MpqArchive &archive)
+{
+	const char filename[] = "fonts\\VERSION";
+	const MpqArchive::FileHash fileHash = MpqArchive::CalculateFileHash(filename);
+	uint32_t fileNumber;
+	if (!archive.GetFileNumber(fileHash, fileNumber))
+		return true;
+	AssetRef ref;
+	ref.archive = &archive;
+	ref.fileNumber = fileNumber;
+	ref.filename = filename;
+	return CheckExtraFontsVersion(std::move(ref));
+}
+#endif
 
 void init_cleanup()
 {
