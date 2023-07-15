@@ -43,6 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Being able to enter Lazarus' chamber before opening the portal
 - Book requirements not updating
 - Diablo: Incorrect level 4 layout when Magic Banner quest is active
+- Halls of the Blind not being compleated by picking up the amulet
 
 #### Platforms
 
