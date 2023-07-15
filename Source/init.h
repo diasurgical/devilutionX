@@ -47,6 +47,8 @@ extern std::optional<MpqArchive> lang_mpq;
 extern std::optional<MpqArchive> devilutionx_mpq;
 #endif
 
+extern char font_mpq_version[];
+
 inline bool HaveSpawn()
 {
 #ifdef UNPACKED_MPQS

@@ -74,6 +74,8 @@ std::optional<MpqArchive> lang_mpq;
 std::optional<MpqArchive> font_mpq;
 #endif
 
+char font_mpq_version[] = "1\n";
+
 namespace {
 
 #ifdef UNPACKED_MPQS
