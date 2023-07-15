@@ -869,7 +869,7 @@ void CheckQuestItem(Player &player, Item &questItem)
 
 	if (Quests[Q_BLIND]._qactive == QUEST_ACTIVE
 	    && (questItem.IDidx == IDI_OPTAMULET
-	        || (gbIsMultiplayer && Quests[Q_BLIND].IsAvailable() && questItem.position == (SetPiece.position.megaToWorld() + Displacement { 5, 5 })))) {
+	        || (Quests[Q_BLIND].IsAvailable() && questItem.position == (SetPiece.position.megaToWorld() + Displacement { 5, 5 })))) {
 		Quests[Q_BLIND]._qactive = QUEST_DONE;
 		NetSendCmdQuest(true, Quests[Q_BLIND]);
 	}
@@ -906,7 +906,7 @@ void CheckQuestItem(Player &player, Item &questItem)
 
 	if (Quests[Q_BLOOD]._qactive == QUEST_ACTIVE
 	    && (questItem.IDidx == IDI_ARMOFVAL
-	        || (gbIsMultiplayer && Quests[Q_BLOOD].IsAvailable() && questItem.position == (SetPiece.position.megaToWorld() + Displacement { 9, 3 })))) {
+	        || (Quests[Q_BLOOD].IsAvailable() && questItem.position == (SetPiece.position.megaToWorld() + Displacement { 9, 3 })))) {
 		Quests[Q_BLOOD]._qactive = QUEST_DONE;
 		NetSendCmdQuest(true, Quests[Q_BLOOD]);
 		myPlayer.Say(HeroSpeech::MayTheSpiritOfArkaineProtectMe, 20);
