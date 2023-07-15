@@ -103,10 +103,7 @@ public class DataActivity extends Activity {
 
 		File fonts_mpq = fileManager.getFile("/fonts.mpq");
 		if (lang.startsWith("ko") || lang.startsWith("zh") || lang.startsWith("ja") || fonts_mpq.exists()) {
-			if (!fonts_mpq.exists() ||
-			    fonts_mpq.length() == 70471463 /* v1 */ ||
-					fonts_mpq.length() == 53991069 /* v2 */ ||
-					fonts_mpq.length() == 58488019 /* v3 */) {
+			if (!fonts_mpq.exists() || DevilutionXSDLActivity.areFontsOutOfDate(fonts_mpq.getAbsolutePath())) {
 				if (!isDownloadingFonts) {
 					fonts_mpq.delete();
 					isDownloadingFonts = true;

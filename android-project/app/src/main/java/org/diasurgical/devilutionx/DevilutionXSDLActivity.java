@@ -78,13 +78,10 @@ public class DevilutionXSDLActivity extends SDLActivity {
 			return true;
 		if (lang.startsWith("ru") && !fileManager.hasFile("ru.mpq"))
 			return true;
-		if (lang.startsWith("ko") || lang.startsWith("zh") || lang.startsWith("ja")) {
-			if (!fileManager.hasFile("fonts.mpq") ||
-					fileManager.fileSize("fonts.mpq") == 70471463 /* v1 */ ||
-					fileManager.fileSize("fonts.mpq") == 53991069 /* v2 */ ||
-					fileManager.fileSize("fonts.mpq") == 58488019 /* v3 */) {
+		File fonts_mpq = fileManager.getFile("/fonts.mpq");
+		if (lang.startsWith("ko") || lang.startsWith("zh") || lang.startsWith("ja") || fonts_mpq.exists()) {
+			if (!fonts_mpq.exists() || areFontsOutOfDate(fonts_mpq.getAbsolutePath()))
 				return true;
-			}
 		}
 
 		return !fileManager.hasFile("diabdat.mpq") &&
@@ -139,4 +136,6 @@ public class DevilutionXSDLActivity extends SDLActivity {
 				"devilutionx"
 		};
 	}
+
+	public static native boolean areFontsOutOfDate(String fonts_mpq);
 }

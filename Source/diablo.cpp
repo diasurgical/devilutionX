@@ -1106,7 +1106,7 @@ void CheckArchivesUpToDate()
 		if (handle.ok()) {
 			std::unique_ptr<char[]> version_contents { new char[size] };
 			handle.read(version_contents.get(), size);
-			fontsMpqOutOfDate = string_view { version_contents.get(), size } != "1\n";
+			fontsMpqOutOfDate = string_view { version_contents.get(), size } != font_mpq_version;
 		}
 	} else {
 		fontsMpqOutOfDate = false;

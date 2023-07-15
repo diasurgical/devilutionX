@@ -5,6 +5,10 @@ set(BUILD_TESTING OFF)
 # All of these will be fetched via FetchContent and linked statically.
 set(DEVILUTIONX_SYSTEM_SDL2 OFF)
 
+# JNI source directory
+list(APPEND DEVILUTIONX_PLATFORM_SUBDIRECTORIES platform/android)
+list(APPEND DEVILUTIONX_PLATFORM_LINK_LIBRARIES libdevilutionx_android)
+
 # Static SDL2 on Android requires Position Independent Code.
 set(SDL_STATIC_PIC ON)
 
