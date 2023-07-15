@@ -5,6 +5,220 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## DevilutionX 1.5.0
+
+### Features
+
+#### Gameplay
+
+- Floating damage numbers
+- Option to auto-pick up oils
+- Quest items now drop based on difficulty
+
+#### Multiplayer
+
+- All quests can now be played, enabled from settings menu
+- Add chat commands, use `/help` for options
+- Add PvP arenas that can be accessed via `/arena #`
+- Inspect other players' items using `/inspect <name>`
+- Hellfire: Disabled The Cornerstone of the World
+- Draw hostile players' names in red in the chat panel
+
+#### Platforms
+
+- Added support for the original Xbox
+- Added support for Android TV
+- Added (experimental) support for RG99
+- Provide virtual resolutions for systems with only one native resolution
+- Android: Support loading data from external storage
+- Android: Do not speed up game after suspending if playing alone
+- Windows: Digitally signed executable
+- Support demo playback on SDL1 versions
+
+#### Graphics / Audio
+
+- Option to show item graphics in stores
+- More fluid lighting updates when moving
+- Added map in town
+- Add widescreen load screens (thanks to @Chance4us)
+- Durability icon gradually changing to red
+- Provide sound cue when gold is auto-placed into the open inventory
+- Color inventory slot based on item quality
+- Show cast animation in town
+- Monsters end their invisibility on death
+- Make the ground color of small rejuvenation potions distinct
+- Add setting for choosing a different audio resampler
+- Support for recoloring heroes using trn-files
+- Indicate on which difficulty a hero has defeated Diablo
+- Use decimal separators for gold and XP
+- Improve the monster HP bar for some edge cases
+- Only display resolution height when FitToScreen is enabled
+- Various text rendering improvements
+
+#### Controls
+
+- Do not target monster when casting Heal Other and Resurrect
+- Improve logic for belt auto-refill
+- Adjust the info panel descriptions based on the input device
+- keyboard/mouse: Additional mapping options
+- keyboard/mouse: Support back button in menus
+- gamepad/touch: Improve menu navigation
+- gamepad: Controls can now be mapped
+- gamepad: Autodetect button layout
+
+#### Translations
+
+- Update French translation
+- Update Italian translation
+- Update Japanese translation
+- Update Polish translation
+- Update Spanish translation
+- Update Ukrainian translation
+- Synchronize names of existing items with the current game language
+- Xbox One/Series: Include translations
+- Add `--lang` for specifying the language
+
+#### Stability / Performance / System
+
+- Create submenus for setting groups
+- Date based screenshot names
+- Performance improvement
+- Reduce RAM usage
+- Frame skipping on low end systems
+- Setting for picking audio device
+
+### Bugfixes
+
+#### Gameplay
+
+- Attack speed not always being accurate for specific combinations of effects and actions
+- Hellfire: Books from Adria's shop morphing
+- Petrified monsters shifting position when hit after loading a save game
+- Don't consume mana when double casting Mana Shield
+- Telekinesis respects the Disable Crippling Shrines setting
+
+#### Multiplayer
+
+- Items held by cursor lost due to lag cursor
+- Items lost due to various desync issues
+- Fix multiple desync issues
+- Don't show hostile players on the map
+- Player animations sometimes not being in sync
+- Better handling of latency
+
+#### Platforms
+
+- Windows: Fix ZeroTier always failing for Unicode usernames
+- Vita: Items lost when tapping outside the inventory
+- Fix gold withdrawal on SDL1 versions
+- macOS/iOS translate system texts
+- Translation support on BE systems
+
+#### Graphics / Audio
+
+- Top of screen not being rendered at some resolutions
+- Correct alignment of lightning and inferno
+- Make item labels take UI into consideration
+- Adria's "you have nothing to recharge" being misalignment on an empty list
+- Monsters sometimes not being rendered
+- Lighting missing for some areas after loading a saved game
+- Hellfire quests being removed from the quest log when completed
+
+#### Controls
+
+- Hero sometimes not willing to drop an item even when there is still room on the ground
+- touch: Missing buttons on low end devices
+
+#### Stability / Performance / System
+
+- Allow using the built-in screenshot function during text input
+- Various crashes
+- Resolve a few bugs and edge cases with the stash
+- A rare freeze when loading hell levels
+- Various issues with cursor rendering
+- Some additional validation of items when converting saves from Hellfire to Diablo
+
+### Bugfixes for original Diablo bugs
+
+#### Gameplay
+
+- Several issues that would cause missiles to miss when they shoudn't
+- Some wall tiles not blocking missiles and vision
+- The player can spawn in an incorrect location on some levels
+- Missing the extra stats at level 50
+- Guardian not calculating its damage correctly
+- Diablo not giving the intended XP on Hell difficulty
+- Fireball/Elemental not doing damage when monster is not in line of sight
+- Lightning spell being able to pass through some walls
+- Double casting of spells
+- Low quality items on quests after using a town portal
+- Monsters on Nightmare and Hell having too little HP
+- Monsters being immune to non-player missiles
+- Stairs up to level 6 not working sometimes
+- The Deadly Hunter bow not dealing the correct damage
+- Spell remaining unavailable after using a stone shrine until reequipping the staff
+- Fast and faster hit recovery stacking
+- Incorrect calculation for max chages lost with when using the recharge skill
+- Not getting XP after damaging a monster if it dies from a trap
+- Fire Arrows causing monsters to stop healing
+
+#### Multiplayer
+
+- Trapped doors rearming themselves when returning to a level
+- Resolve some sources of dsync
+
+#### Graphics / Audio
+
+- Incorrect Armor Class in Char Panel
+- Petrified monsters turning to face the attacker
+- Petrified monster sliding after having been stone cursed
+- Show portal animation in town
+- Broken corners on some cathedral levels
+- Inconsistent lighting on quest levels
+- Light smearing when walking in certain directions
+- Unique monsters light not always following the monster
+- Unique monster light being left behind when they are removed
+- Minor rendering bugs in UI panels
+- Center 2x2 items that go in 2x3 slots
+- Player moonwalking when talking to monsters
+- Tavern Sign playing the wrong sound when dropped on the floor
+- Poisoned Water not appearing in the quest log if discovered before talking to Pepin
+- Camera shaking when loading a save game after Diablo's death
+- Add scrollbar to help window
+
+#### Controls
+
+- Unable to pick Golem spawn location when right-clicking the scroll
+- Casting spells during level transition will target the old position
+- Help panel staying open while talking to NPCs
+
+#### Stability / Performance / System
+
+- Town portal not always returning to the correct quest level
+- Items lost when triggering a portal while picking them up
+- Optic Amulet and Arkaine's Valor sometimes being misaligned
+- Minor stability issues
+
+### Bugfixes for original Hellfire bugs
+
+#### Gameplay
+
+- Prevent oil of death damage wrap around
+- Reflected damage sometimes being too low
+
+#### Multiplayer
+
+- Desync in Nest when cow quest is enabled
+- Being unable to pick up quest items if you didn't start the game
+- Quest going out of sync
+
+#### Graphics / Audio
+
+- Gillian saying the grave quest start line multiple times
+- Buggy lighting in Nest and Crypt
+- Description of jester's item saying 500% instead of 600% damage
+- Typos in subtitles
+
 ## DevilutionX 1.4.1
 
 ### Features
