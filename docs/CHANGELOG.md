@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Features
 
+#### Multiplayer
+
+- Validate player stats
+- Update the pvp arenas
+- Rename "Loopback" to "Offline"
+
 #### Translations
 
 - Update French translation
@@ -17,6 +23,57 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update Korean translation
 - Update Portuguese translation
 - Update Ukrainian translation
+
+#### Platforms
+
+- Android TV: Update banner to include app name
+
+#### Stability / Performance / System
+
+- Move hp/mana display and item graphics to gameplay options
+- Validate properties when reloading items
+- Demomode: Improve replay stability
+- Update [Discord link](https://discord.gg/devilutionx)
+- Reduce ram usage
+
+### Bugfixes
+
+#### Gameplay
+
+- Being able to enter Lazarus' chamber before opening the portal
+- Book requirements not updating
+- Diablo: Incorrect level 4 layout when Magic Banner quest is active
+
+#### Platforms
+
+- Linux: Add sdl-image dependency for deb package
+- Linux: Include discord dependency
+
+#### Graphics / Audio
+
+- Incorrect cursor rendering
+- Incorrect outlines at the right edge of the screen
+- NPC speech continuing after starting a new game
+
+#### Controls
+
+- Gamepad: Being stuck in dialogs
+- Gamepad: Unable to use some scrolls directly
+
+#### Stability / Performance / System
+
+- Crashes on missing fonts
+- Other various crashes
+
+### Bugfixes for original Diablo bugs
+
+#### Gameplay
+
+- Durability overflowing when reloading items
+
+#### Graphics / Audio
+
+- Broken lava tiles
 
 ## DevilutionX 1.5.0
 
