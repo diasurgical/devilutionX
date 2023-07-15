@@ -53,7 +53,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Incorrect cursor rendering
 - Incorrect outlines at the right edge of the screen
-- NPC speach continuing after starting a new game
+- NPC speech continuing after starting a new game
 
 #### Controls
 
