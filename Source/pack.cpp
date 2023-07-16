@@ -177,15 +177,17 @@ bool UnPackNetItem(const Player &player, const ItemNetPack &packedItem, Item &it
 		return true;
 	}
 
-	RecreateItem(player, packedItem.item, item);
-	ValidateField(item._iCreateInfo, IsCreationFlagComboValid(item._iCreateInfo));
-	if ((item._iCreateInfo & CF_TOWN) != 0)
-		ValidateField(item._iCreateInfo, IsTownItemValid(item._iCreateInfo));
-	else if ((item._iCreateInfo & CF_UPER15) != 0 && (item._iCreateInfo & CF_USEFUL) != CF_USEFUL)
-		ValidateFields(item._iCreateInfo, item.dwBuff, IsUniqueMonsterItemValid(item._iCreateInfo, item.dwBuff));
-	else if ((item._iCreateInfo & CF_UPER1) != 0 && (item._iCreateInfo & CF_USEFUL) != CF_USEFUL)
-		ValidateFields(item._iCreateInfo, item.dwBuff, IsDungeonItemValid(item._iCreateInfo, item.dwBuff));
+	uint16_t creationFlags = SDL_SwapLE16(packedItem.item.wCI);
+	uint32_t dwBuff = SDL_SwapLE16(packedItem.item.dwBuff);
+	ValidateField(creationFlags, IsCreationFlagComboValid(creationFlags));
+	if ((creationFlags & CF_TOWN) != 0)
+		ValidateField(creationFlags, IsTownItemValid(creationFlags));
+	else if ((creationFlags & CF_UPER15) != 0 && (creationFlags & CF_USEFUL) != CF_USEFUL)
+		ValidateFields(creationFlags, dwBuff, IsUniqueMonsterItemValid(creationFlags, dwBuff));
+	else
+		ValidateFields(creationFlags, dwBuff, IsDungeonItemValid(creationFlags, dwBuff));
 
+	RecreateItem(player, packedItem.item, item);
 	return true;
 }
 
