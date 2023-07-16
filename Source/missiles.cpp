@@ -1397,7 +1397,8 @@ void AddUniqueMissile(Missile &missile, AddMissileParameter &parameter)
 		return;
 
 	Player &player = *missile.sourcePlayer();
-	int16_t spectralID = 0;
+	uint8_t uniqueMissileID = 0;
+	uint8_t spllvl = 0;
 
 	for (Item &item : EquippedPlayerItemsRange { player }) {
 		if (item._iMagical == ITEM_QUALITY_UNIQUE) {
@@ -1406,13 +1407,13 @@ void AddUniqueMissile(Missile &missile, AddMissileParameter &parameter)
 			for (const auto &power : uitem.powers) {
 				switch (power.type) {
 				case IPL_FIREBALL: // Flambeau
-					spectralID = 0;
+					uniqueMissileID = IPL_FIREBALL;
 					goto end_loop;
 				case IPL_ADDACLIFE: // Blitzen
-					spectralID = 1;
+					uniqueMissileID = IPL_ADDACLIFE;
 					goto end_loop;
 				case IPL_ADDMANAAC: // Thunderclap
-					spectralID = 2;
+					uniqueMissileID = IPL_ADDMANAAC;
 					goto end_loop;
 				default:
 					goto end_loop;
@@ -1422,10 +1423,52 @@ void AddUniqueMissile(Missile &missile, AddMissileParameter &parameter)
 	}
 
 end_loop: // Grab the first spectralID we get and proceed
+
+	switch (player._pClass) {
+	case HeroClass::Rogue:
+		spllvl += (player._pLevel - 1) / 4;
+		break;
+	case HeroClass::Warrior:
+	case HeroClass::Bard:
+		spllvl += (player._pLevel - 1) / 8;
+		break;
+	default:
+		break;
+	}
+
 	missile._mirange = 1;
 	missile.var1 = parameter.dst.x;
 	missile.var2 = parameter.dst.y;
-	missile.var3 = spectralID;
+	missile.var3 = spllvl;
+	missile.var4 = uniqueMissileID;
+}
+
+void AddSpectralArrow(Missile &missile, AddMissileParameter &parameter)
+{
+	int av = 0;
+
+	if (missile.sourceType() == MissileSource::Player) {
+		const Player &player = *missile.sourcePlayer();
+
+		if (player._pClass == HeroClass::Rogue)
+			av += (player._pLevel - 1) / 4;
+		else if (player._pClass == HeroClass::Warrior || player._pClass == HeroClass::Bard)
+			av += (player._pLevel - 1) / 8;
+
+		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::QuickAttack))
+			av++;
+		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastAttack))
+			av += 2;
+		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FasterAttack))
+			av += 4;
+		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastestAttack))
+			av += 8;
+	}
+
+	missile._mirange = 1;
+	missile.var1 = parameter.dst.x;
+	missile.var2 = parameter.dst.y;
+	missile.var3 = av;
 }
 
 void AddWarp(Missile &missile, AddMissileParameter & /*parameter*/)
@@ -3284,22 +3327,27 @@ void ProcessUniqueMissile(Missile &missile)
 	mienemy_type micaster = TARGET_MONSTERS;
 	int id = missile._misource;
 	int dam = missile._midam;
+	int spllvl = missile.var3;
 
-	switch (missile.var3) {
-	case 0:
+	switch (missile.var4) {
+	case IPL_FIREBALL:
 		mitype = MissileID::FireballBow;
+		AddMissile(src, dst, dir, mitype, micaster, id, dam, spllvl);
 		break;
-	case 1:
+	case IPL_ADDACLIFE:
 		mitype = MissileID::LightningBow;
+		AddMissile(src, dst, dir, mitype, micaster, id, dam, spllvl);
 		break;
-	case 2:
+	case IPL_ADDMANAAC:
 		mitype = MissileID::ChargedBoltBow;
-		AddMissile(src, dst, dir, mitype, micaster, id, dam, 0);
-		AddMissile(src, dst, dir, mitype, micaster, id, dam, 0);
+
+		for (int i = 0; i < 3; i++) {
+			AddMissile(src, dst, dir, mitype, micaster, id, dam, spllvl);
+		}
+		break;
+	default:
 		break;
 	}
-
-	AddMissile(src, dst, dir, mitype, micaster, id, dam, 0);
 
 	missile._mirange--;
 
