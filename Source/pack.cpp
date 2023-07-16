@@ -6,8 +6,6 @@
 #include "pack.h"
 
 #include <cstdint>
-#include <unordered_map>
-#include <unordered_set>
 
 #include "engine/random.hpp"
 #include "init.h"
