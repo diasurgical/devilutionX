@@ -1391,13 +1391,13 @@ void AddStealMana(Missile &missile, AddMissileParameter & /*parameter*/)
 	missile._miDelFlag = true;
 }
 
-void AddUniqueMissile(Missile &missile, AddMissileParameter &parameter)
+void AddItemMissile(Missile &missile, AddMissileParameter &parameter)
 {
 	if (missile.sourceType() != MissileSource::Player)
 		return;
 
 	Player &player = *missile.sourcePlayer();
-	uint8_t uniqueMissileID = 0;
+	uint8_t itemMissileID = 0;
 	uint8_t spllvl = 0;
 
 	for (Item &item : EquippedPlayerItemsRange { player }) {
@@ -1407,13 +1407,13 @@ void AddUniqueMissile(Missile &missile, AddMissileParameter &parameter)
 			for (const auto &power : uitem.powers) {
 				switch (power.type) {
 				case IPL_FIREBALL: // Flambeau
-					uniqueMissileID = IPL_FIREBALL;
+					itemMissileID = IPL_FIREBALL;
 					goto end_loop;
 				case IPL_ADDACLIFE: // Blitzen
-					uniqueMissileID = IPL_ADDACLIFE;
+					itemMissileID = IPL_ADDACLIFE;
 					goto end_loop;
 				case IPL_ADDMANAAC: // Thunderclap
-					uniqueMissileID = IPL_ADDMANAAC;
+					itemMissileID = IPL_ADDMANAAC;
 					goto end_loop;
 				default:
 					goto end_loop;
@@ -1440,7 +1440,7 @@ end_loop: // Grab the first spectralID we get and proceed
 	missile.var1 = parameter.dst.x;
 	missile.var2 = parameter.dst.y;
 	missile.var3 = spllvl;
-	missile.var4 = uniqueMissileID;
+	missile.var4 = itemMissileID;
 }
 
 void AddSpectralArrow(Missile &missile, AddMissileParameter &parameter)
@@ -3314,7 +3314,7 @@ void ProcessNova(Missile &missile)
 	ProcessNovaCommon(missile, MissileID::NovaBall);
 }
 
-void ProcessUniqueMissile(Missile &missile)
+void ProcessItemMissile(Missile &missile)
 {
 	if (missile.sourceType() != MissileSource::Player)
 		return;
