@@ -1750,13 +1750,13 @@ void AddArrow(Missile &missile, AddMissileParameter &parameter)
 		const Monster &monster = *missile.sourceMonster();
 
 		missile._midam = monster.minDamage; // min physical damage
-		missile.var1 = monster.maxDamage;   // max physical damage
+		missile.var3 = monster.maxDamage;   // max physical damage
 	} break;
 	case MissileSource::Trap: {
 		switch (missile._mitype) {
 		case MissileID::Arrow:
 			missile._midam = currlevel;   // min physical damage
-			missile.var1 = 2 * currlevel; // max physical damage
+			missile.var3 = 2 * currlevel; // max physical damage
 			break;
 		case MissileID::LightningArrow:
 		case MissileID::FireArrow:
