@@ -674,12 +674,12 @@ void GetBookSpell(Item &item, int lvl)
 	}
 }
 
-int RndPL(int param1, int param2)
+int16_t RndPL(int16_t param1, int16_t param2)
 {
 	return param1 + GenerateRnd(param2 - param1 + 1);
 }
 
-int CalculateToHitBonus(int level)
+int16_t CalculateToHitBonus(int16_t level)
 {
 	switch (level) {
 	case -50:
@@ -709,7 +709,7 @@ int CalculateToHitBonus(int level)
 	}
 }
 
-int SaveItemPower(const Player &player, Item &item, ItemPower &power)
+int16_t SaveItemPower(const Player &player, Item &item, ItemPower &power)
 {
 	if (!gbIsHellfire) {
 		if (power.type == IPL_TARGAC) {
@@ -718,7 +718,7 @@ int SaveItemPower(const Player &player, Item &item, ItemPower &power)
 		}
 	}
 
-	int r = RndPL(power.param1, power.param2);
+	int16_t r = RndPL(power.param1, power.param2);
 
 	switch (power.type) {
 	case IPL_TOHIT:
@@ -767,12 +767,15 @@ int SaveItemPower(const Player &player, Item &item, ItemPower &power)
 		item._iPLMR += r;
 		break;
 	case IPL_ALLRES:
-		item._iPLFR = std::max(item._iPLFR + r, 0);
-		item._iPLLR = std::max(item._iPLLR + r, 0);
-		item._iPLMR = std::max(item._iPLMR + r, 0);
+		// Original code ensured only a positive value is added.
+		// Doesn't seem necessary at all, but need to check for possible regression.
+		item._iPLFR += r;
+		item._iPLLR += r;
+		item._iPLMR += r;
 		break;
 	case IPL_SPLLVLADD:
-		item._iSplLvlAdd = r;
+		// Clamp bonus value to avoid overflowing/underflowing int8_t variable
+		item._iSplLvlAdd += clamp(r, static_cast<int16_t>(std::numeric_limits<int8_t>::min()), static_cast<int16_t>(std::numeric_limits<int8_t>::max()));
 		break;
 	case IPL_CHARGES:
 		item._iCharges *= power.param1;
@@ -785,19 +788,13 @@ int SaveItemPower(const Player &player, Item &item, ItemPower &power)
 		break;
 	case IPL_FIREDAM:
 		item._iFlags |= ItemSpecialEffect::FireDamage;
-		item._iFlags &= ~ItemSpecialEffect::LightningDamage;
 		item._iFMinDam = power.param1;
 		item._iFMaxDam = power.param2;
-		item._iLMinDam = 0;
-		item._iLMaxDam = 0;
 		break;
 	case IPL_LIGHTDAM:
 		item._iFlags |= ItemSpecialEffect::LightningDamage;
-		item._iFlags &= ~ItemSpecialEffect::FireDamage;
 		item._iLMinDam = power.param1;
 		item._iLMaxDam = power.param2;
-		item._iFMinDam = 0;
-		item._iFMaxDam = 0;
 		break;
 	case IPL_STR:
 		item._iPLStr += r;
@@ -857,17 +854,19 @@ int SaveItemPower(const Player &player, Item &item, ItemPower &power)
 		break;
 	case IPL_DUR: {
 		int bonus = r * item._iMaxDur / 100;
-		item._iMaxDur += bonus;
-		item._iDurability += bonus;
+		int newDur = clamp(item._iMaxDur + bonus, 1, DUR_INDESTRUCTIBLE - 1);
+		item._iMaxDur = newDur;
+		item._iDurability = newDur;
 	} break;
 	case IPL_CRYSTALLINE:
-		item._iPLDam += 140 + r * 2;
+		item._iPLDam = 140 + (r * 2);
 		[[fallthrough]];
-	case IPL_DUR_CURSE:
-		item._iMaxDur -= r * item._iMaxDur / 100;
-		item._iMaxDur = std::max<uint8_t>(item._iMaxDur, 1);
-		item._iDurability = item._iMaxDur;
-		break;
+	case IPL_DUR_CURSE: {
+		int curse = r * item._iMaxDur / 100;
+		int newDur = clamp(item._iMaxDur - curse, 1, DUR_INDESTRUCTIBLE - 1);
+		item._iMaxDur = newDur;
+		item._iDurability = newDur;
+	} break;
 	case IPL_INDESTRUCTIBLE:
 		item._iDurability = DUR_INDESTRUCTIBLE;
 		item._iMaxDur = DUR_INDESTRUCTIBLE;
@@ -883,26 +882,19 @@ int SaveItemPower(const Player &player, Item &item, ItemPower &power)
 		break;
 	case IPL_FIRE_ARROWS:
 		item._iFlags |= ItemSpecialEffect::FireArrows;
-		item._iFlags &= ~ItemSpecialEffect::LightningArrows;
-		item._iFMinDam = power.param1;
-		item._iFMaxDam = power.param2;
-		item._iLMinDam = 0;
-		item._iLMaxDam = 0;
+		item._iFMinDam += power.param1;
+		item._iFMaxDam += power.param2;
 		break;
 	case IPL_LIGHT_ARROWS:
 		item._iFlags |= ItemSpecialEffect::LightningArrows;
-		item._iFlags &= ~ItemSpecialEffect::FireArrows;
-		item._iLMinDam = power.param1;
-		item._iLMaxDam = power.param2;
-		item._iFMinDam = 0;
-		item._iFMaxDam = 0;
+		item._iLMinDam += power.param1;
+		item._iLMaxDam += power.param2;
 		break;
 	case IPL_FIREBALL:
 		item._iFlags |= (ItemSpecialEffect::LightningArrows | ItemSpecialEffect::FireArrows);
-		item._iFMinDam = power.param1;
-		item._iFMaxDam = power.param2;
+		item._iFMinDam += power.param1;
+		item._iFMaxDam += power.param2;
 		item._iLMinDam = 0;
-		item._iLMaxDam = 0;
 		break;
 	case IPL_THORNS:
 		item._iFlags |= ItemSpecialEffect::Thorns;
@@ -923,44 +915,71 @@ int SaveItemPower(const Player &player, Item &item, ItemPower &power)
 	case IPL_ALLRESZERO:
 		item._iFlags |= ItemSpecialEffect::ZeroResistance;
 		break;
-	case IPL_STEALMANA:
-		if (power.param1 == 3)
+	case IPL_STEALMANA: {
+		switch (power.param1) {
+		case 3:
 			item._iFlags |= ItemSpecialEffect::StealMana3;
-		if (power.param1 == 5)
+			break;
+		case 5:
 			item._iFlags |= ItemSpecialEffect::StealMana5;
+			break;
+		default:
+			app_fatal("wrong IPL_STEALMANA param1");
+		}
 		RedrawComponent(PanelDrawComponent::Mana);
-		break;
-	case IPL_STEALLIFE:
-		if (power.param1 == 3)
+	} break;
+	case IPL_STEALLIFE: {
+		switch (power.param1) {
+		case 3:
 			item._iFlags |= ItemSpecialEffect::StealLife3;
-		if (power.param1 == 5)
+			break;
+		case 5:
 			item._iFlags |= ItemSpecialEffect::StealLife5;
+			break;
+		default:
+			app_fatal("wrong IPL_STEALLIFE param1");
+		}
 		RedrawComponent(PanelDrawComponent::Health);
-		break;
+	} break;
 	case IPL_TARGAC:
 		if (gbIsHellfire)
 			item._iPLEnAc = power.param1;
 		else
 			item._iPLEnAc += r;
 		break;
-	case IPL_FASTATTACK:
-		if (power.param1 == 1)
+	case IPL_FASTATTACK: {
+		switch (power.param1) {
+		case 1:
 			item._iFlags |= ItemSpecialEffect::QuickAttack;
-		if (power.param1 == 2)
+			break;
+		case 2:
 			item._iFlags |= ItemSpecialEffect::FastAttack;
-		if (power.param1 == 3)
+			break;
+		case 3:
 			item._iFlags |= ItemSpecialEffect::FasterAttack;
-		if (power.param1 == 4)
+			break;
+		case 4:
 			item._iFlags |= ItemSpecialEffect::FastestAttack;
-		break;
-	case IPL_FASTRECOVER:
-		if (power.param1 == 1)
+			break;
+		default:
+			app_fatal("wrong IPL_FASTATTACK param1");
+		}
+	} break;
+	case IPL_FASTRECOVER: {
+		switch (power.param1) {
+		case 1:
 			item._iFlags |= ItemSpecialEffect::FastHitRecovery;
-		if (power.param1 == 2)
+			break;
+		case 2:
 			item._iFlags |= ItemSpecialEffect::FasterHitRecovery;
-		if (power.param1 == 3)
+			break;
+		case 3:
 			item._iFlags |= ItemSpecialEffect::FastestHitRecovery;
-		break;
+			break;
+		default:
+			app_fatal("wrong IPL_FASTRECOVER param1");
+		}
+	} break;
 	case IPL_FASTBLOCK:
 		item._iFlags |= ItemSpecialEffect::FastBlock;
 		break;
@@ -995,17 +1014,15 @@ int SaveItemPower(const Player &player, Item &item, ItemPower &power)
 		break;
 	case IPL_ADDACLIFE:
 		item._iFlags |= (ItemSpecialEffect::LightningArrows | ItemSpecialEffect::FireArrows);
-		item._iFMinDam = power.param1;
-		item._iFMaxDam = power.param2;
+		item._iFMinDam += power.param1;
+		item._iFMaxDam += power.param2;
 		item._iLMinDam = 1;
-		item._iLMaxDam = 0;
 		break;
 	case IPL_ADDMANAAC:
 		item._iFlags |= (ItemSpecialEffect::LightningDamage | ItemSpecialEffect::FireDamage);
-		item._iFMinDam = power.param1;
-		item._iFMaxDam = power.param2;
+		item._iFMinDam += power.param1;
+		item._iFMaxDam += power.param2;
 		item._iLMinDam = 2;
-		item._iLMaxDam = 0;
 		break;
 	case IPL_FIRERES_CURSE:
 		item._iPLFR -= r;
