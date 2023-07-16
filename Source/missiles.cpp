@@ -1768,7 +1768,7 @@ void AddArrow(Missile &missile, AddMissileParameter &parameter)
 		default:
 			break;
 		}
-	}
+	} break;
 	}
 }
 
