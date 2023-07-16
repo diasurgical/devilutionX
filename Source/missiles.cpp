@@ -1416,15 +1416,13 @@ void AddItemMissile(Missile &missile, AddMissileParameter &parameter)
 					itemMissileID = IPL_ADDMANAAC;
 					goto end_loop;
 				default:
-					break;
+					app_fatal(StrCat("wrong itemMissileID: ", itemMissileID));
 				}
 			}
 		}
 	}
 
 end_loop: // Grab the first spectralID we get and proceed
-	if (itemMissileID == 0)
-		app_fatal(StrCat("wrong itemMissileID: ", itemMissileID));
 
 	switch (player._pClass) {
 	case HeroClass::Rogue:
