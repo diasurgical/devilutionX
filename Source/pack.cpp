@@ -69,6 +69,11 @@ void PackNetItem(const Item &item, ItemNetPack &packedItem)
 		PrepareEarForNetwork(item, packedItem.ear);
 }
 
+bool hasMultipleFlags(uint16_t flags)
+{
+	return (flags & (flags - 1)) > 0;
+}
+
 bool IsCreationFlagComboValid(uint16_t iCreateInfo)
 {
 	iCreateInfo = iCreateInfo & ~CF_LEVEL;
@@ -84,11 +89,6 @@ bool IsCreationFlagComboValid(uint16_t iCreateInfo)
 	return isTownItem && hasMultipleFlags(iCreateInfo);
 	return false;
 	return true;
-}
-
-bool hasMultipleFlags(uint16_t flags)
-{
-	return (flags & (flags - 1)) > 0;
 }
 
 bool IsTownItemValid(uint16_t iCreateInfo)
@@ -149,18 +149,20 @@ bool IsDungeonItemValid(uint16_t iCreateInfo, uint32_t dwBuff)
 	return level <= 30;
 }
 
-void UnPackNetItem(const Player &player, const ItemNetPack &packedItem, Item &item)
+bool UnPackNetItem(const Player &player, const ItemNetPack &packedItem, Item &item)
 {
 	item = {};
 	_item_indexes idx = static_cast<_item_indexes>(SDL_SwapLE16(packedItem.def.wIndx));
 	if (idx < 0 || idx > IDI_LAST)
-		return;
+		return false;
 	if (idx != IDI_EAR)
 		RecreateItem(player, packedItem.item, item);
 	else
 		RecreateEar(item, SDL_SwapLE16(packedItem.ear.wCI), SDL_SwapLE32(packedItem.ear.dwSeed), packedItem.ear.bCursval, packedItem.ear.heroname);
 	uint16_t creationFlags = SDL_SwapLE16(packedItem.item.wCI);
 	ValidateField(creationFlags, IsCreationFlagComboValid(creationFlags));
+
+	return true;
 }
 
 void EventFailedJoinAttempt(const char *playerName)
