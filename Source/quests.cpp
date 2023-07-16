@@ -31,6 +31,10 @@
 #include "utils/language.h"
 #include "utils/utf8.hpp"
 
+#ifdef _DEBUG
+#include "debug.h"
+#endif
+
 namespace devilution {
 
 bool QuestLogIsOpen;
@@ -521,6 +525,11 @@ int GetMapReturnLevel()
 
 Point GetMapReturnPosition()
 {
+#ifdef _DEBUG
+	if (!TestMapPath.empty())
+		return ViewPosition;
+#endif
+
 	switch (setlvlnum) {
 	case SL_SKELKING:
 		return Quests[Q_SKELKING].position + Direction::SouthEast;
