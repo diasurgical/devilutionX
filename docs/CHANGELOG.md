@@ -55,6 +55,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Incorrect cursor rendering
 - Incorrect outlines at the right edge of the screen
 - NPC speech continuing after starting a new game
+- Part of the character panel text missing for some languages
 
 #### Controls
 
