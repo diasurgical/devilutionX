@@ -1423,6 +1423,8 @@ void AddItemMissile(Missile &missile, AddMissileParameter &parameter)
 	}
 
 end_loop: // Grab the first spectralID we get and proceed
+	if (itemMissileID == 0)
+		app_fatal(StrCat("wrong itemMissileID: ", itemMissileID));
 
 	switch (player._pClass) {
 	case HeroClass::Rogue:
