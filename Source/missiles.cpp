@@ -1715,6 +1715,7 @@ void AddArrow(Missile &missile, AddMissileParameter &parameter)
 	UpdateMissileVelocity(missile, dst, velocity);
 
 	missile._mirange = 256;
+
 	if (isElementArrow) {
 		SetMissDir(missile, GetDirection16(missile.position.start, dst));
 		missile.var1 = missile.position.start.x;
