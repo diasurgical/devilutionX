@@ -1393,40 +1393,40 @@ void AddStealMana(Missile &missile, AddMissileParameter & /*parameter*/)
 
 void AddSpectralArrow(Missile &missile, AddMissileParameter &parameter)
 {
-	int velocity = 0;
+	if (missile.sourceType() != MissileSource::Player)
+		return;
 
-	if (missile.sourceType() == MissileSource::Player) {
-		Player &player = *missile.sourcePlayer();
+	Player &player = *missile.sourcePlayer();
+	int16_t spectralID = 0;
 
-		if (player._pClass == HeroClass::Rogue)
-			velocity += (player._pLevel - 1) / 4;
-		else if (player._pClass == HeroClass::Warrior || player._pClass == HeroClass::Bard)
-			velocity += (player._pLevel - 1) / 8;
-
-		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::QuickAttack))
-			velocity++;
-		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastAttack))
-			velocity += 2;
-		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FasterAttack))
-			velocity += 4;
-		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastestAttack))
-			velocity += 8;
-
-		int16_t spectralID = 0;
-
-		for (Item &item : EquippedPlayerItemsRange { player }) {
-			if (item.isWeapon()) {
-				spectralID = item._iLMinDam;
-				break;
+	for (Item &item : EquippedPlayerItemsRange { player }) {
+		if (item._iMagical == ITEM_QUALITY_UNIQUE) {
+			const UniqueItem &uitem = UniqueItems[item._iUid];
+			assert(uitem.UINumPL <= sizeof(uitem.powers) / sizeof(*uitem.powers));
+			for (const auto &power : uitem.powers) {
+				switch (power.type) {
+				case IPL_FIREBALL: // Flambeau
+					spectralID = 0;
+					goto end_loop;
+				case IPL_ADDACLIFE: // Blitzen
+					spectralID = 1;
+					goto end_loop;
+				case IPL_ADDMANAAC: // Thunderclap
+					spectralID = 2;
+					goto end_loop;
+				default:
+					goto end_loop;
+				}
 			}
 		}
-		missile._midam = spectralID;
 	}
+
+end_loop: // Grab the first spectralID we get and proceed
+	missile._midam = spectralID;
 
 	missile._mirange = 1;
 	missile.var1 = parameter.dst.x;
 	missile.var2 = parameter.dst.y;
-	missile.var3 = velocity;
 }
 
 void AddWarp(Missile &missile, AddMissileParameter & /*parameter*/)
@@ -3277,17 +3277,14 @@ void ProcessSpectralArrow(Missile &missile)
 	if (missile.sourceType() != MissileSource::Player)
 		return;
 
-	int id = missile._misource;
-	int dam = missile._midam;
 	Point src = missile.position.tile;
 	Point dst = { missile.var1, missile.var2 };
-	int spllvl = missile.var3;
-	MissileID mitype = MissileID::Arrow;
-	mienemy_type micaster = TARGET_PLAYERS;
 	const Player &player = *missile.sourcePlayer();
 	Direction dir = player._pdir;
-
-	micaster = TARGET_MONSTERS;
+	MissileID mitype = MissileID::Arrow;
+	mienemy_type micaster = TARGET_MONSTERS;
+	int id = missile._misource;
+	int dam = missile._midam;
 
 	switch (missile._midam) {
 	case 0:
@@ -3298,17 +3295,15 @@ void ProcessSpectralArrow(Missile &missile)
 		break;
 	case 2:
 		mitype = MissileID::ChargedBoltBow;
-		break;
-	case 3:
-		mitype = MissileID::HolyBoltBow;
+		AddMissile(src, dst, dir, mitype, micaster, id, dam, 0);
+		AddMissile(src, dst, dir, mitype, micaster, id, dam, 0);
 		break;
 	}
-	AddMissile(src, dst, dir, mitype, micaster, id, dam, spllvl);
-	if (mitype == MissileID::ChargedBoltBow) {
-		AddMissile(src, dst, dir, mitype, micaster, id, dam, spllvl);
-		AddMissile(src, dst, dir, mitype, micaster, id, dam, spllvl);
-	}
+
+	AddMissile(src, dst, dir, mitype, micaster, id, 1, 0);
+
 	missile._mirange--;
+
 	if (missile._mirange == 0)
 		missile._miDelFlag = true;
 }
