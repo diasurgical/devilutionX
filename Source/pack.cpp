@@ -71,28 +71,26 @@ void PackNetItem(const Item &item, ItemNetPack &packedItem)
 		PrepareEarForNetwork(item, packedItem.ear);
 }
 
-int CountSetBits(uint16_t n)
-{
-	int count = 0;
-	while (n) {
-		count += n & 1;
-		n >>= 1;
-	}
-	return count;
-}
-
 bool IsCreationFlagComboValid(uint16_t iCreateInfo)
 {
+	iCreateInfo = iCreateInfo & ~CF_LEVEL;
 	const bool isTownItem = (iCreateInfo & CF_TOWN) != 0;
 	const bool isNonTownItem = (iCreateInfo & (CF_PREGEN | CF_UNIQUE | CF_USEFUL)) != 0;
+	const bool isPregenItem = (iCreateInfo & CF_PREGEN) != 0;
+	const bool isGroundItem = (iCreateInfo & CF_USEFUL) == CF_USEFUL;
 
-	if (isTownItem && isNonTownItem)
+	if (isPregenItem && hasMultipleFlags(iCreateInfo))
 		return false;
-
-	if (isTownItem && CountSetBits(iCreateInfo & CF_TOWN) > 1)
+	if (isGroundItem && (iCreateInfo & ~CF_USEFUL) != 0)
 		return false;
-
+	return isTownItem && hasMultipleFlags(iCreateInfo);
+	return false;
 	return true;
+}
+
+bool hasMultipleFlags(uint16_t flags)
+{
+	return (flags & (flags - 1)) > 0;
 }
 
 bool IsTownItemValid(uint16_t iCreateInfo)
@@ -163,7 +161,8 @@ void UnPackNetItem(const Player &player, const ItemNetPack &packedItem, Item &it
 		RecreateItem(player, packedItem.item, item);
 	else
 		RecreateEar(item, SDL_SwapLE16(packedItem.ear.wCI), SDL_SwapLE32(packedItem.ear.dwSeed), packedItem.ear.bCursval, packedItem.ear.heroname);
-	ValidateField(SDL_SwapLE16(packedItem.item.wCI), IsCreationFlagComboValid(packedItem.item.wCI));
+	uint16_t creationFlags = SDL_SwapLE16(packedItem.item.wCI);
+	ValidateField(creationFlags, IsCreationFlagComboValid(creationFlags));
 }
 
 void EventFailedJoinAttempt(const char *playerName)
