@@ -1393,24 +1393,24 @@ void AddStealMana(Missile &missile, AddMissileParameter & /*parameter*/)
 
 void AddSpectralArrow(Missile &missile, AddMissileParameter &parameter)
 {
-	int av = 0;
+	int velocity = 0;
 
 	if (missile.sourceType() == MissileSource::Player) {
 		Player &player = *missile.sourcePlayer();
 
 		if (player._pClass == HeroClass::Rogue)
-			av += (player._pLevel - 1) / 4;
+			velocity += (player._pLevel - 1) / 4;
 		else if (player._pClass == HeroClass::Warrior || player._pClass == HeroClass::Bard)
-			av += (player._pLevel - 1) / 8;
+			velocity += (player._pLevel - 1) / 8;
 
 		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::QuickAttack))
-			av++;
+			velocity++;
 		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastAttack))
-			av += 2;
+			velocity += 2;
 		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FasterAttack))
-			av += 4;
+			velocity += 4;
 		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastestAttack))
-			av += 8;
+			velocity += 8;
 
 		int16_t spectralID = 0;
 
@@ -1426,7 +1426,7 @@ void AddSpectralArrow(Missile &missile, AddMissileParameter &parameter)
 	missile._mirange = 1;
 	missile.var1 = parameter.dst.x;
 	missile.var2 = parameter.dst.y;
-	missile.var3 = av;
+	missile.var3 = velocity;
 }
 
 void AddWarp(Missile &missile, AddMissileParameter & /*parameter*/)
@@ -3274,33 +3274,34 @@ void ProcessNova(Missile &missile)
 
 void ProcessSpectralArrow(Missile &missile)
 {
+	if (missile.sourceType() != MissileSource::Player)
+		return;
+
 	int id = missile._misource;
 	int dam = missile._midam;
 	Point src = missile.position.tile;
 	Point dst = { missile.var1, missile.var2 };
 	int spllvl = missile.var3;
 	MissileID mitype = MissileID::Arrow;
-	Direction dir = Direction::South;
 	mienemy_type micaster = TARGET_PLAYERS;
-	if (!missile.IsTrap()) {
-		const Player &player = Players[id];
-		dir = player._pdir;
-		micaster = TARGET_MONSTERS;
+	const Player &player = *missile.sourcePlayer();
+	Direction dir = player._pdir;
 
-		switch (missile._midam) {
-		case 0:
-			mitype = MissileID::FireballBow;
-			break;
-		case 1:
-			mitype = MissileID::LightningBow;
-			break;
-		case 2:
-			mitype = MissileID::ChargedBoltBow;
-			break;
-		case 3:
-			mitype = MissileID::HolyBoltBow;
-			break;
-		}
+	micaster = TARGET_MONSTERS;
+
+	switch (missile._midam) {
+	case 0:
+		mitype = MissileID::FireballBow;
+		break;
+	case 1:
+		mitype = MissileID::LightningBow;
+		break;
+	case 2:
+		mitype = MissileID::ChargedBoltBow;
+		break;
+	case 3:
+		mitype = MissileID::HolyBoltBow;
+		break;
 	}
 	AddMissile(src, dst, dir, mitype, micaster, id, dam, spllvl);
 	if (mitype == MissileID::ChargedBoltBow) {
