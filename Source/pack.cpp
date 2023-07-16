@@ -182,7 +182,7 @@ bool UnPackNetItem(const Player &player, const ItemNetPack &packedItem, Item &it
 	ValidateField(creationFlags, IsCreationFlagComboValid(creationFlags));
 	if ((creationFlags & CF_TOWN) != 0)
 		ValidateField(creationFlags, IsTownItemValid(creationFlags));
-	else if ((creationFlags & CF_UPER15) != 0 && (creationFlags & CF_USEFUL) != CF_USEFUL)
+	else if ((creationFlags & CF_USEFUL) == CF_UPER15)
 		ValidateFields(creationFlags, dwBuff, IsUniqueMonsterItemValid(creationFlags, dwBuff));
 	else
 		ValidateFields(creationFlags, dwBuff, IsDungeonItemValid(creationFlags, dwBuff));
