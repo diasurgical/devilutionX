@@ -1422,11 +1422,10 @@ void AddSpectralArrow(Missile &missile, AddMissileParameter &parameter)
 	}
 
 end_loop: // Grab the first spectralID we get and proceed
-	missile._midam = spectralID;
-
 	missile._mirange = 1;
 	missile.var1 = parameter.dst.x;
 	missile.var2 = parameter.dst.y;
+	missile.var3 = spectralID;
 }
 
 void AddWarp(Missile &missile, AddMissileParameter & /*parameter*/)
@@ -3286,7 +3285,7 @@ void ProcessSpectralArrow(Missile &missile)
 	int id = missile._misource;
 	int dam = missile._midam;
 
-	switch (missile._midam) {
+	switch (missile.var3) {
 	case 0:
 		mitype = MissileID::FireballBow;
 		break;
@@ -3300,7 +3299,7 @@ void ProcessSpectralArrow(Missile &missile)
 		break;
 	}
 
-	AddMissile(src, dst, dir, mitype, micaster, id, 1, 0);
+	AddMissile(src, dst, dir, mitype, micaster, id, dam, 0);
 
 	missile._mirange--;
 
