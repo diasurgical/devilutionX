@@ -145,7 +145,7 @@ bool IsDungeonItemValid(uint16_t iCreateInfo, uint32_t dwBuff)
 	const uint8_t level = iCreateInfo & CF_LEVEL;
 	const bool isHellfireItem = (dwBuff & CF_HELLFIRE) != 0;
 
-	for (int i = 0; MonstersData[i].name != nullptr; i++) {
+	for (int16_t i = 0; i < static_cast<int16_t>(NUM_MTYPES); i++) {
 		const auto &monsterData = MonstersData[i];
 		auto monsterLevel = static_cast<uint8_t>(monsterData.level);
 
