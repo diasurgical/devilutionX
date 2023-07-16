@@ -1587,7 +1587,7 @@ void AddImmolation(Missile &missile, AddMissileParameter &parameter)
 	missile._mlid = AddLight(missile.position.start, 8);
 }
 
-void AddLightningBow(Missile &missile, AddMissileParameter &parameter)
+void AddItemLightning(Missile &missile, AddMissileParameter &parameter)
 {
 	Point dst = parameter.dst;
 	if (missile.position.start == parameter.dst) {
@@ -1671,7 +1671,7 @@ void AddSearch(Missile &missile, AddMissileParameter & /*parameter*/)
 	}
 }
 
-void AddChargedBoltBow(Missile &missile, AddMissileParameter &parameter)
+void AddItemChargedBolt(Missile &missile, AddMissileParameter &parameter)
 {
 	Point dst = parameter.dst;
 	missile._mirnd = GenerateRnd(15) + 1;
@@ -3193,7 +3193,7 @@ void ProcessBigExplosion(Missile &missile)
 	PutMissile(missile);
 }
 
-void ProcessLightningBow(Missile &missile)
+void ProcessItemLightning(Missile &missile)
 {
 	SpawnLightning(missile, missile._midam);
 }
@@ -3306,7 +3306,7 @@ void ProcessNovaCommon(Missile &missile, MissileID projectileType)
 
 void ProcessImmolation(Missile &missile)
 {
-	ProcessNovaCommon(missile, MissileID::FireballBow);
+	ProcessNovaCommon(missile, MissileID::ItemFireball);
 }
 
 void ProcessNova(Missile &missile)
@@ -3331,15 +3331,15 @@ void ProcessUniqueMissile(Missile &missile)
 
 	switch (missile.var4) {
 	case IPL_FIREBALL:
-		mitype = MissileID::FireballBow;
+		mitype = MissileID::ItemFireball;
 		AddMissile(src, dst, dir, mitype, micaster, id, dam, spllvl);
 		break;
 	case IPL_ADDACLIFE:
-		mitype = MissileID::LightningBow;
+		mitype = MissileID::ItemLightning;
 		AddMissile(src, dst, dir, mitype, micaster, id, dam, spllvl);
 		break;
 	case IPL_ADDMANAAC:
-		mitype = MissileID::ChargedBoltBow;
+		mitype = MissileID::ItemChargedBolt;
 
 		for (int i = 0; i < 3; i++) {
 			AddMissile(src, dst, dir, mitype, micaster, id, dam, spllvl);
