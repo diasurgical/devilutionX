@@ -1759,6 +1759,7 @@ void AddArrow(Missile &missile, AddMissileParameter &parameter)
 			break;
 		case MissileID::LightningArrow:
 		case MissileID::FireArrow:
+			// Duplicated following code exists so physical damage and elemental damage don't result in the same number.
 			missile._midam = currlevel + GenerateRnd(10) + 1;     // min physical damage
 			missile.var3 = (currlevel * 2) + GenerateRnd(10) + 1; // max physical damage
 			missile.var4 = currlevel + GenerateRnd(10) + 1;       // min elemental damage
