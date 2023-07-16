@@ -149,7 +149,7 @@ bool IsDungeonItemValid(uint16_t iCreateInfo, uint32_t dwBuff)
 		const auto &monsterData = MonstersData[i];
 		auto monsterLevel = static_cast<uint8_t>(monsterData.level);
 
-		if (IsAnyOf(i, MT_HORKDMN, MT_DEFILER, MT_NAKRUL)) {
+		if (i != MT_DIABLO && monsterData.availability == MonsterAvailability::Never) {
 			continue;
 		}
 
