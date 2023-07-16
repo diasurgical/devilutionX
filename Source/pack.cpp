@@ -6,6 +6,8 @@
 #include "pack.h"
 
 #include <cstdint>
+#include <unordered_map>
+#include <unordered_set>
 
 #include "engine/random.hpp"
 #include "init.h"
@@ -69,52 +71,86 @@ void PackNetItem(const Item &item, ItemNetPack &packedItem)
 		PrepareEarForNetwork(item, packedItem.ear);
 }
 
-bool IsCreationInfoValid(Item &packedItem)
+int CountSetBits(uint16_t n)
 {
-	bool valid = true;
-	const uint16_t &flags = packedItem._iCreateInfo;
-	const uint32_t &hellfireFlags = packedItem.dwBuff;
-	const uint8_t level = flags & CF_LEVEL;
-	const bool isOnlyGoodItem = (flags & CF_ONLYGOOD) != 0;
-	const bool isUniqueMonsterItem = (flags & CF_UPER15) != 0;
-	const bool isDungeonItem = (flags & CF_UPER1) != 0;
-	const bool isGroundItem = (flags & CF_USEFUL) != 0;
-	const bool isUniqueItem = (flags & CF_UNIQUE) != 0;
-	const bool isSmithItem = (flags & CF_SMITH) != 0;
-	const bool isSmithPremiumItem = (flags & CF_SMITHPREMIUM) != 0;
-	const bool isBoyItem = (flags & CF_BOY) != 0;
-	const bool isWitchItem = (flags & CF_WITCH) != 0;
-	const bool isHealerItem = (flags & CF_HEALER) != 0;
-	const bool isTownItem = (flags & CF_TOWN) != 0;
-	const bool isPregenItem = (flags & CF_PREGEN) != 0;
-	const bool isHellfireItem = (hellfireFlags & CF_HELLFIRE) != 0;
+	int count = 0;
+	while (n) {
+		count += n & 1;
+		n >>= 1;
+	}
+	return count;
+}
 
-	if (isBoyItem && level > 50) { // Wirt item validation
-		valid = false;
-	} else if (isUniqueMonsterItem && !isGroundItem && !isTownItem && !isPregenItem) { // Unique Monster item validation
-		bool matchFound = false;
-		for (int i = 0; UniqueMonstersData[i].mName != nullptr; i++) {
-			const UniqueMonsterData &uniqueMonsterData = UniqueMonstersData[i];
-			const int8_t &uniqueMonsterLevel = MonstersData[uniqueMonsterData.mtype].level;
+bool IsCreationFlagComboValid(uint16_t iCreateInfo)
+{
+	const bool isTownItem = (iCreateInfo & CF_TOWN) != 0;
+	const bool isNonTownItem = (iCreateInfo & (CF_PREGEN | CF_UNIQUE | CF_USEFUL)) != 0;
 
-			if (!isHellfireItem && IsAnyOf(uniqueMonsterData.mtype, MT_HORKDMN, MT_DEFILER, MT_NAKRUL))
-				continue;
+	if (isTownItem && isNonTownItem)
+		return false;
 
-			if (level == uniqueMonsterLevel) {
-				matchFound = true;
-				break;
-			}
+	if (isTownItem && CountSetBits(iCreateInfo & CF_TOWN) > 1)
+		return false;
+
+	return true;
+}
+
+bool IsTownItemValid(uint16_t iCreateInfo)
+{
+	const uint8_t level = iCreateInfo & CF_LEVEL;
+	const bool isBoyItem = (iCreateInfo & CF_BOY) != 0;
+
+	if (isBoyItem && level <= MaxCharacterLevel)
+		return true;
+
+	return level <= 30;
+}
+
+bool IsUniqueMonsterItemValid(uint16_t iCreateInfo, uint32_t dwBuff)
+{
+	const uint8_t level = iCreateInfo & CF_LEVEL;
+	const bool isHellfireItem = (dwBuff & CF_HELLFIRE) != 0;
+
+	for (int i = 0; UniqueMonstersData[i].mName != nullptr; i++) {
+		const auto &uniqueMonsterData = UniqueMonstersData[i];
+		const auto &uniqueMonsterLevel = static_cast<uint8_t>(MonstersData[uniqueMonsterData.mtype].level);
+
+		if (!isHellfireItem && IsAnyOf(uniqueMonsterData.mtype, MT_HORKDMN, MT_DEFILER, MT_NAKRUL)) {
+			// These monsters don't appear in Diablo
+			continue;
 		}
-		if (!matchFound)
-			valid = false;
-	} else if (isHellfireItem && isDungeonItem && level > 40 && !isGroundItem && !isTownItem && !isPregenItem) {
-		// The highest monster level used by a Non-Unique Monster in Hellfire (The Dark Lord)
-		valid = false;
-	} else if (level > 30) {
-		valid = false;
+
+		if (level == uniqueMonsterLevel) {
+			return true;
+		}
 	}
 
-	return valid;
+	return false;
+}
+
+bool IsDungeonItemValid(uint16_t iCreateInfo, uint32_t dwBuff)
+{
+	const uint8_t level = iCreateInfo & CF_LEVEL;
+	const bool isHellfireItem = (dwBuff & CF_HELLFIRE) != 0;
+
+	for (int i = 0; MonstersData[i].name != nullptr; i++) {
+		const auto &monsterData = MonstersData[i];
+		auto monsterLevel = static_cast<uint8_t>(monsterData.level);
+
+		if (IsAnyOf(i, MT_HORKDMN, MT_DEFILER, MT_NAKRUL)) {
+			continue;
+		}
+
+		if (i == MT_DIABLO && !isHellfireItem) {
+			monsterLevel -= 15;
+		}
+
+		if (level == monsterLevel) {
+			return true;
+		}
+	}
+
+	return level <= 30;
 }
 
 void UnPackNetItem(const Player &player, const ItemNetPack &packedItem, Item &item)
@@ -127,7 +163,7 @@ void UnPackNetItem(const Player &player, const ItemNetPack &packedItem, Item &it
 		RecreateItem(player, packedItem.item, item);
 	else
 		RecreateEar(item, SDL_SwapLE16(packedItem.ear.wCI), SDL_SwapLE32(packedItem.ear.dwSeed), packedItem.ear.bCursval, packedItem.ear.heroname);
-	ValidateField(packedItem.iCreateInfo, (packedItem.iCreateInfo & CF_LEVEL) <= 63);
+	ValidateField(SDL_SwapLE16(packedItem.item.wCI), IsCreationFlagComboValid(packedItem.item.wCI));
 }
 
 void EventFailedJoinAttempt(const char *playerName)
