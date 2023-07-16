@@ -14,6 +14,7 @@
 #include "plrmsg.h"
 #include "stores.h"
 #include "utils/endian.hpp"
+#include "utils/enum_traits.h"
 #include "utils/log.hpp"
 #include "utils/utf8.hpp"
 
@@ -68,6 +69,56 @@ void PackNetItem(const Item &item, ItemNetPack &packedItem)
 		PrepareEarForNetwork(item, packedItem.ear);
 }
 
+bool IsCreationInfoValid(Item &packedItem)
+{
+	bool valid = true;
+	const uint16_t &flags = packedItem._iCreateInfo;
+	const uint32_t &hellfireFlags = packedItem.dwBuff;
+	const uint8_t level = flags & CF_LEVEL;
+	const bool isOnlyGoodItem = (flags & CF_ONLYGOOD) != 0;
+	const bool isUniqueMonsterItem = (flags & CF_UPER15) != 0;
+	const bool isDungeonItem = (flags & CF_UPER1) != 0;
+	const bool isGroundItem = (flags & CF_USEFUL) != 0;
+	const bool isUniqueItem = (flags & CF_UNIQUE) != 0;
+	const bool isSmithItem = (flags & CF_SMITH) != 0;
+	const bool isSmithPremiumItem = (flags & CF_SMITHPREMIUM) != 0;
+	const bool isBoyItem = (flags & CF_BOY) != 0;
+	const bool isWitchItem = (flags & CF_WITCH) != 0;
+	const bool isHealerItem = (flags & CF_HEALER) != 0;
+	const bool isTownItem = (flags & CF_TOWN) != 0;
+	const bool isPregenItem = (flags & CF_PREGEN) != 0;
+	const bool isHellfireItem = (hellfireFlags & CF_HELLFIRE) != 0;
+
+	if (isBoyItem && level > 50) { // Wirt sells items in both versions equal to the player level
+		valid = false;
+	} else if (isHellfireItem && isUniqueMonsterItem && level > 45 && !isGroundItem && !isTownItem && !isPregenItem) {
+		// The highest monster level used by a Unique Monster in Hellfire (Na-Krul)
+		valid = false;
+	} else if (isHellfireItem && isDungeonItem && level > 40 && !isGroundItem && !isTownItem && !isPregenItem) {
+		// The highest monster level used by a Non-Unique Monster in Hellfire (The Dark Lord)
+		valid = false;
+	} else if (level > 30) {
+		valid = false;
+	}
+
+	// If the item is sourced from a unique monster, but there are no unique monsters
+	// that have the same level as the item, that means the item was obtained by cheating methods.
+	if (isUniqueMonsterItem) {
+		bool matchFound = false;
+		for (int i = 0; UniqueMonstersData[i].mName != nullptr; i++) {
+			const UniqueMonsterData &uniqueMonsterData = UniqueMonstersData[i];
+			const int8_t &uniqueMonsterLevel = MonstersData[uniqueMonsterData.mtype].level;
+
+			if (level == uniqueMonsterLevel) {
+				matchFound = true;
+				break;
+			}
+		}
+		if (!matchFound)
+			valid = false;
+	}
+}
+
 void UnPackNetItem(const Player &player, const ItemNetPack &packedItem, Item &item)
 {
 	item = {};
@@ -78,6 +129,7 @@ void UnPackNetItem(const Player &player, const ItemNetPack &packedItem, Item &it
 		RecreateItem(player, packedItem.item, item);
 	else
 		RecreateEar(item, SDL_SwapLE16(packedItem.ear.wCI), SDL_SwapLE32(packedItem.ear.dwSeed), packedItem.ear.bCursval, packedItem.ear.heroname);
+	ValidateField(packedItem.iCreateInfo, (packedItem.iCreateInfo & CF_LEVEL) <= 63);
 }
 
 void EventFailedJoinAttempt(const char *playerName)
