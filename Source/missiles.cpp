@@ -1398,7 +1398,6 @@ void AddUniqueMissile(Missile &missile, AddMissileParameter &parameter)
 
 	Player &player = *missile.sourcePlayer();
 	uint8_t uniqueMissileID = 0;
-	uint8_t spllvl = 0;
 
 	for (Item &item : EquippedPlayerItemsRange { player }) {
 		if (item._iMagical == ITEM_QUALITY_UNIQUE) {
@@ -1424,23 +1423,10 @@ void AddUniqueMissile(Missile &missile, AddMissileParameter &parameter)
 
 end_loop: // Grab the first spectralID we get and proceed
 
-	switch (player._pClass) {
-	case HeroClass::Rogue:
-		spllvl += (player._pLevel - 1) / 4;
-		break;
-	case HeroClass::Warrior:
-	case HeroClass::Bard:
-		spllvl += (player._pLevel - 1) / 8;
-		break;
-	default:
-		break;
-	}
-
 	missile._mirange = 1;
 	missile.var1 = parameter.dst.x;
 	missile.var2 = parameter.dst.y;
-	missile.var3 = spllvl;
-	missile.var4 = uniqueMissileID;
+	missile.var3 = uniqueMissileID;
 }
 
 void AddSpectralArrow(Missile &missile, AddMissileParameter &parameter)
@@ -3327,22 +3313,21 @@ void ProcessUniqueMissile(Missile &missile)
 	mienemy_type micaster = TARGET_MONSTERS;
 	int id = missile._misource;
 	int dam = missile._midam;
-	int spllvl = missile.var3;
 
-	switch (missile.var4) {
+	switch (missile.var3) {
 	case IPL_FIREBALL:
 		mitype = MissileID::FireballBow;
-		AddMissile(src, dst, dir, mitype, micaster, id, dam, spllvl);
+		AddMissile(src, dst, dir, mitype, micaster, id, dam, 0);
 		break;
 	case IPL_ADDACLIFE:
 		mitype = MissileID::LightningBow;
-		AddMissile(src, dst, dir, mitype, micaster, id, dam, spllvl);
+		AddMissile(src, dst, dir, mitype, micaster, id, dam, 0);
 		break;
 	case IPL_ADDMANAAC:
 		mitype = MissileID::ChargedBoltBow;
 
 		for (int i = 0; i < 3; i++) {
-			AddMissile(src, dst, dir, mitype, micaster, id, dam, spllvl);
+			AddMissile(src, dst, dir, mitype, micaster, id, dam, 0);
 		}
 		break;
 	default:
