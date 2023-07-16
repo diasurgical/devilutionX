@@ -1416,7 +1416,7 @@ void AddItemMissile(Missile &missile, AddMissileParameter &parameter)
 					itemMissileID = IPL_ADDMANAAC;
 					goto end_loop;
 				default:
-					goto end_loop;
+					break;
 				}
 			}
 		}
