@@ -1661,37 +1661,73 @@ void AddChargedBoltBow(Missile &missile, AddMissileParameter &parameter)
 	missile._mirange = 256;
 }
 
-void AddElementalArrow(Missile &missile, AddMissileParameter &parameter)
+void AddArrow(Missile &missile, AddMissileParameter &parameter)
 {
+	bool isElementArrow = missile._mitype != MissileID::Arrow;
 	Point dst = parameter.dst;
 
 	if (missile.position.start == dst) {
 		dst += parameter.midir;
 	}
 
-	int av = 32;
+	int velocity = 32;
 
+	// Calculate player missile velocity
 	if (missile.sourceType() == MissileSource::Player) {
-		const auto &player = *missile.sourcePlayer();
+		const Player &player = *missile.sourcePlayer();
 
-		if (player._pClass == HeroClass::Rogue)
-			av += (player.getCharacterLevel()) / 4;
-		else if (IsAnyOf(player._pClass, HeroClass::Warrior, HeroClass::Bard))
-			av += (player.getCharacterLevel()) / 8;
+		if (!isElementArrow && HasAnyOf(player._pIFlags, ItemSpecialEffect::RandomArrowVelocity)) {
+			velocity = GenerateRnd(32) + 16;
+		}
+
+		int classDivisor;
+		switch (player._pClass) {
+		case HeroClass::Rogue:
+			classDivisor = 4;
+			if (!gbIsHellfire)
+				velocity--;
+			break;
+		case HeroClass::Warrior:
+		case HeroClass::Bard:
+			classDivisor = 8;
+			if (!gbIsHellfire)
+				velocity--;
+			break;
+		default:
+			classDivisor = 1;
+			break;
+		}
+
+		velocity += (player.getCharacterLevel() - ((isElementArrow) ? 0 : 1)) / classDivisor;
 
 		if (gbIsHellfire) {
 			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::QuickAttack))
-				av++;
+				velocity++;
 			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastAttack))
-				av += 2;
+				velocity += 2;
 			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FasterAttack))
-				av += 4;
+				velocity += 4;
 			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastestAttack))
-				av += 8;
-		} else {
-			if (IsAnyOf(player._pClass, HeroClass::Rogue, HeroClass::Warrior, HeroClass::Bard))
-				av -= 1;
+				velocity += 8;
 		}
+	}
+
+	UpdateMissileVelocity(missile, dst, velocity);
+
+	missile._mirange = 256;
+	if (isElementArrow) {
+		SetMissDir(missile, GetDirection16(missile.position.start, dst));
+		missile.var1 = missile.position.start.x;
+		missile.var2 = missile.position.start.y;
+		missile._mlid = AddLight(missile.position.start, 5);
+	} else {
+		missile._miAnimFrame = static_cast<int>(GetDirection16(missile.position.start, dst)) + 1;
+	}
+
+	// Calculate missile damage
+	switch (missile.sourceType()) {
+	case MissileSource::Player: {
+		const Player &player = *missile.sourcePlayer();
 
 		missile._midam = player._pIMinDam; // min physical damage
 		missile.var3 = player._pIMaxDam;   // max physical damage
@@ -1706,82 +1742,32 @@ void AddElementalArrow(Missile &missile, AddMissileParameter &parameter)
 			missile.var5 = player._pIFMaxDam; // max fire damage
 			break;
 		default:
-			app_fatal(StrCat("wrong missile ID ", static_cast<int>(missile._mitype)));
 			break;
 		}
-	} else if (missile.sourceType() == MissileSource::Trap) {
-		missile._midam = currlevel + GenerateRnd(10) + 1;     // min physical damage
-		missile.var3 = (currlevel * 2) + GenerateRnd(10) + 1; // max physical damage
+	} break;
+	case MissileSource::Monster: {
+		const Monster &monster = *missile.sourceMonster();
 
+		missile._midam = monster.minDamage; // min physical damage
+		missile.var1 = monster.maxDamage;   // max physical damage
+	} break;
+	case MissileSource::Trap: {
 		switch (missile._mitype) {
+		case MissileID::Arrow:
+			missile._midam = currlevel;   // min physical damage
+			missile.var1 = 2 * currlevel; // max physical damage
+			break;
 		case MissileID::LightningArrow:
 		case MissileID::FireArrow:
+			missile._midam = currlevel + GenerateRnd(10) + 1;     // min physical damage
+			missile.var3 = (currlevel * 2) + GenerateRnd(10) + 1; // max physical damage
 			missile.var4 = currlevel + GenerateRnd(10) + 1;       // min elemental damage
 			missile.var5 = (currlevel * 2) + GenerateRnd(10) + 1; // max elemental damage
 			break;
 		default:
-			app_fatal(StrCat("wrong missile ID ", static_cast<int>(missile._mitype)));
 			break;
 		}
 	}
-
-	UpdateMissileVelocity(missile, dst, av);
-
-	SetMissDir(missile, GetDirection16(missile.position.start, dst));
-	missile._mirange = 256;
-	missile.var1 = missile.position.start.x;
-	missile.var2 = missile.position.start.y;
-	missile._mlid = AddLight(missile.position.start, 5);
-}
-
-void AddArrow(Missile &missile, AddMissileParameter &parameter)
-{
-	Point dst = parameter.dst;
-	if (missile.position.start == dst) {
-		dst += parameter.midir;
-	}
-	int av = 32;
-	if (missile._micaster == TARGET_MONSTERS) {
-		const Player &player = Players[missile._misource];
-
-		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::RandomArrowVelocity)) {
-			av = GenerateRnd(32) + 16;
-		}
-		if (player._pClass == HeroClass::Rogue)
-			av += (player.getCharacterLevel() - 1) / 4;
-		else if (player._pClass == HeroClass::Warrior || player._pClass == HeroClass::Bard)
-			av += (player.getCharacterLevel() - 1) / 8;
-
-		if (gbIsHellfire) {
-			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::QuickAttack))
-				av++;
-			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastAttack))
-				av += 2;
-			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FasterAttack))
-				av += 4;
-			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastestAttack))
-				av += 8;
-		}
-	}
-	UpdateMissileVelocity(missile, dst, av);
-	missile._miAnimFrame = static_cast<int>(GetDirection16(missile.position.start, dst)) + 1;
-	missile._mirange = 256;
-
-	switch (missile.sourceType()) {
-	case MissileSource::Player: {
-		const Player &player = *missile.sourcePlayer();
-		missile._midam = player._pIMinDam; // min damage
-		missile.var1 = player._pIMaxDam;   // max damage
-	} break;
-	case MissileSource::Monster: {
-		const Monster &monster = *missile.sourceMonster();
-		missile._midam = monster.minDamage; // min damage
-		missile.var1 = monster.maxDamage;   // max damage
-	} break;
-	case MissileSource::Trap:
-		missile._midam = currlevel;   // min damage
-		missile.var1 = 2 * currlevel; // max damage
-		break;
 	}
 }
 
@@ -2847,61 +2833,58 @@ Missile *AddMissile(Point src, Point dst, Direction midir, MissileID mitype,
 	return &missile;
 }
 
-void ProcessElementalArrow(Missile &missile)
+void ProcessArrow(Missile &missile)
 {
+	bool isElementArrow = missile._mitype != MissileID::Arrow;
+
 	missile._mirange--;
-	if (missile._miAnimType == MissileGraphicID::ChargedBolt || missile._miAnimType == MissileGraphicID::MagmaBallExplosion) {
+
+	if (IsAnyOf(missile._miAnimType, MissileGraphicID::ChargedBolt, MissileGraphicID::MagmaBallExplosion)) {
 		ChangeLight(missile._mlid, missile.position.tile, missile._miAnimFrame + 5);
 	} else {
 		missile._midist++;
 
 		MoveMissileAndCheckMissileCol(missile, DamageType::Physical, missile._midam, missile.var3, true, false);
 
-		if (missile._mirange == 0) {
-			missile._mimfnum = 0;
-			missile._mirange = missile._miAnimLen - 1;
-			missile.position.StopMissile();
+		if (isElementArrow) {
+			if (missile._mirange == 0) {
+				missile._mimfnum = 0;
+				missile._mirange = missile._miAnimLen - 1;
+				missile.position.StopMissile();
 
-			MissileGraphicID eAnim;
-			DamageType damageType;
+				MissileGraphicID graphic = MissileGraphicID::Arrow;
+				DamageType damageType = DamageType::Physical;
 
-			switch (missile._mitype) {
-			case MissileID::LightningArrow:
-				eAnim = MissileGraphicID::ChargedBolt;
-				damageType = DamageType::Lightning;
-				break;
-			case MissileID::FireArrow:
-				eAnim = MissileGraphicID::MagmaBallExplosion;
-				damageType = DamageType::Fire;
-				break;
-			}
+				switch (missile._mitype) {
+				case MissileID::LightningArrow:
+					graphic = MissileGraphicID::ChargedBolt;
+					damageType = DamageType::Lightning;
+					break;
+				case MissileID::FireArrow:
+					graphic = MissileGraphicID::MagmaBallExplosion;
+					damageType = DamageType::Fire;
+					break;
+				default:
+					break;
+				}
 
-			SetMissAnim(missile, eAnim);
-			CheckMissileCol(missile, damageType, missile.var4, missile.var5, false, missile.position.tile, true);
-		} else {
-			if (missile.position.tile != Point { missile.var1, missile.var2 }) {
-				missile.var1 = missile.position.tile.x;
-				missile.var2 = missile.position.tile.y;
-				ChangeLight(missile._mlid, missile.position.tile, 5);
+				SetMissAnim(missile, graphic);
+				CheckMissileCol(missile, damageType, missile.var4, missile.var5, false, missile.position.tile, true);
+			} else {
+				if (missile.position.tile != Point { missile.var1, missile.var2 }) {
+					missile.var1 = missile.position.tile.x;
+					missile.var2 = missile.position.tile.y;
+					ChangeLight(missile._mlid, missile.position.tile, 5);
+				}
 			}
 		}
 	}
+
 	if (missile._mirange == 0) {
 		missile._miDelFlag = true;
-		AddUnLight(missile._mlid);
+		if (isElementArrow)
+			AddUnLight(missile._mlid);
 	}
-	PutMissile(missile);
-}
-
-void ProcessArrow(Missile &missile)
-{
-	missile._mirange--;
-	missile._midist++;
-
-	MoveMissileAndCheckMissileCol(missile, GetMissileData(missile._mitype).damageType(), missile._midam, missile.var1, true, false);
-
-	if (missile._mirange == 0)
-		missile._miDelFlag = true;
 
 	PutMissile(missile);
 }
