@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update French translation
 - Update German translation
 - Update Greek translation
+- Update Japanese translation
 - Update Korean translation
 - Update Portuguese translation
 - Update Ukrainian translation
