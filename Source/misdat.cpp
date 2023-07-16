@@ -103,7 +103,7 @@ const MissileData MissilesData[] = {
 /*LightningWall*/        { &AddLightningWall,       &ProcessLightningWall,        LS_LMAG,     LS_ELECIMP1, MissileGraphicID::Lightning,            Lightning,             MissileMovementDistribution::Disabled    },
 /*LightningWallControl*/ { &AddFireWallControl,     &ProcessLightningWallControl, SFX_NONE,    SFX_NONE,    MissileGraphicID::Lightning,            Lightning | Invisible, MissileMovementDistribution::Disabled    },
 /*Immolation*/           { &AddNova,                &ProcessImmolation,           LS_FBOLT1,   LS_FIRIMP2,  MissileGraphicID::Fireball,             Fire,                  MissileMovementDistribution::Disabled    },
-/*SpectralArrow*/        { &AddSpectralArrow,       &ProcessSpectralArrow,        SFX_NONE,    SFX_NONE,    MissileGraphicID::Arrow,                Physical | Arrow,      MissileMovementDistribution::Disabled    },
+/*UniqueMissile*/        { &AddUniqueMissile,       &ProcessUniqueMissile,        SFX_NONE,    SFX_NONE,    MissileGraphicID::Arrow,                Physical | Arrow,      MissileMovementDistribution::Disabled    },
 /*FireballBow*/          { &AddImmolation,          &ProcessFireball,             IS_FBALLBOW, LS_FIRIMP2,  MissileGraphicID::Fireball,             Fire,                  MissileMovementDistribution::Blockable   },
 /*LightningBow*/         { &AddLightningBow,        &ProcessLightningBow,         IS_FBALLBOW, SFX_NONE,    MissileGraphicID::Lightning,            Lightning | Invisible, MissileMovementDistribution::Disabled    },
 /*ChargedBoltBow*/       { &AddChargedBoltBow,      &ProcessChargedBolt,          LS_CBOLT,    SFX_NONE,    MissileGraphicID::ChargedBolt,          Lightning,             MissileMovementDistribution::Blockable   },

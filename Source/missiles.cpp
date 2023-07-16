@@ -1391,7 +1391,7 @@ void AddStealMana(Missile &missile, AddMissileParameter & /*parameter*/)
 	missile._miDelFlag = true;
 }
 
-void AddSpectralArrow(Missile &missile, AddMissileParameter &parameter)
+void AddUniqueMissile(Missile &missile, AddMissileParameter &parameter)
 {
 	if (missile.sourceType() != MissileSource::Player)
 		return;
@@ -3271,7 +3271,7 @@ void ProcessNova(Missile &missile)
 	ProcessNovaCommon(missile, MissileID::NovaBall);
 }
 
-void ProcessSpectralArrow(Missile &missile)
+void ProcessUniqueMissile(Missile &missile)
 {
 	if (missile.sourceType() != MissileSource::Player)
 		return;
