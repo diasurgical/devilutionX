@@ -1680,7 +1680,8 @@ void AddArrow(Missile &missile, AddMissileParameter &parameter)
 			velocity = GenerateRnd(32) + 16;
 		}
 
-		int classDivisor;
+		int classDivisor = 1;
+
 		switch (player._pClass) {
 		case HeroClass::Rogue:
 			classDivisor = 4;
@@ -1694,7 +1695,6 @@ void AddArrow(Missile &missile, AddMissileParameter &parameter)
 				velocity--;
 			break;
 		default:
-			classDivisor = 1;
 			break;
 		}
 
