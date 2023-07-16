@@ -114,22 +114,7 @@ bool IsCreationInfoValid(Item &packedItem)
 		valid = false;
 	}
 
-	// If the item is sourced from a unique monster, but there are no unique monsters
-	// that have the same level as the item, that means the item was obtained by cheating methods.
-	if (isUniqueMonsterItem) {
-		bool matchFound = false;
-		for (int i = 0; UniqueMonstersData[i].mName != nullptr; i++) {
-			const UniqueMonsterData &uniqueMonsterData = UniqueMonstersData[i];
-			const int8_t &uniqueMonsterLevel = MonstersData[uniqueMonsterData.mtype].level;
-
-			if (level == uniqueMonsterLevel) {
-				matchFound = true;
-				break;
-			}
-		}
-		if (!matchFound)
-			valid = false;
-	}
+	return valid;
 }
 
 void UnPackNetItem(const Player &player, const ItemNetPack &packedItem, Item &item)
