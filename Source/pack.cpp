@@ -89,11 +89,24 @@ bool IsCreationInfoValid(Item &packedItem)
 	const bool isPregenItem = (flags & CF_PREGEN) != 0;
 	const bool isHellfireItem = (hellfireFlags & CF_HELLFIRE) != 0;
 
-	if (isBoyItem && level > 50) { // Wirt sells items in both versions equal to the player level
+	if (isBoyItem && level > 50) { // Wirt item validation
 		valid = false;
-	} else if (isHellfireItem && isUniqueMonsterItem && level > 45 && !isGroundItem && !isTownItem && !isPregenItem) {
-		// The highest monster level used by a Unique Monster in Hellfire (Na-Krul)
-		valid = false;
+	} else if (isUniqueMonsterItem && !isGroundItem && !isTownItem && !isPregenItem) { // Unique Monster item validation
+		bool matchFound = false;
+		for (int i = 0; UniqueMonstersData[i].mName != nullptr; i++) {
+			const UniqueMonsterData &uniqueMonsterData = UniqueMonstersData[i];
+			const int8_t &uniqueMonsterLevel = MonstersData[uniqueMonsterData.mtype].level;
+
+			if (!isHellfireItem && IsAnyOf(uniqueMonsterData.mtype, MT_HORKDMN, MT_DEFILER, MT_NAKRUL))
+				continue;
+
+			if (level == uniqueMonsterLevel) {
+				matchFound = true;
+				break;
+			}
+		}
+		if (!matchFound)
+			valid = false;
 	} else if (isHellfireItem && isDungeonItem && level > 40 && !isGroundItem && !isTownItem && !isPregenItem) {
 		// The highest monster level used by a Non-Unique Monster in Hellfire (The Dark Lord)
 		valid = false;
