@@ -143,6 +143,11 @@ void GetFontPath(GameFontTables size, uint16_t row, string_view ext, char *out)
 	*fmt::format_to(out, R"(fonts\{}-{:02x}{})", FontSizes[size], row, ext) = '\0';
 }
 
+void GetFontPath(string_view language_code, GameFontTables size, uint16_t row, string_view ext, char *out)
+{
+	*fmt::format_to(out, R"(fonts\{}\{}-{:02x}{})", language_code, FontSizes[size], row, ext) = '\0';
+}
+
 uint32_t GetFontId(GameFontTables size, uint16_t row)
 {
 	return (size << 16) | row;
@@ -161,11 +166,23 @@ OptionalClxSpriteList LoadFont(GameFontTables size, text_color color, uint16_t r
 		return OptionalClxSpriteList(*hotFont->second);
 	}
 
-	char path[32];
-	GetFontPath(size, row, ".clx", &path[0]);
-
 	OptionalOwnedClxSpriteList &font = Fonts[fontId];
-	font = LoadOptionalClx(path);
+	char path[32];
+
+	// Try loading the language-specific variant first:
+	const string_view language_code = GetLanguageCode();
+	const string_view language_tag = language_code.substr(0, 2);
+	if (language_tag == "zh" || language_tag == "ja" || language_tag == "ko") {
+		GetFontPath(language_code, size, row, ".clx", &path[0]);
+		font = LoadOptionalClx(path);
+	}
+	if (!font) {
+		// Fall back to the base variant:
+		GetFontPath(size, row, ".clx", &path[0]);
+		font = LoadOptionalClx(path);
+	}
+
+#ifndef UNPACKED_MPQS
 	if (!font) {
 		// Could be an old devilutionx.mpq or fonts.mpq with PCX instead of CLX.
 		//
@@ -175,6 +192,7 @@ OptionalClxSpriteList LoadFont(GameFontTables size, text_color color, uint16_t r
 		GetFontPath(size, row, "", &pcxPath[0]);
 		font = LoadPcxSpriteList(pcxPath, /*numFramesOrFrameHeight=*/256, /*transparentColor=*/1);
 	}
+#endif
 
 	if (!font) {
 		LogError("Error loading font: {}", path);
