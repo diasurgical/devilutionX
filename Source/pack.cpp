@@ -39,6 +39,24 @@ namespace devilution {
 
 namespace {
 
+void EventFailedJoinAttempt(const char *playerName)
+{
+	std::string message = fmt::format("Player '{}' sent invalid player data during attempt to join the game.", playerName);
+	EventPlrMsg(message);
+}
+
+template <typename T>
+void LogFailedJoinAttempt(const char *condition, const char *name, T value)
+{
+	LogDebug("Remote player validation failed: ValidateField({}: {}, {})", name, value, condition);
+}
+
+template <typename T1, typename T2>
+void LogFailedJoinAttempt(const char *condition, const char *name1, T1 value1, const char *name2, T2 value2)
+{
+	LogDebug("Remote player validation failed: ValidateFields({}: {}, {}: {}, {})", name1, value1, name2, value2, condition);
+}
+
 void VerifyGoldSeeds(Player &player)
 {
 	for (int i = 0; i < player._pNumInv; i++) {
@@ -68,34 +86,108 @@ void PackNetItem(const Item &item, ItemNetPack &packedItem)
 		PrepareEarForNetwork(item, packedItem.ear);
 }
 
-void UnPackNetItem(const Player &player, const ItemNetPack &packedItem, Item &item)
+bool hasMultipleFlags(uint16_t flags)
+{
+	return (flags & (flags - 1)) > 0;
+}
+
+bool IsCreationFlagComboValid(uint16_t iCreateInfo)
+{
+	iCreateInfo = iCreateInfo & ~CF_LEVEL;
+	const bool isTownItem = (iCreateInfo & CF_TOWN) != 0;
+	const bool isPregenItem = (iCreateInfo & CF_PREGEN) != 0;
+	const bool isGroundItem = (iCreateInfo & CF_USEFUL) == CF_USEFUL;
+
+	if (isPregenItem && hasMultipleFlags(iCreateInfo))
+		return false;
+	if (isGroundItem && (iCreateInfo & ~CF_USEFUL) != 0)
+		return false;
+	if (isTownItem && hasMultipleFlags(iCreateInfo))
+		return false;
+	return true;
+}
+
+bool IsTownItemValid(uint16_t iCreateInfo)
+{
+	const uint8_t level = iCreateInfo & CF_LEVEL;
+	const bool isBoyItem = (iCreateInfo & CF_BOY) != 0;
+
+	if (isBoyItem && level <= MaxCharacterLevel)
+		return true;
+
+	return level <= 30;
+}
+
+bool IsUniqueMonsterItemValid(uint16_t iCreateInfo, uint32_t dwBuff)
+{
+	const uint8_t level = iCreateInfo & CF_LEVEL;
+	const bool isHellfireItem = (dwBuff & CF_HELLFIRE) != 0;
+
+	for (int i = 0; UniqueMonstersData[i].mName != nullptr; i++) {
+		const auto &uniqueMonsterData = UniqueMonstersData[i];
+		const auto &uniqueMonsterLevel = static_cast<uint8_t>(MonstersData[uniqueMonsterData.mtype].level);
+
+		if (!isHellfireItem && IsAnyOf(uniqueMonsterData.mtype, MT_HORKDMN, MT_DEFILER, MT_NAKRUL)) {
+			// These monsters don't appear in Diablo
+			continue;
+		}
+
+		if (level == uniqueMonsterLevel) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool IsDungeonItemValid(uint16_t iCreateInfo, uint32_t dwBuff)
+{
+	const uint8_t level = iCreateInfo & CF_LEVEL;
+	const bool isHellfireItem = (dwBuff & CF_HELLFIRE) != 0;
+
+	for (int16_t i = 0; i < static_cast<int16_t>(NUM_MTYPES); i++) {
+		const auto &monsterData = MonstersData[i];
+		auto monsterLevel = static_cast<uint8_t>(monsterData.level);
+
+		if (i != MT_DIABLO && monsterData.availability == MonsterAvailability::Never) {
+			continue;
+		}
+
+		if (i == MT_DIABLO && !isHellfireItem) {
+			monsterLevel -= 15;
+		}
+
+		if (level == monsterLevel) {
+			return true;
+		}
+	}
+
+	return level <= 30;
+}
+
+bool UnPackNetItem(const Player &player, const ItemNetPack &packedItem, Item &item)
 {
 	item = {};
 	_item_indexes idx = static_cast<_item_indexes>(SDL_SwapLE16(packedItem.def.wIndx));
 	if (idx < 0 || idx > IDI_LAST)
-		return;
-	if (idx != IDI_EAR)
-		RecreateItem(player, packedItem.item, item);
-	else
+		return false;
+	if (idx == IDI_EAR) {
 		RecreateEar(item, SDL_SwapLE16(packedItem.ear.wCI), SDL_SwapLE32(packedItem.ear.dwSeed), packedItem.ear.bCursval, packedItem.ear.heroname);
-}
+		return true;
+	}
 
-void EventFailedJoinAttempt(const char *playerName)
-{
-	std::string message = fmt::format("Player '{}' sent invalid player data during attempt to join the game.", playerName);
-	EventPlrMsg(message);
-}
+	uint16_t creationFlags = SDL_SwapLE16(packedItem.item.wCI);
+	uint32_t dwBuff = SDL_SwapLE16(packedItem.item.dwBuff);
+	ValidateField(creationFlags, IsCreationFlagComboValid(creationFlags));
+	if ((creationFlags & CF_TOWN) != 0)
+		ValidateField(creationFlags, IsTownItemValid(creationFlags));
+	else if ((creationFlags & CF_USEFUL) == CF_UPER15)
+		ValidateFields(creationFlags, dwBuff, IsUniqueMonsterItemValid(creationFlags, dwBuff));
+	else
+		ValidateFields(creationFlags, dwBuff, IsDungeonItemValid(creationFlags, dwBuff));
 
-template <typename T>
-void LogFailedJoinAttempt(const char *condition, const char *name, T value)
-{
-	LogDebug("Remote player validation failed: ValidateField({}: {}, {})", name, value, condition);
-}
-
-template <typename T1, typename T2>
-void LogFailedJoinAttempt(const char *condition, const char *name1, T1 value1, const char *name2, T2 value2)
-{
-	LogDebug("Remote player validation failed: ValidateFields({}: {}, {}: {}, {})", name1, value1, name2, value2, condition);
+	RecreateItem(player, packedItem.item, item);
+	return true;
 }
 
 } // namespace
@@ -461,18 +553,24 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 	for (int i = 0; i < MAX_SPELLS; i++)
 		player._pSplLvl[i] = packed.pSplLvl[i];
 
-	for (int i = 0; i < NUM_INVLOC; i++)
-		UnPackNetItem(player, packed.InvBody[i], player.InvBody[i]);
+	for (int i = 0; i < NUM_INVLOC; i++) {
+		if (!UnPackNetItem(player, packed.InvBody[i], player.InvBody[i]))
+			return false;
+	}
 
 	player._pNumInv = packed._pNumInv;
-	for (int i = 0; i < player._pNumInv; i++)
-		UnPackNetItem(player, packed.InvList[i], player.InvList[i]);
+	for (int i = 0; i < player._pNumInv; i++) {
+		if (!UnPackNetItem(player, packed.InvList[i], player.InvList[i]))
+			return false;
+	}
 
 	for (int i = 0; i < InventoryGridCells; i++)
 		player.InvGrid[i] = packed.InvGrid[i];
 
-	for (int i = 0; i < MaxBeltItems; i++)
-		UnPackNetItem(player, packed.SpdList[i], player.SpdList[i]);
+	for (int i = 0; i < MaxBeltItems; i++) {
+		if (!UnPackNetItem(player, packed.SpdList[i], player.SpdList[i]))
+			return false;
+	}
 
 	CalcPlrInv(player, false);
 	player._pGold = CalculateGold(player);
