@@ -277,10 +277,18 @@ enum _cmd_id : uint8_t {
 	//
 	// body (TCmdParam1)
 	CMD_DELBELTITEMS,
-	// Damage target player.
+	// Damage target player (Melee).
 	//
 	// body (TCmdDamage)
 	CMD_PLRDAMAGE,
+	// Damage target player (Bow).
+	//
+	// body (TCmdDamage)
+	CMD_PLRBOWDAMAGE,
+	// Damage target player (Spell).
+	//
+	// body (TCmdDamage)
+	CMD_PLRSPLDAMAGE,
 	// Set player level.
 	//
 	// body (TCmdParam1):
@@ -760,7 +768,9 @@ void NetSendCmdChItem(bool bHiPri, uint8_t bLoc, bool forceSpellChange = false);
 void NetSendCmdDelItem(bool bHiPri, uint8_t bLoc);
 void NetSendCmdChInvItem(bool bHiPri, int invGridIndex);
 void NetSendCmdChBeltItem(bool bHiPri, int invGridIndex);
-void NetSendCmdDamage(bool bHiPri, uint8_t bPlr, uint32_t dwDam, DamageType damageType);
+void NetSendCmdDamage(bool bHiPri, uint8_t bPlr, uint32_t dwDam);
+void NetSendCmdBowDamage(bool bHiPri, uint8_t bPlr, uint32_t dwDam);
+void NetSendCmdSpellDamage(bool bHiPri, uint8_t bPlr, uint32_t dwDam, DamageType damageType);
 void NetSendCmdMonDmg(bool bHiPri, uint16_t wMon, uint32_t dwDam);
 void NetSendCmdString(uint32_t pmask, const char *pszStr);
 void delta_close_portal(int pnum);

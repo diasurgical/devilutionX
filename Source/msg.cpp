@@ -44,6 +44,8 @@
 #include "utils/str_cat.hpp"
 #include "utils/utf8.hpp"
 
+#define STRINGIFY_ENUM(x) #x
+
 namespace devilution {
 
 // #define LOG_RECEIVED_MESSAGES
@@ -1078,6 +1080,12 @@ int SyncDropItem(const TCmdPItem &message)
 	    message.item);
 }
 
+void EventFailedCmdValidation(const char *playerName, std::string cmd, int value)
+{
+	std::string message = fmt::format("Player '{}' sent invalid packet data! Packet: {}, Value: {}", playerName, cmd, value);
+	EventPlrMsg(message, UiFlags::ColorRed);
+}
+
 size_t OnRequestGetItem(const TCmd *pCmd, Player &player)
 {
 	const auto &message = *reinterpret_cast<const TCmdGItem *>(pCmd);
@@ -1359,6 +1367,17 @@ size_t OnRangedAttackTile(const TCmd *pCmd, Player &player)
 	}
 
 	return sizeof(message);
+}
+
+bool IsInitNewSpellValid(Player &player, uint32_t damage)
+{
+	if (damage > 192000) {
+		std::string cmd = "CMD_PLRDAMAGE";
+		EventFailedCmdValidation(player._pName, cmd, damage);
+		return false;
+	}
+
+	return true;
 }
 
 bool InitNewSpell(Player &player, uint16_t wParamSpellID, uint16_t wParamSpellType, uint16_t wParamSpellFrom)
@@ -1778,20 +1797,34 @@ size_t OnPlayerDeath(const TCmd *pCmd, size_t pnum)
 	return sizeof(message);
 }
 
-void EventFailedCmdValidation(const char *playerName, std::string reason, int value)
+std::pair<int, int> GetDamage(Player &player)
 {
-	std::string message = fmt::format("Player '{}' sent invalid packet data! Reason: {}, Value: {}", playerName, reason, value);
-	EventPlrMsg(message);
+	int damageMod = player._pIBonusDamMod;
+	if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Bow && player._pClass != HeroClass::Rogue) {
+		damageMod += player._pDamageMod / 2;
+	} else {
+		damageMod += player._pDamageMod;
+	}
+	int mindam = player._pIMinDam + player._pIBonusDam * player._pIMinDam / 100 + damageMod;
+	int maxdam = player._pIMaxDam + player._pIBonusDam * player._pIMaxDam / 100 + damageMod;
+	return { mindam, maxdam };
 }
 
-bool IsPlayerDamageValid(Player &player, uint32_t damage)
+bool IsPlayerDamageValid(Player &attacker, Player &target, uint32_t damage)
 {
-	if (damage > 192000) {
-		EventFailedCmdValidation(player._pName, "OnPlayerDamage", damage);
-		return false;
-	}
+	int minValidDam = GetDamage(attacker).first << 6;
+	int maxValidDam = (IsAnyOf(HeroClass::Warrior, HeroClass::Barbarian)) ? ((GetDamage(attacker).second * 2) << 6) : (GetDamage(attacker).second << 6);
 
-	return true;
+	SDL_Log("Min Valid Dam: %i", minValidDam >> 6);
+	SDL_Log("Max Valid Dam: %i", maxValidDam >> 6);
+	SDL_Log("Dam: %i", damage >> 6);
+
+	if (attacker.isOnActiveLevel() && (damage >= minValidDam && damage <= maxValidDam) && target._pHitPoints >> 6 > 0)
+		return true;
+
+	EventFailedCmdValidation(attacker._pName, STRINGIFY_ENUM(CMD_PLRDAMAGE), (damage >> 6));
+
+	return false;
 }
 
 size_t OnPlayerDamage(const TCmd *pCmd, Player &player)
@@ -1801,7 +1834,57 @@ size_t OnPlayerDamage(const TCmd *pCmd, Player &player)
 
 	Player &target = Players[message.bPlr];
 	if (&target == MyPlayer && leveltype != DTYPE_TOWN && gbBufferMsgs != 1) {
-		if (player.isOnActiveLevel() && IsPlayerDamageValid(player, damage) && target._pHitPoints >> 6 > 0) {
+		if (IsPlayerDamageValid(player, target, damage)) {
+			ApplyPlrDamage(message.damageType, target, 0, 0, damage, DeathReason::Player);
+		}
+	}
+
+	return sizeof(message);
+}
+
+bool IsPlayerBowDamageValid(Player &attacker, Player &target, uint32_t damage)
+{
+	if (attacker.isOnActiveLevel() && damage <= (3000 << 6) && target._pHitPoints >> 6 > 0)
+		return true;
+
+	EventFailedCmdValidation(attacker._pName, STRINGIFY_ENUM(CMD_PLRBOWDAMAGE), (damage >> 6));
+
+	return false;
+}
+
+size_t OnPlayerBowDamage(const TCmd *pCmd, Player &player)
+{
+	const auto &message = *reinterpret_cast<const TCmdDamage *>(pCmd);
+	const uint32_t damage = SDL_SwapLE32(message.dwDam);
+
+	Player &target = Players[message.bPlr];
+	if (&target == MyPlayer && leveltype != DTYPE_TOWN && gbBufferMsgs != 1) {
+		if (IsPlayerBowDamageValid(player, target, damage)) {
+			ApplyPlrDamage(message.damageType, target, 0, 0, damage, DeathReason::Player);
+		}
+	}
+
+	return sizeof(message);
+}
+
+bool IsPlayerSpellDamageValid(Player &attacker, Player &target, uint32_t damage)
+{
+	if (attacker.isOnActiveLevel() && damage <= (3000 << 6) && target._pHitPoints >> 6 > 0)
+		return true;
+
+	EventFailedCmdValidation(attacker._pName, STRINGIFY_ENUM(CMD_PLRSPLDAMAGE), (damage >> 6));
+
+	return false;
+}
+
+size_t OnPlayerSpellDamage(const TCmd *pCmd, Player &player)
+{
+	const auto &message = *reinterpret_cast<const TCmdDamage *>(pCmd);
+	const uint32_t damage = SDL_SwapLE32(message.dwDam);
+
+	Player &target = Players[message.bPlr];
+	if (&target == MyPlayer && leveltype != DTYPE_TOWN && gbBufferMsgs != 1) {
+		if (IsPlayerSpellDamageValid(player, target, damage)) {
 			ApplyPlrDamage(message.damageType, target, 0, 0, damage, DeathReason::Player);
 		}
 	}
@@ -3068,11 +3151,39 @@ void NetSendCmdChBeltItem(bool bHiPri, int beltIndex)
 		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
 }
 
-void NetSendCmdDamage(bool bHiPri, uint8_t bPlr, uint32_t dwDam, DamageType damageType)
+void NetSendCmdDamage(bool bHiPri, uint8_t bPlr, uint32_t dwDam)
 {
 	TCmdDamage cmd;
 
 	cmd.bCmd = CMD_PLRDAMAGE;
+	cmd.bPlr = bPlr;
+	cmd.dwDam = dwDam;
+	cmd.damageType = DamageType::Physical;
+	if (bHiPri)
+		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+	else
+		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+}
+
+void NetSendCmdBowDamage(bool bHiPri, uint8_t bPlr, uint32_t dwDam)
+{
+	TCmdDamage cmd;
+
+	cmd.bCmd = CMD_PLRBOWDAMAGE;
+	cmd.bPlr = bPlr;
+	cmd.dwDam = dwDam;
+	cmd.damageType = DamageType::Physical;
+	if (bHiPri)
+		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+	else
+		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+}
+
+void NetSendCmdSpellDamage(bool bHiPri, uint8_t bPlr, uint32_t dwDam, DamageType damageType)
+{
+	TCmdDamage cmd;
+
+	cmd.bCmd = CMD_PLRSPLDAMAGE;
 	cmd.bPlr = bPlr;
 	cmd.dwDam = dwDam;
 	cmd.damageType = damageType;
@@ -3208,6 +3319,10 @@ size_t ParseCmd(size_t pnum, const TCmd *pCmd)
 		return OnPlayerDeath(pCmd, pnum);
 	case CMD_PLRDAMAGE:
 		return OnPlayerDamage(pCmd, player);
+	case CMD_PLRBOWDAMAGE:
+		return OnPlayerBowDamage(pCmd, player);
+	case CMD_PLRSPLDAMAGE:
+		return OnPlayerSpellDamage(pCmd, player);
 	case CMD_OPENDOOR:
 	case CMD_CLOSEDOOR:
 	case CMD_OPERATEOBJ:

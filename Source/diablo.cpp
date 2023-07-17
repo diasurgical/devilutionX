@@ -1814,7 +1814,7 @@ void InitKeymapActions()
 	    N_("Displays game infos."),
 	    'V',
 	    [] {
-		    NetSendCmdDamage(true, 1, 192001, DamageType::Physical);
+		    NetSendCmdDamage(true, 1, 192001);
 	    },
 	    nullptr,
 	    CanPlayerTakeAction);
@@ -1824,7 +1824,7 @@ void InitKeymapActions()
 	    N_("Displays chat log."),
 	    'L',
 	    [] {
-		    NetSendCmdDamage(true, 1, 192000, DamageType::Physical);
+		    NetSendCmdDamage(true, 1, 192000);
 	    });
 #ifdef _DEBUG
 	sgOptions.Keymapper.AddAction(

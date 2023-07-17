@@ -798,7 +798,7 @@ bool PlrHitPlr(Player &attacker, Player &target)
 		RedrawComponent(PanelDrawComponent::Health);
 	}
 	if (&attacker == MyPlayer) {
-		NetSendCmdDamage(true, target.getId(), skdam, DamageType::Physical);
+		NetSendCmdDamage(true, target.getId(), skdam);
 	}
 	StartPlrHit(target, skdam, false);
 

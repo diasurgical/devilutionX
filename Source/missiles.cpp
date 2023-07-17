@@ -364,8 +364,12 @@ bool Plr2PlrMHit(const Player &player, int p, int mindam, int maxdam, int dist, 
 		dam /= 2;
 	if (resper > 0) {
 		dam -= (dam * resper) / 100;
-		if (&player == MyPlayer)
-			NetSendCmdDamage(true, p, dam, damageType);
+		if (&player == MyPlayer) {
+			if (missileData.isArrow() && damageType == DamageType::Physical)
+				NetSendCmdBowDamage(true, p, dam);
+			else
+				NetSendCmdSpellDamage(true, p, dam, damageType);
+		}
 		target.Say(HeroSpeech::ArghClang);
 		return true;
 	}
@@ -374,8 +378,12 @@ bool Plr2PlrMHit(const Player &player, int p, int mindam, int maxdam, int dist, 
 		StartPlrBlock(target, GetDirection(target.position.tile, player.position.tile));
 		*blocked = true;
 	} else {
-		if (&player == MyPlayer)
-			NetSendCmdDamage(true, p, dam, damageType);
+		if (&player == MyPlayer) {
+			if (missileData.isArrow() && damageType == DamageType::Physical)
+				NetSendCmdBowDamage(true, p, dam);
+			else
+				NetSendCmdSpellDamage(true, p, dam, damageType);
+		}
 		StartPlrHit(target, dam, false);
 	}
 
