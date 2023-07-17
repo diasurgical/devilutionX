@@ -310,6 +310,7 @@ void OptionShowFPSChanged()
 
 void OptionLanguageCodeChanged()
 {
+	UnloadFonts();
 	LanguageInitialize();
 	LoadLanguageArchive();
 }
