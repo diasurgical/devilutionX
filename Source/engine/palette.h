@@ -5,6 +5,7 @@
  */
 #pragma once
 
+#include <array>
 #include <cstdint>
 
 #include "levels/gendung.h"
@@ -31,11 +32,11 @@ namespace devilution {
 #define PAL16_RED 224
 #define PAL16_GRAY 240
 
-extern SDL_Color logical_palette[256];
-extern SDL_Color system_palette[256];
-extern SDL_Color orig_palette[256];
+extern std::array<SDL_Color, 256> logical_palette;
+extern std::array<SDL_Color, 256> system_palette;
+extern std::array<SDL_Color, 256> orig_palette;
 /** Lookup table for transparency */
-extern Uint8 paletteTransparencyLookup[256][256];
+extern std::array<std::array<Uint8, 256>, 256> paletteTransparencyLookup;
 
 #if DEVILUTIONX_PALETTE_TRANSPARENCY_BLACK_16_LUT
 /**
