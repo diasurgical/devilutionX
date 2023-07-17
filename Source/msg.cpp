@@ -1778,6 +1778,22 @@ size_t OnPlayerDeath(const TCmd *pCmd, size_t pnum)
 	return sizeof(message);
 }
 
+void EventFailedCmdValidation(const char *playerName, std::string reason, int value)
+{
+	std::string message = fmt::format("Player '{}' sent invalid packet data! Reason: {}, Value: {}", playerName, reason, value);
+	EventPlrMsg(message);
+}
+
+bool IsPlayerDamageValid(Player &player, uint32_t damage)
+{
+	if (damage > 192000) {
+		EventFailedCmdValidation(player._pName, "OnPlayerDamage", damage);
+		return false;
+	}
+
+	return true;
+}
+
 size_t OnPlayerDamage(const TCmd *pCmd, Player &player)
 {
 	const auto &message = *reinterpret_cast<const TCmdDamage *>(pCmd);
@@ -1785,7 +1801,7 @@ size_t OnPlayerDamage(const TCmd *pCmd, Player &player)
 
 	Player &target = Players[message.bPlr];
 	if (&target == MyPlayer && leveltype != DTYPE_TOWN && gbBufferMsgs != 1) {
-		if (player.isOnActiveLevel() && damage <= 192000 && target._pHitPoints >> 6 > 0) {
+		if (player.isOnActiveLevel() && IsPlayerDamageValid(player, damage) && target._pHitPoints >> 6 > 0) {
 			ApplyPlrDamage(message.damageType, target, 0, 0, damage, DeathReason::Player);
 		}
 	}
