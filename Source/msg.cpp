@@ -1371,12 +1371,6 @@ size_t OnRangedAttackTile(const TCmd *pCmd, Player &player)
 
 bool IsInitNewSpellValid(Player &player, uint32_t damage)
 {
-	if (damage > 192000) {
-		std::string cmd = "CMD_PLRDAMAGE";
-		EventFailedCmdValidation(player._pName, cmd, damage);
-		return false;
-	}
-
 	return true;
 }
 
@@ -1815,10 +1809,6 @@ bool IsPlayerDamageValid(Player &attacker, Player &target, uint32_t damage)
 	int minValidDam = GetDamage(attacker).first << 6;
 	int maxValidDam = (IsAnyOf(HeroClass::Warrior, HeroClass::Barbarian)) ? ((GetDamage(attacker).second * 2) << 6) : (GetDamage(attacker).second << 6);
 
-	SDL_Log("Min Valid Dam: %i", minValidDam >> 6);
-	SDL_Log("Max Valid Dam: %i", maxValidDam >> 6);
-	SDL_Log("Dam: %i", damage >> 6);
-
 	if (attacker.isOnActiveLevel() && (damage >= minValidDam && damage <= maxValidDam) && target._pHitPoints >> 6 > 0)
 		return true;
 
@@ -1844,7 +1834,10 @@ size_t OnPlayerDamage(const TCmd *pCmd, Player &player)
 
 bool IsPlayerBowDamageValid(Player &attacker, Player &target, uint32_t damage)
 {
-	if (attacker.isOnActiveLevel() && damage <= (3000 << 6) && target._pHitPoints >> 6 > 0)
+	int minValidDam = GetDamage(attacker).first << 6;
+	int maxValidDam = GetDamage(attacker).second << 6;
+
+	if (attacker.isOnActiveLevel() && (damage >= minValidDam && damage <= maxValidDam) && target._pHitPoints >> 6 > 0)
 		return true;
 
 	EventFailedCmdValidation(attacker._pName, STRINGIFY_ENUM(CMD_PLRBOWDAMAGE), (damage >> 6));
