@@ -417,9 +417,9 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 	ValidateFields(baseMana, baseManaMax, baseMana <= baseManaMax);
 
 	ValidateFields(packed.pClass, packed.pBaseStr, packed.pBaseStr <= player.GetMaximumAttributeValue(CharacterAttribute::Strength));
-	ValidateFields(packed.pClass, packed.pBaseMag, packed.pBaseStr <= player.GetMaximumAttributeValue(CharacterAttribute::Magic));
-	ValidateFields(packed.pClass, packed.pBaseDex, packed.pBaseStr <= player.GetMaximumAttributeValue(CharacterAttribute::Dexterity));
-	ValidateFields(packed.pClass, packed.pBaseVit, packed.pBaseStr <= player.GetMaximumAttributeValue(CharacterAttribute::Vitality));
+	ValidateFields(packed.pClass, packed.pBaseMag, packed.pBaseMag <= player.GetMaximumAttributeValue(CharacterAttribute::Magic));
+	ValidateFields(packed.pClass, packed.pBaseDex, packed.pBaseDex <= player.GetMaximumAttributeValue(CharacterAttribute::Dexterity));
+	ValidateFields(packed.pClass, packed.pBaseVit, packed.pBaseVit <= player.GetMaximumAttributeValue(CharacterAttribute::Vitality));
 
 	ValidateField(packed._pNumInv, packed._pNumInv < InventoryGridCells);
 
