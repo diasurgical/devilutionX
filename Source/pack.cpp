@@ -315,6 +315,23 @@ void UnPackItem(const ItemPack &packedItem, const Player &player, Item &item, bo
 		item._iMaxCharges = clamp<int>(packedItem.bMCh, 0, item._iMaxCharges);
 		item._iCharges = clamp<int>(packedItem.bCh, 0, item._iMaxCharges);
 
+		// Creates reverse compatibility, since items with IPL_INDESTRUCTIBLE from older versions/vanilla won't have ItemSpecialEffect::Indestructible
+		switch (item._iMagical) {
+		case ITEM_QUALITY_UNIQUE:
+			for (const ItemPower &power : UniqueItems[item._iUid].powers) {
+				if (power.type == IPL_INDESTRUCTIBLE) {
+					item._iFlags |= ItemSpecialEffect::Indestructible;
+					break;
+				}
+			}
+			break;
+		case ITEM_QUALITY_MAGIC:
+			if (item._iSufPower == IPL_INDESTRUCTIBLE) {
+				item._iFlags |= ItemSpecialEffect::Indestructible;
+			}
+			break;
+		}
+
 		RemoveInvalidItem(item);
 
 		if (isHellfire)
