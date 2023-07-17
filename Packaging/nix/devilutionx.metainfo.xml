@@ -37,6 +37,12 @@
 		<p>
       Note: DevilutionX requires data files from original Diablo/Hellfire. By default, a demo version of Diablo is installed.
 		</p>
+		<p>
+	  To install the full version of Diablo, copy <em>DIABDAT.MPQ</em> from the CD or GOG-installation (or extract it from the GoG installer) to <code>~/.var/app/org.diasurgical.DevilutionX/data/diasurgical/devilution</code>.
+		</p>
+		<p>
+	  To run the Diablo: Hellfire expansion you will need to also copy <em>hellfire.mpq</em>, <em>hfmonk.mpq</em>, <em>hfmusic.mpq</em>, <em>hfvoice.mpq</em>.
+		</p>
 	</description>
 
 	<launchable type="desktop-id">devilutionx.desktop</launchable>
