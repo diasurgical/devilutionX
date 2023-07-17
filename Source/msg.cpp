@@ -1785,7 +1785,7 @@ size_t OnPlayerDamage(const TCmd *pCmd, Player &player)
 
 	Player &target = Players[message.bPlr];
 	if (&target == MyPlayer && leveltype != DTYPE_TOWN && gbBufferMsgs != 1) {
-		if (player.isOnActiveLevel() && damage <= 192000 && target._pHitPoints >> 6 > 0) {
+		if (player.isOnActiveLevel() && damage <= 192000 && target._pHitPoints >> 6 > 0 && !target.friendlyMode) {
 			ApplyPlrDamage(message.damageType, target, 0, 0, damage, DeathReason::Player);
 		}
 	}
