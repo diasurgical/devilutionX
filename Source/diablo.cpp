@@ -1814,7 +1814,11 @@ void InitKeymapActions()
 	    N_("Displays game infos."),
 	    'V',
 	    [] {
-		    NetSendCmdDamage(true, 1, 192001);
+		    EventPlrMsg(fmt::format(
+		                    fmt::runtime(_(/* TRANSLATORS: {:s} means: Character Name, Game Version, Game Difficulty. */ "{:s} {:s}")),
+		                    PROJECT_NAME,
+		                    PROJECT_VERSION),
+		        UiFlags::ColorWhite);
 	    },
 	    nullptr,
 	    CanPlayerTakeAction);
@@ -1824,7 +1828,7 @@ void InitKeymapActions()
 	    N_("Displays chat log."),
 	    'L',
 	    [] {
-		    NetSendCmdDamage(true, 1, 192000);
+		    ToggleChatLog();
 	    });
 #ifdef _DEBUG
 	sgOptions.Keymapper.AddAction(
