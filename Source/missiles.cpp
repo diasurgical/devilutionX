@@ -1419,16 +1419,13 @@ void AddSpectralArrow(Missile &missile, AddMissileParameter &parameter)
 	missile.var3 = av;
 }
 
-void AddWarp(Missile &missile, AddMissileParameter & /*parameter*/)
+void AddWarp(Missile &missile, AddMissileParameter &parameter)
 {
 	int minDistanceSq = std::numeric_limits<int>::max();
-	Point src = missile.position.start;
-	Point tile = src;
 
-	MissileSource missileSource = missile.sourceType();
-	if (missileSource == MissileSource::Player) {
-		tile = missile.sourcePlayer()->position.tile;
-	}
+	int id = missile._misource;
+	Player &player = Players[id];
+	Point tile = player.position.tile;
 
 	for (int i = 0; i < numtrigs && i < MAXTRIGGERS; i++) {
 		TriggerStruct *trg = &trigs[i];
@@ -1470,7 +1467,7 @@ void AddWarp(Missile &missile, AddMissileParameter & /*parameter*/)
 		};
 		Displacement triggerOffset = getTriggerOffset(trg);
 		candidate += triggerOffset;
-		Displacement off = src - candidate;
+		Displacement off = player.position.tile - candidate;
 		int distanceSq = off.deltaY * off.deltaY + off.deltaX * off.deltaX;
 		if (distanceSq < minDistanceSq) {
 			minDistanceSq = distanceSq;
@@ -1478,7 +1475,23 @@ void AddWarp(Missile &missile, AddMissileParameter & /*parameter*/)
 		}
 	}
 	missile._mirange = 2;
-	missile.position.tile = tile;
+	std::optional<Point> teleportDestination = FindClosestValidPosition(
+	    [&player](Point target) {
+		    for (int i = 0; i < numtrigs; i++) {
+			    if (trigs[i].position == target)
+				    return false;
+		    }
+		    return PosOkPlayer(player, target);
+	    },
+	    tile, 0, 5);
+
+	if (teleportDestination) {
+		missile.position.tile = *teleportDestination;
+	} else {
+		// No valid teleport destination found
+		missile._miDelFlag = true;
+		parameter.spellFizzled = true;
+	}
 }
 
 void AddLightningWall(Missile &missile, AddMissileParameter &parameter)
@@ -3612,9 +3625,18 @@ void ProcessTeleport(Missile &missile)
 	int id = missile._misource;
 	Player &player = Players[id];
 
+	std::optional<Point> teleportDestination = FindClosestValidPosition(
+	    [&player](Point target) {
+		    return PosOkPlayer(player, target);
+	    },
+	    missile.position.tile, 0, 5);
+
+	if (!teleportDestination)
+		return;
+
 	dPlayer[player.position.tile.x][player.position.tile.y] = 0;
 	PlrClrTrans(player.position.tile);
-	player.position.tile = missile.position.tile;
+	player.position.tile = *teleportDestination;
 	player.position.future = player.position.tile;
 	player.position.old = player.position.tile;
 	PlrDoTrans(player.position.tile);
