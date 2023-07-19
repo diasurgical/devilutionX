@@ -23,6 +23,12 @@
 		<content_attribute id="social-chat">intense</content_attribute>
 	</content_rating>
 
+	<categories>
+		<category>Game</category>
+		<category>ActionGame</category>
+		<category>RolePlaying</category>
+	</categories>
+
 	<supports>
 		<control>pointing</control>
 		<control>keyboard</control>
