@@ -41,9 +41,11 @@ if (Gettext_FOUND)
 endif()
 
 set(devilutionx_assets
-  arena/church.dun
-  arena/circle_of_death.dun
+  arena/cathedral.dun
+  arena/catacombs.dun
+  arena/caves.dun
   arena/hell.dun
+  arena/circle_of_life.dun
   data/boxleftend.clx
   data/boxmiddle.clx
   data/boxrightend.clx
