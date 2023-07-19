@@ -407,6 +407,24 @@ std::string TextCmdArena(const string_view parameter)
 	return ret;
 }
 
+std::string TextCmdLeaveArena(const string_view parameter)
+{
+	std::string ret;
+	if (!gbIsMultiplayer) {
+		StrAppend(ret, _("Arenas are only supported in multiplayer."));
+		return ret;
+	}
+
+	if (!MyPlayer->isOnArenaLevel()) {
+		StrAppend(ret, _("You are not in an arena."));
+		return ret;
+	}
+
+	StrAppend(ret, _("Returning to town."));
+	StartNewLvl(*MyPlayer, interface_mode::WM_DIABNEXTLVL, 0);
+	return ret;
+}
+
 std::string TextCmdArenaPot(const string_view parameter)
 {
 	std::string ret;
@@ -525,6 +543,7 @@ std::string TextCmdLevelSeed(const string_view parameter)
 std::vector<TextCmdItem> TextCmdList = {
 	{ N_("/help"), N_("Prints help overview or help for a specific command."), N_("[command]"), &TextCmdHelp },
 	{ N_("/arena"), N_("Enter a PvP Arena."), N_("<arena-number>"), &TextCmdArena },
+	{ N_("/leavearena"), N_("Return to town."), "", &TextCmdLeaveArena },
 	{ N_("/pots"), N_("Gives Arena Potions."), N_("<number>"), &TextCmdArenaPot },
 	{ N_("/inspect"), N_("Inspects stats and equipment of another player."), N_("<player name>"), &TextCmdInspect },
 	{ N_("/seedinfo"), N_("Show seed infos for current level."), "", &TextCmdLevelSeed },
