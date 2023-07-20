@@ -170,7 +170,7 @@ bool UnPackNetItem(const Player &player, const ItemNetPack &packedItem, Item &it
 	item = {};
 	_item_indexes idx = static_cast<_item_indexes>(SDL_SwapLE16(packedItem.def.wIndx));
 	if (idx < 0 || idx > IDI_LAST)
-		return false;
+		return true;
 	if (idx == IDI_EAR) {
 		RecreateEar(item, SDL_SwapLE16(packedItem.ear.wCI), SDL_SwapLE32(packedItem.ear.dwSeed), packedItem.ear.bCursval, packedItem.ear.heroname);
 		return true;
