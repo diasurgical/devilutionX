@@ -2436,7 +2436,7 @@ bool IsItemAvailable(int i)
 		return false;
 
 	if (gbIsSpawn) {
-		if (i >= 62 && i <= 71)
+		if (i >= 62 && i <= 70)
 			return false; // Medium and heavy armors
 		if (IsAnyOf(i, 105, 107, 108, 110, 111, 113))
 			return false; // Unavailable scrolls
