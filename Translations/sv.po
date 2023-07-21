@@ -1617,7 +1617,7 @@ msgstr "Där snålhet misslyckas, får tålmodigheten sin belöning"
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:85
 msgid "Blessed by a benevolent companion!"
-msgstr "Välsignad av en välvillig följere!"
+msgstr "Välsignad av en välvillig följeslagare!"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:86
