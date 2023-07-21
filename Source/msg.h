@@ -525,13 +525,13 @@ struct TCmdQuest {
 };
 
 struct TItemDef {
-	ItemIndex wIndx;
+	ItemID wIndx;
 	uint16_t wCI;
 	uint32_t dwSeed;
 };
 
 struct TItem {
-	ItemIndex wIndx;
+	ItemID wIndx;
 	uint16_t wCI;
 	uint32_t dwSeed;
 	uint8_t bId;
@@ -546,7 +546,7 @@ struct TItem {
 };
 
 struct TEar {
-	ItemIndex wIndx;
+	ItemID wIndx;
 	uint16_t wCI;
 	uint32_t dwSeed;
 	uint8_t bCursval;

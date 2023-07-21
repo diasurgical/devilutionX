@@ -835,14 +835,14 @@ void CheckInvCut(Player &player, Point cursorPosition, bool automaticMove, bool 
 
 void TryCombineNaKrulNotes(Player &player, Item &noteItem)
 {
-	ItemIndex idx = noteItem.IDidx;
-	ItemIndex notes[] = { ItemIndex::TornNote1, ItemIndex::TornNote2, ItemIndex::TornNote3 };
+	ItemID idx = noteItem.IDidx;
+	ItemID notes[] = { ItemID::TornNote1, ItemID::TornNote2, ItemID::TornNote3 };
 
-	if (IsNoneOf(idx, ItemIndex::TornNote1, ItemIndex::TornNote2, ItemIndex::TornNote3)) {
+	if (IsNoneOf(idx, ItemID::TornNote1, ItemID::TornNote2, ItemID::TornNote3)) {
 		return;
 	}
 
-	for (ItemIndex note : notes) {
+	for (ItemID note : notes) {
 		if (idx != note && !HasInventoryItemWithId(player, note)) {
 			return; // the player doesn't have all notes
 		}
@@ -850,7 +850,7 @@ void TryCombineNaKrulNotes(Player &player, Item &noteItem)
 
 	MyPlayer->Say(HeroSpeech::JustWhatIWasLookingFor, 10);
 
-	for (ItemIndex note : notes) {
+	for (ItemID note : notes) {
 		if (idx != note) {
 			RemoveInventoryItemById(player, note);
 		}
@@ -858,7 +858,7 @@ void TryCombineNaKrulNotes(Player &player, Item &noteItem)
 
 	Point position = noteItem.position; // copy the position to restore it after re-initialising the item
 	noteItem = {};
-	GetItemAttrs(noteItem, ItemIndex::ReconstructedNote, 16);
+	GetItemAttrs(noteItem, ItemID::ReconstructedNote, 16);
 	SetupItem(noteItem);
 	noteItem.position = position; // this ensures CleanupItem removes the entry in the dropped items lookup table
 }
@@ -868,19 +868,19 @@ void CheckQuestItem(Player &player, Item &questItem)
 	Player &myPlayer = *MyPlayer;
 
 	if (Quests[Q_BLIND]._qactive == QUEST_ACTIVE
-	    && (questItem.IDidx == ItemIndex::OpticAmulet
+	    && (questItem.IDidx == ItemID::OpticAmulet
 	        || (Quests[Q_BLIND].IsAvailable() && questItem.position == (SetPiece.position.megaToWorld() + Displacement { 5, 5 })))) {
 		Quests[Q_BLIND]._qactive = QUEST_DONE;
 		NetSendCmdQuest(true, Quests[Q_BLIND]);
 	}
 
-	if (questItem.IDidx == ItemIndex::BlackMushroom && Quests[Q_MUSHROOM]._qactive == QUEST_ACTIVE && Quests[Q_MUSHROOM]._qvar1 == QS_MUSHSPAWNED) {
+	if (questItem.IDidx == ItemID::BlackMushroom && Quests[Q_MUSHROOM]._qactive == QUEST_ACTIVE && Quests[Q_MUSHROOM]._qvar1 == QS_MUSHSPAWNED) {
 		player.Say(HeroSpeech::NowThatsOneBigMushroom, 10); // BUGFIX: Voice for this quest might be wrong in MP
 		Quests[Q_MUSHROOM]._qvar1 = QS_MUSHPICKED;
 		NetSendCmdQuest(true, Quests[Q_MUSHROOM]);
 	}
 
-	if (questItem.IDidx == ItemIndex::AnvilOfFury && Quests[Q_ANVIL]._qactive != QUEST_NOTAVAIL) {
+	if (questItem.IDidx == ItemID::AnvilOfFury && Quests[Q_ANVIL]._qactive != QUEST_NOTAVAIL) {
 		if (Quests[Q_ANVIL]._qactive == QUEST_INIT) {
 			Quests[Q_ANVIL]._qactive = QUEST_ACTIVE;
 			NetSendCmdQuest(true, Quests[Q_ANVIL]);
@@ -890,11 +890,11 @@ void CheckQuestItem(Player &player, Item &questItem)
 		}
 	}
 
-	if (questItem.IDidx == ItemIndex::GoldenElixir && Quests[Q_VEIL]._qactive != QUEST_NOTAVAIL) {
+	if (questItem.IDidx == ItemID::GoldenElixir && Quests[Q_VEIL]._qactive != QUEST_NOTAVAIL) {
 		myPlayer.Say(HeroSpeech::INeedToGetThisToLachdanan, 30);
 	}
 
-	if (questItem.IDidx == ItemIndex::MagicRock && Quests[Q_ROCK]._qactive != QUEST_NOTAVAIL) {
+	if (questItem.IDidx == ItemID::MagicRock && Quests[Q_ROCK]._qactive != QUEST_NOTAVAIL) {
 		if (Quests[Q_ROCK]._qactive == QUEST_INIT) {
 			Quests[Q_ROCK]._qactive = QUEST_ACTIVE;
 			NetSendCmdQuest(true, Quests[Q_ROCK]);
@@ -905,14 +905,14 @@ void CheckQuestItem(Player &player, Item &questItem)
 	}
 
 	if (Quests[Q_BLOOD]._qactive == QUEST_ACTIVE
-	    && (questItem.IDidx == ItemIndex::ArkainesValor
+	    && (questItem.IDidx == ItemID::ArkainesValor
 	        || (Quests[Q_BLOOD].IsAvailable() && questItem.position == (SetPiece.position.megaToWorld() + Displacement { 9, 3 })))) {
 		Quests[Q_BLOOD]._qactive = QUEST_DONE;
 		NetSendCmdQuest(true, Quests[Q_BLOOD]);
 		myPlayer.Say(HeroSpeech::MayTheSpiritOfArkaineProtectMe, 20);
 	}
 
-	if (questItem.IDidx == ItemIndex::CathedralMap) {
+	if (questItem.IDidx == ItemID::CathedralMap) {
 		Quests[Q_GRAVE]._qactive = QUEST_ACTIVE;
 		if (Quests[Q_GRAVE]._qvar1 != 1) {
 			MyPlayer->Say(HeroSpeech::UhHuh, 10);
@@ -1673,7 +1673,7 @@ void AutoGetItem(Player &player, Item *itemPointer, int ii)
 	NetSendCmdPItem(true, CMD_SPAWNITEM, item.position, item);
 }
 
-int FindGetItem(uint32_t iseed, ItemIndex idx, uint16_t createInfo)
+int FindGetItem(uint32_t iseed, ItemID idx, uint16_t createInfo)
 {
 	for (uint8_t i = 0; i < ActiveItemCount; i++) {
 		auto &item = Items[ActiveItems[i]];
@@ -1685,7 +1685,7 @@ int FindGetItem(uint32_t iseed, ItemIndex idx, uint16_t createInfo)
 	return -1;
 }
 
-void SyncGetItem(Point position, uint32_t iseed, ItemIndex idx, uint16_t ci)
+void SyncGetItem(Point position, uint32_t iseed, ItemID idx, uint16_t ci)
 {
 	// Check what the local client has at the target position
 	int ii = dItem[position.x][position.y] - 1;
@@ -1770,7 +1770,7 @@ uint8_t ClampMaxDam(const Item &item, uint8_t maxDam)
 	return maxDam;
 }
 
-int SyncDropItem(Point position, ItemIndex idx, uint16_t icreateinfo, int iseed, int id, int dur, int mdur, int ch, int mch, int ivalue, uint32_t ibuff, int toHit, int maxDam)
+int SyncDropItem(Point position, ItemID idx, uint16_t icreateinfo, int iseed, int id, int dur, int mdur, int ch, int mch, int ivalue, uint32_t ibuff, int toHit, int maxDam)
 {
 	if (ActiveItemCount >= MAXITEMS)
 		return -1;
@@ -2014,11 +2014,11 @@ bool UseInvItem(int cii)
 	}
 
 	constexpr int SpeechDelay = 10;
-	if (item->IDidx == ItemIndex::BlackMushroom) {
+	if (item->IDidx == ItemID::BlackMushroom) {
 		player.Say(HeroSpeech::NowThatsOneBigMushroom, SpeechDelay);
 		return true;
 	}
-	if (item->IDidx == ItemIndex::FungalTome) {
+	if (item->IDidx == ItemID::FungalTome) {
 
 		PlaySFX(IS_IBOOK);
 		player.Say(HeroSpeech::ThatDidntDoAnything, SpeechDelay);

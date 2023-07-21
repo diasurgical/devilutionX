@@ -537,7 +537,7 @@ void Theme_Treasure(int t)
 				//    item spawned/dropped on ground would be halved in value.
 				if (rv >= treasureType - 2 && leveltype != DTYPE_CATHEDRAL) {
 					Item &item = Items[ActiveItems[ActiveItemCount - 1]];
-					if (item.IDidx == ItemIndex::Gold) {
+					if (item.IDidx == ItemID::Gold) {
 						item._ivalue = std::max(item._ivalue / 2, 1);
 					}
 				}

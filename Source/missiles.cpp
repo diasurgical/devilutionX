@@ -1317,7 +1317,7 @@ void AddStealPotions(Missile &missile, AddMissileParameter & /*parameter*/)
 		bool hasPlayedSFX = false;
 		for (int si = 0; si < MaxBeltItems; si++) {
 			Item &beltItem = player.SpdList[si];
-			ItemIndex ii = ItemIndex::None;
+			ItemID ii = ItemID::None;
 			if (beltItem._itype == ItemType::Misc) {
 				if (FlipCoin())
 					continue;
@@ -1352,7 +1352,7 @@ void AddStealPotions(Missile &missile, AddMissileParameter & /*parameter*/)
 					continue;
 				}
 			}
-			if (ii != ItemIndex::None) {
+			if (ii != ItemID::None) {
 				auto seed = beltItem._iSeed;
 				InitializeItem(beltItem, ii);
 				beltItem._iSeed = seed;

@@ -459,7 +459,7 @@ void AddInitItems()
 		item._iSeed = AdvanceRndSeed();
 		SetRndSeed(item._iSeed);
 
-		GetItemAttrs(item, PickRandomlyAmong({ ItemIndex::PotionMana, ItemIndex::PotionHealing }), curlv);
+		GetItemAttrs(item, PickRandomlyAmong({ ItemID::PotionMana, ItemID::PotionHealing }), curlv);
 
 		item._iCreateInfo = curlv | CF_PREGEN;
 		SetupItem(item);
@@ -472,17 +472,17 @@ void AddInitItems()
 
 void SpawnNote()
 {
-	ItemIndex id;
+	ItemID id;
 
 	switch (currlevel) {
 	case 22:
-		id = ItemIndex::TornNote2;
+		id = ItemID::TornNote2;
 		break;
 	case 23:
-		id = ItemIndex::TornNote3;
+		id = ItemID::TornNote3;
 		break;
 	default:
-		id = ItemIndex::TornNote1;
+		id = ItemID::TornNote1;
 		break;
 	}
 
@@ -1375,13 +1375,13 @@ void GetItemBonus(const Player &player, Item &item, int minlvl, int maxlvl, bool
 	}
 }
 
-ItemIndex GetItemIndexForDroppableItem(bool considerDropRate, tl::function_ref<bool(const ItemData &item)> isItemOkay)
+ItemID GetItemIndexForDroppableItem(bool considerDropRate, tl::function_ref<bool(const ItemData &item)> isItemOkay)
 {
-	const int arraySize = GetItemIndex(ItemIndex::Last) * 2;
-	static std::array<ItemIndex, arraySize> ril;
+	const int arraySize = GetItemIndex(ItemID::Last) * 2;
+	static std::array<ItemID, arraySize> ril;
 
 	size_t ri = 0;
-	for (std::underlying_type_t<ItemIndex> i = GetItemIndex(ItemIndex::First); i <= GetItemIndex(ItemIndex::Last); i++) {
+	for (std::underlying_type_t<ItemID> i = GetItemIndex(ItemID::First); i <= GetItemIndex(ItemID::Last); i++) {
 		if (!IsItemAvailable(i))
 			continue;
 		const ItemData &item = AllItemsList[i];
@@ -1391,10 +1391,10 @@ ItemIndex GetItemIndexForDroppableItem(bool considerDropRate, tl::function_ref<b
 			continue;
 		if (!isItemOkay(item))
 			continue;
-		ril[ri] = static_cast<ItemIndex>(i);
+		ril[ri] = static_cast<ItemID>(i);
 		ri++;
 		if (item.iRnd == IDROP_DOUBLE && considerDropRate) {
-			ril[ri] = static_cast<ItemIndex>(i);
+			ril[ri] = static_cast<ItemID>(i);
 			ri++;
 		}
 	}
@@ -1402,7 +1402,7 @@ ItemIndex GetItemIndexForDroppableItem(bool considerDropRate, tl::function_ref<b
 	return ril[GenerateRnd(static_cast<int>(ri))];
 }
 
-ItemIndex RndUItem(Monster *monster)
+ItemID RndUItem(Monster *monster)
 {
 	int itemMaxLevel = ItemsGetCurrlevel() * 2;
 	if (monster != nullptr)
@@ -1418,10 +1418,10 @@ ItemIndex RndUItem(Monster *monster)
 	});
 }
 
-ItemIndex RndAllItems()
+ItemID RndAllItems()
 {
 	if (GenerateRnd(100) > 25)
-		return ItemIndex::Gold;
+		return ItemID::Gold;
 
 	int itemMaxLevel = ItemsGetCurrlevel() * 2;
 	return GetItemIndexForDroppableItem(false, [&itemMaxLevel](const ItemData &item) {
@@ -1431,7 +1431,7 @@ ItemIndex RndAllItems()
 	});
 }
 
-ItemIndex RndTypeItems(ItemType itemType, int imid, int lvl)
+ItemID RndTypeItems(ItemType itemType, int imid, int lvl)
 {
 	int itemMaxLevel = lvl * 2;
 	return GetItemIndexForDroppableItem(false, [&itemMaxLevel, &itemType, &imid](const ItemData &item) {
@@ -1520,7 +1520,7 @@ int GetItemBLevel(int lvl, item_misc_id miscId, bool onlygood, bool uper15)
 	return iblvl;
 }
 
-void SetupAllItems(const Player &player, Item &item, ItemIndex idx, uint32_t iseed, int lvl, int uper, bool onlygood, bool recreate, bool pregen)
+void SetupAllItems(const Player &player, Item &item, ItemID idx, uint32_t iseed, int lvl, int uper, bool onlygood, bool recreate, bool pregen)
 {
 	item._iSeed = iseed;
 	SetRndSeed(iseed);
@@ -1562,7 +1562,7 @@ void SetupAllItems(const Player &player, Item &item, ItemIndex idx, uint32_t ise
 	SetupItem(item);
 }
 
-void SetupBaseItem(Point position, ItemIndex idx, bool onlygood, bool sendmsg, bool delta, bool spawn = false)
+void SetupBaseItem(Point position, ItemID idx, bool onlygood, bool sendmsg, bool delta, bool spawn = false)
 {
 	if (ActiveItemCount >= MAXITEMS)
 		return;
@@ -1587,37 +1587,37 @@ void SetupAllUseful(Item &item, int iseed, int lvl)
 	item._iSeed = iseed;
 	SetRndSeed(iseed);
 
-	ItemIndex idx;
+	ItemID idx;
 
 	if (gbIsHellfire) {
 		switch (GenerateRnd(7)) {
 		case 0:
-			idx = ItemIndex::ScrollTownPortal;
+			idx = ItemID::ScrollTownPortal;
 			if (lvl <= 1)
-				idx = ItemIndex::PotionHealing;
+				idx = ItemID::PotionHealing;
 			break;
 		case 1:
 		case 2:
-			idx = ItemIndex::PotionHealing;
+			idx = ItemID::PotionHealing;
 			break;
 		case 3:
-			idx = ItemIndex::ScrollTownPortal;
+			idx = ItemID::ScrollTownPortal;
 			if (lvl <= 1)
-				idx = ItemIndex::PotionMana;
+				idx = ItemID::PotionMana;
 			break;
 		case 4:
 		case 5:
-			idx = ItemIndex::PotionMana;
+			idx = ItemID::PotionMana;
 			break;
 		default:
-			idx = ItemIndex::Oil;
+			idx = ItemID::Oil;
 			break;
 		}
 	} else {
-		idx = PickRandomlyAmong({ ItemIndex::PotionMana, ItemIndex::PotionHealing });
+		idx = PickRandomlyAmong({ ItemID::PotionMana, ItemID::PotionHealing });
 
 		if (lvl > 1 && FlipCoin(3))
-			idx = ItemIndex::ScrollTownPortal;
+			idx = ItemID::ScrollTownPortal;
 	}
 
 	GetItemAttrs(item, idx, lvl);
@@ -1664,7 +1664,7 @@ void SpawnRock()
 	item.position = stand->position;
 	dItem[item.position.x][item.position.y] = ii + 1;
 	int curlv = ItemsGetCurrlevel();
-	GetItemAttrs(item, ItemIndex::MagicRock, curlv);
+	GetItemAttrs(item, ItemID::MagicRock, curlv);
 	SetupItem(item);
 	item._iSelFlag = 2;
 	item._iPostDraw = true;
@@ -1929,7 +1929,7 @@ bool SmithItemOk(const Player &player, const ItemData &item)
 }
 
 template <bool (*Ok)(const Player &, const ItemData &), bool ConsiderDropRate = false>
-ItemIndex RndVendorItem(const Player &player, int minlvl, int maxlvl)
+ItemID RndVendorItem(const Player &player, int minlvl, int maxlvl)
 {
 	return GetItemIndexForDroppableItem(ConsiderDropRate, [&player, &minlvl, &maxlvl](const ItemData &item) {
 		if (!Ok(player, item))
@@ -1940,7 +1940,7 @@ ItemIndex RndVendorItem(const Player &player, int minlvl, int maxlvl)
 	});
 }
 
-ItemIndex RndSmithItem(const Player &player, int lvl)
+ItemID RndSmithItem(const Player &player, int lvl)
 {
 	return RndVendorItem<SmithItemOk, true>(player, 0, lvl);
 }
@@ -1979,7 +1979,7 @@ bool PremiumItemOk(const Player &player, const ItemData &item)
 	return true;
 }
 
-ItemIndex RndPremiumItem(const Player &player, int minlvl, int maxlvl)
+ItemID RndPremiumItem(const Player &player, int minlvl, int maxlvl)
 {
 	return RndVendorItem<PremiumItemOk>(player, minlvl, maxlvl);
 }
@@ -2001,7 +2001,7 @@ void SpawnOnePremium(Item &premiumItem, int plvl, const Player &player)
 		premiumItem = {};
 		premiumItem._iSeed = AdvanceRndSeed();
 		SetRndSeed(premiumItem._iSeed);
-		ItemIndex itemType = RndPremiumItem(player, plvl / 4, plvl);
+		ItemID itemType = RndPremiumItem(player, plvl / 4, plvl);
 		GetItemAttrs(premiumItem, itemType, plvl);
 		GetItemBonus(player, premiumItem, plvl / 2, plvl, true, !gbIsHellfire);
 
@@ -2081,12 +2081,12 @@ bool WitchItemOk(const Player &player, const ItemData &item)
 	return true;
 }
 
-ItemIndex RndWitchItem(const Player &player, int lvl)
+ItemID RndWitchItem(const Player &player, int lvl)
 {
 	return RndVendorItem<WitchItemOk>(player, 0, lvl);
 }
 
-ItemIndex RndBoyItem(const Player &player, int lvl)
+ItemID RndBoyItem(const Player &player, int lvl)
 {
 	return RndVendorItem<PremiumItemOk>(player, 0, lvl);
 }
@@ -2120,7 +2120,7 @@ bool HealerItemOk(const Player &player, const ItemData &item)
 	return false;
 }
 
-ItemIndex RndHealerItem(const Player &player, int lvl)
+ItemID RndHealerItem(const Player &player, int lvl)
 {
 	return RndVendorItem<HealerItemOk>(player, 0, lvl);
 }
@@ -2128,7 +2128,7 @@ ItemIndex RndHealerItem(const Player &player, int lvl)
 void RecreateSmithItem(const Player &player, Item &item, int lvl, int iseed)
 {
 	SetRndSeed(iseed);
-	ItemIndex itype = RndSmithItem(player, lvl);
+	ItemID itype = RndSmithItem(player, lvl);
 	GetItemAttrs(item, itype, lvl);
 
 	item._iSeed = iseed;
@@ -2139,7 +2139,7 @@ void RecreateSmithItem(const Player &player, Item &item, int lvl, int iseed)
 void RecreatePremiumItem(const Player &player, Item &item, int plvl, int iseed)
 {
 	SetRndSeed(iseed);
-	ItemIndex itype = RndPremiumItem(player, plvl / 4, plvl);
+	ItemID itype = RndPremiumItem(player, plvl / 4, plvl);
 	GetItemAttrs(item, itype, plvl);
 	GetItemBonus(player, item, plvl / 2, plvl, true, !gbIsHellfire);
 
@@ -2151,7 +2151,7 @@ void RecreatePremiumItem(const Player &player, Item &item, int plvl, int iseed)
 void RecreateBoyItem(const Player &player, Item &item, int lvl, int iseed)
 {
 	SetRndSeed(iseed);
-	ItemIndex itype = RndBoyItem(player, lvl);
+	ItemID itype = RndBoyItem(player, lvl);
 	GetItemAttrs(item, itype, lvl);
 	GetItemBonus(player, item, lvl, 2 * lvl, true, true);
 
@@ -2160,17 +2160,17 @@ void RecreateBoyItem(const Player &player, Item &item, int lvl, int iseed)
 	item._iIdentified = true;
 }
 
-void RecreateWitchItem(const Player &player, Item &item, ItemIndex idx, int lvl, int iseed)
+void RecreateWitchItem(const Player &player, Item &item, ItemID idx, int lvl, int iseed)
 {
-	if (IsAnyOf(idx, ItemIndex::PotionMana, ItemIndex::PotionFullMana, ItemIndex::ScrollTownPortal)) {
+	if (IsAnyOf(idx, ItemID::PotionMana, ItemID::PotionFullMana, ItemID::ScrollTownPortal)) {
 		GetItemAttrs(item, idx, lvl);
-	} else if (gbIsHellfire && IsAnyOf(idx, ItemIndex::Book1, ItemIndex::Book2, ItemIndex::Book3, ItemIndex::Book4)) {
+	} else if (gbIsHellfire && IsAnyOf(idx, ItemID::Book1, ItemID::Book2, ItemID::Book3, ItemID::Book4)) {
 		SetRndSeed(iseed);
 		DiscardRandomValues(1);
 		GetItemAttrs(item, idx, lvl);
 	} else {
 		SetRndSeed(iseed);
-		ItemIndex itype = RndWitchItem(player, lvl);
+		ItemID itype = RndWitchItem(player, lvl);
 		GetItemAttrs(item, itype, lvl);
 		int iblvl = -1;
 		if (GenerateRnd(100) <= 5)
@@ -2186,13 +2186,13 @@ void RecreateWitchItem(const Player &player, Item &item, ItemIndex idx, int lvl,
 	item._iIdentified = true;
 }
 
-void RecreateHealerItem(const Player &player, Item &item, ItemIndex idx, int lvl, int iseed)
+void RecreateHealerItem(const Player &player, Item &item, ItemID idx, int lvl, int iseed)
 {
-	if (IsAnyOf(idx, ItemIndex::PotionHealing, ItemIndex::PotionFullHealing, ItemIndex::ScrollResurrect)) {
+	if (IsAnyOf(idx, ItemID::PotionHealing, ItemID::PotionFullHealing, ItemID::ScrollResurrect)) {
 		GetItemAttrs(item, idx, lvl);
 	} else {
 		SetRndSeed(iseed);
-		ItemIndex itype = RndHealerItem(player, lvl);
+		ItemID itype = RndHealerItem(player, lvl);
 		GetItemAttrs(item, itype, lvl);
 	}
 
@@ -2201,7 +2201,7 @@ void RecreateHealerItem(const Player &player, Item &item, ItemIndex idx, int lvl
 	item._iIdentified = true;
 }
 
-void RecreateTownItem(const Player &player, Item &item, ItemIndex idx, uint16_t icreateinfo, int iseed)
+void RecreateTownItem(const Player &player, Item &item, ItemID idx, uint16_t icreateinfo, int iseed)
 {
 	if ((icreateinfo & CF_SMITH) != 0)
 		RecreateSmithItem(player, item, icreateinfo & CF_LEVEL, iseed);
@@ -2222,7 +2222,7 @@ void CreateMagicItem(Point position, int lvl, ItemType itemType, int imid, int i
 
 	int ii = AllocateItem();
 	auto &item = Items[ii];
-	ItemIndex idx = RndTypeItems(itemType, imid, lvl);
+	ItemID idx = RndTypeItems(itemType, imid, lvl);
 
 	while (true) {
 		item = {};
@@ -2256,13 +2256,13 @@ void NextItemRecord(int i)
 	itemrecord[i].nIndex = itemrecord[gnNumGetRecords].nIndex;
 }
 
-ItemIndex RndItemForMonsterLevel(int8_t monsterLevel)
+ItemID RndItemForMonsterLevel(int8_t monsterLevel)
 {
 	if (GenerateRnd(100) > 40)
-		return ItemIndex::None;
+		return ItemID::None;
 
 	if (GenerateRnd(100) > 25)
-		return ItemIndex::Gold;
+		return ItemID::Gold;
 
 	return GetItemIndexForDroppableItem(true, [&monsterLevel](const ItemData &item) {
 		return item.iMinMLvl <= monsterLevel;
@@ -2433,19 +2433,19 @@ std::string GetTranslatedItemNameMagical(const Item &item, bool hellfireItem, bo
 
 bool IsItemAvailable(int i)
 {
-	if (i < GetItemIndex(ItemIndex::First) || i > GetItemIndex(ItemIndex::Last))
+	if (i < GetItemIndex(ItemID::First) || i > GetItemIndex(ItemID::Last))
 		return false;
 
 	if (gbIsSpawn) {
-		if (i >= GetItemIndex(ItemIndex::MediumHeavyArmorFirst) && i <= GetItemIndex(ItemIndex::MediumHeavyArmorLast))
+		if (i >= GetItemIndex(ItemID::MediumHeavyArmorFirst) && i <= GetItemIndex(ItemID::MediumHeavyArmorLast))
 			return false; // Medium and heavy armors
 		if (IsAnyOf(i,
-		        GetItemIndex(ItemIndex::ScrollStoneCurse),
-		        GetItemIndex(ItemIndex::ScrollGuardian),
-		        GetItemIndex(ItemIndex::NonItem),
-		        GetItemIndex(ItemIndex::ScrollGolem),
-		        GetItemIndex(ItemIndex::ScrollNone),
-		        GetItemIndex(ItemIndex::ScrollApocalypse)))
+		        GetItemIndex(ItemID::ScrollStoneCurse),
+		        GetItemIndex(ItemID::ScrollGuardian),
+		        GetItemIndex(ItemID::NonItem),
+		        GetItemIndex(ItemID::ScrollGolem),
+		        GetItemIndex(ItemID::ScrollNone),
+		        GetItemIndex(ItemID::ScrollApocalypse)))
 			return false; // Unavailable scrolls
 	}
 
@@ -2453,18 +2453,18 @@ bool IsItemAvailable(int i)
 		return true;
 
 	return (
-	           i != GetItemIndex(ItemIndex::CathedralMap)                                                   // Cathedral Map
-	           && i != GetItemIndex(ItemIndex::BovinePlate)                                                 // Bovine Plate
-	           && (i < GetItemIndex(ItemIndex::FirstHellfire) || i > GetItemIndex(ItemIndex::LastHellfire)) // Hellfire exclusive items
-	           && (i < GetItemIndex(ItemIndex::FirstOil) || i > GetItemIndex(ItemIndex::LastOil))           // Oils
-	           && i != GetItemIndex(ItemIndex::ScrollSearch)                                                // Scroll of Search
-	           && (i < GetItemIndex(ItemIndex::FirstRune) || i > GetItemIndex(ItemIndex::LastRune))         // Runes
-	           && i != GetItemIndex(ItemIndex::SorcererStaffMana)                                           // Short Staff of Mana
+	           i != GetItemIndex(ItemID::CathedralMap)                                                   // Cathedral Map
+	           && i != GetItemIndex(ItemID::BovinePlate)                                                 // Bovine Plate
+	           && (i < GetItemIndex(ItemID::FirstHellfire) || i > GetItemIndex(ItemID::LastHellfire)) // Hellfire exclusive items
+	           && (i < GetItemIndex(ItemID::FirstOil) || i > GetItemIndex(ItemID::LastOil))           // Oils
+	           && i != GetItemIndex(ItemID::ScrollSearch)                                                // Scroll of Search
+	           && (i < GetItemIndex(ItemID::FirstRune) || i > GetItemIndex(ItemID::LastRune))         // Runes
+	           && i != GetItemIndex(ItemID::SorcererStaffMana)                                           // Short Staff of Mana
 	           )
 	    || (
 	        // Bard items are technically Hellfire-exclusive
 	        // but are just normal items with adjusted stats.
-	        *sgOptions.Gameplay.testBard && IsAnyOf(i, GetItemIndex(ItemIndex::BardSword), GetItemIndex(ItemIndex::BardDagger)));
+	        *sgOptions.Gameplay.testBard && IsAnyOf(i, GetItemIndex(ItemID::BardSword), GetItemIndex(ItemID::BardDagger)));
 }
 
 uint8_t GetOutlineColor(const Item &item, bool checkReq)
@@ -2521,17 +2521,17 @@ void InitItems()
 		if (Quests[Q_ROCK].IsAvailable())
 			SpawnRock();
 		if (Quests[Q_ANVIL].IsAvailable())
-			SpawnQuestItem(ItemIndex::AnvilOfFury, SetPiece.position.megaToWorld() + Displacement { 11, 11 }, 0, 1, false);
+			SpawnQuestItem(ItemID::AnvilOfFury, SetPiece.position.megaToWorld() + Displacement { 11, 11 }, 0, 1, false);
 		if (sgGameInitInfo.bCowQuest != 0 && currlevel == 20)
-			SpawnQuestItem(ItemIndex::BrownSuit, { 25, 25 }, 3, 1, false);
+			SpawnQuestItem(ItemID::BrownSuit, { 25, 25 }, 3, 1, false);
 		if (sgGameInitInfo.bCowQuest != 0 && currlevel == 19)
-			SpawnQuestItem(ItemIndex::GreySuit, { 25, 25 }, 3, 1, false);
+			SpawnQuestItem(ItemID::GreySuit, { 25, 25 }, 3, 1, false);
 		// In multiplayer items spawn during level generation to avoid desyncs
 		if (gbIsMultiplayer) {
 			if (Quests[Q_MUSHROOM].IsAvailable())
-				SpawnQuestItem(ItemIndex::FungalTome, { 0, 0 }, 5, 1, false);
+				SpawnQuestItem(ItemID::FungalTome, { 0, 0 }, 5, 1, false);
 			if (currlevel == Quests[Q_VEIL]._qlevel + 1 && Quests[Q_VEIL]._qactive != QUEST_NOTAVAIL)
-				SpawnQuestItem(ItemIndex::GoldenElixir, { 0, 0 }, 5, 1, false);
+				SpawnQuestItem(ItemID::GoldenElixir, { 0, 0 }, 5, 1, false);
 		}
 		if (currlevel > 0 && currlevel < 16)
 			AddInitItems();
@@ -2875,7 +2875,7 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	}
 
 	if (&player == MyPlayer) {
-		if (player.InvBody[INVLOC_AMULET].isEmpty() || player.InvBody[INVLOC_AMULET].IDidx != ItemIndex::AuricAmulet) {
+		if (player.InvBody[INVLOC_AMULET].isEmpty() || player.InvBody[INVLOC_AMULET].IDidx != ItemID::AuricAmulet) {
 			int half = MaxGold;
 			MaxGold = GOLD_MAX_LIMIT;
 
@@ -2917,7 +2917,7 @@ void CalcPlrInv(Player &player, bool loadgfx)
 	}
 }
 
-void InitializeItem(Item &item, ItemIndex itemData)
+void InitializeItem(Item &item, ItemID itemData)
 {
 	auto &pAllItem = AllItemsList[GetItemIndex(itemData)];
 
@@ -2951,7 +2951,7 @@ void InitializeItem(Item &item, ItemIndex itemData)
 	item._iPrePower = IPL_INVALID;
 	item._iSufPower = IPL_INVALID;
 	item._iMagical = ITEM_QUALITY_NORMAL;
-	item.IDidx = static_cast<ItemIndex>(itemData);
+	item.IDidx = static_cast<ItemID>(itemData);
 	if (gbIsHellfire)
 		item.dwBuff |= CF_HELLFIRE;
 }
@@ -2999,77 +2999,77 @@ void CreatePlrItems(Player &player)
 
 	switch (player._pClass) {
 	case HeroClass::Warrior:
-		InitializeItem(player.InvBody[INVLOC_HAND_LEFT], ItemIndex::WarriorSword);
+		InitializeItem(player.InvBody[INVLOC_HAND_LEFT], ItemID::WarriorSword);
 		GenerateNewSeed(player.InvBody[INVLOC_HAND_LEFT]);
 
-		InitializeItem(player.InvBody[INVLOC_HAND_RIGHT], ItemIndex::WarriorShield);
+		InitializeItem(player.InvBody[INVLOC_HAND_RIGHT], ItemID::WarriorShield);
 		GenerateNewSeed(player.InvBody[INVLOC_HAND_RIGHT]);
 
 		{
 			Item club;
-			InitializeItem(club, ItemIndex::WarriorClub);
+			InitializeItem(club, ItemID::WarriorClub);
 			GenerateNewSeed(club);
 			AutoPlaceItemInInventorySlot(player, 0, club, true);
 		}
 
-		InitializeItem(player.SpdList[0], ItemIndex::PotionHealing);
+		InitializeItem(player.SpdList[0], ItemID::PotionHealing);
 		GenerateNewSeed(player.SpdList[0]);
 
-		InitializeItem(player.SpdList[1], ItemIndex::PotionHealing);
+		InitializeItem(player.SpdList[1], ItemID::PotionHealing);
 		GenerateNewSeed(player.SpdList[1]);
 		break;
 	case HeroClass::Rogue:
-		InitializeItem(player.InvBody[INVLOC_HAND_LEFT], ItemIndex::RogueBow);
+		InitializeItem(player.InvBody[INVLOC_HAND_LEFT], ItemID::RogueBow);
 		GenerateNewSeed(player.InvBody[INVLOC_HAND_LEFT]);
 
-		InitializeItem(player.SpdList[0], ItemIndex::PotionHealing);
+		InitializeItem(player.SpdList[0], ItemID::PotionHealing);
 		GenerateNewSeed(player.SpdList[0]);
 
-		InitializeItem(player.SpdList[1], ItemIndex::PotionHealing);
+		InitializeItem(player.SpdList[1], ItemID::PotionHealing);
 		GenerateNewSeed(player.SpdList[1]);
 		break;
 	case HeroClass::Sorcerer:
-		InitializeItem(player.InvBody[INVLOC_HAND_LEFT], gbIsHellfire ? ItemIndex::SorcererStaffMana : ItemIndex::SorcererStaffChargedBolt);
+		InitializeItem(player.InvBody[INVLOC_HAND_LEFT], gbIsHellfire ? ItemID::SorcererStaffMana : ItemID::SorcererStaffChargedBolt);
 		GenerateNewSeed(player.InvBody[INVLOC_HAND_LEFT]);
 
-		InitializeItem(player.SpdList[0], gbIsHellfire ? ItemIndex::PotionHealing : ItemIndex::PotionMana);
+		InitializeItem(player.SpdList[0], gbIsHellfire ? ItemID::PotionHealing : ItemID::PotionMana);
 		GenerateNewSeed(player.SpdList[0]);
 
-		InitializeItem(player.SpdList[1], gbIsHellfire ? ItemIndex::PotionHealing : ItemIndex::PotionMana);
+		InitializeItem(player.SpdList[1], gbIsHellfire ? ItemID::PotionHealing : ItemID::PotionMana);
 		GenerateNewSeed(player.SpdList[1]);
 		break;
 
 	case HeroClass::Monk:
-		InitializeItem(player.InvBody[INVLOC_HAND_LEFT], ItemIndex::MonkStaff);
+		InitializeItem(player.InvBody[INVLOC_HAND_LEFT], ItemID::MonkStaff);
 		GenerateNewSeed(player.InvBody[INVLOC_HAND_LEFT]);
-		InitializeItem(player.SpdList[0], ItemIndex::PotionHealing);
+		InitializeItem(player.SpdList[0], ItemID::PotionHealing);
 		GenerateNewSeed(player.SpdList[0]);
 
-		InitializeItem(player.SpdList[1], ItemIndex::PotionHealing);
+		InitializeItem(player.SpdList[1], ItemID::PotionHealing);
 		GenerateNewSeed(player.SpdList[1]);
 		break;
 	case HeroClass::Bard:
-		InitializeItem(player.InvBody[INVLOC_HAND_LEFT], ItemIndex::BardSword);
+		InitializeItem(player.InvBody[INVLOC_HAND_LEFT], ItemID::BardSword);
 		GenerateNewSeed(player.InvBody[INVLOC_HAND_LEFT]);
 
-		InitializeItem(player.InvBody[INVLOC_HAND_RIGHT], ItemIndex::BardDagger);
+		InitializeItem(player.InvBody[INVLOC_HAND_RIGHT], ItemID::BardDagger);
 		GenerateNewSeed(player.InvBody[INVLOC_HAND_RIGHT]);
-		InitializeItem(player.SpdList[0], ItemIndex::PotionHealing);
+		InitializeItem(player.SpdList[0], ItemID::PotionHealing);
 		GenerateNewSeed(player.SpdList[0]);
 
-		InitializeItem(player.SpdList[1], ItemIndex::PotionHealing);
+		InitializeItem(player.SpdList[1], ItemID::PotionHealing);
 		GenerateNewSeed(player.SpdList[1]);
 		break;
 	case HeroClass::Barbarian:
-		InitializeItem(player.InvBody[INVLOC_HAND_LEFT], ItemIndex::BarbarianClub);
+		InitializeItem(player.InvBody[INVLOC_HAND_LEFT], ItemID::BarbarianClub);
 		GenerateNewSeed(player.InvBody[INVLOC_HAND_LEFT]);
 
-		InitializeItem(player.InvBody[INVLOC_HAND_RIGHT], ItemIndex::WarriorShield);
+		InitializeItem(player.InvBody[INVLOC_HAND_RIGHT], ItemID::WarriorShield);
 		GenerateNewSeed(player.InvBody[INVLOC_HAND_RIGHT]);
-		InitializeItem(player.SpdList[0], ItemIndex::PotionHealing);
+		InitializeItem(player.SpdList[0], ItemID::PotionHealing);
 		GenerateNewSeed(player.SpdList[0]);
 
-		InitializeItem(player.SpdList[1], ItemIndex::PotionHealing);
+		InitializeItem(player.SpdList[1], ItemID::PotionHealing);
 		GenerateNewSeed(player.SpdList[1]);
 		break;
 	}
@@ -3155,7 +3155,7 @@ Point GetSuperItemLoc(Point position)
 	return itemPosition.value_or(Point { 0, 0 }); // TODO handle no space for dropping items
 }
 
-void GetItemAttrs(Item &item, ItemIndex itemData, int lvl)
+void GetItemAttrs(Item &item, ItemID itemData, int lvl)
 {
 	const auto &baseItemData = AllItemsList[GetItemIndex(itemData)];
 	item._itype = baseItemData.itype;
@@ -3234,19 +3234,19 @@ Item *SpawnUnique(_unique_items uid, Point position, std::optional<int> level /*
 	}
 	int curlv = ItemsGetCurrlevel();
 
-	std::underlying_type_t<ItemIndex> idx = 0;
+	std::underlying_type_t<ItemID> idx = 0;
 	while (AllItemsList[idx].iItemId != UniqueItems[uid].UIItemId)
 		idx++;
 
 	if (sgGameInitInfo.nDifficulty == DIFF_NORMAL) {
-		GetItemAttrs(item, static_cast<ItemIndex>(idx), curlv);
+		GetItemAttrs(item, static_cast<ItemID>(idx), curlv);
 		GetUniqueItem(*MyPlayer, item, uid);
 		SetupItem(item);
 	} else {
 		if (level)
 			curlv = *level;
 		const ItemData &uniqueItemData = AllItemsList[idx];
-		ItemIndex idx = GetItemIndexForDroppableItem(false, [&uniqueItemData](const ItemData &item) {
+		ItemID idx = GetItemIndexForDroppableItem(false, [&uniqueItemData](const ItemData &item) {
 			return item.itype == uniqueItemData.itype;
 		});
 		SetupAllItems(*MyPlayer, item, idx, AdvanceRndSeed(), curlv * 2, 15, true, false, false);
@@ -3260,7 +3260,7 @@ Item *SpawnUnique(_unique_items uid, Point position, std::optional<int> level /*
 
 void SpawnItem(Monster &monster, Point position, bool sendmsg, bool spawn /*= false*/)
 {
-	ItemIndex idx;
+	ItemID idx;
 	bool onlygood = true;
 
 	bool dropsSpecialTreasure = (monster.data().treasure & T_UNIQ) != 0;
@@ -3279,7 +3279,7 @@ void SpawnItem(Monster &monster, Point position, bool sendmsg, bool spawn /*= fa
 		Quests[Q_MUSHROOM]._qvar1 = QS_BRAINSPAWNED;
 		NetSendCmdQuest(true, Quests[Q_MUSHROOM]);
 		// brain replaces normal drop
-		idx = ItemIndex::Brain;
+		idx = ItemID::Brain;
 	} else {
 		if (dropBrain && gbIsMultiplayer && sendmsg) {
 			Quests[Q_MUSHROOM]._qvar1 = QS_BRAINSPAWNED;
@@ -3287,7 +3287,7 @@ void SpawnItem(Monster &monster, Point position, bool sendmsg, bool spawn /*= fa
 			// Drop the brain as extra item to ensure that all clients see the brain drop
 			// When executing SpawnItem is not reliable, cause another client can already have the quest state updated before SpawnItem is executed
 			Point posBrain = GetSuperItemLoc(position);
-			SpawnQuestItem(ItemIndex::Brain, posBrain, false, false, true);
+			SpawnQuestItem(ItemID::Brain, posBrain, false, false, true);
 		}
 		// Normal monster
 		if ((monster.data().treasure & T_NODROP) != 0)
@@ -3296,7 +3296,7 @@ void SpawnItem(Monster &monster, Point position, bool sendmsg, bool spawn /*= fa
 		idx = RndItemForMonsterLevel(monster.level(sgGameInitInfo.nDifficulty));
 	}
 
-	if (idx == ItemIndex::None)
+	if (idx == ItemID::None)
 		return;
 
 	if (ActiveItemCount >= MAXITEMS)
@@ -3321,7 +3321,7 @@ void SpawnItem(Monster &monster, Point position, bool sendmsg, bool spawn /*= fa
 
 void CreateRndItem(Point position, bool onlygood, bool sendmsg, bool delta)
 {
-	ItemIndex idx = onlygood ? RndUItem(nullptr) : RndAllItems();
+	ItemID idx = onlygood ? RndUItem(nullptr) : RndAllItems();
 
 	SetupBaseItem(position, idx, onlygood, sendmsg, delta);
 }
@@ -3343,24 +3343,24 @@ void CreateRndUseful(Point position, bool sendmsg)
 
 void CreateTypeItem(Point position, bool onlygood, ItemType itemType, int imisc, bool sendmsg, bool delta, bool spawn)
 {
-	ItemIndex idx;
+	ItemID idx;
 
 	int curlv = ItemsGetCurrlevel();
 	if (itemType != ItemType::Gold)
 		idx = RndTypeItems(itemType, imisc, curlv);
 	else
-		idx = ItemIndex::Gold;
+		idx = ItemID::Gold;
 
 	SetupBaseItem(position, idx, onlygood, sendmsg, delta, spawn);
 }
 
-void RecreateItem(const Player &player, Item &item, ItemIndex idx, uint16_t icreateinfo, uint32_t iseed, int ivalue, bool isHellfire)
+void RecreateItem(const Player &player, Item &item, ItemID idx, uint16_t icreateinfo, uint32_t iseed, int ivalue, bool isHellfire)
 {
 	bool tmpIsHellfire = gbIsHellfire;
 	gbIsHellfire = isHellfire;
 
-	if (idx == ItemIndex::Gold) {
-		InitializeItem(item, ItemIndex::Gold);
+	if (idx == ItemID::Gold) {
+		InitializeItem(item, ItemID::Gold);
 		item._iSeed = iseed;
 		item._iCreateInfo = icreateinfo;
 		item._ivalue = ivalue;
@@ -3408,7 +3408,7 @@ void RecreateItem(const Player &player, Item &item, ItemIndex idx, uint16_t icre
 
 void RecreateEar(Item &item, uint16_t ic, uint32_t iseed, uint8_t bCursval, string_view heroName)
 {
-	InitializeItem(item, ItemIndex::Ear);
+	InitializeItem(item, ItemID::Ear);
 
 	std::string itemName = fmt::format(fmt::runtime("Ear of {:s}"), heroName);
 
@@ -3475,7 +3475,7 @@ void CornerstoneLoad(Point position)
 	CornerStone.item = item;
 }
 
-void SpawnQuestItem(ItemIndex itemid, Point position, int randarea, int selflag, bool sendmsg)
+void SpawnQuestItem(ItemID itemid, Point position, int randarea, int selflag, bool sendmsg)
 {
 	if (randarea > 0) {
 		int tries = 0;
@@ -3529,7 +3529,7 @@ void SpawnQuestItem(ItemIndex itemid, Point position, int randarea, int selflag,
 	}
 }
 
-void SpawnRewardItem(ItemIndex itemid, Point position, bool sendmsg)
+void SpawnRewardItem(ItemID itemid, Point position, bool sendmsg)
 {
 	if (ActiveItemCount >= MAXITEMS)
 		return;
@@ -3554,17 +3554,17 @@ void SpawnRewardItem(ItemIndex itemid, Point position, bool sendmsg)
 
 void SpawnMapOfDoom(Point position, bool sendmsg)
 {
-	SpawnRewardItem(ItemIndex::CathedralMap, position, sendmsg);
+	SpawnRewardItem(ItemID::CathedralMap, position, sendmsg);
 }
 
 void SpawnRuneBomb(Point position, bool sendmsg)
 {
-	SpawnRewardItem(ItemIndex::RuneBomb, position, sendmsg);
+	SpawnRewardItem(ItemID::RuneBomb, position, sendmsg);
 }
 
 void SpawnTheodore(Point position, bool sendmsg)
 {
-	SpawnRewardItem(ItemIndex::Theodore, position, sendmsg);
+	SpawnRewardItem(ItemID::Theodore, position, sendmsg);
 }
 
 void RespawnItem(Item &item, bool flipFlag)
@@ -4193,7 +4193,7 @@ void UseItem(size_t pnum, item_misc_id mid, SpellID spellID, int spellFrom)
 
 bool UseItemOpensHive(const Item &item, Point position)
 {
-	if (item.IDidx != ItemIndex::RuneBomb)
+	if (item.IDidx != ItemID::RuneBomb)
 		return false;
 	for (auto dir : PathDirs) {
 		Point adjacentPosition = position + dir;
@@ -4205,7 +4205,7 @@ bool UseItemOpensHive(const Item &item, Point position)
 
 bool UseItemOpensGrave(const Item &item, Point position)
 {
-	if (item.IDidx != ItemIndex::CathedralMap)
+	if (item.IDidx != ItemID::CathedralMap)
 		return false;
 	for (auto dir : PathDirs) {
 		Point adjacentPosition = position + dir;
@@ -4234,7 +4234,7 @@ void SpawnSmith(int lvl)
 			newItem = {};
 			newItem._iSeed = AdvanceRndSeed();
 			SetRndSeed(newItem._iSeed);
-			ItemIndex itemData = RndSmithItem(*MyPlayer, lvl);
+			ItemID itemData = RndSmithItem(*MyPlayer, lvl);
 			GetItemAttrs(newItem, itemData, lvl);
 		} while (newItem._iIvalue > maxValue);
 
@@ -4283,9 +4283,9 @@ void SpawnPremium(const Player &player)
 void SpawnWitch(int lvl)
 {
 	constexpr int PinnedItemCount = 3;
-	constexpr std::array<ItemIndex, PinnedItemCount> PinnedItemTypes = { ItemIndex::PotionMana, ItemIndex::PotionFullMana, ItemIndex::ScrollTownPortal };
+	constexpr std::array<ItemID, PinnedItemCount> PinnedItemTypes = { ItemID::PotionMana, ItemID::PotionFullMana, ItemID::ScrollTownPortal };
 	constexpr int MaxPinnedBookCount = 4;
-	constexpr std::array<ItemIndex, MaxPinnedBookCount> PinnedBookTypes = { ItemIndex::Book1, ItemIndex::Book2, ItemIndex::Book3, ItemIndex::Book4 };
+	constexpr std::array<ItemID, MaxPinnedBookCount> PinnedBookTypes = { ItemID::Book1, ItemID::Book2, ItemID::Book3, ItemID::Book4 };
 
 	int bookCount = 0;
 	const int pinnedBookCount = gbIsHellfire ? GenerateRnd(MaxPinnedBookCount) : 0;
@@ -4307,7 +4307,7 @@ void SpawnWitch(int lvl)
 
 		if (gbIsHellfire) {
 			if (i < PinnedItemCount + MaxPinnedBookCount && bookCount < pinnedBookCount) {
-				ItemIndex bookType = PinnedBookTypes[i - PinnedItemCount];
+				ItemID bookType = PinnedBookTypes[i - PinnedItemCount];
 				if (lvl >= AllItemsList[GetItemIndex(bookType)].iMinMLvl) {
 					item._iSeed = AdvanceRndSeed();
 					SetRndSeed(item._iSeed);
@@ -4330,7 +4330,7 @@ void SpawnWitch(int lvl)
 			item = {};
 			item._iSeed = AdvanceRndSeed();
 			SetRndSeed(item._iSeed);
-			ItemIndex itemData = RndWitchItem(*MyPlayer, lvl);
+			ItemID itemData = RndWitchItem(*MyPlayer, lvl);
 			GetItemAttrs(item, itemData, lvl);
 			int maxlvl = -1;
 			if (GenerateRnd(100) <= 5)
@@ -4371,7 +4371,7 @@ void SpawnBoy(int lvl)
 		boyitem = {};
 		boyitem._iSeed = AdvanceRndSeed();
 		SetRndSeed(boyitem._iSeed);
-		ItemIndex itype = RndBoyItem(*MyPlayer, lvl);
+		ItemID itype = RndBoyItem(*MyPlayer, lvl);
 		GetItemAttrs(boyitem, itype, lvl);
 		GetItemBonus(*MyPlayer, boyitem, lvl, 2 * lvl, true, true);
 
@@ -4465,7 +4465,7 @@ void SpawnBoy(int lvl)
 void SpawnHealer(int lvl)
 {
 	constexpr int PinnedItemCount = 2;
-	constexpr std::array<ItemIndex, PinnedItemCount + 1> PinnedItemTypes = { ItemIndex::PotionHealing, ItemIndex::PotionFullHealing, ItemIndex::ScrollResurrect };
+	constexpr std::array<ItemID, PinnedItemCount + 1> PinnedItemTypes = { ItemID::PotionHealing, ItemID::PotionFullHealing, ItemID::ScrollResurrect };
 	const int itemCount = GenerateRnd(gbIsHellfire ? 10 : 8) + 10;
 
 	for (int i = 0; i < 20; i++) {
@@ -4487,7 +4487,7 @@ void SpawnHealer(int lvl)
 
 		item._iSeed = AdvanceRndSeed();
 		SetRndSeed(item._iSeed);
-		ItemIndex itype = RndHealerItem(*MyPlayer, lvl);
+		ItemID itype = RndHealerItem(*MyPlayer, lvl);
 		GetItemAttrs(item, itype, lvl);
 		item._iCreateInfo = lvl | CF_HEALER;
 		item._iIdentified = true;
@@ -4498,7 +4498,7 @@ void SpawnHealer(int lvl)
 
 void MakeGoldStack(Item &goldItem, int value)
 {
-	InitializeItem(goldItem, ItemIndex::Gold);
+	InitializeItem(goldItem, ItemID::Gold);
 	GenerateNewSeed(goldItem);
 	goldItem._iStatFlag = true;
 	goldItem._ivalue = value;
@@ -4526,7 +4526,7 @@ void CreateSpellBook(Point position, SpellID ispell, bool sendmsg, bool delta)
 		}
 	}
 
-	ItemIndex idx = RndTypeItems(ItemType::Misc, IMISC_BOOK, lvl);
+	ItemID idx = RndTypeItems(ItemType::Misc, IMISC_BOOK, lvl);
 	if (ActiveItemCount >= MAXITEMS)
 		return;
 
@@ -4643,8 +4643,8 @@ std::string DebugSpawnItem(std::string itemName)
 			return StrCat("Item not found in ", max_iter, " tries!");
 
 		const int8_t monsterLevel = dist(BetterRng) % CF_LEVEL + 1;
-		ItemIndex idx = RndItemForMonsterLevel(monsterLevel);
-		if (IsAnyOf(idx, ItemIndex::None, ItemIndex::Gold))
+		ItemID idx = RndItemForMonsterLevel(monsterLevel);
+		if (IsAnyOf(idx, ItemID::None, ItemID::Gold))
 			continue;
 
 		testItem = {};
@@ -4690,17 +4690,17 @@ std::string DebugSpawnUniqueItem(std::string itemName)
 	if (!foundUnique)
 		return "No unique found!";
 
-	ItemIndex uniqueBaseIndex = ItemIndex::First;
-	for (std::underlying_type_t<ItemIndex> j = GetItemIndex(ItemIndex::First); j <= GetItemIndex(ItemIndex::Last); j++) {
+	ItemID uniqueBaseIndex = ItemID::First;
+	for (std::underlying_type_t<ItemID> j = GetItemIndex(ItemID::First); j <= GetItemIndex(ItemID::Last); j++) {
 		if (!IsItemAvailable(j))
 			continue;
 		if (AllItemsList[j].iItemId == uniqueItem.UIItemId) {
-			uniqueBaseIndex = static_cast<ItemIndex>(j);
+			uniqueBaseIndex = static_cast<ItemID>(j);
 			break;
 		}
 	}
 
-	if (uniqueBaseIndex == ItemIndex::First)
+	if (uniqueBaseIndex == ItemID::First)
 		return "Base item not available";
 
 	auto &baseItemData = AllItemsList[GetItemIndex(uniqueBaseIndex)];
@@ -4750,7 +4750,7 @@ std::string DebugSpawnUniqueItem(std::string itemName)
 
 bool Item::isUsable() const
 {
-	if (IDidx == ItemIndex::SpectralElixir && Quests[Q_MUSHROOM]._qactive != QUEST_DONE)
+	if (IDidx == ItemID::SpectralElixir && Quests[Q_MUSHROOM]._qactive != QUEST_DONE)
 		return false;
 	return AllItemsList[GetItemIndex(IDidx)].iUsable;
 }

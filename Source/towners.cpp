@@ -341,7 +341,7 @@ void TalkToBarOwner(Player &player, Towner &barOwner)
 				return;
 			}
 
-			if (bannerQuest._qvar2 == 1 && RemoveInventoryItemById(player, ItemIndex::TavernSign)) {
+			if (bannerQuest._qvar2 == 1 && RemoveInventoryItemById(player, ItemID::TavernSign)) {
 				bannerQuest._qactive = QUEST_DONE;
 				bannerQuest._qvar1 = 3;
 				NetSendCmdQuest(true, bannerQuest);
@@ -390,7 +390,7 @@ void TalkToBlackSmith(Player &player, Towner &blackSmith)
 				return;
 			}
 
-			if (Quests[Q_ROCK]._qvar2 == 1 && RemoveInventoryItemById(player, ItemIndex::MagicRock)) {
+			if (Quests[Q_ROCK]._qvar2 == 1 && RemoveInventoryItemById(player, ItemID::MagicRock)) {
 				Quests[Q_ROCK]._qactive = QUEST_DONE;
 				NetSendCmdQuest(true, Quests[Q_ROCK]);
 				SpawnUnique(UITEM_INFRARING, blackSmith.position + Direction::SouthWest, Quests[Q_ROCK]._qlevel);
@@ -411,7 +411,7 @@ void TalkToBlackSmith(Player &player, Towner &blackSmith)
 			return;
 		}
 
-		if (Quests[Q_ANVIL]._qvar2 == 1 && RemoveInventoryItemById(player, ItemIndex::AnvilOfFury)) {
+		if (Quests[Q_ANVIL]._qvar2 == 1 && RemoveInventoryItemById(player, ItemID::AnvilOfFury)) {
 			Quests[Q_ANVIL]._qactive = QUEST_DONE;
 			NetSendCmdQuest(true, Quests[Q_ANVIL]);
 			SpawnUnique(UITEM_GRISWOLD, blackSmith.position + Direction::SouthWest, Quests[Q_ANVIL]._qlevel);
@@ -427,7 +427,7 @@ void TalkToBlackSmith(Player &player, Towner &blackSmith)
 void TalkToWitch(Player &player, Towner & /*witch*/)
 {
 	if (Quests[Q_MUSHROOM]._qactive != QUEST_NOTAVAIL) {
-		if (Quests[Q_MUSHROOM]._qactive == QUEST_INIT && RemoveInventoryItemById(player, ItemIndex::FungalTome)) {
+		if (Quests[Q_MUSHROOM]._qactive == QUEST_INIT && RemoveInventoryItemById(player, ItemID::FungalTome)) {
 			Quests[Q_MUSHROOM]._qactive = QUEST_ACTIVE;
 			Quests[Q_MUSHROOM]._qlog = true;
 			Quests[Q_MUSHROOM]._qvar1 = QS_TOMEGIVEN;
@@ -437,7 +437,7 @@ void TalkToWitch(Player &player, Towner & /*witch*/)
 		}
 		if (Quests[Q_MUSHROOM]._qactive == QUEST_ACTIVE) {
 			if (Quests[Q_MUSHROOM]._qvar1 >= QS_TOMEGIVEN && Quests[Q_MUSHROOM]._qvar1 < QS_MUSHGIVEN) {
-				if (RemoveInventoryItemById(player, ItemIndex::BlackMushroom)) {
+				if (RemoveInventoryItemById(player, ItemID::BlackMushroom)) {
 					Quests[Q_MUSHROOM]._qvar1 = QS_MUSHGIVEN;
 					QuestDialogTable[TOWN_HEALER][Q_MUSHROOM] = TEXT_MUSH3;
 					QuestDialogTable[TOWN_WITCH][Q_MUSHROOM] = TEXT_NONE;
@@ -454,13 +454,13 @@ void TalkToWitch(Player &player, Towner & /*witch*/)
 				}
 			}
 			if (Quests[Q_MUSHROOM]._qvar1 >= QS_MUSHGIVEN) {
-				if (HasInventoryItemWithId(player, ItemIndex::Brain)) {
+				if (HasInventoryItemWithId(player, ItemID::Brain)) {
 					Quests[Q_MUSHROOM]._qmsg = TEXT_MUSH11;
 					NetSendCmdQuest(true, Quests[Q_MUSHROOM]);
 					InitQTextMsg(TEXT_MUSH11);
 					return;
 				}
-				if (HasInventoryOrBeltItemWithId(player, ItemIndex::SpectralElixir)) {
+				if (HasInventoryOrBeltItemWithId(player, ItemID::SpectralElixir)) {
 					Quests[Q_MUSHROOM]._qactive = QUEST_DONE;
 					NetSendCmdQuest(true, Quests[Q_MUSHROOM]);
 					InitQTextMsg(TEXT_MUSH12);
@@ -476,7 +476,7 @@ void TalkToWitch(Player &player, Towner & /*witch*/)
 
 void TalkToBarmaid(Player &player, Towner & /*barmaid*/)
 {
-	if (!player._pLvlVisited[21] && HasInventoryItemWithId(player, ItemIndex::CathedralMap) && Quests[Q_GRAVE]._qmsg != TEXT_GRAVE8) {
+	if (!player._pLvlVisited[21] && HasInventoryItemWithId(player, ItemID::CathedralMap) && Quests[Q_GRAVE]._qmsg != TEXT_GRAVE8) {
 		Quests[Q_GRAVE]._qactive = QUEST_ACTIVE;
 		Quests[Q_GRAVE]._qlog = true;
 		Quests[Q_GRAVE]._qmsg = TEXT_GRAVE8;
@@ -519,8 +519,8 @@ void TalkToHealer(Player &player, Towner &healer)
 	}
 	Quest &blackMushroom = Quests[Q_MUSHROOM];
 	if (blackMushroom._qactive == QUEST_ACTIVE) {
-		if (blackMushroom._qvar1 >= QS_MUSHGIVEN && blackMushroom._qvar1 < QS_BRAINGIVEN && RemoveInventoryItemById(player, ItemIndex::Brain)) {
-			SpawnQuestItem(ItemIndex::SpectralElixir, healer.position + Displacement { 0, 1 }, 0, 0, true);
+		if (blackMushroom._qvar1 >= QS_MUSHGIVEN && blackMushroom._qvar1 < QS_BRAINGIVEN && RemoveInventoryItemById(player, ItemID::Brain)) {
+			SpawnQuestItem(ItemID::SpectralElixir, healer.position + Displacement { 0, 1 }, 0, 0, true);
 			InitQTextMsg(TEXT_MUSH4);
 			blackMushroom._qvar1 = QS_BRAINGIVEN;
 			QuestDialogTable[TOWN_HEALER][Q_MUSHROOM] = TEXT_NONE;
@@ -543,7 +543,7 @@ void TalkToStoryteller(Player &player, Towner & /*storyteller*/)
 {
 	auto &betrayerQuest = Quests[Q_BETRAYER];
 	if (!UseMultiplayerQuests()) {
-		if (betrayerQuest._qactive == QUEST_INIT && RemoveInventoryItemById(player, ItemIndex::StaffOfLazarus)) {
+		if (betrayerQuest._qactive == QUEST_INIT && RemoveInventoryItemById(player, ItemID::StaffOfLazarus)) {
 			InitQTextMsg(TEXT_VILE1);
 			betrayerQuest._qlog = true;
 			betrayerQuest._qactive = QUEST_ACTIVE;
@@ -611,7 +611,7 @@ void TalkToFarmer(Player &player, Towner &farmer)
 	switch (quest._qactive) {
 	case QUEST_NOTAVAIL:
 	case QUEST_INIT:
-		if (HasInventoryItemWithId(player, ItemIndex::RuneBomb)) {
+		if (HasInventoryItemWithId(player, ItemID::RuneBomb)) {
 			InitQTextMsg(TEXT_FARMER2);
 			quest._qactive = QUEST_ACTIVE;
 			quest._qvar1 = 1;
@@ -644,11 +644,11 @@ void TalkToFarmer(Player &player, Towner &farmer)
 			NetSendCmdQuest(true, quest);
 		break;
 	case QUEST_ACTIVE:
-		InitQTextMsg(HasInventoryItemWithId(player, ItemIndex::RuneBomb) ? TEXT_FARMER2 : TEXT_FARMER3);
+		InitQTextMsg(HasInventoryItemWithId(player, ItemID::RuneBomb) ? TEXT_FARMER2 : TEXT_FARMER3);
 		break;
 	case QUEST_DONE:
 		InitQTextMsg(TEXT_FARMER4);
-		SpawnRewardItem(ItemIndex::AuricAmulet, farmer.position + Displacement { 1, 0 }, true);
+		SpawnRewardItem(ItemID::AuricAmulet, farmer.position + Displacement { 1, 0 }, true);
 		quest._qactive = QUEST_HIVE_DONE;
 		if (gbIsMultiplayer)
 			NetSendCmdQuest(true, quest);
@@ -663,14 +663,14 @@ void TalkToFarmer(Player &player, Towner &farmer)
 
 void TalkToCowFarmer(Player &player, Towner &cowFarmer)
 {
-	if (RemoveInventoryItemById(player, ItemIndex::GreySuit)) {
+	if (RemoveInventoryItemById(player, ItemID::GreySuit)) {
 		InitQTextMsg(TEXT_JERSEY7);
 		return;
 	}
 
 	auto &quest = Quests[Q_JERSEY];
 
-	if (RemoveInventoryItemById(player, ItemIndex::BrownSuit)) {
+	if (RemoveInventoryItemById(player, ItemID::BrownSuit)) {
 		SpawnUnique(UITEM_BOVINE, cowFarmer.position + Direction::SouthEast, quest._qlevel);
 		InitQTextMsg(TEXT_JERSEY8);
 		quest._qactive = QUEST_DONE;
@@ -679,7 +679,7 @@ void TalkToCowFarmer(Player &player, Towner &cowFarmer)
 		return;
 	}
 
-	if (HasInventoryItemWithId(player, ItemIndex::RuneBomb)) {
+	if (HasInventoryItemWithId(player, ItemID::RuneBomb)) {
 		InitQTextMsg(TEXT_JERSEY5);
 		quest._qactive = QUEST_ACTIVE;
 		quest._qvar1 = 1;
@@ -749,7 +749,7 @@ void TalkToGirl(Player &player, Towner &girl)
 {
 	auto &quest = Quests[Q_GIRL];
 
-	if (quest._qactive != QUEST_DONE && RemoveInventoryItemById(player, ItemIndex::Theodore)) {
+	if (quest._qactive != QUEST_DONE && RemoveInventoryItemById(player, ItemID::Theodore)) {
 		InitQTextMsg(TEXT_GIRL4);
 		CreateAmulet(girl.position, 13, false, false, true);
 		quest._qactive = QUEST_DONE;

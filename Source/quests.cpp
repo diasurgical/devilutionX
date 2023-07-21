@@ -658,7 +658,7 @@ void ResyncQuests()
 	}
 	if (currlevel == Quests[Q_MUSHROOM]._qlevel && !setlevel) {
 		if (Quests[Q_MUSHROOM]._qactive == QUEST_INIT && Quests[Q_MUSHROOM]._qvar1 == QS_INIT) {
-			SpawnQuestItem(ItemIndex::FungalTome, { 0, 0 }, 5, 1, true);
+			SpawnQuestItem(ItemID::FungalTome, { 0, 0 }, 5, 1, true);
 			Quests[Q_MUSHROOM]._qvar1 = QS_TOMESPAWNED;
 			NetSendCmdQuest(true, Quests[Q_MUSHROOM]);
 		} else {
@@ -674,7 +674,7 @@ void ResyncQuests()
 	}
 	if (currlevel == Quests[Q_VEIL]._qlevel + 1 && Quests[Q_VEIL]._qactive == QUEST_ACTIVE && Quests[Q_VEIL]._qvar1 == 0 && !gbIsMultiplayer) {
 		Quests[Q_VEIL]._qvar1 = 1;
-		SpawnQuestItem(ItemIndex::GoldenElixir, { 0, 0 }, 5, 1, true);
+		SpawnQuestItem(ItemID::GoldenElixir, { 0, 0 }, 5, 1, true);
 		NetSendCmdQuest(true, Quests[Q_VEIL]);
 	}
 	if (setlevel && setlvlnum == SL_VILEBETRAYER) {

@@ -109,7 +109,7 @@ void SyncPlrInv(TSyncHeader *pHdr)
 		pHdr->bItemX = item.position.x;
 		pHdr->bItemY = item.position.y;
 		pHdr->wItemIndx = GetItemIndex(SDL_SwapLE16(item.IDidx));
-		if (item.IDidx == ItemIndex::Ear) {
+		if (item.IDidx == ItemID::Ear) {
 			pHdr->wItemCI = SDL_SwapLE16((item._iIName[0] << 8) | item._iIName[1]);
 			pHdr->dwItemSeed = SDL_SwapLE32((item._iIName[2] << 24) | (item._iIName[3] << 16) | (item._iIName[4] << 8) | item._iIName[5]);
 			pHdr->bItemId = item._iIName[6];
@@ -127,7 +127,7 @@ void SyncPlrInv(TSyncHeader *pHdr)
 			pHdr->bItemMDur = item._iMaxDur;
 			pHdr->bItemCh = item._iCharges;
 			pHdr->bItemMCh = item._iMaxCharges;
-			if (item.IDidx == ItemIndex::Gold) {
+			if (item.IDidx == ItemID::Gold) {
 				pHdr->wItemVal = SDL_SwapLE16(item._ivalue);
 			}
 		}

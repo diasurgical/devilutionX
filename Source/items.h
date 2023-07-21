@@ -204,7 +204,7 @@ struct Item {
 	ItemSpecialEffect _iFlags = ItemSpecialEffect::None;
 	item_misc_id _iMiscId = IMISC_NONE;
 	SpellID _iSpell = SpellID::Null;
-	ItemIndex IDidx = ItemIndex::None;
+	ItemID IDidx = ItemID::None;
 	int _iCharges = 0;
 	int _iMaxCharges = 0;
 	int _iDurability = 0;
@@ -416,7 +416,7 @@ struct Item {
 
 	[[nodiscard]] bool isUsable() const;
 
-	[[nodiscard]] bool keyAttributesMatch(uint32_t seed, ItemIndex itemIndex, uint16_t createInfo) const
+	[[nodiscard]] bool keyAttributesMatch(uint32_t seed, ItemID itemIndex, uint16_t createInfo) const
 	{
 		return _iSeed == seed && IDidx == itemIndex && _iCreateInfo == createInfo;
 	}
@@ -487,7 +487,7 @@ void InitItemGFX();
 void InitItems();
 void CalcPlrItemVals(Player &player, bool Loadgfx);
 void CalcPlrInv(Player &player, bool Loadgfx);
-void InitializeItem(Item &item, ItemIndex itemData);
+void InitializeItem(Item &item, ItemID itemData);
 void GenerateNewSeed(Item &h);
 int GetGoldCursor(int value);
 
@@ -507,19 +507,19 @@ int AllocateItem();
  */
 uint8_t PlaceItemInWorld(Item &&item, WorldTilePosition position);
 Point GetSuperItemLoc(Point position);
-void GetItemAttrs(Item &item, ItemIndex itemData, int lvl);
+void GetItemAttrs(Item &item, ItemID itemData, int lvl);
 void SetupItem(Item &item);
 Item *SpawnUnique(_unique_items uid, Point position, std::optional<int> level = std::nullopt, bool sendmsg = true, bool exactPosition = false);
 void SpawnItem(Monster &monster, Point position, bool sendmsg, bool spawn = false);
 void CreateRndItem(Point position, bool onlygood, bool sendmsg, bool delta);
 void CreateRndUseful(Point position, bool sendmsg);
 void CreateTypeItem(Point position, bool onlygood, ItemType itemType, int imisc, bool sendmsg, bool delta, bool spawn = false);
-void RecreateItem(const Player &player, Item &item, ItemIndex idx, uint16_t icreateinfo, uint32_t iseed, int ivalue, bool isHellfire);
+void RecreateItem(const Player &player, Item &item, ItemID idx, uint16_t icreateinfo, uint32_t iseed, int ivalue, bool isHellfire);
 void RecreateEar(Item &item, uint16_t ic, uint32_t iseed, uint8_t bCursval, string_view heroName);
 void CornerstoneSave();
 void CornerstoneLoad(Point position);
-void SpawnQuestItem(ItemIndex itemid, Point position, int randarea, int selflag, bool sendmsg);
-void SpawnRewardItem(ItemIndex itemid, Point position, bool sendmsg);
+void SpawnQuestItem(ItemID itemid, Point position, int randarea, int selflag, bool sendmsg);
+void SpawnRewardItem(ItemID itemid, Point position, bool sendmsg);
 void SpawnMapOfDoom(Point position, bool sendmsg);
 void SpawnRuneBomb(Point position, bool sendmsg);
 void SpawnTheodore(Point position, bool sendmsg);

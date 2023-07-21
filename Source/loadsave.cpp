@@ -304,7 +304,7 @@ void LoadItemData(LoadHelper &file, Item &item)
 	item._iMinDex = file.NextLE<int8_t>();
 	file.Skip(1); // Alignment
 	item._iStatFlag = file.NextBool32();
-	item.IDidx = static_cast<ItemIndex>(file.NextLE<int32_t>());
+	item.IDidx = static_cast<ItemID>(file.NextLE<int32_t>());
 	if (gbIsSpawn) {
 		item.IDidx = RemapItemIdxFromSpawn(item.IDidx);
 	}
@@ -960,7 +960,7 @@ void LoadMatchingItems(LoadHelper &file, const Player &player, const int n, Item
 			continue;
 		if (unpackedItem._iSeed != heroItem._iSeed)
 			continue;
-		if (heroItem.IDidx == ItemIndex::Ear)
+		if (heroItem.IDidx == ItemID::Ear)
 			continue;
 		if (gbIsMultiplayer) {
 			// Ensure that the unpacked item was regenerated using the appropriate
@@ -1031,8 +1031,8 @@ void SaveItem(SaveHelper &file, const Item &item)
 	if (gbIsSpawn)
 		idx = RemapItemIdxToSpawn(idx);
 	ItemType iType = item._itype;
-	if (idx == ItemIndex::None) {
-		idx = ItemIndex::First;
+	if (idx == ItemID::None) {
+		idx = ItemID::First;
 		iType = ItemType::None;
 	}
 
@@ -1823,49 +1823,49 @@ void RemoveInvalidItem(Item &item)
 	}
 }
 
-ItemIndex RemapItemIdxFromDiablo(ItemIndex i)
+ItemID RemapItemIdxFromDiablo(ItemID i)
 {
-	std::underlying_type_t<ItemIndex> idx = GetItemIndex(i);
+	std::underlying_type_t<ItemID> idx = GetItemIndex(i);
 
-	if (idx == GetItemIndex(ItemIndex::SorcererStaffMana)) {
-		return ItemIndex::SorcererStaffChargedBolt;
+	if (idx == GetItemIndex(ItemID::SorcererStaffMana)) {
+		return ItemID::SorcererStaffChargedBolt;
 	}
-	if (idx >= GetItemIndex(ItemIndex::FirstRune) - 5) {
+	if (idx >= GetItemIndex(ItemID::FirstRune) - 5) {
 		idx += 5; // Hellfire exclusive items
 	}
-	if (idx >= GetItemIndex(ItemIndex::ElixirMagic)) {
+	if (idx >= GetItemIndex(ItemID::ElixirMagic)) {
 		idx += 1; // Scroll of Search
 	}
-	if (idx >= GetItemIndex(ItemIndex::FirstOil)) {
+	if (idx >= GetItemIndex(ItemID::FirstOil)) {
 		idx += 4; // Oils
 	}
 
 	return GetItemIndexEnum(idx);
 }
 
-ItemIndex RemapItemIdxToDiablo(ItemIndex i)
+ItemID RemapItemIdxToDiablo(ItemID i)
 {
-	std::underlying_type_t<ItemIndex> idx = GetItemIndex(i);
+	std::underlying_type_t<ItemID> idx = GetItemIndex(i);
 
-	if (idx == GetItemIndex(ItemIndex::SorcererStaffChargedBolt)) {
-		return ItemIndex::SorcererStaffMana;
+	if (idx == GetItemIndex(ItemID::SorcererStaffChargedBolt)) {
+		return ItemID::SorcererStaffMana;
 	}
-	if ((idx >= GetItemIndex(ItemIndex::FirstOil) && idx <= GetItemIndex(ItemIndex::LastOil)) || idx == GetItemIndex(ItemIndex::ScrollSearch) || idx >= GetItemIndex(ItemIndex::FirstRune)) {
-		return ItemIndex::None; // Hellfire exclusive items
+	if ((idx >= GetItemIndex(ItemID::FirstOil) && idx <= GetItemIndex(ItemID::LastOil)) || idx == GetItemIndex(ItemID::ScrollSearch) || idx >= GetItemIndex(ItemID::FirstRune)) {
+		return ItemID::None; // Hellfire exclusive items
 	}
-	if (idx >= GetItemIndex(ItemIndex::ScrollSearch) + 1) {
+	if (idx >= GetItemIndex(ItemID::ScrollSearch) + 1) {
 		idx -= 1; // Scroll of Search
 	}
-	if (idx >= GetItemIndex(ItemIndex::LastOil) + 1) {
+	if (idx >= GetItemIndex(ItemID::LastOil) + 1) {
 		idx -= 4; // Oils
 	}
 
 	return GetItemIndexEnum(idx);
 }
 
-ItemIndex RemapItemIdxFromSpawn(ItemIndex i)
+ItemID RemapItemIdxFromSpawn(ItemID i)
 {
-	std::underlying_type_t<ItemIndex> idx = GetItemIndex(i);
+	std::underlying_type_t<ItemID> idx = GetItemIndex(i);
 
 	if (idx >= 62) {
 		idx += 9; // Medium and heavy armors
@@ -1892,9 +1892,9 @@ ItemIndex RemapItemIdxFromSpawn(ItemIndex i)
 	return GetItemIndexEnum(idx);
 }
 
-ItemIndex RemapItemIdxToSpawn(ItemIndex i)
+ItemID RemapItemIdxToSpawn(ItemID i)
 {
-	std::underlying_type_t<ItemIndex> idx = GetItemIndex(i);
+	std::underlying_type_t<ItemID> idx = GetItemIndex(i);
 
 	if (idx >= 104) {
 		idx -= 1; // Scroll of Apocalypse

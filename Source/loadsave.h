@@ -17,10 +17,10 @@ extern DVL_API_FOR_TEST bool gbIsHellfireSaveGame;
 extern DVL_API_FOR_TEST uint8_t giNumberOfLevels;
 
 void RemoveInvalidItem(Item &pItem);
-ItemIndex RemapItemIdxFromDiablo(ItemIndex i);
-ItemIndex RemapItemIdxToDiablo(ItemIndex i);
-ItemIndex RemapItemIdxFromSpawn(ItemIndex i);
-ItemIndex RemapItemIdxToSpawn(ItemIndex i);
+ItemID RemapItemIdxFromDiablo(ItemID i);
+ItemID RemapItemIdxToDiablo(ItemID i);
+ItemID RemapItemIdxFromSpawn(ItemID i);
+ItemID RemapItemIdxToSpawn(ItemID i);
 bool IsHeaderValid(uint32_t magicNumber);
 void LoadHotkeys();
 void LoadHeroItems(Player &player);

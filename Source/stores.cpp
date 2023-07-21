@@ -503,7 +503,7 @@ bool SmithSellOk(int i)
 		return false;
 	if (pI->_iClass == ICLASS_QUEST)
 		return false;
-	if (pI->IDidx == ItemIndex::StaffOfLazarus)
+	if (pI->IDidx == ItemID::StaffOfLazarus)
 		return false;
 
 	return true;
@@ -792,9 +792,9 @@ bool WitchSellOk(int i)
 		rv = false;
 	if (pI->_itype == ItemType::Staff && (!gbIsHellfire || IsValidSpell(pI->_iSpell)))
 		rv = true;
-	if (pI->IDidx >= ItemIndex::FirstQuest && pI->IDidx <= ItemIndex::LastQuest)
+	if (pI->IDidx >= ItemID::FirstQuest && pI->IDidx <= ItemID::LastQuest)
 		rv = false;
-	if (pI->IDidx == ItemIndex::StaffOfLazarus)
+	if (pI->IDidx == ItemID::StaffOfLazarus)
 		rv = false;
 	return rv;
 }

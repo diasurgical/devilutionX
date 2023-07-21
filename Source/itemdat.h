@@ -13,7 +13,7 @@
 
 namespace devilution {
 
-enum class ItemIndex : int16_t { // TODO defines all indexes in AllItemsList
+enum class ItemID : int16_t { // TODO defines all indexes in AllItemsList
 	Gold,
 	First = Gold,
 	WarriorSword,
@@ -721,16 +721,16 @@ extern const PLStruct ItemPrefixes[];
 extern const PLStruct ItemSuffixes[];
 extern const UniqueItem UniqueItems[];
 
-constexpr std::underlying_type_t<ItemIndex> GetItemIndex(ItemIndex idxEnum)
+constexpr std::underlying_type_t<ItemID> GetItemIndex(ItemID idxEnum)
 {
-	return static_cast<std::underlying_type_t<ItemIndex>>(idxEnum);
+	return static_cast<std::underlying_type_t<ItemID>>(idxEnum);
 }
-constexpr ItemIndex GetItemIndexEnum(int idx)
+constexpr ItemID GetItemIndexEnum(int idx)
 {
-	if (idx < static_cast<std::underlying_type_t<ItemIndex>>(ItemIndex::First) || idx > static_cast<std::underlying_type_t<ItemIndex>>(ItemIndex::Last))
-		return ItemIndex::None;
+	if (idx < static_cast<std::underlying_type_t<ItemID>>(ItemID::First) || idx > static_cast<std::underlying_type_t<ItemID>>(ItemID::Last))
+		return ItemID::None;
 
-	return static_cast<ItemIndex>(idx);
+	return static_cast<ItemID>(idx);
 }
 
 } // namespace devilution
