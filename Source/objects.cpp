@@ -2041,7 +2041,7 @@ void OperateBookLever(Object &questBook, bool sendmsg)
 			Quests[Q_BLOOD]._qvar1 = 1;
 			NetSendCmdQuest(true, Quests[Q_BLOOD]);
 			if (sendmsg)
-				SpawnQuestItem(IDI_BLDSTONE, SetPiece.position.megaToWorld() + Displacement { 9, 17 }, 0, 1, true);
+				SpawnQuestItem(ItemIndex::BloodStone, SetPiece.position.megaToWorld() + Displacement { 9, 17 }, 0, 1, true);
 		}
 		if (questBook._otype == OBJ_STEELTOME && Quests[Q_WARLORD]._qvar1 == QS_WARLORD_INIT) {
 			Quests[Q_WARLORD]._qactive = QUEST_ACTIVE;
@@ -2193,7 +2193,7 @@ void OperateMushroomPatch(const Player &player, Object &mushroomPatch)
 	Point pos = GetSuperItemLoc(mushroomPatch.position);
 
 	if (&player == MyPlayer) {
-		SpawnQuestItem(IDI_MUSHROOM, pos, 0, 0, true);
+		SpawnQuestItem(ItemIndex::BlackMushroom, pos, 0, 0, true);
 		Quests[Q_MUSHROOM]._qvar1 = QS_MUSHSPAWNED;
 		NetSendCmdQuest(true, Quests[Q_MUSHROOM]);
 		NetSendCmdLoc(MyPlayerId, false, CMD_OPERATEOBJ, mushroomPatch.position);
@@ -2224,7 +2224,7 @@ void OperateInnSignChest(const Player &player, Object &questContainer, bool send
 
 	if (sendmsg) {
 		Point pos = GetSuperItemLoc(questContainer.position);
-		SpawnQuestItem(IDI_BANNER, pos, 0, 0, true);
+		SpawnQuestItem(ItemIndex::TavernSign, pos, 0, 0, true);
 		NetSendCmdLoc(MyPlayerId, true, CMD_OPERATEOBJ, questContainer.position);
 	}
 }
@@ -2309,7 +2309,7 @@ void OperatePedestal(Player &player, Object &pedestal, bool sendmsg)
 		return;
 	}
 
-	if (pedestal._oVar6 == 3 || (sendmsg && !RemoveInventoryItemById(player, IDI_BLDSTONE))) {
+	if (pedestal._oVar6 == 3 || (sendmsg && !RemoveInventoryItemById(player, ItemIndex::BloodStone))) {
 		return;
 	}
 
@@ -2328,13 +2328,13 @@ void OperatePedestal(Player &player, Object &pedestal, bool sendmsg)
 		PlaySfxLoc(LS_PUDDLE, pedestal.position);
 		ObjChangeMap(SetPiece.position.x, SetPiece.position.y + 3, SetPiece.position.x + 2, SetPiece.position.y + 7);
 		if (sendmsg)
-			SpawnQuestItem(IDI_BLDSTONE, SetPiece.position.megaToWorld() + Displacement { 3, 10 }, 0, 1, true);
+			SpawnQuestItem(ItemIndex::BloodStone, SetPiece.position.megaToWorld() + Displacement { 3, 10 }, 0, 1, true);
 	}
 	if (pedestal._oVar6 == 2) {
 		PlaySfxLoc(LS_PUDDLE, pedestal.position);
 		ObjChangeMap(SetPiece.position.x + 6, SetPiece.position.y + 3, SetPiece.position.x + SetPiece.size.width, SetPiece.position.y + 7);
 		if (sendmsg)
-			SpawnQuestItem(IDI_BLDSTONE, SetPiece.position.megaToWorld() + Displacement { 15, 10 }, 0, 1, true);
+			SpawnQuestItem(ItemIndex::BloodStone, SetPiece.position.megaToWorld() + Displacement { 15, 10 }, 0, 1, true);
 	}
 	if (pedestal._oVar6 == 3) {
 		PlaySfxLoc(LS_BLODSTAR, pedestal.position);
@@ -3510,7 +3510,7 @@ void OperateLazStand(Object &stand)
 	stand._oAnimFrame++;
 	stand._oSelFlag = 0;
 	Point pos = GetSuperItemLoc(stand.position);
-	SpawnQuestItem(IDI_LAZSTAFF, pos, 0, 0, true);
+	SpawnQuestItem(ItemIndex::StaffOfLazarus, pos, 0, 0, true);
 	NetSendCmdLoc(MyPlayerId, false, CMD_OPERATEOBJ, stand.position);
 }
 
@@ -4456,14 +4456,14 @@ void ObjChangeMapResync(int x1, int y1, int x2, int y2)
 	ResyncDoors(world1, world2, false);
 }
 
-_item_indexes ItemMiscIdIdx(item_misc_id imiscid)
+ItemIndex ItemMiscIdIdx(item_misc_id imiscid)
 {
-	std::underlying_type_t<_item_indexes> i = IDI_GOLD;
+	std::underlying_type_t<ItemIndex> i = GetItemIndex(ItemIndex::First);
 	while (AllItemsList[i].iRnd == IDROP_NEVER || AllItemsList[i].iMiscId != imiscid) {
 		i++;
 	}
 
-	return static_cast<_item_indexes>(i);
+	return static_cast<ItemIndex>(i);
 }
 
 void OperateObject(Player &player, Object &object)

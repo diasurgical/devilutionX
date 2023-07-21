@@ -60,12 +60,12 @@ void LogFailedJoinAttempt(const char *condition, const char *name1, T1 value1, c
 void VerifyGoldSeeds(Player &player)
 {
 	for (int i = 0; i < player._pNumInv; i++) {
-		if (player.InvList[i].IDidx != IDI_GOLD)
+		if (player.InvList[i].IDidx != ItemIndex::Gold)
 			continue;
 		for (int j = 0; j < player._pNumInv; j++) {
 			if (i == j)
 				continue;
-			if (player.InvList[j].IDidx != IDI_GOLD)
+			if (player.InvList[j].IDidx != ItemIndex::Gold)
 				continue;
 			if (player.InvList[i]._iSeed != player.InvList[j]._iSeed)
 				continue;
@@ -77,10 +77,10 @@ void VerifyGoldSeeds(Player &player)
 
 void PackNetItem(const Item &item, ItemNetPack &packedItem)
 {
-	packedItem.def.wIndx = static_cast<_item_indexes>(SDL_SwapLE16(item.IDidx));
+	packedItem.def.wIndx = static_cast<ItemIndex>(SDL_SwapLE16(item.IDidx));
 	packedItem.def.wCI = SDL_SwapLE16(item._iCreateInfo);
 	packedItem.def.dwSeed = SDL_SwapLE32(item._iSeed);
-	if (item.IDidx != IDI_EAR)
+	if (item.IDidx != ItemIndex::Ear)
 		PrepareItemForNetwork(item, packedItem.item);
 	else
 		PrepareEarForNetwork(item, packedItem.ear);
@@ -168,10 +168,10 @@ bool IsDungeonItemValid(uint16_t iCreateInfo, uint32_t dwBuff)
 bool UnPackNetItem(const Player &player, const ItemNetPack &packedItem, Item &item)
 {
 	item = {};
-	_item_indexes idx = static_cast<_item_indexes>(SDL_SwapLE16(packedItem.def.wIndx));
-	if (idx < 0 || idx > IDI_LAST)
+	std::underlying_type_t<ItemIndex> idx = GetItemIndex(SDL_SwapLE16(packedItem.def.wIndx));
+	if (idx < GetItemIndex(ItemIndex::First) || idx > GetItemIndex(ItemIndex::Last))
 		return false;
-	if (idx == IDI_EAR) {
+	if (idx == GetItemIndex(ItemIndex::Ear)) {
 		RecreateEar(item, SDL_SwapLE16(packedItem.ear.wCI), SDL_SwapLE32(packedItem.ear.dwSeed), packedItem.ear.bCursval, packedItem.ear.heroname);
 		return true;
 	}
@@ -206,8 +206,8 @@ void PackItem(ItemPack &packedItem, const Item &item, bool isHellfire)
 		if (gbIsSpawn) {
 			idx = RemapItemIdxToSpawn(idx);
 		}
-		packedItem.idx = SDL_SwapLE16(idx);
-		if (item.IDidx == IDI_EAR) {
+		packedItem.idx = GetItemIndex(SDL_SwapLE16(idx));
+		if (item.IDidx == ItemIndex::Ear) {
 			packedItem.iCreateInfo = SDL_SwapLE16(item._iIName[1] | (item._iIName[0] << 8));
 			packedItem.iSeed = SDL_SwapLE32(LoadBE32(&item._iIName[2]));
 			packedItem.bId = item._iIName[6];
@@ -229,7 +229,7 @@ void PackItem(ItemPack &packedItem, const Item &item, bool isHellfire)
 
 			packedItem.bCh = item._iCharges;
 			packedItem.bMCh = item._iMaxCharges;
-			if (item.IDidx == IDI_GOLD)
+			if (item.IDidx == ItemIndex::Gold)
 				packedItem.wValue = SDL_SwapLE16(item._ivalue);
 			packedItem.dwBuff = item.dwBuff;
 		}
@@ -358,7 +358,7 @@ void PackNetPlayer(PlayerNetPack &packed, const Player &player)
 
 void UnPackItem(const ItemPack &packedItem, const Player &player, Item &item, bool isHellfire)
 {
-	auto idx = static_cast<_item_indexes>(SDL_SwapLE16(packedItem.idx));
+	auto idx = GetItemIndexEnum(SDL_SwapLE16(packedItem.idx));
 
 	if (gbIsSpawn) {
 		idx = RemapItemIdxFromSpawn(idx);
@@ -367,12 +367,12 @@ void UnPackItem(const ItemPack &packedItem, const Player &player, Item &item, bo
 		idx = RemapItemIdxFromDiablo(idx);
 	}
 
-	if (!IsItemAvailable(idx)) {
+	if (!IsItemAvailable(GetItemIndex(idx))) {
 		item.clear();
 		return;
 	}
 
-	if (idx == IDI_EAR) {
+	if (idx == ItemIndex::Ear) {
 		uint16_t ic = SDL_SwapLE16(packedItem.iCreateInfo);
 		uint32_t iseed = SDL_SwapLE32(packedItem.iSeed);
 		uint16_t ivalue = SDL_SwapLE16(packedItem.wValue);

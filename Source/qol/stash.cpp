@@ -468,11 +468,11 @@ bool UseStashItem(uint16_t c)
 	Item *item = &Stash.stashList[c];
 
 	constexpr int SpeechDelay = 10;
-	if (item->IDidx == IDI_MUSHROOM) {
+	if (item->IDidx == ItemIndex::BlackMushroom) {
 		MyPlayer->Say(HeroSpeech::NowThatsOneBigMushroom, SpeechDelay);
 		return true;
 	}
-	if (item->IDidx == IDI_FUNGALTM) {
+	if (item->IDidx == ItemIndex::FungalTome) {
 		PlaySFX(IS_IBOOK);
 		MyPlayer->Say(HeroSpeech::ThatDidntDoAnything, SpeechDelay);
 		return true;

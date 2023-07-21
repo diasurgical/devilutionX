@@ -304,7 +304,7 @@ void LoadItemData(LoadHelper &file, Item &item)
 	item._iMinDex = file.NextLE<int8_t>();
 	file.Skip(1); // Alignment
 	item._iStatFlag = file.NextBool32();
-	item.IDidx = static_cast<_item_indexes>(file.NextLE<int32_t>());
+	item.IDidx = static_cast<ItemIndex>(file.NextLE<int32_t>());
 	if (gbIsSpawn) {
 		item.IDidx = RemapItemIdxFromSpawn(item.IDidx);
 	}
@@ -960,7 +960,7 @@ void LoadMatchingItems(LoadHelper &file, const Player &player, const int n, Item
 			continue;
 		if (unpackedItem._iSeed != heroItem._iSeed)
 			continue;
-		if (heroItem.IDidx == IDI_EAR)
+		if (heroItem.IDidx == ItemIndex::Ear)
 			continue;
 		if (gbIsMultiplayer) {
 			// Ensure that the unpacked item was regenerated using the appropriate
@@ -1031,8 +1031,8 @@ void SaveItem(SaveHelper &file, const Item &item)
 	if (gbIsSpawn)
 		idx = RemapItemIdxToSpawn(idx);
 	ItemType iType = item._itype;
-	if (idx == -1) {
-		idx = _item_indexes::IDI_GOLD;
+	if (idx == ItemIndex::None) {
+		idx = ItemIndex::First;
 		iType = ItemType::None;
 	}
 
@@ -1110,7 +1110,7 @@ void SaveItem(SaveHelper &file, const Item &item)
 	file.WriteLE<int8_t>(item._iMinDex);
 	file.Skip(1); // Alignment
 	file.WriteLE<uint32_t>(item._iStatFlag ? 1 : 0);
-	file.WriteLE<int32_t>(idx);
+	file.WriteLE<int32_t>(GetItemIndex(idx));
 	file.WriteLE<uint32_t>(item.dwBuff);
 	if (gbIsHellfire)
 		file.WriteLE<uint32_t>(static_cast<uint32_t>(item._iDamAcFlags));
@@ -1808,7 +1808,7 @@ void ConvertLevels(SaveWriter &saveWriter)
 
 void RemoveInvalidItem(Item &item)
 {
-	bool isInvalid = !IsItemAvailable(item.IDidx) || !IsUniqueAvailable(item._iUid);
+	bool isInvalid = !IsItemAvailable(GetItemIndex(item.IDidx)) || !IsUniqueAvailable(item._iUid);
 
 	if (!gbIsHellfire) {
 		isInvalid = isInvalid || (item._itype == ItemType::Staff && GetSpellStaffLevel(item._iSpell) == -1);
@@ -1823,110 +1823,102 @@ void RemoveInvalidItem(Item &item)
 	}
 }
 
-_item_indexes RemapItemIdxFromDiablo(_item_indexes i)
+ItemIndex RemapItemIdxFromDiablo(ItemIndex i)
 {
-	constexpr auto GetItemIdValue = [](int i) -> int {
-		if (i == IDI_SORCERER) {
-			return IDI_SORCERER_DIABLO;
-		}
-		if (i >= 156) {
-			i += 5; // Hellfire exclusive items
-		}
-		if (i >= 88) {
-			i += 1; // Scroll of Search
-		}
-		if (i >= 83) {
-			i += 4; // Oils
-		}
+	std::underlying_type_t<ItemIndex> idx = GetItemIndex(i);
 
-		return i;
-	};
+	if (idx == GetItemIndex(ItemIndex::SorcererStaffMana)) {
+		return ItemIndex::SorcererStaffChargedBolt;
+	}
+	if (idx >= GetItemIndex(ItemIndex::FirstRune) - 5) {
+		idx += 5; // Hellfire exclusive items
+	}
+	if (idx >= GetItemIndex(ItemIndex::ElixirMagic)) {
+		idx += 1; // Scroll of Search
+	}
+	if (idx >= GetItemIndex(ItemIndex::FirstOil)) {
+		idx += 4; // Oils
+	}
 
-	return static_cast<_item_indexes>(GetItemIdValue(i));
+	return GetItemIndexEnum(idx);
 }
 
-_item_indexes RemapItemIdxToDiablo(_item_indexes i)
+ItemIndex RemapItemIdxToDiablo(ItemIndex i)
 {
-	constexpr auto GetItemIdValue = [](int i) -> int {
-		if (i == IDI_SORCERER_DIABLO) {
-			return IDI_SORCERER;
-		}
-		if ((i >= 83 && i <= 86) || i == 92 || i >= 161) {
-			return -1; // Hellfire exclusive items
-		}
-		if (i >= 93) {
-			i -= 1; // Scroll of Search
-		}
-		if (i >= 87) {
-			i -= 4; // Oils
-		}
+	std::underlying_type_t<ItemIndex> idx = GetItemIndex(i);
 
-		return i;
-	};
+	if (idx == GetItemIndex(ItemIndex::SorcererStaffChargedBolt)) {
+		return ItemIndex::SorcererStaffMana;
+	}
+	if ((idx >= GetItemIndex(ItemIndex::FirstOil) && idx <= GetItemIndex(ItemIndex::LastOil)) || idx == GetItemIndex(ItemIndex::ScrollSearch) || idx >= GetItemIndex(ItemIndex::FirstRune)) {
+		return ItemIndex::None; // Hellfire exclusive items
+	}
+	if (idx >= GetItemIndex(ItemIndex::ScrollSearch) + 1) {
+		idx -= 1; // Scroll of Search
+	}
+	if (idx >= GetItemIndex(ItemIndex::LastOil) + 1) {
+		idx -= 4; // Oils
+	}
 
-	return static_cast<_item_indexes>(GetItemIdValue(i));
+	return GetItemIndexEnum(idx);
 }
 
-_item_indexes RemapItemIdxFromSpawn(_item_indexes i)
+ItemIndex RemapItemIdxFromSpawn(ItemIndex i)
 {
-	constexpr auto GetItemIdValue = [](int i) {
-		if (i >= 62) {
-			i += 9; // Medium and heavy armors
-		}
-		if (i >= 96) {
-			i += 1; // Scroll of Stone Curse
-		}
-		if (i >= 98) {
-			i += 1; // Scroll of Guardian
-		}
-		if (i >= 99) {
-			i += 1; // Scroll of ...
-		}
-		if (i >= 101) {
-			i += 1; // Scroll of Golem
-		}
-		if (i >= 102) {
-			i += 1; // Scroll of None
-		}
-		if (i >= 104) {
-			i += 1; // Scroll of Apocalypse
-		}
+	std::underlying_type_t<ItemIndex> idx = GetItemIndex(i);
 
-		return i;
-	};
+	if (idx >= 62) {
+		idx += 9; // Medium and heavy armors
+	}
+	if (idx >= 96) {
+		idx += 1; // Scroll of Stone Curse
+	}
+	if (idx >= 98) {
+		idx += 1; // Scroll of Guardian
+	}
+	if (idx >= 99) {
+		idx += 1; // Scroll of ...
+	}
+	if (idx >= 101) {
+		idx += 1; // Scroll of Golem
+	}
+	if (idx >= 102) {
+		idx += 1; // Scroll of None
+	}
+	if (idx >= 104) {
+		idx += 1; // Scroll of Apocalypse
+	}
 
-	return static_cast<_item_indexes>(GetItemIdValue(i));
+	return GetItemIndexEnum(idx);
 }
 
-_item_indexes RemapItemIdxToSpawn(_item_indexes i)
+ItemIndex RemapItemIdxToSpawn(ItemIndex i)
 {
-	constexpr auto GetItemIdValue = [](int i) {
-		if (i >= 104) {
-			i -= 1; // Scroll of Apocalypse
-		}
-		if (i >= 102) {
-			i -= 1; // Scroll of None
-		}
-		if (i >= 101) {
-			i -= 1; // Scroll of Golem
-		}
-		if (i >= 99) {
-			i -= 1; // Scroll of ...
-		}
-		if (i >= 98) {
-			i -= 1; // Scroll of Guardian
-		}
-		if (i >= 96) {
-			i -= 1; // Scroll of Stone Curse
-		}
-		if (i >= 71) {
-			i -= 9; // Medium and heavy armors
-		}
+	std::underlying_type_t<ItemIndex> idx = GetItemIndex(i);
 
-		return i;
-	};
+	if (idx >= 104) {
+		idx -= 1; // Scroll of Apocalypse
+	}
+	if (idx >= 102) {
+		idx -= 1; // Scroll of None
+	}
+	if (idx >= 101) {
+		idx -= 1; // Scroll of Golem
+	}
+	if (idx >= 99) {
+		idx -= 1; // Scroll of ...
+	}
+	if (idx >= 98) {
+		idx -= 1; // Scroll of Guardian
+	}
+	if (idx >= 96) {
+		idx -= 1; // Scroll of Stone Curse
+	}
+	if (idx >= 71) {
+		idx -= 9; // Medium and heavy armors
+	}
 
-	return static_cast<_item_indexes>(GetItemIdValue(i));
+	return GetItemIndexEnum(idx);
 }
 
 bool IsHeaderValid(uint32_t magicNumber)

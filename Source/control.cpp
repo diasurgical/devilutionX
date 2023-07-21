@@ -417,7 +417,7 @@ std::string TextCmdArenaPot(const string_view parameter)
 
 	for (int potNumber = std::max(1, atoi(parameter.data())); potNumber > 0; potNumber--) {
 		Item item {};
-		InitializeItem(item, IDI_ARENAPOT);
+		InitializeItem(item, ItemIndex::ArenaPotion);
 		GenerateNewSeed(item);
 		item.updateRequiredStatsCacheForPlayer(myPlayer);
 

@@ -2759,7 +2759,7 @@ StartPlayerKill(Player &player, DeathReason deathReason)
 			}
 			if (dropEar) {
 				Item ear;
-				InitializeItem(ear, IDI_EAR);
+				InitializeItem(ear, ItemIndex::Ear);
 				CopyUtf8(ear._iName, fmt::format(fmt::runtime("Ear of {:s}"), player._pName), sizeof(ear._iName));
 				CopyUtf8(ear._iIName, player._pName, sizeof(ear._iIName));
 				switch (player._pClass) {
@@ -2781,7 +2781,7 @@ StartPlayerKill(Player &player, DeathReason deathReason)
 				ear._iSeed = player._pName[2] << 24 | player._pName[3] << 16 | player._pName[4] << 8 | player._pName[5];
 				ear._ivalue = player._pLevel;
 
-				if (FindGetItem(ear._iSeed, IDI_EAR, ear._iCreateInfo) == -1) {
+				if (FindGetItem(ear._iSeed, ItemIndex::Ear, ear._iCreateInfo) == -1) {
 					DeadItem(player, std::move(ear), { 0, 0 });
 				}
 			}

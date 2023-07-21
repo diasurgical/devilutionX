@@ -4511,7 +4511,7 @@ void TalktoMonster(Player &player, Monster &monster)
 
 	if (monster.uniqueType == UniqueMonsterType::SnotSpill
 	    && Quests[Q_LTBANNER].IsAvailable() && Quests[Q_LTBANNER]._qvar1 == 2) {
-		if (RemoveInventoryItemById(player, IDI_BANNER)) {
+		if (RemoveInventoryItemById(player, ItemIndex::TavernSign)) {
 			Quests[Q_LTBANNER]._qactive = QUEST_DONE;
 			monster.talkMsg = TEXT_BANNER12;
 			monster.goal = MonsterGoal::Inquiring;
@@ -4520,7 +4520,7 @@ void TalktoMonster(Player &player, Monster &monster)
 	}
 	if (monster.uniqueType == UniqueMonsterType::Lachdan
 	    && Quests[Q_VEIL].IsAvailable() && monster.talkMsg >= TEXT_VEIL9) {
-		if (RemoveInventoryItemById(player, IDI_GLDNELIX) && (monster.flags & MFLAG_QUEST_COMPLETE) == 0) {
+		if (RemoveInventoryItemById(player, ItemIndex::GoldenElixir) && (monster.flags & MFLAG_QUEST_COMPLETE) == 0) {
 			monster.talkMsg = TEXT_VEIL11;
 			monster.goal = MonsterGoal::Inquiring;
 			monster.flags |= MFLAG_QUEST_COMPLETE;
