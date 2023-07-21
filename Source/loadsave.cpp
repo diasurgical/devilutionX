@@ -1110,7 +1110,7 @@ void SaveItem(SaveHelper &file, const Item &item)
 	file.WriteLE<int8_t>(item._iMinDex);
 	file.Skip(1); // Alignment
 	file.WriteLE<uint32_t>(item._iStatFlag ? 1 : 0);
-	file.WriteLE<int32_t>(GetItemIndex(idx));
+	file.WriteLE<int32_t>(GetItemIDIndex(idx));
 	file.WriteLE<uint32_t>(item.dwBuff);
 	if (gbIsHellfire)
 		file.WriteLE<uint32_t>(static_cast<uint32_t>(item._iDamAcFlags));
@@ -1808,7 +1808,7 @@ void ConvertLevels(SaveWriter &saveWriter)
 
 void RemoveInvalidItem(Item &item)
 {
-	bool isInvalid = !IsItemAvailable(GetItemIndex(item.IDidx)) || !IsUniqueAvailable(item._iUid);
+	bool isInvalid = !IsItemAvailable(GetItemIDIndex(item.IDidx)) || !IsUniqueAvailable(item._iUid);
 
 	if (!gbIsHellfire) {
 		isInvalid = isInvalid || (item._itype == ItemType::Staff && GetSpellStaffLevel(item._iSpell) == -1);
@@ -1825,47 +1825,47 @@ void RemoveInvalidItem(Item &item)
 
 ItemID RemapItemIdxFromDiablo(ItemID i)
 {
-	std::underlying_type_t<ItemID> idx = GetItemIndex(i);
+	std::underlying_type_t<ItemID> idx = GetItemIDIndex(i);
 
-	if (idx == GetItemIndex(ItemID::SorcererStaffMana)) {
+	if (idx == GetItemIDIndex(ItemID::SorcererStaffMana)) {
 		return ItemID::SorcererStaffChargedBolt;
 	}
-	if (idx >= GetItemIndex(ItemID::FirstRune) - 5) {
+	if (idx >= GetItemIDIndex(ItemID::FirstRune) - 5) {
 		idx += 5; // Hellfire exclusive items
 	}
-	if (idx >= GetItemIndex(ItemID::ElixirMagic)) {
+	if (idx >= GetItemIDIndex(ItemID::ElixirMagic)) {
 		idx += 1; // Scroll of Search
 	}
-	if (idx >= GetItemIndex(ItemID::FirstOil)) {
+	if (idx >= GetItemIDIndex(ItemID::FirstOil)) {
 		idx += 4; // Oils
 	}
 
-	return GetItemIndexEnum(idx);
+	return GetItemIDEnum(idx);
 }
 
 ItemID RemapItemIdxToDiablo(ItemID i)
 {
-	std::underlying_type_t<ItemID> idx = GetItemIndex(i);
+	std::underlying_type_t<ItemID> idx = GetItemIDIndex(i);
 
-	if (idx == GetItemIndex(ItemID::SorcererStaffChargedBolt)) {
+	if (idx == GetItemIDIndex(ItemID::SorcererStaffChargedBolt)) {
 		return ItemID::SorcererStaffMana;
 	}
-	if ((idx >= GetItemIndex(ItemID::FirstOil) && idx <= GetItemIndex(ItemID::LastOil)) || idx == GetItemIndex(ItemID::ScrollSearch) || idx >= GetItemIndex(ItemID::FirstRune)) {
+	if ((idx >= GetItemIDIndex(ItemID::FirstOil) && idx <= GetItemIDIndex(ItemID::LastOil)) || idx == GetItemIDIndex(ItemID::ScrollSearch) || idx >= GetItemIDIndex(ItemID::FirstRune)) {
 		return ItemID::None; // Hellfire exclusive items
 	}
-	if (idx >= GetItemIndex(ItemID::ScrollSearch) + 1) {
+	if (idx >= GetItemIDIndex(ItemID::ScrollSearch) + 1) {
 		idx -= 1; // Scroll of Search
 	}
-	if (idx >= GetItemIndex(ItemID::LastOil) + 1) {
+	if (idx >= GetItemIDIndex(ItemID::LastOil) + 1) {
 		idx -= 4; // Oils
 	}
 
-	return GetItemIndexEnum(idx);
+	return GetItemIDEnum(idx);
 }
 
 ItemID RemapItemIdxFromSpawn(ItemID i)
 {
-	std::underlying_type_t<ItemID> idx = GetItemIndex(i);
+	std::underlying_type_t<ItemID> idx = GetItemIDIndex(i);
 
 	if (idx >= 62) {
 		idx += 9; // Medium and heavy armors
@@ -1889,12 +1889,12 @@ ItemID RemapItemIdxFromSpawn(ItemID i)
 		idx += 1; // Scroll of Apocalypse
 	}
 
-	return GetItemIndexEnum(idx);
+	return GetItemIDEnum(idx);
 }
 
 ItemID RemapItemIdxToSpawn(ItemID i)
 {
-	std::underlying_type_t<ItemID> idx = GetItemIndex(i);
+	std::underlying_type_t<ItemID> idx = GetItemIDIndex(i);
 
 	if (idx >= 104) {
 		idx -= 1; // Scroll of Apocalypse
@@ -1918,7 +1918,7 @@ ItemID RemapItemIdxToSpawn(ItemID i)
 		idx -= 9; // Medium and heavy armors
 	}
 
-	return GetItemIndexEnum(idx);
+	return GetItemIDEnum(idx);
 }
 
 bool IsHeaderValid(uint32_t magicNumber)

@@ -168,10 +168,10 @@ bool IsDungeonItemValid(uint16_t iCreateInfo, uint32_t dwBuff)
 bool UnPackNetItem(const Player &player, const ItemNetPack &packedItem, Item &item)
 {
 	item = {};
-	std::underlying_type_t<ItemID> idx = GetItemIndex(SDL_SwapLE16(packedItem.def.wIndx));
-	if (idx < GetItemIndex(ItemID::First) || idx > GetItemIndex(ItemID::Last))
+	std::underlying_type_t<ItemID> idx = GetItemIDIndex(SDL_SwapLE16(packedItem.def.wIndx));
+	if (idx < GetItemIDIndex(ItemID::First) || idx > GetItemIDIndex(ItemID::Last))
 		return false;
-	if (idx == GetItemIndex(ItemID::Ear)) {
+	if (idx == GetItemIDIndex(ItemID::Ear)) {
 		RecreateEar(item, SDL_SwapLE16(packedItem.ear.wCI), SDL_SwapLE32(packedItem.ear.dwSeed), packedItem.ear.bCursval, packedItem.ear.heroname);
 		return true;
 	}
@@ -206,7 +206,7 @@ void PackItem(ItemPack &packedItem, const Item &item, bool isHellfire)
 		if (gbIsSpawn) {
 			idx = RemapItemIdxToSpawn(idx);
 		}
-		packedItem.idx = GetItemIndex(SDL_SwapLE16(idx));
+		packedItem.idx = GetItemIDIndex(SDL_SwapLE16(idx));
 		if (item.IDidx == ItemID::Ear) {
 			packedItem.iCreateInfo = SDL_SwapLE16(item._iIName[1] | (item._iIName[0] << 8));
 			packedItem.iSeed = SDL_SwapLE32(LoadBE32(&item._iIName[2]));
@@ -358,7 +358,7 @@ void PackNetPlayer(PlayerNetPack &packed, const Player &player)
 
 void UnPackItem(const ItemPack &packedItem, const Player &player, Item &item, bool isHellfire)
 {
-	auto idx = GetItemIndexEnum(SDL_SwapLE16(packedItem.idx));
+	auto idx = GetItemIDEnum(SDL_SwapLE16(packedItem.idx));
 
 	if (gbIsSpawn) {
 		idx = RemapItemIdxFromSpawn(idx);
@@ -367,7 +367,7 @@ void UnPackItem(const ItemPack &packedItem, const Player &player, Item &item, bo
 		idx = RemapItemIdxFromDiablo(idx);
 	}
 
-	if (!IsItemAvailable(GetItemIndex(idx))) {
+	if (!IsItemAvailable(GetItemIDIndex(idx))) {
 		item.clear();
 		return;
 	}

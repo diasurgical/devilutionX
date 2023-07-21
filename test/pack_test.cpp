@@ -810,19 +810,19 @@ static void compareGold(const ItemPack &is, int iCurs)
 
 TEST_F(PackTest, UnPackItem_gold_small)
 {
-	const auto is = SwappedLE(ItemPack { 0, 0, GetItemIndex(ItemID::Gold), 0, 0, 0, 0, 0, 1000, 0 });
+	const auto is = SwappedLE(ItemPack { 0, 0, GetItemIDIndex(ItemID::Gold), 0, 0, 0, 0, 0, 1000, 0 });
 	compareGold(is, ICURS_GOLD_SMALL);
 }
 
 TEST_F(PackTest, UnPackItem_gold_medium)
 {
-	const auto is = SwappedLE(ItemPack { 0, 0, GetItemIndex(ItemID::Gold), 0, 0, 0, 0, 0, 1001, 0 });
+	const auto is = SwappedLE(ItemPack { 0, 0, GetItemIDIndex(ItemID::Gold), 0, 0, 0, 0, 0, 1001, 0 });
 	compareGold(is, ICURS_GOLD_MEDIUM);
 }
 
 TEST_F(PackTest, UnPackItem_gold_large)
 {
-	const auto is = SwappedLE(ItemPack { 0, 0, GetItemIndex(ItemID::Gold), 0, 0, 0, 0, 0, 2500, 0 });
+	const auto is = SwappedLE(ItemPack { 0, 0, GetItemIDIndex(ItemID::Gold), 0, 0, 0, 0, 0, 2500, 0 });
 	compareGold(is, ICURS_GOLD_LARGE);
 }
 

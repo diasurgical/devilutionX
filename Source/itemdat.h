@@ -721,11 +721,11 @@ extern const PLStruct ItemPrefixes[];
 extern const PLStruct ItemSuffixes[];
 extern const UniqueItem UniqueItems[];
 
-constexpr std::underlying_type_t<ItemID> GetItemIndex(ItemID idxEnum)
+constexpr std::underlying_type_t<ItemID> GetItemIDIndex(ItemID idxEnum)
 {
 	return static_cast<std::underlying_type_t<ItemID>>(idxEnum);
 }
-constexpr ItemID GetItemIndexEnum(int idx)
+constexpr ItemID GetItemIDEnum(int idx)
 {
 	if (idx < static_cast<std::underlying_type_t<ItemID>>(ItemID::First) || idx > static_cast<std::underlying_type_t<ItemID>>(ItemID::Last))
 		return ItemID::None;

@@ -4458,7 +4458,7 @@ void ObjChangeMapResync(int x1, int y1, int x2, int y2)
 
 ItemID ItemMiscIdIdx(item_misc_id imiscid)
 {
-	std::underlying_type_t<ItemID> i = GetItemIndex(ItemID::First);
+	std::underlying_type_t<ItemID> i = GetItemIDIndex(ItemID::First);
 	while (AllItemsList[i].iRnd == IDROP_NEVER || AllItemsList[i].iMiscId != imiscid) {
 		i++;
 	}
