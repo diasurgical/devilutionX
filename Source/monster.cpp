@@ -1030,7 +1030,8 @@ void MonsterIdle(Monster &monster)
 	if (monster.animInfo.isLastFrame())
 		UpdateEnemy(monster);
 
-	monster.var2++;
+	if (monster.var2 < std::numeric_limits<int16_t>::max())
+		monster.var2++;
 }
 
 /**
