@@ -975,7 +975,7 @@ bool PlayerMHit(int pnum, Monster *monster, int dist, int mind, int maxd, Missil
 
 	Player &player = Players[pnum];
 
-	if (player._pHitPoints >> 6 <= 0) {
+	if (!player.IsAlive()) {
 		return false;
 	}
 
@@ -1091,7 +1091,7 @@ bool PlayerMHit(int pnum, Monster *monster, int dist, int mind, int maxd, Missil
 			ApplyPlrDamage(damageType, player, 0, 0, dam, deathReason);
 		}
 
-		if (player._pHitPoints >> 6 > 0) {
+		if (player.IsAlive()) {
 			player.Say(HeroSpeech::ArghClang);
 		}
 		return true;
@@ -1101,7 +1101,7 @@ bool PlayerMHit(int pnum, Monster *monster, int dist, int mind, int maxd, Missil
 		ApplyPlrDamage(damageType, player, 0, 0, dam, deathReason);
 	}
 
-	if (player._pHitPoints >> 6 > 0) {
+	if (player.IsAlive()) {
 		StartPlrHit(player, dam, false);
 	}
 

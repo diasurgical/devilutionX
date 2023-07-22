@@ -647,7 +647,7 @@ void multi_process_network_packets()
 			player._pBaseStr = pkt->bstr;
 			player._pBaseMag = pkt->bmag;
 			player._pBaseDex = pkt->bdex;
-			if (!cond && player.plractive && player._pHitPoints != 0) {
+			if (!cond && player.plractive && player.IsAlive()) {
 				if (player.isOnActiveLevel() && !player._pLvlChanging) {
 					if (player.position.tile.WalkingDistance(syncPosition) > 3 && PosOkPlayer(player, syncPosition)) {
 						// got out of sync, clear the tiles around where we last thought the player was located
@@ -857,7 +857,7 @@ void recv_plrinfo(int pnum, const TCmdPlrInfoHdr &header, bool recv)
 		return;
 	}
 
-	if (player._pHitPoints >> 6 > 0) {
+	if (player.IsAlive()) {
 		StartStand(player, Direction::South);
 		return;
 	}
