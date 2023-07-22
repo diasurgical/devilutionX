@@ -500,9 +500,8 @@ msgid "Client-Server (TCP)"
 msgstr "Client-Server (TCP)"
 
 #: Source/DiabloUI/multi/selconn.cpp:15
-#, fuzzy
 msgid "Offline"
-msgstr "Loopback"
+msgstr "Offline"
 
 #: Source/DiabloUI/multi/selconn.cpp:56 Source/DiabloUI/multi/selgame.cpp:647
 #: Source/DiabloUI/multi/selgame.cpp:671
@@ -823,10 +822,8 @@ msgid "No"
 msgstr "Nein"
 
 #: Source/DiabloUI/settingsmenu.cpp:146
-#, fuzzy
-#| msgid "Press any key to change."
 msgid "Press gamepad buttons to change."
-msgstr "Eine beliebige Taste drücken um sie festzulegen."
+msgstr "Drücke eine beliebige Taste um diese zu ändern."
 
 #: Source/DiabloUI/settingsmenu.cpp:424
 msgid "Bound key:"
@@ -842,11 +839,11 @@ msgstr "Festgelegte Taste freigeben"
 
 #: Source/DiabloUI/settingsmenu.cpp:466
 msgid "Bound button combo:"
-msgstr ""
+msgstr "Gebundene Knopfkombination:"
 
 #: Source/DiabloUI/settingsmenu.cpp:475
 msgid "Unbind button combo"
-msgstr ""
+msgstr "Entbinde Knopfkombination"
 
 #: Source/DiabloUI/settingsmenu.cpp:519 Source/gamemenu.cpp:65
 msgid "Previous Menu"
@@ -955,9 +952,8 @@ msgid "Game: "
 msgstr "Spiel: "
 
 #: Source/automap.cpp:731
-#, fuzzy
 msgid "Offline Game"
-msgstr "Loopback"
+msgstr "Offlinespiel"
 
 #: Source/automap.cpp:733
 msgid "Password: "
@@ -1025,134 +1021,129 @@ msgstr "Nachricht senden"
 
 #: Source/control.cpp:348
 msgid "Available Commands:"
-msgstr ""
+msgstr "Verfügbare Befehle:"
 
 #: Source/control.cpp:356
 msgid "Command "
-msgstr ""
+msgstr "Befehl "
 
 #: Source/control.cpp:356
 msgid " is unkown."
-msgstr ""
+msgstr " ist unbekannt."
 
 #: Source/control.cpp:359 Source/control.cpp:360
-#, fuzzy
-#| msgid "Description:"
 msgid "Description: "
-msgstr "Beschreibung:"
+msgstr "Beschreibung: "
 
 #: Source/control.cpp:359
 msgid ""
 "\n"
 "Parameters: No additional parameter needed."
 msgstr ""
+"\n"
+"Parameter: Kein zusätzlicher Parameter erforderlich."
 
 #: Source/control.cpp:360
-#, fuzzy
-#| msgid "Players: "
 msgid ""
 "\n"
 "Parameters: "
-msgstr "Spieler: "
+msgstr ""
+"\n"
+"Parameters: "
 
 #: Source/control.cpp:380 Source/control.cpp:412
 msgid "Arenas are only supported in multiplayer."
-msgstr ""
+msgstr "Arenen nur in Multiplayer unterstützt."
 
 #: Source/control.cpp:385
-#, fuzzy
-#| msgid "Are you sure you want to buy this item?"
 msgid "What arena do you want to visit?"
-msgstr "Seid Ihr sicher, dass Ihr diesen Gegenstand kaufen wollt?"
+msgstr "Welche Arena willst du besuchen?"
 
 #: Source/control.cpp:393
 msgid "Invalid arena-number. Valid numbers are:"
-msgstr ""
+msgstr "Untültige Arenen-Nummer. Gültige Nummern sind:"
 
 #: Source/control.cpp:399
 msgid "To enter a arena, you need to be in town or another arena."
 msgstr ""
+"Zum Betreten einer Arena, brauchst musst du in der Stadt oder in einer "
+"anderen Arena sein."
 
 #: Source/control.cpp:436
 msgid "Inspecting only supported in multiplayer."
-msgstr ""
+msgstr "Die Inspektion wird nur im Mehrspielermodus unterstützt."
 
 #: Source/control.cpp:441 Source/control.cpp:730
 msgid "Stopped inspecting players."
-msgstr ""
+msgstr "Stoppen den Spieler zu inspizieren."
 
 #: Source/control.cpp:451
 msgid "Inspecting player: "
-msgstr ""
+msgstr "Inspiziere Spieler: "
 
 #: Source/control.cpp:460
 msgid "No players found with such a name"
-msgstr ""
+msgstr "Keine Spieler mit so einem Namen gefunden"
 
 #: Source/control.cpp:524
 msgid "/help"
-msgstr ""
+msgstr "/hilfe"
 
 #: Source/control.cpp:524
 msgid "Prints help overview or help for a specific command."
-msgstr ""
+msgstr "Gebe Hilfeübersicht oder Hilfe für einen bestimmten Befehl."
 
 #: Source/control.cpp:524
 msgid "[command]"
-msgstr ""
+msgstr "[befehl]"
 
 #: Source/control.cpp:525
 msgid "/arena"
-msgstr ""
+msgstr "/arena"
 
 #: Source/control.cpp:525
 msgid "Enter a PvP Arena."
-msgstr ""
+msgstr "Betrete die PvP Arena."
 
 #: Source/control.cpp:525
 msgid "<arena-number>"
-msgstr ""
+msgstr "<arena-number>"
 
 #: Source/control.cpp:526
 msgid "/arenapot"
-msgstr ""
+msgstr "/arenapot"
 
 #: Source/control.cpp:526
 msgid "Gives Arena Potions."
-msgstr ""
+msgstr "Gebe Arena Tränke."
 
 #: Source/control.cpp:526
-#, fuzzy
-#| msgid "Amber"
 msgid "<number>"
-msgstr "Bernstein-"
+msgstr "<number>"
 
 #: Source/control.cpp:527
 msgid "/inspect"
-msgstr ""
+msgstr "/inspect"
 
 #: Source/control.cpp:527
 msgid "Inspects stats and equipment of another player."
-msgstr ""
+msgstr "Überprüfe Statistiken und Ausrüstung eines anderen Spielers."
 
 #: Source/control.cpp:527
-#, fuzzy
-#| msgctxt "monster"
-#| msgid "Flayed One"
 msgid "<player name>"
-msgstr "Gehäuteter"
+msgstr "<Spielername>"
 
 #: Source/control.cpp:528
 msgid "/seedinfo"
-msgstr ""
+msgstr "/seedinfo"
 
 #: Source/control.cpp:528
 msgid "Show seed infos for current level."
-msgstr ""
+msgstr "Zeige Samen Informationen für das aktuelle Level."
 
 #: Source/control.cpp:538
 msgid "Command \""
-msgstr ""
+msgstr "Befehl \""
 
 #: Source/control.cpp:1012
 msgid "Player friendly"
@@ -1303,7 +1294,7 @@ msgstr "Speicherort der diablo.ini definieren"
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:922
 msgid "Specify the language code (e.g. en or pt_BR)"
-msgstr ""
+msgstr "Bestimme den Sprachencode (e.g. de or de-deu)"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:923
@@ -1366,7 +1357,7 @@ msgstr "Bugs melden unter https://github.com/diasurgical/devilutionX/"
 
 #: Source/diablo.cpp:1103
 msgid "Please update devilutionx.mpq and fonts.mpq to the latest version"
-msgstr ""
+msgstr "Bitte aktualisiere devilutionx.mpq und fonts.mpq auf die neuste Version"
 
 #: Source/diablo.cpp:1105
 msgid ""
@@ -1381,7 +1372,7 @@ msgstr ""
 
 #: Source/diablo.cpp:1109
 msgid "Please update fonts.mpq to the latest version"
-msgstr ""
+msgstr "Bitte aktualisiere fonts.mpq auf die neueste Version"
 
 #: Source/diablo.cpp:1423
 msgid "-- Network timeout --"
@@ -1417,19 +1408,19 @@ msgstr "Schnelltaste für Fertigkeiten oder Zauber."
 
 #: Source/diablo.cpp:1622 Source/diablo.cpp:1995
 msgid "Use health potion"
-msgstr ""
+msgstr "Nutze den Heiltrank"
 
 #: Source/diablo.cpp:1623 Source/diablo.cpp:1996
 msgid "Use health potions from belt."
-msgstr ""
+msgstr "Nutze den Heiltrank vom Gürtel."
 
 #: Source/diablo.cpp:1630 Source/diablo.cpp:2003
 msgid "Use mana potion"
-msgstr ""
+msgstr "Benutze den Mana Trank"
 
 #: Source/diablo.cpp:1631 Source/diablo.cpp:2004
 msgid "Use mana potions from belt."
-msgstr ""
+msgstr "Benutze die Mana Tränke vom Gürtel."
 
 #: Source/diablo.cpp:1638 Source/diablo.cpp:2049
 msgid "Speedbook"
@@ -1610,181 +1601,157 @@ msgstr "Zeigt den Chatverlauf an."
 
 #: Source/diablo.cpp:1886
 msgid "Primary action"
-msgstr ""
+msgstr "Primitive Attacke"
 
 #: Source/diablo.cpp:1887
 msgid "Attack monsters, talk to towners, lift and place inventory items."
 msgstr ""
+"Attackiere Monster, Rede mit den Stadtbewohnern, Inventargegenstände anheben "
+"und platzieren."
 
 #: Source/diablo.cpp:1901
-#, fuzzy
-#| msgid "Select Action"
 msgid "Secondary action"
-msgstr "Aktion wählen"
+msgstr "Zweite Aktion"
 
 #: Source/diablo.cpp:1902
 msgid "Open chests, interact with doors, pick up items."
-msgstr ""
+msgstr "Öffene Kisten, interagiere mit den Türen, Sammle Items ein."
 
 #: Source/diablo.cpp:1916
-#, fuzzy
-#| msgid "Select Action"
 msgid "Spell action"
-msgstr "Aktion wählen"
+msgstr "Aktion auswählen"
 
 #: Source/diablo.cpp:1917
 msgid "Cast the active spell."
-msgstr ""
+msgstr "Wirke den aktiven Zauber."
 
 #: Source/diablo.cpp:1931
-#, fuzzy
-#| msgid "Cancel"
 msgid "Cancel action"
-msgstr "Zurück"
+msgstr "Aktion abbrechen"
 
 #: Source/diablo.cpp:1932
-#, fuzzy
-#| msgid "Closes the game."
 msgid "Close menus."
-msgstr "Beendet das Spiel."
+msgstr "Schließe Menüs."
 
 #: Source/diablo.cpp:1957
 msgid "Move up"
-msgstr ""
+msgstr "Bewege hoch"
 
 #: Source/diablo.cpp:1958
-#, fuzzy
-#| msgid "Multi Player Characters"
 msgid "Moves the player character up."
-msgstr "Mehrspielercharaktere"
+msgstr "Bewege den Charakter des Spieler nach oben."
 
 #: Source/diablo.cpp:1963
 msgid "Move down"
-msgstr ""
+msgstr "Bewege runter"
 
 #: Source/diablo.cpp:1964
-#, fuzzy
-#| msgid "Multi Player Characters"
 msgid "Moves the player character down."
-msgstr "Mehrspielercharaktere"
+msgstr "Bewege den Charakter des Spieler nach unten."
 
 #: Source/diablo.cpp:1969
-#, fuzzy
-#| msgid "$Movement:"
 msgid "Move left"
-msgstr "$Bewegung:"
+msgstr "Gehe nach links"
 
 #: Source/diablo.cpp:1970
-#, fuzzy
-#| msgid "Multi Player Characters"
 msgid "Moves the player character left."
-msgstr "Mehrspielercharaktere"
+msgstr "Bewege den Charakter des Spieler nach links."
 
 #: Source/diablo.cpp:1975
-#, fuzzy
-#| msgid "the night"
 msgid "Move right"
-msgstr "r Nacht"
+msgstr "Gehe nach rehcts"
 
 #: Source/diablo.cpp:1976
-#, fuzzy
-#| msgid "Multi Player Characters"
 msgid "Moves the player character right."
-msgstr "Mehrspielercharaktere"
+msgstr "Bewege den Charakter des Spieler nach rechts."
 
 #: Source/diablo.cpp:1981
 msgid "Stand ground"
-msgstr ""
+msgstr "auf dem Boden stehen."
 
 #: Source/diablo.cpp:1982
 msgid "Hold to prevent the player from moving."
-msgstr ""
+msgstr "Halte gedrückt um dem Spieler vorm bewegen zu hindern."
 
 #: Source/diablo.cpp:1987
 msgid "Toggle stand ground"
-msgstr ""
+msgstr "Standfläche umschalten"
 
 #: Source/diablo.cpp:1988
 msgid "Toggle whether the player moves."
-msgstr ""
+msgstr "Schalte um wenn der Spieler sich bewegt."
 
 #: Source/diablo.cpp:2065
 msgid "Move mouse up"
-msgstr ""
+msgstr "Ziehe Maus nach oben"
 
 #: Source/diablo.cpp:2066
 msgid "Simulates upward mouse movement."
-msgstr ""
+msgstr "Simuliere die Aufwärtsbewegung der Maus."
 
 #: Source/diablo.cpp:2071
 msgid "Move mouse down"
-msgstr ""
+msgstr "Ziehe die Maus nach unten"
 
 #: Source/diablo.cpp:2072
 msgid "Simulates downward mouse movement."
-msgstr ""
+msgstr "Simuliere die Rückwärtsbewegung der Maus."
 
 #: Source/diablo.cpp:2077
 msgid "Move mouse left"
-msgstr ""
+msgstr "Ziehe die Maus nach links"
 
 #: Source/diablo.cpp:2078
 msgid "Simulates leftward mouse movement."
-msgstr ""
+msgstr "Simuliere die Bewegung der Maus nach links."
 
 #: Source/diablo.cpp:2083
 msgid "Move mouse right"
-msgstr ""
+msgstr "Ziehe Maus nach rechts"
 
 #: Source/diablo.cpp:2084
 msgid "Simulates rightward mouse movement."
-msgstr ""
+msgstr "Simuliere die Bewegung der Maus nach rechts."
 
 #: Source/diablo.cpp:2102 Source/diablo.cpp:2109
 msgid "Left mouse click"
-msgstr ""
+msgstr "Linksklick"
 
 #: Source/diablo.cpp:2103 Source/diablo.cpp:2110
 msgid "Simulates the left mouse button."
-msgstr ""
+msgstr "Simuliere den linken Maus-Button."
 
 #: Source/diablo.cpp:2127 Source/diablo.cpp:2134
-#, fuzzy
-#| msgid "Right click to use"
 msgid "Right mouse click"
-msgstr "Rechtsklick zum Benutzen"
+msgstr "Rechtsklick"
 
 #: Source/diablo.cpp:2128 Source/diablo.cpp:2135
 msgid "Simulates the right mouse button."
-msgstr ""
+msgstr "Simuliere den rechten Maus-Button."
 
 #: Source/diablo.cpp:2141
 msgid "Gamepad hotspell menu"
-msgstr ""
+msgstr "Gamepad-Hotspell-Menü"
 
 #: Source/diablo.cpp:2142
 msgid "Hold to set or use spell hotkeys."
-msgstr ""
+msgstr "Halte gedrückt um den Zauber-Hotkey fest zulegen oder zu nutzen."
 
 #: Source/diablo.cpp:2148
 msgid "Gamepad menu navigator"
-msgstr ""
+msgstr "Gamepad Menunavigator"
 
 #: Source/diablo.cpp:2149
 msgid "Hold to access gamepad menu navigation."
-msgstr ""
+msgstr "Halte zum betreten des Gamepad Navigationsmenü."
 
 #: Source/diablo.cpp:2164 Source/diablo.cpp:2173
-#, fuzzy
-#| msgid "The game ended"
 msgid "Toggle game menu"
-msgstr "Das Spiel ist zu Ende"
+msgstr "Schalte Spielmenü"
 
 #: Source/diablo.cpp:2165 Source/diablo.cpp:2174
-#, fuzzy
-#| msgid "Saves the game."
 msgid "Opens the game menu."
-msgstr "Speichert das Spiel."
+msgstr "Öffnet das Spielmenü."
 
 #: Source/discord/discord.cpp:68
 msgid "Cathedral"
@@ -2390,7 +2357,7 @@ msgstr "Hauptfenster kann nicht erstellt werden"
 
 #: Source/inv.cpp:2126
 msgid "No room for item"
-msgstr ""
+msgstr "Kein Platz für das Item"
 
 #: Source/itemdat.cpp:53 Source/itemdat.cpp:236 Source/panels/charpanel.cpp:165
 msgid "Gold"
@@ -3019,10 +2986,8 @@ msgid "Short Staff of Charged Bolt"
 msgstr "Kurzstab des geladenen Blitzes"
 
 #: Source/itemdat.cpp:220
-#, fuzzy
-#| msgid "Mana Potion Pickup"
 msgid "Arena Potion"
-msgstr "Manatränke autom. aufheben"
+msgstr "Arena Trank"
 
 #. TRANSLATORS: Item prefix section.
 #: Source/itemdat.cpp:230
@@ -4340,7 +4305,7 @@ msgstr "Volles Leben und Mana"
 
 #: Source/items.cpp:1783
 msgid "(works only in arenas)"
-msgstr ""
+msgstr "(funktioniert nur in Arenen)"
 
 #: Source/items.cpp:1797
 msgid "Right-click to view"
@@ -4385,34 +4350,23 @@ msgid "Activate to read"
 msgstr "Linksklick zum Lesen"
 
 #: Source/items.cpp:1849
-#, fuzzy
-#| msgid "Activate to view"
 msgid "{} to view"
-msgstr "Aktivieren zum Ansehen"
+msgstr "{} zum Ansehen"
 
 #: Source/items.cpp:1855
-#, fuzzy
-#| msgid "{:+d} to strength"
 msgid "{} to use"
-msgstr "{:+d} zu Stärke"
+msgstr "{} zum benutzen"
 
 #: Source/items.cpp:1858
-#, fuzzy
-#| msgid ""
-#| "Select from spell book, then\n"
-#| "cast spell to read"
 msgid ""
 "Select from spell book,\n"
 "then {} to read"
-msgstr ""
-"Aus dem Zauberbuch wählen, dann\n"
-"Zaubern zum Lesen"
+msgstr "Aus dem Zauberbuch wählen,\n"
+"dann {} lesen"
 
 #: Source/items.cpp:1860
-#, fuzzy
-#| msgid "Activate to read"
 msgid "{} to read"
-msgstr "Linksklick zum Lesen"
+msgstr "{} zum Lesen"
 
 #: Source/items.cpp:1867
 msgctxt "player"
@@ -4767,10 +4721,9 @@ msgid "2x dmg to monst, 1x to you"
 msgstr "2x Gegnerschaden, 1x Selbstschaden"
 
 #: Source/items.cpp:3895
-#, fuzzy, no-c-format
-#| msgid "Random 0 - 500% damage"
+#, no-c-format
 msgid "Random 0 - 600% damage"
-msgstr "0- bis 6-facher Gesamtschaden"
+msgstr "Plötzlich 0 - 600% Schaden"
 
 #: Source/items.cpp:3897
 #, no-c-format
@@ -4856,17 +4809,15 @@ msgstr "Refugium des Erzbischof Lazarus"
 
 #: Source/levels/setmaps.cpp:32
 msgid "Church Arena"
-msgstr ""
+msgstr "Kirchen Arena"
 
 #: Source/levels/setmaps.cpp:33
-#, fuzzy
-#| msgid "Hellfire"
 msgid "Hell Arena"
-msgstr "Hellfire"
+msgstr "Höllen Arena"
 
 #: Source/levels/setmaps.cpp:34
 msgid "Circle of Life Arena"
-msgstr ""
+msgstr "Kreis des Lebens Arena"
 
 #: Source/levels/trigs.cpp:350
 msgid "Down to dungeon"
@@ -6145,20 +6096,16 @@ msgid "Some Magic Immunities"
 msgstr "Einige magische Immunitäten"
 
 #: Source/mpq/mpq_writer.cpp:161
-#, fuzzy
-#| msgid "Failed to open stash archive for writing."
 msgid "Failed to open archive for writing."
-msgstr "Fehler beim Schreiben der Truhendatei."
+msgstr "Fehler beim öffnen des Archives beim schreiben."
 
 #: Source/msg.cpp:770
 msgid "Trying to drop a floor item?"
 msgstr "Versuchst Du, einen Bodengegenstand fallen zu lassen?"
 
 #: Source/msg.cpp:1374
-#, fuzzy
-#| msgid "{:s} has cast an illegal spell."
 msgid "{:s} has cast an invalid spell."
-msgstr "Illegaler Zauber von {:s}"
+msgstr "Ungültiger Zauber von {:s}"
 
 #: Source/msg.cpp:1378
 msgid "{:s} has cast an illegal spell."
@@ -6698,21 +6645,19 @@ msgstr ""
 
 #: Source/options.cpp:825
 msgid "Resampler"
-msgstr ""
+msgstr "Resampler"
 
 #: Source/options.cpp:825
 msgid "Audio resampler"
-msgstr ""
+msgstr "Audio resampler"
 
 #: Source/options.cpp:882
 msgid "Device"
-msgstr ""
+msgstr "Gerät"
 
 #: Source/options.cpp:882
-#, fuzzy
-#| msgid "Audio Settings"
 msgid "Audio device"
-msgstr "Audio Einstellungen"
+msgstr "Audio Gerät"
 
 #: Source/options.cpp:950
 msgid "Graphics"
@@ -6797,7 +6742,7 @@ msgstr ""
 
 #: Source/options.cpp:986
 msgid "Zoom on when enabled."
-msgstr ""
+msgstr "Zoomen an wenn aktiviert."
 
 #: Source/options.cpp:987
 msgid "Color Cycling"
@@ -6921,14 +6866,12 @@ msgstr ""
 "wenn die Spieler sich freundlich gesinnt sind."
 
 #: Source/options.cpp:1050
-#, fuzzy
-#| msgid "No pause in multiplayer"
 msgid "Full quests in Multiplayer"
-msgstr "Keine Pause im Mehrspielermodus"
+msgstr "Volle Quests im Mehrspielermodus"
 
 #: Source/options.cpp:1050
 msgid "Enables the full/uncut singleplayer version of quests."
-msgstr ""
+msgstr "Aktiviert die voll / ungeschnitte Einzelspieler Version von Quest."
 
 #: Source/options.cpp:1051
 msgid "Test Bard"
@@ -6959,11 +6902,12 @@ msgstr ""
 
 #: Source/options.cpp:1054
 msgid "Show Item Graphics in Stores"
-msgstr ""
+msgstr "Zeigt Gegenständegrafiken im Store"
 
 #: Source/options.cpp:1054
 msgid "Show item graphics to the left of item descriptions in store menus."
 msgstr ""
+"Zeigt Gestandgrafik zu der linken Gegenstandbeschreibung im Store Menu."
 
 #: Source/options.cpp:1055
 msgid "Show health values"
@@ -7008,18 +6952,12 @@ msgstr ""
 "Elixire werden automatisch aufgehoben, wenn der Held in die Nähe kommt."
 
 #: Source/options.cpp:1060
-#, fuzzy
-#| msgid "Auto Gold Pickup"
 msgid "Auto Oil Pickup"
-msgstr "Gold autom. aufheben"
+msgstr "Autom. Öl aufheben"
 
 #: Source/options.cpp:1060
-#, fuzzy
-#| msgid ""
-#| "Elixirs are automatically collected when in close proximity to the player."
 msgid "Oils are automatically collected when in close proximity to the player."
-msgstr ""
-"Elixire werden automatisch aufgehoben, wenn der Held in die Nähe kommt."
+msgstr "Öle werden automatisch aufgehoben, wenn der Spieler in die Nähe kommt."
 
 #: Source/options.cpp:1061
 msgid "Auto Pickup in Town"
@@ -7107,14 +7045,12 @@ msgstr ""
 "Beschreibungsbox am unteren Bildschirmrand angezeigt."
 
 #: Source/options.cpp:1070
-#, fuzzy
-#| msgid "Show mana values"
 msgid "Show Item Labels"
-msgstr "Manapunkte anzeigen"
+msgstr "Zeig Gegenstandbeschriftung"
 
 #: Source/options.cpp:1070
 msgid "Show labels for items on the ground when enabled."
-msgstr ""
+msgstr "Beschriftungen für Gegenstände auf dem Boden anzeigen, wenn aktiviert."
 
 #: Source/options.cpp:1071
 msgid "Auto Refill Belt"
@@ -7203,28 +7139,25 @@ msgstr ""
 
 #: Source/options.cpp:1080
 msgid "Enable floating numbers"
-msgstr ""
+msgstr "Aktivert schwebende Nummern"
 
 #: Source/options.cpp:1080
 msgid "Enables floating numbers on gaining XP / dealing damage etc."
 msgstr ""
+"Ermöglicht schwebende Zahlen für den Erhalt von XP, das Verursachen von "
+"Schaden usw."
 
 #: Source/options.cpp:1082
-#, fuzzy
 msgid "Off"
-msgstr "Loopback"
+msgstr "Aus"
 
 #: Source/options.cpp:1083
-#, fuzzy
-#| msgid "Randomize Quests"
 msgid "Random Angles"
 msgstr "Zufallsquests"
 
 #: Source/options.cpp:1084
-#, fuzzy
-#| msgid "Vertical Sync"
 msgid "Vertical Only"
-msgstr "Vertikale Synchronisation"
+msgstr "Nur Vertikal"
 
 #: Source/options.cpp:1135
 msgid "Controller"
@@ -7271,14 +7204,10 @@ msgid "Keymapping Settings"
 msgstr "Tastaturbelegungseinstellungen"
 
 #: Source/options.cpp:1516
-#, fuzzy
-#| msgid "Keymapping"
 msgid "Padmapping"
 msgstr "Tastaturbelegung"
 
 #: Source/options.cpp:1516
-#, fuzzy
-#| msgid "Keymapping Settings"
 msgid "Padmapping Settings"
 msgstr "Tastaturbelegungseinstellungen"
 
@@ -8035,7 +7964,7 @@ msgstr "Mit Wirt sprechen"
 
 #: Source/stores.cpp:1013
 msgid "I have something for sale,"
-msgstr "Ich habe etwas Besonderes zu"
+msgstr "Ich habe etwas Besonderes zu,"
 
 #: Source/stores.cpp:1014
 msgid "but it will cost 50 gold"
@@ -8088,7 +8017,7 @@ msgstr "Gegenstand identifizieren"
 
 #: Source/stores.cpp:1223
 msgid "You have nothing to identify."
-msgstr "Ihr habt nichts zu identifizieren"
+msgstr "Ihr habt nichts zu identifizieren."
 
 #: Source/stores.cpp:1234
 msgid "Identify which item?"
@@ -9397,7 +9326,7 @@ msgstr ""
 "Ich kann es kaum glauben! Das ist wirklich der Amboss des Zornes! Gute "
 "Arbeit, mein Freund. Jetzt wollen wir diesen Bastarden in der Hölle mal "
 "beweisen, dass es dort keinen gefährlicheren Stahl gibt als den, den wir "
-"Menschen schmieden! Nehmt diese Waffe hier, und möge das Licht Euch behüten!"
+"Menschen schmieden! Nehmt diese Waffe hier, und möge das Licht Euch behüten! "
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:192
@@ -9657,7 +9586,7 @@ msgid ""
 "be denied."
 msgstr ""
 "Meine Klinge schreit vor Hunger nach Eurem Blut, und bei meinem Dunklen "
-"Herren, sie soll nicht enttäuscht werden!"
+"Herren, sie soll nicht enttäuscht werden! "
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:231
@@ -9673,7 +9602,7 @@ msgstr ""
 "die einen Menschen auf irgendeine Weise mehr erschauen ließ, als es ihm von "
 "Natur aus möglich war. Ich weiß nicht, welches Geheimnis sich in diesem "
 "Stein verbirgt, mein Freund, doch es ist auf jeden Fall der Mühe wert, ihn "
-"zu suchen!"
+"zu suchen! "
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:233
@@ -9714,7 +9643,7 @@ msgstr ""
 "haben sich auf eine weite Reise vorbereitet, soweit ich mich erinnere. \n"
 "\n"
 "Ich verstehe nur nicht, wie Ihr irgendwas finden wollt, das die bei sich "
-"hatten?"
+"hatten? "
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:239
@@ -9833,7 +9762,7 @@ msgstr ""
 "für alle, die von diesen elenden Monstern verwundet werden, wenn ich die "
 "Geheimnisse entschlüsseln könnte, die ich in der Alchemie dieser Hirne "
 "vermute. Wenn Ihr also wieder mal einen Dämon tötet, versucht bitte, sein "
-"Hirn unversehrt mitzubringen und mir zu geben, ja?"
+"Hirn unversehrt mitzubringen und mir zu geben, ja? "
 
 #. TRANSLATORS: Quest dialog spoken by Pepin
 #: Source/textdat.cpp:257
@@ -9875,7 +9804,7 @@ msgid ""
 msgstr ""
 "Ogden kann einen tierischen Schwarzen Pilz mischen, aber davon muss ich "
 "immer kotzen. Hör mal, hör mal, ich verrate Dir was: Mäßigung ist das ganze "
-"Geheimnis."
+"Geheimnis. "
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:265
@@ -9997,7 +9926,7 @@ msgid ""
 "stop him from attaining his full might."
 msgstr ""
 "Unsere Zeit wird knapp! Ich kann spüren, wie seine finstere Macht wächst, "
-"und nur Ihr könnt verhindern, dass er all seine Kräfte wiedererlangt!"
+"und nur Ihr könnt verhindern, dass er all seine Kräfte wiedererlangt! "
 
 #. TRANSLATORS: Quest dialog spoken by Cain (currently unused)
 #: Source/textdat.cpp:281
@@ -10071,7 +10000,7 @@ msgid ""
 "really got somethin' here. That's a map."
 msgstr ""
 "Hör mal, komm mal her. Ich weiß nicht, ob Du weißt, was ich weiß, aber weißt "
-"Du, dass das eine Karte ist? Eine richtige Landkarte!"
+"Du, dass das eine Karte ist? Eine richtige Landkarte! "
 
 #. TRANSLATORS: Quest dialog spoken by Adria (currently unused)
 #: Source/textdat.cpp:293
@@ -12207,4 +12136,4 @@ msgstr "Getöteter Dorfbewohner"
 #. TRANSLATORS: Thousands separator
 #: Source/utils/format_int.cpp:26
 msgid ","
-msgstr "."
+msgstr ","
