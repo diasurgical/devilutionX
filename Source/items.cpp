@@ -1606,7 +1606,7 @@ void SetupAllUseful(Item &item, int iseed, int lvl)
 			idx = ItemID::PotionMana;
 			break;
 		default:
-			idx = ItemID::Oil;
+			idx = ItemID::BlacksmithOil;
 			break;
 		}
 	} else {
