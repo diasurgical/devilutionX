@@ -1110,7 +1110,7 @@ void SaveItem(SaveHelper &file, const Item &item)
 	file.WriteLE<int8_t>(item._iMinDex);
 	file.Skip(1); // Alignment
 	file.WriteLE<uint32_t>(item._iStatFlag ? 1 : 0);
-	file.WriteLE<int32_t>(GetItemIDIndex(idx));
+	file.WriteLE<int32_t>(static_cast<std::underlying_type_t<ItemID>>(idx));
 	file.WriteLE<uint32_t>(item.dwBuff);
 	if (gbIsHellfire)
 		file.WriteLE<uint32_t>(static_cast<uint32_t>(item._iDamAcFlags));
@@ -1808,7 +1808,7 @@ void ConvertLevels(SaveWriter &saveWriter)
 
 void RemoveInvalidItem(Item &item)
 {
-	bool isInvalid = !IsItemAvailable(GetItemIDIndex(item.IDidx)) || !IsUniqueAvailable(item._iUid);
+	bool isInvalid = !IsItemAvailable(item.IDidx) || !IsUniqueAvailable(item._iUid);
 
 	if (!gbIsHellfire) {
 		isInvalid = isInvalid || (item._itype == ItemType::Staff && GetSpellStaffLevel(item._iSpell) == -1);
@@ -1823,102 +1823,101 @@ void RemoveInvalidItem(Item &item)
 	}
 }
 
+template <typename EnumType>
+EnumType ChangeEnumValue(EnumType enumVal, typename std::underlying_type<EnumType>::type addValue)
+{
+	return static_cast<EnumType>(static_cast<typename std::underlying_type<EnumType>::type>(enumVal) + addValue);
+}
+
 ItemID RemapItemIdxFromDiablo(ItemID i)
 {
-	std::underlying_type_t<ItemID> idx = GetItemIDIndex(i);
-
-	if (idx == GetItemIDIndex(ItemID::SorcererStaffMana)) {
+	if (i == ItemID::SorcererStaffMana) {
 		return ItemID::SorcererStaffChargedBolt;
 	}
-	if (idx >= GetItemIDIndex(ItemID::FirstRune) - 5) {
-		idx += 5; // Hellfire exclusive items
+	if (i >= ItemID::Ring) {
+		i = ChangeEnumValue(i, 5); // Hellfire exclusive items
 	}
-	if (idx >= GetItemIDIndex(ItemID::ElixirMagic)) {
-		idx += 1; // Scroll of Search
+	if (i >= ItemID::ElixirMagic) {
+		i = ChangeEnumValue(i, 1); // Scroll of Search
 	}
-	if (idx >= GetItemIDIndex(ItemID::FirstOil)) {
-		idx += 4; // Oils
+	if (i >= ItemID::FirstOil) {
+		i = ChangeEnumValue(i, 4); // Oils
 	}
 
-	return GetItemIDEnum(idx);
+	return i;
 }
 
 ItemID RemapItemIdxToDiablo(ItemID i)
 {
-	std::underlying_type_t<ItemID> idx = GetItemIDIndex(i);
-
-	if (idx == GetItemIDIndex(ItemID::SorcererStaffChargedBolt)) {
+	if (i == ItemID::SorcererStaffChargedBolt) {
 		return ItemID::SorcererStaffMana;
 	}
-	if ((idx >= GetItemIDIndex(ItemID::FirstOil) && idx <= GetItemIDIndex(ItemID::LastOil)) || idx == GetItemIDIndex(ItemID::ScrollSearch) || idx >= GetItemIDIndex(ItemID::FirstRune)) {
+	if ((i >= ItemID::FirstOil && i <= ItemID::LastOil) || i == ItemID::ScrollSearch || i >= ItemID::FirstRune) {
 		return ItemID::None; // Hellfire exclusive items
 	}
-	if (idx >= GetItemIDIndex(ItemID::ScrollSearch) + 1) {
-		idx -= 1; // Scroll of Search
+	if (i >= ItemID::ScrollLightning) {
+		i = ChangeEnumValue(i, -1); // Scroll of Search
 	}
-	if (idx >= GetItemIDIndex(ItemID::LastOil) + 1) {
-		idx -= 4; // Oils
+	if (i >= ItemID::ElixirStrength) {
+		i = ChangeEnumValue(i, -4); // Oils
 	}
 
-	return GetItemIDEnum(idx);
+	return i;
 }
 
 ItemID RemapItemIdxFromSpawn(ItemID i)
 {
-	std::underlying_type_t<ItemID> idx = GetItemIDIndex(i);
 
-	if (idx >= 62) {
-		idx += 9; // Medium and heavy armors
+	if (i >= ItemID::MediumHeavyArmorFirst) {
+		i = ChangeEnumValue(i, 9); // Medium and heavy armors
 	}
-	if (idx >= 96) {
-		idx += 1; // Scroll of Stone Curse
+	if (i >= ItemID::ScrollFireWall) {
+		i = ChangeEnumValue(i, 1); // Scroll of Stone Curse
 	}
-	if (idx >= 98) {
-		idx += 1; // Scroll of Guardian
+	if (i >= ItemID::ScrollTownPortal2) {
+		i = ChangeEnumValue(i, 1); // Scroll of Guardian
 	}
-	if (idx >= 99) {
-		idx += 1; // Scroll of ...
+	if (i >= ItemID::ScrollFlash) {
+		i = ChangeEnumValue(i, 1); // Scroll of ...
 	}
-	if (idx >= 101) {
-		idx += 1; // Scroll of Golem
+	if (i >= ItemID::ScrollPhasing) {
+		i = ChangeEnumValue(i, 1); // Scroll of Golem
 	}
-	if (idx >= 102) {
-		idx += 1; // Scroll of None
+	if (i >= ItemID::ScrollManaShield) {
+		i = ChangeEnumValue(i, 1); // Scroll of None
 	}
-	if (idx >= 104) {
-		idx += 1; // Scroll of Apocalypse
+	if (i >= ItemID::ScrollFireball) {
+		i = ChangeEnumValue(i, 1); // Scroll of Apocalypse
 	}
 
-	return GetItemIDEnum(idx);
+	return i;
 }
 
 ItemID RemapItemIdxToSpawn(ItemID i)
 {
-	std::underlying_type_t<ItemID> idx = GetItemIDIndex(i);
-
-	if (idx >= 104) {
-		idx -= 1; // Scroll of Apocalypse
+	if (i >= ItemID::ScrollFireball) {
+		i = ChangeEnumValue(i, -1); // Scroll of Apocalypse
 	}
-	if (idx >= 102) {
-		idx -= 1; // Scroll of None
+	if (i >= ItemID::ScrollManaShield) {
+		i = ChangeEnumValue(i, -1); // Scroll of None
 	}
-	if (idx >= 101) {
-		idx -= 1; // Scroll of Golem
+	if (i >= ItemID::ScrollPhasing) {
+		i = ChangeEnumValue(i, -1); // Scroll of Golem
 	}
-	if (idx >= 99) {
-		idx -= 1; // Scroll of ...
+	if (i >= ItemID::ScrollFlash) {
+		i = ChangeEnumValue(i, -1); // Scroll of ...
 	}
-	if (idx >= 98) {
-		idx -= 1; // Scroll of Guardian
+	if (i >= ItemID::ScrollTownPortal2) {
+		i = ChangeEnumValue(i, -1); // Scroll of Guardian
 	}
-	if (idx >= 96) {
-		idx -= 1; // Scroll of Stone Curse
+	if (i >= ItemID::ScrollFireWall) {
+		i = ChangeEnumValue(i, -1); // Scroll of Stone Curse
 	}
-	if (idx >= 71) {
-		idx -= 9; // Medium and heavy armors
+	if (i >= ItemID::Buckler) {
+		i = ChangeEnumValue(i, -9); // Medium and heavy armors
 	}
 
-	return GetItemIDEnum(idx);
+	return i;
 }
 
 bool IsHeaderValid(uint32_t magicNumber)

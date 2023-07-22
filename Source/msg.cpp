@@ -957,7 +957,7 @@ bool IsGItemValid(const TCmdGItem &message)
 	if (!InDungeonBounds({ message.x, message.y }))
 		return false;
 
-	return IsItemAvailable(GetItemIDIndex(SDL_SwapLE16(message.def.wIndx)));
+	return IsItemAvailable(SDL_SwapLE16(message.def.wIndx));
 }
 
 bool IsPItemValid(const TCmdPItem &message)
@@ -967,7 +967,7 @@ bool IsPItemValid(const TCmdPItem &message)
 	if (!InDungeonBounds(position))
 		return false;
 
-	return IsItemAvailable(GetItemIDIndex(SDL_SwapLE16(message.def.wIndx)));
+	return IsItemAvailable(SDL_SwapLE16(message.def.wIndx));
 }
 
 void PrepareItemForNetwork(const Item &item, TCmdGItem &message)
@@ -1087,7 +1087,7 @@ size_t OnRequestGetItem(const TCmd *pCmd, Player &player)
 		const uint32_t dwSeed = SDL_SwapLE32(message.def.dwSeed);
 		const uint16_t wCI = SDL_SwapLE16(message.def.wCI);
 		const ItemID wIndx = static_cast<ItemID>(SDL_SwapLE16(message.def.wIndx));
-		if (GetItemRecord(dwSeed, wCI, GetItemIDIndex(wIndx))) {
+		if (GetItemRecord(dwSeed, wCI, wIndx)) {
 			int ii = -1;
 			if (InDungeonBounds(position)) {
 				ii = abs(dItem[position.x][position.y]) - 1;
@@ -1110,7 +1110,7 @@ size_t OnRequestGetItem(const TCmd *pCmd, Player &player)
 					SyncGetItem(position, dwSeed, wIndx, wCI);
 				else
 					InvGetItem(*MyPlayer, ii);
-				SetItemRecord(dwSeed, wCI, GetItemIDIndex(wIndx));
+				SetItemRecord(dwSeed, wCI, wIndx);
 			} else if (!NetSendCmdReq2(CMD_REQUESTGITEM, MyPlayerId, message.bPnum, message)) {
 				NetSendCmdExtra(message);
 			}
@@ -1179,14 +1179,14 @@ size_t OnRequestAutoGetItem(const TCmd *pCmd, Player &player)
 		const uint32_t dwSeed = SDL_SwapLE32(message.def.dwSeed);
 		const uint16_t wCI = SDL_SwapLE16(message.def.wCI);
 		const ItemID wIndx = static_cast<ItemID>(SDL_SwapLE16(message.def.wIndx));
-		if (GetItemRecord(dwSeed, wCI, GetItemIDIndex(wIndx))) {
+		if (GetItemRecord(dwSeed, wCI, wIndx)) {
 			if (FindGetItem(dwSeed, wIndx, wCI) != -1) {
 				NetSendCmdGItem2(false, CMD_AGETITEM, MyPlayerId, message.bPnum, message);
 				if (message.bPnum != MyPlayerId)
 					SyncGetItem(position, dwSeed, wIndx, wCI);
 				else
 					AutoGetItem(*MyPlayer, &Items[message.bCursitem], message.bCursitem);
-				SetItemRecord(dwSeed, wCI, GetItemIDIndex(wIndx));
+				SetItemRecord(dwSeed, wCI, wIndx);
 			} else if (!NetSendCmdReq2(CMD_REQUESTAGITEM, MyPlayerId, message.bPnum, message)) {
 				NetSendCmdExtra(message);
 			}
@@ -1268,14 +1268,14 @@ size_t OnPutItem(const TCmd *pCmd, size_t pnum)
 			} else
 				ii = SyncDropItem(message);
 			if (ii != -1) {
-				PutItemRecord(dwSeed, wCI, GetItemIDIndex(wIndx));
+				PutItemRecord(dwSeed, wCI, wIndx);
 				DeltaPutItem(message, Items[ii].position, player);
 				if (isSelf)
 					pfile_update(true);
 			}
 			return sizeof(message);
 		} else {
-			PutItemRecord(dwSeed, wCI, GetItemIDIndex(wIndx));
+			PutItemRecord(dwSeed, wCI, wIndx);
 			DeltaPutItem(message, position, player);
 			if (isSelf)
 				pfile_update(true);
@@ -1299,14 +1299,14 @@ size_t OnSyncPutItem(const TCmd *pCmd, size_t pnum)
 		if (player.isOnActiveLevel()) {
 			int ii = SyncDropItem(message);
 			if (ii != -1) {
-				PutItemRecord(dwSeed, wCI, GetItemIDIndex(wIndx));
+				PutItemRecord(dwSeed, wCI, wIndx);
 				DeltaPutItem(message, Items[ii].position, player);
 				if (&player == MyPlayer)
 					pfile_update(true);
 			}
 			return sizeof(message);
 		} else {
-			PutItemRecord(dwSeed, wCI, GetItemIDIndex(wIndx));
+			PutItemRecord(dwSeed, wCI, wIndx);
 			DeltaPutItem(message, { message.x, message.y }, player);
 			if (&player == MyPlayer)
 				pfile_update(true);
@@ -1847,7 +1847,7 @@ size_t OnChangePlayerItems(const TCmd *pCmd, size_t pnum)
 
 	if (gbBufferMsgs == 1) {
 		SendPacket(pnum, &message, sizeof(message));
-	} else if (&player != MyPlayer && IsItemAvailable(GetItemIDIndex(SDL_SwapLE16(message.def.wIndx)))) {
+	} else if (&player != MyPlayer && IsItemAvailable(SDL_SwapLE16(message.def.wIndx))) {
 		Item &item = player.InvBody[message.bLoc];
 		item = {};
 		RecreateItem(player, message, item);
@@ -1884,7 +1884,7 @@ size_t OnChangeInventoryItems(const TCmd *pCmd, int pnum)
 
 	if (gbBufferMsgs == 1) {
 		SendPacket(pnum, &message, sizeof(message));
-	} else if (&player != MyPlayer && IsItemAvailable(GetItemIDIndex(SDL_SwapLE16(message.def.wIndx)))) {
+	} else if (&player != MyPlayer && IsItemAvailable(SDL_SwapLE16(message.def.wIndx))) {
 		Item item {};
 		RecreateItem(player, message, item);
 		CheckInvSwap(player, item, message.bLoc);
@@ -1918,7 +1918,7 @@ size_t OnChangeBeltItems(const TCmd *pCmd, int pnum)
 
 	if (gbBufferMsgs == 1) {
 		SendPacket(pnum, &message, sizeof(message));
-	} else if (&player != MyPlayer && IsItemAvailable(GetItemIDIndex(SDL_SwapLE16(message.def.wIndx)))) {
+	} else if (&player != MyPlayer && IsItemAvailable(SDL_SwapLE16(message.def.wIndx))) {
 		Item &item = player.SpdList[message.bLoc];
 		item = {};
 		RecreateItem(player, message, item);
@@ -1982,7 +1982,7 @@ size_t OnSpawnItem(const TCmd *pCmd, size_t pnum)
 		if (player.isOnActiveLevel() && &player != MyPlayer) {
 			SyncDropItem(message);
 		}
-		PutItemRecord(SDL_SwapLE32(message.def.dwSeed), SDL_SwapLE16(message.def.wCI), GetItemIDIndex(SDL_SwapLE16(message.def.wIndx)));
+		PutItemRecord(SDL_SwapLE32(message.def.dwSeed), SDL_SwapLE16(message.def.wCI), SDL_SwapLE16(message.def.wIndx));
 		DeltaPutItem(message, { message.x, message.y }, player);
 	}
 

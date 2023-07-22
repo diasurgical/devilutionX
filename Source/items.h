@@ -481,7 +481,7 @@ extern CornerStoneStruct CornerStone;
 extern bool UniqueItemFlags[128];
 
 uint8_t GetOutlineColor(const Item &item, bool checkReq);
-bool IsItemAvailable(int i);
+bool IsItemAvailable(ItemID i);
 bool IsUniqueAvailable(int i);
 void InitItemGFX();
 void InitItems();
@@ -551,9 +551,9 @@ void CreateSpellBook(Point position, SpellID ispell, bool sendmsg, bool delta);
 void CreateMagicArmor(Point position, ItemType itemType, int icurs, bool sendmsg, bool delta);
 void CreateAmulet(Point position, int lvl, bool sendmsg, bool delta, bool spawn = false);
 void CreateMagicWeapon(Point position, ItemType itemType, int icurs, bool sendmsg, bool delta);
-bool GetItemRecord(uint32_t nSeed, uint16_t wCI, int nIndex);
-void SetItemRecord(uint32_t nSeed, uint16_t wCI, int nIndex);
-void PutItemRecord(uint32_t nSeed, uint16_t wCI, int nIndex);
+bool GetItemRecord(uint32_t nSeed, uint16_t wCI, ItemID nIndex);
+void SetItemRecord(uint32_t nSeed, uint16_t wCI, ItemID nIndex);
+void PutItemRecord(uint32_t nSeed, uint16_t wCI, ItemID nIndex);
 
 /**
  * @brief Resets item get records.

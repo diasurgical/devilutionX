@@ -1143,7 +1143,7 @@ void GetStaffPower(const Player &player, Item &item, int lvl, SpellID bs, bool o
 		item._iPrePower = ItemPrefixes[preidx].power.type;
 	}
 
-	const ItemData &baseItemData = AllItemsList[GetItemIDIndex(item.IDidx)];
+	const ItemData &baseItemData = GetItemData(item.IDidx);
 	std::string staffName = GenerateStaffName(baseItemData, item._iSpell, false);
 
 	CopyUtf8(item._iName, staffName, sizeof(item._iName));
@@ -1256,7 +1256,7 @@ void GetItemPower(const Player &player, Item &item, int minlvl, int maxlvl, Affi
 
 	CopyUtf8(item._iIName, GenerateMagicItemName(item._iName, pPrefix, pSufix, false), sizeof(item._iIName));
 	if (!StringInPanel(item._iIName)) {
-		CopyUtf8(item._iIName, GenerateMagicItemName(AllItemsList[GetItemIDIndex(item.IDidx)].iSName, pPrefix, pSufix, false), sizeof(item._iIName));
+		CopyUtf8(item._iIName, GenerateMagicItemName(GetItemData(item.IDidx).iSName, pPrefix, pSufix, false), sizeof(item._iIName));
 	}
 	if (pPrefix != nullptr || pSufix != nullptr)
 		CalcItemValue(item);
@@ -1377,29 +1377,25 @@ void GetItemBonus(const Player &player, Item &item, int minlvl, int maxlvl, bool
 
 ItemID GetItemIDIndexForDroppableItem(bool considerDropRate, tl::function_ref<bool(const ItemData &item)> isItemOkay)
 {
-	const int arraySize = GetItemIDIndex(ItemID::Last) * 2;
-	static std::array<ItemID, arraySize> ril;
+	std::vector<ItemID> droppableItems;
 
-	size_t ri = 0;
-	for (std::underlying_type_t<ItemID> i = GetItemIDIndex(ItemID::First); i <= GetItemIDIndex(ItemID::Last); i++) {
-		if (!IsItemAvailable(i))
-			continue;
-		const ItemData &item = AllItemsList[i];
-		if (item.iRnd == IDROP_NEVER)
-			continue;
-		if (IsAnyOf(item.iSpell, SpellID::Resurrect, SpellID::HealOther) && !gbIsMultiplayer)
-			continue;
-		if (!isItemOkay(item))
-			continue;
-		ril[ri] = static_cast<ItemID>(i);
-		ri++;
-		if (item.iRnd == IDROP_DOUBLE && considerDropRate) {
-			ril[ri] = static_cast<ItemID>(i);
-			ri++;
+	for (ItemID itemId = ItemID::First; itemId <= ItemID::Last; itemId = static_cast<ItemID>(static_cast<std::underlying_type_t<ItemID>>(itemId) + 1)) {
+		if (IsItemAvailable(itemId)) {
+			const ItemData &item = GetItemData(itemId);
+			if (item.iRnd != IDROP_NEVER && (!IsAnyOf(item.iSpell, SpellID::Resurrect, SpellID::HealOther) || gbIsMultiplayer) && isItemOkay(item)) {
+				droppableItems.push_back(itemId);
+
+				if (item.iRnd == IDROP_DOUBLE && considerDropRate)
+					droppableItems.push_back(itemId);
+			}
 		}
 	}
 
-	return ril[GenerateRnd(static_cast<int>(ri))];
+	if (droppableItems.empty())
+		return ItemID::First;
+
+	size_t ri = GenerateRnd(static_cast<int>(droppableItems.size()));
+	return droppableItems[ri];
 }
 
 ItemID RndUItem(Monster *monster)
@@ -1456,7 +1452,7 @@ _unique_items CheckUnique(Item &item, int lvl, int uper, bool recreate)
 	for (int j = 0; UniqueItems[j].UIItemId != UITYPE_INVALID; j++) {
 		if (!IsUniqueAvailable(j))
 			break;
-		if (UniqueItems[j].UIItemId == AllItemsList[GetItemIDIndex(item.IDidx)].iItemId
+		if (UniqueItems[j].UIItemId == GetItemData(item.IDidx).iItemId
 		    && lvl >= UniqueItems[j].UIMinLvl
 		    && (recreate || !UniqueItemFlags[j] || gbIsMultiplayer)) {
 			uok[j] = true;
@@ -1551,7 +1547,7 @@ void SetupAllItems(const Player &player, Item &item, ItemID idx, uint32_t iseed,
 			ItemRndDur(item);
 	} else {
 		if (item._iLoc != ILOC_UNEQUIPABLE) {
-			if (iseed > 109 || AllItemsList[GetItemIDIndex(idx)].iItemId != UniqueItems[iseed].UIItemId) {
+			if (iseed > 109 || GetItemData(idx).iItemId != UniqueItems[iseed].UIItemId) {
 				item.clear();
 				return;
 			}
@@ -2271,7 +2267,7 @@ ItemID RndItemForMonsterLevel(int8_t monsterLevel)
 
 StringOrView GetTranslatedItemName(const Item &item)
 {
-	const auto &baseItemData = AllItemsList[GetItemIDIndex(item.IDidx)];
+	const auto &baseItemData = GetItemData(item.IDidx);
 
 	if (item._iCreateInfo == 0) {
 		return _(baseItemData.iName);
@@ -2300,7 +2296,7 @@ StringOrView GetTranslatedItemName(const Item &item)
 std::string GetTranslatedItemNameMagical(const Item &item, bool hellfireItem, bool translate, std::optional<bool> forceNameLengthCheck)
 {
 	std::string identifiedName;
-	const auto &baseItemData = AllItemsList[GetItemIDIndex(item.IDidx)];
+	const auto &baseItemData = GetItemData(item.IDidx);
 
 	int lvl = item._iCreateInfo & CF_LEVEL;
 	bool onlygood = (item._iCreateInfo & (CF_ONLYGOOD | CF_SMITHPREMIUM | CF_BOY | CF_WITCH)) != 0;
@@ -2431,21 +2427,21 @@ std::string GetTranslatedItemNameMagical(const Item &item, bool hellfireItem, bo
 
 } // namespace
 
-bool IsItemAvailable(int i)
+bool IsItemAvailable(ItemID i)
 {
-	if (i < GetItemIDIndex(ItemID::First) || i > GetItemIDIndex(ItemID::Last))
+	if (i < ItemID::First || i > ItemID::Last)
 		return false;
 
 	if (gbIsSpawn) {
-		if (i >= GetItemIDIndex(ItemID::MediumHeavyArmorFirst) && i <= GetItemIDIndex(ItemID::MediumHeavyArmorLast))
+		if (i >= ItemID::MediumHeavyArmorFirst && i <= ItemID::MediumHeavyArmorLast)
 			return false; // Medium and heavy armors
 		if (IsAnyOf(i,
-		        GetItemIDIndex(ItemID::ScrollStoneCurse),
-		        GetItemIDIndex(ItemID::ScrollGuardian),
-		        GetItemIDIndex(ItemID::NonItem),
-		        GetItemIDIndex(ItemID::ScrollGolem),
-		        GetItemIDIndex(ItemID::ScrollNone),
-		        GetItemIDIndex(ItemID::ScrollApocalypse)))
+		        ItemID::ScrollStoneCurse,
+		        ItemID::ScrollGuardian,
+		        ItemID::NonItem,
+		        ItemID::ScrollGolem,
+		        ItemID::ScrollNone,
+		        ItemID::ScrollApocalypse))
 			return false; // Unavailable scrolls
 	}
 
@@ -2453,18 +2449,18 @@ bool IsItemAvailable(int i)
 		return true;
 
 	return (
-	           i != GetItemIDIndex(ItemID::CathedralMap)                                                   // Cathedral Map
-	           && i != GetItemIDIndex(ItemID::BovinePlate)                                                 // Bovine Plate
-	           && (i < GetItemIDIndex(ItemID::FirstHellfire) || i > GetItemIDIndex(ItemID::LastHellfire)) // Hellfire exclusive items
-	           && (i < GetItemIDIndex(ItemID::FirstOil) || i > GetItemIDIndex(ItemID::LastOil))           // Oils
-	           && i != GetItemIDIndex(ItemID::ScrollSearch)                                                // Scroll of Search
-	           && (i < GetItemIDIndex(ItemID::FirstRune) || i > GetItemIDIndex(ItemID::LastRune))         // Runes
-	           && i != GetItemIDIndex(ItemID::SorcererStaffMana)                                           // Short Staff of Mana
+	           i != ItemID::CathedralMap                                  // Cathedral Map
+	           && i != ItemID::BovinePlate                                // Bovine Plate
+	           && (i < ItemID::FirstHellfire || i > ItemID::LastHellfire) // Hellfire exclusive items
+	           && (i < ItemID::FirstOil || i > ItemID::LastOil)           // Oils
+	           && i != ItemID::ScrollSearch                               // Scroll of Search
+	           && (i < ItemID::FirstRune || i > ItemID::LastRune)         // Runes
+	           && i != ItemID::SorcererStaffMana                          // Short Staff of Mana
 	           )
 	    || (
 	        // Bard items are technically Hellfire-exclusive
 	        // but are just normal items with adjusted stats.
-	        *sgOptions.Gameplay.testBard && IsAnyOf(i, GetItemIDIndex(ItemID::BardSword), GetItemIDIndex(ItemID::BardDagger)));
+	        *sgOptions.Gameplay.testBard && IsAnyOf(i, ItemID::BardSword, ItemID::BardDagger));
 }
 
 uint8_t GetOutlineColor(const Item &item, bool checkReq)
@@ -2919,7 +2915,7 @@ void CalcPlrInv(Player &player, bool loadgfx)
 
 void InitializeItem(Item &item, ItemID itemData)
 {
-	auto &pAllItem = AllItemsList[GetItemIDIndex(itemData)];
+	auto &pAllItem = GetItemData(itemData);
 
 	// zero-initialize struct
 	item = {};
@@ -3157,7 +3153,7 @@ Point GetSuperItemLoc(Point position)
 
 void GetItemAttrs(Item &item, ItemID itemData, int lvl)
 {
-	const auto &baseItemData = AllItemsList[GetItemIDIndex(itemData)];
+	const auto &baseItemData = GetItemData(itemData);
 	item._itype = baseItemData.itype;
 	item._iCurs = baseItemData.iCurs;
 	CopyUtf8(item._iName, baseItemData.iName, sizeof(item._iName));
@@ -3234,9 +3230,13 @@ Item *SpawnUnique(_unique_items uid, Point position, std::optional<int> level /*
 	}
 	int curlv = ItemsGetCurrlevel();
 
-	std::underlying_type_t<ItemID> idx = 0;
-	while (AllItemsList[idx].iItemId != UniqueItems[uid].UIItemId)
-		idx++;
+	ItemID idx = ItemID::First;
+	for (ItemID itemId = ItemID::First; itemId <= ItemID::Last; itemId = static_cast<ItemID>(static_cast<std::underlying_type_t<ItemID>>(itemId) + 1)) {
+		if (GetItemData(itemId).iItemId == UniqueItems[uid].UIItemId) {
+			idx = itemId;
+			break;
+		}
+	}
 
 	if (sgGameInitInfo.nDifficulty == DIFF_NORMAL) {
 		GetItemAttrs(item, static_cast<ItemID>(idx), curlv);
@@ -3245,7 +3245,7 @@ Item *SpawnUnique(_unique_items uid, Point position, std::optional<int> level /*
 	} else {
 		if (level)
 			curlv = *level;
-		const ItemData &uniqueItemData = AllItemsList[idx];
+		const ItemData &uniqueItemData = GetItemData(idx);
 		ItemID idx = GetItemIDIndexForDroppableItem(false, [&uniqueItemData](const ItemData &item) {
 			return item.itype == uniqueItemData.itype;
 		});
@@ -4308,7 +4308,7 @@ void SpawnWitch(int lvl)
 		if (gbIsHellfire) {
 			if (i < PinnedItemCount + MaxPinnedBookCount && bookCount < pinnedBookCount) {
 				ItemID bookType = PinnedBookTypes[i - PinnedItemCount];
-				if (lvl >= AllItemsList[GetItemIDIndex(bookType)].iMinMLvl) {
+				if (lvl >= GetItemData(bookType).iMinMLvl) {
 					item._iSeed = AdvanceRndSeed();
 					SetRndSeed(item._iSeed);
 					DiscardRandomValues(1);
@@ -4569,7 +4569,7 @@ void CreateMagicWeapon(Point position, ItemType itemType, int icurs, bool sendms
 	CreateMagicItem(position, curlv, itemType, imid, icurs, sendmsg, delta);
 }
 
-bool GetItemRecord(uint32_t nSeed, uint16_t wCI, int nIndex)
+bool GetItemRecord(uint32_t nSeed, uint16_t wCI, ItemID nIndex)
 {
 	uint32_t ticks = SDL_GetTicks();
 
@@ -4578,7 +4578,7 @@ bool GetItemRecord(uint32_t nSeed, uint16_t wCI, int nIndex)
 			// BUGFIX: loot actions for multiple quest items with same seed (e.g. blood stone) performed within less than 6 seconds will be ignored.
 			NextItemRecord(i);
 			i--;
-		} else if (nSeed == itemrecord[i].nSeed && wCI == itemrecord[i].wCI && nIndex == itemrecord[i].nIndex) {
+		} else if (nSeed == itemrecord[i].nSeed && wCI == itemrecord[i].wCI && static_cast<std::underlying_type_t<ItemID>>(nIndex) == itemrecord[i].nIndex) {
 			return false;
 		}
 	}
@@ -4586,7 +4586,7 @@ bool GetItemRecord(uint32_t nSeed, uint16_t wCI, int nIndex)
 	return true;
 }
 
-void SetItemRecord(uint32_t nSeed, uint16_t wCI, int nIndex)
+void SetItemRecord(uint32_t nSeed, uint16_t wCI, ItemID nIndex)
 {
 	uint32_t ticks = SDL_GetTicks();
 
@@ -4597,11 +4597,11 @@ void SetItemRecord(uint32_t nSeed, uint16_t wCI, int nIndex)
 	itemrecord[gnNumGetRecords].dwTimestamp = ticks;
 	itemrecord[gnNumGetRecords].nSeed = nSeed;
 	itemrecord[gnNumGetRecords].wCI = wCI;
-	itemrecord[gnNumGetRecords].nIndex = nIndex;
+	itemrecord[gnNumGetRecords].nIndex = static_cast<std::underlying_type_t<ItemID>>(nIndex);
 	gnNumGetRecords++;
 }
 
-void PutItemRecord(uint32_t nSeed, uint16_t wCI, int nIndex)
+void PutItemRecord(uint32_t nSeed, uint16_t wCI, ItemID nIndex)
 {
 	uint32_t ticks = SDL_GetTicks();
 
@@ -4609,7 +4609,7 @@ void PutItemRecord(uint32_t nSeed, uint16_t wCI, int nIndex)
 		if (ticks - itemrecord[i].dwTimestamp > 6000) {
 			NextItemRecord(i);
 			i--;
-		} else if (nSeed == itemrecord[i].nSeed && wCI == itemrecord[i].wCI && nIndex == itemrecord[i].nIndex) {
+		} else if (nSeed == itemrecord[i].nSeed && wCI == itemrecord[i].wCI && static_cast<std::underlying_type_t<ItemID>>(nIndex) == itemrecord[i].nIndex) {
 			NextItemRecord(i);
 			break;
 		}
@@ -4691,10 +4691,10 @@ std::string DebugSpawnUniqueItem(std::string itemName)
 		return "No unique found!";
 
 	ItemID uniqueBaseIndex = ItemID::First;
-	for (std::underlying_type_t<ItemID> j = GetItemIDIndex(ItemID::First); j <= GetItemIDIndex(ItemID::Last); j++) {
+	for (ItemID j = ItemID::First; j <= ItemID::Last; j = static_cast<ItemID>(static_cast<std::underlying_type_t<ItemID>>(j) + 1)) {
 		if (!IsItemAvailable(j))
 			continue;
-		if (AllItemsList[j].iItemId == uniqueItem.UIItemId) {
+		if (GetItemData(j).iItemId == uniqueItem.UIItemId) {
 			uniqueBaseIndex = static_cast<ItemID>(j);
 			break;
 		}
@@ -4703,7 +4703,7 @@ std::string DebugSpawnUniqueItem(std::string itemName)
 	if (uniqueBaseIndex == ItemID::First)
 		return "Base item not available";
 
-	auto &baseItemData = AllItemsList[GetItemIDIndex(uniqueBaseIndex)];
+	auto &baseItemData = GetItemData(uniqueBaseIndex);
 
 	Item testItem;
 
@@ -4752,7 +4752,7 @@ bool Item::isUsable() const
 {
 	if (IDidx == ItemID::SpectralElixir && Quests[Q_MUSHROOM]._qactive != QUEST_DONE)
 		return false;
-	return AllItemsList[GetItemIDIndex(IDidx)].iUsable;
+	return GetItemData(IDidx).iUsable;
 }
 
 void Item::setNewAnimation(bool showAnimation)

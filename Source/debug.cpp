@@ -902,7 +902,7 @@ std::string DebugCmdItemInfo(const string_view parameter)
 		pItem = &Items[pcursitem];
 	}
 	if (pItem != nullptr) {
-		return StrCat("Name: ", pItem->_iIName, "\nIDidx: ", GetItemIDIndex(pItem->IDidx), "\nSeed: ", pItem->_iSeed, "\nCreateInfo: ", pItem->_iCreateInfo);
+		return StrCat("Name: ", pItem->_iIName, "\nIDidx: ", static_cast<std::underlying_type_t<ItemID>>(pItem->IDidx), "\nSeed: ", pItem->_iSeed, "\nCreateInfo: ", pItem->_iCreateInfo);
 	}
 	return StrCat("Numitems: ", ActiveItemCount);
 }

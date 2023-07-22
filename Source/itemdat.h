@@ -721,16 +721,9 @@ extern const PLStruct ItemPrefixes[];
 extern const PLStruct ItemSuffixes[];
 extern const UniqueItem UniqueItems[];
 
-constexpr std::underlying_type_t<ItemID> GetItemIDIndex(ItemID idxEnum)
+inline const ItemData &GetItemData(ItemID itemId)
 {
-	return static_cast<std::underlying_type_t<ItemID>>(idxEnum);
-}
-constexpr ItemID GetItemIDEnum(int idx)
-{
-	if (idx < static_cast<std::underlying_type_t<ItemID>>(ItemID::First) || idx > static_cast<std::underlying_type_t<ItemID>>(ItemID::Last))
-		return ItemID::None;
-
-	return static_cast<ItemID>(idx);
+	return AllItemsList[static_cast<std::underlying_type_t<ItemID>>(itemId)];
 }
 
 } // namespace devilution

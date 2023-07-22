@@ -4458,12 +4458,14 @@ void ObjChangeMapResync(int x1, int y1, int x2, int y2)
 
 ItemID ItemMiscIdIdx(item_misc_id imiscid)
 {
-	std::underlying_type_t<ItemID> i = GetItemIDIndex(ItemID::First);
-	while (AllItemsList[i].iRnd == IDROP_NEVER || AllItemsList[i].iMiscId != imiscid) {
-		i++;
+	for (ItemID itemId = ItemID::First; itemId <= ItemID::Last; itemId = static_cast<ItemID>(static_cast<std::underlying_type_t<ItemID>>(itemId) + 1)) {
+		const ItemData &item = GetItemData(itemId);
+		if (item.iRnd != IDROP_NEVER && item.iMiscId == imiscid) {
+			return itemId;
+		}
 	}
 
-	return static_cast<ItemID>(i);
+	return ItemID::First;
 }
 
 void OperateObject(Player &player, Object &object)
