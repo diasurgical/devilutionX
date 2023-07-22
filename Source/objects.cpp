@@ -321,6 +321,15 @@ bool RndLocOk(int xp, int yp)
 	return IsNoneOf(leveltype, DTYPE_CATHEDRAL, DTYPE_CRYPT) || dPiece[xp][yp] <= 125 || dPiece[xp][yp] >= 143;
 }
 
+bool IsAreaOk(Rectangle rect)
+{
+	for (Point position : PointsInRectangle(rect)) {
+		if (!RndLocOk(position.x, position.y))
+			return false;
+	}
+	return true;
+}
+
 bool CanPlaceWallTrap(int xp, int yp)
 {
 	if (dObject[xp][yp] != 0)
@@ -339,15 +348,7 @@ void InitRndLocObj(int min, int max, _object_id objtype)
 		while (true) {
 			int xp = GenerateRnd(80) + 16;
 			int yp = GenerateRnd(80) + 16;
-			if (RndLocOk(xp - 1, yp - 1)
-			    && RndLocOk(xp, yp - 1)
-			    && RndLocOk(xp + 1, yp - 1)
-			    && RndLocOk(xp - 1, yp)
-			    && RndLocOk(xp, yp)
-			    && RndLocOk(xp + 1, yp)
-			    && RndLocOk(xp - 1, yp + 1)
-			    && RndLocOk(xp, yp + 1)
-			    && RndLocOk(xp + 1, yp + 1)) {
+			if (IsAreaOk(Rectangle { { xp - 1, yp - 1 }, { 3, 3 } })) {
 				AddObject(objtype, { xp, yp });
 				break;
 			}
@@ -362,18 +363,7 @@ void InitRndLocBigObj(int min, int max, _object_id objtype)
 		while (true) {
 			int xp = GenerateRnd(80) + 16;
 			int yp = GenerateRnd(80) + 16;
-			if (RndLocOk(xp - 1, yp - 2)
-			    && RndLocOk(xp, yp - 2)
-			    && RndLocOk(xp + 1, yp - 2)
-			    && RndLocOk(xp - 1, yp - 1)
-			    && RndLocOk(xp, yp - 1)
-			    && RndLocOk(xp + 1, yp - 1)
-			    && RndLocOk(xp - 1, yp)
-			    && RndLocOk(xp, yp)
-			    && RndLocOk(xp + 1, yp)
-			    && RndLocOk(xp - 1, yp + 1)
-			    && RndLocOk(xp, yp + 1)
-			    && RndLocOk(xp + 1, yp + 1)) {
+			if (IsAreaOk(Rectangle { { xp - 1, yp - 2 }, { 3, 4 } })) {
 				AddObject(objtype, { xp, yp });
 				break;
 			}
@@ -845,15 +835,7 @@ void AddNakrulLever()
 	while (true) {
 		int xp = GenerateRnd(80) + 16;
 		int yp = GenerateRnd(80) + 16;
-		if (RndLocOk(xp - 1, yp - 1)
-		    && RndLocOk(xp, yp - 1)
-		    && RndLocOk(xp + 1, yp - 1)
-		    && RndLocOk(xp - 1, yp)
-		    && RndLocOk(xp, yp)
-		    && RndLocOk(xp + 1, yp)
-		    && RndLocOk(xp - 1, yp + 1)
-		    && RndLocOk(xp, yp + 1)
-		    && RndLocOk(xp + 1, yp + 1)) {
+		if (IsAreaOk(Rectangle { { xp - 1, yp - 1 }, { 3, 3 } })) {
 			break;
 		}
 	}
@@ -969,23 +951,18 @@ void AddLazStand()
 	int cnt = 0;
 	int xp;
 	int yp;
-	bool found = false;
-	while (!found) {
-		found = true;
+	while (true) {
 		xp = GenerateRnd(80) + 16;
 		yp = GenerateRnd(80) + 16;
-		for (int yy = -3; yy <= 3; yy++) {
-			for (int xx = -2; xx <= 3; xx++) {
-				if (!RndLocOk(xp + xx, yp + yy))
-					found = false;
-			}
-		}
-		if (!found) {
+
+		if (!IsAreaOk(Rectangle { { xp - 2, yp - 3 }, { 6, 7 } })) {
 			cnt++;
 			if (cnt > 10000) {
 				InitRndLocObj(1, 1, OBJ_LAZSTAND);
 				return;
 			}
+		} else {
+			break;
 		}
 	}
 	AddObject(OBJ_LAZSTAND, { xp, yp });
@@ -1528,13 +1505,7 @@ Point GetRndObjLoc(int randarea)
 			randarea--;
 		x = GenerateRnd(MAXDUNX);
 		y = GenerateRnd(MAXDUNY);
-		bool failed = false;
-		for (int i = 0; i < randarea && !failed; i++) {
-			for (int j = 0; j < randarea && !failed; j++) {
-				failed = !RndLocOk(i + x, j + y);
-			}
-		}
-		if (!failed)
+		if (IsAreaOk(Rectangle { { x, y }, { randarea, randarea } }))
 			break;
 	}
 	return { x, y };
