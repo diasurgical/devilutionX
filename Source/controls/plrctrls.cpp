@@ -241,7 +241,7 @@ bool CanTargetMonster(const Monster &monster)
 		return false;
 	if (monster.isPlayerMinion())
 		return false;
-	if (monster.hitPoints >> 6 <= 0) // dead
+	if (!monster.IsAlive()) // dead
 		return false;
 
 	if (!IsTileLit(monster.position.tile)) // not visible

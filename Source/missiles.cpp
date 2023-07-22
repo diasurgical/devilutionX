@@ -260,7 +260,7 @@ bool MonsterMHit(int pnum, int monsterId, int mindam, int maxdam, int dist, Miss
 	if (&player == MyPlayer)
 		ApplyMonsterDamage(damageType, monster, dam);
 
-	if (monster.hitPoints >> 6 <= 0) {
+	if (!monster.IsAlive()) {
 		M_StartKill(monster, player);
 	} else if (resist) {
 		monster.tag(player);
@@ -658,7 +658,7 @@ bool GuardianTryFireAt(Missile &missile, Point target)
 	const Monster &monster = Monsters[mid];
 	if (monster.isPlayerMinion())
 		return false;
-	if (monster.hitPoints >> 6 <= 0)
+	if (!monster.IsAlive())
 		return false;
 
 	Player &player = Players[missile._misource];
@@ -959,7 +959,7 @@ bool MonsterTrapHit(int monsterId, int mindam, int maxdam, int dist, MissileID t
 	if (DebugGodMode)
 		monster.hitPoints = 0;
 #endif
-	if (monster.hitPoints >> 6 <= 0) {
+	if (!monster.IsAlive()) {
 		MonsterDeath(monster, monster.direction, true);
 	} else if (resist) {
 		PlayEffect(monster, MonsterSound::Hit);
@@ -3655,7 +3655,7 @@ void ProcessStoneCurse(Missile &missile)
 {
 	missile._mirange--;
 	auto &monster = Monsters[missile.var2];
-	if (monster.hitPoints == 0 && missile._miAnimType != MissileGraphicID::StoneCurseShatter) {
+	if (!monster.IsAlive() && missile._miAnimType != MissileGraphicID::StoneCurseShatter) {
 		missile._mimfnum = 0;
 		missile._miDrawFlag = true;
 		SetMissAnim(missile, MissileGraphicID::StoneCurseShatter);
@@ -3668,7 +3668,7 @@ void ProcessStoneCurse(Missile &missile)
 
 	if (missile._mirange == 0) {
 		missile._miDelFlag = true;
-		if (monster.hitPoints > 0) {
+		if (monster.IsAlive()) {
 			monster.mode = static_cast<MonsterMode>(missile.var1);
 			monster.animInfo.isPetrified = false;
 		} else {

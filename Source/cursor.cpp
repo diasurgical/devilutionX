@@ -505,49 +505,49 @@ void CheckCursMove()
 		if (pcurstemp != -1) {
 			if (!flipflag && mx + 2 < MAXDUNX && my + 1 < MAXDUNY && dMonster[mx + 2][my + 1] != 0 && IsTileLit({ mx + 2, my + 1 })) {
 				const uint16_t monsterId = abs(dMonster[mx + 2][my + 1]) - 1;
-				if (monsterId == pcurstemp && Monsters[monsterId].hitPoints >> 6 > 0 && (Monsters[monsterId].data().selectionType & 4) != 0) {
+				if (monsterId == pcurstemp && Monsters[monsterId].IsAlive() && (Monsters[monsterId].data().selectionType & 4) != 0) {
 					cursPosition = Point { mx, my } + Displacement { 2, 1 };
 					pcursmonst = monsterId;
 				}
 			}
 			if (flipflag && mx + 1 < MAXDUNX && my + 2 < MAXDUNY && dMonster[mx + 1][my + 2] != 0 && IsTileLit({ mx + 1, my + 2 })) {
 				const uint16_t monsterId = abs(dMonster[mx + 1][my + 2]) - 1;
-				if (monsterId == pcurstemp && Monsters[monsterId].hitPoints >> 6 > 0 && (Monsters[monsterId].data().selectionType & 4) != 0) {
+				if (monsterId == pcurstemp && Monsters[monsterId].IsAlive() && (Monsters[monsterId].data().selectionType & 4) != 0) {
 					cursPosition = Point { mx, my } + Displacement { 1, 2 };
 					pcursmonst = monsterId;
 				}
 			}
 			if (mx + 2 < MAXDUNX && my + 2 < MAXDUNY && dMonster[mx + 2][my + 2] != 0 && IsTileLit({ mx + 2, my + 2 })) {
 				const uint16_t monsterId = abs(dMonster[mx + 2][my + 2]) - 1;
-				if (monsterId == pcurstemp && Monsters[monsterId].hitPoints >> 6 > 0 && (Monsters[monsterId].data().selectionType & 4) != 0) {
+				if (monsterId == pcurstemp && Monsters[monsterId].IsAlive() && (Monsters[monsterId].data().selectionType & 4) != 0) {
 					cursPosition = Point { mx, my } + Displacement { 2, 2 };
 					pcursmonst = monsterId;
 				}
 			}
 			if (mx + 1 < MAXDUNX && !flipflag && dMonster[mx + 1][my] != 0 && IsTileLit({ mx + 1, my })) {
 				const uint16_t monsterId = abs(dMonster[mx + 1][my]) - 1;
-				if (monsterId == pcurstemp && Monsters[monsterId].hitPoints >> 6 > 0 && (Monsters[monsterId].data().selectionType & 2) != 0) {
+				if (monsterId == pcurstemp && Monsters[monsterId].IsAlive() && (Monsters[monsterId].data().selectionType & 2) != 0) {
 					cursPosition = Point { mx, my } + Displacement { 1, 0 };
 					pcursmonst = monsterId;
 				}
 			}
 			if (my + 1 < MAXDUNY && flipflag && dMonster[mx][my + 1] != 0 && IsTileLit({ mx, my + 1 })) {
 				const uint16_t monsterId = abs(dMonster[mx][my + 1]) - 1;
-				if (monsterId == pcurstemp && Monsters[monsterId].hitPoints >> 6 > 0 && (Monsters[monsterId].data().selectionType & 2) != 0) {
+				if (monsterId == pcurstemp && Monsters[monsterId].IsAlive() && (Monsters[monsterId].data().selectionType & 2) != 0) {
 					cursPosition = Point { mx, my } + Displacement { 0, 1 };
 					pcursmonst = monsterId;
 				}
 			}
 			if (dMonster[mx][my] != 0 && IsTileLit({ mx, my })) {
 				const uint16_t monsterId = abs(dMonster[mx][my]) - 1;
-				if (monsterId == pcurstemp && Monsters[monsterId].hitPoints >> 6 > 0 && (Monsters[monsterId].data().selectionType & 1) != 0) {
+				if (monsterId == pcurstemp && Monsters[monsterId].IsAlive() && (Monsters[monsterId].data().selectionType & 1) != 0) {
 					cursPosition = { mx, my };
 					pcursmonst = monsterId;
 				}
 			}
 			if (mx + 1 < MAXDUNX && my + 1 < MAXDUNY && dMonster[mx + 1][my + 1] != 0 && IsTileLit({ mx + 1, my + 1 })) {
 				const uint16_t monsterId = abs(dMonster[mx + 1][my + 1]) - 1;
-				if (monsterId == pcurstemp && Monsters[monsterId].hitPoints >> 6 > 0 && (Monsters[monsterId].data().selectionType & 2) != 0) {
+				if (monsterId == pcurstemp && Monsters[monsterId].IsAlive() && (Monsters[monsterId].data().selectionType & 2) != 0) {
 					cursPosition = Point { mx, my } + Displacement { 1, 1 };
 					pcursmonst = monsterId;
 				}
@@ -565,49 +565,49 @@ void CheckCursMove()
 		}
 		if (!flipflag && mx + 2 < MAXDUNX && my + 1 < MAXDUNY && dMonster[mx + 2][my + 1] != 0 && IsTileLit({ mx + 2, my + 1 })) {
 			int monsterId = abs(dMonster[mx + 2][my + 1]) - 1;
-			if (Monsters[monsterId].hitPoints >> 6 > 0 && (Monsters[monsterId].data().selectionType & 4) != 0) {
+			if (Monsters[monsterId].IsAlive() && (Monsters[monsterId].data().selectionType & 4) != 0) {
 				cursPosition = Point { mx, my } + Displacement { 2, 1 };
 				pcursmonst = monsterId;
 			}
 		}
 		if (flipflag && mx + 1 < MAXDUNX && my + 2 < MAXDUNY && dMonster[mx + 1][my + 2] != 0 && IsTileLit({ mx + 1, my + 2 })) {
 			const uint16_t monsterId = abs(dMonster[mx + 1][my + 2]) - 1;
-			if (Monsters[monsterId].hitPoints >> 6 > 0 && (Monsters[monsterId].data().selectionType & 4) != 0) {
+			if (Monsters[monsterId].IsAlive() && (Monsters[monsterId].data().selectionType & 4) != 0) {
 				cursPosition = Point { mx, my } + Displacement { 1, 2 };
 				pcursmonst = monsterId;
 			}
 		}
 		if (mx + 2 < MAXDUNX && my + 2 < MAXDUNY && dMonster[mx + 2][my + 2] != 0 && IsTileLit({ mx + 2, my + 2 })) {
 			const uint16_t monsterId = abs(dMonster[mx + 2][my + 2]) - 1;
-			if (Monsters[monsterId].hitPoints >> 6 > 0 && (Monsters[monsterId].data().selectionType & 4) != 0) {
+			if (Monsters[monsterId].IsAlive() && (Monsters[monsterId].data().selectionType & 4) != 0) {
 				cursPosition = Point { mx, my } + Displacement { 2, 2 };
 				pcursmonst = monsterId;
 			}
 		}
 		if (!flipflag && mx + 1 < MAXDUNX && dMonster[mx + 1][my] != 0 && IsTileLit({ mx + 1, my })) {
 			const uint16_t monsterId = abs(dMonster[mx + 1][my]) - 1;
-			if (Monsters[monsterId].hitPoints >> 6 > 0 && (Monsters[monsterId].data().selectionType & 2) != 0) {
+			if (Monsters[monsterId].IsAlive() && (Monsters[monsterId].data().selectionType & 2) != 0) {
 				cursPosition = Point { mx, my } + Displacement { 1, 0 };
 				pcursmonst = monsterId;
 			}
 		}
 		if (flipflag && my + 1 < MAXDUNY && dMonster[mx][my + 1] != 0 && IsTileLit({ mx, my + 1 })) {
 			const uint16_t monsterId = abs(dMonster[mx][my + 1]) - 1;
-			if (Monsters[monsterId].hitPoints >> 6 > 0 && (Monsters[monsterId].data().selectionType & 2) != 0) {
+			if (Monsters[monsterId].IsAlive() && (Monsters[monsterId].data().selectionType & 2) != 0) {
 				cursPosition = Point { mx, my } + Displacement { 0, 1 };
 				pcursmonst = monsterId;
 			}
 		}
 		if (dMonster[mx][my] != 0 && IsTileLit({ mx, my })) {
 			const uint16_t monsterId = abs(dMonster[mx][my]) - 1;
-			if (Monsters[monsterId].hitPoints >> 6 > 0 && (Monsters[monsterId].data().selectionType & 1) != 0) {
+			if (Monsters[monsterId].IsAlive() && (Monsters[monsterId].data().selectionType & 1) != 0) {
 				cursPosition = { mx, my };
 				pcursmonst = monsterId;
 			}
 		}
 		if (mx + 1 < MAXDUNX && my + 1 < MAXDUNY && dMonster[mx + 1][my + 1] != 0 && IsTileLit({ mx + 1, my + 1 })) {
 			const uint16_t monsterId = abs(dMonster[mx + 1][my + 1]) - 1;
-			if (Monsters[monsterId].hitPoints >> 6 > 0 && (Monsters[monsterId].data().selectionType & 2) != 0) {
+			if (Monsters[monsterId].IsAlive() && (Monsters[monsterId].data().selectionType & 2) != 0) {
 				cursPosition = Point { mx, my } + Displacement { 1, 1 };
 				pcursmonst = monsterId;
 			}

@@ -154,7 +154,7 @@ void SyncMonster(bool isOwner, const TSyncMonster &monsterSync)
 {
 	const int monsterId = monsterSync._mndx;
 	Monster &monster = Monsters[monsterId];
-	if (monster.hitPoints <= 0 || monster.mode == MonsterMode::Death) {
+	if (!monster.IsAlive() || monster.mode == MonsterMode::Death) {
 		return;
 	}
 
@@ -225,7 +225,7 @@ bool IsEnemyIdValid(const Monster &monster, int enemyId)
 		return false;
 	}
 
-	if (enemy.hitPoints <= 0) {
+	if (!enemy.IsAlive()) {
 		return false;
 	}
 

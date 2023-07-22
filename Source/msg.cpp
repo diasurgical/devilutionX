@@ -673,7 +673,7 @@ void DeltaLeaveSync(uint8_t bLevel)
 	for (size_t i = 0; i < ActiveMonsterCount; i++) {
 		int ma = ActiveMonsters[i];
 		auto &monster = Monsters[ma];
-		if (monster.hitPoints == 0)
+		if (!monster.IsAlive())
 			continue;
 		DMonsterStr &delta = deltaLevel.monster[ma];
 		delta.position = monster.position.tile;
@@ -1745,7 +1745,7 @@ size_t OnMonstDamage(const TCmd *pCmd, size_t pnum)
 			if (player.isOnActiveLevel() && monsterIdx < MaxMonsters) {
 				auto &monster = Monsters[monsterIdx];
 				monster.tag(player);
-				if (monster.hitPoints > 0) {
+				if (monster.IsAlive()) {
 					monster.hitPoints -= SDL_SwapLE32(message.dwDam);
 					if ((monster.hitPoints >> 6) < 1)
 						monster.hitPoints = 1 << 6;

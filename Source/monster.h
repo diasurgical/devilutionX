@@ -316,6 +316,11 @@ struct Monster { // note: missing field _mAFNum
 		return *type().data;
 	}
 
+	bool IsAlive() const
+	{
+		return hitPoints > 0;
+	}
+
 	/**
 	 * @brief Returns monster's name
 	 * Internally it returns a name stored in global array of monsters' data.
