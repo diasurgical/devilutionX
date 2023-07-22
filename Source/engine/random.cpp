@@ -55,6 +55,11 @@ int32_t GenerateRnd(int32_t v)
 	return AdvanceRndSeed() % v;
 }
 
+int32_t RndBetween(int32_t a, int32_t b)
+{
+	return a + GenerateRnd(b - a + 1);
+}
+
 bool FlipCoin(unsigned frequency)
 {
 	// Casting here because GenerateRnd takes a signed argument when it should take and yield unsigned.

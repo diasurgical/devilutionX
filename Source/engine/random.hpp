@@ -73,6 +73,14 @@ uint32_t GenerateSeed();
 int32_t GenerateRnd(int32_t v);
 
 /**
+ * @brief Generates a random value in [a, b] range using the vanilla RNG
+ * @param a - start of the range
+ * @param b - end of the range
+ * @return A random value in [a, b] range
+ */
+int32_t RndBetween(int32_t a, int32_t b);
+
+/**
  * @brief Generates a random boolean value using the vanilla RNG
  *
  * This function returns true 1 in `frequency` of the time, otherwise false. For example the default frequency of 2

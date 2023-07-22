@@ -1089,7 +1089,7 @@ void MonsterAttackMonster(Monster &attacker, Monster &target, int hper, int mind
 	if (hit >= hper)
 		return;
 
-	int dam = (mind + GenerateRnd(maxd - mind + 1)) << 6;
+	int dam = RndBetween(mind, maxd) << 6;
 	ApplyMonsterDamage(DamageType::Physical, target, dam);
 
 	if (attacker.isPlayerMinion()) {
@@ -1194,7 +1194,7 @@ void MonsterAttackPlayer(Monster &monster, Player &player, int hit, int minDam, 
 			}
 		}
 	}
-	int dam = (minDam << 6) + GenerateRnd(((maxDam - minDam) << 6) + 1);
+	int dam = RndBetween(minDam << 6, maxDam << 6);
 	dam = std::max(dam + (player._pIGetHit << 6), 64);
 	if (&player == MyPlayer) {
 		if (player.wReflections > 0) {
@@ -2651,7 +2651,7 @@ void CounselorAi(Monster &monster)
 		if (distanceToEnemy >= 2) {
 			if (v < 5 * (monster.intelligence + 10) && LineClearMissile(monster.position.tile, monster.enemyPosition)) {
 				constexpr MissileID MissileTypes[4] = { MissileID::Firebolt, MissileID::ChargedBolt, MissileID::LightningControl, MissileID::Fireball };
-				StartRangedAttack(monster, MissileTypes[monster.intelligence], monster.minDamage + GenerateRnd(monster.maxDamage - monster.minDamage + 1));
+				StartRangedAttack(monster, MissileTypes[monster.intelligence], RndBetween(monster.minDamage, monster.maxDamage));
 			} else if (GenerateRnd(100) < 30) {
 				monster.goal = MonsterGoal::Move;
 				monster.goalVar1 = 0;
