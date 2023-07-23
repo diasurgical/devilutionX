@@ -76,7 +76,7 @@ void DrawXPBar(const Surface &out)
 
 	RenderClxSprite(out, (*xpbarArt)[0], back);
 
-	const uint8_t charLevel = player._pLevel;
+	const uint8_t charLevel = player.getCharacterLevel();
 
 	if (charLevel == MaxCharacterLevel) {
 		// Draw a nice golden bar for max level characters.
@@ -120,7 +120,7 @@ bool CheckXPBarInfo()
 
 	const Player &player = *MyPlayer;
 
-	const uint8_t charLevel = player._pLevel;
+	const uint8_t charLevel = player.getCharacterLevel();
 
 	AddPanelString(fmt::format(fmt::runtime(_("Level {:d}")), charLevel));
 
@@ -137,8 +137,8 @@ bool CheckXPBarInfo()
 	InfoColor = UiFlags::ColorWhite;
 
 	AddPanelString(fmt::format(fmt::runtime(_("Experience: {:s}")), FormatInteger(player._pExperience)));
-	AddPanelString(fmt::format(fmt::runtime(_("Next Level: {:s}")), FormatInteger(GetNextExperienceThresholdForLevel(charLevel))));
-	AddPanelString(fmt::format(fmt::runtime(_("{:s} to Level {:d}")), FormatInteger(GetNextExperienceThresholdForLevel(charLevel) - player._pExperience), charLevel + 1));
+	AddPanelString(fmt::format(fmt::runtime(_("Next Level: {:s}")), FormatInteger(player._pNextExper)));
+	AddPanelString(fmt::format(fmt::runtime(_("{:s} to Level {:d}")), FormatInteger(player._pNextExper - player._pExperience), charLevel + 1));
 
 	return true;
 }

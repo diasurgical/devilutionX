@@ -255,7 +255,7 @@ void PackPlayer(PlayerPack &packed, const Player &player)
 	packed.pBaseMag = player._pBaseMag;
 	packed.pBaseDex = player._pBaseDex;
 	packed.pBaseVit = player._pBaseVit;
-	packed.pLevel = player._pLevel;
+	packed.pLevel = player.getCharacterLevel();
 	packed.pStatPts = player._pStatPts;
 	packed.pExperience = SDL_SwapLE32(player._pExperience);
 	packed.pGold = SDL_SwapLE32(player._pGold);
@@ -300,7 +300,7 @@ void PackNetPlayer(PlayerNetPack &packed, const Player &player)
 	packed.pBaseMag = player._pBaseMag;
 	packed.pBaseDex = player._pBaseDex;
 	packed.pBaseVit = player._pBaseVit;
-	packed.pLevel = player._pLevel;
+	packed.pLevel = player.getCharacterLevel();
 	packed.pStatPts = player._pStatPts;
 	packed.pExperience = SDL_SwapLE32(player._pExperience);
 	packed.pHPBase = SDL_SwapLE32(player._pHPBase);
@@ -421,7 +421,7 @@ void UnPackPlayer(const PlayerPack &packed, Player &player)
 	Point position { packed.px, packed.py };
 
 	player = {};
-	player._pLevel = std::clamp<uint8_t>(packed.pLevel, 1, MaxCharacterLevel);
+	player.setCharacterLevel(packed.pLevel);
 	player._pMaxHPBase = SDL_SwapLE32(packed.pMaxHPBase);
 	player._pHPBase = SDL_SwapLE32(packed.pHPBase);
 	player._pHPBase = std::clamp<int32_t>(player._pHPBase, 0, player._pMaxHPBase);
@@ -515,7 +515,7 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 
 	ValidateField(packed._pNumInv, packed._pNumInv < InventoryGridCells);
 
-	player._pLevel = packed.pLevel;
+	player.setCharacterLevel(packed.pLevel);
 	player.position.tile = position;
 	player.position.future = position;
 	player.plrlevel = packed.plrlevel;
