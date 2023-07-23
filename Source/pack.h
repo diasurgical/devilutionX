@@ -45,7 +45,7 @@ struct PlayerPack {
 	uint8_t pBaseMag;
 	uint8_t pBaseDex;
 	uint8_t pBaseVit;
-	int8_t pLevel;
+	uint8_t pLevel;
 	uint8_t pStatPts;
 	uint32_t pExperience;
 	int32_t pGold;
