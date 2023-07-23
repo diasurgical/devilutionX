@@ -69,7 +69,7 @@ format again, refer to the help files provided alongside the game data
 (`Data/Global/Excel`) (also available online at
 [D2:R Modding][d2rmodding-utilities]).
 
-### Experience.txt
+### Experience.tsv
 Experience contains the experience value thresholds before a character
 advances to the next level. All numeric values in this file MUST be written in
 base 10 with no decimal or thousands separators. The first row of this file is
@@ -77,11 +77,12 @@ used as a header and requires the following column names:
 
 #### Level
 A numeric value used to set the order for remaining values, or the special
-`MaxLevel` value which is used to determine the maximum character level. At
-the moment you must ensure that the header line is the first line in the file,
-the `MaxLevel` line is second, and levels proceed in ascending order after
-that. Currently Level values other than `MaxLevel` are ignored (we start from
-0 and count up for the rest of the rows) but this may change in the future.
+`MaxLevel` value which is used to determine the maximum character level. The
+header line MUST be the first line in the file. The `MaxLevel` line MUST be
+present, it SHOULD be the second line but can appear later in the file. Levels
+SHOULD proceed in ascending order after that. If you leave any gaps then
+characters will not be able to advance past that level and experience caps
+will not apply.
 
 For example you could set a maximum level of 36 by changing the MaxLevel value:
 ```tsv
@@ -93,11 +94,11 @@ MaxLevel	36
 ```
 
 The first row following the `MaxLevel` line SHOULD be `0	0` (as all characters
-start at level 1, we ignore this row and use the second row to determine when
-characters advance past level 1). There SHOULD also be at least as many rows
-following that line as the highest value provided for `MaxLevel`. If you
-specify a `MaxLevel` of `60` but only provide experience values up to `50`
-then characters will not be able to advance past level 50.
+start at level 1, we ignore these values and use the threshold for level 1 to
+determine when characters advance past level 1). There should also be at least
+as many rows as the highest value provided for `MaxLevel`. If you specify a
+`MaxLevel` of `60` but only provide experience values up to `50` then
+characters will level up to `51` but no further.
 
 #### Experience
 This column determines the experience points required for characters to

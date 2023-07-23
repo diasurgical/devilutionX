@@ -8,81 +8,276 @@
 
 #include <algorithm>
 #include <array>
+#include <bitset>
+#include <charconv>
 #include <cstdint>
+#include <vector>
 
+#include <expected.hpp>
+
+#include "data/common.hpp"
 #include "items.h"
 #include "player.h"
 #include "textdat.h"
 #include "utils/language.h"
+#include "utils/static_vector.hpp"
 
 namespace devilution {
 
 namespace {
-constexpr uint8_t MaxCharacterLevel = 50;
-/** Specifies the experience point limit of each level. */
-const std::array<uint32_t, MaxCharacterLevel + 1> ExpLvlsTbl {
-	0,
-	2000,
-	4620,
-	8040,
-	12489,
-	18258,
-	25712,
-	35309,
-	47622,
-	63364,
-	83419,
-	108879,
-	141086,
-	181683,
-	231075,
-	313656,
-	424067,
-	571190,
-	766569,
-	1025154,
-	1366227,
-	1814568,
-	2401895,
-	3168651,
-	4166200,
-	5459523,
-	7130496,
-	9281874,
-	12042092,
-	15571031,
-	20066900,
-	25774405,
-	32994399,
-	42095202,
-	53525811,
-	67831218,
-	85670061,
-	107834823,
-	135274799,
-	169122009,
-	210720231,
-	261657253,
-	323800420,
-	399335440,
-	490808349,
-	601170414,
-	733825617,
-	892680222,
-	1082908612,
-	1310707109,
-	1583495809
+
+struct ExperienceData {
+	/** Specifies the experience point limit of each level. The given values are defaults used if the data file is missing. */
+	std::vector<uint32_t> levelThresholds {
+		0,
+		2000,
+		4620,
+		8040,
+		12489,
+		18258,
+		25712,
+		35309,
+		47622,
+		63364,
+		83419,
+		108879,
+		141086,
+		181683,
+		231075,
+		313656,
+		424067,
+		571190,
+		766569,
+		1025154,
+		1366227,
+		1814568,
+		2401895,
+		3168651,
+		4166200,
+		5459523,
+		7130496,
+		9281874,
+		12042092,
+		15571031,
+		20066900,
+		25774405,
+		32994399,
+		42095202,
+		53525811,
+		67831218,
+		85670061,
+		107834823,
+		135274799,
+		169122009,
+		210720231,
+		261657253,
+		323800420,
+		399335440,
+		490808349,
+		601170414,
+		733825617,
+		892680222,
+		1082908612,
+		1310707109,
+		1583495809
+	};
+
+	static constexpr uint8_t DefaultMaxLevel = 50;
+	uint8_t maxLevel = DefaultMaxLevel;
+
+	[[nodiscard]] uint32_t getThresholdForLevel(unsigned level)
+	{
+		return levelThresholds[std::min<size_t>({ level, maxLevel, levelThresholds.size() - 1 })];
+	}
+} ExperienceData;
+
+struct ExperienceColumnDefinition {
+	enum class ColumnType {
+		Level,
+		Experience,
+		LAST = Experience
+	} type;
+
+	enum class Error {
+		UnknownColumn
+	};
+
+	// The number of fields between this column and the last one identified as important (or from start of the record if this is the first column we care about)
+	unsigned skipLength;
+
+	static tl::expected<ColumnType, Error> mapNameToType(std::string_view name)
+	{
+		if (name == "Level") {
+			return ColumnType::Level;
+		}
+		if (name == "Experience") {
+			return ColumnType::Experience;
+		}
+		return tl::unexpected { Error::UnknownColumn };
+	}
+
+	ExperienceColumnDefinition() = delete;
+
+	ExperienceColumnDefinition(const ColumnType &type)
+	    : type(type)
+	    , skipLength(0)
+	{
+	}
+
+	ExperienceColumnDefinition(const ColumnType &type, unsigned skipLength)
+	    : type(type)
+	    , skipLength(skipLength)
+	{
+	}
+
+	bool operator==(const ExperienceColumnDefinition &other) const
+	{
+		return type == other.type && skipLength == other.skipLength;
+	}
 };
+
+void ReloadExperienceData()
+{
+	auto dataFileResult = DataFile::load("txtdata\\Experience.tsv");
+	if (!dataFileResult.has_value()) {
+		// Can't load the data file, so reset to defaults.
+		// TODO: Log error somewhere the player can see it, they probably want to know that we couldn't load the file
+		ExperienceData = {};
+		return;
+	}
+	const DataFile &dataFile = dataFileResult.value();
+
+	constexpr unsigned ExpectedColumnCount = enum_size<ExperienceColumnDefinition::ColumnType>::value;
+
+	StaticVector<ExperienceColumnDefinition, ExpectedColumnCount> columns;
+	std::bitset<ExpectedColumnCount> seenColumns;
+
+	unsigned currentColumn = 0;
+	unsigned lastColumn = 0;
+	GetFieldResult result { dataFile.begin() };
+	do {
+		if (columns.size() >= ExpectedColumnCount) {
+			// All key columns have been identified and there's extra fields, discard them and proceed
+			result = DiscardRemainingFields(result.next, dataFile.end());
+			break;
+		}
+
+		result = GetNextField(result.next, dataFile.end());
+		// As long as we don't call GetNextField twice it a row it will always contain a value
+		auto columnType = ExperienceColumnDefinition::mapNameToType(result.value);
+		if (columnType.has_value() && !seenColumns.test(static_cast<size_t>(columnType.value()))) {
+			seenColumns.set(static_cast<size_t>(columnType.value()));
+			unsigned skipColumns = 0;
+			if (currentColumn > lastColumn)
+				skipColumns = currentColumn - lastColumn - 1;
+			columns.emplace_back(columnType.value(), skipColumns);
+			lastColumn = currentColumn;
+		}
+		++currentColumn;
+	} while (!result.endOfRecord());
+
+	if (result.endOfFile()) {
+		// The data file ended after the header, since there's no data we need to reset to defaults.
+		// TODO: Log error somewhere the player can see it, they probably want to know that their file is missing data
+		ExperienceData = {};
+		return;
+	}
+
+	if (columns.size() < ExpectedColumnCount) {
+		// The data file doesn't have the required headers. Again reset to default (though we could potentially just allocate missing columns in the default order?)
+		// TODO: Log error somewhere the player can see it, they probably want to know that their file has the wrong headers
+		ExperienceData = {};
+		return;
+	}
+
+	ExperienceData.levelThresholds.clear();
+	bool foundMaxLevelRecord = false;
+	do {
+		uint8_t level = 0;
+		uint32_t experience = 0;
+		bool isMaxLevelRecord = false;
+		for (auto &column : columns) {
+			result = DiscardMultipleFields(result.next, dataFile.end(), column.skipLength);
+
+			if (result.endOfRecord()) {
+				// reached the end of record early
+				// TODO: let the player know their data file is incomplete
+				break;
+			}
+
+			switch (column.type) {
+			case ExperienceColumnDefinition::ColumnType::Level: {
+				auto fromCharsResult = std::from_chars(result.next, dataFile.end(), level);
+				if (fromCharsResult.ec == std::errc::invalid_argument && !foundMaxLevelRecord) {
+					// not a signless numeric value, is this the MaxLevel line?
+					result = GetNextField(fromCharsResult.ptr, dataFile.end());
+					if (result.value == "MaxLevel") {
+						isMaxLevelRecord = true;
+					}
+					// else it was an invalid value, TODO: let the player know the data file contains errors
+				} else {
+					// if (fromCharsResult.ec == std::errc::result_out_of_range) then a level greater than 255 was provided
+					// TODO: let the player know the data file contains a level higher than we support
+
+					// std::from_chars doesn't consume our field separators so we need to advance to the next field by discarding the remainder of this one
+					result = DiscardField(fromCharsResult.ptr, dataFile.end());
+				}
+			} break;
+
+			case ExperienceColumnDefinition::ColumnType::Experience: {
+				auto fromCharsResult = std::from_chars(result.next, dataFile.end(), experience);
+				if (fromCharsResult.ec == std::errc::result_out_of_range) {
+					// TODO: let the player know the data file contains an experience threshold higher than we support
+					experience = std::numeric_limits<uint32_t>::max();
+				} // TODO: let the player know if they provided a non-numeric value (ec == std::errc::invalid_argument)
+
+				// std::from_chars doesn't consume our field separators so we need to advance to the next field by discarding the remainder of this one
+				result = DiscardField(fromCharsResult.ptr, dataFile.end());
+			} break;
+
+			default:
+				result = DiscardField(result.next, dataFile.end());
+			}
+		}
+
+		if (isMaxLevelRecord) {
+			ExperienceData.maxLevel = experience == 0 ? ExperienceData::DefaultMaxLevel
+			                                          : static_cast<uint8_t>(std::min<uint32_t>(experience, std::numeric_limits<uint8_t>::max()));
+			foundMaxLevelRecord = true;
+		} else {
+			if (foundMaxLevelRecord && level > ExperienceData.maxLevel) {
+				// ignore values we will never use. Should we notify the player?
+			} else {
+				if (level >= ExperienceData.levelThresholds.size()) {
+					// To avoid ValidatePlayer() resetting players to 0 experience we need to use the maximum possible value here
+					// As long as the file has no gaps it'll get initialised properly.
+					ExperienceData.levelThresholds.resize(static_cast<size_t>(level) + 1, std::numeric_limits<uint32_t>::max());
+				}
+				ExperienceData.levelThresholds[level] = experience;
+			}
+		}
+
+		if (!result.endOfRecord()) {
+			result = DiscardRemainingFields(result.next, dataFile.end());
+		}
+	} while (!result.endOfFile());
+}
+
 } // namespace
+
+void LoadPlayerDataFiles()
+{
+	ReloadExperienceData();
+}
 
 uint32_t GetNextExperienceThresholdForLevel(unsigned level)
 {
-	return ExpLvlsTbl[std::min<size_t>(level, static_cast<size_t>(GetMaximumCharacterLevel()))];
+	return ExperienceData.getThresholdForLevel(level);
 }
 
 uint8_t GetMaximumCharacterLevel()
 {
-	return MaxCharacterLevel;
+	return ExperienceData.maxLevel;
 }
 
 const _sfx_id herosounds[enum_size<HeroClass>::value][enum_size<HeroSpeech>::value] = {

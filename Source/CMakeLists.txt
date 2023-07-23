@@ -68,6 +68,8 @@ set(libdevilutionx_SRCS
   controls/modifier_hints.cpp
   controls/plrctrls.cpp
 
+  data/common.cpp
+
   DiabloUI/button.cpp
   DiabloUI/credits.cpp
   DiabloUI/credits_lines.cpp

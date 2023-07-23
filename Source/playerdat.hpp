@@ -135,6 +135,11 @@ struct PlayerAnimData {
 	int8_t castingActionFrame;
 };
 
+/**
+ * @brief Attempts to load data values from external files, currently only Experience.tsv is supported.
+ */
+void LoadPlayerDataFiles();
+
 extern const _sfx_id herosounds[enum_size<HeroClass>::value][enum_size<HeroSpeech>::value];
 uint32_t GetNextExperienceThresholdForLevel(unsigned level);
 uint8_t GetMaximumCharacterLevel();
