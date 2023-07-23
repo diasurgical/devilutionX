@@ -141,6 +141,7 @@ set(devilutionx_assets
   nlevels/cutl6w.clx
   nlevels/l5data/cornerstone.dun
   nlevels/l5data/uberroom.dun
+  txtdata/Experience.txt
   ui_art/diablo.pal
   ui_art/hellfire.pal
   ui_art/creditsw.clx

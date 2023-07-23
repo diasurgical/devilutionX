@@ -238,6 +238,10 @@ inline bool ValidateHandle(const char *path, const AssetHandle &handle)
 }
 
 AssetRef FindAsset(const char *filename);
+inline AssetRef FindAsset(string_view filename)
+{
+	return FindAsset(filename.data());
+}
 
 AssetHandle OpenAsset(AssetRef &&ref, bool threadsafe = false);
 AssetHandle OpenAsset(const char *filename, bool threadsafe = false);
