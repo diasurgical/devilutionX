@@ -43,7 +43,7 @@ struct PlayerData {
 	dungeon_type dungeonArea;
 	_setlevels questMap;
 	Uint8 dungeonLevel;
-	Sint8 playerLevel;
+	Uint8 playerLevel;
 	int playerGfx;
 
 	// Why??? This is POD
