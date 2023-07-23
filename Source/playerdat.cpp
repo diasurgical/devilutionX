@@ -6,17 +6,20 @@
 
 #include "playerdat.hpp"
 
+#include <array>
 #include <cstdint>
 
 #include "items.h"
 #include "player.h"
 #include "textdat.h"
 #include "utils/language.h"
+#include "utils/stdcompat/algorithm.hpp"
 
 namespace devilution {
 
+namespace {
 /** Specifies the experience point limit of each level. */
-const uint32_t ExpLvlsTbl[MaxCharacterLevel] = {
+const std::array<uint32_t, MaxCharacterLevel> ExpLvlsTbl {
 	0,
 	2000,
 	4620,
@@ -68,6 +71,12 @@ const uint32_t ExpLvlsTbl[MaxCharacterLevel] = {
 	1082908612,
 	1310707109
 };
+} // namespace
+
+uint32_t GetNextExperienceThresholdForLevel(int level)
+{
+	return ExpLvlsTbl[clamp(level, 0, static_cast<int>(ExpLvlsTbl.size()) - 1)];
+}
 
 const _sfx_id herosounds[enum_size<HeroClass>::value][enum_size<HeroSpeech>::value] = {
 	// clang-format off
