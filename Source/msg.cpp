@@ -1950,7 +1950,7 @@ size_t OnPlayerLevel(const TCmd *pCmd, size_t pnum)
 	if (gbBufferMsgs != 1) {
 		Player &player = Players[pnum];
 		if (playerLevel <= MaxCharacterLevel && &player != MyPlayer)
-			player._pLevel = static_cast<uint8_t>(playerLevel);
+			player.setCharacterLevel(static_cast<uint8_t>(playerLevel));
 	} else {
 		SendPacket(pnum, &message, sizeof(message));
 	}
@@ -2025,7 +2025,7 @@ size_t OnPlayerJoinLevel(const TCmd *pCmd, size_t pnum)
 		ResetPlayerGFX(player);
 		player.plractive = true;
 		gbActivePlayers++;
-		EventPlrMsg(fmt::format(fmt::runtime(_("Player '{:s}' (level {:d}) just joined the game")), player._pName, player._pLevel));
+		EventPlrMsg(fmt::format(fmt::runtime(_("Player '{:s}' (level {:d}) just joined the game")), player._pName, player.getCharacterLevel()));
 	}
 
 	if (player.plractive && &player != MyPlayer) {
@@ -2224,7 +2224,7 @@ size_t OnCheatExperience(const TCmd *pCmd, size_t pnum) // NOLINT(misc-unused-pa
 #ifdef _DEBUG
 	if (gbBufferMsgs == 1)
 		SendPacket(pnum, pCmd, sizeof(*pCmd));
-	else if (Players[pnum]._pLevel < MaxCharacterLevel) {
+	else if (Players[pnum].getCharacterLevel() < MaxCharacterLevel) {
 		Players[pnum]._pExperience = Players[pnum]._pNextExper;
 		if (*sgOptions.Gameplay.experienceBar) {
 			RedrawEverything();

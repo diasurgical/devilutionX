@@ -622,7 +622,7 @@ void TalkToFarmer(Player &player, Towner &farmer)
 			break;
 		}
 
-		if (!player._pLvlVisited[9] && player._pLevel < 15) {
+		if (!player._pLvlVisited[9] && player.getCharacterLevel() < 15) {
 			_speech_id qt = TEXT_FARMER8;
 			if (player._pLvlVisited[2])
 				qt = TEXT_FARMER5;
@@ -713,7 +713,7 @@ void TalkToCowFarmer(Player &player, Towner &cowFarmer)
 			NetSendCmdQuest(true, quest);
 		break;
 	case QUEST_HIVE_ACTIVE:
-		if (!player._pLvlVisited[9] && player._pLevel < 15) {
+		if (!player._pLvlVisited[9] && player.getCharacterLevel() < 15) {
 			_speech_id qt = TEXT_JERSEY12;
 			switch (GenerateRnd(4)) {
 			case 0:

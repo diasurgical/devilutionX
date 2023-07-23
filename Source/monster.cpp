@@ -1157,7 +1157,7 @@ void MonsterAttackPlayer(Monster &monster, Player &player, int hit, int minDam, 
 		ac += 40;
 	if (HasAnyOf(player.pDamAcFlags, ItemSpecialEffectHf::ACAgainstUndead) && monster.data().monsterClass == MonsterClass::Undead)
 		ac += 20;
-	hit += 2 * (monster.level(sgGameInitInfo.nDifficulty) - player._pLevel)
+	hit += 2 * (monster.level(sgGameInitInfo.nDifficulty) - player.getCharacterLevel())
 	    + 30
 	    - ac;
 	int minhit = GetMinHit();
@@ -4569,7 +4569,7 @@ void SpawnGolem(Player &player, Monster &golem, Point position, Missile &missile
 	golem.maxHitPoints = 2 * (320 * missile._mispllvl + player._pMaxMana / 3);
 	golem.hitPoints = golem.maxHitPoints;
 	golem.armorClass = 25;
-	golem.toHit = 5 * (missile._mispllvl + 8) + 2 * player._pLevel;
+	golem.toHit = 5 * (missile._mispllvl + 8) + 2 * player.getCharacterLevel();
 	golem.minDamage = 2 * (missile._mispllvl + 4);
 	golem.maxDamage = 2 * (missile._mispllvl + 8);
 	golem.flags |= MFLAG_GOLEM;

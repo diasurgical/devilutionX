@@ -153,8 +153,8 @@ void NetReceivePlayerData(TPkt *pkt)
 
 bool IsNetPlayerValid(const Player &player)
 {
-	return player._pLevel >= 1
-	    && player._pLevel <= MaxCharacterLevel
+	return player.getCharacterLevel() >= 1
+	    && player.getCharacterLevel() <= MaxCharacterLevel
 	    && static_cast<uint8_t>(player._pClass) < enum_size<HeroClass>::value
 	    && player.plrlevel < NUMLEVELS
 	    && InDungeonBounds(player.position.tile)
@@ -794,7 +794,7 @@ bool NetInit(bool bSinglePlayer)
 	Player &myPlayer = *MyPlayer;
 	// separator for marking messages from a different game
 	AddMessageToChatLog(_("New Game"), nullptr, UiFlags::ColorRed);
-	AddMessageToChatLog(fmt::format(fmt::runtime(_("Player '{:s}' (level {:d}) just joined the game")), myPlayer._pName, myPlayer._pLevel));
+	AddMessageToChatLog(fmt::format(fmt::runtime(_("Player '{:s}' (level {:d}) just joined the game")), myPlayer._pName, myPlayer.getCharacterLevel()));
 
 	return true;
 }
@@ -849,7 +849,7 @@ void recv_plrinfo(int pnum, const TCmdPlrInfoHdr &header, bool recv)
 	} else {
 		szEvent = _("Player '{:s}' (level {:d}) is already in the game");
 	}
-	EventPlrMsg(fmt::format(fmt::runtime(szEvent), player._pName, player._pLevel));
+	EventPlrMsg(fmt::format(fmt::runtime(szEvent), player._pName, player.getCharacterLevel()));
 
 	SyncInitPlr(player);
 
