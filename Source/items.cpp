@@ -2623,6 +2623,8 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 		}
 	}
 
+	const uint8_t playerLevel = player.getCharacterLevel();
+
 	if (mind == 0 && maxd == 0) {
 		mind = 1;
 		maxd = 1;
@@ -2636,20 +2638,20 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 		}
 
 		if (player._pClass == HeroClass::Monk) {
-			mind = std::max(mind, player._pLevel / 2);
-			maxd = std::max(maxd, (int)player._pLevel);
+			mind = std::max(mind, playerLevel / 2);
+			maxd = std::max<int>(maxd, playerLevel);
 		}
 	}
 
 	if (HasAnyOf(player._pSpellFlags, SpellFlag::RageActive)) {
-		sadd += 2 * player._pLevel;
-		dadd += player._pLevel + player._pLevel / 2;
-		vadd += 2 * player._pLevel;
+		sadd += 2 * playerLevel;
+		dadd += playerLevel + playerLevel / 2;
+		vadd += 2 * playerLevel;
 	}
 	if (HasAnyOf(player._pSpellFlags, SpellFlag::RageCooldown)) {
-		sadd -= 2 * player._pLevel;
-		dadd -= player._pLevel + player._pLevel / 2;
-		vadd -= 2 * player._pLevel;
+		sadd -= 2 * playerLevel;
+		dadd -= playerLevel + playerLevel / 2;
+		vadd -= 2 * playerLevel;
 	}
 
 	player._pIMinDam = mind;
@@ -2677,29 +2679,29 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	player._pVitality = std::max(0, vadd + player._pBaseVit);
 
 	if (player._pClass == HeroClass::Rogue) {
-		player._pDamageMod = player._pLevel * (player._pStrength + player._pDexterity) / 200;
+		player._pDamageMod = playerLevel * (player._pStrength + player._pDexterity) / 200;
 	} else if (player._pClass == HeroClass::Monk) {
-		player._pDamageMod = player._pLevel * (player._pStrength + player._pDexterity) / 150;
+		player._pDamageMod = playerLevel * (player._pStrength + player._pDexterity) / 150;
 		if ((!player.InvBody[INVLOC_HAND_LEFT].isEmpty() && player.InvBody[INVLOC_HAND_LEFT]._itype != ItemType::Staff) || (!player.InvBody[INVLOC_HAND_RIGHT].isEmpty() && player.InvBody[INVLOC_HAND_RIGHT]._itype != ItemType::Staff))
 			player._pDamageMod /= 2; // Monks get half the normal damage bonus if they're holding a non-staff weapon
 	} else if (player._pClass == HeroClass::Bard) {
 		if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Sword || player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Sword)
-			player._pDamageMod = player._pLevel * (player._pStrength + player._pDexterity) / 150;
+			player._pDamageMod = playerLevel * (player._pStrength + player._pDexterity) / 150;
 		else if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Bow || player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Bow) {
-			player._pDamageMod = player._pLevel * (player._pStrength + player._pDexterity) / 250;
+			player._pDamageMod = playerLevel * (player._pStrength + player._pDexterity) / 250;
 		} else {
-			player._pDamageMod = player._pLevel * player._pStrength / 100;
+			player._pDamageMod = playerLevel * player._pStrength / 100;
 		}
 	} else if (player._pClass == HeroClass::Barbarian) {
 
 		if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Axe || player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Axe) {
-			player._pDamageMod = player._pLevel * player._pStrength / 75;
+			player._pDamageMod = playerLevel * player._pStrength / 75;
 		} else if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Mace || player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Mace) {
-			player._pDamageMod = player._pLevel * player._pStrength / 75;
+			player._pDamageMod = playerLevel * player._pStrength / 75;
 		} else if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Bow || player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Bow) {
-			player._pDamageMod = player._pLevel * player._pStrength / 300;
+			player._pDamageMod = playerLevel * player._pStrength / 300;
 		} else {
-			player._pDamageMod = player._pLevel * player._pStrength / 100;
+			player._pDamageMod = playerLevel * player._pStrength / 100;
 		}
 
 		if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Shield || player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Shield) {
@@ -2708,11 +2710,11 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 			else if (player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Shield)
 				player._pIAC -= player.InvBody[INVLOC_HAND_RIGHT]._iAC / 2;
 		} else if (IsNoneOf(player.InvBody[INVLOC_HAND_LEFT]._itype, ItemType::Staff, ItemType::Bow) && IsNoneOf(player.InvBody[INVLOC_HAND_RIGHT]._itype, ItemType::Staff, ItemType::Bow)) {
-			player._pDamageMod += player._pLevel * player._pVitality / 100;
+			player._pDamageMod += playerLevel * player._pVitality / 100;
 		}
-		player._pIAC += player._pLevel / 4;
+		player._pIAC += playerLevel / 4;
 	} else {
-		player._pDamageMod = player._pLevel * player._pStrength / 100;
+		player._pDamageMod = playerLevel * player._pStrength / 100;
 	}
 
 	player._pISpells = spl;
@@ -2723,15 +2725,15 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	player._pIEnAc = enac;
 
 	if (player._pClass == HeroClass::Barbarian) {
-		mr += player._pLevel;
-		fr += player._pLevel;
-		lr += player._pLevel;
+		mr += playerLevel;
+		fr += playerLevel;
+		lr += playerLevel;
 	}
 
 	if (HasAnyOf(player._pSpellFlags, SpellFlag::RageCooldown)) {
-		mr -= player._pLevel;
-		fr -= player._pLevel;
-		lr -= player._pLevel;
+		mr -= playerLevel;
+		fr -= playerLevel;
+		lr -= playerLevel;
 	}
 
 	if (HasAnyOf(iflgs, ItemSpecialEffect::ZeroResistance)) {
@@ -2833,18 +2835,18 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	PlayerArmorGraphic animArmorId = PlayerArmorGraphic::Light;
 	if (player.InvBody[INVLOC_CHEST]._itype == ItemType::HeavyArmor && player.InvBody[INVLOC_CHEST]._iStatFlag) {
 		if (player._pClass == HeroClass::Monk && player.InvBody[INVLOC_CHEST]._iMagical == ITEM_QUALITY_UNIQUE)
-			player._pIAC += player._pLevel / 2;
+			player._pIAC += playerLevel / 2;
 		animArmorId = PlayerArmorGraphic::Heavy;
 	} else if (player.InvBody[INVLOC_CHEST]._itype == ItemType::MediumArmor && player.InvBody[INVLOC_CHEST]._iStatFlag) {
 		if (player._pClass == HeroClass::Monk) {
 			if (player.InvBody[INVLOC_CHEST]._iMagical == ITEM_QUALITY_UNIQUE)
-				player._pIAC += player._pLevel * 2;
+				player._pIAC += playerLevel * 2;
 			else
-				player._pIAC += player._pLevel / 2;
+				player._pIAC += playerLevel / 2;
 		}
 		animArmorId = PlayerArmorGraphic::Medium;
 	} else if (player._pClass == HeroClass::Monk) {
-		player._pIAC += player._pLevel * 2;
+		player._pIAC += playerLevel * 2;
 	}
 
 	const uint8_t gfxNum = static_cast<uint8_t>(animWeaponId) | static_cast<uint8_t>(animArmorId);
@@ -3668,7 +3670,7 @@ void DoRepair(Player &player, int cii)
 		pi = &player.InvBody[cii];
 	}
 
-	RepairItem(*pi, player._pLevel);
+	RepairItem(*pi, player.getCharacterLevel());
 	CalcPlrInv(player, true);
 }
 
@@ -4241,7 +4243,7 @@ void SpawnSmith(int lvl)
 
 void SpawnPremium(const Player &player)
 {
-	int lvl = player._pLevel;
+	int lvl = player.getCharacterLevel();
 	int maxItems = gbIsHellfire ? SMITH_PREMIUM_ITEMS : 6;
 	if (numpremium < maxItems) {
 		for (int i = 0; i < maxItems; i++) {
@@ -4842,7 +4844,7 @@ void RechargeItem(Item &item, Player &player)
 		return;
 
 	int r = GetSpellStaffLevel(item._iSpell);
-	r = GenerateRnd(player._pLevel / r) + 1;
+	r = GenerateRnd(player.getCharacterLevel() / r) + 1;
 
 	do {
 		item._iMaxCharges--;

@@ -121,7 +121,7 @@ int GetManaAmount(const Player &player, SpellID sn)
 	}
 
 	if (sn == SpellID::Healing || sn == SpellID::HealOther) {
-		ma = (GetSpellData(SpellID::Healing).sManaCost + 2 * player._pLevel - adj);
+		ma = (GetSpellData(SpellID::Healing).sManaCost + 2 * player.getCharacterLevel() - adj);
 	} else if (GetSpellData(sn).sManaCost == 255) {
 		ma = (player._pMaxManaBase >> 6) - adj;
 	} else {
@@ -282,7 +282,7 @@ void DoHealOther(const Player &caster, Player &target)
 	}
 
 	int hp = (GenerateRnd(10) + 1) << 6;
-	for (unsigned i = 0; i < caster._pLevel; i++) {
+	for (unsigned i = 0; i < caster.getCharacterLevel(); i++) {
 		hp += (GenerateRnd(4) + 1) << 6;
 	}
 	for (int i = 0; i < caster.GetSpellLevel(SpellID::HealOther); i++) {

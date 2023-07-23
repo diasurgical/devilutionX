@@ -2493,7 +2493,7 @@ bool TryIconCurs()
 			DoRepair(myPlayer, pcursinvitem);
 		else if (pcursstashitem != StashStruct::EmptyCell) {
 			Item &item = Stash.stashList[pcursstashitem];
-			RepairItem(item, myPlayer._pLevel);
+			RepairItem(item, myPlayer.getCharacterLevel());
 		}
 		NewCursor(CURSOR_HAND);
 		return true;
