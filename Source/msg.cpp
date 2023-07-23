@@ -1951,7 +1951,7 @@ size_t OnPlayerLevel(const TCmd *pCmd, size_t pnum)
 	if (gbBufferMsgs != 1) {
 		Player &player = Players[pnum];
 		if (playerLevel <= MaxCharacterLevel && &player != MyPlayer)
-			player._pLevel = static_cast<int8_t>(playerLevel);
+			player._pLevel = static_cast<uint8_t>(playerLevel);
 	} else {
 		SendPacket(pnum, &message, sizeof(message));
 	}
