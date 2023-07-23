@@ -1318,6 +1318,7 @@ KeymapperOptions::KeymapperOptions()
 	keyIDToKeyName.emplace(SDLK_RCTRL, "RCONTROL");
 	keyIDToKeyName.emplace(SDLK_LCTRL, "LCONTROL");
 	keyIDToKeyName.emplace(SDLK_PRINTSCREEN, "PRINT");
+	keyIDToKeyName.emplace(SDLK_PAUSE, "PAUSE");
 	keyIDToKeyName.emplace(SDLK_TAB, "TAB");
 	keyIDToKeyName.emplace(SDL_BUTTON_MIDDLE | KeymapperMouseButtonMask, "MMOUSE");
 	keyIDToKeyName.emplace(SDL_BUTTON_X1 | KeymapperMouseButtonMask, "X1MOUSE");
@@ -1336,7 +1337,6 @@ KeymapperOptions::KeymapperOptions()
 	keyIDToKeyName.emplace(SDLK_BACKSPACE, "BACKSPACE");
 	keyIDToKeyName.emplace(SDLK_CAPSLOCK, "CAPSLOCK");
 	keyIDToKeyName.emplace(SDLK_SCROLLLOCK, "SCROLLLOCK");
-	keyIDToKeyName.emplace(SDLK_PAUSE, "PAUSE");
 	keyIDToKeyName.emplace(SDLK_INSERT, "INSERT");
 	keyIDToKeyName.emplace(SDLK_DELETE, "DELETE");
 	keyIDToKeyName.emplace(SDLK_HOME, "HOME");
