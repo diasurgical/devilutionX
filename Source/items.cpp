@@ -4242,7 +4242,7 @@ void SpawnSmith(int lvl)
 
 void SpawnPremium(const Player &player)
 {
-	int8_t lvl = player._pLevel;
+	int lvl = player._pLevel;
 	int maxItems = gbIsHellfire ? SMITH_PREMIUM_ITEMS : 6;
 	if (numpremium < maxItems) {
 		for (int i = 0; i < maxItems; i++) {
