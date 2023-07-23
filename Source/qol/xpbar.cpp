@@ -128,7 +128,7 @@ bool CheckXPBarInfo()
 		// Show a maximum level indicator for max level players.
 		InfoColor = UiFlags::ColorWhitegold;
 
-		AddPanelString(fmt::format(fmt::runtime(_("Experience: {:s}")), FormatInteger(GetNextExperienceThresholdForLevel(charLevel - 1))));
+		AddPanelString(fmt::format(fmt::runtime(_("Experience: {:s}")), FormatInteger(player._pExperience)));
 		AddPanelString(_("Maximum Level"));
 
 		return true;
