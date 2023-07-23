@@ -83,14 +83,12 @@ void DrawXPBar(const Surface &out)
 		return;
 	}
 
-	const uint8_t charLevel = player.getCharacterLevel();
-
-	const uint64_t prevXp = GetNextExperienceThresholdForLevel(charLevel - 1);
+	const uint64_t prevXp = GetNextExperienceThresholdForClassAndLevel(player._pClass, player.getCharacterLevel() - 1);
 	if (player._pExperience < prevXp)
 		return;
 
 	uint64_t prevXpDelta1 = player._pExperience - prevXp;
-	uint64_t prevXpDelta = GetNextExperienceThresholdForLevel(charLevel) - prevXp;
+	uint64_t prevXpDelta = player.getNextExperienceThreshold() - prevXp;
 	uint64_t fullBar = BarWidth * prevXpDelta1 / prevXpDelta;
 
 	// Figure out how much to fill the last pixel of the XP bar, to make it gradually appear with gained XP

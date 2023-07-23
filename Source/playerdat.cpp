@@ -7,6 +7,7 @@
 #include "playerdat.hpp"
 
 #include <cstdint>
+#include <unordered_map>
 #include <unordered_set>
 #include <vector>
 
@@ -23,74 +24,135 @@ namespace devilution {
 namespace {
 
 struct ExperienceData {
-	/** Specifies the experience point limit of each level. The given values are defaults used if the data file is missing. */
-	std::vector<uint32_t> levelThresholds {
-		0,
-		2000,
-		4620,
-		8040,
-		12489,
-		18258,
-		25712,
-		35309,
-		47622,
-		63364,
-		83419,
-		108879,
-		141086,
-		181683,
-		231075,
-		313656,
-		424067,
-		571190,
-		766569,
-		1025154,
-		1366227,
-		1814568,
-		2401895,
-		3168651,
-		4166200,
-		5459523,
-		7130496,
-		9281874,
-		12042092,
-		15571031,
-		20066900,
-		25774405,
-		32994399,
-		42095202,
-		53525811,
-		67831218,
-		85670061,
-		107834823,
-		135274799,
-		169122009,
-		210720231,
-		261657253,
-		323800420,
-		399335440,
-		490808349,
-		601170414,
-		733825617,
-		892680222,
-		1082908612,
-		1310707109,
-		1583495809
-	};
+	/** Specifies the experience point limit of each level for each class. */
+	std::array<std::vector<uint32_t>, enum_size<HeroClass>::value> levelThresholds;
 
 	static constexpr uint8_t DefaultMaxLevel = 50;
-	uint8_t maxLevel = DefaultMaxLevel;
 
-	[[nodiscard]] uint32_t getThresholdForLevel(unsigned level)
+	/** Specifies the maximum level for each class. */
+	std::array<uint8_t, enum_size<HeroClass>::value> maxLevels;
+
+	/**
+	 * @brief Sets the in-memory table to the default values for a Diablo game
+	 */
+	ExperienceData()
 	{
-		return levelThresholds[std::min<size_t>({ level, maxLevel, levelThresholds.size() - 1 })];
+		const std::vector<uint32_t> DefaultThresholds = { 0,
+			2000,
+			4620,
+			8040,
+			12489,
+			18258,
+			25712,
+			35309,
+			47622,
+			63364,
+			83419,
+			108879,
+			141086,
+			181683,
+			231075,
+			313656,
+			424067,
+			571190,
+			766569,
+			1025154,
+			1366227,
+			1814568,
+			2401895,
+			3168651,
+			4166200,
+			5459523,
+			7130496,
+			9281874,
+			12042092,
+			15571031,
+			20066900,
+			25774405,
+			32994399,
+			42095202,
+			53525811,
+			67831218,
+			85670061,
+			107834823,
+			135274799,
+			169122009,
+			210720231,
+			261657253,
+			323800420,
+			399335440,
+			490808349,
+			601170414,
+			733825617,
+			892680222,
+			1082908612,
+			1310707109,
+			1583495809 };
+		std::fill(levelThresholds.begin(), levelThresholds.end(), DefaultThresholds);
+
+		std::fill(maxLevels.begin(), maxLevels.end(), DefaultMaxLevel);
+	}
+
+	DVL_REINITIALIZES void clear()
+	{
+		std::fill(maxLevels.begin(), maxLevels.end(), 0);
+
+		std::for_each(levelThresholds.begin(), levelThresholds.end(), [](auto &classThresholds) { classThresholds.clear(); });
+	}
+
+	[[nodiscard]] uint32_t getThresholdForClassAndLevel(HeroClass clazz, unsigned level)
+	{
+		const size_t index = static_cast<size_t>(clazz);
+		assert(index < levelThresholds.size());
+		auto &experienceThresholdsForClass = levelThresholds[index];
+		return experienceThresholdsForClass[std::min<size_t>({ level, getMaxLevelForClass(clazz), experienceThresholdsForClass.size() - 1 })];
+	}
+
+	void setThresholdForClassAndLevel(HeroClass clazz, unsigned level, uint32_t experience)
+	{
+		const size_t index = static_cast<size_t>(clazz);
+		assert(index < levelThresholds.size());
+		if (level >= levelThresholds[index].size()) {
+			// To avoid ValidatePlayer() resetting players to 0 experience we need to use the maximum possible value here
+			// As long as the file has no gaps it'll get initialised properly.
+			levelThresholds[index].resize(static_cast<size_t>(level) + 1, std::numeric_limits<uint32_t>::max());
+		}
+		levelThresholds[index][level] = experience;
+	}
+
+	[[nodiscard]] uint8_t getMaxLevelForClass(HeroClass clazz)
+	{
+		const size_t index = static_cast<size_t>(clazz);
+		assert(index < maxLevels.size());
+		return maxLevels[index];
+	}
+
+	void setMaxLevelForClass(HeroClass clazz, uint8_t level)
+	{
+		const size_t index = static_cast<size_t>(clazz);
+		assert(index < maxLevels.size());
+		maxLevels[index] = level == 0 ? DefaultMaxLevel : level;
+	}
+
+	uint8_t getMaxOfMaxLevels()
+	{
+		auto max = std::max_element(maxLevels.begin(), maxLevels.end());
+		assert(max != maxLevels.end());
+		return *max;
 	}
 } ExperienceData;
 
 struct ExperienceColumnDefinition {
 	enum class ColumnType {
 		Level,
-		Experience,
+		Warrior,
+		Rogue,
+		Sorcerer,
+		Monk,
+		Bard,
+		Barbarian,
+		LAST = Barbarian, // Only declared so enum_size can be used
+
 		Unknown = -1
 	} type;
 
@@ -102,10 +164,46 @@ struct ExperienceColumnDefinition {
 		if (name == "Level") {
 			return ColumnType::Level;
 		}
-		if (name == "Experience") {
-			return ColumnType::Experience;
+		if (name == "Warrior") {
+			return ColumnType::Warrior;
+		}
+		if (name == "Rogue") {
+			return ColumnType::Rogue;
+		}
+		if (name == "Sorcerer") {
+			return ColumnType::Sorcerer;
+		}
+		if (name == "Monk") {
+			return ColumnType::Monk;
+		}
+		if (name == "Bard") {
+			return ColumnType::Bard;
+		}
+		if (name == "Barbarian") {
+			return ColumnType::Barbarian;
 		}
 		return ColumnType::Unknown;
+	}
+
+	static HeroClass mapTypeToClass(ColumnType type)
+	{
+		switch (type) {
+		case ColumnType::Warrior:
+			return HeroClass::Warrior;
+		case ColumnType::Rogue:
+			return HeroClass::Rogue;
+		case ColumnType::Sorcerer:
+			return HeroClass::Sorcerer;
+		case ColumnType::Monk:
+			return HeroClass::Monk;
+		case ColumnType::Bard:
+			return HeroClass::Bard;
+		case ColumnType::Barbarian:
+			return HeroClass::Barbarian;
+		default:
+			assert(0 && "attempting to map a non-class column to a HeroClass");
+			return {};
+		}
 	}
 
 	ExperienceColumnDefinition() = delete;
@@ -120,6 +218,11 @@ struct ExperienceColumnDefinition {
 	    : type(type)
 	    , skipLength(skipLength)
 	{
+	}
+
+	HeroClass getClass()
+	{
+		return mapTypeToClass(type);
 	}
 
 	bool operator==(const ExperienceColumnDefinition &other) const
@@ -138,7 +241,7 @@ void ReloadExperienceData()
 		return;
 	}
 
-	constexpr unsigned ExpectedColumnCount = 2; // Level, Experience
+	const unsigned ExpectedColumnCount = enum_size<ExperienceColumnDefinition::ColumnType>::value; // Level, then a column for each class
 
 	std::vector<ExperienceColumnDefinition> columns;
 	columns.reserve(ExpectedColumnCount);
@@ -182,11 +285,11 @@ void ReloadExperienceData()
 		return;
 	}
 
-	ExperienceData.levelThresholds.clear();
+	ExperienceData.clear();
 	bool foundMaxLevelRecord = false;
 	do {
 		uint8_t level = 0;
-		uint32_t experience = 0;
+		std::unordered_map<HeroClass, uint32_t> classExperience {};
 		bool isMaxLevelRecord = false;
 		for (auto &column : columns) {
 			result = DiscardMultipleFields(result.ptr, dataFile.end(), column.skipLength);
@@ -217,7 +320,8 @@ void ReloadExperienceData()
 				}
 			} break;
 
-			case ExperienceColumnDefinition::ColumnType::Experience: {
+			default: { // One of the HeroClass related columns
+				auto &experience = classExperience[column.getClass()];
 				auto fromCharsResult = from_chars(result.ptr, dataFile.end(), experience);
 				if (fromCharsResult.ec == std::errc::result_out_of_range) {
 					// TODO: let the player know the data file contains an experience threshold higher than we support
@@ -226,27 +330,23 @@ void ReloadExperienceData()
 
 				// std::from_chars doesn't consume our field separators so we need to advance to the next field by discarding the remainder of this one
 				result = DiscardField(fromCharsResult.ptr, dataFile.end());
-			} break;
-
-			default:
-				result = DiscardField(result.ptr, dataFile.end());
+			}
 			}
 		}
 
 		if (isMaxLevelRecord) {
-			ExperienceData.maxLevel = experience == 0 ? ExperienceData::DefaultMaxLevel
-			                                          : static_cast<uint8_t>(std::min<uint32_t>(experience, std::numeric_limits<uint8_t>::max()));
+			for (HeroClass clazz : enum_values<HeroClass>()) {
+				ExperienceData.setMaxLevelForClass(clazz, static_cast<uint8_t>(std::min<uint32_t>(classExperience[clazz], std::numeric_limits<uint8_t>::max())));
+			}
 			foundMaxLevelRecord = true;
 		} else {
-			if (foundMaxLevelRecord && level > ExperienceData.maxLevel) {
+			if (foundMaxLevelRecord && level > ExperienceData.getMaxOfMaxLevels()) {
 				// ignore values we will never use. Should we notify the player?
 			} else {
-				if (level >= ExperienceData.levelThresholds.size()) {
-					// To avoid ValidatePlayer() resetting players to 0 experience we need to use the maximum possible value here
-					// As long as the file has no gaps it'll get initialised properly.
-					ExperienceData.levelThresholds.resize(static_cast<size_t>(level) + 1, std::numeric_limits<uint32_t>::max());
+				for (HeroClass clazz : enum_values<HeroClass>()) {
+					if (!foundMaxLevelRecord || level <= ExperienceData.getMaxLevelForClass(clazz))
+						ExperienceData.setThresholdForClassAndLevel(clazz, level, classExperience[clazz]);
 				}
-				ExperienceData.levelThresholds[level] = experience;
 			}
 		}
 
@@ -263,14 +363,14 @@ void LoadPlayerDataFiles()
 	ReloadExperienceData();
 }
 
-uint32_t GetNextExperienceThresholdForLevel(unsigned level)
+uint32_t GetNextExperienceThresholdForClassAndLevel(HeroClass clazz, unsigned level)
 {
-	return ExperienceData.getThresholdForLevel(level);
+	return ExperienceData.getThresholdForClassAndLevel(clazz, level);
 }
 
-uint8_t GetMaximumCharacterLevel()
+uint8_t GetMaximumCharacterLevelForClass(HeroClass clazz)
 {
-	return ExperienceData.maxLevel;
+	return ExperienceData.getMaxLevelForClass(clazz);
 }
 
 const _sfx_id herosounds[enum_size<HeroClass>::value][enum_size<HeroSpeech>::value] = {

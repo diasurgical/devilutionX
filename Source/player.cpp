@@ -2064,12 +2064,12 @@ void Player::setCharacterLevel(uint8_t level)
 
 uint8_t Player::getMaxCharacterLevel() const
 {
-	return GetMaximumCharacterLevel();
+	return GetMaximumCharacterLevelForClass(_pClass);
 }
 
 uint32_t Player::getNextExperienceThreshold() const
 {
-	return GetNextExperienceThresholdForLevel(this->getCharacterLevel());
+	return GetNextExperienceThresholdForClassAndLevel(_pClass, this->getCharacterLevel());
 }
 
 int32_t Player::calculateBaseLife() const
@@ -2455,7 +2455,7 @@ void Player::_addExperience(uint32_t experience, int levelDelta)
 		return;
 	}
 
-	const uint32_t MaxExperience = GetNextExperienceThresholdForLevel(MaxCharacterLevel);
+	const uint32_t MaxExperience = GetNextExperienceThresholdForClassAndLevel(_pClass, MaxCharacterLevel);
 
 	if (_pExperience >= MaxExperience) {
 		// Only let the player gain experience if they haven't reached the cap already
@@ -2473,7 +2473,7 @@ void Player::_addExperience(uint32_t experience, int levelDelta)
 		// for low level characters experience gain is capped to 1/20 of current levels xp
 		// for high level characters experience gain is capped to 200 * current level
 		//  using default values this is a smaller value than 1/20 of the exp needed for the next level starting from level 6.
-		clampedExp = std::min({ clampedExp, /* level 0-5: */ GetNextExperienceThresholdForLevel(clampedPlayerLevel) / 20U, /* level 6-50: */ 200U * clampedPlayerLevel });
+		clampedExp = std::min({ clampedExp, /* level 0-5: */ GetNextExperienceThresholdForClassAndLevel(_pClass, clampedPlayerLevel) / 20U, /* level 6-50: */ 200U * clampedPlayerLevel });
 	}
 
 	// ensure we only add enough experience to reach the max experience cap so we don't overflow

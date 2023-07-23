@@ -77,53 +77,65 @@ used as a header and requires the following column names:
 
 #### Level
 A numeric value used to set the order for remaining values, or the special
-`MaxLevel` value which is used to determine the maximum character level. The
-header line MUST be the first line in the file. The `MaxLevel` line MUST be
-present, it SHOULD be the second line but can appear later in the file. Levels
-SHOULD proceed in ascending order after that. If you leave any gaps then
-characters will not be able to advance past that level and experience caps
-will not apply.
+`MaxLevel` value which is used to determine the maximum level for each class.
+The header line MUST be the first line in the file. The `MaxLevel` line MUST
+be present, it SHOULD be the second line but can appear later in the file.
+Levels SHOULD proceed in ascending order after that. If you leave any gaps
+then characters will not be able to advance past that level and experience
+caps will not apply.
 
-For example you could set a maximum level of 36 by changing the MaxLevel value:
+For example you could set a maximum level of 36 for the Rogue and Sorcerer
+while leaving the other classes able to level to 50 with the following values:
 ```tsv
-Level	Experience
-MaxLevel	36
-0	0
-1	2000
+Level	Warrior	Rogue	Sorcerer	Monk	Bard	Barbarian	ExpRatio
+MaxLevel	50	36	36	50	50	50	1024
+0	0	0	0	0	0	0	1024
+1	2000	2000	2000	2000	2000	2000	1024
 ...
 ```
 
 The first row following the `MaxLevel` line SHOULD be `0	0	0	0	0	0	0	1024` (as
 all characters start at level 1, we ignore these values and use the threshold
-for level 1 to determine when characters advance past level 1). There should
-also be at least as many rows as the highest value provided for `MaxLevel`.
-If you specify a `MaxLevel` of `60` but only provide experience values up to
-`50` then characters will level up to `51` but no further.
+for level 1 to determine when characters of a given class advance past level
+1). There should also be at least as many rows as the highest value provided
+for `MaxLevel`. If you specify a `MaxLevel` of `60` for a class but only
+provide experience values up to `50` then that class will level up to `51` but
+no further.
 
-#### Experience
-This column determines the experience points required for characters to
+#### Warrior/Rogue/Sorcerer/Monk/Bard/Barbarian
+These columns determine the experience points required for each class to
 advance past that level. For example a file like:
 ```tsv
-Level	Experience
-MaxLevel	5
-0	0
-1	2000
-2	4000
-3	6000
-4	8000
-5	10000
+Level	Warrior	Rogue	Sorcerer	Monk	Bard	Barbarian	ExpRatio
+MaxLevel	5	3	1	1	1	1	1024
+0	0	0	0	0	0	0	1024
+1	2000	5000	0	0	0	0	1024
+2	4000	8000					1024
+3	6000	10000					1024
+4	8000						1024
+5	10000						1024
 ```
-Could be used to have characters level up to a max of 5 every 2000 experience
-points. They would start at level 1, level up to 2 at 2000 exp, level 3 at
-4000 exp, level 4 at 6000 exp, then reach the maxium level of 5 at 8000 exp.
-Characters would continue gaining experience until they hit 10000 experience
-points and will not level up any further.
+Could be used to have Warriors level up to 2 at 2000 exp, reach level 3 at
+4000 exp, level 4 at 6000 exp, then reach their max level of 5 at 8000 exp.
+Rogues would level slower, reaching level 2 at 5000 exp and maxing out at
+level 3 at 8000 exp. Both classes would stop gaining experience once they
+hit 10000 experience points. Other classes will not level up (as their max
+level is 1) and would not gain experience (as their experience cap is 0 at
+level 1).
 
-You should provide a value for every row up to (and including) the maximum
-level you intend players to be able to reach. If you have an empty cell for an
-experience value at a row earlier than the `MaxLevel` value then characters
-will not be able to advance past that level. They will continue to gain
-experience without a cap (up to the hard limit of `2^32-1`, 4,294,967,295).
+Empty values/cells are allowed, however make sure that you provide values for
+every row up to (and including) the maximum level for that class. If you have
+an empty cell for a column (class) at a row earlier than the `MaxLevel` value
+characters of that class will not be able to advance past that level. They
+will continue to gain experience without a cap (up to the hard limit of
+`2^32-1`, 4,294,967,295). You probably still want to set an experience cap for
+every level and class combination even if you limit some classes to lower
+maximum levels to avoid accidently triggering this behaviour.
+
+#### ExpRatio
+This value is not currently used. It's present in the file to match the format
+used by Diablo 2. It'll likely be interpreted as a fixed point value (e.g.
+`1.025`) if it does become useful.
 
 [d2-excel-plus]: https://github.com/Cjreek/D2ExcelPlus
 [d2mods-info]: https://www.d2mods.info/forum/viewtopic.php?t=34455
