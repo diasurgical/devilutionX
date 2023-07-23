@@ -2306,7 +2306,6 @@ void CreatePlayer(Player &player, HeroClass c)
 	player._pManaBase = player._pMana;
 	player._pMaxManaBase = player._pMana;
 
-	player._pMaxLvl = player._pLevel;
 	player._pExperience = 0;
 	player._pNextExper = ExpLvlsTbl[1];
 	player._pArmorClass = 0;
@@ -2389,7 +2388,6 @@ int CalcStatDiff(Player &player)
 void NextPlrLevel(Player &player)
 {
 	player._pLevel++;
-	player._pMaxLvl++;
 
 	CalcPlrInv(player, true);
 

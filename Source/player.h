@@ -320,7 +320,6 @@ struct Player {
 	Direction _pdir; // Direction faced by player (direction enum)
 	HeroClass _pClass;
 	int8_t _pLevel;
-	int8_t _pMaxLvl;
 	uint8_t _pgfxnum; // Bitmask indicating what variant of the sprite the player is using. The 3 lower bits define weapon (PlayerWeaponGraphic) and the higher bits define armour (starting with PlayerArmorGraphic)
 	int8_t _pISplLvlAdd;
 	/** @brief Specifies whether players are in non-PvP mode. */
