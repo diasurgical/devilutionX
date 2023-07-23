@@ -73,9 +73,9 @@ const std::array<uint32_t, MaxCharacterLevel> ExpLvlsTbl {
 };
 } // namespace
 
-uint32_t GetNextExperienceThresholdForLevel(int level)
+uint32_t GetNextExperienceThresholdForLevel(unsigned level)
 {
-	return ExpLvlsTbl[clamp(level, 0, static_cast<int>(ExpLvlsTbl.size()) - 1)];
+	return ExpLvlsTbl[std::min<size_t>(level, ExpLvlsTbl.size() - 1)];
 }
 
 const _sfx_id herosounds[enum_size<HeroClass>::value][enum_size<HeroSpeech>::value] = {

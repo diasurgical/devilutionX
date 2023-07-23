@@ -421,7 +421,7 @@ void UnPackPlayer(const PlayerPack &packed, Player &player)
 	Point position { packed.px, packed.py };
 
 	player = {};
-	player._pLevel = clamp<int8_t>(packed.pLevel, 1, MaxCharacterLevel);
+	player._pLevel = clamp<uint8_t>(packed.pLevel, 1, MaxCharacterLevel);
 	player._pMaxHPBase = SDL_SwapLE32(packed.pMaxHPBase);
 	player._pHPBase = SDL_SwapLE32(packed.pHPBase);
 	player._pHPBase = clamp<int32_t>(player._pHPBase, 0, player._pMaxHPBase);

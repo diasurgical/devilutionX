@@ -136,7 +136,7 @@ struct PlayerAnimData {
 };
 
 extern const _sfx_id herosounds[enum_size<HeroClass>::value][enum_size<HeroSpeech>::value];
-uint32_t GetNextExperienceThresholdForLevel(int level);
+uint32_t GetNextExperienceThresholdForLevel(unsigned level);
 extern const PlayerData PlayersData[];
 extern const PlayerSpriteData PlayersSpriteData[];
 extern const PlayerAnimData PlayersAnimData[];
