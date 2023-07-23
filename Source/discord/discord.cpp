@@ -137,7 +137,7 @@ void UpdateGame()
 		return;
 
 	auto newData = PlayerData {
-		leveltype, setlvlnum, currlevel, MyPlayer->_pLevel, MyPlayer->_pgfxnum
+		leveltype, setlvlnum, currlevel, MyPlayer->getCharacterLevel(), MyPlayer->_pgfxnum
 	};
 	if (newData != tracked_data) {
 		tracked_data = newData;

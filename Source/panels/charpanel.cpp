@@ -125,7 +125,7 @@ PanelEntry panelEntries[] = {
 	    []() { return StyledText { UiFlags::ColorWhite, std::string(_(PlayersData[static_cast<std::size_t>(InspectPlayer->_pClass)].className)) }; } },
 
 	{ N_("Level"), { 57, 52 }, 57, 45,
-	    []() { return StyledText { UiFlags::ColorWhite, StrCat(InspectPlayer->_pLevel) }; } },
+	    []() { return StyledText { UiFlags::ColorWhite, StrCat(InspectPlayer->getCharacterLevel()) }; } },
 	{ N_("Experience"), { TopRightLabelX, 52 }, 99, 91,
 	    []() {
 	        int spacing = ((InspectPlayer->_pExperience >= 1000000000) ? 0 : 1);
@@ -133,7 +133,7 @@ PanelEntry panelEntries[] = {
 	    } },
 	{ N_("Next level"), { TopRightLabelX, 80 }, 99, 198,
 	    []() {
-	        if (InspectPlayer->_pLevel == MaxCharacterLevel) {
+	        if (InspectPlayer->getCharacterLevel() == MaxCharacterLevel) {
 		        return StyledText { UiFlags::ColorWhitegold, std::string(_("None")) };
 	        }
 	        int spacing = ((InspectPlayer->_pNextExper >= 1000000000) ? 0 : 1);
@@ -167,7 +167,7 @@ PanelEntry panelEntries[] = {
 	    []() { return StyledText { UiFlags::ColorWhite, FormatInteger(InspectPlayer->_pGold) }; } },
 
 	{ N_("Armor class"), { RightColumnLabelX, 163 }, 57, RightColumnLabelWidth,
-	    []() { return StyledText { GetValueColor(InspectPlayer->_pIBonusAC), StrCat(InspectPlayer->GetArmor() + InspectPlayer->_pLevel * 2) }; } },
+	    []() { return StyledText { GetValueColor(InspectPlayer->_pIBonusAC), StrCat(InspectPlayer->GetArmor() + InspectPlayer->getCharacterLevel() * 2) }; } },
 	{ N_("To hit"), { RightColumnLabelX, 191 }, 57, RightColumnLabelWidth,
 	    []() { return StyledText { GetValueColor(InspectPlayer->_pIBonusToHit), StrCat(InspectPlayer->InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Bow ? InspectPlayer->GetRangedToHit() : InspectPlayer->GetMeleeToHit(), "%") }; } },
 	{ N_("Damage"), { RightColumnLabelX, 219 }, 57, RightColumnLabelWidth,

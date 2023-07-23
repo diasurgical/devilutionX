@@ -87,11 +87,11 @@ bool IsWarpOpen(dungeon_type type)
 		return true;
 
 	if (gbIsHellfire) {
-		if (type == DTYPE_CATACOMBS && myPlayer._pLevel >= 10)
+		if (type == DTYPE_CATACOMBS && myPlayer.getCharacterLevel() >= 10)
 			return true;
-		if (type == DTYPE_CAVES && myPlayer._pLevel >= 15)
+		if (type == DTYPE_CAVES && myPlayer.getCharacterLevel() >= 15)
 			return true;
-		if (type == DTYPE_HELL && myPlayer._pLevel >= 20)
+		if (type == DTYPE_HELL && myPlayer.getCharacterLevel() >= 20)
 			return true;
 		if (type == DTYPE_NEST && IsAnyOf(Quests[Q_FARMER]._qactive, QUEST_DONE, QUEST_HIVE_DONE))
 			return true;
@@ -891,19 +891,19 @@ void CheckTriggers()
 				diablo_message abortflag;
 
 				auto position = myPlayer.position.tile;
-				if (trigs[i]._tlvl == 5 && myPlayer._pLevel < 8) {
+				if (trigs[i]._tlvl == 5 && myPlayer.getCharacterLevel() < 8) {
 					abort = true;
 					position.y += 1;
 					abortflag = EMSG_REQUIRES_LVL_8;
 				}
 
-				if (IsAnyOf(trigs[i]._tlvl, 9, 17) && myPlayer._pLevel < 13) {
+				if (IsAnyOf(trigs[i]._tlvl, 9, 17) && myPlayer.getCharacterLevel() < 13) {
 					abort = true;
 					position.x += 1;
 					abortflag = EMSG_REQUIRES_LVL_13;
 				}
 
-				if (IsAnyOf(trigs[i]._tlvl, 13, 21) && myPlayer._pLevel < 17) {
+				if (IsAnyOf(trigs[i]._tlvl, 13, 21) && myPlayer.getCharacterLevel() < 17) {
 					abort = true;
 					position.y += 1;
 					abortflag = EMSG_REQUIRES_LVL_17;
