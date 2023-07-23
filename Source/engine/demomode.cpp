@@ -15,6 +15,7 @@
 #include "nthread.h"
 #include "options.h"
 #include "pfile.h"
+#include "utils/console.h"
 #include "utils/display.h"
 #include "utils/endian_stream.hpp"
 #include "utils/paths.h"
@@ -28,6 +29,12 @@ namespace devilution {
 // #define LOG_DEMOMODE_MESSAGES_GAMETICK
 
 namespace {
+
+enum class LoadingStatus : uint8_t {
+	Success,
+	FileNotFound,
+	UnsupportedVersion,
+};
 
 enum class DemoMsgType : uint8_t {
 	GameTick = 0,
@@ -369,17 +376,17 @@ void LogDemoMessage(const DemoMsg &msg)
 #endif // LOG_DEMOMODE_MESSAGES
 }
 
-bool LoadDemoMessages(int i)
+LoadingStatus LoadDemoMessages(int i)
 {
 	const std::string path = StrCat(paths::PrefPath(), "demo_", i, ".dmo");
 	FILE *demofile = OpenFile(path.c_str(), "rb");
 	if (demofile == nullptr) {
-		return false;
+		return LoadingStatus::FileNotFound;
 	}
 
 	const uint8_t version = ReadByte(demofile);
-	if (version != 0) {
-		return false;
+	if (version != 0 && version != 1) {
+		return LoadingStatus::UnsupportedVersion;
 	}
 
 	gSaveNumber = ReadLE32(demofile);
@@ -440,7 +447,7 @@ bool LoadDemoMessages(int i)
 
 	DemoModeLastTick = SDL_GetTicks();
 
-	return true;
+	return LoadingStatus::Success;
 }
 
 void RecordEventHeader(const SDL_Event &event)
@@ -460,11 +467,21 @@ void InitPlayBack(int demoNumber, bool timedemo)
 	Timedemo = timedemo;
 	ControlMode = ControlTypes::KeyboardAndMouse;
 
-	if (!LoadDemoMessages(demoNumber)) {
-		SDL_Log("Unable to load demo file");
-		diablo_quit(1);
+	LoadingStatus status = LoadDemoMessages(demoNumber);
+	switch (status) {
+	case LoadingStatus::Success:
+		return;
+	case LoadingStatus::FileNotFound:
+		printInConsole("Demo file not found");
+		break;
+	case LoadingStatus::UnsupportedVersion:
+		printInConsole("Unsupported Demo version");
+		break;
 	}
+	printNewlineInConsole();
+	diablo_quit(1);
 }
+
 void InitRecording(int recordNumber, bool createDemoReference)
 {
 	RecordNumber = recordNumber;
