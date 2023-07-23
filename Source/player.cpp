@@ -2460,22 +2460,22 @@ void AddPlrExperience(Player &player, int lvl, int exp)
 
 	const uint32_t MaxExperience = GetNextExperienceThresholdForLevel(MaxCharacterLevel);
 
-	// Overflow is only possible if a kill grants more than (2^32-1 - MaxExperience) XP in one go, which doesn't happen in normal gameplay. Clamp to experience required to reach max level
-	player._pExperience = std::min(player._pExperience + clampedExp, MaxExperience);
+	if (player._pExperience >= MaxExperience) {
+		// Only let the player gain experience if they haven't reached the cap already
+		return;
+	}
+
+	// ensure we only add enough experience to reach the max experience cap so we don't overflow
+	player._pExperience += std::min(clampedExp, MaxExperience - player._pExperience);
 
 	if (*sgOptions.Gameplay.experienceBar) {
 		RedrawEverything();
 	}
 
 	// Increase player level if applicable
-	unsigned newLvl = player.getCharacterLevel();
-	while (newLvl < MaxCharacterLevel && player._pExperience >= GetNextExperienceThresholdForLevel(newLvl)) {
-		newLvl++;
-	}
-	if (newLvl != player.getCharacterLevel()) {
-		for (unsigned i = newLvl - player.getCharacterLevel(); i > 0; i--) {
-			NextPlrLevel(player);
-		}
+	while (player.getCharacterLevel() < MaxCharacterLevel && player._pExperience >= player._pNextExper) {
+		// NextPlrLevel changes _pLevel and _pNextExper
+		NextPlrLevel(player);
 	}
 
 	NetSendCmdParam1(false, CMD_PLRLEVEL, player.getCharacterLevel());
