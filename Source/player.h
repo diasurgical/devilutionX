@@ -318,7 +318,11 @@ struct Player {
 	ActorPosition position;
 	Direction _pdir; // Direction faced by player (direction enum)
 	HeroClass _pClass;
-	uint8_t _pLevel;
+
+private:
+	uint8_t _pLevel = 1; // Use get/setCharacterLevel as this attribute is tied to _pNextExper
+
+public:
 	uint8_t _pgfxnum; // Bitmask indicating what variant of the sprite the player is using. The 3 lower bits define weapon (PlayerWeaponGraphic) and the higher bits define armour (starting with PlayerArmorGraphic)
 	int8_t _pISplLvlAdd;
 	/** @brief Specifies whether players are in non-PvP mode. */
@@ -510,7 +514,7 @@ struct Player {
 	 */
 	int GetMeleeToHit() const
 	{
-		int hper = _pLevel + _pDexterity / 2 + _pIBonusToHit + BaseHitChance;
+		int hper = getCharacterLevel() + _pDexterity / 2 + _pIBonusToHit + BaseHitChance;
 		if (_pClass == HeroClass::Warrior)
 			hper += 20;
 		return hper;
@@ -533,7 +537,7 @@ struct Player {
 	 */
 	int GetRangedToHit() const
 	{
-		int hper = _pLevel + _pDexterity + _pIBonusToHit + BaseHitChance;
+		int hper = getCharacterLevel() + _pDexterity + _pIBonusToHit + BaseHitChance;
 		if (_pClass == HeroClass::Rogue)
 			hper += 20;
 		else if (_pClass == HeroClass::Warrior || _pClass == HeroClass::Bard)
@@ -571,7 +575,7 @@ struct Player {
 	{
 		int blkper = _pDexterity + _pBaseToBlk;
 		if (useLevel)
-			blkper += _pLevel * 2;
+			blkper += getCharacterLevel() * 2;
 		return blkper;
 	}
 
@@ -748,6 +752,20 @@ struct Player {
 	 * @param wParam2 Second Parameter
 	 */
 	void UpdatePreviewCelSprite(_cmd_id cmdId, Point point, uint16_t wParam1, uint16_t wParam2);
+
+	[[nodiscard]] uint8_t getCharacterLevel() const
+	{
+		return _pLevel;
+	}
+
+	/**
+	 * @brief Sets the character level and derived attributes
+	 *
+	 * This method ensures the level is within the allowed range and sets the number of experience points
+	 * required for the next character level as needed.
+	 * @param level New character level
+	 */
+	void setCharacterLevel(uint8_t level);
 
 	/** @brief Checks if the player is on the same level as the local player (MyPlayer). */
 	bool isOnActiveLevel() const

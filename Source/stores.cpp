@@ -2124,7 +2124,7 @@ void SetupTownStores()
 {
 	Player &myPlayer = *MyPlayer;
 
-	int l = myPlayer._pLevel / 2;
+	int l = myPlayer.getCharacterLevel() / 2;
 	if (!gbIsMultiplayer) {
 		l = 0;
 		for (int i = 0; i < NUMLEVELS; i++) {
@@ -2139,7 +2139,7 @@ void SetupTownStores()
 	SpawnSmith(l);
 	SpawnWitch(l);
 	SpawnHealer(l);
-	SpawnBoy(myPlayer._pLevel);
+	SpawnBoy(myPlayer.getCharacterLevel());
 	SpawnPremium(myPlayer);
 }
 

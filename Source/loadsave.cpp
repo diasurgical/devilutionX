@@ -424,13 +424,13 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	player._pMaxManaBase = file.NextLE<int32_t>();
 	player._pMana = file.NextLE<int32_t>();
 	player._pMaxMana = file.NextLE<int32_t>();
-	file.Skip<int32_t>(); // Skip _pManaPer - always derived from mana and maxMana
-	player._pLevel = file.NextLE<uint8_t>();
-	file.Skip<uint8_t>(); // Skip _pMaxLevel - unused
-	file.Skip(2);         // Alignment
+	file.Skip<int32_t>();                             // Skip _pManaPer - always derived from mana and maxMana
+	player.setCharacterLevel(file.NextLE<uint8_t>()); // this sets _pNextExper as well.
+	file.Skip<uint8_t>();                             // Skip _pMaxLevel - unused
+	file.Skip(2);                                     // Alignment
 	player._pExperience = file.NextLE<uint32_t>();
-	file.Skip<uint32_t>();                        // Skip _pMaxExp - unused
-	player._pNextExper = file.NextLE<uint32_t>(); // This can be calculated based on _pLevel
+	file.Skip<uint32_t>(); // Skip _pMaxExp - unused
+	file.Skip<uint32_t>(); // Skip _pNextExper, it was calculated based on _pLevel above
 	player._pArmorClass = file.NextLE<int8_t>();
 	player._pMagResist = file.NextLE<int8_t>();
 	player._pFireResist = file.NextLE<int8_t>();
@@ -1235,7 +1235,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.WriteLE<int32_t>(player._pMana);
 	file.WriteLE<int32_t>(player._pMaxMana);
 	file.Skip<int32_t>(); // Skip _pManaPer
-	file.WriteLE<uint8_t>(player._pLevel);
+	file.WriteLE<uint8_t>(player.getCharacterLevel());
 	file.Skip<uint8_t>(); // skip _pMaxLevel, this value is uninitialised in most cases in Diablo/Hellfire so there's no point setting it.
 	file.Skip(2);         // Alignment
 	file.WriteLE<uint32_t>(player._pExperience);

@@ -2850,7 +2850,7 @@ void OperateShrineMendicant(Player &player)
 		return;
 
 	int gold = player._pGold / 2;
-	AddPlrExperience(player, player._pLevel, gold);
+	AddPlrExperience(player, player.getCharacterLevel(), gold);
 	TakePlrsMoney(gold);
 
 	RedrawEverything();
@@ -2868,7 +2868,7 @@ void OperateShrineSparkling(Player &player, Point spawnPosition)
 	if (&player != MyPlayer)
 		return;
 
-	AddPlrExperience(player, player._pLevel, 1000 * currlevel);
+	AddPlrExperience(player, player.getCharacterLevel(), 1000 * currlevel);
 
 	AddMissile(
 	    spawnPosition,
