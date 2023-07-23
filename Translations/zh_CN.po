@@ -9055,7 +9055,7 @@ msgid ""
 "What? Now you bring me that elixir from the healer? I was able to finish my "
 "brew without it. Why don't you just keep it..."
 msgstr ""
-"什么？现在​你​把​医治者​的​长生​不​老​药​带给​我？不用​它​我​就​能​喝​完​我​的​啤酒。你​为什么​不​"
+"什么？现在​你​把​医治者​的​长生​不​老​药​带给​我？不用​它​我​也能​完成​我​的​酿造。你​为什么​不​"
 "留​着​它"
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
