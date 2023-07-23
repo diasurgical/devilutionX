@@ -1319,6 +1319,46 @@ KeymapperOptions::KeymapperOptions()
 	keyIDToKeyName.emplace(SDL_BUTTON_X1 | KeymapperMouseButtonMask, "X1MOUSE");
 	keyIDToKeyName.emplace(SDL_BUTTON_X2 | KeymapperMouseButtonMask, "X2MOUSE");
 
+	keyIDToKeyName.emplace(SDLK_BACKQUOTE, "`");
+	keyIDToKeyName.emplace(SDLK_MINUS, "-");
+	keyIDToKeyName.emplace(SDLK_EQUALS, "=");
+	keyIDToKeyName.emplace(SDLK_LEFTBRACKET, "[");
+	keyIDToKeyName.emplace(SDLK_RIGHTBRACKET, "]");
+	keyIDToKeyName.emplace(SDLK_BACKSLASH, "\\");
+	keyIDToKeyName.emplace(SDLK_SEMICOLON, ";");
+	keyIDToKeyName.emplace(SDLK_QUOTE, "'");
+	keyIDToKeyName.emplace(SDLK_COMMA, ",");
+	keyIDToKeyName.emplace(SDLK_PERIOD, ".");
+	keyIDToKeyName.emplace(SDLK_SLASH, "/");
+
+	keyIDToKeyName.emplace(SDLK_BACKSPACE, "BACKSPACE");
+	keyIDToKeyName.emplace(SDLK_CAPSLOCK, "CAPSLOCK");
+	keyIDToKeyName.emplace(SDLK_SCROLLLOCK, "SCROLLLOCK");
+	keyIDToKeyName.emplace(SDLK_PAUSE, "PAUSE");
+	keyIDToKeyName.emplace(SDLK_INSERT, "INSERT");
+	keyIDToKeyName.emplace(SDLK_DELETE, "DELETE");
+	keyIDToKeyName.emplace(SDLK_PAGEUP, "PAGEUP");
+	keyIDToKeyName.emplace(SDLK_PAGEDOWN, "PAGEDOWN");
+	keyIDToKeyName.emplace(SDLK_HOME, "HOME");
+	keyIDToKeyName.emplace(SDLK_END, "END");
+
+	keyIDToKeyName.emplace(SDLK_KP_DIVIDE, "KEYPAD /");
+	keyIDToKeyName.emplace(SDLK_KP_MULTIPLY, "KEYPAD *");
+	keyIDToKeyName.emplace(SDLK_KP_MINUS, "KEYPAD -");
+	keyIDToKeyName.emplace(SDLK_KP_PLUS, "KEYPAD +");
+	keyIDToKeyName.emplace(SDLK_KP_ENTER, "KEYPAD ENTER");
+	keyIDToKeyName.emplace(SDLK_KP_1, "KEYPAD 1");
+	keyIDToKeyName.emplace(SDLK_KP_2, "KEYPAD 2");
+	keyIDToKeyName.emplace(SDLK_KP_3, "KEYPAD 3");
+	keyIDToKeyName.emplace(SDLK_KP_4, "KEYPAD 4");
+	keyIDToKeyName.emplace(SDLK_KP_5, "KEYPAD 5");
+	keyIDToKeyName.emplace(SDLK_KP_6, "KEYPAD 6");
+	keyIDToKeyName.emplace(SDLK_KP_7, "KEYPAD 7");
+	keyIDToKeyName.emplace(SDLK_KP_8, "KEYPAD 8");
+	keyIDToKeyName.emplace(SDLK_KP_9, "KEYPAD 9");
+	keyIDToKeyName.emplace(SDLK_KP_0, "KEYPAD 0");
+	keyIDToKeyName.emplace(SDLK_KP_PERIOD, "KEYPAD DECIMAL");
+
 	keyNameToKeyID.reserve(keyIDToKeyName.size());
 	for (const auto &kv : keyIDToKeyName) {
 		keyNameToKeyID.emplace(kv.second, kv.first);
