@@ -1292,7 +1292,7 @@ std::vector<OptionEntryBase *> LanguageOptions::GetEntries()
 KeymapperOptions::KeymapperOptions()
     : OptionCategoryBase("Keymapping", N_("Keymapping"), N_("Keymapping Settings"))
 {
-	// Insert all supported keys: a-z, 0-9 and F1-F12.
+	// Insert all supported keys: a-z, 0-9 and F1-F24.
 	keyIDToKeyName.reserve(('Z' - 'A' + 1) + ('9' - '0' + 1) + 12);
 	for (char c = 'A'; c <= 'Z'; ++c) {
 		keyIDToKeyName.emplace(c, std::string(1, c));
@@ -1302,6 +1302,9 @@ KeymapperOptions::KeymapperOptions()
 	}
 	for (int i = 0; i < 12; ++i) {
 		keyIDToKeyName.emplace(SDLK_F1 + i, StrCat("F", i + 1));
+	}
+	for (int i = 0; i < 12; ++i) {
+		keyIDToKeyName.emplace(SDLK_F13 + i, StrCat("F", i + 13));
 	}
 
 	keyIDToKeyName.emplace(SDLK_LALT, "LALT");
