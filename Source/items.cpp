@@ -898,11 +898,10 @@ int SaveItemPower(const Player &player, Item &item, ItemPower &power)
 		item._iFMaxDam = 0;
 		break;
 	case IPL_FIREBALL:
-		item._iFlags |= (ItemSpecialEffect::LightningArrows | ItemSpecialEffect::FireArrows);
-		item._iFMinDam = power.param1;
-		item._iFMaxDam = power.param2;
-		item._iLMinDam = 0;
-		item._iLMaxDam = 0;
+		item._iFlags |= ItemSpecialEffect::SpecialAttack;
+		item._iSpecEffectMinDam = power.param1;
+		item._iSpecEffectMaxDam = power.param2;
+		item._iSpecEffect = MissileID::FireballBow;
 		break;
 	case IPL_THORNS:
 		item._iFlags |= ItemSpecialEffect::Thorns;
@@ -993,19 +992,17 @@ int SaveItemPower(const Player &player, Item &item, ItemPower &power)
 	case IPL_INVCURS:
 		item._iCurs = power.param1;
 		break;
-	case IPL_ADDACLIFE:
-		item._iFlags |= (ItemSpecialEffect::LightningArrows | ItemSpecialEffect::FireArrows);
-		item._iFMinDam = power.param1;
-		item._iFMaxDam = power.param2;
-		item._iLMinDam = 1;
-		item._iLMaxDam = 0;
+	case IPL_LIGHTNING:
+		item._iFlags |= ItemSpecialEffect::SpecialAttack;
+		item._iSpecEffectMinDam = power.param1;
+		item._iSpecEffectMaxDam = power.param2;
+		item._iSpecEffect = MissileID::LightningBow;
 		break;
-	case IPL_ADDMANAAC:
-		item._iFlags |= (ItemSpecialEffect::LightningDamage | ItemSpecialEffect::FireDamage);
-		item._iFMinDam = power.param1;
-		item._iFMaxDam = power.param2;
-		item._iLMinDam = 2;
-		item._iLMaxDam = 0;
+	case IPL_CHARGEDBOLT:
+		item._iFlags |= ItemSpecialEffect::SpecialAttack;
+		item._iSpecEffectMinDam = power.param1;
+		item._iSpecEffectMaxDam = power.param2;
+		item._iSpecEffect = MissileID::ChargedBoltBow;
 		break;
 	case IPL_FIRERES_CURSE:
 		item._iPLFR -= r;
@@ -2577,6 +2574,9 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	int fmax = 0; // maximum fire damage
 	int lmin = 0; // minimum lightning damage
 	int lmax = 0; // maximum lightning damage
+	int smin = 0; // minimum special effect damage
+	int smax = 0; // maximum special effect damage
+	MissileID SpecEffect = MissileID::Arrow;
 
 	for (auto &item : player.InvBody) {
 		if (!item.isEmpty() && item._iStatFlag) {
@@ -2620,6 +2620,10 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 				fmax += item._iFMaxDam;
 				lmin += item._iLMinDam;
 				lmax += item._iLMaxDam;
+				smin += item._iSpecEffectMinDam;
+				smax += item._iSpecEffectMaxDam;
+				if (item._iSpecEffect != MissileID::Arrow)
+					SpecEffect = item._iSpecEffect;
 			}
 		}
 	}
@@ -2766,6 +2770,9 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	player._pIFMaxDam = fmax;
 	player._pILMinDam = lmin;
 	player._pILMaxDam = lmax;
+	player._pSpecEffect = SpecEffect;
+	player._pSpecEffectMinDam = smin;
+	player._pSpecEffectMaxDam = smax;
 
 	player._pInfraFlag = false;
 
@@ -3878,12 +3885,12 @@ bool DoOil(Player &player, int cii)
 		return _("no strength requirement");
 	case IPL_INVCURS:
 		return { string_view(" ") };
-	case IPL_ADDACLIFE:
+	case IPL_LIGHTNING:
 		if (item._iFMinDam == item._iFMaxDam)
 			return fmt::format(fmt::runtime(_("lightning damage: {:d}")), item._iFMinDam);
 		else
 			return fmt::format(fmt::runtime(_("lightning damage: {:d}-{:d}")), item._iFMinDam, item._iFMaxDam);
-	case IPL_ADDMANAAC:
+	case IPL_CHARGEDBOLT:
 		return _("charged bolts on hits");
 	case IPL_DEVASTATION:
 		return _("occasional triple damage");

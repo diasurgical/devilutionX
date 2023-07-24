@@ -601,9 +601,10 @@ bool PlrHitMonst(Player &player, Monster &monster, bool adjacentDamage = false)
 			return false;
 	}
 
-	if (gbIsHellfire && HasAllOf(player._pIFlags, ItemSpecialEffect::FireDamage | ItemSpecialEffect::LightningDamage)) {
-		int midam = player._pIFMinDam + GenerateRnd(player._pIFMaxDam - player._pIFMinDam);
-		AddMissile(player.position.tile, player.position.temp, player._pdir, MissileID::SpectralArrow, TARGET_MONSTERS, player.getId(), midam, 0);
+	if (HasAnyOf(player._pIFlags, ItemSpecialEffect::SpecialAttack)) {
+		int midam = player._pSpecEffectMinDam + GenerateRnd(player._pSpecEffectMaxDam - player._pSpecEffectMinDam);
+		Missile *missile = AddMissile(player.position.tile, player.position.temp, player._pdir, MissileID::SpectralArrow, TARGET_MONSTERS, player.getId(), midam, 0);
+		missile->var7 = static_cast<int8_t>(player._pSpecEffect);
 	}
 	int mind = player._pIMinDam;
 	int maxd = player._pIMaxDam;
@@ -834,15 +835,13 @@ bool DoAttack(Player &player)
 			}
 		}
 
-		if (!gbIsHellfire || !HasAllOf(player._pIFlags, ItemSpecialEffect::FireDamage | ItemSpecialEffect::LightningDamage)) {
-			const size_t playerId = player.getId();
-			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FireDamage)) {
-				AddMissile(position, { 1, 0 }, Direction::South, MissileID::WeaponExplosion, TARGET_MONSTERS, playerId, 0, 0);
-			}
-			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::LightningDamage)) {
-				AddMissile(position, { 2, 0 }, Direction::South, MissileID::WeaponExplosion, TARGET_MONSTERS, playerId, 0, 0);
-			}
+    const size_t playerId = player.getId();
+		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FireDamage)) {
+			AddMissile(position, { 1, 0 }, Direction::South, MissileID::WeaponExplosion, TARGET_MONSTERS, playerId, 0, 0);
 		}
+		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::LightningDamage)) {
+			AddMissile(position, { 2, 0 }, Direction::South, MissileID::WeaponExplosion, TARGET_MONSTERS, playerId, 0, 0);
+    }
 
 		if (monster != nullptr) {
 			didhit = PlrHitMonst(player, *monster);
@@ -932,12 +931,12 @@ bool DoRangeAttack(Player &player)
 		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::LightningArrows)) {
 			mistype = MissileID::LightningArrow;
 		}
-		if (HasAllOf(player._pIFlags, ItemSpecialEffect::FireArrows | ItemSpecialEffect::LightningArrows)) {
-			dmg = player._pIFMinDam + GenerateRnd(player._pIFMaxDam - player._pIFMinDam);
+		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::SpecialAttack)) {
+			dmg = player._pSpecEffectMinDam + GenerateRnd(player._pSpecEffectMaxDam - player._pSpecEffectMinDam);
 			mistype = MissileID::SpectralArrow;
 		}
 
-		AddMissile(
+		Missile *missile = AddMissile(
 		    player.position.tile,
 		    player.position.temp + Displacement { xoff, yoff },
 		    player._pdir,
@@ -946,6 +945,7 @@ bool DoRangeAttack(Player &player)
 		    player.getId(),
 		    dmg,
 		    0);
+		missile->var7 = static_cast<int8_t>(player._pSpecEffect);
 
 		if (arrow == 0 && mistype != MissileID::SpectralArrow) {
 			PlaySfxLoc(arrows != 1 ? IS_STING1 : PS_BFIRE, player.position.tile);

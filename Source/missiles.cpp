@@ -3266,20 +3266,7 @@ void ProcessSpectralArrow(Missile &missile)
 		dir = player._pdir;
 		micaster = TARGET_MONSTERS;
 
-		switch (player._pILMinDam) {
-		case 0:
-			mitype = MissileID::FireballBow;
-			break;
-		case 1:
-			mitype = MissileID::LightningBow;
-			break;
-		case 2:
-			mitype = MissileID::ChargedBoltBow;
-			break;
-		case 3:
-			mitype = MissileID::HolyBoltBow;
-			break;
-		}
+		mitype = (MissileID)missile.var7;
 	}
 	AddMissile(src, dst, dir, mitype, micaster, id, dam, spllvl);
 	if (mitype == MissileID::ChargedBoltBow) {

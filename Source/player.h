@@ -376,6 +376,9 @@ struct Player {
 	uint8_t pDiabloKillLevel;
 	uint16_t wReflections;
 	ItemSpecialEffectHf pDamAcFlags;
+	MissileID _pSpecEffect = MissileID::Arrow;
+	uint8_t _pSpecEffectMinDam = 0;
+	uint8_t _pSpecEffectMaxDam = 0;
 
 	void CalcScrolls();
 

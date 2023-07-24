@@ -188,6 +188,9 @@ struct Item {
 	AnimationInfo AnimInfo;
 	bool _iDelFlag = false; // set when item is flagged for deletion, deprecated in 1.02
 	uint8_t _iSelFlag = 0;
+	MissileID _iSpecEffect = MissileID::Arrow;
+	uint8_t _iSpecEffectMinDam = 0;
+	uint8_t _iSpecEffectMaxDam = 0;
 	bool _iPostDraw = false;
 	bool _iIdentified = false;
 	item_quality _iMagical = ITEM_QUALITY_NORMAL;
