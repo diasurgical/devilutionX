@@ -36,6 +36,7 @@ set(tests
   random_test
   rectangle_test
   scrollrt_test
+  stdcompat_test
   stores_test
   str_cat_test
   timedemo_test
