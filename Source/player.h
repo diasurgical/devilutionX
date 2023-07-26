@@ -273,7 +273,6 @@ struct Player {
 	int _pILMinDam;
 	int _pILMaxDam;
 	uint32_t _pExperience;
-	uint32_t _pNextExper;
 	PLR_MODE _pmode;
 	int8_t walkpath[MaxPathLength];
 	bool plractive;
@@ -320,7 +319,7 @@ struct Player {
 	HeroClass _pClass;
 
 private:
-	uint8_t _pLevel = 1; // Use get/setCharacterLevel as this attribute is tied to _pNextExper
+	uint8_t _pLevel = 1; // Use get/setCharacterLevel to ensure this attribute stays within the accepted range
 
 public:
 	uint8_t _pgfxnum; // Bitmask indicating what variant of the sprite the player is using. The 3 lower bits define weapon (PlayerWeaponGraphic) and the higher bits define armour (starting with PlayerArmorGraphic)
@@ -759,13 +758,12 @@ public:
 	}
 
 	/**
-	 * @brief Sets the character level and derived attributes
-	 *
-	 * This method ensures the level is within the allowed range and sets the number of experience points
-	 * required for the next character level as needed.
-	 * @param level New character level
+	 * @brief Sets the character level to the target level or nearest valid value.
+	 * @param level New character level, will be clamped to the allowed range
 	 */
 	void setCharacterLevel(uint8_t level);
+
+	[[nodiscard]] uint32_t getNextExperienceThreshold() const;
 
 	/** @brief Checks if the player is on the same level as the local player (MyPlayer). */
 	bool isOnActiveLevel() const

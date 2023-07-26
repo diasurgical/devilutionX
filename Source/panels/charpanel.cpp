@@ -137,8 +137,9 @@ PanelEntry panelEntries[] = {
 	        if (InspectPlayer->getCharacterLevel() == MaxCharacterLevel) {
 		        return StyledText { UiFlags::ColorWhitegold, std::string(_("None")) };
 	        }
-	        int spacing = ((InspectPlayer->_pNextExper >= 1000000000) ? 0 : 1);
-	        return StyledText { UiFlags::ColorWhite, FormatInteger(InspectPlayer->_pNextExper), spacing };
+	        uint32_t nextExperienceThreshold = InspectPlayer->getNextExperienceThreshold();
+	        int spacing = ((nextExperienceThreshold >= 1000000000) ? 0 : 1);
+	        return StyledText { UiFlags::ColorWhite, FormatInteger(nextExperienceThreshold), spacing };
 	    } },
 
 	{ N_("Base"), { LeftColumnLabelX, /* set dynamically */ 0 }, 0, 44, {} },
