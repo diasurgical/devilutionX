@@ -2059,7 +2059,12 @@ void Player::UpdatePreviewCelSprite(_cmd_id cmdId, Point point, uint16_t wParam1
 
 void Player::setCharacterLevel(uint8_t level)
 {
-	this->_pLevel = clamp<uint8_t>(level, 1U, MaxCharacterLevel);
+	this->_pLevel = clamp<uint8_t>(level, 1U, getMaxCharacterLevel());
+}
+
+uint8_t Player::getMaxCharacterLevel() const
+{
+	return GetMaximumCharacterLevel();
 }
 
 uint32_t Player::getNextExperienceThreshold() const
@@ -2443,6 +2448,8 @@ void AddPlrExperience(Player &player, int lvl, int exp)
 	if (&player != MyPlayer || player._pHitPoints <= 0)
 		return;
 
+	const uint8_t MaxCharacterLevel = player.getMaxCharacterLevel();
+	// This doesn't use Player::isMaxCharacterLevel() in case the character level has been set to a value higher than the max (that function uses an == check, not a >=)
 	if (player.getCharacterLevel() >= MaxCharacterLevel) {
 		player.setCharacterLevel(MaxCharacterLevel);
 		return;
@@ -2477,7 +2484,7 @@ void AddPlrExperience(Player &player, int lvl, int exp)
 	}
 
 	// Increase player level if applicable
-	while (player.getCharacterLevel() < MaxCharacterLevel && player._pExperience >= player.getNextExperienceThreshold()) {
+	while (!player.isMaxCharacterLevel() && player._pExperience >= player.getNextExperienceThreshold()) {
 		// NextPlrLevel increments character level which changes the next experience threshold
 		NextPlrLevel(player);
 	}

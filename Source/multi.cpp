@@ -154,7 +154,7 @@ void NetReceivePlayerData(TPkt *pkt)
 bool IsNetPlayerValid(const Player &player)
 {
 	return player.getCharacterLevel() >= 1
-	    && player.getCharacterLevel() <= MaxCharacterLevel
+	    && player.getCharacterLevel() <= player.getMaxCharacterLevel()
 	    && static_cast<uint8_t>(player._pClass) < enum_size<HeroClass>::value
 	    && player.plrlevel < NUMLEVELS
 	    && InDungeonBounds(player.position.tile)

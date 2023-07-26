@@ -17,6 +17,7 @@
 namespace devilution {
 
 namespace {
+constexpr uint8_t MaxCharacterLevel = 50;
 /** Specifies the experience point limit of each level. */
 const std::array<uint32_t, MaxCharacterLevel> ExpLvlsTbl {
 	0,
@@ -74,7 +75,12 @@ const std::array<uint32_t, MaxCharacterLevel> ExpLvlsTbl {
 
 uint32_t GetNextExperienceThresholdForLevel(unsigned level)
 {
-	return ExpLvlsTbl[std::min<size_t>(level, MaxCharacterLevel - 1)];
+	return ExpLvlsTbl[std::min<size_t>(level, static_cast<size_t>(GetMaximumCharacterLevel()) - 1)];
+}
+
+uint8_t GetMaximumCharacterLevel()
+{
+	return MaxCharacterLevel;
 }
 
 const _sfx_id herosounds[enum_size<HeroClass>::value][enum_size<HeroSpeech>::value] = {
