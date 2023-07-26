@@ -1474,11 +1474,11 @@ void ValidatePlayer()
 	assert(MyPlayer != nullptr);
 	Player &myPlayer = *MyPlayer;
 
-	// Player::setCharacterLevel both ensures that the player level is within the expected range and sets _pNextExpr to the appropriate value for their next level up
+	// Player::setCharacterLevel ensures that the player level is within the expected range in case someone has edited their character level in memory
 	myPlayer.setCharacterLevel(myPlayer.getCharacterLevel());
 	// This lets us catch cases where someone is editing experience directly through memory modification and reset their experience back to the expected cap.
-	if (myPlayer._pExperience > myPlayer._pNextExper) {
-		myPlayer._pExperience = myPlayer._pNextExper;
+	if (myPlayer._pExperience > myPlayer.getNextExperienceThreshold()) {
+		myPlayer._pExperience = myPlayer.getNextExperienceThreshold();
 		if (*sgOptions.Gameplay.experienceBar) {
 			RedrawEverything();
 		}
@@ -2060,7 +2060,11 @@ void Player::UpdatePreviewCelSprite(_cmd_id cmdId, Point point, uint16_t wParam1
 void Player::setCharacterLevel(uint8_t level)
 {
 	this->_pLevel = clamp<uint8_t>(level, 1U, MaxCharacterLevel);
-	this->_pNextExper = GetNextExperienceThresholdForLevel(this->getCharacterLevel());
+}
+
+uint32_t Player::getNextExperienceThreshold() const
+{
+	return GetNextExperienceThresholdForLevel(this->getCharacterLevel());
 }
 
 int32_t Player::calculateBaseLife() const
@@ -2450,7 +2454,7 @@ void AddPlrExperience(Player &player, int lvl, int exp)
 	if (gbIsMultiplayer) {
 		// for low level characters experience gain is capped to 1/20 of current levels xp
 		// for high level characters experience gain is capped to 200 * current level - this is a smaller value than 1/20 of the exp needed for the next level after level 5.
-		clampedExp = std::min<uint32_t>({ clampedExp, /* level 1-5: */ GetNextExperienceThresholdForLevel(player.getCharacterLevel()) / 20U, /* level 6-50: */ 200U * player.getCharacterLevel() });
+		clampedExp = std::min<uint32_t>({ clampedExp, /* level 1-5: */ player.getNextExperienceThreshold() / 20U, /* level 6-50: */ 200U * player.getCharacterLevel() });
 	}
 
 	const uint32_t MaxExperience = GetNextExperienceThresholdForLevel(MaxCharacterLevel);
@@ -2463,14 +2467,9 @@ void AddPlrExperience(Player &player, int lvl, int exp)
 	}
 
 	// Increase player level if applicable
-	unsigned newLvl = player.getCharacterLevel();
-	while (newLvl < MaxCharacterLevel && player._pExperience >= GetNextExperienceThresholdForLevel(newLvl)) {
-		newLvl++;
-	}
-	if (newLvl != player.getCharacterLevel()) {
-		for (unsigned i = newLvl - player.getCharacterLevel(); i > 0; i--) {
-			NextPlrLevel(player);
-		}
+	while (player.getCharacterLevel() < MaxCharacterLevel && player._pExperience >= player.getNextExperienceThreshold()) {
+		// NextPlrLevel increments character level which changes the next experience threshold
+		NextPlrLevel(player);
 	}
 
 	NetSendCmdParam1(false, CMD_PLRLEVEL, player.getCharacterLevel());
