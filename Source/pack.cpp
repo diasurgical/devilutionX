@@ -107,12 +107,12 @@ bool IsCreationFlagComboValid(uint16_t iCreateInfo)
 	return true;
 }
 
-bool IsTownItemValid(uint16_t iCreateInfo)
+bool IsTownItemValid(uint16_t iCreateInfo, const Player &player)
 {
 	const uint8_t level = iCreateInfo & CF_LEVEL;
 	const bool isBoyItem = (iCreateInfo & CF_BOY) != 0;
 
-	if (isBoyItem && level <= MaxCharacterLevel)
+	if (isBoyItem && level <= player.getMaxCharacterLevel())
 		return true;
 
 	return level <= 30;
@@ -180,7 +180,7 @@ bool UnPackNetItem(const Player &player, const ItemNetPack &packedItem, Item &it
 	uint32_t dwBuff = SDL_SwapLE16(packedItem.item.dwBuff);
 	ValidateField(creationFlags, IsCreationFlagComboValid(creationFlags));
 	if ((creationFlags & CF_TOWN) != 0)
-		ValidateField(creationFlags, IsTownItemValid(creationFlags));
+		ValidateField(creationFlags, IsTownItemValid(creationFlags, player));
 	else if ((creationFlags & CF_USEFUL) == CF_UPER15)
 		ValidateFields(creationFlags, dwBuff, IsUniqueMonsterItemValid(creationFlags, dwBuff));
 	else
@@ -498,7 +498,7 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 	Point position { packed.px, packed.py };
 	ValidateFields(position.x, position.y, InDungeonBounds(position));
 	ValidateField(packed.plrlevel, packed.plrlevel < NUMLEVELS);
-	ValidateField(packed.pLevel, packed.pLevel >= 1 && packed.pLevel <= MaxCharacterLevel);
+	ValidateField(packed.pLevel, packed.pLevel >= 1 && packed.pLevel <= player.getMaxCharacterLevel());
 
 	int32_t baseHpMax = SDL_SwapLE32(packed.pMaxHPBase);
 	int32_t baseHp = SDL_SwapLE32(packed.pHPBase);

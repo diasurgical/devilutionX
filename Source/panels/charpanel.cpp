@@ -134,7 +134,7 @@ PanelEntry panelEntries[] = {
 	    } },
 	{ N_("Next level"), { TopRightLabelX, 80 }, 99, 198,
 	    []() {
-	        if (InspectPlayer->getCharacterLevel() == MaxCharacterLevel) {
+	        if (InspectPlayer->isMaxCharacterLevel()) {
 		        return StyledText { UiFlags::ColorWhitegold, std::string(_("None")) };
 	        }
 	        uint32_t nextExperienceThreshold = InspectPlayer->getNextExperienceThreshold();
