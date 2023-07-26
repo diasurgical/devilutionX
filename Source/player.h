@@ -32,7 +32,6 @@ namespace devilution {
 constexpr int InventoryGridCells = 40;
 constexpr int MaxBeltItems = 8;
 constexpr int MaxResistance = 75;
-constexpr uint8_t MaxCharacterLevel = 50;
 constexpr uint8_t MaxSpellLevel = 15;
 constexpr int PlayerNameLength = 32;
 
@@ -751,6 +750,13 @@ public:
 	 * @param level New character level, will be clamped to the allowed range
 	 */
 	void setCharacterLevel(uint8_t level);
+
+	[[nodiscard]] uint8_t getMaxCharacterLevel() const;
+
+	[[nodiscard]] bool isMaxCharacterLevel() const
+	{
+		return getCharacterLevel() >= getMaxCharacterLevel();
+	}
 
 	[[nodiscard]] uint32_t getNextExperienceThreshold() const;
 
