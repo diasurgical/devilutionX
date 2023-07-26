@@ -1474,11 +1474,11 @@ void ValidatePlayer()
 	assert(MyPlayer != nullptr);
 	Player &myPlayer = *MyPlayer;
 
-	// Player::setCharacterLevel both ensures that the player level is within the expected range and sets _pNextExpr to the appropriate value for their next level up
+	// Player::setCharacterLevel ensures that the player level is within the expected range in case someone has edited their character level in memory
 	myPlayer.setCharacterLevel(myPlayer.getCharacterLevel());
 	// This lets us catch cases where someone is editing experience directly through memory modification and reset their experience back to the expected cap.
-	if (myPlayer._pExperience > myPlayer._pNextExper) {
-		myPlayer._pExperience = myPlayer._pNextExper;
+	if (myPlayer._pExperience > myPlayer.getNextExperienceThreshold()) {
+		myPlayer._pExperience = myPlayer.getNextExperienceThreshold();
 		if (*sgOptions.Gameplay.experienceBar) {
 			RedrawEverything();
 		}
@@ -2060,7 +2060,11 @@ void Player::UpdatePreviewCelSprite(_cmd_id cmdId, Point point, uint16_t wParam1
 void Player::setCharacterLevel(uint8_t level)
 {
 	this->_pLevel = clamp<uint8_t>(level, 1U, MaxCharacterLevel);
-	this->_pNextExper = GetNextExperienceThresholdForLevel(this->getCharacterLevel());
+}
+
+uint32_t Player::getNextExperienceThreshold() const
+{
+	return GetNextExperienceThresholdForLevel(this->getCharacterLevel());
 }
 
 int32_t Player::calculateBaseLife() const
@@ -2473,8 +2477,8 @@ void AddPlrExperience(Player &player, int lvl, int exp)
 	}
 
 	// Increase player level if applicable
-	while (player.getCharacterLevel() < MaxCharacterLevel && player._pExperience >= player._pNextExper) {
-		// NextPlrLevel changes _pLevel and _pNextExper
+	while (player.getCharacterLevel() < MaxCharacterLevel && player._pExperience >= player.getNextExperienceThreshold()) {
+		// NextPlrLevel increments character level which changes the next experience threshold
 		NextPlrLevel(player);
 	}
 

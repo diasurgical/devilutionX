@@ -34,6 +34,9 @@
 #include "objects.h"
 #include "options.h"
 #include "pfile.h"
+#ifdef _DEBUG
+#include "playerdat.hpp"
+#endif
 #include "plrmsg.h"
 #include "spells.h"
 #include "storm/storm_net.hpp"
@@ -2225,7 +2228,7 @@ size_t OnCheatExperience(const TCmd *pCmd, size_t pnum) // NOLINT(misc-unused-pa
 	if (gbBufferMsgs == 1)
 		SendPacket(pnum, pCmd, sizeof(*pCmd));
 	else if (Players[pnum].getCharacterLevel() < MaxCharacterLevel) {
-		Players[pnum]._pExperience = Players[pnum]._pNextExper;
+		Players[pnum]._pExperience = Players[pnum].getNextExperienceThreshold();
 		if (*sgOptions.Gameplay.experienceBar) {
 			RedrawEverything();
 		}
