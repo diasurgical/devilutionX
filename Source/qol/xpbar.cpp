@@ -137,8 +137,9 @@ bool CheckXPBarInfo()
 	InfoColor = UiFlags::ColorWhite;
 
 	AddPanelString(fmt::format(fmt::runtime(_("Experience: {:s}")), FormatInteger(player._pExperience)));
-	AddPanelString(fmt::format(fmt::runtime(_("Next Level: {:s}")), FormatInteger(player._pNextExper)));
-	AddPanelString(fmt::format(fmt::runtime(_("{:s} to Level {:d}")), FormatInteger(player._pNextExper - player._pExperience), charLevel + 1));
+	uint32_t nextExperienceThreshold = player.getNextExperienceThreshold();
+	AddPanelString(fmt::format(fmt::runtime(_("Next Level: {:s}")), FormatInteger(nextExperienceThreshold)));
+	AddPanelString(fmt::format(fmt::runtime(_("{:s} to Level {:d}")), FormatInteger(nextExperienceThreshold - player._pExperience), charLevel + 1));
 
 	return true;
 }
