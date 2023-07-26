@@ -2850,7 +2850,7 @@ void OperateShrineMendicant(Player &player)
 		return;
 
 	int gold = player._pGold / 2;
-	AddPlrExperience(player, player.getCharacterLevel(), gold);
+	player.addExperience(gold);
 	TakePlrsMoney(gold);
 
 	RedrawEverything();
@@ -2859,7 +2859,7 @@ void OperateShrineMendicant(Player &player)
 }
 
 /**
- * @brief Grants experience to the player based on their current level while also triggering a magic trap
+ * @brief Grants experience to the player based on the current dungeon level while also triggering a magic trap
  * @param player The player that will be affected by the shrine
  * @param spawnPosition The trap results in casting flash from this location targeting the player
  */
@@ -2868,7 +2868,7 @@ void OperateShrineSparkling(Player &player, Point spawnPosition)
 	if (&player != MyPlayer)
 		return;
 
-	AddPlrExperience(player, player.getCharacterLevel(), 1000 * currlevel);
+	player.addExperience(1000 * currlevel);
 
 	AddMissile(
 	    spawnPosition,
