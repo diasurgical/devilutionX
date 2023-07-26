@@ -2443,25 +2443,32 @@ void NextPlrLevel(Player &player)
 	CalcPlrInv(player, true);
 }
 
-void AddPlrExperience(Player &player, int lvl, int exp)
+void Player::_addExperience(uint32_t experience, int levelDelta)
 {
-	if (&player != MyPlayer || player._pHitPoints <= 0)
+	if (this != MyPlayer || _pHitPoints <= 0)
 		return;
 
-	const uint8_t MaxCharacterLevel = player.getMaxCharacterLevel();
+	const uint8_t MaxCharacterLevel = getMaxCharacterLevel();
 	// This doesn't use Player::isMaxCharacterLevel() in case the character level has been set to a value higher than the max (that function uses an == check, not a >=)
-	if (player.getCharacterLevel() >= MaxCharacterLevel) {
-		player.setCharacterLevel(MaxCharacterLevel);
+	if (getCharacterLevel() >= MaxCharacterLevel) {
+		setCharacterLevel(MaxCharacterLevel);
 		return;
 	}
 
-	// Adjust xp based on difference in level between player and monster
-	uint32_t clampedExp = std::max(static_cast<int>(exp * (1 + (lvl - player.getCharacterLevel()) / 10.0)), 0);
+	const uint32_t MaxExperience = GetNextExperienceThresholdForLevel(MaxCharacterLevel);
+
+	if (_pExperience >= MaxExperience) {
+		// Only let the player gain experience if they haven't reached the cap already
+		return;
+	}
+
+	// Adjust xp based on difference between the players current level and the target level (usually a monster level)
+	uint32_t clampedExp = static_cast<uint32_t>(clamp<int64_t>(static_cast<int64_t>(experience * (1 + levelDelta / 10.0)), 0, std::numeric_limits<uint32_t>::max()));
 
 	// Prevent power leveling
 	if (gbIsMultiplayer) {
 		// Player levels shouldn't be less than 1, but just in case we use a minimum of 1 before clamping so they can still gain some experience
-		const uint32_t clampedPlayerLevel = clamp<uint32_t>(player.getCharacterLevel(), 1, MaxCharacterLevel);
+		const uint32_t clampedPlayerLevel = clamp<uint32_t>(getCharacterLevel(), 1, MaxCharacterLevel);
 
 		// for low level characters experience gain is capped to 1/20 of current levels xp
 		// for high level characters experience gain is capped to 200 * current level
@@ -2469,30 +2476,23 @@ void AddPlrExperience(Player &player, int lvl, int exp)
 		clampedExp = std::min({ clampedExp, /* level 0-5: */ GetNextExperienceThresholdForLevel(clampedPlayerLevel) / 20U, /* level 6-50: */ 200U * clampedPlayerLevel });
 	}
 
-	const uint32_t MaxExperience = GetNextExperienceThresholdForLevel(MaxCharacterLevel);
-
-	if (player._pExperience >= MaxExperience) {
-		// Only let the player gain experience if they haven't reached the cap already
-		return;
-	}
-
 	// ensure we only add enough experience to reach the max experience cap so we don't overflow
-	player._pExperience += std::min(clampedExp, MaxExperience - player._pExperience);
+	_pExperience += std::min(clampedExp, MaxExperience - _pExperience);
 
 	if (*sgOptions.Gameplay.experienceBar) {
 		RedrawEverything();
 	}
 
 	// Increase player level if applicable
-	while (!player.isMaxCharacterLevel() && player._pExperience >= player.getNextExperienceThreshold()) {
+	while (!isMaxCharacterLevel() && _pExperience >= getNextExperienceThreshold()) {
 		// NextPlrLevel increments character level which changes the next experience threshold
-		NextPlrLevel(player);
+		NextPlrLevel(*this);
 	}
 
-	NetSendCmdParam1(false, CMD_PLRLEVEL, player.getCharacterLevel());
+	NetSendCmdParam1(false, CMD_PLRLEVEL, getCharacterLevel());
 }
 
-void AddPlrMonstExper(int lvl, int exp, char pmask)
+void AddPlrMonstExper(int lvl, unsigned int exp, char pmask)
 {
 	int totplrs = 0;
 	for (size_t i = 0; i < Players.size(); i++) {
@@ -2504,7 +2504,7 @@ void AddPlrMonstExper(int lvl, int exp, char pmask)
 	if (totplrs != 0) {
 		int e = exp / totplrs;
 		if ((pmask & (1 << MyPlayerId)) != 0)
-			AddPlrExperience(*MyPlayer, lvl, e);
+			MyPlayer->addExperience(e, lvl);
 	}
 }
 

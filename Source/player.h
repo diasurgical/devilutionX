@@ -761,6 +761,30 @@ public:
 		return getCharacterLevel() == getMaxCharacterLevel();
 	}
 
+private:
+	void _addExperience(uint32_t experience, int levelDelta);
+
+public:
+	/**
+	 * @brief Adds experience to the local player based on the current game mode
+	 * @param experience base value to add, this will be adjusted to prevent power leveling in multiplayer games
+	 */
+	void addExperience(uint32_t experience)
+	{
+		_addExperience(experience, 0);
+	}
+
+	/**
+	 * @brief Adds experience to the local player based on the difference between the monster level
+	 * and current level, then also applying the power level cap in multiplayer games.
+	 * @param experience base value to add, will be scaled up/down by the difference between player and monster level
+	 * @param monsterLevel level of the monster that has rewarded this experience
+	 */
+	void addExperience(uint32_t experience, int monsterLevel)
+	{
+		_addExperience(experience, monsterLevel - getCharacterLevel());
+	}
+
 	[[nodiscard]] uint32_t getNextExperienceThreshold() const;
 
 	/** @brief Checks if the player is on the same level as the local player (MyPlayer). */
@@ -840,8 +864,7 @@ int CalcStatDiff(Player &player);
 #ifdef _DEBUG
 void NextPlrLevel(Player &player);
 #endif
-void AddPlrExperience(Player &player, int lvl, int exp);
-void AddPlrMonstExper(int lvl, int exp, char pmask);
+void AddPlrMonstExper(int lvl, unsigned int exp, char pmask);
 void ApplyPlrDamage(DamageType damageType, Player &player, int dam, int minHP = 0, int frac = 0, DeathReason deathReason = DeathReason::MonsterOrTrap);
 void InitPlayer(Player &player, bool FirstTime);
 void InitMultiView();
