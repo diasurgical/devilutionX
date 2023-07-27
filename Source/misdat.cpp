@@ -311,7 +311,7 @@ void InitMissileGFX(bool loadHellfireGraphics)
 		return;
 
 	for (size_t mi = 0; MissileSpriteData[mi].animFAmt != 0; mi++) {
-		if (!loadHellfireGraphics && mi > static_cast<uint8_t>(MissileGraphicID::BloodStarRedExplosion))
+		if (!loadHellfireGraphics && mi >= static_cast<uint8_t>(MissileGraphicID::HorkSpawn))
 			break;
 		if (MissileSpriteData[mi].flags == MissileGraphicsFlags::MonsterOwned)
 			continue;
