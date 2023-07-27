@@ -127,7 +127,7 @@
       <DeploymentContent>true</DeploymentContent>
       <Link>Assets\%(RecursiveDir)%(Filename)%(Extension)</Link>
     </None>
-    <None Include="..\build\assets\*\*.*">
+    <None Include="..\build\assets\**\*.*">
       <DeploymentContent>true</DeploymentContent>
       <Link>Assets\%(RecursiveDir)%(Filename)%(Extension)</Link>
     </None>
