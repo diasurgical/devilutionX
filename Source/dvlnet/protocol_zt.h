@@ -75,6 +75,7 @@ public:
 	bool get_disconnected(endpoint &peer);
 	bool network_online();
 	bool is_peer_connected(endpoint &peer);
+	bool is_peer_relayed(const endpoint &peer) const;
 	static std::string make_default_gamename();
 
 private:

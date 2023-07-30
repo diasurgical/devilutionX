@@ -1,11 +1,13 @@
 #pragma once
 
+#include <cstdint>
+
 namespace devilution {
 namespace net {
 
 bool zerotier_network_ready();
 void zerotier_network_start();
-void zerotier_network_stop();
+bool zerotier_is_relayed(uint64_t mac);
 
 // NOTE: We have patched our libzt to have the corresponding multicast
 // MAC hardcoded, since libzt is still missing the proper handling.
