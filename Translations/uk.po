@@ -505,9 +505,8 @@ msgid "Client-Server (TCP)"
 msgstr "Клієнт-Сервер (TCP)"
 
 #: Source/DiabloUI/multi/selconn.cpp:15
-#, fuzzy
 msgid "Offline"
-msgstr "Петльова адреса"
+msgstr "Офлайн"
 
 #: Source/DiabloUI/multi/selconn.cpp:56 Source/DiabloUI/multi/selgame.cpp:647
 #: Source/DiabloUI/multi/selgame.cpp:671
@@ -948,9 +947,8 @@ msgid "Game: "
 msgstr "Гра: "
 
 #: Source/automap.cpp:731
-#, fuzzy
 msgid "Offline Game"
-msgstr "Петльова адреса"
+msgstr "Офлайн Гра"
 
 #: Source/automap.cpp:733
 msgid "Password: "
@@ -1089,10 +1087,8 @@ msgid "Prints help overview or help for a specific command."
 msgstr "Друкує огляд довідки або довідку для конкретної команди."
 
 #: Source/control.cpp:524
-#, fuzzy
-#| msgid "Command "
 msgid "[command]"
-msgstr "Команда "
+msgstr "[команда]"
 
 #: Source/control.cpp:525
 msgid "/arena"
@@ -1103,10 +1099,8 @@ msgid "Enter a PvP Arena."
 msgstr "Зайти на PvP-арену."
 
 #: Source/control.cpp:525
-#, fuzzy
-#| msgid "{arena-number}"
 msgid "<arena-number>"
-msgstr "{arena-number}"
+msgstr "<номер-арени>"
 
 #: Source/control.cpp:526
 msgid "/arenapot"
@@ -1117,10 +1111,8 @@ msgid "Gives Arena Potions."
 msgstr "Дає Зілля Арени."
 
 #: Source/control.cpp:526
-#, fuzzy
-#| msgid "{number}"
 msgid "<number>"
-msgstr "{number}"
+msgstr "<номер>"
 
 #: Source/control.cpp:527
 msgid "/inspect"
@@ -1131,10 +1123,8 @@ msgid "Inspects stats and equipment of another player."
 msgstr "Оглядає статистику та спорядження іншого гравця."
 
 #: Source/control.cpp:527
-#, fuzzy
-#| msgid "{player name}"
 msgid "<player name>"
-msgstr "{player name}"
+msgstr "<ім'я гравця>"
 
 #: Source/control.cpp:528
 msgid "/seedinfo"
