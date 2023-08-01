@@ -560,22 +560,23 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 		auto loc = player.GetItemLocation(player.InvBody[i]);
 		switch (i) {
 		case INVLOC_HEAD:
-			if (loc != ILOC_HELM)
-				return false;
+			ValidateField(loc, loc == ILOC_HELM);
+			break;
 		case INVLOC_RING_LEFT:
 		case INVLOC_RING_RIGHT:
-			if (loc != ILOC_RING)
-				return false;
+			ValidateField(loc, loc == ILOC_RING);
+			break;
 		case INVLOC_AMULET:
-			if (loc != ILOC_AMULET)
-				return false;
+			ValidateField(loc, loc == ILOC_AMULET);
+			break;
 		case INVLOC_HAND_LEFT:
 		case INVLOC_HAND_RIGHT:
-			if (IsNoneOf(loc, ILOC_ONEHAND, ILOC_TWOHAND))
-				return false;
+			ValidateField(loc, loc == ILOC_ONEHAND);
+			ValidateField(loc, loc == ILOC_TWOHAND);
+			break;
 		case INVLOC_CHEST:
-			if (loc != ILOC_ARMOR)
-				return false;
+			ValidateField(loc, loc == ILOC_ARMOR);
+			break;
 		}
 	}
 
@@ -592,8 +593,7 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 		if (!UnPackNetItem(player, packed.SpdList[i], player.SpdList[i]))
 			return false;
 		auto loc = player.GetItemLocation(player.SpdList[i]);
-		if (loc != ILOC_BELT)
-			return false;
+		ValidateField(loc, loc == ILOC_BELT);
 	}
 
 	CalcPlrInv(player, false);
