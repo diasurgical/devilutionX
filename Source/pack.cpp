@@ -187,7 +187,6 @@ bool UnPackNetItem(const Player &player, const ItemNetPack &packedItem, Item &it
 		ValidateFields(creationFlags, dwBuff, IsDungeonItemValid(creationFlags, dwBuff));
 
 	RecreateItem(player, packedItem.item, item);
-
 	return true;
 }
 
