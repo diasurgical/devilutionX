@@ -556,7 +556,7 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 	for (int i = 0; i < NUM_INVLOC; i++) {
 		if (!UnPackNetItem(player, packed.InvBody[i], player.InvBody[i]))
 			return false;
-		auto loc = player.GetItemLocation(player.InvBody[i]);
+		auto loc = static_cast<int>(player.GetItemLocation(player.InvBody[i]));
 		switch (i) {
 		case INVLOC_HEAD:
 			ValidateField(loc, loc == ILOC_HELM);
@@ -590,7 +590,7 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 	for (int i = 0; i < MaxBeltItems; i++) {
 		if (!UnPackNetItem(player, packed.SpdList[i], player.SpdList[i]))
 			return false;
-		auto loc = player.GetItemLocation(player.SpdList[i]);
+		auto loc = static_cast<int>(player.GetItemLocation(player.SpdList[i]));
 		ValidateField(loc, loc == ILOC_BELT);
 	}
 
