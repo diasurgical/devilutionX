@@ -571,8 +571,7 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 			break;
 		case INVLOC_HAND_LEFT:
 		case INVLOC_HAND_RIGHT:
-			ValidateField(loc, loc == ILOC_ONEHAND);
-			ValidateField(loc, loc == ILOC_TWOHAND);
+			ValidateField(loc, IsAnyOf(loc, ILOC_ONEHAND, ILOC_TWOHAND));
 			break;
 		case INVLOC_CHEST:
 			ValidateField(loc, loc == ILOC_ARMOR);
