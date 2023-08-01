@@ -187,6 +187,7 @@ bool UnPackNetItem(const Player &player, const ItemNetPack &packedItem, Item &it
 		ValidateFields(creationFlags, dwBuff, IsDungeonItemValid(creationFlags, dwBuff));
 
 	RecreateItem(player, packedItem.item, item);
+
 	return true;
 }
 
@@ -556,6 +557,26 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 	for (int i = 0; i < NUM_INVLOC; i++) {
 		if (!UnPackNetItem(player, packed.InvBody[i], player.InvBody[i]))
 			return false;
+		auto loc = player.GetItemLocation(player.InvBody[i]);
+		switch (i) {
+		case INVLOC_HEAD:
+			if (loc != ILOC_HELM)
+				return false;
+		case INVLOC_RING_LEFT:
+		case INVLOC_RING_RIGHT:
+			if (loc != ILOC_RING)
+				return false;
+		case INVLOC_AMULET:
+			if (loc != ILOC_AMULET)
+				return false;
+		case INVLOC_HAND_LEFT:
+		case INVLOC_HAND_RIGHT:
+			if (IsNoneOf(loc, ILOC_ONEHAND, ILOC_TWOHAND))
+				return false;
+		case INVLOC_CHEST:
+			if (loc != ILOC_ARMOR)
+				return false;
+		}
 	}
 
 	player._pNumInv = packed._pNumInv;
@@ -569,6 +590,9 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 
 	for (int i = 0; i < MaxBeltItems; i++) {
 		if (!UnPackNetItem(player, packed.SpdList[i], player.SpdList[i]))
+			return false;
+		auto loc = player.GetItemLocation(player.SpdList[i]);
+		if (loc != ILOC_BELT)
 			return false;
 	}
 
