@@ -274,13 +274,13 @@ void DoVision(Point position, uint8_t radius, MapExplorationType doAutomap, bool
 					break;
 				}
 
-				if (clearLineOfSight)
-					DoVisionFlags(target, doAutomap, visible);
-
 				int8_t trans = dTransVal[x][y];
 				if (trans != 0)
 					TransList[trans] = true;
-			}	
+			}
+
+			if (clearLineOfSight)
+				DoVisionFlags(target, doAutomap, visible);
 		}
 	}
 }
