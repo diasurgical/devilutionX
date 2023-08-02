@@ -625,27 +625,28 @@ bool PlrHitMonst(Player &player, Monster &monster, bool adjacentDamage = false)
 	if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Mace || player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Mace) {
 		phanditype = ItemType::Mace;
 	}
-
-	switch (monster.data().monsterClass) {
-	case MonsterClass::Undead:
-		if (phanditype == ItemType::Sword) {
-			dam -= dam / 2;
-		} else if (phanditype == ItemType::Mace) {
-			dam += dam / 2;
+	if (monster.type().type != MT_GOLEM) {
+		switch (monster.data().monsterClass) {
+		case MonsterClass::Undead:
+			if (phanditype == ItemType::Sword) {
+				dam -= dam / 2;
+			} else if (phanditype == ItemType::Mace) {
+				dam += dam / 2;
+			}
+			break;
+		case MonsterClass::Animal:
+			if (phanditype == ItemType::Mace) {
+				dam -= dam / 2;
+			} else if (phanditype == ItemType::Sword) {
+				dam += dam / 2;
+			}
+			break;
+		case MonsterClass::Demon:
+			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::TripleDemonDamage)) {
+				dam *= 3;
+			}
+			break;
 		}
-		break;
-	case MonsterClass::Animal:
-		if (phanditype == ItemType::Mace) {
-			dam -= dam / 2;
-		} else if (phanditype == ItemType::Sword) {
-			dam += dam / 2;
-		}
-		break;
-	case MonsterClass::Demon:
-		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::TripleDemonDamage)) {
-			dam *= 3;
-		}
-		break;
 	}
 
 	if (HasAnyOf(player.pDamAcFlags, ItemSpecialEffectHf::Devastation) && GenerateRnd(100) < 5) {

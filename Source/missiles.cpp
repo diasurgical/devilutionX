@@ -248,7 +248,7 @@ bool MonsterMHit(int pnum, int monsterId, int mindam, int maxdam, int dist, Miss
 			dam += player._pDamageMod;
 		else
 			dam += player._pDamageMod / 2;
-		if (monster.data().monsterClass == MonsterClass::Demon && HasAnyOf(player._pIFlags, ItemSpecialEffect::TripleDemonDamage))
+		if (monster.data().monsterClass == MonsterClass::Demon && monster.type().type != MT_GOLEM && HasAnyOf(player._pIFlags, ItemSpecialEffect::TripleDemonDamage))
 			dam *= 3;
 	}
 	bool resist = monster.isResistant(t, damageType);
@@ -656,7 +656,7 @@ bool GuardianTryFireAt(Missile &missile, Point target)
 	if (mid < 0)
 		return false;
 	const Monster &monster = Monsters[mid];
-	if (monster.isPlayerMinion())
+	if (monster.isPlayerMinion() && (missile.sourcePlayer()->friendlyMode || missile.sourcePlayer()->getId() == mid))
 		return false;
 	if (monster.hitPoints >> 6 <= 0)
 		return false;
@@ -3781,7 +3781,7 @@ void ProcessApocalypse(Missile &missile)
 			int mid = dMonster[k][j] - 1;
 			if (mid < 0)
 				continue;
-			if (Monsters[mid].isPlayerMinion())
+			if (Monsters[mid].isPlayerMinion() && (MyPlayer->friendlyMode || missile.sourcePlayer()->getId() == mid))
 				continue;
 			if (TileHasAny(dPiece[k][j], TileProperties::Solid))
 				continue;

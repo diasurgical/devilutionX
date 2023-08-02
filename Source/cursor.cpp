@@ -556,7 +556,7 @@ void CheckCursMove()
 				pcursmonst = -1;
 				cursPosition = { mx, my };
 			}
-			if (pcursmonst != -1 && Monsters[pcursmonst].isPlayerMinion()) {
+			if (pcursmonst != -1 && Monsters[pcursmonst].isPlayerMinion() && (MyPlayer->friendlyMode || IsMyGolem(pcursmonst))) {
 				pcursmonst = -1;
 			}
 			if (pcursmonst != -1) {
@@ -616,7 +616,7 @@ void CheckCursMove()
 			pcursmonst = -1;
 			cursPosition = { mx, my };
 		}
-		if (pcursmonst != -1 && (Monsters[pcursmonst].isPlayerMinion() || IsAnyOf(pcurs, CURSOR_HEALOTHER, CURSOR_RESURRECT))) {
+		if (pcursmonst != -1 && (Monsters[pcursmonst].isPlayerMinion() && (MyPlayer->friendlyMode || IsMyGolem(pcursmonst)) || IsAnyOf(pcurs, CURSOR_HEALOTHER, CURSOR_RESURRECT))) {
 			pcursmonst = -1;
 		}
 	} else {
@@ -765,7 +765,7 @@ void CheckCursMove()
 		pcursitem = -1;
 		cursPosition = { mx, my };
 	}
-	if (pcursmonst != -1 && leveltype != DTYPE_TOWN && Monsters[pcursmonst].isPlayerMinion()) {
+	if (pcursmonst != -1 && leveltype != DTYPE_TOWN && Monsters[pcursmonst].isPlayerMinion() && (MyPlayer->friendlyMode || IsMyGolem(pcursmonst))) {
 		pcursmonst = -1;
 	}
 }

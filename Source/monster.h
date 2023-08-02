@@ -505,6 +505,8 @@ Monster *FindUniqueMonster(UniqueMonsterType monsterType);
 bool IsTileAvailable(const Monster &monster, Point position);
 bool IsSkel(_monster_id mt);
 bool IsGoat(_monster_id mt);
+bool IsGolemId(int mid);
+bool IsMyGolem(int mid);
 /**
  * @brief Reveals a monster that was hiding in a container
  * @param monster instance returned from a previous call to PreSpawnSkeleton

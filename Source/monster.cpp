@@ -646,8 +646,11 @@ void UpdateEnemy(Monster &monster)
 			continue;
 		if (otherMonster.talkMsg != TEXT_NONE && M_Talker(otherMonster))
 			continue;
-		if (isPlayerMinion && otherMonster.isPlayerMinion()) // prevent golems from fighting each other
-			continue;
+		if (isPlayerMinion && otherMonster.isPlayerMinion()) {
+			auto playerId = monster.getId();
+			if (Players[playerId].friendlyMode) // prevent golem from attacking other golems if owner is friendly
+				continue;
+		}
 
 		const int dist = otherMonster.position.tile.WalkingDistance(position);
 		if (((monster.flags & MFLAG_GOLEM) == 0
@@ -4238,12 +4241,13 @@ void M_FallenFear(Point position)
 void PrintMonstHistory(int mt)
 {
 	if (*sgOptions.Gameplay.showMonsterType) {
-		AddPanelString(fmt::format(fmt::runtime(_("Type: {:s}  Kills: {:d}")), GetMonsterTypeText(MonstersData[mt]), MonsterKillCounts[mt]));
+		auto monsterType = (mt != MT_GOLEM) ? GetMonsterTypeText(MonstersData[mt]) : _("Golem");
+		AddPanelString(fmt::format(fmt::runtime(_("Type: {:s}  Kills: {:d}")), monsterType, MonsterKillCounts[mt]));
 	} else {
 		AddPanelString(fmt::format(fmt::runtime(_("Total kills: {:d}")), MonsterKillCounts[mt]));
 	}
 
-	if (MonsterKillCounts[mt] >= 30) {
+	if (MonsterKillCounts[mt] >= 30 && mt != MT_GOLEM) {
 		int minHP = MonstersData[mt].hitPointsMinimum;
 		int maxHP = MonstersData[mt].hitPointsMaximum;
 		if (!gbIsHellfire && mt == MT_DIABLO) {
@@ -4458,6 +4462,16 @@ bool IsGoat(_monster_id mt)
 	return IsAnyOf(mt,
 	    MT_NGOATMC, MT_BGOATMC, MT_RGOATMC, MT_GGOATMC,
 	    MT_NGOATBW, MT_BGOATBW, MT_RGOATBW, MT_GGOATBW);
+}
+
+bool IsGolemId(int mid)
+{
+	return (abs(mid) >= 0 && abs(mid) < MAX_PLRS);
+}
+
+bool IsMyGolem(int mid)
+{
+	return (abs(mid) == MyPlayerId);
 }
 
 void ActivateSkeleton(Monster &monster, Point position)

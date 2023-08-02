@@ -239,7 +239,7 @@ bool CanTargetMonster(const Monster &monster)
 {
 	if ((monster.flags & MFLAG_HIDDEN) != 0)
 		return false;
-	if (monster.isPlayerMinion())
+	if (monster.isPlayerMinion() && (MyPlayer->friendlyMode || IsMyGolem(pcursmonst)))
 		return false;
 	if (monster.hitPoints >> 6 <= 0) // dead
 		return false;
