@@ -1167,7 +1167,6 @@ void DrawInfoBox(const Surface &out)
 		InfoColor = UiFlags::ColorWhite;
 	}
 	Player &myPlayer = *MyPlayer;
-	std::string golemName;
 	if (spselflag || trigflag) {
 		InfoColor = UiFlags::ColorWhite;
 	} else if (!myPlayer.HoldItem.isEmpty()) {
@@ -1193,8 +1192,8 @@ void DrawInfoBox(const Surface &out)
 				if (IsGolemId(pcursmonst)) {
 					const auto &player = Players[pcursmonst];
 					string_view formatString = _(/* TRANSLATORS: Player name followed by the word Golem. Format: {Player}'s {Golem} */ "{0}'s {1}");
-					golemName = fmt::format(fmt::runtime(formatString), player._pName, InfoString.str());
-					InfoString = StringOrView(golemName);
+					std::string golemName = fmt::format(fmt::runtime(formatString), player._pName, InfoString.str());
+					InfoString = std::move(golemName);
 				}
 				if (monster.isUnique()) {
 					InfoColor = UiFlags::ColorWhitegold;
