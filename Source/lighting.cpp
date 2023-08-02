@@ -273,6 +273,10 @@ void DoVision(Point position, uint8_t radius, MapExplorationType doAutomap, bool
 					clearLineOfSight = false;
 					break;
 				}
+
+				int8_t trans = dTransVal[x][y];
+				if (trans != 0)
+					TransList[trans] = true;
 			}
 
 			if (clearLineOfSight)
