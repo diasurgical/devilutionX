@@ -274,14 +274,13 @@ void DoVision(Point position, uint8_t radius, MapExplorationType doAutomap, bool
 
 			if (TileHasAny(dPiece[tileX][tileY], TileProperties::BlockLight))
 				break;
+
+			int8_t trans = dTransVal[tileX][tileY];
+			if (trans != 0)
+				TransList[trans] = true;
 		}
 	}
 }
-
-
-
-
-
 
 void MakeLightTable()
 {
