@@ -16,6 +16,11 @@
 #include "player.h"
 #include "utils/attributes.h"
 
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
+
 namespace devilution {
 
 std::array<bool, MAXVISION> VisionActive;
