@@ -20,7 +20,6 @@
 #define M_PI 3.14159265358979323846
 #endif
 
-
 namespace devilution {
 
 std::array<bool, MAXVISION> VisionActive;
@@ -256,7 +255,7 @@ void DoVision(Point position, uint8_t radius, MapExplorationType doAutomap, bool
 {
 	DoVisionFlags(position, doAutomap, visible);
 
-	const int numAngles = 64;                  // Number of angles for the vision cone
+	const int numAngles = 64;                   // Number of angles for the vision cone
 	const float angleStep = 360.0f / numAngles; // Step size between angles
 
 	for (int i = 0; i < numAngles; i++) {
