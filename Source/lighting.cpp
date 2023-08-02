@@ -251,39 +251,37 @@ void DoVision(Point position, uint8_t radius, MapExplorationType doAutomap, bool
 {
 	DoVisionFlags(position, doAutomap, visible);
 
-	for (int dx = -radius; dx <= radius; dx++) {
-		for (int dy = -radius; dy <= radius; dy++) {
-			int distanceSquared = dx * dx + dy * dy;
-			if (distanceSquared > radius * radius)
-				continue; // Skip tiles outside the circular area.
+	const int numAngles = 360;                  // Number of angles for the vision cone
+	const float angleStep = 360.0f / numAngles; // Step size between angles
 
-			Displacement displacement { dx, dy };
-			Point target = position + displacement;
-			if (!InDungeonBounds(target))
-				continue;
+	for (int i = 0; i < numAngles; i++) {
+		float angle = i * angleStep;
+		float dx = std::cos(angle * M_PI / 180.0f);
+		float dy = std::sin(angle * M_PI / 180.0f);
 
-			// Perform ray casting to check if there's a clear line of sight.
-			bool clearLineOfSight = true;
-			int steps = std::max(abs(dx), abs(dy));
-			for (int step = 0; step <= steps; step++) {
-				int x = (steps != 0) ? (position.x + (displacement.deltaX * step) / steps) : position.x;
-				int y = (steps != 0) ? (position.y + (displacement.deltaY * step) / steps) : position.y;
+		for (int distance = 1; distance <= radius; distance++) {
+			float x = (position.x + 0.5f) * TILE_WIDTH + dx * distance * TILE_WIDTH;
+			float y = (position.y + 0.5f) * TILE_HEIGHT + dy * distance * TILE_HEIGHT;
 
-				if (TileHasAny(dPiece[x][y], TileProperties::BlockLight)) {
-					clearLineOfSight = false;
-					break;
-				}
+			int tileX = static_cast<int>(x / TILE_WIDTH);
+			int tileY = static_cast<int>(y / TILE_HEIGHT);
 
-				int8_t trans = dTransVal[x][y];
-				if (trans != 0)
-					TransList[trans] = true;
-			}
+			if (!InDungeonBounds({ tileX, tileY }))
+				break;
 
-			if (clearLineOfSight)
-				DoVisionFlags(target, doAutomap, visible);
+			Point target { tileX, tileY };
+			DoVisionFlags(target, doAutomap, visible);
+
+			if (TileHasAny(dPiece[tileX][tileY], TileProperties::BlockLight))
+				break;
 		}
 	}
 }
+
+
+
+
+
 
 void MakeLightTable()
 {
