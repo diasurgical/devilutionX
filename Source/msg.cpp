@@ -2047,7 +2047,8 @@ size_t OnPlayerJoinLevel(const TCmd *pCmd, size_t pnum)
 				player.AnimInfo.currentFrame = player.AnimInfo.numberOfFrames - 2;
 				dFlags[player.position.tile.x][player.position.tile.y] |= DungeonFlag::DeadPlayer;
 			}
-
+			player.lightId = AddLight(player.position.tile, player._pLightRad);
+			ChangeLightXY(player.lightId, player.position.tile);
 			ActivateVision(player.position.tile, player._pLightRad, player.getId());
 		}
 	}
