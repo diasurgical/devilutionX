@@ -503,14 +503,23 @@ bool MoveMissile(Missile &missile, tl::function_ref<bool(Point)> checkTile, bool
 		if (incVelocity.deltaX != 0)
 			traveled.deltaX = (traveled.deltaX / incVelocity.deltaX) * incVelocity.deltaX;
 		do {
+			auto initialDiff = missile.position.traveled - traveled;
 			traveled += incVelocity;
+			auto incDiff = missile.position.traveled - traveled;
+
+			// we are at the original calculated position => resume with normal logic
+			if ((initialDiff.deltaX < 0) != (incDiff.deltaX < 0))
+				break;
+			if ((initialDiff.deltaY < 0) != (incDiff.deltaY < 0))
+				break;
 
 			// calculate in-between tile
 			Displacement pixelsTraveled = traveled >> 16;
 			Displacement tileOffset = pixelsTraveled.screenToMissile();
 			Point tile = missile.position.start + tileOffset;
 
-			// we are at the original calculated position => resume with normal logic
+			// we haven't quite reached the missile's current position,
+			// but we can break early to avoid checking collisions in this tile twice
 			if (tile == missile.position.tile)
 				break;
 
