@@ -511,16 +511,22 @@ void Interact()
 
 	Player &myPlayer = *MyPlayer;
 
-	if (leveltype != DTYPE_TOWN && (pcursmonst != -1 || IsStandingGround())) {
+	if (leveltype != DTYPE_TOWN && pcursmonst != -1) {
+		Point position = Monsters[pcursmonst].position.tile;
+
+		NetSendCmdLoc(MyPlayerId, true, myPlayer.UsesRangedWeapon() ? CMD_RATTACKXY : CMD_SATTACKXY, position);
+		LastMouseButtonAction = MouseActionType::Attack;
+		return;
+	}
+
+	if (leveltype != DTYPE_TOWN && IsStandingGround()) {
+		Direction pdir = myPlayer._pdir;
 		AxisDirection moveDir = GetMoveDirection();
-		Point position;
-		if (pcursmonst != -1) {
-			position = Monsters[pcursmonst].position.tile;
-		} else {
-			Direction pdir = myPlayer._pdir;
+		bool motion = moveDir.x != AxisDirectionX_NONE || moveDir.y != AxisDirectionY_NONE;
+		if (motion) {
 			pdir = FaceDir[static_cast<std::size_t>(moveDir.x)][static_cast<std::size_t>(moveDir.y)];
-			position = myPlayer.position.tile + pdir;
 		}
+		Point position = myPlayer.position.tile + pdir;
 
 		NetSendCmdLoc(MyPlayerId, true, myPlayer.UsesRangedWeapon() ? CMD_RATTACKXY : CMD_SATTACKXY, position);
 		LastMouseButtonAction = MouseActionType::Attack;
