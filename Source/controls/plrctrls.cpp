@@ -482,11 +482,11 @@ void FindTrigger()
 	CheckRportal();
 }
 
-bool IsStandingGround(AxisDirection dir)
+bool IsStandingGround()
 {
 	if (ControlMode == ControlTypes::Gamepad) {
 		ControllerButtonCombo standGroundCombo = sgOptions.Padmapper.ButtonComboForAction("StandGround");
-		return (dir.x == AxisDirectionX_NONE && dir.y == AxisDirectionY_NONE) || StandToggle || IsControllerButtonComboPressed(standGroundCombo);
+		return StandToggle || IsControllerButtonComboPressed(standGroundCombo);
 	}
 #ifndef USE_SDL1
 	if (ControlMode == ControlTypes::VirtualGamepad) {
@@ -503,19 +503,23 @@ void Interact()
 		return;
 	}
 
+	if (pcursmonst != -1 && CanTalkToMonst(Monsters[pcursmonst])) {
+		NetSendCmdParam1(true, CMD_ATTACKID, pcursmonst);
+		LastMouseButtonAction = MouseActionType::AttackMonsterTarget;
+		return;
+	}
+
 	Player &myPlayer = *MyPlayer;
 
-	AxisDirection moveDir = GetMoveDirection();
-	if (leveltype != DTYPE_TOWN && IsStandingGround(moveDir)) {
-		Direction pdir = myPlayer._pdir;
-		bool motion = moveDir.x != AxisDirectionX_NONE || moveDir.y != AxisDirectionY_NONE;
-		if (motion) {
-			pdir = FaceDir[static_cast<std::size_t>(moveDir.x)][static_cast<std::size_t>(moveDir.y)];
-		}
-
-		Point position = myPlayer.position.tile + pdir;
-		if (pcursmonst != -1 && !motion) {
+	if (leveltype != DTYPE_TOWN && (pcursmonst != -1 || IsStandingGround())) {
+		AxisDirection moveDir = GetMoveDirection();
+		Point position;
+		if (pcursmonst != -1) {
 			position = Monsters[pcursmonst].position.tile;
+		} else {
+			Direction pdir = myPlayer._pdir;
+			pdir = FaceDir[static_cast<std::size_t>(moveDir.x)][static_cast<std::size_t>(moveDir.y)];
+			position = myPlayer.position.tile + pdir;
 		}
 
 		NetSendCmdLoc(MyPlayerId, true, myPlayer.UsesRangedWeapon() ? CMD_RATTACKXY : CMD_SATTACKXY, position);
@@ -523,16 +527,7 @@ void Interact()
 		return;
 	}
 
-	if (pcursmonst != -1) {
-		if (!myPlayer.UsesRangedWeapon() || CanTalkToMonst(Monsters[pcursmonst])) {
-			NetSendCmdParam1(true, CMD_ATTACKID, pcursmonst);
-		} else {
-			NetSendCmdParam1(true, CMD_RATTACKID, pcursmonst);
-		}
-		LastMouseButtonAction = MouseActionType::AttackMonsterTarget;
-		return;
-	}
-
+	// TODO check player interaction
 	if (leveltype != DTYPE_TOWN && pcursplr != -1 && !myPlayer.friendlyMode) {
 		NetSendCmdParam1(true, myPlayer.UsesRangedWeapon() ? CMD_RATTACKPID : CMD_ATTACKPID, pcursplr);
 		LastMouseButtonAction = MouseActionType::AttackPlayerTarget;
@@ -1306,7 +1301,7 @@ void WalkInDir(size_t playerId, AxisDirection dir)
 	if (!player.isWalking() && player.CanChangeAction())
 		player._pdir = pdir;
 
-	if (IsStandingGround(dir)) {
+	if (IsStandingGround()) {
 		if (player._pmode == PM_STAND)
 			StartStand(player, pdir);
 		return;
