@@ -327,7 +327,9 @@ bool Plr2PlrMHit(const Player &player, int p, int mindam, int maxdam, int dist, 
 
 	int hit;
 	if (missileData.isArrow()) {
-		hit = player.GetRangedToHit()
+		//hper = player.GetRangedPiercingToHit();
+		hit = player.GetRangedPiercingToHit();
+		    - player.CalculateArmorPierce(target.GetArmor(), false)
 		    - (dist * dist / 2)
 		    - target.GetArmor();
 	} else {
