@@ -950,7 +950,7 @@ bool DoAttack(Player &player)
 		if (monster != nullptr) {
 			didhit = PlrHitMonst(player, *monster);
 		} else if (PlayerAtPosition(position) != nullptr && !player.friendlyMode) {
-			didhit = PlrHitPlr(player, *PlayerAtPosition(position), true);
+			didhit = PlrHitPlr(player, *PlayerAtPosition(position));
 		} else {
 			Object *object = FindObjectAtPosition(position, false);
 			if (object != nullptr) {
@@ -976,6 +976,9 @@ bool DoAttack(Player &player)
 					if (PlrHitMonst(player, *monster, true))
 						didhit = true;
 				}
+			} else if (PlayerAtPosition(position) != nullptr && !player.friendlyMode) {
+				if (PlrHitPlr(player, *PlayerAtPosition(position), true))
+					didhit = true;
 			}
 			position = player.position.tile + Left(player._pdir);
 			monster = FindMonsterAtPosition(position);
@@ -984,6 +987,9 @@ bool DoAttack(Player &player)
 					if (PlrHitMonst(player, *monster, true))
 						didhit = true;
 				}
+			} else if (PlayerAtPosition(position) != nullptr && !player.friendlyMode) {
+				if (PlrHitPlr(player, *PlayerAtPosition(position), true))
+					didhit = true;
 			}
 		}
 
