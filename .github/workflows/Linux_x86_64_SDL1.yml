@@ -39,7 +39,8 @@ jobs:
     - name: Configure CMake
       shell: bash
       working-directory: ${{github.workspace}}
-      run: cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_TESTING=OFF -DCPACK=ON -DUSE_SDL1=ON -DDISCORD_INTEGRATION=ON
+      # Disable LTO to work around an ICE in gcc11
+      run: cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_TESTING=OFF -DCPACK=ON -DUSE_SDL1=ON -DDISCORD_INTEGRATION=ON -DDISABLE_LTO=ON
 
     - name: Build
       working-directory: ${{github.workspace}}
