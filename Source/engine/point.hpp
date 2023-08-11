@@ -90,6 +90,7 @@ struct PointOf {
 
 	constexpr PointOf<CoordT> operator-() const
 	{
+		static_assert(std::is_signed<CoordT>::value, "CoordT must be signed");
 		return { -x, -y };
 	}
 
@@ -193,6 +194,7 @@ constexpr PointOf<PointCoordT> operator+(PointOf<PointCoordT> a, Direction direc
 template <typename PointCoordT, typename OtherPointCoordT>
 constexpr DisplacementOf<PointCoordT> operator-(PointOf<PointCoordT> a, PointOf<OtherPointCoordT> b)
 {
+	static_assert(std::is_signed<PointCoordT>::value == std::is_signed<OtherPointCoordT>::value, "points must have the same signedness");
 	return { static_cast<PointCoordT>(a.x - b.x), static_cast<PointCoordT>(a.y - b.y) };
 }
 

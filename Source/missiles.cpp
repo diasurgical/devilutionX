@@ -1474,10 +1474,10 @@ void AddWarp(Missile &missile, AddMissileParameter &parameter)
 			}
 			app_fatal(StrCat("invalid leveltype", static_cast<int>(leveltype)));
 		};
-		Displacement triggerOffset = getTriggerOffset(trg);
+		const Displacement triggerOffset = getTriggerOffset(trg);
 		candidate += triggerOffset;
-		Displacement off = player.position.tile - candidate;
-		int distanceSq = off.deltaY * off.deltaY + off.deltaX * off.deltaX;
+		const Displacement off = Point { player.position.tile } - candidate;
+		const int distanceSq = off.deltaY * off.deltaY + off.deltaX * off.deltaX;
 		if (distanceSq < minDistanceSq) {
 			minDistanceSq = distanceSq;
 			tile = candidate;
