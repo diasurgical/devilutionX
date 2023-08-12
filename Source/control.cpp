@@ -44,6 +44,7 @@
 #include "qol/xpbar.h"
 #include "stores.h"
 #include "towners.h"
+#include "utils/algorithm/container.hpp"
 #include "utils/format_int.hpp"
 #include "utils/language.h"
 #include "utils/log.hpp"
@@ -257,7 +258,7 @@ void PrintInfo(const Surface &out)
 	const int space[] = { 18, 12, 6, 3, 0 };
 	Rectangle infoArea { GetMainPanel().position + Displacement { 177, 46 }, { 288, 60 } };
 
-	const int newLineCount = std::count(InfoString.str().begin(), InfoString.str().end(), '\n');
+	const int newLineCount = c_count(InfoString.str(), '\n');
 	const int spaceIndex = std::min(4, newLineCount);
 	const int spacing = space[spaceIndex];
 	const int lineHeight = 12 + spacing;
@@ -351,7 +352,7 @@ std::string TextCmdHelp(const string_view parameter)
 		}
 		return ret;
 	}
-	auto textCmdIterator = std::find_if(TextCmdList.begin(), TextCmdList.end(), [&](const TextCmdItem &elem) { return elem.text == parameter; });
+	auto textCmdIterator = c_find_if(TextCmdList, [&](const TextCmdItem &elem) { return elem.text == parameter; });
 	if (textCmdIterator == TextCmdList.end())
 		return StrCat(_("Command "), parameter, _(" is unkown."));
 	auto &textCmdItem = *textCmdIterator;
@@ -533,7 +534,7 @@ bool CheckTextCommand(const string_view text)
 	if (text.size() < 1 || text[0] != '/')
 		return false;
 
-	auto textCmdIterator = std::find_if(TextCmdList.begin(), TextCmdList.end(), [&](const TextCmdItem &elem) { return text.find(elem.text) == 0 && (text.length() == elem.text.length() || text[elem.text.length()] == ' '); });
+	auto textCmdIterator = c_find_if(TextCmdList, [&](const TextCmdItem &elem) { return text.find(elem.text) == 0 && (text.length() == elem.text.length() || text[elem.text.length()] == ' '); });
 	if (textCmdIterator == TextCmdList.end()) {
 		InitDiabloMsg(StrCat(_("Command \""), text, "\" is unknown."));
 		return true;
@@ -1039,8 +1040,7 @@ void CheckPanelInfo()
 			} break;
 			case SpellType::Scroll: {
 				AddPanelString(fmt::format(fmt::runtime(_("Scroll of {:s}")), pgettext("spell", GetSpellData(spellId).sNameText)));
-				const InventoryAndBeltPlayerItemsRange items { myPlayer };
-				const int scrollCount = std::count_if(items.begin(), items.end(), [spellId](const Item &item) {
+				const int scrollCount = c_count_if(InventoryAndBeltPlayerItemsRange { myPlayer }, [spellId](const Item &item) {
 					return item.isScrollOf(spellId);
 				});
 				AddPanelString(fmt::format(fmt::runtime(ngettext("{:d} Scroll", "{:d} Scrolls", scrollCount)), scrollCount));

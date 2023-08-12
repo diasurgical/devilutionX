@@ -15,6 +15,7 @@
 #include "inv.h"
 #include "qol/chatlog.h"
 #include "qol/stash.h"
+#include "utils/algorithm/container.hpp"
 #include "utils/language.h"
 #include "utils/utf8.hpp"
 
@@ -39,7 +40,7 @@ std::array<PlayerMessage, 8> Messages;
 
 int CountLinesOfText(string_view text)
 {
-	return 1 + std::count(text.begin(), text.end(), '\n');
+	return 1 + c_count(text, '\n');
 }
 
 PlayerMessage &GetNextMessage()

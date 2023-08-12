@@ -15,6 +15,7 @@
 #include "panels/ui_panels.hpp"
 #include "player.h"
 #include "playerdat.hpp"
+#include "utils/algorithm/container.hpp"
 #include "utils/display.h"
 #include "utils/format_int.hpp"
 #include "utils/language.h"
@@ -240,7 +241,7 @@ void DrawShadowString(const Surface &out, const PanelEntry &entry)
 
 	// If the text is less tall then the field, we center it vertically relative to the field.
 	// Otherwise, we draw from the top of the field.
-	const int textHeight = (std::count(wrapped.begin(), wrapped.end(), '\n') + 1) * GetLineHeight(wrapped, GameFont12);
+	const int textHeight = (c_count(wrapped, '\n') + 1) * GetLineHeight(wrapped, GameFont12);
 	const int labelHeight = std::max(PanelFieldHeight, textHeight);
 
 	DrawString(out, text, { labelPosition + Displacement { -2, 2 }, { entry.labelLength, labelHeight } }, style | UiFlags::ColorBlack, Spacing);

@@ -17,6 +17,7 @@
 #include "monster.h"
 #include "objects.h"
 #include "quests.h"
+#include "utils/algorithm/container.hpp"
 #include "utils/str_cat.hpp"
 
 namespace devilution {
@@ -87,8 +88,7 @@ bool TFit_Shrine(int i)
 
 bool CheckThemeObj5(Point origin, int8_t regionId)
 {
-	const auto searchArea = PointsInRectangle(Rectangle { origin, 2 });
-	return std::all_of(searchArea.cbegin(), searchArea.cend(), [regionId](Point testPosition) {
+	return c_all_of(PointsInRectangle(Rectangle { origin, 2 }), [regionId](Point testPosition) {
 		// note out-of-bounds tiles are not solid, this function relies on the guard in TFit_Obj5 and dungeon border
 		if (IsTileSolid(testPosition)) {
 			return false;
@@ -154,8 +154,7 @@ bool TFit_GoatShrine(int t)
 
 bool CheckThemeObj3(Point origin, int8_t regionId, unsigned frequency = 0)
 {
-	const auto searchArea = PointsInRectangle(Rectangle { origin, 1 });
-	return std::all_of(searchArea.cbegin(), searchArea.cend(), [regionId, frequency](Point testPosition) {
+	return c_all_of(PointsInRectangle(Rectangle { origin, 1 }), [regionId, frequency](Point testPosition) {
 		if (!InDungeonBounds(testPosition)) {
 			return false;
 		}

@@ -28,6 +28,7 @@
 #include "quests.h"
 #include "spells.h"
 #include "towners.h"
+#include "utils/algorithm/container.hpp"
 #include "utils/endian_stream.hpp"
 #include "utils/file_util.h"
 #include "utils/language.h"
@@ -139,7 +140,7 @@ std::string DebugCmdHelp(const string_view parameter)
 		}
 		return ret;
 	}
-	auto debugCmdIterator = std::find_if(DebugCmdList.begin(), DebugCmdList.end(), [&](const DebugCmdItem &elem) { return elem.text == parameter; });
+	auto debugCmdIterator = c_find_if(DebugCmdList, [&](const DebugCmdItem &elem) { return elem.text == parameter; });
 	if (debugCmdIterator == DebugCmdList.end())
 		return StrCat("Debug command ", parameter, " wasn't found");
 	auto &dbgCmdItem = *debugCmdIterator;
@@ -1122,7 +1123,7 @@ void SetDebugLevelSeedInfos(uint32_t mid1Seed, uint32_t mid2Seed, uint32_t mid3S
 
 bool CheckDebugTextCommand(const string_view text)
 {
-	auto debugCmdIterator = std::find_if(DebugCmdList.begin(), DebugCmdList.end(), [&](const DebugCmdItem &elem) { return text.find(elem.text) == 0 && (text.length() == elem.text.length() || text[elem.text.length()] == ' '); });
+	auto debugCmdIterator = c_find_if(DebugCmdList, [&](const DebugCmdItem &elem) { return text.find(elem.text) == 0 && (text.length() == elem.text.length() || text[elem.text.length()] == ' '); });
 	if (debugCmdIterator == DebugCmdList.end())
 		return false;
 
