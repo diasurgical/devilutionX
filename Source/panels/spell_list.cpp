@@ -15,6 +15,7 @@
 #include "panels/spell_icons.hpp"
 #include "player.h"
 #include "spells.h"
+#include "utils/algorithm/container.hpp"
 #include "utils/language.h"
 #include "utils/str_cat.hpp"
 #include "utils/utf8.hpp"
@@ -170,8 +171,7 @@ void DrawSpellList(const Surface &out)
 			}
 			PrintSBookSpellType(out, spellListItem.location, _("Scroll"), spellColor);
 			InfoString = fmt::format(fmt::runtime(_("Scroll of {:s}")), pgettext("spell", spellDataItem.sNameText));
-			const InventoryAndBeltPlayerItemsRange items { myPlayer };
-			const int scrollCount = std::count_if(items.begin(), items.end(), [spellId](const Item &item) {
+			const int scrollCount = c_count_if(InventoryAndBeltPlayerItemsRange { myPlayer }, [spellId](const Item &item) {
 				return item.isScrollOf(spellId);
 			});
 			AddPanelString(fmt::format(fmt::runtime(ngettext("{:d} Scroll", "{:d} Scrolls", scrollCount)), scrollCount));

@@ -12,6 +12,7 @@
 #include "inv_iterators.hpp"
 #include "items.h"
 #include "player.h"
+#include "utils/algorithm/container.hpp"
 
 namespace devilution {
 
@@ -247,7 +248,7 @@ template <typename Predicate>
 bool HasInventoryItem(Player &player, Predicate &&predicate)
 {
 	const InventoryPlayerItemsRange items { player };
-	return std::find_if(items.begin(), items.end(), std::forward<Predicate>(predicate)) != items.end();
+	return c_find_if(items, std::forward<Predicate>(predicate)) != items.end();
 }
 
 /**
@@ -257,7 +258,7 @@ template <typename Predicate>
 bool HasBeltItem(Player &player, Predicate &&predicate)
 {
 	const BeltPlayerItemsRange items { player };
-	return std::find_if(items.begin(), items.end(), std::forward<Predicate>(predicate)) != items.end();
+	return c_find_if(items, std::forward<Predicate>(predicate)) != items.end();
 }
 
 /**
@@ -306,7 +307,7 @@ template <typename Predicate>
 bool RemoveInventoryItem(Player &player, Predicate &&predicate)
 {
 	const InventoryPlayerItemsRange items { player };
-	const auto it = std::find_if(items.begin(), items.end(), std::forward<Predicate>(predicate));
+	const auto it = c_find_if(items, std::forward<Predicate>(predicate));
 	if (it == items.end())
 		return false;
 	player.RemoveInvItem(static_cast<int>(it.index()));
@@ -322,7 +323,7 @@ template <typename Predicate>
 bool RemoveBeltItem(Player &player, Predicate &&predicate)
 {
 	const BeltPlayerItemsRange items { player };
-	const auto it = std::find_if(items.begin(), items.end(), std::forward<Predicate>(predicate));
+	const auto it = c_find_if(items, std::forward<Predicate>(predicate));
 	if (it == items.end())
 		return false;
 	player.RemoveSpdBarItem(static_cast<int>(it.index()));

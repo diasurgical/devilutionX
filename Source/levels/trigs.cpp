@@ -14,6 +14,7 @@
 #include "cursor.h"
 #include "error.h"
 #include "init.h"
+#include "utils/algorithm/container.hpp"
 #include "utils/language.h"
 #include "utils/utf8.hpp"
 
@@ -934,10 +935,9 @@ bool EntranceBoundaryContains(Point entrance, Point position)
 {
 	constexpr Displacement entranceOffsets[7] = { { 0, 0 }, { -1, 0 }, { 0, -1 }, { -1, -1 }, { -2, -1 }, { -1, -2 }, { -2, -2 } };
 
-	return std::any_of(
-	    std::begin(entranceOffsets),
-	    std::end(entranceOffsets),
-	    [&](auto offset) { return entrance + offset == position; });
+	return c_any_of(
+	    entranceOffsets,
+	    [=](Displacement offset) { return entrance + offset == position; });
 }
 
 } // namespace devilution

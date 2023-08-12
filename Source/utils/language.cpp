@@ -9,6 +9,7 @@
 
 #include "engine/assets.hpp"
 #include "options.h"
+#include "utils/algorithm/container.hpp"
 #include "utils/file_util.h"
 #include "utils/log.hpp"
 #include "utils/paths.h"
@@ -338,7 +339,7 @@ bool HasTranslation(const std::string &locale)
 		return true;
 	}
 
-	return std::any_of(Extensions.cbegin(), Extensions.cend(), [locale](const char *extension) {
+	return c_any_of(Extensions, [locale](const char *extension) {
 		return FindAsset((locale + extension).c_str()).ok();
 	});
 }

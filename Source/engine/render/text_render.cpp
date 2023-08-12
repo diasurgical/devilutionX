@@ -23,6 +23,7 @@
 #include "engine/palette.h"
 #include "engine/point.hpp"
 #include "engine/render/clx_render.hpp"
+#include "utils/algorithm/container.hpp"
 #include "utils/display.h"
 #include "utils/language.h"
 #include "utils/sdl_compat.h"
@@ -241,10 +242,10 @@ bool IsBreakAllowed(char32_t codepoint, char32_t nextCodepoint)
 
 std::size_t CountNewlines(string_view fmt, const DrawStringFormatArg *args, std::size_t argsLen)
 {
-	std::size_t result = std::count(fmt.begin(), fmt.end(), '\n');
+	std::size_t result = c_count(fmt, '\n');
 	for (std::size_t i = 0; i < argsLen; ++i) {
 		if (args[i].GetType() == DrawStringFormatArg::Type::StringView)
-			result += std::count(args[i].GetFormatted().begin(), args[i].GetFormatted().end(), '\n');
+			result += c_count(args[i].GetFormatted(), '\n');
 	}
 	return result;
 }
@@ -662,7 +663,7 @@ uint32_t DrawString(const Surface &out, string_view text, const Rectangle &rect,
 		lineHeight = GetLineHeight(text, size);
 
 	if (HasAnyOf(flags, UiFlags::VerticalCenter)) {
-		int textHeight = (std::count(text.cbegin(), text.cend(), '\n') + 1) * lineHeight;
+		int textHeight = (c_count(text, '\n') + 1) * lineHeight;
 		characterPosition.y += std::max(0, (rect.size.height - textHeight) / 2);
 	}
 

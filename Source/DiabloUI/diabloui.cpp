@@ -19,6 +19,7 @@
 #include "engine/load_pcx.hpp"
 #include "engine/render/clx_render.hpp"
 #include "hwcursor.hpp"
+#include "utils/algorithm/container.hpp"
 #include "utils/display.h"
 #include "utils/language.h"
 #include "utils/log.hpp"
@@ -651,7 +652,7 @@ bool UiValidPlayerName(string_view name)
 
 	// Only basic latin alphabet is supported for multiplayer characters to avoid rendering issues for players who do
 	// not have fonts.mpq installed
-	if (!std::all_of(name.begin(), name.end(), IsBasicLatin))
+	if (!c_all_of(name, IsBasicLatin))
 		return false;
 
 	string_view bannedNames[] = {

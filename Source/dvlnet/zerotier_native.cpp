@@ -27,6 +27,7 @@
 #include <ZeroTierSockets.h>
 #include <cstdlib>
 
+#include "utils/algorithm/container.hpp"
 #include "utils/log.hpp"
 #include "utils/paths.h"
 
@@ -40,7 +41,7 @@ namespace {
 #ifdef DVL_ZT_SYMLINK
 bool HasMultiByteChars(string_view path)
 {
-	return std::any_of(path.begin(), path.end(), IsTrailUtf8CodeUnit);
+	return c_any_of(path, IsTrailUtf8CodeUnit);
 }
 
 std::string ComputeAlternateFolderName(string_view path)
