@@ -1973,12 +1973,12 @@ void Player::UpdatePreviewCelSprite(_cmd_id cmdId, Point point, uint16_t wParam1
 		break;
 	}
 	case _cmd_id::CMD_ATTACKXY:
-	case _cmd_id::CMD_SATTACKXY:
 		dir = GetDirection(position.tile, point);
 		graphic = player_graphic::Attack;
 		minimalWalkDistance = 2;
 		break;
 	case _cmd_id::CMD_RATTACKXY:
+	case _cmd_id::CMD_SATTACKXY:
 		dir = GetDirection(position.tile, point);
 		graphic = player_graphic::Attack;
 		break;
