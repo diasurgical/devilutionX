@@ -35,7 +35,7 @@ jobs:
     steps:
       - checkout
       - run: Packaging/amiga/prep.sh
-      - run: cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Debug -DM68K_CPU=68040 -DM68K_FPU=hard -DM68K_COMMON="-s -fbbb=- -ffast-math -O2"
+      - run: cmake -S. -Bbuild -DM68K_CPU=68040 -DM68K_FPU=hard -DM68K_COMMON="-s -fbbb=- -ffast-math -O2"
       - run: cd build && make -j2
       - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_m68k}
   vita:
