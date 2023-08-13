@@ -3,7 +3,7 @@
 #include <cstdint>
 
 #ifdef __ANDROID__
-#include "SDL.h"
+#include <SDL.h>
 #include <jni.h>
 #elif defined(__vita__)
 #include <cstring>
