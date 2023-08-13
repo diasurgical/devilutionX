@@ -1,6 +1,7 @@
 #include "panels/spell_icons.hpp"
 
 #include <cstdint>
+#include <optional>
 
 #include "engine.h"
 #include "engine/load_cel.hpp"
@@ -8,7 +9,6 @@
 #include "engine/palette.h"
 #include "engine/render/clx_render.hpp"
 #include "init.h"
-#include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
 

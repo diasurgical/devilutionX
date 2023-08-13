@@ -7,6 +7,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <optional>
 
 #include <SDL.h>
 
@@ -23,7 +24,6 @@
 #include "spelldat.h"
 #include "spells.h"
 #include "utils/attributes.h"
-#include "utils/stdcompat/optional.hpp"
 #include "utils/stdcompat/string_view.hpp"
 #include "utils/string_or_view.hpp"
 #include "utils/ui_fwd.h"

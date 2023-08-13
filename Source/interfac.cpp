@@ -5,6 +5,7 @@
  */
 
 #include <cstdint>
+#include <optional>
 
 #include <SDL.h>
 
@@ -25,7 +26,6 @@
 #include "pfile.h"
 #include "plrmsg.h"
 #include "utils/sdl_geometry.h"
-#include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
 

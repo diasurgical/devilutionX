@@ -3,6 +3,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <cstring>
+#include <optional>
 
 #include <SmackerDecoder.h>
 
@@ -19,7 +20,6 @@
 #include "utils/log.hpp"
 #include "utils/sdl_compat.h"
 #include "utils/sdl_wrap.h"
-#include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
 namespace {

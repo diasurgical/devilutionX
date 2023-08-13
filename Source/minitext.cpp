@@ -4,6 +4,7 @@
  * Implementation of scrolling dialog text.
  */
 #include <cstdint>
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -18,7 +19,6 @@
 #include "playerdat.hpp"
 #include "textdat.h"
 #include "utils/language.h"
-#include "utils/stdcompat/optional.hpp"
 #include "utils/stdcompat/string_view.hpp"
 
 namespace devilution {

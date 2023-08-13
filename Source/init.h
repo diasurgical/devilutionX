@@ -5,8 +5,9 @@
  */
 #pragma once
 
+#include <optional>
+
 #include "utils/attributes.h"
-#include "utils/stdcompat/optional.hpp"
 
 #ifdef UNPACKED_MPQS
 #include <string>

@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <forward_list>
+#include <optional>
 #include <unordered_map>
 
 #include <SDL_version.h>
@@ -14,7 +15,6 @@
 #include "engine/sound_defs.hpp"
 #include "pack.h"
 #include "utils/enum_traits.h"
-#include "utils/stdcompat/optional.hpp"
 #include "utils/stdcompat/string_view.hpp"
 
 namespace devilution {

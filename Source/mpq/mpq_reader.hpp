@@ -4,10 +4,9 @@
 #include <cstddef>
 #include <cstdint>
 #include <memory>
+#include <optional>
 #include <string>
 #include <vector>
-
-#include "utils/stdcompat/optional.hpp"
 
 // Forward-declare so that we can avoid exposing libmpq.
 struct mpq_archive;

@@ -6,6 +6,7 @@
 #pragma once
 
 #include <cstdint>
+#include <optional>
 
 #include "DiabloUI/ui_flags.hpp"
 #include "engine.h"
@@ -13,7 +14,6 @@
 #include "engine/point.hpp"
 #include "itemdat.h"
 #include "monster.h"
-#include "utils/stdcompat/optional.hpp"
 #include "utils/string_or_view.hpp"
 
 namespace devilution {

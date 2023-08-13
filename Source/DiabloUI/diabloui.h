@@ -1,10 +1,11 @@
 #pragma once
 
-#include <SDL.h>
 #include <array>
 #include <cstddef>
 #include <cstdint>
+#include <optional>
 
+#include <SDL.h>
 #include <function_ref.hpp>
 
 #include "DiabloUI/ui_item.h"
@@ -12,7 +13,6 @@
 #include "engine/load_pcx.hpp" // IWYU pragma: export
 #include "player.h"
 #include "utils/display.h"
-#include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
 

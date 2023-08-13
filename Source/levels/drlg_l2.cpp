@@ -8,6 +8,7 @@
 #include <cmath>
 #include <cstdint>
 #include <list>
+#include <optional>
 
 #include "diablo.h"
 #include "engine/load_file.hpp"
@@ -18,7 +19,6 @@
 #include "player.h"
 #include "quests.h"
 #include "utils/stdcompat/algorithm.hpp"
-#include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
 

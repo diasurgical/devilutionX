@@ -1,6 +1,7 @@
 #include "panels/spell_book.hpp"
 
 #include <cstdint>
+#include <optional>
 
 #include <fmt/format.h>
 
@@ -19,7 +20,6 @@
 #include "player.h"
 #include "spelldat.h"
 #include "utils/language.h"
-#include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
 
