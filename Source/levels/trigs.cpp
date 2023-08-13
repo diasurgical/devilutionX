@@ -5,6 +5,7 @@
  */
 #include "levels/trigs.h"
 
+#include <cmath>
 #include <cstdint>
 
 #include <fmt/format.h>
@@ -444,8 +445,8 @@ bool ForceL2Trig()
 		if (dPiece[cursPosition.x][cursPosition.y] == tileId) {
 			for (int j = 0; j < numtrigs; j++) {
 				if (trigs[j]._tmsg == WM_DIABPREVLVL) {
-					int dx = abs(trigs[j].position.x - cursPosition.x);
-					int dy = abs(trigs[j].position.y - cursPosition.y);
+					int dx = std::abs(trigs[j].position.x - cursPosition.x);
+					int dy = std::abs(trigs[j].position.y - cursPosition.y);
 					if (dx < 4 && dy < 4) {
 						InfoString = fmt::format(fmt::runtime(_("Up to level {:d}")), currlevel - 1);
 						cursPosition = trigs[j].position;
@@ -473,8 +474,8 @@ bool ForceL2Trig()
 			if (dPiece[cursPosition.x][cursPosition.y] == tileId) {
 				for (int j = 0; j < numtrigs; j++) {
 					if (trigs[j]._tmsg == WM_DIABTWARPUP) {
-						int dx = abs(trigs[j].position.x - cursPosition.x);
-						int dy = abs(trigs[j].position.y - cursPosition.y);
+						int dx = std::abs(trigs[j].position.x - cursPosition.x);
+						int dy = std::abs(trigs[j].position.y - cursPosition.y);
 						if (dx < 4 && dy < 4) {
 							InfoString = _("Up to town");
 							cursPosition = trigs[j].position;
@@ -496,8 +497,8 @@ bool ForceL3Trig()
 			InfoString = fmt::format(fmt::runtime(_("Up to level {:d}")), currlevel - 1);
 			for (int j = 0; j < numtrigs; j++) {
 				if (trigs[j]._tmsg == WM_DIABPREVLVL) {
-					int dx = abs(trigs[j].position.x - cursPosition.x);
-					int dy = abs(trigs[j].position.y - cursPosition.y);
+					int dx = std::abs(trigs[j].position.x - cursPosition.x);
+					int dy = std::abs(trigs[j].position.y - cursPosition.y);
 					if (dx < 4 && dy < 4) {
 						cursPosition = trigs[j].position;
 						return true;
@@ -525,8 +526,8 @@ bool ForceL3Trig()
 			if (dPiece[cursPosition.x][cursPosition.y] == tileId) {
 				for (int j = 0; j < numtrigs; j++) {
 					if (trigs[j]._tmsg == WM_DIABTWARPUP) {
-						int dx = abs(trigs[j].position.x - cursPosition.x);
-						int dy = abs(trigs[j].position.y - cursPosition.y);
+						int dx = std::abs(trigs[j].position.x - cursPosition.x);
+						int dy = std::abs(trigs[j].position.y - cursPosition.y);
 						if (dx < 4 && dy < 4) {
 							InfoString = _("Up to town");
 							cursPosition = trigs[j].position;
@@ -572,8 +573,8 @@ bool ForceL4Trig()
 			if (dPiece[cursPosition.x][cursPosition.y] == tileId) {
 				for (int j = 0; j < numtrigs; j++) {
 					if (trigs[j]._tmsg == WM_DIABTWARPUP) {
-						int dx = abs(trigs[j].position.x - cursPosition.x);
-						int dy = abs(trigs[j].position.y - cursPosition.y);
+						int dx = std::abs(trigs[j].position.x - cursPosition.x);
+						int dy = std::abs(trigs[j].position.y - cursPosition.y);
 						if (dx < 4 && dy < 4) {
 							InfoString = _("Up to town");
 							cursPosition = trigs[j].position;
@@ -634,8 +635,8 @@ bool ForceHiveTrig()
 			if (dPiece[cursPosition.x][cursPosition.y] == tileId) {
 				for (int j = 0; j < numtrigs; j++) {
 					if (trigs[j]._tmsg == WM_DIABTWARPUP) {
-						int dx = abs(trigs[j].position.x - cursPosition.x);
-						int dy = abs(trigs[j].position.y - cursPosition.y);
+						int dx = std::abs(trigs[j].position.x - cursPosition.x);
+						int dy = std::abs(trigs[j].position.y - cursPosition.y);
 						if (dx < 4 && dy < 4) {
 							InfoString = _("Up to town");
 							cursPosition = trigs[j].position;
@@ -683,8 +684,8 @@ bool ForceCryptTrig()
 			if (dPiece[cursPosition.x][cursPosition.y] == tileId) {
 				for (int j = 0; j < numtrigs; j++) {
 					if (trigs[j]._tmsg == WM_DIABTWARPUP) {
-						int dx = abs(trigs[j].position.x - cursPosition.x);
-						int dy = abs(trigs[j].position.y - cursPosition.y);
+						int dx = std::abs(trigs[j].position.x - cursPosition.x);
+						int dy = std::abs(trigs[j].position.y - cursPosition.y);
 						if (dx < 4 && dy < 4) {
 							InfoString = _("Up to town");
 							cursPosition = trigs[j].position;

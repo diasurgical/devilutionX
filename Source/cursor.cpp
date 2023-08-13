@@ -5,6 +5,7 @@
  */
 #include "cursor.h"
 
+#include <cmath>
 #include <cstdint>
 
 #include <fmt/format.h>
@@ -134,7 +135,7 @@ bool TrySelectMonster(bool flipflag, Point tile, tl::function_ref<bool(const Mon
 		Point posToCheck = tile + displacement;
 		if (!InDungeonBounds(posToCheck) || dMonster[posToCheck.x][posToCheck.y] == 0)
 			return;
-		const uint16_t monsterId = abs(dMonster[posToCheck.x][posToCheck.y]) - 1;
+		const uint16_t monsterId = std::abs(dMonster[posToCheck.x][posToCheck.y]) - 1;
 		const Monster &monster = Monsters[monsterId];
 		if (IsTileLit(posToCheck) && (monster.data().selectionType & selectionType) != 0 && isValidMonster(monster)) {
 			cursPosition = posToCheck;
@@ -162,7 +163,7 @@ bool TrySelectTowner(bool flipflag, Point tile)
 		Point posToCheck = tile + displacement;
 		if (!InDungeonBounds(posToCheck) || dMonster[posToCheck.x][posToCheck.y] == 0)
 			return;
-		const uint16_t monsterId = abs(dMonster[posToCheck.x][posToCheck.y]) - 1;
+		const uint16_t monsterId = std::abs(dMonster[posToCheck.x][posToCheck.y]) - 1;
 		cursPosition = posToCheck;
 		pcursmonst = monsterId;
 	};
@@ -178,7 +179,7 @@ bool TrySelectTowner(bool flipflag, Point tile)
 bool TrySelectPlayer(bool flipflag, int mx, int my)
 {
 	if (!flipflag && mx + 1 < MAXDUNX && dPlayer[mx + 1][my] != 0) {
-		const uint8_t playerId = abs(dPlayer[mx + 1][my]) - 1;
+		const uint8_t playerId = std::abs(dPlayer[mx + 1][my]) - 1;
 		Player &player = Players[playerId];
 		if (&player != MyPlayer && player._pHitPoints != 0) {
 			cursPosition = Point { mx, my } + Displacement { 1, 0 };
@@ -186,7 +187,7 @@ bool TrySelectPlayer(bool flipflag, int mx, int my)
 		}
 	}
 	if (flipflag && my + 1 < MAXDUNY && dPlayer[mx][my + 1] != 0) {
-		const uint8_t playerId = abs(dPlayer[mx][my + 1]) - 1;
+		const uint8_t playerId = std::abs(dPlayer[mx][my + 1]) - 1;
 		Player &player = Players[playerId];
 		if (&player != MyPlayer && player._pHitPoints != 0) {
 			cursPosition = Point { mx, my } + Displacement { 0, 1 };
@@ -194,7 +195,7 @@ bool TrySelectPlayer(bool flipflag, int mx, int my)
 		}
 	}
 	if (dPlayer[mx][my] != 0) {
-		const uint8_t playerId = abs(dPlayer[mx][my]) - 1;
+		const uint8_t playerId = std::abs(dPlayer[mx][my]) - 1;
 		if (playerId != MyPlayerId) {
 			cursPosition = { mx, my };
 			pcursplr = static_cast<int8_t>(playerId);
@@ -223,7 +224,7 @@ bool TrySelectPlayer(bool flipflag, int mx, int my)
 		}
 	}
 	if (mx + 1 < MAXDUNX && my + 1 < MAXDUNY && dPlayer[mx + 1][my + 1] != 0) {
-		const uint8_t playerId = abs(dPlayer[mx + 1][my + 1]) - 1;
+		const uint8_t playerId = std::abs(dPlayer[mx + 1][my + 1]) - 1;
 		const Player &player = Players[playerId];
 		if (&player != MyPlayer && player._pHitPoints != 0) {
 			cursPosition = Point { mx, my } + Displacement { 1, 1 };
@@ -348,7 +349,7 @@ bool TrySelectPixelBased(Point tile)
 		int monsterId = dMonster[adjacentTile.x][adjacentTile.y];
 		// Never select a monster if a target-player-only spell is selected
 		if (monsterId != 0 && IsNoneOf(pcurs, CURSOR_HEALOTHER, CURSOR_RESURRECT)) {
-			monsterId = abs(monsterId) - 1;
+			monsterId = std::abs(monsterId) - 1;
 			if (leveltype == DTYPE_TOWN) {
 				const Towner &towner = Towners[monsterId];
 				const ClxSprite sprite = towner.currentSprite();
@@ -374,7 +375,7 @@ bool TrySelectPixelBased(Point tile)
 
 		int playerId = dPlayer[adjacentTile.x][adjacentTile.y];
 		if (playerId != 0) {
-			playerId = abs(playerId) - 1;
+			playerId = std::abs(playerId) - 1;
 			if (playerId != MyPlayerId) {
 				const Player &player = Players[playerId];
 				const ClxSprite sprite = player.currentSprite();

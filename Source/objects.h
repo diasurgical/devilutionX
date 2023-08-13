@@ -5,6 +5,7 @@
  */
 #pragma once
 
+#include <cmath>
 #include <cstdint>
 
 #include "engine/clx_sprite.hpp"
@@ -305,7 +306,7 @@ inline bool IsObjectAtPosition(Point position)
  */
 inline Object &ObjectAtPosition(Point position)
 {
-	return Objects[abs(dObject[position.x][position.y]) - 1];
+	return Objects[std::abs(dObject[position.x][position.y]) - 1];
 }
 
 /**

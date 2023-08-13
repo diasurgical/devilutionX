@@ -6,6 +6,7 @@
 #include "missiles.h"
 
 #include <climits>
+#include <cmath>
 #include <cstdint>
 
 #include "control.h"
@@ -412,8 +413,8 @@ void CheckMissileCol(Missile &missile, DamageType damageType, int minDamage, int
 
 	bool isMonsterHit = false;
 	int mid = dMonster[mx][my];
-	if (mid > 0 || (mid != 0 && Monsters[abs(mid) - 1].mode == MonsterMode::Petrified)) {
-		mid = abs(mid) - 1;
+	if (mid > 0 || (mid != 0 && Monsters[std::abs(mid) - 1].mode == MonsterMode::Petrified)) {
+		mid = std::abs(mid) - 1;
 		if (missile.IsTrap()
 		    || (missile._micaster == TARGET_PLAYERS && (                                           // or was fired by a monster and
 		            Monsters[mid].isPlayerMinion() != Monsters[missile._misource].isPlayerMinion() //  the monsters are on opposing factions
@@ -526,7 +527,7 @@ bool MoveMissile(Missile &missile, tl::function_ref<bool(Point)> checkTile, bool
 			// skip collision logic if the missile is on a corner between tiles
 			if (pixelsTraveled.deltaY % 16 == 0
 			    && pixelsTraveled.deltaX % 32 == 0
-			    && abs(pixelsTraveled.deltaY / 16) % 2 != abs(pixelsTraveled.deltaX / 32) % 2) {
+			    && std::abs(pixelsTraveled.deltaY / 16) % 2 != std::abs(pixelsTraveled.deltaX / 32) % 2) {
 				continue;
 			}
 
@@ -1229,7 +1230,7 @@ void AddBerserk(Missile &missile, AddMissileParameter &parameter)
 			    return false;
 		    }
 
-		    int monsterId = abs(dMonster[target.x][target.y]) - 1;
+		    int monsterId = std::abs(dMonster[target.x][target.y]) - 1;
 		    if (monsterId < 0)
 			    return false;
 
@@ -1252,7 +1253,7 @@ void AddBerserk(Missile &missile, AddMissileParameter &parameter)
 	    parameter.dst, 0, 5);
 
 	if (targetMonsterPosition) {
-		auto &monster = Monsters[abs(dMonster[targetMonsterPosition->x][targetMonsterPosition->y]) - 1];
+		auto &monster = Monsters[std::abs(dMonster[targetMonsterPosition->x][targetMonsterPosition->y]) - 1];
 		Player &player = *missile.sourcePlayer();
 		const int slvl = player.GetSpellLevel(SpellID::Berserk);
 		monster.flags |= MFLAG_BERSERK | MFLAG_GOLEM;
@@ -1321,7 +1322,7 @@ void AddStealPotions(Missile &missile, AddMissileParameter & /*parameter*/)
 		int8_t pnum = dPlayer[target.x][target.y];
 		if (pnum == 0)
 			return false;
-		Player &player = Players[abs(pnum) - 1];
+		Player &player = Players[std::abs(pnum) - 1];
 
 		bool hasPlayedSFX = false;
 		for (int si = 0; si < MaxBeltItems; si++) {
@@ -1388,7 +1389,7 @@ void AddStealMana(Missile &missile, AddMissileParameter & /*parameter*/)
 	    missile.position.start, 0, 2);
 
 	if (trappedPlayerPosition) {
-		Player &player = Players[abs(dPlayer[trappedPlayerPosition->x][trappedPlayerPosition->y]) - 1];
+		Player &player = Players[std::abs(dPlayer[trappedPlayerPosition->x][trappedPlayerPosition->y]) - 1];
 
 		player._pMana = 0;
 		player._pManaBase = player._pMana + player._pMaxManaBase - player._pMaxMana;
@@ -2288,7 +2289,7 @@ void AddStoneCurse(Missile &missile, AddMissileParameter &parameter)
 			    return false;
 		    }
 
-		    int monsterId = abs(dMonster[target.x][target.y]) - 1;
+		    int monsterId = std::abs(dMonster[target.x][target.y]) - 1;
 		    if (monsterId < 0) {
 			    return false;
 		    }
@@ -2313,7 +2314,7 @@ void AddStoneCurse(Missile &missile, AddMissileParameter &parameter)
 	}
 
 	// Petrify the targeted monster
-	int monsterId = abs(dMonster[targetMonsterPosition->x][targetMonsterPosition->y]) - 1;
+	int monsterId = std::abs(dMonster[targetMonsterPosition->x][targetMonsterPosition->y]) - 1;
 	auto &monster = Monsters[monsterId];
 
 	if (monster.mode == MonsterMode::Petrified) {
@@ -3105,7 +3106,7 @@ void ProcessRune(Missile &missile)
 	int mid = dMonster[position.x][position.y];
 	int pid = dPlayer[position.x][position.y];
 	if (mid != 0 || pid != 0) {
-		Point targetPosition = mid != 0 ? Monsters[abs(mid) - 1].position.tile : Players[abs(pid) - 1].position.tile;
+		Point targetPosition = mid != 0 ? Monsters[std::abs(mid) - 1].position.tile : Players[std::abs(pid) - 1].position.tile;
 		Direction dir = GetDirection(position, targetPosition);
 
 		missile._miDelFlag = true;

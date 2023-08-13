@@ -5,6 +5,7 @@
  */
 #include "levels/drlg_l2.h"
 
+#include <cmath>
 #include <cstdint>
 #include <list>
 
@@ -1908,8 +1909,8 @@ void ConnectHall(const HallNode &node)
 			if (predungeon[beginning.x][beginning.y] != ',')
 				fInroom = true;
 		}
-		int nDx = abs(end.x - beginning.x);
-		int nDy = abs(end.y - beginning.y);
+		int nDx = std::abs(end.x - beginning.x);
+		int nDy = std::abs(end.y - beginning.y);
 		if (nDx > nDy) {
 			int nRp = std::min(2 * nDx, 30);
 			if (GenerateRnd(100) < nRp) {

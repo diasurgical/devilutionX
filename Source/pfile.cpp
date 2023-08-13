@@ -26,7 +26,6 @@
 #include "utils/language.h"
 #include "utils/parse_int.hpp"
 #include "utils/paths.h"
-#include "utils/stdcompat/abs.hpp"
 #include "utils/stdcompat/string_view.hpp"
 #include "utils/str_cat.hpp"
 #include "utils/str_split.hpp"
