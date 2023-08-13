@@ -1,6 +1,7 @@
 #include "selstart.h"
 
 #include <cstdint>
+#include <optional>
 
 #include <function_ref.hpp>
 
@@ -14,7 +15,6 @@
 #include "hwcursor.hpp"
 #include "options.h"
 #include "utils/language.h"
-#include "utils/stdcompat/optional.hpp"
 #include "utils/utf8.hpp"
 
 namespace devilution {

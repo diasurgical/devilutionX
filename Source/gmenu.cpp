@@ -6,6 +6,7 @@
 #include "gmenu.h"
 
 #include <cstdint>
+#include <optional>
 
 #include "DiabloUI/ui_flags.hpp"
 #include "control.h"
@@ -20,7 +21,6 @@
 #include "stores.h"
 #include "utils/language.h"
 #include "utils/stdcompat/algorithm.hpp"
-#include "utils/stdcompat/optional.hpp"
 #include "utils/ui_fwd.h"
 
 namespace devilution {

@@ -1,6 +1,7 @@
 #include "panels/mainpanel.hpp"
 
 #include <cstdint>
+#include <optional>
 
 #include "control.h"
 #include "engine/clx_sprite.hpp"
@@ -11,7 +12,6 @@
 #include "utils/language.h"
 #include "utils/sdl_compat.h"
 #include "utils/sdl_geometry.h"
-#include "utils/stdcompat/optional.hpp"
 #include "utils/surface_to_clx.hpp"
 
 namespace devilution {

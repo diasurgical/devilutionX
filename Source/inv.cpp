@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <cmath>
 #include <cstdint>
+#include <optional>
 #include <utility>
 
 #include <fmt/format.h>
@@ -32,7 +33,6 @@
 #include "utils/format_int.hpp"
 #include "utils/language.h"
 #include "utils/sdl_geometry.h"
-#include "utils/stdcompat/optional.hpp"
 #include "utils/str_cat.hpp"
 #include "utils/utf8.hpp"
 

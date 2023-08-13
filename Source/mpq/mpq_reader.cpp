@@ -1,10 +1,9 @@
 #include "mpq/mpq_reader.hpp"
 
 #include <cstdint>
+#include <optional>
 
 #include <libmpq/mpq.h>
-
-#include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
 

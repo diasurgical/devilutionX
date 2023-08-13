@@ -6,13 +6,13 @@
 #pragma once
 
 #include <cstdint>
+#include <optional>
 
 #include "DiabloUI/ui_flags.hpp"
 #include "control.h"
 #include "engine.h"
 #include "engine/clx_sprite.hpp"
 #include "utils/attributes.h"
-#include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
 

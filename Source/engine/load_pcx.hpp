@@ -1,11 +1,11 @@
 #pragma once
 
 #include <cstdint>
+#include <optional>
 
 #include <SDL.h>
 
 #include "engine/clx_sprite.hpp"
-#include "utils/stdcompat/optional.hpp"
 
 #ifdef UNPACKED_MPQS
 #define DEVILUTIONX_PCX_EXT ".clx"

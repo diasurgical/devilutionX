@@ -9,6 +9,7 @@
 #include <array>
 #include <cstddef>
 #include <cstdint>
+#include <optional>
 #include <string>
 
 #include <fmt/format.h>
@@ -50,7 +51,6 @@
 #include "utils/log.hpp"
 #include "utils/parse_int.hpp"
 #include "utils/sdl_geometry.h"
-#include "utils/stdcompat/optional.hpp"
 #include "utils/str_case.hpp"
 #include "utils/str_cat.hpp"
 #include "utils/string_or_view.hpp"

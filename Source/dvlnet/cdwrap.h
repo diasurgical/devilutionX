@@ -4,12 +4,12 @@
 #include <exception>
 #include <map>
 #include <memory>
+#include <optional>
 #include <string>
 #include <vector>
 
 #include "dvlnet/abstract_net.h"
 #include "storm/storm_net.hpp"
-#include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
 namespace net {

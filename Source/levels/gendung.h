@@ -7,6 +7,7 @@
 
 #include <cstdint>
 #include <memory>
+#include <optional>
 
 #include "engine.h"
 #include "engine/clx_sprite.hpp"
@@ -17,7 +18,6 @@
 #include "utils/attributes.h"
 #include "utils/bitset2d.hpp"
 #include "utils/enum_traits.h"
-#include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
 

@@ -9,6 +9,7 @@
 #include <list>
 #include <memory>
 #include <mutex>
+#include <optional>
 
 #include <SDL.h>
 
@@ -19,7 +20,6 @@
 #include "utils/math.h"
 #include "utils/sdl_mutex.h"
 #include "utils/stdcompat/algorithm.hpp"
-#include "utils/stdcompat/optional.hpp"
 #include "utils/stdcompat/shared_ptr_array.hpp"
 #include "utils/str_cat.hpp"
 #include "utils/stubs.h"

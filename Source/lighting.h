@@ -7,6 +7,7 @@
 
 #include <array>
 #include <cstdint>
+#include <optional>
 #include <vector>
 
 #include <function_ref.hpp>
@@ -16,7 +17,6 @@
 #include "engine/point.hpp"
 #include "utils/attributes.h"
 #include "utils/stdcompat/invoke_result_t.hpp"
-#include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
 

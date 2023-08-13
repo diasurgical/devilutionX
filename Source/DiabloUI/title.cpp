@@ -1,3 +1,5 @@
+#include <optional>
+
 #include "DiabloUI/diabloui.h"
 #include "control.h"
 #include "controls/input.h"
@@ -8,7 +10,6 @@
 #include "utils/algorithm/container.hpp"
 #include "utils/language.h"
 #include "utils/sdl_geometry.h"
-#include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
 namespace {

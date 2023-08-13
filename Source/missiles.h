@@ -7,6 +7,7 @@
 
 #include <cstdint>
 #include <list>
+#include <optional>
 
 #include "engine.h"
 #include "engine/point.hpp"
@@ -14,7 +15,6 @@
 #include "monster.h"
 #include "player.h"
 #include "spelldat.h"
-#include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
 

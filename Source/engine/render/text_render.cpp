@@ -8,6 +8,7 @@
 #include <array>
 #include <cstddef>
 #include <cstdint>
+#include <optional>
 #include <unordered_map>
 #include <utility>
 
@@ -27,7 +28,6 @@
 #include "utils/display.h"
 #include "utils/language.h"
 #include "utils/sdl_compat.h"
-#include "utils/stdcompat/optional.hpp"
 #include "utils/utf8.hpp"
 
 namespace devilution {
