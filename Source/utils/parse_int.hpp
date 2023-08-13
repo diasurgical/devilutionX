@@ -1,9 +1,7 @@
 #pragma once
 
-#if __cplusplus >= 201703L
 #include <charconv>
 #include <system_error>
-#endif
 
 #include "utils/stdcompat/string_view.hpp"
 
