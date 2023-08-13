@@ -341,7 +341,7 @@ constexpr DisplacementOf<DisplacementDeltaT> operator>>(DisplacementOf<Displacem
 template <typename DisplacementDeltaT>
 constexpr DisplacementOf<DisplacementDeltaT> abs(DisplacementOf<DisplacementDeltaT> a)
 {
-	return { std::abs(a.deltaX), std::abs(a.deltaY) };
+	return DisplacementOf<DisplacementDeltaT>(std::abs(a.deltaX), std::abs(a.deltaY));
 }
 
 template <typename DeltaT>

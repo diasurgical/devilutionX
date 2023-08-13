@@ -13,6 +13,7 @@
 #include "engine/backbuffer_state.hpp"
 #include "engine/point.hpp"
 #include "engine/random.hpp"
+#include "engine/world_tile.hpp"
 #include "gamemenu.h"
 #include "inv.h"
 #include "missiles.h"
@@ -208,7 +209,7 @@ SpellCheckResult CheckSpell(const Player &player, SpellID sn, SpellType st, bool
 	return SpellCheckResult::Success;
 }
 
-void CastSpell(int id, SpellID spl, int sx, int sy, int dx, int dy, int spllvl)
+void CastSpell(int id, SpellID spl, WorldTilePosition src, WorldTilePosition dst, int spllvl)
 {
 	Player &player = Players[id];
 	Direction dir = player._pdir;
@@ -219,12 +220,12 @@ void CastSpell(int id, SpellID spl, int sx, int sy, int dx, int dy, int spllvl)
 	bool fizzled = false;
 	const SpellData &spellData = GetSpellData(spl);
 	for (size_t i = 0; i < sizeof(spellData.sMissiles) / sizeof(spellData.sMissiles[0]) && spellData.sMissiles[i] != MissileID::Null; i++) {
-		Missile *missile = AddMissile({ sx, sy }, { dx, dy }, dir, spellData.sMissiles[i], TARGET_MONSTERS, id, 0, spllvl);
+		Missile *missile = AddMissile(src, dst, dir, spellData.sMissiles[i], TARGET_MONSTERS, id, 0, spllvl);
 		fizzled |= (missile == nullptr);
 	}
 	if (spl == SpellID::ChargedBolt) {
 		for (int i = (spllvl / 2) + 3; i > 0; i--) {
-			Missile *missile = AddMissile({ sx, sy }, { dx, dy }, dir, MissileID::ChargedBolt, TARGET_MONSTERS, id, 0, spllvl);
+			Missile *missile = AddMissile(src, dst, dir, MissileID::ChargedBolt, TARGET_MONSTERS, id, 0, spllvl);
 			fizzled |= (missile == nullptr);
 		}
 	}

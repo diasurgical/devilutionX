@@ -104,7 +104,7 @@ constexpr Direction16 Direction16Flip(Direction16 x, Direction16 pivot)
 	return static_cast<Direction16>(ret);
 }
 
-void UpdateMissileVelocity(Missile &missile, Point destination, int velocityInPixels)
+void UpdateMissileVelocity(Missile &missile, WorldTilePosition destination, int velocityInPixels)
 {
 	missile.position.velocity = { 0, 0 };
 
@@ -112,7 +112,7 @@ void UpdateMissileVelocity(Missile &missile, Point destination, int velocityInPi
 		return;
 
 	// Get the normalized vector in isometric projection
-	Displacement fixed16NormalVector = (missile.position.tile - destination).worldToNormalScreen();
+	Displacement fixed16NormalVector = (Point { missile.position.tile } - Point { destination }).worldToNormalScreen();
 
 	// Multiplying by the target velocity gives us a scaled velocity vector.
 	missile.position.velocity = fixed16NormalVector * velocityInPixels;
@@ -1153,8 +1153,8 @@ void InitMissiles()
 
 void AddOpenNest(Missile &missile, AddMissileParameter &parameter)
 {
-	for (int x : { 80, 81 }) {
-		for (int y : { 62, 63 }) {
+	for (WorldTileCoord x : { 80, 81 }) {
+		for (WorldTileCoord y : { 62, 63 }) {
 			AddMissile({ x, y }, { 80, 62 }, parameter.midir, MissileID::BigExplosion, missile._micaster, missile._misource, missile._midam, 0);
 		}
 	}
@@ -1534,7 +1534,7 @@ void AddBigExplosion(Missile &missile, AddMissileParameter & /*parameter*/)
 
 void AddImmolation(Missile &missile, AddMissileParameter &parameter)
 {
-	Point dst = parameter.dst;
+	WorldTilePosition dst = parameter.dst;
 	if (missile.position.start == parameter.dst) {
 		dst += parameter.midir;
 	}
@@ -1550,7 +1550,7 @@ void AddImmolation(Missile &missile, AddMissileParameter &parameter)
 
 void AddLightningBow(Missile &missile, AddMissileParameter &parameter)
 {
-	Point dst = parameter.dst;
+	WorldTilePosition dst = parameter.dst;
 	if (missile.position.start == parameter.dst) {
 		dst += parameter.midir;
 	}
@@ -1634,7 +1634,7 @@ void AddSearch(Missile &missile, AddMissileParameter & /*parameter*/)
 
 void AddChargedBoltBow(Missile &missile, AddMissileParameter &parameter)
 {
-	Point dst = parameter.dst;
+	WorldTilePosition dst = parameter.dst;
 	missile._mirnd = GenerateRnd(15) + 1;
 	if (missile._micaster != TARGET_MONSTERS) {
 		missile._midam = 15;
@@ -1653,7 +1653,7 @@ void AddChargedBoltBow(Missile &missile, AddMissileParameter &parameter)
 
 void AddElementalArrow(Missile &missile, AddMissileParameter &parameter)
 {
-	Point dst = parameter.dst;
+	WorldTilePosition dst = parameter.dst;
 	if (missile.position.start == dst) {
 		dst += parameter.midir;
 	}
@@ -1690,7 +1690,7 @@ void AddElementalArrow(Missile &missile, AddMissileParameter &parameter)
 
 void AddArrow(Missile &missile, AddMissileParameter &parameter)
 {
-	Point dst = parameter.dst;
+	WorldTilePosition dst = parameter.dst;
 	if (missile.position.start == dst) {
 		dst += parameter.midir;
 	}
@@ -1730,7 +1730,7 @@ void UpdateVileMissPos(Missile &missile, Point dst)
 			for (int i = -k; i <= k; i++) {
 				int xx = i + dst.x;
 				if (PosOkPlayer(*MyPlayer, { xx, yy })) {
-					missile.position.tile = { xx, yy };
+					missile.position.tile = WorldTilePosition(xx, yy);
 					return;
 				}
 			}
@@ -1778,7 +1778,7 @@ void AddPhasing(Missile &missile, AddMissileParameter &parameter)
 
 void AddFirebolt(Missile &missile, AddMissileParameter &parameter)
 {
-	Point dst = parameter.dst;
+	WorldTilePosition dst = parameter.dst;
 	if (missile.position.start == dst) {
 		dst += parameter.midir;
 	}
@@ -1865,7 +1865,7 @@ void AddNovaBall(Missile &missile, AddMissileParameter &parameter)
 	UpdateMissileVelocity(missile, parameter.dst, 16);
 	missile._miAnimFrame = GenerateRnd(8) + 1;
 	missile._mirange = 255;
-	const Point position { missile._misource < 0 ? missile.position.start : Point(Players[missile._misource].position.tile) };
+	const WorldTilePosition position = missile._misource < 0 ? missile.position.start : Players[missile._misource].position.tile;
 	missile.var1 = position.x;
 	missile.var2 = position.y;
 }
@@ -1888,7 +1888,7 @@ void AddFireWall(Missile &missile, AddMissileParameter &parameter)
 
 void AddFireball(Missile &missile, AddMissileParameter &parameter)
 {
-	Point dst = parameter.dst;
+	WorldTilePosition dst = parameter.dst;
 	if (missile.position.start == dst) {
 		dst += parameter.midir;
 	}
@@ -2194,7 +2194,7 @@ void AddRhino(Missile &missile, AddMissileParameter &parameter)
 
 void AddGenericMagicMissile(Missile &missile, AddMissileParameter &parameter)
 {
-	Point dst = parameter.dst;
+	WorldTilePosition dst = parameter.dst;
 	if (missile.position.start == dst) {
 		dst += parameter.midir;
 	}
@@ -2394,7 +2394,7 @@ void AddHealOther(Missile &missile, AddMissileParameter & /*parameter*/)
 
 void AddElemental(Missile &missile, AddMissileParameter &parameter)
 {
-	Point dst = parameter.dst;
+	WorldTilePosition dst = parameter.dst;
 	if (missile.position.start == dst) {
 		dst += parameter.midir;
 	}
@@ -2592,7 +2592,7 @@ void AddInferno(Missile &missile, AddMissileParameter &parameter)
 
 void AddInfernoControl(Missile &missile, AddMissileParameter &parameter)
 {
-	Point dst = parameter.dst;
+	WorldTilePosition dst = parameter.dst;
 	if (missile.position.start == parameter.dst) {
 		dst += parameter.midir;
 	}
@@ -2604,7 +2604,7 @@ void AddInfernoControl(Missile &missile, AddMissileParameter &parameter)
 
 void AddChargedBolt(Missile &missile, AddMissileParameter &parameter)
 {
-	Point dst = parameter.dst;
+	WorldTilePosition dst = parameter.dst;
 	missile._mirnd = GenerateRnd(15) + 1;
 	missile._midam = (missile._micaster == TARGET_MONSTERS) ? (GenerateRnd(Players[missile._misource]._pMagic / 4) + 1) : 15;
 
@@ -2622,7 +2622,7 @@ void AddChargedBolt(Missile &missile, AddMissileParameter &parameter)
 
 void AddHolyBolt(Missile &missile, AddMissileParameter &parameter)
 {
-	Point dst = parameter.dst;
+	WorldTilePosition dst = parameter.dst;
 	if (missile.position.start == dst) {
 		dst += parameter.midir;
 	}
@@ -2672,7 +2672,7 @@ void AddTelekinesis(Missile &missile, AddMissileParameter & /*parameter*/)
 
 void AddBoneSpirit(Missile &missile, AddMissileParameter &parameter)
 {
-	Point dst = parameter.dst;
+	WorldTilePosition dst = parameter.dst;
 	if (missile.position.start == dst) {
 		dst += parameter.midir;
 	}
@@ -2706,7 +2706,7 @@ void AddDiabloApocalypse(Missile &missile, AddMissileParameter & /*parameter*/)
 	missile._miDelFlag = true;
 }
 
-Missile *AddMissile(Point src, Point dst, Direction midir, MissileID mitype,
+Missile *AddMissile(WorldTilePosition src, WorldTilePosition dst, Direction midir, MissileID mitype,
     mienemy_type micaster, int id, int midam, int spllvl,
     Missile *parent, std::optional<_sfx_id> lSFX)
 {
@@ -3789,7 +3789,7 @@ void ProcessApocalypse(Missile &missile)
 				continue;
 
 			int id = missile._misource;
-			AddMissile({ k, j }, { k, j }, Players[id]._pdir, MissileID::ApocalypseBoom, TARGET_MONSTERS, id, missile._midam, 0);
+			AddMissile(WorldTilePosition(k, j), WorldTilePosition(k, j), Players[id]._pdir, MissileID::ApocalypseBoom, TARGET_MONSTERS, id, missile._midam, 0);
 			missile.var2 = j;
 			missile.var4 = k + 1;
 			return;
