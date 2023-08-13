@@ -5,6 +5,7 @@
  */
 #include "engine/render/scrollrt.h"
 
+#include <cmath>
 #include <cstdint>
 
 #include "DiabloUI/ui_flags.hpp"
@@ -677,7 +678,7 @@ void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBuffe
 {
 	int mi = dMonster[tilePosition.x][tilePosition.y];
 	bool isNegativeMonster = mi < 0;
-	mi = abs(mi) - 1;
+	mi = std::abs(mi) - 1;
 
 	if (leveltype == DTYPE_TOWN) {
 		if (isNegativeMonster)
@@ -1152,7 +1153,7 @@ void DrawView(const Surface &out, Point startPosition)
 					auto DrawLine = [&out](Point from, Point to, uint8_t col) {
 						int dx = to.x - from.x;
 						int dy = to.y - from.y;
-						int steps = abs(dx) > abs(dy) ? abs(dx) : abs(dy);
+						int steps = std::abs(dx) > std::abs(dy) ? std::abs(dx) : std::abs(dy);
 						float ix = dx / (float)steps;
 						float iy = dy / (float)steps;
 						float sx = from.x;

@@ -6,6 +6,7 @@
 #include "monster.h"
 
 #include <climits>
+#include <cmath>
 #include <cstdint>
 
 #include <algorithm>
@@ -266,7 +267,7 @@ void PlaceGroup(size_t typeIndex, unsigned num, Monster *leader = nullptr, bool 
 		for (unsigned try2 = 0; j < num && try2 < 100; xp += Displacement(static_cast<Direction>(GenerateRnd(8))).deltaX, yp += Displacement(static_cast<Direction>(GenerateRnd(8))).deltaX) { /// BUGFIX: `yp += Point.y`
 			if (!CanPlaceMonster({ xp, yp })
 			    || (dTransVal[xp][yp] != dTransVal[x1][y1])
-			    || (leashed && (abs(xp - x1) >= 4 || abs(yp - y1) >= 4))) {
+			    || (leashed && (std::abs(xp - x1) >= 4 || std::abs(yp - y1) >= 4))) {
 				try2++;
 				continue;
 			}
@@ -3894,7 +3895,7 @@ void GolumAi(Monster &golem)
 		int mex = golem.position.tile.x - enemy.position.future.x;
 		int mey = golem.position.tile.y - enemy.position.future.y;
 		golem.direction = GetDirection(golem.position.tile, enemy.position.tile);
-		if (abs(mex) < 2 && abs(mey) < 2) {
+		if (std::abs(mex) < 2 && std::abs(mey) < 2) {
 			golem.enemyPosition = enemy.position.tile;
 			if (enemy.activeForTicks == 0) {
 				enemy.activeForTicks = UINT8_MAX;
@@ -4092,7 +4093,7 @@ bool LineClear(tl::function_ref<bool(Point)> clear, Point startPoint, Point endP
 
 	int dx = endPoint.x - position.x;
 	int dy = endPoint.y - position.y;
-	if (abs(dx) > abs(dy)) {
+	if (std::abs(dx) > std::abs(dy)) {
 		if (dx < 0) {
 			std::swap(position, endPoint);
 			dx = -dx;
@@ -4224,7 +4225,7 @@ void M_FallenFear(Point position)
 		int m = dMonster[tile.x][tile.y];
 		if (m == 0)
 			continue;
-		Monster &monster = Monsters[abs(m) - 1];
+		Monster &monster = Monsters[std::abs(m) - 1];
 		if (monster.ai != MonsterAIID::Fallen || monster.hitPoints >> 6 <= 0)
 			continue;
 
@@ -4426,7 +4427,7 @@ Monster *FindMonsterAtPosition(Point position, bool ignoreMovingMonsters)
 		return nullptr;
 	}
 
-	return &Monsters[abs(monsterId) - 1];
+	return &Monsters[std::abs(monsterId) - 1];
 }
 
 Monster *FindUniqueMonster(UniqueMonsterType monsterType)

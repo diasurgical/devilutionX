@@ -4,6 +4,7 @@
  * Implementation of player inventory.
  */
 #include <algorithm>
+#include <cmath>
 #include <cstdint>
 #include <utility>
 
@@ -367,7 +368,7 @@ void CheckInvPaste(Player &player, Point cursorPosition)
 					if (xx >= INV_ROW_SLOT_SIZE)
 						return;
 					if (player.InvGrid[xx + yy] != 0) {
-						int8_t iv = abs(player.InvGrid[xx + yy]);
+						int8_t iv = std::abs(player.InvGrid[xx + yy]);
 						if (it != 0) {
 							if (it != iv)
 								return;
@@ -1137,7 +1138,7 @@ void DrawInv(const Surface &out)
 			    out,
 			    GetPanelPosition(UiPanels::Inventory, InvRect[i + SLOTXY_INV_FIRST].position) + Displacement { 0, InventorySlotSizeInPixels.height },
 			    InventorySlotSizeInPixels,
-			    myPlayer.InvList[abs(myPlayer.InvGrid[i]) - 1]._iMagical);
+			    myPlayer.InvList[std::abs(myPlayer.InvGrid[i]) - 1]._iMagical);
 		}
 	}
 
@@ -1461,7 +1462,7 @@ void CheckInvSwap(Player &player, const Item &item, int invGridIndex)
 			for (int x = 0; x < itemSize.width; x++) {
 				int gridIndex = rowGridIndex + x;
 				if (player.InvGrid[gridIndex] != 0)
-					return abs(player.InvGrid[gridIndex]);
+					return std::abs(player.InvGrid[gridIndex]);
 			}
 		}
 		player._pNumInv++;
@@ -1494,7 +1495,7 @@ void CheckInvSwap(Player &player, const Item &item, int invGridIndex)
 
 void CheckInvRemove(Player &player, int invGridIndex)
 {
-	int invListIndex = abs(player.InvGrid[invGridIndex]) - 1;
+	int invListIndex = std::abs(player.InvGrid[invGridIndex]) - 1;
 
 	if (invListIndex >= 0) {
 		player.RemoveInvItem(invListIndex);
@@ -1855,7 +1856,7 @@ int8_t CheckInvHLight()
 		rv = INVLOC_CHEST;
 		pi = &myPlayer.InvBody[rv];
 	} else if (r >= SLOTXY_INV_FIRST && r <= SLOTXY_INV_LAST) {
-		int8_t itemId = abs(myPlayer.InvGrid[r - SLOTXY_INV_FIRST]);
+		int8_t itemId = std::abs(myPlayer.InvGrid[r - SLOTXY_INV_FIRST]);
 		if (itemId == 0)
 			return -1;
 		int ii = itemId - 1;

@@ -6,6 +6,7 @@
 
 #ifdef _DEBUG
 
+#include <cmath>
 #include <cstdint>
 #include <cstdio>
 
@@ -314,7 +315,7 @@ std::string ExportDun(const string_view parameter)
 			uint16_t monsterId = 0;
 			if (dMonster[x][y] > 0) {
 				for (int i = 0; i < 157; i++) {
-					if (MonstConvTbl[i] == Monsters[abs(dMonster[x][y]) - 1].type().type) {
+					if (MonstConvTbl[i] == Monsters[std::abs(dMonster[x][y]) - 1].type().type) {
 						monsterId = i + 1;
 						break;
 					}
@@ -1150,7 +1151,7 @@ void GetDebugMonster()
 {
 	int monsterIndex = pcursmonst;
 	if (monsterIndex == -1)
-		monsterIndex = abs(dMonster[cursPosition.x][cursPosition.y]) - 1;
+		monsterIndex = std::abs(dMonster[cursPosition.x][cursPosition.y]) - 1;
 
 	if (monsterIndex == -1)
 		monsterIndex = DebugMonsterId;
@@ -1315,14 +1316,14 @@ bool ShouldHighlightDebugAutomapTile(Point position)
 	};
 
 	if (SearchMonsters.size() > 0 && dMonster[position.x][position.y] != 0) {
-		const int mi = abs(dMonster[position.x][position.y]) - 1;
+		const int mi = std::abs(dMonster[position.x][position.y]) - 1;
 		const Monster &monster = Monsters[mi];
 		if (matchesSearched(monster.name(), SearchMonsters))
 			return true;
 	}
 
 	if (SearchItems.size() > 0 && dItem[position.x][position.y] != 0) {
-		const int itemId = abs(dItem[position.x][position.y]) - 1;
+		const int itemId = std::abs(dItem[position.x][position.y]) - 1;
 		const Item &item = Items[itemId];
 		if (matchesSearched(item.getName(), SearchItems))
 			return true;

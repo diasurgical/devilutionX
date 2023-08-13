@@ -4,6 +4,7 @@
  * Implementation of player functionality, leveling, actions, creation, loading, etc.
  */
 #include <algorithm>
+#include <cmath>
 #include <cstdint>
 
 #include <fmt/core.h>
@@ -1111,11 +1112,11 @@ bool DoDeath(Player &player)
 
 bool IsPlayerAdjacentToObject(Player &player, Object &object)
 {
-	int x = abs(player.position.tile.x - object.position.x);
-	int y = abs(player.position.tile.y - object.position.y);
+	int x = std::abs(player.position.tile.x - object.position.x);
+	int y = std::abs(player.position.tile.y - object.position.y);
 	if (y > 1 && object.position.y >= 1 && FindObjectAtPosition(object.position + Direction::NorthEast) == &object) {
 		// special case for activating a large object from the north-east side
-		y = abs(player.position.tile.y - object.position.y + 1);
+		y = std::abs(player.position.tile.y - object.position.y + 1);
 	}
 	return x <= 1 && y <= 1;
 }
@@ -1197,12 +1198,12 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 			if (&player == MyPlayer) {
 				if (player.destAction == ACTION_ATTACKMON || player.destAction == ACTION_ATTACKPLR) {
 					if (player.destAction == ACTION_ATTACKMON) {
-						x = abs(player.position.future.x - monster->position.future.x);
-						y = abs(player.position.future.y - monster->position.future.y);
+						x = std::abs(player.position.future.x - monster->position.future.x);
+						y = std::abs(player.position.future.y - monster->position.future.y);
 						d = GetDirection(player.position.future, monster->position.future);
 					} else {
-						x = abs(player.position.future.x - target->position.future.x);
-						y = abs(player.position.future.y - target->position.future.y);
+						x = std::abs(player.position.future.x - target->position.future.x);
+						y = std::abs(player.position.future.y - target->position.future.y);
 						d = GetDirection(player.position.future, target->position.future);
 					}
 
@@ -1270,8 +1271,8 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 			StartAttack(player, d, pmWillBeCalled);
 			break;
 		case ACTION_ATTACKMON:
-			x = abs(player.position.tile.x - monster->position.future.x);
-			y = abs(player.position.tile.y - monster->position.future.y);
+			x = std::abs(player.position.tile.x - monster->position.future.x);
+			y = std::abs(player.position.tile.y - monster->position.future.y);
 			if (x <= 1 && y <= 1) {
 				d = GetDirection(player.position.future, monster->position.future);
 				if (monster->talkMsg != TEXT_NONE && monster->talkMsg != TEXT_VILE14) {
@@ -1282,8 +1283,8 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 			}
 			break;
 		case ACTION_ATTACKPLR:
-			x = abs(player.position.tile.x - target->position.future.x);
-			y = abs(player.position.tile.y - target->position.future.y);
+			x = std::abs(player.position.tile.x - target->position.future.x);
+			y = std::abs(player.position.tile.y - target->position.future.y);
 			if (x <= 1 && y <= 1) {
 				d = GetDirection(player.position.future, target->position.future);
 				StartAttack(player, d, pmWillBeCalled);
@@ -1353,8 +1354,8 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 			break;
 		case ACTION_PICKUPITEM:
 			if (&player == MyPlayer) {
-				x = abs(player.position.tile.x - item->position.x);
-				y = abs(player.position.tile.y - item->position.y);
+				x = std::abs(player.position.tile.x - item->position.x);
+				y = std::abs(player.position.tile.y - item->position.y);
 				if (x <= 1 && y <= 1 && pcurs == CURSOR_HAND && !item->_iRequest) {
 					NetSendCmdGItem(true, CMD_REQUESTGITEM, player.getId(), targetId);
 					item->_iRequest = true;
@@ -1363,8 +1364,8 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 			break;
 		case ACTION_PICKUPAITEM:
 			if (&player == MyPlayer) {
-				x = abs(player.position.tile.x - item->position.x);
-				y = abs(player.position.tile.y - item->position.y);
+				x = std::abs(player.position.tile.x - item->position.x);
+				y = std::abs(player.position.tile.y - item->position.y);
 				if (x <= 1 && y <= 1 && pcurs == CURSOR_HAND) {
 					NetSendCmdGItem(true, CMD_REQUESTAGITEM, player.getId(), targetId);
 				}
@@ -1392,16 +1393,16 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 			StartAttack(player, d, pmWillBeCalled);
 			player.destAction = ACTION_NONE;
 		} else if (player.destAction == ACTION_ATTACKMON) {
-			x = abs(player.position.tile.x - monster->position.future.x);
-			y = abs(player.position.tile.y - monster->position.future.y);
+			x = std::abs(player.position.tile.x - monster->position.future.x);
+			y = std::abs(player.position.tile.y - monster->position.future.y);
 			if (x <= 1 && y <= 1) {
 				d = GetDirection(player.position.future, monster->position.future);
 				StartAttack(player, d, pmWillBeCalled);
 			}
 			player.destAction = ACTION_NONE;
 		} else if (player.destAction == ACTION_ATTACKPLR) {
-			x = abs(player.position.tile.x - target->position.future.x);
-			y = abs(player.position.tile.y - target->position.future.y);
+			x = std::abs(player.position.tile.x - target->position.future.x);
+			y = std::abs(player.position.tile.y - target->position.future.y);
 			if (x <= 1 && y <= 1) {
 				d = GetDirection(player.position.future, target->position.future);
 				StartAttack(player, d, pmWillBeCalled);
@@ -1625,7 +1626,7 @@ void Player::RemoveInvItem(int iv, bool calcScrolls)
 		// Locate the first grid index containing this item and notify remote clients
 		for (size_t i = 0; i < InventoryGridCells; i++) {
 			int8_t itemIndex = InvGrid[i];
-			if (abs(itemIndex) - 1 == iv) {
+			if (std::abs(itemIndex) - 1 == iv) {
 				NetSendCmdParam1(false, CMD_DELINVITEMS, i);
 				break;
 			}
@@ -1634,7 +1635,7 @@ void Player::RemoveInvItem(int iv, bool calcScrolls)
 
 	// Iterate through invGrid and remove every reference to item
 	for (int8_t &itemIndex : InvGrid) {
-		if (abs(itemIndex) - 1 == iv) {
+		if (std::abs(itemIndex) - 1 == iv) {
 			itemIndex = 0;
 		}
 	}
@@ -2076,7 +2077,7 @@ Player *PlayerAtPosition(Point position)
 	if (playerIndex == 0)
 		return nullptr;
 
-	return &Players[abs(playerIndex) - 1];
+	return &Players[std::abs(playerIndex) - 1];
 }
 
 void LoadPlrGFX(Player &player, player_graphic graphic)
@@ -3104,7 +3105,7 @@ bool PosOkPlayer(const Player &player, Point position)
 	if (!IsTileWalkable(position))
 		return false;
 	if (dPlayer[position.x][position.y] != 0) {
-		auto &otherPlayer = Players[abs(dPlayer[position.x][position.y]) - 1];
+		auto &otherPlayer = Players[std::abs(dPlayer[position.x][position.y]) - 1];
 		if (&otherPlayer != &player && otherPlayer._pHitPoints != 0) {
 			return false;
 		}
