@@ -5,9 +5,10 @@
  */
 #pragma once
 
-#include "SDL.h"
 #include <cstdint>
 #include <string>
+
+#include <SDL.h>
 
 #include "DiabloUI/ui_flags.hpp"
 #include "engine.h"
