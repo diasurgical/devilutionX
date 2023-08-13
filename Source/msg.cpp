@@ -150,7 +150,7 @@ string_view CmdIdString(_cmd_id cmd)
 
 struct TMegaPkt {
 	uint32_t spaceLeft;
-	byte data[32000];
+	std::byte data[32000];
 
 	TMegaPkt()
 	    : spaceLeft(sizeof(data))
@@ -220,7 +220,7 @@ uint8_t sbLastCmd;
 /**
  * @brief buffer used to receive level deltas, size is the worst expected case assuming every object on a level was touched
  */
-byte sgRecvBuf[1U + sizeof(DLevel::item) + sizeof(uint8_t) + (sizeof(WorldTilePosition) + sizeof(_cmd_id)) * MAXOBJECTS + sizeof(DLevel::monster)];
+std::byte sgRecvBuf[1U + sizeof(DLevel::item) + sizeof(uint8_t) + (sizeof(WorldTilePosition) + sizeof(_cmd_id)) * MAXOBJECTS + sizeof(DLevel::monster)];
 _cmd_id sgbRecvCmd;
 std::unordered_map<uint8_t, LocalLevel> LocalLevels;
 DJunk sgJunk;
@@ -338,7 +338,7 @@ void PrePacket()
 {
 	uint8_t playerId = std::numeric_limits<uint8_t>::max();
 	for (TMegaPkt &pkt : MegaPktList) {
-		byte *data = pkt.data;
+		std::byte *data = pkt.data;
 		size_t spaceLeft = sizeof(pkt.data);
 		while (spaceLeft != pkt.spaceLeft) {
 			auto cmdId = static_cast<_cmd_id>(*data);
@@ -426,11 +426,11 @@ int WaitForTurns()
 	return 100 * sgbDeltaChunks / MAX_CHUNKS;
 }
 
-byte *DeltaExportItem(byte *dst, const TCmdPItem *src)
+std::byte *DeltaExportItem(std::byte *dst, const TCmdPItem *src)
 {
 	for (int i = 0; i < MAXITEMS; i++, src++) {
 		if (src->bCmd == CMD_INVALID) {
-			*dst++ = byte { 0xFF };
+			*dst++ = std::byte { 0xFF };
 		} else {
 			memcpy(dst, src, sizeof(TCmdPItem));
 			dst += sizeof(TCmdPItem);
@@ -440,11 +440,11 @@ byte *DeltaExportItem(byte *dst, const TCmdPItem *src)
 	return dst;
 }
 
-size_t DeltaImportItem(const byte *src, TCmdPItem *dst)
+size_t DeltaImportItem(const std::byte *src, TCmdPItem *dst)
 {
 	size_t size = 0;
 	for (int i = 0; i < MAXITEMS; i++, dst++) {
-		if (src[size] == byte { 0xFF }) {
+		if (src[size] == std::byte { 0xFF }) {
 			memset(dst, 0xFF, sizeof(TCmdPItem));
 			size++;
 		} else {
@@ -456,19 +456,19 @@ size_t DeltaImportItem(const byte *src, TCmdPItem *dst)
 	return size;
 }
 
-byte *DeltaExportObject(byte *dst, const std::unordered_map<WorldTilePosition, DObjectStr> &src)
+std::byte *DeltaExportObject(std::byte *dst, const std::unordered_map<WorldTilePosition, DObjectStr> &src)
 {
-	*dst++ = static_cast<byte>(src.size());
+	*dst++ = static_cast<std::byte>(src.size());
 	for (auto &pair : src) {
-		*dst++ = static_cast<byte>(pair.first.x);
-		*dst++ = static_cast<byte>(pair.first.y);
-		*dst++ = static_cast<byte>(pair.second.bCmd);
+		*dst++ = static_cast<std::byte>(pair.first.x);
+		*dst++ = static_cast<std::byte>(pair.first.y);
+		*dst++ = static_cast<std::byte>(pair.second.bCmd);
 	}
 
 	return dst;
 }
 
-const byte *DeltaImportObjects(const byte *src, std::unordered_map<WorldTilePosition, DObjectStr> &dst)
+const std::byte *DeltaImportObjects(const std::byte *src, std::unordered_map<WorldTilePosition, DObjectStr> &dst)
 {
 	dst.clear();
 
@@ -484,11 +484,11 @@ const byte *DeltaImportObjects(const byte *src, std::unordered_map<WorldTilePosi
 	return src;
 }
 
-byte *DeltaExportMonster(byte *dst, const DMonsterStr *src)
+std::byte *DeltaExportMonster(std::byte *dst, const DMonsterStr *src)
 {
 	for (size_t i = 0; i < MaxMonsters; i++, src++) {
 		if (src->position.x == 0xFF) {
-			*dst++ = byte { 0xFF };
+			*dst++ = std::byte { 0xFF };
 		} else {
 			memcpy(dst, src, sizeof(DMonsterStr));
 			dst += sizeof(DMonsterStr);
@@ -498,11 +498,11 @@ byte *DeltaExportMonster(byte *dst, const DMonsterStr *src)
 	return dst;
 }
 
-void DeltaImportMonster(const byte *src, DMonsterStr *dst)
+void DeltaImportMonster(const std::byte *src, DMonsterStr *dst)
 {
 	size_t size = 0;
 	for (size_t i = 0; i < MaxMonsters; i++, dst++) {
-		if (src[size] == byte { 0xFF }) {
+		if (src[size] == std::byte { 0xFF }) {
 			memset(dst, 0xFF, sizeof(DMonsterStr));
 			size++;
 		} else {
@@ -512,11 +512,11 @@ void DeltaImportMonster(const byte *src, DMonsterStr *dst)
 	}
 }
 
-byte *DeltaExportJunk(byte *dst)
+std::byte *DeltaExportJunk(std::byte *dst)
 {
 	for (auto &portal : sgJunk.portal) {
 		if (portal.x == 0xFF) {
-			*dst++ = byte { 0xFF };
+			*dst++ = std::byte { 0xFF };
 		} else {
 			memcpy(dst, &portal, sizeof(DPortal));
 			dst += sizeof(DPortal);
@@ -541,10 +541,10 @@ byte *DeltaExportJunk(byte *dst)
 	return dst;
 }
 
-void DeltaImportJunk(const byte *src)
+void DeltaImportJunk(const std::byte *src)
 {
 	for (int i = 0; i < MAXPORTAL; i++) {
-		if (*src == byte { 0xFF }) {
+		if (*src == std::byte { 0xFF }) {
 			memset(&sgJunk.portal[i], 0xFF, sizeof(DPortal));
 			src++;
 		} else {
@@ -564,17 +564,17 @@ void DeltaImportJunk(const byte *src)
 	}
 }
 
-uint32_t CompressData(byte *buffer, byte *end)
+uint32_t CompressData(std::byte *buffer, std::byte *end)
 {
 #ifdef USE_PKWARE
 	const auto size = static_cast<uint32_t>(end - buffer - 1);
 	const uint32_t pkSize = PkwareCompress(buffer + 1, size);
 
-	*buffer = size != pkSize ? byte { 1 } : byte { 0 };
+	*buffer = size != pkSize ? std::byte { 1 } : std::byte { 0 };
 
 	return pkSize + 1;
 #else
-	*buffer = byte { 0 };
+	*buffer = std::byte { 0 };
 	return end - buffer;
 #endif
 }
@@ -582,11 +582,11 @@ uint32_t CompressData(byte *buffer, byte *end)
 void DeltaImportData(_cmd_id cmd, uint32_t recvOffset)
 {
 #ifdef USE_PKWARE
-	if (sgRecvBuf[0] != byte { 0 })
+	if (sgRecvBuf[0] != std::byte { 0 })
 		PkwareDecompress(&sgRecvBuf[1], recvOffset, sizeof(sgRecvBuf) - 1);
 #endif
 
-	const byte *src = &sgRecvBuf[1];
+	const std::byte *src = &sgRecvBuf[1];
 	if (cmd == CMD_DLEVEL_JUNK) {
 		DeltaImportJunk(src);
 	} else if (cmd == CMD_DLEVEL) {
@@ -823,7 +823,7 @@ void NetSendCmdGItem2(bool usonly, _cmd_id bCmd, uint8_t mast, uint8_t pnum, con
 
 	if (!usonly) {
 		cmd.dwTime = 0;
-		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+		NetSendHiPri(MyPlayerId, (std::byte *)&cmd, sizeof(cmd));
 		return;
 	}
 
@@ -834,7 +834,7 @@ void NetSendCmdGItem2(bool usonly, _cmd_id bCmd, uint8_t mast, uint8_t pnum, con
 		return;
 	}
 
-	tmsg_add((byte *)&cmd, sizeof(cmd));
+	tmsg_add((std::byte *)&cmd, sizeof(cmd));
 }
 
 bool NetSendCmdReq2(_cmd_id bCmd, uint8_t mast, uint8_t pnum, const TCmdGItem &item)
@@ -852,7 +852,7 @@ bool NetSendCmdReq2(_cmd_id bCmd, uint8_t mast, uint8_t pnum, const TCmdGItem &i
 	else if (ticks - SDL_SwapLE32(cmd.dwTime) > 5000)
 		return false;
 
-	tmsg_add((byte *)&cmd, sizeof(cmd));
+	tmsg_add((std::byte *)&cmd, sizeof(cmd));
 
 	return true;
 }
@@ -864,7 +864,7 @@ void NetSendCmdExtra(const TCmdGItem &item)
 	memcpy(&cmd, &item, sizeof(cmd));
 	cmd.dwTime = 0;
 	cmd.bCmd = CMD_ITEMEXTRA;
-	NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+	NetSendHiPri(MyPlayerId, (std::byte *)&cmd, sizeof(cmd));
 }
 
 size_t OnWalk(const TCmd *pCmd, Player &player)
@@ -2428,10 +2428,10 @@ void DeltaExportData(int pnum)
 		    + sizeof(uint8_t)                                                             /* count of object interactions which caused a state change since dungeon generation */
 		    + (sizeof(WorldTilePosition) + sizeof(DObjectStr)) * deltaLevel.object.size() /* location/action pairs for the object interactions */
 		    + sizeof(deltaLevel.monster);                                                 /* latest monster state */
-		std::unique_ptr<byte[]> dst { new byte[bufferSize] };
+		std::unique_ptr<std::byte[]> dst { new std::byte[bufferSize] };
 
-		byte *dstEnd = &dst.get()[1];
-		*dstEnd = static_cast<byte>(it.first);
+		std::byte *dstEnd = &dst.get()[1];
+		*dstEnd = static_cast<std::byte>(it.first);
 		dstEnd += sizeof(uint8_t);
 		dstEnd = DeltaExportItem(dstEnd, deltaLevel.item);
 		dstEnd = DeltaExportObject(dstEnd, deltaLevel.object);
@@ -2440,13 +2440,13 @@ void DeltaExportData(int pnum)
 		multi_send_zero_packet(pnum, CMD_DLEVEL, dst.get(), size);
 	}
 
-	byte dst[sizeof(DJunk) + 1];
-	byte *dstEnd = &dst[1];
+	std::byte dst[sizeof(DJunk) + 1];
+	std::byte *dstEnd = &dst[1];
 	dstEnd = DeltaExportJunk(dstEnd);
 	uint32_t size = CompressData(dst, dstEnd);
 	multi_send_zero_packet(pnum, CMD_DLEVEL_JUNK, dst, size);
 
-	byte src[1] = { static_cast<byte>(0) };
+	std::byte src[1] = { static_cast<std::byte>(0) };
 	multi_send_zero_packet(pnum, CMD_DLEVEL_END, src, 1);
 }
 
@@ -2730,9 +2730,9 @@ void NetSendCmd(bool bHiPri, _cmd_id bCmd)
 
 	cmd.bCmd = bCmd;
 	if (bHiPri)
-		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+		NetSendHiPri(MyPlayerId, (std::byte *)&cmd, sizeof(cmd));
 	else
-		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+		NetSendLoPri(MyPlayerId, (std::byte *)&cmd, sizeof(cmd));
 }
 
 void NetSendCmdGolem(uint8_t mx, uint8_t my, Direction dir, uint8_t menemy, int hp, uint8_t cl)
@@ -2746,7 +2746,7 @@ void NetSendCmdGolem(uint8_t mx, uint8_t my, Direction dir, uint8_t menemy, int 
 	cmd._menemy = menemy;
 	cmd._mhitpoints = hp;
 	cmd._currlevel = cl;
-	NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+	NetSendLoPri(MyPlayerId, (std::byte *)&cmd, sizeof(cmd));
 }
 
 void NetSendCmdLoc(size_t playerId, bool bHiPri, _cmd_id bCmd, Point position)
@@ -2760,9 +2760,9 @@ void NetSendCmdLoc(size_t playerId, bool bHiPri, _cmd_id bCmd, Point position)
 	cmd.x = position.x;
 	cmd.y = position.y;
 	if (bHiPri)
-		NetSendHiPri(playerId, (byte *)&cmd, sizeof(cmd));
+		NetSendHiPri(playerId, (std::byte *)&cmd, sizeof(cmd));
 	else
-		NetSendLoPri(playerId, (byte *)&cmd, sizeof(cmd));
+		NetSendLoPri(playerId, (std::byte *)&cmd, sizeof(cmd));
 
 	MyPlayer->UpdatePreviewCelSprite(bCmd, position, 0, 0);
 }
@@ -2779,9 +2779,9 @@ void NetSendCmdLocParam1(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wPa
 	cmd.y = position.y;
 	cmd.wParam1 = SDL_SwapLE16(wParam1);
 	if (bHiPri)
-		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+		NetSendHiPri(MyPlayerId, (std::byte *)&cmd, sizeof(cmd));
 	else
-		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+		NetSendLoPri(MyPlayerId, (std::byte *)&cmd, sizeof(cmd));
 
 	MyPlayer->UpdatePreviewCelSprite(bCmd, position, wParam1, 0);
 }
@@ -2799,9 +2799,9 @@ void NetSendCmdLocParam2(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wPa
 	cmd.wParam1 = SDL_SwapLE16(wParam1);
 	cmd.wParam2 = SDL_SwapLE16(wParam2);
 	if (bHiPri)
-		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+		NetSendHiPri(MyPlayerId, (std::byte *)&cmd, sizeof(cmd));
 	else
-		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+		NetSendLoPri(MyPlayerId, (std::byte *)&cmd, sizeof(cmd));
 
 	MyPlayer->UpdatePreviewCelSprite(bCmd, position, wParam1, wParam2);
 }
@@ -2820,9 +2820,9 @@ void NetSendCmdLocParam3(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wPa
 	cmd.wParam2 = SDL_SwapLE16(wParam2);
 	cmd.wParam3 = SDL_SwapLE16(wParam3);
 	if (bHiPri)
-		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+		NetSendHiPri(MyPlayerId, (std::byte *)&cmd, sizeof(cmd));
 	else
-		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+		NetSendLoPri(MyPlayerId, (std::byte *)&cmd, sizeof(cmd));
 
 	MyPlayer->UpdatePreviewCelSprite(bCmd, position, wParam1, wParam2);
 }
@@ -2842,9 +2842,9 @@ void NetSendCmdLocParam4(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wPa
 	cmd.wParam3 = SDL_SwapLE16(wParam3);
 	cmd.wParam4 = SDL_SwapLE16(wParam4);
 	if (bHiPri)
-		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+		NetSendHiPri(MyPlayerId, (std::byte *)&cmd, sizeof(cmd));
 	else
-		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+		NetSendLoPri(MyPlayerId, (std::byte *)&cmd, sizeof(cmd));
 
 	MyPlayer->UpdatePreviewCelSprite(bCmd, position, wParam1, wParam3);
 }
@@ -2865,9 +2865,9 @@ void NetSendCmdLocParam5(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wPa
 	cmd.wParam4 = SDL_SwapLE16(wParam4);
 	cmd.wParam5 = SDL_SwapLE16(wParam5);
 	if (bHiPri)
-		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+		NetSendHiPri(MyPlayerId, (std::byte *)&cmd, sizeof(cmd));
 	else
-		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+		NetSendLoPri(MyPlayerId, (std::byte *)&cmd, sizeof(cmd));
 
 	MyPlayer->UpdatePreviewCelSprite(bCmd, position, wParam1, wParam3);
 }
@@ -2882,9 +2882,9 @@ void NetSendCmdParam1(bool bHiPri, _cmd_id bCmd, uint16_t wParam1)
 	cmd.bCmd = bCmd;
 	cmd.wParam1 = SDL_SwapLE16(wParam1);
 	if (bHiPri)
-		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+		NetSendHiPri(MyPlayerId, (std::byte *)&cmd, sizeof(cmd));
 	else
-		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+		NetSendLoPri(MyPlayerId, (std::byte *)&cmd, sizeof(cmd));
 
 	MyPlayer->UpdatePreviewCelSprite(bCmd, {}, wParam1, 0);
 }
@@ -2897,9 +2897,9 @@ void NetSendCmdParam2(bool bHiPri, _cmd_id bCmd, uint16_t wParam1, uint16_t wPar
 	cmd.wParam1 = SDL_SwapLE16(wParam1);
 	cmd.wParam2 = SDL_SwapLE16(wParam2);
 	if (bHiPri)
-		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+		NetSendHiPri(MyPlayerId, (std::byte *)&cmd, sizeof(cmd));
 	else
-		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+		NetSendLoPri(MyPlayerId, (std::byte *)&cmd, sizeof(cmd));
 }
 
 void NetSendCmdParam5(bool bHiPri, _cmd_id bCmd, uint16_t wParam1, uint16_t wParam2, uint16_t wParam3, uint16_t wParam4, uint16_t wParam5)
@@ -2916,9 +2916,9 @@ void NetSendCmdParam5(bool bHiPri, _cmd_id bCmd, uint16_t wParam1, uint16_t wPar
 	cmd.wParam4 = SDL_SwapLE16(wParam4);
 	cmd.wParam5 = SDL_SwapLE16(wParam5);
 	if (bHiPri)
-		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+		NetSendHiPri(MyPlayerId, (std::byte *)&cmd, sizeof(cmd));
 	else
-		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+		NetSendLoPri(MyPlayerId, (std::byte *)&cmd, sizeof(cmd));
 
 	MyPlayer->UpdatePreviewCelSprite(bCmd, {}, wParam1, wParam2);
 }
@@ -2935,9 +2935,9 @@ void NetSendCmdQuest(bool bHiPri, const Quest &quest)
 	cmd.qmsg = quest._qmsg;
 
 	if (bHiPri)
-		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+		NetSendHiPri(MyPlayerId, (std::byte *)&cmd, sizeof(cmd));
 	else
-		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+		NetSendLoPri(MyPlayerId, (std::byte *)&cmd, sizeof(cmd));
 }
 
 void NetSendCmdGItem(bool bHiPri, _cmd_id bCmd, uint8_t pnum, uint8_t ii)
@@ -2955,9 +2955,9 @@ void NetSendCmdGItem(bool bHiPri, _cmd_id bCmd, uint8_t pnum, uint8_t ii)
 	PrepareItemForNetwork(Items[ii], cmd);
 
 	if (bHiPri)
-		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+		NetSendHiPri(MyPlayerId, (std::byte *)&cmd, sizeof(cmd));
 	else
-		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+		NetSendLoPri(MyPlayerId, (std::byte *)&cmd, sizeof(cmd));
 }
 
 void NetSendCmdPItem(bool bHiPri, _cmd_id bCmd, Point position, const Item &item)
@@ -2972,9 +2972,9 @@ void NetSendCmdPItem(bool bHiPri, _cmd_id bCmd, Point position, const Item &item
 	ItemLimbo = item;
 
 	if (bHiPri)
-		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+		NetSendHiPri(MyPlayerId, (std::byte *)&cmd, sizeof(cmd));
 	else
-		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+		NetSendLoPri(MyPlayerId, (std::byte *)&cmd, sizeof(cmd));
 }
 
 void NetSendCmdChItem(bool bHiPri, uint8_t bLoc, bool forceSpellChange)
@@ -2989,9 +2989,9 @@ void NetSendCmdChItem(bool bHiPri, uint8_t bLoc, bool forceSpellChange)
 	PrepareItemForNetwork(item, cmd);
 
 	if (bHiPri)
-		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+		NetSendHiPri(MyPlayerId, (std::byte *)&cmd, sizeof(cmd));
 	else
-		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+		NetSendLoPri(MyPlayerId, (std::byte *)&cmd, sizeof(cmd));
 }
 
 void NetSendCmdDelItem(bool bHiPri, uint8_t bLoc)
@@ -3001,9 +3001,9 @@ void NetSendCmdDelItem(bool bHiPri, uint8_t bLoc)
 	cmd.bLoc = bLoc;
 	cmd.bCmd = CMD_DELPLRITEMS;
 	if (bHiPri)
-		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+		NetSendHiPri(MyPlayerId, (std::byte *)&cmd, sizeof(cmd));
 	else
-		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+		NetSendLoPri(MyPlayerId, (std::byte *)&cmd, sizeof(cmd));
 }
 
 void NetSyncInvItem(const Player &player, int invListIndex)
@@ -3031,9 +3031,9 @@ void NetSendCmdChInvItem(bool bHiPri, int invGridIndex)
 	PrepareItemForNetwork(item, cmd);
 
 	if (bHiPri)
-		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+		NetSendHiPri(MyPlayerId, (std::byte *)&cmd, sizeof(cmd));
 	else
-		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+		NetSendLoPri(MyPlayerId, (std::byte *)&cmd, sizeof(cmd));
 }
 
 void NetSendCmdChBeltItem(bool bHiPri, int beltIndex)
@@ -3047,9 +3047,9 @@ void NetSendCmdChBeltItem(bool bHiPri, int beltIndex)
 	PrepareItemForNetwork(item, cmd);
 
 	if (bHiPri)
-		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+		NetSendHiPri(MyPlayerId, (std::byte *)&cmd, sizeof(cmd));
 	else
-		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+		NetSendLoPri(MyPlayerId, (std::byte *)&cmd, sizeof(cmd));
 }
 
 void NetSendCmdDamage(bool bHiPri, uint8_t bPlr, uint32_t dwDam, DamageType damageType)
@@ -3061,9 +3061,9 @@ void NetSendCmdDamage(bool bHiPri, uint8_t bPlr, uint32_t dwDam, DamageType dama
 	cmd.dwDam = dwDam;
 	cmd.damageType = damageType;
 	if (bHiPri)
-		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+		NetSendHiPri(MyPlayerId, (std::byte *)&cmd, sizeof(cmd));
 	else
-		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+		NetSendLoPri(MyPlayerId, (std::byte *)&cmd, sizeof(cmd));
 }
 
 void NetSendCmdMonDmg(bool bHiPri, uint16_t wMon, uint32_t dwDam)
@@ -3074,9 +3074,9 @@ void NetSendCmdMonDmg(bool bHiPri, uint16_t wMon, uint32_t dwDam)
 	cmd.wMon = wMon;
 	cmd.dwDam = dwDam;
 	if (bHiPri)
-		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+		NetSendHiPri(MyPlayerId, (std::byte *)&cmd, sizeof(cmd));
 	else
-		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+		NetSendLoPri(MyPlayerId, (std::byte *)&cmd, sizeof(cmd));
 }
 
 void NetSendCmdString(uint32_t pmask, const char *pszStr)
@@ -3085,7 +3085,7 @@ void NetSendCmdString(uint32_t pmask, const char *pszStr)
 
 	cmd.bCmd = CMD_STRING;
 	CopyUtf8(cmd.str, pszStr, sizeof(cmd.str));
-	multi_send_msg_packet(pmask, (byte *)&cmd, strlen(cmd.str) + 2);
+	multi_send_msg_packet(pmask, (std::byte *)&cmd, strlen(cmd.str) + 2);
 }
 
 void delta_close_portal(int pnum)

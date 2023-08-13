@@ -708,13 +708,13 @@ struct TPktHdr {
 
 struct TPkt {
 	TPktHdr hdr;
-	byte body[493];
+	std::byte body[493];
 };
 #pragma pack(pop)
 
 struct TBuffer {
 	uint32_t dwNextWriteOffset;
-	byte bData[4096];
+	std::byte bData[4096];
 };
 
 extern uint8_t gbBufferMsgs;

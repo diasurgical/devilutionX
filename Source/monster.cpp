@@ -3372,7 +3372,7 @@ void InitMonsterGFX(CMonster &monsterType)
 		}
 		animOffsets[clxData.size()] = accumulatedSize;
 		monsterType.animData = nullptr;
-		monsterType.animData = std::unique_ptr<byte[]>(new byte[accumulatedSize]);
+		monsterType.animData = std::unique_ptr<std::byte[]>(new std::byte[accumulatedSize]);
 		for (size_t i = 0; i < clxData.size(); ++i) {
 			memcpy(&monsterType.animData[animOffsets[i]], clxData[i].data(), clxData[i].size());
 		}

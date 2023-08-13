@@ -7,7 +7,6 @@
 #include <string>
 #include <vector>
 
-#include "utils/stdcompat/cstddef.hpp"
 #include "utils/stdcompat/optional.hpp"
 
 // Forward-declare so that we can avoid exposing libmpq.
@@ -43,7 +42,7 @@ public:
 	// Returns false if the file does not exit.
 	bool GetFileNumber(FileHash fileHash, uint32_t &fileNumber);
 
-	std::unique_ptr<byte[]> ReadFile(const char *filename, std::size_t &fileSize, int32_t &error);
+	std::unique_ptr<std::byte[]> ReadFile(const char *filename, std::size_t &fileSize, int32_t &error);
 
 	// Returns error code.
 	int32_t ReadBlock(uint32_t fileNumber, uint32_t blockNumber, uint8_t *out, uint32_t outSize);

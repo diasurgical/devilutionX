@@ -1,11 +1,11 @@
 #pragma once
 
+#include <cstddef>
 #include <initializer_list>
 #include <memory>
 #include <utility>
 
 #include "appfat.h"
-#include "utils/stdcompat/cstddef.hpp"
 
 namespace devilution {
 
@@ -79,7 +79,7 @@ public:
 
 private:
 	struct AlignedStorage {
-		alignas(alignof(T)) byte data[sizeof(T)];
+		alignas(alignof(T)) std::byte data[sizeof(T)];
 
 		const T *ptr() const
 		{

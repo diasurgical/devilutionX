@@ -5,14 +5,14 @@
  */
 #pragma once
 
-#include "utils/stdcompat/string_view.hpp"
+#include <cstddef>
 #include <cstdint>
 #include <memory>
 
 #include "items.h"
 #include "player.h"
 #include "quests.h"
-#include "utils/stdcompat/cstddef.hpp"
+#include "utils/stdcompat/string_view.hpp"
 
 namespace devilution {
 
