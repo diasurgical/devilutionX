@@ -39,6 +39,7 @@
 #include "stores.h"
 #include "towners.h"
 #include "track.h"
+#include "utils/algorithm/container.hpp"
 #include "utils/language.h"
 #include "utils/log.hpp"
 #include "utils/str_cat.hpp"
@@ -229,28 +230,24 @@ _speech_id StoryText[3][3] = {
 	{ TEXT_BOOK31, TEXT_BOOK32, TEXT_BOOK33 }
 };
 
-bool RndLocOk(int xp, int yp)
+bool RndLocOk(Point p)
 {
-	if (dMonster[xp][yp] != 0)
+	if (dMonster[p.x][p.y] != 0)
 		return false;
-	if (dPlayer[xp][yp] != 0)
+	if (dPlayer[p.x][p.y] != 0)
 		return false;
-	if (IsObjectAtPosition({ xp, yp }))
+	if (IsObjectAtPosition(p))
 		return false;
-	if (TileContainsSetPiece({ xp, yp }))
+	if (TileContainsSetPiece(p))
 		return false;
-	if (TileHasAny(dPiece[xp][yp], TileProperties::Solid))
+	if (TileHasAny(dPiece[p.x][p.y], TileProperties::Solid))
 		return false;
-	return IsNoneOf(leveltype, DTYPE_CATHEDRAL, DTYPE_CRYPT) || dPiece[xp][yp] <= 125 || dPiece[xp][yp] >= 143;
+	return IsNoneOf(leveltype, DTYPE_CATHEDRAL, DTYPE_CRYPT) || dPiece[p.x][p.y] <= 125 || dPiece[p.x][p.y] >= 143;
 }
 
 bool IsAreaOk(Rectangle rect)
 {
-	for (Point position : PointsInRectangle(rect)) {
-		if (!RndLocOk(position.x, position.y))
-			return false;
-	}
-	return true;
+	return c_all_of(PointsInRectangle(rect), &RndLocOk);
 }
 
 bool CanPlaceWallTrap(int xp, int yp)
@@ -296,14 +293,8 @@ void InitRndLocBigObj(int min, int max, _object_id objtype)
 
 bool CanPlaceRandomObject(Point position, Displacement standoff)
 {
-	for (int yy = -standoff.deltaY; yy <= standoff.deltaY; yy++) {
-		for (int xx = -standoff.deltaX; xx <= standoff.deltaX; xx++) {
-			Point tile = position + Displacement { xx, yy };
-			if (!RndLocOk(tile.x, tile.y))
-				return false;
-		}
-	}
-	return true;
+	return IsAreaOk(Rectangle { position - standoff,
+	    Size { standoff.deltaX * 2 + 1, standoff.deltaY * 2 + 1 } });
 }
 
 std::optional<Point> GetRandomObjectPosition(Displacement standoff)
@@ -419,7 +410,7 @@ void InitRndBarrels()
 		do {
 			xp = GenerateRnd(80) + 16;
 			yp = GenerateRnd(80) + 16;
-		} while (!RndLocOk(xp, yp));
+		} while (!RndLocOk({ xp, yp }));
 		_object_id o = FlipCoin(4) ? explosiveBarrelId : barrelId;
 		AddObject(o, { xp, yp });
 		bool found = true;
@@ -437,7 +428,7 @@ void InitRndBarrels()
 				int dir = GenerateRnd(8);
 				xp += bxadd[dir];
 				yp += byadd[dir];
-				found = RndLocOk(xp, yp);
+				found = RndLocOk({ xp, yp });
 				t++;
 				if (found)
 					break;
