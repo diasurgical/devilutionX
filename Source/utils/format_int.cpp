@@ -36,7 +36,7 @@ std::string FormatInteger(int n)
 	out.append(begin, mlen);
 	begin += mlen;
 	for (; begin != end; begin += GroupSize) {
-		AppendStrView(out, separator);
+		out.append(separator);
 		out.append(begin, GroupSize);
 	}
 

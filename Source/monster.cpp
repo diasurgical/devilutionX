@@ -4283,21 +4283,21 @@ void PrintMonstHistory(int mt)
 			if ((res & (RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING)) != 0) {
 				std::string resists = std::string(_("Resists:"));
 				if ((res & RESIST_MAGIC) != 0)
-					AppendStrView(resists, _(" Magic"));
+					resists.append(_(" Magic"));
 				if ((res & RESIST_FIRE) != 0)
-					AppendStrView(resists, _(" Fire"));
+					resists.append(_(" Fire"));
 				if ((res & RESIST_LIGHTNING) != 0)
-					AppendStrView(resists, _(" Lightning"));
+					resists.append(_(" Lightning"));
 				AddPanelString(resists);
 			}
 			if ((res & (IMMUNE_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING)) != 0) {
 				std::string immune = std::string(_("Immune:"));
 				if ((res & IMMUNE_MAGIC) != 0)
-					AppendStrView(immune, _(" Magic"));
+					immune.append(_(" Magic"));
 				if ((res & IMMUNE_FIRE) != 0)
-					AppendStrView(immune, _(" Fire"));
+					immune.append(_(" Fire"));
 				if ((res & IMMUNE_LIGHTNING) != 0)
-					AppendStrView(immune, _(" Lightning"));
+					immune.append(_(" Lightning"));
 				AddPanelString(immune);
 			}
 		}

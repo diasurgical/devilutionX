@@ -244,16 +244,16 @@ void selgame_GameSelection_Focus(int value)
 			infoString += '\n';
 			switch (gameInfo.gameData.nTickRate) {
 			case 20:
-				AppendStrView(infoString, _("Speed: Normal"));
+				infoString.append(_("Speed: Normal"));
 				break;
 			case 30:
-				AppendStrView(infoString, _("Speed: Fast"));
+				infoString.append(_("Speed: Fast"));
 				break;
 			case 40:
-				AppendStrView(infoString, _("Speed: Faster"));
+				infoString.append(_("Speed: Faster"));
 				break;
 			case 50:
-				AppendStrView(infoString, _("Speed: Fastest"));
+				infoString.append(_("Speed: Fastest"));
 				break;
 			default:
 				// This should not occure, so no translations is needed
@@ -261,7 +261,7 @@ void selgame_GameSelection_Focus(int value)
 				break;
 			}
 			infoString += '\n';
-			AppendStrView(infoString, _("Players: "));
+			infoString.append(_("Players: "));
 			for (auto &playerName : gameInfo.players) {
 				infoString.append(playerName);
 				infoString += ' ';
