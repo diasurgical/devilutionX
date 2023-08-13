@@ -33,7 +33,7 @@ inline char *BufCopy(char *out, string_view value)
  */
 inline void StrAppend(std::string &out, string_view value)
 {
-	AppendStrView(out, value);
+	out.append(value);
 }
 
 /**
@@ -51,7 +51,7 @@ inline char *BufCopy(char *out, const char *str)
  */
 inline void StrAppend(std::string &out, const char *str)
 {
-	AppendStrView(out, string_view(str != nullptr ? str : "(nullptr)"));
+	out.append(string_view(str != nullptr ? str : "(nullptr)"));
 }
 
 template <typename... Args>

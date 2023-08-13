@@ -297,7 +297,7 @@ string_view LanguageParticularTranslate(string_view context, string_view message
 	std::string key = std::string(context);
 	key.reserve(key.size() + 1 + message.size());
 	key += Glue;
-	AppendStrView(key, message);
+	key.append(message);
 
 	auto it = translation[0].find(key.c_str());
 	if (it == translation[0].end()) {
