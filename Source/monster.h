@@ -176,7 +176,7 @@ enum class MonsterSound : uint8_t {
 };
 
 struct CMonster {
-	std::unique_ptr<byte[]> animData;
+	std::unique_ptr<std::byte[]> animData;
 	AnimStruct anims[6];
 	std::unique_ptr<TSnd> sounds[4][2];
 	const MonsterData *data;

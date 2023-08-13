@@ -62,9 +62,9 @@ bool MpqArchive::GetFileNumber(MpqArchive::FileHash fileHash, uint32_t &fileNumb
 	return libmpq__file_number_from_hash(archive_, fileHash[0], fileHash[1], fileHash[2], &fileNumber) == 0;
 }
 
-std::unique_ptr<byte[]> MpqArchive::ReadFile(const char *filename, std::size_t &fileSize, int32_t &error)
+std::unique_ptr<std::byte[]> MpqArchive::ReadFile(const char *filename, std::size_t &fileSize, int32_t &error)
 {
-	std::unique_ptr<byte[]> result;
+	std::unique_ptr<std::byte[]> result;
 	std::uint32_t fileNumber;
 	error = libmpq__file_number(archive_, filename, &fileNumber);
 	if (error != 0)
@@ -79,7 +79,7 @@ std::unique_ptr<byte[]> MpqArchive::ReadFile(const char *filename, std::size_t &
 	if (error != 0)
 		return result;
 
-	result = std::make_unique<byte[]>(unpackedSize);
+	result = std::make_unique<std::byte[]>(unpackedSize);
 
 	const std::size_t blockSize = GetBlockSize(fileNumber, 0, error);
 	if (error != 0)

@@ -25,6 +25,7 @@
 // defines for `PRIuMAX` et al. SDL transitively includes `inttypes.h`.
 // See https://gcc.gnu.org/bugzilla/show_bug.cgi?id=97044
 #include <cinttypes>
+#include <cstddef>
 
 #include <SDL.h>
 
@@ -36,7 +37,6 @@
 #include "engine/point.hpp"
 #include "engine/size.hpp"
 #include "engine/surface.hpp"
-#include "utils/stdcompat/cstddef.hpp"
 
 #define TILE_WIDTH 64
 #define TILE_HEIGHT 32

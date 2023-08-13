@@ -144,7 +144,7 @@ bool ReadHero(SaveReader &archive, PlayerPack *pPack)
 void EncodeHero(SaveWriter &saveWriter, const PlayerPack *pack)
 {
 	size_t packedLen = codec_get_encoded_len(sizeof(*pack));
-	std::unique_ptr<byte[]> packed { new byte[packedLen] };
+	std::unique_ptr<std::byte[]> packed { new std::byte[packedLen] };
 
 	memcpy(packed.get(), pack, sizeof(*pack));
 	codec_encode(packed.get(), sizeof(*pack), packedLen, pfile_get_password());
@@ -233,7 +233,7 @@ std::optional<SaveReader> CreateSaveReader(std::string &&path)
 
 #ifndef DISABLE_DEMOMODE
 struct CompareInfo {
-	std::unique_ptr<byte[]> &data;
+	std::unique_ptr<std::byte[]> &data;
 	size_t currentPosition;
 	size_t size;
 	bool isTownLevel;
@@ -275,7 +275,7 @@ void CreateDetailDiffs(string_view prefix, string_view memoryMapFile, CompareInf
 	}
 
 	size_t readBytes = SDL_RWsize(handle);
-	std::unique_ptr<byte[]> memoryMapFileData { new byte[readBytes] };
+	std::unique_ptr<std::byte[]> memoryMapFileData { new std::byte[readBytes] };
 	SDL_RWread(handle, memoryMapFileData.get(), readBytes, 1);
 	const string_view buffer(reinterpret_cast<const char *>(memoryMapFileData.get()), readBytes);
 
@@ -502,9 +502,9 @@ void pfile_write_hero(SaveWriter &saveWriter, bool writeGameData)
 } // namespace
 
 #ifdef UNPACKED_SAVES
-std::unique_ptr<byte[]> SaveReader::ReadFile(const char *filename, std::size_t &fileSize, int32_t &error)
+std::unique_ptr<std::byte[]> SaveReader::ReadFile(const char *filename, std::size_t &fileSize, int32_t &error)
 {
-	std::unique_ptr<byte[]> result;
+	std::unique_ptr<std::byte[]> result;
 	error = 0;
 	const std::string path = dir_ + filename;
 	uintmax_t size;
@@ -518,7 +518,7 @@ std::unique_ptr<byte[]> SaveReader::ReadFile(const char *filename, std::size_t &
 		error = 1;
 		return nullptr;
 	}
-	result.reset(new byte[size]);
+	result.reset(new std::byte[size]);
 	if (std::fread(result.get(), size, 1, file) != 1) {
 		std::fclose(file);
 		error = 1;
@@ -528,7 +528,7 @@ std::unique_ptr<byte[]> SaveReader::ReadFile(const char *filename, std::size_t &
 	return result;
 }
 
-bool SaveWriter::WriteFile(const char *filename, const byte *data, size_t size)
+bool SaveWriter::WriteFile(const char *filename, const std::byte *data, size_t size)
 {
 	const std::string path = dir_ + filename;
 	FILE *file = OpenFile(path.c_str(), "wb");
@@ -563,12 +563,12 @@ std::optional<SaveReader> OpenStashArchive()
 	return CreateSaveReader(GetStashSavePath());
 }
 
-std::unique_ptr<byte[]> ReadArchive(SaveReader &archive, const char *pszName, size_t *pdwLen)
+std::unique_ptr<std::byte[]> ReadArchive(SaveReader &archive, const char *pszName, size_t *pdwLen)
 {
 	int32_t error;
 	std::size_t length;
 
-	std::unique_ptr<byte[]> result = archive.ReadFile(pszName, length, error);
+	std::unique_ptr<std::byte[]> result = archive.ReadFile(pszName, length, error);
 	if (error != 0)
 		return nullptr;
 

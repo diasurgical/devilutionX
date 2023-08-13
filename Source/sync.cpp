@@ -250,7 +250,7 @@ bool IsTSyncMonsterValidate(const TSyncMonster &monsterSync)
 
 } // namespace
 
-uint32_t sync_all_monsters(byte *pbBuf, uint32_t dwMaxLen)
+uint32_t sync_all_monsters(std::byte *pbBuf, uint32_t dwMaxLen)
 {
 	if (ActiveMonsterCount < 1) {
 		return dwMaxLen;

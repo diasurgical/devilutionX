@@ -35,7 +35,7 @@ struct SaveReader {
 		return dir_;
 	}
 
-	std::unique_ptr<byte[]> ReadFile(const char *filename, std::size_t &fileSize, int32_t &error);
+	std::unique_ptr<std::byte[]> ReadFile(const char *filename, std::size_t &fileSize, int32_t &error);
 
 	bool HasFile(const char *path)
 	{
@@ -52,7 +52,7 @@ struct SaveWriter {
 	{
 	}
 
-	bool WriteFile(const char *filename, const byte *data, size_t size);
+	bool WriteFile(const char *filename, const std::byte *data, size_t size);
 
 	bool HasFile(const char *path)
 	{
@@ -96,7 +96,7 @@ struct HeroCompareResult {
 std::optional<SaveReader> OpenSaveArchive(uint32_t saveNum);
 std::optional<SaveReader> OpenStashArchive();
 const char *pfile_get_password();
-std::unique_ptr<byte[]> ReadArchive(SaveReader &archive, const char *pszName, size_t *pdwLen = nullptr);
+std::unique_ptr<std::byte[]> ReadArchive(SaveReader &archive, const char *pszName, size_t *pdwLen = nullptr);
 void pfile_write_hero(bool writeGameData = false);
 
 #ifndef DISABLE_DEMOMODE
@@ -124,7 +124,7 @@ void pfile_read_player_from_save(uint32_t saveNum, Player &player);
 void pfile_save_level();
 void pfile_convert_levels();
 void pfile_remove_temp_files();
-std::unique_ptr<byte[]> pfile_read(const char *pszName, size_t *pdwLen);
+std::unique_ptr<std::byte[]> pfile_read(const char *pszName, size_t *pdwLen);
 void pfile_update(bool forceSave);
 
 } // namespace devilution

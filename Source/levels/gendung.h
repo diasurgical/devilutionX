@@ -163,7 +163,7 @@ extern std::unique_ptr<uint16_t[]> pSetPiece;
 extern OptionalOwnedClxSpriteList pSpecialCels;
 /** Specifies the tile definitions of the active dungeon type; (e.g. levels/l1data/l1.til). */
 extern DVL_API_FOR_TEST std::unique_ptr<MegaTile[]> pMegaTiles;
-extern std::unique_ptr<byte[]> pDungeonCels;
+extern std::unique_ptr<std::byte[]> pDungeonCels;
 /**
  * List tile properties
  */
