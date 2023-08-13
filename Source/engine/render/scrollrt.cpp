@@ -20,6 +20,7 @@
 #include "engine/render/dun_render.hpp"
 #include "engine/render/text_render.hpp"
 #include "engine/trn.hpp"
+#include "engine/world_tile.hpp"
 #include "error.h"
 #include "gmenu.h"
 #include "help.h"
@@ -76,19 +77,9 @@ bool frameflag;
 namespace {
 
 /**
- * @brief Hash algorithm for point
- */
-struct PointHash {
-	std::size_t operator()(Point const &s) const noexcept
-	{
-		return s.x ^ (s.y << 1);
-	}
-};
-
-/**
  * @brief Contains all Missile at rendering position
  */
-std::unordered_multimap<Point, Missile *, PointHash> MissilesAtRenderingTile;
+std::unordered_multimap<WorldTilePosition, Missile *> MissilesAtRenderingTile;
 
 /**
  * @brief Could the missile (at the next game tick) collide? This method is a simplified version of CheckMissileCol (for example without random).
@@ -295,7 +286,7 @@ void DrawMissilePrivate(const Surface &out, const Missile &missile, Point target
  * @param targetBufferPosition Output buffer coordinates
  * @param pre Is the sprite in the background
  */
-void DrawMissile(const Surface &out, Point tilePosition, Point targetBufferPosition, bool pre)
+void DrawMissile(const Surface &out, WorldTilePosition tilePosition, Point targetBufferPosition, bool pre)
 {
 	const auto range = MissilesAtRenderingTile.equal_range(tilePosition);
 	for (auto it = range.first; it != range.second; it++) {

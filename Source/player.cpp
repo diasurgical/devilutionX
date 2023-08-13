@@ -1058,10 +1058,8 @@ bool DoSpell(Player &player)
 		CastSpell(
 		    player.getId(),
 		    player.executedSpell.spellId,
-		    player.position.tile.x,
-		    player.position.tile.y,
-		    player.position.temp.x,
-		    player.position.temp.y,
+		    player.position.tile,
+		    player.position.temp,
 		    player.executedSpell.spellLevel);
 
 		if (IsAnyOf(player.executedSpell.spellType, SpellType::Scroll, SpellType::Charges)) {

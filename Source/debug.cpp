@@ -395,10 +395,8 @@ std::string DebugCmdVisitTowner(const std::string_view parameter)
 		CastSpell(
 		    MyPlayerId,
 		    SpellID::Teleport,
-		    myPlayer.position.tile.x,
-		    myPlayer.position.tile.y,
-		    towner.position.x,
-		    towner.position.y,
+		    myPlayer.position.tile,
+		    towner.position,
 		    1);
 
 		return StrCat("Say hello to ", parameter, " from me.");

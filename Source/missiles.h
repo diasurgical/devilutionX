@@ -11,6 +11,7 @@
 
 #include "engine.h"
 #include "engine/point.hpp"
+#include "engine/world_tile.hpp"
 #include "misdat.h"
 #include "monster.h"
 #include "player.h"
@@ -21,20 +22,21 @@ namespace devilution {
 constexpr WorldTilePosition GolemHoldingCell = Point { 1, 0 };
 
 struct MissilePosition {
-	Point tile;
 	/** Sprite's pixel offset from tile. */
 	Displacement offset;
 	/** Pixel velocity while moving */
 	Displacement velocity;
-	/** Start position */
-	Point start;
-	/** Start position */
+	/** Pixels traveled as a numerator of 65,536. */
 	Displacement traveled;
+
+	WorldTilePosition tile;
+	/** Start position */
+	WorldTilePosition start;
 
 	/**
 	 * @brief Specifies the location (tile) while rendering
 	 */
-	Point tileForRendering;
+	WorldTilePosition tileForRendering;
 	/**
 	 * @brief Specifies the location (offset) while rendering
 	 */
@@ -240,7 +242,7 @@ inline void SetMissDir(Missile &missile, Direction16 dir)
 void InitMissiles();
 
 struct AddMissileParameter {
-	Point dst;
+	WorldTilePosition dst;
 	Direction midir;
 	Missile *pParent;
 	bool spellFizzled;
@@ -390,7 +392,7 @@ void AddTelekinesis(Missile &missile, AddMissileParameter &parameter);
 void AddBoneSpirit(Missile &missile, AddMissileParameter &parameter);
 void AddRedPortal(Missile &missile, AddMissileParameter &parameter);
 void AddDiabloApocalypse(Missile &missile, AddMissileParameter &parameter);
-Missile *AddMissile(Point src, Point dst, Direction midir, MissileID mitype,
+Missile *AddMissile(WorldTilePosition src, WorldTilePosition dst, Direction midir, MissileID mitype,
     mienemy_type micaster, int id, int midam, int spllvl,
     Missile *parent = nullptr, std::optional<_sfx_id> lSFX = std::nullopt);
 void ProcessElementalArrow(Missile &missile);
