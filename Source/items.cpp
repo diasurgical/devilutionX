@@ -45,7 +45,6 @@
 #include "utils/language.h"
 #include "utils/log.hpp"
 #include "utils/math.h"
-#include "utils/stdcompat/algorithm.hpp"
 #include "utils/str_case.hpp"
 #include "utils/str_cat.hpp"
 #include "utils/utf8.hpp"
@@ -1992,7 +1991,7 @@ void SpawnOnePremium(Item &premiumItem, int plvl, const Player &player)
 	dexterity += dexterity / 5;
 	magic += magic / 5;
 
-	plvl = clamp(plvl, 1, 30);
+	plvl = std::clamp(plvl, 1, 30);
 
 	int maxCount = 150;
 	const bool unlimited = !gbIsHellfire; // TODO: This could lead to an infinite loop if a suitable item can never be generated
@@ -2664,7 +2663,7 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	player._pIBonusDamMod = dmod;
 	player._pIGetHit = ghit;
 
-	lrad = clamp(lrad, 2, 15);
+	lrad = std::clamp(lrad, 2, 15);
 
 	if (player._pLightRad != lrad) {
 		ChangeLightRadius(player.lightId, lrad);
@@ -2742,9 +2741,9 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 		lr = 0;
 	}
 
-	player._pMagResist = clamp(mr, 0, MaxResistance);
-	player._pFireResist = clamp(fr, 0, MaxResistance);
-	player._pLghtResist = clamp(lr, 0, MaxResistance);
+	player._pMagResist = std::clamp(mr, 0, MaxResistance);
+	player._pFireResist = std::clamp(fr, 0, MaxResistance);
+	player._pLghtResist = std::clamp(lr, 0, MaxResistance);
 
 	vadd = (vadd * PlayersData[static_cast<size_t>(player._pClass)].itmLife) >> 6;
 	ihp += (vadd << 6); // BUGFIX: blood boil can cause negative shifts here (see line 757)

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <cmath>
 #include <type_traits>
 #ifdef BUILD_TESTING
@@ -8,7 +9,6 @@
 
 #include "engine/direction.hpp"
 #include "engine/displacement.hpp"
-#include "utils/stdcompat/algorithm.hpp"
 
 namespace devilution {
 

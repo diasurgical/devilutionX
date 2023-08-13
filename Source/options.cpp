@@ -4,6 +4,7 @@
  * Load and save options from the diablo.ini file.
  */
 
+#include <algorithm>
 #include <cstdint>
 #include <cstdio>
 
@@ -30,7 +31,6 @@
 #include "utils/language.h"
 #include "utils/log.hpp"
 #include "utils/paths.h"
-#include "utils/stdcompat/algorithm.hpp"
 #include "utils/str_cat.hpp"
 #include "utils/str_split.hpp"
 #include "utils/utf8.hpp"

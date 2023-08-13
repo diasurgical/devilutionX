@@ -151,7 +151,7 @@ public:
 	{
 		static_assert(sizeof(TSource) > sizeof(TDesired), "Can only narrow to a smaller type");
 		TSource value = SwapLE(Next<TSource>()) + modifier;
-		return static_cast<TDesired>(clamp<TSource>(value, std::numeric_limits<TDesired>::min(), std::numeric_limits<TDesired>::max()));
+		return static_cast<TDesired>(std::clamp<TSource>(value, std::numeric_limits<TDesired>::min(), std::numeric_limits<TDesired>::max()));
 	}
 
 	bool NextBool8()

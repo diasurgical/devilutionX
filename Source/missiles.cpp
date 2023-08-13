@@ -221,7 +221,7 @@ bool MonsterMHit(int pnum, int monsterId, int mindam, int maxdam, int dist, Miss
 		hper = player.GetMagicToHit() - (monster.level(sgGameInitInfo.nDifficulty) * 2) - dist;
 	}
 
-	hper = clamp(hper, 5, 95);
+	hper = std::clamp(hper, 5, 95);
 
 	if (monster.mode == MonsterMode::Petrified)
 		hit = 0;
@@ -337,7 +337,7 @@ bool Plr2PlrMHit(const Player &player, int p, int mindam, int maxdam, int dist, 
 		    - dist;
 	}
 
-	hit = clamp(hit, 5, 95);
+	hit = std::clamp(hit, 5, 95);
 
 	if (hper >= hit) {
 		return false;
@@ -349,7 +349,7 @@ bool Plr2PlrMHit(const Player &player, int p, int mindam, int maxdam, int dist, 
 	}
 
 	int blk = target.GetBlockChance() - (player._pLevel * 2);
-	blk = clamp(blk, 0, 100);
+	blk = std::clamp(blk, 0, 100);
 
 	int dam;
 	if (mtype == MissileID::BoneSpirit) {
@@ -948,7 +948,7 @@ bool MonsterTrapHit(int monsterId, int mindam, int maxdam, int dist, MissileID t
 
 	int hit = GenerateRnd(100);
 	int hper = 90 - monster.armorClass - dist;
-	hper = clamp(hper, 5, 95);
+	hper = std::clamp(hper, 5, 95);
 	if (monster.tryLiftGargoyle())
 		return true;
 	if (hit >= hper && monster.mode != MonsterMode::Petrified) {
@@ -1041,7 +1041,7 @@ bool PlayerMHit(int pnum, Monster *monster, int dist, int mind, int maxd, Missil
 	int blkper = player.GetBlockChance(false);
 	if (monster != nullptr)
 		blkper -= (monster->level(sgGameInitInfo.nDifficulty) - player._pLevel) * 2;
-	blkper = clamp(blkper, 0, 100);
+	blkper = std::clamp(blkper, 0, 100);
 
 	int8_t resper;
 	switch (damageType) {

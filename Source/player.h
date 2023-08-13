@@ -25,7 +25,6 @@
 #include "spelldat.h"
 #include "utils/attributes.h"
 #include "utils/enum_traits.h"
-#include "utils/stdcompat/algorithm.hpp"
 
 namespace devilution {
 
@@ -638,7 +637,7 @@ struct Player {
 			// Maximum achievable HP is approximately 1200. Diablo uses fixed point integers where the last 6 bits are
 			// fractional values. This means that we will never overflow HP values normally by doing this multiplication
 			// as the max value is representable in 17 bits and the multiplication result will be at most 23 bits
-			_pHPPer = clamp(_pHitPoints * 80 / _pMaxHP, 0, 80); // hp should never be greater than maxHP but just in case
+			_pHPPer = std::clamp(_pHitPoints * 80 / _pMaxHP, 0, 80); // hp should never be greater than maxHP but just in case
 		}
 
 		return _pHPPer;
@@ -649,7 +648,7 @@ struct Player {
 		if (_pMaxMana <= 0) {
 			_pManaPer = 0;
 		} else {
-			_pManaPer = clamp(_pMana * 80 / _pMaxMana, 0, 80);
+			_pManaPer = std::clamp(_pMana * 80 / _pMaxMana, 0, 80);
 		}
 
 		return _pManaPer;

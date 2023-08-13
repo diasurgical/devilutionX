@@ -22,7 +22,6 @@
 #include "lighting.h"
 #include "options.h"
 #include "utils/attributes.h"
-#include "utils/stdcompat/algorithm.hpp"
 #ifdef DEBUG_STR
 #include "engine/render/text_render.hpp"
 #endif
@@ -139,7 +138,7 @@ DVL_ALWAYS_INLINE int8_t InitPrefix(int8_t y)
 template <bool OpaquePrefix, int8_t PrefixIncrement>
 std::string prefixDebugString(int8_t prefix) {
 	std::string out(32, OpaquePrefix ? '0' : '1');
-	const uint8_t clamped = clamp<int8_t>(prefix, 0, 32);
+	const uint8_t clamped = std::clamp<int8_t>(prefix, 0, 32);
 	out.replace(0, clamped, clamped, OpaquePrefix ? '1' : '0');
 	StrAppend(out, " prefix=", prefix, " OpaquePrefix=", OpaquePrefix, " PrefixIncrement=", PrefixIncrement);
 	return out;
@@ -242,7 +241,7 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLine(uint8_t *DVL_RESTRICT dst, c
 	if (PrefixIncrement == 0) {
 		RenderLineTransparentOrOpaque<Light, OpaquePrefix>(dst, src, n, tbl);
 	} else if (prefix >= static_cast<int8_t>(n)) {
-		// We clamp the prefix to (0, n] and avoid calling `RenderLineTransparent/Opaque` with width=0.
+		// We std::clamp the prefix to (0, n] and avoid calling `RenderLineTransparent/Opaque` with width=0.
 		if (OpaquePrefix) {
 			RenderLineOpaque<Light>(dst, src, n, tbl);
 		} else {

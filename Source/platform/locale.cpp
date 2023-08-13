@@ -1,5 +1,6 @@
 #include "locale.hpp"
 
+#include <algorithm>
 #include <cstdint>
 
 #ifdef __ANDROID__
@@ -26,7 +27,6 @@
 #include <clocale>
 #endif
 
-#include "utils/stdcompat/algorithm.hpp"
 #include "utils/stdcompat/string_view.hpp"
 
 namespace devilution {

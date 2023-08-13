@@ -6,12 +6,12 @@
 
 #include "animationinfo.h"
 
+#include <algorithm>
 #include <cstdint>
 
 #include "appfat.h"
 #include "nthread.h"
 #include "utils/log.hpp"
-#include "utils/stdcompat/algorithm.hpp"
 
 namespace devilution {
 
@@ -182,7 +182,7 @@ void AnimationInfo::changeAnimationData(OptionalClxSpriteList celSprite, int8_t 
 	if (numberOfFrames != this->numberOfFrames || ticksPerFrame != this->ticksPerFrame) {
 		// Ensure that the currentFrame is still valid and that we disable ADL cause the calculcated values (for example tickModifier_) could be wrong
 		if (numberOfFrames >= 1)
-			currentFrame = clamp<int8_t>(currentFrame, 0, numberOfFrames - 1);
+			currentFrame = std::clamp<int8_t>(currentFrame, 0, numberOfFrames - 1);
 		else
 			currentFrame = -1;
 

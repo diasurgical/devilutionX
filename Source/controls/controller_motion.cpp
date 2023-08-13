@@ -48,7 +48,7 @@ void ScaleJoystickAxes(float *x, float *y, float deadzone)
 		analogX = (analogX * scalingFactor);
 		analogY = (analogY * scalingFactor);
 
-		// clamp to ensure results will never exceed the max_axis value
+		// std::clamp to ensure results will never exceed the max_axis value
 		float clampingFactor = 1.F;
 		float absAnalogX = std::fabs(analogX);
 		float absAnalogY = std::fabs(analogY);

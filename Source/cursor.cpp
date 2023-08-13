@@ -753,8 +753,8 @@ void CheckCursMove()
 		mx++;
 	}
 
-	mx = clamp(mx, 0, MAXDUNX - 1);
-	my = clamp(my, 0, MAXDUNY - 1);
+	mx = std::clamp(mx, 0, MAXDUNX - 1);
+	my = std::clamp(my, 0, MAXDUNY - 1);
 
 	const Point currentTile { mx, my };
 
