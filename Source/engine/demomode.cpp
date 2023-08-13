@@ -560,7 +560,7 @@ bool GetRunGameLoop(bool &drawGame, bool &processInput)
 			}
 		} else {
 			int32_t fraction = ticksElapsed * AnimationInfo::baseValueFraction / gnTickDelay;
-			fraction = clamp<int32_t>(fraction, 0, AnimationInfo::baseValueFraction);
+			fraction = std::clamp<int32_t>(fraction, 0, AnimationInfo::baseValueFraction);
 			uint8_t progressToNextGameTick = static_cast<uint8_t>(fraction);
 			if (dmsg.type == DemoMsgType::GameTick || dmsg.progressToNextGameTick > progressToNextGameTick) {
 				// we are ahead of the replay => add a additional rendering for smoothness

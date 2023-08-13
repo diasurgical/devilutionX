@@ -5,6 +5,7 @@
  */
 #include "levels/drlg_l2.h"
 
+#include <algorithm>
 #include <cmath>
 #include <cstdint>
 #include <list>
@@ -18,7 +19,6 @@
 #include "levels/setmaps.h"
 #include "player.h"
 #include "quests.h"
-#include "utils/stdcompat/algorithm.hpp"
 
 namespace devilution {
 
@@ -1788,10 +1788,10 @@ void CreateRoom(WorldTilePosition topLeft, WorldTilePosition bottomRight, int nR
 		roomTopLeft.y = bottomRight.y - roomSize.height;
 	}
 
-	roomTopLeft.x = clamp<WorldTileCoord>(roomTopLeft.x, 1, 38);
-	roomTopLeft.y = clamp<WorldTileCoord>(roomTopLeft.y, 1, 38);
-	roomBottomRight.x = clamp<WorldTileCoord>(roomBottomRight.x, 1, 38);
-	roomBottomRight.y = clamp<WorldTileCoord>(roomBottomRight.y, 1, 38);
+	roomTopLeft.x = std::clamp<WorldTileCoord>(roomTopLeft.x, 1, 38);
+	roomTopLeft.y = std::clamp<WorldTileCoord>(roomTopLeft.y, 1, 38);
+	roomBottomRight.x = std::clamp<WorldTileCoord>(roomBottomRight.x, 1, 38);
+	roomBottomRight.y = std::clamp<WorldTileCoord>(roomBottomRight.y, 1, 38);
 
 	DefineRoom(roomTopLeft, roomBottomRight, static_cast<bool>(size));
 

@@ -5,6 +5,7 @@
  */
 #include "automap.h"
 
+#include <algorithm>
 #include <cstdint>
 
 #include <fmt/format.h>
@@ -17,7 +18,6 @@
 #include "levels/setmaps.h"
 #include "player.h"
 #include "utils/language.h"
-#include "utils/stdcompat/algorithm.hpp"
 #include "utils/ui_fwd.h"
 #include "utils/utf8.hpp"
 
@@ -480,7 +480,7 @@ void DrawAutomapTile(const Surface &out, Point center, Point map)
 	AutomapTile tile = GetAutomapTypeView(map);
 	uint8_t colorBright = MapColorsBright;
 	uint8_t colorDim = MapColorsDim;
-	MapExplorationType explorationType = static_cast<MapExplorationType>(AutomapView[clamp(map.x, 0, DMAXX - 1)][clamp(map.y, 0, DMAXY - 1)]);
+	MapExplorationType explorationType = static_cast<MapExplorationType>(AutomapView[std::clamp(map.x, 0, DMAXX - 1)][std::clamp(map.y, 0, DMAXY - 1)]);
 
 	switch (explorationType) {
 	case MAP_EXP_SHRINE:
@@ -593,11 +593,11 @@ void SearchAutomapItem(const Surface &out, const Displacement &myPlayerOffset, i
 			tile.y++;
 	}
 
-	const int startX = clamp(tile.x - searchRadius, 0, MAXDUNX);
-	const int startY = clamp(tile.y - searchRadius, 0, MAXDUNY);
+	const int startX = std::clamp(tile.x - searchRadius, 0, MAXDUNX);
+	const int startY = std::clamp(tile.y - searchRadius, 0, MAXDUNY);
 
-	const int endX = clamp(tile.x + searchRadius, 0, MAXDUNX);
-	const int endY = clamp(tile.y + searchRadius, 0, MAXDUNY);
+	const int endX = std::clamp(tile.x + searchRadius, 0, MAXDUNX);
+	const int endY = std::clamp(tile.y + searchRadius, 0, MAXDUNY);
 
 	for (int i = startX; i < endX; i++) {
 		for (int j = startY; j < endY; j++) {

@@ -5,6 +5,7 @@
  */
 #include "effects.h"
 
+#include <algorithm>
 #include <cstdint>
 
 #include "engine/random.hpp"
@@ -13,7 +14,6 @@
 #include "engine/sound_position.hpp"
 #include "init.h"
 #include "player.h"
-#include "utils/stdcompat/algorithm.hpp"
 #include "utils/str_cat.hpp"
 
 namespace devilution {

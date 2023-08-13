@@ -2135,7 +2135,7 @@ void SetupTownStores()
 		SetRndSeed(glSeedTbl[currlevel] * SDL_GetTicks());
 	}
 
-	l = clamp(l + 2, 6, 16);
+	l = std::clamp(l + 2, 6, 16);
 	SpawnSmith(l);
 	SpawnWitch(l);
 	SpawnHealer(l);
