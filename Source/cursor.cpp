@@ -373,9 +373,9 @@ bool TrySelectPixelBased(Point tile)
 			}
 		}
 
-		int playerId = dPlayer[adjacentTile.x][adjacentTile.y];
-		if (playerId != 0) {
-			playerId = std::abs(playerId) - 1;
+		const int8_t dPlayerValue = dPlayer[adjacentTile.x][adjacentTile.y];
+		if (dPlayerValue != 0) {
+			const uint8_t playerId = std::abs(dPlayerValue) - 1;
 			if (playerId != MyPlayerId) {
 				const Player &player = Players[playerId];
 				const ClxSprite sprite = player.currentSprite();
@@ -832,7 +832,7 @@ void CheckCursMove()
 			if (pcurstemp != -1 && TrySelectMonster(flipflag, currentTile, [](const Monster &monster) {
 				    if (!IsValidMonsterForSelection(monster))
 					    return false;
-				    if (monster.getId() != pcurstemp)
+				    if (monster.getId() != static_cast<unsigned>(pcurstemp))
 					    return false;
 				    return true;
 			    })) {
