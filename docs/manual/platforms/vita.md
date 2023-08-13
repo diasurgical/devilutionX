@@ -13,7 +13,7 @@ make
 ```
 
 # Multiplayer
- - Not supported yet
+ - Supported via direct TCP connecitons 
 
 # Controls
 
