@@ -6,6 +6,7 @@
 #include <cstdint>
 #include <optional>
 #include <string>
+#include <string_view>
 #include <vector>
 
 #include "DiabloUI/ui_flags.hpp"
@@ -19,7 +20,6 @@
 #include "playerdat.hpp"
 #include "textdat.h"
 #include "utils/language.h"
-#include "utils/stdcompat/string_view.hpp"
 
 namespace devilution {
 
@@ -39,7 +39,7 @@ const int LineHeight = 38;
 
 std::vector<std::string> TextLines;
 
-void LoadText(string_view text)
+void LoadText(std::string_view text)
 {
 	TextLines.clear();
 

@@ -896,7 +896,7 @@ void LoadPortal(LoadHelper *file, int i)
 		pPortal->ltype = GetLevelType(pPortal->level);
 }
 
-void GetLevelNames(string_view prefix, char *out)
+void GetLevelNames(std::string_view prefix, char *out)
 {
 	char suf;
 	uint8_t num;

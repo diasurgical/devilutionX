@@ -49,12 +49,12 @@ std::atomic_bool zt_joined(false);
 std::unordered_map<uint64_t, zts_event_t> ztPeerEvents;
 
 #ifdef DVL_ZT_SYMLINK
-bool HasMultiByteChars(string_view path)
+bool HasMultiByteChars(std::string_view path)
 {
 	return c_any_of(path, IsTrailUtf8CodeUnit);
 }
 
-std::string ComputeAlternateFolderName(string_view path)
+std::string ComputeAlternateFolderName(std::string_view path)
 {
 	const size_t hashSize = crypto_generichash_BYTES;
 	unsigned char hash[hashSize];
@@ -69,7 +69,7 @@ std::string ComputeAlternateFolderName(string_view path)
 	return fmt::format("{:02x}", fmt::join(hash, ""));
 }
 
-std::string ToZTCompliantPath(string_view configPath)
+std::string ToZTCompliantPath(std::string_view configPath)
 {
 	if (!HasMultiByteChars(configPath))
 		return std::string(configPath);

@@ -8,7 +8,7 @@
 
 #include "utils/utf8.hpp"
 
-static void switch_keyboard_get(devilution::string_view guide_text, devilution::string_view initial_text, char *buf, unsigned buf_len)
+static void switch_keyboard_get(std::string_view guide_text, std::string_view initial_text, char *buf, unsigned buf_len)
 {
 	Result rc = 0;
 
@@ -62,7 +62,7 @@ static void switch_create_and_push_sdlkey_event(uint32_t event_type, SDL_Scancod
 	SDL_PushEvent(&event);
 }
 
-void switch_start_text_input(devilution::string_view guide_text, devilution::string_view initial_text, unsigned max_length)
+void switch_start_text_input(std::string_view guide_text, std::string_view initial_text, unsigned max_length)
 {
 	char text[max_length] = { '\0' };
 	switch_keyboard_get(guide_text, initial_text, text, sizeof(text));

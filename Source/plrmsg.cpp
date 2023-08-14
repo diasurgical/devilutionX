@@ -31,14 +31,14 @@ struct PlayerMessage {
 	/** The text message to display on screen */
 	std::string text;
 	/** First portion of text that should be rendered in gold */
-	string_view from;
+	std::string_view from;
 	/** The line height of the text */
 	int lineHeight;
 };
 
 std::array<PlayerMessage, 8> Messages;
 
-int CountLinesOfText(string_view text)
+int CountLinesOfText(std::string_view text)
 {
 	return 1 + c_count(text, '\n');
 }
@@ -66,19 +66,19 @@ void plrmsg_delay(bool delay)
 		message.time += plrmsgTicks;
 }
 
-void EventPlrMsg(string_view text, UiFlags style)
+void EventPlrMsg(std::string_view text, UiFlags style)
 {
 	PlayerMessage &message = GetNextMessage();
 
 	message.style = style;
 	message.time = SDL_GetTicks();
 	message.text = std::string(text);
-	message.from = string_view(message.text.data(), 0);
+	message.from = std::string_view(message.text.data(), 0);
 	message.lineHeight = GetLineHeight(message.text, GameFont12) + 3;
 	AddMessageToChatLog(text);
 }
 
-void SendPlrMsg(Player &player, string_view text)
+void SendPlrMsg(Player &player, std::string_view text)
 {
 	PlayerMessage &message = GetNextMessage();
 
@@ -87,7 +87,7 @@ void SendPlrMsg(Player &player, string_view text)
 	message.style = UiFlags::ColorWhite;
 	message.time = SDL_GetTicks();
 	message.text = from + std::string(text);
-	message.from = string_view(message.text.data(), from.size());
+	message.from = std::string_view(message.text.data(), from.size());
 	message.lineHeight = GetLineHeight(message.text, GameFont12) + 3;
 	AddMessageToChatLog(text, &player);
 }

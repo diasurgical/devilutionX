@@ -79,7 +79,7 @@ namespace {
 constexpr char ExtraFontsVersion[] = "1\n";
 
 #ifdef UNPACKED_MPQS
-std::optional<std::string> FindUnpackedMpqData(const std::vector<std::string> &paths, string_view mpqName)
+std::optional<std::string> FindUnpackedMpqData(const std::vector<std::string> &paths, std::string_view mpqName)
 {
 	std::string targetPath;
 	for (const std::string &path : paths) {
@@ -94,7 +94,7 @@ std::optional<std::string> FindUnpackedMpqData(const std::vector<std::string> &p
 	return std::nullopt;
 }
 #else
-std::optional<MpqArchive> LoadMPQ(const std::vector<std::string> &paths, string_view mpqName)
+std::optional<MpqArchive> LoadMPQ(const std::vector<std::string> &paths, std::string_view mpqName)
 {
 	std::optional<MpqArchive> archive;
 	std::string mpqAbsPath;
@@ -133,7 +133,7 @@ std::vector<std::string> GetMPQSearchPaths()
 	// add `XDG_DATA_DIRS`.
 	const char *xdgDataDirs = std::getenv("XDG_DATA_DIRS");
 	if (xdgDataDirs != nullptr) {
-		for (const string_view path : SplitByChar(xdgDataDirs, ':')) {
+		for (const std::string_view path : SplitByChar(xdgDataDirs, ':')) {
 			std::string fullPath(path);
 			if (!path.empty() && path.back() != '/')
 				fullPath += '/';
@@ -182,7 +182,7 @@ bool CheckExtraFontsVersion(AssetRef &&ref)
 	if (!handle.read(version_contents.get(), size))
 		return true;
 
-	return string_view { version_contents.get(), size } != ExtraFontsVersion;
+	return std::string_view { version_contents.get(), size } != ExtraFontsVersion;
 }
 
 } // namespace
@@ -266,7 +266,7 @@ void LoadLanguageArchive()
 	lang_mpq = std::nullopt;
 #endif
 
-	string_view code = GetLanguageCode();
+	std::string_view code = GetLanguageCode();
 	if (code != "en") {
 		std::string langMpqName { code };
 #ifdef UNPACKED_MPQS

@@ -1,9 +1,8 @@
 #pragma once
 
 #include <string>
+#include <string_view>
 #include <utility>
-
-#include "utils/stdcompat/string_view.hpp"
 
 namespace devilution {
 
@@ -21,7 +20,7 @@ public:
 	{
 	}
 
-	StringOrView(string_view str)
+	StringOrView(std::string_view str)
 	    : owned_(false)
 	    , view_(str)
 	{
@@ -33,7 +32,7 @@ public:
 		if (other.owned_) {
 			new (&str_) std::string(std::move(other.str_));
 		} else {
-			new (&view_) string_view(other.view_);
+			new (&view_) std::string_view(other.view_);
 		}
 	}
 
@@ -45,11 +44,11 @@ public:
 			} else {
 				str_.~basic_string();
 				owned_ = false;
-				new (&view_) string_view(other.view_);
+				new (&view_) std::string_view(other.view_);
 			}
 		} else {
 			if (other.owned_) {
-				view_.~string_view();
+				view_.~basic_string_view();
 				owned_ = true;
 				new (&str_) std::string(std::move(other.str_));
 			} else {
@@ -64,7 +63,7 @@ public:
 		if (owned_) {
 			str_.~basic_string();
 		} else {
-			view_.~string_view();
+			view_.~basic_string_view();
 		}
 	}
 
@@ -73,12 +72,12 @@ public:
 		return owned_ ? str_.empty() : view_.empty();
 	}
 
-	string_view str() const
+	std::string_view str() const
 	{
 		return owned_ ? str_ : view_;
 	}
 
-	operator string_view() const
+	operator std::string_view() const
 	{
 		return str();
 	}
@@ -87,7 +86,7 @@ private:
 	bool owned_;
 	union {
 		std::string str_;
-		string_view view_;
+		std::string_view view_;
 	};
 };
 

@@ -31,6 +31,6 @@ void ReinitializeIntegerScale();
 #endif
 void ReinitializeRenderer();
 void ResizeWindow();
-void UiErrorOkDialog(string_view caption, string_view text, bool error = true);
+void UiErrorOkDialog(std::string_view caption, std::string_view text, bool error = true);
 
 } // namespace devilution

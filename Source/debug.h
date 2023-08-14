@@ -6,12 +6,12 @@
 #pragma once
 
 #include <cstdint>
+#include <string_view>
 #include <unordered_map>
 
 #include "diablo.h"
 #include "engine.h"
 #include "engine/clx_sprite.hpp"
-#include "utils/stdcompat/string_view.hpp"
 
 namespace devilution {
 
@@ -35,7 +35,7 @@ void LoadDebugGFX();
 void GetDebugMonster();
 void NextDebugMonster();
 void SetDebugLevelSeedInfos(uint32_t mid1Seed, uint32_t mid2Seed, uint32_t mid3Seed, uint32_t endSeed);
-bool CheckDebugTextCommand(const string_view text);
+bool CheckDebugTextCommand(const std::string_view text);
 bool IsDebugGridTextNeeded();
 bool IsDebugGridInMegatiles();
 bool GetDebugGridText(Point dungeonCoords, char *debugGridTextBuffer);

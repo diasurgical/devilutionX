@@ -360,7 +360,7 @@ void UiSettingsMenu()
 
 		optionDescription[0] = '\0';
 
-		string_view titleText;
+		std::string_view titleText;
 		switch (shownMenu) {
 		case ShownMenuType::Categories:
 			titleText = _("Settings");

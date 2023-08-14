@@ -7,6 +7,7 @@
 
 #include <algorithm>
 #include <cstdint>
+#include <string_view>
 
 #include <fmt/format.h>
 
@@ -26,7 +27,6 @@
 #include "towners.h"
 #include "utils/format_int.hpp"
 #include "utils/language.h"
-#include "utils/stdcompat/string_view.hpp"
 #include "utils/str_cat.hpp"
 #include "utils/utf8.hpp"
 
@@ -245,7 +245,7 @@ void AddSTextVal(size_t y, int val)
 	stext[y]._sval = val;
 }
 
-void AddSText(uint8_t x, size_t y, string_view text, UiFlags flags, bool sel, int cursId = -1, bool cursIndent = false)
+void AddSText(uint8_t x, size_t y, std::string_view text, UiFlags flags, bool sel, int cursId = -1, bool cursIndent = false)
 {
 	stext[y]._sx = x;
 	stext[y]._syoff = 0;
@@ -267,7 +267,7 @@ void AddOptionsBackButton()
 void AddItemListBackButton(bool selectable = false)
 {
 	const int line = BackButtonLine();
-	string_view text = _("Back");
+	std::string_view text = _("Back");
 	if (!selectable && IsSmallFontTall()) {
 		AddSText(0, line, text, UiFlags::ColorWhite | UiFlags::AlignRight, selectable);
 	} else {
@@ -926,7 +926,7 @@ void StoreConfirm(Item &item)
 	AddSTextVal(8, item._iIvalue);
 	PrintStoreItem(item, 9, itemColor);
 
-	string_view prompt;
+	std::string_view prompt;
 
 	switch (stextshold) {
 	case TalkID::BoyBuy:
@@ -2062,7 +2062,7 @@ int TakeGold(Player &player, int cost, bool skipMaxPiles)
 	return cost;
 }
 
-void DrawSelector(const Surface &out, const Rectangle &rect, string_view text, UiFlags flags)
+void DrawSelector(const Surface &out, const Rectangle &rect, std::string_view text, UiFlags flags)
 {
 	int lineWidth = GetLineWidth(text);
 
@@ -2155,7 +2155,7 @@ void FreeStoreMem()
 	}
 }
 
-void PrintSString(const Surface &out, int margin, int line, string_view text, UiFlags flags, int price, int cursId, bool cursIndent)
+void PrintSString(const Surface &out, int margin, int line, std::string_view text, UiFlags flags, int price, int cursId, bool cursIndent)
 {
 	const Point uiPosition = GetUIRectangle().position;
 	int sx = uiPosition.x + 32 + margin;

@@ -4876,7 +4876,7 @@ StringOrView Object::name() const
 	default:
 		break;
 	}
-	return string_view();
+	return std::string_view();
 }
 
 void GetObjectStr(const Object &object)

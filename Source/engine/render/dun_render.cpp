@@ -61,7 +61,7 @@ int_fast16_t GetTileHeight(TileType tile)
 }
 
 #ifdef DEBUG_STR
-std::pair<string_view, UiFlags> GetTileDebugStr(TileType tile)
+std::pair<std::string_view, UiFlags> GetTileDebugStr(TileType tile)
 {
 	// clang-format off
 	switch (tile) {
@@ -1092,7 +1092,7 @@ void RenderBlackTileFull(uint8_t *DVL_RESTRICT dst, uint16_t dstPitch)
 #ifdef DUN_RENDER_STATS
 std::unordered_map<DunRenderType, size_t, DunRenderTypeHash> DunRenderStats;
 
-string_view TileTypeToString(TileType tileType)
+std::string_view TileTypeToString(TileType tileType)
 {
 	// clang-format off
 	switch (tileType) {
@@ -1107,7 +1107,7 @@ string_view TileTypeToString(TileType tileType)
 	// clang-format on
 }
 
-string_view MaskTypeToString(MaskType maskType)
+std::string_view MaskTypeToString(MaskType maskType)
 {
 	// clang-format off
 	switch (maskType) {
@@ -1173,7 +1173,7 @@ void RenderTile(const Surface &out, Point position,
 	}
 
 #ifdef DEBUG_STR
-	const std::pair<string_view, UiFlags> debugStr = GetTileDebugStr(tile);
+	const std::pair<std::string_view, UiFlags> debugStr = GetTileDebugStr(tile);
 	DrawString(out, debugStr.first, Rectangle { Point { position.x + 2, position.y - 29 }, Size { 28, 28 } }, debugStr.second);
 #endif
 }

@@ -90,7 +90,7 @@ void StartGoldWithdraw();
 void WithdrawGoldKeyPress(SDL_Keycode vkey);
 void DrawGoldWithdraw(const Surface &out, int amount);
 void CloseGoldWithdraw();
-void GoldWithdrawNewText(string_view text);
+void GoldWithdrawNewText(std::string_view text);
 
 /**
  * @brief Checks whether the given item can be placed on the specified player's stash.

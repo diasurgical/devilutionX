@@ -662,7 +662,7 @@ void CloseGoldWithdraw()
 	SDL_StopTextInput();
 }
 
-void GoldWithdrawNewText(string_view text)
+void GoldWithdrawNewText(std::string_view text)
 {
 	for (char vkey : text) {
 		int digit = vkey - '0';

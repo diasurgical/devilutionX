@@ -76,7 +76,7 @@ AssetRef FindAsset(const char *filename)
 	AssetRef result;
 	result.path[0] = '\0';
 
-	const string_view filenameStr = filename;
+	const std::string_view filenameStr = filename;
 	char pathBuf[AssetRef::PathBufSize];
 	char *const pathEnd = pathBuf + AssetRef::PathBufSize;
 	char *const relativePath = &pathBuf[AssetRef::PathBufSize - filenameStr.size() - 1];
@@ -88,7 +88,7 @@ AssetRef FindAsset(const char *filename)
 	// Absolute path:
 	if (relativePath[0] == '/') {
 		if (FileExists(relativePath)) {
-			*BufCopy(result.path, string_view(relativePath, filenameStr.size())) = '\0';
+			*BufCopy(result.path, std::string_view(relativePath, filenameStr.size())) = '\0';
 		}
 		return result;
 	}
@@ -96,7 +96,7 @@ AssetRef FindAsset(const char *filename)
 	// Unpacked MPQ file:
 	char *const unpackedMpqPath = FindUnpackedMpqFile(relativePath);
 	if (unpackedMpqPath != nullptr) {
-		*BufCopy(result.path, string_view(unpackedMpqPath, pathEnd - unpackedMpqPath)) = '\0';
+		*BufCopy(result.path, std::string_view(unpackedMpqPath, pathEnd - unpackedMpqPath)) = '\0';
 		return result;
 	}
 
@@ -105,7 +105,7 @@ AssetRef FindAsset(const char *filename)
 	char *assetsPath = relativePath - assetsPathPrefix.size();
 	std::memcpy(assetsPath, assetsPathPrefix.data(), assetsPathPrefix.size());
 	if (FileExists(assetsPath)) {
-		*BufCopy(result.path, string_view(assetsPath, pathEnd - assetsPath)) = '\0';
+		*BufCopy(result.path, std::string_view(assetsPath, pathEnd - assetsPath)) = '\0';
 	}
 	return result;
 }

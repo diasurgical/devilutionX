@@ -218,8 +218,8 @@ void DrawShadowString(const Surface &out, const PanelEntry &entry)
 		return;
 
 	constexpr int Spacing = 0;
-	const string_view textStr = LanguageTranslate(entry.label);
-	string_view text;
+	const std::string_view textStr = LanguageTranslate(entry.label);
+	std::string_view text;
 	std::string wrapped;
 	if (entry.labelLength > 0) {
 		wrapped = WordWrapString(textStr, entry.labelLength, GameFont12, Spacing);

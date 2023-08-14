@@ -7,6 +7,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <ctime>
+#include <string_view>
 
 #include <SDL.h>
 #include <config.h>
@@ -29,7 +30,6 @@
 #include "tmsg.h"
 #include "utils/endian.hpp"
 #include "utils/language.h"
-#include "utils/stdcompat/string_view.hpp"
 #include "utils/str_cat.hpp"
 
 namespace devilution {
@@ -158,7 +158,7 @@ bool IsNetPlayerValid(const Player &player)
 	    && static_cast<uint8_t>(player._pClass) < enum_size<HeroClass>::value
 	    && player.plrlevel < NUMLEVELS
 	    && InDungeonBounds(player.position.tile)
-	    && !string_view(player._pName).empty();
+	    && !std::string_view(player._pName).empty();
 }
 
 void CheckPlayerInfoTimeouts()
@@ -259,7 +259,7 @@ void PlayerLeftMsg(int pnum, bool left)
 	delta_close_portal(pnum);
 	RemovePlrMissiles(player);
 	if (left) {
-		string_view pszFmt = _("Player '{:s}' just left the game");
+		std::string_view pszFmt = _("Player '{:s}' just left the game");
 		switch (sgdwPlayerLeftReasonTbl[pnum]) {
 		case LEAVE_ENDING:
 			pszFmt = _("Player '{:s}' killed Diablo and left the game!");
@@ -843,7 +843,7 @@ void recv_plrinfo(int pnum, const TCmdPlrInfoHdr &header, bool recv)
 	player.plractive = true;
 	gbActivePlayers++;
 
-	string_view szEvent;
+	std::string_view szEvent;
 	if (sgbPlayerTurnBitTbl[pnum]) {
 		szEvent = _("Player '{:s}' (level {:d}) just joined the game");
 	} else {

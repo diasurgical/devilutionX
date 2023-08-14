@@ -1254,7 +1254,7 @@ void DrawView(const Surface &out, Point startPosition)
 void DrawFPS(const Surface &out)
 {
 	static int framesSinceLastUpdate = 0;
-	static string_view formatted {};
+	static std::string_view formatted {};
 
 	if (!frameflag || !gbActive) {
 		return;
@@ -1273,7 +1273,7 @@ void DrawFPS(const Surface &out)
 		const char *end = fps >= 100 * FpsPow10
 		    ? BufCopy(buf, fps / FpsPow10, " FPS")
 		    : BufCopy(buf, fps / FpsPow10, ".", fps % FpsPow10, " FPS");
-		formatted = { buf, static_cast<string_view::size_type>(end - buf) };
+		formatted = { buf, static_cast<std::string_view::size_type>(end - buf) };
 	};
 	DrawString(out, formatted, Point { 8, 68 }, UiFlags::ColorRed);
 }

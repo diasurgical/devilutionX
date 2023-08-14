@@ -762,7 +762,7 @@ void DrawAutomapText(const Surface &out)
 
 	DrawString(out, description, linePosition);
 	linePosition.y += 15;
-	string_view difficulty;
+	std::string_view difficulty;
 	switch (sgGameInitInfo.nDifficulty) {
 	case DIFF_NORMAL:
 		difficulty = _("Normal");

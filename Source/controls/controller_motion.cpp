@@ -70,7 +70,7 @@ void ScaleJoystickAxes(float *x, float *y, float deadzone)
 bool IsMovementOverriddenByPadmapper(ControllerButton button)
 {
 	ControllerButtonEvent releaseEvent { button, true };
-	string_view actionName = sgOptions.Padmapper.ActionNameTriggeredByButtonEvent(releaseEvent);
+	std::string_view actionName = sgOptions.Padmapper.ActionNameTriggeredByButtonEvent(releaseEvent);
 	ControllerButtonCombo buttonCombo = sgOptions.Padmapper.ButtonComboForAction(actionName);
 	return buttonCombo.modifier != ControllerButton_NONE;
 }
@@ -78,12 +78,12 @@ bool IsMovementOverriddenByPadmapper(ControllerButton button)
 bool TriggersQuickSpellAction(ControllerButton button)
 {
 	ControllerButtonEvent releaseEvent { button, true };
-	string_view actionName = sgOptions.Padmapper.ActionNameTriggeredByButtonEvent(releaseEvent);
+	std::string_view actionName = sgOptions.Padmapper.ActionNameTriggeredByButtonEvent(releaseEvent);
 
-	string_view prefix { "QuickSpell" };
+	std::string_view prefix { "QuickSpell" };
 	if (actionName.size() < prefix.size())
 		return false;
-	string_view truncatedActionName { actionName.data(), prefix.size() };
+	std::string_view truncatedActionName { actionName.data(), prefix.size() };
 	return truncatedActionName == prefix;
 }
 
@@ -248,7 +248,7 @@ void SimulateRightStickWithPadmapper(ControllerButtonEvent ctrlEvent)
 	if (!ctrlEvent.up && ctrlEvent.button == SuppressedButton)
 		return;
 
-	string_view actionName = sgOptions.Padmapper.ActionNameTriggeredByButtonEvent(ctrlEvent);
+	std::string_view actionName = sgOptions.Padmapper.ActionNameTriggeredByButtonEvent(ctrlEvent);
 	bool upTriggered = actionName == "MouseUp";
 	bool downTriggered = actionName == "MouseDown";
 	bool leftTriggered = actionName == "MouseLeft";

@@ -11,6 +11,7 @@
 
 #include <algorithm>
 #include <array>
+#include <string_view>
 
 #include <fmt/core.h>
 #include <fmt/format.h>
@@ -42,7 +43,6 @@
 #include "utils/cl2_to_clx.hpp"
 #include "utils/file_name_generator.hpp"
 #include "utils/language.h"
-#include "utils/stdcompat/string_view.hpp"
 #include "utils/str_cat.hpp"
 #include "utils/utf8.hpp"
 
@@ -2959,7 +2959,7 @@ void HorkDemonAi(Monster &monster)
 	monster.checkStandAnimationIsLoaded(monster.direction);
 }
 
-string_view GetMonsterTypeText(const MonsterData &monsterData)
+std::string_view GetMonsterTypeText(const MonsterData &monsterData)
 {
 	switch (monsterData.monsterClass) {
 	case MonsterClass::Animal:
@@ -3321,10 +3321,10 @@ void InitMonsterSND(CMonster &monsterType)
 	};
 
 	const MonsterData &data = MonstersData[monsterType.type];
-	string_view soundSuffix = data.soundSuffix != nullptr ? data.soundSuffix : data.assetsSuffix;
+	std::string_view soundSuffix = data.soundSuffix != nullptr ? data.soundSuffix : data.assetsSuffix;
 
 	for (int i = 0; i < 4; i++) {
-		string_view prefix = prefixes[i];
+		std::string_view prefix = prefixes[i];
 		if (prefix == "s" && !data.hasSpecialSound)
 			continue;
 

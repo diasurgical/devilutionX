@@ -8,11 +8,11 @@
 #include <cstddef>
 #include <cstdint>
 #include <memory>
+#include <string_view>
 
 #include "items.h"
 #include "player.h"
 #include "quests.h"
-#include "utils/stdcompat/string_view.hpp"
 
 namespace devilution {
 
@@ -42,7 +42,7 @@ struct Towner {
 	const uint8_t *animOrder; // unowned
 	void (*talk)(Player &player, Towner &towner);
 
-	string_view name;
+	std::string_view name;
 
 	/** Tile position of NPC */
 	Point position;

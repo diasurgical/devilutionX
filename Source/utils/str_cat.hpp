@@ -2,9 +2,8 @@
 
 #include <cstring>
 #include <string>
+#include <string_view>
 #include <type_traits>
-
-#include "utils/stdcompat/string_view.hpp"
 
 namespace devilution {
 
@@ -20,18 +19,18 @@ char *BufCopy(char *out, int value);
 void StrAppend(std::string &out, int value);
 
 /**
- * @brief Copies the given string_view to the given buffer.
+ * @brief Copies the given std::string_view to the given buffer.
  */
-inline char *BufCopy(char *out, string_view value)
+inline char *BufCopy(char *out, std::string_view value)
 {
 	std::memcpy(out, value.data(), value.size());
 	return out + value.size();
 }
 
 /**
- * @brief Copies the given string_view to the given string.
+ * @brief Copies the given std::string_view to the given string.
  */
-inline void StrAppend(std::string &out, string_view value)
+inline void StrAppend(std::string &out, std::string_view value)
 {
 	out.append(value);
 }
@@ -43,7 +42,7 @@ inline void StrAppend(std::string &out, string_view value)
  */
 inline char *BufCopy(char *out, const char *str)
 {
-	return BufCopy(out, string_view(str != nullptr ? str : "(nullptr)"));
+	return BufCopy(out, std::string_view(str != nullptr ? str : "(nullptr)"));
 }
 
 /**
@@ -51,7 +50,7 @@ inline char *BufCopy(char *out, const char *str)
  */
 inline void StrAppend(std::string &out, const char *str)
 {
-	out.append(string_view(str != nullptr ? str : "(nullptr)"));
+	out.append(std::string_view(str != nullptr ? str : "(nullptr)"));
 }
 
 template <typename... Args>

@@ -120,15 +120,15 @@ void PrintDebugMonster(const Monster &monster)
 }
 
 struct DebugCmdItem {
-	const string_view text;
-	const string_view description;
-	const string_view requiredParameter;
-	std::string (*actionProc)(const string_view);
+	const std::string_view text;
+	const std::string_view description;
+	const std::string_view requiredParameter;
+	std::string (*actionProc)(const std::string_view);
 };
 
 extern std::vector<DebugCmdItem> DebugCmdList;
 
-std::string DebugCmdHelp(const string_view parameter)
+std::string DebugCmdHelp(const std::string_view parameter)
 {
 	if (parameter.empty()) {
 		std::string ret = "Available Debug Commands: ";
@@ -151,7 +151,7 @@ std::string DebugCmdHelp(const string_view parameter)
 	return StrCat("Description: ", dbgCmdItem.description, "\nParameters: ", dbgCmdItem.requiredParameter);
 }
 
-std::string DebugCmdGiveGoldCheat(const string_view parameter)
+std::string DebugCmdGiveGoldCheat(const std::string_view parameter)
 {
 	Player &myPlayer = *MyPlayer;
 
@@ -171,7 +171,7 @@ std::string DebugCmdGiveGoldCheat(const string_view parameter)
 	return "You are now rich! If only this was as easy in real life...";
 }
 
-std::string DebugCmdTakeGoldCheat(const string_view parameter)
+std::string DebugCmdTakeGoldCheat(const std::string_view parameter)
 {
 	Player &myPlayer = *MyPlayer;
 
@@ -191,7 +191,7 @@ std::string DebugCmdTakeGoldCheat(const string_view parameter)
 	return "You are poor...";
 }
 
-std::string DebugCmdWarpToLevel(const string_view parameter)
+std::string DebugCmdWarpToLevel(const std::string_view parameter)
 {
 	Player &myPlayer = *MyPlayer;
 	const ParseIntResult<int> parsedParam = ParseInt<int>(parameter, /*min=*/0);
@@ -207,7 +207,7 @@ std::string DebugCmdWarpToLevel(const string_view parameter)
 	return StrCat("Welcome to level ", level, ".");
 }
 
-std::string DebugCmdLoadQuestMap(const string_view parameter)
+std::string DebugCmdLoadQuestMap(const std::string_view parameter)
 {
 	if (parameter.empty()) {
 		std::string ret = "What mapid do you want to visit?";
@@ -241,14 +241,14 @@ std::string DebugCmdLoadQuestMap(const string_view parameter)
 	return StrCat("Mapid ", level, " is not known. Do you want to write a mod?");
 }
 
-std::string DebugCmdLoadMap(const string_view parameter)
+std::string DebugCmdLoadMap(const std::string_view parameter)
 {
 	TestMapPath.clear();
 	int mapType = 0;
 	Point spawn = {};
 
 	int count = 0;
-	for (string_view arg : SplitByChar(parameter, ' ')) {
+	for (std::string_view arg : SplitByChar(parameter, ' ')) {
 		switch (count) {
 		case 0:
 			TestMapPath = StrCat(arg, ".dun");
@@ -286,7 +286,7 @@ std::string DebugCmdLoadMap(const string_view parameter)
 	return "Welcome to this unique place.";
 }
 
-std::string ExportDun(const string_view parameter)
+std::string ExportDun(const std::string_view parameter)
 {
 	std::string levelName = StrCat(currlevel, "-", glSeedTbl[currlevel], ".dun");
 
@@ -353,7 +353,7 @@ std::string ExportDun(const string_view parameter)
 	return StrCat(levelName, " saved. Happy mapping!");
 }
 
-std::unordered_map<string_view, _talker_id> TownerShortNameToTownerId = {
+std::unordered_map<std::string_view, _talker_id> TownerShortNameToTownerId = {
 	{ "griswold", _talker_id::TOWN_SMITH },
 	{ "pepin", _talker_id::TOWN_HEALER },
 	{ "ogden", _talker_id::TOWN_TAVERN },
@@ -367,7 +367,7 @@ std::unordered_map<string_view, _talker_id> TownerShortNameToTownerId = {
 	{ "nut", _talker_id::TOWN_COWFARM },
 };
 
-std::string DebugCmdVisitTowner(const string_view parameter)
+std::string DebugCmdVisitTowner(const std::string_view parameter)
 {
 	Player &myPlayer = *MyPlayer;
 
@@ -407,7 +407,7 @@ std::string DebugCmdVisitTowner(const string_view parameter)
 	return StrCat("Couldn't find ", parameter, ".");
 }
 
-std::string DebugCmdResetLevel(const string_view parameter)
+std::string DebugCmdResetLevel(const std::string_view parameter)
 {
 	Player &myPlayer = *MyPlayer;
 
@@ -439,7 +439,7 @@ std::string DebugCmdResetLevel(const string_view parameter)
 	return StrCat("Level ", level, " was restored and looks fabulous.");
 }
 
-std::string DebugCmdGodMode(const string_view parameter)
+std::string DebugCmdGodMode(const std::string_view parameter)
 {
 	DebugGodMode = !DebugGodMode;
 	if (DebugGodMode)
@@ -447,14 +447,14 @@ std::string DebugCmdGodMode(const string_view parameter)
 	return "You are mortal, beware of the darkness.";
 }
 
-std::string DebugCmdLighting(const string_view parameter)
+std::string DebugCmdLighting(const std::string_view parameter)
 {
 	ToggleLighting();
 
 	return "All raindrops are the same.";
 }
 
-std::string DebugCmdMapReveal(const string_view parameter)
+std::string DebugCmdMapReveal(const std::string_view parameter)
 {
 	for (int x = 0; x < DMAXX; x++)
 		for (int y = 0; y < DMAXY; y++)
@@ -463,7 +463,7 @@ std::string DebugCmdMapReveal(const string_view parameter)
 	return "The way is made clear when viewed from above";
 }
 
-std::string DebugCmdMapHide(const string_view parameter)
+std::string DebugCmdMapHide(const std::string_view parameter)
 {
 	for (int x = 0; x < DMAXX; x++)
 		for (int y = 0; y < DMAXY; y++)
@@ -472,7 +472,7 @@ std::string DebugCmdMapHide(const string_view parameter)
 	return "The way is made unclear when viewed from below";
 }
 
-std::string DebugCmdVision(const string_view parameter)
+std::string DebugCmdVision(const std::string_view parameter)
 {
 	DebugVision = !DebugVision;
 	if (DebugVision)
@@ -481,7 +481,7 @@ std::string DebugCmdVision(const string_view parameter)
 	return "My path is set.";
 }
 
-std::string DebugCmdPath(const string_view parameter)
+std::string DebugCmdPath(const std::string_view parameter)
 {
 	DebugPath = !DebugPath;
 	if (DebugPath)
@@ -490,7 +490,7 @@ std::string DebugCmdPath(const string_view parameter)
 	return "The path is hidden.";
 }
 
-std::string DebugCmdQuest(const string_view parameter)
+std::string DebugCmdQuest(const std::string_view parameter)
 {
 	if (parameter.empty()) {
 		std::string ret = "You must provide an id. This could be: all";
@@ -532,7 +532,7 @@ std::string DebugCmdQuest(const string_view parameter)
 	return StrCat(QuestsData[questId]._qlstr, " enabled.");
 }
 
-std::string DebugCmdLevelUp(const string_view parameter)
+std::string DebugCmdLevelUp(const std::string_view parameter)
 {
 	const int levels = ParseInt<int>(parameter, /*min=*/1).value_or(1);
 	for (int i = 0; i < levels; i++)
@@ -540,7 +540,7 @@ std::string DebugCmdLevelUp(const string_view parameter)
 	return "New experience leads to new insights.";
 }
 
-std::string DebugCmdMaxStats(const string_view parameter)
+std::string DebugCmdMaxStats(const std::string_view parameter)
 {
 	Player &myPlayer = *MyPlayer;
 	ModifyPlrStr(myPlayer, myPlayer.GetMaximumAttributeValue(CharacterAttribute::Strength) - myPlayer._pBaseStr);
@@ -550,7 +550,7 @@ std::string DebugCmdMaxStats(const string_view parameter)
 	return "Who needs elixirs anyway?";
 }
 
-std::string DebugCmdMinStats(const string_view parameter)
+std::string DebugCmdMinStats(const std::string_view parameter)
 {
 	Player &myPlayer = *MyPlayer;
 	ModifyPlrStr(myPlayer, -myPlayer._pBaseStr);
@@ -560,7 +560,7 @@ std::string DebugCmdMinStats(const string_view parameter)
 	return "From hero to zero.";
 }
 
-std::string DebugCmdSetSpellsLevel(const string_view parameter)
+std::string DebugCmdSetSpellsLevel(const std::string_view parameter)
 {
 	const ParseIntResult<uint8_t> parsedArg = ParseInt<uint8_t>(parameter);
 	if (!parsedArg.ok())
@@ -577,7 +577,7 @@ std::string DebugCmdSetSpellsLevel(const string_view parameter)
 	return "Knowledge is power.";
 }
 
-std::string DebugCmdRefillHealthMana(const string_view parameter)
+std::string DebugCmdRefillHealthMana(const std::string_view parameter)
 {
 	Player &myPlayer = *MyPlayer;
 	myPlayer.RestoreFullLife();
@@ -588,7 +588,7 @@ std::string DebugCmdRefillHealthMana(const string_view parameter)
 	return "Ready for more.";
 }
 
-std::string DebugCmdChangeHealth(const string_view parameter)
+std::string DebugCmdChangeHealth(const std::string_view parameter)
 {
 	Player &myPlayer = *MyPlayer;
 	int change = -1;
@@ -611,7 +611,7 @@ std::string DebugCmdChangeHealth(const string_view parameter)
 	return "Health has changed.";
 }
 
-std::string DebugCmdChangeMana(const string_view parameter)
+std::string DebugCmdChangeMana(const std::string_view parameter)
 {
 	Player &myPlayer = *MyPlayer;
 	int change = -1;
@@ -634,24 +634,24 @@ std::string DebugCmdChangeMana(const string_view parameter)
 	return "Mana has changed.";
 }
 
-std::string DebugCmdGenerateUniqueItem(const string_view parameter)
+std::string DebugCmdGenerateUniqueItem(const std::string_view parameter)
 {
 	return DebugSpawnUniqueItem(parameter.data());
 }
 
-std::string DebugCmdGenerateItem(const string_view parameter)
+std::string DebugCmdGenerateItem(const std::string_view parameter)
 {
 	return DebugSpawnItem(parameter.data());
 }
 
-std::string DebugCmdExit(const string_view parameter)
+std::string DebugCmdExit(const std::string_view parameter)
 {
 	gbRunGame = false;
 	gbRunGameResult = false;
 	return "See you again my Lord.";
 }
 
-std::string DebugCmdArrow(const string_view parameter)
+std::string DebugCmdArrow(const std::string_view parameter)
 {
 	Player &myPlayer = *MyPlayer;
 
@@ -673,7 +673,7 @@ std::string DebugCmdArrow(const string_view parameter)
 	return "I can shoot any arrow.";
 }
 
-std::string DebugCmdTalkToTowner(const string_view parameter)
+std::string DebugCmdTalkToTowner(const std::string_view parameter)
 {
 	if (DebugTalkToTowner(parameter.data())) {
 		return "Hello from the other side.";
@@ -681,7 +681,7 @@ std::string DebugCmdTalkToTowner(const string_view parameter)
 	return "NPC not found.";
 }
 
-std::string DebugCmdShowGrid(const string_view parameter)
+std::string DebugCmdShowGrid(const std::string_view parameter)
 {
 	DebugGrid = !DebugGrid;
 	if (DebugGrid)
@@ -690,14 +690,14 @@ std::string DebugCmdShowGrid(const string_view parameter)
 	return "Back to boring.";
 }
 
-std::string DebugCmdSpawnUniqueMonster(const string_view parameter)
+std::string DebugCmdSpawnUniqueMonster(const std::string_view parameter)
 {
 	if (leveltype == DTYPE_TOWN)
 		return "Do you want to kill the towners?!?";
 
 	std::string name;
 	int count = 1;
-	for (string_view arg : SplitByChar(parameter, ' ')) {
+	for (std::string_view arg : SplitByChar(parameter, ' ')) {
 		const ParseIntResult<int> parsedArg = ParseInt<int>(arg);
 		if (!parsedArg.ok())
 			return "Failed to parse argument as integer";
@@ -780,14 +780,14 @@ std::string DebugCmdSpawnUniqueMonster(const string_view parameter)
 	return *ret;
 }
 
-std::string DebugCmdSpawnMonster(const string_view parameter)
+std::string DebugCmdSpawnMonster(const std::string_view parameter)
 {
 	if (leveltype == DTYPE_TOWN)
 		return "Do you want to kill the towners?!?";
 
 	std::string name;
 	int count = 1;
-	for (string_view arg : SplitByChar(parameter, ' ')) {
+	for (std::string_view arg : SplitByChar(parameter, ' ')) {
 		const ParseIntResult<int> parsedArg = ParseInt<int>(arg);
 		if (!parsedArg.ok())
 			return "Failed to parse argument as integer";
@@ -866,7 +866,7 @@ std::string DebugCmdSpawnMonster(const string_view parameter)
 	return *ret;
 }
 
-std::string DebugCmdShowTileData(const string_view parameter)
+std::string DebugCmdShowTileData(const std::string_view parameter)
 {
 	std::string paramList[] = {
 		"dPiece",
@@ -924,7 +924,7 @@ std::string DebugCmdShowTileData(const string_view parameter)
 	return "Special powers activated.";
 }
 
-std::string DebugCmdScrollView(const string_view parameter)
+std::string DebugCmdScrollView(const std::string_view parameter)
 {
 	DebugScrollViewEnabled = !DebugScrollViewEnabled;
 	if (DebugScrollViewEnabled)
@@ -933,7 +933,7 @@ std::string DebugCmdScrollView(const string_view parameter)
 	return "If you want to see the world, you need to explore it yourself.";
 }
 
-std::string DebugCmdItemInfo(const string_view parameter)
+std::string DebugCmdItemInfo(const std::string_view parameter)
 {
 	Player &myPlayer = *MyPlayer;
 	Item *pItem = nullptr;
@@ -953,7 +953,7 @@ std::string DebugCmdItemInfo(const string_view parameter)
 	return StrCat("Numitems: ", ActiveItemCount);
 }
 
-std::string DebugCmdQuestInfo(const string_view parameter)
+std::string DebugCmdQuestInfo(const std::string_view parameter)
 {
 	if (parameter.empty()) {
 		std::string ret = "You must provide an id. This could be:";
@@ -976,7 +976,7 @@ std::string DebugCmdQuestInfo(const string_view parameter)
 	return StrCat("\nQuest: ", QuestsData[quest._qidx]._qlstr, "\nActive: ", quest._qactive, " Var1: ", quest._qvar1, " Var2: ", quest._qvar2);
 }
 
-std::string DebugCmdPlayerInfo(const string_view parameter)
+std::string DebugCmdPlayerInfo(const std::string_view parameter)
 {
 	if (parameter.empty()) {
 		return StrCat("Provide a player ID between 0 and ", Players.size() - 1);
@@ -1000,22 +1000,22 @@ std::string DebugCmdPlayerInfo(const string_view parameter)
 	    "\nInvincible:", player._pInvincible ? 1 : 0, " HitPoints:", player._pHitPoints);
 }
 
-std::string DebugCmdToggleFPS(const string_view parameter)
+std::string DebugCmdToggleFPS(const std::string_view parameter)
 {
 	frameflag = !frameflag;
 	return "";
 }
 
-std::string DebugCmdChangeTRN(const string_view parameter)
+std::string DebugCmdChangeTRN(const std::string_view parameter)
 {
 	std::string out;
 	const auto parts = SplitByChar(parameter, ' ');
 	auto it = parts.begin();
 	if (it != parts.end()) {
-		const string_view first = *it;
+		const std::string_view first = *it;
 		if (++it != parts.end()) {
-			const string_view second = *it;
-			string_view prefix;
+			const std::string_view second = *it;
+			std::string_view prefix;
 			if (first == "mon") {
 				prefix = "monsters\\monsters\\";
 			} else if (first == "plr") {
@@ -1036,7 +1036,7 @@ std::string DebugCmdChangeTRN(const string_view parameter)
 	return out;
 }
 
-std::string DebugCmdSearchMonster(const string_view parameter)
+std::string DebugCmdSearchMonster(const std::string_view parameter)
 {
 	if (parameter.empty()) {
 		std::string ret = "What should I search? I'm too lazy to search for everything... you must provide a monster name!";
@@ -1051,7 +1051,7 @@ std::string DebugCmdSearchMonster(const string_view parameter)
 	return "We will find this bastard!";
 }
 
-std::string DebugCmdSearchItem(const string_view parameter)
+std::string DebugCmdSearchItem(const std::string_view parameter)
 {
 	if (parameter.empty()) {
 		std::string ret = "What should I search? I'm too lazy to search for everything... you must provide a item name!";
@@ -1066,7 +1066,7 @@ std::string DebugCmdSearchItem(const string_view parameter)
 	return "Are you greedy? Anyway I will help you.";
 }
 
-std::string DebugCmdSearchObject(const string_view parameter)
+std::string DebugCmdSearchObject(const std::string_view parameter)
 {
 	if (parameter.empty()) {
 		std::string ret = "What should I search? I'm too lazy to search for everything... you must provide a object name!";
@@ -1081,7 +1081,7 @@ std::string DebugCmdSearchObject(const string_view parameter)
 	return "I will look for the pyramids. Oh sorry, I'm looking for what you want, of course.";
 }
 
-std::string DebugCmdClearSearch(const string_view parameter)
+std::string DebugCmdClearSearch(const std::string_view parameter)
 {
 	SearchMonsters.clear();
 	SearchItems.clear();
@@ -1176,14 +1176,14 @@ void SetDebugLevelSeedInfos(uint32_t mid1Seed, uint32_t mid2Seed, uint32_t mid3S
 	glEndSeed[currlevel] = endSeed;
 }
 
-bool CheckDebugTextCommand(const string_view text)
+bool CheckDebugTextCommand(const std::string_view text)
 {
 	auto debugCmdIterator = c_find_if(DebugCmdList, [&](const DebugCmdItem &elem) { return text.find(elem.text) == 0 && (text.length() == elem.text.length() || text[elem.text.length()] == ' '); });
 	if (debugCmdIterator == DebugCmdList.end())
 		return false;
 
 	auto &dbgCmd = *debugCmdIterator;
-	string_view parameter = "";
+	std::string_view parameter = "";
 	if (text.length() > (dbgCmd.text.length() + 1))
 		parameter = text.substr(dbgCmd.text.length() + 1);
 	const auto result = dbgCmd.actionProc(parameter);
@@ -1305,7 +1305,7 @@ bool IsDebugAutomapHighlightNeeded()
 
 bool ShouldHighlightDebugAutomapTile(Point position)
 {
-	auto matchesSearched = [](const string_view name, const std::vector<std::string> &searchedNames) {
+	auto matchesSearched = [](const std::string_view name, const std::vector<std::string> &searchedNames) {
 		const std::string lowercaseName = AsciiStrToLower(name);
 		for (const auto &searchedName : searchedNames) {
 			if (lowercaseName.find(searchedName) != std::string::npos) {
