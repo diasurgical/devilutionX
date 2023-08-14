@@ -1781,7 +1781,7 @@ void plrctrls_after_check_curs_move()
 		return;
 	}
 	if (!invflag) {
-		InfoString = {};
+		InfoString = StringOrView {};
 		FindActor();
 		FindItemOrObject();
 		FindTrigger();

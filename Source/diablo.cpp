@@ -1435,7 +1435,7 @@ void TimeoutCursor(bool bTimeout)
 		if (sgnTimeoutCurs == CURSOR_NONE && sgbMouseDown == CLICK_NONE) {
 			sgnTimeoutCurs = pcurs;
 			multi_net_ping();
-			InfoString = {};
+			InfoString = StringOrView {};
 			AddPanelString(_("-- Network timeout --"));
 			AddPanelString(_("-- Waiting for players --"));
 			NewCursor(CURSOR_HOURGLASS);
@@ -1449,7 +1449,7 @@ void TimeoutCursor(bool bTimeout)
 		if (pcurs == CURSOR_HOURGLASS)
 			NewCursor(sgnTimeoutCurs);
 		sgnTimeoutCurs = CURSOR_NONE;
-		InfoString = {};
+		InfoString = StringOrView {};
 		RedrawEverything();
 	}
 }
@@ -1459,7 +1459,7 @@ void HelpKeyPressed()
 	if (HelpFlag) {
 		HelpFlag = false;
 	} else if (stextflag != TalkID::None) {
-		InfoString = {};
+		InfoString = StringOrView {};
 		AddPanelString(_("No help available")); /// BUGFIX: message isn't displayed
 		AddPanelString(_("while in stores"));
 		LastMouseButtonAction = MouseActionType::None;
