@@ -637,7 +637,7 @@ void UiDestroy()
 	UnloadUiGFX();
 }
 
-bool UiValidPlayerName(string_view name)
+bool UiValidPlayerName(std::string_view name)
 {
 	if (name.empty())
 		return false;
@@ -655,7 +655,7 @@ bool UiValidPlayerName(string_view name)
 	if (!c_all_of(name, IsBasicLatin))
 		return false;
 
-	string_view bannedNames[] = {
+	std::string_view bannedNames[] = {
 		"gvdl",
 		"dvou",
 		"tiju",
@@ -670,8 +670,8 @@ bool UiValidPlayerName(string_view name)
 	for (char &character : buffer)
 		character++;
 
-	string_view tempName { buffer };
-	for (string_view bannedName : bannedNames) {
+	std::string_view tempName { buffer };
+	for (std::string_view bannedName : bannedNames) {
 		if (tempName.find(bannedName) != tempName.npos)
 			return false;
 	}

@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <forward_list>
 #include <optional>
+#include <string_view>
 #include <unordered_map>
 
 #include <SDL_version.h>
@@ -15,7 +16,6 @@
 #include "engine/sound_defs.hpp"
 #include "pack.h"
 #include "utils/enum_traits.h"
-#include "utils/stdcompat/string_view.hpp"
 
 namespace devilution {
 
@@ -57,8 +57,8 @@ enum class Resampler : uint8_t {
 #endif
 };
 
-string_view ResamplerToString(Resampler resampler);
-std::optional<Resampler> ResamplerFromString(string_view resampler);
+std::string_view ResamplerToString(Resampler resampler);
+std::optional<Resampler> ResamplerFromString(std::string_view resampler);
 
 enum class FloatingNumbers : uint8_t {
 	/** @brief Show no floating numbers. */
@@ -100,28 +100,28 @@ use_enum_as_flags(OptionEntryFlags);
 
 class OptionEntryBase {
 public:
-	OptionEntryBase(string_view key, OptionEntryFlags flags, const char *name, const char *description)
+	OptionEntryBase(std::string_view key, OptionEntryFlags flags, const char *name, const char *description)
 	    : flags(flags)
 	    , key(key)
 	    , name(name)
 	    , description(description)
 	{
 	}
-	[[nodiscard]] virtual string_view GetName() const;
-	[[nodiscard]] string_view GetDescription() const;
+	[[nodiscard]] virtual std::string_view GetName() const;
+	[[nodiscard]] std::string_view GetDescription() const;
 	[[nodiscard]] virtual OptionEntryType GetType() const = 0;
 	[[nodiscard]] OptionEntryFlags GetFlags() const;
 
 	void SetValueChangedCallback(std::function<void()> callback);
 
-	[[nodiscard]] virtual string_view GetValueDescription() const = 0;
-	virtual void LoadFromIni(string_view category) = 0;
-	virtual void SaveToIni(string_view category) const = 0;
+	[[nodiscard]] virtual std::string_view GetValueDescription() const = 0;
+	virtual void LoadFromIni(std::string_view category) = 0;
+	virtual void SaveToIni(std::string_view category) const = 0;
 
 	OptionEntryFlags flags;
 
 protected:
-	string_view key;
+	std::string_view key;
 	const char *name;
 	const char *description;
 	void NotifyValueChanged();
@@ -132,7 +132,7 @@ private:
 
 class OptionEntryBoolean : public OptionEntryBase {
 public:
-	OptionEntryBoolean(string_view key, OptionEntryFlags flags, const char *name, const char *description, bool defaultValue)
+	OptionEntryBoolean(std::string_view key, OptionEntryFlags flags, const char *name, const char *description, bool defaultValue)
 	    : OptionEntryBase(key, flags, name, description)
 	    , defaultValue(defaultValue)
 	    , value(defaultValue)
@@ -145,9 +145,9 @@ public:
 	void SetValue(bool value);
 
 	[[nodiscard]] OptionEntryType GetType() const override;
-	[[nodiscard]] string_view GetValueDescription() const override;
-	void LoadFromIni(string_view category) override;
-	void SaveToIni(string_view category) const override;
+	[[nodiscard]] std::string_view GetValueDescription() const override;
+	void LoadFromIni(std::string_view category) override;
+	void SaveToIni(std::string_view category) const override;
 
 private:
 	bool defaultValue;
@@ -157,15 +157,15 @@ private:
 class OptionEntryListBase : public OptionEntryBase {
 public:
 	[[nodiscard]] virtual size_t GetListSize() const = 0;
-	[[nodiscard]] virtual string_view GetListDescription(size_t index) const = 0;
+	[[nodiscard]] virtual std::string_view GetListDescription(size_t index) const = 0;
 	[[nodiscard]] virtual size_t GetActiveListIndex() const = 0;
 	virtual void SetActiveListIndex(size_t index) = 0;
 
 	[[nodiscard]] OptionEntryType GetType() const override;
-	[[nodiscard]] string_view GetValueDescription() const override;
+	[[nodiscard]] std::string_view GetValueDescription() const override;
 
 protected:
-	OptionEntryListBase(string_view key, OptionEntryFlags flags, const char *name, const char *description)
+	OptionEntryListBase(std::string_view key, OptionEntryFlags flags, const char *name, const char *description)
 	    : OptionEntryBase(key, flags, name, description)
 	{
 	}
@@ -173,16 +173,16 @@ protected:
 
 class OptionEntryEnumBase : public OptionEntryListBase {
 public:
-	void LoadFromIni(string_view category) override;
-	void SaveToIni(string_view category) const override;
+	void LoadFromIni(std::string_view category) override;
+	void SaveToIni(std::string_view category) const override;
 
 	[[nodiscard]] size_t GetListSize() const override;
-	[[nodiscard]] string_view GetListDescription(size_t index) const override;
+	[[nodiscard]] std::string_view GetListDescription(size_t index) const override;
 	[[nodiscard]] size_t GetActiveListIndex() const override;
 	void SetActiveListIndex(size_t index) override;
 
 protected:
-	OptionEntryEnumBase(string_view key, OptionEntryFlags flags, const char *name, const char *description, int defaultValue)
+	OptionEntryEnumBase(std::string_view key, OptionEntryFlags flags, const char *name, const char *description, int defaultValue)
 	    : OptionEntryListBase(key, flags, name, description)
 	    , defaultValue(defaultValue)
 	    , value(defaultValue)
@@ -195,19 +195,19 @@ protected:
 	}
 	void SetValueInternal(int value);
 
-	void AddEntry(int value, string_view name);
+	void AddEntry(int value, std::string_view name);
 
 private:
 	int defaultValue;
 	int value;
-	std::vector<string_view> entryNames;
+	std::vector<std::string_view> entryNames;
 	std::vector<int> entryValues;
 };
 
 template <typename T>
 class OptionEntryEnum : public OptionEntryEnumBase {
 public:
-	OptionEntryEnum(string_view key, OptionEntryFlags flags, const char *name, const char *description, T defaultValue, std::initializer_list<std::pair<T, string_view>> entries)
+	OptionEntryEnum(std::string_view key, OptionEntryFlags flags, const char *name, const char *description, T defaultValue, std::initializer_list<std::pair<T, std::string_view>> entries)
 	    : OptionEntryEnumBase(key, flags, name, description, static_cast<int>(defaultValue))
 	{
 		for (auto entry : entries) {
@@ -226,16 +226,16 @@ public:
 
 class OptionEntryIntBase : public OptionEntryListBase {
 public:
-	void LoadFromIni(string_view category) override;
-	void SaveToIni(string_view category) const override;
+	void LoadFromIni(std::string_view category) override;
+	void SaveToIni(std::string_view category) const override;
 
 	[[nodiscard]] size_t GetListSize() const override;
-	[[nodiscard]] string_view GetListDescription(size_t index) const override;
+	[[nodiscard]] std::string_view GetListDescription(size_t index) const override;
 	[[nodiscard]] size_t GetActiveListIndex() const override;
 	void SetActiveListIndex(size_t index) override;
 
 protected:
-	OptionEntryIntBase(string_view key, OptionEntryFlags flags, const char *name, const char *description, int defaultValue)
+	OptionEntryIntBase(std::string_view key, OptionEntryFlags flags, const char *name, const char *description, int defaultValue)
 	    : OptionEntryListBase(key, flags, name, description)
 	    , defaultValue(defaultValue)
 	    , value(defaultValue)
@@ -260,14 +260,14 @@ private:
 template <typename T>
 class OptionEntryInt : public OptionEntryIntBase {
 public:
-	OptionEntryInt(string_view key, OptionEntryFlags flags, const char *name, const char *description, T defaultValue, std::initializer_list<T> entries)
+	OptionEntryInt(std::string_view key, OptionEntryFlags flags, const char *name, const char *description, T defaultValue, std::initializer_list<T> entries)
 	    : OptionEntryIntBase(key, flags, name, description, static_cast<int>(defaultValue))
 	{
 		for (auto entry : entries) {
 			AddEntry(static_cast<int>(entry));
 		}
 	}
-	OptionEntryInt(string_view key, OptionEntryFlags flags, const char *name, const char *description, T defaultValue)
+	OptionEntryInt(std::string_view key, OptionEntryFlags flags, const char *name, const char *description, T defaultValue)
 	    : OptionEntryInt(key, flags, name, description, defaultValue, { defaultValue })
 	{
 	}
@@ -285,20 +285,20 @@ class OptionEntryLanguageCode : public OptionEntryListBase {
 public:
 	OptionEntryLanguageCode();
 
-	void LoadFromIni(string_view category) override;
-	void SaveToIni(string_view category) const override;
+	void LoadFromIni(std::string_view category) override;
+	void SaveToIni(std::string_view category) const override;
 
 	[[nodiscard]] size_t GetListSize() const override;
-	[[nodiscard]] string_view GetListDescription(size_t index) const override;
+	[[nodiscard]] std::string_view GetListDescription(size_t index) const override;
 	[[nodiscard]] size_t GetActiveListIndex() const override;
 	void SetActiveListIndex(size_t index) override;
 
-	string_view operator*() const
+	std::string_view operator*() const
 	{
 		return szCode;
 	}
 
-	OptionEntryLanguageCode &operator=(string_view code)
+	OptionEntryLanguageCode &operator=(std::string_view code)
 	{
 		assert(code.size() < 6);
 		memcpy(szCode, code.data(), code.size());
@@ -318,11 +318,11 @@ class OptionEntryResolution : public OptionEntryListBase {
 public:
 	OptionEntryResolution();
 
-	void LoadFromIni(string_view category) override;
-	void SaveToIni(string_view category) const override;
+	void LoadFromIni(std::string_view category) override;
+	void SaveToIni(std::string_view category) const override;
 
 	[[nodiscard]] size_t GetListSize() const override;
-	[[nodiscard]] string_view GetListDescription(size_t index) const override;
+	[[nodiscard]] std::string_view GetListDescription(size_t index) const override;
 	[[nodiscard]] size_t GetActiveListIndex() const override;
 	void SetActiveListIndex(size_t index) override;
 	void InvalidateList();
@@ -344,11 +344,11 @@ class OptionEntryResampler : public OptionEntryListBase {
 public:
 	OptionEntryResampler();
 
-	void LoadFromIni(string_view category) override;
-	void SaveToIni(string_view category) const override;
+	void LoadFromIni(std::string_view category) override;
+	void SaveToIni(std::string_view category) const override;
 
 	[[nodiscard]] size_t GetListSize() const override;
-	[[nodiscard]] string_view GetListDescription(size_t index) const override;
+	[[nodiscard]] std::string_view GetListDescription(size_t index) const override;
 	[[nodiscard]] size_t GetActiveListIndex() const override;
 	void SetActiveListIndex(size_t index) override;
 
@@ -367,18 +367,18 @@ class OptionEntryAudioDevice : public OptionEntryListBase {
 public:
 	OptionEntryAudioDevice();
 
-	void LoadFromIni(string_view category) override;
-	void SaveToIni(string_view category) const override;
+	void LoadFromIni(std::string_view category) override;
+	void SaveToIni(std::string_view category) const override;
 
 	[[nodiscard]] size_t GetListSize() const override;
-	[[nodiscard]] string_view GetListDescription(size_t index) const override;
+	[[nodiscard]] std::string_view GetListDescription(size_t index) const override;
 	[[nodiscard]] size_t GetActiveListIndex() const override;
 	void SetActiveListIndex(size_t index) override;
 
 	std::string operator*() const
 	{
 		for (size_t i = 0; i < GetListSize(); i++) {
-			string_view deviceName = GetDeviceName(i);
+			std::string_view deviceName = GetDeviceName(i);
 			if (deviceName == deviceName_)
 				return deviceName_;
 		}
@@ -386,27 +386,27 @@ public:
 	}
 
 private:
-	string_view GetDeviceName(size_t index) const;
+	std::string_view GetDeviceName(size_t index) const;
 
 	std::string deviceName_;
 };
 
 struct OptionCategoryBase {
-	OptionCategoryBase(string_view key, const char *name, const char *description)
+	OptionCategoryBase(std::string_view key, const char *name, const char *description)
 	    : key(key)
 	    , name(name)
 	    , description(description)
 	{
 	}
 
-	[[nodiscard]] string_view GetKey() const;
-	[[nodiscard]] string_view GetName() const;
-	[[nodiscard]] string_view GetDescription() const;
+	[[nodiscard]] std::string_view GetKey() const;
+	[[nodiscard]] std::string_view GetName() const;
+	[[nodiscard]] std::string_view GetDescription() const;
 
 	virtual std::vector<OptionEntryBase *> GetEntries() = 0;
 
 protected:
-	string_view key;
+	std::string_view key;
 	const char *name;
 	const char *description;
 };
@@ -655,18 +655,18 @@ struct KeymapperOptions : OptionCategoryBase {
 		// The implicit copy constructor would copy that reference instead of referencing the copy.
 		Action(const Action &) = delete;
 
-		Action(string_view key, const char *name, const char *description, uint32_t defaultKey, std::function<void()> actionPressed, std::function<void()> actionReleased, std::function<bool()> enable, unsigned index);
+		Action(std::string_view key, const char *name, const char *description, uint32_t defaultKey, std::function<void()> actionPressed, std::function<void()> actionReleased, std::function<bool()> enable, unsigned index);
 
-		[[nodiscard]] string_view GetName() const override;
+		[[nodiscard]] std::string_view GetName() const override;
 		[[nodiscard]] OptionEntryType GetType() const override
 		{
 			return OptionEntryType::Key;
 		}
 
-		void LoadFromIni(string_view category) override;
-		void SaveToIni(string_view category) const override;
+		void LoadFromIni(std::string_view category) override;
+		void SaveToIni(std::string_view category) const override;
 
-		[[nodiscard]] string_view GetValueDescription() const override;
+		[[nodiscard]] std::string_view GetValueDescription() const override;
 
 		bool SetValue(int value);
 
@@ -687,7 +687,7 @@ struct KeymapperOptions : OptionCategoryBase {
 	std::vector<OptionEntryBase *> GetEntries() override;
 
 	void AddAction(
-	    string_view key, const char *name, const char *description, uint32_t defaultKey,
+	    std::string_view key, const char *name, const char *description, uint32_t defaultKey,
 	    std::function<void()> actionPressed,
 	    std::function<void()> actionReleased = nullptr,
 	    std::function<bool()> enable = nullptr,
@@ -697,8 +697,8 @@ struct KeymapperOptions : OptionCategoryBase {
 	void KeyReleased(SDL_Keycode key) const;
 	bool IsTextEntryKey(SDL_Keycode vkey) const;
 	bool IsNumberEntryKey(SDL_Keycode vkey) const;
-	string_view KeyNameForAction(string_view actionName) const;
-	uint32_t KeyForAction(string_view actionName) const;
+	std::string_view KeyNameForAction(std::string_view actionName) const;
+	uint32_t KeyForAction(std::string_view actionName) const;
 
 private:
 	std::forward_list<Action> actions;
@@ -715,23 +715,23 @@ struct PadmapperOptions : OptionCategoryBase {
 	 */
 	class Action final : public OptionEntryBase {
 	public:
-		Action(string_view key, const char *name, const char *description, ControllerButtonCombo defaultInput, std::function<void()> actionPressed, std::function<void()> actionReleased, std::function<bool()> enable, unsigned index);
+		Action(std::string_view key, const char *name, const char *description, ControllerButtonCombo defaultInput, std::function<void()> actionPressed, std::function<void()> actionReleased, std::function<bool()> enable, unsigned index);
 
 		// OptionEntryBase::key may be referencing Action::dynamicKey.
 		// The implicit copy constructor would copy that reference instead of referencing the copy.
 		Action(const Action &) = delete;
 
-		[[nodiscard]] string_view GetName() const override;
+		[[nodiscard]] std::string_view GetName() const override;
 		[[nodiscard]] OptionEntryType GetType() const override
 		{
 			return OptionEntryType::PadButton;
 		}
 
-		void LoadFromIni(string_view category) override;
-		void SaveToIni(string_view category) const override;
+		void LoadFromIni(std::string_view category) override;
+		void SaveToIni(std::string_view category) const override;
 
-		[[nodiscard]] string_view GetValueDescription() const override;
-		[[nodiscard]] string_view GetValueDescription(bool useShortName) const;
+		[[nodiscard]] std::string_view GetValueDescription() const override;
+		[[nodiscard]] std::string_view GetValueDescription(bool useShortName) const;
 
 		bool SetValue(ControllerButtonCombo value);
 
@@ -749,7 +749,7 @@ struct PadmapperOptions : OptionCategoryBase {
 		mutable std::string dynamicName;
 
 		void UpdateValueDescription() const;
-		string_view Shorten(string_view buttonName) const;
+		std::string_view Shorten(std::string_view buttonName) const;
 
 		friend struct PadmapperOptions;
 	};
@@ -758,7 +758,7 @@ struct PadmapperOptions : OptionCategoryBase {
 	std::vector<OptionEntryBase *> GetEntries() override;
 
 	void AddAction(
-	    string_view key, const char *name, const char *description, ControllerButtonCombo defaultInput,
+	    std::string_view key, const char *name, const char *description, ControllerButtonCombo defaultInput,
 	    std::function<void()> actionPressed,
 	    std::function<void()> actionReleased = nullptr,
 	    std::function<bool()> enable = nullptr,
@@ -767,10 +767,10 @@ struct PadmapperOptions : OptionCategoryBase {
 	void ButtonPressed(ControllerButton button);
 	void ButtonReleased(ControllerButton button, bool invokeAction = true);
 	void ReleaseAllActiveButtons();
-	bool IsActive(string_view actionName) const;
-	string_view ActionNameTriggeredByButtonEvent(ControllerButtonEvent ctrlEvent) const;
-	string_view InputNameForAction(string_view actionName, bool useShortName = false) const;
-	ControllerButtonCombo ButtonComboForAction(string_view actionName) const;
+	bool IsActive(std::string_view actionName) const;
+	std::string_view ActionNameTriggeredByButtonEvent(ControllerButtonEvent ctrlEvent) const;
+	std::string_view InputNameForAction(std::string_view actionName, bool useShortName = false) const;
+	ControllerButtonCombo ButtonComboForAction(std::string_view actionName) const;
 
 private:
 	std::forward_list<Action> actions;

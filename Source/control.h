@@ -8,6 +8,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <optional>
+#include <string_view>
 
 #include <SDL.h>
 
@@ -24,7 +25,6 @@
 #include "spelldat.h"
 #include "spells.h"
 #include "utils/attributes.h"
-#include "utils/stdcompat/string_view.hpp"
 #include "utils/string_or_view.hpp"
 #include "utils/ui_fwd.h"
 
@@ -81,7 +81,7 @@ void SetSpell();
 void SetSpeedSpell(size_t slot);
 void ToggleSpell(size_t slot);
 
-void AddPanelString(string_view str);
+void AddPanelString(std::string_view str);
 void AddPanelString(std::string &&str);
 void DrawPanelBox(const Surface &out, SDL_Rect srcRect, Point targetPosition);
 Point GetPanelPosition(UiPanels panel, Point offset = { 0, 0 });
@@ -187,11 +187,11 @@ void control_release_talk_btn();
 void control_type_message();
 void control_reset_talk();
 bool IsTalkActive();
-void control_new_text(string_view text);
+void control_new_text(std::string_view text);
 bool control_presskeys(SDL_Keycode vkey);
 void DiabloHotkeyMsg(uint32_t dwMsg);
 void CloseGoldDrop();
-void GoldDropNewText(string_view text);
+void GoldDropNewText(std::string_view text);
 extern Rectangle ChrBtnsRect[4];
 
 } // namespace devilution

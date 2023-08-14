@@ -1,9 +1,8 @@
 #pragma once
 
 #include <charconv>
+#include <string_view>
 #include <system_error>
-
-#include "utils/stdcompat/string_view.hpp"
 
 namespace devilution {
 
@@ -32,7 +31,7 @@ struct ParseIntResult {
 
 template <typename IntT>
 ParseIntResult<IntT> ParseInt(
-    string_view str, IntT min = std::numeric_limits<IntT>::min(),
+    std::string_view str, IntT min = std::numeric_limits<IntT>::min(),
     IntT max = std::numeric_limits<IntT>::max())
 {
 	IntT value;

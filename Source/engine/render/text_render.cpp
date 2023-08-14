@@ -139,12 +139,12 @@ bool IsSmallFontTallRow(uint16_t row)
 	return IsCJK(row) || IsHangul(row);
 }
 
-void GetFontPath(GameFontTables size, uint16_t row, string_view ext, char *out)
+void GetFontPath(GameFontTables size, uint16_t row, std::string_view ext, char *out)
 {
 	*fmt::format_to(out, R"(fonts\{}-{:02x}{})", FontSizes[size], row, ext) = '\0';
 }
 
-void GetFontPath(string_view language_code, GameFontTables size, uint16_t row, string_view ext, char *out)
+void GetFontPath(std::string_view language_code, GameFontTables size, uint16_t row, std::string_view ext, char *out)
 {
 	*fmt::format_to(out, R"(fonts\{}\{}-{:02x}{})", language_code, FontSizes[size], row, ext) = '\0';
 }
@@ -171,8 +171,8 @@ OptionalClxSpriteList LoadFont(GameFontTables size, text_color color, uint16_t r
 	char path[32];
 
 	// Try loading the language-specific variant first:
-	const string_view language_code = GetLanguageCode();
-	const string_view language_tag = language_code.substr(0, 2);
+	const std::string_view language_code = GetLanguageCode();
+	const std::string_view language_tag = language_code.substr(0, 2);
 	if (language_tag == "zh" || language_tag == "ja" || language_tag == "ko") {
 		GetFontPath(language_code, size, row, ".clx", &path[0]);
 		font = LoadOptionalClx(path);
@@ -258,7 +258,7 @@ bool IsBreakAllowed(char32_t codepoint, char32_t nextCodepoint)
 	return IsFullWidthPunct(codepoint) && !IsFullWidthPunct(nextCodepoint);
 }
 
-std::size_t CountNewlines(string_view fmt, const DrawStringFormatArg *args, std::size_t argsLen)
+std::size_t CountNewlines(std::string_view fmt, const DrawStringFormatArg *args, std::size_t argsLen)
 {
 	std::size_t result = c_count(fmt, '\n');
 	for (std::size_t i = 0; i < argsLen; ++i) {
@@ -270,7 +270,7 @@ std::size_t CountNewlines(string_view fmt, const DrawStringFormatArg *args, std:
 
 class FmtArgParser {
 public:
-	FmtArgParser(string_view fmt,
+	FmtArgParser(std::string_view fmt,
 	    DrawStringFormatArg *args,
 	    size_t len,
 	    size_t offset = 0)
@@ -281,14 +281,14 @@ public:
 	{
 	}
 
-	std::optional<std::size_t> operator()(string_view &rest)
+	std::optional<std::size_t> operator()(std::string_view &rest)
 	{
 		std::optional<std::size_t> result;
 		if (rest[0] != '{')
 			return result;
 
 		std::size_t closingBracePos = rest.find('}', 1);
-		if (closingBracePos == string_view::npos) {
+		if (closingBracePos == std::string_view::npos) {
 			LogError("Unclosed format argument: {}", fmt_);
 			return result;
 		}
@@ -311,7 +311,7 @@ public:
 			result = std::nullopt;
 		} else {
 			if (!args_[*result].HasFormatted()) {
-				const auto fmtStr = positional ? "{}" : fmt::string_view(rest.data(), fmtLen);
+				const auto fmtStr = positional ? "{}" : std::string_view(rest.data(), fmtLen);
 				args_[*result].SetFormatted(fmt::format(fmt::runtime(fmtStr), args_[*result].GetIntValue()));
 			}
 			rest.remove_prefix(fmtLen);
@@ -325,13 +325,13 @@ public:
 	}
 
 private:
-	string_view fmt_;
+	std::string_view fmt_;
 	DrawStringFormatArg *args_;
 	std::size_t len_;
 	std::size_t next_;
 };
 
-bool ContainsSmallFontTallCodepoints(string_view text)
+bool ContainsSmallFontTallCodepoints(std::string_view text)
 {
 	while (!text.empty()) {
 		const char32_t next = ConsumeFirstUtf8CodePoint(&text);
@@ -345,14 +345,14 @@ bool ContainsSmallFontTallCodepoints(string_view text)
 	return false;
 }
 
-int GetLineHeight(string_view fmt, DrawStringFormatArg *args, std::size_t argsLen, GameFontTables fontIndex)
+int GetLineHeight(std::string_view fmt, DrawStringFormatArg *args, std::size_t argsLen, GameFontTables fontIndex)
 {
 	constexpr std::array<int, 6> LineHeights = { 12, 26, 38, 42, 50, 22 };
 	if (fontIndex == GameFont12 && IsSmallFontTall()) {
 		char32_t prev = U'\0';
 		char32_t next;
 		FmtArgParser fmtArgParser { fmt, args, argsLen };
-		string_view rest = fmt;
+		std::string_view rest = fmt;
 		while (!rest.empty()) {
 			if ((prev == U'{' || prev == U'}') && static_cast<char>(prev) == rest[0]) {
 				rest.remove_prefix(1);
@@ -407,14 +407,14 @@ int GetLineStartX(UiFlags flags, const Rectangle &rect, int lineWidth)
 	return rect.position.x;
 }
 
-uint32_t DoDrawString(const Surface &out, string_view text, Rectangle rect, Point &characterPosition,
+uint32_t DoDrawString(const Surface &out, std::string_view text, Rectangle rect, Point &characterPosition,
     int spacing, int lineHeight, int lineWidth, int rightMargin, int bottomMargin,
     UiFlags flags, GameFontTables size, text_color color, bool outline)
 {
 	CurrentFont currentFont;
 
 	char32_t next;
-	string_view remaining = text;
+	std::string_view remaining = text;
 	size_t cpLen;
 	for (; !remaining.empty() && remaining[0] != '\0'
 	     && (next = DecodeFirstUtf8CodePoint(remaining, &cpLen)) != Utf8DecodeError;
@@ -466,7 +466,7 @@ void UnloadFonts()
 	Fonts.clear();
 }
 
-int GetLineWidth(string_view text, GameFontTables size, int spacing, int *charactersInLine)
+int GetLineWidth(std::string_view text, GameFontTables size, int spacing, int *charactersInLine)
 {
 	int lineWidth = 0;
 	CurrentFont currentFont;
@@ -499,7 +499,7 @@ int GetLineWidth(string_view text, GameFontTables size, int spacing, int *charac
 	return lineWidth != 0 ? (lineWidth - spacing) : 0;
 }
 
-int GetLineWidth(string_view fmt, DrawStringFormatArg *args, std::size_t argsLen, size_t argsOffset, GameFontTables size, int spacing, int *charactersInLine)
+int GetLineWidth(std::string_view fmt, DrawStringFormatArg *args, std::size_t argsLen, size_t argsOffset, GameFontTables size, int spacing, int *charactersInLine)
 {
 	int lineWidth = 0;
 	CurrentFont currentFont;
@@ -509,7 +509,7 @@ int GetLineWidth(string_view fmt, DrawStringFormatArg *args, std::size_t argsLen
 	char32_t next;
 
 	FmtArgParser fmtArgParser { fmt, args, argsLen, argsOffset };
-	string_view rest = fmt;
+	std::string_view rest = fmt;
 	while (!rest.empty()) {
 		if ((prev == U'{' || prev == U'}') && static_cast<char>(prev) == rest[0]) {
 			rest.remove_prefix(1);
@@ -552,7 +552,7 @@ int GetLineWidth(string_view fmt, DrawStringFormatArg *args, std::size_t argsLen
 	return lineWidth != 0 ? (lineWidth - spacing) : 0;
 }
 
-int GetLineHeight(string_view text, GameFontTables fontIndex)
+int GetLineHeight(std::string_view text, GameFontTables fontIndex)
 {
 	if (fontIndex == GameFont12 && IsSmallFontTall() && ContainsSmallFontTallCodepoints(text)) {
 		return SmallFontTallLineHeight;
@@ -571,7 +571,7 @@ int AdjustSpacingToFitHorizontally(int &lineWidth, int maxSpacing, int character
 	return maxSpacing - spacingRedux;
 }
 
-std::string WordWrapString(string_view text, unsigned width, GameFontTables size, int spacing)
+std::string WordWrapString(std::string_view text, unsigned width, GameFontTables size, int spacing)
 {
 	std::string output;
 	if (text.empty() || text[0] == '\0')
@@ -580,7 +580,7 @@ std::string WordWrapString(string_view text, unsigned width, GameFontTables size
 	output.reserve(text.size());
 	const char *begin = text.data();
 	const char *processedEnd = text.data();
-	string_view::size_type lastBreakablePos = string_view::npos;
+	std::string_view::size_type lastBreakablePos = std::string_view::npos;
 	std::size_t lastBreakableLen;
 	bool lastBreakableKeep = false;
 	unsigned lineWidth = 0;
@@ -589,7 +589,7 @@ std::string WordWrapString(string_view text, unsigned width, GameFontTables size
 	char32_t codepoint = U'\0'; // the current codepoint
 	char32_t nextCodepoint;     // the next codepoint
 	std::size_t nextCodepointLen;
-	string_view remaining = text;
+	std::string_view remaining = text;
 	nextCodepoint = DecodeFirstUtf8CodePoint(remaining, &nextCodepointLen);
 	do {
 		codepoint = nextCodepoint;
@@ -600,7 +600,7 @@ std::string WordWrapString(string_view text, unsigned width, GameFontTables size
 		nextCodepoint = !remaining.empty() ? DecodeFirstUtf8CodePoint(remaining, &nextCodepointLen) : U'\0';
 
 		if (codepoint == U'\n') { // Existing line break, scan next line
-			lastBreakablePos = string_view::npos;
+			lastBreakablePos = std::string_view::npos;
 			lineWidth = 0;
 			output.append(processedEnd, remaining.data());
 			processedEnd = remaining.data();
@@ -631,7 +631,7 @@ std::string WordWrapString(string_view text, unsigned width, GameFontTables size
 			continue; // String is still within the limit, continue to the next symbol
 		}
 
-		if (lastBreakablePos == string_view::npos) { // Single word longer than width
+		if (lastBreakablePos == std::string_view::npos) { // Single word longer than width
 			continue;
 		}
 
@@ -646,7 +646,7 @@ std::string WordWrapString(string_view text, unsigned width, GameFontTables size
 		// Restart from the beginning of the new line.
 		remaining = text.substr(lastBreakablePos + lastBreakableLen);
 		processedEnd = remaining.data();
-		lastBreakablePos = string_view::npos;
+		lastBreakablePos = std::string_view::npos;
 		lineWidth = 0;
 		nextCodepoint = !remaining.empty() ? DecodeFirstUtf8CodePoint(remaining, &nextCodepointLen) : U'\0';
 	} while (!remaining.empty() && remaining[0] != '\0');
@@ -657,7 +657,7 @@ std::string WordWrapString(string_view text, unsigned width, GameFontTables size
 /**
  * @todo replace Rectangle with cropped Surface
  */
-uint32_t DrawString(const Surface &out, string_view text, const Rectangle &rect, UiFlags flags, int spacing, int lineHeight)
+uint32_t DrawString(const Surface &out, std::string_view text, const Rectangle &rect, UiFlags flags, int spacing, int lineHeight)
 {
 	GameFontTables size = GetSizeFromFlags(flags);
 	text_color color = GetColorFromFlags(flags);
@@ -707,7 +707,7 @@ uint32_t DrawString(const Surface &out, string_view text, const Rectangle &rect,
 	return bytesDrawn;
 }
 
-void DrawStringWithColors(const Surface &out, string_view fmt, DrawStringFormatArg *args, std::size_t argsLen, const Rectangle &rect, UiFlags flags, int spacing, int lineHeight)
+void DrawStringWithColors(const Surface &out, std::string_view fmt, DrawStringFormatArg *args, std::size_t argsLen, const Rectangle &rect, UiFlags flags, int spacing, int lineHeight)
 {
 	GameFontTables size = GetSizeFromFlags(flags);
 	text_color color = GetColorFromFlags(flags);
@@ -745,7 +745,7 @@ void DrawStringWithColors(const Surface &out, string_view fmt, DrawStringFormatA
 
 	char32_t prev = U'\0';
 	char32_t next;
-	string_view remaining = fmt;
+	std::string_view remaining = fmt;
 	FmtArgParser fmtArgParser { fmt, args, argsLen };
 	size_t cpLen;
 	for (; !remaining.empty() && remaining[0] != '\0'

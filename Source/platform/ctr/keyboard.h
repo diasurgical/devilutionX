@@ -1,6 +1,8 @@
-#include <3ds.h>
+#pragma once
 
-#include "utils/stdcompat/string_view.hpp"
+#include <string_view>
+
+#include <3ds.h>
 
 /**
  * @brief Queues a request for user input for the next call to ctr_vkbdFlush()
@@ -10,7 +12,7 @@
  * @param outText Pointer to a buffer to receive user input
  * @param maxLength Size of the buffer
  */
-void ctr_vkbdInput(devilution::string_view title, devilution::string_view inText, char *outText, size_t maxLength);
+void ctr_vkbdInput(std::string_view title, std::string_view inText, char *outText, size_t maxLength);
 
 /**
  * @brief Processes pending requests for user input

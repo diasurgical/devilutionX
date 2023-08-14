@@ -7,6 +7,7 @@
 
 #include <cstdint>
 #include <string>
+#include <string_view>
 #include <unordered_map>
 
 #include <fmt/core.h>
@@ -26,7 +27,6 @@
 #include "utils/language.h"
 #include "utils/parse_int.hpp"
 #include "utils/paths.h"
-#include "utils/stdcompat/string_view.hpp"
 #include "utils/str_cat.hpp"
 #include "utils/str_split.hpp"
 #include "utils/utf8.hpp"
@@ -51,7 +51,7 @@ namespace {
 /** List of character names for the character selection screen. */
 char hero_names[MAX_CHARACTERS][PlayerNameLength];
 
-std::string GetSavePath(uint32_t saveNum, string_view savePrefix = {})
+std::string GetSavePath(uint32_t saveNum, std::string_view savePrefix = {})
 {
 	return StrCat(paths::PrefPath(), savePrefix,
 	    gbIsSpawn
@@ -78,7 +78,7 @@ std::string GetStashSavePath()
 	);
 }
 
-bool GetSaveNames(uint8_t index, string_view prefix, char *out)
+bool GetSaveNames(uint8_t index, std::string_view prefix, char *out)
 {
 	char suf;
 	if (index < giNumberOfLevels)
@@ -255,14 +255,14 @@ struct CompareCounter {
 	}
 };
 
-inline bool string_ends_with(string_view value, string_view suffix)
+inline bool string_ends_with(std::string_view value, std::string_view suffix)
 {
 	if (suffix.size() > value.size())
 		return false;
 	return std::equal(suffix.rbegin(), suffix.rend(), value.rbegin());
 }
 
-void CreateDetailDiffs(string_view prefix, string_view memoryMapFile, CompareInfo &compareInfoReference, CompareInfo &compareInfoActual, std::unordered_map<std::string, size_t> &foundDiffs)
+void CreateDetailDiffs(std::string_view prefix, std::string_view memoryMapFile, CompareInfo &compareInfoReference, CompareInfo &compareInfoActual, std::unordered_map<std::string, size_t> &foundDiffs)
 {
 	// Note: Detail diffs are currently only supported in unit tests
 	std::string memoryMapFileAssetName = StrCat(paths::BasePath(), "/test/fixtures/memory_map/", memoryMapFile, ".txt");
@@ -276,7 +276,7 @@ void CreateDetailDiffs(string_view prefix, string_view memoryMapFile, CompareInf
 	size_t readBytes = SDL_RWsize(handle);
 	std::unique_ptr<std::byte[]> memoryMapFileData { new std::byte[readBytes] };
 	SDL_RWread(handle, memoryMapFileData.get(), readBytes, 1);
-	const string_view buffer(reinterpret_cast<const char *>(memoryMapFileData.get()), readBytes);
+	const std::string_view buffer(reinterpret_cast<const char *>(memoryMapFileData.get()), readBytes);
 
 	std::unordered_map<std::string, CompareCounter> counter;
 
@@ -327,7 +327,7 @@ void CreateDetailDiffs(string_view prefix, string_view memoryMapFile, CompareInf
 		return value;
 	};
 
-	for (string_view line : SplitByChar(buffer, '\n')) {
+	for (std::string_view line : SplitByChar(buffer, '\n')) {
 		if (!line.empty() && line.back() == '\r')
 			line.remove_suffix(1);
 		if (line.empty())
@@ -338,7 +338,7 @@ void CreateDetailDiffs(string_view prefix, string_view memoryMapFile, CompareInf
 		if (it == end)
 			continue;
 
-		string_view command = *it;
+		std::string_view command = *it;
 
 		bool dataExistsReference = compareInfoReference.dataExists;
 		bool dataExistsActual = compareInfoActual.dataExists;
@@ -391,7 +391,7 @@ void CreateDetailDiffs(string_view prefix, string_view memoryMapFile, CompareInf
 		} else if (command == "M") {
 			const auto countAsString = std::string(*++it);
 			const auto bitsAsString = std::string(*++it);
-			string_view comment = *++it;
+			std::string_view comment = *++it;
 
 			CompareCounter count = getCounter(countAsString);
 			const ParseIntResult<size_t> parsedBytes = ParseInt<size_t>(bitsAsString);

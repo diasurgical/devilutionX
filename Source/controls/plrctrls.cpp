@@ -1484,7 +1484,7 @@ bool ContinueSimulatedMouseEvent(const SDL_Event &event, const ControllerButtonE
 	return SimulatingMouseWithPadmapper || IsSimulatedMouseClickBinding(gamepadEvent);
 }
 
-string_view ControlTypeToString(ControlTypes controlType)
+std::string_view ControlTypeToString(ControlTypes controlType)
 {
 	switch (controlType) {
 	case ControlTypes::None:
@@ -1514,7 +1514,7 @@ void LogControlDeviceAndModeChange(ControlTypes newControlDevice, ControlTypes n
 }
 
 #ifndef USE_SDL1
-string_view GamepadTypeToString(GamepadLayout gamepadLayout)
+std::string_view GamepadTypeToString(GamepadLayout gamepadLayout)
 {
 	switch (gamepadLayout) {
 	case GamepadLayout::Nintendo:

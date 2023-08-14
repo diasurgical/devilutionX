@@ -251,9 +251,9 @@ struct DunRenderTypeHash {
 };
 extern std::unordered_map<DunRenderType, size_t, DunRenderTypeHash> DunRenderStats;
 
-string_view TileTypeToString(TileType tileType);
+std::string_view TileTypeToString(TileType tileType);
 
-string_view MaskTypeToString(MaskType maskType);
+std::string_view MaskTypeToString(MaskType maskType);
 #endif
 
 /**

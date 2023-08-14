@@ -66,7 +66,7 @@ SpellID GetSpellFromSpellPage(size_t page, size_t entry)
 constexpr Size SpellBookDescription { 250, 43 };
 constexpr int SpellBookDescriptionPaddingHorizontal = 2;
 
-void PrintSBookStr(const Surface &out, Point position, string_view text, UiFlags flags = UiFlags::None)
+void PrintSBookStr(const Surface &out, Point position, std::string_view text, UiFlags flags = UiFlags::None)
 {
 	DrawString(out, text,
 	    Rectangle(GetPanelPosition(UiPanels::Spell, position + Displacement { SPLICONLENGTH, 0 }),

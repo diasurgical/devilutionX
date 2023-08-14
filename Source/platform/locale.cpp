@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cstdint>
+#include <string_view>
 
 #ifdef __ANDROID__
 #include <SDL.h>
@@ -27,13 +28,11 @@
 #include <clocale>
 #endif
 
-#include "utils/stdcompat/string_view.hpp"
-
 namespace devilution {
 namespace {
 
 #if (defined(_WIN32) && WINVER >= 0x0600 && !defined(NXDK)) || (defined(__APPLE__) && defined(USE_COREFOUNDATION))
-std::string IetfToPosix(string_view langCode)
+std::string IetfToPosix(std::string_view langCode)
 {
 	/*
 	 * Handle special case for simplified/traditional Chinese. IETF/BCP-47 specifies that only the script should be
@@ -179,10 +178,10 @@ std::vector<std::string> GetLocales()
 
 	CFRelease(languages);
 #else
-	constexpr auto svOrEmpty = [](const char *cString) -> string_view {
+	constexpr auto svOrEmpty = [](const char *cString) -> std::string_view {
 		return cString != nullptr ? cString : "";
 	};
-	string_view languages = svOrEmpty(std::getenv("LANGUAGE"));
+	std::string_view languages = svOrEmpty(std::getenv("LANGUAGE"));
 	if (languages.empty()) {
 		languages = svOrEmpty(std::getenv("LANG"));
 		if (languages.empty()) {

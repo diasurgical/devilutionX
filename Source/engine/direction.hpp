@@ -1,9 +1,8 @@
 #pragma once
 
 #include <cstdint>
+#include <string_view>
 #include <type_traits>
-
-#include "utils/stdcompat/string_view.hpp"
 
 namespace devilution {
 
@@ -40,6 +39,6 @@ constexpr Direction Opposite(Direction facing)
 	return static_cast<Direction>((static_cast<std::underlying_type_t<Direction>>(facing) + 4) % 8);
 }
 
-string_view DirectionToString(Direction direction);
+std::string_view DirectionToString(Direction direction);
 
 } // namespace devilution

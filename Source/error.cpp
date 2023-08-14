@@ -112,7 +112,7 @@ void InitDiabloMsg(diablo_message e)
 	InitDiabloMsg(LanguageTranslate(MsgStrings[e]));
 }
 
-void InitDiabloMsg(string_view msg)
+void InitDiabloMsg(std::string_view msg)
 {
 	if (DiabloMessages.size() >= MAX_SEND_STR_LEN)
 		return;

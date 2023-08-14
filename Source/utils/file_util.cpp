@@ -1,18 +1,17 @@
 #include "utils/file_util.h"
 
+#include <algorithm>
 #include <cerrno>
 #include <cstdint>
 #include <cstring>
-
-#include <algorithm>
 #include <string>
+#include <string_view>
 #include <vector>
 
 #include <SDL.h>
 
 #include "utils/log.hpp"
 #include "utils/stdcompat/filesystem.hpp"
-#include "utils/stdcompat/string_view.hpp"
 
 #ifdef USE_SDL1
 #include "utils/sdl2_to_1_2_backports.h"
@@ -50,7 +49,7 @@
 namespace devilution {
 
 #if (defined(_WIN64) || defined(_WIN32)) && !defined(NXDK)
-std::unique_ptr<wchar_t[]> ToWideChar(string_view path)
+std::unique_ptr<wchar_t[]> ToWideChar(std::string_view path)
 {
 	constexpr std::uint32_t flags = MB_ERR_INVALID_CHARS;
 	const int utf16Size = ::MultiByteToWideChar(CP_UTF8, flags, path.data(), path.size(), nullptr, 0);
@@ -64,16 +63,16 @@ std::unique_ptr<wchar_t[]> ToWideChar(string_view path)
 }
 #endif
 
-string_view Dirname(string_view path)
+std::string_view Dirname(std::string_view path)
 {
 	while (path.size() > 1 && path.back() == DirectorySeparator)
 		path.remove_suffix(1);
 	if (path.size() == 1 && path.back() == DirectorySeparator)
 		return DIRECTORY_SEPARATOR_STR;
 	const size_t sep = path.find_last_of(DIRECTORY_SEPARATOR_STR);
-	if (sep == string_view::npos)
+	if (sep == std::string_view::npos)
 		return ".";
-	return string_view { path.data(), sep };
+	return std::string_view { path.data(), sep };
 }
 
 bool FileExists(const char *path)
@@ -265,7 +264,7 @@ void RecursivelyCreateDir(const char *path)
 	std::string cur { path };
 	do {
 		paths.push_back(cur);
-		string_view parent = Dirname(cur);
+		std::string_view parent = Dirname(cur);
 		if (parent == cur)
 			break;
 		cur.assign(parent.data(), parent.size());

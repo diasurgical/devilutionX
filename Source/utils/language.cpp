@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <memory>
+#include <string_view>
 #include <unordered_map>
 #include <vector>
 
@@ -13,7 +14,6 @@
 #include "utils/file_util.h"
 #include "utils/log.hpp"
 #include "utils/paths.h"
-#include "utils/stdcompat/string_view.hpp"
 
 #ifdef USE_SDL1
 #include "utils/sdl2_to_1_2_backports.h"
@@ -40,14 +40,14 @@ using TranslationRef = uint32_t;
 struct StringHash {
 	size_t operator()(const char *str) const noexcept
 	{
-		return std::hash<string_view> {}(str);
+		return std::hash<std::string_view> {}(str);
 	}
 };
 
 struct StringEq {
 	bool operator()(const char *lhs, const char *rhs) const noexcept
 	{
-		return string_view(lhs) == string_view(rhs);
+		return std::string_view(lhs) == std::string_view(rhs);
 	}
 };
 
@@ -62,7 +62,7 @@ TranslationRef EncodeTranslationRef(uint32_t offset, uint32_t size)
 	return (offset << TranslationRefSizeBits) | size;
 }
 
-string_view GetTranslation(TranslationRef ref)
+std::string_view GetTranslation(TranslationRef ref)
 {
 	return { &translationValues[ref >> TranslationRefSizeBits], ref & TranslationRefSizeMask };
 }
@@ -104,13 +104,13 @@ void SwapLE(MoEntry &entry)
 	entry.offset = SDL_SwapLE32(entry.offset);
 }
 
-string_view TrimLeft(string_view str)
+std::string_view TrimLeft(std::string_view str)
 {
 	str.remove_prefix(std::min(str.find_first_not_of(" \t"), str.size()));
 	return str;
 }
 
-string_view TrimRight(string_view str)
+std::string_view TrimRight(std::string_view str)
 {
 	str.remove_suffix(str.size() - (str.find_last_not_of(" \t") + 1));
 	return str;
@@ -129,16 +129,16 @@ tl::function_ref<int(int n)> GetLocalPluralId = PluralIfNotOne;
 /**
  * Match plural=(n != 1);"
  */
-void SetPluralForm(string_view expression)
+void SetPluralForm(std::string_view expression)
 {
-	const string_view key = "plural=";
-	const string_view::size_type keyPos = expression.find(key);
-	if (keyPos == string_view::npos)
+	const std::string_view key = "plural=";
+	const std::string_view::size_type keyPos = expression.find(key);
+	if (keyPos == std::string_view::npos)
 		return;
 	expression.remove_prefix(keyPos + key.size());
 
-	const string_view::size_type semicolonPos = expression.find(';');
-	if (semicolonPos != string_view::npos) {
+	const std::string_view::size_type semicolonPos = expression.find(';');
+	if (semicolonPos != std::string_view::npos) {
 		expression.remove_suffix(expression.size() - semicolonPos);
 	}
 
@@ -216,19 +216,19 @@ void SetPluralForm(string_view expression)
 /**
  * Parse "nplurals=2;"
  */
-void ParsePluralForms(string_view string)
+void ParsePluralForms(std::string_view string)
 {
-	const string_view pluralsKey = "nplurals";
-	const string_view::size_type pluralsPos = string.find(pluralsKey);
-	if (pluralsPos == string_view::npos)
+	const std::string_view pluralsKey = "nplurals";
+	const std::string_view::size_type pluralsPos = string.find(pluralsKey);
+	if (pluralsPos == std::string_view::npos)
 		return;
 	string.remove_prefix(pluralsPos + pluralsKey.size());
 
-	const string_view::size_type eqPos = string.find('=');
-	if (eqPos == string_view::npos)
+	const std::string_view::size_type eqPos = string.find('=');
+	if (eqPos == std::string_view::npos)
 		return;
 
-	string_view value = string.substr(eqPos + 1);
+	std::string_view value = string.substr(eqPos + 1);
 	if (value.empty() || value[0] < '0')
 		return;
 
@@ -241,16 +241,16 @@ void ParsePluralForms(string_view string)
 	SetPluralForm(value);
 }
 
-void ParseMetadata(string_view metadata)
+void ParseMetadata(std::string_view metadata)
 {
-	string_view::size_type delim;
+	std::string_view::size_type delim;
 
-	while (!metadata.empty() && ((delim = metadata.find(':')) != string_view::npos)) {
-		const string_view key = TrimLeft(string_view(metadata.data(), delim));
-		string_view val = TrimLeft(string_view(metadata.data() + delim + 1, metadata.size() - delim - 1));
+	while (!metadata.empty() && ((delim = metadata.find(':')) != std::string_view::npos)) {
+		const std::string_view key = TrimLeft(std::string_view(metadata.data(), delim));
+		std::string_view val = TrimLeft(std::string_view(metadata.data() + delim + 1, metadata.size() - delim - 1));
 
-		if ((delim = val.find('\n')) != string_view::npos) {
-			val = string_view(val.data(), delim);
+		if ((delim = val.find('\n')) != std::string_view::npos) {
+			val = std::string_view(val.data(), delim);
 			metadata.remove_prefix(val.data() - metadata.data() + val.size() + 1);
 		} else {
 			metadata.remove_prefix(metadata.size());
@@ -290,7 +290,7 @@ bool ReadEntry(const std::byte *data, size_t dataSize, const MoEntry &e, char *r
 
 } // namespace
 
-string_view LanguageParticularTranslate(string_view context, string_view message)
+std::string_view LanguageParticularTranslate(std::string_view context, std::string_view message)
 {
 	constexpr const char Glue = '\004';
 
@@ -307,7 +307,7 @@ string_view LanguageParticularTranslate(string_view context, string_view message
 	return GetTranslation(it->second);
 }
 
-string_view LanguagePluralTranslate(const char *singular, string_view plural, int count)
+std::string_view LanguagePluralTranslate(const char *singular, std::string_view plural, int count)
 {
 	int n = GetLocalPluralId(count);
 
@@ -321,7 +321,7 @@ string_view LanguagePluralTranslate(const char *singular, string_view plural, in
 	return GetTranslation(it->second);
 }
 
-string_view LanguageTranslate(const char *key)
+std::string_view LanguageTranslate(const char *key)
 {
 	auto it = translation[0].find(key);
 	if (it == translation[0].end()) {
@@ -344,7 +344,7 @@ bool HasTranslation(const std::string &locale)
 	});
 }
 
-string_view GetLanguageCode()
+std::string_view GetLanguageCode()
 {
 	if (!forceLocale.empty())
 		return forceLocale;
@@ -353,7 +353,7 @@ string_view GetLanguageCode()
 
 bool IsSmallFontTall()
 {
-	const string_view code = GetLanguageCode().substr(0, 2);
+	const std::string_view code = GetLanguageCode().substr(0, 2);
 	return code == "zh" || code == "ja" || code == "ko";
 }
 
@@ -493,7 +493,7 @@ void LanguageInitialize()
 		        : ReadEntry(handle, src[i], keyPtr) && ReadEntry(handle, dst[i], valuePtr)) {
 			// Plural keys also have a plural form but it does not participate in lookup.
 			// Plural values are \0-terminated.
-			string_view value { valuePtr, dst[i].length + 1 };
+			std::string_view value { valuePtr, dst[i].length + 1 };
 			for (size_t j = 0; j < PluralForms && !value.empty(); j++) {
 				const size_t formValueEnd = value.find('\0');
 				translation[j].emplace(keyPtr, EncodeTranslationRef(value.data() - &translationValues[0], formValueEnd));
