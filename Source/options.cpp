@@ -1319,8 +1319,8 @@ KeymapperOptions::KeymapperOptions()
 	keyIDToKeyName.emplace(SDL_BUTTON_X2 | KeymapperMouseButtonMask, "X2MOUSE");
 
 	keyNameToKeyID.reserve(keyIDToKeyName.size());
-	for (const auto &kv : keyIDToKeyName) {
-		keyNameToKeyID.emplace(kv.second, kv.first);
+	for (const auto &[key, value] : keyIDToKeyName) {
+		keyNameToKeyID.emplace(value, key);
 	}
 }
 

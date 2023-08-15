@@ -434,8 +434,10 @@ std::vector<GameInfo> base_protocol<P>::get_gamelist()
 {
 	recv();
 	std::vector<GameInfo> ret;
-	for (auto &s : game_list) {
-		ret.push_back({ s.first, std::get<0>(s.second), std::get<1>(s.second) });
+	ret.reserve(game_list.size());
+	for (const auto &[name, gameInfo] : game_list) {
+		const auto &[gameData, players, _] = gameInfo;
+		ret.push_back({ name, gameData, players });
 	}
 	return ret;
 }

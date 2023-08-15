@@ -460,10 +460,10 @@ size_t DeltaImportItem(const std::byte *src, TCmdPItem *dst)
 std::byte *DeltaExportObject(std::byte *dst, const std::unordered_map<WorldTilePosition, DObjectStr> &src)
 {
 	*dst++ = static_cast<std::byte>(src.size());
-	for (auto &pair : src) {
-		*dst++ = static_cast<std::byte>(pair.first.x);
-		*dst++ = static_cast<std::byte>(pair.first.y);
-		*dst++ = static_cast<std::byte>(pair.second.bCmd);
+	for (const auto &[position, obj] : src) {
+		*dst++ = static_cast<std::byte>(position.x);
+		*dst++ = static_cast<std::byte>(position.y);
+		*dst++ = static_cast<std::byte>(obj.bCmd);
 	}
 
 	return dst;
@@ -2420,9 +2420,7 @@ void run_delta_info()
 
 void DeltaExportData(int pnum)
 {
-	for (auto &it : DeltaLevels) {
-		DLevel &deltaLevel = it.second;
-
+	for (const auto &[levelNum, deltaLevel] : DeltaLevels) {
 		const size_t bufferSize = 1U                                                      /* marker byte, always 0 */
 		    + sizeof(uint8_t)                                                             /* level id */
 		    + sizeof(deltaLevel.item)                                                     /* items spawned during dungeon generation which have been picked up, and items dropped by a player during a game */
@@ -2432,7 +2430,7 @@ void DeltaExportData(int pnum)
 		std::unique_ptr<std::byte[]> dst { new std::byte[bufferSize] };
 
 		std::byte *dstEnd = &dst.get()[1];
-		*dstEnd = static_cast<std::byte>(it.first);
+		*dstEnd = static_cast<std::byte>(levelNum);
 		dstEnd += sizeof(uint8_t);
 		dstEnd = DeltaExportItem(dstEnd, deltaLevel.item);
 		dstEnd = DeltaExportObject(dstEnd, deltaLevel.object);

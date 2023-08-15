@@ -3274,26 +3274,26 @@ bool OperateFountains(Player &player, Object &fountain)
 		if (&player != MyPlayer)
 			return false;
 
-		unsigned randomValue = (fountain._oRndSeed >> 16) % 12;
-		unsigned fromStat = randomValue / 3;
+		const unsigned randomValue = (fountain._oRndSeed >> 16) % 12;
+		const unsigned fromStat = randomValue / 3;
 		unsigned toStat = randomValue % 3;
 		if (toStat >= fromStat)
 			toStat++;
 
-		std::pair<unsigned, int> alterations[] = { { fromStat, -1 }, { toStat, 1 } };
-		for (auto alteration : alterations) {
-			switch (alteration.first) {
+		const std::pair<unsigned, int> alterations[] = { { fromStat, -1 }, { toStat, 1 } };
+		for (const auto &[stat, delta] : alterations) {
+			switch (stat) {
 			case 0:
-				ModifyPlrStr(player, alteration.second);
+				ModifyPlrStr(player, delta);
 				break;
 			case 1:
-				ModifyPlrMag(player, alteration.second);
+				ModifyPlrMag(player, delta);
 				break;
 			case 2:
-				ModifyPlrDex(player, alteration.second);
+				ModifyPlrDex(player, delta);
 				break;
 			case 3:
-				ModifyPlrVit(player, alteration.second);
+				ModifyPlrVit(player, delta);
 				break;
 			}
 		}

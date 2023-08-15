@@ -164,8 +164,8 @@ bool protocol_zt::recv_peer(const endpoint &peer)
 
 bool protocol_zt::send_queued_all()
 {
-	for (auto &peer : peer_list) {
-		if (!send_queued_peer(peer.first)) {
+	for (const auto &[endpoint, _] : peer_list) {
+		if (!send_queued_peer(endpoint)) {
 			// handle error?
 		}
 	}
@@ -174,10 +174,10 @@ bool protocol_zt::send_queued_all()
 
 bool protocol_zt::recv_from_peers()
 {
-	for (auto &peer : peer_list) {
-		if (peer.second.fd != -1) {
-			if (!recv_peer(peer.first)) {
-				disconnect_queue.push_back(peer.first);
+	for (const auto &[endpoint, state] : peer_list) {
+		if (state.fd != -1) {
+			if (!recv_peer(endpoint)) {
+				disconnect_queue.push_back(endpoint);
 			}
 		}
 	}
@@ -280,9 +280,9 @@ void protocol_zt::close_all()
 		lwip_close(fd_udp);
 		fd_udp = -1;
 	}
-	for (auto &peer : peer_list) {
-		if (peer.second.fd != -1)
-			lwip_close(peer.second.fd);
+	for (auto &[_, state] : peer_list) {
+		if (state.fd != -1)
+			lwip_close(state.fd);
 	}
 	peer_list.clear();
 }

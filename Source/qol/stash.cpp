@@ -538,8 +538,7 @@ void StashStruct::RemoveStashItem(StashStruct::StashCell iv)
 	if (lastItemIndex != iv) {
 		stashList[iv] = stashList[lastItemIndex];
 
-		for (auto &pair : Stash.stashGrids) {
-			auto &grid = pair.second;
+		for (auto &[_, grid] : Stash.stashGrids) {
 			for (auto &row : grid) {
 				for (StashStruct::StashCell &itemId : row) {
 					if (itemId == lastItemIndex + 1) {

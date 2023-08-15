@@ -68,8 +68,8 @@ void cdwrap<T>::reset()
 	else
 		dvlnet_wrap->clear_password();
 
-	for (const auto &pair : registered_handlers)
-		dvlnet_wrap->SNetRegisterEventHandler(pair.first, pair.second);
+	for (const auto &[eventType, eventHandler] : registered_handlers)
+		dvlnet_wrap->SNetRegisterEventHandler(eventType, eventHandler);
 }
 
 template <class T>
