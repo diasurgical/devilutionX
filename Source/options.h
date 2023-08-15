@@ -210,8 +210,8 @@ public:
 	OptionEntryEnum(std::string_view key, OptionEntryFlags flags, const char *name, const char *description, T defaultValue, std::initializer_list<std::pair<T, std::string_view>> entries)
 	    : OptionEntryEnumBase(key, flags, name, description, static_cast<int>(defaultValue))
 	{
-		for (auto entry : entries) {
-			AddEntry(static_cast<int>(entry.first), entry.second);
+		for (auto &&[key, value] : entries) {
+			AddEntry(static_cast<int>(key), value);
 		}
 	}
 	[[nodiscard]] T operator*() const

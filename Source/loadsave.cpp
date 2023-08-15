@@ -2338,14 +2338,14 @@ void SaveStash(SaveWriter &stashWriter)
 	file.WriteLE<uint32_t>(Stash.gold);
 
 	std::vector<unsigned> pagesToSave;
-	for (const auto &stashPage : Stash.stashGrids) {
-		if (c_any_of(stashPage.second, [](const auto &row) {
+	for (const auto &[page, grid] : Stash.stashGrids) {
+		if (c_any_of(grid, [](const auto &row) {
 			    return c_any_of(row, [](StashStruct::StashCell cell) {
 				    return cell > 0;
 			    });
 		    })) {
 			// found a page that contains at least one item
-			pagesToSave.push_back(stashPage.first);
+			pagesToSave.push_back(page);
 		}
 	};
 

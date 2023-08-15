@@ -1173,8 +1173,8 @@ void RenderTile(const Surface &out, Point position,
 	}
 
 #ifdef DEBUG_STR
-	const std::pair<std::string_view, UiFlags> debugStr = GetTileDebugStr(tile);
-	DrawString(out, debugStr.first, Rectangle { Point { position.x + 2, position.y - 29 }, Size { 28, 28 } }, debugStr.second);
+	const auto [debugStr, flags] = GetTileDebugStr(tile);
+	DrawString(out, debugStr, Rectangle { Point { position.x + 2, position.y - 29 }, Size { 28, 28 } }, flags);
 #endif
 }
 

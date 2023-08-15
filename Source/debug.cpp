@@ -377,9 +377,9 @@ std::string DebugCmdVisitTowner(const std::string_view parameter)
 	if (parameter.empty()) {
 		std::string ret;
 		ret = "Who? ";
-		for (auto &entry : TownerShortNameToTownerId) {
-			ret.append(" ");
-			ret.append(std::string(entry.first));
+		for (const auto &[name, _] : TownerShortNameToTownerId) {
+			ret += ' ';
+			ret.append(name);
 		}
 		return ret;
 	}

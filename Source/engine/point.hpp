@@ -110,9 +110,7 @@ struct PointOf {
 	constexpr int ApproxDistance(PointOf<PointCoordT> other) const
 	{
 		const Displacement offset = abs(Point(*this) - Point(other));
-		auto minMax = std::minmax(offset.deltaX, offset.deltaY);
-		int min = minMax.first;
-		int max = minMax.second;
+		const auto [min, max] = std::minmax(offset.deltaX, offset.deltaY);
 
 		int approx = max * 1007 + min * 441;
 		if (max < (min * 16))

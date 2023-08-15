@@ -297,8 +297,8 @@ void DrawMissilePrivate(const Surface &out, const Missile &missile, Point target
  */
 void DrawMissile(const Surface &out, Point tilePosition, Point targetBufferPosition, bool pre)
 {
-	const auto range = MissilesAtRenderingTile.equal_range(tilePosition);
-	for (auto it = range.first; it != range.second; it++) {
+	const auto [begin, end] = MissilesAtRenderingTile.equal_range(tilePosition);
+	for (auto it = begin; it != end; ++it) {
 		DrawMissilePrivate(out, *it->second, targetBufferPosition, pre);
 	}
 }
@@ -1117,11 +1117,10 @@ void DrawView(const Surface &out, Point startPosition)
 		char debugGridTextBuffer[10];
 		bool megaTiles = IsDebugGridInMegatiles();
 
-		for (auto m : DebugCoordsMap) {
-			Point dunCoords = { m.first % MAXDUNX, m.first / MAXDUNX };
+		for (auto [dunCoordVal, pixelCoords] : DebugCoordsMap) {
+			Point dunCoords = { dunCoordVal % MAXDUNX, dunCoordVal / MAXDUNX };
 			if (megaTiles && (dunCoords.x % 2 == 1 || dunCoords.y % 2 == 1))
 				continue;
-			Point pixelCoords = m.second;
 			if (megaTiles)
 				pixelCoords += Displacement { 0, TILE_HEIGHT / 2 };
 			if (*sgOptions.Graphics.zoom)

@@ -174,9 +174,9 @@ PanelEntry panelEntries[] = {
 	    []() { return StyledText { GetValueColor(InspectPlayer->_pIBonusToHit), StrCat(InspectPlayer->InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Bow ? InspectPlayer->GetRangedToHit() : InspectPlayer->GetMeleeToHit(), "%") }; } },
 	{ N_("Damage"), { RightColumnLabelX, 219 }, 57, RightColumnLabelWidth,
 	    []() {
-	        std::pair<int, int> dmg = GetDamage();
-	        int spacing = ((dmg.first >= 100) ? -1 : 1);
-	        return StyledText { GetValueColor(InspectPlayer->_pIBonusDam), StrCat(dmg.first, "-", dmg.second), spacing };
+	        const auto [dmgMin, dmgMax] = GetDamage();
+	        int spacing = ((dmgMin >= 100) ? -1 : 1);
+	        return StyledText { GetValueColor(InspectPlayer->_pIBonusDam), StrCat(dmgMin, "-", dmgMax), spacing };
 	    } },
 
 	{ N_("Life"), { LeftColumnLabelX, 284 }, 45, LeftColumnLabelWidth,
