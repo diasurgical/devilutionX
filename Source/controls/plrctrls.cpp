@@ -370,7 +370,7 @@ void CheckPlayerNearby()
 {
 	int newDdistance;
 	int rotations = 0;
-	int distance = 0;
+	int distance = INT_MAX;
 
 	if (pcursmonst != -1)
 		return;
@@ -557,7 +557,7 @@ void InteractPlayer()
 
 void Interact()
 {
-	if (pcursmonst != -1 && leveltype == DTYPE_TOWN) {
+	if (leveltype == DTYPE_TOWN && pcursmonst != -1) {
 		NetSendCmdLocParam1(true, CMD_TALKXY, Towners[pcursmonst].position, pcursmonst);
 		return;
 	}
@@ -569,15 +569,20 @@ void Interact()
 
 	Player &myPlayer = *MyPlayer;
 
-	// TODO check player interaction
 	if (leveltype != DTYPE_TOWN && pcursplr != -1 && !myPlayer.friendlyMode) {
 		InteractPlayer();
 		return;
 	}
 
-	// TODO this is triggered only when there is no target.
+	if (ObjectUnderCursor != nullptr) {
+		NetSendCmdLoc(MyPlayerId, true, CMD_OPOBJXY, cursPosition);
+		LastMouseButtonAction = MouseActionType::OperateObject;
+		return;
+	}
+
+	// This is triggered only when there is no target.
 	// Check if there is a case of changing target by using stand ground and stick (by rotating character)?
-	if (leveltype != DTYPE_TOWN && IsStandingGround()) {
+	if (leveltype != DTYPE_TOWN) {
 		Direction pdir = myPlayer._pdir;
 		AxisDirection moveDir = GetMoveDirection();
 		bool motion = moveDir.x != AxisDirectionX_NONE || moveDir.y != AxisDirectionY_NONE;
@@ -588,12 +593,6 @@ void Interact()
 
 		NetSendCmdLoc(MyPlayerId, true, myPlayer.UsesRangedWeapon() ? CMD_RATTACKXY : CMD_SATTACKXY, position);
 		LastMouseButtonAction = MouseActionType::Attack;
-		return;
-	}
-
-	if (ObjectUnderCursor != nullptr) {
-		NetSendCmdLoc(MyPlayerId, true, CMD_OPOBJXY, cursPosition);
-		LastMouseButtonAction = MouseActionType::OperateObject;
 		return;
 	}
 }
