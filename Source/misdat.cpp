@@ -160,7 +160,6 @@ const std::array<uint8_t, 16> MissileAnimLengths[] {
 	{},
 	Repeat(1),
 	Repeat(4),
-	Repeat(5),
 	Repeat(6),
 	Repeat(7),
 	Repeat(8),
@@ -183,24 +182,23 @@ const std::array<uint8_t, 16> MissileAnimLengths[] {
 constexpr uint8_t AnimLen_0 = 0;        // NOLINT(readability-identifier-naming)
 constexpr uint8_t AnimLen_1 = 1;        // NOLINT(readability-identifier-naming)
 constexpr uint8_t AnimLen_4 = 2;        // NOLINT(readability-identifier-naming)
-constexpr uint8_t AnimLen_5 = 3;        // NOLINT(readability-identifier-naming)
-constexpr uint8_t AnimLen_6 = 4;        // NOLINT(readability-identifier-naming)
-constexpr uint8_t AnimLen_7 = 5;        // NOLINT(readability-identifier-naming)
-constexpr uint8_t AnimLen_8 = 6;        // NOLINT(readability-identifier-naming)
-constexpr uint8_t AnimLen_9 = 7;        // NOLINT(readability-identifier-naming)
-constexpr uint8_t AnimLen_10 = 8;       // NOLINT(readability-identifier-naming)
-constexpr uint8_t AnimLen_12 = 9;       // NOLINT(readability-identifier-naming)
-constexpr uint8_t AnimLen_13 = 10;      // NOLINT(readability-identifier-naming)
-constexpr uint8_t AnimLen_14 = 11;      // NOLINT(readability-identifier-naming)
-constexpr uint8_t AnimLen_15 = 12;      // NOLINT(readability-identifier-naming)
-constexpr uint8_t AnimLen_16 = 13;      // NOLINT(readability-identifier-naming)
-constexpr uint8_t AnimLen_17 = 14;      // NOLINT(readability-identifier-naming)
-constexpr uint8_t AnimLen_19 = 15;      // NOLINT(readability-identifier-naming)
-constexpr uint8_t AnimLen_20 = 16;      // NOLINT(readability-identifier-naming)
-constexpr uint8_t AnimLen_9_4 = 17;     // NOLINT(readability-identifier-naming)
-constexpr uint8_t AnimLen_15_14_3 = 18; // NOLINT(readability-identifier-naming)
-constexpr uint8_t AnimLen_13_11 = 19;   // NOLINT(readability-identifier-naming)
-constexpr uint8_t AnimLen_16x8_8 = 20;  // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_6 = 3;        // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_7 = 4;        // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_8 = 5;        // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_9 = 6;        // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_10 = 7;       // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_12 = 8;       // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_13 = 9;       // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_14 = 10;      // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_15 = 11;      // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_16 = 12;      // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_17 = 13;      // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_19 = 14;      // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_20 = 15;      // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_9_4 = 16;     // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_15_14_3 = 17; // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_13_11 = 18;   // NOLINT(readability-identifier-naming)
+constexpr uint8_t AnimLen_16x8_8 = 19;  // NOLINT(readability-identifier-naming)
 
 } // namespace
 

@@ -381,15 +381,13 @@ void UiSettingsMenu()
 
 		switch (shownMenu) {
 		case ShownMenuType::Categories: {
-			size_t catCount = 0;
 			size_t catIndex = 0;
-			for (auto *pCategory : sgOptions.GetCategories()) {
-				for (auto *pEntry : pCategory->GetEntries()) {
+			for (OptionCategoryBase *pCategory : sgOptions.GetCategories()) {
+				for (OptionEntryBase *pEntry : pCategory->GetEntries()) {
 					if (!IsValidEntry(pEntry))
 						continue;
 					if (selectedCategory == pCategory)
 						itemToSelect = vecDialogItems.size();
-					catCount += 1;
 					vecDialogItems.push_back(std::make_unique<UiListItem>(pCategory->GetName(), static_cast<int>(catIndex), UiFlags::ColorUiGold));
 					break;
 				}
@@ -397,7 +395,7 @@ void UiSettingsMenu()
 			}
 		} break;
 		case ShownMenuType::Settings: {
-			for (auto *pEntry : selectedCategory->GetEntries()) {
+			for (OptionEntryBase *pEntry : selectedCategory->GetEntries()) {
 				if (!IsValidEntry(pEntry))
 					continue;
 				if (selectedOption == pEntry)
