@@ -179,21 +179,6 @@ Bitset2d<MAXDUNX, MAXDUNY> dRendered;
 
 int lastFpsUpdateInMs;
 
-const char *const PlayerModeNames[] = {
-	"standing",
-	"walking (1)",
-	"walking (2)",
-	"walking (3)",
-	"attacking (melee)",
-	"attacking (ranged)",
-	"blocking",
-	"getting hit",
-	"dying",
-	"casting a spell",
-	"changing levels",
-	"quitting"
-};
-
 Rectangle PrevCursorRect;
 
 void BlitCursor(uint8_t *dst, uint32_t dstPitch, uint8_t *src, uint32_t srcPitch, uint32_t srcWidth, uint32_t srcHeight)
