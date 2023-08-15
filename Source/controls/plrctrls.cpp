@@ -27,6 +27,7 @@
 #include "items.h"
 #include "levels/town.h"
 #include "levels/trigs.h"
+#include "limits.h"
 #include "minitext.h"
 #include "missiles.h"
 #include "panels/spell_icons.hpp"
