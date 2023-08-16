@@ -61,7 +61,7 @@ int8_t AnimationInfo::getFrameToUseForRendering() const
 
 uint8_t AnimationInfo::getAnimationProgress() const
 {
-	int16_t ticksSinceSequenceStarted = ticksSinceSequenceStarted_;
+	int16_t ticksSinceSequenceStarted = std::max<int16_t>(0, ticksSinceSequenceStarted_);
 	int32_t tickModifier = tickModifier_;
 
 	if (relevantFramesForDistributing_ <= 0) {

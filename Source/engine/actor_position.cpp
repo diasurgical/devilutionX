@@ -105,19 +105,17 @@ constexpr std::array<const WalkParameter, 8> WalkParameters { {
 
 } // namespace
 
-DisplacementOf<int8_t> ActorPosition::CalculateWalkingOffset(Direction dir, const AnimationInfo &animInfo, bool pendingProcessAnimation /*= false*/) const
+DisplacementOf<int8_t> ActorPosition::CalculateWalkingOffset(Direction dir, const AnimationInfo &animInfo) const
 {
-	DisplacementOf<int16_t> offset = CalculateWalkingOffsetShifted4(dir, animInfo, pendingProcessAnimation);
+	DisplacementOf<int16_t> offset = CalculateWalkingOffsetShifted4(dir, animInfo);
 	offset.deltaX >>= 4;
 	offset.deltaY >>= 4;
 	return offset;
 }
 
-DisplacementOf<int16_t> ActorPosition::CalculateWalkingOffsetShifted4(Direction dir, const AnimationInfo &animInfo, bool pendingProcessAnimation /*= false*/) const
+DisplacementOf<int16_t> ActorPosition::CalculateWalkingOffsetShifted4(Direction dir, const AnimationInfo &animInfo) const
 {
-	int8_t velocityProgress = animInfo.currentFrame + 1;
-	if (pendingProcessAnimation)
-		velocityProgress += 1;
+	int16_t velocityProgress = static_cast<int16_t>(animInfo.getAnimationProgress()) * animInfo.numberOfFrames / AnimationInfo::baseValueFraction;
 	const WalkParameter &walkParameter = WalkParameters[static_cast<size_t>(dir)];
 	DisplacementOf<int16_t> offset = walkParameter.startingOffset;
 	DisplacementOf<int16_t> velocity = walkParameter.getVelocity(animInfo.numberOfFrames);
@@ -125,9 +123,9 @@ DisplacementOf<int16_t> ActorPosition::CalculateWalkingOffsetShifted4(Direction 
 	return offset;
 }
 
-DisplacementOf<int16_t> ActorPosition::CalculateWalkingOffsetShifted8(Direction dir, const AnimationInfo &animInfo, bool pendingProcessAnimation /*= false*/) const
+DisplacementOf<int16_t> ActorPosition::CalculateWalkingOffsetShifted8(Direction dir, const AnimationInfo &animInfo) const
 {
-	DisplacementOf<int16_t> offset = CalculateWalkingOffsetShifted4(dir, animInfo, pendingProcessAnimation);
+	DisplacementOf<int16_t> offset = CalculateWalkingOffsetShifted4(dir, animInfo);
 	offset.deltaX <<= 4;
 	offset.deltaY <<= 4;
 	return offset;
