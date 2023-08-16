@@ -44,7 +44,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Being able to enter Lazarus' chamber before opening the portal
 - Book requirements not updating
 - Diablo: Incorrect level 4 layout when Magic Banner quest is active
-- Halls of the Blind not being compleated by picking up the amulet
+- Halls of the Blind not being completed by picking up the amulet
 
 #### Platforms
 
@@ -399,7 +399,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improve Romanian localization
 - Improve Russian localization ([optional dub](https://github.com/diasurgical/devilutionx-assets/releases/download/v2/ru.mpq) by Stream)
 - Improve Spanish localization
- 
+
 #### Gameplay
 
 - Added a stash at Gillian's house
