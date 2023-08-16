@@ -779,36 +779,33 @@ bool IsMissileBlockedByTile(Point tile)
 	return object != nullptr && !object->_oMissFlag;
 }
 
-void GetDamageAmt(SpellID i, int *mind, int *maxd)
+DamageRange GetDamageAmt(SpellID spell, int spellLevel)
 {
 	assert(MyPlayer != nullptr);
-	assert(i >= SpellID::FIRST && i <= SpellID::LAST);
+	assert(spell >= SpellID::FIRST && spell <= SpellID::LAST);
 
 	Player &myPlayer = *MyPlayer;
 
-	const int sl = myPlayer.GetSpellLevel(i);
-
-	switch (i) {
-	case SpellID::Firebolt:
-		*mind = (myPlayer._pMagic / 8) + sl + 1;
-		*maxd = *mind + 9;
-		break;
+	switch (spell) {
+	case SpellID::Firebolt: {
+		const int min = (myPlayer._pMagic / 8) + spellLevel + 1;
+		return { min, min + 9 };
+	}
 	case SpellID::Healing:
 	case SpellID::HealOther:
 		/// BUGFIX: healing calculation is unused
-		*mind = AddClassHealingBonus(myPlayer._pLevel + sl + 1, myPlayer._pClass) - 1;
-		*maxd = AddClassHealingBonus((4 * myPlayer._pLevel) + (6 * sl) + 10, myPlayer._pClass) - 1;
-		break;
+		return {
+			AddClassHealingBonus(myPlayer._pLevel + spellLevel + 1, myPlayer._pClass) - 1,
+			AddClassHealingBonus((4 * myPlayer._pLevel) + (6 * spellLevel) + 10, myPlayer._pClass) - 1
+		};
 	case SpellID::RuneOfLight:
 	case SpellID::Lightning:
-		*mind = 2;
-		*maxd = 2 + myPlayer._pLevel;
-		break;
-	case SpellID::Flash:
-		*mind = ScaleSpellEffect(myPlayer._pLevel, sl);
-		*mind += *mind / 2;
-		*maxd = *mind * 2;
-		break;
+		return { 2, 2 + myPlayer._pLevel };
+	case SpellID::Flash: {
+		int min = ScaleSpellEffect(myPlayer._pLevel, spellLevel);
+		min += min / 2;
+		return { min, min * 2 };
+	};
 	case SpellID::Identify:
 	case SpellID::TownPortal:
 	case SpellID::StoneCurse:
@@ -832,74 +829,67 @@ void GetDamageAmt(SpellID i, int *mind, int *maxd)
 	case SpellID::Berserk:
 	case SpellID::Search:
 	case SpellID::RuneOfStone:
-		*mind = -1;
-		*maxd = -1;
-		break;
+		return { -1, -1 };
 	case SpellID::FireWall:
 	case SpellID::LightningWall:
-	case SpellID::RingOfFire:
-		*mind = 2 * myPlayer._pLevel + 4;
-		*maxd = *mind + 36;
-		break;
+	case SpellID::RingOfFire: {
+		const int min = 2 * myPlayer._pLevel + 4;
+		return { min, min + 36 };
+	}
 	case SpellID::Fireball:
 	case SpellID::RuneOfFire: {
-		int base = (2 * myPlayer._pLevel) + 4;
-		*mind = ScaleSpellEffect(base, sl);
-		*maxd = ScaleSpellEffect(base + 36, sl);
+		const int base = (2 * myPlayer._pLevel) + 4;
+		return {
+			ScaleSpellEffect(base, spellLevel),
+			ScaleSpellEffect(base + 36, spellLevel)
+		};
 	} break;
 	case SpellID::Guardian: {
-		int base = (myPlayer._pLevel / 2) + 1;
-		*mind = ScaleSpellEffect(base, sl);
-		*maxd = ScaleSpellEffect(base + 9, sl);
+		const int base = (myPlayer._pLevel / 2) + 1;
+		return {
+			ScaleSpellEffect(base, spellLevel),
+			ScaleSpellEffect(base + 9, spellLevel)
+		};
 	} break;
 	case SpellID::ChainLightning:
-		*mind = 4;
-		*maxd = 4 + (2 * myPlayer._pLevel);
-		break;
-	case SpellID::FlameWave:
-		*mind = 6 * (myPlayer._pLevel + 1);
-		*maxd = *mind + 54;
-		break;
+		return { 4, 4 + (2 * myPlayer._pLevel) };
+	case SpellID::FlameWave: {
+		const int min = 6 * (myPlayer._pLevel + 1);
+		return { min, min + 54 };
+	}
 	case SpellID::Nova:
 	case SpellID::Immolation:
 	case SpellID::RuneOfImmolation:
 	case SpellID::RuneOfNova:
-		*mind = ScaleSpellEffect((myPlayer._pLevel + 5) / 2, sl) * 5;
-		*maxd = ScaleSpellEffect((myPlayer._pLevel + 30) / 2, sl) * 5;
-		break;
-	case SpellID::Inferno:
-		*mind = 3;
-		*maxd = myPlayer._pLevel + 4;
-		*maxd += *maxd / 2;
-		break;
+		return {
+			ScaleSpellEffect((myPlayer._pLevel + 5) / 2, spellLevel) * 5,
+			ScaleSpellEffect((myPlayer._pLevel + 30) / 2, spellLevel) * 5
+		};
+	case SpellID::Inferno: {
+		int max = myPlayer._pLevel + 4;
+		max += max / 2;
+		return { 3, max };
+	}
 	case SpellID::Golem:
-		*mind = 11;
-		*maxd = 17;
-		break;
+		return { 11, 17 };
 	case SpellID::Apocalypse:
-		*mind = myPlayer._pLevel;
-		*maxd = *mind * 6;
-		break;
+		return { myPlayer._pLevel, myPlayer._pLevel * 6 };
 	case SpellID::Elemental:
-		*mind = ScaleSpellEffect(2 * myPlayer._pLevel + 4, sl);
-		/// BUGFIX: add here '*mind /= 2;'
-		*maxd = ScaleSpellEffect(2 * myPlayer._pLevel + 40, sl);
-		/// BUGFIX: add here '*maxd /= 2;'
-		break;
+		/// BUGFIX: Divide min and max by 2
+		return {
+			ScaleSpellEffect(2 * myPlayer._pLevel + 4, spellLevel),
+			ScaleSpellEffect(2 * myPlayer._pLevel + 40, spellLevel)
+		};
 	case SpellID::ChargedBolt:
-		*mind = 1;
-		*maxd = *mind + (myPlayer._pMagic / 4);
-		break;
+		return { 1, 1 + (myPlayer._pMagic / 4) };
 	case SpellID::HolyBolt:
-		*mind = myPlayer._pLevel + 9;
-		*maxd = *mind + 9;
-		break;
-	case SpellID::BloodStar:
-		*mind = (myPlayer._pMagic / 2) + 3 * sl - (myPlayer._pMagic / 8);
-		*maxd = *mind;
-		break;
+		return { myPlayer._pLevel + 9, myPlayer._pLevel + 18 };
+	case SpellID::BloodStar: {
+		const int min = (myPlayer._pMagic / 2) + 3 * spellLevel - (myPlayer._pMagic / 8);
+		return { min, min };
+	}
 	default:
-		break;
+		return { -1, -1 };
 	}
 }
 

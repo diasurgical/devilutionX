@@ -156,7 +156,7 @@ else()
 endif()
 
 # By default, devilutionx.mpq is built only if smpq is installed and MPQ support is enabled.
-if(SUPPORTS_MPQ)
+if(SUPPORTS_MPQ AND NOT UNPACKED_MPQS)
   if(NOT DEFINED BUILD_ASSETS_MPQ AND NOT SRC_DIST)
     find_program(SMPQ smpq)
   elseif(BUILD_ASSETS_MPQ)
