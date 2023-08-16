@@ -27,7 +27,7 @@ uint8_t SplTransTbl[256];
 /** Maps from SpellID to spelicon.cel frame number. */
 const SpellIcon SpellITbl[] = {
 	// clang-format off
-/* SpellID::Null             */ SpellIcon::None,
+/* SpellID::Null             */ SpellIcon::Empty,
 /* SpellID::Firebolt         */ SpellIcon::Firebolt,
 /* SpellID::Healing          */ SpellIcon::Healing,
 /* SpellID::Lightning        */ SpellIcon::Lightning,

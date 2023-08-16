@@ -38,7 +38,7 @@ enum class SpellIcon : uint8_t {
 	Teleport,
 	Apocalypse,
 	ItemRepair,
-	None,
+	Empty,
 	Phasing,
 	StaffRecharge,
 	BoneSpirit,
