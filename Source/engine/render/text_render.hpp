@@ -10,6 +10,7 @@
 #include <string>
 #include <string_view>
 #include <utility>
+#include <variant>
 #include <vector>
 
 #include <SDL.h>
@@ -57,34 +58,24 @@ enum text_color : uint8_t {
  */
 class DrawStringFormatArg {
 public:
-	enum class Type : uint8_t {
-		StringView,
-		Int
-	};
+	using Value = std::variant<std::string_view, int>;
 
 	DrawStringFormatArg(std::string_view value, UiFlags flags)
-	    : type_(Type::StringView)
-	    , string_view_value_(value)
+	    : value_(value)
 	    , flags_(flags)
 	{
 	}
 
 	DrawStringFormatArg(int value, UiFlags flags)
-	    : type_(Type::Int)
-	    , int_value_(value)
+	    : value_(value)
 	    , flags_(flags)
 	{
 	}
 
-	Type GetType() const
-	{
-		return type_;
-	}
-
 	std::string_view GetFormatted() const
 	{
-		if (type_ == Type::StringView)
-			return string_view_value_;
+		if (std::holds_alternative<std::string_view>(value_))
+			return std::get<std::string_view>(value_);
 		return formatted_;
 	}
 
@@ -95,12 +86,12 @@ public:
 
 	bool HasFormatted() const
 	{
-		return type_ == Type::StringView || !formatted_.empty();
+		return std::holds_alternative<std::string_view>(value_) || !formatted_.empty();
 	}
 
-	int GetIntValue() const
+	const Value &value() const
 	{
-		return int_value_;
+		return value_;
 	}
 
 	UiFlags GetFlags() const
@@ -109,12 +100,7 @@ public:
 	}
 
 private:
-	Type type_;
-	union {
-		std::string_view string_view_value_;
-		int int_value_;
-	};
-
+	Value value_;
 	UiFlags flags_;
 	std::string formatted_;
 };
