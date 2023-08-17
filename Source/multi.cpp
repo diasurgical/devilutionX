@@ -831,6 +831,7 @@ void recv_plrinfo(int pnum, const TCmdPlrInfoHdr &header, bool recv)
 	PlayerLeftMsg(pnum, false);
 	if (!UnPackNetPlayer(packedPlayer, player)) {
 		player = {};
+		SNetDropPlayer(pnum, LEAVE_DROP);
 		return;
 	}
 

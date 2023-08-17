@@ -149,6 +149,8 @@ void HandleWalkMode(Player &player, Direction dir)
 		return;
 	}
 
+	player._pdir = dir;
+
 	// The player's tile position after finishing this movement action
 	player.position.future = player.position.tile + dirModeParams.tileAdd;
 
@@ -156,8 +158,6 @@ void HandleWalkMode(Player &player, Direction dir)
 
 	player.tempDirection = dirModeParams.dir;
 	player._pmode = dirModeParams.walkMode;
-
-	player._pdir = dir;
 }
 
 void StartWalkAnimation(Player &player, Direction dir, bool pmWillBeCalled)
@@ -180,8 +180,8 @@ void StartWalk(Player &player, Direction dir, bool pmWillBeCalled)
 		return;
 	}
 
-	HandleWalkMode(player, dir);
 	StartWalkAnimation(player, dir, pmWillBeCalled);
+	HandleWalkMode(player, dir);
 }
 
 void ClearStateVariables(Player &player)
@@ -1973,12 +1973,12 @@ void Player::UpdatePreviewCelSprite(_cmd_id cmdId, Point point, uint16_t wParam1
 		break;
 	}
 	case _cmd_id::CMD_ATTACKXY:
-	case _cmd_id::CMD_SATTACKXY:
 		dir = GetDirection(position.tile, point);
 		graphic = player_graphic::Attack;
 		minimalWalkDistance = 2;
 		break;
 	case _cmd_id::CMD_RATTACKXY:
+	case _cmd_id::CMD_SATTACKXY:
 		dir = GetDirection(position.tile, point);
 		graphic = player_graphic::Attack;
 		break;

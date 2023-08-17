@@ -503,21 +503,30 @@ bool MoveMissile(Missile &missile, tl::function_ref<bool(Point)> checkTile, bool
 		if (incVelocity.deltaX != 0)
 			traveled.deltaX = (traveled.deltaX / incVelocity.deltaX) * incVelocity.deltaX;
 		do {
+			auto initialDiff = missile.position.traveled - traveled;
 			traveled += incVelocity;
+			auto incDiff = missile.position.traveled - traveled;
+
+			// we are at the original calculated position => resume with normal logic
+			if ((initialDiff.deltaX < 0) != (incDiff.deltaX < 0))
+				break;
+			if ((initialDiff.deltaY < 0) != (incDiff.deltaY < 0))
+				break;
 
 			// calculate in-between tile
 			Displacement pixelsTraveled = traveled >> 16;
 			Displacement tileOffset = pixelsTraveled.screenToMissile();
 			Point tile = missile.position.start + tileOffset;
 
-			// we are at the original calculated position => resume with normal logic
+			// we haven't quite reached the missile's current position,
+			// but we can break early to avoid checking collisions in this tile twice
 			if (tile == missile.position.tile)
 				break;
 
 			// skip collision logic if the missile is on a corner between tiles
 			if (pixelsTraveled.deltaY % 16 == 0
 			    && pixelsTraveled.deltaX % 32 == 0
-			    && (pixelsTraveled.deltaY / 16) % 2 != (pixelsTraveled.deltaX / 32) % 2) {
+			    && abs(pixelsTraveled.deltaY / 16) % 2 != abs(pixelsTraveled.deltaX / 32) % 2) {
 				continue;
 			}
 
@@ -1419,16 +1428,13 @@ void AddSpectralArrow(Missile &missile, AddMissileParameter &parameter)
 	missile.var3 = av;
 }
 
-void AddWarp(Missile &missile, AddMissileParameter & /*parameter*/)
+void AddWarp(Missile &missile, AddMissileParameter &parameter)
 {
 	int minDistanceSq = std::numeric_limits<int>::max();
-	Point src = missile.position.start;
-	Point tile = src;
 
-	MissileSource missileSource = missile.sourceType();
-	if (missileSource == MissileSource::Player) {
-		tile = missile.sourcePlayer()->position.tile;
-	}
+	int id = missile._misource;
+	Player &player = Players[id];
+	Point tile = player.position.tile;
 
 	for (int i = 0; i < numtrigs && i < MAXTRIGGERS; i++) {
 		TriggerStruct *trg = &trigs[i];
@@ -1468,17 +1474,33 @@ void AddWarp(Missile &missile, AddMissileParameter & /*parameter*/)
 			}
 			app_fatal(StrCat("invalid leveltype", static_cast<int>(leveltype)));
 		};
-		Displacement triggerOffset = getTriggerOffset(trg);
+		const Displacement triggerOffset = getTriggerOffset(trg);
 		candidate += triggerOffset;
-		Displacement off = src - candidate;
-		int distanceSq = off.deltaY * off.deltaY + off.deltaX * off.deltaX;
+		const Displacement off = Point { player.position.tile } - candidate;
+		const int distanceSq = off.deltaY * off.deltaY + off.deltaX * off.deltaX;
 		if (distanceSq < minDistanceSq) {
 			minDistanceSq = distanceSq;
 			tile = candidate;
 		}
 	}
 	missile._mirange = 2;
-	missile.position.tile = tile;
+	std::optional<Point> teleportDestination = FindClosestValidPosition(
+	    [&player](Point target) {
+		    for (int i = 0; i < numtrigs; i++) {
+			    if (trigs[i].position == target)
+				    return false;
+		    }
+		    return PosOkPlayer(player, target);
+	    },
+	    tile, 0, 5);
+
+	if (teleportDestination) {
+		missile.position.tile = *teleportDestination;
+	} else {
+		// No valid teleport destination found
+		missile._miDelFlag = true;
+		parameter.spellFizzled = true;
+	}
 }
 
 void AddLightningWall(Missile &missile, AddMissileParameter &parameter)
@@ -3612,9 +3634,18 @@ void ProcessTeleport(Missile &missile)
 	int id = missile._misource;
 	Player &player = Players[id];
 
+	std::optional<Point> teleportDestination = FindClosestValidPosition(
+	    [&player](Point target) {
+		    return PosOkPlayer(player, target);
+	    },
+	    missile.position.tile, 0, 5);
+
+	if (!teleportDestination)
+		return;
+
 	dPlayer[player.position.tile.x][player.position.tile.y] = 0;
 	PlrClrTrans(player.position.tile);
-	player.position.tile = missile.position.tile;
+	player.position.tile = *teleportDestination;
 	player.position.future = player.position.tile;
 	player.position.old = player.position.tile;
 	PlrDoTrans(player.position.tile);

@@ -36,6 +36,12 @@ jobs:
       with:
         msbuild-architecture: x64
 
+    - name: Configure git
+      shell: cmd
+      run: |
+        git config --global core.filemode false
+        git config --global core.autocrlf false
+
     - name: Build
       shell: cmd
       run: |

@@ -891,6 +891,8 @@ void LoadPortal(LoadHelper *file, int i)
 	pPortal->level = file->NextLE<int32_t>();
 	pPortal->ltype = static_cast<dungeon_type>(file->NextLE<int32_t>());
 	pPortal->setlvl = file->NextBool32();
+	if (!pPortal->setlvl)
+		pPortal->ltype = GetLevelType(pPortal->level);
 }
 
 void GetLevelNames(string_view prefix, char *out)
@@ -1669,7 +1671,7 @@ void SavePortal(SaveHelper *file, int i)
 	file->WriteLE<int32_t>(pPortal->position.x);
 	file->WriteLE<int32_t>(pPortal->position.y);
 	file->WriteLE<int32_t>(pPortal->level);
-	file->WriteLE<int32_t>(pPortal->ltype);
+	file->WriteLE<int32_t>(pPortal->setlvl ? pPortal->ltype : getHellfireLevelType(pPortal->ltype));
 	file->WriteLE<uint32_t>(pPortal->setlvl ? 1 : 0);
 }
 

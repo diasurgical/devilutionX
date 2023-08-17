@@ -20,11 +20,11 @@ struct ActorPosition {
 	WorldTilePosition temp;
 
 	/** @brief Calculates the offset for the walking animation. */
-	DisplacementOf<int8_t> CalculateWalkingOffset(Direction dir, const AnimationInfo &animInfo, bool pendingProcessAnimation = false) const;
+	DisplacementOf<int8_t> CalculateWalkingOffset(Direction dir, const AnimationInfo &animInfo) const;
 	/** @brief Calculates the offset for the walking animation. */
-	DisplacementOf<int16_t> CalculateWalkingOffsetShifted4(Direction dir, const AnimationInfo &animInfo, bool pendingProcessAnimation = false) const;
+	DisplacementOf<int16_t> CalculateWalkingOffsetShifted4(Direction dir, const AnimationInfo &animInfo) const;
 	/** @brief Calculates the offset for the walking animation. */
-	DisplacementOf<int16_t> CalculateWalkingOffsetShifted8(Direction dir, const AnimationInfo &animInfo, bool pendingProcessAnimation = false) const;
+	DisplacementOf<int16_t> CalculateWalkingOffsetShifted8(Direction dir, const AnimationInfo &animInfo) const;
 	/** @brief Returns Pixel velocity while walking. */
 	DisplacementOf<int16_t> GetWalkingVelocityShifted4(Direction dir, const AnimationInfo &animInfo) const;
 	/** @brief Returns Pixel velocity while walking. */
