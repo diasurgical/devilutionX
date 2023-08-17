@@ -11,6 +11,7 @@
 #include <optional>
 #include <unordered_map>
 #include <utility>
+#include <variant>
 
 #include <fmt/core.h>
 
@@ -262,7 +263,7 @@ std::size_t CountNewlines(std::string_view fmt, const DrawStringFormatArg *args,
 {
 	std::size_t result = c_count(fmt, '\n');
 	for (std::size_t i = 0; i < argsLen; ++i) {
-		if (args[i].GetType() == DrawStringFormatArg::Type::StringView)
+		if (std::holds_alternative<std::string_view>(args[i].value()))
 			result += c_count(args[i].GetFormatted(), '\n');
 	}
 	return result;
@@ -312,7 +313,7 @@ public:
 		} else {
 			if (!args_[*result].HasFormatted()) {
 				const auto fmtStr = positional ? "{}" : std::string_view(rest.data(), fmtLen);
-				args_[*result].SetFormatted(fmt::format(fmt::runtime(fmtStr), args_[*result].GetIntValue()));
+				args_[*result].SetFormatted(fmt::format(fmt::runtime(fmtStr), std::get<int>(args_[*result].value())));
 			}
 			rest.remove_prefix(fmtLen);
 		}

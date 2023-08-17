@@ -172,7 +172,7 @@ enum class DeathReason {
 };
 
 /** Maps from armor animation to letter used in graphic files. */
-constexpr std::array<char, 4> ArmourChar = {
+constexpr std::array<char, 3> ArmourChar = {
 	'l', // light
 	'm', // medium
 	'h', // heavy
