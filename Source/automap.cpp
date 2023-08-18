@@ -749,13 +749,13 @@ void DrawAutomapText(const Surface &out)
 	switch (leveltype) {
 	case DTYPE_NEST:
 		description = fmt::format(fmt::runtime(_("Level: Nest {:d}")), currlevel - 16);
-		if (ActiveMonsterCount < 1) {
+		if (ActiveMonsterCount == 4) {
 			description.append(std::string(_(" (Cleared)")));
 		}
 		break;
 	case DTYPE_CRYPT:
 		description = fmt::format(fmt::runtime(_("Level: Crypt {:d}")), currlevel - 20);
-		if (ActiveMonsterCount < 1) {
+		if (ActiveMonsterCount == 4) {
 			description.append(std::string(_(" (Cleared)")));
 		}
 		break;
@@ -764,7 +764,7 @@ void DrawAutomapText(const Surface &out)
 		break;
 	default:
 		description = fmt::format(fmt::runtime(_("Level: {:d}")), currlevel);
-		if (ActiveMonsterCount < 1) {
+		if (ActiveMonsterCount == 4) {
 			description.append(std::string(_(" (Cleared)")));
 		}
 		break;
