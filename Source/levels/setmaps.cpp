@@ -30,8 +30,6 @@ const char *const QuestLevelNames[] = {
 	N_("Poisoned Water Supply"),
 	N_("Archbishop Lazarus' Lair"),
 	N_("Cathedral Arena"),
-	N_("Catacombs Arena"),
-	N_("Caves Arena"),
 	N_("Hell Arena"),
 	N_("Circle of Life Arena"),
 };
@@ -154,19 +152,13 @@ void LoadSetMap()
 		InitNoTriggers();
 		break;
 	case SL_ARENA_CATHEDRAL:
-		LoadArenaMap("arena\\cathedral.dun", { 55, 43 }, { 0, 0 });
-		break;
-	case SL_ARENA_CATACOMBS:
-		LoadArenaMap("arena\\catacombs.dun", { 54, 42 }, { 0, 0 });
-		break;
-	case SL_ARENA_CAVES:
-		LoadArenaMap("arena\\caves.dun", { 54, 38 }, { 0, 0 });
+		LoadArenaMap("arena\\cathedral.dun", { 29, 25 }, { 0, 0 });
 		break;
 	case SL_ARENA_HELL:
-		LoadArenaMap("arena\\hell.dun", { 54, 42 }, { 0, 0 });
+		LoadArenaMap("arena\\hell.dun", { 33, 25 }, { 0, 0 });
 		break;
 	case SL_ARENA_CIRCLE_OF_LIFE:
-		LoadArenaMap("arena\\circle_of_life.dun", { 54, 42 }, { 0, 0 });
+		LoadArenaMap("arena\\circle_of_life.dun", { 29, 25 }, { 0, 0 });
 		break;
 	case SL_NONE:
 #ifdef _DEBUG

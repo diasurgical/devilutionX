@@ -369,8 +369,6 @@ void AppendArenaOverview(std::string &ret)
 
 const dungeon_type DungeonTypeForArena[] = {
 	dungeon_type::DTYPE_CATHEDRAL, // SL_ARENA_CATHEDRAL
-	dungeon_type::DTYPE_CATACOMBS, // SL_ARENA_CATACOMBS
-	dungeon_type::DTYPE_CAVES,     // SL_ARENA_CAVES
 	dungeon_type::DTYPE_HELL,      // SL_ARENA_HELL
 	dungeon_type::DTYPE_HELL,      // SL_ARENA_CIRCLE_OF_LIFE
 };

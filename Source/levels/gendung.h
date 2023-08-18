@@ -39,8 +39,6 @@ enum _setlevels : int8_t {
 	SL_VILEBETRAYER,
 
 	SL_ARENA_CATHEDRAL,
-	SL_ARENA_CATACOMBS,
-	SL_ARENA_CAVES,
 	SL_ARENA_HELL,
 	SL_ARENA_CIRCLE_OF_LIFE,
 
@@ -52,8 +50,6 @@ inline bool IsArenaLevel(_setlevels setLevel)
 {
 	switch (setLevel) {
 	case SL_ARENA_CATHEDRAL:
-	case SL_ARENA_CATACOMBS:
-	case SL_ARENA_CAVES:
 	case SL_ARENA_HELL:
 	case SL_ARENA_CIRCLE_OF_LIFE:
 		return true;
