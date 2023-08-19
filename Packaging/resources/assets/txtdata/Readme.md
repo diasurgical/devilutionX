@@ -76,36 +76,25 @@ base 10 with no decimal or thousands separators. The first row of this file is
 used as a header and requires the following column names:
 
 #### Level
-A numeric value used to set the order for remaining values, or the special
-`MaxLevel` value which is used to determine the maximum character level. The
-header line MUST be the first line in the file. The `MaxLevel` line MUST be
-present, it SHOULD be the second line but can appear later in the file. Levels
-SHOULD proceed in ascending order after that. If you leave any gaps then
-characters will not be able to advance past that level and experience caps
-will not apply.
+A numeric value used to set the order for experience thresholds. The header
+line MUST be the first line in the file. Levels SHOULD proceed in ascending
+order after that. Levels up to 255 are supported, the highest value will be
+used as the maximum character level. If you leave any gaps then characters
+will not be able to advance past that level and experience caps will not apply.
 
-For example you could set a maximum level of 36 by changing the MaxLevel value:
-```tsv
-Level	Experience
-MaxLevel	36
-0	0
-1	2000
-...
-```
+If you're familiar with Diablo 2 text files you might expect to use a MaxLevel
+row to set character level limits, these lines are ignored and the largest
+Level value is used as described above.
 
-The first row following the `MaxLevel` line SHOULD be `0	0` (as all characters
-start at level 1, we ignore these values and use the threshold for level 1 to
-determine when characters advance past level 1). There should also be at least
-as many rows as the highest value provided for `MaxLevel`. If you specify a
-`MaxLevel` of `60` but only provide experience values up to `50` then
-characters will level up to `51` but no further.
+The first row SHOULD be `0	0` (as all characters start at level 1, we ignore
+these values and use the threshold for level 1 to determine when characters
+advance past level 1).
 
 #### Experience
 This column determines the experience points required for characters to
 advance past that level. For example a file like:
 ```tsv
 Level	Experience
-MaxLevel	5
 0	0
 1	2000
 2	4000
@@ -121,9 +110,9 @@ points and will not level up any further.
 
 You should provide a value for every row up to (and including) the maximum
 level you intend players to be able to reach. If you have an empty cell for an
-experience value at a row earlier than the `MaxLevel` value then characters
-will not be able to advance past that level. They will continue to gain
-experience without a cap (up to the hard limit of `2^32-1`, 4,294,967,295).
+experience value at a given level then characters will not be able to advance
+past that level. They will continue to gain experience without a cap (up to the
+hard limit of `2^32-1`, 4,294,967,295).
 
 [d2-excel-plus]: https://github.com/Cjreek/D2ExcelPlus
 [d2mods-info]: https://www.d2mods.info/forum/viewtopic.php?t=34455

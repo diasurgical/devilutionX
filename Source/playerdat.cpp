@@ -26,7 +26,7 @@ namespace devilution {
 
 namespace {
 
-struct ExperienceData {
+class ExperienceData {
 	/** Specifies the experience point limit of each level. The given values are defaults used if the data file is missing. */
 	std::vector<uint32_t> levelThresholds {
 		0,
@@ -82,12 +82,32 @@ struct ExperienceData {
 		1583495809
 	};
 
-	static constexpr uint8_t DefaultMaxLevel = 50;
-	uint8_t maxLevel = DefaultMaxLevel;
-
-	[[nodiscard]] uint32_t getThresholdForLevel(unsigned level)
+public:
+	uint8_t getMaxLevel() const
 	{
-		return levelThresholds[std::min<size_t>({ level, maxLevel, levelThresholds.size() - 1 })];
+		if (levelThresholds.empty())
+			return 0;
+		return static_cast<uint8_t>(std::min<size_t>(levelThresholds.size() - 1, std::numeric_limits<uint8_t>::max()));
+	}
+
+	DVL_REINITIALIZES void clear()
+	{
+		levelThresholds.clear();
+	}
+
+	[[nodiscard]] uint32_t getThresholdForLevel(unsigned level) const
+	{
+		return levelThresholds[std::min<size_t>(level, getMaxLevel())];
+	}
+
+	void setThresholdForLevel(unsigned level, uint32_t experience)
+	{
+		if (level >= levelThresholds.size()) {
+			// To avoid ValidatePlayer() resetting players to 0 experience we need to use the maximum possible value here
+			// As long as the file has no gaps it'll get initialised properly.
+			levelThresholds.resize(static_cast<size_t>(level) + 1, std::numeric_limits<uint32_t>::max());
+		}
+		levelThresholds[level] = experience;
 	}
 } ExperienceData;
 
@@ -190,12 +210,11 @@ void ReloadExperienceData()
 		return;
 	}
 
-	ExperienceData.levelThresholds.clear();
-	bool foundMaxLevelRecord = false;
+	ExperienceData.clear();
 	do {
 		uint8_t level = 0;
 		uint32_t experience = 0;
-		bool isMaxLevelRecord = false;
+		bool skipRecord = false;
 		for (auto &column : columns) {
 			result = DiscardMultipleFields(result.next, dataFile.end(), column.skipLength);
 
@@ -208,11 +227,11 @@ void ReloadExperienceData()
 			switch (column.type) {
 			case ExperienceColumnDefinition::ColumnType::Level: {
 				auto fromCharsResult = std::from_chars(result.next, dataFile.end(), level);
-				if (fromCharsResult.ec == std::errc::invalid_argument && !foundMaxLevelRecord) {
+				if (fromCharsResult.ec == std::errc::invalid_argument) {
 					// not a signless numeric value, is this the MaxLevel line?
 					result = GetNextField(fromCharsResult.ptr, dataFile.end());
 					if (result.value == "MaxLevel") {
-						isMaxLevelRecord = true;
+						skipRecord = true;
 					}
 					// else it was an invalid value, TODO: let the player know the data file contains errors
 				} else {
@@ -238,28 +257,16 @@ void ReloadExperienceData()
 			default:
 				result = DiscardField(result.next, dataFile.end());
 			}
+
+			if (skipRecord)
+				break;
 		}
 
-		if (isMaxLevelRecord) {
-			ExperienceData.maxLevel = experience == 0 ? ExperienceData::DefaultMaxLevel
-			                                          : static_cast<uint8_t>(std::min<uint32_t>(experience, std::numeric_limits<uint8_t>::max()));
-			foundMaxLevelRecord = true;
-		} else {
-			if (foundMaxLevelRecord && level > ExperienceData.maxLevel) {
-				// ignore values we will never use. Should we notify the player?
-			} else {
-				if (level >= ExperienceData.levelThresholds.size()) {
-					// To avoid ValidatePlayer() resetting players to 0 experience we need to use the maximum possible value here
-					// As long as the file has no gaps it'll get initialised properly.
-					ExperienceData.levelThresholds.resize(static_cast<size_t>(level) + 1, std::numeric_limits<uint32_t>::max());
-				}
-				ExperienceData.levelThresholds[level] = experience;
-			}
-		}
+		if (!skipRecord)
+			ExperienceData.setThresholdForLevel(level, experience);
 
-		if (!result.endOfRecord()) {
+		if (!result.endOfRecord())
 			result = DiscardRemainingFields(result.next, dataFile.end());
-		}
 	} while (!result.endOfFile());
 }
 
@@ -277,7 +284,7 @@ uint32_t GetNextExperienceThresholdForLevel(unsigned level)
 
 uint8_t GetMaximumCharacterLevel()
 {
-	return ExperienceData.maxLevel;
+	return ExperienceData.getMaxLevel();
 }
 
 const _sfx_id herosounds[enum_size<HeroClass>::value][enum_size<HeroSpeech>::value] = {
