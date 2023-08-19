@@ -4,30 +4,17 @@
 #include <string_view>
 #include <system_error>
 
+#include <expected.hpp>
+
 namespace devilution {
 
-enum class ParseIntStatus {
-	Ok,
-	ParseError,
+enum class ParseIntError {
+	ParseError = 1,
 	OutOfRange
 };
 
 template <typename IntT>
-struct ParseIntResult {
-	ParseIntStatus status;
-	IntT value = 0;
-
-	[[nodiscard]] bool ok() const
-	{
-		return status == ParseIntStatus::Ok;
-	}
-
-	template <typename T>
-	[[nodiscard]] IntT value_or(T defaultValue) const // NOLINT(readability-identifier-naming)
-	{
-		return ok() ? value : static_cast<IntT>(defaultValue);
-	}
-};
+using ParseIntResult = tl::expected<IntT, ParseIntError>;
 
 template <typename IntT>
 ParseIntResult<IntT> ParseInt(
@@ -37,12 +24,12 @@ ParseIntResult<IntT> ParseInt(
 	IntT value;
 	const std::from_chars_result result = std::from_chars(str.data(), str.data() + str.size(), value);
 	if (result.ec == std::errc::invalid_argument)
-		return ParseIntResult<IntT> { ParseIntStatus::ParseError };
+		return tl::unexpected(ParseIntError::ParseError);
 	if (result.ec == std::errc::result_out_of_range || value < min || value > max)
-		return ParseIntResult<IntT> { ParseIntStatus::OutOfRange };
+		return tl::unexpected(ParseIntError::OutOfRange);
 	if (result.ec != std::errc())
-		return ParseIntResult<IntT> { ParseIntStatus::ParseError };
-	return ParseIntResult<IntT> { ParseIntStatus::Ok, value };
+		return tl::unexpected(ParseIntError::ParseError);
+	return value;
 }
 
 } // namespace devilution
