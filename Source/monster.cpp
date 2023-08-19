@@ -4451,7 +4451,7 @@ bool IsTileAvailable(const Monster &monster, Point position)
 
 bool IsSkel(_monster_id mt)
 {
-	return std::find(std::begin(SkeletonTypes), std::end(SkeletonTypes), mt) != std::end(SkeletonTypes);
+	return c_find(SkeletonTypes, mt) != SkeletonTypes.end();
 }
 
 bool IsGoat(_monster_id mt)

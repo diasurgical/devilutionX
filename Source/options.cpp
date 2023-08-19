@@ -494,7 +494,7 @@ std::string_view OptionEntryEnumBase::GetListDescription(size_t index) const
 }
 size_t OptionEntryEnumBase::GetActiveListIndex() const
 {
-	auto iterator = std::find(entryValues.begin(), entryValues.end(), value);
+	auto iterator = c_find(entryValues, value);
 	if (iterator == entryValues.end())
 		return 0;
 	return std::distance(entryValues.begin(), iterator);
@@ -508,9 +508,8 @@ void OptionEntryEnumBase::SetActiveListIndex(size_t index)
 void OptionEntryIntBase::LoadFromIni(std::string_view category)
 {
 	value = GetIniInt(category.data(), key.data(), defaultValue);
-	if (std::find(entryValues.begin(), entryValues.end(), value) == entryValues.end()) {
-		entryValues.push_back(value);
-		std::sort(entryValues.begin(), entryValues.end());
+	if (c_find(entryValues, value) == entryValues.end()) {
+		entryValues.insert(c_lower_bound(entryValues, value), value);
 		entryNames.clear();
 	}
 }
@@ -542,7 +541,7 @@ std::string_view OptionEntryIntBase::GetListDescription(size_t index) const
 }
 size_t OptionEntryIntBase::GetActiveListIndex() const
 {
-	auto iterator = std::find(entryValues.begin(), entryValues.end(), value);
+	auto iterator = c_find(entryValues, value);
 	if (iterator == entryValues.end())
 		return 0;
 	return std::distance(entryValues.begin(), iterator);
@@ -775,12 +774,11 @@ void OptionEntryResolution::CheckResolutionsAreInitialized() const
 #endif
 
 	// Sort by width then by height
-	std::sort(sizes.begin(), sizes.end(),
-	    [](const Size &x, const Size &y) -> bool {
-		    if (x.width == y.width)
-			    return x.height > y.height;
-		    return x.width > y.width;
-	    });
+	c_sort(sizes, [](const Size &x, const Size &y) -> bool {
+		if (x.width == y.width)
+			return x.height > y.height;
+		return x.width > y.width;
+	});
 	// Remove duplicate entries
 	sizes.erase(std::unique(sizes.begin(), sizes.end()), sizes.end());
 

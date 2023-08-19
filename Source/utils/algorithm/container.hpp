@@ -56,6 +56,15 @@ bool c_none_of(const C &c, Predicate &&predicate)
 	    std::forward<Predicate>(predicate));
 }
 
+template <typename C, typename T>
+container_internal::Iterator<C>
+c_find(C &c, T &&value)
+{
+	return std::find(container_internal::begin(c),
+	    container_internal::end(c),
+	    std::forward<T>(value));
+}
+
 template <typename C, typename Predicate>
 container_internal::Iterator<C>
 c_find_if(C &c, Predicate &&predicate)
@@ -79,6 +88,29 @@ container_internal::Difference<C>
 c_count(const C &c, T &&value)
 {
 	return std::count(container_internal::c_begin(c),
+	    container_internal::c_end(c),
+	    std::forward<T>(value));
+}
+
+template <typename C>
+void c_sort(C &c)
+{
+	std::sort(container_internal::c_begin(c),
+	    container_internal::c_end(c));
+}
+
+template <typename C, typename LessThan>
+void c_sort(C &c, LessThan &&comp)
+{
+	std::sort(container_internal::c_begin(c),
+	    container_internal::c_end(c),
+	    std::forward<LessThan>(comp));
+}
+
+template <typename C, typename T>
+container_internal::Iterator<C> c_lower_bound(C &c, T &&value)
+{
+	return std::lower_bound(container_internal::c_begin(c),
 	    container_internal::c_end(c),
 	    std::forward<T>(value));
 }
