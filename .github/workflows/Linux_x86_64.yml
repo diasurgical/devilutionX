@@ -29,15 +29,29 @@ jobs:
       with:
         fetch-depth: 0
 
+    - name: Add gcc repo
+      run: sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+
+    # Installs dependencies and runs `sudo apt-get update` as part of it.
+    - name: Install dependencies
+      run: Packaging/nix/debian-host-prep.sh --no-gcc
+
+    - name: Install gcc-13
+      run: |
+        sudo apt-get install -yq --no-install-recommends gcc-13 g++-13 && \
+        sudo update-alternatives --install \
+          /usr/bin/gcc gcc /usr/bin/gcc-13 13 \
+          --slave /usr/bin/g++ g++ /usr/bin/g++-13
+
     - name: Create Build Environment
-      run: Packaging/nix/debian-host-prep.sh
+      run: Packaging/nix/debian-host-prep.sh --no-gcc
 
     - name: Cache CMake build folder
       uses: actions/cache@v3
       with:
         path: build
-        key: ${{ github.workflow }}-v2-${{ github.sha }}
-        restore-keys: ${{ github.workflow }}-v2-
+        key: ${{ github.workflow }}-v5-${{ github.sha }}
+        restore-keys: ${{ github.workflow }}-v5-
 
     - name: Build
       working-directory: ${{github.workspace}}
