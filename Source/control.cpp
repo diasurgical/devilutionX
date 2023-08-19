@@ -390,7 +390,7 @@ std::string TextCmdArena(const std::string_view parameter)
 	}
 
 	const ParseIntResult<int> parsedParam = ParseInt<int>(parameter, /*min=*/0);
-	const _setlevels arenaLevel = parsedParam.ok() ? static_cast<_setlevels>(parsedParam.value - 1 + SL_FIRST_ARENA) : _setlevels::SL_NONE;
+	const _setlevels arenaLevel = parsedParam.has_value() ? static_cast<_setlevels>(parsedParam.value() - 1 + SL_FIRST_ARENA) : _setlevels::SL_NONE;
 	if (!IsArenaLevel(arenaLevel)) {
 		StrAppend(ret, _("Invalid arena-number. Valid numbers are:"));
 		AppendArenaOverview(ret);

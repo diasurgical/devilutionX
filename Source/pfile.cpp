@@ -285,9 +285,9 @@ void CreateDetailDiffs(std::string_view prefix, std::string_view memoryMapFile, 
 		if (it != counter.end())
 			return it->second;
 		const ParseIntResult<int> countFromMapFile = ParseInt<int>(counterAsString);
-		if (!countFromMapFile.ok())
+		if (!countFromMapFile.has_value())
 			app_fatal(StrCat("Failed to parse ", counterAsString, " as int"));
-		return CompareCounter { countFromMapFile.value, countFromMapFile.value };
+		return CompareCounter { countFromMapFile.value(), countFromMapFile.value() };
 	};
 	auto addDiff = [&](const std::string &diffKey) {
 		auto it = foundDiffs.find(diffKey);
@@ -366,9 +366,9 @@ void CreateDetailDiffs(std::string_view prefix, std::string_view memoryMapFile, 
 			const auto bitsAsString = std::string(*++it);
 			const auto comment = std::string(*++it);
 			const ParseIntResult<size_t> parsedBytes = ParseInt<size_t>(bitsAsString);
-			if (!parsedBytes.ok())
+			if (!parsedBytes.has_value())
 				app_fatal(StrCat("Failed to parse ", bitsAsString, " as size_t"));
-			const size_t bytes = static_cast<size_t>(parsedBytes.value / 8);
+			const size_t bytes = static_cast<size_t>(parsedBytes.value() / 8);
 
 			if (command == "LT") {
 				int32_t valueReference = read32BitInt(compareInfoReference, false);
@@ -395,9 +395,9 @@ void CreateDetailDiffs(std::string_view prefix, std::string_view memoryMapFile, 
 
 			CompareCounter count = getCounter(countAsString);
 			const ParseIntResult<size_t> parsedBytes = ParseInt<size_t>(bitsAsString);
-			if (!parsedBytes.ok())
+			if (!parsedBytes.has_value())
 				app_fatal(StrCat("Failed to parse ", bitsAsString, " as size_t"));
-			const size_t bytes = static_cast<size_t>(parsedBytes.value / 8);
+			const size_t bytes = static_cast<size_t>(parsedBytes.value() / 8);
 			for (int i = 0; i < count.max(); i++) {
 				count.checkIfDataExists(i, compareInfoReference, compareInfoActual);
 				if (!compareBytes(bytes)) {

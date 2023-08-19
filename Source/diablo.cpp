@@ -1015,11 +1015,11 @@ void DiabloParseFlags(int argc, char **argv)
 				diablo_quit(64);
 			}
 			ParseIntResult<int> parsedParam = ParseInt<int>(argv[++i]);
-			if (!parsedParam.ok()) {
+			if (!parsedParam.has_value()) {
 				PrintFlagMessage("--demo", " must be a number");
 				diablo_quit(64);
 			}
-			demoNumber = parsedParam.value;
+			demoNumber = parsedParam.value();
 			gbShowIntro = false;
 		} else if (arg == "--timedemo") {
 			timedemo = true;
@@ -1029,11 +1029,11 @@ void DiabloParseFlags(int argc, char **argv)
 				diablo_quit(64);
 			}
 			ParseIntResult<int> parsedParam = ParseInt<int>(argv[++i]);
-			if (!parsedParam.ok()) {
+			if (!parsedParam.has_value()) {
 				PrintFlagMessage("--record", " must be a number");
 				diablo_quit(64);
 			}
-			recordNumber = parsedParam.value;
+			recordNumber = parsedParam.value();
 		} else if (arg == "--create-reference") {
 			createDemoReference = true;
 #else
