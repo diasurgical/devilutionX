@@ -1076,12 +1076,11 @@ void DrawGame(const Surface &fullOut, Point position, Displacement offset)
 
 #ifdef DUN_RENDER_STATS
 	std::vector<std::pair<DunRenderType, size_t>> sortedStats(DunRenderStats.begin(), DunRenderStats.end());
-	std::sort(sortedStats.begin(), sortedStats.end(),
-	    [](const std::pair<DunRenderType, size_t> &a, const std::pair<DunRenderType, size_t> &b) {
-		    return a.first.maskType == b.first.maskType
-		        ? static_cast<uint8_t>(a.first.tileType) < static_cast<uint8_t>(b.first.tileType)
-		        : static_cast<uint8_t>(a.first.maskType) < static_cast<uint8_t>(b.first.maskType);
-	    });
+	c_sort(sortedStats, [](const std::pair<DunRenderType, size_t> &a, const std::pair<DunRenderType, size_t> &b) {
+		return a.first.maskType == b.first.maskType
+		    ? static_cast<uint8_t>(a.first.tileType) < static_cast<uint8_t>(b.first.tileType)
+		    : static_cast<uint8_t>(a.first.maskType) < static_cast<uint8_t>(b.first.maskType);
+	});
 	Point pos { 100, 20 };
 	for (size_t i = 0; i < sortedStats.size(); ++i) {
 		const auto &stat = sortedStats[i];

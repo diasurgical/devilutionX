@@ -18,6 +18,7 @@
 #include "options.h"
 #include "qol/stash.h"
 #include "stores.h"
+#include "utils/algorithm/container.hpp"
 #include "utils/format_int.hpp"
 #include "utils/language.h"
 
@@ -50,7 +51,7 @@ class UsedX {
 public:
 	[[nodiscard]] bool contains(int val) const
 	{
-		return std::find(data_.begin(), data_.end(), val) != data_.end();
+		return c_find(data_, val) != data_.end();
 	}
 
 	void insert(int val)
