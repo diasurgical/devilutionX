@@ -64,6 +64,7 @@
 #include "panels/spell_book.hpp"
 #include "panels/spell_list.hpp"
 #include "pfile.h"
+#include "playerdat.hpp"
 #include "plrmsg.h"
 #include "qol/chatlog.h"
 #include "qol/floatingnumbers.h"
@@ -2434,6 +2435,9 @@ int DiabloMain(int argc, char **argv)
 
 	// Finally load game data
 	LoadGameArchives();
+
+	// Load dynamic data before we go into the menu as we need to initialise player characters in memory pretty early.
+	LoadPlayerDataFiles();
 
 	DiabloInit();
 #ifdef __UWP__
