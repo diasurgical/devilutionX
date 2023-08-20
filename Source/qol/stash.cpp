@@ -50,7 +50,7 @@ constexpr Rectangle StashButtonRect[] = {
 	// clang-format on
 };
 
-constexpr PointsInRectangleRange<int> StashGridRange { { { 0, 0 }, Size { 10, 10 } } };
+constexpr PointsInRectangle<int> StashGridRange { { { 0, 0 }, Size { 10, 10 } } };
 
 OptionalOwnedClxSpriteList StashPanelArt;
 OptionalOwnedClxSpriteList StashNavButtonArt;

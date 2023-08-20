@@ -67,7 +67,7 @@ protected:
 };
 
 template <typename CoordT>
-class PointsInRectangleRange {
+class PointsInRectangle {
 public:
 	using const_iterator = class PointsInRectangleIterator : public PointsInRectangleIteratorBase<CoordT> {
 	public:
@@ -188,7 +188,7 @@ public:
 		}
 	};
 
-	constexpr PointsInRectangleRange(RectangleOf<CoordT> region)
+	constexpr PointsInRectangle(RectangleOf<CoordT> region)
 	    : region(region)
 	{
 	}
@@ -240,13 +240,7 @@ protected:
 };
 
 template <typename CoordT>
-constexpr PointsInRectangleRange<CoordT> PointsInRectangle(RectangleOf<CoordT> region)
-{
-	return PointsInRectangleRange<CoordT> { region };
-}
-
-template <typename CoordT>
-class PointsInRectangleColMajorRange {
+class PointsInRectangleColMajor {
 public:
 	using const_iterator = class PointsInRectangleIteratorColMajor : public PointsInRectangleIteratorBase<CoordT> {
 	public:
@@ -368,7 +362,7 @@ public:
 	};
 
 	// gcc6 needs a defined constructor?
-	constexpr PointsInRectangleColMajorRange(RectangleOf<CoordT> region)
+	constexpr PointsInRectangleColMajor(RectangleOf<CoordT> region)
 	    : region(region)
 	{
 	}
@@ -418,11 +412,5 @@ public:
 protected:
 	RectangleOf<CoordT> region;
 };
-
-template <typename CoordT = int>
-constexpr PointsInRectangleColMajorRange<CoordT> PointsInRectangleColMajor(RectangleOf<CoordT> region)
-{
-	return PointsInRectangleColMajorRange<CoordT> { region };
-}
 
 } // namespace devilution
