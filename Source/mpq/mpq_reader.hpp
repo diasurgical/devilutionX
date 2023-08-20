@@ -6,6 +6,7 @@
 #include <memory>
 #include <optional>
 #include <string>
+#include <string_view>
 #include <vector>
 
 // Forward-declare so that we can avoid exposing libmpq.
@@ -24,7 +25,7 @@ public:
 	static const char *ErrorMessage(int32_t errorCode);
 
 	using FileHash = std::array<std::uint32_t, 3>;
-	static FileHash CalculateFileHash(const char *filename);
+	static FileHash CalculateFileHash(std::string_view filename);
 
 	MpqArchive(MpqArchive &&other) noexcept
 	    : path_(std::move(other.path_))
@@ -41,7 +42,7 @@ public:
 	// Returns false if the file does not exit.
 	bool GetFileNumber(FileHash fileHash, uint32_t &fileNumber);
 
-	std::unique_ptr<std::byte[]> ReadFile(const char *filename, std::size_t &fileSize, int32_t &error);
+	std::unique_ptr<std::byte[]> ReadFile(std::string_view filename, std::size_t &fileSize, int32_t &error);
 
 	// Returns error code.
 	int32_t ReadBlock(uint32_t fileNumber, uint32_t blockNumber, uint8_t *out, uint32_t outSize);
@@ -50,14 +51,14 @@ public:
 
 	uint32_t GetNumBlocks(uint32_t fileNumber, int32_t &error);
 
-	int32_t OpenBlockOffsetTable(uint32_t fileNumber, const char *filename);
+	int32_t OpenBlockOffsetTable(uint32_t fileNumber, std::string_view filename);
 
 	int32_t CloseBlockOffsetTable(uint32_t fileNumber);
 
 	// Requires the block offset table to be open
 	std::size_t GetBlockSize(uint32_t fileNumber, uint32_t blockNumber, int32_t &error);
 
-	bool HasFile(const char *filename) const;
+	bool HasFile(std::string_view filename) const;
 
 private:
 	MpqArchive(std::string path, mpq_archive_s *archive)

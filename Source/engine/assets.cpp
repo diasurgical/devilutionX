@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <cstdint>
 #include <cstring>
+#include <string_view>
 
 #include "init.h"
 #include "utils/file_util.h"
@@ -52,7 +53,7 @@ SDL_RWops *OpenOptionalRWops(const std::string &path)
 	return SDL_RWFromFile(path.c_str(), "rb");
 };
 
-bool FindMpqFile(const char *filename, MpqArchive **archive, uint32_t *fileNumber)
+bool FindMpqFile(std::string_view filename, MpqArchive **archive, uint32_t *fileNumber)
 {
 	const MpqArchive::FileHash fileHash = MpqArchive::CalculateFileHash(filename);
 	const auto at = [=](std::optional<MpqArchive> &src) -> bool {
@@ -71,16 +72,15 @@ bool FindMpqFile(const char *filename, MpqArchive **archive, uint32_t *fileNumbe
 } // namespace
 
 #ifdef UNPACKED_MPQS
-AssetRef FindAsset(const char *filename)
+AssetRef FindAsset(std::string_view filename)
 {
 	AssetRef result;
 	result.path[0] = '\0';
 
-	const std::string_view filenameStr = filename;
 	char pathBuf[AssetRef::PathBufSize];
 	char *const pathEnd = pathBuf + AssetRef::PathBufSize;
-	char *const relativePath = &pathBuf[AssetRef::PathBufSize - filenameStr.size() - 1];
-	*BufCopy(relativePath, filenameStr) = '\0';
+	char *const relativePath = &pathBuf[AssetRef::PathBufSize - filename.size() - 1];
+	*BufCopy(relativePath, filename) = '\0';
 
 #ifndef _WIN32
 	std::replace(relativePath, pathEnd, '\\', '/');
@@ -88,7 +88,7 @@ AssetRef FindAsset(const char *filename)
 	// Absolute path:
 	if (relativePath[0] == '/') {
 		if (FileExists(relativePath)) {
-			*BufCopy(result.path, std::string_view(relativePath, filenameStr.size())) = '\0';
+			*BufCopy(result.path, std::string_view(relativePath, filename.size())) = '\0';
 		}
 		return result;
 	}
@@ -110,10 +110,10 @@ AssetRef FindAsset(const char *filename)
 	return result;
 }
 #else
-AssetRef FindAsset(const char *filename)
+AssetRef FindAsset(std::string_view filename)
 {
 	AssetRef result;
-	std::string relativePath = filename;
+	std::string relativePath { filename };
 #ifndef _WIN32
 	std::replace(relativePath.begin(), relativePath.end(), '\\', '/');
 #endif
@@ -177,7 +177,7 @@ AssetHandle OpenAsset(AssetRef &&ref, bool threadsafe)
 #endif
 }
 
-AssetHandle OpenAsset(const char *filename, bool threadsafe)
+AssetHandle OpenAsset(std::string_view filename, bool threadsafe)
 {
 	AssetRef ref = FindAsset(filename);
 	if (!ref.ok())
@@ -185,7 +185,7 @@ AssetHandle OpenAsset(const char *filename, bool threadsafe)
 	return OpenAsset(std::move(ref), threadsafe);
 }
 
-AssetHandle OpenAsset(const char *filename, size_t &fileSize, bool threadsafe)
+AssetHandle OpenAsset(std::string_view filename, size_t &fileSize, bool threadsafe)
 {
 	AssetRef ref = FindAsset(filename);
 	if (!ref.ok())
@@ -194,7 +194,7 @@ AssetHandle OpenAsset(const char *filename, size_t &fileSize, bool threadsafe)
 	return OpenAsset(std::move(ref), threadsafe);
 }
 
-SDL_RWops *OpenAssetAsSdlRwOps(const char *filename, bool threadsafe)
+SDL_RWops *OpenAssetAsSdlRwOps(std::string_view filename, bool threadsafe)
 {
 #ifdef UNPACKED_MPQS
 	AssetRef ref = FindAsset(filename);
