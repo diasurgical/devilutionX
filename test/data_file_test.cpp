@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include "data/common.hpp"
-#include "data/iterators.hpp"
+#include "data/file.hpp"
+#include "data/parser.hpp"
 
 #include <string_view>
 #include <vector>
@@ -144,10 +144,10 @@ TEST(DataFileTest, IterateOverRecords)
 	};
 
 	unsigned row = 0;
-	for (std::string_view record : RecordsRange { dataFile.view() }) {
+	for (FieldsInRecordRange record : dataFile.records()) {
 		ASSERT_LT(row, expectedFields.size()) << "Too many records";
 		unsigned col = 0;
-		for (std::string_view field : FieldsInRecordRange { record }) {
+		for (std::string_view field : record) {
 			if (col < expectedFields[row].size())
 				EXPECT_EQ(field, expectedFields[row][col]) << "Unexpected value at record " << row << " and field " << col;
 			else
@@ -196,9 +196,9 @@ TEST(DataFileTest, DiscardAllAfterFirstFieldIterator)
 	std::array<std::string_view, 5> expectedFields { "Test", "", "1", "1", "" };
 
 	unsigned row = 0;
-	for (std::string_view record : RecordsRange { dataFile.view() }) {
+	for (FieldsInRecordRange record : dataFile.records()) {
 		ASSERT_LT(row, expectedFields.size()) << "Too many records";
-		for (std::string_view field : FieldsInRecordRange { record }) {
+		for (std::string_view field : record) {
 			EXPECT_EQ(field, expectedFields[row]) << "Unexpected first value at record " << row;
 			break;
 		}
@@ -233,6 +233,81 @@ TEST(DataFileTest, DiscardAllUpToLastField)
 		}
 		row++;
 	} while (!result.endOfFile());
+
+	EXPECT_EQ(row, expectedFields.size()) << "Parsing returned fewer records than expected";
+}
+
+TEST(DataFileTest, SkipFieldIterator)
+{
+	auto loadDataResult = LoadDataFile("txtdata\\lf.tsv");
+	ASSERT_TRUE(loadDataResult.has_value()) << "Unable to load lf.tsv";
+
+	DataFile &dataFile = loadDataResult.value();
+
+	// we don't actually test the last value as incrementing the fields-in-record iterator past
+	//  the last field invalidates the value, we can't recover the same way the procedural interface does.
+	std::array<std::string_view, 5> expectedFields { "Values", "3", "", "3", "" };
+
+	RecordsRange recordsRange = dataFile.records();
+	auto record = recordsRange.begin();
+	auto endRecord = recordsRange.end();
+	unsigned row = 0;
+	while (record != endRecord) {
+		ASSERT_LT(row, expectedFields.size()) << "Too many records";
+		FieldsInRecordRange fieldRange = *record;
+		auto field = fieldRange.begin();
+		auto endField = fieldRange.end();
+		field += 2;
+		if (row < expectedFields.size() - 1) {
+			if (field == endField) {
+				ADD_FAILURE() << "Parsing returned fewer fields than expected in record " << row;
+			} else {
+				EXPECT_EQ(*field, expectedFields[row]) << "Unexpected last value at record " << row;
+				++field;
+			}
+		}
+		EXPECT_EQ(field, endField) << "Parsing returned more fields than expected in record " << row;
+
+		++row;
+		++record;
+	}
+
+	EXPECT_EQ(row, expectedFields.size()) << "Parsing returned fewer records than expected";
+}
+
+TEST(DataFileTest, SkipRowIterator)
+{
+	auto loadDataResult = LoadDataFile("txtdata\\lf.tsv");
+	ASSERT_TRUE(loadDataResult.has_value()) << "Unable to load lf.tsv";
+
+	DataFile &dataFile = loadDataResult.value();
+
+	std::vector<std::vector<std::string_view>> expectedFields {
+		// skipping the first two lines
+		{ "1", "2", "" },
+		{ "1", "", "3" },
+		{ "" } // file ends with a newline, parsing returns a single empty field
+	};
+
+	RecordsRange recordsRange = dataFile.records();
+	auto record = recordsRange.begin();
+	auto endRecord = recordsRange.end();
+	record += 2;
+	unsigned row = 0;
+	while (record != endRecord) {
+		ASSERT_LT(row, expectedFields.size()) << "Too many records";
+		unsigned col = 0;
+		for (std::string_view field : *record) {
+			if (col < expectedFields[row].size())
+				EXPECT_EQ(field, expectedFields[row][col]) << "Unexpected value at record " << row << " and field " << col;
+			else
+				ADD_FAILURE() << "Extra value '" << field << "' in record " << row << " at field " << col;
+			col++;
+		}
+		EXPECT_GE(col, expectedFields[row].size()) << "Parsing returned fewer fields than expected in record " << row;
+		++row;
+		++record;
+	}
 
 	EXPECT_EQ(row, expectedFields.size()) << "Parsing returned fewer records than expected";
 }

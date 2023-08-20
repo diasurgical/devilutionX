@@ -1,73 +1,11 @@
 #pragma once
 
 #include <algorithm>
-#include <cstddef>
-#include <memory>
 #include <string_view>
 
-#include <expected.hpp>
-
-#include "engine.h"
+#include "engine.h" // For IsAnyOf
 
 namespace devilution {
-/**
- * @brief Container for a tab-delimited file following the TSV-like format described in txtdata/Readme.md
- */
-class DataFile {
-	std::unique_ptr<char[]> data_;
-	std::string_view content_;
-
-	DataFile() = delete;
-
-	/**
-	 * @brief Creates a view over a sequence of utf8 code units, skipping over the BOM if present
-	 * @param data pointer to the raw data backing the view (this container will take ownership to ensure the lifetime of the view)
-	 * @param size total number of bytes/code units including the BOM if present
-	 */
-	DataFile(std::unique_ptr<char[]> &&data, size_t size)
-	    : data_(std::move(data))
-	    , content_(data_.get(), size)
-	{
-		constexpr std::string_view utf8BOM = "\xef\xbb\xbf";
-		if (this->content_.starts_with(utf8BOM))
-			this->content_.remove_prefix(utf8BOM.size());
-	}
-
-public:
-	enum class Error {
-		NotFound,
-		ReadError
-	};
-
-	/**
-	 * @brief Attempts to load a data file (using the same mechanism as other runtime assets)
-	 *
-	 * @param path file to load including the /txtdata/ prefix
-	 * @return an object containing an owned pointer to an in-memory copy of the file
-	 *         or an error code describing the reason for failure.
-	 */
-	static tl::expected<DataFile, Error> load(std::string_view path);
-
-	[[nodiscard]] std::string_view view() const
-	{
-		return content_;
-	}
-
-	[[nodiscard]] const char *begin() const
-	{
-		return content_.data();
-	}
-
-	[[nodiscard]] const char *end() const
-	{
-		return content_.data() + content_.size();
-	}
-
-	[[nodiscard]] size_t size() const
-	{
-		return content_.size();
-	}
-};
 
 struct GetFieldResult {
 	std::string_view value;
@@ -75,21 +13,21 @@ struct GetFieldResult {
 	const char *next = nullptr;
 
 	enum class Status {
-		Uninitialized,
+		ReadyToRead,
 		EndOfField,
 		EndOfRecord,
 		BadRecordSeparator,
 		EndOfFile,
 		FileTruncated
 	} status
-	    = Status::Uninitialized;
+	    = Status::ReadyToRead;
 
 	GetFieldResult() = default;
 
 	GetFieldResult(const char *next)
 	    : value()
 	    , next(next)
-	    , status(Status::Uninitialized)
+	    , status(Status::ReadyToRead)
 	{
 	}
 
@@ -209,11 +147,21 @@ inline GetFieldResult DiscardField(const char *begin, const char *end)
  * @brief Advances by the specified number of fields or until the end of the record, whichever occurs first
  * @param begin first character of the stream
  * @param end one past the last character in the stream
- * @param skipLength how many records to skip (specifying 0 will cause the method to return without advancing)
+ * @param skipLength how many fields to skip (specifying 0 will cause the method to return without advancing)
  * @return a GetFieldResult struct containing an empty value, a pointer to the start of the next
  *          field/record, and a status code describing what type of separator was found
  */
 GetFieldResult DiscardMultipleFields(const char *begin, const char *end, unsigned skipLength);
+
+/**
+ * @brief Advances by the specified number of records or until the end of the file, whichever occurs first
+ * @param begin first character of the stream
+ * @param end one past the last character in the stream
+ * @param skipLength how many records to skip (specifying 0 will cause the method to return without advancing)
+ * @return a GetFieldResult struct containing an empty value, a pointer to the start of the next
+ *          record, and a status code describing what type of separator was found
+ */
+GetFieldResult DiscardMultipleRecords(const char *begin, const char *end, unsigned skipLength);
 
 /**
  * @brief Discard any remaining fields in the current record
@@ -250,23 +198,5 @@ inline GetFieldResult GetNextField(const char *begin, const char *end)
 
 	// Can't use the string_view(It, It) constructor since that was only added in C++20...
 	return { { begin, static_cast<size_t>(nextSeparator - begin) }, HandleFieldSeparator(nextSeparator, end) };
-}
-
-/**
- * @brief Returns a view of the next record from a tab-delimited stream.
- *
- * This is mainly intended as a convenience function for iterator-based parsing, there's little
- * reason to use it directly.
- * @param begin first character of the stream
- * @param end one past the last character in the stream
- * @return a GetFieldResult struct containing a string_view of the record, the start of the next
- *          record, and a status code describing whether more records are available
- */
-inline GetFieldResult GetNextRecord(const char *begin, const char *end)
-{
-	const char *nextSeparator = std::find_if(begin, end, IsRecordSeparator);
-
-	// Can't use the string_view(It, It) constructor since that was only added in C++20...
-	return { { begin, static_cast<size_t>(nextSeparator - begin) }, HandleRecordSeparator(nextSeparator, end) };
 }
 } // namespace devilution

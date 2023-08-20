@@ -14,8 +14,9 @@
 #include <vector>
 
 #include <expected.hpp>
+#include <fmt/format.h>
 
-#include "data/common.hpp"
+#include "data/file.hpp"
 #include "items.h"
 #include "player.h"
 #include "textdat.h"
@@ -110,9 +111,10 @@ struct ExperienceColumnDefinition {
 
 void ReloadExperienceData()
 {
-	auto dataFileResult = DataFile::load("txtdata\\Experience.tsv");
+	constexpr std::string_view filename = "txtdata\\Experience.tsv";
+	auto dataFileResult = DataFile::load(filename);
 	if (!dataFileResult.has_value()) {
-		app_fatal(_("Unable to load player experience data from txtdata\\Experience.tsv"));
+		app_fatal(fmt::format(fmt::runtime(_(/* TRANSLATORS: Error message when a data file is missing or corrupt */ "Unable to load player experience data from file {:s}")), filename));
 	}
 	const DataFile &dataFile = dataFileResult.value();
 
@@ -123,17 +125,16 @@ void ReloadExperienceData()
 
 	unsigned currentColumn = 0;
 	unsigned lastColumn = 0;
-	GetFieldResult result { dataFile.begin() };
-	do {
+	RecordsRange records = dataFile.records();
+	auto record = records.begin();
+	auto endRecord = records.end();
+	for (std::string_view field : *record) {
 		if (columns.size() >= ExpectedColumnCount) {
-			// All key columns have been identified and there's extra fields, discard them and proceed
-			result = DiscardRemainingFields(result.next, dataFile.end());
+			// All key columns have been identified
 			break;
 		}
 
-		result = GetNextField(result.next, dataFile.end());
-		// As long as we don't call GetNextField twice it a row it will always contain a value
-		auto columnType = ExperienceColumnDefinition::mapNameToType(result.value);
+		auto columnType = ExperienceColumnDefinition::mapNameToType(field);
 		if (columnType.has_value() && !seenColumns.test(static_cast<size_t>(columnType.value()))) {
 			seenColumns.set(static_cast<size_t>(columnType.value()));
 			unsigned skipColumns = 0;
@@ -143,77 +144,106 @@ void ReloadExperienceData()
 			lastColumn = currentColumn;
 		}
 		++currentColumn;
-	} while (!result.endOfRecord());
+	}
+	++record;
 
-	if (result.endOfFile()) {
+	if (record == endRecord) {
 		// The data file ended after the header, since there's no data we can't proceed
-		app_fatal(_("Experience.tsv is incomplete, please check the file contents."));
+		app_fatal(fmt::format(fmt::runtime(_(
+		                          /* TRANSLATORS: Error message when a data file is empty or only contains the header row */
+		                          "{:s} is incomplete, please check the file contents.")),
+		    filename));
 	}
 
 	if (columns.size() < ExpectedColumnCount) {
 		// The data file doesn't have the required headers. Though we could potentially just allocate
 		//  missing columns in the default order that's likely to lead to further corruption in saves
-		app_fatal(_("Your Experience.tsv file doesn't have the expected headers, please make sure it matches the documented format."));
+		app_fatal(fmt::format(fmt::runtime(_(
+		                          /* TRANSLATORS: Error message when a data file doesn't contain the expected columns */
+		                          "Your {:s} file doesn't have the expected columns, please make sure it matches the documented format.")),
+		    filename));
 	}
 
 	ExperienceData.clear();
-	do {
+	unsigned row = 1; // current line/record number for error messages
+	while (record != endRecord) {
 		uint8_t level = 0;
 		uint32_t experience = 0;
 		bool skipRecord = false;
-		for (auto &column : columns) {
-			result = DiscardMultipleFields(result.next, dataFile.end(), column.skipLength);
 
-			if (result.endOfRecord()) {
-				// reached the end of record early
-				// TODO: let the player know their data file is incomplete
+		FieldsInRecordRange fields = *record;
+		auto field = fields.begin();
+		auto endField = fields.end();
+		unsigned col = 0; // current field number for error messages
+		for (auto &column : columns) {
+			col += column.skipLength;
+			field += column.skipLength;
+
+			if (field == endField) {
+				// reached the end of record early, this could be from a trailing newline so don't throw an error
+				skipRecord = true;
 				break;
 			}
 
 			switch (column.type) {
 			case ExperienceColumnDefinition::ColumnType::Level: {
-				auto fromCharsResult = std::from_chars(result.next, dataFile.end(), level);
-				if (fromCharsResult.ec == std::errc::invalid_argument) {
-					// not a signless numeric value, is this the MaxLevel line?
-					result = GetNextField(fromCharsResult.ptr, dataFile.end());
-					if (result.value == "MaxLevel") {
+				auto parseIntResult = field.parseInt(level);
+				if (parseIntResult == std::errc::invalid_argument) {
+					// not a signless numeric value, is this a trailing newline or the MaxLevel line?
+					if (field.endOfFile() || *field == "MaxLevel") {
 						skipRecord = true;
+					} else {
+						app_fatal(fmt::format(fmt::runtime(_(
+						                          /* TRANSLATORS: Error message when parsing the Experience data file and a text value is encountered in the Level column */
+						                          "Expected a positive numeric value for Level in {:s}, found {:s} at row {:d} and column {:d}")),
+						    filename, *field, row, col));
 					}
-					// else it was an invalid value, TODO: let the player know the data file contains errors
-				} else {
-					// if (fromCharsResult.ec == std::errc::result_out_of_range) then a level greater than 255 was provided
-					// TODO: let the player know the data file contains a level higher than we support
-
-					// std::from_chars doesn't consume our field separators so we need to advance to the next field by discarding the remainder of this one
-					result = DiscardField(fromCharsResult.ptr, dataFile.end());
+				} else if (parseIntResult == std::errc::result_out_of_range) {
+					// a level greater than 255 was provided
+					app_fatal(fmt::format(fmt::runtime(_(
+					                          /* TRANSLATORS: Error message when parsing the Experience data file and a text value is encountered in the Level column */
+					                          "Levels above {:d} are not supported, out of range value in {:s} at row {:d} and column {:d}")),
+					    std::numeric_limits<uint8_t>::max(), filename, row, col));
 				}
 			} break;
 
 			case ExperienceColumnDefinition::ColumnType::Experience: {
-				auto fromCharsResult = std::from_chars(result.next, dataFile.end(), experience);
-				if (fromCharsResult.ec == std::errc::result_out_of_range) {
-					// TODO: let the player know the data file contains an experience threshold higher than we support
-					experience = std::numeric_limits<uint32_t>::max();
-				} // TODO: let the player know if they provided a non-numeric value (ec == std::errc::invalid_argument)
-
-				// std::from_chars doesn't consume our field separators so we need to advance to the next field by discarding the remainder of this one
-				result = DiscardField(fromCharsResult.ptr, dataFile.end());
+				auto parseIntResult = field.parseInt(experience);
+				if (parseIntResult == std::errc::invalid_argument) {
+					// not a signless numeric value, is this a trailing newline?
+					if (field.endOfFile()) {
+						skipRecord = true;
+					} else {
+						app_fatal(fmt::format(fmt::runtime(_(
+						                          /* TRANSLATORS: Error message when parsing the Experience data file and a text value is encountered in the Experience column */
+						                          "Expected a positive numeric value for Experience in {:s}, found {:s} at row {:d} and column {:d}")),
+						    filename, *field, row, col));
+					}
+				} else if (parseIntResult == std::errc::result_out_of_range) {
+					// an experience threshold greater than 2^32-1 was provided
+					app_fatal(fmt::format(fmt::runtime(_(
+					                          /* TRANSLATORS: Error message when parsing the Experience data file and a text value is encountered in the Experience column */
+					                          "Experience thresholds above {:d} are not supported, out of range value in {:s} at row {:d} and column {:d}")),
+					    std::numeric_limits<uint32_t>::max(), filename, row, col));
+				}
 			} break;
 
 			default:
-				result = DiscardField(result.next, dataFile.end());
+				break;
 			}
 
 			if (skipRecord)
 				break;
+
+			++field;
+			++col;
 		}
 
 		if (!skipRecord)
 			ExperienceData.setThresholdForLevel(level, experience);
-
-		if (!result.endOfRecord())
-			result = DiscardRemainingFields(result.next, dataFile.end());
-	} while (!result.endOfFile());
+		++record;
+		++row;
+	}
 }
 
 } // namespace
