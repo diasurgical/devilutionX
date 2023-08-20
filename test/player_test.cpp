@@ -2,6 +2,8 @@
 
 #include <gtest/gtest.h>
 
+#include "playerdat.hpp"
+
 using namespace devilution;
 
 namespace devilution {
@@ -176,6 +178,7 @@ static void AssertPlayer(Player &player)
 
 TEST(Player, CreatePlayer)
 {
+	LoadPlayerDataFiles();
 	Players.resize(1);
 	CreatePlayer(Players[0], HeroClass::Rogue);
 	AssertPlayer(Players[0]);

@@ -84,6 +84,10 @@ set(devilutionx_fixtures
   timedemo/WarriorLevel1to2/demo_0.dmo
   timedemo/WarriorLevel1to2/demo_0_reference_spawn_0.sv
   timedemo/WarriorLevel1to2/spawn_0.sv
+  txtdata/cr.tsv
+  txtdata/crlf.tsv
+  txtdata/lf.tsv
+  txtdata/utf8_bom.tsv
 )
 
 foreach(fixture ${devilutionx_fixtures})

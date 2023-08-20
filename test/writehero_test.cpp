@@ -11,6 +11,7 @@
 #include "loadsave.h"
 #include "pack.h"
 #include "pfile.h"
+#include "playerdat.hpp"
 #include "utils/file_util.h"
 #include "utils/paths.h"
 
@@ -373,6 +374,7 @@ TEST(Writehero, pfile_write_hero)
 	MyPlayerId = 0;
 	MyPlayer = &Players[MyPlayerId];
 
+	LoadPlayerDataFiles();
 	_uiheroinfo info {};
 	info.heroclass = HeroClass::Rogue;
 	pfile_ui_save_create(&info);

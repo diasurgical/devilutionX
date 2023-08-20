@@ -15,6 +15,7 @@ set(tests
   automap_test
   codec_test
   cursor_test
+  data_file_test
   dead_test
   diablo_test
   drlg_common_test
