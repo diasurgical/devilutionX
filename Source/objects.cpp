@@ -3579,7 +3579,7 @@ void ResyncDoors(WorldTilePosition p1, WorldTilePosition p2, bool sendmsg)
 	const WorldTileSize size { static_cast<WorldTileCoord>(p2.x - p1.x), static_cast<WorldTileCoord>(p2.y - p1.y) };
 	const WorldTileRectangle area { p1, size };
 
-	for (WorldTilePosition p : PointsInRectangleRange<WorldTileCoord> { area }) {
+	for (const WorldTilePosition p : PointsInRectangle { area }) {
 		Object *obj = FindObjectAtPosition(p);
 		if (obj == nullptr)
 			continue;
