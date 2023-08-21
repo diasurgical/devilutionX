@@ -500,12 +500,12 @@ bool IsStandingGround()
 void InteractMonster()
 {
 	Player &myPlayer = *MyPlayer;
-	Point position = Monsters[pcursmonst].position.tile;
-	bool nigh = myPlayer.position.tile.WalkingDistance(position) < 2;
+	Point position = Monsters[pcursmonst].position.future;
+	bool near = GetMinDistance(position) < 2;
 
 	// talk
 	if (CanTalkToMonst(Monsters[pcursmonst])) {
-		if (!nigh) {
+		if (!near) {
 			return;
 		}
 		NetSendCmdParam1(true, CMD_ATTACKID, pcursmonst);
@@ -521,7 +521,7 @@ void InteractMonster()
 	}
 
 	// attack
-	if (nigh) {
+	if (near) {
 		NetSendCmdParam1(true, CMD_ATTACKID, pcursmonst);
 		LastMouseButtonAction = MouseActionType::AttackMonsterTarget;
 		return;
@@ -544,8 +544,8 @@ void InteractPlayer()
 	}
 
 	// attack
-	Point position = Players[pcursplr].position.tile;
-	if (myPlayer.position.tile.WalkingDistance(position) < 2) {
+	Point position = Players[pcursplr].position.future;
+	if (GetMinDistance(position) < 2) {
 		NetSendCmdParam1(true, CMD_ATTACKPID, pcursplr);
 		LastMouseButtonAction = MouseActionType::AttackPlayerTarget;
 		return;
