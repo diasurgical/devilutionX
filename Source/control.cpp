@@ -134,6 +134,8 @@ OptionalOwnedClxSpriteList talkButtons;
 OptionalOwnedClxSpriteList pDurIcons;
 OptionalOwnedClxSpriteList multiButtons;
 OptionalOwnedClxSpriteList pPanelButtons;
+OptionalOwnedClxSpriteList partyIcons;
+OptionalOwnedClxSpriteList partyFrame;
 
 bool PanelButtons[8];
 int PanelButtonIndex;
@@ -892,6 +894,8 @@ void InitControlPan()
 		InitSpellBook();
 		pQLogCel = LoadCel("data\\quest", static_cast<uint16_t>(SidePanelSize.width));
 		pGBoxBuff = LoadCel("ctrlpan\\golddrop", 261);
+		partyIcons = LoadCel("data\\partyicons", 45);
+		partyFrame = LoadCel("data\\partyframe", 51);
 	}
 	CloseGoldDrop();
 	dropGoldValue = 0;
@@ -1609,6 +1613,54 @@ void GoldDropNewText(string_view text)
 			if (newGoldValue <= initialDropGoldValue) {
 				dropGoldValue = newGoldValue;
 			}
+		}
+	}
+}
+
+void DrawPartyLifebar(const Surface &out, Player &player, Rectangle frame)
+{
+	int numLifeTicks = ((player._pHitPoints * frame.size.width) + (player._pMaxHP / 2)) / player._pMaxHP;
+	uint8_t barColor = PAL16_GRAY + 15;
+	int barHeight = 5;
+
+	// Fill in life bar
+	for (int i = 0; i < frame.size.width; i++) {
+		DrawVerticalLine(out, { frame.position.x + i, frame.position.y }, 5, barColor);
+	}
+
+	if (player._pHitPoints <= 0) {
+		barColor = 0;
+	} else if (player._pHitPoints < (player._pMaxHP / 10)) {
+		barColor = PAL8_RED + 3;
+	} else if (player._pHitPoints < (player._pMaxHP / 2)) {
+		barColor = PAL8_YELLOW + 2;
+	} else {
+		barColor = PAL16_GRAY;
+	}
+
+	for (int j = 0; j < numLifeTicks; j++) {
+		DrawVerticalLine(out, { frame.position.x + j, frame.position.y }, barHeight, barColor);
+	}
+}
+
+void DrawParty(const Surface &out)
+{
+	Rectangle frame { { 12, 64 }, { 51, 44 } };
+	Rectangle icon { { frame.position.x + 3, frame.position.y - 3 }, { frame.size.width - 6, frame.size.height - 6 } };
+	Rectangle text { { frame.position.x + 5, 66 }, { 15, frame.size.width } };
+	int partyCount = 0;
+
+	for (auto &player : Players) {
+		if (player.plractive) {
+			icon.position.y += partyCount * frame.size.height;
+			frame.position.y += partyCount * frame.size.height;
+			int partyIconsFrameNum = static_cast<int>(player._pClass);
+
+			DrawString(out, player._pName, text, UiFlags::ColorWhite);
+			ClxDraw(out, frame.position, (*partyFrame)[1]);
+			ClxDraw(out, icon.position, (*partyIcons)[partyIconsFrameNum]);
+			DrawPartyLifebar(out, player, frame);
+			partyCount++;
 		}
 	}
 }
