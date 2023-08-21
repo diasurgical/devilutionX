@@ -78,24 +78,22 @@ used as a header and requires the following column names:
 #### Level
 A numeric value used to set the order for experience thresholds. The header
 line MUST be the first line in the file. Levels SHOULD proceed in ascending
-order after that. Levels up to 255 are supported, the highest value will be
-used as the maximum character level. If you leave any gaps then characters
-will not be able to advance past that level and experience caps will not apply.
+order after that starting from level 1. Levels up to 255 are supported, the
+highest value will be used as the maximum character level. If you leave any
+gaps then characters will not be able to advance past that level and experience
+caps will not apply.
 
 If you're familiar with Diablo 2 text files you might expect to use a MaxLevel
-row to set character level limits, these lines are ignored and the largest
-Level value is used as described above.
-
-The first row SHOULD be `0	0` (as all characters start at level 1, we ignore
-these values and use the threshold for level 1 to determine when characters
-advance past level 1).
+row to set character level limits and to have a level 0 line, we ignore these
+lines in DevilutionX. As all characters start at level 1 we use the threshold
+for level 1 to determine when characters advance past level 1. The highest
+level defined in the file is the maximum level.
 
 #### Experience
 This column determines the experience points required for characters to
 advance past that level. For example a file like:
 ```tsv
 Level	Experience
-0	0
 1	2000
 2	4000
 3	6000

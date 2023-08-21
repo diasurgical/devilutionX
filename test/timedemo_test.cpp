@@ -6,6 +6,7 @@
 #include "engine/demomode.h"
 #include "options.h"
 #include "pfile.h"
+#include "playerdat.hpp"
 #include "utils/display.h"
 #include "utils/paths.h"
 
@@ -48,6 +49,7 @@ void RunTimedemo(std::string timedemoFolderName)
 	HeadlessMode = true;
 	demo::InitPlayBack(demoNumber, true);
 
+	LoadPlayerDataFiles();
 	pfile_ui_set_hero_infos(Dummy_GetHeroInfo);
 	gbLoadGame = true;
 

@@ -27,67 +27,13 @@ namespace devilution {
 namespace {
 
 class ExperienceData {
-	/** Specifies the experience point limit of each level. The given values are defaults used if the data file is missing. */
-	std::vector<uint32_t> levelThresholds {
-		0,
-		2000,
-		4620,
-		8040,
-		12489,
-		18258,
-		25712,
-		35309,
-		47622,
-		63364,
-		83419,
-		108879,
-		141086,
-		181683,
-		231075,
-		313656,
-		424067,
-		571190,
-		766569,
-		1025154,
-		1366227,
-		1814568,
-		2401895,
-		3168651,
-		4166200,
-		5459523,
-		7130496,
-		9281874,
-		12042092,
-		15571031,
-		20066900,
-		25774405,
-		32994399,
-		42095202,
-		53525811,
-		67831218,
-		85670061,
-		107834823,
-		135274799,
-		169122009,
-		210720231,
-		261657253,
-		323800420,
-		399335440,
-		490808349,
-		601170414,
-		733825617,
-		892680222,
-		1082908612,
-		1310707109,
-		1583495809
-	};
+	/** Specifies the experience point limit of each level. */
+	std::vector<uint32_t> levelThresholds;
 
 public:
 	uint8_t getMaxLevel() const
 	{
-		if (levelThresholds.empty())
-			return 0;
-		return static_cast<uint8_t>(std::min<size_t>(levelThresholds.size() - 1, std::numeric_limits<uint8_t>::max()));
+		return static_cast<uint8_t>(std::min<size_t>(levelThresholds.size(), std::numeric_limits<uint8_t>::max()));
 	}
 
 	DVL_REINITIALIZES void clear()
@@ -97,17 +43,23 @@ public:
 
 	[[nodiscard]] uint32_t getThresholdForLevel(unsigned level) const
 	{
-		return levelThresholds[std::min<size_t>(level, getMaxLevel())];
+		if (level > 0)
+			return levelThresholds[std::min<size_t>(level - 1, getMaxLevel())];
+
+		return 0;
 	}
 
 	void setThresholdForLevel(unsigned level, uint32_t experience)
 	{
-		if (level >= levelThresholds.size()) {
-			// To avoid ValidatePlayer() resetting players to 0 experience we need to use the maximum possible value here
-			// As long as the file has no gaps it'll get initialised properly.
-			levelThresholds.resize(static_cast<size_t>(level) + 1, std::numeric_limits<uint32_t>::max());
+		if (level > 0) {
+			if (level > levelThresholds.size()) {
+				// To avoid ValidatePlayer() resetting players to 0 experience we need to use the maximum possible value here
+				// As long as the file has no gaps it'll get initialised properly.
+				levelThresholds.resize(level, std::numeric_limits<uint32_t>::max());
+			}
+
+			levelThresholds[static_cast<size_t>(level - 1)] = experience;
 		}
-		levelThresholds[level] = experience;
 	}
 } ExperienceData;
 
@@ -160,10 +112,7 @@ void ReloadExperienceData()
 {
 	auto dataFileResult = DataFile::load("txtdata\\Experience.tsv");
 	if (!dataFileResult.has_value()) {
-		// Can't load the data file, so reset to defaults.
-		// TODO: Log error somewhere the player can see it, they probably want to know that we couldn't load the file
-		ExperienceData = {};
-		return;
+		app_fatal(_("Unable to load player experience data from txtdata\\Experience.tsv"));
 	}
 	const DataFile &dataFile = dataFileResult.value();
 
@@ -197,17 +146,14 @@ void ReloadExperienceData()
 	} while (!result.endOfRecord());
 
 	if (result.endOfFile()) {
-		// The data file ended after the header, since there's no data we need to reset to defaults.
-		// TODO: Log error somewhere the player can see it, they probably want to know that their file is missing data
-		ExperienceData = {};
-		return;
+		// The data file ended after the header, since there's no data we can't proceed
+		app_fatal(_("Experience.tsv is incomplete, please check the file contents."));
 	}
 
 	if (columns.size() < ExpectedColumnCount) {
-		// The data file doesn't have the required headers. Again reset to default (though we could potentially just allocate missing columns in the default order?)
-		// TODO: Log error somewhere the player can see it, they probably want to know that their file has the wrong headers
-		ExperienceData = {};
-		return;
+		// The data file doesn't have the required headers. Though we could potentially just allocate
+		//  missing columns in the default order that's likely to lead to further corruption in saves
+		app_fatal(_("Your Experience.tsv file doesn't have the expected headers, please make sure it matches the documented format."));
 	}
 
 	ExperienceData.clear();
