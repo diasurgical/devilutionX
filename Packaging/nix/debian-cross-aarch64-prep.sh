@@ -14,7 +14,8 @@ deb [arch=arm64] http://ports.ubuntu.com/ ${FLAVOR} multiverse
 deb [arch=arm64] http://ports.ubuntu.com/ ${FLAVOR}-updates multiverse
 deb [arch=arm64] http://ports.ubuntu.com/ ${FLAVOR}-backports main restricted universe multiverse
 LIST
-	sudo sed -i 's/deb http/deb [arch=amd64,i386] http/' /etc/apt/sources.list
+	sudo sed -E -i 's/deb (http|file|mirror)/deb [arch=amd64,i386] \1/' /etc/apt/sources.list
+	cat /etc/apt/sources.list
 fi
 
 sudo dpkg --add-architecture arm64
