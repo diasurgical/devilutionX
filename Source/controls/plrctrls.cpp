@@ -27,7 +27,6 @@
 #include "items.h"
 #include "levels/town.h"
 #include "levels/trigs.h"
-#include "limits.h"
 #include "minitext.h"
 #include "missiles.h"
 #include "panels/spell_icons.hpp"
@@ -371,7 +370,7 @@ void CheckPlayerNearby()
 {
 	int newDdistance;
 	int rotations = 0;
-	int distance = INT_MAX;
+	int distance = 0;
 
 	if (pcursmonst != -1)
 		return;
@@ -582,7 +581,6 @@ void Interact()
 	}
 
 	// This is triggered only when there is no target.
-	// Check if there is a case of changing target by using stand ground and stick (by rotating character)?
 	if (leveltype != DTYPE_TOWN) {
 		Direction pdir = myPlayer._pdir;
 		AxisDirection moveDir = GetMoveDirection();
