@@ -40,7 +40,18 @@ void DiscardRandomValues(unsigned count);
 /**
  * @brief Advances the global RandomNumberEngine state and returns the new value
  */
-uint32_t GenerateSeed();
+[[nodiscard]] uint32_t GenerateSeed();
+
+/**
+ * @brief Provides the seed value for a sequence of random numbers of predetermined size
+ *
+ * This advances the engine state of the random number generator by count+1 rounds to ensure that
+ * subsequently generated random numbers will not overlap with the allocated sequence.
+ *
+ * @param count The size of the random number sequence to be allocated
+ * @return The seed for the allocated sequence of random numbers
+ */
+[[nodiscard]] uint32_t AllocateRandomSequence(unsigned count);
 
 /**
  * @brief Generates a random non-negative integer (most of the time) using the vanilla RNG

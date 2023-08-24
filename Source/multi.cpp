@@ -787,7 +787,7 @@ bool NetInit(bool bSinglePlayer)
 	gnTickDelay = 1000 / sgGameInitInfo.nTickRate;
 
 	for (int i = 0; i < NUMLEVELS; i++) {
-		glSeedTbl[i] = AdvanceRndSeed();
+		glSeedTbl[i] = AllocateRandomSequence(10000);
 	}
 	PublicGame = DvlNet_IsPublicGame();
 

@@ -27,16 +27,23 @@ uint32_t GetLCGEngineState()
 
 void DiscardRandomValues(unsigned count)
 {
-	while (count != 0) {
-		GenerateSeed();
-		count--;
-	}
+	if (count > 1)
+		diabloGenerator.discard(count - 1);
+	if (count > 0)
+		sglGameSeed = diabloGenerator();
 }
 
 uint32_t GenerateSeed()
 {
 	sglGameSeed = diabloGenerator();
 	return sglGameSeed;
+}
+
+uint32_t AllocateRandomSequence(unsigned count)
+{
+	uint32_t seed = GenerateSeed();
+	DiscardRandomValues(count);
+	return seed;
 }
 
 int32_t AdvanceRndSeed()
