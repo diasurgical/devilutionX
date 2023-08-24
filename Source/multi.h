@@ -32,6 +32,7 @@ struct GameData {
 	uint8_t bCowQuest;
 	uint8_t bFriendlyFire;
 	uint8_t fullQuests;
+	uint8_t bSharedExperience;
 };
 
 /* @brief Contains info of running public game (for game list browsing) */
