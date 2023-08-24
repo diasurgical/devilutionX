@@ -2096,7 +2096,7 @@ void LoadPlrGFX(Player &player, player_graphic graphic)
 	const HeroClass cls = GetPlayerSpriteClass(player._pClass);
 	const PlayerWeaponGraphic animWeaponId = GetPlayerWeaponGraphic(graphic, static_cast<PlayerWeaponGraphic>(player._pgfxnum & 0xF));
 
-	const char *path = PlayersData[static_cast<std::size_t>(cls)].classPath;
+	const char *path = PlayersSpriteData[static_cast<std::size_t>(cls)].classPath;
 
 	const char *szCel;
 	switch (graphic) {
