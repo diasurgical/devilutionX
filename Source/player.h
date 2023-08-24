@@ -22,6 +22,7 @@
 #include "items.h"
 #include "levels/gendung.h"
 #include "multi.h"
+#include "playerdat.hpp"
 #include "spelldat.h"
 #include "utils/attributes.h"
 #include "utils/enum_traits.h"
@@ -50,17 +51,6 @@ enum {
 	WALK_W    =  8,
 	WALK_NONE = -1,
 	// clang-format on
-};
-
-enum class HeroClass : uint8_t {
-	Warrior,
-	Rogue,
-	Sorcerer,
-	Monk,
-	Bard,
-	Barbarian,
-
-	LAST = Barbarian
 };
 
 enum class CharacterAttribute : uint8_t {
@@ -376,6 +366,27 @@ public:
 	uint8_t pDiabloKillLevel;
 	uint16_t wReflections;
 	ItemSpecialEffectHf pDamAcFlags;
+
+	/**
+	 * @brief Convenience function to get the base stats/bonuses for this player's class
+	 */
+	[[nodiscard]] const ClassAttributes &getClassAttributes() const
+	{
+		return GetClassAttributes(_pClass);
+	}
+
+	[[nodiscard]] const PlayerData &getPlayerData() const
+	{
+		return GetPlayerDataForClass(_pClass);
+	}
+
+	/**
+	 * @brief Gets the translated name for the character's class
+	 */
+	[[nodiscard]] std::string_view getClassName() const
+	{
+		return _(getPlayerData().className);
+	}
 
 	void CalcScrolls();
 

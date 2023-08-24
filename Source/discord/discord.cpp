@@ -88,8 +88,7 @@ std::string GetLocationString()
 
 std::string GetCharacterString()
 {
-	const std::string_view charClassStr = _(PlayersData[static_cast<int>(MyPlayer->_pClass)].className);
-	return fmt::format(fmt::runtime(_(/* TRANSLATORS: Discord character, i.e. "Lv 6 Warrior" */ "Lv {} {}")), tracked_data.playerLevel, charClassStr);
+	return fmt::format(fmt::runtime(_(/* TRANSLATORS: Discord character, i.e. "Lv 6 Warrior" */ "Lv {} {}")), tracked_data.playerLevel, MyPlayer->getClassName());
 }
 
 std::string GetDetailString()

@@ -37,7 +37,6 @@
 #include "objects.h"
 #include "options.h"
 #include "player.h"
-#include "playerdat.hpp"
 #include "qol/autopickup.h"
 #include "qol/floatingnumbers.h"
 #include "qol/stash.h"
@@ -1703,7 +1702,7 @@ int Player::GetCurrentAttributeValue(CharacterAttribute attribute) const
 
 int Player::GetMaximumAttributeValue(CharacterAttribute attribute) const
 {
-	const ClassAttributes &attr = GetClassAttributes(_pClass);
+	const ClassAttributes &attr = getClassAttributes();
 	switch (attribute) {
 	case CharacterAttribute::Strength:
 		return attr.maxStr;
@@ -2062,13 +2061,13 @@ uint32_t Player::getNextExperienceThreshold() const
 
 int32_t Player::calculateBaseLife() const
 {
-	const ClassAttributes &attr = GetClassAttributes(_pClass);
+	const ClassAttributes &attr = getClassAttributes();
 	return attr.adjLife + (attr.lvlLife * getCharacterLevel()) + (attr.chrLife * _pBaseVit);
 }
 
 int32_t Player::calculateBaseMana() const
 {
-	const ClassAttributes &attr = GetClassAttributes(_pClass);
+	const ClassAttributes &attr = getClassAttributes();
 	return attr.adjMana + (attr.lvlMana * getCharacterLevel()) + (attr.chrMana * _pBaseMag);
 }
 
@@ -2279,10 +2278,10 @@ void CreatePlayer(Player &player, HeroClass c)
 	player = {};
 	SetRndSeed(SDL_GetTicks());
 
-	const ClassAttributes &attr = GetClassAttributes(c);
-
 	player.setCharacterLevel(1);
 	player._pClass = c;
+
+	const ClassAttributes &attr = player.getClassAttributes();
 
 	player._pBaseStr = attr.baseStr;
 	player._pStrength = player._pBaseStr;
@@ -2314,7 +2313,7 @@ void CreatePlayer(Player &player, HeroClass c)
 	player._pInfraFlag = false;
 
 	player._pRSplType = SpellType::Skill;
-	SpellID s = PlayersData[static_cast<size_t>(c)].skill;
+	SpellID s = player.getPlayerData().skill;
 	player._pAblSpells = GetSpellBitmask(s);
 	player._pRSpell = s;
 
@@ -2397,7 +2396,7 @@ void NextPlrLevel(Player &player)
 	} else {
 		player._pStatPts += 5;
 	}
-	int hp = GetClassAttributes(player._pClass).lvlLife;
+	int hp = player.getClassAttributes().lvlLife;
 
 	player._pMaxHP += hp;
 	player._pHitPoints = player._pMaxHP;
@@ -2408,7 +2407,7 @@ void NextPlrLevel(Player &player)
 		RedrawComponent(PanelDrawComponent::Health);
 	}
 
-	int mana = GetClassAttributes(player._pClass).lvlMana;
+	int mana = player.getClassAttributes().lvlMana;
 
 	player._pMaxMana += mana;
 	player._pMaxManaBase += mana;
@@ -2534,7 +2533,7 @@ void InitPlayer(Player &player, bool firstTime)
 		ActivateVision(player.position.tile, player._pLightRad, player.getId());
 	}
 
-	SpellID s = PlayersData[static_cast<size_t>(player._pClass)].skill;
+	SpellID s = player.getPlayerData().skill;
 	player._pAblSpells = GetSpellBitmask(s);
 
 	player._pInvincible = false;
@@ -3329,7 +3328,7 @@ void ModifyPlrMag(Player &player, int l)
 	player._pBaseMag += l;
 
 	int ms = l;
-	ms *= GetClassAttributes(player._pClass).chrMana;
+	ms *= player.getClassAttributes().chrMana;
 
 	player._pMaxManaBase += ms;
 	player._pMaxMana += ms;
@@ -3366,7 +3365,7 @@ void ModifyPlrVit(Player &player, int l)
 	player._pBaseVit += l;
 
 	int ms = l;
-	ms *= GetClassAttributes(player._pClass).chrLife;
+	ms *= player.getClassAttributes().chrLife;
 
 	player._pHPBase += ms;
 	player._pMaxHPBase += ms;
@@ -3401,7 +3400,7 @@ void SetPlrMag(Player &player, int v)
 	player._pBaseMag = v;
 
 	int m = v;
-	m *= GetClassAttributes(player._pClass).chrMana;
+	m *= player.getClassAttributes().chrMana;
 
 	player._pMaxManaBase = m;
 	player._pMaxMana = m;
@@ -3419,7 +3418,7 @@ void SetPlrVit(Player &player, int v)
 	player._pBaseVit = v;
 
 	int hp = v;
-	hp *= GetClassAttributes(player._pClass).chrLife;
+	hp *= player.getClassAttributes().chrLife;
 
 	player._pHPBase = hp;
 	player._pMaxHPBase = hp;

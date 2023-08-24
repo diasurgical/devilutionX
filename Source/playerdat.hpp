@@ -7,10 +7,21 @@
 
 #include <cstdint>
 
-#include "player.h"
-#include "textdat.h"
+#include "effects.h"
+#include "spelldat.h"
 
 namespace devilution {
+
+enum class HeroClass : uint8_t {
+	Warrior,
+	Rogue,
+	Sorcerer,
+	Monk,
+	Bard,
+	Barbarian,
+
+	LAST = Barbarian
+};
 
 struct PlayerData {
 	/* Class Name */
@@ -148,7 +159,7 @@ void LoadPlayerDataFiles();
 extern const _sfx_id herosounds[enum_size<HeroClass>::value][enum_size<HeroSpeech>::value];
 uint32_t GetNextExperienceThresholdForLevel(unsigned level);
 uint8_t GetMaximumCharacterLevel();
-extern const PlayerData PlayersData[];
+const PlayerData &GetPlayerDataForClass(HeroClass clazz);
 extern const PlayerSpriteData PlayersSpriteData[];
 extern const PlayerAnimData PlayersAnimData[];
 
