@@ -29,7 +29,7 @@ bool selhero_isMultiPlayer;
 
 bool (*gfnHeroInfo)(bool (*fninfofunc)(_uiheroinfo *));
 bool (*gfnHeroCreate)(_uiheroinfo *);
-void (*gfnHeroStats)(unsigned int, _uidefaultstats *);
+void (*gfnHeroStats)(HeroClass, _uidefaultstats *);
 
 namespace {
 
@@ -226,7 +226,7 @@ void SelheroClassSelectorFocus(int value)
 	const auto heroClass = static_cast<HeroClass>(vecSelHeroDlgItems[value]->m_value);
 
 	_uidefaultstats defaults;
-	gfnHeroStats(static_cast<unsigned int>(heroClass), &defaults);
+	gfnHeroStats(heroClass, &defaults);
 
 	selhero_heroInfo.level = 1;
 	selhero_heroInfo.heroclass = heroClass;
@@ -546,7 +546,7 @@ void selhero_List_Init()
 static void UiSelHeroDialog(
     bool (*fninfo)(bool (*fninfofunc)(_uiheroinfo *)),
     bool (*fncreate)(_uiheroinfo *),
-    void (*fnstats)(unsigned int, _uidefaultstats *),
+    void (*fnstats)(HeroClass, _uidefaultstats *),
     bool (*fnremove)(_uiheroinfo *),
     _selhero_selections *dlgresult,
     uint32_t *saveNumber)
@@ -607,7 +607,7 @@ void UiSelHeroSingDialog(
     bool (*fninfo)(bool (*fninfofunc)(_uiheroinfo *)),
     bool (*fncreate)(_uiheroinfo *),
     bool (*fnremove)(_uiheroinfo *),
-    void (*fnstats)(unsigned int, _uidefaultstats *),
+    void (*fnstats)(HeroClass, _uidefaultstats *),
     _selhero_selections *dlgresult,
     uint32_t *saveNumber,
     _difficulty *difficulty)
@@ -621,7 +621,7 @@ void UiSelHeroMultDialog(
     bool (*fninfo)(bool (*fninfofunc)(_uiheroinfo *)),
     bool (*fncreate)(_uiheroinfo *),
     bool (*fnremove)(_uiheroinfo *),
-    void (*fnstats)(unsigned int, _uidefaultstats *),
+    void (*fnstats)(HeroClass, _uidefaultstats *),
     _selhero_selections *dlgresult,
     uint32_t *saveNumber)
 {
