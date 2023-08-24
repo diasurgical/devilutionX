@@ -123,7 +123,7 @@ PanelEntry panelEntries[] = {
 	{ "", { 9, 14 }, 150, 0,
 	    []() { return StyledText { UiFlags::ColorWhite, InspectPlayer->_pName }; } },
 	{ "", { 161, 14 }, 149, 0,
-	    []() { return StyledText { UiFlags::ColorWhite, std::string(_(PlayersData[static_cast<std::size_t>(InspectPlayer->_pClass)].className)) }; } },
+	    []() { return StyledText { UiFlags::ColorWhite, std::string(InspectPlayer->getClassName()) }; } },
 
 	{ N_("Level"), { 57, 52 }, 57, 45,
 	    []() { return StyledText { UiFlags::ColorWhite, StrCat(InspectPlayer->getCharacterLevel()) }; } },
