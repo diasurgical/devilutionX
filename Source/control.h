@@ -182,6 +182,8 @@ void DrawSpellBook(const Surface &out);
 void DrawGoldSplit(const Surface &out, int amount);
 void control_drop_gold(SDL_Keycode vkey);
 void DrawTalkPan(const Surface &out);
+void DrawInvFloatingInfo(const Surface &out);
+void DrawStashFloatingInfo(const Surface &out);
 bool control_check_talk_btn();
 void control_release_talk_btn();
 void control_type_message();

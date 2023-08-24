@@ -1083,6 +1083,7 @@ GameplayOptions::GameplayOptions()
               { FloatingNumbers::Random, N_("Random Angles") },
               { FloatingNumbers::Vertical, N_("Vertical Only") },
           })
+    , enableFloatingInfoBox("Enable Floating Info Box", OptionEntryFlags::None, N_("Enable Floating Info Box"), N_("Moves information from the control panel to a floating box."), false)
 {
 	grabInput.SetValueChangedCallback(OptionGrabInputChanged);
 	experienceBar.SetValueChangedCallback(OptionExperienceBarChanged);
@@ -1128,6 +1129,7 @@ std::vector<OptionEntryBase *> GameplayOptions::GetEntries()
 		&disableCripplingShrines,
 		&adriaRefillsMana,
 		&grabInput,
+		&enableFloatingInfoBox,
 	};
 }
 
@@ -1309,6 +1311,8 @@ KeymapperOptions::KeymapperOptions()
 	keyIDToKeyName.emplace(SDLK_SPACE, "SPACE");
 	keyIDToKeyName.emplace(SDLK_RCTRL, "RCONTROL");
 	keyIDToKeyName.emplace(SDLK_LCTRL, "LCONTROL");
+	keyIDToKeyName.emplace(SDLK_RSHIFT, "RSHIFT");
+	keyIDToKeyName.emplace(SDLK_LSHIFT, "LSHIFT");
 	keyIDToKeyName.emplace(SDLK_PRINTSCREEN, "PRINT");
 	keyIDToKeyName.emplace(SDLK_PAUSE, "PAUSE");
 	keyIDToKeyName.emplace(SDLK_TAB, "TAB");

@@ -139,6 +139,7 @@ set(libdevilutionx_SRCS
 
   qol/autopickup.cpp
   qol/chatlog.cpp
+  qol/floatinginfobox.cpp
   qol/floatingnumbers.cpp
   qol/itemlabels.cpp
   qol/monhealthbar.cpp
