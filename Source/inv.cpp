@@ -1031,7 +1031,7 @@ void InvDrawSlotBack(const Surface &out, Point targetPosition, Size size, Item &
 					break;
 				}
 
-				if ((pcurs == CURSOR_IDENTIFY && (item._iIdentified || item._iMagical == ITEM_QUALITY_NORMAL) ) || (pcurs == CURSOR_REPAIR && item._iDurability == item._iMaxDur || (pcurs == CURSOR_RECHARGE && item._iCharges == item._iMaxCharges))) {
+				if ((pcurs == CURSOR_IDENTIFY && (item._iIdentified || item._iMagical == ITEM_QUALITY_NORMAL)) || (pcurs == CURSOR_REPAIR && item._iDurability == item._iMaxDur || (pcurs == CURSOR_RECHARGE && item._iCharges == item._iMaxCharges))) {
 					color = PAL16_RED;
 				}
 
