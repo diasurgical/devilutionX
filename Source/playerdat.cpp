@@ -276,29 +276,28 @@ const _sfx_id herosounds[enum_size<HeroClass>::value][enum_size<HeroSpeech>::val
 /** Contains the data related to each player class. */
 const PlayerData PlayersData[] = {
 	// clang-format off
-// HeroClass                 className,       classPath,  skill
+// HeroClass                 className,       skill
 // TRANSLATORS: Player Block start
-/* HeroClass::Warrior */   { N_("Warrior"),   "warrior",  SpellID::ItemRepair    },
-/* HeroClass::Rogue */     { N_("Rogue"),     "rogue",    SpellID::TrapDisarm    },
-/* HeroClass::Sorcerer */  { N_("Sorcerer"),  "sorceror", SpellID::StaffRecharge },
-/* HeroClass::Monk */      { N_("Monk"),      "monk",     SpellID::Search        },
-/* HeroClass::Bard */      { N_("Bard"),      "rogue",    SpellID::Identify      },
-/* HeroClass::Barbarian */ { N_("Barbarian"), "warrior",  SpellID::Rage          },
+/* HeroClass::Warrior */   { N_("Warrior"),   SpellID::ItemRepair    },
+/* HeroClass::Rogue */     { N_("Rogue"),     SpellID::TrapDisarm    },
+/* HeroClass::Sorcerer */  { N_("Sorcerer"),  SpellID::StaffRecharge },
+/* HeroClass::Monk */      { N_("Monk"),      SpellID::Search        },
+/* HeroClass::Bard */      { N_("Bard"),      SpellID::Identify      },
+/* HeroClass::Barbarian */ { N_("Barbarian"), SpellID::Rage          },
 	// clang-format on
 };
 
 /** Contains the data related to each player class. */
 const PlayerSpriteData PlayersSpriteData[] = {
 	// clang-format off
-// HeroClass                   stand,   walk,   attack,   bow, swHit,   block,   lightning,   fire,   magic,   death
+// HeroClass                 classPath,  stand,   walk,   attack,   bow, swHit,   block,   lightning,   fire,   magic,   death
 
-// TRANSLATORS: Player Block
-/* HeroClass::Warrior */   {      96,     96,      128,    96,    96,      96,          96,     96,      96,     128 },
-/* HeroClass::Rogue */     {      96,     96,      128,   128,    96,      96,          96,     96,      96,     128 },
-/* HeroClass::Sorcerer */  {      96,     96,      128,   128,    96,      96,         128,    128,     128,     128 },
-/* HeroClass::Monk */      {     112,    112,      130,   130,    98,      98,         114,    114,     114,     160 },
-/* HeroClass::Bard */      {      96,     96,      128,   128,    96,      96,          96,     96,      96,     128 },
-/* HeroClass::Barbarian */ {      96,     96,      128,    96,    96,      96,          96,     96,      96,     128 },
+/* HeroClass::Warrior */   { "warrior",     96,     96,      128,    96,    96,      96,          96,     96,      96,     128 },
+/* HeroClass::Rogue */     { "rogue",       96,     96,      128,   128,    96,      96,          96,     96,      96,     128 },
+/* HeroClass::Sorcerer */  { "sorceror",    96,     96,      128,   128,    96,      96,         128,    128,     128,     128 },
+/* HeroClass::Monk */      { "monk",       112,    112,      130,   130,    98,      98,         114,    114,     114,     160 },
+/* HeroClass::Bard */      { "rogue",       96,     96,      128,   128,    96,      96,          96,     96,      96,     128 },
+/* HeroClass::Barbarian */ { "warrior",     96,     96,      128,    96,    96,      96,          96,     96,      96,     128 },
 	// clang-format on
 };
 
