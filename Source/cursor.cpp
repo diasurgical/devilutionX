@@ -297,8 +297,9 @@ void DrawSoftwareCursor(const Surface &out, Point position, int cursId)
 	const ClxSprite sprite = GetInvItemSprite(cursId);
 	if (!MyPlayer->HoldItem.isEmpty()) {
 		const auto &heldItem = MyPlayer->HoldItem;
-		ClxDrawOutline(out, GetOutlineColor(heldItem, true), position, sprite);
-		DrawItem(heldItem, out, position, sprite);
+		Size cursSize = GetInvItemSize(cursId);
+		ClxDrawOutline(out, GetOutlineColor(heldItem, true), position - Displacement(cursSize / 2), sprite);
+		DrawItem(heldItem, out, position - Displacement(cursSize / 2), sprite);
 	} else {
 		ClxDraw(out, position, sprite);
 	}
