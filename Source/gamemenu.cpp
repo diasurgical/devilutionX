@@ -332,6 +332,7 @@ void gamemenu_save_game(bool /*bActivate*/)
 	DrawAndBlit();
 	SaveGame();
 	ClrDiabloMsg();
+	InitDiabloMsg(EMSG_SAVED_GAME);
 	RedrawEverything();
 	NewCursor(CURSOR_HAND);
 	if (CornerStone.activated) {
