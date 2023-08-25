@@ -132,7 +132,7 @@ cmake --build build -j $(sysctl -n hw.ncpu)
 ### Installing dependencies
 
 ```
-pkg_add cmake sdl2 libsodium libpng bzip2 gmake googletest
+pkg_add cmake sdl2 libsodium png bzip2 gmake gtest
 ```
 
 ### Compiling

@@ -415,6 +415,12 @@ void RightMouseDown(bool isShiftHeld)
 		return;
 	}
 
+	if (qtextflag) {
+		qtextflag = false;
+		stream_stop();
+		return;
+	}
+
 	if (DoomFlag) {
 		doom_close();
 		return;

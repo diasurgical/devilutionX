@@ -13,15 +13,15 @@ make
 ```
 
 # Multiplayer
- - Not supported yet
+ - Supported via direct TCP connections
 
 # Controls
 
 ## Default
 
 - Left analog or D-Pad: move hero
-- ○: attack nearby enemies, talk to townspeople and merchants, pickup/place items in the inventory, OK while in main menu
-- ×: select spell, back while in menus
+- ○: attack nearby enemies, talk to townspeople and merchants, pickup/place items in the inventory, back in menus
+- ×: select spell, OK while in menus
 - △: pickup items, open nearby chests and doors, use item in the inventory
 - □: cast spell, delete character while in main menu
 - L1: use health item from belt
@@ -39,16 +39,12 @@ make
 
 ## Options
 
-There's special section `controls` in diablo.ini file, that allows you to adjust controls:
+There's special section `Controller` in diablo.ini file, that allows you to adjust controls:
 ```
-[controls]
-switch_potions_and_clicks=0
-dpad_hotkeys=0
-enable_second_touchscreen=1
-sdl2_controller_mapping=50535669746120436f6e74726f6c6c65,PSVita Controller,y:b0,b:b1,a:b2,x:b3,leftshoulder:b4,rightshoulder:b5,dpdown:b6,dpleft:b7,dpup:b8,dpright:b9,back:b10,start:b11,leftx:a0,lefty:a1,rightx:a2,righty:a3,lefttrigger:a4,righttrigger:a5,leftstick:b14,rightstick:b15,
+[Controller]
+Mapping=
+Enable Rear Touchpad=1
 ```
 
-- **dpad_hotkeys:** dpad works as hotkeys without holding Start button
-- **switch_potions_and_clicks:** L1/R1 works as left/right mouse clicks by default, and as health/mana potion while holding Select
-- **sdl2_controller_mapping:** allows you to remap controls. It uses https://github.com/gabomdq/SDL_GameControllerDB syntax
-- **enable_second_touchscreen:** enable/disable back touch mapping to L2/R2
+- **Mapping:** allows you to somewhat remap controls. It uses https://github.com/gabomdq/SDL_GameControllerDB syntax. Deprecated, use padmapper menu in-game if you can.
+- **Enable Rear Touchpad:** enable/disable back touch mapping to L2/R2

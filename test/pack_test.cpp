@@ -17,6 +17,29 @@ void SwapLE(ItemPack &pack)
 	pack.dwBuff = SDL_SwapLE32(pack.dwBuff);
 }
 
+void SwapLE(PlayerPack &pack)
+{
+	pack.dwLowDateTime = SDL_SwapLE32(pack.dwLowDateTime);
+	pack.dwHighDateTime = SDL_SwapLE32(pack.dwHighDateTime);
+	pack.pExperience = SDL_SwapLE32(pack.pExperience);
+	pack.pGold = SDL_SwapLE32(pack.pGold);
+	pack.pHPBase = SDL_SwapLE32(pack.pHPBase);
+	pack.pMaxHPBase = SDL_SwapLE32(pack.pMaxHPBase);
+	pack.pManaBase = SDL_SwapLE32(pack.pManaBase);
+	pack.pMaxManaBase = SDL_SwapLE32(pack.pMaxManaBase);
+	pack.pMemSpells = SDL_SwapLE64(pack.pMemSpells);
+	for (ItemPack &item : pack.InvBody)
+		SwapLE(item);
+	for (ItemPack &item : pack.InvList)
+		SwapLE(item);
+	for (ItemPack &item : pack.SpdList)
+		SwapLE(item);
+	pack.wReflections = SDL_SwapLE16(pack.wReflections);
+	pack.pDiabloKillLevel = SDL_SwapLE32(pack.pDiabloKillLevel);
+	pack.pDifficulty = SDL_SwapLE32(pack.pDifficulty);
+	pack.pDamAcFlags = SDL_SwapLE32(pack.pDamAcFlags);
+}
+
 ItemPack SwappedLE(const ItemPack &pack)
 {
 	ItemPack swapped = pack;
@@ -839,6 +862,545 @@ TEST_F(PackTest, UnPackItem_ear)
 	ItemPack is2;
 	PackItem(is2, id, gbIsHellfire);
 	ComparePackedItems(is, is2);
+}
+
+class NetPackTest : public ::testing::Test {
+public:
+	void SetUp() override
+	{
+		Players.resize(2);
+		MyPlayer = &Players[0];
+
+		PlayerPack testPack {
+			0, 0, -1, 9, 0, 2, 61, 24, 0, 0, "MP-Warrior", 0, 120, 25, 60, 60, 37, 0, 85670061, 3921, 13568, 13568, 3904, 3904,
+			{ 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0 },
+			1610612737,
+			{ { 3160997530, 798, 52, 5, 40, 40, 0, 0, 0, 0 },
+			    { 1911837482, 286, 152, 3, 0, 0, 0, 0, 0, 0 },
+			    { 1262914017, 286, 151, 3, 0, 0, 0, 0, 0, 0 },
+			    { 3846694361, 286, 155, 3, 0, 0, 0, 0, 0, 0 },
+			    { 3454746195, 2077, 122, 3, 60, 60, 0, 0, 0, 0 },
+			    { 1560055601, 4117, 75, 3, 50, 50, 0, 0, 0, 0 },
+			    { 3097669048, 286, 70, 3, 66, 90, 0, 0, 0, 0 } },
+			{ { 423576018, 16400, 82, 0, 0, 0, 0, 0, 0, 0 },
+			    { 543375803, 16400, 81, 0, 0, 0, 0, 0, 0, 0 },
+			    { 1802859062, 8208, 147, 3, 35, 35, 34, 34, 0, 0 },
+			    { 368922902, 0, 0, 0, 0, 0, 0, 0, 3921, 0 },
+			    { 1424628865, 8208, 111, 1, 0, 0, 0, 0, 0, 0 },
+			    { 1128267486, 1, 25, 0, 0, 0, 0, 0, 0, 0 },
+			    { 885129636, 1, 25, 0, 0, 0, 0, 0, 0, 0 },
+			    { 1954673116, 260, 93, 0, 0, 0, 0, 0, 0, 0 },
+			    { 379449999, 260, 93, 0, 0, 0, 0, 0, 0, 0 },
+			    { 1684106752, 24937, 23, 0, 0, 0, 0, 0, 65, 0 },
+			    { 1924887070, 385, 24, 0, 0, 0, 0, 0, 0, 0 },
+			    { 813588879, 194, 56, 2, 6, 18, 0, 0, 0, 0 },
+			    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+			    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+			    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+			    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+			    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+			    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+			    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+			    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+			    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+			    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+			    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+			    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+			    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+			    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+			    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+			    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+			    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+			    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+			    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+			    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+			    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+			    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+			    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+			    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+			    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+			    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+			    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+			    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
+			{ -3, -3, -12, -12, 0, 0, 0, 0, -5, -5, -3, -3, -12, -12, 0, 0, 0, 0, 5, -5, 3, -3, 12, -12, 0, 0, 0, 0, 0, 0, 2, 1, 6, 7, 8, 9, 10, 11, 4, 0 },
+			12,
+			{ { 112017676, 16, 24, 0, 0, 0, 0, 0, 0, 0 },
+			    { 367533949, 16, 24, 0, 0, 0, 0, 0, 0, 0 },
+			    { 778528030, 16, 24, 0, 0, 0, 0, 0, 0, 0 },
+			    { 960294091, 16, 24, 0, 0, 0, 0, 0, 0, 0 },
+			    { 1948311560, 16, 29, 0, 0, 0, 0, 0, 0, 0 },
+			    { 639577687, 16, 29, 0, 0, 0, 0, 0, 0, 0 },
+			    { 103356930, 16, 29, 0, 0, 0, 0, 0, 0, 0 },
+			    { 215810455, 16, 29, 0, 0, 0, 0, 0, 0, 0 } },
+			0, 0, 0, 0, 0, 0, 0, 0, 0,
+			{ 0, 0 },
+			{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+			0, 0, 0, 0,
+			{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
+		};
+
+		SwapLE(testPack);
+		UnPackPlayer(testPack, *MyPlayer);
+	}
+};
+
+bool TestNetPackValidation()
+{
+	PlayerNetPack packed;
+	PackNetPlayer(packed, *MyPlayer);
+	return UnPackNetPlayer(packed, Players[1]);
+}
+
+TEST_F(NetPackTest, UnPackNetPlayer_valid)
+{
+	ASSERT_TRUE(TestNetPackValidation());
+}
+
+TEST_F(NetPackTest, UnPackNetPlayer_invalid_class)
+{
+	MyPlayer->_pClass = static_cast<HeroClass>(-1);
+	ASSERT_FALSE(TestNetPackValidation());
+}
+
+TEST_F(NetPackTest, UnPackNetPlayer_invalid_oob)
+{
+	WorldTilePosition position = MyPlayer->position.tile;
+
+	MyPlayer->position.tile.x = MAXDUNX + 1;
+	ASSERT_FALSE(TestNetPackValidation());
+
+	MyPlayer->position.tile = position;
+	MyPlayer->position.tile.y = MAXDUNY + 1;
+	ASSERT_FALSE(TestNetPackValidation());
+}
+
+TEST_F(NetPackTest, UnPackNetPlayer_invalid_plrlevel)
+{
+	MyPlayer->plrlevel = NUMLEVELS;
+	ASSERT_FALSE(TestNetPackValidation());
+}
+
+TEST_F(NetPackTest, UnPackNetPlayer_invalid_pLevel)
+{
+	MyPlayer->_pLevel = 0;
+	ASSERT_FALSE(TestNetPackValidation());
+
+	MyPlayer->_pLevel = MaxCharacterLevel + 1;
+	ASSERT_FALSE(TestNetPackValidation());
+}
+
+TEST_F(NetPackTest, UnPackNetPlayer_invalid_hpBase)
+{
+	MyPlayer->_pHPBase = -64;
+	ASSERT_FALSE(TestNetPackValidation());
+
+	MyPlayer->_pHPBase = MyPlayer->_pMaxHPBase + 64;
+	ASSERT_FALSE(TestNetPackValidation());
+}
+
+TEST_F(NetPackTest, UnPackNetPlayer_invalid_manaBase)
+{
+	MyPlayer->_pManaBase = MyPlayer->_pMaxManaBase + 64;
+	ASSERT_FALSE(TestNetPackValidation());
+}
+
+TEST_F(NetPackTest, UnPackNetPlayer_invalid_baseStr)
+{
+	MyPlayer->_pBaseStr = MyPlayer->GetMaximumAttributeValue(CharacterAttribute::Strength) + 1;
+	ASSERT_FALSE(TestNetPackValidation());
+}
+
+TEST_F(NetPackTest, UnPackNetPlayer_invalid_baseMag)
+{
+	MyPlayer->_pBaseMag = MyPlayer->GetMaximumAttributeValue(CharacterAttribute::Magic) + 1;
+	ASSERT_FALSE(TestNetPackValidation());
+}
+
+TEST_F(NetPackTest, UnPackNetPlayer_invalid_baseDex)
+{
+	MyPlayer->_pBaseDex = MyPlayer->GetMaximumAttributeValue(CharacterAttribute::Dexterity) + 1;
+	ASSERT_FALSE(TestNetPackValidation());
+}
+
+TEST_F(NetPackTest, UnPackNetPlayer_invalid_baseVit)
+{
+	MyPlayer->_pBaseVit = MyPlayer->GetMaximumAttributeValue(CharacterAttribute::Vitality) + 1;
+	ASSERT_FALSE(TestNetPackValidation());
+}
+
+TEST_F(NetPackTest, UnPackNetPlayer_invalid_numInv)
+{
+	MyPlayer->_pNumInv = InventoryGridCells;
+	ASSERT_FALSE(TestNetPackValidation());
+}
+
+TEST_F(NetPackTest, UnPackNetPlayer_invalid_strength)
+{
+	MyPlayer->_pStrength++;
+	ASSERT_FALSE(TestNetPackValidation());
+}
+
+TEST_F(NetPackTest, UnPackNetPlayer_invalid_magic)
+{
+	MyPlayer->_pMagic++;
+	ASSERT_FALSE(TestNetPackValidation());
+}
+
+TEST_F(NetPackTest, UnPackNetPlayer_invalid_dexterity)
+{
+	MyPlayer->_pDexterity++;
+	ASSERT_FALSE(TestNetPackValidation());
+}
+
+TEST_F(NetPackTest, UnPackNetPlayer_invalid_vitality)
+{
+	MyPlayer->_pVitality++;
+	ASSERT_FALSE(TestNetPackValidation());
+}
+
+TEST_F(NetPackTest, UnPackNetPlayer_invalid_hitPoints)
+{
+	MyPlayer->_pHitPoints++;
+	ASSERT_FALSE(TestNetPackValidation());
+}
+
+TEST_F(NetPackTest, UnPackNetPlayer_invalid_maxHP)
+{
+	MyPlayer->_pMaxHP++;
+	ASSERT_FALSE(TestNetPackValidation());
+}
+
+TEST_F(NetPackTest, UnPackNetPlayer_invalid_mana)
+{
+	MyPlayer->_pMana++;
+	ASSERT_FALSE(TestNetPackValidation());
+}
+
+TEST_F(NetPackTest, UnPackNetPlayer_invalid_maxMana)
+{
+	MyPlayer->_pMaxMana++;
+	ASSERT_FALSE(TestNetPackValidation());
+}
+
+TEST_F(NetPackTest, UnPackNetPlayer_invalid_damageMod)
+{
+	MyPlayer->_pDamageMod++;
+	ASSERT_FALSE(TestNetPackValidation());
+}
+
+TEST_F(NetPackTest, UnPackNetPlayer_invalid_baseToBlk)
+{
+	MyPlayer->_pBaseToBlk++;
+	ASSERT_FALSE(TestNetPackValidation());
+}
+
+TEST_F(NetPackTest, UnPackNetPlayer_invalid_iMinDam)
+{
+	MyPlayer->_pIMinDam++;
+	ASSERT_FALSE(TestNetPackValidation());
+
+	CalcPlrItemVals(*MyPlayer, false);
+	ASSERT_TRUE(TestNetPackValidation());
+
+	MyPlayer->InvBody[INVLOC_HAND_LEFT]._iMinDam++;
+	CalcPlrItemVals(*MyPlayer, false);
+	ASSERT_FALSE(TestNetPackValidation());
+}
+
+TEST_F(NetPackTest, UnPackNetPlayer_invalid_iMaxDam)
+{
+	MyPlayer->_pIMaxDam++;
+	ASSERT_FALSE(TestNetPackValidation());
+
+	CalcPlrItemVals(*MyPlayer, false);
+	ASSERT_TRUE(TestNetPackValidation());
+
+	MyPlayer->InvBody[INVLOC_HAND_LEFT]._iMaxDam++;
+	CalcPlrItemVals(*MyPlayer, false);
+	ASSERT_FALSE(TestNetPackValidation());
+}
+
+TEST_F(NetPackTest, UnPackNetPlayer_invalid_iAC)
+{
+	MyPlayer->_pIAC++;
+	ASSERT_FALSE(TestNetPackValidation());
+
+	CalcPlrItemVals(*MyPlayer, false);
+	ASSERT_TRUE(TestNetPackValidation());
+
+	MyPlayer->InvBody[INVLOC_CHEST]._iAC++;
+	CalcPlrItemVals(*MyPlayer, false);
+	ASSERT_FALSE(TestNetPackValidation());
+}
+
+TEST_F(NetPackTest, UnPackNetPlayer_invalid_iBonusDam)
+{
+	MyPlayer->_pIBonusDam++;
+	ASSERT_FALSE(TestNetPackValidation());
+
+	CalcPlrItemVals(*MyPlayer, false);
+	ASSERT_TRUE(TestNetPackValidation());
+
+	MyPlayer->InvBody[INVLOC_HAND_LEFT]._iPLDam++;
+	CalcPlrItemVals(*MyPlayer, false);
+	ASSERT_FALSE(TestNetPackValidation());
+}
+
+TEST_F(NetPackTest, UnPackNetPlayer_invalid_iBonusToHit)
+{
+	MyPlayer->_pIBonusToHit++;
+	ASSERT_FALSE(TestNetPackValidation());
+
+	CalcPlrItemVals(*MyPlayer, false);
+	ASSERT_TRUE(TestNetPackValidation());
+
+	MyPlayer->InvBody[INVLOC_HAND_LEFT]._iPLToHit++;
+	CalcPlrItemVals(*MyPlayer, false);
+	ASSERT_FALSE(TestNetPackValidation());
+}
+
+TEST_F(NetPackTest, UnPackNetPlayer_invalid_iBonusAC)
+{
+	MyPlayer->_pIBonusAC++;
+	ASSERT_FALSE(TestNetPackValidation());
+
+	CalcPlrItemVals(*MyPlayer, false);
+	ASSERT_TRUE(TestNetPackValidation());
+
+	MyPlayer->InvBody[INVLOC_CHEST]._iPLAC++;
+	CalcPlrItemVals(*MyPlayer, false);
+	ASSERT_FALSE(TestNetPackValidation());
+}
+
+TEST_F(NetPackTest, UnPackNetPlayer_invalid_iBonusDamMod)
+{
+	MyPlayer->_pIBonusDamMod++;
+	ASSERT_FALSE(TestNetPackValidation());
+
+	CalcPlrItemVals(*MyPlayer, false);
+	ASSERT_TRUE(TestNetPackValidation());
+
+	MyPlayer->InvBody[INVLOC_HAND_LEFT]._iPLDamMod++;
+	CalcPlrItemVals(*MyPlayer, false);
+	ASSERT_FALSE(TestNetPackValidation());
+}
+
+TEST_F(NetPackTest, UnPackNetPlayer_invalid_iGetHit)
+{
+	MyPlayer->_pIGetHit++;
+	ASSERT_FALSE(TestNetPackValidation());
+
+	CalcPlrItemVals(*MyPlayer, false);
+	ASSERT_TRUE(TestNetPackValidation());
+
+	MyPlayer->InvBody[INVLOC_CHEST]._iPLGetHit++;
+	CalcPlrItemVals(*MyPlayer, false);
+	ASSERT_FALSE(TestNetPackValidation());
+}
+
+TEST_F(NetPackTest, UnPackNetPlayer_invalid_iEnAc)
+{
+	MyPlayer->_pIEnAc++;
+	ASSERT_FALSE(TestNetPackValidation());
+
+	CalcPlrItemVals(*MyPlayer, false);
+	ASSERT_TRUE(TestNetPackValidation());
+
+	MyPlayer->InvBody[INVLOC_CHEST]._iPLEnAc++;
+	CalcPlrItemVals(*MyPlayer, false);
+	ASSERT_FALSE(TestNetPackValidation());
+}
+
+TEST_F(NetPackTest, UnPackNetPlayer_invalid_iFMinDam)
+{
+	MyPlayer->_pIFMinDam++;
+	ASSERT_FALSE(TestNetPackValidation());
+
+	CalcPlrItemVals(*MyPlayer, false);
+	ASSERT_TRUE(TestNetPackValidation());
+
+	MyPlayer->InvBody[INVLOC_HAND_LEFT]._iFMinDam++;
+	CalcPlrItemVals(*MyPlayer, false);
+	ASSERT_FALSE(TestNetPackValidation());
+}
+
+TEST_F(NetPackTest, UnPackNetPlayer_invalid_iFMaxDam)
+{
+	MyPlayer->_pIFMaxDam++;
+	ASSERT_FALSE(TestNetPackValidation());
+
+	CalcPlrItemVals(*MyPlayer, false);
+	ASSERT_TRUE(TestNetPackValidation());
+
+	MyPlayer->InvBody[INVLOC_HAND_LEFT]._iFMaxDam++;
+	CalcPlrItemVals(*MyPlayer, false);
+	ASSERT_FALSE(TestNetPackValidation());
+}
+
+TEST_F(NetPackTest, UnPackNetPlayer_invalid_iLMinDam)
+{
+	MyPlayer->_pILMinDam++;
+	ASSERT_FALSE(TestNetPackValidation());
+
+	CalcPlrItemVals(*MyPlayer, false);
+	ASSERT_TRUE(TestNetPackValidation());
+
+	MyPlayer->InvBody[INVLOC_HAND_LEFT]._iLMinDam++;
+	CalcPlrItemVals(*MyPlayer, false);
+	ASSERT_FALSE(TestNetPackValidation());
+}
+
+TEST_F(NetPackTest, UnPackNetPlayer_invalid_iLMaxDam)
+{
+	MyPlayer->_pILMaxDam++;
+	ASSERT_FALSE(TestNetPackValidation());
+
+	CalcPlrItemVals(*MyPlayer, false);
+	ASSERT_TRUE(TestNetPackValidation());
+
+	MyPlayer->InvBody[INVLOC_HAND_LEFT]._iLMaxDam++;
+	CalcPlrItemVals(*MyPlayer, false);
+	ASSERT_FALSE(TestNetPackValidation());
+}
+
+TEST_F(NetPackTest, UnPackNetPlayer_invalid_maxHPBase)
+{
+	MyPlayer->_pMaxHPBase++;
+	ASSERT_FALSE(TestNetPackValidation());
+}
+
+TEST_F(NetPackTest, UnPackNetPlayer_invalid_maxManaBase)
+{
+	MyPlayer->_pMaxManaBase++;
+	ASSERT_FALSE(TestNetPackValidation());
+}
+
+TEST_F(NetPackTest, UnPackNetPlayer_invalid_pregenItemFlags)
+{
+	size_t count = 0;
+	for (Item &item : MyPlayer->InvList) {
+		if (item.isEmpty())
+			continue;
+		if (item.IDidx == IDI_EAR)
+			continue;
+		uint16_t createInfo = item._iCreateInfo;
+		item._iCreateInfo |= CF_PREGEN;
+		ASSERT_FALSE(TestNetPackValidation());
+		item._iCreateInfo = createInfo;
+		count++;
+	}
+	ASSERT_GT(count, 0);
+	ASSERT_TRUE(TestNetPackValidation());
+}
+
+TEST_F(NetPackTest, UnPackNetPlayer_invalid_usefulItemFlags)
+{
+	size_t count = 0;
+	for (Item &item : MyPlayer->InvList) {
+		if (item.isEmpty())
+			continue;
+		if (item.IDidx == IDI_EAR)
+			continue;
+		if ((item._iCreateInfo & CF_USEFUL) != CF_USEFUL)
+			continue;
+		uint16_t createInfo = item._iCreateInfo;
+		item._iCreateInfo |= CF_ONLYGOOD;
+		ASSERT_FALSE(TestNetPackValidation());
+		item._iCreateInfo = createInfo;
+		count++;
+	}
+	ASSERT_GT(count, 0);
+	ASSERT_TRUE(TestNetPackValidation());
+}
+
+TEST_F(NetPackTest, UnPackNetPlayer_invalid_townItemFlags)
+{
+	size_t count = 0;
+	for (Item &item : MyPlayer->InvList) {
+		if (item.isEmpty())
+			continue;
+		if (item.IDidx == IDI_EAR)
+			continue;
+		if ((item._iCreateInfo & CF_TOWN) == 0)
+			continue;
+		uint16_t createInfo = item._iCreateInfo;
+		item._iCreateInfo |= CF_ONLYGOOD;
+		ASSERT_FALSE(TestNetPackValidation());
+		item._iCreateInfo = createInfo;
+		count++;
+	}
+	ASSERT_GT(count, 0);
+	ASSERT_TRUE(TestNetPackValidation());
+}
+
+TEST_F(NetPackTest, UnPackNetPlayer_invalid_townItemLevel)
+{
+	size_t boyCount = 0;
+	size_t otherCount = 0;
+	for (Item &item : MyPlayer->InvBody) {
+		if (item.isEmpty())
+			continue;
+		if (item.IDidx == IDI_EAR)
+			continue;
+		if ((item._iCreateInfo & CF_TOWN) == 0)
+			continue;
+		uint16_t createInfo = item._iCreateInfo;
+		bool boyItem = (item._iCreateInfo & CF_BOY) != 0;
+		item._iCreateInfo &= ~CF_LEVEL;
+		item._iCreateInfo |= boyItem ? MaxCharacterLevel + 1 : 31;
+		ASSERT_FALSE(TestNetPackValidation());
+		item._iCreateInfo = createInfo;
+
+		size_t &count = boyItem ? boyCount : otherCount;
+		count++;
+	}
+	ASSERT_GT(boyCount, 0);
+	ASSERT_GT(otherCount, 0);
+	ASSERT_TRUE(TestNetPackValidation());
+}
+
+TEST_F(NetPackTest, UnPackNetPlayer_invalid_uniqueMonsterItemLevel)
+{
+	size_t count = 0;
+	for (Item &item : MyPlayer->InvList) {
+		if (item.isEmpty())
+			continue;
+		if (item.IDidx == IDI_EAR)
+			continue;
+		if ((item._iCreateInfo & CF_USEFUL) != CF_UPER15)
+			continue;
+		uint16_t createInfo = item._iCreateInfo;
+		item._iCreateInfo &= ~CF_LEVEL;
+		item._iCreateInfo |= 31;
+		ASSERT_FALSE(TestNetPackValidation());
+		item._iCreateInfo = createInfo;
+		count++;
+	}
+	ASSERT_GT(count, 0);
+	ASSERT_TRUE(TestNetPackValidation());
+}
+
+TEST_F(NetPackTest, UnPackNetPlayer_invalid_monsterItemLevel)
+{
+	size_t count = 0;
+	for (Item &item : MyPlayer->InvBody) {
+		if (item.isEmpty())
+			continue;
+		if (item.IDidx == IDI_EAR)
+			continue;
+		if ((item._iCreateInfo & CF_TOWN) != 0)
+			continue;
+		if ((item._iCreateInfo & CF_USEFUL) == CF_UPER15)
+			continue;
+		uint16_t createInfo = item._iCreateInfo;
+		item._iCreateInfo &= ~CF_LEVEL;
+		item._iCreateInfo |= 31;
+		ASSERT_FALSE(TestNetPackValidation());
+		item._iCreateInfo = createInfo;
+		count++;
+	}
+	ASSERT_GT(count, 0);
+	ASSERT_TRUE(TestNetPackValidation());
 }
 
 } // namespace

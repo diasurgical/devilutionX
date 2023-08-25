@@ -1,5 +1,7 @@
 name: Bug report
 description: Create a report to help us improve
+title: "[Issue Report]: "
+labels: ["issue report"]
 body:
   - type: dropdown
     id: operating-system

@@ -96,11 +96,11 @@ bool IsCreationFlagComboValid(uint16_t iCreateInfo)
 	iCreateInfo = iCreateInfo & ~CF_LEVEL;
 	const bool isTownItem = (iCreateInfo & CF_TOWN) != 0;
 	const bool isPregenItem = (iCreateInfo & CF_PREGEN) != 0;
-	const bool isGroundItem = (iCreateInfo & CF_USEFUL) == CF_USEFUL;
+	const bool isUsefulItem = (iCreateInfo & CF_USEFUL) == CF_USEFUL;
 
-	if (isPregenItem && hasMultipleFlags(iCreateInfo))
+	if (isPregenItem)
 		return false;
-	if (isGroundItem && (iCreateInfo & ~CF_USEFUL) != 0)
+	if (isUsefulItem && (iCreateInfo & ~CF_USEFUL) != 0)
 		return false;
 	if (isTownItem && hasMultipleFlags(iCreateInfo))
 		return false;
