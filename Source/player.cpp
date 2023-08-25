@@ -2820,7 +2820,7 @@ void StripTopGold(Player &player)
 void ApplyPlrDamage(DamageType damageType, Player &player, int dam, int minHP /*= 0*/, int frac /*= 0*/, DeathReason deathReason /*= DeathReason::MonsterOrTrap*/)
 {
 	int totalDamage = (dam << 6) + frac;
-	if (&player == MyPlayer) {
+	if (&player == MyPlayer && player._pHitPoints > 0) {
 		AddFloatingNumber(damageType, player, totalDamage);
 	}
 	if (totalDamage > 0 && player.pManaShield) {
