@@ -15,7 +15,7 @@ namespace devilution {
 
 enum diablo_message : uint8_t {
 	EMSG_NONE,
-	EMSG_NO_AUTOMAP_IN_TOWN,
+	EMSG_GAME_SAVED,
 	EMSG_NO_MULTIPLAYER_IN_DEMO,
 	EMSG_DIRECT_SOUND_FAILED,
 	EMSG_NOT_IN_SHAREWARE,
