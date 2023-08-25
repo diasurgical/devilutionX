@@ -3,6 +3,7 @@
 #include <gtest/gtest.h>
 
 #include "pack.h"
+#include "playerdat.hpp"
 #include "utils/paths.h"
 
 namespace devilution {
@@ -940,6 +941,7 @@ public:
 		};
 
 		SwapLE(testPack);
+		LoadPlayerDataFiles();
 		UnPackPlayer(testPack, *MyPlayer);
 	}
 };
