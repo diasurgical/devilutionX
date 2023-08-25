@@ -555,8 +555,6 @@ void CheckInvPaste(Player &player, Point cursorPosition)
 	}
 	CalcPlrInv(player, true);
 	if (&player == MyPlayer) {
-		//if (player.HoldItem.isEmpty() && !IsHardwareCursor())
-		//	SetCursorPos(MousePosition + Displacement { itemSize * INV_SLOT_HALF_SIZE_PX });
 		NewCursor(player.HoldItem);
 	}
 }
