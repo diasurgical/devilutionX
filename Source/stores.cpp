@@ -2692,6 +2692,21 @@ void StoreEnter()
 void CheckStoreBtn()
 {
 	const Point uiPosition = GetUIRectangle().position;
+	const Rectangle windowRect { { uiPosition.x + 344, uiPosition.y + PaddingTop }, { 271, 303 } };
+	const Rectangle windowRectFull { { uiPosition.x + 24, uiPosition.y + PaddingTop }, { 591, 303 } };
+
+	if (!stextsize) {
+		if (!windowRect.contains(MousePosition)) {
+			while (stextflag != TalkID::None)
+				StoreESC();
+		}
+	} else {
+		if (!windowRectFull.contains(MousePosition)) {
+			while (stextflag != TalkID::None)
+				StoreESC();
+		}
+	}
+
 	if (qtextflag) {
 		qtextflag = false;
 		if (leveltype == DTYPE_TOWN)
