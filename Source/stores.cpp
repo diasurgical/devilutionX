@@ -2711,15 +2711,7 @@ void CheckStoreBtn()
 		qtextflag = false;
 		if (leveltype == DTYPE_TOWN)
 			stream_stop();
-	} else if (stextsel != -1 && MousePosition.y >= (PaddingTop + uiPosition.y) && MousePosition.y <= (320 + uiPosition.y)) {
-		if (!stextsize) {
-			if (MousePosition.x < 344 + uiPosition.x || MousePosition.x > 616 + uiPosition.x)
-				return;
-		} else {
-			if (MousePosition.x < 24 + uiPosition.x || MousePosition.x > 616 + uiPosition.x)
-				return;
-		}
-
+	} else if (stextsel != -1) {
 		const int relativeY = MousePosition.y - (uiPosition.y + PaddingTop);
 
 		if (stextscrl && MousePosition.x > 600 + uiPosition.x) {
