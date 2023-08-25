@@ -980,15 +980,6 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_plrlevel)
 	ASSERT_FALSE(TestNetPackValidation());
 }
 
-TEST_F(NetPackTest, UnPackNetPlayer_invalid_pLevel)
-{
-	MyPlayer->_pLevel = 0;
-	ASSERT_FALSE(TestNetPackValidation());
-
-	MyPlayer->_pLevel = MaxCharacterLevel + 1;
-	ASSERT_FALSE(TestNetPackValidation());
-}
-
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_hpBase)
 {
 	MyPlayer->_pHPBase = -64;
@@ -1347,7 +1338,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_townItemLevel)
 		uint16_t createInfo = item._iCreateInfo;
 		bool boyItem = (item._iCreateInfo & CF_BOY) != 0;
 		item._iCreateInfo &= ~CF_LEVEL;
-		item._iCreateInfo |= boyItem ? MaxCharacterLevel + 1 : 31;
+		item._iCreateInfo |= boyItem ? MyPlayer->getMaxCharacterLevel() + 1 : 31;
 		ASSERT_FALSE(TestNetPackValidation());
 		item._iCreateInfo = createInfo;
 
