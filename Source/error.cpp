@@ -51,7 +51,7 @@ void InitNextLines()
 /** Maps from error_id to error message. */
 const char *const MsgStrings[] = {
 	"",
-	N_("No automap available in town"),
+	N_("Game saved"),
 	N_("No multiplayer functions in demo"),
 	N_("Direct Sound Creation Failed"),
 	N_("Not available in shareware version"),
