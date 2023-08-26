@@ -2527,6 +2527,22 @@ void InitPlayer(Player &player, bool firstTime)
 		player._pdir = Direction::South;
 
 		if (&player == MyPlayer && (!firstTime || leveltype != DTYPE_TOWN)) {
+			Displacement d[9] = { { 0, 0 }, { -1, -1 }, { -1, 0 }, { -1, 1 }, { 0, -1 }, { 0, 1 }, { 1, -1 }, { 1, 0 }, { 1, 1 } };
+
+			for (auto dir : d) {
+				for (auto &player : Players) {
+					if (&player == MyPlayer || !player.isOnActiveLevel()) {
+						continue;
+					}
+
+					if (player.position.tile == ViewPosition + Displacement(dir)) {
+						continue;
+					}
+
+					ViewPosition += Displacement(dir);
+				}
+			}
+
 			player.position.tile = ViewPosition;
 		}
 
