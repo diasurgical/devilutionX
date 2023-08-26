@@ -163,6 +163,15 @@ void DrawHalfTransparentRectTo(const Surface &out, int sx, int sy, int width, in
 	DrawHalfTransparentBlendedRectTo(out, sx, sy, width, height);
 }
 
+void SetHalfTransparentPixel(const Surface &out, Point position, std::uint8_t col)
+{
+	if (out.InBounds(position)) {
+		uint8_t *pix = out.at(position.x, position.y);
+		const std::array<uint8_t, 256> &lookupTable = paletteTransparencyLookup[col];
+		*pix = lookupTable[*pix];
+	}
+}
+
 void UnsafeDrawBorder2px(const Surface &out, Rectangle rect, uint8_t color)
 {
 	const size_t width = rect.size.width;

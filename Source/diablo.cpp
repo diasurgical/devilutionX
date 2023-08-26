@@ -1760,6 +1760,7 @@ void InitKeymapActions()
 			    stream_stop();
 		    }
 		    AutomapActive = false;
+		    AutomapTransparent = false;
 		    CancelCurrentDiabloMsg();
 		    gamemenu_off();
 		    doom_close();
@@ -2228,6 +2229,7 @@ void InitPadmapActions()
 			    stream_stop();
 		    }
 		    AutomapActive = false;
+		    AutomapTransparent = false;
 		    CancelCurrentDiabloMsg();
 		    gamemenu_off();
 		    doom_close();

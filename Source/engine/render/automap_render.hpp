@@ -88,5 +88,7 @@ void DrawMapLineSteepNW(const Surface &out, Point from, int width, std::uint8_t 
  * The end point is at `{ from.x - (width + 1), from.y + 2 * width }`.
  */
 void DrawMapLineSteepSW(const Surface &out, Point from, int width, std::uint8_t colorIndex);
+void DrawMapEllipse(const Surface &out, Point from, int radius, uint8_t colorIndex);
+void DrawMapStar(const Surface &out, Point from, int radius, uint8_t colorIndex);
 
 } // namespace devilution

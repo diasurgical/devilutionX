@@ -15,7 +15,9 @@
 #include "engine/render/automap_render.hpp"
 #include "levels/gendung.h"
 #include "levels/setmaps.h"
+#include "missiles.h"
 #include "player.h"
+#include "towners.h"
 #include "utils/language.h"
 #include "utils/stdcompat/algorithm.hpp"
 #include "utils/ui_fwd.h"
@@ -39,6 +41,20 @@ enum MapColors : uint8_t {
 	MapColorsDim = (PAL16_YELLOW + 8),
 	/** color for items on automap */
 	MapColorsItem = (PAL8_BLUE + 1),
+	/** color for objects on automap */
+	MapColorsObject = (PAL8_ORANGE + 1),
+	/** color for Town Portal on automap */
+	MapColorsPortal = (PAL8_BLUE + 1),
+	/** color for Red Portal on automap */
+	MapColorsRedPortal = (PAL8_RED + 1),
+	/** color for towners on automap */
+	MapColorsTowner = (PAL16_GRAY + 15),
+	/** color for golems on automap */
+	MapColorsGolem = (PAL16_GRAY + 4),
+	/** color for berserked monster on automap */
+	MapColorsBerserk = (PAL8_YELLOW + 4),
+	/** color for berserked monster on automap */
+	MapColorsDead = (PAL8_RED + 2),
 };
 
 struct AutomapTile {
@@ -112,6 +128,22 @@ void DrawDiamond(const Surface &out, Point center, uint8_t color)
 	DrawMapLineSE(out, left, AmLine(8), color);
 	DrawMapLineSE(out, top, AmLine(8), color);
 	DrawMapLineNE(out, bottom, AmLine(8), color);
+}
+
+void DrawCross(const Surface &out, Point center, uint8_t color)
+{
+	DrawMapLineNE(out, { center.x, center.y - AmLine(8) }, AmLine(8), color);
+	DrawMapLineNE(out, { center.x - AmLine(32), center.y + AmLine(8) }, AmLine(8), color);
+	DrawMapLineNE(out, { center.x - AmLine(32), center.y - AmLine(8) }, AmLine(8), color);
+	DrawMapLineSE(out, { center.x + AmLine(16), center.y - AmLine(16) }, AmLine(8), color);
+	DrawMapLineSE(out, { center.x - AmLine(32), center.y + AmLine(8) }, AmLine(8), color);
+	DrawMapLineSE(out, { center.x - AmLine(32), center.y - AmLine(8) }, AmLine(8), color);
+	DrawMapLineSE(out, { center.x - AmLine(16), center.y - AmLine(16) }, AmLine(8), color);
+	DrawMapLineSE(out, { center.x, center.y + AmLine(8) }, AmLine(8), color);
+	DrawMapLineSE(out, { center.x + AmLine(16), center.y }, AmLine(8), color);
+	DrawMapLineNE(out, { center.x - AmLine(16), center.y + AmLine(16) }, AmLine(8), color);
+	DrawMapLineNE(out, { center.x + AmLine(16), center.y }, AmLine(8), color);
+	DrawMapLineNE(out, { center.x + AmLine(16), center.y + AmLine(16) }, AmLine(8), color);
 }
 
 void DrawMapVerticalDoor(const Surface &out, Point center, uint8_t colorBright, uint8_t colorDim)
@@ -344,14 +376,114 @@ void DrawRiverForkOut(const Surface &out, Point center, uint8_t color)
 	out.SetPixel({ center.x + AmLine(8), center.y + AmLine(16) - AmLine(4) }, color);
 }
 
-void DrawStairs(const Surface &out, Point center, uint8_t color)
+enum class StairsType : uint8_t {
+	Invalid,
+	DownRight,
+	DownLeft,
+	UpRight,
+	UpLeft,
+};
+
+StairsType GetStairsType(uint8_t tileId, uint8_t dlvl)
+{
+	if (dlvl == 0)
+		return StairsType::DownRight;
+	// clang-format off
+	switch (tileId) {
+	// Church
+	case 57:
+		return StairsType::DownRight;
+	case 66:
+		return StairsType::UpRight;
+	// Catacombs
+	case 78:
+		return StairsType::DownRight;
+	case 77:
+	case 160:
+		return StairsType::UpRight; // Shortcut
+	// Caves
+	case 47:
+		return StairsType::DownLeft;
+	case 48:
+		return StairsType::DownRight;
+	case 51:
+	case 153:
+		return StairsType::UpRight; // Shortcut
+	// Hell
+	case 43:
+		return StairsType::DownLeft;
+	case 33:
+	case 131:
+		return StairsType::UpRight; // Shortcut
+	// Hive
+	case 16:
+		return StairsType::DownLeft;
+	case 17:
+	case 21:
+		return StairsType::UpRight;
+	// Crypt
+	case 46:
+		return StairsType::DownRight;
+	case 56:
+	case 64:
+		return StairsType::UpRight;
+	default:
+		return StairsType::Invalid;
+	}
+	// clang-format on
+}
+
+void DrawStairs(const Surface &out, Point center, uint8_t color, StairsType type)
 {
 	constexpr int NumStairSteps = 4;
-	const Displacement offset = { -AmLine(8), AmLine(4) };
-	Point p = { center.x - AmLine(8), center.y - AmLine(8) - AmLine(4) };
+
+	Displacement stairsOffset = { 0, 0 };
+
+	if (type == StairsType::DownRight) {
+		stairsOffset = Displacement { AmLine(24), AmLine(12) };
+	} else if (type == StairsType::DownLeft) {
+		stairsOffset = Displacement { -AmLine(24), AmLine(12) };
+	}
+
+	int lineLength = 16;
+
+	if (IsAnyOf(type, StairsType::DownRight, StairsType::DownLeft))
+		lineLength = 4;
+
+	Displacement offset = { 0, 0 };
+	Point p;
+
+	if (IsAnyOf(type, StairsType::DownRight, StairsType::UpRight)) {
+		offset = { -AmLine(8), AmLine(4) };
+		p = { center.x - AmLine(8) + stairsOffset.deltaX, center.y - AmLine(8) - AmLine(4) + stairsOffset.deltaY };
+	} else if (IsAnyOf(type, StairsType::DownLeft, StairsType::UpLeft)) {
+		offset = { AmLine(8), AmLine(4) };
+		p = { center.x + AmLine(8) + stairsOffset.deltaX, center.y - AmLine(8) - AmLine(4) + stairsOffset.deltaY };
+	}
+
 	for (int i = 0; i < NumStairSteps; ++i) {
-		DrawMapLineSE(out, p, AmLine(16), color);
+		if (IsAnyOf(type, StairsType::DownRight, StairsType::UpRight))
+			DrawMapLineSE(out, p, AmLine(lineLength), color);
+		else if (IsAnyOf(type, StairsType::DownLeft, StairsType::UpLeft))
+			DrawMapLineSW(out, p, AmLine(lineLength), color);
+
+		if (i != NumStairSteps - 1) {
+			if (type == StairsType::DownRight)
+				DrawMapLineSW(out, p + Displacement { 1, 0 }, AmLine(4), color);
+			else if (type == StairsType::DownLeft)
+				DrawMapLineSE(out, p + Displacement { -1, 0 }, AmLine(4), color);
+		}
+
 		p += offset;
+
+		if (type == StairsType::DownRight) {
+			p -= Displacement { AmLine(8), AmLine(4) };
+		} else if (type == StairsType::DownLeft) {
+			p -= Displacement { -AmLine(8), AmLine(4) };
+		}
+
+		if (IsAnyOf(type, StairsType::DownRight, StairsType::DownLeft))
+			lineLength += 4;
 	}
 }
 
@@ -514,7 +646,15 @@ void DrawAutomapTile(const Surface &out, Point center, Point map)
 	}
 
 	if (tile.HasFlag(AutomapTile::Flags::Stairs)) {
-		DrawStairs(out, center, colorBright);
+		DrawStairs(out, center, colorBright, GetStairsType(dungeon[map.x][map.y], currlevel));
+	}
+
+	if (currlevel == Quests[Q_BETRAYER]._qlevel && map == Quests[Q_BETRAYER].position.worldToMega() + Displacement { 1, 1 }) {
+		int pentaColor = (Quests[Q_BETRAYER]._qactive == QUEST_DONE) ? PAL8_RED + 2 : PAL16_YELLOW + 8;
+		DrawMapEllipse(out, center + Displacement { 0, 1 }, AmLine(64), 0); // shadow
+		DrawMapStar(out, center + Displacement { 0, 1 }, AmLine(64), 0);    // shadow
+		DrawMapEllipse(out, center, AmLine(64), pentaColor);
+		DrawMapStar(out, center, AmLine(64), pentaColor);
 	}
 
 	switch (tile.type) {
@@ -593,10 +733,32 @@ void DrawAutomapTile(const Surface &out, Point center, Point map)
 	}
 }
 
+Point GetAutomapScreen(const int i, const int j, const Displacement &myPlayerOffset)
+{
+	int px = i - 2 * AutomapOffset.deltaX - ViewPosition.x;
+	int py = j - 2 * AutomapOffset.deltaY - ViewPosition.y;
+
+	Point screen = {
+		(myPlayerOffset.deltaX * AutoMapScale / 100 / 2) + (px - py) * AmLine(16) + gnScreenWidth / 2,
+		(myPlayerOffset.deltaY * AutoMapScale / 100 / 2) + (px + py) * AmLine(8) + (gnScreenHeight - GetMainPanel().size.height) / 2
+	};
+
+	if (CanPanelsCoverView()) {
+		if (IsRightPanelOpen())
+			screen.x -= 160;
+		if (IsLeftPanelOpen())
+			screen.x += 160;
+	}
+	screen.y -= AmLine(8);
+
+	return screen;
+}
+
 void SearchAutomapItem(const Surface &out, const Displacement &myPlayerOffset, int searchRadius, tl::function_ref<bool(Point position)> highlightTile)
 {
 	const Player &player = *MyPlayer;
 	Point tile = player.position.tile;
+
 	if (player._pmode == PM_WALK_SIDEWAYS) {
 		tile = player.position.future;
 		if (player._pdir == Direction::West)
@@ -616,49 +778,79 @@ void SearchAutomapItem(const Surface &out, const Displacement &myPlayerOffset, i
 			if (!highlightTile({ i, j }))
 				continue;
 
-			int px = i - 2 * AutomapOffset.deltaX - ViewPosition.x;
-			int py = j - 2 * AutomapOffset.deltaY - ViewPosition.y;
-
-			Point screen = {
-				(myPlayerOffset.deltaX * AutoMapScale / 100 / 2) + (px - py) * AmLine(16) + gnScreenWidth / 2,
-				(myPlayerOffset.deltaY * AutoMapScale / 100 / 2) + (px + py) * AmLine(8) + (gnScreenHeight - GetMainPanel().size.height) / 2
-			};
-
-			if (CanPanelsCoverView()) {
-				if (IsRightPanelOpen())
-					screen.x -= 160;
-				if (IsLeftPanelOpen())
-					screen.x += 160;
-			}
-			screen.y -= AmLine(8);
-			DrawDiamond(out, screen, MapColorsItem);
+			DrawDiamond(out, GetAutomapScreen(i, j, myPlayerOffset), MapColorsItem);
 		}
 	}
 }
 
-/**
- * @brief Renders an arrow on the automap, centered on and facing the direction of the player.
- */
-void DrawAutomapPlr(const Surface &out, const Displacement &myPlayerOffset, int playerId)
+void DrawAutomapObject(const Surface &out, const Displacement &myPlayerOffset, tl::function_ref<bool(Point position)> highlightTile)
 {
-	int playerColor = MapColorsPlayer + (8 * playerId) % 128;
+	for (int i = 0; i < MAXDUNX; i++) {
+		for (int j = 0; j < MAXDUNY; j++) {
+			MapExplorationType explorationType = static_cast<MapExplorationType>(AutomapView[clamp(((i - 16) / 2), 0, DMAXX - 1)][clamp(((j - 16) / 2), 0, DMAXY - 1)]);
 
-	Player &player = Players[playerId];
-	Point tile = player.position.tile;
-	if (player._pmode == PM_WALK_SIDEWAYS) {
-		tile = player.position.future;
+			if (!highlightTile({ i, j }) || explorationType == MAP_EXP_NONE || !IsAnyOf(ObjectAtPosition({ i, j })._otype, OBJ_BLINDBOOK, OBJ_BLOODBOOK, OBJ_BOOK2R, OBJ_CRUX1, OBJ_CRUX2, OBJ_CRUX3, OBJ_L5BOOKS, OBJ_L5LEVER, OBJ_LAZSTAND, OBJ_LEVER, OBJ_MCIRCLE1, OBJ_MCIRCLE2, OBJ_MUSHPATCH, OBJ_PEDESTAL, OBJ_SIGNCHEST, OBJ_SLAINHERO, OBJ_STAND, OBJ_STORYBOOK, OBJ_SWITCHSKL, OBJ_WARARMOR, OBJ_WARWEAP))
+				continue;
+
+			DrawDiamond(out, GetAutomapScreen(i, j, myPlayerOffset), MapColorsObject);
+		}
 	}
+}
 
+void DrawAutomapMissile(const Surface &out, const Displacement &myPlayerOffset)
+{
+	for (int i = 0; i < MAXDUNX; i++) {
+		for (int j = 0; j < MAXDUNY; j++) {
+			MapExplorationType explorationType = static_cast<MapExplorationType>(AutomapView[clamp(((i - 16) / 2), 0, DMAXX - 1)][clamp(((j - 16) / 2), 0, DMAXY - 1)]);
+			Missile *portal = nullptr;
+
+			for (auto &m : Missiles) {
+				if (IsAnyOf(m._mitype, MissileID::TownPortal, MissileID::RedPortal) && m.position.tile == Point { i, j }) {
+					portal = &m;
+				}
+			}
+			if (portal == nullptr || (explorationType == MAP_EXP_NONE && portal->_mitype == MissileID::RedPortal))
+				continue;
+
+			DrawCross(out, GetAutomapScreen(i, j, myPlayerOffset), portal->_mitype == MissileID::TownPortal ? MapColorsPortal : MapColorsRedPortal);
+		}
+	}
+}
+
+Displacement GetAutomapWalkingOffset(const Player &player)
+{
+	Displacement offset = {};
+
+	if (player.isWalking())
+		offset = GetOffsetForWalking(player.AnimInfo, player._pdir);
+	return offset;
+}
+
+Displacement GetAutomapWalkingOffset(const Monster *monster)
+{
+	Displacement offset = {};
+
+	if (monster->isWalking())
+		offset = GetOffsetForWalking(monster->animInfo, monster->direction);
+	return offset;
+}
+
+Displacement GetAutomapWalkingOffset(const Towner &towner)
+{
+	return {};
+}
+
+template <typename EntityType>
+void DrawAutomapArrow(const Surface &out, const EntityType &entity, const Displacement &myPlayerOffset, const Point &tile, const Direction &dir, const int col, const int deadCol, const bool entityIsAlive)
+{
 	int px = tile.x - 2 * AutomapOffset.deltaX - ViewPosition.x;
 	int py = tile.y - 2 * AutomapOffset.deltaY - ViewPosition.y;
 
-	Displacement playerOffset = {};
-	if (player.isWalking())
-		playerOffset = GetOffsetForWalking(player.AnimInfo, player._pdir);
+	Displacement offset = GetAutomapWalkingOffset(entity);
 
 	Point base = {
-		((playerOffset.deltaX + myPlayerOffset.deltaX) * AutoMapScale / 100 / 2) + (px - py) * AmLine(16) + gnScreenWidth / 2,
-		((playerOffset.deltaY + myPlayerOffset.deltaY) * AutoMapScale / 100 / 2) + (px + py) * AmLine(8) + (gnScreenHeight - GetMainPanel().size.height) / 2
+		((offset.deltaX + myPlayerOffset.deltaX) * AutoMapScale / 100 / 2) + (px - py) * AmLine(16) + gnScreenWidth / 2,
+		((offset.deltaY + myPlayerOffset.deltaY) * AutoMapScale / 100 / 2) + (px + py) * AmLine(8) + (gnScreenHeight - GetMainPanel().size.height) / 2
 	};
 
 	if (CanPanelsCoverView()) {
@@ -669,58 +861,157 @@ void DrawAutomapPlr(const Surface &out, const Displacement &myPlayerOffset, int 
 	}
 	base.y -= AmLine(16);
 
-	switch (player._pdir) {
-	case Direction::North: {
-		const Point point { base.x, base.y - AmLine(16) };
-		DrawVerticalLine(out, point, AmLine(16), playerColor);
-		DrawMapLineSteepNE(out, { point.x - AmLine(4), point.y + 2 * AmLine(4) }, AmLine(4), playerColor);
-		DrawMapLineSteepNW(out, { point.x + AmLine(4), point.y + 2 * AmLine(4) }, AmLine(4), playerColor);
-	} break;
-	case Direction::NorthEast: {
-		const Point point { base.x + AmLine(16), base.y - AmLine(8) };
-		DrawHorizontalLine(out, { point.x - AmLine(8), point.y }, AmLine(8), playerColor);
-		DrawMapLineNE(out, { point.x - 2 * AmLine(8), point.y + AmLine(8) }, AmLine(8), playerColor);
-		DrawMapLineSteepSW(out, point, AmLine(4), playerColor);
-	} break;
-	case Direction::East: {
-		const Point point { base.x + AmLine(16), base.y };
-		DrawMapLineNW(out, point, AmLine(4), playerColor);
-		DrawHorizontalLine(out, { point.x - AmLine(16), point.y }, AmLine(16), playerColor);
-		DrawMapLineSW(out, point, AmLine(4), playerColor);
-	} break;
-	case Direction::SouthEast: {
-		const Point point { base.x + AmLine(16), base.y + AmLine(8) };
-		DrawMapLineSteepNW(out, point, AmLine(4), playerColor);
-		DrawMapLineSE(out, { point.x - 2 * AmLine(8), point.y - AmLine(8) }, AmLine(8), playerColor);
-		DrawHorizontalLine(out, { point.x - (AmLine(8) + 1), point.y }, AmLine(8) + 1, playerColor);
-	} break;
-	case Direction::South: {
-		const Point point { base.x, base.y + AmLine(16) };
-		DrawVerticalLine(out, { point.x, point.y - AmLine(16) }, AmLine(16), playerColor);
-		DrawMapLineSteepSW(out, { point.x + AmLine(4), point.y - 2 * AmLine(4) }, AmLine(4), playerColor);
-		DrawMapLineSteepSE(out, { point.x - AmLine(4), point.y - 2 * AmLine(4) }, AmLine(4), playerColor);
-	} break;
-	case Direction::SouthWest: {
-		const Point point { base.x - AmLine(16), base.y + AmLine(8) };
-		DrawMapLineSteepNE(out, point, AmLine(4), playerColor);
-		DrawMapLineSW(out, { point.x + 2 * AmLine(8), point.y - AmLine(8) }, AmLine(8), playerColor);
-		DrawHorizontalLine(out, point, AmLine(8) + 1, playerColor);
-	} break;
-	case Direction::West: {
-		const Point point { base.x - AmLine(16), base.y };
-		DrawMapLineNE(out, point, AmLine(4), playerColor);
-		DrawHorizontalLine(out, point, AmLine(16) + 1, playerColor);
-		DrawMapLineSE(out, point, AmLine(4), playerColor);
-	} break;
-	case Direction::NorthWest: {
-		const Point point { base.x - AmLine(16), base.y - AmLine(8) };
-		DrawMapLineNW(out, { point.x + 2 * AmLine(8), point.y + AmLine(8) }, AmLine(8), playerColor);
-		DrawHorizontalLine(out, point, AmLine(8) + 1, playerColor);
-		DrawMapLineSteepSE(out, point, AmLine(4), playerColor);
-	} break;
-	case Direction::NoDirection:
-		break;
+	if (entityIsAlive) {
+		switch (dir) {
+		case Direction::North: {
+			const Point point { base.x, base.y - AmLine(16) };
+			DrawVerticalLine(out, point, AmLine(16), col);
+			DrawMapLineSteepNE(out, { point.x - AmLine(4), point.y + 2 * AmLine(4) }, AmLine(4), col);
+			DrawMapLineSteepNW(out, { point.x + AmLine(4), point.y + 2 * AmLine(4) }, AmLine(4), col);
+		} break;
+		case Direction::NorthEast: {
+			const Point point { base.x + AmLine(16), base.y - AmLine(8) };
+			DrawHorizontalLine(out, { point.x - AmLine(8), point.y }, AmLine(8), col);
+			DrawMapLineNE(out, { point.x - 2 * AmLine(8), point.y + AmLine(8) }, AmLine(8), col);
+			DrawMapLineSteepSW(out, point, AmLine(4), col);
+		} break;
+		case Direction::East: {
+			const Point point { base.x + AmLine(16), base.y };
+			DrawMapLineNW(out, point, AmLine(4), col);
+			DrawHorizontalLine(out, { point.x - AmLine(16), point.y }, AmLine(16), col);
+			DrawMapLineSW(out, point, AmLine(4), col);
+		} break;
+		case Direction::SouthEast: {
+			const Point point { base.x + AmLine(16), base.y + AmLine(8) };
+			DrawMapLineSteepNW(out, point, AmLine(4), col);
+			DrawMapLineSE(out, { point.x - 2 * AmLine(8), point.y - AmLine(8) }, AmLine(8), col);
+			DrawHorizontalLine(out, { point.x - (AmLine(8) + 1), point.y }, AmLine(8) + 1, col);
+		} break;
+		case Direction::South: {
+			const Point point { base.x, base.y + AmLine(16) };
+			DrawVerticalLine(out, { point.x, point.y - AmLine(16) }, AmLine(16), col);
+			DrawMapLineSteepSW(out, { point.x + AmLine(4), point.y - 2 * AmLine(4) }, AmLine(4), col);
+			DrawMapLineSteepSE(out, { point.x - AmLine(4), point.y - 2 * AmLine(4) }, AmLine(4), col);
+		} break;
+		case Direction::SouthWest: {
+			const Point point { base.x - AmLine(16), base.y + AmLine(8) };
+			DrawMapLineSteepNE(out, point, AmLine(4), col);
+			DrawMapLineSW(out, { point.x + 2 * AmLine(8), point.y - AmLine(8) }, AmLine(8), col);
+			DrawHorizontalLine(out, point, AmLine(8) + 1, col);
+		} break;
+		case Direction::West: {
+			const Point point { base.x - AmLine(16), base.y };
+			DrawMapLineNE(out, point, AmLine(4), col);
+			DrawHorizontalLine(out, point, AmLine(16) + 1, col);
+			DrawMapLineSE(out, point, AmLine(4), col);
+		} break;
+		case Direction::NorthWest: {
+			const Point point { base.x - AmLine(16), base.y - AmLine(8) };
+			DrawMapLineNW(out, { point.x + 2 * AmLine(8), point.y + AmLine(8) }, AmLine(8), col);
+			DrawHorizontalLine(out, point, AmLine(8) + 1, col);
+			DrawMapLineSteepSE(out, point, AmLine(4), col);
+		} break;
+		case Direction::NoDirection:
+			break;
+		}
+	} else {
+		const Point point { base.x, base.y };
+		DrawMapLineNE(out, { point.x - AmLine(8), point.y }, AmLine(8), deadCol);
+		DrawMapLineNW(out, { point.x + AmLine(8), point.y }, AmLine(8), deadCol);
 	}
+}
+
+/* void DrawAutomapTowner(const Surface &out, const Displacement &myPlayerOffset)
+{
+	for (auto &towner : Towners) {
+		bool townerAlive = towner._tAnimLen != 1;
+		Point tile = towner.position;
+		DrawCross(out, GetAutomapScreen(towner.position.x, towner.position.y, myPlayerOffset), (townerAlive) ? MapColorsTowner : MapColorsDead);
+	}
+}*/
+
+/**
+ * @brief Renders an arrow on the automap, centered on and facing the direction of the towner.
+ */
+void DrawAutomapTowner(const Surface &out, const Displacement &myPlayerOffset)
+{
+	for (auto &towner : Towners) {
+		bool townerAlive = towner._tAnimLen != 1;
+		Point tile = towner.position;
+
+		Direction townerDir;
+		switch (towner._ttype) {
+		case TOWN_BMAID:
+		case TOWN_DEADGUY:
+		case TOWN_DRUNK:
+		case TOWN_HEALER:
+			townerDir = Direction::SouthEast;
+			break;
+		case TOWN_PEGBOY:
+		case TOWN_STORY:
+		case TOWN_WITCH:
+			townerDir = Direction::South;
+			break;
+		case TOWN_FARMER:
+		case TOWN_GIRL:
+		case TOWN_SMITH:
+		case TOWN_TAVERN:
+			townerDir = Direction::SouthWest;
+			break;
+		default:
+			townerDir = Direction::NoDirection;
+			break;
+		}
+
+		DrawAutomapArrow(out, towner, myPlayerOffset, tile, townerDir, MapColorsTowner, MapColorsDead, townerAlive);
+	}
+}
+
+/**
+ * @brief Renders an arrow on the automap, centered on and facing the direction of the minion.
+ */
+void DrawAutomapMinion(const Surface &out, const Displacement &myPlayerOffset)
+{
+	for (int i = 0; i < MAXDUNX; i++) {
+		for (int j = 0; j < MAXDUNY; j++) {
+			MapExplorationType explorationType = static_cast<MapExplorationType>(AutomapView[clamp(((i - 16) / 2), 0, DMAXX - 1)][clamp(((j - 16) / 2), 0, DMAXY - 1)]);
+			auto *monster = FindMonsterAtPosition({ i, j });
+			if (monster == nullptr)
+				continue;
+			if ((monster->flags & (MFLAG_BERSERK | MFLAG_GOLEM)) == 0)
+				continue;
+
+			int monsterColor = (monster->type().type == MT_GOLEM) ? MapColorsGolem : MapColorsBerserk;
+			bool monsterAlive = monster->hitPoints > 0;
+			Point tile = monster->position.tile;
+
+			if (monster->position.tile == GolemHoldingCell)
+				return;
+
+			if (monster->mode == MonsterMode::MoveSideways) {
+				tile = monster->position.future;
+			}
+
+			DrawAutomapArrow(out, monster, myPlayerOffset, tile, monster->direction, monsterColor, monsterColor, monsterAlive);
+		}
+	}
+}
+
+/**
+ * @brief Renders an arrow on the automap, centered on and facing the direction of the player.
+ */
+void DrawAutomapPlr(const Surface &out, const Displacement &myPlayerOffset, int playerId)
+{
+	Player &player = Players[playerId];
+	bool plrAlive = player._pHitPoints > 0;
+	int playerColor = MapColorsPlayer + (8 * playerId) % 128;
+	Point tile = player.position.tile;
+
+	if (player._pmode == PM_WALK_SIDEWAYS) {
+		tile = player.position.future;
+	}
+
+	DrawAutomapArrow(out, player, myPlayerOffset, tile, player._pdir, playerColor, MapColorsDead, plrAlive);
 }
 
 /**
@@ -816,6 +1107,7 @@ std::unique_ptr<AutomapTile[]> LoadAutomapData(size_t &tileCount)
 } // namespace
 
 bool AutomapActive;
+bool AutomapTransparent;
 uint8_t AutomapView[DMAXX][DMAXY];
 int AutoMapScale;
 Displacement AutomapOffset;
@@ -823,6 +1115,7 @@ Displacement AutomapOffset;
 void InitAutomapOnce()
 {
 	AutomapActive = false;
+	AutomapTransparent = false;
 	AutoMapScale = 50;
 }
 
@@ -876,7 +1169,7 @@ void AutomapZoomIn()
 	if (AutoMapScale >= 200)
 		return;
 
-	AutoMapScale += 5;
+	AutoMapScale += 25;
 }
 
 void AutomapZoomOut()
@@ -884,7 +1177,7 @@ void AutomapZoomOut()
 	if (AutoMapScale <= 50)
 		return;
 
-	AutoMapScale -= 5;
+	AutoMapScale -= 25;
 }
 
 void DrawAutomap(const Surface &out)
@@ -973,6 +1266,21 @@ void DrawAutomap(const Surface &out)
 
 	if (leveltype == DTYPE_CAVES)
 		myPlayerOffset.deltaY += TILE_HEIGHT;
+	// Draw Objects
+	DrawAutomapObject(out, myPlayerOffset, [](Point position) { return dObject[position.x][position.y] != 0; });
+
+	// Draw Missiles
+	DrawAutomapMissile(out, myPlayerOffset);
+
+	if (leveltype == DTYPE_TOWN) {
+		// Draw Towners
+		DrawAutomapTowner(out, myPlayerOffset);
+	} else {
+		// Draw Minions
+		DrawAutomapMinion(out, myPlayerOffset);
+	}
+
+	// Draw Players
 	for (size_t playerId = 0; playerId < Players.size(); playerId++) {
 		Player &player = Players[playerId];
 		if (player.isOnActiveLevel() && player.plractive && !player._pLvlChanging && (&player == MyPlayer || player.friendlyMode)) {

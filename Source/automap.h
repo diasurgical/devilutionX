@@ -30,6 +30,8 @@ enum MapExplorationType : uint8_t {
 
 /** Specifies whether the automap is enabled. */
 extern DVL_API_FOR_TEST bool AutomapActive;
+/** Specifies whether the automap is transparent. */
+extern DVL_API_FOR_TEST bool AutomapTransparent;
 /** Tracks the explored areas of the map. */
 extern uint8_t AutomapView[DMAXX][DMAXY];
 /** Specifies the scale of the automap. */
@@ -38,8 +40,8 @@ extern DVL_API_FOR_TEST Displacement AutomapOffset;
 
 inline int AmLine(int x)
 {
-	assert(x >= 4 && x <= 64);
-	assert((x & (x - 1)) == 0);
+	assert(x >= 2 && x <= 64);
+	//assert((x & (x - 1)) == 0);
 	return AutoMapScale * x / 100;
 }
 
