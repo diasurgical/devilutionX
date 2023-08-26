@@ -29,14 +29,12 @@ struct MessageEntry {
 std::deque<MessageEntry> DiabloMessages;
 uint32_t msgStartTime = 0;
 std::vector<std::string> TextLines;
-uint32_t msgdelay;
 int ErrorWindowHeight = 54;
 const int LineHeight = 12;
 const int LineWidth = 418;
 
 void InitNextLines()
 {
-	msgdelay = SDL_GetTicks();
 	TextLines.clear();
 
 	const std::string paragraphs = WordWrapString(DiabloMessages.front().text, LineWidth, GameFont12, 1);
@@ -143,7 +141,13 @@ bool IsDiabloMsgAvailable()
 
 void CancelCurrentDiabloMsg()
 {
-	msgdelay = 0;
+	if (!DiabloMessages.empty()) {
+		DiabloMessages.pop_front();
+		if (!DiabloMessages.empty()) {
+			InitNextLines();
+			msgStartTime = SDL_GetTicks();
+		}
+	}
 }
 
 void ClrDiabloMsg()
