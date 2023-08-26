@@ -877,7 +877,7 @@ void AutomapZoomOut()
 
 void DrawAutomap(const Surface &out)
 {
-	Automap = { (ViewPosition.x - 8) / 2, (ViewPosition.y - 8) / 2 };
+	Automap = { ((ViewPosition.x - 8) / 2), ((ViewPosition.y - 8) / 2) };
 	if (leveltype != DTYPE_TOWN) {
 		Automap += { -4, -4 };
 	}
@@ -908,8 +908,10 @@ void DrawAutomap(const Surface &out)
 		cells++;
 
 	Point screen {
-		gnScreenWidth / 2,
-		(gnScreenHeight - GetMainPanel().size.height) / 2
+		(gnScreenWidth / 2) - 1,
+		((gnScreenHeight - GetMainPanel().size.height) / 2) + TILE_HEIGHT - 1
+
+
 	};
 	if ((cells & 1) != 0) {
 		screen.x -= AmLine(64) * ((cells - 1) / 2);
