@@ -877,7 +877,7 @@ void AutomapZoomOut()
 
 void DrawAutomap(const Surface &out)
 {
-	Automap = { (ViewPosition.x - 8) / 2), ((ViewPosition.y - 8) / 2 };
+	Automap = { (ViewPosition.x - 8) / 2), (ViewPosition.y - 8) / 2 };
 	if (leveltype != DTYPE_TOWN) {
 		Automap += { -4, -4 };
 	}
