@@ -263,13 +263,15 @@ void DrawCursor(const Surface &out)
 
 	// Copy the buffer before the item cursor and its 1px outline are drawn to a temporary buffer.
 	const int outlineWidth = !MyPlayer->HoldItem.isEmpty() ? 1 : 0;
+	Displacement offset = !MyPlayer->HoldItem.isEmpty() ? Displacement { cursSize / 2 } : Displacement { 0 };
+	Point cursPosition = MousePosition - offset;
 
 	Rectangle &rect = cursor.rect;
-	rect.position.x = MousePosition.x - outlineWidth;
+	rect.position.x = cursPosition.x - outlineWidth;
 	rect.size.width = cursSize.width + 2 * outlineWidth;
 	Clip(rect.position.x, rect.size.width, out.w());
 
-	rect.position.y = MousePosition.y - outlineWidth;
+	rect.position.y = cursPosition.y - outlineWidth;
 	rect.size.height = cursSize.height + 2 * outlineWidth;
 	Clip(rect.position.y, rect.size.height, out.h());
 
@@ -277,7 +279,7 @@ void DrawCursor(const Surface &out)
 		return;
 
 	BlitCursor(cursor.behindBuffer, rect.size.width, &out[rect.position], out.pitch(), rect.size.width, rect.size.height);
-	DrawSoftwareCursor(out, MousePosition + Displacement { 0, cursSize.height - 1 }, pcurs);
+	DrawSoftwareCursor(out, cursPosition + Displacement { 0, cursSize.height - 1 }, pcurs);
 }
 
 /**

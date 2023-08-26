@@ -288,12 +288,6 @@ int FindSlotUnderCursor(Point cursorPosition, Size itemSize)
 	int i = cursorPosition.x;
 	int j = cursorPosition.y;
 
-	if (!IsHardwareCursor()) {
-		// offset the cursor position to match the hot pixel we'd use for a hardware cursor
-		i += itemSize.width * INV_SLOT_HALF_SIZE_PX;
-		j += itemSize.height * INV_SLOT_HALF_SIZE_PX;
-	}
-
 	for (int r = 0; r < NUM_XY_SLOTS; r++) {
 		int xo = GetRightPanel().position.x;
 		int yo = GetRightPanel().position.y;
@@ -554,8 +548,6 @@ void CheckInvPaste(Player &player, Point cursorPosition)
 	}
 	CalcPlrInv(player, true);
 	if (&player == MyPlayer) {
-		if (player.HoldItem.isEmpty() && !IsHardwareCursor())
-			SetCursorPos(MousePosition + Displacement { itemSize * INV_SLOT_HALF_SIZE_PX });
 		NewCursor(player.HoldItem);
 	}
 }
@@ -819,11 +811,6 @@ void CheckInvCut(Player &player, Point cursorPosition, bool automaticMove, bool 
 				holdItem.clear();
 			} else {
 				NewCursor(holdItem);
-				if (!IsHardwareCursor() && !dropItem) {
-					// For a hardware cursor, we set the "hot point" to the center of the item instead.
-					Size cursSize = GetInvItemSize(holdItem._iCurs + CURSOR_FIRSTITEM);
-					SetCursorPos(cursorPosition - Displacement(cursSize / 2));
-				}
 			}
 		}
 	}
