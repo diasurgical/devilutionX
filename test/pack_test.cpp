@@ -3,6 +3,7 @@
 #include <gtest/gtest.h>
 
 #include "pack.h"
+#include "playerdat.hpp"
 #include "utils/paths.h"
 
 namespace devilution {
@@ -940,6 +941,7 @@ public:
 		};
 
 		SwapLE(testPack);
+		LoadPlayerDataFiles();
 		UnPackPlayer(testPack, *MyPlayer);
 	}
 };
@@ -977,15 +979,6 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_oob)
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_plrlevel)
 {
 	MyPlayer->plrlevel = NUMLEVELS;
-	ASSERT_FALSE(TestNetPackValidation());
-}
-
-TEST_F(NetPackTest, UnPackNetPlayer_invalid_pLevel)
-{
-	MyPlayer->_pLevel = 0;
-	ASSERT_FALSE(TestNetPackValidation());
-
-	MyPlayer->_pLevel = MaxCharacterLevel + 1;
 	ASSERT_FALSE(TestNetPackValidation());
 }
 
@@ -1347,7 +1340,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_townItemLevel)
 		uint16_t createInfo = item._iCreateInfo;
 		bool boyItem = (item._iCreateInfo & CF_BOY) != 0;
 		item._iCreateInfo &= ~CF_LEVEL;
-		item._iCreateInfo |= boyItem ? MaxCharacterLevel + 1 : 31;
+		item._iCreateInfo |= boyItem ? MyPlayer->getMaxCharacterLevel() + 1 : 31;
 		ASSERT_FALSE(TestNetPackValidation());
 		item._iCreateInfo = createInfo;
 
