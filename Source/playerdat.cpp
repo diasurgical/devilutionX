@@ -45,7 +45,7 @@ public:
 	[[nodiscard]] uint32_t getThresholdForLevel(unsigned level) const
 	{
 		if (level > 0)
-			return levelThresholds[std::min<size_t>(level - 1, getMaxLevel())];
+			return levelThresholds[std::min<unsigned>(level - 1, getMaxLevel())];
 
 		return 0;
 	}
@@ -64,167 +64,76 @@ public:
 	}
 } ExperienceData;
 
-struct ExperienceColumnDefinition {
-	enum class ColumnType {
-		Level,
-		Experience,
-		LAST = Experience
-	} type;
-
-	enum class Error {
-		UnknownColumn
-	};
-
-	// The number of fields between this column and the last one identified as important (or from start of the record if this is the first column we care about)
-	unsigned skipLength;
-
-	static tl::expected<ColumnType, Error> mapNameToType(std::string_view name)
-	{
-		if (name == "Level") {
-			return ColumnType::Level;
-		}
-		if (name == "Experience") {
-			return ColumnType::Experience;
-		}
-		return tl::unexpected { Error::UnknownColumn };
-	}
-
-	ExperienceColumnDefinition() = delete;
-
-	ExperienceColumnDefinition(const ColumnType &type)
-	    : type(type)
-	    , skipLength(0)
-	{
-	}
-
-	ExperienceColumnDefinition(const ColumnType &type, unsigned skipLength)
-	    : type(type)
-	    , skipLength(skipLength)
-	{
-	}
-
-	bool operator==(const ExperienceColumnDefinition &other) const
-	{
-		return type == other.type && skipLength == other.skipLength;
-	}
+enum class ExperienceColumn {
+	Level,
+	Experience,
+	LAST = Experience
 };
+
+tl::expected<ExperienceColumn, ColumnDefinition::Error> mapExperienceColumnFromName(std::string_view name)
+{
+	if (name == "Level") {
+		return ExperienceColumn::Level;
+	}
+	if (name == "Experience") {
+		return ExperienceColumn::Experience;
+	}
+	return tl::unexpected { ColumnDefinition::Error::UnknownColumn };
+}
 
 void ReloadExperienceData()
 {
 	constexpr std::string_view filename = "txtdata\\Experience.tsv";
 	auto dataFileResult = DataFile::load(filename);
 	if (!dataFileResult.has_value()) {
-		app_fatal(fmt::format(fmt::runtime(_(/* TRANSLATORS: Error message when a data file is missing or corrupt */ "Unable to load player experience data from file {:s}")), filename));
+		DataFile::reportFatalError(dataFileResult.error(), filename);
 	}
-	const DataFile &dataFile = dataFileResult.value();
+	DataFile &dataFile = dataFileResult.value();
 
-	constexpr unsigned ExpectedColumnCount = enum_size<ExperienceColumnDefinition::ColumnType>::value;
+	constexpr unsigned ExpectedColumnCount = enum_size<ExperienceColumn>::value;
 
-	StaticVector<ExperienceColumnDefinition, ExpectedColumnCount> columns;
-	std::bitset<ExpectedColumnCount> seenColumns;
+	std::array<ColumnDefinition, ExpectedColumnCount> columns;
+	auto parseHeaderResult = dataFile.parseHeader<ExperienceColumn>(columns.data(), columns.data() + columns.size(), mapExperienceColumnFromName);
 
-	unsigned currentColumn = 0;
-	unsigned lastColumn = 0;
-	RecordsRange records = dataFile.records();
-	auto record = records.begin();
-	auto endRecord = records.end();
-	for (std::string_view field : *record) {
-		if (columns.size() >= ExpectedColumnCount) {
-			// All key columns have been identified
-			break;
-		}
-
-		auto columnType = ExperienceColumnDefinition::mapNameToType(field);
-		if (columnType.has_value() && !seenColumns.test(static_cast<size_t>(columnType.value()))) {
-			seenColumns.set(static_cast<size_t>(columnType.value()));
-			unsigned skipColumns = 0;
-			if (currentColumn > lastColumn)
-				skipColumns = currentColumn - lastColumn - 1;
-			columns.emplace_back(columnType.value(), skipColumns);
-			lastColumn = currentColumn;
-		}
-		++currentColumn;
-	}
-	++record;
-
-	if (record == endRecord) {
-		// The data file ended after the header, since there's no data we can't proceed
-		app_fatal(fmt::format(fmt::runtime(_(
-		                          /* TRANSLATORS: Error message when a data file is empty or only contains the header row */
-		                          "{:s} is incomplete, please check the file contents.")),
-		    filename));
-	}
-
-	if (columns.size() < ExpectedColumnCount) {
-		// The data file doesn't have the required headers. Though we could potentially just allocate
-		//  missing columns in the default order that's likely to lead to further corruption in saves
-		app_fatal(fmt::format(fmt::runtime(_(
-		                          /* TRANSLATORS: Error message when a data file doesn't contain the expected columns */
-		                          "Your {:s} file doesn't have the expected columns, please make sure it matches the documented format.")),
-		    filename));
+	if (!parseHeaderResult.has_value()) {
+		DataFile::reportFatalError(parseHeaderResult.error(), filename);
 	}
 
 	ExperienceData.clear();
-	unsigned row = 1; // current line/record number for error messages
-	while (record != endRecord) {
+	for (DataFileRecord record : dataFile) {
 		uint8_t level = 0;
 		uint32_t experience = 0;
 		bool skipRecord = false;
 
-		FieldsInRecordRange fields = *record;
-		auto field = fields.begin();
-		auto endField = fields.end();
-		unsigned col = 0; // current field number for error messages
+		FieldIterator fieldIt = record.begin();
+		FieldIterator endField = record.end();
 		for (auto &column : columns) {
-			col += column.skipLength;
-			field += column.skipLength;
+			fieldIt += column.skipLength;
 
-			if (field == endField) {
-				// reached the end of record early, this could be from a trailing newline so don't throw an error
-				skipRecord = true;
-				break;
+			if (fieldIt == endField) {
+				DataFile::reportFatalError(DataFile::Error::NotEnoughColumns, filename);
 			}
 
-			switch (column.type) {
-			case ExperienceColumnDefinition::ColumnType::Level: {
+			DataFileField field = *fieldIt;
+
+			switch (static_cast<ExperienceColumn>(column)) {
+			case ExperienceColumn::Level: {
 				auto parseIntResult = field.parseInt(level);
-				if (parseIntResult == std::errc::invalid_argument) {
-					// not a signless numeric value, is this a trailing newline or the MaxLevel line?
-					if (field.endOfFile() || *field == "MaxLevel") {
+
+				if (parseIntResult != std::errc()) {
+					if (*field == "MaxLevel") {
 						skipRecord = true;
 					} else {
-						app_fatal(fmt::format(fmt::runtime(_(
-						                          /* TRANSLATORS: Error message when parsing the Experience data file and a text value is encountered in the Level column */
-						                          "Expected a positive numeric value for Level in {:s}, found {:s} at row {:d} and column {:d}")),
-						    filename, *field, row, col));
+						DataFile::reportFatalFieldError(parseIntResult, filename, "Level", field);
 					}
-				} else if (parseIntResult == std::errc::result_out_of_range) {
-					// a level greater than 255 was provided
-					app_fatal(fmt::format(fmt::runtime(_(
-					                          /* TRANSLATORS: Error message when parsing the Experience data file and a text value is encountered in the Level column */
-					                          "Levels above {:d} are not supported, out of range value in {:s} at row {:d} and column {:d}")),
-					    std::numeric_limits<uint8_t>::max(), filename, row, col));
 				}
 			} break;
 
-			case ExperienceColumnDefinition::ColumnType::Experience: {
+			case ExperienceColumn::Experience: {
 				auto parseIntResult = field.parseInt(experience);
-				if (parseIntResult == std::errc::invalid_argument) {
-					// not a signless numeric value, is this a trailing newline?
-					if (field.endOfFile()) {
-						skipRecord = true;
-					} else {
-						app_fatal(fmt::format(fmt::runtime(_(
-						                          /* TRANSLATORS: Error message when parsing the Experience data file and a text value is encountered in the Experience column */
-						                          "Expected a positive numeric value for Experience in {:s}, found {:s} at row {:d} and column {:d}")),
-						    filename, *field, row, col));
-					}
-				} else if (parseIntResult == std::errc::result_out_of_range) {
-					// an experience threshold greater than 2^32-1 was provided
-					app_fatal(fmt::format(fmt::runtime(_(
-					                          /* TRANSLATORS: Error message when parsing the Experience data file and a text value is encountered in the Experience column */
-					                          "Experience thresholds above {:d} are not supported, out of range value in {:s} at row {:d} and column {:d}")),
-					    std::numeric_limits<uint32_t>::max(), filename, row, col));
+
+				if (parseIntResult != std::errc()) {
+					DataFile::reportFatalFieldError(parseIntResult, filename, "Experience", field);
 				}
 			} break;
 
@@ -235,14 +144,11 @@ void ReloadExperienceData()
 			if (skipRecord)
 				break;
 
-			++field;
-			++col;
+			++fieldIt;
 		}
 
 		if (!skipRecord)
 			ExperienceData.setThresholdForLevel(level, experience);
-		++record;
-		++row;
 	}
 }
 
