@@ -124,7 +124,6 @@ void DrawMapVerticalDoor(const Surface &out, Point center, uint8_t colorBright, 
 		DrawMapLineNE(out, { center.x - AmLine(8), center.y + AmLine(4) }, AmLine(8), colorDim);
 		DrawMapLineNE(out, { center.x - AmLine(16), center.y + AmLine(8) }, AmLine(4), colorDim);
 		DrawDiamond(out, { center.x + AmLine(16), center.y - AmLine(8) }, colorBright);
-		
 	}
 }
 
