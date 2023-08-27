@@ -86,7 +86,11 @@ set(devilutionx_fixtures
   timedemo/WarriorLevel1to2/spawn_0.sv
   txtdata/cr.tsv
   txtdata/crlf.tsv
+  txtdata/empty.tsv
+  txtdata/empty_with_utf8_bom.tsv
   txtdata/lf.tsv
+  txtdata/lf_no_trail.tsv
+  txtdata/sample.tsv
   txtdata/utf8_bom.tsv
 )
 

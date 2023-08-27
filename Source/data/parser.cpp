@@ -1,10 +1,10 @@
 #include "parser.hpp"
 
 namespace devilution {
-GetFieldResult HandleRecordSeparator(const char *begin, const char *end)
+GetFieldResult HandleRecordTerminator(const char *begin, const char *end)
 {
 	if (begin == end) {
-		return { end, GetFieldResult::Status::EndOfFile };
+		return { end, GetFieldResult::Status::NoFinalTerminator };
 	}
 
 	if (*begin == '\r') {
@@ -15,36 +15,49 @@ GetFieldResult HandleRecordSeparator(const char *begin, const char *end)
 		// carriage returns should be followed by a newline, so let's let the following checks handle it
 	}
 	if (*begin == '\n') {
-		return { begin + 1, GetFieldResult::Status::EndOfRecord };
+		++begin;
+		if (begin == end) {
+			return { end, GetFieldResult::Status::EndOfFile };
+		}
+
+		return { begin, GetFieldResult::Status::EndOfRecord };
 	}
 
-	return { begin, GetFieldResult::Status::BadRecordSeparator };
+	return { begin, GetFieldResult::Status::BadRecordTerminator };
 }
 
-GetFieldResult DiscardMultipleFields(const char *begin, const char *end, unsigned skipLength)
+GetFieldResult DiscardMultipleFields(const char *begin, const char *end, unsigned skipLength, unsigned *fieldsSkipped)
 {
 	GetFieldResult result { begin };
-	while (skipLength > 0) {
+	unsigned skipCount = 0;
+	while (skipCount < skipLength) {
+		++skipCount;
 		result = DiscardField(result.next, end);
 		if (result.endOfRecord()) {
-			// Found the end of record early, we can reuse the error code so just return it
-			return result;
+			// Found the end of record early
+			break;
 		}
-		--skipLength;
+	}
+	if (fieldsSkipped != nullptr) {
+		*fieldsSkipped = skipCount;
 	}
 	return result;
 }
 
-GetFieldResult DiscardMultipleRecords(const char *begin, const char *end, unsigned skipLength)
+GetFieldResult DiscardMultipleRecords(const char *begin, const char *end, unsigned skipLength, unsigned *recordsSkipped)
 {
 	GetFieldResult result { begin };
-	while (skipLength > 0) {
+	unsigned skipCount = 0;
+	while (skipCount < skipLength) {
+		++skipCount;
 		result = DiscardRemainingFields(result.next, end);
 		if (result.endOfFile()) {
-			// Found the end of file early, we can reuse the error code so just return it
-			return result;
+			// Found the end of file early
+			break;
 		}
-		--skipLength;
+	}
+	if (recordsSkipped != nullptr) {
+		*recordsSkipped = skipCount;
 	}
 	return result;
 }

@@ -21,28 +21,49 @@ A formal description of the format using
   The first record in a file SHOULD be used as a header
     Implementations are free to treat records however they want, using
     multiple records as headers or none at all.
-  Files SHOULD contain at least one record.
-    An empty file (zero-length or containing only a UTF8 BOM sequence) is
-    valid and is typically interpreted as a header for a single unnamed column
-    with no records.
+  All files contain at least one record. The last record in a file SHOULD end
+    with a trailing newline, however some spreadsheet applications do not
+    output trailing newlines so we allow flexibility here. This means that an
+    empty file (zero-length or containing only a UTF8 BOM sequence) is valid
+    and is typically interpreted as a header for a single unnamed column with
+    no records.
   Records SHOULD contain the same number of fields.
-  Files SHOULD end with a trailing newline.
-    Note that while a trailing newline is treated as if the file has a final
-    record containing a single empty field, in practice these records SHOULD
-    be discarded. This is mainly to handle the typical output from spreadsheet
-    applications like Excel.
 */
-DXTxtFile ::= utf8bom? header ( recordsep, record )*
+DXTxtFile     ::= utf8bom? ( singleRecord | record+ finalRecord? )
 
-utf8bom   ::= #xEF #xBB #xBF
+utf8bom       ::= #xEF #xBB #xBF
 
-header    ::= record
+/*
+  if parsing reaches EOF and the file has no record terminators then the file
+  MUST be treated as containing a single record with no terminator
+*/
+singleRecord  ::= fields
+
+/*
+  if for some reason you want to end a file with a record containing a single
+  empty field then the record MUST end with a valid terminator
+*/
+record        ::= fields recordterm
+
+/*
+  this means that the terminator is only truly optional for files where the
+  final record contains a single field with at least one character, or at least
+  two fields (as there will then be at least one field separator even if both
+  fields are zero-length)
+*/
+finalRecord   ::= nonEmptyField | field fieldsep fields
 
 /* an empty line is treated as a single empty field */
-record    ::= field ( fieldsep field )*
+fields        ::= field ( fieldsep field )*
 
 /* fields MAY be zero length */
-field     ::= character*
+field         ::= character*
+
+/*
+  unless the final record only consists of a single field, in which case it
+  MUST contain at least one character
+*/
+nonEmptyField ::= character+
 
 /*
   Any Char (see https://www.w3.org/TR/xml/#NT-Char) except Tab ("\t", 0x09),
@@ -50,13 +71,16 @@ field     ::= character*
   field value. For maximum portability characters in the discouraged ranges
   described in the linked section SHOULD NOT be used
 */
-character ::= [^#x9#xA#xD]
+character     ::= [^#x9#xA#xD]
 
 /* fields MUST be separated by tabs */
-fieldsep  ::= #x9
+fieldsep      ::= #x9
 
-/* records MUST be separated by line feeds, a cr/lf pair MAY be used */
-recordsep ::= #xD? #xA
+/*
+  records (other than the final record or the only record in a single-record
+  file) MUST be terminated by line feeds, a cr/lf pair MAY be used
+*/
+recordterm    ::= #xD? #xA
 ```
 
 ## File Descriptions
