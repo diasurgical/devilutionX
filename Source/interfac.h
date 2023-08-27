@@ -14,7 +14,7 @@ namespace devilution {
 /**
  * @brief Custom events.
  */
-enum interface_mode : uint16_t {
+enum interface_mode : uint8_t {
 	WM_DIABNEXTLVL = 0,
 	WM_DIABPREVLVL,
 	WM_DIABRTNLVL,
@@ -32,11 +32,11 @@ enum interface_mode : uint16_t {
 
 void RegisterCustomEvents();
 
-bool IsCustomEvent(uint32_t eventType);
+bool IsCustomEvent(uint16_t eventType);
 
-interface_mode GetCustomEvent(uint32_t eventType);
+interface_mode GetCustomEvent(uint16_t eventType);
 
-uint32_t CustomEventToSdlEvent(interface_mode eventType);
+uint16_t CustomEventToSdlEvent(interface_mode eventType);
 
 enum Cutscenes : uint8_t {
 	CutStart,
