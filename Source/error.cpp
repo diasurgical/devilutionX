@@ -23,7 +23,6 @@ namespace {
 struct MessageEntry {
 	std::string text;
 	uint32_t duration;  // Duration in milliseconds
-	uint32_t startTime; // Time when the message started displaying
 };
 
 std::deque<MessageEntry> DiabloMessages;
@@ -127,7 +126,7 @@ void InitDiabloMsg(string_view msg, uint32_t duration /*= 3500*/)
 	    != DiabloMessages.end())
 		return;
 
-	DiabloMessages.push_back({ std::string(msg), duration, SDL_GetTicks() });
+	DiabloMessages.push_back({ std::string(msg), duration });
 	if (DiabloMessages.size() == 1) {
 		InitNextLines();
 		msgStartTime = SDL_GetTicks();
