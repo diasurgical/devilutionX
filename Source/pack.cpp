@@ -590,12 +590,17 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 		player.InvGrid[i] = packed.InvGrid[i];
 
 	for (int i = 0; i < MaxBeltItems; i++) {
-		if (!UnPackNetItem(player, packed.SpdList[i], player.SpdList[i]))
+		Item &item = player.SpdList[i];
+		if (!UnPackNetItem(player, packed.SpdList[i], item))
 			return false;
-		if (player.SpdList[i].isEmpty())
+		if (item.isEmpty())
 			continue;
-		auto loc = static_cast<int8_t>(player.GetItemLocation(player.SpdList[i]));
-		ValidateField(loc, loc == ILOC_BELT);
+		Size beltItemSize = GetInventorySize(item);
+		int8_t beltItemType = static_cast<int8_t>(item._itype);
+		bool beltItemUsable = item.isUsable();
+		ValidateFields(beltItemSize.width, beltItemSize.height, (beltItemSize == Size { 1, 1 }));
+		ValidateField(beltItemType, item._itype != ItemType::Gold);
+		ValidateField(beltItemUsable, beltItemUsable);
 	}
 
 	CalcPlrInv(player, false);

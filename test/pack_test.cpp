@@ -870,6 +870,7 @@ public:
 	{
 		Players.resize(2);
 		MyPlayer = &Players[0];
+		gbIsMultiplayer = true;
 
 		PlayerPack testPack {
 			0, 0, -1, 9, 0, 2, 61, 24, 0, 0, "MP-Warrior", 0, 120, 25, 60, 60, 37, 0, 85670061, 3921, 13568, 13568, 3904, 3904,
