@@ -120,11 +120,11 @@ void ReloadExperienceData()
 			case ExperienceColumn::Level: {
 				auto parseIntResult = field.parseInt(level);
 
-				if (parseIntResult != std::errc()) {
+				if (!parseIntResult.has_value()) {
 					if (*field == "MaxLevel") {
 						skipRecord = true;
 					} else {
-						DataFile::reportFatalFieldError(parseIntResult, filename, "Level", field);
+						DataFile::reportFatalFieldError(parseIntResult.error(), filename, "Level", field);
 					}
 				}
 			} break;
@@ -132,8 +132,8 @@ void ReloadExperienceData()
 			case ExperienceColumn::Experience: {
 				auto parseIntResult = field.parseInt(experience);
 
-				if (parseIntResult != std::errc()) {
-					DataFile::reportFatalFieldError(parseIntResult, filename, "Experience", field);
+				if (!parseIntResult.has_value()) {
+					DataFile::reportFatalFieldError(parseIntResult.error(), filename, "Experience", field);
 				}
 			} break;
 
