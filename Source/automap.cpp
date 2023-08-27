@@ -909,8 +909,8 @@ void DrawAutomap(const Surface &out)
 		cells++;
 
 	Point screen {
-		(gnScreenWidth / 2),
-		((gnScreenHeight - GetMainPanel().size.height) / 2)
+		gnScreenWidth / 2,
+		(gnScreenHeight - GetMainPanel().size.height) / 2
 	};
 	if ((cells & 1) != 0) {
 		screen.x -= AmLine(64) * ((cells - 1) / 2);
