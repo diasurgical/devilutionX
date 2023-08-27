@@ -3,7 +3,6 @@
  *
  * Implementation of player inventory.
  */
-#include <algorithm>
 #include <cstdint>
 #include <utility>
 
@@ -31,6 +30,7 @@
 #include "utils/format_int.hpp"
 #include "utils/language.h"
 #include "utils/sdl_geometry.h"
+#include "utils/stdcompat/algorithm.hpp"
 #include "utils/stdcompat/optional.hpp"
 #include "utils/str_cat.hpp"
 #include "utils/utf8.hpp"
@@ -44,21 +44,21 @@ bool invflag;
  * arranged as follows:
  *
  * @code{.unparsed}
- *                          00 01
- *                          02 03   06
+ *                          00 00
+ *                          00 00   03
  *
- *              07 08       19 20       13 14
- *              09 10       21 22       15 16
- *              11 12       23 24       17 18
+ *              04 04       06 06       05 05
+ *              04 04       06 06       05 05
+ *              04 04       06 06       05 05
  *
- *                 04                   05
+ *                 01                   02
  *
- *              25 26 27 28 29 30 31 32 33 34
- *              35 36 37 38 39 40 41 42 43 44
- *              45 46 47 48 49 50 51 52 53 54
- *              55 56 57 58 59 60 61 62 63 64
+ *              07 08 09 10 11 12 13 14 15 16
+ *              17 18 19 20 21 22 23 24 25 26
+ *              27 28 29 30 31 32 33 34 35 36
+ *              37 38 39 40 41 42 43 44 45 46
  *
- * 65 66 67 68 69 70 71 72
+ * 47 48 49 50 51 52 53 54
  * @endcode
  */
 const Rectangle InvRect[] = {
@@ -283,30 +283,43 @@ bool AutoEquip(Player &player, const Item &item, inv_body_loc bodyLocation, bool
 	return true;
 }
 
-int FindSlotUnderCursor(Point cursorPosition, Size itemSize)
+int FindTargetSlotUnderItemCursor(Point cursorPosition, Size itemSize)
 {
-	int i = cursorPosition.x;
-	int j = cursorPosition.y;
-
-	for (int r = 0; r < NUM_XY_SLOTS; r++) {
-		int xo = GetRightPanel().position.x;
-		int yo = GetRightPanel().position.y;
-		if (r >= SLOTXY_BELT_FIRST) {
-			xo = GetMainPanel().position.x;
-			yo = GetMainPanel().position.y;
-		}
-
-		if (r == SLOTXY_INV_FIRST) {
-			if (itemSize.width % 2 == 0)
-				i -= INV_SLOT_HALF_SIZE_PX;
-			if (itemSize.height % 2 == 0)
-				j -= INV_SLOT_HALF_SIZE_PX;
-		}
-		if (InvRect[r].contains(i - xo, j - yo)) {
+	Displacement panelOffset = Point { 0, 0 } - GetRightPanel().position;
+	for (int r = SLOTXY_EQUIPPED_FIRST; r <= SLOTXY_EQUIPPED_LAST; r++) {
+		if (InvRect[r].contains(cursorPosition + panelOffset))
 			return r;
+	}
+	for (int r = SLOTXY_INV_FIRST; r <= SLOTXY_INV_LAST; r++) {
+		if (InvRect[r].contains(cursorPosition + panelOffset)) {
+			// When trying to paste into the inventory we need to determine the top left cell of the nearest area that could fit the item, not the slot under the center/hot pixel.
+			if (itemSize.height <= 1 && itemSize.width <= 1) {
+				// top left cell of a 1x1 item is the same cell as the hot pixel, no work to do
+				return r;
+			}
+			// Otherwise work out how far the central cell is from the top-left cell
+			Displacement hotPixelCellOffset = { (itemSize.width - 1) / 2, (itemSize.height - 1) / 2 };
+			// For even dimension items we need to work out if the cursor is in the left/right (or top/bottom) half of the central cell and adjust the offset so the item lands in the area most covered by the cursor.
+			if (itemSize.width % 2 == 0 && InvRect[r].contains(cursorPosition + panelOffset + Displacement { INV_SLOT_HALF_SIZE_PX, 0 })) {
+				// hot pixel was in the left half of the cell, so we want to increase the offset to preference the column to the left
+				hotPixelCellOffset.deltaX++;
+			}
+			if (itemSize.height % 2 == 0 && InvRect[r].contains(cursorPosition + panelOffset + Displacement { 0, INV_SLOT_HALF_SIZE_PX })) {
+				// hot pixel was in the top half of the cell, so we want to increase the offset to preference the row above
+				hotPixelCellOffset.deltaY++;
+			}
+			// Then work out the top left cell of the nearest area that could fit this item (as pasting on the edge of the inventory would otherwise put it out of bounds)
+			int hotPixelCell = r - SLOTXY_INV_FIRST;
+			int targetRow = clamp((hotPixelCell / InventorySizeInSlots.width) - hotPixelCellOffset.deltaY, 0, InventorySizeInSlots.height - itemSize.height);
+			int targetColumn = clamp((hotPixelCell % InventorySizeInSlots.width) - hotPixelCellOffset.deltaX, 0, InventorySizeInSlots.width - itemSize.width);
+			return SLOTXY_INV_FIRST + targetRow * InventorySizeInSlots.width + targetColumn;
 		}
-		if (r == SLOTXY_INV_LAST && itemSize.height % 2 == 0)
-			j += INV_SLOT_HALF_SIZE_PX;
+	}
+
+	panelOffset = Point { 0, 0 } - GetMainPanel().position;
+	for (int r = SLOTXY_BELT_FIRST; r <= SLOTXY_BELT_LAST; r++) {
+		if (InvRect[r].contains(cursorPosition + panelOffset))
+			return r;
 	}
 	return NUM_XY_SLOTS;
 }
@@ -315,7 +328,7 @@ void CheckInvPaste(Player &player, Point cursorPosition)
 {
 	Size itemSize = GetInventorySize(player.HoldItem);
 
-	int slot = FindSlotUnderCursor(cursorPosition, itemSize);
+	int slot = FindTargetSlotUnderItemCursor(cursorPosition, itemSize);
 	if (slot == NUM_XY_SLOTS)
 		return;
 
@@ -352,26 +365,25 @@ void CheckInvPaste(Player &player, Point cursorPosition)
 				}
 			}
 		} else {
-			int yy = std::max(INV_ROW_SLOT_SIZE * ((ii / INV_ROW_SLOT_SIZE) - ((itemSize.height - 1) / 2)), 0);
-			for (int j = 0; j < itemSize.height; j++) {
-				if (yy >= InventoryGridCells)
-					return;
-				int xx = std::max((ii % INV_ROW_SLOT_SIZE) - ((itemSize.width - 1) / 2), 0);
-				for (int i = 0; i < itemSize.width; i++) {
-					if (xx >= INV_ROW_SLOT_SIZE)
-						return;
-					if (player.InvGrid[xx + yy] != 0) {
-						int8_t iv = abs(player.InvGrid[xx + yy]);
+			// check that the item we're pasting only overlaps one other item (or is going into empty space)
+			unsigned originCell = static_cast<unsigned>(slot - SLOTXY_INV_FIRST);
+			for (unsigned rowOffset = 0; rowOffset < static_cast<unsigned>(itemSize.height * InventorySizeInSlots.width); rowOffset += InventorySizeInSlots.width) {
+				for (unsigned columnOffset = 0; columnOffset < static_cast<unsigned>(itemSize.width); columnOffset++) {
+					unsigned testCell = originCell + rowOffset + columnOffset;
+					// FindTargetSlotUnderItemCursor returns the top left slot of the inventory region that fits the item, we can be confident this calculation is not going to read out of range.
+					assert(testCell < sizeof(player.InvGrid));
+					if (player.InvGrid[testCell] != 0) {
+						int8_t iv = abs(player.InvGrid[testCell]);
 						if (it != 0) {
-							if (it != iv)
+							if (it != iv) {
+								// Found two different items that would be displaced by the held item, can't paste the item here.
 								return;
+							}
 						} else {
 							it = iv;
 						}
 					}
-					xx++;
 				}
-				yy += INV_ROW_SLOT_SIZE;
 			}
 		}
 	} else if (il == ILOC_BELT) {
@@ -519,13 +531,8 @@ void CheckInvPaste(Player &player, Point cursorPosition)
 						itemIndex = 0;
 				}
 			}
-			int ii = slot - SLOTXY_INV_FIRST;
 
-			// Calculate top-left position of item for InvGrid and then add item to InvGrid
-
-			int xx = std::max(ii % INV_ROW_SLOT_SIZE - ((itemSize.width - 1) / 2), 0);
-			int yy = std::max(INV_ROW_SLOT_SIZE * (ii / INV_ROW_SLOT_SIZE - ((itemSize.height - 1) / 2)), 0);
-			AddItemToInvGrid(player, xx + yy, it, itemSize);
+			AddItemToInvGrid(player, slot - SLOTXY_INV_FIRST, it, itemSize);
 		}
 		break;
 	case ILOC_BELT: {
