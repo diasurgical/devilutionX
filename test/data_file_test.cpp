@@ -214,7 +214,11 @@ TEST(DataFileTest, ParseInt)
 		DataFileField field = *fieldIt;
 		uint8_t shortVal = 5;
 		auto parseIntResult = field.parseInt(shortVal);
-		EXPECT_EQ(parseIntResult, std::errc::invalid_argument) << "Strings are not uint8_t values";
+		if (parseIntResult.has_value()) {
+			ADD_FAILURE() << "Parsing a string as an int should not succeed";
+		} else {
+			EXPECT_EQ(parseIntResult.error(), DataFileField::Error::NotANumber) << "Strings are not uint8_t values";
+		}
 		EXPECT_EQ(shortVal, 5) << "Value is not modified when parsing as uint8_t fails due to non-numeric fields";
 		EXPECT_EQ(*field, "Sample") << "Should be able to access the field value as a string after failure";
 		++fieldIt;
@@ -225,7 +229,7 @@ TEST(DataFileTest, ParseInt)
 		field = *fieldIt;
 		shortVal = 5;
 		parseIntResult = field.parseInt(shortVal);
-		EXPECT_EQ(parseIntResult, std::errc()) << "Expected " << field << "to fit into a uint8_t variable";
+		EXPECT_TRUE(parseIntResult.has_value()) << "Expected " << field << " to fit into a uint8_t variable";
 		EXPECT_EQ(shortVal, 145) << "Parsing should give the expected base 10 value";
 		EXPECT_EQ(*field, "145") << "Should be able to access the field value as a string even after parsing as an int";
 		++fieldIt;
@@ -235,11 +239,15 @@ TEST(DataFileTest, ParseInt)
 		// Third field is a number too large for a uint8_t but that fits into an int value
 		field = *fieldIt;
 		parseIntResult = field.parseInt(shortVal);
-		EXPECT_EQ(parseIntResult, std::errc::result_out_of_range) << "A value too large to fit into a uint8_t variable should report an error";
+		if (parseIntResult.has_value()) {
+			ADD_FAILURE() << "Parsing an int into a short variable should not succeed";
+		} else {
+			EXPECT_EQ(parseIntResult.error(), DataFileField::Error::OutOfRange) << "A value too large to fit into a uint8_t variable should report an error";
+		}
 		EXPECT_EQ(shortVal, 145) << "Value is not modified when parsing as uint8_t fails due to out of range value";
 		int longVal = 42;
 		parseIntResult = field.parseInt(longVal);
-		EXPECT_EQ(parseIntResult, std::errc()) << "Expected " << field << "to fit into an int variable";
+		EXPECT_TRUE(parseIntResult.has_value()) << "Expected " << field << " to fit into an int variable";
 		EXPECT_EQ(longVal, 70322) << "Value is expected to be parsed into a larger type after an out of range failure";
 		EXPECT_EQ(*field, "70322") << "Should be able to access the field value as a string after parsing as an int";
 		++fieldIt;
@@ -249,7 +257,7 @@ TEST(DataFileTest, ParseInt)
 		// Fourth field is not an integer, but a value that starts with one or more digits that fit into an uint8_t value
 		field = *fieldIt;
 		parseIntResult = field.parseInt(shortVal);
-		EXPECT_EQ(parseIntResult, std::errc()) << "Expected " << field << "to fit into a uint8_t variable (even though it's not really an int)";
+		EXPECT_TRUE(parseIntResult.has_value()) << "Expected " << field << " to fit into a uint8_t variable (even though it's not really an int)";
 		EXPECT_EQ(shortVal, 6) << "Value is loaded as expected until the first non-digit character";
 		EXPECT_EQ(*field, "6.34") << "Should be able to access the field value as a string after failure";
 	}

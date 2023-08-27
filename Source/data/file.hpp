@@ -75,7 +75,7 @@ public:
 	static tl::expected<DataFile, Error> load(std::string_view path);
 
 	static void reportFatalError(Error code, std::string_view fileName);
-	static void reportFatalFieldError(std::errc code, std::string_view fileName, std::string_view fieldName, const DataFileField &field);
+	static void reportFatalFieldError(DataFileField::Error code, std::string_view fileName, std::string_view fieldName, const DataFileField &field);
 
 	void resetHeader()
 	{

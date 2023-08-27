@@ -16,6 +16,26 @@ class DataFileField {
 	unsigned column_;
 
 public:
+	enum class Error {
+		NotANumber,
+		OutOfRange,
+		InvalidValue
+	};
+
+	static tl::expected<void, Error> mapError(std::errc ec)
+	{
+		switch (ec) {
+		case std::errc():
+			return {};
+		case std::errc::result_out_of_range:
+			return tl::unexpected { Error::OutOfRange };
+		case std::errc::invalid_argument:
+			return tl::unexpected { Error::NotANumber };
+		default:
+			return tl::unexpected { Error::InvalidValue };
+		}
+	}
+
 	DataFileField(GetFieldResult *state, const char *end, unsigned row, unsigned column)
 	    : state_(state)
 	    , end_(end)
@@ -56,10 +76,10 @@ public:
 	 * use with operator* or repeated calls to parseInt (even with different types).
 	 * @tparam T an Integral type supported by std::from_chars
 	 * @param destination value to store the result of successful parsing
-	 * @return the error code from std::from_chars
+	 * @return an error code corresponding to the from_chars result if parsing failed
 	 */
 	template <typename T>
-	[[nodiscard]] std::errc parseInt(T &destination)
+	[[nodiscard]] tl::expected<void, Error> parseInt(T &destination)
 	{
 		std::from_chars_result result {};
 		if (state_->status == GetFieldResult::Status::ReadyToRead) {
@@ -74,18 +94,15 @@ public:
 		} else {
 			result = std::from_chars(state_->value.data(), end_, destination);
 		}
-		return result.ec;
+
+		return mapError(result.ec);
 	}
 
 	template <typename T>
-	[[nodiscard]] tl::expected<T, std::errc> asInt()
+	[[nodiscard]] tl::expected<T, Error> asInt()
 	{
 		T value = 0;
-		auto parseIntResult = parseInt(value);
-		if (parseIntResult == std::errc()) {
-			return value;
-		}
-		return tl::unexpected { parseIntResult };
+		return parseInt(value).map([value]() { return value; });
 	}
 
 	/**
