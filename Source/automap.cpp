@@ -116,16 +116,29 @@ void DrawDiamond(const Surface &out, Point center, uint8_t color)
 
 void DrawMapVerticalDoor(const Surface &out, Point center, uint8_t colorBright, uint8_t colorDim)
 {
-	DrawMapLineNE(out, { center.x + AmLine(8), center.y - AmLine(4) }, AmLine(4), colorDim);
-	DrawMapLineNE(out, { center.x - AmLine(16), center.y + AmLine(8) }, AmLine(4), colorDim);
-	DrawDiamond(out, center, colorBright);
+	if (leveltype != DTYPE_CATACOMBS) {
+		DrawMapLineNE(out, { center.x + AmLine(8), center.y - AmLine(4) }, AmLine(4), colorDim);
+		DrawMapLineNE(out, { center.x - AmLine(16), center.y + AmLine(8) }, AmLine(4), colorDim);
+		DrawDiamond(out, center, colorBright);
+	} else {
+		DrawMapLineNE(out, { center.x - AmLine(8), center.y + AmLine(4) }, AmLine(8), colorDim);
+		DrawMapLineNE(out, { center.x - AmLine(16), center.y + AmLine(8) }, AmLine(4), colorDim);
+		DrawDiamond(out, { center.x + AmLine(16), center.y - AmLine(8) }, colorBright);
+		
+	}
 }
 
 void DrawMapHorizontalDoor(const Surface &out, Point center, uint8_t colorBright, uint8_t colorDim)
 {
-	DrawMapLineSE(out, { center.x - AmLine(16), center.y - AmLine(8) }, AmLine(4), colorDim);
-	DrawMapLineSE(out, { center.x + AmLine(8), center.y + AmLine(4) }, AmLine(4), colorDim);
-	DrawDiamond(out, center, colorBright);
+	if (leveltype != DTYPE_CATACOMBS) {
+		DrawMapLineSE(out, { center.x - AmLine(16), center.y - AmLine(8) }, AmLine(4), colorDim);
+		DrawMapLineSE(out, { center.x + AmLine(8), center.y + AmLine(4) }, AmLine(4), colorDim);
+		DrawDiamond(out, center, colorBright);
+	} else {
+		DrawMapLineSE(out, { center.x - AmLine(8), center.y - AmLine(4) }, AmLine(8), colorDim);
+		DrawMapLineSE(out, { center.x + AmLine(8), center.y + AmLine(4) }, AmLine(4), colorDim);
+		DrawDiamond(out, { center.x - AmLine(16), center.y - AmLine(8) }, colorBright);
+	}
 }
 
 void DrawDirt(const Surface &out, Point center, uint8_t color)
