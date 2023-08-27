@@ -17,7 +17,8 @@ namespace devilution {
 
 #define INV_SLOT_SIZE_PX 28
 #define INV_SLOT_HALF_SIZE_PX (INV_SLOT_SIZE_PX / 2)
-#define INV_ROW_SLOT_SIZE 10
+constexpr Size InventorySizeInSlots { 10, 4 };
+#define INV_ROW_SLOT_SIZE InventorySizeInSlots.width
 constexpr Size InventorySlotSizeInPixels { INV_SLOT_SIZE_PX };
 
 enum inv_item : int8_t {
@@ -43,12 +44,14 @@ enum inv_item : int8_t {
 enum inv_xy_slot : uint8_t {
 	// clang-format off
 	SLOTXY_HEAD           = 0,
+	SLOTXY_EQUIPPED_FIRST = SLOTXY_HEAD,
 	SLOTXY_RING_LEFT      = 1,
 	SLOTXY_RING_RIGHT     = 2,
 	SLOTXY_AMULET         = 3,
 	SLOTXY_HAND_LEFT      = 4,
 	SLOTXY_HAND_RIGHT     = 5,
 	SLOTXY_CHEST          = 6,
+	SLOTXY_EQUIPPED_LAST  = SLOTXY_CHEST,
 
 	// regular inventory
 	SLOTXY_INV_FIRST      = 7,
@@ -79,7 +82,7 @@ enum item_color : uint8_t {
 };
 
 extern bool invflag;
-extern const Rectangle InvRect[73];
+extern const Rectangle InvRect[NUM_XY_SLOTS];
 
 void InvDrawSlotBack(const Surface &out, Point targetPosition, Size size, item_quality itemQuality);
 /**
