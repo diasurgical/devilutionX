@@ -22,7 +22,7 @@ namespace {
 
 struct MessageEntry {
 	std::string text;
-	uint32_t duration;  // Duration in milliseconds
+	uint32_t duration; // Duration in milliseconds
 };
 
 std::deque<MessageEntry> DiabloMessages;
