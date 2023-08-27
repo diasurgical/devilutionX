@@ -361,7 +361,7 @@ bool TrySelectPixelBased(Point tile)
 				}
 			} else {
 				const Monster &monster = Monsters[monsterId];
-				if (IsValidMonsterForSelection(monster)) {
+				if (IsTileLit(adjacentTile) && IsValidMonsterForSelection(monster)) {
 					const ClxSprite sprite = monster.animInfo.currentSprite();
 					Displacement renderingOffset = monster.getRenderingOffset(sprite);
 					if (checkSprite(adjacentTile, sprite, renderingOffset)) {
