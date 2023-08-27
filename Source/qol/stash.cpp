@@ -50,7 +50,8 @@ constexpr Rectangle StashButtonRect[] = {
 	// clang-format on
 };
 
-constexpr PointsInRectangleRange<int> StashGridRange { { { 0, 0 }, Size { 10, 10 } } };
+constexpr Size StashGridSize { 10, 10 };
+constexpr PointsInRectangleRange<int> StashGridRange { { { 0, 0 }, StashGridSize } };
 
 OptionalOwnedClxSpriteList StashPanelArt;
 OptionalOwnedClxSpriteList StashNavButtonArt;
@@ -68,7 +69,7 @@ void AddItemToStashGrid(unsigned page, Point position, uint16_t stashListIndex, 
 	}
 }
 
-Point FindSlotUnderCursor(Point cursorPosition)
+std::optional<Point> FindTargetSlotUnderItemCursor(Point cursorPosition, Size itemSize)
 {
 	for (auto point : StashGridRange) {
 		Rectangle cell {
@@ -77,11 +78,30 @@ Point FindSlotUnderCursor(Point cursorPosition)
 		};
 
 		if (cell.contains(cursorPosition)) {
+			// When trying to paste into the stash we need to determine the top left cell of the nearest area that could fit the item, not the slot under the center/hot pixel.
+			if (itemSize.height <= 1 && itemSize.width <= 1) {
+				// top left cell of a 1x1 item is the same cell as the hot pixel, no work to do
+				return point;
+			}
+			// Otherwise work out how far the central cell is from the top-left cell
+			Displacement hotPixelCellOffset = { (itemSize.width - 1) / 2, (itemSize.height - 1) / 2 };
+			// For even dimension items we need to work out if the cursor is in the left/right (or top/bottom) half of the central cell and adjust the offset so the item lands in the area most covered by the cursor.
+			if (itemSize.width % 2 == 0 && cell.contains(cursorPosition + Displacement { INV_SLOT_HALF_SIZE_PX, 0 })) {
+				// hot pixel was in the left half of the cell, so we want to increase the offset to preference the column to the left
+				hotPixelCellOffset.deltaX++;
+			}
+			if (itemSize.height % 2 == 0 && cell.contains(cursorPosition + Displacement { 0, INV_SLOT_HALF_SIZE_PX })) {
+				// hot pixel was in the top half of the cell, so we want to increase the offset to preference the row above
+				hotPixelCellOffset.deltaY++;
+			}
+			// Then work out the top left cell of the nearest area that could fit this item (as pasting on the edge of the stash would otherwise put it out of bounds)
+			point.y = clamp(point.y - hotPixelCellOffset.deltaY, 0, StashGridSize.height - itemSize.height);
+			point.x = clamp(point.x - hotPixelCellOffset.deltaX, 0, StashGridSize.width - itemSize.width);
 			return point;
 		}
 	}
 
-	return InvalidStashPoint;
+	return {};
 }
 
 bool IsItemAllowedInStash(const Item &item)
@@ -92,12 +112,6 @@ bool IsItemAllowedInStash(const Item &item)
 void CheckStashPaste(Point cursorPosition)
 {
 	Player &player = *MyPlayer;
-
-	const Size itemSize = GetInventorySize(player.HoldItem);
-
-	// It's more natural to select the top left cell of the region the sprite is overlapping when putting an item
-	//  into an inventory grid, so compensate for the adjusted hot pixel of item cursors.
-	cursorPosition -= Displacement(itemSize * INV_SLOT_HALF_SIZE_PX);
 
 	if (!IsItemAllowedInStash(player.HoldItem))
 		return;
@@ -113,15 +127,13 @@ void CheckStashPaste(Point cursorPosition)
 		return;
 	}
 
-	// Make the hot pixel the center of the top-left cell of the item, this favors the cell which contains more of the
-	//  item sprite
-	Point firstSlot = FindSlotUnderCursor(cursorPosition + Displacement(INV_SLOT_HALF_SIZE_PX));
-	if (firstSlot == InvalidStashPoint)
+	const Size itemSize = GetInventorySize(player.HoldItem);
+
+	std::optional<Point> targetSlot = FindTargetSlotUnderItemCursor(cursorPosition, itemSize);
+	if (!targetSlot)
 		return;
 
-	if (firstSlot.x + itemSize.width > 10 || firstSlot.y + itemSize.height > 10) {
-		return; // Item does not fit
-	}
+	Point firstSlot = *targetSlot;
 
 	// Check that no more than 1 item is replaced by the move
 	StashStruct::StashCell stashIndex = StashStruct::EmptyCell;
@@ -138,6 +150,7 @@ void CheckStashPaste(Point cursorPosition)
 
 	PlaySFX(ItemInvSnds[ItemCAnimTbl[player.HoldItem._iCurs]]);
 
+	// Need to set the item anchor position to the bottom left so drawing code functions correctly.
 	player.HoldItem.position = firstSlot + Displacement { 0, itemSize.height - 1 };
 
 	if (stashIndex == StashStruct::EmptyCell) {
