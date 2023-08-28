@@ -82,7 +82,7 @@ uint32_t CalculateTextSpeed(int nSFX)
 
 int CalculateTextPosition()
 {
-	uint32_t currTime = GetTicks();
+	uint32_t currTime = GetMillisecondsSinceStartup();
 
 	int y = (currTime - ScrollStart) / qtextSpd - 260;
 
@@ -166,7 +166,7 @@ void InitQTextMsg(_speech_id m)
 		LoadText(_(Speeches[m].txtstr));
 		qtextflag = true;
 		qtextSpd = CalculateTextSpeed(sfxnr);
-		ScrollStart = GetTicks();
+		ScrollStart = GetMillisecondsSinceStartup();
 	}
 	PlaySFX(sfxnr);
 }

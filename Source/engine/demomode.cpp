@@ -847,7 +847,7 @@ void NotifyGameLoopEnd()
 	}
 }
 
-uint32_t GetTicks()
+uint32_t SimulateMillisecondsSinceStartup()
 {
 	return LogicTick * 50;
 }

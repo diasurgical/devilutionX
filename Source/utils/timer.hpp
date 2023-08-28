@@ -2,6 +2,6 @@
 
 namespace devilution {
 
-uint32_t GetTicks();
+uint32_t GetMillisecondsSinceStartup();
 
 }

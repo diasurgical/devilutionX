@@ -2,9 +2,9 @@
 
 namespace devilution {
 
-uint32_t GetTicks()
+uint32_t GetMillisecondsSinceStartup()
 {
-	return (demo::IsRunning() || demo::IsRecording()) ? demo::GetTicks() : SDL_GetTicks();
+	return (demo::IsRunning() || demo::IsRecording()) ? demo::SimulateMillisecondsSinceStartup() : SDL_GetTicks();
 }
 
 } // namespace devilution
