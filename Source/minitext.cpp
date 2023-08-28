@@ -20,6 +20,7 @@
 #include "playerdat.hpp"
 #include "textdat.h"
 #include "utils/language.h"
+#include "utils/timer.hpp"
 
 namespace devilution {
 
@@ -81,7 +82,7 @@ uint32_t CalculateTextSpeed(int nSFX)
 
 int CalculateTextPosition()
 {
-	uint32_t currTime = SDL_GetTicks();
+	uint32_t currTime = GetTicks();
 
 	int y = (currTime - ScrollStart) / qtextSpd - 260;
 
@@ -165,7 +166,7 @@ void InitQTextMsg(_speech_id m)
 		LoadText(_(Speeches[m].txtstr));
 		qtextflag = true;
 		qtextSpd = CalculateTextSpeed(sfxnr);
-		ScrollStart = SDL_GetTicks();
+		ScrollStart = GetTicks();
 	}
 	PlaySFX(sfxnr);
 }
