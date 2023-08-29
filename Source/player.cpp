@@ -2295,8 +2295,6 @@ void CreatePlayer(Player &player, HeroClass c)
 	player._pBaseVit = attr.baseVit;
 	player._pVitality = player._pBaseVit;
 
-	player._pBaseToBlk = attr.blockBonus;
-
 	player._pHitPoints = player.calculateBaseLife();
 	player._pMaxHP = player._pHitPoints;
 	player._pHPBase = player._pHitPoints;

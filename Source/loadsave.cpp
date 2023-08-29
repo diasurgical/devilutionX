@@ -412,9 +412,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	player._pBaseVit = file.NextLE<int32_t>();
 	player._pStatPts = file.NextLE<int32_t>();
 	player._pDamageMod = file.NextLE<int32_t>();
-	player._pBaseToBlk = file.NextLE<int32_t>();
-	if (player._pBaseToBlk == 0)
-		player._pBaseToBlk = player.getClassAttributes().blockBonus;
+	file.Skip<int32_t>(); // Skip _pBaseToBlk - always a copy of PlayerData.blockBonus
 	player._pHPBase = file.NextLE<int32_t>();
 	player._pMaxHPBase = file.NextLE<int32_t>();
 	player._pHitPoints = file.NextLE<int32_t>();
@@ -1224,7 +1222,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.WriteLE<int32_t>(player._pStatPts);
 	file.WriteLE<int32_t>(player._pDamageMod);
 
-	file.WriteLE<int32_t>(player._pBaseToBlk);
+	file.WriteLE<int32_t>(player.getBaseToBlock()); // set _pBaseToBlk for backwards compatibility
 	file.WriteLE<int32_t>(player._pHPBase);
 	file.WriteLE<int32_t>(player._pMaxHPBase);
 	file.WriteLE<int32_t>(player._pHitPoints);
