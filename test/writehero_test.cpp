@@ -285,7 +285,7 @@ void AssertPlayer(Player &player)
 	ASSERT_EQ(player._pGold, 0);
 	ASSERT_EQ(player._pMaxHPBase, 12864);
 	ASSERT_EQ(player._pHPBase, 12864);
-	ASSERT_EQ(player._pBaseToBlk, 20);
+	ASSERT_EQ(player.getBaseToBlock(), 20);
 	ASSERT_EQ(player._pMaxManaBase, 11104);
 	ASSERT_EQ(player._pManaBase, 11104);
 	ASSERT_EQ(player._pMemSpells, 66309357295);

@@ -237,7 +237,6 @@ struct Player {
 	int _pBaseVit;
 	int _pStatPts;
 	int _pDamageMod;
-	int _pBaseToBlk;
 	int _pHPBase;
 	int _pMaxHPBase;
 	int _pHitPoints;
@@ -386,6 +385,11 @@ public:
 	[[nodiscard]] std::string_view getClassName() const
 	{
 		return _(getPlayerData().className);
+	}
+
+	[[nodiscard]] int getBaseToBlock() const
+	{
+		return getClassAttributes().blockBonus;
 	}
 
 	void CalcScrolls();
@@ -626,7 +630,7 @@ public:
 	 */
 	int GetBlockChance(bool useLevel = true) const
 	{
-		int blkper = _pDexterity + _pBaseToBlk;
+		int blkper = _pDexterity + getBaseToBlock();
 		if (useLevel)
 			blkper += getCharacterLevel() * 2;
 		return blkper;
