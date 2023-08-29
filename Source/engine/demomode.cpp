@@ -715,6 +715,9 @@ bool FetchMessage(SDL_Event *event, uint16_t *modState)
 void RecordGameLoopResult(bool runGameLoop)
 {
 	WriteDemoMsgHeader(runGameLoop ? DemoMsg::GameTick : DemoMsg::Rendering);
+
+	if (runGameLoop && !IsRunning())
+		LogicTick++;
 }
 
 void RecordMessage(const SDL_Event &event, uint16_t modState)
@@ -790,6 +793,12 @@ void RecordMessage(const SDL_Event &event, uint16_t modState)
 
 void NotifyGameLoopStart()
 {
+	LogicTick = 0;
+
+	if (IsRunning()) {
+		StartTime = SDL_GetTicks();
+	}
+
 	if (IsRecording()) {
 		const std::string path = StrCat(paths::PrefPath(), "demo_", RecordNumber, ".dmo");
 		DemoRecording = OpenFile(path.c_str(), "wb");
@@ -802,11 +811,6 @@ void NotifyGameLoopStart()
 		WriteByte(DemoRecording, Version);
 		WriteLE32(DemoRecording, gSaveNumber);
 		WriteSettings(DemoRecording);
-	}
-
-	if (IsRunning()) {
-		StartTime = SDL_GetTicks();
-		LogicTick = 0;
 	}
 }
 
@@ -841,6 +845,11 @@ void NotifyGameLoopEnd()
 			break;
 		}
 	}
+}
+
+uint32_t SimulateMillisecondsSinceStartup()
+{
+	return LogicTick * 50;
 }
 
 } // namespace demo

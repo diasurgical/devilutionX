@@ -16,6 +16,7 @@
 #include "stores.h"
 #include "utils/algorithm/container.hpp"
 #include "utils/language.h"
+#include "utils/timer.hpp"
 
 namespace devilution {
 
@@ -30,7 +31,7 @@ const int LineWidth = 418;
 
 void InitNextLines()
 {
-	msgdelay = SDL_GetTicks();
+	msgdelay = GetMillisecondsSinceStartup();
 	TextLines.clear();
 
 	const std::string paragraphs = WordWrapString(DiabloMessages.front(), LineWidth, GameFont12, 1);
@@ -172,7 +173,7 @@ void DrawDiabloMsg(const Surface &out)
 		lineNumber += 1;
 	}
 
-	if (msgdelay > 0 && msgdelay <= SDL_GetTicks() - 3500) {
+	if (msgdelay > 0 && msgdelay <= GetMillisecondsSinceStartup() - 3500) {
 		msgdelay = 0;
 	}
 	if (msgdelay == 0) {
