@@ -1396,7 +1396,7 @@ void AddSpectralArrow(Missile &missile, AddMissileParameter &parameter)
 	int av = 0;
 
 	if (missile.sourceType() == MissileSource::Player) {
-		const Player &player = *missile.sourcePlayer();
+		Player &player = *missile.sourcePlayer();
 
 		if (player._pClass == HeroClass::Rogue)
 			av += (player.getCharacterLevel() - 1) / 4;
@@ -1411,6 +1411,16 @@ void AddSpectralArrow(Missile &missile, AddMissileParameter &parameter)
 			av += 4;
 		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastestAttack))
 			av += 8;
+
+		int16_t spectralID = 0;
+
+		for (Item &item : EquippedPlayerItemsRange { player }) {
+			if (item.isWeapon()) {
+				spectralID = item._iLMinDam;
+				break;
+			}
+		}
+		missile._midam = spectralID;
 	}
 
 	missile._mirange = 1;
@@ -1651,75 +1661,116 @@ void AddChargedBoltBow(Missile &missile, AddMissileParameter &parameter)
 	missile._mirange = 256;
 }
 
-void AddElementalArrow(Missile &missile, AddMissileParameter &parameter)
-{
-	Point dst = parameter.dst;
-	if (missile.position.start == dst) {
-		dst += parameter.midir;
-	}
-	int av = 32;
-	if (missile._micaster == TARGET_MONSTERS) {
-		const Player &player = Players[missile._misource];
-		if (player._pClass == HeroClass::Rogue)
-			av += (player.getCharacterLevel()) / 4;
-		else if (IsAnyOf(player._pClass, HeroClass::Warrior, HeroClass::Bard))
-			av += (player.getCharacterLevel()) / 8;
-
-		if (gbIsHellfire) {
-			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::QuickAttack))
-				av++;
-			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastAttack))
-				av += 2;
-			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FasterAttack))
-				av += 4;
-			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastestAttack))
-				av += 8;
-		} else {
-			if (IsAnyOf(player._pClass, HeroClass::Rogue, HeroClass::Warrior, HeroClass::Bard))
-				av -= 1;
-		}
-	}
-	UpdateMissileVelocity(missile, dst, av);
-
-	SetMissDir(missile, GetDirection16(missile.position.start, dst));
-	missile._mirange = 256;
-	missile.var1 = missile.position.start.x;
-	missile.var2 = missile.position.start.y;
-	missile._mlid = AddLight(missile.position.start, 5);
-}
-
 void AddArrow(Missile &missile, AddMissileParameter &parameter)
 {
+	bool isElementArrow = missile._mitype != MissileID::Arrow;
 	Point dst = parameter.dst;
+
 	if (missile.position.start == dst) {
 		dst += parameter.midir;
 	}
-	int av = 32;
-	if (missile._micaster == TARGET_MONSTERS) {
-		const Player &player = Players[missile._misource];
 
-		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::RandomArrowVelocity)) {
-			av = GenerateRnd(32) + 16;
+	int velocity = 32;
+
+	// Calculate player missile velocity
+	if (missile.sourceType() == MissileSource::Player) {
+		const Player &player = *missile.sourcePlayer();
+
+		if (!isElementArrow && HasAnyOf(player._pIFlags, ItemSpecialEffect::RandomArrowVelocity)) {
+			velocity = GenerateRnd(32) + 16;
 		}
-		if (player._pClass == HeroClass::Rogue)
-			av += (player.getCharacterLevel() - 1) / 4;
-		else if (player._pClass == HeroClass::Warrior || player._pClass == HeroClass::Bard)
-			av += (player.getCharacterLevel() - 1) / 8;
+
+		int classDivisor = 1;
+
+		switch (player._pClass) {
+		case HeroClass::Rogue:
+			classDivisor = 4;
+			if (!gbIsHellfire)
+				velocity--;
+			break;
+		case HeroClass::Warrior:
+		case HeroClass::Bard:
+			classDivisor = 8;
+			if (!gbIsHellfire)
+				velocity--;
+			break;
+		default:
+			break;
+		}
+
+		velocity += (player.getCharacterLevel() - ((isElementArrow) ? 0 : 1)) / classDivisor;
 
 		if (gbIsHellfire) {
 			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::QuickAttack))
-				av++;
+				velocity++;
 			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastAttack))
-				av += 2;
+				velocity += 2;
 			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FasterAttack))
-				av += 4;
+				velocity += 4;
 			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastestAttack))
-				av += 8;
+				velocity += 8;
 		}
 	}
-	UpdateMissileVelocity(missile, dst, av);
-	missile._miAnimFrame = static_cast<int>(GetDirection16(missile.position.start, dst)) + 1;
+
+	UpdateMissileVelocity(missile, dst, velocity);
+
 	missile._mirange = 256;
+
+	if (isElementArrow) {
+		SetMissDir(missile, GetDirection16(missile.position.start, dst));
+		missile.var1 = missile.position.start.x;
+		missile.var2 = missile.position.start.y;
+		missile._mlid = AddLight(missile.position.start, 5);
+	} else {
+		missile._miAnimFrame = static_cast<int>(GetDirection16(missile.position.start, dst)) + 1;
+	}
+
+	// Calculate missile damage
+	switch (missile.sourceType()) {
+	case MissileSource::Player: {
+		const Player &player = *missile.sourcePlayer();
+
+		missile._midam = player._pIMinDam; // min physical damage
+		missile.var3 = player._pIMaxDam;   // max physical damage
+
+		switch (missile._mitype) {
+		case MissileID::LightningArrow:
+			missile.var4 = player._pILMinDam; // min lightning damage
+			missile.var5 = player._pILMaxDam; // max lightning damage
+			break;
+		case MissileID::FireArrow:
+			missile.var4 = player._pIFMinDam; // min fire damage
+			missile.var5 = player._pIFMaxDam; // max fire damage
+			break;
+		default:
+			break;
+		}
+	} break;
+	case MissileSource::Monster: {
+		const Monster &monster = *missile.sourceMonster();
+
+		missile._midam = monster.minDamage; // min physical damage
+		missile.var3 = monster.maxDamage;   // max physical damage
+	} break;
+	case MissileSource::Trap: {
+		switch (missile._mitype) {
+		case MissileID::Arrow:
+			missile._midam = currlevel;   // min physical damage
+			missile.var3 = 2 * currlevel; // max physical damage
+			break;
+		case MissileID::LightningArrow:
+		case MissileID::FireArrow:
+			// Duplicated following code exists so physical damage and elemental damage don't result in the same number.
+			missile._midam = currlevel + GenerateRnd(10) + 1;     // min physical damage
+			missile.var3 = (currlevel * 2) + GenerateRnd(10) + 1; // max physical damage
+			missile.var4 = currlevel + GenerateRnd(10) + 1;       // min elemental damage
+			missile.var5 = (currlevel * 2) + GenerateRnd(10) + 1; // max elemental damage
+			break;
+		default:
+			break;
+		}
+	} break;
+	}
 }
 
 void UpdateVileMissPos(Missile &missile, Point dst)
@@ -1915,6 +1966,20 @@ void AddLightningControl(Missile &missile, AddMissileParameter &parameter)
 	UpdateMissileVelocity(missile, parameter.dst, 32);
 	missile._miAnimFrame = GenerateRnd(8) + 1;
 	missile._mirange = 256;
+
+	switch (missile.sourceType()) {
+	case MissileSource::Player: {
+		const Player &player = *missile.sourcePlayer();
+		missile._midam = (GenerateRnd(2) + GenerateRnd(player.getCharacterLevel()) + 2) << 6;
+	} break;
+	case MissileSource::Monster: {
+		const Monster &monster = *missile.sourceMonster();
+		missile._midam = 2 * (monster.minDamage + GenerateRnd(monster.maxDamage - monster.minDamage + 1));
+	} break;
+	case MissileSource::Trap:
+		missile._midam = (2 * currlevel) + GenerateRnd(currlevel);
+		break;
+	}
 }
 
 void AddLightning(Missile &missile, AddMissileParameter &parameter)
@@ -1969,10 +2034,19 @@ void AddMissileExplosion(Missile &missile, AddMissileParameter &parameter)
 void AddWeaponExplosion(Missile &missile, AddMissileParameter &parameter)
 {
 	missile.var2 = parameter.dst.x;
-	if (parameter.dst.x == 1)
+
+	const Player &player = *missile.sourcePlayer();
+
+	if (missile.var2 == 1) {
+		missile._midam = player._pIFMinDam; // min fire damage
+		missile.var3 = player._pIFMaxDam;   // max fire damage
 		SetMissAnim(missile, MissileGraphicID::MagmaBallExplosion);
-	else
+	} else {
+		missile._midam = player._pILMinDam; // min lightning damage
+		missile.var3 = player._pILMaxDam;   // max lightning damage
 		SetMissAnim(missile, MissileGraphicID::ChargedBolt);
+	}
+
 	missile._mirange = missile._miAnimLen - 1;
 }
 
@@ -2761,118 +2835,59 @@ Missile *AddMissile(Point src, Point dst, Direction midir, MissileID mitype,
 	return &missile;
 }
 
-void ProcessElementalArrow(Missile &missile)
-{
-	missile._mirange--;
-	if (missile._miAnimType == MissileGraphicID::ChargedBolt || missile._miAnimType == MissileGraphicID::MagmaBallExplosion) {
-		ChangeLight(missile._mlid, missile.position.tile, missile._miAnimFrame + 5);
-	} else {
-		int mind;
-		int maxd;
-		int p = missile._misource;
-		missile._midist++;
-		if (!missile.IsTrap()) {
-			if (missile._micaster == TARGET_MONSTERS) {
-				// BUGFIX: damage of missile should be encoded in missile struct; player can be dead/have left the game before missile arrives.
-				const Player &player = Players[p];
-				mind = player._pIMinDam;
-				maxd = player._pIMaxDam;
-			} else {
-				// BUGFIX: damage of missile should be encoded in missile struct; monster can be dead before missile arrives.
-				Monster &monster = Monsters[p];
-				mind = monster.minDamage;
-				maxd = monster.maxDamage;
-			}
-		} else {
-			mind = GenerateRnd(10) + 1 + currlevel;
-			maxd = GenerateRnd(10) + 1 + currlevel * 2;
-		}
-		MoveMissileAndCheckMissileCol(missile, DamageType::Physical, mind, maxd, true, false);
-		if (missile._mirange == 0) {
-			missile._mimfnum = 0;
-			missile._mirange = missile._miAnimLen - 1;
-			missile.position.StopMissile();
-
-			int eMind;
-			int eMaxd;
-			MissileGraphicID eAnim;
-			DamageType damageType;
-			switch (missile._mitype) {
-			case MissileID::LightningArrow:
-				if (!missile.IsTrap()) {
-					// BUGFIX: damage of missile should be encoded in missile struct; player can be dead/have left the game before missile arrives.
-					const Player &player = Players[p];
-					eMind = player._pILMinDam;
-					eMaxd = player._pILMaxDam;
-				} else {
-					eMind = GenerateRnd(10) + 1 + currlevel;
-					eMaxd = GenerateRnd(10) + 1 + currlevel * 2;
-				}
-				eAnim = MissileGraphicID::ChargedBolt;
-				damageType = DamageType::Lightning;
-				break;
-			case MissileID::FireArrow:
-				if (!missile.IsTrap()) {
-					// BUGFIX: damage of missile should be encoded in missile struct; player can be dead/have left the game before missile arrives.
-					const Player &player = Players[p];
-					eMind = player._pIFMinDam;
-					eMaxd = player._pIFMaxDam;
-				} else {
-					eMind = GenerateRnd(10) + 1 + currlevel;
-					eMaxd = GenerateRnd(10) + 1 + currlevel * 2;
-				}
-				eAnim = MissileGraphicID::MagmaBallExplosion;
-				damageType = DamageType::Fire;
-				break;
-			default:
-				app_fatal(StrCat("wrong missile ID ", static_cast<int>(missile._mitype)));
-				break;
-			}
-			SetMissAnim(missile, eAnim);
-			CheckMissileCol(missile, damageType, eMind, eMaxd, false, missile.position.tile, true);
-		} else {
-			if (missile.position.tile != Point { missile.var1, missile.var2 }) {
-				missile.var1 = missile.position.tile.x;
-				missile.var2 = missile.position.tile.y;
-				ChangeLight(missile._mlid, missile.position.tile, 5);
-			}
-		}
-	}
-	if (missile._mirange == 0) {
-		missile._miDelFlag = true;
-		AddUnLight(missile._mlid);
-	}
-	PutMissile(missile);
-}
-
 void ProcessArrow(Missile &missile)
 {
-	missile._mirange--;
-	missile._midist++;
+	bool isElementArrow = missile._mitype != MissileID::Arrow;
 
-	int mind;
-	int maxd;
-	switch (missile.sourceType()) {
-	case MissileSource::Player: {
-		// BUGFIX: damage of missile should be encoded in missile struct; player can be dead/have left the game before missile arrives.
-		const Player &player = *missile.sourcePlayer();
-		mind = player._pIMinDam;
-		maxd = player._pIMaxDam;
-	} break;
-	case MissileSource::Monster: {
-		// BUGFIX: damage of missile should be encoded in missile struct; monster can be dead before missile arrives.
-		const Monster &monster = *missile.sourceMonster();
-		mind = monster.minDamage;
-		maxd = monster.maxDamage;
-	} break;
-	case MissileSource::Trap:
-		mind = currlevel;
-		maxd = 2 * currlevel;
-		break;
+	missile._mirange--;
+
+	if (IsAnyOf(missile._miAnimType, MissileGraphicID::ChargedBolt, MissileGraphicID::MagmaBallExplosion)) {
+		ChangeLight(missile._mlid, missile.position.tile, missile._miAnimFrame + 5);
+	} else {
+		missile._midist++;
+
+		MoveMissileAndCheckMissileCol(missile, DamageType::Physical, missile._midam, missile.var3, true, false);
+
+		if (isElementArrow) {
+			if (missile._mirange == 0) {
+				missile._mimfnum = 0;
+				missile._mirange = missile._miAnimLen - 1;
+				missile.position.StopMissile();
+
+				MissileGraphicID graphic = MissileGraphicID::Arrow;
+				DamageType damageType = DamageType::Physical;
+
+				switch (missile._mitype) {
+				case MissileID::LightningArrow:
+					graphic = MissileGraphicID::ChargedBolt;
+					damageType = DamageType::Lightning;
+					break;
+				case MissileID::FireArrow:
+					graphic = MissileGraphicID::MagmaBallExplosion;
+					damageType = DamageType::Fire;
+					break;
+				default:
+					break;
+				}
+
+				SetMissAnim(missile, graphic);
+				CheckMissileCol(missile, damageType, missile.var4, missile.var5, false, missile.position.tile, true);
+			} else {
+				if (missile.position.tile != Point { missile.var1, missile.var2 }) {
+					missile.var1 = missile.position.tile.x;
+					missile.var2 = missile.position.tile.y;
+					ChangeLight(missile._mlid, missile.position.tile, 5);
+				}
+			}
+		}
 	}
-	MoveMissileAndCheckMissileCol(missile, GetMissileData(missile._mitype).damageType(), mind, maxd, true, false);
-	if (missile._mirange == 0)
+
+	if (missile._mirange == 0) {
 		missile._miDelFlag = true;
+		if (isElementArrow)
+			AddUnLight(missile._mlid);
+	}
+
 	PutMissile(missile);
 }
 
@@ -3266,7 +3281,7 @@ void ProcessSpectralArrow(Missile &missile)
 		dir = player._pdir;
 		micaster = TARGET_MONSTERS;
 
-		switch (player._pILMinDam) {
+		switch (missile._midam) {
 		case 0:
 			mitype = MissileID::FireballBow;
 			break;
@@ -3295,19 +3310,7 @@ void ProcessLightningControl(Missile &missile)
 {
 	missile._mirange--;
 
-	int dam;
-	if (missile.IsTrap()) {
-		// BUGFIX: damage of missile should be encoded in missile struct; monster can be dead before missile arrives.
-		dam = GenerateRnd(currlevel) + 2 * currlevel;
-	} else if (missile._micaster == TARGET_MONSTERS) {
-		// BUGFIX: damage of missile should be encoded in missile struct; player can be dead/have left the game before missile arrives.
-		dam = (GenerateRnd(2) + GenerateRnd(Players[missile._misource].getCharacterLevel()) + 2) << 6;
-	} else {
-		auto &monster = Monsters[missile._misource];
-		dam = 2 * (monster.minDamage + GenerateRnd(monster.maxDamage - monster.minDamage + 1));
-	}
-
-	SpawnLightning(missile, dam);
+	SpawnLightning(missile, missile._midam);
 }
 
 void ProcessLightning(Missile &missile)
@@ -3548,29 +3551,27 @@ void ProcessWeaponExplosion(Missile &missile)
 	constexpr int ExpLight[10] = { 9, 10, 11, 12, 11, 10, 8, 6, 4, 2 };
 
 	missile._mirange--;
-	const Player &player = Players[missile._misource];
-	int mind;
-	int maxd;
+
+	const Player &player = *missile.sourcePlayer();
 	DamageType damageType;
+
 	if (missile.var2 == 1) {
-		// BUGFIX: damage of missile should be encoded in missile struct; player can be dead/have left the game before missile arrives.
-		mind = player._pIFMinDam;
-		maxd = player._pIFMaxDam;
 		damageType = DamageType::Fire;
 	} else {
-		// BUGFIX: damage of missile should be encoded in missile struct; player can be dead/have left the game before missile arrives.
-		mind = player._pILMinDam;
-		maxd = player._pILMaxDam;
 		damageType = DamageType::Lightning;
 	}
-	CheckMissileCol(missile, damageType, mind, maxd, false, missile.position.tile, false);
+
+	CheckMissileCol(missile, damageType, missile._midam, missile.var3, false, missile.position.tile, false);
+
 	if (missile.var1 == 0) {
 		missile._mlid = AddLight(missile.position.tile, 9);
 	} else {
 		if (missile._mirange != 0)
 			ChangeLight(missile._mlid, missile.position.tile, ExpLight[missile.var1]);
 	}
+
 	missile.var1++;
+
 	if (missile._mirange == 0) {
 		missile._miDelFlag = true;
 		AddUnLight(missile._mlid);
