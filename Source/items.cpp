@@ -3004,40 +3004,40 @@ void CreatePlrItems(Player &player)
 		item.clear();
 	}
 
-	switch (player._pClass) {
-	case HeroClass::Warrior:
-		for (_item_indexes itemData : { IDI_WARRIOR, IDI_WARRSHLD, IDI_WARRCLUB, IDI_HEAL, IDI_HEAL })
-			CreateStartingItem(player, itemData);
-		break;
-	case HeroClass::Rogue:
-		for (_item_indexes itemData : { IDI_ROGUE, IDI_HEAL, IDI_HEAL })
-			CreateStartingItem(player, itemData);
-		break;
-	case HeroClass::Sorcerer:
-		for (_item_indexes itemData : { gbIsHellfire ? IDI_SORCERER : IDI_SORCERER_DIABLO, gbIsHellfire ? IDI_HEAL : IDI_MANA, gbIsHellfire ? IDI_HEAL : IDI_MANA })
-			CreateStartingItem(player, itemData);
-		break;
-	case HeroClass::Monk:
-		for (_item_indexes itemData : { IDI_SHORTSTAFF, IDI_HEAL, IDI_HEAL })
-			CreateStartingItem(player, itemData);
-		break;
-	case HeroClass::Bard:
-		for (_item_indexes itemData : { IDI_BARDSWORD, IDI_BARDDAGGER, IDI_HEAL, IDI_HEAL })
-			CreateStartingItem(player, itemData);
-		break;
-	case HeroClass::Barbarian:
-		for (_item_indexes itemData : { IDI_BARBARIAN, IDI_WARRSHLD, IDI_HEAL, IDI_HEAL })
-			CreateStartingItem(player, itemData);
-		break;
+	const PlayerStartingLoadoutData &loadout = GetPlayerStartingLoadoutForClass(player._pClass);
+
+	if (loadout.spell != SpellID::Null && loadout.spellLevel > 0) {
+		player._pMemSpells = GetSpellBitmask(loadout.spell);
+		player._pRSplType = SpellType::Spell;
+		player._pRSpell = loadout.spell;
+		player._pSplLvl[static_cast<unsigned>(loadout.spell)] = loadout.spellLevel;
+	} else {
+		player._pMemSpells = 0;
 	}
 
-	Item &goldItem = player.InvList[player._pNumInv];
-	MakeGoldStack(goldItem, 100);
+	if (loadout.skill != SpellID::Null) {
+		player._pAblSpells = GetSpellBitmask(loadout.skill);
+		if (player._pRSplType == SpellType::Invalid) {
+			player._pRSplType = SpellType::Skill;
+			player._pRSpell = loadout.skill;
+		}
+	}
 
-	player._pNumInv++;
-	player.InvGrid[30] = player._pNumInv;
+	for (auto &itemChoice : loadout.items) {
+		_item_indexes itemData = gbIsHellfire && itemChoice.hellfire != _item_indexes::IDI_NONE ? itemChoice.hellfire : itemChoice.diablo;
+		if (itemData != _item_indexes::IDI_NONE)
+			CreateStartingItem(player, itemData);
+	}
 
-	player._pGold = goldItem._ivalue;
+	if (loadout.gold > 0) {
+		Item &goldItem = player.InvList[player._pNumInv];
+		MakeGoldStack(goldItem, loadout.gold);
+
+		player._pNumInv++;
+		player.InvGrid[30] = player._pNumInv;
+
+		player._pGold = goldItem._ivalue;
+	}
 
 	CalcPlrItemVals(player, false);
 }
