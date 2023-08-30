@@ -651,10 +651,11 @@ void DrawAutomapTile(const Surface &out, Point center, Point map)
 
 	if (currlevel == Quests[Q_BETRAYER]._qlevel && map == Quests[Q_BETRAYER].position.worldToMega() + Displacement { 1, 1 }) {
 		int pentaColor = (Quests[Q_BETRAYER]._qactive == QUEST_DONE) ? PAL8_RED + 2 : PAL16_YELLOW + 8;
-		DrawMapEllipse(out, center + Displacement { 0, 1 }, AmLine(64), 0); // shadow
-		DrawMapStar(out, center + Displacement { 0, 1 }, AmLine(64), 0);    // shadow
-		DrawMapEllipse(out, center, AmLine(64), pentaColor);
-		DrawMapStar(out, center, AmLine(64), pentaColor);
+		Displacement pentaOffset = { 0, -(TILE_HEIGHT / 2) };
+		DrawMapEllipse(out, center + Displacement { 0, 1 } + pentaOffset, AmLine(64), 0); // shadow
+		DrawMapStar(out, center + Displacement { 0, 1 } + pentaOffset, AmLine(64), 0);    // shadow
+		DrawMapEllipse(out, center + pentaOffset, AmLine(64), pentaColor);
+		DrawMapStar(out, center + pentaOffset, AmLine(64), pentaColor);
 	}
 
 	switch (tile.type) {
