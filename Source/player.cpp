@@ -2155,9 +2155,6 @@ void LoadPlrGFX(Player &player, player_graphic graphic)
 		app_fatal("PLR:2");
 	}
 
-	if (HeadlessMode)
-		return;
-
 	char prefix[3] = { CharChar[static_cast<std::size_t>(cls)], ArmourChar[player._pgfxnum >> 4], WepChar[static_cast<std::size_t>(animWeaponId)] };
 	char pszName[256];
 	*fmt::format_to(pszName, R"(plrgfx\{0}\{1}\{1}{2})", path, std::string_view(prefix, 3), szCel) = 0;
