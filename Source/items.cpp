@@ -3005,7 +3005,7 @@ void CreatePlrItems(Player &player)
 			Item club;
 			InitializeItem(club, IDI_WARRCLUB);
 			GenerateNewSeed(club);
-			AutoPlaceItemInInventorySlot(player, 0, club, true);
+			AutoPlaceItemInInventory(player, club, true);
 		}
 
 		InitializeItem(player.SpdList[0], IDI_HEAL);
