@@ -16,3 +16,6 @@ chrLife	1
 chrMana	2
 itmLife	1
 itmMana	2
+baseMagicToHit	70
+baseMeleeToHit	50
+baseRangedToHit	50

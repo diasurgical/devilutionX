@@ -153,7 +153,7 @@ void ReloadExperienceData()
 	}
 }
 
-void LoadClassAttributes(std::string_view classPath, ClassAttributes &out)
+void LoadClassData(std::string_view classPath, ClassAttributes &attributes, PlayerCombatData &combat)
 {
 	const std::string filename = StrCat("txtdata\\classes\\", classPath, "\\attributes.tsv");
 	tl::expected<DataFile, DataFile::Error> dataFileResult = DataFile::load(filename);
@@ -208,34 +208,41 @@ void LoadClassAttributes(std::string_view classPath, ClassAttributes &out)
 		return valueField.parseFixed6(outValue);
 	});
 
-	readInt("baseStr", out.baseStr);
-	readInt("baseMag", out.baseMag);
-	readInt("baseDex", out.baseDex);
-	readInt("baseVit", out.baseVit);
-	readInt("maxStr", out.maxStr);
-	readInt("maxMag", out.maxMag);
-	readInt("maxDex", out.maxDex);
-	readInt("maxVit", out.maxVit);
-	readInt("blockBonus", out.blockBonus);
-	readDecimal("adjLife", out.adjLife);
-	readDecimal("adjMana", out.adjMana);
-	readDecimal("lvlLife", out.lvlLife);
-	readDecimal("lvlMana", out.lvlMana);
-	readDecimal("chrLife", out.chrLife);
-	readDecimal("chrMana", out.chrMana);
-	readDecimal("itmLife", out.itmLife);
-	readDecimal("itmMana", out.itmMana);
+	readInt("baseStr", attributes.baseStr);
+	readInt("baseMag", attributes.baseMag);
+	readInt("baseDex", attributes.baseDex);
+	readInt("baseVit", attributes.baseVit);
+	readInt("maxStr", attributes.maxStr);
+	readInt("maxMag", attributes.maxMag);
+	readInt("maxDex", attributes.maxDex);
+	readInt("maxVit", attributes.maxVit);
+	readInt("blockBonus", combat.baseToBlock);
+	readDecimal("adjLife", attributes.adjLife);
+	readDecimal("adjMana", attributes.adjMana);
+	readDecimal("lvlLife", attributes.lvlLife);
+	readDecimal("lvlMana", attributes.lvlMana);
+	readDecimal("chrLife", attributes.chrLife);
+	readDecimal("chrMana", attributes.chrMana);
+	readDecimal("itmLife", attributes.itmLife);
+	readDecimal("itmMana", attributes.itmMana);
+	readInt("baseMagicToHit", combat.baseMagicToHit);
+	readInt("baseMeleeToHit", combat.baseMeleeToHit);
+	readInt("baseRangedToHit", combat.baseRangedToHit);
 }
 
 std::vector<ClassAttributes> ClassAttributesPerClass;
+
+std::vector<PlayerCombatData> PlayersCombatData;
 
 void LoadClassesAttributes()
 {
 	const std::array classPaths { "warrior", "rogue", "sorcerer", "monk", "bard", "barbarian" };
 	ClassAttributesPerClass.clear();
 	ClassAttributesPerClass.reserve(classPaths.size());
+	PlayersCombatData.clear();
+	PlayersCombatData.reserve(classPaths.size());
 	for (std::string_view path : classPaths) {
-		LoadClassAttributes(path, ClassAttributesPerClass.emplace_back());
+		LoadClassData(path, ClassAttributesPerClass.emplace_back(), PlayersCombatData.emplace_back());
 	}
 }
 
@@ -292,6 +299,11 @@ const _sfx_id herosounds[enum_size<HeroClass>::value][enum_size<HeroSpeech>::val
 	{ PS_WARR1,  PS_WARR2,  PS_WARR3,  PS_WARR4,  PS_WARR5,  PS_WARR6,  PS_WARR7,  PS_WARR8,  PS_WARR9,  PS_WARR10,  PS_WARR11,  PS_WARR12,  PS_WARR13,  PS_WARR14,  PS_WARR15,  PS_WARR16,  PS_WARR17,  PS_WARR18,  PS_WARR19,  PS_WARR20,  PS_WARR21,  PS_WARR22,  PS_WARR23,  PS_WARR24,  PS_WARR25,  PS_WARR26,  PS_WARR27,  PS_WARR28,  PS_WARR29,  PS_WARR30,  PS_WARR31,  PS_WARR32,  PS_WARR33,  PS_WARR34,  PS_WARR35,  PS_WARR36,  PS_WARR37,  PS_WARR38,  PS_WARR39,  PS_WARR40,  PS_WARR41,  PS_WARR42,  PS_WARR43,  PS_WARR44,  PS_WARR45,  PS_WARR46,  PS_WARR47,  PS_WARR48,  PS_WARR49,  PS_WARR50,  PS_WARR51,  PS_WARR52,  PS_WARR53,  PS_WARR54,  PS_WARR55,  PS_WARR56,  PS_WARR57,  PS_WARR58,  PS_WARR59,  PS_WARR60,  PS_WARR61,  PS_WARR62,  PS_WARR63,  PS_WARR64,  PS_WARR65,  PS_WARR66,  PS_WARR67,  PS_WARR68,  PS_WARR69,  PS_WARR70,  PS_WARR71,  PS_WARR72,  PS_WARR73,  PS_WARR74,  PS_WARR75,  PS_WARR76,  PS_WARR77,  PS_WARR78,  PS_WARR79,  PS_WARR80,  PS_WARR81,  PS_WARR82,  PS_WARR83,  PS_WARR84,  PS_WARR85,  PS_WARR86,  PS_WARR87,  PS_WARR88,  PS_WARR89,  PS_WARR90,  PS_WARR91,  PS_WARR92,  PS_WARR93,  PS_WARR94,  PS_WARR95,  PS_WARR96B,  PS_WARR97,  PS_WARR98,  PS_WARR99,  PS_WARR100,  PS_WARR101,  PS_WARR102,  PS_WARR71  },
 	// clang-format on
 };
+
+const PlayerCombatData &GetPlayerCombatDataForClass(HeroClass clazz)
+{
+	return PlayersCombatData[static_cast<size_t>(clazz)];
+}
 
 /** Contains the data related to each player class. */
 const PlayerSpriteData PlayersSpriteData[] = {
