@@ -2310,28 +2310,12 @@ void CreatePlayer(Player &player, HeroClass c)
 	player._pLightRad = 10;
 	player._pInfraFlag = false;
 
-	player._pRSplType = SpellType::Skill;
-	SpellID s = player.getPlayerData().skill;
-	player._pAblSpells = GetSpellBitmask(s);
-	player._pRSpell = s;
-
-	if (c == HeroClass::Sorcerer) {
-		player._pMemSpells = GetSpellBitmask(SpellID::Firebolt);
-		player._pRSplType = SpellType::Spell;
-		player._pRSpell = SpellID::Firebolt;
-	} else {
-		player._pMemSpells = 0;
-	}
-
 	for (uint8_t &spellLevel : player._pSplLvl) {
 		spellLevel = 0;
 	}
 
 	player._pSpellFlags = SpellFlag::None;
-
-	if (player._pClass == HeroClass::Sorcerer) {
-		player._pSplLvl[static_cast<int8_t>(SpellID::Firebolt)] = 2;
-	}
+	player._pRSplType = SpellType::Invalid;
 
 	// Initializing the hotkey bindings to no selection
 	std::fill(player._pSplHotKey, player._pSplHotKey + NumHotkeys, SpellID::Invalid);
@@ -2517,8 +2501,7 @@ void InitPlayer(Player &player, bool firstTime)
 		ActivateVision(player.position.tile, player._pLightRad, player.getId());
 	}
 
-	SpellID s = player.getPlayerData().skill;
-	player._pAblSpells = GetSpellBitmask(s);
+	player._pAblSpells = GetSpellBitmask(GetPlayerStartingLoadoutForClass(player._pClass).skill);
 
 	player._pInvincible = false;
 

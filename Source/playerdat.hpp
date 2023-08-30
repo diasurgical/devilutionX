@@ -8,6 +8,7 @@
 #include <cstdint>
 
 #include "effects.h"
+#include "itemdat.h"
 #include "spelldat.h"
 
 namespace devilution {
@@ -76,6 +77,35 @@ struct PlayerCombatData {
 	uint8_t baseRangedToHit;
 	/* Class starting chance to hit when using spells (used as a %) */
 	uint8_t baseMagicToHit;
+};
+
+/**
+ * @brief Data used to set known skills and provide initial equipment when starting a new game
+ *
+ * Items will be created in order starting with item 1, 2, etc. If the item can be equipped it
+ * will be placed in the first available slot, otherwise if it fits on the belt it will be
+ * placed in the first free space, finally being placed in the first free inventory position.
+ *
+ * The active game mode at the time we're creating a new character controls the choice of item
+ * type. ItemType.hellfire is used if we're in Hellfire mode, ItemType.diablo otherwise.
+ */
+struct PlayerStartingLoadoutData {
+	/* Class Skill */
+	SpellID skill;
+	/* Starting Spell (if any) */
+	SpellID spell;
+	/* Initial level of the starting spell */
+	uint8_t spellLevel;
+
+	struct ItemType {
+		_item_indexes diablo;
+		_item_indexes hellfire;
+	};
+
+	std::array<ItemType, 5> items;
+
+	/* Initial gold amount, up to a single stack (5000 gold) */
+	uint16_t gold;
 };
 
 struct PlayerSpriteData {
@@ -170,6 +200,7 @@ uint32_t GetNextExperienceThresholdForLevel(unsigned level);
 uint8_t GetMaximumCharacterLevel();
 const PlayerData &GetPlayerDataForClass(HeroClass clazz);
 const PlayerCombatData &GetPlayerCombatDataForClass(HeroClass clazz);
+const PlayerStartingLoadoutData &GetPlayerStartingLoadoutForClass(HeroClass clazz);
 extern const PlayerSpriteData PlayersSpriteData[];
 extern const PlayerAnimData PlayersAnimData[];
 

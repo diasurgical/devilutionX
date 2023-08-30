@@ -249,17 +249,29 @@ void LoadClassesAttributes()
 /** Contains the data related to each player class. */
 const PlayerData PlayersData[] = {
 	// clang-format off
-// HeroClass                 className,       skill
+// HeroClass                 className
 // TRANSLATORS: Player Block start
-/* HeroClass::Warrior */   { N_("Warrior"),   SpellID::ItemRepair    },
-/* HeroClass::Rogue */     { N_("Rogue"),     SpellID::TrapDisarm    },
-/* HeroClass::Sorcerer */  { N_("Sorcerer"),  SpellID::StaffRecharge },
-/* HeroClass::Monk */      { N_("Monk"),      SpellID::Search        },
-/* HeroClass::Bard */      { N_("Bard"),      SpellID::Identify      },
+/* HeroClass::Warrior */   { N_("Warrior"),   },
+/* HeroClass::Rogue */     { N_("Rogue"),     },
+/* HeroClass::Sorcerer */  { N_("Sorcerer"),  },
+/* HeroClass::Monk */      { N_("Monk"),      },
+/* HeroClass::Bard */      { N_("Bard"),      },
 // TRANSLATORS: Player Block end
-/* HeroClass::Barbarian */ { N_("Barbarian"), SpellID::Rage          },
+/* HeroClass::Barbarian */ { N_("Barbarian"), },
 	// clang-format on
 };
+
+const std::array<PlayerStartingLoadoutData, enum_size<HeroClass>::value> PlayersStartingLoadoutData { {
+	// clang-format off
+// HeroClass                 skill,                  spell,             spellLevel,     items[0].diablo,       items[0].hellfire, items[1].diablo,  items[1].hellfire, items[2].diablo, items[2].hellfire, items[3].diablo, items[3].hellfire, items[4].diablo, items[4].hellfire, gold,
+/* HeroClass::Warrior   */ { SpellID::ItemRepair,    SpellID::Null,              0, { { { IDI_WARRIOR,         IDI_WARRIOR,    }, { IDI_WARRSHLD,   IDI_WARRSHLD,   }, { IDI_WARRCLUB,  IDI_WARRCLUB,   }, { IDI_HEAL,    IDI_HEAL,  }, { IDI_HEAL,      IDI_HEAL, }, }, },  100, },
+/* HeroClass::Rogue     */ { SpellID::TrapDisarm,    SpellID::Null,              0, { { { IDI_ROGUE,           IDI_ROGUE,      }, { IDI_HEAL,       IDI_HEAL,       }, { IDI_HEAL,      IDI_HEAL,       }, { IDI_NONE,    IDI_NONE,  }, { IDI_NONE,      IDI_NONE, }, }, },  100, },
+/* HeroClass::Sorcerer  */ { SpellID::StaffRecharge, SpellID::Fireball,          2, { { { IDI_SORCERER_DIABLO, IDI_SORCERER,   }, { IDI_MANA,       IDI_HEAL,       }, { IDI_MANA,      IDI_HEAL,       }, { IDI_NONE,    IDI_NONE,  }, { IDI_NONE,      IDI_NONE, }, }, },  100, },
+/* HeroClass::Monk      */ { SpellID::Search,        SpellID::Null,              0, { { { IDI_SHORTSTAFF,      IDI_SHORTSTAFF, }, { IDI_HEAL,       IDI_HEAL,       }, { IDI_HEAL,      IDI_HEAL,       }, { IDI_NONE,    IDI_NONE,  }, { IDI_NONE,      IDI_NONE, }, }, },  100, },
+/* HeroClass::Bard      */ { SpellID::Identify,      SpellID::Null,              0, { { { IDI_BARDSWORD,       IDI_BARDSWORD,  }, { IDI_BARDDAGGER, IDI_BARDDAGGER, }, { IDI_HEAL,      IDI_HEAL,       }, { IDI_HEAL,    IDI_HEAL,  }, { IDI_NONE,      IDI_NONE, }, }, },  100, },
+/* HeroClass::Barbarian */ { SpellID::Rage,          SpellID::Null,              0, { { { IDI_BARBARIAN,       IDI_BARBARIAN,  }, { IDI_WARRSHLD,   IDI_WARRSHLD,   }, { IDI_HEAL,      IDI_HEAL,       }, { IDI_HEAL,    IDI_HEAL,  }, { IDI_NONE,      IDI_NONE, }, }, },  100, }
+	// clang-format on
+} };
 
 } // namespace
 
@@ -303,6 +315,11 @@ const _sfx_id herosounds[enum_size<HeroClass>::value][enum_size<HeroSpeech>::val
 const PlayerCombatData &GetPlayerCombatDataForClass(HeroClass clazz)
 {
 	return PlayersCombatData[static_cast<size_t>(clazz)];
+}
+
+const PlayerStartingLoadoutData &GetPlayerStartingLoadoutForClass(HeroClass clazz)
+{
+	return PlayersStartingLoadoutData[static_cast<size_t>(clazz)];
 }
 
 /** Contains the data related to each player class. */
