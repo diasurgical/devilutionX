@@ -2973,6 +2973,17 @@ void SetPlrHandGoldCurs(Item &gold)
 	gold._iCurs = GetGoldCursor(gold._ivalue);
 }
 
+namespace {
+void CreateStartingItem(Player &player, _item_indexes itemData)
+{
+	Item item;
+	InitializeItem(item, itemData);
+	GenerateNewSeed(item);
+	item.updateRequiredStatsCacheForPlayer(player);
+	AutoEquip(player, item) || AutoPlaceItemInBelt(player, item, true) || AutoPlaceItemInInventory(player, item, true);
+}
+} // namespace
+
 void CreatePlrItems(Player &player)
 {
 	for (auto &item : player.InvBody) {
@@ -2995,88 +3006,28 @@ void CreatePlrItems(Player &player)
 
 	switch (player._pClass) {
 	case HeroClass::Warrior:
-		InitializeItem(player.InvBody[INVLOC_HAND_LEFT], IDI_WARRIOR);
-		GenerateNewSeed(player.InvBody[INVLOC_HAND_LEFT]);
-		player.InvBody[INVLOC_HAND_LEFT].updateRequiredStatsCacheForPlayer(player);
-
-		InitializeItem(player.InvBody[INVLOC_HAND_RIGHT], IDI_WARRSHLD);
-		GenerateNewSeed(player.InvBody[INVLOC_HAND_RIGHT]);
-		player.InvBody[INVLOC_HAND_RIGHT].updateRequiredStatsCacheForPlayer(player);
-
-		{
-			Item club;
-			InitializeItem(club, IDI_WARRCLUB);
-			GenerateNewSeed(club);
-			club.updateRequiredStatsCacheForPlayer(player);
-			AutoPlaceItemInInventory(player, club, true);
-		}
-
-		InitializeItem(player.SpdList[0], IDI_HEAL);
-		GenerateNewSeed(player.SpdList[0]);
-
-		InitializeItem(player.SpdList[1], IDI_HEAL);
-		GenerateNewSeed(player.SpdList[1]);
+		for (_item_indexes itemData : { IDI_WARRIOR, IDI_WARRSHLD, IDI_WARRCLUB, IDI_HEAL, IDI_HEAL })
+			CreateStartingItem(player, itemData);
 		break;
 	case HeroClass::Rogue:
-		InitializeItem(player.InvBody[INVLOC_HAND_LEFT], IDI_ROGUE);
-		GenerateNewSeed(player.InvBody[INVLOC_HAND_LEFT]);
-		player.InvBody[INVLOC_HAND_LEFT].updateRequiredStatsCacheForPlayer(player);
-
-		InitializeItem(player.SpdList[0], IDI_HEAL);
-		GenerateNewSeed(player.SpdList[0]);
-
-		InitializeItem(player.SpdList[1], IDI_HEAL);
-		GenerateNewSeed(player.SpdList[1]);
+		for (_item_indexes itemData : { IDI_ROGUE, IDI_HEAL, IDI_HEAL })
+			CreateStartingItem(player, itemData);
 		break;
 	case HeroClass::Sorcerer:
-		InitializeItem(player.InvBody[INVLOC_HAND_LEFT], gbIsHellfire ? IDI_SORCERER : IDI_SORCERER_DIABLO);
-		GenerateNewSeed(player.InvBody[INVLOC_HAND_LEFT]);
-		player.InvBody[INVLOC_HAND_LEFT].updateRequiredStatsCacheForPlayer(player);
-
-		InitializeItem(player.SpdList[0], gbIsHellfire ? IDI_HEAL : IDI_MANA);
-		GenerateNewSeed(player.SpdList[0]);
-
-		InitializeItem(player.SpdList[1], gbIsHellfire ? IDI_HEAL : IDI_MANA);
-		GenerateNewSeed(player.SpdList[1]);
+		for (_item_indexes itemData : { gbIsHellfire ? IDI_SORCERER : IDI_SORCERER_DIABLO, gbIsHellfire ? IDI_HEAL : IDI_MANA, gbIsHellfire ? IDI_HEAL : IDI_MANA })
+			CreateStartingItem(player, itemData);
 		break;
-
 	case HeroClass::Monk:
-		InitializeItem(player.InvBody[INVLOC_HAND_LEFT], IDI_SHORTSTAFF);
-		GenerateNewSeed(player.InvBody[INVLOC_HAND_LEFT]);
-		player.InvBody[INVLOC_HAND_LEFT].updateRequiredStatsCacheForPlayer(player);
-		InitializeItem(player.SpdList[0], IDI_HEAL);
-		GenerateNewSeed(player.SpdList[0]);
-
-		InitializeItem(player.SpdList[1], IDI_HEAL);
-		GenerateNewSeed(player.SpdList[1]);
+		for (_item_indexes itemData : { IDI_SHORTSTAFF, IDI_HEAL, IDI_HEAL })
+			CreateStartingItem(player, itemData);
 		break;
 	case HeroClass::Bard:
-		InitializeItem(player.InvBody[INVLOC_HAND_LEFT], IDI_BARDSWORD);
-		GenerateNewSeed(player.InvBody[INVLOC_HAND_LEFT]);
-		player.InvBody[INVLOC_HAND_LEFT].updateRequiredStatsCacheForPlayer(player);
-
-		InitializeItem(player.InvBody[INVLOC_HAND_RIGHT], IDI_BARDDAGGER);
-		GenerateNewSeed(player.InvBody[INVLOC_HAND_RIGHT]);
-		player.InvBody[INVLOC_HAND_RIGHT].updateRequiredStatsCacheForPlayer(player);
-		InitializeItem(player.SpdList[0], IDI_HEAL);
-		GenerateNewSeed(player.SpdList[0]);
-
-		InitializeItem(player.SpdList[1], IDI_HEAL);
-		GenerateNewSeed(player.SpdList[1]);
+		for (_item_indexes itemData : { IDI_BARDSWORD, IDI_BARDDAGGER, IDI_HEAL, IDI_HEAL })
+			CreateStartingItem(player, itemData);
 		break;
 	case HeroClass::Barbarian:
-		InitializeItem(player.InvBody[INVLOC_HAND_LEFT], IDI_BARBARIAN);
-		GenerateNewSeed(player.InvBody[INVLOC_HAND_LEFT]);
-		player.InvBody[INVLOC_HAND_LEFT].updateRequiredStatsCacheForPlayer(player);
-
-		InitializeItem(player.InvBody[INVLOC_HAND_RIGHT], IDI_WARRSHLD);
-		GenerateNewSeed(player.InvBody[INVLOC_HAND_RIGHT]);
-		player.InvBody[INVLOC_HAND_RIGHT].updateRequiredStatsCacheForPlayer(player);
-		InitializeItem(player.SpdList[0], IDI_HEAL);
-		GenerateNewSeed(player.SpdList[0]);
-
-		InitializeItem(player.SpdList[1], IDI_HEAL);
-		GenerateNewSeed(player.SpdList[1]);
+		for (_item_indexes itemData : { IDI_BARBARIAN, IDI_WARRSHLD, IDI_HEAL, IDI_HEAL })
+			CreateStartingItem(player, itemData);
 		break;
 	}
 

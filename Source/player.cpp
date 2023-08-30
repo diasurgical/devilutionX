@@ -2336,22 +2336,8 @@ void CreatePlayer(Player &player, HeroClass c)
 	// Initializing the hotkey bindings to no selection
 	std::fill(player._pSplHotKey, player._pSplHotKey + NumHotkeys, SpellID::Invalid);
 
-	PlayerWeaponGraphic animWeaponId = PlayerWeaponGraphic::Unarmed;
-	switch (c) {
-	case HeroClass::Warrior:
-	case HeroClass::Bard:
-	case HeroClass::Barbarian:
-		animWeaponId = PlayerWeaponGraphic::SwordShield;
-		break;
-	case HeroClass::Rogue:
-		animWeaponId = PlayerWeaponGraphic::Bow;
-		break;
-	case HeroClass::Sorcerer:
-	case HeroClass::Monk:
-		animWeaponId = PlayerWeaponGraphic::Staff;
-		break;
-	}
-	player._pgfxnum = static_cast<uint8_t>(animWeaponId);
+	// CreatePlrItems calls AutoEquip which will overwrite the player graphic if required
+	player._pgfxnum = static_cast<uint8_t>(PlayerWeaponGraphic::Unarmed);
 
 	for (bool &levelVisited : player._pLvlVisited) {
 		levelVisited = false;
