@@ -4179,8 +4179,49 @@ void UseItem(size_t pnum, item_misc_id mid, SpellID spellID, int spellFrom)
 		assert(IsValidSpellFrom(spellFrom));
 		player.inventorySpell = *prepareSpellID;
 		player.spellFrom = spellFrom;
-		if (&player == MyPlayer)
-			NewCursor(CURSOR_TELEPORT);
+		player.executedSpell.spellType = SpellType::Scroll;
+		uint8_t cursId = CURSOR_NONE;
+
+		if (&player == MyPlayer) {
+			switch (player.inventorySpell) {
+			case SpellID::Resurrect:
+				cursId = CURSOR_RESURRECT;
+				break;
+			case SpellID::HealOther:
+				cursId = CURSOR_HEALOTHER;
+				break;
+			case SpellID::Telekinesis:
+				cursId = CURSOR_TELEKINESIS;
+				break;
+			case SpellID::Identify:
+				cursId = CURSOR_IDENTIFY;
+				break;
+			case SpellID::ItemRepair:
+				cursId = CURSOR_REPAIR;
+				break;
+			case SpellID::StaffRecharge:
+				cursId = CURSOR_RECHARGE;
+				break;
+			case SpellID::TrapDisarm:
+				cursId = CURSOR_DISARM;
+				break;
+			default:
+				cursId = CURSOR_TELEPORT;
+				break;
+			}
+
+			if (IsAnyOf(player.inventorySpell, SpellID::Identify, SpellID::ItemRepair, SpellID::StaffRecharge)) {
+				if (sbookflag)
+					sbookflag = false;
+				if (!invflag) {
+					invflag = true;
+					if (ControlMode != ControlTypes::KeyboardAndMouse)
+						FocusOnInventory();
+				}
+			}
+
+			NewCursor(cursId);
+		}
 	}
 }
 
@@ -4979,6 +5020,7 @@ bool ApplyOilToItem(Item &item, Player &player)
 	default:
 		return false;
 	}
+
 	return true;
 }
 

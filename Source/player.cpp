@@ -3227,6 +3227,57 @@ void CheckPlrSpell(bool isShiftHeld, SpellID spellID, SpellType spellType)
 
 	const int spellLevel = myPlayer.GetSpellLevel(spellID);
 	const int spellFrom = 0;
+	myPlayer.executedSpell.spellType = spellType;
+	auto cursId = pcurs;
+
+	if (IsAnyOf(spellID, SpellID::Identify, SpellID::ItemRepair, SpellID::StaffRecharge)) {
+		if (sbookflag)
+			sbookflag = false;
+		if (!invflag) {
+			invflag = true;
+			if (ControlMode != ControlTypes::KeyboardAndMouse)
+				FocusOnInventory();
+		}
+	}
+
+	switch (spellID) {
+	case SpellID::Resurrect:
+		LastMouseButtonAction = MouseActionType::Spell;
+		cursId = CURSOR_RESURRECT;
+		break;
+	case SpellID::HealOther:
+		LastMouseButtonAction = MouseActionType::Spell;
+		cursId = CURSOR_HEALOTHER;
+		break;
+	case SpellID::Telekinesis:
+		LastMouseButtonAction = MouseActionType::Spell;
+		cursId = CURSOR_TELEKINESIS;
+		break;
+	case SpellID::Identify:
+		LastMouseButtonAction = MouseActionType::Spell;
+		cursId = CURSOR_IDENTIFY;
+		break;
+	case SpellID::ItemRepair:
+		LastMouseButtonAction = MouseActionType::Spell;
+		cursId = CURSOR_REPAIR;
+		break;
+	case SpellID::StaffRecharge:
+		LastMouseButtonAction = MouseActionType::Spell;
+		cursId = CURSOR_RECHARGE;
+		break;
+	case SpellID::TrapDisarm:
+		LastMouseButtonAction = MouseActionType::Spell;
+		cursId = CURSOR_DISARM;
+		break;
+	default:
+		break;
+	}
+
+	NewCursor(cursId);
+
+	if (cursId != CURSOR_HAND)
+		return;
+
 	if (IsWallSpell(spellID)) {
 		LastMouseButtonAction = MouseActionType::Spell;
 		Direction sd = GetDirection(myPlayer.position.tile, cursPosition);

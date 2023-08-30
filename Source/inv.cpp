@@ -2077,7 +2077,7 @@ bool UseInvItem(int cii)
 			CloseInventory();
 			return true;
 		}
-		if (!item->isScroll() && !item->isRune())
+		if (!item->isScroll() && !item->isRune() && !item->isOil())
 			player.RemoveSpdBarItem(c);
 		return true;
 	}
@@ -2088,7 +2088,7 @@ bool UseInvItem(int cii)
 		CloseInventory();
 		return true;
 	}
-	if (!item->isScroll() && !item->isRune())
+	if (!item->isScroll() && !item->isRune() && !item->isOil())
 		player.RemoveInvItem(c);
 
 	return true;
@@ -2130,15 +2130,18 @@ void CloseStash()
 
 void DoTelekinesis()
 {
-	if (ObjectUnderCursor != nullptr && !ObjectUnderCursor->IsDisabled())
+	if (ObjectUnderCursor != nullptr && !ObjectUnderCursor->IsDisabled()) {
 		NetSendCmdLoc(MyPlayerId, true, CMD_OPOBJT, cursPosition);
-	if (pcursitem != -1)
+	}
+	if (pcursitem != -1) {
 		NetSendCmdGItem(true, CMD_REQUESTAGITEM, MyPlayerId, pcursitem);
+	}
 	if (pcursmonst != -1) {
 		auto &monter = Monsters[pcursmonst];
 		if (!M_Talker(monter) && monter.talkMsg == TEXT_NONE)
 			NetSendCmdParam1(true, CMD_KNOCKBACK, pcursmonst);
 	}
+
 	NewCursor(CURSOR_HAND);
 }
 
