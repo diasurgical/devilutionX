@@ -2997,14 +2997,17 @@ void CreatePlrItems(Player &player)
 	case HeroClass::Warrior:
 		InitializeItem(player.InvBody[INVLOC_HAND_LEFT], IDI_WARRIOR);
 		GenerateNewSeed(player.InvBody[INVLOC_HAND_LEFT]);
+		player.InvBody[INVLOC_HAND_LEFT].updateRequiredStatsCacheForPlayer(player);
 
 		InitializeItem(player.InvBody[INVLOC_HAND_RIGHT], IDI_WARRSHLD);
 		GenerateNewSeed(player.InvBody[INVLOC_HAND_RIGHT]);
+		player.InvBody[INVLOC_HAND_RIGHT].updateRequiredStatsCacheForPlayer(player);
 
 		{
 			Item club;
 			InitializeItem(club, IDI_WARRCLUB);
 			GenerateNewSeed(club);
+			club.updateRequiredStatsCacheForPlayer(player);
 			AutoPlaceItemInInventory(player, club, true);
 		}
 
@@ -3017,6 +3020,7 @@ void CreatePlrItems(Player &player)
 	case HeroClass::Rogue:
 		InitializeItem(player.InvBody[INVLOC_HAND_LEFT], IDI_ROGUE);
 		GenerateNewSeed(player.InvBody[INVLOC_HAND_LEFT]);
+		player.InvBody[INVLOC_HAND_LEFT].updateRequiredStatsCacheForPlayer(player);
 
 		InitializeItem(player.SpdList[0], IDI_HEAL);
 		GenerateNewSeed(player.SpdList[0]);
@@ -3027,6 +3031,7 @@ void CreatePlrItems(Player &player)
 	case HeroClass::Sorcerer:
 		InitializeItem(player.InvBody[INVLOC_HAND_LEFT], gbIsHellfire ? IDI_SORCERER : IDI_SORCERER_DIABLO);
 		GenerateNewSeed(player.InvBody[INVLOC_HAND_LEFT]);
+		player.InvBody[INVLOC_HAND_LEFT].updateRequiredStatsCacheForPlayer(player);
 
 		InitializeItem(player.SpdList[0], gbIsHellfire ? IDI_HEAL : IDI_MANA);
 		GenerateNewSeed(player.SpdList[0]);
@@ -3038,6 +3043,7 @@ void CreatePlrItems(Player &player)
 	case HeroClass::Monk:
 		InitializeItem(player.InvBody[INVLOC_HAND_LEFT], IDI_SHORTSTAFF);
 		GenerateNewSeed(player.InvBody[INVLOC_HAND_LEFT]);
+		player.InvBody[INVLOC_HAND_LEFT].updateRequiredStatsCacheForPlayer(player);
 		InitializeItem(player.SpdList[0], IDI_HEAL);
 		GenerateNewSeed(player.SpdList[0]);
 
@@ -3047,9 +3053,11 @@ void CreatePlrItems(Player &player)
 	case HeroClass::Bard:
 		InitializeItem(player.InvBody[INVLOC_HAND_LEFT], IDI_BARDSWORD);
 		GenerateNewSeed(player.InvBody[INVLOC_HAND_LEFT]);
+		player.InvBody[INVLOC_HAND_LEFT].updateRequiredStatsCacheForPlayer(player);
 
 		InitializeItem(player.InvBody[INVLOC_HAND_RIGHT], IDI_BARDDAGGER);
 		GenerateNewSeed(player.InvBody[INVLOC_HAND_RIGHT]);
+		player.InvBody[INVLOC_HAND_RIGHT].updateRequiredStatsCacheForPlayer(player);
 		InitializeItem(player.SpdList[0], IDI_HEAL);
 		GenerateNewSeed(player.SpdList[0]);
 
@@ -3059,9 +3067,11 @@ void CreatePlrItems(Player &player)
 	case HeroClass::Barbarian:
 		InitializeItem(player.InvBody[INVLOC_HAND_LEFT], IDI_BARBARIAN);
 		GenerateNewSeed(player.InvBody[INVLOC_HAND_LEFT]);
+		player.InvBody[INVLOC_HAND_LEFT].updateRequiredStatsCacheForPlayer(player);
 
 		InitializeItem(player.InvBody[INVLOC_HAND_RIGHT], IDI_WARRSHLD);
 		GenerateNewSeed(player.InvBody[INVLOC_HAND_RIGHT]);
+		player.InvBody[INVLOC_HAND_RIGHT].updateRequiredStatsCacheForPlayer(player);
 		InitializeItem(player.SpdList[0], IDI_HEAL);
 		GenerateNewSeed(player.SpdList[0]);
 
