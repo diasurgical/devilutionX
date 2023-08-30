@@ -86,7 +86,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Gameplay
 
 - Durability overflowing when reloading items
-- Teleoporting onto an ocupied tile
+- Teleporting onto an occupied tile
 
 #### Graphics / Audio
 
