@@ -71,8 +71,8 @@ enum diablo_message : uint8_t {
 	EMSG_SHRINE_MURPHYS,
 };
 
-void InitDiabloMsg(diablo_message e);
-void InitDiabloMsg(string_view msg);
+void InitDiabloMsg(diablo_message e, uint32_t duration = 3500);
+void InitDiabloMsg(string_view msg, uint32_t duration = 3500);
 bool IsDiabloMsgAvailable();
 void CancelCurrentDiabloMsg();
 void ClrDiabloMsg();
