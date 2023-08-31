@@ -15,6 +15,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update the pvp arenas
 - Rename "Loopback" to "Offline"
 
+#### Stability / Performance / System
+
+- Move hp/mana display and item graphics to gameplay options
+- Validate properties when reloading items
+- Demomode: Improve replay stability
+- Update [Discord link](https://discord.gg/devilutionx)
+- Display save game confirmation
+- Reduce ram usage
+
 #### Translations
 
 - Update Simplified Chinese translation
@@ -28,19 +37,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update Swedish translation
 - Update Ukrainian translation
 
-#### Platforms
-
-- Android TV: Update banner to include app name
-
-#### Stability / Performance / System
-
-- Move hp/mana display and item graphics to gameplay options
-- Validate properties when reloading items
-- Demomode: Improve replay stability
-- Update [Discord link](https://discord.gg/devilutionx)
-- Display save game confirmation
-- Reduce ram usage
-
 ### Bugfixes
 
 #### Gameplay
@@ -48,18 +44,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Being able to enter Lazarus' chamber before opening the portal
 - Book requirements not updating
 - Some monsters not walking
-- Missiles not traveleing the full distance at some angles
-- Diablo: Incorrect level 4 layout when Magic Banner quest is active
+- Missiles not traveling the full distance at some angles
+- Diablo: Incorrect level 4 layout when the Magic Banner quest is active
 - Halls of the Blind not being completed by picking up the amulet
 - Shareware: Bucklers not dropping
 - Player animation stuttering
 
 #### Multiplayer
-- Potions droped by Divine shrine not being synced
+
+- Potions dropped by Divine shrines not being synced
 
 #### Platforms
 
-- Linux: Add sdl-image dependency for deb package
+- Linux: Add sdl-image dependency for the deb package
 - Linux: Include discord dependency
 - Xbox One: Missing assets
 
@@ -69,10 +66,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Incorrect outlines at the right edge of the screen
 - NPC speech continuing after starting a new game
 - Correct various font rendering issues
-- Hide hit indicator when only one player is in game
+- Hide the hit indicator when only one player is in the game
 - Issues with flashing lights
 - Floating number still appearing after death
-- Missaligned automap
+- Misaligned automap
 
 #### Controls
 
@@ -82,7 +79,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Stability / Performance / System
 
-- Unable to playback 1.5.0 demo files
+- Unable to playback new demo files
 - Various crashes
 
 ### Bugfixes for original Diablo bugs
@@ -91,7 +88,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Durability overflowing when reloading items
 - Teleporting onto an occupied tile
-- Right click during dialogs casts spells
+- Right-click during dialogs casts spells
 
 #### Graphics / Audio
 
