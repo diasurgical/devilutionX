@@ -654,10 +654,10 @@ Point InvGetEquipSlotCoordFromInvSlot(const inv_xy_slot slot)
 Point GetSlotCoord(int slot)
 {
 	if (slot >= SLOTXY_BELT_FIRST && slot <= SLOTXY_BELT_LAST) {
-		return GetPanelPosition(UiPanels::Main, InvRect[slot].position);
+		return GetPanelPosition(UiPanels::Main, InvRect[slot].Center());
 	}
 
-	return GetPanelPosition(UiPanels::Inventory, InvRect[slot].position);
+	return GetPanelPosition(UiPanels::Inventory, InvRect[slot].Center());
 }
 
 /**
@@ -733,24 +733,11 @@ void ResetInvCursorPosition()
 		} else {
 			mousePos = GetSlotCoord(Slot);
 		}
-
-		if (!MyPlayer->HoldItem.isEmpty()) {
-			mousePos += Displacement { -INV_SLOT_HALF_SIZE_PX, -INV_SLOT_HALF_SIZE_PX };
-		}
 	} else if (Slot >= SLOTXY_BELT_FIRST && Slot <= SLOTXY_BELT_LAST) {
 		mousePos = GetSlotCoord(Slot);
-		if (!MyPlayer->HoldItem.isEmpty())
-			mousePos += Displacement { -INV_SLOT_HALF_SIZE_PX, -INV_SLOT_HALF_SIZE_PX };
 	} else {
 		mousePos = InvGetEquipSlotCoordFromInvSlot((inv_xy_slot)Slot);
-		if (!MyPlayer->HoldItem.isEmpty()) {
-			Size itemSize = GetInventorySize(MyPlayer->HoldItem);
-			mousePos += Displacement { -INV_SLOT_HALF_SIZE_PX, -INV_SLOT_HALF_SIZE_PX * itemSize.height };
-		}
 	}
-
-	mousePos.x += (InventorySlotSizeInPixels.width / 2);
-	mousePos.y -= (InventorySlotSizeInPixels.height / 2);
 
 	SetCursorPos(mousePos);
 }
@@ -759,7 +746,6 @@ int FindClosestInventorySlot(Point mousePos)
 {
 	int shortestDistance = std::numeric_limits<int>::max();
 	int bestSlot = 0;
-	mousePos += Displacement { -INV_SLOT_HALF_SIZE_PX, INV_SLOT_HALF_SIZE_PX };
 
 	for (int i = 0; i < NUM_XY_SLOTS; i++) {
 		int distance = mousePos.ManhattanDistance(GetSlotCoord(i));
@@ -776,7 +762,6 @@ Point FindClosestStashSlot(Point mousePos)
 {
 	int shortestDistance = std::numeric_limits<int>::max();
 	Point bestSlot = {};
-	mousePos += Displacement { -INV_SLOT_HALF_SIZE_PX, -INV_SLOT_HALF_SIZE_PX };
 
 	for (Point point : PointsInRectangle(Rectangle { { 0, 0 }, Size { 10, 10 } })) {
 		int distance = mousePos.ManhattanDistance(GetStashSlotCoord(point));
@@ -819,7 +804,7 @@ void InventoryMove(AxisDirection dir)
 
 	const Item &heldItem = MyPlayer->HoldItem;
 	const bool isHoldingItem = !heldItem.isEmpty();
-	Size itemSize = GetInventorySize(heldItem);
+	Size itemSize = isHoldingItem ? GetInventorySize(heldItem) : Size { 1 };
 
 	// when item is on cursor (pcurs > 1), this is the real cursor XY
 	if (dir.x == AxisDirectionX_LEFT) {
@@ -1006,28 +991,27 @@ void InventoryMove(AxisDirection dir)
 	} else {
 		mousePos = GetSlotCoord(Slot);
 	}
-	// move cursor to the center of the slot if not holding anything or top left is holding an object
-	if (isHoldingItem) {
-		if (Slot < SLOTXY_INV_FIRST) {
-			// The coordinates we get for body slots are based on the centre of the region relative to the hand cursor
-			// Need to adjust the position for items larger than 1x1 so they're aligned as expected
-			mousePos.x -= itemSize.width * INV_SLOT_HALF_SIZE_PX;
-			mousePos.y -= itemSize.height * INV_SLOT_HALF_SIZE_PX;
-		}
-	} else {
-		// get item under new slot if navigating on the inventory
-		if (Slot >= SLOTXY_INV_FIRST && Slot <= SLOTXY_BELT_LAST) {
+	// If we're in the inventory we may need to move the cursor to an area that doesn't line up with the center of a cell
+	if (Slot >= SLOTXY_INV_FIRST && Slot <= SLOTXY_INV_LAST) {
+		if (!isHoldingItem) {
+			// If we're not holding an item
 			int8_t itemInvId = GetItemIdOnSlot(Slot);
-			int itemSlot = FindFirstSlotOnItem(itemInvId);
-			if (itemSlot < 0)
-				itemSlot = Slot;
+			if (itemInvId != 0) {
+				// but the cursor moved over an item
+				int itemSlot = FindFirstSlotOnItem(itemInvId);
+				if (itemSlot < 0)
+					itemSlot = Slot;
 
-			// offset the cursor so it shows over the center of the item
-			mousePos = GetSlotCoord(itemSlot);
-			itemSize = GetItemSizeOnSlot(itemSlot);
-			mousePos.x += (itemSize.width * InventorySlotSizeInPixels.width) / 2;
-			mousePos.y += (itemSize.height * InventorySlotSizeInPixels.height) / 2;
+				// then we need to offset the cursor so it shows over the center of the item
+				mousePos = GetSlotCoord(itemSlot);
+				itemSize = GetItemSizeOnSlot(itemSlot);
+			}
 		}
+		// At this point itemSize is either the size of the cell/item the hand cursor is over, or the size of the item we're currently holding.
+		// mousePos is the center of the top left cell of the item under the hand cursor, or the top left cell of the region that could fit the item we're holding.
+		// either way we need to offset the mouse position to account for items (we're holding or hovering over) with a dimension larger than a single cell.
+		mousePos.x += ((itemSize.width - 1) * InventorySlotSizeInPixels.width) / 2;
+		mousePos.y += ((itemSize.height - 1) * InventorySlotSizeInPixels.height) / 2;
 	}
 
 	if (mousePos == MousePosition) {
@@ -1826,36 +1810,39 @@ void PerformPrimaryAction()
 		} else if (GetRightPanel().contains(MousePosition) || GetMainPanel().contains(MousePosition)) {
 			int inventorySlot = (Slot >= 0) ? Slot : FindClosestInventorySlot(MousePosition);
 
-			const Size cursorSizeInCells = MyPlayer->HoldItem.isEmpty() ? Size { 1, 1 } : GetInventorySize(MyPlayer->HoldItem);
+			int jumpSlot = inventorySlot; // If the cursor is over an inventory slot we may need to adjust it due to pasting items of different sizes over each other
+			if (inventorySlot >= SLOTXY_INV_FIRST && inventorySlot <= SLOTXY_INV_LAST) {
+				const Size cursorSizeInCells = MyPlayer->HoldItem.isEmpty() ? Size { 1, 1 } : GetInventorySize(MyPlayer->HoldItem);
 
-			// Find any item occupying a slot that is currently under the cursor
-			int8_t itemUnderCursor = [](int inventorySlot, Size cursorSizeInCells) {
-				if (inventorySlot < SLOTXY_INV_FIRST || inventorySlot > SLOTXY_INV_LAST)
-					return 0;
-				for (int x = 0; x < cursorSizeInCells.width; x++) {
-					for (int y = 0; y < cursorSizeInCells.height; y++) {
-						int slotUnderCursor = inventorySlot + x + y * INV_ROW_SLOT_SIZE;
-						if (slotUnderCursor > SLOTXY_INV_LAST)
-							continue;
-						int itemId = GetItemIdOnSlot(slotUnderCursor);
-						if (itemId != 0)
-							return itemId;
+				// Find any item occupying a slot that is currently under the cursor
+				int8_t itemUnderCursor = [](int inventorySlot, Size cursorSizeInCells) {
+					if (inventorySlot < SLOTXY_INV_FIRST || inventorySlot > SLOTXY_INV_LAST)
+						return 0;
+					for (int x = 0; x < cursorSizeInCells.width; x++) {
+						for (int y = 0; y < cursorSizeInCells.height; y++) {
+							int slotUnderCursor = inventorySlot + x + y * INV_ROW_SLOT_SIZE;
+							if (slotUnderCursor > SLOTXY_INV_LAST)
+								continue;
+							int itemId = GetItemIdOnSlot(slotUnderCursor);
+							if (itemId != 0)
+								return itemId;
+						}
 					}
-				}
-				return 0;
-			}(inventorySlot, cursorSizeInCells);
+					return 0;
+				}(inventorySlot, cursorSizeInCells);
 
-			// The cursor will need to be shifted to
-			// this slot if the item is swapped or lifted
-			int jumpSlot = FindFirstSlotOnItem(itemUnderCursor);
+				// Capture the first slot of the first item (if any) under the cursor
+				if (itemUnderCursor > 0)
+					jumpSlot = FindFirstSlotOnItem(itemUnderCursor);
+			}
 			CheckInvItem();
 
-			// If we don't find the item in the same position as before,
-			// it suggests that the item was swapped or lifted
-			int newSlot = FindFirstSlotOnItem(itemUnderCursor);
-			if (jumpSlot >= 0 && jumpSlot != newSlot) {
+			if (inventorySlot >= SLOTXY_INV_FIRST && inventorySlot <= SLOTXY_INV_LAST) {
 				Point mousePos = GetSlotCoord(jumpSlot);
 				Slot = jumpSlot;
+				const Size newCursorSizeInCells = MyPlayer->HoldItem.isEmpty() ? GetItemSizeOnSlot(jumpSlot) : GetInventorySize(MyPlayer->HoldItem);
+				mousePos.x += ((newCursorSizeInCells.width - 1) * InventorySlotSizeInPixels.width) / 2;
+				mousePos.y += ((newCursorSizeInCells.height - 1) * InventorySlotSizeInPixels.height) / 2;
 				SetCursorPos(mousePos);
 			}
 		} else if (IsStashOpen && GetLeftPanel().contains(MousePosition)) {
