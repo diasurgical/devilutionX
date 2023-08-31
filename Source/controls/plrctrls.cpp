@@ -933,7 +933,7 @@ void InventoryMove(AxisDirection dir)
 			if (Slot == SLOTXY_HEAD || Slot == SLOTXY_CHEST) {
 				Slot = SLOTXY_INV_ROW1_FIRST + 4;
 			} else if (Slot == SLOTXY_RING_LEFT || Slot == SLOTXY_HAND_LEFT) {
-				Slot = SLOTXY_INV_ROW1_FIRST + 1;
+				Slot = SLOTXY_INV_ROW1_FIRST + (itemSize.width > 1 ? 0 : 1);
 			} else if (Slot == SLOTXY_RING_RIGHT || Slot == SLOTXY_HAND_RIGHT || Slot == SLOTXY_AMULET) {
 				Slot = SLOTXY_INV_ROW1_LAST - 1;
 			} else if (Slot <= (SLOTXY_INV_ROW4_LAST - (itemSize.height * INV_ROW_SLOT_SIZE))) {
