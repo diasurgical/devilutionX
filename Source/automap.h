@@ -30,6 +30,8 @@ enum MapExplorationType : uint8_t {
 
 /** Specifies whether the automap is enabled. */
 extern DVL_API_FOR_TEST bool AutomapActive;
+/** Specifies whether the automap is in minimap mode. */
+extern DVL_API_FOR_TEST bool AutomapMini;
 /** Specifies whether the automap is transparent. */
 extern DVL_API_FOR_TEST bool AutomapTransparent;
 /** Tracks the explored areas of the map. */
@@ -37,6 +39,7 @@ extern uint8_t AutomapView[DMAXX][DMAXY];
 /** Specifies the scale of the automap. */
 extern DVL_API_FOR_TEST int AutoMapScale;
 extern DVL_API_FOR_TEST Displacement AutomapOffset;
+extern Rectangle AutomapMiniRect;
 
 inline int AmLine(int x)
 {
@@ -59,6 +62,11 @@ void InitAutomap();
  * @brief Displays the automap.
  */
 void StartAutomap();
+
+/**
+ * @brief Displays the minimap.
+ */
+void StartMinimap();
 
 /**
  * @brief Scrolls the automap upwards.

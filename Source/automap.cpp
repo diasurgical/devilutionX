@@ -118,7 +118,7 @@ struct AutomapTile {
  */
 std::array<AutomapTile, 256> AutomapTypeTiles;
 
-void DrawDiamond(const Surface &out, Point center, uint8_t color)
+void DrawMapDiamond(const Surface &out, Point center, uint8_t color)
 {
 	const Point left { center.x - AmLine(16), center.y };
 	const Point top { center.x, center.y - AmLine(8) };
@@ -130,7 +130,7 @@ void DrawDiamond(const Surface &out, Point center, uint8_t color)
 	DrawMapLineNE(out, bottom, AmLine(8), color);
 }
 
-void DrawCross(const Surface &out, Point center, uint8_t color)
+void DrawMapCross(const Surface &out, Point center, uint8_t color)
 {
 	DrawMapLineNE(out, { center.x, center.y - AmLine(8) }, AmLine(8), color);
 	DrawMapLineNE(out, { center.x - AmLine(32), center.y + AmLine(8) }, AmLine(8), color);
@@ -151,11 +151,11 @@ void DrawMapVerticalDoor(const Surface &out, Point center, uint8_t colorBright, 
 	if (leveltype != DTYPE_CATACOMBS) {
 		DrawMapLineNE(out, { center.x + AmLine(8), center.y - AmLine(4) }, AmLine(4), colorDim);
 		DrawMapLineNE(out, { center.x - AmLine(16), center.y + AmLine(8) }, AmLine(4), colorDim);
-		DrawDiamond(out, center, colorBright);
+		DrawMapDiamond(out, center, colorBright);
 	} else {
 		DrawMapLineNE(out, { center.x - AmLine(8), center.y + AmLine(4) }, AmLine(8), colorDim);
 		DrawMapLineNE(out, { center.x - AmLine(16), center.y + AmLine(8) }, AmLine(4), colorDim);
-		DrawDiamond(out, { center.x + AmLine(16), center.y - AmLine(8) }, colorBright);
+		DrawMapDiamond(out, { center.x + AmLine(16), center.y - AmLine(8) }, colorBright);
 	}
 }
 
@@ -164,216 +164,216 @@ void DrawMapHorizontalDoor(const Surface &out, Point center, uint8_t colorBright
 	if (leveltype != DTYPE_CATACOMBS) {
 		DrawMapLineSE(out, { center.x - AmLine(16), center.y - AmLine(8) }, AmLine(4), colorDim);
 		DrawMapLineSE(out, { center.x + AmLine(8), center.y + AmLine(4) }, AmLine(4), colorDim);
-		DrawDiamond(out, center, colorBright);
+		DrawMapDiamond(out, center, colorBright);
 	} else {
 		DrawMapLineSE(out, { center.x - AmLine(8), center.y - AmLine(4) }, AmLine(8), colorDim);
 		DrawMapLineSE(out, { center.x + AmLine(8), center.y + AmLine(4) }, AmLine(4), colorDim);
-		DrawDiamond(out, { center.x - AmLine(16), center.y - AmLine(8) }, colorBright);
+		DrawMapDiamond(out, { center.x - AmLine(16), center.y - AmLine(8) }, colorBright);
 	}
 }
 
 void DrawDirt(const Surface &out, Point center, uint8_t color)
 {
-	out.SetPixel({ center.x + AmLine(8) - AmLine(32), center.y + AmLine(4) }, color);
+	SetMapPixel(out, { center.x + AmLine(8) - AmLine(32), center.y + AmLine(4) }, color);
 
-	out.SetPixel({ center.x - AmLine(16), center.y }, color);
-	out.SetPixel({ center.x - AmLine(16), center.y + AmLine(8) }, color);
+	SetMapPixel(out, { center.x - AmLine(16), center.y }, color);
+	SetMapPixel(out, { center.x - AmLine(16), center.y + AmLine(8) }, color);
 
-	out.SetPixel({ center.x - AmLine(8), center.y - AmLine(4) }, color);
-	out.SetPixel({ center.x - AmLine(8), center.y + AmLine(4) }, color);
-	out.SetPixel({ center.x - AmLine(8), center.y + AmLine(16) - AmLine(4) }, color);
+	SetMapPixel(out, { center.x - AmLine(8), center.y - AmLine(4) }, color);
+	SetMapPixel(out, { center.x - AmLine(8), center.y + AmLine(4) }, color);
+	SetMapPixel(out, { center.x - AmLine(8), center.y + AmLine(16) - AmLine(4) }, color);
 
-	out.SetPixel({ center.x, center.y - AmLine(8) }, color);
-	out.SetPixel(center, color);
-	out.SetPixel({ center.x, center.y + AmLine(8) }, color);
-	out.SetPixel({ center.x, center.y + AmLine(16) }, color);
+	SetMapPixel(out, { center.x, center.y - AmLine(8) }, color);
+	SetMapPixel(out, center, color);
+	SetMapPixel(out, { center.x, center.y + AmLine(8) }, color);
+	SetMapPixel(out, { center.x, center.y + AmLine(16) }, color);
 
-	out.SetPixel({ center.x + AmLine(8), center.y - AmLine(4) }, color);
-	out.SetPixel({ center.x + AmLine(8), center.y + AmLine(4) }, color);
-	out.SetPixel({ center.x + AmLine(8), center.y + AmLine(16) - AmLine(4) }, color);
+	SetMapPixel(out, { center.x + AmLine(8), center.y - AmLine(4) }, color);
+	SetMapPixel(out, { center.x + AmLine(8), center.y + AmLine(4) }, color);
+	SetMapPixel(out, { center.x + AmLine(8), center.y + AmLine(16) - AmLine(4) }, color);
 
-	out.SetPixel({ center.x + AmLine(16), center.y }, color);
-	out.SetPixel({ center.x + AmLine(16), center.y + AmLine(8) }, color);
+	SetMapPixel(out, { center.x + AmLine(16), center.y }, color);
+	SetMapPixel(out, { center.x + AmLine(16), center.y + AmLine(8) }, color);
 
-	out.SetPixel({ center.x - AmLine(8) + AmLine(32), center.y + AmLine(4) }, color);
+	SetMapPixel(out, { center.x - AmLine(8) + AmLine(32), center.y + AmLine(4) }, color);
 }
 
 void DrawBridge(const Surface &out, Point center, uint8_t color)
 {
-	out.SetPixel(center, color);
+	SetMapPixel(out, center, color);
 
-	out.SetPixel({ center.x + AmLine(8), center.y - AmLine(4) }, color);
-	out.SetPixel({ center.x + AmLine(8), center.y + AmLine(4) }, color);
+	SetMapPixel(out, { center.x + AmLine(8), center.y - AmLine(4) }, color);
+	SetMapPixel(out, { center.x + AmLine(8), center.y + AmLine(4) }, color);
 
-	out.SetPixel({ center.x + AmLine(16), center.y }, color);
-	out.SetPixel({ center.x + AmLine(16), center.y + AmLine(8) }, color);
+	SetMapPixel(out, { center.x + AmLine(16), center.y }, color);
+	SetMapPixel(out, { center.x + AmLine(16), center.y + AmLine(8) }, color);
 
-	out.SetPixel({ center.x - AmLine(8) + AmLine(32), center.y + AmLine(4) }, color);
+	SetMapPixel(out, { center.x - AmLine(8) + AmLine(32), center.y + AmLine(4) }, color);
 }
 
 void DrawRiverRightIn(const Surface &out, Point center, uint8_t color)
 {
-	out.SetPixel({ center.x - AmLine(16), center.y + AmLine(8) }, color);
+	SetMapPixel(out, { center.x - AmLine(16), center.y + AmLine(8) }, color);
 
-	out.SetPixel({ center.x - AmLine(8), center.y + AmLine(4) }, color);
-	out.SetPixel({ center.x - AmLine(8), center.y + AmLine(16) - AmLine(4) }, color);
+	SetMapPixel(out, { center.x - AmLine(8), center.y + AmLine(4) }, color);
+	SetMapPixel(out, { center.x - AmLine(8), center.y + AmLine(16) - AmLine(4) }, color);
 
-	out.SetPixel(center, color);
-	out.SetPixel({ center.x, center.y + AmLine(8) }, color);
-	out.SetPixel({ center.x, center.y + AmLine(16) }, color);
+	SetMapPixel(out, center, color);
+	SetMapPixel(out, { center.x, center.y + AmLine(8) }, color);
+	SetMapPixel(out, { center.x, center.y + AmLine(16) }, color);
 
-	out.SetPixel({ center.x + AmLine(8), center.y + AmLine(4) }, color);
-	out.SetPixel({ center.x + AmLine(8), center.y + AmLine(16) - AmLine(4) }, color);
+	SetMapPixel(out, { center.x + AmLine(8), center.y + AmLine(4) }, color);
+	SetMapPixel(out, { center.x + AmLine(8), center.y + AmLine(16) - AmLine(4) }, color);
 
-	out.SetPixel({ center.x + AmLine(16), center.y }, color);
-	out.SetPixel({ center.x + AmLine(16), center.y + AmLine(8) }, color);
+	SetMapPixel(out, { center.x + AmLine(16), center.y }, color);
+	SetMapPixel(out, { center.x + AmLine(16), center.y + AmLine(8) }, color);
 
-	out.SetPixel({ center.x - AmLine(8) + AmLine(32), center.y + AmLine(4) }, color);
+	SetMapPixel(out, { center.x - AmLine(8) + AmLine(32), center.y + AmLine(4) }, color);
 }
 
 void DrawRiverCornerSouth(const Surface &out, Point center, uint8_t color)
 {
-	out.SetPixel({ center.x, center.y + AmLine(16) }, color);
+	SetMapPixel(out, { center.x, center.y + AmLine(16) }, color);
 }
 
 void DrawRiverCornerNorth(const Surface &out, Point center, uint8_t color)
 {
-	out.SetPixel({ center.x - AmLine(8), center.y - AmLine(4) }, color);
-	out.SetPixel({ center.x, center.y - AmLine(8) }, color);
-	out.SetPixel({ center.x + AmLine(8), center.y - AmLine(4) }, color);
+	SetMapPixel(out, { center.x - AmLine(8), center.y - AmLine(4) }, color);
+	SetMapPixel(out, { center.x, center.y - AmLine(8) }, color);
+	SetMapPixel(out, { center.x + AmLine(8), center.y - AmLine(4) }, color);
 }
 
 void DrawRiverLeftOut(const Surface &out, Point center, uint8_t color)
 {
-	out.SetPixel({ center.x + AmLine(8) - AmLine(32), center.y + AmLine(4) }, color);
+	SetMapPixel(out, { center.x + AmLine(8) - AmLine(32), center.y + AmLine(4) }, color);
 
-	out.SetPixel({ center.x - AmLine(16), center.y }, color);
-	out.SetPixel({ center.x - AmLine(16), center.y + AmLine(8) }, color);
+	SetMapPixel(out, { center.x - AmLine(16), center.y }, color);
+	SetMapPixel(out, { center.x - AmLine(16), center.y + AmLine(8) }, color);
 
-	out.SetPixel({ center.x - AmLine(8), center.y + AmLine(4) }, color);
-	out.SetPixel({ center.x - AmLine(8), center.y + AmLine(16) - AmLine(4) }, color);
+	SetMapPixel(out, { center.x - AmLine(8), center.y + AmLine(4) }, color);
+	SetMapPixel(out, { center.x - AmLine(8), center.y + AmLine(16) - AmLine(4) }, color);
 
-	out.SetPixel(center, color);
-	out.SetPixel({ center.x, center.y + AmLine(8) }, color);
+	SetMapPixel(out, center, color);
+	SetMapPixel(out, { center.x, center.y + AmLine(8) }, color);
 
-	out.SetPixel({ center.x + AmLine(8), center.y - AmLine(4) }, color);
-	out.SetPixel({ center.x + AmLine(8), center.y + AmLine(4) }, color);
-	out.SetPixel({ center.x + AmLine(8), center.y + AmLine(16) - AmLine(4) }, color);
+	SetMapPixel(out, { center.x + AmLine(8), center.y - AmLine(4) }, color);
+	SetMapPixel(out, { center.x + AmLine(8), center.y + AmLine(4) }, color);
+	SetMapPixel(out, { center.x + AmLine(8), center.y + AmLine(16) - AmLine(4) }, color);
 
-	out.SetPixel({ center.x + AmLine(16), center.y }, color);
-	out.SetPixel({ center.x + AmLine(16), center.y + AmLine(8) }, color);
+	SetMapPixel(out, { center.x + AmLine(16), center.y }, color);
+	SetMapPixel(out, { center.x + AmLine(16), center.y + AmLine(8) }, color);
 
-	out.SetPixel({ center.x - AmLine(8) + AmLine(32), center.y + AmLine(4) }, color);
+	SetMapPixel(out, { center.x - AmLine(8) + AmLine(32), center.y + AmLine(4) }, color);
 }
 
 void DrawRiverLeftIn(const Surface &out, Point center, uint8_t color)
 {
-	out.SetPixel({ center.x - AmLine(16), center.y }, color);
-	out.SetPixel({ center.x - AmLine(16), center.y + AmLine(8) }, color);
+	SetMapPixel(out, { center.x - AmLine(16), center.y }, color);
+	SetMapPixel(out, { center.x - AmLine(16), center.y + AmLine(8) }, color);
 
-	out.SetPixel({ center.x - AmLine(8), center.y - AmLine(4) }, color);
-	out.SetPixel({ center.x - AmLine(8), center.y + AmLine(4) }, color);
-	out.SetPixel({ center.x - AmLine(8), center.y + AmLine(16) - AmLine(4) }, color);
+	SetMapPixel(out, { center.x - AmLine(8), center.y - AmLine(4) }, color);
+	SetMapPixel(out, { center.x - AmLine(8), center.y + AmLine(4) }, color);
+	SetMapPixel(out, { center.x - AmLine(8), center.y + AmLine(16) - AmLine(4) }, color);
 
-	out.SetPixel({ center.x, center.y - AmLine(8) }, color);
-	out.SetPixel(center, color);
-	out.SetPixel({ center.x, center.y + AmLine(8) }, color);
-	out.SetPixel({ center.x, center.y + AmLine(16) }, color);
+	SetMapPixel(out, { center.x, center.y - AmLine(8) }, color);
+	SetMapPixel(out, center, color);
+	SetMapPixel(out, { center.x, center.y + AmLine(8) }, color);
+	SetMapPixel(out, { center.x, center.y + AmLine(16) }, color);
 
-	out.SetPixel({ center.x + AmLine(8), center.y - AmLine(4) }, color);
-	out.SetPixel({ center.x + AmLine(8), center.y + AmLine(4) }, color);
-	out.SetPixel({ center.x + AmLine(8), center.y + AmLine(16) - AmLine(4) }, color);
+	SetMapPixel(out, { center.x + AmLine(8), center.y - AmLine(4) }, color);
+	SetMapPixel(out, { center.x + AmLine(8), center.y + AmLine(4) }, color);
+	SetMapPixel(out, { center.x + AmLine(8), center.y + AmLine(16) - AmLine(4) }, color);
 }
 
 void DrawRiverCornerWest(const Surface &out, Point center, uint8_t color)
 {
-	out.SetPixel({ center.x + AmLine(8) - AmLine(32), center.y + AmLine(4) }, color);
-	out.SetPixel({ center.x - AmLine(16), center.y }, color);
+	SetMapPixel(out, { center.x + AmLine(8) - AmLine(32), center.y + AmLine(4) }, color);
+	SetMapPixel(out, { center.x - AmLine(16), center.y }, color);
 }
 
 void DrawRiverCornerEast(const Surface &out, Point center, uint8_t color)
 {
-	out.SetPixel({ center.x + AmLine(16), center.y }, color);
-	out.SetPixel({ center.x + AmLine(16), center.y + AmLine(8) }, color);
-	out.SetPixel({ center.x - AmLine(8) + AmLine(32), center.y + AmLine(4) }, color);
+	SetMapPixel(out, { center.x + AmLine(16), center.y }, color);
+	SetMapPixel(out, { center.x + AmLine(16), center.y + AmLine(8) }, color);
+	SetMapPixel(out, { center.x - AmLine(8) + AmLine(32), center.y + AmLine(4) }, color);
 }
 
 void DrawRiverRightOut(const Surface &out, Point center, uint8_t color)
 {
-	out.SetPixel({ center.x - AmLine(8), center.y + AmLine(4) }, color);
-	out.SetPixel({ center.x - AmLine(8), center.y + AmLine(16) - AmLine(4) }, color);
+	SetMapPixel(out, { center.x - AmLine(8), center.y + AmLine(4) }, color);
+	SetMapPixel(out, { center.x - AmLine(8), center.y + AmLine(16) - AmLine(4) }, color);
 
-	out.SetPixel(center, color);
-	out.SetPixel({ center.x, center.y + AmLine(8) }, color);
-	out.SetPixel({ center.x, center.y + AmLine(16) }, color);
+	SetMapPixel(out, center, color);
+	SetMapPixel(out, { center.x, center.y + AmLine(8) }, color);
+	SetMapPixel(out, { center.x, center.y + AmLine(16) }, color);
 
-	out.SetPixel({ center.x + AmLine(8), center.y - AmLine(4) }, color);
-	out.SetPixel({ center.x + AmLine(8), center.y + AmLine(4) }, color);
-	out.SetPixel({ center.x + AmLine(8), center.y + AmLine(16) - AmLine(4) }, color);
+	SetMapPixel(out, { center.x + AmLine(8), center.y - AmLine(4) }, color);
+	SetMapPixel(out, { center.x + AmLine(8), center.y + AmLine(4) }, color);
+	SetMapPixel(out, { center.x + AmLine(8), center.y + AmLine(16) - AmLine(4) }, color);
 
-	out.SetPixel({ center.x + AmLine(16), center.y }, color);
-	out.SetPixel({ center.x + AmLine(16), center.y + AmLine(8) }, color);
+	SetMapPixel(out, { center.x + AmLine(16), center.y }, color);
+	SetMapPixel(out, { center.x + AmLine(16), center.y + AmLine(8) }, color);
 
-	out.SetPixel({ center.x - AmLine(8) + AmLine(32), center.y + AmLine(4) }, color);
+	SetMapPixel(out, { center.x - AmLine(8) + AmLine(32), center.y + AmLine(4) }, color);
 }
 
 void DrawRiver(const Surface &out, Point center, uint8_t color)
 {
-	out.SetPixel({ center.x - AmLine(16), center.y + AmLine(8) }, color);
+	SetMapPixel(out, { center.x - AmLine(16), center.y + AmLine(8) }, color);
 
-	out.SetPixel({ center.x - AmLine(8), center.y + AmLine(4) }, color);
-	out.SetPixel({ center.x - AmLine(8), center.y + AmLine(16) - AmLine(4) }, color);
+	SetMapPixel(out, { center.x - AmLine(8), center.y + AmLine(4) }, color);
+	SetMapPixel(out, { center.x - AmLine(8), center.y + AmLine(16) - AmLine(4) }, color);
 
-	out.SetPixel(center, color);
-	out.SetPixel({ center.x, center.y + AmLine(8) }, color);
-	out.SetPixel({ center.x, center.y + AmLine(16) }, color);
+	SetMapPixel(out, center, color);
+	SetMapPixel(out, { center.x, center.y + AmLine(8) }, color);
+	SetMapPixel(out, { center.x, center.y + AmLine(16) }, color);
 
-	out.SetPixel({ center.x + AmLine(8), center.y - AmLine(4) }, color);
-	out.SetPixel({ center.x + AmLine(8), center.y + AmLine(4) }, color);
-	out.SetPixel({ center.x + AmLine(8), center.y + AmLine(16) - AmLine(4) }, color);
+	SetMapPixel(out, { center.x + AmLine(8), center.y - AmLine(4) }, color);
+	SetMapPixel(out, { center.x + AmLine(8), center.y + AmLine(4) }, color);
+	SetMapPixel(out, { center.x + AmLine(8), center.y + AmLine(16) - AmLine(4) }, color);
 
-	out.SetPixel({ center.x + AmLine(16), center.y }, color);
-	out.SetPixel({ center.x + AmLine(16), center.y + AmLine(8) }, color);
+	SetMapPixel(out, { center.x + AmLine(16), center.y }, color);
+	SetMapPixel(out, { center.x + AmLine(16), center.y + AmLine(8) }, color);
 
-	out.SetPixel({ center.x - AmLine(8) + AmLine(32), center.y + AmLine(4) }, color);
+	SetMapPixel(out, { center.x - AmLine(8) + AmLine(32), center.y + AmLine(4) }, color);
 }
 
 void DrawRiverForkIn(const Surface &out, Point center, uint8_t color)
 {
-	out.SetPixel({ center.x - AmLine(16), center.y }, color);
-	out.SetPixel({ center.x - AmLine(16), center.y + AmLine(8) }, color);
+	SetMapPixel(out, { center.x - AmLine(16), center.y }, color);
+	SetMapPixel(out, { center.x - AmLine(16), center.y + AmLine(8) }, color);
 
-	out.SetPixel({ center.x - AmLine(8), center.y - AmLine(4) }, color);
-	out.SetPixel({ center.x - AmLine(8), center.y + AmLine(4) }, color);
-	out.SetPixel({ center.x - AmLine(8), center.y + AmLine(16) - AmLine(4) }, color);
+	SetMapPixel(out, { center.x - AmLine(8), center.y - AmLine(4) }, color);
+	SetMapPixel(out, { center.x - AmLine(8), center.y + AmLine(4) }, color);
+	SetMapPixel(out, { center.x - AmLine(8), center.y + AmLine(16) - AmLine(4) }, color);
 
-	out.SetPixel({ center.x, center.y - AmLine(8) }, color);
-	out.SetPixel(center, color);
-	out.SetPixel({ center.x, center.y + AmLine(8) }, color);
-	out.SetPixel({ center.x, center.y + AmLine(16) }, color);
+	SetMapPixel(out, { center.x, center.y - AmLine(8) }, color);
+	SetMapPixel(out, center, color);
+	SetMapPixel(out, { center.x, center.y + AmLine(8) }, color);
+	SetMapPixel(out, { center.x, center.y + AmLine(16) }, color);
 
-	out.SetPixel({ center.x + AmLine(8), center.y - AmLine(4) }, color);
-	out.SetPixel({ center.x + AmLine(8), center.y + AmLine(4) }, color);
-	out.SetPixel({ center.x + AmLine(8), center.y + AmLine(16) - AmLine(4) }, color);
+	SetMapPixel(out, { center.x + AmLine(8), center.y - AmLine(4) }, color);
+	SetMapPixel(out, { center.x + AmLine(8), center.y + AmLine(4) }, color);
+	SetMapPixel(out, { center.x + AmLine(8), center.y + AmLine(16) - AmLine(4) }, color);
 
-	out.SetPixel({ center.x + AmLine(16), center.y }, color);
-	out.SetPixel({ center.x + AmLine(16), center.y + AmLine(8) }, color);
+	SetMapPixel(out, { center.x + AmLine(16), center.y }, color);
+	SetMapPixel(out, { center.x + AmLine(16), center.y + AmLine(8) }, color);
 
-	out.SetPixel({ center.x - AmLine(8) + AmLine(32), center.y + AmLine(4) }, color);
+	SetMapPixel(out, { center.x - AmLine(8) + AmLine(32), center.y + AmLine(4) }, color);
 }
 
 void DrawRiverForkOut(const Surface &out, Point center, uint8_t color)
 {
-	out.SetPixel({ center.x + AmLine(8) - AmLine(32), center.y + AmLine(4) }, color);
+	SetMapPixel(out, { center.x + AmLine(8) - AmLine(32), center.y + AmLine(4) }, color);
 
-	out.SetPixel({ center.x - AmLine(16), center.y }, color);
-	out.SetPixel({ center.x - AmLine(16), center.y + AmLine(8) }, color);
+	SetMapPixel(out, { center.x - AmLine(16), center.y }, color);
+	SetMapPixel(out, { center.x - AmLine(16), center.y + AmLine(8) }, color);
 
-	out.SetPixel({ center.x - AmLine(8), center.y + AmLine(16) - AmLine(4) }, color);
+	SetMapPixel(out, { center.x - AmLine(8), center.y + AmLine(16) - AmLine(4) }, color);
 
-	out.SetPixel({ center.x, center.y + AmLine(16) }, color);
+	SetMapPixel(out, { center.x, center.y + AmLine(16) }, color);
 
-	out.SetPixel({ center.x + AmLine(8), center.y + AmLine(16) - AmLine(4) }, color);
+	SetMapPixel(out, { center.x + AmLine(8), center.y + AmLine(16) - AmLine(4) }, color);
 }
 
 enum class StairsType : uint8_t {
@@ -501,9 +501,9 @@ void DrawHorizontal(const Surface &out, Point center, AutomapTile tile, uint8_t 
 	}
 	if (tile.HasFlag(AutomapTile::Flags::HorizontalGrate)) {
 		DrawMapLineSE(out, { center.x + AmLine(16), center.y - AmLine(8) }, AmLine(8), colorDim);
-		DrawDiamond(out, { center.x, center.y - AmLine(8) }, colorDim);
+		DrawMapDiamond(out, { center.x, center.y - AmLine(8) }, colorDim);
 	} else if (tile.HasFlag(AutomapTile::Flags::HorizontalArch)) {
-		DrawDiamond(out, { center.x, center.y - AmLine(8) }, colorDim);
+		DrawMapDiamond(out, { center.x, center.y - AmLine(8) }, colorDim);
 	}
 }
 
@@ -521,9 +521,9 @@ void DrawVertical(const Surface &out, Point center, AutomapTile tile, uint8_t co
 	}
 	if (tile.HasFlag(AutomapTile::Flags::VerticalGrate)) { // right-facing half-wall
 		DrawMapLineNE(out, { center.x - AmLine(32), center.y }, AmLine(8), colorDim);
-		DrawDiamond(out, { center.x, center.y - AmLine(8) }, colorDim);
+		DrawMapDiamond(out, { center.x, center.y - AmLine(8) }, colorDim);
 	} else if (tile.HasFlag(AutomapTile::Flags::VerticalArch)) { // window or passable column
-		DrawDiamond(out, { center.x, center.y - AmLine(8) }, colorDim);
+		DrawMapDiamond(out, { center.x, center.y - AmLine(8) }, colorDim);
 	}
 }
 
@@ -651,16 +651,15 @@ void DrawAutomapTile(const Surface &out, Point center, Point map)
 
 	if (currlevel == Quests[Q_BETRAYER]._qlevel && map == Quests[Q_BETRAYER].position.worldToMega() + Displacement { 1, 1 }) {
 		int pentaColor = (Quests[Q_BETRAYER]._qactive == QUEST_DONE) ? PAL8_RED + 2 : PAL16_YELLOW + 8;
-		Displacement pentaOffset = { 0, -(TILE_HEIGHT / 2) };
-		DrawMapEllipse(out, center + Displacement { 0, 1 } + pentaOffset, AmLine(64), 0); // shadow
-		DrawMapStar(out, center + Displacement { 0, 1 } + pentaOffset, AmLine(64), 0);    // shadow
-		DrawMapEllipse(out, center + pentaOffset, AmLine(64), pentaColor);
-		DrawMapStar(out, center + pentaOffset, AmLine(64), pentaColor);
+		DrawMapEllipse(out, center + Displacement { 0, 1 }, AmLine(64), 0); // shadow
+		DrawMapStar(out, center + Displacement { 0, 1 }, AmLine(64), 0);    // shadow
+		DrawMapEllipse(out, center, AmLine(64), pentaColor);
+		DrawMapStar(out, center, AmLine(64), pentaColor);
 	}
 
 	switch (tile.type) {
 	case AutomapTile::Types::Diamond: // stand-alone column or other unpassable object
-		DrawDiamond(out, { center.x, center.y - AmLine(8) }, colorDim);
+		DrawMapDiamond(out, { center.x, center.y - AmLine(8) }, colorDim);
 		break;
 	case AutomapTile::Types::Vertical:
 	case AutomapTile::Types::FenceVertical:
@@ -739,9 +738,21 @@ Point GetAutomapScreen(const int i, const int j, const Displacement &myPlayerOff
 	int px = i - 2 * AutomapOffset.deltaX - ViewPosition.x;
 	int py = j - 2 * AutomapOffset.deltaY - ViewPosition.y;
 
+	Point screenOffset {
+		gnScreenWidth / 2,
+		(gnScreenHeight - GetMainPanel().size.height) / 2
+	};
+
+	if (AutomapMini) {
+		screenOffset = {
+			AutomapMiniRect.position.x + AutomapMiniRect.size.width / 2,
+			AutomapMiniRect.position.y + AutomapMiniRect.size.height / 2
+		};
+	}
+
 	Point screen = {
-		(myPlayerOffset.deltaX * AutoMapScale / 100 / 2) + (px - py) * AmLine(16) + gnScreenWidth / 2,
-		(myPlayerOffset.deltaY * AutoMapScale / 100 / 2) + (px + py) * AmLine(8) + (gnScreenHeight - GetMainPanel().size.height) / 2
+		(myPlayerOffset.deltaX * AutoMapScale / 100 / 2) + (px - py) * AmLine(16) + screenOffset.x,
+		(myPlayerOffset.deltaY * AutoMapScale / 100 / 2) + (px + py) * AmLine(8) + screenOffset.y
 	};
 
 	if (CanPanelsCoverView()) {
@@ -779,7 +790,7 @@ void SearchAutomapItem(const Surface &out, const Displacement &myPlayerOffset, i
 			if (!highlightTile({ i, j }))
 				continue;
 
-			DrawDiamond(out, GetAutomapScreen(i, j, myPlayerOffset), MapColorsItem);
+			DrawMapDiamond(out, GetAutomapScreen(i, j, myPlayerOffset), MapColorsItem);
 		}
 	}
 }
@@ -793,7 +804,7 @@ void DrawAutomapObject(const Surface &out, const Displacement &myPlayerOffset, t
 			if (!highlightTile({ i, j }) || explorationType == MAP_EXP_NONE || !IsAnyOf(ObjectAtPosition({ i, j })._otype, OBJ_BLINDBOOK, OBJ_BLOODBOOK, OBJ_BOOK2R, OBJ_CRUX1, OBJ_CRUX2, OBJ_CRUX3, OBJ_L5BOOKS, OBJ_L5LEVER, OBJ_LAZSTAND, OBJ_LEVER, OBJ_MCIRCLE1, OBJ_MCIRCLE2, OBJ_MUSHPATCH, OBJ_PEDESTAL, OBJ_SIGNCHEST, OBJ_SLAINHERO, OBJ_STAND, OBJ_STORYBOOK, OBJ_SWITCHSKL, OBJ_WARARMOR, OBJ_WARWEAP))
 				continue;
 
-			DrawDiamond(out, GetAutomapScreen(i, j, myPlayerOffset), MapColorsObject);
+			DrawMapDiamond(out, GetAutomapScreen(i, j, myPlayerOffset), MapColorsObject);
 		}
 	}
 }
@@ -813,7 +824,7 @@ void DrawAutomapMissile(const Surface &out, const Displacement &myPlayerOffset)
 			if (portal == nullptr || (explorationType == MAP_EXP_NONE && portal->_mitype == MissileID::RedPortal))
 				continue;
 
-			DrawCross(out, GetAutomapScreen(i, j, myPlayerOffset), portal->_mitype == MissileID::TownPortal ? MapColorsPortal : MapColorsRedPortal);
+			DrawMapEllipse(out, GetAutomapScreen(i, j, myPlayerOffset), AmLine(16), portal->_mitype == MissileID::TownPortal ? MapColorsPortal : MapColorsRedPortal);
 		}
 	}
 }
@@ -849,9 +860,21 @@ void DrawAutomapArrow(const Surface &out, const EntityType &entity, const Displa
 
 	Displacement offset = GetAutomapWalkingOffset(entity);
 
+	Point screen {
+		gnScreenWidth / 2,
+		(gnScreenHeight - GetMainPanel().size.height) / 2
+	};
+
+	if (AutomapMini) {
+		screen = {
+			AutomapMiniRect.position.x + AutomapMiniRect.size.width / 2,
+			AutomapMiniRect.position.y + AutomapMiniRect.size.height / 2
+		};
+	}
+
 	Point base = {
-		((offset.deltaX + myPlayerOffset.deltaX) * AutoMapScale / 100 / 2) + (px - py) * AmLine(16) + gnScreenWidth / 2,
-		((offset.deltaY + myPlayerOffset.deltaY) * AutoMapScale / 100 / 2) + (px + py) * AmLine(8) + (gnScreenHeight - GetMainPanel().size.height) / 2
+		((offset.deltaX + myPlayerOffset.deltaX) * AutoMapScale / 100 / 2) + (px - py) * AmLine(16) + screen.x,
+		((offset.deltaY + myPlayerOffset.deltaY) * AutoMapScale / 100 / 2) + (px + py) * AmLine(8) + screen.y
 	};
 
 	if (CanPanelsCoverView()) {
@@ -921,15 +944,6 @@ void DrawAutomapArrow(const Surface &out, const EntityType &entity, const Displa
 		DrawMapLineNW(out, { point.x + AmLine(8), point.y }, AmLine(8), deadCol);
 	}
 }
-
-/* void DrawAutomapTowner(const Surface &out, const Displacement &myPlayerOffset)
-{
-	for (auto &towner : Towners) {
-		bool townerAlive = towner._tAnimLen != 1;
-		Point tile = towner.position;
-		DrawCross(out, GetAutomapScreen(towner.position.x, towner.position.y, myPlayerOffset), (townerAlive) ? MapColorsTowner : MapColorsDead);
-	}
-}*/
 
 /**
  * @brief Renders an arrow on the automap, centered on and facing the direction of the towner.
@@ -1108,16 +1122,23 @@ std::unique_ptr<AutomapTile[]> LoadAutomapData(size_t &tileCount)
 } // namespace
 
 bool AutomapActive;
+bool AutomapMini;
 bool AutomapTransparent;
 uint8_t AutomapView[DMAXX][DMAXY];
 int AutoMapScale;
 Displacement AutomapOffset;
+Rectangle AutomapMiniRect {};
 
 void InitAutomapOnce()
 {
 	AutomapActive = false;
-	AutomapTransparent = false;
+	AutomapMini = false;
+	AutomapTransparent = true;
 	AutoMapScale = 50;
+	int minimapWidth = gnScreenWidth / 4;
+	Size minimapSize { minimapWidth, minimapWidth / 2 };
+	int minimapPadding = 16;
+	AutomapMiniRect = Rectangle { { gnScreenWidth - minimapPadding - minimapSize.width, minimapPadding }, minimapSize };
 }
 
 void InitAutomap()
@@ -1139,6 +1160,22 @@ void StartAutomap()
 {
 	AutomapOffset = { 0, 0 };
 	AutomapActive = true;
+	AutoMapScale = 50;
+}
+
+void StartMinimap()
+{
+	AutomapOffset = { 0, 0 };
+	AutomapMini = true;
+	if (gnScreenHeight >= 0 && gnScreenHeight < 960)
+		AutoMapScale = 25;
+	else if (gnScreenHeight >= 960 && gnScreenHeight < 1440)
+		AutoMapScale = 50;
+	else if (gnScreenHeight >= 1440 && gnScreenHeight < 1920)
+		AutoMapScale = 75;
+	else
+		AutoMapScale = 100;
+
 }
 
 void AutomapUp()
@@ -1167,7 +1204,7 @@ void AutomapRight()
 
 void AutomapZoomIn()
 {
-	if (AutoMapScale >= 200)
+	if (AutoMapScale >= 400)
 		return;
 
 	AutoMapScale += 25;
@@ -1175,7 +1212,7 @@ void AutomapZoomIn()
 
 void AutomapZoomOut()
 {
-	if (AutoMapScale <= 50)
+	if (AutoMapScale <= 25)
 		return;
 
 	AutoMapScale -= 25;
@@ -1184,6 +1221,7 @@ void AutomapZoomOut()
 void DrawAutomap(const Surface &out)
 {
 	Automap = { (ViewPosition.x - 8) / 2, (ViewPosition.y - 8) / 2 };
+
 	if (leveltype != DTYPE_TOWN) {
 		Automap += { -4, -4 };
 	}
@@ -1218,6 +1256,18 @@ void DrawAutomap(const Surface &out)
 		gnScreenWidth / 2,
 		(gnScreenHeight - GetMainPanel().size.height) / 2
 	};
+
+	if (AutomapMini) {
+		screen = {
+			AutomapMiniRect.position.x + AutomapMiniRect.size.width / 2,
+			AutomapMiniRect.position.y + AutomapMiniRect.size.height / 2
+		};
+		DrawHorizontalLine(out, AutomapMiniRect.position + Displacement { -1, -1 }, AutomapMiniRect.size.width + 2, MapColorsDim);
+		DrawHorizontalLine(out, AutomapMiniRect.position + Displacement { -1, AutomapMiniRect.size.height }, AutomapMiniRect.size.width + 2, MapColorsDim);
+		DrawVerticalLine(out, AutomapMiniRect.position + Displacement { -1, 0 }, AutomapMiniRect.size.height, MapColorsDim);
+		DrawVerticalLine(out, AutomapMiniRect.position + Displacement { AutomapMiniRect.size.width, 0 }, AutomapMiniRect.size.height, MapColorsDim);
+	}
+
 	if ((cells & 1) != 0) {
 		screen.x -= AmLine(64) * ((cells - 1) / 2);
 		screen.y -= AmLine(32) * ((cells + 1) / 2);

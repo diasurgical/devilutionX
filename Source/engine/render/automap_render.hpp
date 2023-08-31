@@ -17,6 +17,7 @@
 
 namespace devilution {
 
+void SetMapPixel(const Surface &out, Point point, uint8_t color);
 /**
  * @brief Draw a line in the target buffer from the given point towards north east at an `atan(1/2)` angle.
  *

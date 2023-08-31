@@ -22,15 +22,6 @@ enum class DirectionY : int8_t {
 	NORTH = -1,
 };
 
-void SetMapPixel(const Surface &out, Point point, uint8_t color)
-{
-	if (!AutomapTransparent) {
-		out.SetPixel(point, color);
-	} else {
-		SetHalfTransparentPixel(out, point, color);
-	}
-}
-
 template <DirectionX DirX, DirectionY DirY>
 void DrawMapLine(const Surface &out, Point from, int height, std::uint8_t colorIndex)
 {
@@ -92,6 +83,17 @@ void DrawMapFreeLine(const Surface &out, Point from, Point to, uint8_t colorInde
 
 } // namespace
 
+void SetMapPixel(const Surface &out, Point point, uint8_t color)
+{
+	if (AutomapMini && !AutomapMiniRect.contains(point))
+		return;
+	if (!AutomapTransparent) {
+		out.SetPixel(point, color);
+	} else {
+		SetHalfTransparentPixel(out, point, color);
+	}
+}
+
 void DrawMapLineNE(const Surface &out, Point from, int height, std::uint8_t colorIndex)
 {
 	DrawMapLine<DirectionX::EAST, DirectionY::NORTH>(out, from, height, colorIndex);
@@ -134,6 +136,8 @@ void DrawMapLineSteepSW(const Surface &out, Point from, int width, std::uint8_t 
 
 void DrawMapEllipse(const Surface &out, Point from, int radius, uint8_t colorIndex)
 {
+	from.y -= AmLine(8);
+
 	const int a = radius;
 	const int b = radius / 2;
 
@@ -183,16 +187,18 @@ void DrawMapEllipse(const Surface &out, Point from, int radius, uint8_t colorInd
 	}
 }
 
-void DrawMapStar(const Surface &out, Point center, int radius, uint8_t color)
+void DrawMapStar(const Surface &out, Point from, int radius, uint8_t color)
 {
+	from.y -= AmLine(8);
+
 	const int scaleFactor = 128;
 	Point anchors[5];
 
-	anchors[0] = { center.x - (121 * radius / scaleFactor), center.y + (19 * radius / scaleFactor) }; // Left Point
-	anchors[1] = { center.x + (121 * radius / scaleFactor), center.y + (19 * radius / scaleFactor) }; // Right Point
-	anchors[2] = { center.x, center.y + (64 * radius / scaleFactor) };                                // Bottom Point
-	anchors[3] = { center.x - (75 * radius / scaleFactor), center.y - (51 * radius / scaleFactor) };  // Top Left Point
-	anchors[4] = { center.x + (75 * radius / scaleFactor), center.y - (51 * radius / scaleFactor) };  // Top Right Point
+	anchors[0] = { from.x - (121 * radius / scaleFactor), from.y + (19 * radius / scaleFactor) }; // Left Point
+	anchors[1] = { from.x + (121 * radius / scaleFactor), from.y + (19 * radius / scaleFactor) }; // Right Point
+	anchors[2] = { from.x, from.y + (64 * radius / scaleFactor) };                                // Bottom Point
+	anchors[3] = { from.x - (75 * radius / scaleFactor), from.y - (51 * radius / scaleFactor) };  // Top Left Point
+	anchors[4] = { from.x + (75 * radius / scaleFactor), from.y - (51 * radius / scaleFactor) };  // Top Right Point
 
 	// Draw lines between the anchors to form a star
 	DrawMapFreeLine(out, anchors[3], anchors[1], color); // Connect Top Left -> Right

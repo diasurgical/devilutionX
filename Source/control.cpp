@@ -993,11 +993,11 @@ void DoAutoMap()
 {
 	if (!AutomapActive) {
 		StartAutomap();
-	} else if (!AutomapTransparent) {
-		AutomapTransparent = true;
+	} else if (!AutomapMini) {
+		StartMinimap();
 	} else {
 		AutomapActive = false;
-		AutomapTransparent = false;
+		AutomapMini = false;
 	}
 }
 
