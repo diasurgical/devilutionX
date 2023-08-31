@@ -17,12 +17,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Translations
 
+- Update Simplified Chinese translation
 - Update French translation
 - Update German translation
 - Update Greek translation
 - Update Japanese translation
 - Update Korean translation
 - Update Portuguese translation
+- Update Spanish translation
+- Update Swedish translation
 - Update Ukrainian translation
 
 #### Platforms
@@ -35,6 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Validate properties when reloading items
 - Demomode: Improve replay stability
 - Update [Discord link](https://discord.gg/devilutionx)
+- Display save game confirmation
 - Reduce ram usage
 
 ### Bugfixes
@@ -43,13 +47,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Being able to enter Lazarus' chamber before opening the portal
 - Book requirements not updating
+- Some monsters not walking
+- Missiles not traveleing the full distance at some angles
 - Diablo: Incorrect level 4 layout when Magic Banner quest is active
 - Halls of the Blind not being completed by picking up the amulet
+- Shareware: Bucklers not dropping
+- Player animation stuttering
+
+#### Multiplayer
+- Potions droped by Divine shrine not being synced
 
 #### Platforms
 
 - Linux: Add sdl-image dependency for deb package
 - Linux: Include discord dependency
+- Xbox One: Missing assets
 
 #### Graphics / Audio
 
@@ -57,14 +69,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Incorrect outlines at the right edge of the screen
 - NPC speech continuing after starting a new game
 - Correct various font rendering issues
+- Hide hit indicator when only one player is in game
+- Issues with flashing lights
+- Floating number still appearing after death
+- Missaligned automap
 
 #### Controls
 
+- Inconsistencies with placing items in to the stash
 - Gamepad: Being stuck in dialogs
 - Gamepad: Unable to use some scrolls directly
 
 #### Stability / Performance / System
 
+- Unable to playback 1.5.0 demo files
 - Various crashes
 
 ### Bugfixes for original Diablo bugs
@@ -72,10 +90,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Gameplay
 
 - Durability overflowing when reloading items
+- Teleporting onto an occupied tile
+- Right click during dialogs casts spells
 
 #### Graphics / Audio
 
+- Cursor jitter when interacting with the inventory
 - Broken lava tiles
+
+#### Controls
+
+- Inconsistencies with placing items in to the inventory
+
+### Bugfixes for original Hellfire bugs
+
+#### Gameplay
+
+- Warping onto a solid tile
 
 ## DevilutionX 1.5.0
 
