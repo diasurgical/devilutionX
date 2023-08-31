@@ -1295,10 +1295,8 @@ void GetStaffSpell(const Player &player, Item &item, int lvl, bool onlygood)
 			s = static_cast<int8_t>(SpellID::Firebolt);
 	}
 
-	int minc = GetSpellData(bs).sStaffMin;
-	int maxc = GetSpellData(bs).sStaffMax - minc + 1;
 	item._iSpell = bs;
-	item._iCharges = minc + GenerateRnd(maxc);
+	item._iCharges = RndBetween(GetSpellData(bs).sStaffMin, GetSpellData(bs).sStaffMax);
 	item._iMaxCharges = item._iCharges;
 
 	item._iMinMag = GetSpellData(bs).minInt;
@@ -3159,7 +3157,7 @@ void GetItemAttrs(Item &item, _item_indexes itemData, int lvl)
 	item._iClass = baseItemData.iClass;
 	item._iMinDam = baseItemData.iMinDam;
 	item._iMaxDam = baseItemData.iMaxDam;
-	item._iAC = baseItemData.iMinAC + GenerateRnd(baseItemData.iMaxAC - baseItemData.iMinAC + 1);
+	item._iAC = RndBetween(baseItemData.iMinAC, baseItemData.iMaxAC);
 	item._iFlags = baseItemData.iFlags;
 	item._iMiscId = baseItemData.iMiscId;
 	item._iSpell = baseItemData.iSpell;
