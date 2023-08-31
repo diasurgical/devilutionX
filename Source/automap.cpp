@@ -1177,7 +1177,6 @@ void StartMinimap()
 		AutoMapScale = 75;
 	else
 		AutoMapScale = 100;
-
 }
 
 void AutomapUp()
