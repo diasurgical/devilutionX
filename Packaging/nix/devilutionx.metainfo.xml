@@ -68,14 +68,14 @@
 			<description>
 				<p>This is a primarily bugfix release, which includes the following updates:</p>
 				<ul>
-					<li>"Loopback" multiplayer is renamed "Offline"</li>
-					<li>HP/Mana display and item graphics options are moved from "Graphics" to "Gameplay" option menu</li>
-					<li>Gameplay fixes, such as book requirements not updating</li>
-					<li>Fixes to crashes found in 1.5.0</li>
-					<li>Reduction in RAM usage</li>
+					<li>Resolve various gameplay and graphical issues</li>
+					<li>Revamped settings menu for better organization</li>
+					<li>Rectification of crashes identified in version 1.5.0</li>
+					<li>Reduced RAM usage for improved performance</li>
 					<li>Updates to PVP arenas</li>
-					<li>Multiplayer stability improvements</li>
-					<li>Updates to French, Portuguese, German, Greek, Ukrainian, Korean and Japanese translations</li>
+					<li>Increased reliability in multiplayer functionality</li>
+					<li>Improved translations</li>
+					<li>Fixed gameplay recording playback issues</li>
 				</ul>
 				<p>Please visit the full changelog for more detailed notes</p>
 			</description>
