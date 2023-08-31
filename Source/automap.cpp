@@ -1137,7 +1137,7 @@ void InitAutomapOnce()
 	AutoMapScale = 50;
 	int minimapWidth = gnScreenWidth / 4;
 	Size minimapSize { minimapWidth, minimapWidth / 2 };
-	int minimapPadding = 16;
+	int minimapPadding = 8;
 	AutomapMiniRect = Rectangle { { gnScreenWidth - minimapPadding - minimapSize.width, minimapPadding }, minimapSize };
 }
 
@@ -1160,6 +1160,7 @@ void StartAutomap()
 {
 	AutomapOffset = { 0, 0 };
 	AutomapActive = true;
+	AutomapTransparent = true;
 	AutoMapScale = 50;
 }
 
@@ -1167,6 +1168,7 @@ void StartMinimap()
 {
 	AutomapOffset = { 0, 0 };
 	AutomapMini = true;
+	AutomapTransparent = false;
 	if (gnScreenHeight >= 0 && gnScreenHeight < 960)
 		AutoMapScale = 25;
 	else if (gnScreenHeight >= 960 && gnScreenHeight < 1440)
@@ -1262,6 +1264,7 @@ void DrawAutomap(const Surface &out)
 			AutomapMiniRect.position.x + AutomapMiniRect.size.width / 2,
 			AutomapMiniRect.position.y + AutomapMiniRect.size.height / 2
 		};
+		DrawHalfTransparentRectTo(out, AutomapMiniRect.position.x, AutomapMiniRect.position.y, AutomapMiniRect.size.width, AutomapMiniRect.size.height);
 		DrawHorizontalLine(out, AutomapMiniRect.position + Displacement { -1, -1 }, AutomapMiniRect.size.width + 2, MapColorsDim);
 		DrawHorizontalLine(out, AutomapMiniRect.position + Displacement { -1, AutomapMiniRect.size.height }, AutomapMiniRect.size.width + 2, MapColorsDim);
 		DrawVerticalLine(out, AutomapMiniRect.position + Displacement { -1, 0 }, AutomapMiniRect.size.height, MapColorsDim);
