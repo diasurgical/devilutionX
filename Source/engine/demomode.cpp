@@ -211,6 +211,38 @@ void ReadSettings(FILE *in, uint8_t version) // NOLINT(readability-identifier-le
 	} else {
 		DemoSettings = {};
 	}
+
+	std::string message = fmt::format("⚙️\n{}={}x{}", _("Resolution"), DemoGraphicsWidth, DemoGraphicsHeight);
+	for (const auto &[key, value] : std::initializer_list<std::pair<std::string_view, bool>> {
+	         { _("Run in Town"), DemoSettings.runInTown },
+	         { _("Theo Quest"), DemoSettings.theoQuest },
+	         { _("Cow Quest"), DemoSettings.cowQuest },
+	         { _("Auto Gold Pickup"), DemoSettings.autoGoldPickup },
+	         { _("Auto Elixir Pickup"), DemoSettings.autoGoldPickup },
+	         { _("Auto Oil Pickup"), DemoSettings.autoOilPickup },
+	         { _("Auto Pickup in Town"), DemoSettings.autoPickupInTown },
+	         { _("Adria Refills Mana"), DemoSettings.adriaRefillsMana },
+	         { _("Auto Equip Weapons"), DemoSettings.autoEquipWeapons },
+	         { _("Auto Equip Armor"), DemoSettings.autoEquipArmor },
+	         { _("Auto Equip Helms"), DemoSettings.autoEquipHelms },
+	         { _("Auto Equip Shields"), DemoSettings.autoEquipShields },
+	         { _("Auto Equip Jewelry"), DemoSettings.autoEquipJewelry },
+	         { _("Randomize Quests"), DemoSettings.randomizeQuests },
+	         { _("Show Item Labels"), DemoSettings.showItemLabels },
+	         { _("Auto Refill Belt"), DemoSettings.autoRefillBelt },
+	         { _("Disable Crippling Shrines"), DemoSettings.disableCripplingShrines } }) {
+		fmt::format_to(std::back_inserter(message), "\n{}={:d}", key, value);
+	}
+	for (const auto &[key, value] : std::initializer_list<std::pair<std::string_view, uint8_t>> {
+	         { _("Heal Potion Pickup"), DemoSettings.numHealPotionPickup },
+	         { _("Full Heal Potion Pickup"), DemoSettings.numFullHealPotionPickup },
+	         { _("Mana Potion Pickup"), DemoSettings.numManaPotionPickup },
+	         { _("Full Mana Potion Pickup"), DemoSettings.numFullManaPotionPickup },
+	         { _("Rejuvenation Potion Pickup"), DemoSettings.numRejuPotionPickup },
+	         { _("Full Rejuvenation Potion Pickup"), DemoSettings.numFullRejuPotionPickup } }) {
+		fmt::format_to(std::back_inserter(message), "\n{}={}", key, value);
+	}
+	Log("{}", message);
 }
 
 void WriteSettings(FILE *out)
