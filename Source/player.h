@@ -656,6 +656,11 @@ struct Player {
 		return _pManaPer;
 	}
 
+	bool IsAlive() const
+	{
+		return _pHitPoints > 0;
+	}
+
 	/**
 	 * @brief Restores between 1/8 (inclusive) and 1/4 (exclusive) of the players max HP (further adjusted by class).
 	 *

@@ -673,7 +673,7 @@ void DeltaLeaveSync(uint8_t bLevel)
 	for (size_t i = 0; i < ActiveMonsterCount; i++) {
 		int ma = ActiveMonsters[i];
 		auto &monster = Monsters[ma];
-		if (monster.hitPoints == 0)
+		if (!monster.IsAlive())
 			continue;
 		DMonsterStr &delta = deltaLevel.monster[ma];
 		delta.position = monster.position.tile;
@@ -1745,7 +1745,7 @@ size_t OnMonstDamage(const TCmd *pCmd, size_t pnum)
 			if (player.isOnActiveLevel() && monsterIdx < MaxMonsters) {
 				auto &monster = Monsters[monsterIdx];
 				monster.tag(player);
-				if (monster.hitPoints > 0) {
+				if (monster.IsAlive()) {
 					monster.hitPoints -= SDL_SwapLE32(message.dwDam);
 					if ((monster.hitPoints >> 6) < 1)
 						monster.hitPoints = 1 << 6;
@@ -1785,7 +1785,7 @@ size_t OnPlayerDamage(const TCmd *pCmd, Player &player)
 
 	Player &target = Players[message.bPlr];
 	if (&target == MyPlayer && leveltype != DTYPE_TOWN && gbBufferMsgs != 1) {
-		if (player.isOnActiveLevel() && damage <= 192000 && target._pHitPoints >> 6 > 0) {
+		if (player.isOnActiveLevel() && damage <= 192000 && target.IsAlive()) {
 			ApplyPlrDamage(message.damageType, target, 0, 0, damage, DeathReason::Player);
 		}
 	}
@@ -2038,7 +2038,7 @@ size_t OnPlayerJoinLevel(const TCmd *pCmd, size_t pnum)
 		ResetPlayerGFX(player);
 		if (player.isOnActiveLevel()) {
 			SyncInitPlr(player);
-			if ((player._pHitPoints >> 6) > 0) {
+			if (player.IsAlive()) {
 				StartStand(player, Direction::South);
 			} else {
 				player._pgfxnum &= ~0xFU;

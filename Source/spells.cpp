@@ -241,7 +241,7 @@ void DoResurrect(size_t pnum, Player &target)
 
 	AddMissile(target.position.tile, target.position.tile, Direction::South, MissileID::ResurrectBeam, TARGET_MONSTERS, pnum, 0, 0);
 
-	if (target._pHitPoints != 0)
+	if (target.IsAlive())
 		return;
 
 	if (&target == MyPlayer) {
@@ -262,7 +262,6 @@ void DoResurrect(size_t pnum, Player &target)
 	}
 	SetPlayerHitPoints(target, hp);
 
-	target._pHPBase = target._pHitPoints + (target._pMaxHPBase - target._pMaxHP); // CODEFIX: does the same stuff as SetPlayerHitPoints above, can be removed
 	target._pMana = 0;
 	target._pManaBase = target._pMana + (target._pMaxManaBase - target._pMaxMana);
 
@@ -277,7 +276,7 @@ void DoResurrect(size_t pnum, Player &target)
 
 void DoHealOther(const Player &caster, Player &target)
 {
-	if ((target._pHitPoints >> 6) <= 0) {
+	if (!target.IsAlive()) {
 		return;
 	}
 

@@ -39,7 +39,7 @@ void InvalidateTargets()
 {
 	if (pcursmonst != -1) {
 		const Monster &monster = Monsters[pcursmonst];
-		if (monster.isInvalid || monster.hitPoints >> 6 <= 0
+		if (monster.isInvalid || !monster.IsAlive()
 		    || (monster.flags & MFLAG_HIDDEN) != 0
 		    || !IsTileLit(monster.position.tile)) {
 			pcursmonst = -1;
@@ -52,7 +52,7 @@ void InvalidateTargets()
 	if (pcursplr != -1) {
 		Player &targetPlayer = Players[pcursplr];
 		if (targetPlayer._pmode == PM_DEATH || targetPlayer._pmode == PM_QUIT || !targetPlayer.plractive
-		    || !targetPlayer.isOnActiveLevel() || targetPlayer._pHitPoints >> 6 <= 0
+		    || !targetPlayer.isOnActiveLevel() || !targetPlayer.IsAlive()
 		    || !IsTileLit(targetPlayer.position.tile))
 			pcursplr = -1;
 	}
