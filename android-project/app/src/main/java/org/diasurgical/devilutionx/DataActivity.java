@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -33,6 +34,12 @@ public class DataActivity extends Activity {
 
 		((TextView) findViewById(R.id.full_guide)).setMovementMethod(LinkMovementMethod.getInstance());
 		((TextView) findViewById(R.id.online_guide)).setMovementMethod(LinkMovementMethod.getInstance());
+
+		boolean isTelevision = getPackageManager().hasSystemFeature(PackageManager.FEATURE_LEANBACK);
+		if (isTelevision) {
+			findViewById(R.id.gamepad_text).setVisibility(View.VISIBLE);
+			findViewById(R.id.gamepad_icon).setVisibility(View.VISIBLE);
+		}
 	}
 
 	protected void onResume() {
