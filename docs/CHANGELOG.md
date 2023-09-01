@@ -15,27 +15,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update the pvp arenas
 - Rename "Loopback" to "Offline"
 
-#### Translations
-
-- Update French translation
-- Update German translation
-- Update Greek translation
-- Update Japanese translation
-- Update Korean translation
-- Update Portuguese translation
-- Update Ukrainian translation
-
-#### Platforms
-
-- Android TV: Update banner to include app name
-
 #### Stability / Performance / System
 
 - Move hp/mana display and item graphics to gameplay options
 - Validate properties when reloading items
 - Demomode: Improve replay stability
 - Update [Discord link](https://discord.gg/devilutionx)
+- Display save game confirmation
 - Reduce ram usage
+
+#### Translations
+
+- Update Simplified Chinese translation
+- Update French translation
+- Update German translation
+- Update Greek translation
+- Update Japanese translation
+- Update Korean translation
+- Update Portuguese translation
+- Update Spanish translation
+- Update Swedish translation
+- Update Ukrainian translation
 
 ### Bugfixes
 
@@ -43,13 +43,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Being able to enter Lazarus' chamber before opening the portal
 - Book requirements not updating
-- Diablo: Incorrect level 4 layout when Magic Banner quest is active
-- Halls of the Blind not being compleated by picking up the amulet
+- Some monsters not walking
+- Missiles not traveling the full distance at some angles
+- Diablo: Incorrect level 4 layout when the Magic Banner quest is active
+- Halls of the Blind not being completed by picking up the amulet
+- Shareware: Bucklers not dropping
+- Player animation stuttering
+
+#### Multiplayer
+
+- Potions dropped by Divine shrines not being synced
 
 #### Platforms
 
-- Linux: Add sdl-image dependency for deb package
+- Linux: Add sdl-image dependency for the deb package
 - Linux: Include discord dependency
+- Xbox One: Missing assets
 
 #### Graphics / Audio
 
@@ -57,14 +66,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Incorrect outlines at the right edge of the screen
 - NPC speech continuing after starting a new game
 - Correct various font rendering issues
+- Hide the hit indicator when only one player is in the game
+- Issues with flashing lights
+- Floating number still appearing after death
+- Misaligned automap
 
 #### Controls
 
+- Inconsistencies with placing items in to the stash
 - Gamepad: Being stuck in dialogs
 - Gamepad: Unable to use some scrolls directly
 
 #### Stability / Performance / System
 
+- Unable to playback new demo files
 - Various crashes
 
 ### Bugfixes for original Diablo bugs
@@ -72,10 +87,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Gameplay
 
 - Durability overflowing when reloading items
+- Teleporting onto an occupied tile
+- Right-click during dialogs casts spells
 
 #### Graphics / Audio
 
+- Cursor jitter when interacting with the inventory
 - Broken lava tiles
+
+#### Controls
+
+- Inconsistencies with placing items in to the inventory
+
+### Bugfixes for original Hellfire bugs
+
+#### Gameplay
+
+- Warping onto a solid tile
 
 ## DevilutionX 1.5.0
 
@@ -399,7 +427,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improve Romanian localization
 - Improve Russian localization ([optional dub](https://github.com/diasurgical/devilutionx-assets/releases/download/v2/ru.mpq) by Stream)
 - Improve Spanish localization
- 
+
 #### Gameplay
 
 - Added a stash at Gillian's house

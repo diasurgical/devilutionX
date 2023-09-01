@@ -22,19 +22,23 @@ namespace devilution {
 
 namespace {
 
-std::deque<std::string> DiabloMessages;
+struct MessageEntry {
+	std::string text;
+	uint32_t duration; // Duration in milliseconds
+};
+
+std::deque<MessageEntry> DiabloMessages;
+uint32_t msgStartTime = 0;
 std::vector<std::string> TextLines;
-uint32_t msgdelay;
 int ErrorWindowHeight = 54;
 const int LineHeight = 12;
 const int LineWidth = 418;
 
 void InitNextLines()
 {
-	msgdelay = GetMillisecondsSinceStartup();
 	TextLines.clear();
 
-	const std::string paragraphs = WordWrapString(DiabloMessages.front(), LineWidth, GameFont12, 1);
+	const std::string paragraphs = WordWrapString(DiabloMessages.front().text, LineWidth, GameFont12, 1);
 
 	size_t previous = 0;
 	while (true) {
@@ -53,7 +57,7 @@ void InitNextLines()
 /** Maps from error_id to error message. */
 const char *const MsgStrings[] = {
 	"",
-	N_("No automap available in town"),
+	N_("Game saved"),
 	N_("No multiplayer functions in demo"),
 	N_("Direct Sound Creation Failed"),
 	N_("Not available in shareware version"),
@@ -109,22 +113,25 @@ const char *const MsgStrings[] = {
 	N_(/* TRANSLATORS: Shrine Text. Keep atmospheric. :) */ "That which can break will."),
 };
 
-void InitDiabloMsg(diablo_message e)
+void InitDiabloMsg(diablo_message e, uint32_t duration /*= 3500*/)
 {
-	InitDiabloMsg(LanguageTranslate(MsgStrings[e]));
+	InitDiabloMsg(LanguageTranslate(MsgStrings[e]), duration);
 }
 
-void InitDiabloMsg(std::string_view msg)
+void InitDiabloMsg(std::string_view msg, uint32_t duration /*= 3500*/)
 {
 	if (DiabloMessages.size() >= MAX_SEND_STR_LEN)
 		return;
 
-	if (c_find(DiabloMessages, msg) != DiabloMessages.end())
+	if (c_find_if(DiabloMessages, [&msg](const MessageEntry &entry) { return entry.text == msg; })
+	    != DiabloMessages.end())
 		return;
 
-	DiabloMessages.push_back(std::string(msg));
-	if (DiabloMessages.size() == 1)
+	DiabloMessages.push_back({ std::string(msg), duration });
+	if (DiabloMessages.size() == 1) {
 		InitNextLines();
+		msgStartTime = SDL_GetTicks();
+	}
 }
 
 bool IsDiabloMsgAvailable()
@@ -134,7 +141,13 @@ bool IsDiabloMsgAvailable()
 
 void CancelCurrentDiabloMsg()
 {
-	msgdelay = 0;
+	if (!DiabloMessages.empty()) {
+		DiabloMessages.pop_front();
+		if (!DiabloMessages.empty()) {
+			InitNextLines();
+			msgStartTime = SDL_GetTicks();
+		}
+	}
 }
 
 void ClrDiabloMsg()
@@ -173,13 +186,17 @@ void DrawDiabloMsg(const Surface &out)
 		lineNumber += 1;
 	}
 
-	if (msgdelay > 0 && msgdelay <= GetMillisecondsSinceStartup() - 3500) {
-		msgdelay = 0;
-	}
-	if (msgdelay == 0) {
+	// Calculate the time the current message has been displayed
+	uint32_t currentTime = SDL_GetTicks();
+	uint32_t messageElapsedTime = currentTime - msgStartTime;
+
+	// Check if the current message's duration has passed
+	if (!DiabloMessages.empty() && messageElapsedTime >= DiabloMessages.front().duration) {
 		DiabloMessages.pop_front();
-		if (!DiabloMessages.empty())
+		if (!DiabloMessages.empty()) {
 			InitNextLines();
+			msgStartTime = currentTime;
+		}
 	}
 }
 

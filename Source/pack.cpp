@@ -556,6 +556,28 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 	for (int i = 0; i < NUM_INVLOC; i++) {
 		if (!UnPackNetItem(player, packed.InvBody[i], player.InvBody[i]))
 			return false;
+		if (player.InvBody[i].isEmpty())
+			continue;
+		auto loc = static_cast<int8_t>(player.GetItemLocation(player.InvBody[i]));
+		switch (i) {
+		case INVLOC_HEAD:
+			ValidateField(loc, loc == ILOC_HELM);
+			break;
+		case INVLOC_RING_LEFT:
+		case INVLOC_RING_RIGHT:
+			ValidateField(loc, loc == ILOC_RING);
+			break;
+		case INVLOC_AMULET:
+			ValidateField(loc, loc == ILOC_AMULET);
+			break;
+		case INVLOC_HAND_LEFT:
+		case INVLOC_HAND_RIGHT:
+			ValidateField(loc, IsAnyOf(loc, ILOC_ONEHAND, ILOC_TWOHAND));
+			break;
+		case INVLOC_CHEST:
+			ValidateField(loc, loc == ILOC_ARMOR);
+			break;
+		}
 	}
 
 	player._pNumInv = packed._pNumInv;
@@ -568,8 +590,17 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 		player.InvGrid[i] = packed.InvGrid[i];
 
 	for (int i = 0; i < MaxBeltItems; i++) {
-		if (!UnPackNetItem(player, packed.SpdList[i], player.SpdList[i]))
+		Item &item = player.SpdList[i];
+		if (!UnPackNetItem(player, packed.SpdList[i], item))
 			return false;
+		if (item.isEmpty())
+			continue;
+		Size beltItemSize = GetInventorySize(item);
+		int8_t beltItemType = static_cast<int8_t>(item._itype);
+		bool beltItemUsable = item.isUsable();
+		ValidateFields(beltItemSize.width, beltItemSize.height, (beltItemSize == Size { 1, 1 }));
+		ValidateField(beltItemType, item._itype != ItemType::Gold);
+		ValidateField(beltItemUsable, beltItemUsable);
 	}
 
 	CalcPlrInv(player, false);

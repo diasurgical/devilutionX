@@ -15,7 +15,7 @@ namespace devilution {
 
 enum diablo_message : uint8_t {
 	EMSG_NONE,
-	EMSG_NO_AUTOMAP_IN_TOWN,
+	EMSG_GAME_SAVED,
 	EMSG_NO_MULTIPLAYER_IN_DEMO,
 	EMSG_DIRECT_SOUND_FAILED,
 	EMSG_NOT_IN_SHAREWARE,
@@ -71,8 +71,8 @@ enum diablo_message : uint8_t {
 	EMSG_SHRINE_MURPHYS,
 };
 
-void InitDiabloMsg(diablo_message e);
-void InitDiabloMsg(std::string_view msg);
+void InitDiabloMsg(diablo_message e, uint32_t duration = 3500);
+void InitDiabloMsg(std::string_view msg, uint32_t duration = 3500);
 bool IsDiabloMsgAvailable();
 void CancelCurrentDiabloMsg();
 void ClrDiabloMsg();
