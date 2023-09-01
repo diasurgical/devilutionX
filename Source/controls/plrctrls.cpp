@@ -1848,11 +1848,11 @@ void PerformPrimaryAction()
 		} else if (IsStashOpen && GetLeftPanel().contains(MousePosition)) {
 			Point stashSlot = (ActiveStashSlot != InvalidStashPoint) ? ActiveStashSlot : FindClosestStashSlot(MousePosition);
 
-			const Size cursorSizeInCells = MyPlayer->HoldItem.isEmpty() ? Size { 1, 1 } : GetInventorySize(MyPlayer->HoldItem);
+			Size cursorSizeInCells = MyPlayer->HoldItem.isEmpty() ? Size { 1, 1 } : GetInventorySize(MyPlayer->HoldItem);
 
 			// Find any item occupying a slot that is currently under the cursor
 			StashStruct::StashCell itemUnderCursor = [](Point stashSlot, Size cursorSizeInCells) -> StashStruct::StashCell {
-				if (stashSlot != InvalidStashPoint)
+				if (stashSlot == InvalidStashPoint)
 					return StashStruct::EmptyCell;
 				for (Point slotUnderCursor : PointsInRectangle(Rectangle { stashSlot, cursorSizeInCells })) {
 					if (slotUnderCursor.x >= 10 || slotUnderCursor.y >= 10)
@@ -1864,20 +1864,26 @@ void PerformPrimaryAction()
 				return StashStruct::EmptyCell;
 			}(stashSlot, cursorSizeInCells);
 
-			// The cursor will need to be shifted to
-			// this slot if the item is swapped or lifted
-			Point jumpSlot = FindFirstStashSlotOnItem(itemUnderCursor);
+			Point jumpSlot = itemUnderCursor == StashStruct::EmptyCell ? stashSlot : FindFirstStashSlotOnItem(itemUnderCursor);
 			CheckStashItem(MousePosition);
 
-			// If we don't find the item in the same position as before,
-			// it suggests that the item was swapped or lifted
-			Point newSlot = FindFirstStashSlotOnItem(itemUnderCursor);
-			if (jumpSlot != InvalidStashPoint && jumpSlot != newSlot) {
-				Point mousePos = GetStashSlotCoord(jumpSlot);
-				mousePos.y -= InventorySlotSizeInPixels.height;
-				ActiveStashSlot = jumpSlot;
-				SetCursorPos(mousePos);
+			Point mousePos = GetStashSlotCoord(jumpSlot);
+			ActiveStashSlot = jumpSlot;
+			if (MyPlayer->HoldItem.isEmpty()) {
+				// For inventory cut/paste we can combine the cases where we swap or simply paste items. Because stash movement is always cell based (there's no fast
+				// movement over large items) it looks better if we offset the hand cursor to the bottom right cell of the item we just placed.
+				ActiveStashSlot += Displacement { cursorSizeInCells - 1 }; // shift the active stash slot coordinates to account for items larger than 1x1
+				// Then we displace the mouse position to the bottom right corner of the item, then shift it back half a cell to center it.
+				// Could also be written as (cursorSize - 1) * InventorySlotSize + HalfInventorySlotSize, same thing in the end.
+				mousePos += Displacement { cursorSizeInCells } * Displacement { InventorySlotSizeInPixels } - Displacement { InventorySlotSizeInPixels } / 2;
+			} else {
+				// If we've picked up an item then use the same logic as the inventory so that the cursor is offset to the center of where the old item location was
+				// (in this case jumpSlot was the top left cell of where it used to be in the grid, and we need to update the cursor size since we're now holding the item)
+				cursorSizeInCells = GetInventorySize(MyPlayer->HoldItem);
+				mousePos.x += ((cursorSizeInCells.width) * InventorySlotSizeInPixels.width) / 2;
+				mousePos.y += ((cursorSizeInCells.height) * InventorySlotSizeInPixels.height) / 2;
 			}
+			SetCursorPos(mousePos);
 		}
 		return;
 	}
