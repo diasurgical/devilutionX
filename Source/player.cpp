@@ -740,7 +740,20 @@ bool PlrHitMonst(Player &player, Monster &monster, bool adjacentDamage = false)
 	return true;
 }
 
-bool PlrHitPlr(Player &attacker, Player &target)
+int CheckReflect(Player &attacker, Player &target, int dam)
+{
+	target.wReflections--;
+	if (target.wReflections <= 0)
+		NetSendCmdParam1(true, CMD_SETREFLECT, 0);
+	// reflects 20-30% damage
+	int mdam = dam * RandomIntBetween(20, 30, true) / 100;
+	if (&target == MyPlayer)
+		NetSendCmdDamage(true, target.getId(), mdam, DamageType::Physical);
+
+	return mdam;
+}
+
+bool PlrHitPlr(Player &attacker, Player &target, bool adjacentDamage = false)
 {
 	if (target._pInvincible) {
 		return false;
@@ -753,6 +766,16 @@ bool PlrHitPlr(Player &attacker, Player &target)
 	int hit = GenerateRnd(100);
 
 	int hper = attacker.GetMeleeToHit() - target.GetArmor();
+
+	if (adjacentDamage) {
+		if (attacker._pLevel > 20)
+			hper -= 30;
+		else
+			hper -= (35 - attacker._pLevel) * 2;
+	}
+
+	hper += attacker.GetMeleePiercingToHit() - attacker.CalculateArmorPierce(target.GetArmor(), true);
+
 	hper = clamp(hper, 5, 95);
 
 	int blk = 100;
@@ -773,34 +796,114 @@ bool PlrHitPlr(Player &attacker, Player &target)
 		return true;
 	}
 
+	if (gbIsHellfire && HasAllOf(attacker._pIFlags, ItemSpecialEffect::FireDamage | ItemSpecialEffect::LightningDamage)) {
+		int midam = attacker._pIFMinDam + GenerateRnd(attacker._pIFMaxDam - attacker._pIFMinDam);
+		AddMissile(attacker.position.tile, attacker.position.temp, attacker._pdir, MissileID::SpectralArrow, TARGET_BOTH, attacker.getId(), midam, 0);
+	}
 	int mind = attacker._pIMinDam;
 	int maxd = attacker._pIMaxDam;
 	int dam = GenerateRnd(maxd - mind + 1) + mind;
 	dam += (dam * attacker._pIBonusDam) / 100;
-	dam += attacker._pIBonusDamMod + attacker._pDamageMod;
+	dam += attacker._pIBonusDamMod;
+	int dam2 = dam << 6;
+	dam += attacker._pDamageMod;
 
 	if (attacker._pClass == HeroClass::Warrior || attacker._pClass == HeroClass::Barbarian) {
 		if (GenerateRnd(100) < attacker._pLevel) {
 			dam *= 2;
 		}
 	}
-	int skdam = dam << 6;
-	if (HasAnyOf(attacker._pIFlags, ItemSpecialEffect::RandomStealLife)) {
-		int tac = GenerateRnd(skdam / 8);
-		attacker._pHitPoints += tac;
-		if (attacker._pHitPoints > attacker._pMaxHP) {
-			attacker._pHitPoints = attacker._pMaxHP;
-		}
-		attacker._pHPBase += tac;
-		if (attacker._pHPBase > attacker._pMaxHPBase) {
-			attacker._pHPBase = attacker._pMaxHPBase;
-		}
-		RedrawComponent(PanelDrawComponent::Health);
+
+	if (HasAnyOf(attacker.pDamAcFlags, ItemSpecialEffectHf::Devastation) && GenerateRnd(100) < 5) {
+		dam *= 3;
 	}
+
+	dam <<= 6;
+	if (HasAnyOf(attacker.pDamAcFlags, ItemSpecialEffectHf::Jesters)) {
+		int r = GenerateRnd(201);
+		if (r >= 100)
+			r = 100 + (r - 100) * 5;
+		dam = dam * r / 100;
+	}
+
+	if (adjacentDamage)
+		dam >>= 2;
+
+	if (target.wReflections > 0) {
+		int reflectedDamage = CheckReflect(attacker, target, dam);
+		dam = std::max(dam - reflectedDamage, 0);
+	}
+
+	if (&target == MyPlayer) {
+		if (HasAnyOf(target._pIFlags, ItemSpecialEffect::Thorns)) {
+			int mdam = (GenerateRnd(3) + 1) << 6;
+			NetSendCmdDamage(true, attacker.getId(), mdam, DamageType::Physical);
+		}
+	}
+
 	if (&attacker == MyPlayer) {
-		NetSendCmdDamage(true, target.getId(), skdam, DamageType::Physical);
+		if (HasAnyOf(attacker.pDamAcFlags, ItemSpecialEffectHf::Peril)) {
+			dam2 += attacker._pIGetHit << 6;
+			if (dam2 >= 0) {
+				ApplyPlrDamage(DamageType::Physical, attacker, 0, 1, dam2);
+			}
+			dam *= 2;
+		}
+
+		int skdam = 0;
+		if (HasAnyOf(attacker._pIFlags, ItemSpecialEffect::RandomStealLife)) {
+			skdam = GenerateRnd(dam / 8);
+			attacker._pHitPoints += skdam;
+			if (attacker._pHitPoints > attacker._pMaxHP) {
+				attacker._pHitPoints = attacker._pMaxHP;
+			}
+			attacker._pHPBase += skdam;
+			if (attacker._pHPBase > attacker._pMaxHPBase) {
+				attacker._pHPBase = attacker._pMaxHPBase;
+			}
+			RedrawComponent(PanelDrawComponent::Health);
+		}
+
+		if (HasAnyOf(attacker._pIFlags, ItemSpecialEffect::StealMana3 | ItemSpecialEffect::StealMana5) && HasNoneOf(attacker._pIFlags, ItemSpecialEffect::NoMana)) {
+			if (HasAnyOf(attacker._pIFlags, ItemSpecialEffect::StealMana3)) {
+				skdam = 3 * dam / 100;
+			}
+			if (HasAnyOf(attacker._pIFlags, ItemSpecialEffect::StealMana5)) {
+				skdam = 5 * dam / 100;
+			}
+			attacker._pMana += skdam;
+			if (attacker._pMana > attacker._pMaxMana) {
+				attacker._pMana = attacker._pMaxMana;
+			}
+			attacker._pManaBase += skdam;
+			if (attacker._pManaBase > attacker._pMaxManaBase) {
+				attacker._pManaBase = attacker._pMaxManaBase;
+			}
+			RedrawComponent(PanelDrawComponent::Mana);
+		}
+
+		if (HasAnyOf(attacker._pIFlags, ItemSpecialEffect::StealLife3 | ItemSpecialEffect::StealLife5)) {
+			if (HasAnyOf(attacker._pIFlags, ItemSpecialEffect::StealLife3)) {
+				skdam = 3 * dam / 100;
+			}
+			if (HasAnyOf(attacker._pIFlags, ItemSpecialEffect::StealLife5)) {
+				skdam = 5 * dam / 100;
+			}
+			attacker._pHitPoints += skdam;
+			if (attacker._pHitPoints > attacker._pMaxHP) {
+				attacker._pHitPoints = attacker._pMaxHP;
+			}
+			attacker._pHPBase += skdam;
+			if (attacker._pHPBase > attacker._pMaxHPBase) {
+				attacker._pHPBase = attacker._pMaxHPBase;
+			}
+			RedrawComponent(PanelDrawComponent::Health);
+		}
+
+		NetSendCmdDamage(true, target.getId(), dam, DamageType::Physical);
 	}
-	StartPlrHit(target, skdam, false);
+
+	StartPlrHit(target, dam, false);
 
 	return true;
 }
@@ -873,6 +976,9 @@ bool DoAttack(Player &player)
 					if (PlrHitMonst(player, *monster, true))
 						didhit = true;
 				}
+			} else if (PlayerAtPosition(position) != nullptr && !player.friendlyMode) {
+				if (PlrHitPlr(player, *PlayerAtPosition(position), true))
+					didhit = true;
 			}
 			position = player.position.tile + Left(player._pdir);
 			monster = FindMonsterAtPosition(position);
@@ -881,6 +987,9 @@ bool DoAttack(Player &player)
 					if (PlrHitMonst(player, *monster, true))
 						didhit = true;
 				}
+			} else if (PlayerAtPosition(position) != nullptr && !player.friendlyMode) {
+				if (PlrHitPlr(player, *PlayerAtPosition(position), true))
+					didhit = true;
 			}
 		}
 
