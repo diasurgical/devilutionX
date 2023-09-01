@@ -158,8 +158,9 @@ void CheckStashPaste(Point cursorPosition)
 		// stashList will have at most 10 000 items, up to 65 535 are supported with uint16_t indexes
 		stashIndex = static_cast<uint16_t>(Stash.stashList.size() - 1);
 	} else {
-		// remove item from stash grid
+		// swap the held item and whatever was in the stash at this position
 		std::swap(Stash.stashList[stashIndex], player.HoldItem);
+		// then clear the space occupied by the old item
 		for (auto &row : Stash.GetCurrentGrid()) {
 			for (auto &itemId : row) {
 				if (itemId - 1 == stashIndex)
@@ -168,6 +169,7 @@ void CheckStashPaste(Point cursorPosition)
 		}
 	}
 
+	// Finally mark the area now occupied by the pasted item in the current page/grid.
 	AddItemToStashGrid(Stash.GetPage(), firstSlot, stashIndex, itemSize);
 
 	Stash.dirty = true;
