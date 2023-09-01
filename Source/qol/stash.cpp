@@ -370,7 +370,7 @@ void DrawStash(const Surface &out)
 			continue; // No item in the given slot
 		}
 		Item &item = Stash.stashList[itemId];
-		InvDrawSlotBack(out, GetStashSlotCoord(slot) + offset, InventorySlotSizeInPixels, item._iMagical);
+		InvDrawSlotBack(out, GetStashSlotCoord(slot) + offset, InventorySlotSizeInPixels, item);
 	}
 
 	for (auto slot : StashGridRange) {

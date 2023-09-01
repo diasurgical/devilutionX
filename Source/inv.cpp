@@ -997,7 +997,7 @@ int CreateGoldItemInInventorySlot(Player &player, int slotIndex, int value)
 
 } // namespace
 
-void InvDrawSlotBack(const Surface &out, Point targetPosition, Size size, item_quality itemQuality)
+void InvDrawSlotBack(const Surface &out, Point targetPosition, Size size, Item &item)
 {
 	SDL_Rect srcRect = MakeSdlRect(0, 0, size.width, size.height);
 	out.Clip(&srcRect, &targetPosition);
@@ -1011,17 +1011,72 @@ void InvDrawSlotBack(const Surface &out, Point targetPosition, Size size, item_q
 		for (int wdt = size.width; wdt != 0; wdt--) {
 			std::uint8_t pix = *dst;
 			if (pix >= PAL16_GRAY) {
-				switch (itemQuality) {
+				int color;
+
+				switch (item._iMagical) {
 				case ITEM_QUALITY_MAGIC:
-					pix -= PAL16_GRAY - (!IsInspectingPlayer() ? PAL16_BLUE : PAL16_ORANGE) - 1;
+					color = PAL16_BLUE;
 					break;
 				case ITEM_QUALITY_UNIQUE:
-					pix -= PAL16_GRAY - (!IsInspectingPlayer() ? PAL16_YELLOW : PAL16_ORANGE) - 1;
+					color = PAL16_YELLOW;
 					break;
 				default:
-					pix -= PAL16_GRAY - (!IsInspectingPlayer() ? PAL16_BEIGE : PAL16_ORANGE) - 1;
+					color = PAL16_BEIGE;
 					break;
 				}
+
+				if ((pcurs == CURSOR_IDENTIFY && (item._iIdentified || item._iMagical == ITEM_QUALITY_NORMAL)) || (pcurs == CURSOR_REPAIR && item._iDurability == item._iMaxDur || (pcurs == CURSOR_RECHARGE && item._iCharges == item._iMaxCharges))) {
+					color = PAL16_RED;
+				}
+
+				if (pcurs == CURSOR_OIL) {
+					switch (MyPlayer->_pOilType) {
+					case IMISC_OILACC:
+						if (item._iPLToHit >= 50 || item._iClass != ICLASS_WEAPON)
+							color = PAL16_RED;
+						break;
+					case IMISC_OILMAST:
+						if (item._iPLToHit >= 100 || item._iClass != ICLASS_WEAPON)
+							color = PAL16_RED;
+						break;
+					case IMISC_OILSHARP:
+						if (item._iMaxDam - item._iMinDam >= 30 || item._iMaxDam == 255 || item._iClass != ICLASS_WEAPON)
+							color = PAL16_RED;
+						break;
+					case IMISC_OILDEATH:
+						if (item._iMaxDam - item._iMinDam >= 30 || item._iMaxDam >= 254 || item._iClass != ICLASS_WEAPON || item._itype == ItemType::Bow)
+							color = PAL16_RED;
+						break;
+					case IMISC_OILSKILL:
+						if (item._iMinStr == 0 && item._iMinMag == 0 && item._iMinDex == 0)
+							color = PAL16_RED;
+						break;
+					case IMISC_OILBSMTH:
+						if (item._iMaxDur == DUR_INDESTRUCTIBLE || (item._iDurability == item._iMaxDur && item._iMaxDur >= 100))
+							color = PAL16_RED;
+						break;
+					case IMISC_OILFORT:
+						if (item._iMaxDur == DUR_INDESTRUCTIBLE || item._iMaxDur >= 200)
+							color = PAL16_RED;
+						break;
+					case IMISC_OILPERM:
+						if (item._iMaxDur == DUR_INDESTRUCTIBLE)
+							color = PAL16_RED;
+						break;
+					case IMISC_OILHARD:
+						if (item._iAC >= 60 || item._iClass != ICLASS_ARMOR)
+							color = PAL16_RED;
+						break;
+					case IMISC_OILIMP:
+						if (item._iAC >= 120 || item._iClass != ICLASS_ARMOR)
+							color = PAL16_RED;
+						break;
+					default:
+						break;
+					}
+				}
+
+				pix -= PAL16_GRAY - (!IsInspectingPlayer() ? color : PAL16_ORANGE) - 1;
 			}
 			*dst++ = pix;
 		}
@@ -1091,7 +1146,7 @@ void DrawInv(const Surface &out)
 		if (!myPlayer.InvBody[slot].isEmpty()) {
 			int screenX = slotPos[slot].x;
 			int screenY = slotPos[slot].y;
-			InvDrawSlotBack(out, GetPanelPosition(UiPanels::Inventory, { screenX, screenY }), { slotSize[slot].width * InventorySlotSizeInPixels.width, slotSize[slot].height * InventorySlotSizeInPixels.height }, myPlayer.InvBody[slot]._iMagical);
+			InvDrawSlotBack(out, GetPanelPosition(UiPanels::Inventory, { screenX, screenY }), { slotSize[slot].width * InventorySlotSizeInPixels.width, slotSize[slot].height * InventorySlotSizeInPixels.height }, myPlayer.InvBody[slot]);
 
 			const int cursId = myPlayer.InvBody[slot]._iCurs + CURSOR_FIRSTITEM;
 
@@ -1114,7 +1169,7 @@ void DrawInv(const Surface &out)
 
 			if (slot == INVLOC_HAND_LEFT) {
 				if (myPlayer.GetItemLocation(myPlayer.InvBody[slot]) == ILOC_TWOHAND) {
-					InvDrawSlotBack(out, GetPanelPosition(UiPanels::Inventory, slotPos[INVLOC_HAND_RIGHT]), { slotSize[INVLOC_HAND_RIGHT].width * InventorySlotSizeInPixels.width, slotSize[INVLOC_HAND_RIGHT].height * InventorySlotSizeInPixels.height }, myPlayer.InvBody[slot]._iMagical);
+					InvDrawSlotBack(out, GetPanelPosition(UiPanels::Inventory, slotPos[INVLOC_HAND_RIGHT]), { slotSize[INVLOC_HAND_RIGHT].width * InventorySlotSizeInPixels.width, slotSize[INVLOC_HAND_RIGHT].height * InventorySlotSizeInPixels.height }, myPlayer.InvBody[slot]);
 					LightTableIndex = 0;
 
 					const int dstX = GetRightPanel().position.x + slotPos[INVLOC_HAND_RIGHT].x + (frameSize.width == InventorySlotSizeInPixels.width ? INV_SLOT_HALF_SIZE_PX : 0) - 1;
@@ -1131,7 +1186,7 @@ void DrawInv(const Surface &out)
 			    out,
 			    GetPanelPosition(UiPanels::Inventory, InvRect[i + SLOTXY_INV_FIRST].position) + Displacement { 0, InventorySlotSizeInPixels.height },
 			    InventorySlotSizeInPixels,
-			    myPlayer.InvList[abs(myPlayer.InvGrid[i]) - 1]._iMagical);
+			    myPlayer.InvList[abs(myPlayer.InvGrid[i]) - 1]);
 		}
 	}
 
@@ -1169,7 +1224,7 @@ void DrawInvBelt(const Surface &out)
 		}
 
 		const Point position { InvRect[i + SLOTXY_BELT_FIRST].position.x + mainPanelPosition.x, InvRect[i + SLOTXY_BELT_FIRST].position.y + mainPanelPosition.y + InventorySlotSizeInPixels.height };
-		InvDrawSlotBack(out, position, InventorySlotSizeInPixels, myPlayer.SpdList[i]._iMagical);
+		InvDrawSlotBack(out, position, InventorySlotSizeInPixels, myPlayer.SpdList[i]);
 		const int cursId = myPlayer.SpdList[i]._iCurs + CURSOR_FIRSTITEM;
 
 		const ClxSprite sprite = GetInvItemSprite(cursId);
