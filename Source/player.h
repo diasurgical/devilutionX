@@ -386,6 +386,50 @@ struct Player {
 		    && _pDexterity >= item._iMinDex;
 	}
 
+	bool CanCleave()
+	{
+		switch (_pClass) {
+		case HeroClass::Warrior:
+		case HeroClass::Rogue:
+		case HeroClass::Sorcerer:
+			return false;
+		case HeroClass::Monk:
+			return isEquipped(ItemType::Staff);
+		case HeroClass::Bard:
+			return InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Sword && InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Sword;
+		case HeroClass::Barbarian:
+			return isEquipped(ItemType::Axe) || (!isEquipped(ItemType::Shield) && (isEquipped(ItemType::Mace, true) || isEquipped(ItemType::Sword, true)));
+		default:
+			return false;
+		}
+	}
+
+	bool isEquipped(ItemType itemType, bool isTwoHanded = false)
+	{
+		switch (itemType) {
+		case ItemType::Sword:
+		case ItemType::Axe:
+		case ItemType::Bow:
+		case ItemType::Mace:
+		case ItemType::Shield:
+		case ItemType::Staff:
+			return (InvBody[INVLOC_HAND_LEFT]._itype == itemType && (!isTwoHanded || InvBody[INVLOC_HAND_LEFT]._iLoc == ILOC_TWOHAND))
+			    || (InvBody[INVLOC_HAND_RIGHT]._itype == itemType && (!isTwoHanded || InvBody[INVLOC_HAND_LEFT]._iLoc == ILOC_TWOHAND));
+		case ItemType::LightArmor:
+		case ItemType::MediumArmor:
+		case ItemType::HeavyArmor:
+			return InvBody[INVLOC_CHEST]._itype == itemType;
+		case ItemType::Helm:
+			return InvBody[INVLOC_HEAD]._itype == itemType;
+		case ItemType::Ring:
+			return InvBody[INVLOC_RING_LEFT]._itype == itemType || InvBody[INVLOC_RING_RIGHT]._itype == itemType;
+		case ItemType::Amulet:
+			return InvBody[INVLOC_AMULET]._itype == itemType;
+		default:
+			return false;
+		}
+	}
+
 	/**
 	 * @brief Remove an item from player inventory
 	 * @param iv invList index of item to be removed
