@@ -1167,9 +1167,9 @@ void StashMove(AxisDirection dir)
 
 	if (ActiveStashSlot != InvalidStashPoint) {
 		Point mousePos = GetStashSlotCoord(ActiveStashSlot);
-		if (pcurs == CURSOR_HAND) {
-			mousePos += Displacement { INV_SLOT_HALF_SIZE_PX, INV_SLOT_HALF_SIZE_PX };
-		}
+		// Stash coordinates are all the top left of the cell, so we need to shift the mouse to the center of the held item
+		// or the center of the cell if we have a hand cursor (itemSize will be 1x1 here so we can use the same calculation)
+		mousePos += Displacement { itemSize.width * INV_SLOT_HALF_SIZE_PX, itemSize.height * INV_SLOT_HALF_SIZE_PX };
 		SetCursorPos(mousePos);
 		return;
 	}
