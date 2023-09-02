@@ -49,7 +49,7 @@ jobs:
     - name: Install clang-18
       run: |
         sudo apt-get install -yq --no-install-recommends clang-18 lld-18 libc++-18-dev:arm64 \
-          libgcc-10-dev-arm64-cross binutils-aarch64-linux-gnu && \
+          libgcc-10-dev-arm64-cross binutils-aarch64-linux-gnu libc++1-18:arm64 libc++abi1-18:arm64 && \
         sudo update-alternatives --install \
           /usr/bin/clang++ clang++ /usr/bin/clang++-18 200 && \
         sudo update-alternatives --install \
