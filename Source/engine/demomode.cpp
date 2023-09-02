@@ -2,7 +2,6 @@
 
 #include <cstdint>
 #include <cstdio>
-#include <deque>
 #include <limits>
 #include <optional>
 
@@ -65,13 +64,6 @@ struct KeyEventData {
 	uint16_t mod;
 };
 
-union DemoMsgEventData {
-	MouseMotionEventData motion;
-	MouseButtonEventData button;
-	MouseWheelEventData wheel;
-	KeyEventData key;
-};
-
 struct DemoMsg {
 	enum EventType : uint8_t {
 		GameTick = 0,
@@ -93,6 +85,12 @@ struct DemoMsg {
 
 	EventType type;
 	uint8_t progressToNextGameTick;
+	union {
+		MouseMotionEventData motion;
+		MouseButtonEventData button;
+		MouseWheelEventData wheel;
+		KeyEventData key;
+	};
 
 	[[nodiscard]] bool isEvent() const
 	{
@@ -100,7 +98,11 @@ struct DemoMsg {
 	}
 };
 
+FILE *DemoFile;
+int DemoFileVersion;
 int DemoNumber = -1;
+std::optional<DemoMsg> CurrentDemoMessage;
+
 bool Timedemo = false;
 int RecordNumber = -1;
 bool CreateDemoReference = false;
@@ -141,46 +143,6 @@ uint32_t StartTime = 0;
 
 uint16_t DemoGraphicsWidth = 640;
 uint16_t DemoGraphicsHeight = 480;
-
-std::deque<DemoMsg> DemoMessageQueue;
-std::deque<MouseMotionEventData> MouseMotionEventDataQueue;
-std::deque<MouseButtonEventData> MouseButtonEventDataQueue;
-std::deque<MouseWheelEventData> MouseWheelEventDataQueue;
-std::deque<KeyEventData> KeyEventDataQueue;
-
-struct DemoMessageAndData {
-	DemoMsg message;
-	DemoMsgEventData data;
-};
-DemoMessageAndData PopDemoMessage()
-{
-	DemoMessageAndData result;
-	result.message = DemoMessageQueue.front();
-	DemoMessageQueue.pop_front();
-	switch (result.message.type) {
-	case DemoMsg::MouseMotionEvent:
-		result.data.motion = MouseMotionEventDataQueue.front();
-		MouseMotionEventDataQueue.pop_front();
-		break;
-	case DemoMsg::MouseButtonDownEvent:
-	case DemoMsg::MouseButtonUpEvent:
-		result.data.button = MouseButtonEventDataQueue.front();
-		MouseButtonEventDataQueue.pop_front();
-		break;
-	case DemoMsg::MouseWheelEvent:
-		result.data.wheel = MouseWheelEventDataQueue.front();
-		MouseWheelEventDataQueue.pop_front();
-		break;
-	case DemoMsg::KeyDownEvent:
-	case DemoMsg::KeyUpEvent:
-		result.data.key = KeyEventDataQueue.front();
-		KeyEventDataQueue.pop_front();
-		break;
-	default:
-		break;
-	}
-	return result;
-}
 
 void ReadSettings(FILE *in, uint8_t version) // NOLINT(readability-identifier-length)
 {
@@ -277,39 +239,39 @@ void WriteSettings(FILE *out)
 }
 
 #if SDL_VERSION_ATLEAST(2, 0, 0)
-bool CreateSdlEvent(const DemoMsg &dmsg, const DemoMsgEventData &data, SDL_Event &event, uint16_t &modState)
+bool CreateSdlEvent(const DemoMsg &dmsg, SDL_Event &event, uint16_t &modState)
 {
 	const uint8_t type = dmsg.type;
 	switch (type) {
 	case DemoMsg::MouseMotionEvent:
 		event.type = SDL_MOUSEMOTION;
 		event.motion.which = 0;
-		event.motion.x = data.motion.x;
-		event.motion.y = data.motion.y;
+		event.motion.x = dmsg.motion.x;
+		event.motion.y = dmsg.motion.y;
 		return true;
 	case DemoMsg::MouseButtonDownEvent:
 	case DemoMsg::MouseButtonUpEvent:
 		event.type = type == DemoMsg::MouseButtonDownEvent ? SDL_MOUSEBUTTONDOWN : SDL_MOUSEBUTTONUP;
 		event.button.which = 0;
-		event.button.button = data.button.button;
+		event.button.button = dmsg.button.button;
 		event.button.state = type == DemoMsg::MouseButtonDownEvent ? SDL_PRESSED : SDL_RELEASED;
-		event.button.x = data.button.x;
-		event.button.y = data.button.y;
-		modState = data.button.mod;
+		event.button.x = dmsg.button.x;
+		event.button.y = dmsg.button.y;
+		modState = dmsg.button.mod;
 		return true;
 	case DemoMsg::MouseWheelEvent:
 		event.type = SDL_MOUSEWHEEL;
 		event.wheel.which = 0;
-		event.wheel.x = data.wheel.x;
-		event.wheel.y = data.wheel.y;
-		modState = data.wheel.mod;
+		event.wheel.x = dmsg.wheel.x;
+		event.wheel.y = dmsg.wheel.y;
+		modState = dmsg.wheel.mod;
 		return true;
 	case DemoMsg::KeyDownEvent:
 	case DemoMsg::KeyUpEvent:
 		event.type = type == DemoMsg::KeyDownEvent ? SDL_KEYDOWN : SDL_KEYUP;
 		event.key.state = type == DemoMsg::KeyDownEvent ? SDL_PRESSED : SDL_RELEASED;
-		event.key.keysym.sym = data.key.sym;
-		event.key.keysym.mod = data.key.mod;
+		event.key.keysym.sym = dmsg.key.sym;
+		event.key.keysym.mod = dmsg.key.mod;
 		return true;
 	default:
 		if (type >= DemoMsg::MinCustomEvent) {
@@ -370,43 +332,43 @@ uint8_t Sdl2ToSdl1MouseButton(uint8_t button)
 	}
 }
 
-bool CreateSdlEvent(const DemoMsg &dmsg, const DemoMsgEventData &data, SDL_Event &event, uint16_t &modState)
+bool CreateSdlEvent(const DemoMsg &dmsg, SDL_Event &event, uint16_t &modState)
 {
 	const uint8_t type = dmsg.type;
 	switch (type) {
 	case DemoMsg::MouseMotionEvent:
 		event.type = SDL_MOUSEMOTION;
 		event.motion.which = 0;
-		event.motion.x = data.motion.x;
-		event.motion.y = data.motion.y;
+		event.motion.x = dmsg.motion.x;
+		event.motion.y = dmsg.motion.y;
 		return true;
 	case DemoMsg::MouseButtonDownEvent:
 	case DemoMsg::MouseButtonUpEvent:
 		event.type = type == DemoMsg::MouseButtonDownEvent ? SDL_MOUSEBUTTONDOWN : SDL_MOUSEBUTTONUP;
 		event.button.which = 0;
-		event.button.button = Sdl2ToSdl1MouseButton(data.button.button);
+		event.button.button = Sdl2ToSdl1MouseButton(dmsg.button.button);
 		event.button.state = type == DemoMsg::MouseButtonDownEvent ? SDL_PRESSED : SDL_RELEASED;
-		event.button.x = data.button.x;
-		event.button.y = data.button.y;
-		modState = data.button.mod;
+		event.button.x = dmsg.button.x;
+		event.button.y = dmsg.button.y;
+		modState = dmsg.button.mod;
 		return true;
 	case DemoMsg::MouseWheelEvent:
-		if (data.wheel.y == 0) {
+		if (dmsg.wheel.y == 0) {
 			LogWarn("Demo: unsupported event (mouse wheel y == 0)");
 			return false;
 		}
 		event.type = SDL_MOUSEBUTTONDOWN;
 		event.button.which = 0;
-		event.button.button = data.wheel.y > 0 ? SDL_BUTTON_WHEELUP : SDL_BUTTON_WHEELDOWN;
-		modState = data.wheel.mod;
+		event.button.button = dmsg.wheel.y > 0 ? SDL_BUTTON_WHEELUP : SDL_BUTTON_WHEELDOWN;
+		modState = dmsg.wheel.mod;
 		return true;
 	case DemoMsg::KeyDownEvent:
 	case DemoMsg::KeyUpEvent:
 		event.type = type == DemoMsg::KeyDownEvent ? SDL_KEYDOWN : SDL_KEYUP;
 		event.key.which = 0;
 		event.key.state = type == DemoMsg::KeyDownEvent ? SDL_PRESSED : SDL_RELEASED;
-		event.key.keysym.sym = Sdl2ToSdl1Key(data.key.sym);
-		event.key.keysym.mod = static_cast<SDL_Keymod>(data.key.mod);
+		event.key.keysym.sym = Sdl2ToSdl1Key(dmsg.key.sym);
+		event.key.keysym.mod = static_cast<SDL_Keymod>(dmsg.key.mod);
 		return true;
 	default:
 		if (type >= DemoMsg::MinCustomEvent) {
@@ -446,11 +408,11 @@ uint8_t MapPreV2DemoMsgEventType(uint16_t type)
 	}
 }
 
-void LogDemoMessage(const DemoMsg &msg, const DemoMsgEventData &data = DemoMsgEventData {})
+void LogDemoMessage(const DemoMsg &dmsg)
 {
 #ifdef LOG_DEMOMODE_MESSAGES
-	const uint8_t progressToNextGameTick = msg.progressToNextGameTick;
-	switch (msg.type) {
+	const uint8_t progressToNextGameTick = dmsg.progressToNextGameTick;
+	switch (dmsg.type) {
 	case DemoMsg::GameTick:
 #ifdef LOG_DEMOMODE_MESSAGES_GAMETICK
 		Log("⏲️  GameTick {:>3}", progressToNextGameTick);
@@ -464,119 +426,122 @@ void LogDemoMessage(const DemoMsg &msg, const DemoMsgEventData &data = DemoMsgEv
 	case DemoMsg::MouseMotionEvent:
 #ifdef LOG_DEMOMODE_MESSAGES_MOUSEMOTION
 		Log("🖱️  Message {:>3} MOUSEMOTION {} {}", progressToNextGameTick,
-		    data.motion.x, data.motion.y);
+		    dmsg.motion.x, dmsg.motion.y);
 #endif
 		break;
 	case DemoMsg::MouseButtonDownEvent:
 	case DemoMsg::MouseButtonUpEvent:
 		Log("🖱️  Message {:>3} {} {} {} {} 0x{:x}", progressToNextGameTick,
-		    msg.type == DemoMsg::MouseButtonDownEvent ? "MOUSEBUTTONDOWN" : "MOUSEBUTTONUP",
-		    data.button.button, data.button.x, data.button.y, data.button.mod);
+		    dmsg.type == DemoMsg::MouseButtonDownEvent ? "MOUSEBUTTONDOWN" : "MOUSEBUTTONUP",
+		    dmsg.button.button, dmsg.button.x, dmsg.button.y, dmsg.button.mod);
 		break;
 	case DemoMsg::MouseWheelEvent:
 		Log("🖱️  Message {:>3} MOUSEWHEEL {} {} 0x{:x}", progressToNextGameTick,
-		    data.wheel.x, data.wheel.y, data.wheel.mod);
+		    dmsg.wheel.x, dmsg.wheel.y, dmsg.wheel.mod);
 		break;
 	case DemoMsg::KeyDownEvent:
 	case DemoMsg::KeyUpEvent:
 		Log("🔤 Message {:>3} {} 0x{:x} 0x{:x}", progressToNextGameTick,
-		    msg.type == DemoMsg::KeyDownEvent ? "KEYDOWN" : "KEYUP",
-		    data.key.sym, data.key.mod);
+		    dmsg.type == DemoMsg::KeyDownEvent ? "KEYDOWN" : "KEYUP",
+		    dmsg.key.sym, dmsg.key.mod);
 		break;
 	case DemoMsg::QuitEvent:
 		Log("❎  Message {:>3} QUIT", progressToNextGameTick);
 		break;
 	default:
-		Log("📨  Message {:>3} USEREVENT {}", progressToNextGameTick, static_cast<uint8_t>(msg.type));
+		Log("📨  Message {:>3} USEREVENT {}", progressToNextGameTick, static_cast<uint8_t>(dmsg.type));
 		break;
 	}
 #endif // LOG_DEMOMODE_MESSAGES
 }
 
-LoadingStatus LoadDemoMessages(int demoNumber)
+void CloseDemoFile()
 {
+	if (DemoFile != nullptr) {
+		std::fclose(DemoFile);
+		DemoFile = nullptr;
+	}
+}
+
+LoadingStatus OpenDemoFile(int demoNumber)
+{
+	CloseDemoFile();
 	const std::string path = StrCat(paths::PrefPath(), "demo_", demoNumber, ".dmo");
-	FILE *demofile = OpenFile(path.c_str(), "rb");
-	if (demofile == nullptr) {
+	DemoFile = OpenFile(path.c_str(), "rb");
+	if (DemoFile == nullptr) {
 		return LoadingStatus::FileNotFound;
 	}
-
-	const uint8_t version = ReadByte(demofile);
-	if (version > Version) {
+	DemoFileVersion = ReadByte(DemoFile);
+	if (DemoFileVersion > Version) {
 		return LoadingStatus::UnsupportedVersion;
 	}
+	DemoNumber = demoNumber;
 
-	gSaveNumber = ReadLE32(demofile);
-	ReadSettings(demofile, version);
-
-	while (true) {
-		const uint8_t typeNum = version >= 2 ? ReadByte(demofile) : ReadLE32(demofile);
-		if (std::feof(demofile) != 0)
-			break;
-
-		// Events with the high bit 1 are Rendering events with the rest of the bits used
-		// to encode `progressToNextGameTick` inline.
-		if ((typeNum & 0b10000000) != 0) {
-			DemoMessageQueue.push_back(DemoMsg { DemoMsg::Rendering, static_cast<uint8_t>(typeNum & 0b01111111u) });
-			continue;
-		}
-		const uint8_t progressToNextGameTick = ReadByte(demofile);
-
-		switch (typeNum) {
-		case DemoMsg::GameTick:
-		case DemoMsg::Rendering:
-			DemoMessageQueue.push_back(DemoMsg { static_cast<DemoMsg::EventType>(typeNum), progressToNextGameTick });
-			break;
-		default: {
-			const uint8_t eventType = version >= 2 ? typeNum : MapPreV2DemoMsgEventType(static_cast<uint16_t>(ReadLE32(demofile)));
-			DemoMessageQueue.push_back(DemoMsg { static_cast<DemoMsg::EventType>(eventType), progressToNextGameTick });
-			switch (eventType) {
-			case DemoMsg::MouseMotionEvent: {
-				MouseMotionEventData motion;
-				motion.x = ReadLE16(demofile);
-				motion.y = ReadLE16(demofile);
-				MouseMotionEventDataQueue.push_back(motion);
-			} break;
-			case DemoMsg::MouseButtonDownEvent:
-			case DemoMsg::MouseButtonUpEvent: {
-				MouseButtonEventData button;
-				button.button = ReadByte(demofile);
-				button.x = ReadLE16(demofile);
-				button.y = ReadLE16(demofile);
-				button.mod = ReadLE16(demofile);
-				MouseButtonEventDataQueue.push_back(button);
-			} break;
-			case DemoMsg::MouseWheelEvent: {
-				MouseWheelEventData wheel;
-				wheel.x = version >= 2 ? ReadLE16<int16_t>(demofile) : static_cast<int16_t>(ReadLE32<int32_t>(demofile));
-				wheel.y = version >= 2 ? ReadLE16<int16_t>(demofile) : static_cast<int16_t>(ReadLE32<int32_t>(demofile));
-				wheel.mod = ReadLE16(demofile);
-				MouseWheelEventDataQueue.push_back(wheel);
-			} break;
-			case DemoMsg::KeyDownEvent:
-			case DemoMsg::KeyUpEvent: {
-				KeyEventData key;
-				key.sym = static_cast<SDL_Keycode>(ReadLE32(demofile));
-				key.mod = static_cast<SDL_Keymod>(ReadLE16(demofile));
-				KeyEventDataQueue.push_back(key);
-			} break;
-			case DemoMsg::QuitEvent: // SDL_QUIT
-				break;
-			default:
-				if (eventType < DemoMsg::MinCustomEvent) {
-					app_fatal(StrCat("Unknown event ", eventType));
-				}
-				break;
-			}
-		} break;
-		}
-	}
-
-	std::fclose(demofile);
-
-	DemoModeLastTick = SDL_GetTicks();
+	gSaveNumber = ReadLE32(DemoFile);
+	ReadSettings(DemoFile, DemoFileVersion);
 
 	return LoadingStatus::Success;
+}
+
+std::optional<DemoMsg> ReadDemoMessage()
+{
+	const uint8_t typeNum = DemoFileVersion >= 2 ? ReadByte(DemoFile) : ReadLE32(DemoFile);
+
+	if (std::feof(DemoFile) != 0) {
+		CloseDemoFile();
+		return std::nullopt;
+	}
+
+	// Events with the high bit 1 are Rendering events with the rest of the bits used
+	// to encode `progressToNextGameTick` inline.
+	if ((typeNum & 0b10000000) != 0) {
+		DemoModeLastTick = SDL_GetTicks();
+		return DemoMsg { DemoMsg::Rendering, static_cast<uint8_t>(typeNum & 0b01111111u), {} };
+	}
+	const uint8_t progressToNextGameTick = ReadByte(DemoFile);
+
+	switch (typeNum) {
+	case DemoMsg::GameTick:
+	case DemoMsg::Rendering:
+		DemoModeLastTick = SDL_GetTicks();
+		return DemoMsg { static_cast<DemoMsg::EventType>(typeNum), progressToNextGameTick, {} };
+	default: {
+		const uint8_t eventType = DemoFileVersion >= 2 ? typeNum : MapPreV2DemoMsgEventType(static_cast<uint16_t>(ReadLE32(DemoFile)));
+		DemoMsg result { static_cast<DemoMsg::EventType>(eventType), progressToNextGameTick, {} };
+		switch (eventType) {
+		case DemoMsg::MouseMotionEvent: {
+			result.motion.x = ReadLE16(DemoFile);
+			result.motion.y = ReadLE16(DemoFile);
+		} break;
+		case DemoMsg::MouseButtonDownEvent:
+		case DemoMsg::MouseButtonUpEvent: {
+			result.button.button = ReadByte(DemoFile);
+			result.button.x = ReadLE16(DemoFile);
+			result.button.y = ReadLE16(DemoFile);
+			result.button.mod = ReadLE16(DemoFile);
+		} break;
+		case DemoMsg::MouseWheelEvent: {
+			result.wheel.x = DemoFileVersion >= 2 ? ReadLE16<int16_t>(DemoFile) : static_cast<int16_t>(ReadLE32<int32_t>(DemoFile));
+			result.wheel.y = DemoFileVersion >= 2 ? ReadLE16<int16_t>(DemoFile) : static_cast<int16_t>(ReadLE32<int32_t>(DemoFile));
+			result.wheel.mod = ReadLE16(DemoFile);
+		} break;
+		case DemoMsg::KeyDownEvent:
+		case DemoMsg::KeyUpEvent: {
+			result.key.sym = static_cast<SDL_Keycode>(ReadLE32(DemoFile));
+			result.key.mod = static_cast<SDL_Keymod>(ReadLE16(DemoFile));
+		} break;
+		case DemoMsg::QuitEvent: // SDL_QUIT
+			break;
+		default:
+			if (eventType < DemoMsg::MinCustomEvent) {
+				app_fatal(StrCat("Unknown event ", eventType));
+			}
+			break;
+		}
+		DemoModeLastTick = SDL_GetTicks();
+		return result;
+	} break;
+	}
 }
 
 void WriteDemoMsgHeader(DemoMsg::EventType type)
@@ -595,11 +560,10 @@ namespace demo {
 
 void InitPlayBack(int demoNumber, bool timedemo)
 {
-	DemoNumber = demoNumber;
 	Timedemo = timedemo;
 	ControlMode = ControlTypes::KeyboardAndMouse;
 
-	const LoadingStatus status = LoadDemoMessages(demoNumber);
+	const LoadingStatus status = OpenDemoFile(demoNumber);
 	switch (status) {
 	case LoadingStatus::Success:
 		return;
@@ -672,10 +636,14 @@ bool IsRecording()
 
 bool GetRunGameLoop(bool &drawGame, bool &processInput)
 {
-	if (DemoMessageQueue.empty())
+	if (CurrentDemoMessage == std::nullopt && DemoFile != nullptr)
+		CurrentDemoMessage = ReadDemoMessage();
+	if (CurrentDemoMessage == std::nullopt)
 		app_fatal("Demo queue empty");
-	const DemoMsg &dmsg = DemoMessageQueue.front();
-	if (dmsg.isEvent())
+
+	const DemoMsg &dmsg = *CurrentDemoMessage;
+
+	if (CurrentDemoMessage->isEvent())
 		app_fatal("Unexpected event demo message in GetRunGameLoop");
 	LogDemoMessage(dmsg);
 	if (Timedemo) {
@@ -706,7 +674,7 @@ bool GetRunGameLoop(bool &drawGame, bool &processInput)
 	}
 	ProgressToNextGameTick = dmsg.progressToNextGameTick;
 	const bool isGameTick = dmsg.type == DemoMsg::GameTick;
-	DemoMessageQueue.pop_front();
+	CurrentDemoMessage = std::nullopt;
 	if (isGameTick)
 		LogicTick++;
 	return isGameTick;
@@ -724,7 +692,8 @@ bool FetchMessage(SDL_Event *event, uint16_t *modState)
 			return true;
 		}
 		if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE) {
-			DemoMessageQueue.clear();
+			CloseDemoFile();
+			CurrentDemoMessage = std::nullopt;
 			DemoNumber = -1;
 			Timedemo = false;
 			last_tick = SDL_GetTicks();
@@ -741,15 +710,16 @@ bool FetchMessage(SDL_Event *event, uint16_t *modState)
 		}
 	}
 
-	if (!DemoMessageQueue.empty()) {
-		if (DemoMessageQueue.front().isEvent()) {
-			const DemoMessageAndData dmsg = PopDemoMessage();
-			LogDemoMessage(dmsg.message, dmsg.data);
-			const bool hasEvent = CreateSdlEvent(dmsg.message, dmsg.data, *event, *modState);
-			ProgressToNextGameTick = dmsg.message.progressToNextGameTick;
+	if (CurrentDemoMessage == std::nullopt && DemoFile != nullptr)
+		CurrentDemoMessage = ReadDemoMessage();
+	if (CurrentDemoMessage != std::nullopt) {
+		const DemoMsg &dmsg = *CurrentDemoMessage;
+		LogDemoMessage(dmsg);
+		if (dmsg.isEvent()) {
+			const bool hasEvent = CreateSdlEvent(dmsg, *event, *modState);
+			ProgressToNextGameTick = dmsg.progressToNextGameTick;
+			CurrentDemoMessage = std::nullopt;
 			return hasEvent;
-		} else {
-			LogDemoMessage(DemoMessageQueue.front());
 		}
 	}
 

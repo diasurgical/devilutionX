@@ -27,6 +27,7 @@
 #include "utils/language.h"
 #include "utils/parse_int.hpp"
 #include "utils/paths.h"
+#include "utils/stdcompat/filesystem.hpp"
 #include "utils/str_cat.hpp"
 #include "utils/str_split.hpp"
 #include "utils/utf8.hpp"
@@ -164,7 +165,17 @@ SaveWriter GetStashWriter()
 void CopySaveFile(uint32_t saveNum, std::string targetPath)
 {
 	const std::string savePath = GetSavePath(saveNum);
+#if defined(UNPACKED_SAVES)
+#ifdef DVL_NO_FILESYSTEM
+#error "UNPACKED_SAVES requires either DISABLE_DEMOMODE or C++17 <filesystem>"
+#endif
+	CreateDir(targetPath.c_str());
+	for (const std::filesystem::directory_entry &entry : std::filesystem::directory_iterator(savePath)) {
+		CopyFileOverwrite(entry.path().string().c_str(), (targetPath + entry.path().filename().string()).c_str());
+	}
+#else
 	CopyFileOverwrite(savePath.c_str(), targetPath.c_str());
+#endif
 }
 #endif
 
