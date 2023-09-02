@@ -105,6 +105,13 @@ parse_args() {
 		>&2 echo "Error: at most one of --profile-use and --profile-generate is allowed"
 		exit 64
 	fi
+	if [[ $TARGET = rg99 ]]; then
+		OPK_EXTRA_FILES+=(
+			Packaging/OpenDingux/devilutionx-from-disk.sh
+			Packaging/OpenDingux/devilutionx-umount-opk-and-run.sh
+		)
+		OPK_DESKTOP_EXEC="devilutionx-from-disk.sh"
+	fi
 	if (( PROFILE_GENERATE )); then
 		CMAKE_CONFIGURE_OPTS+=(
 			"-DDEVILUTIONX_PROFILE_GENERATE=ON"
@@ -112,7 +119,7 @@ parse_args() {
 		)
 		OPK_DESKTOP_NAME="DevilutionX PG"
 		OPK_DESKTOP_EXEC="profile-generate.sh"
-		OPK_EXTRA_FILES=(
+		OPK_EXTRA_FILES+=(
 			Packaging/OpenDingux/profile-generate.sh
 			test/fixtures/timedemo/WarriorLevel1to2/demo_0.dmo
 		)
