@@ -78,20 +78,21 @@ enum class AmHeightOffset : int8_t {
 enum class AmLineLength : uint8_t {
 	EighthTile = 1,
 	QuarterTile = 2,
+	ThirdTile = 3,
 	HalfTile = 4,
 	FullTile = 8,
 	FullAndHalfTile = 12,
 	DoubleTile = 16,
 };
 
-inline Displacement AmOffset(AmWidthOffset x, AmHeightOffset y)
+inline Displacement AmOffset(AmWidthOffset x, AmHeightOffset y, bool doorCorrection = false)
 {
-	return { AutoMapScale * static_cast<int>(x) / 100, AutoMapScale * static_cast<int>(y) / 100 };
+	return { AutoMapScale * static_cast<int>(x) / 100 + (doorCorrection ? 1 : 0), AutoMapScale * static_cast<int>(y) / 100 + (doorCorrection ? 1 : 0) };
 }
 
-inline int AmLine(AmLineLength l)
+inline int AmLine(AmLineLength l, bool doorCorrection = false)
 {
-	return AutoMapScale * static_cast<int>(l) / 100;
+	return AutoMapScale * static_cast<int>(l) / 100 - (doorCorrection ? 1 : 0);
 }
 
 /**
