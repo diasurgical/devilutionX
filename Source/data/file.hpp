@@ -11,35 +11,16 @@
 namespace devilution {
 
 struct ColumnDefinition {
-	uint8_t type;
-
 	enum class Error {
 		UnknownColumn
 	};
 
+	uint8_t type = std::numeric_limits<uint8_t>::max();
+
 	// The number of fields between this column and the last one identified as important (or from start of the record if this is the first column we care about)
 	unsigned skipLength = 0;
 
-	ColumnDefinition()
-	    : type(std::numeric_limits<uint8_t>::max())
-	{
-	}
-
-	ColumnDefinition(unsigned type)
-	    : type(type)
-	{
-	}
-
-	ColumnDefinition(unsigned type, unsigned skipLength)
-	    : type(type)
-	    , skipLength(skipLength)
-	{
-	}
-
-	bool operator==(const ColumnDefinition &other) const
-	{
-		return type == other.type && skipLength == other.skipLength;
-	}
+	bool operator==(const ColumnDefinition &other) const = default;
 
 	template <typename T>
 	explicit operator T() const
