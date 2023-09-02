@@ -9,6 +9,7 @@
 #include <array>
 #include <cstddef>
 #include <cstdint>
+#include <optional>
 #include <string>
 
 #include <fmt/format.h>
@@ -44,11 +45,12 @@
 #include "qol/xpbar.h"
 #include "stores.h"
 #include "towners.h"
+#include "utils/algorithm/container.hpp"
 #include "utils/format_int.hpp"
 #include "utils/language.h"
 #include "utils/log.hpp"
+#include "utils/parse_int.hpp"
 #include "utils/sdl_geometry.h"
-#include "utils/stdcompat/optional.hpp"
 #include "utils/str_case.hpp"
 #include "utils/str_cat.hpp"
 #include "utils/string_or_view.hpp"
@@ -212,7 +214,7 @@ void DrawFlask(const Surface &out, const Surface &celBuf, Point sourcePosition, 
 void DrawFlaskUpper(const Surface &out, const Surface &sourceBuffer, int offset, int fillPer)
 {
 	// clamping because this function only draws the top 12% of the flask display
-	int emptyPortion = clamp(80 - fillPer, 0, 11) + 2; // +2 to account for the frame being included in the sprite
+	int emptyPortion = std::clamp(80 - fillPer, 0, 11) + 2; // +2 to account for the frame being included in the sprite
 
 	// Draw the empty part of the flask
 	DrawFlask(out, sourceBuffer, { 13, 3 }, GetMainPanel().position + Displacement { offset, -13 }, emptyPortion);
@@ -231,7 +233,7 @@ void DrawFlaskUpper(const Surface &out, const Surface &sourceBuffer, int offset,
  */
 void DrawFlaskLower(const Surface &out, const Surface &sourceBuffer, int offset, int fillPer)
 {
-	int filled = clamp(fillPer, 0, 69);
+	int filled = std::clamp(fillPer, 0, 69);
 
 	if (filled < 69)
 		DrawFlaskTop(out, GetMainPanel().position + Displacement { offset, 0 }, sourceBuffer, 16, 85 - filled);
@@ -257,7 +259,7 @@ void PrintInfo(const Surface &out)
 	const int space[] = { 18, 12, 6, 3, 0 };
 	Rectangle infoArea { GetMainPanel().position + Displacement { 177, 46 }, { 288, 60 } };
 
-	const int newLineCount = std::count(InfoString.str().begin(), InfoString.str().end(), '\n');
+	const int newLineCount = c_count(InfoString.str(), '\n');
 	const int spaceIndex = std::min(4, newLineCount);
 	const int spacing = space[spaceIndex];
 	const int lineHeight = 12 + spacing;
@@ -336,12 +338,12 @@ struct TextCmdItem {
 	const std::string text;
 	const std::string description;
 	const std::string requiredParameter;
-	std::string (*actionProc)(const string_view);
+	std::string (*actionProc)(const std::string_view);
 };
 
 extern std::vector<TextCmdItem> TextCmdList;
 
-std::string TextCmdHelp(const string_view parameter)
+std::string TextCmdHelp(const std::string_view parameter)
 {
 	if (parameter.empty()) {
 		std::string ret;
@@ -351,7 +353,7 @@ std::string TextCmdHelp(const string_view parameter)
 		}
 		return ret;
 	}
-	auto textCmdIterator = std::find_if(TextCmdList.begin(), TextCmdList.end(), [&](const TextCmdItem &elem) { return elem.text == parameter; });
+	auto textCmdIterator = c_find_if(TextCmdList, [&](const TextCmdItem &elem) { return elem.text == parameter; });
 	if (textCmdIterator == TextCmdList.end())
 		return StrCat(_("Command "), parameter, _(" is unkown."));
 	auto &textCmdItem = *textCmdIterator;
@@ -373,7 +375,7 @@ const dungeon_type DungeonTypeForArena[] = {
 	dungeon_type::DTYPE_HELL,      // SL_ARENA_CIRCLE_OF_LIFE
 };
 
-std::string TextCmdArena(const string_view parameter)
+std::string TextCmdArena(const std::string_view parameter)
 {
 	std::string ret;
 	if (!gbIsMultiplayer) {
@@ -387,9 +389,9 @@ std::string TextCmdArena(const string_view parameter)
 		return ret;
 	}
 
-	int arenaNumber = atoi(parameter.data());
-	_setlevels arenaLevel = static_cast<_setlevels>(arenaNumber - 1 + SL_FIRST_ARENA);
-	if (arenaNumber < 0 || !IsArenaLevel(arenaLevel)) {
+	const ParseIntResult<int> parsedParam = ParseInt<int>(parameter, /*min=*/0);
+	const _setlevels arenaLevel = parsedParam.has_value() ? static_cast<_setlevels>(parsedParam.value() - 1 + SL_FIRST_ARENA) : _setlevels::SL_NONE;
+	if (!IsArenaLevel(arenaLevel)) {
 		StrAppend(ret, _("Invalid arena-number. Valid numbers are:"));
 		AppendArenaOverview(ret);
 		return ret;
@@ -405,17 +407,18 @@ std::string TextCmdArena(const string_view parameter)
 	return ret;
 }
 
-std::string TextCmdArenaPot(const string_view parameter)
+std::string TextCmdArenaPot(const std::string_view parameter)
 {
 	std::string ret;
 	if (!gbIsMultiplayer) {
 		StrAppend(ret, _("Arenas are only supported in multiplayer."));
 		return ret;
 	}
+	int numPots = ParseInt<int>(parameter, /*min=*/1).value_or(1);
 
 	Player &myPlayer = *MyPlayer;
 
-	for (int potNumber = std::max(1, atoi(parameter.data())); potNumber > 0; potNumber--) {
+	for (int potNumber = numPots; potNumber > 0; potNumber--) {
 		Item item {};
 		InitializeItem(item, IDI_ARENAPOT);
 		GenerateNewSeed(item);
@@ -429,7 +432,7 @@ std::string TextCmdArenaPot(const string_view parameter)
 	return ret;
 }
 
-std::string TextCmdInspect(const string_view parameter)
+std::string TextCmdInspect(const std::string_view parameter)
 {
 	std::string ret;
 	if (!gbIsMultiplayer) {
@@ -483,9 +486,9 @@ bool IsQuestEnabled(const Quest &quest)
 	}
 }
 
-std::string TextCmdLevelSeed(const string_view parameter)
+std::string TextCmdLevelSeed(const std::string_view parameter)
 {
-	string_view levelType = setlevel ? "set level" : "dungeon level";
+	std::string_view levelType = setlevel ? "set level" : "dungeon level";
 
 	char gameId[] = {
 		static_cast<char>((sgGameInitInfo.programid >> 24) & 0xFF),
@@ -495,8 +498,8 @@ std::string TextCmdLevelSeed(const string_view parameter)
 		'\0'
 	};
 
-	string_view mode = gbIsMultiplayer ? "MP" : "SP";
-	string_view questPool = UseMultiplayerQuests() ? "MP" : "Full";
+	std::string_view mode = gbIsMultiplayer ? "MP" : "SP";
+	std::string_view questPool = UseMultiplayerQuests() ? "MP" : "Full";
 
 	uint32_t questFlags = 0;
 	for (const Quest &quest : Quests) {
@@ -528,19 +531,19 @@ std::vector<TextCmdItem> TextCmdList = {
 	{ N_("/seedinfo"), N_("Show seed infos for current level."), "", &TextCmdLevelSeed },
 };
 
-bool CheckTextCommand(const string_view text)
+bool CheckTextCommand(const std::string_view text)
 {
 	if (text.size() < 1 || text[0] != '/')
 		return false;
 
-	auto textCmdIterator = std::find_if(TextCmdList.begin(), TextCmdList.end(), [&](const TextCmdItem &elem) { return text.find(elem.text) == 0 && (text.length() == elem.text.length() || text[elem.text.length()] == ' '); });
+	auto textCmdIterator = c_find_if(TextCmdList, [&](const TextCmdItem &elem) { return text.find(elem.text) == 0 && (text.length() == elem.text.length() || text[elem.text.length()] == ' '); });
 	if (textCmdIterator == TextCmdList.end()) {
 		InitDiabloMsg(StrCat(_("Command \""), text, "\" is unknown."));
 		return true;
 	}
 
 	TextCmdItem &textCmd = *textCmdIterator;
-	string_view parameter = "";
+	std::string_view parameter = "";
 	if (text.length() > (textCmd.text.length() + 1))
 		parameter = text.substr(textCmd.text.length() + 1);
 	const std::string result = textCmd.actionProc(parameter);
@@ -739,7 +742,7 @@ void ToggleCharPanel()
 		OpenCharPanel();
 }
 
-void AddPanelString(string_view str)
+void AddPanelString(std::string_view str)
 {
 	if (InfoString.empty())
 		InfoString = str;
@@ -807,7 +810,7 @@ void DrawFlaskValues(const Surface &out, Point pos, int currValue, int maxValue)
 {
 	UiFlags color = (currValue > 0 ? (currValue == maxValue ? UiFlags::ColorGold : UiFlags::ColorWhite) : UiFlags::ColorRed);
 
-	auto drawStringWithShadow = [out, color](string_view text, Point pos) {
+	auto drawStringWithShadow = [out, color](std::string_view text, Point pos) {
 		DrawString(out, text, pos + Displacement { -1, -1 }, UiFlags::ColorBlack | UiFlags::KerningFitSpacing, 0);
 		DrawString(out, text, pos, color | UiFlags::KerningFitSpacing, 0);
 	};
@@ -880,7 +883,7 @@ void InitControlPan()
 	for (bool &buttonEnabled : chrbtn)
 		buttonEnabled = false;
 	chrbtnactive = false;
-	InfoString = {};
+	InfoString = StringOrView {};
 	RedrawComponent(PanelDrawComponent::Health);
 	RedrawComponent(PanelDrawComponent::Mana);
 	CloseCharPanel();
@@ -1025,7 +1028,7 @@ void CheckPanelInfo()
 		InfoColor = UiFlags::ColorWhite;
 		panelflag = true;
 		AddPanelString(_("Hotkey: 's'"));
-		Player &myPlayer = *MyPlayer;
+		const Player &myPlayer = *MyPlayer;
 		const SpellID spellId = myPlayer._pRSpell;
 		if (IsValidSpell(spellId)) {
 			switch (myPlayer._pRSplType) {
@@ -1039,8 +1042,7 @@ void CheckPanelInfo()
 			} break;
 			case SpellType::Scroll: {
 				AddPanelString(fmt::format(fmt::runtime(_("Scroll of {:s}")), pgettext("spell", GetSpellData(spellId).sNameText)));
-				const InventoryAndBeltPlayerItemsRange items { myPlayer };
-				const int scrollCount = std::count_if(items.begin(), items.end(), [spellId](const Item &item) {
+				const int scrollCount = c_count_if(InventoryAndBeltPlayerItemsRange { myPlayer }, [spellId](const Item &item) {
 					return item.isScrollOf(spellId);
 				});
 				AddPanelString(fmt::format(fmt::runtime(ngettext("{:d} Scroll", "{:d} Scrolls", scrollCount)), scrollCount));
@@ -1163,7 +1165,7 @@ void DrawInfoBox(const Surface &out)
 {
 	DrawPanelBox(out, { 177, 62, 288, 63 }, GetMainPanel().position + Displacement { 177, 46 });
 	if (!panelflag && !trigflag && pcursinvitem == -1 && pcursstashitem == StashStruct::EmptyCell && !spselflag) {
-		InfoString = {};
+		InfoString = StringOrView {};
 		InfoColor = UiFlags::ColorWhite;
 	}
 	Player &myPlayer = *MyPlayer;
@@ -1196,14 +1198,14 @@ void DrawInfoBox(const Surface &out)
 					PrintMonstHistory(monster.type().type);
 				}
 			} else if (pcursitem == -1) {
-				InfoString = string_view(Towners[pcursmonst].name);
+				InfoString = std::string_view(Towners[pcursmonst].name);
 			}
 		}
 		if (pcursplr != -1) {
 			InfoColor = UiFlags::ColorWhitegold;
 			auto &target = Players[pcursplr];
-			InfoString = string_view(target._pName);
-			AddPanelString(fmt::format(fmt::runtime(_("{:s}, Level: {:d}")), _(PlayersData[static_cast<std::size_t>(target._pClass)].className), target._pLevel));
+			InfoString = std::string_view(target._pName);
+			AddPanelString(fmt::format(fmt::runtime(_("{:s}, Level: {:d}")), _(PlayersData[static_cast<std::size_t>(target._pClass)].className), target.getCharacterLevel()));
 			AddPanelString(fmt::format(fmt::runtime(_("Hit Points {:d} of {:d}")), target._pHitPoints >> 6, target._pMaxHP >> 6));
 		}
 	}
@@ -1535,7 +1537,7 @@ bool IsTalkActive()
 	return true;
 }
 
-void control_new_text(string_view text)
+void control_new_text(std::string_view text)
 {
 	strncat(TalkMessage, text.data(), sizeof(TalkMessage) - strlen(TalkMessage) - 1);
 }
@@ -1599,7 +1601,7 @@ void CloseGoldDrop()
 	SDL_StopTextInput();
 }
 
-void GoldDropNewText(string_view text)
+void GoldDropNewText(std::string_view text)
 {
 	for (char vkey : text) {
 		int digit = vkey - '0';

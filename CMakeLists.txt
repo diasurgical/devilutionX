@@ -156,7 +156,7 @@ else()
 endif()
 
 # By default, devilutionx.mpq is built only if smpq is installed and MPQ support is enabled.
-if(SUPPORTS_MPQ)
+if(SUPPORTS_MPQ AND NOT UNPACKED_MPQS)
   if(NOT DEFINED BUILD_ASSETS_MPQ AND NOT SRC_DIST)
     find_program(SMPQ smpq)
   elseif(BUILD_ASSETS_MPQ)
@@ -293,12 +293,9 @@ if(GPERF)
   endif()
 endif()
 
-# Despite setting C++ standard to 20, features from this version are not being used.
-# The oldest compiler used is GCC 6.5 - and that defines our C++ feature set (meaning most of C++17).
-# It's present only to take advantage of fmt::format build time errors.
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_CXX_STANDARD_REQUIRED OFF)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # for clang-tidy
 set(CMAKE_THREAD_PREFER_PTHREAD ON)
 set(THREADS_PREFER_PTHREAD_FLAG ON)

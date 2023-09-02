@@ -14,7 +14,9 @@
 #include "engine/render/text_render.hpp"
 #include "panels/info_box.hpp"
 #include "stores.h"
+#include "utils/algorithm/container.hpp"
 #include "utils/language.h"
+#include "utils/timer.hpp"
 
 namespace devilution {
 
@@ -116,13 +118,12 @@ void InitDiabloMsg(diablo_message e, uint32_t duration /*= 3500*/)
 	InitDiabloMsg(LanguageTranslate(MsgStrings[e]), duration);
 }
 
-void InitDiabloMsg(string_view msg, uint32_t duration /*= 3500*/)
+void InitDiabloMsg(std::string_view msg, uint32_t duration /*= 3500*/)
 {
 	if (DiabloMessages.size() >= MAX_SEND_STR_LEN)
 		return;
 
-	if (std::find_if(DiabloMessages.begin(), DiabloMessages.end(),
-	        [&msg](const MessageEntry &entry) { return entry.text == msg; })
+	if (c_find_if(DiabloMessages, [&msg](const MessageEntry &entry) { return entry.text == msg; })
 	    != DiabloMessages.end())
 		return;
 

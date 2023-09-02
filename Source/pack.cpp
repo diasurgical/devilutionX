@@ -107,12 +107,12 @@ bool IsCreationFlagComboValid(uint16_t iCreateInfo)
 	return true;
 }
 
-bool IsTownItemValid(uint16_t iCreateInfo)
+bool IsTownItemValid(uint16_t iCreateInfo, const Player &player)
 {
 	const uint8_t level = iCreateInfo & CF_LEVEL;
 	const bool isBoyItem = (iCreateInfo & CF_BOY) != 0;
 
-	if (isBoyItem && level <= MaxCharacterLevel)
+	if (isBoyItem && level <= player.getMaxCharacterLevel())
 		return true;
 
 	return level <= 30;
@@ -180,7 +180,7 @@ bool UnPackNetItem(const Player &player, const ItemNetPack &packedItem, Item &it
 	uint32_t dwBuff = SDL_SwapLE16(packedItem.item.dwBuff);
 	ValidateField(creationFlags, IsCreationFlagComboValid(creationFlags));
 	if ((creationFlags & CF_TOWN) != 0)
-		ValidateField(creationFlags, IsTownItemValid(creationFlags));
+		ValidateField(creationFlags, IsTownItemValid(creationFlags, player));
 	else if ((creationFlags & CF_USEFUL) == CF_UPER15)
 		ValidateFields(creationFlags, dwBuff, IsUniqueMonsterItemValid(creationFlags, dwBuff));
 	else
@@ -255,7 +255,7 @@ void PackPlayer(PlayerPack &packed, const Player &player)
 	packed.pBaseMag = player._pBaseMag;
 	packed.pBaseDex = player._pBaseDex;
 	packed.pBaseVit = player._pBaseVit;
-	packed.pLevel = player._pLevel;
+	packed.pLevel = player.getCharacterLevel();
 	packed.pStatPts = player._pStatPts;
 	packed.pExperience = SDL_SwapLE32(player._pExperience);
 	packed.pGold = SDL_SwapLE32(player._pGold);
@@ -300,7 +300,7 @@ void PackNetPlayer(PlayerNetPack &packed, const Player &player)
 	packed.pBaseMag = player._pBaseMag;
 	packed.pBaseDex = player._pBaseDex;
 	packed.pBaseVit = player._pBaseVit;
-	packed.pLevel = player._pLevel;
+	packed.pLevel = player.getCharacterLevel();
 	packed.pStatPts = player._pStatPts;
 	packed.pExperience = SDL_SwapLE32(player._pExperience);
 	packed.pHPBase = SDL_SwapLE32(player._pHPBase);
@@ -404,8 +404,8 @@ void UnPackItem(const ItemPack &packedItem, const Player &player, Item &item, bo
 		item._iIdentified = (packedItem.bId & 1) != 0;
 		item._iMaxDur = packedItem.bMDur;
 		item._iDurability = ClampDurability(item, packedItem.bDur);
-		item._iMaxCharges = clamp<int>(packedItem.bMCh, 0, item._iMaxCharges);
-		item._iCharges = clamp<int>(packedItem.bCh, 0, item._iMaxCharges);
+		item._iMaxCharges = std::clamp<int>(packedItem.bMCh, 0, item._iMaxCharges);
+		item._iCharges = std::clamp<int>(packedItem.bCh, 0, item._iMaxCharges);
 
 		RemoveInvalidItem(item);
 
@@ -421,17 +421,17 @@ void UnPackPlayer(const PlayerPack &packed, Player &player)
 	Point position { packed.px, packed.py };
 
 	player = {};
-	player._pLevel = clamp<int8_t>(packed.pLevel, 1, MaxCharacterLevel);
+	player.setCharacterLevel(packed.pLevel);
 	player._pMaxHPBase = SDL_SwapLE32(packed.pMaxHPBase);
 	player._pHPBase = SDL_SwapLE32(packed.pHPBase);
-	player._pHPBase = clamp<int32_t>(player._pHPBase, 0, player._pMaxHPBase);
+	player._pHPBase = std::clamp<int32_t>(player._pHPBase, 0, player._pMaxHPBase);
 	player._pMaxHP = player._pMaxHPBase;
 	player._pHitPoints = player._pHPBase;
 	player.position.tile = position;
 	player.position.future = position;
-	player.setLevel(clamp<int8_t>(packed.plrlevel, 0, NUMLEVELS));
+	player.setLevel(std::clamp<int8_t>(packed.plrlevel, 0, NUMLEVELS));
 
-	player._pClass = static_cast<HeroClass>(clamp<uint8_t>(packed.pClass, 0, enum_size<HeroClass>::value - 1));
+	player._pClass = static_cast<HeroClass>(std::clamp<uint8_t>(packed.pClass, 0, enum_size<HeroClass>::value - 1));
 
 	ClrPlrPath(player);
 	player.destAction = ACTION_NONE;
@@ -498,7 +498,7 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 	Point position { packed.px, packed.py };
 	ValidateFields(position.x, position.y, InDungeonBounds(position));
 	ValidateField(packed.plrlevel, packed.plrlevel < NUMLEVELS);
-	ValidateField(packed.pLevel, packed.pLevel >= 1 && packed.pLevel <= MaxCharacterLevel);
+	ValidateField(packed.pLevel, packed.pLevel >= 1 && packed.pLevel <= player.getMaxCharacterLevel());
 
 	int32_t baseHpMax = SDL_SwapLE32(packed.pMaxHPBase);
 	int32_t baseHp = SDL_SwapLE32(packed.pHPBase);
@@ -515,7 +515,7 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 
 	ValidateField(packed._pNumInv, packed._pNumInv < InventoryGridCells);
 
-	player._pLevel = packed.pLevel;
+	player.setCharacterLevel(packed.pLevel);
 	player.position.tile = position;
 	player.position.future = position;
 	player.plrlevel = packed.plrlevel;

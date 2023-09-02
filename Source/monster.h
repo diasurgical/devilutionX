@@ -176,7 +176,7 @@ enum class MonsterSound : uint8_t {
 };
 
 struct CMonster {
-	std::unique_ptr<byte[]> animData;
+	std::unique_ptr<std::byte[]> animData;
 	AnimStruct anims[6];
 	std::unique_ptr<TSnd> sounds[4][2];
 	const MonsterData *data;
@@ -321,7 +321,7 @@ struct Monster { // note: missing field _mAFNum
 	 * Internally it returns a name stored in global array of monsters' data.
 	 * @return Monster's name
 	 */
-	string_view name() const
+	std::string_view name() const
 	{
 		if (uniqueType != UniqueMonsterType::None)
 			return pgettext("monster", UniqueMonstersData[static_cast<int8_t>(uniqueType)].mName);
@@ -445,6 +445,14 @@ struct Monster { // note: missing field _mAFNum
 	 * But for graphics and rendering we show the old/real mode.
 	 */
 	[[nodiscard]] MonsterMode getVisualMonsterMode() const;
+
+	[[nodiscard]] Displacement getRenderingOffset(const ClxSprite sprite) const
+	{
+		Displacement offset = { -CalculateWidth2(sprite.width()), 0 };
+		if (isWalking())
+			offset += GetOffsetForWalking(animInfo, direction);
+		return offset;
+	}
 };
 
 extern size_t LevelMonsterTypeCount;

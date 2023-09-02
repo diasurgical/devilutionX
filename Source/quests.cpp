@@ -31,6 +31,10 @@
 #include "utils/language.h"
 #include "utils/utf8.hpp"
 
+#ifdef _DEBUG
+#include "debug.h"
+#endif
+
 namespace devilution {
 
 bool QuestLogIsOpen;
@@ -214,7 +218,7 @@ int QuestLogMouseToEntry()
 	return -1;
 }
 
-void PrintQLString(const Surface &out, int x, int y, string_view str, bool marked, bool disabled = false)
+void PrintQLString(const Surface &out, int x, int y, std::string_view str, bool marked, bool disabled = false)
 {
 	int width = GetLineWidth(str);
 	x += std::max((257 - width) / 2, 0);
@@ -521,6 +525,11 @@ int GetMapReturnLevel()
 
 Point GetMapReturnPosition()
 {
+#ifdef _DEBUG
+	if (!TestMapPath.empty())
+		return ViewPosition;
+#endif
+
 	switch (setlvlnum) {
 	case SL_SKELKING:
 		return Quests[Q_SKELKING].position + Direction::SouthEast;

@@ -2,9 +2,8 @@
 
 #include <cstring>
 #include <string>
+#include <string_view>
 #include <type_traits>
-
-#include "utils/stdcompat/string_view.hpp"
 
 namespace devilution {
 
@@ -20,20 +19,20 @@ char *BufCopy(char *out, int value);
 void StrAppend(std::string &out, int value);
 
 /**
- * @brief Copies the given string_view to the given buffer.
+ * @brief Copies the given std::string_view to the given buffer.
  */
-inline char *BufCopy(char *out, string_view value)
+inline char *BufCopy(char *out, std::string_view value)
 {
 	std::memcpy(out, value.data(), value.size());
 	return out + value.size();
 }
 
 /**
- * @brief Copies the given string_view to the given string.
+ * @brief Copies the given std::string_view to the given string.
  */
-inline void StrAppend(std::string &out, string_view value)
+inline void StrAppend(std::string &out, std::string_view value)
 {
-	AppendStrView(out, value);
+	out.append(value);
 }
 
 /**
@@ -43,7 +42,7 @@ inline void StrAppend(std::string &out, string_view value)
  */
 inline char *BufCopy(char *out, const char *str)
 {
-	return BufCopy(out, string_view(str != nullptr ? str : "(nullptr)"));
+	return BufCopy(out, std::string_view(str != nullptr ? str : "(nullptr)"));
 }
 
 /**
@@ -51,41 +50,22 @@ inline char *BufCopy(char *out, const char *str)
  */
 inline void StrAppend(std::string &out, const char *str)
 {
-	AppendStrView(out, string_view(str != nullptr ? str : "(nullptr)"));
+	out.append(std::string_view(str != nullptr ? str : "(nullptr)"));
 }
 
-#if __cplusplus >= 201703L
 template <typename... Args>
 typename std::enable_if<(sizeof...(Args) > 1), char *>::type
 BufCopy(char *out, Args &&...args)
 {
 	return ((out = BufCopy(out, std::forward<Args>(args))), ...);
 }
-#else
-template <typename Arg, typename... Args>
-inline typename std::enable_if<(sizeof...(Args) > 0), char *>::type
-BufCopy(char *out, Arg &&arg, Args &&...args)
-{
-	return BufCopy(BufCopy(out, std::forward<Arg>(arg)), std::forward<Args>(args)...);
-}
-#endif
 
-#if __cplusplus >= 201703L
 template <typename... Args>
 typename std::enable_if<(sizeof...(Args) > 1), void>::type
 StrAppend(std::string &out, Args &&...args)
 {
 	(StrAppend(out, std::forward<Args>(args)), ...);
 }
-#else
-template <typename Arg, typename... Args>
-typename std::enable_if<(sizeof...(Args) > 0), void>::type
-StrAppend(std::string &out, Arg &&arg, Args &&...args)
-{
-	StrAppend(out, std::forward<Arg>(arg));
-	StrAppend(out, std::forward<Args>(args)...);
-}
-#endif
 
 template <typename... Args>
 std::string StrCat(Args &&...args)

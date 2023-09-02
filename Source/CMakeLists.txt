@@ -68,6 +68,9 @@ set(libdevilutionx_SRCS
   controls/modifier_hints.cpp
   controls/plrctrls.cpp
 
+  data/file.cpp
+  data/parser.cpp
+
   DiabloUI/button.cpp
   DiabloUI/credits.cpp
   DiabloUI/credits_lines.cpp
@@ -163,6 +166,7 @@ set(libdevilutionx_SRCS
   utils/str_cat.cpp
   utils/str_case.cpp
   utils/surface_to_clx.cpp
+  utils/timer.cpp
   utils/utf8.cpp)
 
 if(SUPPORTS_MPQ)

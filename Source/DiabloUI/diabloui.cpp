@@ -19,6 +19,7 @@
 #include "engine/load_pcx.hpp"
 #include "engine/render/clx_render.hpp"
 #include "hwcursor.hpp"
+#include "utils/algorithm/container.hpp"
 #include "utils/display.h"
 #include "utils/language.h"
 #include "utils/log.hpp"
@@ -636,7 +637,7 @@ void UiDestroy()
 	UnloadUiGFX();
 }
 
-bool UiValidPlayerName(string_view name)
+bool UiValidPlayerName(std::string_view name)
 {
 	if (name.empty())
 		return false;
@@ -651,10 +652,10 @@ bool UiValidPlayerName(string_view name)
 
 	// Only basic latin alphabet is supported for multiplayer characters to avoid rendering issues for players who do
 	// not have fonts.mpq installed
-	if (!std::all_of(name.begin(), name.end(), IsBasicLatin))
+	if (!c_all_of(name, IsBasicLatin))
 		return false;
 
-	string_view bannedNames[] = {
+	std::string_view bannedNames[] = {
 		"gvdl",
 		"dvou",
 		"tiju",
@@ -669,8 +670,8 @@ bool UiValidPlayerName(string_view name)
 	for (char &character : buffer)
 		character++;
 
-	string_view tempName { buffer };
-	for (string_view bannedName : bannedNames) {
+	std::string_view tempName { buffer };
+	for (std::string_view bannedName : bannedNames) {
 		if (tempName.find(bannedName) != tempName.npos)
 			return false;
 	}

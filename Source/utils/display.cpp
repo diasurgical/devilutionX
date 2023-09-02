@@ -1,6 +1,7 @@
 #include "utils/display.h"
 
 #include <algorithm>
+#include <cmath>
 #include <cstdint>
 
 #ifdef __vita__

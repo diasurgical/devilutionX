@@ -4,6 +4,7 @@
  * Implementation of player functionality, leveling, actions, creation, loading, etc.
  */
 #include <algorithm>
+#include <cmath>
 #include <cstdint>
 
 #include <fmt/core.h>
@@ -577,10 +578,10 @@ bool PlrHitMonst(Player &player, Monster &monster, bool adjacentDamage = false)
 		return false;
 
 	if (adjacentDamage) {
-		if (player._pLevel > 20)
+		if (player.getCharacterLevel() > 20)
 			hper -= 30;
 		else
-			hper -= (35 - player._pLevel) * 2;
+			hper -= (35 - player.getCharacterLevel()) * 2;
 	}
 
 	int hit = GenerateRnd(100);
@@ -589,7 +590,7 @@ bool PlrHitMonst(Player &player, Monster &monster, bool adjacentDamage = false)
 	}
 
 	hper += player.GetMeleePiercingToHit() - player.CalculateArmorPierce(monster.armorClass, true);
-	hper = clamp(hper, 5, 95);
+	hper = std::clamp(hper, 5, 95);
 
 	if (monster.tryLiftGargoyle())
 		return true;
@@ -613,7 +614,7 @@ bool PlrHitMonst(Player &player, Monster &monster, bool adjacentDamage = false)
 	int dam2 = dam << 6;
 	dam += player._pDamageMod;
 	if (player._pClass == HeroClass::Warrior || player._pClass == HeroClass::Barbarian) {
-		if (GenerateRnd(100) < player._pLevel) {
+		if (GenerateRnd(100) < player.getCharacterLevel()) {
 			dam *= 2;
 		}
 	}
@@ -753,15 +754,15 @@ bool PlrHitPlr(Player &attacker, Player &target)
 	int hit = GenerateRnd(100);
 
 	int hper = attacker.GetMeleeToHit() - target.GetArmor();
-	hper = clamp(hper, 5, 95);
+	hper = std::clamp(hper, 5, 95);
 
 	int blk = 100;
 	if ((target._pmode == PM_STAND || target._pmode == PM_ATTACK) && target._pBlockFlag) {
 		blk = GenerateRnd(100);
 	}
 
-	int blkper = target.GetBlockChance() - (attacker._pLevel * 2);
-	blkper = clamp(blkper, 0, 100);
+	int blkper = target.GetBlockChance() - (attacker.getCharacterLevel() * 2);
+	blkper = std::clamp(blkper, 0, 100);
 
 	if (hit >= hper) {
 		return false;
@@ -780,7 +781,7 @@ bool PlrHitPlr(Player &attacker, Player &target)
 	dam += attacker._pIBonusDamMod + attacker._pDamageMod;
 
 	if (attacker._pClass == HeroClass::Warrior || attacker._pClass == HeroClass::Barbarian) {
-		if (GenerateRnd(100) < attacker._pLevel) {
+		if (GenerateRnd(100) < attacker.getCharacterLevel()) {
 			dam *= 2;
 		}
 	}
@@ -1057,10 +1058,8 @@ bool DoSpell(Player &player)
 		CastSpell(
 		    player.getId(),
 		    player.executedSpell.spellId,
-		    player.position.tile.x,
-		    player.position.tile.y,
-		    player.position.temp.x,
-		    player.position.temp.y,
+		    player.position.tile,
+		    player.position.temp,
 		    player.executedSpell.spellLevel);
 
 		if (IsAnyOf(player.executedSpell.spellType, SpellType::Scroll, SpellType::Charges)) {
@@ -1111,11 +1110,11 @@ bool DoDeath(Player &player)
 
 bool IsPlayerAdjacentToObject(Player &player, Object &object)
 {
-	int x = abs(player.position.tile.x - object.position.x);
-	int y = abs(player.position.tile.y - object.position.y);
+	int x = std::abs(player.position.tile.x - object.position.x);
+	int y = std::abs(player.position.tile.y - object.position.y);
 	if (y > 1 && object.position.y >= 1 && FindObjectAtPosition(object.position + Direction::NorthEast) == &object) {
 		// special case for activating a large object from the north-east side
-		y = abs(player.position.tile.y - object.position.y + 1);
+		y = std::abs(player.position.tile.y - object.position.y + 1);
 	}
 	return x <= 1 && y <= 1;
 }
@@ -1197,12 +1196,12 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 			if (&player == MyPlayer) {
 				if (player.destAction == ACTION_ATTACKMON || player.destAction == ACTION_ATTACKPLR) {
 					if (player.destAction == ACTION_ATTACKMON) {
-						x = abs(player.position.future.x - monster->position.future.x);
-						y = abs(player.position.future.y - monster->position.future.y);
+						x = std::abs(player.position.future.x - monster->position.future.x);
+						y = std::abs(player.position.future.y - monster->position.future.y);
 						d = GetDirection(player.position.future, monster->position.future);
 					} else {
-						x = abs(player.position.future.x - target->position.future.x);
-						y = abs(player.position.future.y - target->position.future.y);
+						x = std::abs(player.position.future.x - target->position.future.x);
+						y = std::abs(player.position.future.y - target->position.future.y);
 						d = GetDirection(player.position.future, target->position.future);
 					}
 
@@ -1270,8 +1269,8 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 			StartAttack(player, d, pmWillBeCalled);
 			break;
 		case ACTION_ATTACKMON:
-			x = abs(player.position.tile.x - monster->position.future.x);
-			y = abs(player.position.tile.y - monster->position.future.y);
+			x = std::abs(player.position.tile.x - monster->position.future.x);
+			y = std::abs(player.position.tile.y - monster->position.future.y);
 			if (x <= 1 && y <= 1) {
 				d = GetDirection(player.position.future, monster->position.future);
 				if (monster->talkMsg != TEXT_NONE && monster->talkMsg != TEXT_VILE14) {
@@ -1282,8 +1281,8 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 			}
 			break;
 		case ACTION_ATTACKPLR:
-			x = abs(player.position.tile.x - target->position.future.x);
-			y = abs(player.position.tile.y - target->position.future.y);
+			x = std::abs(player.position.tile.x - target->position.future.x);
+			y = std::abs(player.position.tile.y - target->position.future.y);
 			if (x <= 1 && y <= 1) {
 				d = GetDirection(player.position.future, target->position.future);
 				StartAttack(player, d, pmWillBeCalled);
@@ -1353,8 +1352,8 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 			break;
 		case ACTION_PICKUPITEM:
 			if (&player == MyPlayer) {
-				x = abs(player.position.tile.x - item->position.x);
-				y = abs(player.position.tile.y - item->position.y);
+				x = std::abs(player.position.tile.x - item->position.x);
+				y = std::abs(player.position.tile.y - item->position.y);
 				if (x <= 1 && y <= 1 && pcurs == CURSOR_HAND && !item->_iRequest) {
 					NetSendCmdGItem(true, CMD_REQUESTGITEM, player.getId(), targetId);
 					item->_iRequest = true;
@@ -1363,8 +1362,8 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 			break;
 		case ACTION_PICKUPAITEM:
 			if (&player == MyPlayer) {
-				x = abs(player.position.tile.x - item->position.x);
-				y = abs(player.position.tile.y - item->position.y);
+				x = std::abs(player.position.tile.x - item->position.x);
+				y = std::abs(player.position.tile.y - item->position.y);
 				if (x <= 1 && y <= 1 && pcurs == CURSOR_HAND) {
 					NetSendCmdGItem(true, CMD_REQUESTAGITEM, player.getId(), targetId);
 				}
@@ -1392,16 +1391,16 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 			StartAttack(player, d, pmWillBeCalled);
 			player.destAction = ACTION_NONE;
 		} else if (player.destAction == ACTION_ATTACKMON) {
-			x = abs(player.position.tile.x - monster->position.future.x);
-			y = abs(player.position.tile.y - monster->position.future.y);
+			x = std::abs(player.position.tile.x - monster->position.future.x);
+			y = std::abs(player.position.tile.y - monster->position.future.y);
 			if (x <= 1 && y <= 1) {
 				d = GetDirection(player.position.future, monster->position.future);
 				StartAttack(player, d, pmWillBeCalled);
 			}
 			player.destAction = ACTION_NONE;
 		} else if (player.destAction == ACTION_ATTACKPLR) {
-			x = abs(player.position.tile.x - target->position.future.x);
-			y = abs(player.position.tile.y - target->position.future.y);
+			x = std::abs(player.position.tile.x - target->position.future.x);
+			y = std::abs(player.position.tile.y - target->position.future.y);
 			if (x <= 1 && y <= 1) {
 				d = GetDirection(player.position.future, target->position.future);
 				StartAttack(player, d, pmWillBeCalled);
@@ -1473,10 +1472,11 @@ void ValidatePlayer()
 	assert(MyPlayer != nullptr);
 	Player &myPlayer = *MyPlayer;
 
-	if (myPlayer._pLevel > MaxCharacterLevel)
-		myPlayer._pLevel = MaxCharacterLevel;
-	if (myPlayer._pExperience > myPlayer._pNextExper) {
-		myPlayer._pExperience = myPlayer._pNextExper;
+	// Player::setCharacterLevel ensures that the player level is within the expected range in case someone has edited their character level in memory
+	myPlayer.setCharacterLevel(myPlayer.getCharacterLevel());
+	// This lets us catch cases where someone is editing experience directly through memory modification and reset their experience back to the expected cap.
+	if (myPlayer._pExperience > myPlayer.getNextExperienceThreshold()) {
+		myPlayer._pExperience = myPlayer.getNextExperienceThreshold();
 		if (*sgOptions.Gameplay.experienceBar) {
 			RedrawEverything();
 		}
@@ -1625,7 +1625,7 @@ void Player::RemoveInvItem(int iv, bool calcScrolls)
 		// Locate the first grid index containing this item and notify remote clients
 		for (size_t i = 0; i < InventoryGridCells; i++) {
 			int8_t itemIndex = InvGrid[i];
-			if (abs(itemIndex) - 1 == iv) {
+			if (std::abs(itemIndex) - 1 == iv) {
 				NetSendCmdParam1(false, CMD_DELINVITEMS, i);
 				break;
 			}
@@ -1634,7 +1634,7 @@ void Player::RemoveInvItem(int iv, bool calcScrolls)
 
 	// Iterate through invGrid and remove every reference to item
 	for (int8_t &itemIndex : InvGrid) {
-		if (abs(itemIndex) - 1 == iv) {
+		if (std::abs(itemIndex) - 1 == iv) {
 			itemIndex = 0;
 		}
 	}
@@ -2055,16 +2055,31 @@ void Player::UpdatePreviewCelSprite(_cmd_id cmdId, Point point, uint16_t wParam1
 	}
 }
 
+void Player::setCharacterLevel(uint8_t level)
+{
+	this->_pLevel = std::clamp<uint8_t>(level, 1U, getMaxCharacterLevel());
+}
+
+uint8_t Player::getMaxCharacterLevel() const
+{
+	return GetMaximumCharacterLevel();
+}
+
+uint32_t Player::getNextExperienceThreshold() const
+{
+	return GetNextExperienceThresholdForLevel(this->getCharacterLevel());
+}
+
 int32_t Player::calculateBaseLife() const
 {
 	const PlayerData &playerData = PlayersData[static_cast<size_t>(_pClass)];
-	return playerData.adjLife + (playerData.lvlLife * _pLevel) + (playerData.chrLife * _pBaseVit);
+	return playerData.adjLife + (playerData.lvlLife * getCharacterLevel()) + (playerData.chrLife * _pBaseVit);
 }
 
 int32_t Player::calculateBaseMana() const
 {
 	const PlayerData &playerData = PlayersData[static_cast<size_t>(_pClass)];
-	return playerData.adjMana + (playerData.lvlMana * _pLevel) + (playerData.chrMana * _pBaseMag);
+	return playerData.adjMana + (playerData.lvlMana * getCharacterLevel()) + (playerData.chrMana * _pBaseMag);
 }
 
 Player *PlayerAtPosition(Point position)
@@ -2076,7 +2091,7 @@ Player *PlayerAtPosition(Point position)
 	if (playerIndex == 0)
 		return nullptr;
 
-	return &Players[abs(playerIndex) - 1];
+	return &Players[std::abs(playerIndex) - 1];
 }
 
 void LoadPlrGFX(Player &player, player_graphic graphic)
@@ -2140,12 +2155,9 @@ void LoadPlrGFX(Player &player, player_graphic graphic)
 		app_fatal("PLR:2");
 	}
 
-	if (HeadlessMode)
-		return;
-
 	char prefix[3] = { CharChar[static_cast<std::size_t>(cls)], ArmourChar[player._pgfxnum >> 4], WepChar[static_cast<std::size_t>(animWeaponId)] };
 	char pszName[256];
-	*fmt::format_to(pszName, R"(plrgfx\{0}\{1}\{1}{2})", path, string_view(prefix, 3), szCel) = 0;
+	*fmt::format_to(pszName, R"(plrgfx\{0}\{1}\{1}{2})", path, std::string_view(prefix, 3), szCel) = 0;
 	const uint16_t animationWidth = GetPlayerSpriteWidth(cls, graphic, animWeaponId);
 	animationData.sprites = LoadCl2Sheet(pszName, animationWidth);
 	std::optional<std::array<uint8_t, 256>> trn = GetClassTRN(player);
@@ -2192,7 +2204,7 @@ void NewPlrAnim(Player &player, player_graphic graphic, Direction dir, Animation
 	if (!HeadlessMode) {
 		sprites = player.AnimationData[static_cast<size_t>(graphic)].spritesForDirection(dir);
 		if (player.previewCelSprite && (*sprites)[0] == *player.previewCelSprite && !player.isWalking()) {
-			previewShownGameTickFragments = clamp<int>(AnimationInfo::baseValueFraction - player.progressToNextGameTickWhenPreviewWasSet, 0, AnimationInfo::baseValueFraction);
+			previewShownGameTickFragments = std::clamp<int>(AnimationInfo::baseValueFraction - player.progressToNextGameTickWhenPreviewWasSet, 0, AnimationInfo::baseValueFraction);
 		}
 	}
 
@@ -2279,7 +2291,7 @@ void CreatePlayer(Player &player, HeroClass c)
 
 	const PlayerData &playerData = PlayersData[static_cast<size_t>(c)];
 
-	player._pLevel = 1;
+	player.setCharacterLevel(1);
 	player._pClass = c;
 
 	player._pBaseStr = playerData.baseStr;
@@ -2306,9 +2318,7 @@ void CreatePlayer(Player &player, HeroClass c)
 	player._pManaBase = player._pMana;
 	player._pMaxManaBase = player._pMana;
 
-	player._pMaxLvl = player._pLevel;
 	player._pExperience = 0;
-	player._pNextExper = ExpLvlsTbl[1];
 	player._pArmorClass = 0;
 	player._pLightRad = 10;
 	player._pInfraFlag = false;
@@ -2388,8 +2398,7 @@ int CalcStatDiff(Player &player)
 
 void NextPlrLevel(Player &player)
 {
-	player._pLevel++;
-	player._pMaxLvl++;
+	player.setCharacterLevel(player.getCharacterLevel() + 1);
 
 	CalcPlrInv(player, true);
 
@@ -2398,8 +2407,6 @@ void NextPlrLevel(Player &player)
 	} else {
 		player._pStatPts += 5;
 	}
-	player._pNextExper = ExpLvlsTbl[std::min<int8_t>(player._pLevel, MaxCharacterLevel - 1)];
-
 	int hp = PlayersData[static_cast<size_t>(player._pClass)].lvlLife;
 
 	player._pMaxHP += hp;
@@ -2429,56 +2436,50 @@ void NextPlrLevel(Player &player)
 		FocusOnCharInfo();
 
 	CalcPlrInv(player, true);
+	PlaySFX(IS_IHARM);
+	PlaySFX(IS_ISIGN);
 }
 
-void AddPlrExperience(Player &player, int lvl, int exp)
+void Player::_addExperience(uint32_t experience, int levelDelta)
 {
-	if (&player != MyPlayer || player._pHitPoints <= 0)
+	if (this != MyPlayer || _pHitPoints <= 0)
 		return;
 
-	if (player._pLevel >= MaxCharacterLevel) {
-		player._pLevel = MaxCharacterLevel;
+	if (isMaxCharacterLevel()) {
 		return;
 	}
 
-	// Adjust xp based on difference in level between player and monster
-	uint32_t clampedExp = std::max(static_cast<int>(exp * (1 + (lvl - player._pLevel) / 10.0)), 0);
+	// Adjust xp based on difference between the players current level and the target level (usually a monster level)
+	uint32_t clampedExp = static_cast<uint32_t>(std::clamp<int64_t>(static_cast<int64_t>(experience * (1 + levelDelta / 10.0)), 0, std::numeric_limits<uint32_t>::max()));
 
 	// Prevent power leveling
 	if (gbIsMultiplayer) {
-		const uint32_t clampedPlayerLevel = clamp(static_cast<int>(player._pLevel), 1, MaxCharacterLevel);
-
 		// for low level characters experience gain is capped to 1/20 of current levels xp
 		// for high level characters experience gain is capped to 200 * current level - this is a smaller value than 1/20 of the exp needed for the next level after level 5.
-		clampedExp = std::min({ clampedExp, /* level 0-5: */ ExpLvlsTbl[clampedPlayerLevel] / 20U, /* level 6-50: */ 200U * clampedPlayerLevel });
+		clampedExp = std::min<uint32_t>({ clampedExp, /* level 1-5: */ getNextExperienceThreshold() / 20U, /* level 6-50: */ 200U * getCharacterLevel() });
 	}
 
-	const uint32_t MaxExperience = ExpLvlsTbl[MaxCharacterLevel - 1];
+	const uint32_t maxExperience = GetNextExperienceThresholdForLevel(getMaxCharacterLevel());
 
-	// Overflow is only possible if a kill grants more than (2^32-1 - MaxExperience) XP in one go, which doesn't happen in normal gameplay. Clamp to experience required to reach max level
-	player._pExperience = std::min(player._pExperience + clampedExp, MaxExperience);
+	// ensure we only add enough experience to reach the max experience cap so we don't overflow
+	_pExperience += std::min(clampedExp, maxExperience - _pExperience);
 
 	if (*sgOptions.Gameplay.experienceBar) {
 		RedrawEverything();
 	}
 
 	// Increase player level if applicable
-	int newLvl = player._pLevel;
-	while (newLvl < MaxCharacterLevel && player._pExperience >= ExpLvlsTbl[newLvl]) {
-		newLvl++;
-	}
-	if (newLvl != player._pLevel) {
-		for (int i = newLvl - player._pLevel; i > 0; i--) {
-			NextPlrLevel(player);
-		}
+	while (!isMaxCharacterLevel() && _pExperience >= getNextExperienceThreshold()) {
+		// NextPlrLevel increments character level which changes the next experience threshold
+		NextPlrLevel(*this);
 	}
 
-	NetSendCmdParam1(false, CMD_PLRLEVEL, player._pLevel);
+	NetSendCmdParam1(false, CMD_PLRLEVEL, getCharacterLevel());
 }
 
-void AddPlrMonstExper(int lvl, int exp, char pmask)
+void AddPlrMonstExper(int lvl, unsigned exp, char pmask)
 {
-	int totplrs = 0;
+	unsigned totplrs = 0;
 	for (size_t i = 0; i < Players.size(); i++) {
 		if (((1 << i) & pmask) != 0) {
 			totplrs++;
@@ -2486,9 +2487,9 @@ void AddPlrMonstExper(int lvl, int exp, char pmask)
 	}
 
 	if (totplrs != 0) {
-		int e = exp / totplrs;
+		unsigned e = exp / totplrs;
 		if ((pmask & (1 << MyPlayerId)) != 0)
-			AddPlrExperience(*MyPlayer, lvl, e);
+			MyPlayer->addExperience(e, lvl);
 	}
 }
 
@@ -2546,7 +2547,6 @@ void InitPlayer(Player &player, bool firstTime)
 	SpellID s = PlayersData[static_cast<size_t>(player._pClass)].skill;
 	player._pAblSpells = GetSpellBitmask(s);
 
-	player._pNextExper = ExpLvlsTbl[std::min<int8_t>(player._pLevel, MaxCharacterLevel - 1)];
 	player._pInvincible = false;
 
 	if (&player == MyPlayer) {
@@ -2661,10 +2661,10 @@ void StartPlrHit(Player &player, int dam, bool forcehit)
 
 	RedrawComponent(PanelDrawComponent::Health);
 	if (player._pClass == HeroClass::Barbarian) {
-		if (dam >> 6 < player._pLevel + player._pLevel / 4 && !forcehit) {
+		if (dam >> 6 < player.getCharacterLevel() + player.getCharacterLevel() / 4 && !forcehit) {
 			return;
 		}
-	} else if (dam >> 6 < player._pLevel && !forcehit) {
+	} else if (dam >> 6 < player.getCharacterLevel() && !forcehit) {
 		return;
 	}
 
@@ -2779,7 +2779,7 @@ StartPlayerKill(Player &player, DeathReason deathReason)
 
 				ear._iCreateInfo = player._pName[0] << 8 | player._pName[1];
 				ear._iSeed = player._pName[2] << 24 | player._pName[3] << 16 | player._pName[4] << 8 | player._pName[5];
-				ear._ivalue = player._pLevel;
+				ear._ivalue = player.getCharacterLevel();
 
 				if (FindGetItem(ear._iSeed, IDI_EAR, ear._iCreateInfo) == -1) {
 					DeadItem(player, std::move(ear), { 0, 0 });
@@ -3104,7 +3104,7 @@ bool PosOkPlayer(const Player &player, Point position)
 	if (!IsTileWalkable(position))
 		return false;
 	if (dPlayer[position.x][position.y] != 0) {
-		auto &otherPlayer = Players[abs(dPlayer[position.x][position.y]) - 1];
+		auto &otherPlayer = Players[std::abs(dPlayer[position.x][position.y]) - 1];
 		if (&otherPlayer != &player && otherPlayer._pHitPoints != 0) {
 			return false;
 		}
@@ -3302,16 +3302,16 @@ void CheckStats(Player &player)
 		int maxStatPoint = player.GetMaximumAttributeValue(attribute);
 		switch (attribute) {
 		case CharacterAttribute::Strength:
-			player._pBaseStr = clamp(player._pBaseStr, 0, maxStatPoint);
+			player._pBaseStr = std::clamp(player._pBaseStr, 0, maxStatPoint);
 			break;
 		case CharacterAttribute::Magic:
-			player._pBaseMag = clamp(player._pBaseMag, 0, maxStatPoint);
+			player._pBaseMag = std::clamp(player._pBaseMag, 0, maxStatPoint);
 			break;
 		case CharacterAttribute::Dexterity:
-			player._pBaseDex = clamp(player._pBaseDex, 0, maxStatPoint);
+			player._pBaseDex = std::clamp(player._pBaseDex, 0, maxStatPoint);
 			break;
 		case CharacterAttribute::Vitality:
-			player._pBaseVit = clamp(player._pBaseVit, 0, maxStatPoint);
+			player._pBaseVit = std::clamp(player._pBaseVit, 0, maxStatPoint);
 			break;
 		}
 	}
@@ -3319,7 +3319,7 @@ void CheckStats(Player &player)
 
 void ModifyPlrStr(Player &player, int l)
 {
-	l = clamp(l, 0 - player._pBaseStr, player.GetMaximumAttributeValue(CharacterAttribute::Strength) - player._pBaseStr);
+	l = std::clamp(l, 0 - player._pBaseStr, player.GetMaximumAttributeValue(CharacterAttribute::Strength) - player._pBaseStr);
 
 	player._pStrength += l;
 	player._pBaseStr += l;
@@ -3333,7 +3333,7 @@ void ModifyPlrStr(Player &player, int l)
 
 void ModifyPlrMag(Player &player, int l)
 {
-	l = clamp(l, 0 - player._pBaseMag, player.GetMaximumAttributeValue(CharacterAttribute::Magic) - player._pBaseMag);
+	l = std::clamp(l, 0 - player._pBaseMag, player.GetMaximumAttributeValue(CharacterAttribute::Magic) - player._pBaseMag);
 
 	player._pMagic += l;
 	player._pBaseMag += l;
@@ -3357,7 +3357,7 @@ void ModifyPlrMag(Player &player, int l)
 
 void ModifyPlrDex(Player &player, int l)
 {
-	l = clamp(l, 0 - player._pBaseDex, player.GetMaximumAttributeValue(CharacterAttribute::Dexterity) - player._pBaseDex);
+	l = std::clamp(l, 0 - player._pBaseDex, player.GetMaximumAttributeValue(CharacterAttribute::Dexterity) - player._pBaseDex);
 
 	player._pDexterity += l;
 	player._pBaseDex += l;
@@ -3370,7 +3370,7 @@ void ModifyPlrDex(Player &player, int l)
 
 void ModifyPlrVit(Player &player, int l)
 {
-	l = clamp(l, 0 - player._pBaseVit, player.GetMaximumAttributeValue(CharacterAttribute::Vitality) - player._pBaseVit);
+	l = std::clamp(l, 0 - player._pBaseVit, player.GetMaximumAttributeValue(CharacterAttribute::Vitality) - player._pBaseVit);
 
 	player._pVitality += l;
 	player._pBaseVit += l;

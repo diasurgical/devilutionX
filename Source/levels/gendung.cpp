@@ -25,7 +25,7 @@ WorldTileRectangle SetPiece;
 std::unique_ptr<uint16_t[]> pSetPiece;
 OptionalOwnedClxSpriteList pSpecialCels;
 std::unique_ptr<MegaTile[]> pMegaTiles;
-std::unique_ptr<byte[]> pDungeonCels;
+std::unique_ptr<std::byte[]> pDungeonCels;
 std::array<TileProperties, MAXTILES> SOLData;
 WorldTilePosition dminPosition;
 WorldTilePosition dmaxPosition;

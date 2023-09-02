@@ -12,6 +12,7 @@
 #include "inv_iterators.hpp"
 #include "items.h"
 #include "player.h"
+#include "utils/algorithm/container.hpp"
 
 namespace devilution {
 
@@ -226,7 +227,7 @@ int ClampDurability(const Item &item, int durability);
 int16_t ClampToHit(const Item &item, int16_t toHit);
 uint8_t ClampMaxDam(const Item &item, uint8_t maxDam);
 int SyncDropItem(Point position, _item_indexes idx, uint16_t icreateinfo, int iseed, int id, int dur, int mdur, int ch, int mch, int ivalue, uint32_t ibuff, int toHit, int maxDam);
-int SyncDropEar(Point position, uint16_t icreateinfo, uint32_t iseed, uint8_t cursval, string_view heroname);
+int SyncDropEar(Point position, uint16_t icreateinfo, uint32_t iseed, uint8_t cursval, std::string_view heroname);
 int8_t CheckInvHLight();
 bool CanUseScroll(Player &player, SpellID spell);
 void ConsumeStaffCharge(Player &player);
@@ -247,27 +248,27 @@ Size GetInventorySize(const Item &item);
  * @brief Checks whether the player has an inventory item matching the predicate.
  */
 template <typename Predicate>
-bool HasInventoryItem(Player &player, Predicate &&predicate)
+bool HasInventoryItem(const Player &player, Predicate &&predicate)
 {
 	const InventoryPlayerItemsRange items { player };
-	return std::find_if(items.begin(), items.end(), std::forward<Predicate>(predicate)) != items.end();
+	return c_find_if(items, std::forward<Predicate>(predicate)) != items.end();
 }
 
 /**
  * @brief Checks whether the player has a belt item matching the predicate.
  */
 template <typename Predicate>
-bool HasBeltItem(Player &player, Predicate &&predicate)
+bool HasBeltItem(const Player &player, Predicate &&predicate)
 {
 	const BeltPlayerItemsRange items { player };
-	return std::find_if(items.begin(), items.end(), std::forward<Predicate>(predicate)) != items.end();
+	return c_find_if(items, std::forward<Predicate>(predicate)) != items.end();
 }
 
 /**
  * @brief Checks whether the player has an inventory or a belt item matching the predicate.
  */
 template <typename Predicate>
-bool HasInventoryOrBeltItem(Player &player, Predicate &&predicate)
+bool HasInventoryOrBeltItem(const Player &player, Predicate &&predicate)
 {
 	return HasInventoryItem(player, predicate) || HasBeltItem(player, predicate);
 }
@@ -275,7 +276,7 @@ bool HasInventoryOrBeltItem(Player &player, Predicate &&predicate)
 /**
  * @brief Checks whether the player has an inventory item with the given ID (IDidx).
  */
-inline bool HasInventoryItemWithId(Player &player, _item_indexes id)
+inline bool HasInventoryItemWithId(const Player &player, _item_indexes id)
 {
 	return HasInventoryItem(player, [id](const Item &item) {
 		return item.IDidx == id;
@@ -285,7 +286,7 @@ inline bool HasInventoryItemWithId(Player &player, _item_indexes id)
 /**
  * @brief Checks whether the player has a belt item with the given ID (IDidx).
  */
-inline bool HasBeltItemWithId(Player &player, _item_indexes id)
+inline bool HasBeltItemWithId(const Player &player, _item_indexes id)
 {
 	return HasBeltItem(player, [id](const Item &item) {
 		return item.IDidx == id;
@@ -295,7 +296,7 @@ inline bool HasBeltItemWithId(Player &player, _item_indexes id)
 /**
  * @brief Checks whether the player has an inventory or a belt item with the given ID (IDidx).
  */
-inline bool HasInventoryOrBeltItemWithId(Player &player, _item_indexes id)
+inline bool HasInventoryOrBeltItemWithId(const Player &player, _item_indexes id)
 {
 	return HasInventoryItemWithId(player, id) || HasBeltItemWithId(player, id);
 }
@@ -309,7 +310,7 @@ template <typename Predicate>
 bool RemoveInventoryItem(Player &player, Predicate &&predicate)
 {
 	const InventoryPlayerItemsRange items { player };
-	const auto it = std::find_if(items.begin(), items.end(), std::forward<Predicate>(predicate));
+	const auto it = c_find_if(items, std::forward<Predicate>(predicate));
 	if (it == items.end())
 		return false;
 	player.RemoveInvItem(static_cast<int>(it.index()));
@@ -325,7 +326,7 @@ template <typename Predicate>
 bool RemoveBeltItem(Player &player, Predicate &&predicate)
 {
 	const BeltPlayerItemsRange items { player };
-	const auto it = std::find_if(items.begin(), items.end(), std::forward<Predicate>(predicate));
+	const auto it = c_find_if(items, std::forward<Predicate>(predicate));
 	if (it == items.end())
 		return false;
 	player.RemoveSpdBarItem(static_cast<int>(it.index()));

@@ -6,9 +6,9 @@
 #pragma once
 
 #include <cstdint>
+#include <optional>
 
 #include "player.h"
-#include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
 

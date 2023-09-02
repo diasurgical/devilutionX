@@ -5,11 +5,11 @@
  */
 #pragma once
 
+#include <cstddef>
 #include <cstdint>
 
 #include "mpq/mpq_common.hpp"
 #include "utils/logged_fstream.hpp"
-#include "utils/stdcompat/cstddef.hpp"
 
 namespace devilution {
 class MpqWriter {
@@ -27,7 +27,7 @@ public:
 
 	void RemoveHashEntry(const char *filename);
 	void RemoveHashEntries(bool (*fnGetName)(uint8_t, char *));
-	bool WriteFile(const char *filename, const byte *data, size_t size);
+	bool WriteFile(const char *filename, const std::byte *data, size_t size);
 	void RenameFile(const char *name, const char *newName);
 
 private:
@@ -37,7 +37,7 @@ private:
 
 	bool ReadMPQHeader(MpqFileHeader *hdr);
 	MpqBlockEntry *AddFile(const char *filename, MpqBlockEntry *block, uint32_t blockIndex);
-	bool WriteFileContents(const char *filename, const byte *fileData, size_t fileSize, MpqBlockEntry *block);
+	bool WriteFileContents(const char *filename, const std::byte *fileData, size_t fileSize, MpqBlockEntry *block);
 
 	// Returns an unused entry in the block entry table.
 	MpqBlockEntry *NewBlock(uint32_t *blockIndex = nullptr);

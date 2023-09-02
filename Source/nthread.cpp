@@ -258,7 +258,7 @@ void nthread_UpdateProgressToNextGameTick()
 	}
 	int ticksAdvanced = gnTickDelay - ticksMissing;
 	int32_t fraction = ticksAdvanced * AnimationInfo::baseValueFraction / gnTickDelay;
-	fraction = clamp<int32_t>(fraction, 0, AnimationInfo::baseValueFraction);
+	fraction = std::clamp<int32_t>(fraction, 0, AnimationInfo::baseValueFraction);
 	ProgressToNextGameTick = static_cast<uint8_t>(fraction);
 }
 

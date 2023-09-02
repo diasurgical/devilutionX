@@ -4,7 +4,9 @@
  * Implementation of scrolling dialog text.
  */
 #include <cstdint>
+#include <optional>
 #include <string>
+#include <string_view>
 #include <vector>
 
 #include "DiabloUI/ui_flags.hpp"
@@ -18,8 +20,7 @@
 #include "playerdat.hpp"
 #include "textdat.h"
 #include "utils/language.h"
-#include "utils/stdcompat/optional.hpp"
-#include "utils/stdcompat/string_view.hpp"
+#include "utils/timer.hpp"
 
 namespace devilution {
 
@@ -39,7 +40,7 @@ const int LineHeight = 38;
 
 std::vector<std::string> TextLines;
 
-void LoadText(string_view text)
+void LoadText(std::string_view text)
 {
 	TextLines.clear();
 
@@ -81,7 +82,7 @@ uint32_t CalculateTextSpeed(int nSFX)
 
 int CalculateTextPosition()
 {
-	uint32_t currTime = SDL_GetTicks();
+	uint32_t currTime = GetMillisecondsSinceStartup();
 
 	int y = (currTime - ScrollStart) / qtextSpd - 260;
 
@@ -165,7 +166,7 @@ void InitQTextMsg(_speech_id m)
 		LoadText(_(Speeches[m].txtstr));
 		qtextflag = true;
 		qtextSpd = CalculateTextSpeed(sfxnr);
-		ScrollStart = SDL_GetTicks();
+		ScrollStart = GetMillisecondsSinceStartup();
 	}
 	PlaySFX(sfxnr);
 }

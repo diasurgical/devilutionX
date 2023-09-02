@@ -1,6 +1,7 @@
 #include "controls/plrctrls.h"
 
 #include <algorithm>
+#include <cmath>
 #include <cstdint>
 #include <list>
 
@@ -103,7 +104,7 @@ int GetRotaryDistance(Point destination)
 	int d1 = static_cast<int>(myPlayer._pdir);
 	int d2 = static_cast<int>(GetDirection(myPlayer.position.future, destination));
 
-	int d = abs(d1 - d2);
+	int d = std::abs(d1 - d2);
 	if (d > 4)
 		return 4 - (d % 4);
 
@@ -328,7 +329,7 @@ void FindMeleeTarget()
 				visited[dx][dy] = true;
 
 				if (dMonster[dx][dy] != 0) {
-					const int mi = abs(dMonster[dx][dy]) - 1;
+					const int mi = std::abs(dMonster[dx][dy]) - 1;
 					const auto &monster = Monsters[mi];
 					if (CanTargetMonster(monster)) {
 						const bool newCanTalk = CanTalkToMonst(monster);
@@ -666,7 +667,7 @@ Point GetSlotCoord(int slot)
 int GetItemIdOnSlot(int slot)
 {
 	if (slot >= SLOTXY_INV_FIRST && slot <= SLOTXY_INV_LAST) {
-		return abs(MyPlayer->InvGrid[slot - SLOTXY_INV_FIRST]);
+		return std::abs(MyPlayer->InvGrid[slot - SLOTXY_INV_FIRST]);
 	}
 
 	return 0;
@@ -1467,7 +1468,7 @@ bool ContinueSimulatedMouseEvent(const SDL_Event &event, const ControllerButtonE
 	return SimulatingMouseWithPadmapper || IsSimulatedMouseClickBinding(gamepadEvent);
 }
 
-string_view ControlTypeToString(ControlTypes controlType)
+std::string_view ControlTypeToString(ControlTypes controlType)
 {
 	switch (controlType) {
 	case ControlTypes::None:
@@ -1497,7 +1498,7 @@ void LogControlDeviceAndModeChange(ControlTypes newControlDevice, ControlTypes n
 }
 
 #ifndef USE_SDL1
-string_view GamepadTypeToString(GamepadLayout gamepadLayout)
+std::string_view GamepadTypeToString(GamepadLayout gamepadLayout)
 {
 	switch (gamepadLayout) {
 	case GamepadLayout::Nintendo:
@@ -1764,7 +1765,7 @@ void plrctrls_after_check_curs_move()
 		return;
 	}
 	if (!invflag) {
-		InfoString = {};
+		InfoString = StringOrView {};
 		FindActor();
 		FindItemOrObject();
 		FindTrigger();

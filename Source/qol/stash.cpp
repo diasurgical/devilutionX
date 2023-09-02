@@ -1,5 +1,6 @@
 #include "qol/stash.h"
 
+#include <algorithm>
 #include <cstdint>
 #include <utility>
 
@@ -20,7 +21,6 @@
 #include "stores.h"
 #include "utils/format_int.hpp"
 #include "utils/language.h"
-#include "utils/stdcompat/algorithm.hpp"
 #include "utils/str_cat.hpp"
 #include "utils/utf8.hpp"
 
@@ -51,7 +51,7 @@ constexpr Rectangle StashButtonRect[] = {
 };
 
 constexpr Size StashGridSize { 10, 10 };
-constexpr PointsInRectangleRange<int> StashGridRange { { { 0, 0 }, StashGridSize } };
+constexpr PointsInRectangle<int> StashGridRange { { { 0, 0 }, StashGridSize } };
 
 OptionalOwnedClxSpriteList StashPanelArt;
 OptionalOwnedClxSpriteList StashNavButtonArt;
@@ -95,8 +95,8 @@ std::optional<Point> FindTargetSlotUnderItemCursor(Point cursorPosition, Size it
 				hotPixelCellOffset.deltaY++;
 			}
 			// Then work out the top left cell of the nearest area that could fit this item (as pasting on the edge of the stash would otherwise put it out of bounds)
-			point.y = clamp(point.y - hotPixelCellOffset.deltaY, 0, StashGridSize.height - itemSize.height);
-			point.x = clamp(point.x - hotPixelCellOffset.deltaX, 0, StashGridSize.width - itemSize.width);
+			point.y = std::clamp(point.y - hotPixelCellOffset.deltaY, 0, StashGridSize.height - itemSize.height);
+			point.x = std::clamp(point.x - hotPixelCellOffset.deltaX, 0, StashGridSize.width - itemSize.width);
 			return point;
 		}
 	}
@@ -538,8 +538,7 @@ void StashStruct::RemoveStashItem(StashStruct::StashCell iv)
 	if (lastItemIndex != iv) {
 		stashList[iv] = stashList[lastItemIndex];
 
-		for (auto &pair : Stash.stashGrids) {
-			auto &grid = pair.second;
+		for (auto &[_, grid] : Stash.stashGrids) {
 			for (auto &row : grid) {
 				for (StashStruct::StashCell &itemId : row) {
 					if (itemId == lastItemIndex + 1) {
@@ -662,7 +661,7 @@ void CloseGoldWithdraw()
 	SDL_StopTextInput();
 }
 
-void GoldWithdrawNewText(string_view text)
+void GoldWithdrawNewText(std::string_view text)
 {
 	for (char vkey : text) {
 		int digit = vkey - '0';

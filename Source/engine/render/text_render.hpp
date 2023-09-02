@@ -6,8 +6,11 @@
 #pragma once
 
 #include <cstdint>
+#include <optional>
 #include <string>
+#include <string_view>
 #include <utility>
+#include <variant>
 #include <vector>
 
 #include <SDL.h>
@@ -16,8 +19,6 @@
 #include "engine.h"
 #include "engine/clx_sprite.hpp"
 #include "engine/rectangle.hpp"
-#include "utils/stdcompat/optional.hpp"
-#include "utils/stdcompat/string_view.hpp"
 
 namespace devilution {
 
@@ -57,34 +58,24 @@ enum text_color : uint8_t {
  */
 class DrawStringFormatArg {
 public:
-	enum class Type : uint8_t {
-		StringView,
-		Int
-	};
+	using Value = std::variant<std::string_view, int>;
 
-	DrawStringFormatArg(string_view value, UiFlags flags)
-	    : type_(Type::StringView)
-	    , string_view_value_(value)
+	DrawStringFormatArg(std::string_view value, UiFlags flags)
+	    : value_(value)
 	    , flags_(flags)
 	{
 	}
 
 	DrawStringFormatArg(int value, UiFlags flags)
-	    : type_(Type::Int)
-	    , int_value_(value)
+	    : value_(value)
 	    , flags_(flags)
 	{
 	}
 
-	Type GetType() const
+	std::string_view GetFormatted() const
 	{
-		return type_;
-	}
-
-	string_view GetFormatted() const
-	{
-		if (type_ == Type::StringView)
-			return string_view_value_;
+		if (std::holds_alternative<std::string_view>(value_))
+			return std::get<std::string_view>(value_);
 		return formatted_;
 	}
 
@@ -95,12 +86,12 @@ public:
 
 	bool HasFormatted() const
 	{
-		return type_ == Type::StringView || !formatted_.empty();
+		return std::holds_alternative<std::string_view>(value_) || !formatted_.empty();
 	}
 
-	int GetIntValue() const
+	const Value &value() const
 	{
-		return int_value_;
+		return value_;
 	}
 
 	UiFlags GetFlags() const
@@ -109,12 +100,7 @@ public:
 	}
 
 private:
-	Type type_;
-	union {
-		string_view string_view_value_;
-		int int_value_;
-	};
-
+	Value value_;
 	UiFlags flags_;
 	std::string formatted_;
 };
@@ -136,7 +122,7 @@ void LoadSmallSelectionSpinner();
  * @param charactersInLine Receives characters read until newline or terminator
  * @return Line width in pixels
  */
-int GetLineWidth(string_view text, GameFontTables size = GameFont12, int spacing = 1, int *charactersInLine = nullptr);
+int GetLineWidth(std::string_view text, GameFontTables size = GameFont12, int spacing = 1, int *charactersInLine = nullptr);
 
 /**
  * @brief Calculate pixel width of first line of text, respecting kerning
@@ -149,9 +135,9 @@ int GetLineWidth(string_view text, GameFontTables size = GameFont12, int spacing
  * @param charactersInLine Receives characters read until newline or terminator
  * @return Line width in pixels
  */
-int GetLineWidth(string_view fmt, DrawStringFormatArg *args, size_t argsLen, size_t argsOffset, GameFontTables size, int spacing, int *charactersInLine = nullptr);
+int GetLineWidth(std::string_view fmt, DrawStringFormatArg *args, size_t argsLen, size_t argsOffset, GameFontTables size, int spacing, int *charactersInLine = nullptr);
 
-int GetLineHeight(string_view text, GameFontTables fontIndex);
+int GetLineHeight(std::string_view text, GameFontTables fontIndex);
 
 /**
  * @brief Builds a multi-line version of the given text so it'll fit within the given width.
@@ -165,7 +151,7 @@ int GetLineHeight(string_view text, GameFontTables fontIndex);
  * @param spacing Any adjustment to apply between each character
  * @return A copy of the source text with newlines inserted where appropriate
  */
-[[nodiscard]] std::string WordWrapString(string_view text, unsigned width, GameFontTables size = GameFont12, int spacing = 1);
+[[nodiscard]] std::string WordWrapString(std::string_view text, unsigned width, GameFontTables size = GameFont12, int spacing = 1);
 
 /**
  * @brief Draws a line of text within a clipping rectangle (positioned relative to the origin of the output buffer).
@@ -186,7 +172,7 @@ int GetLineHeight(string_view text, GameFontTables fontIndex);
  * @param lineHeight Allows overriding the default line height, useful for multi-line strings.
  * @return The number of bytes rendered, including characters "drawn" outside the buffer.
  */
-uint32_t DrawString(const Surface &out, string_view text, const Rectangle &rect, UiFlags flags = UiFlags::None, int spacing = 1, int lineHeight = -1);
+uint32_t DrawString(const Surface &out, std::string_view text, const Rectangle &rect, UiFlags flags = UiFlags::None, int spacing = 1, int lineHeight = -1);
 
 /**
  * @brief Draws a line of text at the given position relative to the origin of the output buffer.
@@ -203,7 +189,7 @@ uint32_t DrawString(const Surface &out, string_view text, const Rectangle &rect,
  *                This value may be adjusted if the flag UIS_FIT_SPACING is passed in the flags parameter.
  * @param lineHeight Allows overriding the default line height, useful for multi-line strings.
  */
-inline void DrawString(const Surface &out, string_view text, const Point &position, UiFlags flags = UiFlags::None, int spacing = 1, int lineHeight = -1)
+inline void DrawString(const Surface &out, std::string_view text, const Point &position, UiFlags flags = UiFlags::None, int spacing = 1, int lineHeight = -1)
 {
 	DrawString(out, text, { position, { out.w() - position.x, 0 } }, flags, spacing, lineHeight);
 }
@@ -223,9 +209,9 @@ inline void DrawString(const Surface &out, string_view text, const Point &positi
  *                This value may be adjusted if the flag UIS_FIT_SPACING is passed in the flags parameter.
  * @param lineHeight Allows overriding the default line height, useful for multi-line strings.
  */
-void DrawStringWithColors(const Surface &out, string_view fmt, DrawStringFormatArg *args, std::size_t argsLen, const Rectangle &rect, UiFlags flags = UiFlags::None, int spacing = 1, int lineHeight = -1);
+void DrawStringWithColors(const Surface &out, std::string_view fmt, DrawStringFormatArg *args, std::size_t argsLen, const Rectangle &rect, UiFlags flags = UiFlags::None, int spacing = 1, int lineHeight = -1);
 
-inline void DrawStringWithColors(const Surface &out, string_view fmt, std::vector<DrawStringFormatArg> args, const Rectangle &rect, UiFlags flags = UiFlags::None, int spacing = 1, int lineHeight = -1)
+inline void DrawStringWithColors(const Surface &out, std::string_view fmt, std::vector<DrawStringFormatArg> args, const Rectangle &rect, UiFlags flags = UiFlags::None, int spacing = 1, int lineHeight = -1)
 {
 	return DrawStringWithColors(out, fmt, args.data(), args.size(), rect, flags, spacing, lineHeight);
 }

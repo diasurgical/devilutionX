@@ -4,6 +4,7 @@
  * Implementation of object functionality, interaction, spawning, loading, etc.
  */
 #include <climits>
+#include <cmath>
 #include <cstdint>
 #include <ctime>
 
@@ -39,6 +40,7 @@
 #include "stores.h"
 #include "towners.h"
 #include "track.h"
+#include "utils/algorithm/container.hpp"
 #include "utils/language.h"
 #include "utils/log.hpp"
 #include "utils/str_cat.hpp"
@@ -154,83 +156,6 @@ const char *const ShrineNames[] = {
 	// TRANSLATORS: Shrine Name Block end
 	N_("Murphy's"),
 };
-/** Specifies the minimum dungeon level on which each shrine will appear. */
-char shrinemin[] = {
-	1, // Mysterious
-	1, // Hidden
-	1, // Gloomy
-	1, // Weird
-	1, // Magical
-	1, // Stone
-	1, // Religious
-	1, // Enchanted
-	1, // Thaumaturgic
-	1, // Fascinating
-	1, // Cryptic
-	1, // Magical
-	1, // Eldritch
-	1, // Eerie
-	1, // Divine
-	1, // Holy
-	1, // Sacred
-	1, // Spiritual
-	1, // Spooky
-	1, // Abandoned
-	1, // Creepy
-	1, // Quiet
-	1, // Secluded
-	1, // Ornate
-	1, // Glimmering
-	1, // Tainted
-	1, // Oily
-	1, // Glowing
-	1, // Mendicant's
-	1, // Sparkling
-	1, // Town
-	1, // Shimmering
-	1, // Solar,
-	1, // Murphy's
-};
-
-#define MAX_LVLS 24
-
-/** Specifies the maximum dungeon level on which each shrine will appear. */
-char shrinemax[] = {
-	MAX_LVLS, // Mysterious
-	MAX_LVLS, // Hidden
-	MAX_LVLS, // Gloomy
-	MAX_LVLS, // Weird
-	MAX_LVLS, // Magical
-	MAX_LVLS, // Stone
-	MAX_LVLS, // Religious
-	8,        // Enchanted
-	MAX_LVLS, // Thaumaturgic
-	MAX_LVLS, // Fascinating
-	MAX_LVLS, // Cryptic
-	MAX_LVLS, // Magical
-	MAX_LVLS, // Eldritch
-	MAX_LVLS, // Eerie
-	MAX_LVLS, // Divine
-	MAX_LVLS, // Holy
-	MAX_LVLS, // Sacred
-	MAX_LVLS, // Spiritual
-	MAX_LVLS, // Spooky
-	MAX_LVLS, // Abandoned
-	MAX_LVLS, // Creepy
-	MAX_LVLS, // Quiet
-	MAX_LVLS, // Secluded
-	MAX_LVLS, // Ornate
-	MAX_LVLS, // Glimmering
-	MAX_LVLS, // Tainted
-	MAX_LVLS, // Oily
-	MAX_LVLS, // Glowing
-	MAX_LVLS, // Mendicant's
-	MAX_LVLS, // Sparkling
-	MAX_LVLS, // Town
-	MAX_LVLS, // Shimmering
-	MAX_LVLS, // Solar,
-	MAX_LVLS, // Murphy's
-};
 
 /**
  * Specifies the game type for which each shrine may appear.
@@ -306,19 +231,24 @@ _speech_id StoryText[3][3] = {
 	{ TEXT_BOOK31, TEXT_BOOK32, TEXT_BOOK33 }
 };
 
-bool RndLocOk(int xp, int yp)
+bool RndLocOk(Point p)
 {
-	if (dMonster[xp][yp] != 0)
+	if (dMonster[p.x][p.y] != 0)
 		return false;
-	if (dPlayer[xp][yp] != 0)
+	if (dPlayer[p.x][p.y] != 0)
 		return false;
-	if (IsObjectAtPosition({ xp, yp }))
+	if (IsObjectAtPosition(p))
 		return false;
-	if (TileContainsSetPiece({ xp, yp }))
+	if (TileContainsSetPiece(p))
 		return false;
-	if (TileHasAny(dPiece[xp][yp], TileProperties::Solid))
+	if (TileHasAny(dPiece[p.x][p.y], TileProperties::Solid))
 		return false;
-	return IsNoneOf(leveltype, DTYPE_CATHEDRAL, DTYPE_CRYPT) || dPiece[xp][yp] <= 125 || dPiece[xp][yp] >= 143;
+	return IsNoneOf(leveltype, DTYPE_CATHEDRAL, DTYPE_CRYPT) || dPiece[p.x][p.y] <= 125 || dPiece[p.x][p.y] >= 143;
+}
+
+bool IsAreaOk(Rectangle rect)
+{
+	return c_all_of(PointsInRectangle(rect), &RndLocOk);
 }
 
 bool CanPlaceWallTrap(int xp, int yp)
@@ -339,15 +269,7 @@ void InitRndLocObj(int min, int max, _object_id objtype)
 		while (true) {
 			int xp = GenerateRnd(80) + 16;
 			int yp = GenerateRnd(80) + 16;
-			if (RndLocOk(xp - 1, yp - 1)
-			    && RndLocOk(xp, yp - 1)
-			    && RndLocOk(xp + 1, yp - 1)
-			    && RndLocOk(xp - 1, yp)
-			    && RndLocOk(xp, yp)
-			    && RndLocOk(xp + 1, yp)
-			    && RndLocOk(xp - 1, yp + 1)
-			    && RndLocOk(xp, yp + 1)
-			    && RndLocOk(xp + 1, yp + 1)) {
+			if (IsAreaOk(Rectangle { { xp - 1, yp - 1 }, { 3, 3 } })) {
 				AddObject(objtype, { xp, yp });
 				break;
 			}
@@ -362,18 +284,7 @@ void InitRndLocBigObj(int min, int max, _object_id objtype)
 		while (true) {
 			int xp = GenerateRnd(80) + 16;
 			int yp = GenerateRnd(80) + 16;
-			if (RndLocOk(xp - 1, yp - 2)
-			    && RndLocOk(xp, yp - 2)
-			    && RndLocOk(xp + 1, yp - 2)
-			    && RndLocOk(xp - 1, yp - 1)
-			    && RndLocOk(xp, yp - 1)
-			    && RndLocOk(xp + 1, yp - 1)
-			    && RndLocOk(xp - 1, yp)
-			    && RndLocOk(xp, yp)
-			    && RndLocOk(xp + 1, yp)
-			    && RndLocOk(xp - 1, yp + 1)
-			    && RndLocOk(xp, yp + 1)
-			    && RndLocOk(xp + 1, yp + 1)) {
+			if (IsAreaOk(Rectangle { { xp - 1, yp - 2 }, { 3, 4 } })) {
 				AddObject(objtype, { xp, yp });
 				break;
 			}
@@ -383,14 +294,8 @@ void InitRndLocBigObj(int min, int max, _object_id objtype)
 
 bool CanPlaceRandomObject(Point position, Displacement standoff)
 {
-	for (int yy = -standoff.deltaY; yy <= standoff.deltaY; yy++) {
-		for (int xx = -standoff.deltaX; xx <= standoff.deltaX; xx++) {
-			Point tile = position + Displacement { xx, yy };
-			if (!RndLocOk(tile.x, tile.y))
-				return false;
-		}
-	}
-	return true;
+	return IsAreaOk(Rectangle { position - standoff,
+	    Size { standoff.deltaX * 2 + 1, standoff.deltaY * 2 + 1 } });
 }
 
 std::optional<Point> GetRandomObjectPosition(Displacement standoff)
@@ -506,7 +411,7 @@ void InitRndBarrels()
 		do {
 			xp = GenerateRnd(80) + 16;
 			yp = GenerateRnd(80) + 16;
-		} while (!RndLocOk(xp, yp));
+		} while (!RndLocOk({ xp, yp }));
 		_object_id o = FlipCoin(4) ? explosiveBarrelId : barrelId;
 		AddObject(o, { xp, yp });
 		bool found = true;
@@ -524,7 +429,7 @@ void InitRndBarrels()
 				int dir = GenerateRnd(8);
 				xp += bxadd[dir];
 				yp += byadd[dir];
-				found = RndLocOk(xp, yp);
+				found = RndLocOk({ xp, yp });
 				t++;
 				if (found)
 					break;
@@ -773,7 +678,7 @@ void SetupObject(Object &object, Point position, _object_id ot)
 	object.position = position;
 
 	if (!HeadlessMode) {
-		const auto &found = std::find(std::begin(ObjFileList), std::end(ObjFileList), ofi);
+		const auto &found = c_find(ObjFileList, ofi);
 		if (found == std::end(ObjFileList)) {
 			LogCritical("Unable to find object_graphic_id {} in list of objects to load, level generation error.", static_cast<int>(ofi));
 			return;
@@ -845,15 +750,7 @@ void AddNakrulLever()
 	while (true) {
 		int xp = GenerateRnd(80) + 16;
 		int yp = GenerateRnd(80) + 16;
-		if (RndLocOk(xp - 1, yp - 1)
-		    && RndLocOk(xp, yp - 1)
-		    && RndLocOk(xp + 1, yp - 1)
-		    && RndLocOk(xp - 1, yp)
-		    && RndLocOk(xp, yp)
-		    && RndLocOk(xp + 1, yp)
-		    && RndLocOk(xp - 1, yp + 1)
-		    && RndLocOk(xp, yp + 1)
-		    && RndLocOk(xp + 1, yp + 1)) {
+		if (IsAreaOk(Rectangle { { xp - 1, yp - 1 }, { 3, 3 } })) {
 			break;
 		}
 	}
@@ -969,23 +866,18 @@ void AddLazStand()
 	int cnt = 0;
 	int xp;
 	int yp;
-	bool found = false;
-	while (!found) {
-		found = true;
+	while (true) {
 		xp = GenerateRnd(80) + 16;
 		yp = GenerateRnd(80) + 16;
-		for (int yy = -3; yy <= 3; yy++) {
-			for (int xx = -2; xx <= 3; xx++) {
-				if (!RndLocOk(xp + xx, yp + yy))
-					found = false;
-			}
-		}
-		if (!found) {
+
+		if (!IsAreaOk(Rectangle { { xp - 2, yp - 3 }, { 6, 7 } })) {
 			cnt++;
 			if (cnt > 10000) {
 				InitRndLocObj(1, 1, OBJ_LAZSTAND);
 				return;
 			}
+		} else {
+			break;
 		}
 	}
 	AddObject(OBJ_LAZSTAND, { xp, yp });
@@ -1405,7 +1297,7 @@ void AddShrine(Object &shrine)
 	int shrines = gbIsHellfire ? NumberOfShrineTypes : 26;
 
 	for (int j = 0; j < shrines; j++) {
-		slist[j] = currlevel >= shrinemin[j] && currlevel <= shrinemax[j];
+		slist[j] = j != ShrineEnchanted || IsAnyOf(leveltype, DTYPE_CATHEDRAL, DTYPE_CATACOMBS);
 		if (gbIsMultiplayer && shrineavail[j] == ShrineTypeSingle) {
 			slist[j] = false;
 		} else if (!gbIsMultiplayer && shrineavail[j] == ShrineTypeMulti) {
@@ -1528,13 +1420,7 @@ Point GetRndObjLoc(int randarea)
 			randarea--;
 		x = GenerateRnd(MAXDUNX);
 		y = GenerateRnd(MAXDUNY);
-		bool failed = false;
-		for (int i = 0; i < randarea && !failed; i++) {
-			for (int j = 0; j < randarea && !failed; j++) {
-				failed = !RndLocOk(i + x, j + y);
-			}
-		}
-		if (!failed)
+		if (IsAreaOk(Rectangle { { x, y }, { randarea, randarea } }))
 			break;
 	}
 	return { x, y };
@@ -2964,7 +2850,7 @@ void OperateShrineMendicant(Player &player)
 		return;
 
 	int gold = player._pGold / 2;
-	AddPlrExperience(player, player._pLevel, gold);
+	player.addExperience(gold);
 	TakePlrsMoney(gold);
 
 	RedrawEverything();
@@ -2973,7 +2859,7 @@ void OperateShrineMendicant(Player &player)
 }
 
 /**
- * @brief Grants experience to the player based on their current level while also triggering a magic trap
+ * @brief Grants experience to the player based on the current dungeon level while also triggering a magic trap
  * @param player The player that will be affected by the shrine
  * @param spawnPosition The trap results in casting flash from this location targeting the player
  */
@@ -2982,7 +2868,7 @@ void OperateShrineSparkling(Player &player, Point spawnPosition)
 	if (&player != MyPlayer)
 		return;
 
-	AddPlrExperience(player, player._pLevel, 1000 * currlevel);
+	player.addExperience(1000 * currlevel);
 
 	AddMissile(
 	    spawnPosition,
@@ -3295,7 +3181,7 @@ int FindValidShrine()
 {
 	for (;;) {
 		int rv = GenerateRnd(gbIsHellfire ? NumberOfShrineTypes : 26);
-		if (currlevel < shrinemin[rv] || currlevel > shrinemax[rv] || rv == ShrineThaumaturgic)
+		if ((rv == ShrineEnchanted && !IsAnyOf(leveltype, DTYPE_CATHEDRAL, DTYPE_CATACOMBS)) || rv == ShrineThaumaturgic)
 			continue;
 		if (gbIsMultiplayer && shrineavail[rv] == ShrineTypeSingle)
 			continue;
@@ -3388,26 +3274,26 @@ bool OperateFountains(Player &player, Object &fountain)
 		if (&player != MyPlayer)
 			return false;
 
-		unsigned randomValue = (fountain._oRndSeed >> 16) % 12;
-		unsigned fromStat = randomValue / 3;
+		const unsigned randomValue = (fountain._oRndSeed >> 16) % 12;
+		const unsigned fromStat = randomValue / 3;
 		unsigned toStat = randomValue % 3;
 		if (toStat >= fromStat)
 			toStat++;
 
-		std::pair<unsigned, int> alterations[] = { { fromStat, -1 }, { toStat, 1 } };
-		for (auto alteration : alterations) {
-			switch (alteration.first) {
+		const std::pair<unsigned, int> alterations[] = { { fromStat, -1 }, { toStat, 1 } };
+		for (const auto &[stat, delta] : alterations) {
+			switch (stat) {
 			case 0:
-				ModifyPlrStr(player, alteration.second);
+				ModifyPlrStr(player, delta);
 				break;
 			case 1:
-				ModifyPlrMag(player, alteration.second);
+				ModifyPlrMag(player, delta);
 				break;
 			case 2:
-				ModifyPlrDex(player, alteration.second);
+				ModifyPlrDex(player, delta);
 				break;
 			case 3:
-				ModifyPlrVit(player, alteration.second);
+				ModifyPlrVit(player, delta);
 				break;
 			}
 		}
@@ -3693,7 +3579,7 @@ void ResyncDoors(WorldTilePosition p1, WorldTilePosition p2, bool sendmsg)
 	const WorldTileSize size { static_cast<WorldTileCoord>(p2.x - p1.x), static_cast<WorldTileCoord>(p2.y - p1.y) };
 	const WorldTileRectangle area { p1, size };
 
-	for (WorldTilePosition p : PointsInRectangleRange<WorldTileCoord> { area }) {
+	for (const WorldTilePosition p : PointsInRectangle { area }) {
 		Object *obj = FindObjectAtPosition(p);
 		if (obj == nullptr)
 			continue;
@@ -3722,7 +3608,7 @@ void UpdateState(Object &object, int frame)
 
 unsigned int Object::GetId() const
 {
-	return abs(dObject[position.x][position.y]) - 1;
+	return std::abs(dObject[position.x][position.y]) - 1;
 }
 
 bool Object::IsDisabled() const
@@ -3748,7 +3634,7 @@ Object *FindObjectAtPosition(Point position, bool considerLargeObjects)
 	auto objectId = dObject[position.x][position.y];
 
 	if (objectId > 0 || (considerLargeObjects && objectId != 0)) {
-		return &Objects[abs(objectId) - 1];
+		return &Objects[std::abs(objectId) - 1];
 	}
 
 	// nothing at this position, return a nullptr
@@ -4826,7 +4712,7 @@ void SyncObjectAnim(Object &object)
 	object_graphic_id index = AllObjects[object._otype].ofindex;
 
 	if (!HeadlessMode) {
-		const auto &found = std::find(std::begin(ObjFileList), std::end(ObjFileList), index);
+		const auto &found = c_find(ObjFileList, index);
 		if (found == std::end(ObjFileList)) {
 			LogCritical("Unable to find object_graphic_id {} in list of objects to load, level generation error.", static_cast<int>(index));
 			return;
@@ -4990,7 +4876,7 @@ StringOrView Object::name() const
 	default:
 		break;
 	}
-	return string_view();
+	return std::string_view();
 }
 
 void GetObjectStr(const Object &object)

@@ -4,8 +4,8 @@
  * Implementation of the in-game chat log.
  */
 #include <ctime>
-
 #include <string>
+#include <string_view>
 #include <vector>
 
 #include <fmt/format.h>
@@ -24,7 +24,6 @@
 #include "minitext.h"
 #include "stores.h"
 #include "utils/language.h"
-#include "utils/stdcompat/string_view.hpp"
 
 namespace devilution {
 
@@ -116,7 +115,7 @@ void ToggleChatLog()
 	}
 }
 
-void AddMessageToChatLog(string_view message, Player *player, UiFlags flags)
+void AddMessageToChatLog(std::string_view message, Player *player, UiFlags flags)
 {
 	MessageCounter++;
 	time_t timeResult = time(nullptr);
@@ -128,7 +127,7 @@ void AddMessageToChatLog(string_view message, Player *player, UiFlags flags)
 	if (player == nullptr) {
 		ChatLogLines.emplace_back(MultiColoredText { "{0} {1}", { { timestamp, UiFlags::ColorRed }, { std::string(message), flags } } });
 	} else {
-		std::string playerInfo = fmt::format(fmt::runtime(_("{:s} (lvl {:d}): ")), player->_pName, player->_pLevel);
+		std::string playerInfo = fmt::format(fmt::runtime(_("{:s} (lvl {:d}): ")), player->_pName, player->getCharacterLevel());
 		ChatLogLines.emplace_back(MultiColoredText { std::string(message), { {} }, 20 });
 		UiFlags nameColor = player == MyPlayer ? UiFlags::ColorWhitegold : UiFlags::ColorBlue;
 		ChatLogLines.emplace_back(MultiColoredText { "{0} - {1}", { { timestamp, UiFlags::ColorRed }, { playerInfo, nameColor } } });
@@ -177,7 +176,7 @@ void DrawChatLog(const Surface &out)
 		if (i + SkipLines >= ChatLogLines.size())
 			break;
 		MultiColoredText &text = ChatLogLines[ChatLogLines.size() - (i + SkipLines + 1)];
-		const string_view line = text.text;
+		const std::string_view line = text.text;
 
 		std::vector<DrawStringFormatArg> args;
 		for (auto &x : text.colors) {

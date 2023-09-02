@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <cmath>
 #include <type_traits>
 #ifdef BUILD_TESTING
@@ -8,8 +9,6 @@
 
 #include "engine/direction.hpp"
 #include "engine/displacement.hpp"
-#include "utils/stdcompat/abs.hpp"
-#include "utils/stdcompat/algorithm.hpp"
 
 namespace devilution {
 
@@ -88,6 +87,13 @@ struct PointOf {
 		return *this;
 	}
 
+	constexpr PointOf<CoordT> &operator/=(const int factor)
+	{
+		x /= factor;
+		y /= factor;
+		return *this;
+	}
+
 	constexpr PointOf<CoordT> operator-() const
 	{
 		static_assert(std::is_signed<CoordT>::value, "CoordT must be signed");
@@ -104,9 +110,7 @@ struct PointOf {
 	constexpr int ApproxDistance(PointOf<PointCoordT> other) const
 	{
 		const Displacement offset = abs(Point(*this) - Point(other));
-		auto minMax = std::minmax(offset.deltaX, offset.deltaY);
-		int min = minMax.first;
-		int max = minMax.second;
+		const auto [min, max] = std::minmax(offset.deltaX, offset.deltaY);
 
 		int approx = max * 1007 + min * 441;
 		if (max < (min * 16))
@@ -134,16 +138,16 @@ struct PointOf {
 	template <typename PointCoordT>
 	constexpr int ManhattanDistance(PointOf<PointCoordT> other) const
 	{
-		return abs(static_cast<int>(x) - static_cast<int>(other.x))
-		    + abs(static_cast<int>(y) - static_cast<int>(other.y));
+		return std::abs(static_cast<int>(x) - static_cast<int>(other.x))
+		    + std::abs(static_cast<int>(y) - static_cast<int>(other.y));
 	}
 
 	template <typename PointCoordT>
 	constexpr int WalkingDistance(PointOf<PointCoordT> other) const
 	{
 		return std::max<int>(
-		    abs(static_cast<int>(x) - static_cast<int>(other.x)),
-		    abs(static_cast<int>(y) - static_cast<int>(other.y)));
+		    std::abs(static_cast<int>(x) - static_cast<int>(other.x)),
+		    std::abs(static_cast<int>(y) - static_cast<int>(other.y)));
 	}
 
 	/**
@@ -222,7 +226,7 @@ constexpr PointOf<PointCoordT> operator*(PointOf<PointCoordT> a, const int facto
 template <typename PointCoordT>
 constexpr PointOf<PointCoordT> abs(PointOf<PointCoordT> a)
 {
-	return { abs(a.x), abs(a.y) };
+	return { std::abs(a.x), std::abs(a.y) };
 }
 
 } // namespace devilution

@@ -3,7 +3,10 @@
  *
  * Implementation of player inventory.
  */
+#include <algorithm>
+#include <cmath>
 #include <cstdint>
+#include <optional>
 #include <utility>
 
 #include <fmt/format.h>
@@ -30,8 +33,6 @@
 #include "utils/format_int.hpp"
 #include "utils/language.h"
 #include "utils/sdl_geometry.h"
-#include "utils/stdcompat/algorithm.hpp"
-#include "utils/stdcompat/optional.hpp"
 #include "utils/str_cat.hpp"
 #include "utils/utf8.hpp"
 
@@ -310,8 +311,8 @@ int FindTargetSlotUnderItemCursor(Point cursorPosition, Size itemSize)
 			}
 			// Then work out the top left cell of the nearest area that could fit this item (as pasting on the edge of the inventory would otherwise put it out of bounds)
 			int hotPixelCell = r - SLOTXY_INV_FIRST;
-			int targetRow = clamp((hotPixelCell / InventorySizeInSlots.width) - hotPixelCellOffset.deltaY, 0, InventorySizeInSlots.height - itemSize.height);
-			int targetColumn = clamp((hotPixelCell % InventorySizeInSlots.width) - hotPixelCellOffset.deltaX, 0, InventorySizeInSlots.width - itemSize.width);
+			int targetRow = std::clamp((hotPixelCell / InventorySizeInSlots.width) - hotPixelCellOffset.deltaY, 0, InventorySizeInSlots.height - itemSize.height);
+			int targetColumn = std::clamp((hotPixelCell % InventorySizeInSlots.width) - hotPixelCellOffset.deltaX, 0, InventorySizeInSlots.width - itemSize.width);
 			return SLOTXY_INV_FIRST + targetRow * InventorySizeInSlots.width + targetColumn;
 		}
 	}
@@ -373,7 +374,7 @@ void CheckInvPaste(Player &player, Point cursorPosition)
 					// FindTargetSlotUnderItemCursor returns the top left slot of the inventory region that fits the item, we can be confident this calculation is not going to read out of range.
 					assert(testCell < sizeof(player.InvGrid));
 					if (player.InvGrid[testCell] != 0) {
-						int8_t iv = abs(player.InvGrid[testCell]);
+						int8_t iv = std::abs(player.InvGrid[testCell]);
 						if (it != 0) {
 							if (it != iv) {
 								// Found two different items that would be displaced by the held item, can't paste the item here.
@@ -1131,7 +1132,7 @@ void DrawInv(const Surface &out)
 			    out,
 			    GetPanelPosition(UiPanels::Inventory, InvRect[i + SLOTXY_INV_FIRST].position) + Displacement { 0, InventorySlotSizeInPixels.height },
 			    InventorySlotSizeInPixels,
-			    myPlayer.InvList[abs(myPlayer.InvGrid[i]) - 1]._iMagical);
+			    myPlayer.InvList[std::abs(myPlayer.InvGrid[i]) - 1]._iMagical);
 		}
 	}
 
@@ -1455,7 +1456,7 @@ void CheckInvSwap(Player &player, const Item &item, int invGridIndex)
 			for (int x = 0; x < itemSize.width; x++) {
 				int gridIndex = rowGridIndex + x;
 				if (player.InvGrid[gridIndex] != 0)
-					return abs(player.InvGrid[gridIndex]);
+					return std::abs(player.InvGrid[gridIndex]);
 			}
 		}
 		player._pNumInv++;
@@ -1488,7 +1489,7 @@ void CheckInvSwap(Player &player, const Item &item, int invGridIndex)
 
 void CheckInvRemove(Player &player, int invGridIndex)
 {
-	int invListIndex = abs(player.InvGrid[invGridIndex]) - 1;
+	int invListIndex = std::abs(player.InvGrid[invGridIndex]) - 1;
 
 	if (invListIndex >= 0) {
 		player.RemoveInvItem(invListIndex);
@@ -1745,7 +1746,7 @@ int ClampDurability(const Item &item, int durability)
 	if (item._iMaxDur == 0)
 		return 0;
 
-	return clamp<int>(durability, 1, item._iMaxDur);
+	return std::clamp<int>(durability, 1, item._iMaxDur);
 }
 
 int16_t ClampToHit(const Item &item, int16_t toHit)
@@ -1776,8 +1777,8 @@ int SyncDropItem(Point position, _item_indexes idx, uint16_t icreateinfo, int is
 		item._iIdentified = true;
 	item._iMaxDur = mdur;
 	item._iDurability = ClampDurability(item, dur);
-	item._iMaxCharges = clamp<int>(mch, 0, item._iMaxCharges);
-	item._iCharges = clamp<int>(ch, 0, item._iMaxCharges);
+	item._iMaxCharges = std::clamp<int>(mch, 0, item._iMaxCharges);
+	item._iCharges = std::clamp<int>(ch, 0, item._iMaxCharges);
 	if (gbIsHellfire) {
 		item._iPLToHit = ClampToHit(item, toHit);
 		item._iMaxDam = ClampMaxDam(item, maxDam);
@@ -1787,7 +1788,7 @@ int SyncDropItem(Point position, _item_indexes idx, uint16_t icreateinfo, int is
 	return PlaceItemInWorld(std::move(item), position);
 }
 
-int SyncDropEar(Point position, uint16_t icreateinfo, uint32_t iseed, uint8_t cursval, string_view heroname)
+int SyncDropEar(Point position, uint16_t icreateinfo, uint32_t iseed, uint8_t cursval, std::string_view heroname)
 {
 	if (ActiveItemCount >= MAXITEMS)
 		return -1;
@@ -1849,7 +1850,7 @@ int8_t CheckInvHLight()
 		rv = INVLOC_CHEST;
 		pi = &myPlayer.InvBody[rv];
 	} else if (r >= SLOTXY_INV_FIRST && r <= SLOTXY_INV_LAST) {
-		int8_t itemId = abs(myPlayer.InvGrid[r - SLOTXY_INV_FIRST]);
+		int8_t itemId = std::abs(myPlayer.InvGrid[r - SLOTXY_INV_FIRST]);
 		if (itemId == 0)
 			return -1;
 		int ii = itemId - 1;

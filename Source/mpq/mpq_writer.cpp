@@ -362,7 +362,7 @@ MpqBlockEntry *MpqWriter::AddFile(const char *filename, MpqBlockEntry *block, ui
 	return block;
 }
 
-bool MpqWriter::WriteFileContents(const char *filename, const byte *fileData, size_t fileSize, MpqBlockEntry *block)
+bool MpqWriter::WriteFileContents(const char *filename, const std::byte *fileData, size_t fileSize, MpqBlockEntry *block)
 {
 	const char *tmp;
 	while ((tmp = strchr(filename, ':')) != nullptr)
@@ -408,7 +408,7 @@ bool MpqWriter::WriteFileContents(const char *filename, const byte *fileData, si
 #endif
 
 	uint32_t destSize = offsetTableByteSize;
-	byte mpqBuf[BlockSize];
+	std::byte mpqBuf[BlockSize];
 	size_t curSector = 0;
 	while (true) {
 		uint32_t len = std::min<uint32_t>(fileSize, BlockSize);
@@ -504,7 +504,7 @@ void MpqWriter::RemoveHashEntries(bool (*fnGetName)(uint8_t, char *))
 	}
 }
 
-bool MpqWriter::WriteFile(const char *filename, const byte *data, size_t size)
+bool MpqWriter::WriteFile(const char *filename, const std::byte *data, size_t size)
 {
 	MpqBlockEntry *blockEntry;
 

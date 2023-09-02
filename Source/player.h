@@ -25,14 +25,12 @@
 #include "spelldat.h"
 #include "utils/attributes.h"
 #include "utils/enum_traits.h"
-#include "utils/stdcompat/algorithm.hpp"
 
 namespace devilution {
 
 constexpr int InventoryGridCells = 40;
 constexpr int MaxBeltItems = 8;
 constexpr int MaxResistance = 75;
-constexpr int MaxCharacterLevel = 50;
 constexpr uint8_t MaxSpellLevel = 15;
 constexpr int PlayerNameLength = 32;
 
@@ -173,7 +171,7 @@ enum class DeathReason {
 };
 
 /** Maps from armor animation to letter used in graphic files. */
-constexpr std::array<char, 4> ArmourChar = {
+constexpr std::array<char, 3> ArmourChar = {
 	'l', // light
 	'm', // medium
 	'h', // heavy
@@ -274,7 +272,6 @@ struct Player {
 	int _pILMinDam;
 	int _pILMaxDam;
 	uint32_t _pExperience;
-	uint32_t _pNextExper;
 	PLR_MODE _pmode;
 	int8_t walkpath[MaxPathLength];
 	bool plractive;
@@ -319,8 +316,11 @@ struct Player {
 	ActorPosition position;
 	Direction _pdir; // Direction faced by player (direction enum)
 	HeroClass _pClass;
-	int8_t _pLevel;
-	int8_t _pMaxLvl;
+
+private:
+	uint8_t _pLevel = 1; // Use get/setCharacterLevel to ensure this attribute stays within the accepted range
+
+public:
 	uint8_t _pgfxnum; // Bitmask indicating what variant of the sprite the player is using. The 3 lower bits define weapon (PlayerWeaponGraphic) and the higher bits define armour (starting with PlayerArmorGraphic)
 	int8_t _pISplLvlAdd;
 	/** @brief Specifies whether players are in non-PvP mode. */
@@ -512,7 +512,7 @@ struct Player {
 	 */
 	int GetMeleeToHit() const
 	{
-		int hper = _pLevel + _pDexterity / 2 + _pIBonusToHit + BaseHitChance;
+		int hper = getCharacterLevel() + _pDexterity / 2 + _pIBonusToHit + BaseHitChance;
 		if (_pClass == HeroClass::Warrior)
 			hper += 20;
 		return hper;
@@ -535,7 +535,7 @@ struct Player {
 	 */
 	int GetRangedToHit() const
 	{
-		int hper = _pLevel + _pDexterity + _pIBonusToHit + BaseHitChance;
+		int hper = getCharacterLevel() + _pDexterity + _pIBonusToHit + BaseHitChance;
 		if (_pClass == HeroClass::Rogue)
 			hper += 20;
 		else if (_pClass == HeroClass::Warrior || _pClass == HeroClass::Bard)
@@ -573,7 +573,7 @@ struct Player {
 	{
 		int blkper = _pDexterity + _pBaseToBlk;
 		if (useLevel)
-			blkper += _pLevel * 2;
+			blkper += getCharacterLevel() * 2;
 		return blkper;
 	}
 
@@ -639,7 +639,7 @@ struct Player {
 			// Maximum achievable HP is approximately 1200. Diablo uses fixed point integers where the last 6 bits are
 			// fractional values. This means that we will never overflow HP values normally by doing this multiplication
 			// as the max value is representable in 17 bits and the multiplication result will be at most 23 bits
-			_pHPPer = clamp(_pHitPoints * 80 / _pMaxHP, 0, 80); // hp should never be greater than maxHP but just in case
+			_pHPPer = std::clamp(_pHitPoints * 80 / _pMaxHP, 0, 80); // hp should never be greater than maxHP but just in case
 		}
 
 		return _pHPPer;
@@ -650,7 +650,7 @@ struct Player {
 		if (_pMaxMana <= 0) {
 			_pManaPer = 0;
 		} else {
-			_pManaPer = clamp(_pMana * 80 / _pMaxMana, 0, 80);
+			_pManaPer = std::clamp(_pMana * 80 / _pMaxMana, 0, 80);
 		}
 
 		return _pManaPer;
@@ -730,6 +730,18 @@ struct Player {
 
 	void getAnimationFramesAndTicksPerFrame(player_graphic graphics, int8_t &numberOfFrames, int8_t &ticksPerFrame) const;
 
+	[[nodiscard]] ClxSprite currentSprite() const
+	{
+		return previewCelSprite ? *previewCelSprite : AnimInfo.currentSprite();
+	}
+	[[nodiscard]] Displacement getRenderingOffset(const ClxSprite sprite) const
+	{
+		Displacement offset = { -CalculateWidth2(sprite.width()), 0 };
+		if (isWalking())
+			offset += GetOffsetForWalking(AnimInfo, _pdir);
+		return offset;
+	}
+
 	/**
 	 * @brief Updates previewCelSprite according to new requested command
 	 * @param cmdId What command is requested
@@ -738,6 +750,50 @@ struct Player {
 	 * @param wParam2 Second Parameter
 	 */
 	void UpdatePreviewCelSprite(_cmd_id cmdId, Point point, uint16_t wParam1, uint16_t wParam2);
+
+	[[nodiscard]] uint8_t getCharacterLevel() const
+	{
+		return _pLevel;
+	}
+
+	/**
+	 * @brief Sets the character level to the target level or nearest valid value.
+	 * @param level New character level, will be clamped to the allowed range
+	 */
+	void setCharacterLevel(uint8_t level);
+
+	[[nodiscard]] uint8_t getMaxCharacterLevel() const;
+
+	[[nodiscard]] bool isMaxCharacterLevel() const
+	{
+		return getCharacterLevel() >= getMaxCharacterLevel();
+	}
+
+private:
+	void _addExperience(uint32_t experience, int levelDelta);
+
+public:
+	/**
+	 * @brief Adds experience to the local player based on the current game mode
+	 * @param experience base value to add, this will be adjusted to prevent power leveling in multiplayer games
+	 */
+	void addExperience(uint32_t experience)
+	{
+		_addExperience(experience, 0);
+	}
+
+	/**
+	 * @brief Adds experience to the local player based on the difference between the monster level
+	 * and current level, then also applying the power level cap in multiplayer games.
+	 * @param experience base value to add, will be scaled up/down by the difference between player and monster level
+	 * @param monsterLevel level of the monster that has rewarded this experience
+	 */
+	void addExperience(uint32_t experience, int monsterLevel)
+	{
+		_addExperience(experience, monsterLevel - getCharacterLevel());
+	}
+
+	[[nodiscard]] uint32_t getNextExperienceThreshold() const;
 
 	/** @brief Checks if the player is on the same level as the local player (MyPlayer). */
 	bool isOnActiveLevel() const
@@ -816,8 +872,7 @@ int CalcStatDiff(Player &player);
 #ifdef _DEBUG
 void NextPlrLevel(Player &player);
 #endif
-void AddPlrExperience(Player &player, int lvl, int exp);
-void AddPlrMonstExper(int lvl, int exp, char pmask);
+void AddPlrMonstExper(int lvl, unsigned int exp, char pmask);
 void ApplyPlrDamage(DamageType damageType, Player &player, int dam, int minHP = 0, int frac = 0, DeathReason deathReason = DeathReason::MonsterOrTrap);
 void InitPlayer(Player &player, bool FirstTime);
 void InitMultiView();

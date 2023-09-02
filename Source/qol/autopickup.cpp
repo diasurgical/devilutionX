@@ -3,11 +3,14 @@
  *
  * QoL feature for automatically picking up gold
  */
+#include "qol/autopickup.h"
+
+#include <algorithm>
 
 #include "inv_iterators.hpp"
 #include "options.h"
 #include "player.h"
-#include <algorithm>
+#include "utils/algorithm/container.hpp"
 
 namespace devilution {
 namespace {
@@ -34,8 +37,8 @@ bool HasRoomForGold()
 
 int NumMiscItemsInInv(int iMiscId)
 {
-	InventoryAndBeltPlayerItemsRange items { *MyPlayer };
-	return std::count_if(items.begin(), items.end(), [iMiscId](const Item &item) { return item._iMiscId == iMiscId; });
+	return c_count_if(InventoryAndBeltPlayerItemsRange { *MyPlayer },
+	    [iMiscId](const Item &item) { return item._iMiscId == iMiscId; });
 }
 
 bool DoPickup(Item item)

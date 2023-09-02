@@ -6,6 +6,7 @@
 #pragma once
 
 #include <cstdint>
+#include <optional>
 
 #include "DiabloUI/ui_flags.hpp"
 #include "engine.h"
@@ -13,7 +14,6 @@
 #include "engine/point.hpp"
 #include "itemdat.h"
 #include "monster.h"
-#include "utils/stdcompat/optional.hpp"
 #include "utils/string_or_view.hpp"
 
 namespace devilution {
@@ -454,6 +454,11 @@ struct Item {
 
 	/** @brief Returns the translated item name to display (respects identified flag) */
 	StringOrView getName() const;
+
+	[[nodiscard]] Displacement getRenderingOffset(const ClxSprite sprite) const
+	{
+		return { -CalculateWidth2(sprite.width()), 0 };
+	}
 };
 
 struct ItemGetRecordStruct {
@@ -515,7 +520,7 @@ void CreateRndItem(Point position, bool onlygood, bool sendmsg, bool delta);
 void CreateRndUseful(Point position, bool sendmsg);
 void CreateTypeItem(Point position, bool onlygood, ItemType itemType, int imisc, bool sendmsg, bool delta, bool spawn = false);
 void RecreateItem(const Player &player, Item &item, _item_indexes idx, uint16_t icreateinfo, uint32_t iseed, int ivalue, bool isHellfire);
-void RecreateEar(Item &item, uint16_t ic, uint32_t iseed, uint8_t bCursval, string_view heroName);
+void RecreateEar(Item &item, uint16_t ic, uint32_t iseed, uint8_t bCursval, std::string_view heroName);
 void CornerstoneSave();
 void CornerstoneLoad(Point position);
 void SpawnQuestItem(_item_indexes itemid, Point position, int randarea, int selflag, bool sendmsg);

@@ -80,7 +80,7 @@ bool IsGameCompatible(const GameData &data)
 static std::string GetErrorMessageIncompatibility(const GameData &data)
 {
 	if (data.programid != GAME_ID) {
-		string_view gameMode;
+		std::string_view gameMode;
 		switch (data.programid) {
 		case GameIdDiabloFull:
 			gameMode = _("Diablo");
@@ -103,7 +103,7 @@ static std::string GetErrorMessageIncompatibility(const GameData &data)
 	}
 }
 
-void UiInitGameSelectionList(string_view search)
+void UiInitGameSelectionList(std::string_view search)
 {
 	selgame_enteringGame = false;
 	selgame_selectedGame = 0;
@@ -228,7 +228,7 @@ void selgame_GameSelection_Focus(int value)
 		std::string infoString = std::string(_("Join the public game already in progress."));
 		infoString.append("\n\n");
 		if (IsGameCompatible(gameInfo.gameData)) {
-			string_view difficulty;
+			std::string_view difficulty;
 			switch (gameInfo.gameData.nDifficulty) {
 			case DIFF_NORMAL:
 				difficulty = _("Normal");
@@ -244,16 +244,16 @@ void selgame_GameSelection_Focus(int value)
 			infoString += '\n';
 			switch (gameInfo.gameData.nTickRate) {
 			case 20:
-				AppendStrView(infoString, _("Speed: Normal"));
+				infoString.append(_("Speed: Normal"));
 				break;
 			case 30:
-				AppendStrView(infoString, _("Speed: Fast"));
+				infoString.append(_("Speed: Fast"));
 				break;
 			case 40:
-				AppendStrView(infoString, _("Speed: Faster"));
+				infoString.append(_("Speed: Faster"));
 				break;
 			case 50:
-				AppendStrView(infoString, _("Speed: Fastest"));
+				infoString.append(_("Speed: Fastest"));
 				break;
 			default:
 				// This should not occure, so no translations is needed
@@ -261,7 +261,7 @@ void selgame_GameSelection_Focus(int value)
 				break;
 			}
 			infoString += '\n';
-			AppendStrView(infoString, _("Players: "));
+			infoString.append(_("Players: "));
 			for (auto &playerName : gameInfo.players) {
 				infoString.append(playerName);
 				infoString += ' ';

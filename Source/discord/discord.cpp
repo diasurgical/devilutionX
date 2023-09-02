@@ -43,7 +43,7 @@ struct PlayerData {
 	dungeon_type dungeonArea;
 	_setlevels questMap;
 	Uint8 dungeonLevel;
-	Sint8 playerLevel;
+	Uint8 playerLevel;
 	int playerGfx;
 
 	// Why??? This is POD
@@ -88,7 +88,7 @@ std::string GetLocationString()
 
 std::string GetCharacterString()
 {
-	const string_view charClassStr = _(PlayersData[static_cast<int>(MyPlayer->_pClass)].className);
+	const std::string_view charClassStr = _(PlayersData[static_cast<int>(MyPlayer->_pClass)].className);
 	return fmt::format(fmt::runtime(_(/* TRANSLATORS: Discord character, i.e. "Lv 6 Warrior" */ "Lv {} {}")), tracked_data.playerLevel, charClassStr);
 }
 
@@ -100,7 +100,7 @@ std::string GetDetailString()
 std::string GetStateString()
 {
 	constexpr std::array<const char *, 3> DifficultyStrs = { N_("Normal"), N_("Nightmare"), N_("Hell") };
-	const string_view difficultyStr = _(DifficultyStrs[sgGameInitInfo.nDifficulty]);
+	const std::string_view difficultyStr = _(DifficultyStrs[sgGameInitInfo.nDifficulty]);
 	return fmt::format(fmt::runtime(_(/* TRANSLATORS: Discord state i.e. "Nightmare difficulty" */ "{} difficulty")), difficultyStr);
 }
 
@@ -137,7 +137,7 @@ void UpdateGame()
 		return;
 
 	auto newData = PlayerData {
-		leveltype, setlvlnum, currlevel, MyPlayer->_pLevel, MyPlayer->_pgfxnum
+		leveltype, setlvlnum, currlevel, MyPlayer->getCharacterLevel(), MyPlayer->_pgfxnum
 	};
 	if (newData != tracked_data) {
 		tracked_data = newData;

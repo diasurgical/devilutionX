@@ -2,15 +2,15 @@
 
 #include <cstring>
 #include <initializer_list>
+#include <string_view>
 
-#include "utils/stdcompat/string_view.hpp"
 #include "utils/str_cat.hpp"
 
 namespace devilution {
 
 class BaseFileNameGenerator {
 public:
-	BaseFileNameGenerator(std::initializer_list<string_view> prefixes, string_view suffix)
+	BaseFileNameGenerator(std::initializer_list<std::string_view> prefixes, std::string_view suffix)
 	    : suffix_(suffix)
 	    , prefixEnd_(Append(buf_, prefixes))
 	{
@@ -23,14 +23,14 @@ public:
 	}
 
 protected:
-	static char *Append(char *buf, std::initializer_list<string_view> strings)
+	static char *Append(char *buf, std::initializer_list<std::string_view> strings)
 	{
-		for (string_view str : strings)
+		for (std::string_view str : strings)
 			buf = BufCopy(buf, str);
 		return buf;
 	}
 
-	[[nodiscard]] string_view Suffix() const
+	[[nodiscard]] std::string_view Suffix() const
 	{
 		return suffix_;
 	}
@@ -44,7 +44,7 @@ protected:
 	}
 
 private:
-	string_view suffix_;
+	std::string_view suffix_;
 	char *prefixEnd_;
 	char buf_[256];
 };
@@ -59,7 +59,7 @@ private:
  */
 class FileNameGenerator : public BaseFileNameGenerator {
 public:
-	FileNameGenerator(std::initializer_list<string_view> prefixes, string_view suffix, unsigned min = 1)
+	FileNameGenerator(std::initializer_list<std::string_view> prefixes, std::string_view suffix, unsigned min = 1)
 	    : BaseFileNameGenerator(prefixes, suffix)
 	    , min_(min)
 	{
@@ -86,7 +86,7 @@ private:
  */
 class FileNameWithCharAffixGenerator : public BaseFileNameGenerator {
 public:
-	FileNameWithCharAffixGenerator(std::initializer_list<string_view> prefixes, string_view suffix, const char *chars)
+	FileNameWithCharAffixGenerator(std::initializer_list<std::string_view> prefixes, std::string_view suffix, const char *chars)
 	    : BaseFileNameGenerator(prefixes, suffix)
 	    , chars_(chars)
 	{

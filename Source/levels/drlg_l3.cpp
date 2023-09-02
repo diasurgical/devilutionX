@@ -1502,12 +1502,12 @@ bool PlacePool()
 }
 
 /**
- * @brief Fill lava pools correctly, cause River() only generates the edges.
+ * @brief Fill lava pools correctly, because River() only generates the edges.
  */
 void PoolFix()
 {
 	for (Point tile : PointsInRectangle(Rectangle { { 1, 1 }, { DMAXX - 2, DMAXY - 2 } })) {
-		// Check if the tile is a the default dirt ceiling tile
+		// Check if the tile is the default dirt ceiling tile
 		if (dungeon[tile.x][tile.y] != 8)
 			continue;
 

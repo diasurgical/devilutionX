@@ -7,7 +7,6 @@
 
 #include "engine/direction.hpp"
 #include "engine/size.hpp"
-#include "utils/stdcompat/abs.hpp"
 
 namespace devilution {
 
@@ -342,7 +341,7 @@ constexpr DisplacementOf<DisplacementDeltaT> operator>>(DisplacementOf<Displacem
 template <typename DisplacementDeltaT>
 constexpr DisplacementOf<DisplacementDeltaT> abs(DisplacementOf<DisplacementDeltaT> a)
 {
-	return { abs(a.deltaX), abs(a.deltaY) };
+	return DisplacementOf<DisplacementDeltaT>(std::abs(a.deltaX), std::abs(a.deltaY));
 }
 
 template <typename DeltaT>

@@ -6,10 +6,10 @@
 #pragma once
 
 #include <cstdint>
+#include <string_view>
 
 #include "objdat.h"
 #include "spelldat.h"
-#include "utils/stdcompat/string_view.hpp"
 
 namespace devilution {
 
@@ -253,7 +253,7 @@ enum class ItemType : int8_t {
 	None = -1,
 };
 
-string_view ItemTypeToString(ItemType itemType);
+std::string_view ItemTypeToString(ItemType itemType);
 
 enum unique_base_item : int8_t {
 	UITYPE_NONE,

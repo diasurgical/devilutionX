@@ -1,10 +1,10 @@
 #pragma once
 
 #include <cstdint>
+#include <optional>
 
 #include "engine/assets.hpp"
 #include "engine/clx_sprite.hpp"
-#include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
 

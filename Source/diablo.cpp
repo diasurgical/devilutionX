@@ -5,6 +5,7 @@
  */
 #include <array>
 #include <cstdint>
+#include <string_view>
 
 #include <fmt/format.h>
 
@@ -63,6 +64,7 @@
 #include "panels/spell_book.hpp"
 #include "panels/spell_list.hpp"
 #include "pfile.h"
+#include "playerdat.hpp"
 #include "plrmsg.h"
 #include "qol/chatlog.h"
 #include "qol/floatingnumbers.h"
@@ -79,8 +81,8 @@
 #include "utils/console.h"
 #include "utils/display.h"
 #include "utils/language.h"
+#include "utils/parse_int.hpp"
 #include "utils/paths.h"
-#include "utils/stdcompat/string_view.hpp"
 #include "utils/str_cat.hpp"
 #include "utils/utf8.hpp"
 
@@ -671,7 +673,7 @@ void HandleMouseButtonUp(Uint8 button, uint16_t modState)
 	}
 }
 
-bool HandleTextInput(string_view text)
+bool HandleTextInput(std::string_view text)
 {
 	if (IsTalkActive()) {
 		control_new_text(text);
@@ -899,7 +901,7 @@ void RunGameLoop(interface_mode uMsg)
 	}
 }
 
-void PrintWithRightPadding(string_view str, size_t width)
+void PrintWithRightPadding(std::string_view str, size_t width)
 {
 	printInConsole(str);
 	if (str.size() >= width)
@@ -907,7 +909,7 @@ void PrintWithRightPadding(string_view str, size_t width)
 	printInConsole(std::string(width - str.size(), ' '));
 }
 
-void PrintHelpOption(string_view flags, string_view description)
+void PrintHelpOption(std::string_view flags, std::string_view description)
 {
 	printInConsole("    ");
 	PrintWithRightPadding(flags, 20);
@@ -955,11 +957,16 @@ void PrintHelpOption(string_view flags, string_view description)
 	diablo_quit(0);
 }
 
-void PrintFlagsRequiresArgument(string_view flag)
+void PrintFlagMessage(std::string_view flag, std::string_view message)
 {
 	printInConsole(flag);
-	printInConsole(" requires an argument");
+	printInConsole(message);
 	printNewlineInConsole();
+}
+
+void PrintFlagRequiresArgument(std::string_view flag)
+{
+	PrintFlagMessage(flag, " requires an argument");
 }
 
 void DiabloParseFlags(int argc, char **argv)
@@ -975,7 +982,7 @@ void DiabloParseFlags(int argc, char **argv)
 	bool createDemoReference = false;
 #endif
 	for (int i = 1; i < argc; i++) {
-		const string_view arg = argv[i];
+		const std::string_view arg = argv[i];
 		if (arg == "-h" || arg == "--help") {
 			PrintHelpAndExit();
 		} else if (arg == "--version") {
@@ -986,44 +993,54 @@ void DiabloParseFlags(int argc, char **argv)
 			diablo_quit(0);
 		} else if (arg == "--data-dir") {
 			if (i + 1 == argc) {
-				PrintFlagsRequiresArgument("--data-dir");
+				PrintFlagRequiresArgument("--data-dir");
 				diablo_quit(64);
 			}
 			paths::SetBasePath(argv[++i]);
 		} else if (arg == "--save-dir") {
 			if (i + 1 == argc) {
-				PrintFlagsRequiresArgument("--save-dir");
+				PrintFlagRequiresArgument("--save-dir");
 				diablo_quit(64);
 			}
 			paths::SetPrefPath(argv[++i]);
 		} else if (arg == "--config-dir") {
 			if (i + 1 == argc) {
-				PrintFlagsRequiresArgument("--config-dir");
+				PrintFlagRequiresArgument("--config-dir");
 				diablo_quit(64);
 			}
 			paths::SetConfigPath(argv[++i]);
 		} else if (arg == "--lang") {
 			if (i + 1 == argc) {
-				PrintFlagsRequiresArgument("--lang");
+				PrintFlagRequiresArgument("--lang");
 				diablo_quit(64);
 			}
 			forceLocale = argv[++i];
 #ifndef DISABLE_DEMOMODE
 		} else if (arg == "--demo") {
 			if (i + 1 == argc) {
-				PrintFlagsRequiresArgument("--demo");
+				PrintFlagRequiresArgument("--demo");
 				diablo_quit(64);
 			}
-			demoNumber = SDL_atoi(argv[++i]);
+			ParseIntResult<int> parsedParam = ParseInt<int>(argv[++i]);
+			if (!parsedParam.has_value()) {
+				PrintFlagMessage("--demo", " must be a number");
+				diablo_quit(64);
+			}
+			demoNumber = parsedParam.value();
 			gbShowIntro = false;
 		} else if (arg == "--timedemo") {
 			timedemo = true;
 		} else if (arg == "--record") {
 			if (i + 1 == argc) {
-				PrintFlagsRequiresArgument("--record");
+				PrintFlagRequiresArgument("--record");
 				diablo_quit(64);
 			}
-			recordNumber = SDL_atoi(argv[++i]);
+			ParseIntResult<int> parsedParam = ParseInt<int>(argv[++i]);
+			if (!parsedParam.has_value()) {
+				PrintFlagMessage("--record", " must be a number");
+				diablo_quit(64);
+			}
+			recordNumber = parsedParam.value();
 		} else if (arg == "--create-reference") {
 			createDemoReference = true;
 #else
@@ -1425,7 +1442,7 @@ void TimeoutCursor(bool bTimeout)
 		if (sgnTimeoutCurs == CURSOR_NONE && sgbMouseDown == CLICK_NONE) {
 			sgnTimeoutCurs = pcurs;
 			multi_net_ping();
-			InfoString = {};
+			InfoString = StringOrView {};
 			AddPanelString(_("-- Network timeout --"));
 			AddPanelString(_("-- Waiting for players --"));
 			NewCursor(CURSOR_HOURGLASS);
@@ -1439,7 +1456,7 @@ void TimeoutCursor(bool bTimeout)
 		if (pcurs == CURSOR_HOURGLASS)
 			NewCursor(sgnTimeoutCurs);
 		sgnTimeoutCurs = CURSOR_NONE;
-		InfoString = {};
+		InfoString = StringOrView {};
 		RedrawEverything();
 	}
 }
@@ -1449,7 +1466,7 @@ void HelpKeyPressed()
 	if (HelpFlag) {
 		HelpFlag = false;
 	} else if (stextflag != TalkID::None) {
-		InfoString = {};
+		InfoString = StringOrView {};
 		AddPanelString(_("No help available")); /// BUGFIX: message isn't displayed
 		AddPanelString(_("while in stores"));
 		LastMouseButtonAction = MouseActionType::None;
@@ -2425,6 +2442,9 @@ int DiabloMain(int argc, char **argv)
 	// Finally load game data
 	LoadGameArchives();
 
+	// Load dynamic data before we go into the menu as we need to initialise player characters in memory pretty early.
+	LoadPlayerDataFiles();
+
 	DiabloInit();
 #ifdef __UWP__
 	onInitialized();
@@ -2483,7 +2503,7 @@ bool TryIconCurs()
 			DoRepair(myPlayer, pcursinvitem);
 		else if (pcursstashitem != StashStruct::EmptyCell) {
 			Item &item = Stash.stashList[pcursstashitem];
-			RepairItem(item, myPlayer._pLevel);
+			RepairItem(item, myPlayer.getCharacterLevel());
 		}
 		NewCursor(CURSOR_HAND);
 		return true;

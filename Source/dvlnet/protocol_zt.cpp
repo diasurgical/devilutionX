@@ -12,6 +12,7 @@
 
 #include <lwip/igmp.h>
 #include <lwip/mld6.h>
+#include <lwip/nd6.h>
 #include <lwip/sockets.h>
 #include <lwip/tcpip.h>
 
@@ -163,8 +164,8 @@ bool protocol_zt::recv_peer(const endpoint &peer)
 
 bool protocol_zt::send_queued_all()
 {
-	for (auto &peer : peer_list) {
-		if (!send_queued_peer(peer.first)) {
+	for (const auto &[endpoint, _] : peer_list) {
+		if (!send_queued_peer(endpoint)) {
 			// handle error?
 		}
 	}
@@ -173,10 +174,10 @@ bool protocol_zt::send_queued_all()
 
 bool protocol_zt::recv_from_peers()
 {
-	for (auto &peer : peer_list) {
-		if (peer.second.fd != -1) {
-			if (!recv_peer(peer.first)) {
-				disconnect_queue.push_back(peer.first);
+	for (const auto &[endpoint, state] : peer_list) {
+		if (state.fd != -1) {
+			if (!recv_peer(endpoint)) {
+				disconnect_queue.push_back(endpoint);
 			}
 		}
 	}
@@ -279,9 +280,9 @@ void protocol_zt::close_all()
 		lwip_close(fd_udp);
 		fd_udp = -1;
 	}
-	for (auto &peer : peer_list) {
-		if (peer.second.fd != -1)
-			lwip_close(peer.second.fd);
+	for (auto &[_, state] : peer_list) {
+		if (state.fd != -1)
+			lwip_close(state.fd);
 	}
 	peer_list.clear();
 }
@@ -310,6 +311,27 @@ uint64_t protocol_zt::current_ms()
 bool protocol_zt::is_peer_connected(endpoint &peer)
 {
 	return peer_list.count(peer) != 0 && peer_list[peer].fd != -1;
+}
+
+bool protocol_zt::is_peer_relayed(const endpoint &peer) const
+{
+	ip6_addr_t address = {};
+	IP6_ADDR_PART(&address, 0, peer.addr[0], peer.addr[1], peer.addr[2], peer.addr[3]);
+	IP6_ADDR_PART(&address, 1, peer.addr[4], peer.addr[5], peer.addr[6], peer.addr[7]);
+	IP6_ADDR_PART(&address, 2, peer.addr[8], peer.addr[9], peer.addr[10], peer.addr[11]);
+	IP6_ADDR_PART(&address, 3, peer.addr[12], peer.addr[13], peer.addr[14], peer.addr[15]);
+
+	const u8_t *hwaddr;
+	if (nd6_get_next_hop_addr_or_queue(netif_default, nullptr, &address, &hwaddr) != ERR_OK)
+		return true;
+
+	uint64_t mac = hwaddr[0];
+	mac = (mac << 8) | hwaddr[1];
+	mac = (mac << 8) | hwaddr[2];
+	mac = (mac << 8) | hwaddr[3];
+	mac = (mac << 8) | hwaddr[4];
+	mac = (mac << 8) | hwaddr[5];
+	return zerotier_is_relayed(mac);
 }
 
 std::string protocol_zt::make_default_gamename()

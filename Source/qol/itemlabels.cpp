@@ -1,8 +1,10 @@
 #include "itemlabels.h"
 
 #include <algorithm>
+#include <cmath>
 #include <limits>
 #include <string>
+#include <string_view>
 #include <vector>
 
 #include <fmt/format.h>
@@ -16,9 +18,9 @@
 #include "options.h"
 #include "qol/stash.h"
 #include "stores.h"
+#include "utils/algorithm/container.hpp"
 #include "utils/format_int.hpp"
 #include "utils/language.h"
-#include "utils/stdcompat/string_view.hpp"
 
 namespace devilution {
 
@@ -49,7 +51,7 @@ class UsedX {
 public:
 	[[nodiscard]] bool contains(int val) const
 	{
-		return std::find(data_.begin(), data_.end(), val) != data_.end();
+		return c_find(data_, val) != data_.end();
 	}
 
 	void insert(int val)
@@ -111,8 +113,8 @@ void AddItemToLabelQueue(int id, Point position)
 	nameWidth += MarginX * 2;
 	int index = ItemCAnimTbl[item._iCurs];
 	if (!labelCenterOffsets[index]) {
-		std::pair<int, int> itemBounds = ClxMeasureSolidHorizontalBounds((*item.AnimInfo.sprites)[item.AnimInfo.currentFrame]);
-		labelCenterOffsets[index].emplace((itemBounds.first + itemBounds.second) / 2);
+		const auto [xBegin, xEnd] = ClxMeasureSolidHorizontalBounds((*item.AnimInfo.sprites)[item.AnimInfo.currentFrame]);
+		labelCenterOffsets[index].emplace((xBegin + xEnd) / 2);
 	}
 
 	position.x += *labelCenterOffsets[index];
@@ -161,7 +163,7 @@ void DrawItemNameLabels(const Surface &out)
 			for (unsigned j = 0; j < i; ++j) {
 				ItemLabel &a = labelQueue[i];
 				ItemLabel &b = labelQueue[j];
-				if (abs(b.pos.y - a.pos.y) < Height + BorderY) {
+				if (std::abs(b.pos.y - a.pos.y) < Height + BorderY) {
 					const int widthA = a.width + BorderX + MarginX * 2;
 					const int widthB = b.width + BorderX + MarginX * 2;
 					int newpos = b.pos.x;

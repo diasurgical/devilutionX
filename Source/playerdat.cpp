@@ -6,68 +6,168 @@
 
 #include "playerdat.hpp"
 
+#include <algorithm>
+#include <array>
+#include <bitset>
+#include <charconv>
 #include <cstdint>
+#include <vector>
 
+#include <expected.hpp>
+#include <fmt/format.h>
+
+#include "data/file.hpp"
 #include "items.h"
 #include "player.h"
 #include "textdat.h"
 #include "utils/language.h"
+#include "utils/static_vector.hpp"
 
 namespace devilution {
 
-/** Specifies the experience point limit of each level. */
-const uint32_t ExpLvlsTbl[MaxCharacterLevel] = {
-	0,
-	2000,
-	4620,
-	8040,
-	12489,
-	18258,
-	25712,
-	35309,
-	47622,
-	63364,
-	83419,
-	108879,
-	141086,
-	181683,
-	231075,
-	313656,
-	424067,
-	571190,
-	766569,
-	1025154,
-	1366227,
-	1814568,
-	2401895,
-	3168651,
-	4166200,
-	5459523,
-	7130496,
-	9281874,
-	12042092,
-	15571031,
-	20066900,
-	25774405,
-	32994399,
-	42095202,
-	53525811,
-	67831218,
-	85670061,
-	107834823,
-	135274799,
-	169122009,
-	210720231,
-	261657253,
-	323800420,
-	399335440,
-	490808349,
-	601170414,
-	733825617,
-	892680222,
-	1082908612,
-	1310707109
+namespace {
+
+class ExperienceData {
+	/** Specifies the experience point limit of each level. */
+	std::vector<uint32_t> levelThresholds;
+
+public:
+	uint8_t getMaxLevel() const
+	{
+		return static_cast<uint8_t>(std::min<size_t>(levelThresholds.size(), std::numeric_limits<uint8_t>::max()));
+	}
+
+	DVL_REINITIALIZES void clear()
+	{
+		levelThresholds.clear();
+	}
+
+	[[nodiscard]] uint32_t getThresholdForLevel(unsigned level) const
+	{
+		if (level > 0)
+			return levelThresholds[std::min<unsigned>(level - 1, getMaxLevel())];
+
+		return 0;
+	}
+
+	void setThresholdForLevel(unsigned level, uint32_t experience)
+	{
+		if (level > 0) {
+			if (level > levelThresholds.size()) {
+				// To avoid ValidatePlayer() resetting players to 0 experience we need to use the maximum possible value here
+				// As long as the file has no gaps it'll get initialised properly.
+				levelThresholds.resize(level, std::numeric_limits<uint32_t>::max());
+			}
+
+			levelThresholds[static_cast<size_t>(level - 1)] = experience;
+		}
+	}
+} ExperienceData;
+
+enum class ExperienceColumn {
+	Level,
+	Experience,
+	LAST = Experience
 };
+
+tl::expected<ExperienceColumn, ColumnDefinition::Error> mapExperienceColumnFromName(std::string_view name)
+{
+	if (name == "Level") {
+		return ExperienceColumn::Level;
+	}
+	if (name == "Experience") {
+		return ExperienceColumn::Experience;
+	}
+	return tl::unexpected { ColumnDefinition::Error::UnknownColumn };
+}
+
+void ReloadExperienceData()
+{
+	constexpr std::string_view filename = "txtdata\\Experience.tsv";
+	auto dataFileResult = DataFile::load(filename);
+	if (!dataFileResult.has_value()) {
+		DataFile::reportFatalError(dataFileResult.error(), filename);
+	}
+	DataFile &dataFile = dataFileResult.value();
+
+	constexpr unsigned ExpectedColumnCount = enum_size<ExperienceColumn>::value;
+
+	std::array<ColumnDefinition, ExpectedColumnCount> columns;
+	auto parseHeaderResult = dataFile.parseHeader<ExperienceColumn>(columns.data(), columns.data() + columns.size(), mapExperienceColumnFromName);
+
+	if (!parseHeaderResult.has_value()) {
+		DataFile::reportFatalError(parseHeaderResult.error(), filename);
+	}
+
+	ExperienceData.clear();
+	for (DataFileRecord record : dataFile) {
+		uint8_t level = 0;
+		uint32_t experience = 0;
+		bool skipRecord = false;
+
+		FieldIterator fieldIt = record.begin();
+		FieldIterator endField = record.end();
+		for (auto &column : columns) {
+			fieldIt += column.skipLength;
+
+			if (fieldIt == endField) {
+				DataFile::reportFatalError(DataFile::Error::NotEnoughColumns, filename);
+			}
+
+			DataFileField field = *fieldIt;
+
+			switch (static_cast<ExperienceColumn>(column)) {
+			case ExperienceColumn::Level: {
+				auto parseIntResult = field.parseInt(level);
+
+				if (parseIntResult != std::errc()) {
+					if (*field == "MaxLevel") {
+						skipRecord = true;
+					} else {
+						DataFile::reportFatalFieldError(parseIntResult, filename, "Level", field);
+					}
+				}
+			} break;
+
+			case ExperienceColumn::Experience: {
+				auto parseIntResult = field.parseInt(experience);
+
+				if (parseIntResult != std::errc()) {
+					DataFile::reportFatalFieldError(parseIntResult, filename, "Experience", field);
+				}
+			} break;
+
+			default:
+				break;
+			}
+
+			if (skipRecord)
+				break;
+
+			++fieldIt;
+		}
+
+		if (!skipRecord)
+			ExperienceData.setThresholdForLevel(level, experience);
+	}
+}
+
+} // namespace
+
+void LoadPlayerDataFiles()
+{
+	ReloadExperienceData();
+}
+
+uint32_t GetNextExperienceThresholdForLevel(unsigned level)
+{
+	return ExperienceData.getThresholdForLevel(level);
+}
+
+uint8_t GetMaximumCharacterLevel()
+{
+	return ExperienceData.getMaxLevel();
+}
 
 const _sfx_id herosounds[enum_size<HeroClass>::value][enum_size<HeroSpeech>::value] = {
 	// clang-format off

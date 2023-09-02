@@ -4,12 +4,12 @@
 #include <exception>
 #include <map>
 #include <memory>
+#include <optional>
 #include <string>
 #include <vector>
 
 #include "dvlnet/abstract_net.h"
 #include "storm/storm_net.hpp"
-#include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
 namespace net {
@@ -68,8 +68,8 @@ void cdwrap<T>::reset()
 	else
 		dvlnet_wrap->clear_password();
 
-	for (const auto &pair : registered_handlers)
-		dvlnet_wrap->SNetRegisterEventHandler(pair.first, pair.second);
+	for (const auto &[eventType, eventHandler] : registered_handlers)
+		dvlnet_wrap->SNetRegisterEventHandler(eventType, eventHandler);
 }
 
 template <class T>

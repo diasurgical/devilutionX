@@ -7,9 +7,9 @@
 
 #include <cstdint>
 #include <string>
+#include <string_view>
 
 #include "engine.h"
-#include "utils/stdcompat/string_view.hpp"
 
 namespace devilution {
 
@@ -72,7 +72,7 @@ enum diablo_message : uint8_t {
 };
 
 void InitDiabloMsg(diablo_message e, uint32_t duration = 3500);
-void InitDiabloMsg(string_view msg, uint32_t duration = 3500);
+void InitDiabloMsg(std::string_view msg, uint32_t duration = 3500);
 bool IsDiabloMsgAvailable();
 void CancelCurrentDiabloMsg();
 void ClrDiabloMsg();

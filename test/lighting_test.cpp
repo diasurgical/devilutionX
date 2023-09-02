@@ -1,3 +1,5 @@
+#include <cmath>
+
 #include <gtest/gtest.h>
 
 #include "control.h"
@@ -25,7 +27,7 @@ TEST(Lighting, CrawlTables)
 		for (int j = -MaxCrawlRadius; j <= MaxCrawlRadius; j++) {
 			if (added[i + 20][j + 20])
 				continue;
-			if (abs(i) == MaxCrawlRadius && abs(j) == MaxCrawlRadius)
+			if (std::abs(i) == MaxCrawlRadius && std::abs(j) == MaxCrawlRadius)
 				continue; // Limit of the crawl table rage
 			EXPECT_EQ(false, true) << "while checking location " << i << ":" << j;
 		}

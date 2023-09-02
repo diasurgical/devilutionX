@@ -5,7 +5,9 @@
  */
 #include "gmenu.h"
 
+#include <algorithm>
 #include <cstdint>
+#include <optional>
 
 #include "DiabloUI/ui_flags.hpp"
 #include "control.h"
@@ -19,8 +21,6 @@
 #include "options.h"
 #include "stores.h"
 #include "utils/language.h"
-#include "utils/stdcompat/algorithm.hpp"
-#include "utils/stdcompat/optional.hpp"
 #include "utils/ui_fwd.h"
 
 namespace devilution {
@@ -161,7 +161,7 @@ bool GmenuMouseIsOverSlider()
 
 int GmenuGetSliderFill()
 {
-	return clamp(MousePosition.x - SliderValueLeft - GetUIRectangle().position.x, SliderFillMin, SliderFillMax);
+	return std::clamp(MousePosition.x - SliderValueLeft - GetUIRectangle().position.x, SliderFillMin, SliderFillMax);
 }
 
 } // namespace

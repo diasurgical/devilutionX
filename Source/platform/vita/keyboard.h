@@ -1,5 +1,5 @@
 #pragma once
 
-#include "utils/stdcompat/string_view.hpp"
+#include <string_view>
 
-void vita_start_text_input(devilution::string_view guide_text, devilution::string_view initial_text, unsigned max_length);
+void vita_start_text_input(std::string_view guide_text, std::string_view initial_text, unsigned max_length);

@@ -102,7 +102,7 @@ uint32_t Hash(const char *s, int type)
 	return seed1;
 }
 
-uint32_t PkwareCompress(byte *srcData, uint32_t size)
+uint32_t PkwareCompress(std::byte *srcData, uint32_t size)
 {
 	std::unique_ptr<char[]> ptr = std::make_unique<char[]>(CMP_BUFFER_SIZE);
 
@@ -110,7 +110,7 @@ uint32_t PkwareCompress(byte *srcData, uint32_t size)
 	if (destSize < 2 * 4096)
 		destSize = 2 * 4096;
 
-	std::unique_ptr<byte[]> destData { new byte[destSize] };
+	std::unique_ptr<std::byte[]> destData { new std::byte[destSize] };
 
 	TDataInfo param;
 	param.srcData = srcData;
@@ -131,10 +131,10 @@ uint32_t PkwareCompress(byte *srcData, uint32_t size)
 	return size;
 }
 
-void PkwareDecompress(byte *inBuff, uint32_t recvSize, int maxBytes)
+void PkwareDecompress(std::byte *inBuff, uint32_t recvSize, int maxBytes)
 {
 	std::unique_ptr<char[]> ptr = std::make_unique<char[]>(CMP_BUFFER_SIZE);
-	std::unique_ptr<byte[]> outBuff { new byte[maxBytes] };
+	std::unique_ptr<std::byte[]> outBuff { new std::byte[maxBytes] };
 
 	TDataInfo info;
 	info.srcData = inBuff;

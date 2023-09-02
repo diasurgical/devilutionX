@@ -3,12 +3,11 @@
 #include <cerrno>
 #include <cstdio>
 #include <cstring>
+#include <optional>
 #include <string>
 
 #include "utils/file_util.h"
 #include "utils/log.hpp"
-#include "utils/stdcompat/optional.hpp"
-
 namespace devilution {
 
 // A wrapper around `FILE *` that logs errors.

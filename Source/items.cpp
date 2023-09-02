@@ -45,7 +45,6 @@
 #include "utils/language.h"
 #include "utils/log.hpp"
 #include "utils/math.h"
-#include "utils/stdcompat/algorithm.hpp"
 #include "utils/str_case.hpp"
 #include "utils/str_cat.hpp"
 #include "utils/utf8.hpp"
@@ -651,9 +650,9 @@ void GetBookSpell(Item &item, int lvl)
 		if (s == maxSpells)
 			s = 1;
 	}
-	const string_view spellName = GetSpellData(bs).sNameText;
-	const size_t iNameLen = string_view(item._iName).size();
-	const size_t iINameLen = string_view(item._iIName).size();
+	const std::string_view spellName = GetSpellData(bs).sNameText;
+	const size_t iNameLen = std::string_view(item._iName).size();
+	const size_t iINameLen = std::string_view(item._iIName).size();
 	CopyUtf8(item._iName + iNameLen, spellName, sizeof(item._iName) - iNameLen);
 	CopyUtf8(item._iIName + iINameLen, spellName, sizeof(item._iIName) - iINameLen);
 	item._iSpell = bs;
@@ -1108,12 +1107,12 @@ int GetStaffPrefixId(int lvl, bool onlygood, bool hellfireItem)
 
 std::string GenerateStaffName(const ItemData &baseItemData, SpellID spellId, bool translate)
 {
-	string_view baseName = translate ? _(baseItemData.iName) : baseItemData.iName;
-	string_view spellName = translate ? pgettext("spell", GetSpellData(spellId).sNameText) : GetSpellData(spellId).sNameText;
-	string_view normalFmt = translate ? pgettext("spell", /* TRANSLATORS: Constructs item names. Format: {Item} of {Spell}. Example: War Staff of Firewall */ "{0} of {1}") : "{0} of {1}";
+	std::string_view baseName = translate ? _(baseItemData.iName) : baseItemData.iName;
+	std::string_view spellName = translate ? pgettext("spell", GetSpellData(spellId).sNameText) : GetSpellData(spellId).sNameText;
+	std::string_view normalFmt = translate ? pgettext("spell", /* TRANSLATORS: Constructs item names. Format: {Item} of {Spell}. Example: War Staff of Firewall */ "{0} of {1}") : "{0} of {1}";
 	std::string name = fmt::format(fmt::runtime(normalFmt), baseName, spellName);
 	if (!StringInPanel(name.c_str())) {
-		string_view shortName = translate ? _(baseItemData.iSName) : baseItemData.iSName;
+		std::string_view shortName = translate ? _(baseItemData.iSName) : baseItemData.iSName;
 		name = fmt::format(fmt::runtime(normalFmt), shortName, spellName);
 	}
 	return name;
@@ -1121,14 +1120,14 @@ std::string GenerateStaffName(const ItemData &baseItemData, SpellID spellId, boo
 
 std::string GenerateStaffNameMagical(const ItemData &baseItemData, SpellID spellId, int preidx, bool translate, std::optional<bool> forceNameLengthCheck)
 {
-	string_view baseName = translate ? _(baseItemData.iName) : baseItemData.iName;
-	string_view magicFmt = translate ? pgettext("spell", /* TRANSLATORS: Constructs item names. Format: {Prefix} {Item} of {Spell}. Example: King's War Staff of Firewall */ "{0} {1} of {2}") : "{0} {1} of {2}";
-	string_view spellName = translate ? pgettext("spell", GetSpellData(spellId).sNameText) : GetSpellData(spellId).sNameText;
-	string_view prefixName = translate ? _(ItemPrefixes[preidx].PLName) : ItemPrefixes[preidx].PLName;
+	std::string_view baseName = translate ? _(baseItemData.iName) : baseItemData.iName;
+	std::string_view magicFmt = translate ? pgettext("spell", /* TRANSLATORS: Constructs item names. Format: {Prefix} {Item} of {Spell}. Example: King's War Staff of Firewall */ "{0} {1} of {2}") : "{0} {1} of {2}";
+	std::string_view spellName = translate ? pgettext("spell", GetSpellData(spellId).sNameText) : GetSpellData(spellId).sNameText;
+	std::string_view prefixName = translate ? _(ItemPrefixes[preidx].PLName) : ItemPrefixes[preidx].PLName;
 
 	std::string identifiedName = fmt::format(fmt::runtime(magicFmt), prefixName, baseName, spellName);
 	if (forceNameLengthCheck ? *forceNameLengthCheck : !StringInPanel(identifiedName.c_str())) {
-		string_view shortName = translate ? _(baseItemData.iSName) : baseItemData.iSName;
+		std::string_view shortName = translate ? _(baseItemData.iSName) : baseItemData.iSName;
 		identifiedName = fmt::format(fmt::runtime(magicFmt), prefixName, shortName, spellName);
 	}
 	return identifiedName;
@@ -1157,16 +1156,16 @@ void GetStaffPower(const Player &player, Item &item, int lvl, SpellID bs, bool o
 	CalcItemValue(item);
 }
 
-std::string GenerateMagicItemName(const string_view &baseNamel, const PLStruct *pPrefix, const PLStruct *pSufix, bool translate)
+std::string GenerateMagicItemName(const std::string_view &baseNamel, const PLStruct *pPrefix, const PLStruct *pSufix, bool translate)
 {
 	if (pPrefix != nullptr && pSufix != nullptr) {
-		string_view fmt = translate ? _(/* TRANSLATORS: Constructs item names. Format: {Prefix} {Item} of {Suffix}. Example: King's Long Sword of the Whale */ "{0} {1} of {2}") : "{0} {1} of {2}";
+		std::string_view fmt = translate ? _(/* TRANSLATORS: Constructs item names. Format: {Prefix} {Item} of {Suffix}. Example: King's Long Sword of the Whale */ "{0} {1} of {2}") : "{0} {1} of {2}";
 		return fmt::format(fmt::runtime(fmt), translate ? _(pPrefix->PLName) : pPrefix->PLName, baseNamel, translate ? _(pSufix->PLName) : pSufix->PLName);
 	} else if (pPrefix != nullptr) {
-		string_view fmt = translate ? _(/* TRANSLATORS: Constructs item names. Format: {Prefix} {Item}. Example: King's Long Sword */ "{0} {1}") : "{0} {1}";
+		std::string_view fmt = translate ? _(/* TRANSLATORS: Constructs item names. Format: {Prefix} {Item}. Example: King's Long Sword */ "{0} {1}") : "{0} {1}";
 		return fmt::format(fmt::runtime(fmt), translate ? _(pPrefix->PLName) : pPrefix->PLName, baseNamel);
 	} else if (pSufix != nullptr) {
-		string_view fmt = translate ? _(/* TRANSLATORS: Constructs item names. Format: {Item} of {Suffix}. Example: Long Sword of the Whale */ "{0} of {1}") : "{0} of {1}";
+		std::string_view fmt = translate ? _(/* TRANSLATORS: Constructs item names. Format: {Item} of {Suffix}. Example: Long Sword of the Whale */ "{0} of {1}") : "{0} of {1}";
 		return fmt::format(fmt::runtime(fmt), baseNamel, translate ? _(pSufix->PLName) : pSufix->PLName);
 	}
 
@@ -1825,8 +1824,8 @@ void printItemMiscGenericGamepad(const Item &item, const bool isOil, bool isCast
 
 void printItemMiscGamepad(const Item &item, bool isOil, bool isCastOnTarget)
 {
-	string_view activateButton;
-	string_view castButton;
+	std::string_view activateButton;
+	std::string_view castButton;
 	switch (GamepadType) {
 	case GamepadLayout::Generic:
 		printItemMiscGenericGamepad(item, isOil, isCastOnTarget);
@@ -1992,7 +1991,7 @@ void SpawnOnePremium(Item &premiumItem, int plvl, const Player &player)
 	dexterity += dexterity / 5;
 	magic += magic / 5;
 
-	plvl = clamp(plvl, 1, 30);
+	plvl = std::clamp(plvl, 1, 30);
 
 	int maxCount = 150;
 	const bool unlimited = !gbIsHellfire; // TODO: This could lead to an infinite loop if a suitable item can never be generated
@@ -2276,7 +2275,7 @@ StringOrView GetTranslatedItemName(const Item &item)
 		return _(baseItemData.iName);
 	} else if (item._iMiscId == IMISC_BOOK) {
 		std::string name;
-		const string_view spellName = pgettext("spell", GetSpellData(item._iSpell).sNameText);
+		const std::string_view spellName = pgettext("spell", GetSpellData(item._iSpell).sNameText);
 		StrAppend(name, _(baseItemData.iName));
 		StrAppend(name, spellName);
 		return name;
@@ -2624,6 +2623,8 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 		}
 	}
 
+	const uint8_t playerLevel = player.getCharacterLevel();
+
 	if (mind == 0 && maxd == 0) {
 		mind = 1;
 		maxd = 1;
@@ -2637,20 +2638,20 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 		}
 
 		if (player._pClass == HeroClass::Monk) {
-			mind = std::max(mind, player._pLevel / 2);
-			maxd = std::max(maxd, (int)player._pLevel);
+			mind = std::max(mind, playerLevel / 2);
+			maxd = std::max<int>(maxd, playerLevel);
 		}
 	}
 
 	if (HasAnyOf(player._pSpellFlags, SpellFlag::RageActive)) {
-		sadd += 2 * player._pLevel;
-		dadd += player._pLevel + player._pLevel / 2;
-		vadd += 2 * player._pLevel;
+		sadd += 2 * playerLevel;
+		dadd += playerLevel + playerLevel / 2;
+		vadd += 2 * playerLevel;
 	}
 	if (HasAnyOf(player._pSpellFlags, SpellFlag::RageCooldown)) {
-		sadd -= 2 * player._pLevel;
-		dadd -= player._pLevel + player._pLevel / 2;
-		vadd -= 2 * player._pLevel;
+		sadd -= 2 * playerLevel;
+		dadd -= playerLevel + playerLevel / 2;
+		vadd -= 2 * playerLevel;
 	}
 
 	player._pIMinDam = mind;
@@ -2664,7 +2665,7 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	player._pIBonusDamMod = dmod;
 	player._pIGetHit = ghit;
 
-	lrad = clamp(lrad, 2, 15);
+	lrad = std::clamp(lrad, 2, 15);
 
 	if (player._pLightRad != lrad) {
 		ChangeLightRadius(player.lightId, lrad);
@@ -2678,29 +2679,29 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	player._pVitality = std::max(0, vadd + player._pBaseVit);
 
 	if (player._pClass == HeroClass::Rogue) {
-		player._pDamageMod = player._pLevel * (player._pStrength + player._pDexterity) / 200;
+		player._pDamageMod = playerLevel * (player._pStrength + player._pDexterity) / 200;
 	} else if (player._pClass == HeroClass::Monk) {
-		player._pDamageMod = player._pLevel * (player._pStrength + player._pDexterity) / 150;
+		player._pDamageMod = playerLevel * (player._pStrength + player._pDexterity) / 150;
 		if ((!player.InvBody[INVLOC_HAND_LEFT].isEmpty() && player.InvBody[INVLOC_HAND_LEFT]._itype != ItemType::Staff) || (!player.InvBody[INVLOC_HAND_RIGHT].isEmpty() && player.InvBody[INVLOC_HAND_RIGHT]._itype != ItemType::Staff))
 			player._pDamageMod /= 2; // Monks get half the normal damage bonus if they're holding a non-staff weapon
 	} else if (player._pClass == HeroClass::Bard) {
 		if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Sword || player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Sword)
-			player._pDamageMod = player._pLevel * (player._pStrength + player._pDexterity) / 150;
+			player._pDamageMod = playerLevel * (player._pStrength + player._pDexterity) / 150;
 		else if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Bow || player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Bow) {
-			player._pDamageMod = player._pLevel * (player._pStrength + player._pDexterity) / 250;
+			player._pDamageMod = playerLevel * (player._pStrength + player._pDexterity) / 250;
 		} else {
-			player._pDamageMod = player._pLevel * player._pStrength / 100;
+			player._pDamageMod = playerLevel * player._pStrength / 100;
 		}
 	} else if (player._pClass == HeroClass::Barbarian) {
 
 		if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Axe || player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Axe) {
-			player._pDamageMod = player._pLevel * player._pStrength / 75;
+			player._pDamageMod = playerLevel * player._pStrength / 75;
 		} else if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Mace || player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Mace) {
-			player._pDamageMod = player._pLevel * player._pStrength / 75;
+			player._pDamageMod = playerLevel * player._pStrength / 75;
 		} else if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Bow || player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Bow) {
-			player._pDamageMod = player._pLevel * player._pStrength / 300;
+			player._pDamageMod = playerLevel * player._pStrength / 300;
 		} else {
-			player._pDamageMod = player._pLevel * player._pStrength / 100;
+			player._pDamageMod = playerLevel * player._pStrength / 100;
 		}
 
 		if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Shield || player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Shield) {
@@ -2709,11 +2710,11 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 			else if (player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Shield)
 				player._pIAC -= player.InvBody[INVLOC_HAND_RIGHT]._iAC / 2;
 		} else if (IsNoneOf(player.InvBody[INVLOC_HAND_LEFT]._itype, ItemType::Staff, ItemType::Bow) && IsNoneOf(player.InvBody[INVLOC_HAND_RIGHT]._itype, ItemType::Staff, ItemType::Bow)) {
-			player._pDamageMod += player._pLevel * player._pVitality / 100;
+			player._pDamageMod += playerLevel * player._pVitality / 100;
 		}
-		player._pIAC += player._pLevel / 4;
+		player._pIAC += playerLevel / 4;
 	} else {
-		player._pDamageMod = player._pLevel * player._pStrength / 100;
+		player._pDamageMod = playerLevel * player._pStrength / 100;
 	}
 
 	player._pISpells = spl;
@@ -2724,15 +2725,15 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	player._pIEnAc = enac;
 
 	if (player._pClass == HeroClass::Barbarian) {
-		mr += player._pLevel;
-		fr += player._pLevel;
-		lr += player._pLevel;
+		mr += playerLevel;
+		fr += playerLevel;
+		lr += playerLevel;
 	}
 
 	if (HasAnyOf(player._pSpellFlags, SpellFlag::RageCooldown)) {
-		mr -= player._pLevel;
-		fr -= player._pLevel;
-		lr -= player._pLevel;
+		mr -= playerLevel;
+		fr -= playerLevel;
+		lr -= playerLevel;
 	}
 
 	if (HasAnyOf(iflgs, ItemSpecialEffect::ZeroResistance)) {
@@ -2742,9 +2743,9 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 		lr = 0;
 	}
 
-	player._pMagResist = clamp(mr, 0, MaxResistance);
-	player._pFireResist = clamp(fr, 0, MaxResistance);
-	player._pLghtResist = clamp(lr, 0, MaxResistance);
+	player._pMagResist = std::clamp(mr, 0, MaxResistance);
+	player._pFireResist = std::clamp(fr, 0, MaxResistance);
+	player._pLghtResist = std::clamp(lr, 0, MaxResistance);
 
 	vadd = (vadd * PlayersData[static_cast<size_t>(player._pClass)].itmLife) >> 6;
 	ihp += (vadd << 6); // BUGFIX: blood boil can cause negative shifts here (see line 757)
@@ -2834,18 +2835,18 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	PlayerArmorGraphic animArmorId = PlayerArmorGraphic::Light;
 	if (player.InvBody[INVLOC_CHEST]._itype == ItemType::HeavyArmor && player.InvBody[INVLOC_CHEST]._iStatFlag) {
 		if (player._pClass == HeroClass::Monk && player.InvBody[INVLOC_CHEST]._iMagical == ITEM_QUALITY_UNIQUE)
-			player._pIAC += player._pLevel / 2;
+			player._pIAC += playerLevel / 2;
 		animArmorId = PlayerArmorGraphic::Heavy;
 	} else if (player.InvBody[INVLOC_CHEST]._itype == ItemType::MediumArmor && player.InvBody[INVLOC_CHEST]._iStatFlag) {
 		if (player._pClass == HeroClass::Monk) {
 			if (player.InvBody[INVLOC_CHEST]._iMagical == ITEM_QUALITY_UNIQUE)
-				player._pIAC += player._pLevel * 2;
+				player._pIAC += playerLevel * 2;
 			else
-				player._pIAC += player._pLevel / 2;
+				player._pIAC += playerLevel / 2;
 		}
 		animArmorId = PlayerArmorGraphic::Medium;
 	} else if (player._pClass == HeroClass::Monk) {
-		player._pIAC += player._pLevel * 2;
+		player._pIAC += playerLevel * 2;
 	}
 
 	const uint8_t gfxNum = static_cast<uint8_t>(animWeaponId) | static_cast<uint8_t>(animArmorId);
@@ -3399,7 +3400,7 @@ void RecreateItem(const Player &player, Item &item, _item_indexes idx, uint16_t 
 	gbIsHellfire = tmpIsHellfire;
 }
 
-void RecreateEar(Item &item, uint16_t ic, uint32_t iseed, uint8_t bCursval, string_view heroName)
+void RecreateEar(Item &item, uint16_t ic, uint32_t iseed, uint8_t bCursval, std::string_view heroName)
 {
 	InitializeItem(item, IDI_EAR);
 
@@ -3669,7 +3670,7 @@ void DoRepair(Player &player, int cii)
 		pi = &player.InvBody[cii];
 	}
 
-	RepairItem(*pi, player._pLevel);
+	RepairItem(*pi, player.getCharacterLevel());
 	CalcPlrInv(player, true);
 }
 
@@ -3877,7 +3878,7 @@ bool DoOil(Player &player, int cii)
 	case IPL_NOMINSTR:
 		return _("no strength requirement");
 	case IPL_INVCURS:
-		return { string_view(" ") };
+		return { std::string_view(" ") };
 	case IPL_ADDACLIFE:
 		if (item._iFMinDam == item._iFMaxDam)
 			return fmt::format(fmt::runtime(_("lightning damage: {:d}")), item._iFMinDam);
@@ -4242,7 +4243,7 @@ void SpawnSmith(int lvl)
 
 void SpawnPremium(const Player &player)
 {
-	int8_t lvl = player._pLevel;
+	int lvl = player.getCharacterLevel();
 	int maxItems = gbIsHellfire ? SMITH_PREMIUM_ITEMS : 6;
 	if (numpremium < maxItems) {
 		for (int i = 0; i < maxItems; i++) {
@@ -4789,7 +4790,7 @@ void Item::updateRequiredStatsCacheForPlayer(const Player &player)
 StringOrView Item::getName() const
 {
 	if (isEmpty()) {
-		return string_view("");
+		return std::string_view("");
 	} else if (!_iIdentified || _iCreateInfo == 0 || _iMagical == ITEM_QUALITY_NORMAL) {
 		return GetTranslatedItemName(*this);
 	} else if (_iMagical == ITEM_QUALITY_UNIQUE) {
@@ -4843,7 +4844,7 @@ void RechargeItem(Item &item, Player &player)
 		return;
 
 	int r = GetSpellStaffLevel(item._iSpell);
-	r = GenerateRnd(player._pLevel / r) + 1;
+	r = GenerateRnd(player.getCharacterLevel() / r) + 1;
 
 	do {
 		item._iMaxCharges--;

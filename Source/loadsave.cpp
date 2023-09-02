@@ -34,6 +34,7 @@
 #include "playerdat.hpp"
 #include "qol/stash.h"
 #include "stores.h"
+#include "utils/algorithm/container.hpp"
 #include "utils/endian.hpp"
 #include "utils/language.h"
 
@@ -80,7 +81,7 @@ T SwapBE(T in)
 }
 
 class LoadHelper {
-	std::unique_ptr<byte[]> m_buffer_;
+	std::unique_ptr<std::byte[]> m_buffer_;
 	size_t m_cur_ = 0;
 	size_t m_size_;
 
@@ -150,7 +151,7 @@ public:
 	{
 		static_assert(sizeof(TSource) > sizeof(TDesired), "Can only narrow to a smaller type");
 		TSource value = SwapLE(Next<TSource>()) + modifier;
-		return static_cast<TDesired>(clamp<TSource>(value, std::numeric_limits<TDesired>::min(), std::numeric_limits<TDesired>::max()));
+		return static_cast<TDesired>(std::clamp<TSource>(value, std::numeric_limits<TDesired>::min(), std::numeric_limits<TDesired>::max()));
 	}
 
 	bool NextBool8()
@@ -167,7 +168,7 @@ public:
 class SaveHelper {
 	SaveWriter &m_mpqWriter;
 	const char *m_szFileName_;
-	std::unique_ptr<byte[]> m_buffer_;
+	std::unique_ptr<std::byte[]> m_buffer_;
 	size_t m_cur_ = 0;
 	size_t m_capacity_;
 
@@ -175,7 +176,7 @@ public:
 	SaveHelper(SaveWriter &mpqWriter, const char *szFileName, size_t bufferLen)
 	    : m_mpqWriter(mpqWriter)
 	    , m_szFileName_(szFileName)
-	    , m_buffer_(new byte[codec_get_encoded_len(bufferLen)])
+	    , m_buffer_(new std::byte[codec_get_encoded_len(bufferLen)])
 	    , m_capacity_(bufferLen)
 	{
 	}
@@ -424,12 +425,12 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	player._pMana = file.NextLE<int32_t>();
 	player._pMaxMana = file.NextLE<int32_t>();
 	file.Skip<int32_t>(); // Skip _pManaPer - always derived from mana and maxMana
-	player._pLevel = file.NextLE<int8_t>();
-	player._pMaxLvl = file.NextLE<int8_t>();
-	file.Skip(2); // Alignment
+	player.setCharacterLevel(file.NextLE<uint8_t>());
+	file.Skip<uint8_t>(); // Skip _pMaxLevel - unused
+	file.Skip(2);         // Alignment
 	player._pExperience = file.NextLE<uint32_t>();
-	file.Skip<uint32_t>();                        // Skip _pMaxExp - unused
-	player._pNextExper = file.NextLE<uint32_t>(); // This can be calculated based on pLevel (which in turn could be calculated based on pExperience)
+	file.Skip<uint32_t>(); // Skip _pMaxExp - unused
+	file.Skip<uint32_t>(); // Skip _pNextExper, we retrieve it when needed based on _pLevel
 	player._pArmorClass = file.NextLE<int8_t>();
 	player._pMagResist = file.NextLE<int8_t>();
 	player._pFireResist = file.NextLE<int8_t>();
@@ -895,7 +896,7 @@ void LoadPortal(LoadHelper *file, int i)
 		pPortal->ltype = GetLevelType(pPortal->level);
 }
 
-void GetLevelNames(string_view prefix, char *out)
+void GetLevelNames(std::string_view prefix, char *out)
 {
 	char suf;
 	uint8_t num;
@@ -1234,12 +1235,12 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.WriteLE<int32_t>(player._pMana);
 	file.WriteLE<int32_t>(player._pMaxMana);
 	file.Skip<int32_t>(); // Skip _pManaPer
-	file.WriteLE<int8_t>(player._pLevel);
-	file.WriteLE<int8_t>(player._pMaxLvl);
-	file.Skip(2); // Alignment
+	file.WriteLE<uint8_t>(player.getCharacterLevel());
+	file.Skip<uint8_t>(); // skip _pMaxLevel, this value is uninitialised in most cases in Diablo/Hellfire so there's no point setting it.
+	file.Skip(2);         // Alignment
 	file.WriteLE<uint32_t>(player._pExperience);
-	file.Skip<uint32_t>(); // Skip _pMaxExp
-	file.WriteLE<uint32_t>(player._pNextExper);
+	file.Skip<uint32_t>();                                       // Skip _pMaxExp
+	file.WriteLE<uint32_t>(player.getNextExperienceThreshold()); // set _pNextExper for backwards compatibility
 	file.WriteLE<int8_t>(player._pArmorClass);
 	file.WriteLE<int8_t>(player._pMagResist);
 	file.WriteLE<int8_t>(player._pFireResist);
@@ -2337,14 +2338,14 @@ void SaveStash(SaveWriter &stashWriter)
 	file.WriteLE<uint32_t>(Stash.gold);
 
 	std::vector<unsigned> pagesToSave;
-	for (const auto &stashPage : Stash.stashGrids) {
-		if (std::any_of(stashPage.second.cbegin(), stashPage.second.cend(), [](const auto &row) {
-			    return std::any_of(row.cbegin(), row.cend(), [](auto cell) {
+	for (const auto &[page, grid] : Stash.stashGrids) {
+		if (c_any_of(grid, [](const auto &row) {
+			    return c_any_of(row, [](StashStruct::StashCell cell) {
 				    return cell > 0;
 			    });
 		    })) {
 			// found a page that contains at least one item
-			pagesToSave.push_back(stashPage.first);
+			pagesToSave.push_back(page);
 		}
 	};
 

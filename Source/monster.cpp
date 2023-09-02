@@ -6,10 +6,12 @@
 #include "monster.h"
 
 #include <climits>
+#include <cmath>
 #include <cstdint>
 
 #include <algorithm>
 #include <array>
+#include <string_view>
 
 #include <fmt/core.h>
 #include <fmt/format.h>
@@ -41,7 +43,6 @@
 #include "utils/cl2_to_clx.hpp"
 #include "utils/file_name_generator.hpp"
 #include "utils/language.h"
-#include "utils/stdcompat/string_view.hpp"
 #include "utils/str_cat.hpp"
 #include "utils/utf8.hpp"
 
@@ -266,7 +267,7 @@ void PlaceGroup(size_t typeIndex, unsigned num, Monster *leader = nullptr, bool 
 		for (unsigned try2 = 0; j < num && try2 < 100; xp += Displacement(static_cast<Direction>(GenerateRnd(8))).deltaX, yp += Displacement(static_cast<Direction>(GenerateRnd(8))).deltaX) { /// BUGFIX: `yp += Point.y`
 			if (!CanPlaceMonster({ xp, yp })
 			    || (dTransVal[xp][yp] != dTransVal[x1][y1])
-			    || (leashed && (abs(xp - x1) >= 4 || abs(yp - y1) >= 4))) {
+			    || (leashed && (std::abs(xp - x1) >= 4 || std::abs(yp - y1) >= 4))) {
 				try2++;
 				continue;
 			}
@@ -1158,7 +1159,7 @@ void MonsterAttackPlayer(Monster &monster, Player &player, int hit, int minDam, 
 		ac += 40;
 	if (HasAnyOf(player.pDamAcFlags, ItemSpecialEffectHf::ACAgainstUndead) && monster.data().monsterClass == MonsterClass::Undead)
 		ac += 20;
-	hit += 2 * (monster.level(sgGameInitInfo.nDifficulty) - player._pLevel)
+	hit += 2 * (monster.level(sgGameInitInfo.nDifficulty) - player.getCharacterLevel())
 	    + 30
 	    - ac;
 	int minhit = GetMinHit();
@@ -1168,7 +1169,7 @@ void MonsterAttackPlayer(Monster &monster, Player &player, int hit, int minDam, 
 		blkper = GenerateRnd(100);
 	}
 	int blk = player.GetBlockChance() - (monster.level(sgGameInitInfo.nDifficulty) * 2);
-	blk = clamp(blk, 0, 100);
+	blk = std::clamp(blk, 0, 100);
 	if (hper >= hit)
 		return;
 	if (blkper < blk) {
@@ -2365,7 +2366,7 @@ void BatAi(Monster &monster)
 		monster.goal = MonsterGoal::Retreat;
 		monster.goalVar1 = 0;
 		if (monster.type().type == MT_FAMILIAR) {
-			AddMissile(monster.enemyPosition, { monster.enemyPosition.x + 1, 0 }, Direction::South, MissileID::Lightning, TARGET_PLAYERS, monster.getId(), GenerateRnd(10) + 1, 0);
+			AddMissile(monster.enemyPosition, monster.enemyPosition + Direction::SouthEast, Direction::South, MissileID::Lightning, TARGET_PLAYERS, monster.getId(), GenerateRnd(10) + 1, 0);
 		}
 	}
 
@@ -2958,7 +2959,7 @@ void HorkDemonAi(Monster &monster)
 	monster.checkStandAnimationIsLoaded(monster.direction);
 }
 
-string_view GetMonsterTypeText(const MonsterData &monsterData)
+std::string_view GetMonsterTypeText(const MonsterData &monsterData)
 {
 	switch (monsterData.monsterClass) {
 	case MonsterClass::Animal:
@@ -3320,10 +3321,10 @@ void InitMonsterSND(CMonster &monsterType)
 	};
 
 	const MonsterData &data = MonstersData[monsterType.type];
-	string_view soundSuffix = data.soundSuffix != nullptr ? data.soundSuffix : data.assetsSuffix;
+	std::string_view soundSuffix = data.soundSuffix != nullptr ? data.soundSuffix : data.assetsSuffix;
 
 	for (int i = 0; i < 4; i++) {
-		string_view prefix = prefixes[i];
+		std::string_view prefix = prefixes[i];
 		if (prefix == "s" && !data.hasSpecialSound)
 			continue;
 
@@ -3372,7 +3373,7 @@ void InitMonsterGFX(CMonster &monsterType)
 		}
 		animOffsets[clxData.size()] = accumulatedSize;
 		monsterType.animData = nullptr;
-		monsterType.animData = std::unique_ptr<byte[]>(new byte[accumulatedSize]);
+		monsterType.animData = std::unique_ptr<std::byte[]>(new std::byte[accumulatedSize]);
 		for (size_t i = 0; i < clxData.size(); ++i) {
 			memcpy(&monsterType.animData[animOffsets[i]], clxData[i].data(), clxData[i].size());
 		}
@@ -3894,7 +3895,7 @@ void GolumAi(Monster &golem)
 		int mex = golem.position.tile.x - enemy.position.future.x;
 		int mey = golem.position.tile.y - enemy.position.future.y;
 		golem.direction = GetDirection(golem.position.tile, enemy.position.tile);
-		if (abs(mex) < 2 && abs(mey) < 2) {
+		if (std::abs(mex) < 2 && std::abs(mey) < 2) {
 			golem.enemyPosition = enemy.position.tile;
 			if (enemy.activeForTicks == 0) {
 				enemy.activeForTicks = UINT8_MAX;
@@ -4092,7 +4093,7 @@ bool LineClear(tl::function_ref<bool(Point)> clear, Point startPoint, Point endP
 
 	int dx = endPoint.x - position.x;
 	int dy = endPoint.y - position.y;
-	if (abs(dx) > abs(dy)) {
+	if (std::abs(dx) > std::abs(dy)) {
 		if (dx < 0) {
 			std::swap(position, endPoint);
 			dx = -dx;
@@ -4224,7 +4225,7 @@ void M_FallenFear(Point position)
 		int m = dMonster[tile.x][tile.y];
 		if (m == 0)
 			continue;
-		Monster &monster = Monsters[abs(m) - 1];
+		Monster &monster = Monsters[std::abs(m) - 1];
 		if (monster.ai != MonsterAIID::Fallen || monster.hitPoints >> 6 <= 0)
 			continue;
 
@@ -4282,21 +4283,21 @@ void PrintMonstHistory(int mt)
 			if ((res & (RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING)) != 0) {
 				std::string resists = std::string(_("Resists:"));
 				if ((res & RESIST_MAGIC) != 0)
-					AppendStrView(resists, _(" Magic"));
+					resists.append(_(" Magic"));
 				if ((res & RESIST_FIRE) != 0)
-					AppendStrView(resists, _(" Fire"));
+					resists.append(_(" Fire"));
 				if ((res & RESIST_LIGHTNING) != 0)
-					AppendStrView(resists, _(" Lightning"));
+					resists.append(_(" Lightning"));
 				AddPanelString(resists);
 			}
 			if ((res & (IMMUNE_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING)) != 0) {
 				std::string immune = std::string(_("Immune:"));
 				if ((res & IMMUNE_MAGIC) != 0)
-					AppendStrView(immune, _(" Magic"));
+					immune.append(_(" Magic"));
 				if ((res & IMMUNE_FIRE) != 0)
-					AppendStrView(immune, _(" Fire"));
+					immune.append(_(" Fire"));
 				if ((res & IMMUNE_LIGHTNING) != 0)
-					AppendStrView(immune, _(" Lightning"));
+					immune.append(_(" Lightning"));
 				AddPanelString(immune);
 			}
 		}
@@ -4426,7 +4427,7 @@ Monster *FindMonsterAtPosition(Point position, bool ignoreMovingMonsters)
 		return nullptr;
 	}
 
-	return &Monsters[abs(monsterId) - 1];
+	return &Monsters[std::abs(monsterId) - 1];
 }
 
 Monster *FindUniqueMonster(UniqueMonsterType monsterType)
@@ -4450,7 +4451,7 @@ bool IsTileAvailable(const Monster &monster, Point position)
 
 bool IsSkel(_monster_id mt)
 {
-	return std::find(std::begin(SkeletonTypes), std::end(SkeletonTypes), mt) != std::end(SkeletonTypes);
+	return c_find(SkeletonTypes, mt) != SkeletonTypes.end();
 }
 
 bool IsGoat(_monster_id mt)
@@ -4570,7 +4571,7 @@ void SpawnGolem(Player &player, Monster &golem, Point position, Missile &missile
 	golem.maxHitPoints = 2 * (320 * missile._mispllvl + player._pMaxMana / 3);
 	golem.hitPoints = golem.maxHitPoints;
 	golem.armorClass = 25;
-	golem.toHit = 5 * (missile._mispllvl + 8) + 2 * player._pLevel;
+	golem.toHit = 5 * (missile._mispllvl + 8) + 2 * player.getCharacterLevel();
 	golem.minDamage = 2 * (missile._mispllvl + 4);
 	golem.maxDamage = 2 * (missile._mispllvl + 8);
 	golem.flags |= MFLAG_GOLEM;
