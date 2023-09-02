@@ -34,6 +34,8 @@ namespace devilution {
 
 namespace {
 
+constexpr uint8_t Version = 3;
+
 enum class LoadingStatus : uint8_t {
 	Success,
 	FileNotFound,
@@ -500,7 +502,7 @@ LoadingStatus LoadDemoMessages(int demoNumber)
 	}
 
 	const uint8_t version = ReadByte(demofile);
-	if (version > 2) {
+	if (version > Version) {
 		return LoadingStatus::UnsupportedVersion;
 	}
 
@@ -512,6 +514,12 @@ LoadingStatus LoadDemoMessages(int demoNumber)
 		if (std::feof(demofile) != 0)
 			break;
 
+		// Events with the high bit 1 are Rendering events with the rest of the bits used
+		// to encode `progressToNextGameTick` inline.
+		if ((typeNum & 0b10000000) != 0) {
+			DemoMessageQueue.push_back(DemoMsg { DemoMsg::Rendering, static_cast<uint8_t>(typeNum & 0b01111111u) });
+			continue;
+		}
 		const uint8_t progressToNextGameTick = ReadByte(demofile);
 
 		switch (typeNum) {
@@ -573,6 +581,10 @@ LoadingStatus LoadDemoMessages(int demoNumber)
 
 void WriteDemoMsgHeader(DemoMsg::EventType type)
 {
+	if (type == DemoMsg::Rendering && ProgressToNextGameTick <= 127) {
+		WriteByte(DemoRecording, ProgressToNextGameTick | 0b10000000);
+		return;
+	}
 	WriteByte(DemoRecording, type);
 	WriteByte(DemoRecording, ProgressToNextGameTick);
 }
@@ -839,7 +851,6 @@ void NotifyGameLoopStart()
 			LogError("Failed to open {} for writing", path);
 			return;
 		}
-		constexpr uint8_t Version = 2;
 		WriteByte(DemoRecording, Version);
 		WriteLE32(DemoRecording, gSaveNumber);
 		WriteSettings(DemoRecording);
