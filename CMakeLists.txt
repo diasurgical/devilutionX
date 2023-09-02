@@ -106,6 +106,12 @@ option(MACOSX_STANDALONE_APP_BUNDLE "Generate a portable app bundle to use on ot
 cmake_dependent_option(DISABLE_TCP "Disable TCP multiplayer option" OFF "NOT NONET" ON)
 cmake_dependent_option(DISABLE_ZERO_TIER "Disable ZeroTier multiplayer option" OFF "NOT NONET" ON)
 
+# Graphics options
+if(NOT USE_SDL1)
+  set(DEVILUTIONX_DISPLAY_TEXTURE_FORMAT "SDL_PIXELFORMAT_RGB888" CACHE STRING "Texture format for DevilutionX textures when using the GPU renderer")
+  mark_as_advanced(DEVILUTIONX_DISPLAY_TEXTURE_FORMAT)
+endif()
+
 # Sound options
 option(NOSOUND "Disable sound support" OFF)
 option(DEVILUTIONX_RESAMPLER_SPEEX "Build with Speex resampler" ON)
