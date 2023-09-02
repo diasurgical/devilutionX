@@ -39,40 +39,40 @@ extern DVL_API_FOR_TEST Displacement AutomapOffset;
 enum class AmWidthOffset : int8_t {
 	None,
 
-	SixteenthTileRight = TILE_WIDTH >> 4,
-	EighthTileRight = TILE_WIDTH >> 3,
-	QuarterTileRight = TILE_WIDTH >> 2,
-	HalfTileRight = TILE_WIDTH >> 1,
-	FullTileRight = TILE_WIDTH,
+	EighthTileRight = TILE_WIDTH >> 4,
+	QuarterTileRight = TILE_WIDTH >> 3,
+	HalfTileRight = TILE_WIDTH >> 2,
+	FullTileRight = TILE_WIDTH >> 1,
+	DoubleTileRight = TILE_WIDTH,
 
-	ThreeEighthsTileRight = HalfTileRight - EighthTileRight,
+	ThreeQuartersTileRight = FullTileRight - QuarterTileRight,
 
-	SixteenthTileLeft = -SixteenthTileRight,
 	EighthTileLeft = -EighthTileRight,
 	QuarterTileLeft = -QuarterTileRight,
 	HalfTileLeft = -HalfTileRight,
 	FullTileLeft = -FullTileRight,
+	DoubleTileLeft = -DoubleTileRight,
 
-	ThreeEighthsTileLeft = -ThreeEighthsTileRight,
+	ThreeQuartersTileLeft = -ThreeQuartersTileRight,
 };
 
 enum class AmHeightOffset : int8_t {
 	None,
 
-	EighthTileDown = TILE_HEIGHT >> 3,
-	QuarterTileDown = TILE_HEIGHT >> 2,
-	HalfTileDown = TILE_HEIGHT >> 1,
-	FullTileDown = TILE_HEIGHT,
+	QuarterTileDown = TILE_HEIGHT >> 3,
+	HalfTileDown = TILE_HEIGHT >> 2,
+	FullTileDown = TILE_HEIGHT >> 1,
+	DoubleTileDown = TILE_HEIGHT,
 
-	ThreeEighthsTileDown = HalfTileDown - EighthTileDown,
-	//SixEighthsTileDown = HalfTileDown + EighthTileDown,
+	ThreeQuartersTileDown = FullTileDown - QuarterTileDown,
+	//SixEighthsTileDown = FullTileDown + QuarterTileDown,
 
-	EighthTileUp = -EighthTileDown,
 	QuarterTileUp = -QuarterTileDown,
 	HalfTileUp = -HalfTileDown,
 	FullTileUp = -FullTileDown,
+	DoubleTileUp = -DoubleTileDown,
 
-	ThreeEighthsTileUp = -ThreeEighthsTileDown,
+	ThreeQuartersTileUp = -ThreeQuartersTileDown,
 };
 
 enum class AmLineLength : uint8_t {
@@ -80,6 +80,7 @@ enum class AmLineLength : uint8_t {
 	QuarterTile = 2,
 	HalfTile = 4,
 	FullTile = 8,
+	FullAndHalfTile = 12,
 	DoubleTile = 16,
 };
 

@@ -18,6 +18,7 @@
 #include "levels/setmaps.h"
 #include "player.h"
 #include "utils/attributes.h"
+#include "utils/enum_traits.h"
 #include "utils/language.h"
 #include "utils/ui_fwd.h"
 #include "utils/utf8.hpp"
@@ -113,250 +114,259 @@ std::array<AutomapTile, 256> AutomapTypeTiles;
 
 void DrawDiamond(const Surface &out, Point center, uint8_t color)
 {
-	DrawMapLineNE(out, center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::None), AmLine(AmLineLength::FullTile), color);
-	DrawMapLineSE(out, center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::None), AmLine(AmLineLength::FullTile), color);
-	DrawMapLineSE(out, center + AmOffset(AmWidthOffset::None, AmHeightOffset::QuarterTileUp), AmLine(AmLineLength::FullTile), color);
-	DrawMapLineNE(out, center + AmOffset(AmWidthOffset::None, AmHeightOffset::QuarterTileDown), AmLine(AmLineLength::FullTile), color);
+	DrawMapLineNE(out, center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::HalfTileUp), AmLine(AmLineLength::FullTile), color);
+	DrawMapLineSE(out, center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::HalfTileUp), AmLine(AmLineLength::FullTile), color);
+	DrawMapLineSE(out, center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileUp), AmLine(AmLineLength::FullTile), color);
+	DrawMapLineNE(out, center + AmOffset(AmWidthOffset::None, AmHeightOffset::None), AmLine(AmLineLength::FullTile), color);
 }
 
 void DrawMapVerticalDoor(const Surface &out, Point center, uint8_t colorBright, uint8_t colorDim)
 {
-	//if (leveltype != DTYPE_CATACOMBS) {
-	DrawMapLineNE(out, center + AmOffset(AmWidthOffset::EighthTileRight, AmHeightOffset::EighthTileUp), AmLine(AmLineLength::HalfTile), colorDim);
-	DrawMapLineNE(out, center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileDown), AmLine(AmLineLength::HalfTile), colorDim);
+	DrawMapLineNE(out, center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileUp), AmLine(AmLineLength::FullTile), colorDim);
+	DrawDiamond(out, center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::HalfTileDown), colorBright);
+}
+
+void DrawMapCrossVerticalDoor(const Surface &out, Point center, uint8_t colorBright, uint8_t colorDim)
+{
+	DrawMapLineNE(out, center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileUp), AmLine(AmLineLength::HalfTile), colorDim);
 	DrawDiamond(out, center, colorBright);
-	//} else {
-	//	DrawMapLineNE(out, { center.x - AmLine(8), center.y + AmLine(4) }, AmLine(8), colorDim);
-	//	DrawMapLineNE(out, { center.x - AmLine(16), center.y + AmLine(8) }, AmLine(4), colorDim);
-	//	DrawDiamond(out, { center.x + AmLine(16), center.y - AmLine(8) }, colorBright);
-	//}
+}
+
+void DrawMapDiamondVerticalDoor(const Surface &out, Point center, uint8_t colorBright, uint8_t colorDim)
+{
+	DrawMapLineNE(out, center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileUp), AmLine(AmLineLength::QuarterTile), colorDim);
+	DrawDiamond(out, center, colorBright);
 }
 
 void DrawMapHorizontalDoor(const Surface &out, Point center, uint8_t colorBright, uint8_t colorDim)
 {
-	//if (leveltype != DTYPE_CATACOMBS) {
-	DrawMapLineSE(out, center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileUp), AmLine(AmLineLength::HalfTile), colorDim);
-	DrawMapLineSE(out, center + AmOffset(AmWidthOffset::EighthTileRight, AmHeightOffset::EighthTileDown), AmLine(AmLineLength::HalfTile), colorDim);
-	DrawDiamond(out, center, colorBright);
-	//} else {
-	//	DrawMapLineSE(out, { center.x - AmLine(8), center.y - AmLine(4) }, AmLine(8), colorDim);
-	//	DrawMapLineSE(out, { center.x + AmLine(8), center.y + AmLine(4) }, AmLine(4), colorDim);
-	//	DrawDiamond(out, { center.x - AmLine(16), center.y - AmLine(8) }, colorBright);
-	//}
+	DrawMapLineSE(out, center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::ThreeQuartersTileUp), AmLine(AmLineLength::FullTile), colorDim);
+	DrawDiamond(out, center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::HalfTileDown), colorBright);
+}
+
+void DrawMapCrossHorizontalDoor(const Surface &out, Point center, uint8_t colorBright, uint8_t colorDim)
+{
+	DrawMapLineSE(out, center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileUp), AmLine(AmLineLength::HalfTile), colorDim);
+	DrawDiamond(out, center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::HalfTileDown), colorBright);
+}
+
+void DrawMapDiamondHorizontalDoor(const Surface &out, Point center, uint8_t colorBright, uint8_t colorDim)
+{
+	DrawMapLineSE(out, center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileUp), AmLine(AmLineLength::QuarterTile), colorDim);
+	DrawDiamond(out, center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::HalfTileDown), colorBright);
 }
 
 void DrawDirt(const Surface &out, Point center, uint8_t color)
 {
-	out.SetPixel(center + AmOffset(AmWidthOffset::EighthTileRight, AmHeightOffset::EighthTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileLeft, AmHeightOffset::QuarterTileDown), color);
 
-	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::HalfTileDown), color);
+
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileUp), color);
 	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::ThreeQuartersTileDown), color);
 
-	out.SetPixel(center + AmOffset(AmWidthOffset::EighthTileLeft, AmHeightOffset::EighthTileUp), color);
-
-	out.SetPixel(center + AmOffset(AmWidthOffset::EighthTileLeft, AmHeightOffset::EighthTileDown), color);
-	out.SetPixel(center + AmOffset(AmWidthOffset::EighthTileLeft, AmHeightOffset::ThreeEighthsTileDown), color);
-
-	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::QuarterTileUp), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileUp), color);
 	out.SetPixel(center, color);
-	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::QuarterTileDown), color);
 	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown), color);
 
-	out.SetPixel(center + AmOffset(AmWidthOffset::EighthTileRight, AmHeightOffset::EighthTileUp), color);
-	out.SetPixel(center + AmOffset(AmWidthOffset::EighthTileRight, AmHeightOffset::EighthTileDown), color);
-	out.SetPixel(center + AmOffset(AmWidthOffset::EighthTileRight, AmHeightOffset::ThreeEighthsTileDown), color);
-
-	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileUp), color);
 	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::ThreeQuartersTileDown), color);
 
-	out.SetPixel(center + AmOffset(AmWidthOffset::ThreeEighthsTileRight, AmHeightOffset::EighthTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::HalfTileDown), color);
+
+	out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileRight, AmHeightOffset::QuarterTileDown), color);
 }
 
 void DrawBridge(const Surface &out, Point center, uint8_t color)
 {
 	out.SetPixel(center, color);
 
-	out.SetPixel(center + AmOffset(AmWidthOffset::EighthTileRight, AmHeightOffset::EighthTileUp), color);
-	out.SetPixel(center + AmOffset(AmWidthOffset::EighthTileRight, AmHeightOffset::EighthTileDown), color);
-
-	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileUp), color);
 	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileDown), color);
 
-	out.SetPixel(center + AmOffset(AmWidthOffset::ThreeEighthsTileRight, AmHeightOffset::EighthTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::HalfTileDown), color);
+
+	out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileRight, AmHeightOffset::QuarterTileDown), color);
 }
 
 void DrawRiverRightIn(const Surface &out, Point center, uint8_t color)
 {
-	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::HalfTileDown), color);
 
-	out.SetPixel(center + AmOffset(AmWidthOffset::EighthTileLeft, AmHeightOffset::EighthTileDown), color);
-	out.SetPixel(center + AmOffset(AmWidthOffset::EighthTileLeft, AmHeightOffset::ThreeEighthsTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::ThreeQuartersTileDown), color);
 
 	out.SetPixel(center, color);
-	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::QuarterTileDown), color);
 	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown), color);
 
-	out.SetPixel(center + AmOffset(AmWidthOffset::EighthTileRight, AmHeightOffset::EighthTileDown), color);
-	out.SetPixel(center + AmOffset(AmWidthOffset::EighthTileRight, AmHeightOffset::ThreeEighthsTileDown), color);
-
-	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::None), color);
 	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::ThreeQuartersTileDown), color);
 
-	out.SetPixel(center + AmOffset(AmWidthOffset::ThreeEighthsTileRight, AmHeightOffset::EighthTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::HalfTileDown), color);
+
+	out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileRight, AmHeightOffset::QuarterTileDown), color);
 }
 
 void DrawRiverCornerSouth(const Surface &out, Point center, uint8_t color)
 {
-	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown), color);
 }
 
 void DrawRiverCornerNorth(const Surface &out, Point center, uint8_t color)
 {
-	out.SetPixel(center + AmOffset(AmWidthOffset::EighthTileLeft, AmHeightOffset::EighthTileUp), color);
-	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::QuarterTileUp), color);
-	out.SetPixel(center + AmOffset(AmWidthOffset::EighthTileRight, AmHeightOffset::EighthTileUp), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileUp), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileUp), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileUp), color);
 }
 
 void DrawRiverLeftOut(const Surface &out, Point center, uint8_t color)
 {
-	out.SetPixel(center + AmOffset(AmWidthOffset::ThreeEighthsTileLeft, AmHeightOffset::EighthTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileLeft, AmHeightOffset::QuarterTileDown), color);
 
-	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::HalfTileDown), color);
+
 	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileDown), color);
-
-	out.SetPixel(center + AmOffset(AmWidthOffset::EighthTileLeft, AmHeightOffset::EighthTileDown), color);
-	out.SetPixel(center + AmOffset(AmWidthOffset::EighthTileLeft, AmHeightOffset::ThreeEighthsTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::ThreeQuartersTileDown), color);
 
 	out.SetPixel(center, color);
-	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::QuarterTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileDown), color);
 
-	out.SetPixel(center + AmOffset(AmWidthOffset::EighthTileRight, AmHeightOffset::EighthTileUp), color);
-	out.SetPixel(center + AmOffset(AmWidthOffset::EighthTileRight, AmHeightOffset::EighthTileDown), color);
-	out.SetPixel(center + AmOffset(AmWidthOffset::EighthTileRight, AmHeightOffset::HalfTileDown), color);
-
-	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileUp), color);
 	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::FullTileDown), color);
 
-	out.SetPixel(center + AmOffset(AmWidthOffset::ThreeEighthsTileRight, AmHeightOffset::EighthTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::HalfTileDown), color);
+
+	out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileRight, AmHeightOffset::QuarterTileDown), color);
 }
 
 void DrawRiverLeftIn(const Surface &out, Point center, uint8_t color)
 {
-	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::HalfTileDown), color);
+
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileUp), color);
 	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::ThreeQuartersTileDown), color);
 
-	out.SetPixel(center + AmOffset(AmWidthOffset::EighthTileLeft, AmHeightOffset::EighthTileUp), color);
-	out.SetPixel(center + AmOffset(AmWidthOffset::EighthTileLeft, AmHeightOffset::EighthTileDown), color);
-	out.SetPixel(center + AmOffset(AmWidthOffset::EighthTileLeft, AmHeightOffset::ThreeEighthsTileDown), color);
-
-	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::QuarterTileUp), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileUp), color);
 	out.SetPixel(center, color);
-	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::QuarterTileDown), color);
 	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown), color);
 
-	out.SetPixel(center + AmOffset(AmWidthOffset::EighthTileRight, AmHeightOffset::EighthTileUp), color);
-	out.SetPixel(center + AmOffset(AmWidthOffset::EighthTileRight, AmHeightOffset::EighthTileDown), color);
-	out.SetPixel(center + AmOffset(AmWidthOffset::EighthTileRight, AmHeightOffset::ThreeEighthsTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileUp), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::ThreeQuartersTileDown), color);
 }
 
 void DrawRiverCornerWest(const Surface &out, Point center, uint8_t color)
 {
-	out.SetPixel(center + AmOffset(AmWidthOffset::ThreeEighthsTileLeft, AmHeightOffset::EighthTileDown), color);
-	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileLeft, AmHeightOffset::QuarterTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::None), color);
 }
 
 void DrawRiverCornerEast(const Surface &out, Point center, uint8_t color)
 {
-	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::None), color);
-	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileDown), color);
-	out.SetPixel(center + AmOffset(AmWidthOffset::ThreeEighthsTileRight, AmHeightOffset::EighthTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::HalfTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileRight, AmHeightOffset::QuarterTileDown), color);
 }
 
 void DrawRiverRightOut(const Surface &out, Point center, uint8_t color)
 {
-	out.SetPixel(center + AmOffset(AmWidthOffset::EighthTileLeft, AmHeightOffset::EighthTileDown), color);
-	out.SetPixel(center + AmOffset(AmWidthOffset::EighthTileLeft, AmHeightOffset::ThreeEighthsTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::ThreeQuartersTileDown), color);
 
 	out.SetPixel(center, color);
-	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::QuarterTileDown), color);
 	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown), color);
 
-	out.SetPixel(center + AmOffset(AmWidthOffset::EighthTileRight, AmHeightOffset::EighthTileUp), color);
-	out.SetPixel(center + AmOffset(AmWidthOffset::EighthTileRight, AmHeightOffset::EighthTileDown), color);
-	out.SetPixel(center + AmOffset(AmWidthOffset::EighthTileRight, AmHeightOffset::ThreeEighthsTileDown), color);
-
-	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileUp), color);
 	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::ThreeQuartersTileDown), color);
 
-	out.SetPixel(center + AmOffset(AmWidthOffset::ThreeEighthsTileRight, AmHeightOffset::EighthTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::HalfTileDown), color);
+
+	out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileRight, AmHeightOffset::QuarterTileDown), color);
 }
 
 void DrawRiver(const Surface &out, Point center, uint8_t color)
 {
-	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::HalfTileDown), color);
 
-	out.SetPixel(center + AmOffset(AmWidthOffset::EighthTileLeft, AmHeightOffset::EighthTileDown), color);
-	out.SetPixel(center + AmOffset(AmWidthOffset::EighthTileLeft, AmHeightOffset::HalfTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::FullTileDown), color);
 
 	out.SetPixel(center, color);
-	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::QuarterTileDown), color);
 	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown), color);
 
-	out.SetPixel(center + AmOffset(AmWidthOffset::EighthTileRight, AmHeightOffset::EighthTileUp), color);
-	out.SetPixel(center + AmOffset(AmWidthOffset::EighthTileRight, AmHeightOffset::EighthTileDown), color);
-	out.SetPixel(center + AmOffset(AmWidthOffset::EighthTileRight, AmHeightOffset::ThreeEighthsTileDown), color);
-
-	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileUp), color);
 	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::ThreeQuartersTileDown), color);
 
-	out.SetPixel(center + AmOffset(AmWidthOffset::ThreeEighthsTileRight, AmHeightOffset::EighthTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::HalfTileDown), color);
+
+	out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileRight, AmHeightOffset::QuarterTileDown), color);
 }
 
 void DrawRiverForkIn(const Surface &out, Point center, uint8_t color)
 {
-	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::HalfTileDown), color);
+
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileUp), color);
 	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::FullTileDown), color);
 
-	out.SetPixel(center + AmOffset(AmWidthOffset::EighthTileLeft, AmHeightOffset::EighthTileUp), color);
-	out.SetPixel(center + AmOffset(AmWidthOffset::EighthTileLeft, AmHeightOffset::EighthTileDown), color);
-	out.SetPixel(center + AmOffset(AmWidthOffset::EighthTileLeft, AmHeightOffset::HalfTileDown), color);
-
-	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::QuarterTileUp), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileUp), color);
 	out.SetPixel(center, color);
-	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::QuarterTileDown), color);
 	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown), color);
 
-	out.SetPixel(center + AmOffset(AmWidthOffset::EighthTileRight, AmHeightOffset::EighthTileUp), color);
-	out.SetPixel(center + AmOffset(AmWidthOffset::EighthTileRight, AmHeightOffset::EighthTileDown), color);
-	out.SetPixel(center + AmOffset(AmWidthOffset::EighthTileRight, AmHeightOffset::ThreeEighthsTileDown), color);
-
-	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileUp), color);
 	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::ThreeQuartersTileDown), color);
 
-	out.SetPixel(center + AmOffset(AmWidthOffset::ThreeEighthsTileRight, AmHeightOffset::EighthTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::HalfTileDown), color);
+
+	out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileRight, AmHeightOffset::QuarterTileDown), color);
 }
 
 void DrawRiverForkOut(const Surface &out, Point center, uint8_t color)
 {
-	out.SetPixel(center + AmOffset(AmWidthOffset::ThreeEighthsTileLeft, AmHeightOffset::EighthTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileLeft, AmHeightOffset::QuarterTileDown), color);
 
-	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::None), color);
-	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::HalfTileDown), color);
 
-	out.SetPixel(center + AmOffset(AmWidthOffset::EighthTileLeft, AmHeightOffset::ThreeEighthsTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::ThreeQuartersTileDown), color);
 
-	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown), color);
 
-	out.SetPixel(center + AmOffset(AmWidthOffset::EighthTileRight, AmHeightOffset::ThreeEighthsTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::ThreeQuartersTileDown), color);
 }
 
 void DrawStairs(const Surface &out, Point center, uint8_t color)
 {
 	constexpr int NumStairSteps = 4;
-	const Displacement offset = AmOffset(AmWidthOffset::EighthTileLeft, AmHeightOffset::EighthTileDown);
+	const Displacement offset = AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileDown);
 
 	// Initial point based on the 'center' position.
-	Point p = center + AmOffset(AmWidthOffset::EighthTileLeft, AmHeightOffset::ThreeEighthsTileUp);
+	Point p = center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::ThreeQuartersTileUp);
 
 	for (int i = 0; i < NumStairSteps; ++i) {
 		DrawMapLineSE(out, p, AmLine(AmLineLength::DoubleTile), color);
@@ -370,17 +380,36 @@ void DrawStairs(const Surface &out, Point center, uint8_t color)
 void DrawHorizontal(const Surface &out, Point center, AutomapTile tile, uint8_t colorBright, uint8_t colorDim)
 {
 	if (!tile.HasFlag(AutomapTile::Flags::HorizontalPassage)) {
-		DrawMapLineSE(out, center + AmOffset(AmWidthOffset::None, AmHeightOffset::None), AmLine(AmLineLength::DoubleTile), colorDim);
+		DrawMapLineSE(out, center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::ThreeQuartersTileUp), AmLine(AmLineLength::DoubleTile), colorDim);
 		return;
 	}
 	if (tile.HasFlag(AutomapTile::Flags::HorizontalDoor)) {
-		DrawMapHorizontalDoor(out, center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileUp), colorBright, colorDim);
+		DrawMapHorizontalDoor(out, center, colorBright, colorDim);
 	}
 	if (tile.HasFlag(AutomapTile::Flags::HorizontalGrate)) {
 		DrawMapLineSE(out, center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileUp), AmLine(AmLineLength::FullTile), colorDim);
-		DrawDiamond(out, center + AmOffset(AmWidthOffset::None, AmHeightOffset::QuarterTileUp), colorDim);
+		DrawDiamond(out, center, colorDim);
 	} else if (tile.HasFlag(AutomapTile::Flags::HorizontalArch)) {
-		DrawDiamond(out, center + AmOffset(AmWidthOffset::None, AmHeightOffset::QuarterTileUp), colorDim);
+		DrawDiamond(out, center, colorDim);
+	}
+}
+
+void DrawFenceHorizontal(const Surface &out, Point center, AutomapTile tile, uint8_t colorBright, uint8_t colorDim)
+{
+	if (!tile.HasFlag(AutomapTile::Flags::HorizontalPassage)) {
+		DrawMapLineSE(out, center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileUp), AmLine(AmLineLength::FullAndHalfTile), colorDim);
+		DrawMapLineNE(out, center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileUp), AmLine(AmLineLength::HalfTile), colorDim);
+		return;
+	}
+	if (tile.HasFlag(AutomapTile::Flags::HorizontalDoor)) {
+		DrawMapHorizontalDoor(out, center, colorBright, colorDim);
+	}
+	if (tile.HasFlag(AutomapTile::Flags::HorizontalGrate)) {
+		DrawMapLineSE(out, center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileUp), AmLine(AmLineLength::FullAndHalfTile), colorDim);
+		DrawMapLineNE(out, center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileUp), AmLine(AmLineLength::HalfTile), colorDim);
+		DrawDiamond(out, center, colorDim);
+	} else if (tile.HasFlag(AutomapTile::Flags::HorizontalArch)) {
+		DrawDiamond(out, center, colorDim);
 	}
 }
 
@@ -390,18 +419,69 @@ void DrawHorizontal(const Surface &out, Point center, AutomapTile tile, uint8_t 
 void DrawVertical(const Surface &out, Point center, AutomapTile tile, uint8_t colorBright, uint8_t colorDim)
 {
 	if (!tile.HasFlag(AutomapTile::Flags::VerticalPassage)) {
-		DrawMapLineNE(out, center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::None), AmLine(AmLineLength::DoubleTile), colorDim);
+		DrawMapLineNE(out, center + AmOffset(AmWidthOffset::ThreeQuartersTileLeft, AmHeightOffset::QuarterTileDown), AmLine(AmLineLength::DoubleTile), colorDim);
 		return;
 	}
 	if (tile.HasFlag(AutomapTile::Flags::VerticalDoor)) {
-		DrawMapVerticalDoor(out, center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileUp), colorBright, colorDim);
+		DrawMapVerticalDoor(out, center, colorBright, colorDim);
 	}
 	if (tile.HasFlag(AutomapTile::Flags::VerticalGrate)) {
-		DrawMapLineNE(out, center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::None), AmLine(AmLineLength::FullTile), colorDim);
-		DrawDiamond(out, center + AmOffset(AmWidthOffset::None, AmHeightOffset::QuarterTileUp), colorDim);
+		DrawMapLineNE(out, center + AmOffset(AmWidthOffset::ThreeQuartersTileLeft, AmHeightOffset::QuarterTileDown), AmLine(AmLineLength::FullTile), colorDim);
+		DrawDiamond(out, center, colorDim);
 	} else if (tile.HasFlag(AutomapTile::Flags::VerticalArch)) {
-		DrawDiamond(out, center + AmOffset(AmWidthOffset::None, AmHeightOffset::QuarterTileUp), colorDim);
+		DrawDiamond(out, center, colorDim);
 	}
+}
+
+void DrawFenceVertical(const Surface &out, Point center, AutomapTile tile, uint8_t colorBright, uint8_t colorDim)
+{
+	if (!tile.HasFlag(AutomapTile::Flags::VerticalPassage)) {
+		DrawMapLineNE(out, center + AmOffset(AmWidthOffset::ThreeQuartersTileLeft, AmHeightOffset::QuarterTileDown), AmLine(AmLineLength::FullAndHalfTile), colorDim);
+		DrawMapLineNW(out, center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileUp), AmLine(AmLineLength::HalfTile), colorDim);
+		return;
+	}
+	if (tile.HasFlag(AutomapTile::Flags::VerticalDoor)) {
+		DrawMapVerticalDoor(out, center, colorBright, colorDim);
+	}
+	if (tile.HasFlag(AutomapTile::Flags::VerticalGrate)) {
+		DrawMapLineNE(out, center + AmOffset(AmWidthOffset::ThreeQuartersTileLeft, AmHeightOffset::None), AmLine(AmLineLength::FullTile), colorDim);
+		DrawDiamond(out, center, colorDim);
+	} else if (tile.HasFlag(AutomapTile::Flags::VerticalArch)) {
+		DrawDiamond(out, center, colorDim);
+	}
+}
+
+void DrawCross(const Surface &out, Point center, AutomapTile tile, uint8_t colorBright, uint8_t colorDim)
+{
+	if (tile.HasFlag(AutomapTile::Flags::HorizontalGrate) || tile.HasFlag(AutomapTile::Flags::VerticalGrate) || tile.HasFlag(AutomapTile::Flags::HorizontalArch) || tile.HasFlag(AutomapTile::Flags::VerticalArch)) {
+		if (tile.HasFlag(AutomapTile::Flags::HorizontalGrate)) {
+			DrawMapLineSE(out, center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileUp), AmLine(AmLineLength::FullTile), colorDim);
+		} else if (tile.HasFlag(AutomapTile::Flags::HorizontalDoor)) {
+			DrawMapDiamondHorizontalDoor(out, center, colorBright, colorDim);
+		} else if (!tile.HasFlag(AutomapTile::Flags::HorizontalPassage)) {
+			DrawMapLineSE(out, center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileUp), AmLine(AmLineLength::FullTile), colorDim);
+		}
+		if (tile.HasFlag(AutomapTile::Flags::VerticalGrate)) {
+			DrawMapLineNE(out, center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileUp), AmLine(AmLineLength::FullTile), colorDim);
+		} else if (tile.HasFlag(AutomapTile::Flags::VerticalDoor)) {
+			DrawMapDiamondVerticalDoor(out, center, colorBright, colorDim);
+		} else if (!tile.HasFlag(AutomapTile::Flags::VerticalPassage)) {
+			DrawMapLineNE(out, center + AmOffset(AmWidthOffset::FullTileLeft, AmHeightOffset::HalfTileDown), AmLine(AmLineLength::FullTile), colorDim);
+		}
+		DrawDiamond(out, center, colorDim);
+	} else {
+		if (tile.HasFlag(AutomapTile::Flags::HorizontalDoor)) {
+			DrawMapCrossHorizontalDoor(out, center, colorBright, colorDim);
+		} else if (!tile.HasFlag(AutomapTile::Flags::HorizontalPassage)) {
+			DrawMapLineSE(out, center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileUp), AmLine(AmLineLength::FullAndHalfTile), colorDim);
+		}
+		if (tile.HasFlag(AutomapTile::Flags::VerticalDoor)) {
+			DrawMapCrossVerticalDoor(out, center, colorBright, colorDim);
+		} else if (!tile.HasFlag(AutomapTile::Flags::VerticalPassage)) {
+			DrawMapLineNE(out, center + AmOffset(AmWidthOffset::ThreeQuartersTileLeft, AmHeightOffset::QuarterTileDown), AmLine(AmLineLength::FullAndHalfTile), colorDim);
+		}
+	}
+
 }
 
 /**
@@ -410,9 +490,9 @@ void DrawVertical(const Surface &out, Point center, AutomapTile tile, uint8_t co
 void DrawCaveHorizontal(const Surface &out, Point center, AutomapTile tile, uint8_t colorBright, uint8_t colorDim)
 {
 	if (tile.HasFlag(AutomapTile::Flags::VerticalDoor)) {
-		DrawMapHorizontalDoor(out, center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileDown), colorBright, colorDim);
+		DrawMapHorizontalDoor(out, center, colorBright, colorDim);
 	} else {
-		DrawMapLineSE(out, center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::None), AmLine(AmLineLength::DoubleTile), colorDim);
+		DrawMapLineSE(out, center + AmOffset(AmWidthOffset::FullTileLeft, AmHeightOffset::None), AmLine(AmLineLength::DoubleTile), colorDim);
 	}
 }
 
@@ -422,10 +502,16 @@ void DrawCaveHorizontal(const Surface &out, Point center, AutomapTile tile, uint
 void DrawCaveVertical(const Surface &out, Point center, AutomapTile tile, uint8_t colorBright, uint8_t colorDim)
 {
 	if (tile.HasFlag(AutomapTile::Flags::HorizontalDoor)) {
-		DrawMapVerticalDoor(out, center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileDown), colorBright, colorDim);
+		DrawMapVerticalDoor(out, center, colorBright, colorDim);
 	} else {
-		DrawMapLineNE(out, { center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileDown) }, AmLine(AmLineLength::DoubleTile), colorDim);
+		DrawMapLineNE(out, { center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown) }, AmLine(AmLineLength::DoubleTile), colorDim);
 	}
+}
+
+void DrawCorner(const Surface &out, Point center, AutomapTile tile, uint8_t colorBright, uint8_t colorDim)
+{
+	DrawMapLineNW(out, center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileUp), AmLine(AmLineLength::HalfTile), colorDim);
+	DrawMapLineNE(out, center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileUp), AmLine(AmLineLength::HalfTile), colorDim);
 }
 
 /**
@@ -528,19 +614,22 @@ void DrawAutomapTile(const Surface &out, Point center, Point map)
 
 	switch (tile.type) {
 	case AutomapTile::Types::Diamond: // stand-alone column or other unpassable object
-		DrawDiamond(out, { center.x, center.y }, colorDim);
+		DrawDiamond(out, center, colorDim);
 		break;
 	case AutomapTile::Types::Vertical:
-	case AutomapTile::Types::FenceVertical:
 		DrawVertical(out, center, tile, colorBright, colorDim);
+		break;
+	case AutomapTile::Types::FenceVertical:
+		DrawFenceVertical(out, center, tile, colorBright, colorDim);
 		break;
 	case AutomapTile::Types::Horizontal:
-	case AutomapTile::Types::FenceHorizontal:
 		DrawHorizontal(out, center, tile, colorBright, colorDim);
 		break;
+	case AutomapTile::Types::FenceHorizontal:
+		DrawFenceHorizontal(out, center, tile, colorBright, colorDim);
+		break;
 	case AutomapTile::Types::Cross:
-		DrawVertical(out, center, tile, colorBright, colorDim);
-		DrawHorizontal(out, center, tile, colorBright, colorDim);
+		DrawCross(out, center, tile, colorBright, colorDim);
 		break;
 	case AutomapTile::Types::CaveHorizontalCross:
 		DrawVertical(out, center, tile, colorBright, colorDim);
@@ -561,6 +650,8 @@ void DrawAutomapTile(const Surface &out, Point center, Point map)
 		DrawCaveVertical(out, center, tile, colorBright, colorDim);
 		break;
 	case AutomapTile::Types::Corner:
+		DrawCorner(out, center, tile, colorBright, colorDim);
+		break;
 	case AutomapTile::Types::None:
 		break;
 	case AutomapTile::Types::Bridge:
@@ -667,7 +758,7 @@ void DrawAutomapPlr(const Surface &out, const Displacement &myPlayerOffset, int 
 
 	Point base = {
 		((playerOffset.deltaX + myPlayerOffset.deltaX) * AutoMapScale / 100 / 2) + (px - py) * AmLine(AmLineLength::DoubleTile) + gnScreenWidth / 2,
-		((playerOffset.deltaY + myPlayerOffset.deltaY) * AutoMapScale / 100 / 2) + (px + py) * AmLine(AmLineLength::FullTile) + (gnScreenHeight - GetMainPanel().size.height) / 2 + TILE_HEIGHT / 2 - 1
+		((playerOffset.deltaY + myPlayerOffset.deltaY) * AutoMapScale / 100 / 2) + (px + py) * AmLine(AmLineLength::FullTile) + (gnScreenHeight - GetMainPanel().size.height) / 2 + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown).deltaY
 	};
 
 	if (CanPanelsCoverView()) {
@@ -680,53 +771,53 @@ void DrawAutomapPlr(const Surface &out, const Displacement &myPlayerOffset, int 
 
 	switch (player._pdir) {
 	case Direction::North: {
-		const Point point = base + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileUp);
+		const Point point = base + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileUp);
 		DrawVerticalLine(out, point, AmLine(AmLineLength::DoubleTile), playerColor);
 		//DrawMapLineSteepNE(out, { point.x - AmLine(4), point.y + 2 * AmLine(4) }, AmLine(AmLineLength::HalfTile), playerColor);
-		DrawMapLineSteepNE(out, point + AmOffset(AmWidthOffset::SixteenthTileLeft, AmHeightOffset::QuarterTileDown), AmLine(AmLineLength::HalfTile), playerColor);
+		DrawMapLineSteepNE(out, point + AmOffset(AmWidthOffset::EighthTileLeft, AmHeightOffset::HalfTileDown), AmLine(AmLineLength::HalfTile), playerColor);
 		//DrawMapLineSteepNW(out, { point.x + AmLine(4), point.y + 2 * AmLine(4) }, AmLine(AmLineLength::HalfTile), playerColor);
-		DrawMapLineSteepNW(out, point + AmOffset(AmWidthOffset::SixteenthTileRight, AmHeightOffset::QuarterTileDown), AmLine(AmLineLength::HalfTile), playerColor);
+		DrawMapLineSteepNW(out, point + AmOffset(AmWidthOffset::EighthTileRight, AmHeightOffset::HalfTileDown), AmLine(AmLineLength::HalfTile), playerColor);
 	} break;
 	case Direction::NorthEast: {
-		const Point point = base + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileUp);
-		DrawHorizontalLine(out, point + AmOffset(AmWidthOffset::EighthTileLeft, AmHeightOffset::None), AmLine(AmLineLength::FullTile), playerColor);
+		const Point point = base + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::HalfTileUp);
+		DrawHorizontalLine(out, point + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::None), AmLine(AmLineLength::FullTile), playerColor);
 		//DrawMapLineNE(out, { point.x - 2 * AmLine(8), point.y + AmLine(8) }, AmLine(AmLineLength::FullTile), playerColor);
-		DrawMapLineNE(out, point + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileDown), AmLine(AmLineLength::FullTile), playerColor);
+		DrawMapLineNE(out, point + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::HalfTileDown), AmLine(AmLineLength::FullTile), playerColor);
 		DrawMapLineSteepSW(out, point, AmLine(AmLineLength::HalfTile), playerColor);
 	} break;
 	case Direction::East: {
-		const Point point = base + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::None);
+		const Point point = base + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::None);
 		DrawMapLineNW(out, point, AmLine(AmLineLength::HalfTile), playerColor);
-		DrawHorizontalLine(out, point + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::None), AmLine(AmLineLength::DoubleTile), playerColor);
+		DrawHorizontalLine(out, point + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::None), AmLine(AmLineLength::DoubleTile), playerColor);
 		DrawMapLineSW(out, point, AmLine(AmLineLength::HalfTile), playerColor);
 	} break;
 	case Direction::SouthEast: {
-		const Point point = base + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileDown);
+		const Point point = base + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::HalfTileDown);
 		DrawMapLineSteepNW(out, point, AmLine(AmLineLength::HalfTile), playerColor);
-		DrawMapLineSE(out, point + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileUp), AmLine(AmLineLength::FullTile), playerColor);
-		DrawHorizontalLine(out, point + AmOffset(AmWidthOffset::EighthTileLeft, AmHeightOffset::None) + Displacement { -1, 0 }, AmLine(AmLineLength::FullTile) + 1, playerColor);
+		DrawMapLineSE(out, point + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::HalfTileUp), AmLine(AmLineLength::FullTile), playerColor);
+		DrawHorizontalLine(out, point + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::None) + Displacement { -1, 0 }, AmLine(AmLineLength::FullTile) + 1, playerColor);
 	} break;
 	case Direction::South: {
-		const Point point = base + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileDown);
-		DrawVerticalLine(out, point + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileUp), AmLine(AmLineLength::DoubleTile), playerColor);
-		DrawMapLineSteepSW(out, point + AmOffset(AmWidthOffset::SixteenthTileRight, AmHeightOffset::QuarterTileUp), AmLine(AmLineLength::HalfTile), playerColor);
-		DrawMapLineSteepSE(out, point + AmOffset(AmWidthOffset::SixteenthTileLeft, AmHeightOffset::QuarterTileUp), AmLine(AmLineLength::HalfTile), playerColor);
+		const Point point = base + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown);
+		DrawVerticalLine(out, point + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileUp), AmLine(AmLineLength::DoubleTile), playerColor);
+		DrawMapLineSteepSW(out, point + AmOffset(AmWidthOffset::EighthTileRight, AmHeightOffset::HalfTileUp), AmLine(AmLineLength::HalfTile), playerColor);
+		DrawMapLineSteepSE(out, point + AmOffset(AmWidthOffset::EighthTileLeft, AmHeightOffset::HalfTileUp), AmLine(AmLineLength::HalfTile), playerColor);
 	} break;
 	case Direction::SouthWest: {
-		const Point point = base + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileDown);
+		const Point point = base + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::HalfTileDown);
 		DrawMapLineSteepNE(out, point, AmLine(AmLineLength::HalfTile), playerColor);
-		DrawMapLineSW(out, point + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileUp), AmLine(AmLineLength::FullTile), playerColor);
+		DrawMapLineSW(out, point + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::HalfTileUp), AmLine(AmLineLength::FullTile), playerColor);
 		DrawHorizontalLine(out, point, AmLine(AmLineLength::FullTile) + 1, playerColor);
 	} break;
 	case Direction::West: {
-		const Point point = base + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::None);
+		const Point point = base + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::None);
 		DrawMapLineNE(out, point, AmLine(AmLineLength::HalfTile), playerColor);
 		DrawHorizontalLine(out, point, AmLine(AmLineLength::DoubleTile) + 1, playerColor);
 		DrawMapLineSE(out, point, AmLine(AmLineLength::HalfTile), playerColor);
 	} break;
 	case Direction::NorthWest: {
-		const Point point = base + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileUp);
-		DrawMapLineNW(out, point + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileDown), AmLine(AmLineLength::FullTile), playerColor);
+		const Point point = base + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::HalfTileUp);
+		DrawMapLineNW(out, point + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::HalfTileDown), AmLine(AmLineLength::FullTile), playerColor);
 		DrawHorizontalLine(out, point, AmLine(AmLineLength::FullTile) + 1, playerColor);
 		DrawMapLineSteepSE(out, point, AmLine(AmLineLength::HalfTile), playerColor);
 	} break;
@@ -938,20 +1029,20 @@ void DrawAutomap(const Surface &out)
 	};
 
 	if ((cells & 1) != 0) {
-		screen.x -= AmOffset(AmWidthOffset::FullTileRight, AmHeightOffset::None).deltaX * ((cells - 1) / 2);
-		screen.y -= AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown).deltaY * ((cells + 1) / 2);
-		
+		screen.x -= AmOffset(AmWidthOffset::DoubleTileRight, AmHeightOffset::None).deltaX * ((cells - 1) / 2);
+		screen.y -= AmOffset(AmWidthOffset::None, AmHeightOffset::DoubleTileDown).deltaY * ((cells + 1) / 2);
+
 	} else {
-		screen.x -= AmOffset(AmWidthOffset::FullTileRight, AmHeightOffset::None).deltaX * (cells / 2) - AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::None).deltaX;
-		screen.y -= AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown).deltaY * (cells / 2) + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileDown).deltaY;
+		screen.x -= AmOffset(AmWidthOffset::DoubleTileRight, AmHeightOffset::None).deltaX * (cells / 2) - AmOffset(AmWidthOffset::FullTileRight, AmHeightOffset::None).deltaX;
+		screen.y -= AmOffset(AmWidthOffset::None, AmHeightOffset::DoubleTileDown).deltaY * (cells / 2) + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown).deltaY;
 	}
 	if ((ViewPosition.x & 1) != 0) {
-		screen.x -= AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::None).deltaX;
-		screen.y -= AmOffset(AmWidthOffset::None, AmHeightOffset::QuarterTileDown).deltaY;
+		screen.x -= AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::None).deltaX;
+		screen.y -= AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileDown).deltaY;
 	}
 	if ((ViewPosition.y & 1) != 0) {
-		screen.x += AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::None).deltaX;
-		screen.y -= AmOffset(AmWidthOffset::None, AmHeightOffset::QuarterTileDown).deltaY;
+		screen.x += AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::None).deltaX;
+		screen.y -= AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileDown).deltaY;
 	}
 
 	screen.x += AutoMapScale * myPlayerOffset.deltaX / 100 / 2;
@@ -972,17 +1063,17 @@ void DrawAutomap(const Surface &out)
 		Point tile1 = screen;
 		for (int j = 0; j < cells; j++) {
 			DrawAutomapTile(out, tile1, { map.x + j, map.y - j });
-			tile1.x += AmOffset(AmWidthOffset::FullTileRight, AmHeightOffset::None).deltaX;
+			tile1.x += AmOffset(AmWidthOffset::DoubleTileRight, AmHeightOffset::None).deltaX;
 		}
 		map.y++;
 
-		Point tile2 = screen + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::HalfTileDown);
+		Point tile2 = screen + AmOffset(AmWidthOffset::FullTileLeft, AmHeightOffset::FullTileDown);
 		for (int j = 0; j <= cells; j++) {
 			DrawAutomapTile(out, tile2, { map.x + j, map.y - j });
-			tile2.x += AmOffset(AmWidthOffset::FullTileRight, AmHeightOffset::None).deltaX;
+			tile2.x += AmOffset(AmWidthOffset::DoubleTileRight, AmHeightOffset::None).deltaX;
 		}
 		map.x++;
-		screen.y += AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown).deltaY;
+		screen.y += AmOffset(AmWidthOffset::None, AmHeightOffset::DoubleTileDown).deltaY;
 	}
 
 	//if (leveltype == DTYPE_CAVES)
