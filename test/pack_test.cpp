@@ -1282,7 +1282,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_pregenItemFlags)
 	for (Item &item : MyPlayer->InvList) {
 		if (item.isEmpty())
 			continue;
-		if (item.IDidx == IDI_EAR)
+		if (IsAnyOf(item.IDidx, IDI_GOLD, IDI_EAR))
 			continue;
 		uint16_t createInfo = item._iCreateInfo;
 		item._iCreateInfo |= CF_PREGEN;
@@ -1300,7 +1300,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_usefulItemFlags)
 	for (Item &item : MyPlayer->InvList) {
 		if (item.isEmpty())
 			continue;
-		if (item.IDidx == IDI_EAR)
+		if (IsAnyOf(item.IDidx, IDI_GOLD, IDI_EAR))
 			continue;
 		if ((item._iCreateInfo & CF_USEFUL) != CF_USEFUL)
 			continue;
@@ -1320,7 +1320,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_townItemFlags)
 	for (Item &item : MyPlayer->InvList) {
 		if (item.isEmpty())
 			continue;
-		if (item.IDidx == IDI_EAR)
+		if (IsAnyOf(item.IDidx, IDI_GOLD, IDI_EAR))
 			continue;
 		if ((item._iCreateInfo & CF_TOWN) == 0)
 			continue;
@@ -1341,7 +1341,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_townItemLevel)
 	for (Item &item : MyPlayer->InvBody) {
 		if (item.isEmpty())
 			continue;
-		if (item.IDidx == IDI_EAR)
+		if (IsAnyOf(item.IDidx, IDI_GOLD, IDI_EAR))
 			continue;
 		if ((item._iCreateInfo & CF_TOWN) == 0)
 			continue;
@@ -1366,7 +1366,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_uniqueMonsterItemLevel)
 	for (Item &item : MyPlayer->InvList) {
 		if (item.isEmpty())
 			continue;
-		if (item.IDidx == IDI_EAR)
+		if (IsAnyOf(item.IDidx, IDI_GOLD, IDI_EAR))
 			continue;
 		if ((item._iCreateInfo & CF_USEFUL) != CF_UPER15)
 			continue;
@@ -1387,7 +1387,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_monsterItemLevel)
 	for (Item &item : MyPlayer->InvBody) {
 		if (item.isEmpty())
 			continue;
-		if (item.IDidx == IDI_EAR)
+		if (IsAnyOf(item.IDidx, IDI_GOLD, IDI_EAR))
 			continue;
 		if ((item._iCreateInfo & CF_TOWN) != 0)
 			continue;
