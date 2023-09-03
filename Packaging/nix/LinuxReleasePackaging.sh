@@ -16,7 +16,7 @@ if [[ -f "${PKG_PATH}/lib/discord_game_sdk.so" ]]; then
 	cat <<'SH' > "${BUILD_DIR}/package/devilutionx.sh"
 #!/bin/sh
 BASEDIR="$(dirname "$(realpath "$0")")"
-LD_LIBRARY_PATH="$BASEDIR" "$BASEDIR"/devilutionx
+LD_LIBRARY_PATH="$BASEDIR" "$BASEDIR"/devilutionx "$@"
 SH
 	chmod +x "${BUILD_DIR}/package/devilutionx.sh"
 fi
