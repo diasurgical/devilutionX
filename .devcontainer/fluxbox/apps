@@ -1,0 +1,7 @@
+[transient] (role=GtkFileChooserDialog)
+  [Dimensions]  {70% 70%}
+  [Position]    (CENTER)        {0 0}
+[end]
+[app] (name=AppRun) (class=tiled)
+  [Fullscreen]  {yes}
+[end]

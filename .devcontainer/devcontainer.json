@@ -1,0 +1,30 @@
+{
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"github.vscode-github-actions",
+				"ms-vscode.cmake-tools"
+			]
+		}
+	},
+	"features": {
+		// https://github.com/devcontainers/features/tree/main/src/desktop-lite
+		"ghcr.io/devcontainers/features/desktop-lite:1": {
+			"webPort": 6080,
+			"password": "vscode"
+		},
+		"ghcr.io/devcontainers-contrib/features/zsh-plugins:0": {},
+		"ghcr.io/stuartleeks/dev-container-features/shell-history:0": {}
+	},
+	"forwardPorts": [
+		6080
+	],
+	"portsAttributes": {
+		"6080": {
+			"label": "desktop"
+		}
+	}
+}
