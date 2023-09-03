@@ -23,4 +23,8 @@ The password is `vscode`.
 
 ![screenshot](gh-codespaces-ports-browser.png)
 
-For more information about the deskopt envorinonment, see https://github.com/devcontainers/features/tree/main/src/desktop-lite
+For more information about the desktop envorinonment, see https://github.com/devcontainers/features/tree/main/src/desktop-lite
+
+Once you have a codespace set up, you can reuse it in the future by going to "Your codespaces" on GitHub (https://github.com/codespaces):
+
+![screenshot](gh-open-codespace.png)
