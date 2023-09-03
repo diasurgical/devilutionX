@@ -178,7 +178,8 @@ bool UnPackNetItem(const Player &player, const ItemNetPack &packedItem, Item &it
 
 	uint16_t creationFlags = SDL_SwapLE16(packedItem.item.wCI);
 	uint32_t dwBuff = SDL_SwapLE16(packedItem.item.dwBuff);
-	ValidateField(creationFlags, IsCreationFlagComboValid(creationFlags));
+	if (idx != IDI_GOLD)
+		ValidateField(creationFlags, IsCreationFlagComboValid(creationFlags));
 	if ((creationFlags & CF_TOWN) != 0)
 		ValidateField(creationFlags, IsTownItemValid(creationFlags, player));
 	else if ((creationFlags & CF_USEFUL) == CF_UPER15)
