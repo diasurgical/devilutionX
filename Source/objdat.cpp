@@ -159,12 +159,7 @@ const _object_id ObjTypeConv[] = {
 };
 
 namespace {
-constexpr auto Animated = ObjectDataFlags::Animated;
-constexpr auto Solid = ObjectDataFlags::Solid;
-constexpr auto MissilesPassThrough = ObjectDataFlags::MissilesPassThrough;
-constexpr auto Light = ObjectDataFlags::Light;
-constexpr auto Trap = ObjectDataFlags::Trap;
-constexpr auto Breakable = ObjectDataFlags::Breakable;
+using enum ObjectDataFlags;
 } // namespace
 
 /** Contains the data related to each object ID. */
