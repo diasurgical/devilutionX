@@ -3961,6 +3961,7 @@ void DeleteMonsterList()
 
 void ProcessMonsters()
 {
+	return;
 	DeleteMonsterList();
 
 	assert(ActiveMonsterCount <= MaxMonsters);
@@ -3998,7 +3999,7 @@ void ProcessMonsters()
 				PlaySFX(USFX_DEFILER8);
 			UpdateEnemy(monster);
 		}
-
+		
 		if ((monster.flags & MFLAG_TARGETS_MONSTER) != 0) {
 			assert(monster.enemy >= 0 && monster.enemy < MaxMonsters);
 			// BUGFIX: enemy target may be dead at time of access, thus reading garbage data from `Monsters[monster.enemy].position.future`.
@@ -4028,6 +4029,7 @@ void ProcessMonsters()
 		if (monster.mode != MonsterMode::Petrified && (monster.flags & MFLAG_ALLOW_SPECIAL) == 0) {
 			monster.animInfo.processAnimation((monster.flags & MFLAG_LOCK_ANIMATION) != 0);
 		}
+		
 	}
 
 	DeleteMonsterList();
