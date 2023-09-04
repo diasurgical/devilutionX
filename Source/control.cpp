@@ -447,20 +447,27 @@ std::string TextCmdInspect(const std::string_view parameter)
 	}
 
 	const std::string param = AsciiStrToLower(parameter);
-	for (auto &player : Players) {
-		const std::string playerName = AsciiStrToLower(player._pName);
-		if (playerName.find(param) != std::string::npos) {
-			InspectPlayer = &player;
-			StrAppend(ret, _("Inspecting player: "));
-			StrAppend(ret, player._pName);
-			OpenCharPanel();
-			if (!sbookflag)
-				invflag = true;
-			RedrawEverything();
-			return ret;
-		}
+	auto it = c_find_if(Players, [&param](const Player &player) {
+		return AsciiStrToLower(player._pName) == param;
+	});
+	if (it == Players.end()) {
+		it = c_find_if(Players, [&param](const Player &player) {
+			return AsciiStrToLower(player._pName).find(param) != std::string::npos;
+		});
 	}
-	StrAppend(ret, _("No players found with such a name"));
+	if (it == Players.end()) {
+		StrAppend(ret, _("No players found with such a name"));
+		return ret;
+	}
+
+	Player &player = *it;
+	InspectPlayer = &player;
+	StrAppend(ret, _("Inspecting player: "));
+	StrAppend(ret, player._pName);
+	OpenCharPanel();
+	if (!sbookflag)
+		invflag = true;
+	RedrawEverything();
 	return ret;
 }
 
