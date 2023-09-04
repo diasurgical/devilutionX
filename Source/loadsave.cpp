@@ -969,6 +969,11 @@ void LoadMatchingItems(LoadHelper &file, const Player &player, const int n, Item
 			if ((heroItem.dwBuff & CF_HELLFIRE) != (unpackedItem.dwBuff & CF_HELLFIRE)) {
 				unpackedItem = {};
 				RecreateItem(player, unpackedItem, heroItem.IDidx, heroItem._iCreateInfo, heroItem._iSeed, heroItem._ivalue, (heroItem.dwBuff & CF_HELLFIRE) != 0);
+				unpackedItem._iIdentified = heroItem._iIdentified;
+				unpackedItem._iMaxDur = heroItem._iMaxDur;
+				unpackedItem._iDurability = ClampDurability(unpackedItem, heroItem._iDurability);
+				unpackedItem._iMaxCharges = std::clamp<int>(heroItem._iMaxCharges, 0, unpackedItem._iMaxCharges);
+				unpackedItem._iCharges = std::clamp<int>(heroItem._iCharges, 0, unpackedItem._iMaxCharges);
 			}
 			if (!IsShopPriceValid(unpackedItem)) {
 				unpackedItem.clear();
