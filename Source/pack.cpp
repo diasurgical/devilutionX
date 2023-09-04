@@ -435,13 +435,7 @@ void UnPackItem(const ItemPack &packedItem, const Player &player, Item &item, bo
 		item._iDurability = ClampDurability(item, packedItem.bDur);
 		item._iMaxCharges = clamp<int>(packedItem.bMCh, 0, item._iMaxCharges);
 		item._iCharges = clamp<int>(packedItem.bCh, 0, item._iMaxCharges);
-
 		RemoveInvalidItem(item);
-
-		if (isHellfire)
-			item.dwBuff |= CF_HELLFIRE;
-		else
-			item.dwBuff &= ~CF_HELLFIRE;
 	}
 }
 
