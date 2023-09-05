@@ -2736,7 +2736,10 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 	}
 
 	if (firstflag || lvldir == ENTRY_LOAD) {
+		bool isHellfireSaveGame = gbIsHellfireSaveGame;
+		gbIsHellfireSaveGame = gbIsHellfire;
 		LoadStash();
+		gbIsHellfireSaveGame = isHellfireSaveGame;
 	}
 
 	IncProgress();
