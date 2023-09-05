@@ -41,6 +41,8 @@ enum MapColors : uint8_t {
 	MapColorsDim = (PAL16_YELLOW + 8),
 	/** color for items on automap */
 	MapColorsItem = (PAL8_BLUE + 1),
+	/** color for lava/water on automap */
+	MapColorsLava = 1,
 };
 
 struct AutomapTile {
@@ -59,11 +61,6 @@ struct AutomapTile {
 		CaveHorizontal,
 		CaveVertical,
 		CaveCross,
-		CaveHorizontalWoodCross,
-		CaveVerticalWoodCross,
-		CaveLeftCorner,
-		CaveRightCorner,
-		CaveBottomCorner,
 		Bridge,
 		River,
 		RiverCornerEast,
@@ -76,6 +73,38 @@ struct AutomapTile {
 		RiverLeftOut,
 		RiverRightIn,
 		RiverRightOut,
+		CaveHorizontalWoodCross,
+		CaveVerticalWoodCross,
+		CaveLeftCorner,
+		CaveRightCorner,
+		CaveBottomCorner,
+		CaveHorizontalWood,
+		CaveVerticalWood,
+		CaveWoodCross,
+		CaveRightWoodCross,
+		CaveLeftWoodCross,
+		HorizontalLavaThin,
+		VerticalLavaThin,
+		BendSouthLavaThin,
+		BendWestLavaThin,
+		BendEastLavaThin,
+		BendNorthLavaThin,
+		VerticalWallLava,
+		HorizontalWallLava,
+		SELava,
+		SWLava,
+		NELava,
+		NWLava,
+		SLava,
+		WLava,
+		ELava,
+		NLava,
+		Lava,
+		CaveHorizontalWallLava,
+		CaveVerticalWallLava,
+		HorizontalBridgeLava,
+		VerticalBridgeLava,
+
 	};
 
 	Types type;
@@ -230,29 +259,24 @@ void DrawMapHorizontalDoorOrGrate(const Surface &out, Point center, uint8_t colo
 /**
  * @brief Draw 16 individual pixels equally spaced apart, used to communicate OOB area to the player.
  */
-void DrawDirt(const Surface &out, Point center, uint8_t color)
+void DrawDirt(const Surface &out, Point center, AutomapTile nwTile, uint8_t color)
 {
 	out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileLeft, AmHeightOffset::QuarterTileDown), color);
-
 	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::None), color);
 	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::HalfTileDown), color);
-
 	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileUp), color);
 	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileDown), color);
 	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::ThreeQuartersTileDown), color);
-
-	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileUp), color);
+	if (!nwTile.HasFlag(AutomapTile::Flags::HorizontalArch))                                                       // Prevent the top dirt pixel from appearing inside arch diamonds
+		out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileUp), color);
 	out.SetPixel(center, color);
 	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileDown), color);
 	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown), color);
-
 	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileUp), color);
 	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileDown), color);
 	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::ThreeQuartersTileDown), color);
-
 	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::None), color);
 	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::HalfTileDown), color);
-
 	out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileRight, AmHeightOffset::QuarterTileDown), color);
 }
 
@@ -434,6 +458,576 @@ void DrawRiverForkOut(const Surface &out, Point center, uint8_t color)
 	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::ThreeQuartersTileDown), color);
 }
 
+void DrawHorizontalLavaThin(const Surface &out, Point center, uint8_t color)
+{
+	// Start at lowest x,y (southeast is positive x and southwest is positive y)
+	// First row (y = 0)
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileUp), color);
+
+	// Second row (y = 1)
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::None), color);
+
+	// Third row (y = 2)
+	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileDown), color);
+
+	// Fourth row (y = 3)
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::ThreeQuartersTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::HalfTileDown), color);
+}
+
+void DrawVerticalLavaThin(const Surface &out, Point center, uint8_t color)
+{
+	// Start at lowest x,y (southeast is positive x and southwest is positive y)
+	// Second row (y = 1)
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::HalfTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileUp), color);
+
+	// Third row (y = 2)
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::ThreeQuartersTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::None), color);
+}
+void DrawBendSouthLavaThin(const Surface &out, Point center, uint8_t color)
+{
+	// Start at lowest x,y (southeast is positive x and southwest is positive y)
+	// First row (y = 0)
+	//out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileUp), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileUp), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::None), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileLeft, AmHeightOffset::QuarterTileDown), color);
+
+	// Second row (y = 1)
+	//out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileUp), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::HalfTileDown), color);
+
+	// Third row (y = 2)
+	//out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::ThreeQuartersTileDown), color);
+
+	// Fourth row (y = 3)
+	//out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileRight, AmHeightOffset::QuarterTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::HalfTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::ThreeQuartersTileDown), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown), color);
+}
+
+void DrawBendWestLavaThin(const Surface &out, Point center, uint8_t color)
+{
+	// Start at lowest x,y (southeast is positive x and southwest is positive y)
+	// First row (y = 0)
+	//out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileUp), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileUp), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::None), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileLeft, AmHeightOffset::QuarterTileDown), color);
+
+	// Second row (y = 1)
+	//out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileUp), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::HalfTileDown), color);
+
+	// Third row (y = 2)
+	//out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::None), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::ThreeQuartersTileDown), color);
+
+	// Fourth row (y = 3)
+	//out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileRight, AmHeightOffset::QuarterTileDown), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::HalfTileDown), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::ThreeQuartersTileDown), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown), color);
+}
+
+void DrawBendEastLavaThin(const Surface &out, Point center, uint8_t color)
+{
+	// Start at lowest x,y (southeast is positive x and southwest is positive y)
+	// First row (y = 0)
+	//out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileUp), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileUp), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::None), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileLeft, AmHeightOffset::QuarterTileDown), color);
+
+	// Second row (y = 1)
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileUp), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::None), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileDown), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::HalfTileDown), color);
+
+	// Third row (y = 2)
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileDown), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::ThreeQuartersTileDown), color);
+
+	// Fourth row (y = 3)
+	//out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileRight, AmHeightOffset::QuarterTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::HalfTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::ThreeQuartersTileDown), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown), color);
+}
+
+void DrawBendNorthLavaThin(const Surface &out, Point center, uint8_t color)
+{
+	// Start at lowest x,y (southeast is positive x and southwest is positive y)
+	// First row (y = 0)
+	//out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileUp), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileUp), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::None), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileLeft, AmHeightOffset::QuarterTileDown), color);
+
+	// Second row (y = 1)
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileUp), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileDown), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::HalfTileDown), color);
+
+	// Third row (y = 2)
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileDown), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileDown), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::ThreeQuartersTileDown), color);
+
+	// Fourth row (y = 3)
+	//out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileRight, AmHeightOffset::QuarterTileDown), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::HalfTileDown), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::ThreeQuartersTileDown), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown), color);
+}
+
+void DrawHorizontalWallLava(const Surface &out, Point center, uint8_t color)
+{
+	// Start at lowest x,y (southeast is positive x and southwest is positive y)
+	// First row (y = 0)
+	//out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileUp), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileUp), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::None), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileLeft, AmHeightOffset::QuarterTileDown), color);
+
+	// Second row (y = 1)
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileUp), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::HalfTileDown), color);
+
+	// Third row (y = 2)
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::ThreeQuartersTileDown), color);
+
+	// Fourth row (y = 3)
+	//out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileRight, AmHeightOffset::QuarterTileDown), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::HalfTileDown), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::ThreeQuartersTileDown), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown), color);
+}
+
+void DrawVerticalWallLava(const Surface &out, Point center, uint8_t color)
+{
+	// Start at lowest x,y (southeast is positive x and southwest is positive y)
+	// First row (y = 0)
+	//out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileUp), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileUp), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::None), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileLeft, AmHeightOffset::QuarterTileDown), color);
+
+	// Second row (y = 1)
+	//out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileUp), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileDown), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::HalfTileDown), color);
+
+	// Third row (y = 2)
+	//out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileDown), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::ThreeQuartersTileDown), color);
+
+	// Fourth row (y = 3)
+	//out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileRight, AmHeightOffset::QuarterTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::HalfTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::ThreeQuartersTileDown), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown), color);
+}
+
+
+void DrawSELava(const Surface &out, Point center, uint8_t color)
+{
+	// Start at lowest x,y (southeast is positive x and southwest is positive y)
+	// First row (y = 0)
+	//out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileUp), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileUp), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::None), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileLeft, AmHeightOffset::QuarterTileDown), color);
+
+	// Second row (y = 1)
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileUp), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::HalfTileDown), color);
+
+	// Third row (y = 2)
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::ThreeQuartersTileDown), color);
+
+	// Fourth row (y = 3)
+	out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileRight, AmHeightOffset::QuarterTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::HalfTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::ThreeQuartersTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown), color);
+}
+
+void DrawSWLava(const Surface &out, Point center, uint8_t color)
+{
+	// Start at lowest x,y (southeast is positive x and southwest is positive y)
+	// First row (y = 0)
+	//out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileUp), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileUp), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileLeft, AmHeightOffset::QuarterTileDown), color);
+
+	// Second row (y = 1)
+	//out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileUp), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::HalfTileDown), color);
+
+	// Third row (y = 2)
+	//out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::ThreeQuartersTileDown), color);
+
+	// Fourth row (y = 3)
+	//out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileRight, AmHeightOffset::QuarterTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::HalfTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::ThreeQuartersTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown), color);
+}
+
+void DrawNELava(const Surface &out, Point center, uint8_t color)
+{
+	// Start at lowest x,y (southeast is positive x and southwest is positive y)
+	// First row (y = 0)
+	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileUp), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileUp), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::None), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileLeft, AmHeightOffset::QuarterTileDown), color);
+
+	// Second row (y = 1)
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileUp), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileDown), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::HalfTileDown), color);
+
+	// Third row (y = 2)	
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileDown), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::ThreeQuartersTileDown), color);
+
+	// Fourth row (y = 3)	
+	out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileRight, AmHeightOffset::QuarterTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::HalfTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::ThreeQuartersTileDown), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown), color);
+}
+
+void DrawNWLava(const Surface &out, Point center, uint8_t color)
+{
+	// Start at lowest x,y (southeast is positive x and southwest is positive y)
+	// First row (y = 0)
+	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileUp), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileUp), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileLeft, AmHeightOffset::QuarterTileDown), color);
+
+	// Second row (y = 1)
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileUp), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::HalfTileDown), color);
+
+	// Third row (y = 2)
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::ThreeQuartersTileDown), color);
+
+	// Fourth row (y = 3)
+	//out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileRight, AmHeightOffset::QuarterTileDown), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::HalfTileDown), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::ThreeQuartersTileDown), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown), color);
+}
+
+void DrawSLava(const Surface &out, Point center, uint8_t color)
+{
+	// Start at lowest x,y (southeast is positive x and southwest is positive y)
+	// First row (y = 0)
+	//out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileUp), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileUp), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::None), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileLeft, AmHeightOffset::QuarterTileDown), color);
+
+	// Second row (y = 1)
+	//out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileUp), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::HalfTileDown), color);
+
+	// Third row (y = 2)
+	//out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::ThreeQuartersTileDown), color);
+
+	// Fourth row (y = 3)
+	//out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileRight, AmHeightOffset::QuarterTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::HalfTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::ThreeQuartersTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown), color);
+}
+
+void DrawWLava(const Surface &out, Point center, uint8_t color)
+{
+	// Start at lowest x,y (southeast is positive x and southwest is positive y)
+	// First row (y = 0)
+	//out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileUp), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileUp), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileLeft, AmHeightOffset::QuarterTileDown), color);
+
+	// Second row (y = 1)
+	//out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileUp), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::HalfTileDown), color);
+
+	// Third row (y = 2)
+	//out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::None), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::ThreeQuartersTileDown), color);
+
+	// Fourth row (y = 3)
+	//out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileRight, AmHeightOffset::QuarterTileDown), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::HalfTileDown), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::ThreeQuartersTileDown), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown), color);
+}
+
+void DrawELava(const Surface &out, Point center, uint8_t color)
+{
+	// Start at lowest x,y (southeast is positive x and southwest is positive y)
+	// First row (y = 0)
+	//out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileUp), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileUp), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::None), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileLeft, AmHeightOffset::QuarterTileDown), color);
+
+	// Second row (y = 1)
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileUp), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::None), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileDown), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::HalfTileDown), color);
+
+	// Third row (y = 2)
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileDown), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::ThreeQuartersTileDown), color);
+
+	// Fourth row (y = 3)
+	out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileRight, AmHeightOffset::QuarterTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::HalfTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::ThreeQuartersTileDown), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown), color);
+}
+
+void DrawNLava(const Surface &out, Point center, uint8_t color)
+{
+	// Start at lowest x,y (southeast is positive x and southwest is positive y)
+	// First row (y = 0)
+	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileUp), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileUp), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::None), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileLeft, AmHeightOffset::QuarterTileDown), color);
+
+	// Second row (y = 1)
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileUp), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileDown), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::HalfTileDown), color);
+
+	// Third row (y = 2)
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileDown), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileDown), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::ThreeQuartersTileDown), color);
+
+	// Fourth row (y = 3)
+	//out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileRight, AmHeightOffset::QuarterTileDown), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::HalfTileDown), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::ThreeQuartersTileDown), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown), color);
+}
+
+void DrawLava(const Surface &out, Point center, uint8_t color)
+{
+	// Start at lowest x,y (southeast is positive x and southwest is positive y)
+	// First row (y = 0)
+	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileUp), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileUp), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileLeft, AmHeightOffset::QuarterTileDown), color);
+
+	// Second row (y = 1)
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileUp), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::HalfTileDown), color);
+
+	// Third row (y = 2)
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::ThreeQuartersTileDown), color);
+
+	// Fourth row (y = 3)
+	out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileRight, AmHeightOffset::QuarterTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::HalfTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::ThreeQuartersTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown), color);
+}
+
+void DrawCaveHorizontalWallLava(const Surface &out, Point center, uint8_t color)
+{
+	// Start at lowest x,y (southeast is positive x and southwest is positive y)
+	// First row (y = 0)
+	//out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileUp), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileUp), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::None), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileLeft, AmHeightOffset::QuarterTileDown), color);
+
+	// Second row (y = 1)
+	//out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileUp), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileDown), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::HalfTileDown), color);
+
+	// Third row (y = 2)
+	//out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileDown), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::ThreeQuartersTileDown), color);
+
+	// Fourth row (y = 3)
+	//out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileRight, AmHeightOffset::QuarterTileDown), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::HalfTileDown), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::ThreeQuartersTileDown), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown), color);
+}
+
+void DrawCaveVerticalWallLava(const Surface &out, Point center, uint8_t color)
+{
+	// Start at lowest x,y (southeast is positive x and southwest is positive y)
+	// First row (y = 0)
+	//out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileUp), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileUp), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::None), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileLeft, AmHeightOffset::QuarterTileDown), color);
+
+	// Second row (y = 1)
+	//out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileUp), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileDown), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::HalfTileDown), color);
+
+	// Third row (y = 2)
+	//out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileDown), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::ThreeQuartersTileDown), color);
+
+	// Fourth row (y = 3)
+	//out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileRight, AmHeightOffset::QuarterTileDown), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::HalfTileDown), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::ThreeQuartersTileDown), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown), color);
+}
+
+void DrawHorizontalBridgeLava(const Surface &out, Point center, uint8_t color)
+{
+	// Start at lowest x,y (southeast is positive x and southwest is positive y)
+	// First row (y = 0)
+	//out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileUp), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileUp), color); // maybe first row too??
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::None), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileLeft, AmHeightOffset::QuarterTileDown), color);
+
+	// Second row (y = 1)
+	//out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileUp), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::None), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileDown), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::HalfTileDown), color);
+
+	// Third row (y = 2)
+	//out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileDown), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::ThreeQuartersTileDown), color);
+
+	// Fourth row (y = 3)
+	//out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileRight, AmHeightOffset::QuarterTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::HalfTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::ThreeQuartersTileDown), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown), color);
+}
+
+void DrawVerticalBridgeLava(const Surface &out, Point center, uint8_t color)
+{
+	// Start at lowest x,y (southeast is positive x and southwest is positive y)
+	// First row (y = 0)
+	//out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileUp), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileUp), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::None), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileLeft, AmHeightOffset::QuarterTileDown), color);
+
+	// Second row (y = 1)
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileUp), color); // maybe this too?
+	//out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::None), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::HalfTileDown), color);
+
+	// Third row (y = 2)
+	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::None), color); // maybe this too?
+	//out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::ThreeQuartersTileDown), color);
+
+	// Fourth row (y = 3)
+	//out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileRight, AmHeightOffset::QuarterTileDown), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::HalfTileDown), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::ThreeQuartersTileDown), color);
+	//out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown), color);
+}
+
+
+
 /**
  * @brief Draw 4 south-east facing lines, used to communicate trigger locations to the player.
  */
@@ -454,7 +1048,7 @@ void DrawStairs(const Surface &out, Point center, uint8_t color)
 /**
  * @brief Draw half-tile length lines to connect walls to any walls to the north-west and/or north-east
  */
-void DrawWallConnections(const Surface &out, Point center, AutomapTile tile, AutomapTile nwTile, AutomapTile neTile, uint8_t colorDim)
+void DrawWallConnections(const Surface &out, Point center, AutomapTile nwTile, AutomapTile neTile, uint8_t colorDim)
 {
 	bool doorCorrection = false;
 	if (IsAnyOf(nwTile.type, AutomapTile::Types::Horizontal, AutomapTile::Types::FenceHorizontal, AutomapTile::Types::Cross, AutomapTile::Types::CaveVerticalWoodCross, AutomapTile::Types::CaveRightCorner)
@@ -462,9 +1056,7 @@ void DrawWallConnections(const Surface &out, Point center, AutomapTile tile, Aut
 		if (!IsAnyOf(leveltype, DTYPE_CATACOMBS) && nwTile.HasFlag(AutomapTile::Flags::HorizontalDoor)) {
 			doorCorrection = true;
 		}
-		//if (!(IsAnyOf(nwTile.type, AutomapTile::Types::CaveVerticalCross, AutomapTile::Types::CaveVerticalWoodCross) && tile.HasFlag(AutomapTile::Flags::Dirt)))
-		//if (!IsAnyOf(nwTile.type, AutomapTile::Types::CaveVerticalCross))
-			DrawMapLineSE(out, center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::ThreeQuartersTileUp, doorCorrection), AmLine(AmLineLength::HalfTile, doorCorrection), colorDim);
+		DrawMapLineSE(out, center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::ThreeQuartersTileUp, doorCorrection), AmLine(AmLineLength::HalfTile, doorCorrection), colorDim);
 	}
 	doorCorrection = false;
 	if (IsAnyOf(neTile.type, AutomapTile::Types::Vertical, AutomapTile::Types::FenceVertical, AutomapTile::Types::Cross, AutomapTile::Types::CaveHorizontalWoodCross, AutomapTile::Types::CaveLeftCorner)
@@ -472,9 +1064,7 @@ void DrawWallConnections(const Surface &out, Point center, AutomapTile tile, Aut
 		if (neTile.HasFlag(AutomapTile::Flags::VerticalDoor)) {
 			doorCorrection = true;
 		}
-		//if (!(IsAnyOf(neTile.type, AutomapTile::Types::CaveHorizontalCross, AutomapTile::Types::CaveHorizontalWoodCross) && tile.HasFlag(AutomapTile::Flags::Dirt)))
-		//if (!IsAnyOf(neTile.type, AutomapTile::Types::CaveHorizontalCross))
-			DrawMapLineNE(out, center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileUp), AmLine(AmLineLength::HalfTile, doorCorrection), colorDim);
+		DrawMapLineNE(out, center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileUp), AmLine(AmLineLength::HalfTile, doorCorrection), colorDim);
 	}
 }
 
@@ -483,26 +1073,28 @@ void DrawWallConnections(const Surface &out, Point center, AutomapTile tile, Aut
  */
 void DrawHorizontal(const Surface &out, Point center, AutomapTile tile, AutomapTile nwTile, AutomapTile neTile, AutomapTile seTile, uint8_t colorBright, uint8_t colorDim, bool noConnection)
 {
-	AmWidthOffset w;
-	AmHeightOffset h;
-	AmLineLength l;
+	AmWidthOffset w = AmWidthOffset::None;
+	AmHeightOffset h = AmHeightOffset::HalfTileUp;
+	AmLineLength l = AmLineLength::FullAndHalfTile;
 
-	if (neTile.HasFlag(AutomapTile::Flags::VerticalArch) || nwTile.HasFlag(AutomapTile::Flags::HorizontalArch)) {
+	if (neTile.HasFlag(AutomapTile::Flags::VerticalArch)
+	    || nwTile.HasFlag(AutomapTile::Flags::HorizontalArch)
+	    || tile.HasFlag(AutomapTile::Flags::VerticalArch)
+	    || tile.HasFlag(AutomapTile::Flags::HorizontalArch)) {
 		noConnection = true;
 		w = AmWidthOffset::QuarterTileRight;
 		h = AmHeightOffset::QuarterTileUp;
 		l = AmLineLength::FullTile;
 		DrawDiamond(out, center, colorDim);
-	} else {
-		w = AmWidthOffset::None;
-		h = AmHeightOffset::HalfTileUp;
-		if (IsAnyOf(leveltype, DTYPE_CAVES, DTYPE_NEST) && IsAnyOf(tile.type, AutomapTile::Types::CaveVerticalCross, AutomapTile::Types::CaveVerticalWoodCross) && !(IsAnyOf(seTile.type, AutomapTile::Types::Horizontal, AutomapTile::Types::CaveVerticalCross, AutomapTile::Types::CaveVerticalWoodCross, AutomapTile::Types::Corner)))
-			l = AmLineLength::FullTile;
-		else
-			l = AmLineLength::FullAndHalfTile;
+	}
+	if (IsAnyOf(leveltype, DTYPE_CAVES, DTYPE_NEST)
+	    && IsAnyOf(tile.type, AutomapTile::Types::CaveVerticalCross, AutomapTile::Types::CaveVerticalWoodCross)
+	    && !(IsAnyOf(seTile.type, AutomapTile::Types::Horizontal, AutomapTile::Types::CaveVerticalCross, AutomapTile::Types::CaveVerticalWoodCross, AutomapTile::Types::Corner))) {
+		l = AmLineLength::FullTile;
 	}
 	if (!tile.HasFlag(AutomapTile::Flags::HorizontalPassage)) {
 		DrawMapLineSE(out, center + AmOffset(w, h), AmLine(l), colorDim);
+		return;
 	}
 	if (tile.HasFlag(AutomapTile::Flags::HorizontalDoor)) {
 		DrawMapHorizontalDoorOrGrate(out, center, colorBright, colorDim);
@@ -516,27 +1108,28 @@ void DrawHorizontal(const Surface &out, Point center, AutomapTile tile, AutomapT
  */
 void DrawVertical(const Surface &out, Point center, AutomapTile tile, AutomapTile nwTile, AutomapTile neTile, AutomapTile swTile, uint8_t colorBright, uint8_t colorDim, bool noConnection)
 {
-	AmWidthOffset w;
-	AmHeightOffset h;
-	AmLineLength l;
+	AmWidthOffset w = AmWidthOffset::ThreeQuartersTileLeft;
+	AmHeightOffset h = AmHeightOffset::QuarterTileDown;
+	AmLineLength l = AmLineLength::FullAndHalfTile;
 
-	if (neTile.HasFlag(AutomapTile::Flags::VerticalArch) || nwTile.HasFlag(AutomapTile::Flags::HorizontalArch)) {
+	if (neTile.HasFlag(AutomapTile::Flags::VerticalArch)
+	    || nwTile.HasFlag(AutomapTile::Flags::HorizontalArch)
+	    || tile.HasFlag(AutomapTile::Flags::VerticalArch)
+	    || tile.HasFlag(AutomapTile::Flags::HorizontalArch)) {
 		noConnection = true;
 		l = AmLineLength::FullTile;
 		DrawDiamond(out, center, colorDim);
-	} else {
-		if (IsAnyOf(leveltype, DTYPE_CAVES, DTYPE_NEST) && IsAnyOf(tile.type, AutomapTile::Types::CaveHorizontalCross, AutomapTile::Types::CaveHorizontalWoodCross) && !(IsAnyOf(swTile.type, AutomapTile::Types::Vertical, AutomapTile::Types::CaveHorizontalCross, AutomapTile::Types::CaveHorizontalWoodCross, AutomapTile::Types::Corner))) {
-			w = AmWidthOffset::HalfTileLeft;
-			h = AmHeightOffset::None;
-			l = AmLineLength::FullTile;
-		} else {
-			w = AmWidthOffset::ThreeQuartersTileLeft;
-			h = AmHeightOffset::QuarterTileDown;
-			l = AmLineLength::FullAndHalfTile;
-		}
+	}
+	if (IsAnyOf(leveltype, DTYPE_CAVES, DTYPE_NEST)
+	    && IsAnyOf(tile.type, AutomapTile::Types::CaveHorizontalCross, AutomapTile::Types::CaveHorizontalWoodCross)
+	    && !(IsAnyOf(swTile.type, AutomapTile::Types::Vertical, AutomapTile::Types::CaveHorizontalCross, AutomapTile::Types::CaveHorizontalWoodCross, AutomapTile::Types::Corner))) {
+		w = AmWidthOffset::HalfTileLeft;
+		h = AmHeightOffset::None;
+		l = AmLineLength::FullTile;
 	}
 	if (!tile.HasFlag(AutomapTile::Flags::VerticalPassage)) {
 		DrawMapLineNE(out, center + AmOffset(w, h), AmLine(l), colorDim);
+		return;
 	}
 	if (tile.HasFlag(AutomapTile::Flags::VerticalDoor)) {
 		DrawMapVerticalDoorOrGrate(out, center, colorBright, colorDim);
@@ -552,16 +1145,16 @@ void DrawVertical(const Surface &out, Point center, AutomapTile tile, AutomapTil
 void DrawCaveWallConnections(const Surface &out, Point center, AutomapTile swTile, AutomapTile seTile, uint8_t colorDim)
 {
 	bool doorCorrection = false;
-	if (IsAnyOf(swTile.type, AutomapTile::Types::CaveVertical, AutomapTile::Types::CaveCross, AutomapTile::Types::CaveRightCorner)) {
+	if (IsAnyOf(swTile.type, AutomapTile::Types::CaveVertical, AutomapTile::Types::CaveVerticalWood, AutomapTile::Types::CaveCross, AutomapTile::Types::CaveWoodCross, AutomapTile::Types::CaveRightWoodCross, AutomapTile::Types::CaveLeftWoodCross, AutomapTile::Types::CaveRightCorner)) {
 		//if (swTile.HasFlag(AutomapTile::Flags::HorizontalDoor)) {
 		//	doorCorrection = true;
 		//}
 		DrawMapLineNE(out, center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::ThreeQuartersTileDown, doorCorrection), AmLine(AmLineLength::HalfTile, doorCorrection), colorDim);
 	}
 	doorCorrection = false;
-	if (IsAnyOf(seTile.type, AutomapTile::Types::CaveHorizontal, AutomapTile::Types::CaveCross, AutomapTile::Types::CaveLeftCorner)) {
+	if (IsAnyOf(seTile.type, AutomapTile::Types::CaveHorizontal, AutomapTile::Types::CaveHorizontalWood, AutomapTile::Types::CaveCross, AutomapTile::Types::CaveWoodCross, AutomapTile::Types::CaveRightWoodCross, AutomapTile::Types::CaveLeftWoodCross, AutomapTile::Types::CaveLeftCorner)) {
 		//if (seTile.HasFlag(AutomapTile::Flags::VerticalDoor)) {
-			//doorCorrection = true;
+		//doorCorrection = true;
 		//}
 		DrawMapLineSE(out, center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileDown), AmLine(AmLineLength::HalfTile, doorCorrection), colorDim);
 	}
@@ -588,6 +1181,13 @@ void DrawCaveHorizontal(const Surface &out, Point center, AutomapTile tile, uint
 			h = AmHeightOffset::QuarterTileUp;
 			l = AmLineLength::FullAndHalfTile;
 		}
+		if (!(IsAnyOf(tile.type, AutomapTile::Types::CaveHorizontalWood, AutomapTile::Types::CaveHorizontalWoodCross, AutomapTile::Types::CaveWoodCross, AutomapTile::Types::CaveLeftWoodCross))) {
+			out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileLeft, AmHeightOffset::QuarterTileDown), colorDim);
+			out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::HalfTileDown), colorDim);
+			out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::ThreeQuartersTileDown), colorDim);
+			out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown), colorDim);
+		}
+
 		DrawMapLineSE(out, center + AmOffset(w, h), AmLine(l), colorDim);
 	}
 }
@@ -609,17 +1209,24 @@ void DrawCaveVertical(const Surface &out, Point center, AutomapTile tile, uint8_
 		} else {
 			l = AmLineLength::FullAndHalfTile;
 		}
+		if (!(IsAnyOf(tile.type, AutomapTile::Types::CaveVerticalWood, AutomapTile::Types::CaveVerticalWoodCross, AutomapTile::Types::CaveWoodCross, AutomapTile::Types::CaveRightWoodCross))) {
+			out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown), colorDim);
+			out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::ThreeQuartersTileDown), colorDim);
+			out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::HalfTileDown), colorDim);
+			out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileRight, AmHeightOffset::QuarterTileDown), colorDim);
+		}
+
 		DrawMapLineNE(out, { center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileDown) }, AmLine(l), colorDim);
 	}
 }
 
-void DrawCaveLeftCorner(const Surface &out, Point center, AutomapTile tile, uint8_t colorBright, uint8_t colorDim)
+void DrawCaveLeftCorner(const Surface &out, Point center, uint8_t colorDim)
 {
 	DrawMapLineSE(out, center + AmOffset(AmWidthOffset::ThreeQuartersTileLeft, AmHeightOffset::QuarterTileUp), AmLine(AmLineLength::HalfTile), colorDim);
 	DrawMapLineNE(out, center + AmOffset(AmWidthOffset::ThreeQuartersTileLeft, AmHeightOffset::QuarterTileDown), AmLine(AmLineLength::HalfTile), colorDim);
 }
 
-void DrawCaveRightCorner(const Surface &out, Point center, AutomapTile tile, uint8_t colorBright, uint8_t colorDim)
+void DrawCaveRightCorner(const Surface &out, Point center, uint8_t colorDim)
 {
 	DrawMapLineSE(out, center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::None), AmLine(AmLineLength::HalfTile), colorDim);
 	DrawMapLineNE(out, center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::None), AmLine(AmLineLength::HalfTile), colorDim);
@@ -701,13 +1308,88 @@ AutomapTile GetAutomapTypeView(Point map)
 		case 14:
 			return { AutomapTile::Types::CaveLeftCorner };
 		case 130:
-			return { AutomapTile::Types::CaveHorizontalWoodCross };
-		case 131:
-			return { AutomapTile::Types::CaveVerticalWoodCross };
 		case 132:
 			return { AutomapTile::Types::CaveHorizontalWoodCross };
+		case 134:
+		case 136:
+		case 151:
+			return { AutomapTile::Types::CaveHorizontalWood };
+		case 146:
+		case 148:
+			return { AutomapTile::Types::CaveHorizontalWood, AutomapTile::Flags::VerticalDoor };
+		case 131:
 		case 133:
 			return { AutomapTile::Types::CaveVerticalWoodCross };
+		case 135:
+		case 137:
+		case 152:
+			return { AutomapTile::Types::CaveVerticalWood };
+		case 147:
+		case 149:
+			return { AutomapTile::Types::CaveVerticalWood, AutomapTile::Flags::HorizontalDoor };
+		case 138:
+		case 141:
+		case 142:
+		case 143:
+			return { AutomapTile::Types::CaveWoodCross };
+		case 139:
+			return { AutomapTile::Types::CaveRightWoodCross };
+		case 140:
+			return { AutomapTile::Types::CaveLeftWoodCross };
+		case 15:
+			return { AutomapTile::Types::HorizontalLavaThin };
+		case 16:
+			return { AutomapTile::Types::HorizontalLavaThin };
+		case 17:
+			return { AutomapTile::Types::VerticalLavaThin };
+		case 18:
+			return { AutomapTile::Types::VerticalLavaThin };
+		case 19:
+			return { AutomapTile::Types::BendSouthLavaThin };
+		case 20:
+			return { AutomapTile::Types::BendWestLavaThin };
+		case 21:
+			return { AutomapTile::Types::BendEastLavaThin };
+		case 22:
+			return { AutomapTile::Types::BendNorthLavaThin };
+		case 23:
+			return { AutomapTile::Types::VerticalWallLava };
+		case 24:
+			return { AutomapTile::Types::HorizontalWallLava };
+		case 25:
+			return { AutomapTile::Types::SELava };
+		case 26:
+			return { AutomapTile::Types::SWLava };
+		case 27:
+			return { AutomapTile::Types::NELava };
+		case 28:
+			return { AutomapTile::Types::NWLava };
+		case 29:
+			return { AutomapTile::Types::SLava };
+		case 30:
+			return { AutomapTile::Types::WLava };
+		case 31:
+			return { AutomapTile::Types::ELava };
+		case 32:
+			return { AutomapTile::Types::NLava };
+		case 33:
+		case 34:
+		case 35:
+		case 36:
+		case 37:
+		case 38:
+		case 39:
+		case 40:
+		case 41:
+			return { AutomapTile::Types::Lava };
+		case 42:
+			return { AutomapTile::Types::CaveHorizontalWallLava };
+		case 43:
+			return { AutomapTile::Types::CaveVerticalWallLava };
+		case 44:
+			return { AutomapTile::Types::HorizontalBridgeLava };
+		case 45:
+			return { AutomapTile::Types::VerticalBridgeLava };
 		}
 	}
 
@@ -744,28 +1426,29 @@ void DrawAutomapTile(const Surface &out, Point center, Point map)
 		break;
 	}
 
+	bool noConnect = false;
+
+	// If the tile contains an arch, we draw a diamond and therefore don't want connection lines
+	if (tile.HasFlag(AutomapTile::Flags::HorizontalArch) || tile.HasFlag(AutomapTile::Flags::VerticalArch)) {
+		noConnect = true;
+	}
+
+	// These tilesets have doors where the connection lines would be drawn
+	if (IsAnyOf(leveltype, DTYPE_CATACOMBS, DTYPE_CAVES, DTYPE_NEST) && (tile.HasFlag(AutomapTile::Flags::HorizontalDoor) || tile.HasFlag(AutomapTile::Flags::VerticalDoor)))
+		noConnect = true;
+
 	if (tile.HasFlag(AutomapTile::Flags::Dirt)) {
-		DrawDirt(out, center, colorDim);
+		DrawDirt(out, center, nwTile, colorDim);
 	}
 
 	if (tile.HasFlag(AutomapTile::Flags::Stairs)) {
 		DrawStairs(out, center, colorBright);
 	}
 
-	bool noConnect = false;
-
-	// If the tile contains an arch, we draw a diamond and therefore don't want connection lines
-	if (tile.HasFlag(AutomapTile::Flags::HorizontalArch) || tile.HasFlag(AutomapTile::Flags::VerticalArch)) {
-		DrawDiamond(out, center, colorDim);
-		noConnect = true;
-	}
-	// These tilesets have doors where the connection lines would be drawn
-	if (IsAnyOf(leveltype, DTYPE_CATACOMBS, DTYPE_CAVES, DTYPE_NEST) && (tile.HasFlag(AutomapTile::Flags::HorizontalDoor) || tile.HasFlag(AutomapTile::Flags::VerticalDoor)))
-		noConnect = true;
 	if (!noConnect) {
 		if (IsAnyOf(leveltype, DTYPE_CAVES, DTYPE_NEST))
 			DrawCaveWallConnections(out, center, swTile, seTile, colorDim);
-		DrawWallConnections(out, center, tile, nwTile, neTile, colorDim);
+		DrawWallConnections(out, center, nwTile, neTile, colorDim);
 	}
 
 	// debug
@@ -799,24 +1482,28 @@ void DrawAutomapTile(const Surface &out, Point center, Point map)
 		DrawCaveVertical(out, center, tile, colorBright, colorDim);
 		break;
 	case AutomapTile::Types::CaveHorizontal:
+	case AutomapTile::Types::CaveHorizontalWood:
 		DrawCaveHorizontal(out, center, tile, colorBright, colorDim);
 		break;
 	case AutomapTile::Types::CaveVertical:
+	case AutomapTile::Types::CaveVerticalWood:
 		DrawCaveVertical(out, center, tile, colorBright, colorDim);
 		break;
 	case AutomapTile::Types::CaveCross:
+	case AutomapTile::Types::CaveWoodCross:
+	case AutomapTile::Types::CaveRightWoodCross:
+	case AutomapTile::Types::CaveLeftWoodCross:
 		DrawCaveHorizontal(out, center, tile, colorBright, colorDim);
 		DrawCaveVertical(out, center, tile, colorBright, colorDim);
 		break;
-	case AutomapTile::Types::CaveBottomCorner:
-		break;
 	case AutomapTile::Types::CaveLeftCorner:
-		DrawCaveLeftCorner(out, center, tile, colorBright, colorDim);
+		DrawCaveLeftCorner(out, center, colorDim);
 		break;
 	case AutomapTile::Types::CaveRightCorner:
-		DrawCaveRightCorner(out, center, tile, colorBright, colorDim);
+		DrawCaveRightCorner(out, center, colorDim);
 		break;
 	case AutomapTile::Types::Corner:
+	case AutomapTile::Types::CaveBottomCorner:
 	case AutomapTile::Types::None:
 		break;
 	case AutomapTile::Types::Bridge:
@@ -854,6 +1541,73 @@ void DrawAutomapTile(const Surface &out, Point center, Point map)
 		break;
 	case AutomapTile::Types::RiverRightOut:
 		DrawRiverRightOut(out, center, MapColorsItem);
+		break;
+	case AutomapTile::Types::HorizontalLavaThin:
+		DrawHorizontalLavaThin(out, center, MapColorsLava);
+		break;
+	case AutomapTile::Types::VerticalLavaThin:
+		DrawVerticalLavaThin(out, center, MapColorsLava);
+		break;
+	case AutomapTile::Types::BendSouthLavaThin:
+		DrawBendSouthLavaThin(out, center, MapColorsLava);
+		break;
+	case AutomapTile::Types::BendWestLavaThin:
+		DrawBendWestLavaThin(out, center, MapColorsLava);
+		break;
+	case AutomapTile::Types::BendEastLavaThin:
+		DrawBendEastLavaThin(out, center, MapColorsLava);
+		break;
+	case AutomapTile::Types::BendNorthLavaThin:
+		DrawBendNorthLavaThin(out, center, MapColorsLava);
+		break;
+	case AutomapTile::Types::VerticalWallLava:
+		DrawVertical(out, center, tile, nwTile, neTile, swTile, colorBright, colorDim, noConnect);
+		DrawVerticalWallLava(out, center, MapColorsLava);
+		break;
+	case AutomapTile::Types::HorizontalWallLava:
+		DrawHorizontal(out, center, tile, nwTile, neTile, swTile, colorBright, colorDim, noConnect);
+		DrawHorizontalWallLava(out, center, MapColorsLava);
+		break;
+	case AutomapTile::Types::SELava:
+		DrawSELava(out, center, MapColorsLava);
+		break;
+	case AutomapTile::Types::SWLava:
+		DrawSWLava(out, center, MapColorsLava);
+		break;
+	case AutomapTile::Types::NELava:
+		DrawNELava(out, center, MapColorsLava);
+		break;
+	case AutomapTile::Types::NWLava:
+		DrawNWLava(out, center, MapColorsLava);
+		break;
+	case AutomapTile::Types::SLava:
+		DrawSLava(out, center, MapColorsLava);
+		break;
+	case AutomapTile::Types::WLava:
+		DrawWLava(out, center, MapColorsLava);
+		break;
+	case AutomapTile::Types::ELava:
+		DrawELava(out, center, MapColorsLava);
+		break;
+	case AutomapTile::Types::NLava:
+		DrawNLava(out, center, MapColorsLava);
+		break;
+	case AutomapTile::Types::Lava:
+		DrawLava(out, center, MapColorsLava);
+		break;
+	case AutomapTile::Types::CaveHorizontalWallLava:
+		DrawCaveHorizontal(out, center, tile, colorBright, colorDim);
+		DrawCaveHorizontalWallLava(out, center, MapColorsLava);
+		break;
+	case AutomapTile::Types::CaveVerticalWallLava:
+		DrawCaveVertical(out, center, tile, colorBright, colorDim);
+		DrawCaveVerticalWallLava(out, center, MapColorsLava);
+		break;
+	case AutomapTile::Types::HorizontalBridgeLava:
+		DrawHorizontalBridgeLava(out, center, MapColorsLava);
+		break;
+	case AutomapTile::Types::VerticalBridgeLava:
+		DrawVerticalBridgeLava(out, center, MapColorsLava);
 		break;
 	}
 }
