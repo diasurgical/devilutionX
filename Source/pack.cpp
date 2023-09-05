@@ -407,7 +407,6 @@ void UnPackItem(const ItemPack &packedItem, const Player &player, Item &item, bo
 		item._iDurability = ClampDurability(item, packedItem.bDur);
 		item._iMaxCharges = std::clamp<int>(packedItem.bMCh, 0, item._iMaxCharges);
 		item._iCharges = std::clamp<int>(packedItem.bCh, 0, item._iMaxCharges);
-		RemoveInvalidItem(item);
 	}
 }
 

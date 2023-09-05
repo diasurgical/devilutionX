@@ -318,7 +318,11 @@ void LoadItemData(LoadHelper &file, Item &item)
 	else
 		item._iDamAcFlags = ItemSpecialEffectHf::None;
 	UpdateHellfireFlag(item, item._iIName);
+}
 
+void LoadAndValidateItemData(LoadHelper &file, Item &item)
+{
+	LoadItemData(file, item);
 	RemoveInvalidItem(item);
 }
 
@@ -489,10 +493,10 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	file.Skip<uint32_t>(); // skip _pBWidth
 
 	for (Item &item : player.InvBody)
-		LoadItemData(file, item);
+		LoadAndValidateItemData(file, item);
 
 	for (Item &item : player.InvList)
-		LoadItemData(file, item);
+		LoadAndValidateItemData(file, item);
 
 	player._pNumInv = file.NextLE<int32_t>();
 
@@ -500,9 +504,9 @@ void LoadPlayer(LoadHelper &file, Player &player)
 		cell = file.NextLE<int8_t>();
 
 	for (Item &item : player.SpdList)
-		LoadItemData(file, item);
+		LoadAndValidateItemData(file, item);
 
-	LoadItemData(file, player.HoldItem);
+	LoadAndValidateItemData(file, player.HoldItem);
 
 	player._pIMinDam = file.NextLE<int32_t>();
 	player._pIMaxDam = file.NextLE<int32_t>();
@@ -824,13 +828,13 @@ void LoadObject(LoadHelper &file, Object &object)
 
 void LoadItem(LoadHelper &file, Item &item)
 {
-	LoadItemData(file, item);
+	LoadAndValidateItemData(file, item);
 	GetItemFrm(item);
 }
 
 void LoadPremium(LoadHelper &file, int i)
 {
-	LoadItemData(file, premiumitems[i]);
+	LoadAndValidateItemData(file, premiumitems[i]);
 }
 
 void LoadQuest(LoadHelper *file, int i)
@@ -2075,7 +2079,7 @@ void LoadStash()
 	auto itemCount = file.NextLE<uint32_t>();
 	Stash.stashList.resize(itemCount);
 	for (unsigned i = 0; i < itemCount; i++) {
-		LoadItemData(file, Stash.stashList[i]);
+		LoadAndValidateItemData(file, Stash.stashList[i]);
 	}
 
 	Stash.SetPage(file.NextLE<uint32_t>());
