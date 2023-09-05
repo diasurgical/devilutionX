@@ -490,6 +490,17 @@ void pfile_write_hero(SaveWriter &saveWriter, bool writeGameData)
 	}
 }
 
+void RemoveAllInvalidItems(Player &player)
+{
+	for (int i = 0; i < NUM_INVLOC; i++)
+		RemoveInvalidItem(player.InvBody[i]);
+	for (int i = 0; i < player._pNumInv; i++)
+		RemoveInvalidItem(player.InvList[i]);
+	for (int i = 0; i < MaxBeltItems; i++)
+		RemoveInvalidItem(player.SpdList[i]);
+	RemoveEmptyInventory(player);
+}
+
 } // namespace
 
 #ifdef UNPACKED_SAVES
@@ -645,7 +656,7 @@ bool pfile_ui_set_hero_infos(bool (*uiAddHeroInfo)(_uiheroinfo *))
 
 				UnPackPlayer(pkplr, player);
 				LoadHeroItems(player);
-				RemoveEmptyInventory(player);
+				RemoveAllInvalidItems(player);
 				CalcPlrInv(player, false);
 
 				Game2UiPlayer(player, &uihero, hasSaveGame);
@@ -731,7 +742,7 @@ void pfile_read_player_from_save(uint32_t saveNum, Player &player)
 
 	UnPackPlayer(pkplr, player);
 	LoadHeroItems(player);
-	RemoveEmptyInventory(player);
+	RemoveAllInvalidItems(player);
 	CalcPlrInv(player, false);
 }
 
