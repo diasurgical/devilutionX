@@ -236,7 +236,7 @@ std::optional<WorldTileSize> GetSizeForThemeRoom();
 dungeon_type GetLevelType(int level);
 void CreateDungeon(uint32_t rseed, lvl_entry entry);
 
-constexpr bool InDungeonBounds(Point position)
+DVL_ALWAYS_INLINE constexpr bool InDungeonBounds(Point position)
 {
 	return position.x >= 0 && position.x < MAXDUNX && position.y >= 0 && position.y < MAXDUNY;
 }
