@@ -572,9 +572,16 @@ void DrawStairs(const Surface &out, Point center, uint8_t color)
 {
 	constexpr int NumStairSteps = 4;
 	const Displacement offset = AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileDown);
+	AmWidthOffset w = AmWidthOffset::QuarterTileLeft;
+	AmHeightOffset h = AmHeightOffset::QuarterTileUp;
+
+	if (IsAnyOf(leveltype, DTYPE_CATACOMBS, DTYPE_HELL)) {
+		w = AmWidthOffset::QuarterTileLeft;
+		h = AmHeightOffset::ThreeQuartersTileUp;
+	}
 
 	// Initial point based on the 'center' position.
-	Point p = center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileUp);
+	Point p = center + AmOffset(w, h);
 
 	for (int i = 0; i < NumStairSteps; ++i) {
 		DrawMapLineSE(out, p, AmLine(AmLineLength::DoubleTile), color);
