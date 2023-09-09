@@ -9,6 +9,8 @@
 #include <string_view>
 #include <vector>
 
+#include "mpq/mpq_common.hpp"
+
 // Forward-declare so that we can avoid exposing libmpq.
 struct mpq_archive;
 using mpq_archive_s = struct mpq_archive;
@@ -24,9 +26,6 @@ public:
 
 	static const char *ErrorMessage(int32_t errorCode);
 
-	using FileHash = std::array<std::uint32_t, 3>;
-	static FileHash CalculateFileHash(std::string_view filename);
-
 	MpqArchive(MpqArchive &&other) noexcept
 	    : path_(std::move(other.path_))
 	    , archive_(other.archive_)
@@ -40,7 +39,7 @@ public:
 	~MpqArchive();
 
 	// Returns false if the file does not exit.
-	bool GetFileNumber(FileHash fileHash, uint32_t &fileNumber);
+	bool GetFileNumber(MpqFileHash fileHash, uint32_t &fileNumber);
 
 	std::unique_ptr<std::byte[]> ReadFile(std::string_view filename, std::size_t &fileSize, int32_t &error);
 

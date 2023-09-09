@@ -33,6 +33,7 @@
 #include "utils/utf8.hpp"
 
 #ifndef UNPACKED_MPQS
+#include "mpq/mpq_common.hpp"
 #include "mpq/mpq_reader.hpp"
 #endif
 
@@ -201,7 +202,7 @@ bool AreExtraFontsOutOfDate(const std::string &path)
 bool AreExtraFontsOutOfDate(MpqArchive &archive)
 {
 	const char filename[] = "fonts\\VERSION";
-	const MpqArchive::FileHash fileHash = MpqArchive::CalculateFileHash(filename);
+	const MpqFileHash fileHash = CalculateMpqFileHash(filename);
 	uint32_t fileNumber;
 	if (!archive.GetFileNumber(fileHash, fileNumber))
 		return true;

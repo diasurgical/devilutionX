@@ -34,13 +34,6 @@ const char *MpqArchive::ErrorMessage(int32_t errorCode)
 	return libmpq__strerror(errorCode);
 }
 
-MpqArchive::FileHash MpqArchive::CalculateFileHash(std::string_view filename)
-{
-	FileHash fileHash;
-	libmpq__file_hash_s(filename.data(), filename.size(), &fileHash[0], &fileHash[1], &fileHash[2]);
-	return fileHash;
-}
-
 MpqArchive &MpqArchive::operator=(MpqArchive &&other) noexcept
 {
 	path_ = std::move(other.path_);
@@ -57,7 +50,7 @@ MpqArchive::~MpqArchive()
 		libmpq__archive_close(archive_);
 }
 
-bool MpqArchive::GetFileNumber(MpqArchive::FileHash fileHash, uint32_t &fileNumber)
+bool MpqArchive::GetFileNumber(MpqFileHash fileHash, uint32_t &fileNumber)
 {
 	return libmpq__file_number_from_hash(archive_, fileHash[0], fileHash[1], fileHash[2], &fileNumber) == 0;
 }
