@@ -34,7 +34,7 @@ jobs:
 
     - name: Run tests
       run: >
-        docker run --rm --interactive --mount type=bind,source=$(pwd),target=/host s390x/alpine sh -c
+        docker run run --platform linux/s390x --rm --interactive --mount type=bind,source=$(pwd),target=/host s390x/alpine sh -c
         "
         apk add --update-cache g++ ninja cmake ccache sdl2-dev sdl2_image-dev fmt-dev libpng-dev bzip2-dev gtest-dev wget &&
         cd /host &&

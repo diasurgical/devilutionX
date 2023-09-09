@@ -172,6 +172,7 @@ set(libdevilutionx_SRCS
 if(SUPPORTS_MPQ)
   list(APPEND libdevilutionx_DEPS libmpq)
   list(APPEND libdevilutionx_SRCS
+    mpq/mpq_common.cpp
     mpq/mpq_reader.cpp
     mpq/mpq_sdl_rwops.cpp
     mpq/mpq_writer.cpp)
