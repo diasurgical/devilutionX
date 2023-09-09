@@ -1,5 +1,7 @@
 #pragma once
 
+#include "utils/attributes.h"
+
 #ifdef BUILD_TESTING
 #include <ostream>
 #endif
@@ -13,80 +15,80 @@ struct SizeOf {
 
 	SizeOf() = default;
 
-	constexpr SizeOf(SizeT width, SizeT height)
+	DVL_ALWAYS_INLINE constexpr SizeOf(SizeT width, SizeT height)
 	    : width(width)
 	    , height(height)
 	{
 	}
 
-	explicit constexpr SizeOf(SizeT size)
+	DVL_ALWAYS_INLINE explicit constexpr SizeOf(SizeT size)
 	    : width(size)
 	    , height(size)
 	{
 	}
 
-	bool operator==(const SizeOf<SizeT> &other) const
+	DVL_ALWAYS_INLINE bool operator==(const SizeOf<SizeT> &other) const
 	{
 		return width == other.width && height == other.height;
 	}
 
-	bool operator!=(const SizeOf<SizeT> &other) const
+	DVL_ALWAYS_INLINE bool operator!=(const SizeOf<SizeT> &other) const
 	{
 		return !(*this == other);
 	}
 
-	constexpr SizeOf<SizeT> &operator+=(SizeT factor)
+	DVL_ALWAYS_INLINE constexpr SizeOf<SizeT> &operator+=(SizeT factor)
 	{
 		width += factor;
 		height += factor;
 		return *this;
 	}
 
-	constexpr SizeOf<SizeT> &operator-=(SizeT factor)
+	DVL_ALWAYS_INLINE constexpr SizeOf<SizeT> &operator-=(SizeT factor)
 	{
 		return *this += -factor;
 	}
 
-	constexpr SizeOf<SizeT> &operator*=(SizeT factor)
+	DVL_ALWAYS_INLINE constexpr SizeOf<SizeT> &operator*=(SizeT factor)
 	{
 		width *= factor;
 		height *= factor;
 		return *this;
 	}
 
-	constexpr SizeOf<SizeT> &operator*=(float factor)
+	DVL_ALWAYS_INLINE constexpr SizeOf<SizeT> &operator*=(float factor)
 	{
 		width = static_cast<SizeT>(width * factor);
 		height = static_cast<SizeT>(height * factor);
 		return *this;
 	}
 
-	constexpr SizeOf<SizeT> &operator/=(SizeT factor)
+	DVL_ALWAYS_INLINE constexpr SizeOf<SizeT> &operator/=(SizeT factor)
 	{
 		width /= factor;
 		height /= factor;
 		return *this;
 	}
 
-	constexpr friend SizeOf<SizeT> operator+(SizeOf<SizeT> a, SizeT factor)
+	DVL_ALWAYS_INLINE constexpr friend SizeOf<SizeT> operator+(SizeOf<SizeT> a, SizeT factor)
 	{
 		a += factor;
 		return a;
 	}
 
-	constexpr friend SizeOf<SizeT> operator-(SizeOf<SizeT> a, SizeT factor)
+	DVL_ALWAYS_INLINE constexpr friend SizeOf<SizeT> operator-(SizeOf<SizeT> a, SizeT factor)
 	{
 		a -= factor;
 		return a;
 	}
 
-	constexpr friend SizeOf<SizeT> operator*(SizeOf<SizeT> a, SizeT factor)
+	DVL_ALWAYS_INLINE constexpr friend SizeOf<SizeT> operator*(SizeOf<SizeT> a, SizeT factor)
 	{
 		a *= factor;
 		return a;
 	}
 
-	constexpr friend SizeOf<SizeT> operator/(SizeOf<SizeT> a, SizeT factor)
+	DVL_ALWAYS_INLINE constexpr friend SizeOf<SizeT> operator/(SizeOf<SizeT> a, SizeT factor)
 	{
 		a /= factor;
 		return a;

@@ -37,6 +37,7 @@
 #include "engine/point.hpp"
 #include "engine/size.hpp"
 #include "engine/surface.hpp"
+#include "utils/attributes.h"
 
 #define TILE_WIDTH 64
 #define TILE_HEIGHT 32
@@ -44,13 +45,13 @@
 namespace devilution {
 
 template <typename V, typename X, typename... Xs>
-constexpr bool IsAnyOf(const V &v, X x, Xs... xs)
+DVL_ALWAYS_INLINE constexpr bool IsAnyOf(const V &v, X x, Xs... xs)
 {
 	return v == x || ((v == xs) || ...);
 }
 
 template <typename V, typename X, typename... Xs>
-constexpr bool IsNoneOf(const V &v, X x, Xs... xs)
+DVL_ALWAYS_INLINE constexpr bool IsNoneOf(const V &v, X x, Xs... xs)
 {
 	return v != x && ((v != xs) && ...);
 }

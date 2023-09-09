@@ -604,7 +604,7 @@ void StartMonsterGotHit(Monster &monster)
 	dMonster[monster.position.tile.x][monster.position.tile.y] = monster.getId() + 1;
 }
 
-bool IsRanged(Monster &monster)
+DVL_ALWAYS_INLINE bool IsRanged(Monster &monster)
 {
 	return IsAnyOf(monster.ai, MonsterAIID::SkeletonRanged, MonsterAIID::GoatRanged, MonsterAIID::Succubus, MonsterAIID::LazarusSuccubus);
 }

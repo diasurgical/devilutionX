@@ -30,7 +30,7 @@ protected:
 	{
 	}
 
-	void Increment()
+	DVL_ALWAYS_INLINE void Increment()
 	{
 		++minorIndex;
 		if (minorIndex >= majorDimension) {
@@ -82,19 +82,19 @@ public:
 		{
 		}
 
-		value_type operator*() const
+		DVL_ALWAYS_INLINE value_type operator*() const
 		{
 			// Row-major iteration e.g. {0, 0}, {1, 0}, {2, 0}, {0, 1}, {1, 1}, ...
 			return this->origin + Displacement { this->minorIndex, this->majorIndex };
 		}
 
 		// Equality comparable concepts
-		bool operator==(const PointsInRectangleIterator &rhs) const
+		DVL_ALWAYS_INLINE bool operator==(const PointsInRectangleIterator &rhs) const
 		{
 			return this->majorIndex == rhs.majorIndex && this->minorIndex == rhs.minorIndex;
 		}
 
-		bool operator!=(const PointsInRectangleIterator &rhs) const
+		DVL_ALWAYS_INLINE bool operator!=(const PointsInRectangleIterator &rhs) const
 		{
 			return !(*this == rhs);
 		}
@@ -126,7 +126,7 @@ public:
 		}
 
 		// Forward concepts
-		PointsInRectangleIterator &operator++()
+		DVL_ALWAYS_INLINE PointsInRectangleIterator &operator++()
 		{
 			this->Increment();
 			return *this;
@@ -255,19 +255,19 @@ public:
 		{
 		}
 
-		value_type operator*() const
+		DVL_ALWAYS_INLINE value_type operator*() const
 		{
 			// Col-major iteration e.g. {0, 0}, {0, 1}, {0, 2}, {1, 0}, {1, 1}, ...
 			return this->origin + Displacement { this->majorIndex, this->minorIndex };
 		}
 
 		// Equality comparable concepts
-		bool operator==(const PointsInRectangleIteratorColMajor &rhs) const
+		DVL_ALWAYS_INLINE bool operator==(const PointsInRectangleIteratorColMajor &rhs) const
 		{
 			return this->majorIndex == rhs.majorIndex && this->minorIndex == rhs.minorIndex;
 		}
 
-		bool operator!=(const PointsInRectangleIteratorColMajor &rhs) const
+		DVL_ALWAYS_INLINE bool operator!=(const PointsInRectangleIteratorColMajor &rhs) const
 		{
 			return !(*this == rhs);
 		}
@@ -299,7 +299,7 @@ public:
 		}
 
 		// Forward concepts
-		PointsInRectangleIteratorColMajor &operator++()
+		DVL_ALWAYS_INLINE PointsInRectangleIteratorColMajor &operator++()
 		{
 			this->Increment();
 			return *this;
