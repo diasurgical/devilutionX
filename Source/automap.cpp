@@ -1074,17 +1074,15 @@ void DrawAutomapTile(const Surface &out, Point center, Point map)
 	if (tile.HasFlag(AutomapTile::Flags::Stairs)) {
 		DrawStairs(out, center, colorBright);
 	}
+
 	AutomapTile sTile = GetAutomapTypeView(map + Displacement { 1, 1 });
+
 	if (!noConnect) {
 		if (IsAnyOf(leveltype, DTYPE_CAVES, DTYPE_NEST)) {
 			DrawCaveWallConnections(out, center, sTile, swTile, seTile, colorDim);
 		}
 		DrawWallConnections(out, center, nwTile, neTile, colorBright, colorDim);
 	}
-
-	// debug
-	int colorBright2 = PAL8_BLUE;
-	int colorDim2 = PAL16_BLUE + 8;
 
 	switch (tile.type) {
 	case AutomapTile::Types::Diamond: // stand-alone column or other unpassable object
@@ -1326,15 +1324,12 @@ void DrawAutomapPlr(const Surface &out, const Displacement &myPlayerOffset, int 
 	case Direction::North: {
 		const Point point = base + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileUp);
 		DrawVerticalLine(out, point, AmLine(AmLineLength::DoubleTile), playerColor);
-		//DrawMapLineSteepNE(out, { point.x - AmLine(4), point.y + 2 * AmLine(4) }, AmLine(AmLineLength::HalfTile), playerColor);
 		DrawMapLineSteepNE(out, point + AmOffset(AmWidthOffset::EighthTileLeft, AmHeightOffset::HalfTileDown), AmLine(AmLineLength::HalfTile), playerColor);
-		//DrawMapLineSteepNW(out, { point.x + AmLine(4), point.y + 2 * AmLine(4) }, AmLine(AmLineLength::HalfTile), playerColor);
 		DrawMapLineSteepNW(out, point + AmOffset(AmWidthOffset::EighthTileRight, AmHeightOffset::HalfTileDown), AmLine(AmLineLength::HalfTile), playerColor);
 	} break;
 	case Direction::NorthEast: {
 		const Point point = base + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::HalfTileUp);
 		DrawHorizontalLine(out, point + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::None), AmLine(AmLineLength::FullTile), playerColor);
-		//DrawMapLineNE(out, { point.x - 2 * AmLine(8), point.y + AmLine(8) }, AmLine(AmLineLength::FullTile), playerColor);
 		DrawMapLineNE(out, point + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::HalfTileDown), AmLine(AmLineLength::FullTile), playerColor);
 		DrawMapLineSteepSW(out, point, AmLine(AmLineLength::HalfTile), playerColor);
 	} break;
@@ -1565,7 +1560,6 @@ void DrawAutomap(const Surface &out)
 	Displacement myPlayerOffset = {};
 	if (myPlayer.isWalking())
 		myPlayerOffset = GetOffsetForWalking(myPlayer.AnimInfo, myPlayer._pdir, true);
-	//myPlayerOffset += Displacement { -1, (leveltype != DTYPE_CAVES) ? TILE_HEIGHT - 1 : -1 };
 
 	int d = (AutoMapScale * 64) / 100;
 	int cells = 2 * (gnScreenWidth / 2 / d) + 1;
@@ -1631,8 +1625,6 @@ void DrawAutomap(const Surface &out)
 		screen.y += AmOffset(AmWidthOffset::None, AmHeightOffset::DoubleTileDown).deltaY;
 	}
 
-	//if (leveltype == DTYPE_CAVES)
-	//	myPlayerOffset.deltaY += TILE_HEIGHT;
 	for (size_t playerId = 0; playerId < Players.size(); playerId++) {
 		Player &player = Players[playerId];
 		if (player.isOnActiveLevel() && player.plractive && !player._pLvlChanging && (&player == MyPlayer || player.friendlyMode)) {
@@ -1640,7 +1632,6 @@ void DrawAutomap(const Surface &out)
 		}
 	}
 
-	//myPlayerOffset.deltaY -= TILE_HEIGHT / 2;
 	if (AutoMapShowItems)
 		SearchAutomapItem(out, myPlayerOffset, 8, [](Point position) { return dItem[position.x][position.y] != 0; });
 #ifdef _DEBUG
