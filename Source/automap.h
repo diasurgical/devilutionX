@@ -85,14 +85,14 @@ enum class AmLineLength : uint8_t {
 	DoubleTile = 16,
 };
 
-inline Displacement AmOffset(AmWidthOffset x, AmHeightOffset y, bool doorCorrection = false)
+inline Displacement AmOffset(AmWidthOffset x, AmHeightOffset y)
 {
-	return { AutoMapScale * static_cast<int>(x) / 100 + (doorCorrection ? 1 : 0), AutoMapScale * static_cast<int>(y) / 100 + (doorCorrection ? 1 : 0) };
+	return { AutoMapScale * static_cast<int>(x) / 100, AutoMapScale * static_cast<int>(y) / 100 };
 }
 
-inline int AmLine(AmLineLength l, bool doorCorrection = false)
+inline int AmLine(AmLineLength l)
 {
-	return AutoMapScale * static_cast<int>(l) / 100 - (doorCorrection ? 1 : 0);
+	return AutoMapScale * static_cast<int>(l) / 100;
 }
 
 /**
