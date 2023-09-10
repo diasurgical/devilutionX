@@ -711,8 +711,10 @@ void DrawCaveWallConnections(const Surface &out, Point center, AutomapTile sTile
 		dirtFill2 = true;
 	}
 
-	if (sTile.HasFlag(AutomapTile::Flags::Dirt) || (sTile.type != AutomapTile::Types::None && dirtFill1 && dirtFill2))
-		out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown), colorDim);
+	if (sTile.HasFlag(AutomapTile::Flags::Dirt) || (sTile.type != AutomapTile::Types::None && dirtFill1 && dirtFill2)) {
+		if (leveltype != DTYPE_TOWN)
+			out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown), colorDim);
+	}
 }
 
 /**
@@ -736,7 +738,7 @@ void DrawCaveHorizontal(const Surface &out, Point center, AutomapTile tile, uint
 			h = AmHeightOffset::QuarterTileUp;
 			l = AmLineLength::FullAndHalfTile;
 		}
-		if (!(IsAnyOf(tile.type, AutomapTile::Types::CaveHorizontalWood, AutomapTile::Types::CaveHorizontalWoodCross, AutomapTile::Types::CaveWoodCross, AutomapTile::Types::CaveLeftWoodCross))) {
+		if (leveltype != DTYPE_TOWN && !(IsAnyOf(tile.type, AutomapTile::Types::CaveHorizontalWood, AutomapTile::Types::CaveHorizontalWoodCross, AutomapTile::Types::CaveWoodCross, AutomapTile::Types::CaveLeftWoodCross))) {
 			out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileLeft, AmHeightOffset::QuarterTileDown), colorDim);
 			out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::HalfTileDown), colorDim);
 			out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::ThreeQuartersTileDown), colorDim);
@@ -764,7 +766,7 @@ void DrawCaveVertical(const Surface &out, Point center, AutomapTile tile, uint8_
 		} else {
 			l = AmLineLength::FullAndHalfTile;
 		}
-		if (!(IsAnyOf(tile.type, AutomapTile::Types::CaveVerticalWood, AutomapTile::Types::CaveVerticalWoodCross, AutomapTile::Types::CaveWoodCross, AutomapTile::Types::CaveRightWoodCross))) {
+		if (leveltype != DTYPE_TOWN && !(IsAnyOf(tile.type, AutomapTile::Types::CaveVerticalWood, AutomapTile::Types::CaveVerticalWoodCross, AutomapTile::Types::CaveWoodCross, AutomapTile::Types::CaveRightWoodCross))) {
 			out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown), colorDim);
 			out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::ThreeQuartersTileDown), colorDim);
 			out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::HalfTileDown), colorDim);
@@ -907,7 +909,7 @@ void DrawAutomapTile(const Surface &out, Point center, Point map)
 	AutomapTile sTile = GetAutomapTypeView(map + Displacement { 1, 1 });
 
 	if (!noConnect) {
-		if (IsAnyOf(leveltype, DTYPE_CAVES, DTYPE_NEST)) {
+		if (IsAnyOf(leveltype, DTYPE_TOWN, DTYPE_CAVES, DTYPE_NEST)) {
 			DrawCaveWallConnections(out, center, sTile, swTile, seTile, colorDim);
 		}
 		DrawWallConnections(out, center, nwTile, neTile, colorBright, colorDim);
@@ -1313,7 +1315,7 @@ void InitAutomap()
 	for (unsigned i = 0; i < tileCount; i++) {
 		AutomapTile tempTileType = tileTypes[i];
 
-		if (IsAnyOf(leveltype, DTYPE_CAVES, DTYPE_NEST)) {
+		if (IsAnyOf(leveltype, DTYPE_TOWN, DTYPE_CAVES, DTYPE_NEST)) {
 			switch (i + 1) {
 			case 5:
 				tempTileType = { AutomapTile::Types::CaveBottomCorner };
