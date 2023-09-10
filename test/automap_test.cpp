@@ -65,24 +65,24 @@ TEST(Automap, AutomapZoomIn)
 	AutoMapScale = 50;
 	AutomapZoomIn();
 	EXPECT_EQ(AutoMapScale, 75);
-	EXPECT_EQ(AmLine(64), 48);
-	EXPECT_EQ(AmLine(32), 24);
-	EXPECT_EQ(AmLine(16), 12);
-	EXPECT_EQ(AmLine(8), 6);
-	EXPECT_EQ(AmLine(4), 3);
+	EXPECT_EQ(AmLine(AmLineLength::FullTile), static_cast<AmLineLength>(6));
+	EXPECT_EQ(AmLine(AmLineLength::HalfTile), AmLineLength::ThirdTile);
+	EXPECT_EQ(AmLine(AmLineLength::ThirdTile), AmLineLength::QuarterTile);
+	EXPECT_EQ(AmLine(AmLineLength::QuarterTile), static_cast<AmLineLength>(1));
 }
 
 TEST(Automap, AutomapZoomIn_Max)
 {
 	AutoMapScale = 175;
+	AutoMapScale = 175;
 	AutomapZoomIn();
 	AutomapZoomIn();
 	EXPECT_EQ(AutoMapScale, 200);
-	EXPECT_EQ(AmLine(64), 128);
-	EXPECT_EQ(AmLine(32), 64);
-	EXPECT_EQ(AmLine(16), 32);
-	EXPECT_EQ(AmLine(8), 16);
-	EXPECT_EQ(AmLine(4), 8);
+	EXPECT_EQ(AmLine(AmLineLength::DoubleTile), static_cast<AmLineLength>(32));
+	EXPECT_EQ(AmLine(AmLineLength::FullTile), AmLineLength::DoubleTile);
+	EXPECT_EQ(AmLine(AmLineLength::HalfTile), AmLineLength::FullTile);
+	EXPECT_EQ(AmLine(AmLineLength::ThirdTile), static_cast<AmLineLength>(6));
+	EXPECT_EQ(AmLine(AmLineLength::QuarterTile), AmLineLength::HalfTile);
 }
 
 TEST(Automap, AutomapZoomOut)

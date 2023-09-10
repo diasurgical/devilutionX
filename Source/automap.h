@@ -75,7 +75,6 @@ enum class AmHeightOffset : int8_t {
 };
 
 enum class AmLineLength : uint8_t {
-	EighthTile = 1,
 	QuarterTile = 2,
 	ThirdTile = 3,
 	HalfTile = 4,
