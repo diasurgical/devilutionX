@@ -212,45 +212,47 @@ void DoRenderBackwards(
 template <bool North, bool West, bool South, bool East>
 DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderOutlineForPixel(uint8_t *dst, int dstPitch, uint8_t color)
 {
-	if (North)
+	if constexpr (North)
 		dst[-dstPitch] = color;
-	if (West)
+	if constexpr (West)
 		dst[-1] = color;
-	if (East)
+	if constexpr (East)
 		dst[1] = color;
-	if (South)
+	if constexpr (South)
 		dst[dstPitch] = color;
 }
 
 template <bool North, bool West, bool South, bool East, bool SkipColorIndexZero = true>
 DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderOutlineForPixel(uint8_t *dst, int dstPitch, uint8_t srcColor, uint8_t color)
 {
-	if (SkipColorIndexZero && srcColor == 0)
-		return;
+	if constexpr (SkipColorIndexZero) {
+		if (srcColor == 0)
+			return;
+	}
 	RenderOutlineForPixel<North, West, South, East>(dst, dstPitch, color);
 }
 
 template <bool North, bool West, bool South, bool East>
 DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderOutlineForPixels(uint8_t *dst, int dstPitch, int width, uint8_t color)
 {
-	if (North)
+	if constexpr (North)
 		std::memset(dst - dstPitch, color, width);
 
-	if (West && East)
+	if constexpr (West && East)
 		std::memset(dst - 1, color, width + 2);
-	else if (West)
+	else if constexpr (West)
 		std::memset(dst - 1, color, width);
-	else if (East)
+	else if constexpr (East)
 		std::memset(dst + 1, color, width);
 
-	if (South)
+	if constexpr (South)
 		std::memset(dst + dstPitch, color, width);
 }
 
 template <bool North, bool West, bool South, bool East, bool SkipColorIndexZero>
 DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderOutlineForPixels(uint8_t *dst, int dstPitch, int width, const uint8_t *src, uint8_t color)
 {
-	if (SkipColorIndexZero) {
+	if constexpr (SkipColorIndexZero) {
 		while (width-- > 0)
 			RenderOutlineForPixel<North, West, South, East>(dst++, dstPitch, *src++, color);
 	} else {
@@ -264,7 +266,7 @@ void RenderClxOutlinePixelsCheckFirstColumn(
     const uint8_t *src, uint8_t width, uint8_t color)
 {
 	if (dstX == -1) {
-		if (Fill) {
+		if constexpr (Fill) {
 			RenderOutlineForPixel</*North=*/false, /*West=*/false, /*South=*/false, East>(
 			    dst++, dstPitch, color);
 		} else {
@@ -274,7 +276,7 @@ void RenderClxOutlinePixelsCheckFirstColumn(
 		--width;
 	}
 	if (width > 0) {
-		if (Fill) {
+		if constexpr (Fill) {
 			RenderOutlineForPixel<North, /*West=*/false, South, East>(dst++, dstPitch, color);
 		} else {
 			RenderOutlineForPixel<North, /*West=*/false, South, East, SkipColorIndexZero>(dst++, dstPitch, *src++, color);
@@ -282,7 +284,7 @@ void RenderClxOutlinePixelsCheckFirstColumn(
 		--width;
 	}
 	if (width > 0) {
-		if (Fill) {
+		if constexpr (Fill) {
 			RenderOutlineForPixels<North, West, South, East>(dst, dstPitch, width, color);
 		} else {
 			RenderOutlineForPixels<North, West, South, East, SkipColorIndexZero>(dst, dstPitch, width, src, color);
@@ -300,7 +302,7 @@ void RenderClxOutlinePixelsCheckLastColumn(
 	const int numSpecialPixels = (lastPixel ? 1 : 0) + (oobPixel ? 1 : 0);
 	if (width > numSpecialPixels) {
 		width -= numSpecialPixels;
-		if (Fill) {
+		if constexpr (Fill) {
 			RenderOutlineForPixels<North, West, South, East>(dst, dstPitch, width, color);
 		} else {
 			RenderOutlineForPixels<North, West, South, East, SkipColorIndexZero>(dst, dstPitch, width, src, color);
@@ -309,14 +311,14 @@ void RenderClxOutlinePixelsCheckLastColumn(
 		dst += width;
 	}
 	if (lastPixel) {
-		if (Fill) {
+		if constexpr (Fill) {
 			RenderOutlineForPixel<North, West, South, /*East=*/false>(dst++, dstPitch, color);
 		} else {
 			RenderOutlineForPixel<North, West, South, /*East=*/false, SkipColorIndexZero>(dst++, dstPitch, *src++, color);
 		}
 	}
 	if (oobPixel) {
-		if (Fill) {
+		if constexpr (Fill) {
 			RenderOutlineForPixel</*North=*/false, West, /*South=*/false, /*East=*/false>(dst, dstPitch, color);
 		} else {
 			RenderOutlineForPixel</*North=*/false, West, /*South=*/false, /*East=*/false, SkipColorIndexZero>(dst, dstPitch, *src, color);
@@ -329,16 +331,27 @@ void RenderClxOutlinePixels(
     uint8_t *dst, int dstPitch, int dstX, int dstW,
     const uint8_t *src, uint8_t width, uint8_t color)
 {
-	if (SkipColorIndexZero && Fill && *src == 0)
-		return;
+	if constexpr (SkipColorIndexZero && Fill) {
+		if (*src == 0)
+			return;
+	}
 
-	if (CheckFirstColumn && dstX <= 0) {
-		RenderClxOutlinePixelsCheckFirstColumn<Fill, North, West, South, East, SkipColorIndexZero>(
-		    dst, dstPitch, dstX, src, width, color);
-	} else if (CheckLastColumn && dstX + width >= dstW) {
-		RenderClxOutlinePixelsCheckLastColumn<Fill, North, West, South, East, SkipColorIndexZero>(
-		    dst, dstPitch, dstX, dstW, src, width, color);
-	} else if (Fill) {
+	if constexpr (CheckFirstColumn) {
+		if (dstX <= 0) {
+			RenderClxOutlinePixelsCheckFirstColumn<Fill, North, West, South, East, SkipColorIndexZero>(
+			    dst, dstPitch, dstX, src, width, color);
+			return;
+		}
+	}
+	if constexpr (CheckLastColumn) {
+		if (dstX + width >= dstW) {
+			RenderClxOutlinePixelsCheckLastColumn<Fill, North, West, South, East, SkipColorIndexZero>(
+			    dst, dstPitch, dstX, dstW, src, width, color);
+			return;
+		}
+	}
+
+	if constexpr (Fill) {
 		RenderOutlineForPixels<North, West, South, East>(dst, dstPitch, width, color);
 	} else {
 		RenderOutlineForPixels<North, West, South, East, SkipColorIndexZero>(dst, dstPitch, width, src, color);
@@ -370,7 +383,7 @@ const uint8_t *RenderClxOutlineRowClipped( // NOLINT(readability-function-cognit
 		dst += w;
 	};
 
-	if (ClipWidth) {
+	if constexpr (ClipWidth) {
 		auto remainingLeftClip = clipX.left - skipSize.xOffset;
 		if (skipSize.xOffset > clipX.left) {
 			position.x += static_cast<int>(skipSize.xOffset - clipX.left);
@@ -409,7 +422,11 @@ const uint8_t *RenderClxOutlineRowClipped( // NOLINT(readability-function-cognit
 		if (IsClxOpaque(v)) {
 			const bool fill = IsClxOpaqueFill(v);
 			v = fill ? GetClxOpaqueFillWidth(v) : GetClxOpaquePixelsWidth(v);
-			renderPixels(fill, ClipWidth ? std::min(remainingWidth, static_cast<int_fast16_t>(v)) : v);
+			if constexpr (ClipWidth) {
+				renderPixels(fill, std::min(remainingWidth, static_cast<int_fast16_t>(v)));
+			} else {
+				renderPixels(fill, v);
+			}
 		} else {
 			dst += v;
 		}
@@ -417,7 +434,7 @@ const uint8_t *RenderClxOutlineRowClipped( // NOLINT(readability-function-cognit
 		position.x += v;
 	}
 
-	if (ClipWidth) {
+	if constexpr (ClipWidth) {
 		remainingWidth += clipX.right;
 		if (remainingWidth > 0) {
 			skipSize.xOffset = static_cast<int_fast16_t>(srcWidth) - remainingWidth;
