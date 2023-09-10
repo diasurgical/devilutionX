@@ -457,111 +457,96 @@ void DrawRiverForkOut(const Surface &out, Point center, uint8_t color)
 	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::ThreeQuartersTileDown), color);
 }
 
-template <Direction direction1, Direction direction2>
+template <Direction TDir1, Direction TDir2>
 void DrawLavaRiver(const Surface &out, Point center, uint8_t color, bool hasBridge)
 {
 	// First row (y = 0)
-	if constexpr (IsAnyOf(direction1, Direction::NorthWest) || IsAnyOf(direction2, Direction::NorthWest)) {
-		if (!(hasBridge && IsAnyOf(direction1, Direction::NorthWest))) {
+	if constexpr (IsAnyOf(TDir1, Direction::NorthWest) || IsAnyOf(TDir2, Direction::NorthWest)) {
+		if (!(hasBridge && IsAnyOf(TDir1, Direction::NorthWest))) {
 			out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileUp), color);
 			out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::None), color);
 		}
 	}
 
 	// Second row (y = 1)
-	if constexpr (IsAnyOf(direction1, Direction::NorthEast) || IsAnyOf(direction2, Direction::NorthEast)) {
-		if (!(hasBridge && (IsAnyOf(direction1, Direction::NorthEast) || IsAnyOf(direction2, Direction::NorthEast))))
+	if constexpr (IsAnyOf(TDir1, Direction::NorthEast) || IsAnyOf(TDir2, Direction::NorthEast)) {
+		if (!(hasBridge && (IsAnyOf(TDir1, Direction::NorthEast) || IsAnyOf(TDir2, Direction::NorthEast))))
 			out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileUp), color);
 	}
-	if constexpr (IsAnyOf(direction1, Direction::NorthWest, Direction::NorthEast) || IsAnyOf(direction2, Direction::NorthWest, Direction::NorthEast)) {
+	if constexpr (IsAnyOf(TDir1, Direction::NorthWest, Direction::NorthEast) || IsAnyOf(TDir2, Direction::NorthWest, Direction::NorthEast)) {
 		out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::None), color);
 	}
-	if constexpr (IsAnyOf(direction1, Direction::SouthWest, Direction::NorthWest) || IsAnyOf(direction2, Direction::SouthWest, Direction::NorthWest)) {
+	if constexpr (IsAnyOf(TDir1, Direction::SouthWest, Direction::NorthWest) || IsAnyOf(TDir2, Direction::SouthWest, Direction::NorthWest)) {
 		out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileDown), color);
 	}
-	if constexpr (IsAnyOf(direction1, Direction::SouthWest) || IsAnyOf(direction2, Direction::SouthWest)) {
+	if constexpr (IsAnyOf(TDir1, Direction::SouthWest) || IsAnyOf(TDir2, Direction::SouthWest)) {
 		out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::HalfTileDown), color);
 	}
 
 	// Third row (y = 2)
-	if constexpr (IsAnyOf(direction1, Direction::NorthEast) || IsAnyOf(direction2, Direction::NorthEast)) {
-		if (!(hasBridge && (IsAnyOf(direction1, Direction::NorthEast) || IsAnyOf(direction2, Direction::NorthEast))))
+	if constexpr (IsAnyOf(TDir1, Direction::NorthEast) || IsAnyOf(TDir2, Direction::NorthEast)) {
+		if (!(hasBridge && (IsAnyOf(TDir1, Direction::NorthEast) || IsAnyOf(TDir2, Direction::NorthEast))))
 			out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::None), color);
 	}
-	if constexpr (IsAnyOf(direction1, Direction::NorthEast, Direction::SouthEast) || IsAnyOf(direction2, Direction::NorthEast, Direction::SouthEast)) {
+	if constexpr (IsAnyOf(TDir1, Direction::NorthEast, Direction::SouthEast) || IsAnyOf(TDir2, Direction::NorthEast, Direction::SouthEast)) {
 		out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileDown), color);
 	}
-	if constexpr (IsAnyOf(direction1, Direction::SouthWest, Direction::SouthEast) || IsAnyOf(direction2, Direction::SouthWest, Direction::SouthEast)) {
+	if constexpr (IsAnyOf(TDir1, Direction::SouthWest, Direction::SouthEast) || IsAnyOf(TDir2, Direction::SouthWest, Direction::SouthEast)) {
 		out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileDown), color);
 	}
-	if constexpr (IsAnyOf(direction1, Direction::SouthWest) || IsAnyOf(direction2, Direction::SouthWest)) {
+	if constexpr (IsAnyOf(TDir1, Direction::SouthWest) || IsAnyOf(TDir2, Direction::SouthWest)) {
 		out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::ThreeQuartersTileDown), color);
 	}
 
 	// Fourth row (y = 3)
-	if constexpr (IsAnyOf(direction1, Direction::SouthEast) || IsAnyOf(direction2, Direction::SouthEast)) {
+	if constexpr (IsAnyOf(TDir1, Direction::SouthEast) || IsAnyOf(TDir2, Direction::SouthEast)) {
 		out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::HalfTileDown), color);
 		out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::ThreeQuartersTileDown), color);
 	}
 }
 
-template <Direction direction>
+template <Direction TDir>
 void DrawLava(const Surface &out, Point center, uint8_t color)
 {
-	if constexpr (IsNoneOf(direction, Direction::South, Direction::SouthEast, Direction::East)) {
-		// First row
-		out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileUp), color);
-		out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileUp), color);
-		out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::None), color);
-		out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileLeft, AmHeightOffset::QuarterTileDown), color);
+	if constexpr (IsAnyOf(TDir, Direction::NorthWest, Direction::North, Direction::NorthEast, Direction::NoDirection)) {
+		out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileUp), color); // north corner
 	}
-
-	if constexpr (IsNoneOf(direction, Direction::South, Direction::SouthWest, Direction::West)) {
-		// Second row
-		out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileUp), color);
+	if constexpr (IsAnyOf(TDir, Direction::SouthWest, Direction::West, Direction::NorthWest, Direction::North, Direction::NorthEast, Direction::NoDirection)) {
+		out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileUp), color); // northwest edge
+		out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::None), color);             // northwest edge
 	}
-
-	if constexpr (IsNoneOf(direction, Direction::South)) {
-		// Both second and third row
-		out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::None), color);
+	if constexpr (IsAnyOf(TDir, Direction::SouthWest, Direction::West, Direction::NorthWest, Direction::NoDirection)) {
+		out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileLeft, AmHeightOffset::QuarterTileDown), color); // west corner
 	}
-
-	if constexpr (IsNoneOf(direction, Direction::East)) {
-		// Second and third row
-		out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileDown), color);
+	if constexpr (IsAnyOf(TDir, Direction::South, Direction::SouthWest, Direction::West, Direction::NorthWest, Direction::SouthEast, Direction::NoDirection)) {
+		out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::HalfTileDown), color);             // southwest edge
+		out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::ThreeQuartersTileDown), color); // southwest edge
 	}
-
-	if constexpr (IsNoneOf(direction, Direction::North, Direction::NorthEast, Direction::East)) {
-		// Second row
-		out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::HalfTileDown), color);
+	if constexpr (IsAnyOf(TDir, Direction::South, Direction::SouthWest, Direction::SouthEast, Direction::NoDirection)) {
+		out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown), color); // south corner
 	}
-
-	if constexpr (IsNoneOf(direction, Direction::South, Direction::SouthWest, Direction::West)) {
-		// Third row
-		out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::None), color);
+	if constexpr (IsAnyOf(TDir, Direction::South, Direction::SouthWest, Direction::NorthEast, Direction::East, Direction::SouthEast, Direction::NoDirection)) {
+		out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::HalfTileDown), color);             // southeast edge
+		out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::ThreeQuartersTileDown), color); // southeast edge
 	}
-
-	if constexpr (IsNoneOf(direction, Direction::West)) {
-		// Third row
-		out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileDown), color);
+	if constexpr (IsAnyOf(TDir, Direction::NorthEast, Direction::East, Direction::SouthEast, Direction::NoDirection)) {
+		out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileRight, AmHeightOffset::QuarterTileDown), color); // east corner
 	}
-
-	if constexpr (IsNoneOf(direction, Direction::North)) {
-		// Both third and fourth row
-		out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileDown), color);
+	if constexpr (IsAnyOf(TDir, Direction::NorthWest, Direction::North, Direction::NorthEast, Direction::East, Direction::SouthEast, Direction::NoDirection)) {
+		out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileUp), color); // northeast edge
+		out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::None), color);             // northeast edge
 	}
-
-	if constexpr (IsNoneOf(direction, Direction::North, Direction::NorthEast, Direction::East)) {
-		// Third row
-		out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::ThreeQuartersTileDown), color);
+	if constexpr (IsNoneOf(TDir, Direction::South)) {
+		out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::None), color); // north center
 	}
-
-	if constexpr (IsNoneOf(direction, Direction::North, Direction::NorthWest, Direction::West)) {
-		// Fourth row
-		out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileRight, AmHeightOffset::QuarterTileDown), color);
-		out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::HalfTileDown), color);
-		out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::ThreeQuartersTileDown), color);
-		out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown), color);
+	if constexpr (IsNoneOf(TDir, Direction::East)) {
+		out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileDown), color); // west center
+	}
+	if constexpr (IsNoneOf(TDir, Direction::West)) {
+		out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileDown), color); // east center
+	}
+	if constexpr (IsNoneOf(TDir, Direction::North)) {
+		out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileDown), color); // south center
 	}
 }
 
