@@ -180,8 +180,6 @@ set(_optimize_in_debug_srcs
   utils/pcx_to_clx.cpp)
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang" AND CMAKE_BUILD_TYPE STREQUAL "Debug")
   set_source_files_properties(${_optimize_in_debug_srcs} PROPERTIES COMPILE_OPTIONS "-O2")
-elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-  set_source_files_properties(${_optimize_in_debug_srcs} PROPERTIES COMPILE_OPTIONS "$<$<CONFIG:Debug>:/O2>")
 endif()
 
 if(SUPPORTS_MPQ)
