@@ -876,7 +876,7 @@ void AutomapZoomIn()
 	if (AutoMapScale >= 200)
 		return;
 
-	AutoMapScale += 5;
+	AutoMapScale += 25;
 }
 
 void AutomapZoomOut()
@@ -884,7 +884,7 @@ void AutomapZoomOut()
 	if (AutoMapScale <= 50)
 		return;
 
-	AutoMapScale -= 5;
+	AutoMapScale -= 25;
 }
 
 void DrawAutomap(const Surface &out)
