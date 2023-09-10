@@ -34,8 +34,9 @@ void TestFileContents(
 			EXPECT_EQ(result.value, expectedContent[row][col]) << "Unexpected value at record " << row << " and field " << col;
 			col++;
 		} while (!result.endOfRecord());
-		if (!result.endOfFile())
+		if (!result.endOfFile()) {
 			EXPECT_EQ(result.status, expectedEndOfRecordStatus) << "Unexpected status when parsing the end of record " << row;
+		}
 
 		EXPECT_EQ(col, expectedContent[row].size()) << "Parsing returned fewer fields than expected in record " << row;
 		row++;
