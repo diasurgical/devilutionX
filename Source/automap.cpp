@@ -1313,226 +1313,104 @@ void InitAutomap()
 	size_t tileCount = 0;
 	std::unique_ptr<AutomapTile[]> tileTypes = LoadAutomapData(tileCount);
 	for (unsigned i = 0; i < tileCount; i++) {
-		AutomapTile tempTileType = tileTypes[i];
-
 		if (IsAnyOf(leveltype, DTYPE_TOWN, DTYPE_CAVES, DTYPE_NEST)) {
-			switch (i + 1) {
-			case 5:
-				tempTileType = { AutomapTile::Types::CaveBottomCorner };
-				break;
-			case 13:
-				tempTileType = { AutomapTile::Types::CaveRightCorner };
-				break;
-			case 14:
-				tempTileType = { AutomapTile::Types::CaveLeftCorner };
-				break;
-			}
+			tileTypes[4] = { AutomapTile::Types::CaveBottomCorner };
+			tileTypes[12] = { AutomapTile::Types::CaveRightCorner };
+			tileTypes[13] = { AutomapTile::Types::CaveLeftCorner };
 		}
 		if (IsAnyOf(leveltype, DTYPE_CAVES)) {
-			switch (i + 1) {
-			case 130:
-			case 132:
-				tempTileType = { AutomapTile::Types::CaveHorizontalWoodCross };
-				break;
-			case 134:
-			case 136:
-			case 151:
-				tempTileType = { AutomapTile::Types::CaveHorizontalWood };
-				break;
-			case 146:
-			case 148:
-				tempTileType = { AutomapTile::Types::CaveHorizontalWood, AutomapTile::Flags::VerticalDoor };
-				break;
-			case 131:
-			case 133:
-				tempTileType = { AutomapTile::Types::CaveVerticalWoodCross };
-				break;
-			case 135:
-			case 137:
-			case 152:
-				tempTileType = { AutomapTile::Types::CaveVerticalWood };
-				break;
-			case 147:
-			case 149:
-				tempTileType = { AutomapTile::Types::CaveVerticalWood, AutomapTile::Flags::HorizontalDoor };
-				break;
-			case 138:
-			case 141:
-			case 142:
-			case 143:
-				tempTileType = { AutomapTile::Types::CaveWoodCross };
-				break;
-			case 139:
-				tempTileType = { AutomapTile::Types::CaveRightWoodCross };
-				break;
-			case 140:
-				tempTileType = { AutomapTile::Types::CaveLeftWoodCross };
-				break;
-			case 15:
-			case 16:
-				tempTileType = { AutomapTile::Types::HorizontalLavaThin };
-				break;
-			case 17:
-			case 18:
-				tempTileType = { AutomapTile::Types::VerticalLavaThin };
-				break;
-			case 19:
-				tempTileType = { AutomapTile::Types::BendSouthLavaThin };
-				break;
-			case 20:
-				tempTileType = { AutomapTile::Types::BendWestLavaThin };
-				break;
-			case 21:
-				tempTileType = { AutomapTile::Types::BendEastLavaThin };
-				break;
-			case 22:
-				tempTileType = { AutomapTile::Types::BendNorthLavaThin };
-				break;
-			case 23:
-				tempTileType = { AutomapTile::Types::VerticalWallLava };
-				break;
-			case 24:
-				tempTileType = { AutomapTile::Types::HorizontalWallLava };
-				break;
-			case 25:
-				tempTileType = { AutomapTile::Types::SELava };
-				break;
-			case 26:
-				tempTileType = { AutomapTile::Types::SWLava };
-				break;
-			case 27:
-				tempTileType = { AutomapTile::Types::NELava };
-				break;
-			case 28:
-				tempTileType = { AutomapTile::Types::NWLava };
-				break;
-			case 29:
-				tempTileType = { AutomapTile::Types::SLava };
-				break;
-			case 30:
-				tempTileType = { AutomapTile::Types::WLava };
-				break;
-			case 31:
-				tempTileType = { AutomapTile::Types::ELava };
-				break;
-			case 32:
-				tempTileType = { AutomapTile::Types::NLava };
-				break;
-			case 33:
-			case 34:
-			case 35:
-			case 36:
-			case 37:
-			case 38:
-			case 39:
-			case 40:
-			case 41:
-				tempTileType = { AutomapTile::Types::Lava };
-				break;
-			case 42:
-				tempTileType = { AutomapTile::Types::CaveHorizontalWallLava };
-				break;
-			case 43:
-				tempTileType = { AutomapTile::Types::CaveVerticalWallLava };
-				break;
-			case 44:
-				tempTileType = { AutomapTile::Types::HorizontalBridgeLava };
-				break;
-			case 45:
-				tempTileType = { AutomapTile::Types::VerticalBridgeLava };
-				break;
+			tileTypes[129] = { AutomapTile::Types::CaveHorizontalWoodCross };
+			tileTypes[131] = { AutomapTile::Types::CaveHorizontalWoodCross };
+			tileTypes[133] = { AutomapTile::Types::CaveHorizontalWood };
+			tileTypes[135] = { AutomapTile::Types::CaveHorizontalWood };
+			tileTypes[150] = { AutomapTile::Types::CaveHorizontalWood };
+			tileTypes[145] = { AutomapTile::Types::CaveHorizontalWood, AutomapTile::Flags::VerticalDoor };
+			tileTypes[147] = { AutomapTile::Types::CaveHorizontalWood, AutomapTile::Flags::VerticalDoor };
+			tileTypes[130] = { AutomapTile::Types::CaveVerticalWoodCross };
+			tileTypes[132] = { AutomapTile::Types::CaveVerticalWoodCross };
+			tileTypes[134] = { AutomapTile::Types::CaveVerticalWood };
+			tileTypes[136] = { AutomapTile::Types::CaveVerticalWood };
+			tileTypes[151] = { AutomapTile::Types::CaveVerticalWood };
+			tileTypes[146] = { AutomapTile::Types::CaveVerticalWood, AutomapTile::Flags::HorizontalDoor };
+			tileTypes[148] = { AutomapTile::Types::CaveVerticalWood, AutomapTile::Flags::HorizontalDoor };
+			tileTypes[137] = { AutomapTile::Types::CaveWoodCross };
+			tileTypes[140] = { AutomapTile::Types::CaveWoodCross };
+			tileTypes[141] = { AutomapTile::Types::CaveWoodCross };
+			tileTypes[142] = { AutomapTile::Types::CaveWoodCross };
+			tileTypes[138] = { AutomapTile::Types::CaveRightWoodCross };
+			tileTypes[139] = { AutomapTile::Types::CaveLeftWoodCross };
+			tileTypes[14] = { AutomapTile::Types::HorizontalLavaThin };
+			tileTypes[15] = { AutomapTile::Types::HorizontalLavaThin };
+			tileTypes[16] = { AutomapTile::Types::VerticalLavaThin };
+			tileTypes[17] = { AutomapTile::Types::VerticalLavaThin };
+			tileTypes[18] = { AutomapTile::Types::BendSouthLavaThin };
+			tileTypes[19] = { AutomapTile::Types::BendWestLavaThin };
+			tileTypes[20] = { AutomapTile::Types::BendEastLavaThin };
+			tileTypes[21] = { AutomapTile::Types::BendNorthLavaThin };
+			tileTypes[22] = { AutomapTile::Types::VerticalWallLava };
+			tileTypes[23] = { AutomapTile::Types::HorizontalWallLava };
+			tileTypes[24] = { AutomapTile::Types::SELava };
+			tileTypes[25] = { AutomapTile::Types::SWLava };
+			tileTypes[26] = { AutomapTile::Types::NELava };
+			tileTypes[27] = { AutomapTile::Types::NWLava };
+			tileTypes[28] = { AutomapTile::Types::SLava };
+			tileTypes[29] = { AutomapTile::Types::WLava };
+			tileTypes[30] = { AutomapTile::Types::ELava };
+			tileTypes[31] = { AutomapTile::Types::NLava };
+			tileTypes[32] = { AutomapTile::Types::Lava };
+			tileTypes[33] = { AutomapTile::Types::Lava };
+			tileTypes[34] = { AutomapTile::Types::Lava };
+			tileTypes[35] = { AutomapTile::Types::Lava };
+			tileTypes[36] = { AutomapTile::Types::Lava };
+			tileTypes[37] = { AutomapTile::Types::Lava };
+			tileTypes[38] = { AutomapTile::Types::Lava };
+			tileTypes[39] = { AutomapTile::Types::Lava };
+			tileTypes[40] = { AutomapTile::Types::Lava };
+			tileTypes[41] = { AutomapTile::Types::CaveHorizontalWallLava };
+			tileTypes[42] = { AutomapTile::Types::CaveVerticalWallLava };
+			tileTypes[43] = { AutomapTile::Types::HorizontalBridgeLava };
+			tileTypes[44] = { AutomapTile::Types::VerticalBridgeLava };
 			}
-		}
 		if (IsAnyOf(leveltype, DTYPE_NEST)) {
-			switch (i + 1) {
-			case 103:
-			case 104:
-			case 109:
-				tempTileType = { AutomapTile::Types::HorizontalLavaThin };
-				break;
-			case 105:
-			case 106:
-			case 108:
-				tempTileType = { AutomapTile::Types::VerticalLavaThin };
-				break;
-			case 113:
-				tempTileType = { AutomapTile::Types::BendSouthLavaThin };
-				break;
-			case 114:
-				tempTileType = { AutomapTile::Types::BendWestLavaThin };
-				break;
-			case 111:
-				tempTileType = { AutomapTile::Types::BendEastLavaThin };
-				break;
-			case 112:
-				tempTileType = { AutomapTile::Types::BendNorthLavaThin };
-				break;
-			case 135:
-				tempTileType = { AutomapTile::Types::VerticalWallLava };
-				break;
-			case 136:
-				tempTileType = { AutomapTile::Types::HorizontalWallLava };
-				break;
-			case 119:
-				tempTileType = { AutomapTile::Types::SELava };
-				break;
-			case 120:
-				tempTileType = { AutomapTile::Types::SWLava };
-				break;
-			case 121:
-				tempTileType = { AutomapTile::Types::NELava };
-				break;
-			case 122:
-				tempTileType = { AutomapTile::Types::NWLava };
-				break;
-			case 107:
-				tempTileType = { AutomapTile::Types::SLava };
-				break;
-			case 115:
-				tempTileType = { AutomapTile::Types::WLava };
-				break;
-			case 131:
-				tempTileType = { AutomapTile::Types::ELava };
-				break;
-			case 123:
-				tempTileType = { AutomapTile::Types::NLava };
-				break;
-			case 118:
-			case 125:
-			case 127:
-			case 128:
-			case 129:
-			case 130:
-			case 132:
-			case 133:
-			case 134:
-				tempTileType = { AutomapTile::Types::Lava };
-				break;
-			case 137:
-				tempTileType = { AutomapTile::Types::CaveHorizontalWallLava };
-				break;
-			case 138:
-				tempTileType = { AutomapTile::Types::CaveVerticalWallLava };
-				break;
-			case 116:
-				tempTileType = { AutomapTile::Types::HorizontalBridgeLava };
-				break;
-			case 117:
-				tempTileType = { AutomapTile::Types::VerticalBridgeLava };
-				break;
-			}
+			tileTypes[102] = { AutomapTile::Types::HorizontalLavaThin };
+			tileTypes[103] = { AutomapTile::Types::HorizontalLavaThin };
+			tileTypes[108] = { AutomapTile::Types::HorizontalLavaThin };
+			tileTypes[104] = { AutomapTile::Types::VerticalLavaThin };
+			tileTypes[105] = { AutomapTile::Types::VerticalLavaThin };
+			tileTypes[107] = { AutomapTile::Types::VerticalLavaThin };
+			tileTypes[112] = { AutomapTile::Types::BendSouthLavaThin };
+			tileTypes[113] = { AutomapTile::Types::BendWestLavaThin };
+			tileTypes[110] = { AutomapTile::Types::BendEastLavaThin };
+			tileTypes[111] = { AutomapTile::Types::BendNorthLavaThin };
+			tileTypes[134] = { AutomapTile::Types::VerticalWallLava };
+			tileTypes[135] = { AutomapTile::Types::HorizontalWallLava };
+			tileTypes[118] = { AutomapTile::Types::SELava };
+			tileTypes[119] = { AutomapTile::Types::SWLava };
+			tileTypes[120] = { AutomapTile::Types::NELava };
+			tileTypes[121] = { AutomapTile::Types::NWLava };
+			tileTypes[106] = { AutomapTile::Types::SLava };
+			tileTypes[114] = { AutomapTile::Types::WLava };
+			tileTypes[130] = { AutomapTile::Types::ELava };
+			tileTypes[122] = { AutomapTile::Types::NLava };
+			tileTypes[117] = { AutomapTile::Types::Lava };
+			tileTypes[124] = { AutomapTile::Types::Lava };
+			tileTypes[126] = { AutomapTile::Types::Lava };
+			tileTypes[127] = { AutomapTile::Types::Lava };
+			tileTypes[128] = { AutomapTile::Types::Lava };
+			tileTypes[129] = { AutomapTile::Types::Lava };
+			tileTypes[131] = { AutomapTile::Types::Lava };
+			tileTypes[132] = { AutomapTile::Types::Lava };
+			tileTypes[133] = { AutomapTile::Types::Lava };
+			tileTypes[136] = { AutomapTile::Types::CaveHorizontalWallLava };
+			tileTypes[137] = { AutomapTile::Types::CaveVerticalWallLava };
+			tileTypes[115] = { AutomapTile::Types::HorizontalBridgeLava };
+			tileTypes[116] = { AutomapTile::Types::VerticalBridgeLava };
 		}
 		if (IsAnyOf(leveltype, DTYPE_HELL)) {
-			switch (i + 1) {
-			case 52:
-				tempTileType = { AutomapTile::Types::VerticalDiamond };
-				break;
-			case 56:
-				tempTileType = { AutomapTile::Types::HorizontalDiamond };
-				break;
-			}
+			tileTypes[51] = { AutomapTile::Types::VerticalDiamond };
+			tileTypes[55] = { AutomapTile::Types::HorizontalDiamond };
 		}
-		AutomapTypeTiles[i + 1] = tempTileType;
+		AutomapTypeTiles[i + 1] = tileTypes[i];
 	}
 
 	memset(AutomapView, 0, sizeof(AutomapView));
