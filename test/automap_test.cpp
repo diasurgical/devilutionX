@@ -9,11 +9,11 @@ TEST(Automap, InitAutomap)
 	InitAutomapOnce();
 	EXPECT_EQ(AutomapActive, false);
 	EXPECT_EQ(AutoMapScale, 50);
-	EXPECT_EQ(AmLine(64), 32);
-	EXPECT_EQ(AmLine(32), 16);
-	EXPECT_EQ(AmLine(16), 8);
-	EXPECT_EQ(AmLine(8), 4);
-	EXPECT_EQ(AmLine(4), 2);
+	EXPECT_EQ(AmLine(AmLineLength::DoubleTile), AmLineLength::HalfTile);
+	EXPECT_EQ(AmLine(AmLineLength::FullAndHalfTile), static_cast<AmLineLength>(6));
+	EXPECT_EQ(AmLine(AmLineLength::FullTile), AmLineLength::QuarterTile);
+	EXPECT_EQ(AmLine(AmLineLength::HalfTile), static_cast<AmLineLength>(1));
+	EXPECT_EQ(AmLine(AmLineLength::QuarterTile), static_cast<AmLineLength>(0));
 }
 
 TEST(Automap, StartAutomap)
