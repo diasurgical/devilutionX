@@ -214,7 +214,7 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLineTransparent(uint8_t *DVL_REST
 template <LightType Light, bool Transparent>
 DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLineTransparentOrOpaque(uint8_t *DVL_RESTRICT dst, const uint8_t *DVL_RESTRICT src, uint_fast8_t width, const uint8_t *DVL_RESTRICT tbl)
 {
-	if (Transparent) {
+	if constexpr (Transparent) {
 		RenderLineTransparent<Light>(dst, src, width, tbl);
 	} else {
 		RenderLineOpaque<Light>(dst, src, width, tbl);
@@ -224,12 +224,12 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLineTransparentOrOpaque(uint8_t *
 template <LightType Light, bool OpaquePrefix, int8_t PrefixIncrement>
 DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLineTransparentAndOpaque(uint8_t *DVL_RESTRICT dst, const uint8_t *DVL_RESTRICT src, uint_fast8_t prefixWidth, uint_fast8_t width, const uint8_t *DVL_RESTRICT tbl)
 {
-	if (OpaquePrefix) {
+	if constexpr (OpaquePrefix) {
 		RenderLineOpaque<Light>(dst, src, prefixWidth, tbl);
-		if (!SkipTransparentPixels<OpaquePrefix, PrefixIncrement>)
+		if constexpr (!SkipTransparentPixels<OpaquePrefix, PrefixIncrement>)
 			RenderLineTransparent<Light>(dst + prefixWidth, src + prefixWidth, width - prefixWidth, tbl);
 	} else {
-		if (!SkipTransparentPixels<OpaquePrefix, PrefixIncrement>)
+		if constexpr (!SkipTransparentPixels<OpaquePrefix, PrefixIncrement>)
 			RenderLineTransparent<Light>(dst, src, prefixWidth, tbl);
 		RenderLineOpaque<Light>(dst + prefixWidth, src + prefixWidth, width - prefixWidth, tbl);
 	}
@@ -238,21 +238,21 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLineTransparentAndOpaque(uint8_t 
 template <LightType Light, bool OpaquePrefix, int8_t PrefixIncrement>
 DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLine(uint8_t *DVL_RESTRICT dst, const uint8_t *DVL_RESTRICT src, uint_fast8_t n, const uint8_t *DVL_RESTRICT tbl, int8_t prefix)
 {
-	if (PrefixIncrement == 0) {
+	if constexpr (PrefixIncrement == 0) {
 		RenderLineTransparentOrOpaque<Light, OpaquePrefix>(dst, src, n, tbl);
 	} else if (prefix >= static_cast<int8_t>(n)) {
 		// We std::clamp the prefix to (0, n] and avoid calling `RenderLineTransparent/Opaque` with width=0.
-		if (OpaquePrefix) {
+		if constexpr (OpaquePrefix) {
 			RenderLineOpaque<Light>(dst, src, n, tbl);
 		} else {
-			if (!SkipTransparentPixels<OpaquePrefix, PrefixIncrement>)
+			if constexpr (!SkipTransparentPixels<OpaquePrefix, PrefixIncrement>)
 				RenderLineTransparent<Light>(dst, src, n, tbl);
 		}
 	} else if (prefix <= 0) {
-		if (!OpaquePrefix) {
+		if constexpr (!OpaquePrefix) {
 			RenderLineOpaque<Light>(dst, src, n, tbl);
 		} else {
-			if (!SkipTransparentPixels<OpaquePrefix, PrefixIncrement>)
+			if constexpr (!SkipTransparentPixels<OpaquePrefix, PrefixIncrement>)
 				RenderLineTransparent<Light>(dst, src, n, tbl);
 		}
 	} else {
@@ -727,13 +727,13 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderRightTriangle(uint8_t *DVL_RESTRI
 
 template <LightType Light, bool OpaquePrefix, int8_t PrefixIncrement>
 DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderTrapezoidUpperHalf(uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl) {
-	if (PrefixIncrement != 0) {
+	if constexpr (PrefixIncrement != 0) {
 		// The first and the last line are always fully transparent/opaque (or vice-versa).
 		// We handle them specially to avoid calling the blitter with width=0.
 		const uint8_t *srcEnd = src + Width * TrapezoidUpperHeight;
 		constexpr bool FirstLineIsTransparent = OpaquePrefix ^ (PrefixIncrement < 0);
-		if (FirstLineIsTransparent) {
-			if (!SkipTransparentPixels<OpaquePrefix, PrefixIncrement>)
+		if constexpr (FirstLineIsTransparent) {
+			if constexpr (!SkipTransparentPixels<OpaquePrefix, PrefixIncrement>)
 				RenderLineTransparent<Light>(dst, src, Width, tbl);
 		} else {
 			RenderLineOpaque<Light>(dst, src, Width, tbl);
