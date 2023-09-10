@@ -178,7 +178,9 @@ set(_optimize_in_debug_srcs
   utils/cel_to_clx.cpp
   utils/cl2_to_clx.cpp
   utils/pcx_to_clx.cpp)
-if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang" AND CMAKE_BUILD_TYPE STREQUAL "Debug")
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_BUILD_TYPE STREQUAL "Debug")
+  set_source_files_properties(${_optimize_in_debug_srcs} PROPERTIES COMPILE_OPTIONS "-O2;--param=max-vartrack-size=900000000")
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND CMAKE_BUILD_TYPE STREQUAL "Debug")
   set_source_files_properties(${_optimize_in_debug_srcs} PROPERTIES COMPILE_OPTIONS "-O2")
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
   set_source_files_properties(${_optimize_in_debug_srcs} PROPERTIES COMPILE_OPTIONS "$<$<CONFIG:Debug>:/O2>")
