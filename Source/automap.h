@@ -65,7 +65,6 @@ enum class AmHeightOffset : int8_t {
 	DoubleTileDown = TILE_HEIGHT,
 
 	ThreeQuartersTileDown = FullTileDown - QuarterTileDown,
-	//SixEighthsTileDown = FullTileDown + QuarterTileDown,
 
 	QuarterTileUp = -QuarterTileDown,
 	HalfTileUp = -HalfTileDown,
