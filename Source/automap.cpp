@@ -1313,6 +1313,9 @@ void InitAutomap()
 	size_t tileCount = 0;
 	std::unique_ptr<AutomapTile[]> tileTypes = LoadAutomapData(tileCount);
 
+	if (IsAnyOf(leveltype, DTYPE_CATACOMBS)) {
+		tileTypes[41] = { AutomapTile::Types::FenceHorizontal };
+	}
 	if (IsAnyOf(leveltype, DTYPE_TOWN, DTYPE_CAVES, DTYPE_NEST)) {
 		tileTypes[4] = { AutomapTile::Types::CaveBottomCorner };
 		tileTypes[12] = { AutomapTile::Types::CaveRightCorner };
