@@ -881,7 +881,7 @@ void AutomapZoomIn()
 
 void AutomapZoomOut()
 {
-	if (AutoMapScale <= 50)
+	if (AutoMapScale <= 25)
 		return;
 
 	AutoMapScale -= 25;
