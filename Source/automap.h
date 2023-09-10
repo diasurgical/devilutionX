@@ -35,48 +35,40 @@ extern uint8_t AutomapView[DMAXX][DMAXY];
 /** Specifies the scale of the automap. */
 extern DVL_API_FOR_TEST int AutoMapScale;
 extern DVL_API_FOR_TEST Displacement AutomapOffset;
+
 /** Defines the offsets used for Automap lines */
 enum class AmWidthOffset : int8_t {
 	None,
-
 	EighthTileRight = TILE_WIDTH >> 4,
 	QuarterTileRight = TILE_WIDTH >> 3,
 	HalfTileRight = TILE_WIDTH >> 2,
+	ThreeQuartersTileRight = (TILE_WIDTH >> 1) - (TILE_WIDTH >> 3),
 	FullTileRight = TILE_WIDTH >> 1,
 	DoubleTileRight = TILE_WIDTH,
-
-	ThreeQuartersTileRight = FullTileRight - QuarterTileRight,
-
 	EighthTileLeft = -EighthTileRight,
 	QuarterTileLeft = -QuarterTileRight,
 	HalfTileLeft = -HalfTileRight,
+	ThreeQuartersTileLeft = -ThreeQuartersTileRight,
 	FullTileLeft = -FullTileRight,
 	DoubleTileLeft = -DoubleTileRight,
-
-	ThreeQuartersTileLeft = -ThreeQuartersTileRight,
 };
 
 enum class AmHeightOffset : int8_t {
 	None,
-
 	QuarterTileDown = TILE_HEIGHT >> 3,
 	HalfTileDown = TILE_HEIGHT >> 2,
+	ThreeQuartersTileDown = (TILE_HEIGHT >> 1) - (TILE_HEIGHT >> 3),
 	FullTileDown = TILE_HEIGHT >> 1,
 	DoubleTileDown = TILE_HEIGHT,
-
-	ThreeQuartersTileDown = FullTileDown - QuarterTileDown,
-
 	QuarterTileUp = -QuarterTileDown,
 	HalfTileUp = -HalfTileDown,
+	ThreeQuartersTileUp = -ThreeQuartersTileDown,
 	FullTileUp = -FullTileDown,
 	DoubleTileUp = -DoubleTileDown,
-
-	ThreeQuartersTileUp = -ThreeQuartersTileDown,
 };
 
 enum class AmLineLength : uint8_t {
 	QuarterTile = 2,
-	ThirdTile = 3,
 	HalfTile = 4,
 	FullTile = 8,
 	FullAndHalfTile = 12,
