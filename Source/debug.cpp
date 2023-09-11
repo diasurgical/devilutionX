@@ -700,6 +700,7 @@ std::string DebugCmdSpawnUniqueMonster(const std::string_view parameter)
 		if (!parsedArg.has_value()) {
 			name.append(arg);
 			name += ' ';
+			continue;
 		}
 		const int num = parsedArg.value();
 		if (num > 0) {
@@ -797,7 +798,6 @@ std::string DebugCmdSpawnMonster(const std::string_view parameter)
 			count = num;
 			break;
 		}
-		
 	}
 	if (name.empty())
 		return "Monster name cannot be empty. Duh.";
