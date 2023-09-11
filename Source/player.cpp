@@ -246,11 +246,18 @@ void StartRangeAttack(Player &player, Direction d, WorldTileCoord cx, WorldTileC
 
 	int8_t skippedAnimationFrames = 0;
 	if (!gbIsHellfire) {
-		if (includesFirstFrame && HasAnyOf(player._pIFlags, ItemSpecialEffect::QuickAttack | ItemSpecialEffect::FastAttack)) {
-			skippedAnimationFrames += 1;
-		}
-		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastAttack)) {
-			skippedAnimationFrames += 1;
+		if (includesFirstFrame) {
+			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastAttack)) {
+				skippedAnimationFrames = 2;
+			} else if (HasAnyOf(player._pIFlags, ItemSpecialEffect::QuickAttack)) {
+				skippedAnimationFrames = 1;
+			}
+		} else {
+			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastAttack)) {
+				skippedAnimationFrames = 1;
+			} else if (HasAnyOf(player._pIFlags, ItemSpecialEffect::QuickAttack)) {
+				skippedAnimationFrames = GenerateRnd(2);
+			}
 		}
 	}
 
