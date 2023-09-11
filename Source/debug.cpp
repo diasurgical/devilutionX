@@ -787,15 +787,17 @@ std::string DebugCmdSpawnMonster(const std::string_view parameter)
 	int count = 1;
 	for (std::string_view arg : SplitByChar(parameter, ' ')) {
 		const ParseIntResult<int> parsedArg = ParseInt<int>(arg);
-		if (!parsedArg.has_value())
-			return "Failed to parse argument as integer";
+		if (!parsedArg.has_value()) {
+			name.append(arg);
+			name += ' ';
+			continue;
+		}
 		const int num = parsedArg.value();
 		if (num > 0) {
 			count = num;
 			break;
 		}
-		name.append(arg);
-		name += ' ';
+		
 	}
 	if (name.empty())
 		return "Monster name cannot be empty. Duh.";
