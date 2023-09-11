@@ -217,12 +217,14 @@ void StartAttack(Player &player, Direction d, bool includesFirstFrame)
 	} else {
 		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FasterAttack)) {
 			// The combination of Faster and Fast Attack doesn't result in more skipped frames, because the second frame skip of Faster Attack is not triggered.
-			skippedAnimationFrames = 2;
+			skippedAnimationFrames = 1 + GenerateRnd(2);
 		} else if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastAttack)) {
 			skippedAnimationFrames = 1;
 		} else if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastestAttack)) {
 			// Fastest Attack is skipped if Fast or Faster Attack is also specified, because both skip the frame that triggers Fastest Attack skipping.
 			skippedAnimationFrames = 2;
+		} else if (HasAnyOf(player._pIFlags, ItemSpecialEffect::QuickAttack)) {
+			skippedAnimationFrames = GenerateRnd(2);
 		}
 	}
 
