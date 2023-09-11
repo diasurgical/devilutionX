@@ -92,6 +92,7 @@ void UnsafeDrawVerticalLine(const Surface &out, Point from, int height, std::uin
  * @param height Rectangle height
  */
 void DrawHalfTransparentRectTo(const Surface &out, int sx, int sy, int width, int height);
+void SetHalfTransparentPixel(const Surface &out, Point position, std::uint8_t col);
 
 /**
  * Draws a 2px inset border.

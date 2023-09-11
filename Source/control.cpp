@@ -1001,10 +1001,14 @@ void control_check_btn_press()
 
 void DoAutoMap()
 {
-	if (!AutomapActive)
+	if (!AutomapActive) {
 		StartAutomap();
-	else
+	} else if (!AutomapMini) {
+		StartMinimap();
+	} else {
 		AutomapActive = false;
+		AutomapMini = false;
+	}
 }
 
 void CheckPanelInfo()
