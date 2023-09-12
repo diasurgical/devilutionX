@@ -92,6 +92,9 @@ constexpr const std::array<_monster_id, 12> SkeletonTypes {
 /** Maps from monster action to monster animation letter. */
 constexpr char Animletter[7] = "nwahds";
 
+/** Maps from golem action to animation letter. Golem has no idle animation, we use walk animation instead */
+constexpr char GolemAnimletter[7] = "wwahds";
+
 size_t GetNumAnims(const MonsterData &monsterData)
 {
 	return monsterData.hasSpecial ? 6 : 5;
@@ -1023,10 +1026,7 @@ void SyncLightPosition(Monster &monster)
 
 void MonsterIdle(Monster &monster)
 {
-	if (monster.type().type == MT_GOLEM)
-		monster.changeAnimationData(MonsterGraphic::Walk);
-	else
-		monster.changeAnimationData(MonsterGraphic::Stand);
+	monster.changeAnimationData(MonsterGraphic::Stand);
 
 	if (monster.animInfo.isLastFrame())
 		UpdateEnemy(monster);
@@ -3349,7 +3349,8 @@ void InitMonsterGFX(CMonster &monsterType)
 	if (!HeadlessMode) {
 		monsterType.animData = MultiFileLoader<MaxAnims> {}(
 		    numAnims,
-		    FileNameWithCharAffixGenerator({ "monsters\\", monsterData.assetsSuffix }, DEVILUTIONX_CL2_EXT, Animletter),
+		    FileNameWithCharAffixGenerator({ "monsters\\", monsterData.assetsSuffix }, DEVILUTIONX_CL2_EXT,
+		        mtype == MT_GOLEM ? GolemAnimletter : Animletter),
 		    animOffsets.data(),
 		    hasAnim);
 	}
@@ -3622,10 +3623,7 @@ bool M_Talker(const Monster &monster)
 void M_StartStand(Monster &monster, Direction md)
 {
 	ClearMVars(monster);
-	if (monster.type().type == MT_GOLEM)
-		NewMonsterAnim(monster, MonsterGraphic::Walk, md);
-	else
-		NewMonsterAnim(monster, MonsterGraphic::Stand, md);
+	NewMonsterAnim(monster, MonsterGraphic::Stand, md);
 	monster.var1 = static_cast<int>(monster.mode);
 	monster.var2 = 0;
 	monster.mode = MonsterMode::Stand;
