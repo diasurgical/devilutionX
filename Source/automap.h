@@ -55,11 +55,13 @@ enum class AmWidthOffset : int8_t {
 
 enum class AmHeightOffset : int8_t {
 	None,
+	EighthTileDown = TILE_HEIGHT >> 4,
 	QuarterTileDown = TILE_HEIGHT >> 3,
 	HalfTileDown = TILE_HEIGHT >> 2,
 	ThreeQuartersTileDown = (TILE_HEIGHT >> 1) - (TILE_HEIGHT >> 3),
 	FullTileDown = TILE_HEIGHT >> 1,
 	DoubleTileDown = TILE_HEIGHT,
+	EighthTileUp = -EighthTileDown,
 	QuarterTileUp = -QuarterTileDown,
 	HalfTileUp = -HalfTileDown,
 	ThreeQuartersTileUp = -ThreeQuartersTileDown,

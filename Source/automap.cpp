@@ -159,10 +159,9 @@ void DrawDiamond(const Surface &out, Point center, uint8_t color)
 }
 
 /**
- * @brief Non-Catacombs: Draw a diamond on left tile, and draw a half-tile length line between door and top-right edge of top tile.
- * Catacombs: Draw a diamond on top tile, and draw a half-tile length line between diamond and bottom-left edge of left tile.
+ * @brief Draws a bright diamond and a line, orientation depending on the tileset.
  */
-void DrawMapVerticalDoorOrGrate(const Surface &out, Point center, uint8_t colorBright, uint8_t colorDim)
+void DrawMapVerticalDoor(const Surface &out, Point center, AutomapTile neTile, uint8_t colorBright, uint8_t colorDim)
 {
 	AmWidthOffset lWidthOffset;
 	AmHeightOffset lHeightOffset;
@@ -202,15 +201,32 @@ void DrawMapVerticalDoorOrGrate(const Surface &out, Point center, uint8_t colorB
 	default:
 		app_fatal("Invalid leveltype");
 	}
-	DrawMapLineNE(out, center + AmOffset(lWidthOffset, lHeightOffset), AmLine(length), colorDim);
+	if (!(neTile.HasFlag(AutomapTile::Flags::VerticalPassage) && leveltype == DTYPE_CATHEDRAL))
+		DrawMapLineNE(out, center + AmOffset(lWidthOffset, lHeightOffset), AmLine(length), colorDim);
 	DrawDiamond(out, center + AmOffset(dWidthOffset, dHeightOffset), colorBright);
 }
 
 /**
- * @brief Non-Catacombs: Draw a diamond on right tile, and draw a half-tile length line between diamond and top-left edge of top tile.
- * Catacombs: Draw a diamond on top tile, and draw a half-tile length line between diamond and bottom-right edge of right tile.
+ * @brief Draws a dotted line to represent a wall grate.
  */
-void DrawMapHorizontalDoorOrGrate(const Surface &out, Point center, uint8_t colorBright, uint8_t colorDim)
+void DrawMapVerticalGrate(const Surface &out, Point center, uint8_t colorDim)
+{
+	Point pos1 = center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::None) + AmOffset(AmWidthOffset::EighthTileRight, AmHeightOffset::EighthTileUp);
+	Point pos2 = center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::None);
+	Point pos3 = center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::None) + AmOffset(AmWidthOffset::EighthTileLeft, AmHeightOffset::EighthTileDown);
+
+	out.SetPixel(pos1 + Displacement { 0, 1 }, 0);
+	out.SetPixel(pos2 + Displacement { 0, 1 }, 0);
+	out.SetPixel(pos3 + Displacement { 0, 1 }, 0);
+	out.SetPixel(pos1, colorDim);
+	out.SetPixel(pos2, colorDim);
+	out.SetPixel(pos3, colorDim);
+}
+
+/**
+ * @brief Draws a bright diamond and a line, orientation depending on the tileset.
+ */
+void DrawMapHorizontalDoor(const Surface &out, Point center, AutomapTile nwTile, uint8_t colorBright, uint8_t colorDim)
 {
 	AmWidthOffset lWidthOffset;
 	AmHeightOffset lHeightOffset;
@@ -251,8 +267,26 @@ void DrawMapHorizontalDoorOrGrate(const Surface &out, Point center, uint8_t colo
 	default:
 		app_fatal("Invalid leveltype");
 	}
-	DrawMapLineSE(out, center + AmOffset(lWidthOffset, lHeightOffset), AmLine(length), colorDim);
+	if (!(nwTile.HasFlag(AutomapTile::Flags::HorizontalPassage) && leveltype == DTYPE_CATHEDRAL))
+		DrawMapLineSE(out, center + AmOffset(lWidthOffset, lHeightOffset), AmLine(length), colorDim);
 	DrawDiamond(out, center + AmOffset(dWidthOffset, dHeightOffset), colorBright);
+}
+
+/**
+ * @brief Draws a dotted line to represent a wall grate.
+ */
+void DrawMapHorizontalGrate(const Surface &out, Point center, uint8_t colorDim)
+{
+	Point pos1 = center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::None) + AmOffset(AmWidthOffset::EighthTileLeft, AmHeightOffset::EighthTileUp);
+	Point pos2 = center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::None);
+	Point pos3 = center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::None) + AmOffset(AmWidthOffset::EighthTileRight, AmHeightOffset::EighthTileDown);
+
+	out.SetPixel(pos1 + Displacement { 0, 1 }, 0);
+	out.SetPixel(pos2 + Displacement { 0, 1 }, 0);
+	out.SetPixel(pos3 + Displacement { 0, 1 }, 0);
+	out.SetPixel(pos1, colorDim);
+	out.SetPixel(pos2, colorDim);
+	out.SetPixel(pos3, colorDim);
 }
 
 /**
@@ -266,7 +300,11 @@ void DrawDirt(const Surface &out, Point center, AutomapTile nwTile, AutomapTile 
 	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileUp), color);
 	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileDown), color);
 	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::ThreeQuartersTileDown), color);
-	if (!nwTile.HasFlag(AutomapTile::Flags::HorizontalArch) && !neTile.HasFlag(AutomapTile::Flags::VerticalArch)) // Prevent the top dirt pixel from appearing inside arch diamonds
+	// Prevent the top dirt pixel from appearing inside arch diamonds
+	if (!nwTile.HasFlag(AutomapTile::Flags::HorizontalArch)
+	    && !nwTile.HasFlag(AutomapTile::Flags::HorizontalGrate)
+	    && !neTile.HasFlag(AutomapTile::Flags::VerticalArch)
+	    && !neTile.HasFlag(AutomapTile::Flags::VerticalGrate))
 		out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileUp), color);
 	out.SetPixel(center, color);
 	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileDown), color);
@@ -573,6 +611,25 @@ void DrawStairs(const Surface &out, Point center, uint8_t color)
 		p += offset;
 	}
 }
+/**
+ * @brief Redraws the bright line of the door diamond that gets overwritten by later drawn lines.
+ */
+void FixHorizontalDoor(const Surface &out, Point center, AutomapTile nwTile, uint8_t colorBright)
+{
+	if (leveltype != DTYPE_CATACOMBS && nwTile.HasFlag(AutomapTile::Flags::HorizontalDoor)) {
+		DrawMapLineNE(out, center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::HalfTileUp), AmLine(AmLineLength::FullTile), colorBright);
+	}
+}
+
+/**
+ * @brief Redraws the bright line of the door diamond that gets overwritten by later drawn lines.
+ */
+void FixVerticalDoor(const Surface &out, Point center, AutomapTile neTile, uint8_t colorBright)
+{
+	if (leveltype != DTYPE_CATACOMBS && neTile.HasFlag(AutomapTile::Flags::VerticalDoor)) {
+		DrawMapLineSE(out, center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileUp), AmLine(AmLineLength::FullTile), colorBright);
+	}
+}
 
 /**
  * @brief Draw half-tile length lines to connect walls to any walls to the north-west and/or north-east
@@ -581,17 +638,11 @@ void DrawWallConnections(const Surface &out, Point center, AutomapTile nwTile, A
 {
 	if (IsAnyOf(nwTile.type, AutomapTile::Types::HorizontalWallLava, AutomapTile::Types::Horizontal, AutomapTile::Types::HorizontalDiamond, AutomapTile::Types::FenceHorizontal, AutomapTile::Types::Cross, AutomapTile::Types::CaveVerticalWoodCross, AutomapTile::Types::CaveRightCorner)) {
 		DrawMapLineSE(out, center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::ThreeQuartersTileUp), AmLine(AmLineLength::HalfTile), colorDim);
-		// fix for overwriting door diamond
-		if (leveltype != DTYPE_CATACOMBS && nwTile.HasFlag(AutomapTile::Flags::HorizontalDoor)) {
-			DrawMapLineNE(out, center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::HalfTileUp), AmLine(AmLineLength::FullTile), colorBright);
-		}
+		FixHorizontalDoor(out, center, nwTile, colorBright);
 	}
 	if (IsAnyOf(neTile.type, AutomapTile::Types::VerticalWallLava, AutomapTile::Types::Vertical, AutomapTile::Types::VerticalDiamond, AutomapTile::Types::FenceVertical, AutomapTile::Types::Cross, AutomapTile::Types::CaveHorizontalWoodCross, AutomapTile::Types::CaveLeftCorner)) {
 		DrawMapLineNE(out, center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileUp), AmLine(AmLineLength::HalfTile), colorDim);
-		// fix for overwriting door diamond
-		if (leveltype != DTYPE_CATACOMBS && neTile.HasFlag(AutomapTile::Flags::VerticalDoor)) {
-			DrawMapLineSE(out, center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileUp), AmLine(AmLineLength::FullTile), colorBright);
-		}
+		FixVerticalDoor(out, center, neTile, colorBright);
 	}
 }
 
@@ -606,14 +657,19 @@ void DrawHorizontal(const Surface &out, Point center, AutomapTile tile, AutomapT
 
 	// Draw a diamond in the top tile
 	if (neTile.HasFlag(AutomapTile::Flags::VerticalArch)         // NE tile has an arch, so add a diamond for visual consistency
+	    || neTile.HasFlag(AutomapTile::Flags::VerticalGrate)     // NE tile has a grate, so add a diamond for visual consistency
 	    || nwTile.HasFlag(AutomapTile::Flags::HorizontalArch)    // NW tile has an arch, so add a diamond for visual consistency
+	    || nwTile.HasFlag(AutomapTile::Flags::HorizontalGrate)   // NW tile has a grate, so add a diamond for visual consistency
 	    || tile.HasFlag(AutomapTile::Flags::VerticalArch)        // Current tile has an arch, add a diamond
 	    || tile.HasFlag(AutomapTile::Flags::HorizontalArch)      // Current tile has an arch, add a diamond
+	    || tile.HasFlag(AutomapTile::Flags::VerticalGrate)       // Current tile has an grate, add a diamond
+	    || tile.HasFlag(AutomapTile::Flags::HorizontalGrate)     // Current tile has an grate, add a diamond
 	    || tile.type == AutomapTile::Types::HorizontalDiamond) { // wall ending in hell that should end with a diamond
 		w = AmWidthOffset::QuarterTileRight;
 		h = AmHeightOffset::QuarterTileUp;
 		l = AmLineLength::FullTile; // shorten line to avoid overdraw
 		DrawDiamond(out, center, colorDim);
+		FixHorizontalDoor(out, center, nwTile, colorBright);
 	}
 	// Shorten line to avoid overdraw
 	if (IsAnyOf(leveltype, DTYPE_CAVES, DTYPE_NEST)
@@ -628,9 +684,9 @@ void DrawHorizontal(const Surface &out, Point center, AutomapTile tile, AutomapT
 	}
 	// Draw door or grate (door diamond is bright, grate diamond is dim)
 	if (tile.HasFlag(AutomapTile::Flags::HorizontalDoor)) {
-		DrawMapHorizontalDoorOrGrate(out, center, colorBright, colorDim);
+		DrawMapHorizontalDoor(out, center, nwTile, colorBright, colorDim);
 	} else if (tile.HasFlag(AutomapTile::Flags::HorizontalGrate)) {
-		DrawMapHorizontalDoorOrGrate(out, center, colorDim, colorDim);
+		DrawMapHorizontalGrate(out, center, colorDim);
 	}
 }
 
@@ -645,12 +701,17 @@ void DrawVertical(const Surface &out, Point center, AutomapTile tile, AutomapTil
 
 	// Draw a diamond in the top tile
 	if (neTile.HasFlag(AutomapTile::Flags::VerticalArch)       // NE tile has an arch, so add a diamond for visual consistency
+	    || neTile.HasFlag(AutomapTile::Flags::VerticalGrate)   // NE tile has a grate, so add a diamond for visual consistency
 	    || nwTile.HasFlag(AutomapTile::Flags::HorizontalArch)  // NW tile has an arch, so add a diamond for visual consistency
+	    || nwTile.HasFlag(AutomapTile::Flags::HorizontalGrate) // NW tile has a grate, so add a diamond for visual consistency
 	    || tile.HasFlag(AutomapTile::Flags::VerticalArch)      // Current tile has an arch, add a diamond
 	    || tile.HasFlag(AutomapTile::Flags::HorizontalArch)    // Current tile has an arch, add a diamond
+	    || tile.HasFlag(AutomapTile::Flags::VerticalGrate)     // Current tile has an grate, add a diamond
+	    || tile.HasFlag(AutomapTile::Flags::HorizontalGrate)   // Current tile has an grate, add a diamond
 	    || tile.type == AutomapTile::Types::VerticalDiamond) { // wall ending in hell that should end with a diamond
 		l = AmLineLength::FullTile;                            // shorten line to avoid overdraw
 		DrawDiamond(out, center, colorDim);
+		FixVerticalDoor(out, center, nwTile, colorBright);
 	}
 	// Shorten line to avoid overdraw and adjust offset to match
 	if (IsAnyOf(leveltype, DTYPE_CAVES, DTYPE_NEST)
@@ -667,9 +728,9 @@ void DrawVertical(const Surface &out, Point center, AutomapTile tile, AutomapTil
 	}
 	// Draw door or grate (door diamond is bright, grate diamond is dim)
 	if (tile.HasFlag(AutomapTile::Flags::VerticalDoor)) {
-		DrawMapVerticalDoorOrGrate(out, center, colorBright, colorDim);
+		DrawMapVerticalDoor(out, center, neTile, colorBright, colorDim);
 	} else if (tile.HasFlag(AutomapTile::Flags::VerticalGrate)) {
-		DrawMapVerticalDoorOrGrate(out, center, colorDim, colorDim);
+		DrawMapVerticalGrate(out, center, colorDim);
 	}
 }
 
@@ -705,10 +766,10 @@ void DrawCaveWallConnections(const Surface &out, Point center, AutomapTile sTile
 /**
  * For caves the horizontal/vertical flags are swapped
  */
-void DrawCaveHorizontal(const Surface &out, Point center, AutomapTile tile, uint8_t colorBright, uint8_t colorDim)
+void DrawCaveHorizontal(const Surface &out, Point center, AutomapTile tile, AutomapTile nwTile, uint8_t colorBright, uint8_t colorDim)
 {
 	if (tile.HasFlag(AutomapTile::Flags::VerticalDoor)) {
-		DrawMapHorizontalDoorOrGrate(out, center, colorBright, colorDim);
+		DrawMapHorizontalDoor(out, center, nwTile, colorBright, colorDim);
 	} else {
 		AmWidthOffset w;
 		AmHeightOffset h;
@@ -737,10 +798,10 @@ void DrawCaveHorizontal(const Surface &out, Point center, AutomapTile tile, uint
 /**
  * For caves the horizontal/vertical flags are swapped
  */
-void DrawCaveVertical(const Surface &out, Point center, AutomapTile tile, uint8_t colorBright, uint8_t colorDim)
+void DrawCaveVertical(const Surface &out, Point center, AutomapTile tile, AutomapTile neTile, uint8_t colorBright, uint8_t colorDim)
 {
 	if (tile.HasFlag(AutomapTile::Flags::HorizontalDoor)) {
-		DrawMapVerticalDoorOrGrate(out, center, colorBright, colorDim);
+		DrawMapVerticalDoor(out, center, neTile, colorBright, colorDim);
 	} else {
 		AmWidthOffset w;
 		AmHeightOffset h;
@@ -870,11 +931,15 @@ void DrawAutomapTile(const Surface &out, Point center, Point map)
 
 	bool noConnect = false;
 
-	// If the tile is an arch or diamond, we draw a diamond and therefore don't want connection lines
+	// If the tile is an arch, grate, or diamond, we draw a diamond and therefore don't want connection lines
 	if (tile.HasFlag(AutomapTile::Flags::HorizontalArch)
 	    || tile.HasFlag(AutomapTile::Flags::VerticalArch)
+	    || tile.HasFlag(AutomapTile::Flags::HorizontalGrate)
+	    || tile.HasFlag(AutomapTile::Flags::VerticalGrate)
 	    || nwTile.HasFlag(AutomapTile::Flags::HorizontalArch)
+	    || nwTile.HasFlag(AutomapTile::Flags::HorizontalGrate)
 	    || neTile.HasFlag(AutomapTile::Flags::VerticalArch)
+	    || neTile.HasFlag(AutomapTile::Flags::VerticalGrate)
 	    || tile.type == AutomapTile::Types::Diamond) {
 		noConnect = true;
 	}
@@ -921,27 +986,27 @@ void DrawAutomapTile(const Surface &out, Point center, Point map)
 	case AutomapTile::Types::CaveHorizontalCross:
 	case AutomapTile::Types::CaveHorizontalWoodCross:
 		DrawVertical(out, center, tile, nwTile, neTile, swTile, colorBright, colorDim);
-		DrawCaveHorizontal(out, center, tile, colorBright, colorDim);
+		DrawCaveHorizontal(out, center, tile, nwTile, colorBright, colorDim);
 		break;
 	case AutomapTile::Types::CaveVerticalCross:
 	case AutomapTile::Types::CaveVerticalWoodCross:
 		DrawHorizontal(out, center, tile, nwTile, neTile, seTile, colorBright, colorDim);
-		DrawCaveVertical(out, center, tile, colorBright, colorDim);
+		DrawCaveVertical(out, center, tile, neTile, colorBright, colorDim);
 		break;
 	case AutomapTile::Types::CaveHorizontal:
 	case AutomapTile::Types::CaveHorizontalWood:
-		DrawCaveHorizontal(out, center, tile, colorBright, colorDim);
+		DrawCaveHorizontal(out, center, tile, nwTile, colorBright, colorDim);
 		break;
 	case AutomapTile::Types::CaveVertical:
 	case AutomapTile::Types::CaveVerticalWood:
-		DrawCaveVertical(out, center, tile, colorBright, colorDim);
+		DrawCaveVertical(out, center, tile, neTile, colorBright, colorDim);
 		break;
 	case AutomapTile::Types::CaveCross:
 	case AutomapTile::Types::CaveWoodCross:
 	case AutomapTile::Types::CaveRightWoodCross:
 	case AutomapTile::Types::CaveLeftWoodCross:
-		DrawCaveHorizontal(out, center, tile, colorBright, colorDim);
-		DrawCaveVertical(out, center, tile, colorBright, colorDim);
+		DrawCaveHorizontal(out, center, tile, nwTile, colorBright, colorDim);
+		DrawCaveVertical(out, center, tile, neTile, colorBright, colorDim);
 		break;
 	case AutomapTile::Types::CaveLeftCorner:
 		DrawCaveLeftCorner(out, center, colorDim);
@@ -1044,11 +1109,11 @@ void DrawAutomapTile(const Surface &out, Point center, Point map)
 		DrawLava<Direction::NoDirection>(out, center, MapColorsLava);
 		break;
 	case AutomapTile::Types::CaveHorizontalWallLava:
-		DrawCaveHorizontal(out, center, tile, colorBright, colorDim);
+		DrawCaveHorizontal(out, center, tile, nwTile, colorBright, colorDim);
 		DrawLavaRiver<Direction::NorthEast, Direction::NoDirection>(out, center, MapColorsLava, false);
 		break;
 	case AutomapTile::Types::CaveVerticalWallLava:
-		DrawCaveVertical(out, center, tile, colorBright, colorDim);
+		DrawCaveVertical(out, center, tile, neTile, colorBright, colorDim);
 		DrawLavaRiver<Direction::NorthWest, Direction::NoDirection>(out, center, MapColorsLava, false);
 		break;
 	case AutomapTile::Types::HorizontalBridgeLava:
