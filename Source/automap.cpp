@@ -17,6 +17,7 @@
 #include "levels/gendung.h"
 #include "levels/setmaps.h"
 #include "player.h"
+#include "utils/attributes.h"
 #include "utils/language.h"
 #include "utils/ui_fwd.h"
 #include "utils/utf8.hpp"
@@ -94,6 +95,14 @@ struct AutomapTile {
 	constexpr bool HasFlag(Flags test) const
 	{
 		return (static_cast<uint8_t>(flags) & static_cast<uint8_t>(test)) != 0;
+	}
+
+	template <typename... Args>
+	[[nodiscard]] DVL_ALWAYS_INLINE constexpr bool hasAnyFlag(Flags flag, Args... flags)
+	{
+		return (static_cast<uint8_t>(this->flags)
+		           & (static_cast<uint8_t>(flag) | ... | static_cast<uint8_t>(flags)))
+		    != 0;
 	}
 };
 
