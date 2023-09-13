@@ -911,6 +911,7 @@ void DrawAutomapTile(const Surface &out, Point center, Point map)
 	AutomapTile neTile = GetAutomapTypeView(map + Displacement { 0, -1 });
 	AutomapTile swTile = GetAutomapTypeView(map + Displacement { 0, 1 });
 	AutomapTile seTile = GetAutomapTypeView(map + Displacement { 1, 0 });
+	AutomapTile sTile = GetAutomapTypeView(map + Displacement { 1, 1 });
 
 	uint8_t colorBright = MapColorsBright;
 	uint8_t colorDim = MapColorsDim;
@@ -953,15 +954,13 @@ void DrawAutomapTile(const Surface &out, Point center, Point map)
 	if (IsAnyOf(leveltype, DTYPE_CATACOMBS, DTYPE_CAVES) && (tile.HasFlag(AutomapTile::Flags::HorizontalDoor) || tile.HasFlag(AutomapTile::Flags::VerticalDoor)))
 		noConnect = true;
 
-	if (tile.HasFlag(AutomapTile::Flags::Dirt)) {
+	if ((tile.type != AutomapTile::Types::None || swTile.type != AutomapTile::Types::None || seTile.type != AutomapTile::Types::None || sTile.type != AutomapTile::Types::None)&& tile.HasFlag(AutomapTile::Flags::Dirt)) {
 		DrawDirt(out, center, nwTile, neTile, colorDim);
 	}
 
 	if (tile.HasFlag(AutomapTile::Flags::Stairs)) {
 		DrawStairs(out, center, colorBright);
 	}
-
-	AutomapTile sTile = GetAutomapTypeView(map + Displacement { 1, 1 });
 
 	if (!noConnect) {
 		if (IsAnyOf(leveltype, DTYPE_TOWN, DTYPE_CAVES, DTYPE_NEST)) {
