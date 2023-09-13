@@ -16,7 +16,6 @@
 #include <cstdint>
 #include <cstdlib>
 #include <memory>
-#include <tuple>
 #include <utility>
 
 // We include `cinttypes` here so that it is included before `inttypes.h`

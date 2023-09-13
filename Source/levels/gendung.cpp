@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <stack>
+#include <vector>
 
 #include "engine/load_file.hpp"
 #include "engine/random.hpp"
@@ -265,17 +266,22 @@ void FindTransparencyValues(Point floor, uint8_t floorID)
 	// Algorithm adapted from https://en.wikipedia.org/wiki/Flood_fill#Span_Filling
 	// Modified to include diagonally adjacent tiles that would otherwise not be visited
 	// Also, Wikipedia's selection for the initial seed is incorrect
-	using Seed = std::tuple<int, int, int, int>;
-	std::stack<Seed> seedStack;
-	seedStack.push(std::make_tuple(floor.x, floor.x + 1, floor.y, 1));
+	struct Seed {
+		int scanStart;
+		int scanEnd;
+		int y;
+		int dy;
+	};
+	std::stack<Seed, std::vector<Seed>> seedStack;
+	seedStack.push({ floor.x, floor.x + 1, floor.y, 1 });
 
-	const auto isInside = [&](int x, int y) {
+	const auto isInside = [floorID](int x, int y) {
 		if (dTransVal[x][y] != 0)
 			return false;
 		return IsFloor({ x, y }, floorID);
 	};
 
-	const auto set = [&](int x, int y) {
+	const auto set = [floorID](int x, int y) {
 		FillTransparencyValues({ x, y }, floorID);
 	};
 
@@ -285,17 +291,16 @@ void FindTransparencyValues(Point floor, uint8_t floorID)
 		Point up = p + Displacement { 0, -1 };
 		Point upOver = up + direction;
 		if (!isInside(up.x, up.y) && isInside(upOver.x, upOver.y))
-			seedStack.push(std::make_tuple(upOver.x, upOver.x + 1, upOver.y, -1));
+			seedStack.push({ upOver.x, upOver.x + 1, upOver.y, -1 });
 
 		Point down = p + Displacement { 0, 1 };
 		Point downOver = down + direction;
 		if (!isInside(down.x, down.y) && isInside(downOver.x, downOver.y))
-			seedStack.push(std::make_tuple(downOver.x, downOver.x + 1, downOver.y, 1));
+			seedStack.push(Seed { downOver.x, downOver.x + 1, downOver.y, 1 });
 	};
 
 	while (!seedStack.empty()) {
-		int scanStart, scanEnd, y, dy;
-		std::tie(scanStart, scanEnd, y, dy) = seedStack.top();
+		const auto [scanStart, scanEnd, y, dy] = seedStack.top();
 		seedStack.pop();
 
 		int scanLeft = scanStart;
@@ -307,7 +312,7 @@ void FindTransparencyValues(Point floor, uint8_t floorID)
 			checkDiagonals({ scanLeft, y }, left);
 		}
 		if (scanLeft < scanStart)
-			seedStack.push(std::make_tuple(scanLeft, scanStart - 1, y - dy, -dy));
+			seedStack.push(Seed { scanLeft, scanStart - 1, y - dy, -dy });
 
 		int scanRight = scanStart;
 		while (scanRight < scanEnd) {
@@ -315,9 +320,9 @@ void FindTransparencyValues(Point floor, uint8_t floorID)
 				set(scanRight, y);
 				scanRight++;
 			}
-			seedStack.push(std::make_tuple(scanLeft, scanRight - 1, y + dy, dy));
+			seedStack.push(Seed { scanLeft, scanRight - 1, y + dy, dy });
 			if (scanRight - 1 > scanEnd)
-				seedStack.push(std::make_tuple(scanEnd + 1, scanRight - 1, y - dy, -dy));
+				seedStack.push(Seed { scanEnd + 1, scanRight - 1, y - dy, -dy });
 			if (scanLeft < scanRight)
 				checkDiagonals({ scanRight - 1, y }, right);
 

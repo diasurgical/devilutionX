@@ -45,7 +45,13 @@ private:
 
 	endpoint_t firstpeer;
 	std::string gamename;
-	std::map<std::string, std::tuple<GameData, std::vector<std::string>, endpoint_t>> game_list;
+
+	struct GameListValue {
+		GameData data;
+		std::vector<std::string> playerNames;
+		endpoint_t peer;
+	};
+	std::map</*name*/ std::string, GameListValue> game_list;
 	std::array<Peer, MAX_PLRS> peers;
 	bool isGameHost_;
 
@@ -99,8 +105,8 @@ bool base_protocol<P>::wait_firstpeer()
 {
 	// wait for peer for 5 seconds
 	for (auto i = 0; i < 500; ++i) {
-		if (game_list.count(gamename)) {
-			firstpeer = std::get<2>(game_list[gamename]);
+		if (game_list.find(gamename) != game_list.end()) {
+			firstpeer = game_list[gamename].peer;
 			break;
 		}
 		send_info_request();
@@ -310,7 +316,7 @@ void base_protocol<P>::recv_decrypted(packet &pkt, endpoint_t sender)
 		size_t gameNameSize = pkt.Info().size() - neededSize;
 		gameName.resize(gameNameSize);
 		std::memcpy(&gameName[0], pkt.Info().data() + neededSize, gameNameSize);
-		game_list[gameName] = std::make_tuple(*gameData, playerNames, sender);
+		game_list[gameName] = GameListValue { *gameData, std::move(playerNames), sender };
 		return;
 	}
 	recv_ingame(pkt, sender);
@@ -437,7 +443,7 @@ std::vector<GameInfo> base_protocol<P>::get_gamelist()
 	ret.reserve(game_list.size());
 	for (const auto &[name, gameInfo] : game_list) {
 		const auto &[gameData, players, _] = gameInfo;
-		ret.push_back({ name, gameData, players });
+		ret.push_back(GameInfo { name, gameData, players });
 	}
 	return ret;
 }
