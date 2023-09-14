@@ -39,12 +39,14 @@ enum MapColors : uint8_t {
 	MapColorsBright = PAL8_YELLOW,
 	/** color for dim map lines/dots */
 	MapColorsDim = (PAL16_YELLOW + 8),
-	/** color for grates */
-	MapColorsGrate = (PAL16_YELLOW + 4),
 	/** color for items on automap */
 	MapColorsItem = (PAL8_BLUE + 1),
-	/** color for lava on automap */
+	/** color for cave lava on automap */
 	MapColorsLava = (PAL8_ORANGE + 2),
+	/** color for cave water on automap */
+	MapColorsWater = (PAL8_BLUE + 2),
+	/** color for hive acid on automap */
+	MapColorsAcid = (PAL8_YELLOW + 2),
 };
 
 struct AutomapTile {
@@ -209,23 +211,6 @@ void DrawMapVerticalDoor(const Surface &out, Point center, AutomapTile neTile, u
 }
 
 /**
- * @brief Draws a dotted line to represent a wall grate.
- */
-void DrawMapVerticalGrate(const Surface &out, Point center, uint8_t colorDim)
-{
-	Point pos1 = center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::None) + AmOffset(AmWidthOffset::EighthTileRight, AmHeightOffset::EighthTileUp);
-	Point pos2 = center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::None);
-	Point pos3 = center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::None) + AmOffset(AmWidthOffset::EighthTileLeft, AmHeightOffset::EighthTileDown);
-
-	out.SetPixel(pos1 + Displacement { 0, 1 }, 0);
-	out.SetPixel(pos2 + Displacement { 0, 1 }, 0);
-	out.SetPixel(pos3 + Displacement { 0, 1 }, 0);
-	out.SetPixel(pos1, colorDim);
-	out.SetPixel(pos2, colorDim);
-	out.SetPixel(pos3, colorDim);
-}
-
-/**
  * @brief Draws a bright diamond and a line, orientation depending on the tileset.
  */
 void DrawMapHorizontalDoor(const Surface &out, Point center, AutomapTile nwTile, uint8_t colorBright, uint8_t colorDim)
@@ -272,23 +257,6 @@ void DrawMapHorizontalDoor(const Surface &out, Point center, AutomapTile nwTile,
 	if (!(nwTile.HasFlag(AutomapTile::Flags::HorizontalPassage) && leveltype == DTYPE_CATHEDRAL))
 		DrawMapLineSE(out, center + AmOffset(lWidthOffset, lHeightOffset), AmLine(length), colorDim);
 	DrawDiamond(out, center + AmOffset(dWidthOffset, dHeightOffset), colorBright);
-}
-
-/**
- * @brief Draws a dotted line to represent a wall grate.
- */
-void DrawMapHorizontalGrate(const Surface &out, Point center, uint8_t colorDim)
-{
-	Point pos1 = center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::None) + AmOffset(AmWidthOffset::EighthTileLeft, AmHeightOffset::EighthTileUp);
-	Point pos2 = center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::None);
-	Point pos3 = center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::None) + AmOffset(AmWidthOffset::EighthTileRight, AmHeightOffset::EighthTileDown);
-
-	out.SetPixel(pos1 + Displacement { 0, 1 }, 0);
-	out.SetPixel(pos2 + Displacement { 0, 1 }, 0);
-	out.SetPixel(pos3 + Displacement { 0, 1 }, 0);
-	out.SetPixel(pos1, colorDim);
-	out.SetPixel(pos2, colorDim);
-	out.SetPixel(pos3, colorDim);
 }
 
 /**
@@ -649,7 +617,7 @@ void DrawWallConnections(const Surface &out, Point center, AutomapTile nwTile, A
 /**
  * Left-facing obstacle
  */
-void DrawHorizontal(const Surface &out, Point center, AutomapTile tile, AutomapTile nwTile, AutomapTile neTile, AutomapTile seTile, uint8_t colorBright, uint8_t colorDim, uint8_t colorGrate)
+void DrawHorizontal(const Surface &out, Point center, AutomapTile tile, AutomapTile nwTile, AutomapTile neTile, AutomapTile seTile, uint8_t colorBright, uint8_t colorDim)
 {
 	AmWidthOffset w = AmWidthOffset::None;
 	AmHeightOffset h = AmHeightOffset::HalfTileUp;
@@ -673,22 +641,20 @@ void DrawHorizontal(const Surface &out, Point center, AutomapTile tile, AutomapT
 		l = AmLineLength::FullTile;
 	}
 	// Draw the wall line if the wall is solid
-	if (!tile.HasFlag(AutomapTile::Flags::HorizontalPassage)) {
+	if (!tile.hasAnyFlag(AutomapTile::Flags::HorizontalDoor, AutomapTile::Flags::HorizontalArch)) {
 		DrawMapLineSE(out, center + AmOffset(w, h), AmLine(l), colorDim);
 		return;
 	}
-	// Draw door or grate (door diamond is bright, grate diamond is dim)
+	// Draw door
 	if (tile.HasFlag(AutomapTile::Flags::HorizontalDoor)) {
 		DrawMapHorizontalDoor(out, center, nwTile, colorBright, colorDim);
-	} else if (tile.HasFlag(AutomapTile::Flags::HorizontalGrate)) {
-		DrawMapHorizontalGrate(out, center, colorGrate);
 	}
 }
 
 /**
  * Right-facing obstacle
  */
-void DrawVertical(const Surface &out, Point center, AutomapTile tile, AutomapTile nwTile, AutomapTile neTile, AutomapTile swTile, uint8_t colorBright, uint8_t colorDim, uint8_t colorGrate)
+void DrawVertical(const Surface &out, Point center, AutomapTile tile, AutomapTile nwTile, AutomapTile neTile, AutomapTile swTile, uint8_t colorBright, uint8_t colorDim)
 {
 	AmWidthOffset w = AmWidthOffset::ThreeQuartersTileLeft;
 	AmHeightOffset h = AmHeightOffset::QuarterTileDown;
@@ -712,15 +678,13 @@ void DrawVertical(const Surface &out, Point center, AutomapTile tile, AutomapTil
 		l = AmLineLength::FullTile;
 	}
 	// Draw the wall line if the wall is solid
-	if (!tile.HasFlag(AutomapTile::Flags::VerticalPassage)) {
+	if (!tile.hasAnyFlag(AutomapTile::Flags::VerticalDoor, AutomapTile::Flags::VerticalArch)) {
 		DrawMapLineNE(out, center + AmOffset(w, h), AmLine(l), colorDim);
 		return;
 	}
-	// Draw door or grate (door diamond is bright, grate diamond is dim)
+	// Draw door
 	if (tile.HasFlag(AutomapTile::Flags::VerticalDoor)) {
 		DrawMapVerticalDoor(out, center, neTile, colorBright, colorDim);
-	} else if (tile.HasFlag(AutomapTile::Flags::VerticalGrate)) {
-		DrawMapVerticalGrate(out, center, colorGrate);
 	}
 }
 
@@ -888,30 +852,6 @@ AutomapTile GetAutomapTypeView(Point map)
 	return GetAutomapType(map);
 }
 
-AutomapTile GetAutomapTileInDirection(Direction dir, Point map)
-{
-	switch (dir) {
-	case Direction::South:
-		return GetAutomapTypeView(map + Displacement { 1, 1 });
-	case Direction::SouthWest:
-		return GetAutomapTypeView(map + Displacement { 0, 1 });
-	case Direction::West:
-		return GetAutomapTypeView(map + Displacement { -1, 1 });
-	case Direction::NorthWest:
-		return GetAutomapTypeView(map + Displacement { -1, 0 });
-	case Direction::North:
-		return GetAutomapTypeView(map + Displacement { -1, -1 });
-	case Direction::NorthEast:
-		return GetAutomapTypeView(map + Displacement { 0, -1 });
-	case Direction::East:
-		return GetAutomapTypeView(map + Displacement { 1, -1 });
-	case Direction::SouthEast:
-		return GetAutomapTypeView(map + Displacement { 1, 0 });
-	case Direction::NoDirection:
-		return GetAutomapTypeView(map);
-	}
-}
-
 /**
  * @brief Renders the given automap shape at the specified screen coordinates.
  */
@@ -919,19 +859,16 @@ void DrawAutomapTile(const Surface &out, Point center, Point map)
 {
 	uint8_t colorBright = MapColorsBright;
 	uint8_t colorDim = MapColorsDim;
-	uint8_t colorGrate = MapColorsGrate;
 	MapExplorationType explorationType = static_cast<MapExplorationType>(AutomapView[std::clamp(map.x, 0, DMAXX - 1)][std::clamp(map.y, 0, DMAXY - 1)]);
 
 	switch (explorationType) {
 	case MAP_EXP_SHRINE:
 		colorDim = PAL16_GRAY + 11;
 		colorBright = PAL16_GRAY + 3;
-		colorGrate = PAL16_GRAY + 7;
 		break;
 	case MAP_EXP_OTHERS:
 		colorDim = PAL16_BEIGE + 10;
 		colorBright = PAL16_BEIGE + 2;
-		colorGrate = PAL16_BEIGE + 6;
 		break;
 	case MAP_EXP_SELF:
 	case MAP_EXP_NONE:
@@ -940,9 +877,9 @@ void DrawAutomapTile(const Surface &out, Point center, Point map)
 	}
 
 	bool noConnect = false;
-	AutomapTile tile = GetAutomapTileInDirection(Direction::NoDirection, map);
-	AutomapTile nwTile = GetAutomapTileInDirection(Direction::NorthWest, map);
-	AutomapTile neTile = GetAutomapTileInDirection(Direction::NorthEast, map);
+	AutomapTile tile = GetAutomapTypeView(map + Direction::NoDirection);
+	AutomapTile nwTile = GetAutomapTypeView(map + Direction::NorthWest);
+	AutomapTile neTile = GetAutomapTypeView(map + Direction::NorthEast);
 
 	// If the tile is an arch, grate, or diamond, we draw a diamond and therefore don't want connection lines
 	if (tile.hasAnyFlag(AutomapTile::Flags::HorizontalArch, AutomapTile::Flags::VerticalArch, AutomapTile::Flags::HorizontalGrate, AutomapTile::Flags::VerticalGrate)
@@ -956,12 +893,12 @@ void DrawAutomapTile(const Surface &out, Point center, Point map)
 	if (IsAnyOf(leveltype, DTYPE_CATACOMBS, DTYPE_CAVES) && (tile.HasFlag(AutomapTile::Flags::HorizontalDoor) || tile.HasFlag(AutomapTile::Flags::VerticalDoor)))
 		noConnect = true;
 
-	AutomapTile swTile = GetAutomapTileInDirection(Direction::SouthWest, map);
-	AutomapTile sTile = GetAutomapTileInDirection(Direction::South, map);
-	AutomapTile seTile = GetAutomapTileInDirection(Direction::SouthEast, map);
-	AutomapTile nTile = GetAutomapTileInDirection(Direction::North, map);
-	AutomapTile wTile = GetAutomapTileInDirection(Direction::West, map);
-	AutomapTile eTile = GetAutomapTileInDirection(Direction::East, map);
+	AutomapTile swTile = GetAutomapTypeView(map + Direction::SouthWest);
+	AutomapTile sTile = GetAutomapTypeView(map + Direction::South);
+	AutomapTile seTile = GetAutomapTypeView(map + Direction::SouthEast);
+	AutomapTile nTile = GetAutomapTypeView(map + Direction::North);
+	AutomapTile wTile = GetAutomapTypeView(map + Direction::West);
+	AutomapTile eTile = GetAutomapTypeView(map + Direction::East);
 
 	if ((leveltype == DTYPE_TOWN && tile.HasFlag(AutomapTile::Flags::Dirt))
 	    || (tile.HasFlag(AutomapTile::Flags::Dirt)
@@ -988,6 +925,17 @@ void DrawAutomapTile(const Surface &out, Point center, Point map)
 		DrawWallConnections(out, center, nwTile, neTile, colorBright, colorDim);
 	}
 
+	uint8_t lavaColor = MapColorsLava;
+	if (leveltype == DTYPE_NEST) {
+		lavaColor = MapColorsAcid;
+	} else if (setlevel && setlvlnum == Quests[Q_PWATER]._qslvl) {
+		if (Quests[Q_PWATER]._qactive != QUEST_DONE) {
+			lavaColor = MapColorsAcid;
+		} else {
+			lavaColor = MapColorsWater;
+		}
+	}
+
 	switch (tile.type) {
 	case AutomapTile::Types::Diamond: // stand-alone column or other unpassable object
 		DrawDiamond(out, center, colorDim);
@@ -995,25 +943,25 @@ void DrawAutomapTile(const Surface &out, Point center, Point map)
 	case AutomapTile::Types::Vertical:
 	case AutomapTile::Types::FenceVertical:
 	case AutomapTile::Types::VerticalDiamond:
-		DrawVertical(out, center, tile, nwTile, neTile, swTile, colorBright, colorDim, colorGrate);
+		DrawVertical(out, center, tile, nwTile, neTile, swTile, colorBright, colorDim);
 		break;
 	case AutomapTile::Types::Horizontal:
 	case AutomapTile::Types::FenceHorizontal:
 	case AutomapTile::Types::HorizontalDiamond:
-		DrawHorizontal(out, center, tile, nwTile, neTile, seTile, colorBright, colorDim, colorGrate);
+		DrawHorizontal(out, center, tile, nwTile, neTile, seTile, colorBright, colorDim);
 		break;
 	case AutomapTile::Types::Cross:
-		DrawVertical(out, center, tile, nwTile, neTile, swTile, colorBright, colorDim, colorGrate);
-		DrawHorizontal(out, center, tile, nwTile, neTile, seTile, colorBright, colorDim, colorGrate);
+		DrawVertical(out, center, tile, nwTile, neTile, swTile, colorBright, colorDim);
+		DrawHorizontal(out, center, tile, nwTile, neTile, seTile, colorBright, colorDim);
 		break;
 	case AutomapTile::Types::CaveHorizontalCross:
 	case AutomapTile::Types::CaveHorizontalWoodCross:
-		DrawVertical(out, center, tile, nwTile, neTile, swTile, colorBright, colorDim, colorGrate);
+		DrawVertical(out, center, tile, nwTile, neTile, swTile, colorBright, colorDim);
 		DrawCaveHorizontal(out, center, tile, nwTile, swTile, colorBright, colorDim);
 		break;
 	case AutomapTile::Types::CaveVerticalCross:
 	case AutomapTile::Types::CaveVerticalWoodCross:
-		DrawHorizontal(out, center, tile, nwTile, neTile, seTile, colorBright, colorDim, colorGrate);
+		DrawHorizontal(out, center, tile, nwTile, neTile, seTile, colorBright, colorDim);
 		DrawCaveVertical(out, center, tile, neTile, seTile, colorBright, colorDim);
 		break;
 	case AutomapTile::Types::CaveHorizontal:
@@ -1089,71 +1037,71 @@ void DrawAutomapTile(const Surface &out, Point center, Point map)
 		DrawRiverRightOut(out, center, MapColorsItem);
 		break;
 	case AutomapTile::Types::HorizontalLavaThin:
-		DrawLavaRiver<Direction::NorthWest, Direction::SouthEast>(out, center, MapColorsLava, false);
+		DrawLavaRiver<Direction::NorthWest, Direction::SouthEast>(out, center, lavaColor, false);
 		break;
 	case AutomapTile::Types::VerticalLavaThin:
-		DrawLavaRiver<Direction::NorthEast, Direction::SouthWest>(out, center, MapColorsLava, false);
+		DrawLavaRiver<Direction::NorthEast, Direction::SouthWest>(out, center, lavaColor, false);
 		break;
 	case AutomapTile::Types::BendSouthLavaThin:
-		DrawLavaRiver<Direction::SouthWest, Direction::SouthEast>(out, center, MapColorsLava, false);
+		DrawLavaRiver<Direction::SouthWest, Direction::SouthEast>(out, center, lavaColor, false);
 		break;
 	case AutomapTile::Types::BendWestLavaThin:
-		DrawLavaRiver<Direction::NorthWest, Direction::SouthWest>(out, center, MapColorsLava, false);
+		DrawLavaRiver<Direction::NorthWest, Direction::SouthWest>(out, center, lavaColor, false);
 		break;
 	case AutomapTile::Types::BendEastLavaThin:
-		DrawLavaRiver<Direction::NorthEast, Direction::SouthEast>(out, center, MapColorsLava, false);
+		DrawLavaRiver<Direction::NorthEast, Direction::SouthEast>(out, center, lavaColor, false);
 		break;
 	case AutomapTile::Types::BendNorthLavaThin:
-		DrawLavaRiver<Direction::NorthWest, Direction::NorthEast>(out, center, MapColorsLava, false);
+		DrawLavaRiver<Direction::NorthWest, Direction::NorthEast>(out, center, lavaColor, false);
 		break;
 	case AutomapTile::Types::VerticalWallLava:
-		DrawVertical(out, center, tile, nwTile, neTile, swTile, colorBright, colorDim, colorGrate);
-		DrawLavaRiver<Direction::SouthEast, Direction::NoDirection>(out, center, MapColorsLava, false);
+		DrawVertical(out, center, tile, nwTile, neTile, swTile, colorBright, colorDim);
+		DrawLavaRiver<Direction::SouthEast, Direction::NoDirection>(out, center, lavaColor, false);
 		break;
 	case AutomapTile::Types::HorizontalWallLava:
-		DrawHorizontal(out, center, tile, nwTile, neTile, swTile, colorBright, colorDim, colorGrate);
-		DrawLavaRiver<Direction::SouthWest, Direction::NoDirection>(out, center, MapColorsLava, false);
+		DrawHorizontal(out, center, tile, nwTile, neTile, swTile, colorBright, colorDim);
+		DrawLavaRiver<Direction::SouthWest, Direction::NoDirection>(out, center, lavaColor, false);
 		break;
 	case AutomapTile::Types::SELava:
-		DrawLava<Direction::SouthEast>(out, center, MapColorsLava);
+		DrawLava<Direction::SouthEast>(out, center, lavaColor);
 		break;
 	case AutomapTile::Types::SWLava:
-		DrawLava<Direction::SouthWest>(out, center, MapColorsLava);
+		DrawLava<Direction::SouthWest>(out, center, lavaColor);
 		break;
 	case AutomapTile::Types::NELava:
-		DrawLava<Direction::NorthEast>(out, center, MapColorsLava);
+		DrawLava<Direction::NorthEast>(out, center, lavaColor);
 		break;
 	case AutomapTile::Types::NWLava:
-		DrawLava<Direction::NorthWest>(out, center, MapColorsLava);
+		DrawLava<Direction::NorthWest>(out, center, lavaColor);
 		break;
 	case AutomapTile::Types::SLava:
-		DrawLava<Direction::South>(out, center, MapColorsLava);
+		DrawLava<Direction::South>(out, center, lavaColor);
 		break;
 	case AutomapTile::Types::WLava:
-		DrawLava<Direction::West>(out, center, MapColorsLava);
+		DrawLava<Direction::West>(out, center, lavaColor);
 		break;
 	case AutomapTile::Types::ELava:
-		DrawLava<Direction::East>(out, center, MapColorsLava);
+		DrawLava<Direction::East>(out, center, lavaColor);
 		break;
 	case AutomapTile::Types::NLava:
-		DrawLava<Direction::North>(out, center, MapColorsLava);
+		DrawLava<Direction::North>(out, center, lavaColor);
 		break;
 	case AutomapTile::Types::Lava:
-		DrawLava<Direction::NoDirection>(out, center, MapColorsLava);
+		DrawLava<Direction::NoDirection>(out, center, lavaColor);
 		break;
 	case AutomapTile::Types::CaveHorizontalWallLava:
 		DrawCaveHorizontal(out, center, tile, nwTile, swTile, colorBright, colorDim);
-		DrawLavaRiver<Direction::NorthEast, Direction::NoDirection>(out, center, MapColorsLava, false);
+		DrawLavaRiver<Direction::NorthEast, Direction::NoDirection>(out, center, lavaColor, false);
 		break;
 	case AutomapTile::Types::CaveVerticalWallLava:
 		DrawCaveVertical(out, center, tile, neTile, seTile, colorBright, colorDim);
-		DrawLavaRiver<Direction::NorthWest, Direction::NoDirection>(out, center, MapColorsLava, false);
+		DrawLavaRiver<Direction::NorthWest, Direction::NoDirection>(out, center, lavaColor, false);
 		break;
 	case AutomapTile::Types::HorizontalBridgeLava:
-		DrawLavaRiver<Direction::NorthWest, Direction::SouthEast>(out, center, MapColorsLava, true);
+		DrawLavaRiver<Direction::NorthWest, Direction::SouthEast>(out, center, lavaColor, true);
 		break;
 	case AutomapTile::Types::VerticalBridgeLava:
-		DrawLavaRiver<Direction::NorthEast, Direction::SouthWest>(out, center, MapColorsLava, true);
+		DrawLavaRiver<Direction::NorthEast, Direction::SouthWest>(out, center, lavaColor, true);
 		break;
 	}
 }
