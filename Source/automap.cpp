@@ -974,9 +974,7 @@ void DrawAutomapTile(const Surface &out, Point center, Point map)
 		break;
 	case AutomapTile::Types::CaveCross:
 		// Add the missing dirt pixel
-		if (sTile.HasFlag(AutomapTile::Flags::Dirt) || (leveltype != DTYPE_TOWN && IsNoneOf(tile.type, AutomapTile::Types::None))) {
-			out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown), colorDim);
-		}
+		out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown), colorDim);
 	case AutomapTile::Types::CaveWoodCross:
 	case AutomapTile::Types::CaveRightWoodCross:
 	case AutomapTile::Types::CaveLeftWoodCross:
@@ -994,9 +992,8 @@ void DrawAutomapTile(const Surface &out, Point center, Point map)
 		break;
 	case AutomapTile::Types::CaveBottomCorner:
 		// Add the missing dirt pixel
-		if (sTile.HasFlag(AutomapTile::Flags::Dirt) || (leveltype != DTYPE_TOWN && IsNoneOf(tile.type, AutomapTile::Types::None))) {
-			out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown), colorDim);
-		}
+		// BUGFIX: A tile in poisoned water supply isn't drawing this pixel
+		out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown), colorDim);
 		break;
 	case AutomapTile::Types::None:
 		break;
