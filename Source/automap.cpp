@@ -906,9 +906,9 @@ void DrawAutomapTile(const Surface &out, Point center, Point map)
 	            || swTile.type != AutomapTile::Types::None
 	            || sTile.type != AutomapTile::Types::None
 	            || seTile.type != AutomapTile::Types::None
-	            || IsAnyOf(nwTile.type, AutomapTile::Types::CaveCross, AutomapTile::Types::CaveVertical, AutomapTile::Types::CaveVerticalCross, AutomapTile::Types::CaveVerticalWallLava, AutomapTile::Types::CaveVerticalWoodCross)
+	            || IsAnyOf(nwTile.type, AutomapTile::Types::CaveCross, AutomapTile::Types::CaveVertical, AutomapTile::Types::CaveVerticalCross, AutomapTile::Types::CaveVerticalWallLava, AutomapTile::Types::CaveLeftWoodCross)
 	            || IsAnyOf(nTile.type, AutomapTile::Types::CaveCross)
-	            || IsAnyOf(neTile.type, AutomapTile::Types::CaveCross, AutomapTile::Types::CaveHorizontal, AutomapTile::Types::CaveHorizontalCross, AutomapTile::Types::CaveHorizontalWallLava, AutomapTile::Types::CaveHorizontalWoodCross)
+	            || IsAnyOf(neTile.type, AutomapTile::Types::CaveCross, AutomapTile::Types::CaveHorizontal, AutomapTile::Types::CaveHorizontalCross, AutomapTile::Types::CaveHorizontalWallLava, AutomapTile::Types::CaveRightWoodCross)
 	            || IsAnyOf(wTile.type, AutomapTile::Types::CaveVerticalCross)
 	            || IsAnyOf(eTile.type, AutomapTile::Types::CaveHorizontalCross)))) {
 		DrawDirt(out, center, nwTile, neTile, colorDim);
