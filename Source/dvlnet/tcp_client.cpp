@@ -11,8 +11,7 @@
 
 #include <asio/connect.hpp>
 
-namespace devilution {
-namespace net {
+namespace devilution::net {
 
 int tcp_client::create(std::string addrstr)
 {
@@ -141,5 +140,4 @@ std::string tcp_client::make_default_gamename()
 tcp_client::~tcp_client()
     = default;
 
-} // namespace net
-} // namespace devilution
+} // namespace devilution::net

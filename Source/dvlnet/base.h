@@ -17,21 +17,17 @@ namespace net {
 
 class base : public abstract_net {
 public:
-	virtual int create(std::string addrstr) = 0;
-	virtual int join(std::string addrstr) = 0;
-
-	virtual bool SNetReceiveMessage(uint8_t *sender, void **data, uint32_t *size);
-	virtual bool SNetSendMessage(int playerId, void *data, unsigned int size);
-	virtual bool SNetReceiveTurns(char **data, size_t *size, uint32_t *status);
-	virtual bool SNetSendTurn(char *data, unsigned int size);
-	virtual void SNetGetProviderCaps(struct _SNETCAPS *caps);
-	virtual bool SNetRegisterEventHandler(event_type evtype,
-	    SEVTHANDLER func);
-	virtual bool SNetUnregisterEventHandler(event_type evtype);
-	virtual bool SNetLeaveGame(int type);
-	virtual bool SNetDropPlayer(int playerid, uint32_t flags);
-	virtual bool SNetGetOwnerTurnsWaiting(uint32_t *turns);
-	virtual bool SNetGetTurnsInTransit(uint32_t *turns);
+	bool SNetReceiveMessage(uint8_t *sender, void **data, uint32_t *size) override;
+	bool SNetSendMessage(int playerId, void *data, unsigned int size) override;
+	bool SNetReceiveTurns(char **data, size_t *size, uint32_t *status) override;
+	bool SNetSendTurn(char *data, unsigned int size) override;
+	void SNetGetProviderCaps(struct _SNETCAPS *caps) override;
+	bool SNetRegisterEventHandler(event_type evtype, SEVTHANDLER func) override;
+	bool SNetUnregisterEventHandler(event_type evtype) override;
+	bool SNetLeaveGame(int type) override;
+	bool SNetDropPlayer(int playerid, uint32_t flags) override;
+	bool SNetGetOwnerTurnsWaiting(uint32_t *turns) override;
+	bool SNetGetTurnsInTransit(uint32_t *turns) override;
 
 	virtual void poll() = 0;
 	virtual void send(packet &pkt) = 0;
@@ -39,10 +35,10 @@ public:
 
 	void setup_gameinfo(buffer_t info);
 
-	virtual void setup_password(std::string pw);
-	virtual void clear_password();
+	void setup_password(std::string pw) override;
+	void clear_password() override;
 
-	virtual ~base() = default;
+	~base() override = default;
 
 protected:
 	std::map<event_type, SEVTHANDLER> registered_handlers;
