@@ -81,27 +81,6 @@ struct AutomapTile {
 		CaveWoodCross,
 		CaveRightWoodCross,
 		CaveLeftWoodCross,
-		HorizontalLavaThin, // unused
-		VerticalLavaThin,   // unused
-		BendSouthLavaThin,  // unused
-		BendWestLavaThin,   // unused
-		BendEastLavaThin,   // unused
-		BendNorthLavaThin,  // unused
-		VerticalWallLava,
-		HorizontalWallLava,
-		SELava, // unused
-		SWLava, // unused
-		NELava, // unused
-		NWLava, // unused
-		SLava,  // unused
-		WLava,  // unused
-		ELava,  // unused
-		NLava,  // unused
-		Lava,   // unused
-		CaveHorizontalWallLava,
-		CaveVerticalWallLava,
-		HorizontalBridgeLava, // unused
-		VerticalBridgeLava,   // unused
 		VerticalDiamond,
 		HorizontalDiamond,
 	};
@@ -505,11 +484,11 @@ void FixVerticalDoor(const Surface &out, Point center, AutomapTile neTile, uint8
  */
 void DrawWallConnections(const Surface &out, Point center, AutomapTile nwTile, AutomapTile neTile, uint8_t colorBright, uint8_t colorDim)
 {
-	if (IsAnyOf(nwTile.type, AutomapTile::Types::HorizontalWallLava, AutomapTile::Types::Horizontal, AutomapTile::Types::HorizontalDiamond, AutomapTile::Types::FenceHorizontal, AutomapTile::Types::Cross, AutomapTile::Types::CaveVerticalWoodCross, AutomapTile::Types::CaveRightCorner)) {
+	if (IsAnyOf(nwTile.type, AutomapTile::Types::Horizontal, AutomapTile::Types::HorizontalDiamond, AutomapTile::Types::FenceHorizontal, AutomapTile::Types::Cross, AutomapTile::Types::CaveVerticalWoodCross, AutomapTile::Types::CaveRightCorner)) {
 		DrawMapLineSE(out, center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::ThreeQuartersTileUp), AmLine(AmLineLength::HalfTile), colorDim);
 		FixHorizontalDoor(out, center, nwTile, colorBright);
 	}
-	if (IsAnyOf(neTile.type, AutomapTile::Types::VerticalWallLava, AutomapTile::Types::Vertical, AutomapTile::Types::VerticalDiamond, AutomapTile::Types::FenceVertical, AutomapTile::Types::Cross, AutomapTile::Types::CaveHorizontalWoodCross, AutomapTile::Types::CaveLeftCorner)) {
+	if (IsAnyOf(neTile.type, AutomapTile::Types::Vertical, AutomapTile::Types::VerticalDiamond, AutomapTile::Types::FenceVertical, AutomapTile::Types::Cross, AutomapTile::Types::CaveHorizontalWoodCross, AutomapTile::Types::CaveLeftCorner)) {
 		DrawMapLineNE(out, center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileUp), AmLine(AmLineLength::HalfTile), colorDim);
 		FixVerticalDoor(out, center, neTile, colorBright);
 	}
@@ -601,10 +580,10 @@ void DrawCorner(const Surface &out, Point center, AutomapTile nwTile, AutomapTil
  */
 void DrawCaveWallConnections(const Surface &out, Point center, AutomapTile sTile, AutomapTile swTile, AutomapTile seTile, uint8_t colorDim)
 {
-	if (IsAnyOf(swTile.type, AutomapTile::Types::CaveVerticalWallLava, AutomapTile::Types::CaveVertical, AutomapTile::Types::CaveVerticalWood, AutomapTile::Types::CaveCross, AutomapTile::Types::CaveWoodCross, AutomapTile::Types::CaveRightWoodCross, AutomapTile::Types::CaveLeftWoodCross, AutomapTile::Types::CaveRightCorner)) {
+	if (IsAnyOf(swTile.type, AutomapTile::Types::CaveVertical, AutomapTile::Types::CaveVerticalWood, AutomapTile::Types::CaveCross, AutomapTile::Types::CaveWoodCross, AutomapTile::Types::CaveRightWoodCross, AutomapTile::Types::CaveLeftWoodCross, AutomapTile::Types::CaveRightCorner)) {
 		DrawMapLineNE(out, center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::ThreeQuartersTileDown), AmLine(AmLineLength::HalfTile), colorDim);
 	}
-	if (IsAnyOf(seTile.type, AutomapTile::Types::CaveHorizontalWallLava, AutomapTile::Types::CaveHorizontal, AutomapTile::Types::CaveHorizontalWood, AutomapTile::Types::CaveCross, AutomapTile::Types::CaveWoodCross, AutomapTile::Types::CaveRightWoodCross, AutomapTile::Types::CaveLeftWoodCross, AutomapTile::Types::CaveLeftCorner)) {
+	if (IsAnyOf(seTile.type, AutomapTile::Types::CaveHorizontal, AutomapTile::Types::CaveHorizontalWood, AutomapTile::Types::CaveCross, AutomapTile::Types::CaveWoodCross, AutomapTile::Types::CaveRightWoodCross, AutomapTile::Types::CaveLeftWoodCross, AutomapTile::Types::CaveLeftCorner)) {
 		DrawMapLineSE(out, center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileDown), AmLine(AmLineLength::HalfTile), colorDim);
 	}
 }
@@ -807,9 +786,9 @@ void DrawAutomapTile(const Surface &out, Point center, Point map)
 	            || swTile.type != AutomapTile::Types::None
 	            || sTile.type != AutomapTile::Types::None
 	            || seTile.type != AutomapTile::Types::None
-	            || IsAnyOf(nwTile.type, AutomapTile::Types::CaveCross, AutomapTile::Types::CaveVertical, AutomapTile::Types::CaveVerticalCross, AutomapTile::Types::CaveVerticalWallLava, AutomapTile::Types::CaveLeftWoodCross)
+	            || IsAnyOf(nwTile.type, AutomapTile::Types::CaveCross, AutomapTile::Types::CaveVertical, AutomapTile::Types::CaveVerticalCross, AutomapTile::Types::CaveLeftWoodCross)
 	            || IsAnyOf(nTile.type, AutomapTile::Types::CaveCross)
-	            || IsAnyOf(neTile.type, AutomapTile::Types::CaveCross, AutomapTile::Types::CaveHorizontal, AutomapTile::Types::CaveHorizontalCross, AutomapTile::Types::CaveHorizontalWallLava, AutomapTile::Types::CaveRightWoodCross)
+	            || IsAnyOf(neTile.type, AutomapTile::Types::CaveCross, AutomapTile::Types::CaveHorizontal, AutomapTile::Types::CaveHorizontalCross, AutomapTile::Types::CaveRightWoodCross)
 	            || IsAnyOf(wTile.type, AutomapTile::Types::CaveVerticalCross)
 	            || IsAnyOf(eTile.type, AutomapTile::Types::CaveHorizontalCross)))) {
 		DrawDirt(out, center, nwTile, neTile, colorDim);
@@ -922,25 +901,6 @@ void DrawAutomapTile(const Surface &out, Point center, Point map)
 		break;
 	case AutomapTile::Types::RiverRightOut:
 		DrawRiverRightOut(out, center, MapColorsItem);
-		break;
-	case AutomapTile::Types::HorizontalLavaThin:
-	case AutomapTile::Types::VerticalLavaThin:
-	case AutomapTile::Types::BendSouthLavaThin:
-	case AutomapTile::Types::BendWestLavaThin:
-	case AutomapTile::Types::BendEastLavaThin:
-	case AutomapTile::Types::BendNorthLavaThin:
-		break;
-	case AutomapTile::Types::VerticalWallLava:
-		DrawVertical(out, center, tile, nwTile, neTile, swTile, colorBright, colorDim);
-		break;
-	case AutomapTile::Types::HorizontalWallLava:
-		DrawHorizontal(out, center, tile, nwTile, neTile, swTile, colorBright, colorDim);
-		break;
-	case AutomapTile::Types::CaveHorizontalWallLava:
-		DrawCaveHorizontal(out, center, tile, nwTile, swTile, colorBright, colorDim);
-		break;
-	case AutomapTile::Types::CaveVerticalWallLava:
-		DrawCaveVertical(out, center, tile, neTile, seTile, colorBright, colorDim);
 		break;
 	}
 }
@@ -1214,71 +1174,6 @@ void InitAutomap()
 			tileTypes[142] = { AutomapTile::Types::CaveWoodCross };
 			tileTypes[138] = { AutomapTile::Types::CaveRightWoodCross };
 			tileTypes[139] = { AutomapTile::Types::CaveLeftWoodCross };
-			tileTypes[14] = { AutomapTile::Types::HorizontalLavaThin };
-			tileTypes[15] = { AutomapTile::Types::HorizontalLavaThin };
-			tileTypes[16] = { AutomapTile::Types::VerticalLavaThin };
-			tileTypes[17] = { AutomapTile::Types::VerticalLavaThin };
-			tileTypes[18] = { AutomapTile::Types::BendSouthLavaThin };
-			tileTypes[19] = { AutomapTile::Types::BendWestLavaThin };
-			tileTypes[20] = { AutomapTile::Types::BendEastLavaThin };
-			tileTypes[21] = { AutomapTile::Types::BendNorthLavaThin };
-			tileTypes[22] = { AutomapTile::Types::VerticalWallLava };
-			tileTypes[23] = { AutomapTile::Types::HorizontalWallLava };
-			tileTypes[24] = { AutomapTile::Types::SELava };
-			tileTypes[25] = { AutomapTile::Types::SWLava };
-			tileTypes[26] = { AutomapTile::Types::NELava };
-			tileTypes[27] = { AutomapTile::Types::NWLava };
-			tileTypes[28] = { AutomapTile::Types::SLava };
-			tileTypes[29] = { AutomapTile::Types::WLava };
-			tileTypes[30] = { AutomapTile::Types::ELava };
-			tileTypes[31] = { AutomapTile::Types::NLava };
-			tileTypes[32] = { AutomapTile::Types::Lava };
-			tileTypes[33] = { AutomapTile::Types::Lava };
-			tileTypes[34] = { AutomapTile::Types::Lava };
-			tileTypes[35] = { AutomapTile::Types::Lava };
-			tileTypes[36] = { AutomapTile::Types::Lava };
-			tileTypes[37] = { AutomapTile::Types::Lava };
-			tileTypes[38] = { AutomapTile::Types::Lava };
-			tileTypes[39] = { AutomapTile::Types::Lava };
-			tileTypes[40] = { AutomapTile::Types::Lava };
-			tileTypes[41] = { AutomapTile::Types::CaveHorizontalWallLava };
-			tileTypes[42] = { AutomapTile::Types::CaveVerticalWallLava };
-			tileTypes[43] = { AutomapTile::Types::HorizontalBridgeLava };
-			tileTypes[44] = { AutomapTile::Types::VerticalBridgeLava };
-		} else if (IsAnyOf(leveltype, DTYPE_NEST)) {
-			tileTypes[102] = { AutomapTile::Types::HorizontalLavaThin };
-			tileTypes[103] = { AutomapTile::Types::HorizontalLavaThin };
-			tileTypes[108] = { AutomapTile::Types::HorizontalLavaThin };
-			tileTypes[104] = { AutomapTile::Types::VerticalLavaThin };
-			tileTypes[105] = { AutomapTile::Types::VerticalLavaThin };
-			tileTypes[107] = { AutomapTile::Types::VerticalLavaThin };
-			tileTypes[112] = { AutomapTile::Types::BendSouthLavaThin };
-			tileTypes[113] = { AutomapTile::Types::BendWestLavaThin };
-			tileTypes[110] = { AutomapTile::Types::BendEastLavaThin };
-			tileTypes[111] = { AutomapTile::Types::BendNorthLavaThin };
-			tileTypes[134] = { AutomapTile::Types::VerticalWallLava };
-			tileTypes[135] = { AutomapTile::Types::HorizontalWallLava };
-			tileTypes[118] = { AutomapTile::Types::SELava };
-			tileTypes[119] = { AutomapTile::Types::SWLava };
-			tileTypes[120] = { AutomapTile::Types::NELava };
-			tileTypes[121] = { AutomapTile::Types::NWLava };
-			tileTypes[106] = { AutomapTile::Types::SLava };
-			tileTypes[114] = { AutomapTile::Types::WLava };
-			tileTypes[130] = { AutomapTile::Types::ELava };
-			tileTypes[122] = { AutomapTile::Types::NLava };
-			tileTypes[117] = { AutomapTile::Types::Lava };
-			tileTypes[124] = { AutomapTile::Types::Lava };
-			tileTypes[126] = { AutomapTile::Types::Lava };
-			tileTypes[127] = { AutomapTile::Types::Lava };
-			tileTypes[128] = { AutomapTile::Types::Lava };
-			tileTypes[129] = { AutomapTile::Types::Lava };
-			tileTypes[131] = { AutomapTile::Types::Lava };
-			tileTypes[132] = { AutomapTile::Types::Lava };
-			tileTypes[133] = { AutomapTile::Types::Lava };
-			tileTypes[136] = { AutomapTile::Types::CaveHorizontalWallLava };
-			tileTypes[137] = { AutomapTile::Types::CaveVerticalWallLava };
-			tileTypes[115] = { AutomapTile::Types::HorizontalBridgeLava };
-			tileTypes[116] = { AutomapTile::Types::VerticalBridgeLava };
 		}
 		break;
 	case DTYPE_HELL:
