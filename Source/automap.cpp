@@ -303,10 +303,8 @@ void DrawDirt(const Surface &out, Point center, AutomapTile nwTile, AutomapTile 
 	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileDown), color);
 	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::ThreeQuartersTileDown), color);
 	// Prevent the top dirt pixel from appearing inside arch diamonds
-	if (!nwTile.HasFlag(AutomapTile::Flags::HorizontalArch)
-	    && !nwTile.HasFlag(AutomapTile::Flags::HorizontalGrate)
-	    && !neTile.HasFlag(AutomapTile::Flags::VerticalArch)
-	    && !neTile.HasFlag(AutomapTile::Flags::VerticalGrate))
+	if (!nwTile.hasAnyFlag(AutomapTile::Flags::HorizontalArch, AutomapTile::Flags::HorizontalGrate)
+	    && !neTile.hasAnyFlag(AutomapTile::Flags::VerticalArch, AutomapTile::Flags::VerticalGrate))
 		out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileUp), color);
 	out.SetPixel(center, color);
 	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileDown), color);
@@ -658,14 +656,9 @@ void DrawHorizontal(const Surface &out, Point center, AutomapTile tile, AutomapT
 	AmLineLength l = AmLineLength::FullAndHalfTile;
 
 	// Draw a diamond in the top tile
-	if (neTile.HasFlag(AutomapTile::Flags::VerticalArch)         // NE tile has an arch, so add a diamond for visual consistency
-	    || neTile.HasFlag(AutomapTile::Flags::VerticalGrate)     // NE tile has a grate, so add a diamond for visual consistency
-	    || nwTile.HasFlag(AutomapTile::Flags::HorizontalArch)    // NW tile has an arch, so add a diamond for visual consistency
-	    || nwTile.HasFlag(AutomapTile::Flags::HorizontalGrate)   // NW tile has a grate, so add a diamond for visual consistency
-	    || tile.HasFlag(AutomapTile::Flags::VerticalArch)        // Current tile has an arch, add a diamond
-	    || tile.HasFlag(AutomapTile::Flags::HorizontalArch)      // Current tile has an arch, add a diamond
-	    || tile.HasFlag(AutomapTile::Flags::VerticalGrate)       // Current tile has an grate, add a diamond
-	    || tile.HasFlag(AutomapTile::Flags::HorizontalGrate)     // Current tile has an grate, add a diamond
+	if (neTile.hasAnyFlag(AutomapTile::Flags::VerticalArch, AutomapTile::Flags::VerticalGrate) // NE tile has an arch, so add a diamond for visual consistency
+	    || nwTile.hasAnyFlag(AutomapTile::Flags::HorizontalArch, AutomapTile::Flags::HorizontalGrate) // NW tile has an arch, so add a diamond for visual consistency
+	    || tile.hasAnyFlag(AutomapTile::Flags::VerticalArch, AutomapTile::Flags::HorizontalArch, AutomapTile::Flags::VerticalGrate, AutomapTile::Flags::HorizontalGrate) // Current tile has an arch, add a diamond
 	    || tile.type == AutomapTile::Types::HorizontalDiamond) { // wall ending in hell that should end with a diamond
 		w = AmWidthOffset::QuarterTileRight;
 		h = AmHeightOffset::QuarterTileUp;
@@ -702,14 +695,9 @@ void DrawVertical(const Surface &out, Point center, AutomapTile tile, AutomapTil
 	AmLineLength l = AmLineLength::FullAndHalfTile;
 
 	// Draw a diamond in the top tile
-	if (neTile.HasFlag(AutomapTile::Flags::VerticalArch)       // NE tile has an arch, so add a diamond for visual consistency
-	    || neTile.HasFlag(AutomapTile::Flags::VerticalGrate)   // NE tile has a grate, so add a diamond for visual consistency
-	    || nwTile.HasFlag(AutomapTile::Flags::HorizontalArch)  // NW tile has an arch, so add a diamond for visual consistency
-	    || nwTile.HasFlag(AutomapTile::Flags::HorizontalGrate) // NW tile has a grate, so add a diamond for visual consistency
-	    || tile.HasFlag(AutomapTile::Flags::VerticalArch)      // Current tile has an arch, add a diamond
-	    || tile.HasFlag(AutomapTile::Flags::HorizontalArch)    // Current tile has an arch, add a diamond
-	    || tile.HasFlag(AutomapTile::Flags::VerticalGrate)     // Current tile has an grate, add a diamond
-	    || tile.HasFlag(AutomapTile::Flags::HorizontalGrate)   // Current tile has an grate, add a diamond
+	if (neTile.hasAnyFlag(AutomapTile::Flags::VerticalArch, AutomapTile::Flags::VerticalGrate) // NE tile has an arch, so add a diamond for visual consistency
+	    || nwTile.hasAnyFlag(AutomapTile::Flags::HorizontalArch, AutomapTile::Flags::HorizontalGrate) // NW tile has an arch, so add a diamond for visual consistency
+	    || tile.hasAnyFlag(AutomapTile::Flags::VerticalArch, AutomapTile::Flags::HorizontalArch, AutomapTile::Flags::VerticalGrate, AutomapTile::Flags::HorizontalGrate) // Current tile has an arch, add a diamond
 	    || tile.type == AutomapTile::Types::VerticalDiamond) { // wall ending in hell that should end with a diamond
 		l = AmLineLength::FullTile;                            // shorten line to avoid overdraw
 		DrawDiamond(out, center, colorDim);
