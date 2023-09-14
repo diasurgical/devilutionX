@@ -379,7 +379,7 @@ void DrawRiverLeftOut(const Surface &out, Point center, uint8_t color)
 
 	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileUp), color);
 	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileDown), color);
-	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::FullTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::ThreeQuartersTileDown), color);
 
 	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::None), color);
 	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::HalfTileDown), color);
@@ -443,7 +443,7 @@ void DrawRiver(const Surface &out, Point center, uint8_t color)
 	out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::HalfTileDown), color);
 
 	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileDown), color);
-	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::FullTileDown), color);
+	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::ThreeQuartersTileDown), color);
 
 	out.SetPixel(center, color);
 	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileDown), color);
@@ -748,27 +748,27 @@ void DrawCorner(const Surface &out, Point center, AutomapTile nwTile, AutomapTil
  */
 void DrawCaveWallConnections(const Surface &out, Point center, AutomapTile sTile, AutomapTile swTile, AutomapTile seTile, uint8_t colorDim)
 {
-	bool dirtFill1 = false;
-	bool dirtFill2 = false;
 	if (IsAnyOf(swTile.type, AutomapTile::Types::CaveVerticalWallLava, AutomapTile::Types::CaveVertical, AutomapTile::Types::CaveVerticalWood, AutomapTile::Types::CaveCross, AutomapTile::Types::CaveWoodCross, AutomapTile::Types::CaveRightWoodCross, AutomapTile::Types::CaveLeftWoodCross, AutomapTile::Types::CaveRightCorner)) {
 		DrawMapLineNE(out, center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::ThreeQuartersTileDown), AmLine(AmLineLength::HalfTile), colorDim);
-		dirtFill1 = true;
 	}
 	if (IsAnyOf(seTile.type, AutomapTile::Types::CaveHorizontalWallLava, AutomapTile::Types::CaveHorizontal, AutomapTile::Types::CaveHorizontalWood, AutomapTile::Types::CaveCross, AutomapTile::Types::CaveWoodCross, AutomapTile::Types::CaveRightWoodCross, AutomapTile::Types::CaveLeftWoodCross, AutomapTile::Types::CaveLeftCorner)) {
 		DrawMapLineSE(out, center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileDown), AmLine(AmLineLength::HalfTile), colorDim);
-		dirtFill2 = true;
 	}
-
-	if (sTile.HasFlag(AutomapTile::Flags::Dirt) || (sTile.type != AutomapTile::Types::None && dirtFill1 && dirtFill2)) {
-		if (leveltype != DTYPE_TOWN)
-			out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown), colorDim);
+}
+void DrawCaveHorizontalDirt(const Surface &out, Point center, AutomapTile tile, AutomapTile swTile, uint8_t colorDim)
+{
+	if (swTile.HasFlag(AutomapTile::Flags::Dirt) || (leveltype != DTYPE_TOWN && IsNoneOf(tile.type, AutomapTile::Types::CaveHorizontalWood, AutomapTile::Types::CaveHorizontalWoodCross, AutomapTile::Types::CaveWoodCross, AutomapTile::Types::CaveLeftWoodCross))) {
+		out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileLeft, AmHeightOffset::QuarterTileDown), colorDim);
+		out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::HalfTileDown), colorDim);
+		out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::ThreeQuartersTileDown), colorDim);
+		out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown), colorDim);
 	}
 }
 
 /**
  * For caves the horizontal/vertical flags are swapped
  */
-void DrawCaveHorizontal(const Surface &out, Point center, AutomapTile tile, AutomapTile nwTile, uint8_t colorBright, uint8_t colorDim)
+void DrawCaveHorizontal(const Surface &out, Point center, AutomapTile tile, AutomapTile nwTile, AutomapTile swTile, uint8_t colorBright, uint8_t colorDim)
 {
 	if (tile.HasFlag(AutomapTile::Flags::VerticalDoor)) {
 		DrawMapHorizontalDoor(out, center, nwTile, colorBright, colorDim);
@@ -786,21 +786,25 @@ void DrawCaveHorizontal(const Surface &out, Point center, AutomapTile tile, Auto
 			h = AmHeightOffset::QuarterTileUp;
 			l = AmLineLength::FullAndHalfTile;
 		}
-		if (leveltype != DTYPE_TOWN && !(IsAnyOf(tile.type, AutomapTile::Types::CaveHorizontalWood, AutomapTile::Types::CaveHorizontalWoodCross, AutomapTile::Types::CaveWoodCross, AutomapTile::Types::CaveLeftWoodCross))) {
-			out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileLeft, AmHeightOffset::QuarterTileDown), colorDim);
-			out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::HalfTileDown), colorDim);
-			out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::ThreeQuartersTileDown), colorDim);
-			out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown), colorDim);
-		}
-
+		DrawCaveHorizontalDirt(out, center, tile, swTile, colorDim);
 		DrawMapLineSE(out, center + AmOffset(w, h), AmLine(l), colorDim);
+	}
+}
+
+void DrawCaveVerticalDirt(const Surface &out, Point center, AutomapTile tile, AutomapTile seTile, uint8_t colorDim)
+{
+	if (seTile.HasFlag(AutomapTile::Flags::Dirt) || (leveltype != DTYPE_TOWN && IsNoneOf(tile.type, AutomapTile::Types::CaveVerticalWood, AutomapTile::Types::CaveVerticalWoodCross, AutomapTile::Types::CaveWoodCross, AutomapTile::Types::CaveRightWoodCross))) {
+		out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown), colorDim);
+		out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::ThreeQuartersTileDown), colorDim);
+		out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::HalfTileDown), colorDim);
+		out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileRight, AmHeightOffset::QuarterTileDown), colorDim);
 	}
 }
 
 /**
  * For caves the horizontal/vertical flags are swapped
  */
-void DrawCaveVertical(const Surface &out, Point center, AutomapTile tile, AutomapTile neTile, uint8_t colorBright, uint8_t colorDim)
+void DrawCaveVertical(const Surface &out, Point center, AutomapTile tile, AutomapTile neTile, AutomapTile seTile, uint8_t colorBright, uint8_t colorDim)
 {
 	if (tile.HasFlag(AutomapTile::Flags::HorizontalDoor)) {
 		DrawMapVerticalDoor(out, center, neTile, colorBright, colorDim);
@@ -814,12 +818,7 @@ void DrawCaveVertical(const Surface &out, Point center, AutomapTile tile, Automa
 		} else {
 			l = AmLineLength::FullAndHalfTile;
 		}
-		if (leveltype != DTYPE_TOWN && !(IsAnyOf(tile.type, AutomapTile::Types::CaveVerticalWood, AutomapTile::Types::CaveVerticalWoodCross, AutomapTile::Types::CaveWoodCross, AutomapTile::Types::CaveRightWoodCross))) {
-			out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown), colorDim);
-			out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::ThreeQuartersTileDown), colorDim);
-			out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::HalfTileDown), colorDim);
-			out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileRight, AmHeightOffset::QuarterTileDown), colorDim);
-		}
+		DrawCaveVerticalDirt(out, center, tile, seTile, colorDim);
 		DrawMapLineNE(out, { center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileDown) }, AmLine(l), colorDim);
 	}
 }
@@ -901,18 +900,35 @@ AutomapTile GetAutomapTypeView(Point map)
 	return GetAutomapType(map);
 }
 
+AutomapTile GetAutomapTileInDirection(Direction dir, Point map)
+{
+	switch (dir) {
+	case Direction::South:
+		return GetAutomapTypeView(map + Displacement { 1, 1 });
+	case Direction::SouthWest:
+		return GetAutomapTypeView(map + Displacement { 0, 1 });
+	case Direction::West:
+		return GetAutomapTypeView(map + Displacement { -1, 1 });
+	case Direction::NorthWest:
+		return GetAutomapTypeView(map + Displacement { -1, 0 });
+	case Direction::North:
+		return GetAutomapTypeView(map + Displacement { -1, -1 });
+	case Direction::NorthEast:
+		return GetAutomapTypeView(map + Displacement { 0, -1 });
+	case Direction::East:
+		return GetAutomapTypeView(map + Displacement { 1, -1 });
+	case Direction::SouthEast:
+		return GetAutomapTypeView(map + Displacement { 1, 0 });
+	case Direction::NoDirection:
+		return GetAutomapTypeView(map);
+	}
+}
+
 /**
  * @brief Renders the given automap shape at the specified screen coordinates.
  */
 void DrawAutomapTile(const Surface &out, Point center, Point map)
 {
-	AutomapTile tile = GetAutomapTypeView(map);
-	AutomapTile nwTile = GetAutomapTypeView(map + Displacement { -1, 0 });
-	AutomapTile neTile = GetAutomapTypeView(map + Displacement { 0, -1 });
-	AutomapTile swTile = GetAutomapTypeView(map + Displacement { 0, 1 });
-	AutomapTile seTile = GetAutomapTypeView(map + Displacement { 1, 0 });
-	AutomapTile sTile = GetAutomapTypeView(map + Displacement { 1, 1 });
-
 	uint8_t colorBright = MapColorsBright;
 	uint8_t colorDim = MapColorsDim;
 	uint8_t colorGrate = MapColorsGrate;
@@ -936,16 +952,14 @@ void DrawAutomapTile(const Surface &out, Point center, Point map)
 	}
 
 	bool noConnect = false;
+	AutomapTile tile = GetAutomapTileInDirection(Direction::NoDirection, map);
+	AutomapTile nwTile = GetAutomapTileInDirection(Direction::NorthWest, map);
+	AutomapTile neTile = GetAutomapTileInDirection(Direction::NorthEast, map);
 
 	// If the tile is an arch, grate, or diamond, we draw a diamond and therefore don't want connection lines
-	if (tile.HasFlag(AutomapTile::Flags::HorizontalArch)
-	    || tile.HasFlag(AutomapTile::Flags::VerticalArch)
-	    || tile.HasFlag(AutomapTile::Flags::HorizontalGrate)
-	    || tile.HasFlag(AutomapTile::Flags::VerticalGrate)
-	    || nwTile.HasFlag(AutomapTile::Flags::HorizontalArch)
-	    || nwTile.HasFlag(AutomapTile::Flags::HorizontalGrate)
-	    || neTile.HasFlag(AutomapTile::Flags::VerticalArch)
-	    || neTile.HasFlag(AutomapTile::Flags::VerticalGrate)
+	if (tile.hasAnyFlag(AutomapTile::Flags::HorizontalArch, AutomapTile::Flags::VerticalArch, AutomapTile::Flags::HorizontalGrate, AutomapTile::Flags::VerticalGrate)
+	    || nwTile.hasAnyFlag(AutomapTile::Flags::HorizontalArch, AutomapTile::Flags::HorizontalGrate)
+	    || neTile.hasAnyFlag(AutomapTile::Flags::VerticalArch, AutomapTile::Flags::VerticalGrate)
 	    || tile.type == AutomapTile::Types::Diamond) {
 		noConnect = true;
 	}
@@ -954,7 +968,24 @@ void DrawAutomapTile(const Surface &out, Point center, Point map)
 	if (IsAnyOf(leveltype, DTYPE_CATACOMBS, DTYPE_CAVES) && (tile.HasFlag(AutomapTile::Flags::HorizontalDoor) || tile.HasFlag(AutomapTile::Flags::VerticalDoor)))
 		noConnect = true;
 
-	if ((tile.type != AutomapTile::Types::None || swTile.type != AutomapTile::Types::None || seTile.type != AutomapTile::Types::None || sTile.type != AutomapTile::Types::None)&& tile.HasFlag(AutomapTile::Flags::Dirt)) {
+	AutomapTile swTile = GetAutomapTileInDirection(Direction::SouthWest, map);
+	AutomapTile sTile = GetAutomapTileInDirection(Direction::South, map);
+	AutomapTile seTile = GetAutomapTileInDirection(Direction::SouthEast, map);
+	AutomapTile nTile = GetAutomapTileInDirection(Direction::North, map);
+	AutomapTile wTile = GetAutomapTileInDirection(Direction::West, map);
+	AutomapTile eTile = GetAutomapTileInDirection(Direction::East, map);
+
+	if ((leveltype == DTYPE_TOWN && tile.HasFlag(AutomapTile::Flags::Dirt))
+		|| (tile.HasFlag(AutomapTile::Flags::Dirt)
+	    && (tile.type != AutomapTile::Types::None
+	        || swTile.type != AutomapTile::Types::None
+	        || sTile.type != AutomapTile::Types::None
+	        || seTile.type != AutomapTile::Types::None
+	        || IsAnyOf(nwTile.type, AutomapTile::Types::CaveCross, AutomapTile::Types::CaveVertical, AutomapTile::Types::CaveVerticalCross, AutomapTile::Types::CaveVerticalWallLava, AutomapTile::Types::CaveVerticalWoodCross)
+	        || IsAnyOf(nTile.type, AutomapTile::Types::CaveCross)
+	        || IsAnyOf(neTile.type, AutomapTile::Types::CaveCross, AutomapTile::Types::CaveHorizontal, AutomapTile::Types::CaveHorizontalCross, AutomapTile::Types::CaveHorizontalWallLava, AutomapTile::Types::CaveHorizontalWoodCross)
+	        || IsAnyOf(wTile.type, AutomapTile::Types::CaveVerticalCross)
+	        || IsAnyOf(eTile.type, AutomapTile::Types::CaveHorizontalCross)))) {
 		DrawDirt(out, center, nwTile, neTile, colorDim);
 	}
 
@@ -990,27 +1021,31 @@ void DrawAutomapTile(const Surface &out, Point center, Point map)
 	case AutomapTile::Types::CaveHorizontalCross:
 	case AutomapTile::Types::CaveHorizontalWoodCross:
 		DrawVertical(out, center, tile, nwTile, neTile, swTile, colorBright, colorDim, colorGrate);
-		DrawCaveHorizontal(out, center, tile, nwTile, colorBright, colorDim);
+		DrawCaveHorizontal(out, center, tile, nwTile, swTile, colorBright, colorDim);
 		break;
 	case AutomapTile::Types::CaveVerticalCross:
 	case AutomapTile::Types::CaveVerticalWoodCross:
 		DrawHorizontal(out, center, tile, nwTile, neTile, seTile, colorBright, colorDim, colorGrate);
-		DrawCaveVertical(out, center, tile, neTile, colorBright, colorDim);
+		DrawCaveVertical(out, center, tile, neTile, seTile, colorBright, colorDim);
 		break;
 	case AutomapTile::Types::CaveHorizontal:
 	case AutomapTile::Types::CaveHorizontalWood:
-		DrawCaveHorizontal(out, center, tile, nwTile, colorBright, colorDim);
+		DrawCaveHorizontal(out, center, tile, nwTile, swTile, colorBright, colorDim);
 		break;
 	case AutomapTile::Types::CaveVertical:
 	case AutomapTile::Types::CaveVerticalWood:
-		DrawCaveVertical(out, center, tile, neTile, colorBright, colorDim);
+		DrawCaveVertical(out, center, tile, neTile, seTile, colorBright, colorDim);
 		break;
 	case AutomapTile::Types::CaveCross:
+		// Add the missing dirt pixel
+		if (sTile.HasFlag(AutomapTile::Flags::Dirt) || (leveltype != DTYPE_TOWN && IsNoneOf(tile.type, AutomapTile::Types::None))) {
+			out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown), colorDim);
+		}
 	case AutomapTile::Types::CaveWoodCross:
 	case AutomapTile::Types::CaveRightWoodCross:
 	case AutomapTile::Types::CaveLeftWoodCross:
-		DrawCaveHorizontal(out, center, tile, nwTile, colorBright, colorDim);
-		DrawCaveVertical(out, center, tile, neTile, colorBright, colorDim);
+		DrawCaveHorizontal(out, center, tile, nwTile, swTile, colorBright, colorDim);
+		DrawCaveVertical(out, center, tile, neTile, seTile, colorBright, colorDim);
 		break;
 	case AutomapTile::Types::CaveLeftCorner:
 		DrawCaveLeftCorner(out, center, colorDim);
@@ -1020,7 +1055,13 @@ void DrawAutomapTile(const Surface &out, Point center, Point map)
 		break;
 	case AutomapTile::Types::Corner:
 		DrawCorner(out, center, nwTile, neTile, colorDim);
+		break;
 	case AutomapTile::Types::CaveBottomCorner:
+		// Add the missing dirt pixel
+		if (sTile.HasFlag(AutomapTile::Flags::Dirt) || (leveltype != DTYPE_TOWN && IsNoneOf(tile.type, AutomapTile::Types::None))) {
+			out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown), colorDim);
+		}
+		break;
 	case AutomapTile::Types::None:
 		break;
 	case AutomapTile::Types::Bridge:
@@ -1113,11 +1154,11 @@ void DrawAutomapTile(const Surface &out, Point center, Point map)
 		DrawLava<Direction::NoDirection>(out, center, MapColorsLava);
 		break;
 	case AutomapTile::Types::CaveHorizontalWallLava:
-		DrawCaveHorizontal(out, center, tile, nwTile, colorBright, colorDim);
+		DrawCaveHorizontal(out, center, tile, nwTile, swTile, colorBright, colorDim);
 		DrawLavaRiver<Direction::NorthEast, Direction::NoDirection>(out, center, MapColorsLava, false);
 		break;
 	case AutomapTile::Types::CaveVerticalWallLava:
-		DrawCaveVertical(out, center, tile, neTile, colorBright, colorDim);
+		DrawCaveVertical(out, center, tile, neTile, seTile, colorBright, colorDim);
 		DrawLavaRiver<Direction::NorthWest, Direction::NoDirection>(out, center, MapColorsLava, false);
 		break;
 	case AutomapTile::Types::HorizontalBridgeLava:
