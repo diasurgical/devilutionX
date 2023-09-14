@@ -41,12 +41,6 @@ enum MapColors : uint8_t {
 	MapColorsDim = (PAL16_YELLOW + 8),
 	/** color for items on automap */
 	MapColorsItem = (PAL8_BLUE + 1),
-	/** color for cave lava on automap */
-	MapColorsLava = (PAL8_ORANGE + 2),
-	/** color for cave water on automap */
-	MapColorsWater = (PAL8_BLUE + 2),
-	/** color for hive acid on automap */
-	MapColorsAcid = (PAL8_YELLOW + 4),
 };
 
 struct AutomapTile {
@@ -87,27 +81,27 @@ struct AutomapTile {
 		CaveWoodCross,
 		CaveRightWoodCross,
 		CaveLeftWoodCross,
-		HorizontalLavaThin,
-		VerticalLavaThin,
-		BendSouthLavaThin,
-		BendWestLavaThin,
-		BendEastLavaThin,
-		BendNorthLavaThin,
+		HorizontalLavaThin, // unused
+		VerticalLavaThin,   // unused
+		BendSouthLavaThin,  // unused
+		BendWestLavaThin,   // unused
+		BendEastLavaThin,   // unused
+		BendNorthLavaThin,  // unused
 		VerticalWallLava,
 		HorizontalWallLava,
-		SELava,
-		SWLava,
-		NELava,
-		NWLava,
-		SLava,
-		WLava,
-		ELava,
-		NLava,
-		Lava,
+		SELava, // unused
+		SWLava, // unused
+		NELava, // unused
+		NWLava, // unused
+		SLava,  // unused
+		WLava,  // unused
+		ELava,  // unused
+		NLava,  // unused
+		Lava,   // unused
 		CaveHorizontalWallLava,
 		CaveVerticalWallLava,
-		HorizontalBridgeLava,
-		VerticalBridgeLava,
+		HorizontalBridgeLava, // unused
+		VerticalBridgeLava,   // unused
 		VerticalDiamond,
 		HorizontalDiamond,
 	};
@@ -461,99 +455,6 @@ void DrawRiverForkOut(const Surface &out, Point center, uint8_t color)
 	out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown), color);
 
 	out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::ThreeQuartersTileDown), color);
-}
-
-template <Direction TDir1, Direction TDir2>
-void DrawLavaRiver(const Surface &out, Point center, uint8_t color, bool hasBridge)
-{
-	// First row (y = 0)
-	if constexpr (IsAnyOf(TDir1, Direction::NorthWest) || IsAnyOf(TDir2, Direction::NorthWest)) {
-		if (!(hasBridge && IsAnyOf(TDir1, Direction::NorthWest))) {
-			out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileUp), color);
-			out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::None), color);
-		}
-	}
-
-	// Second row (y = 1)
-	if constexpr (IsAnyOf(TDir1, Direction::NorthEast) || IsAnyOf(TDir2, Direction::NorthEast)) {
-		if (!(hasBridge && (IsAnyOf(TDir1, Direction::NorthEast) || IsAnyOf(TDir2, Direction::NorthEast))))
-			out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileUp), color);
-	}
-	if constexpr (IsAnyOf(TDir1, Direction::NorthWest, Direction::NorthEast) || IsAnyOf(TDir2, Direction::NorthWest, Direction::NorthEast)) {
-		out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::None), color);
-	}
-	if constexpr (IsAnyOf(TDir1, Direction::SouthWest, Direction::NorthWest) || IsAnyOf(TDir2, Direction::SouthWest, Direction::NorthWest)) {
-		out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileDown), color);
-	}
-	if constexpr (IsAnyOf(TDir1, Direction::SouthWest) || IsAnyOf(TDir2, Direction::SouthWest)) {
-		out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::HalfTileDown), color);
-	}
-
-	// Third row (y = 2)
-	if constexpr (IsAnyOf(TDir1, Direction::NorthEast) || IsAnyOf(TDir2, Direction::NorthEast)) {
-		if (!(hasBridge && (IsAnyOf(TDir1, Direction::NorthEast) || IsAnyOf(TDir2, Direction::NorthEast))))
-			out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::None), color);
-	}
-	if constexpr (IsAnyOf(TDir1, Direction::NorthEast, Direction::SouthEast) || IsAnyOf(TDir2, Direction::NorthEast, Direction::SouthEast)) {
-		out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileDown), color);
-	}
-	if constexpr (IsAnyOf(TDir1, Direction::SouthWest, Direction::SouthEast) || IsAnyOf(TDir2, Direction::SouthWest, Direction::SouthEast)) {
-		out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileDown), color);
-	}
-	if constexpr (IsAnyOf(TDir1, Direction::SouthWest) || IsAnyOf(TDir2, Direction::SouthWest)) {
-		out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::ThreeQuartersTileDown), color);
-	}
-
-	// Fourth row (y = 3)
-	if constexpr (IsAnyOf(TDir1, Direction::SouthEast) || IsAnyOf(TDir2, Direction::SouthEast)) {
-		out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::HalfTileDown), color);
-		out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::ThreeQuartersTileDown), color);
-	}
-}
-
-template <Direction TDir>
-void DrawLava(const Surface &out, Point center, uint8_t color)
-{
-	if constexpr (IsAnyOf(TDir, Direction::NorthWest, Direction::North, Direction::NorthEast, Direction::NoDirection)) {
-		out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileUp), color); // north corner
-	}
-	if constexpr (IsAnyOf(TDir, Direction::SouthWest, Direction::West, Direction::NorthWest, Direction::North, Direction::NorthEast, Direction::NoDirection)) {
-		out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileUp), color); // northwest edge
-		out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::None), color);             // northwest edge
-	}
-	if constexpr (IsAnyOf(TDir, Direction::SouthWest, Direction::West, Direction::NorthWest, Direction::NoDirection)) {
-		out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileLeft, AmHeightOffset::QuarterTileDown), color); // west corner
-	}
-	if constexpr (IsAnyOf(TDir, Direction::South, Direction::SouthWest, Direction::West, Direction::NorthWest, Direction::SouthEast, Direction::NoDirection)) {
-		out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::HalfTileDown), color);             // southwest edge
-		out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::ThreeQuartersTileDown), color); // southwest edge
-	}
-	if constexpr (IsAnyOf(TDir, Direction::South, Direction::SouthWest, Direction::SouthEast, Direction::NoDirection)) {
-		out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown), color); // south corner
-	}
-	if constexpr (IsAnyOf(TDir, Direction::South, Direction::SouthWest, Direction::NorthEast, Direction::East, Direction::SouthEast, Direction::NoDirection)) {
-		out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::HalfTileDown), color);             // southeast edge
-		out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::ThreeQuartersTileDown), color); // southeast edge
-	}
-	if constexpr (IsAnyOf(TDir, Direction::NorthEast, Direction::East, Direction::SouthEast, Direction::NoDirection)) {
-		out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileRight, AmHeightOffset::QuarterTileDown), color); // east corner
-	}
-	if constexpr (IsAnyOf(TDir, Direction::NorthWest, Direction::North, Direction::NorthEast, Direction::East, Direction::SouthEast, Direction::NoDirection)) {
-		out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileUp), color); // northeast edge
-		out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::None), color);             // northeast edge
-	}
-	if constexpr (IsNoneOf(TDir, Direction::South)) {
-		out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::None), color); // north center
-	}
-	if constexpr (IsNoneOf(TDir, Direction::East)) {
-		out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileDown), color); // west center
-	}
-	if constexpr (IsNoneOf(TDir, Direction::West)) {
-		out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileDown), color); // east center
-	}
-	if constexpr (IsNoneOf(TDir, Direction::North)) {
-		out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileDown), color); // south center
-	}
 }
 
 /**
@@ -925,17 +826,6 @@ void DrawAutomapTile(const Surface &out, Point center, Point map)
 		DrawWallConnections(out, center, nwTile, neTile, colorBright, colorDim);
 	}
 
-	uint8_t lavaColor = MapColorsLava;
-	if (leveltype == DTYPE_NEST) {
-		lavaColor = MapColorsAcid;
-	} else if (setlevel && setlvlnum == Quests[Q_PWATER]._qslvl) {
-		if (Quests[Q_PWATER]._qactive != QUEST_DONE) {
-			lavaColor = MapColorsAcid;
-		} else {
-			lavaColor = MapColorsWater;
-		}
-	}
-
 	switch (tile.type) {
 	case AutomapTile::Types::Diamond: // stand-alone column or other unpassable object
 		DrawDiamond(out, center, colorDim);
@@ -1034,71 +924,28 @@ void DrawAutomapTile(const Surface &out, Point center, Point map)
 		DrawRiverRightOut(out, center, MapColorsItem);
 		break;
 	case AutomapTile::Types::HorizontalLavaThin:
-		DrawLavaRiver<Direction::NorthWest, Direction::SouthEast>(out, center, lavaColor, false);
 		break;
 	case AutomapTile::Types::VerticalLavaThin:
-		DrawLavaRiver<Direction::NorthEast, Direction::SouthWest>(out, center, lavaColor, false);
 		break;
 	case AutomapTile::Types::BendSouthLavaThin:
-		DrawLavaRiver<Direction::SouthWest, Direction::SouthEast>(out, center, lavaColor, false);
 		break;
 	case AutomapTile::Types::BendWestLavaThin:
-		DrawLavaRiver<Direction::NorthWest, Direction::SouthWest>(out, center, lavaColor, false);
 		break;
 	case AutomapTile::Types::BendEastLavaThin:
-		DrawLavaRiver<Direction::NorthEast, Direction::SouthEast>(out, center, lavaColor, false);
 		break;
 	case AutomapTile::Types::BendNorthLavaThin:
-		DrawLavaRiver<Direction::NorthWest, Direction::NorthEast>(out, center, lavaColor, false);
 		break;
 	case AutomapTile::Types::VerticalWallLava:
 		DrawVertical(out, center, tile, nwTile, neTile, swTile, colorBright, colorDim);
-		DrawLavaRiver<Direction::SouthEast, Direction::NoDirection>(out, center, lavaColor, false);
 		break;
 	case AutomapTile::Types::HorizontalWallLava:
 		DrawHorizontal(out, center, tile, nwTile, neTile, swTile, colorBright, colorDim);
-		DrawLavaRiver<Direction::SouthWest, Direction::NoDirection>(out, center, lavaColor, false);
-		break;
-	case AutomapTile::Types::SELava:
-		DrawLava<Direction::SouthEast>(out, center, lavaColor);
-		break;
-	case AutomapTile::Types::SWLava:
-		DrawLava<Direction::SouthWest>(out, center, lavaColor);
-		break;
-	case AutomapTile::Types::NELava:
-		DrawLava<Direction::NorthEast>(out, center, lavaColor);
-		break;
-	case AutomapTile::Types::NWLava:
-		DrawLava<Direction::NorthWest>(out, center, lavaColor);
-		break;
-	case AutomapTile::Types::SLava:
-		DrawLava<Direction::South>(out, center, lavaColor);
-		break;
-	case AutomapTile::Types::WLava:
-		DrawLava<Direction::West>(out, center, lavaColor);
-		break;
-	case AutomapTile::Types::ELava:
-		DrawLava<Direction::East>(out, center, lavaColor);
-		break;
-	case AutomapTile::Types::NLava:
-		DrawLava<Direction::North>(out, center, lavaColor);
-		break;
-	case AutomapTile::Types::Lava:
-		DrawLava<Direction::NoDirection>(out, center, lavaColor);
 		break;
 	case AutomapTile::Types::CaveHorizontalWallLava:
 		DrawCaveHorizontal(out, center, tile, nwTile, swTile, colorBright, colorDim);
-		DrawLavaRiver<Direction::NorthEast, Direction::NoDirection>(out, center, lavaColor, false);
 		break;
 	case AutomapTile::Types::CaveVerticalWallLava:
 		DrawCaveVertical(out, center, tile, neTile, seTile, colorBright, colorDim);
-		DrawLavaRiver<Direction::NorthWest, Direction::NoDirection>(out, center, lavaColor, false);
-		break;
-	case AutomapTile::Types::HorizontalBridgeLava:
-		DrawLavaRiver<Direction::NorthWest, Direction::SouthEast>(out, center, lavaColor, true);
-		break;
-	case AutomapTile::Types::VerticalBridgeLava:
-		DrawLavaRiver<Direction::NorthEast, Direction::SouthWest>(out, center, lavaColor, true);
 		break;
 	}
 }
