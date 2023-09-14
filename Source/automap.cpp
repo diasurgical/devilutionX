@@ -656,10 +656,10 @@ void DrawHorizontal(const Surface &out, Point center, AutomapTile tile, AutomapT
 	AmLineLength l = AmLineLength::FullAndHalfTile;
 
 	// Draw a diamond in the top tile
-	if (neTile.hasAnyFlag(AutomapTile::Flags::VerticalArch, AutomapTile::Flags::VerticalGrate) // NE tile has an arch, so add a diamond for visual consistency
-	    || nwTile.hasAnyFlag(AutomapTile::Flags::HorizontalArch, AutomapTile::Flags::HorizontalGrate) // NW tile has an arch, so add a diamond for visual consistency
+	if (neTile.hasAnyFlag(AutomapTile::Flags::VerticalArch, AutomapTile::Flags::VerticalGrate)                                                                           // NE tile has an arch, so add a diamond for visual consistency
+	    || nwTile.hasAnyFlag(AutomapTile::Flags::HorizontalArch, AutomapTile::Flags::HorizontalGrate)                                                                    // NW tile has an arch, so add a diamond for visual consistency
 	    || tile.hasAnyFlag(AutomapTile::Flags::VerticalArch, AutomapTile::Flags::HorizontalArch, AutomapTile::Flags::VerticalGrate, AutomapTile::Flags::HorizontalGrate) // Current tile has an arch, add a diamond
-	    || tile.type == AutomapTile::Types::HorizontalDiamond) { // wall ending in hell that should end with a diamond
+	    || tile.type == AutomapTile::Types::HorizontalDiamond) {                                                                                                         // wall ending in hell that should end with a diamond
 		w = AmWidthOffset::QuarterTileRight;
 		h = AmHeightOffset::QuarterTileUp;
 		l = AmLineLength::FullTile; // shorten line to avoid overdraw
@@ -695,11 +695,11 @@ void DrawVertical(const Surface &out, Point center, AutomapTile tile, AutomapTil
 	AmLineLength l = AmLineLength::FullAndHalfTile;
 
 	// Draw a diamond in the top tile
-	if (neTile.hasAnyFlag(AutomapTile::Flags::VerticalArch, AutomapTile::Flags::VerticalGrate) // NE tile has an arch, so add a diamond for visual consistency
-	    || nwTile.hasAnyFlag(AutomapTile::Flags::HorizontalArch, AutomapTile::Flags::HorizontalGrate) // NW tile has an arch, so add a diamond for visual consistency
+	if (neTile.hasAnyFlag(AutomapTile::Flags::VerticalArch, AutomapTile::Flags::VerticalGrate)                                                                           // NE tile has an arch, so add a diamond for visual consistency
+	    || nwTile.hasAnyFlag(AutomapTile::Flags::HorizontalArch, AutomapTile::Flags::HorizontalGrate)                                                                    // NW tile has an arch, so add a diamond for visual consistency
 	    || tile.hasAnyFlag(AutomapTile::Flags::VerticalArch, AutomapTile::Flags::HorizontalArch, AutomapTile::Flags::VerticalGrate, AutomapTile::Flags::HorizontalGrate) // Current tile has an arch, add a diamond
-	    || tile.type == AutomapTile::Types::VerticalDiamond) { // wall ending in hell that should end with a diamond
-		l = AmLineLength::FullTile;                            // shorten line to avoid overdraw
+	    || tile.type == AutomapTile::Types::VerticalDiamond) {                                                                                                           // wall ending in hell that should end with a diamond
+		l = AmLineLength::FullTile;                                                                                                                                      // shorten line to avoid overdraw
 		DrawDiamond(out, center, colorDim);
 		FixVerticalDoor(out, center, nwTile, colorBright);
 	}
@@ -1396,9 +1396,13 @@ void InitAutomap()
 	size_t tileCount = 0;
 	std::unique_ptr<AutomapTile[]> tileTypes = LoadAutomapData(tileCount);
 
-	if (IsAnyOf(leveltype, DTYPE_CATACOMBS)) {
+	switch (leveltype) {
+	case DTYPE_CATACOMBS:
 		tileTypes[41] = { AutomapTile::Types::FenceHorizontal };
-	} else if (IsAnyOf(leveltype, DTYPE_TOWN, DTYPE_CAVES, DTYPE_NEST)) {
+		break;
+	case DTYPE_TOWN: // Town automap uses a dun file that contains caves tileset
+	case DTYPE_CAVES:
+	case DTYPE_NEST:
 		tileTypes[4] = { AutomapTile::Types::CaveBottomCorner };
 		tileTypes[12] = { AutomapTile::Types::CaveRightCorner };
 		tileTypes[13] = { AutomapTile::Types::CaveLeftCorner };
@@ -1489,9 +1493,11 @@ void InitAutomap()
 			tileTypes[115] = { AutomapTile::Types::HorizontalBridgeLava };
 			tileTypes[116] = { AutomapTile::Types::VerticalBridgeLava };
 		}
-	} else if (IsAnyOf(leveltype, DTYPE_HELL)) {
+		break;
+	case DTYPE_HELL:
 		tileTypes[51] = { AutomapTile::Types::VerticalDiamond };
 		tileTypes[55] = { AutomapTile::Types::HorizontalDiamond };
+		break;
 	}
 	for (unsigned i = 0; i < tileCount; i++) {
 		AutomapTypeTiles[i + 1] = tileTypes[i];
