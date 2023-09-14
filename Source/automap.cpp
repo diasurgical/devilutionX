@@ -46,7 +46,7 @@ enum MapColors : uint8_t {
 	/** color for cave water on automap */
 	MapColorsWater = (PAL8_BLUE + 2),
 	/** color for hive acid on automap */
-	MapColorsAcid = (PAL8_YELLOW + 2),
+	MapColorsAcid = (PAL8_YELLOW + 4),
 };
 
 struct AutomapTile {
