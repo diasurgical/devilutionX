@@ -7,8 +7,7 @@
 #include "utils/language.h"
 #include "utils/stubs.h"
 
-namespace devilution {
-namespace net {
+namespace devilution::net {
 
 int loopback::create(std::string /*addrstr*/)
 {
@@ -118,5 +117,4 @@ std::string loopback::make_default_gamename()
 	return std::string(_("loopback"));
 }
 
-} // namespace net
-} // namespace devilution
+} // namespace devilution::net

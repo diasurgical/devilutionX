@@ -22,8 +22,7 @@
 #include "dvlnet/packet.h"
 #include "dvlnet/tcp_server.h"
 
-namespace devilution {
-namespace net {
+namespace devilution::net {
 
 class tcp_client : public base {
 public:
@@ -56,5 +55,4 @@ private:
 	void HandleSend(const asio::error_code &error, size_t bytesSent);
 };
 
-} // namespace net
-} // namespace devilution
+} // namespace devilution::net

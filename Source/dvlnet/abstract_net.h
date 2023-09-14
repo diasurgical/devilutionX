@@ -9,11 +9,11 @@
 #include "multi.h"
 #include "storm/storm_net.hpp"
 
-namespace devilution {
-namespace net {
+namespace devilution::net {
 
-typedef std::vector<unsigned char> buffer_t;
-typedef unsigned long provider_t;
+using buffer_t = std::vector<unsigned char>;
+using provider_t = unsigned long;
+
 class dvlnet_exception : public std::exception {
 public:
 	const char *what() const throw() override
@@ -67,5 +67,4 @@ public:
 	static std::unique_ptr<abstract_net> MakeNet(provider_t provider);
 };
 
-} // namespace net
-} // namespace devilution
+} // namespace devilution::net
