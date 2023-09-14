@@ -924,15 +924,10 @@ void DrawAutomapTile(const Surface &out, Point center, Point map)
 		DrawRiverRightOut(out, center, MapColorsItem);
 		break;
 	case AutomapTile::Types::HorizontalLavaThin:
-		break;
 	case AutomapTile::Types::VerticalLavaThin:
-		break;
 	case AutomapTile::Types::BendSouthLavaThin:
-		break;
 	case AutomapTile::Types::BendWestLavaThin:
-		break;
 	case AutomapTile::Types::BendEastLavaThin:
-		break;
 	case AutomapTile::Types::BendNorthLavaThin:
 		break;
 	case AutomapTile::Types::VerticalWallLava:
