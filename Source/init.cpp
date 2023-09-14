@@ -405,7 +405,7 @@ void MainWndProc(const SDL_Event &event)
 		diablo_focus_unpause();
 		break;
 	default:
-		LogVerbose("Unhandled SDL_WINDOWEVENT event: ", event.window.event);
+		LogVerbose("Unhandled SDL_WINDOWEVENT event: {:d}", event.window.event);
 		break;
 	}
 #else
