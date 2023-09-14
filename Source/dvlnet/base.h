@@ -76,10 +76,10 @@ protected:
 
 	std::unique_ptr<packet_factory> pktfty;
 
-	void Connect(plr_t player);
-	void RecvLocal(packet &pkt);
+	tl::expected<void, PacketError> Connect(plr_t player);
+	tl::expected<void, PacketError> RecvLocal(packet &pkt);
 	void RunEventHandler(_SNETEVENT &ev);
-	void SendEchoRequest(plr_t player);
+	tl::expected<void, PacketError> SendEchoRequest(plr_t player);
 
 	[[nodiscard]] bool IsConnected(plr_t player) const;
 	virtual bool IsGameHost() = 0;
@@ -90,17 +90,17 @@ private:
 
 	plr_t GetOwner();
 	bool AllTurnsArrived();
-	void MakeReady(seq_t sequenceNumber);
-	void SendTurnIfReady(turn_t turn);
-	void SendFirstTurnIfReady(plr_t player);
+	tl::expected<void, PacketError> MakeReady(seq_t sequenceNumber);
+	tl::expected<void, PacketError> SendTurnIfReady(turn_t turn);
+	tl::expected<void, PacketError> SendFirstTurnIfReady(plr_t player);
 	void ClearMsg(plr_t plr);
 
-	void HandleAccept(packet &pkt);
-	void HandleConnect(packet &pkt);
-	void HandleTurn(packet &pkt);
-	void HandleDisconnect(packet &pkt);
-	void HandleEchoRequest(packet &pkt);
-	void HandleEchoReply(packet &pkt);
+	tl::expected<void, PacketError> HandleAccept(packet &pkt);
+	tl::expected<void, PacketError> HandleConnect(packet &pkt);
+	tl::expected<void, PacketError> HandleTurn(packet &pkt);
+	tl::expected<void, PacketError> HandleDisconnect(packet &pkt);
+	tl::expected<void, PacketError> HandleEchoRequest(packet &pkt);
+	tl::expected<void, PacketError> HandleEchoReply(packet &pkt);
 };
 
 } // namespace net

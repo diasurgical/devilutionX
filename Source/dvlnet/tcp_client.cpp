@@ -1,15 +1,17 @@
 #include "dvlnet/tcp_client.h"
-#include "options.h"
-#include "utils/language.h"
 
-#include <SDL.h>
 #include <exception>
 #include <functional>
 #include <memory>
 #include <stdexcept>
 #include <system_error>
 
+#include <SDL.h>
 #include <asio/connect.hpp>
+#include <expected.hpp>
+
+#include "options.h"
+#include "utils/language.h"
 
 namespace devilution::net {
 
@@ -43,10 +45,14 @@ int tcp_client::join(std::string addrstr)
 	StartReceive();
 	{
 		cookie_self = packet_out::GenerateCookie();
-		auto pkt = pktfty->make_packet<PT_JOIN_REQUEST>(PLR_BROADCAST,
-		    PLR_MASTER, cookie_self,
-		    game_init_info);
-		send(*pkt);
+		tl::expected<std::unique_ptr<packet>, PacketError> pkt
+		    = pktfty->make_packet<PT_JOIN_REQUEST>(
+		        PLR_BROADCAST, PLR_MASTER, cookie_self, game_init_info);
+		if (!pkt.has_value()) {
+			SDL_SetError("make_packet: %s", pkt.error().what());
+			return -1;
+		}
+		send(**pkt);
 		for (auto i = 0; i < NoSleep; ++i) {
 			try {
 				poll();
@@ -95,8 +101,15 @@ void tcp_client::HandleReceive(const asio::error_code &error, size_t bytesRead)
 	recv_queue.Write(std::move(recv_buffer));
 	recv_buffer.resize(frame_queue::max_frame_size);
 	while (recv_queue.PacketReady()) {
-		auto pkt = pktfty->make_packet(recv_queue.ReadPacket());
-		RecvLocal(*pkt);
+		tl::expected<std::unique_ptr<packet>, PacketError> pkt = pktfty->make_packet(recv_queue.ReadPacket());
+		if (!pkt.has_value()) {
+			LogError("make_packet: {}", pkt.error().what());
+			return;
+		}
+		if (tl::expected<void, PacketError> result = RecvLocal(**pkt); !result.has_value()) {
+			LogError("RecvLocal: {}", result.error().what());
+			return;
+		}
 	}
 	StartReceive();
 }

@@ -5,12 +5,13 @@
 #include <memory>
 #include <utility>
 
+#include <expected.hpp>
+
 #include "dvlnet/base.h"
 #include "player.h"
 #include "utils/log.hpp"
 
-namespace devilution {
-namespace net {
+namespace devilution::net {
 
 tcp_server::tcp_server(asio::io_context &ioc, const std::string &bindaddr,
     unsigned short port, packet_factory &pktfty)
@@ -79,12 +80,21 @@ void tcp_server::HandleReceive(const scc &con, const asio::error_code &ec,
 	try {
 		while (con->recv_queue.PacketReady()) {
 			try {
-				auto pkt = pktfty.make_packet(con->recv_queue.ReadPacket());
+				tl::expected<std::unique_ptr<packet>, PacketError> pkt = pktfty.make_packet(con->recv_queue.ReadPacket());
+				if (!pkt.has_value()) {
+					Log("make_packet: {}", pkt.error().what());
+					DropConnection(con);
+					return;
+				}
 				if (con->plr == PLR_BROADCAST) {
-					HandleReceiveNewPlayer(con, *pkt);
+					if (tl::expected<void, PacketError> result = HandleReceiveNewPlayer(con, **pkt); !result.has_value()) {
+						Log("HandleReceiveNewPlayer: {}", result.error().what());
+						DropConnection(con);
+						return;
+					}
 				} else {
 					con->timeout = timeout_active;
-					HandleReceivePacket(*pkt);
+					HandleReceivePacket(**pkt);
 				}
 			} catch (dvlnet_exception &e) {
 				Log("Network error: {}", e.what());
@@ -100,32 +110,52 @@ void tcp_server::HandleReceive(const scc &con, const asio::error_code &ec,
 	StartReceive(con);
 }
 
-void tcp_server::HandleReceiveNewPlayer(const scc &con, packet &pkt)
+tl::expected<void, PacketError> tcp_server::HandleReceiveNewPlayer(const scc &con, packet &inPkt)
 {
 	auto newplr = NextFree();
 	if (newplr == PLR_BROADCAST)
 		throw server_exception();
 
-	if (Empty())
-		game_init_info = pkt.Info();
+	if (Empty()) {
+		tl::expected<const buffer_t *, PacketError> pktInfo = inPkt.Info();
+		if (!pktInfo.has_value())
+			return tl::make_unexpected(pktInfo.error());
+		game_init_info = **pktInfo;
+	}
 
 	for (plr_t player = 0; player < Players.size(); player++) {
 		if (connections[player]) {
-			auto playerPacket = pktfty.make_packet<PT_CONNECT>(PLR_MASTER, PLR_BROADCAST, newplr);
-			StartSend(connections[player], *playerPacket);
+			{
+				tl::expected<std::unique_ptr<packet>, PacketError> pkt
+				    = pktfty.make_packet<PT_CONNECT>(PLR_MASTER, PLR_BROADCAST, newplr);
+				if (!pkt.has_value())
+					return tl::make_unexpected(pkt.error());
+				StartSend(connections[player], **pkt);
+			}
 
-			auto newplrPacket = pktfty.make_packet<PT_CONNECT>(PLR_MASTER, PLR_BROADCAST, player);
-			StartSend(con, *newplrPacket);
+			{
+				tl::expected<std::unique_ptr<packet>, PacketError> pkt
+				    = pktfty.make_packet<PT_CONNECT>(PLR_MASTER, PLR_BROADCAST, player);
+				if (!pkt.has_value())
+					return tl::make_unexpected(pkt.error());
+				StartSend(con, **pkt);
+			}
 		}
 	}
 
-	auto reply = pktfty.make_packet<PT_JOIN_ACCEPT>(PLR_MASTER, PLR_BROADCAST,
-	    pkt.Cookie(), newplr,
-	    game_init_info);
-	StartSend(con, *reply);
+	tl::expected<cookie_t, PacketError> cookie = inPkt.Cookie();
+	if (!cookie.has_value())
+		return tl::make_unexpected(cookie.error());
+	tl::expected<std::unique_ptr<packet>, PacketError> pkt
+	    = pktfty.make_packet<PT_JOIN_ACCEPT>(PLR_MASTER, PLR_BROADCAST,
+	        *cookie, newplr, game_init_info);
+	if (!pkt.has_value())
+		return tl::make_unexpected(pkt.error());
+	StartSend(con, **pkt);
 	con->plr = newplr;
 	connections[newplr] = con;
 	con->timeout = timeout_active;
+	return {};
 }
 
 void tcp_server::HandleReceivePacket(packet &pkt)
@@ -213,10 +243,15 @@ void tcp_server::HandleTimeout(const scc &con, const asio::error_code &ec)
 void tcp_server::DropConnection(const scc &con)
 {
 	if (con->plr != PLR_BROADCAST) {
-		auto pkt = pktfty.make_packet<PT_DISCONNECT>(PLR_MASTER, PLR_BROADCAST,
-		    con->plr, LEAVE_DROP);
+		tl::expected<std::unique_ptr<packet>, PacketError> pkt
+		    = pktfty.make_packet<PT_DISCONNECT>(PLR_MASTER, PLR_BROADCAST,
+		        con->plr, LEAVE_DROP);
 		connections[con->plr] = nullptr;
-		SendPacket(*pkt);
+		if (pkt.has_value()) {
+			SendPacket(**pkt);
+		} else {
+			LogError("make_packet<PT_DISCONNECT>: {}", pkt.error().what());
+		}
 		// TODO: investigate if it is really ok for the server to
 		//       drop a client directly.
 	}
@@ -232,5 +267,4 @@ void tcp_server::Close()
 tcp_server::~tcp_server()
     = default;
 
-} // namespace net
-} // namespace devilution
+} // namespace devilution::net
