@@ -1181,17 +1181,17 @@ void DrawAutomapTile(const Surface &out, Point center, Point map)
 		break;
 	case AutomapTile::Types::PentagramClosed:
 		// Functions are called twice to integrate shadow. Shadows are not drawn inside these functions to avoid shadows being drawn on top of normal pixels.
-		DrawMapEllipse(out, center + Displacement { 0, 1 }, AmLine(static_cast<AmLineLength>(64)), 0); // shadow
-		DrawMapStar(out, center + Displacement { 0, 1 }, AmLine(static_cast<AmLineLength>(64)), 0);    // shadow
-		DrawMapEllipse(out, center, AmLine(static_cast<AmLineLength>(64)), colorDim);
-		DrawMapStar(out, center, AmLine(static_cast<AmLineLength>(64)), colorDim);
+		DrawMapEllipse(out, center + Displacement { 0, 1 }, AmLine(AmLineLength::OctupleTile), 0); // shadow
+		DrawMapStar(out, center + Displacement { 0, 1 }, AmLine(AmLineLength::OctupleTile), 0);    // shadow
+		DrawMapEllipse(out, center, AmLine(AmLineLength::OctupleTile), colorDim);
+		DrawMapStar(out, center, AmLine(AmLineLength::OctupleTile), colorDim);
 		break;
 	case AutomapTile::Types::PentagramOpen:
 		// Functions are called twice to integrate shadow. Shadows are not drawn inside these functions to avoid shadows being drawn on top of normal pixels.
-		DrawMapEllipse(out, center + Displacement { 0, 1 }, AmLine(static_cast<AmLineLength>(64)), 0); // shadow
-		DrawMapStar(out, center + Displacement { 0, 1 }, AmLine(static_cast<AmLineLength>(64)), 0);    // shadow
-		DrawMapEllipse(out, center, AmLine(static_cast<AmLineLength>(64)), MapColorsPentagramOpen);
-		DrawMapStar(out, center, AmLine(static_cast<AmLineLength>(64)), MapColorsPentagramOpen);
+		DrawMapEllipse(out, center + Displacement { 0, 1 }, AmLine(AmLineLength::OctupleTile), 0); // shadow
+		DrawMapStar(out, center + Displacement { 0, 1 }, AmLine(AmLineLength::OctupleTile), 0);    // shadow
+		DrawMapEllipse(out, center, AmLine(AmLineLength::OctupleTile), MapColorsPentagramOpen);
+		DrawMapStar(out, center, AmLine(AmLineLength::OctupleTile), MapColorsPentagramOpen);
 		break;
 	}
 }
