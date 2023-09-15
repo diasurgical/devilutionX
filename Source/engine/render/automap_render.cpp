@@ -4,6 +4,7 @@
  * Line drawing routines for the automap.
  */
 #include "engine/render/automap_render.hpp"
+#include "automap.h"
 
 #include <cstdint>
 
@@ -24,35 +25,71 @@ template <DirectionX DirX, DirectionY DirY>
 void DrawMapLine(const Surface &out, Point from, int height, std::uint8_t colorIndex)
 {
 	while (height-- > 0) {
-		out.SetPixel({ from.x, from.y + 1 }, 0);
-		out.SetPixel(from, colorIndex);
+		SetMapPixel(out, { from.x, from.y + 1 }, 0);
+		SetMapPixel(out, from, colorIndex);
 		from.x += static_cast<int>(DirX);
-		out.SetPixel({ from.x, from.y + 1 }, 0);
-		out.SetPixel(from, colorIndex);
+		SetMapPixel(out, { from.x, from.y + 1 }, 0);
+		SetMapPixel(out, from, colorIndex);
 		from.x += static_cast<int>(DirX);
 		from.y += static_cast<int>(DirY);
 	}
-	out.SetPixel({ from.x, from.y + 1 }, 0);
-	out.SetPixel(from, colorIndex);
+	SetMapPixel(out, { from.x, from.y + 1 }, 0);
+	SetMapPixel(out, from, colorIndex);
 }
 
 template <DirectionX DirX, DirectionY DirY>
 void DrawMapLineSteep(const Surface &out, Point from, int width, std::uint8_t colorIndex)
 {
 	while (width-- > 0) {
-		out.SetPixel({ from.x, from.y + 1 }, 0);
-		out.SetPixel(from, colorIndex);
+		SetMapPixel(out, { from.x, from.y + 1 }, 0);
+		SetMapPixel(out, from, colorIndex);
 		from.y += static_cast<int>(DirY);
-		out.SetPixel({ from.x, from.y + 1 }, 0);
-		out.SetPixel(from, colorIndex);
+		SetMapPixel(out, { from.x, from.y + 1 }, 0);
+		SetMapPixel(out, from, colorIndex);
 		from.y += static_cast<int>(DirY);
 		from.x += static_cast<int>(DirX);
 	}
-	out.SetPixel({ from.x, from.y + 1 }, 0);
-	out.SetPixel(from, colorIndex);
+	SetMapPixel(out, { from.x, from.y + 1 }, 0);
+	SetMapPixel(out, from, colorIndex);
 }
 
 } // namespace
+
+void DrawMapLineNS(const Surface &out, Point from, int height, std::uint8_t colorIndex)
+{
+	if (from.x < 0 || from.x >= out.w() || from.y >= out.h() || height <= 0 || from.y + height <= 0)
+		return;
+
+	if (from.y < 0) {
+		height += from.y;
+		from.y = 0;
+	}
+
+	if (from.y + height > out.h())
+		height = out.h() - from.y;
+
+	for (int i = 0; i < height; ++i) {
+		SetMapPixel(out, { from.x, from.y + i }, colorIndex);
+	}
+}
+
+void DrawMapLineWE(const Surface &out, Point from, int width, std::uint8_t colorIndex)
+{
+	if (from.y < 0 || from.y >= out.h() || from.x >= out.w() || width <= 0 || from.x + width <= 0)
+		return;
+
+	if (from.x < 0) {
+		width += from.x;
+		from.x = 0;
+	}
+
+	if (from.x + width > out.w())
+		width = out.w() - from.x;
+
+	for (int i = 0; i < width; ++i) {
+		SetMapPixel(out, { from.x + i, from.y }, colorIndex);
+	}
+}
 
 void DrawMapLineNE(const Surface &out, Point from, int height, std::uint8_t colorIndex)
 {
@@ -122,6 +159,14 @@ void DrawMapFreeLine(const Surface &out, Point from, Point to, uint8_t colorInde
 			from.y += sy;
 		}
 	}
+}
+
+void SetMapPixel(const Surface &out, Point position, uint8_t color)
+{
+	if (AutomapTransparent)
+		SetHalfTransparentPixel(out, position, color);
+	else
+		out.SetPixel(position, color);
 }
 
 } // namespace devilution
