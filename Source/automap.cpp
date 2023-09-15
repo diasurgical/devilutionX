@@ -622,6 +622,40 @@ void DrawWallConnections(const Surface &out, Point center, AutomapTile nwTile, A
 }
 
 /**
+ * @brief Draws a dotted line to represent a wall grate.
+ */
+void DrawMapVerticalGrate(const Surface &out, Point center, uint8_t colorDim)
+{
+	Point pos1 = center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::None) + AmOffset(AmWidthOffset::EighthTileRight, AmHeightOffset::EighthTileUp);
+	Point pos2 = center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::None);
+	Point pos3 = center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::None) + AmOffset(AmWidthOffset::EighthTileLeft, AmHeightOffset::EighthTileDown);
+
+	out.SetPixel(pos1 + Displacement { 0, 1 }, 0);
+	out.SetPixel(pos2 + Displacement { 0, 1 }, 0);
+	out.SetPixel(pos3 + Displacement { 0, 1 }, 0);
+	out.SetPixel(pos1, colorDim);
+	out.SetPixel(pos2, colorDim);
+	out.SetPixel(pos3, colorDim);
+}
+
+/**
+ * @brief Draws a dotted line to represent a wall grate.
+ */
+void DrawMapHorizontalGrate(const Surface &out, Point center, uint8_t colorDim)
+{
+	Point pos1 = center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::None) + AmOffset(AmWidthOffset::EighthTileLeft, AmHeightOffset::EighthTileUp);
+	Point pos2 = center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::None);
+	Point pos3 = center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::None) + AmOffset(AmWidthOffset::EighthTileRight, AmHeightOffset::EighthTileDown);
+
+	out.SetPixel(pos1 + Displacement { 0, 1 }, 0);
+	out.SetPixel(pos2 + Displacement { 0, 1 }, 0);
+	out.SetPixel(pos3 + Displacement { 0, 1 }, 0);
+	out.SetPixel(pos1, colorDim);
+	out.SetPixel(pos2, colorDim);
+	out.SetPixel(pos3, colorDim);
+}
+
+/**
  * Left-facing obstacle
  */
 void DrawHorizontal(const Surface &out, Point center, AutomapTile tile, AutomapTile nwTile, AutomapTile neTile, AutomapTile seTile, uint8_t colorBright, uint8_t colorDim)
@@ -648,13 +682,15 @@ void DrawHorizontal(const Surface &out, Point center, AutomapTile tile, AutomapT
 		l = AmLineLength::FullTile;
 	}
 	// Draw the wall line if the wall is solid
-	if (!tile.hasAnyFlag(AutomapTile::Flags::HorizontalDoor, AutomapTile::Flags::HorizontalArch)) {
+	if (!tile.hasFlag(AutomapTile::Flags::HorizontalPassage)) {
 		DrawMapLineSE(out, center + AmOffset(w, h), AmLine(l), colorDim);
 		return;
 	}
-	// Draw door
+	// Draw door or grate
 	if (tile.hasFlag(AutomapTile::Flags::HorizontalDoor)) {
 		DrawMapHorizontalDoor(out, center, nwTile, colorBright, colorDim);
+	} else if (tile.hasFlag(AutomapTile::Flags::HorizontalGrate)) {
+		DrawMapHorizontalGrate(out, center, colorDim);
 	}
 }
 
@@ -685,13 +721,15 @@ void DrawVertical(const Surface &out, Point center, AutomapTile tile, AutomapTil
 		l = AmLineLength::FullTile;
 	}
 	// Draw the wall line if the wall is solid
-	if (!tile.hasAnyFlag(AutomapTile::Flags::VerticalDoor, AutomapTile::Flags::VerticalArch)) {
+	if (!tile.hasFlag(AutomapTile::Flags::VerticalPassage)) {
 		DrawMapLineNE(out, center + AmOffset(w, h), AmLine(l), colorDim);
 		return;
 	}
-	// Draw door
+	// Draw door or grate
 	if (tile.hasFlag(AutomapTile::Flags::VerticalDoor)) {
 		DrawMapVerticalDoor(out, center, neTile, colorBright, colorDim);
+	} else if (tile.hasFlag(AutomapTile::Flags::VerticalGrate)) {
+		DrawMapVerticalGrate(out, center, colorDim);
 	}
 }
 
