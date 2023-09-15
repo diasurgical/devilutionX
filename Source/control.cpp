@@ -1006,6 +1006,8 @@ void DoAutoMap()
 {
 	if (!AutomapActive)
 		StartAutomap();
+	else if (!AutomapTransparent)
+		AutomapTransparent = true;
 	else
 		AutomapActive = false;
 }

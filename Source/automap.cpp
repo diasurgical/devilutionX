@@ -487,10 +487,10 @@ void DrawLavaRiver(const Surface &out, Point center, uint8_t color, bool hasBrid
 			SetMapPixel(out, center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileUp), color);
 	}
 	if constexpr (IsAnyOf(Direction::NorthWest, TDir1, TDir2) || IsAnyOf(Direction::NorthEast, TDir1, TDir2)) {
-		out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::None), color);
+		SetMapPixel(out, center + AmOffset(AmWidthOffset::None, AmHeightOffset::None), color);
 	}
 	if constexpr (IsAnyOf(Direction::SouthWest, TDir1, TDir2) || IsAnyOf(Direction::NorthWest, TDir1, TDir2)) {
-		out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileDown), color);
+		SetMapPixel(out, center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileDown), color);
 	}
 	if constexpr (IsAnyOf(Direction::SouthWest, TDir1, TDir2)) {
 		SetMapPixel(out, center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::HalfTileDown), color);
@@ -502,10 +502,10 @@ void DrawLavaRiver(const Surface &out, Point center, uint8_t color, bool hasBrid
 			SetMapPixel(out, center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::None), color);
 	}
 	if constexpr (IsAnyOf(Direction::NorthEast, TDir1, TDir2) || IsAnyOf(Direction::SouthEast, TDir1, TDir2)) {
-		out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileDown), color);
+		SetMapPixel(out, center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileDown), color);
 	}
 	if constexpr (IsAnyOf(Direction::SouthWest, TDir1, TDir2) || IsAnyOf(Direction::SouthEast, TDir1, TDir2)) {
-		out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileDown), color);
+		SetMapPixel(out, center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileDown), color);
 	}
 	if constexpr (IsAnyOf(Direction::SouthWest, TDir1, TDir2)) {
 		SetMapPixel(out, center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::ThreeQuartersTileDown), color);
@@ -1506,6 +1506,7 @@ bool AutomapActive;
 uint8_t AutomapView[DMAXX][DMAXY];
 int AutoMapScale;
 Displacement AutomapOffset;
+bool AutomapTransparent;
 
 void InitAutomapOnce()
 {
@@ -1651,6 +1652,7 @@ void StartAutomap()
 {
 	AutomapOffset = { 0, 0 };
 	AutomapActive = true;
+	AutomapTransparent = false;
 }
 
 void AutomapUp()
