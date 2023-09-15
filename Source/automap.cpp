@@ -130,7 +130,7 @@ struct AutomapTile {
 		// clang-format on
 	};
 
-	Flags flags;
+	Flags flags = {};
 
 	constexpr bool HasFlag(Flags test) const
 	{
@@ -761,8 +761,6 @@ void DrawCaveVertical(const Surface &out, Point center, AutomapTile tile, Automa
 	if (tile.HasFlag(AutomapTile::Flags::HorizontalDoor)) {
 		DrawMapVerticalDoor(out, center, neTile, colorBright, colorDim);
 	} else {
-		AmWidthOffset w;
-		AmHeightOffset h;
 		AmLineLength l;
 
 		if (IsAnyOf(tile.type, AutomapTile::Types::CaveVerticalCross, AutomapTile::Types::CaveVerticalWoodCross)) {
@@ -1442,6 +1440,8 @@ void InitAutomap()
 	case DTYPE_HELL:
 		tileTypes[51] = { AutomapTile::Types::VerticalDiamond };
 		tileTypes[55] = { AutomapTile::Types::HorizontalDiamond };
+		break;
+	default:
 		break;
 	}
 	for (unsigned i = 0; i < tileCount; i++) {
