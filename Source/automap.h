@@ -75,6 +75,7 @@ enum class AmLineLength : uint8_t {
 	FullTile = 8,
 	FullAndHalfTile = 12,
 	DoubleTile = 16,
+	OctupleTile = 64,
 };
 
 inline Displacement AmOffset(AmWidthOffset x, AmHeightOffset y)
