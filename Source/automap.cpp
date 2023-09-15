@@ -800,7 +800,7 @@ void DrawAutomapTile(const Surface &out, Point center, Point map)
 
 	if (!noConnect) {
 		if (IsAnyOf(leveltype, DTYPE_TOWN, DTYPE_CAVES, DTYPE_NEST)) {
-			DrawCaveWallConnections(out, center, sTile, swTile, seTile, colorDim);
+			DrawCaveWallConnections(out, center, swTile, seTile, colorDim);
 		}
 		DrawWallConnections(out, center, nwTile, neTile, colorBright, colorDim);
 	}
