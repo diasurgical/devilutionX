@@ -132,7 +132,7 @@ struct AutomapTile {
 
 	Flags flags = {};
 
-	constexpr bool HasFlag(Flags test) const
+	[[nodiscard]] DVL_ALWAYS_INLINE constexpr bool hasFlag(Flags test) const
 	{
 		return (static_cast<uint8_t>(flags) & static_cast<uint8_t>(test)) != 0;
 	}
@@ -205,7 +205,7 @@ void DrawMapVerticalDoor(const Surface &out, Point center, AutomapTile neTile, u
 	default:
 		app_fatal("Invalid leveltype");
 	}
-	if (!(neTile.HasFlag(AutomapTile::Flags::VerticalPassage) && leveltype == DTYPE_CATHEDRAL))
+	if (!(neTile.hasFlag(AutomapTile::Flags::VerticalPassage) && leveltype == DTYPE_CATHEDRAL))
 		DrawMapLineNE(out, center + AmOffset(lWidthOffset, lHeightOffset), AmLine(length), colorDim);
 	DrawDiamond(out, center + AmOffset(dWidthOffset, dHeightOffset), colorBright);
 }
@@ -254,7 +254,7 @@ void DrawMapHorizontalDoor(const Surface &out, Point center, AutomapTile nwTile,
 	default:
 		app_fatal("Invalid leveltype");
 	}
-	if (!(nwTile.HasFlag(AutomapTile::Flags::HorizontalPassage) && leveltype == DTYPE_CATHEDRAL))
+	if (!(nwTile.hasFlag(AutomapTile::Flags::HorizontalPassage) && leveltype == DTYPE_CATHEDRAL))
 		DrawMapLineSE(out, center + AmOffset(lWidthOffset, lHeightOffset), AmLine(length), colorDim);
 	DrawDiamond(out, center + AmOffset(dWidthOffset, dHeightOffset), colorBright);
 }
@@ -467,7 +467,7 @@ template <Direction TDir1, Direction TDir2>
 void DrawLavaRiver(const Surface &out, Point center, uint8_t color, bool hasBridge)
 {
 	// First row (y = 0)
-	if constexpr (IsAnyOf(TDir1, Direction::NorthWest) || IsAnyOf(TDir2, Direction::NorthWest)) {
+	if constexpr (IsAnyOf(Direction::NorthWest, TDir1, TDir2)) {
 		if (!(hasBridge && IsAnyOf(TDir1, Direction::NorthWest))) {
 			out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileUp), color);
 			out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::None), color);
@@ -475,37 +475,37 @@ void DrawLavaRiver(const Surface &out, Point center, uint8_t color, bool hasBrid
 	}
 
 	// Second row (y = 1)
-	if constexpr (IsAnyOf(TDir1, Direction::NorthEast) || IsAnyOf(TDir2, Direction::NorthEast)) {
-		if (!(hasBridge && (IsAnyOf(TDir1, Direction::NorthEast) || IsAnyOf(TDir2, Direction::NorthEast))))
+	if constexpr (IsAnyOf(Direction::NorthEast, TDir1, TDir2)) {
+		if (!(hasBridge && IsAnyOf(Direction::NorthEast, TDir1, TDir2)))
 			out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileUp), color);
 	}
-	if constexpr (IsAnyOf(TDir1, Direction::NorthWest, Direction::NorthEast) || IsAnyOf(TDir2, Direction::NorthWest, Direction::NorthEast)) {
+	if constexpr (IsAnyOf(Direction::NorthWest, Direction::NorthEast, TDir1, TDir2)) {
 		out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::None), color);
 	}
-	if constexpr (IsAnyOf(TDir1, Direction::SouthWest, Direction::NorthWest) || IsAnyOf(TDir2, Direction::SouthWest, Direction::NorthWest)) {
+	if constexpr (IsAnyOf(Direction::SouthWest, Direction::NorthWest, TDir1, TDir2)) {
 		out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileDown), color);
 	}
-	if constexpr (IsAnyOf(TDir1, Direction::SouthWest) || IsAnyOf(TDir2, Direction::SouthWest)) {
+	if constexpr (IsAnyOf(Direction::SouthWest, TDir1, TDir2)) {
 		out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::HalfTileDown), color);
 	}
 
 	// Third row (y = 2)
-	if constexpr (IsAnyOf(TDir1, Direction::NorthEast) || IsAnyOf(TDir2, Direction::NorthEast)) {
-		if (!(hasBridge && (IsAnyOf(TDir1, Direction::NorthEast) || IsAnyOf(TDir2, Direction::NorthEast))))
+	if constexpr (IsAnyOf(Direction::NorthEast, TDir1, TDir2)) {
+		if (!(hasBridge && IsAnyOf(Direction::NorthEast, TDir1, TDir2)))
 			out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::None), color);
 	}
-	if constexpr (IsAnyOf(TDir1, Direction::NorthEast, Direction::SouthEast) || IsAnyOf(TDir2, Direction::NorthEast, Direction::SouthEast)) {
+	if constexpr (IsAnyOf(Direction::NorthEast, Direction::SouthEast, TDir1, TDir2)) {
 		out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileDown), color);
 	}
-	if constexpr (IsAnyOf(TDir1, Direction::SouthWest, Direction::SouthEast) || IsAnyOf(TDir2, Direction::SouthWest, Direction::SouthEast)) {
+	if constexpr (IsAnyOf(Direction::SouthWest, Direction::SouthEast, TDir1, TDir2)) {
 		out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileDown), color);
 	}
-	if constexpr (IsAnyOf(TDir1, Direction::SouthWest) || IsAnyOf(TDir2, Direction::SouthWest)) {
+	if constexpr (IsAnyOf(Direction::SouthWest, TDir1, TDir2)) {
 		out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::ThreeQuartersTileDown), color);
 	}
 
 	// Fourth row (y = 3)
-	if constexpr (IsAnyOf(TDir1, Direction::SouthEast) || IsAnyOf(TDir2, Direction::SouthEast)) {
+	if constexpr (IsAnyOf(Direction::SouthEast, TDir1, TDir2)) {
 		out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::HalfTileDown), color);
 		out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::ThreeQuartersTileDown), color);
 	}
@@ -517,7 +517,7 @@ void DrawLava(const Surface &out, Point center, uint8_t color)
 	if constexpr (IsAnyOf(TDir, Direction::NorthWest, Direction::North, Direction::NorthEast, Direction::NoDirection)) {
 		out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileUp), color); // north corner
 	}
-	if constexpr (IsAnyOf(TDir, Direction::SouthWest, Direction::West, Direction::NorthWest, Direction::North, Direction::NorthEast, Direction::NoDirection)) {
+	if constexpr (IsNoneOf(TDir, Direction::South, Direction::SouthEast, Direction::East)) {
 		out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileUp), color); // northwest edge
 		out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::None), color);             // northwest edge
 	}
@@ -538,20 +538,20 @@ void DrawLava(const Surface &out, Point center, uint8_t color)
 	if constexpr (IsAnyOf(TDir, Direction::NorthEast, Direction::East, Direction::SouthEast, Direction::NoDirection)) {
 		out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileRight, AmHeightOffset::QuarterTileDown), color); // east corner
 	}
-	if constexpr (IsAnyOf(TDir, Direction::NorthWest, Direction::North, Direction::NorthEast, Direction::East, Direction::SouthEast, Direction::NoDirection)) {
+	if constexpr (IsNoneOf(TDir, Direction::South, Direction::SouthWest, Direction::West)) {
 		out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileUp), color); // northeast edge
 		out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::None), color);             // northeast edge
 	}
-	if constexpr (IsNoneOf(TDir, Direction::South)) {
+	if constexpr (TDir != Direction::South) {
 		out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::None), color); // north center
 	}
-	if constexpr (IsNoneOf(TDir, Direction::East)) {
+	if constexpr (TDir != Direction::East) {
 		out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileDown), color); // west center
 	}
-	if constexpr (IsNoneOf(TDir, Direction::West)) {
+	if constexpr (TDir != Direction::West) {
 		out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileDown), color); // east center
 	}
-	if constexpr (IsNoneOf(TDir, Direction::North)) {
+	if constexpr (TDir != Direction::North) {
 		out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileDown), color); // south center
 	}
 }
@@ -584,7 +584,7 @@ void DrawStairs(const Surface &out, Point center, uint8_t color)
  */
 void FixHorizontalDoor(const Surface &out, Point center, AutomapTile nwTile, uint8_t colorBright)
 {
-	if (leveltype != DTYPE_CATACOMBS && nwTile.HasFlag(AutomapTile::Flags::HorizontalDoor)) {
+	if (leveltype != DTYPE_CATACOMBS && nwTile.hasFlag(AutomapTile::Flags::HorizontalDoor)) {
 		DrawMapLineNE(out, center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::HalfTileUp), AmLine(AmLineLength::FullTile), colorBright);
 	}
 }
@@ -594,7 +594,7 @@ void FixHorizontalDoor(const Surface &out, Point center, AutomapTile nwTile, uin
  */
 void FixVerticalDoor(const Surface &out, Point center, AutomapTile neTile, uint8_t colorBright)
 {
-	if (leveltype != DTYPE_CATACOMBS && neTile.HasFlag(AutomapTile::Flags::VerticalDoor)) {
+	if (leveltype != DTYPE_CATACOMBS && neTile.hasFlag(AutomapTile::Flags::VerticalDoor)) {
 		DrawMapLineSE(out, center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileUp), AmLine(AmLineLength::FullTile), colorBright);
 	}
 }
@@ -646,7 +646,7 @@ void DrawHorizontal(const Surface &out, Point center, AutomapTile tile, AutomapT
 		return;
 	}
 	// Draw door
-	if (tile.HasFlag(AutomapTile::Flags::HorizontalDoor)) {
+	if (tile.hasFlag(AutomapTile::Flags::HorizontalDoor)) {
 		DrawMapHorizontalDoor(out, center, nwTile, colorBright, colorDim);
 	}
 }
@@ -683,7 +683,7 @@ void DrawVertical(const Surface &out, Point center, AutomapTile tile, AutomapTil
 		return;
 	}
 	// Draw door
-	if (tile.HasFlag(AutomapTile::Flags::VerticalDoor)) {
+	if (tile.hasFlag(AutomapTile::Flags::VerticalDoor)) {
 		DrawMapVerticalDoor(out, center, neTile, colorBright, colorDim);
 	}
 }
@@ -709,7 +709,7 @@ void DrawCaveWallConnections(const Surface &out, Point center, AutomapTile sTile
 }
 void DrawCaveHorizontalDirt(const Surface &out, Point center, AutomapTile tile, AutomapTile swTile, uint8_t colorDim)
 {
-	if (swTile.HasFlag(AutomapTile::Flags::Dirt) || (leveltype != DTYPE_TOWN && IsNoneOf(tile.type, AutomapTile::Types::CaveHorizontalWood, AutomapTile::Types::CaveHorizontalWoodCross, AutomapTile::Types::CaveWoodCross, AutomapTile::Types::CaveLeftWoodCross))) {
+	if (swTile.hasFlag(AutomapTile::Flags::Dirt) || (leveltype != DTYPE_TOWN && IsNoneOf(tile.type, AutomapTile::Types::CaveHorizontalWood, AutomapTile::Types::CaveHorizontalWoodCross, AutomapTile::Types::CaveWoodCross, AutomapTile::Types::CaveLeftWoodCross))) {
 		out.SetPixel(center + AmOffset(AmWidthOffset::ThreeQuartersTileLeft, AmHeightOffset::QuarterTileDown), colorDim);
 		out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::HalfTileDown), colorDim);
 		out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::ThreeQuartersTileDown), colorDim);
@@ -722,7 +722,7 @@ void DrawCaveHorizontalDirt(const Surface &out, Point center, AutomapTile tile, 
  */
 void DrawCaveHorizontal(const Surface &out, Point center, AutomapTile tile, AutomapTile nwTile, AutomapTile swTile, uint8_t colorBright, uint8_t colorDim)
 {
-	if (tile.HasFlag(AutomapTile::Flags::VerticalDoor)) {
+	if (tile.hasFlag(AutomapTile::Flags::VerticalDoor)) {
 		DrawMapHorizontalDoor(out, center, nwTile, colorBright, colorDim);
 	} else {
 		AmWidthOffset w;
@@ -745,7 +745,7 @@ void DrawCaveHorizontal(const Surface &out, Point center, AutomapTile tile, Auto
 
 void DrawCaveVerticalDirt(const Surface &out, Point center, AutomapTile tile, AutomapTile seTile, uint8_t colorDim)
 {
-	if (seTile.HasFlag(AutomapTile::Flags::Dirt) || (leveltype != DTYPE_TOWN && IsNoneOf(tile.type, AutomapTile::Types::CaveVerticalWood, AutomapTile::Types::CaveVerticalWoodCross, AutomapTile::Types::CaveWoodCross, AutomapTile::Types::CaveRightWoodCross))) {
+	if (seTile.hasFlag(AutomapTile::Flags::Dirt) || (leveltype != DTYPE_TOWN && IsNoneOf(tile.type, AutomapTile::Types::CaveVerticalWood, AutomapTile::Types::CaveVerticalWoodCross, AutomapTile::Types::CaveWoodCross, AutomapTile::Types::CaveRightWoodCross))) {
 		out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown), colorDim);
 		out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::ThreeQuartersTileDown), colorDim);
 		out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::HalfTileDown), colorDim);
@@ -758,7 +758,7 @@ void DrawCaveVerticalDirt(const Surface &out, Point center, AutomapTile tile, Au
  */
 void DrawCaveVertical(const Surface &out, Point center, AutomapTile tile, AutomapTile neTile, AutomapTile seTile, uint8_t colorBright, uint8_t colorDim)
 {
-	if (tile.HasFlag(AutomapTile::Flags::HorizontalDoor)) {
+	if (tile.hasFlag(AutomapTile::Flags::HorizontalDoor)) {
 		DrawMapVerticalDoor(out, center, neTile, colorBright, colorDim);
 	} else {
 		AmLineLength l;
@@ -794,7 +794,7 @@ bool HasAutomapFlag(Point position, AutomapTile::Flags type)
 		return false;
 	}
 
-	return AutomapTypeTiles[dungeon[position.x][position.y]].HasFlag(type);
+	return AutomapTypeTiles[dungeon[position.x][position.y]].hasFlag(type);
 }
 
 /**
@@ -888,18 +888,18 @@ void DrawAutomapTile(const Surface &out, Point center, Point map)
 	}
 
 	// These tilesets have doors where the connection lines would be drawn
-	if (IsAnyOf(leveltype, DTYPE_CATACOMBS, DTYPE_CAVES) && (tile.HasFlag(AutomapTile::Flags::HorizontalDoor) || tile.HasFlag(AutomapTile::Flags::VerticalDoor)))
+	if (IsAnyOf(leveltype, DTYPE_CATACOMBS, DTYPE_CAVES) && (tile.hasFlag(AutomapTile::Flags::HorizontalDoor) || tile.hasFlag(AutomapTile::Flags::VerticalDoor)))
 		noConnect = true;
 
-	AutomapTile swTile = GetAutomapTypeView(map + Direction::SouthWest);
-	AutomapTile sTile = GetAutomapTypeView(map + Direction::South);
-	AutomapTile seTile = GetAutomapTypeView(map + Direction::SouthEast);
-	AutomapTile nTile = GetAutomapTypeView(map + Direction::North);
-	AutomapTile wTile = GetAutomapTypeView(map + Direction::West);
-	AutomapTile eTile = GetAutomapTypeView(map + Direction::East);
+	const AutomapTile swTile = GetAutomapTypeView(map + Direction::SouthWest);
+	const AutomapTile sTile = GetAutomapTypeView(map + Direction::South);
+	const AutomapTile seTile = GetAutomapTypeView(map + Direction::SouthEast);
+	const AutomapTile nTile = GetAutomapTypeView(map + Direction::North);
+	const AutomapTile wTile = GetAutomapTypeView(map + Direction::West);
+	const AutomapTile eTile = GetAutomapTypeView(map + Direction::East);
 
-	if ((leveltype == DTYPE_TOWN && tile.HasFlag(AutomapTile::Flags::Dirt))
-	    || (tile.HasFlag(AutomapTile::Flags::Dirt)
+	if ((leveltype == DTYPE_TOWN && tile.hasFlag(AutomapTile::Flags::Dirt))
+	    || (tile.hasFlag(AutomapTile::Flags::Dirt)
 	        && (tile.type != AutomapTile::Types::None
 	            || swTile.type != AutomapTile::Types::None
 	            || sTile.type != AutomapTile::Types::None
@@ -912,7 +912,7 @@ void DrawAutomapTile(const Surface &out, Point center, Point map)
 		DrawDirt(out, center, nwTile, neTile, colorDim);
 	}
 
-	if (tile.HasFlag(AutomapTile::Flags::Stairs)) {
+	if (tile.hasFlag(AutomapTile::Flags::Stairs)) {
 		DrawStairs(out, center, colorBright);
 	}
 
@@ -973,6 +973,7 @@ void DrawAutomapTile(const Surface &out, Point center, Point map)
 	case AutomapTile::Types::CaveCross:
 		// Add the missing dirt pixel
 		out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown), colorDim);
+		[[fallthough]];
 	case AutomapTile::Types::CaveWoodCross:
 	case AutomapTile::Types::CaveRightWoodCross:
 	case AutomapTile::Types::CaveLeftWoodCross:
@@ -1622,13 +1623,13 @@ void SetAutomapView(Point position, MapExplorationType explorer)
 	UpdateAutomapExplorer(map, explorer);
 
 	AutomapTile tile = GetAutomapType(map);
-	bool solid = tile.HasFlag(AutomapTile::Flags::Dirt);
+	bool solid = tile.hasFlag(AutomapTile::Flags::Dirt);
 
 	switch (tile.type) {
 	case AutomapTile::Types::Vertical:
 		if (solid) {
 			auto tileSW = GetAutomapType({ map.x, map.y + 1 });
-			if (tileSW.type == AutomapTile::Types::Corner && tileSW.HasFlag(AutomapTile::Flags::Dirt))
+			if (tileSW.type == AutomapTile::Types::Corner && tileSW.hasFlag(AutomapTile::Flags::Dirt))
 				UpdateAutomapExplorer({ map.x, map.y + 1 }, explorer);
 		} else if (HasAutomapFlag({ map.x - 1, map.y }, AutomapTile::Flags::Dirt)) {
 			UpdateAutomapExplorer({ map.x - 1, map.y }, explorer);
@@ -1637,7 +1638,7 @@ void SetAutomapView(Point position, MapExplorationType explorer)
 	case AutomapTile::Types::Horizontal:
 		if (solid) {
 			auto tileSE = GetAutomapType({ map.x + 1, map.y });
-			if (tileSE.type == AutomapTile::Types::Corner && tileSE.HasFlag(AutomapTile::Flags::Dirt))
+			if (tileSE.type == AutomapTile::Types::Corner && tileSE.hasFlag(AutomapTile::Flags::Dirt))
 				UpdateAutomapExplorer({ map.x + 1, map.y }, explorer);
 		} else if (HasAutomapFlag({ map.x, map.y - 1 }, AutomapTile::Flags::Dirt)) {
 			UpdateAutomapExplorer({ map.x, map.y - 1 }, explorer);
@@ -1646,10 +1647,10 @@ void SetAutomapView(Point position, MapExplorationType explorer)
 	case AutomapTile::Types::Cross:
 		if (solid) {
 			auto tileSW = GetAutomapType({ map.x, map.y + 1 });
-			if (tileSW.type == AutomapTile::Types::Corner && tileSW.HasFlag(AutomapTile::Flags::Dirt))
+			if (tileSW.type == AutomapTile::Types::Corner && tileSW.hasFlag(AutomapTile::Flags::Dirt))
 				UpdateAutomapExplorer({ map.x, map.y + 1 }, explorer);
 			auto tileSE = GetAutomapType({ map.x + 1, map.y });
-			if (tileSE.type == AutomapTile::Types::Corner && tileSE.HasFlag(AutomapTile::Flags::Dirt))
+			if (tileSE.type == AutomapTile::Types::Corner && tileSE.hasFlag(AutomapTile::Flags::Dirt))
 				UpdateAutomapExplorer({ map.x + 1, map.y }, explorer);
 		} else {
 			if (HasAutomapFlag({ map.x - 1, map.y }, AutomapTile::Flags::Dirt))
@@ -1665,7 +1666,7 @@ void SetAutomapView(Point position, MapExplorationType explorer)
 			if (HasAutomapFlag({ map.x, map.y - 1 }, AutomapTile::Flags::Dirt))
 				UpdateAutomapExplorer({ map.x, map.y - 1 }, explorer);
 			auto tileSW = GetAutomapType({ map.x, map.y + 1 });
-			if (tileSW.type == AutomapTile::Types::Corner && tileSW.HasFlag(AutomapTile::Flags::Dirt))
+			if (tileSW.type == AutomapTile::Types::Corner && tileSW.hasFlag(AutomapTile::Flags::Dirt))
 				UpdateAutomapExplorer({ map.x, map.y + 1 }, explorer);
 		} else if (HasAutomapFlag({ map.x - 1, map.y }, AutomapTile::Flags::Dirt)) {
 			UpdateAutomapExplorer({ map.x - 1, map.y }, explorer);
@@ -1676,7 +1677,7 @@ void SetAutomapView(Point position, MapExplorationType explorer)
 			if (HasAutomapFlag({ map.x - 1, map.y }, AutomapTile::Flags::Dirt))
 				UpdateAutomapExplorer({ map.x - 1, map.y }, explorer);
 			auto tileSE = GetAutomapType({ map.x + 1, map.y });
-			if (tileSE.type == AutomapTile::Types::Corner && tileSE.HasFlag(AutomapTile::Flags::Dirt))
+			if (tileSE.type == AutomapTile::Types::Corner && tileSE.hasFlag(AutomapTile::Flags::Dirt))
 				UpdateAutomapExplorer({ map.x + 1, map.y }, explorer);
 		} else if (HasAutomapFlag({ map.x, map.y - 1 }, AutomapTile::Flags::Dirt)) {
 			UpdateAutomapExplorer({ map.x, map.y - 1 }, explorer);
