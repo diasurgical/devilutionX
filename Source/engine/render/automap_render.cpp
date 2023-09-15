@@ -95,8 +95,8 @@ void DrawMapLineSteepSW(const Surface &out, Point from, int width, std::uint8_t 
 }
 
 /**
- * @brief Draws a line from first point to second point, unrestricted to the standard automap angles. Doesn't include shadow
-*/
+ * @brief Draws a line from first point to second point, unrestricted to the standard automap angles. Doesn't include shadow.
+ */
 void DrawMapFreeLine(const Surface &out, Point from, Point to, uint8_t colorIndex)
 {
 	int dx = std::abs(to.x - from.x);
