@@ -41,6 +41,8 @@ enum MapColors : uint8_t {
 	MapColorsDim = (PAL16_YELLOW + 8),
 	/** color for items on automap */
 	MapColorsItem = (PAL8_BLUE + 1),
+	/** color for activated pentragram on automap */
+	MapColorsPentagramOpen = (PAL8_RED + 2),
 	/** color for cave lava on automap */
 	MapColorsLava = (PAL8_ORANGE + 2),
 	/** color for cave water on automap */
@@ -110,6 +112,8 @@ struct AutomapTile {
 		VerticalBridgeLava,
 		VerticalDiamond,
 		HorizontalDiamond,
+		PentagramClosed,
+		PentagramOpen,
 	};
 
 	Types type;
@@ -785,6 +789,82 @@ void DrawCaveRightCorner(const Surface &out, Point center, uint8_t colorDim)
 	DrawMapLineNE(out, center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::None), AmLine(AmLineLength::HalfTile), colorDim);
 }
 
+void DrawMapEllipse(const Surface &out, Point from, int radius, uint8_t colorIndex)
+{
+	const int a = radius;
+	const int b = radius / 2;
+
+	int x = 0;
+	int y = b;
+
+	// Offset ellipse so the center of the ellipse is the center of our megatile on the x plane
+	from.x -= radius;
+
+	// Initial point
+	out.SetPixel({ from.x, from.y + b }, colorIndex);
+	out.SetPixel({ from.x, from.y - b }, colorIndex);
+
+	// Initialize the parameters
+	int p1 = (b * b) - (a * a * b) + (a * a) / 4;
+
+	// Region 1
+	while ((b * b * x) < (a * a * y)) {
+		x++;
+		if (p1 < 0) {
+			p1 += (2 * b * b * x) + (b * b);
+		} else {
+			y--;
+			p1 += (2 * b * b * x) - (2 * a * a * y) + (b * b);
+		}
+
+		out.SetPixel({ from.x + x, from.y + y }, colorIndex);
+		out.SetPixel({ from.x - x, from.y + y }, colorIndex);
+		out.SetPixel({ from.x + x, from.y - y }, colorIndex);
+		out.SetPixel({ from.x - x, from.y - y }, colorIndex);
+	}
+
+	// Initialize the second parameter for Region 2
+	int p2 = (b * b * ((x + 1) * (x + 1))) + (a * a * ((y - 1) * (y - 1))) - (a * a * b * b);
+
+	// Region 2
+	while (y > 0) {
+		y--;
+		if (p2 > 0) {
+			p2 += (-2 * a * a * y) + (a * a);
+		} else {
+			x++;
+			p2 += (2 * b * b * x) - (2 * a * a * y) + (a * a);
+		}
+
+		out.SetPixel({ from.x + x, from.y + y }, colorIndex);
+		out.SetPixel({ from.x - x, from.y + y }, colorIndex);
+		out.SetPixel({ from.x + x, from.y - y }, colorIndex);
+		out.SetPixel({ from.x - x, from.y - y }, colorIndex);
+	}
+}
+
+void DrawMapStar(const Surface &out, Point from, int radius, uint8_t color)
+{
+	const int scaleFactor = 128;
+	Point anchors[5];
+
+	// Offset star so the center of the star is the center of our megatile on the x plane
+	from.x -= radius;
+
+	anchors[0] = { from.x - (121 * radius / scaleFactor), from.y + (19 * radius / scaleFactor) }; // Left Point
+	anchors[1] = { from.x + (121 * radius / scaleFactor), from.y + (19 * radius / scaleFactor) }; // Right Point
+	anchors[2] = { from.x, from.y + (64 * radius / scaleFactor) };                                // Bottom Point
+	anchors[3] = { from.x - (75 * radius / scaleFactor), from.y - (51 * radius / scaleFactor) };  // Top Left Point
+	anchors[4] = { from.x + (75 * radius / scaleFactor), from.y - (51 * radius / scaleFactor) };  // Top Right Point
+
+	// Draw lines between the anchors to form a star
+	DrawMapFreeLine(out, anchors[3], anchors[1], color); // Connect Top Left -> Right
+	DrawMapFreeLine(out, anchors[1], anchors[0], color); // Connect Right -> Left
+	DrawMapFreeLine(out, anchors[0], anchors[4], color); // Connect Left -> Top Right
+	DrawMapFreeLine(out, anchors[4], anchors[2], color); // Connect Top Right -> Bottom
+	DrawMapFreeLine(out, anchors[2], anchors[3], color); // Connect Bottom -> Top Left
+}
+
 /**
  * @brief Check if a given tile has the provided AutomapTile flag
  */
@@ -1098,6 +1178,20 @@ void DrawAutomapTile(const Surface &out, Point center, Point map)
 		break;
 	case AutomapTile::Types::VerticalBridgeLava:
 		DrawLavaRiver<Direction::NorthEast, Direction::SouthWest>(out, center, lavaColor, true);
+		break;
+	case AutomapTile::Types::PentagramClosed:
+		// Functions are called twice to integrate shadow. Shadows are not drawn inside these functions to avoid shadows being drawn on top of normal pixels.
+		DrawMapEllipse(out, center + Displacement { 0, 1 }, AmLine(static_cast<AmLineLength>(64)), 0); // shadow
+		DrawMapStar(out, center + Displacement { 0, 1 }, AmLine(static_cast<AmLineLength>(64)), 0);    // shadow
+		DrawMapEllipse(out, center, AmLine(static_cast<AmLineLength>(64)), colorDim);
+		DrawMapStar(out, center, AmLine(static_cast<AmLineLength>(64)), colorDim);
+		break;
+	case AutomapTile::Types::PentagramOpen:
+		// Functions are called twice to integrate shadow. Shadows are not drawn inside these functions to avoid shadows being drawn on top of normal pixels.
+		DrawMapEllipse(out, center + Displacement { 0, 1 }, AmLine(static_cast<AmLineLength>(64)), 0); // shadow
+		DrawMapStar(out, center + Displacement { 0, 1 }, AmLine(static_cast<AmLineLength>(64)), 0);    // shadow
+		DrawMapEllipse(out, center, AmLine(static_cast<AmLineLength>(64)), MapColorsPentagramOpen);
+		DrawMapStar(out, center, AmLine(static_cast<AmLineLength>(64)), MapColorsPentagramOpen);
 		break;
 	}
 }
@@ -1441,6 +1535,8 @@ void InitAutomap()
 	case DTYPE_HELL:
 		tileTypes[51] = { AutomapTile::Types::VerticalDiamond };
 		tileTypes[55] = { AutomapTile::Types::HorizontalDiamond };
+		tileTypes[102] = { AutomapTile::Types::PentagramClosed };
+		tileTypes[111] = { AutomapTile::Types::PentagramOpen };
 		break;
 	default:
 		break;
