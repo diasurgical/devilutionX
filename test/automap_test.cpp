@@ -100,11 +100,11 @@ TEST(Automap, AutomapZoomOut_Min)
 	AutoMapScale = 50;
 	AutomapZoomOut();
 	AutomapZoomOut();
-	EXPECT_EQ(AutoMapScale, 25);
-	EXPECT_EQ(AmLine(AmLineLength::DoubleTile), static_cast<int>(AmLineLength::HalfTile));
-	EXPECT_EQ(AmLine(AmLineLength::FullTile), static_cast<int>(AmLineLength::QuarterTile));
-	EXPECT_EQ(AmLine(AmLineLength::HalfTile), 1);
-	EXPECT_EQ(AmLine(AmLineLength::QuarterTile), 0);
+	EXPECT_EQ(AutoMapScale, 50);
+	EXPECT_EQ(AmLine(AmLineLength::DoubleTile), static_cast<int>(AmLineLength::FullTile));
+	EXPECT_EQ(AmLine(AmLineLength::FullTile), static_cast<int>(AmLineLength::HalfTile));
+	EXPECT_EQ(AmLine(AmLineLength::HalfTile), static_cast<int>(AmLineLength::QuarterTile));
+	EXPECT_EQ(AmLine(AmLineLength::QuarterTile), 1);
 }
 
 TEST(Automap, AutomapZoomReset)

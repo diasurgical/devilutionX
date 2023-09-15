@@ -1232,7 +1232,7 @@ void AutomapZoomIn()
 
 void AutomapZoomOut()
 {
-	if (AutoMapScale <= 25)
+	if (AutoMapScale <= 50)
 		return;
 
 	AutoMapScale -= 25;
