@@ -12,7 +12,7 @@ For the full game:
   - Optional: If you want to also play the Hellfire expansion, copy hellfire.mpq, hfmonk.mpq, hfmusic.mpq, hfvoice.mpq into the same folder
 
 For the free shareware version:
-  - Get the spawn.mpq (https://github.com/diasurgical/devilutionx-assets/releases/download/v2/spawn.mpq)
+  - Get the spawn.mpq (https://github.com/diasurgical/devilutionx-assets/releases/latest/download/spawn.mpq)
   - Copy the spawn.mpq into Roms/PORTS/Binaries/Diablo.port/FILES_HERE
 
 Controls

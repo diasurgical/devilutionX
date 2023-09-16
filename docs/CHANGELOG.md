@@ -427,7 +427,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improve Korean localization
 - Improve Portuguese localization
 - Improve Romanian localization
-- Improve Russian localization ([optional dub](https://github.com/diasurgical/devilutionx-assets/releases/download/v2/ru.mpq) by Stream)
+- Improve Russian localization ([optional dub](https://github.com/diasurgical/devilutionx-assets/releases/latest/download/ru.mpq) by Stream)
 - Improve Spanish localization
 
 #### Gameplay
@@ -607,7 +607,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - PS4: The games fail to launch without a default ini, please see https://github.com/diasurgical/devilutionX/issues/4443
 - Clicking an empty hero slot will crash the game
-- Xbo/s: Missing translation files (download and add [devilutionx.mpq](https://github.com/diasurgical/devilutionx-assets/releases/download/v2/devilutionx.mpq))
+- Xbo/s: Missing translation files (download and add [devilutionx.mpq](https://github.com/diasurgical/devilutionx-assets/releases/latest/download/devilutionx.mpq))
 
 ## DevilutionX 1.3.0
 
@@ -634,7 +634,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added option for pickup sound
 - Shrine reveals map in a different color than your own exploration
 - Automap has drop shadow for better contrast in some levels
-- Added font with support for Extended Latin, Greek, Coptic, Cyrillic, [Chinese, Japanese, and Korean](https://github.com/diasurgical/devilutionx-assets/releases/download/v1/fonts.mpq)
+- Added font with support for Extended Latin, Greek, Coptic, Cyrillic, [Chinese, Japanese, and Korean](https://github.com/diasurgical/devilutionx-assets/releases/latest/download/fonts.mpq)
 - Item outline color now matches rarity
 - Use gold color to indicate unique items in stores
 - Improved XP bar visuals
@@ -694,12 +694,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added French
 - Added German
 - Added Italian
-- Added Korean (requires the [additional fonts](https://github.com/diasurgical/devilutionx-assets/releases/download/v1/fonts.mpq))
-- Added Polish ([optional dub](https://github.com/diasurgical/devilutionx-assets/releases/download/v1/pl.mpq) by professional voice actors)
+- Added Korean (requires the [additional fonts](https://github.com/diasurgical/devilutionx-assets/releases/latest/download/fonts.mpq))
+- Added Polish ([optional dub](https://github.com/diasurgical/devilutionx-assets/releases/latest/download/pl.mpq) by professional voice actors)
 - Added Russian
-- Added Simplified Chinese (requires the [additional fonts](https://github.com/diasurgical/devilutionx-assets/releases/download/v1/fonts.mpq))
+- Added Simplified Chinese (requires the [additional fonts](https://github.com/diasurgical/devilutionx-assets/releases/latest/download/fonts.mpq))
 - Added Spanish
-- Added Traditional Chinese (requires the [additional fonts](https://github.com/diasurgical/devilutionx-assets/releases/download/v1/fonts.mpq))
+- Added Traditional Chinese (requires the [additional fonts](https://github.com/diasurgical/devilutionx-assets/releases/latest/download/fonts.mpq))
 
 ### Bugfixes
 
