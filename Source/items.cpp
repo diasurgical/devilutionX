@@ -2747,10 +2747,10 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	player._pFireResist = std::clamp(fr, 0, MaxResistance);
 	player._pLghtResist = std::clamp(lr, 0, MaxResistance);
 
-	vadd = (vadd * PlayersData[static_cast<size_t>(player._pClass)].itmLife) >> 6;
+	vadd = (vadd * GetClassAttributes(player._pClass).itmLife) >> 6;
 	ihp += (vadd << 6); // BUGFIX: blood boil can cause negative shifts here (see line 757)
 
-	madd = (madd * PlayersData[static_cast<size_t>(player._pClass)].itmMana) >> 6;
+	madd = (madd * GetClassAttributes(player._pClass).itmMana) >> 6;
 	imana += (madd << 6);
 
 	player._pMaxHP = ihp + player._pMaxHPBase;

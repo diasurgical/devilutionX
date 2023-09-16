@@ -17,6 +17,11 @@ struct PlayerData {
 	const char *className;
 	/* Class Directory Path */
 	const char *classPath;
+	/* Class Skill */
+	SpellID skill;
+};
+
+struct ClassAttributes {
 	/* Class Starting Strength Stat */
 	uint8_t baseStr;
 	/* Class Starting Magic Stat */
@@ -51,9 +56,9 @@ struct PlayerData {
 	int16_t itmLife;
 	/* Mana from item bonus Magic */
 	int16_t itmMana;
-	/* Class Skill */
-	SpellID skill;
 };
+
+const ClassAttributes &GetClassAttributes(HeroClass playerClass);
 
 struct PlayerSpriteData {
 	/* Sprite width: Stand */

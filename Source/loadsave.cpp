@@ -414,7 +414,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	player._pDamageMod = file.NextLE<int32_t>();
 	player._pBaseToBlk = file.NextLE<int32_t>();
 	if (player._pBaseToBlk == 0)
-		player._pBaseToBlk = PlayersData[static_cast<std::size_t>(player._pClass)].blockBonus;
+		player._pBaseToBlk = GetClassAttributes(player._pClass).blockBonus;
 	player._pHPBase = file.NextLE<int32_t>();
 	player._pMaxHPBase = file.NextLE<int32_t>();
 	player._pHitPoints = file.NextLE<int32_t>();

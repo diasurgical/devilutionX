@@ -1703,16 +1703,16 @@ int Player::GetCurrentAttributeValue(CharacterAttribute attribute) const
 
 int Player::GetMaximumAttributeValue(CharacterAttribute attribute) const
 {
-	PlayerData plrData = PlayersData[static_cast<std::size_t>(_pClass)];
+	const ClassAttributes &attr = GetClassAttributes(_pClass);
 	switch (attribute) {
 	case CharacterAttribute::Strength:
-		return plrData.maxStr;
+		return attr.maxStr;
 	case CharacterAttribute::Magic:
-		return plrData.maxMag;
+		return attr.maxMag;
 	case CharacterAttribute::Dexterity:
-		return plrData.maxDex;
+		return attr.maxDex;
 	case CharacterAttribute::Vitality:
-		return plrData.maxVit;
+		return attr.maxVit;
 	}
 	app_fatal("Unsupported attribute");
 }
@@ -2062,14 +2062,14 @@ uint32_t Player::getNextExperienceThreshold() const
 
 int32_t Player::calculateBaseLife() const
 {
-	const PlayerData &playerData = PlayersData[static_cast<size_t>(_pClass)];
-	return playerData.adjLife + (playerData.lvlLife * getCharacterLevel()) + (playerData.chrLife * _pBaseVit);
+	const ClassAttributes &attr = GetClassAttributes(_pClass);
+	return attr.adjLife + (attr.lvlLife * getCharacterLevel()) + (attr.chrLife * _pBaseVit);
 }
 
 int32_t Player::calculateBaseMana() const
 {
-	const PlayerData &playerData = PlayersData[static_cast<size_t>(_pClass)];
-	return playerData.adjMana + (playerData.lvlMana * getCharacterLevel()) + (playerData.chrMana * _pBaseMag);
+	const ClassAttributes &attr = GetClassAttributes(_pClass);
+	return attr.adjMana + (attr.lvlMana * getCharacterLevel()) + (attr.chrMana * _pBaseMag);
 }
 
 Player *PlayerAtPosition(Point position)
@@ -2279,24 +2279,24 @@ void CreatePlayer(Player &player, HeroClass c)
 	player = {};
 	SetRndSeed(SDL_GetTicks());
 
-	const PlayerData &playerData = PlayersData[static_cast<size_t>(c)];
+	const ClassAttributes &attr = GetClassAttributes(c);
 
 	player.setCharacterLevel(1);
 	player._pClass = c;
 
-	player._pBaseStr = playerData.baseStr;
+	player._pBaseStr = attr.baseStr;
 	player._pStrength = player._pBaseStr;
 
-	player._pBaseMag = playerData.baseMag;
+	player._pBaseMag = attr.baseMag;
 	player._pMagic = player._pBaseMag;
 
-	player._pBaseDex = playerData.baseDex;
+	player._pBaseDex = attr.baseDex;
 	player._pDexterity = player._pBaseDex;
 
-	player._pBaseVit = playerData.baseVit;
+	player._pBaseVit = attr.baseVit;
 	player._pVitality = player._pBaseVit;
 
-	player._pBaseToBlk = playerData.blockBonus;
+	player._pBaseToBlk = attr.blockBonus;
 
 	player._pHitPoints = player.calculateBaseLife();
 	player._pMaxHP = player._pHitPoints;
@@ -2314,7 +2314,7 @@ void CreatePlayer(Player &player, HeroClass c)
 	player._pInfraFlag = false;
 
 	player._pRSplType = SpellType::Skill;
-	SpellID s = playerData.skill;
+	SpellID s = PlayersData[static_cast<size_t>(c)].skill;
 	player._pAblSpells = GetSpellBitmask(s);
 	player._pRSpell = s;
 
@@ -2397,7 +2397,7 @@ void NextPlrLevel(Player &player)
 	} else {
 		player._pStatPts += 5;
 	}
-	int hp = PlayersData[static_cast<size_t>(player._pClass)].lvlLife;
+	int hp = GetClassAttributes(player._pClass).lvlLife;
 
 	player._pMaxHP += hp;
 	player._pHitPoints = player._pMaxHP;
@@ -2408,7 +2408,7 @@ void NextPlrLevel(Player &player)
 		RedrawComponent(PanelDrawComponent::Health);
 	}
 
-	int mana = PlayersData[static_cast<size_t>(player._pClass)].lvlMana;
+	int mana = GetClassAttributes(player._pClass).lvlMana;
 
 	player._pMaxMana += mana;
 	player._pMaxManaBase += mana;
@@ -3329,7 +3329,7 @@ void ModifyPlrMag(Player &player, int l)
 	player._pBaseMag += l;
 
 	int ms = l;
-	ms *= PlayersData[static_cast<size_t>(player._pClass)].chrMana;
+	ms *= GetClassAttributes(player._pClass).chrMana;
 
 	player._pMaxManaBase += ms;
 	player._pMaxMana += ms;
@@ -3366,7 +3366,7 @@ void ModifyPlrVit(Player &player, int l)
 	player._pBaseVit += l;
 
 	int ms = l;
-	ms *= PlayersData[static_cast<size_t>(player._pClass)].chrLife;
+	ms *= GetClassAttributes(player._pClass).chrLife;
 
 	player._pHPBase += ms;
 	player._pMaxHPBase += ms;
@@ -3401,7 +3401,7 @@ void SetPlrMag(Player &player, int v)
 	player._pBaseMag = v;
 
 	int m = v;
-	m *= PlayersData[static_cast<size_t>(player._pClass)].chrMana;
+	m *= GetClassAttributes(player._pClass).chrMana;
 
 	player._pMaxManaBase = m;
 	player._pMaxMana = m;
@@ -3419,7 +3419,7 @@ void SetPlrVit(Player &player, int v)
 	player._pBaseVit = v;
 
 	int hp = v;
-	hp *= PlayersData[static_cast<size_t>(player._pClass)].chrLife;
+	hp *= GetClassAttributes(player._pClass).chrLife;
 
 	player._pHPBase = hp;
 	player._pMaxHPBase = hp;

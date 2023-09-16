@@ -11,6 +11,8 @@
 #include <bitset>
 #include <charconv>
 #include <cstdint>
+#include <unordered_map>
+#include <variant>
 #include <vector>
 
 #include <expected.hpp>
@@ -22,6 +24,7 @@
 #include "textdat.h"
 #include "utils/language.h"
 #include "utils/static_vector.hpp"
+#include "utils/str_cat.hpp"
 
 namespace devilution {
 
@@ -152,11 +155,104 @@ void ReloadExperienceData()
 	}
 }
 
+void LoadClassAttributes(std::string_view classPath, ClassAttributes &out)
+{
+	const std::string filename = StrCat("txtdata\\classes\\", classPath, "\\attributes.tsv");
+	tl::expected<DataFile, DataFile::Error> dataFileResult = DataFile::load(filename);
+	if (!dataFileResult.has_value()) {
+		DataFile::reportFatalError(dataFileResult.error(), filename);
+	}
+	DataFile &dataFile = dataFileResult.value();
+
+	if (tl::expected<void, DataFile::Error> result = dataFile.skipHeader();
+	    !result.has_value()) {
+		DataFile::reportFatalError(result.error(), filename);
+	}
+
+	struct KeyInfo {
+		std::variant<uint8_t *, int16_t *> out;
+		bool found = false;
+	};
+	std::unordered_map<std::string_view, KeyInfo> keyToField {
+		{ "baseStr", KeyInfo { &out.baseStr } },
+		{ "baseMag", KeyInfo { &out.baseMag } },
+		{ "baseDex", KeyInfo { &out.baseDex } },
+		{ "baseVit", KeyInfo { &out.baseVit } },
+		{ "maxStr", KeyInfo { &out.maxStr } },
+		{ "maxMag", KeyInfo { &out.maxMag } },
+		{ "maxDex", KeyInfo { &out.maxDex } },
+		{ "maxVit", KeyInfo { &out.maxVit } },
+		{ "blockBonus", KeyInfo { &out.blockBonus } },
+		{ "adjLife", KeyInfo { &out.adjLife } },
+		{ "adjMana", KeyInfo { &out.adjMana } },
+		{ "lvlLife", KeyInfo { &out.lvlLife } },
+		{ "lvlMana", KeyInfo { &out.lvlMana } },
+		{ "chrLife", KeyInfo { &out.chrLife } },
+		{ "chrMana", KeyInfo { &out.chrMana } },
+		{ "itmLife", KeyInfo { &out.itmLife } },
+		{ "itmMana", KeyInfo { &out.itmMana } },
+	};
+	for (DataFileRecord record : dataFile) {
+		FieldIterator fieldIt = record.begin();
+		const FieldIterator endField = record.end();
+
+		const std::string_view key = (*fieldIt).value();
+		++fieldIt;
+		if (fieldIt == endField) {
+			DataFile::reportFatalError(DataFile::Error::NotEnoughColumns, filename);
+		}
+		DataFileField valueField = *fieldIt;
+
+		auto mappingIt = keyToField.find(key);
+		if (mappingIt == keyToField.end()) {
+			app_fatal(fmt::format("Unknown field {} in {}", key, filename));
+		}
+		KeyInfo &keyInfo = mappingIt->second;
+		if (keyInfo.found) {
+			app_fatal(fmt::format("Duplicate field {} in {}", key, filename));
+		}
+		std::visit([&](auto *outField) {
+			auto parseIntResult = valueField.parseInt(*outField);
+			if (parseIntResult != std::errc()) {
+				DataFile::reportFatalFieldError(parseIntResult, filename, "Value", valueField);
+			}
+		},
+		    keyInfo.out);
+		keyInfo.found = true;
+
+		++fieldIt;
+	}
+
+	for (const auto &[key, keyInfo] : keyToField) {
+		if (!keyInfo.found) {
+			app_fatal(fmt::format("Missing field {} in {}", key, filename));
+		}
+	}
+}
+
+std::vector<ClassAttributes> ClassAttributesPerClass;
+
+void LoadClassesAttributes()
+{
+	const std::array classPaths { "warrior", "rogue", "sorcerer", "monk", "bard", "barbarian" };
+	ClassAttributesPerClass.clear();
+	ClassAttributesPerClass.reserve(classPaths.size());
+	for (std::string_view path : classPaths) {
+		LoadClassAttributes(path, ClassAttributesPerClass.emplace_back());
+	}
+}
+
 } // namespace
+
+const ClassAttributes &GetClassAttributes(HeroClass playerClass)
+{
+	return ClassAttributesPerClass[static_cast<size_t>(playerClass)];
+}
 
 void LoadPlayerDataFiles()
 {
 	ReloadExperienceData();
+	LoadClassesAttributes();
 }
 
 uint32_t GetNextExperienceThresholdForLevel(unsigned level)
@@ -183,15 +279,14 @@ const _sfx_id herosounds[enum_size<HeroClass>::value][enum_size<HeroSpeech>::val
 /** Contains the data related to each player class. */
 const PlayerData PlayersData[] = {
 	// clang-format off
-// HeroClass                 className,       classPath,   baseStr, baseMag,    baseDex,   baseVit,    maxStr, maxMag,     maxDex,    maxVit, blockBonus,   adjLife,                      adjMana,   lvlLife,   lvlMana,  chrLife,                     chrMana,                     itmLife,                      itmMana, skill,
-
+// HeroClass                 className,       classPath,  skill
 // TRANSLATORS: Player Block start
-/* HeroClass::Warrior */   { N_("Warrior"),   "warrior",        30,      10,         20,        25,       250,     50,         60,       100,         30, (18 << 6),                    -(1 << 6),  (2 << 6),  (1 << 6), (2 << 6),                    (1 << 6),                    (2 << 6),                     (1 << 6), SpellID::ItemRepair    },
-/* HeroClass::Rogue */     { N_("Rogue"),     "rogue",          20,      15,         30,        20,        55,     70,        250,        80,         20, (23 << 6),  static_cast<int>(5.5F * 64),  (2 << 6),  (2 << 6), (1 << 6),                    (1 << 6), static_cast<int>(1.5F * 64),  static_cast<int>(1.5F * 64), SpellID::TrapDisarm    },
-/* HeroClass::Sorcerer */  { N_("Sorcerer"),  "sorceror",       15,      35,         15,        20,        45,    250,         85,        80,         10,  (9 << 6),                    -(2 << 6),  (1 << 6),  (2 << 6), (1 << 6),                    (2 << 6),                    (1 << 6),                     (2 << 6), SpellID::StaffRecharge },
-/* HeroClass::Monk */      { N_("Monk"),      "monk",           25,      15,         25,        20,       150,     80,        150,        80,         25, (23 << 6),  static_cast<int>(5.5F * 64),  (2 << 6),  (2 << 6), (1 << 6),                    (1 << 6), static_cast<int>(1.5F * 64),  static_cast<int>(1.5F * 64), SpellID::Search,       },
-/* HeroClass::Bard */      { N_("Bard"),      "rogue",          20,      20,         25,        20,       120,    120,        120,       100,         25, (23 << 6),                     (3 << 6),  (2 << 6),  (2 << 6), (1 << 6), static_cast<int>(1.5F * 64), static_cast<int>(1.5F * 64), static_cast<int>(1.75F * 64), SpellID::Identify      },
-/* HeroClass::Barbarian */ { N_("Barbarian"), "warrior",        40,       0,         20,        25,       255,      0,         55,       150,         30, (18 << 6),                     (0 << 6),  (2 << 6),  (0 << 6), (2 << 6),                    (1 << 6), static_cast<int>(2.5F * 64),                     (1 << 6), SpellID::Rage          },
+/* HeroClass::Warrior */   { N_("Warrior"),   "warrior",  SpellID::ItemRepair    },
+/* HeroClass::Rogue */     { N_("Rogue"),     "rogue",    SpellID::TrapDisarm    },
+/* HeroClass::Sorcerer */  { N_("Sorcerer"),  "sorceror", SpellID::StaffRecharge },
+/* HeroClass::Monk */      { N_("Monk"),      "monk",     SpellID::Search        },
+/* HeroClass::Bard */      { N_("Bard"),      "rogue",    SpellID::Identify      },
+/* HeroClass::Barbarian */ { N_("Barbarian"), "warrior",  SpellID::Rage          },
 	// clang-format on
 };
 

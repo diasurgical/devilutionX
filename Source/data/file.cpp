@@ -115,4 +115,16 @@ tl::expected<void, DataFile::Error> DataFile::parseHeader(ColumnDefinition *begi
 	}
 	return {};
 }
+
+tl::expected<void, DataFile::Error> DataFile::skipHeader()
+{
+	RecordIterator it { data(), data() + size(), false };
+	++it;
+	if (it == this->end()) {
+		return tl::unexpected { Error::NoContent };
+	}
+	body_ = it.data();
+	return {};
+}
+
 } // namespace devilution
