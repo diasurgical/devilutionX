@@ -1250,6 +1250,26 @@ void DrawAutomapTile(const Surface &out, Point center, Point map)
 	}
 }
 
+Displacement GetAutomapScreen()
+{
+	Displacement screen = {};
+
+	if (Minimap) {
+		screen = {
+			MinimapRect.position.x + MinimapRect.size.width / 2,
+			MinimapRect.position.y + MinimapRect.size.height / 2
+		};
+	} else {
+		screen = {
+			gnScreenWidth / 2,
+			(gnScreenHeight - GetMainPanel().size.height) / 2
+		};
+	}
+	screen += AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileDown);
+
+	return screen;
+}
+
 void SearchAutomapItem(const Surface &out, const Displacement &myPlayerOffset, int searchRadius, tl::function_ref<bool(Point position)> highlightTile)
 {
 	const Player &player = *MyPlayer;
@@ -1268,6 +1288,8 @@ void SearchAutomapItem(const Surface &out, const Displacement &myPlayerOffset, i
 	const int endX = std::clamp(tile.x + searchRadius, 0, MAXDUNX);
 	const int endY = std::clamp(tile.y + searchRadius, 0, MAXDUNY);
 
+	int scale = (Minimap) ? MinimapScale : AutoMapScale;
+
 	for (int i = startX; i < endX; i++) {
 		for (int j = startY; j < endY; j++) {
 			if (!highlightTile({ i, j }))
@@ -1277,8 +1299,8 @@ void SearchAutomapItem(const Surface &out, const Displacement &myPlayerOffset, i
 			int py = j - 2 * AutomapOffset.deltaY - ViewPosition.y;
 
 			Point screen = {
-				(myPlayerOffset.deltaX * AutoMapScale / 100 / 2) + (px - py) * AmLine(AmLineLength::DoubleTile) + gnScreenWidth / 2,
-				(myPlayerOffset.deltaY * AutoMapScale / 100 / 2) + (px + py) * AmLine(AmLineLength::FullTile) + (gnScreenHeight - GetMainPanel().size.height) / 2
+				(myPlayerOffset.deltaX * scale / 100 / 2) + (px - py) * AmLine(AmLineLength::DoubleTile) + gnScreenWidth / 2,
+				(myPlayerOffset.deltaY * scale / 100 / 2) + (px + py) * AmLine(AmLineLength::FullTile) + (gnScreenHeight - GetMainPanel().size.height) / 2
 			};
 
 			if (CanPanelsCoverView()) {
@@ -1313,10 +1335,14 @@ void DrawAutomapPlr(const Surface &out, const Displacement &myPlayerOffset, int 
 	if (player.isWalking())
 		playerOffset = GetOffsetForWalking(player.AnimInfo, player._pdir);
 
+	int scale = (Minimap) ? MinimapScale : AutoMapScale;
+
 	Point base = {
-		((playerOffset.deltaX + myPlayerOffset.deltaX) * AutoMapScale / 100 / 2) + (px - py) * AmLine(AmLineLength::DoubleTile) + gnScreenWidth / 2,
-		((playerOffset.deltaY + myPlayerOffset.deltaY) * AutoMapScale / 100 / 2) + (px + py) * AmLine(AmLineLength::FullTile) + (gnScreenHeight - GetMainPanel().size.height) / 2 + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown).deltaY
+		((playerOffset.deltaX + myPlayerOffset.deltaX) * scale / 100 / 2) + (px - py) * AmLine(AmLineLength::DoubleTile),
+		((playerOffset.deltaY + myPlayerOffset.deltaY) * scale / 100 / 2) + (px + py) * AmLine(AmLineLength::FullTile) + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown).deltaY
 	};
+
+	base += GetAutomapScreen();
 
 	if (CanPanelsCoverView()) {
 		if (IsRightPanelOpen())
@@ -1505,14 +1531,34 @@ std::unique_ptr<AutomapTile[]> LoadAutomapData(size_t &tileCount)
 bool AutomapActive;
 uint8_t AutomapView[DMAXX][DMAXY];
 int AutoMapScale;
+int MinimapScale;
 Displacement AutomapOffset;
 bool AutomapTransparent;
+bool Minimap;
+Rectangle MinimapRect {};
 
 void InitAutomapOnce()
 {
 	AutomapActive = false;
 	AutoMapScale = 50;
 	SetAutomapType(AutomapType::Opaque);
+
+	// Set the dimensions and screen position of the minimap relative to the screen dimensions
+	int minimapWidth = gnScreenWidth / 4;
+	Size minimapSize { minimapWidth, minimapWidth / 2 };
+	int minimapPadding = gnScreenWidth / 128;
+	MinimapRect = Rectangle { { gnScreenWidth - minimapPadding - minimapSize.width, minimapPadding }, minimapSize };
+
+	// Set minimap scale
+	int height = 480;
+	int scale = 25;
+	int factor = gnScreenHeight / height;
+
+	if (factor >= 8) {
+		MinimapScale = scale * 8;
+	} else {
+		MinimapScale = scale * factor;
+	}
 }
 
 void InitAutomap()
@@ -1652,6 +1698,13 @@ void StartAutomap()
 {
 	AutomapOffset = { 0, 0 };
 	AutomapActive = true;
+	AutomapTransparent = true;
+}
+
+void StartMinimap()
+{
+	AutomapOffset = { 0, 0 };
+	Minimap = true;
 	AutomapTransparent = false;
 }
 
@@ -1681,18 +1734,22 @@ void AutomapRight()
 
 void AutomapZoomIn()
 {
-	if (AutoMapScale >= 200)
+	int &scale = (Minimap) ? MinimapScale : AutoMapScale;
+
+	if (scale >= 200)
 		return;
 
-	AutoMapScale += 25;
+	scale += 25;
 }
 
 void AutomapZoomOut()
 {
-	if (AutoMapScale <= 25)
+	int &scale = (Minimap) ? MinimapScale : AutoMapScale;
+
+	if (scale <= 25)
 		return;
 
-	AutoMapScale -= 25;
+	scale -= 25;
 }
 
 void DrawAutomap(const Surface &out)
@@ -1718,21 +1775,27 @@ void DrawAutomap(const Surface &out)
 	if (myPlayer.isWalking())
 		myPlayerOffset = GetOffsetForWalking(myPlayer.AnimInfo, myPlayer._pdir, true);
 
-	int d = (AutoMapScale * 64) / 100;
+	int scale = (Minimap) ? MinimapScale : AutoMapScale;
+	int d = (scale * 64) / 100;
 	int cells = 2 * (gnScreenWidth / 2 / d) + 1;
 	if (((gnScreenWidth / 2) % d) != 0)
 		cells++;
-	if (((gnScreenWidth / 2) % d) >= (AutoMapScale * 32) / 100)
+	if (((gnScreenWidth / 2) % d) >= (scale * 32) / 100)
 		cells++;
 	if ((myPlayerOffset.deltaX + myPlayerOffset.deltaY) != 0)
 		cells++;
 
-	Point screen {
-		gnScreenWidth / 2,
-		(gnScreenHeight - GetMainPanel().size.height) / 2
-	};
+	if (Minimap) {
+		DrawHalfTransparentRectTo(out, MinimapRect.position.x, MinimapRect.position.y, MinimapRect.size.width, MinimapRect.size.height);
+		DrawHorizontalLine(out, MinimapRect.position + Displacement { -1, -1 }, MinimapRect.size.width + 2, MapColorsDim);
+		DrawHorizontalLine(out, MinimapRect.position + Displacement { -1, MinimapRect.size.height }, MinimapRect.size.width + 2, MapColorsDim);
+		DrawVerticalLine(out, MinimapRect.position + Displacement { -1, 0 }, MinimapRect.size.height, MapColorsDim);
+		DrawVerticalLine(out, MinimapRect.position + Displacement { MinimapRect.size.width, 0 }, MinimapRect.size.height, MapColorsDim);
+	}
 
-	screen += AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileDown);
+	Point screen = {};
+
+	screen += GetAutomapScreen();
 
 	if ((cells & 1) != 0) {
 		screen.x -= AmOffset(AmWidthOffset::DoubleTileRight, AmHeightOffset::None).deltaX * ((cells - 1) / 2);
@@ -1751,8 +1814,8 @@ void DrawAutomap(const Surface &out)
 		screen.y -= AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileDown).deltaY;
 	}
 
-	screen.x += AutoMapScale * myPlayerOffset.deltaX / 100 / 2;
-	screen.y += AutoMapScale * myPlayerOffset.deltaY / 100 / 2;
+	screen.x += scale * myPlayerOffset.deltaX / 100 / 2;
+	screen.y += scale * myPlayerOffset.deltaY / 100 / 2;
 
 	if (CanPanelsCoverView()) {
 		if (IsRightPanelOpen()) {

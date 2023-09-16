@@ -1004,12 +1004,14 @@ void control_check_btn_press()
 
 void DoAutoMap()
 {
-	if (!AutomapActive)
+	if (!AutomapActive) {
 		StartAutomap();
-	else if (!AutomapTransparent)
-		AutomapTransparent = true;
-	else
+	} else if (!Minimap) {
+		StartMinimap();
+	} else {
 		AutomapActive = false;
+		Minimap = false;
+	}
 }
 
 void CycleAutomapType()
