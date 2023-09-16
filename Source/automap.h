@@ -42,7 +42,6 @@ extern DVL_API_FOR_TEST bool AutomapTransparent;
 extern DVL_API_FOR_TEST bool Minimap;
 extern Rectangle MinimapRect;
 
-
 /** Defines the offsets used for Automap lines */
 enum class AmWidthOffset : int8_t {
 	None,
