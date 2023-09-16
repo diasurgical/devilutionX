@@ -11,8 +11,6 @@
 #include <bitset>
 #include <charconv>
 #include <cstdint>
-#include <unordered_map>
-#include <variant>
 #include <vector>
 
 #include <expected.hpp>
@@ -169,65 +167,64 @@ void LoadClassAttributes(std::string_view classPath, ClassAttributes &out)
 		DataFile::reportFatalError(result.error(), filename);
 	}
 
-	struct KeyInfo {
-		std::variant<uint8_t *, int16_t *> out;
-		bool found = false;
-	};
-	std::unordered_map<std::string_view, KeyInfo> keyToField {
-		{ "baseStr", KeyInfo { &out.baseStr } },
-		{ "baseMag", KeyInfo { &out.baseMag } },
-		{ "baseDex", KeyInfo { &out.baseDex } },
-		{ "baseVit", KeyInfo { &out.baseVit } },
-		{ "maxStr", KeyInfo { &out.maxStr } },
-		{ "maxMag", KeyInfo { &out.maxMag } },
-		{ "maxDex", KeyInfo { &out.maxDex } },
-		{ "maxVit", KeyInfo { &out.maxVit } },
-		{ "blockBonus", KeyInfo { &out.blockBonus } },
-		{ "adjLife", KeyInfo { &out.adjLife } },
-		{ "adjMana", KeyInfo { &out.adjMana } },
-		{ "lvlLife", KeyInfo { &out.lvlLife } },
-		{ "lvlMana", KeyInfo { &out.lvlMana } },
-		{ "chrLife", KeyInfo { &out.chrLife } },
-		{ "chrMana", KeyInfo { &out.chrMana } },
-		{ "itmLife", KeyInfo { &out.itmLife } },
-		{ "itmMana", KeyInfo { &out.itmMana } },
-	};
-	for (DataFileRecord record : dataFile) {
+	auto recordIt = dataFile.begin();
+	const auto recordEnd = dataFile.end();
+
+	const auto getValueField = [&](std::string_view expectedKey) {
+		if (recordIt == recordEnd) {
+			app_fatal(fmt::format("Missing field {} in {}", expectedKey, filename));
+		}
+		DataFileRecord record = *recordIt;
 		FieldIterator fieldIt = record.begin();
 		const FieldIterator endField = record.end();
 
 		const std::string_view key = (*fieldIt).value();
+		if (key != expectedKey) {
+			app_fatal(fmt::format("Unexpected field in {}: got {}, expected {}", filename, key, expectedKey));
+		}
+
 		++fieldIt;
 		if (fieldIt == endField) {
 			DataFile::reportFatalError(DataFile::Error::NotEnoughColumns, filename);
 		}
-		DataFileField valueField = *fieldIt;
+		return *fieldIt;
+	};
 
-		auto mappingIt = keyToField.find(key);
-		if (mappingIt == keyToField.end()) {
-			app_fatal(fmt::format("Unknown field {} in {}", key, filename));
-		}
-		KeyInfo &keyInfo = mappingIt->second;
-		if (keyInfo.found) {
-			app_fatal(fmt::format("Duplicate field {} in {}", key, filename));
-		}
-		std::visit([&](auto *outField) {
-			auto parseIntResult = valueField.parseInt(*outField);
-			if (parseIntResult != std::errc()) {
-				DataFile::reportFatalFieldError(parseIntResult, filename, "Value", valueField);
+	const auto valueReader = [&](auto &&readFn) {
+		return [&](std::string_view expectedKey, auto &outValue) {
+			DataFileField valueField = getValueField(expectedKey);
+			if (const tl::expected<void, devilution::DataFileField::Error> result = readFn(valueField, outValue);
+			    !result.has_value()) {
+				DataFile::reportFatalFieldError(result.error(), filename, "Value", valueField);
 			}
-		},
-		    keyInfo.out);
-		keyInfo.found = true;
+			++recordIt;
+		};
+	};
 
-		++fieldIt;
-	}
+	const auto readInt = valueReader([](DataFileField &valueField, auto &outValue) {
+		return valueField.parseInt(outValue);
+	});
+	const auto readDecimal = valueReader([](DataFileField &valueField, auto &outValue) {
+		return valueField.parseFixed6(outValue);
+	});
 
-	for (const auto &[key, keyInfo] : keyToField) {
-		if (!keyInfo.found) {
-			app_fatal(fmt::format("Missing field {} in {}", key, filename));
-		}
-	}
+	readInt("baseStr", out.baseStr);
+	readInt("baseMag", out.baseMag);
+	readInt("baseDex", out.baseDex);
+	readInt("baseVit", out.baseVit);
+	readInt("maxStr", out.maxStr);
+	readInt("maxMag", out.maxMag);
+	readInt("maxDex", out.maxDex);
+	readInt("maxVit", out.maxVit);
+	readInt("blockBonus", out.blockBonus);
+	readDecimal("adjLife", out.adjLife);
+	readDecimal("adjMana", out.adjMana);
+	readDecimal("lvlLife", out.lvlLife);
+	readDecimal("lvlMana", out.lvlMana);
+	readDecimal("chrLife", out.chrLife);
+	readDecimal("chrMana", out.chrMana);
+	readDecimal("itmLife", out.itmLife);
+	readDecimal("itmMana", out.itmMana);
 }
 
 std::vector<ClassAttributes> ClassAttributesPerClass;

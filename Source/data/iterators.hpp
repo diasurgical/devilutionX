@@ -25,9 +25,9 @@ public:
 
 	static tl::expected<void, Error> mapError(std::errc ec)
 	{
-		switch (ec) {
-		case std::errc():
+		if (ec == std::errc())
 			return {};
+		switch (ec) {
 		case std::errc::result_out_of_range:
 			return tl::unexpected { Error::OutOfRange };
 		case std::errc::invalid_argument:
