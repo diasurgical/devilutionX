@@ -479,10 +479,10 @@ void DrawLavaRiver(const Surface &out, Point center, uint8_t color, bool hasBrid
 		if (!(hasBridge && IsAnyOf(Direction::NorthEast, TDir1, TDir2)))
 			out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileUp), color);
 	}
-	if constexpr (IsAnyOf(Direction::NorthWest, Direction::NorthEast, TDir1, TDir2)) {
+	if constexpr (IsAnyOf(Direction::NorthWest, TDir1, TDir2) || IsAnyOf(Direction::NorthEast, TDir1, TDir2)) {
 		out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::None), color);
 	}
-	if constexpr (IsAnyOf(Direction::SouthWest, Direction::NorthWest, TDir1, TDir2)) {
+	if constexpr (IsAnyOf(Direction::SouthWest, TDir1, TDir2) || IsAnyOf(Direction::NorthWest, TDir1, TDir2)) {
 		out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::QuarterTileDown), color);
 	}
 	if constexpr (IsAnyOf(Direction::SouthWest, TDir1, TDir2)) {
@@ -494,10 +494,10 @@ void DrawLavaRiver(const Surface &out, Point center, uint8_t color, bool hasBrid
 		if (!(hasBridge && IsAnyOf(Direction::NorthEast, TDir1, TDir2)))
 			out.SetPixel(center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::None), color);
 	}
-	if constexpr (IsAnyOf(Direction::NorthEast, Direction::SouthEast, TDir1, TDir2)) {
+	if constexpr (IsAnyOf(Direction::NorthEast, TDir1, TDir2) || IsAnyOf(Direction::SouthEast, TDir1, TDir2)) {
 		out.SetPixel(center + AmOffset(AmWidthOffset::QuarterTileRight, AmHeightOffset::QuarterTileDown), color);
 	}
-	if constexpr (IsAnyOf(Direction::SouthWest, Direction::SouthEast, TDir1, TDir2)) {
+	if constexpr (IsAnyOf(Direction::SouthWest, TDir1, TDir2) || IsAnyOf(Direction::SouthEast, TDir1, TDir2)) {
 		out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileDown), color);
 	}
 	if constexpr (IsAnyOf(Direction::SouthWest, TDir1, TDir2)) {
@@ -973,7 +973,7 @@ void DrawAutomapTile(const Surface &out, Point center, Point map)
 	case AutomapTile::Types::CaveCross:
 		// Add the missing dirt pixel
 		out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown), colorDim);
-		[[fallthough]];
+		[[fallthrough]];
 	case AutomapTile::Types::CaveWoodCross:
 	case AutomapTile::Types::CaveRightWoodCross:
 	case AutomapTile::Types::CaveLeftWoodCross:
