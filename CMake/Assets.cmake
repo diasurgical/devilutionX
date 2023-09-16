@@ -142,6 +142,12 @@ set(devilutionx_assets
   nlevels/l5data/cornerstone.dun
   nlevels/l5data/uberroom.dun
   txtdata/Experience.tsv
+  txtdata/classes/barbarian/attributes.tsv
+  txtdata/classes/bard/attributes.tsv
+  txtdata/classes/monk/attributes.tsv
+  txtdata/classes/rogue/attributes.tsv
+  txtdata/classes/sorcerer/attributes.tsv
+  txtdata/classes/warrior/attributes.tsv
   ui_art/diablo.pal
   ui_art/hellfire.pal
   ui_art/creditsw.clx

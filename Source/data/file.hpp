@@ -107,6 +107,8 @@ public:
 		return parseHeader(begin, end, [typedMapper](std::string_view label) { return typedMapper(label).transform([](T value) { return static_cast<uint8_t>(value); }); });
 	}
 
+	[[nodiscard]] tl::expected<void, DataFile::Error> skipHeader();
+
 	[[nodiscard]] RecordIterator begin() const
 	{
 		return { body_, data() + size(), body_ != data() };
