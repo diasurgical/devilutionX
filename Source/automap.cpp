@@ -1106,7 +1106,7 @@ void DrawAutomapTile(const Surface &out, Point center, Point map)
 		break;
 	case AutomapTile::Types::CaveCross:
 		// Add the missing dirt pixel
-		out.SetPixel(center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown), colorDim);
+		SetMapPixel(out, center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown), colorDim);
 		[[fallthrough]];
 	case AutomapTile::Types::CaveWoodCross:
 	case AutomapTile::Types::CaveRightWoodCross:
@@ -1353,7 +1353,7 @@ void DrawAutomapPlr(const Surface &out, const Displacement &myPlayerOffset, int 
 	} break;
 	case Direction::South: {
 		const Point point = base + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown);
-		DrawVerticalLine(out, point + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileUp), AmLine(AmLineLength::DoubleTile), playerColor);
+		DrawMapLineNS(out, point + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileUp), AmLine(AmLineLength::DoubleTile), playerColor);
 		DrawMapLineSteepSW(out, point + AmOffset(AmWidthOffset::EighthTileRight, AmHeightOffset::HalfTileUp), AmLine(AmLineLength::HalfTile), playerColor);
 		DrawMapLineSteepSE(out, point + AmOffset(AmWidthOffset::EighthTileLeft, AmHeightOffset::HalfTileUp), AmLine(AmLineLength::HalfTile), playerColor);
 	} break;
