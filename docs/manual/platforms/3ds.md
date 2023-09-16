@@ -3,7 +3,7 @@
 ## Installation
 
 Look for the latest release on the
-[Releases](https://github.com/diasurgical/devilutionX/releases) page.
+[Releases](https://github.com/diasurgical/devilutionX/releases/latest) page.
 
 Installation instructions can be found on the [Installing](/docs/installing.md) page.
 
@@ -52,7 +52,7 @@ on another platform with more capable hardware.
 The 3DS version of the game will attempt to detect the appropriate
 language based on your 3DS console's language setting.
 Chinese, Korean, and Japanese users will need to download
-[fonts.mpq](https://github.com/diasurgical/devilutionx-assets/releases/download/v1/fonts.mpq)
+[fonts.mpq](https://github.com/diasurgical/devilutionx-assets/releases/latest/download/fonts.mpq)
 or the text will be missing.
 
 It is currently not recommended to use the Chinese, Korean, or Japanese translations on old 3DS models.
