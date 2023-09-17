@@ -4,6 +4,7 @@
 #include <cerrno>
 #include <cstdint>
 #include <cstring>
+#include <limits>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -181,6 +182,24 @@ bool FileExistsAndIsWriteable(const char *path)
 bool GetFileSize(const char *path, std::uintmax_t *size)
 {
 #ifdef _WIN32
+#if defined(WINVER) && WINVER <= 0x0500 && (!defined(_WIN32_WINNT) || _WIN32_WINNT == 0)
+	HANDLE handle = ::CreateFileA(path, GENERIC_READ,
+	    FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING,
+	    FILE_ATTRIBUTE_NORMAL, NULL);
+	if (handle == INVALID_HANDLE_VALUE) {
+		LogError("File not found: {}", GetLastError());
+		return false;
+	}
+	DWORD fileSizeHigh;
+	const DWORD fileSizeLow = ::GetFileSize(handle, &fileSizeHigh);
+	if (fileSizeLow == INVALID_FILE_SIZE && GetLastError() != NO_ERROR) {
+		LogError("GetFileSize failed for {}: {}", path, GetLastError());
+		::CloseHandle(handle);
+		return false;
+	}
+	*size = (static_cast<uintmax_t>(fileSizeHigh) << 32) | fileSizeLow;
+	return true;
+#else
 	WIN32_FILE_ATTRIBUTE_DATA attr;
 #ifdef DEVILUTIONX_WINDOWS_NO_WCHAR
 	if (!GetFileAttributesExA(path, GetFileExInfoStandard, &attr)) {
@@ -199,6 +218,7 @@ bool GetFileSize(const char *path, std::uintmax_t *size)
 	// C4293 in msvc when shifting a 32 bit type by 32 bits.
 	*size = static_cast<std::uintmax_t>(attr.nFileSizeHigh) << (sizeof(attr.nFileSizeHigh) * 8) | attr.nFileSizeLow;
 	return true;
+#endif
 #else
 	struct ::stat statResult;
 	if (::stat(path, &statResult) == -1)
@@ -279,11 +299,18 @@ void RecursivelyCreateDir(const char *path)
 bool ResizeFile(const char *path, std::uintmax_t size)
 {
 #ifdef _WIN32
+#if defined(WINVER) && WINVER <= 0x0500 && (!defined(_WIN32_WINNT) || _WIN32_WINNT == 0)
+	if (size > std::numeric_limits<LONG>::max()) {
+		return false;
+	}
+	auto lisize = static_cast<LONG>(size);
+#else
 	LARGE_INTEGER lisize;
 	lisize.QuadPart = static_cast<LONGLONG>(size);
 	if (lisize.QuadPart < 0) {
 		return false;
 	}
+#endif
 #ifdef DEVILUTIONX_WINDOWS_NO_WCHAR
 	HANDLE file = ::CreateFileA(path, GENERIC_WRITE, 0, NULL, OPEN_EXISTING, 0, NULL);
 #else
@@ -296,7 +323,13 @@ bool ResizeFile(const char *path, std::uintmax_t size)
 #endif
 	if (file == INVALID_HANDLE_VALUE) {
 		return false;
-	} else if (::SetFilePointerEx(file, lisize, NULL, FILE_BEGIN) == 0 || ::SetEndOfFile(file) == 0) {
+	} else if (
+#if defined(WINVER) && WINVER <= 0x0500 && (!defined(_WIN32_WINNT) || _WIN32_WINNT == 0)
+	    ::SetFilePointer(file, lisize, NULL, FILE_BEGIN) == 0
+#else
+	    ::SetFilePointerEx(file, lisize, NULL, FILE_BEGIN) == 0
+#endif
+	    || ::SetEndOfFile(file) == 0) {
 		::CloseHandle(file);
 		return false;
 	}
@@ -311,9 +344,10 @@ bool ResizeFile(const char *path, std::uintmax_t size)
 
 void RenameFile(const char *from, const char *to)
 {
+#ifdef _WIN32
 #ifdef DEVILUTIONX_WINDOWS_NO_WCHAR
 	::MoveFile(from, to);
-#elif defined(_WIN32)
+#else
 	const auto fromUtf16 = ToWideChar(from);
 	const auto toUtf16 = ToWideChar(to);
 	if (fromUtf16 == nullptr || toUtf16 == nullptr) {
@@ -321,6 +355,7 @@ void RenameFile(const char *from, const char *to)
 		return;
 	}
 	::MoveFileW(&fromUtf16[0], &toUtf16[0]);
+#endif // _WIN32
 #elif defined(DVL_HAS_FILESYSTEM)
 	std::error_code ec;
 	std::filesystem::rename(std::filesystem::u8path(from), std::filesystem::u8path(to), ec);
@@ -331,11 +366,12 @@ void RenameFile(const char *from, const char *to)
 
 void CopyFileOverwrite(const char *from, const char *to)
 {
+#ifdef _WIN32
 #ifdef DEVILUTIONX_WINDOWS_NO_WCHAR
 	if (!::CopyFile(from, to, /*bFailIfExists=*/false)) {
 		LogError("Failed to copy {} to {}", from, to);
 	}
-#elif defined(_WIN32)
+#else
 	const auto fromUtf16 = ToWideChar(from);
 	const auto toUtf16 = ToWideChar(to);
 	if (fromUtf16 == nullptr || toUtf16 == nullptr) {
@@ -345,6 +381,7 @@ void CopyFileOverwrite(const char *from, const char *to)
 	if (!::CopyFileW(&fromUtf16[0], &toUtf16[0], /*bFailIfExists=*/false)) {
 		LogError("Failed to copy {} to {}", from, to);
 	}
+#endif // _WIN32
 #elif defined(__APPLE__)
 	::copyfile(from, to, nullptr, COPYFILE_ALL);
 #elif defined(DVL_HAS_FILESYSTEM)

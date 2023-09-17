@@ -1604,6 +1604,7 @@ bool CanPlayerTakeAction()
 
 void InitKeymapActions()
 {
+	fmt::print("hello\n");
 	for (int i = 0; i < 8; ++i) {
 		sgOptions.Keymapper.AddAction(
 		    "BeltItem{}",
