@@ -27,9 +27,9 @@
 
 namespace devilution::net {
 
-class server_exception : public dvlnet_exception {
+class ServerError : public PacketError {
 public:
-	const char *what() const throw() override
+	const char *what() const override
 	{
 		return "Invalid player ID";
 	}
@@ -77,8 +77,8 @@ private:
 	void StartReceive(const scc &con);
 	void HandleReceive(const scc &con, const asio::error_code &ec, size_t bytesRead);
 	tl::expected<void, PacketError> HandleReceiveNewPlayer(const scc &con, packet &pkt);
-	void HandleReceivePacket(packet &pkt);
-	void SendPacket(packet &pkt);
+	tl::expected<void, PacketError> HandleReceivePacket(packet &pkt);
+	tl::expected<void, PacketError> SendPacket(packet &pkt);
 	void StartSend(const scc &con, packet &pkt);
 	void HandleSend(const scc &con, const asio::error_code &ec, size_t bytesSent);
 	void StartTimeout(const scc &con);

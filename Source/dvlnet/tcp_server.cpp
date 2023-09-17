@@ -79,27 +79,25 @@ void tcp_server::HandleReceive(const scc &con, const asio::error_code &ec,
 	con->recv_buffer.resize(frame_queue::max_frame_size);
 	try {
 		while (con->recv_queue.PacketReady()) {
-			try {
-				tl::expected<std::unique_ptr<packet>, PacketError> pkt = pktfty.make_packet(con->recv_queue.ReadPacket());
-				if (!pkt.has_value()) {
-					Log("make_packet: {}", pkt.error().what());
+			tl::expected<std::unique_ptr<packet>, PacketError> pkt = pktfty.make_packet(con->recv_queue.ReadPacket());
+			if (!pkt.has_value()) {
+				Log("make_packet: {}", pkt.error().what());
+				DropConnection(con);
+				return;
+			}
+			if (con->plr == PLR_BROADCAST) {
+				if (tl::expected<void, PacketError> result = HandleReceiveNewPlayer(con, **pkt); !result.has_value()) {
+					Log("HandleReceiveNewPlayer: {}", result.error().what());
 					DropConnection(con);
 					return;
 				}
-				if (con->plr == PLR_BROADCAST) {
-					if (tl::expected<void, PacketError> result = HandleReceiveNewPlayer(con, **pkt); !result.has_value()) {
-						Log("HandleReceiveNewPlayer: {}", result.error().what());
-						DropConnection(con);
-						return;
-					}
-				} else {
-					con->timeout = timeout_active;
-					HandleReceivePacket(**pkt);
+			} else {
+				con->timeout = timeout_active;
+				if (tl::expected<void, PacketError> result = HandleReceivePacket(**pkt); !result.has_value()) {
+					Log("Network error: {}", result.error().what());
+					DropConnection(con);
+					return;
 				}
-			} catch (dvlnet_exception &e) {
-				Log("Network error: {}", e.what());
-				DropConnection(con);
-				return;
 			}
 		}
 	} catch (frame_queue_exception &e) {
@@ -114,7 +112,7 @@ tl::expected<void, PacketError> tcp_server::HandleReceiveNewPlayer(const scc &co
 {
 	auto newplr = NextFree();
 	if (newplr == PLR_BROADCAST)
-		throw server_exception();
+		return tl::make_unexpected(ServerError());
 
 	if (Empty()) {
 		tl::expected<const buffer_t *, PacketError> pktInfo = inPkt.Info();
@@ -158,12 +156,12 @@ tl::expected<void, PacketError> tcp_server::HandleReceiveNewPlayer(const scc &co
 	return {};
 }
 
-void tcp_server::HandleReceivePacket(packet &pkt)
+tl::expected<void, PacketError> tcp_server::HandleReceivePacket(packet &pkt)
 {
-	SendPacket(pkt);
+	return SendPacket(pkt);
 }
 
-void tcp_server::SendPacket(packet &pkt)
+tl::expected<void, PacketError> tcp_server::SendPacket(packet &pkt)
 {
 	if (pkt.Destination() == PLR_BROADCAST) {
 		for (size_t i = 0; i < Players.size(); ++i)
@@ -171,10 +169,11 @@ void tcp_server::SendPacket(packet &pkt)
 				StartSend(connections[i], pkt);
 	} else {
 		if (pkt.Destination() >= MAX_PLRS)
-			throw server_exception();
+			return tl::make_unexpected(ServerError());
 		if ((pkt.Destination() != pkt.Source()) && connections[pkt.Destination()])
 			StartSend(connections[pkt.Destination()], pkt);
 	}
+	return {};
 }
 
 void tcp_server::StartSend(const scc &con, packet &pkt)
