@@ -235,7 +235,7 @@ TEST(DataFileTest, ParseInt)
 
 		int longVal = 1;
 		auto parseFixedResult = field.parseFixed6(longVal);
-		EXPECT_TRUE(parseFixedResult.has_value()) << "Expected " << field << " to be parsed as a fixed point integer wiith only the integer part";
+		EXPECT_TRUE(parseFixedResult.has_value()) << "Expected " << field << " to be parsed as a fixed point integer with only the integer part";
 		EXPECT_EQ(longVal, 145 << 6) << "Parsing should give the expected fixed point base 10 value";
 
 		++fieldIt;
@@ -276,7 +276,7 @@ TEST(DataFileTest, ParseInt)
 		parseFixedResult = field.parseFixed6(shortFixedVal);
 		EXPECT_FALSE(parseFixedResult.has_value()) << "Expected " << field << " to fail to parse into a 2.6 fixed point variable";
 		EXPECT_EQ(parseFixedResult.error(), DataFileField::Error::OutOfRange) << "A value too large to fit into a 2 bit integer part should report an error";
-		EXPECT_EQ(shortFixedVal, 32) << "The variiable should not be modified when parsing fails";
+		EXPECT_EQ(shortFixedVal, 32) << "The variable should not be modified when parsing fails";
 
 		++fieldIt;
 
@@ -286,7 +286,7 @@ TEST(DataFileTest, ParseInt)
 		parseFixedResult = field.parseFixed6(shortFixedVal);
 		EXPECT_FALSE(parseFixedResult.has_value()) << "Expected " << field << " to fail to parse into a 2.6 fixed point variable";
 		EXPECT_EQ(parseFixedResult.error(), DataFileField::Error::OutOfRange) << "A value that after rounding is too large to fit into a 2 bit integer part should report an error";
-		EXPECT_EQ(shortFixedVal, 32) << "The variiable should not be modified when parsing fails";
+		EXPECT_EQ(shortFixedVal, 32) << "The variable should not be modified when parsing fails";
 	}
 }
 
