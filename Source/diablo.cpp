@@ -554,7 +554,7 @@ void PressKey(SDL_Keycode vkey, uint16_t modState)
 		}
 		return;
 #ifdef _DEBUG
-	case SDLK_m:
+	case SDLK_v:
 		if ((modState & KMOD_SHIFT) != 0)
 			NextDebugMonster();
 		else
@@ -1716,6 +1716,14 @@ void InitKeymapActions()
 	    N_("Toggles if automap is displayed."),
 	    SDLK_TAB,
 	    DoAutoMap,
+	    nullptr,
+	    IsGameRunning);
+	sgOptions.Keymapper.AddAction(
+	    "CycleAutomapType",
+	    N_("Cycle map type"),
+	    N_("Opaque -> Transparent -> Minimap -> None"),
+	    SDLK_m,
+	    CycleAutomapType,
 	    nullptr,
 	    IsGameRunning);
 

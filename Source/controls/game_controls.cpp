@@ -269,7 +269,7 @@ void PressControllerButton(ControllerButton button)
 			gamemenu_on();
 			return;
 		case devilution::ControllerButton_BUTTON_DPAD_DOWN:
-			DoAutoMap();
+			CycleAutomapType();
 			return;
 		case devilution::ControllerButton_BUTTON_DPAD_LEFT:
 			ProcessGameAction(GameAction { GameActionType_TOGGLE_CHARACTER_INFO });
