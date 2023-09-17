@@ -1,2 +1,2 @@
-String	Byte	Int	Float
-Sample	145	70322	6.34
+String	Byte	Int	Float	FloatOverflow
+Sample	145	70322	6.34	3.999

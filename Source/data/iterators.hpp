@@ -6,6 +6,7 @@
 #include <expected.hpp>
 
 #include "parser.hpp"
+#include "utils/parse_int.hpp"
 
 namespace devilution {
 
@@ -30,6 +31,18 @@ public:
 		case std::errc::result_out_of_range:
 			return tl::unexpected { Error::OutOfRange };
 		case std::errc::invalid_argument:
+			return tl::unexpected { Error::NotANumber };
+		default:
+			return tl::unexpected { Error::InvalidValue };
+		}
+	}
+
+	static tl::expected<void, Error> mapError(ParseIntError ec)
+	{
+		switch (ec) {
+		case ParseIntError::OutOfRange:
+			return tl::unexpected { Error::OutOfRange };
+		case ParseIntError::ParseError:
 			return tl::unexpected { Error::NotANumber };
 		default:
 			return tl::unexpected { Error::InvalidValue };
@@ -103,6 +116,47 @@ public:
 	{
 		T value = 0;
 		return parseInt(value).map([value]() { return value; });
+	}
+
+	/**
+	 * @brief Attempts to parse the current field as a fixed point value with 6 bits for the fraction
+	 *
+	 * You can freely interleave this method with calls to operator*. If this is the first value
+	 * access since the last advance this will scan the current field and store it for later
+	 * use with operator* or repeated calls to parseInt/Fixed6 (even with different types).
+	 * @tparam T an Integral type supported by std::from_chars
+	 * @param destination value to store the result of successful parsing
+	 * @return an error code equivalent to what you'd get from from_chars if parsing failed
+	 */
+	template <typename T>
+	[[nodiscard]] tl::expected<void, Error> parseFixed6(T &destination)
+	{
+		ParseIntResult<T> parseResult;
+		if (state_->status == GetFieldResult::Status::ReadyToRead) {
+			const char *begin = state_->next;
+			// first read, consume digits
+			parseResult = ParseFixed6<T>({ begin, static_cast<size_t>(end_ - begin) }, &state_->next);
+			// then read the remainder of the field
+			*state_ = GetNextField(state_->next, end_);
+			// and prepend what was already parsed
+			state_->value = { begin, (state_->value.data() - begin) + state_->value.size() };
+		} else {
+			parseResult = ParseFixed6<T>(state_->value);
+		}
+
+		if (parseResult.has_value()) {
+			destination = parseResult.value();
+			return {};
+		} else {
+			return mapError(parseResult.error());
+		}
+	}
+
+	template <typename T>
+	[[nodiscard]] tl::expected<T, Error> asFixed6()
+	{
+		T value = 0;
+		return parseFixed6(value).map([value]() { return value; });
 	}
 
 	/**

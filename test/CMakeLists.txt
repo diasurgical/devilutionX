@@ -32,6 +32,7 @@ set(tests
   missiles_test
   pack_test
   path_test
+  parse_int_test
   player_test
   quests_test
   random_test
