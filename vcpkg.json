@@ -6,7 +6,7 @@
         "bzip2",
         "simpleini"
     ],
-    "builtin-baseline": "927bc12e31148b0d44ae9d174b96c20e3bcf08eb",
+    "builtin-baseline": "e8c2a04eb7ca058b6e2f0e6e33c67fdbffeee846",
     "features": {
         "sdl1": {
             "description": "Use SDL1.2 instead of SDL2",
