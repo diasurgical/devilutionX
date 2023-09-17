@@ -3468,7 +3468,7 @@ msgstr "Lune Gibbeuse"
 
 #: Source/itemdat.cpp:458
 msgid "Ice Shank"
-msgstr "Tringle de Glace"
+msgstr "Surin de Glace"
 
 #: Source/itemdat.cpp:459
 msgid "The Executioner's Blade"
