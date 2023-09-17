@@ -11,8 +11,8 @@ list(PREPEND CMAKE_C_STANDARD_INCLUDE_DIRECTORIES "${CMAKE_CURRENT_LIST_DIR}/min
 list(PREPEND CMAKE_CXX_STANDARD_INCLUDE_DIRECTORIES "${CMAKE_CURRENT_LIST_DIR}/mingw9x/include")
 
 # Compatibility with CPUs that do not have MMX.
-set(CMAKE_C_FLAGS_INIT "-mno-mmx")
-set(CMAKE_CXX_FLAGS_INIT "-mno-mmx")
+set(CMAKE_C_FLAGS_INIT "-march=pentium")
+set(CMAKE_CXX_FLAGS_INIT "-march=pentium")
 
 SET(CMAKE_C_COMPILER   "i686-w64-mingw32-gcc")
 SET(CMAKE_CXX_COMPILER "i686-w64-mingw32-g++")
