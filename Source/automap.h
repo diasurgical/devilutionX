@@ -88,6 +88,20 @@ inline int AmLine(AmLineLength l)
 	return AutoMapScale * static_cast<int>(l) / 100;
 }
 
+enum class AutomapType : uint8_t {
+	Opaque,
+	Transparent,
+	Minimap,
+	LAST = Minimap
+};
+
+/**
+ * @brief Sets the map type. Does not change `AutomapActive`.
+ */
+void SetAutomapType(AutomapType type);
+
+AutomapType GetAutomapType();
+
 /**
  * @brief Initializes the automap.
  */

@@ -153,6 +153,7 @@ void DoPanBtn();
 
 void control_check_btn_press();
 void DoAutoMap();
+void CycleAutomapType();
 
 /**
  * Checks the mouse cursor position within the control panel and sets information

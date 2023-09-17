@@ -33,6 +33,8 @@ namespace devilution {
 namespace {
 Point Automap;
 
+AutomapType CurrentAutomapType;
+
 enum MapColors : uint8_t {
 	/** color used to draw the player's arrow */
 	MapColorsPlayer = (PAL8_ORANGE + 1),
@@ -1581,6 +1583,16 @@ void InitAutomap()
 	for (auto &column : dFlags)
 		for (auto &dFlag : column)
 			dFlag &= ~DungeonFlag::Explored;
+}
+
+void SetAutomapType(AutomapType type)
+{
+	CurrentAutomapType = type;
+}
+
+AutomapType GetAutomapType()
+{
+	return CurrentAutomapType;
 }
 
 void StartAutomap()
