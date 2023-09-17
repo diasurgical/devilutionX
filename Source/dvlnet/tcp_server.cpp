@@ -208,8 +208,11 @@ void tcp_server::HandleAccept(const scc &con, const asio::error_code &ec)
 	if (NextFree() == PLR_BROADCAST) {
 		DropConnection(con);
 	} else {
+		asio::error_code errorCode;
 		asio::ip::tcp::no_delay option(true);
-		con->socket.set_option(option);
+		con->socket.set_option(option, errorCode);
+		if (errorCode)
+			LogError("Server error setting socket option: {}", errorCode.message());
 		con->timeout = timeout_connect;
 		StartReceive(con);
 		StartTimeout(con);
