@@ -1849,8 +1849,12 @@ bool PadmapperOptions::CanDeferToMovementHandler(const Action &action) const
 }
 
 namespace {
+#ifdef DEVILUTIONX_RESAMPLER_SPEEX
 constexpr char ResamplerSpeex[] = "Speex";
+#endif
+#ifdef DVL_AULIB_SUPPORTS_SDL_RESAMPLER
 constexpr char ResamplerSDL[] = "SDL";
+#endif
 } // namespace
 
 std::string_view ResamplerToString(Resampler resampler)
