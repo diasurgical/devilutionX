@@ -1,6 +1,6 @@
 #include "./console.h"
 
-#if (defined(_WIN64) || defined(_WIN32)) && !defined(NXDK)
+#if defined(_WIN32) && !defined(DEVILUTIONX_WINDOWS_NO_WCHAR)
 #include <cstddef>
 #include <cstdio>
 #include <string>

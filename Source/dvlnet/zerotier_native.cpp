@@ -10,7 +10,7 @@
 #include "utils/sdl2_backports.h"
 #endif
 
-#if (defined(_WIN64) || defined(_WIN32)) && !defined(NXDK)
+#if defined(_WIN32) && !defined(DEVILUTIONX_WINDOWS_NO_WCHAR)
 #include "utils/stdcompat/filesystem.hpp"
 #ifdef DVL_HAS_FILESYSTEM
 #define DVL_ZT_SYMLINK

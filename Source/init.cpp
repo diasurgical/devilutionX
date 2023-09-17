@@ -12,7 +12,7 @@
 #include <SDL.h>
 #include <config.h>
 
-#if (defined(_WIN64) || defined(_WIN32)) && !defined(__UWP__) && !defined(NXDK)
+#if defined(_WIN32) && !defined(__UWP__) && !defined(DEVILUTIONX_WINDOWS_NO_WCHAR)
 #include <find_steam_game.h>
 #endif
 
@@ -147,7 +147,7 @@ std::vector<std::string> GetMPQSearchPaths()
 	}
 #elif defined(NXDK)
 	paths.emplace_back("D:\\");
-#elif (defined(_WIN64) || defined(_WIN32)) && !defined(__UWP__) && !defined(NXDK)
+#elif defined(_WIN32) && !defined(__UWP__) && !defined(DEVILUTIONX_WINDOWS_NO_WCHAR)
 	char gogpath[_FSG_PATH_MAX];
 	fsg_get_gog_game_path(gogpath, "1412601690");
 	if (strlen(gogpath) > 0) {

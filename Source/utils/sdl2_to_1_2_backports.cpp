@@ -5,7 +5,7 @@
 
 #include "./console.h"
 
-#if defined(_WIN32) && !defined(NXDK)
+#if defined(_WIN32) && !defined(DEVILUTIONX_WINDOWS_NO_WCHAR)
 #define WIN32_LEAN_AND_MEAN
 #define NOMINMAX 1
 #define UNICODE 1
@@ -505,7 +505,7 @@ Sint64 SDL_RWsize(SDL_RWops *context)
 	return end - begin;
 }
 
-#if defined(_WIN32) && !defined(NXDK)
+#if defined(_WIN32) && !defined(DEVILUTIONX_WINDOWS_NO_WCHAR)
 
 namespace {
 
