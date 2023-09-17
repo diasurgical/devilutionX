@@ -42,7 +42,7 @@ void CopyFileOverwrite(const char *from, const char *to);
 void RemoveFile(const char *path);
 FILE *OpenFile(const char *path, const char *mode);
 
-#if (defined(_WIN64) || defined(_WIN32)) && !defined(NXDK)
+#if defined(_WIN32) && !defined(DEVILUTIONX_WINDOWS_NO_WCHAR)
 std::unique_ptr<wchar_t[]> ToWideChar(std::string_view path);
 #endif
 
