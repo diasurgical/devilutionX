@@ -843,7 +843,7 @@ void DrawFloor(const Surface &out, Point tilePosition, Point targetBufferPositio
 	}
 }
 
-bool IsWall(Point position)
+[[nodiscard]] DVL_ALWAYS_INLINE bool IsWall(Point position)
 {
 	return TileHasAny(dPiece[position.x][position.y], TileProperties::Solid) || dSpecial[position.x][position.y] != 0;
 }
