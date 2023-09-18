@@ -25,6 +25,7 @@
 
 #ifdef _DEBUG
 #include "debug.h"
+#include "lighting.h"
 #endif
 
 namespace devilution {
@@ -1392,6 +1393,34 @@ void DrawAutomapText(const Surface &out)
 
 	std::string difficultyString = fmt::format(fmt::runtime(_(/* TRANSLATORS: {:s} means: Game Difficulty. */ "Difficulty: {:s}")), difficulty);
 	DrawString(out, difficultyString, linePosition);
+
+#ifdef _DEBUG
+	UiFlags debugColor = UiFlags::ColorOrange;
+	if (DebugGodMode) {
+		linePosition.y += 15;
+		DrawString(out, "God Mode", linePosition, debugColor);
+	}
+	if (DisableLighting) {
+		linePosition.y += 15;
+		DrawString(out, "Fullbright", linePosition, debugColor);
+	}
+	if (DebugVision) {
+		linePosition.y += 15;
+		DrawString(out, "Draw Vision", linePosition, debugColor);
+	}
+	if (DebugPath) {
+		linePosition.y += 15;
+		DrawString(out, "Draw Path", linePosition, debugColor);
+	}
+	if (DebugGrid) {
+		linePosition.y += 15;
+		DrawString(out, "Draw Grid", linePosition, debugColor);
+	}
+	if (DebugScrollViewEnabled) {
+		linePosition.y += 15;
+		DrawString(out, "Scroll View", linePosition, debugColor);
+	}
+#endif
 }
 
 std::unique_ptr<AutomapTile[]> LoadAutomapData(size_t &tileCount)
