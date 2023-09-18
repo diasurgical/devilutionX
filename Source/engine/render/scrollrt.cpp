@@ -163,11 +163,6 @@ void UpdateMissilesRendererData()
 	}
 }
 
-/**
- * @brief Keeps track of which tiles have been rendered already.
- */
-Bitset2d<MAXDUNX, MAXDUNY> dRendered;
-
 int lastFpsUpdateInMs;
 
 Rectangle PrevCursorRect;
@@ -706,11 +701,6 @@ void DrawPlayerHelper(const Surface &out, const Player &player, Point tilePositi
 void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosition)
 {
 	assert(InDungeonBounds(tilePosition));
-
-	if (dRendered.test(tilePosition.x, tilePosition.y))
-		return;
-	dRendered.set(tilePosition.x, tilePosition.y);
-
 	LightTableIndex = dLight[tilePosition.x][tilePosition.y];
 
 	DrawCell(out, tilePosition, targetBufferPosition);
@@ -729,7 +719,7 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 	}
 
 	if (LightTableIndex < LightsMax && bDead != 0) {
-		Corpse &corpse = Corpses[(bDead & 0x1F) - 1];
+		const Corpse &corpse = Corpses[(bDead & 0x1F) - 1];
 		const Point position { targetBufferPosition.x - CalculateWidth2(corpse.width), targetBufferPosition.y };
 		const ClxSprite sprite = corpse.spritesForDirection(static_cast<Direction>((bDead >> 5) & 7))[corpse.frame];
 		if (corpse.translationPaletteIndex != 0) {
@@ -853,11 +843,12 @@ void DrawTileContent(const Surface &out, Point tilePosition, Point targetBufferP
 {
 	// Keep evaluating until MicroTiles can't affect screen
 	rows += MicroTileLen;
-	dRendered.reset();
 
 	for (int i = 0; i < rows; i++) {
+		bool skip = false;
 		for (int j = 0; j < columns; j++) {
 			if (InDungeonBounds(tilePosition)) {
+				bool skipNext = false;
 #ifdef _DEBUG
 				DebugCoordsMap[tilePosition.x + tilePosition.y * MAXDUNX] = targetBufferPosition;
 #endif
@@ -869,10 +860,14 @@ void DrawTileContent(const Surface &out, Point tilePosition, Point targetBufferP
 					if (IsWall(tilePosition) && (IsWall(tilePosition + Displacement { 1, 0 }) || (tilePosition.x > 0 && IsWall(tilePosition + Displacement { -1, 0 })))) { // Part of a wall aligned on the x-axis
 						if (IsTileNotSolid(tilePosition + Displacement { 1, -1 }) && IsTileNotSolid(tilePosition + Displacement { 0, -1 })) {                              // Has walkable area behind it
 							DrawDungeon(out, tilePosition + Direction::East, { targetBufferPosition.x + TILE_WIDTH, targetBufferPosition.y });
+							skipNext = true;
 						}
 					}
 				}
-				DrawDungeon(out, tilePosition, targetBufferPosition);
+				if (!skip) {
+					DrawDungeon(out, tilePosition, targetBufferPosition);
+				}
+				skip = skipNext;
 			}
 			tilePosition += Direction::East;
 			targetBufferPosition.x += TILE_WIDTH;
