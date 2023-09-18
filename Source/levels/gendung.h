@@ -167,7 +167,7 @@ extern std::unique_ptr<std::byte[]> pDungeonCels;
 /**
  * List tile properties
  */
-extern DVL_API_FOR_TEST std::array<TileProperties, MAXTILES> SOLData;
+extern DVL_API_FOR_TEST TileProperties SOLData[MAXTILES];
 /** Specifies the minimum X,Y-coordinates of the map. */
 extern WorldTilePosition dminPosition;
 /** Specifies the maximum X,Y-coordinates of the map. */
@@ -334,7 +334,11 @@ struct Miniset {
 	}
 };
 
-bool TileHasAny(int tileId, TileProperties property);
+[[nodiscard]] DVL_ALWAYS_INLINE bool TileHasAny(int tileId, TileProperties property)
+{
+	return HasAnyOf(SOLData[tileId], property);
+}
+
 void LoadLevelSOLData();
 void SetDungeonMicros();
 void DRLG_InitTrans();

@@ -27,7 +27,7 @@ std::unique_ptr<uint16_t[]> pSetPiece;
 OptionalOwnedClxSpriteList pSpecialCels;
 std::unique_ptr<MegaTile[]> pMegaTiles;
 std::unique_ptr<std::byte[]> pDungeonCels;
-std::array<TileProperties, MAXTILES> SOLData;
+TileProperties SOLData[MAXTILES];
 WorldTilePosition dminPosition;
 WorldTilePosition dmaxPosition;
 dungeon_type leveltype;
@@ -415,11 +415,6 @@ void CreateDungeon(uint32_t rseed, lvl_entry entry)
 	}
 
 	Make_SetPC(SetPiece);
-}
-
-bool TileHasAny(int tileId, TileProperties property)
-{
-	return HasAnyOf(SOLData[tileId], property);
 }
 
 void LoadLevelSOLData()
