@@ -1396,6 +1396,8 @@ void DrawAutomapText(const Surface &out)
 
 #ifdef _DEBUG
 	UiFlags debugColor = UiFlags::ColorOrange;
+
+	linePosition.y += 45;
 	if (DebugGodMode) {
 		linePosition.y += 15;
 		DrawString(out, "God Mode", linePosition, debugColor);
