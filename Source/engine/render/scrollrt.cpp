@@ -436,29 +436,16 @@ void DrawDeadPlayer(const Surface &out, Point tilePosition, Point targetBufferPo
 /**
  * @brief Render an object sprite
  * @param out Output buffer
+ * @param objectToDraw Dungeone object to draw
  * @param tilePosition dPiece coordinates
  * @param targetBufferPosition Output buffer coordinates
  * @param pre Is the sprite in the background
  */
-void DrawObject(const Surface &out, Point tilePosition, Point targetBufferPosition, bool pre)
+void DrawObject(const Surface &out, const Object &objectToDraw, Point tilePosition, Point targetBufferPosition)
 {
-	if (LightTableIndex >= LightsMax) {
-		return;
-	}
-
-	Object *object = FindObjectAtPosition(tilePosition);
-	if (object == nullptr) {
-		return;
-	}
-
-	const Object &objectToDraw = *object;
-	if (objectToDraw._oPreFlag != pre) {
-		return;
-	}
-
 	const ClxSprite sprite = objectToDraw.currentSprite();
 
-	Point screenPosition = targetBufferPosition + objectToDraw.getRenderingOffset(sprite, tilePosition);
+	const Point screenPosition = targetBufferPosition + objectToDraw.getRenderingOffset(sprite, tilePosition);
 
 	if (&objectToDraw == ObjectUnderCursor) {
 		ClxDrawOutlineSkipColorZero(out, 194, screenPosition, sprite);
@@ -625,25 +612,17 @@ void DrawFloor(const Surface &out, Point tilePosition, Point targetBufferPositio
  * @param targetBufferPosition Output buffer coordinates
  * @param pre Is the sprite in the background
  */
-void DrawItem(const Surface &out, Point tilePosition, Point targetBufferPosition, bool pre)
+void DrawItem(const Surface &out, int8_t itemIndex, Point targetBufferPosition)
 {
-	int8_t bItem = dItem[tilePosition.x][tilePosition.y];
-
-	if (bItem <= 0)
-		return;
-
-	auto &item = Items[bItem - 1];
-	if (item._iPostDraw == pre)
-		return;
-
+	const Item &item = Items[itemIndex];
 	const ClxSprite sprite = item.AnimInfo.currentSprite();
 	const Point position = targetBufferPosition + item.getRenderingOffset(sprite);
-	if (stextflag == TalkID::None && (bItem - 1 == pcursitem || AutoMapShowItems)) {
+	if (stextflag == TalkID::None && (itemIndex == pcursitem || AutoMapShowItems)) {
 		ClxDrawOutlineSkipColorZero(out, GetOutlineColor(item, false), position, sprite);
 	}
 	ClxDrawLight(out, position, sprite);
 	if (item.AnimInfo.isLastFrame() || item._iCurs == ICURS_MAGIC_ROCK)
-		AddItemToLabelQueue(bItem - 1, position);
+		AddItemToLabelQueue(itemIndex, position);
 }
 
 /**
@@ -736,8 +715,8 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 
 	DrawCell(out, tilePosition, targetBufferPosition);
 
-	int8_t bDead = dCorpse[tilePosition.x][tilePosition.y];
-	int8_t bMap = dTransVal[tilePosition.x][tilePosition.y];
+	const int8_t bDead = dCorpse[tilePosition.x][tilePosition.y];
+	const int8_t bMap = dTransVal[tilePosition.x][tilePosition.y];
 
 #ifdef _DEBUG
 	if (DebugVision && IsTileLit(tilePosition)) {
@@ -760,8 +739,17 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 			ClxDrawLight(out, position, sprite);
 		}
 	}
-	DrawObject(out, tilePosition, targetBufferPosition, true);
-	DrawItem(out, tilePosition, targetBufferPosition, true);
+
+	const int8_t bItem = dItem[tilePosition.x][tilePosition.y];
+	const Object *object = LightTableIndex < LightsMax
+	    ? FindObjectAtPosition(tilePosition)
+	    : nullptr;
+	if (object != nullptr && object->_oPreFlag) {
+		DrawObject(out, *object, tilePosition, targetBufferPosition);
+	}
+	if (bItem > 0 && !Items[bItem - 1]._iPostDraw) {
+		DrawItem(out, static_cast<int8_t>(bItem - 1), targetBufferPosition);
+	}
 
 	if (TileContainsDeadPlayer(tilePosition)) {
 		DrawDeadPlayer(out, tilePosition, targetBufferPosition);
@@ -774,8 +762,13 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 		DrawMonsterHelper(out, tilePosition, targetBufferPosition);
 	}
 	DrawMissile(out, tilePosition, targetBufferPosition, false);
-	DrawObject(out, tilePosition, targetBufferPosition, false);
-	DrawItem(out, tilePosition, targetBufferPosition, false);
+
+	if (object != nullptr && !object->_oPreFlag) {
+		DrawObject(out, *object, tilePosition, targetBufferPosition);
+	}
+	if (bItem > 0 && Items[bItem - 1]._iPostDraw) {
+		DrawItem(out, static_cast<int8_t>(bItem - 1), targetBufferPosition);
+	}
 
 	if (leveltype != DTYPE_TOWN) {
 		char bArch = dSpecial[tilePosition.x][tilePosition.y];
