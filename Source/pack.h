@@ -165,4 +165,20 @@ void PackItem(ItemPack &packedItem, const Item &item, bool isHellfire);
  */
 void UnPackItem(const ItemPack &packedItem, const Player &player, Item &item, bool isHellfire);
 
+/**
+ * @brief Save the attributes needed to recreate this item into an ItemNetPack struct
+ * @param item The source item
+ * @param packedItem The destination packed struct
+ */
+void PackNetItem(const Item &item, ItemNetPack &packedItem);
+
+/**
+ * @brief Expand a ItemPack in to a Item
+ * @param player The player holding the item
+ * @param packedItem The source packed item
+ * @param item The destination item
+ * @return True if the item is valid
+ */
+bool UnPackNetItem(const Player &player, const ItemNetPack &packedItem, Item &item);
+
 } // namespace devilution

@@ -24,6 +24,7 @@
 #include "lighting.h"
 #include "monstdat.h"
 #include "monster.h"
+#include "pack.h"
 #include "plrmsg.h"
 #include "quests.h"
 #include "spells.h"
@@ -902,6 +903,13 @@ std::string DebugCmdItemInfo(const string_view parameter)
 		pItem = &Items[pcursitem];
 	}
 	if (pItem != nullptr) {
+		std::string_view netPackValidation { "N/A" };
+		if (gbIsMultiplayer) {
+			ItemNetPack itemPack;
+			Item unpacked;
+			PackNetItem(*pItem, itemPack);
+			netPackValidation = UnPackNetItem(myPlayer, itemPack, unpacked) ? "Success" : "Failure";
+		}
 		return StrCat("Name: ", pItem->_iIName,
 		    "\nIDidx: ", pItem->IDidx, " (", AllItemsList[pItem->IDidx].iName, ")",
 		    "\nSeed: ", pItem->_iSeed,
@@ -916,7 +924,8 @@ std::string DebugCmdItemInfo(const string_view parameter)
 		    "\nBoy: ", ((pItem->_iCreateInfo & CF_BOY) == 0) ? "False" : "True",
 		    "\nWitch: ", ((pItem->_iCreateInfo & CF_WITCH) == 0) ? "False" : "True",
 		    "\nHealer: ", ((pItem->_iCreateInfo & CF_HEALER) == 0) ? "False" : "True",
-		    "\nPregen: ", ((pItem->_iCreateInfo & CF_PREGEN) == 0) ? "False" : "True");
+		    "\nPregen: ", ((pItem->_iCreateInfo & CF_PREGEN) == 0) ? "False" : "True",
+		    "\nNet Validation: ", netPackValidation);
 	}
 	return StrCat("Numitems: ", ActiveItemCount);
 }
