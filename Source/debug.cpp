@@ -1189,7 +1189,7 @@ bool CheckDebugTextCommand(const std::string_view text)
 	const auto result = dbgCmd.actionProc(parameter);
 	Log("DebugCmd: {} Result: {}", text, result);
 	if (result != "")
-		InitDiabloMsg(result);
+		EventPlrMsg(result, UiFlags::ColorRed);
 	return true;
 }
 
