@@ -86,6 +86,7 @@ std::unordered_multimap<WorldTilePosition, Missile *> MissilesAtRenderingTile;
  */
 bool CouldMissileCollide(Point tile, bool checkPlayerAndMonster)
 {
+	FunctionProfiler profiler(__func__);
 	if (!InDungeonBounds(tile))
 		return true;
 	if (checkPlayerAndMonster) {
@@ -100,6 +101,7 @@ bool CouldMissileCollide(Point tile, bool checkPlayerAndMonster)
 
 void UpdateMissilePositionForRendering(Missile &m, int progress)
 {
+	FunctionProfiler profiler(__func__);
 	DisplacementOf<int64_t> velocity = m.position.velocity;
 	velocity *= progress;
 	velocity /= AnimationInfo::baseValueFraction;
@@ -113,6 +115,7 @@ void UpdateMissilePositionForRendering(Missile &m, int progress)
 
 void UpdateMissileRendererData(Missile &m)
 {
+	FunctionProfiler profiler(__func__);
 	m.position.tileForRendering = m.position.tile;
 	m.position.offsetForRendering = m.position.offset;
 
@@ -155,6 +158,7 @@ void UpdateMissileRendererData(Missile &m)
 
 void UpdateMissilesRendererData()
 {
+	FunctionProfiler profiler(__func__);
 	MissilesAtRenderingTile.clear();
 
 	for (auto &m : Missiles) {
@@ -174,6 +178,7 @@ Rectangle PrevCursorRect;
 
 void BlitCursor(uint8_t *dst, uint32_t dstPitch, uint8_t *src, uint32_t srcPitch, uint32_t srcWidth, uint32_t srcHeight)
 {
+	FunctionProfiler profiler(__func__);
 	for (std::uint32_t i = 0; i < srcHeight; ++i, src += srcPitch, dst += dstPitch) {
 		memcpy(dst, src, srcWidth);
 	}
@@ -184,6 +189,7 @@ void BlitCursor(uint8_t *dst, uint32_t dstPitch, uint8_t *src, uint32_t srcPitch
  */
 void UndrawCursor(const Surface &out)
 {
+	FunctionProfiler profiler(__func__);
 	DrawnCursor &cursor = GetDrawnCursor();
 	BlitCursor(&out[cursor.rect.position], out.pitch(), cursor.behindBuffer, cursor.rect.size.width, cursor.rect.size.width, cursor.rect.size.height);
 	PrevCursorRect = cursor.rect;
@@ -191,6 +197,7 @@ void UndrawCursor(const Surface &out)
 
 bool ShouldShowCursor()
 {
+	FunctionProfiler profiler(__func__);
 	if (ControlMode == ControlTypes::KeyboardAndMouse)
 		return true;
 	if (pcurs == CURSOR_TELEPORT)
@@ -208,6 +215,7 @@ bool ShouldShowCursor()
  */
 void DrawCursor(const Surface &out)
 {
+	FunctionProfiler profiler(__func__);
 	DrawnCursor &cursor = GetDrawnCursor();
 	if (IsHardwareCursor()) {
 		SetHardwareCursorVisible(ShouldShowCursor());
@@ -268,6 +276,7 @@ void DrawCursor(const Surface &out)
  */
 void DrawMissilePrivate(const Surface &out, const Missile &missile, Point targetBufferPosition, bool pre)
 {
+	FunctionProfiler profiler(__func__);
 	if (missile._miPreFlag != pre || !missile._miDrawFlag)
 		return;
 
@@ -290,6 +299,7 @@ void DrawMissilePrivate(const Surface &out, const Missile &missile, Point target
  */
 void DrawMissile(const Surface &out, WorldTilePosition tilePosition, Point targetBufferPosition, bool pre)
 {
+	FunctionProfiler profiler(__func__);
 	const auto [begin, end] = MissilesAtRenderingTile.equal_range(tilePosition);
 	for (auto it = begin; it != end; ++it) {
 		DrawMissilePrivate(out, *it->second, targetBufferPosition, pre);
@@ -305,6 +315,7 @@ void DrawMissile(const Surface &out, WorldTilePosition tilePosition, Point targe
  */
 void DrawMonster(const Surface &out, Point tilePosition, Point targetBufferPosition, const Monster &monster)
 {
+	FunctionProfiler profiler(__func__);
 	if (!monster.animInfo.sprites) {
 		Log("Draw Monster \"{}\": NULL Cel Buffer", monster.name());
 		return;
@@ -334,6 +345,7 @@ void DrawMonster(const Surface &out, Point tilePosition, Point targetBufferPosit
  */
 void DrawPlayerIconHelper(const Surface &out, MissileGraphicID missileGraphicId, Point position, const Player &player, bool infraVision)
 {
+	FunctionProfiler profiler(__func__);
 	bool lighting = &player != MyPlayer;
 
 	if (player.isWalking())
@@ -365,6 +377,7 @@ void DrawPlayerIconHelper(const Surface &out, MissileGraphicID missileGraphicId,
  */
 void DrawPlayerIcons(const Surface &out, const Player &player, Point position, bool infraVision)
 {
+	FunctionProfiler profiler(__func__);
 	if (player.pManaShield)
 		DrawPlayerIconHelper(out, MissileGraphicID::ManaShield, position, player, infraVision);
 	if (player.wReflections > 0)
@@ -380,6 +393,7 @@ void DrawPlayerIcons(const Surface &out, const Player &player, Point position, b
  */
 void DrawPlayer(const Surface &out, const Player &player, Point tilePosition, Point targetBufferPosition)
 {
+	FunctionProfiler profiler(__func__);
 	if (!IsTileLit(tilePosition) && !MyPlayer->_pInfraFlag && !MyPlayer->isOnArenaLevel() && leveltype != DTYPE_TOWN) {
 		return;
 	}
@@ -422,6 +436,7 @@ void DrawPlayer(const Surface &out, const Player &player, Point tilePosition, Po
  */
 void DrawDeadPlayer(const Surface &out, Point tilePosition, Point targetBufferPosition)
 {
+	FunctionProfiler profiler(__func__);
 	dFlags[tilePosition.x][tilePosition.y] &= ~DungeonFlag::DeadPlayer;
 
 	for (Player &player : Players) {
@@ -442,6 +457,7 @@ void DrawDeadPlayer(const Surface &out, Point tilePosition, Point targetBufferPo
  */
 void DrawObject(const Surface &out, Point tilePosition, Point targetBufferPosition, bool pre)
 {
+	FunctionProfiler profiler(__func__);
 	if (LightTableIndex >= LightsMax) {
 		return;
 	}
@@ -480,6 +496,7 @@ static void DrawDungeon(const Surface & /*out*/, Point /*tilePosition*/, Point /
  */
 void DrawCell(const Surface &out, Point tilePosition, Point targetBufferPosition)
 {
+	FunctionProfiler profiler(__func__);
 	const uint16_t levelPieceId = dPiece[tilePosition.x][tilePosition.y];
 	const MICROS *pMap = &DPieceMicros[levelPieceId];
 
@@ -593,6 +610,7 @@ void DrawCell(const Surface &out, Point tilePosition, Point targetBufferPosition
  */
 void DrawFloor(const Surface &out, Point tilePosition, Point targetBufferPosition)
 {
+	FunctionProfiler profiler(__func__);
 	LightTableIndex = dLight[tilePosition.x][tilePosition.y];
 
 	const uint8_t *tbl = LightTables[LightTableIndex].data();
@@ -627,6 +645,7 @@ void DrawFloor(const Surface &out, Point tilePosition, Point targetBufferPositio
  */
 void DrawItem(const Surface &out, Point tilePosition, Point targetBufferPosition, bool pre)
 {
+	FunctionProfiler profiler(__func__);
 	int8_t bItem = dItem[tilePosition.x][tilePosition.y];
 
 	if (bItem <= 0)
@@ -654,6 +673,7 @@ void DrawItem(const Surface &out, Point tilePosition, Point targetBufferPosition
  */
 void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBufferPosition)
 {
+	FunctionProfiler profiler(__func__);
 	int mi = dMonster[tilePosition.x][tilePosition.y];
 	bool isNegativeMonster = mi < 0;
 	mi = std::abs(mi) - 1;
@@ -715,6 +735,7 @@ void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBuffe
  */
 void DrawPlayerHelper(const Surface &out, const Player &player, Point tilePosition, Point targetBufferPosition)
 {
+	FunctionProfiler profiler(__func__);
 	DrawPlayer(out, player, tilePosition, targetBufferPosition);
 }
 
@@ -726,6 +747,7 @@ void DrawPlayerHelper(const Surface &out, const Player &player, Point tilePositi
  */
 void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosition)
 {
+	FunctionProfiler profiler(__func__);
 	assert(InDungeonBounds(tilePosition));
 
 	if (dRendered.test(tilePosition.x, tilePosition.y))
@@ -814,6 +836,7 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
  */
 void DrawFloor(const Surface &out, Point tilePosition, Point targetBufferPosition, int rows, int columns)
 {
+	FunctionProfiler profiler(__func__);
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < columns; j++) {
 			if (InDungeonBounds(tilePosition)) {
@@ -845,6 +868,7 @@ void DrawFloor(const Surface &out, Point tilePosition, Point targetBufferPositio
 
 bool IsWall(Point position)
 {
+	FunctionProfiler profiler(__func__);
 	return TileHasAny(dPiece[position.x][position.y], TileProperties::Solid) || dSpecial[position.x][position.y] != 0;
 }
 
@@ -858,6 +882,7 @@ bool IsWall(Point position)
  */
 void DrawTileContent(const Surface &out, Point tilePosition, Point targetBufferPosition, int rows, int columns)
 {
+	FunctionProfiler profiler(__func__);
 	// Keep evaluating until MicroTiles can't affect screen
 	rows += MicroTileLen;
 	dRendered.reset();
@@ -907,6 +932,7 @@ void DrawTileContent(const Surface &out, Point tilePosition, Point targetBufferP
  */
 void Zoom(const Surface &out)
 {
+	FunctionProfiler profiler(__func__);
 	int viewportWidth = out.w();
 	int viewportOffsetX = 0;
 	if (CanPanelsCoverView()) {
@@ -964,6 +990,7 @@ int tileRows;
 
 void CalcFirstTilePosition(Point &position, Displacement &offset)
 {
+	FunctionProfiler profiler(__func__);
 	// Adjust by player offset and tile grid alignment
 	Player &myPlayer = *MyPlayer;
 	offset = tileOffset;
@@ -1015,6 +1042,7 @@ void CalcFirstTilePosition(Point &position, Displacement &offset)
  */
 void DrawGame(const Surface &fullOut, Point position, Displacement offset)
 {
+	FunctionProfiler profiler(__func__);
 	// Limit rendering to the view area
 	const Surface &out = !*sgOptions.Graphics.zoom
 	    ? fullOut.subregionY(0, gnViewportHeight)
@@ -1093,6 +1121,7 @@ void DrawGame(const Surface &fullOut, Point position, Displacement offset)
  */
 void DrawView(const Surface &out, Point startPosition)
 {
+	FunctionProfiler profiler(__func__);
 #ifdef _DEBUG
 	DebugCoordsMap.clear();
 #endif
@@ -1263,6 +1292,7 @@ void DrawFPS(const Surface &out)
  */
 void DoBlitScreen(int x, int y, int w, int h)
 {
+	FunctionProfiler profiler(__func__);
 #ifdef DEBUG_DO_BLIT_SCREEN
 	const Surface &out = GlobalBackBuffer();
 	const uint8_t debugColor = PAL8_RED;
@@ -1291,6 +1321,7 @@ void DrawMain(const Surface &out, int dwHgt, bool drawDesc, bool drawHp, bool dr
 	if (!gbActive || RenderDirectlyToOutputSurface) {
 		return;
 	}
+	FunctionProfiler profiler(__func__);
 
 	assert(dwHgt >= 0 && dwHgt <= gnScreenHeight);
 
@@ -1339,6 +1370,7 @@ void DrawMain(const Surface &out, int dwHgt, bool drawDesc, bool drawHp, bool dr
 
 Displacement GetOffsetForWalking(const AnimationInfo &animationInfo, const Direction dir, bool cameraMode /*= false*/)
 {
+	FunctionProfiler profiler(__func__);
 	// clang-format off
 	//                                           South,        SouthWest,    West,         NorthWest,    North,        NorthEast,     East,         SouthEast,
 	constexpr Displacement StartOffset[8]    = { {   0, -32 }, {  32, -16 }, {  64,   0 }, {   0,   0 }, {   0,   0 }, {  0,    0 },  { -64,   0 }, { -32, -16 } };
@@ -1372,6 +1404,7 @@ void ShiftGrid(int *x, int *y, int horizontal, int vertical)
 
 int RowsCoveredByPanel()
 {
+	FunctionProfiler profiler(__func__);
 	auto &mainPanelSize = GetMainPanel().size;
 	if (GetScreenWidth() <= mainPanelSize.width) {
 		return 0;
@@ -1387,6 +1420,7 @@ int RowsCoveredByPanel()
 
 void CalcTileOffset(int *offsetX, int *offsetY)
 {
+	FunctionProfiler profiler(__func__);
 	uint16_t screenWidth = GetScreenWidth();
 	uint16_t viewportHeight = GetViewportHeight();
 
@@ -1412,6 +1446,7 @@ void CalcTileOffset(int *offsetX, int *offsetY)
 
 void TilesInView(int *rcolumns, int *rrows)
 {
+	FunctionProfiler profiler(__func__);
 	uint16_t screenWidth = GetScreenWidth();
 	uint16_t viewportHeight = GetViewportHeight();
 
@@ -1489,6 +1524,7 @@ void CalcViewportGeometry()
 
 Point GetScreenPosition(Point tile)
 {
+	FunctionProfiler profiler(__func__);
 	Point firstTile = ViewPosition;
 	Displacement offset = {};
 	CalcFirstTilePosition(firstTile, offset);
@@ -1507,6 +1543,7 @@ void ClearScreenBuffer()
 {
 	if (HeadlessMode)
 		return;
+	FunctionProfiler profiler(__func__);
 
 	assert(PalSurface != nullptr);
 	SDL_FillRect(PalSurface, nullptr, 0);
@@ -1583,6 +1620,7 @@ void scrollrt_draw_game_screen()
 {
 	if (HeadlessMode)
 		return;
+	FunctionProfiler profiler(__func__);
 
 	int hgt = 0;
 
@@ -1604,6 +1642,7 @@ void DrawAndBlit()
 	if (!gbRunGame || HeadlessMode) {
 		return;
 	}
+	FunctionProfiler profiler(__func__);
 
 	int hgt = 0;
 	bool drawHealth = IsRedrawComponent(PanelDrawComponent::Health);

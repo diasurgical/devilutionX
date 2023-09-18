@@ -12,6 +12,7 @@
 #include "engine/render/scrollrt.h"
 #include "utils/attributes.h"
 #include "utils/clx_decode.hpp"
+#include "utils/profiler.h"
 
 #ifdef DEBUG_CLX
 #include <fmt/format.h>
@@ -194,6 +195,7 @@ void DoRenderBackwards(
     const Surface &out, Point position, const uint8_t *src, size_t srcSize,
     unsigned srcWidth, unsigned srcHeight, BlitFn &&blitFn)
 {
+		FunctionProfiler profiler(__func__);
 	if (position.y < 0 || position.y + 1 >= static_cast<int>(out.h() + srcHeight))
 		return;
 	const ClipX clipX = CalculateClipX(position.x, srcWidth, out);
@@ -615,6 +617,7 @@ template <bool SkipColorIndexZero>
 void RenderClxOutline(const Surface &out, Point position, const uint8_t *src, std::size_t srcSize,
     std::size_t srcWidth, uint8_t color)
 {
+		FunctionProfiler profiler(__func__);
 	RenderSrc srcForBackwards { src, src + srcSize, static_cast<uint_fast16_t>(srcWidth) };
 	if (position.x > 0 && position.x + static_cast<int>(srcWidth) < static_cast<int>(out.w())) {
 		RenderClxOutlineClippedY<SkipColorIndexZero>(out, position, srcForBackwards, color);
@@ -625,6 +628,7 @@ void RenderClxOutline(const Surface &out, Point position, const uint8_t *src, st
 
 void ClxApplyTrans(ClxSprite sprite, const uint8_t *trn)
 {
+		FunctionProfiler profiler(__func__);
 	// A bit of a hack but this is the only place in the code where we need mutable sprites.
 	auto *dst = const_cast<uint8_t *>(sprite.pixelData());
 	uint16_t remaining = sprite.pixelDataSize();
@@ -666,6 +670,7 @@ void ClxApplyTrans(ClxSpriteSheet sheet, const uint8_t *trn)
 
 bool IsPointWithinClx(Point position, ClxSprite clx)
 {
+		FunctionProfiler profiler(__func__);
 	const uint8_t *src = clx.pixelData();
 	const uint8_t *end = src + clx.pixelDataSize();
 	const uint16_t width = clx.width();
@@ -719,6 +724,7 @@ bool IsPointWithinClx(Point position, ClxSprite clx)
 
 std::pair<int, int> ClxMeasureSolidHorizontalBounds(ClxSprite clx)
 {
+		FunctionProfiler profiler(__func__);
 	const uint8_t *src = clx.pixelData();
 	const uint8_t *end = src + clx.pixelDataSize();
 	const uint16_t width = clx.width();

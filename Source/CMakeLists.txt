@@ -167,6 +167,7 @@ set(libdevilutionx_SRCS
   utils/str_cat.cpp
   utils/str_case.cpp
   utils/surface_to_clx.cpp
+  utils/profiler.cpp
   utils/timer.cpp
   utils/utf8.cpp)
 

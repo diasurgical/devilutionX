@@ -7,6 +7,7 @@
 
 #include <cstdint>
 
+#include <utils/profiler.h>
 #include "engine.h"
 #include "engine/animationinfo.h"
 #include "engine/point.hpp"

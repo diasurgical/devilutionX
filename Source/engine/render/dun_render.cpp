@@ -18,6 +18,7 @@
 #include <climits>
 #include <cstdint>
 
+#include "utils/profiler.h"
 #include "engine/render/blit_impl.hpp"
 #include "lighting.h"
 #include "options.h"
@@ -922,6 +923,7 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderTileType(TileType tile, uint8_t *
 template <bool OpaquePrefix, int8_t PrefixIncrement>
 DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderTransparentSquareDispatch(uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl, Clip clip)
 {
+		FunctionProfiler profiler(__func__);
 	if (tbl == LightTables[LightsMax].data()) {
 		RenderTransparentSquare<LightType::FullyDark, OpaquePrefix, PrefixIncrement>(dst, dstPitch, src, tbl, clip);
 	} else if (tbl == LightTables[0].data()) {
@@ -964,6 +966,7 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderRightTrapezoidOrTransparentSquare
 template <bool OpaquePrefix, int8_t PrefixIncrement>
 DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLeftTrapezoidOrTransparentSquareDispatch(TileType tile, uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl, Clip clip)
 {
+		FunctionProfiler profiler(__func__);
 	if (tbl == LightTables[LightsMax].data()) {
 		RenderLeftTrapezoidOrTransparentSquare<LightType::FullyDark, OpaquePrefix, PrefixIncrement>(tile, dst, dstPitch, src, tbl, clip);
 	} else if (tbl == LightTables[0].data()) {
@@ -976,6 +979,7 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLeftTrapezoidOrTransparentSquareD
 template <bool OpaquePrefix, int8_t PrefixIncrement>
 DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderRightTrapezoidOrTransparentSquareDispatch(TileType tile, uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl, Clip clip)
 {
+		FunctionProfiler profiler(__func__);
 	if (tbl == LightTables[LightsMax].data()) {
 		RenderRightTrapezoidOrTransparentSquare<LightType::FullyDark, OpaquePrefix, PrefixIncrement>(tile, dst, dstPitch, src, tbl, clip);
 	} else if (tbl == LightTables[0].data()) {
@@ -988,6 +992,7 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderRightTrapezoidOrTransparentSquare
 template <bool Transparent>
 DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderTileDispatch(TileType tile, uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl, Clip clip)
 {
+		FunctionProfiler profiler(__func__);
 	if (tbl == LightTables[LightsMax].data()) {
 		RenderTileType<LightType::FullyDark, Transparent>(tile, dst, dstPitch, src, tbl, clip);
 	} else if (tbl == LightTables[0].data()) {
@@ -1126,6 +1131,7 @@ std::string_view MaskTypeToString(MaskType maskType)
 void RenderTile(const Surface &out, Point position,
     LevelCelBlock levelCelBlock, MaskType maskType, const uint8_t *tbl)
 {
+		FunctionProfiler profiler(__func__);
 	const TileType tile = levelCelBlock.type();
 
 #ifdef DEBUG_RENDER_OFFSET_X
@@ -1180,6 +1186,7 @@ void RenderTile(const Surface &out, Point position,
 
 void world_draw_black_tile(const Surface &out, int sx, int sy)
 {
+		FunctionProfiler profiler(__func__);
 #ifdef DEBUG_RENDER_OFFSET_X
 	sx += DEBUG_RENDER_OFFSET_X;
 #endif

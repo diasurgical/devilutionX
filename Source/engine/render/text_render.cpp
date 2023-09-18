@@ -15,6 +15,7 @@
 
 #include <fmt/core.h>
 
+#include "utils/profiler.h"
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/ui_item.h"
 #include "engine.h"
@@ -469,6 +470,7 @@ void UnloadFonts()
 
 int GetLineWidth(std::string_view text, GameFontTables size, int spacing, int *charactersInLine)
 {
+		FunctionProfiler profiler(__func__);
 	int lineWidth = 0;
 	CurrentFont currentFont;
 	uint32_t codepoints = 0;
@@ -502,6 +504,7 @@ int GetLineWidth(std::string_view text, GameFontTables size, int spacing, int *c
 
 int GetLineWidth(std::string_view fmt, DrawStringFormatArg *args, std::size_t argsLen, size_t argsOffset, GameFontTables size, int spacing, int *charactersInLine)
 {
+		FunctionProfiler profiler(__func__);
 	int lineWidth = 0;
 	CurrentFont currentFont;
 
@@ -555,6 +558,7 @@ int GetLineWidth(std::string_view fmt, DrawStringFormatArg *args, std::size_t ar
 
 int GetLineHeight(std::string_view text, GameFontTables fontIndex)
 {
+		FunctionProfiler profiler(__func__);
 	if (fontIndex == GameFont12 && IsSmallFontTall() && ContainsSmallFontTallCodepoints(text)) {
 		return SmallFontTallLineHeight;
 	}
@@ -574,6 +578,7 @@ int AdjustSpacingToFitHorizontally(int &lineWidth, int maxSpacing, int character
 
 std::string WordWrapString(std::string_view text, unsigned width, GameFontTables size, int spacing)
 {
+		FunctionProfiler profiler(__func__);
 	std::string output;
 	if (text.empty() || text[0] == '\0')
 		return output;
@@ -660,6 +665,7 @@ std::string WordWrapString(std::string_view text, unsigned width, GameFontTables
  */
 uint32_t DrawString(const Surface &out, std::string_view text, const Rectangle &rect, UiFlags flags, int spacing, int lineHeight)
 {
+		FunctionProfiler profiler(__func__);
 	GameFontTables size = GetSizeFromFlags(flags);
 	text_color color = GetColorFromFlags(flags);
 
@@ -710,6 +716,7 @@ uint32_t DrawString(const Surface &out, std::string_view text, const Rectangle &
 
 void DrawStringWithColors(const Surface &out, std::string_view fmt, DrawStringFormatArg *args, std::size_t argsLen, const Rectangle &rect, UiFlags flags, int spacing, int lineHeight)
 {
+		FunctionProfiler profiler(__func__);
 	GameFontTables size = GetSizeFromFlags(flags);
 	text_color color = GetColorFromFlags(flags);
 

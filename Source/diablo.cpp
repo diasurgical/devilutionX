@@ -8,6 +8,7 @@
 #include <string_view>
 
 #include <fmt/format.h>
+#include <utils/profiler.h>
 
 #include <config.h>
 
@@ -697,6 +698,7 @@ bool HandleTextInput(std::string_view text)
 
 void GameEventHandler(const SDL_Event &event, uint16_t modState)
 {
+		FunctionProfiler profiler(__func__);
 	StaticVector<ControllerButtonEvent, 4> ctrlEvents = ToControllerButtonEvents(event);
 	for (ControllerButtonEvent ctrlEvent : ctrlEvents) {
 		GameAction action;
@@ -825,6 +827,7 @@ void RunGameLoop(interface_mode uMsg)
 	unsigned run_game_iteration = 0;
 #endif
 
+		FunctionProfiler profiler(__func__);
 	while (gbRunGame) {
 
 #ifdef _DEBUG
@@ -2454,6 +2457,12 @@ int DiabloMain(int argc, char **argv)
 
 	DiabloSplash();
 	mainmenu_loop();
+
+	for (const auto &timing : FunctionProfiler::Dump()) {
+		fmt::print("{}: {}ms ({} calls)\n", timing.name, timing.ms, timing.count);
+	}
+	fmt::print("\n");
+
 	DiabloDeinit();
 
 	return 0;
@@ -3002,6 +3011,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 
 bool game_loop(bool bStartup)
 {
+		FunctionProfiler profiler(__func__);
 	uint16_t wait = bStartup ? sgGameInitInfo.nTickRate * 3 : 3;
 
 	for (unsigned i = 0; i < wait; i++) {
