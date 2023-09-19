@@ -846,7 +846,7 @@ void Substitution()
 			if (FlipCoin(10)) {
 				uint8_t c = dungeon[x][y];
 				if (L4BTYPES[c] == 6 && !Protected.test(x, y)) {
-					dungeon[x][y] = GenerateRnd(3) + 95;
+					dungeon[x][y] = PickRandomlyAmong({ 95, 96, 97 });
 				}
 			}
 		}

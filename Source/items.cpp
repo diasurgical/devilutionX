@@ -4215,13 +4215,13 @@ void SpawnSmith(int lvl)
 	constexpr int PinnedItemCount = 0;
 
 	int maxValue = 140000;
-	int maxItems = 20;
+	int maxItems = 19;
 	if (gbIsHellfire) {
 		maxValue = 200000;
-		maxItems = 25;
+		maxItems = 24;
 	}
 
-	int iCnt = GenerateRnd(maxItems - 10) + 10;
+	int iCnt = RandomIntBetween(10, maxItems);
 	for (int i = 0; i < iCnt; i++) {
 		Item &newItem = smithitem[i];
 
@@ -4283,9 +4283,8 @@ void SpawnWitch(int lvl)
 	constexpr std::array<_item_indexes, MaxPinnedBookCount> PinnedBookTypes = { IDI_BOOK1, IDI_BOOK2, IDI_BOOK3, IDI_BOOK4 };
 
 	int bookCount = 0;
-	const int pinnedBookCount = gbIsHellfire ? GenerateRnd(MaxPinnedBookCount) : 0;
-	const int reservedItems = gbIsHellfire ? 10 : 17;
-	const int itemCount = GenerateRnd(WITCH_ITEMS - reservedItems) + 10;
+	const int pinnedBookCount = gbIsHellfire ? RandomIntLessThan(MaxPinnedBookCount) : 0;
+	const int itemCount = RandomIntBetween(10, gbIsHellfire ? 24 : 17);
 	const int maxValue = gbIsHellfire ? 200000 : 140000;
 
 	for (int i = 0; i < WITCH_ITEMS; i++) {
@@ -4461,9 +4460,9 @@ void SpawnHealer(int lvl)
 {
 	constexpr int PinnedItemCount = 2;
 	constexpr std::array<_item_indexes, PinnedItemCount + 1> PinnedItemTypes = { IDI_HEAL, IDI_FULLHEAL, IDI_RESURRECT };
-	const int itemCount = GenerateRnd(gbIsHellfire ? 10 : 8) + 10;
+	const int itemCount = RandomIntBetween(10, gbIsHellfire ? 19 : 17);
 
-	for (int i = 0; i < 20; i++) {
+	for (int i = 0; i < sizeof(healitem) / sizeof(healitem[0]); i++) {
 		Item &item = healitem[i];
 		item = {};
 
@@ -4849,15 +4848,14 @@ void RechargeItem(Item &item, Player &player)
 	if (item._iCharges == item._iMaxCharges)
 		return;
 
-	int r = GetSpellStaffLevel(item._iSpell);
-	r = GenerateRnd(player.getCharacterLevel() / r) + 1;
+	int rechargeStrength = RandomIntBetween(1, player.getCharacterLevel() / GetSpellStaffLevel(item._iSpell));
 
 	do {
 		item._iMaxCharges--;
 		if (item._iMaxCharges == 0) {
 			return;
 		}
-		item._iCharges += r;
+		item._iCharges += rechargeStrength;
 	} while (item._iCharges < item._iMaxCharges);
 
 	item._iCharges = std::min(item._iCharges, item._iMaxCharges);
@@ -4923,12 +4921,12 @@ bool ApplyOilToItem(Item &item, Player &player)
 	switch (player._pOilType) {
 	case IMISC_OILACC:
 		if (item._iPLToHit < 50) {
-			item._iPLToHit += GenerateRnd(2) + 1;
+			item._iPLToHit += RandomIntBetween(1, 2);
 		}
 		break;
 	case IMISC_OILMAST:
 		if (item._iPLToHit < 100) {
-			item._iPLToHit += GenerateRnd(3) + 3;
+			item._iPLToHit += RandomIntBetween(3, 5);
 		}
 		break;
 	case IMISC_OILSHARP:
@@ -4943,7 +4941,7 @@ bool ApplyOilToItem(Item &item, Player &player)
 		}
 		break;
 	case IMISC_OILSKILL:
-		r = GenerateRnd(6) + 5;
+		r = RandomIntBetween(5, 10);
 		item._iMinStr = std::max(0, item._iMinStr - r);
 		item._iMinMag = std::max(0, item._iMinMag - r);
 		item._iMinDex = std::max(0, item._iMinDex - r);
@@ -4964,7 +4962,7 @@ bool ApplyOilToItem(Item &item, Player &player)
 		break;
 	case IMISC_OILFORT:
 		if (item._iMaxDur != DUR_INDESTRUCTIBLE && item._iMaxDur < 200) {
-			r = GenerateRnd(41) + 10;
+			r = RandomIntBetween(10, 50);
 			item._iMaxDur += r;
 			item._iDurability += r;
 		}
@@ -4975,12 +4973,12 @@ bool ApplyOilToItem(Item &item, Player &player)
 		break;
 	case IMISC_OILHARD:
 		if (item._iAC < 60) {
-			item._iAC += GenerateRnd(2) + 1;
+			item._iAC += RandomIntBetween(1, 2);
 		}
 		break;
 	case IMISC_OILIMP:
 		if (item._iAC < 120) {
-			item._iAC += GenerateRnd(3) + 3;
+			item._iAC += RandomIntBetween(3, 5);
 		}
 		break;
 	default:
