@@ -54,7 +54,8 @@ int tcp_client::join(std::string addrstr)
 		    = pktfty->make_packet<PT_JOIN_REQUEST>(
 		        PLR_BROADCAST, PLR_MASTER, cookie_self, game_init_info);
 		if (!pkt.has_value()) {
-			SDL_SetError("make_packet: %s", pkt.error().what());
+			const std::string_view message = pkt.error().what();
+			SDL_SetError("make_packet: %.*s\n", static_cast<int>(message.size()), message.data());
 			return -1;
 		}
 		send(**pkt);
