@@ -1056,19 +1056,40 @@ void DrawGame(const Surface &fullOut, Point position, Displacement offset)
 	}
 
 #ifdef DUN_RENDER_STATS
-	std::vector<std::pair<DunRenderType, size_t>> sortedStats(DunRenderStats.begin(), DunRenderStats.end());
-	c_sort(sortedStats, [](const std::pair<DunRenderType, size_t> &a, const std::pair<DunRenderType, size_t> &b) {
+	std::vector<std::pair<DunRenderType, DunRenderStatValue>> sortedStats(DunRenderStats.begin(), DunRenderStats.end());
+	c_sort(sortedStats, [](const std::pair<DunRenderType, DunRenderStatValue> &a, const std::pair<DunRenderType, DunRenderStatValue> &b) {
 		return a.first.maskType == b.first.maskType
 		    ? static_cast<uint8_t>(a.first.tileType) < static_cast<uint8_t>(b.first.tileType)
 		    : static_cast<uint8_t>(a.first.maskType) < static_cast<uint8_t>(b.first.maskType);
 	});
-	Point pos { 100, 20 };
+
+	Point pos { 60, 20 };
+	constexpr int ColsStart = 292;
+	constexpr int ColWidth = 48;
+	{
+		int colX = pos.x + ColsStart;
+		for (const std::string_view header : { "total", "p.lit", "baked", "f.lit", "dark" }) {
+			DrawString(out, header, Rectangle({ colX, pos.y - 16 }, Size(ColWidth, 16)), UiFlags::AlignRight);
+			colX += ColWidth;
+		}
+	}
 	for (size_t i = 0; i < sortedStats.size(); ++i) {
 		const auto &stat = sortedStats[i];
 		DrawString(out, StrCat(i, "."), Rectangle(pos, Size { 20, 16 }), UiFlags::AlignRight);
 		DrawString(out, MaskTypeToString(stat.first.maskType), { pos.x + 24, pos.y });
-		DrawString(out, TileTypeToString(stat.first.tileType), { pos.x + 184, pos.y });
-		DrawString(out, FormatInteger(stat.second), Rectangle({ pos.x + 354, pos.y }, Size(40, 16)), UiFlags::AlignRight);
+		DrawString(out, TileTypeToString(stat.first.tileType), { pos.x + 136, pos.y });
+		int colX = pos.x + ColsStart;
+		for (const size_t val :
+		    { stat.second.total(),
+			      stat.second.numPartiallyLit,
+#if DEVILUTIONX_BAKED_LIGHT_DUNGEON_FRAMES_RAM_SIZE > 0
+			      stat.second.numBaked,
+#endif
+			      stat.second.numFullyLit,
+			      stat.second.numFullyDark }) {
+			DrawString(out, FormatInteger(val), Rectangle({ colX, pos.y }, Size(40, 16)), UiFlags::AlignRight);
+			colX += ColWidth;
+		}
 		pos.y += 16;
 	}
 #endif

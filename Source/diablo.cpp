@@ -2346,10 +2346,7 @@ void SetCursorPos(Point position)
 
 void FreeGameMem()
 {
-	pDungeonCels = nullptr;
-	pMegaTiles = nullptr;
-	pSpecialCels = std::nullopt;
-
+	FreeDunTiles();
 	FreeMonsters();
 	FreeMissileGFX();
 	FreeObjectGFX();
@@ -2732,8 +2729,8 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 	SetRndSeed(glSeedTbl[currlevel]);
 	IncProgress();
 	MakeLightTable();
-	SetDungeonMicros();
 	LoadLvlGFX();
+	SetDungeonMicros();
 	IncProgress();
 
 	if (firstflag) {

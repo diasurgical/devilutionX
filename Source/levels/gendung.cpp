@@ -11,6 +11,7 @@
 #include "levels/drlg_l2.h"
 #include "levels/drlg_l3.h"
 #include "levels/drlg_l4.h"
+#include "levels/dun_frames_baked_lighting.hpp"
 #include "levels/town.h"
 #include "lighting.h"
 #include "options.h"
@@ -497,6 +498,10 @@ void SetDungeonMicros()
 			DPieceMicros[i].mt[block] = LevelCelBlock { SDL_SwapLE16(pieces[blocks - 2 + (block & 1) - (block & 0xE)]) };
 		}
 	}
+
+	if (leveltype != DTYPE_TOWN) {
+		BuildBakedLightData(tileCount, blocks);
+	}
 }
 
 void DRLG_InitTrans()
@@ -782,6 +787,14 @@ void FloodTransparencyValues(uint8_t floorID)
 		}
 		yy += 2;
 	}
+}
+
+void FreeDunTiles()
+{
+	FreeBakedLightData();
+	pDungeonCels = nullptr;
+	pMegaTiles = nullptr;
+	pSpecialCels = std::nullopt;
 }
 
 } // namespace devilution

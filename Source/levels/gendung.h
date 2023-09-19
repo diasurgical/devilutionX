@@ -370,5 +370,6 @@ void DRLG_LPass3(int lv);
 bool IsNearThemeRoom(WorldTilePosition position);
 void InitLevels();
 void FloodTransparencyValues(uint8_t floorID);
+void FreeDunTiles();
 
 } // namespace devilution

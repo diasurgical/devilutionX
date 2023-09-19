@@ -149,6 +149,8 @@ set(STREAM_ALL_AUDIO_MIN_FILE_SIZE "" CACHE STRING "If set, stream all the audio
 mark_as_advanced(STREAM_ALL_AUDIO_MIN_FILE_SIZE)
 option(DEVILUTIONX_PALETTE_TRANSPARENCY_BLACK_16_LUT "Whether to use a lookup table for transparency blending with black. This improves performance of blending transparent black overlays, such as quest dialog background, at the cost of 128 KiB of RAM." ON)
 mark_as_advanced(DEVILUTIONX_PALETTE_TRANSPARENCY_BLACK_16_LUT)
+set(DEVILUTIONX_BAKED_LIGHT_DUNGEON_FRAMES_RAM_SIZE "1048576" CACHE STRING "Maximum RAM size (bytes) for dungeon tiles with baked lighting. Increasing this may increase rendering performance at the cost of higher RAM usage.")
+mark_as_advanced(DEVILUTIONX_BAKED_LIGHT_DUNGEON_FRAMES_RAM_SIZE)
 
 # Additional features
 option(DISABLE_DEMOMODE "Disable demo mode support" OFF)

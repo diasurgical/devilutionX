@@ -145,18 +145,32 @@ enum class MaskType : uint8_t {
 struct DunRenderType {
 	TileType tileType;
 	MaskType maskType;
-	bool operator==(const DunRenderType &other) const
-	{
-		return tileType == other.tileType && maskType == other.maskType;
-	}
+	bool operator==(const DunRenderType &other) const = default;
 };
 struct DunRenderTypeHash {
 	size_t operator()(DunRenderType t) const noexcept
 	{
-		return std::hash<uint32_t> {}((1 < static_cast<uint8_t>(t.tileType)) | static_cast<uint8_t>(t.maskType));
+		return std::hash<uint32_t> {}((1 << static_cast<uint8_t>(t.tileType)) | static_cast<uint8_t>(t.maskType));
 	}
 };
-extern std::unordered_map<DunRenderType, size_t, DunRenderTypeHash> DunRenderStats;
+struct DunRenderStatValue {
+	size_t numFullyLit = 0;
+	size_t numPartiallyLit = 0;
+	size_t numFullyDark = 0;
+#if DEVILUTIONX_BAKED_LIGHT_DUNGEON_FRAMES_RAM_SIZE > 0
+	size_t numBaked = 0;
+#endif
+
+	size_t total() const
+	{
+		return numFullyLit + numPartiallyLit + numFullyDark
+#if DEVILUTIONX_BAKED_LIGHT_DUNGEON_FRAMES_RAM_SIZE > 0
+		    + numBaked
+#endif
+		    ;
+	}
+};
+extern std::unordered_map<DunRenderType, DunRenderStatValue, DunRenderTypeHash> DunRenderStats;
 
 std::string_view TileTypeToString(TileType tileType);
 

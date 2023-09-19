@@ -19,6 +19,7 @@
 #include <cstdint>
 
 #include "engine/render/blit_impl.hpp"
+#include "levels/dun_frames_baked_lighting.hpp"
 #include "levels/dun_tile.hpp"
 #include "lighting.h"
 #include "options.h"
@@ -1091,7 +1092,7 @@ void RenderBlackTileFull(uint8_t *DVL_RESTRICT dst, uint16_t dstPitch)
 } // namespace
 
 #ifdef DUN_RENDER_STATS
-std::unordered_map<DunRenderType, size_t, DunRenderTypeHash> DunRenderStats;
+std::unordered_map<DunRenderType, DunRenderStatValue, DunRenderTypeHash> DunRenderStats;
 
 std::string_view TileTypeToString(TileType tileType)
 {
@@ -1144,12 +1145,45 @@ void RenderTile(const Surface &out, Point position,
 		return;
 
 	const auto *pFrameTable = reinterpret_cast<const uint32_t *>(pDungeonCels.get());
+
+#if DEVILUTIONX_BAKED_LIGHT_DUNGEON_FRAMES_RAM_SIZE > 0
+#ifdef DUN_RENDER_STATS
+	bool baked = false;
+#endif
+	const uint8_t *src;
+	if (tbl > LightTables[0].data() && tbl < LightTables[LightsMax].data()) {
+		const GetDungeonCelResult result = GetMaybeBakedDungeonCel(levelCelBlock.frame() - 1, (tbl - LightTables[0].data()) / sizeof(LightTables[0]));
+		src = result.ptr;
+		if (result.baked) {
+			tbl = LightTables[0].data();
+#ifdef DUN_RENDER_STATS
+			baked = true;
+#endif
+		}
+	} else {
+		src = reinterpret_cast<const uint8_t *>(&pDungeonCels[SDL_SwapLE32(pFrameTable[levelCelBlock.frame()])]);
+	}
+#else
 	const auto *src = reinterpret_cast<const uint8_t *>(&pDungeonCels[SDL_SwapLE32(pFrameTable[levelCelBlock.frame()])]);
+#endif
+
 	uint8_t *dst = out.at(static_cast<int>(position.x + clip.left), static_cast<int>(position.y - clip.bottom));
 	const uint16_t dstPitch = out.pitch();
 
 #ifdef DUN_RENDER_STATS
-	++DunRenderStats[DunRenderType { tile, maskType }];
+	DunRenderStatValue &statVal = DunRenderStats[DunRenderType { tile, maskType }];
+#if DEVILUTIONX_BAKED_LIGHT_DUNGEON_FRAMES_RAM_SIZE > 0
+	if (baked) {
+		++statVal.numBaked;
+	} else
+#endif
+	    if (tbl == LightTables[0].data()) {
+		++statVal.numFullyLit;
+	} else if (tbl == LightTables[LightsMax].data()) {
+		++statVal.numFullyDark;
+	} else {
+		++statVal.numPartiallyLit;
+	}
 #endif
 
 	switch (maskType) {

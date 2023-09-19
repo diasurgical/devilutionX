@@ -125,6 +125,7 @@ set(libdevilutionx_SRCS
   levels/drlg_l2.cpp
   levels/drlg_l3.cpp
   levels/drlg_l4.cpp
+  levels/dun_frames_baked_lighting.cpp
   levels/gendung.cpp
   levels/setmaps.cpp
   levels/themes.cpp
