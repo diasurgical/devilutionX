@@ -745,7 +745,14 @@ char *SDL_GetBasePath()
 #if defined(WINVER) && WINVER <= 0x0500 && (!defined(_WIN32_WINNT) || _WIN32_WINNT == 0)
 	TCHAR buffer[MAX_PATH] = { 0 };
 	GetModuleFileName(NULL, buffer, MAX_PATH);
-	const size_t len = std::string_view(buffer).size();
+	size_t len = std::string_view(buffer).size();
+	while (len > 0) {
+		if (buffer[len - 1] == '\\') {
+			break;
+		}
+		--len;
+	}
+	buffer[len] = '\0';
 	retval = static_cast<char *>(SDL_malloc(len + 1));
 	if (!retval) {
 		SDL_OutOfMemory();
@@ -854,6 +861,12 @@ char *SDL_GetPrefPath(const char *org, const char *app)
 	 *
 	 * https://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
 	 */
+#if defined(WINVER) && WINVER <= 0x0500 && (!defined(_WIN32_WINNT) || _WIN32_WINNT == 0)
+	// On Windows9x there is no such thing as PrefPath. Simply use the current directory.
+	char *result = (char *)SDL_malloc(1);
+	*result = '\0';
+	return result;
+#else
 	const char *envr = SDL_getenv("XDG_DATA_HOME");
 	const char *append;
 	char *retval = NULL;
@@ -913,20 +926,12 @@ char *SDL_GetPrefPath(const char *org, const char *app)
 	for (ptr = retval + 1; *ptr; ptr++) {
 		if (*ptr == '/') {
 			*ptr = '\0';
-#if defined(WINVER) && WINVER <= 0x0500 && (!defined(_WIN32_WINNT) || _WIN32_WINNT == 0)
-			if (mkdir(retval) != 0 && errno != EEXIST)
-#else
 			if (mkdir(retval, 0700) != 0 && errno != EEXIST)
-#endif
 				goto error;
 			*ptr = '/';
 		}
 	}
-#if defined(WINVER) && WINVER <= 0x0500 && (!defined(_WIN32_WINNT) || _WIN32_WINNT == 0)
-	if (mkdir(retval) != 0 && errno != EEXIST) {
-#else
 	if (mkdir(retval, 0700) != 0 && errno != EEXIST) {
-#endif
 	error:
 		SDL_SetError("Couldn't create directory '%s': '%s'", retval, strerror(errno));
 		SDL_free(retval);
@@ -941,6 +946,7 @@ char *SDL_GetPrefPath(const char *org, const char *app)
 	}
 
 	return retval;
+#endif
 }
 
 #endif
