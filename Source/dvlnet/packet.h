@@ -61,25 +61,42 @@ static constexpr plr_t PLR_BROADCAST = 0xFF;
 
 class PacketError {
 public:
-	virtual const char *what() const
+	PacketError()
+	    : message_(std::string_view("Incorrect package size"))
 	{
-		return "Incorrect package size";
 	}
-};
 
-class PacketTypeError : public PacketError {
-public:
-	explicit PacketTypeError(std::uint8_t unknownPacketType);
-	PacketTypeError(std::initializer_list<packet_type> expectedTypes, std::uint8_t actual);
-
-	const char *what() const override
+	PacketError(const char message[])
+	    : message_(std::string_view(message))
 	{
-		return message_.c_str();
+	}
+
+	PacketError(std::string &&message)
+	    : message_(std::move(message))
+	{
+	}
+
+	PacketError(const PacketError &error)
+	    : message_(std::string(error.message_))
+	{
+	}
+
+	PacketError(PacketError &&error)
+	    : message_(std::move(error.message_))
+	{
+	}
+
+	std::string_view what() const
+	{
+		return message_;
 	}
 
 private:
-	std::string message_;
+	StringOrView message_;
 };
+
+PacketError PacketTypeError(std::uint8_t unknownPacketType);
+PacketError PacketTypeError(std::initializer_list<packet_type> expectedTypes, std::uint8_t actual);
 
 class packet {
 protected:
