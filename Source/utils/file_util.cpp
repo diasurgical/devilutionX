@@ -198,6 +198,7 @@ bool GetFileSize(const char *path, std::uintmax_t *size)
 		return false;
 	}
 	*size = (static_cast<uintmax_t>(fileSizeHigh) << 32) | fileSizeLow;
+	::CloseHandle(handle);
 	return true;
 #else
 	WIN32_FILE_ATTRIBUTE_DATA attr;
@@ -313,6 +314,10 @@ bool ResizeFile(const char *path, std::uintmax_t size)
 #endif
 #ifdef DEVILUTIONX_WINDOWS_NO_WCHAR
 	HANDLE file = ::CreateFileA(path, GENERIC_WRITE, 0, NULL, OPEN_EXISTING, 0, NULL);
+	if (file == INVALID_HANDLE_VALUE) {
+		LogError("CreateFileA({}) failed: {}", path, ::GetLastError());
+		return false;
+	}
 #else
 	const auto pathUtf16 = ToWideChar(path);
 	if (pathUtf16 == nullptr) {
@@ -320,16 +325,26 @@ bool ResizeFile(const char *path, std::uintmax_t size)
 		return false;
 	}
 	HANDLE file = ::CreateFileW(&pathUtf16[0], GENERIC_WRITE, 0, NULL, OPEN_EXISTING, 0, NULL);
-#endif
 	if (file == INVALID_HANDLE_VALUE) {
+		LogError("CreateFileW({}) failed: {}", path, ::GetLastError());
 		return false;
-	} else if (
-#if defined(WINVER) && WINVER <= 0x0500 && (!defined(_WIN32_WINNT) || _WIN32_WINNT == 0)
-	    ::SetFilePointer(file, lisize, NULL, FILE_BEGIN) == 0
-#else
-	    ::SetFilePointerEx(file, lisize, NULL, FILE_BEGIN) == 0
+	}
 #endif
-	    || ::SetEndOfFile(file) == 0) {
+#if defined(WINVER) && WINVER <= 0x0500 && (!defined(_WIN32_WINNT) || _WIN32_WINNT == 0)
+	if (::SetFilePointer(file, lisize, NULL, FILE_BEGIN) == INVALID_SET_FILE_POINTER) {
+		LogError("SetFilePointer(file, {}, NULL, FILE_BEGIN) failed: {}", lisize, ::GetLastError());
+		::CloseHandle(file);
+		return false;
+	}
+#else
+	if (::SetFilePointerEx(file, lisize, NULL, FILE_BEGIN) == 0) {
+		LogError("SetFilePointerEx(file, {}, NULL, FILE_BEGIN) failed: {}", size, ::GetLastError());
+		::CloseHandle(file);
+		return false;
+	}
+#endif
+	if (::SetEndOfFile(file) == 0) {
+		LogError("SetEndOfFile failed: {}", ::GetLastError());
 		::CloseHandle(file);
 		return false;
 	}
