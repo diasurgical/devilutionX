@@ -84,35 +84,36 @@ const char *packet_type_to_string(uint8_t packetType)
 	}
 }
 
-PacketTypeError::PacketTypeError(std::uint8_t unknownPacketType)
-    : message_(StrCat("Unknown packet type ", unknownPacketType))
+PacketError PacketTypeError(std::uint8_t unknownPacketType)
 {
+	return PacketError(StrCat("Unknown packet type ", unknownPacketType));
 }
 
-PacketTypeError::PacketTypeError(std::initializer_list<packet_type> expectedTypes, std::uint8_t actual)
+PacketError PacketTypeError(std::initializer_list<packet_type> expectedTypes, std::uint8_t actual)
 {
-	message_ = "Expected packet of type ";
-	const auto appendPacketType = [this](std::uint8_t t) {
+	std::string message = "Expected packet of type ";
+	const auto appendPacketType = [&](std::uint8_t t) {
 		const char *typeStr = packet_type_to_string(t);
 		if (typeStr != nullptr)
-			message_.append(typeStr);
+			message.append(typeStr);
 		else
-			StrAppend(message_, t);
+			StrAppend(message, t);
 	};
 
 	constexpr char KJoinTypes[] = " or ";
 	for (const packet_type t : expectedTypes) {
 		appendPacketType(t);
-		message_.append(KJoinTypes);
+		message.append(KJoinTypes);
 	}
-	message_.resize(message_.size() - (sizeof(KJoinTypes) - 1));
-	message_.append(", got");
+	message.resize(message.size() - (sizeof(KJoinTypes) - 1));
+	message.append(", got");
 	appendPacketType(actual);
+	return PacketError(std::move(message));
 }
 
 namespace {
 
-tl::expected<void, PacketTypeError> CheckPacketTypeOneOf(std::initializer_list<packet_type> expectedTypes, std::uint8_t actualType)
+tl::expected<void, PacketError> CheckPacketTypeOneOf(std::initializer_list<packet_type> expectedTypes, std::uint8_t actualType)
 {
 	if (c_none_of(expectedTypes,
 	        [actualType](uint8_t type) { return type == actualType; })) {

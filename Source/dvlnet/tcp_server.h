@@ -27,13 +27,10 @@
 
 namespace devilution::net {
 
-class ServerError : public PacketError {
-public:
-	const char *what() const override
-	{
-		return "Invalid player ID";
-	}
-};
+inline PacketError ServerError()
+{
+	return PacketError("Invalid player ID");
+}
 
 class tcp_server {
 public:
