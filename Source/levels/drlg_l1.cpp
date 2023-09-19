@@ -372,7 +372,7 @@ void FillFloor()
 			if (dungeon[i][j] != Floor || Protected.test(i, j))
 				continue;
 
-			int rv = GenerateRnd(3);
+			int rv = RandomIntLessThan(3);
 			if (rv == 1)
 				dungeon[i][j] = Floor22;
 			else if (rv == 2)

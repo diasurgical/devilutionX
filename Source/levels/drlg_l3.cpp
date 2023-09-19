@@ -757,8 +757,8 @@ void CreateBlock(int x, int y, int obs, int dir)
 	int x2;
 	int y2;
 
-	int blksizex = GenerateRnd(2) + 3;
-	int blksizey = GenerateRnd(2) + 3;
+	int blksizex = RandomIntBetween(3, 4);
+	int blksizey = RandomIntBetween(3, 4);
 
 	if (dir == 0) {
 		y2 = y - 1;
@@ -1102,10 +1102,10 @@ void River()
 				if (dungeon[rx][ry] == 7) {
 					dircheck = 0;
 					if (dir < 2) {
-						river[2][riveramt] = GenerateRnd(2) + 17;
+						river[2][riveramt] = PickRandomlyAmong({ 17, 18 });
 					}
 					if (dir > 1) {
-						river[2][riveramt] = GenerateRnd(2) + 15;
+						river[2][riveramt] = PickRandomlyAmong({ 15, 16 });
 					}
 					river[0][riveramt] = rx;
 					river[1][riveramt] = ry;

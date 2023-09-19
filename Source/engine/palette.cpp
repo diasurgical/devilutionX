@@ -230,12 +230,12 @@ void LoadRndLvlPal(dungeon_type l)
 		return;
 	}
 
-	int rv = GenerateRnd(4) + 1;
 	if (l == DTYPE_CRYPT) {
 		LoadPalette("nlevels\\l5data\\l5base.pal");
 		return;
 	}
 
+	int rv = RandomIntBetween(1, 4);
 	char szFileName[27];
 	if (l == DTYPE_NEST) {
 		if (!*sgOptions.Graphics.alternateNestArt) {
