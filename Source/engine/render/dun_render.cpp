@@ -1207,4 +1207,29 @@ void world_draw_black_tile(const Surface &out, int sx, int sy)
 	}
 }
 
+void DunTileColorMap(std::span<const uint8_t> src, TileType tileType,
+    const uint8_t *tbl, uint8_t *dst)
+{
+	if (tileType == TileType::TransparentSquare) {
+		const uint8_t *srcPtr = src.data();
+		for (auto i = 0; i < Height; ++i) {
+			for (uint_fast8_t drawWidth = Width; drawWidth > 0;) {
+				auto v = static_cast<int8_t>(*srcPtr++);
+				if (v > 0) {
+					drawWidth -= v;
+					while (v-- > 0) {
+						*dst++ = tbl[*srcPtr++];
+					}
+				} else {
+					drawWidth += v;
+				}
+			}
+		}
+	} else {
+		for (const uint8_t pix : src) {
+			*dst++ = tbl[pix];
+		}
+	}
+}
+
 } // namespace devilution
