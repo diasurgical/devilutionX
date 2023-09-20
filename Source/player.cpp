@@ -37,7 +37,6 @@
 #include "objects.h"
 #include "options.h"
 #include "player.h"
-#include "playerdat.hpp"
 #include "qol/autopickup.h"
 #include "qol/floatingnumbers.h"
 #include "qol/stash.h"
@@ -1703,16 +1702,16 @@ int Player::GetCurrentAttributeValue(CharacterAttribute attribute) const
 
 int Player::GetMaximumAttributeValue(CharacterAttribute attribute) const
 {
-	PlayerData plrData = PlayersData[static_cast<std::size_t>(_pClass)];
+	const ClassAttributes &attr = getClassAttributes();
 	switch (attribute) {
 	case CharacterAttribute::Strength:
-		return plrData.maxStr;
+		return attr.maxStr;
 	case CharacterAttribute::Magic:
-		return plrData.maxMag;
+		return attr.maxMag;
 	case CharacterAttribute::Dexterity:
-		return plrData.maxDex;
+		return attr.maxDex;
 	case CharacterAttribute::Vitality:
-		return plrData.maxVit;
+		return attr.maxVit;
 	}
 	app_fatal("Unsupported attribute");
 }
@@ -2062,14 +2061,14 @@ uint32_t Player::getNextExperienceThreshold() const
 
 int32_t Player::calculateBaseLife() const
 {
-	const PlayerData &playerData = PlayersData[static_cast<size_t>(_pClass)];
-	return playerData.adjLife + (playerData.lvlLife * getCharacterLevel()) + (playerData.chrLife * _pBaseVit);
+	const ClassAttributes &attr = getClassAttributes();
+	return attr.adjLife + (attr.lvlLife * getCharacterLevel()) + (attr.chrLife * _pBaseVit);
 }
 
 int32_t Player::calculateBaseMana() const
 {
-	const PlayerData &playerData = PlayersData[static_cast<size_t>(_pClass)];
-	return playerData.adjMana + (playerData.lvlMana * getCharacterLevel()) + (playerData.chrMana * _pBaseMag);
+	const ClassAttributes &attr = getClassAttributes();
+	return attr.adjMana + (attr.lvlMana * getCharacterLevel()) + (attr.chrMana * _pBaseMag);
 }
 
 Player *PlayerAtPosition(Point position)
@@ -2096,7 +2095,7 @@ void LoadPlrGFX(Player &player, player_graphic graphic)
 	const HeroClass cls = GetPlayerSpriteClass(player._pClass);
 	const PlayerWeaponGraphic animWeaponId = GetPlayerWeaponGraphic(graphic, static_cast<PlayerWeaponGraphic>(player._pgfxnum & 0xF));
 
-	const char *path = PlayersData[static_cast<std::size_t>(cls)].classPath;
+	const char *path = PlayersSpriteData[static_cast<std::size_t>(cls)].classPath;
 
 	const char *szCel;
 	switch (graphic) {
@@ -2279,24 +2278,22 @@ void CreatePlayer(Player &player, HeroClass c)
 	player = {};
 	SetRndSeed(SDL_GetTicks());
 
-	const PlayerData &playerData = PlayersData[static_cast<size_t>(c)];
-
 	player.setCharacterLevel(1);
 	player._pClass = c;
 
-	player._pBaseStr = playerData.baseStr;
+	const ClassAttributes &attr = player.getClassAttributes();
+
+	player._pBaseStr = attr.baseStr;
 	player._pStrength = player._pBaseStr;
 
-	player._pBaseMag = playerData.baseMag;
+	player._pBaseMag = attr.baseMag;
 	player._pMagic = player._pBaseMag;
 
-	player._pBaseDex = playerData.baseDex;
+	player._pBaseDex = attr.baseDex;
 	player._pDexterity = player._pBaseDex;
 
-	player._pBaseVit = playerData.baseVit;
+	player._pBaseVit = attr.baseVit;
 	player._pVitality = player._pBaseVit;
-
-	player._pBaseToBlk = playerData.blockBonus;
 
 	player._pHitPoints = player.calculateBaseLife();
 	player._pMaxHP = player._pHitPoints;
@@ -2313,48 +2310,18 @@ void CreatePlayer(Player &player, HeroClass c)
 	player._pLightRad = 10;
 	player._pInfraFlag = false;
 
-	player._pRSplType = SpellType::Skill;
-	SpellID s = playerData.skill;
-	player._pAblSpells = GetSpellBitmask(s);
-	player._pRSpell = s;
-
-	if (c == HeroClass::Sorcerer) {
-		player._pMemSpells = GetSpellBitmask(SpellID::Firebolt);
-		player._pRSplType = SpellType::Spell;
-		player._pRSpell = SpellID::Firebolt;
-	} else {
-		player._pMemSpells = 0;
-	}
-
 	for (uint8_t &spellLevel : player._pSplLvl) {
 		spellLevel = 0;
 	}
 
 	player._pSpellFlags = SpellFlag::None;
-
-	if (player._pClass == HeroClass::Sorcerer) {
-		player._pSplLvl[static_cast<int8_t>(SpellID::Firebolt)] = 2;
-	}
+	player._pRSplType = SpellType::Invalid;
 
 	// Initializing the hotkey bindings to no selection
 	std::fill(player._pSplHotKey, player._pSplHotKey + NumHotkeys, SpellID::Invalid);
 
-	PlayerWeaponGraphic animWeaponId = PlayerWeaponGraphic::Unarmed;
-	switch (c) {
-	case HeroClass::Warrior:
-	case HeroClass::Bard:
-	case HeroClass::Barbarian:
-		animWeaponId = PlayerWeaponGraphic::SwordShield;
-		break;
-	case HeroClass::Rogue:
-		animWeaponId = PlayerWeaponGraphic::Bow;
-		break;
-	case HeroClass::Sorcerer:
-	case HeroClass::Monk:
-		animWeaponId = PlayerWeaponGraphic::Staff;
-		break;
-	}
-	player._pgfxnum = static_cast<uint8_t>(animWeaponId);
+	// CreatePlrItems calls AutoEquip which will overwrite the player graphic if required
+	player._pgfxnum = static_cast<uint8_t>(PlayerWeaponGraphic::Unarmed);
 
 	for (bool &levelVisited : player._pLvlVisited) {
 		levelVisited = false;
@@ -2397,7 +2364,7 @@ void NextPlrLevel(Player &player)
 	} else {
 		player._pStatPts += 5;
 	}
-	int hp = PlayersData[static_cast<size_t>(player._pClass)].lvlLife;
+	int hp = player.getClassAttributes().lvlLife;
 
 	player._pMaxHP += hp;
 	player._pHitPoints = player._pMaxHP;
@@ -2408,7 +2375,7 @@ void NextPlrLevel(Player &player)
 		RedrawComponent(PanelDrawComponent::Health);
 	}
 
-	int mana = PlayersData[static_cast<size_t>(player._pClass)].lvlMana;
+	int mana = player.getClassAttributes().lvlMana;
 
 	player._pMaxMana += mana;
 	player._pMaxManaBase += mana;
@@ -2534,8 +2501,7 @@ void InitPlayer(Player &player, bool firstTime)
 		ActivateVision(player.position.tile, player._pLightRad, player.getId());
 	}
 
-	SpellID s = PlayersData[static_cast<size_t>(player._pClass)].skill;
-	player._pAblSpells = GetSpellBitmask(s);
+	player._pAblSpells = GetSpellBitmask(GetPlayerStartingLoadoutForClass(player._pClass).skill);
 
 	player._pInvincible = false;
 
@@ -3329,7 +3295,7 @@ void ModifyPlrMag(Player &player, int l)
 	player._pBaseMag += l;
 
 	int ms = l;
-	ms *= PlayersData[static_cast<size_t>(player._pClass)].chrMana;
+	ms *= player.getClassAttributes().chrMana;
 
 	player._pMaxManaBase += ms;
 	player._pMaxMana += ms;
@@ -3366,7 +3332,7 @@ void ModifyPlrVit(Player &player, int l)
 	player._pBaseVit += l;
 
 	int ms = l;
-	ms *= PlayersData[static_cast<size_t>(player._pClass)].chrLife;
+	ms *= player.getClassAttributes().chrLife;
 
 	player._pHPBase += ms;
 	player._pMaxHPBase += ms;
@@ -3401,7 +3367,7 @@ void SetPlrMag(Player &player, int v)
 	player._pBaseMag = v;
 
 	int m = v;
-	m *= PlayersData[static_cast<size_t>(player._pClass)].chrMana;
+	m *= player.getClassAttributes().chrMana;
 
 	player._pMaxManaBase = m;
 	player._pMaxMana = m;
@@ -3419,7 +3385,7 @@ void SetPlrVit(Player &player, int v)
 	player._pBaseVit = v;
 
 	int hp = v;
-	hp *= PlayersData[static_cast<size_t>(player._pClass)].chrLife;
+	hp *= player.getClassAttributes().chrLife;
 
 	player._pHPBase = hp;
 	player._pMaxHPBase = hp;

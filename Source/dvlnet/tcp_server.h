@@ -13,6 +13,8 @@
 // the 3DS SDK.
 #include <fmt/core.h>
 
+#include <expected.hpp>
+
 #include <asio/ts/buffer.hpp>
 #include <asio/ts/internet.hpp>
 #include <asio/ts/io_context.hpp>
@@ -23,16 +25,12 @@
 #include "dvlnet/packet.h"
 #include "multi.h"
 
-namespace devilution {
-namespace net {
+namespace devilution::net {
 
-class server_exception : public dvlnet_exception {
-public:
-	const char *what() const throw() override
-	{
-		return "Invalid player ID";
-	}
-};
+inline PacketError ServerError()
+{
+	return PacketError("Invalid player ID");
+}
 
 class tcp_server {
 public:
@@ -75,9 +73,9 @@ private:
 	void HandleAccept(const scc &con, const asio::error_code &ec);
 	void StartReceive(const scc &con);
 	void HandleReceive(const scc &con, const asio::error_code &ec, size_t bytesRead);
-	void HandleReceiveNewPlayer(const scc &con, packet &pkt);
-	void HandleReceivePacket(packet &pkt);
-	void SendPacket(packet &pkt);
+	tl::expected<void, PacketError> HandleReceiveNewPlayer(const scc &con, packet &pkt);
+	tl::expected<void, PacketError> HandleReceivePacket(packet &pkt);
+	tl::expected<void, PacketError> SendPacket(packet &pkt);
 	void StartSend(const scc &con, packet &pkt);
 	void HandleSend(const scc &con, const asio::error_code &ec, size_t bytesSent);
 	void StartTimeout(const scc &con);
@@ -85,5 +83,4 @@ private:
 	void DropConnection(const scc &con);
 };
 
-} // namespace net
-} // namespace devilution
+} // namespace devilution::net

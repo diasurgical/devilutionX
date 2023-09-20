@@ -1153,7 +1153,7 @@ void StashMove(AxisDirection dir)
 	} else if (dir.y == AxisDirectionY_DOWN) {
 		if (ActiveStashSlot.y < 10 - itemSize.height) {
 			ActiveStashSlot.y++;
-		} else if ((holdItem.isEmpty() || CanBePlacedOnBelt(holdItem)) && ActiveStashSlot.x > 1) {
+		} else if ((holdItem.isEmpty() || CanBePlacedOnBelt(*MyPlayer, holdItem)) && ActiveStashSlot.x > 1) {
 			int beltSlot = ActiveStashSlot.x - 2;
 			Slot = SLOTXY_BELT_FIRST + beltSlot;
 			ActiveStashSlot = InvalidStashPoint;

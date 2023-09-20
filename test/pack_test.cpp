@@ -961,8 +961,10 @@ TEST_F(NetPackTest, UnPackNetPlayer_valid)
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_class)
 {
-	MyPlayer->_pClass = static_cast<HeroClass>(-1);
-	ASSERT_FALSE(TestNetPackValidation());
+	PlayerNetPack packed;
+	PackNetPlayer(packed, *MyPlayer);
+	packed.pClass = std::numeric_limits<uint8_t>::max();
+	ASSERT_FALSE(UnPackNetPlayer(packed, Players[1]));
 }
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_oob)
@@ -1084,8 +1086,10 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_damageMod)
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_baseToBlk)
 {
-	MyPlayer->_pBaseToBlk++;
-	ASSERT_FALSE(TestNetPackValidation());
+	PlayerNetPack packed;
+	PackNetPlayer(packed, *MyPlayer);
+	packed.pBaseToBlk++;
+	ASSERT_FALSE(UnPackNetPlayer(packed, Players[1]));
 }
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_iMinDam)

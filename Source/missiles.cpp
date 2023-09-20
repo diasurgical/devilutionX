@@ -209,7 +209,7 @@ bool MonsterMHit(int pnum, int monsterId, int mindam, int maxdam, int dist, Miss
 	if (!monster.isPossibleToHit() || monster.isImmune(t, damageType))
 		return false;
 
-	int hit = GenerateRnd(100);
+	int hit = RandomIntLessThan(100);
 	int hper = 0;
 	const Player &player = Players[pnum];
 	const MissileData &missileData = GetMissileData(t);
@@ -1268,7 +1268,7 @@ void AddHorkSpawn(Missile &missile, AddMissileParameter &parameter)
 void AddJester(Missile &missile, AddMissileParameter &parameter)
 {
 	MissileID spell = MissileID::Firebolt;
-	switch (GenerateRnd(10)) {
+	switch (RandomIntLessThan(10)) {
 	case 0:
 	case 1:
 		spell = MissileID::Firebolt;
@@ -1497,7 +1497,7 @@ void AddWarp(Missile &missile, AddMissileParameter &parameter)
 void AddLightningWall(Missile &missile, AddMissileParameter &parameter)
 {
 	UpdateMissileVelocity(missile, parameter.dst, 16);
-	missile._miAnimFrame = GenerateRnd(8) + 1;
+	missile._miAnimFrame = RandomIntBetween(1, 8);
 	missile._mirange = 255 * (missile._mispllvl + 1);
 	switch (missile.sourceType()) {
 	case MissileSource::Trap:
@@ -1555,7 +1555,7 @@ void AddLightningBow(Missile &missile, AddMissileParameter &parameter)
 		dst += parameter.midir;
 	}
 	UpdateMissileVelocity(missile, dst, 32);
-	missile._miAnimFrame = GenerateRnd(8) + 1;
+	missile._miAnimFrame = RandomIntBetween(1, 8);
 	missile._mirange = 255;
 	if (missile._misource < 0) {
 		missile.var1 = missile.position.start.x;
@@ -1573,7 +1573,7 @@ void AddMana(Missile &missile, AddMissileParameter & /*parameter*/)
 
 	int manaAmount = (GenerateRnd(10) + 1) << 6;
 	for (int i = 0; i < player.getCharacterLevel(); i++) {
-		manaAmount += (GenerateRnd(4) + 1) << 6;
+		manaAmount += RandomIntBetween(1, 4) << 6;
 	}
 	for (int i = 0; i < missile._mispllvl; i++) {
 		manaAmount += (GenerateRnd(6) + 1) << 6;
@@ -1643,7 +1643,7 @@ void AddChargedBoltBow(Missile &missile, AddMissileParameter &parameter)
 	if (missile.position.start == dst) {
 		dst += parameter.midir;
 	}
-	missile._miAnimFrame = GenerateRnd(8) + 1;
+	missile._miAnimFrame = RandomIntBetween(1, 8);
 	missile._mlid = AddLight(missile.position.start, 5);
 	UpdateMissileVelocity(missile, dst, 8);
 	missile.var1 = 5;
@@ -1699,7 +1699,7 @@ void AddArrow(Missile &missile, AddMissileParameter &parameter)
 		const Player &player = Players[missile._misource];
 
 		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::RandomArrowVelocity)) {
-			av = GenerateRnd(32) + 16;
+			av = RandomIntBetween(16, 47);
 		}
 		if (player._pClass == HeroClass::Rogue)
 			av += (player.getCharacterLevel() - 1) / 4;
@@ -1863,7 +1863,7 @@ void AddTeleport(Missile &missile, AddMissileParameter &parameter)
 void AddNovaBall(Missile &missile, AddMissileParameter &parameter)
 {
 	UpdateMissileVelocity(missile, parameter.dst, 16);
-	missile._miAnimFrame = GenerateRnd(8) + 1;
+	missile._miAnimFrame = RandomIntBetween(1, 8);
 	missile._mirange = 255;
 	const WorldTilePosition position = missile._misource < 0 ? missile.position.start : Players[missile._misource].position.tile;
 	missile.var1 = position.x;
@@ -1913,7 +1913,7 @@ void AddLightningControl(Missile &missile, AddMissileParameter &parameter)
 	missile.var1 = missile.position.start.x;
 	missile.var2 = missile.position.start.y;
 	UpdateMissileVelocity(missile, parameter.dst, 32);
-	missile._miAnimFrame = GenerateRnd(8) + 1;
+	missile._miAnimFrame = RandomIntBetween(1, 8);
 	missile._mirange = 256;
 }
 
@@ -1923,7 +1923,7 @@ void AddLightning(Missile &missile, AddMissileParameter &parameter)
 
 	SyncPositionWithParent(missile, parameter);
 
-	missile._miAnimFrame = GenerateRnd(8) + 1;
+	missile._miAnimFrame = RandomIntBetween(1, 8);
 
 	if (missile._micaster == TARGET_PLAYERS || missile.IsTrap()) {
 		if (missile.IsTrap() || Monsters[missile._misource].type().type == MT_FAMILIAR)
@@ -2611,7 +2611,7 @@ void AddChargedBolt(Missile &missile, AddMissileParameter &parameter)
 	if (missile.position.start == dst) {
 		dst += parameter.midir;
 	}
-	missile._miAnimFrame = GenerateRnd(8) + 1;
+	missile._miAnimFrame = RandomIntBetween(1, 8);
 	missile._mlid = AddLight(missile.position.start, 5);
 
 	UpdateMissileVelocity(missile, dst, 8);

@@ -75,6 +75,7 @@ enum class AmLineLength : uint8_t {
 	FullTile = 8,
 	FullAndHalfTile = 12,
 	DoubleTile = 16,
+	OctupleTile = 64,
 };
 
 inline Displacement AmOffset(AmWidthOffset x, AmHeightOffset y)
@@ -86,6 +87,20 @@ inline int AmLine(AmLineLength l)
 {
 	return AutoMapScale * static_cast<int>(l) / 100;
 }
+
+enum class AutomapType : uint8_t {
+	Opaque,
+	Transparent,
+	Minimap,
+	LAST = Minimap
+};
+
+/**
+ * @brief Sets the map type. Does not change `AutomapActive`.
+ */
+void SetAutomapType(AutomapType type);
+
+AutomapType GetAutomapType();
 
 /**
  * @brief Initializes the automap.

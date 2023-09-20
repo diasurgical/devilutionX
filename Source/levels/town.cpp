@@ -221,7 +221,7 @@ void DrlgTPass3()
 		dungeon[16][35] = 7;
 		dungeon[17][35] = 7;
 		for (int x = 36; x < 46; x++) {
-			FillTile(x, 78, GenerateRnd(4) + 1);
+			FillTile(x, 78, PickRandomlyAmong({ 1, 2, 3, 4 }));
 		}
 	}
 	if (gbIsHellfire) {

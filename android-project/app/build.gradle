@@ -7,13 +7,13 @@ if (buildAsApplication) {
 }
 
 android {
-	ndkVersion '25.2.9519653'
+	ndkVersion '26.0.10792818'
 	compileSdk 33
 	defaultConfig {
 		if (buildAsApplication) {
 			applicationId "org.diasurgical.devilutionx"
 		}
-		minSdkVersion 18
+		minSdkVersion 21
 		targetSdkVersion 33
 		versionCode 28
 		versionName project.file('../../VERSION').text.trim()

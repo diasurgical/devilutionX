@@ -92,7 +92,7 @@ void InvDrawSlotBack(const Surface &out, Point targetPosition, Size size, item_q
  * @param item The item to be checked.
  * @return 'True' in case the item can be placed on the belt and 'False' otherwise.
  */
-bool CanBePlacedOnBelt(const Item &item);
+bool CanBePlacedOnBelt(const Player &player, const Item &item);
 
 /**
  * @brief Function type which performs an operation on the given item.
@@ -134,9 +134,11 @@ bool AutoEquipEnabled(const Player &player, const Item &item);
  * @param item The item to equip.
  * @param persistItem Indicates whether or not the item should be persisted in the player's body. Pass 'False' to check
  * whether the player can equip the item but you don't want the item to actually be equipped. 'True' by default.
+ * @param sendNetworkMessage Set to true if you want an equip sound and network message to be generated if the equipment
+ * changes. Should only be set if a local player is equipping an item in a play session (not when creating a new game)
  * @return 'True' if the item was equipped and 'False' otherwise.
  */
-bool AutoEquip(Player &player, const Item &item, bool persistItem = true);
+bool AutoEquip(Player &player, const Item &item, bool persistItem = true, bool sendNetworkMessage = false);
 
 /**
  * @brief Checks whether the given item can be placed on the specified player's inventory.
@@ -144,20 +146,11 @@ bool AutoEquip(Player &player, const Item &item, bool persistItem = true);
  * @param player The player whose inventory will be checked.
  * @param item The item to be checked.
  * @param persistItem Pass 'True' to actually place the item in the inventory. The default is 'False'.
+ * @param sendNetworkMessage Set to true if you want a network message to be generated if the item is persisted.
+ * Should only be set if a local player is placing an item in a play session (not when creating a new game)
  * @return 'True' in case the item can be placed on the player's inventory and 'False' otherwise.
  */
-bool AutoPlaceItemInInventory(Player &player, const Item &item, bool persistItem = false);
-
-/**
- * @brief Checks whether the given item can be placed on the specified player's inventory slot.
- * If 'persistItem' is 'True', the item is also placed in the inventory slot.
- * @param player The player whose inventory will be checked.
- * @param slotIndex The 0-based index of the slot to put the item on.
- * @param item The item to be checked.
- * @param persistItem Pass 'True' to actually place the item in the inventory slot. The default is 'False'.
- * @return 'True' in case the item can be placed on the specified player's inventory slot and 'False' otherwise.
- */
-bool AutoPlaceItemInInventorySlot(Player &player, int slotIndex, const Item &item, bool persistItem);
+bool AutoPlaceItemInInventory(Player &player, const Item &item, bool persistItem = false, bool sendNetworkMessage = false);
 
 /**
  * @brief Checks whether the given item can be placed on the specified player's belt. Returns 'True' when the item can be placed
@@ -166,9 +159,11 @@ bool AutoPlaceItemInInventorySlot(Player &player, int slotIndex, const Item &ite
  * @param player The player on whose belt will be checked.
  * @param item The item to be checked.
  * @param persistItem Pass 'True' to actually place the item in the belt. The default is 'False'.
+ * @param sendNetworkMessage Set to true if you want a network message to be generated if the item is persisted.
+ * Should only be set if a local player is placing an item in a play session (not when creating a new game)
  * @return 'True' in case the item can be placed on the player's belt and 'False' otherwise.
  */
-bool AutoPlaceItemInBelt(Player &player, const Item &item, bool persistItem = false);
+bool AutoPlaceItemInBelt(Player &player, const Item &item, bool persistItem = false, bool sendNetworkMessage = false);
 
 /**
  * @brief Calculate the maximum aditional gold that may fit in the user's inventory

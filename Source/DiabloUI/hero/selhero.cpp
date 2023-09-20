@@ -29,7 +29,7 @@ bool selhero_isMultiPlayer;
 
 bool (*gfnHeroInfo)(bool (*fninfofunc)(_uiheroinfo *));
 bool (*gfnHeroCreate)(_uiheroinfo *);
-void (*gfnHeroStats)(unsigned int, _uidefaultstats *);
+void (*gfnHeroStats)(HeroClass, _uidefaultstats *);
 
 namespace {
 
@@ -161,12 +161,12 @@ void SelheroListSelect(int value)
 		vecSelHeroDlgItems.push_back(std::make_unique<UiListItem>(_("Sorcerer"), static_cast<int>(HeroClass::Sorcerer)));
 		if (gbIsHellfire) {
 			vecSelHeroDlgItems.push_back(std::make_unique<UiListItem>(_("Monk"), static_cast<int>(HeroClass::Monk)));
-		}
-		if (gbBard || *sgOptions.Gameplay.testBard) {
-			vecSelHeroDlgItems.push_back(std::make_unique<UiListItem>(_("Bard"), static_cast<int>(HeroClass::Bard)));
-		}
-		if (gbBarbarian || *sgOptions.Gameplay.testBarbarian) {
-			vecSelHeroDlgItems.push_back(std::make_unique<UiListItem>(_("Barbarian"), static_cast<int>(HeroClass::Barbarian)));
+			if (gbBard || *sgOptions.Gameplay.testBard) {
+				vecSelHeroDlgItems.push_back(std::make_unique<UiListItem>(_("Bard"), static_cast<int>(HeroClass::Bard)));
+			}
+			if (gbBarbarian || *sgOptions.Gameplay.testBarbarian) {
+				vecSelHeroDlgItems.push_back(std::make_unique<UiListItem>(_("Barbarian"), static_cast<int>(HeroClass::Barbarian)));
+			}
 		}
 		if (vecSelHeroDlgItems.size() > 4)
 			itemH = 26;
@@ -226,7 +226,7 @@ void SelheroClassSelectorFocus(int value)
 	const auto heroClass = static_cast<HeroClass>(vecSelHeroDlgItems[value]->m_value);
 
 	_uidefaultstats defaults;
-	gfnHeroStats(static_cast<unsigned int>(heroClass), &defaults);
+	gfnHeroStats(heroClass, &defaults);
 
 	selhero_heroInfo.level = 1;
 	selhero_heroInfo.heroclass = heroClass;
@@ -546,7 +546,7 @@ void selhero_List_Init()
 static void UiSelHeroDialog(
     bool (*fninfo)(bool (*fninfofunc)(_uiheroinfo *)),
     bool (*fncreate)(_uiheroinfo *),
-    void (*fnstats)(unsigned int, _uidefaultstats *),
+    void (*fnstats)(HeroClass, _uidefaultstats *),
     bool (*fnremove)(_uiheroinfo *),
     _selhero_selections *dlgresult,
     uint32_t *saveNumber)
@@ -607,7 +607,7 @@ void UiSelHeroSingDialog(
     bool (*fninfo)(bool (*fninfofunc)(_uiheroinfo *)),
     bool (*fncreate)(_uiheroinfo *),
     bool (*fnremove)(_uiheroinfo *),
-    void (*fnstats)(unsigned int, _uidefaultstats *),
+    void (*fnstats)(HeroClass, _uidefaultstats *),
     _selhero_selections *dlgresult,
     uint32_t *saveNumber,
     _difficulty *difficulty)
@@ -621,7 +621,7 @@ void UiSelHeroMultDialog(
     bool (*fninfo)(bool (*fninfofunc)(_uiheroinfo *)),
     bool (*fncreate)(_uiheroinfo *),
     bool (*fnremove)(_uiheroinfo *),
-    void (*fnstats)(unsigned int, _uidefaultstats *),
+    void (*fnstats)(HeroClass, _uidefaultstats *),
     _selhero_selections *dlgresult,
     uint32_t *saveNumber)
 {

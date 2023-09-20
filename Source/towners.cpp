@@ -701,19 +701,7 @@ void TalkToCowFarmer(Player &player, Towner &cowFarmer)
 		break;
 	case QUEST_HIVE_ACTIVE:
 		if (!player._pLvlVisited[9] && player.getCharacterLevel() < 15) {
-			_speech_id qt = TEXT_JERSEY12;
-			switch (GenerateRnd(4)) {
-			case 0:
-				qt = TEXT_JERSEY9;
-				break;
-			case 1:
-				qt = TEXT_JERSEY10;
-				break;
-			case 2:
-				qt = TEXT_JERSEY11;
-				break;
-			}
-			InitQTextMsg(qt);
+			InitQTextMsg(PickRandomlyAmong({ TEXT_JERSEY9, TEXT_JERSEY10, TEXT_JERSEY11, TEXT_JERSEY12 }));
 			break;
 		}
 

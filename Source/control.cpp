@@ -424,7 +424,7 @@ std::string TextCmdArenaPot(const std::string_view parameter)
 		GenerateNewSeed(item);
 		item.updateRequiredStatsCacheForPlayer(myPlayer);
 
-		if (!AutoPlaceItemInBelt(myPlayer, item, true) && !AutoPlaceItemInInventory(myPlayer, item, true)) {
+		if (!AutoPlaceItemInBelt(myPlayer, item, true, true) && !AutoPlaceItemInInventory(myPlayer, item, true, true)) {
 			break; // inventory is full
 		}
 	}
@@ -1007,6 +1007,20 @@ void DoAutoMap()
 		AutomapActive = false;
 }
 
+void CycleAutomapType()
+{
+	if (!AutomapActive) {
+		StartAutomap();
+		return;
+	}
+	const AutomapType newType { static_cast<std::underlying_type_t<AutomapType>>(
+		(static_cast<unsigned>(GetAutomapType()) + 1) % enum_size<AutomapType>::value) };
+	SetAutomapType(newType);
+	if (newType == AutomapType::Opaque) {
+		AutomapActive = false;
+	}
+}
+
 void CheckPanelInfo()
 {
 	panelflag = false;
@@ -1212,7 +1226,7 @@ void DrawInfoBox(const Surface &out)
 			InfoColor = UiFlags::ColorWhitegold;
 			auto &target = Players[pcursplr];
 			InfoString = std::string_view(target._pName);
-			AddPanelString(fmt::format(fmt::runtime(_("{:s}, Level: {:d}")), _(PlayersData[static_cast<std::size_t>(target._pClass)].className), target.getCharacterLevel()));
+			AddPanelString(fmt::format(fmt::runtime(_("{:s}, Level: {:d}")), target.getClassName(), target.getCharacterLevel()));
 			AddPanelString(fmt::format(fmt::runtime(_("Hit Points {:d} of {:d}")), target._pHitPoints >> 6, target._pMaxHP >> 6));
 		}
 	}

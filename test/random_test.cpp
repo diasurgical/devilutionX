@@ -279,6 +279,31 @@ TEST(RandomTest, NegativeReturnValues)
 		EXPECT_EQ(GenerateRnd(i), -8) << "Unexpected return value for a limit of " << i;
 	}
 
+	// The following values are/were used throughout the code
+	SetRndSeed(1457187811);
+	EXPECT_EQ(GenerateRnd(37), -23) << "Unexpected return value for a limit of 37";
+
+	SetRndSeed(1457187811);
+	EXPECT_EQ(GenerateRnd(38), -12) << "Unexpected return value for a limit of 38";
+
+	SetRndSeed(1457187811);
+	// commonly used for dungeon megatile coordinates
+	EXPECT_EQ(GenerateRnd(40), -8) << "Unexpected return value for a limit of 40";
+
+	SetRndSeed(1457187811);
+	EXPECT_EQ(GenerateRnd(41), -9) << "Unexpected return value for a limit of 41";
+
+	SetRndSeed(1457187811);
+	EXPECT_EQ(GenerateRnd(52), -8) << "Unexpected return value for a limit of 52";
+
+	SetRndSeed(1457187811);
+	// commonly used for dungeon tile coordinates
+	EXPECT_EQ(GenerateRnd(80), -48) << "Unexpected return value for a limit of 80";
+
+	SetRndSeed(1457187811);
+	// commonly used for percentage rolls (typically in a context that 0 and -68 lead to the same outcome)
+	EXPECT_EQ(GenerateRnd(100), -68) << "Unexpected return value for a limit of 100";
+
 	for (int i = 1; i < 32768; i *= 2) {
 		SetRndSeed(1457187811);
 		EXPECT_EQ(GenerateRnd(i), 0) << "Expect powers of 2 such as " << i << " to cleanly divide the int_min RNG value ";

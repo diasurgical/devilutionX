@@ -119,7 +119,7 @@ static void AssertPlayer(Player &player)
 	ASSERT_EQ(player._pGold, 100);
 	ASSERT_EQ(player._pMaxHPBase, 2880);
 	ASSERT_EQ(player._pHPBase, 2880);
-	ASSERT_EQ(player._pBaseToBlk, 20);
+	ASSERT_EQ(player.getBaseToBlock(), 20);
 	ASSERT_EQ(player._pMaxManaBase, 1440);
 	ASSERT_EQ(player._pManaBase, 1440);
 	ASSERT_EQ(player._pMemSpells, 0);
@@ -158,8 +158,9 @@ static void AssertPlayer(Player &player)
 	ASSERT_EQ(player._pLghtResist, 0);
 	ASSERT_EQ(CountBool(player._pLvlVisited, NUMLEVELS), 0);
 	ASSERT_EQ(CountBool(player._pSLvlVisited, NUMLEVELS), 0);
+	// This test case uses a Rogue, starting loadout is a short bow with damage 1-4
 	ASSERT_EQ(player._pIMinDam, 1);
-	ASSERT_EQ(player._pIMaxDam, 1);
+	ASSERT_EQ(player._pIMaxDam, 4);
 	ASSERT_EQ(player._pIAC, 0);
 	ASSERT_EQ(player._pIBonusDam, 0);
 	ASSERT_EQ(player._pIBonusToHit, 0);

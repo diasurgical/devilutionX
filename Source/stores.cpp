@@ -337,15 +337,15 @@ bool StoreAutoPlace(Item &item, bool persistItem)
 {
 	Player &player = *MyPlayer;
 
-	if (AutoEquipEnabled(player, item) && AutoEquip(player, item, persistItem)) {
+	if (AutoEquipEnabled(player, item) && AutoEquip(player, item, persistItem, true)) {
 		return true;
 	}
 
-	if (AutoPlaceItemInBelt(player, item, persistItem)) {
+	if (AutoPlaceItemInBelt(player, item, persistItem, true)) {
 		return true;
 	}
 
-	return AutoPlaceItemInInventory(player, item, persistItem);
+	return AutoPlaceItemInInventory(player, item, persistItem, true);
 }
 
 void ScrollVendorStore(Item *itemData, int storeLimit, int idx, int selling = true)

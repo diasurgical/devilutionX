@@ -1048,8 +1048,8 @@ GameplayOptions::GameplayOptions()
     , cowQuest("Cow Quest", OptionEntryFlags::CantChangeInGame | OptionEntryFlags::OnlyHellfire, N_("Cow Quest"), N_("Enable Jersey's quest. Lester the farmer is replaced by the Complete Nut."), false)
     , friendlyFire("Friendly Fire", OptionEntryFlags::CantChangeInMultiPlayer, N_("Friendly Fire"), N_("Allow arrow/spell damage between players in multiplayer even when the friendly mode is on."), true)
     , multiplayerFullQuests("MultiplayerFullQuests", OptionEntryFlags::CantChangeInMultiPlayer, N_("Full quests in Multiplayer"), N_("Enables the full/uncut singleplayer version of quests."), false)
-    , testBard("Test Bard", OptionEntryFlags::CantChangeInGame, N_("Test Bard"), N_("Force the Bard character type to appear in the hero selection menu."), false)
-    , testBarbarian("Test Barbarian", OptionEntryFlags::CantChangeInGame, N_("Test Barbarian"), N_("Force the Barbarian character type to appear in the hero selection menu."), false)
+    , testBard("Test Bard", OptionEntryFlags::CantChangeInGame | OptionEntryFlags::OnlyHellfire, N_("Test Bard"), N_("Force the Bard character type to appear in the hero selection menu."), false)
+    , testBarbarian("Test Barbarian", OptionEntryFlags::CantChangeInGame | OptionEntryFlags::OnlyHellfire, N_("Test Barbarian"), N_("Force the Barbarian character type to appear in the hero selection menu."), false)
     , experienceBar("Experience Bar", OptionEntryFlags::None, N_("Experience Bar"), N_("Experience Bar is added to the UI at the bottom of the screen."), false)
     , showItemGraphicsInStores("Show Item Graphics in Stores", OptionEntryFlags::None, N_("Show Item Graphics in Stores"), N_("Show item graphics to the left of item descriptions in store menus."), false)
     , showHealthValues("Show health values", OptionEntryFlags::None, N_("Show health values"), N_("Displays current / max health value on health globe."), false)
@@ -1849,8 +1849,12 @@ bool PadmapperOptions::CanDeferToMovementHandler(const Action &action) const
 }
 
 namespace {
+#ifdef DEVILUTIONX_RESAMPLER_SPEEX
 constexpr char ResamplerSpeex[] = "Speex";
+#endif
+#ifdef DVL_AULIB_SUPPORTS_SDL_RESAMPLER
 constexpr char ResamplerSDL[] = "SDL";
+#endif
 } // namespace
 
 std::string_view ResamplerToString(Resampler resampler)

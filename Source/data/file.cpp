@@ -47,24 +47,24 @@ void DataFile::reportFatalError(Error code, std::string_view fileName)
 	}
 }
 
-void DataFile::reportFatalFieldError(std::errc code, std::string_view fileName, std::string_view fieldName, const DataFileField &field)
+void DataFile::reportFatalFieldError(DataFileField::Error code, std::string_view fileName, std::string_view fieldName, const DataFileField &field)
 {
 	switch (code) {
-	case std::errc::invalid_argument:
+	case DataFileField::Error::NotANumber:
 		app_fatal(fmt::format(fmt::runtime(_(
 		                          /* TRANSLATORS: Error message when parsing a data file and a text value is encountered when a number is expected. Arguments are {found value}, {column heading}, {file name}, {row/record number}, {column/field number} */
 		                          "Non-numeric value {0} for {1} in {2} at row {3} and column {4}")),
 		    field.currentValue(), fieldName, fileName, field.row(), field.column()));
-	case std::errc::result_out_of_range:
+	case DataFileField::Error::OutOfRange:
 		app_fatal(fmt::format(fmt::runtime(_(
 		                          /* TRANSLATORS: Error message when parsing a data file and we find a number larger than expected. Arguments are {found value}, {column heading}, {file name}, {row/record number}, {column/field number} */
 		                          "Out of range value {0} for {1} in {2} at row {3} and column {4}")),
 		    field.currentValue(), fieldName, fileName, field.row(), field.column()));
-	default:
+	case DataFileField::Error::InvalidValue:
 		app_fatal(fmt::format(fmt::runtime(_(
-		                          /* TRANSLATORS: Fallback error message when an error occurs while parsing a data file and we can't determine the cause. Arguments are {file name}, {row/record number}, {column/field number} */
-		                          "Unexpected error while reading {0} at row {1} and column {2}")),
-		    fileName, field.row(), field.column()));
+		                          /* TRANSLATORS: Error message when we find an unrecognised value in a key column. Arguments are {found value}, {column heading}, {file name}, {row/record number}, {column/field number} */
+		                          "Invalid value {0} for {1} in {2} at row {3} and column {4}")),
+		    field.currentValue(), fieldName, fileName, field.row(), field.column()));
 	}
 }
 
@@ -115,4 +115,16 @@ tl::expected<void, DataFile::Error> DataFile::parseHeader(ColumnDefinition *begi
 	}
 	return {};
 }
+
+tl::expected<void, DataFile::Error> DataFile::skipHeader()
+{
+	RecordIterator it { data(), data() + size(), false };
+	++it;
+	if (it == this->end()) {
+		return tl::unexpected { Error::NoContent };
+	}
+	body_ = it.data();
+	return {};
+}
+
 } // namespace devilution

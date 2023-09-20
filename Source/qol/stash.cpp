@@ -215,10 +215,10 @@ void CheckStashCut(Point cursorPosition, bool automaticMove)
 	if (iv != StashStruct::EmptyCell) {
 		holdItem = Stash.stashList[iv];
 		if (automaticMove) {
-			if (CanBePlacedOnBelt(holdItem)) {
-				automaticallyMoved = AutoPlaceItemInBelt(player, holdItem, true);
+			if (CanBePlacedOnBelt(player, holdItem)) {
+				automaticallyMoved = AutoPlaceItemInBelt(player, holdItem, true, true);
 			} else {
-				automaticallyMoved = automaticallyEquipped = AutoEquip(player, holdItem);
+				automaticallyMoved = AutoEquip(player, holdItem, true, true);
 			}
 		}
 
@@ -238,7 +238,7 @@ void CheckStashCut(Point cursorPosition, bool automaticMove)
 
 		if (automaticMove) {
 			if (!automaticallyMoved) {
-				if (CanBePlacedOnBelt(holdItem)) {
+				if (CanBePlacedOnBelt(player, holdItem)) {
 					player.SaySpecific(HeroSpeech::IHaveNoRoom);
 				} else {
 					player.SaySpecific(HeroSpeech::ICantDoThat);

@@ -214,7 +214,11 @@ TEST(DataFileTest, ParseInt)
 		DataFileField field = *fieldIt;
 		uint8_t shortVal = 5;
 		auto parseIntResult = field.parseInt(shortVal);
-		EXPECT_EQ(parseIntResult, std::errc::invalid_argument) << "Strings are not uint8_t values";
+		if (parseIntResult.has_value()) {
+			ADD_FAILURE() << "Parsing a string as an int should not succeed";
+		} else {
+			EXPECT_EQ(parseIntResult.error(), DataFileField::Error::NotANumber) << "Strings are not uint8_t values";
+		}
 		EXPECT_EQ(shortVal, 5) << "Value is not modified when parsing as uint8_t fails due to non-numeric fields";
 		EXPECT_EQ(*field, "Sample") << "Should be able to access the field value as a string after failure";
 		++fieldIt;
@@ -225,9 +229,15 @@ TEST(DataFileTest, ParseInt)
 		field = *fieldIt;
 		shortVal = 5;
 		parseIntResult = field.parseInt(shortVal);
-		EXPECT_EQ(parseIntResult, std::errc()) << "Expected " << field << "to fit into a uint8_t variable";
+		EXPECT_TRUE(parseIntResult.has_value()) << "Expected " << field << " to fit into a uint8_t variable";
 		EXPECT_EQ(shortVal, 145) << "Parsing should give the expected base 10 value";
 		EXPECT_EQ(*field, "145") << "Should be able to access the field value as a string even after parsing as an int";
+
+		int longVal = 1;
+		auto parseFixedResult = field.parseFixed6(longVal);
+		EXPECT_TRUE(parseFixedResult.has_value()) << "Expected " << field << " to be parsed as a fixed point integer with only the integer part";
+		EXPECT_EQ(longVal, 145 << 6) << "Parsing should give the expected fixed point base 10 value";
+
 		++fieldIt;
 
 		ASSERT_NE(fieldIt, end) << "sample.tsv must contain a third field to use as a test value for large ints";
@@ -235,11 +245,15 @@ TEST(DataFileTest, ParseInt)
 		// Third field is a number too large for a uint8_t but that fits into an int value
 		field = *fieldIt;
 		parseIntResult = field.parseInt(shortVal);
-		EXPECT_EQ(parseIntResult, std::errc::result_out_of_range) << "A value too large to fit into a uint8_t variable should report an error";
+		if (parseIntResult.has_value()) {
+			ADD_FAILURE() << "Parsing an int into a short variable should not succeed";
+		} else {
+			EXPECT_EQ(parseIntResult.error(), DataFileField::Error::OutOfRange) << "A value too large to fit into a uint8_t variable should report an error";
+		}
 		EXPECT_EQ(shortVal, 145) << "Value is not modified when parsing as uint8_t fails due to out of range value";
-		int longVal = 42;
+		longVal = 42;
 		parseIntResult = field.parseInt(longVal);
-		EXPECT_EQ(parseIntResult, std::errc()) << "Expected " << field << "to fit into an int variable";
+		EXPECT_TRUE(parseIntResult.has_value()) << "Expected " << field << " to fit into an int variable";
 		EXPECT_EQ(longVal, 70322) << "Value is expected to be parsed into a larger type after an out of range failure";
 		EXPECT_EQ(*field, "70322") << "Should be able to access the field value as a string after parsing as an int";
 		++fieldIt;
@@ -249,9 +263,30 @@ TEST(DataFileTest, ParseInt)
 		// Fourth field is not an integer, but a value that starts with one or more digits that fit into an uint8_t value
 		field = *fieldIt;
 		parseIntResult = field.parseInt(shortVal);
-		EXPECT_EQ(parseIntResult, std::errc()) << "Expected " << field << "to fit into a uint8_t variable (even though it's not really an int)";
+		EXPECT_TRUE(parseIntResult.has_value()) << "Expected " << field << " to fit into a uint8_t variable (even though it's not really an int)";
 		EXPECT_EQ(shortVal, 6) << "Value is loaded as expected until the first non-digit character";
-		EXPECT_EQ(*field, "6.34") << "Should be able to access the field value as a string after failure";
+		EXPECT_EQ(*field, "6.34") << "Should be able to access the field value as a string after parsing as an int";
+		int fixedVal = 64;
+		parseFixedResult = field.parseFixed6(fixedVal);
+		EXPECT_TRUE(parseFixedResult.has_value()) << "Expected " << field << " to be parsed as a fixed point value";
+		// 6.34 is parsed as 384 (6<<6) + 22 (0.34 rounds to 0.34375, 22/64)
+		EXPECT_EQ(fixedVal, 406) << "Value is loaded as a fixed point number";
+
+		uint8_t shortFixedVal = 32;
+		parseFixedResult = field.parseFixed6(shortFixedVal);
+		EXPECT_FALSE(parseFixedResult.has_value()) << "Expected " << field << " to fail to parse into a 2.6 fixed point variable";
+		EXPECT_EQ(parseFixedResult.error(), DataFileField::Error::OutOfRange) << "A value too large to fit into a 2 bit integer part should report an error";
+		EXPECT_EQ(shortFixedVal, 32) << "The variable should not be modified when parsing fails";
+
+		++fieldIt;
+
+		ASSERT_NE(fieldIt, end) << "sample.tsv must contain a fifth field to use as a test value for fixed point overflow";
+
+		field = *fieldIt;
+		parseFixedResult = field.parseFixed6(shortFixedVal);
+		EXPECT_FALSE(parseFixedResult.has_value()) << "Expected " << field << " to fail to parse into a 2.6 fixed point variable";
+		EXPECT_EQ(parseFixedResult.error(), DataFileField::Error::OutOfRange) << "A value that after rounding is too large to fit into a 2 bit integer part should report an error";
+		EXPECT_EQ(shortFixedVal, 32) << "The variable should not be modified when parsing fails";
 	}
 }
 

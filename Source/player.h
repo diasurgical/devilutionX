@@ -22,6 +22,7 @@
 #include "items.h"
 #include "levels/gendung.h"
 #include "multi.h"
+#include "playerdat.hpp"
 #include "spelldat.h"
 #include "utils/attributes.h"
 #include "utils/enum_traits.h"
@@ -35,7 +36,6 @@ constexpr uint8_t MaxSpellLevel = 15;
 constexpr int PlayerNameLength = 32;
 
 constexpr size_t NumHotkeys = 12;
-constexpr int BaseHitChance = 50;
 
 /** Walking directions */
 enum {
@@ -50,17 +50,6 @@ enum {
 	WALK_W    =  8,
 	WALK_NONE = -1,
 	// clang-format on
-};
-
-enum class HeroClass : uint8_t {
-	Warrior,
-	Rogue,
-	Sorcerer,
-	Monk,
-	Bard,
-	Barbarian,
-
-	LAST = Barbarian
 };
 
 enum class CharacterAttribute : uint8_t {
@@ -247,7 +236,6 @@ struct Player {
 	int _pBaseVit;
 	int _pStatPts;
 	int _pDamageMod;
-	int _pBaseToBlk;
 	int _pHPBase;
 	int _pMaxHPBase;
 	int _pHitPoints;
@@ -376,6 +364,37 @@ public:
 	uint8_t pDiabloKillLevel;
 	uint16_t wReflections;
 	ItemSpecialEffectHf pDamAcFlags;
+
+	/**
+	 * @brief Convenience function to get the base stats/bonuses for this player's class
+	 */
+	[[nodiscard]] const ClassAttributes &getClassAttributes() const
+	{
+		return GetClassAttributes(_pClass);
+	}
+
+	[[nodiscard]] const PlayerCombatData &getPlayerCombatData() const
+	{
+		return GetPlayerCombatDataForClass(_pClass);
+	}
+
+	[[nodiscard]] const PlayerData &getPlayerData() const
+	{
+		return GetPlayerDataForClass(_pClass);
+	}
+
+	/**
+	 * @brief Gets the translated name for the character's class
+	 */
+	[[nodiscard]] std::string_view getClassName() const
+	{
+		return _(getPlayerData().className);
+	}
+
+	[[nodiscard]] int getBaseToBlock() const
+	{
+		return getPlayerCombatData().baseToBlock;
+	}
 
 	void CalcScrolls();
 
@@ -556,10 +575,7 @@ public:
 	 */
 	int GetMeleeToHit() const
 	{
-		int hper = getCharacterLevel() + _pDexterity / 2 + _pIBonusToHit + BaseHitChance;
-		if (_pClass == HeroClass::Warrior)
-			hper += 20;
-		return hper;
+		return getCharacterLevel() + _pDexterity / 2 + _pIBonusToHit + getPlayerCombatData().baseMeleeToHit;
 	}
 
 	/**
@@ -579,12 +595,7 @@ public:
 	 */
 	int GetRangedToHit() const
 	{
-		int hper = getCharacterLevel() + _pDexterity + _pIBonusToHit + BaseHitChance;
-		if (_pClass == HeroClass::Rogue)
-			hper += 20;
-		else if (_pClass == HeroClass::Warrior || _pClass == HeroClass::Bard)
-			hper += 10;
-		return hper;
+		return getCharacterLevel() + _pDexterity + _pIBonusToHit + getPlayerCombatData().baseRangedToHit;
 	}
 
 	int GetRangedPiercingToHit() const
@@ -601,12 +612,7 @@ public:
 	 */
 	int GetMagicToHit() const
 	{
-		int hper = _pMagic + BaseHitChance;
-		if (_pClass == HeroClass::Sorcerer)
-			hper += 20;
-		else if (_pClass == HeroClass::Bard)
-			hper += 10;
-		return hper;
+		return _pMagic + getPlayerCombatData().baseMagicToHit;
 	}
 
 	/**
@@ -615,7 +621,7 @@ public:
 	 */
 	int GetBlockChance(bool useLevel = true) const
 	{
-		int blkper = _pDexterity + _pBaseToBlk;
+		int blkper = _pDexterity + getBaseToBlock();
 		if (useLevel)
 			blkper += getCharacterLevel() * 2;
 		return blkper;

@@ -75,17 +75,6 @@ void VerifyGoldSeeds(Player &player)
 	}
 }
 
-void PackNetItem(const Item &item, ItemNetPack &packedItem)
-{
-	packedItem.def.wIndx = static_cast<_item_indexes>(SDL_SwapLE16(item.IDidx));
-	packedItem.def.wCI = SDL_SwapLE16(item._iCreateInfo);
-	packedItem.def.dwSeed = SDL_SwapLE32(item._iSeed);
-	if (item.IDidx != IDI_EAR)
-		PrepareItemForNetwork(item, packedItem.item);
-	else
-		PrepareEarForNetwork(item, packedItem.ear);
-}
-
 bool hasMultipleFlags(uint16_t flags)
 {
 	return (flags & (flags - 1)) > 0;
@@ -163,32 +152,6 @@ bool IsDungeonItemValid(uint16_t iCreateInfo, uint32_t dwBuff)
 	}
 
 	return level <= 30;
-}
-
-bool UnPackNetItem(const Player &player, const ItemNetPack &packedItem, Item &item)
-{
-	item = {};
-	_item_indexes idx = static_cast<_item_indexes>(SDL_SwapLE16(packedItem.def.wIndx));
-	if (idx < 0 || idx > IDI_LAST)
-		return true;
-	if (idx == IDI_EAR) {
-		RecreateEar(item, SDL_SwapLE16(packedItem.ear.wCI), SDL_SwapLE32(packedItem.ear.dwSeed), packedItem.ear.bCursval, packedItem.ear.heroname);
-		return true;
-	}
-
-	uint16_t creationFlags = SDL_SwapLE16(packedItem.item.wCI);
-	uint32_t dwBuff = SDL_SwapLE16(packedItem.item.dwBuff);
-	if (idx != IDI_GOLD)
-		ValidateField(creationFlags, IsCreationFlagComboValid(creationFlags));
-	if ((creationFlags & CF_TOWN) != 0)
-		ValidateField(creationFlags, IsTownItemValid(creationFlags, player));
-	else if ((creationFlags & CF_USEFUL) == CF_UPER15)
-		ValidateFields(creationFlags, dwBuff, IsUniqueMonsterItemValid(creationFlags, dwBuff));
-	else
-		ValidateFields(creationFlags, dwBuff, IsDungeonItemValid(creationFlags, dwBuff));
-
-	RecreateItem(player, packedItem.item, item);
-	return true;
 }
 
 } // namespace
@@ -290,6 +253,17 @@ void PackPlayer(PlayerPack &packed, const Player &player)
 	packed.bIsHellfire = gbIsHellfire ? 1 : 0;
 }
 
+void PackNetItem(const Item &item, ItemNetPack &packedItem)
+{
+	packedItem.def.wIndx = static_cast<_item_indexes>(SDL_SwapLE16(item.IDidx));
+	packedItem.def.wCI = SDL_SwapLE16(item._iCreateInfo);
+	packedItem.def.dwSeed = SDL_SwapLE32(item._iSeed);
+	if (item.IDidx != IDI_EAR)
+		PrepareItemForNetwork(item, packedItem.item);
+	else
+		PrepareEarForNetwork(item, packedItem.ear);
+}
+
 void PackNetPlayer(PlayerNetPack &packed, const Player &player)
 {
 	packed.plrlevel = player.plrlevel;
@@ -341,7 +315,8 @@ void PackNetPlayer(PlayerNetPack &packed, const Player &player)
 	packed.pMana = SDL_SwapLE32(player._pMana);
 	packed.pMaxMana = SDL_SwapLE32(player._pMaxMana);
 	packed.pDamageMod = SDL_SwapLE32(player._pDamageMod);
-	packed.pBaseToBlk = SDL_SwapLE32(player._pBaseToBlk);
+	// we pack base to block as a basic check that remote players are using the same playerdat values as we are
+	packed.pBaseToBlk = SDL_SwapLE32(player.getBaseToBlock());
 	packed.pIMinDam = SDL_SwapLE32(player._pIMinDam);
 	packed.pIMaxDam = SDL_SwapLE32(player._pIMaxDam);
 	packed.pIAC = SDL_SwapLE32(player._pIAC);
@@ -453,7 +428,6 @@ void UnPackPlayer(const PlayerPack &packed, Player &player)
 
 	player._pExperience = SDL_SwapLE32(packed.pExperience);
 	player._pGold = SDL_SwapLE32(packed.pGold);
-	player._pBaseToBlk = PlayersData[static_cast<std::size_t>(player._pClass)].blockBonus;
 	if ((int)(player._pHPBase & 0xFFFFFFC0) < 64)
 		player._pHPBase = 64;
 
@@ -487,6 +461,32 @@ void UnPackPlayer(const PlayerPack &packed, Player &player)
 	CalcPlrInv(player, false);
 	player.wReflections = SDL_SwapLE16(packed.wReflections);
 	player.pDiabloKillLevel = SDL_SwapLE32(packed.pDiabloKillLevel);
+}
+
+bool UnPackNetItem(const Player &player, const ItemNetPack &packedItem, Item &item)
+{
+	item = {};
+	_item_indexes idx = static_cast<_item_indexes>(SDL_SwapLE16(packedItem.def.wIndx));
+	if (idx < 0 || idx > IDI_LAST)
+		return true;
+	if (idx == IDI_EAR) {
+		RecreateEar(item, SDL_SwapLE16(packedItem.ear.wCI), SDL_SwapLE32(packedItem.ear.dwSeed), packedItem.ear.bCursval, packedItem.ear.heroname);
+		return true;
+	}
+
+	uint16_t creationFlags = SDL_SwapLE16(packedItem.item.wCI);
+	uint32_t dwBuff = SDL_SwapLE16(packedItem.item.dwBuff);
+	if (idx != IDI_GOLD)
+		ValidateField(creationFlags, IsCreationFlagComboValid(creationFlags));
+	if ((creationFlags & CF_TOWN) != 0)
+		ValidateField(creationFlags, IsTownItemValid(creationFlags, player));
+	else if ((creationFlags & CF_USEFUL) == CF_UPER15)
+		ValidateFields(creationFlags, dwBuff, IsUniqueMonsterItemValid(creationFlags, dwBuff));
+	else
+		ValidateFields(creationFlags, dwBuff, IsDungeonItemValid(creationFlags, dwBuff));
+
+	RecreateItem(player, packedItem.item, item);
+	return true;
 }
 
 bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
@@ -542,7 +542,6 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 	player._pStatPts = packed.pStatPts;
 
 	player._pExperience = SDL_SwapLE32(packed.pExperience);
-	player._pBaseToBlk = PlayersData[static_cast<std::size_t>(player._pClass)].blockBonus;
 	player._pMaxManaBase = baseManaMax;
 	player._pManaBase = baseMana;
 	player._pMemSpells = SDL_SwapLE64(packed.pMemSpells);
@@ -616,7 +615,7 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 	ValidateFields(player._pMana, SDL_SwapLE32(packed.pMana), player._pMana == SDL_SwapLE32(packed.pMana));
 	ValidateFields(player._pMaxMana, SDL_SwapLE32(packed.pMaxMana), player._pMaxMana == SDL_SwapLE32(packed.pMaxMana));
 	ValidateFields(player._pDamageMod, SDL_SwapLE32(packed.pDamageMod), player._pDamageMod == SDL_SwapLE32(packed.pDamageMod));
-	ValidateFields(player._pBaseToBlk, SDL_SwapLE32(packed.pBaseToBlk), player._pBaseToBlk == SDL_SwapLE32(packed.pBaseToBlk));
+	ValidateFields(player.getBaseToBlock(), SDL_SwapLE32(packed.pBaseToBlk), player.getBaseToBlock() == SDL_SwapLE32(packed.pBaseToBlk));
 	ValidateFields(player._pIMinDam, SDL_SwapLE32(packed.pIMinDam), player._pIMinDam == SDL_SwapLE32(packed.pIMinDam));
 	ValidateFields(player._pIMaxDam, SDL_SwapLE32(packed.pIMaxDam), player._pIMaxDam == SDL_SwapLE32(packed.pIMaxDam));
 	ValidateFields(player._pIAC, SDL_SwapLE32(packed.pIAC), player._pIAC == SDL_SwapLE32(packed.pIAC));
