@@ -94,9 +94,9 @@ bool FileExists(const char *path)
 			::SetLastError(ERROR_SUCCESS);
 		} else {
 #ifdef DEVILUTIONX_WINDOWS_NO_WCHAR
-			LogError("GetFileAttributesA: error code {}", ::GetLastError());
+			LogError("GetFileAttributesA({}): error code {}", path, ::GetLastError());
 #else
-			LogError("PathFileExistsW: error code {}", ::GetLastError());
+			LogError("PathFileExistsW({}): error code {}", path, ::GetLastError());
 #endif
 		}
 		return false;
