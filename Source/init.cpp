@@ -155,7 +155,9 @@ std::vector<std::string> GetMPQSearchPaths()
 	}
 #endif
 
-	paths.emplace_back(""); // PWD
+	if (paths.empty() || !paths.back().empty()) {
+		paths.emplace_back(); // PWD
+	}
 
 	if (SDL_LOG_PRIORITY_VERBOSE >= SDL_LogGetPriority(SDL_LOG_CATEGORY_APPLICATION)) {
 		LogVerbose("Paths:\n    base: {}\n    pref: {}\n  config: {}\n  assets: {}",

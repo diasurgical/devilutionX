@@ -94,9 +94,9 @@ bool FileExists(const char *path)
 			::SetLastError(ERROR_SUCCESS);
 		} else {
 #if defined(NXDK)
-			LogError("GetFileAttributesA: error code {}", ::GetLastError());
+			LogError("GetFileAttributesA({}): error code {}", path, ::GetLastError());
 #else
-			LogError("PathFileExistsW: error code {}", ::GetLastError());
+			LogError("PathFileExistsW({}): error code {}", path, ::GetLastError());
 #endif
 		}
 		return false;

@@ -17,7 +17,7 @@ public:
 	bool Open(const char *path, const char *mode)
 	{
 		s_ = OpenFile(path, mode);
-		return CheckError("fopen(\"{}\", \"{}\")", path, mode);
+		return CheckError(s_ != nullptr, "fopen(\"{}\", \"{}\")", path, mode);
 	}
 
 	void Close()
