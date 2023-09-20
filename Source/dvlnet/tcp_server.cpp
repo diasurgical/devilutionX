@@ -189,7 +189,10 @@ void tcp_server::StartSend(const scc &con, packet &pkt)
 void tcp_server::HandleSend(const scc &con, const asio::error_code &ec,
     size_t bytesSent)
 {
-	// empty for now
+	if (ec) {
+		Log("Network error: {}", ec.message());
+		DropConnection(con);
+	}
 }
 
 void tcp_server::StartAccept()
@@ -202,8 +205,11 @@ void tcp_server::StartAccept()
 
 void tcp_server::HandleAccept(const scc &con, const asio::error_code &ec)
 {
-	if (ec)
+	if (ec) {
+		PacketError packetError = IoHandlerError(ec.message());
+		RaiseIoHandlerError(packetError);
 		return;
+	}
 	if (NextFree() == PLR_BROADCAST) {
 		DropConnection(con);
 	} else {
@@ -259,6 +265,20 @@ void tcp_server::DropConnection(const scc &con)
 	}
 	con->timer.cancel();
 	con->socket.close();
+}
+
+void tcp_server::RaiseIoHandlerError(const PacketError &error)
+{
+	ioHandlerResult.emplace(error);
+}
+
+tl::expected<void, PacketError> tcp_server::CheckIoHandlerError()
+{
+	if (ioHandlerResult == std::nullopt)
+		return {};
+	tl::expected<void, PacketError> packetError = tl::make_unexpected(*ioHandlerResult);
+	ioHandlerResult = std::nullopt;
+	return packetError;
 }
 
 void tcp_server::Close()

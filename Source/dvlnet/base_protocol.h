@@ -17,7 +17,7 @@ class base_protocol : public base {
 public:
 	int create(std::string addrstr) override;
 	int join(std::string addrstr) override;
-	void poll() override;
+	tl::expected<void, PacketError> poll() override;
 	void send(packet &pkt) override;
 	void DisconnectNet(plr_t plr) override;
 
@@ -190,9 +190,10 @@ bool base_protocol<P>::IsGameHost()
 }
 
 template <class P>
-void base_protocol<P>::poll()
+tl::expected<void, PacketError> base_protocol<P>::poll()
 {
 	recv();
+	return {};
 }
 
 template <class P>

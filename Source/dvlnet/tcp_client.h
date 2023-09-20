@@ -16,6 +16,7 @@
 #include <asio/ts/internet.hpp>
 #include <asio/ts/io_context.hpp>
 #include <asio/ts/net.hpp>
+#include <asio_handle_exception.hpp>
 
 #include "dvlnet/base.h"
 #include "dvlnet/frame_queue.h"
@@ -29,7 +30,7 @@ public:
 	int create(std::string addrstr) override;
 	int join(std::string addrstr) override;
 
-	void poll() override;
+	tl::expected<void, PacketError> poll() override;
 	void send(packet &pkt) override;
 
 	bool SNetLeaveGame(int type) override;
@@ -50,9 +51,13 @@ private:
 	asio::ip::tcp::socket sock = asio::ip::tcp::socket(ioc);
 	std::unique_ptr<tcp_server> local_server; // must be declared *after* ioc
 
+	std::optional<PacketError> ioHandlerResult;
+
 	void HandleReceive(const asio::error_code &error, size_t bytesRead);
 	void StartReceive();
 	void HandleSend(const asio::error_code &error, size_t bytesSent);
+
+	void RaiseIoHandlerError(const PacketError &error);
 };
 
 } // namespace devilution::net
