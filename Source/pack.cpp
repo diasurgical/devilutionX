@@ -254,6 +254,10 @@ void PackPlayer(PlayerPack &packed, const Player &player)
 
 void PackNetItem(const Item &item, ItemNetPack &packedItem)
 {
+	if (item.isEmpty()) {
+		packedItem.def.wIndx = static_cast<_item_indexes>(0xFFFF);
+		return;
+	}
 	packedItem.def.wIndx = static_cast<_item_indexes>(SDL_SwapLE16(item.IDidx));
 	packedItem.def.wCI = SDL_SwapLE16(item._iCreateInfo);
 	packedItem.def.dwSeed = SDL_SwapLE32(item._iSeed);
@@ -332,6 +336,11 @@ void PackNetPlayer(PlayerNetPack &packed, const Player &player)
 
 void UnPackItem(const ItemPack &packedItem, const Player &player, Item &item, bool isHellfire)
 {
+	if (packedItem.idx == 0xFFFF) {
+		item.clear();
+		return;
+	}
+
 	auto idx = static_cast<_item_indexes>(SDL_SwapLE16(packedItem.idx));
 
 	if (gbIsSpawn) {
