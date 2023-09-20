@@ -29,7 +29,7 @@ public:
 	bool SNetGetOwnerTurnsWaiting(uint32_t *turns) override;
 	bool SNetGetTurnsInTransit(uint32_t *turns) override;
 
-	virtual void poll() = 0;
+	virtual tl::expected<void, PacketError> poll() = 0;
 	virtual void send(packet &pkt) = 0;
 	virtual void DisconnectNet(plr_t plr);
 

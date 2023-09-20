@@ -12,6 +12,7 @@
 
 #include "options.h"
 #include "utils/language.h"
+#include "utils/str_cat.hpp"
 
 namespace devilution::net {
 
@@ -55,15 +56,14 @@ int tcp_client::join(std::string addrstr)
 		        PLR_BROADCAST, PLR_MASTER, cookie_self, game_init_info);
 		if (!pkt.has_value()) {
 			const std::string_view message = pkt.error().what();
-			SDL_SetError("make_packet: %.*s\n", static_cast<int>(message.size()), message.data());
+			SDL_SetError("make_packet: %.*s", static_cast<int>(message.size()), message.data());
 			return -1;
 		}
 		send(**pkt);
 		for (auto i = 0; i < NoSleep; ++i) {
-			try {
-				poll();
-			} catch (const std::runtime_error &e) {
-				SDL_SetError("%s", e.what());
+			if (tl::expected<void, PacketError> result = poll(); !result.has_value()) {
+				const std::string_view message = result.error().what();
+				SDL_SetError("%.*s", static_cast<int>(message.size()), message.data());
 				return -1;
 			}
 			if (plr_self != PLR_BROADCAST)
@@ -72,7 +72,8 @@ int tcp_client::join(std::string addrstr)
 		}
 	}
 	if (plr_self == PLR_BROADCAST) {
-		SDL_SetError("%s", _("Unable to connect").data());
+		const std::string_view message = _("Unable to connect");
+		SDL_SetError("%.*s", static_cast<int>(message.size()), message.data());
 		return -1;
 	}
 
@@ -84,21 +85,34 @@ bool tcp_client::IsGameHost()
 	return local_server != nullptr;
 }
 
-void tcp_client::poll()
+tl::expected<void, PacketError> tcp_client::poll()
 {
-	ioc.poll();
+	while (ioc.poll_one() > 0) {
+		if (IsGameHost()) {
+			tl::expected<void, PacketError> serverResult = local_server->CheckIoHandlerError();
+			if (!serverResult.has_value())
+				return serverResult;
+		}
+		if (ioHandlerResult == std::nullopt)
+			continue;
+		tl::expected<void, PacketError> packetError = tl::make_unexpected(*ioHandlerResult);
+		ioHandlerResult = std::nullopt;
+		return packetError;
+	}
+	return {};
 }
 
 void tcp_client::HandleReceive(const asio::error_code &error, size_t bytesRead)
 {
 	if (error) {
-		// error in recv from server
-		// returning and doing nothing should be the same
-		// as if all connections to other clients were lost
+		PacketError packetError = IoHandlerError(error.message());
+		RaiseIoHandlerError(packetError);
 		return;
 	}
 	if (bytesRead == 0) {
-		throw std::runtime_error(_("error: read 0 bytes from server").data());
+		PacketError packetError(_("error: read 0 bytes from server"));
+		RaiseIoHandlerError(packetError);
+		return;
 	}
 	recv_buffer.resize(bytesRead);
 	recv_queue.Write(std::move(recv_buffer));
@@ -106,11 +120,11 @@ void tcp_client::HandleReceive(const asio::error_code &error, size_t bytesRead)
 	while (recv_queue.PacketReady()) {
 		tl::expected<std::unique_ptr<packet>, PacketError> pkt = pktfty->make_packet(recv_queue.ReadPacket());
 		if (!pkt.has_value()) {
-			LogError("make_packet: {}", pkt.error().what());
+			RaiseIoHandlerError(pkt.error());
 			return;
 		}
 		if (tl::expected<void, PacketError> result = RecvLocal(**pkt); !result.has_value()) {
-			LogError("RecvLocal: {}", result.error().what());
+			RaiseIoHandlerError(result.error());
 			return;
 		}
 	}
@@ -126,7 +140,8 @@ void tcp_client::StartReceive()
 
 void tcp_client::HandleSend(const asio::error_code &error, size_t bytesSent)
 {
-	// empty for now
+	if (error)
+		RaiseIoHandlerError(error.message());
 }
 
 void tcp_client::send(packet &pkt)
@@ -151,6 +166,11 @@ bool tcp_client::SNetLeaveGame(int type)
 std::string tcp_client::make_default_gamename()
 {
 	return std::string(sgOptions.Network.szBindAddress);
+}
+
+void tcp_client::RaiseIoHandlerError(const PacketError &error)
+{
+	ioHandlerResult.emplace(error);
 }
 
 tcp_client::~tcp_client()

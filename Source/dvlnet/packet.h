@@ -76,6 +76,11 @@ public:
 	{
 	}
 
+	PacketError(std::string_view message)
+	    : message_(message)
+	{
+	}
+
 	PacketError(const PacketError &error)
 	    : message_(std::string(error.message_))
 	{
@@ -94,6 +99,11 @@ public:
 private:
 	StringOrView message_;
 };
+
+inline PacketError IoHandlerError(std::string message)
+{
+	return PacketError(std::move(message));
+}
 
 PacketError PacketTypeError(std::uint8_t unknownPacketType);
 PacketError PacketTypeError(std::initializer_list<packet_type> expectedTypes, std::uint8_t actual);
