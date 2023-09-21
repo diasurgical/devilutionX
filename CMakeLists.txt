@@ -299,9 +299,12 @@ if(GPERF)
   endif()
 endif()
 
+# Despite setting C++ standard to 20, features from this version are not being used.
+# DevilutionX is compatible with C++ 17.
+# Here we set it to 20 only to take advantage of the fmt::format build time errors.
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_STANDARD_REQUIRED OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # for clang-tidy
 set(CMAKE_THREAD_PREFER_PTHREAD ON)
 set(THREADS_PREFER_PTHREAD_FLAG ON)

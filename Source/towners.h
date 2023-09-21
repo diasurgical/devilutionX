@@ -8,7 +8,6 @@
 #include <cstddef>
 #include <cstdint>
 #include <memory>
-#include <span>
 #include <string_view>
 
 #include "items.h"
@@ -40,7 +39,7 @@ struct Towner {
 	OptionalOwnedClxSpriteList ownedAnim;
 	OptionalClxSpriteList anim;
 	/** Specifies the animation frame sequence. */
-	std::span<const uint8_t> animOrder;
+	const uint8_t *animOrder; // unowned
 	void (*talk)(Player &player, Towner &towner);
 
 	std::string_view name;
@@ -59,6 +58,7 @@ struct Towner {
 	/** Current frame of animation. */
 	uint8_t _tAnimFrame;
 	uint8_t _tAnimFrameCnt;
+	uint8_t animOrderSize;
 	_talker_id _ttype;
 
 	[[nodiscard]] ClxSprite currentSprite() const
