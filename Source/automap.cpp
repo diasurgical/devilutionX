@@ -14,6 +14,7 @@
 #include "engine/load_file.hpp"
 #include "engine/palette.h"
 #include "engine/render/automap_render.hpp"
+#include "engine/render/clx_render.hpp"
 #include "levels/gendung.h"
 #include "levels/setmaps.h"
 #include "player.h"
@@ -959,6 +960,19 @@ void DrawAutomapTile(const Surface &out, Point center, Point map)
 	AutomapTile tile = GetAutomapTypeView(map + Direction::NoDirection);
 	AutomapTile nwTile = GetAutomapTypeView(map + Direction::NorthWest);
 	AutomapTile neTile = GetAutomapTypeView(map + Direction::NorthEast);
+
+#ifdef _DEBUG
+	if (DebugVision) {
+		if (IsTileLit(map.megaToWorld()))
+			DrawDiamond(out, center, PAL8_ORANGE + 1);
+		if (IsTileLit(map.megaToWorld() + Direction::South))
+			DrawDiamond(out, center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown), PAL8_ORANGE + 1);
+		if (IsTileLit(map.megaToWorld() + Direction::SouthWest))
+			DrawDiamond(out, center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::HalfTileDown), PAL8_ORANGE + 1);
+		if (IsTileLit(map.megaToWorld() + Direction::SouthEast))
+			DrawDiamond(out, center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::HalfTileDown), PAL8_ORANGE + 1);
+	}
+#endif
 
 	// If the tile is an arch, grate, or diamond, we draw a diamond and therefore don't want connection lines
 	if (tile.hasAnyFlag(AutomapTile::Flags::HorizontalArch, AutomapTile::Flags::VerticalArch, AutomapTile::Flags::HorizontalGrate, AutomapTile::Flags::VerticalGrate)
