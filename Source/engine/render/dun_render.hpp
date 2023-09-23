@@ -6,7 +6,6 @@
 #pragma once
 
 #include <cstdint>
-#include <span>
 
 #include <SDL_endian.h>
 
@@ -275,16 +274,5 @@ void RenderTile(const Surface &out, Point position,
  * @param sy Target buffer coordinate (bottom corner of the tile)
  */
 void world_draw_black_tile(const Surface &out, int sx, int sy);
-
-/**
- * @brief Applies a color map to a dungeon tile.
- *
- * @param src Dungeon CEL data.
- * @param tileType Dungeon CEL type.
- * @param tbl Palette mapping.
- * @param dst Output dungeon CEL data.
- */
-void DunTileColorMap(std::span<const uint8_t> src, TileType tileType,
-    const uint8_t *tbl, uint8_t *dst);
 
 } // namespace devilution
