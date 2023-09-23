@@ -83,6 +83,7 @@
 #include "utils/language.h"
 #include "utils/parse_int.hpp"
 #include "utils/paths.h"
+#include "utils/screen_reader.hpp"
 #include "utils/str_cat.hpp"
 #include "utils/utf8.hpp"
 
@@ -1141,6 +1142,7 @@ void ApplicationInit()
 	init_create_window();
 	was_window_init = true;
 
+	InitializeScreenReader();
 	LanguageInitialize();
 
 	SetApplicationVersions();
@@ -1227,6 +1229,8 @@ void DiabloSplash()
 void DiabloDeinit()
 {
 	FreeItemGFX();
+
+	ShutDownScreenReader();
 
 	if (gbSndInited)
 		effects_cleanup_sfx();

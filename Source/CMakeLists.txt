@@ -251,8 +251,18 @@ if(DISCORD_INTEGRATION)
   )
 endif()
 
+if(SCREEN_READER_INTEGRATION)
+  list(APPEND libdevilutionx_SRCS
+    utils/screen_reader.cpp
+  )
+endif()
+
 add_devilutionx_library(libdevilutionx OBJECT ${libdevilutionx_SRCS})
 target_include_directories(libdevilutionx PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
+
+if(SCREEN_READER_INTEGRATION AND NOT WIN32)
+  target_include_directories(libdevilutionx PUBLIC ${Speechd_INCLUDE_DIRS})
+endif()
 
 # Use file GENERATE instead of configure_file because configure_file
 # does not support generator expressions.
@@ -277,6 +287,10 @@ if(DISCORD_INTEGRATION)
   target_link_libraries(libdevilutionx PRIVATE discord discord_game_sdk)
 endif()
 
+if(SCREEN_READER_INTEGRATION AND WIN32)
+  target_compile_definitions(libdevilutionx PRIVATE Tolk)
+endif()
+
 target_link_libraries(libdevilutionx PUBLIC
   Threads::Threads
   DevilutionX::SDL
@@ -287,6 +301,14 @@ target_link_libraries(libdevilutionx PUBLIC
   hoehrmann_utf8
   ${libdevilutionx_DEPS}
 )
+
+if(SCREEN_READER_INTEGRATION)
+  if(WIN32)
+    target_link_libraries(libdevilutionx PUBLIC Tolk)
+  else()
+    target_link_libraries(libdevilutionx PUBLIC speechd)
+  endif()
+endif()
 
 if(NOT USE_SDL1)
   target_link_libraries(libdevilutionx PUBLIC SDL2::SDL2_image)

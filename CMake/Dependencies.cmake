@@ -24,6 +24,14 @@ if(SUPPORTS_MPQ)
   endif()
 endif()
 
+if(SCREEN_READER_INTEGRATION)
+  if(WIN32)
+    add_subdirectory(3rdParty/tolk)
+  else()
+    find_package(Speechd REQUIRED)
+  endif()
+endif()
+
 if(EMSCRIPTEN)
   # We use `USE_PTHREADS=1` here to get a version of SDL2 that supports threads.
   emscripten_system_library("SDL2" SDL2::SDL2 USE_SDL=2 USE_PTHREADS=1)

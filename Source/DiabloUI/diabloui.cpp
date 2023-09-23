@@ -24,6 +24,7 @@
 #include "utils/language.h"
 #include "utils/log.hpp"
 #include "utils/pcx_to_clx.hpp"
+#include "utils/screen_reader.hpp"
 #include "utils/sdl_compat.h"
 #include "utils/sdl_geometry.h"
 #include "utils/sdl_wrap.h"
@@ -151,6 +152,7 @@ void UiInitList(void (*fnFocus)(int value), void (*fnSelect)(int value), void (*
 			gUiList = uiList;
 			if (selectedItem <= SelectedItemMax && HasAnyOf(uiList->GetItem(selectedItem)->uiFlags, UiFlags::NeedsNextElement))
 				AdjustListOffset(selectedItem + 1);
+			SpeakText(uiList->GetItem(selectedItem)->m_text);
 		} else if (item->IsType(UiType::Scrollbar)) {
 			uiScrollbar = static_cast<UiScrollbar *>(item.get());
 		}
@@ -225,6 +227,7 @@ void UiFocus(std::size_t itemIndex, bool checkUp, bool ignoreItemsWraps = false)
 		}
 		pItem = gUiList->GetItem(itemIndex);
 	}
+	SpeakText(pItem->m_text);
 
 	if (HasAnyOf(pItem->uiFlags, UiFlags::NeedsNextElement))
 		AdjustListOffset(itemIndex + 1);

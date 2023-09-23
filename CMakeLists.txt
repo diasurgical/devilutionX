@@ -153,6 +153,8 @@ mark_as_advanced(DEVILUTIONX_PALETTE_TRANSPARENCY_BLACK_16_LUT)
 # Additional features
 option(DISABLE_DEMOMODE "Disable demo mode support" OFF)
 option(DISCORD_INTEGRATION "Build with Discord SDK for rich presence support" OFF)
+option(SCREEN_READER_INTEGRATION "Build with screen reader support" OFF)
+mark_as_advanced(SCREEN_READER_INTEGRATION)
 
 # If both UNPACKED_MPQS and UNPACKED_SAVES are enabled, we completely remove MPQ support.
 if(UNPACKED_MPQS AND UNPACKED_SAVES)
@@ -546,6 +548,12 @@ if(CPACK AND (APPLE OR BUILD_ASSETS_MPQ OR SRC_DIST))
 
     if(DISCORD_SHARED_LIB)
       install(FILES "${DISCORD_SHARED_LIB}"
+        DESTINATION "."
+      )
+    endif()
+
+    if(SCREEN_READER_INTEGRATION)
+      install(FILES "${Tolk_BINARY_DIR}/libTolk.dll"
         DESTINATION "."
       )
     endif()
