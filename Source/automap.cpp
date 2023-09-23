@@ -14,7 +14,6 @@
 #include "engine/load_file.hpp"
 #include "engine/palette.h"
 #include "engine/render/automap_render.hpp"
-#include "engine/render/clx_render.hpp"
 #include "levels/gendung.h"
 #include "levels/setmaps.h"
 #include "player.h"
