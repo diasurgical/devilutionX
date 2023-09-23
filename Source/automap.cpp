@@ -1000,6 +1000,19 @@ void DrawAutomapTile(const Surface &out, Point center, Point map)
 	AutomapTile nwTile = GetAutomapTypeView(map + Direction::NorthWest);
 	AutomapTile neTile = GetAutomapTypeView(map + Direction::NorthEast);
 
+#ifdef _DEBUG
+	if (DebugVision) {
+		if (IsTileLit(map.megaToWorld()))
+			DrawDiamond(out, center, PAL8_ORANGE + 1);
+		if (IsTileLit(map.megaToWorld() + Direction::South))
+			DrawDiamond(out, center + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileDown), PAL8_ORANGE + 1);
+		if (IsTileLit(map.megaToWorld() + Direction::SouthWest))
+			DrawDiamond(out, center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::HalfTileDown), PAL8_ORANGE + 1);
+		if (IsTileLit(map.megaToWorld() + Direction::SouthEast))
+			DrawDiamond(out, center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::HalfTileDown), PAL8_ORANGE + 1);
+	}
+#endif
+
 	// If the tile is an arch, grate, or diamond, we draw a diamond and therefore don't want connection lines
 	if (tile.hasAnyFlag(AutomapTile::Flags::HorizontalArch, AutomapTile::Flags::VerticalArch, AutomapTile::Flags::HorizontalGrate, AutomapTile::Flags::VerticalGrate)
 	    || nwTile.hasAnyFlag(AutomapTile::Flags::HorizontalArch, AutomapTile::Flags::HorizontalGrate)
