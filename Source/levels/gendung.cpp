@@ -494,7 +494,7 @@ void SetDungeonMicros()
 	for (size_t i = 0; i < tileCount / blocks; i++) {
 		uint16_t *pieces = &levelPieces[blocks * i];
 		for (size_t block = 0; block < blocks; block++) {
-			DPieceMicros[i].mt[block] = SDL_SwapLE16(pieces[blocks - 2 + (block & 1) - (block & 0xE)]);
+			DPieceMicros[i].mt[block] = LevelCelBlock { SDL_SwapLE16(pieces[blocks - 2 + (block & 1) - (block & 0xE)]) };
 		}
 	}
 }
