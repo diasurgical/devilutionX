@@ -50,6 +50,7 @@
 #include "utils/language.h"
 #include "utils/log.hpp"
 #include "utils/parse_int.hpp"
+#include "utils/screen_reader.hpp"
 #include "utils/sdl_geometry.h"
 #include "utils/str_case.hpp"
 #include "utils/str_cat.hpp"
@@ -268,6 +269,8 @@ void PrintInfo(const Surface &out)
 	// will also add additional space beneath the last line
 	// which throws off the vertical centering
 	infoArea.position.y += spacing / 2;
+
+	SpeakText(InfoString);
 
 	DrawString(out, InfoString, infoArea, InfoColor | UiFlags::AlignCenter | UiFlags::VerticalCenter | UiFlags::KerningFitSpacing, 2, lineHeight);
 }
