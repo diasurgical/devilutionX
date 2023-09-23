@@ -335,8 +335,7 @@ else()
       add_custom_command(
         TARGET ${BIN_TARGET} POST_BUILD
         DEPENDS ${BIN_TARGET}
-        COMMAND $<$<CONFIG:Release>:${CMAKE_STRIP}>
-                $<$<CONFIG:MinSizeRel>:${CMAKE_STRIP}>
+        COMMAND $<$<OR:$<CONFIG:Release>,$<CONFIG:MinSizeRel>>:${CMAKE_STRIP}>
         ARGS $<TARGET_FILE:${BIN_TARGET}>)
     endif()
 endif()
