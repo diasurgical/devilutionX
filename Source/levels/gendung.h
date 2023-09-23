@@ -9,12 +9,12 @@
 #include <memory>
 #include <optional>
 
-#include "engine.h"
 #include "engine/clx_sprite.hpp"
 #include "engine/point.hpp"
 #include "engine/rectangle.hpp"
 #include "engine/render/scrollrt.h"
 #include "engine/world_tile.hpp"
+#include "levels/dun_tile.hpp"
 #include "utils/attributes.h"
 #include "utils/bitset2d.hpp"
 #include "utils/enum_traits.h"
@@ -134,7 +134,7 @@ struct MegaTile {
 };
 
 struct MICROS {
-	uint16_t mt[16];
+	LevelCelBlock mt[16];
 };
 
 struct ShadowStruct {
