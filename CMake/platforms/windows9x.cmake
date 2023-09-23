@@ -14,6 +14,7 @@ set(SDL1_VIDEO_MODE_BPP 8)
 set(SDL1_FORCE_DIRECT_RENDER ON)
 
 set(DEVILUTIONX_WINDOWS_NO_WCHAR ON)
+set(DEVILUTIONX_DUN_RENDER_SMALL_CODE_SIZE ON)
 
 # `WINVER=0x0500` without `_WIN32_WINNT` is Windows 98.
 # MinGW force-defines `_WIN32_WINNT=0xa00` if it isn't defined, so define it as 0.
