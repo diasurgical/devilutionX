@@ -36,10 +36,6 @@ extern uint8_t AutomapView[DMAXX][DMAXY];
 extern DVL_API_FOR_TEST int AutoMapScale;
 extern DVL_API_FOR_TEST int MinimapScale;
 extern DVL_API_FOR_TEST Displacement AutomapOffset;
-/** Specifies whether the automap is transparent. */
-extern DVL_API_FOR_TEST bool AutomapTransparent;
-/** Specifies whether the automap is in minimap mode. */
-extern DVL_API_FOR_TEST bool Minimap;
 extern Rectangle MinimapRect;
 
 /** Defines the offsets used for Automap lines */
@@ -84,26 +80,44 @@ enum class AmLineLength : uint8_t {
 	OctupleTile = 64,
 };
 
-inline Displacement AmOffset(AmWidthOffset x, AmHeightOffset y)
-{
-	int scale = (Minimap) ? MinimapScale : AutoMapScale;
-
-	return { scale * static_cast<int>(x) / 100, scale * static_cast<int>(y) / 100 };
-}
-
-inline int AmLine(AmLineLength l)
-{
-	int scale = (Minimap) ? MinimapScale : AutoMapScale;
-
-	return scale * static_cast<int>(l) / 100;
-}
-
 enum class AutomapType : uint8_t {
 	Opaque,
 	Transparent,
 	Minimap,
 	LAST = Minimap
 };
+
+extern AutomapType CurrentAutomapType;
+
+/**
+ * @brief Sets the map type. Does not change `AutomapActive`.
+ */
+inline void SetAutomapType(AutomapType type)
+{
+	CurrentAutomapType = type;
+}
+
+/**
+ * @brief Sets the map type. Does not change `AutomapActive`.
+ */
+inline AutomapType GetAutomapType()
+{
+	return CurrentAutomapType;
+}
+
+inline Displacement AmOffset(AmWidthOffset x, AmHeightOffset y)
+{
+	int scale = (GetAutomapType() == AutomapType::Minimap) ? MinimapScale : AutoMapScale;
+
+	return { scale * static_cast<int>(x) / 100, scale * static_cast<int>(y) / 100 };
+}
+
+inline int AmLine(AmLineLength l)
+{
+	int scale = (GetAutomapType() == AutomapType::Minimap) ? MinimapScale : AutoMapScale;
+
+	return scale * static_cast<int>(l) / 100;
+}
 
 /**
  * @brief Sets the map type. Does not change `AutomapActive`.

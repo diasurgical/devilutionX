@@ -1006,11 +1006,8 @@ void DoAutoMap()
 {
 	if (!AutomapActive) {
 		StartAutomap();
-	} else if (!Minimap) {
-		StartMinimap();
 	} else {
 		AutomapActive = false;
-		Minimap = false;
 	}
 }
 
@@ -1019,9 +1016,9 @@ void CycleAutomapType()
 	const AutomapType newType { static_cast<std::underlying_type_t<AutomapType>>(
 		(static_cast<unsigned>(GetAutomapType()) + 1) % enum_size<AutomapType>::value) };
 	SetAutomapType(newType);
-	if (newType == AutomapType::Minimap) {
-		SetAutomapType(AutomapType::Opaque); // temporary hack to skip minimap while minimap hasn't been implemented yet
-	}
+	//if (newType == AutomapType::Minimap) {
+	//	SetAutomapType(AutomapType::Opaque); // temporary hack to skip minimap while minimap hasn't been implemented yet
+	//}
 }
 
 void CheckPanelInfo()
