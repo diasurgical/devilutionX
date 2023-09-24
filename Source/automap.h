@@ -35,8 +35,6 @@ extern uint8_t AutomapView[DMAXX][DMAXY];
 /** Specifies the scale of the automap. */
 extern DVL_API_FOR_TEST int AutoMapScale;
 extern DVL_API_FOR_TEST Displacement AutomapOffset;
-/** Specifies whether the automap is transparent. */
-extern DVL_API_FOR_TEST bool AutomapTransparent;
 
 /** Defines the offsets used for Automap lines */
 enum class AmWidthOffset : int8_t {

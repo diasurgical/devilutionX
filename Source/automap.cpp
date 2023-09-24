@@ -1506,13 +1506,12 @@ bool AutomapActive;
 uint8_t AutomapView[DMAXX][DMAXY];
 int AutoMapScale;
 Displacement AutomapOffset;
-bool AutomapTransparent;
 
 void InitAutomapOnce()
 {
 	AutomapActive = false;
 	AutoMapScale = 50;
-	AutomapTransparent = false;
+	SetAutomapType(AutomapType::Opaque);
 }
 
 void InitAutomap()
@@ -1652,7 +1651,6 @@ void StartAutomap()
 {
 	AutomapOffset = { 0, 0 };
 	AutomapActive = true;
-	AutomapTransparent = false;
 }
 
 void AutomapUp()

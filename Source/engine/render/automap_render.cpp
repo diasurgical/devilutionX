@@ -163,7 +163,7 @@ void DrawMapFreeLine(const Surface &out, Point from, Point to, uint8_t colorInde
 
 void SetMapPixel(const Surface &out, Point position, uint8_t color)
 {
-	if (AutomapTransparent)
+	if (GetAutomapType() == AutomapType::Transparent)
 		SetHalfTransparentPixel(out, position, color);
 	else
 		out.SetPixel(position, color);
