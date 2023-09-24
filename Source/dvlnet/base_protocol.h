@@ -18,7 +18,7 @@ public:
 	int create(std::string addrstr) override;
 	int join(std::string addrstr) override;
 	tl::expected<void, PacketError> poll() override;
-	void send(packet &pkt) override;
+	tl::expected<void, PacketError> send(packet &pkt) override;
 	void DisconnectNet(plr_t plr) override;
 
 	bool SNetLeaveGame(int type) override;
@@ -56,7 +56,7 @@ private:
 
 	plr_t get_master();
 	tl::expected<void, PacketError> InitiateHandshake(plr_t player);
-	void SendTo(plr_t player, packet &pkt);
+	tl::expected<void, PacketError> SendTo(plr_t player, packet &pkt);
 	void DrainSendQueue(plr_t player);
 	void recv();
 	tl::expected<void, PacketError> handle_join_request(packet &pkt, endpoint_t sender);
@@ -137,16 +137,19 @@ tl::expected<void, PacketError> base_protocol<P>::wait_join()
 	tl::expected<std::unique_ptr<packet>, PacketError> pkt
 	    = pktfty->make_packet<PT_JOIN_REQUEST>(PLR_BROADCAST, PLR_MASTER, cookie_self, game_init_info);
 	if (!pkt.has_value()) {
-		return tl::unexpected(pkt.error());
+		return tl::make_unexpected(pkt.error());
 	}
-	proto.send(firstpeer, (*pkt)->Data());
+	tl::expected<void, PacketError> result = proto.send(firstpeer, (*pkt)->Data());
+	if (!result.has_value()) {
+		return result;
+	}
 	for (auto i = 0; i < 500; ++i) {
 		recv();
 		if (plr_self != PLR_BROADCAST)
-			break; // join successful
+			return {}; // join successful
 		SDL_Delay(10);
 	}
-	return {};
+	return tl::make_unexpected("Timeout waiting to join game");
 }
 
 template <class P>
@@ -174,8 +177,10 @@ int base_protocol<P>::join(std::string addrstr)
 
 	if (wait_network()) {
 		if (wait_firstpeer()) {
-			if (tl::expected<void, PacketError> result = wait_join(); !result.has_value()) {
-				LogError("wait_join: {}", result.error().what());
+			tl::expected<void, PacketError> result = wait_join();
+			if (!result.has_value()) {
+				const std::string_view message = result.error().what();
+				SDL_SetError("wait_join: %.*s", static_cast<int>(message.size()), message.data());
 				return -1;
 			}
 		}
@@ -212,36 +217,39 @@ tl::expected<void, PacketError> base_protocol<P>::InitiateHandshake(plr_t player
 }
 
 template <class P>
-void base_protocol<P>::send(packet &pkt)
+tl::expected<void, PacketError> base_protocol<P>::send(packet &pkt)
 {
 	plr_t destination = pkt.Destination();
-	if (destination < MAX_PLRS) {
-		if (destination == MyPlayerId)
-			return;
-		SendTo(destination, pkt);
-	} else if (destination == PLR_BROADCAST) {
-		for (plr_t player = 0; player < Players.size(); player++)
-			SendTo(player, pkt);
-	} else if (destination == PLR_MASTER) {
-		throw dvlnet_exception();
-	} else {
-		throw dvlnet_exception();
+	if (destination == PLR_BROADCAST) {
+		for (plr_t player = 0; player < Players.size(); player++) {
+			tl::expected<void, PacketError> result = SendTo(player, pkt);
+			if (!result.has_value())
+				LogError("Failed to send packet {} to player {}: {}", static_cast<uint8_t>(pkt.Type()), player, result.error().what());
+		}
+		return {};
 	}
+	if (destination >= MAX_PLRS)
+		return tl::make_unexpected("Invalid player ID");
+	if (destination == MyPlayerId)
+		return {};
+	return SendTo(destination, pkt);
 }
 
 template <class P>
-void base_protocol<P>::SendTo(plr_t player, packet &pkt)
+tl::expected<void, PacketError> base_protocol<P>::SendTo(plr_t player, packet &pkt)
 {
 	Peer &peer = peers[player];
 	if (!peer.endpoint)
-		return;
+		return {};
 
 	// The handshake uses echo packets so clients know
 	// when they can safely drain their send queues
-	if (peer.sendQueue && !IsAnyOf(pkt.Type(), PT_ECHO_REQUEST, PT_ECHO_REPLY))
+	if (peer.sendQueue && !IsAnyOf(pkt.Type(), PT_ECHO_REQUEST, PT_ECHO_REPLY)) {
 		peer.sendQueue->push_back(pkt);
-	else
-		proto.send(peer.endpoint, pkt.Data());
+		return {};
+	}
+
+	return proto.send(peer.endpoint, pkt.Data());
 }
 
 template <class P>
@@ -301,20 +309,13 @@ tl::expected<void, PacketError> base_protocol<P>::handle_join_request(packet &in
 	for (plr_t j = 0; j < Players.size(); ++j) {
 		endpoint_t peer = peers[j].endpoint;
 		if ((j != plr_self) && (j != i) && peer) {
-			{
-				tl::expected<std::unique_ptr<packet>, PacketError> pkt
-				    = pktfty->make_packet<PT_CONNECT>(PLR_MASTER, PLR_BROADCAST, i, senderinfo);
-				if (!pkt.has_value())
-					return tl::make_unexpected(pkt.error());
-				proto.send(peer, (*pkt)->Data());
-			}
-			{
-				tl::expected<std::unique_ptr<packet>, PacketError> pkt
-				    = pktfty->make_packet<PT_CONNECT>(PLR_MASTER, PLR_BROADCAST, j, peer.serialize());
-				if (!pkt.has_value())
-					return tl::make_unexpected(pkt.error());
-				proto.send(sender, (*pkt)->Data());
-			}
+			tl::expected<void, PacketError> result
+			    = pktfty->make_packet<PT_CONNECT>(PLR_MASTER, PLR_BROADCAST, i, senderinfo)
+			          .and_then([&](std::unique_ptr<packet> &&pkt) { return proto.send(peer, pkt->Data()); })
+			          .and_then([&]() { return pktfty->make_packet<PT_CONNECT>(PLR_MASTER, PLR_BROADCAST, j, peer.serialize()); })
+			          .and_then([&](std::unique_ptr<packet> &&pkt) { return proto.send(sender, pkt->Data()); });
+			if (!result.has_value())
+				return result;
 		}
 	}
 
@@ -327,7 +328,9 @@ tl::expected<void, PacketError> base_protocol<P>::handle_join_request(packet &in
 	    = pktfty->make_packet<PT_JOIN_ACCEPT>(plr_self, PLR_BROADCAST, *cookie, i, game_init_info);
 	if (!pkt.has_value())
 		return tl::make_unexpected(pkt.error());
-	proto.send(sender, (*pkt)->Data());
+	tl::expected<void, PacketError> result = proto.send(sender, (*pkt)->Data());
+	if (!result.has_value())
+		return result;
 	DrainSendQueue(i);
 	return {};
 }
@@ -473,7 +476,9 @@ void base_protocol<P>::DrainSendQueue(plr_t player)
 	std::deque<packet> &sendQueue = *srcPeer.sendQueue;
 	while (!sendQueue.empty()) {
 		packet &pkt = sendQueue.front();
-		proto.send(srcPeer.endpoint, pkt.Data());
+		tl::expected<void, PacketError> result = proto.send(srcPeer.endpoint, pkt.Data());
+		if (!result.has_value())
+			LogError("DrainSendQueue failed to send packet: {}", result.error().what());
 		sendQueue.pop_front();
 	}
 

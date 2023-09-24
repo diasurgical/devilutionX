@@ -30,7 +30,7 @@ public:
 	bool SNetGetTurnsInTransit(uint32_t *turns) override;
 
 	virtual tl::expected<void, PacketError> poll() = 0;
-	virtual void send(packet &pkt) = 0;
+	virtual tl::expected<void, PacketError> send(packet &pkt) = 0;
 	virtual void DisconnectNet(plr_t plr);
 
 	void setup_gameinfo(buffer_t info);
