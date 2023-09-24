@@ -1768,17 +1768,19 @@ void DrawAutomap(const Surface &out)
 		// Background fill
 		DrawHalfTransparentRectTo(out, MinimapRect.position.x, MinimapRect.position.y, MinimapRect.size.width, MinimapRect.size.height);
 
+		uint8_t frameShadowColor = PAL16_YELLOW + 12;
+
 		// Shadow
-		DrawHorizontalLine(out, MinimapRect.position + Displacement { 0, 0 }, MinimapRect.size.width + 2, MapColorsDim);
-		DrawHorizontalLine(out, MinimapRect.position + Displacement { 0, MinimapRect.size.height + 1 }, MinimapRect.size.width + 2, MapColorsDim);
-		DrawVerticalLine(out, MinimapRect.position + Displacement { 0, 1 }, MinimapRect.size.height, MapColorsDim);
-		DrawVerticalLine(out, MinimapRect.position + Displacement { MinimapRect.size.width + 1, 1 }, MinimapRect.size.height, MapColorsDim);
+		DrawHorizontalLine(out, MinimapRect.position + Displacement { -1, -1 }, MinimapRect.size.width + 1, frameShadowColor);
+		DrawHorizontalLine(out, MinimapRect.position + Displacement { -2, MinimapRect.size.height + 1 }, MinimapRect.size.width + 4, frameShadowColor);
+		DrawVerticalLine(out, MinimapRect.position + Displacement { -1, 0 }, MinimapRect.size.height, frameShadowColor);
+		DrawVerticalLine(out, MinimapRect.position + Displacement { MinimapRect.size.width + 1, -2 }, MinimapRect.size.height + 3, frameShadowColor);
 
 		// Frame
-		DrawHorizontalLine(out, MinimapRect.position + Displacement { -1, -1 }, MinimapRect.size.width + 2, MapColorsDim);
-		DrawHorizontalLine(out, MinimapRect.position + Displacement { -1, MinimapRect.size.height }, MinimapRect.size.width + 2, MapColorsDim);
-		DrawVerticalLine(out, MinimapRect.position + Displacement { -1, 0 }, MinimapRect.size.height, MapColorsDim);
-		DrawVerticalLine(out, MinimapRect.position + Displacement { MinimapRect.size.width, 0 }, MinimapRect.size.height, MapColorsDim);
+		DrawHorizontalLine(out, MinimapRect.position + Displacement { -2, -2 }, MinimapRect.size.width + 3, MapColorsDim);
+		DrawHorizontalLine(out, MinimapRect.position + Displacement { -2, MinimapRect.size.height }, MinimapRect.size.width + 3, MapColorsDim);
+		DrawVerticalLine(out, MinimapRect.position + Displacement { -2, -1 }, MinimapRect.size.height + 1, MapColorsDim);
+		DrawVerticalLine(out, MinimapRect.position + Displacement { MinimapRect.size.width, -1 }, MinimapRect.size.height + 1, MapColorsDim);
 	}
 
 	Point screen = {};
