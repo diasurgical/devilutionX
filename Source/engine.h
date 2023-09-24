@@ -90,6 +90,16 @@ void UnsafeDrawVerticalLine(const Surface &out, Point from, int height, std::uin
 void DrawHalfTransparentRectTo(const Surface &out, int sx, int sy, int width, int height);
 
 /**
+ * Draws a half-transparent pixel
+ *
+ * @brief Render a transparent pixel
+ * @param out Target buffer
+ * @param position Screen coordinates
+ * @param col Pixel color
+ */
+void SetHalfTransparentPixel(const Surface &out, Point position, uint8_t color);
+
+/**
  * Draws a 2px inset border.
  *
  * @param out Target buffer

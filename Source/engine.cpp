@@ -15,6 +15,7 @@
 #include <cstdint>
 #include <cstring>
 
+#include "engine/palette.h"
 #include "lighting.h"
 #include "movie.h"
 #include "options.h"
@@ -160,6 +161,15 @@ void DrawHalfTransparentRectTo(const Surface &out, int sx, int sy, int width, in
 	}
 
 	DrawHalfTransparentBlendedRectTo(out, sx, sy, width, height);
+}
+
+void SetHalfTransparentPixel(const Surface &out, Point position, uint8_t color)
+{
+	if (out.InBounds(position)) {
+		uint8_t *pix = out.at(position.x, position.y);
+		const auto &lookupTable = paletteTransparencyLookup[color];
+		*pix = lookupTable[*pix];
+	}
 }
 
 void UnsafeDrawBorder2px(const Surface &out, Rectangle rect, uint8_t color)
