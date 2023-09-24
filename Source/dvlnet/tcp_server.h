@@ -80,7 +80,7 @@ private:
 	tl::expected<void, PacketError> HandleReceiveNewPlayer(const scc &con, packet &pkt);
 	tl::expected<void, PacketError> HandleReceivePacket(packet &pkt);
 	tl::expected<void, PacketError> SendPacket(packet &pkt);
-	void StartSend(const scc &con, packet &pkt);
+	tl::expected<void, PacketError> StartSend(const scc &con, packet &pkt);
 	void HandleSend(const scc &con, const asio::error_code &ec, size_t bytesSent);
 	void StartTimeout(const scc &con);
 	void HandleTimeout(const scc &con, const asio::error_code &ec);

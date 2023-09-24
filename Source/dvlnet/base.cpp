@@ -52,8 +52,7 @@ tl::expected<void, PacketError> base::SendEchoRequest(plr_t player)
 	if (!pkt.has_value()) {
 		return tl::make_unexpected(pkt.error());
 	}
-	send(**pkt);
-	return {};
+	return send(**pkt);
 }
 
 tl::expected<void, PacketError> base::HandleAccept(packet &pkt)
@@ -139,8 +138,8 @@ tl::expected<void, PacketError> base::HandleEchoRequest(packet &pkt)
 	    .and_then([&](cookie_t &&pktTime) {
 		    return pktfty->make_packet<PT_ECHO_REPLY>(plr_self, pkt.Source(), pktTime);
 	    })
-	    .transform([&](std::unique_ptr<packet> &&pkt) {
-		    send(*pkt);
+	    .and_then([&](std::unique_ptr<packet> &&pkt) {
+		    return send(*pkt);
 	    });
 }
 
@@ -246,7 +245,11 @@ bool base::SNetSendMessage(int playerId, void *data, unsigned int size)
 			LogError("make_packet: {}", pkt.error().what());
 			return false;
 		}
-		send(**pkt);
+		tl::expected<void, PacketError> result = send(**pkt);
+		if (!result.has_value()) {
+			LogError("send: {}", result.error().what());
+			return false;
+		}
 	}
 	return true;
 }
@@ -362,7 +365,7 @@ tl::expected<void, PacketError> base::SendTurnIfReady(turn_t turn)
 		if (!pkt.has_value()) {
 			return tl::make_unexpected(pkt.error());
 		}
-		send(**pkt);
+		return send(**pkt);
 	}
 	return {};
 }
@@ -383,7 +386,10 @@ tl::expected<void, PacketError> base::SendFirstTurnIfReady(plr_t player)
 		if (!pkt.has_value()) {
 			return tl::make_unexpected(pkt.error());
 		}
-		send(**pkt);
+		tl::expected<void, PacketError> result = send(**pkt);
+		if (!result.has_value()) {
+			return result;
+		}
 	}
 	return {};
 }
@@ -453,7 +459,11 @@ bool base::SNetLeaveGame(int type)
 		LogError("make_packet: {}", pkt.error().what());
 		return false;
 	}
-	send(**pkt);
+	tl::expected<void, PacketError> result = send(**pkt);
+	if (!result.has_value()) {
+		LogError("send: {}", result.error().what());
+		return false;
+	}
 	plr_self = PLR_BROADCAST;
 	return true;
 }
@@ -470,9 +480,14 @@ bool base::SNetDropPlayer(int playerid, uint32_t flags)
 		LogError("make_packet: {}", pkt.error().what());
 		return false;
 	}
-	send(**pkt);
-	if (tl::expected<void, PacketError> result = RecvLocal(**pkt); !result.has_value()) {
-		LogError("SNetDropPlayer: {}", result.error().what());
+	tl::expected<void, PacketError> sendResult = send(**pkt);
+	if (!sendResult.has_value()) {
+		LogError("send: {}", sendResult.error().what());
+		return false;
+	}
+	tl::expected<void, PacketError> receiveResult = RecvLocal(**pkt);
+	if (!receiveResult.has_value()) {
+		LogError("SNetDropPlayer: {}", receiveResult.error().what());
 		return false;
 	}
 	return true;

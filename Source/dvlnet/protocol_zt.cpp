@@ -90,10 +90,13 @@ bool protocol_zt::network_online()
 	return true;
 }
 
-bool protocol_zt::send(const endpoint &peer, const buffer_t &data)
+tl::expected<void, PacketError> protocol_zt::send(const endpoint &peer, const buffer_t &data)
 {
-	peer_list[peer].send_queue.push_back(frame_queue::MakeFrame(data));
-	return true;
+	tl::expected<buffer_t, PacketError> frame = frame_queue::MakeFrame(data);
+	if (!frame.has_value())
+		return tl::make_unexpected(frame.error());
+	peer_list[peer].send_queue.push_back(*frame);
+	return {};
 }
 
 bool protocol_zt::send_oob(const endpoint &peer, const buffer_t &data) const
@@ -238,11 +241,21 @@ bool protocol_zt::recv(endpoint &peer, buffer_t &data)
 	}
 
 	for (auto &p : peer_list) {
-		if (p.second.recv_queue.PacketReady()) {
-			peer = p.first;
-			data = p.second.recv_queue.ReadPacket();
-			return true;
+		tl::expected<bool, PacketError> ready = p.second.recv_queue.PacketReady();
+		if (!ready.has_value()) {
+			LogError("PacketReady: {}", ready.error().what());
+			continue;
 		}
+		if (!*ready)
+			continue;
+		tl::expected<buffer_t, PacketError> packet = p.second.recv_queue.ReadPacket();
+		if (!packet.has_value()) {
+			LogError("Failed reading packet data from peer: {}", packet.error().what());
+			continue;
+		}
+		peer = p.first;
+		data = *packet;
+		return true;
 	}
 	return false;
 }
