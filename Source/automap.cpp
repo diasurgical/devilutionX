@@ -1527,7 +1527,7 @@ std::unique_ptr<AutomapTile[]> LoadAutomapData(size_t &tileCount)
 } // namespace
 
 bool AutomapActive;
-AutomapType CurrentAutomapType;
+AutomapType CurrentAutomapType = AutomapType::Opaque;
 uint8_t AutomapView[DMAXX][DMAXY];
 int AutoMapScale;
 int MinimapScale;
@@ -1538,7 +1538,6 @@ void InitAutomapOnce()
 {
 	AutomapActive = false;
 	AutoMapScale = 50;
-	SetAutomapType(AutomapType::Opaque);
 
 	// Set the dimensions and screen position of the minimap relative to the screen dimensions
 	int minimapWidth = gnScreenWidth / 4;
