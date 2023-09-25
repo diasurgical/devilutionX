@@ -82,6 +82,7 @@ enum class AmLineLength : uint8_t {
 
 enum class AutomapType : uint8_t {
 	Opaque,
+	FIRST = Opaque,
 	Transparent,
 	Minimap,
 	LAST = Minimap

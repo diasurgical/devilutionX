@@ -1012,9 +1012,16 @@ void DoAutoMap()
 
 void CycleAutomapType()
 {
+	if (!AutomapActive) {
+		StartAutomap();
+		return;
+	}
 	const AutomapType newType { static_cast<std::underlying_type_t<AutomapType>>(
 		(static_cast<unsigned>(GetAutomapType()) + 1) % enum_size<AutomapType>::value) };
 	SetAutomapType(newType);
+	if (newType == AutomapType::FIRST) {
+		AutomapActive = false;
+	}
 }
 
 void CheckPanelInfo()
