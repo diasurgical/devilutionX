@@ -88,7 +88,7 @@ enum class AutomapType : uint8_t {
 	LAST = Minimap
 };
 
-extern AutomapType CurrentAutomapType;
+extern DVL_API_FOR_TEST AutomapType CurrentAutomapType;
 
 /**
  * @brief Sets the map type. Does not change `AutomapActive`.
