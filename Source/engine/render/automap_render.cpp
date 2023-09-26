@@ -163,10 +163,14 @@ void DrawMapFreeLine(const Surface &out, Point from, Point to, uint8_t colorInde
 
 void SetMapPixel(const Surface &out, Point position, uint8_t color)
 {
-	if (GetAutomapType() == AutomapType::Transparent)
+	if (GetAutomapType() == AutomapType::Minimap && !MinimapRect.contains(position))
+		return;
+
+	if (GetAutomapType() == AutomapType::Transparent) {
 		SetHalfTransparentPixel(out, position, color);
-	else
+	} else {
 		out.SetPixel(position, color);
+	}
 }
 
 } // namespace devilution
