@@ -121,7 +121,7 @@ std::byte *CopyBufferedPackets(std::byte *destination, TBuffer *source, size_t *
 			srcPtr += chunkSize;
 			*size -= chunkSize;
 		}
-		memcpy(source->bData, srcPtr, (source->bData - srcPtr) + source->dwNextWriteOffset + 1);
+		memmove(source->bData, srcPtr, (source->bData - srcPtr) + source->dwNextWriteOffset + 1);
 		source->dwNextWriteOffset += static_cast<uint32_t>(source->bData - srcPtr);
 		return destination;
 	}
