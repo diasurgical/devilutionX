@@ -2771,7 +2771,7 @@ void ApplyPlrDamage(DamageType damageType, Player &player, int dam, int minHP /*
 	if (&player == MyPlayer && player._pHitPoints > 0) {
 		AddFloatingNumber(damageType, player, totalDamage);
 	}
-	if (totalDamage > 0 && player.pManaShield) {
+	if (totalDamage > 0 && player.pManaShield && HasNoneOf(player._pIFlags, ItemSpecialEffect::NoMana)) {
 		uint8_t manaShieldLevel = player._pSplLvl[static_cast<int8_t>(SpellID::ManaShield)];
 		if (manaShieldLevel > 0) {
 			totalDamage += totalDamage / -player.GetManaShieldDamageReduction();
@@ -2982,10 +2982,8 @@ void ProcessPlayers()
 				if (HasAnyOf(player._pIFlags, ItemSpecialEffect::DrainLife) && leveltype != DTYPE_TOWN) {
 					ApplyPlrDamage(DamageType::Physical, player, 0, 0, 4);
 				}
-				if (HasAnyOf(player._pIFlags, ItemSpecialEffect::NoMana) && player._pManaBase > 0) {
-					player._pManaBase -= player._pMana;
-					player._pMana = 0;
-					RedrawComponent(PanelDrawComponent::Mana);
+				if (player.pManaShield && HasAnyOf(player._pIFlags, ItemSpecialEffect::NoMana)) {
+					NetSendCmd(true, CMD_REMSHIELD);
 				}
 			}
 

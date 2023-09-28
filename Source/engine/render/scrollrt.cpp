@@ -1682,7 +1682,7 @@ void DrawAndBlit()
 	if (*sgOptions.Gameplay.showHealthValues)
 		DrawFlaskValues(out, { mainPanel.position.x + 134, mainPanel.position.y + 28 }, MyPlayer->_pHitPoints >> 6, MyPlayer->_pMaxHP >> 6);
 	if (*sgOptions.Gameplay.showManaValues)
-		DrawFlaskValues(out, { mainPanel.position.x + mainPanel.size.width - 138, mainPanel.position.y + 28 }, MyPlayer->_pMana >> 6, MyPlayer->_pMaxMana >> 6);
+		DrawFlaskValues(out, { mainPanel.position.x + mainPanel.size.width - 138, mainPanel.position.y + 28 }, HasAnyOf(InspectPlayer->_pIFlags, ItemSpecialEffect::NoMana) ? 0 : MyPlayer->_pMana >> 6, HasAnyOf(InspectPlayer->_pIFlags, ItemSpecialEffect::NoMana) ? 0 : MyPlayer->_pMaxMana >> 6);
 
 	DrawCursor(out);
 
