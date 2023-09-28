@@ -13,6 +13,13 @@ on:
       - '*.md'
       - 'docs/**'
 
+permissions:
+  contents: write
+
+env:
+  VCPKG_FEATURE_FLAGS: dependencygraph
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
