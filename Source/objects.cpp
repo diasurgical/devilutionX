@@ -4828,13 +4828,13 @@ void SyncNakrulRoom()
 #ifdef _DEBUG
 void DebugOperateShrine(shrine_type shrineType)
 {
-	const Player &myPlayer = *MyPlayer;
+	Player &myPlayer = *MyPlayer;
 	Object shrine;
 
 	shrine._oVar1 = shrineType;
 	shrine._oSelFlag = 1;
 	shrine.position = myPlayer.position.tile;
-	OperateShrine(*MyPlayer, shrine, IS_MAGIC);
+	OperateShrine(myPlayer, shrine, IS_MAGIC);
 }
 #endif
 
