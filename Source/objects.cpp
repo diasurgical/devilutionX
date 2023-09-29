@@ -56,44 +56,6 @@ bool LoadingMapObjects;
 
 namespace {
 
-enum shrine_type : uint8_t {
-	ShrineMysterious,
-	ShrineHidden,
-	ShrineGloomy,
-	ShrineWeird,
-	ShrineMagical,
-	ShrineStone,
-	ShrineReligious,
-	ShrineEnchanted,
-	ShrineThaumaturgic,
-	ShrineFascinating,
-	ShrineCryptic,
-	ShrineMagicaL2,
-	ShrineEldritch,
-	ShrineEerie,
-	ShrineDivine,
-	ShrineHoly,
-	ShrineSacred,
-	ShrineSpiritual,
-	ShrineSpooky,
-	ShrineAbandoned,
-	ShrineCreepy,
-	ShrineQuiet,
-	ShrineSecluded,
-	ShrineOrnate,
-	ShrineGlimmering,
-	ShrineTainted,
-	ShrineOily,
-	ShrineGlowing,
-	ShrineMendicant,
-	ShrineSparkling,
-	ShrineTown,
-	ShrineShimmering,
-	ShrineSolar,
-	ShrineMurphys,
-	NumberOfShrineTypes
-};
-
 enum {
 	// clang-format off
 	DOOR_CLOSED  =  0,
@@ -117,45 +79,6 @@ int NaKrulTomeSequence;
 int bxadd[8] = { -1, 0, 1, -1, 1, -1, 0, 1 };
 /** Specifies the Y-coordinate delta between barrels. */
 int byadd[8] = { -1, -1, -1, 0, 0, 1, 1, 1 };
-/** Maps from shrine_id to shrine name. */
-const char *const ShrineNames[] = {
-	// TRANSLATORS: Shrine Name Block
-	N_("Mysterious"),
-	N_("Hidden"),
-	N_("Gloomy"),
-	N_("Weird"),
-	N_("Magical"),
-	N_("Stone"),
-	N_("Religious"),
-	N_("Enchanted"),
-	N_("Thaumaturgic"),
-	N_("Fascinating"),
-	N_("Cryptic"),
-	N_("Magical"),
-	N_("Eldritch"),
-	N_("Eerie"),
-	N_("Divine"),
-	N_("Holy"),
-	N_("Sacred"),
-	N_("Spiritual"),
-	N_("Spooky"),
-	N_("Abandoned"),
-	N_("Creepy"),
-	N_("Quiet"),
-	N_("Secluded"),
-	N_("Ornate"),
-	N_("Glimmering"),
-	N_("Tainted"),
-	N_("Oily"),
-	N_("Glowing"),
-	N_("Mendicant's"),
-	N_("Sparkling"),
-	N_("Town"),
-	N_("Shimmering"),
-	N_("Solar"),
-	// TRANSLATORS: Shrine Name Block end
-	N_("Murphy's"),
-};
 
 /**
  * Specifies the game type for which each shrine may appear.
@@ -4901,5 +4824,18 @@ void SyncNakrulRoom()
 	dPiece[UberRow][UberCol - 2] = 299;
 	dPiece[UberRow][UberCol + 1] = 298;
 }
+
+#ifdef _DEBUG
+void DebugOperateShrine(shrine_type shrineType)
+{
+	const Player &myPlayer = *MyPlayer;
+	Object shrine;
+
+	shrine._oVar1 = shrineType;
+	shrine._oSelFlag = 1;
+	shrine.position = myPlayer.position.tile;
+	OperateShrine(*MyPlayer, shrine, IS_MAGIC);
+}
+#endif
 
 } // namespace devilution

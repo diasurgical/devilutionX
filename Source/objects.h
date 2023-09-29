@@ -23,6 +23,84 @@ namespace devilution {
 
 #define MAXOBJECTS 127
 
+enum shrine_type : uint8_t {
+	ShrineMysterious,
+	ShrineHidden,
+	ShrineGloomy,
+	ShrineWeird,
+	ShrineMagical,
+	ShrineStone,
+	ShrineReligious,
+	ShrineEnchanted,
+	ShrineThaumaturgic,
+	ShrineFascinating,
+	ShrineCryptic,
+	ShrineMagicaL2,
+	ShrineEldritch,
+	ShrineEerie,
+	ShrineDivine,
+	ShrineHoly,
+	ShrineSacred,
+	ShrineSpiritual,
+	ShrineSpooky,
+	ShrineAbandoned,
+	ShrineCreepy,
+	ShrineQuiet,
+	ShrineSecluded,
+	ShrineOrnate,
+	ShrineGlimmering,
+	ShrineTainted,
+	ShrineOily,
+	ShrineGlowing,
+	ShrineMendicant,
+	ShrineSparkling,
+	ShrineTown,
+	ShrineShimmering,
+	ShrineSolar,
+	ShrineMurphys,
+	NumberOfShrineTypes
+};
+
+/** Maps from shrine_id to shrine name. */
+const char *const ShrineNames[] = {
+	// TRANSLATORS: Shrine Name Block
+	N_("Mysterious"),
+	N_("Hidden"),
+	N_("Gloomy"),
+	N_("Weird"),
+	N_("Magical"),
+	N_("Stone"),
+	N_("Religious"),
+	N_("Enchanted"),
+	N_("Thaumaturgic"),
+	N_("Fascinating"),
+	N_("Cryptic"),
+	N_("Magical"),
+	N_("Eldritch"),
+	N_("Eerie"),
+	N_("Divine"),
+	N_("Holy"),
+	N_("Sacred"),
+	N_("Spiritual"),
+	N_("Spooky"),
+	N_("Abandoned"),
+	N_("Creepy"),
+	N_("Quiet"),
+	N_("Secluded"),
+	N_("Ornate"),
+	N_("Glimmering"),
+	N_("Tainted"),
+	N_("Oily"),
+	N_("Glowing"),
+	N_("Mendicant's"),
+	N_("Sparkling"),
+	N_("Town"),
+	N_("Shimmering"),
+	N_("Solar"),
+	// TRANSLATORS: Shrine Name Block end
+	N_("Murphy's"),
+};
+
 struct Object {
 	_object_id _otype = OBJ_NULL;
 	bool applyLighting = false;
@@ -353,5 +431,8 @@ void SyncObjectAnim(Object &object);
  */
 void GetObjectStr(const Object &object);
 void SyncNakrulRoom();
+#ifdef _DEBUG
+void DebugOperateShrine(shrine_type shrineType);
+#endif
 
 } // namespace devilution

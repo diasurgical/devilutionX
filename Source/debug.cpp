@@ -25,6 +25,7 @@
 #include "lighting.h"
 #include "monstdat.h"
 #include "monster.h"
+#include "objects.h"
 #include "pack.h"
 #include "plrmsg.h"
 #include "quests.h"
@@ -1188,6 +1189,41 @@ std::string DebugCmdClearSearch(const std::string_view parameter)
 	return StrCat(cmdLabel, "Removed all automap search markers.");
 }
 
+std::string DebugCmdShrine(const std::string_view parameter)
+{
+	std::string cmdLabel = "[shrine] ";
+
+	if (leveltype == DTYPE_TOWN)
+		return StrCat(cmdLabel, "This command is not available in Town!");
+
+	if (parameter.empty()) {
+		std::string ret = StrCat(cmdLabel, "Missing shrine name!");
+		return ret;
+	}
+
+	std::string name;
+	name.append(parameter);
+	AsciiStrToLower(name);
+
+	shrine_type shrineType = NumberOfShrineTypes;
+
+	for (int i = 0; i < NumberOfShrineTypes; i++) {
+		const std::string shrineName = AsciiStrToLower(ShrineNames[i]);
+		if (shrineName.find(name) == std::string::npos)
+			continue;
+		shrineType = static_cast<shrine_type>(i);
+		if (shrineName == name) // to support partial name matching but always choose the correct shrine if full name is given
+			break;
+	}
+
+	if (shrineType == NumberOfShrineTypes)
+		return StrCat(cmdLabel, "Shrine not found!");
+
+	DebugOperateShrine(shrineType);
+
+	return StrCat(cmdLabel, "Activated ", name, " shrine effect.");
+}
+
 std::vector<DebugCmdItem> DebugCmdList = {
 	{ "help", "Prints help overview or help for a specific command.", "({command})", &DebugCmdHelp },
 	{ "givegold", "Fills the inventory with gold.", "", &DebugCmdGiveGoldCheat },
@@ -1231,6 +1267,7 @@ std::vector<DebugCmdItem> DebugCmdList = {
 	{ "searchitem", "Searches the automap for {item}", "{item}", &DebugCmdSearchItem },
 	{ "searchobject", "Searches the automap for {object}", "{object}", &DebugCmdSearchObject },
 	{ "clearsearch", "Search in the auto map is cleared", "", &DebugCmdClearSearch },
+	{ "shrine", "Activate shrine effect of {shrine}", "{shrine}", &DebugCmdShrine },
 };
 
 } // namespace
