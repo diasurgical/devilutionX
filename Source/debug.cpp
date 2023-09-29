@@ -1221,7 +1221,7 @@ std::string DebugCmdShrine(const std::string_view parameter)
 
 	DebugOperateShrine(shrineType);
 
-	return StrCat(cmdLabel, "Activated ", name, " shrine effect.");
+	return StrCat(cmdLabel, "Activated ", ShrineNames[shrineType], " shrine effect.");
 }
 
 std::vector<DebugCmdItem> DebugCmdList = {
