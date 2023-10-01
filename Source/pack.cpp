@@ -80,6 +80,8 @@ bool hasMultipleFlags(uint16_t flags)
 	return (flags & (flags - 1)) > 0;
 }
 
+} // namespace
+
 bool IsCreationFlagComboValid(uint16_t iCreateInfo)
 {
 	iCreateInfo = iCreateInfo & ~CF_LEVEL;
@@ -199,7 +201,6 @@ bool RecreateHellfireSpellBook(const Player &player, const ItemNetPack &packedIt
 	item = spellBook;
 	return true;
 }
-} // namespace
 
 void PackItem(ItemPack &packedItem, const Item &item, bool isHellfire)
 {
@@ -563,7 +564,7 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 	ValidateFields(packed.pClass, packed.pBaseDex, packed.pBaseDex <= player.GetMaximumAttributeValue(CharacterAttribute::Dexterity));
 	ValidateFields(packed.pClass, packed.pBaseVit, packed.pBaseVit <= player.GetMaximumAttributeValue(CharacterAttribute::Vitality));
 
-	ValidateField(packed._pNumInv, packed._pNumInv < InventoryGridCells);
+	ValidateField(packed._pNumInv, packed._pNumInv <= InventoryGridCells);
 
 	player._pLevel = packed.pLevel;
 	player.position.tile = position;

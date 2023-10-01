@@ -142,6 +142,10 @@ struct PlayerNetPack {
 };
 #pragma pack(pop)
 
+bool IsCreationFlagComboValid(uint16_t iCreateInfo);
+bool IsTownItemValid(uint16_t iCreateInfo);
+bool IsUniqueMonsterItemValid(uint16_t iCreateInfo, uint32_t dwBuff);
+bool IsDungeonItemValid(uint16_t iCreateInfo, uint32_t dwBuff);
 void PackPlayer(PlayerPack &pPack, const Player &player);
 void UnPackPlayer(const PlayerPack &pPack, Player &player);
 void PackNetPlayer(PlayerNetPack &packed, const Player &player);
