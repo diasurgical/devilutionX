@@ -1031,7 +1031,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_baseVit)
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_numInv)
 {
-	MyPlayer->_pNumInv = InventoryGridCells;
+	MyPlayer->_pNumInv = InventoryGridCells + 1;
 	ASSERT_FALSE(TestNetPackValidation());
 }
 
