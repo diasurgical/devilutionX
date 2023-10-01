@@ -2758,19 +2758,35 @@ StartPlayerKill(Player &player, DeathReason deathReason)
 void StripTopGold(Player &player)
 {
 	for (Item &item : InventoryPlayerItemsRange { player }) {
-		if (item._itype == ItemType::Gold) {
-			if (item._ivalue > MaxGold) {
-				Item excessGold;
-				MakeGoldStack(excessGold, item._ivalue - MaxGold);
-				item._ivalue = MaxGold;
+		if (item._itype != ItemType::Gold)
+			continue;
+		if (item._ivalue <= MaxGold)
+			continue;
+		Item excessGold;
+		MakeGoldStack(excessGold, item._ivalue - MaxGold);
+		item._ivalue = MaxGold;
 
-				if (!GoldAutoPlace(player, excessGold)) {
-					DeadItem(player, std::move(excessGold), { 0, 0 });
-				}
-			}
-		}
+		if (GoldAutoPlace(player, excessGold))
+			continue;
+		if (!player.HoldItem.isEmpty() && ActiveItemCount + 1 >= MAXITEMS)
+			continue;
+		DeadItem(player, std::move(excessGold), { 0, 0 });
 	}
 	player._pGold = CalculateGold(player);
+
+	if (player.HoldItem.isEmpty())
+		return;
+	if (AutoEquip(player, player.HoldItem, false))
+		return;
+	if (AutoPlaceItemInInventory(player, player.HoldItem))
+		return;
+	if (AutoPlaceItemInBelt(player, player.HoldItem))
+		return;
+	std::optional<Point> itemTile = FindAdjacentPositionForItem(player.position.tile, player._pdir);
+	if (itemTile)
+		return;
+	DeadItem(player, std::move(player.HoldItem), { 0, 0 });
+	NewCursor(CURSOR_HAND);
 }
 
 void ApplyPlrDamage(DamageType damageType, Player &player, int dam, int minHP /*= 0*/, int frac /*= 0*/, DeathReason deathReason /*= DeathReason::MonsterOrTrap*/)
