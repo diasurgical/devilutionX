@@ -190,6 +190,7 @@ tl::expected<void, PacketError> tcp_server::StartSend(const scc &con, packet &pk
 	    [this, con, frame = std::move(framePtr)](const asio::error_code &ec, size_t bytesSent) {
 		    HandleSend(con, ec, bytesSent);
 	    });
+	return {};
 }
 
 void tcp_server::HandleSend(const scc &con, const asio::error_code &ec,
