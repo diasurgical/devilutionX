@@ -166,6 +166,7 @@ tl::expected<void, PacketError> tcp_client::send(packet &pkt)
 	asio::async_write(sock, buf, [this, frame = std::move(framePtr)](const asio::error_code &error, size_t bytesSent) {
 		HandleSend(error, bytesSent);
 	});
+	return {};
 }
 
 bool tcp_client::SNetLeaveGame(int type)
