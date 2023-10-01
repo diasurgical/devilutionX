@@ -3191,7 +3191,7 @@ void SyncInitPlrPos(Player &player)
 	const WorldTileDisplacement offset[9] = { { 0, 0 }, { 1, 0 }, { 0, 1 }, { 1, 1 }, { 2, 0 }, { 0, 2 }, { 1, 2 }, { 2, 1 }, { 2, 2 } };
 
 	Point position = [&]() {
-		for (int i = 0; i < 8; i++) {
+		for (int i = 0; i < MaxPlayers; i++) {
 			Point position = player.position.tile + offset[i];
 			if (PosOkPlayer(player, position))
 				return position;
