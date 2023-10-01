@@ -15,7 +15,7 @@
 namespace devilution {
 
 // must be unsigned to generate unsigned comparisons with pnum
-#define MAX_PLRS 4
+#define MAX_PLRS 8
 
 struct GameData {
 	int32_t size;

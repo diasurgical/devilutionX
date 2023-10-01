@@ -21,7 +21,7 @@
 namespace devilution {
 
 #define MAXLIGHTS 32
-#define MAXVISION 4
+#define MAXVISION 8
 /** @brief Number of supported light levels */
 constexpr size_t NumLightingLevels = 16;
 #define NO_LIGHT -1
