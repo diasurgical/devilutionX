@@ -16,6 +16,7 @@
 #include "automap.h"
 #include "engine.h"
 #include "engine/point.hpp"
+#include "multi.h"
 #include "utils/attributes.h"
 
 namespace devilution {
