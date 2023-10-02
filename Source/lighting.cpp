@@ -18,8 +18,8 @@
 
 namespace devilution {
 
-std::array<bool, MAXVISION> VisionActive;
-Light VisionList[MAXVISION];
+std::array<bool, MAX_PLRS> VisionActive;
+Light VisionList[MAX_PLRS];
 Light Lights[MAXLIGHTS];
 std::array<uint8_t, MAXLIGHTS> ActiveLights;
 int ActiveLightCount;
