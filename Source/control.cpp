@@ -146,7 +146,7 @@ uint8_t NextTalkSave;
 char TalkMessage[MAX_SEND_STR_LEN];
 bool TalkButtonsDown[3];
 int sgbPlrTalkTbl;
-bool WhisperList[MAX_PLRS];
+bool WhisperList[4]; // Cannot be greater than the vanilla value due to limitations of the control panel
 
 enum panel_button_id : uint8_t {
 	PanelButtonCharinfo,
