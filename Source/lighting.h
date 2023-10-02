@@ -21,7 +21,6 @@
 namespace devilution {
 
 #define MAXLIGHTS 32
-#define MAXVISION 8
 /** @brief Number of supported light levels */
 constexpr size_t NumLightingLevels = 16;
 #define NO_LIGHT -1
@@ -42,8 +41,8 @@ struct Light {
 	bool hasChanged;
 };
 
-extern Light VisionList[MAXVISION];
-extern std::array<bool, MAXVISION> VisionActive;
+extern Light VisionList[MAX_PLRS];
+extern std::array<bool, MAX_PLRS> VisionActive;
 extern Light Lights[MAXLIGHTS];
 extern std::array<uint8_t, MAXLIGHTS> ActiveLights;
 extern int ActiveLightCount;
