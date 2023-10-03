@@ -628,12 +628,12 @@ void DrawMapVerticalGrate(const Surface &out, Point center, uint8_t colorDim)
 	Point pos2 = center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::None);
 	Point pos3 = center + AmOffset(AmWidthOffset::HalfTileLeft, AmHeightOffset::None) + AmOffset(AmWidthOffset::EighthTileLeft, AmHeightOffset::EighthTileDown);
 
-	out.SetPixel(pos1 + Displacement { 0, 1 }, 0);
-	out.SetPixel(pos2 + Displacement { 0, 1 }, 0);
-	out.SetPixel(pos3 + Displacement { 0, 1 }, 0);
-	out.SetPixel(pos1, colorDim);
-	out.SetPixel(pos2, colorDim);
-	out.SetPixel(pos3, colorDim);
+	SetMapPixel(out, pos1 + Displacement { 0, 1 }, 0);
+	SetMapPixel(out, pos2 + Displacement { 0, 1 }, 0);
+	SetMapPixel(out, pos3 + Displacement { 0, 1 }, 0);
+	SetMapPixel(out, pos1, colorDim);
+	SetMapPixel(out, pos2, colorDim);
+	SetMapPixel(out, pos3, colorDim);
 }
 
 /**
@@ -645,12 +645,12 @@ void DrawMapHorizontalGrate(const Surface &out, Point center, uint8_t colorDim)
 	Point pos2 = center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::None);
 	Point pos3 = center + AmOffset(AmWidthOffset::HalfTileRight, AmHeightOffset::None) + AmOffset(AmWidthOffset::EighthTileRight, AmHeightOffset::EighthTileDown);
 
-	out.SetPixel(pos1 + Displacement { 0, 1 }, 0);
-	out.SetPixel(pos2 + Displacement { 0, 1 }, 0);
-	out.SetPixel(pos3 + Displacement { 0, 1 }, 0);
-	out.SetPixel(pos1, colorDim);
-	out.SetPixel(pos2, colorDim);
-	out.SetPixel(pos3, colorDim);
+	SetMapPixel(out, pos1 + Displacement { 0, 1 }, 0);
+	SetMapPixel(out, pos2 + Displacement { 0, 1 }, 0);
+	SetMapPixel(out, pos3 + Displacement { 0, 1 }, 0);
+	SetMapPixel(out, pos1, colorDim);
+	SetMapPixel(out, pos2, colorDim);
+	SetMapPixel(out, pos3, colorDim);
 }
 
 /**
