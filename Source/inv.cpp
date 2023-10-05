@@ -856,6 +856,7 @@ void TryCombineNaKrulNotes(Player &player, Item &noteItem)
 	GetItemAttrs(noteItem, IDI_FULLNOTE, 16);
 	SetupItem(noteItem);
 	noteItem.position = position; // this ensures CleanupItem removes the entry in the dropped items lookup table
+	noteItem.dwBuff |= CF_DEVILUTIONX;
 }
 
 void CheckQuestItem(Player &player, Item &questItem)

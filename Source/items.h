@@ -166,6 +166,8 @@ enum icreateinfo_flag {
 enum icreateinfo_flag2 {
 	// clang-format off
 	CF_HELLFIRE = 1,
+	CF_DEVILUTIONX = 1 << 1,
+	CF_DEBUG = 1 << 2,
 	// clang-format on
 };
 

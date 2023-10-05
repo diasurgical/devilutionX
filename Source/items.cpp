@@ -461,6 +461,7 @@ void AddInitItems()
 		GetItemAttrs(item, PickRandomlyAmong({ IDI_MANA, IDI_HEAL }), curlv);
 
 		item._iCreateInfo = curlv | CF_PREGEN;
+		item.dwBuff |= CF_DEVILUTIONX;
 		SetupItem(item);
 		item.AnimInfo.currentFrame = item.AnimInfo.numberOfFrames - 1;
 		item._iAnimFlag = false;
@@ -1569,6 +1570,7 @@ void SetupBaseItem(Point position, _item_indexes idx, bool onlygood, bool sendms
 	auto &item = Items[ii];
 	GetSuperItemSpace(position, ii);
 	int curlv = ItemsGetCurrlevel();
+	item.dwBuff |= CF_DEVILUTIONX;
 
 	SetupAllItems(*MyPlayer, item, idx, AdvanceRndSeed(), 2 * curlv, 1, onlygood, false, delta);
 
@@ -1668,6 +1670,7 @@ void SpawnRock()
 	item._iPostDraw = true;
 	item.AnimInfo.currentFrame = 10;
 	item._iCreateInfo |= CF_PREGEN;
+	item.dwBuff |= CF_DEVILUTIONX;
 
 	DeltaAddItem(ii);
 }
@@ -2051,6 +2054,7 @@ void SpawnOnePremium(Item &premiumItem, int plvl, const Player &player)
 		}
 	}
 	premiumItem._iCreateInfo = plvl | CF_SMITHPREMIUM;
+	premiumItem.dwBuff |= CF_DEVILUTIONX;
 	premiumItem._iIdentified = true;
 	premiumItem._iStatFlag = player.CanUseItem(premiumItem);
 }
@@ -2231,6 +2235,7 @@ void CreateMagicItem(Point position, int lvl, ItemType itemType, int imid, int i
 		idx = RndTypeItems(itemType, imid, lvl);
 	}
 	GetSuperItemSpace(position, ii);
+	item.dwBuff |= CF_DEVILUTIONX;
 
 	if (sendmsg)
 		NetSendCmdPItem(false, CMD_DROPITEM, item.position, item);
@@ -2981,6 +2986,7 @@ void CreateStartingItem(Player &player, _item_indexes itemData)
 	GenerateNewSeed(item);
 	item.updateRequiredStatsCacheForPlayer(player);
 	AutoEquip(player, item) || AutoPlaceItemInBelt(player, item, true) || AutoPlaceItemInInventory(player, item, true);
+	item.dwBuff |= CF_DEVILUTIONX;
 }
 } // namespace
 
@@ -3263,6 +3269,7 @@ void SpawnItem(Monster &monster, Point position, bool sendmsg, bool spawn /*= fa
 	auto &item = Items[ii];
 	GetSuperItemSpace(position, ii);
 	int uper = monster.isUnique() ? 15 : 1;
+	item.dwBuff |= CF_DEVILUTIONX;
 
 	int8_t mLevel = monster.data().level;
 	if (!gbIsHellfire && monster.type().type == MT_DIABLO)
@@ -3292,6 +3299,7 @@ void CreateRndUseful(Point position, bool sendmsg)
 	auto &item = Items[ii];
 	GetSuperItemSpace(position, ii);
 	int curlv = ItemsGetCurrlevel();
+	item.dwBuff |= CF_DEVILUTIONX;
 
 	SetupAllUseful(item, AdvanceRndSeed(), curlv);
 	if (sendmsg)
@@ -3472,6 +3480,7 @@ void SpawnQuestItem(_item_indexes itemid, Point position, int randarea, int self
 	item._iSeed = AdvanceRndSeed();
 	SetRndSeed(item._iSeed);
 	item._iPostDraw = true;
+	item.dwBuff |= CF_DEVILUTIONX;
 	if (selflag != 0) {
 		item._iSelFlag = selflag;
 		item.AnimInfo.currentFrame = item.AnimInfo.numberOfFrames - 1;
@@ -3502,6 +3511,7 @@ void SpawnRewardItem(_item_indexes itemid, Point position, bool sendmsg)
 	item._iSelFlag = 2;
 	item._iPostDraw = true;
 	item._iIdentified = true;
+	item.dwBuff |= CF_DEVILUTIONX;
 	GenerateNewSeed(item);
 
 	if (sendmsg) {
@@ -4196,6 +4206,7 @@ void SpawnSmith(int lvl)
 		} while (newItem._iIvalue > maxValue);
 
 		newItem._iCreateInfo = lvl | CF_SMITH;
+		newItem.dwBuff |= CF_DEVILUTIONX;
 		newItem._iIdentified = true;
 	}
 	for (int i = iCnt; i < SMITH_ITEMS; i++)
@@ -4298,6 +4309,7 @@ void SpawnWitch(int lvl)
 		} while (item._iIvalue > maxValue);
 
 		item._iCreateInfo = lvl | CF_WITCH;
+		item.dwBuff |= CF_DEVILUTIONX;
 		item._iIdentified = true;
 	}
 
@@ -4414,6 +4426,7 @@ void SpawnBoy(int lvl)
 	            || boyitem._iIvalue < ivalue)
 	        && count < 250));
 	boyitem._iCreateInfo = lvl | CF_BOY;
+	boyitem.dwBuff |= CF_DEVILUTIONX;
 	boyitem._iIdentified = true;
 	boylevel = lvl / 2;
 }
@@ -4446,6 +4459,7 @@ void SpawnHealer(int lvl)
 		_item_indexes itype = RndHealerItem(*MyPlayer, lvl);
 		GetItemAttrs(item, itype, lvl);
 		item._iCreateInfo = lvl | CF_HEALER;
+		item.dwBuff |= CF_DEVILUTIONX;
 		item._iIdentified = true;
 	}
 
@@ -4496,6 +4510,7 @@ void CreateSpellBook(Point position, SpellID ispell, bool sendmsg, bool delta)
 			break;
 	}
 	GetSuperItemSpace(position, ii);
+	item.dwBuff |= CF_DEVILUTIONX;
 
 	if (sendmsg)
 		NetSendCmdPItem(false, CMD_DROPITEM, item.position, item);
@@ -4617,6 +4632,8 @@ std::string DebugSpawnItem(std::string itemName)
 	auto &item = Items[ii];
 	item = testItem.pop();
 	item._iIdentified = true;
+	item.dwBuff |= CF_DEVILUTIONX;
+	item.dwBuff |= CF_DEBUG;
 	Point pos = MyPlayer->position.tile;
 	GetSuperItemSpace(pos, ii);
 	NetSendCmdPItem(false, CMD_SPAWNITEM, item.position, item);
@@ -4703,6 +4720,8 @@ std::string DebugSpawnUniqueItem(std::string itemName)
 	Point pos = MyPlayer->position.tile;
 	GetSuperItemSpace(pos, ii);
 	item._iIdentified = true;
+	item.dwBuff |= CF_DEVILUTIONX;
+	item.dwBuff |= CF_DEBUG;
 	NetSendCmdPItem(false, CMD_SPAWNITEM, item.position, item);
 
 	return StrCat(cmdLabel, "Item generated successfully - iterations: ", i);
