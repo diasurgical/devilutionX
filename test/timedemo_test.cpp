@@ -8,6 +8,7 @@
 #include "pfile.h"
 #include "playerdat.hpp"
 #include "utils/display.h"
+#include "utils/lua.hpp"
 #include "utils/paths.h"
 
 using namespace devilution;
@@ -33,6 +34,7 @@ void RunTimedemo(std::string timedemoFolderName)
 
 	InitKeymapActions();
 	LoadOptions();
+	LuaInitialize();
 
 	const int demoNumber = 0;
 

@@ -159,6 +159,7 @@ set(libdevilutionx_SRCS
   utils/format_int.cpp
   utils/language.cpp
   utils/logged_fstream.cpp
+  utils/lua.cpp
   utils/paths.cpp
   utils/parse_int.cpp
   utils/pcx_to_clx.cpp
@@ -286,6 +287,8 @@ if(DISCORD_INTEGRATION)
   target_compile_definitions(libdevilutionx PRIVATE DISCORD)
   target_link_libraries(libdevilutionx PRIVATE discord discord_game_sdk)
 endif()
+
+target_link_libraries(libdevilutionx PRIVATE ${LUA_LIBRARIES})
 
 if(SCREEN_READER_INTEGRATION AND WIN32)
   target_compile_definitions(libdevilutionx PRIVATE Tolk)

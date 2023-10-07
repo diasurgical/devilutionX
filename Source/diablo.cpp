@@ -81,6 +81,7 @@
 #include "utils/console.h"
 #include "utils/display.h"
 #include "utils/language.h"
+#include "utils/lua.hpp"
 #include "utils/parse_int.hpp"
 #include "utils/paths.h"
 #include "utils/screen_reader.hpp"
@@ -822,6 +823,7 @@ void RunGameLoop(interface_mode uMsg)
 	nthread_ignore_mutex(false);
 
 	discord_manager::StartGame();
+	LuaEvent("OnGameStart");
 #ifdef GPERF_HEAP_FIRST_GAME_ITERATION
 	unsigned run_game_iteration = 0;
 #endif
@@ -1230,6 +1232,7 @@ void DiabloDeinit()
 {
 	FreeItemGFX();
 
+	LuaShutdown();
 	ShutDownScreenReader();
 
 	if (gbSndInited)
@@ -2449,6 +2452,7 @@ int DiabloMain(int argc, char **argv)
 	LoadLanguageArchive();
 
 	ApplicationInit();
+	LuaInitialize();
 	SaveOptions();
 
 	// Finally load game data

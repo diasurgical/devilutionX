@@ -137,6 +137,7 @@ set(devilutionx_assets
   levels/l2data/bonechat.dun
   levels/towndata/automap.dun
   levels/towndata/automap.amp
+  lua/init.lua
   nlevels/cutl5w.clx
   nlevels/cutl6w.clx
   nlevels/l5data/cornerstone.dun
