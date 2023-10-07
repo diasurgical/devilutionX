@@ -58,6 +58,7 @@ bool sgbTimeout;
 std::string GameName;
 std::string GamePassword;
 bool PublicGame;
+bool StreamerMode;
 uint8_t gbDeltaSender;
 bool sgbNetInited;
 uint32_t player_state[MAX_PLRS];
@@ -790,6 +791,7 @@ bool NetInit(bool bSinglePlayer)
 		glSeedTbl[i] = AdvanceRndSeed();
 	}
 	PublicGame = DvlNet_IsPublicGame();
+	StreamerMode = false;
 
 	Player &myPlayer = *MyPlayer;
 	// separator for marking messages from a different game

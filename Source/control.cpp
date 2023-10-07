@@ -520,12 +520,22 @@ std::string TextCmdLevelSeed(const string_view parameter)
 	    "Storybook: ", glSeedTbl[16]);
 }
 
+std::string TextCmdStreamerMode(const std::string_view parameter)
+{
+	std::string ret;
+
+	StreamerMode = !StreamerMode;
+	StrAppend(ret, _("Toggling Streamer Mode."));
+	return ret;
+}
+
 std::vector<TextCmdItem> TextCmdList = {
 	{ N_("/help"), N_("Prints help overview or help for a specific command."), N_("[command]"), &TextCmdHelp },
 	{ N_("/arena"), N_("Enter a PvP Arena."), N_("<arena-number>"), &TextCmdArena },
 	{ N_("/arenapot"), N_("Gives Arena Potions."), N_("<number>"), &TextCmdArenaPot },
 	{ N_("/inspect"), N_("Inspects stats and equipment of another player."), N_("<player name>"), &TextCmdInspect },
 	{ N_("/seedinfo"), N_("Show seed infos for current level."), "", &TextCmdLevelSeed },
+	{ N_("/streamermode"), N_("Hides game name and password for streamers."), "", &TextCmdStreamerMode },
 };
 
 bool CheckTextCommand(const string_view text)
