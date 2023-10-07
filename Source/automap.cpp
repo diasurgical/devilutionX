@@ -730,7 +730,7 @@ void DrawAutomapText(const Surface &out)
 {
 	Point linePosition { 8, 8 };
 
-	if (gbIsMultiplayer) {
+	if (gbIsMultiplayer && !StreamerMode) {
 		if (GameName != "0.0.0.0" && !IsLoopback && !StreamerMode) {
 			std::string description = std::string(_("Game: "));
 			description.append(GameName);
@@ -741,10 +741,10 @@ void DrawAutomapText(const Surface &out)
 		std::string description;
 		if (IsLoopback) {
 			description = std::string(_("Offline Game"));
-		} else if (!PublicGame && !StreamerMode) {
+		} else if (!PublicGame) {
 			description = std::string(_("Password: "));
 			description.append(GamePassword);
-		} else if (!StreamerMode) {
+		} else {
 			description = std::string(_("Public Game"));
 		}
 		DrawString(out, description, linePosition);
