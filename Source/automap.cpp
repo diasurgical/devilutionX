@@ -744,7 +744,7 @@ void DrawAutomapText(const Surface &out)
 		} else if (!PublicGame && !StreamerMode) {
 			description = std::string(_("Password: "));
 			description.append(GamePassword);
-		} else {
+		} else if (!StreamerMode) {
 			description = std::string(_("Public Game"));
 		}
 		DrawString(out, description, linePosition);
