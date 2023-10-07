@@ -4,7 +4,8 @@
     "dependencies": [
         "fmt",
         "bzip2",
-        "simpleini"
+        "simpleini",
+        "lua"
     ],
     "builtin-baseline": "e8c2a04eb7ca058b6e2f0e6e33c67fdbffeee846",
     "features": {
