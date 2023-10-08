@@ -520,7 +520,7 @@ std::string TextCmdLevelSeed(const string_view parameter)
 	    "Storybook: ", glSeedTbl[16]);
 }
 
-std::string TextCmdStreamerMode(const string_view parameter)
+std::string TextCmdStreamerMode(string_view parameter)
 {
 	std::string ret;
 
