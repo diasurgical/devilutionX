@@ -565,10 +565,10 @@ std::string DebugCmdLevelUp(const std::string_view parameter)
 	Player &myPlayer = *MyPlayer;
 	std::string cmdLabel = "[givelvl] ";
 
-	const int levels = ParseInt<int>(parameter, /*min=*/1).value_or(1);
+	const int levels = std::min<int>(ParseInt<int>(parameter, /*min=*/1).value_or(1), GetMaximumCharacterLevel() - myPlayer.getCharacterLevel());
 	for (int i = 0; i < levels; i++)
 		NetSendCmd(true, CMD_CHEAT_EXPERIENCE);
-	return StrCat(cmdLabel, "New character level: ", myPlayer.getCharacterLevel());
+	return StrCat(cmdLabel, "New character level: ", myPlayer.getCharacterLevel() + levels);
 }
 
 std::string DebugCmdMaxStats(const std::string_view parameter)
