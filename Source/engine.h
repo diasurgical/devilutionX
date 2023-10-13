@@ -77,8 +77,7 @@ void DrawVerticalLine(const Surface &out, Point from, int height, std::uint8_t c
 void UnsafeDrawVerticalLine(const Surface &out, Point from, int height, std::uint8_t colorIndex);
 
 /**
- * Draws a half-transparent rectangle by blacking out odd pixels on odd lines,
- * even pixels on even lines.
+ * Draws a half-transparent rectangle by palette blending with black.
  *
  * @brief Render a transparent black rectangle
  * @param out Target buffer
