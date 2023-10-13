@@ -406,6 +406,12 @@ void MainWndProc(const SDL_Event &event)
 	case SDL_WINDOWEVENT_FOCUS_GAINED:
 		diablo_focus_unpause();
 		break;
+	case SDL_WINDOWEVENT_MOVED:
+	case SDL_WINDOWEVENT_RESIZED:
+	case SDL_WINDOWEVENT_MAXIMIZED:
+	case SDL_WINDOWEVENT_ENTER:
+	case SDL_WINDOWEVENT_TAKE_FOCUS:
+		break;
 	default:
 		LogVerbose("Unhandled SDL_WINDOWEVENT event: {:d}", event.window.event);
 		break;
