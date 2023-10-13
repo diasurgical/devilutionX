@@ -28,7 +28,7 @@ struct PlayerData {
 	/* Class Name */
 	const char *className;
 	/* Class Skill */
-	SpellID skill;
+	SpellID skill = SpellID::Null;
 };
 
 struct ClassAttributes {
