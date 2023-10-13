@@ -10,6 +10,7 @@
 #include "error.h"
 
 #include "DiabloUI/ui_flags.hpp"
+#include "engine/clx_sprite.hpp"
 #include "engine/render/clx_render.hpp"
 #include "engine/render/text_render.hpp"
 #include "panels/info_box.hpp"
@@ -31,8 +32,12 @@ std::deque<MessageEntry> DiabloMessages;
 uint32_t msgStartTime = 0;
 std::vector<std::string> TextLines;
 int ErrorWindowHeight = 54;
-const int LineHeight = 12;
 const int LineWidth = 418;
+
+int LineHeight()
+{
+	return IsSmallFontTall() ? 18 : 12;
+}
 
 void InitNextLines()
 {
@@ -42,14 +47,14 @@ void InitNextLines()
 
 	size_t previous = 0;
 	while (true) {
-		size_t next = paragraphs.find('\n', previous);
+		const size_t next = paragraphs.find('\n', previous);
 		TextLines.emplace_back(paragraphs.substr(previous, next - previous));
 		if (next == std::string::npos)
 			break;
 		previous = next + 1;
 	}
 
-	ErrorWindowHeight = std::max(54, static_cast<int>((TextLines.size() * LineHeight) + 42));
+	ErrorWindowHeight = std::max(54, static_cast<int>((TextLines.size() * LineHeight()) + 42));
 }
 
 } // namespace
@@ -157,38 +162,64 @@ void ClrDiabloMsg()
 
 void DrawDiabloMsg(const Surface &out)
 {
-	auto &uiRectanglePosition = GetUIRectangle().position;
-	int dialogStartY = ((gnScreenHeight - GetMainPanel().size.height) / 2) - (ErrorWindowHeight / 2) + 9;
+	const ClxSpriteList sprites = *pSTextSlidCels;
+	const ClxSprite borderCornerTopLeftSprite = sprites[0];
+	const ClxSprite borderCornerBottomLeftSprite = sprites[1];
+	const ClxSprite borderCornerBottomRightSprite = sprites[2];
+	const ClxSprite borderCornerTopRightSprite = sprites[3];
+	const ClxSprite borderTopSprite = sprites[4];
+	const ClxSprite borderLeftSprite = sprites[5];
+	const ClxSprite borderBottomSprite = sprites[6];
+	const ClxSprite borderRightSprite = sprites[7];
 
-	ClxDraw(out, { uiRectanglePosition.x + 101, dialogStartY }, (*pSTextSlidCels)[0]);
-	ClxDraw(out, { uiRectanglePosition.x + 101, dialogStartY + ErrorWindowHeight - 6 }, (*pSTextSlidCels)[1]);
-	ClxDraw(out, { uiRectanglePosition.x + 527, dialogStartY + ErrorWindowHeight - 6 }, (*pSTextSlidCels)[2]);
-	ClxDraw(out, { uiRectanglePosition.x + 527, dialogStartY }, (*pSTextSlidCels)[3]);
+	const int borderPartWidth = 12;
+	const int borderPartHeight = 12;
 
-	int sx = uiRectanglePosition.x + 109;
-	for (int i = 0; i < 35; i++) {
-		ClxDraw(out, { sx, dialogStartY }, (*pSTextSlidCels)[4]);
-		ClxDraw(out, { sx, dialogStartY + ErrorWindowHeight - 6 }, (*pSTextSlidCels)[6]);
-		sx += 12;
+	const int outerHeight = ErrorWindowHeight;
+	const int outerWidth = 429;
+	const int borderThickness = 3;
+	const int innerWidth = outerWidth - 2 * borderThickness;
+	const int innerHeight = outerHeight - 2 * borderThickness;
+
+	const Point uiRectanglePosition = GetUIRectangle().position;
+	const Point topLeft { uiRectanglePosition.x + 101, ((gnScreenHeight - GetMainPanel().size.height - outerHeight) / 2) - borderThickness };
+
+	const int innerXBegin = topLeft.x + borderThickness;
+	const int innerXEnd = innerXBegin + innerWidth;
+	const int innerYBegin = topLeft.y + borderThickness;
+	const int innerYEnd = innerYBegin + innerHeight;
+	const int borderRightX = innerXEnd - (borderPartWidth - borderThickness);
+	const int borderBottomY = innerYEnd - (borderPartHeight - borderThickness);
+
+	RenderClxSprite(out, borderCornerTopLeftSprite, topLeft);
+	RenderClxSprite(out, borderCornerBottomLeftSprite, { topLeft.x, borderBottomY });
+	RenderClxSprite(out, borderCornerBottomRightSprite, { borderRightX, borderBottomY });
+	RenderClxSprite(out, borderCornerTopRightSprite, { borderRightX, topLeft.y });
+
+	const Surface horizontalBorderOut = out.subregionX(topLeft.x, outerWidth - borderPartWidth);
+	for (int x = borderPartWidth; x < horizontalBorderOut.w(); x += borderPartWidth) {
+		RenderClxSprite(horizontalBorderOut, borderTopSprite, { x, topLeft.y });
+		RenderClxSprite(horizontalBorderOut, borderBottomSprite, { x, borderBottomY });
 	}
-	int drawnYborder = 12;
-	while ((drawnYborder + 12) < ErrorWindowHeight) {
-		ClxDraw(out, { uiRectanglePosition.x + 101, dialogStartY + drawnYborder }, (*pSTextSlidCels)[5]);
-		ClxDraw(out, { uiRectanglePosition.x + 527, dialogStartY + drawnYborder }, (*pSTextSlidCels)[7]);
-		drawnYborder += 12;
+
+	const Surface verticalBorderOut = out.subregionY(topLeft.y, outerHeight - borderPartHeight);
+	for (int y = borderPartHeight; y < verticalBorderOut.h(); y += borderPartHeight) {
+		RenderClxSprite(verticalBorderOut, borderLeftSprite, { topLeft.x, y });
+		RenderClxSprite(verticalBorderOut, borderRightSprite, { borderRightX, y });
 	}
+	DrawHalfTransparentRectTo(out, innerXBegin, innerYBegin, innerWidth, innerHeight);
 
-	DrawHalfTransparentRectTo(out, uiRectanglePosition.x + 104, dialogStartY - 8, 432, ErrorWindowHeight);
-
-	int lineNumber = 0;
-	for (auto &line : TextLines) {
-		DrawString(out, line, { { uiRectanglePosition.x + 109, dialogStartY + 12 + lineNumber * LineHeight }, { LineWidth, LineHeight } }, UiFlags::AlignCenter, 1, LineHeight);
-		lineNumber += 1;
+	const int lineHeight = LineHeight();
+	const int textX = innerXBegin + 5;
+	int textY = innerYBegin + (innerHeight - lineHeight * static_cast<int>(TextLines.size())) / 2;
+	for (const std::string &line : TextLines) {
+		DrawString(out, line, { { textX, textY }, { LineWidth, lineHeight } }, UiFlags::AlignCenter, 1, lineHeight);
+		textY += lineHeight;
 	}
 
 	// Calculate the time the current message has been displayed
-	uint32_t currentTime = SDL_GetTicks();
-	uint32_t messageElapsedTime = currentTime - msgStartTime;
+	const uint32_t currentTime = SDL_GetTicks();
+	const uint32_t messageElapsedTime = currentTime - msgStartTime;
 
 	// Check if the current message's duration has passed
 	if (!DiabloMessages.empty() && messageElapsedTime >= DiabloMessages.front().duration) {
