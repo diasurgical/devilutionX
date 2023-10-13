@@ -303,10 +303,6 @@ struct Item {
 	 */
 	bool isWeapon() const
 	{
-		if (this->isEmpty()) {
-			return false;
-		}
-
 		switch (this->_itype) {
 		case ItemType::Axe:
 		case ItemType::Bow:
@@ -326,10 +322,6 @@ struct Item {
 	 */
 	bool isArmor() const
 	{
-		if (this->isEmpty()) {
-			return false;
-		}
-
 		switch (this->_itype) {
 		case ItemType::HeavyArmor:
 		case ItemType::LightArmor:
@@ -347,7 +339,7 @@ struct Item {
 	 */
 	bool isHelm() const
 	{
-		return !this->isEmpty() && this->_itype == ItemType::Helm;
+		return this->_itype == ItemType::Helm;
 	}
 
 	/**
@@ -356,7 +348,7 @@ struct Item {
 	 */
 	bool isShield() const
 	{
-		return !this->isEmpty() && this->_itype == ItemType::Shield;
+		return this->_itype == ItemType::Shield;
 	}
 
 	/**
@@ -365,10 +357,6 @@ struct Item {
 	 */
 	bool isJewelry() const
 	{
-		if (this->isEmpty()) {
-			return false;
-		}
-
 		switch (this->_itype) {
 		case ItemType::Amulet:
 		case ItemType::Ring:
