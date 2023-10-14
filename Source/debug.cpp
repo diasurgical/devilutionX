@@ -167,20 +167,46 @@ std::string DebugCmdGiveGoldCheat(const std::string_view parameter)
 	Player &myPlayer = *MyPlayer;
 	std::string cmdLabel = "[givegold] ";
 
+	int goldToAdd = 0;
+
+	if (parameter.empty())
+		goldToAdd = GOLD_MAX_LIMIT * InventoryGridCells;
+	else
+		goldToAdd = ParseInt<int>(parameter, /*min=*/1).value_or(1);
+
+	const int goldAmountBefore = myPlayer._pGold;
 	for (int8_t &itemIndex : myPlayer.InvGrid) {
-		if (itemIndex != 0)
+		if (itemIndex < 0)
 			continue;
 
-		Item &goldItem = myPlayer.InvList[myPlayer._pNumInv];
-		MakeGoldStack(goldItem, GOLD_MAX_LIMIT);
-		myPlayer._pNumInv++;
-		itemIndex = myPlayer._pNumInv;
+		Item &item = myPlayer.InvList[itemIndex != 0 ? itemIndex - 1 : myPlayer._pNumInv];
 
-		myPlayer._pGold += goldItem._ivalue;
+		if (itemIndex != 0) {
+			if ((!item.isGold() && !item.isEmpty()) || (item.isGold() && item._ivalue == GOLD_MAX_LIMIT))
+				continue;
+		} else {
+			if (item.isEmpty()) {
+				MakeGoldStack(item, 0);
+				myPlayer._pNumInv++;
+				itemIndex = myPlayer._pNumInv;
+			}
+		}
+
+		int goldThatCanBeAdded = (GOLD_MAX_LIMIT - item._ivalue);
+		if (goldThatCanBeAdded >= goldToAdd) {
+			item._ivalue += goldToAdd;
+			myPlayer._pGold += goldToAdd;
+			break;
+		}
+
+		item._ivalue += goldThatCanBeAdded;
+		goldToAdd -= goldThatCanBeAdded;
+		myPlayer._pGold += goldThatCanBeAdded;
 	}
+
 	CalcPlrInv(myPlayer, true);
 
-	return StrCat(cmdLabel, "Set your gold to", myPlayer._pGold, ".");
+	return StrCat(cmdLabel, "Set your gold to ", myPlayer._pGold, ", added ", myPlayer._pGold - goldAmountBefore, ".");
 }
 
 std::string DebugCmdTakeGoldCheat(const std::string_view parameter)
@@ -1200,7 +1226,7 @@ std::string DebugCmdClearSearch(const std::string_view parameter)
 
 std::vector<DebugCmdItem> DebugCmdList = {
 	{ "help", "Prints help overview or help for a specific command.", "({command})", &DebugCmdHelp },
-	{ "givegold", "Fills the inventory with gold.", "", &DebugCmdGiveGoldCheat },
+	{ "givegold", "Gives player {amount} of gold or max amount if didn't specify.", "{amount}", &DebugCmdGiveGoldCheat },
 	{ "givelvl", "Levels the player up (min 1 level or {levels}).", "({levels})", &DebugCmdLevelUp },
 	{ "maxstats", "Sets all stat values to maximum.", "", &DebugCmdMaxStats },
 	{ "minstats", "Sets all stat values to minimum.", "", &DebugCmdMinStats },
