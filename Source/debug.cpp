@@ -204,20 +204,38 @@ std::string DebugCmdTakeGoldCheat(const std::string_view parameter)
 	Player &myPlayer = *MyPlayer;
 	std::string cmdLabel = "[takegold] ";
 
+	int goldToRemove = 0;
+
+	if (parameter.empty())
+		goldToRemove = GOLD_MAX_LIMIT * InventoryGridCells;
+	else
+		goldToRemove = ParseInt<int>(parameter, /*min=*/1).value_or(1);
+
+	const int goldAmountBefore = myPlayer._pGold;
 	for (auto itemIndex : myPlayer.InvGrid) {
 		itemIndex -= 1;
 
 		if (itemIndex < 0)
 			continue;
-		if (myPlayer.InvList[itemIndex]._itype != ItemType::Gold)
+
+		Item &item = myPlayer.InvList[itemIndex];
+		if (!item.isGold())
 			continue;
 
+		if (item._ivalue >= goldToRemove) {
+			myPlayer._pGold -= goldToRemove;
+			item._ivalue -= goldToRemove;
+			if (item._ivalue == 0)
+				myPlayer.RemoveInvItem(itemIndex);
+			break;
+		}
+
+		myPlayer._pGold -= item._ivalue;
+		goldToRemove -= item._ivalue;
 		myPlayer.RemoveInvItem(itemIndex);
 	}
 
-	myPlayer._pGold = 0;
-
-	return StrCat(cmdLabel, "Set your gold to", myPlayer._pGold, ".");
+	return StrCat(cmdLabel, "Set your gold to ", myPlayer._pGold, ", removed ", goldAmountBefore - myPlayer._pGold, ".");
 }
 
 std::string DebugCmdWarpToLevel(const std::string_view parameter)
@@ -1221,7 +1239,7 @@ std::vector<DebugCmdItem> DebugCmdList = {
 	{ "maxstats", "Sets all stat values to maximum.", "", &DebugCmdMaxStats },
 	{ "minstats", "Sets all stat values to minimum.", "", &DebugCmdMinStats },
 	{ "setspells", "Set spell level to {level} for all spells.", "{level}", &DebugCmdSetSpellsLevel },
-	{ "takegold", "Removes all gold from inventory.", "", &DebugCmdTakeGoldCheat },
+	{ "takegold", "Removes {amount} gold or if didn't specify - all gold from inventory.", "{amount}", &DebugCmdTakeGoldCheat },
 	{ "givequest", "Enable a given quest.", "({id})", &DebugCmdQuest },
 	{ "givemap", "Reveal the map.", "", &DebugCmdMapReveal },
 	{ "takemap", "Hide the map.", "", &DebugCmdMapHide },
