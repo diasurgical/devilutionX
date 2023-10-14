@@ -19,7 +19,7 @@
 #include "engine/events.hpp"
 #include "engine/load_cel.hpp"
 #include "engine/point.hpp"
-#include "error.h"
+#include "diablo_msg.hpp"
 #include "inv.h"
 #include "levels/setmaps.h"
 #include "lighting.h"

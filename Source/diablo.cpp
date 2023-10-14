@@ -35,7 +35,7 @@
 #include "engine/load_file.hpp"
 #include "engine/random.hpp"
 #include "engine/sound.h"
-#include "error.h"
+#include "diablo_msg.hpp"
 #include "gamemenu.h"
 #include "gmenu.h"
 #include "help.h"

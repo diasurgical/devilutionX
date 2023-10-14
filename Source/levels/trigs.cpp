@@ -13,7 +13,7 @@
 #include "control.h"
 #include "controls/plrctrls.h"
 #include "cursor.h"
-#include "error.h"
+#include "diablo_msg.hpp"
 #include "init.h"
 #include "utils/algorithm/container.hpp"
 #include "utils/language.h"

@@ -1,20 +1,21 @@
 /**
- * @file error.cpp
+ * @file diablo_msg.cpp
  *
  * Implementation of in-game message functions.
  */
 
+#include <algorithm>
 #include <cstdint>
 #include <deque>
 
-#include "error.h"
+#include "diablo_msg.hpp"
 
 #include "DiabloUI/ui_flags.hpp"
+#include "control.h"
 #include "engine/clx_sprite.hpp"
 #include "engine/render/clx_render.hpp"
 #include "engine/render/text_render.hpp"
 #include "panels/info_box.hpp"
-#include "stores.h"
 #include "utils/algorithm/container.hpp"
 #include "utils/language.h"
 #include "utils/timer.hpp"
@@ -31,7 +32,7 @@ struct MessageEntry {
 std::deque<MessageEntry> DiabloMessages;
 uint32_t msgStartTime = 0;
 std::vector<std::string> TextLines;
-int ErrorWindowHeight = 54;
+int OuterHeight = 54;
 const int LineWidth = 418;
 
 int LineHeight()
@@ -54,7 +55,7 @@ void InitNextLines()
 		previous = next + 1;
 	}
 
-	ErrorWindowHeight = std::max(54, static_cast<int>((TextLines.size() * LineHeight()) + 42));
+	OuterHeight = std::max(54, static_cast<int>((TextLines.size() * LineHeight()) + 42));
 }
 
 } // namespace
@@ -175,7 +176,7 @@ void DrawDiabloMsg(const Surface &out)
 	const int borderPartWidth = 12;
 	const int borderPartHeight = 12;
 
-	const int outerHeight = ErrorWindowHeight;
+	const int outerHeight = OuterHeight;
 	const int outerWidth = 429;
 	const int borderThickness = 3;
 	const int innerWidth = outerWidth - 2 * borderThickness;

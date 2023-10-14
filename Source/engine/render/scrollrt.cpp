@@ -21,7 +21,7 @@
 #include "engine/render/text_render.hpp"
 #include "engine/trn.hpp"
 #include "engine/world_tile.hpp"
-#include "error.h"
+#include "diablo_msg.hpp"
 #include "gmenu.h"
 #include "help.h"
 #include "hwcursor.hpp"

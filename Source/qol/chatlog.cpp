@@ -16,7 +16,7 @@
 #include "control.h"
 #include "doom.h"
 #include "engine/render/text_render.hpp"
-#include "error.h"
+#include "diablo_msg.hpp"
 #include "gamemenu.h"
 #include "help.h"
 #include "init.h"
