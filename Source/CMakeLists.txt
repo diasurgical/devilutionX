@@ -12,9 +12,9 @@ set(libdevilutionx_SRCS
   dead.cpp
   debug.cpp
   diablo.cpp
+  diablo_msg.cpp
   doom.cpp
   engine.cpp
-  error.cpp
   gamemenu.cpp
   gmenu.cpp
   help.cpp

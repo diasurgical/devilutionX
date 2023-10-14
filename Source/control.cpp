@@ -24,7 +24,7 @@
 #include "engine/render/clx_render.hpp"
 #include "engine/render/text_render.hpp"
 #include "engine/trn.hpp"
-#include "error.h"
+#include "diablo_msg.hpp"
 #include "gamemenu.h"
 #include "init.h"
 #include "inv.h"

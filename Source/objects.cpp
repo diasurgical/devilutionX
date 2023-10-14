@@ -23,7 +23,7 @@
 #include "engine/load_file.hpp"
 #include "engine/points_in_rectangle_range.hpp"
 #include "engine/random.hpp"
-#include "error.h"
+#include "diablo_msg.hpp"
 #include "init.h"
 #include "inv.h"
 #include "inv_iterators.hpp"

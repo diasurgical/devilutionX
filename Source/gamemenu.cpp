@@ -10,7 +10,7 @@
 #include "engine/events.hpp"
 #include "engine/sound.h"
 #include "engine/sound_defs.hpp"
-#include "error.h"
+#include "diablo_msg.hpp"
 #include "gmenu.h"
 #include "init.h"
 #include "loadsave.h"

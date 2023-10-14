@@ -1,5 +1,5 @@
 /**
- * @file error.h
+ * @file diablo_msg.hpp
  *
  * Interface of in-game message functions.
  */
