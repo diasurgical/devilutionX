@@ -342,6 +342,15 @@ struct Item {
 	}
 
 	/**
+	 * @brief Checks whether this item is gold.
+	 * @return 'True' in case the item is gold and 'False' otherwise.
+	 */
+	bool isGold() const
+	{
+		return this->_itype == ItemType::Gold;
+	}
+
+	/**
 	 * @brief Checks whether this item is a helm.
 	 * @return 'True' in case the item is a helm and 'False' otherwise.
 	 */
