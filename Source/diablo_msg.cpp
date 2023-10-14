@@ -11,14 +11,13 @@
 #include "diablo_msg.hpp"
 
 #include "DiabloUI/ui_flags.hpp"
-#include "control.h"
 #include "engine/clx_sprite.hpp"
 #include "engine/render/clx_render.hpp"
 #include "engine/render/text_render.hpp"
 #include "panels/info_box.hpp"
 #include "utils/algorithm/container.hpp"
 #include "utils/language.h"
-#include "utils/timer.hpp"
+#include "utils/str_split.hpp"
 
 namespace devilution {
 
@@ -30,32 +29,29 @@ struct MessageEntry {
 };
 
 std::deque<MessageEntry> DiabloMessages;
-uint32_t msgStartTime = 0;
+uint32_t msgStartTime;
 std::vector<std::string> TextLines;
-int OuterHeight = 54;
-const int LineWidth = 418;
+int OuterHeight;
+int LineWidth;
+int LineHeight;
 
-int LineHeight()
-{
-	return IsSmallFontTall() ? 18 : 12;
-}
-
-void InitNextLines()
+void InitDiabloMsg()
 {
 	TextLines.clear();
+	if (DiabloMessages.empty())
+		return;
 
-	const std::string paragraphs = WordWrapString(DiabloMessages.front().text, LineWidth, GameFont12, 1);
-
-	size_t previous = 0;
-	while (true) {
-		const size_t next = paragraphs.find('\n', previous);
-		TextLines.emplace_back(paragraphs.substr(previous, next - previous));
-		if (next == std::string::npos)
-			break;
-		previous = next + 1;
+	LineWidth = 418;
+	const std::string_view text = DiabloMessages.front().text;
+	const std::string wrapped = WordWrapString(text, LineWidth, GameFont12);
+	for (const std::string_view line : SplitByChar(wrapped, '\n')) {
+		LineWidth = std::max(LineWidth, GetLineWidth(text, GameFont12));
+		TextLines.emplace_back(line);
 	}
 
-	OuterHeight = std::max(54, static_cast<int>((TextLines.size() * LineHeight()) + 42));
+	msgStartTime = SDL_GetTicks();
+	LineHeight = GetLineHeight(text, GameFont12);
+	OuterHeight = static_cast<int>((TextLines.size()) * LineHeight) + 42;
 }
 
 } // namespace
@@ -126,17 +122,13 @@ void InitDiabloMsg(diablo_message e, uint32_t duration /*= 3500*/)
 
 void InitDiabloMsg(std::string_view msg, uint32_t duration /*= 3500*/)
 {
-	if (DiabloMessages.size() >= MAX_SEND_STR_LEN)
-		return;
-
 	if (c_find_if(DiabloMessages, [&msg](const MessageEntry &entry) { return entry.text == msg; })
 	    != DiabloMessages.end())
 		return;
 
 	DiabloMessages.push_back({ std::string(msg), duration });
 	if (DiabloMessages.size() == 1) {
-		InitNextLines();
-		msgStartTime = SDL_GetTicks();
+		InitDiabloMsg();
 	}
 }
 
@@ -149,10 +141,7 @@ void CancelCurrentDiabloMsg()
 {
 	if (!DiabloMessages.empty()) {
 		DiabloMessages.pop_front();
-		if (!DiabloMessages.empty()) {
-			InitNextLines();
-			msgStartTime = SDL_GetTicks();
-		}
+		InitDiabloMsg();
 	}
 }
 
@@ -176,14 +165,16 @@ void DrawDiabloMsg(const Surface &out)
 	const int borderPartWidth = 12;
 	const int borderPartHeight = 12;
 
-	const int outerHeight = OuterHeight;
-	const int outerWidth = 429;
+	const int textPaddingX = 5;
 	const int borderThickness = 3;
+
+	const int outerHeight = std::min<int>(out.h(), OuterHeight);
+	const int outerWidth = std::min<int>(out.w(), LineWidth + 2 * borderThickness + textPaddingX);
 	const int innerWidth = outerWidth - 2 * borderThickness;
+	const int lineWidth = innerWidth - textPaddingX;
 	const int innerHeight = outerHeight - 2 * borderThickness;
 
-	const Point uiRectanglePosition = GetUIRectangle().position;
-	const Point topLeft { uiRectanglePosition.x + 101, ((gnScreenHeight - GetMainPanel().size.height - outerHeight) / 2) - borderThickness };
+	const Point topLeft { (out.w() - outerWidth) / 2, (out.h() - outerHeight) / 2 };
 
 	const int innerXBegin = topLeft.x + borderThickness;
 	const int innerXEnd = innerXBegin + innerWidth;
@@ -210,25 +201,20 @@ void DrawDiabloMsg(const Surface &out)
 	}
 	DrawHalfTransparentRectTo(out, innerXBegin, innerYBegin, innerWidth, innerHeight);
 
-	const int lineHeight = LineHeight();
-	const int textX = innerXBegin + 5;
-	int textY = innerYBegin + (innerHeight - lineHeight * static_cast<int>(TextLines.size())) / 2;
+	const int textX = innerXBegin + textPaddingX;
+	int textY = innerYBegin + (innerHeight - LineHeight * static_cast<int>(TextLines.size())) / 2;
 	for (const std::string &line : TextLines) {
-		DrawString(out, line, { { textX, textY }, { LineWidth, lineHeight } }, UiFlags::AlignCenter, 1, lineHeight);
-		textY += lineHeight;
+		DrawString(out, line, { { textX, textY }, { lineWidth, LineHeight } }, UiFlags::AlignCenter, 1, LineHeight);
+		textY += LineHeight;
 	}
 
 	// Calculate the time the current message has been displayed
-	const uint32_t currentTime = SDL_GetTicks();
-	const uint32_t messageElapsedTime = currentTime - msgStartTime;
+	const uint32_t messageElapsedTime = SDL_GetTicks() - msgStartTime;
 
 	// Check if the current message's duration has passed
 	if (!DiabloMessages.empty() && messageElapsedTime >= DiabloMessages.front().duration) {
 		DiabloMessages.pop_front();
-		if (!DiabloMessages.empty()) {
-			InitNextLines();
-			msgStartTime = currentTime;
-		}
+		InitDiabloMsg();
 	}
 }
 

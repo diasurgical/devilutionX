@@ -18,12 +18,12 @@
 #ifdef _DEBUG
 #include "debug.h"
 #endif
+#include "diablo_msg.hpp"
 #include "engine/backbuffer_state.hpp"
 #include "engine/load_cel.hpp"
 #include "engine/load_file.hpp"
 #include "engine/points_in_rectangle_range.hpp"
 #include "engine/random.hpp"
-#include "diablo_msg.hpp"
 #include "init.h"
 #include "inv.h"
 #include "inv_iterators.hpp"
