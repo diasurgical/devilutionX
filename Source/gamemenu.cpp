@@ -6,11 +6,11 @@
 #include "gamemenu.h"
 
 #include "cursor.h"
+#include "diablo_msg.hpp"
 #include "engine/backbuffer_state.hpp"
 #include "engine/events.hpp"
 #include "engine/sound.h"
 #include "engine/sound_defs.hpp"
-#include "diablo_msg.hpp"
 #include "gmenu.h"
 #include "init.h"
 #include "loadsave.h"

@@ -13,6 +13,7 @@
 #include "controls/plrctrls.h"
 #include "cursor.h"
 #include "dead.h"
+#include "diablo_msg.hpp"
 #include "doom.h"
 #include "engine/backbuffer_state.hpp"
 #include "engine/dx.h"
@@ -21,7 +22,6 @@
 #include "engine/render/text_render.hpp"
 #include "engine/trn.hpp"
 #include "engine/world_tile.hpp"
-#include "diablo_msg.hpp"
 #include "gmenu.h"
 #include "help.h"
 #include "hwcursor.hpp"
@@ -1194,7 +1194,7 @@ void DrawView(const Surface &out, Point startPosition)
 		DrawChatLog(out);
 	}
 	if (IsDiabloMsgAvailable()) {
-		DrawDiabloMsg(out);
+		DrawDiabloMsg(out.subregionY(0, out.h() - GetMainPanel().size.height));
 	}
 	if (MyPlayerIsDead) {
 		RedBack(out);
