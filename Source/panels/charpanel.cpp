@@ -240,7 +240,7 @@ void DrawShadowString(const Surface &out, const PanelEntry &entry)
 		labelPosition += Displacement { -entry.labelLength - (IsSmallFontTall() ? 2 : 3), 0 };
 	}
 
-	// If the text is less tall then the field, we center it vertically relative to the field.
+	// If the text is less tall than the field, we center it vertically relative to the field.
 	// Otherwise, we draw from the top of the field.
 	const int textHeight = (c_count(wrapped, '\n') + 1) * GetLineHeight(wrapped, GameFont12);
 	const int labelHeight = std::max(PanelFieldHeight, textHeight);
