@@ -2049,6 +2049,7 @@ void OperateChest(const Player &player, Object &chest, bool sendLootMsg)
 			mtype = MissileID::Arrow;
 		}
 		AddMissile(chest.position, player.position.tile, mdir, mtype, TARGET_PLAYERS, -1, 0, 0);
+		PlaySfxLoc(IS_TRAP, chest.position);
 		chest._oTrapFlag = false;
 	}
 	if (&player == MyPlayer)
