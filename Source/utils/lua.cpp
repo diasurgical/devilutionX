@@ -108,13 +108,14 @@ void LuaInitialize()
 #endif
 
 	// Registering globals
-	lua["print"] = LuaPrint;
-	lua["_VERSION"] = LUA_VERSION;
+	lua.set(
+	    "print", LuaPrint,
+	    "_VERSION", LUA_VERSION);
 
 	// Registering devilutionx object table
-	sol::table devilutionx(lua, sol::create);
-	devilutionx["message"] = LuaPlayerMessage;
-	lua["devilutionx"] = devilutionx;
+	lua.create_named_table(
+	    "devilutionx",
+	    "message", LuaPlayerMessage);
 
 	RunScript("lua/init.lua");
 	RunScript("lua/user.lua");
