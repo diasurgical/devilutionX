@@ -1304,6 +1304,11 @@ KeymapperOptions::KeymapperOptions()
 		keyIDToKeyName.emplace(SDLK_F1 + i, StrCat("F", i + 1));
 	}
 
+	keyIDToKeyName.emplace(SDLK_KP_0, "KEYPADNUM 0");
+	for (int i = 0; i < 9; i++) {
+		keyIDToKeyName.emplace(SDLK_KP_1 + i, StrCat("KEYPADNUM ", i + 1));
+	}
+
 	keyIDToKeyName.emplace(SDLK_LALT, "LALT");
 	keyIDToKeyName.emplace(SDLK_RALT, "RALT");
 	keyIDToKeyName.emplace(SDLK_SPACE, "SPACE");
