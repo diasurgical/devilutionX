@@ -620,20 +620,27 @@ std::string WordWrapString(std::string_view text, unsigned width, GameFontTables
 			lineWidth += (*currentFont.sprite)[frame].width() + spacing;
 		}
 
-		const bool isWhitespace = IsWhitespace(codepoint);
-		if (isWhitespace || IsBreakAllowed(codepoint, nextCodepoint)) {
+		if (IsWhitespace(codepoint)) {
 			lastBreakablePos = remaining.data() - begin - codepointLen;
 			lastBreakableLen = codepointLen;
-			lastBreakableKeep = !isWhitespace;
+			lastBreakableKeep = false;
 			continue;
 		}
 
 		if (lineWidth - spacing <= width) {
+			if (IsBreakAllowed(codepoint, nextCodepoint)) {
+				lastBreakablePos = remaining.data() - begin - codepointLen;
+				lastBreakableLen = codepointLen;
+				lastBreakableKeep = true;
+			}
+
 			continue; // String is still within the limit, continue to the next symbol
 		}
 
 		if (lastBreakablePos == std::string_view::npos) { // Single word longer than width
-			continue;
+			lastBreakablePos = remaining.data() - begin - codepointLen;
+			lastBreakableLen = 0;
+			lastBreakableKeep = false;
 		}
 
 		// Break line and continue to next line
