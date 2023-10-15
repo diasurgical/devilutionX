@@ -89,6 +89,7 @@ void SDL_LogInfo(int category, const char *fmt, ...) DVL_PRINTF_ATTRIBUTE(2, 3);
 void SDL_LogWarn(int category, const char *fmt, ...) DVL_PRINTF_ATTRIBUTE(2, 3);
 void SDL_LogError(int category, const char *fmt, ...) DVL_PRINTF_ATTRIBUTE(2, 3);
 void SDL_LogCritical(int category, const char *fmt, ...) DVL_PRINTF_ATTRIBUTE(2, 3);
+void SDL_LogMessage(int category, SDL_LogPriority priority, const char *fmt, ...) DVL_PRINTF_ATTRIBUTE(3, 4);
 void SDL_LogMessageV(int category, SDL_LogPriority priority, const char *fmt, va_list ap) DVL_PRINTF_ATTRIBUTE(3, 0);
 
 void SDL_LogSetAllPriority(SDL_LogPriority priority);
