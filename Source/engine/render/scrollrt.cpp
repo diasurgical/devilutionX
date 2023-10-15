@@ -46,6 +46,7 @@
 #include "utils/display.h"
 #include "utils/endian.hpp"
 #include "utils/log.hpp"
+#include "utils/lua.hpp"
 #include "utils/str_cat.hpp"
 
 #ifndef USE_SDL1
@@ -1653,6 +1654,8 @@ void DrawAndBlit()
 	DrawCursor(out);
 
 	DrawFPS(out);
+
+	LuaEvent("OnGameDrawComplete");
 
 	DrawMain(out, hgt, drawInfoBox, drawHealth, drawMana, drawBelt, drawControlButtons);
 
