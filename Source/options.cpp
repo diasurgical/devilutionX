@@ -1384,10 +1384,11 @@ void KeymapperOptions::Action::SaveToIni(std::string_view category) const
 	if (boundKey == SDLK_UNKNOWN) {
 		// Just add an empty config entry if the action is unbound.
 		SetIniValue(category.data(), key.data(), "");
+		return;
 	}
 	auto keyNameIt = sgOptions.Keymapper.keyIDToKeyName.find(boundKey);
 	if (keyNameIt == sgOptions.Keymapper.keyIDToKeyName.end()) {
-		LogVerbose("Keymapper: no name found for key '{}'", key);
+		LogVerbose("Keymapper: no name found for key {} bound to {}", boundKey, key);
 		return;
 	}
 	SetIniValue(category.data(), key.data(), keyNameIt->second.c_str());
@@ -1628,13 +1629,13 @@ void PadmapperOptions::Action::SaveToIni(std::string_view category) const
 	}
 	std::string inputName = sgOptions.Padmapper.buttonToButtonName[static_cast<size_t>(boundInput.button)];
 	if (inputName.empty()) {
-		LogVerbose("Padmapper: no name found for key '{}'", key);
+		LogVerbose("Padmapper: no name found for button {} bound to {}", static_cast<size_t>(boundInput.button), key);
 		return;
 	}
 	if (boundInput.modifier != ControllerButton_NONE) {
 		const std::string &modifierName = sgOptions.Padmapper.buttonToButtonName[static_cast<size_t>(boundInput.modifier)];
 		if (modifierName.empty()) {
-			LogVerbose("Padmapper: no name found for key '{}'", key);
+			LogVerbose("Padmapper: no name found for modifier button {} bound to {}", static_cast<size_t>(boundInput.button), key);
 			return;
 		}
 		inputName = StrCat(modifierName, "+", inputName);
