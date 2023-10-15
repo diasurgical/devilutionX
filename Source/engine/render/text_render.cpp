@@ -583,7 +583,6 @@ std::string WordWrapString(std::string_view text, unsigned width, GameFontTables
 	const char *processedEnd = text.data();
 	std::string_view::size_type lastBreakablePos = std::string_view::npos;
 	std::size_t lastBreakableLen;
-	bool lastBreakableKeep = false;
 	unsigned lineWidth = 0;
 	CurrentFont currentFont;
 
@@ -623,15 +622,13 @@ std::string WordWrapString(std::string_view text, unsigned width, GameFontTables
 		if (IsWhitespace(codepoint)) {
 			lastBreakablePos = remaining.data() - begin - codepointLen;
 			lastBreakableLen = codepointLen;
-			lastBreakableKeep = false;
 			continue;
 		}
 
 		if (lineWidth - spacing <= width) {
 			if (IsBreakAllowed(codepoint, nextCodepoint)) {
-				lastBreakablePos = remaining.data() - begin - codepointLen;
-				lastBreakableLen = codepointLen;
-				lastBreakableKeep = true;
+				lastBreakablePos = remaining.data() - begin;
+				lastBreakableLen = 0;
 			}
 
 			continue; // String is still within the limit, continue to the next symbol
@@ -640,14 +637,10 @@ std::string WordWrapString(std::string_view text, unsigned width, GameFontTables
 		if (lastBreakablePos == std::string_view::npos) { // Single word longer than width
 			lastBreakablePos = remaining.data() - begin - codepointLen;
 			lastBreakableLen = 0;
-			lastBreakableKeep = false;
 		}
 
 		// Break line and continue to next line
 		const char *end = &text[lastBreakablePos];
-		if (lastBreakableKeep) {
-			end += lastBreakableLen;
-		}
 		output.append(processedEnd, end);
 		output += '\n';
 
