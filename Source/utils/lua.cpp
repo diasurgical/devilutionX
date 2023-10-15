@@ -4,6 +4,7 @@
 #include <string_view>
 
 #include <sol/sol.hpp>
+#include <sol/utility/to_string.hpp>
 
 #include "engine/assets.hpp"
 #include "engine/dx.h"
@@ -135,6 +136,21 @@ void LuaEvent(std::string_view name)
 	}
 	const sol::protected_function fn = trigger->as<sol::protected_function>();
 	CheckResult(fn());
+}
+
+tl::expected<std::string, std::string> RunLua(std::string_view code)
+{
+	sol::state &lua = *luaState;
+	const sol::protected_function_result result = lua.safe_script(code);
+	const bool valid = result.valid();
+	if (!valid) {
+		if (result.get_type() == sol::type::string) {
+			return tl::make_unexpected(result.get<std::string>());
+		}
+		return tl::make_unexpected("Unknown Lua error");
+	}
+
+	return sol::utility::to_string(sol::object(result));
 }
 
 } // namespace devilution

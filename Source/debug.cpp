@@ -35,6 +35,7 @@
 #include "utils/file_util.h"
 #include "utils/language.h"
 #include "utils/log.hpp"
+#include "utils/lua.hpp"
 #include "utils/parse_int.hpp"
 #include "utils/str_case.hpp"
 #include "utils/str_cat.hpp"
@@ -150,6 +151,15 @@ std::string DebugCmdHelp(const std::string_view parameter)
 	if (dbgCmdItem.requiredParameter.empty())
 		return StrCat("Description: ", dbgCmdItem.description, "\nParameters: No additional parameter needed.");
 	return StrCat("Description: ", dbgCmdItem.description, "\nParameters: ", dbgCmdItem.requiredParameter);
+}
+
+std::string DebugCmdLua(std::string_view code)
+{
+	tl::expected<std::string, std::string> result = RunLua(code);
+	if (!result.has_value()) {
+		return StrCat("> ", code, "\n") + std::move(result).error();
+	}
+	return StrCat("> ", code, "\n") + std::move(result).value();
 }
 
 std::string DebugCmdGiveGoldCheat(const std::string_view parameter)
@@ -1231,6 +1241,7 @@ std::vector<DebugCmdItem> DebugCmdList = {
 	{ "searchitem", "Searches the automap for {item}", "{item}", &DebugCmdSearchItem },
 	{ "searchobject", "Searches the automap for {object}", "{object}", &DebugCmdSearchObject },
 	{ "clearsearch", "Search in the auto map is cleared", "", &DebugCmdClearSearch },
+	{ "lua", "Run Lua code", "{code}", &DebugCmdLua },
 };
 
 } // namespace
