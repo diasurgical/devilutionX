@@ -24,3 +24,4 @@ end
 
 Events:RegisterEvent("OnGameBoot")
 Events:RegisterEvent("OnGameStart")
+Events:RegisterEvent("OnGameDrawComplete")

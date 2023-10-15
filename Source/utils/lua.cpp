@@ -6,6 +6,8 @@
 #include <sol/sol.hpp>
 
 #include "engine/assets.hpp"
+#include "engine/dx.h"
+#include "engine/render/text_render.hpp"
 #include "plrmsg.h"
 #include "utils/console.h"
 #include "utils/log.hpp"
@@ -18,24 +20,16 @@ std::optional<sol::state> luaState;
 
 int LuaPrint(lua_State *state)
 {
-	int nargs = lua_gettop(state);
-	if (nargs >= 1 && lua_isstring(state, 1)) {
-		std::string msg = lua_tostring(state, 1);
-		msg += "\n";
-		printInConsole(msg);
+	const int n = lua_gettop(state);
+	for (int i = 1; i <= n; i++) {
+		size_t l;
+		const char *s = luaL_tolstring(state, i, &l);
+		if (i > 1)
+			printInConsole("\t");
+		printInConsole(std::string_view(s, l));
+		lua_pop(state, 1);
 	}
-
-	return 0;
-}
-
-int LuaPlayerMessage(lua_State *state)
-{
-	int nargs = lua_gettop(state);
-	if (nargs >= 1 && lua_isstring(state, 1)) {
-		std::string_view msg = lua_tostring(state, 1);
-		EventPlrMsg(msg, UiFlags::ColorRed);
-	}
-
+	printNewlineInConsole();
 	return 0;
 }
 
@@ -80,14 +74,14 @@ void LuaPanic(sol::optional<std::string> maybe_msg)
 
 } // namespace
 
-void Sol2DebugPrintStack(lua_State *L)
+void Sol2DebugPrintStack(lua_State *state)
 {
-	LogDebug("{}", sol::detail::debug::dump_types(L));
+	LogDebug("{}", sol::detail::debug::dump_types(state));
 }
 
-void Sol2DebugPrintSection(const std::string &message, lua_State *L)
+void Sol2DebugPrintSection(const std::string &message, lua_State *state)
 {
-	LogDebug("-- {} -- [ {} ]", message, sol::detail::debug::dump_types(L));
+	LogDebug("-- {} -- [ {} ]", message, sol::detail::debug::dump_types(state));
 }
 
 void LuaInitialize()
@@ -115,7 +109,10 @@ void LuaInitialize()
 	// Registering devilutionx object table
 	lua.create_named_table(
 	    "devilutionx",
-	    "message", LuaPlayerMessage);
+	    "message", [](std::string_view text) { EventPlrMsg(text, UiFlags::ColorRed); }
+	    // TODO: Re-enable once https://github.com/bebbo/amiga-gcc/issues/363 is fixed.
+	    // "drawString", [](std::string_view text, int x, int y) { DrawString(GlobalBackBuffer(), text, { x, y }); }
+	);
 
 	RunScript("lua/init.lua");
 	RunScript("lua/user.lua");
