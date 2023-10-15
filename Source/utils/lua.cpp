@@ -129,23 +129,13 @@ void LuaShutdown()
 
 void LuaEvent(std::string_view name)
 {
-	sol::state &lua = *luaState;
-	const sol::object events = lua["Events"];
-	if (!events.is<sol::table>()) {
-		LogError("Events table missing!");
-		return;
-	}
-	const sol::object event = events.as<sol::table>()[name];
-	if (!event.is<sol::table>()) {
-		LogError("Events.{} event not registered", name);
-		return;
-	}
-	const sol::object trigger = event.as<sol::table>()["Trigger"];
-	if (!trigger.is<sol::function>()) {
+	const sol::state &lua = *luaState;
+	const auto trigger = lua.traverse_get<std::optional<sol::object>>("Events", name, "Trigger");
+	if (!trigger.has_value() || !trigger->is<sol::protected_function>()) {
 		LogError("Events.{}.Trigger is not a function", name);
 		return;
 	}
-	const sol::protected_function fn = trigger.as<sol::protected_function>();
+	const sol::protected_function fn = trigger->as<sol::protected_function>();
 	CheckResult(fn());
 }
 
