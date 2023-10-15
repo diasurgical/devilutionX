@@ -1,11 +1,11 @@
 #pragma once
 
-#include <string>
+#include <string_view>
 
 namespace devilution {
 
 void LuaInitialize();
 void LuaShutdown();
-void LuaEvent(std::string name);
+void LuaEvent(std::string_view name);
 
 } // namespace devilution

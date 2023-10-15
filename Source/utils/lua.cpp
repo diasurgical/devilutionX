@@ -1,22 +1,20 @@
 #include "utils/lua.hpp"
 
+#include <optional>
 #include <string_view>
 
-extern "C" {
-#include "lauxlib.h"
-#include "lua.h"
-#include "lualib.h"
-}
+#include <sol/sol.hpp>
 
 #include "engine/assets.hpp"
 #include "plrmsg.h"
 #include "utils/console.h"
+#include "utils/log.hpp"
 
 namespace devilution {
 
 namespace {
 
-lua_State *LuaState;
+std::optional<sol::state> luaState;
 
 int LuaPrint(lua_State *state)
 {
@@ -41,6 +39,19 @@ int LuaPlayerMessage(lua_State *state)
 	return 0;
 }
 
+bool CheckResult(sol::protected_function_result result)
+{
+	const bool valid = result.valid();
+	if (!valid) {
+		if (result.get_type() == sol::type::string) {
+			LogError("Lua error: {}", result.get<std::string>());
+		} else {
+			LogError("Unknown Lua error");
+		}
+	}
+	return valid;
+}
+
 void RunScript(std::string_view path)
 {
 	AssetRef ref = FindAsset(path);
@@ -48,7 +59,7 @@ void RunScript(std::string_view path)
 		return;
 
 	const size_t size = ref.size();
-	std::unique_ptr<char[]> luaScript { new char[size + 1] };
+	std::unique_ptr<char[]> luaScript { new char[size] };
 
 	AssetHandle handle = OpenAsset(std::move(ref));
 	if (!handle.ok())
@@ -57,52 +68,53 @@ void RunScript(std::string_view path)
 	if (size > 0 && !handle.read(luaScript.get(), size))
 		return;
 
-	luaScript[size] = '\0'; // Terminate string
+	const std::string_view luaScriptStr(luaScript.get(), size);
+	CheckResult(luaState->safe_script(luaScriptStr));
+}
 
-	int status = luaL_loadstring(LuaState, luaScript.get());
-	if (status == LUA_OK)
-		status = lua_pcall(LuaState, 0, 0, 0);
-	if (status != LUA_OK)
-		SDL_Log("%s", lua_tostring(LuaState, -1));
+void LuaPanic(sol::optional<std::string> maybe_msg)
+{
+	LogError("Lua is in a panic state and will now abort() the application:\n",
+	    maybe_msg.value_or("unknown error"));
 }
 
 } // namespace
 
+void Sol2DebugPrintStack(lua_State *L)
+{
+	LogDebug("{}", sol::detail::debug::dump_types(L));
+}
+
+void Sol2DebugPrintSection(const std::string &message, lua_State *L)
+{
+	LogDebug("-- {} -- [ {} ]", message, sol::detail::debug::dump_types(L));
+}
+
 void LuaInitialize()
 {
-	LuaState = luaL_newstate();
-
-	// Load libraries
-	luaL_requiref(LuaState, LUA_GNAME, luaopen_base, 1);
-	lua_pop(LuaState, 1);
-	luaL_requiref(LuaState, LUA_LOADLIBNAME, luaopen_package, 1);
-	lua_pop(LuaState, 1);
-	luaL_requiref(LuaState, LUA_COLIBNAME, luaopen_coroutine, 1);
-	lua_pop(LuaState, 1);
-	luaL_requiref(LuaState, LUA_TABLIBNAME, luaopen_table, 1);
-	lua_pop(LuaState, 1);
-	luaL_requiref(LuaState, LUA_STRLIBNAME, luaopen_string, 1);
-	lua_pop(LuaState, 1);
-	luaL_requiref(LuaState, LUA_MATHLIBNAME, luaopen_math, 1);
-	lua_pop(LuaState, 1);
-	luaL_requiref(LuaState, LUA_UTF8LIBNAME, luaopen_utf8, 1);
-	lua_pop(LuaState, 1);
+	luaState.emplace(sol::c_call<decltype(&LuaPanic), &LuaPanic>);
+	sol::state &lua = *luaState;
+	lua.open_libraries(
+	    sol::lib::base,
+	    sol::lib::package,
+	    sol::lib::coroutine,
+	    sol::lib::table,
+	    sol::lib::string,
+	    sol::lib::math,
+	    sol::lib::utf8);
 
 #ifdef _DEBUG
-	luaL_requiref(LuaState, LUA_DBLIBNAME, luaopen_debug, 1);
-	lua_pop(LuaState, 1);
+	lua.open_libraries(sol::lib::debug);
 #endif
 
 	// Registering globals
-	lua_register(LuaState, "print", LuaPrint);
-	lua_pushstring(LuaState, LUA_VERSION);
-	lua_setglobal(LuaState, "_VERSION");
+	lua["print"] = LuaPrint;
+	lua["_VERSION"] = LUA_VERSION;
 
 	// Registering devilutionx object table
-	lua_newtable(LuaState);
-	lua_pushcfunction(LuaState, LuaPlayerMessage);
-	lua_setfield(LuaState, -2, "message");
-	lua_setglobal(LuaState, "devilutionx");
+	sol::table devilutionx(lua, sol::create);
+	devilutionx["message"] = LuaPlayerMessage;
+	lua["devilutionx"] = devilutionx;
 
 	RunScript("lua/init.lua");
 	RunScript("lua/user.lua");
@@ -112,36 +124,29 @@ void LuaInitialize()
 
 void LuaShutdown()
 {
-	if (LuaState == nullptr)
-		return;
-
-	lua_close(LuaState);
+	luaState = std::nullopt;
 }
 
-void LuaEvent(std::string name)
+void LuaEvent(std::string_view name)
 {
-	lua_getglobal(LuaState, "Events");
-	if (!lua_istable(LuaState, -1)) {
-		lua_pop(LuaState, 1);
-		SDL_Log("Events table missing!");
+	sol::state &lua = *luaState;
+	const sol::object events = lua["Events"];
+	if (!events.is<sol::table>()) {
+		LogError("Events table missing!");
 		return;
 	}
-	lua_getfield(LuaState, -1, name.c_str());
-	if (!lua_istable(LuaState, -1)) {
-		lua_pop(LuaState, 2);
-		SDL_Log("Events.%s event not registered", name.c_str());
+	const sol::object event = events.as<sol::table>()[name];
+	if (!event.is<sol::table>()) {
+		LogError("Events.{} event not registered", name);
 		return;
 	}
-	lua_getfield(LuaState, -1, "Trigger");
-	if (!lua_isfunction(LuaState, -1)) {
-		lua_pop(LuaState, 3);
-		SDL_Log("Events.%s.Trigger is not a function", name.c_str());
+	const sol::object trigger = event.as<sol::table>()["Trigger"];
+	if (!trigger.is<sol::function>()) {
+		LogError("Events.{}.Trigger is not a function", name);
 		return;
 	}
-	if (lua_pcall(LuaState, 0, 0, 0) != LUA_OK) {
-		SDL_Log("%s", lua_tostring(LuaState, -1));
-	}
-	lua_pop(LuaState, 2);
+	const sol::protected_function fn = trigger.as<sol::protected_function>();
+	CheckResult(fn());
 }
 
 } // namespace devilution

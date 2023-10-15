@@ -27,8 +27,6 @@ endif()
 find_package(Lua 5.4 QUIET)
 if(LUA_FOUND)
   message("-- Found Lua ${LUA_VERSION_STRING}")
-  # No clear way to statically link from the system lib
-  set(DEVILUTIONX_STATIC_LUA OFF)
 else()
   if(NOT DEFINED DEVILUTIONX_SYSTEM_LUA)
     message("-- Suitable system Lua package not found, will use Lua from source")
@@ -47,6 +45,8 @@ else()
   find_package(Lua 5.4 REQUIRED)
   include_directories(${LUA_INCLUDE_DIR})
 endif()
+
+add_subdirectory(3rdParty/sol2)
 
 if(SCREEN_READER_INTEGRATION)
   if(WIN32)

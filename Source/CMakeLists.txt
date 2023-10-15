@@ -288,7 +288,7 @@ if(DISCORD_INTEGRATION)
   target_link_libraries(libdevilutionx PRIVATE discord discord_game_sdk)
 endif()
 
-target_link_libraries(libdevilutionx PRIVATE ${LUA_LIBRARIES})
+target_link_libraries(libdevilutionx PRIVATE ${LUA_LIBRARIES} sol2::sol2)
 
 if(SCREEN_READER_INTEGRATION AND WIN32)
   target_compile_definitions(libdevilutionx PRIVATE Tolk)
