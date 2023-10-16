@@ -4,6 +4,19 @@
 
 ---
 
+# Table of Content
+
+- [What is DevilutionX](#what-is-devilutionx)
+- [How to Install](#how-to-install)
+- [Contributing](#contributing)
+- [Mods](#mods)
+- [Test builds](#test-builds)
+- [Building from Source](#building-from-source)
+- [Credits](#credits)
+- [Legal](#legal)
+
+---
+
 [![Discord Channel](https://img.shields.io/discord/518540764754608128?color=%237289DA&logo=discord&logoColor=%23FFFFFF)](https://discord.gg/devilutionx)
 [![Downloads](https://img.shields.io/github/downloads/diasurgical/devilutionX/total.svg)](https://github.com/diasurgical/devilutionX/releases/latest)
 [![Codecov](https://codecov.io/gh/diasurgical/devilutionX/branch/master/graph/badge.svg)](https://codecov.io/gh/diasurgical/devilutionX)
