@@ -1607,6 +1607,18 @@ bool CanPlayerTakeAction()
 {
 	return !IsPlayerDead() && IsGameRunning();
 }
+
+bool CanAutomapBeToggledOff()
+{
+	// check if every window is closed - if yes, automap can be toggled off
+	if (!QuestLogIsOpen && !IsWithdrawGoldOpen && !IsStashOpen && !chrflag
+	    && !sbookflag && !invflag && !isGameMenuOpen && !qtextflag && !spselflag
+	    && !ChatLogFlag && !HelpFlag)
+		return true;
+
+	return false;
+}
+
 } // namespace
 
 void InitKeymapActions()
@@ -1783,6 +1795,9 @@ void InitKeymapActions()
 	    N_("Hide all info screens."),
 	    SDLK_SPACE,
 	    [] {
+		    if (CanAutomapBeToggledOff())
+			    AutomapActive = false;
+
 		    ClosePanels();
 		    HelpFlag = false;
 		    ChatLogFlag = false;
@@ -1791,7 +1806,7 @@ void InitKeymapActions()
 			    qtextflag = false;
 			    stream_stop();
 		    }
-		    AutomapActive = false;
+
 		    CancelCurrentDiabloMsg();
 		    gamemenu_off();
 		    doom_close();
@@ -2251,6 +2266,9 @@ void InitPadmapActions()
 	    N_("Hide all info screens."),
 	    ControllerButton_NONE,
 	    [] {
+		    if (CanAutomapBeToggledOff())
+			    AutomapActive = false;
+
 		    ClosePanels();
 		    HelpFlag = false;
 		    ChatLogFlag = false;
@@ -2259,7 +2277,7 @@ void InitPadmapActions()
 			    qtextflag = false;
 			    stream_stop();
 		    }
-		    AutomapActive = false;
+
 		    CancelCurrentDiabloMsg();
 		    gamemenu_off();
 		    doom_close();
