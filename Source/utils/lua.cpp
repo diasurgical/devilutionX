@@ -175,8 +175,7 @@ void LuaInitialize()
 	lua.create_named_table(
 	    "devilutionx",
 	    "message", [](std::string_view text) { EventPlrMsg(text, UiFlags::ColorRed); },
-	    // TODO: Re-enable once https://github.com/bebbo/amiga-gcc/issues/363 is fixed.
-	    // "drawString", [](std::string_view text, int x, int y) { DrawString(GlobalBackBuffer(), text, { x, y }); }
+	    "drawString", [](std::string_view text, int x, int y) { DrawString(GlobalBackBuffer(), text, { x, y }); },
 	    "log", LuaLog,
 	    "logVerbose", LuaLogVerbose,
 	    "logDebug", LuaLogDebug,
