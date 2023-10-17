@@ -3080,10 +3080,7 @@ void ProcessHorkSpawn(Missile &missile)
 
 		if (spawnPosition) {
 			auto facing = static_cast<Direction>(missile.var1);
-			Monster *monster = AddMonster(*spawnPosition, facing, 1, true);
-			if (monster != nullptr) {
-				M_StartStand(*monster, facing);
-			}
+			SpawnMonster(*spawnPosition, facing, 1);
 		}
 	} else {
 		missile._midist++;
