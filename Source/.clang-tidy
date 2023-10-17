@@ -46,6 +46,8 @@ Checks: >
   performance-*,
   portability-*,
   readability-*,
+  -readability-identifier-length,
+  -bugprone-easily-swappable-parameters,
   -readability-magic-numbers,
   -misc-non-private-member-variables-in-classes,
   -modernize-avoid-c-arrays,
