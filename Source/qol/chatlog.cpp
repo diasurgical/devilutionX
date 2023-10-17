@@ -4,6 +4,7 @@
  * Implementation of the in-game chat log.
  */
 #include <ctime>
+#include <sstream>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -37,7 +38,6 @@ struct ColoredText {
 struct MultiColoredText {
 	std::string text;
 	std::vector<ColoredText> colors;
-	int offset = 0;
 };
 
 bool UnreadFlag = false;
@@ -123,14 +123,24 @@ void AddMessageToChatLog(std::string_view message, Player *player, UiFlags flags
 	std::string timestamp = localtimeResult != nullptr ? fmt::format("[#{:d}] {:02}:{:02}:{:02}", MessageCounter, localtimeResult->tm_hour, localtimeResult->tm_min, localtimeResult->tm_sec)
 	                                                   : fmt::format("[#{:d}] ", MessageCounter);
 	int oldSize = ChatLogLines.size();
-	ChatLogLines.emplace_back(MultiColoredText { "", { {} } });
 	if (player == nullptr) {
 		ChatLogLines.emplace_back(MultiColoredText { "{0} {1}", { { timestamp, UiFlags::ColorRed }, { std::string(message), flags } } });
 	} else {
 		std::string playerInfo = fmt::format(fmt::runtime(_("{:s} (lvl {:d}): ")), player->_pName, player->getCharacterLevel());
-		ChatLogLines.emplace_back(MultiColoredText { std::string(message), { {} }, 20 });
 		UiFlags nameColor = player == MyPlayer ? UiFlags::ColorWhitegold : UiFlags::ColorBlue;
-		ChatLogLines.emplace_back(MultiColoredText { "{0} - {1}", { { timestamp, UiFlags::ColorRed }, { playerInfo, nameColor } } });
+		std::string prefix = timestamp + " - " + playerInfo;
+		std::string text = WordWrapString(prefix + std::string(message), ContentTextWidth);
+		std::vector<std::string> lines;
+		std::stringstream ss(text);
+
+		for (std::string s; getline(ss, s, '\n');) {
+			lines.push_back(s);
+		}
+		for (int i = lines.size() - 1; i >= 1; i--) {
+			ChatLogLines.emplace_back(MultiColoredText { lines[i], {} });
+		}
+		lines[0].erase(0, prefix.length());
+		ChatLogLines.emplace_back(MultiColoredText { "{0} - {1}{2}", { { timestamp, UiFlags::ColorRed }, { playerInfo, nameColor }, { lines[0], UiFlags::ColorWhite } } });
 	}
 
 	unsigned int diff = ChatLogLines.size() - oldSize;
@@ -182,7 +192,7 @@ void DrawChatLog(const Surface &out)
 		for (auto &x : text.colors) {
 			args.emplace_back(DrawStringFormatArg { x.text, x.color });
 		}
-		DrawStringWithColors(out, line, args, { { (sx + text.offset), contentY + i * lineHeight }, { ContentTextWidth - text.offset * 2, lineHeight } }, UiFlags::ColorWhite, /*spacing=*/1, lineHeight);
+		DrawStringWithColors(out, line, args, { { sx, contentY + i * lineHeight }, { ContentTextWidth, lineHeight } }, UiFlags::ColorWhite, /*spacing=*/1, lineHeight);
 	}
 
 	DrawString(out, _("Press ESC to end or the arrow keys to scroll."),
