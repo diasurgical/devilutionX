@@ -1314,9 +1314,12 @@ KeymapperOptions::KeymapperOptions()
 
 	keyIDToKeyName.emplace(SDLK_LALT, "LALT");
 	keyIDToKeyName.emplace(SDLK_RALT, "RALT");
+
 	keyIDToKeyName.emplace(SDLK_SPACE, "SPACE");
+
 	keyIDToKeyName.emplace(SDLK_RCTRL, "RCONTROL");
 	keyIDToKeyName.emplace(SDLK_LCTRL, "LCONTROL");
+
 	keyIDToKeyName.emplace(SDLK_PRINTSCREEN, "PRINT");
 	keyIDToKeyName.emplace(SDLK_PAUSE, "PAUSE");
 	keyIDToKeyName.emplace(SDLK_TAB, "TAB");
@@ -1345,16 +1348,6 @@ KeymapperOptions::KeymapperOptions()
 	keyIDToKeyName.emplace(SDLK_KP_DIVIDE, "KEYPAD /");
 	keyIDToKeyName.emplace(SDLK_KP_MULTIPLY, "KEYPAD *");
 	keyIDToKeyName.emplace(SDLK_KP_ENTER, "KEYPAD ENTER");
-	keyIDToKeyName.emplace(SDLK_KP_1, "KEYPAD 1");
-	keyIDToKeyName.emplace(SDLK_KP_2, "KEYPAD 2");
-	keyIDToKeyName.emplace(SDLK_KP_3, "KEYPAD 3");
-	keyIDToKeyName.emplace(SDLK_KP_4, "KEYPAD 4");
-	keyIDToKeyName.emplace(SDLK_KP_5, "KEYPAD 5");
-	keyIDToKeyName.emplace(SDLK_KP_6, "KEYPAD 6");
-	keyIDToKeyName.emplace(SDLK_KP_7, "KEYPAD 7");
-	keyIDToKeyName.emplace(SDLK_KP_8, "KEYPAD 8");
-	keyIDToKeyName.emplace(SDLK_KP_9, "KEYPAD 9");
-	keyIDToKeyName.emplace(SDLK_KP_0, "KEYPAD 0");
 	keyIDToKeyName.emplace(SDLK_KP_PERIOD, "KEYPAD DECIMAL");
 
 	keyNameToKeyID.reserve(keyIDToKeyName.size());

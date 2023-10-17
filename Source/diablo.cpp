@@ -1819,7 +1819,7 @@ void InitKeymapActions()
 	    diablo_pause_game);
 	sgOptions.Keymapper.AddAction(
 	    "Pause Game (Alternate)",
-	    N_("Pause Game"),
+	    N_("Pause Game (Alternate)"),
 	    N_("Pauses the game."),
 	    SDLK_PAUSE,
 	    diablo_pause_game);
