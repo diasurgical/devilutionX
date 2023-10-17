@@ -1538,7 +1538,7 @@ void MonsterPetrified(Monster &monster)
 	}
 }
 
-Monster *AddSkeleton(Point position, Direction dir, bool inMap)
+std::optional<size_t> GetRandomSkeletonTypeIndex()
 {
 	int32_t typeCount = 0;
 	size_t skeletonIndexes[SkeletonTypes.size()];
@@ -1549,18 +1549,20 @@ Monster *AddSkeleton(Point position, Direction dir, bool inMap)
 	}
 
 	if (typeCount == 0) {
-		return nullptr;
+		return {};
 	}
 
 	const size_t typeIndex = skeletonIndexes[GenerateRnd(typeCount)];
-	return AddMonster(position, dir, typeIndex, inMap);
+	return typeIndex;
 }
 
-void SpawnSkeleton(Point position, Direction dir)
+Monster *AddSkeleton(Point position, Direction dir, bool inMap)
 {
-	Monster *skeleton = AddSkeleton(position, dir, true);
-	if (skeleton != nullptr)
-		StartSpecialStand(*skeleton, dir);
+	auto typeIndex = GetRandomSkeletonTypeIndex();
+	if (!typeIndex)
+		return nullptr;
+
+	return AddMonster(position, dir, *typeIndex, inMap);
 }
 
 bool IsLineNotSolid(Point startPoint, Point endPoint)
@@ -2295,7 +2297,10 @@ void LeoricAi(Monster &monster)
 		    && LineClearMissile(monster.position.tile, monster.enemyPosition)) {
 			Point newPosition = monster.position.tile + md;
 			if (IsTileAvailable(monster, newPosition) && ActiveMonsterCount < MaxMonsters) {
-				SpawnSkeleton(newPosition, md);
+				auto typeIndex = GetRandomSkeletonTypeIndex();
+				if (typeIndex) {
+					SpawnMonster(newPosition, md, *typeIndex, true);
+				}
 				StartSpecialStand(monster, md);
 			}
 		} else {
@@ -3638,6 +3643,13 @@ Monster *AddMonster(Point position, Direction dir, size_t typeIndex, bool inMap)
 	return nullptr;
 }
 
+void SpawnMonster(Point position, Direction dir, size_t typeIndex, bool startSpecialStand /*= false*/)
+{
+	Monster *monster = AddMonster(position, dir, typeIndex, true);
+	if (startSpecialStand && monster != nullptr)
+		StartSpecialStand(*monster, dir);
+}
+
 void AddDoppelganger(Monster &monster)
 {
 	Point target = { 0, 0 };
@@ -3649,7 +3661,7 @@ void AddDoppelganger(Monster &monster)
 	}
 	if (target != Point { 0, 0 }) {
 		const size_t typeIndex = GetMonsterTypeIndex(monster.type().type);
-		AddMonster(target, monster.direction, typeIndex, true);
+		SpawnMonster(target, monster.direction, typeIndex);
 	}
 }
 
