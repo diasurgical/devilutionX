@@ -143,7 +143,6 @@ bool IsUniqueMonsterItemValid(uint16_t iCreateInfo, uint32_t dwBuff)
 bool IsDungeonItemValid(uint16_t iCreateInfo, uint32_t dwBuff)
 {
 	const uint8_t level = iCreateInfo & CF_LEVEL;
-	const bool isUseful = (iCreateInfo & CF_USEFUL) != 0;
 	const bool isHellfireItem = (dwBuff & CF_HELLFIRE) != 0;
 
 	// Check all monster levels to see if they match the item level
