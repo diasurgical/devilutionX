@@ -167,24 +167,6 @@ bool IsDungeonItemValid(uint16_t iCreateInfo, uint32_t dwBuff)
 	}
 
 	if (isHellfireItem) {
-		int numRunes = 5;
-		int maxSpells = MAX_SPELLS - numRunes;
-
-		// Check all spell levels to validate drops created by CreateSpellBook()
-		// This ensures the ilvl 40 Book of Apocalypse dropped by Na-Krul is flagged as a legitimate drop
-		for (int j = 0; j < maxSpells; j++) {
-			const auto &spellData = SpellsData[j];
-			auto spellLevel = spellData.sBookLvl;
-
-			// CreateSpellBook() adds 1 to the spell level for ilvl
-			spellLevel += 1;
-
-			if (level == (spellLevel * 2)) {
-				// The ilvl matches the result for a spell book drop, so we confirm the item is legitimate
-				return true;
-			}
-		}
-
 		uint8_t hellfireMaxDungeonLevel = 24;
 
 		// Hellfire adjusts the currlevel minus 7 in dungeon levels 20-24 for generating items
@@ -197,6 +179,28 @@ bool IsDungeonItemValid(uint16_t iCreateInfo, uint32_t dwBuff)
 	// Diablo doesn't have containers that drop items in dungeon level 16, therefore we decrement by 1
 	diabloMaxDungeonLevel -= 1;
 	return level <= (diabloMaxDungeonLevel * 2);
+}
+
+bool RecreateHellfireSpellBook(const Player &player, const ItemNetPack &packedItem, Item &item)
+{
+	Item spellBook {};
+	RecreateItem(player, packedItem.item, spellBook);
+
+	// Hellfire uses the spell book level when generating items via CreateSpellBook()
+	int spellBookLevel = GetSpellBookLevel(spellBook._iSpell);
+
+	// CreateSpellBook() adds 1 to the spell level for ilvl
+	spellBookLevel++;
+
+	if (spellBookLevel >= 1 && (spellBook._iCreateInfo & CF_LEVEL) == spellBookLevel * 2) {
+		// The ilvl matches the result for a spell book drop, so we confirm the item is legitimate
+		item = spellBook;
+		return true;
+	}
+
+	ValidateFields(spellBook._iCreateInfo, spellBook.dwBuff, IsDungeonItemValid(spellBook._iCreateInfo, spellBook.dwBuff));
+	item = spellBook;
+	return true;
 }
 
 } // namespace
@@ -536,6 +540,8 @@ bool UnPackNetItem(const Player &player, const ItemNetPack &packedItem, Item &it
 		ValidateField(creationFlags, IsTownItemValid(creationFlags, player));
 	else if ((creationFlags & CF_USEFUL) == CF_UPER15)
 		ValidateFields(creationFlags, dwBuff, IsUniqueMonsterItemValid(creationFlags, dwBuff));
+	else if ((dwBuff & CF_HELLFIRE) != 0 && AllItemsList[idx].iMiscId == IMISC_BOOK)
+		return RecreateHellfireSpellBook(player, packedItem, item);
 	else
 		ValidateFields(creationFlags, dwBuff, IsDungeonItemValid(creationFlags, dwBuff));
 
