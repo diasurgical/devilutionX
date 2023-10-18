@@ -168,6 +168,24 @@ bool IsDungeonItemValid(uint16_t iCreateInfo, uint32_t dwBuff)
 	}
 
 	if (isHellfireItem) {
+		int numRunes = 5;
+		int maxSpells = MAX_SPELLS - numRunes;
+
+		// Check all spell levels to validate drops created by CreateSpellBook()
+		// This ensures the ilvl 40 Book of Apocalypse dropped by Na-Krul is flagged as a legitimate drop
+		for (int j = 0; j < maxSpells; j++) {
+			const auto &spellData = SpellsData[j];
+			auto spellLevel = spellData.sBookLvl;
+
+			// CreateSpellBook() adds 1 to the spell level for ilvl
+			spellLevel += 1;
+
+			if (level == (spellLevel * 2)) {
+				// The ilvl matches the result for a spell book drop, so we confirm the item is legitimate
+				return true;
+			}
+		}
+
 		uint8_t hellfireMaxDungeonLevel = 24;
 
 		// Hellfire adjusts the currlevel minus 7 in dungeon levels 20-24 for generating items
