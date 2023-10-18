@@ -87,13 +87,13 @@ bool IsCreationFlagComboValid(uint16_t iCreateInfo)
 	const bool isPregenItem = (iCreateInfo & CF_PREGEN) != 0;
 	const bool isUsefulItem = (iCreateInfo & CF_USEFUL) == CF_USEFUL;
 
-	// Pregen flags are discarded when an item is picked up, therefore impossible to have in the inventory
 	if (isPregenItem)
+		// Pregen flags are discarded when an item is picked up, therefore impossible to have in the inventory
 		return false;
 	if (isUsefulItem && (iCreateInfo & ~CF_USEFUL) != 0)
 		return false;
-	// Items from town can only have 1 towner flag
 	if (isTownItem && hasMultipleFlags(iCreateInfo))
+		// Items from town can only have 1 towner flag
 		return false;
 	return true;
 }
@@ -121,13 +121,18 @@ bool IsUniqueMonsterItemValid(uint16_t iCreateInfo, uint32_t dwBuff)
 		const auto &uniqueMonsterData = UniqueMonstersData[i];
 		const auto &uniqueMonsterLevel = static_cast<uint8_t>(MonstersData[uniqueMonsterData.mtype].level);
 
-		if (!isHellfireItem && IsAnyOf(uniqueMonsterData.mtype, MT_HORKDMN, MT_DEFILER, MT_NAKRUL)) {
-			// These monsters don't appear in Diablo
+		if (IsAnyOf(uniqueMonsterData.mtype, MT_DEFILER, MT_NAKRUL)) {
+			// These monsters don't use their mlvl for item generation
 			continue;
 		}
 
-		// If the ilvl matches the mlvl, we confirm the item is legitimate
+		if (!isHellfireItem && IsAnyOf(uniqueMonsterData.mtype, MT_HORKDMN)) {
+			// This monster doesn't appear in Diablo
+			continue;
+		}
+
 		if (level == uniqueMonsterLevel) {
+			// If the ilvl matches the mlvl, we confirm the item is legitimate
 			return true;
 		}
 	}
@@ -146,18 +151,18 @@ bool IsDungeonItemValid(uint16_t iCreateInfo, uint32_t dwBuff)
 		const auto &monsterData = MonstersData[i];
 		auto monsterLevel = static_cast<uint8_t>(monsterData.level);
 
-		// Skip monsters that are unable to appear in the game
 		if (i != MT_DIABLO && monsterData.availability == MonsterAvailability::Never) {
+			// Skip monsters that are unable to appear in the game
 			continue;
 		}
 
-		// Adjust The Dark Lord's mlvl if the item isn't a Hellfire item to match the Diablo mlvl
 		if (i == MT_DIABLO && !isHellfireItem) {
+			// Adjust The Dark Lord's mlvl if the item isn't a Hellfire item to match the Diablo mlvl
 			monsterLevel -= 15;
 		}
 
-		// If the ilvl matches the mlvl, we confirm the item is legitimate
 		if (level == monsterLevel) {
+			// If the ilvl matches the mlvl, we confirm the item is legitimate
 			return true;
 		}
 	}
