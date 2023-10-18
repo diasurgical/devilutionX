@@ -102,12 +102,13 @@ bool IsTownItemValid(uint16_t iCreateInfo, const Player &player)
 {
 	const uint8_t level = iCreateInfo & CF_LEVEL;
 	const bool isBoyItem = (iCreateInfo & CF_BOY) != 0;
+	const uint8_t maxTownItemLevel = 30;
 
 	// Wirt items in multiplayer are equal to the level of the player, therefore they cannot exceed the max character level
 	if (isBoyItem && level <= player.getMaxCharacterLevel())
 		return true;
 
-	return level <= 30;
+	return level <= maxTownItemLevel;
 }
 
 bool IsUniqueMonsterItemValid(uint16_t iCreateInfo, uint32_t dwBuff)
