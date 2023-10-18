@@ -87,10 +87,12 @@ bool IsCreationFlagComboValid(uint16_t iCreateInfo)
 	const bool isPregenItem = (iCreateInfo & CF_PREGEN) != 0;
 	const bool isUsefulItem = (iCreateInfo & CF_USEFUL) == CF_USEFUL;
 
+	// Pregen flags are discarded when an item is picked up, therefore impossible to have in the inventory
 	if (isPregenItem)
 		return false;
 	if (isUsefulItem && (iCreateInfo & ~CF_USEFUL) != 0)
 		return false;
+	// Items from town can only have 1 towner flag
 	if (isTownItem && hasMultipleFlags(iCreateInfo))
 		return false;
 	return true;
@@ -101,6 +103,7 @@ bool IsTownItemValid(uint16_t iCreateInfo, const Player &player)
 	const uint8_t level = iCreateInfo & CF_LEVEL;
 	const bool isBoyItem = (iCreateInfo & CF_BOY) != 0;
 
+	// Wirt items in multiplayer are equal to the level of the player, therefore they cannot exceed the max character level
 	if (isBoyItem && level <= player.getMaxCharacterLevel())
 		return true;
 
@@ -112,6 +115,7 @@ bool IsUniqueMonsterItemValid(uint16_t iCreateInfo, uint32_t dwBuff)
 	const uint8_t level = iCreateInfo & CF_LEVEL;
 	const bool isHellfireItem = (dwBuff & CF_HELLFIRE) != 0;
 
+	// Check all unique monster levels to see if they match the item level
 	for (int i = 0; UniqueMonstersData[i].mName != nullptr; i++) {
 		const auto &uniqueMonsterData = UniqueMonstersData[i];
 		const auto &uniqueMonsterLevel = static_cast<uint8_t>(MonstersData[uniqueMonsterData.mtype].level);
@@ -132,26 +136,44 @@ bool IsUniqueMonsterItemValid(uint16_t iCreateInfo, uint32_t dwBuff)
 bool IsDungeonItemValid(uint16_t iCreateInfo, uint32_t dwBuff)
 {
 	const uint8_t level = iCreateInfo & CF_LEVEL;
+	const bool isUseful = (iCreateInfo & CF_USEFUL) != 0;
 	const bool isHellfireItem = (dwBuff & CF_HELLFIRE) != 0;
 
+	// Check all monster levels to see if they match the item level
 	for (int16_t i = 0; i < static_cast<int16_t>(NUM_MTYPES); i++) {
 		const auto &monsterData = MonstersData[i];
 		auto monsterLevel = static_cast<uint8_t>(monsterData.level);
 
+		// Skip monsters that are unable to appear in the game
 		if (i != MT_DIABLO && monsterData.availability == MonsterAvailability::Never) {
 			continue;
 		}
 
+		// Adjust The Dark Lord's mlvl if the item isn't a Hellfire item to match the Diablo mlvl
 		if (i == MT_DIABLO && !isHellfireItem) {
 			monsterLevel -= 15;
 		}
 
+		// If the ilvl matches the mlvl, we confirm the item is legitimate
 		if (level == monsterLevel) {
 			return true;
 		}
 	}
 
-	return level <= 30;
+	if (isHellfireItem) {
+		uint8_t hellfireMaxDungeonLevel = 24;
+
+		// Hellfire adjusts the currlevel minus 7 in dungeon levels 20-24 for generating items
+		hellfireMaxDungeonLevel -= 7;
+		return level <= (hellfireMaxDungeonLevel * 2);
+	}
+
+	uint8_t diabloMaxDungeonLevel = 16;
+
+	// Diablo doesn't have containers that drop items in dungeon level 16, therefore we decrement by 1
+	diabloMaxDungeonLevel -= 1;
+	return level <= (diabloMaxDungeonLevel * 2);
+
 }
 
 } // namespace
