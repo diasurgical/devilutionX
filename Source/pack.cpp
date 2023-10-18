@@ -125,6 +125,7 @@ bool IsUniqueMonsterItemValid(uint16_t iCreateInfo, uint32_t dwBuff)
 			continue;
 		}
 
+		// If the ilvl matches the mlvl, we confirm the item is legitimate
 		if (level == uniqueMonsterLevel) {
 			return true;
 		}
