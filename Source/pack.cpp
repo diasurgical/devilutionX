@@ -87,14 +87,16 @@ bool IsCreationFlagComboValid(uint16_t iCreateInfo)
 	const bool isPregenItem = (iCreateInfo & CF_PREGEN) != 0;
 	const bool isUsefulItem = (iCreateInfo & CF_USEFUL) == CF_USEFUL;
 
-	if (isPregenItem)
+	if (isPregenItem) {
 		// Pregen flags are discarded when an item is picked up, therefore impossible to have in the inventory
 		return false;
+	}
 	if (isUsefulItem && (iCreateInfo & ~CF_USEFUL) != 0)
 		return false;
-	if (isTownItem && hasMultipleFlags(iCreateInfo))
+	if (isTownItem && hasMultipleFlags(iCreateInfo)) {
 		// Items from town can only have 1 towner flag
 		return false;
+	}
 	return true;
 }
 
@@ -177,7 +179,7 @@ bool IsDungeonItemValid(uint16_t iCreateInfo, uint32_t dwBuff)
 	uint8_t diabloMaxDungeonLevel = 16;
 
 	// Diablo doesn't have containers that drop items in dungeon level 16, therefore we decrement by 1
-	diabloMaxDungeonLevel -= 1;
+	diabloMaxDungeonLevel--;
 	return level <= (diabloMaxDungeonLevel * 2);
 }
 
