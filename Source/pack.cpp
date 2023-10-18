@@ -197,7 +197,6 @@ bool IsDungeonItemValid(uint16_t iCreateInfo, uint32_t dwBuff)
 	// Diablo doesn't have containers that drop items in dungeon level 16, therefore we decrement by 1
 	diabloMaxDungeonLevel -= 1;
 	return level <= (diabloMaxDungeonLevel * 2);
-
 }
 
 } // namespace
