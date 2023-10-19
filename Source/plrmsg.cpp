@@ -24,7 +24,7 @@ namespace devilution {
 namespace {
 
 struct PlayerMessage {
-	/** Time message was recived */
+	/** Time message was received */
 	Uint32 time;
 	/** The default text color */
 	UiFlags style;
