@@ -1,7 +1,7 @@
 /**
  * @file msg.cpp
  *
- * Implementation of function for sending and reciving network messages.
+ * Implementation of function for sending and receiving network messages.
  */
 #include <climits>
 #include <cmath>
