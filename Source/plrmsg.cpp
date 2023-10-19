@@ -129,8 +129,12 @@ void DrawPlrMsg(const Surface &out)
 		y -= message.lineHeight * chatlines;
 
 		DrawHalfTransparentRectTo(out, x - 3, y, width + 6, message.lineHeight * chatlines);
-		DrawString(out, text, { { x, y }, { width, 0 } }, message.style, 1, message.lineHeight);
-		DrawString(out, std::string_view(message.text.data(), message.prefixLength), { { x, y }, { width, 0 } }, UiFlags::ColorWhitegold, 1, message.lineHeight);
+
+		std::vector<DrawStringFormatArg> args {
+			{ std::string_view(text.data(), message.prefixLength), UiFlags::ColorWhitegold },
+			{ std::string_view(text.data() + message.prefixLength, text.size() - message.prefixLength), message.style }
+		};
+		DrawStringWithColors(out, "{:s}{:s}", args, { { x, y }, { width, 0 } }, UiFlags::None, 1, message.lineHeight);
 	}
 }
 
