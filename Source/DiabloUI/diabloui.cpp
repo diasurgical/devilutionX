@@ -409,11 +409,14 @@ void UiFocusNavigation(SDL_Event *event)
 #ifndef USE_SDL1
 			case SDLK_v:
 				if ((SDL_GetModState() & KMOD_CTRL) != 0) {
-					char *clipboard = SDL_GetClipboardText();
-					if (clipboard == nullptr) {
-						Log("{}", SDL_GetError());
-					} else {
-						SelheroCatToName(clipboard, UiTextInput, UiTextInputLen);
+					if (SDL_HasClipboardText() == SDL_TRUE) {
+						char *clipboard = SDL_GetClipboardText();
+						if (clipboard == nullptr) {
+							Log("{}", SDL_GetError());
+						} else {
+							SelheroCatToName(clipboard, UiTextInput, UiTextInputLen);
+						}
+						SDL_free(clipboard);
 					}
 				}
 				return;
