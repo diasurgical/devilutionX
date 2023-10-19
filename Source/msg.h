@@ -1,7 +1,7 @@
 /**
  * @file msg.h
  *
- * Interface of function for sending and reciving network messages.
+ * Interface of function for sending and receiving network messages.
  */
 #pragma once
 
