@@ -123,13 +123,8 @@ bool IsUniqueMonsterItemValid(uint16_t iCreateInfo, uint32_t dwBuff)
 		const auto &uniqueMonsterData = UniqueMonstersData[i];
 		const auto &uniqueMonsterLevel = static_cast<uint8_t>(MonstersData[uniqueMonsterData.mtype].level);
 
-		if (IsAnyOf(uniqueMonsterData.mtype, MT_DEFILER, MT_NAKRUL)) {
+		if (IsAnyOf(uniqueMonsterData.mtype, MT_DEFILER, MT_NAKRUL, MT_HORKDMN)) {
 			// These monsters don't use their mlvl for item generation
-			continue;
-		}
-
-		if (!isHellfireItem && IsAnyOf(uniqueMonsterData.mtype, MT_HORKDMN)) {
-			// This monster doesn't appear in Diablo
 			continue;
 		}
 
