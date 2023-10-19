@@ -30,8 +30,8 @@ struct PlayerMessage {
 	UiFlags style;
 	/** The text message to display on screen */
 	std::string text;
-	/** First portion of text that should be rendered in gold */
-	std::string_view from;
+	/** Length of first portion of text that should be rendered in gold */
+	size_t prefixLength;
 	/** The line height of the text */
 	int lineHeight;
 };
@@ -73,7 +73,7 @@ void EventPlrMsg(std::string_view text, UiFlags style)
 	message.style = style;
 	message.time = SDL_GetTicks();
 	message.text = std::string(text);
-	message.from = {};
+	message.prefixLength = 0;
 	message.lineHeight = GetLineHeight(message.text, GameFont12) + 3;
 	AddMessageToChatLog(text);
 }
@@ -87,7 +87,7 @@ void SendPlrMsg(Player &player, std::string_view text)
 	message.style = UiFlags::ColorWhite;
 	message.time = SDL_GetTicks();
 	message.text = from + std::string(text);
-	message.from = std::string_view(message.text.data(), from.size());
+	message.prefixLength = from.size();
 	message.lineHeight = GetLineHeight(message.text, GameFont12) + 3;
 	AddMessageToChatLog(text, &player);
 }
@@ -130,7 +130,7 @@ void DrawPlrMsg(const Surface &out)
 
 		DrawHalfTransparentRectTo(out, x - 3, y, width + 6, message.lineHeight * chatlines);
 		DrawString(out, text, { { x, y }, { width, 0 } }, message.style, 1, message.lineHeight);
-		DrawString(out, message.from, { { x, y }, { width, 0 } }, UiFlags::ColorWhitegold, 1, message.lineHeight);
+		DrawString(out, std::string_view(message.text.data(), message.prefixLength), { { x, y }, { width, 0 } }, UiFlags::ColorWhitegold, 1, message.lineHeight);
 	}
 }
 
