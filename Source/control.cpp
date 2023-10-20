@@ -1590,6 +1590,21 @@ bool control_presskeys(SDL_Keycode vkey)
 	case SDLK_UP:
 		ControlUpDown(-1);
 		return true;
+#ifndef USE_SDL1
+	case SDLK_v:
+		if ((SDL_GetModState() & KMOD_CTRL) != 0) {
+			if (SDL_HasClipboardText() == SDL_TRUE) {
+				char *clipboard = SDL_GetClipboardText();
+				if (clipboard == nullptr) {
+					Log("{}", SDL_GetError());
+				} else {
+					strncat(TalkMessage, clipboard, sizeof(TalkMessage) - strlen(TalkMessage) - 1);
+				}
+				SDL_free(clipboard);
+			}
+		}
+		return true;
+#endif
 	default:
 		return vkey >= SDLK_SPACE && vkey <= SDLK_z;
 	}
