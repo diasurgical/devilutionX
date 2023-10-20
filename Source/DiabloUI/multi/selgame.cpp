@@ -122,6 +122,8 @@ void UiInitGameSelectionList(std::string_view search)
 
 	selgame_FreeVectors();
 
+	selgame_Label[0] = '\0';
+
 	UiAddBackground(&vecSelGameDialog);
 	UiAddLogo(&vecSelGameDialog);
 
@@ -422,7 +424,7 @@ bool IsDifficultyAllowed(int value)
 void selgame_Diff_Select(int value)
 {
 	if (selhero_isMultiPlayer && !IsDifficultyAllowed(vecSelGameDlgItems[value]->m_value)) {
-		selgame_GameSelection_Select(0);
+		selgame_GameSelection_Select(selgame_selectedGame);
 		return;
 	}
 
@@ -533,7 +535,7 @@ void selgame_Speed_Focus(int value)
 
 void selgame_Speed_Esc()
 {
-	selgame_GameSelection_Select(0);
+	selgame_GameSelection_Select(selgame_selectedGame);
 }
 
 void selgame_Speed_Select(int value)
