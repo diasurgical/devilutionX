@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cstdint>
+#include <memory>
 #include <string>
 
 #include "DiabloUI/button.h"
@@ -27,6 +28,7 @@
 #include "utils/screen_reader.hpp"
 #include "utils/sdl_compat.h"
 #include "utils/sdl_geometry.h"
+#include "utils/sdl_ptrs.h"
 #include "utils/sdl_wrap.h"
 #include "utils/str_cat.hpp"
 #include "utils/stubs.h"
@@ -410,13 +412,12 @@ void UiFocusNavigation(SDL_Event *event)
 			case SDLK_v:
 				if ((SDL_GetModState() & KMOD_CTRL) != 0) {
 					if (SDL_HasClipboardText() == SDL_TRUE) {
-						char *clipboard = SDL_GetClipboardText();
-						if (clipboard == nullptr) {
+						std::unique_ptr<char, SDLFreeDeleter<char>> clipboard { SDL_GetClipboardText() };
+						if (clipboard == nullptr || *clipboard == '\0') {
 							Log("{}", SDL_GetError());
 						} else {
-							SelheroCatToName(clipboard, UiTextInput, UiTextInputLen);
+							SelheroCatToName(clipboard.get(), UiTextInput, UiTextInputLen);
 						}
-						SDL_free(clipboard);
 					}
 				}
 				return;
