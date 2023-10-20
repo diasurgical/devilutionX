@@ -9,6 +9,7 @@
 #include <array>
 #include <cstddef>
 #include <cstdint>
+#include <memory>
 #include <optional>
 #include <string>
 
@@ -52,6 +53,7 @@
 #include "utils/parse_int.hpp"
 #include "utils/screen_reader.hpp"
 #include "utils/sdl_geometry.h"
+#include "utils/sdl_ptrs.h"
 #include "utils/str_case.hpp"
 #include "utils/str_cat.hpp"
 #include "utils/string_or_view.hpp"
@@ -1594,13 +1596,12 @@ bool control_presskeys(SDL_Keycode vkey)
 	case SDLK_v:
 		if ((SDL_GetModState() & KMOD_CTRL) != 0) {
 			if (SDL_HasClipboardText() == SDL_TRUE) {
-				char *clipboard = SDL_GetClipboardText();
-				if (clipboard == nullptr) {
+				std::unique_ptr<char, SDLFreeDeleter<char>> clipboard { SDL_GetClipboardText() };
+				if (clipboard == nullptr || *clipboard == '\0') {
 					Log("{}", SDL_GetError());
 				} else {
-					strncat(TalkMessage, clipboard, sizeof(TalkMessage) - strlen(TalkMessage) - 1);
+					strncat(TalkMessage, clipboard.get(), sizeof(TalkMessage) - strlen(TalkMessage) - 1);
 				}
-				SDL_free(clipboard);
 			}
 		}
 		return true;
