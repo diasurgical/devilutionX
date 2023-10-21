@@ -607,8 +607,12 @@ void FixVerticalDoor(const Surface &out, Point center, AutomapTile neTile, uint8
 /**
  * @brief Draw half-tile length lines to connect walls to any walls to the north-west and/or north-east
  */
-void DrawWallConnections(const Surface &out, Point center, AutomapTile nwTile, AutomapTile neTile, uint8_t colorBright, uint8_t colorDim)
+void DrawWallConnections(const Surface &out, Point center, AutomapTile tile, AutomapTile nwTile, AutomapTile neTile, uint8_t colorBright, uint8_t colorDim)
 {
+	if (tile.hasFlag(AutomapTile::Flags::HorizontalDoor) && nwTile.hasFlag(AutomapTile::Flags::HorizontalDoor)) {
+		//  fix missing lower half of the line connecting door pairs in Lazarus' level
+		DrawMapLineSE(out, center + AmOffset(AmWidthOffset::None, AmHeightOffset::HalfTileUp), AmLine(AmLineLength::HalfTile), colorDim);
+	}
 	if (IsAnyOf(nwTile.type, AutomapTile::Types::HorizontalWallLava, AutomapTile::Types::Horizontal, AutomapTile::Types::HorizontalDiamond, AutomapTile::Types::FenceHorizontal, AutomapTile::Types::Cross, AutomapTile::Types::CaveVerticalWoodCross, AutomapTile::Types::CaveRightCorner)) {
 		DrawMapLineSE(out, center + AmOffset(AmWidthOffset::QuarterTileLeft, AmHeightOffset::ThreeQuartersTileUp), AmLine(AmLineLength::HalfTile), colorDim);
 		FixHorizontalDoor(out, center, nwTile, colorBright);
@@ -1048,7 +1052,7 @@ void DrawAutomapTile(const Surface &out, Point center, Point map)
 		if (IsAnyOf(leveltype, DTYPE_TOWN, DTYPE_CAVES, DTYPE_NEST)) {
 			DrawCaveWallConnections(out, center, sTile, swTile, seTile, colorDim);
 		}
-		DrawWallConnections(out, center, nwTile, neTile, colorBright, colorDim);
+		DrawWallConnections(out, center, tile, nwTile, neTile, colorBright, colorDim);
 	}
 
 	uint8_t lavaColor = MapColorsLava;
