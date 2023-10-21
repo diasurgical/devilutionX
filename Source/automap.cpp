@@ -731,12 +731,6 @@ void DrawVertical(const Surface &out, Point center, AutomapTile tile, AutomapTil
 	}
 }
 
-void DrawCorner(const Surface &out, Point center, AutomapTile nwTile, AutomapTile neTile, uint8_t colorDim)
-{
-	if (nwTile.type == AutomapTile::Types::None && neTile.type == AutomapTile::Types::None)
-		DrawDiamond(out, center, colorDim);
-}
-
 /**
  * @brief Draw half-tile length lines to connect walls to any walls to the south-west and/or south-east
  * (For caves the horizontal/vertical flags are swapped)
@@ -1119,7 +1113,6 @@ void DrawAutomapTile(const Surface &out, Point center, Point map)
 		DrawCaveRightCorner(out, center, colorDim);
 		break;
 	case AutomapTile::Types::Corner:
-		DrawCorner(out, center, nwTile, neTile, colorDim);
 		break;
 	case AutomapTile::Types::CaveBottomCorner:
 		// Add the missing dirt pixel
