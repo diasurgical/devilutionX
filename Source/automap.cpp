@@ -672,6 +672,7 @@ void DrawHorizontal(const Surface &out, Point center, AutomapTile tile, AutomapT
 		l = AmLineLength::FullTile; // shorten line to avoid overdraw
 		DrawDiamond(out, center, colorDim);
 		FixHorizontalDoor(out, center, nwTile, colorBright);
+		FixVerticalDoor(out, center, neTile, colorBright);
 	}
 	// Shorten line to avoid overdraw
 	if (IsAnyOf(leveltype, DTYPE_CAVES, DTYPE_NEST)
@@ -709,6 +710,7 @@ void DrawVertical(const Surface &out, Point center, AutomapTile tile, AutomapTil
 		l = AmLineLength::FullTile;                                                                                                                                      // shorten line to avoid overdraw
 		DrawDiamond(out, center, colorDim);
 		FixVerticalDoor(out, center, nwTile, colorBright);
+		FixVerticalDoor(out, center, neTile, colorBright);
 	}
 	// Shorten line to avoid overdraw and adjust offset to match
 	if (IsAnyOf(leveltype, DTYPE_CAVES, DTYPE_NEST)
