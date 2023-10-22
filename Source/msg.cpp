@@ -2645,7 +2645,8 @@ void DeltaLoadLevel()
 					GolumAi(monster);
 					monster.flags |= (MFLAG_TARGETS_MONSTER | MFLAG_GOLEM);
 				} else {
-					M_StartStand(monster, monster.direction);
+					if (monster.ai != MonsterAIID::Gargoyle)
+						M_StartStand(monster, monster.direction);
 				}
 				monster.activeForTicks = deltaLevel.monster[i]._mactive;
 			}
