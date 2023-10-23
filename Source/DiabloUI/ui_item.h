@@ -271,6 +271,7 @@ public:
 	std::string_view m_hint;
 	char *m_value;
 	std::size_t m_max_length;
+	size_t m_cursor;
 	bool m_allowEmpty;
 };
 

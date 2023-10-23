@@ -6,25 +6,7 @@
 
 #include <hoehrmann_utf8.h>
 
-#include "utils/attributes.h"
-
 namespace devilution {
-
-namespace {
-
-/** Truncates `str` to at most `len` at a code point boundary. */
-std::string_view TruncateUtf8(std::string_view str, std::size_t len)
-{
-	if (str.size() > len) {
-		std::size_t truncIndex = len;
-		while (truncIndex > 0 && IsTrailUtf8CodeUnit(str[truncIndex]))
-			truncIndex--;
-		str.remove_suffix(str.size() - truncIndex);
-	}
-	return str;
-}
-
-} // namespace
 
 char32_t DecodeFirstUtf8CodePoint(std::string_view input, std::size_t *len)
 {
@@ -43,6 +25,17 @@ char32_t DecodeFirstUtf8CodePoint(std::string_view input, std::size_t *len)
 	}
 	*len = input.size();
 	return Utf8DecodeError;
+}
+
+std::string_view TruncateUtf8(std::string_view str, std::size_t len)
+{
+	if (str.size() > len) {
+		std::size_t truncIndex = len;
+		while (truncIndex > 0 && IsTrailUtf8CodeUnit(str[truncIndex]))
+			truncIndex--;
+		str.remove_suffix(str.size() - truncIndex);
+	}
+	return str;
 }
 
 void CopyUtf8(char *dest, std::string_view source, std::size_t bytes)

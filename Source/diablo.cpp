@@ -679,10 +679,6 @@ void HandleMouseButtonUp(Uint8 button, uint16_t modState)
 
 bool HandleTextInput(std::string_view text)
 {
-	if (IsTalkActive()) {
-		control_new_text(text);
-		return true;
-	}
 	if (dropGoldFlag) {
 		GoldDropNewText(text);
 		return true;
@@ -720,6 +716,10 @@ void GameEventHandler(const SDL_Event &event, uint16_t modState)
 		}
 	}
 	if (ctrlEvents.size() > 0 && ctrlEvents[0].button != ControllerButton_NONE) {
+		return;
+	}
+
+	if (IsTalkActive() && HandleTalkTextInputEvent(event)) {
 		return;
 	}
 

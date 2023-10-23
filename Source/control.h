@@ -188,7 +188,7 @@ void control_release_talk_btn();
 void control_type_message();
 void control_reset_talk();
 bool IsTalkActive();
-void control_new_text(std::string_view text);
+bool HandleTalkTextInputEvent(const SDL_Event &event);
 bool control_presskeys(SDL_Keycode vkey);
 void DiabloHotkeyMsg(uint32_t dwMsg);
 void CloseGoldDrop();

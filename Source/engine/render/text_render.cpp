@@ -410,16 +410,28 @@ int GetLineStartX(UiFlags flags, const Rectangle &rect, int lineWidth)
 
 uint32_t DoDrawString(const Surface &out, std::string_view text, Rectangle rect, Point &characterPosition,
     int spacing, int lineHeight, int lineWidth, int rightMargin, int bottomMargin,
-    UiFlags flags, GameFontTables size, text_color color, bool outline)
+    UiFlags flags, GameFontTables size, text_color color, bool outline, int cursorPosition = -1)
 {
 	CurrentFont currentFont;
 
 	char32_t next;
 	std::string_view remaining = text;
 	size_t cpLen;
+
+	const auto maybeDrawCursor = [&]() {
+		if (cursorPosition == static_cast<int>(text.size() - remaining.size()) && GetAnimationFrame(2, 500) != 0) {
+			Point position = characterPosition;
+			MaybeWrap(position, 2, rightMargin, position.x, lineHeight);
+			OptionalClxSpriteList baseFont = LoadFont(size, color, 0);
+			if (baseFont)
+				DrawFont(out, position, *baseFont, color, '|', outline);
+		}
+	};
+
 	for (; !remaining.empty() && remaining[0] != '\0'
 	     && (next = DecodeFirstUtf8CodePoint(remaining, &cpLen)) != Utf8DecodeError;
 	     remaining.remove_prefix(cpLen)) {
+		maybeDrawCursor();
 		if (next == ZWSP)
 			continue;
 
@@ -452,6 +464,7 @@ uint32_t DoDrawString(const Surface &out, std::string_view text, Rectangle rect,
 		DrawFont(out, characterPosition, *currentFont.sprite, color, frame, outline);
 		characterPosition.x += width + spacing;
 	}
+	maybeDrawCursor();
 	return remaining.data() - text.data();
 }
 
@@ -658,7 +671,7 @@ std::string WordWrapString(std::string_view text, unsigned width, GameFontTables
 /**
  * @todo replace Rectangle with cropped Surface
  */
-uint32_t DrawString(const Surface &out, std::string_view text, const Rectangle &rect, UiFlags flags, int spacing, int lineHeight)
+uint32_t DrawString(const Surface &out, std::string_view text, const Rectangle &rect, UiFlags flags, int spacing, int lineHeight, int cursorPosition)
 {
 	GameFontTables size = GetSizeFromFlags(flags);
 	text_color color = GetColorFromFlags(flags);
@@ -682,7 +695,7 @@ uint32_t DrawString(const Surface &out, std::string_view text, const Rectangle &
 		lineHeight = GetLineHeight(text, size);
 
 	if (HasAnyOf(flags, UiFlags::VerticalCenter)) {
-		int textHeight = (c_count(text, '\n') + 1) * lineHeight;
+		const int textHeight = (c_count(text, '\n') + 1) * lineHeight;
 		characterPosition.y += std::max(0, (rect.size.height - textHeight) / 2);
 	}
 
@@ -692,17 +705,17 @@ uint32_t DrawString(const Surface &out, std::string_view text, const Rectangle &
 
 	const Surface clippedOut = ClipSurface(out, rect);
 
-	const uint32_t bytesDrawn = DoDrawString(clippedOut, text, rect, characterPosition, spacing, lineHeight, lineWidth, rightMargin, bottomMargin, flags, size, color, outlined);
+	// Only draw the PentaCursor if the cursor is not at the end.
+	if (HasAnyOf(flags, UiFlags::PentaCursor) && static_cast<size_t>(cursorPosition) == text.size()) {
+		cursorPosition = -1;
+	}
+
+	const uint32_t bytesDrawn = DoDrawString(clippedOut, text, rect, characterPosition, spacing, lineHeight, lineWidth, rightMargin, bottomMargin, flags, size, color, outlined, cursorPosition);
 
 	if (HasAnyOf(flags, UiFlags::PentaCursor)) {
 		const ClxSprite sprite = (*pSPentSpn2Cels)[PentSpn2Spin()];
 		MaybeWrap(characterPosition, sprite.width(), rightMargin, initialX, lineHeight);
 		ClxDraw(clippedOut, characterPosition + Displacement { 0, lineHeight - BaseLineOffset[size] }, sprite);
-	} else if (HasAnyOf(flags, UiFlags::TextCursor) && GetAnimationFrame(2, 500) != 0) {
-		MaybeWrap(characterPosition, 2, rightMargin, initialX, lineHeight);
-		OptionalClxSpriteList baseFont = LoadFont(size, color, 0);
-		if (baseFont)
-			DrawFont(clippedOut, characterPosition, *baseFont, color, '|', outlined);
 	}
 
 	return bytesDrawn;
@@ -802,11 +815,6 @@ void DrawStringWithColors(const Surface &out, std::string_view fmt, DrawStringFo
 		const ClxSprite sprite = (*pSPentSpn2Cels)[PentSpn2Spin()];
 		MaybeWrap(characterPosition, sprite.width(), rightMargin, initialX, lineHeight);
 		ClxDraw(clippedOut, characterPosition + Displacement { 0, lineHeight - BaseLineOffset[size] }, sprite);
-	} else if (HasAnyOf(flags, UiFlags::TextCursor) && GetAnimationFrame(2, 500) != 0) {
-		MaybeWrap(characterPosition, 2, rightMargin, initialX, lineHeight);
-		OptionalClxSpriteList baseFont = LoadFont(size, color, 0);
-		if (baseFont)
-			DrawFont(clippedOut, characterPosition, *baseFont, color, '|', outlined);
 	}
 }
 

@@ -3,11 +3,13 @@
 #include <algorithm>
 #include <cstdint>
 #include <memory>
+#include <optional>
 #include <string>
 
 #include "DiabloUI/button.h"
 #include "DiabloUI/dialogs.h"
 #include "DiabloUI/scrollbar.h"
+#include "DiabloUI/text_input.hpp"
 #include "controls/controller.h"
 #include "controls/input.h"
 #include "controls/menu_controls.h"
@@ -58,7 +60,6 @@ OptionalOwnedClxSpriteList ArtBackgroundWidescreen;
 OptionalOwnedClxSpriteList ArtBackground;
 OptionalOwnedClxSpriteList ArtCursor;
 
-bool textInputActive = true;
 std::size_t SelectedItem = 0;
 
 namespace {
@@ -79,8 +80,8 @@ bool (*gfnListYesNo)();
 std::vector<UiItemBase *> gUiItems;
 UiList *gUiList = nullptr;
 bool UiItemsWraps;
-char *UiTextInput;
-int UiTextInputLen;
+
+std::optional<TextInputState> UiTextInputState;
 bool allowEmptyTextInput = false;
 
 uint32_t fadeTc;
@@ -107,6 +108,11 @@ void AdjustListOffset(std::size_t itemIndex)
 
 } // namespace
 
+bool IsTextInputActive()
+{
+	return UiTextInputState.has_value();
+}
+
 void UiInitList(void (*fnFocus)(int value), void (*fnSelect)(int value), void (*fnEsc)(), const std::vector<std::unique_ptr<UiItemBase>> &items, bool itemsWraps, void (*fnFullscreen)(), bool (*fnYesNo)(), size_t selectedItem /*= 0*/)
 {
 	SelectedItem = selectedItem;
@@ -128,13 +134,11 @@ void UiInitList(void (*fnFocus)(int value), void (*fnSelect)(int value), void (*
 #ifndef __SWITCH__
 	SDL_StopTextInput(); // input is enabled by default
 #endif
-	textInputActive = false;
 	UiScrollbar *uiScrollbar = nullptr;
 	for (const auto &item : items) {
 		if (item->IsType(UiType::Edit)) {
 			auto *pItemUIEdit = static_cast<UiEdit *>(item.get());
 			SDL_SetTextInputRect(&item->m_rect);
-			textInputActive = true;
 			allowEmptyTextInput = pItemUIEdit->m_allowEmpty;
 #ifdef __SWITCH__
 			switch_start_text_input(pItemUIEdit->m_hint, pItemUIEdit->m_value, pItemUIEdit->m_max_length);
@@ -145,8 +149,11 @@ void UiInitList(void (*fnFocus)(int value), void (*fnSelect)(int value), void (*
 #else
 			SDL_StartTextInput();
 #endif
-			UiTextInput = pItemUIEdit->m_value;
-			UiTextInputLen = pItemUIEdit->m_max_length;
+			UiTextInputState.emplace(TextInputState::Options {
+			    .value = pItemUIEdit->m_value,
+			    .cursorPosition = &pItemUIEdit->m_cursor,
+			    .maxLength = pItemUIEdit->m_max_length,
+			});
 		} else if (item->IsType(UiType::List)) {
 			auto *uiList = static_cast<UiList *>(item.get());
 			SelectedItemMax = std::max(uiList->m_vecItems.size() - 1, static_cast<size_t>(0));
@@ -293,14 +300,6 @@ void UiFocusPageDown()
 	}
 }
 
-void SelheroCatToName(const char *inBuf, char *outBuf, int cnt)
-{
-	size_t outLen = strlen(outBuf);
-	char *dest = outBuf + outLen;
-	size_t destCount = cnt - outLen;
-	CopyUtf8(dest, inBuf, destCount);
-}
-
 bool HandleMenuAction(MenuAction menuAction)
 {
 	switch (menuAction) {
@@ -404,55 +403,8 @@ void UiFocusNavigation(SDL_Event *event)
 	}
 #endif
 
-	if (textInputActive) {
-		switch (event->type) {
-		case SDL_KEYDOWN: {
-			switch (event->key.keysym.sym) {
-#ifndef USE_SDL1
-			case SDLK_v:
-				if ((SDL_GetModState() & KMOD_CTRL) != 0) {
-					if (SDL_HasClipboardText() == SDL_TRUE) {
-						std::unique_ptr<char, SDLFreeDeleter<char>> clipboard { SDL_GetClipboardText() };
-						if (clipboard == nullptr || *clipboard == '\0') {
-							Log("{}", SDL_GetError());
-						} else {
-							SelheroCatToName(clipboard.get(), UiTextInput, UiTextInputLen);
-						}
-					}
-				}
-				return;
-#endif
-			case SDLK_BACKSPACE:
-			case SDLK_LEFT: {
-				UiTextInput[FindLastUtf8Symbols(UiTextInput)] = '\0';
-				return;
-			}
-			default:
-				break;
-			}
-#ifdef USE_SDL1
-			if ((event->key.keysym.mod & KMOD_CTRL) == 0) {
-				std::string utf8;
-				AppendUtf8(event->key.keysym.unicode, utf8);
-				SelheroCatToName(utf8.c_str(), UiTextInput, UiTextInputLen);
-			}
-#endif
-			break;
-		}
-#ifndef USE_SDL1
-		case SDL_TEXTINPUT:
-			if (textInputActive) {
-#ifdef __vita__
-				CopyUtf8(UiTextInput, event->text.text, UiTextInputLen);
-#else
-				SelheroCatToName(event->text.text, UiTextInput, UiTextInputLen);
-#endif
-			}
-			return;
-#endif
-		default:
-			break;
-		}
+	if (UiTextInputState.has_value() && HandleTextInputEvent(*event, *UiTextInputState)) {
+		return;
 	}
 
 	if (event->type == SDL_MOUSEBUTTONDOWN || event->type == SDL_MOUSEBUTTONUP) {
@@ -519,15 +471,14 @@ void UiHandleEvents(SDL_Event *event)
 void UiFocusNavigationSelect()
 {
 	UiPlaySelectSound();
-	if (textInputActive) {
-		if (!allowEmptyTextInput && strlen(UiTextInput) == 0) {
+	if (UiTextInputState.has_value()) {
+		if (!allowEmptyTextInput && UiTextInputState->empty()) {
 			return;
 		}
 #ifndef __SWITCH__
 		SDL_StopTextInput();
 #endif
-		UiTextInput = nullptr;
-		UiTextInputLen = 0;
+		UiTextInputState = std::nullopt;
 	}
 	if (gfnListSelect != nullptr)
 		gfnListSelect(SelectedItem);
@@ -536,12 +487,11 @@ void UiFocusNavigationSelect()
 void UiFocusNavigationEsc()
 {
 	UiPlaySelectSound();
-	if (textInputActive) {
+	if (UiTextInputState.has_value()) {
 #ifndef __SWITCH__
 		SDL_StopTextInput();
 #endif
-		UiTextInput = nullptr;
-		UiTextInputLen = 0;
+		UiTextInputState = std::nullopt;
 	}
 	if (gfnListEsc != nullptr)
 		gfnListEsc();
@@ -914,7 +864,7 @@ void Render(const UiEdit &uiEdit)
 	Rectangle rect = MakeRectangle(uiEdit.m_rect).inset({ 43, 1 });
 
 	const Surface &out = Surface(DiabloUiSurface());
-	DrawString(out, uiEdit.m_value, rect, uiEdit.GetFlags() | UiFlags::TextCursor);
+	DrawString(out, uiEdit.m_value, rect, uiEdit.GetFlags(), /*spacing=*/1, /*lineHeight=*/-1, uiEdit.m_cursor);
 }
 
 bool HandleMouseEventArtTextButton(const SDL_Event &event, const UiArtTextButton *uiButton)

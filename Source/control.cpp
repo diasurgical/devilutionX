@@ -15,6 +15,7 @@
 
 #include <fmt/format.h>
 
+#include "DiabloUI/text_input.hpp"
 #include "automap.h"
 #include "controls/modifier_hints.h"
 #include "controls/plrctrls.h"
@@ -149,6 +150,9 @@ char TalkMessage[MAX_SEND_STR_LEN];
 bool TalkButtonsDown[3];
 int sgbPlrTalkTbl;
 bool WhisperList[MAX_PLRS];
+
+size_t ChatCursorPosition;
+std::optional<TextInputState> ChatInputState;
 
 enum panel_button_id : uint8_t {
 	PanelButtonCharinfo,
@@ -601,7 +605,7 @@ void ControlPressEnter()
 			talkSave &= 7;
 			if (i != talkSave) {
 				strcpy(TalkSave[i], TalkSave[talkSave]);
-				strcpy(TalkSave[talkSave], TalkMessage);
+				*BufCopy(TalkSave[talkSave], ChatInputState->value()) = '\0';
 			}
 		}
 		TalkMessage[0] = '\0';
@@ -615,7 +619,7 @@ void ControlUpDown(int v)
 	for (int i = 0; i < 8; i++) {
 		TalkSaveIndex = (v + TalkSaveIndex) & 7;
 		if (TalkSave[TalkSaveIndex][0] != 0) {
-			strcpy(TalkMessage, TalkSave[TalkSaveIndex]);
+			ChatInputState->assign(TalkSave[TalkSaveIndex]);
 			return;
 		}
 	}
@@ -860,6 +864,7 @@ void InitControlPan()
 		}
 	}
 	talkflag = false;
+	ChatInputState = std::nullopt;
 	if (IsChatAvailable()) {
 		if (!HeadlessMode) {
 			{
@@ -1437,8 +1442,8 @@ void DrawTalkPan(const Surface &out)
 	int x = mainPanelPosition.x + 200;
 	int y = mainPanelPosition.y + 10;
 
-	const uint32_t len = DrawString(out, TalkMessage, { { x, y }, { 250, 39 } }, UiFlags::ColorWhite | UiFlags::PentaCursor, 1, 13);
-	TalkMessage[std::min<size_t>(len, sizeof(TalkMessage) - 1)] = '\0';
+	const uint32_t len = DrawString(out, TalkMessage, { { x, y }, { 250, 39 } }, UiFlags::ColorWhite | UiFlags::PentaCursor, 1, 13, ChatCursorPosition);
+	ChatInputState->truncate(len);
 
 	x += 46;
 	int talkBtn = 0;
@@ -1532,9 +1537,13 @@ void control_type_message()
 		return;
 
 	talkflag = true;
+	TalkMessage[0] = '\0';
+	ChatInputState.emplace(TextInputState::Options {
+	    .value = TalkMessage,
+	    .cursorPosition = &ChatCursorPosition,
+	    .maxLength = sizeof(TalkMessage) - 1 });
 	SDL_Rect rect = MakeSdlRect(GetMainPanel().position.x + 200, GetMainPanel().position.y + 22, 0, 27);
 	SDL_SetTextInputRect(&rect);
-	TalkMessage[0] = '\0';
 	for (bool &talkButtonDown : TalkButtonsDown) {
 		talkButtonDown = false;
 	}
@@ -1548,6 +1557,7 @@ void control_reset_talk()
 {
 	talkflag = false;
 	SDL_StopTextInput();
+	ChatInputState = std::nullopt;
 	sgbPlrTalkTbl = 0;
 	RedrawEverything();
 }
@@ -1563,9 +1573,9 @@ bool IsTalkActive()
 	return true;
 }
 
-void control_new_text(std::string_view text)
+bool HandleTalkTextInputEvent(const SDL_Event &event)
 {
-	strncat(TalkMessage, text.data(), sizeof(TalkMessage) - strlen(TalkMessage) - 1);
+	return HandleTextInputEvent(event, *ChatInputState);
 }
 
 bool control_presskeys(SDL_Keycode vkey)
@@ -1583,29 +1593,12 @@ bool control_presskeys(SDL_Keycode vkey)
 	case SDLK_KP_ENTER:
 		ControlPressEnter();
 		return true;
-	case SDLK_BACKSPACE:
-		TalkMessage[FindLastUtf8Symbols(TalkMessage)] = '\0';
-		return true;
 	case SDLK_DOWN:
 		ControlUpDown(1);
 		return true;
 	case SDLK_UP:
 		ControlUpDown(-1);
 		return true;
-#ifndef USE_SDL1
-	case SDLK_v:
-		if ((SDL_GetModState() & KMOD_CTRL) != 0) {
-			if (SDL_HasClipboardText() == SDL_TRUE) {
-				std::unique_ptr<char, SDLFreeDeleter<char>> clipboard { SDL_GetClipboardText() };
-				if (clipboard == nullptr || *clipboard == '\0') {
-					Log("{}", SDL_GetError());
-				} else {
-					strncat(TalkMessage, clipboard.get(), sizeof(TalkMessage) - strlen(TalkMessage) - 1);
-				}
-			}
-		}
-		return true;
-#endif
 	default:
 		return vkey >= SDLK_SPACE && vkey <= SDLK_z;
 	}
