@@ -43,8 +43,7 @@ enum class UiFlags : uint32_t {
 	ElementHidden      = 1 << 26,
 
 	PentaCursor        = 1 << 27,
-	TextCursor         = 1 << 28,
-	Outlined           = 1 << 29,
+	Outlined           = 1 << 28,
 
 	/** @brief Ensures that the if current element is active that the next element is also visible. */
 	NeedsNextElement   = 1 << 30,

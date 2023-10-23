@@ -17,7 +17,8 @@
 namespace devilution {
 
 extern std::size_t SelectedItem;
-extern bool textInputActive;
+
+bool IsTextInputActive();
 
 enum _artFocus : uint8_t {
 	FOCUS_SMALL,

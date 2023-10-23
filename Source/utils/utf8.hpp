@@ -53,6 +53,14 @@ inline bool IsTrailUtf8CodeUnit(char x)
 }
 
 /**
+ * @brief Returns the number of code units for a code point starting at *src;
+ */
+inline size_t Utf8CodePointLen(const char *src)
+{
+	return "\1\1\1\1\1\1\1\1\1\1\1\1\2\2\3\4"[static_cast<unsigned char>(*src) >> 4];
+}
+
+/**
  * Returns the start byte index of the last code point in a UTF-8 string.
  */
 inline std::size_t FindLastUtf8Symbols(std::string_view input)
@@ -75,5 +83,8 @@ inline std::size_t FindLastUtf8Symbols(std::string_view input)
 void CopyUtf8(char *dest, std::string_view source, std::size_t bytes);
 
 void AppendUtf8(char32_t codepoint, std::string &out);
+
+/** @brief Truncates `str` to at most `len` at a code point boundary. */
+std::string_view TruncateUtf8(std::string_view str, std::size_t len);
 
 } // namespace devilution

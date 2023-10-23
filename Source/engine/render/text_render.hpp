@@ -170,9 +170,10 @@ int GetLineHeight(std::string_view text, GameFontTables fontIndex);
  * @param spacing Additional space to add between characters.
  *                This value may be adjusted if the flag UIS_FIT_SPACING is passed in the flags parameter.
  * @param lineHeight Allows overriding the default line height, useful for multi-line strings.
+ * @param cursorPosition If non-negative, draws a blinking cursor after the given byte index.
  * @return The number of bytes rendered, including characters "drawn" outside the buffer.
  */
-uint32_t DrawString(const Surface &out, std::string_view text, const Rectangle &rect, UiFlags flags = UiFlags::None, int spacing = 1, int lineHeight = -1);
+uint32_t DrawString(const Surface &out, std::string_view text, const Rectangle &rect, UiFlags flags = UiFlags::None, int spacing = 1, int lineHeight = -1, int cursorPosition = -1);
 
 /**
  * @brief Draws a line of text at the given position relative to the origin of the output buffer.

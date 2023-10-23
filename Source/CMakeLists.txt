@@ -88,6 +88,7 @@ set(libdevilutionx_SRCS
   DiabloUI/settingsmenu.cpp
   DiabloUI/support_lines.cpp
   DiabloUI/title.cpp
+  DiabloUI/text_input.cpp
 
   dvlnet/abstract_net.cpp
   dvlnet/base.cpp
