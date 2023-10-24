@@ -1185,9 +1185,9 @@ void DrawView(const Surface &out, Point startPosition)
 		DrawSpellList(out);
 	}
 	if (dropGoldFlag) {
-		DrawGoldSplit(out, dropGoldValue);
+		DrawGoldSplit(out);
 	}
-	DrawGoldWithdraw(out, WithdrawGoldValue);
+	DrawGoldWithdraw(out);
 	if (HelpFlag) {
 		DrawHelp(out);
 	}

@@ -33,19 +33,19 @@ namespace devilution {
 constexpr Size SidePanelSize { 320, 352 };
 
 extern bool dropGoldFlag;
+extern size_t GoldDropCursorPosition;
+extern char GoldDropText[21];
+
 extern bool chrbtn[4];
 extern bool lvlbtndown;
-extern int dropGoldValue;
 extern bool chrbtnactive;
 extern UiFlags InfoColor;
 extern int sbooktab;
-extern int8_t initialDropGoldIndex;
 extern bool talkflag;
 extern bool sbookflag;
 extern bool chrflag;
 extern StringOrView InfoString;
 extern bool panelflag;
-extern int initialDropGoldValue;
 extern bool panbtndown;
 extern bool spselflag;
 const Rectangle &GetMainPanel();
@@ -180,7 +180,7 @@ void ReleaseChrBtns(bool addAllStatPoints);
 void DrawDurIcon(const Surface &out);
 void RedBack(const Surface &out);
 void DrawSpellBook(const Surface &out);
-void DrawGoldSplit(const Surface &out, int amount);
+void DrawGoldSplit(const Surface &out);
 void control_drop_gold(SDL_Keycode vkey);
 void DrawTalkPan(const Surface &out);
 bool control_check_talk_btn();
@@ -191,8 +191,10 @@ bool IsTalkActive();
 bool HandleTalkTextInputEvent(const SDL_Event &event);
 bool control_presskeys(SDL_Keycode vkey);
 void DiabloHotkeyMsg(uint32_t dwMsg);
+void OpenGoldDrop(int8_t invIndex, int max);
 void CloseGoldDrop();
-void GoldDropNewText(std::string_view text);
+int GetGoldDropMax();
+bool HandleGoldDropTextInputEvent(const SDL_Event &event);
 extern Rectangle ChrBtnsRect[4];
 
 } // namespace devilution

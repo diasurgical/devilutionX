@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <cstddef>
 #include <cstring>
+#include <string>
 #include <string_view>
 
 #include <SDL.h>
@@ -65,6 +66,12 @@ class TextInputState {
 			buf_[len_] = '\0';
 		}
 
+		void clear()
+		{
+			len_ = 0;
+			buf_[0] = '\0';
+		}
+
 		explicit operator std::string_view() const
 		{
 			return { buf_, len_ };
@@ -112,6 +119,11 @@ public:
 		return value_.empty();
 	}
 
+	[[nodiscard]] size_t cursorPosition() const
+	{
+		return *cursorPosition_;
+	}
+
 	/**
 	 * @brief Overwrites the value with the given text and moves cursor to the end.
 	 */
@@ -119,6 +131,12 @@ public:
 	{
 		value_ = text;
 		*cursorPosition_ = value_.size();
+	}
+
+	void clear()
+	{
+		value_.clear();
+		*cursorPosition_ = 0;
 	}
 
 	/**
@@ -165,7 +183,7 @@ public:
 
 	void setCursorToEnd()
 	{
-		*cursorPosition_ = std::string_view(value_).size();
+		*cursorPosition_ = value_.size();
 	}
 
 	void moveCursorLeft()
@@ -185,18 +203,76 @@ public:
 private:
 	[[nodiscard]] std::string_view beforeCursor() const
 	{
-		return std::string_view(value_).substr(0, *cursorPosition_);
+		return value().substr(0, *cursorPosition_);
 	}
 
 	[[nodiscard]] std::string_view afterCursor() const
 	{
-		return std::string_view(value_).substr(*cursorPosition_);
+		return value().substr(*cursorPosition_);
 	}
 
 	Buffer value_;
 	size_t *cursorPosition_; // unowned
 };
 
+/**
+ * @brief Manages state for a number input with a cursor.
+ */
+class NumberInputState {
+public:
+	struct Options {
+		TextInputState::Options textOptions;
+		int min;
+		int max;
+	};
+	NumberInputState(const Options &options)
+	    : textInput_(options.textOptions)
+	    , min_(options.min)
+	    , max_(options.max)
+	{
+	}
+
+	[[nodiscard]] bool empty() const
+	{
+		return textInput_.empty();
+	}
+
+	[[nodiscard]] int value(int defaultValue = 0) const;
+
+	[[nodiscard]] int max() const
+	{
+		return max_;
+	}
+
+	/**
+	 * @brief Inserts the text at the current cursor position.
+	 *
+	 * Ignores non-numeric characters.
+	 */
+	void type(std::string_view str);
+
+	/**
+	 * @brief Sets the text of the input.
+	 *
+	 * Ignores non-numeric characters.
+	 */
+	void assign(std::string_view str);
+
+	TextInputState &textInput()
+	{
+		return textInput_;
+	}
+
+private:
+	void enforceRange();
+	std::string filterStr(std::string_view str, bool allowMinus);
+
+	TextInputState textInput_;
+	int min_;
+	int max_;
+};
+
 bool HandleTextInputEvent(const SDL_Event &event, TextInputState &state);
+bool HandleNumberInputEvent(const SDL_Event &event, NumberInputState &state);
 
 } // namespace devilution

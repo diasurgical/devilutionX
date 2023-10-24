@@ -67,19 +67,23 @@
 namespace devilution {
 
 bool dropGoldFlag;
+size_t GoldDropCursorPosition;
+char GoldDropText[21];
+namespace {
+int8_t GoldDropInvIndex;
+std::optional<NumberInputState> GoldDropInputState;
+} // namespace
+
 bool chrbtn[4];
 bool lvlbtndown;
-int dropGoldValue;
 bool chrbtnactive;
 UiFlags InfoColor;
 int sbooktab;
-int8_t initialDropGoldIndex;
 bool talkflag;
 bool sbookflag;
 bool chrflag;
 StringOrView InfoString;
 bool panelflag;
-int initialDropGoldValue;
 bool panbtndown;
 bool spselflag;
 Rectangle MainPanel;
@@ -625,10 +629,10 @@ void ControlUpDown(int v)
 	}
 }
 
-void RemoveGold(Player &player, int goldIndex)
+void RemoveGold(Player &player, int goldIndex, int amount)
 {
-	int gi = goldIndex - INVITEM_INV_FIRST;
-	player.InvList[gi]._ivalue -= dropGoldValue;
+	const int gi = goldIndex - INVITEM_INV_FIRST;
+	player.InvList[gi]._ivalue -= amount;
 	if (player.InvList[gi]._ivalue > 0) {
 		SetPlrHandGoldCurs(player.InvList[gi]);
 		NetSyncInvItem(player, gi);
@@ -636,11 +640,10 @@ void RemoveGold(Player &player, int goldIndex)
 		player.RemoveInvItem(gi);
 	}
 
-	MakeGoldStack(player.HoldItem, dropGoldValue);
+	MakeGoldStack(player.HoldItem, amount);
 	NewCursor(player.HoldItem);
 
 	player._pGold = CalculateGold(player);
-	dropGoldValue = 0;
 }
 
 bool IsLevelUpButtonVisible()
@@ -914,10 +917,6 @@ void InitControlPan()
 		pGBoxBuff = LoadCel("ctrlpan\\golddrop", 261);
 	}
 	CloseGoldDrop();
-	dropGoldValue = 0;
-	initialDropGoldValue = 0;
-	initialDropGoldIndex = 0;
-
 	CalculatePanelAreas();
 
 	if (!HeadlessMode)
@@ -1143,17 +1142,11 @@ void CheckBtnUp()
 			CloseGoldWithdraw();
 			CloseStash();
 			invflag = !invflag;
-			if (dropGoldFlag) {
-				CloseGoldDrop();
-				dropGoldValue = 0;
-			}
+			CloseGoldDrop();
 			break;
 		case PanelButtonSpellbook:
 			CloseInventory();
-			if (dropGoldFlag) {
-				CloseGoldDrop();
-				dropGoldValue = 0;
-			}
+			CloseGoldDrop();
 			sbookflag = !sbookflag;
 			break;
 		case PanelButtonSendmsg:
@@ -1367,19 +1360,23 @@ void RedBack(const Surface &out)
 	}
 }
 
-void DrawGoldSplit(const Surface &out, int amount)
+void DrawGoldSplit(const Surface &out)
 {
 	const int dialogX = 30;
 
 	ClxDraw(out, GetPanelPosition(UiPanels::Inventory, { dialogX, 178 }), (*pGBoxBuff)[0]);
+
+	const std::string_view amountText = GoldDropText;
+	const size_t cursorPosition = GoldDropCursorPosition;
+	const int max = GetGoldDropMax();
 
 	const std::string description = fmt::format(
 	    fmt::runtime(ngettext(
 	        /* TRANSLATORS: {:s} is a number with separators. Dialog is shown when splitting a stash of Gold.*/
 	        "You have {:s} gold piece. How many do you want to remove?",
 	        "You have {:s} gold pieces. How many do you want to remove?",
-	        initialDropGoldValue)),
-	    FormatInteger(initialDropGoldValue));
+	        max)),
+	    FormatInteger(max));
 
 	// Pre-wrap the string at spaces, otherwise DrawString would hard wrap in the middle of words
 	const std::string wrapped = WordWrapString(description, 200);
@@ -1389,13 +1386,10 @@ void DrawGoldSplit(const Surface &out, int amount)
 	//  for the text entered by the player.
 	DrawString(out, wrapped, { GetPanelPosition(UiPanels::Inventory, { dialogX + 31, 75 }), { 200, 50 } }, UiFlags::ColorWhitegold | UiFlags::AlignCenter, 1, 17);
 
-	std::string value;
-	if (amount > 0) {
-		value = StrCat(amount);
-	}
 	// Even a ten digit amount of gold only takes up about half a line. There's no need to wrap or clip text here so we
 	// use the Point form of DrawString.
-	DrawString(out, value, GetPanelPosition(UiPanels::Inventory, { dialogX + 37, 128 }), UiFlags::ColorWhite | UiFlags::PentaCursor);
+	DrawString(out, amountText, GetPanelPosition(UiPanels::Inventory, { dialogX + 37, 128 }),
+	    UiFlags::ColorWhite | UiFlags::PentaCursor, /*spacing=*/1, /*lineHeight=*/-1, cursorPosition);
 }
 
 void control_drop_gold(SDL_Keycode vkey)
@@ -1404,19 +1398,22 @@ void control_drop_gold(SDL_Keycode vkey)
 
 	if (myPlayer._pHitPoints >> 6 <= 0) {
 		CloseGoldDrop();
-		dropGoldValue = 0;
 		return;
 	}
 
-	if (vkey == SDLK_RETURN || vkey == SDLK_KP_ENTER) {
-		if (dropGoldValue > 0)
-			RemoveGold(myPlayer, initialDropGoldIndex);
+	switch (vkey) {
+	case SDLK_RETURN:
+	case SDLK_KP_ENTER:
+		if (const int value = GoldDropInputState->value(); value != 0) {
+			RemoveGold(myPlayer, GoldDropInvIndex, value);
+		}
 		CloseGoldDrop();
-	} else if (vkey == SDLK_ESCAPE) {
+		break;
+	case SDLK_ESCAPE:
 		CloseGoldDrop();
-		dropGoldValue = 0;
-	} else if (vkey == SDLK_BACKSPACE) {
-		dropGoldValue = dropGoldValue / 10;
+		break;
+	default:
+		break;
 	}
 }
 
@@ -1626,26 +1623,41 @@ void DiabloHotkeyMsg(uint32_t dwMsg)
 	}
 }
 
+void OpenGoldDrop(int8_t invIndex, int max)
+{
+	dropGoldFlag = true;
+	GoldDropInvIndex = invIndex;
+	GoldDropText[0] = '\0';
+	GoldDropInputState.emplace(NumberInputState::Options {
+	    .textOptions {
+	        .value = GoldDropText,
+	        .cursorPosition = &GoldDropCursorPosition,
+	        .maxLength = sizeof(GoldDropText) - 1,
+	    },
+	    .min = 0,
+	    .max = max,
+	});
+	SDL_StartTextInput();
+}
+
 void CloseGoldDrop()
 {
 	if (!dropGoldFlag)
 		return;
-	dropGoldFlag = false;
 	SDL_StopTextInput();
+	dropGoldFlag = false;
+	GoldDropInputState = std::nullopt;
+	GoldDropInvIndex = 0;
 }
 
-void GoldDropNewText(std::string_view text)
+int GetGoldDropMax()
 {
-	for (char vkey : text) {
-		int digit = vkey - '0';
-		if (digit >= 0 && digit <= 9) {
-			int newGoldValue = dropGoldValue * 10;
-			newGoldValue += digit;
-			if (newGoldValue <= initialDropGoldValue) {
-				dropGoldValue = newGoldValue;
-			}
-		}
-	}
+	return GoldDropInputState->max();
+}
+
+bool HandleGoldDropTextInputEvent(const SDL_Event &event)
+{
+	return HandleNumberInputEvent(event, *GoldDropInputState);
 }
 
 } // namespace devilution

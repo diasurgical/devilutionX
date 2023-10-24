@@ -188,11 +188,12 @@ uint32_t DrawString(const Surface &out, std::string_view text, const Rectangle &
  * @param flags A combination of UiFlags to describe font size, color, alignment, etc. See ui_items.h for available options
  * @param spacing Additional space to add between characters.
  *                This value may be adjusted if the flag UIS_FIT_SPACING is passed in the flags parameter.
+ * @param cursorPosition If non-negative, draws a blinking cursor after the given byte index.
  * @param lineHeight Allows overriding the default line height, useful for multi-line strings.
  */
-inline void DrawString(const Surface &out, std::string_view text, const Point &position, UiFlags flags = UiFlags::None, int spacing = 1, int lineHeight = -1)
+inline void DrawString(const Surface &out, std::string_view text, const Point &position, UiFlags flags = UiFlags::None, int spacing = 1, int lineHeight = -1, int cursorPosition = -1)
 {
-	DrawString(out, text, { position, { out.w() - position.x, 0 } }, flags, spacing, lineHeight);
+	DrawString(out, text, { position, { out.w() - position.x, 0 } }, flags, spacing, lineHeight, cursorPosition);
 }
 
 /**
