@@ -677,19 +677,6 @@ void HandleMouseButtonUp(Uint8 button, uint16_t modState)
 	}
 }
 
-bool HandleTextInput(std::string_view text)
-{
-	if (dropGoldFlag) {
-		GoldDropNewText(text);
-		return true;
-	}
-	if (IsWithdrawGoldOpen) {
-		GoldWithdrawNewText(text);
-		return true;
-	}
-	return false;
-}
-
 [[maybe_unused]] void LogUnhandledEvent(const char *name, int value)
 {
 	LogVerbose("Unhandled SDL event: {} {}", name, value);
@@ -722,35 +709,20 @@ void GameEventHandler(const SDL_Event &event, uint16_t modState)
 	if (IsTalkActive() && HandleTalkTextInputEvent(event)) {
 		return;
 	}
-
-	switch (event.type) {
-	case SDL_KEYDOWN: {
-#ifdef USE_SDL1
-		// SDL1 does not support TEXTINPUT events, so we emulate them here.
-		const Uint16 bmpCodePoint = event.key.keysym.unicode;
-		if (bmpCodePoint >= ' ') {
-			std::string utf8;
-			AppendUtf8(bmpCodePoint, utf8);
-			if (HandleTextInput(utf8)) {
-				return;
-			}
-		}
-#endif
-		PressKey(event.key.keysym.sym, modState);
+	if (dropGoldFlag && HandleGoldDropTextInputEvent(event)) {
 		return;
 	}
+	if (IsWithdrawGoldOpen && HandleGoldWithdrawTextInputEvent(event)) {
+		return;
+	}
+
+	switch (event.type) {
+	case SDL_KEYDOWN:
+		PressKey(event.key.keysym.sym, modState);
+		return;
 	case SDL_KEYUP:
 		ReleaseKey(event.key.keysym.sym);
 		return;
-#if SDL_VERSION_ATLEAST(2, 0, 0)
-	case SDL_TEXTEDITING:
-		return;
-	case SDL_TEXTINPUT:
-		if (!HandleTextInput(event.text.text)) {
-			LogUnhandledEvent("SDL_TEXTINPUT", event.text.windowID);
-		}
-		return;
-#endif
 	case SDL_MOUSEMOTION:
 		if (ControlMode == ControlTypes::KeyboardAndMouse && invflag)
 			InvalidateInventorySlot();

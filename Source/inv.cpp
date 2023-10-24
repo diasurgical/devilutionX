@@ -566,10 +566,7 @@ void CheckInvCut(Player &player, Point cursorPosition, bool automaticMove, bool 
 		return;
 	}
 
-	if (dropGoldFlag) {
-		CloseGoldDrop();
-		dropGoldValue = 0;
-	}
+	CloseGoldDrop();
 
 	uint32_t r = 0;
 	for (; r < NUM_XY_SLOTS; r++) {
@@ -956,14 +953,13 @@ void StartGoldDrop()
 {
 	CloseGoldWithdraw();
 
-	initialDropGoldIndex = pcursinvitem;
+	const int8_t invIndex = pcursinvitem;
 
 	Player &myPlayer = *MyPlayer;
 
-	if (pcursinvitem <= INVITEM_INV_LAST)
-		initialDropGoldValue = myPlayer.InvList[pcursinvitem - INVITEM_INV_FIRST]._ivalue;
-	else
-		initialDropGoldValue = myPlayer.SpdList[pcursinvitem - INVITEM_BELT_FIRST]._ivalue;
+	const size_t max = (invIndex <= INVITEM_INV_LAST)
+	    ? myPlayer.InvList[invIndex - INVITEM_INV_FIRST]._ivalue
+	    : myPlayer.SpdList[invIndex - INVITEM_BELT_FIRST]._ivalue;
 
 	if (talkflag)
 		control_reset_talk();
@@ -972,9 +968,7 @@ void StartGoldDrop()
 	SDL_Rect rect = MakeSdlRect(start.x, start.y, 180, 20);
 	SDL_SetTextInputRect(&rect);
 
-	dropGoldFlag = true;
-	dropGoldValue = 0;
-	SDL_StartTextInput();
+	OpenGoldDrop(invIndex, max);
 }
 
 int CreateGoldItemInInventorySlot(Player &player, int slotIndex, int value)
@@ -1555,10 +1549,7 @@ void CheckInvScrn(bool isShiftHeld, bool isCtrlHeld)
 void InvGetItem(Player &player, int ii)
 {
 	auto &item = Items[ii];
-	if (dropGoldFlag) {
-		CloseGoldDrop();
-		dropGoldValue = 0;
-	}
+	CloseGoldDrop();
 
 	if (dItem[item.position.x][item.position.y] == 0)
 		return;
@@ -1629,10 +1620,7 @@ void AutoGetItem(Player &player, Item *itemPointer, int ii)
 {
 	Item &item = *itemPointer;
 
-	if (dropGoldFlag) {
-		CloseGoldDrop();
-		dropGoldValue = 0;
-	}
+	CloseGoldDrop();
 
 	if (dItem[item.position.x][item.position.y] == 0)
 		return;
@@ -2057,10 +2045,7 @@ bool UseInvItem(int cii)
 		return true;
 	}
 
-	if (dropGoldFlag) {
-		CloseGoldDrop();
-		dropGoldValue = 0;
-	}
+	CloseGoldDrop();
 
 	if (item->isScroll() && leveltype == DTYPE_TOWN && !GetSpellData(item->_iSpell).isAllowedInTown()) {
 		return true;
