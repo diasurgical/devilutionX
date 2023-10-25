@@ -1066,10 +1066,10 @@ void DrawGame(const Surface &fullOut, Point position, Displacement offset)
 	Point pos { 100, 20 };
 	for (size_t i = 0; i < sortedStats.size(); ++i) {
 		const auto &stat = sortedStats[i];
-		DrawString(out, StrCat(i, "."), Rectangle(pos, Size { 20, 16 }), UiFlags::AlignRight);
+		DrawString(out, StrCat(i, "."), Rectangle(pos, Size { 20, 16 }), { .flags = UiFlags::AlignRight });
 		DrawString(out, MaskTypeToString(stat.first.maskType), { pos.x + 24, pos.y });
 		DrawString(out, TileTypeToString(stat.first.tileType), { pos.x + 184, pos.y });
-		DrawString(out, FormatInteger(stat.second), Rectangle({ pos.x + 354, pos.y }, Size(40, 16)), UiFlags::AlignRight);
+		DrawString(out, FormatInteger(stat.second), Rectangle({ pos.x + 354, pos.y }, Size(40, 16)), { .flags = UiFlags::AlignRight });
 		pos.y += 16;
 	}
 #endif
@@ -1111,7 +1111,8 @@ void DrawView(const Surface &out, Point startPosition)
 				Size tileSize = { TILE_WIDTH, TILE_HEIGHT };
 				if (*sgOptions.Graphics.zoom)
 					tileSize *= 2;
-				DrawString(out, debugGridTextBuffer, { pixelCoords - Displacement { 0, tileSize.height }, tileSize }, UiFlags::ColorRed | UiFlags::AlignCenter | UiFlags::VerticalCenter);
+				DrawString(out, debugGridTextBuffer, { pixelCoords - Displacement { 0, tileSize.height }, tileSize },
+				    { .flags = UiFlags::ColorRed | UiFlags::AlignCenter | UiFlags::VerticalCenter });
 			}
 			if (DebugGrid) {
 				auto DrawDebugSquare = [&out](Point center, Displacement hor, Displacement ver, uint8_t col) {
@@ -1240,7 +1241,7 @@ void DrawFPS(const Surface &out)
 		    : BufCopy(buf, fps / FpsPow10, ".", fps % FpsPow10, " FPS");
 		formatted = { buf, static_cast<std::string_view::size_type>(end - buf) };
 	};
-	DrawString(out, formatted, Point { 8, 68 }, UiFlags::ColorRed);
+	DrawString(out, formatted, Point { 8, 68 }, { .flags = UiFlags::ColorRed });
 }
 
 /**

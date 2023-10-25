@@ -768,13 +768,15 @@ namespace {
 void Render(const UiText &uiText)
 {
 	const Surface &out = Surface(DiabloUiSurface());
-	DrawString(out, uiText.GetText(), MakeRectangle(uiText.m_rect), uiText.GetFlags() | UiFlags::FontSizeDialog);
+	DrawString(out, uiText.GetText(), MakeRectangle(uiText.m_rect),
+	    { .flags = uiText.GetFlags() | UiFlags::FontSizeDialog });
 }
 
 void Render(const UiArtText &uiArtText)
 {
 	const Surface &out = Surface(DiabloUiSurface());
-	DrawString(out, uiArtText.GetText(), MakeRectangle(uiArtText.m_rect), uiArtText.GetFlags(), uiArtText.GetSpacing(), uiArtText.GetLineHeight());
+	DrawString(out, uiArtText.GetText(), MakeRectangle(uiArtText.m_rect),
+	    { .flags = uiArtText.GetFlags(), .spacing = uiArtText.GetSpacing(), .lineHeight = uiArtText.GetLineHeight() });
 }
 
 void Render(const UiImageClx &uiImage)
@@ -800,7 +802,7 @@ void Render(const UiImageAnimatedClx &uiImage)
 void Render(const UiArtTextButton &uiButton)
 {
 	const Surface &out = Surface(DiabloUiSurface());
-	DrawString(out, uiButton.GetText(), MakeRectangle(uiButton.m_rect), uiButton.GetFlags());
+	DrawString(out, uiButton.GetText(), MakeRectangle(uiButton.m_rect), { .flags = uiButton.GetFlags() });
 }
 
 void Render(const UiList &uiList)
@@ -814,10 +816,13 @@ void Render(const UiList &uiList)
 			DrawSelector(rect);
 
 		Rectangle rectangle = MakeRectangle(rect);
-		if (item.args.empty())
-			DrawString(out, item.m_text, rectangle, uiList.GetFlags() | item.uiFlags, uiList.GetSpacing());
-		else
-			DrawStringWithColors(out, item.m_text, item.args, rectangle, uiList.GetFlags() | item.uiFlags, uiList.GetSpacing());
+		if (item.args.empty()) {
+			DrawString(out, item.m_text, rectangle,
+			    { .flags = uiList.GetFlags() | item.uiFlags, .spacing = uiList.GetSpacing() });
+		} else {
+			DrawStringWithColors(out, item.m_text, item.args, rectangle,
+			    { .flags = uiList.GetFlags() | item.uiFlags, .spacing = uiList.GetSpacing() });
+		}
 	}
 }
 
@@ -864,7 +869,8 @@ void Render(const UiEdit &uiEdit)
 	Rectangle rect = MakeRectangle(uiEdit.m_rect).inset({ 43, 1 });
 
 	const Surface &out = Surface(DiabloUiSurface());
-	DrawString(out, uiEdit.m_value, rect, uiEdit.GetFlags(), /*spacing=*/1, /*lineHeight=*/-1, uiEdit.m_cursor);
+	DrawString(out, uiEdit.m_value, rect,
+	    { .flags = uiEdit.GetFlags(), .cursorPosition = static_cast<int>(uiEdit.m_cursor) });
 }
 
 bool HandleMouseEventArtTextButton(const SDL_Event &event, const UiArtTextButton *uiButton)

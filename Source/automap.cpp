@@ -1471,32 +1471,33 @@ void DrawAutomapText(const Surface &out)
 	DrawString(out, difficultyString, linePosition);
 
 #ifdef _DEBUG
-	UiFlags debugColor = UiFlags::ColorOrange;
-
+	const TextRenderOptions debugTextOptions {
+		.flags = UiFlags::ColorOrange,
+	};
 	linePosition.y += 45;
 	if (DebugGodMode) {
 		linePosition.y += 15;
-		DrawString(out, "God Mode", linePosition, debugColor);
+		DrawString(out, "God Mode", linePosition, debugTextOptions);
 	}
 	if (DisableLighting) {
 		linePosition.y += 15;
-		DrawString(out, "Fullbright", linePosition, debugColor);
+		DrawString(out, "Fullbright", linePosition, debugTextOptions);
 	}
 	if (DebugVision) {
 		linePosition.y += 15;
-		DrawString(out, "Draw Vision", linePosition, debugColor);
+		DrawString(out, "Draw Vision", linePosition, debugTextOptions);
 	}
 	if (DebugPath) {
 		linePosition.y += 15;
-		DrawString(out, "Draw Path", linePosition, debugColor);
+		DrawString(out, "Draw Path", linePosition, debugTextOptions);
 	}
 	if (DebugGrid) {
 		linePosition.y += 15;
-		DrawString(out, "Draw Grid", linePosition, debugColor);
+		DrawString(out, "Draw Grid", linePosition, debugTextOptions);
 	}
 	if (DebugScrollViewEnabled) {
 		linePosition.y += 15;
-		DrawString(out, "Scroll View", linePosition, debugColor);
+		DrawString(out, "Scroll View", linePosition, debugTextOptions);
 	}
 #endif
 }

@@ -1179,7 +1179,8 @@ void DrawInvBelt(const Surface &out)
 
 		if (myPlayer.SpdList[i].isUsable()
 		    && myPlayer.SpdList[i]._itype != ItemType::Gold) {
-			DrawString(out, StrCat(i + 1), { position - Displacement { 0, 12 }, InventorySlotSizeInPixels }, UiFlags::ColorWhite | UiFlags::AlignRight);
+			DrawString(out, StrCat(i + 1), { position - Displacement { 0, 12 }, InventorySlotSizeInPixels },
+			    { .flags = UiFlags::ColorWhite | UiFlags::AlignRight });
 		}
 	}
 }
