@@ -18,6 +18,7 @@
 #include "DiabloUI/ui_flags.hpp"
 #include "engine.h"
 #include "engine/clx_sprite.hpp"
+#include "engine/palette.h"
 #include "engine/rectangle.hpp"
 
 namespace devilution {
@@ -122,6 +123,14 @@ struct TextRenderOptions {
 
 	/** @brief If non-negative, draws a blinking cursor after the given byte index.*/
 	int cursorPosition = -1;
+
+	/** @brief Highlight text background in this range. */
+	struct {
+		int begin;
+		int end;
+	} highlightRange = { 0, 0 };
+
+	uint8_t highlightColor = PAL8_RED + 6;
 };
 
 /**

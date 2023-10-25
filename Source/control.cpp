@@ -67,7 +67,7 @@
 namespace devilution {
 
 bool dropGoldFlag;
-size_t GoldDropCursorPosition;
+TextInputCursorState GoldDropCursor;
 char GoldDropText[21];
 namespace {
 int8_t GoldDropInvIndex;
@@ -155,7 +155,7 @@ bool TalkButtonsDown[3];
 int sgbPlrTalkTbl;
 bool WhisperList[MAX_PLRS];
 
-size_t ChatCursorPosition;
+TextInputCursorState ChatCursor;
 std::optional<TextInputState> ChatInputState;
 
 enum panel_button_id : uint8_t {
@@ -1375,7 +1375,7 @@ void DrawGoldSplit(const Surface &out)
 	ClxDraw(out, GetPanelPosition(UiPanels::Inventory, { dialogX, 178 }), (*pGBoxBuff)[0]);
 
 	const std::string_view amountText = GoldDropText;
-	const size_t cursorPosition = GoldDropCursorPosition;
+	const TextInputCursorState &cursor = GoldDropCursor;
 	const int max = GetGoldDropMax();
 
 	const std::string description = fmt::format(
@@ -1398,7 +1398,11 @@ void DrawGoldSplit(const Surface &out)
 	// Even a ten digit amount of gold only takes up about half a line. There's no need to wrap or clip text here so we
 	// use the Point form of DrawString.
 	DrawString(out, amountText, GetPanelPosition(UiPanels::Inventory, { dialogX + 37, 128 }),
-	    { .flags = UiFlags::ColorWhite | UiFlags::PentaCursor, .cursorPosition = static_cast<int>(cursorPosition) });
+	    {
+	        .flags = UiFlags::ColorWhite | UiFlags::PentaCursor,
+	        .cursorPosition = static_cast<int>(cursor.position),
+	        .highlightRange = { static_cast<int>(cursor.selection.begin), static_cast<int>(cursor.selection.end) },
+	    });
 }
 
 void control_drop_gold(SDL_Keycode vkey)
@@ -1449,7 +1453,12 @@ void DrawTalkPan(const Surface &out)
 	int y = mainPanelPosition.y + 10;
 
 	const uint32_t len = DrawString(out, TalkMessage, { { x, y }, { 250, 39 } },
-	    { .flags = UiFlags::ColorWhite | UiFlags::PentaCursor, .lineHeight = 13, .cursorPosition = static_cast<int>(ChatCursorPosition) });
+	    {
+	        .flags = UiFlags::ColorWhite | UiFlags::PentaCursor,
+	        .lineHeight = 13,
+	        .cursorPosition = static_cast<int>(ChatCursor.position),
+	        .highlightRange = { static_cast<int>(ChatCursor.selection.begin), static_cast<int>(ChatCursor.selection.end) },
+	    });
 	ChatInputState->truncate(len);
 
 	x += 46;
@@ -1547,7 +1556,7 @@ void control_type_message()
 	TalkMessage[0] = '\0';
 	ChatInputState.emplace(TextInputState::Options {
 	    .value = TalkMessage,
-	    .cursorPosition = &ChatCursorPosition,
+	    .cursor = &ChatCursor,
 	    .maxLength = sizeof(TalkMessage) - 1 });
 	SDL_Rect rect = MakeSdlRect(GetMainPanel().position.x + 200, GetMainPanel().position.y + 22, 0, 27);
 	SDL_SetTextInputRect(&rect);
@@ -1641,7 +1650,7 @@ void OpenGoldDrop(int8_t invIndex, int max)
 	GoldDropInputState.emplace(NumberInputState::Options {
 	    .textOptions {
 	        .value = GoldDropText,
-	        .cursorPosition = &GoldDropCursorPosition,
+	        .cursor = &GoldDropCursor,
 	        .maxLength = sizeof(GoldDropText) - 1,
 	    },
 	    .min = 0,

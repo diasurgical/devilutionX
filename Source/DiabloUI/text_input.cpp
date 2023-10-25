@@ -25,10 +25,29 @@ bool HandleInputEvent(const SDL_Event &event, TextInputState &state,
     tl::function_ref<bool(std::string_view)> typeFn,
     [[maybe_unused]] tl::function_ref<bool(std::string_view)> assignFn)
 {
+	const bool isShift = (SDL_GetModState() & KMOD_SHIFT) != 0;
 	switch (event.type) {
 	case SDL_KEYDOWN: {
 		switch (event.key.keysym.sym) {
 #ifndef USE_SDL1
+		case SDLK_c:
+			if ((SDL_GetModState() & KMOD_CTRL) != 0) {
+				const std::string selectedText { state.selectedText() };
+				if (SDL_SetClipboardText(selectedText.c_str()) < 0) {
+					Log("{}", SDL_GetError());
+				}
+			}
+			return true;
+		case SDLK_x:
+			if ((SDL_GetModState() & KMOD_CTRL) != 0) {
+				const std::string selectedText { state.selectedText() };
+				if (SDL_SetClipboardText(selectedText.c_str()) < 0) {
+					Log("{}", SDL_GetError());
+				} else {
+					state.eraseSelection();
+				}
+			}
+			return true;
 		case SDLK_v:
 			if ((SDL_GetModState() & KMOD_CTRL) != 0) {
 				if (SDL_HasClipboardText() == SDL_TRUE) {
@@ -49,16 +68,16 @@ bool HandleInputEvent(const SDL_Event &event, TextInputState &state,
 			state.del();
 			return true;
 		case SDLK_LEFT:
-			state.moveCursorLeft();
+			isShift ? state.moveSelectCursorLeft() : state.moveCursorLeft();
 			return true;
 		case SDLK_RIGHT:
-			state.moveCursorRight();
+			isShift ? state.moveSelectCursorRight() : state.moveCursorRight();
 			return true;
 		case SDLK_HOME:
-			state.setCursorToStart();
+			isShift ? state.setSelectCursorToStart() : state.setCursorToStart();
 			return true;
 		case SDLK_END:
-			state.setCursorToEnd();
+			isShift ? state.setSelectCursorToEnd() : state.setCursorToEnd();
 			return true;
 		default:
 			break;

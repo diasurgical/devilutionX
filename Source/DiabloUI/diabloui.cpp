@@ -151,7 +151,7 @@ void UiInitList(void (*fnFocus)(int value), void (*fnSelect)(int value), void (*
 #endif
 			UiTextInputState.emplace(TextInputState::Options {
 			    .value = pItemUIEdit->m_value,
-			    .cursorPosition = &pItemUIEdit->m_cursor,
+			    .cursor = &pItemUIEdit->m_cursor,
 			    .maxLength = pItemUIEdit->m_max_length,
 			});
 		} else if (item->IsType(UiType::List)) {
@@ -870,7 +870,12 @@ void Render(const UiEdit &uiEdit)
 
 	const Surface &out = Surface(DiabloUiSurface());
 	DrawString(out, uiEdit.m_value, rect,
-	    { .flags = uiEdit.GetFlags(), .cursorPosition = static_cast<int>(uiEdit.m_cursor) });
+	    {
+	        .flags = uiEdit.GetFlags(),
+	        .cursorPosition = static_cast<int>(uiEdit.m_cursor.position),
+	        .highlightRange = { static_cast<int>(uiEdit.m_cursor.selection.begin), static_cast<int>(uiEdit.m_cursor.selection.end) },
+	        .highlightColor = 126,
+	    });
 }
 
 bool HandleMouseEventArtTextButton(const SDL_Event &event, const UiArtTextButton *uiButton)

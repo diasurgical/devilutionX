@@ -53,6 +53,11 @@ DVL_ALWAYS_INLINE constexpr bool IsNoneOf(const V &v, X x, Xs... xs)
 }
 
 /**
+ * @brief Fill a rectangle with the given color.
+ */
+void FillRect(const Surface &out, int x, int y, int width, int height, uint8_t colorIndex);
+
+/**
  * @brief Draw a horizontal line segment in the target buffer (left to right)
  * @param out Target buffer
  * @param from Start of the line segment

@@ -94,6 +94,13 @@ void DrawHalfTransparentBlendedRectTo(const Surface &out, unsigned sx, unsigned 
 
 } // namespace
 
+void FillRect(const Surface &out, int x, int y, int width, int height, uint8_t colorIndex)
+{
+	for (int j = 0; j < height; j++) {
+		DrawHorizontalLine(out, { x, y + j }, width, colorIndex);
+	}
+}
+
 void DrawHorizontalLine(const Surface &out, Point from, int width, std::uint8_t colorIndex)
 {
 	if (from.y < 0 || from.y >= out.h() || from.x >= out.w() || width <= 0 || from.x + width <= 0)

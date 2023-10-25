@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 
+#include "DiabloUI/text_input.hpp"
 #include "DiabloUI/ui_flags.hpp"
 #include "engine/clx_sprite.hpp"
 #include "engine/render/text_render.hpp"
@@ -271,7 +272,7 @@ public:
 	std::string_view m_hint;
 	char *m_value;
 	std::size_t m_max_length;
-	size_t m_cursor;
+	TextInputCursorState m_cursor;
 	bool m_allowEmpty;
 };
 
