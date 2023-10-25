@@ -28,6 +28,7 @@
 #include "init.h"
 #include "inv.h"
 #include "lighting.h"
+#include "lua/lua.hpp"
 #include "minitext.h"
 #include "missiles.h"
 #include "nthread.h"
@@ -46,7 +47,6 @@
 #include "utils/display.h"
 #include "utils/endian.hpp"
 #include "utils/log.hpp"
-#include "utils/lua.hpp"
 #include "utils/str_cat.hpp"
 
 #ifndef USE_SDL1
