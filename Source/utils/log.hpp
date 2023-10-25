@@ -9,7 +9,7 @@
 #include "utils/str_cat.hpp"
 
 #ifdef USE_SDL1
-#include "sdl2_to_1_2_backports.h"
+#include "utils/sdl2_to_1_2_backports.h"
 #endif
 
 namespace devilution {

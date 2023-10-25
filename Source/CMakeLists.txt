@@ -132,6 +132,10 @@ set(libdevilutionx_SRCS
   levels/town.cpp
   levels/trigs.cpp
 
+  lua/lua.cpp
+  lua/modules/render.cpp
+  lua/modules/log.cpp
+
   panels/charpanel.cpp
   panels/info_box.cpp
   panels/mainpanel.cpp
@@ -160,7 +164,6 @@ set(libdevilutionx_SRCS
   utils/format_int.cpp
   utils/language.cpp
   utils/logged_fstream.cpp
-  utils/lua.cpp
   utils/paths.cpp
   utils/parse_int.cpp
   utils/pcx_to_clx.cpp

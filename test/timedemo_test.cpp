@@ -4,11 +4,11 @@
 
 #include "diablo.h"
 #include "engine/demomode.h"
+#include "lua/lua.hpp"
 #include "options.h"
 #include "pfile.h"
 #include "playerdat.hpp"
 #include "utils/display.h"
-#include "utils/lua.hpp"
 #include "utils/paths.h"
 
 using namespace devilution;
