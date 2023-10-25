@@ -204,7 +204,8 @@ void DrawItemNameLabels(const Surface &out)
 			FillRect(clippedOut, label.pos.x, label.pos.y + MarginY, label.width, Height, PAL8_BLUE + 6);
 		else
 			DrawHalfTransparentRectTo(clippedOut, label.pos.x, label.pos.y + MarginY, label.width, Height);
-		DrawString(clippedOut, label.text, { { label.pos.x + MarginX, label.pos.y }, { label.width, Height } }, item.getTextColor());
+		DrawString(clippedOut, label.text, { { label.pos.x + MarginX, label.pos.y }, { label.width, Height } },
+		    { .flags = item.getTextColor() });
 	}
 	labelQueue.clear();
 }

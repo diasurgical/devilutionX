@@ -282,7 +282,12 @@ void PrintInfo(const Surface &out)
 
 	SpeakText(InfoString);
 
-	DrawString(out, InfoString, infoArea, InfoColor | UiFlags::AlignCenter | UiFlags::VerticalCenter | UiFlags::KerningFitSpacing, 2, lineHeight);
+	DrawString(out, InfoString, infoArea,
+	    {
+	        .flags = InfoColor | UiFlags::AlignCenter | UiFlags::VerticalCenter | UiFlags::KerningFitSpacing,
+	        .spacing = 2,
+	        .lineHeight = lineHeight,
+	    });
 }
 
 int CapStatPointsToAdd(int remainingStatPoints, const Player &player, CharacterAttribute attribute)
@@ -830,8 +835,10 @@ void DrawFlaskValues(const Surface &out, Point pos, int currValue, int maxValue)
 	UiFlags color = (currValue > 0 ? (currValue == maxValue ? UiFlags::ColorGold : UiFlags::ColorWhite) : UiFlags::ColorRed);
 
 	auto drawStringWithShadow = [out, color](std::string_view text, Point pos) {
-		DrawString(out, text, pos + Displacement { -1, -1 }, UiFlags::ColorBlack | UiFlags::KerningFitSpacing, 0);
-		DrawString(out, text, pos, color | UiFlags::KerningFitSpacing, 0);
+		DrawString(out, text, pos + Displacement { -1, -1 },
+		    { .flags = UiFlags::ColorBlack | UiFlags::KerningFitSpacing, .spacing = 0 });
+		DrawString(out, text, pos,
+		    { .flags = color | UiFlags::KerningFitSpacing, .spacing = 0 });
 	};
 
 	std::string currText = StrCat(currValue);
@@ -1261,7 +1268,8 @@ void DrawLevelUpIcon(const Surface &out)
 {
 	if (IsLevelUpButtonVisible()) {
 		int nCel = lvlbtndown ? 2 : 1;
-		DrawString(out, _("Level Up"), { GetMainPanel().position + Displacement { 0, -62 }, { 120, 0 } }, UiFlags::ColorWhite | UiFlags::AlignCenter | UiFlags::KerningFitSpacing);
+		DrawString(out, _("Level Up"), { GetMainPanel().position + Displacement { 0, -62 }, { 120, 0 } },
+		    { .flags = UiFlags::ColorWhite | UiFlags::AlignCenter | UiFlags::KerningFitSpacing });
 		ClxDraw(out, GetMainPanel().position + Displacement { 40, -17 }, (*pChrButtons)[nCel]);
 	}
 }
@@ -1384,12 +1392,13 @@ void DrawGoldSplit(const Surface &out)
 	// The split gold dialog is roughly 4 lines high, but we need at least one line for the player to input an amount.
 	// Using a clipping region 50 units high (approx 3 lines with a lineheight of 17) to ensure there is enough room left
 	//  for the text entered by the player.
-	DrawString(out, wrapped, { GetPanelPosition(UiPanels::Inventory, { dialogX + 31, 75 }), { 200, 50 } }, UiFlags::ColorWhitegold | UiFlags::AlignCenter, 1, 17);
+	DrawString(out, wrapped, { GetPanelPosition(UiPanels::Inventory, { dialogX + 31, 75 }), { 200, 50 } },
+	    { .flags = UiFlags::ColorWhitegold | UiFlags::AlignCenter, .lineHeight = 17 });
 
 	// Even a ten digit amount of gold only takes up about half a line. There's no need to wrap or clip text here so we
 	// use the Point form of DrawString.
 	DrawString(out, amountText, GetPanelPosition(UiPanels::Inventory, { dialogX + 37, 128 }),
-	    UiFlags::ColorWhite | UiFlags::PentaCursor, /*spacing=*/1, /*lineHeight=*/-1, cursorPosition);
+	    { .flags = UiFlags::ColorWhite | UiFlags::PentaCursor, .cursorPosition = static_cast<int>(cursorPosition) });
 }
 
 void control_drop_gold(SDL_Keycode vkey)
@@ -1439,7 +1448,8 @@ void DrawTalkPan(const Surface &out)
 	int x = mainPanelPosition.x + 200;
 	int y = mainPanelPosition.y + 10;
 
-	const uint32_t len = DrawString(out, TalkMessage, { { x, y }, { 250, 39 } }, UiFlags::ColorWhite | UiFlags::PentaCursor, 1, 13, ChatCursorPosition);
+	const uint32_t len = DrawString(out, TalkMessage, { { x, y }, { 250, 39 } },
+	    { .flags = UiFlags::ColorWhite | UiFlags::PentaCursor, .lineHeight = 13, .cursorPosition = static_cast<int>(ChatCursorPosition) });
 	ChatInputState->truncate(len);
 
 	x += 46;
@@ -1472,7 +1482,7 @@ void DrawTalkPan(const Surface &out)
 			RenderClxSprite(out, (*TalkButton)[TalkButtonsDown[talkBtn] ? 1 : 0], talkPanPosition + Displacement { 4, -15 });
 		}
 		if (player.plractive) {
-			DrawString(out, player._pName, { { x, y + 60 + talkBtn * 18 }, { 204, 0 } }, color);
+			DrawString(out, player._pName, { { x, y + 60 + talkBtn * 18 }, { 204, 0 } }, { .flags = color });
 		}
 
 		talkBtn++;

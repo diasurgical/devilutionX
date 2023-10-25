@@ -2200,13 +2200,13 @@ void PrintSString(const Surface &out, int margin, int line, std::string_view tex
 
 	if (*sgOptions.Gameplay.showItemGraphicsInStores && cursIndent) {
 		const Rectangle textRect { { rect.position.x + HalfCursWidth + 8, rect.position.y }, { rect.size.width - HalfCursWidth + 8, rect.size.height } };
-		DrawString(out, text, textRect, flags);
+		DrawString(out, text, textRect, { .flags = flags });
 	} else {
-		DrawString(out, text, rect, flags);
+		DrawString(out, text, rect, { .flags = flags });
 	}
 
 	if (price > 0)
-		DrawString(out, FormatInteger(price), rect, flags | UiFlags::AlignRight);
+		DrawString(out, FormatInteger(price), rect, { .flags = flags | UiFlags::AlignRight });
 
 	if (stextsel == line) {
 		DrawSelector(out, rect, text, flags);

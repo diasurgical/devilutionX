@@ -134,7 +134,8 @@ void DrawPlrMsg(const Surface &out)
 			{ std::string_view(text.data(), message.prefixLength), UiFlags::ColorWhitegold },
 			{ std::string_view(text.data() + message.prefixLength, text.size() - message.prefixLength), message.style }
 		};
-		DrawStringWithColors(out, "{:s}{:s}", args, { { x, y }, { width, 0 } }, UiFlags::None, 1, message.lineHeight);
+		DrawStringWithColors(out, "{:s}{:s}", args, { { x, y }, { width, 0 } },
+		    { .flags = UiFlags::None, .lineHeight = message.lineHeight });
 	}
 }
 

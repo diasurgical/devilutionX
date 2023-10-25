@@ -105,6 +105,25 @@ private:
 	std::string formatted_;
 };
 
+/** @brief Text rendering options. */
+struct TextRenderOptions {
+	/** @brief A combination of UiFlags to describe font size, color, alignment, etc. See ui_items.h for available options */
+	UiFlags flags = UiFlags::None;
+
+	/**
+	 * @brief Additional space to add between characters.
+	 *
+	 * This value may be adjusted if the flag UiFlags::KerningFitSpacing is set.
+	 */
+	int spacing = 1;
+
+	/** @brief Allows overriding the default line height, useful for multi-line strings. */
+	int lineHeight = -1;
+
+	/** @brief If non-negative, draws a blinking cursor after the given byte index.*/
+	int cursorPosition = -1;
+};
+
 /**
  * @brief Small text selection cursor.
  *
@@ -166,14 +185,10 @@ int GetLineHeight(std::string_view text, GameFontTables fontIndex);
  * @param out The screen buffer to draw on.
  * @param text String to be drawn.
  * @param rect Clipping region relative to the output buffer describing where to draw the text and when to wrap long lines.
- * @param flags A combination of UiFlags to describe font size, color, alignment, etc. See ui_items.h for available options
- * @param spacing Additional space to add between characters.
- *                This value may be adjusted if the flag UIS_FIT_SPACING is passed in the flags parameter.
- * @param lineHeight Allows overriding the default line height, useful for multi-line strings.
- * @param cursorPosition If non-negative, draws a blinking cursor after the given byte index.
+ * @param opts Rendering options.
  * @return The number of bytes rendered, including characters "drawn" outside the buffer.
  */
-uint32_t DrawString(const Surface &out, std::string_view text, const Rectangle &rect, UiFlags flags = UiFlags::None, int spacing = 1, int lineHeight = -1, int cursorPosition = -1);
+uint32_t DrawString(const Surface &out, std::string_view text, const Rectangle &rect, TextRenderOptions opts = {});
 
 /**
  * @brief Draws a line of text at the given position relative to the origin of the output buffer.
@@ -185,37 +200,30 @@ uint32_t DrawString(const Surface &out, std::string_view text, const Rectangle &
  * @param out The screen buffer to draw on.
  * @param text String to be drawn.
  * @param position Location of the top left corner of the string relative to the top left corner of the output buffer.
- * @param flags A combination of UiFlags to describe font size, color, alignment, etc. See ui_items.h for available options
- * @param spacing Additional space to add between characters.
- *                This value may be adjusted if the flag UIS_FIT_SPACING is passed in the flags parameter.
- * @param cursorPosition If non-negative, draws a blinking cursor after the given byte index.
- * @param lineHeight Allows overriding the default line height, useful for multi-line strings.
+ * @param opts Rendering options.
  */
-inline void DrawString(const Surface &out, std::string_view text, const Point &position, UiFlags flags = UiFlags::None, int spacing = 1, int lineHeight = -1, int cursorPosition = -1)
+inline void DrawString(const Surface &out, std::string_view text, const Point &position, TextRenderOptions opts = {})
 {
-	DrawString(out, text, { position, { out.w() - position.x, 0 } }, flags, spacing, lineHeight, cursorPosition);
+	DrawString(out, text, { position, { out.w() - position.x, 0 } }, opts);
 }
 
 /**
  * @brief Draws a line of text with different colors for certain parts of the text.
  *
- *     DrawStringWithColors(out, "Press {} to start", {{"Ⓧ", UiFlags::ColorBlue}}, UiFlags::ColorWhite)
+ *     DrawStringWithColors(out, "Press {} to start", {{"Ⓧ", UiFlags::ColorBlue}}, {.flags = UiFlags::ColorWhite})
  *
  * @param out Output buffer to draw the text on.
  * @param fmt An fmt::format string.
  * @param args Format arguments.
  * @param argsLen Number of format arguments.
  * @param rect Clipping region relative to the output buffer describing where to draw the text and when to wrap long lines.
- * @param flags A combination of UiFlags to describe font size, color, alignment, etc. See ui_items.h for available options
- * @param spacing Additional space to add between characters.
- *                This value may be adjusted if the flag UIS_FIT_SPACING is passed in the flags parameter.
- * @param lineHeight Allows overriding the default line height, useful for multi-line strings.
+ * @param opts Rendering options.
  */
-void DrawStringWithColors(const Surface &out, std::string_view fmt, DrawStringFormatArg *args, std::size_t argsLen, const Rectangle &rect, UiFlags flags = UiFlags::None, int spacing = 1, int lineHeight = -1);
+void DrawStringWithColors(const Surface &out, std::string_view fmt, DrawStringFormatArg *args, std::size_t argsLen, const Rectangle &rect, TextRenderOptions opts = {});
 
-inline void DrawStringWithColors(const Surface &out, std::string_view fmt, std::vector<DrawStringFormatArg> args, const Rectangle &rect, UiFlags flags = UiFlags::None, int spacing = 1, int lineHeight = -1)
+inline void DrawStringWithColors(const Surface &out, std::string_view fmt, std::vector<DrawStringFormatArg> args, const Rectangle &rect, TextRenderOptions opts = {})
 {
-	return DrawStringWithColors(out, fmt, args.data(), args.size(), rect, flags, spacing, lineHeight);
+	return DrawStringWithColors(out, fmt, args.data(), args.size(), rect, opts);
 }
 
 uint8_t PentSpn2Spin();

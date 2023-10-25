@@ -1175,7 +1175,7 @@ void RenderTile(const Surface &out, Point position,
 
 #ifdef DEBUG_STR
 	const auto [debugStr, flags] = GetTileDebugStr(tile);
-	DrawString(out, debugStr, Rectangle { Point { position.x + 2, position.y - 29 }, Size { 28, 28 } }, flags);
+	DrawString(out, debugStr, Rectangle { Point { position.x + 2, position.y - 29 }, Size { 28, 28 } }, { .flags = flags });
 #endif
 }
 

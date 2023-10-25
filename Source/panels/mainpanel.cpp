@@ -27,8 +27,10 @@ OptionalOwnedClxSpriteList PanelButtonDownGrime;
 
 void DrawButtonText(const Surface &out, std::string_view text, Rectangle placement, UiFlags style, int spacing = 1)
 {
-	DrawString(out, text, { placement.position + Displacement { 0, 1 }, placement.size }, UiFlags::AlignCenter | UiFlags::KerningFitSpacing | UiFlags::ColorBlack, spacing);
-	DrawString(out, text, placement, UiFlags::AlignCenter | UiFlags::KerningFitSpacing | style, spacing);
+	DrawString(out, text, { placement.position + Displacement { 0, 1 }, placement.size },
+	    { .flags = UiFlags::AlignCenter | UiFlags::KerningFitSpacing | UiFlags::ColorBlack, .spacing = spacing });
+	DrawString(out, text, placement,
+	    { .flags = UiFlags::AlignCenter | UiFlags::KerningFitSpacing | style, .spacing = spacing });
 }
 
 void DrawButtonOnPanel(Point position, std::string_view text, int frame)

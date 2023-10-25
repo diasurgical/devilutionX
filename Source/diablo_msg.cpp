@@ -204,7 +204,8 @@ void DrawDiabloMsg(const Surface &out)
 	const int textX = innerXBegin + textPaddingX;
 	int textY = innerYBegin + (innerHeight - LineHeight * static_cast<int>(TextLines.size())) / 2;
 	for (const std::string &line : TextLines) {
-		DrawString(out, line, { { textX, textY }, { lineWidth, LineHeight } }, UiFlags::AlignCenter, 1, LineHeight);
+		DrawString(out, line, { { textX, textY }, { lineWidth, LineHeight } },
+		    { .flags = UiFlags::AlignCenter, .lineHeight = LineHeight });
 		textY += LineHeight;
 	}
 

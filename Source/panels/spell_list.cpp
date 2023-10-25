@@ -34,7 +34,7 @@ void PrintSBookSpellType(const Surface &out, Point position, std::string_view te
 	position += Displacement { SPLICONLENGTH / 2 - GetLineWidth(text) / 2, (IsSmallFontTall() ? -19 : -15) };
 
 	// Then draw the text over the top
-	DrawString(out, text, position, UiFlags::ColorWhite | UiFlags::Outlined);
+	DrawString(out, text, position, { .flags = UiFlags::ColorWhite | UiFlags::Outlined });
 }
 
 void PrintSBookHotkey(const Surface &out, Point position, const std::string_view text)
@@ -43,7 +43,7 @@ void PrintSBookHotkey(const Surface &out, Point position, const std::string_view
 	position += Displacement { SPLICONLENGTH - (GetLineWidth(text.data()) + 5), 5 - SPLICONLENGTH };
 
 	// Then draw the text over the top
-	DrawString(out, text, position, UiFlags::ColorWhite | UiFlags::Outlined);
+	DrawString(out, text, position, { .flags = UiFlags::ColorWhite | UiFlags::Outlined });
 }
 
 bool GetSpellListSelection(SpellID &pSpell, SpellType &pSplType)

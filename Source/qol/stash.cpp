@@ -398,8 +398,10 @@ void DrawStash(const Surface &out)
 	Point position = GetPanelPosition(UiPanels::Stash);
 	UiFlags style = UiFlags::VerticalCenter | UiFlags::ColorWhite;
 
-	DrawString(out, StrCat(Stash.GetPage() + 1), { position + Displacement { 132, 0 }, { 57, 11 } }, UiFlags::AlignCenter | style);
-	DrawString(out, FormatInteger(Stash.gold), { position + Displacement { 122, 19 }, { 107, 13 } }, UiFlags::AlignRight | style);
+	DrawString(out, StrCat(Stash.GetPage() + 1), { position + Displacement { 132, 0 }, { 57, 11 } },
+	    { .flags = UiFlags::AlignCenter | style });
+	DrawString(out, FormatInteger(Stash.gold), { position + Displacement { 122, 19 }, { 107, 13 } },
+	    { .flags = UiFlags::AlignRight | style });
 }
 
 void CheckStashItem(Point mousePosition, bool isShiftHeld, bool isCtrlHeld)
@@ -650,12 +652,13 @@ void DrawGoldWithdraw(const Surface &out)
 	// The split gold dialog is roughly 4 lines high, but we need at least one line for the player to input an amount.
 	// Using a clipping region 50 units high (approx 3 lines with a lineheight of 17) to ensure there is enough room left
 	//  for the text entered by the player.
-	DrawString(out, wrapped, { GetPanelPosition(UiPanels::Stash, { dialogX + 31, 75 }), { 200, 50 } }, UiFlags::ColorWhitegold | UiFlags::AlignCenter, 1, 17);
+	DrawString(out, wrapped, { GetPanelPosition(UiPanels::Stash, { dialogX + 31, 75 }), { 200, 50 } },
+	    { .flags = UiFlags::ColorWhitegold | UiFlags::AlignCenter, .lineHeight = 17 });
 
 	// Even a ten digit amount of gold only takes up about half a line. There's no need to wrap or clip text here so we
 	// use the Point form of DrawString.
 	DrawString(out, amountText, GetPanelPosition(UiPanels::Stash, { dialogX + 37, 128 }),
-	    UiFlags::ColorWhite | UiFlags::PentaCursor, /*spacing=*/1, /*lineHeight=*/-1, cursorPosition);
+	    { .flags = UiFlags::ColorWhite | UiFlags::PentaCursor, .cursorPosition = static_cast<int>(cursorPosition) });
 }
 
 void CloseGoldWithdraw()
