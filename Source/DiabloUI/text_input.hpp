@@ -12,6 +12,35 @@
 
 namespace devilution {
 
+/** @brief A range of bytes in text. */
+struct TextRange {
+	size_t begin = 0;
+	size_t end = 0;
+
+	[[nodiscard]] size_t size() const
+	{
+		return end - begin;
+	}
+
+	[[nodiscard]] bool empty() const
+	{
+		return begin == end;
+	}
+
+	void clear()
+	{
+		begin = end = 0;
+	}
+};
+
+/**
+ * @brief Current state of the cursor and the selection range.
+ */
+struct TextInputCursorState {
+	size_t position = 0;
+	TextRange selection;
+};
+
 /**
  * @brief Manages state for a single-line text input with a cursor.
  *
@@ -98,20 +127,25 @@ class TextInputState {
 
 public:
 	struct Options {
-		char *value;            // unowned
-		size_t *cursorPosition; // unowned
+		char *value;                  // unowned
+		TextInputCursorState *cursor; // unowned
 		size_t maxLength = 0;
 	};
 	TextInputState(const Options &options)
 	    : value_(options.value, options.maxLength)
-	    , cursorPosition_(options.cursorPosition)
+	    , cursor_(options.cursor)
 	{
-		*cursorPosition_ = value_.size();
+		cursor_->position = value_.size();
 	}
 
 	[[nodiscard]] std::string_view value() const
 	{
 		return std::string_view(value_);
+	}
+
+	[[nodiscard]] std::string_view selectedText() const
+	{
+		return value().substr(cursor_->selection.begin, cursor_->selection.size());
 	}
 
 	[[nodiscard]] bool empty() const
@@ -121,7 +155,7 @@ public:
 
 	[[nodiscard]] size_t cursorPosition() const
 	{
-		return *cursorPosition_;
+		return cursor_->position;
 	}
 
 	/**
@@ -130,13 +164,13 @@ public:
 	void assign(std::string_view text)
 	{
 		value_ = text;
-		*cursorPosition_ = value_.size();
+		cursor_->position = value_.size();
 	}
 
 	void clear()
 	{
 		value_.clear();
-		*cursorPosition_ = 0;
+		cursor_->position = 0;
 	}
 
 	/**
@@ -147,7 +181,17 @@ public:
 		if (length >= value().size())
 			return;
 		value_ = value().substr(0, length);
-		*cursorPosition_ = std::min(*cursorPosition_, value_.size());
+		cursor_->position = std::min(cursor_->position, value_.size());
+	}
+
+	/**
+	 * @brief Erases the currently selected text and sets the cursor to selection start.
+	 */
+	void eraseSelection()
+	{
+		value_.erase(cursor_->selection.begin, cursor_->selection.size());
+		cursor_->position = cursor_->selection.begin;
+		cursor_->selection.clear();
 	}
 
 	/**
@@ -155,64 +199,135 @@ public:
 	 */
 	void type(std::string_view text)
 	{
+		if (!cursor_->selection.empty())
+			eraseSelection();
 		const size_t prevSize = value_.size();
-		value_.insert(*cursorPosition_, text);
-		*cursorPosition_ += value_.size() - prevSize;
+		value_.insert(cursor_->position, text);
+		cursor_->position += value_.size() - prevSize;
 	}
 
 	void backspace()
 	{
-		if (*cursorPosition_ == 0)
-			return;
-		const size_t toRemove = *cursorPosition_ - FindLastUtf8Symbols(beforeCursor());
-		*cursorPosition_ -= toRemove;
-		value_.erase(*cursorPosition_, toRemove);
+		if (cursor_->selection.empty()) {
+			if (cursor_->position == 0)
+				return;
+			cursor_->selection.begin = FindLastUtf8Symbols(beforeCursor());
+			cursor_->selection.end = cursor_->position;
+		}
+		eraseSelection();
 	}
 
 	void del()
 	{
-		if (*cursorPosition_ == value_.size())
-			return;
-		value_.erase(*cursorPosition_, Utf8CodePointLen(afterCursor().data()));
+		if (cursor_->selection.empty()) {
+			if (cursor_->position == value_.size())
+				return;
+			cursor_->selection.begin = cursor_->position;
+			cursor_->selection.end = cursor_->position + Utf8CodePointLen(afterCursor().data());
+		}
+		eraseSelection();
+	}
+
+	void delSelection()
+	{
+		value_.erase(cursor_->selection.begin, cursor_->selection.size());
 	}
 
 	void setCursorToStart()
 	{
-		*cursorPosition_ = 0;
+		cursor_->position = 0;
+		cursor_->selection.clear();
+	}
+
+	void setSelectCursorToStart()
+	{
+		if (cursor_->selection.empty()) {
+			cursor_->selection.end = cursor_->position;
+		} else if (cursor_->selection.end == cursor_->position) {
+			cursor_->selection.end = cursor_->selection.begin;
+		}
+		cursor_->selection.begin = cursor_->position = 0;
 	}
 
 	void setCursorToEnd()
 	{
-		*cursorPosition_ = value_.size();
+		cursor_->position = value_.size();
+		cursor_->selection.clear();
+	}
+
+	void setSelectCursorToEnd()
+	{
+		if (cursor_->selection.empty()) {
+			cursor_->selection.begin = cursor_->position;
+		} else if (cursor_->selection.begin == cursor_->position) {
+			cursor_->selection.begin = cursor_->selection.end;
+		}
+		cursor_->selection.end = cursor_->position = value_.size();
 	}
 
 	void moveCursorLeft()
 	{
-		if (*cursorPosition_ == 0)
+		cursor_->selection.clear();
+		if (cursor_->position == 0)
 			return;
-		--*cursorPosition_;
+		const size_t newPosition = FindLastUtf8Symbols(beforeCursor());
+		cursor_->position = newPosition;
+	}
+
+	void moveSelectCursorLeft()
+	{
+		if (cursor_->position == 0)
+			return;
+		const size_t newPosition = FindLastUtf8Symbols(beforeCursor());
+		if (cursor_->selection.empty()) {
+			cursor_->selection.begin = newPosition;
+			cursor_->selection.end = cursor_->position;
+		} else if (cursor_->selection.end == cursor_->position) {
+			cursor_->selection.end = newPosition;
+		} else {
+			cursor_->selection.begin = newPosition;
+		}
+		cursor_->position = newPosition;
 	}
 
 	void moveCursorRight()
 	{
-		if (*cursorPosition_ == value_.size())
+		cursor_->selection.clear();
+		if (cursor_->position == value_.size())
 			return;
-		++*cursorPosition_;
+		const size_t newPosition = cursor_->position + Utf8CodePointLen(afterCursor().data());
+		cursor_->position = newPosition;
+	}
+
+	void moveSelectCursorRight()
+	{
+		if (cursor_->position == value_.size())
+			return;
+		const size_t newPosition = cursor_->position + Utf8CodePointLen(afterCursor().data());
+		if (cursor_->selection.empty()) {
+			cursor_->selection.begin = cursor_->position;
+			cursor_->selection.end = newPosition;
+		} else if (cursor_->selection.begin == cursor_->position) {
+			cursor_->selection.begin = newPosition;
+		} else {
+			cursor_->selection.end = newPosition;
+		}
+		cursor_->position = newPosition;
 	}
 
 private:
 	[[nodiscard]] std::string_view beforeCursor() const
 	{
-		return value().substr(0, *cursorPosition_);
+		return value().substr(0, cursor_->position);
 	}
 
 	[[nodiscard]] std::string_view afterCursor() const
 	{
-		return value().substr(*cursorPosition_);
+		return value().substr(cursor_->position);
 	}
 
 	Buffer value_;
-	size_t *cursorPosition_; // unowned
+	TextInputCursorState *cursor_; // unowned
 };
 
 /**

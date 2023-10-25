@@ -231,9 +231,8 @@ private:
 	uint32_t currentUnicodeRow_ = 0;
 };
 
-void DrawFont(const Surface &out, Point position, const ClxSpriteList font, text_color color, int frame, bool outline)
+void DrawFont(const Surface &out, Point position, ClxSprite glyph, text_color color, bool outline)
 {
-	ClxSprite glyph = font[frame];
 	if (outline) {
 		ClxDrawOutlineSkipColorZero(out, 0, { position.x, position.y + glyph.height() - 1 }, glyph);
 	}
@@ -424,14 +423,13 @@ uint32_t DoDrawString(const Surface &out, std::string_view text, Rectangle rect,
 			MaybeWrap(position, 2, rightMargin, position.x, opts.lineHeight);
 			OptionalClxSpriteList baseFont = LoadFont(size, color, 0);
 			if (baseFont)
-				DrawFont(out, position, *baseFont, color, '|', outline);
+				DrawFont(out, position, (*baseFont)['|'], color, outline);
 		}
 	};
 
 	for (; !remaining.empty() && remaining[0] != '\0'
 	     && (next = DecodeFirstUtf8CodePoint(remaining, &cpLen)) != Utf8DecodeError;
 	     remaining.remove_prefix(cpLen)) {
-		maybeDrawCursor();
 		if (next == ZWSP)
 			continue;
 
@@ -461,7 +459,19 @@ uint32_t DoDrawString(const Surface &out, std::string_view text, Rectangle rect,
 				continue;
 		}
 
-		DrawFont(out, characterPosition, *currentFont.sprite, color, frame, outline);
+		const ClxSprite glyph = (*currentFont.sprite)[frame];
+		const auto byteIndex = static_cast<int>(text.size() - remaining.size());
+
+		// Draw highlight
+		if (byteIndex >= opts.highlightRange.begin && byteIndex < opts.highlightRange.end) {
+			const bool lastInRange = static_cast<int>(byteIndex + cpLen) == opts.highlightRange.end;
+			FillRect(out, characterPosition.x, characterPosition.y,
+			    glyph.width() + (lastInRange ? 0 : opts.spacing), glyph.height(),
+			    opts.highlightColor);
+		}
+
+		DrawFont(out, characterPosition, glyph, color, outline);
+		maybeDrawCursor();
 		characterPosition.x += width + opts.spacing;
 	}
 	maybeDrawCursor();
@@ -808,7 +818,7 @@ void DrawStringWithColors(const Surface &out, std::string_view fmt, DrawStringFo
 				continue;
 		}
 
-		DrawFont(clippedOut, characterPosition, *currentFont.sprite, color, frame, outlined);
+		DrawFont(clippedOut, characterPosition, (*currentFont.sprite)[frame], color, outlined);
 		characterPosition.x += width + opts.spacing;
 	}
 

@@ -16,6 +16,7 @@
 #include "utils/sdl2_to_1_2_backports.h"
 #endif
 
+#include "DiabloUI/text_input.hpp"
 #include "DiabloUI/ui_flags.hpp"
 #include "engine.h"
 #include "engine/point.hpp"
@@ -33,7 +34,7 @@ namespace devilution {
 constexpr Size SidePanelSize { 320, 352 };
 
 extern bool dropGoldFlag;
-extern size_t GoldDropCursorPosition;
+extern TextInputCursorState GoldDropCursor;
 extern char GoldDropText[21];
 
 extern bool chrbtn[4];

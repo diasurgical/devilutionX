@@ -38,7 +38,7 @@ constexpr unsigned CountStashPages = 100;
 constexpr unsigned LastStashPage = CountStashPages - 1;
 
 char GoldWithdrawText[21];
-size_t GoldWithdrawCursorPosition;
+TextInputCursorState GoldWithdrawCursor;
 std::optional<NumberInputState> GoldWithdrawInputState;
 
 constexpr Size ButtonSize { 27, 16 };
@@ -598,7 +598,7 @@ void StartGoldWithdraw()
 	GoldWithdrawInputState.emplace(NumberInputState::Options {
 	    .textOptions {
 	        .value = GoldWithdrawText,
-	        .cursorPosition = &GoldWithdrawCursorPosition,
+	        .cursor = &GoldWithdrawCursor,
 	        .maxLength = sizeof(GoldWithdrawText) - 1,
 	    },
 	    .min = 0,
@@ -640,7 +640,7 @@ void DrawGoldWithdraw(const Surface &out)
 	}
 
 	const std::string_view amountText = GoldWithdrawText;
-	const size_t cursorPosition = GoldWithdrawCursorPosition;
+	const TextInputCursorState &cursor = GoldWithdrawCursor;
 
 	const int dialogX = 30;
 
@@ -658,7 +658,11 @@ void DrawGoldWithdraw(const Surface &out)
 	// Even a ten digit amount of gold only takes up about half a line. There's no need to wrap or clip text here so we
 	// use the Point form of DrawString.
 	DrawString(out, amountText, GetPanelPosition(UiPanels::Stash, { dialogX + 37, 128 }),
-	    { .flags = UiFlags::ColorWhite | UiFlags::PentaCursor, .cursorPosition = static_cast<int>(cursorPosition) });
+	    {
+	        .flags = UiFlags::ColorWhite | UiFlags::PentaCursor,
+	        .cursorPosition = static_cast<int>(cursor.position),
+	        .highlightRange = { static_cast<int>(cursor.selection.begin), static_cast<int>(cursor.selection.end) },
+	    });
 }
 
 void CloseGoldWithdraw()
