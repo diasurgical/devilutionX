@@ -564,6 +564,7 @@ void UpdateHellfireFlag(Item &item, const char *identifiedItemName);
 #ifdef _DEBUG
 std::string DebugSpawnItem(std::string itemName);
 std::string DebugSpawnUniqueItem(std::string itemName);
+std::string DebugCreateItem(uint32_t seed, uint8_t idx, uint16_t iCreateInfo, uint32_t dwBuff, uint16_t value);
 #endif
 /* data */
 

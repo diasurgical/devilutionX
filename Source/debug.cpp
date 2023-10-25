@@ -696,6 +696,60 @@ std::string DebugCmdGenerateItem(const std::string_view parameter)
 {
 	return DebugSpawnItem(parameter.data());
 }
+std::string DebugCmdCreateItem(const std::string_view parameter)
+{
+	std::string cmdLabel = "[createitem] ";
+
+	if (ActiveItemCount >= MAXITEMS)
+		return StrCat(cmdLabel, "No space to generate the item!");
+
+	uint32_t seed = 0;
+	uint8_t idx = 0;
+	uint16_t iCreateInfo = 0;
+	uint32_t dwBuff = 0;
+	uint8_t durability = 0;
+	uint8_t charges = 0;
+	uint16_t value = 0;	
+
+	int count = 0;
+	for (std::string_view arg : SplitByChar(parameter, ' ')) {
+		switch (count) {
+		case 0: {
+			const ParseIntResult<int> parsedArg = ParseInt<int>(arg);
+			if (!parsedArg.has_value())
+				return StrCat(cmdLabel, "Failed to parse argument 0 as integer!");
+			seed = parsedArg.value();
+		} break;
+		case 1: {
+			const ParseIntResult<int> parsedArg = ParseInt<int>(arg);
+			if (!parsedArg.has_value())
+				return StrCat(cmdLabel, "Failed to parse argument 1 as integer!");
+			idx = parsedArg.value();
+		} break;
+		case 2: {
+			const ParseIntResult<int> parsedArg = ParseInt<int>(arg);
+			if (!parsedArg.has_value())
+				return StrCat(cmdLabel, "Failed to parse argument 2 as integer!");
+			iCreateInfo = parsedArg.value();
+		} break;
+		case 3: {
+			const ParseIntResult<int> parsedArg = ParseInt<int>(arg);
+			if (!parsedArg.has_value())
+				return StrCat(cmdLabel, "Failed to parse argument 3 as integer!");
+			dwBuff = parsedArg.value();
+		} break;
+		case 4: {
+			const ParseIntResult<int> parsedArg = ParseInt<int>(arg);
+			if (!parsedArg.has_value())
+				return StrCat(cmdLabel, "Failed to parse argument 4 as integer!");
+			value = parsedArg.value();
+		} break;
+		}
+		count++;
+	}
+
+	return DebugCreateItem(seed, idx, iCreateInfo, dwBuff, value);
+}
 
 std::string DebugCmdExit(const std::string_view parameter)
 {
@@ -1224,6 +1278,7 @@ std::vector<DebugCmdItem> DebugCmdList = {
 	{ "changemp", "Changes mana by {value} (Use a negative value to remove mana).", "{value}", &DebugCmdChangeMana },
 	{ "dropu", "Attempts to generate unique item {name}.", "{name}", &DebugCmdGenerateUniqueItem },
 	{ "drop", "Attempts to generate item {name}.", "{name}", &DebugCmdGenerateItem },
+	{ "createitem", "Generates an item with specified parameters:  Seed: {seed}, idx: {idx}, iCreateInfo {iCreateInfo}, dwBuff: {dwBuff}, Durability: {durability}, Charges: {charges}", "{seed} {idx} {iCreateInfo} {dwBuff} {durability} {charges}", &DebugCmdCreateItem },
 	{ "talkto", "Interacts with a NPC whose name contains {name}.", "{name}", &DebugCmdTalkToTowner },
 	{ "exit", "Exits the game.", "", &DebugCmdExit },
 	{ "arrow", "Changes arrow effect (normal, fire, lightning, explosion).", "{effect}", &DebugCmdArrow },

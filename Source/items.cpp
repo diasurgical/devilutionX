@@ -4707,6 +4707,33 @@ std::string DebugSpawnUniqueItem(std::string itemName)
 
 	return StrCat(cmdLabel, "Item generated successfully - iterations: ", i);
 }
+
+std::string DebugCreateItem(uint32_t seed, uint8_t idx, uint16_t iCreateInfo, uint32_t dwBuff, uint16_t value)
+{
+	std::string cmdLabel = "[createitem] ";
+	Item createdItem = {};
+
+	RecreateItem(*MyPlayer, createdItem, static_cast<_item_indexes>(idx), iCreateInfo, seed, value, (dwBuff & CF_HELLFIRE) != 0);
+
+	int ii = AllocateItem();
+	auto &item = Items[ii];
+	item = createdItem.pop();
+	item._iIdentified = true;
+	item._iMaxDur = 1;
+	item._iDurability = ClampDurability(item, item._iMaxDur);
+	item._iMaxCharges = 1;
+	item._iCharges = 1;
+	if (gbIsHellfire) {
+		item._iPLToHit = ClampToHit(item, 1);
+		item._iMaxDam = ClampMaxDam(item, 1);
+	}
+	item.dwBuff = dwBuff;
+	Point pos = MyPlayer->position.tile;
+	GetSuperItemSpace(pos, ii);
+	NetSendCmdPItem(false, CMD_SPAWNITEM, item.position, item);
+
+	return StrCat(cmdLabel, "Created item successfully!");
+}
 #endif
 
 bool Item::isUsable() const
