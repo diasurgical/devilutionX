@@ -25,13 +25,16 @@ bool HandleInputEvent(const SDL_Event &event, TextInputState &state,
     tl::function_ref<bool(std::string_view)> typeFn,
     [[maybe_unused]] tl::function_ref<bool(std::string_view)> assignFn)
 {
-	const bool isShift = (SDL_GetModState() & KMOD_SHIFT) != 0;
+	const auto modState = SDL_GetModState();
+	const bool isCtrl = (modState & KMOD_CTRL) != 0;
+	const bool isAlt = (modState & KMOD_ALT) != 0;
+	const bool isShift = (modState & KMOD_SHIFT) != 0;
 	switch (event.type) {
 	case SDL_KEYDOWN: {
 		switch (event.key.keysym.sym) {
 #ifndef USE_SDL1
 		case SDLK_c:
-			if ((SDL_GetModState() & KMOD_CTRL) != 0) {
+			if (isCtrl) {
 				const std::string selectedText { state.selectedText() };
 				if (SDL_SetClipboardText(selectedText.c_str()) < 0) {
 					Log("{}", SDL_GetError());
@@ -39,7 +42,7 @@ bool HandleInputEvent(const SDL_Event &event, TextInputState &state,
 			}
 			return true;
 		case SDLK_x:
-			if ((SDL_GetModState() & KMOD_CTRL) != 0) {
+			if (isCtrl) {
 				const std::string selectedText { state.selectedText() };
 				if (SDL_SetClipboardText(selectedText.c_str()) < 0) {
 					Log("{}", SDL_GetError());
@@ -49,7 +52,7 @@ bool HandleInputEvent(const SDL_Event &event, TextInputState &state,
 			}
 			return true;
 		case SDLK_v:
-			if ((SDL_GetModState() & KMOD_CTRL) != 0) {
+			if (isCtrl) {
 				if (SDL_HasClipboardText() == SDL_TRUE) {
 					std::unique_ptr<char, SDLFreeDeleter<char>> clipboard { SDL_GetClipboardText() };
 					if (clipboard == nullptr || *clipboard == '\0') {
@@ -62,16 +65,16 @@ bool HandleInputEvent(const SDL_Event &event, TextInputState &state,
 			return true;
 #endif
 		case SDLK_BACKSPACE:
-			state.backspace();
+			state.backspace(/*word=*/isCtrl || isAlt);
 			return true;
 		case SDLK_DELETE:
-			state.del();
+			state.del(/*word=*/isCtrl || isAlt);
 			return true;
 		case SDLK_LEFT:
-			isShift ? state.moveSelectCursorLeft() : state.moveCursorLeft();
+			isShift ? state.moveSelectCursorLeft(/*word=*/isCtrl || isAlt) : state.moveCursorLeft(/*word=*/isCtrl || isAlt);
 			return true;
 		case SDLK_RIGHT:
-			isShift ? state.moveSelectCursorRight() : state.moveCursorRight();
+			isShift ? state.moveSelectCursorRight(/*word=*/isCtrl || isAlt) : state.moveCursorRight(/*word=*/isCtrl || isAlt);
 			return true;
 		case SDLK_HOME:
 			isShift ? state.setSelectCursorToStart() : state.setCursorToStart();

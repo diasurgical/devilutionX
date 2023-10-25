@@ -206,31 +206,26 @@ public:
 		cursor_->position += value_.size() - prevSize;
 	}
 
-	void backspace()
+	void backspace(bool word)
 	{
 		if (cursor_->selection.empty()) {
 			if (cursor_->position == 0)
 				return;
-			cursor_->selection.begin = FindLastUtf8Symbols(beforeCursor());
+			cursor_->selection.begin = prevPosition(word);
 			cursor_->selection.end = cursor_->position;
 		}
 		eraseSelection();
 	}
 
-	void del()
+	void del(bool word)
 	{
 		if (cursor_->selection.empty()) {
 			if (cursor_->position == value_.size())
 				return;
 			cursor_->selection.begin = cursor_->position;
-			cursor_->selection.end = cursor_->position + Utf8CodePointLen(afterCursor().data());
+			cursor_->selection.end = nextPosition(word);
 		}
 		eraseSelection();
-	}
-
-	void delSelection()
-	{
-		value_.erase(cursor_->selection.begin, cursor_->selection.size());
 	}
 
 	void setCursorToStart()
@@ -265,20 +260,20 @@ public:
 		cursor_->selection.end = cursor_->position = value_.size();
 	}
 
-	void moveCursorLeft()
+	void moveCursorLeft(bool word)
 	{
 		cursor_->selection.clear();
 		if (cursor_->position == 0)
 			return;
-		const size_t newPosition = FindLastUtf8Symbols(beforeCursor());
+		const size_t newPosition = prevPosition(word);
 		cursor_->position = newPosition;
 	}
 
-	void moveSelectCursorLeft()
+	void moveSelectCursorLeft(bool word)
 	{
 		if (cursor_->position == 0)
 			return;
-		const size_t newPosition = FindLastUtf8Symbols(beforeCursor());
+		const size_t newPosition = prevPosition(word);
 		if (cursor_->selection.empty()) {
 			cursor_->selection.begin = newPosition;
 			cursor_->selection.end = cursor_->position;
@@ -290,20 +285,20 @@ public:
 		cursor_->position = newPosition;
 	}
 
-	void moveCursorRight()
+	void moveCursorRight(bool word)
 	{
 		cursor_->selection.clear();
 		if (cursor_->position == value_.size())
 			return;
-		const size_t newPosition = cursor_->position + Utf8CodePointLen(afterCursor().data());
+		const size_t newPosition = nextPosition(word);
 		cursor_->position = newPosition;
 	}
 
-	void moveSelectCursorRight()
+	void moveSelectCursorRight(bool word)
 	{
 		if (cursor_->position == value_.size())
 			return;
-		const size_t newPosition = cursor_->position + Utf8CodePointLen(afterCursor().data());
+		const size_t newPosition = nextPosition(word);
 		if (cursor_->selection.empty()) {
 			cursor_->selection.begin = cursor_->position;
 			cursor_->selection.end = newPosition;
@@ -316,6 +311,48 @@ public:
 	}
 
 private:
+	[[nodiscard]] static bool isWordSeparator(unsigned char c)
+	{
+		const bool isAsciiWordChar = (c >= '0' && c <= '9')
+		    || (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == '_';
+		return c <= '\x7E' && !isAsciiWordChar;
+	}
+
+	[[nodiscard]] size_t prevPosition(bool word) const
+	{
+		const std::string_view str = beforeCursor();
+		size_t pos = FindLastUtf8Symbols(str);
+		if (!word)
+			return pos;
+		while (pos > 0 && isWordSeparator(str[pos])) {
+			pos = FindLastUtf8Symbols({ str.data(), pos });
+		}
+		while (pos > 0) {
+			const size_t prevPos = FindLastUtf8Symbols({ str.data(), pos });
+			if (isWordSeparator(str[prevPos]))
+				break;
+			pos = prevPos;
+		}
+		return pos;
+	}
+
+	[[nodiscard]] size_t nextPosition(bool word) const
+	{
+		const std::string_view str = afterCursor();
+		size_t pos = Utf8CodePointLen(str.data());
+		if (!word)
+			return cursor_->position + pos;
+		while (pos < str.size() && isWordSeparator(str[pos])) {
+			pos += Utf8CodePointLen(str.data() + pos);
+		}
+		while (pos < str.size()) {
+			pos += Utf8CodePointLen(str.data() + pos);
+			if (isWordSeparator(str[pos]))
+				break;
+		}
+		return cursor_->position + pos;
+	}
+
 	[[nodiscard]] std::string_view beforeCursor() const
 	{
 		return value().substr(0, cursor_->position);
