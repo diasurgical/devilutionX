@@ -1806,7 +1806,7 @@ void InitKeymapActions()
 	    N_("Zoom Game Screen."),
 	    'Z',
 	    [] {
-		    sgOptions.Graphics.zoom.SetValue(!*sgOptions.Graphics.zoom);
+		    CycleZoom();
 		    CalcViewportGeometry();
 	    },
 	    nullptr,
@@ -2280,7 +2280,7 @@ void InitPadmapActions()
 	    N_("Zoom Game Screen."),
 	    ControllerButton_NONE,
 	    [] {
-		    sgOptions.Graphics.zoom.SetValue(!*sgOptions.Graphics.zoom);
+		    CycleZoom();
 		    CalcViewportGeometry();
 	    },
 	    nullptr,

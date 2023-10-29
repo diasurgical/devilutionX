@@ -898,6 +898,8 @@ void Zoom(const Surface &out)
 {
 	int viewportWidth = out.w();
 	int viewportOffsetX = 0;
+	const int zoomMultiplier = *sgOptions.Graphics.zoom;
+
 	if (CanPanelsCoverView()) {
 		if (IsLeftPanelOpen()) {
 			viewportWidth -= SidePanelSize.width;
@@ -909,18 +911,18 @@ void Zoom(const Surface &out)
 
 	// We round to even for the source width and height.
 	// If the width / height was odd, we copy just one extra pixel / row later on.
-	const int srcWidth = (viewportWidth + 1) / 2;
-	const int doubleableWidth = viewportWidth / 2;
-	const int srcHeight = (out.h() + 1) / 2;
-	const int doubleableHeight = out.h() / 2;
+	const int srcWidth = (viewportWidth + 1) / zoomMultiplier;
+	const int multiplyableWidth = viewportWidth / zoomMultiplier;
+	const int srcHeight = (out.h() + 1) / zoomMultiplier;
+	const int muliplyableHeight = out.h() / zoomMultiplier;
 
 	uint8_t *src = out.at(srcWidth - 1, srcHeight - 1);
 	uint8_t *dst = out.at(viewportOffsetX + viewportWidth - 1, out.h() - 1);
 	const bool oddViewportWidth = (viewportWidth % 2) == 1;
 
-	for (int hgt = 0; hgt < doubleableHeight; hgt++) {
-		// Double the pixels in the line.
-		for (int i = 0; i < doubleableWidth; i++) {
+	for (int hgt = 0; hgt < muliplyableHeight; hgt++) {
+		// Multiply the pixels in the line.
+		for (int i = 0; i < multiplyableWidth; i++) {
 			*dst-- = *src;
 			*dst-- = *src;
 			--src;
@@ -935,11 +937,11 @@ void Zoom(const Surface &out)
 		// Skip the rest of the source line.
 		src -= (out.pitch() - srcWidth);
 
-		// Double the line.
+		// Multiply the line.
 		memcpy(dst - out.pitch() + 1, dst + 1, viewportWidth);
 
 		// Skip the rest of the destination line.
-		dst -= 2 * out.pitch() - viewportWidth;
+		dst -= zoomMultiplier * out.pitch() - viewportWidth;
 	}
 	if ((out.h() % 2) == 1) {
 		memcpy(dst - out.pitch() + 1, dst + 1, viewportWidth);
@@ -963,11 +965,23 @@ void CalcFirstTilePosition(Point &position, Displacement &offset)
 
 	// Skip rendering parts covered by the panels
 	if (CanPanelsCoverView() && (IsLeftPanelOpen() || IsRightPanelOpen())) {
-		int multiplier = (*sgOptions.Graphics.zoom) ? 1 : 2;
+		const int zoomMultiplier = *sgOptions.Graphics.zoom;
+		int multiplier = 0;
+		switch (zoomMultiplier) {
+		case 1:
+			multiplier = 2;
+			break;
+		case 2:
+			multiplier = 1;
+			break;
+		default:
+			break;
+		}
+
 		position += Displacement(Direction::East) * multiplier;
 		offset.deltaX += -TILE_WIDTH * multiplier / 2 / 2;
 
-		if (IsLeftPanelOpen() && !*sgOptions.Graphics.zoom) {
+		if (IsLeftPanelOpen() && zoomMultiplier == 1) {
 			offset.deltaX += SidePanelSize.width;
 			// SidePanelSize.width accounted for in Zoom()
 		}
@@ -1004,17 +1018,31 @@ void CalcFirstTilePosition(Point &position, Displacement &offset)
  */
 void DrawGame(const Surface &fullOut, Point position, Displacement offset)
 {
+	const int zoomMultiplier = *sgOptions.Graphics.zoom;
+
 	// Limit rendering to the view area
-	const Surface &out = !*sgOptions.Graphics.zoom
+	const Surface &out = zoomMultiplier == 1
 	    ? fullOut.subregionY(0, gnViewportHeight)
-	    : fullOut.subregionY(0, (gnViewportHeight + 1) / 2);
+	    : fullOut.subregionY(0, (gnViewportHeight + 1) / zoomMultiplier);
 
 	int columns = tileColums;
 	int rows = tileRows;
 
 	// Skip rendering parts covered by the panels
 	if (CanPanelsCoverView() && (IsLeftPanelOpen() || IsRightPanelOpen())) {
-		columns -= (*sgOptions.Graphics.zoom) ? 2 : 4;
+		switch (zoomMultiplier) {
+		case 1:
+			columns -= 4;
+			break;
+		case 2:
+			columns -= 2;
+			break;
+		case 3:
+			columns -= 1;
+			break;
+		default:
+			break;
+		}
 	}
 
 	UpdateMissilesRendererData();
@@ -1052,7 +1080,7 @@ void DrawGame(const Surface &fullOut, Point position, Displacement offset)
 	DrawFloor(out, position, Point {} + offset, rows, columns);
 	DrawTileContent(out, position, Point {} + offset, rows, columns);
 
-	if (*sgOptions.Graphics.zoom) {
+	if (zoomMultiplier > 1) {
 		Zoom(fullOut.subregionY(0, gnViewportHeight));
 	}
 
@@ -1105,12 +1133,15 @@ void DrawView(const Surface &out, Point startPosition)
 				continue;
 			if (megaTiles)
 				pixelCoords += Displacement { 0, TILE_HEIGHT / 2 };
-			if (*sgOptions.Graphics.zoom)
-				pixelCoords *= 2;
+
+			const int zoomMultiplier = *sgOptions.Graphics.zoom;
+
+			if (zoomMultiplier > 1)
+				pixelCoords *= zoomMultiplier;
 			if (debugGridTextNeeded && GetDebugGridText(dunCoords, debugGridTextBuffer)) {
 				Size tileSize = { TILE_WIDTH, TILE_HEIGHT };
-				if (*sgOptions.Graphics.zoom)
-					tileSize *= 2;
+				if (zoomMultiplier > 1)
+					tileSize *= zoomMultiplier;
 				DrawString(out, debugGridTextBuffer, { pixelCoords - Displacement { 0, tileSize.height }, tileSize }, UiFlags::ColorRed | UiFlags::AlignCenter | UiFlags::VerticalCenter);
 			}
 			if (DebugGrid) {
@@ -1135,9 +1166,9 @@ void DrawView(const Surface &out, Point startPosition)
 
 				Displacement hor = { TILE_WIDTH / 2, 0 };
 				Displacement ver = { 0, TILE_HEIGHT / 2 };
-				if (*sgOptions.Graphics.zoom) {
-					hor *= 2;
-					ver *= 2;
+				if (zoomMultiplier > 1) {
+					hor *= zoomMultiplier;
+					ver *= zoomMultiplier;
 				}
 				Point center = pixelCoords + hor - ver;
 
@@ -1367,8 +1398,10 @@ int RowsCoveredByPanel()
 	}
 
 	int rows = mainPanelSize.height / TILE_HEIGHT;
-	if (*sgOptions.Graphics.zoom) {
-		rows /= 2;
+	const int zoomMultiplier = *sgOptions.Graphics.zoom;
+
+	if (zoomMultiplier > 1) {
+		rows /= zoomMultiplier;
 	}
 
 	return rows;
@@ -1381,13 +1414,14 @@ void CalcTileOffset(int *offsetX, int *offsetY)
 
 	int x;
 	int y;
+	const int zoomMultiplier = *sgOptions.Graphics.zoom;
 
-	if (!*sgOptions.Graphics.zoom) {
+	if (zoomMultiplier == 1) {
 		x = screenWidth % TILE_WIDTH;
 		y = viewportHeight % TILE_HEIGHT;
 	} else {
-		x = (screenWidth / 2) % TILE_WIDTH;
-		y = (viewportHeight / 2) % TILE_HEIGHT;
+		x = (screenWidth / zoomMultiplier) % TILE_WIDTH;
+		y = (viewportHeight / zoomMultiplier) % TILE_HEIGHT;
 	}
 
 	if (x != 0)
@@ -1413,33 +1447,48 @@ void TilesInView(int *rcolumns, int *rrows)
 		rows++;
 	}
 
-	if (*sgOptions.Graphics.zoom) {
+	const int zoomMultiplier = *sgOptions.Graphics.zoom;
+
+	if (zoomMultiplier > 1) {
 		// Half the number of tiles, rounded up
 		if ((columns & 1) != 0) {
 			columns++;
 		}
-		columns /= 2;
+		columns /= zoomMultiplier;
 		if ((rows & 1) != 0) {
 			rows++;
 		}
-		rows /= 2;
+		rows /= zoomMultiplier;
 	}
 
 	*rcolumns = columns;
 	*rrows = rows;
 }
 
+void CycleZoom()
+{
+	const int zoomMultiplier = *sgOptions.Graphics.zoom;
+	const int maxZoomMultiplier = 8;
+	const int defaultZoomMultiplier = 1;
+
+	if (zoomMultiplier < maxZoomMultiplier) {
+		sgOptions.Graphics.zoom.SetValue(std::min(zoomMultiplier + 1, maxZoomMultiplier));
+	} else {
+		sgOptions.Graphics.zoom.SetValue(defaultZoomMultiplier);
+	}
+}
+
 void CalcViewportGeometry()
 {
-	const int zoomFactor = *sgOptions.Graphics.zoom ? 2 : 1;
-	const int screenWidth = GetScreenWidth() / zoomFactor;
-	const int screenHeight = GetScreenHeight() / zoomFactor;
-	const int panelHeight = GetMainPanel().size.height / zoomFactor;
+	const int zoomMultiplier = *sgOptions.Graphics.zoom;
+	const int screenWidth = GetScreenWidth() / zoomMultiplier;
+	const int screenHeight = GetScreenHeight() / zoomMultiplier;
+	const int panelHeight = GetMainPanel().size.height / zoomMultiplier;
 	const int pixelsToPanel = screenHeight - panelHeight;
 	Point playerPosition { screenWidth / 2, pixelsToPanel / 2 };
 
-	if (*sgOptions.Graphics.zoom)
-		playerPosition.y += TILE_HEIGHT / 4;
+	if (zoomMultiplier > 1)
+		playerPosition.y += TILE_HEIGHT / (zoomMultiplier * 2);
 
 	const int tilesToTop = (playerPosition.y + TILE_HEIGHT - 1) / TILE_HEIGHT;
 	const int tilesToLeft = (playerPosition.x + TILE_WIDTH - 1) / TILE_WIDTH;
@@ -1470,7 +1519,7 @@ void CalcViewportGeometry()
 
 	// Compute the number of rows to be rendered as well as
 	// the number of columns to be rendered in the first row
-	const int viewportHeight = GetViewportHeight() / zoomFactor;
+	const int viewportHeight = GetViewportHeight() / zoomMultiplier;
 	const Point renderStart = startPosition - Displacement { TILE_WIDTH / 2, TILE_HEIGHT / 2 };
 	tileRows = (viewportHeight - renderStart.y + TILE_HEIGHT / 2 - 1) / (TILE_HEIGHT / 2);
 	tileColums = (screenWidth - renderStart.x + TILE_WIDTH - 1) / TILE_WIDTH;

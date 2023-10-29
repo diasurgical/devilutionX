@@ -119,8 +119,11 @@ void AddItemToLabelQueue(int id, Point position)
 
 	position.x += *labelCenterOffsets[index];
 	position.y -= TILE_HEIGHT;
-	if (*sgOptions.Graphics.zoom) {
-		position *= 2;
+
+	const int zoomMultiplier = *sgOptions.Graphics.zoom;
+
+	if (zoomMultiplier > 1) {
+		position *= zoomMultiplier;
 	}
 	position.x -= nameWidth / 2;
 	position.y -= Height;

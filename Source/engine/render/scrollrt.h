@@ -58,6 +58,7 @@ void CalcTileOffset(int *offsetX, int *offsetY);
  * @param rows Both even and odd rows
  */
 void TilesInView(int *columns, int *rows);
+void CycleZoom();
 void CalcViewportGeometry();
 
 /**

@@ -983,7 +983,7 @@ GraphicsOptions::GraphicsOptions()
           )
 #endif
     , gammaCorrection("Gamma Correction", OptionEntryFlags::Invisible, "Gamma Correction", "Gamma correction level.", 100)
-    , zoom("Zoom", OptionEntryFlags::None, N_("Zoom"), N_("Zoom on when enabled."), false)
+    , zoom("Zoom", OptionEntryFlags::None, N_("Zoom"), N_("Zoom multiplier"), 1)
     , colorCycling("Color Cycling", OptionEntryFlags::None, N_("Color Cycling"), N_("Color cycling effect used for water, lava, and acid animation."), true)
     , alternateNestArt("Alternate nest art", OptionEntryFlags::OnlyHellfire | OptionEntryFlags::CantChangeInGame, N_("Alternate nest art"), N_("The game will use an alternative palette for Hellfire’s nest tileset."), false)
 #if SDL_VERSION_ATLEAST(2, 0, 0)

@@ -314,16 +314,18 @@ bool TrySelectPixelBased(Point tile)
 		const Point renderPosition = GetScreenPosition(renderingTile) + renderingOffset;
 		Point spriteTopLeft = renderPosition - Displacement { 0, sprite.height() };
 		Size spriteSize = { sprite.width(), sprite.height() };
-		if (*sgOptions.Graphics.zoom) {
-			spriteSize *= 2;
-			spriteTopLeft *= 2;
+		const int zoomMultiplier = *sgOptions.Graphics.zoom;
+
+		if (zoomMultiplier > 1) {
+			spriteSize *= zoomMultiplier;
+			spriteTopLeft *= zoomMultiplier;
 		}
 		const Rectangle spriteCoords = Rectangle(spriteTopLeft, spriteSize);
 		if (!spriteCoords.contains(MousePosition))
 			return false;
 		Point pointInSprite = Point { 0, 0 } + (MousePosition - spriteCoords.position);
-		if (*sgOptions.Graphics.zoom)
-			pointInSprite /= 2;
+		if (zoomMultiplier > 1)
+			pointInSprite /= zoomMultiplier;
 		return IsPointWithinClx(pointInSprite, sprite);
 	};
 
@@ -679,9 +681,11 @@ void CheckCursMove()
 		sy = mainPanel.position.y - 1;
 	}
 
-	if (*sgOptions.Graphics.zoom) {
-		sx /= 2;
-		sy /= 2;
+	const int zoomMultiplier = *sgOptions.Graphics.zoom;
+
+	if (zoomMultiplier > 1) {
+		sx /= zoomMultiplier;
+		sy /= zoomMultiplier;
 	}
 
 	// Adjust by player offset and tile grid alignment
@@ -731,8 +735,8 @@ void CheckCursMove()
 		my++;
 	}
 
-	if (*sgOptions.Graphics.zoom) {
-		sy -= TILE_HEIGHT / 4;
+	if (zoomMultiplier > 1) {
+		sy -= TILE_HEIGHT / (zoomMultiplier * 2);
 	}
 
 	int tx = sx / TILE_WIDTH;
