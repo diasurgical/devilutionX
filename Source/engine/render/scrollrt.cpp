@@ -892,14 +892,13 @@ void DrawTileContent(const Surface &out, Point tilePosition, Point targetBufferP
 }
 
 /**
- * @brief Scale up the top left part of the buffer 2x.
+ * @brief Scale up the top left part of the buffer based on the specified zoom level.
  */
 void Zoom(const Surface &out)
 {
+	// Adjust viewport width based on panel visibility
 	int viewportWidth = out.w();
 	int viewportOffsetX = 0;
-	const int zoomMultiplier = *sgOptions.Graphics.zoom;
-
 	if (CanPanelsCoverView()) {
 		if (IsLeftPanelOpen()) {
 			viewportWidth -= SidePanelSize.width;
@@ -909,44 +908,55 @@ void Zoom(const Surface &out)
 		}
 	}
 
-	// We round to even for the source width and height.
-	// If the width / height was odd, we copy just one extra pixel / row later on.
-	const int srcWidth = (viewportWidth + 1) / zoomMultiplier;
-	const int multiplyableWidth = viewportWidth / zoomMultiplier;
-	const int srcHeight = (out.h() + 1) / zoomMultiplier;
-	const int muliplyableHeight = out.h() / zoomMultiplier;
+	// Get the zoom multiplier value
+	int zoomMultiplier = *sgOptions.Graphics.zoom;
+
+	// Calculate dimensions based on zoom level
+	const int srcWidth = (viewportWidth + zoomMultiplier - 1) / zoomMultiplier;
+	const int doubleableWidth = viewportWidth / zoomMultiplier;
+	const int srcHeight = (out.h() + zoomMultiplier - 1) / zoomMultiplier;
+	const int doubleableHeight = out.h() / zoomMultiplier;
 
 	uint8_t *src = out.at(srcWidth - 1, srcHeight - 1);
 	uint8_t *dst = out.at(viewportOffsetX + viewportWidth - 1, out.h() - 1);
-	const bool oddViewportWidth = (viewportWidth % 2) == 1;
 
-	for (int hgt = 0; hgt < muliplyableHeight; hgt++) {
-		// Multiply the pixels in the line.
-		for (int i = 0; i < multiplyableWidth; i++) {
-			*dst-- = *src;
-			*dst-- = *src;
+	// Process each line for the height
+	for (int hgt = 0; hgt < doubleableHeight; hgt++) {
+		// Process each pixel for the width
+		for (int i = 0; i < doubleableWidth; i++) {
+			// Repeat pixel for zoom level
+			for (int j = 0; j < zoomMultiplier; j++) {
+				*dst-- = *src;
+			}
 			--src;
 		}
 
-		// Copy a single extra pixel if the output width is odd.
-		if (oddViewportWidth) {
+		// Handle remaining pixels if viewport width is not perfectly divisible
+		for (int j = doubleableWidth * zoomMultiplier; j < viewportWidth; j++) {
 			*dst-- = *src;
-			--src;
 		}
+		--src;
 
-		// Skip the rest of the source line.
+		// Adjust the source pointer
 		src -= (out.pitch() - srcWidth);
 
-		// Multiply the line.
-		memcpy(dst - out.pitch() + 1, dst + 1, viewportWidth);
+		// Duplicate the line for zoom level
+		for (int z = 1; z < zoomMultiplier; z++) {
+			memcpy(dst - out.pitch() + 1, dst + 1, viewportWidth);
+			dst -= out.pitch();
+		}
 
-		// Skip the rest of the destination line.
-		dst -= zoomMultiplier * out.pitch() - viewportWidth;
+		// Adjust the destination pointer
+		dst -= out.pitch() - viewportWidth;
 	}
-	if ((out.h() % 2) == 1) {
+
+	// Handle the case where the viewport height is not perfectly divisible by zoom level
+	for (int z = doubleableHeight * zoomMultiplier; z < out.h(); z++) {
 		memcpy(dst - out.pitch() + 1, dst + 1, viewportWidth);
+		dst -= out.pitch();
 	}
 }
+
 
 Displacement tileOffset;
 Displacement tileShift;
