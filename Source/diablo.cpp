@@ -61,6 +61,7 @@
 #include "nthread.h"
 #include "objects.h"
 #include "options.h"
+#include "panels/console.hpp"
 #include "panels/info_box.hpp"
 #include "panels/spell_book.hpp"
 #include "panels/spell_list.hpp"
@@ -705,6 +706,12 @@ void GameEventHandler(const SDL_Event &event, uint16_t modState)
 	if (ctrlEvents.size() > 0 && ctrlEvents[0].button != ControllerButton_NONE) {
 		return;
 	}
+
+#ifdef _DEBUG
+	if (ConsoleHandleEvent(event)) {
+		return;
+	}
+#endif
 
 	if (IsTalkActive() && HandleTalkTextInputEvent(event)) {
 		return;
@@ -1864,6 +1871,12 @@ void InitKeymapActions()
 		    ToggleChatLog();
 	    });
 #ifdef _DEBUG
+	sgOptions.Keymapper.AddAction(
+	    "OpenConsole",
+	    N_("Console"),
+	    N_("Opens Lua console."),
+	    SDLK_BACKQUOTE,
+	    OpenConsole);
 	sgOptions.Keymapper.AddAction(
 	    "DebugToggle",
 	    "Debug toggle",

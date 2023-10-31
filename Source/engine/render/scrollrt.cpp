@@ -34,6 +34,7 @@
 #include "nthread.h"
 #include "options.h"
 #include "panels/charpanel.hpp"
+#include "panels/console.hpp"
 #include "plrmsg.h"
 #include "qol/chatlog.h"
 #include "qol/floatingnumbers.h"
@@ -1659,6 +1660,10 @@ void DrawAndBlit()
 	LuaEvent("OnGameDrawComplete");
 
 	DrawMain(out, hgt, drawInfoBox, drawHealth, drawMana, drawBelt, drawControlButtons);
+
+#ifdef _DEBUG
+	DrawConsole(out);
+#endif
 
 	RedrawComplete();
 	for (PanelDrawComponent component : enum_values<PanelDrawComponent>()) {

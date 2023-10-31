@@ -114,6 +114,8 @@ set(devilutionx_assets
   fonts/blue.trn
   fonts/buttonface.trn
   fonts/buttonpushed.trn
+  fonts/gamedialogwhite.trn
+  fonts/gamedialogred.trn
   fonts/golduis.trn
   fonts/goldui.trn
   fonts/grayuis.trn

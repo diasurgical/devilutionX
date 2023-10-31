@@ -17,10 +17,8 @@ public:
 		return SplitByCharIterator(split_by, text, text.substr(0, text.find(split_by)));
 	}
 
-	static SplitByCharIterator end(std::string_view text, char split_by) // NOLINT(readability-identifier-naming)
-	{
-		return SplitByCharIterator(split_by, text, text.substr(text.size()));
-	}
+	// End iterator
+	SplitByCharIterator() = default;
 
 	[[nodiscard]] std::string_view operator*() const
 	{
@@ -34,6 +32,10 @@ public:
 
 	SplitByCharIterator &operator++()
 	{
+		if (slice_.data() + slice_.size() == text_.data() + text_.size()) {
+			slice_ = {};
+			return *this;
+		}
 		slice_ = text_.substr(slice_.data() - text_.data() + slice_.size());
 		if (!slice_.empty())
 			slice_.remove_prefix(1); // skip the split_by char
@@ -66,7 +68,7 @@ private:
 	{
 	}
 
-	const char split_by_;
+	const char split_by_ = '\0';
 	const std::string_view text_;
 	std::string_view slice_;
 };
@@ -86,7 +88,7 @@ public:
 
 	[[nodiscard]] SplitByCharIterator end() const // NOLINT(readability-identifier-naming)
 	{
-		return SplitByCharIterator::end(text_, split_by_);
+		return {};
 	}
 
 private:

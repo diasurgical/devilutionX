@@ -153,15 +153,6 @@ std::string DebugCmdHelp(const std::string_view parameter)
 	return StrCat("Description: ", dbgCmdItem.description, "\nParameters: ", dbgCmdItem.requiredParameter);
 }
 
-std::string DebugCmdLua(std::string_view code)
-{
-	tl::expected<std::string, std::string> result = RunLua(code);
-	if (!result.has_value()) {
-		return StrCat("> ", code, "\n") + std::move(result).error();
-	}
-	return StrCat("> ", code, "\n") + std::move(result).value();
-}
-
 std::string DebugCmdGiveGoldCheat(const std::string_view parameter)
 {
 	Player &myPlayer = *MyPlayer;
@@ -1285,7 +1276,6 @@ std::vector<DebugCmdItem> DebugCmdList = {
 	{ "searchitem", "Searches the automap for {item}", "{item}", &DebugCmdSearchItem },
 	{ "searchobject", "Searches the automap for {object}", "{object}", &DebugCmdSearchObject },
 	{ "clearsearch", "Search in the auto map is cleared", "", &DebugCmdClearSearch },
-	{ "lua", "Run Lua code", "{code}", &DebugCmdLua },
 };
 
 } // namespace
