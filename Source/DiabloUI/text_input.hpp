@@ -90,7 +90,7 @@ class TextInputState {
 
 		void erase(size_t pos, size_t len)
 		{
-			std::memmove(&buf_[pos], &buf_[pos + len], len);
+			std::memmove(&buf_[pos], &buf_[pos + len], len_ - (pos + len));
 			len_ -= len;
 			buf_[len_] = '\0';
 		}

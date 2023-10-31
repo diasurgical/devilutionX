@@ -33,6 +33,12 @@ bool HandleInputEvent(const SDL_Event &event, TextInputState &state,
 	case SDL_KEYDOWN: {
 		switch (event.key.keysym.sym) {
 #ifndef USE_SDL1
+		case SDLK_a:
+			if (isCtrl) {
+				state.setCursorToStart();
+				state.setSelectCursorToEnd();
+			}
+			return true;
 		case SDLK_c:
 			if (isCtrl) {
 				const std::string selectedText { state.selectedText() };
@@ -92,8 +98,11 @@ bool HandleInputEvent(const SDL_Event &event, TextInputState &state,
 			typeFn(utf8);
 			return true;
 		}
+#else
+		// Mark events that will also trigger SDL_TEXTINPUT as handled.
+		return !isCtrl && !isAlt
+		    && event.key.keysym.sym >= SDLK_SPACE && event.key.keysym.sym <= SDLK_z;
 #endif
-		return false;
 	}
 #ifndef USE_SDL1
 	case SDL_TEXTINPUT:
