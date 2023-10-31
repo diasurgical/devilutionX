@@ -133,10 +133,12 @@ set(libdevilutionx_SRCS
   levels/trigs.cpp
 
   lua/lua.cpp
+  lua/repl.cpp
   lua/modules/render.cpp
   lua/modules/log.cpp
 
   panels/charpanel.cpp
+  panels/console.cpp
   panels/info_box.cpp
   panels/mainpanel.cpp
   panels/spell_book.cpp

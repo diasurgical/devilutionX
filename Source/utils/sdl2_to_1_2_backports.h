@@ -51,6 +51,8 @@
 #define SDLK_LGUI SDLK_LSUPER
 #define SDLK_RGUI SDLK_RSUPER
 
+#define SDL_SCANCODE_GRAVE 53
+
 // Haptic events are not supported in SDL1.
 #define SDL_INIT_HAPTIC 0
 

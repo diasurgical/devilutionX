@@ -103,7 +103,7 @@ bool HandleInputEvent(const SDL_Event &event, TextInputState &state,
 		return !isCtrl && !isAlt
 		    && event.key.keysym.sym >= SDLK_SPACE && event.key.keysym.sym <= SDLK_z;
 #endif
-	}
+	} break;
 #ifndef USE_SDL1
 	case SDL_TEXTINPUT:
 #ifdef __vita__
@@ -118,6 +118,7 @@ bool HandleInputEvent(const SDL_Event &event, TextInputState &state,
 	default:
 		return false;
 	}
+	return false;
 }
 
 } // namespace

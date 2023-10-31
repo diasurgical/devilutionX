@@ -20,6 +20,7 @@
 #include "engine/clx_sprite.hpp"
 #include "engine/palette.h"
 #include "engine/rectangle.hpp"
+#include "utils/enum_traits.h"
 
 namespace devilution {
 
@@ -38,7 +39,8 @@ enum text_color : uint8_t {
 	ColorUiGoldDark,
 	ColorUiSilverDark,
 
-	ColorDialogWhite,
+	ColorDialogWhite, // Dialog white in main menu
+	ColorDialogRed,
 	ColorYellow,
 
 	ColorGold,
@@ -52,7 +54,25 @@ enum text_color : uint8_t {
 
 	ColorButtonface,
 	ColorButtonpushed,
+
+	ColorInGameDialogWhite, // Dialog white in-game
+	ColorInGameDialogRed,   // Dialog red in-game
 };
+
+constexpr GameFontTables GetFontSizeFromUiFlags(UiFlags flags)
+{
+	if (HasAnyOf(flags, UiFlags::FontSize24))
+		return GameFont24;
+	if (HasAnyOf(flags, UiFlags::FontSize30))
+		return GameFont30;
+	if (HasAnyOf(flags, UiFlags::FontSize42))
+		return GameFont42;
+	if (HasAnyOf(flags, UiFlags::FontSize46))
+		return GameFont46;
+	if (HasAnyOf(flags, UiFlags::FontSizeDialog))
+		return FontSizeDialog;
+	return GameFont12;
+}
 
 /**
  * @brief A format argument for `DrawStringWithColors`.
