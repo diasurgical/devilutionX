@@ -48,7 +48,7 @@ Id  Build  Count  Name       Description
 
 Primarily "/O1" was used, but there are also peculiarities such as the use of both Microsoft Visual Studio 6 and Microsoft Visual Code 5 for linking the game.
 
-5. The heartfelt dedication of a team of people. GalaXyHaXz did the initial heavy lifting and succeeded in the tremendous task of getting the decompiled source code of Diablo 1 compiling with the original toolchain. Later on she released the project open source and a community of open source collaborators formed. Most of us have never met in real life prior to joining the project, which stands to show that there is strength in online collaboration that transcend both culture and borders.
+5. The heartfelt dedication of a team of people. GalaXyHaXz did the initial heavy lifting and succeeded in the tremendous task of getting the decompiled source code of Diablo 1 compiling with the original toolchain. Later on she released the project open source and a community of open source collaborators formed. Most of us have never met in real life prior to joining the project, which stands to show that there is strength in online collaboration that transcends both culture and borders.
 
 6. The Beta release and the Alpha4 release of Diablo 1 has also proved invaluable resources for cross-validation as the compiler optimization level was not set to release mode for these binaries.
 

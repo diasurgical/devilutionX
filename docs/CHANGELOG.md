@@ -754,7 +754,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix name filtering
 - Correct minor memory leaks
 - Further reduced memory usage
-- Performance improvments
+- Performance improvements
 - Windows: Only show network errors once
 
 ### Bugfixes for original Diablo bugs
@@ -1382,7 +1382,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### January 14, 2019
 
 - [50% of functions are now binary identical](https://github.com/diasurgical/devilution/milestone/3) to the 1.09b version
-- [#456](https://github.com/diasurgical/devilution/pull/456) Assets can now be loaded directly form disk (no need for MPQ-files when modding)
+- [#456](https://github.com/diasurgical/devilution/pull/456) Assets can now be loaded directly from disk (no need for MPQ-files when modding)
 - [#528](https://github.com/diasurgical/devilution/pull/528) Code ported to C (can still be compiled as C++)
 - [#111](https://github.com/diasurgical/devilution/pull/111) Rich Header no longer contains incorrect sections
 - [#182](https://github.com/diasurgical/devilution/pull/182) defined a [Code Style](https://github.com/diasurgical/devilution/wiki/Code-style-guide) with accompanying clang-format definition
