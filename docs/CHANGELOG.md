@@ -260,7 +260,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The Deadly Hunter bow not dealing the correct damage
 - Spell remaining unavailable after using a stone shrine until reequipping the staff
 - Fast and faster hit recovery stacking
-- Incorrect calculation for max changes lost with when using the recharge skill
+- Incorrect calculation for max charges lost with when using the recharge skill
 - Not getting XP after damaging a monster if it dies from a trap
 - Fire Arrows causing monsters to stop healing
 
