@@ -120,7 +120,8 @@ struct DisplacementOf {
 
 	float magnitude() const
 	{
-		return static_cast<float>(hypot(deltaX, deltaY));
+		// We do not use `std::hypot` here because it is slower and we do not need the extra precision.
+		return sqrtf(deltaX * deltaX + deltaY * deltaY);
 	}
 
 	/**
