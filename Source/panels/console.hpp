@@ -7,6 +7,7 @@
 
 namespace devilution {
 
+bool IsConsoleOpen();
 void OpenConsole();
 bool ConsoleHandleEvent(const SDL_Event &event);
 void DrawConsole(const Surface &out);

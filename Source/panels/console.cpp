@@ -5,6 +5,7 @@
 #include <string_view>
 
 #include <SDL.h>
+#include <function_ref.hpp>
 
 #ifdef USE_SDL1
 #include "utils/sdl2_to_1_2_backports.h"
@@ -31,6 +32,14 @@ namespace devilution {
 namespace {
 
 constexpr std::string_view Prompt = "> ";
+constexpr std::string_view HelpText =
+    // Displayed as the first console message
+    "Lua console\n"
+    "Shift+Enter to insert a newline, PageUp/Down to scroll,"
+    " Up/Down to fill the input from history,"
+    " Shift+Up/Down to fill the input from output history,"
+    " Esc to close.";
+
 bool IsConsoleVisible;
 char ConsoleInputBuffer[4096];
 TextInputCursorState ConsoleInputCursor;
@@ -46,6 +55,7 @@ std::string WrappedInputText { Prompt };
 
 struct ConsoleLine {
 	enum Type : uint8_t {
+		Help,
 		Input,
 		Output,
 		Error
@@ -54,9 +64,26 @@ struct ConsoleLine {
 	Type type;
 	std::string text;
 	std::string wrapped = {};
+	int numLines = 0;
+
+	[[nodiscard]] std::string_view textWithoutPrompt() const
+	{
+		std::string_view result = text;
+		if (type == ConsoleLine::Input) {
+			result.remove_prefix(Prompt.size());
+		}
+		return result;
+	}
 };
 
 std::vector<ConsoleLine> ConsoleLines;
+int ConsoleLinesTotalHeight;
+
+// Index of the currently filled input/output, counting from end.
+int HistoryIndex = -1;
+
+// Draft input, saved when navigating history.
+std::string DraftInput;
 
 Rectangle OuterRect;
 Rectangle InputRect;
@@ -76,10 +103,30 @@ constexpr UiFlags ErrorTextUiFlags = TextUiFlags | UiFlags::ColorDialogRed;
 constexpr int TextSpacing = 0;
 constexpr GameFontTables TextFontSize = GetFontSizeFromUiFlags(InputTextUiFlags);
 
+// Scroll offset from the bottom (in pages), to be applied on next render.
+int PendingScrollPages;
+// Scroll offset from the bottom in pixels.
+int ScrollOffset;
+constexpr int ScrollStep = LineHeight * 3;
+
 void CloseConsole()
 {
 	IsConsoleVisible = false;
 	SDL_StopTextInput();
+}
+
+int GetConsoleLinesInnerWidth()
+{
+	return OuterRect.size.width - 2 * TextPaddingX;
+}
+
+void AddConsoleLine(ConsoleLine &&consoleLine)
+{
+	consoleLine.wrapped = WordWrapString(consoleLine.text, GetConsoleLinesInnerWidth(), TextFontSize, TextSpacing);
+	consoleLine.numLines += static_cast<int>(c_count(consoleLine.wrapped, '\n')) + 1;
+	ConsoleLinesTotalHeight += consoleLine.numLines * LineHeight;
+	ConsoleLines.emplace_back(std::move(consoleLine));
+	ScrollOffset = 0;
 }
 
 void SendInput()
@@ -87,21 +134,23 @@ void SendInput()
 	const std::string_view input = ConsoleInputState.value();
 	tl::expected<std::string, std::string> result = RunLuaReplLine(input);
 
-	ConsoleLines.emplace_back(ConsoleLine { .type = ConsoleLine::Input, .text = StrCat("> ", input) });
+	AddConsoleLine(ConsoleLine { .type = ConsoleLine::Input, .text = StrCat(Prompt, input) });
 
 	if (result.has_value()) {
 		if (!result->empty()) {
-			ConsoleLines.emplace_back(ConsoleLine { .type = ConsoleLine::Output, .text = *std::move(result) });
+			AddConsoleLine(ConsoleLine { .type = ConsoleLine::Output, .text = *std::move(result) });
 		}
 	} else {
 		if (!result.error().empty()) {
-			ConsoleLines.emplace_back(ConsoleLine { .type = ConsoleLine::Error, .text = std::move(result).error() });
+			AddConsoleLine(ConsoleLine { .type = ConsoleLine::Error, .text = std::move(result).error() });
 		} else {
-			ConsoleLines.emplace_back(ConsoleLine { .type = ConsoleLine::Error, .text = "Unknown error" });
+			AddConsoleLine(ConsoleLine { .type = ConsoleLine::Error, .text = "Unknown error" });
 		}
 	}
 
 	ConsoleInputState.clear();
+	DraftInput.clear();
+	HistoryIndex = -1;
 }
 
 void DrawInputText(const Surface &inputTextSurface, std::string_view originalInputText, std::string_view wrappedInputText)
@@ -131,12 +180,21 @@ void DrawInputText(const Surface &inputTextSurface, std::string_view originalInp
 
 void DrawConsoleLines(const Surface &out)
 {
-	int lineYEnd = out.h() - 4; // Extra space for letters like g.
+	const int innerHeight = out.h() - 4; // Extra space for letters like g.
+	if (PendingScrollPages) {
+		ScrollOffset += innerHeight * PendingScrollPages;
+		PendingScrollPages = 0;
+	}
+	ScrollOffset = std::clamp(ScrollOffset, 0, std::max(0, ConsoleLinesTotalHeight - innerHeight));
+
+	int lineYEnd = innerHeight + ScrollOffset;
 	// NOLINTNEXTLINE(modernize-loop-convert)
 	for (auto it = ConsoleLines.rbegin(), itEnd = ConsoleLines.rend(); it != itEnd; ++it) {
 		ConsoleLine &consoleLine = *it;
-		if (consoleLine.wrapped.empty()) {
-			consoleLine.wrapped = WordWrapString(consoleLine.text, out.w(), TextFontSize, TextSpacing);
+		const int linesYBegin = lineYEnd - LineHeight * consoleLine.numLines;
+		if (linesYBegin > innerHeight) {
+			lineYEnd = linesYBegin;
+			continue;
 		}
 		size_t end = consoleLine.wrapped.size();
 		while (true) {
@@ -149,6 +207,7 @@ void DrawConsoleLines(const Surface &out)
 				    TextRenderOptions { .flags = InputTextUiFlags, .spacing = TextSpacing });
 				break;
 			case ConsoleLine::Output:
+			case ConsoleLine::Help:
 				DrawString(out, line, { 0, lineYEnd },
 				    TextRenderOptions { .flags = OutputTextUiFlags, .spacing = TextSpacing });
 				break;
@@ -164,7 +223,95 @@ void DrawConsoleLines(const Surface &out)
 	}
 }
 
+const ConsoleLine &GetConsoleLineFromEnd(int index)
+{
+	return *(ConsoleLines.rbegin() + index);
+}
+
+void SetHistoryIndex(int index)
+{
+	InputTextChanged = true;
+	HistoryIndex = static_cast<int>(ConsoleLines.size()) - (index + 1);
+	if (HistoryIndex == -1) {
+		ConsoleInputState.assign(DraftInput);
+		return;
+	}
+	const ConsoleLine &line = ConsoleLines[index];
+	ConsoleInputState.assign(line.textWithoutPrompt());
+}
+
+void PrevHistoryItem(tl::function_ref<bool(const ConsoleLine &line)> filter)
+{
+	if (HistoryIndex == -1) {
+		DraftInput = ConsoleInputState.value();
+	}
+	for (int i = HistoryIndex + 1; i < ConsoleLines.size(); ++i) {
+		const int index = static_cast<int>(ConsoleLines.size()) - (i + 1);
+		if (filter(ConsoleLines[index])) {
+			SetHistoryIndex(index);
+			return;
+		}
+	}
+}
+
+void NextHistoryItem(tl::function_ref<bool(const ConsoleLine &line)> filter)
+{
+	for (int i = static_cast<int>(ConsoleLines.size()) - HistoryIndex; i < ConsoleLines.size(); ++i) {
+		if (filter(ConsoleLines[i])) {
+			SetHistoryIndex(i);
+			return;
+		}
+	}
+	if (HistoryIndex != -1) {
+		SetHistoryIndex(ConsoleLines.size());
+	}
+}
+
+bool IsHistoryInputLine(const ConsoleLine &line)
+{
+	if (line.type != ConsoleLine::Input)
+		return false;
+	std::string_view text = line.text;
+	text.remove_prefix(Prompt.size());
+	if (text.empty())
+		return false;
+	return HistoryIndex == -1 || GetConsoleLineFromEnd(HistoryIndex).textWithoutPrompt() != text;
+}
+
+void PrevInput()
+{
+	PrevHistoryItem(IsHistoryInputLine);
+}
+
+void NextInput()
+{
+	NextHistoryItem(IsHistoryInputLine);
+}
+
+bool IsHistoryOutputLine(const ConsoleLine &line)
+{
+	return !line.text.empty()
+	    && (line.type == ConsoleLine::Output || line.type == ConsoleLine::Error)
+	    && (HistoryIndex == -1
+	        || GetConsoleLineFromEnd(HistoryIndex).textWithoutPrompt() != line.text);
+}
+
+void PrevOutput()
+{
+	PrevHistoryItem(IsHistoryOutputLine);
+}
+
+void NextOutput()
+{
+	NextHistoryItem(IsHistoryOutputLine);
+}
+
 } // namespace
+
+bool IsConsoleOpen()
+{
+	return IsConsoleVisible;
+}
 
 void OpenConsole()
 {
@@ -194,6 +341,12 @@ bool ConsoleHandleEvent(const SDL_Event &event)
 		case SDLK_ESCAPE:
 			CloseConsole();
 			return true;
+		case SDLK_UP:
+			isShift ? PrevOutput() : PrevInput();
+			return true;
+		case SDLK_DOWN:
+			isShift ? NextOutput() : NextInput();
+			return true;
 		case SDLK_RETURN:
 		case SDLK_KP_ENTER:
 			if (isShift) {
@@ -203,10 +356,37 @@ bool ConsoleHandleEvent(const SDL_Event &event)
 			}
 			InputTextChanged = true;
 			return true;
+		case SDLK_PAGEUP:
+			++PendingScrollPages;
+			return true;
+		case SDLK_PAGEDOWN:
+			--PendingScrollPages;
+			return true;
 		default:
 			return false;
 		}
 		break;
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+	case SDL_MOUSEWHEEL:
+		if (event.wheel.y > 0) {
+			ScrollOffset += ScrollStep;
+		} else if (event.wheel.y < 0) {
+			ScrollOffset -= ScrollStep;
+		}
+		return true;
+#else
+	case SDL_MOUSEBUTTONDOWN:
+	case SDL_MOUSEBUTTONUP:
+		if (event.button.button == SDL_BUTTON_WHEELUP) {
+			ScrollOffset += ScrollStep;
+			return true;
+		}
+		if (event.button.button == SDL_BUTTON_WHEELDOWN) {
+			ScrollOffset -= ScrollStep;
+			return true;
+		}
+		return false;
+#endif
 	default:
 		return false;
 	}
@@ -243,6 +423,9 @@ void DrawConsole(const Surface &out)
 		SDL_SetTextInputRect(&sdlInputRect);
 		SDL_StartTextInput();
 		FirstRender = false;
+		if (ConsoleLines.empty()) {
+			AddConsoleLine(ConsoleLine { .type = ConsoleLine::Help, .text = std::string(HelpText) });
+		}
 	}
 
 	const Rectangle bgRect = OuterRect;
@@ -252,7 +435,7 @@ void DrawConsole(const Surface &out)
 	    out.subregion(
 	        TextPaddingX,
 	        TextPaddingYTop,
-	        OuterRect.size.width - 2 * TextPaddingX,
+	        GetConsoleLinesInnerWidth(),
 	        OuterRect.size.height - inputTextRect.size.height - 8));
 
 	DrawHorizontalLine(out, InputRect.position - Displacement { 0, 1 }, InputRect.size.width, BorderColor);
