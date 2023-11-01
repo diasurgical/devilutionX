@@ -1,6 +1,8 @@
 #ifdef _DEBUG
 #include "lua/repl.hpp"
 
+#include <cstddef>
+#include <optional>
 #include <string>
 #include <string_view>
 
@@ -9,16 +11,49 @@
 #include <sol/utility/to_string.hpp>
 
 #include "lua/lua.hpp"
+#include "panels/console.hpp"
 #include "utils/str_cat.hpp"
 
 namespace devilution {
 
 namespace {
 
+std::optional<sol::environment> replEnv;
+
+int LuaPrintToConsole(lua_State *state)
+{
+	std::string result;
+	const int n = lua_gettop(state);
+	for (int i = 1; i <= n; i++) {
+		size_t l;
+		const char *s = luaL_tolstring(state, i, &l);
+		if (i > 1)
+			result += '\t';
+		result.append(s, l);
+		lua_pop(state, 1);
+	}
+	PrintToConsole(result);
+	return 0;
+}
+
+void CreateReplEnvironment()
+{
+	sol::state &lua = LuaState();
+	replEnv.emplace(lua, sol::create, lua.globals());
+	replEnv->set("print", LuaPrintToConsole);
+}
+
+sol::environment &ReplEnvironment()
+{
+	if (!replEnv.has_value())
+		CreateReplEnvironment();
+	return *replEnv;
+}
+
 sol::protected_function_result TryRunLuaAsExpressionThenStatement(std::string_view code)
 {
 	// Try to compile as an expression first. This also how the `lua` repl is implemented.
-	const sol::state &lua = LuaState();
+	sol::state &lua = LuaState();
 	std::string expression = StrCat("return ", code, ";");
 	sol::detail::typical_chunk_name_t basechunkname = {};
 	sol::load_status status = static_cast<sol::load_status>(
@@ -35,6 +70,7 @@ sol::protected_function_result TryRunLuaAsExpressionThenStatement(std::string_vi
 		}
 	}
 	sol::stack_aligned_protected_function fn(lua.lua_state(), -1);
+	sol::set_environment(ReplEnvironment(), fn);
 	return fn();
 }
 
