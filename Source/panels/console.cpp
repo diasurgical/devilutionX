@@ -132,9 +132,8 @@ void AddConsoleLine(ConsoleLine &&consoleLine)
 void SendInput()
 {
 	const std::string_view input = ConsoleInputState.value();
-	tl::expected<std::string, std::string> result = RunLuaReplLine(input);
-
 	AddConsoleLine(ConsoleLine { .type = ConsoleLine::Input, .text = StrCat(Prompt, input) });
+	tl::expected<std::string, std::string> result = RunLuaReplLine(input);
 
 	if (result.has_value()) {
 		if (!result->empty()) {
@@ -463,6 +462,11 @@ void DrawConsole(const Surface &out)
 
 	SDL_Rect sdlRect = MakeSdlRect(OuterRect);
 	BltFast(&sdlRect, &sdlRect);
+}
+
+void PrintToConsole(std::string_view text)
+{
+	AddConsoleLine(ConsoleLine { .type = ConsoleLine::Output, .text = std::string(text) });
 }
 
 } // namespace devilution
