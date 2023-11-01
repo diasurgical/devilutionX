@@ -5,6 +5,7 @@
 
 #include <sol/sol.hpp>
 
+#include "appfat.h"
 #include "engine/assets.hpp"
 #include "lua/modules/log.hpp"
 #include "lua/modules/render.hpp"
@@ -33,37 +34,45 @@ int LuaPrint(lua_State *state)
 	return 0;
 }
 
-bool CheckResult(sol::protected_function_result result)
+bool CheckResult(sol::protected_function_result result, bool optional)
 {
 	const bool valid = result.valid();
 	if (!valid) {
-		if (result.get_type() == sol::type::string) {
-			LogError("Lua error: {}", result.get<std::string>());
-		} else {
-			LogError("Unknown Lua error");
-		}
+		const std::string error = result.get_type() == sol::type::string
+		    ? StrCat("Lua error: ", result.get<std::string>())
+		    : "Unknown Lua error";
+		if (!optional)
+			app_fatal(error);
+		LogError(error);
 	}
 	return valid;
 }
 
-void RunScript(std::string_view path)
+void RunScript(std::string_view path, bool optional)
 {
 	AssetRef ref = FindAsset(path);
-	if (!ref.ok())
+	if (!ref.ok()) {
+		if (!optional)
+			app_fatal(StrCat("Asset not found: ", path));
 		return;
+	}
 
 	const size_t size = ref.size();
 	std::unique_ptr<char[]> luaScript { new char[size] };
 
 	AssetHandle handle = OpenAsset(std::move(ref));
-	if (!handle.ok())
+	if (!handle.ok()) {
+		app_fatal(StrCat("Failed to open asset: ", path, "\n", handle.error()));
 		return;
+	}
 
-	if (size > 0 && !handle.read(luaScript.get(), size))
+	if (size > 0 && !handle.read(luaScript.get(), size)) {
+		app_fatal(StrCat("Read failed: ", path, "\n", handle.error()));
 		return;
+	}
 
 	const std::string_view luaScriptStr(luaScript.get(), size);
-	CheckResult(luaState->safe_script(luaScriptStr));
+	CheckResult(luaState->safe_script(luaScriptStr), optional);
 }
 
 void LuaPanic(sol::optional<std::string> message)
@@ -113,8 +122,8 @@ void LuaInitialize()
 	    "render", LuaRenderModule(lua),
 	    "message", [](std::string_view text) { EventPlrMsg(text, UiFlags::ColorRed); });
 
-	RunScript("lua/init.lua");
-	RunScript("lua/user.lua");
+	RunScript("lua/init.lua", /*optional=*/false);
+	RunScript("lua/user.lua", /*optional=*/true);
 
 	LuaEvent("OnGameBoot");
 }
@@ -133,7 +142,7 @@ void LuaEvent(std::string_view name)
 		return;
 	}
 	const sol::protected_function fn = trigger->as<sol::protected_function>();
-	CheckResult(fn());
+	CheckResult(fn(), /*optional=*/true);
 }
 
 sol::state &LuaState()
