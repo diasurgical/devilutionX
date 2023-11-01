@@ -122,8 +122,8 @@ void LuaInitialize()
 	    "render", LuaRenderModule(lua),
 	    "message", [](std::string_view text) { EventPlrMsg(text, UiFlags::ColorRed); });
 
-	RunScript("lua/init.lua", /*optional=*/false);
-	RunScript("lua/user.lua", /*optional=*/true);
+	RunScript("lua\\init.lua", /*optional=*/false);
+	RunScript("lua\\user.lua", /*optional=*/true);
 
 	LuaEvent("OnGameBoot");
 }
