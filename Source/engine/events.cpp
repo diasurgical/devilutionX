@@ -8,6 +8,7 @@
 #include "interfac.h"
 #include "movie.h"
 #include "options.h"
+#include "panels/console.hpp"
 #include "utils/log.hpp"
 
 #ifdef USE_SDL1
@@ -120,6 +121,13 @@ bool FetchMessage_Real(SDL_Event *event, uint16_t *modState)
 		break;
 #ifndef USE_SDL1
 	case SDL_MOUSEWHEEL:
+#ifdef _DEBUG
+		if (IsConsoleOpen()) {
+			*event = e;
+			break;
+		}
+#endif
+		// This is a hack, mousewheel events should be handled directly by their consumers instead.
 		event->type = SDL_KEYDOWN;
 		if (e.wheel.y > 0) {
 			event->key.keysym.sym = (SDL_GetModState() & KMOD_CTRL) != 0 ? SDLK_KP_PLUS : SDLK_UP;
