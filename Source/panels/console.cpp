@@ -38,7 +38,7 @@ constexpr std::string_view HelpText =
     "Shift+Enter to insert a newline, PageUp/Down to scroll,"
     " Up/Down to fill the input from history,"
     " Shift+Up/Down to fill the input from output history,"
-    " Esc to close.";
+    " Ctrl+L to clear history, Esc to close.";
 
 bool IsConsoleVisible;
 char ConsoleInputBuffer[4096];
@@ -306,6 +306,14 @@ void NextOutput()
 	NextHistoryItem(IsHistoryOutputLine);
 }
 
+void ClearConsole()
+{
+	ConsoleLines.clear();
+	HistoryIndex = -1;
+	ScrollOffset = 0;
+	AddConsoleLine(ConsoleLine { .type = ConsoleLine::Help, .text = std::string(HelpText) });
+}
+
 } // namespace
 
 bool IsConsoleOpen()
@@ -361,6 +369,9 @@ bool ConsoleHandleEvent(const SDL_Event &event)
 			return true;
 		case SDLK_PAGEDOWN:
 			--PendingScrollPages;
+			return true;
+		case SDLK_l:
+			ClearConsole();
 			return true;
 		default:
 			return false;
