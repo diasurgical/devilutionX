@@ -596,7 +596,7 @@ std::string WordWrapString(std::string_view text, unsigned width, GameFontTables
 	const char *begin = text.data();
 	const char *processedEnd = text.data();
 	std::string_view::size_type lastBreakablePos = std::string_view::npos;
-	std::size_t lastBreakableLen;
+	std::size_t lastBreakableLen = 0;
 	unsigned lineWidth = 0;
 	CurrentFont currentFont;
 
