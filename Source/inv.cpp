@@ -801,7 +801,7 @@ void CheckInvCut(Player &player, Point cursorPosition, bool automaticMove, bool 
 			if (automaticallyEquipped) {
 				PlaySFX(ItemInvSnds[ItemCAnimTbl[holdItem._iCurs]]);
 			} else if (!automaticMove || automaticallyMoved) {
-				PlaySFX(IS_IGRAB);
+				PlaySFX(SfxID::GrabItem);
 			}
 
 			if (automaticMove) {
@@ -1563,7 +1563,7 @@ void InvGetItem(Player &player, int ii)
 		if (MyPlayer == &player) {
 			// Non-gold items (or gold when you have a full inventory) go to the hand then provide audible feedback on
 			//  paste. To give the same feedback for auto-placed gold we play the sound effect now.
-			PlaySFX(IS_GOLD);
+			PlaySFX(SfxID::ItemGold);
 		}
 	} else {
 		// The item needs to go into the players hand
@@ -1654,7 +1654,7 @@ void AutoGetItem(Player &player, Item *itemPointer, int ii)
 
 	if (done) {
 		if (!autoEquipped && *sgOptions.Audio.itemPickupSound && &player == MyPlayer) {
-			PlaySFX(IS_IGRAB);
+			PlaySFX(SfxID::GrabItem);
 		}
 
 		CleanupItems(ii);
@@ -2015,7 +2015,7 @@ bool UseInvItem(int cii)
 	}
 	if (item->IDidx == IDI_FUNGALTM) {
 
-		PlaySFX(IS_IBOOK);
+		PlaySFX(SfxID::ItemBook);
 		player.Say(HeroSpeech::ThatDidntDoAnything, SpeechDelay);
 		return true;
 	}
@@ -2063,7 +2063,7 @@ bool UseInvItem(int cii)
 
 	int idata = ItemCAnimTbl[item->_iCurs];
 	if (item->_iMiscId == IMISC_BOOK)
-		PlaySFX(IS_RBOOK);
+		PlaySFX(SfxID::ReadBook);
 	else if (&player == MyPlayer)
 		PlaySFX(ItemInvSnds[idata]);
 

@@ -195,7 +195,7 @@ struct PlayerAnimData {
  */
 void LoadPlayerDataFiles();
 
-extern const _sfx_id herosounds[enum_size<HeroClass>::value][enum_size<HeroSpeech>::value];
+extern const SfxID herosounds[enum_size<HeroClass>::value][enum_size<HeroSpeech>::value];
 uint32_t GetNextExperienceThresholdForLevel(unsigned level);
 uint8_t GetMaximumCharacterLevel();
 const PlayerData &GetPlayerDataForClass(HeroClass clazz);

@@ -5,14 +5,14 @@
 
 namespace devilution {
 int sfxdelay;
-_sfx_id sfxdnum;
+SfxID sfxdnum;
 
 // Disable clang-format here because our config says:
 // AllowShortFunctionsOnASingleLine: None
 // clang-format off
-bool effect_is_playing(int nSFX) { return false; }
+bool effect_is_playing(SfxID nSFX) { return false; }
 void stream_stop() { }
-void PlaySFX(_sfx_id psfx)
+void PlaySFX(SfxID psfx)
 {
 	switch (psfx) {
 	case PS_WARR69:
@@ -36,7 +36,7 @@ void PlaySFX(_sfx_id psfx)
 		break;
 	}
 }
-void PlaySfxLoc(_sfx_id psfx, Point position, bool randomizeByCategory)
+void PlaySfxLoc(SfxID psfx, Point position, bool randomizeByCategory)
 {
 	if (!randomizeByCategory)
 		return;
@@ -48,8 +48,8 @@ void sound_update() { }
 void effects_cleanup_sfx() { }
 void sound_init() { }
 void ui_sound_init() { }
-void effects_play_sound(_sfx_id id) { }
-int GetSFXLength(int nSFX) { return 0; }
+void effects_play_sound(SfxID id) { }
+int GetSFXLength(SfxID nSFX) { return 0; }
 // clang-format off
 
 } // namespace devilution

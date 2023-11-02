@@ -200,12 +200,12 @@ void UiInitList_clear()
 
 void UiPlayMoveSound()
 {
-	effects_play_sound(IS_TITLEMOV);
+	effects_play_sound(SfxID::MenuMove);
 }
 
 void UiPlaySelectSound()
 {
-	effects_play_sound(IS_TITLSLCT);
+	effects_play_sound(SfxID::MenuSelect);
 }
 
 namespace {

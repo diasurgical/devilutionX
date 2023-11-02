@@ -61,7 +61,7 @@ void LoadText(std::string_view text)
  * @param nSFX The index of the sound in the sgSFX table
  * @return ms/px
  */
-uint32_t CalculateTextSpeed(int nSFX)
+uint32_t CalculateTextSpeed(SfxID nSFX)
 {
 	const int numLines = TextLines.size();
 
@@ -135,28 +135,28 @@ void InitQuestText()
 
 void InitQTextMsg(_speech_id m)
 {
-	_sfx_id sfxnr = Speeches[m].sfxnr;
-	const _sfx_id *classSounds = herosounds[static_cast<size_t>(MyPlayer->_pClass)];
+	SfxID sfxnr = Speeches[m].sfxnr;
+	const SfxID *classSounds = herosounds[static_cast<size_t>(MyPlayer->_pClass)];
 	switch (sfxnr) {
-	case PS_WARR1:
+	case SfxID::Warrior1:
 		sfxnr = classSounds[static_cast<size_t>(HeroSpeech::ChamberOfBoneLore)];
 		break;
-	case PS_WARR10:
+	case SfxID::Warrior10:
 		sfxnr = classSounds[static_cast<size_t>(HeroSpeech::ValorLore)];
 		break;
-	case PS_WARR11:
+	case SfxID::Warrior11:
 		sfxnr = classSounds[static_cast<size_t>(HeroSpeech::HallsOfTheBlindLore)];
 		break;
-	case PS_WARR12:
+	case SfxID::Warrior12:
 		sfxnr = classSounds[static_cast<size_t>(HeroSpeech::WarlordOfBloodLore)];
 		break;
-	case PS_WARR54:
+	case SfxID::Warrior54:
 		sfxnr = classSounds[static_cast<size_t>(HeroSpeech::InSpirituSanctum)];
 		break;
-	case PS_WARR55:
+	case SfxID::Warrior55:
 		sfxnr = classSounds[static_cast<size_t>(HeroSpeech::PraedictumOtium)];
 		break;
-	case PS_WARR56:
+	case SfxID::Warrior56:
 		sfxnr = classSounds[static_cast<size_t>(HeroSpeech::EfficioObitusUtInimicus)];
 		break;
 	default:

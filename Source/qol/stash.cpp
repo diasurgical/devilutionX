@@ -124,7 +124,7 @@ void CheckStashPaste(Point cursorPosition)
 			return;
 		Stash.gold += player.HoldItem._ivalue;
 		player.HoldItem.clear();
-		PlaySFX(IS_GOLD);
+		PlaySFX(SfxID::ItemGold);
 		Stash.dirty = true;
 		NewCursor(CURSOR_HAND);
 		return;
@@ -233,7 +233,7 @@ void CheckStashCut(Point cursorPosition, bool automaticMove)
 		if (automaticallyEquipped) {
 			PlaySFX(ItemInvSnds[ItemCAnimTbl[holdItem._iCurs]]);
 		} else if (!automaticMove || automaticallyMoved) {
-			PlaySFX(IS_IGRAB);
+			PlaySFX(SfxID::GrabItem);
 		}
 
 		if (automaticMove) {
@@ -473,7 +473,7 @@ bool UseStashItem(uint16_t c)
 		return true;
 	}
 	if (item->IDidx == IDI_FUNGALTM) {
-		PlaySFX(IS_IBOOK);
+		PlaySFX(SfxID::ItemBook);
 		MyPlayer->Say(HeroSpeech::ThatDidntDoAnything, SpeechDelay);
 		return true;
 	}
@@ -497,7 +497,7 @@ bool UseStashItem(uint16_t c)
 	}
 
 	if (item->_iMiscId == IMISC_BOOK)
-		PlaySFX(IS_RBOOK);
+		PlaySFX(SfxID::ReadBook);
 	else
 		PlaySFX(ItemInvSnds[ItemCAnimTbl[item->_iCurs]]);
 
@@ -621,7 +621,7 @@ void WithdrawGoldKeyPress(SDL_Keycode vkey)
 	case SDLK_KP_ENTER:
 		if (const int value = GoldWithdrawInputState->value(); value != 0) {
 			WithdrawGold(myPlayer, value);
-			PlaySFX(IS_GOLD);
+			PlaySFX(SfxID::ItemGold);
 		}
 		CloseGoldWithdraw();
 		break;

@@ -244,7 +244,7 @@ void GamemenuSoundVolume(bool bActivate)
 			gbSoundOn = true;
 		}
 	}
-	PlaySFX(IS_TITLEMOV);
+	PlaySFX(SfxID::MenuMove);
 	GamemenuGetSound();
 }
 

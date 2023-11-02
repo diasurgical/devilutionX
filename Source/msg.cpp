@@ -2288,7 +2288,7 @@ size_t OnNakrul(const TCmd *pCmd)
 {
 	if (gbBufferMsgs != 1) {
 		if (currlevel == 24) {
-			PlaySfxLoc(IS_CROPEN, { UberRow, UberCol });
+			PlaySfxLoc(SfxID::CryptDoorOpen, { UberRow, UberCol });
 			SyncNakrulRoom();
 		}
 		IsUberRoomOpened = true;
@@ -2315,7 +2315,7 @@ size_t OnOpenGrave(const TCmd *pCmd)
 		TownOpenGrave();
 		InitTownTriggers();
 		if (leveltype == DTYPE_TOWN)
-			PlaySFX(IS_SARC);
+			PlaySFX(SfxID::Sarcophagus);
 	}
 	return sizeof(*pCmd);
 }

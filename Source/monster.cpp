@@ -825,7 +825,7 @@ void StartEating(Monster &monster)
 
 void DiabloDeath(Monster &diablo, bool sendmsg)
 {
-	PlaySFX(USFX_DIABLOD);
+	PlaySFX(SfxID::DiabloDeath);
 	auto &quest = Quests[Q_DIABLO];
 	quest._qactive = QUEST_DONE;
 	if (sendmsg)
@@ -869,7 +869,7 @@ void SpawnLoot(Monster &monster, bool sendmsg)
 	if (Quests[Q_GARBUD].IsAvailable() && monster.uniqueType == UniqueMonsterType::Garbud) {
 		CreateTypeItem(monster.position.tile + Displacement { 1, 1 }, true, ItemType::Mace, IMISC_NONE, sendmsg, false);
 	} else if (monster.uniqueType == UniqueMonsterType::Defiler) {
-		if (effect_is_playing(USFX_DEFILER8))
+		if (effect_is_playing(SfxID::Defiler8))
 			stream_stop();
 		SpawnMapOfDoom(monster.position.tile, sendmsg);
 		Quests[Q_DEFILER]._qactive = QUEST_DONE;
@@ -881,9 +881,9 @@ void SpawnLoot(Monster &monster, bool sendmsg)
 			CreateAmulet(monster.position.tile, 13, sendmsg, false);
 		}
 	} else if (monster.type().type == MT_NAKRUL) {
-		int nSFX = IsUberRoomOpened ? USFX_NAKRUL4 : USFX_NAKRUL5;
+		SfxID nSFX = IsUberRoomOpened ? SfxID::NaKrul4 : SfxID::NaKrul5;
 		if (sgGameInitInfo.bCowQuest != 0)
-			nSFX = USFX_NAKRUL6;
+			nSFX = SfxID::NaKrul6;
 		if (effect_is_playing(nSFX))
 			stream_stop();
 		UberDiabloMonsterIndex = -2;
@@ -2510,7 +2510,7 @@ void GharbadAi(Monster &monster)
 
 	if (IsTileVisible(monster.position.tile)) {
 		if (monster.talkMsg == TEXT_GARBUD4) {
-			if (!effect_is_playing(USFX_GARBUD4) && monster.goal == MonsterGoal::Talking) {
+			if (!effect_is_playing(SfxID::Gharbad4) && monster.goal == MonsterGoal::Talking) {
 				monster.goal = MonsterGoal::Normal;
 				monster.activeForTicks = UINT8_MAX;
 				monster.talkMsg = TEXT_NONE;
@@ -2546,7 +2546,7 @@ void SnotSpilAi(Monster &monster)
 
 	if (IsTileVisible(monster.position.tile)) {
 		if (monster.talkMsg == TEXT_BANNER12) {
-			if (!effect_is_playing(USFX_SNOT3) && monster.goal == MonsterGoal::Talking) {
+			if (!effect_is_playing(SfxID::Snotspill3) && monster.goal == MonsterGoal::Talking) {
 				ObjChangeMap(SetPiece.position.x, SetPiece.position.y, SetPiece.position.x + SetPiece.size.width + 1, SetPiece.position.y + SetPiece.size.height + 1);
 				Quests[Q_LTBANNER]._qvar1 = 3;
 				NetSendCmdQuest(true, Quests[Q_LTBANNER]);
@@ -2697,7 +2697,7 @@ void ZharAi(Monster &monster)
 
 	if (IsTileVisible(monster.position.tile)) {
 		if (monster.talkMsg == TEXT_ZHAR2) {
-			if (!effect_is_playing(USFX_ZHAR2) && monster.goal == MonsterGoal::Talking) {
+			if (!effect_is_playing(SfxID::Zhar2) && monster.goal == MonsterGoal::Talking) {
 				monster.activeForTicks = UINT8_MAX;
 				monster.talkMsg = TEXT_NONE;
 				monster.goal = MonsterGoal::Normal;
@@ -2793,7 +2793,7 @@ void LazarusAi(Monster &monster)
 				NetSendCmdQuest(true, Quests[Q_BETRAYER]);
 			}
 
-			if (monster.talkMsg == TEXT_VILE13 && !effect_is_playing(USFX_LAZ1) && monster.goal == MonsterGoal::Talking) {
+			if (monster.talkMsg == TEXT_VILE13 && !effect_is_playing(SfxID::LazarusGreeting) && monster.goal == MonsterGoal::Talking) {
 				ObjChangeMap(1, 18, 20, 24);
 				RedoPlayerVision();
 				Quests[Q_BETRAYER]._qvar1 = 6;
@@ -2863,7 +2863,7 @@ void LachdananAi(Monster &monster)
 
 	if (IsTileVisible(monster.position.tile)) {
 		if (monster.talkMsg == TEXT_VEIL11) {
-			if (!effect_is_playing(USFX_LACH3) && monster.goal == MonsterGoal::Talking) {
+			if (!effect_is_playing(SfxID::Lachdanan3) && monster.goal == MonsterGoal::Talking) {
 				monster.talkMsg = TEXT_NONE;
 				Quests[Q_VEIL]._qactive = QUEST_DONE;
 				NetSendCmdQuest(true, Quests[Q_VEIL]);
@@ -2887,7 +2887,7 @@ void WarlordAi(Monster &monster)
 	if (IsTileVisible(monster.position.tile)) {
 		if (monster.talkMsg == TEXT_WARLRD9 && monster.goal == MonsterGoal::Inquiring)
 			monster.mode = MonsterMode::Talk;
-		if (monster.talkMsg == TEXT_WARLRD9 && !effect_is_playing(USFX_WARLRD1) && monster.goal == MonsterGoal::Talking) {
+		if (monster.talkMsg == TEXT_WARLRD9 && !effect_is_playing(SfxID::Warlord) && monster.goal == MonsterGoal::Talking) {
 			monster.activeForTicks = UINT8_MAX;
 			monster.talkMsg = TEXT_NONE;
 			monster.goal = MonsterGoal::Normal;
@@ -3982,20 +3982,20 @@ void ProcessMonsters()
 
 		if (IsTileVisible(monster.position.tile) && monster.activeForTicks == 0) {
 			if (monster.type().type == MT_CLEAVER) {
-				PlaySFX(USFX_CLEAVER);
+				PlaySFX(SfxID::ButcherGreeting);
 			}
 			if (monster.type().type == MT_NAKRUL) {
 				if (sgGameInitInfo.bCowQuest != 0) {
-					PlaySFX(USFX_NAKRUL6);
+					PlaySFX(SfxID::NaKrul6);
 				} else {
 					if (IsUberRoomOpened)
-						PlaySFX(USFX_NAKRUL4);
+						PlaySFX(SfxID::NaKrul4);
 					else
-						PlaySFX(USFX_NAKRUL5);
+						PlaySFX(SfxID::NaKrul5);
 				}
 			}
 			if (monster.type().type == MT_DEFILER)
-				PlaySFX(USFX_DEFILER8);
+				PlaySFX(SfxID::Defiler8);
 			UpdateEnemy(monster);
 		}
 

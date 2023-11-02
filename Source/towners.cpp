@@ -21,7 +21,7 @@ int CowMsg;
 int CowClicks;
 
 /** Specifies the active sound effect ID for interacting with cows. */
-_sfx_id CowPlaying = SFX_NONE;
+SfxID CowPlaying = SfxID::None;
 
 struct TownerData {
 	_talker_id type;
@@ -564,17 +564,17 @@ void TalkToStoryteller(Player &player, Towner & /*storyteller*/)
 
 void TalkToCow(Player &player, Towner &cow)
 {
-	if (CowPlaying != SFX_NONE && effect_is_playing(CowPlaying))
+	if (CowPlaying != SfxID::None && effect_is_playing(CowPlaying))
 		return;
 
 	CowClicks++;
 
-	CowPlaying = TSFX_COW1;
+	CowPlaying = SfxID::Cow1;
 	if (CowClicks == 4) {
 		if (gbIsSpawn)
 			CowClicks = 0;
 
-		CowPlaying = TSFX_COW2;
+		CowPlaying = SfxID::Cow2;
 	} else if (CowClicks >= 8 && !gbIsSpawn) {
 		CowClicks = 4;
 

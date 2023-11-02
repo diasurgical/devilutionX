@@ -217,7 +217,7 @@ use_enum_as_flags(SpellDataFlags);
 
 struct SpellData {
 	const char *sNameText;
-	_sfx_id sSFX;
+	SfxID sSFX;
 	uint16_t bookCost10;
 	uint8_t staffCost10;
 	uint8_t sManaCost;
