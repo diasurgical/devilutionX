@@ -11,6 +11,96 @@
 
 namespace devilution {
 
+enum class TranslationFile : uint16_t {
+	ZombieGold, // default
+	ZombieBlueRed,
+	ZombieGray,
+	ZombieYellow,
+	FallenSpearRed, // default
+	FallenSpearBlue,
+	FallenSpearDarkBlue,
+	FallenSpearBrown,
+	FallenSpearOrange,
+	FallenSpearRedYellow,
+	FallenSpearYellow,
+	SkeletonAxeRed, // default
+	SkeletonAxeBlack,
+	SkeletonAxeBlue,
+	SkeletonAxeDarkRed,
+	SkeletonAxeGold,
+	SkeletonAxeWhite,
+	FallenSwordRed, // default
+	FallenSwordBlue,
+	FallenSwordDarkBlue,
+	FallenSwordBrown,
+	FallenSwordOrange,
+	FallenSwordRedYellow,
+	FallenSwordYellow,
+	ScavengerRed, // default
+	ScavengerBlueRed,
+	ScavengerOrange,
+	ScavengerGray,
+	ScavengerYellowBlue,
+	SkeletonBowRed, // default
+	SkeletonBowBlack,
+	SkeletonBowBlue,
+	SkeletonBowDarkRed,
+	SkeletonBowGold,
+	SkeletonBowWhite,
+	SkeletonSwordRed, // default
+	SkeletonSwordBlack,
+	SkeletonSwordBlue,
+	SkeletonSwordDarkRed,
+	SkeletonSwordGold,
+	SkeletonSwordWhite,
+	TwinSneakGray, // default
+	SneakGray, // default
+	SneakYellow,
+	SneakRed,
+	SneakGold,
+	GoatLordBlack, // default
+	GoatMaceOrange, // default
+	GoatMaceGold,
+	GoatMaceTest1,
+	GoatMaceGray,
+	GoatMaceRed,
+	GoatMaceTest2,
+	BatBlue, // default
+	BatGray,
+	BatOrange,
+	BatRed,
+	GoatBowOrange, // default
+	GoatBowGold,
+	GoatBowGray,
+	GoatBowRed,
+	AcidGold, // default
+	AcidBlue,
+	AcidBlack,
+	AcidRed,
+	SkeletonKingRed, // default
+	ButcherRed, // default
+	FatRed, // default
+	FatBlue,
+	FatGold,
+	FatDarkRed,
+	WormGray, // TODO: Double check this, not sure
+	MagmaBlackOrange, // default
+	MagmaBlueOrange,
+	MagmaRedBlue,
+	MagmaBlackYellow,
+
+	UndeadBalrogRed, // default
+
+	FireManYellowOrange, // default
+
+	BigFallenRed, // default
+
+	UnravelerGold, // default
+
+	DarkMageBlack, // default
+
+};
+
 enum class MonsterAIID : int8_t {
 	Zombie,
 	Fat,
