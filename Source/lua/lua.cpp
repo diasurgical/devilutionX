@@ -175,7 +175,7 @@ void LuaInitialize()
 	const sol::table loaded = lua.create_table_with(
 	    "devilutionx.version", PROJECT_VERSION,
 	    "devilutionx.log", LuaLogModule(lua),
-	    "devilutionx.audio", LuaLogModule(lua),
+	    "devilutionx.audio", LuaAudioModule(lua),
 	    "devilutionx.render", LuaRenderModule(lua),
 	    "devilutionx.message", [](std::string_view text) { EventPlrMsg(text, UiFlags::ColorRed); });
 	lua["require"] = lua["requireGen"](loaded, LuaLoadScriptFromAssets);
