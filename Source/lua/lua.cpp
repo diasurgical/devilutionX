@@ -6,6 +6,8 @@
 
 #include <sol/sol.hpp>
 
+#include <config.h>
+
 #include "appfat.h"
 #include "engine/assets.hpp"
 #include "lua/modules/log.hpp"
@@ -159,6 +161,7 @@ void LuaInitialize()
 	// Registering devilutionx object table
 	CheckResult(lua.safe_script(RequireGenSrc), /*optional=*/false);
 	const sol::table loaded = lua.create_table_with(
+	    "devilutionx.version", PROJECT_VERSION,
 	    "devilutionx.log", LuaLogModule(lua),
 	    "devilutionx.render", LuaRenderModule(lua),
 	    "devilutionx.message", [](std::string_view text) { EventPlrMsg(text, UiFlags::ColorRed); });
