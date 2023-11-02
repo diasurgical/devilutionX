@@ -13,6 +13,6 @@ namespace devilution {
 void LuaInitialize();
 void LuaShutdown();
 void LuaEvent(std::string_view name);
-sol::state &LuaState();
+sol::state &GetLuaState();
 
 } // namespace devilution

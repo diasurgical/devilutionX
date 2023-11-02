@@ -38,7 +38,7 @@ int LuaPrintToConsole(lua_State *state)
 
 void CreateReplEnvironment()
 {
-	sol::state &lua = LuaState();
+	sol::state &lua = GetLuaState();
 	replEnv.emplace(lua, sol::create, lua.globals());
 	replEnv->set("print", LuaPrintToConsole);
 }
@@ -53,7 +53,7 @@ sol::environment &ReplEnvironment()
 sol::protected_function_result TryRunLuaAsExpressionThenStatement(std::string_view code)
 {
 	// Try to compile as an expression first. This also how the `lua` repl is implemented.
-	sol::state &lua = LuaState();
+	sol::state &lua = GetLuaState();
 	std::string expression = StrCat("return ", code, ";");
 	sol::detail::typical_chunk_name_t basechunkname = {};
 	sol::load_status status = static_cast<sol::load_status>(
