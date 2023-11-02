@@ -116,7 +116,6 @@ bool IsTownItemValid(uint16_t iCreateInfo, const Player &player)
 bool IsUniqueMonsterItemValid(uint16_t iCreateInfo, uint32_t dwBuff)
 {
 	const uint8_t level = iCreateInfo & CF_LEVEL;
-	const bool isHellfireItem = (dwBuff & CF_HELLFIRE) != 0;
 
 	// Check all unique monster levels to see if they match the item level
 	for (int i = 0; UniqueMonstersData[i].mName != nullptr; i++) {

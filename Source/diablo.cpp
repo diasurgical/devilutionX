@@ -1764,7 +1764,7 @@ void InitKeymapActions()
 		    "QuickMessage{}",
 		    N_("Quick Message {}"),
 		    N_("Use Quick Message in chat."),
-		    (i < 4) ? SDLK_F9 + i : SDLK_UNKNOWN,
+		    (i < 4) ? static_cast<SDL_Keycode>(SDLK_F9 + i) : SDLK_UNKNOWN,
 		    [i]() { DiabloHotkeyMsg(i); },
 		    nullptr,
 		    nullptr,
