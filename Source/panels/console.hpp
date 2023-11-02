@@ -14,6 +14,7 @@ void OpenConsole();
 bool ConsoleHandleEvent(const SDL_Event &event);
 void DrawConsole(const Surface &out);
 void PrintToConsole(std::string_view text);
+void PrintWarningToConsole(std::string_view text);
 
 } // namespace devilution
 #endif // _DEBUG

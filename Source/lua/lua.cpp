@@ -89,6 +89,16 @@ int LuaPrint(lua_State *state)
 	return 0;
 }
 
+void LuaWarn(void *userData, const char *message, int continued)
+{
+	static std::string warnBuffer;
+	warnBuffer.append(message);
+	if (continued != 0)
+		return;
+	LogWarn("{}", warnBuffer);
+	warnBuffer.clear();
+}
+
 bool CheckResult(sol::protected_function_result result, bool optional)
 {
 	const bool valid = result.valid();
@@ -141,6 +151,7 @@ void LuaInitialize()
 	    .compiledScripts = {},
 	});
 	sol::state &lua = CurrentLuaState->sol;
+	lua_setwarnf(lua.lua_state(), LuaWarn, /*ud=*/nullptr);
 	lua.open_libraries(
 	    sol::lib::base,
 	    sol::lib::package,
