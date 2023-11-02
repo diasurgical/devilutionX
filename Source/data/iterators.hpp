@@ -4,9 +4,11 @@
 #include <ostream>
 
 #include <expected.hpp>
+#include <function_ref.hpp>
 
 #include "parser.hpp"
 #include "utils/parse_int.hpp"
+#include "utils/str_split.hpp"
 
 namespace devilution {
 
@@ -109,6 +111,54 @@ public:
 		}
 
 		return mapError(result.ec);
+	}
+
+	[[nodiscard]] tl::expected<void, Error> parseBool(bool &destination)
+	{
+		const std::string_view str = value();
+		if (str == "true") {
+			destination = true;
+			return {};
+		}
+		if (str == "false") {
+			destination = false;
+			return {};
+		}
+		return tl::make_unexpected(DataFileField::Error::InvalidValue);
+	}
+
+	template <typename T, size_t N>
+	[[nodiscard]] tl::expected<void, Error> parseIntArray(T (&destination)[N])
+	{
+		size_t i = 0;
+		for (const std::string_view part : SplitByChar(value(), ',')) {
+			if (i == N)
+				return tl::make_unexpected(Error::InvalidValue);
+			const std::from_chars_result result
+			    = std::from_chars(part.data(), part.data() + part.size(), destination[i]);
+			if (result.ec != std::errc())
+				return mapError(result.ec);
+			++i;
+		}
+		if (i != N)
+			return tl::make_unexpected(Error::InvalidValue);
+		return {};
+	}
+
+	template <typename T, typename ParseFn>
+	[[nodiscard]] tl::expected<void, Error> parseEnumList(T &destination, ParseFn &&parseFn)
+	{
+		destination = {};
+		const std::string_view str = value();
+		if (str.empty())
+			return {};
+		for (const std::string_view part : SplitByChar(str, ',')) {
+			auto result = parseFn(part);
+			if (!result.has_value())
+				return tl::make_unexpected(Error::InvalidValue);
+			destination |= result.value();
+		}
+		return {};
 	}
 
 	template <typename T>

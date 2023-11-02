@@ -57,6 +57,7 @@
 #include "menu.h"
 #include "minitext.h"
 #include "missiles.h"
+#include "monstdat.h"
 #include "movie.h"
 #include "multi.h"
 #include "nthread.h"
@@ -2473,6 +2474,9 @@ int DiabloMain(int argc, char **argv)
 
 	// Load dynamic data before we go into the menu as we need to initialise player characters in memory pretty early.
 	LoadPlayerDataFiles();
+
+	// TODO: We can probably load this much later (when the game is starting).
+	LoadMonsterData();
 
 	DiabloInit();
 #ifdef __UWP__

@@ -105,7 +105,7 @@ std::string DebugCmdSpawnMonster(std::string name, std::optional<unsigned> count
 
 	for (int i = 0; i < NUM_MTYPES; i++) {
 		auto mondata = MonstersData[i];
-		const std::string monsterName = AsciiStrToLower(mondata.name);
+		const std::string monsterName = AsciiStrToLower(std::string_view(mondata.name));
 		if (monsterName.find(name) == std::string::npos)
 			continue;
 		mtype = i;

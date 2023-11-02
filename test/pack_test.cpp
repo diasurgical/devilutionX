@@ -2,6 +2,7 @@
 
 #include <gtest/gtest.h>
 
+#include "monstdat.h"
 #include "pack.h"
 #include "playerdat.hpp"
 #include "utils/paths.h"
@@ -943,6 +944,7 @@ public:
 
 		SwapLE(testPack);
 		LoadPlayerDataFiles();
+		LoadMonsterData();
 		UnPackPlayer(testPack, *MyPlayer);
 	}
 };

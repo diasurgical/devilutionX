@@ -5,6 +5,7 @@
 #include "diablo.h"
 #include "engine/demomode.h"
 #include "lua/lua.hpp"
+#include "monstdat.h"
 #include "options.h"
 #include "pfile.h"
 #include "playerdat.hpp"
@@ -52,6 +53,7 @@ void RunTimedemo(std::string timedemoFolderName)
 	demo::InitPlayBack(demoNumber, true);
 
 	LoadPlayerDataFiles();
+	LoadMonsterData();
 	pfile_ui_set_hero_infos(Dummy_GetHeroInfo);
 	gbLoadGame = true;
 
