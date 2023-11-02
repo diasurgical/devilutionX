@@ -132,8 +132,14 @@ use_enum_as_flags(MissileDataFlags);
 struct MissileData {
 	void (*mAddProc)(Missile &, AddMissileParameter &);
 	void (*mProc)(Missile &);
-	_sfx_id mlSFX;
-	_sfx_id miSFX;
+	/**
+	 * @brief Sound emitted when cast.
+	 */
+	SfxID mlSFX;
+	/**
+	 * @brief Sound emitted on impact.
+	 */
+	SfxID miSFX;
 	MissileGraphicID mFileNum;
 	MissileDataFlags flags;
 	MissileMovementDistribution movementDistribution;

@@ -79,7 +79,7 @@ void GmenuUpDown(bool isDown)
 			}
 			if (sgpCurrItem->enabled()) {
 				if (i != 0)
-					PlaySFX(IS_TITLEMOV);
+					PlaySFX(SfxID::MenuMove);
 				return;
 			}
 		}
@@ -274,12 +274,12 @@ bool gmenu_presskeys(SDL_Keycode vkey)
 	case SDLK_KP_ENTER:
 	case SDLK_RETURN:
 		if (sgpCurrItem->enabled()) {
-			PlaySFX(IS_TITLEMOV);
+			PlaySFX(SfxID::MenuMove);
 			sgpCurrItem->fnMenu(true);
 		}
 		break;
 	case SDLK_ESCAPE:
-		PlaySFX(IS_TITLEMOV);
+		PlaySFX(SfxID::MenuMove);
 		gmenu_set_items(nullptr, nullptr);
 		break;
 	case SDLK_SPACE:
@@ -351,7 +351,7 @@ bool gmenu_left_mouse(bool isDown)
 		return true;
 	}
 	sgpCurrItem = pItem;
-	PlaySFX(IS_TITLEMOV);
+	PlaySFX(SfxID::MenuMove);
 	if (pItem->isSlider()) {
 		isDraggingSlider = GmenuMouseIsOverSlider();
 		gmenu_on_mouse_move();

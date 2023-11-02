@@ -234,7 +234,7 @@ void PrintQLString(const Surface &out, int x, int y, std::string_view str, bool 
 
 void StartPWaterPurify()
 {
-	PlaySfxLoc(IS_QUESTDN, MyPlayer->position.tile);
+	PlaySfxLoc(SfxID::QuestDone, MyPlayer->position.tile);
 	LoadPalette("levels\\l3data\\l3pwater.pal", false);
 	UpdatePWaterPalette();
 	WaterDone = 32;
@@ -887,7 +887,7 @@ void QuestlogUp()
 		if (SelectedQuest < 0) {
 			SelectedQuest = FirstFinishedQuest - 1;
 		}
-		PlaySFX(IS_TITLEMOV);
+		PlaySFX(SfxID::MenuMove);
 	}
 }
 
@@ -900,13 +900,13 @@ void QuestlogDown()
 		if (SelectedQuest == FirstFinishedQuest) {
 			SelectedQuest = 0;
 		}
-		PlaySFX(IS_TITLEMOV);
+		PlaySFX(SfxID::MenuMove);
 	}
 }
 
 void QuestlogEnter()
 {
-	PlaySFX(IS_TITLSLCT);
+	PlaySFX(SfxID::MenuSelect);
 	if (EncounteredQuestCount != 0 && SelectedQuest >= 0 && SelectedQuest < FirstFinishedQuest)
 		InitQTextMsg(Quests[EncounteredQuests[SelectedQuest]]._qmsg);
 	QuestLogIsOpen = false;

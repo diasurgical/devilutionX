@@ -49,7 +49,7 @@ void SetPortalStats(int i, bool o, Point position, int lvl, dungeon_type lvltype
 
 void AddPortalMissile(int i, Point position, bool sync)
 {
-	auto *missile = AddMissile({ 0, 0 }, position, Direction::South, MissileID::TownPortal, TARGET_MONSTERS, i, 0, 0, /*parent=*/nullptr, SFX_NONE);
+	auto *missile = AddMissile({ 0, 0 }, position, Direction::South, MissileID::TownPortal, TARGET_MONSTERS, i, 0, 0, /*parent=*/nullptr, SfxID::None);
 	if (missile != nullptr) {
 		// Don't show portal opening animation if we sync existing portals
 		if (sync)

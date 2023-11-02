@@ -394,7 +394,7 @@ void AddRedPortal(Missile &missile, AddMissileParameter &parameter);
 void AddDiabloApocalypse(Missile &missile, AddMissileParameter &parameter);
 Missile *AddMissile(WorldTilePosition src, WorldTilePosition dst, Direction midir, MissileID mitype,
     mienemy_type micaster, int id, int midam, int spllvl,
-    Missile *parent = nullptr, std::optional<_sfx_id> lSFX = std::nullopt);
+    Missile *parent = nullptr, std::optional<SfxID> lSFX = std::nullopt);
 void ProcessElementalArrow(Missile &missile);
 void ProcessArrow(Missile &missile);
 void ProcessGenericProjectile(Missile &missile);

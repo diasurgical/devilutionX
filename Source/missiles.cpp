@@ -473,7 +473,7 @@ void CheckMissileCol(Missile &missile, DamageType damageType, int minDamage, int
 	}
 
 	const MissileData &missileData = GetMissileData(missile._mitype);
-	if (missile._mirange == 0 && missileData.miSFX != -1)
+	if (missile._mirange == 0 && missileData.miSFX != SfxID::None)
 		PlaySfxLoc(missileData.miSFX, missile.position.tile);
 }
 
@@ -1359,7 +1359,7 @@ void AddStealPotions(Missile &missile, AddMissileParameter & /*parameter*/)
 				beltItem._iStatFlag = true;
 			}
 			if (!hasPlayedSFX) {
-				PlaySfxLoc(IS_POPPOP2, target);
+				PlaySfxLoc(SfxID::PodPop, target);
 				hasPlayedSFX = true;
 			}
 		}
@@ -1385,7 +1385,7 @@ void AddStealMana(Missile &missile, AddMissileParameter & /*parameter*/)
 		player._pManaBase = player._pMana + player._pMaxManaBase - player._pMaxMana;
 		CalcPlrInv(player, false);
 		RedrawComponent(PanelDrawComponent::Mana);
-		PlaySfxLoc(TSFX_COW7, *trappedPlayerPosition);
+		PlaySfxLoc(SfxID::Pig, *trappedPlayerPosition);
 	}
 
 	missile._miDelFlag = true;
@@ -2708,7 +2708,7 @@ void AddDiabloApocalypse(Missile &missile, AddMissileParameter & /*parameter*/)
 
 Missile *AddMissile(WorldTilePosition src, WorldTilePosition dst, Direction midir, MissileID mitype,
     mienemy_type micaster, int id, int midam, int spllvl,
-    Missile *parent, std::optional<_sfx_id> lSFX)
+    Missile *parent, std::optional<SfxID> lSFX)
 {
 	if (Missiles.size() >= Missiles.max_size()) {
 		return nullptr;
@@ -2748,7 +2748,7 @@ Missile *AddMissile(WorldTilePosition src, WorldTilePosition dst, Direction midi
 		lSFX = missileData.mlSFX;
 	}
 
-	if (*lSFX != SFX_NONE) {
+	if (*lSFX != SfxID::None) {
 		PlaySfxLoc(*lSFX, missile.position.start);
 	}
 
@@ -3175,7 +3175,7 @@ void ProcessSearch(Missile &missile)
 	const Player &player = Players[missile._misource];
 
 	missile._miDelFlag = true;
-	PlaySfxLoc(IS_CAST7, player.position.tile);
+	PlaySfxLoc(SfxID::SpellEnd, player.position.tile);
 	if (&player == MyPlayer)
 		AutoMapShowItems = false;
 }

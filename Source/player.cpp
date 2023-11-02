@@ -438,7 +438,7 @@ bool DoWalk(Player &player, int variant)
 	if (*sgOptions.Audio.walkingSound && (leveltype != DTYPE_TOWN || sgGameInitInfo.bRunInTown == 0)) {
 		if (player.AnimInfo.currentFrame == 0
 		    || player.AnimInfo.currentFrame == 4) {
-			PlaySfxLoc(PS_WALK1, player.position.tile);
+			PlaySfxLoc(SfxID::Walk, player.position.tile);
 		}
 	}
 
@@ -818,7 +818,7 @@ bool PlrHitObj(const Player &player, Object &targetObject)
 bool DoAttack(Player &player)
 {
 	if (player.AnimInfo.currentFrame == player._pAFNum - 2) {
-		PlaySfxLoc(PS_SWING, player.position.tile);
+		PlaySfxLoc(SfxID::Swing, player.position.tile);
 	}
 
 	bool didhit = false;
@@ -938,7 +938,7 @@ bool DoRangeAttack(Player &player)
 		    0);
 
 		if (arrow == 0 && mistype != MissileID::SpectralArrow) {
-			PlaySfxLoc(arrows != 1 ? IS_STING1 : PS_BFIRE, player.position.tile);
+			PlaySfxLoc(arrows != 1 ? SfxID::ShootBow2 : SfxID::ShootBow, player.position.tile);
 		}
 
 		if (DamageWeapon(player, 40)) {
@@ -1753,9 +1753,9 @@ bool Player::IsPositionInPath(Point pos)
 
 void Player::Say(HeroSpeech speechId) const
 {
-	_sfx_id soundEffect = herosounds[static_cast<size_t>(_pClass)][static_cast<size_t>(speechId)];
+	SfxID soundEffect = herosounds[static_cast<size_t>(_pClass)][static_cast<size_t>(speechId)];
 
-	if (soundEffect == SFX_NONE)
+	if (soundEffect == SfxID::None)
 		return;
 
 	PlaySfxLoc(soundEffect, position.tile);
@@ -1763,9 +1763,9 @@ void Player::Say(HeroSpeech speechId) const
 
 void Player::SaySpecific(HeroSpeech speechId) const
 {
-	_sfx_id soundEffect = herosounds[static_cast<size_t>(_pClass)][static_cast<size_t>(speechId)];
+	SfxID soundEffect = herosounds[static_cast<size_t>(_pClass)][static_cast<size_t>(speechId)];
 
-	if (soundEffect == SFX_NONE || effect_is_playing(soundEffect))
+	if (soundEffect == SfxID::None || effect_is_playing(soundEffect))
 		return;
 
 	PlaySfxLoc(soundEffect, position.tile, false);
@@ -2393,8 +2393,8 @@ void NextPlrLevel(Player &player)
 		FocusOnCharInfo();
 
 	CalcPlrInv(player, true);
-	PlaySFX(IS_IHARM);
-	PlaySFX(IS_ISIGN);
+	PlaySFX(SfxID::ItemArmor);
+	PlaySFX(SfxID::ItemSign);
 }
 
 void Player::_addExperience(uint32_t experience, int levelDelta)
@@ -2579,7 +2579,7 @@ void StartPlrBlock(Player &player, Direction dir)
 		return;
 	}
 
-	PlaySfxLoc(IS_ISWORD, player.position.tile);
+	PlaySfxLoc(SfxID::ItemSword, player.position.tile);
 
 	int8_t skippedAnimationFrames = 0;
 	if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastBlock)) {
@@ -2973,16 +2973,16 @@ void ProcessPlayers()
 		sfxdelay--;
 		if (sfxdelay == 0) {
 			switch (sfxdnum) {
-			case USFX_DEFILER1:
+			case SfxID::Defiler1:
 				InitQTextMsg(TEXT_DEFILER1);
 				break;
-			case USFX_DEFILER2:
+			case SfxID::Defiler2:
 				InitQTextMsg(TEXT_DEFILER2);
 				break;
-			case USFX_DEFILER3:
+			case SfxID::Defiler3:
 				InitQTextMsg(TEXT_DEFILER3);
 				break;
-			case USFX_DEFILER4:
+			case SfxID::Defiler4:
 				InitQTextMsg(TEXT_DEFILER4);
 				break;
 			default:
@@ -3443,11 +3443,11 @@ void PlayDungMsgs()
 		myPlayer.pDungMsgs |= DungMsgHell;
 	} else if (!setlevel && currlevel == 16 && !myPlayer._pLvlVisited[16] && (myPlayer.pDungMsgs & DungMsgDiablo) == 0) {
 		sfxdelay = 40;
-		sfxdnum = PS_DIABLVLINT;
+		sfxdnum = SfxID::DiabloGreeting;
 		myPlayer.pDungMsgs |= DungMsgDiablo;
 	} else if (!setlevel && currlevel == 17 && !myPlayer._pLvlVisited[17] && (myPlayer.pDungMsgs2 & 1) == 0) {
 		sfxdelay = 10;
-		sfxdnum = USFX_DEFILER1;
+		sfxdnum = SfxID::Defiler1;
 		Quests[Q_DEFILER]._qactive = QUEST_ACTIVE;
 		Quests[Q_DEFILER]._qlog = true;
 		Quests[Q_DEFILER]._qmsg = TEXT_DEFILER1;
@@ -3455,14 +3455,14 @@ void PlayDungMsgs()
 		myPlayer.pDungMsgs2 |= 1;
 	} else if (!setlevel && currlevel == 19 && !myPlayer._pLvlVisited[19] && (myPlayer.pDungMsgs2 & 4) == 0) {
 		sfxdelay = 10;
-		sfxdnum = USFX_DEFILER3;
+		sfxdnum = SfxID::Defiler3;
 		myPlayer.pDungMsgs2 |= 4;
 	} else if (!setlevel && currlevel == 21 && !myPlayer._pLvlVisited[21] && (myPlayer.pDungMsgs & 32) == 0) {
 		myPlayer.Say(HeroSpeech::ThisIsAPlaceOfGreatPower, 30);
 		myPlayer.pDungMsgs |= 32;
 	} else if (setlevel && setlvlnum == SL_SKELKING && !gbIsSpawn && !myPlayer._pSLvlVisited[SL_SKELKING] && Quests[Q_SKELKING]._qactive == QUEST_ACTIVE) {
 		sfxdelay = 10;
-		sfxdnum = USFX_SKING1;
+		sfxdnum = SfxID::LeoricGreeting;
 	} else {
 		sfxdelay = 0;
 	}

@@ -3072,7 +3072,7 @@ bool IsDiabloAlive(bool playSFX)
 {
 	if (Quests[Q_DIABLO]._qactive == QUEST_DONE && !gbIsMultiplayer) {
 		if (playSFX)
-			PlaySFX(USFX_DIABLOD);
+			PlaySFX(SfxID::DiabloDeath);
 		return false;
 	}
 

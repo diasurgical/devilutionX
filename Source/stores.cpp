@@ -664,7 +664,7 @@ void FillManaPlayer()
 	Player &myPlayer = *MyPlayer;
 
 	if (myPlayer._pMana != myPlayer._pMaxMana) {
-		PlaySFX(IS_CAST8);
+		PlaySFX(SfxID::CastHealing);
 	}
 	myPlayer._pMana = myPlayer._pMaxMana;
 	myPlayer._pManaBase = myPlayer._pMaxManaBase;
@@ -1014,7 +1014,7 @@ void HealPlayer()
 	Player &myPlayer = *MyPlayer;
 
 	if (myPlayer._pHitPoints != myPlayer._pMaxHP) {
-		PlaySFX(IS_CAST8);
+		PlaySFX(SfxID::CastHealing);
 	}
 	myPlayer._pHitPoints = myPlayer._pMaxHP;
 	myPlayer._pHPBase = myPlayer._pMaxHPBase;
@@ -2492,7 +2492,7 @@ void StoreESC()
 
 void StoreUp()
 {
-	PlaySFX(IS_TITLEMOV);
+	PlaySFX(SfxID::MenuMove);
 	if (stextsel == -1) {
 		return;
 	}
@@ -2529,7 +2529,7 @@ void StoreUp()
 
 void StoreDown()
 {
-	PlaySFX(IS_TITLEMOV);
+	PlaySFX(SfxID::MenuMove);
 	if (stextsel == -1) {
 		return;
 	}
@@ -2566,7 +2566,7 @@ void StoreDown()
 
 void StorePrior()
 {
-	PlaySFX(IS_TITLEMOV);
+	PlaySFX(SfxID::MenuMove);
 	if (stextsel != -1 && stextscrl) {
 		if (stextsel == stextup) {
 			stextsval = std::max(stextsval - 4, 0);
@@ -2578,7 +2578,7 @@ void StorePrior()
 
 void StoreNext()
 {
-	PlaySFX(IS_TITLEMOV);
+	PlaySFX(SfxID::MenuMove);
 	if (stextsel != -1 && stextscrl) {
 		if (stextsel == stextdown) {
 			if (stextsval < stextsmax)
@@ -2616,7 +2616,7 @@ void StoreEnter()
 		return;
 	}
 
-	PlaySFX(IS_TITLSLCT);
+	PlaySFX(SfxID::MenuSelect);
 	switch (stextflag) {
 	case TalkID::Smith:
 		SmithEnter();
