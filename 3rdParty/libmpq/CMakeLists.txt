@@ -10,8 +10,8 @@ include(functions/FetchContent_MakeAvailableExcludeFromAll)
 
 include(FetchContent)
 FetchContent_Declare(libmpq
-    URL https://github.com/diasurgical/libmpq/archive/fc2ec5c0a83106f971602dec06dcdbc50a8bd5d4.tar.gz
-    URL_HASH MD5=1b3964264015792387f71f3f2325661d
+    URL https://github.com/diasurgical/libmpq/archive/7c2924d4553513eba1a70bbdb558198dd8c2726a.tar.gz
+    URL_HASH MD5=315c88c02b45851cdfee8460322de044
 )
 FetchContent_MakeAvailableExcludeFromAll(libmpq)
 
