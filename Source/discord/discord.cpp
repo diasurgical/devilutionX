@@ -1,5 +1,10 @@
 #include "discord.h"
 
+#ifdef _WIN32
+// On Windows, discordsrc-src/cpp/discord.h includes windows.h
+#define NOMINMAX 1
+#define WIN32_LEAN_AND_MEAN
+#endif
 #include <discordsrc-src/cpp/discord.h>
 
 #include <algorithm>
