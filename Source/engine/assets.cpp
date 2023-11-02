@@ -75,6 +75,8 @@ bool FindMpqFile(std::string_view filename, MpqArchive **archive, uint32_t *file
 AssetRef FindAsset(std::string_view filename)
 {
 	AssetRef result;
+	if (filename.empty() || filename.back() == '\\')
+		return result;
 	result.path[0] = '\0';
 
 	char pathBuf[AssetRef::PathBufSize];
@@ -113,6 +115,9 @@ AssetRef FindAsset(std::string_view filename)
 AssetRef FindAsset(std::string_view filename)
 {
 	AssetRef result;
+	if (filename.empty() || filename.back() == '\\')
+		return result;
+
 	std::string relativePath { filename };
 #ifndef _WIN32
 	std::replace(relativePath.begin(), relativePath.end(), '\\', '/');
@@ -204,6 +209,28 @@ SDL_RWops *OpenAssetAsSdlRwOps(std::string_view filename, bool threadsafe)
 #else
 	return OpenAsset(filename, threadsafe).release();
 #endif
+}
+
+tl::expected<AssetData, std::string> LoadAsset(std::string_view path)
+{
+	AssetRef ref = FindAsset(path);
+	if (!ref.ok()) {
+		return tl::make_unexpected(StrCat("Asset not found: ", path));
+	}
+
+	const size_t size = ref.size();
+	std::unique_ptr<char[]> data { new char[size] };
+
+	AssetHandle handle = OpenAsset(std::move(ref));
+	if (!handle.ok()) {
+		return tl::make_unexpected(StrCat("Failed to open asset: ", path, "\n", handle.error()));
+	}
+
+	if (size > 0 && !handle.read(data.get(), size)) {
+		return tl::make_unexpected(StrCat("Read failed: ", path, "\n", handle.error()));
+	}
+
+	return AssetData { std::move(data), size };
 }
 
 } // namespace devilution
