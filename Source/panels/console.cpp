@@ -14,6 +14,7 @@
 #include "DiabloUI/text_input.hpp"
 #include "control.h"
 #include "engine.h"
+#include "engine/assets.hpp"
 #include "engine/displacement.hpp"
 #include "engine/dx.h"
 #include "engine/palette.h"
@@ -39,6 +40,7 @@ constexpr std::string_view HelpText =
     " Up/Down to fill the input from history,"
     " Shift+Up/Down to fill the input from output history,"
     " Ctrl+L to clear history, Esc to close.";
+std::optional<tl::expected<AssetData, std::string>> ConsolePrelude;
 
 bool IsConsoleVisible;
 char ConsoleInputBuffer[4096];
@@ -313,12 +315,33 @@ void NextOutput()
 	NextHistoryItem(IsHistoryOutputLine);
 }
 
+void AddInitialConsoleLines()
+{
+	if (ConsolePrelude->has_value()) {
+		std::string_view prelude { **ConsolePrelude };
+		if (!prelude.empty() && prelude.back() == '\n')
+			prelude.remove_suffix(1);
+		AddConsoleLine(ConsoleLine { .type = ConsoleLine::Help, .text = StrCat(HelpText, "\n", prelude) });
+	} else {
+		AddConsoleLine(ConsoleLine { .type = ConsoleLine::Help, .text = std::string(HelpText) });
+		AddConsoleLine(ConsoleLine { .type = ConsoleLine::Error, .text = ConsolePrelude->error() });
+	}
+}
+
 void ClearConsole()
 {
 	ConsoleLines.clear();
 	HistoryIndex = -1;
 	ScrollOffset = 0;
-	AddConsoleLine(ConsoleLine { .type = ConsoleLine::Help, .text = std::string(HelpText) });
+	AddInitialConsoleLines();
+}
+
+void InitConsole()
+{
+	ConsolePrelude = LoadAsset("lua\\repl_prelude.lua");
+	AddInitialConsoleLines();
+	if (ConsolePrelude->has_value())
+		RunLuaReplLine(std::string_view(**ConsolePrelude));
 }
 
 } // namespace
@@ -442,7 +465,7 @@ void DrawConsole(const Surface &out)
 		SDL_StartTextInput();
 		FirstRender = false;
 		if (ConsoleLines.empty()) {
-			AddConsoleLine(ConsoleLine { .type = ConsoleLine::Help, .text = std::string(HelpText) });
+			InitConsole();
 		}
 	}
 

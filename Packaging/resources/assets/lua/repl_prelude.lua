@@ -1,0 +1,5 @@
+log = require('devilutionx.log')
+audio = require('devilutionx.audio')
+render = require('devilutionx.render')
+message = require('devilutionx.message')
+inspect = require('inspect')
