@@ -10,6 +10,7 @@
 
 #include "appfat.h"
 #include "engine/assets.hpp"
+#include "lua/modules/audio.hpp"
 #include "lua/modules/log.hpp"
 #include "lua/modules/render.hpp"
 #include "plrmsg.h"
@@ -163,6 +164,7 @@ void LuaInitialize()
 	const sol::table loaded = lua.create_table_with(
 	    "devilutionx.version", PROJECT_VERSION,
 	    "devilutionx.log", LuaLogModule(lua),
+	    "devilutionx.audio", LuaLogModule(lua),
 	    "devilutionx.render", LuaRenderModule(lua),
 	    "devilutionx.message", [](std::string_view text) { EventPlrMsg(text, UiFlags::ColorRed); });
 	lua["require"] = lua["requireGen"](loaded, LuaLoadScriptFromAssets);
