@@ -6,7 +6,11 @@
 #include "monstdat.h"
 
 #include <cstdint>
+#include <unordered_map>
 
+#include <expected.hpp>
+
+#include "data/file.hpp"
 #include "items.h"
 #include "monster.h"
 #include "textdat.h"
@@ -22,220 +26,17 @@ constexpr uint16_t Uniq(_unique_items item)
 	return static_cast<uint16_t>(T_UNIQ) + item;
 }
 
-const char *const MonsterSpritePaths[] = {
-	"zombie\\zombie",   // Zombie
-	"falspear\\phall",  // FallenSpear
-	"falsword\\fall",   // FallenSword
-	"skelaxe\\sklax",   // SkeletonAxe
-	"skelbow\\sklbw",   // SkeletonBow
-	"skelsd\\sklsr",    // SkeletonCapt
-	"demskel\\demskl",  // SkeletonDemo
-	"sking\\sking",     // SkeletonKing
-	"scav\\scav",       // Scavenger
-	"tsneak\\tsneak",   // InvisibleLor
-	"sneak\\sneak",     // Hidden
-	"goatmace\\goat",   // GoatMace
-	"goatbow\\goatb",   // GoatBow
-	"goatlord\\goatl",  // GoatLord
-	"bat\\bat",         // Bat
-	"acid\\acid",       // AcidBeast
-	"fat\\fat",         // Overlord
-	"fatc\\fatc",       // Butcher
-	"worm\\worm",       // Wyrm
-	"magma\\magma",     // MagmaDemon
-	"rhino\\rhino",     // HornedDemon
-	"thin\\thin",       // StormRider
-	"fireman\\firem",   // Incinerator
-	"bigfall\\fallg",   // DevilKinBrut
-	"gargoyle\\gargo",  // Gargoyle
-	"mega\\mega",       // Slayer
-	"snake\\snake",     // Viper
-	"black\\black",     // BlackKnight
-	"unrav\\unrav",     // Shredded
-	"succ\\scbs",       // Succubus
-	"mage\\mage",       // Counselor
-	"golem\\golem",     // Golem
-	"diablo\\diablo",   // Diablo
-	"darkmage\\dmage",  // ArchLitch
-	"fork\\fork",       // Hellboar
-	"scorp\\scorp",     // Stinger
-	"eye\\eye",         // Psychorb
-	"spider\\spider",   // Arachnon
-	"spawn\\spawn",     // HorkSpawn
-	"wscorp\\wscorp",   // Venomtail
-	"eye2\\eye2",       // Necromorb
-	"bspidr\\bspidr",   // SpiderLord
-	"clasp\\clasp",     // Lashworm
-	"antworm\\worm",    // Torchant
-	"horkd\\horkd",     // HorkDemon
-	"hellbug\\hellbg",  // HellBug
-	"gravdg\\gravdg",   // Gravedigger
-	"rat\\rat",         // Rat
-	"hellbat\\helbat",  // Firebat
-	"lich\\lich",       // Lich
-	"bubba\\bubba",     // CryptDemon
-	"hellbat2\\bhelbt", // Hellbat
-	"lich2\\lich2",     // ArchLich
-	"byclps\\byclps",   // Biclops
-	"flesh\\flesh",     // FleshThing
-	"reaper\\reap",     // Reaper
-	"nkr\\nkr",         // NaKrul
-};
+std::vector<std::string> MonsterSpritePaths;
 
 } // namespace
 
 const char *MonsterData::spritePath() const
 {
-	return MonsterSpritePaths[static_cast<size_t>(spriteId)];
+	return MonsterSpritePaths[static_cast<size_t>(spriteId)].c_str();
 }
 
 /** Contains the data related to each monster ID. */
-const MonsterData MonstersData[] = {
-	// clang-format off
-// _monster_id     name,                                     soundSuffix,      trnFile,             spriteId,                         availability,                 width,  image, hasSpecial,  hasSpecialSound,  frames[6],                  rate[6],               minDunLvl,  maxDunLvl,  level,  hitPointsMinimum,  hitPointsMaximum, ai,                          abilityFlags,                                          intelligence,  toHit,  animFrameNum,  minDamage,  maxDamage,  toHitSpecial,  animFrameNumSpecial,  minDamageSpecial,  maxDamageSpecial,  armorClass, monsterClass,         resistance,                                                  resistanceHell,                                               selectionType, treasure,              exp
-
-// TRANSLATORS: Monster Block start
-/* MT_NZOMBIE */ { P_("monster", "Zombie"),                  nullptr,          nullptr,             MonsterSpriteId::Zombie,          MonsterAvailability::Always,    128,    799, false,       false,            { 11, 24, 12,  6, 16,  0 }, { 4, 1, 1, 1, 1, 1 },          1,          2,      1,                 4,                 7, MonsterAIID::Zombie,         0,                                                                0,     10,             8,          2,          5,             0,                    0,                 0,                 0,           5, MonsterClass::Undead, IMMUNE_MAGIC,                                                IMMUNE_MAGIC,                                                             3, 0,                      54 },
-/* MT_BZOMBIE */ { P_("monster", "Ghoul"),                   nullptr,          "zombie\\bluered",   MonsterSpriteId::Zombie,          MonsterAvailability::Always,    128,    799, false,       false,            { 11, 24, 12,  6, 16,  0 }, { 4, 1, 1, 1, 1, 1 },          2,          3,      2,                 7,                11, MonsterAIID::Zombie,         0,                                                                1,     10,             8,          3,         10,             0,                    0,                 0,                 0,          10, MonsterClass::Undead, IMMUNE_MAGIC,                                                IMMUNE_MAGIC,                                                             3, 0,                      58 },
-/* MT_GZOMBIE */ { P_("monster", "Rotting Carcass"),         nullptr,          "zombie\\grey",      MonsterSpriteId::Zombie,          MonsterAvailability::Always,    128,    799, false,       false,            { 11, 24, 12,  6, 16,  0 }, { 4, 1, 1, 1, 1, 1 },          2,          4,      4,                15,                25, MonsterAIID::Zombie,         0,                                                                2,     25,             8,          5,         15,             0,                    0,                 0,                 0,          15, MonsterClass::Undead, IMMUNE_MAGIC,                                                IMMUNE_MAGIC | RESIST_FIRE,                                               3, 0,                     136 },
-/* MT_YZOMBIE */ { P_("monster", "Black Death"),             nullptr,          "zombie\\yellow",    MonsterSpriteId::Zombie,          MonsterAvailability::Always,    128,    799, false,       false,            { 11, 24, 12,  6, 16,  0 }, { 4, 1, 1, 1, 1, 1 },          3,          5,      6,                25,                40, MonsterAIID::Zombie,         0,                                                                3,     30,             8,          6,         22,             0,                    0,                 0,                 0,          20, MonsterClass::Undead, IMMUNE_MAGIC,                                                IMMUNE_MAGIC |               RESIST_LIGHTNING,                            3, 0,                     240 },
-/* MT_RFALLSP */ { P_("monster", "Fallen One"),              nullptr,          "falspear\\fallent", MonsterSpriteId::FallenSpear,     MonsterAvailability::Always,    128,    543, true,        true,             { 11, 11, 13, 11, 18, 13 }, { 3, 1, 1, 1, 1, 1 },          1,          2,      1,                 1,                 4, MonsterAIID::Fallen,         0,                                                                0,     15,             7,          1,          3,             0,                    5,                 0,                 0,           0, MonsterClass::Animal, 0,                                                           0,                                                                        3, 0,                      46 },
-/* MT_DFALLSP */ { P_("monster", "Carver"),                  nullptr,          "falspear\\dark",    MonsterSpriteId::FallenSpear,     MonsterAvailability::Always,    128,    543, true,        true,             { 11, 11, 13, 11, 18, 13 }, { 3, 1, 1, 1, 1, 1 },          2,          3,      3,                 4,                 8, MonsterAIID::Fallen,         0,                                                                2,     20,             7,          2,          5,             0,                    5,                 0,                 0,           5, MonsterClass::Animal, 0,                                                           0,                                                                        3, 0,                      80 },
-/* MT_YFALLSP */ { P_("monster", "Devil Kin"),               nullptr,          nullptr,             MonsterSpriteId::FallenSpear,     MonsterAvailability::Always,    128,    543, true,        true,             { 11, 11, 13, 11, 18, 13 }, { 3, 1, 1, 1, 1, 1 },          2,          4,      5,                12,                24, MonsterAIID::Fallen,         0,                                                                2,     25,             7,          3,          7,             0,                    5,                 0,                 0,          10, MonsterClass::Animal, 0,                                                           RESIST_FIRE,                                                              3, 0,                     155 },
-/* MT_BFALLSP */ { P_("monster", "Dark One"),                nullptr,          "falspear\\blue",    MonsterSpriteId::FallenSpear,     MonsterAvailability::Always,    128,    543, true,        true,             { 11, 11, 13, 11, 18, 13 }, { 3, 1, 1, 1, 1, 1 },          3,          5,      7,                20,                36, MonsterAIID::Fallen,         0,                                                                3,     30,             7,          4,          8,             0,                    5,                 0,                 0,          15, MonsterClass::Animal, 0,                                                           RESIST_LIGHTNING,                                                         3, 0,                     255 },
-/* MT_WSKELAX */ { P_("monster", "Skeleton"),                nullptr,          "skelaxe\\white",    MonsterSpriteId::SkeletonAxe,     MonsterAvailability::Always,    128,    553, true,        false,            { 12,  8, 13,  6, 17, 16 }, { 5, 1, 1, 1, 1, 1 },          1,          2,      1,                 2,                 4, MonsterAIID::SkeletonMelee,  0,                                                                0,     20,             8,          1,          4,             0,                    0,                 0,                 0,           0, MonsterClass::Undead, IMMUNE_MAGIC,                                                IMMUNE_MAGIC,                                                             3, 0,                      64 },
-/* MT_TSKELAX */ { P_("monster", "Corpse Axe"),              nullptr,          "skelaxe\\skelt",    MonsterSpriteId::SkeletonAxe,     MonsterAvailability::Always,    128,    553, true,        false,            { 12,  8, 13,  6, 17, 16 }, { 4, 1, 1, 1, 1, 1 },          2,          3,      2,                 4,                 7, MonsterAIID::SkeletonMelee,  0,                                                                1,     25,             8,          3,          5,             0,                    0,                 0,                 0,           0, MonsterClass::Undead, IMMUNE_MAGIC,                                                IMMUNE_MAGIC,                                                             3, 0,                      68 },
-/* MT_RSKELAX */ { P_("monster", "Burning Dead"),            nullptr,          nullptr,             MonsterSpriteId::SkeletonAxe,     MonsterAvailability::Always,    128,    553, true,        false,            { 12,  8, 13,  6, 17, 16 }, { 2, 1, 1, 1, 1, 1 },          2,          4,      4,                 8,                12, MonsterAIID::SkeletonMelee,  0,                                                                2,     30,             8,          3,          7,             0,                    0,                 0,                 0,           5, MonsterClass::Undead, IMMUNE_MAGIC | RESIST_FIRE,                                  IMMUNE_MAGIC | IMMUNE_FIRE,                                               3, 0,                     154 },
-/* MT_XSKELAX */ { P_("monster", "Horror"),                  nullptr,          "skelaxe\\black",    MonsterSpriteId::SkeletonAxe,     MonsterAvailability::Always,    128,    553, true,        false,            { 12,  8, 13,  6, 17, 16 }, { 3, 1, 1, 1, 1, 1 },          3,          5,      6,                12,                20, MonsterAIID::SkeletonMelee,  0,                                                                3,     35,             8,          4,          9,             0,                    0,                 0,                 0,          15, MonsterClass::Undead, IMMUNE_MAGIC |               RESIST_LIGHTNING,               IMMUNE_MAGIC |               RESIST_LIGHTNING,                            3, 0,                     264 },
-/* MT_RFALLSD */ { P_("monster", "Fallen One"),              nullptr,          "falsword\\fallent", MonsterSpriteId::FallenSword,     MonsterAvailability::Always,    128,    623, true,        true,             { 12, 12, 13, 11, 14, 15 }, { 3, 1, 1, 1, 1, 1 },          1,          2,      1,                 2,                 5, MonsterAIID::Fallen,         0,                                                                0,     15,             8,          1,          4,             0,                    5,                 0,                 0,          10, MonsterClass::Animal, 0,                                                           0,                                                                        3, 0,                      52 },
-/* MT_DFALLSD */ { P_("monster", "Carver"),                  nullptr,          "falsword\\dark",    MonsterSpriteId::FallenSword,     MonsterAvailability::Always,    128,    623, true,        true,             { 12, 12, 13, 11, 14, 15 }, { 3, 1, 1, 1, 1, 1 },          2,          3,      3,                 5,                 9, MonsterAIID::Fallen,         0,                                                                1,     20,             8,          2,          7,             0,                    5,                 0,                 0,          15, MonsterClass::Animal, 0,                                                           0,                                                                        3, 0,                      90 },
-/* MT_YFALLSD */ { P_("monster", "Devil Kin"),               nullptr,          nullptr,             MonsterSpriteId::FallenSword,     MonsterAvailability::Always,    128,    623, true,        true,             { 12, 12, 13, 11, 14, 15 }, { 3, 1, 1, 1, 1, 1 },          2,          4,      5,                16,                24, MonsterAIID::Fallen,         0,                                                                2,     25,             8,          4,         10,             0,                    5,                 0,                 0,          20, MonsterClass::Animal, 0,                                                           RESIST_FIRE,                                                              3, 0,                     180 },
-/* MT_BFALLSD */ { P_("monster", "Dark One"),                nullptr,          "falsword\\blue",    MonsterSpriteId::FallenSword,     MonsterAvailability::Always,    128,    623, true,        true,             { 12, 12, 13, 11, 14, 15 }, { 3, 1, 1, 1, 1, 1 },          3,          5,      7,                24,                36, MonsterAIID::Fallen,         0,                                                                3,     30,             8,          4,         12,             0,                    5,                 0,                 0,          25, MonsterClass::Animal, 0,                                                           RESIST_LIGHTNING,                                                         3, 0,                     280 },
-/* MT_NSCAV   */ { P_("monster", "Scavenger"),               nullptr,          nullptr,             MonsterSpriteId::Scavenger,       MonsterAvailability::Always,    128,    410, true,        false,            { 12,  8, 12,  6, 20, 11 }, { 2, 1, 1, 1, 1, 1 },          1,          3,      2,                 3,                 6, MonsterAIID::Scavenger,      0,                                                                0,     20,             7,          1,          5,             0,                    0,                 0,                 0,          10, MonsterClass::Animal, 0,                                                           RESIST_FIRE,                                                              3, 0,                      80 },
-/* MT_BSCAV   */ { P_("monster", "Plague Eater"),            nullptr,          "scav\\scavbr",      MonsterSpriteId::Scavenger,       MonsterAvailability::Always,    128,    410, true,        false,            { 12,  8, 12,  6, 20, 11 }, { 2, 1, 1, 1, 1, 1 },          2,          4,      4,                12,                24, MonsterAIID::Scavenger,      0,                                                                1,     30,             7,          1,          8,             0,                    0,                 0,                 0,          20, MonsterClass::Animal, 0,                                                           RESIST_LIGHTNING,                                                         3, 0,                     188 },
-/* MT_WSCAV   */ { P_("monster", "Shadow Beast"),            nullptr,          "scav\\scavbe",      MonsterSpriteId::Scavenger,       MonsterAvailability::Always,    128,    410, true,        false,            { 12,  8, 12,  6, 20, 11 }, { 2, 1, 1, 1, 1, 1 },          3,          5,      6,                24,                36, MonsterAIID::Scavenger,      0,                                                                2,     35,             7,          3,         12,             0,                    0,                 0,                 0,          25, MonsterClass::Animal, 0,                                                           RESIST_FIRE,                                                              3, 0,                     375 },
-/* MT_YSCAV   */ { P_("monster", "Bone Gasher"),             nullptr,          "scav\\scavw",       MonsterSpriteId::Scavenger,       MonsterAvailability::Always,    128,    410, true,        false,            { 12,  8, 12,  6, 20, 11 }, { 2, 1, 1, 1, 1, 1 },          4,          6,      8,                28,                40, MonsterAIID::Scavenger,      0,                                                                3,     35,             7,          5,         15,             0,                    0,                 0,                 0,          30, MonsterClass::Animal, RESIST_MAGIC,                                                RESIST_LIGHTNING,                                                         3, 0,                     552 },
-/* MT_WSKELBW */ { P_("monster", "Skeleton"),                nullptr,          "skelbow\\white",    MonsterSpriteId::SkeletonBow,     MonsterAvailability::Always,    128,    567, true,        false,            {  9,  8, 16,  5, 16, 16 }, { 4, 1, 1, 1, 1, 1 },          2,          3,      3,                 2,                 4, MonsterAIID::SkeletonRanged, 0,                                                                0,     15,            12,          1,          2,             0,                    0,                 0,                 0,           0, MonsterClass::Undead, IMMUNE_MAGIC,                                                IMMUNE_MAGIC,                                                             3, 0,                     110 },
-/* MT_TSKELBW */ { P_("monster", "Corpse Bow"),              nullptr,          "skelbow\\skelt",    MonsterSpriteId::SkeletonBow,     MonsterAvailability::Always,    128,    567, true,        false,            {  9,  8, 16,  5, 16, 16 }, { 4, 1, 1, 1, 1, 1 },          2,          4,      5,                 8,                16, MonsterAIID::SkeletonRanged, 0,                                                                1,     25,            12,          1,          4,             0,                    0,                 0,                 0,           0, MonsterClass::Undead, IMMUNE_MAGIC,                                                IMMUNE_MAGIC,                                                             3, 0,                     210 },
-/* MT_RSKELBW */ { P_("monster", "Burning Dead"),            nullptr,          nullptr,             MonsterSpriteId::SkeletonBow,     MonsterAvailability::Always,    128,    567, true,        false,            {  9,  8, 16,  5, 16, 16 }, { 2, 1, 1, 1, 1, 1 },          3,          5,      7,                10,                24, MonsterAIID::SkeletonRanged, 0,                                                                2,     30,            12,          1,          6,             0,                    0,                 0,                 0,           5, MonsterClass::Undead, IMMUNE_MAGIC | RESIST_FIRE,                                  IMMUNE_MAGIC | IMMUNE_FIRE,                                               3, 0,                     364 },
-/* MT_XSKELBW */ { P_("monster", "Horror"),                  nullptr,          "skelbow\\black",    MonsterSpriteId::SkeletonBow,     MonsterAvailability::Always,    128,    567, true,        false,            {  9,  8, 16,  5, 16, 16 }, { 3, 1, 1, 1, 1, 1 },          4,          6,      9,                15,                45, MonsterAIID::SkeletonRanged, 0,                                                                3,     35,            12,          2,          9,             0,                    0,                 0,                 0,          15, MonsterClass::Undead, IMMUNE_MAGIC |               RESIST_LIGHTNING,               IMMUNE_MAGIC |               RESIST_LIGHTNING,                            3, 0,                     594 },
-/* MT_WSKELSD */ { P_("monster", "Skeleton Captain"),        nullptr,          "skelsd\\white",     MonsterSpriteId::SkeletonCaptain, MonsterAvailability::Always,    128,    575, true,        true,             { 13,  8, 12,  7, 15, 16 }, { 4, 1, 1, 1, 1, 1 },          1,          3,      2,                 3,                 6, MonsterAIID::SkeletonMelee,  0,                                                                0,     20,             8,          2,          7,             0,                    0,                 0,                 0,          10, MonsterClass::Undead, IMMUNE_MAGIC,                                                IMMUNE_MAGIC,                                                             3, 0,                      90 },
-/* MT_TSKELSD */ { P_("monster", "Corpse Captain"),          nullptr,          "skelsd\\skelt",     MonsterSpriteId::SkeletonCaptain, MonsterAvailability::Always,    128,    575, true,        false,            { 13,  8, 12,  7, 15, 16 }, { 4, 1, 1, 1, 1, 1 },          2,          4,      4,                12,                20, MonsterAIID::SkeletonMelee,  0,                                                                1,     30,             8,          3,          9,             0,                    0,                 0,                 0,           5, MonsterClass::Undead, IMMUNE_MAGIC,                                                IMMUNE_MAGIC,                                                             3, 0,                     200 },
-/* MT_RSKELSD */ { P_("monster", "Burning Dead Captain"),    nullptr,          nullptr,             MonsterSpriteId::SkeletonCaptain, MonsterAvailability::Always,    128,    575, true,        false,            { 13,  8, 12,  7, 15, 16 }, { 4, 1, 1, 1, 1, 1 },          3,          5,      6,                16,                30, MonsterAIID::SkeletonMelee,  0,                                                                2,     35,             8,          4,         10,             0,                    0,                 0,                 0,          15, MonsterClass::Undead, IMMUNE_MAGIC | RESIST_FIRE,                                  IMMUNE_MAGIC | IMMUNE_FIRE,                                               3, 0,                     393 },
-/* MT_XSKELSD */ { P_("monster", "Horror Captain"),          nullptr,          "skelsd\\black",     MonsterSpriteId::SkeletonCaptain, MonsterAvailability::Always,    128,    575, true,        false,            { 13,  8, 12,  7, 15, 16 }, { 4, 1, 1, 1, 1, 1 },          4,          6,      8,                35,                50, MonsterAIID::SkeletonMelee,  MFLAG_SEARCH,                                                     3,     40,             8,          5,         14,             0,                    0,                 0,                 0,          30, MonsterClass::Undead, IMMUNE_MAGIC |               RESIST_LIGHTNING,               IMMUNE_MAGIC |               RESIST_LIGHTNING,                            3, 0,                     604 },
-/* MT_INVILORD*/ { P_("monster", "Invisible Lord"),          nullptr,          nullptr,             MonsterSpriteId::InvisibleLord,   MonsterAvailability::Never,     128,    800, false,       false,            { 13, 13, 15, 11, 16,  0 }, { 2, 1, 1, 1, 1, 1 },         19,         20,     14,               278,               278, MonsterAIID::SkeletonMelee,  MFLAG_SEARCH | MFLAG_CAN_OPEN_DOOR,                               3,     65,             8,         16,         30,             0,                    0,                 0,                 0,          60, MonsterClass::Demon,  RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING,               RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING,                            3, 0,                    2000 },
-/* MT_SNEAK   */ { P_("monster", "Hidden"),                  nullptr,          nullptr,             MonsterSpriteId::Hidden,          MonsterAvailability::Retail,    128,    992, true,        false,            { 16,  8, 12,  8, 24, 15 }, { 2, 1, 1, 1, 1, 1 },          2,          5,      5,                 8,                24, MonsterAIID::Sneak,          MFLAG_HIDDEN,                                                     0,     35,             8,          3,          6,             0,                    0,                 0,                 0,          25, MonsterClass::Demon,  0,                                                           0,                                                                        3, 0,                     278 },
-/* MT_STALKER */ { P_("monster", "Stalker"),                 nullptr,          "sneak\\sneakv2",    MonsterSpriteId::Hidden,          MonsterAvailability::Retail,    128,    992, true,        false,            { 16,  8, 12,  8, 24, 15 }, { 2, 1, 1, 1, 1, 1 },          5,          7,      9,                30,                45, MonsterAIID::Sneak,          MFLAG_HIDDEN |                   MFLAG_SEARCH,                    1,     40,             8,          8,         16,             0,                    0,                 0,                 0,          30, MonsterClass::Demon,  0,                                                           0,                                                                        3, 0,                     630 },
-/* MT_UNSEEN  */ { P_("monster", "Unseen"),                  nullptr,          "sneak\\sneakv3",    MonsterSpriteId::Hidden,          MonsterAvailability::Retail,    128,    992, true,        false,            { 16,  8, 12,  8, 24, 15 }, { 2, 1, 1, 1, 1, 1 },          6,          8,     11,                35,                50, MonsterAIID::Sneak,          MFLAG_HIDDEN |                   MFLAG_SEARCH,                    2,     45,             8,         12,         20,             0,                    0,                 0,                 0,          30, MonsterClass::Demon,  RESIST_MAGIC,                                                IMMUNE_MAGIC,                                                             3, 0,                     935 },
-/* MT_ILLWEAV */ { P_("monster", "Illusion Weaver"),         nullptr,          "sneak\\sneakv1",    MonsterSpriteId::Hidden,          MonsterAvailability::Retail,    128,    992, true,        false,            { 16,  8, 12,  8, 24, 15 }, { 2, 1, 1, 1, 1, 1 },          8,         10,     13,                40,                60, MonsterAIID::Sneak,          MFLAG_HIDDEN |                   MFLAG_SEARCH,                    3,     60,             8,         16,         24,             0,                    0,                 0,                 0,          30, MonsterClass::Demon,  RESIST_MAGIC | RESIST_FIRE,                                  IMMUNE_MAGIC | RESIST_FIRE,                                               3, 0,                    1500 },
-/* MT_LRDSAYTR*/ { P_("monster", "Satyr Lord"),              "newsfx\\satyr",  nullptr,             MonsterSpriteId::GoatLord,        MonsterAvailability::Retail,    160,    800, false,       false,            { 13, 13, 14,  9, 16,  0 }, { 2, 1, 1, 1, 1, 1 },         21,         22,     28,               160,               200, MonsterAIID::SkeletonMelee,  MFLAG_SEARCH,                                                     3,     90,             8,         20,         30,             0,                    0,                 0,                 0,          70, MonsterClass::Animal, RESIST_FIRE | RESIST_LIGHTNING,                              RESIST_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING,                            3, 0,                    2800 },
-/* MT_NGOATMC */ { P_("monster", "Flesh Clan"),              nullptr,          nullptr,             MonsterSpriteId::GoatMace,        MonsterAvailability::Retail,    128,   1030, true,        false,            { 12,  8, 12,  6, 20, 12 }, { 2, 1, 1, 1, 1, 1 },          4,          6,      8,                30,                45, MonsterAIID::GoatMelee,      MFLAG_SEARCH | MFLAG_CAN_OPEN_DOOR,                               0,     50,             8,          4,         10,             0,                    0,                 0,                 0,          40, MonsterClass::Demon,  0,                                                           0,                                                                        3, 0,                     460 },
-/* MT_BGOATMC */ { P_("monster", "Stone Clan"),              nullptr,          "goatmace\\beige",   MonsterSpriteId::GoatMace,        MonsterAvailability::Retail,    128,   1030, true,        false,            { 12,  8, 12,  6, 20, 12 }, { 2, 1, 1, 1, 1, 1 },          5,          7,     10,                40,                55, MonsterAIID::GoatMelee,      MFLAG_SEARCH | MFLAG_CAN_OPEN_DOOR,                               1,     60,             8,          6,         12,             0,                    0,                 0,                 0,          40, MonsterClass::Demon,  RESIST_MAGIC,                                                IMMUNE_MAGIC,                                                             3, 0,                     685 },
-/* MT_RGOATMC */ { P_("monster", "Fire Clan"),               nullptr,          "goatmace\\red",     MonsterSpriteId::GoatMace,        MonsterAvailability::Retail,    128,   1030, true,        false,            { 12,  8, 12,  6, 20, 12 }, { 2, 1, 1, 1, 1, 1 },          6,          8,     12,                50,                65, MonsterAIID::GoatMelee,      MFLAG_SEARCH | MFLAG_CAN_OPEN_DOOR,                               2,     70,             8,          8,         16,             0,                    0,                 0,                 0,          45, MonsterClass::Demon,  RESIST_FIRE,                                                 IMMUNE_FIRE,                                                              3, 0,                     906 },
-/* MT_GGOATMC */ { P_("monster", "Night Clan"),              nullptr,          "goatmace\\gray",    MonsterSpriteId::GoatMace,        MonsterAvailability::Retail,    128,   1030, true,        false,            { 12,  8, 12,  6, 20, 12 }, { 2, 1, 1, 1, 1, 1 },          7,          9,     14,                55,                70, MonsterAIID::GoatMelee,      MFLAG_SEARCH | MFLAG_CAN_OPEN_DOOR,                               3,     80,             8,         10,         20,            15,                    0,                30,                30,          50, MonsterClass::Demon,  RESIST_MAGIC,                                                IMMUNE_MAGIC,                                                             3, 0,                    1190 },
-/* MT_FIEND   */ { P_("monster", "Fiend"),                   nullptr,          "bat\\red",          MonsterSpriteId::Bat,             MonsterAvailability::Always,     96,    364, false,       false,            {  9, 13, 10,  9, 13,  0 }, { 1, 1, 1, 1, 1, 1 },          2,          3,      3,                 3,                 6, MonsterAIID::Bat,            0,                                                                0,     35,             5,          1,          6,             0,                    0,                 0,                 0,           0, MonsterClass::Animal, 0,                                                           0,                                                                        6, T_NODROP,              102 },
-/* MT_BLINK   */ { P_("monster", "Blink"),                   nullptr,          nullptr,             MonsterSpriteId::Bat,             MonsterAvailability::Always,     96,    364, false,       false,            {  9, 13, 10,  9, 13,  0 }, { 1, 1, 1, 1, 1, 1 },          3,          5,      7,                12,                28, MonsterAIID::Bat,            0,                                                                1,     45,             5,          1,          8,             0,                    0,                 0,                 0,          15, MonsterClass::Animal, 0,                                                           0,                                                                        6, T_NODROP,              340 },
-/* MT_GLOOM   */ { P_("monster", "Gloom"),                   nullptr,          "bat\\grey",         MonsterSpriteId::Bat,             MonsterAvailability::Always,     96,    364, false,       false,            {  9, 13, 10,  9, 13,  0 }, { 1, 1, 1, 1, 1, 1 },          4,          6,      9,                28,                36, MonsterAIID::Bat,            MFLAG_SEARCH,                                                     2,     70,             5,          4,         12,             0,                    0,                 0,                 0,          35, MonsterClass::Animal, RESIST_MAGIC,                                                RESIST_MAGIC,                                                             6, T_NODROP,              509 },
-/* MT_FAMILIAR*/ { P_("monster", "Familiar"),                nullptr,          "bat\\orange",       MonsterSpriteId::Bat,             MonsterAvailability::Always,     96,    364, false,       false,            {  9, 13, 10,  9, 13,  0 }, { 1, 1, 1, 1, 1, 1 },          6,          8,     13,                20,                35, MonsterAIID::Bat,            MFLAG_SEARCH,                                                     3,     50,             5,          4,         16,             0,                    0,                 0,                 0,          35, MonsterClass::Demon,  RESIST_MAGIC |               IMMUNE_LIGHTNING,               RESIST_MAGIC |               IMMUNE_LIGHTNING,                            6, T_NODROP,              448 },
-/* MT_NGOATBW */ { P_("monster", "Flesh Clan"),              nullptr,          nullptr,             MonsterSpriteId::GoatBow,         MonsterAvailability::Retail,    128,   1040, false,       false,            { 12,  8, 16,  6, 20,  0 }, { 3, 1, 1, 1, 1, 1 },          4,          6,      8,                20,                35, MonsterAIID::GoatRanged,     MFLAG_CAN_OPEN_DOOR,                                              0,     35,            13,          1,          7,             0,                    0,                 0,                 0,          35, MonsterClass::Demon,  0,                                                           0,                                                                        3, 0,                     448 },
-/* MT_BGOATBW */ { P_("monster", "Stone Clan"),              nullptr,          "goatbow\\beige",    MonsterSpriteId::GoatBow,         MonsterAvailability::Retail,    128,   1040, false,       false,            { 12,  8, 16,  6, 20,  0 }, { 3, 1, 1, 1, 1, 1 },          5,          7,     10,                30,                40, MonsterAIID::GoatRanged,     MFLAG_CAN_OPEN_DOOR,                                              1,     40,            13,          2,          9,             0,                    0,                 0,                 0,          35, MonsterClass::Demon,  RESIST_MAGIC,                                                IMMUNE_MAGIC,                                                             3, 0,                     645 },
-/* MT_RGOATBW */ { P_("monster", "Fire Clan"),               nullptr,          "goatbow\\red",      MonsterSpriteId::GoatBow,         MonsterAvailability::Retail,    128,   1040, false,       false,            { 12,  8, 16,  6, 20,  0 }, { 3, 1, 1, 1, 1, 1 },          6,          8,     12,                40,                50, MonsterAIID::GoatRanged,     MFLAG_SEARCH | MFLAG_CAN_OPEN_DOOR,                               2,     45,            13,          3,         11,             0,                    0,                 0,                 0,          35, MonsterClass::Demon,  RESIST_FIRE,                                                 IMMUNE_FIRE,                                                              3, 0,                     822 },
-/* MT_GGOATBW */ { P_("monster", "Night Clan"),              nullptr,          "goatbow\\gray",     MonsterSpriteId::GoatBow,         MonsterAvailability::Retail,    128,   1040, false,       false,            { 12,  8, 16,  6, 20,  0 }, { 3, 1, 1, 1, 1, 1 },          7,          9,     14,                50,                65, MonsterAIID::GoatRanged,     MFLAG_SEARCH | MFLAG_CAN_OPEN_DOOR,                               3,     50,            13,          4,         13,            15,                    0,                 0,                 0,          40, MonsterClass::Demon,  RESIST_MAGIC,                                                IMMUNE_MAGIC,                                                             3, 0,                    1092 },
-/* MT_NACID   */ { P_("monster", "Acid Beast"),              nullptr,          nullptr,             MonsterSpriteId::AcidBeast,       MonsterAvailability::Retail,    128,    716, true,        true,             { 13,  8, 12,  8, 16, 12 }, { 1, 1, 1, 1, 1, 1 },          6,          8,     11,                40,                66, MonsterAIID::Acid,           0,                                                                0,     40,             8,          4,         12,            25,                    8,                 0,                 0,          30, MonsterClass::Animal, IMMUNE_ACID,                                                 IMMUNE_MAGIC |                                  IMMUNE_ACID,              3, 0,                     846 },
-/* MT_RACID   */ { P_("monster", "Poison Spitter"),          nullptr,          "acid\\acidblk",     MonsterSpriteId::AcidBeast,       MonsterAvailability::Retail,    128,    716, true,        true,             { 13,  8, 12,  8, 16, 12 }, { 1, 1, 1, 1, 1, 1 },          8,         10,     15,                60,                85, MonsterAIID::Acid,           0,                                                                1,     45,             8,          4,         16,            25,                    8,                 0,                 0,          30, MonsterClass::Animal, IMMUNE_ACID,                                                 IMMUNE_MAGIC |                                  IMMUNE_ACID,              3, 0,                    1248 },
-/* MT_BACID   */ { P_("monster", "Pit Beast"),               nullptr,          "acid\\acidb",       MonsterSpriteId::AcidBeast,       MonsterAvailability::Retail,    128,    716, true,        true,             { 13,  8, 12,  8, 16, 12 }, { 1, 1, 1, 1, 1, 1 },         10,         12,     21,                80,               110, MonsterAIID::Acid,           0,                                                                2,     55,             8,          8,         18,            35,                    8,                 0,                 0,          35, MonsterClass::Animal, RESIST_MAGIC |                                  IMMUNE_ACID, IMMUNE_MAGIC |               RESIST_LIGHTNING | IMMUNE_ACID,              3, 0,                    2060 },
-/* MT_XACID   */ { P_("monster", "Lava Maw"),                nullptr,          "acid\\acidr",       MonsterSpriteId::AcidBeast,       MonsterAvailability::Retail,    128,    716, true,        true,             { 13,  8, 12,  8, 16, 12 }, { 1, 1, 1, 1, 1, 1 },         12,         14,     25,               100,               150, MonsterAIID::Acid,           0,                                                                3,     65,             8,         10,         20,            40,                    8,                 0,                 0,          35, MonsterClass::Animal, RESIST_MAGIC | IMMUNE_FIRE |                    IMMUNE_ACID, IMMUNE_MAGIC | IMMUNE_FIRE |                    IMMUNE_ACID,              3, 0,                    2940 },
-/* MT_SKING   */ { P_("monster", "Skeleton King"),           nullptr,          "skelaxe\\white",    MonsterSpriteId::SkeletonKing,    MonsterAvailability::Never,     160,   1010, true,        true,             {  8,  6, 16,  6, 16,  6 }, { 2, 1, 1, 1, 1, 2 },          4,          4,      9,               140,               140, MonsterAIID::SkeletonKing,   MFLAG_SEARCH | MFLAG_CAN_OPEN_DOOR,                               3,     60,             8,          6,         16,             0,                    0,                 0,                 0,          70, MonsterClass::Undead, IMMUNE_MAGIC | RESIST_FIRE | RESIST_LIGHTNING,               IMMUNE_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING,                            7, Uniq(UITEM_SKCROWN),   570 },
-/* MT_CLEAVER */ { P_("monster", "The Butcher"),             nullptr,          nullptr,             MonsterSpriteId::Butcher,         MonsterAvailability::Never,     128,    980, false,       false,            { 10,  8, 12,  6, 16,  0 }, { 1, 1, 1, 1, 1, 1 },          1,          1,      1,               320,               320, MonsterAIID::Butcher,        0,                                                                3,     50,             8,          6,         12,             0,                    0,                 0,                 0,          50, MonsterClass::Demon,  RESIST_FIRE | RESIST_LIGHTNING,                              RESIST_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING,                            3, Uniq(UITEM_CLEAVER),   710 },
-/* MT_FAT     */ { P_("monster", "Overlord"),                nullptr,          nullptr,             MonsterSpriteId::Overlord,        MonsterAvailability::Retail,    128,   1130, true,        false,            {  8, 10, 15,  6, 16, 10 }, { 4, 1, 1, 1, 1, 1 },          5,          7,     10,                60,                80, MonsterAIID::Fat,            0,                                                                0,     55,             8,          6,         12,             0,                    0,                 0,                 0,          55, MonsterClass::Demon,  0,                                                           RESIST_FIRE,                                                              3, 0,                     635 },
-/* MT_MUDMAN, */ { P_("monster", "Mud Man"),                 nullptr,          "fat\\blue",         MonsterSpriteId::Overlord,        MonsterAvailability::Retail,    128,   1130, true,        false,            {  8, 10, 15,  6, 16, 10 }, { 4, 1, 1, 1, 1, 1 },          7,          9,     14,               100,               125, MonsterAIID::Fat,            MFLAG_SEARCH,                                                     1,     60,             8,          8,         16,             0,                    0,                 0,                 0,          60, MonsterClass::Demon,  0,                                                           IMMUNE_LIGHTNING,                                                         3, 0,                    1165 },
-/* MT_TOAD    */ { P_("monster", "Toad Demon"),              nullptr,          "fat\\fatb",         MonsterSpriteId::Overlord,        MonsterAvailability::Retail,    128,   1130, true,        false,            {  8, 10, 15,  6, 16, 10 }, { 4, 1, 1, 1, 1, 1 },          8,         10,     16,               135,               160, MonsterAIID::Fat,            MFLAG_SEARCH,                                                     2,     70,             8,          8,         16,            40,                    0,                 8,                20,          65, MonsterClass::Demon,  IMMUNE_MAGIC,                                                IMMUNE_MAGIC |               RESIST_LIGHTNING,                            3, 0,                    1380 },
-/* MT_FLAYED  */ { P_("monster", "Flayed One"),              nullptr,          "fat\\fatf",         MonsterSpriteId::Overlord,        MonsterAvailability::Retail,    128,   1130, true,        false,            {  8, 10, 15,  6, 16, 10 }, { 4, 1, 1, 1, 1, 1 },         10,         12,     20,               160,               200, MonsterAIID::Fat,            MFLAG_SEARCH,                                                     3,     85,             8,         10,         20,             0,                    0,                 0,                 0,          70, MonsterClass::Demon,  RESIST_MAGIC | IMMUNE_FIRE,                                  IMMUNE_MAGIC | IMMUNE_FIRE,                                               3, 0,                    2058 },
-/* MT_WYRM    */ { P_("monster", "Wyrm"),                    nullptr,          nullptr,             MonsterSpriteId::Wyrm,            MonsterAvailability::Never,     160,   2420, false,       false,            { 13, 13, 13, 11, 19,  0 }, { 1, 1, 1, 1, 1, 1 },          5,          7,     11,                60,                90, MonsterAIID::SkeletonMelee,  0,                                                                0,     40,             8,          4,         10,             0,                    0,                 0,                 0,          25, MonsterClass::Animal, RESIST_MAGIC,                                                RESIST_MAGIC,                                                             3, 0,                     660 },
-/* MT_CAVSLUG */ { P_("monster", "Cave Slug"),               nullptr,          nullptr,             MonsterSpriteId::Wyrm,            MonsterAvailability::Never,     160,   2420, false,       false,            { 13, 13, 13, 11, 19,  0 }, { 1, 1, 1, 1, 1, 1 },          6,          8,     13,                75,               110, MonsterAIID::SkeletonMelee,  0,                                                                1,     50,             8,          6,         13,             0,                    0,                 0,                 0,          30, MonsterClass::Animal, RESIST_MAGIC,                                                RESIST_MAGIC,                                                             3, 0,                     994 },
-/* MT_DVLWYRM */ { P_("monster", "Devil Wyrm"),              nullptr,          nullptr,             MonsterSpriteId::Wyrm,            MonsterAvailability::Never,     160,   2420, false,       false,            { 13, 13, 13, 11, 19,  0 }, { 1, 1, 1, 1, 1, 1 },          7,          9,     15,               100,               140, MonsterAIID::SkeletonMelee,  0,                                                                2,     55,             8,          8,         16,             0,                    0,                 0,                 0,          30, MonsterClass::Animal, RESIST_MAGIC | RESIST_FIRE,                                  RESIST_MAGIC | RESIST_FIRE,                                               3, 0,                    1320 },
-/* MT_DEVOUR  */ { P_("monster", "Devourer"),                nullptr,          nullptr,             MonsterSpriteId::Wyrm,            MonsterAvailability::Never,     160,   2420, false,       false,            { 13, 13, 13, 11, 19,  0 }, { 1, 1, 1, 1, 1, 1 },          8,         10,     17,               125,               200, MonsterAIID::SkeletonMelee,  0,                                                                3,     60,             8,         10,         20,             0,                    0,                 0,                 0,          35, MonsterClass::Animal, RESIST_MAGIC | RESIST_FIRE,                                  RESIST_MAGIC | RESIST_FIRE,                                               3, 0,                    1827 },
-/* MT_NMAGMA  */ { P_("monster", "Magma Demon"),             nullptr,          nullptr,             MonsterSpriteId::MagmaDemon,      MonsterAvailability::Retail,    128,   1680, true,        true,             {  8, 10, 14,  7, 18, 18 }, { 2, 1, 1, 1, 1, 1 },          8,          9,     13,                50,                70, MonsterAIID::Magma,          MFLAG_SEARCH | MFLAG_CAN_OPEN_DOOR,                               0,     45,             4,          2,         10,            50,                   13,                 0,                 0,          45, MonsterClass::Demon,  IMMUNE_MAGIC | RESIST_FIRE,                                  IMMUNE_MAGIC | IMMUNE_FIRE,                                               7, 0,                    1076 },
-/* MT_YMAGMA  */ { P_("monster", "Blood Stone"),             nullptr,          "magma\\yellow",     MonsterSpriteId::MagmaDemon,      MonsterAvailability::Retail,    128,   1680, true,        true,             {  8, 10, 14,  7, 18, 18 }, { 2, 1, 1, 1, 1, 1 },          8,         10,     14,                55,                75, MonsterAIID::Magma,          MFLAG_SEARCH | MFLAG_CAN_OPEN_DOOR,                               1,     50,             4,          2,         12,            50,                   14,                 0,                 0,          45, MonsterClass::Demon,  IMMUNE_MAGIC | IMMUNE_FIRE,                                  IMMUNE_MAGIC | IMMUNE_FIRE,                                               7, 0,                    1309 },
-/* MT_BMAGMA  */ { P_("monster", "Hell Stone"),              nullptr,          "magma\\blue",       MonsterSpriteId::MagmaDemon,      MonsterAvailability::Retail,    128,   1680, true,        true,             {  8, 10, 14,  7, 18, 18 }, { 2, 1, 1, 1, 1, 1 },          9,         11,     16,                60,                80, MonsterAIID::Magma,          MFLAG_SEARCH | MFLAG_CAN_OPEN_DOOR,                               2,     60,             4,          2,         20,            60,                   14,                 0,                 0,          50, MonsterClass::Demon,  IMMUNE_MAGIC | IMMUNE_FIRE,                                  IMMUNE_MAGIC | IMMUNE_FIRE,                                               7, 0,                    1680 },
-/* MT_WMAGMA  */ { P_("monster", "Lava Lord"),               nullptr,          "magma\\wierd",      MonsterSpriteId::MagmaDemon,      MonsterAvailability::Retail,    128,   1680, true,        true,             {  8, 10, 14,  7, 18, 18 }, { 2, 1, 1, 1, 1, 1 },          9,         11,     18,                70,                85, MonsterAIID::Magma,          MFLAG_SEARCH | MFLAG_CAN_OPEN_DOOR,                               3,     75,             4,          4,         24,            60,                   14,                 0,                 0,          60, MonsterClass::Demon,  IMMUNE_MAGIC | IMMUNE_FIRE,                                  IMMUNE_MAGIC | IMMUNE_FIRE,                                               7, 0,                    2124 },
-/* MT_HORNED  */ { P_("monster", "Horned Demon"),            nullptr,          nullptr,             MonsterSpriteId::HornedDemon,     MonsterAvailability::Retail,    160,   1630, true,        true,             {  8,  8, 14,  6, 16,  6 }, { 2, 1, 1, 1, 1, 1 },          7,          9,     13,                40,                80, MonsterAIID::Rhino,          MFLAG_SEARCH | MFLAG_CAN_OPEN_DOOR,                               0,     60,             7,          2,         16,           100,                    0,                 5,                32,          40, MonsterClass::Animal, 0,                                                           RESIST_FIRE,                                                              7, 0,                    1172 },
-/* MT_MUDRUN  */ { P_("monster", "Mud Runner"),              nullptr,          "rhino\\orange",     MonsterSpriteId::HornedDemon,     MonsterAvailability::Retail,    160,   1630, true,        true,             {  8,  8, 14,  6, 16,  6 }, { 2, 1, 1, 1, 1, 1 },          8,         10,     15,                50,                90, MonsterAIID::Rhino,          MFLAG_SEARCH | MFLAG_CAN_OPEN_DOOR,                               1,     70,             7,          6,         18,           100,                    0,                12,                36,          45, MonsterClass::Animal, 0,                                                           RESIST_FIRE,                                                              7, 0,                    1404 },
-/* MT_FROSTC  */ { P_("monster", "Frost Charger"),           nullptr,          "rhino\\blue",       MonsterSpriteId::HornedDemon,     MonsterAvailability::Retail,    160,   1630, true,        true,             {  8,  8, 14,  6, 16,  6 }, { 2, 1, 1, 1, 1, 1 },          9,         11,     17,                60,               100, MonsterAIID::Rhino,          MFLAG_SEARCH | MFLAG_CAN_OPEN_DOOR,                               2,     80,             7,          8,         20,           100,                    0,                20,                40,          50, MonsterClass::Animal, IMMUNE_MAGIC |               RESIST_LIGHTNING,               IMMUNE_MAGIC |               RESIST_LIGHTNING,                            7, 0,                    1720 },
-/* MT_OBLORD  */ { P_("monster", "Obsidian Lord"),           nullptr,          "rhino\\rhinob",     MonsterSpriteId::HornedDemon,     MonsterAvailability::Retail,    160,   1630, true,        true,             {  8,  8, 14,  6, 16,  6 }, { 2, 1, 1, 1, 1, 1 },         10,         12,     19,                70,               110, MonsterAIID::Rhino,          MFLAG_SEARCH | MFLAG_CAN_OPEN_DOOR,                               3,     90,             7,         10,         22,           100,                    0,                20,                50,          55, MonsterClass::Animal, IMMUNE_MAGIC |               RESIST_LIGHTNING,               IMMUNE_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING,                            7, 0,                    1809 },
-/* MT_BONEDMN */ { P_("monster", "oldboned"),                nullptr,          nullptr,             MonsterSpriteId::SkeletonDemon,   MonsterAvailability::Never,     128,   1740, true,        true,             { 10,  8, 20,  6, 24, 16 }, { 3, 1, 1, 1, 1, 1 },         24,         24,     12,                70,                70, MonsterAIID::Storm,          0,                                                                0,     60,             8,          6,         14,            12,                    0,                 0,                 0,          50, MonsterClass::Demon,  IMMUNE_MAGIC,                                                IMMUNE_MAGIC,                                                             7, 0,                    1344 },
-/* MT_REDDTH  */ { P_("monster", "Red Death"),               nullptr,          "thin\\thinv3",      MonsterSpriteId::StormRider,      MonsterAvailability::Never,     160,   1740, true,        true,             {  8,  8, 18,  4, 17, 14 }, { 3, 1, 1, 1, 1, 1 },          8,         10,     16,                96,                96, MonsterAIID::Storm,          0,                                                                1,     75,             5,         10,         20,             0,                    0,                 0,                 0,          60, MonsterClass::Demon,  IMMUNE_MAGIC | IMMUNE_FIRE,                                  IMMUNE_MAGIC | IMMUNE_FIRE,                                               7, 0,                    2168 },
-/* MT_LTCHDMN */ { P_("monster", "Litch Demon"),             nullptr,          "thin\\thinv3",      MonsterSpriteId::StormRider,      MonsterAvailability::Never,     160,   1740, true,        true,             {  8,  8, 18,  4, 17, 14 }, { 3, 1, 1, 1, 1, 1 },          9,         11,     18,               110,               110, MonsterAIID::Storm,          0,                                                                2,     80,             5,         10,         24,             0,                    0,                 0,                 0,          45, MonsterClass::Demon,  IMMUNE_MAGIC |               IMMUNE_LIGHTNING,               IMMUNE_MAGIC |               IMMUNE_LIGHTNING,                            7, 0,                    2736 },
-/* MT_UDEDBLRG*/ { P_("monster", "Undead Balrog"),           nullptr,          "thin\\thinv3",      MonsterSpriteId::StormRider,      MonsterAvailability::Never,     160,   1740, true,        true,             {  8,  8, 18,  4, 17, 14 }, { 3, 1, 1, 1, 1, 1 },         11,         13,     22,               130,               130, MonsterAIID::Storm,          0,                                                                3,     85,             5,         12,         30,             0,                    0,                 0,                 0,          65, MonsterClass::Demon,  IMMUNE_MAGIC | RESIST_FIRE | RESIST_LIGHTNING,               IMMUNE_MAGIC | RESIST_FIRE | RESIST_LIGHTNING,                            7, 0,                    3575 },
-/* MT_INCIN   */ { P_("monster", "Incinerator"),             nullptr,          nullptr,             MonsterSpriteId::Incinerator,     MonsterAvailability::Never,     128,   1460, true,        false,            { 14, 19, 20,  8, 14, 23 }, { 1, 1, 1, 1, 1, 1 },         21,         22,     16,                30,                45, MonsterAIID::FireMan,        0,                                                                0,     75,             8,          8,         16,             0,                    0,                 0,                 0,          25, MonsterClass::Demon,  IMMUNE_MAGIC | IMMUNE_FIRE,                                  IMMUNE_MAGIC | IMMUNE_FIRE,                                               3, 0,                    1888 },
-/* MT_FLAMLRD */ { P_("monster", "Flame Lord"),              nullptr,          nullptr,             MonsterSpriteId::Incinerator,     MonsterAvailability::Never,     128,   1460, true,        false,            { 14, 19, 20,  8, 14, 23 }, { 1, 1, 1, 1, 1, 1 },         22,         23,     18,                40,                55, MonsterAIID::FireMan,        0,                                                                1,     75,             8,         10,         20,             0,                    0,                 0,                 0,          25, MonsterClass::Demon,  IMMUNE_MAGIC | IMMUNE_FIRE,                                  IMMUNE_MAGIC | IMMUNE_FIRE,                                               3, 0,                    2250 },
-/* MT_DOOMFIRE*/ { P_("monster", "Doom Fire"),               nullptr,          nullptr,             MonsterSpriteId::Incinerator,     MonsterAvailability::Never,     128,   1460, true,        false,            { 14, 19, 20,  8, 14, 23 }, { 1, 1, 1, 1, 1, 1 },         23,         24,     20,                50,                65, MonsterAIID::FireMan,        0,                                                                2,     80,             8,         12,         24,             0,                    0,                 0,                 0,          30, MonsterClass::Demon,  IMMUNE_MAGIC | IMMUNE_FIRE | RESIST_LIGHTNING,               IMMUNE_MAGIC | IMMUNE_FIRE | RESIST_LIGHTNING,                            3, 0,                    2740 },
-/* MT_HELLBURN*/ { P_("monster", "Hell Burner"),             nullptr,          nullptr,             MonsterSpriteId::Incinerator,     MonsterAvailability::Never,     128,   1460, true,        false,            { 14, 19, 20,  8, 14, 23 }, { 1, 1, 1, 1, 1, 1 },         24,         24,     22,                60,                80, MonsterAIID::FireMan,        0,                                                                3,     85,             8,         15,         30,             0,                    0,                 0,                 0,          30, MonsterClass::Demon,  IMMUNE_MAGIC | IMMUNE_FIRE | RESIST_LIGHTNING,               IMMUNE_MAGIC | IMMUNE_FIRE | RESIST_LIGHTNING,                            3, 0,                    3355 },
-/* MT_STORM   */ { P_("monster", "Red Storm"),               nullptr,          "thin\\thinv3",      MonsterSpriteId::StormRider,      MonsterAvailability::Retail,    160,   1740, true,        true,             {  8,  8, 18,  4, 17, 14 }, { 3, 1, 1, 1, 1, 1 },          9,         11,     18,                55,               110, MonsterAIID::Storm,          MFLAG_SEARCH | MFLAG_CAN_OPEN_DOOR,                               0,     80,             5,          8,         18,            75,                    8,                 4,                16,          30, MonsterClass::Demon,  IMMUNE_MAGIC |               RESIST_LIGHTNING,               IMMUNE_MAGIC |               IMMUNE_LIGHTNING,                            7, 0,                    2160 },
-/* MT_RSTORM  */ { P_("monster", "Storm Rider"),             nullptr,          nullptr,             MonsterSpriteId::StormRider,      MonsterAvailability::Retail,    160,   1740, true,        true,             {  8,  8, 18,  4, 17, 14 }, { 3, 1, 1, 1, 1, 1 },         10,         12,     20,                60,               120, MonsterAIID::Storm,          MFLAG_SEARCH | MFLAG_CAN_OPEN_DOOR,                               1,     80,             5,          8,         18,            80,                    8,                 4,                16,          30, MonsterClass::Demon,  RESIST_MAGIC |               IMMUNE_LIGHTNING,               IMMUNE_MAGIC |               IMMUNE_LIGHTNING,                            7, 0,                    2391 },
-/* MT_STORML  */ { P_("monster", "Storm Lord"),              nullptr,          "thin\\thinv2",      MonsterSpriteId::StormRider,      MonsterAvailability::Retail,    160,   1740, true,        true,             {  8,  8, 18,  4, 17, 14 }, { 3, 1, 1, 1, 1, 1 },         11,         13,     22,                75,               135, MonsterAIID::Storm,          MFLAG_SEARCH | MFLAG_CAN_OPEN_DOOR,                               2,     85,             5,         12,         24,            75,                    8,                 4,                16,          35, MonsterClass::Demon,  RESIST_MAGIC |               IMMUNE_LIGHTNING,               IMMUNE_MAGIC |               IMMUNE_LIGHTNING,                            7, 0,                    2775 },
-/* MT_MAEL    */ { P_("monster", "Maelstrom"),               nullptr,          "thin\\thinv1",      MonsterSpriteId::StormRider,      MonsterAvailability::Retail,    160,   1740, true,        true,             {  8,  8, 18,  4, 17, 14 }, { 3, 1, 1, 1, 1, 1 },         12,         14,     24,                90,               150, MonsterAIID::Storm,          MFLAG_SEARCH | MFLAG_CAN_OPEN_DOOR,                               3,     90,             5,         12,         28,            75,                    8,                 4,                16,          40, MonsterClass::Demon,  RESIST_MAGIC |               IMMUNE_LIGHTNING,               IMMUNE_MAGIC |               IMMUNE_LIGHTNING,                            7, 0,                    3177 },
-/* MT_BIGFALL */ { P_("monster", "Devil Kin Brute"),         "newsfx\\kbrute", nullptr,             MonsterSpriteId::DevilKinBrute,   MonsterAvailability::Retail,    128,    800, true,        false,            { 10,  8, 11,  8, 17,  0 }, { 1, 1, 1, 1, 2, 2 },         21,         22,     27,               120,               160, MonsterAIID::SkeletonMelee,  MFLAG_SEARCH | MFLAG_CAN_OPEN_DOOR,                               3,    100,             6,         18,         24,             0,                    0,                 0,                 0,          70, MonsterClass::Animal, RESIST_FIRE | RESIST_LIGHTNING,                              RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING,                            3, 0,                    2400 },
-/* MT_WINGED  */ { P_("monster", "Winged-Demon"),            nullptr,          nullptr,             MonsterSpriteId::Gargoyle,        MonsterAvailability::Retail,    160,   1650, true,        false,            { 14, 14, 14, 10, 18, 14 }, { 1, 1, 1, 1, 1, 2 },          5,          7,      9,                45,                60, MonsterAIID::Gargoyle,       MFLAG_CAN_OPEN_DOOR,                                              0,     50,             7,         10,         16,             0,                    0,                 0,                 0,          45, MonsterClass::Demon,  IMMUNE_MAGIC | RESIST_FIRE,                                  IMMUNE_MAGIC | IMMUNE_FIRE,                                               6, 0,                     662 },
-/* MT_GARGOYLE*/ { P_("monster", "Gargoyle"),                nullptr,          "gargoyle\\gare",    MonsterSpriteId::Gargoyle,        MonsterAvailability::Retail,    160,   1650, true,        false,            { 14, 14, 14, 10, 18, 14 }, { 1, 1, 1, 1, 1, 2 },          7,          9,     13,                60,                90, MonsterAIID::Gargoyle,       MFLAG_CAN_OPEN_DOOR,                                              1,     65,             7,         10,         16,             0,                    0,                 0,                 0,          45, MonsterClass::Demon,  IMMUNE_MAGIC |               RESIST_LIGHTNING,               IMMUNE_MAGIC |               IMMUNE_LIGHTNING,                            6, 0,                    1205 },
-/* MT_BLOODCLW*/ { P_("monster", "Blood Claw"),              nullptr,          "gargoyle\\gargbr",  MonsterSpriteId::Gargoyle,        MonsterAvailability::Retail,    160,   1650, true,        false,            { 14, 14, 14, 10, 18, 14 }, { 1, 1, 1, 1, 1, 1 },          9,         11,     19,                75,               125, MonsterAIID::Gargoyle,       MFLAG_CAN_OPEN_DOOR,                                              2,     80,             7,         14,         22,             0,                    0,                 0,                 0,          50, MonsterClass::Demon,  IMMUNE_MAGIC | IMMUNE_FIRE,                                  IMMUNE_MAGIC | IMMUNE_FIRE | RESIST_LIGHTNING,                            6, 0,                    1873 },
-/* MT_DEATHW  */ { P_("monster", "Death Wing"),              nullptr,          "gargoyle\\gargb",   MonsterSpriteId::Gargoyle,        MonsterAvailability::Retail,    160,   1650, true,        false,            { 14, 14, 14, 10, 18, 14 }, { 1, 1, 1, 1, 1, 1 },         10,         12,     23,                90,               150, MonsterAIID::Gargoyle,       MFLAG_CAN_OPEN_DOOR,                                              3,     95,             7,         16,         28,             0,                    0,                 0,                 0,          60, MonsterClass::Demon,  IMMUNE_MAGIC |               IMMUNE_LIGHTNING,               IMMUNE_MAGIC | RESIST_FIRE | IMMUNE_LIGHTNING,                            6, 0,                    2278 },
-/* MT_MEGA    */ { P_("monster", "Slayer"),                  nullptr,          nullptr,             MonsterSpriteId::Slayer,          MonsterAvailability::Retail,    160,   2220, true,        true,             {  6,  7, 14,  1, 24,  5 }, { 3, 1, 1, 1, 2, 1 },         10,         12,     20,               120,               140, MonsterAIID::Mega,           MFLAG_SEARCH | MFLAG_CAN_OPEN_DOOR,                               0,    100,             8,         12,         20,             0,                    3,                 0,                 0,          60, MonsterClass::Demon,  RESIST_MAGIC | IMMUNE_FIRE,                                  RESIST_MAGIC | IMMUNE_FIRE,                                               7, 0,                    2300 },
-/* MT_GUARD   */ { P_("monster", "Guardian"),                nullptr,          "mega\\guard",       MonsterSpriteId::Slayer,          MonsterAvailability::Retail,    160,   2220, true,        true,             {  6,  7, 14,  1, 24,  5 }, { 3, 1, 1, 1, 2, 1 },         11,         13,     22,               140,               160, MonsterAIID::Mega,           MFLAG_SEARCH | MFLAG_CAN_OPEN_DOOR,                               1,    110,             8,         14,         22,             0,                    3,                 0,                 0,          65, MonsterClass::Demon,  RESIST_MAGIC | IMMUNE_FIRE,                                  RESIST_MAGIC | IMMUNE_FIRE,                                               7, 0,                    2714 },
-/* MT_VTEXLRD */ { P_("monster", "Vortex Lord"),             nullptr,          "mega\\vtexl",       MonsterSpriteId::Slayer,          MonsterAvailability::Retail,    160,   2220, true,        true,             {  6,  7, 14,  1, 24,  5 }, { 3, 1, 1, 1, 2, 1 },         12,         14,     24,               160,               180, MonsterAIID::Mega,           MFLAG_SEARCH | MFLAG_CAN_OPEN_DOOR,                               2,    120,             8,         18,         24,             0,                    3,                 0,                 0,          70, MonsterClass::Demon,  RESIST_MAGIC | IMMUNE_FIRE,                                  RESIST_MAGIC | IMMUNE_FIRE | RESIST_LIGHTNING,                            7, 0,                    3252 },
-/* MT_BALROG  */ { P_("monster", "Balrog"),                  nullptr,          "mega\\balr",        MonsterSpriteId::Slayer,          MonsterAvailability::Retail,    160,   2220, true,        true,             {  6,  7, 14,  1, 24,  5 }, { 3, 1, 1, 1, 2, 1 },         13,         15,     26,               180,               200, MonsterAIID::Mega,           MFLAG_SEARCH | MFLAG_CAN_OPEN_DOOR,                               3,    130,             8,         22,         30,             0,                    3,                 0,                 0,          75, MonsterClass::Demon,  RESIST_MAGIC | IMMUNE_FIRE,                                  RESIST_MAGIC | IMMUNE_FIRE | RESIST_LIGHTNING,                            7, 0,                    3643 },
-/* MT_NSNAKE  */ { P_("monster", "Cave Viper"),              nullptr,          nullptr,             MonsterSpriteId::Viper,           MonsterAvailability::Retail,    160,   1270, false,       false,            { 12, 11, 13,  5, 18,  0 }, { 2, 1, 1, 1, 1, 1 },         11,         13,     21,               100,               150, MonsterAIID::Snake,          MFLAG_SEARCH,                                                     0,     90,             8,          8,         20,             0,                    0,                 0,                 0,          60, MonsterClass::Demon,  IMMUNE_MAGIC,                                                IMMUNE_MAGIC,                                                             7, 0,                    2725 },
-/* MT_RSNAKE  */ { P_("monster", "Fire Drake"),              nullptr,          "snake\\snakr",      MonsterSpriteId::Viper,           MonsterAvailability::Retail,    160,   1270, false,       false,            { 12, 11, 13,  5, 18,  0 }, { 2, 1, 1, 1, 1, 1 },         12,         14,     23,               120,               170, MonsterAIID::Snake,          MFLAG_SEARCH,                                                     1,    105,             8,         12,         24,             0,                    0,                 0,                 0,          65, MonsterClass::Demon,  IMMUNE_MAGIC | RESIST_FIRE,                                  IMMUNE_MAGIC | IMMUNE_FIRE,                                               7, 0,                    3139 },
-/* MT_BSNAKE  */ { P_("monster", "Gold Viper"),              nullptr,          "snake\\snakg",      MonsterSpriteId::Viper,           MonsterAvailability::Retail,    160,   1270, false,       false,            { 12, 11, 13,  5, 18,  0 }, { 2, 1, 1, 1, 1, 1 },         13,         14,     25,               140,               180, MonsterAIID::Snake,          MFLAG_SEARCH,                                                     2,    120,             8,         15,         26,             0,                    0,                 0,                 0,          70, MonsterClass::Demon,  IMMUNE_MAGIC |               RESIST_LIGHTNING,               IMMUNE_MAGIC |               RESIST_LIGHTNING,                            7, 0,                    3540 },
-/* MT_GSNAKE  */ { P_("monster", "Azure Drake"),             nullptr,          "snake\\snakb",      MonsterSpriteId::Viper,           MonsterAvailability::Retail,    160,   1270, false,       false,            { 12, 11, 13,  5, 18,  0 }, { 2, 1, 1, 1, 1, 1 },         15,         16,     27,               160,               200, MonsterAIID::Snake,          MFLAG_SEARCH,                                                     3,    130,             8,         18,         30,             0,                    0,                 0,                 0,          75, MonsterClass::Demon,  RESIST_FIRE | RESIST_LIGHTNING,                              IMMUNE_MAGIC | RESIST_FIRE | IMMUNE_LIGHTNING,                            7, 0,                    3791 },
-/* MT_NBLACK  */ { P_("monster", "Black Knight"),            nullptr,          nullptr,             MonsterSpriteId::BlackKnight,     MonsterAvailability::Retail,    160,   2120, false,       false,            {  8,  8, 16,  4, 24,  0 }, { 2, 1, 1, 1, 1, 1 },         12,         14,     24,               150,               150, MonsterAIID::SkeletonMelee,  MFLAG_SEARCH,                                                     0,    110,             8,         15,         20,             0,                    0,                 0,                 0,          75, MonsterClass::Demon,  RESIST_MAGIC |               RESIST_LIGHTNING,               RESIST_MAGIC |               IMMUNE_LIGHTNING,                            7, 0,                    3360 },
-/* MT_RTBLACK */ { P_("monster", "Doom Guard"),              nullptr,          "black\\blkkntrt",   MonsterSpriteId::BlackKnight,     MonsterAvailability::Retail,    160,   2120, false,       false,            {  8,  8, 16,  4, 24,  0 }, { 2, 1, 1, 1, 1, 1 },         13,         15,     26,               165,               165, MonsterAIID::SkeletonMelee,  MFLAG_SEARCH,                                                     0,    130,             8,         18,         25,             0,                    0,                 0,                 0,          75, MonsterClass::Demon,  RESIST_MAGIC | RESIST_FIRE,                                  RESIST_MAGIC | IMMUNE_FIRE,                                               7, 0,                    3650 },
-/* MT_BTBLACK */ { P_("monster", "Steel Lord"),              nullptr,          "black\\blkkntbt",   MonsterSpriteId::BlackKnight,     MonsterAvailability::Retail,    160,   2120, false,       false,            {  8,  8, 16,  4, 24,  0 }, { 2, 1, 1, 1, 1, 1 },         14,         16,     28,               180,               180, MonsterAIID::SkeletonMelee,  MFLAG_SEARCH,                                                     1,    120,             8,         20,         30,             0,                    0,                 0,                 0,          80, MonsterClass::Demon,  RESIST_MAGIC | IMMUNE_FIRE | RESIST_LIGHTNING,               IMMUNE_MAGIC | IMMUNE_FIRE | RESIST_LIGHTNING,                            7, 0,                    4252 },
-/* MT_RBLACK  */ { P_("monster", "Blood Knight"),            nullptr,          "black\\blkkntbe",   MonsterSpriteId::BlackKnight,     MonsterAvailability::Retail,    160,   2120, false,       false,            {  8,  8, 16,  4, 24,  0 }, { 2, 1, 1, 1, 1, 1 },         13,         14,     30,               200,               200, MonsterAIID::SkeletonMelee,  MFLAG_SEARCH,                                                     1,    130,             8,         25,         35,             0,                    0,                 0,                 0,          85, MonsterClass::Demon,  IMMUNE_MAGIC | RESIST_FIRE | IMMUNE_LIGHTNING,               IMMUNE_MAGIC | RESIST_FIRE | IMMUNE_LIGHTNING,                            7, 0,                    5130 },
-/* MT_UNRAV   */ { P_("monster", "The Shredded"),            "newsfx\\shred",  nullptr,             MonsterSpriteId::Shredded,        MonsterAvailability::Retail,     96,    484, false,       false,            { 10, 10, 12,  5, 16,  0 }, { 1, 1, 1, 1, 1, 1 },         17,         18,     23,                70,                90, MonsterAIID::SkeletonMelee,  0,                                                                0,     75,             7,          4,         12,             0,                    0,                 0,                 0,          65, MonsterClass::Undead, RESIST_FIRE | RESIST_LIGHTNING,                              RESIST_FIRE | RESIST_LIGHTNING,                                           3, 0,                     900 },
-/* MT_HOLOWONE*/ { P_("monster", "Hollow One"),              "acid\\acid",     nullptr,             MonsterSpriteId::Shredded,        MonsterAvailability::Never,      96,    484, false,       false,            { 10, 10, 12,  5, 16,  0 }, { 1, 1, 1, 1, 1, 1 },         18,         19,     27,               135,               240, MonsterAIID::SkeletonMelee,  0,                                                                1,     75,             7,         12,         24,             0,                    0,                 0,                 0,          75, MonsterClass::Undead, IMMUNE_MAGIC | IMMUNE_FIRE | RESIST_LIGHTNING,               IMMUNE_MAGIC | IMMUNE_FIRE | RESIST_LIGHTNING,                            3, 0,                    4374 },
-/* MT_PAINMSTR*/ { P_("monster", "Pain Master"),             "acid\\acid",     nullptr,             MonsterSpriteId::Shredded,        MonsterAvailability::Never,      96,    484, false,       false,            { 10, 10, 12,  5, 16,  0 }, { 1, 1, 1, 1, 1, 1 },         19,         20,     29,               110,               200, MonsterAIID::SkeletonMelee,  0,                                                                2,     80,             7,         16,         30,             0,                    0,                 0,                 0,          80, MonsterClass::Undead, IMMUNE_MAGIC | IMMUNE_FIRE | RESIST_LIGHTNING,               IMMUNE_MAGIC | IMMUNE_FIRE | RESIST_LIGHTNING,                            3, 0,                    5147 },
-/* MT_REALWEAV*/ { P_("monster", "Reality Weaver"),          "acid\\acid",     nullptr,             MonsterSpriteId::Shredded,        MonsterAvailability::Never,      96,    484, false,       false,            { 10, 10, 12,  5, 16,  0 }, { 1, 1, 1, 1, 1, 1 },         20,         20,     30,               135,               240, MonsterAIID::SkeletonMelee,  0,                                                                3,     85,             7,         20,         35,             0,                    0,                 0,                 0,          85, MonsterClass::Undead, RESIST_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING,               RESIST_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING,                            3, 0,                    5925 },
-/* MT_SUCCUBUS*/ { P_("monster", "Succubus"),                nullptr,          nullptr,             MonsterSpriteId::Succubus,        MonsterAvailability::Retail,    128,    980, false,       false,            { 14,  8, 16,  7, 24,  0 }, { 1, 1, 1, 1, 1, 1 },         12,         14,     24,               120,               150, MonsterAIID::Succubus,       MFLAG_CAN_OPEN_DOOR,                                              0,    100,            10,          1,         20,             0,                    0,                 0,                 0,          60, MonsterClass::Demon,  RESIST_MAGIC,                                                IMMUNE_MAGIC | RESIST_FIRE,                                               3, 0,                    3696 },
-/* MT_SNOWWICH*/ { P_("monster", "Snow Witch"),              nullptr,          "succ\\succb",       MonsterSpriteId::Succubus,        MonsterAvailability::Retail,    128,    980, false,       false,            { 14,  8, 16,  7, 24,  0 }, { 1, 1, 1, 1, 1, 1 },         13,         15,     26,               135,               175, MonsterAIID::Succubus,       MFLAG_CAN_OPEN_DOOR,                                              1,    110,            10,          1,         24,             0,                    0,                 0,                 0,          65, MonsterClass::Demon,  RESIST_LIGHTNING,                                            IMMUNE_MAGIC |               RESIST_LIGHTNING,                            3, 0,                    4084 },
-/* MT_HLSPWN  */ { P_("monster", "Hell Spawn"),              nullptr,          "succ\\succrw",      MonsterSpriteId::Succubus,        MonsterAvailability::Retail,    128,    980, false,       false,            { 14,  8, 16,  7, 24,  0 }, { 1, 1, 1, 1, 1, 1 },         14,         16,     28,               150,               200, MonsterAIID::Succubus,       MFLAG_SEARCH | MFLAG_CAN_OPEN_DOOR,                               2,    115,            10,          1,         30,             0,                    0,                 0,                 0,          75, MonsterClass::Demon,  RESIST_MAGIC |               IMMUNE_LIGHTNING,               IMMUNE_MAGIC | IMMUNE_FIRE | RESIST_LIGHTNING,                            3, 0,                    4480 },
-/* MT_SOLBRNR */ { P_("monster", "Soul Burner"),             nullptr,          "succ\\succbw",      MonsterSpriteId::Succubus,        MonsterAvailability::Retail,    128,    980, false,       false,            { 14,  8, 16,  7, 24,  0 }, { 1, 1, 1, 1, 1, 1 },         15,         16,     30,               140,               225, MonsterAIID::Succubus,       MFLAG_SEARCH | MFLAG_CAN_OPEN_DOOR,                               3,    120,            10,          1,         35,             0,                    0,                 0,                 0,          85, MonsterClass::Demon,  RESIST_MAGIC | IMMUNE_FIRE | RESIST_LIGHTNING,               IMMUNE_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING,                            3, 0,                    4644 },
-/* MT_COUNSLR */ { P_("monster", "Counselor"),               nullptr,          nullptr,             MonsterSpriteId::Counselor,       MonsterAvailability::Retail,    128,   2000, true,        false,            { 12,  1, 20,  8, 28, 20 }, { 1, 1, 1, 1, 1, 1 },         13,         14,     25,                70,                70, MonsterAIID::Counselor,      MFLAG_CAN_OPEN_DOOR,                                              0,     90,             8,          8,         20,             0,                    0,                 0,                 0,           0, MonsterClass::Demon,  RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING,               RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING,                            7, 0,                    4070 },
-/* MT_MAGISTR */ { P_("monster", "Magistrate"),              nullptr,          "mage\\cnselg",      MonsterSpriteId::Counselor,       MonsterAvailability::Retail,    128,   2000, true,        false,            { 12,  1, 20,  8, 28, 20 }, { 1, 1, 1, 1, 1, 1 },         14,         15,     27,                85,                85, MonsterAIID::Counselor,      MFLAG_CAN_OPEN_DOOR,                                              1,    100,             8,         10,         24,             0,                    0,                 0,                 0,           0, MonsterClass::Demon,  RESIST_MAGIC | IMMUNE_FIRE | RESIST_LIGHTNING,               IMMUNE_MAGIC | IMMUNE_FIRE | RESIST_LIGHTNING,                            7, 0,                    4478 },
-/* MT_CABALIST*/ { P_("monster", "Cabalist"),                nullptr,          "mage\\cnselgd",     MonsterSpriteId::Counselor,       MonsterAvailability::Retail,    128,   2000, true,        false,            { 12,  1, 20,  8, 28, 20 }, { 1, 1, 1, 1, 1, 1 },         15,         16,     29,               120,               120, MonsterAIID::Counselor,      MFLAG_CAN_OPEN_DOOR,                                              2,    110,             8,         14,         30,             0,                    0,                 0,                 0,           0, MonsterClass::Demon,  RESIST_MAGIC | RESIST_FIRE | IMMUNE_LIGHTNING,               IMMUNE_MAGIC | RESIST_FIRE | IMMUNE_LIGHTNING,                            7, 0,                    4929 },
-/* MT_ADVOCATE*/ { P_("monster", "Advocate"),                nullptr,          "mage\\cnselbk",     MonsterSpriteId::Counselor,       MonsterAvailability::Retail,    128,   2000, true,        false,            { 12,  1, 20,  8, 28, 20 }, { 1, 1, 1, 1, 1, 1 },         16,         16,     30,               145,               145, MonsterAIID::Counselor,      MFLAG_CAN_OPEN_DOOR,                                              3,    120,             8,         15,         25,             0,                    0,                 0,                 0,           0, MonsterClass::Demon,  IMMUNE_MAGIC | RESIST_FIRE | IMMUNE_LIGHTNING,               IMMUNE_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING,                            7, 0,                    4968 },
-/* MT_GOLEM   */ { P_("monster", "Golem"),                   "golem\\golm",    nullptr,             MonsterSpriteId::Golem,           MonsterAvailability::Never,      96,    386, true,        false,            {  0, 16, 12,  0, 12, 20 }, { 1, 1, 1, 1, 1, 1 },          1,          1,     12,                 1,                 1, MonsterAIID::Golem,          MFLAG_CAN_OPEN_DOOR,                                              0,      0,             7,          1,          1,             0,                    0,                 0,                 0,           1, MonsterClass::Demon,  0,                                                           0,                                                                        0, 0,                       0 },
-/* MT_DIABLO  */ { P_("monster", "The Dark Lord"),           nullptr,          nullptr,             MonsterSpriteId::Diablo,          MonsterAvailability::Never,     160,   2000, true,        true,             { 16,  6, 16,  6, 16, 16 }, { 1, 1, 1, 1, 1, 1 },         26,         26,     45,              3333,              3333, MonsterAIID::Diablo,         MFLAG_KNOCKBACK | MFLAG_SEARCH | MFLAG_CAN_OPEN_DOOR,             3,    220,             4,         30,         60,             0,                   11,                 0,                 0,          90, MonsterClass::Demon,  IMMUNE_MAGIC | RESIST_FIRE | RESIST_LIGHTNING,               IMMUNE_MAGIC | RESIST_FIRE | RESIST_LIGHTNING,                            7, 0,                   31666 },
-/* MT_DARKMAGE*/ { P_("monster", "The Arch-Litch Malignus"), "darkmage\\dmag", nullptr,             MonsterSpriteId::ArchLitch,       MonsterAvailability::Never,     128,   1060, true,        false,            {  6,  1, 21,  6, 23, 18 }, { 1, 1, 1, 1, 1, 1 },         21,         21,     30,               160,               160, MonsterAIID::Counselor,      MFLAG_CAN_OPEN_DOOR,                                              3,    120,             8,         20,         40,             0,                    0,                 0,                 0,          70, MonsterClass::Demon,  RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING,               IMMUNE_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING,                            7, 0,                    4968 },
-/* MT_HELLBOAR*/ { P_("monster", "Hellboar"),                "newsfx\\hboar",  nullptr,             MonsterSpriteId::Hellboar,        MonsterAvailability::Retail,    188,    800, false,       false,            { 10, 10, 15,  6, 16,  0 }, { 2, 1, 1, 1, 1, 1 },         17,         18,     23,                80,               100, MonsterAIID::SkeletonMelee,  MFLAG_KNOCKBACK | MFLAG_SEARCH,                                   2,     70,             7,         16,         24,             0,                    0,                 0,                 0,          60, MonsterClass::Demon,  0,                                                           RESIST_FIRE | RESIST_LIGHTNING,                                           3, 0,                     750 },
-/* MT_STINGER */ { P_("monster", "Stinger"),                 "newsfx\\stingr", nullptr,             MonsterSpriteId::Stinger,         MonsterAvailability::Retail,     64,    305, false,       false,            { 10, 10, 12,  6, 15,  0 }, { 2, 1, 1, 1, 1, 1 },         17,         18,     22,                30,                40, MonsterAIID::SkeletonMelee,  0,                                                                3,     85,             8,          1,         20,             0,                    0,                 0,                 0,          50, MonsterClass::Animal, 0,                                                           RESIST_LIGHTNING,                                                         1, 0,                     500 },
-/* MT_PSYCHORB*/ { P_("monster", "Psychorb"),                "newsfx\\psyco",  nullptr,             MonsterSpriteId::Psychorb,        MonsterAvailability::Retail,    156,    800, false,       false,            { 12, 13, 13,  7, 21,  0 }, { 2, 1, 1, 1, 1, 1 },         17,         18,     22,                20,                30, MonsterAIID::Psychorb,       0,                                                                3,     80,             8,         10,         10,             0,                    0,                 0,                 0,          40, MonsterClass::Animal, 0,                                                           RESIST_FIRE,                                                              6, 0,                     450 },
-/* MT_ARACHNON*/ { P_("monster", "Arachnon"),                "newsfx\\slord",  nullptr,             MonsterSpriteId::Arachnon,        MonsterAvailability::Retail,    148,    800, false,       false,            { 12, 10, 15,  6, 20,  0 }, { 2, 1, 1, 1, 1, 1 },         17,         18,     22,                60,                80, MonsterAIID::SkeletonMelee,  MFLAG_SEARCH,                                                     3,     50,             8,          5,         15,             0,                    0,                 0,                 0,          50, MonsterClass::Animal, 0,                                                           RESIST_LIGHTNING,                                                         7, 0,                     500 },
-/* MT_FELLTWIN*/ { P_("monster", "Felltwin"),                "newsfx\\ftwin",  nullptr,             MonsterSpriteId::InvisibleLord,   MonsterAvailability::Retail,    128,    800, false,       false,            { 13, 13, 15, 11, 16,  0 }, { 2, 1, 1, 1, 1, 1 },         17,         18,     22,                50,                70, MonsterAIID::SkeletonMelee,  MFLAG_SEARCH | MFLAG_CAN_OPEN_DOOR,                               3,     70,             8,         10,         18,             0,                    0,                 0,                 0,          50, MonsterClass::Demon,  0,                                                           RESIST_FIRE | RESIST_LIGHTNING,                                           3, 0,                     600 },
-/* MT_HORKSPWN*/ { P_("monster", "Hork Spawn"),              "newsfx\\hspawn", nullptr,             MonsterSpriteId::HorkSpawn,       MonsterAvailability::Retail,    164,    520, false,       true,             { 15, 12, 14, 11, 14,  0 }, { 1, 1, 1, 1, 1, 1 },         18,         19,     22,                30,                30, MonsterAIID::SkeletonMelee,  0,                                                                3,     60,             8,         10,         25,             0,                    0,                 0,                 0,          25, MonsterClass::Demon,  RESIST_MAGIC,                                                RESIST_MAGIC,                                                             3, 0,                     250 },
-/* MT_VENMTAIL*/ { P_("monster", "Venomtail"),               "newsfx\\stingr", nullptr,             MonsterSpriteId::Venomtail,       MonsterAvailability::Retail,     86,    305, false,       false,            { 10, 10, 12,  6, 15,  0 }, { 2, 1, 1, 1, 1, 1 },         19,         20,     24,                40,                50, MonsterAIID::SkeletonMelee,  0,                                                                3,     85,             8,          1,         30,             0,                    0,                 0,                 0,          60, MonsterClass::Animal, RESIST_LIGHTNING,                                            IMMUNE_LIGHTNING,                                                         1, 0,                    1000 },
-/* MT_NECRMORB*/ { P_("monster", "Necromorb"),               "newsfx\\psyco",  nullptr,             MonsterSpriteId::Necromorb,       MonsterAvailability::Retail,    140,    800, false,       false,            { 12, 13, 13,  7, 21,  0 }, { 2, 1, 1, 1, 1, 1 },         19,         20,     24,                30,                40, MonsterAIID::Necromorb,      0,                                                                3,     80,             8,         20,         20,             0,                    0,                 0,                 0,          50, MonsterClass::Animal, RESIST_FIRE,                                                 IMMUNE_FIRE | RESIST_LIGHTNING,                                           6, 0,                    1100 },
-/* MT_SPIDLORD*/ { P_("monster", "Spider Lord"),             "newsfx\\slord",  nullptr,             MonsterSpriteId::SpiderLord,      MonsterAvailability::Retail,    148,    800, true,        true,             { 12, 10, 15,  6, 20, 10 }, { 2, 1, 1, 1, 1, 1 },         19,         20,     24,                80,               100, MonsterAIID::Acid,           MFLAG_SEARCH,                                                     3,     60,             8,          8,         20,            75,                    8,                10,                10,          60, MonsterClass::Animal, RESIST_LIGHTNING,                                            RESIST_FIRE | IMMUNE_LIGHTNING,                                           7, 0,                    1250 },
-/* MT_LASHWORM*/ { P_("monster", "Lashworm"),                "newsfx\\lworm",  nullptr,             MonsterSpriteId::Lashworm,        MonsterAvailability::Retail,    176,    800, false,       false,            { 10, 12, 15,  6, 16,  0 }, { 1, 1, 1, 1, 1, 1 },         19,         20,     20,                30,                30, MonsterAIID::SkeletonMelee,  0,                                                                3,     90,             8,         12,         20,             0,                    0,                 0,                 0,          50, MonsterClass::Animal, 0,                                                           RESIST_FIRE,                                                              3, 0,                     600 },
-/* MT_TORCHANT*/ { P_("monster", "Torchant"),                "newsfx\\tchant", nullptr,             MonsterSpriteId::Torchant,        MonsterAvailability::Retail,    192,    800, false,       false,            { 14, 12, 12,  6, 20,  0 }, { 2, 1, 1, 1, 1, 1 },         19,         20,     22,                60,                80, MonsterAIID::Torchant,       0,                                                                3,     75,             8,         20,         30,             0,                    0,                 0,                 0,          70, MonsterClass::Animal, IMMUNE_FIRE,                                                 RESIST_MAGIC | IMMUNE_FIRE | RESIST_LIGHTNING,                            7, 0,                    1250 },
-/* MT_HORKDMN */ { P_("monster", "Hork Demon"),              "newsfx\\hdemon", nullptr,             MonsterSpriteId::HorkDemon,       MonsterAvailability::Never,     138,    800, true,        true,             { 15,  8, 16,  6, 16,  9 }, { 2, 1, 1, 1, 1, 2 },         19,         19,     27,               120,               160, MonsterAIID::SkeletonMelee,  0,                                                                3,     60,             8,         20,         35,            80,                    8,                 0,                 0,          80, MonsterClass::Demon,  RESIST_LIGHTNING,                                            RESIST_MAGIC |               IMMUNE_LIGHTNING,                            7, 0,                    2000 },
-/* MT_DEFILER */ { P_("monster", "Hell Bug"),                "newsfx\\defile", nullptr,             MonsterSpriteId::HellBug,         MonsterAvailability::Never,     198,    800, true,        true,             {  8,  8, 14,  6, 14, 12 }, { 1, 1, 1, 1, 1, 1 },         20,         20,     30,               240,               240, MonsterAIID::SkeletonMelee,  MFLAG_SEARCH,                                                     3,    110,             8,         20,         30,            90,                    8,                50,                60,          80, MonsterClass::Demon,  RESIST_MAGIC | RESIST_FIRE | IMMUNE_LIGHTNING,               RESIST_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING,                            7, 0,                    5000 },
-/* MT_GRAVEDIG*/ { P_("monster", "Gravedigger"),             "newsfx\\gdiggr", nullptr,             MonsterSpriteId::Gravedigger,     MonsterAvailability::Retail,    124,    800, true,        true,             { 24, 24, 12,  6, 16, 16 }, { 2, 1, 1, 1, 1, 1 },         21,         21,     26,               120,               240, MonsterAIID::Scavenger,      MFLAG_CAN_OPEN_DOOR,                                              3,     80,             6,          2,         12,             0,                    0,                 0,                 0,          20, MonsterClass::Undead, IMMUNE_LIGHTNING,                                            RESIST_MAGIC | RESIST_FIRE | IMMUNE_LIGHTNING,                            3, 0,                    2000 },
-/* MT_TOMBRAT */ { P_("monster", "Tomb Rat"),                "newsfx\\tmbrat", nullptr,             MonsterSpriteId::Rat,             MonsterAvailability::Retail,    104,    550, false,       false,            { 11,  8, 12,  6, 20,  0 }, { 2, 1, 1, 1, 1, 1 },         21,         22,     24,                80,               120, MonsterAIID::SkeletonMelee,  0,                                                                3,    120,             8,         12,         25,             0,                    0,                 0,                 0,          30, MonsterClass::Animal, 0,                                                           RESIST_FIRE | RESIST_LIGHTNING,                                           3, 0,                    1800 },
-/* MT_FIREBAT */ { P_("monster", "Firebat"),                 "newsfx\\helbat", nullptr,             MonsterSpriteId::Firebat,         MonsterAvailability::Retail,     96,    550, false,       false,            { 18, 16, 14,  6, 18, 11 }, { 2, 1, 1, 1, 1, 1 },         21,         22,     24,                60,                80, MonsterAIID::FireBat,        0,                                                                3,    100,             8,         15,         20,             0,                    0,                 0,                 0,          70, MonsterClass::Animal, IMMUNE_FIRE,                                                 RESIST_MAGIC | IMMUNE_FIRE | RESIST_LIGHTNING,                            7, 0,                    2400 },
-/* MT_SKLWING */ { P_("monster", "Skullwing"),               "newsfx\\swing",  "skelaxe\\skelt",    MonsterSpriteId::SkeletonDemon,   MonsterAvailability::Retail,    128,   1740, true,        false,            { 10,  8, 20,  6, 24, 16 }, { 3, 1, 1, 1, 1, 1 },         21,         22,     27,                70,                70, MonsterAIID::SkeletonMelee,  0,                                                                0,     75,             7,         15,         20,            75,                    9,                15,                20,          80, MonsterClass::Undead, RESIST_FIRE | RESIST_LIGHTNING,                              RESIST_FIRE | RESIST_LIGHTNING,                                           7, 0,                    3000 },
-/* MT_LICH    */ { P_("monster", "Lich"),                    "newsfx\\lich",   nullptr,             MonsterSpriteId::Lich,            MonsterAvailability::Retail,     96,    800, false,       true,             { 12, 10, 10,  7, 21,  0 }, { 2, 1, 1, 1, 2, 1 },         21,         22,     25,                80,               100, MonsterAIID::Lich,           0,                                                                3,    100,             8,         15,         20,             0,                    0,                 0,                 0,          60, MonsterClass::Undead, RESIST_LIGHTNING,                                            RESIST_MAGIC | RESIST_FIRE | IMMUNE_LIGHTNING,                            3, 0,                    3000 },
-/* MT_CRYPTDMN*/ { P_("monster", "Crypt Demon"),             "newsfx\\crypt",  nullptr,             MonsterSpriteId::CryptDemon,      MonsterAvailability::Retail,    154,    800, false,       true,             {  8, 18, 12,  8, 21,  0 }, { 3, 1, 1, 1, 1, 1 },         22,         23,     28,               200,               240, MonsterAIID::SkeletonMelee,  0,                                                                3,    100,             8,         20,         40,             0,                    0,                 0,                 0,          85, MonsterClass::Demon,  IMMUNE_MAGIC | RESIST_FIRE | RESIST_LIGHTNING,               IMMUNE_MAGIC | IMMUNE_FIRE | RESIST_LIGHTNING,                            3, 0,                    3200 },
-/* MT_HELLBAT */ { P_("monster", "Hellbat"),                 "newsfx\\helbat", nullptr,             MonsterSpriteId::Hellbat,         MonsterAvailability::Retail,     96,    550, true,        false,            { 18, 16, 14,  6, 18, 11 }, { 2, 1, 1, 1, 1, 1 },         23,         24,     29,               100,               140, MonsterAIID::Torchant,       0,                                                                3,    110,             8,         30,         30,             0,                    0,                 0,                 0,          80, MonsterClass::Demon,  RESIST_MAGIC | IMMUNE_FIRE  | RESIST_LIGHTNING,              RESIST_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING,                            7, 0,                    3600 },
-/* MT_BONEDEMN*/ { P_("monster", "Bone Demon"),              "newsfx\\swing",  nullptr,             MonsterSpriteId::SkeletonDemon,   MonsterAvailability::Retail,    128,   1740, true,        true,             { 10,  8, 20,  6, 24, 16 }, { 3, 1, 1, 1, 1, 1 },         23,         24,     30,               240,               280, MonsterAIID::BoneDemon,      0,                                                                0,    100,             8,         40,         50,           160,                   12,                50,                50,          50, MonsterClass::Undead, IMMUNE_FIRE  | IMMUNE_LIGHTNING,                             IMMUNE_FIRE | IMMUNE_LIGHTNING,                                           7, 0,                    5000 },
-/* MT_ARCHLICH*/ { P_("monster", "Arch Lich"),               "newsfx\\lich",   nullptr,             MonsterSpriteId::ArchLich,        MonsterAvailability::Retail,    136,    800, false,       true,             { 12, 10, 10,  7, 21,  0 }, { 2, 1, 1, 1, 2, 1 },         23,         24,     30,               180,               200, MonsterAIID::ArchLich,       0,                                                                3,    120,             8,         30,         30,             0,                    0,                 0,                 0,          75, MonsterClass::Undead, RESIST_MAGIC | RESIST_FIRE | IMMUNE_LIGHTNING,               IMMUNE_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING,                            3, 0,                    4000 },
-/* MT_BICLOPS */ { P_("monster", "Biclops"),                 "newsfx\\biclop", nullptr,             MonsterSpriteId::Biclops,         MonsterAvailability::Retail,    180,    800, false,       false,            { 10, 11, 16,  6, 16,  0 }, { 2, 1, 1, 1, 2, 1 },         23,         24,     30,               200,               240, MonsterAIID::SkeletonMelee,  MFLAG_KNOCKBACK |                MFLAG_CAN_OPEN_DOOR,             3,     90,             8,         40,         50,             0,                    0,                 0,                 0,          80, MonsterClass::Demon,  RESIST_LIGHTNING,                                            RESIST_FIRE | RESIST_LIGHTNING,                                           3, 0,                    4000 },
-/* MT_FLESTHNG*/ { P_("monster", "Flesh Thing"),             "newsfx\\flesht", nullptr,             MonsterSpriteId::FleshThing,      MonsterAvailability::Retail,    164,    800, false,       true,             { 15, 24, 15,  6, 16,  0 }, { 1, 1, 1, 1, 1, 1 },         23,         24,     28,               300,               400, MonsterAIID::SkeletonMelee,  0,                                                                3,    150,             8,         12,         18,             0,                    0,                 0,                 0,          70, MonsterClass::Demon,  RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING,               RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING,                            3, 0,                    4000 },
-/* MT_REAPER  */ { P_("monster", "Reaper"),                  "newsfx\\reaper", nullptr,             MonsterSpriteId::Reaper,          MonsterAvailability::Retail,    180,    800, false,       false,            { 12, 10, 14,  6, 16,  0 }, { 2, 1, 1, 1, 1, 1 },         23,         24,     30,               260,               300, MonsterAIID::SkeletonMelee,  0,                                                                3,    120,             8,         30,         35,             0,                    0,                 0,                 0,          90, MonsterClass::Demon,  IMMUNE_MAGIC | IMMUNE_FIRE  | RESIST_LIGHTNING,              IMMUNE_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING,                            3, 0,                    6000 },
-// TRANSLATORS: Monster Block end
-/* MT_NAKRUL  */ { P_("monster", "Na-Krul"),                 "newsfx\\nakrul", nullptr,             MonsterSpriteId::NaKrul,          MonsterAvailability::Never,     226,   1200, true,        true,             {  2,  6, 16,  3, 16, 16 }, { 1, 1, 1, 1, 1, 1 },         31,         31,     40,              1332,              1332, MonsterAIID::SkeletonMelee,  MFLAG_KNOCKBACK | MFLAG_SEARCH | MFLAG_CAN_OPEN_DOOR,             3,    150,             7,         40,         50,           150,                   10,                40,                50,         125, MonsterClass::Demon,  IMMUNE_MAGIC | IMMUNE_FIRE  | RESIST_LIGHTNING,              IMMUNE_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING,                            7, 0,                   13333 },
-	// clang-format on
-};
+std::vector<MonsterData> MonstersData;
 
 /**
  * Map between .DUN file value and monster type enum
@@ -399,6 +200,420 @@ const _monster_id MonstConvTbl[] = {
 	MT_INVILORD,
 	MT_LRDSAYTR,
 };
+
+tl::expected<MonsterAvailability, std::string> ParseMonsterAvailability(std::string_view value)
+{
+	if (value == "Always")
+		return MonsterAvailability::Always;
+	if (value == "Never")
+		return MonsterAvailability::Never;
+	if (value == "Retail")
+		return MonsterAvailability::Retail;
+	return tl::make_unexpected("Expected one of: Always, Never, or Retail");
+}
+
+tl::expected<MonsterAIID, std::string> ParseAiId(std::string_view value)
+{
+	if (value == "Zombie")
+		return MonsterAIID::Zombie;
+	if (value == "Fat")
+		return MonsterAIID::Fat;
+	if (value == "SkeletonMelee")
+		return MonsterAIID::SkeletonMelee;
+	if (value == "SkeletonRanged")
+		return MonsterAIID::SkeletonRanged;
+	if (value == "Scavenger")
+		return MonsterAIID::Scavenger;
+	if (value == "Rhino")
+		return MonsterAIID::Rhino;
+	if (value == "GoatMelee")
+		return MonsterAIID::GoatMelee;
+	if (value == "GoatRanged")
+		return MonsterAIID::GoatRanged;
+	if (value == "Fallen")
+		return MonsterAIID::Fallen;
+	if (value == "Magma")
+		return MonsterAIID::Magma;
+	if (value == "SkeletonKing")
+		return MonsterAIID::SkeletonKing;
+	if (value == "Bat")
+		return MonsterAIID::Bat;
+	if (value == "Gargoyle")
+		return MonsterAIID::Gargoyle;
+	if (value == "Butcher")
+		return MonsterAIID::Butcher;
+	if (value == "Succubus")
+		return MonsterAIID::Succubus;
+	if (value == "Sneak")
+		return MonsterAIID::Sneak;
+	if (value == "Storm")
+		return MonsterAIID::Storm;
+	if (value == "FireMan")
+		return MonsterAIID::FireMan;
+	if (value == "Gharbad")
+		return MonsterAIID::Gharbad;
+	if (value == "Acid")
+		return MonsterAIID::Acid;
+	if (value == "AcidUnique")
+		return MonsterAIID::AcidUnique;
+	if (value == "Golem")
+		return MonsterAIID::Golem;
+	if (value == "Zhar")
+		return MonsterAIID::Zhar;
+	if (value == "Snotspill")
+		return MonsterAIID::Snotspill;
+	if (value == "Snake")
+		return MonsterAIID::Snake;
+	if (value == "Counselor")
+		return MonsterAIID::Counselor;
+	if (value == "Mega")
+		return MonsterAIID::Mega;
+	if (value == "Diablo")
+		return MonsterAIID::Diablo;
+	if (value == "Lazarus")
+		return MonsterAIID::Lazarus;
+	if (value == "LazarusSuccubus")
+		return MonsterAIID::LazarusSuccubus;
+	if (value == "Lachdanan")
+		return MonsterAIID::Lachdanan;
+	if (value == "Warlord")
+		return MonsterAIID::Warlord;
+	if (value == "FireBat")
+		return MonsterAIID::FireBat;
+	if (value == "Torchant")
+		return MonsterAIID::Torchant;
+	if (value == "HorkDemon")
+		return MonsterAIID::HorkDemon;
+	if (value == "Lich")
+		return MonsterAIID::Lich;
+	if (value == "ArchLich")
+		return MonsterAIID::ArchLich;
+	if (value == "Psychorb")
+		return MonsterAIID::Psychorb;
+	if (value == "Necromorb")
+		return MonsterAIID::Necromorb;
+	if (value == "BoneDemon")
+		return MonsterAIID::BoneDemon;
+	return tl::make_unexpected("Unknown enum value");
+}
+
+tl::expected<monster_flag, std::string> ParseMonsterFlag(std::string_view value)
+{
+	if (value == "HIDDEN")
+		return MFLAG_HIDDEN;
+	if (value == "LOCK_ANIMATION")
+		return MFLAG_LOCK_ANIMATION;
+	if (value == "ALLOW_SPECIAL")
+		return MFLAG_ALLOW_SPECIAL;
+	if (value == "TARGETS_MONSTER")
+		return MFLAG_TARGETS_MONSTER;
+	if (value == "GOLEM")
+		return MFLAG_GOLEM;
+	if (value == "QUEST_COMPLETE")
+		return MFLAG_QUEST_COMPLETE;
+	if (value == "KNOCKBACK")
+		return MFLAG_KNOCKBACK;
+	if (value == "SEARCH")
+		return MFLAG_SEARCH;
+	if (value == "CAN_OPEN_DOOR")
+		return MFLAG_CAN_OPEN_DOOR;
+	if (value == "NO_ENEMY")
+		return MFLAG_NO_ENEMY;
+	if (value == "BERSERK")
+		return MFLAG_BERSERK;
+	if (value == "NOLIFESTEAL")
+		return MFLAG_NOLIFESTEAL;
+	return tl::make_unexpected("Unknown enum value");
+}
+
+tl::expected<MonsterClass, std::string> ParseMonsterClass(std::string_view value)
+{
+	if (value == "Undead")
+		return MonsterClass::Undead;
+	if (value == "Demon")
+		return MonsterClass::Demon;
+	if (value == "Animal")
+		return MonsterClass::Animal;
+	return tl::make_unexpected("Unknown enum value");
+}
+
+tl::expected<monster_resistance, std::string> ParseMonsterResistance(std::string_view value)
+{
+	if (value == "RESIST_MAGIC")
+		return RESIST_MAGIC;
+	if (value == "RESIST_FIRE")
+		return RESIST_FIRE;
+	if (value == "RESIST_LIGHTNING")
+		return RESIST_LIGHTNING;
+	if (value == "IMMUNE_MAGIC")
+		return IMMUNE_MAGIC;
+	if (value == "IMMUNE_FIRE")
+		return IMMUNE_FIRE;
+	if (value == "IMMUNE_LIGHTNING")
+		return IMMUNE_LIGHTNING;
+	if (value == "IMMUNE_ACID")
+		return IMMUNE_ACID;
+	return tl::make_unexpected("Unknown enum value");
+}
+
+void LoadMonsterData()
+{
+	const std::string_view filename = "txtdata\\monsters\\monstdat.tsv";
+	tl::expected<DataFile, DataFile::Error> dataFileResult = DataFile::load(filename);
+	if (!dataFileResult.has_value()) {
+		DataFile::reportFatalError(dataFileResult.error(), filename);
+	}
+
+	DataFile &dataFile = dataFileResult.value();
+	if (tl::expected<void, DataFile::Error> result = dataFile.skipHeader();
+	    !result.has_value()) {
+		DataFile::reportFatalError(result.error(), filename);
+	}
+
+	MonstersData.clear();
+	std::unordered_map<std::string, size_t> spritePathToId;
+	for (DataFileRecord record : dataFile) {
+		FieldIterator fieldIt = record.begin();
+		const FieldIterator endField = record.end();
+
+		MonstersData.emplace_back();
+		MonsterData &monster = MonstersData.back();
+
+		const auto advance = [&]() {
+			++fieldIt;
+			if (fieldIt == endField) {
+				DataFile::reportFatalError(DataFile::Error::NotEnoughColumns, filename);
+			}
+		};
+
+		// Skip the first column (monster ID).
+
+		// name
+		advance();
+		monster.name = (*fieldIt).value();
+
+		// assetsSuffix
+		advance();
+		{
+			std::string assetsSuffix { (*fieldIt).value() };
+			const auto [it, inserted] = spritePathToId.emplace(assetsSuffix, spritePathToId.size());
+			if (inserted)
+				MonsterSpritePaths.push_back(it->first);
+			monster.spriteId = it->second;
+		}
+
+		// soundSuffix
+		advance();
+		monster.soundSuffix = (*fieldIt).value();
+
+		// trnFile
+		advance();
+		monster.trnFile = (*fieldIt).value();
+
+		// availability
+		advance();
+		if (tl::expected<MonsterAvailability, std::string> result = ParseMonsterAvailability((*fieldIt).value()); result.has_value()) {
+			monster.availability = *std::move(result);
+		} else {
+			DataFile::reportFatalFieldError(DataFileField::Error::InvalidValue, filename, "availability", *fieldIt, result.error());
+		}
+
+		// width
+		advance();
+		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(monster.width); !result.has_value()) {
+			DataFile::reportFatalFieldError(result.error(), filename, "width", *fieldIt);
+		}
+
+		// image
+		advance();
+		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(monster.image); !result.has_value()) {
+			DataFile::reportFatalFieldError(result.error(), filename, "image", *fieldIt);
+		}
+
+		// hasSpecial
+		advance();
+		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseBool(monster.hasSpecial); !result.has_value()) {
+			DataFile::reportFatalFieldError(result.error(), filename, "hasSpecial", *fieldIt);
+		}
+
+		// hasSpecialSound
+		advance();
+		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseBool(monster.hasSpecialSound); !result.has_value()) {
+			DataFile::reportFatalFieldError(result.error(), filename, "hasSpecialSound", *fieldIt);
+		}
+
+		// frames[6]
+		advance();
+		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseIntArray(monster.frames); !result.has_value()) {
+			DataFile::reportFatalFieldError(result.error(), filename, "frames", *fieldIt);
+		}
+
+		// rate[6]
+		advance();
+		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseIntArray(monster.rate); !result.has_value()) {
+			DataFile::reportFatalFieldError(result.error(), filename, "rate", *fieldIt);
+		}
+
+		// minDunLvl
+		advance();
+		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(monster.minDunLvl); !result.has_value()) {
+			DataFile::reportFatalFieldError(result.error(), filename, "minDunLvl", *fieldIt);
+		}
+
+		// maxDunLvl
+		advance();
+		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(monster.maxDunLvl); !result.has_value()) {
+			DataFile::reportFatalFieldError(result.error(), filename, "maxDunLvl", *fieldIt);
+		}
+
+		// level
+		advance();
+		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(monster.level); !result.has_value()) {
+			DataFile::reportFatalFieldError(result.error(), filename, "level", *fieldIt);
+		}
+
+		// hitPointsMinimum
+		advance();
+		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(monster.hitPointsMinimum); !result.has_value()) {
+			DataFile::reportFatalFieldError(result.error(), filename, "hitPointsMinimum", *fieldIt);
+		}
+
+		// hitPointsMaximum
+		advance();
+		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(monster.hitPointsMaximum); !result.has_value()) {
+			DataFile::reportFatalFieldError(result.error(), filename, "hitPointsMaximum", *fieldIt);
+		}
+
+		// ai
+		advance();
+		if (tl::expected<MonsterAIID, std::string> result = ParseAiId((*fieldIt).value()); result.has_value()) {
+			monster.ai = *std::move(result);
+		} else {
+			DataFile::reportFatalFieldError(DataFileField::Error::InvalidValue, filename, "ai", *fieldIt, result.error());
+		}
+
+		// abilityFlags
+		advance();
+		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseEnumList(monster.abilityFlags, ParseMonsterFlag); !result.has_value()) {
+			DataFile::reportFatalFieldError(result.error(), filename, "abilityFlags", *fieldIt);
+		}
+
+		// intelligence
+		advance();
+		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(monster.intelligence); !result.has_value()) {
+			DataFile::reportFatalFieldError(result.error(), filename, "intelligence", *fieldIt);
+		}
+
+		// toHit
+		advance();
+		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(monster.toHit); !result.has_value()) {
+			DataFile::reportFatalFieldError(result.error(), filename, "toHit", *fieldIt);
+		}
+
+		// animFrameNum
+		advance();
+		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(monster.animFrameNum); !result.has_value()) {
+			DataFile::reportFatalFieldError(result.error(), filename, "animFrameNum", *fieldIt);
+		}
+
+		// minDamage
+		advance();
+		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(monster.minDamage); !result.has_value()) {
+			DataFile::reportFatalFieldError(result.error(), filename, "minDamage", *fieldIt);
+		}
+
+		// maxDamage
+		advance();
+		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(monster.maxDamage); !result.has_value()) {
+			DataFile::reportFatalFieldError(result.error(), filename, "maxDamage", *fieldIt);
+		}
+
+		// toHitSpecial
+		advance();
+		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(monster.toHitSpecial); !result.has_value()) {
+			DataFile::reportFatalFieldError(result.error(), filename, "toHitSpecial", *fieldIt);
+		}
+
+		// animFrameNumSpecial
+		advance();
+		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(monster.animFrameNumSpecial); !result.has_value()) {
+			DataFile::reportFatalFieldError(result.error(), filename, "animFrameNumSpecial", *fieldIt);
+		}
+
+		// minDamageSpecial
+		advance();
+		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(monster.minDamageSpecial); !result.has_value()) {
+			DataFile::reportFatalFieldError(result.error(), filename, "minDamageSpecial", *fieldIt);
+		}
+
+		// maxDamageSpecial
+		advance();
+		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(monster.maxDamageSpecial); !result.has_value()) {
+			DataFile::reportFatalFieldError(result.error(), filename, "maxDamageSpecial", *fieldIt);
+		}
+
+		// armorClass
+		advance();
+		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(monster.armorClass); !result.has_value()) {
+			DataFile::reportFatalFieldError(result.error(), filename, "armorClass", *fieldIt);
+		}
+
+		// monsterClass
+		advance();
+		if (tl::expected<MonsterClass, std::string> result = ParseMonsterClass((*fieldIt).value()); result.has_value()) {
+			monster.monsterClass = *std::move(result);
+		} else {
+			DataFile::reportFatalFieldError(DataFileField::Error::InvalidValue, filename, "monsterClass", *fieldIt, result.error());
+		}
+
+		// resistance
+		advance();
+		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseEnumList(monster.resistance, ParseMonsterResistance); !result.has_value()) {
+			DataFile::reportFatalFieldError(result.error(), filename, "resistance", *fieldIt);
+		}
+
+		// resistanceHell
+		advance();
+		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseEnumList(monster.resistanceHell, ParseMonsterResistance); !result.has_value()) {
+			DataFile::reportFatalFieldError(result.error(), filename, "resistanceHell", *fieldIt);
+		}
+
+		// selectionType
+		advance();
+		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(monster.selectionType); !result.has_value()) {
+			DataFile::reportFatalFieldError(result.error(), filename, "selectionType", *fieldIt);
+		}
+
+		// treasure
+		// TODO: Replace this hack with proper parsing once unique monsters have been migrated.
+		advance();
+		{
+			const std::string_view value = (*fieldIt).value();
+			if (value.empty()) {
+				monster.treasure = 0;
+			} else if (value == "None") {
+				monster.treasure = T_NODROP;
+			} else if (value == "Uniq(SKCROWN)") {
+				monster.treasure = Uniq(UITEM_SKCROWN);
+			} else if (value == "Uniq(CLEAVER)") {
+				monster.treasure = Uniq(UITEM_CLEAVER);
+			} else {
+				DataFile::reportFatalFieldError(DataFileField::Error::InvalidValue, filename, "treasure", *fieldIt, "NOTE: Parser is incomplete");
+			}
+		}
+
+		// exp
+		advance();
+		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(monster.exp); !result.has_value()) {
+			DataFile::reportFatalFieldError(result.error(), filename, "exp", *fieldIt);
+		}
+	}
+}
+
+size_t GetNumMonsterSprites()
+{
+	return MonsterSpritePaths.size();
+}
 
 /** Contains the data related to each unique monster ID. */
 const UniqueMonsterData UniqueMonstersData[] = {

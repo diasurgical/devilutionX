@@ -3425,7 +3425,7 @@ void InitMonsterGFX(CMonster &monsterType, MonsterSpritesData &&spritesData)
 		++j;
 	}
 
-	if (monsterData.trnFile != nullptr) {
+	if (!monsterData.trnFile.empty()) {
 		InitMonsterTRN(monsterType);
 	}
 
@@ -3478,7 +3478,7 @@ void InitAllMonsterGFX()
 		return;
 
 	using LevelMonsterTypeIndices = StaticVector<uint8_t, 8>;
-	std::array<LevelMonsterTypeIndices, enum_size<MonsterSpriteId>::value> monstersBySprite;
+	std::vector<LevelMonsterTypeIndices> monstersBySprite(GetNumMonsterSprites());
 	for (size_t i = 0; i < LevelMonsterTypeCount; ++i) {
 		monstersBySprite[static_cast<size_t>(LevelMonsterTypes[i].data().spriteId)].emplace_back(i);
 	}

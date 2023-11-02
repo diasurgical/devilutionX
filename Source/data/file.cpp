@@ -47,24 +47,31 @@ void DataFile::reportFatalError(Error code, std::string_view fileName)
 	}
 }
 
-void DataFile::reportFatalFieldError(DataFileField::Error code, std::string_view fileName, std::string_view fieldName, const DataFileField &field)
+void DataFile::reportFatalFieldError(DataFileField::Error code, std::string_view fileName, std::string_view fieldName, const DataFileField &field, std::string_view details)
 {
+	std::string detailsStr;
+	if (!details.empty()) {
+		detailsStr = StrCat("\n", details);
+	}
 	switch (code) {
 	case DataFileField::Error::NotANumber:
 		app_fatal(fmt::format(fmt::runtime(_(
 		                          /* TRANSLATORS: Error message when parsing a data file and a text value is encountered when a number is expected. Arguments are {found value}, {column heading}, {file name}, {row/record number}, {column/field number} */
 		                          "Non-numeric value {0} for {1} in {2} at row {3} and column {4}")),
-		    field.currentValue(), fieldName, fileName, field.row(), field.column()));
+		    field.currentValue(), fieldName, fileName, field.row(), field.column())
+		              .append(detailsStr));
 	case DataFileField::Error::OutOfRange:
 		app_fatal(fmt::format(fmt::runtime(_(
 		                          /* TRANSLATORS: Error message when parsing a data file and we find a number larger than expected. Arguments are {found value}, {column heading}, {file name}, {row/record number}, {column/field number} */
 		                          "Out of range value {0} for {1} in {2} at row {3} and column {4}")),
-		    field.currentValue(), fieldName, fileName, field.row(), field.column()));
+		    field.currentValue(), fieldName, fileName, field.row(), field.column())
+		              .append(detailsStr));
 	case DataFileField::Error::InvalidValue:
 		app_fatal(fmt::format(fmt::runtime(_(
 		                          /* TRANSLATORS: Error message when we find an unrecognised value in a key column. Arguments are {found value}, {column heading}, {file name}, {row/record number}, {column/field number} */
 		                          "Invalid value {0} for {1} in {2} at row {3} and column {4}")),
-		    field.currentValue(), fieldName, fileName, field.row(), field.column()));
+		    field.currentValue(), fieldName, fileName, field.row(), field.column())
+		              .append(detailsStr));
 	}
 }
 

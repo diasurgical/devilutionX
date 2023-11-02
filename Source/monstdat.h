@@ -87,73 +87,11 @@ enum class MonsterAvailability : uint8_t {
 	Retail,
 };
 
-enum class MonsterSpriteId : uint8_t {
-	Zombie = 0,      // "zombie\\zombie"
-	FallenSpear,     // "falspear\\phall"
-	FallenSword,     // "falsword\\fall"
-	SkeletonAxe,     // "skelaxe\\sklax"
-	SkeletonBow,     // "skelbow\\sklbw"
-	SkeletonCaptain, // "skelsd\\sklsr"
-	SkeletonDemon,   // "demskel\\demskl"
-	SkeletonKing,    // "sking\\sking"
-	Scavenger,       // "scav\\scav"
-	InvisibleLord,   // "tsneak\\tsneak"
-	Hidden,          // "sneak\\sneak"
-	GoatMace,        // "goatmace\\goat"
-	GoatBow,         // "goatbow\\goatb"
-	GoatLord,        // "goatlord\\goatl"
-	Bat,             // "bat\\bat"
-	AcidBeast,       // "acid\\acid"
-	Overlord,        // "fat\\fat"
-	Butcher,         // "fatc\\fatc"
-	Wyrm,            // "worm\\worm"
-	MagmaDemon,      // "magma\\magma"
-	HornedDemon,     // "rhino\\rhino"
-	StormRider,      // "thin\\thin"
-	Incinerator,     // "fireman\\firem"
-	DevilKinBrute,   // "bigfall\\fallg"
-	Gargoyle,        // "gargoyle\\gargo"
-	Slayer,          // "mega\\mega"
-	Viper,           // "snake\\snake"
-	BlackKnight,     // "black\\black"
-	Shredded,        // "unrav\\unrav"
-	Succubus,        // "succ\\scbs"
-	Counselor,       // "mage\\mage"
-	Golem,           // "golem\\golem"
-	Diablo,          // "diablo\\diablo"
-	ArchLitch,       // "darkmage\\dmage"
-	Hellboar,        // "fork\\fork"
-	Stinger,         // "scorp\\scorp"
-	Psychorb,        // "eye\\eye"
-	Arachnon,        // "spider\\spider"
-	HorkSpawn,       // "spawn\\spawn"
-	Venomtail,       // "wscorp\\wscorp"
-	Necromorb,       // "eye2\\eye2"
-	SpiderLord,      // "bspidr\\bspidr"
-	Lashworm,        // "clasp\\clasp"
-	Torchant,        // "antworm\\worm"
-	HorkDemon,       // "horkd\\horkd"
-	HellBug,         // "hellbug\\hellbg"
-	Gravedigger,     // "gravdg\\gravdg"
-	Rat,             // "rat\\rat"
-	Firebat,         // "hellbat\\helbat"
-	Lich,            // "lich\\lich"
-	CryptDemon,      // "bubba\\bubba"
-	Hellbat,         // "hellbat2\\bhelbt"
-	ArchLich,        // "lich2\\lich2"
-	Biclops,         // "byclps\\byclps"
-	FleshThing,      // "flesh\\flesh"
-	Reaper,          // "reaper\\reap"
-	NaKrul,          // "nkr\\nkr"
-	FIRST = Zombie,
-	LAST = NaKrul
-};
-
 struct MonsterData {
-	const char *name;
-	const char *soundSuffix;
-	const char *trnFile;
-	MonsterSpriteId spriteId;
+	std::string name;
+	std::string soundSuffix;
+	std::string trnFile;
+	uint16_t spriteId;
 	MonsterAvailability availability;
 	uint16_t width;
 	uint16_t image;
@@ -196,7 +134,7 @@ struct MonsterData {
 
 	[[nodiscard]] const char *soundPath() const
 	{
-		return soundSuffix != nullptr ? soundSuffix : spritePath();
+		return !soundSuffix.empty() ? soundSuffix.c_str() : spritePath();
 	}
 
 	[[nodiscard]] bool hasAnim(size_t index) const
@@ -388,8 +326,17 @@ struct UniqueMonsterData {
 	_speech_id mtalkmsg;
 };
 
-extern const MonsterData MonstersData[];
+extern std::vector<MonsterData> MonstersData;
 extern const _monster_id MonstConvTbl[];
 extern const UniqueMonsterData UniqueMonstersData[];
+
+void LoadMonsterData();
+
+/**
+ * @brief Returns the number of the monster sprite files.
+ *
+ * Different monsters can use the same sprite with different TRNs, these count as 1.
+ */
+size_t GetNumMonsterSprites();
 
 } // namespace devilution
