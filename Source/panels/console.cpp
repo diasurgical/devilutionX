@@ -58,6 +58,7 @@ struct ConsoleLine {
 		Help,
 		Input,
 		Output,
+		Warning,
 		Error
 	};
 
@@ -98,6 +99,7 @@ bool FirstRender;
 constexpr UiFlags TextUiFlags = UiFlags::FontSizeDialog;
 constexpr UiFlags InputTextUiFlags = TextUiFlags | UiFlags::ColorDialogWhite;
 constexpr UiFlags OutputTextUiFlags = TextUiFlags | UiFlags::ColorDialogWhite;
+constexpr UiFlags WarningTextUiFlags = TextUiFlags | UiFlags::ColorDialogYellow;
 constexpr UiFlags ErrorTextUiFlags = TextUiFlags | UiFlags::ColorDialogRed;
 
 constexpr int TextSpacing = 0;
@@ -210,6 +212,10 @@ void DrawConsoleLines(const Surface &out)
 				DrawString(out, line, { 0, lineYEnd },
 				    TextRenderOptions { .flags = OutputTextUiFlags, .spacing = TextSpacing });
 				break;
+			case ConsoleLine::Warning:
+				DrawString(out, line, { 0, lineYEnd },
+				    TextRenderOptions { .flags = WarningTextUiFlags, .spacing = TextSpacing });
+				break;
 			case ConsoleLine::Error:
 				DrawString(out, line, { 0, lineYEnd },
 				    TextRenderOptions { .flags = ErrorTextUiFlags, .spacing = TextSpacing });
@@ -292,7 +298,7 @@ void NextInput()
 bool IsHistoryOutputLine(const ConsoleLine &line)
 {
 	return !line.text.empty()
-	    && (line.type == ConsoleLine::Output || line.type == ConsoleLine::Error)
+	    && (line.type == ConsoleLine::Output || line.type == ConsoleLine::Warning || line.type == ConsoleLine::Error)
 	    && (HistoryIndex == -1
 	        || GetConsoleLineFromEnd(HistoryIndex).textWithoutPrompt() != line.text);
 }
@@ -469,6 +475,11 @@ void DrawConsole(const Surface &out)
 void PrintToConsole(std::string_view text)
 {
 	AddConsoleLine(ConsoleLine { .type = ConsoleLine::Output, .text = std::string(text) });
+}
+
+void PrintWarningToConsole(std::string_view text)
+{
+	AddConsoleLine(ConsoleLine { .type = ConsoleLine::Warning, .text = std::string(text) });
 }
 
 } // namespace devilution

@@ -55,8 +55,9 @@ enum text_color : uint8_t {
 	ColorButtonface,
 	ColorButtonpushed,
 
-	ColorInGameDialogWhite, // Dialog white in-game
-	ColorInGameDialogRed,   // Dialog red in-game
+	ColorInGameDialogWhite,  // Dialog white in-game
+	ColorInGameDialogYellow, // Dialog yellow in-game
+	ColorInGameDialogRed,    // Dialog red in-game
 };
 
 constexpr GameFontTables GetFontSizeFromUiFlags(UiFlags flags)

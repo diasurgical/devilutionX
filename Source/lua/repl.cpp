@@ -20,6 +20,16 @@ namespace {
 
 std::optional<sol::environment> replEnv;
 
+void LuaConsoleWarn(void *userData, const char *message, int continued)
+{
+	static std::string warnBuffer;
+	warnBuffer.append(message);
+	if (continued != 0)
+		return;
+	PrintWarningToConsole(warnBuffer);
+	warnBuffer.clear();
+}
+
 int LuaPrintToConsole(lua_State *state)
 {
 	std::string result;
@@ -41,6 +51,7 @@ void CreateReplEnvironment()
 	sol::state &lua = GetLuaState();
 	replEnv.emplace(lua, sol::create, lua.globals());
 	replEnv->set("print", LuaPrintToConsole);
+	lua_setwarnf(replEnv->lua_state(), LuaConsoleWarn, /*ud=*/nullptr);
 }
 
 sol::environment &ReplEnvironment()
