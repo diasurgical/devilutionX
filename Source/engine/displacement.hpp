@@ -120,6 +120,16 @@ struct DisplacementOf {
 
 	DVL_ALWAYS_INLINE float magnitude() const
 	{
+		// If [x * x <= max], then [x <= max / x] for x > 0
+		assert(deltaX == 0 || std::abs(deltaX) <= std::numeric_limits<DeltaT>::max() / std::abs(deltaX));
+		assert(deltaY == 0 || std::abs(deltaY) <= std::numeric_limits<DeltaT>::max() / std::abs(deltaY));
+
+		// If [x + y <= max], then [x <= max - y]
+		assert(deltaX * deltaX <= std::numeric_limits<DeltaT>::max() - deltaY * deltaY);
+
+		// Maximum precision of float is 24 bits
+		assert(deltaX * deltaX + deltaY * deltaY < (1 << 24));
+
 		// We do not use `std::hypot` here because it is slower and we do not need the extra precision.
 		return sqrtf(deltaX * deltaX + deltaY * deltaY);
 	}
