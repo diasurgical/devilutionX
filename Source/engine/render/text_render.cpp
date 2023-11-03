@@ -401,7 +401,7 @@ int GetLineStartX(UiFlags flags, const Rectangle &rect, int lineWidth)
 
 uint32_t DoDrawString(const Surface &out, std::string_view text, Rectangle rect, Point &characterPosition,
     int lineWidth, int rightMargin, int bottomMargin, GameFontTables size, text_color color, bool outline,
-    const TextRenderOptions &opts)
+    TextRenderOptions &opts)
 {
 	CurrentFont currentFont;
 
@@ -410,12 +410,17 @@ uint32_t DoDrawString(const Surface &out, std::string_view text, Rectangle rect,
 	size_t cpLen;
 
 	const auto maybeDrawCursor = [&]() {
-		if (opts.cursorPosition == static_cast<int>(text.size() - remaining.size()) && GetAnimationFrame(2, 500) != 0) {
+		if (opts.cursorPosition == static_cast<int>(text.size() - remaining.size())) {
 			Point position = characterPosition;
 			MaybeWrap(position, 2, rightMargin, position.x, opts.lineHeight);
-			OptionalClxSpriteList baseFont = LoadFont(size, color, 0);
-			if (baseFont)
-				DrawFont(out, position, (*baseFont)['|'], color, outline);
+			if (GetAnimationFrame(2, 500) != 0) {
+				OptionalClxSpriteList baseFont = LoadFont(size, color, 0);
+				if (baseFont)
+					DrawFont(out, position, (*baseFont)['|'], color, outline);
+			}
+			if (opts.renderedCursorPositionOut != nullptr) {
+				*opts.renderedCursorPositionOut = position;
+			}
 		}
 	};
 

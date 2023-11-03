@@ -132,6 +132,7 @@ set(libdevilutionx_SRCS
   levels/town.cpp
   levels/trigs.cpp
 
+  lua/autocomplete.cpp
   lua/lua.cpp
   lua/repl.cpp
   lua/modules/audio.cpp
@@ -295,7 +296,7 @@ if(DISCORD_INTEGRATION)
   target_link_libraries(libdevilutionx PRIVATE discord discord_game_sdk)
 endif()
 
-target_link_libraries(libdevilutionx PRIVATE ${LUA_LIBRARIES} sol2::sol2)
+target_link_libraries(libdevilutionx PUBLIC ${LUA_LIBRARIES} sol2::sol2)
 
 if(SCREEN_READER_INTEGRATION AND WIN32)
   target_compile_definitions(libdevilutionx PRIVATE Tolk)

@@ -152,6 +152,9 @@ struct TextRenderOptions {
 	} highlightRange = { 0, 0 };
 
 	uint8_t highlightColor = PAL8_RED + 6;
+
+	/** @brief If a cursor is rendered, the surface coordinates are saved here. */
+	std::optional<Point> *renderedCursorPositionOut = nullptr;
 };
 
 /**

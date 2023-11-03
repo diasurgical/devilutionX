@@ -22,6 +22,7 @@
 #include "engine/render/text_render.hpp"
 #include "engine/size.hpp"
 #include "engine/surface.hpp"
+#include "lua/autocomplete.hpp"
 #include "lua/repl.hpp"
 #include "utils/algorithm/container.hpp"
 #include "utils/sdl_geometry.h"
@@ -54,6 +55,10 @@ TextInputState ConsoleInputState {
 };
 bool InputTextChanged = false;
 std::string WrappedInputText { Prompt };
+std::vector<LuaAutocompleteSuggestion> AutocompleteSuggestions;
+int AutocompleteSuggestionsMaxWidth = -1;
+int AutocompleteSuggestionFocusIndex = -1;
+constexpr size_t MaxSuggestions = 12;
 
 struct ConsoleLine {
 	enum Type : uint8_t {
@@ -103,9 +108,12 @@ constexpr UiFlags InputTextUiFlags = TextUiFlags | UiFlags::ColorDialogWhite;
 constexpr UiFlags OutputTextUiFlags = TextUiFlags | UiFlags::ColorDialogWhite;
 constexpr UiFlags WarningTextUiFlags = TextUiFlags | UiFlags::ColorDialogYellow;
 constexpr UiFlags ErrorTextUiFlags = TextUiFlags | UiFlags::ColorDialogRed;
+constexpr UiFlags AutocompleteSuggestionsTextUiFlags = TextUiFlags | UiFlags::ColorDialogWhite;
+constexpr UiFlags AutocompleteSuggestionsFocusedTextUiFlags = TextUiFlags | UiFlags::ColorDialogYellow;
 
 constexpr int TextSpacing = 0;
 constexpr GameFontTables TextFontSize = GetFontSizeFromUiFlags(InputTextUiFlags);
+constexpr GameFontTables AutocompleteSuggestionsTextFontSize = GetFontSizeFromUiFlags(AutocompleteSuggestionsTextUiFlags);
 
 // Scroll offset from the bottom (in pages), to be applied on next render.
 int PendingScrollPages;
@@ -156,11 +164,53 @@ void SendInput()
 	HistoryIndex = -1;
 }
 
-void DrawInputText(const Surface &inputTextSurface, std::string_view originalInputText, std::string_view wrappedInputText)
+void DrawAutocompleteSuggestions(const Surface &out, const std::vector<LuaAutocompleteSuggestion> &suggestions, Point position)
+{
+	if (AutocompleteSuggestionsMaxWidth == -1) {
+		int maxWidth = 0;
+		for (const LuaAutocompleteSuggestion &suggestion : suggestions) {
+			maxWidth = std::max(maxWidth, GetLineWidth(suggestion.displayText, AutocompleteSuggestionsTextFontSize, TextSpacing));
+		}
+		AutocompleteSuggestionsMaxWidth = maxWidth;
+	}
+
+	const int outerWidth = AutocompleteSuggestionsMaxWidth + TextPaddingX * 2;
+
+	if (position.x + outerWidth > out.w()) {
+		position.x -= AutocompleteSuggestionsMaxWidth;
+	}
+	const int height = static_cast<int>(suggestions.size()) * LineHeight + TextPaddingYBottom + TextPaddingYTop;
+
+	position.y -= height;
+	FillRect(out, position.x, position.y, outerWidth, height, PAL16_BLUE + 14);
+	size_t i = 0;
+
+	Point textPosition { position.x + TextPaddingX, position.y + TextPaddingYTop };
+	for (const LuaAutocompleteSuggestion &suggestion : suggestions) {
+		if (static_cast<int>(i) == AutocompleteSuggestionFocusIndex) {
+			const int extraTop = i == 0 ? TextPaddingYTop : 0;
+			const int extraHeight = extraTop + TextPaddingYBottom;
+			FillRect(out, position.x, textPosition.y - extraTop, outerWidth, LineHeight + extraHeight, PAL16_BLUE + 8);
+		}
+		DrawString(out, suggestion.displayText, textPosition,
+		    TextRenderOptions {
+		        .flags = AutocompleteSuggestionsTextUiFlags,
+		        .spacing = TextSpacing,
+		    });
+		textPosition.y += LineHeight;
+		++i;
+	}
+}
+
+void DrawInputText(const Surface &out,
+    Rectangle rect, std::string_view originalInputText, std::string_view wrappedInputText)
 {
 	int lineY = 0;
 	int numRendered = -static_cast<int>(Prompt.size());
 	bool prevIsOriginalNewline = false;
+
+	const Surface inputTextSurface = out.subregion(rect.position.x, rect.position.y, rect.size.width, rect.size.height);
+	std::optional<Point> renderedCursorPositionOut;
 	for (const std::string_view line : SplitByChar(wrappedInputText, '\n')) {
 		const int lineCursorPosition = static_cast<int>(ConsoleInputCursor.position) - numRendered;
 		const bool isCursorOnPrevLine = lineCursorPosition == 0 && !prevIsOriginalNewline && numRendered > 0;
@@ -171,13 +221,20 @@ void DrawInputText(const Surface &inputTextSurface, std::string_view originalInp
 		        .spacing = TextSpacing,
 		        .cursorPosition = isCursorOnPrevLine ? -1 : lineCursorPosition,
 		        .highlightRange = { static_cast<int>(ConsoleInputCursor.selection.begin) - numRendered, static_cast<int>(ConsoleInputCursor.selection.end) - numRendered },
-		    });
+		        .renderedCursorPositionOut = &renderedCursorPositionOut });
 		lineY += LineHeight;
 		numRendered += static_cast<int>(line.size());
 		prevIsOriginalNewline = static_cast<size_t>(numRendered) < originalInputText.size()
 		    && originalInputText[static_cast<size_t>(numRendered)] == '\n';
 		if (prevIsOriginalNewline)
 			++numRendered;
+	}
+
+	if (!AutocompleteSuggestions.empty() && renderedCursorPositionOut.has_value()) {
+		Point position = *renderedCursorPositionOut;
+		position.x += rect.position.x;
+		position.y += rect.position.y;
+		DrawAutocompleteSuggestions(out, AutocompleteSuggestions, position);
 	}
 }
 
@@ -357,6 +414,15 @@ void OpenConsole()
 	FirstRender = true;
 }
 
+void AcceptSuggestion()
+{
+	const LuaAutocompleteSuggestion &suggestion = AutocompleteSuggestions[AutocompleteSuggestionFocusIndex];
+	ConsoleInputState.type(suggestion.completionText);
+	if (suggestion.cursorAdjust == -1) {
+		ConsoleInputState.moveCursorLeft(/*word=*/false);
+	}
+}
+
 bool ConsoleHandleEvent(const SDL_Event &event)
 {
 	if (!IsConsoleVisible) {
@@ -377,20 +443,46 @@ bool ConsoleHandleEvent(const SDL_Event &event)
 	case SDL_KEYDOWN:
 		switch (event.key.keysym.sym) {
 		case SDLK_ESCAPE:
-			CloseConsole();
+			if (!AutocompleteSuggestions.empty()) {
+				AutocompleteSuggestions.clear();
+				AutocompleteSuggestionFocusIndex = -1;
+			} else {
+				CloseConsole();
+			}
 			return true;
 		case SDLK_UP:
-			isShift ? PrevOutput() : PrevInput();
+			if (AutocompleteSuggestionFocusIndex != -1) {
+				AutocompleteSuggestionFocusIndex = std::max(
+				    0, AutocompleteSuggestionFocusIndex - 1);
+			} else {
+				isShift ? PrevOutput() : PrevInput();
+			}
 			return true;
 		case SDLK_DOWN:
-			isShift ? NextOutput() : NextInput();
+			if (AutocompleteSuggestionFocusIndex != -1) {
+				AutocompleteSuggestionFocusIndex = std::min(
+				    static_cast<int>(AutocompleteSuggestions.size()) - 1,
+				    AutocompleteSuggestionFocusIndex + 1);
+			} else {
+				isShift ? NextOutput() : NextInput();
+			}
+			return true;
+		case SDLK_TAB:
+			if (AutocompleteSuggestionFocusIndex != -1) {
+				AcceptSuggestion();
+				InputTextChanged = true;
+			}
 			return true;
 		case SDLK_RETURN:
 		case SDLK_KP_ENTER:
 			if (isShift) {
 				ConsoleInputState.type("\n");
 			} else {
-				SendInput();
+				if (AutocompleteSuggestionFocusIndex != -1) {
+					AcceptSuggestion();
+				} else {
+					SendInput();
+				}
 			}
 			InputTextChanged = true;
 			return true;
@@ -445,6 +537,9 @@ void DrawConsole(const Surface &out)
 	const std::string_view originalInputText = ConsoleInputState.value();
 	if (InputTextChanged) {
 		WrappedInputText = WordWrapString(StrCat(Prompt, originalInputText), OuterRect.size.width - 2 * TextPaddingX, TextFontSize, TextSpacing);
+		GetLuaAutocompleteSuggestions(originalInputText.substr(0, ConsoleInputCursor.position), GetLuaReplEnvironment(), /*maxSuggestions=*/MaxSuggestions, AutocompleteSuggestions);
+		AutocompleteSuggestionsMaxWidth = -1;
+		AutocompleteSuggestionFocusIndex = AutocompleteSuggestions.empty() ? -1 : 0;
 		InputTextChanged = false;
 	}
 
@@ -481,13 +576,14 @@ void DrawConsole(const Surface &out)
 
 	DrawHorizontalLine(out, InputRect.position - Displacement { 0, 1 }, InputRect.size.width, BorderColor);
 	DrawInputText(
-	    out.subregion(
-	        inputTextRect.position.x,
-	        inputTextRect.position.y,
-	        // Extra space for the cursor on the right:
-	        inputTextRect.size.width + TextPaddingX,
-	        // Extra space for letters like g.
-	        inputTextRect.size.height + TextPaddingYBottom),
+	    out,
+	    Rectangle(
+	        inputTextRect.position,
+	        Size {
+	            // Extra space for the cursor on the right:
+	            inputTextRect.size.width + TextPaddingX,
+	            // Extra space for letters like g.
+	            inputTextRect.size.height + TextPaddingYBottom }),
 	    originalInputText,
 	    WrappedInputText);
 

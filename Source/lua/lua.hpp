@@ -3,10 +3,7 @@
 #include <string_view>
 
 #include <expected.hpp>
-
-namespace sol {
-class state;
-} // namespace sol
+#include <sol/forward.hpp>
 
 namespace devilution {
 
