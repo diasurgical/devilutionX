@@ -54,13 +54,6 @@ void CreateReplEnvironment()
 	lua_setwarnf(replEnv->lua_state(), LuaConsoleWarn, /*ud=*/nullptr);
 }
 
-sol::environment &ReplEnvironment()
-{
-	if (!replEnv.has_value())
-		CreateReplEnvironment();
-	return *replEnv;
-}
-
 sol::protected_function_result TryRunLuaAsExpressionThenStatement(std::string_view code)
 {
 	// Try to compile as an expression first. This also how the `lua` repl is implemented.
@@ -81,11 +74,18 @@ sol::protected_function_result TryRunLuaAsExpressionThenStatement(std::string_vi
 		}
 	}
 	sol::stack_aligned_protected_function fn(lua.lua_state(), -1);
-	sol::set_environment(ReplEnvironment(), fn);
+	sol::set_environment(GetLuaReplEnvironment(), fn);
 	return fn();
 }
 
 } // namespace
+
+sol::environment &GetLuaReplEnvironment()
+{
+	if (!replEnv.has_value())
+		CreateReplEnvironment();
+	return *replEnv;
+}
 
 tl::expected<std::string, std::string> RunLuaReplLine(std::string_view code)
 {
