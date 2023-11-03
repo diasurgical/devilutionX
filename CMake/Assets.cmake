@@ -141,6 +141,7 @@ set(devilutionx_assets
   levels/towndata/automap.dun
   levels/towndata/automap.amp
   lua/init.lua
+  lua/inspect.lua
   nlevels/cutl5w.clx
   nlevels/cutl6w.clx
   nlevels/l5data/cornerstone.dun
