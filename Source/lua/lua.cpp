@@ -16,6 +16,7 @@
 #include "plrmsg.h"
 #include "utils/console.h"
 #include "utils/log.hpp"
+#include "utils/str_cat.hpp"
 
 namespace devilution {
 
@@ -49,9 +50,12 @@ end
 sol::object LuaLoadScriptFromAssets(std::string_view packageName)
 {
 	LuaState &luaState = *CurrentLuaState;
-	std::string path { packageName };
-	std::replace(path.begin(), path.end(), '.', '\\');
-	path.append(".lua");
+	constexpr std::string_view PathPrefix = "lua\\";
+	constexpr std::string_view PathSuffix = ".lua";
+	std::string path;
+	path.reserve(PathPrefix.size() + packageName.size() + PathSuffix.size());
+	StrAppend(path, PathPrefix, packageName, PathSuffix);
+	std::replace(path.begin() + PathPrefix.size(), path.end() - PathSuffix.size(), '.', '\\');
 
 	auto iter = luaState.compiledScripts.find(path);
 	if (iter != luaState.compiledScripts.end()) {
