@@ -1,5 +1,3 @@
-Events = {}
-
 function Events:RegisterEvent(eventName)
     self[eventName] = {
         Functions = {},

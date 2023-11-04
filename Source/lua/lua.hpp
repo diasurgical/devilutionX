@@ -11,5 +11,6 @@ void LuaInitialize();
 void LuaShutdown();
 void LuaEvent(std::string_view name);
 sol::state &GetLuaState();
+sol::environment CreateLuaSandbox();
 
 } // namespace devilution
