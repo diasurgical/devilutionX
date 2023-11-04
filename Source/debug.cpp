@@ -153,92 +153,6 @@ std::string DebugCmdHelp(const std::string_view parameter)
 	return StrCat("Description: ", dbgCmdItem.description, "\nParameters: ", dbgCmdItem.requiredParameter);
 }
 
-std::string DebugCmdGiveGoldCheat(const std::string_view parameter)
-{
-	Player &myPlayer = *MyPlayer;
-	std::string cmdLabel = "[givegold] ";
-
-	int goldToAdd = 0;
-
-	if (parameter.empty())
-		goldToAdd = GOLD_MAX_LIMIT * InventoryGridCells;
-	else
-		goldToAdd = ParseInt<int>(parameter, /*min=*/1).value_or(1);
-
-	const int goldAmountBefore = myPlayer._pGold;
-	for (int8_t &itemIndex : myPlayer.InvGrid) {
-		if (itemIndex < 0)
-			continue;
-
-		Item &item = myPlayer.InvList[itemIndex != 0 ? itemIndex - 1 : myPlayer._pNumInv];
-
-		if (itemIndex != 0) {
-			if ((!item.isGold() && !item.isEmpty()) || (item.isGold() && item._ivalue == GOLD_MAX_LIMIT))
-				continue;
-		} else {
-			if (item.isEmpty()) {
-				MakeGoldStack(item, 0);
-				myPlayer._pNumInv++;
-				itemIndex = myPlayer._pNumInv;
-			}
-		}
-
-		int goldThatCanBeAdded = (GOLD_MAX_LIMIT - item._ivalue);
-		if (goldThatCanBeAdded >= goldToAdd) {
-			item._ivalue += goldToAdd;
-			myPlayer._pGold += goldToAdd;
-			break;
-		}
-
-		item._ivalue += goldThatCanBeAdded;
-		goldToAdd -= goldThatCanBeAdded;
-		myPlayer._pGold += goldThatCanBeAdded;
-	}
-
-	CalcPlrInv(myPlayer, true);
-
-	return StrCat(cmdLabel, "Set your gold to ", myPlayer._pGold, ", added ", myPlayer._pGold - goldAmountBefore, ".");
-}
-
-std::string DebugCmdTakeGoldCheat(const std::string_view parameter)
-{
-	Player &myPlayer = *MyPlayer;
-	std::string cmdLabel = "[takegold] ";
-
-	int goldToRemove = 0;
-
-	if (parameter.empty())
-		goldToRemove = GOLD_MAX_LIMIT * InventoryGridCells;
-	else
-		goldToRemove = ParseInt<int>(parameter, /*min=*/1).value_or(1);
-
-	const int goldAmountBefore = myPlayer._pGold;
-	for (auto itemIndex : myPlayer.InvGrid) {
-		itemIndex -= 1;
-
-		if (itemIndex < 0)
-			continue;
-
-		Item &item = myPlayer.InvList[itemIndex];
-		if (!item.isGold())
-			continue;
-
-		if (item._ivalue >= goldToRemove) {
-			myPlayer._pGold -= goldToRemove;
-			item._ivalue -= goldToRemove;
-			if (item._ivalue == 0)
-				myPlayer.RemoveInvItem(itemIndex);
-			break;
-		}
-
-		myPlayer._pGold -= item._ivalue;
-		goldToRemove -= item._ivalue;
-		myPlayer.RemoveInvItem(itemIndex);
-	}
-
-	return StrCat(cmdLabel, "Set your gold to ", myPlayer._pGold, ", removed ", goldAmountBefore - myPlayer._pGold, ".");
-}
-
 std::string DebugCmdWarpToLevel(const std::string_view parameter)
 {
 	Player &myPlayer = *MyPlayer;
@@ -521,28 +435,6 @@ std::string DebugCmdLighting(const std::string_view parameter)
 	return StrCat(cmdLabel, "Fullbright: ", DisableLighting ? "On" : "Off");
 }
 
-std::string DebugCmdMapReveal(const std::string_view parameter)
-{
-	std::string cmdLabel = "[givemap] ";
-
-	for (int x = 0; x < DMAXX; x++)
-		for (int y = 0; y < DMAXY; y++)
-			UpdateAutomapExplorer({ x, y }, MAP_EXP_SHRINE);
-
-	return StrCat(cmdLabel, "Automap fully explored.");
-}
-
-std::string DebugCmdMapHide(const std::string_view parameter)
-{
-	std::string cmdLabel = "[takemap] ";
-
-	for (int x = 0; x < DMAXX; x++)
-		for (int y = 0; y < DMAXY; y++)
-			AutomapView[x][y] = MAP_EXP_NONE;
-
-	return StrCat(cmdLabel, "Automap exploration removed.");
-}
-
 std::string DebugCmdVision(const std::string_view parameter)
 {
 	std::string cmdLabel = "[drawvision] ";
@@ -559,106 +451,6 @@ std::string DebugCmdPath(const std::string_view parameter)
 	DebugPath = !DebugPath;
 
 	return StrCat(cmdLabel, "Path highlighting: ", DebugPath ? "On" : "Off");
-}
-
-std::string DebugCmdQuest(const std::string_view parameter)
-{
-	std::string cmdLabel = "[givequest] ";
-
-	if (parameter.empty()) {
-		std::string ret = StrCat(cmdLabel, "Missing quest id! (This can be: all)");
-		for (auto &quest : Quests) {
-			if (IsNoneOf(quest._qactive, QUEST_NOTAVAIL, QUEST_INIT))
-				continue;
-			StrAppend(ret, ", ", quest._qidx, " (", QuestsData[quest._qidx]._qlstr, ")");
-		}
-		return ret;
-	}
-
-	if (parameter.compare("all") == 0) {
-		for (auto &quest : Quests) {
-			if (IsNoneOf(quest._qactive, QUEST_NOTAVAIL, QUEST_INIT))
-				continue;
-
-			quest._qactive = QUEST_ACTIVE;
-			quest._qlog = true;
-		}
-
-		return StrCat(cmdLabel, "Activated all quests.");
-	}
-
-	const ParseIntResult<int> parsedArg = ParseInt<int>(parameter, /*min=*/0);
-	if (!parsedArg.has_value())
-		return StrCat(cmdLabel, "Failed to parse argument as integer!");
-	const int questId = parsedArg.value();
-
-	if (questId >= MAXQUESTS)
-		return StrCat(cmdLabel, "Quest ", questId, " does not exist!");
-	auto &quest = Quests[questId];
-
-	if (IsNoneOf(quest._qactive, QUEST_NOTAVAIL, QUEST_INIT))
-		return StrCat(cmdLabel, QuestsData[questId]._qlstr, " is already active!");
-
-	quest._qactive = QUEST_ACTIVE;
-	quest._qlog = true;
-
-	return StrCat(cmdLabel, QuestsData[questId]._qlstr, " activated.");
-}
-
-std::string DebugCmdLevelUp(const std::string_view parameter)
-{
-	Player &myPlayer = *MyPlayer;
-	std::string cmdLabel = "[givelvl] ";
-
-	const int levels = std::min<int>(ParseInt<int>(parameter, /*min=*/1).value_or(1), GetMaximumCharacterLevel() - myPlayer.getCharacterLevel());
-	for (int i = 0; i < levels; i++)
-		NetSendCmd(true, CMD_CHEAT_EXPERIENCE);
-	return StrCat(cmdLabel, "New character level: ", myPlayer.getCharacterLevel() + levels);
-}
-
-std::string DebugCmdMaxStats(const std::string_view parameter)
-{
-	Player &myPlayer = *MyPlayer;
-	std::string cmdLabel = "[maxstats] ";
-
-	ModifyPlrStr(myPlayer, myPlayer.GetMaximumAttributeValue(CharacterAttribute::Strength) - myPlayer._pBaseStr);
-	ModifyPlrMag(myPlayer, myPlayer.GetMaximumAttributeValue(CharacterAttribute::Magic) - myPlayer._pBaseMag);
-	ModifyPlrDex(myPlayer, myPlayer.GetMaximumAttributeValue(CharacterAttribute::Dexterity) - myPlayer._pBaseDex);
-	ModifyPlrVit(myPlayer, myPlayer.GetMaximumAttributeValue(CharacterAttribute::Vitality) - myPlayer._pBaseVit);
-
-	return StrCat(cmdLabel, "Set all character base attributes to maximum.");
-}
-
-std::string DebugCmdMinStats(const std::string_view parameter)
-{
-	Player &myPlayer = *MyPlayer;
-	std::string cmdLabel = "[minstats] ";
-
-	ModifyPlrStr(myPlayer, -myPlayer._pBaseStr);
-	ModifyPlrMag(myPlayer, -myPlayer._pBaseMag);
-	ModifyPlrDex(myPlayer, -myPlayer._pBaseDex);
-	ModifyPlrVit(myPlayer, -myPlayer._pBaseVit);
-
-	return StrCat(cmdLabel, "Set all character base attributes to minimum.");
-}
-
-std::string DebugCmdSetSpellsLevel(const std::string_view parameter)
-{
-	std::string cmdLabel = "[setspells] ";
-
-	const ParseIntResult<uint8_t> parsedArg = ParseInt<uint8_t>(parameter);
-	if (!parsedArg.has_value())
-		return StrCat(cmdLabel, "Failed to parse argument as uint8_t!");
-	const uint8_t level = parsedArg.value();
-	for (uint8_t i = static_cast<uint8_t>(SpellID::Firebolt); i < MAX_SPELLS; i++) {
-		if (GetSpellBookLevel(static_cast<SpellID>(i)) != -1) {
-			NetSendCmdParam2(true, CMD_CHANGE_SPELL_LEVEL, i, level);
-		}
-	}
-	if (level == 0)
-		MyPlayer->_pMemSpells = 0;
-
-	return StrCat(cmdLabel, "Set all spell levels to ", level);
 }
 
 std::string DebugCmdRefillHealthMana(const std::string_view parameter)
@@ -771,15 +563,6 @@ std::string DebugCmdTalkToTowner(const std::string_view parameter)
 		return StrCat(cmdLabel, "Opened ", parameter, " talk window.");
 	}
 	return StrCat(cmdLabel, "Towner not found!");
-}
-
-std::string DebugCmdShowGrid(const std::string_view parameter)
-{
-	std::string cmdLabel = "[grid] ";
-
-	DebugGrid = !DebugGrid;
-
-	return StrCat(cmdLabel, "Tile grid highlighting: ", DebugGrid ? "On" : "Off");
 }
 
 std::string DebugCmdSpawnUniqueMonster(const std::string_view parameter)
@@ -1079,31 +862,6 @@ std::string DebugCmdItemInfo(const std::string_view parameter)
 	return StrCat(cmdLabel, "Numitems: ", ActiveItemCount);
 }
 
-std::string DebugCmdQuestInfo(const std::string_view parameter)
-{
-	std::string cmdLabel = "[questinfo] ";
-
-	if (parameter.empty()) {
-		std::string ret = StrCat(cmdLabel, "You must provide an id! This could be: ");
-		for (auto &quest : Quests) {
-			if (IsNoneOf(quest._qactive, QUEST_NOTAVAIL, QUEST_INIT))
-				continue;
-			StrAppend(ret, ", ", quest._qidx, " (", QuestsData[quest._qidx]._qlstr, ")");
-		}
-		return ret;
-	}
-
-	const ParseIntResult<int> parsedArg = ParseInt<int>(parameter, /*min=*/0);
-	if (!parsedArg.has_value())
-		return StrCat(cmdLabel, "Failed to parse argument as integer!");
-	const int questId = parsedArg.value();
-
-	if (questId >= MAXQUESTS)
-		return StrCat(cmdLabel, "Quest ", questId, " does not exist!");
-	auto &quest = Quests[questId];
-	return StrCat(cmdLabel, "\nQuest: ", QuestsData[quest._qidx]._qlstr, "\nActive: ", quest._qactive, " Var1: ", quest._qvar1, " Var2: ", quest._qvar2);
-}
-
 std::string DebugCmdPlayerInfo(const std::string_view parameter)
 {
 	std::string cmdLabel = "[playerinfo] ";
@@ -1235,15 +993,6 @@ std::string DebugCmdClearSearch(const std::string_view parameter)
 
 std::vector<DebugCmdItem> DebugCmdList = {
 	{ "help", "Prints help overview or help for a specific command.", "({command})", &DebugCmdHelp },
-	{ "givegold", "Gives player {amount} of gold or max amount if didn't specify.", "{amount}", &DebugCmdGiveGoldCheat },
-	{ "givelvl", "Levels the player up (min 1 level or {levels}).", "({levels})", &DebugCmdLevelUp },
-	{ "maxstats", "Sets all stat values to maximum.", "", &DebugCmdMaxStats },
-	{ "minstats", "Sets all stat values to minimum.", "", &DebugCmdMinStats },
-	{ "setspells", "Set spell level to {level} for all spells.", "{level}", &DebugCmdSetSpellsLevel },
-	{ "takegold", "Removes {amount} gold or if didn't specify - all gold from inventory.", "{amount}", &DebugCmdTakeGoldCheat },
-	{ "givequest", "Enable a given quest.", "({id})", &DebugCmdQuest },
-	{ "givemap", "Reveal the map.", "", &DebugCmdMapReveal },
-	{ "takemap", "Hide the map.", "", &DebugCmdMapHide },
 	{ "goto", "Moves to specifided {level} (use 0 for town).", "{level}", &DebugCmdWarpToLevel },
 	{ "questmap", "Load a quest level {level}.", "{level}", &DebugCmdLoadQuestMap },
 	{ "map", "Load custom level from a given {path}.dun.", "{path} {type} {x} {y}", &DebugCmdLoadMap },
@@ -1262,13 +1011,11 @@ std::vector<DebugCmdItem> DebugCmdList = {
 	{ "talkto", "Interacts with a NPC whose name contains {name}.", "{name}", &DebugCmdTalkToTowner },
 	{ "exit", "Exits the game.", "", &DebugCmdExit },
 	{ "arrow", "Changes arrow effect (normal, fire, lightning, explosion).", "{effect}", &DebugCmdArrow },
-	{ "grid", "Toggles showing grid.", "", &DebugCmdShowGrid },
 	{ "spawnu", "Spawns unique monster {name}.", "{name} ({count})", &DebugCmdSpawnUniqueMonster },
 	{ "spawn", "Spawns monster {name}.", "{name} ({count})", &DebugCmdSpawnMonster },
 	{ "tiledata", "Toggles showing tile data {name} (leave name empty to see a list).", "{name}", &DebugCmdShowTileData },
 	{ "scrollview", "Toggles scroll view feature (with shift+mouse).", "", &DebugCmdScrollView },
 	{ "iteminfo", "Shows info of currently selected item.", "", &DebugCmdItemInfo },
-	{ "questinfo", "Shows info of quests.", "{id}", &DebugCmdQuestInfo },
 	{ "playerinfo", "Shows info of player.", "{playerid}", &DebugCmdPlayerInfo },
 	{ "fps", "Toggles displaying FPS", "", &DebugCmdToggleFPS },
 	{ "trn", "Makes player use TRN {trn} - Write 'plr' before it to look in plrgfx\\ or 'mon' to look in monsters\\monsters\\ - example: trn plr infra is equal to 'plrgfx\\infra.trn'", "{trn}", &DebugCmdChangeTRN },

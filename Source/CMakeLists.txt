@@ -136,6 +136,8 @@ set(libdevilutionx_SRCS
   lua/lua.cpp
   lua/repl.cpp
   lua/modules/audio.cpp
+  lua/modules/dev.cpp
+  lua/modules/dev/quests.cpp
   lua/modules/render.cpp
   lua/modules/log.cpp
 
