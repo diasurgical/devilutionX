@@ -49,9 +49,10 @@ int LuaPrintToConsole(lua_State *state)
 void CreateReplEnvironment()
 {
 	sol::state &lua = GetLuaState();
-	replEnv.emplace(lua, sol::create, lua.globals());
-	replEnv->set("print", LuaPrintToConsole);
-	lua_setwarnf(replEnv->lua_state(), LuaConsoleWarn, /*ud=*/nullptr);
+	sol::environment env = CreateLuaSandbox();
+	env["print"] = LuaPrintToConsole;
+	lua_setwarnf(env.lua_state(), LuaConsoleWarn, /*ud=*/nullptr);
+	replEnv.emplace(env);
 }
 
 sol::protected_function_result TryRunLuaAsExpressionThenStatement(std::string_view code)
