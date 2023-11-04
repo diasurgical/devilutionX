@@ -184,6 +184,8 @@ void DrawAutocompleteSuggestions(const Surface &out, const std::vector<LuaAutoco
 	const int height = static_cast<int>(suggestions.size()) * LineHeight + TextPaddingYBottom + TextPaddingYTop;
 
 	position.y -= height;
+	position.y = std::max(LineHeight, position.y);
+
 	FillRect(out, position.x, position.y, outerWidth, height, PAL16_BLUE + 14);
 	size_t i = 0;
 
@@ -549,8 +551,8 @@ void DrawConsole(const Surface &out)
 	}
 
 	const int numLines = static_cast<int>(c_count(WrappedInputText, '\n')) + 1;
-	const int inputTextHeight = numLines * LineHeight;
-	InputRectHeight = inputTextHeight + TextPaddingYTop + TextPaddingYBottom;
+	InputRectHeight = std::min(OuterRect.size.height, numLines * LineHeight + TextPaddingYTop + TextPaddingYBottom);
+	const int inputTextHeight = InputRectHeight - (TextPaddingYTop + TextPaddingYBottom);
 
 	InputRect.position = { 0, OuterRect.size.height - InputRectHeight };
 	InputRect.size = { OuterRect.size.width, InputRectHeight };
