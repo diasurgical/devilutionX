@@ -18,6 +18,10 @@
 #include "utils/log.hpp"
 #include "utils/str_cat.hpp"
 
+#ifdef _DEBUG
+#include "lua/modules/dev.hpp"
+#endif
+
 namespace devilution {
 
 namespace {
@@ -172,11 +176,20 @@ void LuaInitialize()
 	// Registering globals
 	lua.set(
 	    "print", LuaPrint,
+	    "_DEBUG",
+#ifdef _DEBUG
+	    true,
+#else
+	    false,
+#endif
 	    "_VERSION", LUA_VERSION);
 
 	// Registering devilutionx object table
 	CheckResult(lua.safe_script(RequireGenSrc), /*optional=*/false);
 	const sol::table loaded = lua.create_table_with(
+#ifdef _DEBUG
+	    "devilutionx.dev", LuaDevModule(lua),
+#endif
 	    "devilutionx.version", PROJECT_VERSION,
 	    "devilutionx.log", LuaLogModule(lua),
 	    "devilutionx.audio", LuaAudioModule(lua),

@@ -9,7 +9,10 @@
 
 #include <sol/sol.hpp>
 
+#include "lua/metadoc.hpp"
 #include "utils/algorithm/container.hpp"
+#include "utils/str_cat.hpp"
+#include "utils/str_split.hpp"
 
 namespace devilution {
 
@@ -20,23 +23,39 @@ std::string_view GetLastToken(std::string_view text)
 	if (text.empty())
 		return {};
 	size_t i = text.size();
-	while (i > 0 && text[i - 1] != ' ')
+	while (i > 0 && text[i - 1] != ' ' && text[i - 1] != '(' && text[i - 1] != ',')
 		--i;
 	return text.substr(i);
 }
 
-bool IsCallable(const sol::object &value)
+struct ValueInfo {
+	bool callable = false;
+	std::string signature;
+	std::string docstring;
+};
+
+ValueInfo GetValueInfo(const sol::table &table, std::string_view key, const sol::object &value)
 {
-	if (value.get_type() == sol::type::function)
-		return true;
-	if (!value.is<sol::table>())
-		return false;
-	const auto table = value.as<sol::table>();
-	const auto metatable = table.get<std::optional<sol::object>>(sol::metatable_key);
+	ValueInfo info;
+	if (std::optional<std::string> signature = GetSignature(table, key); signature.has_value()) {
+		info.signature = *std::move(signature);
+	}
+	if (std::optional<std::string> docstring = GetDocstring(table, key); docstring.has_value()) {
+		info.docstring = *std::move(docstring);
+	}
+	if (value.get_type() == sol::type::function) {
+		info.callable = true;
+		return info;
+	}
+	if (!value.is<sol::table>()) return info;
+	const auto valueAsTable = value.as<sol::table>();
+	const auto metatable = valueAsTable.get<std::optional<sol::object>>(sol::metatable_key);
 	if (!metatable || !metatable->is<sol::table>())
-		return false;
-	const auto callFn = metatable->as<sol::table>().get<std::optional<sol::object>>(sol::meta_function::call);
-	return callFn.has_value();
+		return info;
+	const auto metatableTbl = metatable->as<sol::table>();
+	const auto callFn = metatableTbl.get<std::optional<sol::object>>(sol::meta_function::call);
+	info.callable = callFn.has_value();
+	return info;
 }
 
 void SuggestionsFromTable(const sol::table &table, std::string_view prefix,
@@ -54,11 +73,22 @@ void SuggestionsFromTable(const sol::table &table, std::string_view prefix,
 			    || keyStr.find("☢") != std::string::npos
 			    || keyStr.find("🔩") != std::string::npos)
 				continue;
+			ValueInfo info = GetValueInfo(table, keyStr, value);
 			std::string completionText = keyStr.substr(prefix.size());
 			LuaAutocompleteSuggestion suggestion { std::move(keyStr), std::move(completionText) };
-			if (IsCallable(value)) {
+			if (info.callable) {
 				suggestion.completionText.append("()");
 				suggestion.cursorAdjust = -1;
+			}
+			if (!info.signature.empty()) {
+				StrAppend(suggestion.displayText, info.signature);
+			}
+			if (!info.docstring.empty()) {
+				std::string_view firstLine = info.docstring;
+				if (const size_t newlinePos = firstLine.find('\n'); newlinePos != std::string_view::npos) {
+					firstLine = firstLine.substr(0, newlinePos);
+				}
+				StrAppend(suggestion.displayText, " - ", firstLine);
 			}
 			out.insert(std::move(suggestion));
 			if (out.size() == maxSuggestions)
@@ -77,9 +107,10 @@ void GetLuaAutocompleteSuggestions(std::string_view text, const sol::environment
     size_t maxSuggestions, std::vector<LuaAutocompleteSuggestion> &out)
 {
 	out.clear();
-	if (text.empty())
-		return;
+	if (text.empty()) return;
 	std::string_view token = GetLastToken(text);
+	const char prevChar = token.data() == text.data() ? '\0' : *(token.data() - 1);
+	if (prevChar == '(' || prevChar == ',') return;
 	const size_t dotPos = token.rfind('.');
 	const std::string_view prefix = token.substr(dotPos + 1);
 	token.remove_suffix(token.size() - (dotPos == std::string_view::npos ? 0 : dotPos));
@@ -96,9 +127,12 @@ void GetLuaAutocompleteSuggestions(std::string_view text, const sol::environment
 			addSuggestions(fallback->as<sol::table>());
 		}
 	} else {
-		const auto obj = lua.traverse_get<std::optional<sol::object>>(token);
-		if (!obj.has_value())
-			return;
+		std::optional<sol::object> obj = lua;
+		for (const std::string_view part : SplitByChar(token, '.')) {
+			obj = obj->as<sol::table>().get<std::optional<sol::object>>(part);
+			if (!obj.has_value() || obj->get_type() != sol::type::table)
+				return;
+		}
 		if (obj->get_type() == sol::type::table) {
 			addSuggestions(obj->as<sol::table>());
 		}

@@ -1,6 +1,7 @@
 #ifdef _DEBUG
 #include "panels/console.hpp"
 
+#include <algorithm>
 #include <cstdint>
 #include <string_view>
 
@@ -166,18 +167,19 @@ void SendInput()
 
 void DrawAutocompleteSuggestions(const Surface &out, const std::vector<LuaAutocompleteSuggestion> &suggestions, Point position)
 {
+	const int maxInnerWidth = out.w() - TextPaddingX * 2;
 	if (AutocompleteSuggestionsMaxWidth == -1) {
 		int maxWidth = 0;
 		for (const LuaAutocompleteSuggestion &suggestion : suggestions) {
 			maxWidth = std::max(maxWidth, GetLineWidth(suggestion.displayText, AutocompleteSuggestionsTextFontSize, TextSpacing));
 		}
-		AutocompleteSuggestionsMaxWidth = maxWidth;
+		AutocompleteSuggestionsMaxWidth = std::min(maxWidth, maxInnerWidth);
 	}
 
 	const int outerWidth = AutocompleteSuggestionsMaxWidth + TextPaddingX * 2;
 
 	if (position.x + outerWidth > out.w()) {
-		position.x -= AutocompleteSuggestionsMaxWidth;
+		position.x = out.w() - outerWidth;
 	}
 	const int height = static_cast<int>(suggestions.size()) * LineHeight + TextPaddingYBottom + TextPaddingYTop;
 
@@ -192,7 +194,10 @@ void DrawAutocompleteSuggestions(const Surface &out, const std::vector<LuaAutoco
 			const int extraHeight = extraTop + TextPaddingYBottom;
 			FillRect(out, position.x, textPosition.y - extraTop, outerWidth, LineHeight + extraHeight, PAL16_BLUE + 8);
 		}
-		DrawString(out, suggestion.displayText, textPosition,
+		const int textHeight = LineHeight + TextPaddingYBottom;
+		DrawString(
+		    out.subregion(textPosition.x, textPosition.y, maxInnerWidth, textHeight), suggestion.displayText,
+		    Rectangle { Point { 0, 0 }, Size { maxInnerWidth, textHeight } },
 		    TextRenderOptions {
 		        .flags = AutocompleteSuggestionsTextUiFlags,
 		        .spacing = TextSpacing,
