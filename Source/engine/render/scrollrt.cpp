@@ -7,6 +7,7 @@
 
 #include <cmath>
 #include <cstdint>
+#include <ctime>
 
 #include "DiabloUI/ui_flags.hpp"
 #include "automap.h"
@@ -1246,6 +1247,19 @@ void DrawFPS(const Surface &out)
 }
 
 /**
+ * @brief Display the current clock
+ */
+void DrawClock(const Surface &out)
+{
+	time_t now = time(NULL);
+	struct tm *timeinfo = localtime(&now);
+	static char buf[15] {};
+	strftime(buf, sizeof(buf), "%H:%M", timeinfo);
+
+	DrawString(out, std::string_view(buf), Point { 8, 82 }, { .flags = UiFlags::ColorWhite });
+}
+
+/**
  * @brief Update part of the screen from the back buffer
  * @param x Back buffer coordinate
  * @param y Back buffer coordinate
@@ -1656,6 +1670,9 @@ void DrawAndBlit()
 	DrawCursor(out);
 
 	DrawFPS(out);
+	if (*sgOptions.Gameplay.showClock) {
+		DrawClock(out);
+	}
 
 	LuaEvent("OnGameDrawComplete");
 

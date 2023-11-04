@@ -1083,6 +1083,7 @@ GameplayOptions::GameplayOptions()
               { FloatingNumbers::Random, N_("Random Angles") },
               { FloatingNumbers::Vertical, N_("Vertical Only") },
           })
+	, showClock("Show clock", OptionEntryFlags::None, N_("Show clock"), N_("Displays the clock in the upper left corner of the screen."), false)
 {
 	grabInput.SetValueChangedCallback(OptionGrabInputChanged);
 	experienceBar.SetValueChangedCallback(OptionExperienceBarChanged);
@@ -1128,6 +1129,7 @@ std::vector<OptionEntryBase *> GameplayOptions::GetEntries()
 		&disableCripplingShrines,
 		&adriaRefillsMana,
 		&grabInput,
+		&showClock,
 	};
 }
 

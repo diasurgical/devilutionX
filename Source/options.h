@@ -596,6 +596,8 @@ struct GameplayOptions : OptionCategoryBase {
 	OptionEntryInt<int> numFullRejuPotionPickup;
 	/** @brief Enable floating numbers. */
 	OptionEntryEnum<FloatingNumbers> enableFloatingNumbers;
+	/** @brief Show in-game clock. */
+	OptionEntryBoolean showClock;
 };
 
 struct ControllerOptions : OptionCategoryBase {
