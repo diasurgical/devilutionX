@@ -140,6 +140,7 @@ set(libdevilutionx_SRCS
   lua/modules/dev/quests.cpp
   lua/modules/render.cpp
   lua/modules/log.cpp
+  lua/modules/utils.cpp
 
   panels/charpanel.cpp
   panels/console.cpp

@@ -13,6 +13,7 @@
 #include "lua/modules/audio.hpp"
 #include "lua/modules/log.hpp"
 #include "lua/modules/render.hpp"
+#include "lua/modules/utils.hpp"
 #include "plrmsg.h"
 #include "utils/console.h"
 #include "utils/log.hpp"
@@ -194,7 +195,8 @@ void LuaInitialize()
 	    "devilutionx.log", LuaLogModule(lua),
 	    "devilutionx.audio", LuaAudioModule(lua),
 	    "devilutionx.render", LuaRenderModule(lua),
-	    "devilutionx.message", [](std::string_view text) { EventPlrMsg(text, UiFlags::ColorRed); });
+	    "devilutionx.message", [](std::string_view text) { EventPlrMsg(text, UiFlags::ColorRed); },
+		"devilutionx.utils", LuaUtilsModule(lua));
 	lua["require"] = lua["requireGen"](loaded, LuaLoadScriptFromAssets);
 
 	RunScript("lua\\init.lua", /*optional=*/false);
