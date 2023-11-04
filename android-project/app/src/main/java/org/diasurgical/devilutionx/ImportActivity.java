@@ -1,6 +1,7 @@
 package org.diasurgical.devilutionx;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -27,11 +28,22 @@ public class ImportActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-		intent.addCategory(Intent.CATEGORY_OPENABLE);
-		intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-		intent.setType("*/*");
-		startActivityForResult(intent, IMPORT_REQUEST_CODE);
+
+		ExternalFilesManager fileManager = new ExternalFilesManager(this);
+		String externalFilesDir =  fileManager.getExternalFilesDirectory();
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage(getString(R.string.import_data_info, externalFilesDir));
+		builder.setPositiveButton(R.string.ok_button, (dialog, which) -> {
+			Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+			intent.addCategory(Intent.CATEGORY_OPENABLE);
+			intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+			intent.setType("*/*");
+			startActivityForResult(intent, IMPORT_REQUEST_CODE);
+		});
+
+		AlertDialog dialog = builder.create();
+		dialog.show();
 	}
 
 	@Override
