@@ -1319,7 +1319,7 @@ void GetOilType(Item &item, int maxLvl)
 		cnt = 0;
 		for (size_t j = 0; j < sizeof(OilLevels) / sizeof(OilLevels[0]); j++) {
 			if (OilLevels[j] <= maxLvl) {
-				rnd[cnt] = j;
+				rnd[cnt] = static_cast<int8_t>(j);
 				cnt++;
 			}
 		}

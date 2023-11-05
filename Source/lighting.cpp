@@ -348,7 +348,7 @@ void MakeLightTable()
 
 	if (leveltype == DTYPE_HELL) {
 		// Blood wall lighting
-		const int shades = LightTables.size() - 1;
+		const auto shades = static_cast<int>(LightTables.size() - 1);
 		for (int i = 0; i < shades; i++) {
 			auto &lightTable = LightTables[i];
 			constexpr int range = 16;
@@ -374,17 +374,17 @@ void MakeLightTable()
 	// Generate light falloffs ranges
 	const float maxDarkness = 15;
 	const float maxBrightness = 0;
-	for (size_t radius = 0; radius < NumLightRadiuses; radius++) {
-		size_t maxDistance = (radius + 1) * 8;
-		for (size_t distance = 0; distance < 128; distance++) {
+	for (unsigned radius = 0; radius < NumLightRadiuses; radius++) {
+		const unsigned maxDistance = (radius + 1) * 8;
+		for (unsigned distance = 0; distance < 128; distance++) {
 			if (distance > maxDistance) {
 				LightFalloffs[radius][distance] = 15;
 			} else {
-				const float factor = static_cast<float>(distance) / maxDistance;
+				const float factor = static_cast<float>(distance) / static_cast<float>(maxDistance);
 				float scaled;
 				if (IsAnyOf(leveltype, DTYPE_NEST, DTYPE_CRYPT)) {
 					// quardratic falloff with over exposure
-					const float brightness = radius * 1.25;
+					const float brightness = static_cast<float>(radius) * 1.25F;
 					scaled = factor * factor * brightness + (maxDarkness - brightness);
 					scaled = std::max(maxBrightness, scaled);
 				} else {
@@ -634,7 +634,7 @@ void ProcessVisionList()
 	TransList = {};
 
 	for (const Player &player : Players) {
-		int id = player.getId();
+		const size_t id = player.getId();
 		if (!VisionActive[id])
 			continue;
 		Light &vision = VisionList[id];
@@ -649,7 +649,7 @@ void ProcessVisionList()
 		}
 	}
 	for (const Player &player : Players) {
-		int id = player.getId();
+		const size_t id = player.getId();
 		if (!VisionActive[id])
 			continue;
 		Light &vision = VisionList[id];

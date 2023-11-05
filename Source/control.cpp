@@ -270,7 +270,7 @@ void PrintInfo(const Surface &out)
 	const int space[] = { 18, 12, 6, 3, 0 };
 	Rectangle infoArea { GetMainPanel().position + Displacement { 177, 46 }, { 288, 60 } };
 
-	const int newLineCount = c_count(InfoString.str(), '\n');
+	const auto newLineCount = static_cast<int>(c_count(InfoString.str(), '\n'));
 	const int spaceIndex = std::min(4, newLineCount);
 	const int spacing = space[spaceIndex];
 	const int lineHeight = 12 + spacing;

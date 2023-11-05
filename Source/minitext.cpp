@@ -31,7 +31,7 @@ namespace {
 /** Vertical speed of the scrolling text in ms/px */
 int qtextSpd;
 /** Start time of scrolling */
-Uint32 ScrollStart;
+uint32_t ScrollStart;
 /** Graphics for the window border */
 OptionalOwnedClxSpriteList pTextBoxCels;
 
@@ -63,13 +63,13 @@ void LoadText(std::string_view text)
  */
 uint32_t CalculateTextSpeed(SfxID nSFX)
 {
-	const int numLines = TextLines.size();
+	const auto numLines = static_cast<uint32_t>(TextLines.size());
 
 #ifndef NOSOUND
-	Uint32 sfxFrames = GetSFXLength(nSFX);
+	uint32_t sfxFrames = GetSFXLength(nSFX);
 #else
 	// Sound is disabled -- estimate length from the number of lines.
-	Uint32 sfxFrames = numLines * 3000;
+	uint32_t sfxFrames = numLines * 3000;
 #endif
 	assert(sfxFrames != 0);
 
@@ -82,11 +82,11 @@ uint32_t CalculateTextSpeed(SfxID nSFX)
 
 int CalculateTextPosition()
 {
-	uint32_t currTime = GetMillisecondsSinceStartup();
+	const uint32_t currTime = GetMillisecondsSinceStartup();
 
-	int y = (currTime - ScrollStart) / qtextSpd - 260;
+	const int y = (currTime - ScrollStart) / qtextSpd - 260;
 
-	int textHeight = LineHeight * TextLines.size();
+	const auto textHeight = static_cast<int>(LineHeight * TextLines.size());
 	if (y >= textHeight)
 		qtextflag = false;
 

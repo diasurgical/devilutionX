@@ -2400,7 +2400,7 @@ void SaveGameData(SaveWriter &saveWriter)
 	file.WriteBE<int32_t>(ViewPosition.y);
 	file.WriteLE<uint8_t>(invflag ? 1 : 0);
 	file.WriteLE<uint8_t>(chrflag ? 1 : 0);
-	file.WriteBE<int32_t>(ActiveMonsterCount);
+	file.WriteBE(static_cast<int32_t>(ActiveMonsterCount));
 	file.WriteBE<int32_t>(ActiveItemCount);
 	// ActiveMissileCount will be a value from 0-125 (for vanilla compatibility). Writing an unsigned value here to avoid
 	// warnings about casting from unsigned to signed, but there's no sign extension issues when reading this as a signed
@@ -2460,7 +2460,7 @@ void SaveGameData(SaveWriter &saveWriter)
 		for (int i = 0; i < ActiveLightCount; i++)
 			SaveLighting(&file, &Lights[ActiveLights[i]]);
 
-		int visionCount = Players.size();
+		const auto visionCount = static_cast<int32_t>(Players.size());
 		file.WriteBE<int32_t>(visionCount + 1); // VisionId
 		file.WriteBE<int32_t>(visionCount);
 
@@ -2558,7 +2558,7 @@ void SaveLevel(SaveWriter &saveWriter)
 		}
 	}
 
-	file.WriteBE<int32_t>(ActiveMonsterCount);
+	file.WriteBE(static_cast<int32_t>(ActiveMonsterCount));
 	file.WriteBE<int32_t>(ActiveItemCount);
 	file.WriteBE<int32_t>(ActiveObjectCount);
 

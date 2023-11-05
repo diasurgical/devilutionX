@@ -955,9 +955,9 @@ void StartGoldDrop()
 
 	const int8_t invIndex = pcursinvitem;
 
-	Player &myPlayer = *MyPlayer;
+	const Player &myPlayer = *MyPlayer;
 
-	const size_t max = (invIndex <= INVITEM_INV_LAST)
+	const int max = (invIndex <= INVITEM_INV_LAST)
 	    ? myPlayer.InvList[invIndex - INVITEM_INV_FIRST]._ivalue
 	    : myPlayer.SpdList[invIndex - INVITEM_BELT_FIRST]._ivalue;
 
@@ -1207,7 +1207,7 @@ bool AutoPlaceItemInBelt(Player &player, const Item &item, bool persistItem, boo
 				player.CalcScrolls();
 				RedrawComponent(PanelDrawComponent::Belt);
 				if (sendNetworkMessage) {
-					size_t beltIndex = std::distance<const Item *>(&player.SpdList[0], &beltItem);
+					const auto beltIndex = static_cast<int>(std::distance<const Item *>(&player.SpdList[0], &beltItem));
 					NetSendCmdChBeltItem(false, beltIndex);
 				}
 			}
@@ -2131,7 +2131,7 @@ void DoTelekinesis()
 	if (ObjectUnderCursor != nullptr && !ObjectUnderCursor->IsDisabled())
 		NetSendCmdLoc(MyPlayerId, true, CMD_OPOBJT, cursPosition);
 	if (pcursitem != -1)
-		NetSendCmdGItem(true, CMD_REQUESTAGITEM, MyPlayerId, pcursitem);
+		NetSendCmdGItem(true, CMD_REQUESTAGITEM, static_cast<uint8_t>(MyPlayerId), pcursitem);
 	if (pcursmonst != -1) {
 		auto &monter = Monsters[pcursmonst];
 		if (!M_Talker(monter) && monter.talkMsg == TEXT_NONE)
