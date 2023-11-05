@@ -123,7 +123,7 @@ enum _difficulty : uint8_t {
 
 struct THEME_LOC {
 	RectangleOf<uint8_t> room;
-	int16_t ttval;
+	int8_t ttval;
 };
 
 struct MegaTile {
