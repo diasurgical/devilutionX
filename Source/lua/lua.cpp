@@ -20,6 +20,7 @@
 
 #ifdef _DEBUG
 #include "lua/modules/dev.hpp"
+#include "lua/repl.hpp"
 #endif
 
 namespace devilution {
@@ -252,6 +253,9 @@ void LuaInitialize()
 
 void LuaShutdown()
 {
+#ifdef _DEBUG
+	LuaReplShutdown();
+#endif
 	CurrentLuaState = std::nullopt;
 }
 

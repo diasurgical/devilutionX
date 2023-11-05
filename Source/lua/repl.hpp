@@ -13,5 +13,7 @@ tl::expected<std::string, std::string> RunLuaReplLine(std::string_view code);
 
 sol::environment &GetLuaReplEnvironment();
 
+void LuaReplShutdown();
+
 } // namespace devilution
 #endif // _DEBUG

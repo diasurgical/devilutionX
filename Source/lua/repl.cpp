@@ -48,7 +48,6 @@ int LuaPrintToConsole(lua_State *state)
 
 void CreateReplEnvironment()
 {
-	sol::state &lua = GetLuaState();
 	sol::environment env = CreateLuaSandbox();
 	env["print"] = LuaPrintToConsole;
 	lua_setwarnf(env.lua_state(), LuaConsoleWarn, /*ud=*/nullptr);
@@ -101,6 +100,11 @@ tl::expected<std::string, std::string> RunLuaReplLine(std::string_view code)
 		return std::string {};
 	}
 	return sol::utility::to_string(sol::stack_object(result));
+}
+
+void LuaReplShutdown()
+{
+	replEnv = std::nullopt;
 }
 
 } // namespace devilution
