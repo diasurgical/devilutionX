@@ -11,7 +11,7 @@ using ::testing::Lt;
 using ::testing::Pair;
 using ::testing::UnorderedElementsAre;
 
-void TestArrowRotatesUniformly(Missile &missile, int startingFrame, int leftFrame, int rightFrame)
+void TestArrowRotatesUniformly(Missile &missile, int startingFrame, unsigned leftFrame, unsigned rightFrame)
 {
 	std::unordered_map<int, unsigned> observed {};
 	for (auto i = 0; i < 100; i++) {
@@ -20,7 +20,7 @@ void TestArrowRotatesUniformly(Missile &missile, int startingFrame, int leftFram
 		observed[missile._miAnimFrame]++;
 	}
 
-	EXPECT_THAT(observed, UnorderedElementsAre(Pair(leftFrame, AllOf(Gt(30), Lt(70))), Pair(rightFrame, AllOf(Gt(30), Lt(70))))) << "Arrows should rotate either direction roughly 50% of the time";
+	EXPECT_THAT(observed, UnorderedElementsAre(Pair(leftFrame, AllOf(Gt(30U), Lt(70U))), Pair(rightFrame, AllOf(Gt(30U), Lt(70U))))) << "Arrows should rotate either direction roughly 50% of the time";
 }
 
 void TestAnimatedMissileRotatesUniformly(Missile &missile, int startingDir, int leftDir, int rightDir)
@@ -32,7 +32,7 @@ void TestAnimatedMissileRotatesUniformly(Missile &missile, int startingDir, int 
 		observed[missile._mimfnum]++;
 	}
 
-	EXPECT_THAT(observed, UnorderedElementsAre(Pair(leftDir, AllOf(Gt(30), Lt(70))), Pair(rightDir, AllOf(Gt(30), Lt(70))))) << "Animated missiles should rotate either direction roughly 50% of the time";
+	EXPECT_THAT(observed, UnorderedElementsAre(Pair(leftDir, AllOf(Gt(30U), Lt(70U))), Pair(rightDir, AllOf(Gt(30U), Lt(70U))))) << "Animated missiles should rotate either direction roughly 50% of the time";
 }
 
 TEST(Missiles, RotateBlockedMissileArrow)
