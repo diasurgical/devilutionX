@@ -1315,9 +1315,9 @@ void SearchAutomapItem(const Surface &out, const Displacement &myPlayerOffset, i
 /**
  * @brief Renders an arrow on the automap, centered on and facing the direction of the player.
  */
-void DrawAutomapPlr(const Surface &out, const Displacement &myPlayerOffset, int playerId)
+void DrawAutomapPlr(const Surface &out, const Displacement &myPlayerOffset, size_t playerId)
 {
-	int playerColor = MapColorsPlayer + (8 * playerId) % 128;
+	const uint8_t playerColor = MapColorsPlayer + (8 * playerId) % 128;
 
 	Player &player = Players[playerId];
 	Point tile = player.position.tile;

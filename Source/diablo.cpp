@@ -14,6 +14,7 @@
 #include "DiabloUI/selstart.h"
 #include "automap.h"
 #include "capture.h"
+#include "control.h"
 #include "cursor.h"
 #include "dead.h"
 #ifdef _DEBUG
@@ -1604,7 +1605,7 @@ bool CanAutomapBeToggledOff()
 
 void InitKeymapActions()
 {
-	for (int i = 0; i < 8; ++i) {
+	for (uint32_t i = 0; i < 8; ++i) {
 		sgOptions.Keymapper.AddAction(
 		    "BeltItem{}",
 		    N_("Belt item {}"),
@@ -1620,7 +1621,7 @@ void InitKeymapActions()
 		    CanPlayerTakeAction,
 		    i + 1);
 	}
-	for (size_t i = 0; i < NumHotkeys; ++i) {
+	for (uint32_t i = 0; i < NumHotkeys; ++i) {
 		sgOptions.Keymapper.AddAction(
 		    "QuickSpell{}",
 		    N_("Quick spell {}"),
@@ -1759,12 +1760,12 @@ void InitKeymapActions()
 	    SpellBookKeyPressed,
 	    nullptr,
 	    CanPlayerTakeAction);
-	for (size_t i = 0; i < QUICK_MESSAGE_OPTIONS; ++i) {
+	for (uint32_t i = 0; i < QUICK_MESSAGE_OPTIONS; ++i) {
 		sgOptions.Keymapper.AddAction(
 		    "QuickMessage{}",
 		    N_("Quick Message {}"),
 		    N_("Use Quick Message in chat."),
-		    (i < 4) ? static_cast<SDL_Keycode>(SDLK_F9 + i) : SDLK_UNKNOWN,
+		    (i < 4) ? static_cast<uint32_t>(SDLK_F9) + i : static_cast<uint32_t>(SDLK_UNKNOWN),
 		    [i]() { DiabloHotkeyMsg(i); },
 		    nullptr,
 		    nullptr,
@@ -1907,7 +1908,7 @@ void InitPadmapActions()
 		    CanPlayerTakeAction,
 		    i + 1);
 	}
-	for (size_t i = 0; i < NumHotkeys; ++i) {
+	for (uint32_t i = 0; i < NumHotkeys; ++i) {
 		sgOptions.Padmapper.AddAction(
 		    "QuickSpell{}",
 		    N_("Quick spell {}"),

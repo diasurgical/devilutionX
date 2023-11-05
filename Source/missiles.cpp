@@ -495,7 +495,7 @@ bool MoveMissile(Missile &missile, tl::function_ref<bool(Point)> checkTile, bool
 	// Did the missile skip a tile?
 	if (possibleVisitTiles > 1) {
 		auto speed = abs(missile.position.velocity);
-		float denominator = (2 * speed.deltaY >= speed.deltaX) ? 2 * speed.deltaY : speed.deltaX;
+		const auto denominator = static_cast<float>((2 * speed.deltaY >= speed.deltaX) ? 2 * speed.deltaY : speed.deltaX);
 		auto incVelocity = missile.position.velocity * ((32 << 16) / denominator);
 		auto traveled = missile.position.traveled - missile.position.velocity;
 		// Adjust the traveled vector to start on the next smallest multiple of incVelocity
