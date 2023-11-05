@@ -304,7 +304,7 @@ void MakeDmt()
 {
 	for (int y = 0; y < DMAXY - 1; y++) {
 		for (int x = 0; x < DMAXX - 1; x++) {
-			int val = (DungeonMask.test(x + 1, y + 1) << 3) | (DungeonMask.test(x, y + 1) << 2) | (DungeonMask.test(x + 1, y) << 1) | DungeonMask.test(x, y);
+			int val = (DungeonMask.test(x + 1, y + 1) << 3) | (DungeonMask.test(x, y + 1) << 2) | (DungeonMask.test(x + 1, y) << 1) | (DungeonMask.test(x, y) << 0);
 			dungeon[x][y] = L4ConvTbl[val];
 		}
 	}
