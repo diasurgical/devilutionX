@@ -19,7 +19,7 @@ inline std::string LuaDocstringKey(std::string_view key)
 }
 
 template <typename T>
-void SetWithSignatureAndDoc(sol::table &table, std::string_view key, std::string_view signature, std::string_view doc, T &&value)
+void SetDocumented(sol::table &table, std::string_view key, std::string_view signature, std::string_view doc, T &&value)
 {
 	table[key] = std::forward<T>(value);
 	table[LuaSignatureKey(key)] = signature;

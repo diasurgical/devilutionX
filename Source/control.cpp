@@ -38,6 +38,7 @@
 #include "missiles.h"
 #include "options.h"
 #include "panels/charpanel.hpp"
+#include "panels/console.hpp"
 #include "panels/mainpanel.hpp"
 #include "panels/spell_book.hpp"
 #include "panels/spell_icons.hpp"
@@ -579,10 +580,6 @@ bool CheckTextCommand(const std::string_view text)
 
 void ResetTalkMsg()
 {
-#ifdef _DEBUG
-	if (CheckDebugTextCommand(TalkMessage))
-		return;
-#endif
 	if (CheckTextCommand(TalkMessage))
 		return;
 
@@ -1628,14 +1625,15 @@ void DiabloHotkeyMsg(uint32_t dwMsg)
 
 	assert(dwMsg < QUICK_MESSAGE_OPTIONS);
 
-	for (auto &msg : sgOptions.Chat.szHotKeyMsgs[dwMsg]) {
-
+	for (const std::string &msg : sgOptions.Chat.szHotKeyMsgs[dwMsg]) {
 #ifdef _DEBUG
-		if (CheckDebugTextCommand(msg))
+		constexpr std::string_view LuaPrefix = "/lua ";
+		if (msg.starts_with(LuaPrefix)) {
+			InitConsole();
+			RunInConsole(std::string_view(msg).substr(LuaPrefix.size()));
 			continue;
+		}
 #endif
-		if (CheckTextCommand(msg))
-			continue;
 		char charMsg[MAX_SEND_STR_LEN];
 		CopyUtf8(charMsg, msg, sizeof(charMsg));
 		NetSendCmdString(0xFFFFFF, charMsg);

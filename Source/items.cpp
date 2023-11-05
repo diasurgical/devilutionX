@@ -4577,10 +4577,7 @@ void PutItemRecord(uint32_t nSeed, uint16_t wCI, int nIndex)
 std::mt19937 BetterRng;
 std::string DebugSpawnItem(std::string itemName)
 {
-	std::string cmdLabel = "[drop] ";
-
-	if (ActiveItemCount >= MAXITEMS)
-		return StrCat(cmdLabel, "No space to generate the item!");
+	if (ActiveItemCount >= MAXITEMS) return "No space to generate the item!";
 
 	const int max_time = 3000;
 	const int max_iter = 1000000;
@@ -4596,10 +4593,10 @@ std::string DebugSpawnItem(std::string itemName)
 		std::uniform_int_distribution<int32_t> dist(0, INT_MAX);
 		SetRndSeed(dist(BetterRng));
 		if (SDL_GetTicks() - begin > max_time)
-			return StrCat(cmdLabel, "Item not found in ", max_time / 1000, " seconds!");
+			return StrCat("Item not found in ", max_time / 1000, " seconds!");
 
 		if (i > max_iter)
-			return StrCat(cmdLabel, "Item not found in ", max_iter, " tries!");
+			return StrCat("Item not found in ", max_iter, " tries!");
 
 		const int8_t monsterLevel = dist(BetterRng) % CF_LEVEL + 1;
 		_item_indexes idx = RndItemForMonsterLevel(monsterLevel);
@@ -4621,15 +4618,12 @@ std::string DebugSpawnItem(std::string itemName)
 	Point pos = MyPlayer->position.tile;
 	GetSuperItemSpace(pos, ii);
 	NetSendCmdPItem(false, CMD_SPAWNITEM, item.position, item);
-	return StrCat(cmdLabel, "Item generated successfully - iterations: ", i);
+	return StrCat("Item generated successfully - iterations: ", i);
 }
 
 std::string DebugSpawnUniqueItem(std::string itemName)
 {
-	std::string cmdLabel = "[dropu] ";
-
-	if (ActiveItemCount >= MAXITEMS)
-		return StrCat(cmdLabel, "No space to generate the item!");
+	if (ActiveItemCount >= MAXITEMS) return "No space to generate the item!";
 
 	AsciiStrToLower(itemName);
 	UniqueItem uniqueItem;
@@ -4648,8 +4642,7 @@ std::string DebugSpawnUniqueItem(std::string itemName)
 			break;
 		}
 	}
-	if (!foundUnique)
-		return StrCat(cmdLabel, "No unique item found!");
+	if (!foundUnique) return "No unique item found!";
 
 	_item_indexes uniqueBaseIndex = IDI_GOLD;
 	for (std::underlying_type_t<_item_indexes> j = IDI_GOLD; j <= IDI_LAST; j++) {
@@ -4661,8 +4654,7 @@ std::string DebugSpawnUniqueItem(std::string itemName)
 		}
 	}
 
-	if (uniqueBaseIndex == IDI_GOLD)
-		return StrCat(cmdLabel, "Base item not available!");
+	if (uniqueBaseIndex == IDI_GOLD) return "Base item not available!";
 
 	auto &baseItemData = AllItemsList[static_cast<size_t>(uniqueBaseIndex)];
 
@@ -4672,11 +4664,11 @@ std::string DebugSpawnUniqueItem(std::string itemName)
 	for (uint32_t begin = SDL_GetTicks();; i++) {
 		constexpr int max_time = 3000;
 		if (SDL_GetTicks() - begin > max_time)
-			return StrCat(cmdLabel, "Item not found in ", max_time / 1000, " seconds!");
+			return StrCat("Item not found in ", max_time / 1000, " seconds!");
 
 		constexpr int max_iter = 1000000;
 		if (i > max_iter)
-			return StrCat(cmdLabel, "Item not found in ", max_iter, " tries!");
+			return StrCat("Item not found in ", max_iter, " tries!");
 
 		testItem = {};
 		testItem._iMiscId = baseItemData.iMiscId;
@@ -4695,7 +4687,7 @@ std::string DebugSpawnUniqueItem(std::string itemName)
 		const std::string tmp = AsciiStrToLower(testItem._iIName);
 		if (tmp.find(itemName) != std::string::npos)
 			break;
-		return StrCat(cmdLabel, "Impossible to generate!");
+		return "Impossible to generate!";
 	}
 
 	int ii = AllocateItem();
@@ -4706,7 +4698,7 @@ std::string DebugSpawnUniqueItem(std::string itemName)
 	item._iIdentified = true;
 	NetSendCmdPItem(false, CMD_SPAWNITEM, item.position, item);
 
-	return StrCat(cmdLabel, "Item generated successfully - iterations: ", i);
+	return StrCat("Item generated successfully - iterations: ", i);
 }
 #endif
 

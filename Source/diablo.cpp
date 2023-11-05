@@ -813,8 +813,9 @@ void RunGameLoop(interface_mode uMsg)
 
 #ifdef _DEBUG
 		if (!gbGameLoopStartup && !DebugCmdsFromCommandLine.empty()) {
-			for (auto &cmd : DebugCmdsFromCommandLine) {
-				CheckDebugTextCommand(cmd);
+			InitConsole();
+			for (const std::string &cmd : DebugCmdsFromCommandLine) {
+				RunInConsole(cmd);
 			}
 			DebugCmdsFromCommandLine.clear();
 		}

@@ -910,12 +910,12 @@ void UpdateCowFarmerAnimAfterQuestComplete()
 }
 
 #ifdef _DEBUG
-bool DebugTalkToTowner(std::string targetName)
+bool DebugTalkToTowner(std::string_view targetName)
 {
 	SetupTownStores();
-	AsciiStrToLower(targetName);
+	const std::string lowercaseName = AsciiStrToLower(targetName);
 	Player &myPlayer = *MyPlayer;
-	for (auto &townerData : TownersData) {
+	for (const TownerData &townerData : TownersData) {
 		if (!IsTownerPresent(townerData.type))
 			continue;
 		// cows have an init function that differs from the rest and isn't compatible with this code, skip them :(
@@ -925,7 +925,7 @@ bool DebugTalkToTowner(std::string targetName)
 		townerData.init(fakeTowner, townerData);
 		fakeTowner.position = myPlayer.position.tile;
 		const std::string npcName = AsciiStrToLower(fakeTowner.name);
-		if (npcName.find(targetName) != std::string::npos) {
+		if (npcName.find(lowercaseName) != std::string::npos) {
 			townerData.talk(myPlayer, fakeTowner);
 			return true;
 		}
