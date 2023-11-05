@@ -93,6 +93,7 @@ struct ConsoleLine {
 };
 
 std::vector<ConsoleLine> ConsoleLines;
+size_t NumPreparedConsoleLines;
 int ConsoleLinesTotalHeight;
 
 // Index of the currently filled input/output, counting from end.
@@ -140,33 +141,21 @@ int GetConsoleLinesInnerWidth()
 	return OuterRect.size.width - 2 * TextPaddingX;
 }
 
-void AddConsoleLine(ConsoleLine &&consoleLine)
+void PrepareForRender(ConsoleLine &consoleLine)
 {
 	consoleLine.wrapped = WordWrapString(consoleLine.text, GetConsoleLinesInnerWidth(), TextFontSize, TextSpacing);
 	consoleLine.numLines += static_cast<int>(c_count(consoleLine.wrapped, '\n')) + 1;
 	ConsoleLinesTotalHeight += consoleLine.numLines * LineHeight;
+}
+
+void AddConsoleLine(ConsoleLine &&consoleLine)
+{
 	ConsoleLines.emplace_back(std::move(consoleLine));
-	ScrollOffset = 0;
 }
 
 void SendInput()
 {
-	const std::string_view input = ConsoleInputState.value();
-	AddConsoleLine(ConsoleLine { .type = ConsoleLine::Input, .text = StrCat(Prompt, input) });
-	tl::expected<std::string, std::string> result = RunLuaReplLine(input);
-
-	if (result.has_value()) {
-		if (!result->empty()) {
-			AddConsoleLine(ConsoleLine { .type = ConsoleLine::Output, .text = *std::move(result) });
-		}
-	} else {
-		if (!result.error().empty()) {
-			AddConsoleLine(ConsoleLine { .type = ConsoleLine::Error, .text = std::move(result).error() });
-		} else {
-			AddConsoleLine(ConsoleLine { .type = ConsoleLine::Error, .text = "Unknown error" });
-		}
-	}
-
+	RunInConsole(ConsoleInputState.value());
 	ConsoleInputState.clear();
 	DraftInput.clear();
 	HistoryIndex = -1;
@@ -273,6 +262,15 @@ void DrawConsoleLines(const Surface &out)
 		ScrollOffset += innerHeight * PendingScrollPages;
 		PendingScrollPages = 0;
 	}
+
+	if (NumPreparedConsoleLines != ConsoleLines.size()) {
+		for (size_t i = NumPreparedConsoleLines; i < ConsoleLines.size(); ++i) {
+			PrepareForRender(ConsoleLines[i]);
+		}
+		NumPreparedConsoleLines = ConsoleLines.size();
+		ScrollOffset = 0;
+	}
+
 	ScrollOffset = std::clamp(ScrollOffset, 0, std::max(0, ConsoleLinesTotalHeight - innerHeight));
 
 	int lineYEnd = innerHeight + ScrollOffset;
@@ -418,15 +416,9 @@ void ClearConsole()
 	ConsoleLines.clear();
 	HistoryIndex = -1;
 	ScrollOffset = 0;
+	NumPreparedConsoleLines = 0;
+	ConsoleLinesTotalHeight = 0;
 	AddInitialConsoleLines();
-}
-
-void InitConsole()
-{
-	ConsolePrelude = LoadAsset("lua\\repl_prelude.lua");
-	AddInitialConsoleLines();
-	if (ConsolePrelude->has_value())
-		RunLuaReplLine(std::string_view(**ConsolePrelude));
 }
 
 } // namespace
@@ -621,6 +613,34 @@ void DrawConsole(const Surface &out)
 
 	SDL_Rect sdlRect = MakeSdlRect(OuterRect);
 	BltFast(&sdlRect, &sdlRect);
+}
+
+void InitConsole()
+{
+	if (!ConsoleLines.empty())
+		return;
+	ConsolePrelude = LoadAsset("lua\\repl_prelude.lua");
+	AddInitialConsoleLines();
+	if (ConsolePrelude->has_value())
+		RunLuaReplLine(std::string_view(**ConsolePrelude));
+}
+
+void RunInConsole(std::string_view code)
+{
+	AddConsoleLine(ConsoleLine { .type = ConsoleLine::Input, .text = StrCat(Prompt, code) });
+	tl::expected<std::string, std::string> result = RunLuaReplLine(code);
+
+	if (result.has_value()) {
+		if (!result->empty()) {
+			AddConsoleLine(ConsoleLine { .type = ConsoleLine::Output, .text = *std::move(result) });
+		}
+	} else {
+		if (!result.error().empty()) {
+			AddConsoleLine(ConsoleLine { .type = ConsoleLine::Error, .text = std::move(result).error() });
+		} else {
+			AddConsoleLine(ConsoleLine { .type = ConsoleLine::Error, .text = "Unknown error" });
+		}
+	}
 }
 
 void PrintToConsole(std::string_view text)

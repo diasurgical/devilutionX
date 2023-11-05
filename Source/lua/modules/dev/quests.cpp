@@ -1,8 +1,12 @@
 #ifdef _DEBUG
 #include "lua/modules/dev/quests.hpp"
 
+#include <cstdint>
+#include <string>
+
 #include <sol/sol.hpp>
 
+#include "engine.h"
 #include "lua/metadoc.hpp"
 #include "quests.h"
 #include "utils/str_cat.hpp"
@@ -31,7 +35,7 @@ std::string DebugCmdEnableQuests()
 		quest._qactive = QUEST_ACTIVE;
 		quest._qlog = true;
 	}
-	return StrCat("Activated all quests.");
+	return "Activated all quests.";
 }
 
 std::string DebugCmdQuestInfo(const uint8_t questId)
@@ -58,18 +62,10 @@ std::string DebugCmdQuestsInfo()
 sol::table LuaDevQuestsModule(sol::state_view &lua)
 {
 	sol::table table = lua.create_table();
-	SetWithSignatureAndDoc(table, "activate", "(id: number)",
-	    "Activates the given quest.",
-	    &DebugCmdEnableQuest);
-	SetWithSignatureAndDoc(table, "activateAll", "()",
-	    "Activates all available quests.",
-	    &DebugCmdEnableQuests);
-	SetWithSignatureAndDoc(table, "info", "(id: number)",
-	    "Information on the given quest.",
-	    &DebugCmdQuestInfo);
-	SetWithSignatureAndDoc(table, "all", "()",
-	    "Information on all available quest.",
-	    &DebugCmdQuestsInfo);
+	SetDocumented(table, "activate", "(id: number)", "Activate the given quest.", &DebugCmdEnableQuest);
+	SetDocumented(table, "activateAll", "()", "Activate all available quests.", &DebugCmdEnableQuests);
+	SetDocumented(table, "all", "()", "Information on all available quest.", &DebugCmdQuestsInfo);
+	SetDocumented(table, "info", "(id: number)", "Information on the given quest.", &DebugCmdQuestInfo);
 	return table;
 }
 

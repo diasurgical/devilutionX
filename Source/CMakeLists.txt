@@ -134,12 +134,24 @@ set(libdevilutionx_SRCS
 
   lua/autocomplete.cpp
   lua/lua.cpp
-  lua/repl.cpp
   lua/modules/audio.cpp
   lua/modules/dev.cpp
+  lua/modules/dev/display.cpp
+  lua/modules/dev/items.cpp
+  lua/modules/dev/level.cpp
+  lua/modules/dev/level/map.cpp
+  lua/modules/dev/level/warp.cpp
+  lua/modules/dev/monsters.cpp
+  lua/modules/dev/player.cpp
+  lua/modules/dev/player/gold.cpp
+  lua/modules/dev/player/spells.cpp
+  lua/modules/dev/player/stats.cpp
   lua/modules/dev/quests.cpp
-  lua/modules/render.cpp
+  lua/modules/dev/search.cpp
+  lua/modules/dev/towners.cpp
   lua/modules/log.cpp
+  lua/modules/render.cpp
+  lua/repl.cpp
 
   panels/charpanel.cpp
   panels/console.cpp

@@ -184,6 +184,7 @@ void GetLuaAutocompleteSuggestions(std::string_view text, const sol::environment
 	};
 
 	if (token.empty()) {
+		if (prevChar == '.') return;
 		addSuggestions(lua);
 		const auto fallback = lua.get<std::optional<sol::object>>("_G");
 		if (fallback.has_value() && fallback->get_type() == sol::type::table) {
