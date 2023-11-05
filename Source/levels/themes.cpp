@@ -39,13 +39,13 @@ bool treasureFlag;
 
 int themex;
 int themey;
-int themeVar1;
+size_t themeVar1;
 
 bool TFit_Shrine(int i)
 {
 	int xp = 0;
 	int yp = 0;
-	int found = 0;
+	size_t found = 0;
 
 	while (found == 0) {
 		Point testPosition { xp, yp };
@@ -300,7 +300,7 @@ bool SpecialThemeFit(int i, theme_id t)
 	return rv;
 }
 
-bool CheckThemeRoom(int tv)
+bool CheckThemeRoom(int8_t tv)
 {
 	for (int i = 0; i < numtrigs; i++) {
 		if (dTransVal[trigs[i].position.x][trigs[i].position.y] == tv)
@@ -348,7 +348,7 @@ bool CheckThemeRoom(int tv)
  */
 void PlaceThemeMonsts(int t, int f)
 {
-	int scattertypes[138];
+	size_t scattertypes[138];
 
 	int numscattypes = 0;
 	for (size_t i = 0; i < LevelMonsterTypeCount; i++) {
@@ -357,7 +357,7 @@ void PlaceThemeMonsts(int t, int f)
 			numscattypes++;
 		}
 	}
-	int mtype = scattertypes[GenerateRnd(numscattypes)];
+	size_t mtype = scattertypes[GenerateRnd(numscattypes)];
 	for (int yp = 0; yp < MAXDUNY; yp++) {
 		for (int xp = 0; xp < MAXDUNX; xp++) {
 			if (dTransVal[xp][yp] == themes[t].ttval && IsTileNotSolid({ xp, yp }) && dItem[xp][yp] == 0 && !IsObjectAtPosition({ xp, yp })) {
@@ -844,7 +844,7 @@ void InitThemes()
 	constexpr theme_id ThemeGood[4] = { THEME_GOATSHRINE, THEME_SHRINE, THEME_SKELROOM, THEME_LIBRARY };
 
 	if (leveltype == DTYPE_CATHEDRAL) {
-		for (size_t i = 0; i < 256 && numthemes < MAXTHEMES; i++) {
+		for (int8_t i = 0; numthemes < MAXTHEMES; i++) {
 			if (CheckThemeRoom(i)) {
 				themes[numthemes].ttval = i;
 				theme_id j = ThemeGood[GenerateRnd(4)];
@@ -854,6 +854,8 @@ void InitThemes()
 				themes[numthemes].ttype = j;
 				numthemes++;
 			}
+			if (i == std::numeric_limits<int8_t>::max())
+				break;
 		}
 		return;
 	}
