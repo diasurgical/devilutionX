@@ -32,7 +32,7 @@ constexpr float LogBase = 10.0;
  * Picked so that a volume change of -10 dB results in half perceived loudness.
  * VolumeScale = -1000 / log(0.5)
  */
-constexpr float VolumeScale = 3321.9281;
+constexpr float VolumeScale = 3321.9281F;
 
 /**
  * Min and max volume range, in millibel.
