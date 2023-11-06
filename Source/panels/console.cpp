@@ -209,18 +209,24 @@ void DrawAutocompleteSuggestions(const Surface &out, const std::vector<LuaAutoco
 	}
 }
 
+bool IsBreakStart(std::string_view str, size_t &breakLen)
+{
+	const char32_t cp = DecodeFirstUtf8CodePoint(str, &breakLen);
+	return cp == U'\n' || IsBreakableWhitespace(cp);
+}
+
 void DrawInputText(const Surface &out,
     Rectangle rect, std::string_view originalInputText, std::string_view wrappedInputText)
 {
 	int lineY = 0;
 	int numRendered = -static_cast<int>(Prompt.size());
-	bool prevIsOriginalNewline = false;
+	bool prevIsOriginalWhitespace = false;
 
 	const Surface inputTextSurface = out.subregion(rect.position.x, rect.position.y, rect.size.width, rect.size.height);
 	std::optional<Point> renderedCursorPositionOut;
 	for (const std::string_view line : SplitByChar(wrappedInputText, '\n')) {
 		const int lineCursorPosition = static_cast<int>(ConsoleInputCursor.position) - numRendered;
-		const bool isCursorOnPrevLine = lineCursorPosition == 0 && !prevIsOriginalNewline && numRendered > 0;
+		const bool isCursorOnPrevLine = lineCursorPosition == 0 && !prevIsOriginalWhitespace && numRendered > 0;
 		DrawString(
 		    inputTextSurface, line, { 0, lineY },
 		    TextRenderOptions {
@@ -231,10 +237,18 @@ void DrawInputText(const Surface &out,
 		        .renderedCursorPositionOut = &renderedCursorPositionOut });
 		lineY += LineHeight;
 		numRendered += static_cast<int>(line.size());
-		prevIsOriginalNewline = static_cast<size_t>(numRendered) < originalInputText.size()
-		    && originalInputText[static_cast<size_t>(numRendered)] == '\n';
-		if (prevIsOriginalNewline)
-			++numRendered;
+
+		size_t whitespaceLength;
+		prevIsOriginalWhitespace = static_cast<size_t>(numRendered) < originalInputText.size()
+		    && IsBreakStart(originalInputText.substr(static_cast<size_t>(numRendered)), whitespaceLength);
+		if (prevIsOriginalWhitespace) {
+			// If we replaced an original whitespace with a newline, count the original whitespace as rendered.
+			numRendered += static_cast<int>(whitespaceLength);
+		}
+		if (numRendered < 0 && IsBreakStart(Prompt.substr(Prompt.size() - static_cast<size_t>(-numRendered)), whitespaceLength)) {
+			// If we replaced the whitespace in a prompt with a newline, count it as rendered.
+			numRendered += static_cast<int>(whitespaceLength);
+		}
 	}
 
 	if (!AutocompleteSuggestions.empty() && renderedCursorPositionOut.has_value()) {

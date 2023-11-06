@@ -235,11 +235,6 @@ void DrawFont(const Surface &out, Point position, ClxSprite glyph, text_color co
 	}
 }
 
-bool IsWhitespace(char32_t c)
-{
-	return IsAnyOf(c, U' ', U'　', ZWSP);
-}
-
 bool IsFullWidthPunct(char32_t c)
 {
 	return IsAnyOf(c, U'，', U'、', U'。', U'？', U'！');
@@ -641,7 +636,7 @@ std::string WordWrapString(std::string_view text, unsigned width, GameFontTables
 			lineWidth += (*currentFont.sprite)[frame].width() + spacing;
 		}
 
-		if (IsWhitespace(codepoint)) {
+		if (IsBreakableWhitespace(codepoint)) {
 			lastBreakablePos = remaining.data() - begin - codepointLen;
 			lastBreakableLen = codepointLen;
 			continue;
@@ -831,6 +826,11 @@ void DrawStringWithColors(const Surface &out, std::string_view fmt, DrawStringFo
 uint8_t PentSpn2Spin()
 {
 	return (SDL_GetTicks() / 50) % 8;
+}
+
+bool IsBreakableWhitespace(char32_t c)
+{
+	return IsAnyOf(c, U' ', U'　', ZWSP);
 }
 
 } // namespace devilution
