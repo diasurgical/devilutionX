@@ -131,7 +131,7 @@ struct DisplacementOf {
 		assert(deltaX * deltaX + deltaY * deltaY < (1 << 24));
 
 		// We do not use `std::hypot` here because it is slower and we do not need the extra precision.
-		return sqrtf(deltaX * deltaX + deltaY * deltaY);
+		return sqrtf(static_cast<float>(deltaX * deltaX + deltaY * deltaY));
 	}
 
 	/**

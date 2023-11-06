@@ -10,22 +10,22 @@
 
 using namespace devilution;
 
-static int CountItems(Item *items, int n)
+static size_t CountItems(Item *items, int n)
 {
 	return std::count_if(items, items + n, [](Item x) { return !x.isEmpty(); });
 }
 
-static int Count8(int8_t *ints, int n)
+static size_t Count8(int8_t *ints, int n)
 {
 	return std::count_if(ints, ints + n, [](int8_t x) { return x != 0; });
 }
 
-static int CountU8(uint8_t *ints, int n)
+static size_t CountU8(uint8_t *ints, int n)
 {
 	return std::count_if(ints, ints + n, [](uint8_t x) { return x != 0; });
 }
 
-static int CountBool(bool *bools, int n)
+static size_t CountBool(bool *bools, int n)
 {
 	return std::count_if(bools, bools + n, [](bool x) { return x; });
 }

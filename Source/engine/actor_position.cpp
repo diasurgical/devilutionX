@@ -108,9 +108,7 @@ constexpr std::array<const WalkParameter, 8> WalkParameters { {
 DisplacementOf<int8_t> ActorPosition::CalculateWalkingOffset(Direction dir, const AnimationInfo &animInfo) const
 {
 	DisplacementOf<int16_t> offset = CalculateWalkingOffsetShifted4(dir, animInfo);
-	offset.deltaX >>= 4;
-	offset.deltaY >>= 4;
-	return offset;
+	return { static_cast<int8_t>(offset.deltaX >> 4), static_cast<int8_t>(offset.deltaY >> 4) };
 }
 
 DisplacementOf<int16_t> ActorPosition::CalculateWalkingOffsetShifted4(Direction dir, const AnimationInfo &animInfo) const

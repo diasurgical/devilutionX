@@ -11,12 +11,71 @@ namespace devilution {
  * @brief Writes the integer to the given buffer.
  * @return char* end of the buffer
  */
-char *BufCopy(char *out, int value);
+char *BufCopy(char *out, long long value);
+inline char *BufCopy(char *out, long value)
+{
+	return BufCopy(out, static_cast<long long>(value));
+}
+inline char *BufCopy(char *out, int value)
+{
+	return BufCopy(out, static_cast<long long>(value));
+}
+inline char *BufCopy(char *out, short value)
+{
+	return BufCopy(out, static_cast<long long>(value));
+}
+
+/**
+ * @brief Writes the integer to the given buffer.
+ * @return char* end of the buffer
+ */
+char *BufCopy(char *out, unsigned long long value);
+inline char *BufCopy(char *out, unsigned long value)
+{
+	return BufCopy(out, static_cast<unsigned long long>(value));
+}
+inline char *BufCopy(char *out, unsigned int value)
+{
+	return BufCopy(out, static_cast<unsigned long long>(value));
+}
+inline char *BufCopy(char *out, unsigned short value)
+{
+	return BufCopy(out, static_cast<unsigned long long>(value));
+}
 
 /**
  * @brief Appends the integer to the given string.
  */
-void StrAppend(std::string &out, int value);
+void StrAppend(std::string &out, long long value);
+inline void StrAppend(std::string &out, long value)
+{
+	StrAppend(out, static_cast<long long>(value));
+}
+inline void StrAppend(std::string &out, int value)
+{
+	StrAppend(out, static_cast<long long>(value));
+}
+inline void StrAppend(std::string &out, short value)
+{
+	StrAppend(out, static_cast<long long>(value));
+}
+
+/**
+ * @brief Appends the integer to the given string.
+ */
+void StrAppend(std::string &out, unsigned long long value);
+inline void StrAppend(std::string &out, unsigned long value)
+{
+	StrAppend(out, static_cast<unsigned long long>(value));
+}
+inline void StrAppend(std::string &out, unsigned int value)
+{
+	StrAppend(out, static_cast<unsigned long long>(value));
+}
+inline void StrAppend(std::string &out, unsigned short value)
+{
+	StrAppend(out, static_cast<unsigned long long>(value));
+}
 
 /**
  * @brief Copies the given std::string_view to the given buffer.
