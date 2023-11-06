@@ -140,6 +140,7 @@ set(devilutionx_assets
   levels/l2data/bonechat.dun
   levels/towndata/automap.dun
   levels/towndata/automap.amp
+  lua_internal/get_lua_function_signature.lua
   lua/init.lua
   lua/inspect.lua
   lua/repl_prelude.lua
