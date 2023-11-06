@@ -113,11 +113,7 @@ class TextInputState {
 		 */
 		[[nodiscard]] std::string_view truncateForInsertion(std::string_view text) const
 		{
-			const size_t newLength = len_ + text.size();
-			if (newLength > maxLength_) {
-				return TruncateUtf8(text, newLength - maxLength_);
-			}
-			return text;
+			return TruncateUtf8(text, maxLength_ - len_);
 		}
 
 		char *buf_; // unowned
