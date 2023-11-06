@@ -2,13 +2,18 @@
 #include "lua/autocomplete.hpp"
 
 #include <algorithm>
+#include <cstddef>
 #include <string>
 #include <string_view>
 #include <unordered_set>
 #include <vector>
 
 #include <sol/sol.hpp>
+#include <sol/utility/to_string.hpp>
 
+#include "appfat.h"
+#include "engine/assets.hpp"
+#include "lua/lua.hpp"
 #include "lua/metadoc.hpp"
 #include "utils/algorithm/container.hpp"
 #include "utils/str_cat.hpp"
@@ -34,6 +39,56 @@ struct ValueInfo {
 	std::string docstring;
 };
 
+sol::protected_function LoadLuaFunctionSignatureGetter(sol::state &lua)
+{
+	tl::expected<AssetData, std::string> src = LoadAsset("lua_internal\\get_lua_function_signature.lua");
+	if (!src.has_value()) {
+		app_fatal(src.error());
+	}
+	const sol::object obj = SafeCallResult(lua.safe_script(std::string_view(src.value())), /*optional=*/false);
+	if (obj.get_type() != sol::type::function) {
+		app_fatal("Lua: expected a function");
+	}
+	return obj.as<sol::protected_function>();
+}
+
+std::string GetNativeLuaFunctionSignature(const sol::object &fn)
+{
+	sol::state &lua = GetLuaState();
+	constexpr std::string_view LuaFunctionSignatureGetterKey = "__DEVILUTIONX_GET_LUA_SIGNATURE";
+	sol::object getter = lua[LuaFunctionSignatureGetterKey];
+	if (getter.get_type() == sol::type::lua_nil) {
+		getter = lua[LuaFunctionSignatureGetterKey] = LoadLuaFunctionSignatureGetter(lua);
+	}
+	const sol::object obj = SafeCallResult(getter.as<sol::protected_function>()(fn), /*optional=*/false);
+	if (obj.get_type() != sol::type::string) {
+		app_fatal(StrCat("Lua: Expected a string, got ", sol::utility::to_string(obj)));
+	}
+	return obj.as<std::string>();
+}
+
+std::string GetFunctionSignature(const sol::object &value)
+{
+	value.push(value.lua_state());
+	const bool isC = lua_iscfunction(value.lua_state(), -1) != 0;
+	lua_pop(value.lua_state(), 1);
+	return isC ? "(...)" : GetNativeLuaFunctionSignature(value);
+}
+
+void RemoveFirstArgumentFromFunctionSignature(std::string &signature)
+{
+	if (signature == "(...)") return;
+	size_t firstArgEnd = signature.find_first_of(",)");
+	if (firstArgEnd == std::string::npos) return;
+	++firstArgEnd;
+	if (firstArgEnd == signature.size()) {
+		signature = "()";
+		return;
+	}
+	if (signature[firstArgEnd] == ' ') ++firstArgEnd;
+	signature.replace(0, firstArgEnd, "(");
+}
+
 ValueInfo GetValueInfo(const sol::table &table, std::string_view key, const sol::object &value)
 {
 	ValueInfo info;
@@ -45,6 +100,7 @@ ValueInfo GetValueInfo(const sol::table &table, std::string_view key, const sol:
 	}
 	if (value.get_type() == sol::type::function) {
 		info.callable = true;
+		if (info.signature.empty()) info.signature = GetFunctionSignature(value);
 		return info;
 	}
 	if (!value.is<sol::table>()) return info;
@@ -55,6 +111,13 @@ ValueInfo GetValueInfo(const sol::table &table, std::string_view key, const sol:
 	const auto metatableTbl = metatable->as<sol::table>();
 	const auto callFn = metatableTbl.get<std::optional<sol::object>>(sol::meta_function::call);
 	info.callable = callFn.has_value();
+	if (info.callable && info.signature.empty()) {
+		if (info.signature.empty()) {
+			info.signature = GetFunctionSignature(*callFn);
+			// Remove the first argument (the table passed to `__call`):
+			RemoveFirstArgumentFromFunctionSignature(info.signature);
+		}
+	}
 	return info;
 }
 

@@ -111,20 +111,6 @@ void LuaWarn(void *userData, const char *message, int continued)
 	warnBuffer.clear();
 }
 
-sol::object CheckResult(sol::protected_function_result result, bool optional)
-{
-	const bool valid = result.valid();
-	if (!valid) {
-		const std::string error = result.get_type() == sol::type::string
-		    ? StrCat("Lua error: ", result.get<std::string>())
-		    : "Unknown Lua error";
-		if (!optional)
-			app_fatal(error);
-		LogError(error);
-	}
-	return result;
-}
-
 sol::object RunScript(std::optional<sol::environment> env, std::string_view packageName, bool optional)
 {
 	sol::object result = LuaLoadScriptFromAssets(packageName);
@@ -139,7 +125,7 @@ sol::object RunScript(std::optional<sol::environment> env, std::string_view pack
 	if (env.has_value()) {
 		sol::set_environment(*env, fn);
 	}
-	return CheckResult(fn(), optional);
+	return SafeCallResult(fn(), optional);
 }
 
 void LuaPanic(sol::optional<std::string> message)
@@ -216,20 +202,17 @@ void LuaInitialize()
 	lua_setwarnf(lua.lua_state(), LuaWarn, /*ud=*/nullptr);
 	lua.open_libraries(
 	    sol::lib::base,
-	    sol::lib::package,
 	    sol::lib::coroutine,
-	    sol::lib::table,
-	    sol::lib::string,
+	    sol::lib::debug,
 	    sol::lib::math,
-	    sol::lib::utf8,
-	    sol::lib::os);
-
-#ifdef _DEBUG
-	lua.open_libraries(sol::lib::debug);
-#endif
+	    sol::lib::os,
+	    sol::lib::package,
+	    sol::lib::string,
+	    sol::lib::table,
+	    sol::lib::utf8);
 
 	// Registering devilutionx object table
-	CheckResult(lua.safe_script(RequireGenSrc), /*optional=*/false);
+	SafeCallResult(lua.safe_script(RequireGenSrc), /*optional=*/false);
 	CurrentLuaState->commonPackages = lua.create_table_with(
 #ifdef _DEBUG
 	    "devilutionx.dev", LuaDevModule(lua),
@@ -268,12 +251,26 @@ void LuaEvent(std::string_view name)
 		return;
 	}
 	const sol::protected_function fn = trigger->as<sol::protected_function>();
-	CheckResult(fn(), /*optional=*/true);
+	SafeCallResult(fn(), /*optional=*/true);
 }
 
 sol::state &GetLuaState()
 {
 	return CurrentLuaState->sol;
+}
+
+sol::object SafeCallResult(sol::protected_function_result result, bool optional)
+{
+	const bool valid = result.valid();
+	if (!valid) {
+		const std::string error = result.get_type() == sol::type::string
+		    ? StrCat("Lua error: ", result.get<std::string>())
+		    : "Unknown Lua error";
+		if (!optional)
+			app_fatal(error);
+		LogError(error);
+	}
+	return result;
 }
 
 } // namespace devilution
