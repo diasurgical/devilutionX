@@ -262,4 +262,7 @@ inline void DrawStringWithColors(const Surface &out, std::string_view fmt, std::
 uint8_t PentSpn2Spin();
 void UnloadFonts();
 
+/** @brief Whether this character can be substituted by a newline when word-wrapping. */
+bool IsBreakableWhitespace(char32_t c);
+
 } // namespace devilution
