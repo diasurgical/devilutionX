@@ -61,7 +61,7 @@ inline void AppendClxPixelsOrFillRun(const uint8_t *src, unsigned length, std::v
 			// 3 appears to be optimal for most of our data (much better than 2, rarely very slightly worse than 4).
 			constexpr unsigned MinFillRunLength = 3;
 			if (prevColorRunLength >= MinFillRunLength) {
-				AppendClxPixelsRun(begin, prevColorBegin - begin, out);
+				AppendClxPixelsRun(begin, static_cast<unsigned>(prevColorBegin - begin), out);
 				AppendClxFillRun(prevColor, prevColorRunLength, out);
 				begin = src;
 			}
@@ -76,10 +76,10 @@ inline void AppendClxPixelsOrFillRun(const uint8_t *src, unsigned length, std::v
 	// is followed by transparent pixels.
 	// Width=2 Fill command takes 2 bytes, while the Pixels command is 3 bytes.
 	if (prevColorRunLength >= 2) {
-		AppendClxPixelsRun(begin, prevColorBegin - begin, out);
+		AppendClxPixelsRun(begin, static_cast<unsigned>(prevColorBegin - begin), out);
 		AppendClxFillRun(prevColor, prevColorRunLength, out);
 	} else {
-		AppendClxPixelsRun(begin, prevColorBegin - begin + prevColorRunLength, out);
+		AppendClxPixelsRun(begin, static_cast<unsigned>(prevColorBegin - begin + prevColorRunLength), out);
 	}
 }
 

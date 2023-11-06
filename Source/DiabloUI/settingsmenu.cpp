@@ -401,11 +401,12 @@ void UiSettingsMenu()
 				if (selectedOption == pEntry)
 					itemToSelect = vecDialogItems.size();
 				auto formatArgs = CreateDrawStringFormatArgForEntry(pEntry);
+				int optionId = static_cast<int>(vecOptions.size());
 				if (NeedsTwoLinesToDisplayOption(formatArgs)) {
-					vecDialogItems.push_back(std::make_unique<UiListItem>("{}:", formatArgs, vecOptions.size(), UiFlags::ColorUiGold | UiFlags::NeedsNextElement));
-					vecDialogItems.push_back(std::make_unique<UiListItem>(pEntry->GetValueDescription(), vecOptions.size(), UiFlags::ColorUiSilver | UiFlags::ElementDisabled));
+					vecDialogItems.push_back(std::make_unique<UiListItem>("{}:", formatArgs, optionId, UiFlags::ColorUiGold | UiFlags::NeedsNextElement));
+					vecDialogItems.push_back(std::make_unique<UiListItem>(pEntry->GetValueDescription(), optionId, UiFlags::ColorUiSilver | UiFlags::ElementDisabled));
 				} else {
-					vecDialogItems.push_back(std::make_unique<UiListItem>("{}: {}", formatArgs, vecOptions.size(), UiFlags::ColorUiGold));
+					vecDialogItems.push_back(std::make_unique<UiListItem>("{}: {}", formatArgs, optionId, UiFlags::ColorUiGold));
 				}
 				vecOptions.push_back(pEntry);
 			}
@@ -413,7 +414,7 @@ void UiSettingsMenu()
 		case ShownMenuType::ListOption: {
 			auto *pOptionList = static_cast<OptionEntryListBase *>(selectedOption);
 			for (size_t i = 0; i < pOptionList->GetListSize(); i++) {
-				vecDialogItems.push_back(std::make_unique<UiListItem>(pOptionList->GetListDescription(i), i, UiFlags::ColorUiGold));
+				vecDialogItems.push_back(std::make_unique<UiListItem>(pOptionList->GetListDescription(i), static_cast<int>(i), UiFlags::ColorUiGold));
 			}
 			itemToSelect = pOptionList->GetActiveListIndex();
 			UpdateDescription(*pOptionList);

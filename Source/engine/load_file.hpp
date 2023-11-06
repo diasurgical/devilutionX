@@ -123,7 +123,7 @@ struct MultiFileLoader {
 			totalSize += size;
 			++j;
 		}
-		outOffsets[files.size()] = totalSize;
+		outOffsets[files.size()] = static_cast<uint32_t>(totalSize);
 		std::unique_ptr<std::byte[]> buf { new std::byte[totalSize] };
 		for (size_t i = 0, j = 0; i < numFiles; ++i) {
 			if (!filterFn(i))
