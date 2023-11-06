@@ -115,7 +115,7 @@ class TextInputState {
 		{
 			const size_t newLength = len_ + text.size();
 			if (newLength > maxLength_) {
-				return TruncateUtf8(text, newLength - maxLength_);
+				return TruncateUtf8(text, maxLength_ - len_);
 			}
 			return text;
 		}
