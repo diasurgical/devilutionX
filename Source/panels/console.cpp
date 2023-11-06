@@ -54,7 +54,14 @@ TextInputState ConsoleInputState {
 	    .maxLength = sizeof(ConsoleInputBuffer) - 1,
 	}
 };
-bool InputTextChanged = false;
+
+enum class InputTextState {
+	UpToDate,
+	Edited,
+	RestoredFromHistory
+};
+
+InputTextState CurrentInputTextState = InputTextState::UpToDate;
 std::string WrappedInputText { Prompt };
 std::vector<LuaAutocompleteSuggestion> AutocompleteSuggestions;
 int AutocompleteSuggestionsMaxWidth = -1;
@@ -301,7 +308,7 @@ const ConsoleLine &GetConsoleLineFromEnd(int index)
 
 void SetHistoryIndex(int index)
 {
-	InputTextChanged = true;
+	CurrentInputTextState = InputTextState::RestoredFromHistory;
 	HistoryIndex = std::ssize(ConsoleLines) - (index + 1);
 	if (HistoryIndex == -1) {
 		ConsoleInputState.assign(DraftInput);
@@ -441,7 +448,7 @@ bool ConsoleHandleEvent(const SDL_Event &event)
 		return false;
 	}
 	if (HandleTextInputEvent(event, ConsoleInputState)) {
-		InputTextChanged = true;
+		CurrentInputTextState = InputTextState::Edited;
 		return true;
 	}
 	const auto modState = SDL_GetModState();
@@ -477,7 +484,7 @@ bool ConsoleHandleEvent(const SDL_Event &event)
 		case SDLK_TAB:
 			if (AutocompleteSuggestionFocusIndex != -1) {
 				AcceptSuggestion();
-				InputTextChanged = true;
+				CurrentInputTextState = InputTextState::Edited;
 			}
 			return true;
 		case SDLK_RETURN:
@@ -491,7 +498,7 @@ bool ConsoleHandleEvent(const SDL_Event &event)
 					SendInput();
 				}
 			}
-			InputTextChanged = true;
+			CurrentInputTextState = InputTextState::Edited;
 			return true;
 		case SDLK_PAGEUP:
 			++PendingScrollPages;
@@ -542,12 +549,16 @@ void DrawConsole(const Surface &out)
 	OuterRect.size = { out.w(), out.h() - GetMainPanel().size.height - 2 };
 
 	const std::string_view originalInputText = ConsoleInputState.value();
-	if (InputTextChanged) {
+	if (CurrentInputTextState != InputTextState::UpToDate) {
 		WrappedInputText = WordWrapString(StrCat(Prompt, originalInputText), OuterRect.size.width - 2 * TextPaddingX, TextFontSize, TextSpacing);
-		GetLuaAutocompleteSuggestions(originalInputText.substr(0, ConsoleInputCursor.position), GetLuaReplEnvironment(), /*maxSuggestions=*/MaxSuggestions, AutocompleteSuggestions);
+		if (CurrentInputTextState == InputTextState::RestoredFromHistory) {
+			AutocompleteSuggestions.clear();
+		} else {
+			GetLuaAutocompleteSuggestions(originalInputText.substr(0, ConsoleInputCursor.position), GetLuaReplEnvironment(), /*maxSuggestions=*/MaxSuggestions, AutocompleteSuggestions);
+		}
 		AutocompleteSuggestionsMaxWidth = -1;
 		AutocompleteSuggestionFocusIndex = AutocompleteSuggestions.empty() ? -1 : 0;
-		InputTextChanged = false;
+		CurrentInputTextState = InputTextState::UpToDate;
 	}
 
 	const int numLines = static_cast<int>(c_count(WrappedInputText, '\n')) + 1;
