@@ -32,6 +32,7 @@ struct LuaState {
 	sol::table commonPackages = {};
 	std::unordered_map<std::string, sol::bytecode> compiledScripts = {};
 	sol::environment sandbox = {};
+	sol::table events = {};
 };
 
 std::optional<LuaState> CurrentLuaState;
@@ -164,14 +165,11 @@ sol::environment CreateLuaSandbox()
 
 	// Register safe built-in globals.
 	for (const std::string_view global : {
-	         // DevilutionX
-	         "Events",
 	         // Built-ins:
 	         "assert", "warn", "error", "ipairs", "next", "pairs", "pcall",
 	         "select", "tonumber", "tostring", "type", "xpcall",
 	         "rawequal", "rawget", "rawset", "setmetatable",
 	// Built-in packages:
-
 #ifdef _DEBUG
 	         "debug",
 #endif
@@ -213,6 +211,10 @@ void LuaInitialize()
 
 	// Registering devilutionx object table
 	SafeCallResult(lua.safe_script(RequireGenSrc), /*optional=*/false);
+
+	// Loaded without a sandbox.
+	CurrentLuaState->events = RunScript(/*env=*/std::nullopt, "devilutionx.events", /*optional=*/false);
+
 	CurrentLuaState->commonPackages = lua.create_table_with(
 #ifdef _DEBUG
 	    "devilutionx.dev", LuaDevModule(lua),
@@ -222,16 +224,16 @@ void LuaInitialize()
 	    "devilutionx.audio", LuaAudioModule(lua),
 	    "devilutionx.render", LuaRenderModule(lua),
 	    "devilutionx.message", [](std::string_view text) { EventPlrMsg(text, UiFlags::ColorRed); },
-	    // Load the "inspect" package without the sandbox.
+	    // These packages are loaded without a sandbox:
+	    "devilutionx.events", CurrentLuaState->events,
 	    "inspect", RunScript(/*env=*/std::nullopt, "inspect", /*optional=*/false));
 
-	// This table is set up by the init script.
-	lua.create_named_table("Events");
+	// Used by the custom require implementation.
+	lua["setEnvironment"] = [](const sol::environment &env, const sol::function &fn) { sol::set_environment(env, fn); };
 
-	RunScript(CreateLuaSandbox(), "init", /*optional=*/false);
 	RunScript(CreateLuaSandbox(), "user", /*optional=*/true);
 
-	LuaEvent("OnGameBoot");
+	LuaEvent("GameBoot");
 }
 
 void LuaShutdown()
@@ -244,10 +246,9 @@ void LuaShutdown()
 
 void LuaEvent(std::string_view name)
 {
-	const sol::state &lua = CurrentLuaState->sol;
-	const auto trigger = lua.traverse_get<std::optional<sol::object>>("Events", name, "Trigger");
+	const auto trigger = CurrentLuaState->events.traverse_get<std::optional<sol::object>>(name, "trigger");
 	if (!trigger.has_value() || !trigger->is<sol::protected_function>()) {
-		LogError("Events.{}.Trigger is not a function", name);
+		LogError("events.{}.trigger is not a function", name);
 		return;
 	}
 	const sol::protected_function fn = trigger->as<sol::protected_function>();
