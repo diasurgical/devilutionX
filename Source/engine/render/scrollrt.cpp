@@ -1657,7 +1657,7 @@ void DrawAndBlit()
 
 	DrawFPS(out);
 
-	LuaEvent("OnGameDrawComplete");
+	LuaEvent("GameDrawComplete");
 
 	DrawMain(out, hgt, drawInfoBox, drawHealth, drawMana, drawBelt, drawControlButtons);
 

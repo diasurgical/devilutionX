@@ -1,3 +1,4 @@
+events = require('devilutionx.events')
 log = require('devilutionx.log')
 audio = require('devilutionx.audio')
 render = require('devilutionx.render')

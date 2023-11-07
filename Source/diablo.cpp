@@ -805,7 +805,7 @@ void RunGameLoop(interface_mode uMsg)
 	nthread_ignore_mutex(false);
 
 	discord_manager::StartGame();
-	LuaEvent("OnGameStart");
+	LuaEvent("GameStart");
 #ifdef GPERF_HEAP_FIRST_GAME_ITERATION
 	unsigned run_game_iteration = 0;
 #endif
