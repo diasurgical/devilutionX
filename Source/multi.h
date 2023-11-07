@@ -56,8 +56,8 @@ extern uint32_t player_state[MAX_PLRS];
 extern bool IsLoopback;
 
 void InitGameInfo();
-void NetSendLoPri(int playerId, const std::byte *data, size_t size);
-void NetSendHiPri(int playerId, const std::byte *data, size_t size);
+void NetSendLoPri(size_t playerId, const std::byte *data, size_t size);
+void NetSendHiPri(size_t playerId, const std::byte *data, size_t size);
 void multi_send_msg_packet(uint32_t pmask, const std::byte *data, size_t size);
 void multi_msg_countdown();
 void multi_player_left(int pnum, int reason);

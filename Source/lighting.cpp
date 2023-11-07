@@ -594,7 +594,7 @@ void SavePreLighting()
 	memcpy(dPreLight, dLight, sizeof(dPreLight));
 }
 
-void ActivateVision(Point position, int r, int id)
+void ActivateVision(Point position, int r, size_t id)
 {
 	auto &vision = VisionList[id];
 	vision.position.tile = position;
@@ -606,7 +606,7 @@ void ActivateVision(Point position, int r, int id)
 	UpdateVision = true;
 }
 
-void ChangeVisionRadius(int id, int r)
+void ChangeVisionRadius(size_t id, int r)
 {
 	auto &vision = VisionList[id];
 	vision.hasChanged = true;
@@ -616,7 +616,7 @@ void ChangeVisionRadius(int id, int r)
 	UpdateVision = true;
 }
 
-void ChangeVisionXY(int id, Point position)
+void ChangeVisionXY(size_t id, Point position)
 {
 	auto &vision = VisionList[id];
 	vision.hasChanged = true;
