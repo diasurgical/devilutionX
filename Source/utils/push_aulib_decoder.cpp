@@ -18,13 +18,13 @@ namespace {
 
 float SampleToFloat(int16_t sample)
 {
-	constexpr float Factor = 1.0 / (std::numeric_limits<int16_t>::max() + 1);
+	constexpr float Factor = 1.0F / (std::numeric_limits<int16_t>::max() + 1);
 	return sample * Factor;
 }
 
 float SampleToFloat(uint8_t sample)
 {
-	constexpr float Factor = 2.0 / std::numeric_limits<uint8_t>::max();
+	constexpr float Factor = 2.0F / std::numeric_limits<uint8_t>::max();
 	return (sample * Factor) - 1;
 }
 
