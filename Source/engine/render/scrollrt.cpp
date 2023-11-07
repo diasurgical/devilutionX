@@ -1123,8 +1123,8 @@ void DrawView(const Surface &out, Point startPosition)
 						int steps = std::abs(dx) > std::abs(dy) ? std::abs(dx) : std::abs(dy);
 						float ix = dx / (float)steps;
 						float iy = dy / (float)steps;
-						float sx = from.x;
-						float sy = from.y;
+						float sx = static_cast<float>(from.x);
+						float sy = static_cast<float>(from.y);
 
 						for (int i = 0; i <= steps; i++, sx += ix, sy += iy)
 							out.SetPixel({ (int)sx, (int)sy }, col);

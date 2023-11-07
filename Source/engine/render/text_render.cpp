@@ -469,7 +469,7 @@ uint32_t DoDrawString(const Surface &out, std::string_view text, Rectangle rect,
 		characterPosition.x += width + opts.spacing;
 	}
 	maybeDrawCursor();
-	return remaining.data() - text.data();
+	return static_cast<uint32_t>(remaining.data() - text.data());
 }
 
 } // namespace
@@ -699,7 +699,7 @@ uint32_t DrawString(const Surface &out, std::string_view text, const Rectangle &
 		opts.lineHeight = GetLineHeight(text, size);
 
 	if (HasAnyOf(opts.flags, UiFlags::VerticalCenter)) {
-		const int textHeight = (c_count(text, '\n') + 1) * opts.lineHeight;
+		const int textHeight = static_cast<int>((c_count(text, '\n') + 1) * opts.lineHeight);
 		characterPosition.y += std::max(0, (rect.size.height - textHeight) / 2);
 	}
 
@@ -750,7 +750,7 @@ void DrawStringWithColors(const Surface &out, std::string_view fmt, DrawStringFo
 		opts.lineHeight = GetLineHeight(fmt, args, argsLen, size);
 
 	if (HasAnyOf(opts.flags, UiFlags::VerticalCenter)) {
-		int textHeight = (CountNewlines(fmt, args, argsLen) + 1) * opts.lineHeight;
+		const int textHeight = static_cast<int>((CountNewlines(fmt, args, argsLen) + 1) * opts.lineHeight);
 		characterPosition.y += std::max(0, (rect.size.height - textHeight) / 2);
 	}
 
