@@ -192,7 +192,7 @@ void CheckPlayerInfoTimeouts()
 	}
 }
 
-void SendPacket(int playerId, const std::byte *packet, size_t size)
+void SendPacket(size_t playerId, const std::byte *packet, size_t size)
 {
 	TPkt pkt;
 
@@ -200,7 +200,7 @@ void SendPacket(int playerId, const std::byte *packet, size_t size)
 	const size_t sizeWithheader = size + sizeof(pkt.hdr);
 	pkt.hdr.wLen = SDL_SwapLE16(static_cast<uint16_t>(sizeWithheader));
 	memcpy(pkt.body, packet, size);
-	if (!SNetSendMessage(playerId, &pkt.hdr, sizeWithheader))
+	if (!SNetSendMessage(static_cast<int>(playerId), &pkt.hdr, sizeWithheader))
 		nthread_terminate_game("SNetSendMessage0");
 }
 
@@ -495,7 +495,7 @@ void InitGameInfo()
 	sgGameInitInfo.fullQuests = (!gbIsMultiplayer || *sgOptions.Gameplay.multiplayerFullQuests) ? 1 : 0;
 }
 
-void NetSendLoPri(int playerId, const std::byte *data, size_t size)
+void NetSendLoPri(size_t playerId, const std::byte *data, size_t size)
 {
 	if (data != nullptr && size != 0) {
 		CopyPacket(&lowPriorityBuffer, data, size);
@@ -503,7 +503,7 @@ void NetSendLoPri(int playerId, const std::byte *data, size_t size)
 	}
 }
 
-void NetSendHiPri(int playerId, const std::byte *data, size_t size)
+void NetSendHiPri(size_t playerId, const std::byte *data, size_t size)
 {
 	if (data != nullptr && size != 0) {
 		CopyPacket(&highPriorityBuffer, data, size);

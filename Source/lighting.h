@@ -74,9 +74,9 @@ void ChangeLightOffset(int i, DisplacementOf<int8_t> offset);
 void ChangeLight(int i, Point position, uint8_t radius);
 void ProcessLightList();
 void SavePreLighting();
-void ActivateVision(Point position, int r, int id);
-void ChangeVisionRadius(int id, int r);
-void ChangeVisionXY(int id, Point position);
+void ActivateVision(Point position, int r, size_t id);
+void ChangeVisionRadius(size_t id, int r);
+void ChangeVisionXY(size_t id, Point position);
 void ProcessVisionList();
 void lighting_color_cycling();
 
