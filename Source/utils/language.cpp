@@ -496,7 +496,7 @@ void LanguageInitialize()
 			std::string_view value { valuePtr, dst[i].length + 1 };
 			for (size_t j = 0; j < PluralForms && !value.empty(); j++) {
 				const size_t formValueEnd = value.find('\0');
-				translation[j].emplace(keyPtr, EncodeTranslationRef(value.data() - &translationValues[0], formValueEnd));
+				translation[j].emplace(keyPtr, EncodeTranslationRef(static_cast<uint32_t>(value.data() - &translationValues[0]), static_cast<uint32_t>(formValueEnd)));
 				value.remove_prefix(formValueEnd + 1);
 			}
 

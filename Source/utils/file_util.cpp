@@ -53,11 +53,11 @@ namespace devilution {
 std::unique_ptr<wchar_t[]> ToWideChar(std::string_view path)
 {
 	constexpr std::uint32_t flags = MB_ERR_INVALID_CHARS;
-	const int utf16Size = ::MultiByteToWideChar(CP_UTF8, flags, path.data(), path.size(), nullptr, 0);
+	const int utf16Size = ::MultiByteToWideChar(CP_UTF8, flags, path.data(), static_cast<int>(path.size()), nullptr, 0);
 	if (utf16Size == 0)
 		return nullptr;
 	std::unique_ptr<wchar_t[]> utf16 { new wchar_t[utf16Size + 1] };
-	if (::MultiByteToWideChar(CP_UTF8, flags, path.data(), path.size(), &utf16[0], utf16Size) != utf16Size)
+	if (::MultiByteToWideChar(CP_UTF8, flags, path.data(), static_cast<int>(path.size()), &utf16[0], utf16Size) != utf16Size)
 		return nullptr;
 	utf16[utf16Size] = L'\0';
 	return utf16;
