@@ -441,7 +441,7 @@ const uint8_t *RenderClxOutlineRowClipped( // NOLINT(readability-function-cognit
 			return SkipRestOfLineWithOverrun(src, static_cast<int_fast16_t>(srcWidth), skipSize);
 		}
 	}
-	skipSize = GetSkipSize(remainingWidth, srcWidth);
+	skipSize = GetSkipSize(remainingWidth, static_cast<int_fast16_t>(srcWidth));
 
 	return src;
 }
