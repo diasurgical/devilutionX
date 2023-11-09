@@ -1315,11 +1315,10 @@ void SearchAutomapItem(const Surface &out, const Displacement &myPlayerOffset, i
 /**
  * @brief Renders an arrow on the automap, centered on and facing the direction of the player.
  */
-void DrawAutomapPlr(const Surface &out, const Displacement &myPlayerOffset, size_t playerId)
+void DrawAutomapPlr(const Surface &out, const Displacement &myPlayerOffset, const Player &player)
 {
-	const uint8_t playerColor = MapColorsPlayer + (8 * playerId) % 128;
+	const uint8_t playerColor = MapColorsPlayer + (8 * player.getId()) % 128;
 
-	Player &player = Players[playerId];
 	Point tile = player.position.tile;
 	if (player._pmode == PM_WALK_SIDEWAYS) {
 		tile = player.position.future;
@@ -1834,10 +1833,9 @@ void DrawAutomap(const Surface &out)
 		screen.y += AmOffset(AmWidthOffset::None, AmHeightOffset::DoubleTileDown).deltaY;
 	}
 
-	for (size_t playerId = 0; playerId < Players.size(); playerId++) {
-		Player &player = Players[playerId];
+	for (const Player &player : Players) {
 		if (player.isOnActiveLevel() && player.plractive && !player._pLvlChanging && (&player == MyPlayer || player.friendlyMode)) {
-			DrawAutomapPlr(out, myPlayerOffset, playerId);
+			DrawAutomapPlr(out, myPlayerOffset, player);
 		}
 	}
 
