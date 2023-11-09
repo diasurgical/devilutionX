@@ -39,7 +39,8 @@ extern int8_t pcursitem;
 struct Object; // Defined in objects.h
 extern Object *ObjectUnderCursor;
 
-extern int8_t pcursplr;
+struct Player; // Defined in player.h
+extern const Player *PlayerUnderCursor;
 extern Point cursPosition;
 extern DVL_API_FOR_TEST int pcurs;
 

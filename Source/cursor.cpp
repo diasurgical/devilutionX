@@ -183,7 +183,7 @@ bool TrySelectPlayer(bool flipflag, int mx, int my)
 		Player &player = Players[playerId];
 		if (&player != MyPlayer && player._pHitPoints != 0) {
 			cursPosition = Point { mx, my } + Displacement { 1, 0 };
-			pcursplr = static_cast<int8_t>(playerId);
+			PlayerUnderCursor = &player;
 		}
 	}
 	if (flipflag && my + 1 < MAXDUNY && dPlayer[mx][my + 1] != 0) {
@@ -191,21 +191,22 @@ bool TrySelectPlayer(bool flipflag, int mx, int my)
 		Player &player = Players[playerId];
 		if (&player != MyPlayer && player._pHitPoints != 0) {
 			cursPosition = Point { mx, my } + Displacement { 0, 1 };
-			pcursplr = static_cast<int8_t>(playerId);
+			PlayerUnderCursor = &player;
 		}
 	}
 	if (dPlayer[mx][my] != 0) {
 		const uint8_t playerId = std::abs(dPlayer[mx][my]) - 1;
-		if (playerId != MyPlayerId) {
+		Player &player = Players[playerId];
+		if (&player != MyPlayer) {
 			cursPosition = { mx, my };
-			pcursplr = static_cast<int8_t>(playerId);
+			PlayerUnderCursor = &player;
 		}
 	}
 	if (TileContainsDeadPlayer({ mx, my })) {
 		for (const Player &player : Players) {
 			if (player.position.tile == Point { mx, my } && &player != MyPlayer) {
 				cursPosition = { mx, my };
-				pcursplr = static_cast<int8_t>(player.getId());
+				PlayerUnderCursor = &player;
 			}
 		}
 	}
@@ -216,7 +217,7 @@ bool TrySelectPlayer(bool flipflag, int mx, int my)
 					for (const Player &player : Players) {
 						if (player.position.tile.x == mx + xx && player.position.tile.y == my + yy && &player != MyPlayer) {
 							cursPosition = Point { mx, my } + Displacement { xx, yy };
-							pcursplr = static_cast<int8_t>(player.getId());
+							PlayerUnderCursor = &player;
 						}
 					}
 				}
@@ -228,11 +229,11 @@ bool TrySelectPlayer(bool flipflag, int mx, int my)
 		const Player &player = Players[playerId];
 		if (&player != MyPlayer && player._pHitPoints != 0) {
 			cursPosition = Point { mx, my } + Displacement { 1, 1 };
-			pcursplr = static_cast<int8_t>(playerId);
+			PlayerUnderCursor = &player;
 		}
 	}
 
-	return pcursplr != -1;
+	return PlayerUnderCursor != nullptr;
 }
 
 bool TrySelectObject(bool flipflag, Point tile)
@@ -382,7 +383,7 @@ bool TrySelectPixelBased(Point tile)
 				Displacement renderingOffset = player.getRenderingOffset(sprite);
 				if (checkSprite(adjacentTile, sprite, renderingOffset)) {
 					cursPosition = adjacentTile;
-					pcursplr = playerId;
+					PlayerUnderCursor = &player;
 					return true;
 				}
 			}
@@ -394,7 +395,7 @@ bool TrySelectPixelBased(Point tile)
 					Displacement renderingOffset = player.getRenderingOffset(sprite);
 					if (checkSprite(adjacentTile, sprite, renderingOffset)) {
 						cursPosition = adjacentTile;
-						pcursplr = static_cast<int8_t>(player.getId());
+						PlayerUnderCursor = &player;
 						return true;
 					}
 				}
@@ -443,7 +444,7 @@ int8_t pcursitem;
 /** Current highlighted object */
 Object *ObjectUnderCursor;
 /** Current highlighted player */
-int8_t pcursplr;
+const Player *PlayerUnderCursor;
 /** Current highlighted tile position */
 Point cursPosition;
 /** Previously highlighted monster */
@@ -627,7 +628,7 @@ void InitLevelCursor()
 	ObjectUnderCursor = nullptr;
 	pcursitem = -1;
 	pcursstashitem = StashStruct::EmptyCell;
-	pcursplr = -1;
+	PlayerUnderCursor = nullptr;
 	ClearCursor();
 }
 
@@ -762,7 +763,7 @@ void CheckCursMove()
 	if ((sgbMouseDown != CLICK_NONE || ControllerActionHeld != GameActionType_NONE) && IsNoneOf(LastMouseButtonAction, MouseActionType::None, MouseActionType::Attack, MouseActionType::Spell)) {
 		InvalidateTargets();
 
-		if (pcursmonst == -1 && ObjectUnderCursor == nullptr && pcursitem == -1 && pcursinvitem == -1 && pcursstashitem == StashStruct::EmptyCell && pcursplr == -1) {
+		if (pcursmonst == -1 && ObjectUnderCursor == nullptr && pcursitem == -1 && pcursinvitem == -1 && pcursstashitem == StashStruct::EmptyCell && PlayerUnderCursor == nullptr) {
 			cursPosition = { mx, my };
 			CheckTrigForce();
 			CheckTown();
@@ -782,7 +783,7 @@ void CheckCursMove()
 	}
 	pcursinvitem = -1;
 	pcursstashitem = StashStruct::EmptyCell;
-	pcursplr = -1;
+	PlayerUnderCursor = nullptr;
 	ShowUniqueItemInfoBox = false;
 	panelflag = false;
 	trigflag = false;

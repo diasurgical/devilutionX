@@ -384,7 +384,7 @@ void DrawPlayer(const Surface &out, const Player &player, Point tilePosition, Po
 	const ClxSprite sprite = player.currentSprite();
 	Point spriteBufferPosition = targetBufferPosition + player.getRenderingOffset(sprite);
 
-	if (static_cast<size_t>(pcursplr) < Players.size() && &player == &Players[pcursplr])
+	if (&player == PlayerUnderCursor)
 		ClxDrawOutlineSkipColorZero(out, 165, spriteBufferPosition, sprite);
 
 	if (&player == MyPlayer && IsNoneOf(leveltype, DTYPE_NEST, DTYPE_CRYPT)) {

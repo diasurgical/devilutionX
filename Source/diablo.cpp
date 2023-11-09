@@ -245,7 +245,7 @@ void LeftMouseCmd(bool bShift)
 			NetSendCmdLocParam1(true, invflag ? CMD_GOTOGETITEM : CMD_GOTOAGETITEM, cursPosition, pcursitem);
 		if (pcursmonst != -1)
 			NetSendCmdLocParam1(true, CMD_TALKXY, cursPosition, pcursmonst);
-		if (pcursitem == -1 && pcursmonst == -1 && pcursplr == -1) {
+		if (pcursitem == -1 && pcursmonst == -1 && PlayerUnderCursor == nullptr) {
 			LastMouseButtonAction = MouseActionType::Walk;
 			NetSendCmdLoc(MyPlayerId, true, CMD_WALKXY, cursPosition);
 		}
@@ -270,9 +270,9 @@ void LeftMouseCmd(bool bShift)
 				LastMouseButtonAction = MouseActionType::AttackMonsterTarget;
 				NetSendCmdParam1(true, CMD_RATTACKID, pcursmonst);
 			}
-		} else if (pcursplr != -1 && !myPlayer.friendlyMode) {
+		} else if (PlayerUnderCursor != nullptr && !myPlayer.friendlyMode) {
 			LastMouseButtonAction = MouseActionType::AttackPlayerTarget;
-			NetSendCmdParam1(true, CMD_RATTACKPID, pcursplr);
+			NetSendCmdParam1(true, CMD_RATTACKPID, PlayerUnderCursor->getId());
 		}
 	} else {
 		if (bShift) {
@@ -290,12 +290,12 @@ void LeftMouseCmd(bool bShift)
 		} else if (pcursmonst != -1) {
 			LastMouseButtonAction = MouseActionType::AttackMonsterTarget;
 			NetSendCmdParam1(true, CMD_ATTACKID, pcursmonst);
-		} else if (pcursplr != -1 && !myPlayer.friendlyMode) {
+		} else if (PlayerUnderCursor != nullptr && !myPlayer.friendlyMode) {
 			LastMouseButtonAction = MouseActionType::AttackPlayerTarget;
-			NetSendCmdParam1(true, CMD_ATTACKPID, pcursplr);
+			NetSendCmdParam1(true, CMD_ATTACKPID, PlayerUnderCursor->getId());
 		}
 	}
-	if (!bShift && pcursitem == -1 && ObjectUnderCursor == nullptr && pcursmonst == -1 && pcursplr == -1) {
+	if (!bShift && pcursitem == -1 && ObjectUnderCursor == nullptr && pcursmonst == -1 && PlayerUnderCursor == nullptr) {
 		LastMouseButtonAction = MouseActionType::Walk;
 		NetSendCmdLoc(MyPlayerId, true, CMD_WALKXY, cursPosition);
 	}
@@ -2490,8 +2490,8 @@ int DiabloMain(int argc, char **argv)
 bool TryIconCurs()
 {
 	if (pcurs == CURSOR_RESURRECT) {
-		if (pcursplr != -1) {
-			NetSendCmdParam1(true, CMD_RESURRECT, pcursplr);
+		if (PlayerUnderCursor != nullptr) {
+			NetSendCmdParam1(true, CMD_RESURRECT, PlayerUnderCursor->getId());
 			NewCursor(CURSOR_HAND);
 			return true;
 		}
@@ -2500,8 +2500,8 @@ bool TryIconCurs()
 	}
 
 	if (pcurs == CURSOR_HEALOTHER) {
-		if (pcursplr != -1) {
-			NetSendCmdParam1(true, CMD_HEALOTHER, pcursplr);
+		if (PlayerUnderCursor != nullptr) {
+			NetSendCmdParam1(true, CMD_HEALOTHER, PlayerUnderCursor->getId());
 			NewCursor(CURSOR_HAND);
 			return true;
 		}
@@ -2572,8 +2572,8 @@ bool TryIconCurs()
 			NetSendCmdLocParam5(true, CMD_SPELLXYD, cursPosition, static_cast<int8_t>(spellID), static_cast<uint8_t>(spellType), static_cast<uint16_t>(sd), spellLevel, spellFrom);
 		} else if (pcursmonst != -1) {
 			NetSendCmdParam5(true, CMD_SPELLID, pcursmonst, static_cast<int8_t>(spellID), static_cast<uint8_t>(spellType), spellLevel, spellFrom);
-		} else if (pcursplr != -1 && !myPlayer.friendlyMode) {
-			NetSendCmdParam5(true, CMD_SPELLPID, pcursplr, static_cast<int8_t>(spellID), static_cast<uint8_t>(spellType), spellLevel, spellFrom);
+		} else if (PlayerUnderCursor != nullptr && !myPlayer.friendlyMode) {
+			NetSendCmdParam5(true, CMD_SPELLPID, PlayerUnderCursor->getId(), static_cast<int8_t>(spellID), static_cast<uint8_t>(spellType), spellLevel, spellFrom);
 		} else {
 			NetSendCmdLocParam4(true, CMD_SPELLXY, cursPosition, static_cast<int8_t>(spellID), static_cast<uint8_t>(spellType), spellLevel, spellFrom);
 		}
