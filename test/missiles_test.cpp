@@ -11,7 +11,7 @@ using ::testing::Lt;
 using ::testing::Pair;
 using ::testing::UnorderedElementsAre;
 
-void TestArrowRotatesUniformly(Missile &missile, int startingFrame, unsigned leftFrame, unsigned rightFrame)
+void TestArrowRotatesUniformly(Missile &missile, int startingFrame, int leftFrame, int rightFrame)
 {
 	std::unordered_map<int, unsigned> observed {};
 	for (auto i = 0; i < 100; i++) {
