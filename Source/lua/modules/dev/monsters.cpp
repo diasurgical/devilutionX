@@ -30,9 +30,9 @@ std::string DebugCmdSpawnUniqueMonster(std::string name, std::optional<unsigned>
 
 	int mtype = -1;
 	UniqueMonsterType uniqueIndex = UniqueMonsterType::None;
-	for (size_t i = 0; UniqueMonstersData[i].mtype != MT_INVALID; i++) {
+	for (size_t i = 0; UniqueMonstersData.size(); ++i) {
 		auto mondata = UniqueMonstersData[i];
-		const std::string monsterName = AsciiStrToLower(mondata.mName);
+		const std::string monsterName = AsciiStrToLower(std::string_view(mondata.mName));
 		if (monsterName.find(name) == std::string::npos)
 			continue;
 		mtype = mondata.mtype;

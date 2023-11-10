@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstddef>
 #include <memory>
 #include <string_view>
 
@@ -118,6 +119,9 @@ public:
 	{
 		return {};
 	}
+
+	// Assumes a header
+	[[nodiscard]] size_t numRecords() const;
 
 	[[nodiscard]] const char *data() const
 	{
