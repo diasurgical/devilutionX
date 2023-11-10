@@ -479,7 +479,7 @@ void ClrAllMonsters()
 
 void PlaceUniqueMonsters()
 {
-	for (size_t u = 0; UniqueMonstersData[u].mtype != -1; u++) {
+	for (size_t u = 0; u < UniqueMonstersData.size(); ++u) {
 		if (UniqueMonstersData[u].mlevel != currlevel)
 			continue;
 

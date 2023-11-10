@@ -156,6 +156,7 @@ set(devilutionx_assets
   txtdata/classes/sorcerer/attributes.tsv
   txtdata/classes/warrior/attributes.tsv
   txtdata/monsters/monstdat.tsv
+  txtdata/monsters/unique_monstdat.tsv
   ui_art/diablo.pal
   ui_art/hellfire.pal
   ui_art/creditsw.clx

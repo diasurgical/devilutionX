@@ -3,6 +3,7 @@
 #include <fmt/format.h>
 
 #include "engine/assets.hpp"
+#include "utils/algorithm/container.hpp"
 #include "utils/language.h"
 
 namespace devilution {
@@ -132,6 +133,14 @@ tl::expected<void, DataFile::Error> DataFile::skipHeader()
 	}
 	body_ = it.data();
 	return {};
+}
+
+[[nodiscard]] size_t DataFile::numRecords() const
+{
+	if (content_.empty()) return 0;
+	const auto numNewlines = static_cast<size_t>(c_count(content_, '\n') + (content_.back() == '\n' ? 0 : 1));
+	if (numNewlines < 2) return 0;
+	return static_cast<size_t>(numNewlines - 1);
 }
 
 } // namespace devilution

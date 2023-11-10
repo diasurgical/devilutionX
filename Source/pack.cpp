@@ -118,8 +118,7 @@ bool IsUniqueMonsterItemValid(uint16_t iCreateInfo, uint32_t dwBuff)
 	const uint8_t level = iCreateInfo & CF_LEVEL;
 
 	// Check all unique monster levels to see if they match the item level
-	for (int i = 0; UniqueMonstersData[i].mName != nullptr; i++) {
-		const auto &uniqueMonsterData = UniqueMonstersData[i];
+	for (const UniqueMonsterData &uniqueMonsterData : UniqueMonstersData) {
 		const auto &uniqueMonsterLevel = static_cast<uint8_t>(MonstersData[uniqueMonsterData.mtype].level);
 
 		if (IsAnyOf(uniqueMonsterData.mtype, MT_DEFILER, MT_NAKRUL, MT_HORKDMN)) {

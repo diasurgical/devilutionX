@@ -306,8 +306,8 @@ enum class UniqueMonsterPack : uint8_t {
 
 struct UniqueMonsterData {
 	_monster_id mtype;
-	const char *mName;
-	const char *mTrnName;
+	std::string mName;
+	std::string mTrnName;
 	uint8_t mlevel;
 	uint16_t mmaxhp;
 	MonsterAIID mAi;
@@ -328,7 +328,7 @@ struct UniqueMonsterData {
 
 extern std::vector<MonsterData> MonstersData;
 extern const _monster_id MonstConvTbl[];
-extern const UniqueMonsterData UniqueMonstersData[];
+extern std::vector<UniqueMonsterData> UniqueMonstersData;
 
 void LoadMonsterData();
 
