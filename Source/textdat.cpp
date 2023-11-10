@@ -617,7 +617,7 @@ const Speech Speeches[] = {
 	    true, SfxID::CompleteNut12 },
 	{ N_(/* TRANSLATORS: Quest text spoken by Complete Nut */ "All right, I'll cut the bull.  I didn't mean to steer you wrong.  I was sitting at home, feeling moo-dy, when things got really un-stable; a whole stampede of monsters came out of the floor!  I just cowed.  I just happened to be wearing this Jersey when I ran out the door, and now I look udderly ridiculous.  If only I had something normal to wear, it wouldn't be so bad.  Hey!  Can you go back to my place and get my suit for me?  The brown one, not the gray one, that's for evening wear.  I'd do it myself, but I don't want anyone seeing me like this.  Here, take this, you might need it... to kill those things that have overgrown everything.  You can't miss my house, it's just south of the fork in the river... you know... the one with the overgrown vegetable garden."),
 	    true, SfxID::CompleteNut4a },
-	{ N_(""), true, SfxID::None },
+	{ "", true, SfxID::None },
 	{ N_(/* TRANSLATORS: Quest text read aloud from book */ "I have tried spells, threats, abjuration and bargaining with this foul creature -- to no avail.  My methods of enslaving lesser demons seem to have no effect on this fearsome beast."),
 	    true, SfxID::NarratorHF6 },
 	{ N_(/* TRANSLATORS: Quest text read aloud from book */ "My home is slowly becoming corrupted by the vileness of this unwanted prisoner.  The crypts are full of shadows that move just beyond the corners of my vision.  The faint scrabble of claws dances at the edges of my hearing. They are searching, I think, for this journal."),
