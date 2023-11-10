@@ -376,12 +376,11 @@ void PrePacket()
 	}
 }
 
-void SendPacket(int pnum, const void *packet, size_t dwSize)
+void SendPacket(size_t pnum, const void *packet, size_t dwSize)
 {
-	TFakeCmdPlr cmd;
-
 	if (pnum != sgnCurrMegaPlayer) {
 		sgnCurrMegaPlayer = pnum;
+		TFakeCmdPlr cmd;
 		cmd.bCmd = FAKE_CMD_SETID;
 		cmd.bPlr = pnum;
 		SendPacket(pnum, &cmd, sizeof(cmd));
@@ -392,6 +391,11 @@ void SendPacket(int pnum, const void *packet, size_t dwSize)
 	TMegaPkt &currMegaPkt = MegaPktList.back();
 	memcpy(currMegaPkt.data + sizeof(currMegaPkt.data) - currMegaPkt.spaceLeft, packet, dwSize);
 	currMegaPkt.spaceLeft -= dwSize;
+}
+
+void SendPacket(const Player &player, const void *packet, size_t dwSize)
+{
+	SendPacket(player.getId(), packet, dwSize);
 }
 
 int WaitForTurns()
@@ -647,12 +651,12 @@ size_t OnLevelData(int pnum, const TCmd *pCmd)
 	return wBytes + sizeof(message);
 }
 
-void DeltaSyncGolem(const TCmdGolem &message, int pnum, uint8_t level)
+void DeltaSyncGolem(const TCmdGolem &message, const Player &player, uint8_t level)
 {
 	if (!gbIsMultiplayer)
 		return;
 
-	DMonsterStr &monster = GetDeltaLevel(level).monster[pnum];
+	DMonsterStr &monster = GetDeltaLevel(level).monster[player.getId()];
 	monster.position.x = message._mx;
 	monster.position.y = message._my;
 	monster._mactive = UINT8_MAX;
@@ -804,7 +808,7 @@ bool IOwnLevel(const Player &player)
 	return false;
 }
 
-void DeltaOpenPortal(int pnum, Point position, uint8_t bLevel, dungeon_type bLType, bool bSetLvl)
+void DeltaOpenPortal(size_t pnum, Point position, uint8_t bLevel, dungeon_type bLType, bool bSetLvl)
 {
 	sgJunk.portal[pnum].x = position.x;
 	sgJunk.portal[pnum].y = position.y;
@@ -882,50 +886,50 @@ size_t OnWalk(const TCmd *pCmd, Player &player)
 	return sizeof(message);
 }
 
-size_t OnAddStrength(const TCmd *pCmd, size_t pnum)
+size_t OnAddStrength(const TCmd *pCmd, Player &player)
 {
 	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 
 	if (gbBufferMsgs == 1)
-		SendPacket(pnum, &message, sizeof(message));
+		SendPacket(player, &message, sizeof(message));
 	else if (message.wParam1 <= 256)
-		ModifyPlrStr(Players[pnum], SDL_SwapLE16(message.wParam1));
+		ModifyPlrStr(player, SDL_SwapLE16(message.wParam1));
 
 	return sizeof(message);
 }
 
-size_t OnAddMagic(const TCmd *pCmd, size_t pnum)
+size_t OnAddMagic(const TCmd *pCmd, Player &player)
 {
 	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 
 	if (gbBufferMsgs == 1)
-		SendPacket(pnum, &message, sizeof(message));
+		SendPacket(player, &message, sizeof(message));
 	else if (message.wParam1 <= 256)
-		ModifyPlrMag(Players[pnum], SDL_SwapLE16(message.wParam1));
+		ModifyPlrMag(player, SDL_SwapLE16(message.wParam1));
 
 	return sizeof(message);
 }
 
-size_t OnAddDexterity(const TCmd *pCmd, int pnum)
+size_t OnAddDexterity(const TCmd *pCmd, Player &player)
 {
 	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 
 	if (gbBufferMsgs == 1)
-		SendPacket(pnum, &message, sizeof(message));
+		SendPacket(player, &message, sizeof(message));
 	else if (message.wParam1 <= 256)
-		ModifyPlrDex(Players[pnum], SDL_SwapLE16(message.wParam1));
+		ModifyPlrDex(player, SDL_SwapLE16(message.wParam1));
 
 	return sizeof(message);
 }
 
-size_t OnAddVitality(const TCmd *pCmd, size_t pnum)
+size_t OnAddVitality(const TCmd *pCmd, Player &player)
 {
 	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 
 	if (gbBufferMsgs == 1)
-		SendPacket(pnum, &message, sizeof(message));
+		SendPacket(player, &message, sizeof(message));
 	else if (message.wParam1 <= 256)
-		ModifyPlrVit(Players[pnum], SDL_SwapLE16(message.wParam1));
+		ModifyPlrVit(player, SDL_SwapLE16(message.wParam1));
 
 	return sizeof(message);
 }
@@ -1121,12 +1125,12 @@ size_t OnRequestGetItem(const TCmd *pCmd, Player &player)
 	return sizeof(message);
 }
 
-size_t OnGetItem(const TCmd *pCmd, size_t pnum)
+size_t OnGetItem(const TCmd *pCmd, Player &player)
 {
 	const auto &message = *reinterpret_cast<const TCmdGItem *>(pCmd);
 
 	if (gbBufferMsgs == 1) {
-		SendPacket(pnum, &message, sizeof(message));
+		SendPacket(player, &message, sizeof(message));
 	} else if (IsGItemValid(message)) {
 		const Point position { message.x, message.y };
 		const uint32_t dwSeed = SDL_SwapLE32(message.def.dwSeed);
@@ -1197,12 +1201,12 @@ size_t OnRequestAutoGetItem(const TCmd *pCmd, Player &player)
 	return sizeof(message);
 }
 
-size_t OnAutoGetItem(const TCmd *pCmd, size_t pnum)
+size_t OnAutoGetItem(const TCmd *pCmd, Player &player)
 {
 	const auto &message = *reinterpret_cast<const TCmdGItem *>(pCmd);
 
 	if (gbBufferMsgs == 1) {
-		SendPacket(pnum, &message, sizeof(message));
+		SendPacket(player, &message, sizeof(message));
 	} else if (IsGItemValid(message)) {
 		const Point position { message.x, message.y };
 		if (DeltaGetItem(message, message.bLevel)) {
@@ -1228,15 +1232,15 @@ size_t OnAutoGetItem(const TCmd *pCmd, size_t pnum)
 	return sizeof(message);
 }
 
-size_t OnItemExtra(const TCmd *pCmd, size_t pnum)
+size_t OnItemExtra(const TCmd *pCmd, Player &player)
 {
 	const auto &message = *reinterpret_cast<const TCmdGItem *>(pCmd);
 
 	if (gbBufferMsgs == 1) {
-		SendPacket(pnum, &message, sizeof(message));
+		SendPacket(player, &message, sizeof(message));
 	} else if (IsGItemValid(message)) {
 		DeltaGetItem(message, message.bLevel);
-		if (Players[pnum].isOnActiveLevel()) {
+		if (player.isOnActiveLevel()) {
 			const Point position { message.x, message.y };
 			SyncGetItem(position, SDL_SwapLE32(message.def.dwSeed), static_cast<_item_indexes>(SDL_SwapLE16(message.def.wIndx)), SDL_SwapLE16(message.def.wCI));
 		}
@@ -1245,15 +1249,14 @@ size_t OnItemExtra(const TCmd *pCmd, size_t pnum)
 	return sizeof(message);
 }
 
-size_t OnPutItem(const TCmd *pCmd, size_t pnum)
+size_t OnPutItem(const TCmd *pCmd, Player &player)
 {
 	const auto &message = *reinterpret_cast<const TCmdPItem *>(pCmd);
 
 	if (gbBufferMsgs == 1) {
-		SendPacket(pnum, &message, sizeof(message));
+		SendPacket(player, &message, sizeof(message));
 	} else if (IsPItemValid(message)) {
 		const Point position { message.x, message.y };
-		Player &player = Players[pnum];
 		bool isSelf = &player == MyPlayer;
 		const int32_t dwSeed = SDL_SwapLE32(message.def.dwSeed);
 		const uint16_t wCI = SDL_SwapLE16(message.def.wCI);
@@ -1286,14 +1289,13 @@ size_t OnPutItem(const TCmd *pCmd, size_t pnum)
 	return sizeof(message);
 }
 
-size_t OnSyncPutItem(const TCmd *pCmd, size_t pnum)
+size_t OnSyncPutItem(const TCmd *pCmd, Player &player)
 {
 	const auto &message = *reinterpret_cast<const TCmdPItem *>(pCmd);
 
 	if (gbBufferMsgs == 1)
-		SendPacket(pnum, &message, sizeof(message));
+		SendPacket(player, &message, sizeof(message));
 	else if (IsPItemValid(message)) {
-		Player &player = Players[pnum];
 		const int32_t dwSeed = SDL_SwapLE32(message.def.dwSeed);
 		const uint16_t wCI = SDL_SwapLE16(message.def.wCI);
 		const _item_indexes wIndx = static_cast<_item_indexes>(SDL_SwapLE16(message.def.wIndx));
@@ -1569,12 +1571,10 @@ size_t OnSpellPlayer(const TCmd *pCmd, Player &player)
 	return sizeof(message);
 }
 
-size_t OnKnockback(const TCmd *pCmd, size_t pnum)
+size_t OnKnockback(const TCmd *pCmd, Player &player)
 {
 	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 	const uint16_t monsterIdx = SDL_SwapLE16(message.wParam1);
-
-	Player &player = Players[pnum];
 
 	if (gbBufferMsgs != 1 && player.isOnActiveLevel() && monsterIdx < MaxMonsters) {
 		Monster &monster = Monsters[monsterIdx];
@@ -1585,16 +1585,16 @@ size_t OnKnockback(const TCmd *pCmd, size_t pnum)
 	return sizeof(message);
 }
 
-size_t OnResurrect(const TCmd *pCmd, size_t pnum)
+size_t OnResurrect(const TCmd *pCmd, Player &player)
 {
 	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 	const uint16_t playerIdx = SDL_SwapLE16(message.wParam1);
 
 	if (gbBufferMsgs == 1) {
-		SendPacket(pnum, &message, sizeof(message));
+		SendPacket(player, &message, sizeof(message));
 	} else if (playerIdx < Players.size()) {
-		DoResurrect(pnum, Players[playerIdx]);
-		if (pnum == MyPlayerId)
+		DoResurrect(player, Players[playerIdx]);
+		if (&player == MyPlayer)
 			pfile_update(true);
 	}
 
@@ -1630,14 +1630,14 @@ size_t OnTalkXY(const TCmd *pCmd, Player &player)
 	return sizeof(message);
 }
 
-size_t OnNewLevel(const TCmd *pCmd, size_t pnum)
+size_t OnNewLevel(const TCmd *pCmd, Player &player)
 {
 	const auto &message = *reinterpret_cast<const TCmdParam2 *>(pCmd);
 	const uint16_t eventIdx = SDL_SwapLE16(message.wParam1);
 
 	if (gbBufferMsgs == 1) {
-		SendPacket(pnum, &message, sizeof(message));
-	} else if (pnum != MyPlayerId) {
+		SendPacket(player, &message, sizeof(message));
+	} else if (&player != MyPlayer) {
 		if (eventIdx < WM_FIRST || eventIdx > WM_LAST)
 			return sizeof(message);
 
@@ -1648,34 +1648,33 @@ size_t OnNewLevel(const TCmd *pCmd, size_t pnum)
 			return sizeof(message);
 		}
 
-		StartNewLvl(Players[pnum], mode, levelId);
+		StartNewLvl(player, mode, levelId);
 	}
 
 	return sizeof(message);
 }
 
-size_t OnWarp(const TCmd *pCmd, size_t pnum)
+size_t OnWarp(const TCmd *pCmd, Player &player)
 {
 	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 	const uint16_t portalIdx = SDL_SwapLE16(message.wParam1);
 
 	if (gbBufferMsgs == 1) {
-		SendPacket(pnum, &message, sizeof(message));
+		SendPacket(player, &message, sizeof(message));
 	} else if (portalIdx < MAXPORTAL) {
-		StartWarpLvl(Players[pnum], portalIdx);
+		StartWarpLvl(player, portalIdx);
 	}
 
 	return sizeof(message);
 }
 
-size_t OnMonstDeath(const TCmd *pCmd, size_t pnum)
+size_t OnMonstDeath(const TCmd *pCmd, Player &player)
 {
 	const auto &message = *reinterpret_cast<const TCmdLocParam1 *>(pCmd);
 	const Point position { message.x, message.y };
 	const uint16_t monsterIdx = SDL_SwapLE16(message.wParam1);
 
 	if (gbBufferMsgs != 1) {
-		Player &player = Players[pnum];
 		if (&player != MyPlayer && InDungeonBounds(position) && monsterIdx < MaxMonsters) {
 			Monster &monster = Monsters[monsterIdx];
 			if (player.isOnActiveLevel())
@@ -1683,43 +1682,41 @@ size_t OnMonstDeath(const TCmd *pCmd, size_t pnum)
 			delta_kill_monster(monster, position, player);
 		}
 	} else {
-		SendPacket(pnum, &message, sizeof(message));
+		SendPacket(player, &message, sizeof(message));
 	}
 
 	return sizeof(message);
 }
 
-size_t OnKillGolem(const TCmd *pCmd, size_t pnum)
+size_t OnKillGolem(const TCmd *pCmd, Player &player)
 {
 	const auto &message = *reinterpret_cast<const TCmdLoc *>(pCmd);
 	const Point position { message.x, message.y };
 
 	if (gbBufferMsgs != 1) {
-		Player &player = Players[pnum];
 		if (&player != MyPlayer && InDungeonBounds(position)) {
-			Monster &monster = Monsters[pnum];
+			Monster &monster = Monsters[player.getId()];
 			if (player.isOnActiveLevel())
 				M_SyncStartKill(monster, position, player);
 			delta_kill_monster(monster, position, player); // BUGFIX: should be p->wParam1, plrlevel will be incorrect if golem is killed because player changed levels
 		}
 	} else {
-		SendPacket(pnum, &message, sizeof(message));
+		SendPacket(player, &message, sizeof(message));
 	}
 
 	return sizeof(message);
 }
 
-size_t OnAwakeGolem(const TCmd *pCmd, size_t pnum)
+size_t OnAwakeGolem(const TCmd *pCmd, Player &player)
 {
 	const auto &message = *reinterpret_cast<const TCmdGolem *>(pCmd);
 	const Point position { message._mx, message._my };
 
 	if (gbBufferMsgs == 1) {
-		SendPacket(pnum, &message, sizeof(message));
+		SendPacket(player, &message, sizeof(message));
 	} else if (InDungeonBounds(position)) {
-		Player &player = Players[pnum];
 		if (!player.isOnActiveLevel()) {
-			DeltaSyncGolem(message, pnum, message._currlevel);
+			DeltaSyncGolem(message, player, message._currlevel);
 		} else if (&player != MyPlayer) {
 			// Check if this player already has an active golem
 			for (auto &missile : Missiles) {
@@ -1728,20 +1725,19 @@ size_t OnAwakeGolem(const TCmd *pCmd, size_t pnum)
 				}
 			}
 
-			AddMissile(player.position.tile, position, message._mdir, MissileID::Golem, TARGET_MONSTERS, pnum, 0, 1);
+			AddMissile(player.position.tile, position, message._mdir, MissileID::Golem, TARGET_MONSTERS, player.getId(), 0, 1);
 		}
 	}
 
 	return sizeof(message);
 }
 
-size_t OnMonstDamage(const TCmd *pCmd, size_t pnum)
+size_t OnMonstDamage(const TCmd *pCmd, Player &player)
 {
 	const auto &message = *reinterpret_cast<const TCmdMonDamage *>(pCmd);
 	const uint16_t monsterIdx = SDL_SwapLE16(message.wMon);
 
 	if (gbBufferMsgs != 1) {
-		Player &player = Players[pnum];
 		if (&player != MyPlayer) {
 			if (player.isOnActiveLevel() && monsterIdx < MaxMonsters) {
 				auto &monster = Monsters[monsterIdx];
@@ -1755,25 +1751,24 @@ size_t OnMonstDamage(const TCmd *pCmd, size_t pnum)
 			}
 		}
 	} else {
-		SendPacket(pnum, &message, sizeof(message));
+		SendPacket(player, &message, sizeof(message));
 	}
 
 	return sizeof(message);
 }
 
-size_t OnPlayerDeath(const TCmd *pCmd, size_t pnum)
+size_t OnPlayerDeath(const TCmd *pCmd, Player &player)
 {
 	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 	const DeathReason deathReason = static_cast<DeathReason>(SDL_SwapLE16(message.wParam1));
 
 	if (gbBufferMsgs != 1) {
-		Player &player = Players[pnum];
 		if (&player != MyPlayer)
 			StartPlayerKill(player, deathReason);
 		else
 			pfile_update(true);
 	} else {
-		SendPacket(pnum, &message, sizeof(message));
+		SendPacket(player, &message, sizeof(message));
 	}
 
 	return sizeof(message);
@@ -1794,14 +1789,13 @@ size_t OnPlayerDamage(const TCmd *pCmd, Player &player)
 	return sizeof(message);
 }
 
-size_t OnOperateObject(const TCmd &pCmd, size_t pnum)
+size_t OnOperateObject(const TCmd &pCmd, Player &player)
 {
 	const auto &message = reinterpret_cast<const TCmdLoc &>(pCmd);
 
 	if (gbBufferMsgs == 1) {
-		SendPacket(pnum, &message, sizeof(message));
+		SendPacket(player, &message, sizeof(message));
 	} else {
-		Player &player = Players[pnum];
 		WorldTilePosition position { message.x, message.y };
 		assert(InDungeonBounds(position));
 		if (player.isOnActiveLevel()) {
@@ -1815,14 +1809,13 @@ size_t OnOperateObject(const TCmd &pCmd, size_t pnum)
 	return sizeof(message);
 }
 
-size_t OnBreakObject(const TCmd &pCmd, size_t pnum)
+size_t OnBreakObject(const TCmd &pCmd, Player &player)
 {
 	const auto &message = reinterpret_cast<const TCmdLoc &>(pCmd);
 
 	if (gbBufferMsgs == 1) {
-		SendPacket(pnum, &message, sizeof(message));
+		SendPacket(player, &message, sizeof(message));
 	} else {
-		Player &player = Players[pnum];
 		WorldTilePosition position { message.x, message.y };
 		assert(InDungeonBounds(position));
 		if (player.isOnActiveLevel()) {
@@ -1836,10 +1829,9 @@ size_t OnBreakObject(const TCmd &pCmd, size_t pnum)
 	return sizeof(message);
 }
 
-size_t OnChangePlayerItems(const TCmd *pCmd, size_t pnum)
+size_t OnChangePlayerItems(const TCmd *pCmd, Player &player)
 {
 	const auto &message = *reinterpret_cast<const TCmdChItem *>(pCmd);
-	Player &player = Players[pnum];
 
 	if (message.bLoc >= NUM_INVLOC)
 		return sizeof(message);
@@ -1847,7 +1839,7 @@ size_t OnChangePlayerItems(const TCmd *pCmd, size_t pnum)
 	auto bodyLocation = static_cast<inv_body_loc>(message.bLoc);
 
 	if (gbBufferMsgs == 1) {
-		SendPacket(pnum, &message, sizeof(message));
+		SendPacket(player, &message, sizeof(message));
 	} else if (&player != MyPlayer && IsItemAvailable(static_cast<_item_indexes>(SDL_SwapLE16(message.def.wIndx)))) {
 		Item &item = player.InvBody[message.bLoc];
 		item = {};
@@ -1860,31 +1852,29 @@ size_t OnChangePlayerItems(const TCmd *pCmd, size_t pnum)
 	return sizeof(message);
 }
 
-size_t OnDeletePlayerItems(const TCmd *pCmd, size_t pnum)
+size_t OnDeletePlayerItems(const TCmd *pCmd, Player &player)
 {
 	const auto &message = *reinterpret_cast<const TCmdDelItem *>(pCmd);
 
 	if (gbBufferMsgs != 1) {
-		Player &player = Players[pnum];
 		if (&player != MyPlayer && message.bLoc < NUM_INVLOC)
 			inv_update_rem_item(player, static_cast<inv_body_loc>(message.bLoc));
 	} else {
-		SendPacket(pnum, &message, sizeof(message));
+		SendPacket(player, &message, sizeof(message));
 	}
 
 	return sizeof(message);
 }
 
-size_t OnChangeInventoryItems(const TCmd *pCmd, int pnum)
+size_t OnChangeInventoryItems(const TCmd *pCmd, Player &player)
 {
 	const auto &message = *reinterpret_cast<const TCmdChItem *>(pCmd);
-	Player &player = Players[pnum];
 
 	if (message.bLoc >= InventoryGridCells)
 		return sizeof(message);
 
 	if (gbBufferMsgs == 1) {
-		SendPacket(pnum, &message, sizeof(message));
+		SendPacket(player, &message, sizeof(message));
 	} else if (&player != MyPlayer && IsItemAvailable(static_cast<_item_indexes>(SDL_SwapLE16(message.def.wIndx)))) {
 		Item item {};
 		RecreateItem(player, message, item);
@@ -1894,14 +1884,13 @@ size_t OnChangeInventoryItems(const TCmd *pCmd, int pnum)
 	return sizeof(message);
 }
 
-size_t OnDeleteInventoryItems(const TCmd *pCmd, int pnum)
+size_t OnDeleteInventoryItems(const TCmd *pCmd, Player &player)
 {
 	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 	const uint16_t invGridIndex = SDL_SwapLE16(message.wParam1);
-	Player &player = Players[pnum];
 
 	if (gbBufferMsgs == 1) {
-		SendPacket(pnum, &message, sizeof(message));
+		SendPacket(player, &message, sizeof(message));
 	} else if (&player != MyPlayer && invGridIndex < InventoryGridCells) {
 		CheckInvRemove(player, invGridIndex);
 	}
@@ -1909,16 +1898,15 @@ size_t OnDeleteInventoryItems(const TCmd *pCmd, int pnum)
 	return sizeof(message);
 }
 
-size_t OnChangeBeltItems(const TCmd *pCmd, int pnum)
+size_t OnChangeBeltItems(const TCmd *pCmd, Player &player)
 {
 	const auto &message = *reinterpret_cast<const TCmdChItem *>(pCmd);
-	Player &player = Players[pnum];
 
 	if (message.bLoc >= MaxBeltItems)
 		return sizeof(message);
 
 	if (gbBufferMsgs == 1) {
-		SendPacket(pnum, &message, sizeof(message));
+		SendPacket(player, &message, sizeof(message));
 	} else if (&player != MyPlayer && IsItemAvailable(static_cast<_item_indexes>(SDL_SwapLE16(message.def.wIndx)))) {
 		Item &item = player.SpdList[message.bLoc];
 		item = {};
@@ -1928,14 +1916,13 @@ size_t OnChangeBeltItems(const TCmd *pCmd, int pnum)
 	return sizeof(message);
 }
 
-size_t OnDeleteBeltItems(const TCmd *pCmd, int pnum)
+size_t OnDeleteBeltItems(const TCmd *pCmd, Player &player)
 {
 	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 	const uint16_t spdBarIndex = SDL_SwapLE16(message.wParam1);
-	Player &player = Players[pnum];
 
 	if (gbBufferMsgs == 1) {
-		SendPacket(pnum, &message, sizeof(message));
+		SendPacket(player, &message, sizeof(message));
 	} else if (&player != MyPlayer && spdBarIndex < MaxBeltItems) {
 		player.RemoveSpdBarItem(spdBarIndex);
 	}
@@ -1943,43 +1930,41 @@ size_t OnDeleteBeltItems(const TCmd *pCmd, int pnum)
 	return sizeof(message);
 }
 
-size_t OnPlayerLevel(const TCmd *pCmd, size_t pnum)
+size_t OnPlayerLevel(const TCmd *pCmd, Player &player)
 {
 	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 	const uint16_t playerLevel = SDL_SwapLE16(message.wParam1);
 
 	if (gbBufferMsgs != 1) {
-		Player &player = Players[pnum];
 		if (playerLevel <= player.getMaxCharacterLevel() && &player != MyPlayer)
 			player.setCharacterLevel(static_cast<uint8_t>(playerLevel));
 	} else {
-		SendPacket(pnum, &message, sizeof(message));
+		SendPacket(player, &message, sizeof(message));
 	}
 
 	return sizeof(message);
 }
 
-size_t OnDropItem(const TCmd *pCmd, size_t pnum)
+size_t OnDropItem(const TCmd *pCmd, Player &player)
 {
 	const auto &message = *reinterpret_cast<const TCmdPItem *>(pCmd);
 
 	if (gbBufferMsgs == 1) {
-		SendPacket(pnum, &message, sizeof(message));
+		SendPacket(player, &message, sizeof(message));
 	} else if (IsPItemValid(message)) {
-		DeltaPutItem(message, { message.x, message.y }, Players[pnum]);
+		DeltaPutItem(message, { message.x, message.y }, player);
 	}
 
 	return sizeof(message);
 }
 
-size_t OnSpawnItem(const TCmd *pCmd, size_t pnum)
+size_t OnSpawnItem(const TCmd *pCmd, Player &player)
 {
 	const auto &message = *reinterpret_cast<const TCmdPItem *>(pCmd);
 
 	if (gbBufferMsgs == 1) {
-		SendPacket(pnum, &message, sizeof(message));
+		SendPacket(player, &message, sizeof(message));
 	} else if (IsPItemValid(message)) {
-		Player &player = Players[pnum];
 		if (player.isOnActiveLevel() && &player != MyPlayer) {
 			SyncDropItem(message);
 		}
@@ -1990,26 +1975,26 @@ size_t OnSpawnItem(const TCmd *pCmd, size_t pnum)
 	return sizeof(message);
 }
 
-size_t OnSendPlayerInfo(const TCmd *pCmd, size_t pnum)
+size_t OnSendPlayerInfo(const TCmd *pCmd, Player &player)
 {
 	const auto &message = *reinterpret_cast<const TCmdPlrInfoHdr *>(pCmd);
 	const uint16_t wBytes = SDL_SwapLE16(message.wBytes);
 
 	if (gbBufferMsgs == 1)
-		SendPacket(pnum, &message, wBytes + sizeof(message));
+		SendPacket(player, &message, wBytes + sizeof(message));
 	else
-		recv_plrinfo(pnum, message, message.bCmd == CMD_ACK_PLRINFO);
+		recv_plrinfo(player, message, message.bCmd == CMD_ACK_PLRINFO);
 
 	return wBytes + sizeof(message);
 }
 
-size_t OnPlayerJoinLevel(const TCmd *pCmd, size_t pnum)
+size_t OnPlayerJoinLevel(const TCmd *pCmd, Player &player)
 {
 	const auto &message = *reinterpret_cast<const TCmdLocParam2 *>(pCmd);
 	const Point position { message.x, message.y };
 
 	if (gbBufferMsgs == 1) {
-		SendPacket(pnum, &message, sizeof(message));
+		SendPacket(player, &message, sizeof(message));
 		return sizeof(message);
 	}
 
@@ -2018,8 +2003,6 @@ size_t OnPlayerJoinLevel(const TCmd *pCmd, size_t pnum)
 	if (!IsValidLevel(playerLevel, isSetLevel) || !InDungeonBounds(position)) {
 		return sizeof(message);
 	}
-
-	Player &player = Players[pnum];
 
 	player._pLvlChanging = false;
 	if (player._pName[0] != '\0' && !player.plractive) {
@@ -2056,7 +2039,7 @@ size_t OnPlayerJoinLevel(const TCmd *pCmd, size_t pnum)
 	return sizeof(message);
 }
 
-size_t OnActivatePortal(const TCmd *pCmd, size_t pnum)
+size_t OnActivatePortal(const TCmd *pCmd, Player &player)
 {
 	const auto &message = *reinterpret_cast<const TCmdLocParam3 *>(pCmd);
 	const Point position { message.x, message.y };
@@ -2065,15 +2048,14 @@ size_t OnActivatePortal(const TCmd *pCmd, size_t pnum)
 	const bool isSetLevel = message.wParam3 != 0;
 
 	if (gbBufferMsgs == 1) {
-		SendPacket(pnum, &message, sizeof(message));
+		SendPacket(player, &message, sizeof(message));
 	} else if (InDungeonBounds(position) && IsValidLevel(level, isSetLevel) && dungeonTypeIdx <= DTYPE_LAST) {
 		auto dungeonType = static_cast<dungeon_type>(dungeonTypeIdx);
 
-		ActivatePortal(pnum, position, level, dungeonType, isSetLevel);
-		Player &player = Players[pnum];
+		ActivatePortal(player, position, level, dungeonType, isSetLevel);
 		if (&player != MyPlayer) {
 			if (leveltype == DTYPE_TOWN) {
-				AddPortalInTown(pnum);
+				AddPortalInTown(player);
 			} else if (player.isOnActiveLevel()) {
 				bool addPortal = true;
 				for (auto &missile : Missiles) {
@@ -2083,106 +2065,102 @@ size_t OnActivatePortal(const TCmd *pCmd, size_t pnum)
 					}
 				}
 				if (addPortal) {
-					AddPortalMissile(pnum, position, false);
+					AddPortalMissile(player, position, false);
 				}
 			} else {
-				RemovePortalMissile(pnum);
+				RemovePortalMissile(player);
 			}
 		}
-		DeltaOpenPortal(pnum, position, level, dungeonType, isSetLevel);
+		DeltaOpenPortal(player.getId(), position, level, dungeonType, isSetLevel);
 	}
 
 	return sizeof(message);
 }
 
-size_t OnDeactivatePortal(const TCmd *pCmd, size_t pnum)
+size_t OnDeactivatePortal(const TCmd *pCmd, Player &player)
 {
 	if (gbBufferMsgs == 1) {
-		SendPacket(pnum, pCmd, sizeof(*pCmd));
+		SendPacket(player, pCmd, sizeof(*pCmd));
 	} else {
-		if (PortalOnLevel(pnum))
-			RemovePortalMissile(pnum);
-		DeactivatePortal(pnum);
-		delta_close_portal(pnum);
+		if (PortalOnLevel(player))
+			RemovePortalMissile(player);
+		DeactivatePortal(player);
+		delta_close_portal(player);
 	}
 
 	return sizeof(*pCmd);
 }
 
-size_t OnRestartTown(const TCmd *pCmd, size_t pnum)
+size_t OnRestartTown(const TCmd *pCmd, Player &player)
 {
 	if (gbBufferMsgs == 1) {
-		SendPacket(pnum, pCmd, sizeof(*pCmd));
+		SendPacket(player, pCmd, sizeof(*pCmd));
 	} else {
-		if (pnum == MyPlayerId) {
+		if (&player == MyPlayer) {
 			MyPlayerIsDead = false;
 			gamemenu_off();
 		}
-		RestartTownLvl(Players[pnum]);
+		RestartTownLvl(player);
 	}
 
 	return sizeof(*pCmd);
 }
 
-size_t OnSetStrength(const TCmd *pCmd, size_t pnum)
+size_t OnSetStrength(const TCmd *pCmd, Player &player)
 {
 	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 	const uint16_t value = SDL_SwapLE16(message.wParam1);
 
 	if (gbBufferMsgs != 1) {
-		Player &player = Players[pnum];
 		if (value <= 750 && &player != MyPlayer)
 			SetPlrStr(player, value);
 	} else {
-		SendPacket(pnum, &message, sizeof(message));
+		SendPacket(player, &message, sizeof(message));
 	}
 
 	return sizeof(message);
 }
 
-size_t OnSetDexterity(const TCmd *pCmd, size_t pnum)
+size_t OnSetDexterity(const TCmd *pCmd, Player &player)
 {
 	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 	const uint16_t value = SDL_SwapLE16(message.wParam1);
 
 	if (gbBufferMsgs != 1) {
-		Player &player = Players[pnum];
 		if (value <= 750 && &player != MyPlayer)
 			SetPlrDex(player, value);
 	} else {
-		SendPacket(pnum, &message, sizeof(message));
+		SendPacket(player, &message, sizeof(message));
 	}
 
 	return sizeof(message);
 }
 
-size_t OnSetMagic(const TCmd *pCmd, size_t pnum)
+size_t OnSetMagic(const TCmd *pCmd, Player &player)
 {
 	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 	const uint16_t value = SDL_SwapLE16(message.wParam1);
 
 	if (gbBufferMsgs != 1) {
-		Player &player = Players[pnum];
 		if (value <= 750 && &player != MyPlayer)
 			SetPlrMag(player, value);
 	} else {
-		SendPacket(pnum, &message, sizeof(message));
+		SendPacket(player, &message, sizeof(message));
 	}
 
 	return sizeof(message);
 }
 
-size_t OnSetVitality(const TCmd *pCmd, size_t pnum)
+size_t OnSetVitality(const TCmd *pCmd, Player &player)
 {
 	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 	const uint16_t value = SDL_SwapLE16(message.wParam1);
 
 	if (gbBufferMsgs != 1) {
-		Player &player = Players[pnum];
 		if (value <= 750 && &player != MyPlayer)
 			SetPlrVit(player, value);
 	} else {
-		SendPacket(pnum, &message, sizeof(message));
+		SendPacket(player, &message, sizeof(message));
 	}
 
 	return sizeof(message);
@@ -2206,46 +2184,45 @@ size_t OnFriendlyMode(const TCmd *pCmd, Player &player) // NOLINT(misc-unused-pa
 	return sizeof(*pCmd);
 }
 
-size_t OnSyncQuest(const TCmd *pCmd, size_t pnum)
+size_t OnSyncQuest(const TCmd *pCmd, Player &player)
 {
 	const auto &message = *reinterpret_cast<const TCmdQuest *>(pCmd);
 
 	if (gbBufferMsgs == 1) {
-		SendPacket(pnum, &message, sizeof(message));
+		SendPacket(player, &message, sizeof(message));
 	} else {
-		if (pnum != MyPlayerId && message.q < MAXQUESTS && message.qstate <= QUEST_HIVE_DONE)
+		if (&player != MyPlayer && message.q < MAXQUESTS && message.qstate <= QUEST_HIVE_DONE)
 			SetMultiQuest(message.q, message.qstate, message.qlog != 0, message.qvar1, message.qvar2, message.qmsg);
 	}
 
 	return sizeof(message);
 }
 
-size_t OnCheatExperience(const TCmd *pCmd, size_t pnum) // NOLINT(misc-unused-parameters)
+size_t OnCheatExperience(const TCmd *pCmd, Player &player) // NOLINT(misc-unused-parameters)
 {
 #ifdef _DEBUG
 	if (gbBufferMsgs == 1)
-		SendPacket(pnum, pCmd, sizeof(*pCmd));
-	else if (!Players[pnum].isMaxCharacterLevel()) {
-		Players[pnum]._pExperience = Players[pnum].getNextExperienceThreshold();
+		SendPacket(player, pCmd, sizeof(*pCmd));
+	else if (!player.isMaxCharacterLevel()) {
+		player._pExperience = player.getNextExperienceThreshold();
 		if (*sgOptions.Gameplay.experienceBar) {
 			RedrawEverything();
 		}
-		NextPlrLevel(Players[pnum]);
+		NextPlrLevel(player);
 	}
 #endif
 	return sizeof(*pCmd);
 }
 
-size_t OnChangeSpellLevel(const TCmd *pCmd, size_t pnum) // NOLINT(misc-unused-parameters)
+size_t OnChangeSpellLevel(const TCmd *pCmd, Player &player) // NOLINT(misc-unused-parameters)
 {
 	const auto &message = *reinterpret_cast<const TCmdParam2 *>(pCmd);
 	const SpellID spellID = static_cast<SpellID>(SDL_SwapLE16(message.wParam1));
 	const uint8_t spellLevel = std::min(static_cast<uint8_t>(SDL_SwapLE16(message.wParam2)), MaxSpellLevel);
 
 	if (gbBufferMsgs == 1) {
-		SendPacket(pnum, pCmd, sizeof(*pCmd));
+		SendPacket(player, pCmd, sizeof(*pCmd));
 	} else {
-		Player &player = Players[pnum];
 		player._pMemSpells |= GetSpellBitmask(spellID);
 		player._pSplLvl[static_cast<size_t>(spellID)] = spellLevel;
 	}
@@ -2298,10 +2275,10 @@ size_t OnNakrul(const TCmd *pCmd)
 	return sizeof(*pCmd);
 }
 
-size_t OnOpenHive(const TCmd *pCmd, size_t pnum)
+size_t OnOpenHive(const TCmd *pCmd, Player &player)
 {
 	if (gbBufferMsgs != 1) {
-		AddMissile({ 0, 0 }, { 0, 0 }, Direction::South, MissileID::OpenNest, TARGET_MONSTERS, pnum, 0, 0);
+		AddMissile({ 0, 0 }, { 0, 0 }, Direction::South, MissileID::OpenNest, TARGET_MONSTERS, player.getId(), 0, 0);
 		TownOpenHive();
 		InitTownTriggers();
 	}
@@ -3087,9 +3064,9 @@ void NetSendCmdString(uint32_t pmask, const char *pszStr)
 	multi_send_msg_packet(pmask, (std::byte *)&cmd, strlen(cmd.str) + 2);
 }
 
-void delta_close_portal(int pnum)
+void delta_close_portal(const Player &player)
 {
-	memset(&sgJunk.portal[pnum], 0xFF, sizeof(sgJunk.portal[pnum]));
+	memset(&sgJunk.portal[player.getId()], 0xFF, sizeof(sgJunk.portal[player.getId()]));
 }
 
 size_t ParseCmd(size_t pnum, const TCmd *pCmd)
@@ -3110,33 +3087,33 @@ size_t ParseCmd(size_t pnum, const TCmd *pCmd)
 	case CMD_WALKXY:
 		return OnWalk(pCmd, player);
 	case CMD_ADDSTR:
-		return OnAddStrength(pCmd, pnum);
+		return OnAddStrength(pCmd, player);
 	case CMD_ADDDEX:
-		return OnAddDexterity(pCmd, pnum);
+		return OnAddDexterity(pCmd, player);
 	case CMD_ADDMAG:
-		return OnAddMagic(pCmd, pnum);
+		return OnAddMagic(pCmd, player);
 	case CMD_ADDVIT:
-		return OnAddVitality(pCmd, pnum);
+		return OnAddVitality(pCmd, player);
 	case CMD_GOTOGETITEM:
 		return OnGotoGetItem(pCmd, player);
 	case CMD_REQUESTGITEM:
 		return OnRequestGetItem(pCmd, player);
 	case CMD_GETITEM:
-		return OnGetItem(pCmd, pnum);
+		return OnGetItem(pCmd, player);
 	case CMD_GOTOAGETITEM:
 		return OnGotoAutoGetItem(pCmd, player);
 	case CMD_REQUESTAGITEM:
 		return OnRequestAutoGetItem(pCmd, player);
 	case CMD_AGETITEM:
-		return OnAutoGetItem(pCmd, pnum);
+		return OnAutoGetItem(pCmd, player);
 	case CMD_ITEMEXTRA:
-		return OnItemExtra(pCmd, pnum);
+		return OnItemExtra(pCmd, player);
 	case CMD_PUTITEM:
-		return OnPutItem(pCmd, pnum);
+		return OnPutItem(pCmd, player);
 	case CMD_SYNCPUTITEM:
-		return OnSyncPutItem(pCmd, pnum);
+		return OnSyncPutItem(pCmd, player);
 	case CMD_SPAWNITEM:
-		return OnSpawnItem(pCmd, pnum);
+		return OnSpawnItem(pCmd, player);
 	case CMD_ATTACKXY:
 		return OnAttackTile(pCmd, player);
 	case CMD_SATTACKXY:
@@ -3166,9 +3143,9 @@ size_t ParseCmd(size_t pnum, const TCmd *pCmd)
 	case CMD_SPELLPID:
 		return OnSpellPlayer(pCmd, player);
 	case CMD_KNOCKBACK:
-		return OnKnockback(pCmd, pnum);
+		return OnKnockback(pCmd, player);
 	case CMD_RESURRECT:
-		return OnResurrect(pCmd, pnum);
+		return OnResurrect(pCmd, player);
 	case CMD_HEALOTHER:
 		return OnHealOther(pCmd, player);
 	case CMD_TALKXY:
@@ -3176,72 +3153,72 @@ size_t ParseCmd(size_t pnum, const TCmd *pCmd)
 	case CMD_DEBUG:
 		return OnDebug(pCmd);
 	case CMD_NEWLVL:
-		return OnNewLevel(pCmd, pnum);
+		return OnNewLevel(pCmd, player);
 	case CMD_WARP:
-		return OnWarp(pCmd, pnum);
+		return OnWarp(pCmd, player);
 	case CMD_MONSTDEATH:
-		return OnMonstDeath(pCmd, pnum);
+		return OnMonstDeath(pCmd, player);
 	case CMD_KILLGOLEM:
-		return OnKillGolem(pCmd, pnum);
+		return OnKillGolem(pCmd, player);
 	case CMD_AWAKEGOLEM:
-		return OnAwakeGolem(pCmd, pnum);
+		return OnAwakeGolem(pCmd, player);
 	case CMD_MONSTDAMAGE:
-		return OnMonstDamage(pCmd, pnum);
+		return OnMonstDamage(pCmd, player);
 	case CMD_PLRDEAD:
-		return OnPlayerDeath(pCmd, pnum);
+		return OnPlayerDeath(pCmd, player);
 	case CMD_PLRDAMAGE:
 		return OnPlayerDamage(pCmd, player);
 	case CMD_OPENDOOR:
 	case CMD_CLOSEDOOR:
 	case CMD_OPERATEOBJ:
-		return OnOperateObject(*pCmd, pnum);
+		return OnOperateObject(*pCmd, player);
 	case CMD_BREAKOBJ:
-		return OnBreakObject(*pCmd, pnum);
+		return OnBreakObject(*pCmd, player);
 	case CMD_CHANGEPLRITEMS:
-		return OnChangePlayerItems(pCmd, pnum);
+		return OnChangePlayerItems(pCmd, player);
 	case CMD_DELPLRITEMS:
-		return OnDeletePlayerItems(pCmd, pnum);
+		return OnDeletePlayerItems(pCmd, player);
 	case CMD_CHANGEINVITEMS:
-		return OnChangeInventoryItems(pCmd, pnum);
+		return OnChangeInventoryItems(pCmd, player);
 	case CMD_DELINVITEMS:
-		return OnDeleteInventoryItems(pCmd, pnum);
+		return OnDeleteInventoryItems(pCmd, player);
 	case CMD_CHANGEBELTITEMS:
-		return OnChangeBeltItems(pCmd, pnum);
+		return OnChangeBeltItems(pCmd, player);
 	case CMD_DELBELTITEMS:
-		return OnDeleteBeltItems(pCmd, pnum);
+		return OnDeleteBeltItems(pCmd, player);
 	case CMD_PLRLEVEL:
-		return OnPlayerLevel(pCmd, pnum);
+		return OnPlayerLevel(pCmd, player);
 	case CMD_DROPITEM:
-		return OnDropItem(pCmd, pnum);
+		return OnDropItem(pCmd, player);
 	case CMD_ACK_PLRINFO:
 	case CMD_SEND_PLRINFO:
-		return OnSendPlayerInfo(pCmd, pnum);
+		return OnSendPlayerInfo(pCmd, player);
 	case CMD_PLAYER_JOINLEVEL:
-		return OnPlayerJoinLevel(pCmd, pnum);
+		return OnPlayerJoinLevel(pCmd, player);
 	case CMD_ACTIVATEPORTAL:
-		return OnActivatePortal(pCmd, pnum);
+		return OnActivatePortal(pCmd, player);
 	case CMD_DEACTIVATEPORTAL:
-		return OnDeactivatePortal(pCmd, pnum);
+		return OnDeactivatePortal(pCmd, player);
 	case CMD_RETOWN:
-		return OnRestartTown(pCmd, pnum);
+		return OnRestartTown(pCmd, player);
 	case CMD_SETSTR:
-		return OnSetStrength(pCmd, pnum);
+		return OnSetStrength(pCmd, player);
 	case CMD_SETMAG:
-		return OnSetMagic(pCmd, pnum);
+		return OnSetMagic(pCmd, player);
 	case CMD_SETDEX:
-		return OnSetDexterity(pCmd, pnum);
+		return OnSetDexterity(pCmd, player);
 	case CMD_SETVIT:
-		return OnSetVitality(pCmd, pnum);
+		return OnSetVitality(pCmd, player);
 	case CMD_STRING:
 		return OnString(pCmd, player);
 	case CMD_FRIENDLYMODE:
 		return OnFriendlyMode(pCmd, player);
 	case CMD_SYNCQUEST:
-		return OnSyncQuest(pCmd, pnum);
+		return OnSyncQuest(pCmd, player);
 	case CMD_CHEAT_EXPERIENCE:
-		return OnCheatExperience(pCmd, pnum);
+		return OnCheatExperience(pCmd, player);
 	case CMD_CHANGE_SPELL_LEVEL:
-		return OnChangeSpellLevel(pCmd, pnum);
+		return OnChangeSpellLevel(pCmd, player);
 	case CMD_SETSHIELD:
 		return OnSetShield(pCmd, player);
 	case CMD_REMSHIELD:
@@ -3251,7 +3228,7 @@ size_t ParseCmd(size_t pnum, const TCmd *pCmd)
 	case CMD_NAKRUL:
 		return OnNakrul(pCmd);
 	case CMD_OPENHIVE:
-		return OnOpenHive(pCmd, pnum);
+		return OnOpenHive(pCmd, player);
 	case CMD_OPENGRAVE:
 		return OnOpenGrave(pCmd);
 	default:

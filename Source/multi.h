@@ -14,6 +14,9 @@
 
 namespace devilution {
 
+// Defined in player.h, forward declared here to allow for functions which operate in the context of a player.
+struct Player;
+
 // must be unsigned to generate unsigned comparisons with pnum
 #define MAX_PLRS 4
 
@@ -71,6 +74,6 @@ void multi_process_network_packets();
 void multi_send_zero_packet(size_t pnum, _cmd_id bCmd, const std::byte *data, size_t size);
 void NetClose();
 bool NetInit(bool bSinglePlayer);
-void recv_plrinfo(int pnum, const TCmdPlrInfoHdr &header, bool recv);
+void recv_plrinfo(Player &player, const TCmdPlrInfoHdr &header, bool recv);
 
 } // namespace devilution

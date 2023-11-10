@@ -763,7 +763,7 @@ void NetSendCmdChBeltItem(bool bHiPri, int invGridIndex);
 void NetSendCmdDamage(bool bHiPri, uint8_t bPlr, uint32_t dwDam, DamageType damageType);
 void NetSendCmdMonDmg(bool bHiPri, uint16_t wMon, uint32_t dwDam);
 void NetSendCmdString(uint32_t pmask, const char *pszStr);
-void delta_close_portal(int pnum);
+void delta_close_portal(const Player &player);
 size_t ParseCmd(size_t pnum, const TCmd *pCmd);
 
 } // namespace devilution
