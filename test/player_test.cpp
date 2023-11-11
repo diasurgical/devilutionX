@@ -180,6 +180,7 @@ static void AssertPlayer(Player &player)
 TEST(Player, CreatePlayer)
 {
 	LoadPlayerDataFiles();
+	LoadItemData();
 	Players.resize(1);
 	CreatePlayer(Players[0], HeroClass::Rogue);
 	AssertPlayer(Players[0]);

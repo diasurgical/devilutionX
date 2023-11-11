@@ -4,6 +4,11 @@
  * Implementation of all spell data.
  */
 #include "spelldat.h"
+
+#include <string_view>
+
+#include <expected.hpp>
+
 #include "utils/language.h"
 
 namespace devilution {
@@ -74,5 +79,62 @@ const SpellData SpellsData[] = {
 /*SpellID::RuneOfStone*/      { P_("spell", "Rune of Stone"),      SfxID::CastHealing,           800,           30,        255, Magic | Targeted,             -1,         -1,      48, { MissileID::RuneOfStone,          MissileID::Null,    },         1,        10,         40,         80 },
 	// clang-format on
 };
+
+tl::expected<SpellID, std::string> ParseSpellId(std::string_view value)
+{
+	if (value == "Null") return SpellID::Null;
+	if (value == "Firebolt") return SpellID::Firebolt;
+	if (value == "Healing") return SpellID::Healing;
+	if (value == "Lightning") return SpellID::Lightning;
+	if (value == "Flash") return SpellID::Flash;
+	if (value == "Identify") return SpellID::Identify;
+	if (value == "FireWall") return SpellID::FireWall;
+	if (value == "TownPortal") return SpellID::TownPortal;
+	if (value == "StoneCurse") return SpellID::StoneCurse;
+	if (value == "Infravision") return SpellID::Infravision;
+	if (value == "Phasing") return SpellID::Phasing;
+	if (value == "ManaShield") return SpellID::ManaShield;
+	if (value == "Fireball") return SpellID::Fireball;
+	if (value == "Guardian") return SpellID::Guardian;
+	if (value == "ChainLightning") return SpellID::ChainLightning;
+	if (value == "FlameWave") return SpellID::FlameWave;
+	if (value == "DoomSerpents") return SpellID::DoomSerpents;
+	if (value == "BloodRitual") return SpellID::BloodRitual;
+	if (value == "Nova") return SpellID::Nova;
+	if (value == "Invisibility") return SpellID::Invisibility;
+	if (value == "Inferno") return SpellID::Inferno;
+	if (value == "Golem") return SpellID::Golem;
+	if (value == "Rage") return SpellID::Rage;
+	if (value == "Teleport") return SpellID::Teleport;
+	if (value == "Apocalypse") return SpellID::Apocalypse;
+	if (value == "Etherealize") return SpellID::Etherealize;
+	if (value == "ItemRepair") return SpellID::ItemRepair;
+	if (value == "StaffRecharge") return SpellID::StaffRecharge;
+	if (value == "TrapDisarm") return SpellID::TrapDisarm;
+	if (value == "Elemental") return SpellID::Elemental;
+	if (value == "ChargedBolt") return SpellID::ChargedBolt;
+	if (value == "HolyBolt") return SpellID::HolyBolt;
+	if (value == "Resurrect") return SpellID::Resurrect;
+	if (value == "Telekinesis") return SpellID::Telekinesis;
+	if (value == "HealOther") return SpellID::HealOther;
+	if (value == "BloodStar") return SpellID::BloodStar;
+	if (value == "BoneSpirit") return SpellID::BoneSpirit;
+	if (value == "Mana") return SpellID::Mana;
+	if (value == "Magi") return SpellID::Magi;
+	if (value == "Jester") return SpellID::Jester;
+	if (value == "LightningWall") return SpellID::LightningWall;
+	if (value == "Immolation") return SpellID::Immolation;
+	if (value == "Warp") return SpellID::Warp;
+	if (value == "Reflect") return SpellID::Reflect;
+	if (value == "Berserk") return SpellID::Berserk;
+	if (value == "RingOfFire") return SpellID::RingOfFire;
+	if (value == "Search") return SpellID::Search;
+	if (value == "RuneOfFire") return SpellID::RuneOfFire;
+	if (value == "RuneOfLight") return SpellID::RuneOfLight;
+	if (value == "RuneOfNova") return SpellID::RuneOfNova;
+	if (value == "RuneOfImmolation") return SpellID::RuneOfImmolation;
+	if (value == "RuneOfStone") return SpellID::RuneOfStone;
+	return tl::make_unexpected("Unknown enum value");
+}
 
 } // namespace devilution
