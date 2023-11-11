@@ -30,7 +30,7 @@ void WriteToStderr(std::string_view str)
 	HANDLE handle = GetStderrHandle();
 	if (handle == NULL)
 		return;
-	WriteConsole(handle, str.data(), str.size(), NULL, NULL);
+	WriteConsole(handle, str.data(), static_cast<DWORD>(str.size()), NULL, NULL);
 }
 
 } // namespace
