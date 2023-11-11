@@ -271,6 +271,11 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
   add_link_options("$<$<BOOL:${DEVILUTIONX_PROFILE_DIR}>:-fprofile-dir=${DEVILUTIONX_PROFILE_DIR};-fprofile-prefix-path=${CMAKE_CURRENT_BINARY_DIR}>")
 endif()
 
+if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+  # u8path() function is deprecated but there is no sensible alternative and it might even get un-deprecated.
+  add_definitions(-D_SILENCE_CXX20_U8PATH_DEPRECATION_WARNING)
+endif()
+
 # Not a genexp because CMake doesn't support it
 # https://gitlab.kitware.com/cmake/cmake/-/issues/20546
 if(NOT DISABLE_LTO)
