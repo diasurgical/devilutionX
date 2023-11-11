@@ -1,6 +1,7 @@
 BasedOnStyle: webkit
 AlignTrailingComments: true
 AllowShortBlocksOnASingleLine: true
+AllowShortCaseLabelsOnASingleLine: true
 AllowShortFunctionsOnASingleLine: All
 AllowShortIfStatementsOnASingleLine: WithoutElse
 PointerAlignment: Right

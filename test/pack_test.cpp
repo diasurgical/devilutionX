@@ -411,6 +411,11 @@ public:
 		Players.resize(1);
 		MyPlayer = &Players[0];
 	}
+
+	static void SetUpTestSuite()
+	{
+		LoadItemData();
+	}
 };
 
 TEST_F(PackTest, UnPackItem_diablo)
@@ -943,9 +948,14 @@ public:
 		};
 
 		SwapLE(testPack);
+		UnPackPlayer(testPack, *MyPlayer);
+	}
+
+	static void SetUpTestSuite()
+	{
 		LoadPlayerDataFiles();
 		LoadMonsterData();
-		UnPackPlayer(testPack, *MyPlayer);
+		LoadItemData();
 	}
 };
 

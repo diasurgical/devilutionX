@@ -15,6 +15,11 @@ public:
 		Players.resize(1);
 		MyPlayer = &Players[0];
 	}
+
+	static void SetUpTestSuite()
+	{
+		LoadItemData();
+	}
 };
 
 /* Set up a given item as a spell scroll, allowing for its usage. */

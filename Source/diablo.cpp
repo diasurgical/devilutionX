@@ -2477,6 +2477,7 @@ int DiabloMain(int argc, char **argv)
 
 	// TODO: We can probably load this much later (when the game is starting).
 	LoadMonsterData();
+	LoadItemData();
 
 	DiabloInit();
 #ifdef __UWP__

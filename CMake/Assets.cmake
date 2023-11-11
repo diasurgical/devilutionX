@@ -155,6 +155,10 @@ set(devilutionx_assets
   txtdata/classes/rogue/attributes.tsv
   txtdata/classes/sorcerer/attributes.tsv
   txtdata/classes/warrior/attributes.tsv
+  txtdata/items/item_prefixes.tsv
+  txtdata/items/item_suffixes.tsv
+  txtdata/items/itemdat.tsv
+  txtdata/items/unique_itemdat.tsv
   txtdata/monsters/monstdat.tsv
   txtdata/monsters/unique_monstdat.tsv
   ui_art/diablo.pal

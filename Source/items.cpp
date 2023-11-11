@@ -1086,7 +1086,7 @@ int GetStaffPrefixId(int lvl, bool onlygood, bool hellfireItem)
 	if (FlipCoin(10) || onlygood) {
 		int nl = 0;
 		int l[256];
-		for (int j = 0; ItemPrefixes[j].power.type != IPL_INVALID; j++) {
+		for (int j = 0, n = static_cast<int>(ItemPrefixes.size()); j < n; ++j) {
 			if (!IsPrefixValidForItemType(j, AffixItemType::Staff, hellfireItem) || ItemPrefixes[j].PLMinLvl > lvl)
 				continue;
 			if (onlygood && !ItemPrefixes[j].PLOk)
@@ -1194,7 +1194,7 @@ void GetItemPowerPrefixAndSuffix(int minlvl, int maxlvl, AffixItemType flgs, boo
 		onlygood = true;
 	if (allocatePrefix) {
 		int nt = 0;
-		for (int j = 0; ItemPrefixes[j].power.type != IPL_INVALID; j++) {
+		for (int j = 0, n = static_cast<int>(ItemPrefixes.size()); j < n; ++j) {
 			if (!IsPrefixValidForItemType(j, flgs, hellfireItem))
 				continue;
 			if (ItemPrefixes[j].PLMinLvl < minlvl || ItemPrefixes[j].PLMinLvl > maxlvl)
@@ -1218,7 +1218,7 @@ void GetItemPowerPrefixAndSuffix(int minlvl, int maxlvl, AffixItemType flgs, boo
 	}
 	if (allocateSuffix) {
 		int nl = 0;
-		for (int j = 0; ItemSuffixes[j].power.type != IPL_INVALID; j++) {
+		for (int j = 0, n = static_cast<int>(ItemSuffixes.size()); j < n; ++j) {
 			if (IsSuffixValidForItemType(j, flgs, hellfireItem)
 			    && ItemSuffixes[j].PLMinLvl >= minlvl && ItemSuffixes[j].PLMinLvl <= maxlvl
 			    && !((goe == GOE_GOOD && ItemSuffixes[j].PLGOE == GOE_EVIL) || (goe == GOE_EVIL && ItemSuffixes[j].PLGOE == GOE_GOOD))
@@ -1451,7 +1451,7 @@ _unique_items CheckUnique(Item &item, int lvl, int uper, bool recreate)
 		return UITEM_INVALID;
 
 	int numu = 0;
-	for (int j = 0; UniqueItems[j].UIItemId != UITYPE_INVALID; j++) {
+	for (int j = 0, n = static_cast<int>(UniqueItems.size()); j < n; ++j) {
 		if (!IsUniqueAvailable(j))
 			break;
 		if (UniqueItems[j].UIItemId == AllItemsList[item.IDidx].iItemId
@@ -4629,11 +4629,11 @@ std::string DebugSpawnUniqueItem(std::string itemName)
 	UniqueItem uniqueItem;
 	bool foundUnique = false;
 	int uniqueIndex = 0;
-	for (int j = 0; UniqueItems[j].UIItemId != UITYPE_INVALID; j++) {
+	for (int j = 0, n = static_cast<int>(UniqueItems.size()); j < n; ++j) {
 		if (!IsUniqueAvailable(j))
 			break;
 
-		const std::string tmp = AsciiStrToLower(UniqueItems[j].UIName);
+		const std::string tmp = AsciiStrToLower(std::string_view(UniqueItems[j].UIName));
 		if (tmp.find(itemName) != std::string::npos) {
 			itemName = tmp;
 			uniqueItem = UniqueItems[j];

@@ -375,6 +375,7 @@ TEST(Writehero, pfile_write_hero)
 	MyPlayer = &Players[MyPlayerId];
 
 	LoadPlayerDataFiles();
+	LoadItemData();
 	_uiheroinfo info {};
 	info.heroclass = HeroClass::Rogue;
 	pfile_ui_save_create(&info);

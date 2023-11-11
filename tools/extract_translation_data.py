@@ -6,6 +6,10 @@ root = pathlib.Path(__file__).resolve().parent.parent
 translation_dummy_path = root.joinpath("Source/translation_dummy.cpp")
 monstdat_path = root.joinpath("Packaging/resources/assets/txtdata/monsters/monstdat.tsv")
 unique_monstdat_path = root.joinpath("Packaging/resources/assets/txtdata/monsters/unique_monstdat.tsv")
+itemdat_path = root.joinpath("Packaging/resources/assets/txtdata/items/itemdat.tsv")
+unique_itemdat_path = root.joinpath("Packaging/resources/assets/txtdata/items/unique_itemdat.tsv")
+item_prefixes_path = root.joinpath("Packaging/resources/assets/txtdata/items/item_prefixes.tsv")
+item_suffixes_path = root.joinpath("Packaging/resources/assets/txtdata/items/item_suffixes.tsv")
 
 with open(translation_dummy_path, 'w') as temp_source:
     temp_source.write(f'/**\n')
@@ -21,10 +25,40 @@ with open(translation_dummy_path, 'w') as temp_source:
         for row in reader:
             name = row['name']
             var_name = row['_monster_id'] + "_NAME"
-            temp_source.write(f'const char *' + var_name + ' = P_("monster", "' + name + '");\n')
+            temp_source.write(f'const char *{var_name} = P_("monster", "{name}");\n')
     with open(unique_monstdat_path, 'r') as tsv:
         reader = csv.DictReader(tsv, delimiter='\t')
         for row in reader:
             name = row['name']
             var_name = name.upper().replace(' ', '_').replace('-', '_') + "_NAME"
-            temp_source.write(f'const char *' + var_name + ' = P_("monster", "' + name + '");\n')
+            temp_source.write(f'const char *{var_name} = P_("monster", "{name}");\n')
+    with open(itemdat_path, 'r') as tsv:
+        reader = csv.DictReader(tsv, delimiter='\t')
+        for i, row in enumerate(reader):
+            id = row['id']
+            name = row['name']
+            if name == 'Scroll of None' or name == 'Non Item':
+                continue
+            shortName = row['shortName']
+            var_name = id if id else f'ITEM_{i}'
+            temp_source.write(f'const char *{var_name}_NAME = N_("{name}");\n')
+            if shortName:
+                temp_source.write(f'const char *{var_name}_SHORT_NAME = N_("{shortName}");\n')
+    with open(unique_itemdat_path, 'r') as tsv:
+        reader = csv.DictReader(tsv, delimiter='\t')
+        for i, row in enumerate(reader):
+            name = row['name']
+            var_name = f'UNIQUE_ITEM_{i}'
+            temp_source.write(f'const char *{var_name}_NAME = N_("{name}");\n')
+    with open(item_prefixes_path, 'r') as tsv:
+        reader = csv.DictReader(tsv, delimiter='\t')
+        for i, row in enumerate(reader):
+            name = row['name']
+            var_name = f'ITEM_PREFIX_{i}'
+            temp_source.write(f'const char *{var_name}_NAME = N_("{name}");\n')
+    with open(item_suffixes_path, 'r') as tsv:
+        reader = csv.DictReader(tsv, delimiter='\t')
+        for i, row in enumerate(reader):
+            name = row['name']
+            var_name = f'ITEM_SUFFIX_{i}'
+            temp_source.write(f'const char *{var_name}_NAME = N_("{name}");\n')
