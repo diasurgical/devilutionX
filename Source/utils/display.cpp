@@ -378,8 +378,10 @@ bool SpawnWindow(const char *lpWindowName)
 #ifndef USE_SDL1
 void ReinitializeTexture()
 {
-	if (texture)
-		texture.reset();
+	if (left)
+		left.reset();
+	if (right)
+		right.reset();
 
 	if (renderer == nullptr)
 		return;
@@ -388,9 +390,11 @@ void ReinitializeTexture()
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, quality.c_str());
 
 #ifdef PSP
-	texture = SDLWrap::CreateTexture(renderer, SDL_PIXELFORMAT_ABGR1555, SDL_TEXTUREACCESS_STREAMING, gnScreenWidth, gnScreenHeight);
+	left = SDLWrap::CreateTexture(renderer, SDL_PIXELFORMAT_ABGR1555, SDL_TEXTUREACCESS_STREAMING, gnScreenWidth / 2, gnScreenHeight);
+	right = SDLWrap::CreateTexture(renderer, SDL_PIXELFORMAT_ABGR1555, SDL_TEXTUREACCESS_STREAMING, gnScreenWidth / 2, gnScreenHeight);
 #else
-	texture = SDLWrap::CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, gnScreenWidth, gnScreenHeight);
+	left = SDLWrap::CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, gnScreenWidth / 2, gnScreenHeight);
+	right = SDLWrap::CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, gnScreenWidth / 2, gnScreenHeight);
 #endif
 }
 
@@ -417,8 +421,10 @@ void ReinitializeRenderer()
 	Size windowSize = { current.current_w, current.current_h };
 	AdjustToScreenGeometry(windowSize);
 #else
-	if (texture)
-		texture.reset();
+	if (left)
+		left.reset();
+	if (right)
+		right.reset();
 
 	FreeRenderer();
 
@@ -445,7 +451,7 @@ void ReinitializeRenderer()
 		}
 
 		Uint32 format;
-		if (SDL_QueryTexture(texture.get(), &format, nullptr, nullptr, nullptr) < 0)
+		if (SDL_QueryTexture(left.get(), &format, nullptr, nullptr, nullptr) < 0)
 			ErrSdl();
 		RendererTextureSurface = SDLWrap::CreateRGBSurfaceWithFormat(0, gnScreenWidth, gnScreenHeight, SDL_BITSPERPIXEL(format), format);
 	} else {
