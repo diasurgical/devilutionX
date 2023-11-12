@@ -11,6 +11,7 @@
 #include <expected.hpp>
 
 #include "data/file.hpp"
+#include "data/record_reader.hpp"
 #include "items.h"
 #include "monster.h"
 #include "textdat.h"
@@ -484,242 +485,61 @@ void LoadMonstDat()
 	MonstersData.reserve(dataFile.numRecords());
 	std::unordered_map<std::string, size_t> spritePathToId;
 	for (DataFileRecord record : dataFile) {
-		FieldIterator fieldIt = record.begin();
-		const FieldIterator endField = record.end();
-
-		MonstersData.emplace_back();
-		MonsterData &monster = MonstersData.back();
-
-		const auto advance = [&]() {
-			++fieldIt;
-			if (fieldIt == endField) {
-				DataFile::reportFatalError(DataFile::Error::NotEnoughColumns, filename);
-			}
-		};
-
-		// Skip the first column (monster ID).
-
-		// name
-		advance();
-		monster.name = (*fieldIt).value();
-
-		// assetsSuffix
-		advance();
+		RecordReader reader { record, filename };
+		MonsterData &monster = MonstersData.emplace_back();
+		reader.advance(); // Skip the first column (monster ID).
+		reader.readString("name", monster.name);
 		{
-			std::string assetsSuffix { (*fieldIt).value() };
+			std::string assetsSuffix;
+			reader.readString("assetsSuffix", assetsSuffix);
 			const auto [it, inserted] = spritePathToId.emplace(assetsSuffix, spritePathToId.size());
 			if (inserted)
 				MonsterSpritePaths.push_back(it->first);
 			monster.spriteId = it->second;
 		}
-
-		// soundSuffix
-		advance();
-		monster.soundSuffix = (*fieldIt).value();
-
-		// trnFile
-		advance();
-		monster.trnFile = (*fieldIt).value();
-
-		// availability
-		advance();
-		if (tl::expected<MonsterAvailability, std::string> result = ParseMonsterAvailability((*fieldIt).value()); result.has_value()) {
-			monster.availability = *std::move(result);
-		} else {
-			DataFile::reportFatalFieldError(DataFileField::Error::InvalidValue, filename, "availability", *fieldIt, result.error());
-		}
-
-		// width
-		advance();
-		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(monster.width); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename, "width", *fieldIt);
-		}
-
-		// image
-		advance();
-		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(monster.image); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename, "image", *fieldIt);
-		}
-
-		// hasSpecial
-		advance();
-		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseBool(monster.hasSpecial); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename, "hasSpecial", *fieldIt);
-		}
-
-		// hasSpecialSound
-		advance();
-		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseBool(monster.hasSpecialSound); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename, "hasSpecialSound", *fieldIt);
-		}
-
-		// frames[6]
-		advance();
-		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseIntArray(monster.frames); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename, "frames", *fieldIt);
-		}
-
-		// rate[6]
-		advance();
-		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseIntArray(monster.rate); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename, "rate", *fieldIt);
-		}
-
-		// minDunLvl
-		advance();
-		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(monster.minDunLvl); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename, "minDunLvl", *fieldIt);
-		}
-
-		// maxDunLvl
-		advance();
-		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(monster.maxDunLvl); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename, "maxDunLvl", *fieldIt);
-		}
-
-		// level
-		advance();
-		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(monster.level); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename, "level", *fieldIt);
-		}
-
-		// hitPointsMinimum
-		advance();
-		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(monster.hitPointsMinimum); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename, "hitPointsMinimum", *fieldIt);
-		}
-
-		// hitPointsMaximum
-		advance();
-		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(monster.hitPointsMaximum); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename, "hitPointsMaximum", *fieldIt);
-		}
-
-		// ai
-		advance();
-		if (tl::expected<MonsterAIID, std::string> result = ParseAiId((*fieldIt).value()); result.has_value()) {
-			monster.ai = *std::move(result);
-		} else {
-			DataFile::reportFatalFieldError(DataFileField::Error::InvalidValue, filename, "ai", *fieldIt, result.error());
-		}
-
-		// abilityFlags
-		advance();
-		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseEnumList(monster.abilityFlags, ParseMonsterFlag); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename, "abilityFlags", *fieldIt);
-		}
-
-		// intelligence
-		advance();
-		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(monster.intelligence); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename, "intelligence", *fieldIt);
-		}
-
-		// toHit
-		advance();
-		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(monster.toHit); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename, "toHit", *fieldIt);
-		}
-
-		// animFrameNum
-		advance();
-		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(monster.animFrameNum); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename, "animFrameNum", *fieldIt);
-		}
-
-		// minDamage
-		advance();
-		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(monster.minDamage); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename, "minDamage", *fieldIt);
-		}
-
-		// maxDamage
-		advance();
-		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(monster.maxDamage); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename, "maxDamage", *fieldIt);
-		}
-
-		// toHitSpecial
-		advance();
-		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(monster.toHitSpecial); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename, "toHitSpecial", *fieldIt);
-		}
-
-		// animFrameNumSpecial
-		advance();
-		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(monster.animFrameNumSpecial); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename, "animFrameNumSpecial", *fieldIt);
-		}
-
-		// minDamageSpecial
-		advance();
-		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(monster.minDamageSpecial); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename, "minDamageSpecial", *fieldIt);
-		}
-
-		// maxDamageSpecial
-		advance();
-		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(monster.maxDamageSpecial); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename, "maxDamageSpecial", *fieldIt);
-		}
-
-		// armorClass
-		advance();
-		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(monster.armorClass); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename, "armorClass", *fieldIt);
-		}
-
-		// monsterClass
-		advance();
-		if (tl::expected<MonsterClass, std::string> result = ParseMonsterClass((*fieldIt).value()); result.has_value()) {
-			monster.monsterClass = *std::move(result);
-		} else {
-			DataFile::reportFatalFieldError(DataFileField::Error::InvalidValue, filename, "monsterClass", *fieldIt, result.error());
-		}
-
-		// resistance
-		advance();
-		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseEnumList(monster.resistance, ParseMonsterResistance); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename, "resistance", *fieldIt);
-		}
-
-		// resistanceHell
-		advance();
-		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseEnumList(monster.resistanceHell, ParseMonsterResistance); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename, "resistanceHell", *fieldIt);
-		}
-
-		// selectionType
-		advance();
-		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(monster.selectionType); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename, "selectionType", *fieldIt);
-		}
+		reader.readString("soundSuffix", monster.soundSuffix);
+		reader.readString("trnFile", monster.trnFile);
+		reader.read("availability", monster.availability, ParseMonsterAvailability);
+		reader.readInt("width", monster.width);
+		reader.readInt("image", monster.image);
+		reader.readBool("hasSpecial", monster.hasSpecial);
+		reader.readBool("hasSpecialSound", monster.hasSpecialSound);
+		reader.readIntArray("frames", monster.frames);
+		reader.readIntArray("rate", monster.rate);
+		reader.readInt("minDunLvl", monster.minDunLvl);
+		reader.readInt("maxDunLvl", monster.maxDunLvl);
+		reader.readInt("level", monster.level);
+		reader.readInt("hitPointsMinimum", monster.hitPointsMinimum);
+		reader.readInt("hitPointsMaximum", monster.hitPointsMaximum);
+		reader.read("ai", monster.ai, ParseAiId);
+		reader.readEnumList("abilityFlags", monster.abilityFlags, ParseMonsterFlag);
+		reader.readInt("intelligence", monster.intelligence);
+		reader.readInt("toHit", monster.toHit);
+		reader.readInt("animFrameNum", monster.animFrameNum);
+		reader.readInt("minDamage", monster.minDamage);
+		reader.readInt("maxDamage", monster.maxDamage);
+		reader.readInt("toHitSpecial", monster.toHitSpecial);
+		reader.readInt("animFrameNumSpecial", monster.animFrameNumSpecial);
+		reader.readInt("minDamageSpecial", monster.minDamageSpecial);
+		reader.readInt("maxDamageSpecial", monster.maxDamageSpecial);
+		reader.readInt("armorClass", monster.armorClass);
+		reader.read("monsterClass", monster.monsterClass, ParseMonsterClass);
+		reader.readEnumList("resistance", monster.resistance, ParseMonsterResistance);
+		reader.readEnumList("resistanceHell", monster.resistanceHell, ParseMonsterResistance);
+		reader.readInt("selectionType", monster.selectionType);
 
 		// treasure
 		// TODO: Replace this hack with proper parsing once items have been migrated to data files.
-		advance();
-		{
-			const std::string_view value = (*fieldIt).value();
-			if (value.empty()) {
-				monster.treasure = 0;
-			} else if (value == "None") {
-				monster.treasure = T_NODROP;
-			} else if (value == "Uniq(SKCROWN)") {
-				monster.treasure = Uniq(UITEM_SKCROWN);
-			} else if (value == "Uniq(CLEAVER)") {
-				monster.treasure = Uniq(UITEM_CLEAVER);
-			} else {
-				DataFile::reportFatalFieldError(DataFileField::Error::InvalidValue, filename, "treasure", *fieldIt, "NOTE: Parser is incomplete");
-			}
-		}
+		reader.read("treasure", monster.treasure, [](std::string_view value) -> tl::expected<uint16_t, std::string> {
+			if (value.empty()) return 0;
+			if (value == "None") return T_NODROP;
+			if (value == "Uniq(SKCROWN)") return Uniq(UITEM_SKCROWN);
+			if (value == "Uniq(CLEAVER)") return Uniq(UITEM_CLEAVER);
+			return tl::make_unexpected("Invalid value. NOTE: Parser is incomplete");
+		});
 
-		// exp
-		advance();
-		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(monster.exp); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename, "exp", *fieldIt);
-		}
+		reader.readInt("exp", monster.exp);
 	}
-
 	MonstersData.shrink_to_fit();
 }
 
@@ -740,123 +560,35 @@ void LoadUniqueMonstDat()
 	UniqueMonstersData.clear();
 	UniqueMonstersData.reserve(dataFile.numRecords());
 	for (DataFileRecord record : dataFile) {
-		FieldIterator fieldIt = record.begin();
-		const FieldIterator endField = record.end();
-
-		UniqueMonstersData.emplace_back();
-		UniqueMonsterData &monster = UniqueMonstersData.back();
-
-		const auto advance = [&]() {
-			++fieldIt;
-			if (fieldIt == endField) {
-				DataFile::reportFatalError(DataFile::Error::NotEnoughColumns, filename);
-			}
-		};
-
-		// type
-		if (tl::expected<_monster_id, std::string> result = ParseMonsterId((*fieldIt).value()); result.has_value()) {
-			monster.mtype = *std::move(result);
-		} else {
-			DataFile::reportFatalFieldError(DataFileField::Error::InvalidValue, filename, "type", *fieldIt, result.error());
-		}
-
-		// name
-		advance();
-		monster.mName = (*fieldIt).value();
-
-		// trn
-		advance();
-		monster.mTrnName = (*fieldIt).value();
-
-		// level
-		advance();
-		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(monster.mlevel); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename, "level", *fieldIt);
-		}
-
-		// maxHp
-		advance();
-		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(monster.mmaxhp); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename, "maxHp", *fieldIt);
-		}
-
-		// ai
-		advance();
-		if (tl::expected<MonsterAIID, std::string> result = ParseAiId((*fieldIt).value()); result.has_value()) {
-			monster.mAi = *std::move(result);
-		} else {
-			DataFile::reportFatalFieldError(DataFileField::Error::InvalidValue, filename, "ai", *fieldIt, result.error());
-		}
-
-		// intelligence
-		advance();
-		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(monster.mint); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename, "intelligence", *fieldIt);
-		}
-
-		// minDamage
-		advance();
-		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(monster.mMinDamage); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename, "minDamage", *fieldIt);
-		}
-
-		// maxDamage
-		advance();
-		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(monster.mMaxDamage); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename, "maxDamage", *fieldIt);
-		}
-
-		// resistance
-		advance();
-		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseEnumList(monster.mMagicRes, ParseMonsterResistance); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename, "resistance", *fieldIt);
-		}
-
-		// monsterPack
-		advance();
-		if (tl::expected<UniqueMonsterPack, std::string> result = ParseUniqueMonsterPack((*fieldIt).value()); result.has_value()) {
-			monster.monsterPack = *std::move(result);
-		} else {
-			DataFile::reportFatalFieldError(DataFileField::Error::InvalidValue, filename, "monsterPack", *fieldIt, result.error());
-		}
-
-		// customToHit
-		advance();
-		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(monster.customToHit); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename, "customToHit", *fieldIt);
-		}
-
-		// customArmorClass
-		advance();
-		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(monster.customArmorClass); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename, "customArmorClass", *fieldIt);
-		}
+		RecordReader reader { record, filename };
+		UniqueMonsterData &monster = UniqueMonstersData.emplace_back();
+		reader.read("type", monster.mtype, ParseMonsterId);
+		reader.readString("name", monster.mName);
+		reader.readString("trn", monster.mTrnName);
+		reader.readInt("level", monster.mlevel);
+		reader.readInt("maxHp", monster.mmaxhp);
+		reader.read("ai", monster.mAi, ParseAiId);
+		reader.readInt("intelligence", monster.mint);
+		reader.readInt("minDamage", monster.mMinDamage);
+		reader.readInt("maxDamage", monster.mMaxDamage);
+		reader.readEnumList("resistance", monster.mMagicRes, ParseMonsterResistance);
+		reader.read("monsterPack", monster.monsterPack, ParseUniqueMonsterPack);
+		reader.readInt("customToHit", monster.customToHit);
+		reader.readInt("customArmorClass", monster.customArmorClass);
 
 		// talkMessage
 		// TODO: Replace this hack with proper parsing once messages have been migrated to data files.
-		advance();
-		{
-			const std::string_view value = (*fieldIt).value();
-			if (value.empty()) {
-				monster.mtalkmsg = TEXT_NONE;
-			} else if (value == "TEXT_GARBUD1") {
-				monster.mtalkmsg = TEXT_GARBUD1;
-			} else if (value == "TEXT_ZHAR1") {
-				monster.mtalkmsg = TEXT_ZHAR1;
-			} else if (value == "TEXT_BANNER10") {
-				monster.mtalkmsg = TEXT_BANNER10;
-			} else if (value == "TEXT_VILE13") {
-				monster.mtalkmsg = TEXT_VILE13;
-			} else if (value == "TEXT_VEIL9") {
-				monster.mtalkmsg = TEXT_VEIL9;
-			} else if (value == "TEXT_WARLRD9") {
-				monster.mtalkmsg = TEXT_WARLRD9;
-			} else {
-				DataFile::reportFatalFieldError(DataFileField::Error::InvalidValue, filename, "talkMessage", *fieldIt, "NOTE: Parser is incomplete");
-			}
-		}
+		reader.read("talkMessage", monster.mtalkmsg, [](std::string_view value) -> tl::expected<_speech_id, std::string> {
+			if (value.empty()) return TEXT_NONE;
+			if (value == "TEXT_GARBUD1") return TEXT_GARBUD1;
+			if (value == "TEXT_ZHAR1") return TEXT_ZHAR1;
+			if (value == "TEXT_BANNER10") return TEXT_BANNER10;
+			if (value == "TEXT_VILE13") return TEXT_VILE13;
+			if (value == "TEXT_VEIL9") return TEXT_VEIL9;
+			if (value == "TEXT_WARLRD9") return TEXT_WARLRD9;
+			return tl::make_unexpected("Invalid value. NOTE: Parser is incomplete");
+		});
 	}
-
 	UniqueMonstersData.shrink_to_fit();
 }
 

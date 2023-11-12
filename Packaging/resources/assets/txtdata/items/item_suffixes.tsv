@@ -1,4 +1,4 @@
-name	power.type	power.param1	power.param2	minLevel	itemTypes	alignment	doubleChance	useful	minVal	maxVal	multVal
+name	power	power.value1	power.value2	minLevel	itemTypes	alignment	doubleChance	useful	minVal	maxVal	multVal
 quality	DAMMOD	1	2	2	Weapon,Staff,Bow	Any	false	true	100	200	2
 maiming	DAMMOD	3	5	7	Weapon,Staff,Bow	Any	false	true	1300	1500	3
 slaying	DAMMOD	6	8	15	Weapon	Any	false	true	2600	3000	5

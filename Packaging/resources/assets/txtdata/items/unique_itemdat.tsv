@@ -1,4 +1,4 @@
-name	uniqueBaseItem	minLevel	value	powers[0].type	powers[0].param1	powers[0].param2	powers[1].type	powers[1].param1	powers[1].param2	powers[2].type	powers[2].param1	powers[2].param2	powers[3].type	powers[3].param1	powers[3].param2	powers[4].type	powers[4].param1	powers[4].param2	powers[5].type	powers[5].param1	powers[5].param2
+name	uniqueBaseItem	minLevel	value	power0	power0.value1	power0.value2	power1	power1.value1	power1.value2	power2	power2.value1	power2.value2	power3	power3.value1	power3.value2	power4	power4.value1	power4.value2	power5	power5.value1	power5.value2
 The Butcher's Cleaver	CLEAVER	1	3650	STR	10	10	SETDAM	4	24	SETDUR	10	10									
 The Undead Crown	SKCROWN	1	16650	RNDSTEALLIFE			SETAC	8	8	INVCURS	77										
 Empyrean Band	INFRARING	1	8000	ATTRIBS	2	2	LIGHT	2	2	FASTRECOVER	1	1	ABSHALFTRAP								

@@ -146,7 +146,7 @@ public:
 	}
 
 	template <typename T, typename ParseFn>
-	[[nodiscard]] tl::expected<void, Error> parseEnumList(T &destination, ParseFn &&parseFn)
+	[[nodiscard]] tl::expected<void, std::string> parseEnumList(T &destination, ParseFn &&parseFn)
 	{
 		destination = {};
 		const std::string_view str = value();
@@ -155,7 +155,7 @@ public:
 		for (const std::string_view part : SplitByChar(str, ',')) {
 			auto result = parseFn(part);
 			if (!result.has_value())
-				return tl::make_unexpected(Error::InvalidValue);
+				return tl::make_unexpected(std::move(result).error());
 			destination |= result.value();
 		}
 		return {};

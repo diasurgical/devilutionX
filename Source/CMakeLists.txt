@@ -70,6 +70,7 @@ set(libdevilutionx_SRCS
 
   data/file.cpp
   data/parser.cpp
+  data/record_reader.cpp
 
   DiabloUI/button.cpp
   DiabloUI/credits.cpp
