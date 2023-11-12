@@ -13,6 +13,7 @@
 
 #include "data/file.hpp"
 #include "data/iterators.hpp"
+#include "data/record_reader.hpp"
 #include "spelldat.h"
 #include "utils/str_cat.hpp"
 
@@ -491,200 +492,40 @@ void LoadItemDat()
 	AllItemsList.clear();
 	AllItemsList.reserve(dataFile.numRecords());
 	for (DataFileRecord record : dataFile) {
-		FieldIterator fieldIt = record.begin();
-		const FieldIterator endField = record.end();
-
-		AllItemsList.emplace_back();
-		ItemData &item = AllItemsList.back();
-
-		const auto advance = [&]() {
-			++fieldIt;
-			if (fieldIt == endField) {
-				DataFile::reportFatalError(DataFile::Error::NotEnoughColumns, filename);
-			}
-		};
-
-		// Skip the first column (item ID).
-
-		// dropRate
-		advance();
-		if (tl::expected<item_drop_rate, std::string> result = ParseItemDropRate((*fieldIt).value()); result.has_value()) {
-			item.iRnd = *std::move(result);
-		} else {
-			DataFile::reportFatalFieldError(DataFileField::Error::InvalidValue, filename, "dropRate", *fieldIt, result.error());
-		}
-
-		// class
-		advance();
-		if (tl::expected<item_class, std::string> result = ParseItemClass((*fieldIt).value()); result.has_value()) {
-			item.iClass = *std::move(result);
-		} else {
-			DataFile::reportFatalFieldError(DataFileField::Error::InvalidValue, filename, "class", *fieldIt, result.error());
-		}
-
-		// equipType
-		advance();
-		if (tl::expected<item_equip_type, std::string> result = ParseItemEquipType((*fieldIt).value()); result.has_value()) {
-			item.iLoc = *std::move(result);
-		} else {
-			DataFile::reportFatalFieldError(DataFileField::Error::InvalidValue, filename, "equipType", *fieldIt, result.error());
-		}
-
-		// cursorGraphic
-		advance();
-		if (tl::expected<item_cursor_graphic, std::string> result = ParseItemCursorGraphic((*fieldIt).value()); result.has_value()) {
-			item.iCurs = *std::move(result);
-		} else {
-			DataFile::reportFatalFieldError(DataFileField::Error::InvalidValue, filename, "cursorGraphic", *fieldIt, result.error());
-		}
-
-		// itemType
-		advance();
-		if (tl::expected<ItemType, std::string> result = ParseItemType((*fieldIt).value()); result.has_value()) {
-			item.itype = *std::move(result);
-		} else {
-			DataFile::reportFatalFieldError(DataFileField::Error::InvalidValue, filename, "itemType", *fieldIt, result.error());
-		}
-
-		// uniqueBaseItem
-		advance();
-		if (tl::expected<unique_base_item, std::string> result = ParseUniqueBaseItem((*fieldIt).value()); result.has_value()) {
-			item.iItemId = *std::move(result);
-		} else {
-			DataFile::reportFatalFieldError(DataFileField::Error::InvalidValue, filename, "uniqueBaseItem", *fieldIt, result.error());
-		}
-
-		// name
-		advance();
-		item.iName = (*fieldIt).value();
-
-		// shortName
-		advance();
-		item.iSName = (*fieldIt).value();
-
-		// minMonsterLevel
-		advance();
-		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(item.iMinMLvl); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename, "minMonsterLevel", *fieldIt);
-		}
-
-		// durability
-		advance();
-		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(item.iDurability); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename, "durability", *fieldIt);
-		}
-
-		// minDamage
-		advance();
-		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(item.iMinDam); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename, "minDamage", *fieldIt);
-		}
-
-		// maxDamage
-		advance();
-		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(item.iMaxDam); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename, "maxDamage", *fieldIt);
-		}
-
-		// minArmor
-		advance();
-		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(item.iMinAC); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename, "minArmor", *fieldIt);
-		}
-
-		// maxArmor
-		advance();
-		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(item.iMaxAC); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename, "maxArmor", *fieldIt);
-		}
-
-		// minStrength
-		advance();
-		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(item.iMinStr); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename, "minStrength", *fieldIt);
-		}
-
-		// minMagic
-		advance();
-		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(item.iMinMag); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename, "minMagic", *fieldIt);
-		}
-
-		// minDexterity
-		advance();
-		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(item.iMinDex); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename, "minDexterity", *fieldIt);
-		}
-
-		// specialEffects
-		advance();
-		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseEnumList(item.iFlags, ParseItemSpecialEffect); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename, "specialEffects", *fieldIt);
-		}
-
-		// miscId
-		advance();
-		if (tl::expected<item_misc_id, std::string> result = ParseItemMiscId((*fieldIt).value()); result.has_value()) {
-			item.iMiscId = *std::move(result);
-		} else {
-			DataFile::reportFatalFieldError(DataFileField::Error::InvalidValue, filename, "miscId", *fieldIt, result.error());
-		}
-
-		// spell
-		advance();
-		if (tl::expected<SpellID, std::string> result = ParseSpellId((*fieldIt).value()); result.has_value()) {
-			item.iSpell = *std::move(result);
-		} else {
-			DataFile::reportFatalFieldError(DataFileField::Error::InvalidValue, filename, "spell", *fieldIt, result.error());
-		}
-
-		// usable
-		advance();
-		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseBool(item.iUsable); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename, "usable", *fieldIt);
-		}
-
-		// value
-		advance();
-		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(item.iValue); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename, "value", *fieldIt);
-		}
+		RecordReader reader { record, filename };
+		ItemData &item = AllItemsList.emplace_back();
+		reader.advance(); // Skip the first column (item ID).
+		reader.read("dropRate", item.iRnd, ParseItemDropRate);
+		reader.read("class", item.iClass, ParseItemClass);
+		reader.read("equipType", item.iLoc, ParseItemEquipType);
+		reader.read("cursorGraphic", item.iCurs, ParseItemCursorGraphic);
+		reader.read("itemType", item.itype, ParseItemType);
+		reader.read("uniqueBaseItem", item.iItemId, ParseUniqueBaseItem);
+		reader.readString("name", item.iName);
+		reader.readString("shortName", item.iSName);
+		reader.readInt("minMonsterLevel", item.iMinMLvl);
+		reader.readInt("durability", item.iDurability);
+		reader.readInt("minDamage", item.iMinDam);
+		reader.readInt("maxDamage", item.iMaxDam);
+		reader.readInt("minArmor", item.iMinAC);
+		reader.readInt("maxArmor", item.iMaxAC);
+		reader.readInt("minStrength", item.iMinStr);
+		reader.readInt("minMagic", item.iMinMag);
+		reader.readInt("minDexterity", item.iMinDex);
+		reader.readEnumList("specialEffects", item.iFlags, ParseItemSpecialEffect);
+		reader.read("miscId", item.iMiscId, ParseItemMiscId);
+		reader.read("spell", item.iSpell, ParseSpellId);
+		reader.readBool("usable", item.iUsable);
+		reader.readInt("value", item.iValue);
 	}
-
 	AllItemsList.shrink_to_fit();
 }
 
-void ParseItemPower(devilution::FieldIterator &fieldIt, const FieldIterator &endField,
-    std::string_view filename, std::string_view fieldName, ItemPower &power)
+void ReadItemPower(RecordReader &reader, std::string_view fieldName, ItemPower &power)
 {
-	const auto advance = [&]() {
-		++fieldIt;
-		if (fieldIt == endField) {
-			DataFile::reportFatalError(DataFile::Error::NotEnoughColumns, filename);
-		}
-	};
-
-	if (tl::expected<item_effect_type, std::string> result = ParseItemEffectType((*fieldIt).value()); result.has_value()) {
-		power.type = *std::move(result);
-	} else {
-		DataFile::reportFatalFieldError(DataFileField::Error::InvalidValue, filename, StrCat(fieldName, ".type"), *fieldIt, result.error());
-	}
-
-	// param1
-	advance();
-	if (!(*fieldIt).value().empty()) {
-		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(power.param1); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename, StrCat(fieldName, ".param1"), *fieldIt);
-		}
-	}
-
-	// param2
-	advance();
-	if (!(*fieldIt).value().empty()) {
-		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(power.param2); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename, StrCat(fieldName, ".param2"), *fieldIt);
-		}
-	}
+	reader.read(fieldName, power.type, ParseItemEffectType);
+	reader.readOptionalInt(StrCat(fieldName, ".value1"), power.param1);
+	reader.readOptionalInt(StrCat(fieldName, ".value2"), power.param2);
 }
 
 void LoadUniqueItemDat()
@@ -704,53 +545,21 @@ void LoadUniqueItemDat()
 	UniqueItems.clear();
 	UniqueItems.reserve(dataFile.numRecords());
 	for (DataFileRecord record : dataFile) {
-		FieldIterator fieldIt = record.begin();
-		const FieldIterator endField = record.end();
-
-		UniqueItems.emplace_back();
-		UniqueItem &item = UniqueItems.back();
-
-		const auto advance = [&]() {
-			++fieldIt;
-			if (fieldIt == endField) {
-				DataFile::reportFatalError(DataFile::Error::NotEnoughColumns, filename);
-			}
-		};
-
-		// name
-		item.UIName = (*fieldIt).value();
-
-		// uniqueBaseItem
-		advance();
-		if (tl::expected<unique_base_item, std::string> result = ParseUniqueBaseItem((*fieldIt).value()); result.has_value()) {
-			item.UIItemId = *std::move(result);
-		} else {
-			DataFile::reportFatalFieldError(DataFileField::Error::InvalidValue, filename, "class", *fieldIt, result.error());
-		}
-
-		// minLevel
-		advance();
-		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(item.UIMinLvl); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename, "minLevel", *fieldIt);
-		}
-
-		// value
-		advance();
-		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(item.UIValue); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename, "value", *fieldIt);
-		}
+		RecordReader reader { record, filename };
+		UniqueItem &item = UniqueItems.emplace_back();
+		reader.readString("name", item.UIName);
+		reader.read("uniqueBaseItem", item.UIItemId, ParseUniqueBaseItem);
+		reader.readInt("minLevel", item.UIMinLvl);
+		reader.readInt("value", item.UIValue);
 
 		// powers (up to 6)
 		item.UINumPL = 0;
 		for (size_t i = 0; i < 6; ++i) {
-			// type
-			advance();
-			if ((*fieldIt).value().empty())
-				continue;
-			ParseItemPower(fieldIt, endField, filename, StrCat("powers[", i, "]"), item.powers[item.UINumPL++]);
+			if (reader.value().empty())
+				break;
+			ReadItemPower(reader, StrCat("power", i), item.powers[item.UINumPL++]);
 		}
 	}
-
 	UniqueItems.shrink_to_fit();
 }
 
@@ -770,77 +579,19 @@ void LoadItemAffixesDat(std::string_view filename, std::vector<PLStruct> &out)
 	out.clear();
 	out.reserve(dataFile.numRecords());
 	for (DataFileRecord record : dataFile) {
-		FieldIterator fieldIt = record.begin();
-		const FieldIterator endField = record.end();
-
-		out.emplace_back();
-		PLStruct &item = out.back();
-
-		const auto advance = [&]() {
-			++fieldIt;
-			if (fieldIt == endField) {
-				DataFile::reportFatalError(DataFile::Error::NotEnoughColumns, filename);
-			}
-		};
-
-		// name
-		item.PLName = (*fieldIt).value();
-
-		// power
-		advance();
-		ParseItemPower(fieldIt, endField, filename, "power", item.power);
-
-		// minLevel
-		advance();
-		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(item.PLMinLvl); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename, "minLevel", *fieldIt);
-		}
-
-		// itemTypes
-		advance();
-		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseEnumList(item.PLIType, ParseAffixItemType); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename, "itemTypes", *fieldIt);
-		}
-
-		// alignment
-		advance();
-		if (tl::expected<goodorevil, std::string> result = ParseAffixAlignment((*fieldIt).value()); result.has_value()) {
-			item.PLGOE = *std::move(result);
-		} else {
-			DataFile::reportFatalFieldError(DataFileField::Error::InvalidValue, filename, "alignment", *fieldIt, result.error());
-		}
-
-		// doubleChance
-		advance();
-		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseBool(item.PLDouble); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename, "doubleChance", *fieldIt);
-		}
-
-		// useful
-		advance();
-		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseBool(item.PLOk); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename, "useful", *fieldIt);
-		}
-
-		// minVal
-		advance();
-		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(item.minVal); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename, "minVal", *fieldIt);
-		}
-
-		// maxVal
-		advance();
-		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(item.maxVal); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename, "maxVal", *fieldIt);
-		}
-
-		// multVal
-		advance();
-		if (tl::expected<void, DataFileField::Error> result = (*fieldIt).parseInt(item.multVal); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename, "multVal", *fieldIt);
-		}
+		RecordReader reader { record, filename };
+		PLStruct &item = out.emplace_back();
+		reader.readString("name", item.PLName);
+		ReadItemPower(reader, "power", item.power);
+		reader.readInt("minLevel", item.PLMinLvl);
+		reader.readEnumList("itemTypes", item.PLIType, ParseAffixItemType);
+		reader.read("alignment", item.PLGOE, ParseAffixAlignment);
+		reader.readBool("doubleChance", item.PLDouble);
+		reader.readBool("useful", item.PLOk);
+		reader.readInt("minVal", item.minVal);
+		reader.readInt("maxVal", item.maxVal);
+		reader.readInt("multVal", item.multVal);
 	}
-
 	out.shrink_to_fit();
 }
 
