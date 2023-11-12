@@ -1,6 +1,7 @@
 #ifdef _DEBUG
 #include "lua/modules/dev/level.hpp"
 
+#include <cstddef>
 #include <cstdio>
 #include <optional>
 #include <string>
@@ -24,9 +25,7 @@ namespace {
 
 std::string ExportDun()
 {
-	std::string levelName = StrCat(currlevel, "-", glSeedTbl[currlevel], ".dun");
-	std::string cmdLabel = "[exportdun] ";
-
+	const std::string levelName = StrCat(currlevel, "-", glSeedTbl[currlevel], ".dun");
 	FILE *dunFile = OpenFile(levelName.c_str(), "ab");
 
 	WriteLE16(dunFile, DMAXX);
@@ -108,6 +107,15 @@ std::string DebugCmdResetLevel(uint8_t level, std::optional<int> seed)
 	return StrCat("Successfully reset level ", level, ".");
 }
 
+std::string DebugCmdLevelSeed(std::optional<uint8_t> level)
+{
+	constexpr size_t NumLevels = sizeof(glSeedTbl) / sizeof(glSeedTbl[0]);
+	if (level.has_value() && *level >= NumLevels) {
+		return StrCat("level out of range, max: ", NumLevels - 1);
+	}
+	return StrCat(glSeedTbl[level.value_or(currlevel)]);
+}
+
 } // namespace
 
 sol::table LuaDevLevelModule(sol::state_view &lua)
@@ -116,6 +124,7 @@ sol::table LuaDevLevelModule(sol::state_view &lua)
 	SetDocumented(table, "exportDun", "()", "Save the current level as a dun-file.", &ExportDun);
 	SetDocumented(table, "map", "", "Automap-related commands.", LuaDevLevelMapModule(lua));
 	SetDocumented(table, "reset", "(n: number, seed: number = nil)", "Resets specified level.", &DebugCmdResetLevel);
+	SetDocumented(table, "seed", "(level: number = nil)", "Get the seed of the current or given level.", &DebugCmdLevelSeed);
 	SetDocumented(table, "warp", "", "Warp to a level or a custom map.", LuaDevLevelWarpModule(lua));
 	return table;
 }
