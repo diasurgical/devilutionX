@@ -28,7 +28,8 @@ namespace devilution {
 int refreshDelay;
 SDL_Renderer *renderer;
 #ifndef USE_SDL1
-SDLTextureUniquePtr texture;
+SDLTextureUniquePtr left;
+SDLTextureUniquePtr right;
 #endif
 
 /** Currently active palette */
@@ -113,7 +114,8 @@ void dx_cleanup()
 	Palette = nullptr;
 	RendererTextureSurface = nullptr;
 #ifndef USE_SDL1
-	texture = nullptr;
+	left = nullptr;
+	right = nullptr;
 	if (*sgOptions.Graphics.upscale)
 		SDL_DestroyRenderer(renderer);
 #endif
@@ -226,7 +228,10 @@ void RenderPresent()
 
 #ifndef USE_SDL1
 	if (renderer != nullptr) {
-		if (SDL_UpdateTexture(texture.get(), nullptr, surface->pixels, surface->pitch) <= -1) { // pitch is 2560
+		if (SDL_UpdateTexture(left.get(), nullptr, surface->pixels, surface->pitch) <= -1) { // pitch is 2560
+			ErrSdl();
+		}
+		if (SDL_UpdateTexture(right.get(), nullptr, reinterpret_cast<char *>(surface->pixels) + surface->pitch / 2, surface->pitch) <= -1) { // pitch is 2560
 			ErrSdl();
 		}
 
@@ -238,7 +243,12 @@ void RenderPresent()
 		if (SDL_RenderClear(renderer) <= -1) {
 			ErrSdl();
 		}
-		if (SDL_RenderCopy(renderer, texture.get(), nullptr, nullptr) <= -1) {
+		SDL_Rect leftRect = MakeSdlRect(0, 0, gnScreenWidth / 2, gnScreenHeight);
+		if (SDL_RenderCopy(renderer, left.get(), nullptr, &leftRect) <= -1) {
+			ErrSdl();
+		}
+		SDL_Rect rightRect = MakeSdlRect(gnScreenWidth / 2, 0, gnScreenWidth / 2, gnScreenHeight);
+		if (SDL_RenderCopy(renderer, right.get(), nullptr, &rightRect) <= -1) {
 			ErrSdl();
 		}
 		if (ControlMode == ControlTypes::VirtualGamepad) {
