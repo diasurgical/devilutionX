@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
-"POT-Creation-Date: 2023-11-13 12:02+0100\n"
+"POT-Creation-Date: 2023-11-14 09:00+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -374,7 +374,7 @@ msgid "Load Game"
 msgstr ""
 
 #: Source/DiabloUI/hero/selhero.cpp:199 Source/gamemenu.cpp:44
-#: Source/gamemenu.cpp:55 Source/multi.cpp:794
+#: Source/gamemenu.cpp:55 Source/multi.cpp:792
 msgid "New Game"
 msgstr ""
 
@@ -2396,1772 +2396,16 @@ msgstr ""
 msgid "No room for item"
 msgstr ""
 
-#: Source/itemdat.cpp:53 Source/itemdat.cpp:236 Source/panels/charpanel.cpp:167
-msgid "Gold"
-msgstr ""
-
-#: Source/itemdat.cpp:54 Source/itemdat.cpp:172
-msgid "Short Sword"
-msgstr ""
-
-#: Source/itemdat.cpp:55 Source/itemdat.cpp:124
-msgid "Buckler"
-msgstr ""
-
-#: Source/itemdat.cpp:56 Source/itemdat.cpp:192 Source/itemdat.cpp:193
-msgid "Club"
-msgstr ""
-
-#: Source/itemdat.cpp:57 Source/itemdat.cpp:196
-msgid "Short Bow"
-msgstr ""
-
-#: Source/itemdat.cpp:58
-msgid "Short Staff of Mana"
-msgstr ""
-
-#: Source/itemdat.cpp:59
-msgid "Cleaver"
-msgstr ""
-
-#: Source/itemdat.cpp:60 Source/itemdat.cpp:435
-msgid "The Undead Crown"
-msgstr ""
-
-#: Source/itemdat.cpp:61 Source/itemdat.cpp:436
-msgid "Empyrean Band"
-msgstr ""
-
-#: Source/itemdat.cpp:62
-msgid "Magic Rock"
-msgstr ""
-
-#: Source/itemdat.cpp:63 Source/itemdat.cpp:437
-msgid "Optic Amulet"
-msgstr ""
-
-#: Source/itemdat.cpp:64 Source/itemdat.cpp:438
-msgid "Ring of Truth"
-msgstr ""
-
-#: Source/itemdat.cpp:65
-msgid "Tavern Sign"
-msgstr ""
-
-#: Source/itemdat.cpp:66 Source/itemdat.cpp:439
-msgid "Harlequin Crest"
-msgstr ""
-
-#: Source/itemdat.cpp:67 Source/itemdat.cpp:440
-msgid "Veil of Steel"
-msgstr ""
-
-#: Source/itemdat.cpp:68
-msgid "Golden Elixir"
-msgstr ""
-
-#: Source/itemdat.cpp:69 Source/quests.cpp:62
-msgid "Anvil of Fury"
-msgstr ""
-
-#: Source/itemdat.cpp:70 Source/quests.cpp:53
-msgid "Black Mushroom"
-msgstr ""
-
-#: Source/itemdat.cpp:71
-msgid "Brain"
-msgstr ""
-
-#: Source/itemdat.cpp:72
-msgid "Fungal Tome"
-msgstr ""
-
-#: Source/itemdat.cpp:73
-msgid "Spectral Elixir"
-msgstr ""
-
-#: Source/itemdat.cpp:74
-msgid "Blood Stone"
-msgstr ""
-
-#: Source/itemdat.cpp:75
-msgid "Cathedral Map"
-msgstr ""
-
-#: Source/itemdat.cpp:76
-msgid "Heart"
-msgstr ""
-
-#: Source/itemdat.cpp:77 Source/itemdat.cpp:130
-msgid "Potion of Healing"
-msgstr ""
-
-#: Source/itemdat.cpp:78 Source/itemdat.cpp:132
-msgid "Potion of Mana"
-msgstr ""
-
-#: Source/itemdat.cpp:79 Source/itemdat.cpp:147
-msgid "Scroll of Identify"
-msgstr ""
-
-#: Source/itemdat.cpp:80 Source/itemdat.cpp:151
-msgid "Scroll of Town Portal"
-msgstr ""
-
-#: Source/itemdat.cpp:81 Source/itemdat.cpp:441
-msgid "Arkaine's Valor"
-msgstr ""
-
-#: Source/itemdat.cpp:82 Source/itemdat.cpp:131
-msgid "Potion of Full Healing"
-msgstr ""
-
-#: Source/itemdat.cpp:83 Source/itemdat.cpp:133
-msgid "Potion of Full Mana"
-msgstr ""
-
-#: Source/itemdat.cpp:84 Source/itemdat.cpp:442
-msgid "Griswold's Edge"
-msgstr ""
-
-#: Source/itemdat.cpp:85 Source/itemdat.cpp:443
-msgid "Bovine Plate"
-msgstr ""
-
-#: Source/itemdat.cpp:86
-msgid "Staff of Lazarus"
-msgstr ""
-
-#: Source/itemdat.cpp:87 Source/itemdat.cpp:148
-msgid "Scroll of Resurrect"
-msgstr ""
-
-#: Source/itemdat.cpp:88 Source/itemdat.cpp:136 Source/items.cpp:179
-msgid "Blacksmith Oil"
-msgstr ""
-
-#: Source/itemdat.cpp:89 Source/itemdat.cpp:204
-msgid "Short Staff"
-msgstr ""
-
-#: Source/itemdat.cpp:90 Source/itemdat.cpp:172 Source/itemdat.cpp:173
-#: Source/itemdat.cpp:174 Source/itemdat.cpp:175 Source/itemdat.cpp:178
-#: Source/itemdat.cpp:179 Source/itemdat.cpp:180 Source/itemdat.cpp:181
-#: Source/itemdat.cpp:182
-msgid "Sword"
-msgstr ""
-
-#: Source/itemdat.cpp:91 Source/itemdat.cpp:171
-msgid "Dagger"
-msgstr ""
-
-#: Source/itemdat.cpp:92
-msgid "Rune Bomb"
-msgstr ""
-
-#: Source/itemdat.cpp:93
-msgid "Theodore"
-msgstr ""
-
-#: Source/itemdat.cpp:94
-msgid "Auric Amulet"
-msgstr ""
-
-#: Source/itemdat.cpp:95
-msgid "Torn Note 1"
-msgstr ""
-
-#: Source/itemdat.cpp:96
-msgid "Torn Note 2"
-msgstr ""
-
-#: Source/itemdat.cpp:97
-msgid "Torn Note 3"
-msgstr ""
-
-#: Source/itemdat.cpp:98
-msgid "Reconstructed Note"
-msgstr ""
-
-#: Source/itemdat.cpp:99
-msgid "Brown Suit"
-msgstr ""
-
-#: Source/itemdat.cpp:100
-msgid "Grey Suit"
-msgstr ""
-
-#: Source/itemdat.cpp:101 Source/itemdat.cpp:102
-msgid "Cap"
-msgstr ""
-
-#: Source/itemdat.cpp:102
-msgid "Skull Cap"
-msgstr ""
-
-#: Source/itemdat.cpp:103 Source/itemdat.cpp:104 Source/itemdat.cpp:106
-msgid "Helm"
-msgstr ""
-
-#: Source/itemdat.cpp:104
-msgid "Full Helm"
-msgstr ""
-
-#: Source/itemdat.cpp:105
-msgid "Crown"
-msgstr ""
-
-#: Source/itemdat.cpp:106
-msgid "Great Helm"
-msgstr ""
-
-#: Source/itemdat.cpp:107
-msgid "Cape"
-msgstr ""
-
-#: Source/itemdat.cpp:108
-msgid "Rags"
-msgstr ""
-
-#: Source/itemdat.cpp:109
-msgid "Cloak"
-msgstr ""
-
-#: Source/itemdat.cpp:110
-msgid "Robe"
-msgstr ""
-
-#: Source/itemdat.cpp:111
-msgid "Quilted Armor"
-msgstr ""
-
-#: Source/itemdat.cpp:111 Source/itemdat.cpp:112 Source/itemdat.cpp:113
-#: Source/itemdat.cpp:114 Source/objects.cpp:4848
-msgid "Armor"
-msgstr ""
-
-#: Source/itemdat.cpp:112
-msgid "Leather Armor"
-msgstr ""
-
-#: Source/itemdat.cpp:113
-msgid "Hard Leather Armor"
-msgstr ""
-
-#: Source/itemdat.cpp:114
-msgid "Studded Leather Armor"
-msgstr ""
-
-#: Source/itemdat.cpp:115
-msgid "Ring Mail"
-msgstr ""
-
-#: Source/itemdat.cpp:115 Source/itemdat.cpp:116 Source/itemdat.cpp:117
-#: Source/itemdat.cpp:119
-msgid "Mail"
-msgstr ""
-
-#: Source/itemdat.cpp:116
-msgid "Chain Mail"
-msgstr ""
-
-#: Source/itemdat.cpp:117
-msgid "Scale Mail"
-msgstr ""
-
-#: Source/itemdat.cpp:118
-msgid "Breast Plate"
-msgstr ""
-
-#: Source/itemdat.cpp:118 Source/itemdat.cpp:120 Source/itemdat.cpp:121
-#: Source/itemdat.cpp:122 Source/itemdat.cpp:123
-msgid "Plate"
-msgstr ""
-
-#: Source/itemdat.cpp:119
-msgid "Splint Mail"
-msgstr ""
-
-#: Source/itemdat.cpp:120
-msgid "Plate Mail"
-msgstr ""
-
-#: Source/itemdat.cpp:121
-msgid "Field Plate"
-msgstr ""
-
-#: Source/itemdat.cpp:122
-msgid "Gothic Plate"
-msgstr ""
-
-#: Source/itemdat.cpp:123
-msgid "Full Plate Mail"
-msgstr ""
-
-#: Source/itemdat.cpp:124 Source/itemdat.cpp:125 Source/itemdat.cpp:126
-#: Source/itemdat.cpp:127 Source/itemdat.cpp:128 Source/itemdat.cpp:129
-msgid "Shield"
-msgstr ""
-
-#: Source/itemdat.cpp:125
-msgid "Small Shield"
-msgstr ""
-
-#: Source/itemdat.cpp:126
-msgid "Large Shield"
-msgstr ""
-
-#: Source/itemdat.cpp:127
-msgid "Kite Shield"
-msgstr ""
-
-#: Source/itemdat.cpp:128
-msgid "Tower Shield"
-msgstr ""
-
-#: Source/itemdat.cpp:129
-msgid "Gothic Shield"
-msgstr ""
-
-#: Source/itemdat.cpp:134
-msgid "Potion of Rejuvenation"
-msgstr ""
-
-#: Source/itemdat.cpp:135
-msgid "Potion of Full Rejuvenation"
-msgstr ""
-
-#: Source/itemdat.cpp:137 Source/items.cpp:174
+#: Source/items.cpp:174 Source/translation_dummy.cpp:360
 msgid "Oil of Accuracy"
-msgstr ""
-
-#: Source/itemdat.cpp:138 Source/items.cpp:176
-msgid "Oil of Sharpness"
-msgstr ""
-
-#: Source/itemdat.cpp:139
-msgid "Oil"
-msgstr ""
-
-#: Source/itemdat.cpp:140
-msgid "Elixir of Strength"
-msgstr ""
-
-#: Source/itemdat.cpp:141
-msgid "Elixir of Magic"
-msgstr ""
-
-#: Source/itemdat.cpp:142
-msgid "Elixir of Dexterity"
-msgstr ""
-
-#: Source/itemdat.cpp:143
-msgid "Elixir of Vitality"
-msgstr ""
-
-#: Source/itemdat.cpp:144
-msgid "Scroll of Healing"
-msgstr ""
-
-#: Source/itemdat.cpp:145
-msgid "Scroll of Search"
-msgstr ""
-
-#: Source/itemdat.cpp:146
-msgid "Scroll of Lightning"
-msgstr ""
-
-#: Source/itemdat.cpp:149
-msgid "Scroll of Fire Wall"
-msgstr ""
-
-#: Source/itemdat.cpp:150
-msgid "Scroll of Inferno"
-msgstr ""
-
-#: Source/itemdat.cpp:152
-msgid "Scroll of Flash"
-msgstr ""
-
-#: Source/itemdat.cpp:153
-msgid "Scroll of Infravision"
-msgstr ""
-
-#: Source/itemdat.cpp:154
-msgid "Scroll of Phasing"
-msgstr ""
-
-#: Source/itemdat.cpp:155
-msgid "Scroll of Mana Shield"
-msgstr ""
-
-#: Source/itemdat.cpp:156
-msgid "Scroll of Flame Wave"
-msgstr ""
-
-#: Source/itemdat.cpp:157
-msgid "Scroll of Fireball"
-msgstr ""
-
-#: Source/itemdat.cpp:158
-msgid "Scroll of Stone Curse"
-msgstr ""
-
-#: Source/itemdat.cpp:159
-msgid "Scroll of Chain Lightning"
-msgstr ""
-
-#: Source/itemdat.cpp:160
-msgid "Scroll of Guardian"
-msgstr ""
-
-#: Source/itemdat.cpp:162
-msgid "Scroll of Nova"
-msgstr ""
-
-#: Source/itemdat.cpp:163
-msgid "Scroll of Golem"
-msgstr ""
-
-#: Source/itemdat.cpp:165
-msgid "Scroll of Teleport"
-msgstr ""
-
-#: Source/itemdat.cpp:166
-msgid "Scroll of Apocalypse"
-msgstr ""
-
-#: Source/itemdat.cpp:167 Source/itemdat.cpp:168 Source/itemdat.cpp:169
-#: Source/itemdat.cpp:170
-msgid "Book of "
-msgstr ""
-
-#: Source/itemdat.cpp:173
-msgid "Falchion"
-msgstr ""
-
-#: Source/itemdat.cpp:174
-msgid "Scimitar"
-msgstr ""
-
-#: Source/itemdat.cpp:175
-msgid "Claymore"
-msgstr ""
-
-#: Source/itemdat.cpp:176
-msgid "Blade"
-msgstr ""
-
-#: Source/itemdat.cpp:177
-msgid "Sabre"
-msgstr ""
-
-#: Source/itemdat.cpp:178
-msgid "Long Sword"
-msgstr ""
-
-#: Source/itemdat.cpp:179
-msgid "Broad Sword"
-msgstr ""
-
-#: Source/itemdat.cpp:180
-msgid "Bastard Sword"
-msgstr ""
-
-#: Source/itemdat.cpp:181
-msgid "Two-Handed Sword"
-msgstr ""
-
-#: Source/itemdat.cpp:182
-msgid "Great Sword"
-msgstr ""
-
-#: Source/itemdat.cpp:183
-msgid "Small Axe"
-msgstr ""
-
-#: Source/itemdat.cpp:183 Source/itemdat.cpp:184 Source/itemdat.cpp:185
-#: Source/itemdat.cpp:186 Source/itemdat.cpp:187 Source/itemdat.cpp:188
-msgid "Axe"
-msgstr ""
-
-#: Source/itemdat.cpp:185
-msgid "Large Axe"
-msgstr ""
-
-#: Source/itemdat.cpp:186
-msgid "Broad Axe"
-msgstr ""
-
-#: Source/itemdat.cpp:187
-msgid "Battle Axe"
-msgstr ""
-
-#: Source/itemdat.cpp:188
-msgid "Great Axe"
-msgstr ""
-
-#: Source/itemdat.cpp:189 Source/itemdat.cpp:190
-msgid "Mace"
-msgstr ""
-
-#: Source/itemdat.cpp:190
-msgid "Morning Star"
-msgstr ""
-
-#: Source/itemdat.cpp:191
-msgid "War Hammer"
-msgstr ""
-
-#: Source/itemdat.cpp:191
-msgid "Hammer"
-msgstr ""
-
-#: Source/itemdat.cpp:192
-msgid "Spiked Club"
-msgstr ""
-
-#: Source/itemdat.cpp:194
-msgid "Flail"
-msgstr ""
-
-#: Source/itemdat.cpp:195
-msgid "Maul"
-msgstr ""
-
-#: Source/itemdat.cpp:196 Source/itemdat.cpp:197 Source/itemdat.cpp:198
-#: Source/itemdat.cpp:199 Source/itemdat.cpp:200 Source/itemdat.cpp:201
-#: Source/itemdat.cpp:202 Source/itemdat.cpp:203
-msgid "Bow"
-msgstr ""
-
-#: Source/itemdat.cpp:197
-msgid "Hunter's Bow"
-msgstr ""
-
-#: Source/itemdat.cpp:198
-msgid "Long Bow"
-msgstr ""
-
-#: Source/itemdat.cpp:199
-msgid "Composite Bow"
-msgstr ""
-
-#: Source/itemdat.cpp:200
-msgid "Short Battle Bow"
-msgstr ""
-
-#: Source/itemdat.cpp:201
-msgid "Long Battle Bow"
-msgstr ""
-
-#: Source/itemdat.cpp:202
-msgid "Short War Bow"
-msgstr ""
-
-#: Source/itemdat.cpp:203
-msgid "Long War Bow"
-msgstr ""
-
-#: Source/itemdat.cpp:204 Source/itemdat.cpp:205 Source/itemdat.cpp:206
-#: Source/itemdat.cpp:207 Source/itemdat.cpp:208
-#: Source/panels/spell_list.cpp:183
-msgid "Staff"
-msgstr ""
-
-#: Source/itemdat.cpp:205
-msgid "Long Staff"
-msgstr ""
-
-#: Source/itemdat.cpp:206
-msgid "Composite Staff"
-msgstr ""
-
-#: Source/itemdat.cpp:207
-msgid "Quarter Staff"
-msgstr ""
-
-#: Source/itemdat.cpp:208
-msgid "War Staff"
-msgstr ""
-
-#: Source/itemdat.cpp:209 Source/itemdat.cpp:210 Source/itemdat.cpp:211
-msgid "Ring"
-msgstr ""
-
-#: Source/itemdat.cpp:212 Source/itemdat.cpp:213
-msgid "Amulet"
-msgstr ""
-
-#: Source/itemdat.cpp:214
-msgid "Rune of Fire"
-msgstr ""
-
-#: Source/itemdat.cpp:214 Source/itemdat.cpp:215 Source/itemdat.cpp:216
-#: Source/itemdat.cpp:217 Source/itemdat.cpp:218
-msgid "Rune"
-msgstr ""
-
-#: Source/itemdat.cpp:215
-msgid "Rune of Lightning"
-msgstr ""
-
-#: Source/itemdat.cpp:216
-msgid "Greater Rune of Fire"
-msgstr ""
-
-#: Source/itemdat.cpp:217
-msgid "Greater Rune of Lightning"
-msgstr ""
-
-#: Source/itemdat.cpp:218
-msgid "Rune of Stone"
-msgstr ""
-
-#: Source/itemdat.cpp:219
-msgid "Short Staff of Charged Bolt"
-msgstr ""
-
-#: Source/itemdat.cpp:220
-msgid "Arena Potion"
-msgstr ""
-
-#. TRANSLATORS: Item prefix section.
-#: Source/itemdat.cpp:230
-msgid "Tin"
-msgstr ""
-
-#: Source/itemdat.cpp:231
-msgid "Brass"
-msgstr ""
-
-#: Source/itemdat.cpp:232
-msgid "Bronze"
-msgstr ""
-
-#: Source/itemdat.cpp:233
-msgid "Iron"
-msgstr ""
-
-#: Source/itemdat.cpp:234
-msgid "Steel"
-msgstr ""
-
-#: Source/itemdat.cpp:235
-msgid "Silver"
-msgstr ""
-
-#: Source/itemdat.cpp:237
-msgid "Platinum"
-msgstr ""
-
-#: Source/itemdat.cpp:238
-msgid "Mithril"
-msgstr ""
-
-#: Source/itemdat.cpp:239
-msgid "Meteoric"
-msgstr ""
-
-#: Source/itemdat.cpp:240 Source/objects.cpp:126
-msgid "Weird"
-msgstr ""
-
-#: Source/itemdat.cpp:241
-msgid "Strange"
-msgstr ""
-
-#: Source/itemdat.cpp:242
-msgid "Useless"
-msgstr ""
-
-#: Source/itemdat.cpp:243
-msgid "Bent"
-msgstr ""
-
-#: Source/itemdat.cpp:244
-msgid "Weak"
-msgstr ""
-
-#: Source/itemdat.cpp:245
-msgid "Jagged"
-msgstr ""
-
-#: Source/itemdat.cpp:246
-msgid "Deadly"
-msgstr ""
-
-#: Source/itemdat.cpp:247
-msgid "Heavy"
-msgstr ""
-
-#: Source/itemdat.cpp:248
-msgid "Vicious"
-msgstr ""
-
-#: Source/itemdat.cpp:249
-msgid "Brutal"
-msgstr ""
-
-#: Source/itemdat.cpp:250
-msgid "Massive"
-msgstr ""
-
-#: Source/itemdat.cpp:251
-msgid "Savage"
-msgstr ""
-
-#: Source/itemdat.cpp:252
-msgid "Ruthless"
-msgstr ""
-
-#: Source/itemdat.cpp:253
-msgid "Merciless"
-msgstr ""
-
-#: Source/itemdat.cpp:254
-msgid "Clumsy"
-msgstr ""
-
-#: Source/itemdat.cpp:255
-msgid "Dull"
-msgstr ""
-
-#: Source/itemdat.cpp:256
-msgid "Sharp"
-msgstr ""
-
-#: Source/itemdat.cpp:257 Source/itemdat.cpp:267
-msgid "Fine"
-msgstr ""
-
-#: Source/itemdat.cpp:258
-msgid "Warrior's"
-msgstr ""
-
-#: Source/itemdat.cpp:259
-msgid "Soldier's"
-msgstr ""
-
-#: Source/itemdat.cpp:260
-msgid "Lord's"
-msgstr ""
-
-#: Source/itemdat.cpp:261
-msgid "Knight's"
-msgstr ""
-
-#: Source/itemdat.cpp:262
-msgid "Master's"
-msgstr ""
-
-#: Source/itemdat.cpp:263
-msgid "Champion's"
-msgstr ""
-
-#: Source/itemdat.cpp:264
-msgid "King's"
-msgstr ""
-
-#: Source/itemdat.cpp:265
-msgid "Vulnerable"
-msgstr ""
-
-#: Source/itemdat.cpp:266
-msgid "Rusted"
-msgstr ""
-
-#: Source/itemdat.cpp:268
-msgid "Strong"
-msgstr ""
-
-#: Source/itemdat.cpp:269
-msgid "Grand"
-msgstr ""
-
-#: Source/itemdat.cpp:270
-msgid "Valiant"
-msgstr ""
-
-#: Source/itemdat.cpp:271
-msgid "Glorious"
-msgstr ""
-
-#: Source/itemdat.cpp:272
-msgid "Blessed"
-msgstr ""
-
-#: Source/itemdat.cpp:273
-msgid "Saintly"
-msgstr ""
-
-#: Source/itemdat.cpp:274
-msgid "Awesome"
-msgstr ""
-
-#: Source/itemdat.cpp:275 Source/objects.cpp:138
-msgid "Holy"
-msgstr ""
-
-#: Source/itemdat.cpp:276
-msgid "Godly"
-msgstr ""
-
-#: Source/itemdat.cpp:277
-msgid "Red"
-msgstr ""
-
-#: Source/itemdat.cpp:278 Source/itemdat.cpp:279
-msgid "Crimson"
-msgstr ""
-
-#: Source/itemdat.cpp:280
-msgid "Garnet"
-msgstr ""
-
-#: Source/itemdat.cpp:281
-msgid "Ruby"
-msgstr ""
-
-#: Source/itemdat.cpp:282
-msgid "Blue"
-msgstr ""
-
-#: Source/itemdat.cpp:283
-msgid "Azure"
-msgstr ""
-
-#: Source/itemdat.cpp:284
-msgid "Lapis"
-msgstr ""
-
-#: Source/itemdat.cpp:285
-msgid "Cobalt"
-msgstr ""
-
-#: Source/itemdat.cpp:286
-msgid "Sapphire"
-msgstr ""
-
-#: Source/itemdat.cpp:287
-msgid "White"
-msgstr ""
-
-#: Source/itemdat.cpp:288
-msgid "Pearl"
-msgstr ""
-
-#: Source/itemdat.cpp:289
-msgid "Ivory"
-msgstr ""
-
-#: Source/itemdat.cpp:290
-msgid "Crystal"
-msgstr ""
-
-#: Source/itemdat.cpp:291
-msgid "Diamond"
-msgstr ""
-
-#: Source/itemdat.cpp:292
-msgid "Topaz"
-msgstr ""
-
-#: Source/itemdat.cpp:293
-msgid "Amber"
-msgstr ""
-
-#: Source/itemdat.cpp:294
-msgid "Jade"
-msgstr ""
-
-#: Source/itemdat.cpp:295
-msgid "Obsidian"
-msgstr ""
-
-#: Source/itemdat.cpp:296
-msgid "Emerald"
-msgstr ""
-
-#: Source/itemdat.cpp:297
-msgid "Hyena's"
-msgstr ""
-
-#: Source/itemdat.cpp:298
-msgid "Frog's"
-msgstr ""
-
-#: Source/itemdat.cpp:299
-msgid "Spider's"
-msgstr ""
-
-#: Source/itemdat.cpp:300
-msgid "Raven's"
-msgstr ""
-
-#: Source/itemdat.cpp:301
-msgid "Snake's"
-msgstr ""
-
-#: Source/itemdat.cpp:302
-msgid "Serpent's"
-msgstr ""
-
-#: Source/itemdat.cpp:303
-msgid "Drake's"
-msgstr ""
-
-#: Source/itemdat.cpp:304
-msgid "Dragon's"
-msgstr ""
-
-#: Source/itemdat.cpp:305
-msgid "Wyrm's"
-msgstr ""
-
-#: Source/itemdat.cpp:306
-msgid "Hydra's"
-msgstr ""
-
-#: Source/itemdat.cpp:307
-msgid "Angel's"
-msgstr ""
-
-#: Source/itemdat.cpp:308
-msgid "Arch-Angel's"
-msgstr ""
-
-#: Source/itemdat.cpp:309
-msgid "Plentiful"
-msgstr ""
-
-#: Source/itemdat.cpp:310
-msgid "Bountiful"
-msgstr ""
-
-#: Source/itemdat.cpp:311
-msgid "Flaming"
-msgstr ""
-
-#: Source/itemdat.cpp:312
-msgid "Lightning"
-msgstr ""
-
-#: Source/itemdat.cpp:313
-msgid "Jester's"
-msgstr ""
-
-#: Source/itemdat.cpp:314
-msgid "Crystalline"
-msgstr ""
-
-#. TRANSLATORS: Item prefix section end.
-#: Source/itemdat.cpp:316
-msgid "Doppelganger's"
-msgstr ""
-
-#. TRANSLATORS: Item suffix section. All items will have a word binding word. (Format: {:s} of {:s} - e.g. Rags of Valor)
-#: Source/itemdat.cpp:326
-msgid "quality"
-msgstr ""
-
-#: Source/itemdat.cpp:327
-msgid "maiming"
-msgstr ""
-
-#: Source/itemdat.cpp:328
-msgid "slaying"
-msgstr ""
-
-#: Source/itemdat.cpp:329
-msgid "gore"
-msgstr ""
-
-#: Source/itemdat.cpp:330
-msgid "carnage"
-msgstr ""
-
-#: Source/itemdat.cpp:331
-msgid "slaughter"
-msgstr ""
-
-#: Source/itemdat.cpp:332
-msgid "pain"
-msgstr ""
-
-#: Source/itemdat.cpp:333
-msgid "tears"
-msgstr ""
-
-#: Source/itemdat.cpp:334
-msgid "health"
-msgstr ""
-
-#: Source/itemdat.cpp:335
-msgid "protection"
-msgstr ""
-
-#: Source/itemdat.cpp:336
-msgid "absorption"
-msgstr ""
-
-#: Source/itemdat.cpp:337
-msgid "deflection"
-msgstr ""
-
-#: Source/itemdat.cpp:338
-msgid "osmosis"
-msgstr ""
-
-#: Source/itemdat.cpp:339
-msgid "frailty"
-msgstr ""
-
-#: Source/itemdat.cpp:340
-msgid "weakness"
-msgstr ""
-
-#: Source/itemdat.cpp:341
-msgid "strength"
-msgstr ""
-
-#: Source/itemdat.cpp:342
-msgid "might"
-msgstr ""
-
-#: Source/itemdat.cpp:343
-msgid "power"
-msgstr ""
-
-#: Source/itemdat.cpp:344
-msgid "giants"
-msgstr ""
-
-#: Source/itemdat.cpp:345
-msgid "titans"
-msgstr ""
-
-#: Source/itemdat.cpp:346
-msgid "paralysis"
-msgstr ""
-
-#: Source/itemdat.cpp:347
-msgid "atrophy"
-msgstr ""
-
-#: Source/itemdat.cpp:348
-msgid "dexterity"
-msgstr ""
-
-#: Source/itemdat.cpp:349
-msgid "skill"
-msgstr ""
-
-#: Source/itemdat.cpp:350
-msgid "accuracy"
-msgstr ""
-
-#: Source/itemdat.cpp:351
-msgid "precision"
-msgstr ""
-
-#: Source/itemdat.cpp:352
-msgid "perfection"
-msgstr ""
-
-#: Source/itemdat.cpp:353
-msgid "the fool"
-msgstr ""
-
-#: Source/itemdat.cpp:354
-msgid "dyslexia"
-msgstr ""
-
-#: Source/itemdat.cpp:355
-msgid "magic"
-msgstr ""
-
-#: Source/itemdat.cpp:356
-msgid "the mind"
-msgstr ""
-
-#: Source/itemdat.cpp:357
-msgid "brilliance"
-msgstr ""
-
-#: Source/itemdat.cpp:358
-msgid "sorcery"
-msgstr ""
-
-#: Source/itemdat.cpp:359
-msgid "wizardry"
-msgstr ""
-
-#: Source/itemdat.cpp:360
-msgid "illness"
-msgstr ""
-
-#: Source/itemdat.cpp:361
-msgid "disease"
-msgstr ""
-
-#: Source/itemdat.cpp:362
-msgid "vitality"
-msgstr ""
-
-#: Source/itemdat.cpp:363
-msgid "zest"
-msgstr ""
-
-#: Source/itemdat.cpp:364
-msgid "vim"
-msgstr ""
-
-#: Source/itemdat.cpp:365
-msgid "vigor"
-msgstr ""
-
-#: Source/itemdat.cpp:366
-msgid "life"
-msgstr ""
-
-#: Source/itemdat.cpp:367
-msgid "trouble"
-msgstr ""
-
-#: Source/itemdat.cpp:368
-msgid "the pit"
-msgstr ""
-
-#: Source/itemdat.cpp:369
-msgid "the sky"
-msgstr ""
-
-#: Source/itemdat.cpp:370
-msgid "the moon"
-msgstr ""
-
-#: Source/itemdat.cpp:371
-msgid "the stars"
-msgstr ""
-
-#: Source/itemdat.cpp:372
-msgid "the heavens"
-msgstr ""
-
-#: Source/itemdat.cpp:373
-msgid "the zodiac"
-msgstr ""
-
-#: Source/itemdat.cpp:374
-msgid "the vulture"
-msgstr ""
-
-#: Source/itemdat.cpp:375
-msgid "the jackal"
-msgstr ""
-
-#: Source/itemdat.cpp:376
-msgid "the fox"
-msgstr ""
-
-#: Source/itemdat.cpp:377
-msgid "the jaguar"
-msgstr ""
-
-#: Source/itemdat.cpp:378
-msgid "the eagle"
-msgstr ""
-
-#: Source/itemdat.cpp:379
-msgid "the wolf"
-msgstr ""
-
-#: Source/itemdat.cpp:380
-msgid "the tiger"
-msgstr ""
-
-#: Source/itemdat.cpp:381
-msgid "the lion"
-msgstr ""
-
-#: Source/itemdat.cpp:382
-msgid "the mammoth"
-msgstr ""
-
-#: Source/itemdat.cpp:383
-msgid "the whale"
-msgstr ""
-
-#: Source/itemdat.cpp:384
-msgid "fragility"
-msgstr ""
-
-#: Source/itemdat.cpp:385
-msgid "brittleness"
-msgstr ""
-
-#: Source/itemdat.cpp:386
-msgid "sturdiness"
-msgstr ""
-
-#: Source/itemdat.cpp:387
-msgid "craftsmanship"
-msgstr ""
-
-#: Source/itemdat.cpp:388
-msgid "structure"
-msgstr ""
-
-#: Source/itemdat.cpp:389
-msgid "the ages"
-msgstr ""
-
-#: Source/itemdat.cpp:390
-msgid "the dark"
-msgstr ""
-
-#: Source/itemdat.cpp:391
-msgid "the night"
-msgstr ""
-
-#: Source/itemdat.cpp:392
-msgid "light"
-msgstr ""
-
-#: Source/itemdat.cpp:393
-msgid "radiance"
-msgstr ""
-
-#: Source/itemdat.cpp:394
-msgid "flame"
-msgstr ""
-
-#: Source/itemdat.cpp:395
-msgid "fire"
-msgstr ""
-
-#: Source/itemdat.cpp:396
-msgid "burning"
-msgstr ""
-
-#: Source/itemdat.cpp:397
-msgid "shock"
-msgstr ""
-
-#: Source/itemdat.cpp:398
-msgid "lightning"
-msgstr ""
-
-#: Source/itemdat.cpp:399
-msgid "thunder"
-msgstr ""
-
-#: Source/itemdat.cpp:400
-msgid "many"
-msgstr ""
-
-#: Source/itemdat.cpp:401
-msgid "plenty"
-msgstr ""
-
-#: Source/itemdat.cpp:402
-msgid "thorns"
-msgstr ""
-
-#: Source/itemdat.cpp:403
-msgid "corruption"
-msgstr ""
-
-#: Source/itemdat.cpp:404
-msgid "thieves"
-msgstr ""
-
-#: Source/itemdat.cpp:405
-msgid "the bear"
-msgstr ""
-
-#: Source/itemdat.cpp:406
-msgid "the bat"
-msgstr ""
-
-#: Source/itemdat.cpp:407
-msgid "vampires"
-msgstr ""
-
-#: Source/itemdat.cpp:408
-msgid "the leech"
-msgstr ""
-
-#: Source/itemdat.cpp:409
-msgid "blood"
-msgstr ""
-
-#: Source/itemdat.cpp:410
-msgid "piercing"
-msgstr ""
-
-#: Source/itemdat.cpp:411
-msgid "puncturing"
-msgstr ""
-
-#: Source/itemdat.cpp:412
-msgid "bashing"
-msgstr ""
-
-#: Source/itemdat.cpp:413
-msgid "readiness"
-msgstr ""
-
-#: Source/itemdat.cpp:414
-msgid "swiftness"
-msgstr ""
-
-#: Source/itemdat.cpp:415
-msgid "speed"
-msgstr ""
-
-#: Source/itemdat.cpp:416
-msgid "haste"
-msgstr ""
-
-#: Source/itemdat.cpp:417
-msgid "balance"
-msgstr ""
-
-#: Source/itemdat.cpp:418
-msgid "stability"
-msgstr ""
-
-#: Source/itemdat.cpp:419
-msgid "harmony"
-msgstr ""
-
-#: Source/itemdat.cpp:420
-msgid "blocking"
-msgstr ""
-
-#: Source/itemdat.cpp:421
-msgid "devastation"
-msgstr ""
-
-#: Source/itemdat.cpp:422
-msgid "decay"
-msgstr ""
-
-#. TRANSLATORS: Item suffix section end.
-#: Source/itemdat.cpp:424
-msgid "peril"
-msgstr ""
-
-#. TRANSLATORS: Unique Item section
-#: Source/itemdat.cpp:434
-msgid "The Butcher's Cleaver"
-msgstr ""
-
-#: Source/itemdat.cpp:444
-msgid "The Rift Bow"
-msgstr ""
-
-#: Source/itemdat.cpp:445
-msgid "The Needler"
-msgstr ""
-
-#: Source/itemdat.cpp:446
-msgid "The Celestial Bow"
-msgstr ""
-
-#: Source/itemdat.cpp:447
-msgid "Deadly Hunter"
-msgstr ""
-
-#: Source/itemdat.cpp:448
-msgid "Bow of the Dead"
-msgstr ""
-
-#: Source/itemdat.cpp:449
-msgid "The Blackoak Bow"
-msgstr ""
-
-#: Source/itemdat.cpp:450
-msgid "Flamedart"
-msgstr ""
-
-#: Source/itemdat.cpp:451
-msgid "Fleshstinger"
-msgstr ""
-
-#: Source/itemdat.cpp:452
-msgid "Windforce"
-msgstr ""
-
-#: Source/itemdat.cpp:453
-msgid "Eaglehorn"
-msgstr ""
-
-#: Source/itemdat.cpp:454
-msgid "Gonnagal's Dirk"
-msgstr ""
-
-#: Source/itemdat.cpp:455
-msgid "The Defender"
-msgstr ""
-
-#: Source/itemdat.cpp:456
-msgid "Gryphon's Claw"
-msgstr ""
-
-#: Source/itemdat.cpp:457
-msgid "Black Razor"
-msgstr ""
-
-#: Source/itemdat.cpp:458
-msgid "Gibbous Moon"
-msgstr ""
-
-#: Source/itemdat.cpp:459
-msgid "Ice Shank"
-msgstr ""
-
-#: Source/itemdat.cpp:460
-msgid "The Executioner's Blade"
-msgstr ""
-
-#: Source/itemdat.cpp:461
-msgid "The Bonesaw"
-msgstr ""
-
-#: Source/itemdat.cpp:462
-msgid "Shadowhawk"
-msgstr ""
-
-#: Source/itemdat.cpp:463
-msgid "Wizardspike"
-msgstr ""
-
-#: Source/itemdat.cpp:464
-msgid "Lightsabre"
-msgstr ""
-
-#: Source/itemdat.cpp:465
-msgid "The Falcon's Talon"
-msgstr ""
-
-#: Source/itemdat.cpp:466
-msgid "Inferno"
-msgstr ""
-
-#: Source/itemdat.cpp:467
-msgid "Doombringer"
-msgstr ""
-
-#: Source/itemdat.cpp:468
-msgid "The Grizzly"
-msgstr ""
-
-#: Source/itemdat.cpp:469
-msgid "The Grandfather"
-msgstr ""
-
-#: Source/itemdat.cpp:470
-msgid "The Mangler"
-msgstr ""
-
-#: Source/itemdat.cpp:471
-msgid "Sharp Beak"
-msgstr ""
-
-#: Source/itemdat.cpp:472
-msgid "BloodSlayer"
-msgstr ""
-
-#: Source/itemdat.cpp:473
-msgid "The Celestial Axe"
-msgstr ""
-
-#: Source/itemdat.cpp:474
-msgid "Wicked Axe"
-msgstr ""
-
-#: Source/itemdat.cpp:475
-msgid "Stonecleaver"
-msgstr ""
-
-#: Source/itemdat.cpp:476
-msgid "Aguinara's Hatchet"
-msgstr ""
-
-#: Source/itemdat.cpp:477
-msgid "Hellslayer"
-msgstr ""
-
-#: Source/itemdat.cpp:478
-msgid "Messerschmidt's Reaver"
-msgstr ""
-
-#: Source/itemdat.cpp:479
-msgid "Crackrust"
-msgstr ""
-
-#: Source/itemdat.cpp:480
-msgid "Hammer of Jholm"
-msgstr ""
-
-#: Source/itemdat.cpp:481
-msgid "Civerb's Cudgel"
-msgstr ""
-
-#: Source/itemdat.cpp:482
-msgid "The Celestial Star"
-msgstr ""
-
-#: Source/itemdat.cpp:483
-msgid "Baranar's Star"
-msgstr ""
-
-#: Source/itemdat.cpp:484
-msgid "Gnarled Root"
-msgstr ""
-
-#: Source/itemdat.cpp:485
-msgid "The Cranium Basher"
-msgstr ""
-
-#: Source/itemdat.cpp:486
-msgid "Schaefer's Hammer"
-msgstr ""
-
-#: Source/itemdat.cpp:487
-msgid "Dreamflange"
-msgstr ""
-
-#: Source/itemdat.cpp:488
-msgid "Staff of Shadows"
-msgstr ""
-
-#: Source/itemdat.cpp:489
-msgid "Immolator"
-msgstr ""
-
-#: Source/itemdat.cpp:490
-msgid "Storm Spire"
-msgstr ""
-
-#: Source/itemdat.cpp:491
-msgid "Gleamsong"
-msgstr ""
-
-#: Source/itemdat.cpp:492
-msgid "Thundercall"
-msgstr ""
-
-#: Source/itemdat.cpp:493
-msgid "The Protector"
-msgstr ""
-
-#: Source/itemdat.cpp:494
-msgid "Naj's Puzzler"
-msgstr ""
-
-#: Source/itemdat.cpp:495
-msgid "Mindcry"
-msgstr ""
-
-#: Source/itemdat.cpp:496
-msgid "Rod of Onan"
-msgstr ""
-
-#: Source/itemdat.cpp:497
-msgid "Helm of Spirits"
-msgstr ""
-
-#: Source/itemdat.cpp:498
-msgid "Thinking Cap"
-msgstr ""
-
-#: Source/itemdat.cpp:499
-msgid "OverLord's Helm"
-msgstr ""
-
-#: Source/itemdat.cpp:500
-msgid "Fool's Crest"
-msgstr ""
-
-#: Source/itemdat.cpp:501
-msgid "Gotterdamerung"
-msgstr ""
-
-#: Source/itemdat.cpp:502
-msgid "Royal Circlet"
-msgstr ""
-
-#: Source/itemdat.cpp:503
-msgid "Torn Flesh of Souls"
-msgstr ""
-
-#: Source/itemdat.cpp:504
-msgid "The Gladiator's Bane"
-msgstr ""
-
-#: Source/itemdat.cpp:505
-msgid "The Rainbow Cloak"
-msgstr ""
-
-#: Source/itemdat.cpp:506
-msgid "Leather of Aut"
-msgstr ""
-
-#: Source/itemdat.cpp:507
-msgid "Wisdom's Wrap"
-msgstr ""
-
-#: Source/itemdat.cpp:508
-msgid "Sparking Mail"
-msgstr ""
-
-#: Source/itemdat.cpp:509
-msgid "Scavenger Carapace"
-msgstr ""
-
-#: Source/itemdat.cpp:510
-msgid "Nightscape"
-msgstr ""
-
-#: Source/itemdat.cpp:511
-msgid "Naj's Light Plate"
-msgstr ""
-
-#: Source/itemdat.cpp:512
-msgid "Demonspike Coat"
-msgstr ""
-
-#: Source/itemdat.cpp:513
-msgid "The Deflector"
-msgstr ""
-
-#: Source/itemdat.cpp:514
-msgid "Split Skull Shield"
-msgstr ""
-
-#: Source/itemdat.cpp:515
-msgid "Dragon's Breach"
-msgstr ""
-
-#: Source/itemdat.cpp:516
-msgid "Blackoak Shield"
-msgstr ""
-
-#: Source/itemdat.cpp:517
-msgid "Holy Defender"
-msgstr ""
-
-#: Source/itemdat.cpp:518
-msgid "Stormshield"
-msgstr ""
-
-#: Source/itemdat.cpp:519
-msgid "Bramble"
-msgstr ""
-
-#: Source/itemdat.cpp:520
-msgid "Ring of Regha"
-msgstr ""
-
-#: Source/itemdat.cpp:521
-msgid "The Bleeder"
-msgstr ""
-
-#: Source/itemdat.cpp:522
-msgid "Constricting Ring"
-msgstr ""
-
-#: Source/itemdat.cpp:523
-msgid "Ring of Engagement"
-msgstr ""
-
-#: Source/itemdat.cpp:524
-msgid "Giant's Knuckle"
-msgstr ""
-
-#: Source/itemdat.cpp:525
-msgid "Mercurial Ring"
-msgstr ""
-
-#: Source/itemdat.cpp:526
-msgid "Xorine's Ring"
-msgstr ""
-
-#: Source/itemdat.cpp:527
-msgid "Karik's Ring"
-msgstr ""
-
-#: Source/itemdat.cpp:528
-msgid "Ring of Magma"
-msgstr ""
-
-#: Source/itemdat.cpp:529
-msgid "Ring of the Mystics"
-msgstr ""
-
-#: Source/itemdat.cpp:530
-msgid "Ring of Thunder"
-msgstr ""
-
-#: Source/itemdat.cpp:531
-msgid "Amulet of Warding"
-msgstr ""
-
-#: Source/itemdat.cpp:532
-msgid "Gnat Sting"
-msgstr ""
-
-#: Source/itemdat.cpp:533
-msgid "Flambeau"
-msgstr ""
-
-#: Source/itemdat.cpp:534
-msgid "Armor of Gloom"
-msgstr ""
-
-#: Source/itemdat.cpp:535
-msgid "Blitzen"
-msgstr ""
-
-#: Source/itemdat.cpp:536
-msgid "Thunderclap"
-msgstr ""
-
-#: Source/itemdat.cpp:537
-msgid "Shirotachi"
-msgstr ""
-
-#: Source/itemdat.cpp:538
-msgid "Eater of Souls"
-msgstr ""
-
-#: Source/itemdat.cpp:539
-msgid "Diamondedge"
-msgstr ""
-
-#: Source/itemdat.cpp:540
-msgid "Bone Chain Armor"
-msgstr ""
-
-#: Source/itemdat.cpp:541
-msgid "Demon Plate Armor"
-msgstr ""
-
-#: Source/itemdat.cpp:542
-msgid "Acolyte's Amulet"
-msgstr ""
-
-#. TRANSLATORS: Unique Item section end.
-#: Source/itemdat.cpp:544
-msgid "Gladiator's Ring"
 msgstr ""
 
 #: Source/items.cpp:175
 msgid "Oil of Mastery"
+msgstr ""
+
+#: Source/items.cpp:176 Source/translation_dummy.cpp:361
+msgid "Oil of Sharpness"
 msgstr ""
 
 #: Source/items.cpp:177
@@ -4170,6 +2414,11 @@ msgstr ""
 
 #: Source/items.cpp:178
 msgid "Oil of Skill"
+msgstr ""
+
+#: Source/items.cpp:179 Source/translation_dummy.cpp:282
+#: Source/translation_dummy.cpp:359
+msgid "Blacksmith Oil"
 msgstr ""
 
 #: Source/items.cpp:180
@@ -4998,7 +3247,7 @@ msgstr ""
 msgid "Invalid game state"
 msgstr ""
 
-#: Source/menu.cpp:156
+#: Source/menu.cpp:155
 msgid "Unable to display mainmenu"
 msgstr ""
 
@@ -5078,30 +3327,30 @@ msgstr ""
 msgid "Failed to open archive for writing."
 msgstr ""
 
-#: Source/msg.cpp:775
+#: Source/msg.cpp:774
 msgid "Trying to drop a floor item?"
 msgstr ""
 
-#: Source/msg.cpp:1377
+#: Source/msg.cpp:1376
 #, c++-format
 msgid "{:s} has cast an invalid spell."
 msgstr ""
 
-#: Source/msg.cpp:1381
+#: Source/msg.cpp:1380
 #, c++-format
 msgid "{:s} has cast an illegal spell."
 msgstr ""
 
-#: Source/msg.cpp:2012 Source/multi.cpp:795 Source/multi.cpp:845
+#: Source/msg.cpp:2011 Source/multi.cpp:793 Source/multi.cpp:843
 #, c++-format
 msgid "Player '{:s}' (level {:d}) just joined the game"
 msgstr ""
 
-#: Source/msg.cpp:2373
+#: Source/msg.cpp:2372
 msgid "The game ended"
 msgstr ""
 
-#: Source/msg.cpp:2379
+#: Source/msg.cpp:2378
 msgid "Unable to get level data"
 msgstr ""
 
@@ -5120,7 +3369,7 @@ msgstr ""
 msgid "Player '{:s}' dropped due to timeout"
 msgstr ""
 
-#: Source/multi.cpp:847
+#: Source/multi.cpp:845
 #, c++-format
 msgid "Player '{:s}' (level {:d}) is already in the game"
 msgstr ""
@@ -5136,6 +3385,10 @@ msgstr ""
 
 #: Source/objects.cpp:125
 msgid "Gloomy"
+msgstr ""
+
+#: Source/objects.cpp:126 Source/translation_dummy.cpp:610
+msgid "Weird"
 msgstr ""
 
 #: Source/objects.cpp:127 Source/objects.cpp:134
@@ -5176,6 +3429,10 @@ msgstr ""
 
 #: Source/objects.cpp:137
 msgid "Divine"
+msgstr ""
+
+#: Source/objects.cpp:138 Source/translation_dummy.cpp:645
+msgid "Holy"
 msgstr ""
 
 #: Source/objects.cpp:139
@@ -5431,6 +3688,12 @@ msgstr ""
 
 #: Source/objects.cpp:4845
 msgid "Purifying Spring"
+msgstr ""
+
+#: Source/objects.cpp:4848 Source/translation_dummy.cpp:316
+#: Source/translation_dummy.cpp:318 Source/translation_dummy.cpp:320
+#: Source/translation_dummy.cpp:322
+msgid "Armor"
 msgstr ""
 
 #: Source/objects.cpp:4850 Source/objects.cpp:4867
@@ -6069,6 +4332,11 @@ msgstr ""
 msgid "Points to distribute"
 msgstr ""
 
+#: Source/panels/charpanel.cpp:167 Source/translation_dummy.cpp:247
+#: Source/translation_dummy.cpp:606
+msgid "Gold"
+msgstr ""
+
 #: Source/panels/charpanel.cpp:171
 msgid "Armor class"
 msgstr ""
@@ -6193,6 +4461,12 @@ msgstr ""
 msgid "Scroll"
 msgstr ""
 
+#: Source/panels/spell_list.cpp:183 Source/translation_dummy.cpp:459
+#: Source/translation_dummy.cpp:461 Source/translation_dummy.cpp:463
+#: Source/translation_dummy.cpp:465 Source/translation_dummy.cpp:467
+msgid "Staff"
+msgstr ""
+
 #: Source/panels/spell_list.cpp:193
 #, c++-format
 msgid "Spell Hotkey {:s}"
@@ -6254,6 +4528,10 @@ msgstr ""
 msgid "The Magic Rock"
 msgstr ""
 
+#: Source/quests.cpp:53 Source/translation_dummy.cpp:264
+msgid "Black Mushroom"
+msgstr ""
+
 #: Source/quests.cpp:54
 msgid "Gharbad The Weak"
 msgstr ""
@@ -6280,6 +4558,10 @@ msgstr ""
 
 #: Source/quests.cpp:61
 msgid "Valor"
+msgstr ""
+
+#: Source/quests.cpp:62 Source/translation_dummy.cpp:263
+msgid "Anvil of Fury"
 msgstr ""
 
 #: Source/quests.cpp:63
@@ -6349,257 +4631,257 @@ msgstr ""
 msgid "To {:s}"
 msgstr ""
 
-#: Source/spelldat.cpp:24
+#: Source/spelldat.cpp:29
 msgctxt "spell"
 msgid "Firebolt"
 msgstr ""
 
-#: Source/spelldat.cpp:25
+#: Source/spelldat.cpp:30
 msgctxt "spell"
 msgid "Healing"
 msgstr ""
 
-#: Source/spelldat.cpp:26
+#: Source/spelldat.cpp:31
 msgctxt "spell"
 msgid "Lightning"
 msgstr ""
 
-#: Source/spelldat.cpp:27
+#: Source/spelldat.cpp:32
 msgctxt "spell"
 msgid "Flash"
 msgstr ""
 
-#: Source/spelldat.cpp:28
+#: Source/spelldat.cpp:33
 msgctxt "spell"
 msgid "Identify"
 msgstr ""
 
-#: Source/spelldat.cpp:29
+#: Source/spelldat.cpp:34
 msgctxt "spell"
 msgid "Fire Wall"
 msgstr ""
 
-#: Source/spelldat.cpp:30
+#: Source/spelldat.cpp:35
 msgctxt "spell"
 msgid "Town Portal"
 msgstr ""
 
-#: Source/spelldat.cpp:31
+#: Source/spelldat.cpp:36
 msgctxt "spell"
 msgid "Stone Curse"
 msgstr ""
 
-#: Source/spelldat.cpp:32
+#: Source/spelldat.cpp:37
 msgctxt "spell"
 msgid "Infravision"
 msgstr ""
 
-#: Source/spelldat.cpp:33
+#: Source/spelldat.cpp:38
 msgctxt "spell"
 msgid "Phasing"
 msgstr ""
 
-#: Source/spelldat.cpp:34
+#: Source/spelldat.cpp:39
 msgctxt "spell"
 msgid "Mana Shield"
 msgstr ""
 
-#: Source/spelldat.cpp:35
+#: Source/spelldat.cpp:40
 msgctxt "spell"
 msgid "Fireball"
 msgstr ""
 
-#: Source/spelldat.cpp:36
+#: Source/spelldat.cpp:41
 msgctxt "spell"
 msgid "Guardian"
 msgstr ""
 
-#: Source/spelldat.cpp:37
+#: Source/spelldat.cpp:42
 msgctxt "spell"
 msgid "Chain Lightning"
 msgstr ""
 
-#: Source/spelldat.cpp:38
+#: Source/spelldat.cpp:43
 msgctxt "spell"
 msgid "Flame Wave"
 msgstr ""
 
-#: Source/spelldat.cpp:39
+#: Source/spelldat.cpp:44
 msgctxt "spell"
 msgid "Doom Serpents"
 msgstr ""
 
-#: Source/spelldat.cpp:40
+#: Source/spelldat.cpp:45
 msgctxt "spell"
 msgid "Blood Ritual"
 msgstr ""
 
-#: Source/spelldat.cpp:41
+#: Source/spelldat.cpp:46
 msgctxt "spell"
 msgid "Nova"
 msgstr ""
 
-#: Source/spelldat.cpp:42
+#: Source/spelldat.cpp:47
 msgctxt "spell"
 msgid "Invisibility"
 msgstr ""
 
-#: Source/spelldat.cpp:43
+#: Source/spelldat.cpp:48
 msgctxt "spell"
 msgid "Inferno"
 msgstr ""
 
-#: Source/spelldat.cpp:44
+#: Source/spelldat.cpp:49
 msgctxt "spell"
 msgid "Golem"
 msgstr ""
 
-#: Source/spelldat.cpp:45
+#: Source/spelldat.cpp:50
 msgctxt "spell"
 msgid "Rage"
 msgstr ""
 
-#: Source/spelldat.cpp:46
+#: Source/spelldat.cpp:51
 msgctxt "spell"
 msgid "Teleport"
 msgstr ""
 
-#: Source/spelldat.cpp:47
+#: Source/spelldat.cpp:52
 msgctxt "spell"
 msgid "Apocalypse"
 msgstr ""
 
-#: Source/spelldat.cpp:48
+#: Source/spelldat.cpp:53
 msgctxt "spell"
 msgid "Etherealize"
 msgstr ""
 
-#: Source/spelldat.cpp:49
+#: Source/spelldat.cpp:54
 msgctxt "spell"
 msgid "Item Repair"
 msgstr ""
 
-#: Source/spelldat.cpp:50
+#: Source/spelldat.cpp:55
 msgctxt "spell"
 msgid "Staff Recharge"
 msgstr ""
 
-#: Source/spelldat.cpp:51
+#: Source/spelldat.cpp:56
 msgctxt "spell"
 msgid "Trap Disarm"
 msgstr ""
 
-#: Source/spelldat.cpp:52
+#: Source/spelldat.cpp:57
 msgctxt "spell"
 msgid "Elemental"
 msgstr ""
 
-#: Source/spelldat.cpp:53
+#: Source/spelldat.cpp:58
 msgctxt "spell"
 msgid "Charged Bolt"
 msgstr ""
 
-#: Source/spelldat.cpp:54
+#: Source/spelldat.cpp:59
 msgctxt "spell"
 msgid "Holy Bolt"
 msgstr ""
 
-#: Source/spelldat.cpp:55
+#: Source/spelldat.cpp:60
 msgctxt "spell"
 msgid "Resurrect"
 msgstr ""
 
-#: Source/spelldat.cpp:56
+#: Source/spelldat.cpp:61
 msgctxt "spell"
 msgid "Telekinesis"
 msgstr ""
 
-#: Source/spelldat.cpp:57
+#: Source/spelldat.cpp:62
 msgctxt "spell"
 msgid "Heal Other"
 msgstr ""
 
-#: Source/spelldat.cpp:58
+#: Source/spelldat.cpp:63
 msgctxt "spell"
 msgid "Blood Star"
 msgstr ""
 
-#: Source/spelldat.cpp:59
+#: Source/spelldat.cpp:64
 msgctxt "spell"
 msgid "Bone Spirit"
 msgstr ""
 
-#: Source/spelldat.cpp:60
+#: Source/spelldat.cpp:65
 msgctxt "spell"
 msgid "Mana"
 msgstr ""
 
-#: Source/spelldat.cpp:61
+#: Source/spelldat.cpp:66
 msgctxt "spell"
 msgid "the Magi"
 msgstr ""
 
-#: Source/spelldat.cpp:62
+#: Source/spelldat.cpp:67
 msgctxt "spell"
 msgid "the Jester"
 msgstr ""
 
-#: Source/spelldat.cpp:63
+#: Source/spelldat.cpp:68
 msgctxt "spell"
 msgid "Lightning Wall"
 msgstr ""
 
-#: Source/spelldat.cpp:64
+#: Source/spelldat.cpp:69
 msgctxt "spell"
 msgid "Immolation"
 msgstr ""
 
-#: Source/spelldat.cpp:65
+#: Source/spelldat.cpp:70
 msgctxt "spell"
 msgid "Warp"
 msgstr ""
 
-#: Source/spelldat.cpp:66
+#: Source/spelldat.cpp:71
 msgctxt "spell"
 msgid "Reflect"
 msgstr ""
 
-#: Source/spelldat.cpp:67
+#: Source/spelldat.cpp:72
 msgctxt "spell"
 msgid "Berserk"
 msgstr ""
 
-#: Source/spelldat.cpp:68
+#: Source/spelldat.cpp:73
 msgctxt "spell"
 msgid "Ring of Fire"
 msgstr ""
 
-#: Source/spelldat.cpp:69
+#: Source/spelldat.cpp:74
 msgctxt "spell"
 msgid "Search"
 msgstr ""
 
-#: Source/spelldat.cpp:70
+#: Source/spelldat.cpp:75
 msgctxt "spell"
 msgid "Rune of Fire"
 msgstr ""
 
-#: Source/spelldat.cpp:71
+#: Source/spelldat.cpp:76
 msgctxt "spell"
 msgid "Rune of Light"
 msgstr ""
 
-#: Source/spelldat.cpp:72
+#: Source/spelldat.cpp:77
 msgctxt "spell"
 msgid "Rune of Nova"
 msgstr ""
 
-#: Source/spelldat.cpp:73
+#: Source/spelldat.cpp:78
 msgctxt "spell"
 msgid "Rune of Immolation"
 msgstr ""
 
-#: Source/spelldat.cpp:74
+#: Source/spelldat.cpp:79
 msgctxt "spell"
 msgid "Rune of Stone"
 msgstr ""
@@ -9740,6 +8022,1736 @@ msgstr ""
 #: Source/translation_dummy.cpp:246
 msgctxt "monster"
 msgid "Doomlock"
+msgstr ""
+
+#: Source/translation_dummy.cpp:248 Source/translation_dummy.cpp:394
+msgid "Short Sword"
+msgstr ""
+
+#: Source/translation_dummy.cpp:249 Source/translation_dummy.cpp:341
+msgid "Buckler"
+msgstr ""
+
+#: Source/translation_dummy.cpp:250 Source/translation_dummy.cpp:435
+#: Source/translation_dummy.cpp:436 Source/translation_dummy.cpp:437
+msgid "Club"
+msgstr ""
+
+#: Source/translation_dummy.cpp:251 Source/translation_dummy.cpp:442
+msgid "Short Bow"
+msgstr ""
+
+#: Source/translation_dummy.cpp:252
+msgid "Short Staff of Mana"
+msgstr ""
+
+#: Source/translation_dummy.cpp:253
+msgid "Cleaver"
+msgstr ""
+
+#: Source/translation_dummy.cpp:254 Source/translation_dummy.cpp:491
+msgid "The Undead Crown"
+msgstr ""
+
+#: Source/translation_dummy.cpp:255 Source/translation_dummy.cpp:492
+msgid "Empyrean Band"
+msgstr ""
+
+#: Source/translation_dummy.cpp:256
+msgid "Magic Rock"
+msgstr ""
+
+#: Source/translation_dummy.cpp:257 Source/translation_dummy.cpp:493
+msgid "Optic Amulet"
+msgstr ""
+
+#: Source/translation_dummy.cpp:258 Source/translation_dummy.cpp:494
+msgid "Ring of Truth"
+msgstr ""
+
+#: Source/translation_dummy.cpp:259
+msgid "Tavern Sign"
+msgstr ""
+
+#: Source/translation_dummy.cpp:260 Source/translation_dummy.cpp:495
+msgid "Harlequin Crest"
+msgstr ""
+
+#: Source/translation_dummy.cpp:261 Source/translation_dummy.cpp:496
+msgid "Veil of Steel"
+msgstr ""
+
+#: Source/translation_dummy.cpp:262
+msgid "Golden Elixir"
+msgstr ""
+
+#: Source/translation_dummy.cpp:265
+msgid "Brain"
+msgstr ""
+
+#: Source/translation_dummy.cpp:266
+msgid "Fungal Tome"
+msgstr ""
+
+#: Source/translation_dummy.cpp:267
+msgid "Spectral Elixir"
+msgstr ""
+
+#: Source/translation_dummy.cpp:268
+msgid "Blood Stone"
+msgstr ""
+
+#: Source/translation_dummy.cpp:269
+msgid "Cathedral Map"
+msgstr ""
+
+#: Source/translation_dummy.cpp:270
+msgid "Heart"
+msgstr ""
+
+#: Source/translation_dummy.cpp:271 Source/translation_dummy.cpp:353
+msgid "Potion of Healing"
+msgstr ""
+
+#: Source/translation_dummy.cpp:272 Source/translation_dummy.cpp:355
+msgid "Potion of Mana"
+msgstr ""
+
+#: Source/translation_dummy.cpp:273 Source/translation_dummy.cpp:370
+msgid "Scroll of Identify"
+msgstr ""
+
+#: Source/translation_dummy.cpp:274 Source/translation_dummy.cpp:374
+msgid "Scroll of Town Portal"
+msgstr ""
+
+#: Source/translation_dummy.cpp:275 Source/translation_dummy.cpp:497
+msgid "Arkaine's Valor"
+msgstr ""
+
+#: Source/translation_dummy.cpp:276 Source/translation_dummy.cpp:354
+msgid "Potion of Full Healing"
+msgstr ""
+
+#: Source/translation_dummy.cpp:277 Source/translation_dummy.cpp:356
+msgid "Potion of Full Mana"
+msgstr ""
+
+#: Source/translation_dummy.cpp:278 Source/translation_dummy.cpp:498
+msgid "Griswold's Edge"
+msgstr ""
+
+#: Source/translation_dummy.cpp:279 Source/translation_dummy.cpp:499
+msgid "Bovine Plate"
+msgstr ""
+
+#: Source/translation_dummy.cpp:280
+msgid "Staff of Lazarus"
+msgstr ""
+
+#: Source/translation_dummy.cpp:281 Source/translation_dummy.cpp:371
+msgid "Scroll of Resurrect"
+msgstr ""
+
+#: Source/translation_dummy.cpp:283 Source/translation_dummy.cpp:458
+msgid "Short Staff"
+msgstr ""
+
+#: Source/translation_dummy.cpp:284 Source/translation_dummy.cpp:395
+#: Source/translation_dummy.cpp:397 Source/translation_dummy.cpp:399
+#: Source/translation_dummy.cpp:401 Source/translation_dummy.cpp:407
+#: Source/translation_dummy.cpp:409 Source/translation_dummy.cpp:411
+#: Source/translation_dummy.cpp:413 Source/translation_dummy.cpp:415
+msgid "Sword"
+msgstr ""
+
+#: Source/translation_dummy.cpp:285 Source/translation_dummy.cpp:392
+#: Source/translation_dummy.cpp:393
+msgid "Dagger"
+msgstr ""
+
+#: Source/translation_dummy.cpp:286
+msgid "Rune Bomb"
+msgstr ""
+
+#: Source/translation_dummy.cpp:287
+msgid "Theodore"
+msgstr ""
+
+#: Source/translation_dummy.cpp:288
+msgid "Auric Amulet"
+msgstr ""
+
+#: Source/translation_dummy.cpp:289
+msgid "Torn Note 1"
+msgstr ""
+
+#: Source/translation_dummy.cpp:290
+msgid "Torn Note 2"
+msgstr ""
+
+#: Source/translation_dummy.cpp:291
+msgid "Torn Note 3"
+msgstr ""
+
+#: Source/translation_dummy.cpp:292
+msgid "Reconstructed Note"
+msgstr ""
+
+#: Source/translation_dummy.cpp:293
+msgid "Brown Suit"
+msgstr ""
+
+#: Source/translation_dummy.cpp:294
+msgid "Grey Suit"
+msgstr ""
+
+#: Source/translation_dummy.cpp:295 Source/translation_dummy.cpp:296
+#: Source/translation_dummy.cpp:298
+msgid "Cap"
+msgstr ""
+
+#: Source/translation_dummy.cpp:297
+msgid "Skull Cap"
+msgstr ""
+
+#: Source/translation_dummy.cpp:299 Source/translation_dummy.cpp:300
+#: Source/translation_dummy.cpp:302 Source/translation_dummy.cpp:306
+msgid "Helm"
+msgstr ""
+
+#: Source/translation_dummy.cpp:301
+msgid "Full Helm"
+msgstr ""
+
+#: Source/translation_dummy.cpp:303 Source/translation_dummy.cpp:304
+msgid "Crown"
+msgstr ""
+
+#: Source/translation_dummy.cpp:305
+msgid "Great Helm"
+msgstr ""
+
+#: Source/translation_dummy.cpp:307 Source/translation_dummy.cpp:308
+msgid "Cape"
+msgstr ""
+
+#: Source/translation_dummy.cpp:309 Source/translation_dummy.cpp:310
+msgid "Rags"
+msgstr ""
+
+#: Source/translation_dummy.cpp:311 Source/translation_dummy.cpp:312
+msgid "Cloak"
+msgstr ""
+
+#: Source/translation_dummy.cpp:313 Source/translation_dummy.cpp:314
+msgid "Robe"
+msgstr ""
+
+#: Source/translation_dummy.cpp:315
+msgid "Quilted Armor"
+msgstr ""
+
+#: Source/translation_dummy.cpp:317
+msgid "Leather Armor"
+msgstr ""
+
+#: Source/translation_dummy.cpp:319
+msgid "Hard Leather Armor"
+msgstr ""
+
+#: Source/translation_dummy.cpp:321
+msgid "Studded Leather Armor"
+msgstr ""
+
+#: Source/translation_dummy.cpp:323
+msgid "Ring Mail"
+msgstr ""
+
+#: Source/translation_dummy.cpp:324 Source/translation_dummy.cpp:326
+#: Source/translation_dummy.cpp:328 Source/translation_dummy.cpp:332
+msgid "Mail"
+msgstr ""
+
+#: Source/translation_dummy.cpp:325
+msgid "Chain Mail"
+msgstr ""
+
+#: Source/translation_dummy.cpp:327
+msgid "Scale Mail"
+msgstr ""
+
+#: Source/translation_dummy.cpp:329
+msgid "Breast Plate"
+msgstr ""
+
+#: Source/translation_dummy.cpp:330 Source/translation_dummy.cpp:334
+#: Source/translation_dummy.cpp:336 Source/translation_dummy.cpp:338
+#: Source/translation_dummy.cpp:340
+msgid "Plate"
+msgstr ""
+
+#: Source/translation_dummy.cpp:331
+msgid "Splint Mail"
+msgstr ""
+
+#: Source/translation_dummy.cpp:333
+msgid "Plate Mail"
+msgstr ""
+
+#: Source/translation_dummy.cpp:335
+msgid "Field Plate"
+msgstr ""
+
+#: Source/translation_dummy.cpp:337
+msgid "Gothic Plate"
+msgstr ""
+
+#: Source/translation_dummy.cpp:339
+msgid "Full Plate Mail"
+msgstr ""
+
+#: Source/translation_dummy.cpp:342 Source/translation_dummy.cpp:344
+#: Source/translation_dummy.cpp:346 Source/translation_dummy.cpp:348
+#: Source/translation_dummy.cpp:350 Source/translation_dummy.cpp:352
+msgid "Shield"
+msgstr ""
+
+#: Source/translation_dummy.cpp:343
+msgid "Small Shield"
+msgstr ""
+
+#: Source/translation_dummy.cpp:345
+msgid "Large Shield"
+msgstr ""
+
+#: Source/translation_dummy.cpp:347
+msgid "Kite Shield"
+msgstr ""
+
+#: Source/translation_dummy.cpp:349
+msgid "Tower Shield"
+msgstr ""
+
+#: Source/translation_dummy.cpp:351
+msgid "Gothic Shield"
+msgstr ""
+
+#: Source/translation_dummy.cpp:357
+msgid "Potion of Rejuvenation"
+msgstr ""
+
+#: Source/translation_dummy.cpp:358
+msgid "Potion of Full Rejuvenation"
+msgstr ""
+
+#: Source/translation_dummy.cpp:362
+msgid "Oil"
+msgstr ""
+
+#: Source/translation_dummy.cpp:363
+msgid "Elixir of Strength"
+msgstr ""
+
+#: Source/translation_dummy.cpp:364
+msgid "Elixir of Magic"
+msgstr ""
+
+#: Source/translation_dummy.cpp:365
+msgid "Elixir of Dexterity"
+msgstr ""
+
+#: Source/translation_dummy.cpp:366
+msgid "Elixir of Vitality"
+msgstr ""
+
+#: Source/translation_dummy.cpp:367
+msgid "Scroll of Healing"
+msgstr ""
+
+#: Source/translation_dummy.cpp:368
+msgid "Scroll of Search"
+msgstr ""
+
+#: Source/translation_dummy.cpp:369
+msgid "Scroll of Lightning"
+msgstr ""
+
+#: Source/translation_dummy.cpp:372
+msgid "Scroll of Fire Wall"
+msgstr ""
+
+#: Source/translation_dummy.cpp:373
+msgid "Scroll of Inferno"
+msgstr ""
+
+#: Source/translation_dummy.cpp:375
+msgid "Scroll of Flash"
+msgstr ""
+
+#: Source/translation_dummy.cpp:376
+msgid "Scroll of Infravision"
+msgstr ""
+
+#: Source/translation_dummy.cpp:377
+msgid "Scroll of Phasing"
+msgstr ""
+
+#: Source/translation_dummy.cpp:378
+msgid "Scroll of Mana Shield"
+msgstr ""
+
+#: Source/translation_dummy.cpp:379
+msgid "Scroll of Flame Wave"
+msgstr ""
+
+#: Source/translation_dummy.cpp:380
+msgid "Scroll of Fireball"
+msgstr ""
+
+#: Source/translation_dummy.cpp:381
+msgid "Scroll of Stone Curse"
+msgstr ""
+
+#: Source/translation_dummy.cpp:382
+msgid "Scroll of Chain Lightning"
+msgstr ""
+
+#: Source/translation_dummy.cpp:383
+msgid "Scroll of Guardian"
+msgstr ""
+
+#: Source/translation_dummy.cpp:384
+msgid "Scroll of Nova"
+msgstr ""
+
+#: Source/translation_dummy.cpp:385
+msgid "Scroll of Golem"
+msgstr ""
+
+#: Source/translation_dummy.cpp:386
+msgid "Scroll of Teleport"
+msgstr ""
+
+#: Source/translation_dummy.cpp:387
+msgid "Scroll of Apocalypse"
+msgstr ""
+
+#: Source/translation_dummy.cpp:388 Source/translation_dummy.cpp:389
+#: Source/translation_dummy.cpp:390 Source/translation_dummy.cpp:391
+msgid "Book of "
+msgstr ""
+
+#: Source/translation_dummy.cpp:396
+msgid "Falchion"
+msgstr ""
+
+#: Source/translation_dummy.cpp:398
+msgid "Scimitar"
+msgstr ""
+
+#: Source/translation_dummy.cpp:400
+msgid "Claymore"
+msgstr ""
+
+#: Source/translation_dummy.cpp:402 Source/translation_dummy.cpp:403
+msgid "Blade"
+msgstr ""
+
+#: Source/translation_dummy.cpp:404 Source/translation_dummy.cpp:405
+msgid "Sabre"
+msgstr ""
+
+#: Source/translation_dummy.cpp:406
+msgid "Long Sword"
+msgstr ""
+
+#: Source/translation_dummy.cpp:408
+msgid "Broad Sword"
+msgstr ""
+
+#: Source/translation_dummy.cpp:410
+msgid "Bastard Sword"
+msgstr ""
+
+#: Source/translation_dummy.cpp:412
+msgid "Two-Handed Sword"
+msgstr ""
+
+#: Source/translation_dummy.cpp:414
+msgid "Great Sword"
+msgstr ""
+
+#: Source/translation_dummy.cpp:416
+msgid "Small Axe"
+msgstr ""
+
+#: Source/translation_dummy.cpp:417 Source/translation_dummy.cpp:418
+#: Source/translation_dummy.cpp:419 Source/translation_dummy.cpp:421
+#: Source/translation_dummy.cpp:423 Source/translation_dummy.cpp:425
+#: Source/translation_dummy.cpp:427
+msgid "Axe"
+msgstr ""
+
+#: Source/translation_dummy.cpp:420
+msgid "Large Axe"
+msgstr ""
+
+#: Source/translation_dummy.cpp:422
+msgid "Broad Axe"
+msgstr ""
+
+#: Source/translation_dummy.cpp:424
+msgid "Battle Axe"
+msgstr ""
+
+#: Source/translation_dummy.cpp:426
+msgid "Great Axe"
+msgstr ""
+
+#: Source/translation_dummy.cpp:428 Source/translation_dummy.cpp:429
+#: Source/translation_dummy.cpp:431
+msgid "Mace"
+msgstr ""
+
+#: Source/translation_dummy.cpp:430
+msgid "Morning Star"
+msgstr ""
+
+#: Source/translation_dummy.cpp:432
+msgid "War Hammer"
+msgstr ""
+
+#: Source/translation_dummy.cpp:433
+msgid "Hammer"
+msgstr ""
+
+#: Source/translation_dummy.cpp:434
+msgid "Spiked Club"
+msgstr ""
+
+#: Source/translation_dummy.cpp:438 Source/translation_dummy.cpp:439
+msgid "Flail"
+msgstr ""
+
+#: Source/translation_dummy.cpp:440 Source/translation_dummy.cpp:441
+msgid "Maul"
+msgstr ""
+
+#: Source/translation_dummy.cpp:443 Source/translation_dummy.cpp:445
+#: Source/translation_dummy.cpp:447 Source/translation_dummy.cpp:449
+#: Source/translation_dummy.cpp:451 Source/translation_dummy.cpp:453
+#: Source/translation_dummy.cpp:455 Source/translation_dummy.cpp:457
+msgid "Bow"
+msgstr ""
+
+#: Source/translation_dummy.cpp:444
+msgid "Hunter's Bow"
+msgstr ""
+
+#: Source/translation_dummy.cpp:446
+msgid "Long Bow"
+msgstr ""
+
+#: Source/translation_dummy.cpp:448
+msgid "Composite Bow"
+msgstr ""
+
+#: Source/translation_dummy.cpp:450
+msgid "Short Battle Bow"
+msgstr ""
+
+#: Source/translation_dummy.cpp:452
+msgid "Long Battle Bow"
+msgstr ""
+
+#: Source/translation_dummy.cpp:454
+msgid "Short War Bow"
+msgstr ""
+
+#: Source/translation_dummy.cpp:456
+msgid "Long War Bow"
+msgstr ""
+
+#: Source/translation_dummy.cpp:460
+msgid "Long Staff"
+msgstr ""
+
+#: Source/translation_dummy.cpp:462
+msgid "Composite Staff"
+msgstr ""
+
+#: Source/translation_dummy.cpp:464
+msgid "Quarter Staff"
+msgstr ""
+
+#: Source/translation_dummy.cpp:466
+msgid "War Staff"
+msgstr ""
+
+#: Source/translation_dummy.cpp:468 Source/translation_dummy.cpp:469
+#: Source/translation_dummy.cpp:470 Source/translation_dummy.cpp:471
+#: Source/translation_dummy.cpp:472 Source/translation_dummy.cpp:473
+msgid "Ring"
+msgstr ""
+
+#: Source/translation_dummy.cpp:474 Source/translation_dummy.cpp:475
+#: Source/translation_dummy.cpp:476 Source/translation_dummy.cpp:477
+msgid "Amulet"
+msgstr ""
+
+#: Source/translation_dummy.cpp:478
+msgid "Rune of Fire"
+msgstr ""
+
+#: Source/translation_dummy.cpp:479 Source/translation_dummy.cpp:481
+#: Source/translation_dummy.cpp:483 Source/translation_dummy.cpp:485
+#: Source/translation_dummy.cpp:487
+msgid "Rune"
+msgstr ""
+
+#: Source/translation_dummy.cpp:480
+msgid "Rune of Lightning"
+msgstr ""
+
+#: Source/translation_dummy.cpp:482
+msgid "Greater Rune of Fire"
+msgstr ""
+
+#: Source/translation_dummy.cpp:484
+msgid "Greater Rune of Lightning"
+msgstr ""
+
+#: Source/translation_dummy.cpp:486
+msgid "Rune of Stone"
+msgstr ""
+
+#: Source/translation_dummy.cpp:488
+msgid "Short Staff of Charged Bolt"
+msgstr ""
+
+#: Source/translation_dummy.cpp:489
+msgid "Arena Potion"
+msgstr ""
+
+#: Source/translation_dummy.cpp:490
+msgid "The Butcher's Cleaver"
+msgstr ""
+
+#: Source/translation_dummy.cpp:500
+msgid "The Rift Bow"
+msgstr ""
+
+#: Source/translation_dummy.cpp:501
+msgid "The Needler"
+msgstr ""
+
+#: Source/translation_dummy.cpp:502
+msgid "The Celestial Bow"
+msgstr ""
+
+#: Source/translation_dummy.cpp:503
+msgid "Deadly Hunter"
+msgstr ""
+
+#: Source/translation_dummy.cpp:504
+msgid "Bow of the Dead"
+msgstr ""
+
+#: Source/translation_dummy.cpp:505
+msgid "The Blackoak Bow"
+msgstr ""
+
+#: Source/translation_dummy.cpp:506
+msgid "Flamedart"
+msgstr ""
+
+#: Source/translation_dummy.cpp:507
+msgid "Fleshstinger"
+msgstr ""
+
+#: Source/translation_dummy.cpp:508
+msgid "Windforce"
+msgstr ""
+
+#: Source/translation_dummy.cpp:509
+msgid "Eaglehorn"
+msgstr ""
+
+#: Source/translation_dummy.cpp:510
+msgid "Gonnagal's Dirk"
+msgstr ""
+
+#: Source/translation_dummy.cpp:511
+msgid "The Defender"
+msgstr ""
+
+#: Source/translation_dummy.cpp:512
+msgid "Gryphon's Claw"
+msgstr ""
+
+#: Source/translation_dummy.cpp:513
+msgid "Black Razor"
+msgstr ""
+
+#: Source/translation_dummy.cpp:514
+msgid "Gibbous Moon"
+msgstr ""
+
+#: Source/translation_dummy.cpp:515
+msgid "Ice Shank"
+msgstr ""
+
+#: Source/translation_dummy.cpp:516
+msgid "The Executioner's Blade"
+msgstr ""
+
+#: Source/translation_dummy.cpp:517
+msgid "The Bonesaw"
+msgstr ""
+
+#: Source/translation_dummy.cpp:518
+msgid "Shadowhawk"
+msgstr ""
+
+#: Source/translation_dummy.cpp:519
+msgid "Wizardspike"
+msgstr ""
+
+#: Source/translation_dummy.cpp:520
+msgid "Lightsabre"
+msgstr ""
+
+#: Source/translation_dummy.cpp:521
+msgid "The Falcon's Talon"
+msgstr ""
+
+#: Source/translation_dummy.cpp:522
+msgid "Inferno"
+msgstr ""
+
+#: Source/translation_dummy.cpp:523
+msgid "Doombringer"
+msgstr ""
+
+#: Source/translation_dummy.cpp:524
+msgid "The Grizzly"
+msgstr ""
+
+#: Source/translation_dummy.cpp:525
+msgid "The Grandfather"
+msgstr ""
+
+#: Source/translation_dummy.cpp:526
+msgid "The Mangler"
+msgstr ""
+
+#: Source/translation_dummy.cpp:527
+msgid "Sharp Beak"
+msgstr ""
+
+#: Source/translation_dummy.cpp:528
+msgid "BloodSlayer"
+msgstr ""
+
+#: Source/translation_dummy.cpp:529
+msgid "The Celestial Axe"
+msgstr ""
+
+#: Source/translation_dummy.cpp:530
+msgid "Wicked Axe"
+msgstr ""
+
+#: Source/translation_dummy.cpp:531
+msgid "Stonecleaver"
+msgstr ""
+
+#: Source/translation_dummy.cpp:532
+msgid "Aguinara's Hatchet"
+msgstr ""
+
+#: Source/translation_dummy.cpp:533
+msgid "Hellslayer"
+msgstr ""
+
+#: Source/translation_dummy.cpp:534
+msgid "Messerschmidt's Reaver"
+msgstr ""
+
+#: Source/translation_dummy.cpp:535
+msgid "Crackrust"
+msgstr ""
+
+#: Source/translation_dummy.cpp:536
+msgid "Hammer of Jholm"
+msgstr ""
+
+#: Source/translation_dummy.cpp:537
+msgid "Civerb's Cudgel"
+msgstr ""
+
+#: Source/translation_dummy.cpp:538
+msgid "The Celestial Star"
+msgstr ""
+
+#: Source/translation_dummy.cpp:539
+msgid "Baranar's Star"
+msgstr ""
+
+#: Source/translation_dummy.cpp:540
+msgid "Gnarled Root"
+msgstr ""
+
+#: Source/translation_dummy.cpp:541
+msgid "The Cranium Basher"
+msgstr ""
+
+#: Source/translation_dummy.cpp:542
+msgid "Schaefer's Hammer"
+msgstr ""
+
+#: Source/translation_dummy.cpp:543
+msgid "Dreamflange"
+msgstr ""
+
+#: Source/translation_dummy.cpp:544
+msgid "Staff of Shadows"
+msgstr ""
+
+#: Source/translation_dummy.cpp:545
+msgid "Immolator"
+msgstr ""
+
+#: Source/translation_dummy.cpp:546
+msgid "Storm Spire"
+msgstr ""
+
+#: Source/translation_dummy.cpp:547
+msgid "Gleamsong"
+msgstr ""
+
+#: Source/translation_dummy.cpp:548
+msgid "Thundercall"
+msgstr ""
+
+#: Source/translation_dummy.cpp:549
+msgid "The Protector"
+msgstr ""
+
+#: Source/translation_dummy.cpp:550
+msgid "Naj's Puzzler"
+msgstr ""
+
+#: Source/translation_dummy.cpp:551
+msgid "Mindcry"
+msgstr ""
+
+#: Source/translation_dummy.cpp:552
+msgid "Rod of Onan"
+msgstr ""
+
+#: Source/translation_dummy.cpp:553
+msgid "Helm of Spirits"
+msgstr ""
+
+#: Source/translation_dummy.cpp:554
+msgid "Thinking Cap"
+msgstr ""
+
+#: Source/translation_dummy.cpp:555
+msgid "OverLord's Helm"
+msgstr ""
+
+#: Source/translation_dummy.cpp:556
+msgid "Fool's Crest"
+msgstr ""
+
+#: Source/translation_dummy.cpp:557
+msgid "Gotterdamerung"
+msgstr ""
+
+#: Source/translation_dummy.cpp:558
+msgid "Royal Circlet"
+msgstr ""
+
+#: Source/translation_dummy.cpp:559
+msgid "Torn Flesh of Souls"
+msgstr ""
+
+#: Source/translation_dummy.cpp:560
+msgid "The Gladiator's Bane"
+msgstr ""
+
+#: Source/translation_dummy.cpp:561
+msgid "The Rainbow Cloak"
+msgstr ""
+
+#: Source/translation_dummy.cpp:562
+msgid "Leather of Aut"
+msgstr ""
+
+#: Source/translation_dummy.cpp:563
+msgid "Wisdom's Wrap"
+msgstr ""
+
+#: Source/translation_dummy.cpp:564
+msgid "Sparking Mail"
+msgstr ""
+
+#: Source/translation_dummy.cpp:565
+msgid "Scavenger Carapace"
+msgstr ""
+
+#: Source/translation_dummy.cpp:566
+msgid "Nightscape"
+msgstr ""
+
+#: Source/translation_dummy.cpp:567
+msgid "Naj's Light Plate"
+msgstr ""
+
+#: Source/translation_dummy.cpp:568
+msgid "Demonspike Coat"
+msgstr ""
+
+#: Source/translation_dummy.cpp:569
+msgid "The Deflector"
+msgstr ""
+
+#: Source/translation_dummy.cpp:570
+msgid "Split Skull Shield"
+msgstr ""
+
+#: Source/translation_dummy.cpp:571
+msgid "Dragon's Breach"
+msgstr ""
+
+#: Source/translation_dummy.cpp:572
+msgid "Blackoak Shield"
+msgstr ""
+
+#: Source/translation_dummy.cpp:573
+msgid "Holy Defender"
+msgstr ""
+
+#: Source/translation_dummy.cpp:574
+msgid "Stormshield"
+msgstr ""
+
+#: Source/translation_dummy.cpp:575
+msgid "Bramble"
+msgstr ""
+
+#: Source/translation_dummy.cpp:576
+msgid "Ring of Regha"
+msgstr ""
+
+#: Source/translation_dummy.cpp:577
+msgid "The Bleeder"
+msgstr ""
+
+#: Source/translation_dummy.cpp:578
+msgid "Constricting Ring"
+msgstr ""
+
+#: Source/translation_dummy.cpp:579
+msgid "Ring of Engagement"
+msgstr ""
+
+#: Source/translation_dummy.cpp:580
+msgid "Giant's Knuckle"
+msgstr ""
+
+#: Source/translation_dummy.cpp:581
+msgid "Mercurial Ring"
+msgstr ""
+
+#: Source/translation_dummy.cpp:582
+msgid "Xorine's Ring"
+msgstr ""
+
+#: Source/translation_dummy.cpp:583
+msgid "Karik's Ring"
+msgstr ""
+
+#: Source/translation_dummy.cpp:584
+msgid "Ring of Magma"
+msgstr ""
+
+#: Source/translation_dummy.cpp:585
+msgid "Ring of the Mystics"
+msgstr ""
+
+#: Source/translation_dummy.cpp:586
+msgid "Ring of Thunder"
+msgstr ""
+
+#: Source/translation_dummy.cpp:587
+msgid "Amulet of Warding"
+msgstr ""
+
+#: Source/translation_dummy.cpp:588
+msgid "Gnat Sting"
+msgstr ""
+
+#: Source/translation_dummy.cpp:589
+msgid "Flambeau"
+msgstr ""
+
+#: Source/translation_dummy.cpp:590
+msgid "Armor of Gloom"
+msgstr ""
+
+#: Source/translation_dummy.cpp:591
+msgid "Blitzen"
+msgstr ""
+
+#: Source/translation_dummy.cpp:592
+msgid "Thunderclap"
+msgstr ""
+
+#: Source/translation_dummy.cpp:593
+msgid "Shirotachi"
+msgstr ""
+
+#: Source/translation_dummy.cpp:594
+msgid "Eater of Souls"
+msgstr ""
+
+#: Source/translation_dummy.cpp:595
+msgid "Diamondedge"
+msgstr ""
+
+#: Source/translation_dummy.cpp:596
+msgid "Bone Chain Armor"
+msgstr ""
+
+#: Source/translation_dummy.cpp:597
+msgid "Demon Plate Armor"
+msgstr ""
+
+#: Source/translation_dummy.cpp:598
+msgid "Acolyte's Amulet"
+msgstr ""
+
+#: Source/translation_dummy.cpp:599
+msgid "Gladiator's Ring"
+msgstr ""
+
+#: Source/translation_dummy.cpp:600
+msgid "Tin"
+msgstr ""
+
+#: Source/translation_dummy.cpp:601
+msgid "Brass"
+msgstr ""
+
+#: Source/translation_dummy.cpp:602
+msgid "Bronze"
+msgstr ""
+
+#: Source/translation_dummy.cpp:603
+msgid "Iron"
+msgstr ""
+
+#: Source/translation_dummy.cpp:604
+msgid "Steel"
+msgstr ""
+
+#: Source/translation_dummy.cpp:605
+msgid "Silver"
+msgstr ""
+
+#: Source/translation_dummy.cpp:607
+msgid "Platinum"
+msgstr ""
+
+#: Source/translation_dummy.cpp:608
+msgid "Mithril"
+msgstr ""
+
+#: Source/translation_dummy.cpp:609
+msgid "Meteoric"
+msgstr ""
+
+#: Source/translation_dummy.cpp:611
+msgid "Strange"
+msgstr ""
+
+#: Source/translation_dummy.cpp:612
+msgid "Useless"
+msgstr ""
+
+#: Source/translation_dummy.cpp:613
+msgid "Bent"
+msgstr ""
+
+#: Source/translation_dummy.cpp:614
+msgid "Weak"
+msgstr ""
+
+#: Source/translation_dummy.cpp:615
+msgid "Jagged"
+msgstr ""
+
+#: Source/translation_dummy.cpp:616
+msgid "Deadly"
+msgstr ""
+
+#: Source/translation_dummy.cpp:617
+msgid "Heavy"
+msgstr ""
+
+#: Source/translation_dummy.cpp:618
+msgid "Vicious"
+msgstr ""
+
+#: Source/translation_dummy.cpp:619
+msgid "Brutal"
+msgstr ""
+
+#: Source/translation_dummy.cpp:620
+msgid "Massive"
+msgstr ""
+
+#: Source/translation_dummy.cpp:621
+msgid "Savage"
+msgstr ""
+
+#: Source/translation_dummy.cpp:622
+msgid "Ruthless"
+msgstr ""
+
+#: Source/translation_dummy.cpp:623
+msgid "Merciless"
+msgstr ""
+
+#: Source/translation_dummy.cpp:624
+msgid "Clumsy"
+msgstr ""
+
+#: Source/translation_dummy.cpp:625
+msgid "Dull"
+msgstr ""
+
+#: Source/translation_dummy.cpp:626
+msgid "Sharp"
+msgstr ""
+
+#: Source/translation_dummy.cpp:627 Source/translation_dummy.cpp:637
+msgid "Fine"
+msgstr ""
+
+#: Source/translation_dummy.cpp:628
+msgid "Warrior's"
+msgstr ""
+
+#: Source/translation_dummy.cpp:629
+msgid "Soldier's"
+msgstr ""
+
+#: Source/translation_dummy.cpp:630
+msgid "Lord's"
+msgstr ""
+
+#: Source/translation_dummy.cpp:631
+msgid "Knight's"
+msgstr ""
+
+#: Source/translation_dummy.cpp:632
+msgid "Master's"
+msgstr ""
+
+#: Source/translation_dummy.cpp:633
+msgid "Champion's"
+msgstr ""
+
+#: Source/translation_dummy.cpp:634
+msgid "King's"
+msgstr ""
+
+#: Source/translation_dummy.cpp:635
+msgid "Vulnerable"
+msgstr ""
+
+#: Source/translation_dummy.cpp:636
+msgid "Rusted"
+msgstr ""
+
+#: Source/translation_dummy.cpp:638
+msgid "Strong"
+msgstr ""
+
+#: Source/translation_dummy.cpp:639
+msgid "Grand"
+msgstr ""
+
+#: Source/translation_dummy.cpp:640
+msgid "Valiant"
+msgstr ""
+
+#: Source/translation_dummy.cpp:641
+msgid "Glorious"
+msgstr ""
+
+#: Source/translation_dummy.cpp:642
+msgid "Blessed"
+msgstr ""
+
+#: Source/translation_dummy.cpp:643
+msgid "Saintly"
+msgstr ""
+
+#: Source/translation_dummy.cpp:644
+msgid "Awesome"
+msgstr ""
+
+#: Source/translation_dummy.cpp:646
+msgid "Godly"
+msgstr ""
+
+#: Source/translation_dummy.cpp:647
+msgid "Red"
+msgstr ""
+
+#: Source/translation_dummy.cpp:648 Source/translation_dummy.cpp:649
+msgid "Crimson"
+msgstr ""
+
+#: Source/translation_dummy.cpp:650
+msgid "Garnet"
+msgstr ""
+
+#: Source/translation_dummy.cpp:651
+msgid "Ruby"
+msgstr ""
+
+#: Source/translation_dummy.cpp:652
+msgid "Blue"
+msgstr ""
+
+#: Source/translation_dummy.cpp:653
+msgid "Azure"
+msgstr ""
+
+#: Source/translation_dummy.cpp:654
+msgid "Lapis"
+msgstr ""
+
+#: Source/translation_dummy.cpp:655
+msgid "Cobalt"
+msgstr ""
+
+#: Source/translation_dummy.cpp:656
+msgid "Sapphire"
+msgstr ""
+
+#: Source/translation_dummy.cpp:657
+msgid "White"
+msgstr ""
+
+#: Source/translation_dummy.cpp:658
+msgid "Pearl"
+msgstr ""
+
+#: Source/translation_dummy.cpp:659
+msgid "Ivory"
+msgstr ""
+
+#: Source/translation_dummy.cpp:660
+msgid "Crystal"
+msgstr ""
+
+#: Source/translation_dummy.cpp:661
+msgid "Diamond"
+msgstr ""
+
+#: Source/translation_dummy.cpp:662
+msgid "Topaz"
+msgstr ""
+
+#: Source/translation_dummy.cpp:663
+msgid "Amber"
+msgstr ""
+
+#: Source/translation_dummy.cpp:664
+msgid "Jade"
+msgstr ""
+
+#: Source/translation_dummy.cpp:665
+msgid "Obsidian"
+msgstr ""
+
+#: Source/translation_dummy.cpp:666
+msgid "Emerald"
+msgstr ""
+
+#: Source/translation_dummy.cpp:667
+msgid "Hyena's"
+msgstr ""
+
+#: Source/translation_dummy.cpp:668
+msgid "Frog's"
+msgstr ""
+
+#: Source/translation_dummy.cpp:669
+msgid "Spider's"
+msgstr ""
+
+#: Source/translation_dummy.cpp:670
+msgid "Raven's"
+msgstr ""
+
+#: Source/translation_dummy.cpp:671
+msgid "Snake's"
+msgstr ""
+
+#: Source/translation_dummy.cpp:672
+msgid "Serpent's"
+msgstr ""
+
+#: Source/translation_dummy.cpp:673
+msgid "Drake's"
+msgstr ""
+
+#: Source/translation_dummy.cpp:674
+msgid "Dragon's"
+msgstr ""
+
+#: Source/translation_dummy.cpp:675
+msgid "Wyrm's"
+msgstr ""
+
+#: Source/translation_dummy.cpp:676
+msgid "Hydra's"
+msgstr ""
+
+#: Source/translation_dummy.cpp:677
+msgid "Angel's"
+msgstr ""
+
+#: Source/translation_dummy.cpp:678
+msgid "Arch-Angel's"
+msgstr ""
+
+#: Source/translation_dummy.cpp:679
+msgid "Plentiful"
+msgstr ""
+
+#: Source/translation_dummy.cpp:680
+msgid "Bountiful"
+msgstr ""
+
+#: Source/translation_dummy.cpp:681
+msgid "Flaming"
+msgstr ""
+
+#: Source/translation_dummy.cpp:682
+msgid "Lightning"
+msgstr ""
+
+#: Source/translation_dummy.cpp:683
+msgid "Jester's"
+msgstr ""
+
+#: Source/translation_dummy.cpp:684
+msgid "Crystalline"
+msgstr ""
+
+#: Source/translation_dummy.cpp:685
+msgid "Doppelganger's"
+msgstr ""
+
+#: Source/translation_dummy.cpp:686
+msgid "quality"
+msgstr ""
+
+#: Source/translation_dummy.cpp:687
+msgid "maiming"
+msgstr ""
+
+#: Source/translation_dummy.cpp:688
+msgid "slaying"
+msgstr ""
+
+#: Source/translation_dummy.cpp:689
+msgid "gore"
+msgstr ""
+
+#: Source/translation_dummy.cpp:690
+msgid "carnage"
+msgstr ""
+
+#: Source/translation_dummy.cpp:691
+msgid "slaughter"
+msgstr ""
+
+#: Source/translation_dummy.cpp:692
+msgid "pain"
+msgstr ""
+
+#: Source/translation_dummy.cpp:693
+msgid "tears"
+msgstr ""
+
+#: Source/translation_dummy.cpp:694
+msgid "health"
+msgstr ""
+
+#: Source/translation_dummy.cpp:695
+msgid "protection"
+msgstr ""
+
+#: Source/translation_dummy.cpp:696
+msgid "absorption"
+msgstr ""
+
+#: Source/translation_dummy.cpp:697
+msgid "deflection"
+msgstr ""
+
+#: Source/translation_dummy.cpp:698
+msgid "osmosis"
+msgstr ""
+
+#: Source/translation_dummy.cpp:699
+msgid "frailty"
+msgstr ""
+
+#: Source/translation_dummy.cpp:700
+msgid "weakness"
+msgstr ""
+
+#: Source/translation_dummy.cpp:701
+msgid "strength"
+msgstr ""
+
+#: Source/translation_dummy.cpp:702
+msgid "might"
+msgstr ""
+
+#: Source/translation_dummy.cpp:703
+msgid "power"
+msgstr ""
+
+#: Source/translation_dummy.cpp:704
+msgid "giants"
+msgstr ""
+
+#: Source/translation_dummy.cpp:705
+msgid "titans"
+msgstr ""
+
+#: Source/translation_dummy.cpp:706
+msgid "paralysis"
+msgstr ""
+
+#: Source/translation_dummy.cpp:707
+msgid "atrophy"
+msgstr ""
+
+#: Source/translation_dummy.cpp:708
+msgid "dexterity"
+msgstr ""
+
+#: Source/translation_dummy.cpp:709
+msgid "skill"
+msgstr ""
+
+#: Source/translation_dummy.cpp:710
+msgid "accuracy"
+msgstr ""
+
+#: Source/translation_dummy.cpp:711
+msgid "precision"
+msgstr ""
+
+#: Source/translation_dummy.cpp:712
+msgid "perfection"
+msgstr ""
+
+#: Source/translation_dummy.cpp:713
+msgid "the fool"
+msgstr ""
+
+#: Source/translation_dummy.cpp:714
+msgid "dyslexia"
+msgstr ""
+
+#: Source/translation_dummy.cpp:715
+msgid "magic"
+msgstr ""
+
+#: Source/translation_dummy.cpp:716
+msgid "the mind"
+msgstr ""
+
+#: Source/translation_dummy.cpp:717
+msgid "brilliance"
+msgstr ""
+
+#: Source/translation_dummy.cpp:718
+msgid "sorcery"
+msgstr ""
+
+#: Source/translation_dummy.cpp:719
+msgid "wizardry"
+msgstr ""
+
+#: Source/translation_dummy.cpp:720
+msgid "illness"
+msgstr ""
+
+#: Source/translation_dummy.cpp:721
+msgid "disease"
+msgstr ""
+
+#: Source/translation_dummy.cpp:722
+msgid "vitality"
+msgstr ""
+
+#: Source/translation_dummy.cpp:723
+msgid "zest"
+msgstr ""
+
+#: Source/translation_dummy.cpp:724
+msgid "vim"
+msgstr ""
+
+#: Source/translation_dummy.cpp:725
+msgid "vigor"
+msgstr ""
+
+#: Source/translation_dummy.cpp:726
+msgid "life"
+msgstr ""
+
+#: Source/translation_dummy.cpp:727
+msgid "trouble"
+msgstr ""
+
+#: Source/translation_dummy.cpp:728
+msgid "the pit"
+msgstr ""
+
+#: Source/translation_dummy.cpp:729
+msgid "the sky"
+msgstr ""
+
+#: Source/translation_dummy.cpp:730
+msgid "the moon"
+msgstr ""
+
+#: Source/translation_dummy.cpp:731
+msgid "the stars"
+msgstr ""
+
+#: Source/translation_dummy.cpp:732
+msgid "the heavens"
+msgstr ""
+
+#: Source/translation_dummy.cpp:733
+msgid "the zodiac"
+msgstr ""
+
+#: Source/translation_dummy.cpp:734
+msgid "the vulture"
+msgstr ""
+
+#: Source/translation_dummy.cpp:735
+msgid "the jackal"
+msgstr ""
+
+#: Source/translation_dummy.cpp:736
+msgid "the fox"
+msgstr ""
+
+#: Source/translation_dummy.cpp:737
+msgid "the jaguar"
+msgstr ""
+
+#: Source/translation_dummy.cpp:738
+msgid "the eagle"
+msgstr ""
+
+#: Source/translation_dummy.cpp:739
+msgid "the wolf"
+msgstr ""
+
+#: Source/translation_dummy.cpp:740
+msgid "the tiger"
+msgstr ""
+
+#: Source/translation_dummy.cpp:741
+msgid "the lion"
+msgstr ""
+
+#: Source/translation_dummy.cpp:742
+msgid "the mammoth"
+msgstr ""
+
+#: Source/translation_dummy.cpp:743
+msgid "the whale"
+msgstr ""
+
+#: Source/translation_dummy.cpp:744
+msgid "fragility"
+msgstr ""
+
+#: Source/translation_dummy.cpp:745
+msgid "brittleness"
+msgstr ""
+
+#: Source/translation_dummy.cpp:746
+msgid "sturdiness"
+msgstr ""
+
+#: Source/translation_dummy.cpp:747
+msgid "craftsmanship"
+msgstr ""
+
+#: Source/translation_dummy.cpp:748
+msgid "structure"
+msgstr ""
+
+#: Source/translation_dummy.cpp:749
+msgid "the ages"
+msgstr ""
+
+#: Source/translation_dummy.cpp:750
+msgid "the dark"
+msgstr ""
+
+#: Source/translation_dummy.cpp:751
+msgid "the night"
+msgstr ""
+
+#: Source/translation_dummy.cpp:752
+msgid "light"
+msgstr ""
+
+#: Source/translation_dummy.cpp:753
+msgid "radiance"
+msgstr ""
+
+#: Source/translation_dummy.cpp:754
+msgid "flame"
+msgstr ""
+
+#: Source/translation_dummy.cpp:755
+msgid "fire"
+msgstr ""
+
+#: Source/translation_dummy.cpp:756
+msgid "burning"
+msgstr ""
+
+#: Source/translation_dummy.cpp:757
+msgid "shock"
+msgstr ""
+
+#: Source/translation_dummy.cpp:758
+msgid "lightning"
+msgstr ""
+
+#: Source/translation_dummy.cpp:759
+msgid "thunder"
+msgstr ""
+
+#: Source/translation_dummy.cpp:760
+msgid "many"
+msgstr ""
+
+#: Source/translation_dummy.cpp:761
+msgid "plenty"
+msgstr ""
+
+#: Source/translation_dummy.cpp:762
+msgid "thorns"
+msgstr ""
+
+#: Source/translation_dummy.cpp:763
+msgid "corruption"
+msgstr ""
+
+#: Source/translation_dummy.cpp:764
+msgid "thieves"
+msgstr ""
+
+#: Source/translation_dummy.cpp:765
+msgid "the bear"
+msgstr ""
+
+#: Source/translation_dummy.cpp:766
+msgid "the bat"
+msgstr ""
+
+#: Source/translation_dummy.cpp:767
+msgid "vampires"
+msgstr ""
+
+#: Source/translation_dummy.cpp:768
+msgid "the leech"
+msgstr ""
+
+#: Source/translation_dummy.cpp:769
+msgid "blood"
+msgstr ""
+
+#: Source/translation_dummy.cpp:770
+msgid "piercing"
+msgstr ""
+
+#: Source/translation_dummy.cpp:771
+msgid "puncturing"
+msgstr ""
+
+#: Source/translation_dummy.cpp:772
+msgid "bashing"
+msgstr ""
+
+#: Source/translation_dummy.cpp:773
+msgid "readiness"
+msgstr ""
+
+#: Source/translation_dummy.cpp:774
+msgid "swiftness"
+msgstr ""
+
+#: Source/translation_dummy.cpp:775
+msgid "speed"
+msgstr ""
+
+#: Source/translation_dummy.cpp:776
+msgid "haste"
+msgstr ""
+
+#: Source/translation_dummy.cpp:777
+msgid "balance"
+msgstr ""
+
+#: Source/translation_dummy.cpp:778
+msgid "stability"
+msgstr ""
+
+#: Source/translation_dummy.cpp:779
+msgid "harmony"
+msgstr ""
+
+#: Source/translation_dummy.cpp:780
+msgid "blocking"
+msgstr ""
+
+#: Source/translation_dummy.cpp:781
+msgid "devastation"
+msgstr ""
+
+#: Source/translation_dummy.cpp:782
+msgid "decay"
+msgstr ""
+
+#: Source/translation_dummy.cpp:783
+msgid "peril"
 msgstr ""
 
 #. TRANSLATORS: Thousands separator
