@@ -31,6 +31,10 @@
 #endif
 #endif
 
+#ifdef PSP
+#include <pspkernel.h>
+#endif
+
 #if (_POSIX_C_SOURCE >= 200112L || defined(_BSD_SOURCE) || defined(__APPLE__)) && !defined(NXDK)
 #include <sys/stat.h>
 #include <unistd.h>
@@ -396,7 +400,11 @@ void RemoveFile(const char *path)
 	FILE *f = fopen(name.c_str(), "r+");
 	if (f != nullptr) {
 		fclose(f);
+#ifdef PSP
+		sceIoRemove(name.c_str());
+#else
 		remove(name.c_str());
+#endif
 		f = nullptr;
 		LogVerbose("Removed file: {}", name);
 	} else {

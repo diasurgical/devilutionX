@@ -23,10 +23,12 @@ namespace devilution {
 namespace {
 std::unique_ptr<net::abstract_net> dvlnet_inst;
 bool GameIsPublic = {};
-thread_local uint32_t dwLastError = 0;
 
 #ifndef NONET
+thread_local uint32_t dwLastError = 0;
 SdlMutex storm_net_mutex;
+#else
+uint32_t dwLastError = 0;
 #endif
 } // namespace
 
