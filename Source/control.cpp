@@ -550,11 +550,11 @@ std::string TextCmdLevelSeed(const std::string_view parameter)
 }
 
 std::vector<TextCmdItem> TextCmdList = {
-	{ N_("/help"), N_("Prints help overview or help for a specific command."), N_("[command]"), &TextCmdHelp },
-	{ N_("/arena"), N_("Enter a PvP Arena."), N_("<arena-number>"), &TextCmdArena },
-	{ N_("/arenapot"), N_("Gives Arena Potions."), N_("<number>"), &TextCmdArenaPot },
-	{ N_("/inspect"), N_("Inspects stats and equipment of another player."), N_("<player name>"), &TextCmdInspect },
-	{ N_("/seedinfo"), N_("Show seed infos for current level."), "", &TextCmdLevelSeed },
+	{ "/help", N_("Prints help overview or help for a specific command."), N_("[command]"), &TextCmdHelp },
+	{ "/arena", N_("Enter a PvP Arena."), N_("<arena-number>"), &TextCmdArena },
+	{ "/arenapot", N_("Gives Arena Potions."), N_("<number>"), &TextCmdArenaPot },
+	{ "/inspect", N_("Inspects stats and equipment of another player."), N_("<player name>"), &TextCmdInspect },
+	{ "/seedinfo", N_("Show seed infos for current level."), "", &TextCmdLevelSeed },
 };
 
 bool CheckTextCommand(const std::string_view text)
