@@ -8,15 +8,10 @@ bool gbMusicOn;
 bool gbSoundOn;
 _music_id sgnMusicTrack = NUM_MUSIC;
 
-// Disable clang-format here because our config says:
-// AllowShortFunctionsOnASingleLine: None
-// clang-format off
 void ClearDuplicateSounds() { }
 void snd_play_snd(TSnd *pSnd, int lVolume, int lPan) { }
 std::unique_ptr<TSnd> sound_file_load(const char *path, bool stream) { return nullptr; }
-TSnd::~TSnd()
-{
-}
+TSnd::~TSnd() { }
 void snd_init() { }
 void snd_deinit() { }
 void music_stop() { }
@@ -27,6 +22,5 @@ int sound_get_or_set_sound_volume(int volume) { return 0; }
 void music_mute() { }
 void music_unmute() { }
 _music_id GetLevelMusic(dungeon_type dungeonType) { return TMUSIC_TOWN; }
-// clang-format on
 
 } // namespace devilution
