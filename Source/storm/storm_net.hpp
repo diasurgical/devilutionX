@@ -126,15 +126,6 @@ bool SNetSendMessage(int playerID, void *data, unsigned int databytes);
  */
 bool SNetSendTurn(char *data, unsigned int databytes);
 
-uint32_t SErrGetLastError();
-void SErrSetLastError(uint32_t dwErrCode);
-
-// Values for dwErrCode
-#define STORM_ERROR_GAME_TERMINATED 0x85100069
-#define STORM_ERROR_INVALID_PLAYER 0x8510006a
-#define STORM_ERROR_NO_MESSAGES_WAITING 0x8510006b
-#define STORM_ERROR_NOT_IN_GAME 0x85100070
-
 bool SNetGetOwnerTurnsWaiting(uint32_t *);
 bool SNetUnregisterEventHandler(event_type);
 bool SNetRegisterEventHandler(event_type, SEVTHANDLER);
