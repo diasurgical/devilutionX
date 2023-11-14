@@ -7,7 +7,7 @@ if [[ $# -eq 0 ]]; then
 fi
 
 ASSETS_REPO_DIR="$1"
-OUTPUT_DIR="${PWD}/Packaging/resources/assets"
+OUTPUT_DIR="${PWD}/assets"
 
 set -x
 cd "${ASSETS_REPO_DIR}/bundled-assets"

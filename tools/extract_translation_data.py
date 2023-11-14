@@ -4,12 +4,12 @@ import pathlib
 
 root = pathlib.Path(__file__).resolve().parent.parent
 translation_dummy_path = root.joinpath("Source/translation_dummy.cpp")
-monstdat_path = root.joinpath("Packaging/resources/assets/txtdata/monsters/monstdat.tsv")
-unique_monstdat_path = root.joinpath("Packaging/resources/assets/txtdata/monsters/unique_monstdat.tsv")
-itemdat_path = root.joinpath("Packaging/resources/assets/txtdata/items/itemdat.tsv")
-unique_itemdat_path = root.joinpath("Packaging/resources/assets/txtdata/items/unique_itemdat.tsv")
-item_prefixes_path = root.joinpath("Packaging/resources/assets/txtdata/items/item_prefixes.tsv")
-item_suffixes_path = root.joinpath("Packaging/resources/assets/txtdata/items/item_suffixes.tsv")
+monstdat_path = root.joinpath("assets/txtdata/monsters/monstdat.tsv")
+unique_monstdat_path = root.joinpath("assets/txtdata/monsters/unique_monstdat.tsv")
+itemdat_path = root.joinpath("assets/txtdata/items/itemdat.tsv")
+unique_itemdat_path = root.joinpath("assets/txtdata/items/unique_itemdat.tsv")
+item_prefixes_path = root.joinpath("assets/txtdata/items/item_prefixes.tsv")
+item_suffixes_path = root.joinpath("assets/txtdata/items/item_suffixes.tsv")
 
 with open(translation_dummy_path, 'w') as temp_source:
     temp_source.write(f'/**\n')

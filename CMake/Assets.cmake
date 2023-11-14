@@ -182,7 +182,7 @@ endif()
 
 if(APPLE)
   foreach(asset_file ${devilutionx_assets})
-    set(src "${CMAKE_CURRENT_SOURCE_DIR}/Packaging/resources/assets/${asset_file}")
+    set(src "${CMAKE_CURRENT_SOURCE_DIR}/assets/${asset_file}")
     get_filename_component(_asset_dir "${asset_file}" DIRECTORY)
     set_source_files_properties("${src}" PROPERTIES
       MACOSX_PACKAGE_LOCATION "Resources/${_asset_dir}"
@@ -194,7 +194,7 @@ else()
   # - If smpq is installed, devilutionx.mpq is built from these files.
   # - If smpq is not installed, the game will load the assets directly from this directoy.
   foreach(asset_file ${devilutionx_assets})
-    set(src "${CMAKE_CURRENT_SOURCE_DIR}/Packaging/resources/assets/${asset_file}")
+    set(src "${CMAKE_CURRENT_SOURCE_DIR}/assets/${asset_file}")
     set(dst "${DEVILUTIONX_ASSETS_OUTPUT_DIRECTORY}/${asset_file}")
     list(APPEND DEVILUTIONX_MPQ_FILES "${asset_file}")
     list(APPEND DEVILUTIONX_OUTPUT_ASSETS_FILES "${dst}")
