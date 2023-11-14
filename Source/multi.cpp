@@ -533,7 +533,7 @@ void multi_send_msg_packet(uint32_t pmask, const std::byte *data, size_t size)
 	size_t playerID = 0;
 	for (size_t v = 1; playerID < Players.size(); playerID++, v <<= 1) {
 		if ((v & pmask) != 0) {
-			if (!SNetSendMessage(playerID, &pkt.hdr, len) && SErrGetLastError() != STORM_ERROR_INVALID_PLAYER) {
+			if (!SNetSendMessage(playerID, &pkt.hdr, len)) {
 				nthread_terminate_game("SNetSendMessage");
 				return;
 			}
@@ -676,8 +676,6 @@ void multi_process_network_packets()
 		}
 		HandleAllPackets(playerId, (const std::byte *)(pkt + 1), dwMsgSize - sizeof(TPktHdr));
 	}
-	if (SErrGetLastError() != STORM_ERROR_NO_MESSAGES_WAITING)
-		nthread_terminate_game("SNetReceiveMsg");
 	CheckPlayerInfoTimeouts();
 }
 

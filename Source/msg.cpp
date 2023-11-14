@@ -404,8 +404,7 @@ int WaitForTurns()
 
 	if (sgbDeltaChunks == 0) {
 		nthread_send_and_recv_turn(0, 0);
-		if (!SNetGetOwnerTurnsWaiting(&turns) && SErrGetLastError() == STORM_ERROR_NOT_IN_GAME)
-			return 100;
+		SNetGetOwnerTurnsWaiting(&turns);
 		if (SDL_GetTicks() - sgdwOwnerWait <= 2000 && turns < gdwTurnsInTransit)
 			return 0;
 		sgbDeltaChunks++;

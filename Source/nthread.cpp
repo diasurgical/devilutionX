@@ -67,14 +67,7 @@ void NthreadHandler()
 
 void nthread_terminate_game(const char *pszFcn)
 {
-	uint32_t sErr = SErrGetLastError();
-	if (sErr == STORM_ERROR_INVALID_PLAYER) {
-		return;
-	}
-	if (sErr != STORM_ERROR_GAME_TERMINATED && sErr != STORM_ERROR_NOT_IN_GAME) {
-		app_fatal(StrCat(pszFcn, ":\n", pszFcn));
-	}
-
+	app_fatal(pszFcn);
 	gbGameDestroyed = true;
 }
 
@@ -121,8 +114,6 @@ bool nthread_recv_turns(bool *pfSendAsync)
 		return true;
 	}
 	if (!SNetReceiveTurns(MAX_PLRS, (char **)glpMsgTbl, gdwMsgLenTbl, &player_state[0])) {
-		if (SErrGetLastError() != STORM_ERROR_NO_MESSAGES_WAITING)
-			nthread_terminate_game("SNetReceiveTurns");
 		sgbTicsOutOfSync = false;
 		sgbSyncCountdown = 1;
 		sgbPacketCountdown = 1;
