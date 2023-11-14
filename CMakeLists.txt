@@ -447,7 +447,7 @@ if(VITA)
       VERSION ${VITA_VERSION}
       NAME ${VITA_APP_NAME}
       FILE Packaging/vita/sce_sys sce_sys
-      FILE Packaging/resources/assets assets
+      FILE assets assets
       ${VITA_TRANSLATIONS_LIST}
     )
   endif()
