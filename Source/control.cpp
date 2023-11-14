@@ -564,7 +564,7 @@ bool CheckTextCommand(const std::string_view text)
 
 	auto textCmdIterator = c_find_if(TextCmdList, [&](const TextCmdItem &elem) { return text.find(elem.text) == 0 && (text.length() == elem.text.length() || text[elem.text.length()] == ' '); });
 	if (textCmdIterator == TextCmdList.end()) {
-		InitDiabloMsg(StrCat(_("Command \""), text, "\" is unknown."));
+		InitDiabloMsg(StrCat(_("Command "), "\"", text, "\"", _(" is unknown.")));
 		return true;
 	}
 
