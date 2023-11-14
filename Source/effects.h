@@ -7,8 +7,8 @@
 
 #include <cstdint>
 #include <memory>
+#include <string>
 
-#include "engine.h"
 #include "engine/sound.h"
 
 namespace devilution {
@@ -1065,7 +1065,7 @@ enum sfx_flag : uint8_t {
 
 struct TSFX {
 	uint8_t bFlags;
-	const char *pszName;
+	std::string pszName;
 	std::unique_ptr<TSnd> pSnd;
 };
 
