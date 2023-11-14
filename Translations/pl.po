@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
-"POT-Creation-Date: 2023-11-14 19:27+0100\n"
+"POT-Creation-Date: 2023-11-14 21:28+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -1042,8 +1042,8 @@ msgstr "Dostępne Polecenia:"
 msgid "Command "
 msgstr "Polecenie "
 
-#: Source/control.cpp:377
-msgid " is unkown."
+#: Source/control.cpp:377 Source/control.cpp:567
+msgid " is unknown."
 msgstr " jest nieznane."
 
 #: Source/control.cpp:380 Source/control.cpp:381
@@ -1153,10 +1153,6 @@ msgstr "/seedinfo"
 #: Source/control.cpp:557
 msgid "Show seed infos for current level."
 msgstr ""
-
-#: Source/control.cpp:567
-msgid " is unknown."
-msgstr " jest nieznane."
 
 #: Source/control.cpp:1049
 msgid "Player friendly"

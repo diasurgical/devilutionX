@@ -374,7 +374,7 @@ std::string TextCmdHelp(const std::string_view parameter)
 	}
 	auto textCmdIterator = c_find_if(TextCmdList, [&](const TextCmdItem &elem) { return elem.text == parameter; });
 	if (textCmdIterator == TextCmdList.end())
-		return StrCat(_("Command "), parameter, _(" is unkown."));
+		return StrCat(_("Command "), parameter, _(" is unknown."));
 	auto &textCmdItem = *textCmdIterator;
 	if (textCmdItem.requiredParameter.empty())
 		return StrCat(_("Description: "), _(textCmdItem.description), _("\nParameters: No additional parameter needed."));
