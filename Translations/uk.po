@@ -1037,8 +1037,6 @@ msgid "Command "
 msgstr "Команда "
 
 #: Source/control.cpp:377 Source/control.cpp:567
-#, fuzzy
-#| msgid " is unkown."
 msgid " is unknown."
 msgstr " невідома."
 
@@ -1254,16 +1252,15 @@ msgstr "рівень 15"
 
 #. TRANSLATORS: Error message when a data file is missing or corrupt. Arguments are {file name}
 #: Source/data/file.cpp:36
-#, fuzzy, c++-format
-#| msgid "Unable to load character"
+#, c++-format
 msgid "Unable to load data from file {0}"
-msgstr "Неможливо завантажити героя"
+msgstr "Не вдалося завантажити дані з файлу {0}"
 
 #. TRANSLATORS: Error message when a data file is empty or only contains the header row. Arguments are {file name}
 #: Source/data/file.cpp:41
 #, c++-format
 msgid "{0} is incomplete, please check the file contents."
-msgstr ""
+msgstr "{0} є неповним, будь ласка, перевірте вміст файлу."
 
 #. TRANSLATORS: Error message when a data file doesn't contain the expected columns. Arguments are {file name}
 #: Source/data/file.cpp:46
@@ -1272,28 +1269,29 @@ msgid ""
 "Your {0} file doesn't have the expected columns, please make sure it matches "
 "the documented format."
 msgstr ""
+"Ваш файл {0} не містить очікуваних стовпців, будь ласка, переконайтеся, що "
+"він відповідає задокументованому формату."
 
 #. TRANSLATORS: Error message when parsing a data file and a text value is encountered when a number is expected. Arguments are {found value}, {column heading}, {file name}, {row/record number}, {column/field number}
 #: Source/data/file.cpp:61
 #, c++-format
 msgid "Non-numeric value {0} for {1} in {2} at row {3} and column {4}"
-msgstr ""
+msgstr "Нечислове значення {0} для {1} у {2} у рядку {3} та стовпчику {4}"
 
 #. TRANSLATORS: Error message when parsing a data file and we find a number larger than expected. Arguments are {found value}, {column heading}, {file name}, {row/record number}, {column/field number}
 #: Source/data/file.cpp:67
 #, c++-format
 msgid "Out of range value {0} for {1} in {2} at row {3} and column {4}"
 msgstr ""
+"Значення поза діапазоном {0} для {1} в {2} в рядку {3} та стовпчику {4}"
 
 #. TRANSLATORS: Error message when we find an unrecognised value in a key column. Arguments are {found value}, {column heading}, {file name}, {row/record number}, {column/field number}
 #: Source/data/file.cpp:73
 #, c++-format
 msgid "Invalid value {0} for {1} in {2} at row {3} and column {4}"
-msgstr ""
+msgstr "Невірне значення {0} для {1} в {2} в рядку {3} та стовпчику {4}"
 
 #: Source/diablo.cpp:132
-#, fuzzy
-#| msgid "I need help! Come Here!"
 msgid "I need help! Come here!"
 msgstr "Мені потрібна допомога! Ідіть сюди!"
 
@@ -1311,29 +1309,27 @@ msgstr "А тепер ПОМРИ!"
 
 #: Source/diablo.cpp:136
 msgid "Heal yourself!"
-msgstr ""
+msgstr "Зціли себе!"
 
 #: Source/diablo.cpp:137
 msgid "Watch out!"
-msgstr ""
+msgstr "Обережно!"
 
 #: Source/diablo.cpp:138
-#, fuzzy
-#| msgid "Thanks To"
 msgid "Thanks."
-msgstr "Дякуємо"
+msgstr "Дякую."
 
 #: Source/diablo.cpp:139
 msgid "Retreat!"
-msgstr ""
+msgstr "Відступаємо!"
 
 #: Source/diablo.cpp:140
 msgid "Sorry."
-msgstr ""
+msgstr "Вибач."
 
 #: Source/diablo.cpp:141
 msgid "I'm waiting."
-msgstr ""
+msgstr "Я чекаю."
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:912
@@ -1558,11 +1554,11 @@ msgstr "Перемикає відображення автокарти."
 
 #: Source/diablo.cpp:1726
 msgid "Cycle map type"
-msgstr ""
+msgstr "Циклювати тип карти"
 
 #: Source/diablo.cpp:1727
 msgid "Opaque -> Transparent -> Minimap -> None"
-msgstr ""
+msgstr "Непрозора -> Прозора -> Мінікарта -> Немає"
 
 #: Source/diablo.cpp:1736 Source/diablo.cpp:2069
 msgid "Open Inventory screen."
@@ -1626,10 +1622,8 @@ msgid "Pauses the game."
 msgstr "Ставить гру на паузу."
 
 #: Source/diablo.cpp:1819
-#, fuzzy
-#| msgid "Pause Game"
 msgid "Pause Game (Alternate)"
-msgstr "Зупинити Гру"
+msgstr "Зупинити гру (Альтернатива)"
 
 #: Source/diablo.cpp:1825 Source/diablo.cpp:2302
 msgid "Decrease Gamma"
@@ -1687,11 +1681,11 @@ msgstr "Показує лог чату."
 
 #: Source/diablo.cpp:1879
 msgid "Console"
-msgstr ""
+msgstr "Консоль"
 
 #: Source/diablo.cpp:1880
 msgid "Opens Lua console."
-msgstr ""
+msgstr "Відкриває консоль Lua."
 
 #: Source/diablo.cpp:1935
 msgid "Primary action"
@@ -1848,11 +1842,8 @@ msgid "Opens the game menu."
 msgstr "Відкриває ігрове меню."
 
 #: Source/diablo_msg.cpp:62
-#, fuzzy
-#| msgctxt "spell"
-#| msgid "Flame Wave"
 msgid "Game saved"
-msgstr "Хвиля Вогню"
+msgstr "Гру збережено"
 
 #: Source/diablo_msg.cpp:63
 msgid "No multiplayer functions in demo"
@@ -4412,10 +4403,6 @@ msgstr ""
 "інвентаря."
 
 #: Source/options.cpp:1072
-#, fuzzy
-#| msgid ""
-#| "When enabled Cauldrons, Fascinating Shrines, Goat Shrines, Ornate Shrines "
-#| "and Sacred Shrines are not able to be clicked on and labeled as disabled."
 msgid ""
 "When enabled Cauldrons, Fascinating Shrines, Goat Shrines, Ornate Shrines, "
 "Sacred Shrines and Murphy's Shrines are not able to be clicked on and "
