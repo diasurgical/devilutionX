@@ -41,7 +41,7 @@ struct MultiColoredText {
 };
 
 bool UnreadFlag = false;
-unsigned int SkipLines;
+size_t SkipLines;
 unsigned int MessageCounter = 0;
 
 std::vector<MultiColoredText> ChatLogLines;
@@ -122,7 +122,7 @@ void AddMessageToChatLog(std::string_view message, Player *player, UiFlags flags
 	const std::tm *localtimeResult = localtime(&timeResult);
 	std::string timestamp = localtimeResult != nullptr ? fmt::format("[#{:d}] {:02}:{:02}:{:02}", MessageCounter, localtimeResult->tm_hour, localtimeResult->tm_min, localtimeResult->tm_sec)
 	                                                   : fmt::format("[#{:d}] ", MessageCounter);
-	int oldSize = ChatLogLines.size();
+	size_t oldSize = ChatLogLines.size();
 	if (player == nullptr) {
 		ChatLogLines.emplace_back(MultiColoredText { "{0} {1}", { { timestamp, UiFlags::ColorRed }, { std::string(message), flags } } });
 	} else {
@@ -136,14 +136,14 @@ void AddMessageToChatLog(std::string_view message, Player *player, UiFlags flags
 		for (std::string s; getline(ss, s, '\n');) {
 			lines.push_back(s);
 		}
-		for (int i = lines.size() - 1; i >= 1; i--) {
+		for (int i = static_cast<int>(lines.size()) - 1; i >= 1; i--) {
 			ChatLogLines.emplace_back(MultiColoredText { lines[i], {} });
 		}
 		lines[0].erase(0, prefix.length());
 		ChatLogLines.emplace_back(MultiColoredText { "{0} - {1}{2}", { { timestamp, UiFlags::ColorRed }, { playerInfo, nameColor }, { lines[0], UiFlags::ColorWhite } } });
 	}
 
-	unsigned int diff = ChatLogLines.size() - oldSize;
+	size_t diff = ChatLogLines.size() - oldSize;
 	// only autoscroll when on top of the log
 	if (SkipLines != 0) {
 		SkipLines += diff;

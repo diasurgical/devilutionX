@@ -24,7 +24,7 @@ struct FloatingNumber {
 	UiFlags style;
 	DamageType type;
 	int value;
-	int index;
+	size_t index;
 	bool reverseDirection;
 };
 
@@ -91,7 +91,7 @@ void UpdateFloatingData(FloatingNumber &num)
 	}
 }
 
-void AddFloatingNumber(Point pos, Displacement offset, DamageType type, int value, int index, bool damageToPlayer)
+void AddFloatingNumber(Point pos, Displacement offset, DamageType type, int value, size_t index, bool damageToPlayer)
 {
 	// 45 deg angles to avoid jitter caused by px alignment
 	Displacement goodAngles[] = {
@@ -199,7 +199,7 @@ void DrawFloatingNumbers(const Surface &out, Point viewPosition, Displacement of
 
 void ClearFloatingNumbers()
 {
-	srand(time(nullptr));
+	srand(static_cast<unsigned int>(time(nullptr)));
 
 	FloatingQueue.clear();
 }
