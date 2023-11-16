@@ -3933,11 +3933,11 @@ msgstr "{:s} (wył.)"
 
 #: Source/options.cpp:457 Source/options.cpp:581 Source/options.cpp:587
 msgid "ON"
-msgstr "WŁ."
+msgstr "TAK"
 
 #: Source/options.cpp:457 Source/options.cpp:579 Source/options.cpp:585
 msgid "OFF"
-msgstr "WYŁ."
+msgstr "NIE"
 
 #: Source/options.cpp:569
 msgid "Start Up"
