@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
-"POT-Creation-Date: 2023-11-14 21:46+0100\n"
+"POT-Creation-Date: 2023-11-16 22:50+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -827,10 +827,8 @@ msgid "No"
 msgstr "Nie"
 
 #: Source/DiabloUI/settingsmenu.cpp:146
-#, fuzzy
-#| msgid "Press any key to change."
 msgid "Press gamepad buttons to change."
-msgstr "Naciśnij dowolny klawisz by zmienić."
+msgstr "Naciśnij przycisk na kontrolerze aby zmienić."
 
 #: Source/DiabloUI/settingsmenu.cpp:423
 msgid "Bound key:"
@@ -1055,6 +1053,8 @@ msgid ""
 "\n"
 "Parameters: No additional parameter needed."
 msgstr ""
+"\n"
+"Parametry: Brak wymaganych dodatkowych parametrów."
 
 #: Source/control.cpp:381
 msgid ""
@@ -1066,21 +1066,19 @@ msgstr ""
 
 #: Source/control.cpp:401 Source/control.cpp:433
 msgid "Arenas are only supported in multiplayer."
-msgstr ""
+msgstr "Areny są obsługiwane tylko w grach wieloosobowych."
 
 #: Source/control.cpp:406
-#, fuzzy
-#| msgid "Are you sure you want to buy this item?"
 msgid "What arena do you want to visit?"
-msgstr "Czy na pewno chcesz kupić ten przedmiot?"
+msgstr "Którą arenę chcesz odwiedzić?"
 
 #: Source/control.cpp:414
 msgid "Invalid arena-number. Valid numbers are:"
-msgstr ""
+msgstr "Błędny numer areny. Poprawne numery to:"
 
 #: Source/control.cpp:420
 msgid "To enter a arena, you need to be in town or another arena."
-msgstr ""
+msgstr "Aby wejść na arenę musisz być w mieście lub na innej arenie."
 
 #: Source/control.cpp:458
 msgid "Inspecting only supported in multiplayer."
@@ -1092,7 +1090,7 @@ msgstr ""
 
 #: Source/control.cpp:478
 msgid "No players found with such a name"
-msgstr ""
+msgstr "Nie znaleziono graczy z tą nazwą"
 
 #: Source/control.cpp:484
 msgid "Inspecting player: "
@@ -1108,7 +1106,7 @@ msgstr "[polecenie]"
 
 #: Source/control.cpp:554
 msgid "Enter a PvP Arena."
-msgstr ""
+msgstr "Wejdź na Arenę PvP."
 
 #: Source/control.cpp:554
 msgid "<arena-number>"
@@ -1116,7 +1114,7 @@ msgstr "<numer-areny>"
 
 #: Source/control.cpp:555
 msgid "Gives Arena Potions."
-msgstr ""
+msgstr "Daje Miksturę Areny."
 
 #: Source/control.cpp:555
 msgid "<number>"
@@ -1275,6 +1273,8 @@ msgid ""
 "Your {0} file doesn't have the expected columns, please make sure it matches "
 "the documented format."
 msgstr ""
+"Twój plik {0} nie ma oczekiwanych kolumn, proszę upewnić się, że pasuje do "
+"udokumentowanego formatu."
 
 #. TRANSLATORS: Error message when parsing a data file and a text value is encountered when a number is expected. Arguments are {found value}, {column heading}, {file name}, {row/record number}, {column/field number}
 #: Source/data/file.cpp:61
@@ -1558,11 +1558,11 @@ msgstr "Przełącza, czy wyświetlana jest automapa."
 
 #: Source/diablo.cpp:1726
 msgid "Cycle map type"
-msgstr ""
+msgstr "Przełącz typ mapy"
 
 #: Source/diablo.cpp:1727
 msgid "Opaque -> Transparent -> Minimap -> None"
-msgstr ""
+msgstr "Nieprzezroczysta -> Przezroczysta -> Mini mapa -> Brak"
 
 #: Source/diablo.cpp:1736 Source/diablo.cpp:2069
 msgid "Open Inventory screen."
@@ -1693,87 +1693,69 @@ msgstr "Otwiera konsolę Lua."
 
 #: Source/diablo.cpp:1935
 msgid "Primary action"
-msgstr ""
+msgstr "Główna akcja"
 
 #: Source/diablo.cpp:1936
 msgid "Attack monsters, talk to towners, lift and place inventory items."
 msgstr ""
+"Atakuj potwory, rozmawiaj z mieszkańcami, podnoś i umieszczaj przedmioty w "
+"ekwipunku."
 
 #: Source/diablo.cpp:1950
-#, fuzzy
-#| msgid "Select Action"
 msgid "Secondary action"
-msgstr "Czynność"
+msgstr "Drugorzędna akcja"
 
 #: Source/diablo.cpp:1951
 msgid "Open chests, interact with doors, pick up items."
-msgstr ""
+msgstr "Otwieraj skrzynie, używaj drzwi, podnoś przedmioty."
 
 #: Source/diablo.cpp:1965
-#, fuzzy
-#| msgid "Select Action"
 msgid "Spell action"
-msgstr "Czynność"
+msgstr "Akcja czaru"
 
 #: Source/diablo.cpp:1966
 msgid "Cast the active spell."
-msgstr ""
+msgstr "Rzuć aktywny czar."
 
 #: Source/diablo.cpp:1980
-#, fuzzy
-#| msgid "Cancel"
 msgid "Cancel action"
-msgstr "Anuluj"
+msgstr "Akcja anulowania"
 
 #: Source/diablo.cpp:1981
-#, fuzzy
-#| msgid "Closes the game."
 msgid "Close menus."
-msgstr "Zamyka grę."
+msgstr "Zamknij menu."
 
 #: Source/diablo.cpp:2006
 msgid "Move up"
-msgstr ""
+msgstr "Ruch do góry"
 
 #: Source/diablo.cpp:2007
-#, fuzzy
-#| msgid "Multi Player Characters"
 msgid "Moves the player character up."
-msgstr "Postacie - Gra Sieciowa"
+msgstr "Porusza postacią gracza do góry."
 
 #: Source/diablo.cpp:2012
 msgid "Move down"
-msgstr ""
+msgstr "Ruch w dół"
 
 #: Source/diablo.cpp:2013
-#, fuzzy
-#| msgid "Multi Player Characters"
 msgid "Moves the player character down."
-msgstr "Postacie - Gra Sieciowa"
+msgstr "Porusza postacią gracza w dół."
 
 #: Source/diablo.cpp:2018
-#, fuzzy
-#| msgid "$Movement:"
 msgid "Move left"
-msgstr "$Poruszanie się:"
+msgstr "Ruch w lewo"
 
 #: Source/diablo.cpp:2019
-#, fuzzy
-#| msgid "Multi Player Characters"
 msgid "Moves the player character left."
-msgstr "Postacie - Gra Sieciowa"
+msgstr "Porusza postacią gracza w lewo."
 
 #: Source/diablo.cpp:2024
-#, fuzzy
-#| msgid "the night"
 msgid "Move right"
-msgstr "zmierzchu"
+msgstr "Ruch w prawo"
 
 #: Source/diablo.cpp:2025
-#, fuzzy
-#| msgid "Multi Player Characters"
 msgid "Moves the player character right."
-msgstr "Postacie - Gra Sieciowa"
+msgstr "Porusza postacią gracza w prawo."
 
 #: Source/diablo.cpp:2030
 msgid "Stand ground"
@@ -1825,21 +1807,19 @@ msgstr ""
 
 #: Source/diablo.cpp:2151 Source/diablo.cpp:2158
 msgid "Left mouse click"
-msgstr ""
+msgstr "Kliknięcie lewym przyciskiem myszy"
 
 #: Source/diablo.cpp:2152 Source/diablo.cpp:2159
 msgid "Simulates the left mouse button."
-msgstr ""
+msgstr "Symuluje kliknięcie lewym przyciskiem myszy."
 
 #: Source/diablo.cpp:2176 Source/diablo.cpp:2183
-#, fuzzy
-#| msgid "Right click to use"
 msgid "Right mouse click"
-msgstr "PPM by użyć"
+msgstr "Kliknięcie prawym przyciskiem myszy"
 
 #: Source/diablo.cpp:2177 Source/diablo.cpp:2184
 msgid "Simulates the right mouse button."
-msgstr ""
+msgstr "Symuluje kliknięcie prawym przyciskiem myszy."
 
 #: Source/diablo.cpp:2190
 msgid "Gamepad hotspell menu"
@@ -2763,7 +2743,7 @@ msgstr "odnawia całe życie i manę"
 
 #: Source/items.cpp:1782
 msgid "(works only in arenas)"
-msgstr ""
+msgstr "(działa tylko na arenach)"
 
 #: Source/items.cpp:1796
 msgid "Right-click to view"
@@ -2810,34 +2790,28 @@ msgid "Activate to read"
 msgstr "Aktywuj, aby przeczytać"
 
 #: Source/items.cpp:1848
-#, fuzzy, c++-format
-#| msgid "Activate to view"
+#, c++-format
 msgid "{} to view"
-msgstr "Aktywuj, aby wyświetlić"
+msgstr "{} aby wyświetlić"
 
 #: Source/items.cpp:1854
-#, fuzzy, c++-format
-#| msgid "{:+d} to strength"
+#, c++-format
 msgid "{} to use"
-msgstr "{:+d} do siły"
+msgstr "{} aby użyć"
 
 #: Source/items.cpp:1857
-#, fuzzy, c++-format
-#| msgid ""
-#| "Select from spell book, then\n"
-#| "cast spell to read"
+#, c++-format
 msgid ""
 "Select from spell book,\n"
 "then {} to read"
 msgstr ""
-"Wybierz z księgi zaklęć, a następnie\n"
-"rzuć zaklęcie, aby przeczytać"
+"Wybierz z księgi zaklęć,\n"
+"a następnie {} aby przeczytać"
 
 #: Source/items.cpp:1859
-#, fuzzy, c++-format
-#| msgid "Activate to read"
+#, c++-format
 msgid "{} to read"
-msgstr "Aktywuj, aby przeczytać"
+msgstr "{} aby przeczytać"
 
 #: Source/items.cpp:1866
 #, c++-format
@@ -4430,6 +4404,7 @@ msgstr ""
 #: Source/options.cpp:1070
 msgid "Show labels for items on the ground when enabled."
 msgstr ""
+"Pokazuje etykiety przedmiotów znajdujących się na ziemi kiedy włączone."
 
 #: Source/options.cpp:1071
 msgid "Refill belt from inventory when belt item is consumed."
@@ -4484,28 +4459,25 @@ msgstr ""
 
 #: Source/options.cpp:1080
 msgid "Enable floating numbers"
-msgstr ""
+msgstr "Pokazuj liczbowe wartości"
 
 #: Source/options.cpp:1080
 msgid "Enables floating numbers on gaining XP / dealing damage etc."
 msgstr ""
+"Pokazuje liczbowe wartości przy zdobywaniu doświadczenia / zadawaniu obrażeń "
+"etc."
 
 #: Source/options.cpp:1082
-#, fuzzy
 msgid "Off"
-msgstr "Loopback"
+msgstr "Wyłączone"
 
 #: Source/options.cpp:1083
-#, fuzzy
-#| msgid "Randomize Quests"
 msgid "Random Angles"
-msgstr "Losuj Zadania"
+msgstr "Losowy kierunek"
 
 #: Source/options.cpp:1084
-#, fuzzy
-#| msgid "Vertical Sync"
 msgid "Vertical Only"
-msgstr "Synchronizacja pionowa"
+msgstr "Tylko w pionie"
 
 #: Source/options.cpp:1135
 msgid "Controller"
@@ -4552,16 +4524,12 @@ msgid "Keymapping Settings"
 msgstr "Ustawienia mapowania klawiszy"
 
 #: Source/options.cpp:1551
-#, fuzzy
-#| msgid "Keymapping"
 msgid "Padmapping"
-msgstr "Mapowanie Klawiszy"
+msgstr "Mapowanie kontrolera"
 
 #: Source/options.cpp:1551
-#, fuzzy
-#| msgid "Keymapping Settings"
 msgid "Padmapping Settings"
-msgstr "Ustawienia mapowania klawiszy"
+msgstr "Ustawienia mapowania kontrolera"
 
 #: Source/panels/charpanel.cpp:128
 msgid "Level"
@@ -7966,16 +7934,12 @@ msgstr ""
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:411
-#, fuzzy
-#| msgid ""
-#| "Griswold? Good old Griswold. I love him like a brother! We fought "
-#| "together, you know, back when... we... Lazarus... Lazarus... Lazarus!!!"
 msgid ""
 "Griswold? Good old Griswold. I love him like a brother! We fought together, "
 "you know, back when... we... Lazarus...  Lazarus... Lazarus!!!"
 msgstr ""
 "Griswold? Stary, dobry Griswold. Kocham go jak brata! Walczyliśmy razem, "
-"wiesz? Dawniej, kiedy... my... Lazarus... Lazarus... Lazarus!!!"
+"wiesz? Dawniej, kiedy... my... Lazarus...  Lazarus... Lazarus!!!"
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:413
