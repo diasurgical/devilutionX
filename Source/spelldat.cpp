@@ -14,11 +14,7 @@
 namespace devilution {
 
 namespace {
-const auto Fire = SpellDataFlags::Fire;
-const auto Lightning = SpellDataFlags::Lightning;
-const auto Magic = SpellDataFlags::Magic;
-const auto Targeted = SpellDataFlags::Targeted;
-const auto AllowedInTown = SpellDataFlags::AllowedInTown;
+using enum SpellDataFlags;
 } // namespace
 
 /** Data related to each spell ID. */

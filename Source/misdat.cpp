@@ -17,13 +17,7 @@
 namespace devilution {
 
 namespace {
-constexpr auto Physical = MissileDataFlags::Physical;
-constexpr auto Fire = MissileDataFlags::Fire;
-constexpr auto Lightning = MissileDataFlags::Lightning;
-constexpr auto Magic = MissileDataFlags::Magic;
-constexpr auto Acid = MissileDataFlags::Acid;
-constexpr auto Arrow = MissileDataFlags::Arrow;
-constexpr auto Invisible = MissileDataFlags::Invisible;
+using enum MissileDataFlags;
 } // namespace
 
 /** Data related to each missile ID. */
