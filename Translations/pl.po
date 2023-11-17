@@ -7939,7 +7939,7 @@ msgid ""
 "you know, back when... we... Lazarus...  Lazarus... Lazarus!!!"
 msgstr ""
 "Griswold? Stary, dobry Griswold. Kocham go jak brata! Walczyliśmy razem, "
-"wiesz? Dawniej, kiedy... my... Lazarus...  Lazarus... Lazarus!!!"
+"wiesz? Dawniej, kiedy... my... Lazarus... Lazarus... Lazarus!!!"
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:413
