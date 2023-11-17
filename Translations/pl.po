@@ -1114,7 +1114,7 @@ msgstr "<numer-areny>"
 
 #: Source/control.cpp:555
 msgid "Gives Arena Potions."
-msgstr "Daje Miksturę Areny."
+msgstr "Daje Mikstury Areny."
 
 #: Source/control.cpp:555
 msgid "<number>"
