@@ -470,16 +470,8 @@ tl::expected<UniqueMonsterPack, std::string> ParseUniqueMonsterPack(std::string_
 void LoadMonstDat()
 {
 	const std::string_view filename = "txtdata\\monsters\\monstdat.tsv";
-	tl::expected<DataFile, DataFile::Error> dataFileResult = DataFile::load(filename);
-	if (!dataFileResult.has_value()) {
-		DataFile::reportFatalError(dataFileResult.error(), filename);
-	}
-
-	DataFile &dataFile = dataFileResult.value();
-	if (tl::expected<void, DataFile::Error> result = dataFile.skipHeader();
-	    !result.has_value()) {
-		DataFile::reportFatalError(result.error(), filename);
-	}
+	DataFile dataFile = DataFile::loadOrDie(filename);
+	dataFile.skipHeaderOrDie(filename);
 
 	MonstersData.clear();
 	MonstersData.reserve(dataFile.numRecords());
@@ -546,16 +538,8 @@ void LoadMonstDat()
 void LoadUniqueMonstDat()
 {
 	const std::string_view filename = "txtdata\\monsters\\unique_monstdat.tsv";
-	tl::expected<DataFile, DataFile::Error> dataFileResult = DataFile::load(filename);
-	if (!dataFileResult.has_value()) {
-		DataFile::reportFatalError(dataFileResult.error(), filename);
-	}
-
-	DataFile &dataFile = dataFileResult.value();
-	if (tl::expected<void, DataFile::Error> result = dataFile.skipHeader();
-	    !result.has_value()) {
-		DataFile::reportFatalError(result.error(), filename);
-	}
+	DataFile dataFile = DataFile::loadOrDie(filename);
+	dataFile.skipHeaderOrDie(filename);
 
 	UniqueMonstersData.clear();
 	UniqueMonstersData.reserve(dataFile.numRecords());

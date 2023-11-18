@@ -25,6 +25,15 @@ tl::expected<DataFile, DataFile::Error> DataFile::load(std::string_view path)
 	return DataFile { std::move(data), size };
 }
 
+DataFile DataFile::loadOrDie(std::string_view path)
+{
+	tl::expected<DataFile, DataFile::Error> dataFileResult = DataFile::load(path);
+	if (!dataFileResult.has_value()) {
+		DataFile::reportFatalError(dataFileResult.error(), path);
+	}
+	return *std::move(dataFileResult);
+}
+
 void DataFile::reportFatalError(Error code, std::string_view fileName)
 {
 	switch (code) {
@@ -133,6 +142,13 @@ tl::expected<void, DataFile::Error> DataFile::skipHeader()
 	}
 	body_ = it.data();
 	return {};
+}
+
+void DataFile::skipHeaderOrDie(std::string_view path)
+{
+	if (tl::expected<void, DataFile::Error> result = skipHeader(); !result.has_value()) {
+		DataFile::reportFatalError(result.error(), path);
+	}
 }
 
 [[nodiscard]] size_t DataFile::numRecords() const

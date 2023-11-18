@@ -75,6 +75,8 @@ public:
 	 */
 	static tl::expected<DataFile, Error> load(std::string_view path);
 
+	static DataFile loadOrDie(std::string_view path);
+
 	static void reportFatalError(Error code, std::string_view fileName);
 	static void reportFatalFieldError(DataFileField::Error code, std::string_view fileName, std::string_view fieldName, const DataFileField &field, std::string_view details = {});
 
@@ -109,6 +111,8 @@ public:
 	}
 
 	[[nodiscard]] tl::expected<void, DataFile::Error> skipHeader();
+
+	void skipHeaderOrDie(std::string_view path);
 
 	[[nodiscard]] RecordIterator begin() const
 	{

@@ -478,16 +478,8 @@ tl::expected<goodorevil, std::string> ParseAffixAlignment(std::string_view value
 void LoadItemDat()
 {
 	const std::string_view filename = "txtdata\\items\\itemdat.tsv";
-	tl::expected<DataFile, DataFile::Error> dataFileResult = DataFile::load(filename);
-	if (!dataFileResult.has_value()) {
-		DataFile::reportFatalError(dataFileResult.error(), filename);
-	}
-
-	DataFile &dataFile = dataFileResult.value();
-	if (tl::expected<void, DataFile::Error> result = dataFile.skipHeader();
-	    !result.has_value()) {
-		DataFile::reportFatalError(result.error(), filename);
-	}
+	DataFile dataFile = DataFile::loadOrDie(filename);
+	dataFile.skipHeaderOrDie(filename);
 
 	AllItemsList.clear();
 	AllItemsList.reserve(dataFile.numRecords());
@@ -531,16 +523,8 @@ void ReadItemPower(RecordReader &reader, std::string_view fieldName, ItemPower &
 void LoadUniqueItemDat()
 {
 	const std::string_view filename = "txtdata\\items\\unique_itemdat.tsv";
-	tl::expected<DataFile, DataFile::Error> dataFileResult = DataFile::load(filename);
-	if (!dataFileResult.has_value()) {
-		DataFile::reportFatalError(dataFileResult.error(), filename);
-	}
-
-	DataFile &dataFile = dataFileResult.value();
-	if (tl::expected<void, DataFile::Error> result = dataFile.skipHeader();
-	    !result.has_value()) {
-		DataFile::reportFatalError(result.error(), filename);
-	}
+	DataFile dataFile = DataFile::loadOrDie(filename);
+	dataFile.skipHeaderOrDie(filename);
 
 	UniqueItems.clear();
 	UniqueItems.reserve(dataFile.numRecords());
@@ -565,16 +549,8 @@ void LoadUniqueItemDat()
 
 void LoadItemAffixesDat(std::string_view filename, std::vector<PLStruct> &out)
 {
-	tl::expected<DataFile, DataFile::Error> dataFileResult = DataFile::load(filename);
-	if (!dataFileResult.has_value()) {
-		DataFile::reportFatalError(dataFileResult.error(), filename);
-	}
-
-	DataFile &dataFile = dataFileResult.value();
-	if (tl::expected<void, DataFile::Error> result = dataFile.skipHeader();
-	    !result.has_value()) {
-		DataFile::reportFatalError(result.error(), filename);
-	}
+	DataFile dataFile = DataFile::loadOrDie(filename);
+	dataFile.skipHeaderOrDie(filename);
 
 	out.clear();
 	out.reserve(dataFile.numRecords());
