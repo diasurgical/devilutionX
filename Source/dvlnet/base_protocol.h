@@ -64,7 +64,7 @@ private:
 	tl::expected<void, PacketError> recv_ingame(packet &pkt, endpoint_t sender);
 	bool is_recognized(endpoint_t sender);
 
-	bool wait_network();
+	tl::expected<bool, PacketError> wait_network();
 	bool wait_firstpeer();
 	tl::expected<void, PacketError> wait_join();
 };
@@ -80,15 +80,18 @@ plr_t base_protocol<P>::get_master()
 }
 
 template <class P>
-bool base_protocol<P>::wait_network()
+tl::expected<bool, PacketError> base_protocol<P>::wait_network()
 {
 	// wait for ZeroTier for 5 seconds
 	for (auto i = 0; i < 500; ++i) {
-		if (proto.network_online())
-			break;
+		tl::expected<bool, PacketError> status = proto.network_online();
+		if (!status.has_value())
+			return status;
+		if (*status)
+			return true;
 		SDL_Delay(10);
 	}
-	return proto.network_online();
+	return false;
 }
 
 template <class P>
@@ -118,7 +121,12 @@ bool base_protocol<P>::wait_firstpeer()
 template <class P>
 bool base_protocol<P>::send_info_request()
 {
-	if (!proto.network_online())
+	tl::expected<bool, PacketError> status = proto.network_online();
+	if (!status.has_value()) {
+		LogError("network_online: {}", status.error().what());
+		return false;
+	}
+	if (!*status)
 		return false;
 	tl::expected<std::unique_ptr<packet>, PacketError> pkt
 	    = pktfty->make_packet<PT_INFO_REQUEST>(PLR_BROADCAST, PLR_MASTER);
@@ -158,7 +166,12 @@ int base_protocol<P>::create(std::string addrstr)
 	gamename = addrstr;
 	isGameHost_ = true;
 
-	if (wait_network()) {
+	tl::expected<bool, PacketError> isReady = wait_network();
+	if (!isReady.has_value()) {
+		LogError("wait_network: {}", isReady.error().what());
+		return -1;
+	}
+	if (*isReady) {
 		plr_self = 0;
 		if (tl::expected<void, PacketError> result = Connect(plr_self);
 		    !result.has_value()) {
@@ -175,7 +188,13 @@ int base_protocol<P>::join(std::string addrstr)
 	gamename = addrstr;
 	isGameHost_ = false;
 
-	if (wait_network()) {
+	tl::expected<bool, PacketError> isReady = wait_network();
+	if (!isReady.has_value()) {
+		const std::string_view message = isReady.error().what();
+		SDL_SetError("wait_join: %.*s", static_cast<int>(message.size()), message.data());
+		return -1;
+	}
+	if (*isReady) {
 		if (wait_firstpeer()) {
 			tl::expected<void, PacketError> result = wait_join();
 			if (!result.has_value()) {
@@ -413,7 +432,10 @@ tl::expected<void, PacketError> base_protocol<P>::recv_ingame(packet &pkt, endpo
 		tl::expected<const buffer_t *, PacketError> pktInfo = pkt.Info();
 		if (!pktInfo.has_value())
 			return tl::make_unexpected(pktInfo.error());
-		peer.endpoint.unserialize(**pktInfo);
+		if (tl::expected<void, PacketError> result = peer.endpoint.unserialize(**pktInfo);
+		    !result.has_value()) {
+			return result;
+		}
 		peer.sendQueue = std::make_unique<std::deque<packet>>();
 		if (tl::expected<void, PacketError> result = Connect(*newPlayer);
 		    !result.has_value()) {

@@ -14,14 +14,6 @@ namespace devilution::net {
 using buffer_t = std::vector<unsigned char>;
 using provider_t = unsigned long;
 
-class dvlnet_exception : public std::exception {
-public:
-	const char *what() const throw() override
-	{
-		return "Network error";
-	}
-};
-
 class abstract_net {
 public:
 	virtual int create(std::string addrstr) = 0;
