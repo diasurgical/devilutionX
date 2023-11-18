@@ -134,16 +134,8 @@ tl::expected<sfx_flag, std::string> ParseSfxFlag(std::string_view value)
 void LoadEffectsData()
 {
 	const std::string_view filename = "txtdata\\sound\\effects.tsv";
-	tl::expected<DataFile, DataFile::Error> dataFileResult = DataFile::load(filename);
-	if (!dataFileResult.has_value()) {
-		DataFile::reportFatalError(dataFileResult.error(), filename);
-	}
-
-	DataFile &dataFile = dataFileResult.value();
-	if (tl::expected<void, DataFile::Error> result = dataFile.skipHeader();
-	    !result.has_value()) {
-		DataFile::reportFatalError(result.error(), filename);
-	}
+	DataFile dataFile = DataFile::loadOrDie(filename);
+	dataFile.skipHeaderOrDie(filename);
 
 	sgSFX.clear();
 	sgSFX.reserve(dataFile.numRecords());
