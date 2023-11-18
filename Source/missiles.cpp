@@ -594,10 +594,19 @@ void MoveMissileAndCheckMissileCol(Missile &missile, DamageType damageType, int 
 
 void SetMissAnim(Missile &missile, MissileGraphicID animtype)
 {
-	int dir = missile._mimfnum;
+	const int dir = missile._mimfnum;
 
-	if (animtype > MissileGraphicID::None) {
-		animtype = MissileGraphicID::None;
+	if (animtype >= MissileGraphicID::None) {
+		missile._miAnimType = MissileGraphicID::None;
+		missile._miAnimData = std::nullopt;
+		missile._miAnimWidth = 0;
+		missile._miAnimWidth2 = 0;
+		missile._miAnimFlags = MissileGraphicsFlags::None;
+		missile._miAnimDelay = 0;
+		missile._miAnimLen = 0;
+		missile._miAnimCnt = 0;
+		missile._miAnimFrame = 1;
+		return;
 	}
 
 	const MissileFileData &missileData = GetMissileSpriteData(animtype);

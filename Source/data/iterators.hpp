@@ -127,12 +127,12 @@ public:
 		return tl::make_unexpected(DataFileField::Error::InvalidValue);
 	}
 
-	template <typename T, size_t N>
-	[[nodiscard]] tl::expected<void, Error> parseIntArray(T (&destination)[N])
+	template <typename T>
+	[[nodiscard]] tl::expected<void, Error> parseIntArray(T *destination, size_t n)
 	{
 		size_t i = 0;
 		for (const std::string_view part : SplitByChar(value(), ',')) {
-			if (i == N)
+			if (i == n)
 				return tl::make_unexpected(Error::InvalidValue);
 			const std::from_chars_result result
 			    = std::from_chars(part.data(), part.data() + part.size(), destination[i]);
@@ -140,9 +140,21 @@ public:
 				return mapError(result.ec);
 			++i;
 		}
-		if (i != N)
+		if (i != n)
 			return tl::make_unexpected(Error::InvalidValue);
 		return {};
+	}
+
+	template <typename T, size_t N>
+	[[nodiscard]] tl::expected<void, Error> parseIntArray(T (&destination)[N])
+	{
+		return parseIntArray<T>(destination, N);
+	}
+
+	template <typename T, size_t N>
+	[[nodiscard]] tl::expected<void, Error> parseIntArray(std::array<T, N> &destination)
+	{
+		return parseIntArray<T>(destination.data(), N);
 	}
 
 	template <typename T, typename ParseFn>

@@ -7,12 +7,10 @@
 
 #include <cstddef>
 #include <cstdint>
-#include <string_view>
+#include <string>
 #include <type_traits>
-#include <vector>
 
 #include "effects.h"
-#include "engine.h"
 #include "engine/clx_sprite.hpp"
 #include "spelldat.h"
 #include "utils/enum_traits.h"
@@ -172,7 +170,7 @@ struct MissileFileData {
 	OptionalOwnedClxSpriteListOrSheet sprites;
 	uint16_t animWidth;
 	int8_t animWidth2;
-	char name[9];
+	std::string name;
 	uint8_t animFAmt;
 	MissileGraphicsFlags flags;
 	uint8_t animDelayIdx;
@@ -206,15 +204,12 @@ extern const MissileData MissilesData[];
 
 inline const MissileData &GetMissileData(MissileID missileId)
 {
-	return MissilesData[static_cast<std::underlying_type<MissileID>::type>(missileId)];
+	return MissilesData[static_cast<std::underlying_type_t<MissileID>>(missileId)];
 }
 
-extern MissileFileData MissileSpriteData[];
+MissileFileData &GetMissileSpriteData(MissileGraphicID graphicId);
 
-inline MissileFileData &GetMissileSpriteData(MissileGraphicID graphicId)
-{
-	return MissileSpriteData[static_cast<std::underlying_type<MissileGraphicID>::type>(graphicId)];
-}
+void LoadMissileData();
 
 void InitMissileGFX(bool loadHellfireGraphics = false);
 void FreeMissileGFX();

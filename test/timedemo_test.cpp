@@ -53,6 +53,7 @@ void RunTimedemo(std::string timedemoFolderName)
 	demo::InitPlayBack(demoNumber, true);
 
 	LoadPlayerDataFiles();
+	LoadMissileData();
 	LoadMonsterData();
 	LoadItemData();
 	pfile_ui_set_hero_infos(Dummy_GetHeroInfo);

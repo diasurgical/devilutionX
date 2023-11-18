@@ -1,5 +1,6 @@
 #pragma once
 
+#include <array>
 #include <string_view>
 #include <type_traits>
 
@@ -48,6 +49,16 @@ public:
 
 	template <typename T, size_t N>
 	void readIntArray(std::string_view name, T (&out)[N])
+	{
+		advance();
+		DataFileField field = *it_;
+		if (tl::expected<void, DataFileField::Error> result = field.parseIntArray(out); !result.has_value()) {
+			DataFile::reportFatalFieldError(result.error(), filename_, name, field);
+		}
+	}
+
+	template <typename T, size_t N>
+	void readIntArray(std::string_view name, std::array<T, N> &out)
 	{
 		advance();
 		DataFileField field = *it_;
