@@ -30,9 +30,7 @@ public:
 	{
 		advance();
 		DataFileField field = *it_;
-		if (tl::expected<void, DataFileField::Error> result = field.parseInt(out); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename_, name, field);
-		}
+		failOnError(field.parseInt(out), name, field);
 	}
 
 	template <typename T>
@@ -42,9 +40,7 @@ public:
 		advance();
 		DataFileField field = *it_;
 		if (field.value().empty()) return;
-		if (tl::expected<void, DataFileField::Error> result = field.parseInt(out); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename_, name, field);
-		}
+		failOnError(field.parseInt(out), name, field);
 	}
 
 	template <typename T, size_t N>
@@ -52,9 +48,7 @@ public:
 	{
 		advance();
 		DataFileField field = *it_;
-		if (tl::expected<void, DataFileField::Error> result = field.parseIntArray(out); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename_, name, field);
-		}
+		failOnError(field.parseIntArray(out), name, field);
 	}
 
 	template <typename T, size_t N>
@@ -62,9 +56,7 @@ public:
 	{
 		advance();
 		DataFileField field = *it_;
-		if (tl::expected<void, DataFileField::Error> result = field.parseIntArray(out); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename_, name, field);
-		}
+		failOnError(field.parseIntArray(out), name, field);
 	}
 
 	template <typename T>
@@ -73,18 +65,14 @@ public:
 	{
 		advance();
 		DataFileField field = *it_;
-		if (tl::expected<void, DataFileField::Error> result = field.parseFixed6(out); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename_, name, field);
-		}
+		failOnError(field.parseFixed6(out), name, field);
 	}
 
 	void readBool(std::string_view name, bool &out)
 	{
 		advance();
 		DataFileField field = *it_;
-		if (tl::expected<void, DataFileField::Error> result = field.parseBool(out); !result.has_value()) {
-			DataFile::reportFatalFieldError(result.error(), filename_, name, field);
-		}
+		failOnError(field.parseBool(out), name, field);
 	}
 
 	void readString(std::string_view name, std::string &out)
@@ -98,11 +86,9 @@ public:
 	{
 		advance();
 		DataFileField field = *it_;
-		if (tl::expected<T, std::string> result = parseFn(field.value()); result.has_value()) {
-			out = *std::move(result);
-		} else {
-			DataFile::reportFatalFieldError(DataFileField::Error::InvalidValue, filename_, name, field, result.error());
-		}
+		tl::expected<T, std::string> result = parseFn(field.value());
+		failOnError(result, name, field, DataFileField::Error::InvalidValue);
+		out = *std::move(result);
 	}
 
 	template <typename T, typename F>
@@ -110,9 +96,8 @@ public:
 	{
 		advance();
 		DataFileField field = *it_;
-		if (tl::expected<void, std::string> result = field.parseEnumList(out, std::forward<F>(parseFn)); !result.has_value()) {
-			DataFile::reportFatalFieldError(DataFileField::Error::InvalidValue, filename_, name, field, result.error());
-		}
+		failOnError(field.parseEnumList(out, std::forward<F>(parseFn)),
+		    name, field, DataFileField::Error::InvalidValue);
 	}
 
 	std::string_view value()
@@ -125,6 +110,22 @@ public:
 	void advance();
 
 private:
+	template <typename T>
+	void failOnError(const tl::expected<T, DataFileField::Error> &result, std::string_view name, const DataFileField &field)
+	{
+		if (!result.has_value()) {
+			DataFile::reportFatalFieldError(result.error(), filename_, name, field);
+		}
+	}
+
+	template <typename T>
+	void failOnError(const tl::expected<T, std::string> &result, std::string_view name, const DataFileField &field, DataFileField::Error error)
+	{
+		if (!result.has_value()) {
+			DataFile::reportFatalFieldError(error, filename_, name, field, result.error());
+		}
+	}
+
 	FieldIterator it_;
 	const FieldIterator end_;
 	std::string_view filename_;
