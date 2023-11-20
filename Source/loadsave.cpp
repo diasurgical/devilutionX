@@ -36,6 +36,7 @@
 #include "stores.h"
 #include "utils/endian.hpp"
 #include "utils/language.h"
+#include "utils/stdcompat/algorithm.hpp"
 
 namespace devilution {
 
@@ -975,8 +976,8 @@ void LoadMatchingItems(LoadHelper &file, const Player &player, const int n, Item
 				unpackedItem._iIdentified = heroItem._iIdentified;
 				unpackedItem._iMaxDur = heroItem._iMaxDur;
 				unpackedItem._iDurability = ClampDurability(unpackedItem, heroItem._iDurability);
-				unpackedItem._iMaxCharges = std::clamp<int>(heroItem._iMaxCharges, 0, unpackedItem._iMaxCharges);
-				unpackedItem._iCharges = std::clamp<int>(heroItem._iCharges, 0, unpackedItem._iMaxCharges);
+				unpackedItem._iMaxCharges = clamp<int>(heroItem._iMaxCharges, 0, unpackedItem._iMaxCharges);
+				unpackedItem._iCharges = clamp<int>(heroItem._iCharges, 0, unpackedItem._iMaxCharges);
 			}
 			if (!IsShopPriceValid(unpackedItem)) {
 				unpackedItem.clear();
