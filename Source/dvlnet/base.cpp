@@ -470,16 +470,20 @@ bool base::SNetLeaveGame(int type)
 
 bool base::SNetDropPlayer(int playerid, uint32_t flags)
 {
+	plr_t plr = static_cast<plr_t>(playerid);
 	tl::expected<std::unique_ptr<packet>, PacketError> pkt
 	    = pktfty->make_packet<PT_DISCONNECT>(
 	        plr_self,
 	        PLR_BROADCAST,
-	        (plr_t)playerid,
-	        (leaveinfo_t)flags);
+	        plr,
+	        static_cast<leaveinfo_t>(flags));
 	if (!pkt.has_value()) {
 		LogError("make_packet: {}", pkt.error().what());
 		return false;
 	}
+	// Disconnect at the network layer first so we
+	// don't send players their own disconnect packet
+	DisconnectNet(plr);
 	tl::expected<void, PacketError> sendResult = send(**pkt);
 	if (!sendResult.has_value()) {
 		LogError("send: {}", sendResult.error().what());

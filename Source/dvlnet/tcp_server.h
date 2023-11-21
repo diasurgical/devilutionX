@@ -39,6 +39,7 @@ public:
 	    unsigned short port, packet_factory &pktfty);
 	std::string LocalhostSelf();
 	tl::expected<void, PacketError> CheckIoHandlerError();
+	void DisconnectNet(plr_t plr);
 	void Close();
 	virtual ~tcp_server();
 

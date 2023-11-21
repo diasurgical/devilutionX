@@ -257,21 +257,22 @@ void tcp_server::HandleTimeout(const scc &con, const asio::error_code &ec)
 
 void tcp_server::DropConnection(const scc &con)
 {
-	if (con->plr != PLR_BROADCAST) {
-		tl::expected<std::unique_ptr<packet>, PacketError> pkt
-		    = pktfty.make_packet<PT_DISCONNECT>(PLR_MASTER, PLR_BROADCAST,
-		        con->plr, LEAVE_DROP);
-		connections[con->plr] = nullptr;
-		if (pkt.has_value()) {
-			SendPacket(**pkt);
-		} else {
-			LogError("make_packet<PT_DISCONNECT>: {}", pkt.error().what());
-		}
-		// TODO: investigate if it is really ok for the server to
-		//       drop a client directly.
-	}
+	plr_t plr = con->plr;
 	con->timer.cancel();
 	con->socket.close();
+	if (plr == PLR_BROADCAST) {
+		return;
+	}
+	connections[plr] = nullptr;
+
+	tl::expected<std::unique_ptr<packet>, PacketError> pkt
+	    = pktfty.make_packet<PT_DISCONNECT>(PLR_MASTER, PLR_BROADCAST,
+	        plr, LEAVE_DROP);
+	if (pkt.has_value()) {
+		SendPacket(**pkt);
+	} else {
+		LogError("make_packet<PT_DISCONNECT>: {}", pkt.error().what());
+	}
 }
 
 void tcp_server::RaiseIoHandlerError(const PacketError &error)
@@ -286,6 +287,16 @@ tl::expected<void, PacketError> tcp_server::CheckIoHandlerError()
 	tl::expected<void, PacketError> packetError = tl::make_unexpected(*ioHandlerResult);
 	ioHandlerResult = std::nullopt;
 	return packetError;
+}
+
+void tcp_server::DisconnectNet(plr_t plr)
+{
+	scc &con = connections[plr];
+	if (con == nullptr)
+		return;
+	con->timer.cancel();
+	con->socket.close();
+	con = nullptr;
 }
 
 void tcp_server::Close()
