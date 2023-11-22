@@ -110,9 +110,8 @@ tl::expected<void, PacketError> base::HandleDisconnect(packet &pkt)
 	tl::expected<plr_t, PacketError> newPlayer = pkt.NewPlayer();
 	if (!newPlayer.has_value())
 		return tl::make_unexpected(newPlayer.error());
-	if (*newPlayer == plr_self) {
-		ABORT(); // we were dropped by the owner?!?
-	}
+	if (*newPlayer == plr_self)
+		return tl::make_unexpected("We were dropped by the owner?");
 	if (IsConnected(*newPlayer)) {
 		tl::expected<leaveinfo_t, PacketError> leaveinfo = pkt.LeaveInfo();
 		if (!leaveinfo.has_value())
