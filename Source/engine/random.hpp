@@ -136,6 +136,83 @@ public:
 	}
 };
 
+/** Adapted from https://prng.di.unimi.it/xoshiro128plusplus.c */
+class xoshiro128plusplus {
+private:
+	static uint32_t rotl(const uint32_t x, int k)
+	{
+		return (x << k) | (x >> (32 - k));
+	}
+
+	uint32_t s[4];
+
+public:
+	void seed(uint64_t value)
+	{
+		uint64_t rand1 = next_split(value);
+		uint64_t rand2 = next_split(rand1);
+		s[0] = static_cast<uint32_t>(rand1);
+		s[1] = static_cast<uint32_t>(rand2);
+		s[2] = static_cast<uint32_t>(rand1 >> 32);
+		s[3] = static_cast<uint32_t>(rand2 >> 32);
+	}
+
+	void seed(uint32_t value)
+	{
+		s[0] = next_split(value);
+		s[1] = next_split(s[0]);
+		s[2] = next_split(s[1]);
+		s[3] = next_split(s[2]);
+	}
+
+	uint32_t next()
+	{
+		const uint32_t result = rotl(s[0] + s[3], 7) + s[0];
+
+		const uint32_t t = s[1] << 9;
+
+		s[2] ^= s[0];
+		s[3] ^= s[1];
+		s[1] ^= s[2];
+		s[0] ^= s[3];
+
+		s[2] ^= t;
+
+		s[3] = rotl(s[3], 11);
+
+		return result;
+	}
+
+private:
+	/** Adapted from https://prng.di.unimi.it/splitmix64.c */
+	static uint64_t next_split(uint64_t x)
+	{
+		uint64_t z = (x += 0x9e3779b97f4a7c15);
+		z = (z ^ (z >> 30)) * 0xbf58476d1ce4e5b9;
+		z = (z ^ (z >> 27)) * 0x94d049bb133111eb;
+		return z ^ (z >> 31);
+	}
+
+	/** Adapted from https://prng.di.unimi.it/splitmix64.c using fmix32 from MurmurHash3 */
+	static uint32_t next_split(uint32_t x)
+	{
+		uint32_t z = (x += 0x9e3779b9);
+		z = (z ^ (z >> 16)) * 0x85ebca6b;
+		z = (z ^ (z >> 13)) * 0xc2b2ae35;
+		return z ^ (z >> 16);
+	}
+};
+
+/**
+ * @brief Advances the global seed generator state and returns the new value
+ */
+void ResetSeedGenerator(uint64_t seed);
+
+/**
+ * @brief Advances the global seed generator state and returns the new value
+ */
+uint32_t GenerateSeed();
+
 /**
  * @brief Set the state of the RandomNumberEngine used by the base game to the specific seed
  * @param seed New engine state
@@ -163,7 +240,7 @@ void DiscardRandomValues(unsigned count);
 /**
  * @brief Advances the global RandomNumberEngine state and returns the new value
  */
-uint32_t GenerateSeed();
+uint32_t GenerateRandomNumber();
 
 /**
  * @brief Generates a random non-negative integer (most of the time) using the vanilla RNG

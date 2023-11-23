@@ -13,6 +13,19 @@ uint32_t sglGameSeed;
 /** Borland C/C++ psuedo-random number generator needed for vanilla compatibility */
 std::linear_congruential_engine<uint32_t, 0x015A4E35, 1, 0> diabloGenerator;
 
+/** Xoshiro pseudo-random number generator to provide less predictable seeds */
+xoshiro128plusplus seedGenerator;
+
+void ResetSeedGenerator(uint64_t seed)
+{
+	seedGenerator.seed(seed);
+}
+
+uint32_t GenerateSeed()
+{
+	return seedGenerator.next();
+}
+
 void SetRndSeed(uint32_t seed)
 {
 	diabloGenerator.seed(seed);
@@ -27,12 +40,12 @@ uint32_t GetLCGEngineState()
 void DiscardRandomValues(unsigned count)
 {
 	while (count != 0) {
-		GenerateSeed();
+		GenerateRandomNumber();
 		count--;
 	}
 }
 
-uint32_t GenerateSeed()
+uint32_t GenerateRandomNumber()
 {
 	sglGameSeed = diabloGenerator();
 	return sglGameSeed;
@@ -40,7 +53,7 @@ uint32_t GenerateSeed()
 
 int32_t AdvanceRndSeed()
 {
-	const int32_t seed = static_cast<int32_t>(GenerateSeed());
+	const int32_t seed = static_cast<int32_t>(GenerateRandomNumber());
 	// since abs(INT_MIN) is undefined behavior, handle this value specially
 	return seed == std::numeric_limits<int32_t>::min() ? std::numeric_limits<int32_t>::min() : std::abs(seed);
 }
