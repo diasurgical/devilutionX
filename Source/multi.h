@@ -23,7 +23,7 @@ struct Player;
 struct GameData {
 	int32_t size;
 	/** Used to initialise the seed table for dungeon levels so players in multiplayer games generate the same layout */
-	uint32_t dwSeed;
+	uint64_t gameSeed;
 	uint32_t programid;
 	uint8_t versionMajor;
 	uint8_t versionMinor;
