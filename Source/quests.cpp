@@ -298,24 +298,24 @@ void InitQuests()
 
 void InitialiseQuestPools(uint32_t seed, Quest quests[])
 {
-	SetRndSeed(seed);
-	quests[PickRandomlyAmong({ Q_SKELKING, Q_PWATER })]._qactive = QUEST_NOTAVAIL;
+	DiabloGenerator rng(seed);
+	quests[rng.pickRandomlyAmong({ Q_SKELKING, Q_PWATER })]._qactive = QUEST_NOTAVAIL;
 
 	// using int and not size_t here to detect negative values from GenerateRnd
-	int randomIndex = GenerateRnd(sizeof(QuestGroup1) / sizeof(*QuestGroup1));
+	int randomIndex = rng.generateRnd(sizeof(QuestGroup1) / sizeof(*QuestGroup1));
 
 	if (randomIndex >= 0)
 		quests[QuestGroup1[randomIndex]]._qactive = QUEST_NOTAVAIL;
 
-	randomIndex = GenerateRnd(sizeof(QuestGroup2) / sizeof(*QuestGroup2));
+	randomIndex = rng.generateRnd(sizeof(QuestGroup2) / sizeof(*QuestGroup2));
 	if (randomIndex >= 0)
 		quests[QuestGroup2[randomIndex]]._qactive = QUEST_NOTAVAIL;
 
-	randomIndex = GenerateRnd(sizeof(QuestGroup3) / sizeof(*QuestGroup3));
+	randomIndex = rng.generateRnd(sizeof(QuestGroup3) / sizeof(*QuestGroup3));
 	if (randomIndex >= 0)
 		quests[QuestGroup3[randomIndex]]._qactive = QUEST_NOTAVAIL;
 
-	randomIndex = GenerateRnd(sizeof(QuestGroup4) / sizeof(*QuestGroup4));
+	randomIndex = rng.generateRnd(sizeof(QuestGroup4) / sizeof(*QuestGroup4));
 
 	// always true, QuestGroup4 has two members
 	if (randomIndex >= 0)
