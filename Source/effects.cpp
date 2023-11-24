@@ -182,6 +182,8 @@ void PrivSoundInit(uint8_t bLoadMask)
 
 bool effect_is_playing(SfxID nSFX)
 {
+	if (!gbSndInited) return false;
+
 	TSFX *sfx = &sgSFX[static_cast<int16_t>(nSFX)];
 	if (sfx->pSnd != nullptr)
 		return sfx->pSnd->isPlaying();
@@ -203,6 +205,8 @@ void stream_stop()
 void PlaySFX(SfxID psfx)
 {
 	psfx = RndSFX(psfx);
+
+	if (!gbSndInited) return;
 
 	PlaySfxPriv(&sgSFX[static_cast<int16_t>(psfx)], false, { 0, 0 });
 }
