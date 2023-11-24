@@ -1,17 +1,20 @@
 #include "dvlnet/abstract_net.h"
 
+#include "dvlnet/loopback.h"
 #include "utils/stubs.h"
+
 #ifndef NONET
-#include "dvlnet/base_protocol.h"
 #include "dvlnet/cdwrap.h"
+
 #ifndef DISABLE_ZERO_TIER
+#include "dvlnet/base_protocol.h"
 #include "dvlnet/protocol_zt.h"
 #endif
+
 #ifndef DISABLE_TCP
 #include "dvlnet/tcp_client.h"
 #endif
 #endif
-#include "dvlnet/loopback.h"
 
 namespace devilution::net {
 
