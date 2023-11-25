@@ -810,7 +810,7 @@ void Render(const UiList &uiList)
 	const Surface &out = Surface(DiabloUiSurface());
 
 	for (std::size_t i = listOffset; i < uiList.m_vecItems.size() && (i - listOffset) < ListViewportSize; ++i) {
-		SDL_Rect rect = uiList.itemRect(i - listOffset);
+		SDL_Rect rect = uiList.itemRect(static_cast<int>(i - listOffset));
 		const UiListItem &item = *uiList.GetItem(i);
 		if (i == SelectedItem)
 			DrawSelector(rect);
