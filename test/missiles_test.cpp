@@ -45,7 +45,7 @@ TEST(Missiles, RotateBlockedMissileArrow)
 
 	Player &player = Players[0];
 	// missile can be a copy or a reference, there's no nullptr check and the functions that use it don't expect the instance to be part of a global structure so it doesn't really matter for this use.
-	Missile missile = *AddMissile({ 0, 0 }, { 0, 0 }, Direction::South, MissileID::Arrow, TARGET_MONSTERS, player.getId(), 0, 0);
+	Missile missile = *AddMissile({ 0, 0 }, { 0, 0 }, Direction::South, MissileID::Arrow, TARGET_MONSTERS, player, 0, 0);
 
 	// Arrows have a hardcoded frame count and use 1-indexed sprites
 	EXPECT_EQ(missile._miAnimFrame, 1);
@@ -55,7 +55,7 @@ TEST(Missiles, RotateBlockedMissileArrow)
 	TestArrowRotatesUniformly(missile, 16, 15, 1);
 
 	// All other missiles use the number of 0-indexed sprites defined in MissileSpriteData
-	missile = *AddMissile({ 0, 0 }, { 0, 0 }, Direction::South, MissileID::Firebolt, TARGET_MONSTERS, player.getId(), 0, 0);
+	missile = *AddMissile({ 0, 0 }, { 0, 0 }, Direction::South, MissileID::Firebolt, TARGET_MONSTERS, player, 0, 0);
 	EXPECT_EQ(missile._mimfnum, 0);
 	TestAnimatedMissileRotatesUniformly(missile, 5, 4, 6);
 	TestAnimatedMissileRotatesUniformly(missile, 0, 15, 1);

@@ -692,7 +692,7 @@ bool GuardianTryFireAt(Missile &missile, Point target)
 	return true;
 }
 
-bool GrowWall(int playerId, Point position, Point target, MissileID type, int spellLevel, int damage)
+bool GrowWall(int id, Point position, Point target, MissileID type, int spellLevel, int damage)
 {
 	int dp = dPiece[position.x][position.y];
 	assert(dp <= MAXTILES && dp >= 0);
@@ -701,7 +701,7 @@ bool GrowWall(int playerId, Point position, Point target, MissileID type, int sp
 		return false;
 	}
 
-	AddMissile(position, position, Players[playerId]._pdir, type, TARGET_BOTH, playerId, damage, spellLevel);
+	AddMissile(position, position, Direction::South, type, TARGET_BOTH, id, damage, spellLevel);
 	return true;
 }
 
