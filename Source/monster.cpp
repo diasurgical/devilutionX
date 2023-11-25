@@ -1315,7 +1315,7 @@ bool MonsterRangedAttack(Monster &monster)
 				    monster.direction,
 				    missileType,
 				    TARGET_PLAYERS,
-				    monster.getId(),
+				    monster,
 				    monster.var2,
 				    0);
 			}
@@ -1340,7 +1340,7 @@ bool MonsterRangedSpecialAttack(Monster &monster)
 		        monster.direction,
 		        static_cast<MissileID>(monster.var1),
 		        TARGET_PLAYERS,
-		        monster.getId(),
+		        monster,
 		        monster.var3,
 		        0)
 		    != nullptr) {
@@ -2208,11 +2208,10 @@ void RhinoAi(Monster &monster)
 		if (distanceToEnemy >= 5
 		    && v < 2 * monster.intelligence + 43
 		    && LineClear([&monster](Point position) { return IsTileAvailable(monster, position); }, monster.position.tile, monster.enemyPosition)) {
-			size_t monsterId = monster.getId();
-			if (AddMissile(monster.position.tile, monster.enemyPosition, md, MissileID::Rhino, TARGET_PLAYERS, monsterId, 0, 0) != nullptr) {
+			if (AddMissile(monster.position.tile, monster.enemyPosition, md, MissileID::Rhino, TARGET_PLAYERS, monster, 0, 0) != nullptr) {
 				if (monster.data().hasSpecialSound)
 					PlayEffect(monster, MonsterSound::Special);
-				dMonster[monster.position.tile.x][monster.position.tile.y] = -(monsterId + 1);
+				dMonster[monster.position.tile.x][monster.position.tile.y] = -(monster.getId() + 1);
 				monster.mode = MonsterMode::Charge;
 			}
 		} else {
@@ -2375,9 +2374,8 @@ void BatAi(Monster &monster)
 	    && distanceToEnemy >= 5
 	    && v < 4 * monster.intelligence + 33
 	    && LineClear([&monster](Point position) { return IsTileAvailable(monster, position); }, monster.position.tile, monster.enemyPosition)) {
-		size_t monsterId = monster.getId();
-		if (AddMissile(monster.position.tile, monster.enemyPosition, md, MissileID::Rhino, TARGET_PLAYERS, monsterId, 0, 0) != nullptr) {
-			dMonster[monster.position.tile.x][monster.position.tile.y] = -(monsterId + 1);
+		if (AddMissile(monster.position.tile, monster.enemyPosition, md, MissileID::Rhino, TARGET_PLAYERS, monster, 0, 0) != nullptr) {
+			dMonster[monster.position.tile.x][monster.position.tile.y] = -(monster.getId() + 1);
 			monster.mode = MonsterMode::Charge;
 		}
 	} else if (distanceToEnemy >= 2) {
@@ -2392,7 +2390,7 @@ void BatAi(Monster &monster)
 		monster.goal = MonsterGoal::Retreat;
 		monster.goalVar1 = 0;
 		if (monster.type().type == MT_FAMILIAR) {
-			AddMissile(monster.enemyPosition, monster.enemyPosition + Direction::SouthEast, Direction::South, MissileID::Lightning, TARGET_PLAYERS, monster.getId(), GenerateRnd(10) + 1, 0);
+			AddMissile(monster.enemyPosition, monster.enemyPosition + Direction::SouthEast, Direction::South, MissileID::Lightning, TARGET_PLAYERS, monster, GenerateRnd(10) + 1, 0);
 		}
 	}
 
@@ -2601,10 +2599,9 @@ void SnakeAi(Monster &monster)
 	unsigned distanceToEnemy = monster.distanceToEnemy();
 	if (distanceToEnemy >= 2) {
 		if (distanceToEnemy < 3 && LineClear([&monster](Point position) { return IsTileAvailable(monster, position); }, monster.position.tile, monster.enemyPosition) && static_cast<MonsterMode>(monster.var1) != MonsterMode::Charge) {
-			size_t monsterId = monster.getId();
-			if (AddMissile(monster.position.tile, monster.enemyPosition, md, MissileID::Rhino, TARGET_PLAYERS, monsterId, 0, 0) != nullptr) {
+			if (AddMissile(monster.position.tile, monster.enemyPosition, md, MissileID::Rhino, TARGET_PLAYERS, monster, 0, 0) != nullptr) {
 				PlayEffect(monster, MonsterSound::Attack);
-				dMonster[monster.position.tile.x][monster.position.tile.y] = -(monsterId + 1);
+				dMonster[monster.position.tile.x][monster.position.tile.y] = -(monster.getId() + 1);
 				monster.mode = MonsterMode::Charge;
 			}
 		} else if (static_cast<MonsterMode>(monster.var1) == MonsterMode::Delay || GenerateRnd(100) >= 35 - 2 * monster.intelligence) {
@@ -2695,9 +2692,8 @@ void CounselorAi(Monster &monster)
 			} else if (static_cast<MonsterMode>(monster.var1) == MonsterMode::Delay
 			    || GenerateRnd(100) < 2 * monster.intelligence + 20) {
 				StartRangedAttack(monster, MissileID::Null, 0);
-				size_t monsterId = monster.getId();
-				AddMissile(monster.position.tile, { 0, 0 }, monster.direction, MissileID::FlashBottom, TARGET_PLAYERS, monsterId, 4, 0);
-				AddMissile(monster.position.tile, { 0, 0 }, monster.direction, MissileID::FlashTop, TARGET_PLAYERS, monsterId, 4, 0);
+				AddMissile(monster.position.tile, { 0, 0 }, monster.direction, MissileID::FlashBottom, TARGET_PLAYERS, monster, 4, 0);
+				AddMissile(monster.position.tile, { 0, 0 }, monster.direction, MissileID::FlashTop, TARGET_PLAYERS, monster, 4, 0);
 			} else
 				AiDelay(monster, GenerateRnd(10) + 2 * (5 - monster.intelligence));
 		}
@@ -3777,7 +3773,7 @@ void MonsterDeath(Monster &monster, Direction md, bool sendmsg)
 	CheckQuestKill(monster, sendmsg);
 	M_FallenFear(monster.position.tile);
 	if (IsAnyOf(monster.type().type, MT_NACID, MT_RACID, MT_BACID, MT_XACID, MT_SPIDLORD))
-		AddMissile(monster.position.tile, { 0, 0 }, Direction::South, MissileID::AcidPuddle, TARGET_PLAYERS, monster.getId(), monster.intelligence + 1, 0);
+		AddMissile(monster.position.tile, { 0, 0 }, Direction::South, MissileID::AcidPuddle, TARGET_PLAYERS, monster, monster.intelligence + 1, 0);
 }
 
 void StartMonsterDeath(Monster &monster, const Player &player, bool sendmsg)
