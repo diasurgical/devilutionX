@@ -16,7 +16,7 @@ std::vector<std::unique_ptr<UiListItem>> vecMenuItems;
 
 _mainmenu_selections MainMenuResult;
 
-void UiMainMenuSelect(int value)
+void UiMainMenuSelect(size_t value)
 {
 	MainMenuResult = (_mainmenu_selections)vecMenuItems[value]->m_value;
 }
