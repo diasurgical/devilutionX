@@ -72,8 +72,8 @@ std::size_t SelectedItemMax;
 std::size_t ListViewportSize = 1;
 std::size_t listOffset = 0;
 
-void (*gfnListFocus)(int value);
-void (*gfnListSelect)(int value);
+void (*gfnListFocus)(size_t value);
+void (*gfnListSelect)(size_t value);
 void (*gfnListEsc)();
 void (*gfnFullscreen)();
 bool (*gfnListYesNo)();
@@ -113,7 +113,7 @@ bool IsTextInputActive()
 	return UiTextInputState.has_value();
 }
 
-void UiInitList(void (*fnFocus)(int value), void (*fnSelect)(int value), void (*fnEsc)(), const std::vector<std::unique_ptr<UiItemBase>> &items, bool itemsWraps, void (*fnFullscreen)(), bool (*fnYesNo)(), size_t selectedItem /*= 0*/)
+void UiInitList(void (*fnFocus)(size_t value), void (*fnSelect)(size_t value), void (*fnEsc)(), const std::vector<std::unique_ptr<UiItemBase>> &items, bool itemsWraps, void (*fnFullscreen)(), bool (*fnYesNo)(), size_t selectedItem /*= 0*/)
 {
 	SelectedItem = selectedItem;
 	SelectedItemMax = 0;
