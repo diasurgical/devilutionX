@@ -169,7 +169,7 @@ void SelheroListSelect(size_t value)
 		}
 		if (vecSelHeroDlgItems.size() > 4)
 			itemH = 26;
-		int itemY = 246 + (176 - vecSelHeroDlgItems.size() * itemH) / 2;
+		int itemY = static_cast<int>(246 + (176 - vecSelHeroDlgItems.size() * itemH) / 2);
 		vecSelDlgItems.push_back(std::make_unique<UiList>(vecSelHeroDlgItems, vecSelHeroDlgItems.size(), uiPosition.x + 264, (uiPosition.y + itemY), 320, itemH, UiFlags::AlignCenter | UiFlags::FontSize24 | UiFlags::ColorUiGold));
 
 		SDL_Rect rect2 = { (Sint16)(uiPosition.x + 279), (Sint16)(uiPosition.y + 429), 140, 35 };
