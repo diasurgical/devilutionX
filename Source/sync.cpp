@@ -152,8 +152,7 @@ void SyncPlrInv(TSyncHeader *pHdr)
 
 void SyncMonster(bool isOwner, const TSyncMonster &monsterSync)
 {
-	const int monsterId = monsterSync._mndx;
-	Monster &monster = Monsters[monsterId];
+	Monster &monster = Monsters[monsterSync._mndx];
 	if (monster.hitPoints <= 0 || monster.mode == MonsterMode::Death) {
 		return;
 	}
@@ -183,14 +182,14 @@ void SyncMonster(bool isOwner, const TSyncMonster &monsterSync)
 			Direction md = GetDirection(monster.position.tile, position);
 			if (DirOK(monster, md)) {
 				M_ClearSquares(monster);
-				dMonster[monster.position.tile.x][monster.position.tile.y] = monsterId + 1;
+				monster.occupyTile(monster.position.tile, false);
 				Walk(monster, md);
 				monster.activeForTicks = UINT8_MAX;
 			}
 		}
 	} else if (dMonster[position.x][position.y] == 0) {
 		M_ClearSquares(monster);
-		dMonster[position.x][position.y] = monsterId + 1;
+		monster.occupyTile(position, false);
 		monster.position.tile = position;
 		if (monster.lightId != NO_LIGHT)
 			ChangeLightXY(monster.lightId, position);

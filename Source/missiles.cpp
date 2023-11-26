@@ -3730,7 +3730,7 @@ void ProcessRhino(Missile &missile)
 	monster.position.future = newPos;
 	monster.position.old = newPos;
 	monster.position.tile = newPos;
-	dMonster[newPos.x][newPos.y] = -(monst + 1);
+	monster.occupyTile(newPos, true);
 	if (monster.isUnique())
 		ChangeLightXY(missile._mlid, newPos);
 	MoveMissilePos(missile);
