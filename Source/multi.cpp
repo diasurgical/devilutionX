@@ -659,7 +659,7 @@ void multi_process_network_packets()
 						if (player.isWalking())
 							player.position.temp = syncPosition;
 						SetPlayerOld(player);
-						dPlayer[player.position.tile.x][player.position.tile.y] = playerId + 1;
+						player.occupyTile(player.position.tile, false);
 					}
 					if (player.position.future.WalkingDistance(player.position.tile) > 1) {
 						player.position.future = player.position.tile;

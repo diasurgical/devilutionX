@@ -1260,7 +1260,7 @@ void MonsterAttackPlayer(Monster &monster, Player &player, int hit, int minDam, 
 			player.position.tile = newPosition;
 			FixPlayerLocation(player, player._pdir);
 			FixPlrWalkTags(player);
-			dPlayer[newPosition.x][newPosition.y] = player.getId() + 1;
+			player.occupyTile(newPosition, false);
 			SetPlayerOld(player);
 		}
 	}
@@ -4439,7 +4439,7 @@ void MissToMonst(Missile &missile, Point position)
 			player.position.tile = newPosition;
 			FixPlayerLocation(player, player._pdir);
 			FixPlrWalkTags(player);
-			dPlayer[newPosition.x][newPosition.y] = pnum + 1;
+			player.occupyTile(newPosition, false);
 			SetPlayerOld(player);
 		}
 		return;

@@ -884,6 +884,13 @@ public:
 
 	/** @brief Returns a character's mana based on starting mana, character level, and base magic. */
 	int32_t calculateBaseMana() const;
+
+	/**
+	 * @brief Sets a tile/dPlayer to be occupied by the player
+	 * @param position tile to update
+	 * @param isMoving specifies whether the player is moving or not (true/moving results in a negative index in dPlayer)
+	 */
+	void occupyTile(Point position, bool isMoving) const;
 };
 
 extern DVL_API_FOR_TEST size_t MyPlayerId;
