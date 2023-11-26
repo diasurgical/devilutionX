@@ -40,8 +40,8 @@ jobs:
       uses: actions/cache@v3
       with:
         path: android-project/app/.cxx
-        key: ${{ github.workflow }}-v3-${{ github.sha }}
-        restore-keys: ${{ github.workflow }}-v3-
+        key: ${{ github.workflow }}-v4-${{ github.sha }}
+        restore-keys: ${{ github.workflow }}-v4-
 
     - name: Build
       working-directory: ${{github.workspace}}
