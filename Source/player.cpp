@@ -77,17 +77,17 @@ void UpdatePlayerLightOffset(Player &player)
 
 void WalkNorthwards(Player &player, const DirectionSettings &walkParams)
 {
-	dPlayer[player.position.future.x][player.position.future.y] = -(player.getId() + 1);
+	player.occupyTile(player.position.future, true);
 	player.position.temp = player.position.tile + walkParams.tileAdd;
 }
 
 void WalkSouthwards(Player &player, const DirectionSettings & /*walkParams*/)
 {
 	const size_t playerId = player.getId();
-	dPlayer[player.position.tile.x][player.position.tile.y] = -(playerId + 1);
 	player.position.temp = player.position.tile;
 	player.position.tile = player.position.future; // Move player to the next tile to maintain correct render order
-	dPlayer[player.position.tile.x][player.position.tile.y] = playerId + 1;
+	player.occupyTile(player.position.temp, true);
+	player.occupyTile(player.position.tile, false);
 	// BUGFIX: missing `if (leveltype != DTYPE_TOWN) {` for call to ChangeLightXY and PM_ChangeLightOff.
 	ChangeLightXY(player.lightId, player.position.tile);
 	UpdatePlayerLightOffset(player);
@@ -98,8 +98,8 @@ void WalkSideways(Player &player, const DirectionSettings &walkParams)
 	Point const nextPosition = player.position.tile + walkParams.map;
 
 	const size_t playerId = player.getId();
-	dPlayer[player.position.tile.x][player.position.tile.y] = -(playerId + 1);
-	dPlayer[player.position.future.x][player.position.future.y] = playerId + 1;
+	player.occupyTile(player.position.tile, true);
+	player.occupyTile(player.position.future, false);
 
 	if (leveltype != DTYPE_TOWN) {
 		ChangeLightXY(player.lightId, nextPosition);
@@ -415,7 +415,7 @@ void InitLevelChange(Player &player)
 	FixPlrWalkTags(player);
 	SetPlayerOld(player);
 	if (&player == MyPlayer) {
-		dPlayer[player.position.tile.x][player.position.tile.y] = player.getId() + 1;
+		player.occupyTile(player.position.tile, false);
 	} else {
 		player._pLvlVisited[player.plrlevel] = true;
 	}
@@ -453,7 +453,7 @@ bool DoWalk(Player &player, int variant)
 	case PM_WALK_NORTHWARDS:
 		dPlayer[player.position.tile.x][player.position.tile.y] = 0;
 		player.position.tile = player.position.temp;
-		dPlayer[player.position.tile.x][player.position.tile.y] = player.getId() + 1;
+		player.occupyTile(player.position.tile, false);
 		break;
 	case PM_WALK_SOUTHWARDS:
 		dPlayer[player.position.temp.x][player.position.temp.y] = 0;
@@ -462,7 +462,7 @@ bool DoWalk(Player &player, int variant)
 		dPlayer[player.position.tile.x][player.position.tile.y] = 0;
 		player.position.tile = player.position.temp;
 		// dPlayer is set here for backwards comparability, without it the player would be invisible if loaded from a vanilla save.
-		dPlayer[player.position.tile.x][player.position.tile.y] = player.getId() + 1;
+		player.occupyTile(player.position.tile, false);
 		break;
 	}
 
@@ -2070,6 +2070,12 @@ int32_t Player::calculateBaseMana() const
 	return attr.adjMana + (attr.lvlMana * getCharacterLevel()) + (attr.chrMana * _pBaseMag);
 }
 
+void Player::occupyTile(Point position, bool isMoving) const
+{
+	int16_t id = static_cast<int16_t>(this->getId() + 1);
+	dPlayer[position.x][position.y] = isMoving ? -id : id;
+}
+
 Player *PlayerAtPosition(Point position)
 {
 	if (!InDungeonBounds(position))
@@ -2567,7 +2573,7 @@ void StartStand(Player &player, Direction dir)
 	player._pmode = PM_STAND;
 	FixPlayerLocation(player, dir);
 	FixPlrWalkTags(player);
-	dPlayer[player.position.tile.x][player.position.tile.y] = player.getId() + 1;
+	player.occupyTile(player.position.tile, false);
 	SetPlayerOld(player);
 }
 
@@ -2641,7 +2647,7 @@ void StartPlrHit(Player &player, int dam, bool forcehit)
 	player._pmode = PM_GOTHIT;
 	FixPlayerLocation(player, pd);
 	FixPlrWalkTags(player);
-	dPlayer[player.position.tile.x][player.position.tile.y] = player.getId() + 1;
+	player.occupyTile(player.position.tile, false);
 	SetPlayerOld(player);
 }
 
@@ -3251,7 +3257,7 @@ void SyncInitPlrPos(Player &player)
 	}();
 
 	player.position.tile = position;
-	dPlayer[position.x][position.y] = player.getId() + 1;
+	player.occupyTile(position, false);
 	player.position.future = position;
 
 	if (&player == MyPlayer) {
