@@ -274,32 +274,27 @@ tl::expected<void, PacketError> base_protocol<P>::SendTo(plr_t player, packet &p
 template <class P>
 void base_protocol<P>::recv()
 {
-	try {
-		buffer_t pkt_buf;
-		endpoint_t sender;
-		while (proto.recv(sender, pkt_buf)) { // read until kernel buffer is empty?
-			tl::expected<void, PacketError> result
-			    = pktfty->make_packet(pkt_buf)
-			          .and_then([&](std::unique_ptr<packet> &&pkt) {
-				          return recv_decrypted(*pkt, sender);
-			          });
-			if (!result.has_value()) {
-				// drop packet
-				proto.disconnect(sender);
-				Log("{}", result.error().what());
+	buffer_t pkt_buf;
+	endpoint_t sender;
+	while (proto.recv(sender, pkt_buf)) { // read until kernel buffer is empty?
+		tl::expected<void, PacketError> result
+		    = pktfty->make_packet(pkt_buf)
+		          .and_then([&](std::unique_ptr<packet> &&pkt) {
+			          return recv_decrypted(*pkt, sender);
+		          });
+		if (!result.has_value()) {
+			// drop packet
+			proto.disconnect(sender);
+			Log("{}", result.error().what());
+		}
+	}
+	while (proto.get_disconnected(sender)) {
+		for (plr_t i = 0; i < Players.size(); ++i) {
+			if (peers[i].endpoint == sender) {
+				DisconnectNet(i);
+				break;
 			}
 		}
-		while (proto.get_disconnected(sender)) {
-			for (plr_t i = 0; i < Players.size(); ++i) {
-				if (peers[i].endpoint == sender) {
-					DisconnectNet(i);
-					break;
-				}
-			}
-		}
-	} catch (std::exception &e) {
-		Log("{}", e.what());
-		return;
 	}
 }
 
