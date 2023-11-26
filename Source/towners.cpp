@@ -40,7 +40,7 @@ void NewTownerAnim(Towner &towner, ClxSpriteList sprites, uint8_t numFrames, int
 	towner._tAnimDelay = delay;
 }
 
-void InitTownerInfo(int i, const TownerData &townerData)
+void InitTownerInfo(int16_t i, const TownerData &townerData)
 {
 	auto &towner = Towners[i];
 
@@ -218,7 +218,7 @@ void InitCows(Towner &towner, const TownerData &townerData)
 	towner.name = _("Cow");
 
 	const Point position = townerData.position;
-	int cowId = dMonster[position.x][position.y];
+	int16_t cowId = dMonster[position.x][position.y];
 
 	// Cows are large sprites so take up multiple tiles. Vanilla Diablo/Hellfire allowed the player to stand adjacent
 	//  to a cow facing an ordinal direction (the two top-right cows) which leads to visual clipping. It's easier to
@@ -829,7 +829,7 @@ void InitTowners()
 
 	CowSprites.emplace(LoadCelSheet("towners\\animals\\cow", 128));
 
-	int i = 0;
+	int16_t i = 0;
 	for (const auto &townerData : TownersData) {
 		if (!IsTownerPresent(townerData.type))
 			continue;
