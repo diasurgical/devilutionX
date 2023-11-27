@@ -559,20 +559,18 @@ void LoadMapObjects(const char *path, Point start, WorldTileRectangle mapRange =
 
 	auto dunData = LoadFileInMem<uint16_t>(path);
 
-	int width = SDL_SwapLE16(dunData[0]);
-	int height = SDL_SwapLE16(dunData[1]);
+	WorldTileSize size = GetDunSize(dunData.get());
 
-	int layer2Offset = 2 + width * height;
+	int layer2Offset = 2 + size.width * size.height;
 
 	// The rest of the layers are at dPiece scale
-	width *= 2;
-	height *= 2;
+	size.width *= static_cast<WorldTileCoord>(2);
 
-	const uint16_t *objectLayer = &dunData[layer2Offset + width * height * 2];
+	const uint16_t *objectLayer = &dunData[layer2Offset + size.width * size.height * 2];
 
-	for (int j = 0; j < height; j++) {
-		for (int i = 0; i < width; i++) {
-			auto objectId = static_cast<uint8_t>(SDL_SwapLE16(objectLayer[j * width + i]));
+	for (WorldTileCoord j = 0; j < size.height; j++) {
+		for (WorldTileCoord i = 0; i < size.width; i++) {
+			auto objectId = static_cast<uint8_t>(SDL_SwapLE16(objectLayer[j * size.width + i]));
 			if (objectId != 0) {
 				Point mapPos = start + Displacement { i, j };
 				Object *mapObject = AddObject(ObjTypeConv[objectId], mapPos);
@@ -3949,20 +3947,18 @@ void SetMapObjects(const uint16_t *dunData, int startx, int starty)
 
 	ClrAllObjects();
 
-	int width = SDL_SwapLE16(dunData[0]);
-	int height = SDL_SwapLE16(dunData[1]);
+	WorldTileSize size = GetDunSize(dunData);
 
-	int layer2Offset = 2 + width * height;
+	int layer2Offset = 2 + size.width * size.height;
 
 	// The rest of the layers are at dPiece scale
-	width *= 2;
-	height *= 2;
+	size.width *= static_cast<WorldTileCoord>(2);
 
-	const uint16_t *objectLayer = &dunData[layer2Offset + width * height * 2];
+	const uint16_t *objectLayer = &dunData[layer2Offset + size.width * size.height * 2];
 
-	for (int j = 0; j < height; j++) {
-		for (int i = 0; i < width; i++) {
-			auto objectId = static_cast<uint8_t>(SDL_SwapLE16(objectLayer[j * width + i]));
+	for (WorldTileCoord j = 0; j < size.height; j++) {
+		for (WorldTileCoord i = 0; i < size.width; i++) {
+			auto objectId = static_cast<uint8_t>(SDL_SwapLE16(objectLayer[j * size.width + i]));
 			if (objectId != 0) {
 				const ObjectData &objectData = AllObjects[ObjTypeConv[objectId]];
 				filesWidths[objectData.ofindex] = objectData.animWidth;
@@ -3972,9 +3968,9 @@ void SetMapObjects(const uint16_t *dunData, int startx, int starty)
 
 	LoadLevelObjects(filesWidths);
 
-	for (int j = 0; j < height; j++) {
-		for (int i = 0; i < width; i++) {
-			auto objectId = static_cast<uint8_t>(SDL_SwapLE16(objectLayer[j * width + i]));
+	for (WorldTileCoord j = 0; j < size.height; j++) {
+		for (WorldTileCoord i = 0; i < size.width; i++) {
+			auto objectId = static_cast<uint8_t>(SDL_SwapLE16(objectLayer[j * size.width + i]));
 			if (objectId != 0) {
 				AddObject(ObjTypeConv[objectId], { startx + 16 + i, starty + 16 + j });
 			}
