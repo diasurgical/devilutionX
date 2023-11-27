@@ -703,13 +703,18 @@ void DRLG_HoldThemeRooms()
 	}
 }
 
+WorldTileSize GetDunSize(const uint16_t *dunData)
+{
+	return WorldTileSize(static_cast<WorldTileCoord>(SDL_SwapLE16(dunData[0])), static_cast<WorldTileCoord>(SDL_SwapLE16(dunData[1])));
+}
+
 void SetSetPieceRoom(WorldTilePosition position, int floorId)
 {
 	if (pSetPiece == nullptr)
 		return;
 
 	PlaceDunTiles(pSetPiece.get(), position, floorId);
-	SetPiece = { position, WorldTileSize(SDL_SwapLE16(pSetPiece[0]), SDL_SwapLE16(pSetPiece[1])) };
+	SetPiece = { position, GetDunSize(pSetPiece.get()) };
 }
 
 void FreeQuestSetPieces()
