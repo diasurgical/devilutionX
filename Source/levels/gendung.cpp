@@ -23,7 +23,6 @@ uint8_t pdungeon[DMAXX][DMAXY];
 Bitset2d<DMAXX, DMAXY> Protected;
 WorldTileRectangle SetPieceRoom;
 WorldTileRectangle SetPiece;
-std::unique_ptr<uint16_t[]> pSetPiece;
 OptionalOwnedClxSpriteList pSpecialCels;
 std::unique_ptr<MegaTile[]> pMegaTiles;
 std::unique_ptr<std::byte[]> pDungeonCels;
@@ -703,20 +702,6 @@ void DRLG_HoldThemeRooms()
 WorldTileSize GetDunSize(const uint16_t *dunData)
 {
 	return WorldTileSize(static_cast<WorldTileCoord>(SDL_SwapLE16(dunData[0])), static_cast<WorldTileCoord>(SDL_SwapLE16(dunData[1])));
-}
-
-void SetSetPieceRoom(WorldTilePosition position, int floorId)
-{
-	if (pSetPiece == nullptr)
-		return;
-
-	PlaceDunTiles(pSetPiece.get(), position, floorId);
-	SetPiece = { position, GetDunSize(pSetPiece.get()) };
-}
-
-void FreeQuestSetPieces()
-{
-	pSetPiece = nullptr;
 }
 
 void DRLG_LPass3(int lv)

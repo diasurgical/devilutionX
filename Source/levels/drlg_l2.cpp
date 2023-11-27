@@ -1629,15 +1629,23 @@ void PlaceMiniSetRandom1x1(uint8_t search, uint8_t replace, int rndper)
 	PlaceMiniSetRandom({ { 1, 1 }, { { search } }, { { replace } } }, rndper);
 }
 
-void LoadQuestSetPieces()
+void InitSetPiece()
 {
+	std::unique_ptr<uint16_t[]> setPieceData;
+
 	if (Quests[Q_BLIND].IsAvailable()) {
-		pSetPiece = LoadFileInMem<uint16_t>("levels\\l2data\\blind1.dun");
+		setPieceData = LoadFileInMem<uint16_t>("levels\\l2data\\blind1.dun");
 	} else if (Quests[Q_BLOOD].IsAvailable()) {
-		pSetPiece = LoadFileInMem<uint16_t>("levels\\l2data\\blood1.dun");
+		setPieceData = LoadFileInMem<uint16_t>("levels\\l2data\\blood1.dun");
 	} else if (Quests[Q_SCHAMB].IsAvailable()) {
-		pSetPiece = LoadFileInMem<uint16_t>("levels\\l2data\\bonestr2.dun");
+		setPieceData = LoadFileInMem<uint16_t>("levels\\l2data\\bonestr2.dun");
+	} else {
+		return; // no setpiece needed for this level
 	}
+
+	WorldTilePosition setPiecePosition = SetPieceRoom.position;
+	PlaceDunTiles(setPieceData.get(), setPiecePosition, 3);
+	SetPiece = { setPiecePosition, GetDunSize(setPieceData.get()) };
 }
 
 void InitDungeonPieces()
@@ -2661,8 +2669,6 @@ bool PlaceStairs(lvl_entry entry)
 
 void GenerateLevel(lvl_entry entry)
 {
-	LoadQuestSetPieces();
-
 	while (true) {
 		nRoomCnt = 0;
 		InitDungeonFlags();
@@ -2671,14 +2677,12 @@ void GenerateLevel(lvl_entry entry)
 			continue;
 		}
 		FixTilesPatterns();
-		SetSetPieceRoom(SetPieceRoom.position, 3);
+		InitSetPiece();
 		FloodTransparencyValues(3);
 		FixTransparency();
 		if (PlaceStairs(entry))
 			break;
 	}
-
-	FreeQuestSetPieces();
 
 	FixLockout();
 	FixDoors();

@@ -1796,16 +1796,11 @@ void Fence()
 	FenceDoorFix();
 }
 
-void LoadQuestSetPieces()
-{
-	if (Quests[Q_ANVIL].IsAvailable())
-		pSetPiece = LoadFileInMem<uint16_t>("levels\\l3data\\anvil.dun");
-}
-
 bool PlaceAnvil()
 {
+	std::unique_ptr<uint16_t[]> setPieceData = LoadFileInMem<uint16_t>("levels\\l3data\\anvil.dun");
 	// growing the size by 2 to allow a 1 tile border on all sides
-	WorldTileSize areaSize = WorldTileSize(SDL_SwapLE16(pSetPiece[0]), SDL_SwapLE16(pSetPiece[1])) + 2;
+	WorldTileSize areaSize = GetDunSize(setPieceData.get()) + 2;
 	WorldTileCoord sx = GenerateRnd(DMAXX - areaSize.width);
 	WorldTileCoord sy = GenerateRnd(DMAXY - areaSize.height);
 
@@ -1832,7 +1827,7 @@ bool PlaceAnvil()
 			break;
 	}
 
-	PlaceDunTiles(pSetPiece.get(), { sx + 1, sy + 1 }, 7);
+	PlaceDunTiles(setPieceData.get(), { sx + 1, sy + 1 }, 7);
 	SetPiece = { { sx, sy }, areaSize };
 
 	for (WorldTilePosition tile : PointsInRectangle(SetPiece)) {
@@ -1993,8 +1988,6 @@ bool PlaceStairs(lvl_entry entry)
 
 void GenerateLevel(lvl_entry entry)
 {
-	LoadQuestSetPieces();
-
 	while (true) {
 		InitDungeonFlags();
 		int x1 = GenerateRnd(20) + 10;
@@ -2028,8 +2021,6 @@ void GenerateLevel(lvl_entry entry)
 		if (PlacePool())
 			break;
 	}
-
-	FreeQuestSetPieces();
 
 	if (leveltype == DTYPE_NEST) {
 		PlaceMiniSetRandom(L6ISLE1, 70);
