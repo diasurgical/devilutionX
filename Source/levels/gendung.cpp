@@ -537,19 +537,17 @@ void DRLG_CopyTrans(int sx, int sy, int dx, int dy)
 
 void LoadTransparency(const uint16_t *dunData)
 {
-	int width = SDL_SwapLE16(dunData[0]);
-	int height = SDL_SwapLE16(dunData[1]);
+	WorldTileSize size = GetDunSize(dunData);
 
-	int layer2Offset = 2 + width * height;
+	int layer2Offset = 2 + size.width * size.height;
 
 	// The rest of the layers are at dPiece scale
-	width *= 2;
-	height *= 2;
+	size *= static_cast<WorldTileCoord>(2);
 
-	const uint16_t *transparentLayer = &dunData[layer2Offset + width * height * 3];
+	const uint16_t *transparentLayer = &dunData[layer2Offset + size.width * size.height * 3];
 
-	for (int j = 0; j < height; j++) {
-		for (int i = 0; i < width; i++) {
+	for (WorldTileCoord j = 0; j < size.height; j++) {
+		for (WorldTileCoord i = 0; i < size.width; i++) {
 			dTransVal[16 + i][16 + j] = SDL_SwapLE16(*transparentLayer);
 			transparentLayer++;
 		}
@@ -631,14 +629,13 @@ std::optional<Point> PlaceMiniSet(const Miniset &miniset, int tries, bool drlg1Q
 
 void PlaceDunTiles(const uint16_t *dunData, Point position, int floorId)
 {
-	int width = SDL_SwapLE16(dunData[0]);
-	int height = SDL_SwapLE16(dunData[1]);
+	WorldTileSize size = GetDunSize(dunData);
 
 	const uint16_t *tileLayer = &dunData[2];
 
-	for (int j = 0; j < height; j++) {
-		for (int i = 0; i < width; i++) {
-			auto tileId = static_cast<uint8_t>(SDL_SwapLE16(tileLayer[j * width + i]));
+	for (WorldTileCoord j = 0; j < size.height; j++) {
+		for (WorldTileCoord i = 0; i < size.width; i++) {
+			auto tileId = static_cast<uint8_t>(SDL_SwapLE16(tileLayer[j * size.width + i]));
 			if (tileId != 0) {
 				dungeon[position.x + i][position.y + j] = tileId;
 				Protected.set(position.x + i, position.y + j);
