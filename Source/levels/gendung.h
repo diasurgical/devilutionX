@@ -358,6 +358,10 @@ std::optional<Point> PlaceMiniSet(const Miniset &miniset, int tries = 199, bool 
 void PlaceDunTiles(const uint16_t *dunData, Point position, int floorId = 0);
 void DRLG_PlaceThemeRooms(int minSize, int maxSize, int floor, int freq, bool rndSize);
 void DRLG_HoldThemeRooms();
+/**
+ * @brief Returns ths size in tiles of the specified ".dun" Data
+ */
+WorldTileSize GetDunSize(const uint16_t *dunData);
 void SetSetPieceRoom(WorldTilePosition position, int floorId);
 void FreeQuestSetPieces();
 void DRLG_LPass3(int lv);
