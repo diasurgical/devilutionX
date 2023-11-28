@@ -487,7 +487,7 @@ void LoadMonstDat()
 			const auto [it, inserted] = spritePathToId.emplace(assetsSuffix, spritePathToId.size());
 			if (inserted)
 				MonsterSpritePaths.push_back(it->first);
-			monster.spriteId = it->second;
+			monster.spriteId = static_cast<uint16_t>(it->second);
 		}
 		reader.readString("soundSuffix", monster.soundSuffix);
 		reader.readString("trnFile", monster.trnFile);
