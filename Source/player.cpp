@@ -1044,7 +1044,7 @@ bool DoSpell(Player &player)
 {
 	if (player.AnimInfo.currentFrame == player._pSFNum) {
 		CastSpell(
-		    player.getId(),
+		    player,
 		    player.executedSpell.spellId,
 		    player.position.tile,
 		    player.position.temp,

@@ -62,7 +62,7 @@ std::string DebugCmdVisitTowner(std::string_view name)
 	for (const Towner &towner : Towners) {
 		if (towner._ttype != it->second) continue;
 		CastSpell(
-		    static_cast<int>(MyPlayerId),
+		    *MyPlayer,
 		    SpellID::Teleport,
 		    myPlayer.position.tile,
 		    towner.position,
