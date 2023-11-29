@@ -288,7 +288,7 @@ void ShowProgress(interface_mode uMsg)
 	IsProgress = true;
 
 	gbSomebodyWonGameKludge = false;
-	plrmsg_delay(true);
+	uint32_t delayStart = SDL_GetTicks();
 
 	EventHandler previousHandler = SetEventHandler(DisableInputEventHandler);
 
@@ -501,7 +501,7 @@ void ShowProgress(interface_mode uMsg)
 	IsProgress = false;
 
 	NetSendCmdLocParam2(true, CMD_PLAYER_JOINLEVEL, myPlayer.position.tile, myPlayer.plrlevel, myPlayer.plrIsOnSetLevel ? 1 : 0);
-	plrmsg_delay(false);
+	DelayPlrMessages(SDL_GetTicks() - delayStart);
 
 	if (gbSomebodyWonGameKludge && myPlayer.isOnLevel(16)) {
 		PrepDoEnding();
