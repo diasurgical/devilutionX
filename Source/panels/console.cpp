@@ -321,7 +321,7 @@ const ConsoleLine &GetConsoleLineFromEnd(int index)
 void SetHistoryIndex(int index)
 {
 	CurrentInputTextState = InputTextState::RestoredFromHistory;
-	HistoryIndex = std::ssize(ConsoleLines) - (index + 1);
+	HistoryIndex = static_cast<int>(std::ssize(ConsoleLines)) - (index + 1);
 	if (HistoryIndex == -1) {
 		ConsoleInputState.assign(DraftInput);
 		return;
@@ -335,7 +335,7 @@ void PrevHistoryItem(tl::function_ref<bool(const ConsoleLine &line)> filter)
 	if (HistoryIndex == -1) {
 		DraftInput = ConsoleInputState.value();
 	}
-	const int n = std::ssize(ConsoleLines);
+	const int n = static_cast<int>(std::ssize(ConsoleLines));
 	for (int i = HistoryIndex + 1; i < n; ++i) {
 		const int index = n - (i + 1);
 		if (filter(ConsoleLines[index])) {
@@ -347,7 +347,7 @@ void PrevHistoryItem(tl::function_ref<bool(const ConsoleLine &line)> filter)
 
 void NextHistoryItem(tl::function_ref<bool(const ConsoleLine &line)> filter)
 {
-	const int n = std::ssize(ConsoleLines);
+	const int n = static_cast<int>(std::ssize(ConsoleLines));
 	for (int i = n - HistoryIndex; i < n; ++i) {
 		if (filter(ConsoleLines[i])) {
 			SetHistoryIndex(i);

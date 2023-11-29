@@ -547,7 +547,7 @@ void LoadTransparency(const uint16_t *dunData)
 
 	for (WorldTileCoord j = 0; j < size.height; j++) {
 		for (WorldTileCoord i = 0; i < size.width; i++) {
-			dTransVal[16 + i][16 + j] = SDL_SwapLE16(*transparentLayer);
+			dTransVal[16 + i][16 + j] = static_cast<int8_t>(SDL_SwapLE16(*transparentLayer));
 			transparentLayer++;
 		}
 	}

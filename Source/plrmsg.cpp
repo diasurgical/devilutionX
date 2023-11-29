@@ -40,7 +40,7 @@ std::array<PlayerMessage, 8> Messages;
 
 int CountLinesOfText(std::string_view text)
 {
-	return 1 + c_count(text, '\n');
+	return static_cast<int>(1 + c_count(text, '\n'));
 }
 
 PlayerMessage &GetNextMessage()
