@@ -17,7 +17,7 @@
 
 namespace devilution {
 
-void plrmsg_delay(bool delay);
+void DelayPlrMessages(uint32_t delayTime);
 void EventPlrMsg(std::string_view text, UiFlags style = UiFlags::ColorWhitegold);
 void SendPlrMsg(Player &player, std::string_view text);
 void InitPlrMsg();
