@@ -878,14 +878,14 @@ void NetSendCmdGItem2(bool usonly, _cmd_id bCmd, uint8_t mast, uint8_t pnum, con
 	tmsg_add((std::byte *)&cmd, sizeof(cmd));
 }
 
-bool NetSendCmdReq2(_cmd_id bCmd, uint8_t mast, uint8_t pnum, const TCmdGItem &item)
+bool NetSendCmdReq2(_cmd_id bCmd, const Player &player, uint8_t pnum, const TCmdGItem &item)
 {
 	TCmdGItem cmd;
 
 	memcpy(&cmd, &item, sizeof(cmd));
 	cmd.bCmd = bCmd;
 	cmd.bPnum = pnum;
-	cmd.bMaster = mast;
+	cmd.bMaster = player.getId();
 
 	int ticks = SDL_GetTicks();
 	if (cmd.dwTime == 0)
@@ -1168,7 +1168,7 @@ size_t OnRequestGetItem(const TCmd *pCmd, Player &player)
 				else
 					InvGetItem(*MyPlayer, ii);
 				SetItemRecord(dwSeed, wCI, wIndx);
-			} else if (!NetSendCmdReq2(CMD_REQUESTGITEM, MyPlayerId, message.bPnum, message)) {
+			} else if (!NetSendCmdReq2(CMD_REQUESTGITEM, *MyPlayer, message.bPnum, message)) {
 				NetSendCmdExtra(message);
 			}
 		}
@@ -1244,7 +1244,7 @@ size_t OnRequestAutoGetItem(const TCmd *pCmd, Player &player)
 				else
 					AutoGetItem(*MyPlayer, &Items[message.bCursitem], message.bCursitem);
 				SetItemRecord(dwSeed, wCI, wIndx);
-			} else if (!NetSendCmdReq2(CMD_REQUESTAGITEM, MyPlayerId, message.bPnum, message)) {
+			} else if (!NetSendCmdReq2(CMD_REQUESTAGITEM, *MyPlayer, message.bPnum, message)) {
 				NetSendCmdExtra(message);
 			}
 		}
@@ -2968,8 +2968,10 @@ void NetSendCmdQuest(bool bHiPri, const Quest &quest)
 		NetSendLoPri(MyPlayerId, (std::byte *)&cmd, sizeof(cmd));
 }
 
-void NetSendCmdGItem(bool bHiPri, _cmd_id bCmd, uint8_t pnum, uint8_t ii)
+void NetSendCmdGItem(bool bHiPri, _cmd_id bCmd, const Player &player, uint8_t ii)
 {
+	uint8_t pnum = player.getId();
+
 	TCmdGItem cmd;
 
 	cmd.bCmd = bCmd;
@@ -3080,12 +3082,12 @@ void NetSendCmdChBeltItem(bool bHiPri, int beltIndex)
 		NetSendLoPri(MyPlayerId, (std::byte *)&cmd, sizeof(cmd));
 }
 
-void NetSendCmdDamage(bool bHiPri, uint8_t bPlr, uint32_t dwDam, DamageType damageType)
+void NetSendCmdDamage(bool bHiPri, const Player &player, uint32_t dwDam, DamageType damageType)
 {
 	TCmdDamage cmd;
 
 	cmd.bCmd = CMD_PLRDAMAGE;
-	cmd.bPlr = bPlr;
+	cmd.bPlr = player.getId();
 	cmd.dwDam = dwDam;
 	cmd.damageType = damageType;
 	if (bHiPri)

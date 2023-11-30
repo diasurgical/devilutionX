@@ -399,7 +399,7 @@ inline Missile *AddMissile(WorldTilePosition src, WorldTilePosition dst, Directi
     mienemy_type micaster, const Player &player, int midam, int spllvl,
     Missile *parent = nullptr, std::optional<SfxID> lSFX = std::nullopt)
 {
-	return AddMissile(src, dst, midir, mitype, micaster, static_cast<int>(player.getId()), midam, spllvl, parent, lSFX);
+	return AddMissile(src, dst, midir, mitype, micaster, player.getId(), midam, spllvl, parent, lSFX);
 }
 inline Missile *AddMissile(WorldTilePosition src, WorldTilePosition dst, Direction midir, MissileID mitype,
     mienemy_type micaster, const Monster &monster, int midam, int spllvl,

@@ -459,7 +459,7 @@ public:
 	/**
 	 * @brief Returns the network identifier for this player
 	 */
-	[[nodiscard]] size_t getId() const;
+	[[nodiscard]] uint8_t getId() const;
 
 	void RemoveSpdBarItem(int iv);
 
@@ -893,7 +893,7 @@ public:
 	void occupyTile(Point position, bool isMoving) const;
 };
 
-extern DVL_API_FOR_TEST size_t MyPlayerId;
+extern DVL_API_FOR_TEST uint8_t MyPlayerId;
 extern DVL_API_FOR_TEST Player *MyPlayer;
 extern DVL_API_FOR_TEST std::vector<Player> Players;
 /** @brief What Player items and stats should be displayed? Normally this is identical to MyPlayer but can differ when /inspect was used. */
