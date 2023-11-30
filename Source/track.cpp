@@ -92,7 +92,7 @@ void RepeatMouseAction()
 		break;
 	case MouseActionType::AttackPlayerTarget:
 		if (PlayerUnderCursor != nullptr && !myPlayer.friendlyMode)
-			NetSendCmdParam1(true, rangedAttack ? CMD_RATTACKPID : CMD_ATTACKPID, static_cast<uint16_t>(PlayerUnderCursor->getId()));
+			NetSendCmdParam1(true, rangedAttack ? CMD_RATTACKPID : CMD_ATTACKPID, PlayerUnderCursor->getId());
 		break;
 	case MouseActionType::Spell:
 		if (ControlMode != ControlTypes::KeyboardAndMouse) {

@@ -3731,7 +3731,7 @@ void M_StartHit(Monster &monster, const Player &player, int dam)
 {
 	monster.tag(player);
 	if (IsHardHit(monster, dam)) {
-		monster.enemy = static_cast<uint8_t>(player.getId());
+		monster.enemy = player.getId();
 		monster.enemyPosition = player.position.future;
 		monster.flags &= ~MFLAG_TARGETS_MONSTER;
 		if (monster.mode != MonsterMode::Petrified) {
