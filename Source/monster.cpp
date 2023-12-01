@@ -3500,6 +3500,15 @@ void InitAllMonsterGFX()
 		InitMonsterGFX(firstMonster, std::move(spritesData));
 	}
 	LogVerbose(" Total monster graphics:                 {:>4d} KiB {:>4d} KiB", totalUniqueBytes / 1024, totalBytes / 1024);
+
+	if (totalUniqueBytes > 0) {
+		// we loaded new sprites, check if we need to update existing monsters
+		for (size_t i = 0; i < ActiveMonsterCount; i++) {
+			Monster &monster = Monsters[ActiveMonsters[i]];
+			if (!monster.animInfo.sprites)
+				SyncMonsterAnim(monster);
+		}
+	}
 }
 
 void WeakenNaKrul()
