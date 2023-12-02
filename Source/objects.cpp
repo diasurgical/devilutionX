@@ -564,7 +564,7 @@ void LoadMapObjects(const char *path, Point start, WorldTileRectangle mapRange =
 	int layer2Offset = 2 + size.width * size.height;
 
 	// The rest of the layers are at dPiece scale
-	size.width *= static_cast<WorldTileCoord>(2);
+	size *= static_cast<WorldTileCoord>(2);
 
 	const uint16_t *objectLayer = &dunData[layer2Offset + size.width * size.height * 2];
 
@@ -3952,7 +3952,7 @@ void SetMapObjects(const uint16_t *dunData, int startx, int starty)
 	int layer2Offset = 2 + size.width * size.height;
 
 	// The rest of the layers are at dPiece scale
-	size.width *= static_cast<WorldTileCoord>(2);
+	size *= static_cast<WorldTileCoord>(2);
 
 	const uint16_t *objectLayer = &dunData[layer2Offset + size.width * size.height * 2];
 
