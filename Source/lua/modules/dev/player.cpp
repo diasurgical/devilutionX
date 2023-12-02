@@ -81,8 +81,8 @@ std::string DebugSetPlayerTrn(std::string_view path)
 sol::table LuaDevPlayerTrnModule(sol::state_view &lua)
 {
 	sol::table table = lua.create_table();
-	SetDocumented(table, "mon", "(name: string)", "Set player TRN to monsters\\monsters\\${name}.trn",
-	    [](std::string_view name) { return DebugSetPlayerTrn(StrCat("monsters\\monsters\\", name, ".trn")); });
+	SetDocumented(table, "mon", "(name: string)", "Set player TRN to monsters\\${name}.trn",
+	    [](std::string_view name) { return DebugSetPlayerTrn(StrCat("monsters\\", name, ".trn")); });
 	SetDocumented(table, "plr", "(name: string)", "Set player TRN to plrgfx\\${name}.trn",
 	    [](std::string_view name) { return DebugSetPlayerTrn(StrCat("plrgfx\\", name, ".trn")); });
 	SetDocumented(table, "clear", "()", "Unset player TRN",
