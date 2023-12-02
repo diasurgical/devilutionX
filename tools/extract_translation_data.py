@@ -10,6 +10,7 @@ itemdat_path = root.joinpath("assets/txtdata/items/itemdat.tsv")
 unique_itemdat_path = root.joinpath("assets/txtdata/items/unique_itemdat.tsv")
 item_prefixes_path = root.joinpath("assets/txtdata/items/item_prefixes.tsv")
 item_suffixes_path = root.joinpath("assets/txtdata/items/item_suffixes.tsv")
+spelldat_path = root.joinpath("assets/txtdata/spells/spelldat.tsv")
 
 with open(translation_dummy_path, 'w') as temp_source:
     temp_source.write(f'/**\n')
@@ -62,3 +63,9 @@ with open(translation_dummy_path, 'w') as temp_source:
             name = row['name']
             var_name = f'ITEM_SUFFIX_{i}'
             temp_source.write(f'const char *{var_name}_NAME = N_("{name}");\n')
+    with open(spelldat_path, 'r') as tsv:
+        reader = csv.DictReader(tsv, delimiter='\t')
+        for i, row in enumerate(reader):
+            name = row['name']
+            var_name = 'SPELL_' + name.upper().replace(' ', '_').replace('-', '_')
+            temp_source.write(f'const char *{var_name}_NAME = P_("spell", "{name}");\n')

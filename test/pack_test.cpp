@@ -414,6 +414,7 @@ public:
 
 	static void SetUpTestSuite()
 	{
+		LoadSpellData();
 		LoadItemData();
 	}
 };
@@ -953,6 +954,7 @@ public:
 
 	static void SetUpTestSuite()
 	{
+		LoadSpellData();
 		LoadPlayerDataFiles();
 		LoadMonsterData();
 		LoadItemData();

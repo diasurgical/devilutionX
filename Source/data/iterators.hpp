@@ -1,13 +1,14 @@
 #pragma once
 
 #include <charconv>
+#include <optional>
 #include <ostream>
 
 #include <expected.hpp>
-#include <function_ref.hpp>
 
 #include "parser.hpp"
 #include "utils/parse_int.hpp"
+#include "utils/str_cat.hpp"
 #include "utils/str_split.hpp"
 
 namespace devilution {
@@ -155,6 +156,45 @@ public:
 	[[nodiscard]] tl::expected<void, Error> parseIntArray(std::array<T, N> &destination)
 	{
 		return parseIntArray<T>(destination.data(), N);
+	}
+
+	template <typename T, typename ParseFn>
+	[[nodiscard]] tl::expected<void, std::string> parseEnumArray(T *destination, size_t n, std::optional<T> fillMissing, ParseFn &&parseFn)
+	{
+		size_t i = 0;
+		const std::string_view str = value();
+		if (!str.empty()) {
+			for (const std::string_view part : SplitByChar(str, ',')) {
+				if (i == n)
+					return tl::make_unexpected(StrCat("Too many values, max: ", n));
+				auto result = parseFn(part);
+				if (!result.has_value()) {
+					return tl::make_unexpected(std::move(result).error());
+				}
+				destination[i++] = *result;
+			}
+		}
+		if (i != n) {
+			if (!fillMissing.has_value()) {
+				return tl::make_unexpected(StrCat("Too few values, expected ", n, " got ", i));
+			}
+			while (i < n) {
+				destination[i++] = *fillMissing;
+			}
+		}
+		return {};
+	}
+
+	template <typename T, size_t N, typename ParseFn>
+	[[nodiscard]] tl::expected<void, std::string> parseEnumArray(T (&destination)[N], std::optional<T> fillMissing, ParseFn &&parseFn)
+	{
+		return parseEnumArray<T, ParseFn>(destination, N, std::move(fillMissing), std::forward<ParseFn>(parseFn));
+	}
+
+	template <typename T, size_t N, typename ParseFn>
+	[[nodiscard]] tl::expected<void, std::string> parseIntArray(std::array<T, N> &destination, std::optional<T> fillMissing, ParseFn &&parseFn)
+	{
+		return parseEnumArray<T, ParseFn>(destination.data(), N, std::move(fillMissing), std::forward<ParseFn>(parseFn));
 	}
 
 	template <typename T, typename ParseFn>

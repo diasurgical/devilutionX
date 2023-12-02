@@ -18,6 +18,7 @@ public:
 
 	static void SetUpTestSuite()
 	{
+		LoadSpellData();
 		LoadItemData();
 	}
 };

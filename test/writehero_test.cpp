@@ -374,6 +374,7 @@ TEST(Writehero, pfile_write_hero)
 	MyPlayerId = 0;
 	MyPlayer = &Players[MyPlayerId];
 
+	LoadSpellData();
 	LoadPlayerDataFiles();
 	LoadItemData();
 	_uiheroinfo info {};

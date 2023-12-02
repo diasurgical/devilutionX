@@ -52,6 +52,7 @@ void RunTimedemo(std::string timedemoFolderName)
 	HeadlessMode = true;
 	demo::InitPlayBack(demoNumber, true);
 
+	LoadSpellData();
 	LoadPlayerDataFiles();
 	LoadMissileData();
 	LoadMonsterData();
