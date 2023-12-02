@@ -482,6 +482,11 @@ extern bool sgbSaveSoundOn;
 void PrepareUniqueMonst(Monster &monster, UniqueMonsterType monsterType, size_t miniontype, int bosspacksize, const UniqueMonsterData &uniqueMonsterData);
 void InitLevelMonsters();
 void GetLevelMTypes();
+size_t AddMonsterType(_monster_id type, placeflag placeflag);
+inline size_t AddMonsterType(UniqueMonsterType uniqueType, placeflag placeflag)
+{
+	return AddMonsterType(UniqueMonstersData[static_cast<size_t>(uniqueType)].mtype, placeflag);
+}
 void InitMonsterSND(CMonster &monsterType);
 void InitMonsterGFX(CMonster &monsterType, MonsterSpritesData &&spritesData = {});
 void InitAllMonsterGFX();

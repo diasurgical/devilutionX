@@ -30,8 +30,8 @@ std::string DebugCmdSpawnUniqueMonster(std::string name, std::optional<unsigned>
 
 	int mtype = -1;
 	UniqueMonsterType uniqueIndex = UniqueMonsterType::None;
-	for (size_t i = 0; UniqueMonstersData.size(); ++i) {
-		auto mondata = UniqueMonstersData[i];
+	for (size_t i = 0; i < UniqueMonstersData.size(); ++i) {
+		const auto &mondata = UniqueMonstersData[i];
 		const std::string monsterName = AsciiStrToLower(std::string_view(mondata.mName));
 		if (monsterName.find(name) == std::string::npos)
 			continue;
@@ -55,11 +55,11 @@ std::string DebugCmdSpawnUniqueMonster(std::string name, std::optional<unsigned>
 	}
 
 	if (!found) {
+		if (LevelMonsterTypeCount == MaxLvlMTypes)
+			LevelMonsterTypeCount--; // we are running out of monster types, so override last used monster type
+		id = AddMonsterType(uniqueIndex, PLACE_SCATTER);
 		CMonster &monsterType = LevelMonsterTypes[id];
-		monsterType.type = static_cast<_monster_id>(mtype);
 		InitMonsterGFX(monsterType);
-		InitMonsterSND(monsterType);
-		monsterType.placeFlags |= PLACE_SCATTER;
 		monsterType.corpseId = 1;
 	}
 
@@ -104,7 +104,7 @@ std::string DebugCmdSpawnMonster(std::string name, std::optional<unsigned> count
 	int mtype = -1;
 
 	for (int i = 0; i < NUM_MTYPES; i++) {
-		auto mondata = MonstersData[i];
+		const auto &mondata = MonstersData[i];
 		const std::string monsterName = AsciiStrToLower(std::string_view(mondata.name));
 		if (monsterName.find(name) == std::string::npos)
 			continue;
@@ -127,11 +127,11 @@ std::string DebugCmdSpawnMonster(std::string name, std::optional<unsigned> count
 	}
 
 	if (!found) {
+		if (LevelMonsterTypeCount == MaxLvlMTypes)
+			LevelMonsterTypeCount--; // we are running out of monster types, so override last used monster type
+		id = AddMonsterType(static_cast<_monster_id>(mtype), PLACE_SCATTER);
 		CMonster &monsterType = LevelMonsterTypes[id];
-		monsterType.type = static_cast<_monster_id>(mtype);
 		InitMonsterGFX(monsterType);
-		InitMonsterSND(monsterType);
-		monsterType.placeFlags |= PLACE_SCATTER;
 		monsterType.corpseId = 1;
 	}
 

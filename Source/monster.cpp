@@ -417,39 +417,6 @@ void PlaceUniqueMonst(UniqueMonsterType uniqindex, size_t minionType, int bosspa
 	PrepareUniqueMonst(monster, uniqindex, minionType, bosspacksize, uniqueMonsterData);
 }
 
-size_t AddMonsterType(_monster_id type, placeflag placeflag)
-{
-	const size_t typeIndex = GetMonsterTypeIndex(type);
-	CMonster &monsterType = LevelMonsterTypes[typeIndex];
-
-	if (typeIndex == LevelMonsterTypeCount) {
-		LevelMonsterTypeCount++;
-		monsterType.type = type;
-		const MonsterData &monsterData = MonstersData[type];
-		monstimgtot += monsterData.image;
-
-		const size_t numAnims = GetNumAnims(monsterData);
-		for (size_t i = 0; i < numAnims; ++i) {
-			AnimStruct &anim = monsterType.anims[i];
-			anim.frames = monsterData.frames[i];
-			if (monsterData.hasAnim(i)) {
-				anim.rate = monsterData.rate[i];
-				anim.width = monsterData.width;
-			}
-		}
-
-		InitMonsterSND(monsterType);
-	}
-
-	monsterType.placeFlags |= placeflag;
-	return typeIndex;
-}
-
-inline size_t AddMonsterType(UniqueMonsterType uniqueType, placeflag placeflag)
-{
-	return AddMonsterType(UniqueMonstersData[static_cast<size_t>(uniqueType)].mtype, placeflag);
-}
-
 void ClearMVars(Monster &monster)
 {
 	monster.var1 = 0;
@@ -3164,6 +3131,34 @@ MonsterSpritesData LoadMonsterSpritesData(const MonsterData &monsterData)
 }
 
 } // namespace
+
+size_t AddMonsterType(_monster_id type, placeflag placeflag)
+{
+	const size_t typeIndex = GetMonsterTypeIndex(type);
+	CMonster &monsterType = LevelMonsterTypes[typeIndex];
+
+	if (typeIndex == LevelMonsterTypeCount) {
+		LevelMonsterTypeCount++;
+		monsterType.type = type;
+		const MonsterData &monsterData = MonstersData[type];
+		monstimgtot += monsterData.image;
+
+		const size_t numAnims = GetNumAnims(monsterData);
+		for (size_t i = 0; i < numAnims; ++i) {
+			AnimStruct &anim = monsterType.anims[i];
+			anim.frames = monsterData.frames[i];
+			if (monsterData.hasAnim(i)) {
+				anim.rate = monsterData.rate[i];
+				anim.width = monsterData.width;
+			}
+		}
+
+		InitMonsterSND(monsterType);
+	}
+
+	monsterType.placeFlags |= placeflag;
+	return typeIndex;
+}
 
 void InitTRNForUniqueMonster(Monster &monster)
 {
