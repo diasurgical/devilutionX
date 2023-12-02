@@ -163,6 +163,7 @@ set(devilutionx_assets
   txtdata/monsters/monstdat.tsv
   txtdata/monsters/unique_monstdat.tsv
   txtdata/sound/effects.tsv
+  txtdata/spells/spelldat.tsv
   ui_art/diablo.pal
   ui_art/hellfire.pal
   ui_art/creditsw.clx

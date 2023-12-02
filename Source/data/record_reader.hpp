@@ -28,8 +28,7 @@ public:
 	typename std::enable_if_t<std::is_integral_v<T>, void>
 	readInt(std::string_view name, T &out)
 	{
-		advance();
-		DataFileField field = *it_;
+		DataFileField field = nextField();
 		failOnError(field.parseInt(out), name, field);
 	}
 
@@ -37,8 +36,7 @@ public:
 	typename std::enable_if_t<std::is_integral_v<T>, void>
 	readOptionalInt(std::string_view name, T &out)
 	{
-		advance();
-		DataFileField field = *it_;
+		DataFileField field = nextField();
 		if (field.value().empty()) return;
 		failOnError(field.parseInt(out), name, field);
 	}
@@ -46,16 +44,21 @@ public:
 	template <typename T, size_t N>
 	void readIntArray(std::string_view name, T (&out)[N])
 	{
-		advance();
-		DataFileField field = *it_;
+		DataFileField field = nextField();
 		failOnError(field.parseIntArray(out), name, field);
+	}
+
+	template <typename T, size_t N, typename F>
+	void readEnumArray(std::string_view name, std::optional<T> fillMissing, T (&out)[N], F &&parseFn)
+	{
+		DataFileField field = nextField();
+		failOnError(field.parseEnumArray(out, fillMissing, parseFn), name, field, DataFileField::Error::InvalidValue);
 	}
 
 	template <typename T, size_t N>
 	void readIntArray(std::string_view name, std::array<T, N> &out)
 	{
-		advance();
-		DataFileField field = *it_;
+		DataFileField field = nextField();
 		failOnError(field.parseIntArray(out), name, field);
 	}
 
@@ -63,15 +66,13 @@ public:
 	typename std::enable_if_t<std::is_integral_v<T>, void>
 	readFixed6(std::string_view name, T &out)
 	{
-		advance();
-		DataFileField field = *it_;
+		DataFileField field = nextField();
 		failOnError(field.parseFixed6(out), name, field);
 	}
 
 	void readBool(std::string_view name, bool &out)
 	{
-		advance();
-		DataFileField field = *it_;
+		DataFileField field = nextField();
 		failOnError(field.parseBool(out), name, field);
 	}
 
@@ -84,8 +85,7 @@ public:
 	template <typename T, typename F>
 	void read(std::string_view name, T &out, F &&parseFn)
 	{
-		advance();
-		DataFileField field = *it_;
+		DataFileField field = nextField();
 		tl::expected<T, std::string> result = parseFn(field.value());
 		failOnError(result, name, field, DataFileField::Error::InvalidValue);
 		out = *std::move(result);
@@ -94,8 +94,7 @@ public:
 	template <typename T, typename F>
 	void readEnumList(std::string_view name, T &out, F &&parseFn)
 	{
-		advance();
-		DataFileField field = *it_;
+		DataFileField field = nextField();
 		failOnError(field.parseEnumList(out, std::forward<F>(parseFn)),
 		    name, field, DataFileField::Error::InvalidValue);
 	}
@@ -108,6 +107,12 @@ public:
 	}
 
 	void advance();
+
+	DataFileField nextField()
+	{
+		advance();
+		return *it_;
+	}
 
 private:
 	template <typename T>

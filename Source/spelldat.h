@@ -6,8 +6,10 @@
 #pragma once
 
 #include <cstdint>
+#include <string>
 #include <string_view>
 #include <type_traits>
+#include <vector>
 
 #include <expected.hpp>
 
@@ -221,7 +223,7 @@ enum class SpellDataFlags : uint8_t {
 use_enum_as_flags(SpellDataFlags);
 
 struct SpellData {
-	const char *sNameText;
+	std::string sNameText;
 	SfxID sSFX;
 	uint16_t bookCost10;
 	uint8_t staffCost10;
@@ -262,11 +264,13 @@ struct SpellData {
 	}
 };
 
-extern const SpellData SpellsData[];
+extern std::vector<SpellData> SpellsData;
 
 inline const SpellData &GetSpellData(SpellID spellId)
 {
 	return SpellsData[static_cast<std::underlying_type<SpellID>::type>(spellId)];
 }
+
+void LoadSpellData();
 
 } // namespace devilution

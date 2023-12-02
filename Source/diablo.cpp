@@ -2476,6 +2476,7 @@ int DiabloMain(int argc, char **argv)
 	LoadPlayerDataFiles();
 
 	// TODO: We can probably load this much later (when the game is starting).
+	LoadSpellData();
 	LoadMissileData();
 	LoadMonsterData();
 	LoadItemData();
