@@ -31,9 +31,9 @@ jobs:
       uses: lukka/get-cmake@latest
 
     - name: Restore or setup vcpkg
-      uses: lukka/run-vcpkg@v11.1
+      uses: lukka/run-vcpkg@v11.3
       with:
-        vcpkgGitCommitId: '927bc12e31148b0d44ae9d174b96c20e3bcf08eb'
+        vcpkgGitCommitId: '16ee2ecb31788c336ace8bb14c21801efb6836e4'
 
     - name: Fetch test data
       run: |
