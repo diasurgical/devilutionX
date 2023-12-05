@@ -214,7 +214,7 @@ void MonsterSeeds()
 {
 	sgdwGameLoops++;
 	const uint32_t seed = (sgdwGameLoops >> 8) | (sgdwGameLoops << 24);
-	for (size_t i = 0; i < MaxMonsters; i++)
+	for (uint32_t i = 0; i < MaxMonsters; i++)
 		Monsters[i].aiSeed = seed + i;
 }
 
@@ -330,7 +330,7 @@ void BeginTimeout()
 
 void HandleAllPackets(size_t pnum, const std::byte *data, size_t size)
 {
-	for (unsigned offset = 0; offset < size;) {
+	for (size_t offset = 0; offset < size;) {
 		size_t messageSize = ParseCmd(pnum, reinterpret_cast<const TCmd *>(&data[offset]));
 		if (messageSize == 0) {
 			break;
@@ -696,17 +696,19 @@ void multi_send_zero_packet(size_t pnum, _cmd_id bCmd, const std::byte *data, si
 		pkt.hdr.wCheck = HeaderCheckVal;
 		auto &message = *reinterpret_cast<TCmdPlrInfoHdr *>(pkt.body);
 		message.bCmd = bCmd;
-		message.wOffset = SDL_SwapLE16(offset);
+		assert(offset <= 0x0ffff);
+		message.wOffset = SDL_SwapLE16(static_cast<uint16_t>(offset));
 
 		size_t dwBody = gdwLargestMsgSize - sizeof(pkt.hdr) - sizeof(message);
 		dwBody = std::min(dwBody, size - offset);
 		assert(dwBody <= 0x0ffff);
-		message.wBytes = SDL_SwapLE16(dwBody);
+		message.wBytes = SDL_SwapLE16(static_cast<uint16_t>(dwBody));
 
 		memcpy(&pkt.body[sizeof(message)], &data[offset], dwBody);
 
 		const size_t dwMsg = sizeof(pkt.hdr) + sizeof(message) + dwBody;
-		pkt.hdr.wLen = SDL_SwapLE16(dwMsg);
+		assert(dwMsg <= 0x0ffff);
+		pkt.hdr.wLen = SDL_SwapLE16(static_cast<uint16_t>(dwMsg));
 
 		if (!SNetSendMessage(pnum, &pkt, dwMsg)) {
 			nthread_terminate_game("SNetSendMessage2");
