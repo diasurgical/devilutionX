@@ -128,7 +128,7 @@ std::byte *CopyBufferedPackets(std::byte *destination, TBuffer *source, size_t *
 			*size -= chunkSize;
 		}
 		memmove(source->bData, srcPtr, (source->bData - srcPtr) + source->dwNextWriteOffset + 1);
-		source->dwNextWriteOffset += static_cast<uint32_t>(source->bData - srcPtr);
+		source->dwNextWriteOffset += source->bData - srcPtr;
 		return destination;
 	}
 	return destination;
@@ -524,7 +524,7 @@ void NetSendHiPri(size_t playerId, const std::byte *data, size_t size)
 		remainingSpace = sync_all_monsters(destination, remainingSpace);
 		const size_t len = gdwNormalMsgSize - remainingSpace;
 		pkt.hdr.wLen = SDL_SwapLE16(static_cast<uint16_t>(len));
-		if (!SNetSendMessage(SNPLAYER_OTHERS, &pkt.hdr, static_cast<unsigned>(len)))
+		if (!SNetSendMessage(SNPLAYER_OTHERS, &pkt.hdr, len))
 			nthread_terminate_game("SNetSendMessage");
 	}
 }
@@ -618,7 +618,7 @@ void multi_process_network_packets()
 
 	uint8_t playerId = std::numeric_limits<uint8_t>::max();
 	TPktHdr *pkt;
-	uint32_t dwMsgSize = 0;
+	size_t dwMsgSize = 0;
 	while (SNetReceiveMessage(&playerId, (void **)&pkt, &dwMsgSize)) {
 		dwRecCount++;
 		ClearPlayerLeftState();

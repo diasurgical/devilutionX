@@ -17,10 +17,10 @@ namespace net {
 
 class base : public abstract_net {
 public:
-	bool SNetReceiveMessage(uint8_t *sender, void **data, uint32_t *size) override;
-	bool SNetSendMessage(int playerId, void *data, unsigned int size) override;
+	bool SNetReceiveMessage(uint8_t *sender, void **data, size_t *size) override;
+	bool SNetSendMessage(int playerId, void *data, size_t size) override;
 	bool SNetReceiveTurns(char **data, size_t *size, uint32_t *status) override;
-	bool SNetSendTurn(char *data, unsigned int size) override;
+	bool SNetSendTurn(char *data, size_t size) override;
 	void SNetGetProviderCaps(struct _SNETCAPS *caps) override;
 	bool SNetRegisterEventHandler(event_type evtype, SEVTHANDLER func) override;
 	bool SNetUnregisterEventHandler(event_type evtype) override;

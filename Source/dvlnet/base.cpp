@@ -210,7 +210,7 @@ tl::expected<void, PacketError> base::RecvLocal(packet &pkt)
 	}
 }
 
-bool base::SNetReceiveMessage(uint8_t *sender, void **data, uint32_t *size)
+bool base::SNetReceiveMessage(uint8_t *sender, void **data, size_t *size)
 {
 	poll();
 	if (message_queue.empty())
@@ -223,7 +223,7 @@ bool base::SNetReceiveMessage(uint8_t *sender, void **data, uint32_t *size)
 	return true;
 }
 
-bool base::SNetSendMessage(int playerId, void *data, unsigned int size)
+bool base::SNetSendMessage(int playerId, void *data, size_t size)
 {
 	if (playerId != SNPLAYER_ALL && playerId != SNPLAYER_OTHERS
 	    && (playerId < 0 || playerId >= MAX_PLRS))
@@ -336,7 +336,7 @@ bool base::SNetReceiveTurns(char **data, size_t *size, uint32_t *status)
 	return false;
 }
 
-bool base::SNetSendTurn(char *data, unsigned int size)
+bool base::SNetSendTurn(char *data, size_t size)
 {
 	if (size != sizeof(int32_t))
 		ABORT();

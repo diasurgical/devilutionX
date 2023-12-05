@@ -29,7 +29,7 @@ SdlMutex storm_net_mutex;
 #endif
 } // namespace
 
-bool SNetReceiveMessage(uint8_t *senderplayerid, void **data, uint32_t *databytes)
+bool SNetReceiveMessage(uint8_t *senderplayerid, void **data, size_t *databytes)
 {
 #ifndef NONET
 	std::lock_guard<SdlMutex> lg(storm_net_mutex);
@@ -37,7 +37,7 @@ bool SNetReceiveMessage(uint8_t *senderplayerid, void **data, uint32_t *databyte
 	return dvlnet_inst->SNetReceiveMessage(senderplayerid, data, databytes);
 }
 
-bool SNetSendMessage(int playerID, void *data, unsigned int databytes)
+bool SNetSendMessage(int playerID, void *data, size_t databytes)
 {
 #ifndef NONET
 	std::lock_guard<SdlMutex> lg(storm_net_mutex);
@@ -55,7 +55,7 @@ bool SNetReceiveTurns(int arraysize, char **arraydata, size_t *arraydatabytes, u
 	return dvlnet_inst->SNetReceiveTurns(arraydata, arraydatabytes, arrayplayerstatus);
 }
 
-bool SNetSendTurn(char *data, unsigned int databytes)
+bool SNetSendTurn(char *data, size_t databytes)
 {
 #ifndef NONET
 	std::lock_guard<SdlMutex> lg(storm_net_mutex);
