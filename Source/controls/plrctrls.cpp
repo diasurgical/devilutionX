@@ -1274,13 +1274,11 @@ bool IsPathBlocked(Point position, Direction dir)
 	return !PosOkPlayer(myPlayer, leftStep) && !PosOkPlayer(myPlayer, rightStep);
 }
 
-void WalkInDir(size_t playerId, AxisDirection dir)
+void WalkInDir(Player &player, AxisDirection dir)
 {
-	Player &player = Players[playerId];
-
 	if (dir.x == AxisDirectionX_NONE && dir.y == AxisDirectionY_NONE) {
 		if (ControlMode != ControlTypes::KeyboardAndMouse && player.walkpath[0] != WALK_NONE && player.destAction == ACTION_NONE)
-			NetSendCmdLoc(playerId, true, CMD_WALKXY, player.position.future); // Stop walking
+			NetSendCmdLoc(player.getId(), true, CMD_WALKXY, player.position.future); // Stop walking
 		return;
 	}
 
@@ -1302,7 +1300,7 @@ void WalkInDir(size_t playerId, AxisDirection dir)
 		return; // Don't start backtrack around obstacles
 	}
 
-	NetSendCmdLoc(playerId, true, CMD_WALKXY, delta);
+	NetSendCmdLoc(player.getId(), true, CMD_WALKXY, delta);
 }
 
 void QuestLogMove(AxisDirection moveDir)
@@ -1360,13 +1358,13 @@ void ProcessLeftStickOrDPadGameUI()
 		handler(GetLeftStickOrDpadDirection(false));
 }
 
-void Movement(size_t playerId)
+void Movement(Player &player)
 {
 	if (PadMenuNavigatorActive || PadHotspellMenuActive || InGameMenu())
 		return;
 
 	if (GetLeftStickOrDPadGameUIHandler() == nullptr) {
-		WalkInDir(playerId, GetMoveDirection());
+		WalkInDir(player, GetMoveDirection());
 	}
 }
 
@@ -1779,7 +1777,7 @@ void plrctrls_every_frame()
 
 void plrctrls_after_game_logic()
 {
-	Movement(MyPlayerId);
+	Movement(*MyPlayer);
 }
 
 void UseBeltItem(int type)

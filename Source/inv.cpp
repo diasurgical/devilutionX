@@ -2067,7 +2067,7 @@ bool UseInvItem(int cii)
 	else if (&player == MyPlayer)
 		PlaySFX(ItemInvSnds[idata]);
 
-	UseItem(player.getId(), item->_iMiscId, item->_iSpell, cii);
+	UseItem(player, item->_iMiscId, item->_iSpell, cii);
 
 	if (speedlist) {
 		if (player.SpdList[c]._iMiscId == IMISC_NOTE) {
