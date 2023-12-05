@@ -501,7 +501,7 @@ bool UseStashItem(uint16_t c)
 	else
 		PlaySFX(ItemInvSnds[ItemCAnimTbl[item->_iCurs]]);
 
-	UseItem(MyPlayerId, item->_iMiscId, item->_iSpell, -1);
+	UseItem(*MyPlayer, item->_iMiscId, item->_iSpell, -1);
 
 	if (Stash.stashList[c]._iMiscId == IMISC_MAPOFDOOM)
 		return true;

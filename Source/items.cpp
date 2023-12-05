@@ -3981,9 +3981,8 @@ void PrintItemDur(const Item &item)
 	PrintItemInfo(item);
 }
 
-void UseItem(size_t pnum, item_misc_id mid, SpellID spellID, int spellFrom)
+void UseItem(Player &player, item_misc_id mid, SpellID spellID, int spellFrom)
 {
-	Player &player = Players[pnum];
 	std::optional<SpellID> prepareSpellID;
 
 	switch (mid) {
