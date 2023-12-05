@@ -187,7 +187,7 @@ std::string_view CmdIdString(_cmd_id cmd)
 #endif // LOG_RECEIVED_MESSAGES
 
 struct TMegaPkt {
-	uint32_t spaceLeft;
+	size_t spaceLeft;
 	std::byte data[32000];
 
 	TMegaPkt()
@@ -2050,7 +2050,7 @@ size_t OnPlayerJoinLevel(const TCmd *pCmd, Player &player)
 		return sizeof(message);
 	}
 
-	const uint16_t playerLevel = SDL_SwapLE16(message.wParam1);
+	const uint8_t playerLevel = static_cast<uint8_t>(SDL_SwapLE16(message.wParam1));
 	bool isSetLevel = message.wParam2 != 0;
 	if (!IsValidLevel(playerLevel, isSetLevel) || !InDungeonBounds(position)) {
 		return sizeof(message);
@@ -2095,7 +2095,7 @@ size_t OnActivatePortal(const TCmd *pCmd, Player &player)
 {
 	const auto &message = *reinterpret_cast<const TCmdLocParam3 *>(pCmd);
 	const Point position { message.x, message.y };
-	const uint16_t level = SDL_SwapLE16(message.wParam1);
+	const uint8_t level = static_cast<uint8_t>(SDL_SwapLE16(message.wParam1));
 	const uint16_t dungeonTypeIdx = SDL_SwapLE16(message.wParam2);
 	const bool isSetLevel = message.wParam3 != 0;
 
@@ -2222,7 +2222,7 @@ size_t OnString(const TCmd *pCmd, Player &player)
 {
 	auto *p = (TCmdString *)pCmd;
 
-	int len = strlen(p->str);
+	size_t len = strlen(p->str);
 	if (gbBufferMsgs == 0)
 		SendPlrMsg(player, p->str);
 
@@ -2383,8 +2383,8 @@ void RecreateItem(const Player &player, const TItem &messageItem, Item &item)
 	item._iMaxCharges = std::clamp<int>(messageItem.bMCh, 0, item._iMaxCharges);
 	item._iCharges = std::clamp<int>(messageItem.bCh, 0, item._iMaxCharges);
 	if (gbIsHellfire) {
-		item._iPLToHit = ClampToHit(item, SDL_SwapLE16(messageItem.wToHit));
-		item._iMaxDam = ClampMaxDam(item, SDL_SwapLE16(messageItem.wMaxDam));
+		item._iPLToHit = ClampToHit(item, static_cast<uint8_t>(SDL_SwapLE16(messageItem.wToHit)));
+		item._iMaxDam = ClampMaxDam(item, static_cast<uint8_t>(SDL_SwapLE16(messageItem.wMaxDam)));
 	}
 	item.dwBuff = dwBuff;
 }
