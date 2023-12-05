@@ -712,11 +712,6 @@ struct TPkt {
 };
 #pragma pack(pop)
 
-struct TBuffer {
-	uint32_t dwNextWriteOffset;
-	std::byte bData[4096];
-};
-
 extern uint8_t gbBufferMsgs;
 extern int dwRecCount;
 

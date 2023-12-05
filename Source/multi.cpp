@@ -35,7 +35,6 @@
 namespace devilution {
 
 bool gbSomebodyWonGameKludge;
-TBuffer highPriorityBuffer;
 uint16_t sgwPackPlrOffsetTbl[MAX_PLRS];
 bool sgbPlayerTurnBitTbl[MAX_PLRS];
 bool sgbPlayerLeftGameTbl[MAX_PLRS];
@@ -47,7 +46,6 @@ GameData sgGameInitInfo;
 bool gbSelectProvider;
 int sglTimeoutStart;
 int sgdwPlayerLeftReasonTbl[MAX_PLRS];
-TBuffer lowPriorityBuffer;
 uint32_t sgdwGameLoops;
 /**
  * Specifies the maximum number of players in a game, where 1
@@ -75,6 +73,14 @@ const event_type EventTypes[3] = {
 };
 
 namespace {
+
+struct TBuffer {
+	size_t dwNextWriteOffset;
+	std::byte bData[4096];
+};
+
+TBuffer highPriorityBuffer;
+TBuffer lowPriorityBuffer;
 
 constexpr uint16_t HeaderCheckVal =
 #if SDL_BYTEORDER == SDL_LIL_ENDIAN
