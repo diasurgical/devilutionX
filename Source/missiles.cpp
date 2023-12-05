@@ -202,7 +202,7 @@ int ProjectileTrapDamage(Missile &missile)
 	return currlevel + GenerateRnd(2 * currlevel);
 }
 
-bool MonsterMHit(int pnum, int monsterId, int mindam, int maxdam, int dist, MissileID t, DamageType damageType, bool shift)
+bool MonsterMHit(const Player &player, int monsterId, int mindam, int maxdam, int dist, MissileID t, DamageType damageType, bool shift)
 {
 	auto &monster = Monsters[monsterId];
 
@@ -211,7 +211,6 @@ bool MonsterMHit(int pnum, int monsterId, int mindam, int maxdam, int dist, Miss
 
 	int hit = RandomIntLessThan(100);
 	int hper = 0;
-	const Player &player = Players[pnum];
 	const MissileData &missileData = GetMissileData(t);
 	if (missileData.isArrow()) {
 		hper = player.GetRangedPiercingToHit();
@@ -422,7 +421,7 @@ void CheckMissileCol(Missile &missile, DamageType damageType, int minDamage, int
 			// then the missile can potentially hit this target
 			isMonsterHit = MonsterTrapHit(mid, minDamage, maxDamage, missile._midist, missile._mitype, damageType, isDamageShifted);
 		} else if (IsAnyOf(missile._micaster, TARGET_BOTH, TARGET_MONSTERS)) {
-			isMonsterHit = MonsterMHit(missile._misource, mid, minDamage, maxDamage, missile._midist, missile._mitype, damageType, isDamageShifted);
+			isMonsterHit = MonsterMHit(*missile.sourcePlayer(), mid, minDamage, maxDamage, missile._midist, missile._mitype, damageType, isDamageShifted);
 		}
 	}
 
@@ -434,19 +433,19 @@ void CheckMissileCol(Missile &missile, DamageType damageType, int minDamage, int
 
 	bool isPlayerHit = false;
 	bool blocked = false;
-	const int8_t pid = dPlayer[mx][my];
-	if (pid > 0) {
+	Player *player = PlayerAtPosition({ mx, my }, true);
+	if (player != nullptr) {
 		if (missile._micaster != TARGET_BOTH && !missile.IsTrap()) {
 			if (missile._micaster == TARGET_MONSTERS) {
-				if ((pid - 1) != missile._misource)
-					isPlayerHit = Plr2PlrMHit(Players[missile._misource], Players[pid - 1], minDamage, maxDamage, missile._midist, missile._mitype, damageType, isDamageShifted, &blocked);
+				if (player->getId() != missile._misource)
+					isPlayerHit = Plr2PlrMHit(Players[missile._misource], *player, minDamage, maxDamage, missile._midist, missile._mitype, damageType, isDamageShifted, &blocked);
 			} else {
 				Monster &monster = Monsters[missile._misource];
-				isPlayerHit = PlayerMHit(pid - 1, &monster, missile._midist, minDamage, maxDamage, missile._mitype, damageType, isDamageShifted, DeathReason::MonsterOrTrap, &blocked);
+				isPlayerHit = PlayerMHit(*player, &monster, missile._midist, minDamage, maxDamage, missile._mitype, damageType, isDamageShifted, DeathReason::MonsterOrTrap, &blocked);
 			}
 		} else {
 			DeathReason deathReason = (!missile.IsTrap() && (missile._miAnimType == MissileGraphicID::FireWall || missile._miAnimType == MissileGraphicID::Lightning)) ? DeathReason::Player : DeathReason::MonsterOrTrap;
-			isPlayerHit = PlayerMHit(pid - 1, nullptr, missile._midist, minDamage, maxDamage, missile._mitype, damageType, isDamageShifted, deathReason, &blocked);
+			isPlayerHit = PlayerMHit(*player, nullptr, missile._midist, minDamage, maxDamage, missile._mitype, damageType, isDamageShifted, deathReason, &blocked);
 		}
 	}
 
@@ -976,11 +975,9 @@ bool MonsterTrapHit(int monsterId, int mindam, int maxdam, int dist, MissileID t
 	return true;
 }
 
-bool PlayerMHit(int pnum, Monster *monster, int dist, int mind, int maxd, MissileID mtype, DamageType damageType, bool shift, DeathReason deathReason, bool *blocked)
+bool PlayerMHit(Player &player, Monster *monster, int dist, int mind, int maxd, MissileID mtype, DamageType damageType, bool shift, DeathReason deathReason, bool *blocked)
 {
 	*blocked = false;
-
-	Player &player = Players[pnum];
 
 	if (player._pHitPoints >> 6 <= 0) {
 		return false;
@@ -1316,14 +1313,13 @@ void AddStealPotions(Missile &missile, AddMissileParameter & /*parameter*/)
 		Point target = missile.position.start + displacement;
 		if (!InDungeonBounds(target))
 			return false;
-		int8_t pnum = dPlayer[target.x][target.y];
-		if (pnum == 0)
+		Player *player = PlayerAtPosition(target);
+		if (player == nullptr)
 			return false;
-		Player &player = Players[std::abs(pnum) - 1];
 
 		bool hasPlayedSFX = false;
 		for (int si = 0; si < MaxBeltItems; si++) {
-			Item &beltItem = player.SpdList[si];
+			Item &beltItem = player->SpdList[si];
 			_item_indexes ii = IDI_NONE;
 			if (beltItem._itype == ItemType::Misc) {
 				if (FlipCoin())
@@ -1334,7 +1330,7 @@ void AddStealPotions(Missile &missile, AddMissileParameter & /*parameter*/)
 					break;
 				case IMISC_HEAL:
 				case IMISC_MANA:
-					player.RemoveSpdBarItem(si);
+					player->RemoveSpdBarItem(si);
 					break;
 				case IMISC_FULLMANA:
 					ii = ItemMiscIdIdx(IMISC_MANA);
@@ -3101,9 +3097,9 @@ void ProcessRune(Missile &missile)
 {
 	Point position = missile.position.tile;
 	int mid = dMonster[position.x][position.y];
-	int pid = dPlayer[position.x][position.y];
-	if (mid != 0 || pid != 0) {
-		Point targetPosition = mid != 0 ? Monsters[std::abs(mid) - 1].position.tile : Players[std::abs(pid) - 1].position.tile;
+	Player *player = PlayerAtPosition(position);
+	if (mid != 0 || player != nullptr) {
+		Point targetPosition = mid != 0 ? Monsters[std::abs(mid) - 1].position.tile : player->position.tile;
 		Direction dir = GetDirection(position, targetPosition);
 
 		missile._miDelFlag = true;

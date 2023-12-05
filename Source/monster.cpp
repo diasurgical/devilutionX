@@ -4424,25 +4424,24 @@ void MissToMonst(Missile &missile, Point position)
 		return;
 
 	if ((monster.flags & MFLAG_TARGETS_MONSTER) == 0) {
-		if (dPlayer[oldPosition.x][oldPosition.y] <= 0)
+		Player *player = PlayerAtPosition(oldPosition, true);
+		if (player == nullptr)
 			return;
 
-		int pnum = dPlayer[oldPosition.x][oldPosition.y] - 1;
-		Player &player = Players[pnum];
-		MonsterAttackPlayer(monster, player, 500, monster.minDamageSpecial, monster.maxDamageSpecial);
+		MonsterAttackPlayer(monster, *player, 500, monster.minDamageSpecial, monster.maxDamageSpecial);
 
 		if (IsAnyOf(monster.type().type, MT_NSNAKE, MT_RSNAKE, MT_BSNAKE, MT_GSNAKE))
 			return;
 
-		if (player._pmode != PM_GOTHIT && player._pmode != PM_DEATH)
-			StartPlrHit(player, 0, true);
+		if (player->_pmode != PM_GOTHIT && player->_pmode != PM_DEATH)
+			StartPlrHit(*player, 0, true);
 		Point newPosition = oldPosition + monster.direction;
-		if (PosOkPlayer(player, newPosition)) {
-			player.position.tile = newPosition;
-			FixPlayerLocation(player, player._pdir);
-			FixPlrWalkTags(player);
-			player.occupyTile(newPosition, false);
-			SetPlayerOld(player);
+		if (PosOkPlayer(*player, newPosition)) {
+			player->position.tile = newPosition;
+			FixPlayerLocation(*player, player->_pdir);
+			FixPlrWalkTags(*player);
+			player->occupyTile(newPosition, false);
+			SetPlayerOld(*player);
 		}
 		return;
 	}

@@ -2075,13 +2075,13 @@ void Player::occupyTile(Point position, bool isMoving) const
 	dPlayer[position.x][position.y] = isMoving ? -id : id;
 }
 
-Player *PlayerAtPosition(Point position)
+Player *PlayerAtPosition(Point position, bool ignoreMovingPlayers /*= false*/)
 {
 	if (!InDungeonBounds(position))
 		return nullptr;
 
 	auto playerIndex = dPlayer[position.x][position.y];
-	if (playerIndex == 0)
+	if (playerIndex == 0 || (ignoreMovingPlayers && playerIndex < 0))
 		return nullptr;
 
 	return &Players[std::abs(playerIndex) - 1];
@@ -3079,12 +3079,9 @@ bool PosOkPlayer(const Player &player, Point position)
 		return false;
 	if (!IsTileWalkable(position))
 		return false;
-	if (dPlayer[position.x][position.y] != 0) {
-		auto &otherPlayer = Players[std::abs(dPlayer[position.x][position.y]) - 1];
-		if (&otherPlayer != &player && otherPlayer._pHitPoints != 0) {
-			return false;
-		}
-	}
+	Player *otherPlayer = PlayerAtPosition(position);
+	if (otherPlayer != nullptr && otherPlayer != &player && otherPlayer->_pHitPoints != 0)
+		return false;
 
 	if (dMonster[position.x][position.y] != 0) {
 		if (leveltype == DTYPE_TOWN) {
