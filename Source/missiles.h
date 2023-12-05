@@ -205,7 +205,7 @@ DamageRange GetDamageAmt(SpellID spell, int spellLevel);
  */
 Direction16 GetDirection16(Point p1, Point p2);
 bool MonsterTrapHit(int monsterId, int mindam, int maxdam, int dist, MissileID t, DamageType damageType, bool shift);
-bool PlayerMHit(int pnum, Monster *monster, int dist, int mind, int maxd, MissileID mtype, DamageType damageType, bool shift, DeathReason deathReason, bool *blocked);
+bool PlayerMHit(Player &player, Monster *monster, int dist, int mind, int maxd, MissileID mtype, DamageType damageType, bool shift, DeathReason deathReason, bool *blocked);
 
 /**
  * @brief Could the missile collide with solid objects? (like walls or closed doors)
