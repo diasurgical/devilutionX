@@ -35,7 +35,7 @@ public:
 	int create(std::string addrstr) override;
 	int join(std::string addrstr) override;
 	bool SNetReceiveMessage(uint8_t *sender, void **data, size_t *size) override;
-	bool SNetSendMessage(int dest, void *data, size_t size) override;
+	bool SNetSendMessage(uint8_t dest, void *data, size_t size) override;
 	bool SNetReceiveTurns(char **data, size_t *size, uint32_t *status) override;
 	bool SNetSendTurn(char *data, size_t size) override;
 	void SNetGetProviderCaps(struct _SNETCAPS *caps) override;

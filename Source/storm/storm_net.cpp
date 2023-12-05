@@ -37,7 +37,7 @@ bool SNetReceiveMessage(uint8_t *senderplayerid, void **data, size_t *databytes)
 	return dvlnet_inst->SNetReceiveMessage(senderplayerid, data, databytes);
 }
 
-bool SNetSendMessage(int playerID, void *data, size_t databytes)
+bool SNetSendMessage(uint8_t playerID, void *data, size_t databytes)
 {
 #ifndef NONET
 	std::lock_guard<SdlMutex> lg(storm_net_mutex);
@@ -98,7 +98,7 @@ bool SNetDestroy()
 	return true;
 }
 
-bool SNetDropPlayer(int playerid, uint32_t flags)
+bool SNetDropPlayer(uint8_t playerid, uint32_t flags)
 {
 #ifndef NONET
 	std::lock_guard<SdlMutex> lg(storm_net_mutex);

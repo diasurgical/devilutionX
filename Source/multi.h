@@ -59,11 +59,11 @@ extern uint32_t player_state[MAX_PLRS];
 extern bool IsLoopback;
 
 void InitGameInfo();
-void NetSendLoPri(size_t playerId, const std::byte *data, size_t size);
-void NetSendHiPri(size_t playerId, const std::byte *data, size_t size);
+void NetSendLoPri(uint8_t playerId, const std::byte *data, size_t size);
+void NetSendHiPri(uint8_t playerId, const std::byte *data, size_t size);
 void multi_send_msg_packet(uint32_t pmask, const std::byte *data, size_t size);
 void multi_msg_countdown();
-void multi_player_left(int pnum, int reason);
+void multi_player_left(uint8_t pnum, int reason);
 void multi_net_ping();
 
 /**
@@ -71,7 +71,7 @@ void multi_net_ping();
  */
 bool multi_handle_delta();
 void multi_process_network_packets();
-void multi_send_zero_packet(size_t pnum, _cmd_id bCmd, const std::byte *data, size_t size);
+void multi_send_zero_packet(uint8_t pnum, _cmd_id bCmd, const std::byte *data, size_t size);
 void NetClose();
 bool NetInit(bool bSinglePlayer);
 void recv_plrinfo(Player &player, const TCmdPlrInfoHdr &header, bool recv);

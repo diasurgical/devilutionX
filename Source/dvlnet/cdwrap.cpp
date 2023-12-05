@@ -42,7 +42,7 @@ bool cdwrap::SNetReceiveMessage(uint8_t *sender, void **data, size_t *size)
 	return dvlnet_wrap->SNetReceiveMessage(sender, data, size);
 }
 
-bool cdwrap::SNetSendMessage(int playerID, void *data, size_t size)
+bool cdwrap::SNetSendMessage(uint8_t playerID, void *data, size_t size)
 {
 	return dvlnet_wrap->SNetSendMessage(playerID, data, size);
 }

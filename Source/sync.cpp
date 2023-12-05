@@ -293,7 +293,7 @@ size_t sync_all_monsters(std::byte *pbBuf, size_t dwMaxLen)
 	return dwMaxLen;
 }
 
-uint32_t OnSyncData(const TCmd *pCmd, size_t pnum)
+uint32_t OnSyncData(const TCmd *pCmd, const Player &player)
 {
 	const auto &header = *reinterpret_cast<const TSyncHeader *>(pCmd);
 	const uint16_t wLen = SDL_SwapLE16(header.wLen);
@@ -303,7 +303,7 @@ uint32_t OnSyncData(const TCmd *pCmd, size_t pnum)
 	if (gbBufferMsgs == 1) {
 		return wLen + sizeof(header);
 	}
-	if (pnum == MyPlayerId) {
+	if (&player == MyPlayer) {
 		return wLen + sizeof(header);
 	}
 
@@ -315,13 +315,14 @@ uint32_t OnSyncData(const TCmd *pCmd, size_t pnum)
 
 	if (IsValidLevelForMultiplayer(level)) {
 		const auto *monsterSyncs = reinterpret_cast<const TSyncMonster *>(pCmd + sizeof(header));
+		bool isOwner = player.getId() > MyPlayerId;
 
 		for (int i = 0; i < monsterCount; i++) {
 			if (!IsTSyncMonsterValidate(monsterSyncs[i]))
 				continue;
 
 			if (syncLocalLevel) {
-				SyncMonster(pnum > MyPlayerId, monsterSyncs[i]);
+				SyncMonster(isOwner, monsterSyncs[i]);
 			}
 
 			delta_sync_monster(monsterSyncs[i], level);

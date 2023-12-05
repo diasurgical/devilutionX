@@ -223,17 +223,16 @@ bool base::SNetReceiveMessage(uint8_t *sender, void **data, size_t *size)
 	return true;
 }
 
-bool base::SNetSendMessage(int playerId, void *data, size_t size)
+bool base::SNetSendMessage(uint8_t playerId, void *data, size_t size)
 {
-	if (playerId != SNPLAYER_ALL && playerId != SNPLAYER_OTHERS
-	    && (playerId < 0 || playerId >= MAX_PLRS))
+	if (playerId != SNPLAYER_OTHERS && playerId >= MAX_PLRS)
 		abort();
 	auto *rawMessage = reinterpret_cast<unsigned char *>(data);
 	buffer_t message(rawMessage, rawMessage + size);
-	if (playerId == plr_self || playerId == SNPLAYER_ALL)
+	if (playerId == plr_self)
 		message_queue.emplace_back(plr_self, message);
 	plr_t dest;
-	if (playerId == SNPLAYER_ALL || playerId == SNPLAYER_OTHERS)
+	if (playerId == SNPLAYER_OTHERS)
 		dest = PLR_BROADCAST;
 	else
 		dest = playerId;
@@ -498,7 +497,7 @@ bool base::SNetDropPlayer(int playerid, uint32_t flags)
 
 plr_t base::GetOwner()
 {
-	for (size_t i = 0; i < Players.size(); ++i) {
+	for (plr_t i = 0; i < Players.size(); ++i) {
 		if (IsConnected(i)) {
 			return i;
 		}
