@@ -682,7 +682,7 @@ void SetupObject(Object &object, Point position, _object_id ot)
 			return;
 		}
 
-		const int j = std::distance(std::begin(ObjFileList), found);
+		const size_t j = std::distance(std::begin(ObjFileList), found);
 
 		if (pObjCels[j]) {
 			object._oAnimData.emplace(*pObjCels[j]);
@@ -1188,13 +1188,13 @@ void AddDoor(Object &door)
 
 void AddSarcophagus(Object &sarcophagus)
 {
-	dObject[sarcophagus.position.x][sarcophagus.position.y - 1] = -(sarcophagus.GetId() + 1);
+	dObject[sarcophagus.position.x][sarcophagus.position.y - 1] = -(static_cast<int8_t>(sarcophagus.GetId()) + 1);
 	sarcophagus._oVar1 = GenerateRnd(10);
 	sarcophagus._oRndSeed = AdvanceRndSeed();
 	if (sarcophagus._oVar1 >= 8) {
 		Monster *monster = PreSpawnSkeleton();
 		if (monster != nullptr) {
-			sarcophagus._oVar2 = monster->getId();
+			sarcophagus._oVar2 = static_cast<int>(monster->getId());
 		} else {
 			sarcophagus._oVar2 = -1;
 		}
@@ -1278,7 +1278,7 @@ void AddBarrel(Object &barrel)
 	if (barrel._oVar2 >= 8) {
 		Monster *skeleton = PreSpawnSkeleton();
 		if (skeleton != nullptr) {
-			barrel._oVar4 = skeleton->getId();
+			barrel._oVar4 = static_cast<int>(skeleton->getId());
 		} else {
 			barrel._oVar4 = -1;
 		}
@@ -1325,9 +1325,10 @@ void AddLargeFountain(Object &fountain)
 {
 	int ox = fountain.position.x;
 	int oy = fountain.position.y;
-	dObject[ox][oy - 1] = -(fountain.GetId() + 1);
-	dObject[ox - 1][oy] = -(fountain.GetId() + 1);
-	dObject[ox - 1][oy - 1] = -(fountain.GetId() + 1);
+	uint8_t id = -(static_cast<int8_t>(fountain.GetId()) + 1);
+	dObject[ox][oy - 1] = id;
+	dObject[ox - 1][oy] = id;
+	dObject[ox - 1][oy - 1] = id;
 	fountain._oRndSeed = AdvanceRndSeed();
 }
 
@@ -4714,7 +4715,7 @@ void SyncObjectAnim(Object &object)
 			return;
 		}
 
-		const int i = std::distance(std::begin(ObjFileList), found);
+		const size_t i = std::distance(std::begin(ObjFileList), found);
 
 		if (pObjCels[i]) {
 			object._oAnimData.emplace(*pObjCels[i]);
