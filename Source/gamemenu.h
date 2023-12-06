@@ -13,6 +13,7 @@ void gamemenu_handle_previous();
 void gamemenu_quit_game(bool bActivate);
 void gamemenu_load_game(bool bActivate);
 void gamemenu_save_game(bool bActivate);
+void gamemenu_return_to_main_menu(bool bActivate);
 
 extern bool isGameMenuOpen;
 

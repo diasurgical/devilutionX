@@ -43,6 +43,7 @@ TMenuItem sgSingleMenu[] = {
 	{ GMENU_ENABLED, N_("Options"),   &GamemenuOptions    },
 	{ GMENU_ENABLED, N_("New Game"),  &GamemenuNewGame    },
 	{ GMENU_ENABLED, N_("Load Game"), &gamemenu_load_game },
+	{ GMENU_ENABLED, N_("Return to Main Menu"), &gamemenu_return_to_main_menu },
 	{ GMENU_ENABLED, N_("Quit Game"), &gamemenu_quit_game },
 	{ GMENU_ENABLED, nullptr,         nullptr             }
 	// clang-format on
@@ -291,6 +292,13 @@ void gamemenu_quit_game(bool bActivate)
 #else
 	ReturnToMainMenu = true;
 #endif
+}
+
+
+void gamemenu_return_to_main_menu(bool bActivate)
+{
+	GamemenuNewGame(bActivate);
+	ReturnToMainMenu = true;
 }
 
 void gamemenu_load_game(bool /*bActivate*/)
