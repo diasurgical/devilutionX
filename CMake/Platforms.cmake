@@ -1,7 +1,3 @@
-if(WIN32)
-  include(platforms/windows)
-endif()
-
 if(HAIKU)
   include(platforms/haiku)
 endif()
@@ -35,6 +31,8 @@ elseif(TARGET_PLATFORM STREQUAL "miyoo_mini")
   include(platforms/miyoo_mini)
 elseif(TARGET_PLATORM STREQUAL "windows9x")
   include(platforms/windows9x)
+elseif(WIN32)
+  include(platforms/windows)
 endif()
 
 if(NINTENDO_SWITCH)
