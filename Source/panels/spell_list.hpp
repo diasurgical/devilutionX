@@ -21,6 +21,7 @@ void DrawSpellList(const Surface &out);
 std::vector<SpellListItem> GetSpellListItems();
 void SetSpell();
 void SetSpeedSpell(size_t slot);
+bool IsValidSpeedSpell(size_t slot);
 void ToggleSpell(size_t slot);
 
 /**
