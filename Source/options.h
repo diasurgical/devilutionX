@@ -654,6 +654,10 @@ struct LanguageOptions : OptionCategoryBase {
 };
 
 constexpr uint32_t KeymapperMouseButtonMask = 1 << 31;
+constexpr uint32_t MouseScrollUpButton = 65536 | KeymapperMouseButtonMask;
+constexpr uint32_t MouseScrollDownButton = 65537 | KeymapperMouseButtonMask;
+constexpr uint32_t MouseScrollLeftButton = 65538 | KeymapperMouseButtonMask;
+constexpr uint32_t MouseScrollRightButton = 65539 | KeymapperMouseButtonMask;
 
 /** The Keymapper maps keys to actions. */
 struct KeymapperOptions : OptionCategoryBase {
