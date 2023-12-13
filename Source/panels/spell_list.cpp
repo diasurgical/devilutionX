@@ -274,6 +274,13 @@ void SetSpeedSpell(size_t slot)
 		return;
 	}
 	Player &myPlayer = *MyPlayer;
+
+	if (myPlayer._pSplHotKey[slot] == pSpell && myPlayer._pSplTHotKey[slot] == pSplType) {
+		// Unset spell hotkey
+		myPlayer._pSplHotKey[slot] = SpellID::Invalid;
+		return;
+	}
+
 	for (size_t i = 0; i < NumHotkeys; ++i) {
 		if (myPlayer._pSplHotKey[i] == pSpell && myPlayer._pSplTHotKey[i] == pSplType)
 			myPlayer._pSplHotKey[i] = SpellID::Invalid;
