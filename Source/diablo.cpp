@@ -1614,6 +1614,33 @@ void SpellBookKeyPressed()
 	CloseInventory();
 }
 
+void CycleSpellHotkeys(bool next)
+{
+	StaticVector<size_t, NumHotkeys> validHotKeyIndexes;
+	std::optional<size_t> currentIndex;
+	for (size_t slot = 0; slot < NumHotkeys; slot++) {
+		if (!IsValidSpeedSpell(slot))
+			continue;
+		if (MyPlayer->_pRSpell == MyPlayer->_pSplHotKey[slot] && MyPlayer->_pRSplType == MyPlayer->_pSplTHotKey[slot]) {
+			// found current
+			currentIndex = validHotKeyIndexes.size();
+		}
+		validHotKeyIndexes.emplace_back(slot);
+	}
+	if (validHotKeyIndexes.size() == 0)
+		return;
+
+	size_t newIndex;
+	if (!currentIndex) {
+		newIndex = next ? 0 : (validHotKeyIndexes.size() - 1);
+	} else if (next) {
+		newIndex = (*currentIndex == validHotKeyIndexes.size() - 1) ? 0 : (*currentIndex + 1);
+	} else {
+		newIndex = *currentIndex == 0 ? (validHotKeyIndexes.size() - 1) : (*currentIndex - 1);
+	}
+	ToggleSpell(validHotKeyIndexes[newIndex]);
+}
+
 bool IsPlayerDead()
 {
 	return MyPlayer->_pmode == PM_DEATH || MyPlayerIsDead;
@@ -1680,6 +1707,22 @@ void InitKeymapActions()
 		    CanPlayerTakeAction,
 		    i + 1);
 	}
+	sgOptions.Keymapper.AddAction(
+	    "QuickSpellPrevious",
+	    N_("Previous quick spell"),
+	    N_("Selects the previous quick spell (cycles)."),
+	    MouseScrollUpButton,
+	    [] { CycleSpellHotkeys(false); },
+	    nullptr,
+	    CanPlayerTakeAction);
+	sgOptions.Keymapper.AddAction(
+	    "QuickSpellNext",
+	    N_("Next quick spell"),
+	    N_("Selects the next quick spell (cycles)."),
+	    MouseScrollDownButton,
+	    [] { CycleSpellHotkeys(true); },
+	    nullptr,
+	    CanPlayerTakeAction);
 	sgOptions.Keymapper.AddAction(
 	    "UseHealthPotion",
 	    N_("Use health potion"),
