@@ -7,7 +7,7 @@ if (buildAsApplication) {
 }
 
 android {
-	ndkVersion '26.0.10792818'
+	ndkVersion '26.1.10909125'
 	compileSdk 33
 	defaultConfig {
 		if (buildAsApplication) {
@@ -31,6 +31,9 @@ android {
 		}
 	}
 	namespace 'org.diasurgical.devilutionx'
+	buildFeatures {
+		buildConfig true
+	}
 	applicationVariants.all { variant ->
 		tasks["merge${variant.name.capitalize()}Assets"]
 			.dependsOn("externalNativeBuild${variant.name.capitalize()}")
