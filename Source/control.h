@@ -77,10 +77,6 @@ inline bool CanPanelsCoverView()
 	const Rectangle &mainPanel = GetMainPanel();
 	return GetScreenWidth() <= mainPanel.size.width && GetScreenHeight() <= SidePanelSize.height + mainPanel.size.height;
 }
-void DrawSpellList(const Surface &out);
-void SetSpell();
-void SetSpeedSpell(size_t slot);
-void ToggleSpell(size_t slot);
 
 void AddPanelString(std::string_view str);
 void AddPanelString(std::string &&str);
@@ -126,12 +122,6 @@ void DrawFlaskValues(const Surface &out, Point pos, int currValue, int maxValue)
  * @see Player::UpdateHitPointPercentage() and Player::UpdateManaPercentage()
  */
 void control_update_life_mana();
-
-/**
- * @brief draws the current right mouse button spell.
- * @param out screen buffer representing the main UI panel
- */
-void DrawSpell(const Surface &out);
 
 void InitControlPan();
 void DrawCtrlPan(const Surface &out);

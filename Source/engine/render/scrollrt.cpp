@@ -35,6 +35,7 @@
 #include "options.h"
 #include "panels/charpanel.hpp"
 #include "panels/console.hpp"
+#include "panels/spell_list.hpp"
 #include "plrmsg.h"
 #include "qol/chatlog.h"
 #include "qol/floatingnumbers.h"

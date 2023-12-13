@@ -13,6 +13,7 @@
 #include "gamemenu.h"
 #include "gmenu.h"
 #include "options.h"
+#include "panels/spell_list.hpp"
 #include "qol/stash.h"
 #include "stores.h"
 
