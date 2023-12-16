@@ -512,7 +512,7 @@ bool base::SNetGetOwnerTurnsWaiting(uint32_t *turns)
 	plr_t owner = GetOwner();
 	PlayerState &playerState = playerStateTable_[owner];
 	std::deque<turn_t> &turnQueue = playerState.turnQueue;
-	*turns = turnQueue.size();
+	*turns = static_cast<uint32_t>(turnQueue.size());
 
 	return true;
 }
@@ -521,7 +521,7 @@ bool base::SNetGetTurnsInTransit(uint32_t *turns)
 {
 	PlayerState &playerState = playerStateTable_[plr_self];
 	std::deque<turn_t> &turnQueue = playerState.turnQueue;
-	*turns = turnQueue.size();
+	*turns = static_cast<uint32_t>(turnQueue.size());
 	return true;
 }
 

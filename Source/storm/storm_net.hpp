@@ -39,7 +39,7 @@ struct _SNETEVENT {
 	uint32_t eventid;
 	uint32_t playerid;
 	void *data;
-	uint32_t databytes;
+	size_t databytes;
 };
 
 #define PS_CONNECTED 0x10000
