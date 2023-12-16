@@ -357,8 +357,8 @@ std::string protocol_zt::make_default_gamename()
 	std::string ret;
 	std::string allowedChars = "abcdefghkopqrstuvwxyz";
 	std::random_device rd;
-	std::uniform_int_distribution<int> dist(0, allowedChars.size() - 1);
-	for (int i = 0; i < 5; ++i) {
+	std::uniform_int_distribution<size_t> dist(0, allowedChars.size() - 1);
+	for (size_t i = 0; i < 5; ++i) {
 		ret += allowedChars.at(dist(rd));
 	}
 	return ret;

@@ -29,8 +29,9 @@ tl::expected<buffer_t, PacketError> frame_queue::Read(framesize_t s)
 		return tl::make_unexpected(FrameQueueError());
 	buffer_t ret;
 	while (s > 0 && s >= buffer_deque.front().size()) {
-		s -= buffer_deque.front().size();
-		current_size -= buffer_deque.front().size();
+		framesize_t bufferSize = static_cast<framesize_t>(buffer_deque.front().size());
+		s -= bufferSize;
+		current_size -= bufferSize;
 		ret.insert(ret.end(),
 		    buffer_deque.front().begin(),
 		    buffer_deque.front().end());
@@ -49,7 +50,7 @@ tl::expected<buffer_t, PacketError> frame_queue::Read(framesize_t s)
 
 void frame_queue::Write(buffer_t buf)
 {
-	current_size += buf.size();
+	current_size += static_cast<framesize_t>(buf.size());
 	buffer_deque.push_back(std::move(buf));
 }
 
@@ -80,9 +81,9 @@ tl::expected<buffer_t, PacketError> frame_queue::ReadPacket()
 tl::expected<buffer_t, PacketError> frame_queue::MakeFrame(buffer_t packetbuf)
 {
 	buffer_t ret;
-	if (packetbuf.size() > max_frame_size)
+	framesize_t size = static_cast<framesize_t>(packetbuf.size());
+	if (size > max_frame_size)
 		return tl::make_unexpected("Buffer exceeds maximum frame size");
-	framesize_t size = packetbuf.size();
 	ret.insert(ret.end(), packet_out::begin(size), packet_out::end(size));
 	ret.insert(ret.end(), packetbuf.begin(), packetbuf.end());
 	return ret;
