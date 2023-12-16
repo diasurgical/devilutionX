@@ -20,7 +20,7 @@ int loopback::join(std::string /*addrstr*/)
 	ABORT();
 }
 
-bool loopback::SNetReceiveMessage(uint8_t *sender, void **data, uint32_t *size)
+bool loopback::SNetReceiveMessage(uint8_t *sender, void **data, size_t *size)
 {
 	if (message_queue.empty())
 		return false;
@@ -32,9 +32,9 @@ bool loopback::SNetReceiveMessage(uint8_t *sender, void **data, uint32_t *size)
 	return true;
 }
 
-bool loopback::SNetSendMessage(int dest, void *data, unsigned int size)
+bool loopback::SNetSendMessage(uint8_t dest, void *data, size_t size)
 {
-	if (dest == plr_single || dest == SNPLAYER_ALL) {
+	if (dest == plr_single) {
 		auto *rawMessage = reinterpret_cast<unsigned char *>(data);
 		buffer_t message(rawMessage, rawMessage + size);
 		message_queue.push(message);
@@ -51,7 +51,7 @@ bool loopback::SNetReceiveTurns(char **data, size_t *size, uint32_t * /*status*/
 	return true;
 }
 
-bool loopback::SNetSendTurn(char * /*data*/, unsigned int /*size*/)
+bool loopback::SNetSendTurn(char * /*data*/, size_t /*size*/)
 {
 	return true;
 }

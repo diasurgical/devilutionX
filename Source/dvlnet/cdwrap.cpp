@@ -37,12 +37,12 @@ void cdwrap::setup_gameinfo(buffer_t info)
 		dvlnet_wrap->setup_gameinfo(game_init_info);
 }
 
-bool cdwrap::SNetReceiveMessage(uint8_t *sender, void **data, uint32_t *size)
+bool cdwrap::SNetReceiveMessage(uint8_t *sender, void **data, size_t *size)
 {
 	return dvlnet_wrap->SNetReceiveMessage(sender, data, size);
 }
 
-bool cdwrap::SNetSendMessage(int playerID, void *data, unsigned int size)
+bool cdwrap::SNetSendMessage(uint8_t playerID, void *data, size_t size)
 {
 	return dvlnet_wrap->SNetSendMessage(playerID, data, size);
 }
@@ -52,7 +52,7 @@ bool cdwrap::SNetReceiveTurns(char **data, size_t *size, uint32_t *status)
 	return dvlnet_wrap->SNetReceiveTurns(data, size, status);
 }
 
-bool cdwrap::SNetSendTurn(char *data, unsigned int size)
+bool cdwrap::SNetSendTurn(char *data, size_t size)
 {
 	return dvlnet_wrap->SNetSendTurn(data, size);
 }

@@ -61,7 +61,7 @@ bool SNetDestroy();
  *
  *  Returns true if the function was called successfully and false otherwise.
  */
-bool SNetDropPlayer(int playerid, uint32_t flags);
+bool SNetDropPlayer(uint8_t playerid, uint32_t flags);
 
 /*  SNetGetTurnsInTransit @ 115
  *
@@ -87,7 +87,7 @@ bool SNetJoinGame(char *gameName, char *gamePassword, int *playerid);
  */
 bool SNetLeaveGame(int type);
 
-bool SNetReceiveMessage(uint8_t *senderplayerid, void **data, uint32_t *databytes);
+bool SNetReceiveMessage(uint8_t *senderplayerid, void **data, size_t *databytes);
 bool SNetReceiveTurns(int arraysize, char **arraydata, size_t *arraydatabytes, uint32_t *arrayplayerstatus);
 
 typedef void (*SEVTHANDLER)(struct _SNETEVENT *);
@@ -107,11 +107,10 @@ typedef void (*SEVTHANDLER)(struct _SNETEVENT *);
  *
  *  Returns true if the function was called successfully and false otherwise.
  */
-bool SNetSendMessage(int playerID, void *data, unsigned int databytes);
+bool SNetSendMessage(uint8_t playerID, void *data, size_t databytes);
 
 // Macro values to target specific players
-#define SNPLAYER_ALL -1
-#define SNPLAYER_OTHERS -2
+constexpr uint8_t SNPLAYER_OTHERS = 0xFF;
 
 /*  SNetSendTurn @ 128
  *
@@ -124,7 +123,7 @@ bool SNetSendMessage(int playerID, void *data, unsigned int databytes);
  *
  *  Returns true if the function was called successfully and false otherwise.
  */
-bool SNetSendTurn(char *data, unsigned int databytes);
+bool SNetSendTurn(char *data, size_t databytes);
 
 bool SNetGetOwnerTurnsWaiting(uint32_t *);
 bool SNetUnregisterEventHandler(event_type);

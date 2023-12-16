@@ -187,7 +187,7 @@ std::string_view CmdIdString(_cmd_id cmd)
 #endif // LOG_RECEIVED_MESSAGES
 
 struct TMegaPkt {
-	uint32_t spaceLeft;
+	size_t spaceLeft;
 	std::byte data[32000];
 
 	TMegaPkt()
@@ -413,7 +413,7 @@ void PrePacket()
 	}
 }
 
-void SendPacket(size_t pnum, const void *packet, size_t dwSize)
+void SendPacket(uint8_t pnum, const void *packet, size_t dwSize)
 {
 	if (pnum != sgnCurrMegaPlayer) {
 		sgnCurrMegaPlayer = pnum;
@@ -644,7 +644,7 @@ void DeltaImportData(_cmd_id cmd, uint32_t recvOffset)
 	sgbDeltaChunks++;
 }
 
-size_t OnLevelData(int pnum, const TCmd *pCmd)
+size_t OnLevelData(uint8_t pnum, const TCmd *pCmd)
 {
 	const auto &message = *reinterpret_cast<const TCmdPlrInfoHdr *>(pCmd);
 	const uint16_t wBytes = SDL_SwapLE16(message.wBytes);
@@ -2050,7 +2050,7 @@ size_t OnPlayerJoinLevel(const TCmd *pCmd, Player &player)
 		return sizeof(message);
 	}
 
-	const uint16_t playerLevel = SDL_SwapLE16(message.wParam1);
+	const uint8_t playerLevel = static_cast<uint8_t>(SDL_SwapLE16(message.wParam1));
 	bool isSetLevel = message.wParam2 != 0;
 	if (!IsValidLevel(playerLevel, isSetLevel) || !InDungeonBounds(position)) {
 		return sizeof(message);
@@ -2095,7 +2095,7 @@ size_t OnActivatePortal(const TCmd *pCmd, Player &player)
 {
 	const auto &message = *reinterpret_cast<const TCmdLocParam3 *>(pCmd);
 	const Point position { message.x, message.y };
-	const uint16_t level = SDL_SwapLE16(message.wParam1);
+	const uint8_t level = static_cast<uint8_t>(SDL_SwapLE16(message.wParam1));
 	const uint16_t dungeonTypeIdx = SDL_SwapLE16(message.wParam2);
 	const bool isSetLevel = message.wParam3 != 0;
 
@@ -2222,7 +2222,7 @@ size_t OnString(const TCmd *pCmd, Player &player)
 {
 	auto *p = (TCmdString *)pCmd;
 
-	int len = strlen(p->str);
+	size_t len = strlen(p->str);
 	if (gbBufferMsgs == 0)
 		SendPlrMsg(player, p->str);
 
@@ -2383,8 +2383,8 @@ void RecreateItem(const Player &player, const TItem &messageItem, Item &item)
 	item._iMaxCharges = std::clamp<int>(messageItem.bMCh, 0, item._iMaxCharges);
 	item._iCharges = std::clamp<int>(messageItem.bCh, 0, item._iMaxCharges);
 	if (gbIsHellfire) {
-		item._iPLToHit = ClampToHit(item, SDL_SwapLE16(messageItem.wToHit));
-		item._iMaxDam = ClampMaxDam(item, SDL_SwapLE16(messageItem.wMaxDam));
+		item._iPLToHit = ClampToHit(item, static_cast<uint8_t>(SDL_SwapLE16(messageItem.wToHit)));
+		item._iMaxDam = ClampMaxDam(item, static_cast<uint8_t>(SDL_SwapLE16(messageItem.wMaxDam)));
 	}
 	item.dwBuff = dwBuff;
 }
@@ -2394,7 +2394,7 @@ void ClearLastSentPlayerCmd()
 	lastSentPlayerCmd = {};
 }
 
-void msg_send_drop_pkt(int pnum, int reason)
+void msg_send_drop_pkt(uint8_t pnum, int reason)
 {
 	TFakeDropPlr cmd;
 
@@ -2447,7 +2447,7 @@ void run_delta_info()
 	FreePackets();
 }
 
-void DeltaExportData(int pnum)
+void DeltaExportData(uint8_t pnum)
 {
 	for (const auto &[levelNum, deltaLevel] : DeltaLevels) {
 		const size_t bufferSize = 1U                                                      /* marker byte, always 0 */
@@ -2777,7 +2777,7 @@ void NetSendCmdGolem(uint8_t mx, uint8_t my, Direction dir, uint8_t menemy, int 
 	NetSendLoPri(MyPlayerId, (std::byte *)&cmd, sizeof(cmd));
 }
 
-void NetSendCmdLoc(size_t playerId, bool bHiPri, _cmd_id bCmd, Point position)
+void NetSendCmdLoc(uint8_t playerId, bool bHiPri, _cmd_id bCmd, Point position)
 {
 	if (playerId == MyPlayerId && WasPlayerCmdAlreadyRequested(bCmd, position))
 		return;
@@ -3123,7 +3123,7 @@ void delta_close_portal(const Player &player)
 	memset(&sgJunk.portal[player.getId()], 0xFF, sizeof(sgJunk.portal[player.getId()]));
 }
 
-size_t ParseCmd(size_t pnum, const TCmd *pCmd)
+size_t ParseCmd(uint8_t pnum, const TCmd *pCmd)
 {
 	sbLastCmd = pCmd->bCmd;
 	if (sgwPackPlrOffsetTbl[pnum] != 0 && sbLastCmd != CMD_ACK_PLRINFO && sbLastCmd != CMD_SEND_PLRINFO)
@@ -3137,7 +3137,7 @@ size_t ParseCmd(size_t pnum, const TCmd *pCmd)
 
 	switch (pCmd->bCmd) {
 	case CMD_SYNCDATA:
-		return OnSyncData(pCmd, pnum);
+		return OnSyncData(pCmd, player);
 	case CMD_WALKXY:
 		return OnWalk(pCmd, player);
 	case CMD_ADDSTR:
