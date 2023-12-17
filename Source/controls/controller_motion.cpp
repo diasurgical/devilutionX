@@ -149,21 +149,22 @@ bool IsControllerMotion(const SDL_Event &event)
 	}
 #endif
 
+#if defined(JOY_AXIS_LEFTX) || defined(JOY_AXIS_LEFTY) || defined(JOY_AXIS_RIGHTX) || defined(JOY_AXIS_RIGHTY)
 	if (event.type == SDL_JOYAXISMOTION) {
 		switch (event.jaxis.axis) {
 #ifdef JOY_AXIS_LEFTX
 		case JOY_AXIS_LEFTX:
 			return true;
 #endif
-#ifdef JOY_AXIS_LEFTX
+#ifdef JOY_AXIS_LEFTY
 		case JOY_AXIS_LEFTY:
 			return true;
 #endif
-#ifdef JOY_AXIS_LEFTX
+#ifdef JOY_AXIS_RIGHTX
 		case JOY_AXIS_RIGHTX:
 			return true;
 #endif
-#ifdef JOY_AXIS_LEFTX
+#ifdef JOY_AXIS_RIGHTY
 		case JOY_AXIS_RIGHTY:
 			return true;
 #endif
@@ -171,6 +172,7 @@ bool IsControllerMotion(const SDL_Event &event)
 			return false;
 		}
 	}
+#endif
 
 	return false;
 }
