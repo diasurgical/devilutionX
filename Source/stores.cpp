@@ -348,7 +348,7 @@ bool StoreAutoPlace(Item &item, bool persistItem)
 	return AutoPlaceItemInInventory(player, item, persistItem, true);
 }
 
-void ScrollVendorStore(Item *itemData, int storeLimit, int idx, int selling = true)
+void ScrollVendorStore(Item *itemData, size_t storeLimit, int idx, int selling = true)
 {
 	ClearSText(5, 21);
 	stextup = 5;
@@ -370,7 +370,7 @@ void ScrollVendorStore(Item *itemData, int storeLimit, int idx, int selling = tr
 		if (stextsel != -1 && !stext[stextsel].isSelectable() && stextsel != BackButtonLine())
 			stextsel = stextdown;
 	} else {
-		stextsmax = std::max(storeLimit - 4, 0);
+		stextsmax = std::max(static_cast<int>(storeLimit) - 4, 0);
 	}
 }
 
