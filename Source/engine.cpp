@@ -52,11 +52,7 @@ void DrawHalfTransparentAligned32BlendedRectTo(const Surface &out, unsigned sx, 
 	while (height-- > 0) {
 		for (unsigned i = 0; i < width; ++i, ++pix) {
 			const uint32_t v = *pix;
-#if SDL_BYTEORDER == SDL_LIL_ENDIAN
 			*pix = lookupTable[v & 0xFFFF] | (lookupTable[(v >> 16) & 0xFFFF] << 16);
-#else
-			*pix = lookupTable[(v >> 16) & 0xFFFF] | (lookupTable[v & 0xFFFF] << 16);
-#endif
 		}
 		pix += skipX;
 	}
