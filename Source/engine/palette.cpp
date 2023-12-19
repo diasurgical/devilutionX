@@ -103,11 +103,7 @@ void GenerateBlendedLookupTable(std::array<SDL_Color, 256> &palette, int skipFro
 #if DEVILUTIONX_PALETTE_TRANSPARENCY_BLACK_16_LUT
 	for (unsigned i = 0; i < 256; ++i) {
 		for (unsigned j = 0; j < 256; ++j) {
-#if SDL_BYTEORDER == SDL_LIL_ENDIAN
 			const std::uint16_t index = i | (j << 8);
-#else
-			const std::uint16_t index = j | (i << 8);
-#endif
 			paletteTransparencyLookupBlack16[index] = paletteTransparencyLookup[0][i] | (paletteTransparencyLookup[0][j] << 8);
 		}
 	}
