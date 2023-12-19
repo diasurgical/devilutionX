@@ -38,7 +38,7 @@ private:
 
 	bool ReadMPQHeader(MpqFileHeader *hdr);
 	MpqBlockEntry *AddFile(std::string_view filename, MpqBlockEntry *block, uint32_t blockIndex);
-	bool WriteFileContents(const std::byte *fileData, size_t fileSize, MpqBlockEntry *block);
+	bool WriteFileContents(const std::byte *fileData, uint32_t fileSize, MpqBlockEntry *block);
 
 	// Returns an unused entry in the block entry table.
 	MpqBlockEntry *NewBlock(uint32_t *blockIndex = nullptr);
@@ -57,7 +57,7 @@ private:
 
 	LoggedFStream stream_;
 	std::string name_;
-	std::uintmax_t size_ {};
+	uint32_t size_ {};
 	std::unique_ptr<MpqHashEntry[]> hashTable_;
 	std::unique_ptr<MpqBlockEntry[]> blockTable_;
 

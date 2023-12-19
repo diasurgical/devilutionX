@@ -97,11 +97,13 @@ MpqWriter::MpqWriter(const char *path)
 	const char *mode = "wb";
 	if (exists) {
 		mode = "r+b";
-		if (!GetFileSize(path, &size_)) {
+		std::uintmax_t fileSize;
+		if (!GetFileSize(path, &fileSize)) {
 			error = R"(GetFileSize failed: "{}")";
 			LogError(error, path, std::strerror(errno));
 			goto on_error;
 		}
+		size_ = static_cast<uint32_t>(fileSize);
 		LogVerbose("GetFileSize(\"{}\") = {}", path, size_);
 	}
 	if (!stream_.Open(path, mode)) {
@@ -360,7 +362,7 @@ MpqBlockEntry *MpqWriter::AddFile(std::string_view filename, MpqBlockEntry *bloc
 	return block;
 }
 
-bool MpqWriter::WriteFileContents(const std::byte *fileData, size_t fileSize, MpqBlockEntry *block)
+bool MpqWriter::WriteFileContents(const std::byte *fileData, uint32_t fileSize, MpqBlockEntry *block)
 {
 	const uint32_t numSectors = (fileSize + (BlockSize - 1)) / BlockSize;
 	const uint32_t offsetTableByteSize = sizeof(uint32_t) * (numSectors + 1);
@@ -442,7 +444,7 @@ bool MpqWriter::WriteHeader()
 	memset(&fhdr, 0, sizeof(fhdr));
 	fhdr.signature = MpqFileHeader::DiabloSignature;
 	fhdr.headerSize = MpqFileHeader::DiabloSize;
-	fhdr.fileSize = static_cast<uint32_t>(size_);
+	fhdr.fileSize = size_;
 	fhdr.version = 0;
 	fhdr.blockSizeFactor = BlockSizeFactor;
 	fhdr.hashEntriesOffset = MpqHashEntryOffset;
@@ -501,7 +503,7 @@ bool MpqWriter::WriteFile(std::string_view filename, const std::byte *data, size
 
 	RemoveHashEntry(filename);
 	blockEntry = AddFile(filename, nullptr, 0);
-	if (!WriteFileContents(data, size, blockEntry)) {
+	if (!WriteFileContents(data, static_cast<uint32_t>(size), blockEntry)) {
 		RemoveHashEntry(filename);
 		return false;
 	}
