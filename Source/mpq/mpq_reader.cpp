@@ -96,7 +96,7 @@ std::unique_ptr<std::byte[]> MpqArchive::ReadFile(std::string_view filename, std
 	return result;
 }
 
-int32_t MpqArchive::ReadBlock(uint32_t fileNumber, uint32_t blockNumber, uint8_t *out, uint32_t outSize)
+int32_t MpqArchive::ReadBlock(uint32_t fileNumber, uint32_t blockNumber, uint8_t *out, size_t outSize)
 {
 	std::vector<std::uint8_t> &tmpBuf = GetTemporaryBuffer(outSize);
 	return libmpq__block_read_with_temporary_buffer(
