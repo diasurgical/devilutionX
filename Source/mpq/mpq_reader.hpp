@@ -44,7 +44,7 @@ public:
 	std::unique_ptr<std::byte[]> ReadFile(std::string_view filename, std::size_t &fileSize, int32_t &error);
 
 	// Returns error code.
-	int32_t ReadBlock(uint32_t fileNumber, uint32_t blockNumber, uint8_t *out, uint32_t outSize);
+	int32_t ReadBlock(uint32_t fileNumber, uint32_t blockNumber, uint8_t *out, size_t outSize);
 
 	std::size_t GetUnpackedFileSize(uint32_t fileNumber, int32_t &error);
 
