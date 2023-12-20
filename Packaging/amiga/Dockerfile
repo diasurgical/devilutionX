@@ -1,4 +1,4 @@
-FROM amigadev/crosstools:m68k-amigaos
+FROM amigadev/crosstools:m68k-amigaos-gcc10
 
 RUN apt-get install --no-install-recommends -y smpq
 RUN mkdir /devilutionx-deps-build
