@@ -46,7 +46,7 @@ const int BarPos[3][2] = { { 53, 37 }, { 53, 421 }, { 53, 37 } };
 
 OptionalOwnedClxSpriteList ArtCutsceneWidescreen;
 
-uint16_t CustomEventsBegin = SDL_USEREVENT;
+SdlEventType CustomEventsBegin = SDL_USEREVENT;
 constexpr uint16_t NumCustomEvents = WM_LAST - WM_FIRST + 1;
 
 Cutscenes GetCutSceneFromLevelType(dungeon_type type)
@@ -234,17 +234,17 @@ void RegisterCustomEvents()
 #endif
 }
 
-bool IsCustomEvent(uint16_t eventType)
+bool IsCustomEvent(SdlEventType eventType)
 {
 	return eventType >= CustomEventsBegin && eventType < CustomEventsBegin + NumCustomEvents;
 }
 
-interface_mode GetCustomEvent(uint16_t eventType)
+interface_mode GetCustomEvent(SdlEventType eventType)
 {
 	return static_cast<interface_mode>(eventType - CustomEventsBegin);
 }
 
-uint16_t CustomEventToSdlEvent(interface_mode eventType)
+SdlEventType CustomEventToSdlEvent(interface_mode eventType)
 {
 	return CustomEventsBegin + eventType;
 }

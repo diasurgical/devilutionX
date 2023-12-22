@@ -192,7 +192,11 @@ struct AssetHandle {
 
 	bool read(void *buffer, size_t len)
 	{
+#if SDL_VERSION_ATLEAST(2, 0, 0)
 		return handle->read(handle, buffer, len, 1) == 1;
+#else
+		return handle->read(handle, buffer, static_cast<int>(len), 1) == 1;
+#endif
 	}
 
 	bool seek(long pos)
