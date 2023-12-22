@@ -149,7 +149,7 @@ struct AssetRef {
 			int32_t error;
 			return archive->GetUnpackedFileSize(fileNumber, error);
 		}
-		return SDL_RWsize(directHandle);
+		return static_cast<size_t>(SDL_RWsize(directHandle));
 	}
 };
 

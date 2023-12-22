@@ -387,8 +387,9 @@ TEST(Writehero, pfile_write_hero)
 	pfile_write_hero();
 
 	const char *path = "multi_0.sv";
-	uintmax_t size;
-	ASSERT_TRUE(GetFileSize(path, &size));
+	uintmax_t fileSize;
+	ASSERT_TRUE(GetFileSize(path, &fileSize));
+	size_t size = static_cast<size_t>(fileSize);
 	FILE *f = std::fopen(path, "rb");
 	ASSERT_TRUE(f != nullptr);
 	std::unique_ptr<char[]> data { new char[size] };

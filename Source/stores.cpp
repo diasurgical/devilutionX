@@ -348,7 +348,7 @@ bool StoreAutoPlace(Item &item, bool persistItem)
 	return AutoPlaceItemInInventory(player, item, persistItem, true);
 }
 
-void ScrollVendorStore(Item *itemData, size_t storeLimit, int idx, int selling = true)
+void ScrollVendorStore(Item *itemData, int storeLimit, int idx, int selling = true)
 {
 	ClearSText(5, 21);
 	stextup = 5;
@@ -393,7 +393,7 @@ void StartSmith()
 
 void ScrollSmithBuy(int idx)
 {
-	ScrollVendorStore(smithitem, std::size(smithitem), idx);
+	ScrollVendorStore(smithitem, static_cast<int>(std::size(smithitem)), idx);
 }
 
 uint32_t TotalPlayerGold()
@@ -439,7 +439,7 @@ void ScrollSmithPremiumBuy(int boughtitems)
 			boughtitems--;
 	}
 
-	ScrollVendorStore(premiumitems, std::size(premiumitems), idx);
+	ScrollVendorStore(premiumitems, static_cast<int>(std::size(premiumitems)), idx);
 }
 
 bool StartSmithPremiumBuy()
@@ -689,7 +689,7 @@ void StartWitch()
 
 void ScrollWitchBuy(int idx)
 {
-	ScrollVendorStore(witchitem, std::size(witchitem), idx);
+	ScrollVendorStore(witchitem, static_cast<int>(std::size(witchitem)), idx);
 }
 
 void WitchBookLevel(Item &bookItem)
@@ -1038,7 +1038,7 @@ void StartHealer()
 
 void ScrollHealerBuy(int idx)
 {
-	ScrollVendorStore(healitem, std::size(healitem), idx);
+	ScrollVendorStore(healitem, static_cast<int>(std::size(healitem)), idx);
 }
 
 void StartHealerBuy()
