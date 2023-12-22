@@ -72,7 +72,7 @@ std::unique_ptr<std::byte[]> MpqArchive::ReadFile(std::string_view filename, std
 	if (error != 0)
 		return result;
 
-	result = std::make_unique<std::byte[]>(unpackedSize);
+	result = std::make_unique<std::byte[]>(static_cast<size_t>(unpackedSize));
 
 	const std::size_t blockSize = GetBlockSize(fileNumber, 0, error);
 	if (error != 0)
@@ -92,7 +92,7 @@ std::unique_ptr<std::byte[]> MpqArchive::ReadFile(std::string_view filename, std
 	}
 	CloseBlockOffsetTable(fileNumber);
 
-	fileSize = unpackedSize;
+	fileSize = static_cast<size_t>(unpackedSize);
 	return result;
 }
 
@@ -109,7 +109,7 @@ std::size_t MpqArchive::GetUnpackedFileSize(uint32_t fileNumber, int32_t &error)
 {
 	libmpq__off_t unpackedSize;
 	error = libmpq__file_size_unpacked(archive_, fileNumber, &unpackedSize);
-	return unpackedSize;
+	return static_cast<size_t>(unpackedSize);
 }
 
 uint32_t MpqArchive::GetNumBlocks(uint32_t fileNumber, int32_t &error)
@@ -134,7 +134,7 @@ std::size_t MpqArchive::GetBlockSize(uint32_t fileNumber, uint32_t blockNumber, 
 {
 	libmpq__off_t blockSize;
 	error = libmpq__block_size_unpacked(archive_, fileNumber, blockNumber, &blockSize);
-	return blockSize;
+	return static_cast<size_t>(blockSize);
 }
 
 bool MpqArchive::HasFile(std::string_view filename) const

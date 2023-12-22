@@ -284,7 +284,7 @@ void CreateDetailDiffs(std::string_view prefix, std::string_view memoryMapFile, 
 		return;
 	}
 
-	size_t readBytes = SDL_RWsize(handle);
+	size_t readBytes = static_cast<size_t>(SDL_RWsize(handle));
 	std::unique_ptr<std::byte[]> memoryMapFileData { new std::byte[readBytes] };
 	SDL_RWread(handle, memoryMapFileData.get(), readBytes, 1);
 	SDL_RWclose(handle);
