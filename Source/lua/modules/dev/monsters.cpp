@@ -114,6 +114,7 @@ std::string DebugCmdSpawnMonster(std::string name, std::optional<unsigned> count
 	}
 
 	if (mtype == -1) return "Monster not found";
+	if (!MyPlayer->isLevelOwnedByLocalClient()) return "You are not the level owner.";
 
 	size_t id = MaxLvlMTypes - 1;
 	bool found = false;
@@ -137,28 +138,27 @@ std::string DebugCmdSpawnMonster(std::string name, std::optional<unsigned> count
 
 	Player &myPlayer = *MyPlayer;
 
-	unsigned spawnedMonster = 0;
+	size_t monstersToSpawn = std::min<size_t>(MaxMonsters - ActiveMonsterCount, count);
+	if (monstersToSpawn == 0)
+		return "Can't spawn any monsters";
 
-	auto ret = Crawl(0, MaxCrawlRadius, [&](Displacement displacement) -> std::optional<std::string> {
+	size_t spawnedMonster = 0;
+	Crawl(0, MaxCrawlRadius, [&](Displacement displacement) {
 		Point pos = myPlayer.position.tile + displacement;
 		if (dPlayer[pos.x][pos.y] != 0 || dMonster[pos.x][pos.y] != 0)
-			return {};
+			return false;
 		if (!IsTileWalkable(pos))
-			return {};
+			return false;
 
-		if (AddMonster(pos, myPlayer._pdir, id, true) == nullptr)
-			return StrCat("Spawned ", spawnedMonster, " monsters. (Unable to spawn more)");
+		SpawnMonster(pos, myPlayer._pdir, id);
 		spawnedMonster += 1;
 
-		if (spawnedMonster >= count)
-			return StrCat("Spawned ", spawnedMonster, " monsters.");
-
-		return {};
+		return spawnedMonster == monstersToSpawn;
 	});
 
-	if (!ret.has_value())
+	if (monstersToSpawn != count)
 		return StrCat("Spawned ", spawnedMonster, " monsters. (Unable to spawn more)");
-	return *ret;
+	return StrCat("Spawned ", spawnedMonster, " monsters.");
 }
 
 } // namespace

@@ -177,6 +177,7 @@ std::string_view CmdIdString(_cmd_id cmd)
 	case CMD_NAKRUL: return "CMD_NAKRUL";
 	case CMD_OPENHIVE: return "CMD_OPENHIVE";
 	case CMD_OPENGRAVE: return "CMD_OPENGRAVE";
+	case CMD_SPAWNMONSTER: return "CMD_SPAWNMONSTER";
 	case FAKE_CMD_SETID: return "FAKE_CMD_SETID";
 	case FAKE_CMD_DROPID: return "FAKE_CMD_DROPID";
 	case CMD_INVALID: return "CMD_INVALID";
@@ -210,9 +211,15 @@ struct DObjectStr {
 	_cmd_id bCmd;
 };
 
+struct DSpawnedMonster {
+	size_t typeIndex;
+	uint32_t seed;
+};
+
 struct DLevel {
 	TCmdPItem item[MAXITEMS];
 	std::unordered_map<WorldTilePosition, DObjectStr> object;
+	std::unordered_map<size_t, DSpawnedMonster> spawnedMonsters;
 	DMonsterStr monster[MaxMonsters];
 };
 
@@ -539,7 +546,7 @@ std::byte *DeltaExportMonster(std::byte *dst, const DMonsterStr *src)
 	return dst;
 }
 
-void DeltaImportMonster(const std::byte *src, DMonsterStr *dst)
+size_t DeltaImportMonster(const std::byte *src, DMonsterStr *dst)
 {
 	size_t size = 0;
 	for (size_t i = 0; i < MaxMonsters; i++, dst++) {
@@ -551,6 +558,43 @@ void DeltaImportMonster(const std::byte *src, DMonsterStr *dst)
 			size += sizeof(DMonsterStr);
 		}
 	}
+
+	return size;
+}
+
+std::byte *DeltaExportSpawnedMonsters(std::byte *dst, const std::unordered_map<size_t, DSpawnedMonster> &spawnedMonsters)
+{
+	auto &size = *reinterpret_cast<uint16_t *>(dst);
+	size = static_cast<uint16_t>(spawnedMonsters.size());
+	dst += sizeof(uint16_t);
+
+	for (const auto &deltaSpawnedMonster : spawnedMonsters) {
+		auto &monsterId = *reinterpret_cast<uint16_t *>(dst);
+		monsterId = static_cast<uint16_t>(deltaSpawnedMonster.first);
+		dst += sizeof(uint16_t);
+
+		memcpy(dst, &deltaSpawnedMonster.second, sizeof(DSpawnedMonster));
+		dst += sizeof(DSpawnedMonster);
+	}
+
+	return dst;
+}
+
+const std::byte *DeltaImportSpawnedMonsters(const std::byte *src, std::unordered_map<size_t, DSpawnedMonster> &spawnedMonsters)
+{
+	uint16_t size = *reinterpret_cast<const uint16_t *>(src);
+	src += sizeof(uint16_t);
+
+	for (size_t i = 0; i < size; i++) {
+		uint16_t monsterId = *reinterpret_cast<const uint16_t *>(src);
+		src += sizeof(uint16_t);
+		DSpawnedMonster spawnedMonster;
+		memcpy(&spawnedMonster, src, sizeof(DSpawnedMonster));
+		src += sizeof(DSpawnedMonster);
+		spawnedMonsters.emplace(monsterId, spawnedMonster);
+	}
+
+	return src;
 }
 
 std::byte *DeltaExportJunk(std::byte *dst)
@@ -636,7 +680,8 @@ void DeltaImportData(_cmd_id cmd, uint32_t recvOffset)
 		DLevel &deltaLevel = GetDeltaLevel(i);
 		src += DeltaImportItem(src, deltaLevel.item);
 		src = DeltaImportObjects(src, deltaLevel.object);
-		DeltaImportMonster(src, deltaLevel.monster);
+		src += DeltaImportMonster(src, deltaLevel.monster);
+		src = DeltaImportSpawnedMonsters(src, deltaLevel.spawnedMonsters);
 	} else {
 		app_fatal(StrCat("Unkown network message type: ", cmd));
 	}
@@ -2328,6 +2373,26 @@ size_t OnOpenGrave(const TCmd *pCmd)
 	return sizeof(*pCmd);
 }
 
+size_t OnSpawnMonster(const TCmd *pCmd, const Player &player)
+{
+	const auto &message = *reinterpret_cast<const TCmdSpawnMonster *>(pCmd);
+	if (gbBufferMsgs == 1)
+		return sizeof(message);
+
+	const Point position { message.x, message.y };
+
+	size_t typeIndex = static_cast<size_t>(SDL_SwapLE16(message.typeIndex));
+	size_t monsterId = static_cast<size_t>(SDL_SwapLE16(message.monsterId));
+
+	DLevel &deltaLevel = GetDeltaLevel(player);
+
+	deltaLevel.spawnedMonsters[monsterId] = { typeIndex, message.seed };
+
+	if (player.isOnActiveLevel() && &player != MyPlayer)
+		InitializeSpawnedMonster(position, message.dir, typeIndex, monsterId, message.seed);
+	return sizeof(message);
+}
+
 } // namespace
 
 void PrepareItemForNetwork(const Item &item, TItem &messageItem)
@@ -2434,7 +2499,9 @@ void DeltaExportData(uint8_t pnum)
 		    + sizeof(deltaLevel.item)                                                     /* items spawned during dungeon generation which have been picked up, and items dropped by a player during a game */
 		    + sizeof(uint8_t)                                                             /* count of object interactions which caused a state change since dungeon generation */
 		    + (sizeof(WorldTilePosition) + sizeof(DObjectStr)) * deltaLevel.object.size() /* location/action pairs for the object interactions */
-		    + sizeof(deltaLevel.monster);                                                 /* latest monster state */
+		    + sizeof(deltaLevel.monster)                                                  /* latest monster state */
+		    + sizeof(uint16_t)                                                            /* spanwned monster count */
+		    + (sizeof(uint16_t) + sizeof(DSpawnedMonster)) * MaxMonsters;                 /* spanwned monsters */
 		std::unique_ptr<std::byte[]> dst { new std::byte[bufferSize] };
 
 		std::byte *dstEnd = &dst.get()[1];
@@ -2443,6 +2510,7 @@ void DeltaExportData(uint8_t pnum)
 		dstEnd = DeltaExportItem(dstEnd, deltaLevel.item);
 		dstEnd = DeltaExportObject(dstEnd, deltaLevel.object);
 		dstEnd = DeltaExportMonster(dstEnd, deltaLevel.monster);
+		dstEnd = DeltaExportSpawnedMonsters(dstEnd, deltaLevel.spawnedMonsters);
 		uint32_t size = CompressData(dst.get(), dstEnd);
 		multi_send_zero_packet(pnum, CMD_DLEVEL, dst.get(), size);
 	}
@@ -2616,6 +2684,10 @@ void DeltaLoadLevel()
 	uint8_t localLevel = GetLevelForMultiplayer(*MyPlayer);
 	DLevel &deltaLevel = GetDeltaLevel(localLevel);
 	if (leveltype != DTYPE_TOWN) {
+		for (auto &deltaSpawnedMonster : deltaLevel.spawnedMonsters) {
+			LoadDeltaSpawnedMonster(deltaSpawnedMonster.second.typeIndex, deltaSpawnedMonster.first, deltaSpawnedMonster.second.seed);
+			assert(deltaLevel.monster[deltaSpawnedMonster.first].position.x != 0xFF);
+		}
 		for (size_t i = 0; i < MaxMonsters; i++) {
 			if (deltaLevel.monster[i].position.x == 0xFF)
 				continue;
@@ -2754,6 +2826,20 @@ void NetSendCmdGolem(uint8_t mx, uint8_t my, Direction dir, uint8_t menemy, int 
 	cmd._mhitpoints = hp;
 	cmd._currlevel = cl;
 	NetSendLoPri(MyPlayerId, (std::byte *)&cmd, sizeof(cmd));
+}
+
+void NetSendCmdSpawnMonster(Point position, Direction dir, uint16_t typeIndex, uint16_t monsterId, uint32_t seed)
+{
+	TCmdSpawnMonster cmd;
+
+	cmd.bCmd = CMD_SPAWNMONSTER;
+	cmd.x = position.x;
+	cmd.y = position.y;
+	cmd.dir = dir;
+	cmd.typeIndex = SDL_SwapLE16(typeIndex);
+	cmd.monsterId = SDL_SwapLE16(monsterId);
+	cmd.seed = SDL_SwapLE32(seed);
+	NetSendHiPri(MyPlayerId, (std::byte *)&cmd, sizeof(cmd));
 }
 
 void NetSendCmdLoc(uint8_t playerId, bool bHiPri, _cmd_id bCmd, Point position)
@@ -3264,6 +3350,8 @@ size_t ParseCmd(uint8_t pnum, const TCmd *pCmd)
 		return OnOpenHive(pCmd, player);
 	case CMD_OPENGRAVE:
 		return OnOpenGrave(pCmd);
+	case CMD_SPAWNMONSTER:
+		return OnSpawnMonster(pCmd, player);
 	default:
 		break;
 	}
