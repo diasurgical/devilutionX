@@ -495,7 +495,20 @@ void InitGolems();
 void InitMonsters();
 void SetMapMonsters(const uint16_t *dunData, Point startPosition);
 Monster *AddMonster(Point position, Direction dir, size_t mtype, bool inMap);
+/**
+ * @brief Spawns a new monsters (dynamically/not on level load).
+ * The command is only executed for the level owner, to prevent desyncs in multiplayer.
+ * The level owner sends a CMD_SPAWNMONSTER-message to the other players.
+ */
 void SpawnMonster(Point position, Direction dir, size_t typeIndex, bool startSpecialStand = false);
+/**
+ * @brief Loads data for a dynamically spawned monster when entering a level in multiplayer.
+ */
+void LoadDeltaSpawnedMonster(size_t typeIndex, size_t monsterId, uint32_t seed);
+/**
+ * @brief Initialize a spanwed monster (from a network message or from SpawnMonster-function).
+ */
+void InitializeSpawnedMonster(Point position, Direction dir, size_t typeIndex, size_t monsterId, uint32_t seed);
 void AddDoppelganger(Monster &monster);
 void ApplyMonsterDamage(DamageType damageType, Monster &monster, int damage);
 bool M_Talker(const Monster &monster);

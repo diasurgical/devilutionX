@@ -416,6 +416,10 @@ enum _cmd_id : uint8_t {
 	CMD_NAKRUL,
 	CMD_OPENHIVE,
 	CMD_OPENGRAVE,
+	// Spawn a monster at target location.
+	//
+	// body (TCmdSpawnMonster)
+	CMD_SPAWNMONSTER,
 	// Fake command; set current player for succeeding mega pkt buffer messages.
 	//
 	// body (TFakeCmdPlr)
@@ -512,6 +516,16 @@ struct TCmdGolem {
 	int8_t _menemy;
 	int32_t _mhitpoints;
 	uint8_t _currlevel;
+};
+
+struct TCmdSpawnMonster {
+	_cmd_id bCmd;
+	uint8_t x;
+	uint8_t y;
+	Direction dir;
+	uint16_t typeIndex;
+	uint16_t monsterId;
+	uint32_t seed;
 };
 
 struct TCmdQuest {
@@ -738,6 +752,7 @@ void DeltaLoadLevel();
 void ClearLastSentPlayerCmd();
 void NetSendCmd(bool bHiPri, _cmd_id bCmd);
 void NetSendCmdGolem(uint8_t mx, uint8_t my, Direction dir, uint8_t menemy, int hp, uint8_t cl);
+void NetSendCmdSpawnMonster(Point position, Direction dir, uint16_t typeIndex, uint16_t monsterId, uint32_t seed);
 void NetSendCmdLoc(uint8_t playerId, bool bHiPri, _cmd_id bCmd, Point position);
 void NetSendCmdLocParam1(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wParam1);
 void NetSendCmdLocParam2(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wParam1, uint16_t wParam2);
