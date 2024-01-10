@@ -710,11 +710,7 @@ void CalculatePanelAreas()
 
 bool IsChatAvailable()
 {
-#ifdef _DEBUG
-	return true;
-#else
 	return gbIsMultiplayer;
-#endif
 }
 
 void FocusOnCharInfo()
