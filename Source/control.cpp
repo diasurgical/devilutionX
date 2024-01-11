@@ -269,7 +269,7 @@ void PrintInfo(const Surface &out)
 		return;
 
 	const int space[] = { 18, 12, 6, 3, 0 };
-	Rectangle infoArea { GetMainPanel().position + Displacement { 177, 46 }, { 288, 60 } };
+	Rectangle infoArea { GetMainPanel().position + InfoBoxTopLeft, InfoBoxSize };
 
 	const auto newLineCount = static_cast<int>(c_count(InfoString.str(), '\n'));
 	const int spaceIndex = std::min(4, newLineCount);
@@ -1187,7 +1187,7 @@ void FreeControlPan()
 
 void DrawInfoBox(const Surface &out)
 {
-	DrawPanelBox(out, { 177, 62, 288, 63 }, GetMainPanel().position + Displacement { 177, 46 });
+	DrawPanelBox(out, { 177, 62, InfoBoxSize.width, InfoBoxSize.height }, GetMainPanel().position + InfoBoxTopLeft);
 	if (!panelflag && !trigflag && pcursinvitem == -1 && pcursstashitem == StashStruct::EmptyCell && !spselflag) {
 		InfoString = StringOrView {};
 		InfoColor = UiFlags::ColorWhite;
