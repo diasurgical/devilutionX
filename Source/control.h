@@ -16,9 +16,11 @@
 
 #include "DiabloUI/ui_flags.hpp"
 #include "engine.h"
+#include "engine/displacement.hpp"
 #include "engine/point.hpp"
 #include "engine/rectangle.hpp"
 #include "engine/render/text_render.hpp"
+#include "engine/size.hpp"
 #include "panels/ui_panels.hpp"
 #include "spelldat.h"
 #include "spells.h"
@@ -31,6 +33,10 @@
 namespace devilution {
 
 constexpr Size SidePanelSize { 320, 352 };
+
+// Info box displacement of the top-left corner relative to GetMainPanel().position.
+constexpr Displacement InfoBoxTopLeft { 177, 46 };
+constexpr Size InfoBoxSize { 288, 64 };
 
 extern bool dropGoldFlag;
 extern bool chrbtn[4];
