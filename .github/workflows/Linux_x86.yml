@@ -52,7 +52,7 @@ jobs:
           --slave /usr/bin/g++ g++ /usr/bin/g++-13
 
     - name: Cache CMake build folder
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: build
         key: ${{ github.workflow }}-v5-${{ github.sha }}
