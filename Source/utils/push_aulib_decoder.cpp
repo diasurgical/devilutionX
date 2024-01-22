@@ -5,6 +5,8 @@
 #include <cstring>
 #include <limits>
 #include <mutex>
+#include <type_traits>
+#include <variant>
 
 #include <aulib.h>
 
@@ -12,34 +14,33 @@
 
 namespace devilution {
 
-void PushAulibDecoder::PushSamples(const std::int16_t *data, unsigned size) noexcept
+namespace {
+
+float SampleToFloat(int16_t sample)
 {
-	AudioQueueItem item;
-	item.data.reset(new std::int16_t[size]);
-	std::memcpy(item.data.get(), data, size * sizeof(data[0]));
-	item.len = size;
-	item.pos = item.data.get();
-	const std::lock_guard<SdlMutex> lock(queue_mutex_);
-	queue_.push(std::move(item));
+	constexpr float Factor = 1.0F / (std::numeric_limits<int16_t>::max() + 1);
+	return sample * Factor;
 }
 
-void PushAulibDecoder::PushSamples(const std::uint8_t *data, unsigned size) noexcept
+float SampleToFloat(uint8_t sample)
 {
-	AudioQueueItem item;
-	item.data.reset(new std::int16_t[size]);
-	constexpr std::int16_t Center = 128;
-	constexpr std::int16_t Scale = 256;
-	for (unsigned i = 0; i < size; ++i)
-		item.data[i] = static_cast<std::int16_t>((data[i] - Center) * Scale);
-	item.len = size;
-	item.pos = item.data.get();
-	const std::lock_guard<SdlMutex> lock(queue_mutex_);
-	queue_.push(std::move(item));
+	constexpr float Factor = 2.0F / std::numeric_limits<uint8_t>::max();
+	return (sample * Factor) - 1;
 }
+
+template <typename T>
+void ToFloats(const T *samples, float *out, unsigned count)
+{
+	std::transform(samples, samples + count, out, [](T sample) {
+		return SampleToFloat(sample);
+	});
+}
+
+} // namespace
 
 void PushAulibDecoder::DiscardPendingSamples() noexcept
 {
-	const std::lock_guard<SdlMutex> lock(queue_mutex_);
+	const auto lock = std::lock_guard(queue_mutex_);
 	queue_ = std::queue<AudioQueueItem>();
 }
 
@@ -68,26 +69,25 @@ int PushAulibDecoder::doDecoding(float buf[], int len, bool &callAgain)
 {
 	callAgain = false;
 
-	const auto writeFloats = [&buf](const std::int16_t *samples, unsigned count) {
-		constexpr float Scale = std::numeric_limits<std::int16_t>::max() + 1.F;
-		for (unsigned i = 0; i < count; ++i) {
-			buf[i] = static_cast<float>(samples[i]) / Scale;
-		}
+	constexpr auto WriteFloats = [](PushAulibDecoder::AudioQueueItem &item, float *out, unsigned count) {
+		std::visit([&](const auto &samples) { ToFloats(&samples[item.pos], out, count); }, item.data);
 	};
 
 	unsigned remaining = len;
 	{
-		const std::lock_guard<SdlMutex> lock(queue_mutex_);
+		const auto lock = std::lock_guard(queue_mutex_);
 		AudioQueueItem *item;
 		while ((item = Next()) != nullptr) {
 			if (static_cast<unsigned>(remaining) <= item->len) {
-				writeFloats(item->pos, remaining);
+				WriteFloats(*item, buf, remaining);
 				item->pos += remaining;
 				item->len -= remaining;
+				if (item->len == 0)
+					queue_.pop();
 				return len;
 			}
 
-			writeFloats(item->pos, item->len);
+			WriteFloats(*item, buf, item->len);
 			buf += item->len;
 			remaining -= static_cast<int>(item->len);
 			queue_.pop();

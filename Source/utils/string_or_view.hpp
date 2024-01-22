@@ -1,94 +1,62 @@
 #pragma once
 
 #include <string>
+#include <string_view>
 #include <utility>
-
-#include "utils/stdcompat/string_view.hpp"
+#include <variant>
 
 namespace devilution {
 
 class StringOrView {
 public:
 	StringOrView()
-	    : owned_(false)
-	    , view_()
+	    : rep_ { std::string_view {} }
 	{
 	}
+
+	StringOrView(StringOrView &&) noexcept = default;
 
 	StringOrView(std::string &&str)
-	    : owned_(true)
-	    , str_(std::move(str))
+	    : rep_ { std::move(str) }
 	{
 	}
 
-	StringOrView(string_view str)
-	    : owned_(false)
-	    , view_(str)
+	StringOrView(std::string_view str)
+	    : rep_ { str }
 	{
 	}
 
-	StringOrView(StringOrView &&other) noexcept
-	    : owned_(other.owned_)
-	{
-		if (other.owned_) {
-			new (&str_) std::string(std::move(other.str_));
-		} else {
-			new (&view_) string_view(other.view_);
-		}
-	}
+	StringOrView &operator=(StringOrView &&) noexcept = default;
 
-	StringOrView &operator=(StringOrView &&other) noexcept
+	StringOrView &operator=(std::string &&value) noexcept
 	{
-		if (owned_) {
-			if (other.owned_) {
-				str_ = std::move(other.str_);
-			} else {
-				str_.~basic_string();
-				owned_ = false;
-				new (&view_) string_view(other.view_);
-			}
-		} else {
-			if (other.owned_) {
-				view_.~string_view();
-				owned_ = true;
-				new (&str_) std::string(std::move(other.str_));
-			} else {
-				view_ = other.view_;
-			}
-		}
+		rep_ = std::move(value);
 		return *this;
 	}
 
-	~StringOrView()
+	StringOrView &operator=(std::string_view value) noexcept
 	{
-		if (owned_) {
-			str_.~basic_string();
-		} else {
-			view_.~string_view();
-		}
+		rep_ = value;
+		return *this;
 	}
 
 	bool empty() const
 	{
-		return owned_ ? str_.empty() : view_.empty();
+		return std::visit([](auto &&val) -> bool { return val.empty(); }, rep_);
 	}
 
-	string_view str() const
+	std::string_view str() const
 	{
-		return owned_ ? str_ : view_;
+		return std::visit([](auto &&val) -> std::string_view { return val; }, rep_);
 	}
 
-	operator string_view() const
+	operator std::string_view() const
 	{
 		return str();
 	}
 
 private:
-	bool owned_;
-	union {
-		std::string str_;
-		string_view view_;
-	};
+	std::variant<std::string, std::string_view> rep_;
 };
 
 } // namespace devilution

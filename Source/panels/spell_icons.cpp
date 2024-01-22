@@ -1,6 +1,7 @@
 #include "panels/spell_icons.hpp"
 
 #include <cstdint>
+#include <optional>
 
 #include "engine.h"
 #include "engine/load_cel.hpp"
@@ -8,7 +9,6 @@
 #include "engine/palette.h"
 #include "engine/render/clx_render.hpp"
 #include "init.h"
-#include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
 
@@ -25,59 +25,61 @@ OptionalOwnedClxSpriteList LargeSpellIcons;
 uint8_t SplTransTbl[256];
 
 /** Maps from SpellID to spelicon.cel frame number. */
-const uint8_t SpellITbl[] = {
-	26,
-	0,
-	1,
-	2,
-	3,
-	4,
-	5,
-	6,
-	7,
-	8,
-	27,
-	12,
-	11,
-	17,
-	15,
-	13,
-	17,
-	18,
-	10,
-	19,
-	14,
-	20,
-	22,
-	23,
-	24,
-	21,
-	25,
-	28,
-	36,
-	37,
-	38,
-	41,
-	40,
-	39,
-	9,
-	35,
-	29,
-	50,
-	50,
-	49,
-	45,
-	46,
-	42,
-	44,
-	47,
-	48,
-	43,
-	34,
-	34,
-	34,
-	34,
-	34,
+const SpellIcon SpellITbl[] = {
+	// clang-format off
+/* SpellID::Null             */ SpellIcon::Empty,
+/* SpellID::Firebolt         */ SpellIcon::Firebolt,
+/* SpellID::Healing          */ SpellIcon::Healing,
+/* SpellID::Lightning        */ SpellIcon::Lightning,
+/* SpellID::Flash            */ SpellIcon::Flash,
+/* SpellID::Identify         */ SpellIcon::Identify,
+/* SpellID::FireWall         */ SpellIcon::FireWall,
+/* SpellID::TownPortal       */ SpellIcon::TownPortal,
+/* SpellID::StoneCurse       */ SpellIcon::StoneCurse,
+/* SpellID::Infravision      */ SpellIcon::Infravision,
+/* SpellID::Phasing          */ SpellIcon::Phasing,
+/* SpellID::ManaShield       */ SpellIcon::ManaShield,
+/* SpellID::Fireball         */ SpellIcon::Fireball,
+/* SpellID::Guardian         */ SpellIcon::DoomSerpents,
+/* SpellID::ChainLightning   */ SpellIcon::ChainLightning,
+/* SpellID::FlameWave        */ SpellIcon::FlameWave,
+/* SpellID::DoomSerpents     */ SpellIcon::DoomSerpents,
+/* SpellID::BloodRitual      */ SpellIcon::BloodRitual,
+/* SpellID::Nova             */ SpellIcon::Nova,
+/* SpellID::Invisibility     */ SpellIcon::Invisibility,
+/* SpellID::Inferno          */ SpellIcon::Inferno,
+/* SpellID::Golem            */ SpellIcon::Golem,
+/* SpellID::Rage             */ SpellIcon::BloodBoil,
+/* SpellID::Teleport         */ SpellIcon::Teleport,
+/* SpellID::Apocalypse       */ SpellIcon::Apocalypse,
+/* SpellID::Etherealize      */ SpellIcon::Etherealize,
+/* SpellID::ItemRepair       */ SpellIcon::ItemRepair,
+/* SpellID::StaffRecharge    */ SpellIcon::StaffRecharge,
+/* SpellID::TrapDisarm       */ SpellIcon::TrapDisarm,
+/* SpellID::Elemental        */ SpellIcon::Elemental,
+/* SpellID::ChargedBolt      */ SpellIcon::ChargedBolt,
+/* SpellID::HolyBolt         */ SpellIcon::HolyBolt,
+/* SpellID::Resurrect        */ SpellIcon::Resurrect,
+/* SpellID::Telekinesis      */ SpellIcon::Telekinesis,
+/* SpellID::HealOther        */ SpellIcon::HealOther,
+/* SpellID::BloodStar        */ SpellIcon::BloodStar,
+/* SpellID::BoneSpirit       */ SpellIcon::BoneSpirit,
+/* SpellID::Mana             */ SpellIcon::Mana,
+/* SpellID::Magi             */ SpellIcon::Mana,
+/* SpellID::Jester           */ SpellIcon::Jester,
+/* SpellID::LightningWall    */ SpellIcon::LightningWall,
+/* SpellID::Immolation       */ SpellIcon::Immolation,
+/* SpellID::Warp             */ SpellIcon::Warp,
+/* SpellID::Reflect          */ SpellIcon::Reflect,
+/* SpellID::Berserk          */ SpellIcon::Berserk,
+/* SpellID::RingOfFire       */ SpellIcon::RingOfFire,
+/* SpellID::Search           */ SpellIcon::Search,
+/* SpellID::RuneOfFire       */ SpellIcon::PentaStar,
+/* SpellID::RuneOfLight      */ SpellIcon::PentaStar,
+/* SpellID::RuneOfNova       */ SpellIcon::PentaStar,
+/* SpellID::RuneOfImmolation */ SpellIcon::PentaStar,
+/* SpellID::RuneOfStone      */ SpellIcon::PentaStar,
+	// clang-format on
 };
 
 } // namespace
@@ -128,12 +130,17 @@ void FreeSmallSpellIcons()
 	SmallSpellIcons = std::nullopt;
 }
 
+uint8_t GetSpellIconFrame(SpellID spell)
+{
+	return static_cast<uint8_t>(SpellITbl[static_cast<int8_t>(spell)]);
+}
+
 void DrawLargeSpellIcon(const Surface &out, Point position, SpellID spell)
 {
 #ifdef UNPACKED_MPQS
 	ClxDrawTRN(out, position, (*LargeSpellIconsBackground)[0], SplTransTbl);
 #endif
-	ClxDrawTRN(out, position, (*LargeSpellIcons)[SpellITbl[static_cast<int8_t>(spell)]], SplTransTbl);
+	ClxDrawTRN(out, position, (*LargeSpellIcons)[GetSpellIconFrame(spell)], SplTransTbl);
 }
 
 void DrawSmallSpellIcon(const Surface &out, Point position, SpellID spell)
@@ -141,7 +148,7 @@ void DrawSmallSpellIcon(const Surface &out, Point position, SpellID spell)
 #ifdef UNPACKED_MPQS
 	ClxDrawTRN(out, position, (*SmallSpellIconsBackground)[0], SplTransTbl);
 #endif
-	ClxDrawTRN(out, position, (*SmallSpellIcons)[SpellITbl[static_cast<int8_t>(spell)]], SplTransTbl);
+	ClxDrawTRN(out, position, (*SmallSpellIcons)[GetSpellIconFrame(spell)], SplTransTbl);
 }
 
 void DrawLargeSpellIconBorder(const Surface &out, Point position, uint8_t color)

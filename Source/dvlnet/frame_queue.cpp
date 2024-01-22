@@ -9,25 +9,29 @@
 namespace devilution {
 namespace net {
 
-#if DVL_EXCEPTIONS
-#define FRAME_QUEUE_ERROR throw frame_queue_exception()
-#else
-#define FRAME_QUEUE_ERROR app_fatal("frame queue error")
-#endif
+namespace {
+
+PacketError FrameQueueError()
+{
+	return PacketError("Incorrect frame size");
+}
+
+} // namespace
 
 framesize_t frame_queue::Size() const
 {
 	return current_size;
 }
 
-buffer_t frame_queue::Read(framesize_t s)
+tl::expected<buffer_t, PacketError> frame_queue::Read(framesize_t s)
 {
 	if (current_size < s)
-		FRAME_QUEUE_ERROR;
+		return tl::make_unexpected(FrameQueueError());
 	buffer_t ret;
 	while (s > 0 && s >= buffer_deque.front().size()) {
-		s -= buffer_deque.front().size();
-		current_size -= buffer_deque.front().size();
+		framesize_t bufferSize = static_cast<framesize_t>(buffer_deque.front().size());
+		s -= bufferSize;
+		current_size -= bufferSize;
 		ret.insert(ret.end(),
 		    buffer_deque.front().begin(),
 		    buffer_deque.front().end());
@@ -46,38 +50,40 @@ buffer_t frame_queue::Read(framesize_t s)
 
 void frame_queue::Write(buffer_t buf)
 {
-	current_size += buf.size();
+	current_size += static_cast<framesize_t>(buf.size());
 	buffer_deque.push_back(std::move(buf));
 }
 
-bool frame_queue::PacketReady()
+tl::expected<bool, PacketError> frame_queue::PacketReady()
 {
 	if (nextsize == 0) {
 		if (Size() < sizeof(framesize_t))
 			return false;
-		auto szbuf = Read(sizeof(framesize_t));
-		std::memcpy(&nextsize, &szbuf[0], sizeof(framesize_t));
+		tl::expected<buffer_t, PacketError> szbuf = Read(sizeof(framesize_t));
+		if (!szbuf.has_value())
+			return tl::make_unexpected(szbuf.error());
+		std::memcpy(&nextsize, &(*szbuf)[0], sizeof(framesize_t));
 		if (nextsize == 0)
-			FRAME_QUEUE_ERROR;
+			return tl::make_unexpected(FrameQueueError());
 	}
 	return Size() >= nextsize;
 }
 
-buffer_t frame_queue::ReadPacket()
+tl::expected<buffer_t, PacketError> frame_queue::ReadPacket()
 {
 	if (nextsize == 0 || Size() < nextsize)
-		FRAME_QUEUE_ERROR;
-	auto ret = Read(nextsize);
+		return tl::make_unexpected(FrameQueueError());
+	tl::expected<buffer_t, PacketError> ret = Read(nextsize);
 	nextsize = 0;
 	return ret;
 }
 
-buffer_t frame_queue::MakeFrame(buffer_t packetbuf)
+tl::expected<buffer_t, PacketError> frame_queue::MakeFrame(buffer_t packetbuf)
 {
 	buffer_t ret;
-	if (packetbuf.size() > max_frame_size)
-		ABORT();
-	framesize_t size = packetbuf.size();
+	framesize_t size = static_cast<framesize_t>(packetbuf.size());
+	if (size > max_frame_size)
+		return tl::make_unexpected("Buffer exceeds maximum frame size");
 	ret.insert(ret.end(), packet_out::begin(size), packet_out::end(size));
 	ret.insert(ret.end(), packetbuf.begin(), packetbuf.end());
 	return ret;

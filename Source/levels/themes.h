@@ -14,7 +14,7 @@ namespace devilution {
 
 struct ThemeStruct {
 	theme_id ttype;
-	int16_t ttval;
+	int8_t ttval;
 };
 
 extern int numthemes;

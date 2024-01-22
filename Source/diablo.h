@@ -117,7 +117,7 @@ struct QuickMessage {
 	const char *const message;
 };
 
-constexpr size_t QUICK_MESSAGE_OPTIONS = 4;
+constexpr size_t QUICK_MESSAGE_OPTIONS = 10;
 extern QuickMessage QuickMessages[QUICK_MESSAGE_OPTIONS];
 /**
  * @brief Specifices what game logic step is currently executed

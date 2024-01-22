@@ -15,6 +15,7 @@
 #include "inv.h"
 #include "qol/chatlog.h"
 #include "qol/stash.h"
+#include "utils/algorithm/container.hpp"
 #include "utils/language.h"
 #include "utils/utf8.hpp"
 
@@ -23,23 +24,23 @@ namespace devilution {
 namespace {
 
 struct PlayerMessage {
-	/** Time message was recived */
+	/** Time message was received */
 	Uint32 time;
 	/** The default text color */
 	UiFlags style;
 	/** The text message to display on screen */
 	std::string text;
-	/** First portion of text that should be rendered in gold */
-	string_view from;
+	/** Length of first portion of text that should be rendered in gold */
+	size_t prefixLength;
 	/** The line height of the text */
 	int lineHeight;
 };
 
 std::array<PlayerMessage, 8> Messages;
 
-int CountLinesOfText(string_view text)
+int CountLinesOfText(std::string_view text)
 {
-	return 1 + std::count(text.begin(), text.end(), '\n');
+	return static_cast<int>(1 + c_count(text, '\n'));
 }
 
 PlayerMessage &GetNextMessage()
@@ -51,42 +52,34 @@ PlayerMessage &GetNextMessage()
 
 } // namespace
 
-void plrmsg_delay(bool delay)
+void DelayPlrMessages(uint32_t delayTime)
 {
-	static uint32_t plrmsgTicks;
-
-	if (delay) {
-		plrmsgTicks = -SDL_GetTicks();
-		return;
-	}
-
-	plrmsgTicks += SDL_GetTicks();
 	for (PlayerMessage &message : Messages)
-		message.time += plrmsgTicks;
+		message.time += delayTime;
 }
 
-void EventPlrMsg(string_view text, UiFlags style)
+void EventPlrMsg(std::string_view text, UiFlags style)
 {
 	PlayerMessage &message = GetNextMessage();
 
 	message.style = style;
 	message.time = SDL_GetTicks();
 	message.text = std::string(text);
-	message.from = string_view(message.text.data(), 0);
+	message.prefixLength = 0;
 	message.lineHeight = GetLineHeight(message.text, GameFont12) + 3;
 	AddMessageToChatLog(text);
 }
 
-void SendPlrMsg(Player &player, string_view text)
+void SendPlrMsg(Player &player, std::string_view text)
 {
 	PlayerMessage &message = GetNextMessage();
 
-	std::string from = fmt::format(fmt::runtime(_("{:s} (lvl {:d}): ")), player._pName, player._pLevel);
+	std::string from = fmt::format(fmt::runtime(_("{:s} (lvl {:d}): ")), player._pName, player.getCharacterLevel());
 
 	message.style = UiFlags::ColorWhite;
 	message.time = SDL_GetTicks();
 	message.text = from + std::string(text);
-	message.from = string_view(message.text.data(), from.size());
+	message.prefixLength = from.size();
 	message.lineHeight = GetLineHeight(message.text, GameFont12) + 3;
 	AddMessageToChatLog(text, &player);
 }
@@ -128,8 +121,13 @@ void DrawPlrMsg(const Surface &out)
 		y -= message.lineHeight * chatlines;
 
 		DrawHalfTransparentRectTo(out, x - 3, y, width + 6, message.lineHeight * chatlines);
-		DrawString(out, text, { { x, y }, { width, 0 } }, message.style, 1, message.lineHeight);
-		DrawString(out, message.from, { { x, y }, { width, 0 } }, UiFlags::ColorWhitegold, 1, message.lineHeight);
+
+		std::vector<DrawStringFormatArg> args {
+			{ std::string_view(text.data(), message.prefixLength), UiFlags::ColorWhitegold },
+			{ std::string_view(text.data() + message.prefixLength, text.size() - message.prefixLength), message.style }
+		};
+		DrawStringWithColors(out, "{:s}{:s}", args, { { x, y }, { width, 0 } },
+		    { .flags = UiFlags::None, .lineHeight = message.lineHeight });
 	}
 }
 

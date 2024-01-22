@@ -20,7 +20,7 @@ void TestArrowRotatesUniformly(Missile &missile, int startingFrame, int leftFram
 		observed[missile._miAnimFrame]++;
 	}
 
-	EXPECT_THAT(observed, UnorderedElementsAre(Pair(leftFrame, AllOf(Gt(30), Lt(70))), Pair(rightFrame, AllOf(Gt(30), Lt(70))))) << "Arrows should rotate either direction roughly 50% of the time";
+	EXPECT_THAT(observed, UnorderedElementsAre(Pair(leftFrame, AllOf(Gt(30U), Lt(70U))), Pair(rightFrame, AllOf(Gt(30U), Lt(70U))))) << "Arrows should rotate either direction roughly 50% of the time";
 }
 
 void TestAnimatedMissileRotatesUniformly(Missile &missile, int startingDir, int leftDir, int rightDir)
@@ -32,7 +32,7 @@ void TestAnimatedMissileRotatesUniformly(Missile &missile, int startingDir, int 
 		observed[missile._mimfnum]++;
 	}
 
-	EXPECT_THAT(observed, UnorderedElementsAre(Pair(leftDir, AllOf(Gt(30), Lt(70))), Pair(rightDir, AllOf(Gt(30), Lt(70))))) << "Animated missiles should rotate either direction roughly 50% of the time";
+	EXPECT_THAT(observed, UnorderedElementsAre(Pair(leftDir, AllOf(Gt(30U), Lt(70U))), Pair(rightDir, AllOf(Gt(30U), Lt(70U))))) << "Animated missiles should rotate either direction roughly 50% of the time";
 }
 
 TEST(Missiles, RotateBlockedMissileArrow)
@@ -41,10 +41,11 @@ TEST(Missiles, RotateBlockedMissileArrow)
 	MyPlayerId = 0;
 	MyPlayer = &Players[MyPlayerId];
 	*MyPlayer = {};
+	LoadMissileData();
 
 	Player &player = Players[0];
 	// missile can be a copy or a reference, there's no nullptr check and the functions that use it don't expect the instance to be part of a global structure so it doesn't really matter for this use.
-	Missile missile = *AddMissile({ 0, 0 }, { 0, 0 }, Direction::South, MissileID::Arrow, TARGET_MONSTERS, player.getId(), 0, 0);
+	Missile missile = *AddMissile({ 0, 0 }, { 0, 0 }, Direction::South, MissileID::Arrow, TARGET_MONSTERS, player, 0, 0);
 
 	// Arrows have a hardcoded frame count and use 1-indexed sprites
 	EXPECT_EQ(missile._miAnimFrame, 1);
@@ -54,7 +55,7 @@ TEST(Missiles, RotateBlockedMissileArrow)
 	TestArrowRotatesUniformly(missile, 16, 15, 1);
 
 	// All other missiles use the number of 0-indexed sprites defined in MissileSpriteData
-	missile = *AddMissile({ 0, 0 }, { 0, 0 }, Direction::South, MissileID::Firebolt, TARGET_MONSTERS, player.getId(), 0, 0);
+	missile = *AddMissile({ 0, 0 }, { 0, 0 }, Direction::South, MissileID::Firebolt, TARGET_MONSTERS, player, 0, 0);
 	EXPECT_EQ(missile._mimfnum, 0);
 	TestAnimatedMissileRotatesUniformly(missile, 5, 4, 6);
 	TestAnimatedMissileRotatesUniformly(missile, 0, 15, 1);

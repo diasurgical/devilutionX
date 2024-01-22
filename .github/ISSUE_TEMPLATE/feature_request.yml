@@ -1,0 +1,23 @@
+name: Feature Request
+description: Request a feature or improvement.
+title: "[Feature Request]: "
+labels: ["enhancement"]
+body:
+  - type: dropdown
+    id: feature-type
+    attributes:
+      label: Feature Type
+      options:
+        - Quality of Life
+        - Touch Controls
+        - Gamepad Controls
+        - Other (please specify)
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe
+      placeholder: A clear and concise description of the desired feature/change.
+    validations:
+      required: true

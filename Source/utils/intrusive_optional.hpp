@@ -1,10 +1,10 @@
 #pragma once
 
+#include <optional>
 #include <type_traits>
 #include <utility>
 
 #include "appfat.h"
-#include "utils/stdcompat/optional.hpp"
 
 /// An optional that uses a field of the stored class and some value to store nullopt.
 #define DEFINE_INTRUSIVE_OPTIONAL_IMPL(OPTIONAL_CLASS, VALUE_CLASS, FIELD, NULL_VALUE, CONSTEXPR) \

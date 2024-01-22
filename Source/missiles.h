@@ -7,34 +7,36 @@
 
 #include <cstdint>
 #include <list>
+#include <optional>
 
 #include "engine.h"
 #include "engine/point.hpp"
+#include "engine/world_tile.hpp"
 #include "misdat.h"
 #include "monster.h"
 #include "player.h"
 #include "spelldat.h"
-#include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
 
 constexpr WorldTilePosition GolemHoldingCell = Point { 1, 0 };
 
 struct MissilePosition {
-	Point tile;
 	/** Sprite's pixel offset from tile. */
 	Displacement offset;
 	/** Pixel velocity while moving */
 	Displacement velocity;
-	/** Start position */
-	Point start;
-	/** Start position */
+	/** Pixels traveled as a numerator of 65,536. */
 	Displacement traveled;
+
+	WorldTilePosition tile;
+	/** Start position */
+	WorldTilePosition start;
 
 	/**
 	 * @brief Specifies the location (tile) while rendering
 	 */
-	Point tileForRendering;
+	WorldTilePosition tileForRendering;
 	/**
 	 * @brief Specifies the location (offset) while rendering
 	 */
@@ -176,7 +178,11 @@ struct Missile {
 extern std::list<Missile> Missiles;
 extern bool MissilePreFlag;
 
-void GetDamageAmt(SpellID i, int *mind, int *maxd);
+struct DamageRange {
+	int min;
+	int max;
+};
+DamageRange GetDamageAmt(SpellID spell, int spellLevel);
 
 /**
  * @brief Returns the direction a vector from p1(x1, y1) to p2(x2, y2) is pointing to.
@@ -199,7 +205,7 @@ void GetDamageAmt(SpellID i, int *mind, int *maxd);
  */
 Direction16 GetDirection16(Point p1, Point p2);
 bool MonsterTrapHit(int monsterId, int mindam, int maxdam, int dist, MissileID t, DamageType damageType, bool shift);
-bool PlayerMHit(int pnum, Monster *monster, int dist, int mind, int maxd, MissileID mtype, DamageType damageType, bool shift, DeathReason deathReason, bool *blocked);
+bool PlayerMHit(Player &player, Monster *monster, int dist, int mind, int maxd, MissileID mtype, DamageType damageType, bool shift, DeathReason deathReason, bool *blocked);
 
 /**
  * @brief Could the missile collide with solid objects? (like walls or closed doors)
@@ -236,7 +242,7 @@ inline void SetMissDir(Missile &missile, Direction16 dir)
 void InitMissiles();
 
 struct AddMissileParameter {
-	Point dst;
+	WorldTilePosition dst;
 	Direction midir;
 	Missile *pParent;
 	bool spellFizzled;
@@ -386,9 +392,21 @@ void AddTelekinesis(Missile &missile, AddMissileParameter &parameter);
 void AddBoneSpirit(Missile &missile, AddMissileParameter &parameter);
 void AddRedPortal(Missile &missile, AddMissileParameter &parameter);
 void AddDiabloApocalypse(Missile &missile, AddMissileParameter &parameter);
-Missile *AddMissile(Point src, Point dst, Direction midir, MissileID mitype,
+Missile *AddMissile(WorldTilePosition src, WorldTilePosition dst, Direction midir, MissileID mitype,
     mienemy_type micaster, int id, int midam, int spllvl,
-    Missile *parent = nullptr, std::optional<_sfx_id> lSFX = std::nullopt);
+    Missile *parent = nullptr, std::optional<SfxID> lSFX = std::nullopt);
+inline Missile *AddMissile(WorldTilePosition src, WorldTilePosition dst, Direction midir, MissileID mitype,
+    mienemy_type micaster, const Player &player, int midam, int spllvl,
+    Missile *parent = nullptr, std::optional<SfxID> lSFX = std::nullopt)
+{
+	return AddMissile(src, dst, midir, mitype, micaster, player.getId(), midam, spllvl, parent, lSFX);
+}
+inline Missile *AddMissile(WorldTilePosition src, WorldTilePosition dst, Direction midir, MissileID mitype,
+    mienemy_type micaster, const Monster &monster, int midam, int spllvl,
+    Missile *parent = nullptr, std::optional<SfxID> lSFX = std::nullopt)
+{
+	return AddMissile(src, dst, midir, mitype, micaster, static_cast<int>(monster.getId()), midam, spllvl, parent, lSFX);
+}
 void ProcessElementalArrow(Missile &missile);
 void ProcessArrow(Missile &missile);
 void ProcessGenericProjectile(Missile &missile);

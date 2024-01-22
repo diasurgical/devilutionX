@@ -6,6 +6,7 @@ on:
     types: [published]
     paths-ignore:
       - '*.md'
+      - 'docs/**'
   workflow_dispatch:
 
 concurrency:
@@ -17,7 +18,7 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
@@ -33,7 +34,7 @@ jobs:
 
     - name: Run tests
       run: >
-        docker run --rm --interactive --mount type=bind,source=$(pwd),target=/host s390x/alpine sh -c
+        docker run run --platform linux/s390x --rm --interactive --mount type=bind,source=$(pwd),target=/host s390x/alpine sh -c
         "
         apk add --update-cache g++ ninja cmake ccache sdl2-dev sdl2_image-dev fmt-dev libpng-dev bzip2-dev gtest-dev wget &&
         cd /host &&

@@ -14,7 +14,7 @@ TEST(StrCatTest, BufCopyBasicTest)
 {
 	char buf[5];
 	char *end = BufCopy(buf, "a", "b", "c", 5);
-	EXPECT_EQ(string_view(buf, end - buf), "abc5");
+	EXPECT_EQ(std::string_view(buf, end - buf), "abc5");
 }
 
 } // namespace

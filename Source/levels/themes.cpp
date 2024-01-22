@@ -17,6 +17,7 @@
 #include "monster.h"
 #include "objects.h"
 #include "quests.h"
+#include "utils/algorithm/container.hpp"
 #include "utils/str_cat.hpp"
 
 namespace devilution {
@@ -38,13 +39,13 @@ bool treasureFlag;
 
 int themex;
 int themey;
-int themeVar1;
+size_t themeVar1;
 
 bool TFit_Shrine(int i)
 {
 	int xp = 0;
 	int yp = 0;
-	int found = 0;
+	size_t found = 0;
 
 	while (found == 0) {
 		Point testPosition { xp, yp };
@@ -87,8 +88,7 @@ bool TFit_Shrine(int i)
 
 bool CheckThemeObj5(Point origin, int8_t regionId)
 {
-	const auto searchArea = PointsInRectangle(Rectangle { origin, 2 });
-	return std::all_of(searchArea.cbegin(), searchArea.cend(), [regionId](Point testPosition) {
+	return c_all_of(PointsInRectangle(Rectangle { origin, 2 }), [regionId](Point testPosition) {
 		// note out-of-bounds tiles are not solid, this function relies on the guard in TFit_Obj5 and dungeon border
 		if (IsTileSolid(testPosition)) {
 			return false;
@@ -154,8 +154,7 @@ bool TFit_GoatShrine(int t)
 
 bool CheckThemeObj3(Point origin, int8_t regionId, unsigned frequency = 0)
 {
-	const auto searchArea = PointsInRectangle(Rectangle { origin, 1 });
-	return std::all_of(searchArea.cbegin(), searchArea.cend(), [regionId, frequency](Point testPosition) {
+	return c_all_of(PointsInRectangle(Rectangle { origin, 1 }), [regionId, frequency](Point testPosition) {
 		if (!InDungeonBounds(testPosition)) {
 			return false;
 		}
@@ -301,7 +300,7 @@ bool SpecialThemeFit(int i, theme_id t)
 	return rv;
 }
 
-bool CheckThemeRoom(int tv)
+bool CheckThemeRoom(int8_t tv)
 {
 	for (int i = 0; i < numtrigs; i++) {
 		if (dTransVal[trigs[i].position.x][trigs[i].position.y] == tv)
@@ -349,7 +348,7 @@ bool CheckThemeRoom(int tv)
  */
 void PlaceThemeMonsts(int t, int f)
 {
-	int scattertypes[138];
+	size_t scattertypes[138];
 
 	int numscattypes = 0;
 	for (size_t i = 0; i < LevelMonsterTypeCount; i++) {
@@ -358,7 +357,7 @@ void PlaceThemeMonsts(int t, int f)
 			numscattypes++;
 		}
 	}
-	int mtype = scattertypes[GenerateRnd(numscattypes)];
+	size_t mtype = scattertypes[GenerateRnd(numscattypes)];
 	for (int yp = 0; yp < MAXDUNY; yp++) {
 		for (int xp = 0; xp < MAXDUNX; xp++) {
 			if (dTransVal[xp][yp] == themes[t].ttval && IsTileNotSolid({ xp, yp }) && dItem[xp][yp] == 0 && !IsObjectAtPosition({ xp, yp })) {
@@ -845,7 +844,7 @@ void InitThemes()
 	constexpr theme_id ThemeGood[4] = { THEME_GOATSHRINE, THEME_SHRINE, THEME_SKELROOM, THEME_LIBRARY };
 
 	if (leveltype == DTYPE_CATHEDRAL) {
-		for (size_t i = 0; i < 256 && numthemes < MAXTHEMES; i++) {
+		for (int8_t i = 0; numthemes < MAXTHEMES; i++) {
 			if (CheckThemeRoom(i)) {
 				themes[numthemes].ttval = i;
 				theme_id j = ThemeGood[GenerateRnd(4)];
@@ -855,6 +854,8 @@ void InitThemes()
 				themes[numthemes].ttype = j;
 				numthemes++;
 			}
+			if (i == std::numeric_limits<int8_t>::max())
+				break;
 		}
 		return;
 	}

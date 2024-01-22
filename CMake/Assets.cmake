@@ -114,6 +114,9 @@ set(devilutionx_assets
   fonts/blue.trn
   fonts/buttonface.trn
   fonts/buttonpushed.trn
+  fonts/gamedialogwhite.trn
+  fonts/gamedialogyellow.trn
+  fonts/gamedialogred.trn
   fonts/golduis.trn
   fonts/goldui.trn
   fonts/grayuis.trn
@@ -137,10 +140,30 @@ set(devilutionx_assets
   levels/l2data/bonechat.dun
   levels/towndata/automap.dun
   levels/towndata/automap.amp
+  lua_internal/get_lua_function_signature.lua
+  lua/devilutionx/events.lua
+  lua/inspect.lua
+  lua/repl_prelude.lua
   nlevels/cutl5w.clx
   nlevels/cutl6w.clx
   nlevels/l5data/cornerstone.dun
   nlevels/l5data/uberroom.dun
+  txtdata/Experience.tsv
+  txtdata/classes/barbarian/attributes.tsv
+  txtdata/classes/bard/attributes.tsv
+  txtdata/classes/monk/attributes.tsv
+  txtdata/classes/rogue/attributes.tsv
+  txtdata/classes/sorcerer/attributes.tsv
+  txtdata/classes/warrior/attributes.tsv
+  txtdata/items/item_prefixes.tsv
+  txtdata/items/item_suffixes.tsv
+  txtdata/items/itemdat.tsv
+  txtdata/items/unique_itemdat.tsv
+  txtdata/missiles/missile_sprites.tsv
+  txtdata/monsters/monstdat.tsv
+  txtdata/monsters/unique_monstdat.tsv
+  txtdata/sound/effects.tsv
+  txtdata/spells/spelldat.tsv
   ui_art/diablo.pal
   ui_art/hellfire.pal
   ui_art/creditsw.clx
@@ -161,7 +184,7 @@ endif()
 
 if(APPLE)
   foreach(asset_file ${devilutionx_assets})
-    set(src "${CMAKE_CURRENT_SOURCE_DIR}/Packaging/resources/assets/${asset_file}")
+    set(src "${CMAKE_CURRENT_SOURCE_DIR}/assets/${asset_file}")
     get_filename_component(_asset_dir "${asset_file}" DIRECTORY)
     set_source_files_properties("${src}" PROPERTIES
       MACOSX_PACKAGE_LOCATION "Resources/${_asset_dir}"
@@ -173,7 +196,7 @@ else()
   # - If smpq is installed, devilutionx.mpq is built from these files.
   # - If smpq is not installed, the game will load the assets directly from this directoy.
   foreach(asset_file ${devilutionx_assets})
-    set(src "${CMAKE_CURRENT_SOURCE_DIR}/Packaging/resources/assets/${asset_file}")
+    set(src "${CMAKE_CURRENT_SOURCE_DIR}/assets/${asset_file}")
     set(dst "${DEVILUTIONX_ASSETS_OUTPUT_DIRECTORY}/${asset_file}")
     list(APPEND DEVILUTIONX_MPQ_FILES "${asset_file}")
     list(APPEND DEVILUTIONX_OUTPUT_ASSETS_FILES "${dst}")

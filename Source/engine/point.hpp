@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <cmath>
 #include <type_traits>
 #ifdef BUILD_TESTING
@@ -8,8 +9,7 @@
 
 #include "engine/direction.hpp"
 #include "engine/displacement.hpp"
-#include "utils/stdcompat/abs.hpp"
-#include "utils/stdcompat/algorithm.hpp"
+#include "utils/attributes.h"
 
 namespace devilution {
 
@@ -29,67 +29,75 @@ struct PointOf {
 	PointOf() = default;
 
 	template <typename PointCoordT>
-	constexpr PointOf(PointOf<PointCoordT> other)
+	DVL_ALWAYS_INLINE constexpr PointOf(PointOf<PointCoordT> other)
 	    : x(other.x)
 	    , y(other.y)
 	{
 	}
 
-	constexpr PointOf(CoordT x, CoordT y)
+	DVL_ALWAYS_INLINE constexpr PointOf(CoordT x, CoordT y)
 	    : x(x)
 	    , y(y)
 	{
 	}
 
 	template <typename PointCoordT>
-	constexpr bool operator==(const PointOf<PointCoordT> &other) const
+	DVL_ALWAYS_INLINE constexpr bool operator==(const PointOf<PointCoordT> &other) const
 	{
 		return x == other.x && y == other.y;
 	}
 
 	template <typename PointCoordT>
-	constexpr bool operator!=(const PointOf<PointCoordT> &other) const
+	DVL_ALWAYS_INLINE constexpr bool operator!=(const PointOf<PointCoordT> &other) const
 	{
 		return !(*this == other);
 	}
 
 	template <typename DisplacementDeltaT = int>
-	constexpr PointOf<CoordT> &operator+=(const DisplacementOf<DisplacementDeltaT> &displacement)
+	DVL_ALWAYS_INLINE constexpr PointOf<CoordT> &operator+=(const DisplacementOf<DisplacementDeltaT> &displacement)
 	{
 		x += displacement.deltaX;
 		y += displacement.deltaY;
 		return *this;
 	}
 
-	constexpr PointOf<CoordT> &operator+=(Direction direction)
+	DVL_ALWAYS_INLINE constexpr PointOf<CoordT> &operator+=(Direction direction)
 	{
 		return (*this) += DisplacementOf<typename std::make_signed<CoordT>::type>(direction);
 	}
 
 	template <typename DisplacementDeltaT = int>
-	constexpr PointOf<CoordT> &operator-=(const DisplacementOf<DisplacementDeltaT> &displacement)
+	DVL_ALWAYS_INLINE constexpr PointOf<CoordT> &operator-=(const DisplacementOf<DisplacementDeltaT> &displacement)
 	{
 		x -= displacement.deltaX;
 		y -= displacement.deltaY;
 		return *this;
 	}
 
-	constexpr PointOf<CoordT> &operator*=(const float factor)
+	DVL_ALWAYS_INLINE constexpr PointOf<CoordT> &operator*=(const float factor)
 	{
 		x = static_cast<int>(x * factor);
 		y = static_cast<int>(y * factor);
 		return *this;
 	}
 
-	constexpr PointOf<CoordT> &operator*=(const int factor)
+	DVL_ALWAYS_INLINE constexpr PointOf<CoordT> &operator*=(const int factor)
 	{
 		x *= factor;
 		y *= factor;
 		return *this;
 	}
 
-	constexpr PointOf<CoordT> operator-() const
+	DVL_ALWAYS_INLINE constexpr PointOf<CoordT> &operator/=(const int factor)
 	{
+		x /= factor;
+		y /= factor;
+		return *this;
+	}
+
+	DVL_ALWAYS_INLINE constexpr PointOf<CoordT> operator-() const
+	{
+		static_assert(std::is_signed<CoordT>::value, "CoordT must be signed");
 		return { -x, -y };
 	}
 
@@ -103,9 +111,7 @@ struct PointOf {
 	constexpr int ApproxDistance(PointOf<PointCoordT> other) const
 	{
 		const Displacement offset = abs(Point(*this) - Point(other));
-		auto minMax = std::minmax(offset.deltaX, offset.deltaY);
-		int min = minMax.first;
-		int max = minMax.second;
+		const auto [min, max] = std::minmax(offset.deltaX, offset.deltaY);
 
 		int approx = max * 1007 + min * 441;
 		if (max < (min * 16))
@@ -131,24 +137,24 @@ struct PointOf {
 	}
 
 	template <typename PointCoordT>
-	constexpr int ManhattanDistance(PointOf<PointCoordT> other) const
+	DVL_ALWAYS_INLINE constexpr int ManhattanDistance(PointOf<PointCoordT> other) const
 	{
-		return abs(static_cast<int>(x) - static_cast<int>(other.x))
-		    + abs(static_cast<int>(y) - static_cast<int>(other.y));
+		return std::abs(static_cast<int>(x) - static_cast<int>(other.x))
+		    + std::abs(static_cast<int>(y) - static_cast<int>(other.y));
 	}
 
 	template <typename PointCoordT>
-	constexpr int WalkingDistance(PointOf<PointCoordT> other) const
+	DVL_ALWAYS_INLINE constexpr int WalkingDistance(PointOf<PointCoordT> other) const
 	{
 		return std::max<int>(
-		    abs(static_cast<int>(x) - static_cast<int>(other.x)),
-		    abs(static_cast<int>(y) - static_cast<int>(other.y)));
+		    std::abs(static_cast<int>(x) - static_cast<int>(other.x)),
+		    std::abs(static_cast<int>(y) - static_cast<int>(other.y)));
 	}
 
 	/**
 	 * @brief Converts a coordinate in megatiles to the northmost of the 4 corresponding world tiles
 	 */
-	constexpr PointOf<CoordT> megaToWorld() const
+	DVL_ALWAYS_INLINE constexpr PointOf<CoordT> megaToWorld() const
 	{
 		return { static_cast<CoordT>(16 + 2 * x), static_cast<CoordT>(16 + 2 * y) };
 	}
@@ -156,7 +162,7 @@ struct PointOf {
 	/**
 	 * @brief Converts a coordinate in world tiles back to the corresponding megatile
 	 */
-	constexpr PointOf<CoordT> worldToMega() const
+	DVL_ALWAYS_INLINE constexpr PointOf<CoordT> worldToMega() const
 	{
 		return { static_cast<CoordT>((x - 16) / 2), static_cast<CoordT>((y - 16) / 2) };
 	}
@@ -177,50 +183,51 @@ std::ostream &operator<<(std::ostream &stream, const PointOf<PointCoordT> &point
 #endif
 
 template <typename PointCoordT, typename DisplacementDeltaT>
-constexpr PointOf<PointCoordT> operator+(PointOf<PointCoordT> a, DisplacementOf<DisplacementDeltaT> displacement)
+DVL_ALWAYS_INLINE constexpr PointOf<PointCoordT> operator+(PointOf<PointCoordT> a, DisplacementOf<DisplacementDeltaT> displacement)
 {
 	a += displacement;
 	return a;
 }
 
 template <typename PointCoordT>
-constexpr PointOf<PointCoordT> operator+(PointOf<PointCoordT> a, Direction direction)
+DVL_ALWAYS_INLINE constexpr PointOf<PointCoordT> operator+(PointOf<PointCoordT> a, Direction direction)
 {
 	a += direction;
 	return a;
 }
 
 template <typename PointCoordT, typename OtherPointCoordT>
-constexpr DisplacementOf<PointCoordT> operator-(PointOf<PointCoordT> a, PointOf<OtherPointCoordT> b)
+DVL_ALWAYS_INLINE constexpr DisplacementOf<PointCoordT> operator-(PointOf<PointCoordT> a, PointOf<OtherPointCoordT> b)
 {
+	static_assert(std::is_signed<PointCoordT>::value == std::is_signed<OtherPointCoordT>::value, "points must have the same signedness");
 	return { static_cast<PointCoordT>(a.x - b.x), static_cast<PointCoordT>(a.y - b.y) };
 }
 
 template <typename PointCoordT, typename DisplacementDeltaT>
-constexpr PointOf<PointCoordT> operator-(PointOf<PointCoordT> a, DisplacementOf<DisplacementDeltaT> displacement)
+DVL_ALWAYS_INLINE constexpr PointOf<PointCoordT> operator-(PointOf<PointCoordT> a, DisplacementOf<DisplacementDeltaT> displacement)
 {
 	a -= displacement;
 	return a;
 }
 
 template <typename PointCoordT>
-constexpr PointOf<PointCoordT> operator*(PointOf<PointCoordT> a, const float factor)
+DVL_ALWAYS_INLINE constexpr PointOf<PointCoordT> operator*(PointOf<PointCoordT> a, const float factor)
 {
 	a *= factor;
 	return a;
 }
 
 template <typename PointCoordT>
-constexpr PointOf<PointCoordT> operator*(PointOf<PointCoordT> a, const int factor)
+DVL_ALWAYS_INLINE constexpr PointOf<PointCoordT> operator*(PointOf<PointCoordT> a, const int factor)
 {
 	a *= factor;
 	return a;
 }
 
 template <typename PointCoordT>
-constexpr PointOf<PointCoordT> abs(PointOf<PointCoordT> a)
+DVL_ALWAYS_INLINE constexpr PointOf<PointCoordT> abs(PointOf<PointCoordT> a)
 {
-	return { abs(a.x), abs(a.y) };
+	return { std::abs(a.x), std::abs(a.y) };
 }
 
 } // namespace devilution

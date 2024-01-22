@@ -6,6 +6,7 @@
 #pragma once
 
 #include <cstdint>
+#include <vector>
 
 #include "textdat.h"
 
@@ -88,10 +89,10 @@ enum class MonsterAvailability : uint8_t {
 };
 
 struct MonsterData {
-	const char *name;
-	const char *assetsSuffix;
-	const char *soundSuffix;
-	const char *trnFile;
+	std::string name;
+	std::string soundSuffix;
+	std::string trnFile;
+	uint16_t spriteId;
 	MonsterAvailability availability;
 	uint16_t width;
 	uint16_t image;
@@ -129,6 +130,18 @@ struct MonsterData {
 	/** Using monster_treasure */
 	uint16_t treasure;
 	uint16_t exp;
+
+	[[nodiscard]] const char *spritePath() const;
+
+	[[nodiscard]] const char *soundPath() const
+	{
+		return !soundSuffix.empty() ? soundSuffix.c_str() : spritePath();
+	}
+
+	[[nodiscard]] bool hasAnim(size_t index) const
+	{
+		return frames[index] != 0;
+	}
 };
 
 enum _monster_id : int16_t {
@@ -294,8 +307,8 @@ enum class UniqueMonsterPack : uint8_t {
 
 struct UniqueMonsterData {
 	_monster_id mtype;
-	const char *mName;
-	const char *mTrnName;
+	std::string mName;
+	std::string mTrnName;
 	uint8_t mlevel;
 	uint16_t mmaxhp;
 	MonsterAIID mAi;
@@ -314,8 +327,17 @@ struct UniqueMonsterData {
 	_speech_id mtalkmsg;
 };
 
-extern const MonsterData MonstersData[];
+extern std::vector<MonsterData> MonstersData;
 extern const _monster_id MonstConvTbl[];
-extern const UniqueMonsterData UniqueMonstersData[];
+extern std::vector<UniqueMonsterData> UniqueMonstersData;
+
+void LoadMonsterData();
+
+/**
+ * @brief Returns the number of the monster sprite files.
+ *
+ * Different monsters can use the same sprite with different TRNs, these count as 1.
+ */
+size_t GetNumMonsterSprites();
 
 } // namespace devilution

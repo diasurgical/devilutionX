@@ -1,10 +1,12 @@
 #include "qol/stash.h"
 
+#include <algorithm>
 #include <cstdint>
 #include <utility>
 
 #include <fmt/format.h>
 
+#include "DiabloUI/text_input.hpp"
 #include "control.h"
 #include "controls/plrctrls.h"
 #include "cursor.h"
@@ -16,11 +18,11 @@
 #include "engine/render/text_render.hpp"
 #include "engine/size.hpp"
 #include "hwcursor.hpp"
+#include "inv.h"
 #include "minitext.h"
 #include "stores.h"
 #include "utils/format_int.hpp"
 #include "utils/language.h"
-#include "utils/stdcompat/algorithm.hpp"
 #include "utils/str_cat.hpp"
 #include "utils/utf8.hpp"
 
@@ -29,14 +31,15 @@ namespace devilution {
 bool IsStashOpen;
 StashStruct Stash;
 bool IsWithdrawGoldOpen;
-int WithdrawGoldValue;
 
 namespace {
 
 constexpr unsigned CountStashPages = 100;
 constexpr unsigned LastStashPage = CountStashPages - 1;
 
-int InitialWithdrawGoldValue;
+char GoldWithdrawText[21];
+TextInputCursorState GoldWithdrawCursor;
+std::optional<NumberInputState> GoldWithdrawInputState;
 
 constexpr Size ButtonSize { 27, 16 };
 /** Contains mappings for the buttons in the stash (2 navigation buttons, withdraw gold buttons, 2 navigation buttons) */
@@ -50,7 +53,8 @@ constexpr Rectangle StashButtonRect[] = {
 	// clang-format on
 };
 
-constexpr PointsInRectangleRange<int> StashGridRange { { { 0, 0 }, Size { 10, 10 } } };
+constexpr Size StashGridSize { 10, 10 };
+constexpr PointsInRectangle<int> StashGridRange { { { 0, 0 }, StashGridSize } };
 
 OptionalOwnedClxSpriteList StashPanelArt;
 OptionalOwnedClxSpriteList StashNavButtonArt;
@@ -68,7 +72,7 @@ void AddItemToStashGrid(unsigned page, Point position, uint16_t stashListIndex, 
 	}
 }
 
-Point FindSlotUnderCursor(Point cursorPosition)
+std::optional<Point> FindTargetSlotUnderItemCursor(Point cursorPosition, Size itemSize)
 {
 	for (auto point : StashGridRange) {
 		Rectangle cell {
@@ -77,11 +81,30 @@ Point FindSlotUnderCursor(Point cursorPosition)
 		};
 
 		if (cell.contains(cursorPosition)) {
+			// When trying to paste into the stash we need to determine the top left cell of the nearest area that could fit the item, not the slot under the center/hot pixel.
+			if (itemSize.height <= 1 && itemSize.width <= 1) {
+				// top left cell of a 1x1 item is the same cell as the hot pixel, no work to do
+				return point;
+			}
+			// Otherwise work out how far the central cell is from the top-left cell
+			Displacement hotPixelCellOffset = { (itemSize.width - 1) / 2, (itemSize.height - 1) / 2 };
+			// For even dimension items we need to work out if the cursor is in the left/right (or top/bottom) half of the central cell and adjust the offset so the item lands in the area most covered by the cursor.
+			if (itemSize.width % 2 == 0 && cell.contains(cursorPosition + Displacement { INV_SLOT_HALF_SIZE_PX, 0 })) {
+				// hot pixel was in the left half of the cell, so we want to increase the offset to preference the column to the left
+				hotPixelCellOffset.deltaX++;
+			}
+			if (itemSize.height % 2 == 0 && cell.contains(cursorPosition + Displacement { 0, INV_SLOT_HALF_SIZE_PX })) {
+				// hot pixel was in the top half of the cell, so we want to increase the offset to preference the row above
+				hotPixelCellOffset.deltaY++;
+			}
+			// Then work out the top left cell of the nearest area that could fit this item (as pasting on the edge of the stash would otherwise put it out of bounds)
+			point.y = std::clamp(point.y - hotPixelCellOffset.deltaY, 0, StashGridSize.height - itemSize.height);
+			point.x = std::clamp(point.x - hotPixelCellOffset.deltaX, 0, StashGridSize.width - itemSize.width);
 			return point;
 		}
 	}
 
-	return InvalidStashPoint;
+	return {};
 }
 
 bool IsItemAllowedInStash(const Item &item)
@@ -93,14 +116,6 @@ void CheckStashPaste(Point cursorPosition)
 {
 	Player &player = *MyPlayer;
 
-	const Size itemSize = GetInventorySize(player.HoldItem);
-	const Displacement hotPixelOffset = Displacement(itemSize * INV_SLOT_HALF_SIZE_PX);
-	if (IsHardwareCursor()) {
-		// It's more natural to select the top left cell of the region the sprite is overlapping when putting an item
-		//  into an inventory grid, so compensate for the adjusted hot pixel of hardware cursors.
-		cursorPosition -= hotPixelOffset;
-	}
-
 	if (!IsItemAllowedInStash(player.HoldItem))
 		return;
 
@@ -109,25 +124,19 @@ void CheckStashPaste(Point cursorPosition)
 			return;
 		Stash.gold += player.HoldItem._ivalue;
 		player.HoldItem.clear();
-		PlaySFX(IS_GOLD);
+		PlaySFX(SfxID::ItemGold);
 		Stash.dirty = true;
-		if (!IsHardwareCursor()) {
-			// To make software cursors behave like hardware cursors we need to adjust the hand cursor position manually
-			SetCursorPos(cursorPosition + hotPixelOffset);
-		}
 		NewCursor(CURSOR_HAND);
 		return;
 	}
 
-	// Make the hot pixel the center of the top-left cell of the item, this favors the cell which contains more of the
-	//  item sprite
-	Point firstSlot = FindSlotUnderCursor(cursorPosition + Displacement(INV_SLOT_HALF_SIZE_PX));
-	if (firstSlot == InvalidStashPoint)
+	const Size itemSize = GetInventorySize(player.HoldItem);
+
+	std::optional<Point> targetSlot = FindTargetSlotUnderItemCursor(cursorPosition, itemSize);
+	if (!targetSlot)
 		return;
 
-	if (firstSlot.x + itemSize.width > 10 || firstSlot.y + itemSize.height > 10) {
-		return; // Item does not fit
-	}
+	Point firstSlot = *targetSlot;
 
 	// Check that no more than 1 item is replaced by the move
 	StashStruct::StashCell stashIndex = StashStruct::EmptyCell;
@@ -144,6 +153,7 @@ void CheckStashPaste(Point cursorPosition)
 
 	PlaySFX(ItemInvSnds[ItemCAnimTbl[player.HoldItem._iCurs]]);
 
+	// Need to set the item anchor position to the bottom left so drawing code functions correctly.
 	player.HoldItem.position = firstSlot + Displacement { 0, itemSize.height - 1 };
 
 	if (stashIndex == StashStruct::EmptyCell) {
@@ -151,8 +161,9 @@ void CheckStashPaste(Point cursorPosition)
 		// stashList will have at most 10 000 items, up to 65 535 are supported with uint16_t indexes
 		stashIndex = static_cast<uint16_t>(Stash.stashList.size() - 1);
 	} else {
-		// remove item from stash grid
+		// swap the held item and whatever was in the stash at this position
 		std::swap(Stash.stashList[stashIndex], player.HoldItem);
+		// then clear the space occupied by the old item
 		for (auto &row : Stash.GetCurrentGrid()) {
 			for (auto &itemId : row) {
 				if (itemId - 1 == stashIndex)
@@ -161,14 +172,11 @@ void CheckStashPaste(Point cursorPosition)
 		}
 	}
 
+	// Finally mark the area now occupied by the pasted item in the current page/grid.
 	AddItemToStashGrid(Stash.GetPage(), firstSlot, stashIndex, itemSize);
 
 	Stash.dirty = true;
 
-	if (player.HoldItem.isEmpty() && !IsHardwareCursor()) {
-		// To make software cursors behave like hardware cursors we need to adjust the hand cursor position manually
-		SetCursorPos(cursorPosition + hotPixelOffset);
-	}
 	NewCursor(player.HoldItem);
 }
 
@@ -176,10 +184,7 @@ void CheckStashCut(Point cursorPosition, bool automaticMove)
 {
 	Player &player = *MyPlayer;
 
-	if (IsWithdrawGoldOpen) {
-		IsWithdrawGoldOpen = false;
-		WithdrawGoldValue = 0;
-	}
+	CloseGoldWithdraw();
 
 	Point slot = InvalidStashPoint;
 
@@ -210,10 +215,10 @@ void CheckStashCut(Point cursorPosition, bool automaticMove)
 	if (iv != StashStruct::EmptyCell) {
 		holdItem = Stash.stashList[iv];
 		if (automaticMove) {
-			if (CanBePlacedOnBelt(holdItem)) {
-				automaticallyMoved = AutoPlaceItemInBelt(player, holdItem, true);
+			if (CanBePlacedOnBelt(player, holdItem)) {
+				automaticallyMoved = AutoPlaceItemInBelt(player, holdItem, true, true);
 			} else {
-				automaticallyMoved = automaticallyEquipped = AutoEquip(player, holdItem);
+				automaticallyMoved = AutoEquip(player, holdItem, true, true);
 			}
 		}
 
@@ -228,12 +233,12 @@ void CheckStashCut(Point cursorPosition, bool automaticMove)
 		if (automaticallyEquipped) {
 			PlaySFX(ItemInvSnds[ItemCAnimTbl[holdItem._iCurs]]);
 		} else if (!automaticMove || automaticallyMoved) {
-			PlaySFX(IS_IGRAB);
+			PlaySFX(SfxID::GrabItem);
 		}
 
 		if (automaticMove) {
 			if (!automaticallyMoved) {
-				if (CanBePlacedOnBelt(holdItem)) {
+				if (CanBePlacedOnBelt(player, holdItem)) {
 					player.SaySpecific(HeroSpeech::IHaveNoRoom);
 				} else {
 					player.SaySpecific(HeroSpeech::ICantDoThat);
@@ -243,11 +248,6 @@ void CheckStashCut(Point cursorPosition, bool automaticMove)
 			holdItem.clear();
 		} else {
 			NewCursor(holdItem);
-			if (!IsHardwareCursor()) {
-				// For a hardware cursor, we set the "hot point" to the center of the item instead.
-				Size cursSize = GetInvItemSize(holdItem._iCurs + CURSOR_FIRSTITEM);
-				SetCursorPos(cursorPosition - Displacement(cursSize / 2));
-			}
 		}
 	}
 }
@@ -276,8 +276,6 @@ void FreeStashGFX()
 
 void InitStash()
 {
-	InitialWithdrawGoldValue = 0;
-
 	if (!HeadlessMode) {
 		StashPanelArt = LoadClx("data\\stash.clx");
 		StashNavButtonArt = LoadClx("data\\stashnavbtns.clx");
@@ -400,8 +398,10 @@ void DrawStash(const Surface &out)
 	Point position = GetPanelPosition(UiPanels::Stash);
 	UiFlags style = UiFlags::VerticalCenter | UiFlags::ColorWhite;
 
-	DrawString(out, StrCat(Stash.GetPage() + 1), { position + Displacement { 132, 0 }, { 57, 11 } }, UiFlags::AlignCenter | style);
-	DrawString(out, FormatInteger(Stash.gold), { position + Displacement { 122, 19 }, { 107, 13 } }, UiFlags::AlignRight | style);
+	DrawString(out, StrCat(Stash.GetPage() + 1), { position + Displacement { 132, 0 }, { 57, 11 } },
+	    { .flags = UiFlags::AlignCenter | style });
+	DrawString(out, FormatInteger(Stash.gold), { position + Displacement { 122, 19 }, { 107, 13 } },
+	    { .flags = UiFlags::AlignRight | style });
 }
 
 void CheckStashItem(Point mousePosition, bool isShiftHeld, bool isCtrlHeld)
@@ -473,7 +473,7 @@ bool UseStashItem(uint16_t c)
 		return true;
 	}
 	if (item->IDidx == IDI_FUNGALTM) {
-		PlaySFX(IS_IBOOK);
+		PlaySFX(SfxID::ItemBook);
 		MyPlayer->Say(HeroSpeech::ThatDidntDoAnything, SpeechDelay);
 		return true;
 	}
@@ -486,10 +486,7 @@ bool UseStashItem(uint16_t c)
 		return true;
 	}
 
-	if (IsWithdrawGoldOpen) {
-		IsWithdrawGoldOpen = false;
-		WithdrawGoldValue = 0;
-	}
+	CloseGoldWithdraw();
 
 	if (item->isScroll()) {
 		return true;
@@ -500,11 +497,11 @@ bool UseStashItem(uint16_t c)
 	}
 
 	if (item->_iMiscId == IMISC_BOOK)
-		PlaySFX(IS_RBOOK);
+		PlaySFX(SfxID::ReadBook);
 	else
 		PlaySFX(ItemInvSnds[ItemCAnimTbl[item->_iCurs]]);
 
-	UseItem(MyPlayerId, item->_iMiscId, item->_iSpell, -1);
+	UseItem(*MyPlayer, item->_iMiscId, item->_iSpell, -1);
 
 	if (Stash.stashList[c]._iMiscId == IMISC_MAPOFDOOM)
 		return true;
@@ -538,8 +535,7 @@ void StashStruct::RemoveStashItem(StashStruct::StashCell iv)
 	if (lastItemIndex != iv) {
 		stashList[iv] = stashList[lastItemIndex];
 
-		for (auto &pair : Stash.stashGrids) {
-			auto &grid = pair.second;
+		for (auto &[_, grid] : Stash.stashGrids) {
 			for (auto &row : grid) {
 				for (StashStruct::StashCell &itemId : row) {
 					if (itemId == lastItemIndex + 1) {
@@ -590,8 +586,6 @@ void StartGoldWithdraw()
 {
 	CloseGoldDrop();
 
-	InitialWithdrawGoldValue = std::min(RoomForGold(), Stash.gold);
-
 	if (talkflag)
 		control_reset_talk();
 
@@ -600,7 +594,16 @@ void StartGoldWithdraw()
 	SDL_SetTextInputRect(&rect);
 
 	IsWithdrawGoldOpen = true;
-	WithdrawGoldValue = 0;
+	GoldWithdrawText[0] = '\0';
+	GoldWithdrawInputState.emplace(NumberInputState::Options {
+	    .textOptions {
+	        .value = GoldWithdrawText,
+	        .cursor = &GoldWithdrawCursor,
+	        .maxLength = sizeof(GoldWithdrawText) - 1,
+	    },
+	    .min = 0,
+	    .max = std::min(RoomForGold(), Stash.gold),
+	});
 	SDL_StartTextInput();
 }
 
@@ -613,24 +616,31 @@ void WithdrawGoldKeyPress(SDL_Keycode vkey)
 		return;
 	}
 
-	if ((vkey == SDLK_RETURN) || (vkey == SDLK_KP_ENTER)) {
-		if (WithdrawGoldValue > 0) {
-			WithdrawGold(myPlayer, WithdrawGoldValue);
-			PlaySFX(IS_GOLD);
+	switch (vkey) {
+	case SDLK_RETURN:
+	case SDLK_KP_ENTER:
+		if (const int value = GoldWithdrawInputState->value(); value != 0) {
+			WithdrawGold(myPlayer, value);
+			PlaySFX(SfxID::ItemGold);
 		}
 		CloseGoldWithdraw();
-	} else if (vkey == SDLK_ESCAPE) {
+		break;
+	case SDLK_ESCAPE:
 		CloseGoldWithdraw();
-	} else if (vkey == SDLK_BACKSPACE) {
-		WithdrawGoldValue /= 10;
+		break;
+	default:
+		break;
 	}
 }
 
-void DrawGoldWithdraw(const Surface &out, int amount)
+void DrawGoldWithdraw(const Surface &out)
 {
 	if (!IsWithdrawGoldOpen) {
 		return;
 	}
+
+	const std::string_view amountText = GoldWithdrawText;
+	const TextInputCursorState &cursor = GoldWithdrawCursor;
 
 	const int dialogX = 30;
 
@@ -642,38 +652,31 @@ void DrawGoldWithdraw(const Surface &out, int amount)
 	// The split gold dialog is roughly 4 lines high, but we need at least one line for the player to input an amount.
 	// Using a clipping region 50 units high (approx 3 lines with a lineheight of 17) to ensure there is enough room left
 	//  for the text entered by the player.
-	DrawString(out, wrapped, { GetPanelPosition(UiPanels::Stash, { dialogX + 31, 75 }), { 200, 50 } }, UiFlags::ColorWhitegold | UiFlags::AlignCenter, 1, 17);
+	DrawString(out, wrapped, { GetPanelPosition(UiPanels::Stash, { dialogX + 31, 75 }), { 200, 50 } },
+	    { .flags = UiFlags::ColorWhitegold | UiFlags::AlignCenter, .lineHeight = 17 });
 
-	std::string value = "";
-	if (amount > 0) {
-		value = StrCat(amount);
-	}
 	// Even a ten digit amount of gold only takes up about half a line. There's no need to wrap or clip text here so we
 	// use the Point form of DrawString.
-	DrawString(out, value, GetPanelPosition(UiPanels::Stash, { dialogX + 37, 128 }), UiFlags::ColorWhite | UiFlags::PentaCursor);
+	DrawString(out, amountText, GetPanelPosition(UiPanels::Stash, { dialogX + 37, 128 }),
+	    {
+	        .flags = UiFlags::ColorWhite | UiFlags::PentaCursor,
+	        .cursorPosition = static_cast<int>(cursor.position),
+	        .highlightRange = { static_cast<int>(cursor.selection.begin), static_cast<int>(cursor.selection.end) },
+	    });
 }
 
 void CloseGoldWithdraw()
 {
 	if (!IsWithdrawGoldOpen)
 		return;
-	IsWithdrawGoldOpen = false;
-	WithdrawGoldValue = 0;
 	SDL_StopTextInput();
+	IsWithdrawGoldOpen = false;
+	GoldWithdrawInputState = std::nullopt;
 }
 
-void GoldWithdrawNewText(string_view text)
+bool HandleGoldWithdrawTextInputEvent(const SDL_Event &event)
 {
-	for (char vkey : text) {
-		int digit = vkey - '0';
-		if (digit >= 0 && digit <= 9) {
-			int newGoldValue = WithdrawGoldValue * 10;
-			newGoldValue += digit;
-			if (newGoldValue <= InitialWithdrawGoldValue) {
-				WithdrawGoldValue = newGoldValue;
-			}
-		}
-	}
+	return HandleNumberInputEvent(event, *GoldWithdrawInputState);
 }
 
 bool AutoPlaceItemInStash(Player &player, const Item &item, bool persistItem)

@@ -7,6 +7,7 @@
 
 #include <cstdint>
 
+#include "engine/world_tile.hpp"
 #include "player.h"
 
 namespace devilution {
@@ -34,13 +35,13 @@ SpellCheckResult CheckSpell(const Player &player, SpellID sn, SpellType st, bool
  * @param player The player whose readied spell is to be checked.
  */
 void EnsureValidReadiedSpell(Player &player);
-void CastSpell(int id, SpellID spl, int sx, int sy, int dx, int dy, int spllvl);
+void CastSpell(Player &player, SpellID spl, WorldTilePosition src, WorldTilePosition dst, int spllvl);
 
 /**
  * @param pnum player index
  * @param rid target player index
  */
-void DoResurrect(size_t pnum, Player &target);
+void DoResurrect(Player &player, Player &target);
 void DoHealOther(const Player &caster, Player &target);
 int GetSpellBookLevel(SpellID s);
 int GetSpellStaffLevel(SpellID s);

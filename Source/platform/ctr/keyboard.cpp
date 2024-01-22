@@ -7,8 +7,8 @@
 constexpr size_t MAX_TEXT_LENGTH = 255;
 
 struct vkbdEvent {
-	devilution::string_view hintText;
-	devilution::string_view inText;
+	std::string_view hintText;
+	std::string_view inText;
 	char *outText;
 	size_t maxLength;
 };
@@ -16,7 +16,7 @@ struct vkbdEvent {
 static vkbdEvent events[16];
 static int eventCount = 0;
 
-void ctr_vkbdInput(devilution::string_view hintText, devilution::string_view inText, char *outText, size_t maxLength)
+void ctr_vkbdInput(std::string_view hintText, std::string_view inText, char *outText, size_t maxLength)
 {
 	if (eventCount >= sizeof(events))
 		return;

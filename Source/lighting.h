@@ -7,6 +7,8 @@
 
 #include <array>
 #include <cstdint>
+#include <optional>
+#include <type_traits>
 #include <vector>
 
 #include <function_ref.hpp>
@@ -15,8 +17,6 @@
 #include "engine.h"
 #include "engine/point.hpp"
 #include "utils/attributes.h"
-#include "utils/stdcompat/invoke_result_t.hpp"
-#include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
 
@@ -74,9 +74,9 @@ void ChangeLightOffset(int i, DisplacementOf<int8_t> offset);
 void ChangeLight(int i, Point position, uint8_t radius);
 void ProcessLightList();
 void SavePreLighting();
-void ActivateVision(Point position, int r, int id);
-void ChangeVisionRadius(int id, int r);
-void ChangeVisionXY(int id, Point position);
+void ActivateVision(Point position, int r, size_t id);
+void ChangeVisionRadius(size_t id, int r);
+void ChangeVisionXY(size_t id, Point position);
 void ProcessVisionList();
 void lighting_color_cycling();
 
@@ -110,9 +110,9 @@ bool DoCrawl(unsigned radius, tl::function_ref<bool(Displacement)> function);
 bool DoCrawl(unsigned minRadius, unsigned maxRadius, tl::function_ref<bool(Displacement)> function);
 
 template <typename F>
-auto Crawl(unsigned radius, F function) -> invoke_result_t<decltype(function), Displacement>
+auto Crawl(unsigned radius, F function) -> std::invoke_result_t<decltype(function), Displacement>
 {
-	invoke_result_t<decltype(function), Displacement> result;
+	std::invoke_result_t<decltype(function), Displacement> result;
 	DoCrawl(radius, [&result, &function](Displacement displacement) -> bool {
 		result = function(displacement);
 		return !result;
@@ -121,9 +121,9 @@ auto Crawl(unsigned radius, F function) -> invoke_result_t<decltype(function), D
 }
 
 template <typename F>
-auto Crawl(unsigned minRadius, unsigned maxRadius, F function) -> invoke_result_t<decltype(function), Displacement>
+auto Crawl(unsigned minRadius, unsigned maxRadius, F function) -> std::invoke_result_t<decltype(function), Displacement>
 {
-	invoke_result_t<decltype(function), Displacement> result;
+	std::invoke_result_t<decltype(function), Displacement> result;
 	DoCrawl(minRadius, maxRadius, [&result, &function](Displacement displacement) -> bool {
 		result = function(displacement);
 		return !result;

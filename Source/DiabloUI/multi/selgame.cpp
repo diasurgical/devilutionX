@@ -26,7 +26,7 @@ char selgame_Password[16] = "";
 char selgame_Description[512];
 std::string selgame_Title;
 bool selgame_enteringGame;
-int selgame_selectedGame;
+size_t selgame_selectedGame;
 bool selgame_endMenu;
 int *gdwPlayerId;
 _difficulty nDifficulty;
@@ -46,7 +46,7 @@ std::vector<std::unique_ptr<UiListItem>> vecSelGameDlgItems;
 std::vector<std::unique_ptr<UiItemBase>> vecSelGameDialog;
 std::vector<GameInfo> Gamelist;
 uint32_t firstPublicGameInfoRequestSend = 0;
-unsigned HighlightedItem;
+size_t HighlightedItem;
 
 void selgame_FreeVectors()
 {
@@ -80,7 +80,7 @@ bool IsGameCompatible(const GameData &data)
 static std::string GetErrorMessageIncompatibility(const GameData &data)
 {
 	if (data.programid != GAME_ID) {
-		string_view gameMode;
+		std::string_view gameMode;
 		switch (data.programid) {
 		case GameIdDiabloFull:
 			gameMode = _("Diablo");
@@ -103,7 +103,7 @@ static std::string GetErrorMessageIncompatibility(const GameData &data)
 	}
 }
 
-void UiInitGameSelectionList(string_view search)
+void UiInitGameSelectionList(std::string_view search)
 {
 	selgame_enteringGame = false;
 	selgame_selectedGame = 0;
@@ -121,6 +121,8 @@ void UiInitGameSelectionList(string_view search)
 	}
 
 	selgame_FreeVectors();
+
+	selgame_Label[0] = '\0';
 
 	UiAddBackground(&vecSelGameDialog);
 	UiAddLogo(&vecSelGameDialog);
@@ -173,7 +175,7 @@ void UiInitGameSelectionList(string_view search)
 	SDL_Rect rect6 = { (Sint16)(uiPosition.x + 449), (Sint16)(uiPosition.y + 427), 140, 35 };
 	vecSelGameDialog.push_back(std::make_unique<UiArtTextButton>(_("CANCEL"), &UiFocusNavigationEsc, rect6, UiFlags::AlignCenter | UiFlags::VerticalCenter | UiFlags::FontSize30 | UiFlags::ColorUiGold));
 
-	auto selectFn = [](int index) {
+	auto selectFn = [](size_t index) {
 		// UiListItem::m_value could be different from
 		// the index if packet encryption is disabled
 		int itemValue = vecSelGameDlgItems[index]->m_value;
@@ -181,7 +183,7 @@ void UiInitGameSelectionList(string_view search)
 	};
 
 	if (!search.empty()) {
-		for (unsigned i = 0; i < vecSelGameDlgItems.size(); i++) {
+		for (size_t i = 0; i < vecSelGameDlgItems.size(); i++) {
 			int gameIndex = vecSelGameDlgItems[i]->m_value - 3;
 			if (gameIndex < 0)
 				continue;
@@ -204,11 +206,10 @@ void selgame_GameSelection_Init()
 	UiInitGameSelectionList("");
 }
 
-void selgame_GameSelection_Focus(int value)
+void selgame_GameSelection_Focus(size_t value)
 {
-	const auto index = static_cast<unsigned>(value);
-	HighlightedItem = index;
-	const UiListItem &item = *vecSelGameDlgItems[index];
+	HighlightedItem = value;
+	const UiListItem &item = *vecSelGameDlgItems[value];
 	switch (item.m_value) {
 	case 0:
 		CopyUtf8(selgame_Description, _("Create a new game with a difficulty setting of your choice."), sizeof(selgame_Description));
@@ -228,7 +229,7 @@ void selgame_GameSelection_Focus(int value)
 		std::string infoString = std::string(_("Join the public game already in progress."));
 		infoString.append("\n\n");
 		if (IsGameCompatible(gameInfo.gameData)) {
-			string_view difficulty;
+			std::string_view difficulty;
 			switch (gameInfo.gameData.nDifficulty) {
 			case DIFF_NORMAL:
 				difficulty = _("Normal");
@@ -244,16 +245,16 @@ void selgame_GameSelection_Focus(int value)
 			infoString += '\n';
 			switch (gameInfo.gameData.nTickRate) {
 			case 20:
-				AppendStrView(infoString, _("Speed: Normal"));
+				infoString.append(_("Speed: Normal"));
 				break;
 			case 30:
-				AppendStrView(infoString, _("Speed: Fast"));
+				infoString.append(_("Speed: Fast"));
 				break;
 			case 40:
-				AppendStrView(infoString, _("Speed: Faster"));
+				infoString.append(_("Speed: Faster"));
 				break;
 			case 50:
-				AppendStrView(infoString, _("Speed: Fastest"));
+				infoString.append(_("Speed: Fastest"));
 				break;
 			default:
 				// This should not occure, so no translations is needed
@@ -261,7 +262,7 @@ void selgame_GameSelection_Focus(int value)
 				break;
 			}
 			infoString += '\n';
-			AppendStrView(infoString, _("Players: "));
+			infoString.append(_("Players: "));
 			for (auto &playerName : gameInfo.players) {
 				infoString.append(playerName);
 				infoString += ' ';
@@ -288,7 +289,7 @@ bool UpdateHeroLevel(_uiheroinfo *pInfo)
 	return true;
 }
 
-void selgame_GameSelection_Select(int value)
+void selgame_GameSelection_Select(size_t value)
 {
 	selgame_enteringGame = true;
 	selgame_selectedGame = value;
@@ -382,7 +383,7 @@ void selgame_GameSelection_Esc()
 	selgame_endMenu = true;
 }
 
-void selgame_Diff_Focus(int value)
+void selgame_Diff_Focus(size_t value)
 {
 	switch (vecSelGameDlgItems[value]->m_value) {
 	case DIFF_NORMAL:
@@ -419,10 +420,10 @@ bool IsDifficultyAllowed(int value)
 	return false;
 }
 
-void selgame_Diff_Select(int value)
+void selgame_Diff_Select(size_t value)
 {
 	if (selhero_isMultiPlayer && !IsDifficultyAllowed(vecSelGameDlgItems[value]->m_value)) {
-		selgame_GameSelection_Select(0);
+		selgame_GameSelection_Select(selgame_selectedGame);
 		return;
 	}
 
@@ -508,7 +509,7 @@ void selgame_GameSpeedSelection()
 	UiInitList(selgame_Speed_Focus, selgame_Speed_Select, selgame_Speed_Esc, vecSelGameDialog, true);
 }
 
-void selgame_Speed_Focus(int value)
+void selgame_Speed_Focus(size_t value)
 {
 	switch (vecSelGameDlgItems[value]->m_value) {
 	case 20:
@@ -533,10 +534,10 @@ void selgame_Speed_Focus(int value)
 
 void selgame_Speed_Esc()
 {
-	selgame_GameSelection_Select(0);
+	selgame_GameSelection_Select(selgame_selectedGame);
 }
 
-void selgame_Speed_Select(int value)
+void selgame_Speed_Select(size_t value)
 {
 	nTickRate = vecSelGameDlgItems[value]->m_value;
 
@@ -548,7 +549,7 @@ void selgame_Speed_Select(int value)
 	selgame_Password_Init(0);
 }
 
-void selgame_Password_Init(int /*value*/)
+void selgame_Password_Init(size_t /*value*/)
 {
 	memset(&selgame_Password, 0, sizeof(selgame_Password));
 
@@ -600,7 +601,7 @@ static bool IsGameCompatibleWithErrorMessage(const GameData &data)
 	return false;
 }
 
-void selgame_Password_Select(int /*value*/)
+void selgame_Password_Select(size_t /*value*/)
 {
 	char *gamePassword = nullptr;
 	if (selgame_selectedGame == 0)

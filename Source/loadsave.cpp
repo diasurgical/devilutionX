@@ -34,6 +34,7 @@
 #include "playerdat.hpp"
 #include "qol/stash.h"
 #include "stores.h"
+#include "utils/algorithm/container.hpp"
 #include "utils/endian.hpp"
 #include "utils/language.h"
 
@@ -80,7 +81,7 @@ T SwapBE(T in)
 }
 
 class LoadHelper {
-	std::unique_ptr<byte[]> m_buffer_;
+	std::unique_ptr<std::byte[]> m_buffer_;
 	size_t m_cur_ = 0;
 	size_t m_size_;
 
@@ -150,7 +151,7 @@ public:
 	{
 		static_assert(sizeof(TSource) > sizeof(TDesired), "Can only narrow to a smaller type");
 		TSource value = SwapLE(Next<TSource>()) + modifier;
-		return static_cast<TDesired>(clamp<TSource>(value, std::numeric_limits<TDesired>::min(), std::numeric_limits<TDesired>::max()));
+		return static_cast<TDesired>(std::clamp<TSource>(value, std::numeric_limits<TDesired>::min(), std::numeric_limits<TDesired>::max()));
 	}
 
 	bool NextBool8()
@@ -167,7 +168,7 @@ public:
 class SaveHelper {
 	SaveWriter &m_mpqWriter;
 	const char *m_szFileName_;
-	std::unique_ptr<byte[]> m_buffer_;
+	std::unique_ptr<std::byte[]> m_buffer_;
 	size_t m_cur_ = 0;
 	size_t m_capacity_;
 
@@ -175,7 +176,7 @@ public:
 	SaveHelper(SaveWriter &mpqWriter, const char *szFileName, size_t bufferLen)
 	    : m_mpqWriter(mpqWriter)
 	    , m_szFileName_(szFileName)
-	    , m_buffer_(new byte[codec_get_encoded_len(bufferLen)])
+	    , m_buffer_(new std::byte[codec_get_encoded_len(bufferLen)])
 	    , m_capacity_(bufferLen)
 	{
 	}
@@ -317,7 +318,11 @@ void LoadItemData(LoadHelper &file, Item &item)
 	else
 		item._iDamAcFlags = ItemSpecialEffectHf::None;
 	UpdateHellfireFlag(item, item._iIName);
+}
 
+void LoadAndValidateItemData(LoadHelper &file, Item &item)
+{
+	LoadItemData(file, item);
 	RemoveInvalidItem(item);
 }
 
@@ -411,9 +416,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	player._pBaseVit = file.NextLE<int32_t>();
 	player._pStatPts = file.NextLE<int32_t>();
 	player._pDamageMod = file.NextLE<int32_t>();
-	player._pBaseToBlk = file.NextLE<int32_t>();
-	if (player._pBaseToBlk == 0)
-		player._pBaseToBlk = PlayersData[static_cast<std::size_t>(player._pClass)].blockBonus;
+	file.Skip<int32_t>(); // Skip _pBaseToBlk - always a copy of PlayerData.blockBonus
 	player._pHPBase = file.NextLE<int32_t>();
 	player._pMaxHPBase = file.NextLE<int32_t>();
 	player._pHitPoints = file.NextLE<int32_t>();
@@ -424,12 +427,12 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	player._pMana = file.NextLE<int32_t>();
 	player._pMaxMana = file.NextLE<int32_t>();
 	file.Skip<int32_t>(); // Skip _pManaPer - always derived from mana and maxMana
-	player._pLevel = file.NextLE<int8_t>();
-	player._pMaxLvl = file.NextLE<int8_t>();
-	file.Skip(2); // Alignment
+	player.setCharacterLevel(file.NextLE<uint8_t>());
+	file.Skip<uint8_t>(); // Skip _pMaxLevel - unused
+	file.Skip(2);         // Alignment
 	player._pExperience = file.NextLE<uint32_t>();
-	file.Skip<uint32_t>();                        // Skip _pMaxExp - unused
-	player._pNextExper = file.NextLE<uint32_t>(); // This can be calculated based on pLevel (which in turn could be calculated based on pExperience)
+	file.Skip<uint32_t>(); // Skip _pMaxExp - unused
+	file.Skip<uint32_t>(); // Skip _pNextExper, we retrieve it when needed based on _pLevel
 	player._pArmorClass = file.NextLE<int8_t>();
 	player._pMagResist = file.NextLE<int8_t>();
 	player._pFireResist = file.NextLE<int8_t>();
@@ -488,10 +491,10 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	file.Skip<uint32_t>(); // skip _pBWidth
 
 	for (Item &item : player.InvBody)
-		LoadItemData(file, item);
+		LoadAndValidateItemData(file, item);
 
 	for (Item &item : player.InvList)
-		LoadItemData(file, item);
+		LoadAndValidateItemData(file, item);
 
 	player._pNumInv = file.NextLE<int32_t>();
 
@@ -499,9 +502,9 @@ void LoadPlayer(LoadHelper &file, Player &player)
 		cell = file.NextLE<int8_t>();
 
 	for (Item &item : player.SpdList)
-		LoadItemData(file, item);
+		LoadAndValidateItemData(file, item);
 
-	LoadItemData(file, player.HoldItem);
+	LoadAndValidateItemData(file, player.HoldItem);
 
 	player._pIMinDam = file.NextLE<int32_t>();
 	player._pIMaxDam = file.NextLE<int32_t>();
@@ -823,13 +826,13 @@ void LoadObject(LoadHelper &file, Object &object)
 
 void LoadItem(LoadHelper &file, Item &item)
 {
-	LoadItemData(file, item);
+	LoadAndValidateItemData(file, item);
 	GetItemFrm(item);
 }
 
 void LoadPremium(LoadHelper &file, int i)
 {
-	LoadItemData(file, premiumitems[i]);
+	LoadAndValidateItemData(file, premiumitems[i]);
 }
 
 void LoadQuest(LoadHelper *file, int i)
@@ -895,7 +898,7 @@ void LoadPortal(LoadHelper *file, int i)
 		pPortal->ltype = GetLevelType(pPortal->level);
 }
 
-void GetLevelNames(string_view prefix, char *out)
+void GetLevelNames(std::string_view prefix, char *out)
 {
 	char suf;
 	uint8_t num;
@@ -968,6 +971,11 @@ void LoadMatchingItems(LoadHelper &file, const Player &player, const int n, Item
 			if ((heroItem.dwBuff & CF_HELLFIRE) != (unpackedItem.dwBuff & CF_HELLFIRE)) {
 				unpackedItem = {};
 				RecreateItem(player, unpackedItem, heroItem.IDidx, heroItem._iCreateInfo, heroItem._iSeed, heroItem._ivalue, (heroItem.dwBuff & CF_HELLFIRE) != 0);
+				unpackedItem._iIdentified = heroItem._iIdentified;
+				unpackedItem._iMaxDur = heroItem._iMaxDur;
+				unpackedItem._iDurability = ClampDurability(unpackedItem, heroItem._iDurability);
+				unpackedItem._iMaxCharges = std::clamp<int>(heroItem._iMaxCharges, 0, unpackedItem._iMaxCharges);
+				unpackedItem._iCharges = std::clamp<int>(heroItem._iCharges, 0, unpackedItem._iMaxCharges);
 			}
 			if (!IsShopPriceValid(unpackedItem)) {
 				unpackedItem.clear();
@@ -1223,7 +1231,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.WriteLE<int32_t>(player._pStatPts);
 	file.WriteLE<int32_t>(player._pDamageMod);
 
-	file.WriteLE<int32_t>(player._pBaseToBlk);
+	file.WriteLE<int32_t>(player.getBaseToBlock()); // set _pBaseToBlk for backwards compatibility
 	file.WriteLE<int32_t>(player._pHPBase);
 	file.WriteLE<int32_t>(player._pMaxHPBase);
 	file.WriteLE<int32_t>(player._pHitPoints);
@@ -1234,12 +1242,12 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.WriteLE<int32_t>(player._pMana);
 	file.WriteLE<int32_t>(player._pMaxMana);
 	file.Skip<int32_t>(); // Skip _pManaPer
-	file.WriteLE<int8_t>(player._pLevel);
-	file.WriteLE<int8_t>(player._pMaxLvl);
-	file.Skip(2); // Alignment
+	file.WriteLE<uint8_t>(player.getCharacterLevel());
+	file.Skip<uint8_t>(); // skip _pMaxLevel, this value is uninitialised in most cases in Diablo/Hellfire so there's no point setting it.
+	file.Skip(2);         // Alignment
 	file.WriteLE<uint32_t>(player._pExperience);
-	file.Skip<uint32_t>(); // Skip _pMaxExp
-	file.WriteLE<uint32_t>(player._pNextExper);
+	file.Skip<uint32_t>();                                       // Skip _pMaxExp
+	file.WriteLE<uint32_t>(player.getNextExperienceThreshold()); // set _pNextExper for backwards compatibility
 	file.WriteLE<int8_t>(player._pArmorClass);
 	file.WriteLE<int8_t>(player._pMagResist);
 	file.WriteLE<int8_t>(player._pFireResist);
@@ -2069,7 +2077,7 @@ void LoadStash()
 	auto itemCount = file.NextLE<uint32_t>();
 	Stash.stashList.resize(itemCount);
 	for (unsigned i = 0; i < itemCount; i++) {
-		LoadItemData(file, Stash.stashList[i]);
+		LoadAndValidateItemData(file, Stash.stashList[i]);
 	}
 
 	Stash.SetPage(file.NextLE<uint32_t>());
@@ -2337,14 +2345,14 @@ void SaveStash(SaveWriter &stashWriter)
 	file.WriteLE<uint32_t>(Stash.gold);
 
 	std::vector<unsigned> pagesToSave;
-	for (const auto &stashPage : Stash.stashGrids) {
-		if (std::any_of(stashPage.second.cbegin(), stashPage.second.cend(), [](const auto &row) {
-			    return std::any_of(row.cbegin(), row.cend(), [](auto cell) {
+	for (const auto &[page, grid] : Stash.stashGrids) {
+		if (c_any_of(grid, [](const auto &row) {
+			    return c_any_of(row, [](StashStruct::StashCell cell) {
 				    return cell > 0;
 			    });
 		    })) {
 			// found a page that contains at least one item
-			pagesToSave.push_back(stashPage.first);
+			pagesToSave.push_back(page);
 		}
 	};
 
@@ -2401,7 +2409,7 @@ void SaveGameData(SaveWriter &saveWriter)
 	file.WriteBE<int32_t>(ViewPosition.y);
 	file.WriteLE<uint8_t>(invflag ? 1 : 0);
 	file.WriteLE<uint8_t>(chrflag ? 1 : 0);
-	file.WriteBE<int32_t>(ActiveMonsterCount);
+	file.WriteBE(static_cast<int32_t>(ActiveMonsterCount));
 	file.WriteBE<int32_t>(ActiveItemCount);
 	// ActiveMissileCount will be a value from 0-125 (for vanilla compatibility). Writing an unsigned value here to avoid
 	// warnings about casting from unsigned to signed, but there's no sign extension issues when reading this as a signed
@@ -2461,7 +2469,7 @@ void SaveGameData(SaveWriter &saveWriter)
 		for (int i = 0; i < ActiveLightCount; i++)
 			SaveLighting(&file, &Lights[ActiveLights[i]]);
 
-		int visionCount = Players.size();
+		const auto visionCount = static_cast<int32_t>(Players.size());
 		file.WriteBE<int32_t>(visionCount + 1); // VisionId
 		file.WriteBE<int32_t>(visionCount);
 
@@ -2559,7 +2567,7 @@ void SaveLevel(SaveWriter &saveWriter)
 		}
 	}
 
-	file.WriteBE<int32_t>(ActiveMonsterCount);
+	file.WriteBE(static_cast<int32_t>(ActiveMonsterCount));
 	file.WriteBE<int32_t>(ActiveItemCount);
 	file.WriteBE<int32_t>(ActiveObjectCount);
 

@@ -5,6 +5,7 @@ on:
     types: [published]
     paths-ignore:
       - '*.md'
+      - 'docs/**'
   workflow_dispatch:
 
 concurrency:
@@ -16,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
@@ -31,7 +32,7 @@ jobs:
 
     - name: Upload-Package
       if: ${{ !env.ACT }}
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: devilutionx-src.tar.xz
         path: devilutionx-src.tar.xz
@@ -47,7 +48,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
@@ -62,7 +63,7 @@ jobs:
 
     - name: Upload-Package
       if: ${{ !env.ACT }}
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: devilutionx-src-fully-vendored.tar.xz
         path: devilutionx-src-fully-vendored.tar.xz

@@ -17,6 +17,8 @@
 
 namespace devilution {
 
+void DrawMapLineNS(const Surface &out, Point from, int height, std::uint8_t colorIndex);
+void DrawMapLineWE(const Surface &out, Point from, int height, std::uint8_t colorIndex);
 /**
  * @brief Draw a line in the target buffer from the given point towards north east at an `atan(1/2)` angle.
  *
@@ -88,5 +90,13 @@ void DrawMapLineSteepNW(const Surface &out, Point from, int width, std::uint8_t 
  * The end point is at `{ from.x - (width + 1), from.y + 2 * width }`.
  */
 void DrawMapLineSteepSW(const Surface &out, Point from, int width, std::uint8_t colorIndex);
+void DrawMapFreeLine(const Surface &out, Point from, Point to, uint8_t colorIndex);
+
+/**
+ * @brief Draw an automap pixel.
+ *
+ * Draw either an opaque pixel or a transparent pixel, depending on the automap mode.
+ */
+void SetMapPixel(const Surface &out, Point position, uint8_t color);
 
 } // namespace devilution

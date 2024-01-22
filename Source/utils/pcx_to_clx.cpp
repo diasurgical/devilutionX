@@ -1,5 +1,6 @@
 #include "utils/pcx_to_clx.hpp"
 
+#include <cstddef>
 #include <cstdint>
 #include <cstring>
 
@@ -13,7 +14,6 @@
 #include "utils/clx_encode.hpp"
 #include "utils/endian.hpp"
 #include "utils/pcx.hpp"
-#include "utils/stdcompat/cstddef.hpp"
 
 #ifdef DEBUG_PCX_TO_CL2_SIZE
 #include <iomanip>

@@ -7,17 +7,17 @@
 
 #include <cstdint>
 #include <memory>
+#include <optional>
 
-#include "engine.h"
 #include "engine/clx_sprite.hpp"
 #include "engine/point.hpp"
 #include "engine/rectangle.hpp"
 #include "engine/render/scrollrt.h"
 #include "engine/world_tile.hpp"
+#include "levels/dun_tile.hpp"
 #include "utils/attributes.h"
 #include "utils/bitset2d.hpp"
 #include "utils/enum_traits.h"
-#include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
 
@@ -123,7 +123,7 @@ enum _difficulty : uint8_t {
 
 struct THEME_LOC {
 	RectangleOf<uint8_t> room;
-	int16_t ttval;
+	int8_t ttval;
 };
 
 struct MegaTile {
@@ -134,7 +134,7 @@ struct MegaTile {
 };
 
 struct MICROS {
-	uint16_t mt[16];
+	LevelCelBlock mt[16];
 };
 
 struct ShadowStruct {
@@ -158,16 +158,14 @@ extern Bitset2d<DMAXX, DMAXY> Protected;
 extern WorldTileRectangle SetPieceRoom;
 /** Specifies the active set quest piece in coordinate. */
 extern WorldTileRectangle SetPiece;
-/** Contains the contents of the single player quest DUN file. */
-extern std::unique_ptr<uint16_t[]> pSetPiece;
 extern OptionalOwnedClxSpriteList pSpecialCels;
 /** Specifies the tile definitions of the active dungeon type; (e.g. levels/l1data/l1.til). */
 extern DVL_API_FOR_TEST std::unique_ptr<MegaTile[]> pMegaTiles;
-extern std::unique_ptr<byte[]> pDungeonCels;
+extern std::unique_ptr<std::byte[]> pDungeonCels;
 /**
  * List tile properties
  */
-extern DVL_API_FOR_TEST std::array<TileProperties, MAXTILES> SOLData;
+extern DVL_API_FOR_TEST TileProperties SOLData[MAXTILES];
 /** Specifies the minimum X,Y-coordinates of the map. */
 extern WorldTilePosition dminPosition;
 /** Specifies the maximum X,Y-coordinates of the map. */
@@ -236,7 +234,7 @@ std::optional<WorldTileSize> GetSizeForThemeRoom();
 dungeon_type GetLevelType(int level);
 void CreateDungeon(uint32_t rseed, lvl_entry entry);
 
-constexpr bool InDungeonBounds(Point position)
+DVL_ALWAYS_INLINE constexpr bool InDungeonBounds(Point position)
 {
 	return position.x >= 0 && position.x < MAXDUNX && position.y >= 0 && position.y < MAXDUNY;
 }
@@ -334,7 +332,11 @@ struct Miniset {
 	}
 };
 
-bool TileHasAny(int tileId, TileProperties property);
+[[nodiscard]] DVL_ALWAYS_INLINE bool TileHasAny(int tileId, TileProperties property)
+{
+	return HasAnyOf(SOLData[tileId], property);
+}
+
 void LoadLevelSOLData();
 void SetDungeonMicros();
 void DRLG_InitTrans();
@@ -354,8 +356,10 @@ std::optional<Point> PlaceMiniSet(const Miniset &miniset, int tries = 199, bool 
 void PlaceDunTiles(const uint16_t *dunData, Point position, int floorId = 0);
 void DRLG_PlaceThemeRooms(int minSize, int maxSize, int floor, int freq, bool rndSize);
 void DRLG_HoldThemeRooms();
-void SetSetPieceRoom(WorldTilePosition position, int floorId);
-void FreeQuestSetPieces();
+/**
+ * @brief Returns ths size in tiles of the specified ".dun" Data
+ */
+WorldTileSize GetDunSize(const uint16_t *dunData);
 void DRLG_LPass3(int lv);
 
 /**

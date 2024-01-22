@@ -5,8 +5,11 @@
  */
 #include "levels/drlg_l2.h"
 
+#include <algorithm>
+#include <cmath>
 #include <cstdint>
 #include <list>
+#include <optional>
 
 #include "diablo.h"
 #include "engine/load_file.hpp"
@@ -16,8 +19,6 @@
 #include "levels/setmaps.h"
 #include "player.h"
 #include "quests.h"
-#include "utils/stdcompat/algorithm.hpp"
-#include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
 
@@ -1628,15 +1629,23 @@ void PlaceMiniSetRandom1x1(uint8_t search, uint8_t replace, int rndper)
 	PlaceMiniSetRandom({ { 1, 1 }, { { search } }, { { replace } } }, rndper);
 }
 
-void LoadQuestSetPieces()
+void InitSetPiece()
 {
+	std::unique_ptr<uint16_t[]> setPieceData;
+
 	if (Quests[Q_BLIND].IsAvailable()) {
-		pSetPiece = LoadFileInMem<uint16_t>("levels\\l2data\\blind1.dun");
+		setPieceData = LoadFileInMem<uint16_t>("levels\\l2data\\blind1.dun");
 	} else if (Quests[Q_BLOOD].IsAvailable()) {
-		pSetPiece = LoadFileInMem<uint16_t>("levels\\l2data\\blood1.dun");
+		setPieceData = LoadFileInMem<uint16_t>("levels\\l2data\\blood1.dun");
 	} else if (Quests[Q_SCHAMB].IsAvailable()) {
-		pSetPiece = LoadFileInMem<uint16_t>("levels\\l2data\\bonestr2.dun");
+		setPieceData = LoadFileInMem<uint16_t>("levels\\l2data\\bonestr2.dun");
+	} else {
+		return; // no setpiece needed for this level
 	}
+
+	WorldTilePosition setPiecePosition = SetPieceRoom.position;
+	PlaceDunTiles(setPieceData.get(), setPiecePosition, 3);
+	SetPiece = { setPiecePosition, GetDunSize(setPieceData.get()) };
 }
 
 void InitDungeonPieces()
@@ -1787,10 +1796,10 @@ void CreateRoom(WorldTilePosition topLeft, WorldTilePosition bottomRight, int nR
 		roomTopLeft.y = bottomRight.y - roomSize.height;
 	}
 
-	roomTopLeft.x = clamp<WorldTileCoord>(roomTopLeft.x, 1, 38);
-	roomTopLeft.y = clamp<WorldTileCoord>(roomTopLeft.y, 1, 38);
-	roomBottomRight.x = clamp<WorldTileCoord>(roomBottomRight.x, 1, 38);
-	roomBottomRight.y = clamp<WorldTileCoord>(roomBottomRight.y, 1, 38);
+	roomTopLeft.x = std::clamp<WorldTileCoord>(roomTopLeft.x, 1, 38);
+	roomTopLeft.y = std::clamp<WorldTileCoord>(roomTopLeft.y, 1, 38);
+	roomBottomRight.x = std::clamp<WorldTileCoord>(roomBottomRight.x, 1, 38);
+	roomBottomRight.y = std::clamp<WorldTileCoord>(roomBottomRight.y, 1, 38);
 
 	DefineRoom(roomTopLeft, roomBottomRight, static_cast<bool>(size));
 
@@ -1908,8 +1917,8 @@ void ConnectHall(const HallNode &node)
 			if (predungeon[beginning.x][beginning.y] != ',')
 				fInroom = true;
 		}
-		int nDx = abs(end.x - beginning.x);
-		int nDy = abs(end.y - beginning.y);
+		int nDx = std::abs(end.x - beginning.x);
+		int nDy = std::abs(end.y - beginning.y);
 		if (nDx > nDy) {
 			int nRp = std::min(2 * nDx, 30);
 			if (GenerateRnd(100) < nRp) {
@@ -2660,8 +2669,6 @@ bool PlaceStairs(lvl_entry entry)
 
 void GenerateLevel(lvl_entry entry)
 {
-	LoadQuestSetPieces();
-
 	while (true) {
 		nRoomCnt = 0;
 		InitDungeonFlags();
@@ -2670,14 +2677,12 @@ void GenerateLevel(lvl_entry entry)
 			continue;
 		}
 		FixTilesPatterns();
-		SetSetPieceRoom(SetPieceRoom.position, 3);
+		InitSetPiece();
 		FloodTransparencyValues(3);
 		FixTransparency();
 		if (PlaceStairs(entry))
 			break;
 	}
-
-	FreeQuestSetPieces();
 
 	FixLockout();
 	FixDoors();

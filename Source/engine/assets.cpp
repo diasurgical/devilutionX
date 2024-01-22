@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <cstdint>
 #include <cstring>
+#include <string_view>
 
 #include "init.h"
 #include "utils/file_util.h"
@@ -52,9 +53,9 @@ SDL_RWops *OpenOptionalRWops(const std::string &path)
 	return SDL_RWFromFile(path.c_str(), "rb");
 };
 
-bool FindMpqFile(const char *filename, MpqArchive **archive, uint32_t *fileNumber)
+bool FindMpqFile(std::string_view filename, MpqArchive **archive, uint32_t *fileNumber)
 {
-	const MpqArchive::FileHash fileHash = MpqArchive::CalculateFileHash(filename);
+	const MpqFileHash fileHash = CalculateMpqFileHash(filename);
 	const auto at = [=](std::optional<MpqArchive> &src) -> bool {
 		if (src && src->GetFileNumber(fileHash, *fileNumber)) {
 			*archive = &(*src);
@@ -71,16 +72,17 @@ bool FindMpqFile(const char *filename, MpqArchive **archive, uint32_t *fileNumbe
 } // namespace
 
 #ifdef UNPACKED_MPQS
-AssetRef FindAsset(const char *filename)
+AssetRef FindAsset(std::string_view filename)
 {
 	AssetRef result;
+	if (filename.empty() || filename.back() == '\\')
+		return result;
 	result.path[0] = '\0';
 
-	const string_view filenameStr = filename;
 	char pathBuf[AssetRef::PathBufSize];
 	char *const pathEnd = pathBuf + AssetRef::PathBufSize;
-	char *const relativePath = &pathBuf[AssetRef::PathBufSize - filenameStr.size() - 1];
-	*BufCopy(relativePath, filenameStr) = '\0';
+	char *const relativePath = &pathBuf[AssetRef::PathBufSize - filename.size() - 1];
+	*BufCopy(relativePath, filename) = '\0';
 
 #ifndef _WIN32
 	std::replace(relativePath, pathEnd, '\\', '/');
@@ -88,7 +90,7 @@ AssetRef FindAsset(const char *filename)
 	// Absolute path:
 	if (relativePath[0] == '/') {
 		if (FileExists(relativePath)) {
-			*BufCopy(result.path, string_view(relativePath, filenameStr.size())) = '\0';
+			*BufCopy(result.path, std::string_view(relativePath, filename.size())) = '\0';
 		}
 		return result;
 	}
@@ -96,7 +98,7 @@ AssetRef FindAsset(const char *filename)
 	// Unpacked MPQ file:
 	char *const unpackedMpqPath = FindUnpackedMpqFile(relativePath);
 	if (unpackedMpqPath != nullptr) {
-		*BufCopy(result.path, string_view(unpackedMpqPath, pathEnd - unpackedMpqPath)) = '\0';
+		*BufCopy(result.path, std::string_view(unpackedMpqPath, pathEnd - unpackedMpqPath)) = '\0';
 		return result;
 	}
 
@@ -105,15 +107,18 @@ AssetRef FindAsset(const char *filename)
 	char *assetsPath = relativePath - assetsPathPrefix.size();
 	std::memcpy(assetsPath, assetsPathPrefix.data(), assetsPathPrefix.size());
 	if (FileExists(assetsPath)) {
-		*BufCopy(result.path, string_view(assetsPath, pathEnd - assetsPath)) = '\0';
+		*BufCopy(result.path, std::string_view(assetsPath, pathEnd - assetsPath)) = '\0';
 	}
 	return result;
 }
 #else
-AssetRef FindAsset(const char *filename)
+AssetRef FindAsset(std::string_view filename)
 {
 	AssetRef result;
-	std::string relativePath = filename;
+	if (filename.empty() || filename.back() == '\\')
+		return result;
+
+	std::string relativePath { filename };
 #ifndef _WIN32
 	std::replace(relativePath.begin(), relativePath.end(), '\\', '/');
 #endif
@@ -177,7 +182,7 @@ AssetHandle OpenAsset(AssetRef &&ref, bool threadsafe)
 #endif
 }
 
-AssetHandle OpenAsset(const char *filename, bool threadsafe)
+AssetHandle OpenAsset(std::string_view filename, bool threadsafe)
 {
 	AssetRef ref = FindAsset(filename);
 	if (!ref.ok())
@@ -185,7 +190,7 @@ AssetHandle OpenAsset(const char *filename, bool threadsafe)
 	return OpenAsset(std::move(ref), threadsafe);
 }
 
-AssetHandle OpenAsset(const char *filename, size_t &fileSize, bool threadsafe)
+AssetHandle OpenAsset(std::string_view filename, size_t &fileSize, bool threadsafe)
 {
 	AssetRef ref = FindAsset(filename);
 	if (!ref.ok())
@@ -194,7 +199,7 @@ AssetHandle OpenAsset(const char *filename, size_t &fileSize, bool threadsafe)
 	return OpenAsset(std::move(ref), threadsafe);
 }
 
-SDL_RWops *OpenAssetAsSdlRwOps(const char *filename, bool threadsafe)
+SDL_RWops *OpenAssetAsSdlRwOps(std::string_view filename, bool threadsafe)
 {
 #ifdef UNPACKED_MPQS
 	AssetRef ref = FindAsset(filename);
@@ -204,6 +209,28 @@ SDL_RWops *OpenAssetAsSdlRwOps(const char *filename, bool threadsafe)
 #else
 	return OpenAsset(filename, threadsafe).release();
 #endif
+}
+
+tl::expected<AssetData, std::string> LoadAsset(std::string_view path)
+{
+	AssetRef ref = FindAsset(path);
+	if (!ref.ok()) {
+		return tl::make_unexpected(StrCat("Asset not found: ", path));
+	}
+
+	const size_t size = ref.size();
+	std::unique_ptr<char[]> data { new char[size] };
+
+	AssetHandle handle = OpenAsset(std::move(ref));
+	if (!handle.ok()) {
+		return tl::make_unexpected(StrCat("Failed to open asset: ", path, "\n", handle.error()));
+	}
+
+	if (size > 0 && !handle.read(data.get(), size)) {
+		return tl::make_unexpected(StrCat("Read failed: ", path, "\n", handle.error()));
+	}
+
+	return AssetData { std::move(data), size };
 }
 
 } // namespace devilution

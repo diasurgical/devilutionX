@@ -7,13 +7,13 @@
 
 #include <cstdint>
 #include <limits>
+#include <optional>
 
 #include <SDL.h>
 #include <function_ref.hpp>
 
 #include "engine/direction.hpp"
 #include "engine/point.hpp"
-#include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
 

@@ -124,7 +124,6 @@ bool mainmenu_select_hero_dialog(GameData *gameData)
 		    &gSaveNumber);
 	}
 	if (dlgresult == SELHERO_PREVIOUS) {
-		SErrSetLastError(1223);
 		return false;
 	}
 

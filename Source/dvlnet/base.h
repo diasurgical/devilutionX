@@ -17,32 +17,28 @@ namespace net {
 
 class base : public abstract_net {
 public:
-	virtual int create(std::string addrstr) = 0;
-	virtual int join(std::string addrstr) = 0;
+	bool SNetReceiveMessage(uint8_t *sender, void **data, size_t *size) override;
+	bool SNetSendMessage(uint8_t playerId, void *data, size_t size) override;
+	bool SNetReceiveTurns(char **data, size_t *size, uint32_t *status) override;
+	bool SNetSendTurn(char *data, size_t size) override;
+	void SNetGetProviderCaps(struct _SNETCAPS *caps) override;
+	bool SNetRegisterEventHandler(event_type evtype, SEVTHANDLER func) override;
+	bool SNetUnregisterEventHandler(event_type evtype) override;
+	bool SNetLeaveGame(int type) override;
+	bool SNetDropPlayer(int playerid, uint32_t flags) override;
+	bool SNetGetOwnerTurnsWaiting(uint32_t *turns) override;
+	bool SNetGetTurnsInTransit(uint32_t *turns) override;
 
-	virtual bool SNetReceiveMessage(uint8_t *sender, void **data, uint32_t *size);
-	virtual bool SNetSendMessage(int playerId, void *data, unsigned int size);
-	virtual bool SNetReceiveTurns(char **data, size_t *size, uint32_t *status);
-	virtual bool SNetSendTurn(char *data, unsigned int size);
-	virtual void SNetGetProviderCaps(struct _SNETCAPS *caps);
-	virtual bool SNetRegisterEventHandler(event_type evtype,
-	    SEVTHANDLER func);
-	virtual bool SNetUnregisterEventHandler(event_type evtype);
-	virtual bool SNetLeaveGame(int type);
-	virtual bool SNetDropPlayer(int playerid, uint32_t flags);
-	virtual bool SNetGetOwnerTurnsWaiting(uint32_t *turns);
-	virtual bool SNetGetTurnsInTransit(uint32_t *turns);
-
-	virtual void poll() = 0;
-	virtual void send(packet &pkt) = 0;
+	virtual tl::expected<void, PacketError> poll() = 0;
+	virtual tl::expected<void, PacketError> send(packet &pkt) = 0;
 	virtual void DisconnectNet(plr_t plr);
 
 	void setup_gameinfo(buffer_t info);
 
-	virtual void setup_password(std::string pw);
-	virtual void clear_password();
+	void setup_password(std::string pw) override;
+	void clear_password() override;
 
-	virtual ~base() = default;
+	~base() override = default;
 
 protected:
 	std::map<event_type, SEVTHANDLER> registered_handlers;
@@ -80,10 +76,10 @@ protected:
 
 	std::unique_ptr<packet_factory> pktfty;
 
-	void Connect(plr_t player);
-	void RecvLocal(packet &pkt);
+	tl::expected<void, PacketError> Connect(plr_t player);
+	tl::expected<void, PacketError> RecvLocal(packet &pkt);
 	void RunEventHandler(_SNETEVENT &ev);
-	void SendEchoRequest(plr_t player);
+	tl::expected<void, PacketError> SendEchoRequest(plr_t player);
 
 	[[nodiscard]] bool IsConnected(plr_t player) const;
 	virtual bool IsGameHost() = 0;
@@ -94,17 +90,17 @@ private:
 
 	plr_t GetOwner();
 	bool AllTurnsArrived();
-	void MakeReady(seq_t sequenceNumber);
-	void SendTurnIfReady(turn_t turn);
-	void SendFirstTurnIfReady(plr_t player);
+	tl::expected<void, PacketError> MakeReady(seq_t sequenceNumber);
+	tl::expected<void, PacketError> SendTurnIfReady(turn_t turn);
+	tl::expected<void, PacketError> SendFirstTurnIfReady(plr_t player);
 	void ClearMsg(plr_t plr);
 
-	void HandleAccept(packet &pkt);
-	void HandleConnect(packet &pkt);
-	void HandleTurn(packet &pkt);
-	void HandleDisconnect(packet &pkt);
-	void HandleEchoRequest(packet &pkt);
-	void HandleEchoReply(packet &pkt);
+	tl::expected<void, PacketError> HandleAccept(packet &pkt);
+	tl::expected<void, PacketError> HandleConnect(packet &pkt);
+	tl::expected<void, PacketError> HandleTurn(packet &pkt);
+	tl::expected<void, PacketError> HandleDisconnect(packet &pkt);
+	tl::expected<void, PacketError> HandleEchoRequest(packet &pkt);
+	tl::expected<void, PacketError> HandleEchoReply(packet &pkt);
 };
 
 } // namespace net

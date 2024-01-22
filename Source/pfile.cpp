@@ -7,6 +7,7 @@
 
 #include <cstdint>
 #include <string>
+#include <string_view>
 #include <unordered_map>
 
 #include <fmt/core.h>
@@ -24,9 +25,9 @@
 #include "utils/endian.hpp"
 #include "utils/file_util.h"
 #include "utils/language.h"
+#include "utils/parse_int.hpp"
 #include "utils/paths.h"
-#include "utils/stdcompat/abs.hpp"
-#include "utils/stdcompat/string_view.hpp"
+#include "utils/stdcompat/filesystem.hpp"
 #include "utils/str_cat.hpp"
 #include "utils/str_split.hpp"
 #include "utils/utf8.hpp"
@@ -51,7 +52,7 @@ namespace {
 /** List of character names for the character selection screen. */
 char hero_names[MAX_CHARACTERS][PlayerNameLength];
 
-std::string GetSavePath(uint32_t saveNum, string_view savePrefix = {})
+std::string GetSavePath(uint32_t saveNum, std::string_view savePrefix = {})
 {
 	return StrCat(paths::PrefPath(), savePrefix,
 	    gbIsSpawn
@@ -78,7 +79,7 @@ std::string GetStashSavePath()
 	);
 }
 
-bool GetSaveNames(uint8_t index, string_view prefix, char *out)
+bool GetSaveNames(uint8_t index, std::string_view prefix, char *out)
 {
 	char suf;
 	if (index < giNumberOfLevels)
@@ -143,7 +144,7 @@ bool ReadHero(SaveReader &archive, PlayerPack *pPack)
 void EncodeHero(SaveWriter &saveWriter, const PlayerPack *pack)
 {
 	size_t packedLen = codec_get_encoded_len(sizeof(*pack));
-	std::unique_ptr<byte[]> packed { new byte[packedLen] };
+	std::unique_ptr<std::byte[]> packed { new std::byte[packedLen] };
 
 	memcpy(packed.get(), pack, sizeof(*pack));
 	codec_encode(packed.get(), sizeof(*pack), packedLen, pfile_get_password());
@@ -164,14 +165,24 @@ SaveWriter GetStashWriter()
 void CopySaveFile(uint32_t saveNum, std::string targetPath)
 {
 	const std::string savePath = GetSavePath(saveNum);
+#if defined(UNPACKED_SAVES)
+#ifdef DVL_NO_FILESYSTEM
+#error "UNPACKED_SAVES requires either DISABLE_DEMOMODE or C++17 <filesystem>"
+#endif
+	CreateDir(targetPath.c_str());
+	for (const std::filesystem::directory_entry &entry : std::filesystem::directory_iterator(savePath)) {
+		CopyFileOverwrite(entry.path().string().c_str(), (targetPath + entry.path().filename().string()).c_str());
+	}
+#else
 	CopyFileOverwrite(savePath.c_str(), targetPath.c_str());
+#endif
 }
 #endif
 
 void Game2UiPlayer(const Player &player, _uiheroinfo *heroinfo, bool bHasSaveFile)
 {
 	CopyUtf8(heroinfo->name, player._pName, sizeof(heroinfo->name));
-	heroinfo->level = player._pLevel;
+	heroinfo->level = player.getCharacterLevel();
 	heroinfo->heroclass = player._pClass;
 	heroinfo->strength = player._pStrength;
 	heroinfo->magic = player._pMagic;
@@ -232,7 +243,7 @@ std::optional<SaveReader> CreateSaveReader(std::string &&path)
 
 #ifndef DISABLE_DEMOMODE
 struct CompareInfo {
-	std::unique_ptr<byte[]> &data;
+	std::unique_ptr<std::byte[]> &data;
 	size_t currentPosition;
 	size_t size;
 	bool isTownLevel;
@@ -255,14 +266,14 @@ struct CompareCounter {
 	}
 };
 
-inline bool string_ends_with(string_view value, string_view suffix)
+inline bool string_ends_with(std::string_view value, std::string_view suffix)
 {
 	if (suffix.size() > value.size())
 		return false;
 	return std::equal(suffix.rbegin(), suffix.rend(), value.rbegin());
 }
 
-void CreateDetailDiffs(string_view prefix, string_view memoryMapFile, CompareInfo &compareInfoReference, CompareInfo &compareInfoActual, std::unordered_map<std::string, size_t> &foundDiffs)
+void CreateDetailDiffs(std::string_view prefix, std::string_view memoryMapFile, CompareInfo &compareInfoReference, CompareInfo &compareInfoActual, std::unordered_map<std::string, size_t> &foundDiffs)
 {
 	// Note: Detail diffs are currently only supported in unit tests
 	std::string memoryMapFileAssetName = StrCat(paths::BasePath(), "/test/fixtures/memory_map/", memoryMapFile, ".txt");
@@ -273,10 +284,16 @@ void CreateDetailDiffs(string_view prefix, string_view memoryMapFile, CompareInf
 		return;
 	}
 
-	size_t readBytes = SDL_RWsize(handle);
-	std::unique_ptr<byte[]> memoryMapFileData { new byte[readBytes] };
+	size_t readBytes = static_cast<size_t>(SDL_RWsize(handle));
+	std::unique_ptr<std::byte[]> memoryMapFileData { new std::byte[readBytes] };
+#if SDL_VERSION_ATLEAST(2, 0, 0)
 	SDL_RWread(handle, memoryMapFileData.get(), readBytes, 1);
-	const string_view buffer(reinterpret_cast<const char *>(memoryMapFileData.get()), readBytes);
+#else
+	SDL_RWread(handle, memoryMapFileData.get(), static_cast<int>(readBytes), 1);
+#endif
+	SDL_RWclose(handle);
+
+	const std::string_view buffer(reinterpret_cast<const char *>(memoryMapFileData.get()), readBytes);
 
 	std::unordered_map<std::string, CompareCounter> counter;
 
@@ -284,8 +301,10 @@ void CreateDetailDiffs(string_view prefix, string_view memoryMapFile, CompareInf
 		auto it = counter.find(counterAsString);
 		if (it != counter.end())
 			return it->second;
-		int countFromMapFile = std::stoi(counterAsString);
-		return CompareCounter { countFromMapFile, countFromMapFile };
+		const ParseIntResult<int> countFromMapFile = ParseInt<int>(counterAsString);
+		if (!countFromMapFile.has_value())
+			app_fatal(StrCat("Failed to parse ", counterAsString, " as int"));
+		return CompareCounter { countFromMapFile.value(), countFromMapFile.value() };
 	};
 	auto addDiff = [&](const std::string &diffKey) {
 		auto it = foundDiffs.find(diffKey);
@@ -298,9 +317,9 @@ void CreateDetailDiffs(string_view prefix, string_view memoryMapFile, CompareInf
 
 	auto compareBytes = [&](size_t countBytes) {
 		if (compareInfoReference.dataExists && compareInfoReference.currentPosition + countBytes > compareInfoReference.size)
-			app_fatal(StrCat("Comparsion failed. Too less bytes in reference to compare. Location: ", prefix));
+			app_fatal(StrCat("Comparison failed. Not enough bytes in reference to compare. Location: ", prefix));
 		if (compareInfoActual.dataExists && compareInfoActual.currentPosition + countBytes > compareInfoActual.size)
-			app_fatal(StrCat("Comparsion failed. Too less bytes in actual to compare. Location: ", prefix));
+			app_fatal(StrCat("Comparison failed. Not enough bytes in actual to compare. Location: ", prefix));
 		bool result = true;
 		if (compareInfoReference.dataExists && compareInfoActual.dataExists)
 			result = memcmp(compareInfoReference.data.get() + compareInfoReference.currentPosition, compareInfoActual.data.get() + compareInfoActual.currentPosition, countBytes) == 0;
@@ -325,7 +344,7 @@ void CreateDetailDiffs(string_view prefix, string_view memoryMapFile, CompareInf
 		return value;
 	};
 
-	for (string_view line : SplitByChar(buffer, '\n')) {
+	for (std::string_view line : SplitByChar(buffer, '\n')) {
 		if (!line.empty() && line.back() == '\r')
 			line.remove_suffix(1);
 		if (line.empty())
@@ -336,7 +355,7 @@ void CreateDetailDiffs(string_view prefix, string_view memoryMapFile, CompareInf
 		if (it == end)
 			continue;
 
-		string_view command = *it;
+		std::string_view command = *it;
 
 		bool dataExistsReference = compareInfoReference.dataExists;
 		bool dataExistsActual = compareInfoActual.dataExists;
@@ -363,7 +382,10 @@ void CreateDetailDiffs(string_view prefix, string_view memoryMapFile, CompareInf
 		if (command == "R" || command == "LT" || command == "LC" || command == "LC_LE") {
 			const auto bitsAsString = std::string(*++it);
 			const auto comment = std::string(*++it);
-			size_t bytes = static_cast<size_t>(std::stoi(bitsAsString) / 8);
+			const ParseIntResult<size_t> parsedBytes = ParseInt<size_t>(bitsAsString);
+			if (!parsedBytes.has_value())
+				app_fatal(StrCat("Failed to parse ", bitsAsString, " as size_t"));
+			const size_t bytes = static_cast<size_t>(parsedBytes.value() / 8);
 
 			if (command == "LT") {
 				int32_t valueReference = read32BitInt(compareInfoReference, false);
@@ -386,10 +408,13 @@ void CreateDetailDiffs(string_view prefix, string_view memoryMapFile, CompareInf
 		} else if (command == "M") {
 			const auto countAsString = std::string(*++it);
 			const auto bitsAsString = std::string(*++it);
-			string_view comment = *++it;
+			std::string_view comment = *++it;
 
 			CompareCounter count = getCounter(countAsString);
-			size_t bytes = static_cast<size_t>(std::stoi(bitsAsString) / 8);
+			const ParseIntResult<size_t> parsedBytes = ParseInt<size_t>(bitsAsString);
+			if (!parsedBytes.has_value())
+				app_fatal(StrCat("Failed to parse ", bitsAsString, " as size_t"));
+			const size_t bytes = static_cast<size_t>(parsedBytes.value() / 8);
 			for (int i = 0; i < count.max(); i++) {
 				count.checkIfDataExists(i, compareInfoReference, compareInfoActual);
 				if (!compareBytes(bytes)) {
@@ -465,8 +490,8 @@ HeroCompareResult CompareSaves(const std::string &actualSavePath, const std::str
 			app_fatal(StrCat("Comparsion failed. Uncompared bytes in reference. File: ", compareTarget.fileName));
 		if (compareInfoActual.currentPosition != fileSizeActual)
 			app_fatal(StrCat("Comparsion failed. Uncompared bytes in actual. File: ", compareTarget.fileName));
-		for (auto entry : foundDiffs) {
-			StrAppend(message, "\nDiff found in ", entry.first, " count: ", entry.second);
+		for (const auto &[location, count] : foundDiffs) {
+			StrAppend(message, "\nDiff found in ", location, " count: ", count);
 		}
 	}
 	return { compareResult ? HeroCompareResult::Same : HeroCompareResult::Difference, message };
@@ -490,12 +515,23 @@ void pfile_write_hero(SaveWriter &saveWriter, bool writeGameData)
 	}
 }
 
+void RemoveAllInvalidItems(Player &player)
+{
+	for (int i = 0; i < NUM_INVLOC; i++)
+		RemoveInvalidItem(player.InvBody[i]);
+	for (int i = 0; i < player._pNumInv; i++)
+		RemoveInvalidItem(player.InvList[i]);
+	for (int i = 0; i < MaxBeltItems; i++)
+		RemoveInvalidItem(player.SpdList[i]);
+	RemoveEmptyInventory(player);
+}
+
 } // namespace
 
 #ifdef UNPACKED_SAVES
-std::unique_ptr<byte[]> SaveReader::ReadFile(const char *filename, std::size_t &fileSize, int32_t &error)
+std::unique_ptr<std::byte[]> SaveReader::ReadFile(const char *filename, std::size_t &fileSize, int32_t &error)
 {
-	std::unique_ptr<byte[]> result;
+	std::unique_ptr<std::byte[]> result;
 	error = 0;
 	const std::string path = dir_ + filename;
 	uintmax_t size;
@@ -509,7 +545,7 @@ std::unique_ptr<byte[]> SaveReader::ReadFile(const char *filename, std::size_t &
 		error = 1;
 		return nullptr;
 	}
-	result.reset(new byte[size]);
+	result.reset(new std::byte[size]);
 	if (std::fread(result.get(), size, 1, file) != 1) {
 		std::fclose(file);
 		error = 1;
@@ -519,7 +555,7 @@ std::unique_ptr<byte[]> SaveReader::ReadFile(const char *filename, std::size_t &
 	return result;
 }
 
-bool SaveWriter::WriteFile(const char *filename, const byte *data, size_t size)
+bool SaveWriter::WriteFile(const char *filename, const std::byte *data, size_t size)
 {
 	const std::string path = dir_ + filename;
 	FILE *file = OpenFile(path.c_str(), "wb");
@@ -554,12 +590,12 @@ std::optional<SaveReader> OpenStashArchive()
 	return CreateSaveReader(GetStashSavePath());
 }
 
-std::unique_ptr<byte[]> ReadArchive(SaveReader &archive, const char *pszName, size_t *pdwLen)
+std::unique_ptr<std::byte[]> ReadArchive(SaveReader &archive, const char *pszName, size_t *pdwLen)
 {
 	int32_t error;
 	std::size_t length;
 
-	std::unique_ptr<byte[]> result = archive.ReadFile(pszName, length, error);
+	std::unique_ptr<std::byte[]> result = archive.ReadFile(pszName, length, error);
 	if (error != 0)
 		return nullptr;
 
@@ -645,7 +681,7 @@ bool pfile_ui_set_hero_infos(bool (*uiAddHeroInfo)(_uiheroinfo *))
 
 				UnPackPlayer(pkplr, player);
 				LoadHeroItems(player);
-				RemoveEmptyInventory(player);
+				RemoveAllInvalidItems(player);
 				CalcPlrInv(player, false);
 
 				Game2UiPlayer(player, &uihero, hasSaveGame);
@@ -657,12 +693,13 @@ bool pfile_ui_set_hero_infos(bool (*uiAddHeroInfo)(_uiheroinfo *))
 	return true;
 }
 
-void pfile_ui_set_class_stats(unsigned int playerClass, _uidefaultstats *classStats)
+void pfile_ui_set_class_stats(HeroClass playerClass, _uidefaultstats *classStats)
 {
-	classStats->strength = PlayersData[playerClass].baseStr;
-	classStats->magic = PlayersData[playerClass].baseMag;
-	classStats->dexterity = PlayersData[playerClass].baseDex;
-	classStats->vitality = PlayersData[playerClass].baseVit;
+	const ClassAttributes &classAttributes = GetClassAttributes(playerClass);
+	classStats->strength = classAttributes.baseStr;
+	classStats->magic = classAttributes.baseMag;
+	classStats->dexterity = classAttributes.baseDex;
+	classStats->vitality = classAttributes.baseVit;
 }
 
 uint32_t pfile_ui_get_first_unused_save_num()
@@ -731,7 +768,7 @@ void pfile_read_player_from_save(uint32_t saveNum, Player &player)
 
 	UnPackPlayer(pkplr, player);
 	LoadHeroItems(player);
-	RemoveEmptyInventory(player);
+	RemoveAllInvalidItems(player);
 	CalcPlrInv(player, false);
 }
 

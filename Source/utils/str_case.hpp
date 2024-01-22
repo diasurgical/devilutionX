@@ -1,14 +1,13 @@
 #pragma once
 
 #include <string>
-
-#include "utils/stdcompat/string_view.hpp"
+#include <string_view>
 
 namespace devilution {
 
 void AsciiStrToLower(std::string &str);
 
-[[nodiscard]] inline std::string AsciiStrToLower(string_view str)
+[[nodiscard]] inline std::string AsciiStrToLower(std::string_view str)
 {
 	std::string copy { str.data(), str.size() };
 	AsciiStrToLower(copy);

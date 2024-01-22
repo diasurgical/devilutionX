@@ -1,20 +1,21 @@
 #pragma once
 
+#include <string_view>
+
 #include <SDL.h>
 #include <fmt/core.h>
 #include <fmt/ranges.h>
 
-#include "utils/stdcompat/string_view.hpp"
 #include "utils/str_cat.hpp"
 
 #ifdef USE_SDL1
-#include "sdl2_to_1_2_backports.h"
+#include "utils/sdl2_to_1_2_backports.h"
 #endif
 
 namespace devilution {
 
 // Local definition to fix compilation issue due to header conflict.
-[[noreturn]] void app_fatal(string_view);
+[[noreturn]] void app_fatal(std::string_view);
 
 enum class LogCategory {
 	Application = SDL_LOG_CATEGORY_APPLICATION,
@@ -42,7 +43,7 @@ enum class LogPriority {
 namespace detail {
 
 template <typename... Args>
-std::string format(string_view fmt, Args &&...args)
+std::string format(std::string_view fmt, Args &&...args)
 {
 	FMT_TRY
 	{
@@ -63,99 +64,99 @@ std::string format(string_view fmt, Args &&...args)
 } // namespace detail
 
 template <typename... Args>
-void Log(string_view fmt, Args &&...args)
+void Log(std::string_view fmt, Args &&...args)
 {
 	auto str = detail::format(fmt, std::forward<Args>(args)...);
 	SDL_Log("%s", str.c_str());
 }
 
 template <typename... Args>
-void LogVerbose(LogCategory category, string_view fmt, Args &&...args)
+void LogVerbose(LogCategory category, std::string_view fmt, Args &&...args)
 {
 	auto str = detail::format(fmt, std::forward<Args>(args)...);
 	SDL_LogVerbose(static_cast<int>(category), "%s", str.c_str());
 }
 
 template <typename... Args>
-void LogVerbose(string_view fmt, Args &&...args)
+void LogVerbose(std::string_view fmt, Args &&...args)
 {
 	LogVerbose(defaultCategory, fmt, std::forward<Args>(args)...);
 }
 
 template <typename... Args>
-void LogDebug(LogCategory category, string_view fmt, Args &&...args)
+void LogDebug(LogCategory category, std::string_view fmt, Args &&...args)
 {
 	auto str = detail::format(fmt, std::forward<Args>(args)...);
 	SDL_LogDebug(static_cast<int>(category), "%s", str.c_str());
 }
 
 template <typename... Args>
-void LogDebug(string_view fmt, Args &&...args)
+void LogDebug(std::string_view fmt, Args &&...args)
 {
 	LogDebug(defaultCategory, fmt, std::forward<Args>(args)...);
 }
 
 template <typename... Args>
-void LogInfo(LogCategory category, string_view fmt, Args &&...args)
+void LogInfo(LogCategory category, std::string_view fmt, Args &&...args)
 {
 	auto str = detail::format(fmt, std::forward<Args>(args)...);
 	SDL_LogInfo(static_cast<int>(category), "%s", str.c_str());
 }
 
 template <typename... Args>
-void LogInfo(string_view fmt, Args &&...args)
+void LogInfo(std::string_view fmt, Args &&...args)
 {
 	LogInfo(defaultCategory, fmt, std::forward<Args>(args)...);
 }
 
 template <typename... Args>
-void LogWarn(LogCategory category, string_view fmt, Args &&...args)
+void LogWarn(LogCategory category, std::string_view fmt, Args &&...args)
 {
 	auto str = detail::format(fmt, std::forward<Args>(args)...);
 	SDL_LogWarn(static_cast<int>(category), "%s", str.c_str());
 }
 
 template <typename... Args>
-void LogWarn(string_view fmt, Args &&...args)
+void LogWarn(std::string_view fmt, Args &&...args)
 {
 	LogWarn(defaultCategory, fmt, std::forward<Args>(args)...);
 }
 
 template <typename... Args>
-void LogError(LogCategory category, string_view fmt, Args &&...args)
+void LogError(LogCategory category, std::string_view fmt, Args &&...args)
 {
 	auto str = detail::format(fmt, std::forward<Args>(args)...);
 	SDL_LogError(static_cast<int>(category), "%s", str.c_str());
 }
 
 template <typename... Args>
-void LogError(string_view fmt, Args &&...args)
+void LogError(std::string_view fmt, Args &&...args)
 {
 	LogError(defaultCategory, fmt, std::forward<Args>(args)...);
 }
 
 template <typename... Args>
-void LogCritical(LogCategory category, string_view fmt, Args &&...args)
+void LogCritical(LogCategory category, std::string_view fmt, Args &&...args)
 {
 	auto str = detail::format(fmt, std::forward<Args>(args)...);
 	SDL_LogCritical(static_cast<int>(category), "%s", str.c_str());
 }
 
 template <typename... Args>
-void LogCritical(string_view fmt, Args &&...args)
+void LogCritical(std::string_view fmt, Args &&...args)
 {
 	LogCritical(defaultCategory, fmt, std::forward<Args>(args)...);
 }
 
 template <typename... Args>
-void LogMessageV(LogCategory category, LogPriority priority, string_view fmt, Args &&...args)
+void LogMessageV(LogCategory category, LogPriority priority, std::string_view fmt, Args &&...args)
 {
 	auto str = detail::format(fmt, std::forward<Args>(args)...);
 	SDL_LogMessageV(static_cast<int>(category), static_cast<SDL_LogPriority>(priority), "%s", str.c_str());
 }
 
 template <typename... Args>
-void LogMessageV(string_view fmt, Args &&...args)
+void LogMessageV(std::string_view fmt, Args &&...args)
 {
 	LogMessageV(defaultCategory, fmt, std::forward<Args>(args)...);
 }

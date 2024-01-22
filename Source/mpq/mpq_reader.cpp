@@ -1,10 +1,10 @@
 #include "mpq/mpq_reader.hpp"
 
 #include <cstdint>
+#include <optional>
+#include <string_view>
 
 #include <libmpq/mpq.h>
-
-#include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
 
@@ -34,13 +34,6 @@ const char *MpqArchive::ErrorMessage(int32_t errorCode)
 	return libmpq__strerror(errorCode);
 }
 
-MpqArchive::FileHash MpqArchive::CalculateFileHash(const char *filename)
-{
-	FileHash fileHash;
-	libmpq__file_hash(filename, &fileHash[0], &fileHash[1], &fileHash[2]);
-	return fileHash;
-}
-
 MpqArchive &MpqArchive::operator=(MpqArchive &&other) noexcept
 {
 	path_ = std::move(other.path_);
@@ -57,16 +50,16 @@ MpqArchive::~MpqArchive()
 		libmpq__archive_close(archive_);
 }
 
-bool MpqArchive::GetFileNumber(MpqArchive::FileHash fileHash, uint32_t &fileNumber)
+bool MpqArchive::GetFileNumber(MpqFileHash fileHash, uint32_t &fileNumber)
 {
 	return libmpq__file_number_from_hash(archive_, fileHash[0], fileHash[1], fileHash[2], &fileNumber) == 0;
 }
 
-std::unique_ptr<byte[]> MpqArchive::ReadFile(const char *filename, std::size_t &fileSize, int32_t &error)
+std::unique_ptr<std::byte[]> MpqArchive::ReadFile(std::string_view filename, std::size_t &fileSize, int32_t &error)
 {
-	std::unique_ptr<byte[]> result;
+	std::unique_ptr<std::byte[]> result;
 	std::uint32_t fileNumber;
-	error = libmpq__file_number(archive_, filename, &fileNumber);
+	error = libmpq__file_number_s(archive_, filename.data(), filename.size(), &fileNumber);
 	if (error != 0)
 		return result;
 
@@ -79,7 +72,7 @@ std::unique_ptr<byte[]> MpqArchive::ReadFile(const char *filename, std::size_t &
 	if (error != 0)
 		return result;
 
-	result = std::make_unique<byte[]>(unpackedSize);
+	result = std::make_unique<std::byte[]>(static_cast<size_t>(unpackedSize));
 
 	const std::size_t blockSize = GetBlockSize(fileNumber, 0, error);
 	if (error != 0)
@@ -89,8 +82,8 @@ std::unique_ptr<byte[]> MpqArchive::ReadFile(const char *filename, std::size_t &
 	if (error != 0)
 		return result;
 
-	error = libmpq__file_read_with_filename_and_temporary_buffer(
-	    archive_, fileNumber, filename, reinterpret_cast<std::uint8_t *>(result.get()), unpackedSize,
+	error = libmpq__file_read_with_filename_and_temporary_buffer_s(
+	    archive_, fileNumber, filename.data(), filename.size(), reinterpret_cast<std::uint8_t *>(result.get()), unpackedSize,
 	    tmp.data(), static_cast<libmpq__off_t>(blockSize), nullptr);
 	if (error != 0) {
 		result = nullptr;
@@ -99,11 +92,11 @@ std::unique_ptr<byte[]> MpqArchive::ReadFile(const char *filename, std::size_t &
 	}
 	CloseBlockOffsetTable(fileNumber);
 
-	fileSize = unpackedSize;
+	fileSize = static_cast<size_t>(unpackedSize);
 	return result;
 }
 
-int32_t MpqArchive::ReadBlock(uint32_t fileNumber, uint32_t blockNumber, uint8_t *out, uint32_t outSize)
+int32_t MpqArchive::ReadBlock(uint32_t fileNumber, uint32_t blockNumber, uint8_t *out, size_t outSize)
 {
 	std::vector<std::uint8_t> &tmpBuf = GetTemporaryBuffer(outSize);
 	return libmpq__block_read_with_temporary_buffer(
@@ -116,7 +109,7 @@ std::size_t MpqArchive::GetUnpackedFileSize(uint32_t fileNumber, int32_t &error)
 {
 	libmpq__off_t unpackedSize;
 	error = libmpq__file_size_unpacked(archive_, fileNumber, &unpackedSize);
-	return unpackedSize;
+	return static_cast<size_t>(unpackedSize);
 }
 
 uint32_t MpqArchive::GetNumBlocks(uint32_t fileNumber, int32_t &error)
@@ -126,9 +119,9 @@ uint32_t MpqArchive::GetNumBlocks(uint32_t fileNumber, int32_t &error)
 	return numBlocks;
 }
 
-int32_t MpqArchive::OpenBlockOffsetTable(uint32_t fileNumber, const char *filename)
+int32_t MpqArchive::OpenBlockOffsetTable(uint32_t fileNumber, std::string_view filename)
 {
-	return libmpq__block_open_offset_with_filename(archive_, fileNumber, filename);
+	return libmpq__block_open_offset_with_filename_s(archive_, fileNumber, filename.data(), filename.size());
 }
 
 int32_t MpqArchive::CloseBlockOffsetTable(uint32_t fileNumber)
@@ -141,13 +134,13 @@ std::size_t MpqArchive::GetBlockSize(uint32_t fileNumber, uint32_t blockNumber, 
 {
 	libmpq__off_t blockSize;
 	error = libmpq__block_size_unpacked(archive_, fileNumber, blockNumber, &blockSize);
-	return blockSize;
+	return static_cast<size_t>(blockSize);
 }
 
-bool MpqArchive::HasFile(const char *filename) const
+bool MpqArchive::HasFile(std::string_view filename) const
 {
 	std::uint32_t fileNumber;
-	int32_t error = libmpq__file_number(archive_, filename, &fileNumber);
+	int32_t error = libmpq__file_number_s(archive_, filename.data(), filename.size(), &fileNumber);
 	return error == 0;
 }
 

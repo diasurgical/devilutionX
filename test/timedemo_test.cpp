@@ -4,8 +4,11 @@
 
 #include "diablo.h"
 #include "engine/demomode.h"
+#include "lua/lua.hpp"
+#include "monstdat.h"
 #include "options.h"
 #include "pfile.h"
+#include "playerdat.hpp"
 #include "utils/display.h"
 #include "utils/paths.h"
 
@@ -32,6 +35,7 @@ void RunTimedemo(std::string timedemoFolderName)
 
 	InitKeymapActions();
 	LoadOptions();
+	LuaInitialize();
 
 	const int demoNumber = 0;
 
@@ -48,6 +52,11 @@ void RunTimedemo(std::string timedemoFolderName)
 	HeadlessMode = true;
 	demo::InitPlayBack(demoNumber, true);
 
+	LoadSpellData();
+	LoadPlayerDataFiles();
+	LoadMissileData();
+	LoadMonsterData();
+	LoadItemData();
 	pfile_ui_set_hero_infos(Dummy_GetHeroInfo);
 	gbLoadGame = true;
 

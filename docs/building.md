@@ -132,7 +132,7 @@ cmake --build build -j $(sysctl -n hw.ncpu)
 ### Installing dependencies
 
 ```
-pkg_add cmake sdl2 libsodium libpng bzip2 gmake googletest
+pkg_add cmake sdl2 libsodium png bzip2 gmake gtest
 ```
 
 ### Compiling
@@ -496,7 +496,7 @@ emrun index.html
 * Windows 10
 * CMake
 * Git
-* Visual Studio 2022 with the foloowing packages installed:
+* Visual Studio 2022 with the following packages installed:
     * C++ (v143) Universal Windows Platform tools
     * Windows 11 SDK (10.0.22000.0)
     * Windows 10 SDK (10.0.18362.0)

@@ -1,6 +1,0 @@
-exclude:
-- /Packaging/.*
-- /3rdParty/.*
-languages:
-- cpp
-component_depth: 2

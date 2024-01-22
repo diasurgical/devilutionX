@@ -4,116 +4,116 @@
 
 namespace devilution {
 namespace controller_button_icon {
-const string_view Playstation_Triangle = "\uE000";
-const string_view Playstation_Square = "\uE001";
-const string_view Playstation_X = "\uE002";
-const string_view Playstation_Circle = "\uE003";
-const string_view Playstation_Options = "\uE004";
-const string_view Playstation_Share = "\uE005";
-const string_view Playstation_L2 = "\uE006";
-const string_view Playstation_R2 = "\uE007";
-const string_view Playstation_L1 = "\uE008";
-const string_view Playstation_R1 = "\uE009";
-const string_view Playstation_DPad_Up = "\uE00A";
-const string_view Playstation_DPad_Right = "\uE00B";
-const string_view Playstation_DPad_Down = "\uE00C";
-const string_view Playstation_DPad_Left = "\uE00D";
-const string_view Playstation_LStick_NW = "\uE00E";
-const string_view Playstation_LStick_W = "\uE00F";
-const string_view Playstation_LStick_SW = "\uE010";
-const string_view Playstation_LStick_N = "\uE011";
-const string_view Playstation_LStick = "\uE012";
-const string_view Playstation_LStick_S = "\uE013";
-const string_view Playstation_LStick_NE = "\uE014";
-const string_view Playstation_LStick_E = "\uE015";
-const string_view Playstation_LStick_SE = "\uE016";
-const string_view Playstation_L3 = "\uE017";
-const string_view Playstation_RStick_NW = "\uE018";
-const string_view Playstation_RStick_W = "\uE019";
-const string_view Playstation_RStick_SW = "\uE01A";
-const string_view Playstation_RStick_N = "\uE01B";
-const string_view Playstation_RStick = "\uE01C";
-const string_view Playstation_RStick_S = "\uE01D";
-const string_view Playstation_RStick_NE = "\uE01E";
-const string_view Playstation_RStick_E = "\uE01F";
-const string_view Playstation_RStick_SE = "\uE020";
-const string_view Playstation_R3 = "\uE021";
-const string_view Playstation_Touchpad = "\uE022";
-const string_view Nintendo_X = "\uE023";
-const string_view Nintendo_Y = "\uE024";
-const string_view Nintendo_B = "\uE025";
-const string_view Nintendo_A = "\uE026";
-const string_view Nintendo_Plus = "\uE027";
-const string_view Nintendo_Minus = "\uE028";
-const string_view Nintendo_ZL = "\uE029";
-const string_view Nintendo_ZR = "\uE02A";
-const string_view Nintendo_L = "\uE02B";
-const string_view Nintendo_R = "\uE02C";
-const string_view Nintendo_DPad_Up = "\uE02D";
-const string_view Nintendo_DPad_Right = "\uE02E";
-const string_view Nintendo_DPad_Down = "\uE02F";
-const string_view Nintendo_DPad_Left = "\uE030";
-const string_view Nintendo_LStick_NW = "\uE031";
-const string_view Nintendo_LStick_W = "\uE032";
-const string_view Nintendo_LStick_SW = "\uE033";
-const string_view Nintendo_LStick_N = "\uE034";
-const string_view Nintendo_LStick = "\uE035";
-const string_view Nintendo_LStick_S = "\uE036";
-const string_view Nintendo_LStick_NE = "\uE037";
-const string_view Nintendo_LStick_E = "\uE038";
-const string_view Nintendo_LStick_SE = "\uE039";
-const string_view Nintendo_LStick_Click = "\uE03A";
-const string_view Nintendo_RStick_NW = "\uE03B";
-const string_view Nintendo_RStick_W = "\uE03C";
-const string_view Nintendo_RStick_SW = "\uE03D";
-const string_view Nintendo_RStick_N = "\uE03E";
-const string_view Nintendo_RStick = "\uE03F";
-const string_view Nintendo_RStick_S = "\uE040";
-const string_view Nintendo_RStick_NE = "\uE041";
-const string_view Nintendo_RStick_E = "\uE042";
-const string_view Nintendo_RStick_SE = "\uE043";
-const string_view Nintendo_RStick_Click = "\uE044";
-const string_view Nintendo_Home = "\uE045";
-const string_view Nintendo_Screenshot = "\uE046";
-const string_view Nintendo_SL = "\uE047";
-const string_view Nintendo_SR = "\uE048";
-const string_view Xbox_Y = "\uE049";
-const string_view Xbox_X = "\uE04A";
-const string_view Xbox_A = "\uE04B";
-const string_view Xbox_B = "\uE04C";
-const string_view Xbox_Menu = "\uE04D";
-const string_view Xbox_View = "\uE04E";
-const string_view Xbox_LT = "\uE04F";
-const string_view Xbox_RT = "\uE050";
-const string_view Xbox_LB = "\uE051";
-const string_view Xbox_RB = "\uE052";
-const string_view Xbox_DPad_Up = "\uE053";
-const string_view Xbox_DPad_Right = "\uE054";
-const string_view Xbox_DPad_Down = "\uE055";
-const string_view Xbox_DPad_Left = "\uE056";
-const string_view Xbox_LStick_NW = "\uE057";
-const string_view Xbox_LStick_W = "\uE058";
-const string_view Xbox_LStick_SW = "\uE059";
-const string_view Xbox_LStick_N = "\uE05A";
-const string_view Xbox_LStick = "\uE05B";
-const string_view Xbox_LStick_NE = "\uE05C";
-const string_view Xbox_LStick_E = "\uE05D";
-const string_view Xbox_LStick_SE = "\uE05E";
-const string_view Xbox_LStick_Click = "\uE05F";
-const string_view Xbox_RStick_NW = "\uE060";
-const string_view Xbox_RStick_W = "\uE061";
-const string_view Xbox_RStick_SW = "\uE062";
-const string_view Xbox_RStick_N = "\uE063";
-const string_view Xbox_RStick = "\uE064";
-const string_view Xbox_RStick_S = "\uE065";
-const string_view Xbox_RStick_NE = "\uE066";
-const string_view Xbox_RStick_E = "\uE067";
-const string_view Xbox_RStick_SE = "\uE068";
-const string_view Xbox_RStick_Click = "\uE069";
-const string_view Xbox_Xbox = "\uE06A";
+const std::string_view Playstation_Triangle = "\uE000";
+const std::string_view Playstation_Square = "\uE001";
+const std::string_view Playstation_X = "\uE002";
+const std::string_view Playstation_Circle = "\uE003";
+const std::string_view Playstation_Options = "\uE004";
+const std::string_view Playstation_Share = "\uE005";
+const std::string_view Playstation_L2 = "\uE006";
+const std::string_view Playstation_R2 = "\uE007";
+const std::string_view Playstation_L1 = "\uE008";
+const std::string_view Playstation_R1 = "\uE009";
+const std::string_view Playstation_DPad_Up = "\uE00A";
+const std::string_view Playstation_DPad_Right = "\uE00B";
+const std::string_view Playstation_DPad_Down = "\uE00C";
+const std::string_view Playstation_DPad_Left = "\uE00D";
+const std::string_view Playstation_LStick_NW = "\uE00E";
+const std::string_view Playstation_LStick_W = "\uE00F";
+const std::string_view Playstation_LStick_SW = "\uE010";
+const std::string_view Playstation_LStick_N = "\uE011";
+const std::string_view Playstation_LStick = "\uE012";
+const std::string_view Playstation_LStick_S = "\uE013";
+const std::string_view Playstation_LStick_NE = "\uE014";
+const std::string_view Playstation_LStick_E = "\uE015";
+const std::string_view Playstation_LStick_SE = "\uE016";
+const std::string_view Playstation_L3 = "\uE017";
+const std::string_view Playstation_RStick_NW = "\uE018";
+const std::string_view Playstation_RStick_W = "\uE019";
+const std::string_view Playstation_RStick_SW = "\uE01A";
+const std::string_view Playstation_RStick_N = "\uE01B";
+const std::string_view Playstation_RStick = "\uE01C";
+const std::string_view Playstation_RStick_S = "\uE01D";
+const std::string_view Playstation_RStick_NE = "\uE01E";
+const std::string_view Playstation_RStick_E = "\uE01F";
+const std::string_view Playstation_RStick_SE = "\uE020";
+const std::string_view Playstation_R3 = "\uE021";
+const std::string_view Playstation_Touchpad = "\uE022";
+const std::string_view Nintendo_X = "\uE023";
+const std::string_view Nintendo_Y = "\uE024";
+const std::string_view Nintendo_B = "\uE025";
+const std::string_view Nintendo_A = "\uE026";
+const std::string_view Nintendo_Plus = "\uE027";
+const std::string_view Nintendo_Minus = "\uE028";
+const std::string_view Nintendo_ZL = "\uE029";
+const std::string_view Nintendo_ZR = "\uE02A";
+const std::string_view Nintendo_L = "\uE02B";
+const std::string_view Nintendo_R = "\uE02C";
+const std::string_view Nintendo_DPad_Up = "\uE02D";
+const std::string_view Nintendo_DPad_Right = "\uE02E";
+const std::string_view Nintendo_DPad_Down = "\uE02F";
+const std::string_view Nintendo_DPad_Left = "\uE030";
+const std::string_view Nintendo_LStick_NW = "\uE031";
+const std::string_view Nintendo_LStick_W = "\uE032";
+const std::string_view Nintendo_LStick_SW = "\uE033";
+const std::string_view Nintendo_LStick_N = "\uE034";
+const std::string_view Nintendo_LStick = "\uE035";
+const std::string_view Nintendo_LStick_S = "\uE036";
+const std::string_view Nintendo_LStick_NE = "\uE037";
+const std::string_view Nintendo_LStick_E = "\uE038";
+const std::string_view Nintendo_LStick_SE = "\uE039";
+const std::string_view Nintendo_LStick_Click = "\uE03A";
+const std::string_view Nintendo_RStick_NW = "\uE03B";
+const std::string_view Nintendo_RStick_W = "\uE03C";
+const std::string_view Nintendo_RStick_SW = "\uE03D";
+const std::string_view Nintendo_RStick_N = "\uE03E";
+const std::string_view Nintendo_RStick = "\uE03F";
+const std::string_view Nintendo_RStick_S = "\uE040";
+const std::string_view Nintendo_RStick_NE = "\uE041";
+const std::string_view Nintendo_RStick_E = "\uE042";
+const std::string_view Nintendo_RStick_SE = "\uE043";
+const std::string_view Nintendo_RStick_Click = "\uE044";
+const std::string_view Nintendo_Home = "\uE045";
+const std::string_view Nintendo_Screenshot = "\uE046";
+const std::string_view Nintendo_SL = "\uE047";
+const std::string_view Nintendo_SR = "\uE048";
+const std::string_view Xbox_Y = "\uE049";
+const std::string_view Xbox_X = "\uE04A";
+const std::string_view Xbox_A = "\uE04B";
+const std::string_view Xbox_B = "\uE04C";
+const std::string_view Xbox_Menu = "\uE04D";
+const std::string_view Xbox_View = "\uE04E";
+const std::string_view Xbox_LT = "\uE04F";
+const std::string_view Xbox_RT = "\uE050";
+const std::string_view Xbox_LB = "\uE051";
+const std::string_view Xbox_RB = "\uE052";
+const std::string_view Xbox_DPad_Up = "\uE053";
+const std::string_view Xbox_DPad_Right = "\uE054";
+const std::string_view Xbox_DPad_Down = "\uE055";
+const std::string_view Xbox_DPad_Left = "\uE056";
+const std::string_view Xbox_LStick_NW = "\uE057";
+const std::string_view Xbox_LStick_W = "\uE058";
+const std::string_view Xbox_LStick_SW = "\uE059";
+const std::string_view Xbox_LStick_N = "\uE05A";
+const std::string_view Xbox_LStick = "\uE05B";
+const std::string_view Xbox_LStick_NE = "\uE05C";
+const std::string_view Xbox_LStick_E = "\uE05D";
+const std::string_view Xbox_LStick_SE = "\uE05E";
+const std::string_view Xbox_LStick_Click = "\uE05F";
+const std::string_view Xbox_RStick_NW = "\uE060";
+const std::string_view Xbox_RStick_W = "\uE061";
+const std::string_view Xbox_RStick_SW = "\uE062";
+const std::string_view Xbox_RStick_N = "\uE063";
+const std::string_view Xbox_RStick = "\uE064";
+const std::string_view Xbox_RStick_S = "\uE065";
+const std::string_view Xbox_RStick_NE = "\uE066";
+const std::string_view Xbox_RStick_E = "\uE067";
+const std::string_view Xbox_RStick_SE = "\uE068";
+const std::string_view Xbox_RStick_Click = "\uE069";
+const std::string_view Xbox_Xbox = "\uE06A";
 } // namespace controller_button_icon
 
-string_view ToPlayStationIcon(ControllerButton button)
+std::string_view ToPlayStationIcon(ControllerButton button)
 {
 	switch (button) {
 	case devilution::ControllerButton_BUTTON_A:
@@ -153,7 +153,7 @@ string_view ToPlayStationIcon(ControllerButton button)
 	}
 }
 
-string_view ToNintendoIcon(ControllerButton button)
+std::string_view ToNintendoIcon(ControllerButton button)
 {
 	switch (button) {
 	case devilution::ControllerButton_BUTTON_A:
@@ -193,7 +193,7 @@ string_view ToNintendoIcon(ControllerButton button)
 	}
 }
 
-string_view ToXboxIcon(ControllerButton button)
+std::string_view ToXboxIcon(ControllerButton button)
 {
 	switch (button) {
 	case devilution::ControllerButton_BUTTON_A:
@@ -233,7 +233,7 @@ string_view ToXboxIcon(ControllerButton button)
 	}
 }
 
-string_view ToGenericButtonText(ControllerButton button)
+std::string_view ToGenericButtonText(ControllerButton button)
 {
 	switch (button) {
 	case devilution::ControllerButton_BUTTON_A:
@@ -277,7 +277,7 @@ string_view ToGenericButtonText(ControllerButton button)
 	}
 }
 
-string_view ToString(ControllerButton button)
+std::string_view ToString(ControllerButton button)
 {
 	switch (GamepadType) {
 	case devilution::GamepadLayout::PlayStation:

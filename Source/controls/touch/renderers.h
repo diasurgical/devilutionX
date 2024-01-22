@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <optional>
 
 #include <SDL.h>
 
@@ -9,7 +10,6 @@
 #include "engine/surface.hpp"
 #include "utils/png.h"
 #include "utils/sdl_ptrs.h"
-#include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
 

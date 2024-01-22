@@ -3,11 +3,14 @@
  *
  * QoL feature for automatically picking up gold
  */
+#include "qol/autopickup.h"
+
+#include <algorithm>
 
 #include "inv_iterators.hpp"
 #include "options.h"
 #include "player.h"
-#include <algorithm>
+#include "utils/algorithm/container.hpp"
 
 namespace devilution {
 namespace {
@@ -34,8 +37,8 @@ bool HasRoomForGold()
 
 int NumMiscItemsInInv(int iMiscId)
 {
-	InventoryAndBeltPlayerItemsRange items { *MyPlayer };
-	return std::count_if(items.begin(), items.end(), [iMiscId](const Item &item) { return item._iMiscId == iMiscId; });
+	return c_count_if(InventoryAndBeltPlayerItemsRange { *MyPlayer },
+	    [iMiscId](const Item &item) { return item._iMiscId == iMiscId; });
 }
 
 bool DoPickup(Item item)
@@ -44,7 +47,7 @@ bool DoPickup(Item item)
 		return true;
 
 	if (item._itype == ItemType::Misc
-	    && (AutoPlaceItemInInventory(*MyPlayer, item, false) || AutoPlaceItemInBelt(*MyPlayer, item, false))) {
+	    && (AutoPlaceItemInInventory(*MyPlayer, item) || AutoPlaceItemInBelt(*MyPlayer, item))) {
 		switch (item._iMiscId) {
 		case IMISC_HEAL:
 			return *sgOptions.Gameplay.numHealPotionPickup > NumMiscItemsInInv(item._iMiscId);
@@ -100,7 +103,7 @@ void AutoPickup(const Player &player)
 			int itemIndex = dItem[tile.x][tile.y] - 1;
 			auto &item = Items[itemIndex];
 			if (DoPickup(item)) {
-				NetSendCmdGItem(true, CMD_REQUESTAGITEM, player.getId(), itemIndex);
+				NetSendCmdGItem(true, CMD_REQUESTAGITEM, player, itemIndex);
 				item._iRequest = true;
 			}
 		}

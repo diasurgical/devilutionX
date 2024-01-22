@@ -109,6 +109,17 @@ struct Surface {
 	}
 
 	/**
+	 * @brief Returns a buffer that starts at `x` of width `w`.
+	 */
+	Surface subregionX(int x, int w) const
+	{
+		SDL_Rect subregion = region;
+		subregion.x += static_cast<decltype(SDL_Rect {}.x)>(x);
+		subregion.w = static_cast<decltype(SDL_Rect {}.w)>(w);
+		return Surface(surface, subregion);
+	}
+
+	/**
 	 * @brief Returns a buffer that starts at `y` of height `h`.
 	 */
 	Surface subregionY(int y, int h) const

@@ -30,7 +30,7 @@ protected:
 	{
 	}
 
-	void Increment()
+	DVL_ALWAYS_INLINE void Increment()
 	{
 		++minorIndex;
 		if (minorIndex >= majorDimension) {
@@ -67,7 +67,7 @@ protected:
 };
 
 template <typename CoordT>
-class PointsInRectangleRange {
+class PointsInRectangle {
 public:
 	using const_iterator = class PointsInRectangleIterator : public PointsInRectangleIteratorBase<CoordT> {
 	public:
@@ -82,19 +82,19 @@ public:
 		{
 		}
 
-		value_type operator*() const
+		DVL_ALWAYS_INLINE value_type operator*() const
 		{
 			// Row-major iteration e.g. {0, 0}, {1, 0}, {2, 0}, {0, 1}, {1, 1}, ...
 			return this->origin + Displacement { this->minorIndex, this->majorIndex };
 		}
 
 		// Equality comparable concepts
-		bool operator==(const PointsInRectangleIterator &rhs) const
+		DVL_ALWAYS_INLINE bool operator==(const PointsInRectangleIterator &rhs) const
 		{
 			return this->majorIndex == rhs.majorIndex && this->minorIndex == rhs.minorIndex;
 		}
 
-		bool operator!=(const PointsInRectangleIterator &rhs) const
+		DVL_ALWAYS_INLINE bool operator!=(const PointsInRectangleIterator &rhs) const
 		{
 			return !(*this == rhs);
 		}
@@ -126,7 +126,7 @@ public:
 		}
 
 		// Forward concepts
-		PointsInRectangleIterator &operator++()
+		DVL_ALWAYS_INLINE PointsInRectangleIterator &operator++()
 		{
 			this->Increment();
 			return *this;
@@ -188,7 +188,7 @@ public:
 		}
 	};
 
-	constexpr PointsInRectangleRange(RectangleOf<CoordT> region)
+	constexpr PointsInRectangle(RectangleOf<CoordT> region)
 	    : region(region)
 	{
 	}
@@ -240,13 +240,7 @@ protected:
 };
 
 template <typename CoordT>
-constexpr PointsInRectangleRange<CoordT> PointsInRectangle(RectangleOf<CoordT> region)
-{
-	return PointsInRectangleRange<CoordT> { region };
-}
-
-template <typename CoordT>
-class PointsInRectangleColMajorRange {
+class PointsInRectangleColMajor {
 public:
 	using const_iterator = class PointsInRectangleIteratorColMajor : public PointsInRectangleIteratorBase<CoordT> {
 	public:
@@ -261,19 +255,19 @@ public:
 		{
 		}
 
-		value_type operator*() const
+		DVL_ALWAYS_INLINE value_type operator*() const
 		{
 			// Col-major iteration e.g. {0, 0}, {0, 1}, {0, 2}, {1, 0}, {1, 1}, ...
 			return this->origin + Displacement { this->majorIndex, this->minorIndex };
 		}
 
 		// Equality comparable concepts
-		bool operator==(const PointsInRectangleIteratorColMajor &rhs) const
+		DVL_ALWAYS_INLINE bool operator==(const PointsInRectangleIteratorColMajor &rhs) const
 		{
 			return this->majorIndex == rhs.majorIndex && this->minorIndex == rhs.minorIndex;
 		}
 
-		bool operator!=(const PointsInRectangleIteratorColMajor &rhs) const
+		DVL_ALWAYS_INLINE bool operator!=(const PointsInRectangleIteratorColMajor &rhs) const
 		{
 			return !(*this == rhs);
 		}
@@ -305,7 +299,7 @@ public:
 		}
 
 		// Forward concepts
-		PointsInRectangleIteratorColMajor &operator++()
+		DVL_ALWAYS_INLINE PointsInRectangleIteratorColMajor &operator++()
 		{
 			this->Increment();
 			return *this;
@@ -368,7 +362,7 @@ public:
 	};
 
 	// gcc6 needs a defined constructor?
-	constexpr PointsInRectangleColMajorRange(RectangleOf<CoordT> region)
+	constexpr PointsInRectangleColMajor(RectangleOf<CoordT> region)
 	    : region(region)
 	{
 	}
@@ -418,11 +412,5 @@ public:
 protected:
 	RectangleOf<CoordT> region;
 };
-
-template <typename CoordT = int>
-constexpr PointsInRectangleColMajorRange<CoordT> PointsInRectangleColMajor(RectangleOf<CoordT> region)
-{
-	return PointsInRectangleColMajorRange<CoordT> { region };
-}
 
 } // namespace devilution

@@ -15,6 +15,7 @@
 #include "panels/ui_panels.hpp"
 #include "player.h"
 #include "playerdat.hpp"
+#include "utils/algorithm/container.hpp"
 #include "utils/display.h"
 #include "utils/format_int.hpp"
 #include "utils/language.h"
@@ -122,10 +123,10 @@ PanelEntry panelEntries[] = {
 	{ "", { 9, 14 }, 150, 0,
 	    []() { return StyledText { UiFlags::ColorWhite, InspectPlayer->_pName }; } },
 	{ "", { 161, 14 }, 149, 0,
-	    []() { return StyledText { UiFlags::ColorWhite, std::string(_(PlayersData[static_cast<std::size_t>(InspectPlayer->_pClass)].className)) }; } },
+	    []() { return StyledText { UiFlags::ColorWhite, std::string(InspectPlayer->getClassName()) }; } },
 
 	{ N_("Level"), { 57, 52 }, 57, 45,
-	    []() { return StyledText { UiFlags::ColorWhite, StrCat(InspectPlayer->_pLevel) }; } },
+	    []() { return StyledText { UiFlags::ColorWhite, StrCat(InspectPlayer->getCharacterLevel()) }; } },
 	{ N_("Experience"), { TopRightLabelX, 52 }, 99, 91,
 	    []() {
 	        int spacing = ((InspectPlayer->_pExperience >= 1000000000) ? 0 : 1);
@@ -133,11 +134,12 @@ PanelEntry panelEntries[] = {
 	    } },
 	{ N_("Next level"), { TopRightLabelX, 80 }, 99, 198,
 	    []() {
-	        if (InspectPlayer->_pLevel == MaxCharacterLevel) {
+	        if (InspectPlayer->isMaxCharacterLevel()) {
 		        return StyledText { UiFlags::ColorWhitegold, std::string(_("None")) };
 	        }
-	        int spacing = ((InspectPlayer->_pNextExper >= 1000000000) ? 0 : 1);
-	        return StyledText { UiFlags::ColorWhite, FormatInteger(InspectPlayer->_pNextExper), spacing };
+	        uint32_t nextExperienceThreshold = InspectPlayer->getNextExperienceThreshold();
+	        int spacing = ((nextExperienceThreshold >= 1000000000) ? 0 : 1);
+	        return StyledText { UiFlags::ColorWhite, FormatInteger(nextExperienceThreshold), spacing };
 	    } },
 
 	{ N_("Base"), { LeftColumnLabelX, /* set dynamically */ 0 }, 0, 44, {} },
@@ -167,14 +169,14 @@ PanelEntry panelEntries[] = {
 	    []() { return StyledText { UiFlags::ColorWhite, FormatInteger(InspectPlayer->_pGold) }; } },
 
 	{ N_("Armor class"), { RightColumnLabelX, 163 }, 57, RightColumnLabelWidth,
-	    []() { return StyledText { GetValueColor(InspectPlayer->_pIBonusAC), StrCat(InspectPlayer->GetArmor() + InspectPlayer->_pLevel * 2) }; } },
+	    []() { return StyledText { GetValueColor(InspectPlayer->_pIBonusAC), StrCat(InspectPlayer->GetArmor() + InspectPlayer->getCharacterLevel() * 2) }; } },
 	{ N_("To hit"), { RightColumnLabelX, 191 }, 57, RightColumnLabelWidth,
 	    []() { return StyledText { GetValueColor(InspectPlayer->_pIBonusToHit), StrCat(InspectPlayer->InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Bow ? InspectPlayer->GetRangedToHit() : InspectPlayer->GetMeleeToHit(), "%") }; } },
 	{ N_("Damage"), { RightColumnLabelX, 219 }, 57, RightColumnLabelWidth,
 	    []() {
-	        std::pair<int, int> dmg = GetDamage();
-	        int spacing = ((dmg.first >= 100) ? -1 : 1);
-	        return StyledText { GetValueColor(InspectPlayer->_pIBonusDam), StrCat(dmg.first, "-", dmg.second), spacing };
+	        const auto [dmgMin, dmgMax] = GetDamage();
+	        int spacing = ((dmgMin >= 100) ? -1 : 1);
+	        return StyledText { GetValueColor(InspectPlayer->_pIBonusDam), StrCat(dmgMin, "-", dmgMax), spacing };
 	    } },
 
 	{ N_("Life"), { LeftColumnLabelX, 284 }, 45, LeftColumnLabelWidth,
@@ -217,8 +219,8 @@ void DrawShadowString(const Surface &out, const PanelEntry &entry)
 		return;
 
 	constexpr int Spacing = 0;
-	const string_view textStr = LanguageTranslate(entry.label);
-	string_view text;
+	const std::string_view textStr = LanguageTranslate(entry.label);
+	std::string_view text;
 	std::string wrapped;
 	if (entry.labelLength > 0) {
 		wrapped = WordWrapString(textStr, entry.labelLength, GameFont12, Spacing);
@@ -238,13 +240,15 @@ void DrawShadowString(const Surface &out, const PanelEntry &entry)
 		labelPosition += Displacement { -entry.labelLength - (IsSmallFontTall() ? 2 : 3), 0 };
 	}
 
-	// If the text is less tall then the field, we center it vertically relative to the field.
+	// If the text is less tall than the field, we center it vertically relative to the field.
 	// Otherwise, we draw from the top of the field.
-	const int textHeight = (std::count(wrapped.begin(), wrapped.end(), '\n') + 1) * GetLineHeight(wrapped, GameFont12);
+	const int textHeight = static_cast<int>((c_count(wrapped, '\n') + 1) * GetLineHeight(wrapped, GameFont12));
 	const int labelHeight = std::max(PanelFieldHeight, textHeight);
 
-	DrawString(out, text, { labelPosition + Displacement { -2, 2 }, { entry.labelLength, labelHeight } }, style | UiFlags::ColorBlack, Spacing);
-	DrawString(out, text, { labelPosition, { entry.labelLength, labelHeight } }, style | UiFlags::ColorWhite, Spacing);
+	DrawString(out, text, { labelPosition + Displacement { -2, 2 }, { entry.labelLength, labelHeight } },
+	    { .flags = style | UiFlags::ColorBlack, .spacing = Spacing });
+	DrawString(out, text, { labelPosition, { entry.labelLength, labelHeight } },
+	    { .flags = style | UiFlags::ColorWhite, .spacing = Spacing });
 }
 
 void DrawStatButtons(const Surface &out)
@@ -309,7 +313,7 @@ void DrawChr(const Surface &out)
 			    out,
 			    tmp.text,
 			    { entry.position + Displacement { pos.x, pos.y + PanelFieldPaddingTop }, { entry.length, PanelFieldInnerHeight } },
-			    UiFlags::AlignCenter | UiFlags::VerticalCenter | tmp.style, tmp.spacing);
+			    { .flags = UiFlags::AlignCenter | UiFlags::VerticalCenter | tmp.style, .spacing = tmp.spacing });
 		}
 	}
 	DrawStatButtons(out);

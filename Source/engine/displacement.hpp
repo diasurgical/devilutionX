@@ -7,7 +7,7 @@
 
 #include "engine/direction.hpp"
 #include "engine/size.hpp"
-#include "utils/stdcompat/abs.hpp"
+#include "utils/attributes.h"
 
 namespace devilution {
 
@@ -24,50 +24,50 @@ struct DisplacementOf {
 	DisplacementOf() = default;
 
 	template <typename DisplacementDeltaT>
-	constexpr DisplacementOf(DisplacementOf<DisplacementDeltaT> other)
+	DVL_ALWAYS_INLINE constexpr DisplacementOf(DisplacementOf<DisplacementDeltaT> other)
 	    : deltaX(other.deltaX)
 	    , deltaY(other.deltaY)
 	{
 	}
 
-	constexpr DisplacementOf(DeltaT deltaX, DeltaT deltaY)
+	DVL_ALWAYS_INLINE constexpr DisplacementOf(DeltaT deltaX, DeltaT deltaY)
 	    : deltaX(deltaX)
 	    , deltaY(deltaY)
 	{
 	}
 
-	explicit constexpr DisplacementOf(DeltaT delta)
+	DVL_ALWAYS_INLINE explicit constexpr DisplacementOf(DeltaT delta)
 	    : deltaX(delta)
 	    , deltaY(delta)
 	{
 	}
 
 	template <typename SizeT>
-	explicit constexpr DisplacementOf(const SizeOf<SizeT> &size)
+	DVL_ALWAYS_INLINE explicit constexpr DisplacementOf(const SizeOf<SizeT> &size)
 	    : deltaX(size.width)
 	    , deltaY(size.height)
 	{
 	}
 
-	explicit constexpr DisplacementOf(Direction direction)
+	DVL_ALWAYS_INLINE explicit constexpr DisplacementOf(Direction direction)
 	    : DisplacementOf(fromDirection(direction))
 	{
 	}
 
 	template <typename DisplacementDeltaT>
-	constexpr bool operator==(const DisplacementOf<DisplacementDeltaT> &other) const
+	DVL_ALWAYS_INLINE constexpr bool operator==(const DisplacementOf<DisplacementDeltaT> &other) const
 	{
 		return deltaX == other.deltaX && deltaY == other.deltaY;
 	}
 
 	template <typename DisplacementDeltaT>
-	constexpr bool operator!=(const DisplacementOf<DisplacementDeltaT> &other) const
+	DVL_ALWAYS_INLINE constexpr bool operator!=(const DisplacementOf<DisplacementDeltaT> &other) const
 	{
 		return !(*this == other);
 	}
 
 	template <typename DisplacementDeltaT = DeltaT>
-	constexpr DisplacementOf<DeltaT> &operator+=(DisplacementOf<DisplacementDeltaT> displacement)
+	DVL_ALWAYS_INLINE constexpr DisplacementOf<DeltaT> &operator+=(DisplacementOf<DisplacementDeltaT> displacement)
 	{
 		deltaX += displacement.deltaX;
 		deltaY += displacement.deltaY;
@@ -75,21 +75,21 @@ struct DisplacementOf {
 	}
 
 	template <typename DisplacementDeltaT = DeltaT>
-	constexpr DisplacementOf<DeltaT> &operator-=(DisplacementOf<DisplacementDeltaT> displacement)
+	DVL_ALWAYS_INLINE constexpr DisplacementOf<DeltaT> &operator-=(DisplacementOf<DisplacementDeltaT> displacement)
 	{
 		deltaX -= displacement.deltaX;
 		deltaY -= displacement.deltaY;
 		return *this;
 	}
 
-	constexpr DisplacementOf<DeltaT> &operator*=(const int factor)
+	DVL_ALWAYS_INLINE constexpr DisplacementOf<DeltaT> &operator*=(const int factor)
 	{
 		deltaX *= factor;
 		deltaY *= factor;
 		return *this;
 	}
 
-	constexpr DisplacementOf<DeltaT> &operator*=(const float factor)
+	DVL_ALWAYS_INLINE constexpr DisplacementOf<DeltaT> &operator*=(const float factor)
 	{
 		deltaX = static_cast<DeltaT>(deltaX * factor);
 		deltaY = static_cast<DeltaT>(deltaY * factor);
@@ -97,30 +97,41 @@ struct DisplacementOf {
 	}
 
 	template <typename DeltaU>
-	constexpr DisplacementOf<DeltaT> &operator*=(const DisplacementOf<DeltaU> factor)
+	DVL_ALWAYS_INLINE constexpr DisplacementOf<DeltaT> &operator*=(const DisplacementOf<DeltaU> factor)
 	{
 		deltaX = static_cast<DeltaT>(deltaX * factor.deltaX);
 		deltaY = static_cast<DeltaT>(deltaY * factor.deltaY);
 		return *this;
 	}
 
-	constexpr DisplacementOf<DeltaT> &operator/=(const int factor)
+	DVL_ALWAYS_INLINE constexpr DisplacementOf<DeltaT> &operator/=(const int factor)
 	{
 		deltaX /= factor;
 		deltaY /= factor;
 		return *this;
 	}
 
-	constexpr DisplacementOf<DeltaT> &operator/=(const float factor)
+	DVL_ALWAYS_INLINE constexpr DisplacementOf<DeltaT> &operator/=(const float factor)
 	{
 		deltaX = static_cast<DeltaT>(deltaX / factor);
 		deltaY = static_cast<DeltaT>(deltaY / factor);
 		return *this;
 	}
 
-	float magnitude() const
+	DVL_ALWAYS_INLINE float magnitude() const
 	{
-		return static_cast<float>(hypot(deltaX, deltaY));
+		// If [x * x <= max], then [x <= max / x] for x > 0
+		assert(deltaX == 0 || std::abs(deltaX) <= std::numeric_limits<DeltaT>::max() / std::abs(deltaX));
+		assert(deltaY == 0 || std::abs(deltaY) <= std::numeric_limits<DeltaT>::max() / std::abs(deltaY));
+
+		// If [x + y <= max], then [x <= max - y]
+		assert(deltaX * deltaX <= std::numeric_limits<DeltaT>::max() - deltaY * deltaY);
+
+		// Maximum precision of float is 24 bits
+		assert(deltaX * deltaX + deltaY * deltaY < (1 << 24));
+
+		// We do not use `std::hypot` here because it is slower and we do not need the extra precision.
+		return sqrtf(static_cast<float>(deltaX * deltaX + deltaY * deltaY));
 	}
 
 	/**
@@ -134,7 +145,7 @@ struct DisplacementOf {
 	 *
 	 * @return A representation of the original displacement in screen coordinates.
 	 */
-	constexpr DisplacementOf<DeltaT> worldToScreen() const
+	DVL_ALWAYS_INLINE constexpr DisplacementOf<DeltaT> worldToScreen() const
 	{
 		static_assert(std::is_signed<DeltaT>::value, "DeltaT must be signed for transformations involving a rotation");
 		return { (deltaY - deltaX) * 32, (deltaY + deltaX) * -16 };
@@ -147,7 +158,7 @@ struct DisplacementOf {
 	 *
 	 * @return A representation of the original displacement in world coordinates.
 	 */
-	constexpr DisplacementOf<DeltaT> screenToWorld() const
+	DVL_ALWAYS_INLINE constexpr DisplacementOf<DeltaT> screenToWorld() const
 	{
 		static_assert(std::is_signed<DeltaT>::value, "DeltaT must be signed for transformations involving a rotation");
 		return { (2 * deltaY + deltaX) / -64, (2 * deltaY - deltaX) / -64 };
@@ -198,7 +209,7 @@ struct DisplacementOf {
 	 */
 	[[nodiscard]] Displacement normalized() const;
 
-	[[nodiscard]] constexpr DisplacementOf<DeltaT> Rotate(int quadrants) const
+	[[nodiscard]] DVL_ALWAYS_INLINE constexpr DisplacementOf<DeltaT> Rotate(int quadrants) const
 	{
 		static_assert(std::is_signed<DeltaT>::value, "DeltaT must be signed for Rotate");
 		constexpr DeltaT Sines[] = { 0, 1, 0, -1 };
@@ -230,7 +241,7 @@ struct DisplacementOf {
 	}
 
 private:
-	static constexpr DisplacementOf<DeltaT> fromDirection(Direction direction)
+	DVL_ALWAYS_INLINE static constexpr DisplacementOf<DeltaT> fromDirection(Direction direction)
 	{
 		static_assert(std::is_signed<DeltaT>::value, "DeltaT must be signed for conversion from Direction");
 		switch (direction) {
@@ -273,76 +284,76 @@ std::ostream &operator<<(std::ostream &stream, const DisplacementOf<Displacement
 #endif
 
 template <typename DisplacementDeltaT, typename OtherDisplacementDeltaT>
-constexpr DisplacementOf<DisplacementDeltaT> operator+(DisplacementOf<DisplacementDeltaT> a, DisplacementOf<OtherDisplacementDeltaT> b)
+DVL_ALWAYS_INLINE constexpr DisplacementOf<DisplacementDeltaT> operator+(DisplacementOf<DisplacementDeltaT> a, DisplacementOf<OtherDisplacementDeltaT> b)
 {
 	a += b;
 	return a;
 }
 
 template <typename DisplacementDeltaT, typename OtherDisplacementDeltaT>
-constexpr DisplacementOf<DisplacementDeltaT> operator-(DisplacementOf<DisplacementDeltaT> a, DisplacementOf<OtherDisplacementDeltaT> b)
+DVL_ALWAYS_INLINE constexpr DisplacementOf<DisplacementDeltaT> operator-(DisplacementOf<DisplacementDeltaT> a, DisplacementOf<OtherDisplacementDeltaT> b)
 {
 	a -= b;
 	return a;
 }
 
 template <typename DisplacementDeltaT>
-constexpr DisplacementOf<DisplacementDeltaT> operator*(DisplacementOf<DisplacementDeltaT> a, const int factor)
+DVL_ALWAYS_INLINE constexpr DisplacementOf<DisplacementDeltaT> operator*(DisplacementOf<DisplacementDeltaT> a, const int factor)
 {
 	a *= factor;
 	return a;
 }
 
 template <typename DisplacementDeltaT>
-constexpr DisplacementOf<DisplacementDeltaT> operator*(DisplacementOf<DisplacementDeltaT> a, const float factor)
+DVL_ALWAYS_INLINE constexpr DisplacementOf<DisplacementDeltaT> operator*(DisplacementOf<DisplacementDeltaT> a, const float factor)
 {
 	a *= factor;
 	return a;
 }
 
 template <typename DisplacementDeltaT, typename DisplacementDeltaU>
-constexpr DisplacementOf<DisplacementDeltaT> operator*(DisplacementOf<DisplacementDeltaT> a, const DisplacementOf<DisplacementDeltaU> factor)
+DVL_ALWAYS_INLINE constexpr DisplacementOf<DisplacementDeltaT> operator*(DisplacementOf<DisplacementDeltaT> a, const DisplacementOf<DisplacementDeltaU> factor)
 {
 	a *= factor;
 	return a;
 }
 
 template <typename DisplacementDeltaT>
-constexpr DisplacementOf<DisplacementDeltaT> operator/(DisplacementOf<DisplacementDeltaT> a, const int factor)
+DVL_ALWAYS_INLINE constexpr DisplacementOf<DisplacementDeltaT> operator/(DisplacementOf<DisplacementDeltaT> a, const int factor)
 {
 	a /= factor;
 	return a;
 }
 
 template <typename DisplacementDeltaT>
-constexpr DisplacementOf<DisplacementDeltaT> operator/(DisplacementOf<DisplacementDeltaT> a, const float factor)
+DVL_ALWAYS_INLINE constexpr DisplacementOf<DisplacementDeltaT> operator/(DisplacementOf<DisplacementDeltaT> a, const float factor)
 {
 	a /= factor;
 	return a;
 }
 
 template <typename DisplacementDeltaT>
-constexpr DisplacementOf<DisplacementDeltaT> operator-(DisplacementOf<DisplacementDeltaT> a)
+DVL_ALWAYS_INLINE constexpr DisplacementOf<DisplacementDeltaT> operator-(DisplacementOf<DisplacementDeltaT> a)
 {
 	return { -a.deltaX, -a.deltaY };
 }
 
 template <typename DisplacementDeltaT>
-constexpr DisplacementOf<DisplacementDeltaT> operator<<(DisplacementOf<DisplacementDeltaT> a, unsigned factor)
+DVL_ALWAYS_INLINE constexpr DisplacementOf<DisplacementDeltaT> operator<<(DisplacementOf<DisplacementDeltaT> a, unsigned factor)
 {
 	return { a.deltaX << factor, a.deltaY << factor };
 }
 
 template <typename DisplacementDeltaT>
-constexpr DisplacementOf<DisplacementDeltaT> operator>>(DisplacementOf<DisplacementDeltaT> a, unsigned factor)
+DVL_ALWAYS_INLINE constexpr DisplacementOf<DisplacementDeltaT> operator>>(DisplacementOf<DisplacementDeltaT> a, unsigned factor)
 {
 	return { a.deltaX >> factor, a.deltaY >> factor };
 }
 
 template <typename DisplacementDeltaT>
-constexpr DisplacementOf<DisplacementDeltaT> abs(DisplacementOf<DisplacementDeltaT> a)
+DVL_ALWAYS_INLINE constexpr DisplacementOf<DisplacementDeltaT> abs(DisplacementOf<DisplacementDeltaT> a)
 {
-	return { abs(a.deltaX), abs(a.deltaY) };
+	return DisplacementOf<DisplacementDeltaT>(std::abs(a.deltaX), std::abs(a.deltaY));
 }
 
 template <typename DeltaT>

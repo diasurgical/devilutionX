@@ -26,7 +26,7 @@ void SelyesnoFree()
 	vecSelYesNoDialog.clear();
 }
 
-void SelyesnoSelect(int value)
+void SelyesnoSelect(size_t value)
 {
 	selyesno_value = vecSelYesNoDialogItems[value]->m_value == 0;
 	selyesno_endMenu = true;

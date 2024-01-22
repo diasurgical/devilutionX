@@ -13,6 +13,7 @@
 #include "gamemenu.h"
 #include "gmenu.h"
 #include "options.h"
+#include "panels/spell_list.hpp"
 #include "qol/stash.h"
 #include "stores.h"
 
@@ -269,7 +270,7 @@ void PressControllerButton(ControllerButton button)
 			gamemenu_on();
 			return;
 		case devilution::ControllerButton_BUTTON_DPAD_DOWN:
-			DoAutoMap();
+			CycleAutomapType();
 			return;
 		case devilution::ControllerButton_BUTTON_DPAD_LEFT:
 			ProcessGameAction(GameAction { GameActionType_TOGGLE_CHARACTER_INFO });
@@ -335,7 +336,7 @@ bool IsSimulatedMouseClickBinding(ControllerButtonEvent ctrlEvent)
 		return false;
 	if (!ctrlEvent.up && ctrlEvent.button == SuppressedButton)
 		return false;
-	string_view actionName = sgOptions.Padmapper.ActionNameTriggeredByButtonEvent(ctrlEvent);
+	std::string_view actionName = sgOptions.Padmapper.ActionNameTriggeredByButtonEvent(ctrlEvent);
 	return IsAnyOf(actionName, "LeftMouseClick1", "LeftMouseClick2", "RightMouseClick1", "RightMouseClick2");
 }
 

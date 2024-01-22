@@ -16,6 +16,10 @@ StaticVector<ControllerButtonEvent, 4> Joystick::ToControllerButtonEvents(const 
 	case SDL_JOYBUTTONDOWN:
 	case SDL_JOYBUTTONUP: {
 		bool up = (event.jbutton.state == SDL_RELEASED);
+#if defined(JOY_BUTTON_A) || defined(JOY_BUTTON_B) || defined(JOY_BUTTON_X) || defined(JOY_BUTTON_Y)                                            \
+    || defined(JOY_BUTTON_LEFTSTICK) || defined(JOY_BUTTON_RIGHTSTICK) || defined(JOY_BUTTON_LEFTSHOULDER) || defined(JOY_BUTTON_RIGHTSHOULDER) \
+    || defined(JOY_BUTTON_TRIGGERLEFT) || defined(JOY_BUTTON_TRIGGERRIGHT) || defined(JOY_BUTTON_START) || defined(JOY_BUTTON_BACK)             \
+    || defined(JOY_BUTTON_DPAD_LEFT) || defined(JOY_BUTTON_DPAD_UP) || defined(JOY_BUTTON_DPAD_RIGHT) || defined(JOY_BUTTON_DPAD_DOWN)
 		switch (event.jbutton.button) {
 #ifdef JOY_BUTTON_A
 		case JOY_BUTTON_A:
@@ -84,7 +88,9 @@ StaticVector<ControllerButtonEvent, 4> Joystick::ToControllerButtonEvents(const 
 		default:
 			return { ControllerButtonEvent { ControllerButton_IGNORE, up } };
 		}
-		break;
+#else
+		return { ControllerButtonEvent { ControllerButton_IGNORE, up } };
+#endif
 	}
 	case SDL_JOYHATMOTION: {
 		Joystick *joystick = Get(event);
@@ -167,6 +173,10 @@ void Joystick::UnlockHatState()
 
 int Joystick::ToSdlJoyButton(ControllerButton button)
 {
+#if defined(JOY_BUTTON_A) || defined(JOY_BUTTON_B) || defined(JOY_BUTTON_X) || defined(JOY_BUTTON_Y)                                                \
+    || defined(JOY_BUTTON_BACK) || defined(JOY_BUTTON_START) || defined(JOY_BUTTON_LEFTSTICK) || defined(JOY_BUTTON_RIGHTSTICK)                     \
+    || defined(JOY_BUTTON_LEFTSHOULDER) || defined(JOY_BUTTON_RIGHTSHOULDER) || defined(JOY_BUTTON_TRIGGERLEFT) || defined(JOY_BUTTON_TRIGGERRIGHT) \
+    || defined(JOY_BUTTON_DPAD_LEFT) || defined(JOY_BUTTON_DPAD_UP) || defined(JOY_BUTTON_DPAD_RIGHT) || defined(JOY_BUTTON_DPAD_DOWN)
 	switch (button) {
 #ifdef JOY_BUTTON_A
 	case ControllerButton_BUTTON_A:
@@ -235,11 +245,15 @@ int Joystick::ToSdlJoyButton(ControllerButton button)
 	default:
 		return -1;
 	}
+#else
+	return -1;
+#endif
 }
 
 // NOLINTNEXTLINE(readability-convert-member-functions-to-static): Not static if joystick mappings are defined.
 bool Joystick::IsHatButtonPressed(ControllerButton button) const
 {
+#if (defined(JOY_HAT_DPAD_UP_HAT) && defined(JOY_HAT_DPAD_UP)) || (defined(JOY_HAT_DPAD_DOWN_HAT) && defined(JOY_HAT_DPAD_DOWN)) || (defined(JOY_HAT_DPAD_LEFT_HAT) && defined(JOY_HAT_DPAD_LEFT)) || (defined(JOY_HAT_DPAD_RIGHT_HAT) && defined(JOY_HAT_DPAD_RIGHT))
 	switch (button) {
 #if defined(JOY_HAT_DPAD_UP_HAT) && defined(JOY_HAT_DPAD_UP)
 	case ControllerButton_BUTTON_DPAD_UP:
@@ -260,6 +274,9 @@ bool Joystick::IsHatButtonPressed(ControllerButton button) const
 	default:
 		return false;
 	}
+#else
+	return false;
+#endif
 }
 
 bool Joystick::IsPressed(ControllerButton button) const
@@ -279,6 +296,8 @@ bool Joystick::ProcessAxisMotion(const SDL_Event &event)
 {
 	if (event.type != SDL_JOYAXISMOTION)
 		return false;
+
+#if defined(JOY_AXIS_LEFTX) || defined(JOY_AXIS_LEFTY) || defined(JOY_AXIS_RIGHTX) || defined(JOY_AXIS_RIGHTY)
 	switch (event.jaxis.axis) {
 #ifdef JOY_AXIS_LEFTX
 	case JOY_AXIS_LEFTX:
@@ -307,6 +326,9 @@ bool Joystick::ProcessAxisMotion(const SDL_Event &event)
 	default:
 		return false;
 	}
+#else
+	return false;
+#endif
 }
 
 void Joystick::Add(int deviceIndex)

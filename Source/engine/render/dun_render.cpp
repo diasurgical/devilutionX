@@ -19,10 +19,10 @@
 #include <cstdint>
 
 #include "engine/render/blit_impl.hpp"
+#include "levels/dun_tile.hpp"
 #include "lighting.h"
 #include "options.h"
 #include "utils/attributes.h"
-#include "utils/stdcompat/algorithm.hpp"
 #ifdef DEBUG_STR
 #include "engine/render/text_render.hpp"
 #endif
@@ -35,19 +35,19 @@ namespace devilution {
 namespace {
 
 /** Width of a tile rendering primitive. */
-constexpr int_fast16_t Width = TILE_WIDTH / 2;
+constexpr int_fast16_t Width = DunFrameWidth;
 
 /** Height of a tile rendering primitive (except triangles). */
-constexpr int_fast16_t Height = TILE_HEIGHT;
+constexpr int_fast16_t Height = DunFrameHeight;
 
 /** Height of the lower triangle of a triangular or a trapezoid tile. */
-constexpr int_fast16_t LowerHeight = TILE_HEIGHT / 2;
+constexpr int_fast16_t LowerHeight = DunFrameHeight / 2;
 
 /** Height of the upper triangle of a triangular tile. */
-constexpr int_fast16_t TriangleUpperHeight = TILE_HEIGHT / 2 - 1;
+constexpr int_fast16_t TriangleUpperHeight = DunFrameHeight / 2 - 1;
 
 /** Height of the upper rectangle of a trapezoid tile. */
-constexpr int_fast16_t TrapezoidUpperHeight = TILE_HEIGHT / 2;
+constexpr int_fast16_t TrapezoidUpperHeight = DunFrameHeight / 2;
 
 constexpr int_fast16_t TriangleHeight = LowerHeight + TriangleUpperHeight;
 
@@ -62,7 +62,7 @@ int_fast16_t GetTileHeight(TileType tile)
 }
 
 #ifdef DEBUG_STR
-std::pair<string_view, UiFlags> GetTileDebugStr(TileType tile)
+std::pair<std::string_view, UiFlags> GetTileDebugStr(TileType tile)
 {
 	// clang-format off
 	switch (tile) {
@@ -139,7 +139,7 @@ DVL_ALWAYS_INLINE int8_t InitPrefix(int8_t y)
 template <bool OpaquePrefix, int8_t PrefixIncrement>
 std::string prefixDebugString(int8_t prefix) {
 	std::string out(32, OpaquePrefix ? '0' : '1');
-	const uint8_t clamped = clamp<int8_t>(prefix, 0, 32);
+	const uint8_t clamped = std::clamp<int8_t>(prefix, 0, 32);
 	out.replace(0, clamped, clamped, OpaquePrefix ? '1' : '0');
 	StrAppend(out, " prefix=", prefix, " OpaquePrefix=", OpaquePrefix, " PrefixIncrement=", PrefixIncrement);
 	return out;
@@ -215,7 +215,7 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLineTransparent(uint8_t *DVL_REST
 template <LightType Light, bool Transparent>
 DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLineTransparentOrOpaque(uint8_t *DVL_RESTRICT dst, const uint8_t *DVL_RESTRICT src, uint_fast8_t width, const uint8_t *DVL_RESTRICT tbl)
 {
-	if (Transparent) {
+	if constexpr (Transparent) {
 		RenderLineTransparent<Light>(dst, src, width, tbl);
 	} else {
 		RenderLineOpaque<Light>(dst, src, width, tbl);
@@ -225,12 +225,12 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLineTransparentOrOpaque(uint8_t *
 template <LightType Light, bool OpaquePrefix, int8_t PrefixIncrement>
 DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLineTransparentAndOpaque(uint8_t *DVL_RESTRICT dst, const uint8_t *DVL_RESTRICT src, uint_fast8_t prefixWidth, uint_fast8_t width, const uint8_t *DVL_RESTRICT tbl)
 {
-	if (OpaquePrefix) {
+	if constexpr (OpaquePrefix) {
 		RenderLineOpaque<Light>(dst, src, prefixWidth, tbl);
-		if (!SkipTransparentPixels<OpaquePrefix, PrefixIncrement>)
+		if constexpr (!SkipTransparentPixels<OpaquePrefix, PrefixIncrement>)
 			RenderLineTransparent<Light>(dst + prefixWidth, src + prefixWidth, width - prefixWidth, tbl);
 	} else {
-		if (!SkipTransparentPixels<OpaquePrefix, PrefixIncrement>)
+		if constexpr (!SkipTransparentPixels<OpaquePrefix, PrefixIncrement>)
 			RenderLineTransparent<Light>(dst, src, prefixWidth, tbl);
 		RenderLineOpaque<Light>(dst + prefixWidth, src + prefixWidth, width - prefixWidth, tbl);
 	}
@@ -239,21 +239,21 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLineTransparentAndOpaque(uint8_t 
 template <LightType Light, bool OpaquePrefix, int8_t PrefixIncrement>
 DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLine(uint8_t *DVL_RESTRICT dst, const uint8_t *DVL_RESTRICT src, uint_fast8_t n, const uint8_t *DVL_RESTRICT tbl, int8_t prefix)
 {
-	if (PrefixIncrement == 0) {
+	if constexpr (PrefixIncrement == 0) {
 		RenderLineTransparentOrOpaque<Light, OpaquePrefix>(dst, src, n, tbl);
 	} else if (prefix >= static_cast<int8_t>(n)) {
-		// We clamp the prefix to (0, n] and avoid calling `RenderLineTransparent/Opaque` with width=0.
-		if (OpaquePrefix) {
+		// We std::clamp the prefix to (0, n] and avoid calling `RenderLineTransparent/Opaque` with width=0.
+		if constexpr (OpaquePrefix) {
 			RenderLineOpaque<Light>(dst, src, n, tbl);
 		} else {
-			if (!SkipTransparentPixels<OpaquePrefix, PrefixIncrement>)
+			if constexpr (!SkipTransparentPixels<OpaquePrefix, PrefixIncrement>)
 				RenderLineTransparent<Light>(dst, src, n, tbl);
 		}
 	} else if (prefix <= 0) {
-		if (!OpaquePrefix) {
+		if constexpr (!OpaquePrefix) {
 			RenderLineOpaque<Light>(dst, src, n, tbl);
 		} else {
-			if (!SkipTransparentPixels<OpaquePrefix, PrefixIncrement>)
+			if constexpr (!SkipTransparentPixels<OpaquePrefix, PrefixIncrement>)
 				RenderLineTransparent<Light>(dst, src, n, tbl);
 		}
 	} else {
@@ -728,13 +728,13 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderRightTriangle(uint8_t *DVL_RESTRI
 
 template <LightType Light, bool OpaquePrefix, int8_t PrefixIncrement>
 DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderTrapezoidUpperHalf(uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl) {
-	if (PrefixIncrement != 0) {
+	if constexpr (PrefixIncrement != 0) {
 		// The first and the last line are always fully transparent/opaque (or vice-versa).
 		// We handle them specially to avoid calling the blitter with width=0.
 		const uint8_t *srcEnd = src + Width * TrapezoidUpperHeight;
 		constexpr bool FirstLineIsTransparent = OpaquePrefix ^ (PrefixIncrement < 0);
-		if (FirstLineIsTransparent) {
-			if (!SkipTransparentPixels<OpaquePrefix, PrefixIncrement>)
+		if constexpr (FirstLineIsTransparent) {
+			if constexpr (!SkipTransparentPixels<OpaquePrefix, PrefixIncrement>)
 				RenderLineTransparent<Light>(dst, src, Width, tbl);
 		} else {
 			RenderLineOpaque<Light>(dst, src, Width, tbl);
@@ -1093,7 +1093,7 @@ void RenderBlackTileFull(uint8_t *DVL_RESTRICT dst, uint16_t dstPitch)
 #ifdef DUN_RENDER_STATS
 std::unordered_map<DunRenderType, size_t, DunRenderTypeHash> DunRenderStats;
 
-string_view TileTypeToString(TileType tileType)
+std::string_view TileTypeToString(TileType tileType)
 {
 	// clang-format off
 	switch (tileType) {
@@ -1108,7 +1108,7 @@ string_view TileTypeToString(TileType tileType)
 	// clang-format on
 }
 
-string_view MaskTypeToString(MaskType maskType)
+std::string_view MaskTypeToString(MaskType maskType)
 {
 	// clang-format off
 	switch (maskType) {
@@ -1174,8 +1174,8 @@ void RenderTile(const Surface &out, Point position,
 	}
 
 #ifdef DEBUG_STR
-	const std::pair<string_view, UiFlags> debugStr = GetTileDebugStr(tile);
-	DrawString(out, debugStr.first, Rectangle { Point { position.x + 2, position.y - 29 }, Size { 28, 28 } }, debugStr.second);
+	const auto [debugStr, flags] = GetTileDebugStr(tile);
+	DrawString(out, debugStr, Rectangle { Point { position.x + 2, position.y - 29 }, Size { 28, 28 } }, { .flags = flags });
 #endif
 }
 

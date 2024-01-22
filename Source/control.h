@@ -7,6 +7,8 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <optional>
+#include <string_view>
 
 #include <SDL.h>
 
@@ -14,17 +16,18 @@
 #include "utils/sdl2_to_1_2_backports.h"
 #endif
 
+#include "DiabloUI/text_input.hpp"
 #include "DiabloUI/ui_flags.hpp"
 #include "engine.h"
+#include "engine/displacement.hpp"
 #include "engine/point.hpp"
 #include "engine/rectangle.hpp"
 #include "engine/render/text_render.hpp"
+#include "engine/size.hpp"
 #include "panels/ui_panels.hpp"
 #include "spelldat.h"
 #include "spells.h"
 #include "utils/attributes.h"
-#include "utils/stdcompat/optional.hpp"
-#include "utils/stdcompat/string_view.hpp"
 #include "utils/string_or_view.hpp"
 #include "utils/ui_fwd.h"
 
@@ -32,20 +35,24 @@ namespace devilution {
 
 constexpr Size SidePanelSize { 320, 352 };
 
+// Info box displacement of the top-left corner relative to GetMainPanel().position.
+constexpr Displacement InfoBoxTopLeft { 177, 46 };
+constexpr Size InfoBoxSize { 288, 64 };
+
 extern bool dropGoldFlag;
+extern TextInputCursorState GoldDropCursor;
+extern char GoldDropText[21];
+
 extern bool chrbtn[4];
 extern bool lvlbtndown;
-extern int dropGoldValue;
 extern bool chrbtnactive;
 extern UiFlags InfoColor;
 extern int sbooktab;
-extern int8_t initialDropGoldIndex;
 extern bool talkflag;
 extern bool sbookflag;
 extern bool chrflag;
 extern StringOrView InfoString;
 extern bool panelflag;
-extern int initialDropGoldValue;
 extern bool panbtndown;
 extern bool spselflag;
 const Rectangle &GetMainPanel();
@@ -76,12 +83,8 @@ inline bool CanPanelsCoverView()
 	const Rectangle &mainPanel = GetMainPanel();
 	return GetScreenWidth() <= mainPanel.size.width && GetScreenHeight() <= SidePanelSize.height + mainPanel.size.height;
 }
-void DrawSpellList(const Surface &out);
-void SetSpell();
-void SetSpeedSpell(size_t slot);
-void ToggleSpell(size_t slot);
 
-void AddPanelString(string_view str);
+void AddPanelString(std::string_view str);
 void AddPanelString(std::string &&str);
 void DrawPanelBox(const Surface &out, SDL_Rect srcRect, Point targetPosition);
 Point GetPanelPosition(UiPanels panel, Point offset = { 0, 0 });
@@ -126,12 +129,6 @@ void DrawFlaskValues(const Surface &out, Point pos, int currValue, int maxValue)
  */
 void control_update_life_mana();
 
-/**
- * @brief draws the current right mouse button spell.
- * @param out screen buffer representing the main UI panel
- */
-void DrawSpell(const Surface &out);
-
 void InitControlPan();
 void DrawCtrlPan(const Surface &out);
 
@@ -153,6 +150,7 @@ void DoPanBtn();
 
 void control_check_btn_press();
 void DoAutoMap();
+void CycleAutomapType();
 
 /**
  * Checks the mouse cursor position within the control panel and sets information
@@ -179,7 +177,7 @@ void ReleaseChrBtns(bool addAllStatPoints);
 void DrawDurIcon(const Surface &out);
 void RedBack(const Surface &out);
 void DrawSpellBook(const Surface &out);
-void DrawGoldSplit(const Surface &out, int amount);
+void DrawGoldSplit(const Surface &out);
 void control_drop_gold(SDL_Keycode vkey);
 void DrawTalkPan(const Surface &out);
 bool control_check_talk_btn();
@@ -187,11 +185,13 @@ void control_release_talk_btn();
 void control_type_message();
 void control_reset_talk();
 bool IsTalkActive();
-void control_new_text(string_view text);
+bool HandleTalkTextInputEvent(const SDL_Event &event);
 bool control_presskeys(SDL_Keycode vkey);
 void DiabloHotkeyMsg(uint32_t dwMsg);
+void OpenGoldDrop(int8_t invIndex, int max);
 void CloseGoldDrop();
-void GoldDropNewText(string_view text);
+int GetGoldDropMax();
+bool HandleGoldDropTextInputEvent(const SDL_Event &event);
 extern Rectangle ChrBtnsRect[4];
 
 } // namespace devilution

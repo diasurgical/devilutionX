@@ -4,10 +4,10 @@ set(CMAKE_POLICY_DEFAULT_CMP0048 NEW)
 
 include(FetchContent)
 FetchContent_Declare(zlib
-    URL https://www.zlib.net/zlib-1.2.13.tar.gz
-        https://www.zlib.net/fossils/zlib-1.2.13.tar.gz
-        https://github.com/madler/zlib/releases/download/v1.2.13/zlib-1.2.13.tar.gz
-    URL_HASH MD5=9b8aa094c4e5765dabf4da391f00d15c
+    URL https://www.zlib.net/zlib-1.3.tar.gz
+        https://www.zlib.net/fossils/zlib-1.3.tar.gz
+        https://github.com/madler/zlib/releases/download/v1.3/zlib-1.3.tar.gz
+    URL_HASH MD5=60373b133d630f74f4a1f94c1185a53f
 )
 FetchContent_MakeAvailableExcludeFromAll(zlib)
 

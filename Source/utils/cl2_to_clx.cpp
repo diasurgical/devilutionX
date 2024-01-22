@@ -55,7 +55,7 @@ uint16_t Cl2ToClx(const uint8_t *data, size_t size,
 		} else {
 			groupBegin = &data[LoadLE32(&data[group * 4])];
 			numFrames = LoadLE32(groupBegin);
-			WriteLE32(&clxData[4 * group], clxData.size());
+			WriteLE32(&clxData[4 * group], static_cast<uint32_t>(clxData.size()));
 		}
 
 		// CLX header: frame count, frame offset for each frame, file size
@@ -126,7 +126,7 @@ uint16_t Cl2ToClx(const uint8_t *data, size_t size,
 			}
 			AppendClxTransparentRun(transparentRunWidth, clxData);
 
-			WriteLE16(&clxData[frameHeaderPos + 4], frameHeight);
+			WriteLE16(&clxData[frameHeaderPos + 4], static_cast<uint16_t>(frameHeight));
 			memset(&clxData[frameHeaderPos + 6], 0, 4);
 		}
 

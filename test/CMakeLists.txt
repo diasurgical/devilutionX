@@ -15,6 +15,7 @@ set(tests
   automap_test
   codec_test
   cursor_test
+  data_file_test
   dead_test
   diablo_test
   drlg_common_test
@@ -31,6 +32,7 @@ set(tests
   missiles_test
   pack_test
   path_test
+  parse_int_test
   player_test
   quests_test
   random_test

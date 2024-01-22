@@ -13,7 +13,6 @@
 #include "engine/assets.hpp"
 #include "mpq/mpq_common.hpp"
 #include "utils/static_vector.hpp"
-#include "utils/stdcompat/cstddef.hpp"
 #include "utils/str_cat.hpp"
 
 namespace devilution {
@@ -58,7 +57,7 @@ void LoadFileInMem(const char *path, std::array<T, N> &data)
  * @param numRead Number of T elements read
  * @return Buffer with content of file
  */
-template <typename T = byte>
+template <typename T = std::byte>
 std::unique_ptr<T[]> LoadFileInMem(const char *path, std::size_t *numRead = nullptr)
 {
 	size_t size;
@@ -95,10 +94,10 @@ struct MultiFileLoader {
 	 * @param pathFn a function that returns the path for the given index
 	 * @param outOffsets a buffer index for the start of each file will be written here, then the total file size at the end.
 	 * @param filterFn a function that returns whether to load a file for the given index
-	 * @return std::unique_ptr<byte[]> the buffer with all the files
+	 * @return std::unique_ptr<std::byte[]> the buffer with all the files
 	 */
 	template <typename PathFn, typename FilterFn = DefaultFilterFn>
-	[[nodiscard]] std::unique_ptr<byte[]> operator()(size_t numFiles, PathFn &&pathFn, uint32_t *outOffsets,
+	[[nodiscard]] std::unique_ptr<std::byte[]> operator()(size_t numFiles, PathFn &&pathFn, uint32_t *outOffsets,
 	    FilterFn filterFn = DefaultFilterFn {})
 	{
 		StaticVector<std::array<char, MaxMpqPathSize>, MaxFiles> paths;
@@ -124,8 +123,8 @@ struct MultiFileLoader {
 			totalSize += size;
 			++j;
 		}
-		outOffsets[files.size()] = totalSize;
-		std::unique_ptr<byte[]> buf { new byte[totalSize] };
+		outOffsets[files.size()] = static_cast<uint32_t>(totalSize);
+		std::unique_ptr<std::byte[]> buf { new std::byte[totalSize] };
 		for (size_t i = 0, j = 0; i < numFiles; ++i) {
 			if (!filterFn(i))
 				continue;
