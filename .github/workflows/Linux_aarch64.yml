@@ -61,7 +61,7 @@ jobs:
           --slave /usr/bin/ld.lld ld.lld /usr/bin/ld.lld-18
 
     - name: Cache CMake build folder
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: build
         key: ${{ github.workflow }}-v6-${{ github.sha }}
