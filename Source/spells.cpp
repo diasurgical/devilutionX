@@ -13,6 +13,7 @@
 #include "engine/backbuffer_state.hpp"
 #include "engine/point.hpp"
 #include "engine/random.hpp"
+#include "engine/world_tile.hpp"
 #include "gamemenu.h"
 #include "inv.h"
 #include "missiles.h"
@@ -121,7 +122,7 @@ int GetManaAmount(const Player &player, SpellID sn)
 	}
 
 	if (sn == SpellID::Healing || sn == SpellID::HealOther) {
-		ma = (GetSpellData(SpellID::Healing).sManaCost + 2 * player._pLevel - adj);
+		ma = (GetSpellData(SpellID::Healing).sManaCost + 2 * player.getCharacterLevel() - adj);
 	} else if (GetSpellData(sn).sManaCost == 255) {
 		ma = (player._pMaxManaBase >> 6) - adj;
 	} else {
@@ -208,9 +209,8 @@ SpellCheckResult CheckSpell(const Player &player, SpellID sn, SpellType st, bool
 	return SpellCheckResult::Success;
 }
 
-void CastSpell(int id, SpellID spl, int sx, int sy, int dx, int dy, int spllvl)
+void CastSpell(Player &player, SpellID spl, WorldTilePosition src, WorldTilePosition dst, int spllvl)
 {
-	Player &player = Players[id];
 	Direction dir = player._pdir;
 	if (IsWallSpell(spl)) {
 		dir = player.tempDirection;
@@ -219,12 +219,12 @@ void CastSpell(int id, SpellID spl, int sx, int sy, int dx, int dy, int spllvl)
 	bool fizzled = false;
 	const SpellData &spellData = GetSpellData(spl);
 	for (size_t i = 0; i < sizeof(spellData.sMissiles) / sizeof(spellData.sMissiles[0]) && spellData.sMissiles[i] != MissileID::Null; i++) {
-		Missile *missile = AddMissile({ sx, sy }, { dx, dy }, dir, spellData.sMissiles[i], TARGET_MONSTERS, id, 0, spllvl);
+		Missile *missile = AddMissile(src, dst, dir, spellData.sMissiles[i], TARGET_MONSTERS, player, 0, spllvl);
 		fizzled |= (missile == nullptr);
 	}
 	if (spl == SpellID::ChargedBolt) {
 		for (int i = (spllvl / 2) + 3; i > 0; i--) {
-			Missile *missile = AddMissile({ sx, sy }, { dx, dy }, dir, MissileID::ChargedBolt, TARGET_MONSTERS, id, 0, spllvl);
+			Missile *missile = AddMissile(src, dst, dir, MissileID::ChargedBolt, TARGET_MONSTERS, player, 0, spllvl);
 			fizzled |= (missile == nullptr);
 		}
 	}
@@ -233,13 +233,9 @@ void CastSpell(int id, SpellID spl, int sx, int sy, int dx, int dy, int spllvl)
 	}
 }
 
-void DoResurrect(size_t pnum, Player &target)
+void DoResurrect(Player &player, Player &target)
 {
-	if (pnum >= Players.size()) {
-		return;
-	}
-
-	AddMissile(target.position.tile, target.position.tile, Direction::South, MissileID::ResurrectBeam, TARGET_MONSTERS, pnum, 0, 0);
+	AddMissile(target.position.tile, target.position.tile, Direction::South, MissileID::ResurrectBeam, TARGET_MONSTERS, player, 0, 0);
 
 	if (target._pHitPoints != 0)
 		return;
@@ -282,7 +278,7 @@ void DoHealOther(const Player &caster, Player &target)
 	}
 
 	int hp = (GenerateRnd(10) + 1) << 6;
-	for (int i = 0; i < caster._pLevel; i++) {
+	for (unsigned i = 0; i < caster.getCharacterLevel(); i++) {
 		hp += (GenerateRnd(4) + 1) << 6;
 	}
 	for (int i = 0; i < caster.GetSpellLevel(SpellID::HealOther); i++) {

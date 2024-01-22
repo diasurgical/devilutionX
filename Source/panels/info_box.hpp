@@ -5,14 +5,14 @@
 namespace devilution {
 
 /**
- * @brief Info box frame
+ * @brief Fixed size info box frame
  *
  * Used in stores, the quest log, the help window, and the unique item info window.
  */
 extern OptionalOwnedClxSpriteList pSTextBoxCels;
 
 /**
- * @brief Info box scrollbar graphics.
+ * @brief Dynamic size info box frame and scrollbar graphics.
  *
  * Used in stores and `DrawDiabloMsg`.
  */

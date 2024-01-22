@@ -88,9 +88,9 @@ void CheckStashButtonPress(Point mousePosition);
 
 void StartGoldWithdraw();
 void WithdrawGoldKeyPress(SDL_Keycode vkey);
-void DrawGoldWithdraw(const Surface &out, int amount);
+void DrawGoldWithdraw(const Surface &out);
 void CloseGoldWithdraw();
-void GoldWithdrawNewText(string_view text);
+bool HandleGoldWithdrawTextInputEvent(const SDL_Event &event);
 
 /**
  * @brief Checks whether the given item can be placed on the specified player's stash.

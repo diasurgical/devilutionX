@@ -24,7 +24,11 @@ namespace devilution {
 std::array<SDL_Color, 256> logical_palette;
 std::array<SDL_Color, 256> system_palette;
 std::array<SDL_Color, 256> orig_palette;
-std::array<std::array<Uint8, 256>, 256> paletteTransparencyLookup;
+
+// This array is read from a lot on every frame.
+// We do not use `std::array` here to improve debug build performance.
+// In a debug build, `std::array` accesses are function calls.
+Uint8 paletteTransparencyLookup[256][256];
 
 #if DEVILUTIONX_PALETTE_TRANSPARENCY_BLACK_16_LUT
 uint16_t paletteTransparencyLookupBlack16[65536];
@@ -38,7 +42,7 @@ bool sgbFadedIn = true;
 void LoadGamma()
 {
 	int gammaValue = *sgOptions.Graphics.gammaCorrection;
-	gammaValue = clamp(gammaValue, 30, 100);
+	gammaValue = std::clamp(gammaValue, 30, 100);
 	sgOptions.Graphics.gammaCorrection.SetValue(gammaValue - gammaValue % 5);
 }
 
@@ -103,11 +107,7 @@ void GenerateBlendedLookupTable(std::array<SDL_Color, 256> &palette, int skipFro
 #if DEVILUTIONX_PALETTE_TRANSPARENCY_BLACK_16_LUT
 	for (unsigned i = 0; i < 256; ++i) {
 		for (unsigned j = 0; j < 256; ++j) {
-#if SDL_BYTEORDER == SDL_LIL_ENDIAN
 			const std::uint16_t index = i | (j << 8);
-#else
-			const std::uint16_t index = j | (i << 8);
-#endif
 			paletteTransparencyLookupBlack16[index] = paletteTransparencyLookup[0][i] | (paletteTransparencyLookup[0][j] << 8);
 		}
 	}
@@ -124,10 +124,10 @@ void CycleColors(int from, int to)
 	std::rotate(system_palette.begin() + from, system_palette.begin() + from + 1, system_palette.begin() + to + 1);
 
 	for (auto &palette : paletteTransparencyLookup) {
-		std::rotate(palette.begin() + from, palette.begin() + from + 1, palette.begin() + to + 1);
+		std::rotate(std::begin(palette) + from, std::begin(palette) + from + 1, std::begin(palette) + to + 1);
 	}
 
-	std::rotate(paletteTransparencyLookup.begin() + from, paletteTransparencyLookup.begin() + from + 1, paletteTransparencyLookup.begin() + to + 1);
+	std::rotate(&paletteTransparencyLookup[from][0], &paletteTransparencyLookup[from + 1][0], &paletteTransparencyLookup[to + 1][0]);
 }
 
 /**
@@ -140,10 +140,10 @@ void CycleColorsReverse(int from, int to)
 	std::rotate(system_palette.begin() + from, system_palette.begin() + to, system_palette.begin() + to + 1);
 
 	for (auto &palette : paletteTransparencyLookup) {
-		std::rotate(palette.begin() + from, palette.begin() + to, palette.begin() + to + 1);
+		std::rotate(std::begin(palette) + from, std::begin(palette) + to, std::begin(palette) + to + 1);
 	}
 
-	std::rotate(paletteTransparencyLookup.begin() + from, paletteTransparencyLookup.begin() + to, paletteTransparencyLookup.begin() + to + 1);
+	std::rotate(&paletteTransparencyLookup[from][0], &paletteTransparencyLookup[to][0], &paletteTransparencyLookup[to + 1][0]);
 }
 
 } // namespace
@@ -226,12 +226,12 @@ void LoadRndLvlPal(dungeon_type l)
 		return;
 	}
 
-	int rv = GenerateRnd(4) + 1;
 	if (l == DTYPE_CRYPT) {
 		LoadPalette("nlevels\\l5data\\l5base.pal");
 		return;
 	}
 
+	int rv = RandomIntBetween(1, 4);
 	char szFileName[27];
 	if (l == DTYPE_NEST) {
 		if (!*sgOptions.Graphics.alternateNestArt) {

@@ -14,11 +14,23 @@ deb [arch=arm64] http://ports.ubuntu.com/ ${FLAVOR} multiverse
 deb [arch=arm64] http://ports.ubuntu.com/ ${FLAVOR}-updates multiverse
 deb [arch=arm64] http://ports.ubuntu.com/ ${FLAVOR}-backports main restricted universe multiverse
 LIST
-	sudo sed -i 's/deb http/deb [arch=amd64,i386] http/' /etc/apt/sources.list
+	sudo sed -E -i 's/deb (http|file|mirror)/deb [arch=amd64,i386] \1/' /etc/apt/sources.list
+	cat /etc/apt/sources.list
 fi
+
+
+PACKAGES=(
+  cmake git smpq gettext dpkg-cross libc-dev-arm64-cross
+  libsdl2-dev:arm64 libsdl2-image-dev:arm64 libsodium-dev:arm64
+  libsimpleini-dev:arm64 libpng-dev:arm64 libbz2-dev:arm64 libfmt-dev:arm64
+  libspeechd-dev:arm64
+)
+
+if (( $# < 1 )) || [[ "$1" != --no-gcc ]]; then
+  PACKAGES+=(crossbuild-essential-arm64)
+fi
+
 
 sudo dpkg --add-architecture arm64
 sudo apt-get update
-sudo apt-get install -y cmake git smpq gettext crossbuild-essential-arm64 \
-  libsdl2-dev:arm64 libsdl2-image-dev:arm64 libsodium-dev:arm64 \
-  libsimpleini-dev:arm64 libpng-dev:arm64 libbz2-dev:arm64 libfmt-dev:arm64
+sudo apt-get install -y "${PACKAGES[@]}"

@@ -1087,7 +1087,7 @@ msgstr ""
 
 #: Source/cursor.cpp:220
 msgid "Town Portal"
-msgstr "Stadsportal"
+msgstr "Byportal"
 
 #: Source/cursor.cpp:221
 msgid "from {:s}"
@@ -1481,7 +1481,7 @@ msgstr "fel: läste 0 bytes från servern"
 
 #: Source/error.cpp:55
 msgid "No automap available in town"
-msgstr "Ingen autokarta tillgänglig i staden"
+msgstr "Ingen autokarta tillgänglig i byn"
 
 #: Source/error.cpp:56
 msgid "No multiplayer functions in demo"
@@ -1501,7 +1501,7 @@ msgstr "Inte tillräckligt med utrymme för att spara"
 
 #: Source/error.cpp:60
 msgid "No Pause in town"
-msgstr "Ingen Paus i staden"
+msgstr "Ingen Paus i byn"
 
 #: Source/error.cpp:61
 msgid "Copying to a hard disk is recommended"
@@ -1745,7 +1745,7 @@ msgstr "Avsluta Spel"
 
 #: Source/gamemenu.cpp:51
 msgid "Restart In Town"
-msgstr "Starta Om i Staden"
+msgstr "Starta Om i Byn"
 
 #: Source/gamemenu.cpp:63
 msgid "Gamma"
@@ -2063,7 +2063,7 @@ msgstr "Köttyxa"
 
 #: Source/itemdat.cpp:60 Source/itemdat.cpp:434
 msgid "The Undead Crown"
-msgstr "De Vandödas Krona"
+msgstr "De Odödas Krona"
 
 #: Source/itemdat.cpp:61 Source/itemdat.cpp:435
 msgid "Empyrean Band"
@@ -2143,7 +2143,7 @@ msgstr "Identifiera-Skriftrulle"
 
 #: Source/itemdat.cpp:80 Source/itemdat.cpp:151
 msgid "Scroll of Town Portal"
-msgstr "Stadsportal-Skriftrulle"
+msgstr "Byportal-Skriftrulle"
 
 #: Source/itemdat.cpp:81 Source/itemdat.cpp:440
 msgid "Arkaine's Valor"
@@ -2483,7 +2483,7 @@ msgstr "Huggare"
 
 #: Source/itemdat.cpp:175
 msgid "Claymore"
-msgstr "Höglandssvärd"
+msgstr "Slagsvärd"
 
 #: Source/itemdat.cpp:176
 msgid "Blade"
@@ -2560,7 +2560,7 @@ msgstr "Spikklubba"
 
 #: Source/itemdat.cpp:194
 msgid "Flail"
-msgstr "Slaga"
+msgstr "Stridsgissel"
 
 #: Source/itemdat.cpp:195
 msgid "Maul"
@@ -4413,7 +4413,7 @@ msgstr "extra PK mot demoner"
 
 #: Source/items.cpp:3754
 msgid "extra AC vs undead"
-msgstr "extra PK mot vandöda"
+msgstr "extra PK mot ödöda"
 
 #: Source/items.cpp:3756
 msgid "50% Mana moved to Health"
@@ -4788,7 +4788,7 @@ msgstr "Likdemon"
 #: Source/monstdat.cpp:91
 msgctxt "monster"
 msgid "Undead Balrog"
-msgstr "Vandöd Balrog"
+msgstr "Odöd Balrog"
 
 #: Source/monstdat.cpp:92
 msgctxt "monster"
@@ -5614,7 +5614,7 @@ msgstr "Demon"
 
 #: Source/monster.cpp:3386
 msgid "Undead"
-msgstr "Vandöd"
+msgstr "Odöd"
 
 #: Source/monster.cpp:4648
 msgid "Type: {:s}  Kills: {:d}"
@@ -6848,7 +6848,7 @@ msgstr "Magi"
 
 #: Source/panels/spell_list.cpp:172
 msgid "Damages undead only"
-msgstr "Skadar endast vandöda"
+msgstr "Skadar endast odöda"
 
 #: Source/panels/spell_list.cpp:183
 msgid "Scroll"
@@ -7080,7 +7080,7 @@ msgstr "Eldmur"
 #: Source/spelldat.cpp:22
 msgctxt "spell"
 msgid "Town Portal"
-msgstr "Stadsportal"
+msgstr "Byportal"
 
 #: Source/spelldat.cpp:23
 msgctxt "spell"
@@ -7683,7 +7683,7 @@ msgstr ""
 "\n"
 "Här tar historien en ännu mörkare vändning än vad jag trodde var möjligt! "
 "Vår forne kung har stigit upp från sin eviga sömn och styr nu en legion av "
-"vandöda tjänare inne i Labyrinten. Hans kropp begravdes i en grift tre "
+"odöda tjänare inne i Labyrinten. Hans kropp begravdes i en grift tre "
 "våningar under Katedralen. Snälla, kära mästare, släpp hans själ fri genom "
 "att förgöra hans förbannade nuvarande form..."
 
@@ -7768,7 +7768,7 @@ msgid ""
 "all who still live here."
 msgstr ""
 "De döda som går bland de levande följer den förbannade Kungen. Han har "
-"makten att väcka upp ännu fler krigare för de vandödas evigt växande armé. "
+"makten att väcka upp ännu fler krigare för de odödas evigt växande armé. "
 "Om du inte stoppar hans styre kommer han säkerligen tåga över detta land och "
 "slå ned alla som ännu bor här."
 
@@ -7782,7 +7782,7 @@ msgid ""
 msgstr ""
 "Lyssna, jag har affärer att sköta här. Jag säljer inte information, och jag "
 "bryr mig inte om någon Kung som varit död längre än jag levat. Men om du "
-"behöver något att använda mot den här vandöda Kungen, så kanske jag kan "
+"behöver något att använda mot den här odöda Kungen, så kanske jag kan "
 "hjälpa dig..."
 
 #. TRANSLATORS: Quest dialog spoken by The Skeleton King (Hostile)
@@ -8142,7 +8142,7 @@ msgid ""
 "Please, do what you can or I don't know what we will do."
 msgstr ""
 "Jag har alltid försökt hålla stora förråd av mat och dryck i vår källare, "
-"men om hela staden saknar färskvatten kommer till och med våra förråd sina "
+"men om hela byn saknar färskvatten kommer till och med våra förråd sina "
 "snart.\n"
 "\n"
 "Snälla, gör vad du kan, annars vet jag inte vad vi ska ta oss till."
@@ -10005,7 +10005,7 @@ msgid ""
 "little skeletons!"
 msgstr ""
 "Om du är ute efter ett bra vapen så se här. Ta ett vanligt trubbigt vapen, "
-"som en stridsklubba. Funkar utmärkt mot de där vandöda fasorna där nere, och "
+"som en stridsklubba. Funkar utmärkt mot de där odöda fasorna där nere, och "
 "det finns inget bättre för att spräcka smala små skelett!"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
@@ -10030,7 +10030,7 @@ msgid ""
 msgstr ""
 "Titta på den här klingan, balansen. Ett svärd i rätt händer och mot rätt "
 "fiende, är alla vapens mästare. Dess skarpa egg har inte mycket att skära "
-"eller hugga igenom mot de vandöda, men mot levande fiender kan ett svärd på "
+"eller hugga igenom mot de odöda, men mot levande fiender kan ett svärd på "
 "riktigt skära deras kött!"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
@@ -10945,7 +10945,7 @@ msgid ""
 "the talk of an old sick woman, but anything seems possible these days."
 msgstr ""
 "Min mormor berättar ofta historier om mystiska krafter som bebor kyrkogården "
-"utanför stade. Och du kanske vill höra en av dem. Hon sade att om man lämnar "
+"utanför byn. Och du kanske vill höra en av dem. Hon sade att om man lämnar "
 "en lämplig gåva i kyrkogården, går in i katedralen för att be för de döda, "
 "och sedan kommer tillbaka, så skulle gåvan ändrats på något konstigt sätt. "
 "Jag vet inte om det bara är en sjuk gammal kvinnas prat, men allt verkar "
@@ -11463,7 +11463,7 @@ msgstr "Krögaren Ogden"
 
 #: Source/towners.cpp:110
 msgid "Wounded Townsman"
-msgstr "Skadad Stadsbo"
+msgstr "Skadad Bybo"
 
 #: Source/towners.cpp:132
 msgid "Adria the Witch"
@@ -11499,7 +11499,7 @@ msgstr "Celia"
 
 #: Source/towners.cpp:277
 msgid "Slain Townsman"
-msgstr "Dräpt Stadsbo"
+msgstr "Dräpt Bybo"
 
 #: Source/trigs.cpp:343
 msgid "Down to dungeon"
@@ -11533,7 +11533,7 @@ msgstr "Upp till nivå {:d}"
 #: Source/trigs.cpp:416 Source/trigs.cpp:471 Source/trigs.cpp:523
 #: Source/trigs.cpp:602 Source/trigs.cpp:619 Source/trigs.cpp:666
 msgid "Up to town"
-msgstr "Upp till staden"
+msgstr "Upp till byn"
 
 #: Source/trigs.cpp:427 Source/trigs.cpp:505 Source/trigs.cpp:558
 #: Source/trigs.cpp:583 Source/trigs.cpp:648

@@ -1,8 +1,10 @@
 #include "itemlabels.h"
 
 #include <algorithm>
+#include <cmath>
 #include <limits>
 #include <string>
+#include <string_view>
 #include <vector>
 
 #include <fmt/format.h>
@@ -16,9 +18,9 @@
 #include "options.h"
 #include "qol/stash.h"
 #include "stores.h"
+#include "utils/algorithm/container.hpp"
 #include "utils/format_int.hpp"
 #include "utils/language.h"
-#include "utils/stdcompat/string_view.hpp"
 
 namespace devilution {
 
@@ -36,11 +38,16 @@ bool highlightKeyPressed = false;
 bool isLabelHighlighted = false;
 std::array<std::optional<int>, ITEMTYPES> labelCenterOffsets;
 
-const int BorderX = 4;               // minimal horizontal space between labels
-const int BorderY = 2;               // minimal vertical space between labels
-const int MarginX = 2;               // horizontal margins between text and edges of the label
-const int MarginY = 1;               // vertical margins between text and edges of the label
-const int Height = 11 + MarginY * 2; // going above 13 scatters labels of items that are next to each other
+const int BorderX = 4; // minimal horizontal space between labels
+const int BorderY = 2; // minimal vertical space between labels
+const int MarginX = 2; // horizontal margins between text and edges of the label
+
+// Vertical space between the text and the edges of the label.
+int TextMarginTop() { return IsSmallFontTall() ? 1 : -1; }
+int TextMarginBottom() { return IsSmallFontTall() ? 1 : 3; }
+
+// The total height of the label box.
+int LabelHeight() { return (IsSmallFontTall() ? 16 : 11) + TextMarginBottom() + TextMarginTop(); }
 
 /**
  * @brief The set of used X coordinates for a certain Y coordinate.
@@ -49,7 +56,7 @@ class UsedX {
 public:
 	[[nodiscard]] bool contains(int val) const
 	{
-		return std::find(data_.begin(), data_.end(), val) != data_.end();
+		return c_find(data_, val) != data_.end();
 	}
 
 	void insert(int val)
@@ -111,8 +118,8 @@ void AddItemToLabelQueue(int id, Point position)
 	nameWidth += MarginX * 2;
 	int index = ItemCAnimTbl[item._iCurs];
 	if (!labelCenterOffsets[index]) {
-		std::pair<int, int> itemBounds = ClxMeasureSolidHorizontalBounds((*item.AnimInfo.sprites)[item.AnimInfo.currentFrame]);
-		labelCenterOffsets[index].emplace((itemBounds.first + itemBounds.second) / 2);
+		const auto [xBegin, xEnd] = ClxMeasureSolidHorizontalBounds((*item.AnimInfo.sprites)[item.AnimInfo.currentFrame]);
+		labelCenterOffsets[index].emplace((xBegin + xEnd) / 2);
 	}
 
 	position.x += *labelCenterOffsets[index];
@@ -121,7 +128,7 @@ void AddItemToLabelQueue(int id, Point position)
 		position *= 2;
 	}
 	position.x -= nameWidth / 2;
-	position.y -= Height;
+	position.y -= LabelHeight();
 	labelQueue.push_back(ItemLabel { id, nameWidth, position, std::move(textOnGround) });
 }
 
@@ -137,13 +144,6 @@ bool IsMouseOverGameArea()
 	return true;
 }
 
-void FillRect(const Surface &out, int x, int y, int width, int height, Uint8 col)
-{
-	for (int j = 0; j < height; j++) {
-		DrawHorizontalLine(out, { x, y + j }, width, col);
-	}
-}
-
 void DrawItemNameLabels(const Surface &out)
 {
 	const Surface clippedOut = out.subregionY(0, gnViewportHeight);
@@ -151,6 +151,8 @@ void DrawItemNameLabels(const Surface &out)
 	if (labelQueue.empty())
 		return;
 	UsedX usedX;
+	const int labelHeight = LabelHeight();
+	const int labelMarginTop = TextMarginTop();
 
 	for (unsigned i = 0; i < labelQueue.size(); ++i) {
 		usedX.clear();
@@ -161,7 +163,7 @@ void DrawItemNameLabels(const Surface &out)
 			for (unsigned j = 0; j < i; ++j) {
 				ItemLabel &a = labelQueue[i];
 				ItemLabel &b = labelQueue[j];
-				if (abs(b.pos.y - a.pos.y) < Height + BorderY) {
+				if (std::abs(b.pos.y - a.pos.y) < labelHeight + BorderY) {
 					const int widthA = a.width + BorderX + MarginX * 2;
 					const int widthB = b.width + BorderX + MarginX * 2;
 					int newpos = b.pos.x;
@@ -186,7 +188,8 @@ void DrawItemNameLabels(const Surface &out)
 	for (const ItemLabel &label : labelQueue) {
 		Item &item = Items[label.id];
 
-		if (MousePosition.x >= label.pos.x && MousePosition.x < label.pos.x + label.width && MousePosition.y >= label.pos.y + MarginY && MousePosition.y < label.pos.y + MarginY + Height) {
+		if (MousePosition.x >= label.pos.x && MousePosition.x < label.pos.x + label.width
+		    && MousePosition.y >= label.pos.y && MousePosition.y < label.pos.y + labelHeight) {
 			if (!gmenu_is_active()
 			    && PauseMode == 0
 			    && !MyPlayerIsDead
@@ -199,10 +202,11 @@ void DrawItemNameLabels(const Surface &out)
 			}
 		}
 		if (pcursitem == label.id && stextflag == TalkID::None)
-			FillRect(clippedOut, label.pos.x, label.pos.y + MarginY, label.width, Height, PAL8_BLUE + 6);
+			FillRect(clippedOut, label.pos.x, label.pos.y, label.width, labelHeight, PAL8_BLUE + 6);
 		else
-			DrawHalfTransparentRectTo(clippedOut, label.pos.x, label.pos.y + MarginY, label.width, Height);
-		DrawString(clippedOut, label.text, { { label.pos.x + MarginX, label.pos.y }, { label.width, Height } }, item.getTextColor());
+			DrawHalfTransparentRectTo(clippedOut, label.pos.x, label.pos.y, label.width, labelHeight);
+		DrawString(clippedOut, label.text, { { label.pos.x + MarginX, label.pos.y + labelMarginTop }, { label.width, labelHeight } },
+		    { .flags = item.getTextColor() });
 	}
 	labelQueue.clear();
 }

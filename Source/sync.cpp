@@ -152,8 +152,7 @@ void SyncPlrInv(TSyncHeader *pHdr)
 
 void SyncMonster(bool isOwner, const TSyncMonster &monsterSync)
 {
-	const int monsterId = monsterSync._mndx;
-	Monster &monster = Monsters[monsterId];
+	Monster &monster = Monsters[monsterSync._mndx];
 	if (monster.hitPoints <= 0 || monster.mode == MonsterMode::Death) {
 		return;
 	}
@@ -183,14 +182,14 @@ void SyncMonster(bool isOwner, const TSyncMonster &monsterSync)
 			Direction md = GetDirection(monster.position.tile, position);
 			if (DirOK(monster, md)) {
 				M_ClearSquares(monster);
-				dMonster[monster.position.tile.x][monster.position.tile.y] = monsterId + 1;
+				monster.occupyTile(monster.position.tile, false);
 				Walk(monster, md);
 				monster.activeForTicks = UINT8_MAX;
 			}
 		}
 	} else if (dMonster[position.x][position.y] == 0) {
 		M_ClearSquares(monster);
-		dMonster[position.x][position.y] = monsterId + 1;
+		monster.occupyTile(position, false);
 		monster.position.tile = position;
 		if (monster.lightId != NO_LIGHT)
 			ChangeLightXY(monster.lightId, position);
@@ -250,7 +249,7 @@ bool IsTSyncMonsterValidate(const TSyncMonster &monsterSync)
 
 } // namespace
 
-uint32_t sync_all_monsters(byte *pbBuf, uint32_t dwMaxLen)
+size_t sync_all_monsters(std::byte *pbBuf, size_t dwMaxLen)
 {
 	if (ActiveMonsterCount < 1) {
 		return dwMaxLen;
@@ -294,7 +293,7 @@ uint32_t sync_all_monsters(byte *pbBuf, uint32_t dwMaxLen)
 	return dwMaxLen;
 }
 
-uint32_t OnSyncData(const TCmd *pCmd, size_t pnum)
+uint32_t OnSyncData(const TCmd *pCmd, const Player &player)
 {
 	const auto &header = *reinterpret_cast<const TSyncHeader *>(pCmd);
 	const uint16_t wLen = SDL_SwapLE16(header.wLen);
@@ -304,7 +303,7 @@ uint32_t OnSyncData(const TCmd *pCmd, size_t pnum)
 	if (gbBufferMsgs == 1) {
 		return wLen + sizeof(header);
 	}
-	if (pnum == MyPlayerId) {
+	if (&player == MyPlayer) {
 		return wLen + sizeof(header);
 	}
 
@@ -316,13 +315,14 @@ uint32_t OnSyncData(const TCmd *pCmd, size_t pnum)
 
 	if (IsValidLevelForMultiplayer(level)) {
 		const auto *monsterSyncs = reinterpret_cast<const TSyncMonster *>(pCmd + sizeof(header));
+		bool isOwner = player.getId() > MyPlayerId;
 
 		for (int i = 0; i < monsterCount; i++) {
 			if (!IsTSyncMonsterValidate(monsterSyncs[i]))
 				continue;
 
 			if (syncLocalLevel) {
-				SyncMonster(pnum > MyPlayerId, monsterSyncs[i]);
+				SyncMonster(isOwner, monsterSyncs[i]);
 			}
 
 			delta_sync_monster(monsterSyncs[i], level);

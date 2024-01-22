@@ -6,7 +6,12 @@
 #pragma once
 
 #include <cstdint>
+#include <string>
+#include <string_view>
 #include <type_traits>
+#include <vector>
+
+#include <expected.hpp>
 
 #include "effects.h"
 #include "utils/enum_traits.h"
@@ -84,6 +89,8 @@ enum class SpellID : int8_t {
 	LAST = RuneOfStone,
 	Invalid = -1,
 };
+
+tl::expected<SpellID, std::string> ParseSpellId(std::string_view value);
 
 enum class MagicType : uint8_t {
 	Fire,
@@ -216,8 +223,8 @@ enum class SpellDataFlags : uint8_t {
 use_enum_as_flags(SpellDataFlags);
 
 struct SpellData {
-	const char *sNameText;
-	_sfx_id sSFX;
+	std::string sNameText;
+	SfxID sSFX;
 	uint16_t bookCost10;
 	uint8_t staffCost10;
 	uint8_t sManaCost;
@@ -257,11 +264,13 @@ struct SpellData {
 	}
 };
 
-extern const SpellData SpellsData[];
+extern std::vector<SpellData> SpellsData;
 
 inline const SpellData &GetSpellData(SpellID spellId)
 {
 	return SpellsData[static_cast<std::underlying_type<SpellID>::type>(spellId)];
 }
+
+void LoadSpellData();
 
 } // namespace devilution

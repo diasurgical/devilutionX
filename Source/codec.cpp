@@ -7,7 +7,6 @@
 #include "sha.h"
 #include "utils/endian.hpp"
 #include "utils/log.hpp"
-#include "utils/stdcompat/cstddef.hpp"
 
 namespace devilution {
 namespace {
@@ -53,7 +52,7 @@ SHA1Context CodecInitKey(const char *pszPassword)
 	return context;
 }
 
-CodecSignature GetCodecSignature(byte *src)
+CodecSignature GetCodecSignature(std::byte *src)
 {
 	CodecSignature result;
 	result.checksum = LoadLE32(src);
@@ -63,16 +62,16 @@ CodecSignature GetCodecSignature(byte *src)
 	return result;
 }
 
-void SetCodecSignature(byte *dst, CodecSignature sig)
+void SetCodecSignature(std::byte *dst, CodecSignature sig)
 {
-	*dst++ = static_cast<byte>(sig.checksum);
-	*dst++ = static_cast<byte>(sig.checksum >> 8);
-	*dst++ = static_cast<byte>(sig.checksum >> 16);
-	*dst++ = static_cast<byte>(sig.checksum >> 24);
-	*dst++ = static_cast<byte>(sig.error);
-	*dst++ = static_cast<byte>(sig.lastChunkSize);
-	*dst++ = static_cast<byte>(0);
-	*dst++ = static_cast<byte>(0);
+	*dst++ = static_cast<std::byte>(sig.checksum);
+	*dst++ = static_cast<std::byte>(sig.checksum >> 8);
+	*dst++ = static_cast<std::byte>(sig.checksum >> 16);
+	*dst++ = static_cast<std::byte>(sig.checksum >> 24);
+	*dst++ = static_cast<std::byte>(sig.error);
+	*dst++ = static_cast<std::byte>(sig.lastChunkSize);
+	*dst++ = static_cast<std::byte>(0);
+	*dst++ = static_cast<std::byte>(0);
 }
 
 void ByteSwapBlock(uint32_t *data)
@@ -89,7 +88,7 @@ void XorBlock(const uint32_t *shaResult, uint32_t *out)
 
 } // namespace
 
-std::size_t codec_decode(byte *pbSrcDst, std::size_t size, const char *pszPassword)
+std::size_t codec_decode(std::byte *pbSrcDst, std::size_t size, const char *pszPassword)
 {
 	uint32_t buf[BlockSize];
 	uint32_t dst[SHA1HashSize];
@@ -134,7 +133,7 @@ std::size_t codec_get_encoded_len(std::size_t dwSrcBytes)
 	return dwSrcBytes + SignatureSize;
 }
 
-void codec_encode(byte *pbSrcDst, std::size_t size, std::size_t size64, const char *pszPassword)
+void codec_encode(std::byte *pbSrcDst, std::size_t size, std::size_t size64, const char *pszPassword)
 {
 	uint32_t buf[BlockSize];
 	uint32_t tmp[SHA1HashSize];

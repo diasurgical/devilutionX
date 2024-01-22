@@ -44,7 +44,8 @@ void RenderButton(const UiButton &button)
 		--textRect.position.y;
 	}
 
-	DrawString(out, button.GetText(), textRect, UiFlags::AlignCenter | UiFlags::FontSizeDialog | UiFlags::ColorDialogWhite);
+	DrawString(out, button.GetText(), textRect,
+	    { .flags = UiFlags::AlignCenter | UiFlags::FontSizeDialog | UiFlags::ColorDialogWhite });
 }
 
 bool HandleMouseEventButton(const SDL_Event &event, UiButton *button)

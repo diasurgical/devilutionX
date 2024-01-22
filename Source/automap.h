@@ -34,14 +34,98 @@ extern DVL_API_FOR_TEST bool AutomapActive;
 extern uint8_t AutomapView[DMAXX][DMAXY];
 /** Specifies the scale of the automap. */
 extern DVL_API_FOR_TEST int AutoMapScale;
+extern DVL_API_FOR_TEST int MinimapScale;
 extern DVL_API_FOR_TEST Displacement AutomapOffset;
+extern Rectangle MinimapRect;
 
-inline int AmLine(int x)
+/** Defines the offsets used for Automap lines */
+enum class AmWidthOffset : int8_t {
+	None,
+	EighthTileRight = TILE_WIDTH >> 4,
+	QuarterTileRight = TILE_WIDTH >> 3,
+	HalfTileRight = TILE_WIDTH >> 2,
+	ThreeQuartersTileRight = (TILE_WIDTH >> 1) - (TILE_WIDTH >> 3),
+	FullTileRight = TILE_WIDTH >> 1,
+	DoubleTileRight = TILE_WIDTH,
+	EighthTileLeft = -EighthTileRight,
+	QuarterTileLeft = -QuarterTileRight,
+	HalfTileLeft = -HalfTileRight,
+	ThreeQuartersTileLeft = -ThreeQuartersTileRight,
+	FullTileLeft = -FullTileRight,
+	DoubleTileLeft = -DoubleTileRight,
+};
+
+enum class AmHeightOffset : int8_t {
+	None,
+	EighthTileDown = TILE_HEIGHT >> 4,
+	QuarterTileDown = TILE_HEIGHT >> 3,
+	HalfTileDown = TILE_HEIGHT >> 2,
+	ThreeQuartersTileDown = (TILE_HEIGHT >> 1) - (TILE_HEIGHT >> 3),
+	FullTileDown = TILE_HEIGHT >> 1,
+	DoubleTileDown = TILE_HEIGHT,
+	EighthTileUp = -EighthTileDown,
+	QuarterTileUp = -QuarterTileDown,
+	HalfTileUp = -HalfTileDown,
+	ThreeQuartersTileUp = -ThreeQuartersTileDown,
+	FullTileUp = -FullTileDown,
+	DoubleTileUp = -DoubleTileDown,
+};
+
+enum class AmLineLength : uint8_t {
+	QuarterTile = 2,
+	HalfTile = 4,
+	FullTile = 8,
+	FullAndHalfTile = 12,
+	DoubleTile = 16,
+	OctupleTile = 64,
+};
+
+enum class AutomapType : uint8_t {
+	Opaque,
+	FIRST = Opaque,
+	Transparent,
+	Minimap,
+	LAST = Minimap
+};
+
+extern DVL_API_FOR_TEST AutomapType CurrentAutomapType;
+
+/**
+ * @brief Sets the map type. Does not change `AutomapActive`.
+ */
+inline void SetAutomapType(AutomapType type)
 {
-	assert(x >= 4 && x <= 64);
-	assert((x & (x - 1)) == 0);
-	return AutoMapScale * x / 100;
+	CurrentAutomapType = type;
 }
+
+/**
+ * @brief Sets the map type. Does not change `AutomapActive`.
+ */
+inline AutomapType GetAutomapType()
+{
+	return CurrentAutomapType;
+}
+
+inline Displacement AmOffset(AmWidthOffset x, AmHeightOffset y)
+{
+	int scale = (GetAutomapType() == AutomapType::Minimap) ? MinimapScale : AutoMapScale;
+
+	return { scale * static_cast<int>(x) / 100, scale * static_cast<int>(y) / 100 };
+}
+
+inline int AmLine(AmLineLength l)
+{
+	int scale = (GetAutomapType() == AutomapType::Minimap) ? MinimapScale : AutoMapScale;
+
+	return scale * static_cast<int>(l) / 100;
+}
+
+/**
+ * @brief Sets the map type. Does not change `AutomapActive`.
+ */
+void SetAutomapType(AutomapType type);
+
+AutomapType GetAutomapType();
 
 /**
  * @brief Initializes the automap.
@@ -57,6 +141,11 @@ void InitAutomap();
  * @brief Displays the automap.
  */
 void StartAutomap();
+
+/**
+ * @brief Displays the minimap.
+ */
+void StartMinimap();
 
 /**
  * @brief Scrolls the automap upwards.

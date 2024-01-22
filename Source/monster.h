@@ -175,16 +175,26 @@ enum class MonsterSound : uint8_t {
 	Special
 };
 
+struct MonsterSpritesData {
+	static constexpr size_t MaxAnims = 6;
+	std::unique_ptr<std::byte[]> data;
+	std::array<uint32_t, MaxAnims + 1> offsets;
+};
+
 struct CMonster {
-	std::unique_ptr<byte[]> animData;
+	std::unique_ptr<std::byte[]> animData;
 	AnimStruct anims[6];
 	std::unique_ptr<TSnd> sounds[4][2];
-	const MonsterData *data;
 
 	_monster_id type;
 	/** placeflag enum as a flags*/
 	uint8_t placeFlags;
-	int8_t corpseId;
+	int8_t corpseId = 0;
+
+	const MonsterData &data() const
+	{
+		return MonstersData[type];
+	}
 
 	/**
 	 * @brief Returns AnimStruct for specified graphic
@@ -313,7 +323,7 @@ struct Monster { // note: missing field _mAFNum
 
 	const MonsterData &data() const
 	{
-		return *type().data;
+		return type().data();
 	}
 
 	/**
@@ -321,7 +331,7 @@ struct Monster { // note: missing field _mAFNum
 	 * Internally it returns a name stored in global array of monsters' data.
 	 * @return Monster's name
 	 */
-	string_view name() const
+	std::string_view name() const
 	{
 		if (uniqueType != UniqueMonsterType::None)
 			return pgettext("monster", UniqueMonstersData[static_cast<int8_t>(uniqueType)].mName);
@@ -445,6 +455,21 @@ struct Monster { // note: missing field _mAFNum
 	 * But for graphics and rendering we show the old/real mode.
 	 */
 	[[nodiscard]] MonsterMode getVisualMonsterMode() const;
+
+	[[nodiscard]] Displacement getRenderingOffset(const ClxSprite sprite) const
+	{
+		Displacement offset = { -CalculateWidth2(sprite.width()), 0 };
+		if (isWalking())
+			offset += GetOffsetForWalking(animInfo, direction);
+		return offset;
+	}
+
+	/**
+	 * @brief Sets a tile/dMonster to be occupied by the monster
+	 * @param position tile to update
+	 * @param isMoving specifies whether the monster is moving or not (true/moving results in a negative index in dMonster)
+	 */
+	void occupyTile(Point position, bool isMoving) const;
 };
 
 extern size_t LevelMonsterTypeCount;
@@ -457,13 +482,33 @@ extern bool sgbSaveSoundOn;
 void PrepareUniqueMonst(Monster &monster, UniqueMonsterType monsterType, size_t miniontype, int bosspacksize, const UniqueMonsterData &uniqueMonsterData);
 void InitLevelMonsters();
 void GetLevelMTypes();
+size_t AddMonsterType(_monster_id type, placeflag placeflag);
+inline size_t AddMonsterType(UniqueMonsterType uniqueType, placeflag placeflag)
+{
+	return AddMonsterType(UniqueMonstersData[static_cast<size_t>(uniqueType)].mtype, placeflag);
+}
 void InitMonsterSND(CMonster &monsterType);
-void InitMonsterGFX(CMonster &monsterType);
+void InitMonsterGFX(CMonster &monsterType, MonsterSpritesData &&spritesData = {});
+void InitAllMonsterGFX();
 void WeakenNaKrul();
 void InitGolems();
 void InitMonsters();
 void SetMapMonsters(const uint16_t *dunData, Point startPosition);
 Monster *AddMonster(Point position, Direction dir, size_t mtype, bool inMap);
+/**
+ * @brief Spawns a new monsters (dynamically/not on level load).
+ * The command is only executed for the level owner, to prevent desyncs in multiplayer.
+ * The level owner sends a CMD_SPAWNMONSTER-message to the other players.
+ */
+void SpawnMonster(Point position, Direction dir, size_t typeIndex, bool startSpecialStand = false);
+/**
+ * @brief Loads data for a dynamically spawned monster when entering a level in multiplayer.
+ */
+void LoadDeltaSpawnedMonster(size_t typeIndex, size_t monsterId, uint32_t seed);
+/**
+ * @brief Initialize a spanwed monster (from a network message or from SpawnMonster-function).
+ */
+void InitializeSpawnedMonster(Point position, Direction dir, size_t typeIndex, size_t monsterId, uint32_t seed);
 void AddDoppelganger(Monster &monster);
 void ApplyMonsterDamage(DamageType damageType, Monster &monster, int damage);
 bool M_Talker(const Monster &monster);

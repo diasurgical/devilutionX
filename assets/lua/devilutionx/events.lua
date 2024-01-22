@@ -1,0 +1,65 @@
+local function CreateEvent()
+  local functions = {}
+  return {
+    ---Adds an event handler.
+    ---
+    ---The handler called every time an event is triggered.
+    ---@param func function
+    add = function(func)
+      table.insert(functions, func)
+    end,
+
+    ---Removes the event handler.
+    ---@param func function
+    remove = function(func)
+      for i, f in ipairs(functions) do
+        if f == func then
+          table.remove(functions, i)
+          break
+        end
+      end
+    end,
+
+    ---Triggers an event.
+    ---
+    ---The arguments are forwarded to handlers.
+    ---@param ... any
+    trigger = function(...)
+      if arg ~= nil then
+        for _, func in ipairs(functions) do
+          func(table.unpack(arg))
+        end
+      else
+        for _, func in ipairs(functions) do
+          func()
+        end
+      end
+    end,
+    __sig_trigger = "(...)",
+  }
+end
+
+local events = {
+  ---Called early on game boot.
+  GameBoot = CreateEvent(),
+  __doc_GameBoot = "Called early on game boot.",
+
+  ---Called every time a new game is started.
+  GameStart = CreateEvent(),
+  __doc_GameStart = "Called every time a new game is started.",
+
+  ---Called every frame at the end.
+  GameDrawComplete = CreateEvent(),
+  __doc_GameDrawComplete = "Called every frame at the end.",
+}
+
+---Registers a custom event type with the given name.
+---@param name string
+function events.registerCustom(name)
+  events[name] = CreateEvent()
+end
+
+events.__sig_registerCustom = "(name: string)"
+events.__doc_registerCustom = "Register a custom event type."
+
+return events

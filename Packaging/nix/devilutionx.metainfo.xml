@@ -64,6 +64,23 @@
 		</screenshot>
 	</screenshots>
 	<releases>
+		<release version="1.5.1" date="2023-xx-xx">
+			<description>
+				<p>This is a primarily bugfix release, which includes the following updates:</p>
+				<ul>
+					<li>Resolve various gameplay and graphical issues</li>
+					<li>Revamped settings menu for better organization</li>
+					<li>Rectification of crashes identified in version 1.5.0</li>
+					<li>Reduced RAM usage for improved performance</li>
+					<li>Updates to PVP arenas</li>
+					<li>Increased reliability in multiplayer functionality</li>
+					<li>Improved translations</li>
+					<li>Fixed gameplay recording playback issues</li>
+				</ul>
+				<p>Please visit the full changelog for more detailed notes</p>
+			</description>
+			<url>https://github.com/diasurgical/devilutionX/releases/tag/1.5.1</url>
+		</release>
 		<release version="1.5.0" date="2023-06-13">
 			<description>
 				<p>This release includes a lot of features, such as:</p>

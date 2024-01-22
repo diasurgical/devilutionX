@@ -2,7 +2,9 @@
 
 #include <gtest/gtest.h>
 
+#include "monstdat.h"
 #include "pack.h"
+#include "playerdat.hpp"
 #include "utils/paths.h"
 
 namespace devilution {
@@ -408,6 +410,12 @@ public:
 	{
 		Players.resize(1);
 		MyPlayer = &Players[0];
+	}
+
+	static void SetUpTestSuite()
+	{
+		LoadSpellData();
+		LoadItemData();
 	}
 };
 
@@ -870,6 +878,7 @@ public:
 	{
 		Players.resize(2);
 		MyPlayer = &Players[0];
+		gbIsMultiplayer = true;
 
 		PlayerPack testPack {
 			0, 0, -1, 9, 0, 2, 61, 24, 0, 0, "MP-Warrior", 0, 120, 25, 60, 60, 37, 0, 85670061, 3921, 13568, 13568, 3904, 3904,
@@ -942,6 +951,14 @@ public:
 		SwapLE(testPack);
 		UnPackPlayer(testPack, *MyPlayer);
 	}
+
+	static void SetUpTestSuite()
+	{
+		LoadSpellData();
+		LoadPlayerDataFiles();
+		LoadMonsterData();
+		LoadItemData();
+	}
 };
 
 bool TestNetPackValidation()
@@ -958,8 +975,10 @@ TEST_F(NetPackTest, UnPackNetPlayer_valid)
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_class)
 {
-	MyPlayer->_pClass = static_cast<HeroClass>(-1);
-	ASSERT_FALSE(TestNetPackValidation());
+	PlayerNetPack packed;
+	PackNetPlayer(packed, *MyPlayer);
+	packed.pClass = std::numeric_limits<uint8_t>::max();
+	ASSERT_FALSE(UnPackNetPlayer(packed, Players[1]));
 }
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_oob)
@@ -977,15 +996,6 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_oob)
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_plrlevel)
 {
 	MyPlayer->plrlevel = NUMLEVELS;
-	ASSERT_FALSE(TestNetPackValidation());
-}
-
-TEST_F(NetPackTest, UnPackNetPlayer_invalid_pLevel)
-{
-	MyPlayer->_pLevel = 0;
-	ASSERT_FALSE(TestNetPackValidation());
-
-	MyPlayer->_pLevel = MaxCharacterLevel + 1;
 	ASSERT_FALSE(TestNetPackValidation());
 }
 
@@ -1030,7 +1040,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_baseVit)
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_numInv)
 {
-	MyPlayer->_pNumInv = InventoryGridCells;
+	MyPlayer->_pNumInv = InventoryGridCells + 1;
 	ASSERT_FALSE(TestNetPackValidation());
 }
 
@@ -1090,8 +1100,10 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_damageMod)
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_baseToBlk)
 {
-	MyPlayer->_pBaseToBlk++;
-	ASSERT_FALSE(TestNetPackValidation());
+	PlayerNetPack packed;
+	PackNetPlayer(packed, *MyPlayer);
+	packed.pBaseToBlk++;
+	ASSERT_FALSE(UnPackNetPlayer(packed, Players[1]));
 }
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_iMinDam)
@@ -1281,7 +1293,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_pregenItemFlags)
 	for (Item &item : MyPlayer->InvList) {
 		if (item.isEmpty())
 			continue;
-		if (item.IDidx == IDI_EAR)
+		if (IsAnyOf(item.IDidx, IDI_GOLD, IDI_EAR))
 			continue;
 		uint16_t createInfo = item._iCreateInfo;
 		item._iCreateInfo |= CF_PREGEN;
@@ -1299,7 +1311,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_usefulItemFlags)
 	for (Item &item : MyPlayer->InvList) {
 		if (item.isEmpty())
 			continue;
-		if (item.IDidx == IDI_EAR)
+		if (IsAnyOf(item.IDidx, IDI_GOLD, IDI_EAR))
 			continue;
 		if ((item._iCreateInfo & CF_USEFUL) != CF_USEFUL)
 			continue;
@@ -1319,7 +1331,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_townItemFlags)
 	for (Item &item : MyPlayer->InvList) {
 		if (item.isEmpty())
 			continue;
-		if (item.IDidx == IDI_EAR)
+		if (IsAnyOf(item.IDidx, IDI_GOLD, IDI_EAR))
 			continue;
 		if ((item._iCreateInfo & CF_TOWN) == 0)
 			continue;
@@ -1340,14 +1352,14 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_townItemLevel)
 	for (Item &item : MyPlayer->InvBody) {
 		if (item.isEmpty())
 			continue;
-		if (item.IDidx == IDI_EAR)
+		if (IsAnyOf(item.IDidx, IDI_GOLD, IDI_EAR))
 			continue;
 		if ((item._iCreateInfo & CF_TOWN) == 0)
 			continue;
 		uint16_t createInfo = item._iCreateInfo;
 		bool boyItem = (item._iCreateInfo & CF_BOY) != 0;
 		item._iCreateInfo &= ~CF_LEVEL;
-		item._iCreateInfo |= boyItem ? MaxCharacterLevel + 1 : 31;
+		item._iCreateInfo |= boyItem ? MyPlayer->getMaxCharacterLevel() + 1 : 31;
 		ASSERT_FALSE(TestNetPackValidation());
 		item._iCreateInfo = createInfo;
 
@@ -1365,7 +1377,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_uniqueMonsterItemLevel)
 	for (Item &item : MyPlayer->InvList) {
 		if (item.isEmpty())
 			continue;
-		if (item.IDidx == IDI_EAR)
+		if (IsAnyOf(item.IDidx, IDI_GOLD, IDI_EAR))
 			continue;
 		if ((item._iCreateInfo & CF_USEFUL) != CF_UPER15)
 			continue;
@@ -1386,7 +1398,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_monsterItemLevel)
 	for (Item &item : MyPlayer->InvBody) {
 		if (item.isEmpty())
 			continue;
-		if (item.IDidx == IDI_EAR)
+		if (IsAnyOf(item.IDidx, IDI_GOLD, IDI_EAR))
 			continue;
 		if ((item._iCreateInfo & CF_TOWN) != 0)
 			continue;

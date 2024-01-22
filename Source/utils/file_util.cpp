@@ -1,24 +1,24 @@
 #include "utils/file_util.h"
 
+#include <algorithm>
 #include <cerrno>
 #include <cstdint>
 #include <cstring>
-
-#include <algorithm>
+#include <limits>
 #include <string>
+#include <string_view>
 #include <vector>
 
 #include <SDL.h>
 
 #include "utils/log.hpp"
 #include "utils/stdcompat/filesystem.hpp"
-#include "utils/stdcompat/string_view.hpp"
 
 #ifdef USE_SDL1
 #include "utils/sdl2_to_1_2_backports.h"
 #endif
 
-#if defined(_WIN64) || defined(_WIN32)
+#ifdef _WIN32
 #include <memory>
 
 // Suppress definitions of `min` and `max` macros by <windows.h>:
@@ -26,12 +26,12 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
-#ifndef NXDK
+#ifndef DEVILUTIONX_WINDOWS_NO_WCHAR
 #include <shlwapi.h>
 #endif
 #endif
 
-#if (_POSIX_C_SOURCE >= 200112L || defined(_BSD_SOURCE) || defined(__APPLE__)) && !defined(NXDK)
+#if (_POSIX_C_SOURCE >= 200112L || defined(_BSD_SOURCE) || defined(__APPLE__)) && !defined(DEVILUTIONX_WINDOWS_NO_WCHAR)
 #include <sys/stat.h>
 #include <unistd.h>
 #endif
@@ -49,37 +49,37 @@
 
 namespace devilution {
 
-#if (defined(_WIN64) || defined(_WIN32)) && !defined(NXDK)
-std::unique_ptr<wchar_t[]> ToWideChar(string_view path)
+#if defined(_WIN32) && !defined(DEVILUTIONX_WINDOWS_NO_WCHAR)
+std::unique_ptr<wchar_t[]> ToWideChar(std::string_view path)
 {
 	constexpr std::uint32_t flags = MB_ERR_INVALID_CHARS;
-	const int utf16Size = ::MultiByteToWideChar(CP_UTF8, flags, path.data(), path.size(), nullptr, 0);
+	const int utf16Size = ::MultiByteToWideChar(CP_UTF8, flags, path.data(), static_cast<int>(path.size()), nullptr, 0);
 	if (utf16Size == 0)
 		return nullptr;
 	std::unique_ptr<wchar_t[]> utf16 { new wchar_t[utf16Size + 1] };
-	if (::MultiByteToWideChar(CP_UTF8, flags, path.data(), path.size(), &utf16[0], utf16Size) != utf16Size)
+	if (::MultiByteToWideChar(CP_UTF8, flags, path.data(), static_cast<int>(path.size()), &utf16[0], utf16Size) != utf16Size)
 		return nullptr;
 	utf16[utf16Size] = L'\0';
 	return utf16;
 }
 #endif
 
-string_view Dirname(string_view path)
+std::string_view Dirname(std::string_view path)
 {
 	while (path.size() > 1 && path.back() == DirectorySeparator)
 		path.remove_suffix(1);
 	if (path.size() == 1 && path.back() == DirectorySeparator)
 		return DIRECTORY_SEPARATOR_STR;
 	const size_t sep = path.find_last_of(DIRECTORY_SEPARATOR_STR);
-	if (sep == string_view::npos)
+	if (sep == std::string_view::npos)
 		return ".";
-	return string_view { path.data(), sep };
+	return std::string_view { path.data(), sep };
 }
 
 bool FileExists(const char *path)
 {
-#if defined(_WIN64) || defined(_WIN32)
-#if defined(NXDK)
+#ifdef _WIN32
+#ifdef DEVILUTIONX_WINDOWS_NO_WCHAR
 	const bool exists = ::GetFileAttributesA(path) != INVALID_FILE_ATTRIBUTES;
 #else
 	const auto pathUtf16 = ToWideChar(path);
@@ -93,10 +93,10 @@ bool FileExists(const char *path)
 		if (::GetLastError() == ERROR_FILE_NOT_FOUND || ::GetLastError() == ERROR_PATH_NOT_FOUND) {
 			::SetLastError(ERROR_SUCCESS);
 		} else {
-#if defined(NXDK)
-			LogError("GetFileAttributesA: error code {}", ::GetLastError());
+#ifdef DEVILUTIONX_WINDOWS_NO_WCHAR
+			LogError("GetFileAttributesA({}): error code {}", path, ::GetLastError());
 #else
-			LogError("PathFileExistsW: error code {}", ::GetLastError());
+			LogError("PathFileExistsW({}): error code {}", path, ::GetLastError());
 #endif
 		}
 		return false;
@@ -116,11 +116,11 @@ bool FileExists(const char *path)
 #endif
 }
 
-#if defined(_WIN64) || defined(_WIN32)
+#ifdef _WIN32
 namespace {
 DWORD WindowsGetFileAttributes(const char *path)
 {
-#if defined(NXDK)
+#ifdef DEVILUTIONX_WINDOWS_NO_WCHAR
 	const DWORD attr = ::GetFileAttributesA(path);
 #else
 	const auto pathUtf16 = ToWideChar(path);
@@ -134,7 +134,7 @@ DWORD WindowsGetFileAttributes(const char *path)
 		if (::GetLastError() == ERROR_FILE_NOT_FOUND || ::GetLastError() == ERROR_PATH_NOT_FOUND) {
 			::SetLastError(ERROR_SUCCESS);
 		} else {
-#if defined(NXDK)
+#ifdef DEVILUTIONX_WINDOWS_NO_WCHAR
 			LogError("GetFileAttributesA: error code {}", ::GetLastError());
 #else
 			LogError("GetFileAttributesW: error code {}", ::GetLastError());
@@ -149,7 +149,7 @@ DWORD WindowsGetFileAttributes(const char *path)
 
 bool DirectoryExists(const char *path)
 {
-#if defined(_WIN64) || defined(_WIN32)
+#ifdef _WIN32
 	const DWORD attr = WindowsGetFileAttributes(path);
 	return attr != INVALID_FILE_ATTRIBUTES && (attr & FILE_ATTRIBUTE_DIRECTORY) != 0;
 #elif defined(DVL_HAS_FILESYSTEM)
@@ -163,7 +163,7 @@ bool DirectoryExists(const char *path)
 
 bool FileExistsAndIsWriteable(const char *path)
 {
-#if defined(_WIN64) || defined(_WIN32)
+#ifdef _WIN32
 	const DWORD attr = WindowsGetFileAttributes(path);
 	return attr != INVALID_FILE_ATTRIBUTES && (attr & FILE_ATTRIBUTE_READONLY) == 0;
 #elif (_POSIX_C_SOURCE >= 200112L || defined(_BSD_SOURCE) || defined(__APPLE__)) && !defined(__ANDROID__)
@@ -181,9 +181,28 @@ bool FileExistsAndIsWriteable(const char *path)
 
 bool GetFileSize(const char *path, std::uintmax_t *size)
 {
-#if defined(_WIN64) || defined(_WIN32)
+#ifdef _WIN32
+#if defined(WINVER) && WINVER <= 0x0500 && (!defined(_WIN32_WINNT) || _WIN32_WINNT == 0)
+	HANDLE handle = ::CreateFileA(path, GENERIC_READ,
+	    FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING,
+	    FILE_ATTRIBUTE_NORMAL, NULL);
+	if (handle == INVALID_HANDLE_VALUE) {
+		LogError("File not found: {}", GetLastError());
+		return false;
+	}
+	DWORD fileSizeHigh;
+	const DWORD fileSizeLow = ::GetFileSize(handle, &fileSizeHigh);
+	if (fileSizeLow == INVALID_FILE_SIZE && GetLastError() != NO_ERROR) {
+		LogError("GetFileSize failed for {}: {}", path, GetLastError());
+		::CloseHandle(handle);
+		return false;
+	}
+	*size = (static_cast<uintmax_t>(fileSizeHigh) << 32) | fileSizeLow;
+	::CloseHandle(handle);
+	return true;
+#else
 	WIN32_FILE_ATTRIBUTE_DATA attr;
-#if defined(NXDK)
+#ifdef DEVILUTIONX_WINDOWS_NO_WCHAR
 	if (!GetFileAttributesExA(path, GetFileExInfoStandard, &attr)) {
 		return false;
 	}
@@ -200,6 +219,7 @@ bool GetFileSize(const char *path, std::uintmax_t *size)
 	// C4293 in msvc when shifting a 32 bit type by 32 bits.
 	*size = static_cast<std::uintmax_t>(attr.nFileSizeHigh) << (sizeof(attr.nFileSizeHigh) * 8) | attr.nFileSizeLow;
 	return true;
+#endif
 #else
 	struct ::stat statResult;
 	if (::stat(path, &statResult) == -1)
@@ -219,8 +239,8 @@ bool CreateDir(const char *path)
 		return false;
 	}
 	return true;
-#elif defined(_WIN64) || defined(_WIN32)
-#ifdef NXDK
+#elif defined(_WIN32)
+#ifdef DEVILUTIONX_WINDOWS_NO_WCHAR
 	if (::CreateDirectoryA(path, /*lpSecurityAttributes=*/nullptr) != 0)
 		return true;
 	if (::GetLastError() == ERROR_ALREADY_EXISTS)
@@ -265,7 +285,7 @@ void RecursivelyCreateDir(const char *path)
 	std::string cur { path };
 	do {
 		paths.push_back(cur);
-		string_view parent = Dirname(cur);
+		std::string_view parent = Dirname(cur);
 		if (parent == cur)
 			break;
 		cur.assign(parent.data(), parent.size());
@@ -279,14 +299,25 @@ void RecursivelyCreateDir(const char *path)
 
 bool ResizeFile(const char *path, std::uintmax_t size)
 {
-#if defined(_WIN64) || defined(_WIN32)
+#ifdef _WIN32
+#if defined(WINVER) && WINVER <= 0x0500 && (!defined(_WIN32_WINNT) || _WIN32_WINNT == 0)
+	if (size > std::numeric_limits<LONG>::max()) {
+		return false;
+	}
+	auto lisize = static_cast<LONG>(size);
+#else
 	LARGE_INTEGER lisize;
 	lisize.QuadPart = static_cast<LONGLONG>(size);
 	if (lisize.QuadPart < 0) {
 		return false;
 	}
-#ifdef NXDK
+#endif
+#ifdef DEVILUTIONX_WINDOWS_NO_WCHAR
 	HANDLE file = ::CreateFileA(path, GENERIC_WRITE, 0, NULL, OPEN_EXISTING, 0, NULL);
+	if (file == INVALID_HANDLE_VALUE) {
+		LogError("CreateFileA({}) failed: {}", path, ::GetLastError());
+		return false;
+	}
 #else
 	const auto pathUtf16 = ToWideChar(path);
 	if (pathUtf16 == nullptr) {
@@ -294,10 +325,26 @@ bool ResizeFile(const char *path, std::uintmax_t size)
 		return false;
 	}
 	HANDLE file = ::CreateFileW(&pathUtf16[0], GENERIC_WRITE, 0, NULL, OPEN_EXISTING, 0, NULL);
-#endif
 	if (file == INVALID_HANDLE_VALUE) {
+		LogError("CreateFileW({}) failed: {}", path, ::GetLastError());
 		return false;
-	} else if (::SetFilePointerEx(file, lisize, NULL, FILE_BEGIN) == 0 || ::SetEndOfFile(file) == 0) {
+	}
+#endif
+#if defined(WINVER) && WINVER <= 0x0500 && (!defined(_WIN32_WINNT) || _WIN32_WINNT == 0)
+	if (::SetFilePointer(file, lisize, NULL, FILE_BEGIN) == INVALID_SET_FILE_POINTER) {
+		LogError("SetFilePointer(file, {}, NULL, FILE_BEGIN) failed: {}", lisize, ::GetLastError());
+		::CloseHandle(file);
+		return false;
+	}
+#else
+	if (::SetFilePointerEx(file, lisize, NULL, FILE_BEGIN) == 0) {
+		LogError("SetFilePointerEx(file, {}, NULL, FILE_BEGIN) failed: {}", size, ::GetLastError());
+		::CloseHandle(file);
+		return false;
+	}
+#endif
+	if (::SetEndOfFile(file) == 0) {
+		LogError("SetEndOfFile failed: {}", ::GetLastError());
 		::CloseHandle(file);
 		return false;
 	}
@@ -312,9 +359,10 @@ bool ResizeFile(const char *path, std::uintmax_t size)
 
 void RenameFile(const char *from, const char *to)
 {
-#if defined(NXDK)
+#ifdef _WIN32
+#ifdef DEVILUTIONX_WINDOWS_NO_WCHAR
 	::MoveFile(from, to);
-#elif defined(_WIN64) || defined(_WIN32)
+#else
 	const auto fromUtf16 = ToWideChar(from);
 	const auto toUtf16 = ToWideChar(to);
 	if (fromUtf16 == nullptr || toUtf16 == nullptr) {
@@ -322,6 +370,7 @@ void RenameFile(const char *from, const char *to)
 		return;
 	}
 	::MoveFileW(&fromUtf16[0], &toUtf16[0]);
+#endif // _WIN32
 #elif defined(DVL_HAS_FILESYSTEM)
 	std::error_code ec;
 	std::filesystem::rename(std::filesystem::u8path(from), std::filesystem::u8path(to), ec);
@@ -332,11 +381,12 @@ void RenameFile(const char *from, const char *to)
 
 void CopyFileOverwrite(const char *from, const char *to)
 {
-#if defined(NXDK)
+#ifdef _WIN32
+#ifdef DEVILUTIONX_WINDOWS_NO_WCHAR
 	if (!::CopyFile(from, to, /*bFailIfExists=*/false)) {
 		LogError("Failed to copy {} to {}", from, to);
 	}
-#elif defined(_WIN64) || defined(_WIN32)
+#else
 	const auto fromUtf16 = ToWideChar(from);
 	const auto toUtf16 = ToWideChar(to);
 	if (fromUtf16 == nullptr || toUtf16 == nullptr) {
@@ -346,6 +396,7 @@ void CopyFileOverwrite(const char *from, const char *to)
 	if (!::CopyFileW(&fromUtf16[0], &toUtf16[0], /*bFailIfExists=*/false)) {
 		LogError("Failed to copy {} to {}", from, to);
 	}
+#endif // _WIN32
 #elif defined(__APPLE__)
 	::copyfile(from, to, nullptr, COPYFILE_ALL);
 #elif defined(DVL_HAS_FILESYSTEM)
@@ -381,9 +432,9 @@ void CopyFileOverwrite(const char *from, const char *to)
 
 void RemoveFile(const char *path)
 {
-#if defined(NXDK)
+#ifdef DEVILUTIONX_WINDOWS_NO_WCHAR
 	::DeleteFileA(path);
-#elif defined(_WIN64) || defined(_WIN32)
+#elif defined(_WIN32)
 	const auto pathUtf16 = ToWideChar(path);
 	if (pathUtf16 == nullptr) {
 		LogError("UTF-8 -> UTF-16 conversion error code {}", ::GetLastError());
@@ -407,7 +458,7 @@ void RemoveFile(const char *path)
 
 FILE *OpenFile(const char *path, const char *mode)
 {
-#if (defined(_WIN64) || defined(_WIN32)) && !defined(NXDK)
+#if defined(_WIN32) && !defined(DEVILUTIONX_WINDOWS_NO_WCHAR)
 	std::unique_ptr<wchar_t[]> pathUtf16;
 	std::unique_ptr<wchar_t[]> modeUtf16;
 	if ((pathUtf16 = ToWideChar(path)) == nullptr

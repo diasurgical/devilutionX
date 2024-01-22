@@ -9,21 +9,24 @@
 #include <array>
 #include <cstddef>
 #include <cstdint>
+#include <memory>
+#include <optional>
 #include <string>
 
 #include <fmt/format.h>
 
+#include "DiabloUI/text_input.hpp"
 #include "automap.h"
 #include "controls/modifier_hints.h"
 #include "controls/plrctrls.h"
 #include "cursor.h"
+#include "diablo_msg.hpp"
 #include "engine/backbuffer_state.hpp"
 #include "engine/clx_sprite.hpp"
 #include "engine/load_cel.hpp"
 #include "engine/render/clx_render.hpp"
 #include "engine/render/text_render.hpp"
 #include "engine/trn.hpp"
-#include "error.h"
 #include "gamemenu.h"
 #include "init.h"
 #include "inv.h"
@@ -35,6 +38,7 @@
 #include "missiles.h"
 #include "options.h"
 #include "panels/charpanel.hpp"
+#include "panels/console.hpp"
 #include "panels/mainpanel.hpp"
 #include "panels/spell_book.hpp"
 #include "panels/spell_icons.hpp"
@@ -44,11 +48,14 @@
 #include "qol/xpbar.h"
 #include "stores.h"
 #include "towners.h"
+#include "utils/algorithm/container.hpp"
 #include "utils/format_int.hpp"
 #include "utils/language.h"
 #include "utils/log.hpp"
+#include "utils/parse_int.hpp"
+#include "utils/screen_reader.hpp"
 #include "utils/sdl_geometry.h"
-#include "utils/stdcompat/optional.hpp"
+#include "utils/sdl_ptrs.h"
 #include "utils/str_case.hpp"
 #include "utils/str_cat.hpp"
 #include "utils/string_or_view.hpp"
@@ -61,19 +68,23 @@
 namespace devilution {
 
 bool dropGoldFlag;
+TextInputCursorState GoldDropCursor;
+char GoldDropText[21];
+namespace {
+int8_t GoldDropInvIndex;
+std::optional<NumberInputState> GoldDropInputState;
+} // namespace
+
 bool chrbtn[4];
 bool lvlbtndown;
-int dropGoldValue;
 bool chrbtnactive;
 UiFlags InfoColor;
 int sbooktab;
-int8_t initialDropGoldIndex;
 bool talkflag;
 bool sbookflag;
 bool chrflag;
 StringOrView InfoString;
 bool panelflag;
-int initialDropGoldValue;
 bool panbtndown;
 bool spselflag;
 Rectangle MainPanel;
@@ -145,6 +156,9 @@ bool TalkButtonsDown[3];
 int sgbPlrTalkTbl;
 bool WhisperList[MAX_PLRS];
 
+TextInputCursorState ChatCursor;
+std::optional<TextInputState> ChatInputState;
+
 enum panel_button_id : uint8_t {
 	PanelButtonCharinfo,
 	PanelButtonQlog,
@@ -212,7 +226,7 @@ void DrawFlask(const Surface &out, const Surface &celBuf, Point sourcePosition, 
 void DrawFlaskUpper(const Surface &out, const Surface &sourceBuffer, int offset, int fillPer)
 {
 	// clamping because this function only draws the top 12% of the flask display
-	int emptyPortion = clamp(80 - fillPer, 0, 11) + 2; // +2 to account for the frame being included in the sprite
+	int emptyPortion = std::clamp(80 - fillPer, 0, 11) + 2; // +2 to account for the frame being included in the sprite
 
 	// Draw the empty part of the flask
 	DrawFlask(out, sourceBuffer, { 13, 3 }, GetMainPanel().position + Displacement { offset, -13 }, emptyPortion);
@@ -231,7 +245,7 @@ void DrawFlaskUpper(const Surface &out, const Surface &sourceBuffer, int offset,
  */
 void DrawFlaskLower(const Surface &out, const Surface &sourceBuffer, int offset, int fillPer)
 {
-	int filled = clamp(fillPer, 0, 69);
+	int filled = std::clamp(fillPer, 0, 69);
 
 	if (filled < 69)
 		DrawFlaskTop(out, GetMainPanel().position + Displacement { offset, 0 }, sourceBuffer, 16, 85 - filled);
@@ -255,9 +269,9 @@ void PrintInfo(const Surface &out)
 		return;
 
 	const int space[] = { 18, 12, 6, 3, 0 };
-	Rectangle infoArea { GetMainPanel().position + Displacement { 177, 46 }, { 288, 60 } };
+	Rectangle infoArea { GetMainPanel().position + InfoBoxTopLeft, InfoBoxSize };
 
-	const int newLineCount = std::count(InfoString.str().begin(), InfoString.str().end(), '\n');
+	const auto newLineCount = static_cast<int>(c_count(InfoString.str(), '\n'));
 	const int spaceIndex = std::min(4, newLineCount);
 	const int spacing = space[spaceIndex];
 	const int lineHeight = 12 + spacing;
@@ -267,7 +281,14 @@ void PrintInfo(const Surface &out)
 	// which throws off the vertical centering
 	infoArea.position.y += spacing / 2;
 
-	DrawString(out, InfoString, infoArea, InfoColor | UiFlags::AlignCenter | UiFlags::VerticalCenter | UiFlags::KerningFitSpacing, 2, lineHeight);
+	SpeakText(InfoString);
+
+	DrawString(out, InfoString, infoArea,
+	    {
+	        .flags = InfoColor | UiFlags::AlignCenter | UiFlags::VerticalCenter | UiFlags::KerningFitSpacing,
+	        .spacing = 2,
+	        .lineHeight = lineHeight,
+	    });
 }
 
 int CapStatPointsToAdd(int remainingStatPoints, const Player &player, CharacterAttribute attribute)
@@ -336,12 +357,12 @@ struct TextCmdItem {
 	const std::string text;
 	const std::string description;
 	const std::string requiredParameter;
-	std::string (*actionProc)(const string_view);
+	std::string (*actionProc)(const std::string_view);
 };
 
 extern std::vector<TextCmdItem> TextCmdList;
 
-std::string TextCmdHelp(const string_view parameter)
+std::string TextCmdHelp(const std::string_view parameter)
 {
 	if (parameter.empty()) {
 		std::string ret;
@@ -351,9 +372,9 @@ std::string TextCmdHelp(const string_view parameter)
 		}
 		return ret;
 	}
-	auto textCmdIterator = std::find_if(TextCmdList.begin(), TextCmdList.end(), [&](const TextCmdItem &elem) { return elem.text == parameter; });
+	auto textCmdIterator = c_find_if(TextCmdList, [&](const TextCmdItem &elem) { return elem.text == parameter; });
 	if (textCmdIterator == TextCmdList.end())
-		return StrCat(_("Command "), parameter, _(" is unkown."));
+		return StrCat(_("Command "), parameter, _(" is unknown."));
 	auto &textCmdItem = *textCmdIterator;
 	if (textCmdItem.requiredParameter.empty())
 		return StrCat(_("Description: "), _(textCmdItem.description), _("\nParameters: No additional parameter needed."));
@@ -373,7 +394,7 @@ const dungeon_type DungeonTypeForArena[] = {
 	dungeon_type::DTYPE_HELL,      // SL_ARENA_CIRCLE_OF_LIFE
 };
 
-std::string TextCmdArena(const string_view parameter)
+std::string TextCmdArena(const std::string_view parameter)
 {
 	std::string ret;
 	if (!gbIsMultiplayer) {
@@ -387,9 +408,9 @@ std::string TextCmdArena(const string_view parameter)
 		return ret;
 	}
 
-	int arenaNumber = atoi(parameter.data());
-	_setlevels arenaLevel = static_cast<_setlevels>(arenaNumber - 1 + SL_FIRST_ARENA);
-	if (arenaNumber < 0 || !IsArenaLevel(arenaLevel)) {
+	const ParseIntResult<int> parsedParam = ParseInt<int>(parameter, /*min=*/0);
+	const _setlevels arenaLevel = parsedParam.has_value() ? static_cast<_setlevels>(parsedParam.value() - 1 + SL_FIRST_ARENA) : _setlevels::SL_NONE;
+	if (!IsArenaLevel(arenaLevel)) {
 		StrAppend(ret, _("Invalid arena-number. Valid numbers are:"));
 		AppendArenaOverview(ret);
 		return ret;
@@ -405,23 +426,24 @@ std::string TextCmdArena(const string_view parameter)
 	return ret;
 }
 
-std::string TextCmdArenaPot(const string_view parameter)
+std::string TextCmdArenaPot(const std::string_view parameter)
 {
 	std::string ret;
 	if (!gbIsMultiplayer) {
 		StrAppend(ret, _("Arenas are only supported in multiplayer."));
 		return ret;
 	}
+	int numPots = ParseInt<int>(parameter, /*min=*/1).value_or(1);
 
 	Player &myPlayer = *MyPlayer;
 
-	for (int potNumber = std::max(1, atoi(parameter.data())); potNumber > 0; potNumber--) {
+	for (int potNumber = numPots; potNumber > 0; potNumber--) {
 		Item item {};
 		InitializeItem(item, IDI_ARENAPOT);
 		GenerateNewSeed(item);
 		item.updateRequiredStatsCacheForPlayer(myPlayer);
 
-		if (!AutoPlaceItemInBelt(myPlayer, item, true) && !AutoPlaceItemInInventory(myPlayer, item, true)) {
+		if (!AutoPlaceItemInBelt(myPlayer, item, true, true) && !AutoPlaceItemInInventory(myPlayer, item, true, true)) {
 			break; // inventory is full
 		}
 	}
@@ -429,7 +451,7 @@ std::string TextCmdArenaPot(const string_view parameter)
 	return ret;
 }
 
-std::string TextCmdInspect(const string_view parameter)
+std::string TextCmdInspect(const std::string_view parameter)
 {
 	std::string ret;
 	if (!gbIsMultiplayer) {
@@ -444,20 +466,27 @@ std::string TextCmdInspect(const string_view parameter)
 	}
 
 	const std::string param = AsciiStrToLower(parameter);
-	for (auto &player : Players) {
-		const std::string playerName = AsciiStrToLower(player._pName);
-		if (playerName.find(param) != std::string::npos) {
-			InspectPlayer = &player;
-			StrAppend(ret, _("Inspecting player: "));
-			StrAppend(ret, player._pName);
-			OpenCharPanel();
-			if (!sbookflag)
-				invflag = true;
-			RedrawEverything();
-			return ret;
-		}
+	auto it = c_find_if(Players, [&param](const Player &player) {
+		return AsciiStrToLower(player._pName) == param;
+	});
+	if (it == Players.end()) {
+		it = c_find_if(Players, [&param](const Player &player) {
+			return AsciiStrToLower(player._pName).find(param) != std::string::npos;
+		});
 	}
-	StrAppend(ret, _("No players found with such a name"));
+	if (it == Players.end()) {
+		StrAppend(ret, _("No players found with such a name"));
+		return ret;
+	}
+
+	Player &player = *it;
+	InspectPlayer = &player;
+	StrAppend(ret, _("Inspecting player: "));
+	StrAppend(ret, player._pName);
+	OpenCharPanel();
+	if (!sbookflag)
+		invflag = true;
+	RedrawEverything();
 	return ret;
 }
 
@@ -483,9 +512,9 @@ bool IsQuestEnabled(const Quest &quest)
 	}
 }
 
-std::string TextCmdLevelSeed(const string_view parameter)
+std::string TextCmdLevelSeed(const std::string_view parameter)
 {
-	string_view levelType = setlevel ? "set level" : "dungeon level";
+	std::string_view levelType = setlevel ? "set level" : "dungeon level";
 
 	char gameId[] = {
 		static_cast<char>((sgGameInitInfo.programid >> 24) & 0xFF),
@@ -495,8 +524,8 @@ std::string TextCmdLevelSeed(const string_view parameter)
 		'\0'
 	};
 
-	string_view mode = gbIsMultiplayer ? "MP" : "SP";
-	string_view questPool = UseMultiplayerQuests() ? "MP" : "Full";
+	std::string_view mode = gbIsMultiplayer ? "MP" : "SP";
+	std::string_view questPool = UseMultiplayerQuests() ? "MP" : "Full";
 
 	uint32_t questFlags = 0;
 	for (const Quest &quest : Quests) {
@@ -521,26 +550,26 @@ std::string TextCmdLevelSeed(const string_view parameter)
 }
 
 std::vector<TextCmdItem> TextCmdList = {
-	{ N_("/help"), N_("Prints help overview or help for a specific command."), N_("[command]"), &TextCmdHelp },
-	{ N_("/arena"), N_("Enter a PvP Arena."), N_("<arena-number>"), &TextCmdArena },
-	{ N_("/arenapot"), N_("Gives Arena Potions."), N_("<number>"), &TextCmdArenaPot },
-	{ N_("/inspect"), N_("Inspects stats and equipment of another player."), N_("<player name>"), &TextCmdInspect },
-	{ N_("/seedinfo"), N_("Show seed infos for current level."), "", &TextCmdLevelSeed },
+	{ "/help", N_("Prints help overview or help for a specific command."), N_("[command]"), &TextCmdHelp },
+	{ "/arena", N_("Enter a PvP Arena."), N_("<arena-number>"), &TextCmdArena },
+	{ "/arenapot", N_("Gives Arena Potions."), N_("<number>"), &TextCmdArenaPot },
+	{ "/inspect", N_("Inspects stats and equipment of another player."), N_("<player name>"), &TextCmdInspect },
+	{ "/seedinfo", N_("Show seed infos for current level."), "", &TextCmdLevelSeed },
 };
 
-bool CheckTextCommand(const string_view text)
+bool CheckTextCommand(const std::string_view text)
 {
 	if (text.size() < 1 || text[0] != '/')
 		return false;
 
-	auto textCmdIterator = std::find_if(TextCmdList.begin(), TextCmdList.end(), [&](const TextCmdItem &elem) { return text.find(elem.text) == 0 && (text.length() == elem.text.length() || text[elem.text.length()] == ' '); });
+	auto textCmdIterator = c_find_if(TextCmdList, [&](const TextCmdItem &elem) { return text.find(elem.text) == 0 && (text.length() == elem.text.length() || text[elem.text.length()] == ' '); });
 	if (textCmdIterator == TextCmdList.end()) {
-		InitDiabloMsg(StrCat(_("Command \""), text, "\" is unknown."));
+		InitDiabloMsg(StrCat(_("Command "), "\"", text, "\"", _(" is unknown.")));
 		return true;
 	}
 
 	TextCmdItem &textCmd = *textCmdIterator;
-	string_view parameter = "";
+	std::string_view parameter = "";
 	if (text.length() > (textCmd.text.length() + 1))
 		parameter = text.substr(textCmd.text.length() + 1);
 	const std::string result = textCmd.actionProc(parameter);
@@ -551,10 +580,6 @@ bool CheckTextCommand(const string_view text)
 
 void ResetTalkMsg()
 {
-#ifdef _DEBUG
-	if (CheckDebugTextCommand(TalkMessage))
-		return;
-#endif
 	if (CheckTextCommand(TalkMessage))
 		return;
 
@@ -586,7 +611,7 @@ void ControlPressEnter()
 			talkSave &= 7;
 			if (i != talkSave) {
 				strcpy(TalkSave[i], TalkSave[talkSave]);
-				strcpy(TalkSave[talkSave], TalkMessage);
+				*BufCopy(TalkSave[talkSave], ChatInputState->value()) = '\0';
 			}
 		}
 		TalkMessage[0] = '\0';
@@ -600,16 +625,16 @@ void ControlUpDown(int v)
 	for (int i = 0; i < 8; i++) {
 		TalkSaveIndex = (v + TalkSaveIndex) & 7;
 		if (TalkSave[TalkSaveIndex][0] != 0) {
-			strcpy(TalkMessage, TalkSave[TalkSaveIndex]);
+			ChatInputState->assign(TalkSave[TalkSaveIndex]);
 			return;
 		}
 	}
 }
 
-void RemoveGold(Player &player, int goldIndex)
+void RemoveGold(Player &player, int goldIndex, int amount)
 {
-	int gi = goldIndex - INVITEM_INV_FIRST;
-	player.InvList[gi]._ivalue -= dropGoldValue;
+	const int gi = goldIndex - INVITEM_INV_FIRST;
+	player.InvList[gi]._ivalue -= amount;
 	if (player.InvList[gi]._ivalue > 0) {
 		SetPlrHandGoldCurs(player.InvList[gi]);
 		NetSyncInvItem(player, gi);
@@ -617,11 +642,10 @@ void RemoveGold(Player &player, int goldIndex)
 		player.RemoveInvItem(gi);
 	}
 
-	MakeGoldStack(player.HoldItem, dropGoldValue);
+	MakeGoldStack(player.HoldItem, amount);
 	NewCursor(player.HoldItem);
 
 	player._pGold = CalculateGold(player);
-	dropGoldValue = 0;
 }
 
 bool IsLevelUpButtonVisible()
@@ -686,11 +710,7 @@ void CalculatePanelAreas()
 
 bool IsChatAvailable()
 {
-#ifdef _DEBUG
-	return true;
-#else
 	return gbIsMultiplayer;
-#endif
 }
 
 void FocusOnCharInfo()
@@ -739,7 +759,7 @@ void ToggleCharPanel()
 		OpenCharPanel();
 }
 
-void AddPanelString(string_view str)
+void AddPanelString(std::string_view str)
 {
 	if (InfoString.empty())
 		InfoString = str;
@@ -807,9 +827,11 @@ void DrawFlaskValues(const Surface &out, Point pos, int currValue, int maxValue)
 {
 	UiFlags color = (currValue > 0 ? (currValue == maxValue ? UiFlags::ColorGold : UiFlags::ColorWhite) : UiFlags::ColorRed);
 
-	auto drawStringWithShadow = [out, color](string_view text, Point pos) {
-		DrawString(out, text, pos + Displacement { -1, -1 }, UiFlags::ColorBlack | UiFlags::KerningFitSpacing, 0);
-		DrawString(out, text, pos, color | UiFlags::KerningFitSpacing, 0);
+	auto drawStringWithShadow = [out, color](std::string_view text, Point pos) {
+		DrawString(out, text, pos + Displacement { -1, -1 },
+		    { .flags = UiFlags::ColorBlack | UiFlags::KerningFitSpacing, .spacing = 0 });
+		DrawString(out, text, pos,
+		    { .flags = color | UiFlags::KerningFitSpacing, .spacing = 0 });
 	};
 
 	std::string currText = StrCat(currValue);
@@ -845,6 +867,7 @@ void InitControlPan()
 		}
 	}
 	talkflag = false;
+	ChatInputState = std::nullopt;
 	if (IsChatAvailable()) {
 		if (!HeadlessMode) {
 			{
@@ -880,7 +903,7 @@ void InitControlPan()
 	for (bool &buttonEnabled : chrbtn)
 		buttonEnabled = false;
 	chrbtnactive = false;
-	InfoString = {};
+	InfoString = StringOrView {};
 	RedrawComponent(PanelDrawComponent::Health);
 	RedrawComponent(PanelDrawComponent::Mana);
 	CloseCharPanel();
@@ -894,10 +917,6 @@ void InitControlPan()
 		pGBoxBuff = LoadCel("ctrlpan\\golddrop", 261);
 	}
 	CloseGoldDrop();
-	dropGoldValue = 0;
-	initialDropGoldValue = 0;
-	initialDropGoldIndex = 0;
-
 	CalculatePanelAreas();
 
 	if (!HeadlessMode)
@@ -997,6 +1016,20 @@ void DoAutoMap()
 		AutomapActive = false;
 }
 
+void CycleAutomapType()
+{
+	if (!AutomapActive) {
+		StartAutomap();
+		return;
+	}
+	const AutomapType newType { static_cast<std::underlying_type_t<AutomapType>>(
+		(static_cast<unsigned>(GetAutomapType()) + 1) % enum_size<AutomapType>::value) };
+	SetAutomapType(newType);
+	if (newType == AutomapType::FIRST) {
+		AutomapActive = false;
+	}
+}
+
 void CheckPanelInfo()
 {
 	panelflag = false;
@@ -1025,7 +1058,7 @@ void CheckPanelInfo()
 		InfoColor = UiFlags::ColorWhite;
 		panelflag = true;
 		AddPanelString(_("Hotkey: 's'"));
-		Player &myPlayer = *MyPlayer;
+		const Player &myPlayer = *MyPlayer;
 		const SpellID spellId = myPlayer._pRSpell;
 		if (IsValidSpell(spellId)) {
 			switch (myPlayer._pRSplType) {
@@ -1039,8 +1072,7 @@ void CheckPanelInfo()
 			} break;
 			case SpellType::Scroll: {
 				AddPanelString(fmt::format(fmt::runtime(_("Scroll of {:s}")), pgettext("spell", GetSpellData(spellId).sNameText)));
-				const InventoryAndBeltPlayerItemsRange items { myPlayer };
-				const int scrollCount = std::count_if(items.begin(), items.end(), [spellId](const Item &item) {
+				const int scrollCount = c_count_if(InventoryAndBeltPlayerItemsRange { myPlayer }, [spellId](const Item &item) {
 					return item.isScrollOf(spellId);
 				});
 				AddPanelString(fmt::format(fmt::runtime(ngettext("{:d} Scroll", "{:d} Scrolls", scrollCount)), scrollCount));
@@ -1110,17 +1142,11 @@ void CheckBtnUp()
 			CloseGoldWithdraw();
 			CloseStash();
 			invflag = !invflag;
-			if (dropGoldFlag) {
-				CloseGoldDrop();
-				dropGoldValue = 0;
-			}
+			CloseGoldDrop();
 			break;
 		case PanelButtonSpellbook:
 			CloseInventory();
-			if (dropGoldFlag) {
-				CloseGoldDrop();
-				dropGoldValue = 0;
-			}
+			CloseGoldDrop();
 			sbookflag = !sbookflag;
 			break;
 		case PanelButtonSendmsg:
@@ -1161,9 +1187,9 @@ void FreeControlPan()
 
 void DrawInfoBox(const Surface &out)
 {
-	DrawPanelBox(out, { 177, 62, 288, 63 }, GetMainPanel().position + Displacement { 177, 46 });
+	DrawPanelBox(out, { 177, 62, InfoBoxSize.width, InfoBoxSize.height }, GetMainPanel().position + InfoBoxTopLeft);
 	if (!panelflag && !trigflag && pcursinvitem == -1 && pcursstashitem == StashStruct::EmptyCell && !spselflag) {
-		InfoString = {};
+		InfoString = StringOrView {};
 		InfoColor = UiFlags::ColorWhite;
 	}
 	Player &myPlayer = *MyPlayer;
@@ -1196,14 +1222,14 @@ void DrawInfoBox(const Surface &out)
 					PrintMonstHistory(monster.type().type);
 				}
 			} else if (pcursitem == -1) {
-				InfoString = string_view(Towners[pcursmonst].name);
+				InfoString = std::string_view(Towners[pcursmonst].name);
 			}
 		}
-		if (pcursplr != -1) {
+		if (PlayerUnderCursor != nullptr) {
 			InfoColor = UiFlags::ColorWhitegold;
-			auto &target = Players[pcursplr];
-			InfoString = string_view(target._pName);
-			AddPanelString(fmt::format(fmt::runtime(_("{:s}, Level: {:d}")), _(PlayersData[static_cast<std::size_t>(target._pClass)].className), target._pLevel));
+			auto &target = *PlayerUnderCursor;
+			InfoString = std::string_view(target._pName);
+			AddPanelString(fmt::format(fmt::runtime(_("{:s}, Level: {:d}")), target.getClassName(), target.getCharacterLevel()));
 			AddPanelString(fmt::format(fmt::runtime(_("Hit Points {:d} of {:d}")), target._pHitPoints >> 6, target._pMaxHP >> 6));
 		}
 	}
@@ -1235,7 +1261,8 @@ void DrawLevelUpIcon(const Surface &out)
 {
 	if (IsLevelUpButtonVisible()) {
 		int nCel = lvlbtndown ? 2 : 1;
-		DrawString(out, _("Level Up"), { GetMainPanel().position + Displacement { 0, -62 }, { 120, 0 } }, UiFlags::ColorWhite | UiFlags::AlignCenter);
+		DrawString(out, _("Level Up"), { GetMainPanel().position + Displacement { 0, -62 }, { 120, 0 } },
+		    { .flags = UiFlags::ColorWhite | UiFlags::AlignCenter | UiFlags::KerningFitSpacing });
 		ClxDraw(out, GetMainPanel().position + Displacement { 40, -17 }, (*pChrButtons)[nCel]);
 	}
 }
@@ -1334,19 +1361,23 @@ void RedBack(const Surface &out)
 	}
 }
 
-void DrawGoldSplit(const Surface &out, int amount)
+void DrawGoldSplit(const Surface &out)
 {
 	const int dialogX = 30;
 
 	ClxDraw(out, GetPanelPosition(UiPanels::Inventory, { dialogX, 178 }), (*pGBoxBuff)[0]);
+
+	const std::string_view amountText = GoldDropText;
+	const TextInputCursorState &cursor = GoldDropCursor;
+	const int max = GetGoldDropMax();
 
 	const std::string description = fmt::format(
 	    fmt::runtime(ngettext(
 	        /* TRANSLATORS: {:s} is a number with separators. Dialog is shown when splitting a stash of Gold.*/
 	        "You have {:s} gold piece. How many do you want to remove?",
 	        "You have {:s} gold pieces. How many do you want to remove?",
-	        initialDropGoldValue)),
-	    FormatInteger(initialDropGoldValue));
+	        max)),
+	    FormatInteger(max));
 
 	// Pre-wrap the string at spaces, otherwise DrawString would hard wrap in the middle of words
 	const std::string wrapped = WordWrapString(description, 200);
@@ -1354,15 +1385,17 @@ void DrawGoldSplit(const Surface &out, int amount)
 	// The split gold dialog is roughly 4 lines high, but we need at least one line for the player to input an amount.
 	// Using a clipping region 50 units high (approx 3 lines with a lineheight of 17) to ensure there is enough room left
 	//  for the text entered by the player.
-	DrawString(out, wrapped, { GetPanelPosition(UiPanels::Inventory, { dialogX + 31, 75 }), { 200, 50 } }, UiFlags::ColorWhitegold | UiFlags::AlignCenter, 1, 17);
+	DrawString(out, wrapped, { GetPanelPosition(UiPanels::Inventory, { dialogX + 31, 75 }), { 200, 50 } },
+	    { .flags = UiFlags::ColorWhitegold | UiFlags::AlignCenter, .lineHeight = 17 });
 
-	std::string value;
-	if (amount > 0) {
-		value = StrCat(amount);
-	}
 	// Even a ten digit amount of gold only takes up about half a line. There's no need to wrap or clip text here so we
 	// use the Point form of DrawString.
-	DrawString(out, value, GetPanelPosition(UiPanels::Inventory, { dialogX + 37, 128 }), UiFlags::ColorWhite | UiFlags::PentaCursor);
+	DrawString(out, amountText, GetPanelPosition(UiPanels::Inventory, { dialogX + 37, 128 }),
+	    {
+	        .flags = UiFlags::ColorWhite | UiFlags::PentaCursor,
+	        .cursorPosition = static_cast<int>(cursor.position),
+	        .highlightRange = { static_cast<int>(cursor.selection.begin), static_cast<int>(cursor.selection.end) },
+	    });
 }
 
 void control_drop_gold(SDL_Keycode vkey)
@@ -1371,19 +1404,22 @@ void control_drop_gold(SDL_Keycode vkey)
 
 	if (myPlayer._pHitPoints >> 6 <= 0) {
 		CloseGoldDrop();
-		dropGoldValue = 0;
 		return;
 	}
 
-	if (vkey == SDLK_RETURN || vkey == SDLK_KP_ENTER) {
-		if (dropGoldValue > 0)
-			RemoveGold(myPlayer, initialDropGoldIndex);
+	switch (vkey) {
+	case SDLK_RETURN:
+	case SDLK_KP_ENTER:
+		if (const int value = GoldDropInputState->value(); value != 0) {
+			RemoveGold(myPlayer, GoldDropInvIndex, value);
+		}
 		CloseGoldDrop();
-	} else if (vkey == SDLK_ESCAPE) {
+		break;
+	case SDLK_ESCAPE:
 		CloseGoldDrop();
-		dropGoldValue = 0;
-	} else if (vkey == SDLK_BACKSPACE) {
-		dropGoldValue = dropGoldValue / 10;
+		break;
+	default:
+		break;
 	}
 }
 
@@ -1409,8 +1445,14 @@ void DrawTalkPan(const Surface &out)
 	int x = mainPanelPosition.x + 200;
 	int y = mainPanelPosition.y + 10;
 
-	const uint32_t len = DrawString(out, TalkMessage, { { x, y }, { 250, 39 } }, UiFlags::ColorWhite | UiFlags::PentaCursor, 1, 13);
-	TalkMessage[std::min<size_t>(len, sizeof(TalkMessage) - 1)] = '\0';
+	const uint32_t len = DrawString(out, TalkMessage, { { x, y }, { 250, 39 } },
+	    {
+	        .flags = UiFlags::ColorWhite | UiFlags::PentaCursor,
+	        .lineHeight = 13,
+	        .cursorPosition = static_cast<int>(ChatCursor.position),
+	        .highlightRange = { static_cast<int>(ChatCursor.selection.begin), static_cast<int>(ChatCursor.selection.end) },
+	    });
+	ChatInputState->truncate(len);
 
 	x += 46;
 	int talkBtn = 0;
@@ -1442,7 +1484,7 @@ void DrawTalkPan(const Surface &out)
 			RenderClxSprite(out, (*TalkButton)[TalkButtonsDown[talkBtn] ? 1 : 0], talkPanPosition + Displacement { 4, -15 });
 		}
 		if (player.plractive) {
-			DrawString(out, player._pName, { { x, y + 60 + talkBtn * 18 }, { 204, 0 } }, color);
+			DrawString(out, player._pName, { { x, y + 60 + talkBtn * 18 }, { 204, 0 } }, { .flags = color });
 		}
 
 		talkBtn++;
@@ -1504,9 +1546,13 @@ void control_type_message()
 		return;
 
 	talkflag = true;
+	TalkMessage[0] = '\0';
+	ChatInputState.emplace(TextInputState::Options {
+	    .value = TalkMessage,
+	    .cursor = &ChatCursor,
+	    .maxLength = sizeof(TalkMessage) - 1 });
 	SDL_Rect rect = MakeSdlRect(GetMainPanel().position.x + 200, GetMainPanel().position.y + 22, 0, 27);
 	SDL_SetTextInputRect(&rect);
-	TalkMessage[0] = '\0';
 	for (bool &talkButtonDown : TalkButtonsDown) {
 		talkButtonDown = false;
 	}
@@ -1520,6 +1566,7 @@ void control_reset_talk()
 {
 	talkflag = false;
 	SDL_StopTextInput();
+	ChatInputState = std::nullopt;
 	sgbPlrTalkTbl = 0;
 	RedrawEverything();
 }
@@ -1535,9 +1582,9 @@ bool IsTalkActive()
 	return true;
 }
 
-void control_new_text(string_view text)
+bool HandleTalkTextInputEvent(const SDL_Event &event)
 {
-	strncat(TalkMessage, text.data(), sizeof(TalkMessage) - strlen(TalkMessage) - 1);
+	return HandleTextInputEvent(event, *ChatInputState);
 }
 
 bool control_presskeys(SDL_Keycode vkey)
@@ -1554,9 +1601,6 @@ bool control_presskeys(SDL_Keycode vkey)
 	case SDLK_RETURN:
 	case SDLK_KP_ENTER:
 		ControlPressEnter();
-		return true;
-	case SDLK_BACKSPACE:
-		TalkMessage[FindLastUtf8Symbols(TalkMessage)] = '\0';
 		return true;
 	case SDLK_DOWN:
 		ControlUpDown(1);
@@ -1577,40 +1621,56 @@ void DiabloHotkeyMsg(uint32_t dwMsg)
 
 	assert(dwMsg < QUICK_MESSAGE_OPTIONS);
 
-	for (auto &msg : sgOptions.Chat.szHotKeyMsgs[dwMsg]) {
-
+	for (const std::string &msg : sgOptions.Chat.szHotKeyMsgs[dwMsg]) {
 #ifdef _DEBUG
-		if (CheckDebugTextCommand(msg))
+		constexpr std::string_view LuaPrefix = "/lua ";
+		if (msg.starts_with(LuaPrefix)) {
+			InitConsole();
+			RunInConsole(std::string_view(msg).substr(LuaPrefix.size()));
 			continue;
+		}
 #endif
-		if (CheckTextCommand(msg))
-			continue;
 		char charMsg[MAX_SEND_STR_LEN];
 		CopyUtf8(charMsg, msg, sizeof(charMsg));
 		NetSendCmdString(0xFFFFFF, charMsg);
 	}
 }
 
+void OpenGoldDrop(int8_t invIndex, int max)
+{
+	dropGoldFlag = true;
+	GoldDropInvIndex = invIndex;
+	GoldDropText[0] = '\0';
+	GoldDropInputState.emplace(NumberInputState::Options {
+	    .textOptions {
+	        .value = GoldDropText,
+	        .cursor = &GoldDropCursor,
+	        .maxLength = sizeof(GoldDropText) - 1,
+	    },
+	    .min = 0,
+	    .max = max,
+	});
+	SDL_StartTextInput();
+}
+
 void CloseGoldDrop()
 {
 	if (!dropGoldFlag)
 		return;
-	dropGoldFlag = false;
 	SDL_StopTextInput();
+	dropGoldFlag = false;
+	GoldDropInputState = std::nullopt;
+	GoldDropInvIndex = 0;
 }
 
-void GoldDropNewText(string_view text)
+int GetGoldDropMax()
 {
-	for (char vkey : text) {
-		int digit = vkey - '0';
-		if (digit >= 0 && digit <= 9) {
-			int newGoldValue = dropGoldValue * 10;
-			newGoldValue += digit;
-			if (newGoldValue <= initialDropGoldValue) {
-				dropGoldValue = newGoldValue;
-			}
-		}
-	}
+	return GoldDropInputState->max();
+}
+
+bool HandleGoldDropTextInputEvent(const SDL_Event &event)
+{
+	return HandleNumberInputEvent(event, *GoldDropInputState);
 }
 
 } // namespace devilution

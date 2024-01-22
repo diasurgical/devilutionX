@@ -16,11 +16,16 @@ struct SpellListItem {
 	bool isSelected;
 };
 
+/**
+ * @brief draws the current right mouse button spell.
+ * @param out screen buffer representing the main UI panel
+ */
 void DrawSpell(const Surface &out);
 void DrawSpellList(const Surface &out);
 std::vector<SpellListItem> GetSpellListItems();
 void SetSpell();
 void SetSpeedSpell(size_t slot);
+bool IsValidSpeedSpell(size_t slot);
 void ToggleSpell(size_t slot);
 
 /**

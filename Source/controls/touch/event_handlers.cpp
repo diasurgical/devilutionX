@@ -9,6 +9,7 @@
 #include "gmenu.h"
 #include "inv.h"
 #include "panels/spell_book.hpp"
+#include "panels/spell_list.hpp"
 #include "qol/stash.h"
 #include "stores.h"
 #include "utils/ui_fwd.h"

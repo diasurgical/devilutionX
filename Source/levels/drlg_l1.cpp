@@ -372,7 +372,7 @@ void FillFloor()
 			if (dungeon[i][j] != Floor || Protected.test(i, j))
 				continue;
 
-			int rv = GenerateRnd(3);
+			int rv = RandomIntLessThan(3);
 			if (rv == 1)
 				dungeon[i][j] = Floor22;
 			else if (rv == 2)
@@ -381,15 +381,22 @@ void FillFloor()
 	}
 }
 
-void LoadQuestSetPieces()
+void InitSetPiece()
 {
+	std::unique_ptr<uint16_t[]> setPieceData;
 	if (Quests[Q_BUTCHER].IsAvailable()) {
-		pSetPiece = LoadFileInMem<uint16_t>("levels\\l1data\\rnd6.dun");
+		setPieceData = LoadFileInMem<uint16_t>("levels\\l1data\\rnd6.dun");
 	} else if (Quests[Q_SKELKING].IsAvailable() && !UseMultiplayerQuests()) {
-		pSetPiece = LoadFileInMem<uint16_t>("levels\\l1data\\skngdo.dun");
+		setPieceData = LoadFileInMem<uint16_t>("levels\\l1data\\skngdo.dun");
 	} else if (Quests[Q_LTBANNER].IsAvailable()) {
-		pSetPiece = LoadFileInMem<uint16_t>("levels\\l1data\\banner2.dun");
+		setPieceData = LoadFileInMem<uint16_t>("levels\\l1data\\banner2.dun");
+	} else {
+		return; // no setpiece needed for this level
 	}
+
+	WorldTilePosition setPiecePosition = SelectChamber();
+	PlaceDunTiles(setPieceData.get(), setPiecePosition, Floor);
+	SetPiece = { setPiecePosition, GetDunSize(setPieceData.get()) };
 }
 
 void InitDungeonPieces()
@@ -1015,8 +1022,8 @@ void FillChambers()
 		} else if (CornerStone.isAvailable()) {
 			SetCornerRoom();
 		}
-	} else if (pSetPiece != nullptr) {
-		SetSetPieceRoom(SelectChamber(), Floor);
+	} else {
+		InitSetPiece();
 	}
 }
 
@@ -1170,8 +1177,6 @@ void GenerateLevel(lvl_entry entry)
 		break;
 	}
 
-	LoadQuestSetPieces();
-
 	while (true) {
 		DRLG_InitTrans();
 
@@ -1188,8 +1193,6 @@ void GenerateLevel(lvl_entry entry)
 		if (PlaceStairs(entry))
 			break;
 	}
-
-	FreeQuestSetPieces();
 
 	for (int j = 0; j < DMAXY; j++) {
 		for (int i = 0; i < DMAXX; i++) {

@@ -6,14 +6,17 @@ on:
       - master
     paths-ignore:
       - '*.md'
+      - 'docs/**'
   pull_request:
     types: [opened, synchronize]
     paths-ignore:
       - '*.md'
+      - 'docs/**'
   release:
     types: [published]
     paths-ignore:
       - '*.md'
+      - 'docs/**'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -28,7 +31,7 @@ jobs:
     runs-on: macos-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
@@ -36,8 +39,8 @@ jobs:
       uses: actions/cache@v3
       with:
         path: build
-        key: ${{ github.workflow }}-v2-${{ github.sha }}
-        restore-keys: ${{ github.workflow }}-v2-
+        key: ${{ github.workflow }}-v3-${{ github.sha }}
+        restore-keys: ${{ github.workflow }}-v3-
 
     - name: Configure CMake
       # Use a bash shell so we can use the same syntax for environment variable
@@ -58,7 +61,7 @@ jobs:
 
     - name: Upload-Package
       if: ${{ !env.ACT }}
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: devilutionx-iOS.ipa
         path: build/devilutionx-iOS.ipa

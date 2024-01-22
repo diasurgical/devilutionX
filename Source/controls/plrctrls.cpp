@@ -1,6 +1,7 @@
 #include "controls/plrctrls.h"
 
 #include <algorithm>
+#include <cmath>
 #include <cstdint>
 #include <list>
 
@@ -103,7 +104,7 @@ int GetRotaryDistance(Point destination)
 	int d1 = static_cast<int>(myPlayer._pdir);
 	int d2 = static_cast<int>(GetDirection(myPlayer.position.future, destination));
 
-	int d = abs(d1 - d2);
+	int d = std::abs(d1 - d2);
 	if (d > 4)
 		return 4 - (d % 4);
 
@@ -328,7 +329,7 @@ void FindMeleeTarget()
 				visited[dx][dy] = true;
 
 				if (dMonster[dx][dy] != 0) {
-					const int mi = abs(dMonster[dx][dy]) - 1;
+					const int mi = std::abs(dMonster[dx][dy]) - 1;
 					const auto &monster = Monsters[mi];
 					if (CanTargetMonster(monster)) {
 						const bool newCanTalk = CanTalkToMonst(monster);
@@ -381,8 +382,7 @@ void CheckPlayerNearby()
 	if (myPlayer.friendlyMode && spl != SpellID::Resurrect && spl != SpellID::HealOther)
 		return;
 
-	for (size_t i = 0; i < Players.size(); i++) {
-		const Player &player = Players[i];
+	for (const Player &player : Players) {
 		if (&player == MyPlayer)
 			continue;
 		const int mx = player.position.future.x;
@@ -400,15 +400,15 @@ void CheckPlayerNearby()
 				continue;
 		}
 
-		if (pcursplr != -1 && distance < newDdistance)
+		if (PlayerUnderCursor != nullptr && distance < newDdistance)
 			continue;
 		const int newRotations = GetRotaryDistance(player.position.future);
-		if (pcursplr != -1 && distance == newDdistance && rotations < newRotations)
+		if (PlayerUnderCursor != nullptr && distance == newDdistance && rotations < newRotations)
 			continue;
 
 		distance = newDdistance;
 		rotations = newRotations;
-		pcursplr = i;
+		PlayerUnderCursor = &player;
 	}
 }
 
@@ -474,7 +474,7 @@ void FindTrigger()
 		}
 	}
 
-	if (pcursmonst != -1 || pcursplr != -1 || cursPosition.x == -1 || cursPosition.y == -1)
+	if (pcursmonst != -1 || PlayerUnderCursor != nullptr || cursPosition.x == -1 || cursPosition.y == -1)
 		return; // Prefer monster/player info text
 
 	CheckTrigForce();
@@ -533,8 +533,8 @@ void Interact()
 		return;
 	}
 
-	if (leveltype != DTYPE_TOWN && pcursplr != -1 && !myPlayer.friendlyMode) {
-		NetSendCmdParam1(true, myPlayer.UsesRangedWeapon() ? CMD_RATTACKPID : CMD_ATTACKPID, pcursplr);
+	if (leveltype != DTYPE_TOWN && PlayerUnderCursor != nullptr && !myPlayer.friendlyMode) {
+		NetSendCmdParam1(true, myPlayer.UsesRangedWeapon() ? CMD_RATTACKPID : CMD_ATTACKPID, PlayerUnderCursor->getId());
 		LastMouseButtonAction = MouseActionType::AttackPlayerTarget;
 		return;
 	}
@@ -654,10 +654,10 @@ Point InvGetEquipSlotCoordFromInvSlot(const inv_xy_slot slot)
 Point GetSlotCoord(int slot)
 {
 	if (slot >= SLOTXY_BELT_FIRST && slot <= SLOTXY_BELT_LAST) {
-		return GetPanelPosition(UiPanels::Main, InvRect[slot].position);
+		return GetPanelPosition(UiPanels::Main, InvRect[slot].Center());
 	}
 
-	return GetPanelPosition(UiPanels::Inventory, InvRect[slot].position);
+	return GetPanelPosition(UiPanels::Inventory, InvRect[slot].Center());
 }
 
 /**
@@ -666,7 +666,7 @@ Point GetSlotCoord(int slot)
 int GetItemIdOnSlot(int slot)
 {
 	if (slot >= SLOTXY_INV_FIRST && slot <= SLOTXY_INV_LAST) {
-		return abs(MyPlayer->InvGrid[slot - SLOTXY_INV_FIRST]);
+		return std::abs(MyPlayer->InvGrid[slot - SLOTXY_INV_FIRST]);
 	}
 
 	return 0;
@@ -733,24 +733,11 @@ void ResetInvCursorPosition()
 		} else {
 			mousePos = GetSlotCoord(Slot);
 		}
-
-		if (!MyPlayer->HoldItem.isEmpty()) {
-			mousePos += Displacement { -INV_SLOT_HALF_SIZE_PX, -INV_SLOT_HALF_SIZE_PX };
-		}
 	} else if (Slot >= SLOTXY_BELT_FIRST && Slot <= SLOTXY_BELT_LAST) {
 		mousePos = GetSlotCoord(Slot);
-		if (!MyPlayer->HoldItem.isEmpty())
-			mousePos += Displacement { -INV_SLOT_HALF_SIZE_PX, -INV_SLOT_HALF_SIZE_PX };
 	} else {
 		mousePos = InvGetEquipSlotCoordFromInvSlot((inv_xy_slot)Slot);
-		if (!MyPlayer->HoldItem.isEmpty()) {
-			Size itemSize = GetInventorySize(MyPlayer->HoldItem);
-			mousePos += Displacement { -INV_SLOT_HALF_SIZE_PX, -INV_SLOT_HALF_SIZE_PX * itemSize.height };
-		}
 	}
-
-	mousePos.x += (InventorySlotSizeInPixels.width / 2);
-	mousePos.y -= (InventorySlotSizeInPixels.height / 2);
 
 	SetCursorPos(mousePos);
 }
@@ -759,7 +746,6 @@ int FindClosestInventorySlot(Point mousePos)
 {
 	int shortestDistance = std::numeric_limits<int>::max();
 	int bestSlot = 0;
-	mousePos += Displacement { -INV_SLOT_HALF_SIZE_PX, INV_SLOT_HALF_SIZE_PX };
 
 	for (int i = 0; i < NUM_XY_SLOTS; i++) {
 		int distance = mousePos.ManhattanDistance(GetSlotCoord(i));
@@ -776,7 +762,6 @@ Point FindClosestStashSlot(Point mousePos)
 {
 	int shortestDistance = std::numeric_limits<int>::max();
 	Point bestSlot = {};
-	mousePos += Displacement { -INV_SLOT_HALF_SIZE_PX, -INV_SLOT_HALF_SIZE_PX };
 
 	for (Point point : PointsInRectangle(Rectangle { { 0, 0 }, Size { 10, 10 } })) {
 		int distance = mousePos.ManhattanDistance(GetStashSlotCoord(point));
@@ -819,7 +804,7 @@ void InventoryMove(AxisDirection dir)
 
 	const Item &heldItem = MyPlayer->HoldItem;
 	const bool isHoldingItem = !heldItem.isEmpty();
-	Size itemSize = GetInventorySize(heldItem);
+	Size itemSize = isHoldingItem ? GetInventorySize(heldItem) : Size { 1 };
 
 	// when item is on cursor (pcurs > 1), this is the real cursor XY
 	if (dir.x == AxisDirectionX_LEFT) {
@@ -948,7 +933,7 @@ void InventoryMove(AxisDirection dir)
 			if (Slot == SLOTXY_HEAD || Slot == SLOTXY_CHEST) {
 				Slot = SLOTXY_INV_ROW1_FIRST + 4;
 			} else if (Slot == SLOTXY_RING_LEFT || Slot == SLOTXY_HAND_LEFT) {
-				Slot = SLOTXY_INV_ROW1_FIRST + 1;
+				Slot = SLOTXY_INV_ROW1_FIRST + (itemSize.width > 1 ? 0 : 1);
 			} else if (Slot == SLOTXY_RING_RIGHT || Slot == SLOTXY_HAND_RIGHT || Slot == SLOTXY_AMULET) {
 				Slot = SLOTXY_INV_ROW1_LAST - 1;
 			} else if (Slot <= (SLOTXY_INV_ROW4_LAST - (itemSize.height * INV_ROW_SLOT_SIZE))) {
@@ -1006,28 +991,27 @@ void InventoryMove(AxisDirection dir)
 	} else {
 		mousePos = GetSlotCoord(Slot);
 	}
-	// move cursor to the center of the slot if not holding anything or top left is holding an object
-	if (isHoldingItem) {
-		if (Slot < SLOTXY_INV_FIRST) {
-			// The coordinates we get for body slots are based on the centre of the region relative to the hand cursor
-			// Need to adjust the position for items larger than 1x1 so they're aligned as expected
-			mousePos.x -= itemSize.width * INV_SLOT_HALF_SIZE_PX;
-			mousePos.y -= itemSize.height * INV_SLOT_HALF_SIZE_PX;
-		}
-	} else {
-		// get item under new slot if navigating on the inventory
-		if (Slot >= SLOTXY_INV_FIRST && Slot <= SLOTXY_BELT_LAST) {
+	// If we're in the inventory we may need to move the cursor to an area that doesn't line up with the center of a cell
+	if (Slot >= SLOTXY_INV_FIRST && Slot <= SLOTXY_INV_LAST) {
+		if (!isHoldingItem) {
+			// If we're not holding an item
 			int8_t itemInvId = GetItemIdOnSlot(Slot);
-			int itemSlot = FindFirstSlotOnItem(itemInvId);
-			if (itemSlot < 0)
-				itemSlot = Slot;
+			if (itemInvId != 0) {
+				// but the cursor moved over an item
+				int itemSlot = FindFirstSlotOnItem(itemInvId);
+				if (itemSlot < 0)
+					itemSlot = Slot;
 
-			// offset the cursor so it shows over the center of the item
-			mousePos = GetSlotCoord(itemSlot);
-			itemSize = GetItemSizeOnSlot(itemSlot);
-			mousePos.x += (itemSize.width * InventorySlotSizeInPixels.width) / 2;
-			mousePos.y += (itemSize.height * InventorySlotSizeInPixels.height) / 2;
+				// then we need to offset the cursor so it shows over the center of the item
+				mousePos = GetSlotCoord(itemSlot);
+				itemSize = GetItemSizeOnSlot(itemSlot);
+			}
 		}
+		// At this point itemSize is either the size of the cell/item the hand cursor is over, or the size of the item we're currently holding.
+		// mousePos is the center of the top left cell of the item under the hand cursor, or the top left cell of the region that could fit the item we're holding.
+		// either way we need to offset the mouse position to account for items (we're holding or hovering over) with a dimension larger than a single cell.
+		mousePos.x += ((itemSize.width - 1) * InventorySlotSizeInPixels.width) / 2;
+		mousePos.y += ((itemSize.height - 1) * InventorySlotSizeInPixels.height) / 2;
 	}
 
 	if (mousePos == MousePosition) {
@@ -1168,7 +1152,7 @@ void StashMove(AxisDirection dir)
 	} else if (dir.y == AxisDirectionY_DOWN) {
 		if (ActiveStashSlot.y < 10 - itemSize.height) {
 			ActiveStashSlot.y++;
-		} else if ((holdItem.isEmpty() || CanBePlacedOnBelt(holdItem)) && ActiveStashSlot.x > 1) {
+		} else if ((holdItem.isEmpty() || CanBePlacedOnBelt(*MyPlayer, holdItem)) && ActiveStashSlot.x > 1) {
 			int beltSlot = ActiveStashSlot.x - 2;
 			Slot = SLOTXY_BELT_FIRST + beltSlot;
 			ActiveStashSlot = InvalidStashPoint;
@@ -1183,9 +1167,9 @@ void StashMove(AxisDirection dir)
 
 	if (ActiveStashSlot != InvalidStashPoint) {
 		Point mousePos = GetStashSlotCoord(ActiveStashSlot);
-		if (pcurs == CURSOR_HAND) {
-			mousePos += Displacement { INV_SLOT_HALF_SIZE_PX, INV_SLOT_HALF_SIZE_PX };
-		}
+		// Stash coordinates are all the top left of the cell, so we need to shift the mouse to the center of the held item
+		// or the center of the cell if we have a hand cursor (itemSize will be 1x1 here so we can use the same calculation)
+		mousePos += Displacement { itemSize.width * INV_SLOT_HALF_SIZE_PX, itemSize.height * INV_SLOT_HALF_SIZE_PX };
 		SetCursorPos(mousePos);
 		return;
 	}
@@ -1290,13 +1274,11 @@ bool IsPathBlocked(Point position, Direction dir)
 	return !PosOkPlayer(myPlayer, leftStep) && !PosOkPlayer(myPlayer, rightStep);
 }
 
-void WalkInDir(size_t playerId, AxisDirection dir)
+void WalkInDir(Player &player, AxisDirection dir)
 {
-	Player &player = Players[playerId];
-
 	if (dir.x == AxisDirectionX_NONE && dir.y == AxisDirectionY_NONE) {
 		if (ControlMode != ControlTypes::KeyboardAndMouse && player.walkpath[0] != WALK_NONE && player.destAction == ACTION_NONE)
-			NetSendCmdLoc(playerId, true, CMD_WALKXY, player.position.future); // Stop walking
+			NetSendCmdLoc(player.getId(), true, CMD_WALKXY, player.position.future); // Stop walking
 		return;
 	}
 
@@ -1318,7 +1300,7 @@ void WalkInDir(size_t playerId, AxisDirection dir)
 		return; // Don't start backtrack around obstacles
 	}
 
-	NetSendCmdLoc(playerId, true, CMD_WALKXY, delta);
+	NetSendCmdLoc(player.getId(), true, CMD_WALKXY, delta);
 }
 
 void QuestLogMove(AxisDirection moveDir)
@@ -1376,13 +1358,13 @@ void ProcessLeftStickOrDPadGameUI()
 		handler(GetLeftStickOrDpadDirection(false));
 }
 
-void Movement(size_t playerId)
+void Movement(Player &player)
 {
 	if (PadMenuNavigatorActive || PadHotspellMenuActive || InGameMenu())
 		return;
 
 	if (GetLeftStickOrDPadGameUIHandler() == nullptr) {
-		WalkInDir(playerId, GetMoveDirection());
+		WalkInDir(player, GetMoveDirection());
 	}
 }
 
@@ -1483,7 +1465,7 @@ bool ContinueSimulatedMouseEvent(const SDL_Event &event, const ControllerButtonE
 	return SimulatingMouseWithPadmapper || IsSimulatedMouseClickBinding(gamepadEvent);
 }
 
-string_view ControlTypeToString(ControlTypes controlType)
+std::string_view ControlTypeToString(ControlTypes controlType)
 {
 	switch (controlType) {
 	case ControlTypes::None:
@@ -1513,7 +1495,7 @@ void LogControlDeviceAndModeChange(ControlTypes newControlDevice, ControlTypes n
 }
 
 #ifndef USE_SDL1
-string_view GamepadTypeToString(GamepadLayout gamepadLayout)
+std::string_view GamepadTypeToString(GamepadLayout gamepadLayout)
 {
 	switch (gamepadLayout) {
 	case GamepadLayout::Nintendo:
@@ -1757,14 +1739,14 @@ void plrctrls_after_check_curs_move()
 	if (ControllerActionHeld != GameActionType_NONE && IsNoneOf(LastMouseButtonAction, MouseActionType::None, MouseActionType::Attack, MouseActionType::Spell)) {
 		InvalidateTargets();
 
-		if (pcursmonst == -1 && ObjectUnderCursor == nullptr && pcursitem == -1 && pcursinvitem == -1 && pcursstashitem == StashStruct::EmptyCell && pcursplr == -1) {
+		if (pcursmonst == -1 && ObjectUnderCursor == nullptr && pcursitem == -1 && pcursinvitem == -1 && pcursstashitem == StashStruct::EmptyCell && PlayerUnderCursor == nullptr) {
 			FindTrigger();
 		}
 		return;
 	}
 
 	// Clear focuse set by cursor
-	pcursplr = -1;
+	PlayerUnderCursor = nullptr;
 	pcursmonst = -1;
 	pcursitem = -1;
 	ObjectUnderCursor = nullptr;
@@ -1780,7 +1762,7 @@ void plrctrls_after_check_curs_move()
 		return;
 	}
 	if (!invflag) {
-		InfoString = {};
+		InfoString = StringOrView {};
 		FindActor();
 		FindItemOrObject();
 		FindTrigger();
@@ -1795,7 +1777,7 @@ void plrctrls_every_frame()
 
 void plrctrls_after_game_logic()
 {
-	Movement(MyPlayerId);
+	Movement(*MyPlayer);
 }
 
 void UseBeltItem(int type)
@@ -1826,46 +1808,49 @@ void PerformPrimaryAction()
 		} else if (GetRightPanel().contains(MousePosition) || GetMainPanel().contains(MousePosition)) {
 			int inventorySlot = (Slot >= 0) ? Slot : FindClosestInventorySlot(MousePosition);
 
-			const Size cursorSizeInCells = MyPlayer->HoldItem.isEmpty() ? Size { 1, 1 } : GetInventorySize(MyPlayer->HoldItem);
+			int jumpSlot = inventorySlot; // If the cursor is over an inventory slot we may need to adjust it due to pasting items of different sizes over each other
+			if (inventorySlot >= SLOTXY_INV_FIRST && inventorySlot <= SLOTXY_INV_LAST) {
+				const Size cursorSizeInCells = MyPlayer->HoldItem.isEmpty() ? Size { 1, 1 } : GetInventorySize(MyPlayer->HoldItem);
 
-			// Find any item occupying a slot that is currently under the cursor
-			int8_t itemUnderCursor = [](int inventorySlot, Size cursorSizeInCells) {
-				if (inventorySlot < SLOTXY_INV_FIRST || inventorySlot > SLOTXY_INV_LAST)
-					return 0;
-				for (int x = 0; x < cursorSizeInCells.width; x++) {
-					for (int y = 0; y < cursorSizeInCells.height; y++) {
-						int slotUnderCursor = inventorySlot + x + y * INV_ROW_SLOT_SIZE;
-						if (slotUnderCursor > SLOTXY_INV_LAST)
-							continue;
-						int itemId = GetItemIdOnSlot(slotUnderCursor);
-						if (itemId != 0)
-							return itemId;
+				// Find any item occupying a slot that is currently under the cursor
+				int8_t itemUnderCursor = [](int inventorySlot, Size cursorSizeInCells) {
+					if (inventorySlot < SLOTXY_INV_FIRST || inventorySlot > SLOTXY_INV_LAST)
+						return 0;
+					for (int x = 0; x < cursorSizeInCells.width; x++) {
+						for (int y = 0; y < cursorSizeInCells.height; y++) {
+							int slotUnderCursor = inventorySlot + x + y * INV_ROW_SLOT_SIZE;
+							if (slotUnderCursor > SLOTXY_INV_LAST)
+								continue;
+							int itemId = GetItemIdOnSlot(slotUnderCursor);
+							if (itemId != 0)
+								return itemId;
+						}
 					}
-				}
-				return 0;
-			}(inventorySlot, cursorSizeInCells);
+					return 0;
+				}(inventorySlot, cursorSizeInCells);
 
-			// The cursor will need to be shifted to
-			// this slot if the item is swapped or lifted
-			int jumpSlot = FindFirstSlotOnItem(itemUnderCursor);
+				// Capture the first slot of the first item (if any) under the cursor
+				if (itemUnderCursor > 0)
+					jumpSlot = FindFirstSlotOnItem(itemUnderCursor);
+			}
 			CheckInvItem();
 
-			// If we don't find the item in the same position as before,
-			// it suggests that the item was swapped or lifted
-			int newSlot = FindFirstSlotOnItem(itemUnderCursor);
-			if (jumpSlot >= 0 && jumpSlot != newSlot) {
+			if (inventorySlot >= SLOTXY_INV_FIRST && inventorySlot <= SLOTXY_INV_LAST) {
 				Point mousePos = GetSlotCoord(jumpSlot);
 				Slot = jumpSlot;
+				const Size newCursorSizeInCells = MyPlayer->HoldItem.isEmpty() ? GetItemSizeOnSlot(jumpSlot) : GetInventorySize(MyPlayer->HoldItem);
+				mousePos.x += ((newCursorSizeInCells.width - 1) * InventorySlotSizeInPixels.width) / 2;
+				mousePos.y += ((newCursorSizeInCells.height - 1) * InventorySlotSizeInPixels.height) / 2;
 				SetCursorPos(mousePos);
 			}
 		} else if (IsStashOpen && GetLeftPanel().contains(MousePosition)) {
 			Point stashSlot = (ActiveStashSlot != InvalidStashPoint) ? ActiveStashSlot : FindClosestStashSlot(MousePosition);
 
-			const Size cursorSizeInCells = MyPlayer->HoldItem.isEmpty() ? Size { 1, 1 } : GetInventorySize(MyPlayer->HoldItem);
+			Size cursorSizeInCells = MyPlayer->HoldItem.isEmpty() ? Size { 1, 1 } : GetInventorySize(MyPlayer->HoldItem);
 
 			// Find any item occupying a slot that is currently under the cursor
 			StashStruct::StashCell itemUnderCursor = [](Point stashSlot, Size cursorSizeInCells) -> StashStruct::StashCell {
-				if (stashSlot != InvalidStashPoint)
+				if (stashSlot == InvalidStashPoint)
 					return StashStruct::EmptyCell;
 				for (Point slotUnderCursor : PointsInRectangle(Rectangle { stashSlot, cursorSizeInCells })) {
 					if (slotUnderCursor.x >= 10 || slotUnderCursor.y >= 10)
@@ -1877,20 +1862,26 @@ void PerformPrimaryAction()
 				return StashStruct::EmptyCell;
 			}(stashSlot, cursorSizeInCells);
 
-			// The cursor will need to be shifted to
-			// this slot if the item is swapped or lifted
-			Point jumpSlot = FindFirstStashSlotOnItem(itemUnderCursor);
+			Point jumpSlot = itemUnderCursor == StashStruct::EmptyCell ? stashSlot : FindFirstStashSlotOnItem(itemUnderCursor);
 			CheckStashItem(MousePosition);
 
-			// If we don't find the item in the same position as before,
-			// it suggests that the item was swapped or lifted
-			Point newSlot = FindFirstStashSlotOnItem(itemUnderCursor);
-			if (jumpSlot != InvalidStashPoint && jumpSlot != newSlot) {
-				Point mousePos = GetStashSlotCoord(jumpSlot);
-				mousePos.y -= InventorySlotSizeInPixels.height;
-				ActiveStashSlot = jumpSlot;
-				SetCursorPos(mousePos);
+			Point mousePos = GetStashSlotCoord(jumpSlot);
+			ActiveStashSlot = jumpSlot;
+			if (MyPlayer->HoldItem.isEmpty()) {
+				// For inventory cut/paste we can combine the cases where we swap or simply paste items. Because stash movement is always cell based (there's no fast
+				// movement over large items) it looks better if we offset the hand cursor to the bottom right cell of the item we just placed.
+				ActiveStashSlot += Displacement { cursorSizeInCells - 1 }; // shift the active stash slot coordinates to account for items larger than 1x1
+				// Then we displace the mouse position to the bottom right corner of the item, then shift it back half a cell to center it.
+				// Could also be written as (cursorSize - 1) * InventorySlotSize + HalfInventorySlotSize, same thing in the end.
+				mousePos += Displacement { cursorSizeInCells } * Displacement { InventorySlotSizeInPixels } - Displacement { InventorySlotSizeInPixels } / 2;
+			} else {
+				// If we've picked up an item then use the same logic as the inventory so that the cursor is offset to the center of where the old item location was
+				// (in this case jumpSlot was the top left cell of where it used to be in the grid, and we need to update the cursor size since we're now holding the item)
+				cursorSizeInCells = GetInventorySize(MyPlayer->HoldItem);
+				mousePos.x += ((cursorSizeInCells.width) * InventorySlotSizeInPixels.width) / 2;
+				mousePos.y += ((cursorSizeInCells.height) * InventorySlotSizeInPixels.height) / 2;
 			}
+			SetCursorPos(mousePos);
 		}
 		return;
 	}
@@ -1920,7 +1911,7 @@ bool SpellHasActorTarget()
 		cursPosition = Monsters[pcursmonst].position.tile;
 	}
 
-	return pcursplr != -1 || pcursmonst != -1;
+	return PlayerUnderCursor != nullptr || pcursmonst != -1;
 }
 
 void UpdateSpellTarget(SpellID spell)
@@ -1928,7 +1919,7 @@ void UpdateSpellTarget(SpellID spell)
 	if (SpellHasActorTarget())
 		return;
 
-	pcursplr = -1;
+	PlayerUnderCursor = nullptr;
 	pcursmonst = -1;
 
 	Player &myPlayer = *MyPlayer;
@@ -2008,7 +1999,7 @@ void PerformSpellAction()
 
 	const Player &myPlayer = *MyPlayer;
 	SpellID spl = myPlayer._pRSpell;
-	if ((pcursplr == -1 && (spl == SpellID::Resurrect || spl == SpellID::HealOther))
+	if ((PlayerUnderCursor == nullptr && (spl == SpellID::Resurrect || spl == SpellID::HealOther))
 	    || (ObjectUnderCursor == nullptr && spl == SpellID::TrapDisarm)) {
 		myPlayer.Say(HeroSpeech::ICantCastThatHere);
 		return;
@@ -2016,7 +2007,7 @@ void PerformSpellAction()
 
 	UpdateSpellTarget(myPlayer._pRSpell);
 	CheckPlrSpell(false);
-	if (pcursplr != -1)
+	if (PlayerUnderCursor != nullptr)
 		LastMouseButtonAction = MouseActionType::SpellPlayerTarget;
 	else if (pcursmonst != -1)
 		LastMouseButtonAction = MouseActionType::SpellMonsterTarget;

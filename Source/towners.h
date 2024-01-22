@@ -5,14 +5,15 @@
  */
 #pragma once
 
-#include "utils/stdcompat/string_view.hpp"
+#include <cstddef>
 #include <cstdint>
 #include <memory>
+#include <span>
+#include <string_view>
 
 #include "items.h"
 #include "player.h"
 #include "quests.h"
-#include "utils/stdcompat/cstddef.hpp"
 
 namespace devilution {
 
@@ -39,10 +40,10 @@ struct Towner {
 	OptionalOwnedClxSpriteList ownedAnim;
 	OptionalClxSpriteList anim;
 	/** Specifies the animation frame sequence. */
-	const uint8_t *animOrder; // unowned
+	std::span<const uint8_t> animOrder;
 	void (*talk)(Player &player, Towner &towner);
 
-	string_view name;
+	std::string_view name;
 
 	/** Tile position of NPC */
 	Point position;
@@ -58,12 +59,15 @@ struct Towner {
 	/** Current frame of animation. */
 	uint8_t _tAnimFrame;
 	uint8_t _tAnimFrameCnt;
-	uint8_t animOrderSize;
 	_talker_id _ttype;
 
-	ClxSprite currentSprite() const
+	[[nodiscard]] ClxSprite currentSprite() const
 	{
 		return (*anim)[_tAnimFrame];
+	}
+	[[nodiscard]] Displacement getRenderingOffset() const
+	{
+		return { -CalculateWidth2(_tAnimWidth), 0 };
 	}
 };
 
@@ -84,7 +88,7 @@ void UpdateGirlAnimAfterQuestComplete();
 void UpdateCowFarmerAnimAfterQuestComplete();
 
 #ifdef _DEBUG
-bool DebugTalkToTowner(std::string targetName);
+bool DebugTalkToTowner(std::string_view targetName);
 #endif
 extern _speech_id QuestDialogTable[NUM_TOWNER_TYPES][MAXQUESTS];
 

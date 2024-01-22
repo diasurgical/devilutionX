@@ -6,12 +6,12 @@
 #pragma once
 
 #include <cstdint>
+#include <optional>
 #include <utility>
 
 #include "engine.h"
 #include "engine/clx_sprite.hpp"
 #include "utils/attributes.h"
-#include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
 
@@ -39,7 +39,8 @@ extern int8_t pcursitem;
 struct Object; // Defined in objects.h
 extern Object *ObjectUnderCursor;
 
-extern int8_t pcursplr;
+struct Player; // Defined in player.h
+extern const Player *PlayerUnderCursor;
 extern Point cursPosition;
 extern DVL_API_FOR_TEST int pcurs;
 

@@ -5,6 +5,7 @@
  */
 #include <array>
 #include <cstdint>
+#include <string_view>
 
 #include <fmt/format.h>
 
@@ -13,6 +14,7 @@
 #include "DiabloUI/selstart.h"
 #include "automap.h"
 #include "capture.h"
+#include "control.h"
 #include "cursor.h"
 #include "dead.h"
 #ifdef _DEBUG
@@ -22,6 +24,7 @@
 #include "controls/plrctrls.h"
 #include "controls/remap_keyboard.h"
 #include "diablo.h"
+#include "diablo_msg.hpp"
 #include "discord/discord.h"
 #include "doom.h"
 #include "encrypt.h"
@@ -34,7 +37,6 @@
 #include "engine/load_file.hpp"
 #include "engine/random.hpp"
 #include "engine/sound.h"
-#include "error.h"
 #include "gamemenu.h"
 #include "gmenu.h"
 #include "help.h"
@@ -51,18 +53,22 @@
 #include "levels/trigs.h"
 #include "lighting.h"
 #include "loadsave.h"
+#include "lua/lua.hpp"
 #include "menu.h"
 #include "minitext.h"
 #include "missiles.h"
+#include "monstdat.h"
 #include "movie.h"
 #include "multi.h"
 #include "nthread.h"
 #include "objects.h"
 #include "options.h"
+#include "panels/console.hpp"
 #include "panels/info_box.hpp"
 #include "panels/spell_book.hpp"
 #include "panels/spell_list.hpp"
 #include "pfile.h"
+#include "playerdat.hpp"
 #include "plrmsg.h"
 #include "qol/chatlog.h"
 #include "qol/floatingnumbers.h"
@@ -79,8 +85,9 @@
 #include "utils/console.h"
 #include "utils/display.h"
 #include "utils/language.h"
+#include "utils/parse_int.hpp"
 #include "utils/paths.h"
-#include "utils/stdcompat/string_view.hpp"
+#include "utils/screen_reader.hpp"
 #include "utils/str_cat.hpp"
 #include "utils/utf8.hpp"
 
@@ -122,10 +129,16 @@ std::vector<std::string> DebugCmdsFromCommandLine;
 #endif
 GameLogicStep gGameLogicStep = GameLogicStep::None;
 QuickMessage QuickMessages[QUICK_MESSAGE_OPTIONS] = {
-	{ "QuickMessage1", N_("I need help! Come Here!") },
+	{ "QuickMessage1", N_("I need help! Come here!") },
 	{ "QuickMessage2", N_("Follow me.") },
 	{ "QuickMessage3", N_("Here's something for you.") },
-	{ "QuickMessage4", N_("Now you DIE!") }
+	{ "QuickMessage4", N_("Now you DIE!") },
+	{ "QuickMessage5", N_("Heal yourself!") },
+	{ "QuickMessage6", N_("Watch out!") },
+	{ "QuickMessage7", N_("Thanks.") },
+	{ "QuickMessage8", N_("Retreat!") },
+	{ "QuickMessage9", N_("Sorry.") },
+	{ "QuickMessage10", N_("I'm waiting.") },
 };
 
 /** This and the following mouse variables are for handling in-game click-and-hold actions */
@@ -233,7 +246,7 @@ void LeftMouseCmd(bool bShift)
 			NetSendCmdLocParam1(true, invflag ? CMD_GOTOGETITEM : CMD_GOTOAGETITEM, cursPosition, pcursitem);
 		if (pcursmonst != -1)
 			NetSendCmdLocParam1(true, CMD_TALKXY, cursPosition, pcursmonst);
-		if (pcursitem == -1 && pcursmonst == -1 && pcursplr == -1) {
+		if (pcursitem == -1 && pcursmonst == -1 && PlayerUnderCursor == nullptr) {
 			LastMouseButtonAction = MouseActionType::Walk;
 			NetSendCmdLoc(MyPlayerId, true, CMD_WALKXY, cursPosition);
 		}
@@ -258,9 +271,9 @@ void LeftMouseCmd(bool bShift)
 				LastMouseButtonAction = MouseActionType::AttackMonsterTarget;
 				NetSendCmdParam1(true, CMD_RATTACKID, pcursmonst);
 			}
-		} else if (pcursplr != -1 && !myPlayer.friendlyMode) {
+		} else if (PlayerUnderCursor != nullptr && !myPlayer.friendlyMode) {
 			LastMouseButtonAction = MouseActionType::AttackPlayerTarget;
-			NetSendCmdParam1(true, CMD_RATTACKPID, pcursplr);
+			NetSendCmdParam1(true, CMD_RATTACKPID, PlayerUnderCursor->getId());
 		}
 	} else {
 		if (bShift) {
@@ -278,12 +291,12 @@ void LeftMouseCmd(bool bShift)
 		} else if (pcursmonst != -1) {
 			LastMouseButtonAction = MouseActionType::AttackMonsterTarget;
 			NetSendCmdParam1(true, CMD_ATTACKID, pcursmonst);
-		} else if (pcursplr != -1 && !myPlayer.friendlyMode) {
+		} else if (PlayerUnderCursor != nullptr && !myPlayer.friendlyMode) {
 			LastMouseButtonAction = MouseActionType::AttackPlayerTarget;
-			NetSendCmdParam1(true, CMD_ATTACKPID, pcursplr);
+			NetSendCmdParam1(true, CMD_ATTACKPID, PlayerUnderCursor->getId());
 		}
 	}
-	if (!bShift && pcursitem == -1 && ObjectUnderCursor == nullptr && pcursmonst == -1 && pcursplr == -1) {
+	if (!bShift && pcursitem == -1 && ObjectUnderCursor == nullptr && pcursmonst == -1 && PlayerUnderCursor == nullptr) {
 		LastMouseButtonAction = MouseActionType::Walk;
 		NetSendCmdLoc(MyPlayerId, true, CMD_WALKXY, cursPosition);
 	}
@@ -413,6 +426,12 @@ void RightMouseDown(bool isShiftHeld)
 		return;
 	}
 
+	if (qtextflag) {
+		qtextflag = false;
+		stream_stop();
+		return;
+	}
+
 	if (DoomFlag) {
 		doom_close();
 		return;
@@ -468,10 +487,6 @@ void PressKey(SDL_Keycode vkey, uint16_t modState)
 	if (vkey == SDLK_UNKNOWN)
 		return;
 
-	if (vkey == SDLK_PAUSE) {
-		diablo_pause_game();
-		return;
-	}
 	if (gmenu_presskeys(vkey) || control_presskeys(vkey)) {
 		return;
 	}
@@ -546,7 +561,7 @@ void PressKey(SDL_Keycode vkey, uint16_t modState)
 		}
 		return;
 #ifdef _DEBUG
-	case SDLK_m:
+	case SDLK_v:
 		if ((modState & KMOD_SHIFT) != 0)
 			NextDebugMonster();
 		else
@@ -665,23 +680,6 @@ void HandleMouseButtonUp(Uint8 button, uint16_t modState)
 	}
 }
 
-bool HandleTextInput(string_view text)
-{
-	if (IsTalkActive()) {
-		control_new_text(text);
-		return true;
-	}
-	if (dropGoldFlag) {
-		GoldDropNewText(text);
-		return true;
-	}
-	if (IsWithdrawGoldOpen) {
-		GoldWithdrawNewText(text);
-		return true;
-	}
-	return false;
-}
-
 [[maybe_unused]] void LogUnhandledEvent(const char *name, int value)
 {
 	LogVerbose("Unhandled SDL event: {} {}", name, value);
@@ -711,34 +709,29 @@ void GameEventHandler(const SDL_Event &event, uint16_t modState)
 		return;
 	}
 
-	switch (event.type) {
-	case SDL_KEYDOWN: {
-#ifdef USE_SDL1
-		// SDL1 does not support TEXTINPUT events, so we emulate them here.
-		const Uint16 bmpCodePoint = event.key.keysym.unicode;
-		if (bmpCodePoint >= ' ') {
-			std::string utf8;
-			AppendUtf8(bmpCodePoint, utf8);
-			if (HandleTextInput(utf8)) {
-				return;
-			}
-		}
-#endif
-		PressKey(event.key.keysym.sym, modState);
+#ifdef _DEBUG
+	if (ConsoleHandleEvent(event)) {
 		return;
 	}
+#endif
+
+	if (IsTalkActive() && HandleTalkTextInputEvent(event)) {
+		return;
+	}
+	if (dropGoldFlag && HandleGoldDropTextInputEvent(event)) {
+		return;
+	}
+	if (IsWithdrawGoldOpen && HandleGoldWithdrawTextInputEvent(event)) {
+		return;
+	}
+
+	switch (event.type) {
+	case SDL_KEYDOWN:
+		PressKey(event.key.keysym.sym, modState);
+		return;
 	case SDL_KEYUP:
 		ReleaseKey(event.key.keysym.sym);
 		return;
-#if SDL_VERSION_ATLEAST(2, 0, 0)
-	case SDL_TEXTEDITING:
-		return;
-	case SDL_TEXTINPUT:
-		if (!HandleTextInput(event.text.text)) {
-			LogUnhandledEvent("SDL_TEXTINPUT", event.text.windowID);
-		}
-		return;
-#endif
 	case SDL_MOUSEMOTION:
 		if (ControlMode == ControlTypes::KeyboardAndMouse && invflag)
 			InvalidateInventorySlot();
@@ -753,6 +746,43 @@ void GameEventHandler(const SDL_Event &event, uint16_t modState)
 		MousePosition = { event.button.x, event.button.y };
 		HandleMouseButtonUp(event.button.button, modState);
 		return;
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+	case SDL_MOUSEWHEEL:
+		if (event.wheel.y > 0) { // Up
+			if (stextflag != TalkID::None) {
+				StoreUp();
+			} else if (QuestLogIsOpen) {
+				QuestlogUp();
+			} else if (HelpFlag) {
+				HelpScrollUp();
+			} else if (ChatLogFlag) {
+				ChatLogScrollUp();
+			} else if (IsStashOpen) {
+				Stash.PreviousPage();
+			} else {
+				sgOptions.Keymapper.KeyPressed(MouseScrollUpButton);
+			}
+		} else if (event.wheel.y < 0) { // down
+			if (stextflag != TalkID::None) {
+				StoreDown();
+			} else if (QuestLogIsOpen) {
+				QuestlogDown();
+			} else if (HelpFlag) {
+				HelpScrollDown();
+			} else if (ChatLogFlag) {
+				ChatLogScrollDown();
+			} else if (IsStashOpen) {
+				Stash.NextPage();
+			} else {
+				sgOptions.Keymapper.KeyPressed(MouseScrollDownButton);
+			}
+		} else if (event.wheel.x > 0) { // left
+			sgOptions.Keymapper.KeyPressed(MouseScrollLeftButton);
+		} else if (event.wheel.x < 0) { // right
+			sgOptions.Keymapper.KeyPressed(MouseScrollRightButton);
+		}
+		break;
+#endif
 	default:
 		if (IsCustomEvent(event.type)) {
 			if (gbIsMultiplayer)
@@ -813,6 +843,7 @@ void RunGameLoop(interface_mode uMsg)
 	nthread_ignore_mutex(false);
 
 	discord_manager::StartGame();
+	LuaEvent("GameStart");
 #ifdef GPERF_HEAP_FIRST_GAME_ITERATION
 	unsigned run_game_iteration = 0;
 #endif
@@ -821,8 +852,9 @@ void RunGameLoop(interface_mode uMsg)
 
 #ifdef _DEBUG
 		if (!gbGameLoopStartup && !DebugCmdsFromCommandLine.empty()) {
-			for (auto &cmd : DebugCmdsFromCommandLine) {
-				CheckDebugTextCommand(cmd);
+			InitConsole();
+			for (const std::string &cmd : DebugCmdsFromCommandLine) {
+				RunInConsole(cmd);
 			}
 			DebugCmdsFromCommandLine.clear();
 		}
@@ -893,7 +925,7 @@ void RunGameLoop(interface_mode uMsg)
 	}
 }
 
-void PrintWithRightPadding(string_view str, size_t width)
+void PrintWithRightPadding(std::string_view str, size_t width)
 {
 	printInConsole(str);
 	if (str.size() >= width)
@@ -901,7 +933,7 @@ void PrintWithRightPadding(string_view str, size_t width)
 	printInConsole(std::string(width - str.size(), ' '));
 }
 
-void PrintHelpOption(string_view flags, string_view description)
+void PrintHelpOption(std::string_view flags, std::string_view description)
 {
 	printInConsole("    ");
 	PrintWithRightPadding(flags, 20);
@@ -949,11 +981,16 @@ void PrintHelpOption(string_view flags, string_view description)
 	diablo_quit(0);
 }
 
-void PrintFlagsRequiresArgument(string_view flag)
+void PrintFlagMessage(std::string_view flag, std::string_view message)
 {
 	printInConsole(flag);
-	printInConsole(" requires an argument");
+	printInConsole(message);
 	printNewlineInConsole();
+}
+
+void PrintFlagRequiresArgument(std::string_view flag)
+{
+	PrintFlagMessage(flag, " requires an argument");
 }
 
 void DiabloParseFlags(int argc, char **argv)
@@ -969,7 +1006,7 @@ void DiabloParseFlags(int argc, char **argv)
 	bool createDemoReference = false;
 #endif
 	for (int i = 1; i < argc; i++) {
-		const string_view arg = argv[i];
+		const std::string_view arg = argv[i];
 		if (arg == "-h" || arg == "--help") {
 			PrintHelpAndExit();
 		} else if (arg == "--version") {
@@ -980,44 +1017,54 @@ void DiabloParseFlags(int argc, char **argv)
 			diablo_quit(0);
 		} else if (arg == "--data-dir") {
 			if (i + 1 == argc) {
-				PrintFlagsRequiresArgument("--data-dir");
+				PrintFlagRequiresArgument("--data-dir");
 				diablo_quit(64);
 			}
 			paths::SetBasePath(argv[++i]);
 		} else if (arg == "--save-dir") {
 			if (i + 1 == argc) {
-				PrintFlagsRequiresArgument("--save-dir");
+				PrintFlagRequiresArgument("--save-dir");
 				diablo_quit(64);
 			}
 			paths::SetPrefPath(argv[++i]);
 		} else if (arg == "--config-dir") {
 			if (i + 1 == argc) {
-				PrintFlagsRequiresArgument("--config-dir");
+				PrintFlagRequiresArgument("--config-dir");
 				diablo_quit(64);
 			}
 			paths::SetConfigPath(argv[++i]);
 		} else if (arg == "--lang") {
 			if (i + 1 == argc) {
-				PrintFlagsRequiresArgument("--lang");
+				PrintFlagRequiresArgument("--lang");
 				diablo_quit(64);
 			}
 			forceLocale = argv[++i];
 #ifndef DISABLE_DEMOMODE
 		} else if (arg == "--demo") {
 			if (i + 1 == argc) {
-				PrintFlagsRequiresArgument("--demo");
+				PrintFlagRequiresArgument("--demo");
 				diablo_quit(64);
 			}
-			demoNumber = SDL_atoi(argv[++i]);
+			ParseIntResult<int> parsedParam = ParseInt<int>(argv[++i]);
+			if (!parsedParam.has_value()) {
+				PrintFlagMessage("--demo", " must be a number");
+				diablo_quit(64);
+			}
+			demoNumber = parsedParam.value();
 			gbShowIntro = false;
 		} else if (arg == "--timedemo") {
 			timedemo = true;
 		} else if (arg == "--record") {
 			if (i + 1 == argc) {
-				PrintFlagsRequiresArgument("--record");
+				PrintFlagRequiresArgument("--record");
 				diablo_quit(64);
 			}
-			recordNumber = SDL_atoi(argv[++i]);
+			ParseIntResult<int> parsedParam = ParseInt<int>(argv[++i]);
+			if (!parsedParam.has_value()) {
+				PrintFlagMessage("--record", " must be a number");
+				diablo_quit(64);
+			}
+			recordNumber = parsedParam.value();
 		} else if (arg == "--create-reference") {
 			createDemoReference = true;
 #else
@@ -1118,6 +1165,7 @@ void ApplicationInit()
 	init_create_window();
 	was_window_init = true;
 
+	InitializeScreenReader();
 	LanguageInitialize();
 
 	SetApplicationVersions();
@@ -1204,6 +1252,9 @@ void DiabloSplash()
 void DiabloDeinit()
 {
 	FreeItemGFX();
+
+	LuaShutdown();
+	ShutDownScreenReader();
 
 	if (gbSndInited)
 		effects_cleanup_sfx();
@@ -1419,7 +1470,7 @@ void TimeoutCursor(bool bTimeout)
 		if (sgnTimeoutCurs == CURSOR_NONE && sgbMouseDown == CLICK_NONE) {
 			sgnTimeoutCurs = pcurs;
 			multi_net_ping();
-			InfoString = {};
+			InfoString = StringOrView {};
 			AddPanelString(_("-- Network timeout --"));
 			AddPanelString(_("-- Waiting for players --"));
 			NewCursor(CURSOR_HOURGLASS);
@@ -1433,7 +1484,7 @@ void TimeoutCursor(bool bTimeout)
 		if (pcurs == CURSOR_HOURGLASS)
 			NewCursor(sgnTimeoutCurs);
 		sgnTimeoutCurs = CURSOR_NONE;
-		InfoString = {};
+		InfoString = StringOrView {};
 		RedrawEverything();
 	}
 }
@@ -1443,7 +1494,7 @@ void HelpKeyPressed()
 	if (HelpFlag) {
 		HelpFlag = false;
 	} else if (stextflag != TalkID::None) {
-		InfoString = {};
+		InfoString = StringOrView {};
 		AddPanelString(_("No help available")); /// BUGFIX: message isn't displayed
 		AddPanelString(_("while in stores"));
 		LastMouseButtonAction = MouseActionType::None;
@@ -1563,6 +1614,33 @@ void SpellBookKeyPressed()
 	CloseInventory();
 }
 
+void CycleSpellHotkeys(bool next)
+{
+	StaticVector<size_t, NumHotkeys> validHotKeyIndexes;
+	std::optional<size_t> currentIndex;
+	for (size_t slot = 0; slot < NumHotkeys; slot++) {
+		if (!IsValidSpeedSpell(slot))
+			continue;
+		if (MyPlayer->_pRSpell == MyPlayer->_pSplHotKey[slot] && MyPlayer->_pRSplType == MyPlayer->_pSplTHotKey[slot]) {
+			// found current
+			currentIndex = validHotKeyIndexes.size();
+		}
+		validHotKeyIndexes.emplace_back(slot);
+	}
+	if (validHotKeyIndexes.size() == 0)
+		return;
+
+	size_t newIndex;
+	if (!currentIndex) {
+		newIndex = next ? 0 : (validHotKeyIndexes.size() - 1);
+	} else if (next) {
+		newIndex = (*currentIndex == validHotKeyIndexes.size() - 1) ? 0 : (*currentIndex + 1);
+	} else {
+		newIndex = *currentIndex == 0 ? (validHotKeyIndexes.size() - 1) : (*currentIndex - 1);
+	}
+	ToggleSpell(validHotKeyIndexes[newIndex]);
+}
+
 bool IsPlayerDead()
 {
 	return MyPlayer->_pmode == PM_DEATH || MyPlayerIsDead;
@@ -1577,11 +1655,23 @@ bool CanPlayerTakeAction()
 {
 	return !IsPlayerDead() && IsGameRunning();
 }
+
+bool CanAutomapBeToggledOff()
+{
+	// check if every window is closed - if yes, automap can be toggled off
+	if (!QuestLogIsOpen && !IsWithdrawGoldOpen && !IsStashOpen && !chrflag
+	    && !sbookflag && !invflag && !isGameMenuOpen && !qtextflag && !spselflag
+	    && !ChatLogFlag && !HelpFlag)
+		return true;
+
+	return false;
+}
+
 } // namespace
 
 void InitKeymapActions()
 {
-	for (int i = 0; i < 8; ++i) {
+	for (uint32_t i = 0; i < 8; ++i) {
 		sgOptions.Keymapper.AddAction(
 		    "BeltItem{}",
 		    N_("Belt item {}"),
@@ -1597,7 +1687,7 @@ void InitKeymapActions()
 		    CanPlayerTakeAction,
 		    i + 1);
 	}
-	for (size_t i = 0; i < NumHotkeys; ++i) {
+	for (uint32_t i = 0; i < NumHotkeys; ++i) {
 		sgOptions.Keymapper.AddAction(
 		    "QuickSpell{}",
 		    N_("Quick spell {}"),
@@ -1617,6 +1707,22 @@ void InitKeymapActions()
 		    CanPlayerTakeAction,
 		    i + 1);
 	}
+	sgOptions.Keymapper.AddAction(
+	    "QuickSpellPrevious",
+	    N_("Previous quick spell"),
+	    N_("Selects the previous quick spell (cycles)."),
+	    MouseScrollUpButton,
+	    [] { CycleSpellHotkeys(false); },
+	    nullptr,
+	    CanPlayerTakeAction);
+	sgOptions.Keymapper.AddAction(
+	    "QuickSpellNext",
+	    N_("Next quick spell"),
+	    N_("Selects the next quick spell (cycles)."),
+	    MouseScrollDownButton,
+	    [] { CycleSpellHotkeys(true); },
+	    nullptr,
+	    CanPlayerTakeAction);
 	sgOptions.Keymapper.AddAction(
 	    "UseHealthPotion",
 	    N_("Use health potion"),
@@ -1695,6 +1801,14 @@ void InitKeymapActions()
 	    DoAutoMap,
 	    nullptr,
 	    IsGameRunning);
+	sgOptions.Keymapper.AddAction(
+	    "CycleAutomapType",
+	    N_("Cycle map type"),
+	    N_("Opaque -> Transparent -> Minimap -> None"),
+	    SDLK_m,
+	    CycleAutomapType,
+	    nullptr,
+	    IsGameRunning);
 
 	sgOptions.Keymapper.AddAction(
 	    "Inventory",
@@ -1728,12 +1842,12 @@ void InitKeymapActions()
 	    SpellBookKeyPressed,
 	    nullptr,
 	    CanPlayerTakeAction);
-	for (int i = 0; i < 4; ++i) {
+	for (uint32_t i = 0; i < QUICK_MESSAGE_OPTIONS; ++i) {
 		sgOptions.Keymapper.AddAction(
 		    "QuickMessage{}",
 		    N_("Quick Message {}"),
 		    N_("Use Quick Message in chat."),
-		    SDLK_F9 + i,
+		    (i < 4) ? static_cast<uint32_t>(SDLK_F9) + i : static_cast<uint32_t>(SDLK_UNKNOWN),
 		    [i]() { DiabloHotkeyMsg(i); },
 		    nullptr,
 		    nullptr,
@@ -1745,6 +1859,9 @@ void InitKeymapActions()
 	    N_("Hide all info screens."),
 	    SDLK_SPACE,
 	    [] {
+		    if (CanAutomapBeToggledOff())
+			    AutomapActive = false;
+
 		    ClosePanels();
 		    HelpFlag = false;
 		    ChatLogFlag = false;
@@ -1753,7 +1870,7 @@ void InitKeymapActions()
 			    qtextflag = false;
 			    stream_stop();
 		    }
-		    AutomapActive = false;
+
 		    CancelCurrentDiabloMsg();
 		    gamemenu_off();
 		    doom_close();
@@ -1776,6 +1893,12 @@ void InitKeymapActions()
 	    N_("Pause Game"),
 	    N_("Pauses the game."),
 	    'P',
+	    diablo_pause_game);
+	sgOptions.Keymapper.AddAction(
+	    "Pause Game (Alternate)",
+	    N_("Pause Game (Alternate)"),
+	    N_("Pauses the game."),
+	    SDLK_PAUSE,
 	    diablo_pause_game);
 	sgOptions.Keymapper.AddAction(
 	    "DecreaseGamma",
@@ -1832,6 +1955,12 @@ void InitKeymapActions()
 	    });
 #ifdef _DEBUG
 	sgOptions.Keymapper.AddAction(
+	    "OpenConsole",
+	    N_("Console"),
+	    N_("Opens Lua console."),
+	    SDLK_BACKQUOTE,
+	    OpenConsole);
+	sgOptions.Keymapper.AddAction(
 	    "DebugToggle",
 	    "Debug toggle",
 	    "Programming is like magic.",
@@ -1861,7 +1990,7 @@ void InitPadmapActions()
 		    CanPlayerTakeAction,
 		    i + 1);
 	}
-	for (size_t i = 0; i < NumHotkeys; ++i) {
+	for (uint32_t i = 0; i < NumHotkeys; ++i) {
 		sgOptions.Padmapper.AddAction(
 		    "QuickSpell{}",
 		    N_("Quick spell {}"),
@@ -2213,6 +2342,9 @@ void InitPadmapActions()
 	    N_("Hide all info screens."),
 	    ControllerButton_NONE,
 	    [] {
+		    if (CanAutomapBeToggledOff())
+			    AutomapActive = false;
+
 		    ClosePanels();
 		    HelpFlag = false;
 		    ChatLogFlag = false;
@@ -2221,7 +2353,7 @@ void InitPadmapActions()
 			    qtextflag = false;
 			    stream_stop();
 		    }
-		    AutomapActive = false;
+
 		    CancelCurrentDiabloMsg();
 		    gamemenu_off();
 		    doom_close();
@@ -2414,10 +2546,20 @@ int DiabloMain(int argc, char **argv)
 	LoadLanguageArchive();
 
 	ApplicationInit();
+	LuaInitialize();
 	SaveOptions();
 
 	// Finally load game data
 	LoadGameArchives();
+
+	// Load dynamic data before we go into the menu as we need to initialise player characters in memory pretty early.
+	LoadPlayerDataFiles();
+
+	// TODO: We can probably load this much later (when the game is starting).
+	LoadSpellData();
+	LoadMissileData();
+	LoadMonsterData();
+	LoadItemData();
 
 	DiabloInit();
 #ifdef __UWP__
@@ -2435,8 +2577,8 @@ int DiabloMain(int argc, char **argv)
 bool TryIconCurs()
 {
 	if (pcurs == CURSOR_RESURRECT) {
-		if (pcursplr != -1) {
-			NetSendCmdParam1(true, CMD_RESURRECT, pcursplr);
+		if (PlayerUnderCursor != nullptr) {
+			NetSendCmdParam1(true, CMD_RESURRECT, PlayerUnderCursor->getId());
 			NewCursor(CURSOR_HAND);
 			return true;
 		}
@@ -2445,8 +2587,8 @@ bool TryIconCurs()
 	}
 
 	if (pcurs == CURSOR_HEALOTHER) {
-		if (pcursplr != -1) {
-			NetSendCmdParam1(true, CMD_HEALOTHER, pcursplr);
+		if (PlayerUnderCursor != nullptr) {
+			NetSendCmdParam1(true, CMD_HEALOTHER, PlayerUnderCursor->getId());
 			NewCursor(CURSOR_HAND);
 			return true;
 		}
@@ -2477,7 +2619,7 @@ bool TryIconCurs()
 			DoRepair(myPlayer, pcursinvitem);
 		else if (pcursstashitem != StashStruct::EmptyCell) {
 			Item &item = Stash.stashList[pcursstashitem];
-			RepairItem(item, myPlayer._pLevel);
+			RepairItem(item, myPlayer.getCharacterLevel());
 		}
 		NewCursor(CURSOR_HAND);
 		return true;
@@ -2517,8 +2659,8 @@ bool TryIconCurs()
 			NetSendCmdLocParam5(true, CMD_SPELLXYD, cursPosition, static_cast<int8_t>(spellID), static_cast<uint8_t>(spellType), static_cast<uint16_t>(sd), spellLevel, spellFrom);
 		} else if (pcursmonst != -1) {
 			NetSendCmdParam5(true, CMD_SPELLID, pcursmonst, static_cast<int8_t>(spellID), static_cast<uint8_t>(spellType), spellLevel, spellFrom);
-		} else if (pcursplr != -1 && !myPlayer.friendlyMode) {
-			NetSendCmdParam5(true, CMD_SPELLPID, pcursplr, static_cast<int8_t>(spellID), static_cast<uint8_t>(spellType), spellLevel, spellFrom);
+		} else if (PlayerUnderCursor != nullptr && !myPlayer.friendlyMode) {
+			NetSendCmdParam5(true, CMD_SPELLPID, PlayerUnderCursor->getId(), static_cast<int8_t>(spellID), static_cast<uint8_t>(spellType), spellLevel, spellFrom);
 		} else {
 			NetSendCmdLocParam4(true, CMD_SPELLXY, cursPosition, static_cast<int8_t>(spellID), static_cast<uint8_t>(spellType), spellLevel, spellFrom);
 		}
@@ -2730,7 +2872,10 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 	}
 
 	if (firstflag || lvldir == ENTRY_LOAD) {
+		bool isHellfireSaveGame = gbIsHellfireSaveGame;
+		gbIsHellfireSaveGame = gbIsHellfire;
 		LoadStash();
+		gbIsHellfireSaveGame = isHellfireSaveGame;
 	}
 
 	IncProgress();
@@ -3016,7 +3161,7 @@ bool IsDiabloAlive(bool playSFX)
 {
 	if (Quests[Q_DIABLO]._qactive == QUEST_DONE && !gbIsMultiplayer) {
 		if (playSFX)
-			PlaySFX(USFX_DIABLOD);
+			PlaySFX(SfxID::DiabloDeath);
 		return false;
 	}
 

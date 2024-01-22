@@ -7,8 +7,9 @@ FetchContent_Declare(asio
 )
 FetchContent_MakeAvailableExcludeFromAll(asio)
 
-add_library(asio INTERFACE)
-target_include_directories(asio INTERFACE ${asio_SOURCE_DIR}/asio/include)
+add_library(asio STATIC ${CMAKE_CURRENT_LIST_DIR}/asio_handle_exception.cpp)
+target_compile_definitions(asio PUBLIC ASIO_NO_EXCEPTIONS)
+target_include_directories(asio PUBLIC ${asio_SOURCE_DIR}/asio/include ${CMAKE_CURRENT_LIST_DIR})
 
 if(NINTENDO_3DS OR NINTENDO_SWITCH)
   include(asio_defs REQUIRED)

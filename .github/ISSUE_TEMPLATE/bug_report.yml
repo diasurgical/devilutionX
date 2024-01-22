@@ -1,5 +1,7 @@
 name: Bug report
 description: Create a report to help us improve
+title: "[Issue Report]: "
+labels: ["issue report"]
 body:
   - type: dropdown
     id: operating-system
@@ -26,7 +28,8 @@ body:
     attributes:
       label: DevilutionX version
       options:
-        - 1.5.0 (latest release)
+        - 1.5.1
+        - 1.5.0
         - 1.4.1
         - 1.4.0
         - 1.3.0

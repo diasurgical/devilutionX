@@ -2,8 +2,6 @@
 
 #include <SDL_version.h>
 
-#include "utils/stdcompat/string_view.hpp"
-
 #define VOLUME_MIN -1600
 #define VOLUME_MAX 0
 #define VOLUME_STEPS 64

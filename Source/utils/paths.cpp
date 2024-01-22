@@ -84,7 +84,7 @@ const std::string &PrefPath()
 		prefPath = FromSDL(SDL_GetPrefPath("diasurgical", "devilution"));
 #if !defined(__amigaos__)
 		if (FileExistsAndIsWriteable("diablo.ini")) {
-			prefPath = std::string("." DIRECTORY_SEPARATOR_STR);
+			prefPath = std::string();
 		}
 #endif
 #endif
@@ -103,7 +103,7 @@ const std::string &ConfigPath()
 		configPath = FromSDL(SDL_GetPrefPath("diasurgical", "devilution"));
 #if !defined(__amigaos__)
 		if (FileExistsAndIsWriteable("diablo.ini")) {
-			configPath = std::string("." DIRECTORY_SEPARATOR_STR);
+			configPath = std::string();
 		}
 #endif
 #endif

@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 
+#include "DiabloUI/text_input.hpp"
 #include "DiabloUI/ui_flags.hpp"
 #include "engine/clx_sprite.hpp"
 #include "engine/render/text_render.hpp"
@@ -179,7 +180,7 @@ public:
 	{
 	}
 
-	[[nodiscard]] string_view GetText() const
+	[[nodiscard]] std::string_view GetText() const
 	{
 		if (text_ != nullptr)
 			return text_;
@@ -227,7 +228,7 @@ class UiArtTextButton : public UiItemBase {
 public:
 	using Callback = void (*)();
 
-	UiArtTextButton(string_view text, Callback action, SDL_Rect rect, UiFlags flags = UiFlags::None)
+	UiArtTextButton(std::string_view text, Callback action, SDL_Rect rect, UiFlags flags = UiFlags::None)
 	    : UiItemBase(UiType::ArtTextButton, rect, flags)
 	    , text_(text)
 	    , action_(action)
@@ -239,7 +240,7 @@ public:
 		UiItemBase::SetFlags(flags);
 	}
 
-	[[nodiscard]] string_view GetText() const
+	[[nodiscard]] std::string_view GetText() const
 	{
 		return text_;
 	}
@@ -250,7 +251,7 @@ public:
 	}
 
 private:
-	string_view text_;
+	std::string_view text_;
 	Callback action_;
 };
 
@@ -258,7 +259,7 @@ private:
 
 class UiEdit : public UiItemBase {
 public:
-	UiEdit(string_view hint, char *value, std::size_t maxLength, bool allowEmpty, SDL_Rect rect, UiFlags flags = UiFlags::None)
+	UiEdit(std::string_view hint, char *value, std::size_t maxLength, bool allowEmpty, SDL_Rect rect, UiFlags flags = UiFlags::None)
 	    : UiItemBase(UiType::Edit, rect, flags)
 	    , m_hint(hint)
 	    , m_value(value)
@@ -268,9 +269,10 @@ public:
 	}
 
 	// private:
-	string_view m_hint;
+	std::string_view m_hint;
 	char *m_value;
 	std::size_t m_max_length;
+	TextInputCursorState m_cursor;
 	bool m_allowEmpty;
 };
 
@@ -280,19 +282,19 @@ public:
 
 class UiText : public UiItemBase {
 public:
-	UiText(string_view text, SDL_Rect rect, UiFlags flags = UiFlags::ColorDialogWhite)
+	UiText(std::string_view text, SDL_Rect rect, UiFlags flags = UiFlags::ColorDialogWhite)
 	    : UiItemBase(UiType::Text, rect, flags)
 	    , text_(text)
 	{
 	}
 
-	[[nodiscard]] string_view GetText() const
+	[[nodiscard]] std::string_view GetText() const
 	{
 		return text_;
 	}
 
 private:
-	string_view text_;
+	std::string_view text_;
 };
 
 //=============================================================================
@@ -303,7 +305,7 @@ class UiButton : public UiItemBase {
 public:
 	using Callback = void (*)();
 
-	UiButton(string_view text, Callback action, SDL_Rect rect, UiFlags flags = UiFlags::None)
+	UiButton(std::string_view text, Callback action, SDL_Rect rect, UiFlags flags = UiFlags::None)
 	    : UiItemBase(UiType::Button, rect, flags)
 	    , text_(text)
 	    , action_(action)
@@ -311,7 +313,7 @@ public:
 	{
 	}
 
-	[[nodiscard]] string_view GetText() const
+	[[nodiscard]] std::string_view GetText() const
 	{
 		return text_;
 	}
@@ -337,7 +339,7 @@ public:
 	}
 
 private:
-	string_view text_;
+	std::string_view text_;
 	Callback action_;
 
 	// State
@@ -348,14 +350,14 @@ private:
 
 class UiListItem {
 public:
-	UiListItem(string_view text = "", int value = 0, UiFlags uiFlags = UiFlags::None)
+	UiListItem(std::string_view text = "", int value = 0, UiFlags uiFlags = UiFlags::None)
 	    : m_text(text)
 	    , m_value(value)
 	    , uiFlags(uiFlags)
 	{
 	}
 
-	UiListItem(string_view text, std::vector<DrawStringFormatArg> &args, int value = 0, UiFlags uiFlags = UiFlags::None)
+	UiListItem(std::string_view text, std::vector<DrawStringFormatArg> &args, int value = 0, UiFlags uiFlags = UiFlags::None)
 	    : m_text(text)
 	    , args(args)
 	    , m_value(value)
@@ -364,7 +366,7 @@ public:
 	}
 
 	// private:
-	string_view m_text;
+	std::string_view m_text;
 	std::vector<DrawStringFormatArg> args;
 	int m_value;
 	UiFlags uiFlags;

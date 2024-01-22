@@ -1,17 +1,23 @@
-#include "./sdl2_to_1_2_backports.h"
+#include "utils/sdl2_to_1_2_backports.h"
 
 #include <algorithm>
 #include <cstddef>
+#include <cstring>
+#include <string_view>
 
-#include "./console.h"
-
-#if defined(_WIN32) && !defined(NXDK)
+#if defined(_WIN32)
 #define WIN32_LEAN_AND_MEAN
 #define NOMINMAX 1
+#ifndef DEVILUTIONX_WINDOWS_NO_WCHAR
 #define UNICODE 1
 #include <shlobj.h>
+#endif
 #include <windows.h>
 #endif
+
+#include <fmt/format.h>
+
+#include "utils/console.h"
 
 #define DEFAULT_PRIORITY SDL_LOG_PRIORITY_CRITICAL
 #define DEFAULT_ASSERT_PRIORITY SDL_LOG_PRIORITY_WARN
@@ -505,7 +511,7 @@ Sint64 SDL_RWsize(SDL_RWops *context)
 	return end - begin;
 }
 
-#if defined(_WIN32) && !defined(NXDK)
+#if defined(_WIN32) && !defined(DEVILUTIONX_WINDOWS_NO_WCHAR)
 
 namespace {
 
@@ -696,7 +702,7 @@ char *SDL_GetPrefPath(const char *org, const char *app)
 #else
 
 namespace {
-#if !defined(__QNXNTO__) && !defined(__amigaos__)
+#if !defined(__QNXNTO__) && !defined(__amigaos__) && !(defined(WINVER) && WINVER <= 0x0500 && (!defined(_WIN32_WINNT) || _WIN32_WINNT == 0))
 char *readSymLink(const char *path)
 {
 	// From sdl2-2.0.9/src/filesystem/unix/SDL_sysfilesystem.c
@@ -736,7 +742,24 @@ char *SDL_GetBasePath()
 
 	char *retval = NULL;
 
-#if defined(__FREEBSD__)
+#if defined(WINVER) && WINVER <= 0x0500 && (!defined(_WIN32_WINNT) || _WIN32_WINNT == 0)
+	TCHAR buffer[MAX_PATH] = { 0 };
+	GetModuleFileName(NULL, buffer, MAX_PATH);
+	size_t len = std::string_view(buffer).size();
+	while (len > 0) {
+		if (buffer[len - 1] == '\\') {
+			break;
+		}
+		--len;
+	}
+	buffer[len] = '\0';
+	retval = static_cast<char *>(SDL_malloc(len + 1));
+	if (!retval) {
+		SDL_OutOfMemory();
+		return NULL;
+	}
+	SDL_memcpy(retval, buffer, len + 1);
+#elif defined(__FREEBSD__)
 	char fullpath[PATH_MAX];
 	size_t buflen = sizeof(fullpath);
 	const int mib[] = { CTL_KERN, KERN_PROC, KERN_PROC_PATHNAME, -1 };
@@ -747,8 +770,7 @@ char *SDL_GetBasePath()
 			return NULL;
 		}
 	}
-#endif
-#if defined(__OPENBSD__)
+#elif defined(__OPENBSD__)
 	char **retvalargs;
 	size_t len;
 	const int mib[] = { CTL_KERN, KERN_PROC_ARGS, getpid(), KERN_PROC_ARGV };
@@ -765,8 +787,7 @@ char *SDL_GetBasePath()
 
 		SDL_free(retvalargs);
 	}
-#endif
-#if defined(__SOLARIS__)
+#elif defined(__SOLARIS__)
 	const char *path = getexecname();
 	if ((path != NULL) && (path[0] == '/')) { /* must be absolute path... */
 		retval = SDL_strdup(path);
@@ -775,8 +796,7 @@ char *SDL_GetBasePath()
 			return NULL;
 		}
 	}
-#endif
-#if defined(__3DS__)
+#elif defined(__3DS__)
 	retval = SDL_strdup("file:sdmc:/3ds/devilutionx/");
 #elif defined(__amigaos__)
 	retval = SDL_strdup("PROGDIR:");
@@ -841,6 +861,12 @@ char *SDL_GetPrefPath(const char *org, const char *app)
 	 *
 	 * https://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
 	 */
+#if defined(WINVER) && WINVER <= 0x0500 && (!defined(_WIN32_WINNT) || _WIN32_WINNT == 0)
+	// On Windows9x there is no such thing as PrefPath. Simply use the current directory.
+	char *result = (char *)SDL_malloc(1);
+	*result = '\0';
+	return result;
+#else
 	const char *envr = SDL_getenv("XDG_DATA_HOME");
 	const char *append;
 	char *retval = NULL;
@@ -892,9 +918,9 @@ char *SDL_GetPrefPath(const char *org, const char *app)
 	}
 
 	if (*org) {
-		SDL_snprintf(retval, len, "%s%s%s/%s", envr, append, org, app);
+		*fmt::format_to_n(retval, len - 1, "{}{}{}/{}", envr, append, org, app).out = '\0';
 	} else {
-		SDL_snprintf(retval, len, "%s%s%s", envr, append, app);
+		*fmt::format_to_n(retval, len - 1, "{}{}{}", envr, append, app).out = '\0';
 	}
 
 	for (ptr = retval + 1; *ptr; ptr++) {
@@ -920,6 +946,7 @@ char *SDL_GetPrefPath(const char *org, const char *app)
 	}
 
 	return retval;
+#endif
 }
 
 #endif

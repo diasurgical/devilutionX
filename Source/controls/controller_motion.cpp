@@ -48,7 +48,7 @@ void ScaleJoystickAxes(float *x, float *y, float deadzone)
 		analogX = (analogX * scalingFactor);
 		analogY = (analogY * scalingFactor);
 
-		// clamp to ensure results will never exceed the max_axis value
+		// std::clamp to ensure results will never exceed the max_axis value
 		float clampingFactor = 1.F;
 		float absAnalogX = std::fabs(analogX);
 		float absAnalogY = std::fabs(analogY);
@@ -70,7 +70,7 @@ void ScaleJoystickAxes(float *x, float *y, float deadzone)
 bool IsMovementOverriddenByPadmapper(ControllerButton button)
 {
 	ControllerButtonEvent releaseEvent { button, true };
-	string_view actionName = sgOptions.Padmapper.ActionNameTriggeredByButtonEvent(releaseEvent);
+	std::string_view actionName = sgOptions.Padmapper.ActionNameTriggeredByButtonEvent(releaseEvent);
 	ControllerButtonCombo buttonCombo = sgOptions.Padmapper.ButtonComboForAction(actionName);
 	return buttonCombo.modifier != ControllerButton_NONE;
 }
@@ -78,12 +78,12 @@ bool IsMovementOverriddenByPadmapper(ControllerButton button)
 bool TriggersQuickSpellAction(ControllerButton button)
 {
 	ControllerButtonEvent releaseEvent { button, true };
-	string_view actionName = sgOptions.Padmapper.ActionNameTriggeredByButtonEvent(releaseEvent);
+	std::string_view actionName = sgOptions.Padmapper.ActionNameTriggeredByButtonEvent(releaseEvent);
 
-	string_view prefix { "QuickSpell" };
+	std::string_view prefix { "QuickSpell" };
 	if (actionName.size() < prefix.size())
 		return false;
-	string_view truncatedActionName { actionName.data(), prefix.size() };
+	std::string_view truncatedActionName { actionName.data(), prefix.size() };
 	return truncatedActionName == prefix;
 }
 
@@ -149,21 +149,22 @@ bool IsControllerMotion(const SDL_Event &event)
 	}
 #endif
 
+#if defined(JOY_AXIS_LEFTX) || defined(JOY_AXIS_LEFTY) || defined(JOY_AXIS_RIGHTX) || defined(JOY_AXIS_RIGHTY)
 	if (event.type == SDL_JOYAXISMOTION) {
 		switch (event.jaxis.axis) {
 #ifdef JOY_AXIS_LEFTX
 		case JOY_AXIS_LEFTX:
 			return true;
 #endif
-#ifdef JOY_AXIS_LEFTX
+#ifdef JOY_AXIS_LEFTY
 		case JOY_AXIS_LEFTY:
 			return true;
 #endif
-#ifdef JOY_AXIS_LEFTX
+#ifdef JOY_AXIS_RIGHTX
 		case JOY_AXIS_RIGHTX:
 			return true;
 #endif
-#ifdef JOY_AXIS_LEFTX
+#ifdef JOY_AXIS_RIGHTY
 		case JOY_AXIS_RIGHTY:
 			return true;
 #endif
@@ -171,6 +172,7 @@ bool IsControllerMotion(const SDL_Event &event)
 			return false;
 		}
 	}
+#endif
 
 	return false;
 }
@@ -248,7 +250,7 @@ void SimulateRightStickWithPadmapper(ControllerButtonEvent ctrlEvent)
 	if (!ctrlEvent.up && ctrlEvent.button == SuppressedButton)
 		return;
 
-	string_view actionName = sgOptions.Padmapper.ActionNameTriggeredByButtonEvent(ctrlEvent);
+	std::string_view actionName = sgOptions.Padmapper.ActionNameTriggeredByButtonEvent(ctrlEvent);
 	bool upTriggered = actionName == "MouseUp";
 	bool downTriggered = actionName == "MouseDown";
 	bool leftTriggered = actionName == "MouseLeft";

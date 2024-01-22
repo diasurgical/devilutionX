@@ -45,7 +45,7 @@ struct PlayerPack {
 	uint8_t pBaseMag;
 	uint8_t pBaseDex;
 	uint8_t pBaseVit;
-	int8_t pLevel;
+	uint8_t pLevel;
 	uint8_t pStatPts;
 	uint32_t pExperience;
 	int32_t pGold;
@@ -142,6 +142,10 @@ struct PlayerNetPack {
 };
 #pragma pack(pop)
 
+bool IsCreationFlagComboValid(uint16_t iCreateInfo);
+bool IsTownItemValid(uint16_t iCreateInfo, const Player &player);
+bool IsUniqueMonsterItemValid(uint16_t iCreateInfo, uint32_t dwBuff);
+bool IsDungeonItemValid(uint16_t iCreateInfo, uint32_t dwBuff);
 void PackPlayer(PlayerPack &pPack, const Player &player);
 void UnPackPlayer(const PlayerPack &pPack, Player &player);
 void PackNetPlayer(PlayerNetPack &packed, const Player &player);
@@ -164,5 +168,21 @@ void PackItem(ItemPack &packedItem, const Item &item, bool isHellfire);
  * @param isHellfire Whether the item is from Hellfire or not
  */
 void UnPackItem(const ItemPack &packedItem, const Player &player, Item &item, bool isHellfire);
+
+/**
+ * @brief Save the attributes needed to recreate this item into an ItemNetPack struct
+ * @param item The source item
+ * @param packedItem The destination packed struct
+ */
+void PackNetItem(const Item &item, ItemNetPack &packedItem);
+
+/**
+ * @brief Expand a ItemPack in to a Item
+ * @param player The player holding the item
+ * @param packedItem The source packed item
+ * @param item The destination item
+ * @return True if the item is valid
+ */
+bool UnPackNetItem(const Player &player, const ItemNetPack &packedItem, Item &item);
 
 } // namespace devilution

@@ -5,19 +5,14 @@
 #include <exception>
 #include <vector>
 
+#include <expected.hpp>
+
+#include "dvlnet/packet.h"
+
 namespace devilution {
 namespace net {
 
 typedef std::vector<unsigned char> buffer_t;
-
-class frame_queue_exception : public std::exception {
-public:
-	const char *what() const throw() override
-	{
-		return "Incorrect frame size";
-	}
-};
-
 typedef uint32_t framesize_t;
 
 class frame_queue {
@@ -30,14 +25,14 @@ private:
 	framesize_t nextsize = 0;
 
 	framesize_t Size() const;
-	buffer_t Read(framesize_t s);
+	tl::expected<buffer_t, PacketError> Read(framesize_t s);
 
 public:
-	bool PacketReady();
-	buffer_t ReadPacket();
+	tl::expected<bool, PacketError> PacketReady();
+	tl::expected<buffer_t, PacketError> ReadPacket();
 	void Write(buffer_t buf);
 
-	static buffer_t MakeFrame(buffer_t packetbuf);
+	static tl::expected<buffer_t, PacketError> MakeFrame(buffer_t packetbuf);
 };
 
 } // namespace net

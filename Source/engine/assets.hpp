@@ -4,8 +4,10 @@
 #include <cstdint>
 #include <cstdio>
 #include <string>
+#include <string_view>
 
 #include <SDL.h>
+#include <expected.hpp>
 
 #include "appfat.h"
 #include "diablo.h"
@@ -96,7 +98,7 @@ struct AssetRef {
 	// An MPQ file reference:
 	MpqArchive *archive = nullptr;
 	uint32_t fileNumber;
-	const char *filename;
+	std::string_view filename;
 
 	// Alternatively, a direct SDL_RWops handle:
 	SDL_RWops *directHandle = nullptr;
@@ -147,7 +149,7 @@ struct AssetRef {
 			int32_t error;
 			return archive->GetUnpackedFileSize(fileNumber, error);
 		}
-		return SDL_RWsize(directHandle);
+		return static_cast<size_t>(SDL_RWsize(directHandle));
 	}
 };
 
@@ -190,7 +192,11 @@ struct AssetHandle {
 
 	bool read(void *buffer, size_t len)
 	{
+#if SDL_VERSION_ATLEAST(2, 0, 0)
 		return handle->read(handle, buffer, len, 1) == 1;
+#else
+		return handle->read(handle, buffer, static_cast<int>(len), 1) == 1;
+#endif
 	}
 
 	bool seek(long pos)
@@ -212,12 +218,12 @@ struct AssetHandle {
 };
 #endif
 
-[[noreturn]] inline void FailedToOpenFileError(const char *path, const char *error)
+[[noreturn]] inline void FailedToOpenFileError(std::string_view path, std::string_view error)
 {
 	app_fatal(StrCat("Failed to open file:\n", path, "\n\n", error));
 }
 
-inline bool ValidatAssetRef(const char *path, const AssetRef &ref)
+inline bool ValidatAssetRef(std::string_view path, const AssetRef &ref)
 {
 	if (ref.ok())
 		return true;
@@ -227,7 +233,7 @@ inline bool ValidatAssetRef(const char *path, const AssetRef &ref)
 	return false;
 }
 
-inline bool ValidateHandle(const char *path, const AssetHandle &handle)
+inline bool ValidateHandle(std::string_view path, const AssetHandle &handle)
 {
 	if (handle.ok())
 		return true;
@@ -237,12 +243,24 @@ inline bool ValidateHandle(const char *path, const AssetHandle &handle)
 	return false;
 }
 
-AssetRef FindAsset(const char *filename);
+AssetRef FindAsset(std::string_view filename);
 
 AssetHandle OpenAsset(AssetRef &&ref, bool threadsafe = false);
-AssetHandle OpenAsset(const char *filename, bool threadsafe = false);
-AssetHandle OpenAsset(const char *filename, size_t &fileSize, bool threadsafe = false);
+AssetHandle OpenAsset(std::string_view filename, bool threadsafe = false);
+AssetHandle OpenAsset(std::string_view filename, size_t &fileSize, bool threadsafe = false);
 
-SDL_RWops *OpenAssetAsSdlRwOps(const char *filename, bool threadsafe = false);
+SDL_RWops *OpenAssetAsSdlRwOps(std::string_view filename, bool threadsafe = false);
+
+struct AssetData {
+	std::unique_ptr<char[]> data;
+	size_t size;
+
+	explicit operator std::string_view() const
+	{
+		return std::string_view(data.get(), size);
+	}
+};
+
+tl::expected<AssetData, std::string> LoadAsset(std::string_view path);
 
 } // namespace devilution

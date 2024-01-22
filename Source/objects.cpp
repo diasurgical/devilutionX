@@ -4,6 +4,7 @@
  * Implementation of object functionality, interaction, spawning, loading, etc.
  */
 #include <climits>
+#include <cmath>
 #include <cstdint>
 #include <ctime>
 
@@ -17,12 +18,12 @@
 #ifdef _DEBUG
 #include "debug.h"
 #endif
+#include "diablo_msg.hpp"
 #include "engine/backbuffer_state.hpp"
 #include "engine/load_cel.hpp"
 #include "engine/load_file.hpp"
 #include "engine/points_in_rectangle_range.hpp"
 #include "engine/random.hpp"
-#include "error.h"
 #include "init.h"
 #include "inv.h"
 #include "inv_iterators.hpp"
@@ -39,6 +40,7 @@
 #include "stores.h"
 #include "towners.h"
 #include "track.h"
+#include "utils/algorithm/container.hpp"
 #include "utils/language.h"
 #include "utils/log.hpp"
 #include "utils/str_cat.hpp"
@@ -154,83 +156,6 @@ const char *const ShrineNames[] = {
 	// TRANSLATORS: Shrine Name Block end
 	N_("Murphy's"),
 };
-/** Specifies the minimum dungeon level on which each shrine will appear. */
-char shrinemin[] = {
-	1, // Mysterious
-	1, // Hidden
-	1, // Gloomy
-	1, // Weird
-	1, // Magical
-	1, // Stone
-	1, // Religious
-	1, // Enchanted
-	1, // Thaumaturgic
-	1, // Fascinating
-	1, // Cryptic
-	1, // Magical
-	1, // Eldritch
-	1, // Eerie
-	1, // Divine
-	1, // Holy
-	1, // Sacred
-	1, // Spiritual
-	1, // Spooky
-	1, // Abandoned
-	1, // Creepy
-	1, // Quiet
-	1, // Secluded
-	1, // Ornate
-	1, // Glimmering
-	1, // Tainted
-	1, // Oily
-	1, // Glowing
-	1, // Mendicant's
-	1, // Sparkling
-	1, // Town
-	1, // Shimmering
-	1, // Solar,
-	1, // Murphy's
-};
-
-#define MAX_LVLS 24
-
-/** Specifies the maximum dungeon level on which each shrine will appear. */
-char shrinemax[] = {
-	MAX_LVLS, // Mysterious
-	MAX_LVLS, // Hidden
-	MAX_LVLS, // Gloomy
-	MAX_LVLS, // Weird
-	MAX_LVLS, // Magical
-	MAX_LVLS, // Stone
-	MAX_LVLS, // Religious
-	8,        // Enchanted
-	MAX_LVLS, // Thaumaturgic
-	MAX_LVLS, // Fascinating
-	MAX_LVLS, // Cryptic
-	MAX_LVLS, // Magical
-	MAX_LVLS, // Eldritch
-	MAX_LVLS, // Eerie
-	MAX_LVLS, // Divine
-	MAX_LVLS, // Holy
-	MAX_LVLS, // Sacred
-	MAX_LVLS, // Spiritual
-	MAX_LVLS, // Spooky
-	MAX_LVLS, // Abandoned
-	MAX_LVLS, // Creepy
-	MAX_LVLS, // Quiet
-	MAX_LVLS, // Secluded
-	MAX_LVLS, // Ornate
-	MAX_LVLS, // Glimmering
-	MAX_LVLS, // Tainted
-	MAX_LVLS, // Oily
-	MAX_LVLS, // Glowing
-	MAX_LVLS, // Mendicant's
-	MAX_LVLS, // Sparkling
-	MAX_LVLS, // Town
-	MAX_LVLS, // Shimmering
-	MAX_LVLS, // Solar,
-	MAX_LVLS, // Murphy's
-};
 
 /**
  * Specifies the game type for which each shrine may appear.
@@ -306,19 +231,24 @@ _speech_id StoryText[3][3] = {
 	{ TEXT_BOOK31, TEXT_BOOK32, TEXT_BOOK33 }
 };
 
-bool RndLocOk(int xp, int yp)
+bool RndLocOk(Point p)
 {
-	if (dMonster[xp][yp] != 0)
+	if (dMonster[p.x][p.y] != 0)
 		return false;
-	if (dPlayer[xp][yp] != 0)
+	if (dPlayer[p.x][p.y] != 0)
 		return false;
-	if (IsObjectAtPosition({ xp, yp }))
+	if (IsObjectAtPosition(p))
 		return false;
-	if (TileContainsSetPiece({ xp, yp }))
+	if (TileContainsSetPiece(p))
 		return false;
-	if (TileHasAny(dPiece[xp][yp], TileProperties::Solid))
+	if (TileHasAny(dPiece[p.x][p.y], TileProperties::Solid))
 		return false;
-	return IsNoneOf(leveltype, DTYPE_CATHEDRAL, DTYPE_CRYPT) || dPiece[xp][yp] <= 125 || dPiece[xp][yp] >= 143;
+	return IsNoneOf(leveltype, DTYPE_CATHEDRAL, DTYPE_CRYPT) || dPiece[p.x][p.y] <= 125 || dPiece[p.x][p.y] >= 143;
+}
+
+bool IsAreaOk(Rectangle rect)
+{
+	return c_all_of(PointsInRectangle(rect), &RndLocOk);
 }
 
 bool CanPlaceWallTrap(int xp, int yp)
@@ -339,15 +269,7 @@ void InitRndLocObj(int min, int max, _object_id objtype)
 		while (true) {
 			int xp = GenerateRnd(80) + 16;
 			int yp = GenerateRnd(80) + 16;
-			if (RndLocOk(xp - 1, yp - 1)
-			    && RndLocOk(xp, yp - 1)
-			    && RndLocOk(xp + 1, yp - 1)
-			    && RndLocOk(xp - 1, yp)
-			    && RndLocOk(xp, yp)
-			    && RndLocOk(xp + 1, yp)
-			    && RndLocOk(xp - 1, yp + 1)
-			    && RndLocOk(xp, yp + 1)
-			    && RndLocOk(xp + 1, yp + 1)) {
+			if (IsAreaOk(Rectangle { { xp - 1, yp - 1 }, { 3, 3 } })) {
 				AddObject(objtype, { xp, yp });
 				break;
 			}
@@ -362,18 +284,7 @@ void InitRndLocBigObj(int min, int max, _object_id objtype)
 		while (true) {
 			int xp = GenerateRnd(80) + 16;
 			int yp = GenerateRnd(80) + 16;
-			if (RndLocOk(xp - 1, yp - 2)
-			    && RndLocOk(xp, yp - 2)
-			    && RndLocOk(xp + 1, yp - 2)
-			    && RndLocOk(xp - 1, yp - 1)
-			    && RndLocOk(xp, yp - 1)
-			    && RndLocOk(xp + 1, yp - 1)
-			    && RndLocOk(xp - 1, yp)
-			    && RndLocOk(xp, yp)
-			    && RndLocOk(xp + 1, yp)
-			    && RndLocOk(xp - 1, yp + 1)
-			    && RndLocOk(xp, yp + 1)
-			    && RndLocOk(xp + 1, yp + 1)) {
+			if (IsAreaOk(Rectangle { { xp - 1, yp - 2 }, { 3, 4 } })) {
 				AddObject(objtype, { xp, yp });
 				break;
 			}
@@ -383,14 +294,8 @@ void InitRndLocBigObj(int min, int max, _object_id objtype)
 
 bool CanPlaceRandomObject(Point position, Displacement standoff)
 {
-	for (int yy = -standoff.deltaY; yy <= standoff.deltaY; yy++) {
-		for (int xx = -standoff.deltaX; xx <= standoff.deltaX; xx++) {
-			Point tile = position + Displacement { xx, yy };
-			if (!RndLocOk(tile.x, tile.y))
-				return false;
-		}
-	}
-	return true;
+	return IsAreaOk(Rectangle { position - standoff,
+	    Size { standoff.deltaX * 2 + 1, standoff.deltaY * 2 + 1 } });
 }
 
 std::optional<Point> GetRandomObjectPosition(Displacement standoff)
@@ -506,7 +411,7 @@ void InitRndBarrels()
 		do {
 			xp = GenerateRnd(80) + 16;
 			yp = GenerateRnd(80) + 16;
-		} while (!RndLocOk(xp, yp));
+		} while (!RndLocOk({ xp, yp }));
 		_object_id o = FlipCoin(4) ? explosiveBarrelId : barrelId;
 		AddObject(o, { xp, yp });
 		bool found = true;
@@ -524,7 +429,7 @@ void InitRndBarrels()
 				int dir = GenerateRnd(8);
 				xp += bxadd[dir];
 				yp += byadd[dir];
-				found = RndLocOk(xp, yp);
+				found = RndLocOk({ xp, yp });
 				t++;
 				if (found)
 					break;
@@ -654,20 +559,18 @@ void LoadMapObjects(const char *path, Point start, WorldTileRectangle mapRange =
 
 	auto dunData = LoadFileInMem<uint16_t>(path);
 
-	int width = SDL_SwapLE16(dunData[0]);
-	int height = SDL_SwapLE16(dunData[1]);
+	WorldTileSize size = GetDunSize(dunData.get());
 
-	int layer2Offset = 2 + width * height;
+	int layer2Offset = 2 + size.width * size.height;
 
 	// The rest of the layers are at dPiece scale
-	width *= 2;
-	height *= 2;
+	size *= static_cast<WorldTileCoord>(2);
 
-	const uint16_t *objectLayer = &dunData[layer2Offset + width * height * 2];
+	const uint16_t *objectLayer = &dunData[layer2Offset + size.width * size.height * 2];
 
-	for (int j = 0; j < height; j++) {
-		for (int i = 0; i < width; i++) {
-			auto objectId = static_cast<uint8_t>(SDL_SwapLE16(objectLayer[j * width + i]));
+	for (WorldTileCoord j = 0; j < size.height; j++) {
+		for (WorldTileCoord i = 0; i < size.width; i++) {
+			auto objectId = static_cast<uint8_t>(SDL_SwapLE16(objectLayer[j * size.width + i]));
 			if (objectId != 0) {
 				Point mapPos = start + Displacement { i, j };
 				Object *mapObject = AddObject(ObjTypeConv[objectId], mapPos);
@@ -773,13 +676,13 @@ void SetupObject(Object &object, Point position, _object_id ot)
 	object.position = position;
 
 	if (!HeadlessMode) {
-		const auto &found = std::find(std::begin(ObjFileList), std::end(ObjFileList), ofi);
+		const auto &found = c_find(ObjFileList, ofi);
 		if (found == std::end(ObjFileList)) {
 			LogCritical("Unable to find object_graphic_id {} in list of objects to load, level generation error.", static_cast<int>(ofi));
 			return;
 		}
 
-		const int j = std::distance(std::begin(ObjFileList), found);
+		const size_t j = std::distance(std::begin(ObjFileList), found);
 
 		if (pObjCels[j]) {
 			object._oAnimData.emplace(*pObjCels[j]);
@@ -845,15 +748,7 @@ void AddNakrulLever()
 	while (true) {
 		int xp = GenerateRnd(80) + 16;
 		int yp = GenerateRnd(80) + 16;
-		if (RndLocOk(xp - 1, yp - 1)
-		    && RndLocOk(xp, yp - 1)
-		    && RndLocOk(xp + 1, yp - 1)
-		    && RndLocOk(xp - 1, yp)
-		    && RndLocOk(xp, yp)
-		    && RndLocOk(xp + 1, yp)
-		    && RndLocOk(xp - 1, yp + 1)
-		    && RndLocOk(xp, yp + 1)
-		    && RndLocOk(xp + 1, yp + 1)) {
+		if (IsAreaOk(Rectangle { { xp - 1, yp - 1 }, { 3, 3 } })) {
 			break;
 		}
 	}
@@ -969,23 +864,18 @@ void AddLazStand()
 	int cnt = 0;
 	int xp;
 	int yp;
-	bool found = false;
-	while (!found) {
-		found = true;
+	while (true) {
 		xp = GenerateRnd(80) + 16;
 		yp = GenerateRnd(80) + 16;
-		for (int yy = -3; yy <= 3; yy++) {
-			for (int xx = -2; xx <= 3; xx++) {
-				if (!RndLocOk(xp + xx, yp + yy))
-					found = false;
-			}
-		}
-		if (!found) {
+
+		if (!IsAreaOk(Rectangle { { xp - 2, yp - 3 }, { 6, 7 } })) {
 			cnt++;
 			if (cnt > 10000) {
 				InitRndLocObj(1, 1, OBJ_LAZSTAND);
 				return;
 			}
+		} else {
+			break;
 		}
 	}
 	AddObject(OBJ_LAZSTAND, { xp, yp });
@@ -1298,13 +1188,13 @@ void AddDoor(Object &door)
 
 void AddSarcophagus(Object &sarcophagus)
 {
-	dObject[sarcophagus.position.x][sarcophagus.position.y - 1] = -(sarcophagus.GetId() + 1);
+	dObject[sarcophagus.position.x][sarcophagus.position.y - 1] = -(static_cast<int8_t>(sarcophagus.GetId()) + 1);
 	sarcophagus._oVar1 = GenerateRnd(10);
 	sarcophagus._oRndSeed = AdvanceRndSeed();
 	if (sarcophagus._oVar1 >= 8) {
 		Monster *monster = PreSpawnSkeleton();
 		if (monster != nullptr) {
-			sarcophagus._oVar2 = monster->getId();
+			sarcophagus._oVar2 = static_cast<int>(monster->getId());
 		} else {
 			sarcophagus._oVar2 = -1;
 		}
@@ -1388,7 +1278,7 @@ void AddBarrel(Object &barrel)
 	if (barrel._oVar2 >= 8) {
 		Monster *skeleton = PreSpawnSkeleton();
 		if (skeleton != nullptr) {
-			barrel._oVar4 = skeleton->getId();
+			barrel._oVar4 = static_cast<int>(skeleton->getId());
 		} else {
 			barrel._oVar4 = -1;
 		}
@@ -1405,7 +1295,7 @@ void AddShrine(Object &shrine)
 	int shrines = gbIsHellfire ? NumberOfShrineTypes : 26;
 
 	for (int j = 0; j < shrines; j++) {
-		slist[j] = currlevel >= shrinemin[j] && currlevel <= shrinemax[j];
+		slist[j] = j != ShrineEnchanted || IsAnyOf(leveltype, DTYPE_CATHEDRAL, DTYPE_CATACOMBS);
 		if (gbIsMultiplayer && shrineavail[j] == ShrineTypeSingle) {
 			slist[j] = false;
 		} else if (!gbIsMultiplayer && shrineavail[j] == ShrineTypeMulti) {
@@ -1435,9 +1325,10 @@ void AddLargeFountain(Object &fountain)
 {
 	int ox = fountain.position.x;
 	int oy = fountain.position.y;
-	dObject[ox][oy - 1] = -(fountain.GetId() + 1);
-	dObject[ox - 1][oy] = -(fountain.GetId() + 1);
-	dObject[ox - 1][oy - 1] = -(fountain.GetId() + 1);
+	uint8_t id = -(static_cast<int8_t>(fountain.GetId()) + 1);
+	dObject[ox][oy - 1] = id;
+	dObject[ox - 1][oy] = id;
+	dObject[ox - 1][oy - 1] = id;
 	fountain._oRndSeed = AdvanceRndSeed();
 }
 
@@ -1528,13 +1419,7 @@ Point GetRndObjLoc(int randarea)
 			randarea--;
 		x = GenerateRnd(MAXDUNX);
 		y = GenerateRnd(MAXDUNY);
-		bool failed = false;
-		for (int i = 0; i < randarea && !failed; i++) {
-			for (int j = 0; j < randarea && !failed; j++) {
-				failed = !RndLocOk(i + x, j + y);
-			}
-		}
-		if (!failed)
+		if (IsAreaOk(Rectangle { { x, y }, { randarea, randarea } }))
 			break;
 	}
 	return { x, y };
@@ -1624,7 +1509,7 @@ void UpdateCircle(Object &circle)
 			Quests[Q_BETRAYER]._qvar1 = 4;
 			NetSendCmdQuest(true, Quests[Q_BETRAYER]);
 		}
-		AddMissile(playerOnCircle->position.tile, { 35, 46 }, Direction::South, MissileID::Phasing, TARGET_BOTH, playerOnCircle->getId(), 0, 0);
+		AddMissile(playerOnCircle->position.tile, { 35, 46 }, Direction::South, MissileID::Phasing, TARGET_BOTH, *playerOnCircle, 0, 0);
 		if (playerOnCircle == MyPlayer) {
 			LastMouseButtonAction = MouseActionType::None;
 			sgbMouseDown = CLICK_NONE;
@@ -1729,9 +1614,10 @@ void UpdateFlameTrap(Object &trap)
 		constexpr MissileID TrapMissile = MissileID::FireWallControl;
 		if (dMonster[x][y] > 0)
 			MonsterTrapHit(dMonster[x][y] - 1, mindam / 2, maxdam / 2, 0, TrapMissile, GetMissileData(TrapMissile).damageType(), false);
-		if (dPlayer[x][y] > 0) {
+		Player *player = PlayerAtPosition({ x, y }, true);
+		if (player != nullptr) {
 			bool unused;
-			PlayerMHit(dPlayer[x][y] - 1, nullptr, 0, mindam, maxdam, TrapMissile, GetMissileData(TrapMissile).damageType(), false, DeathReason::MonsterOrTrap, &unused);
+			PlayerMHit(*player, nullptr, 0, mindam, maxdam, TrapMissile, GetMissileData(TrapMissile).damageType(), false, DeathReason::MonsterOrTrap, &unused);
 		}
 
 		if (trap._oAnimFrame == trap._oAnimLen)
@@ -1865,16 +1751,16 @@ void OperateDoor(Object &door, bool sendflag)
 	bool openDoor = door._oVar4 == DOOR_CLOSED;
 
 	if (!openDoor && !IsDoorClear(door)) {
-		PlaySfxLoc(isCrypt ? IS_CRCLOS : IS_DOORCLOS, door.position);
+		PlaySfxLoc(isCrypt ? SfxID::CryptDoorClose : SfxID::DoorClose, door.position);
 		door._oVar4 = DOOR_BLOCKED;
 		return;
 	}
 
 	if (openDoor) {
-		PlaySfxLoc(isCrypt ? IS_CROPEN : IS_DOOROPEN, door.position);
+		PlaySfxLoc(isCrypt ? SfxID::CryptDoorOpen : SfxID::DoorOpen, door.position);
 		OpenDoor(door);
 	} else {
-		PlaySfxLoc(isCrypt ? IS_CRCLOS : IS_DOORCLOS, door.position);
+		PlaySfxLoc(isCrypt ? SfxID::CryptDoorClose : SfxID::DoorClose, door.position);
 		CloseDoor(door);
 	}
 
@@ -1927,12 +1813,12 @@ void OperateLever(Object &object, bool sendmsg)
 		return;
 	}
 
-	PlaySfxLoc(IS_LEVER, object.position);
+	PlaySfxLoc(SfxID::OperateLever, object.position);
 
 	UpdateLeverState(object);
 
 	if (currlevel == 24) {
-		PlaySfxLoc(IS_CROPEN, { UberRow, UberCol });
+		PlaySfxLoc(SfxID::CryptDoorOpen, { UberRow, UberCol });
 		Quests[Q_NAKRUL]._qactive = QUEST_DONE;
 		NetSendCmdQuest(true, Quests[Q_NAKRUL]);
 	}
@@ -1967,7 +1853,7 @@ void OperateBook(Player &player, Object &book, bool sendmsg)
 
 		circle._oVar6 = 4;
 		ObjectAtPosition({ 35, 36 })._oVar5++;
-		AddMissile(player.position.tile, target, Direction::South, MissileID::Phasing, TARGET_BOTH, player.getId(), 0, 0);
+		AddMissile(player.position.tile, target, Direction::South, MissileID::Phasing, TARGET_BOTH, player, 0, 0);
 	}
 
 	book._oSelFlag = 0;
@@ -2000,7 +1886,7 @@ void OperateBook(Player &player, Object &book, bool sendmsg)
 			Quests[Q_SCHAMB]._qactive = QUEST_DONE;
 			NetSendCmdQuest(true, Quests[Q_SCHAMB]);
 		}
-		PlaySfxLoc(IS_QUESTDN, book.position);
+		PlaySfxLoc(SfxID::QuestDone, book.position);
 		InitDiabloMsg(EMSG_BONECHAMB);
 		AddMissile(
 		    player.position.tile,
@@ -2008,7 +1894,7 @@ void OperateBook(Player &player, Object &book, bool sendmsg)
 		    player._pdir,
 		    MissileID::Guardian,
 		    TARGET_MONSTERS,
-		    player.getId(),
+		    player,
 		    0,
 		    0);
 	}
@@ -2121,7 +2007,7 @@ void OperateChest(const Player &player, Object &chest, bool sendLootMsg)
 		return;
 	}
 
-	PlaySfxLoc(IS_CHEST, chest.position);
+	PlaySfxLoc(SfxID::ChestOpen, chest.position);
 	chest._oSelFlag = 0;
 	chest._oAnimFrame += 2;
 	SetRndSeed(chest._oRndSeed);
@@ -2163,6 +2049,7 @@ void OperateChest(const Player &player, Object &chest, bool sendLootMsg)
 			mtype = MissileID::Arrow;
 		}
 		AddMissile(chest.position, player.position.tile, mdir, mtype, TARGET_PLAYERS, -1, 0, 0);
+		PlaySfxLoc(SfxID::TriggerTrap, chest.position);
 		chest._oTrapFlag = false;
 	}
 	if (&player == MyPlayer)
@@ -2189,7 +2076,7 @@ void OperateMushroomPatch(const Player &player, Object &mushroomPatch)
 	mushroomPatch._oSelFlag = 0;
 	mushroomPatch._oAnimFrame++;
 
-	PlaySfxLoc(IS_CHEST, mushroomPatch.position);
+	PlaySfxLoc(SfxID::ChestOpen, mushroomPatch.position);
 	Point pos = GetSuperItemLoc(mushroomPatch.position);
 
 	if (&player == MyPlayer) {
@@ -2220,7 +2107,7 @@ void OperateInnSignChest(const Player &player, Object &questContainer, bool send
 	questContainer._oSelFlag = 0;
 	questContainer._oAnimFrame += 2;
 
-	PlaySfxLoc(IS_CHEST, questContainer.position);
+	PlaySfxLoc(SfxID::ChestOpen, questContainer.position);
 
 	if (sendmsg) {
 		Point pos = GetSuperItemLoc(questContainer.position);
@@ -2258,7 +2145,7 @@ void OperateSlainHero(const Player &player, Object &corpse, bool sendmsg)
 
 void OperateTrapLever(Object &flameLever)
 {
-	PlaySfxLoc(IS_LEVER, flameLever.position);
+	PlaySfxLoc(SfxID::OperateLever, flameLever.position);
 
 	if (flameLever._oAnimFrame == 1) {
 		flameLever._oAnimFrame = 2;
@@ -2290,7 +2177,7 @@ void OperateSarcophagus(Object &sarcophagus, bool sendMsg, bool sendLootMsg)
 		return;
 	}
 
-	PlaySfxLoc(IS_SARC, sarcophagus.position);
+	PlaySfxLoc(SfxID::Sarcophagus, sarcophagus.position);
 	sarcophagus._oSelFlag = 0;
 	sarcophagus._oAnimFlag = true;
 	sarcophagus._oAnimDelay = 3;
@@ -2325,19 +2212,19 @@ void OperatePedestal(Player &player, Object &pedestal, bool sendmsg)
 	pedestal._oAnimFrame++;
 	pedestal._oVar6++;
 	if (pedestal._oVar6 == 1) {
-		PlaySfxLoc(LS_PUDDLE, pedestal.position);
+		PlaySfxLoc(SfxID::SpellPuddle, pedestal.position);
 		ObjChangeMap(SetPiece.position.x, SetPiece.position.y + 3, SetPiece.position.x + 2, SetPiece.position.y + 7);
 		if (sendmsg)
 			SpawnQuestItem(IDI_BLDSTONE, SetPiece.position.megaToWorld() + Displacement { 3, 10 }, 0, 1, true);
 	}
 	if (pedestal._oVar6 == 2) {
-		PlaySfxLoc(LS_PUDDLE, pedestal.position);
+		PlaySfxLoc(SfxID::SpellPuddle, pedestal.position);
 		ObjChangeMap(SetPiece.position.x + 6, SetPiece.position.y + 3, SetPiece.position.x + SetPiece.size.width, SetPiece.position.y + 7);
 		if (sendmsg)
 			SpawnQuestItem(IDI_BLDSTONE, SetPiece.position.megaToWorld() + Displacement { 15, 10 }, 0, 1, true);
 	}
 	if (pedestal._oVar6 == 3) {
-		PlaySfxLoc(LS_BLODSTAR, pedestal.position);
+		PlaySfxLoc(SfxID::SpellBloodStar, pedestal.position);
 		ObjChangeMap(pedestal._oVar1, pedestal._oVar2, pedestal._oVar3, pedestal._oVar4);
 		LoadMapObjects("levels\\l2data\\blood2.dun", SetPiece.position.megaToWorld());
 		if (sendmsg)
@@ -2496,7 +2383,7 @@ void OperateShrineMagical(const Player &player)
 	    player._pdir,
 	    MissileID::ManaShield,
 	    TARGET_MONSTERS,
-	    player.getId(),
+	    player,
 	    0,
 	    2 * leveltype);
 
@@ -2653,7 +2540,7 @@ void OperateShrineCryptic(Player &player)
 	    player._pdir,
 	    MissileID::Nova,
 	    TARGET_MONSTERS,
-	    player.getId(),
+	    player,
 	    0,
 	    2 * leveltype);
 
@@ -2745,7 +2632,7 @@ void OperateShrineDivine(Player &player, Point spawnPosition)
 
 void OperateShrineHoly(const Player &player)
 {
-	AddMissile(player.position.tile, { 0, 0 }, Direction::South, MissileID::Phasing, TARGET_MONSTERS, player.getId(), 0, 2 * leveltype);
+	AddMissile(player.position.tile, { 0, 0 }, Direction::South, MissileID::Phasing, TARGET_MONSTERS, player, 0, 2 * leveltype);
 
 	if (&player != MyPlayer)
 		return;
@@ -2964,7 +2851,7 @@ void OperateShrineMendicant(Player &player)
 		return;
 
 	int gold = player._pGold / 2;
-	AddPlrExperience(player, player._pLevel, gold);
+	player.addExperience(gold);
 	TakePlrsMoney(gold);
 
 	RedrawEverything();
@@ -2973,7 +2860,7 @@ void OperateShrineMendicant(Player &player)
 }
 
 /**
- * @brief Grants experience to the player based on their current level while also triggering a magic trap
+ * @brief Grants experience to the player based on the current dungeon level while also triggering a magic trap
  * @param player The player that will be affected by the shrine
  * @param spawnPosition The trap results in casting flash from this location targeting the player
  */
@@ -2982,7 +2869,7 @@ void OperateShrineSparkling(Player &player, Point spawnPosition)
 	if (&player != MyPlayer)
 		return;
 
-	AddPlrExperience(player, player._pLevel, 1000 * currlevel);
+	player.addExperience(1000 * currlevel);
 
 	AddMissile(
 	    spawnPosition,
@@ -3015,7 +2902,7 @@ void OperateShrineTown(const Player &player, Point spawnPosition)
 	    player._pdir,
 	    MissileID::TownPortal,
 	    TARGET_MONSTERS,
-	    player.getId(),
+	    player,
 	    0,
 	    0);
 
@@ -3086,15 +2973,12 @@ void OperateShrineMurphys(Player &player)
 	InitDiabloMsg(EMSG_SHRINE_MURPHYS);
 }
 
-void OperateShrine(Player &player, Object &shrine, _sfx_id sType)
+void OperateShrine(Player &player, Object &shrine, SfxID sType)
 {
 	if (shrine._oSelFlag == 0)
 		return;
 
-	if (dropGoldFlag) {
-		CloseGoldDrop();
-		dropGoldValue = 0;
-	}
+	CloseGoldDrop();
 
 	SetRndSeed(shrine._oRndSeed);
 	shrine._oSelFlag = 0;
@@ -3216,7 +3100,7 @@ void OperateBookStand(Object &bookStand, bool sendmsg, bool sendLootMsg)
 		return;
 	}
 
-	PlaySfxLoc(IS_ISCROL, bookStand.position);
+	PlaySfxLoc(SfxID::ItemScroll, bookStand.position);
 	bookStand._oSelFlag = 0;
 	bookStand._oAnimFrame += 2;
 	SetRndSeed(bookStand._oRndSeed);
@@ -3234,7 +3118,7 @@ void OperateBookcase(Object &bookcase, bool sendmsg, bool sendLootMsg)
 		return;
 	}
 
-	PlaySfxLoc(IS_ISCROL, bookcase.position);
+	PlaySfxLoc(SfxID::ItemScroll, bookcase.position);
 	bookcase._oSelFlag = 0;
 	bookcase._oAnimFrame -= 2;
 	SetRndSeed(bookcase._oRndSeed);
@@ -3295,7 +3179,7 @@ int FindValidShrine()
 {
 	for (;;) {
 		int rv = GenerateRnd(gbIsHellfire ? NumberOfShrineTypes : 26);
-		if (currlevel < shrinemin[rv] || currlevel > shrinemax[rv] || rv == ShrineThaumaturgic)
+		if ((rv == ShrineEnchanted && !IsAnyOf(leveltype, DTYPE_CATHEDRAL, DTYPE_CATACOMBS)) || rv == ShrineThaumaturgic)
 			continue;
 		if (gbIsMultiplayer && shrineavail[rv] == ShrineTypeSingle)
 			continue;
@@ -3305,7 +3189,7 @@ int FindValidShrine()
 	}
 }
 
-void OperateGoatShrine(Player &player, Object &object, _sfx_id sType)
+void OperateGoatShrine(Player &player, Object &object, SfxID sType)
 {
 	SetRndSeed(object._oRndSeed);
 	object._oVar1 = FindValidShrine();
@@ -3314,7 +3198,7 @@ void OperateGoatShrine(Player &player, Object &object, _sfx_id sType)
 	RedrawEverything();
 }
 
-void OperateCauldron(Player &player, Object &object, _sfx_id sType)
+void OperateCauldron(Player &player, Object &object, SfxID sType)
 {
 	SetRndSeed(object._oRndSeed);
 	object._oVar1 = FindValidShrine();
@@ -3333,7 +3217,7 @@ bool OperateFountains(Player &player, Object &fountain)
 			return false;
 
 		if (player._pHitPoints < player._pMaxHP) {
-			PlaySfxLoc(LS_FOUNTAIN, fountain.position);
+			PlaySfxLoc(SfxID::OperateFountain, fountain.position);
 			player._pHitPoints += 64;
 			player._pHPBase += 64;
 			if (player._pHitPoints > player._pMaxHP) {
@@ -3342,14 +3226,14 @@ bool OperateFountains(Player &player, Object &fountain)
 			}
 			applied = true;
 		} else
-			PlaySfxLoc(LS_FOUNTAIN, fountain.position);
+			PlaySfxLoc(SfxID::OperateFountain, fountain.position);
 		break;
 	case OBJ_PURIFYINGFTN:
 		if (&player != MyPlayer)
 			return false;
 
 		if (player._pMana < player._pMaxMana) {
-			PlaySfxLoc(LS_FOUNTAIN, fountain.position);
+			PlaySfxLoc(SfxID::OperateFountain, fountain.position);
 
 			player._pMana += 64;
 			player._pManaBase += 64;
@@ -3360,12 +3244,12 @@ bool OperateFountains(Player &player, Object &fountain)
 
 			applied = true;
 		} else
-			PlaySfxLoc(LS_FOUNTAIN, fountain.position);
+			PlaySfxLoc(SfxID::OperateFountain, fountain.position);
 		break;
 	case OBJ_MURKYFTN:
 		if (fountain._oSelFlag == 0)
 			break;
-		PlaySfxLoc(LS_FOUNTAIN, fountain.position);
+		PlaySfxLoc(SfxID::OperateFountain, fountain.position);
 		fountain._oSelFlag = 0;
 		AddMissile(
 		    player.position.tile,
@@ -3373,7 +3257,7 @@ bool OperateFountains(Player &player, Object &fountain)
 		    player._pdir,
 		    MissileID::Infravision,
 		    TARGET_MONSTERS,
-		    player.getId(),
+		    player,
 		    0,
 		    2 * leveltype);
 		applied = true;
@@ -3383,31 +3267,31 @@ bool OperateFountains(Player &player, Object &fountain)
 	case OBJ_TEARFTN: {
 		if (fountain._oSelFlag == 0)
 			break;
-		PlaySfxLoc(LS_FOUNTAIN, fountain.position);
+		PlaySfxLoc(SfxID::OperateFountain, fountain.position);
 		fountain._oSelFlag = 0;
 		if (&player != MyPlayer)
 			return false;
 
-		unsigned randomValue = (fountain._oRndSeed >> 16) % 12;
-		unsigned fromStat = randomValue / 3;
+		const unsigned randomValue = (fountain._oRndSeed >> 16) % 12;
+		const unsigned fromStat = randomValue / 3;
 		unsigned toStat = randomValue % 3;
 		if (toStat >= fromStat)
 			toStat++;
 
-		std::pair<unsigned, int> alterations[] = { { fromStat, -1 }, { toStat, 1 } };
-		for (auto alteration : alterations) {
-			switch (alteration.first) {
+		const std::pair<unsigned, int> alterations[] = { { fromStat, -1 }, { toStat, 1 } };
+		for (const auto &[stat, delta] : alterations) {
+			switch (stat) {
 			case 0:
-				ModifyPlrStr(player, alteration.second);
+				ModifyPlrStr(player, delta);
 				break;
 			case 1:
-				ModifyPlrMag(player, alteration.second);
+				ModifyPlrMag(player, delta);
 				break;
 			case 2:
-				ModifyPlrDex(player, alteration.second);
+				ModifyPlrDex(player, delta);
 				break;
 			case 3:
-				ModifyPlrVit(player, alteration.second);
+				ModifyPlrVit(player, delta);
 				break;
 			}
 		}
@@ -3480,7 +3364,7 @@ void OperateStoryBook(Object &storyBook)
 		return;
 	}
 	storyBook._oAnimFrame = storyBook._oVar4;
-	PlaySfxLoc(IS_ISCROL, storyBook.position);
+	PlaySfxLoc(SfxID::ItemScroll, storyBook.position);
 	auto msg = static_cast<_speech_id>(storyBook._oVar2);
 	if (storyBook._oVar8 != 0 && currlevel == 24) {
 		if (!IsUberLeverActivated && Quests[Q_NAKRUL]._qactive != QUEST_DONE && OperateNakrulBook(storyBook._oVar8)) {
@@ -3557,7 +3441,7 @@ void BreakCrux(Object &crux, bool sendmsg)
 	if (!AreAllCruxesOfTypeBroken(crux._oVar8))
 		return;
 
-	PlaySfxLoc(IS_LEVER, crux.position);
+	PlaySfxLoc(SfxID::OperateLever, crux.position);
 	ObjChangeMap(crux._oVar1, crux._oVar2, crux._oVar3, crux._oVar4);
 }
 
@@ -3580,20 +3464,21 @@ void BreakBarrel(const Player &player, Object &barrel, bool forcebreak, bool sen
 
 	if (barrel.isExplosive()) {
 		if (barrel._otype == _object_id::OBJ_URNEX)
-			PlaySfxLoc(IS_POPPOP3, barrel.position);
+			PlaySfxLoc(SfxID::UrnExpload, barrel.position);
 		else if (barrel._otype == _object_id::OBJ_PODEX)
-			PlaySfxLoc(IS_POPPOP8, barrel.position);
+			PlaySfxLoc(SfxID::PodExpload, barrel.position);
 		else
-			PlaySfxLoc(IS_BARLFIRE, barrel.position);
+			PlaySfxLoc(SfxID::BarrelExpload, barrel.position);
 		for (int yp = barrel.position.y - 1; yp <= barrel.position.y + 1; yp++) {
 			for (int xp = barrel.position.x - 1; xp <= barrel.position.x + 1; xp++) {
 				constexpr MissileID TrapMissile = MissileID::Firebolt;
 				if (dMonster[xp][yp] > 0) {
 					MonsterTrapHit(dMonster[xp][yp] - 1, 1, 4, 0, TrapMissile, GetMissileData(TrapMissile).damageType(), false);
 				}
-				if (dPlayer[xp][yp] > 0) {
+				Player *adjacentPlayer = PlayerAtPosition({ xp, yp }, true);
+				if (adjacentPlayer != nullptr) {
 					bool unused;
-					PlayerMHit(dPlayer[xp][yp] - 1, nullptr, 0, 8, 16, TrapMissile, GetMissileData(TrapMissile).damageType(), false, DeathReason::MonsterOrTrap, &unused);
+					PlayerMHit(*adjacentPlayer, nullptr, 0, 8, 16, TrapMissile, GetMissileData(TrapMissile).damageType(), false, DeathReason::MonsterOrTrap, &unused);
 				}
 				// don't really need to exclude large objects as explosive barrels are single tile objects, but using considerLargeObjects == false as this matches the old logic.
 				Object *adjacentObject = FindObjectAtPosition({ xp, yp }, false);
@@ -3604,11 +3489,11 @@ void BreakBarrel(const Player &player, Object &barrel, bool forcebreak, bool sen
 		}
 	} else {
 		if (barrel._otype == _object_id::OBJ_URN)
-			PlaySfxLoc(IS_POPPOP2, barrel.position);
+			PlaySfxLoc(SfxID::UrnBreak, barrel.position);
 		else if (barrel._otype == _object_id::OBJ_POD)
-			PlaySfxLoc(IS_POPPOP5, barrel.position);
+			PlaySfxLoc(SfxID::PodPop, barrel.position);
 		else
-			PlaySfxLoc(IS_BARREL, barrel.position);
+			PlaySfxLoc(SfxID::BarrelBreak, barrel.position);
 		SetRndSeed(barrel._oRndSeed);
 		if (barrel._oVar2 <= 1) {
 			if (barrel._oVar3 == 0)
@@ -3693,7 +3578,7 @@ void ResyncDoors(WorldTilePosition p1, WorldTilePosition p2, bool sendmsg)
 	const WorldTileSize size { static_cast<WorldTileCoord>(p2.x - p1.x), static_cast<WorldTileCoord>(p2.y - p1.y) };
 	const WorldTileRectangle area { p1, size };
 
-	for (WorldTilePosition p : PointsInRectangleRange<WorldTileCoord> { area }) {
+	for (const WorldTilePosition p : PointsInRectangle { area }) {
 		Object *obj = FindObjectAtPosition(p);
 		if (obj == nullptr)
 			continue;
@@ -3722,7 +3607,7 @@ void UpdateState(Object &object, int frame)
 
 unsigned int Object::GetId() const
 {
-	return abs(dObject[position.x][position.y]) - 1;
+	return std::abs(dObject[position.x][position.y]) - 1;
 }
 
 bool Object::IsDisabled() const
@@ -3736,7 +3621,7 @@ bool Object::IsDisabled() const
 	if (!IsShrine()) {
 		return false;
 	}
-	return IsAnyOf(static_cast<shrine_type>(_oVar1), shrine_type::ShrineFascinating, shrine_type::ShrineOrnate, shrine_type::ShrineSacred);
+	return IsAnyOf(static_cast<shrine_type>(_oVar1), shrine_type::ShrineFascinating, shrine_type::ShrineOrnate, shrine_type::ShrineSacred, shrine_type::ShrineMurphys);
 }
 
 Object *FindObjectAtPosition(Point position, bool considerLargeObjects)
@@ -3748,7 +3633,7 @@ Object *FindObjectAtPosition(Point position, bool considerLargeObjects)
 	auto objectId = dObject[position.x][position.y];
 
 	if (objectId > 0 || (considerLargeObjects && objectId != 0)) {
-		return &Objects[abs(objectId) - 1];
+		return &Objects[std::abs(objectId) - 1];
 	}
 
 	// nothing at this position, return a nullptr
@@ -4065,20 +3950,18 @@ void SetMapObjects(const uint16_t *dunData, int startx, int starty)
 
 	ClrAllObjects();
 
-	int width = SDL_SwapLE16(dunData[0]);
-	int height = SDL_SwapLE16(dunData[1]);
+	WorldTileSize size = GetDunSize(dunData);
 
-	int layer2Offset = 2 + width * height;
+	int layer2Offset = 2 + size.width * size.height;
 
 	// The rest of the layers are at dPiece scale
-	width *= 2;
-	height *= 2;
+	size *= static_cast<WorldTileCoord>(2);
 
-	const uint16_t *objectLayer = &dunData[layer2Offset + width * height * 2];
+	const uint16_t *objectLayer = &dunData[layer2Offset + size.width * size.height * 2];
 
-	for (int j = 0; j < height; j++) {
-		for (int i = 0; i < width; i++) {
-			auto objectId = static_cast<uint8_t>(SDL_SwapLE16(objectLayer[j * width + i]));
+	for (WorldTileCoord j = 0; j < size.height; j++) {
+		for (WorldTileCoord i = 0; i < size.width; i++) {
+			auto objectId = static_cast<uint8_t>(SDL_SwapLE16(objectLayer[j * size.width + i]));
 			if (objectId != 0) {
 				const ObjectData &objectData = AllObjects[ObjTypeConv[objectId]];
 				filesWidths[objectData.ofindex] = objectData.animWidth;
@@ -4088,9 +3971,9 @@ void SetMapObjects(const uint16_t *dunData, int startx, int starty)
 
 	LoadLevelObjects(filesWidths);
 
-	for (int j = 0; j < height; j++) {
-		for (int i = 0; i < width; i++) {
-			auto objectId = static_cast<uint8_t>(SDL_SwapLE16(objectLayer[j * width + i]));
+	for (WorldTileCoord j = 0; j < size.height; j++) {
+		for (WorldTileCoord i = 0; i < size.width; i++) {
+			auto objectId = static_cast<uint8_t>(SDL_SwapLE16(objectLayer[j * size.width + i]));
 			if (objectId != 0) {
 				AddObject(ObjTypeConv[objectId], { startx + 16 + i, starty + 16 + j });
 			}
@@ -4284,7 +4167,7 @@ void OperateTrap(Object &trap)
 
 	Direction dir = GetDirection(trap.position, target);
 	AddMissile(trap.position, target, dir, static_cast<MissileID>(trap._oVar3), TARGET_PLAYERS, -1, 0, 0);
-	PlaySfxLoc(IS_TRAP, triggerPosition);
+	PlaySfxLoc(SfxID::TriggerTrap, triggerPosition);
 }
 
 void ProcessObjects()
@@ -4517,7 +4400,7 @@ void OperateObject(Player &player, Object &object)
 		break;
 	case OBJ_SHRINEL:
 	case OBJ_SHRINER:
-		OperateShrine(player, object, IS_MAGIC);
+		OperateShrine(player, object, SfxID::OperateShrine);
 		break;
 	case OBJ_SKELBOOK:
 	case OBJ_BOOKSTAND:
@@ -4535,10 +4418,10 @@ void OperateObject(Player &player, Object &object)
 		OperateArmorStand(object, sendmsg, sendmsg);
 		break;
 	case OBJ_GOATSHRINE:
-		OperateGoatShrine(player, object, LS_GSHRINE);
+		OperateGoatShrine(player, object, SfxID::OperateGoatShrine);
 		break;
 	case OBJ_CAULDRON:
-		OperateCauldron(player, object, LS_CALDRON);
+		OperateCauldron(player, object, SfxID::OperateCaldron);
 		break;
 	case OBJ_BLOODFTN:
 	case OBJ_PURIFYINGFTN:
@@ -4721,7 +4604,7 @@ void SyncOpObject(Player &player, int cmd, Object &object)
 		break;
 	case OBJ_SHRINEL:
 	case OBJ_SHRINER:
-		OperateShrine(player, object, IS_MAGIC);
+		OperateShrine(player, object, SfxID::OperateShrine);
 		break;
 	case OBJ_SKELBOOK:
 	case OBJ_BOOKSTAND:
@@ -4739,14 +4622,14 @@ void SyncOpObject(Player &player, int cmd, Object &object)
 		OperateArmorStand(object, sendmsg, false);
 		break;
 	case OBJ_GOATSHRINE:
-		OperateGoatShrine(player, object, LS_GSHRINE);
+		OperateGoatShrine(player, object, SfxID::OperateGoatShrine);
 		break;
 	case OBJ_LAZSTAND:
 		if (!sendmsg)
 			UpdateState(object, object._oAnimFrame + 1);
 		break;
 	case OBJ_CAULDRON:
-		OperateCauldron(player, object, LS_CALDRON);
+		OperateCauldron(player, object, SfxID::OperateCaldron);
 		break;
 	case OBJ_MURKYFTN:
 	case OBJ_TEARFTN:
@@ -4826,13 +4709,13 @@ void SyncObjectAnim(Object &object)
 	object_graphic_id index = AllObjects[object._otype].ofindex;
 
 	if (!HeadlessMode) {
-		const auto &found = std::find(std::begin(ObjFileList), std::end(ObjFileList), index);
+		const auto &found = c_find(ObjFileList, index);
 		if (found == std::end(ObjFileList)) {
 			LogCritical("Unable to find object_graphic_id {} in list of objects to load, level generation error.", static_cast<int>(index));
 			return;
 		}
 
-		const int i = std::distance(std::begin(ObjFileList), found);
+		const size_t i = std::distance(std::begin(ObjFileList), found);
 
 		if (pObjCels[i]) {
 			object._oAnimData.emplace(*pObjCels[i]);
@@ -4990,7 +4873,7 @@ StringOrView Object::name() const
 	default:
 		break;
 	}
-	return string_view();
+	return std::string_view();
 }
 
 void GetObjectStr(const Object &object)

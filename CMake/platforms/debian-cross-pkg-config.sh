@@ -14,11 +14,13 @@ if [ x"${PKG_CONFIG_LIBDIR+set}" = x ]; then
   # Normalized multiarch path if any, e.g. i386-linux-gnu for i386
   multiarch="`dpkg-architecture -t"${triplet}" -qDEB_HOST_MULTIARCH 2>/dev/null`"
   # Native multiarch path
-  native_multiarch="$(cat /usr/lib/pkg-config.multiarch)"
+  if [ -f /usr/lib/pkg-config.multiarch ]; then
+    native_multiarch="$(cat /usr/lib/pkg-config.multiarch)"
 
-  # This can be used for native builds as well, in that case, just exec pkg-config "$@" directly.
-  if [ "$native_multiarch" = "$multiarch" ]; then
-     exec pkg-config "$@"
+    # This can be used for native builds as well, in that case, just exec pkg-config "$@" directly.
+    if [ "$native_multiarch" = "$multiarch" ]; then
+       exec pkg-config "$@"
+    fi
   fi
 
   PKG_CONFIG_LIBDIR="/usr/local/${triplet}/lib/pkgconfig"

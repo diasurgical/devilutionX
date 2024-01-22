@@ -1,10 +1,9 @@
 #include "engine/random.hpp"
 
+#include <cmath>
 #include <cstdint>
 #include <limits>
 #include <random>
-
-#include "utils/stdcompat/abs.hpp"
 
 namespace devilution {
 
@@ -43,7 +42,7 @@ int32_t AdvanceRndSeed()
 {
 	const int32_t seed = static_cast<int32_t>(GenerateSeed());
 	// since abs(INT_MIN) is undefined behavior, handle this value specially
-	return seed == std::numeric_limits<int32_t>::min() ? std::numeric_limits<int32_t>::min() : abs(seed);
+	return seed == std::numeric_limits<int32_t>::min() ? std::numeric_limits<int32_t>::min() : std::abs(seed);
 }
 
 int32_t GenerateRnd(int32_t v)

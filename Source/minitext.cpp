@@ -4,7 +4,9 @@
  * Implementation of scrolling dialog text.
  */
 #include <cstdint>
+#include <optional>
 #include <string>
+#include <string_view>
 #include <vector>
 
 #include "DiabloUI/ui_flags.hpp"
@@ -18,8 +20,7 @@
 #include "playerdat.hpp"
 #include "textdat.h"
 #include "utils/language.h"
-#include "utils/stdcompat/optional.hpp"
-#include "utils/stdcompat/string_view.hpp"
+#include "utils/timer.hpp"
 
 namespace devilution {
 
@@ -30,7 +31,7 @@ namespace {
 /** Vertical speed of the scrolling text in ms/px */
 int qtextSpd;
 /** Start time of scrolling */
-Uint32 ScrollStart;
+uint32_t ScrollStart;
 /** Graphics for the window border */
 OptionalOwnedClxSpriteList pTextBoxCels;
 
@@ -39,7 +40,7 @@ const int LineHeight = 38;
 
 std::vector<std::string> TextLines;
 
-void LoadText(string_view text)
+void LoadText(std::string_view text)
 {
 	TextLines.clear();
 
@@ -60,15 +61,15 @@ void LoadText(string_view text)
  * @param nSFX The index of the sound in the sgSFX table
  * @return ms/px
  */
-uint32_t CalculateTextSpeed(int nSFX)
+uint32_t CalculateTextSpeed(SfxID nSFX)
 {
-	const int numLines = TextLines.size();
+	const auto numLines = static_cast<uint32_t>(TextLines.size());
 
 #ifndef NOSOUND
-	Uint32 sfxFrames = GetSFXLength(nSFX);
+	uint32_t sfxFrames = GetSFXLength(nSFX);
 #else
 	// Sound is disabled -- estimate length from the number of lines.
-	Uint32 sfxFrames = numLines * 3000;
+	uint32_t sfxFrames = numLines * 3000;
 #endif
 	assert(sfxFrames != 0);
 
@@ -81,11 +82,11 @@ uint32_t CalculateTextSpeed(int nSFX)
 
 int CalculateTextPosition()
 {
-	uint32_t currTime = SDL_GetTicks();
+	const uint32_t currTime = GetMillisecondsSinceStartup();
 
-	int y = (currTime - ScrollStart) / qtextSpd - 260;
+	const int y = (currTime - ScrollStart) / qtextSpd - 260;
 
-	int textHeight = LineHeight * TextLines.size();
+	const auto textHeight = static_cast<int>(LineHeight * TextLines.size());
 	if (y >= textHeight)
 		qtextflag = false;
 
@@ -115,7 +116,8 @@ void DrawQTextContent(const Surface &out)
 			continue;
 		}
 
-		DrawString(out, line, { { sx, sy + i * LineHeight }, { 543, LineHeight } }, UiFlags::FontSize30 | UiFlags::ColorGold);
+		DrawString(out, line, { { sx, sy + i * LineHeight }, { 543, LineHeight } },
+		    { .flags = UiFlags::FontSize30 | UiFlags::ColorGold });
 	}
 }
 
@@ -133,28 +135,28 @@ void InitQuestText()
 
 void InitQTextMsg(_speech_id m)
 {
-	_sfx_id sfxnr = Speeches[m].sfxnr;
-	const _sfx_id *classSounds = herosounds[static_cast<size_t>(MyPlayer->_pClass)];
+	SfxID sfxnr = Speeches[m].sfxnr;
+	const SfxID *classSounds = herosounds[static_cast<size_t>(MyPlayer->_pClass)];
 	switch (sfxnr) {
-	case PS_WARR1:
+	case SfxID::Warrior1:
 		sfxnr = classSounds[static_cast<size_t>(HeroSpeech::ChamberOfBoneLore)];
 		break;
-	case PS_WARR10:
+	case SfxID::Warrior10:
 		sfxnr = classSounds[static_cast<size_t>(HeroSpeech::ValorLore)];
 		break;
-	case PS_WARR11:
+	case SfxID::Warrior11:
 		sfxnr = classSounds[static_cast<size_t>(HeroSpeech::HallsOfTheBlindLore)];
 		break;
-	case PS_WARR12:
+	case SfxID::Warrior12:
 		sfxnr = classSounds[static_cast<size_t>(HeroSpeech::WarlordOfBloodLore)];
 		break;
-	case PS_WARR54:
+	case SfxID::Warrior54:
 		sfxnr = classSounds[static_cast<size_t>(HeroSpeech::InSpirituSanctum)];
 		break;
-	case PS_WARR55:
+	case SfxID::Warrior55:
 		sfxnr = classSounds[static_cast<size_t>(HeroSpeech::PraedictumOtium)];
 		break;
-	case PS_WARR56:
+	case SfxID::Warrior56:
 		sfxnr = classSounds[static_cast<size_t>(HeroSpeech::EfficioObitusUtInimicus)];
 		break;
 	default:
@@ -165,7 +167,7 @@ void InitQTextMsg(_speech_id m)
 		LoadText(_(Speeches[m].txtstr));
 		qtextflag = true;
 		qtextSpd = CalculateTextSpeed(sfxnr);
-		ScrollStart = SDL_GetTicks();
+		ScrollStart = GetMillisecondsSinceStartup();
 	}
 	PlaySFX(sfxnr);
 }

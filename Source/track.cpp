@@ -49,12 +49,12 @@ void InvalidateTargets()
 	if (ObjectUnderCursor != nullptr && ObjectUnderCursor->_oSelFlag < 1)
 		ObjectUnderCursor = nullptr;
 
-	if (pcursplr != -1) {
-		Player &targetPlayer = Players[pcursplr];
+	if (PlayerUnderCursor != nullptr) {
+		const Player &targetPlayer = *PlayerUnderCursor;
 		if (targetPlayer._pmode == PM_DEATH || targetPlayer._pmode == PM_QUIT || !targetPlayer.plractive
 		    || !targetPlayer.isOnActiveLevel() || targetPlayer._pHitPoints >> 6 <= 0
 		    || !IsTileLit(targetPlayer.position.tile))
-			pcursplr = -1;
+			PlayerUnderCursor = nullptr;
 	}
 }
 
@@ -91,8 +91,8 @@ void RepeatMouseAction()
 			NetSendCmdParam1(true, rangedAttack ? CMD_RATTACKID : CMD_ATTACKID, pcursmonst);
 		break;
 	case MouseActionType::AttackPlayerTarget:
-		if (pcursplr != -1 && !myPlayer.friendlyMode)
-			NetSendCmdParam1(true, rangedAttack ? CMD_RATTACKPID : CMD_ATTACKPID, pcursplr);
+		if (PlayerUnderCursor != nullptr && !myPlayer.friendlyMode)
+			NetSendCmdParam1(true, rangedAttack ? CMD_RATTACKPID : CMD_ATTACKPID, PlayerUnderCursor->getId());
 		break;
 	case MouseActionType::Spell:
 		if (ControlMode != ControlTypes::KeyboardAndMouse) {
@@ -105,7 +105,7 @@ void RepeatMouseAction()
 			CheckPlrSpell(false);
 		break;
 	case MouseActionType::SpellPlayerTarget:
-		if (pcursplr != -1 && !myPlayer.friendlyMode)
+		if (PlayerUnderCursor != nullptr && !myPlayer.friendlyMode)
 			CheckPlrSpell(false);
 		break;
 	case MouseActionType::OperateObject:

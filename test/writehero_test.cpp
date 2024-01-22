@@ -11,6 +11,7 @@
 #include "loadsave.h"
 #include "pack.h"
 #include "pfile.h"
+#include "playerdat.hpp"
 #include "utils/file_util.h"
 #include "utils/paths.h"
 
@@ -278,13 +279,13 @@ void AssertPlayer(Player &player)
 	ASSERT_EQ(player._pDexterity, 281);
 	ASSERT_EQ(player._pBaseVit, 80);
 	ASSERT_EQ(player._pVitality, 90);
-	ASSERT_EQ(player._pLevel, 50);
+	ASSERT_EQ(player.getCharacterLevel(), 50);
 	ASSERT_EQ(player._pStatPts, 0);
 	ASSERT_EQ(player._pExperience, 1583495809);
 	ASSERT_EQ(player._pGold, 0);
 	ASSERT_EQ(player._pMaxHPBase, 12864);
 	ASSERT_EQ(player._pHPBase, 12864);
-	ASSERT_EQ(player._pBaseToBlk, 20);
+	ASSERT_EQ(player.getBaseToBlock(), 20);
 	ASSERT_EQ(player._pMaxManaBase, 11104);
 	ASSERT_EQ(player._pManaBase, 11104);
 	ASSERT_EQ(player._pMemSpells, 66309357295);
@@ -323,7 +324,7 @@ void AssertPlayer(Player &player)
 	ASSERT_EQ(player._pMaxHP, 16640);
 	ASSERT_EQ(player._pMana, 14624);
 	ASSERT_EQ(player._pMaxMana, 14624);
-	ASSERT_EQ(player._pNextExper, 1310707109);
+	ASSERT_EQ(player.getNextExperienceThreshold(), 1583495809);
 	ASSERT_EQ(player._pMagResist, 75);
 	ASSERT_EQ(player._pFireResist, 16);
 	ASSERT_EQ(player._pLghtResist, 75);
@@ -373,6 +374,9 @@ TEST(Writehero, pfile_write_hero)
 	MyPlayerId = 0;
 	MyPlayer = &Players[MyPlayerId];
 
+	LoadSpellData();
+	LoadPlayerDataFiles();
+	LoadItemData();
 	_uiheroinfo info {};
 	info.heroclass = HeroClass::Rogue;
 	pfile_ui_save_create(&info);
@@ -383,8 +387,9 @@ TEST(Writehero, pfile_write_hero)
 	pfile_write_hero();
 
 	const char *path = "multi_0.sv";
-	uintmax_t size;
-	ASSERT_TRUE(GetFileSize(path, &size));
+	uintmax_t fileSize;
+	ASSERT_TRUE(GetFileSize(path, &fileSize));
+	size_t size = static_cast<size_t>(fileSize);
 	FILE *f = std::fopen(path, "rb");
 	ASSERT_TRUE(f != nullptr);
 	std::unique_ptr<char[]> data { new char[size] };
