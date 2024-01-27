@@ -41,8 +41,8 @@ jobs:
       run: |
         wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key | sudo tee /etc/apt/trusted.gpg.d/apt.llvm.org.asc
         sudo tee /etc/apt/sources.list.d/clang.list <<LIST
-        deb [arch=amd64,arm64] http://apt.llvm.org/focal/ llvm-toolchain-focal main
-        deb-src http://apt.llvm.org/focal/ llvm-toolchain-focal main
+        deb [arch=amd64,arm64] http://apt.llvm.org/focal/ llvm-toolchain-focal-18 main
+        deb-src http://apt.llvm.org/focal/ llvm-toolchain-focal-18 main
         LIST
 
     # Installs dependencies, including arm64 libraries (runs `sudo apt-get update` as part of it)
