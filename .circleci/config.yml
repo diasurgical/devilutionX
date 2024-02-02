@@ -2,7 +2,7 @@ version: 2
 jobs:
   switch:
     docker:
-      - image: devkitpro/devkita64:latest
+      - image: devkitpro/devkita64@sha256:ff45e29f2efab7f70651cee39e1d98952d0db970d78c4d71bcd94efcfb0e4e5f
     working_directory: ~/repo
     steps:
       - checkout
