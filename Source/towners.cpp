@@ -79,7 +79,7 @@ void InitSmith(Towner &towner, const TownerData &townerData)
 	};
 	towner.animOrder = { AnimOrder };
 	LoadTownerAnimations(towner, "towners\\smith\\smithn", 16, 3);
-	towner.name = _("Griswold the Blacksmith");
+	towner.name = _("Griswold the Dick Head");
 	towner.gossip = PickRandomlyAmong({ TEXT_GRISWOLD2, TEXT_GRISWOLD3, TEXT_GRISWOLD4, TEXT_GRISWOLD5, TEXT_GRISWOLD6, TEXT_GRISWOLD7, TEXT_GRISWOLD8, TEXT_GRISWOLD9, TEXT_GRISWOLD10, TEXT_GRISWOLD12, TEXT_GRISWOLD13 });
 }
 

@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <cmath>
 #include <cstdint>
+#include <map>
 #include <optional>
 #include <utility>
 
@@ -325,27 +326,103 @@ int FindTargetSlotUnderItemCursor(Point cursorPosition, Size itemSize)
 	return NUM_XY_SLOTS;
 }
 
+static constexpr std::array<item_equip_type, 55> item_loc_table {
+	ILOC_HELM,    // 0 
+	ILOC_RING,
+	ILOC_RING,
+	ILOC_AMULET,
+	ILOC_ONEHAND,
+	ILOC_ONEHAND,
+	ILOC_ARMOR, // SLOTXY_CHEST
+	ILOC_UNEQUIPABLE,
+	ILOC_UNEQUIPABLE,
+	ILOC_UNEQUIPABLE,
+	ILOC_UNEQUIPABLE,
+	ILOC_UNEQUIPABLE,
+	ILOC_UNEQUIPABLE,
+	ILOC_UNEQUIPABLE,
+	ILOC_UNEQUIPABLE,
+	ILOC_UNEQUIPABLE,
+	ILOC_UNEQUIPABLE,
+	ILOC_UNEQUIPABLE,
+	ILOC_UNEQUIPABLE,
+	ILOC_UNEQUIPABLE,
+	ILOC_UNEQUIPABLE,
+	ILOC_UNEQUIPABLE,
+	ILOC_UNEQUIPABLE,
+	ILOC_UNEQUIPABLE,
+	ILOC_UNEQUIPABLE,
+	ILOC_UNEQUIPABLE,
+	ILOC_UNEQUIPABLE,
+	ILOC_UNEQUIPABLE,
+	ILOC_UNEQUIPABLE,
+	ILOC_UNEQUIPABLE,
+	ILOC_UNEQUIPABLE,
+	ILOC_UNEQUIPABLE,
+	ILOC_UNEQUIPABLE,
+	ILOC_UNEQUIPABLE,
+	ILOC_UNEQUIPABLE,
+	ILOC_UNEQUIPABLE,
+	ILOC_UNEQUIPABLE,
+	ILOC_UNEQUIPABLE,
+	ILOC_UNEQUIPABLE,
+	ILOC_UNEQUIPABLE,
+	ILOC_UNEQUIPABLE,
+	ILOC_UNEQUIPABLE,
+	ILOC_UNEQUIPABLE,
+	ILOC_UNEQUIPABLE,
+	ILOC_UNEQUIPABLE,
+	ILOC_UNEQUIPABLE,
+	ILOC_UNEQUIPABLE,
+	ILOC_BELT,
+	ILOC_BELT,
+	ILOC_BELT,
+	ILOC_BELT,
+	ILOC_BELT,
+	ILOC_BELT,
+	ILOC_BELT,
+	ILOC_BELT
+};
+
+// TODO : Test that we haven't broken the change in appearance
+//        when equipping a new body armor
+void ChangeBodyEquipment(int slot, Player& player, item_equip_type il)
+{
+	auto iLocToInvLoc = [&slot](item_equip_type loc) {
+		// Table?
+		switch (loc) {
+		case ILOC_HELM:
+			return INVLOC_HEAD;
+		case ILOC_RING:
+			return (slot == SLOTXY_RING_LEFT ? INVLOC_RING_LEFT : INVLOC_RING_RIGHT);
+		case ILOC_AMULET:
+			return INVLOC_AMULET;
+		case ILOC_ARMOR:
+			return INVLOC_CHEST;
+		default:
+			app_fatal("Unexpected equipment type");
+		}
+	};
+	inv_body_loc body_loc = iLocToInvLoc(il);
+	Item previouslyEquippedItem = player.InvBody[slot];
+	ChangeEquipment(player, body_loc, player.HoldItem.pop(), &player == MyPlayer);
+	if (!previouslyEquippedItem.isEmpty()) {
+		player.HoldItem = previouslyEquippedItem;
+	}
+}
+
 void CheckInvPaste(Player &player, Point cursorPosition)
 {
+	
+	// (2x4) - Cape
 	Size itemSize = GetInventorySize(player.HoldItem);
 
 	int slot = FindTargetSlotUnderItemCursor(cursorPosition, itemSize);
 	if (slot == NUM_XY_SLOTS)
 		return;
 
-	item_equip_type il = ILOC_UNEQUIPABLE;
-	if (slot == SLOTXY_HEAD)
-		il = ILOC_HELM;
-	if (slot == SLOTXY_RING_LEFT || slot == SLOTXY_RING_RIGHT)
-		il = ILOC_RING;
-	if (slot == SLOTXY_AMULET)
-		il = ILOC_AMULET;
-	if (slot == SLOTXY_HAND_LEFT || slot == SLOTXY_HAND_RIGHT)
-		il = ILOC_ONEHAND;
-	if (slot == SLOTXY_CHEST)
-		il = ILOC_ARMOR;
-	if (slot >= SLOTXY_BELT_FIRST && slot <= SLOTXY_BELT_LAST)
-		il = ILOC_BELT;
+
+	item_equip_type il = (slot >= 0 && slot <= 54) ? item_loc_table[slot] : ILOC_UNEQUIPABLE;
 
 	item_equip_type desiredIl = player.GetItemLocation(player.HoldItem);
 	if (il == ILOC_ONEHAND && desiredIl == ILOC_TWOHAND)
@@ -355,6 +432,7 @@ void CheckInvPaste(Player &player, Point cursorPosition)
 	if (il == ILOC_UNEQUIPABLE) {
 		int ii = slot - SLOTXY_INV_FIRST;
 		if (player.HoldItem._itype == ItemType::Gold) {
+			// Placing a gold item into the grid somewhere???
 			if (player.InvGrid[ii] != 0) {
 				int8_t iv = player.InvGrid[ii];
 				if (iv > 0) {
@@ -394,6 +472,7 @@ void CheckInvPaste(Player &player, Point cursorPosition)
 		return;
 	}
 
+	// ???? When
 	if (IsNoneOf(il, ILOC_UNEQUIPABLE, ILOC_BELT) && !player.CanUseItem(player.HoldItem)) {
 		player.Say(HeroSpeech::ICantUseThisYet);
 		return;
@@ -405,31 +484,14 @@ void CheckInvPaste(Player &player, Point cursorPosition)
 	if (&player == MyPlayer)
 		PlaySFX(ItemInvSnds[ItemCAnimTbl[player.HoldItem._iCurs]]);
 
+	// Select the parameters that go into
+	// ChangeEquipment and add it to post switch
 	switch (il) {
 	case ILOC_HELM:
 	case ILOC_RING:
 	case ILOC_AMULET:
 	case ILOC_ARMOR: {
-		auto iLocToInvLoc = [&slot](item_equip_type loc) {
-			switch (loc) {
-			case ILOC_HELM:
-				return INVLOC_HEAD;
-			case ILOC_RING:
-				return (slot == SLOTXY_RING_LEFT ? INVLOC_RING_LEFT : INVLOC_RING_RIGHT);
-			case ILOC_AMULET:
-				return INVLOC_AMULET;
-			case ILOC_ARMOR:
-				return INVLOC_CHEST;
-			default:
-				app_fatal("Unexpected equipment type");
-			}
-		};
-		inv_body_loc slot = iLocToInvLoc(il);
-		Item previouslyEquippedItem = player.InvBody[slot];
-		ChangeEquipment(player, slot, player.HoldItem.pop(), &player == MyPlayer);
-		if (!previouslyEquippedItem.isEmpty()) {
-			player.HoldItem = previouslyEquippedItem;
-		}
+		ChangeBodyEquipment(slot, player, il);
 		break;
 	}
 	case ILOC_ONEHAND: {
