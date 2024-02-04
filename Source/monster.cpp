@@ -2293,7 +2293,7 @@ void LeoricAi(Monster &monster)
 		monster.goal = MonsterGoal::Normal;
 	}
 	if (monster.goal == MonsterGoal::Normal) {
-		if (!gbIsMultiplayer
+		if (!UseMultiplayerQuests()
 		    && ((distanceToEnemy >= 3 && v < 4 * monster.intelligence + 35) || v < 6)
 		    && LineClearMissile(monster.position.tile, monster.enemyPosition)) {
 			Point newPosition = monster.position.tile + md;
