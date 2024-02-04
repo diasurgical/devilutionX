@@ -2379,7 +2379,7 @@ size_t OnSpawnMonster(const TCmd *pCmd, const Player &player)
 	if (gbBufferMsgs == 1)
 		return sizeof(message);
 
-	const Point position { message.x, message.y };
+	const WorldTilePosition position { message.x, message.y };
 
 	size_t typeIndex = static_cast<size_t>(SDL_SwapLE16(message.typeIndex));
 	size_t monsterId = static_cast<size_t>(SDL_SwapLE16(message.monsterId));
@@ -2387,6 +2387,12 @@ size_t OnSpawnMonster(const TCmd *pCmd, const Player &player)
 	DLevel &deltaLevel = GetDeltaLevel(player);
 
 	deltaLevel.spawnedMonsters[monsterId] = { typeIndex, message.seed };
+	// Override old monster delta information
+	auto &deltaMonster = deltaLevel.monster[monsterId];
+	deltaMonster.position = position;
+	deltaMonster.hitPoints = -1;
+	deltaMonster._menemy = 0;
+	deltaMonster._mactive = 0;
 
 	if (player.isOnActiveLevel() && &player != MyPlayer)
 		InitializeSpawnedMonster(position, message.dir, typeIndex, monsterId, message.seed);
