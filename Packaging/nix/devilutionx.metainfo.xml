@@ -64,12 +64,14 @@
 		</screenshot>
 	</screenshots>
 	<releases>
-		<release version="1.5.2" date="2023-12-17">
+		<release version="1.5.2" date="2024-02-04">
 			<description>
 				<p>This release includes the following updates:</p>
 				<ul>
-					<li>Multiplayer crash fixes</li>
-					<li>Improved packet validation for items</li>
+					<li>Fix issues join games due to invalid player data</li>
+					<li>Improve rendering of Chinese/Japanese/Korean texts</li>
+					<li>Fix Hellfire items not saving their identified state</li>
+					<li>Fix stash corrupting when converting a hero between Diablo and Hellfire</li>
 					<li>Release is now built on Ubuntu 22.04.<br>Warning: This may cause DevilutionX to fail launch on systems with older <b>glibc</b> versions!</li>
 				</ul>
 				<p>Please visit the full changelog for more detailed notes</p>
