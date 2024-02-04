@@ -95,7 +95,8 @@ std::string ToZTCompliantPath(std::string_view configPath)
 	}
 
 	std::string symlinkPath = StrCat(alternateConfigPath, "\\", alternateFolderName);
-	bool symlinkExists = std::filesystem::exists(std::filesystem::u8path(symlinkPath), err);
+	bool symlinkExists = std::filesystem::exists(
+	    std::u8string_view(reinterpret_cast<const char8_t *>(symlinkPath.data()), symlinkPath.size()), err);
 	if (err) {
 		LogVerbose("Failed to determine if symlink for ZT-compliant config path exists");
 		return std::string(configPath);
@@ -103,8 +104,8 @@ std::string ToZTCompliantPath(std::string_view configPath)
 
 	if (!symlinkExists) {
 		std::filesystem::create_directory_symlink(
-		    std::filesystem::u8path(configPath),
-		    std::filesystem::u8path(symlinkPath),
+		    std::u8string_view(reinterpret_cast<const char8_t *>(configPath.data()), configPath.size()),
+		    std::u8string_view(reinterpret_cast<const char8_t *>(symlinkPath.data()), symlinkPath.size()),
 		    err);
 
 		if (err) {
