@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## DevilutionX 1.5.2
+
+### Bug Fixes
+
+#### Multiplayer
+
+- Unable to join game due to invalid player data
+
+#### Translations
+
+- Improve rendering of Chinese/Japanese/Korean texts
+
+#### Gameplay
+
+- Hellfire items not saving their identified state
+
+#### Stability / Performance / System
+
+- Amiga: Fix rendering of things behind transparent elements
+- Stash corrupting when converting a hero between Diablo and Hellfire
+- Android: Game locking up when switching sound output
+- Xbox: Game crashing unexpectedly
+- Xbox: Improve performance
+
 ## DevilutionX 1.5.1
 
 ### Features
