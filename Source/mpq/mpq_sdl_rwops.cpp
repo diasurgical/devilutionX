@@ -59,13 +59,13 @@ static OffsetType MpqFileRwSeek(struct SDL_RWops *context, OffsetType offset, in
 	OffsetType newPosition;
 	switch (whence) {
 	case RW_SEEK_SET:
-		newPosition = static_cast<size_t>(offset);
+		newPosition = offset;
 		break;
 	case RW_SEEK_CUR:
-		newPosition = static_cast<size_t>(data.position + offset);
+		newPosition = static_cast<OffsetType>(data.position + offset);
 		break;
 	case RW_SEEK_END:
-		newPosition = static_cast<size_t>(data.size + offset);
+		newPosition = static_cast<OffsetType>(data.size + offset);
 		break;
 	default:
 		return -1;
