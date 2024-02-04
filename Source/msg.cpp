@@ -757,7 +757,7 @@ void DeltaLeaveSync(uint8_t bLevel)
 	DLevel &deltaLevel = GetDeltaLevel(bLevel);
 
 	for (size_t i = 0; i < ActiveMonsterCount; i++) {
-		int ma = ActiveMonsters[i];
+		const unsigned ma = ActiveMonsters[i];
 		auto &monster = Monsters[ma];
 		if (monster.hitPoints == 0)
 			continue;

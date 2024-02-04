@@ -11,6 +11,7 @@
 
 #include <algorithm>
 #include <array>
+#include <numeric>
 #include <string_view>
 
 #include <fmt/core.h>
@@ -57,7 +58,7 @@ namespace devilution {
 CMonster LevelMonsterTypes[MaxLvlMTypes];
 size_t LevelMonsterTypeCount;
 Monster Monsters[MaxMonsters];
-int ActiveMonsters[MaxMonsters];
+unsigned ActiveMonsters[MaxMonsters];
 size_t ActiveMonsterCount;
 /** Tracks the total number of monsters killed per monster_id. */
 int MonsterKillCounts[NUM_MTYPES];
@@ -631,7 +632,7 @@ void UpdateEnemy(Monster &monster)
 		}
 	}
 	for (size_t i = 0; i < ActiveMonsterCount; i++) {
-		const int monsterId = ActiveMonsters[i];
+		const unsigned monsterId = ActiveMonsters[i];
 		Monster &otherMonster = Monsters[monsterId];
 		if (&otherMonster == &monster)
 			continue;
@@ -659,7 +660,7 @@ void UpdateEnemy(Monster &monster)
 		    || ((sameroom || !bestsameroom) && dist < bestDist)
 		    || (menemy == -1)) {
 			monster.flags |= MFLAG_TARGETS_MONSTER;
-			menemy = monsterId;
+			menemy = static_cast<int>(monsterId);
 			target = otherMonster.position.future;
 			bestDist = dist;
 			bestsameroom = sameroom;
@@ -3143,8 +3144,8 @@ void EnsureMonsterIndexIsActive(size_t monsterId)
 			continue;
 		if (index < ActiveMonsterCount)
 			return; // monster is already active
-		int oldId = ActiveMonsters[ActiveMonsterCount];
-		ActiveMonsters[ActiveMonsterCount] = static_cast<int>(monsterId);
+		const unsigned oldId = ActiveMonsters[ActiveMonsterCount];
+		ActiveMonsters[ActiveMonsterCount] = static_cast<unsigned>(monsterId);
 		ActiveMonsters[index] = oldId;
 		ActiveMonsterCount += 1;
 	}
@@ -3292,10 +3293,7 @@ void InitLevelMonsters()
 	ActiveMonsterCount = 0;
 	totalmonsters = MaxMonsters;
 
-	for (size_t i = 0; i < MaxMonsters; i++) {
-		ActiveMonsters[i] = static_cast<int>(i);
-	}
-
+	std::iota(std::begin(ActiveMonsters), std::end(ActiveMonsters), 0u);
 	uniquetrans = 0;
 }
 
@@ -4081,7 +4079,7 @@ void DeleteMonsterList()
 
 	for (size_t i = MAX_PLRS; i < ActiveMonsterCount;) {
 		if (Monsters[ActiveMonsters[i]].isInvalid) {
-			if (pcursmonst == ActiveMonsters[i]) // Unselect monster if player highlighted it
+			if (pcursmonst == static_cast<int>(ActiveMonsters[i])) // Unselect monster if player highlighted it
 				pcursmonst = -1;
 			DeleteMonster(i);
 		} else {

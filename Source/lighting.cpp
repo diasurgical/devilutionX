@@ -362,7 +362,7 @@ void MakeLightTable()
 	} else if (IsAnyOf(leveltype, DTYPE_NEST, DTYPE_CRYPT)) {
 		// Make the lava fully bright
 		for (auto &lightTable : LightTables)
-			std::iota(lightTable.begin(), lightTable.begin() + 16, 0);
+			std::iota(lightTable.begin(), lightTable.begin() + 16, uint8_t { 0 });
 		LightTables[15][0] = 0;
 		std::fill_n(LightTables[15].begin() + 1, 15, 1);
 	}
@@ -438,7 +438,7 @@ void InitLighting()
 	DisableLighting = false;
 #endif
 
-	std::iota(ActiveLights.begin(), ActiveLights.end(), 0);
+	std::iota(ActiveLights.begin(), ActiveLights.end(), uint8_t { 0 });
 	VisionActive = {};
 	TransList = {};
 }
