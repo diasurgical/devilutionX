@@ -1002,7 +1002,7 @@ void LoadDroppedItems(LoadHelper &file, size_t savedItemCount)
 	file.Skip<uint8_t>(MAXITEMS * 2);
 
 	// Reset ActiveItems, the Items array will be populated from the start
-	std::iota(ActiveItems, ActiveItems + MAXITEMS, 0);
+	std::iota(ActiveItems, ActiveItems + MAXITEMS, uint8_t { 0 });
 	ActiveItemCount = 0;
 	// Clear dItem so we can populate valid drop locations
 	memset(dItem, 0, sizeof(dItem));
@@ -2171,8 +2171,8 @@ void LoadGame(bool firstflag)
 	// skip ahead for vanilla save compatibility (Related to bugfix where MonsterKillCounts[MaxMonsters] was changed to MonsterKillCounts[NUM_MTYPES]
 	file.Skip(4 * (MaxMonsters - NUM_MTYPES));
 	if (leveltype != DTYPE_TOWN) {
-		for (int &monsterId : ActiveMonsters)
-			monsterId = file.NextBE<int32_t>();
+		for (unsigned &monsterId : ActiveMonsters)
+			monsterId = file.NextBE<uint32_t>();
 		for (size_t i = 0; i < ActiveMonsterCount; i++)
 			LoadMonster(&file, Monsters[ActiveMonsters[i]]);
 		for (size_t i = 0; i < ActiveMonsterCount; i++)
@@ -2435,8 +2435,8 @@ void SaveGameData(SaveWriter &saveWriter)
 	file.Skip(4 * (MaxMonsters - NUM_MTYPES));
 
 	if (leveltype != DTYPE_TOWN) {
-		for (int monsterId : ActiveMonsters)
-			file.WriteBE<int32_t>(monsterId);
+		for (unsigned monsterId : ActiveMonsters)
+			file.WriteBE<uint32_t>(monsterId);
 		for (size_t i = 0; i < ActiveMonsterCount; i++)
 			SaveMonster(&file, Monsters[ActiveMonsters[i]]);
 		// Write ActiveMissiles
@@ -2572,8 +2572,8 @@ void SaveLevel(SaveWriter &saveWriter)
 	file.WriteBE<int32_t>(ActiveObjectCount);
 
 	if (leveltype != DTYPE_TOWN) {
-		for (int monsterId : ActiveMonsters)
-			file.WriteBE<int32_t>(monsterId);
+		for (unsigned monsterId : ActiveMonsters)
+			file.WriteBE<uint32_t>(monsterId);
 		for (size_t i = 0; i < ActiveMonsterCount; i++)
 			SaveMonster(&file, Monsters[ActiveMonsters[i]]);
 		for (int objectId : ActiveObjects)
@@ -2646,8 +2646,8 @@ void LoadLevel()
 	ActiveObjectCount = file.NextBE<int32_t>();
 
 	if (leveltype != DTYPE_TOWN) {
-		for (int &monsterId : ActiveMonsters)
-			monsterId = file.NextBE<int32_t>();
+		for (unsigned &monsterId : ActiveMonsters)
+			monsterId = file.NextBE<uint32_t>();
 		for (size_t i = 0; i < ActiveMonsterCount; i++) {
 			Monster &monster = Monsters[ActiveMonsters[i]];
 			LoadMonster(&file, monster);
