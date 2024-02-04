@@ -31,6 +31,26 @@ jobs:
       with:
         fetch-depth: 0
 
+    - name: Add clang repo
+      run: |
+        wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key | sudo tee /etc/apt/trusted.gpg.d/apt.llvm.org.asc
+        sudo tee /etc/apt/sources.list.d/clang.list <<LIST
+        deb [arch=amd64,arm64] http://apt.llvm.org/jammy/ llvm-toolchain-jammy-18 main
+        deb-src http://apt.llvm.org/jammy/ llvm-toolchain-jammy-18 main
+        LIST
+
+    - name: Install clang-18
+      run: |
+        sudo apt-get update && \
+        sudo apt-get install -yq --no-install-recommends clang-18 lld-18 libc++-18-dev \
+          libc++1-18 libc++abi1-18 && \
+        sudo update-alternatives --install \
+          /usr/bin/clang++ clang++ /usr/bin/clang++-18 200 && \
+        sudo update-alternatives --install \
+          /usr/bin/clang clang /usr/bin/clang-18 200 \
+          --slave /usr/bin/lld lld /usr/bin/lld-18 \
+          --slave /usr/bin/ld.lld ld.lld /usr/bin/ld.lld-18
+
     - name: Create Build Environment
       run: >
         sudo apt-get update &&
