@@ -15,9 +15,6 @@ on:  # yamllint disable-line rule:truthy
       - 'docs/**'
   release:
     types: [published]
-    paths-ignore:
-      - '*.md'
-      - 'docs/**'
   workflow_dispatch:
 
 concurrency:
@@ -37,11 +34,8 @@ jobs:
       - name: Install dependencies
         run: |
           apk --no-cache add \
-            bash \
-            cmake \
             gettext \
             git \
-            pkgconfig \
             samurai
                
 
