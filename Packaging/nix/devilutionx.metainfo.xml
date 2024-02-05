@@ -64,7 +64,21 @@
 		</screenshot>
 	</screenshots>
 	<releases>
-		<release version="1.5.1" date="2023-xx-xx">
+		<release version="1.5.2" date="2024-02-04">
+			<description>
+				<p>This release includes the following updates:</p>
+				<ul>
+					<li>Fix issues with joining games due to invalid player data</li>
+					<li>Improve rendering of Chinese/Japanese/Korean texts</li>
+					<li>Fix Hellfire items not saving their identified state</li>
+					<li>Fix stash corrupting when converting a hero between Diablo and Hellfire</li>
+					<li>Release is now built on Ubuntu 22.04.<br>Warning: This may cause DevilutionX to fail launch on systems with older <b>glibc</b> versions!</li>
+				</ul>
+				<p>Please visit the full changelog for more detailed notes</p>
+			</description>
+			<url>https://github.com/diasurgical/devilutionX/releases/tag/1.5.2</url>
+		</release>
+		<release version="1.5.1" date="2023-09-02">
 			<description>
 				<p>This is a primarily bugfix release, which includes the following updates:</p>
 				<ul>
