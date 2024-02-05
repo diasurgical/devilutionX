@@ -68,7 +68,7 @@
 			<description>
 				<p>This release includes the following updates:</p>
 				<ul>
-					<li>Fix issues join games due to invalid player data</li>
+					<li>Fix issues with joining games due to invalid player data</li>
 					<li>Improve rendering of Chinese/Japanese/Korean texts</li>
 					<li>Fix Hellfire items not saving their identified state</li>
 					<li>Fix stash corrupting when converting a hero between Diablo and Hellfire</li>
