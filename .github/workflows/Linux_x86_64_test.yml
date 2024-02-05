@@ -48,6 +48,6 @@ jobs:
       run: cd build && ctest --output-on-failure
 
     - name: Upload results
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v4
       with:
         gcov: true
