@@ -35,7 +35,15 @@ jobs:
           fetch-depth: 0
 
       - name: Install dependencies
-        run: apk --no-cache add git cmake ninja bash pkgconfig gettext
+        run: |
+          apk --no-cache add \
+            bash \
+            cmake \
+            gettext \
+            git \
+            pkgconfig \
+            samurai
+               
 
       - name: Configure CMake
         run: |
