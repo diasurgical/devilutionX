@@ -25,9 +25,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Stability / Performance / System
 
-- Amiga: Fix rendering of things behind transparent elements
-- Stash corrupting when converting a hero between Diablo and Hellfire
+- Amiga: Incorrect rendering of things behind transparent elements
 - Android: Game locking up when switching sound output
+- Fedora: Unable to locate BZIP2 
+- Manjaro: Unable to locate libsodium
+- Stash corrupting when converting a hero between Diablo and Hellfire
 - Xbox: Game crashing unexpectedly
 - Xbox: Improve performance
 
