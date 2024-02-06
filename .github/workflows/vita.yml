@@ -33,7 +33,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          apk --no-cache add \
+          apk add \
             gettext \
             git \
             samurai
@@ -43,7 +43,7 @@ jobs:
         run: |
           cmake -S. -Bbuild -GNinja \
             -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-            -DCMAKE_TOOLCHAIN_FILE=${VITASDK}/share/vita.toolchain.cmake \
+            -DCMAKE_TOOLCHAIN_FILE=${VITASDK}/share/vita.toolchain.cmake
 
       - name: Build DevilutionX
         run: cmake --build build

@@ -34,13 +34,14 @@ jobs:
       - name: Install dependencies
         run: |
           apt-get update && \
-          apt-get install -y \
+          apt-get install -y --no-install-recommends --no-install-suggests \
             gettext
 
       - name: Configure CMake
         run: |
-          /opt/devkitpro/portlibs/switch/bin/aarch64-none-elf-cmake -S. -Bbuild \
-            -DCMAKE_BUILD_TYPE=RelWithDebInfo
+          cmake -S. -Bbuild \
+            -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+            -DCMAKE_TOOLCHAIN_FILE=/opt/devkitpro/cmake/Switch.cmake
 
       - name: Build DevilutionX
         run: cmake --build build -j$(nproc)
