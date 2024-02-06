@@ -57,7 +57,7 @@ jobs:
         if: ${{ github.event_name == 'release' && !env.ACT }}
         uses: svenstaro/upload-release-action@v2
         with:
+          asset_name: devilutionx-switch.nro
           file: ./build/devilutionx.nro
-          file_glob: true
           overwrite: true
 ...

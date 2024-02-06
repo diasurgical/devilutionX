@@ -68,15 +68,15 @@ jobs:
         if: ${{ github.event_name == 'release' && !env.ACT }}
         uses: svenstaro/upload-release-action@v2
         with:
+          asset_name: devilutionx-3ds.3dsx
           file: ./build/devilutionx.3dsx
-          file_glob: true
           overwrite: true
 
       - name: Update Release cia
         if: ${{ github.event_name == 'release' && !env.ACT }}
         uses: svenstaro/upload-release-action@v2
         with:
+          asset_name: devilutionx-3ds.cia
           file: ./build/devilutionx.cia
-          file_glob: true
           overwrite: true
 ...
