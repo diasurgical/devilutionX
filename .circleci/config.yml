@@ -32,7 +32,4 @@ workflows:
   version: 2
   testflow:
     jobs:
-      - switch
-      - 3ds
       - amigaos-m68k
-      - vita
