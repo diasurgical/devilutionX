@@ -72,7 +72,6 @@
 					<li>Improve rendering of Chinese/Japanese/Korean texts</li>
 					<li>Fix Hellfire items not saving their identified state</li>
 					<li>Fix stash corrupting when converting a hero between Diablo and Hellfire</li>
-					<li>Release is now built on Ubuntu 22.04.<br>Warning: This may cause DevilutionX to fail launch on systems with older <b>glibc</b> versions!</li>
 				</ul>
 				<p>Please visit the full changelog for more detailed notes</p>
 			</description>
