@@ -23,7 +23,7 @@ concurrency:
 
 jobs:
   build:
-    runs-on: macos-14
+    runs-on: ubuntu-latest
     container: devkitpro/devkita64:latest
     steps:
       - name: Checkout
