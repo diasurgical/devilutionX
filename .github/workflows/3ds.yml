@@ -62,7 +62,7 @@ jobs:
         if: ${{ !env.ACT }}
         uses: actions/upload-artifact@v4
         with:
-          name: devilutionx.3dsx/cia
+          name: devilutionx.3dsx and devilutionx.cia
           path: |
             ./build/devilutionx.3dsx
             ./build/devilutionx.cia
