@@ -58,14 +58,19 @@ jobs:
       - name: Build DevilutionX
         run: cmake --build build
 
-      - name: Upload Package
+      - name: Upload 3dsx Package
         if: ${{ !env.ACT }}
         uses: actions/upload-artifact@v4
         with:
-          name: devilutionx.3dsx and devilutionx.cia
-          path: |
-            ./build/devilutionx.3dsx
-            ./build/devilutionx.cia
+          name: devilutionx.3dsx
+          path: ./build/devilutionx.3dsx
+
+      - name: Upload cia Package
+        if: ${{ !env.ACT }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: devilutionx.cia
+          path: ./build/devilutionx.cia
 
       - name: Update Release 3dsx
         if: ${{ github.event_name == 'release' && !env.ACT }}
