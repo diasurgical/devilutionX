@@ -1,6 +1,7 @@
+---
 name: Windows 9x MinGW
 
-on:
+on:  # yamllint disable-line rule:truthy
   push:
     branches:
       - master
@@ -8,15 +9,12 @@ on:
       - '*.md'
       - 'docs/**'
   pull_request:
-    types: [ opened, synchronize ]
+    types: [opened, synchronize]
     paths-ignore:
       - '*.md'
       - 'docs/**'
   release:
     types: [published]
-    paths-ignore:
-      - '*.md'
-      - 'docs/**'
   workflow_dispatch:
 
 concurrency:
@@ -25,42 +23,60 @@ concurrency:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    - name: Create Build Environment
-      run: >
-        sudo apt-get update &&
-        sudo apt-get install -y cmake gcc-mingw-w64-i686 g++-mingw-w64-i686 mingw-w64-tools libz-mingw-w64-dev gettext dpkg-dev wget git sudo smpq &&
-        sudo rm /usr/i686-w64-mingw32/lib/libz.dll.a &&
-        sudo Packaging/windows/mingw9x-prep.sh
+      - name: Create Build Environment
+        run: |
+          apt-get update
+          apt-get install -y \
+            cmake \
+            gcc-mingw-w64-i686 \
+            g++-mingw-w64-i686 \
+            mingw-w64-tools \
+            libz-mingw-w64-dev \
+            gettext \
+            dpkg-dev \
+            wget \
+            git \
+            smpq
+          rm /usr/i686-w64-mingw32/lib/libz.dll.a
+          Packaging/windows/mingw9x-prep.sh
 
-    - name: Configure CMake
-      shell: bash
-      working-directory: ${{github.workspace}}
-      run: cmake -S. -Bbuild-windows9x -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF -DCPACK=ON -DCMAKE_TOOLCHAIN_FILE=../CMake/platforms/mingw9x.toolchain.cmake -DTARGET_PLATORM=windows9x
+      - name: Configure CMake
+        shell: bash
+        working-directory: ${{github.workspace}}
+        run: |
+          cmake \
+            -S . \
+            -B build-windows9x \
+            -D CMAKE_BUILD_TYPE=Release \
+            -D BUILD_TESTING=OFF \
+            -D CPACK=ON \
+            -D CMAKE_TOOLCHAIN_FILE=../CMake/platforms/mingw9x.toolchain.cmake \
+            -D TARGET_PLATORM=windows9x
 
-    - name: Build
-      working-directory: ${{github.workspace}}
-      shell: bash
-      run: |
-        cmake --build build-windows9x -j $(nproc) --target package
-        mv build-windows9x/devilutionx.zip devilutionx-win9x.zip
+      - name: Build
+        working-directory: ${{github.workspace}}
+        shell: bash
+        run: |
+          cmake --build build-windows9x -j $(nproc) --target package
+          mv build-windows9x/devilutionx.zip devilutionx-win9x.zip
 
-    - name: Upload-Package
-      if: ${{ !env.ACT }}
-      uses: actions/upload-artifact@v4
-      with:
-        path: devilutionx-win9x.zip
+      - name: Upload-Package
+        if: ${{ !env.ACT }}
+        uses: actions/upload-artifact@v4
+        with:
+          path: devilutionx-win9x.zip
 
-    - name: Update Release
-      if: ${{ github.event_name == 'release' && !env.ACT }}
-      uses: svenstaro/upload-release-action@v2
-      with:
-        file: devilutionx-win9x.zip
-        overwrite: true
-
+      - name: Update Release
+        if: ${{ github.event_name == 'release' && !env.ACT }}
+        uses: svenstaro/upload-release-action@v2
+        with:
+          file: devilutionx-win9x.zip
+          overwrite: true
+...

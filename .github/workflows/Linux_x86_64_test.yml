@@ -1,6 +1,7 @@
+---
 name: Linux x64 Tests
 
-on:
+on:  # yamllint disable-line rule:truthy
   push:
     branches:
       - master
@@ -8,7 +9,7 @@ on:
       - '*.md'
       - 'docs/**'
   pull_request:
-    types: [ opened, synchronize ]
+    types: [opened, synchronize]
     paths-ignore:
       - '*.md'
       - 'docs/**'
@@ -20,34 +21,45 @@ concurrency:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
-
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    - name: Install dependencies
-      run: |
-        sudo apt-get update -y
-        sudo apt-get install -y cmake curl g++ git lcov libgtest-dev libgmock-dev libfmt-dev libsdl2-dev libsodium-dev libpng-dev libbz2-dev wget
-    - name: Cache CMake build folder
-      uses: actions/cache@v4
-      with:
-        path: build
-        key: ${{ github.workflow }}-v1-${{ github.sha }}
-        restore-keys: ${{ github.workflow }}-v1-
+      - name: Install dependencies
+        run: |
+          apt-get update -y
+          apt-get install -y \
+            cmake \
+            curl \
+            g++ \
+            git \
+            lcov \
+            libgtest-dev \
+            libgmock-dev \
+            libfmt-dev \
+            libsdl2-dev \
+            libsodium-dev \
+            libpng-dev \
+            libbz2-dev \
+            wget
+      - name: Cache CMake build folder
+        uses: actions/cache@v4
+        with:
+          path: build
+          key: ${{ github.workflow }}-v1-${{ github.sha }}
+          restore-keys: ${{ github.workflow }}-v1-
 
-    - name: Build tests
-      run: |
-        cmake -S. -Bbuild -DENABLE_CODECOVERAGE=ON
-        wget -nc https://github.com/diasurgical/devilutionx-assets/releases/download/v2/spawn.mpq -P build
-        cmake --build build -j $(nproc)
+      - name: Build tests
+        run: |
+          cmake -S. -Bbuild -DENABLE_CODECOVERAGE=ON
+          wget -nc https://github.com/diasurgical/devilutionx-assets/releases/download/v2/spawn.mpq -P build
+          cmake --build build -j $(nproc)
 
-    - name: Run tests
-      run: cd build && ctest --output-on-failure
+      - name: Run tests
+        run: cd build && ctest --output-on-failure
 
-    - name: Upload results
-      uses: codecov/codecov-action@v4
-      with:
-        gcov: true
+      - name: Upload results
+        uses: codecov/codecov-action@v4
+...

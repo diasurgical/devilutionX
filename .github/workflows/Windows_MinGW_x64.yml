@@ -1,6 +1,7 @@
+---
 name: Windows MinGW x64
 
-on:
+on:  # yamllint disable-line rule:truthy
   push:
     branches:
       - master
@@ -8,10 +9,11 @@ on:
       - '*.md'
       - 'docs/**'
   pull_request:
-    types: [ opened, synchronize ]
+    types: [opened, synchronize]
     paths-ignore:
       - '*.md'
       - 'docs/**'
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -19,65 +21,92 @@ concurrency:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    - name: Create Build Environment
-      run: >
-        sudo apt-get update &&
-        sudo apt-get install -y cmake gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64 pkg-config-mingw-w64-x86-64 libz-mingw-w64-dev gettext dpkg-dev wget git sudo smpq &&
-        sudo rm /usr/x86_64-w64-mingw32/lib/libz.dll.a &&
-        sudo Packaging/windows/mingw-prep64.sh
+      - name: Create Build Environment
+        run: |
+          apt-get update
+          apt-get install -y \
+            cmake \
+            gcc-mingw-w64-x86-64 \
+            g++-mingw-w64-x86-64 \
+            pkg-config-mingw-w64-x86-64 \
+            libz-mingw-w64-dev \
+            gettext \
+            dpkg-dev \
+            wget \
+            git \
+            smpq
+          rm /usr/x86_64-w64-mingw32/lib/libz.dll.a
+          Packaging/windows/mingw-prep64.sh
 
-    - name: Configure CMake
-      shell: bash
-      working-directory: ${{github.workspace}}
-      run: cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_TESTING=OFF -DCPACK=ON -DCMAKE_TOOLCHAIN_FILE=../CMake/platforms/mingwcc64.toolchain.cmake -DDEVILUTIONX_SYSTEM_BZIP2=OFF -DDEVILUTIONX_STATIC_LIBSODIUM=ON -DDISCORD_INTEGRATION=ON -DSCREEN_READER_INTEGRATION=ON
+      - name: Configure CMake
+        shell: bash
+        working-directory: ${{github.workspace}}
+        run: |
+          cmake \
+            -S . \
+            -B build \
+            -D CMAKE_BUILD_TYPE=RelWithDebInfo \
+            -D BUILD_TESTING=OFF \
+            -D CPACK=ON \
+            -D CMAKE_TOOLCHAIN_FILE=../CMake/platforms/mingwcc64.toolchain.cmake \
+            -D DEVILUTIONX_SYSTEM_BZIP2=OFF \
+            -D DEVILUTIONX_STATIC_LIBSODIUM=ON \
+            -D DISCORD_INTEGRATION=ON \
+            -D SCREEN_READER_INTEGRATION=ON
 
-    - name: Build
-      working-directory: ${{github.workspace}}
-      shell: bash
-      run: cmake --build build -j $(nproc) --target package
+      - name: Build
+        working-directory: ${{github.workspace}}
+        shell: bash
+        run: cmake --build build -j $(nproc) --target package
 
-    - name: Upload-Package
-      if: ${{ !env.ACT }}
-      uses: actions/upload-artifact@v4
-      with:
-        name: devilutionx_x64.zip
-        path: build/devilutionx.zip
+      - name: Upload-Package
+        if: ${{ !env.ACT }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: devilutionx_x64.zip
+          path: build/devilutionx.zip
 
-    - name: Move artifacts to new folder and split exe and other data into two folders
-      if: ${{ !env.ACT && github.ref == 'refs/heads/master' && github.event_name != 'pull_request' && github.repository == 'diasurgical/devilutionX'}}
-      working-directory: ${{github.workspace}}
-      shell: bash
-      run: mkdir artifacts_dir && unzip build/devilutionx.zip -d artifacts_dir && mkdir artifacts_dir/exe_dir && mv artifacts_dir/devilutionx/devilutionx.exe artifacts_dir/exe_dir && zip -m artifacts_dir/exe_dir/build.zip artifacts_dir/exe_dir/devilutionx.exe
+      - name: Move artifacts to new folder and split exe and other data into two folders
+        if: ${{ !env.ACT && github.ref == 'refs/heads/master' && github.event_name != 'pull_request' && github.repository == 'diasurgical/devilutionX'}}
+        working-directory: ${{github.workspace}}
+        shell: bash
+        run: |
+          mkdir artifacts_dir
+          unzip build/devilutionx.zip -d artifacts_dir
+          mkdir artifacts_dir/exe_dir
+          mv artifacts_dir/devilutionx/devilutionx.exe artifacts_dir/exe_dir
+          zip -m artifacts_dir/exe_dir/build.zip artifacts_dir/exe_dir/devilutionx.exe
 
-    - name: Pushes DLLs and devilutionx.mpq to another repository
-      if: ${{ !env.ACT && github.ref == 'refs/heads/master' && github.event_name != 'pull_request' && github.repository == 'diasurgical/devilutionX' }}
-      uses: cpina/github-action-push-to-another-repository@main
-      env:
-        SSH_DEPLOY_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
-      with:
-        source-directory: artifacts_dir/devilutionx/
-        destination-github-username: 'artifacts-storage'
-        destination-repository-name: 'devilutionx-artifacts'
-        target-directory: data
-        commit-message: "[DATA] ${{ github.event.head_commit.message }}"
-        target-branch: master
+      - name: Pushes DLLs and devilutionx.mpq to another repository
+        if: ${{ !env.ACT && github.ref == 'refs/heads/master' && github.event_name != 'pull_request' && github.repository == 'diasurgical/devilutionX' }}
+        uses: cpina/github-action-push-to-another-repository@main
+        env:
+          SSH_DEPLOY_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
+        with:
+          source-directory: artifacts_dir/devilutionx/
+          destination-github-username: 'artifacts-storage'
+          destination-repository-name: 'devilutionx-artifacts'
+          target-directory: data
+          commit-message: "[DATA] ${{ github.event.head_commit.message }}"
+          target-branch: master
 
-    - name: Pushes exe to another repository
-      if: ${{ !env.ACT && github.ref == 'refs/heads/master' && github.event_name != 'pull_request' && github.repository == 'diasurgical/devilutionX' }}
-      uses: cpina/github-action-push-to-another-repository@main
-      env:
-        SSH_DEPLOY_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
-      with:
-        source-directory: artifacts_dir/exe_dir
-        destination-github-username: 'artifacts-storage'
-        destination-repository-name: 'devilutionx-artifacts'
-        target-directory: ${{ github.sha }}
-        commit-message: "[EXE] ${{ github.event.head_commit.message }}"
-        target-branch: master
+      - name: Pushes exe to another repository
+        if: ${{ !env.ACT && github.ref == 'refs/heads/master' && github.event_name != 'pull_request' && github.repository == 'diasurgical/devilutionX' }}
+        uses: cpina/github-action-push-to-another-repository@main
+        env:
+          SSH_DEPLOY_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
+        with:
+          source-directory: artifacts_dir/exe_dir
+          destination-github-username: 'artifacts-storage'
+          destination-repository-name: 'devilutionx-artifacts'
+          target-directory: ${{ github.sha }}
+          commit-message: "[EXE] ${{ github.event.head_commit.message }}"
+          target-branch: master
+...

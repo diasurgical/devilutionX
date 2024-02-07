@@ -1,3 +1,4 @@
+---
 name: Bug report
 description: Create a report to help us improve
 title: "[Issue Report]: "
@@ -69,3 +70,4 @@ body:
     attributes:
       label: Additional context
       placeholder: Any other context about the problem here (screenshots, videos, code blocks, etc.).
+...

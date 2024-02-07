@@ -1,6 +1,7 @@
+---
 name: iOS
 
-on:
+on:  # yamllint disable-line rule:truthy
   push:
     branches:
       - master
@@ -14,9 +15,7 @@ on:
       - 'docs/**'
   release:
     types: [published]
-    paths-ignore:
-      - '*.md'
-      - 'docs/**'
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -31,47 +30,54 @@ jobs:
     runs-on: macos-latest
 
     steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    - name: Cache CMake build folder
-      uses: actions/cache@v4
-      with:
-        path: build
-        key: ${{ github.workflow }}-v3-${{ github.sha }}
-        restore-keys: ${{ github.workflow }}-v3-
+      - name: Cache CMake build folder
+        uses: actions/cache@v4
+        with:
+          path: build
+          key: ${{ github.workflow }}-v3-${{ github.sha }}
+          restore-keys: ${{ github.workflow }}-v3-
 
-    - name: Configure CMake
-      # Use a bash shell so we can use the same syntax for environment variable
-      # access regardless of the host operating system
-      shell: bash
-      working-directory: ${{github.workspace}}
-      run: cmake -S. -Bbuild -DCMAKE_TOOLCHAIN_FILE=../CMake/platforms/ios.toolchain.cmake  -DENABLE_BITCODE=0 -DPLATFORM=OS64
+      - name: Configure CMake
+        # Use a bash shell so we can use the same syntax for environment variable
+        # access regardless of the host operating system
+        shell: bash
+        working-directory: ${{github.workspace}}
+        run: |
+          cmake \
+            -S . \
+            -B build \
+            -D CMAKE_TOOLCHAIN_FILE=../CMake/platforms/ios.toolchain.cmake \
+            -D ENABLE_BITCODE=0 \
+            -D PLATFORM=OS64
 
-    - name: Build
-      working-directory: ${{github.workspace}}
-      shell: bash
-      run: >
-        cmake --build build -j $(sysctl -n hw.physicalcpu) --config Release &&
-        cd build &&
-        mkdir Payload &&
-        mv devilutionx.app Payload &&
-        zip -r devilutionx-iOS.ipa Payload
+      - name: Build
+        working-directory: ${{github.workspace}}
+        shell: bash
+        run: >
+          cmake --build build -j $(sysctl -n hw.physicalcpu) --config Release &&
+          cd build &&
+          mkdir Payload &&
+          mv devilutionx.app Payload &&
+          zip -r devilutionx-iOS.ipa Payload
 
-    - name: Upload-Package
-      if: ${{ !env.ACT }}
-      uses: actions/upload-artifact@v4
-      with:
-        name: devilutionx-iOS.ipa
-        path: build/devilutionx-iOS.ipa
+      - name: Upload-Package
+        if: ${{ !env.ACT }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: devilutionx-iOS.ipa
+          path: build/devilutionx-iOS.ipa
 
-    - name: Update Release
-      if: ${{ github.event_name == 'release' && !env.ACT }}
-      uses: svenstaro/upload-release-action@v2
-      with:
-        file: build/devilutionx-iOS.ipa
-        overwrite: true
+      - name: Update Release
+        if: ${{ github.event_name == 'release' && !env.ACT }}
+        uses: svenstaro/upload-release-action@v2
+        with:
+          file: build/devilutionx-iOS.ipa
+          overwrite: true
 
-    - name: Clean up artifacts
-      run: rm -rf build/Payload build/*.ipa
+      - name: Clean up artifacts
+        run: rm -rf build/Payload build/*.ipa
+...

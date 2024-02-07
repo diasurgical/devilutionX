@@ -1,6 +1,7 @@
+---
 name: Validate translations
 
-on:
+on:  # yamllint disable-line rule:truthy
   push:
     branches:
       - master
@@ -8,10 +9,11 @@ on:
       - '*.md'
       - 'docs/**'
   pull_request:
-    types: [ opened, synchronize ]
+    types: [opened, synchronize]
     paths-ignore:
       - '*.md'
       - 'docs/**'
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -21,15 +23,18 @@ jobs:
   fmt-check:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    - name: Install polib
-      run: sudo apt-get update && sudo apt-get install -y python3-polib
+      - name: Install polib
+        run: |
+          apt-get update && \
+          apt-get install -y python3-polib
 
-    - name: Check
-      working-directory: ${{github.workspace}}
-      shell: bash
-      run: python3 tools/validate_translations.py
+      - name: Check
+        working-directory: ${{github.workspace}}
+        shell: bash
+        run: python3 tools/validate_translations.py
+...

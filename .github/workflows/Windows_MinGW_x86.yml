@@ -1,6 +1,7 @@
+---
 name: Windows MinGW x86
 
-on:
+on:  # yamllint disable-line rule:truthy
   push:
     branches:
       - master
@@ -8,10 +9,11 @@ on:
       - '*.md'
       - 'docs/**'
   pull_request:
-    types: [ opened, synchronize ]
+    types: [opened, synchronize]
     paths-ignore:
       - '*.md'
       - 'docs/**'
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -19,33 +21,55 @@ concurrency:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    - name: Create Build Environment
-      run: >
-        sudo apt update &&
-        sudo apt install -y cmake gcc-mingw-w64-i686 g++-mingw-w64-i686 pkg-config-mingw-w64-i686 libz-mingw-w64-dev gettext dpkg-dev wget git sudo smpq &&
-        sudo rm /usr/i686-w64-mingw32/lib/libz.dll.a &&
-        sudo Packaging/windows/mingw-prep.sh
+      - name: Create Build Environment
+        run: |
+          apt-get update
+          apt-get install -y \
+            cmake \
+            gcc-mingw-w64-i686 \
+            g++-mingw-w64-i686 \
+            pkg-config-mingw-w64-i686 \
+            libz-mingw-w64-dev \
+            gettext \
+            dpkg-dev \
+            wget \
+            git \
+            smpq
+          rm /usr/i686-w64-mingw32/lib/libz.dll.a
+          Packaging/windows/mingw-prep.sh
 
-    - name: Configure CMake
-      shell: bash
-      working-directory: ${{github.workspace}}
-      run: cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_TESTING=OFF -DCPACK=ON -DCMAKE_TOOLCHAIN_FILE=../CMake/platforms/mingwcc.toolchain.cmake -DDEVILUTIONX_SYSTEM_BZIP2=OFF -DDEVILUTIONX_STATIC_LIBSODIUM=ON -DDISCORD_INTEGRATION=ON -DSCREEN_READER_INTEGRATION=ON
+      - name: Configure CMake
+        shell: bash
+        working-directory: ${{github.workspace}}
+        run: |
+          cmake \
+            -S . \
+            -B build \
+            -D CMAKE_BUILD_TYPE=RelWithDebInfo \
+            -D BUILD_TESTING=OFF \
+            -D CPACK=ON \
+            -D CMAKE_TOOLCHAIN_FILE=../CMake/platforms/mingwcc.toolchain.cmake \
+            -D DEVILUTIONX_SYSTEM_BZIP2=OFF \
+            -D DEVILUTIONX_STATIC_LIBSODIUM=ON \
+            -D DISCORD_INTEGRATION=ON \
+            -D SCREEN_READER_INTEGRATION=ON
 
-    - name: Build
-      working-directory: ${{github.workspace}}
-      shell: bash
-      run: cmake --build build -j $(nproc) --target package
+      - name: Build
+        working-directory: ${{github.workspace}}
+        shell: bash
+        run: cmake --build build -j $(nproc) --target package
 
-    - name: Upload-Package
-      if: ${{ !env.ACT }}
-      uses: actions/upload-artifact@v4
-      with:
-        name: devilutionx_x86.zip
-        path: build/devilutionx.zip
+      - name: Upload-Package
+        if: ${{ !env.ACT }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: devilutionx_x86.zip
+          path: build/devilutionx.zip
+...
