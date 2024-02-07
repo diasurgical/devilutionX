@@ -24,7 +24,7 @@ concurrency:
 jobs:
   build:
     runs-on: macos-14
-    container: devkitpro/devkita64:20240120
+    container: devkitpro/devkita64:latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -39,9 +39,11 @@ jobs:
 
       - name: Configure CMake
         run: |
-          cmake -S. -Bbuild \
-            -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-            -DCMAKE_TOOLCHAIN_FILE=/opt/devkitpro/cmake/Switch.cmake
+          cmake \
+            -S . \
+            -B build \
+            -D CMAKE_BUILD_TYPE=RelWithDebInfo \
+            -D CMAKE_TOOLCHAIN_FILE=/opt/devkitpro/cmake/Switch.cmake
 
       - name: Build DevilutionX
         run: cmake --build build -j$(nproc)

@@ -23,7 +23,7 @@ concurrency:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     container: vitasdk/vitasdk:latest
     steps:
       - name: Checkout
@@ -37,11 +37,13 @@ jobs:
             gettext \
             git \
             samurai
-               
 
       - name: Configure CMake
         run: |
-          cmake -S. -Bbuild -GNinja \
+          cmake \
+            -S . \
+            -B build \
+            -G Ninja \
             -DCMAKE_BUILD_TYPE=RelWithDebInfo \
             -DCMAKE_TOOLCHAIN_FILE=${VITASDK}/share/vita.toolchain.cmake
 

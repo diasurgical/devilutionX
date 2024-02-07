@@ -23,7 +23,7 @@ concurrency:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     container: devkitpro/devkitarm:latest
     steps:
       - name: Checkout
@@ -33,8 +33,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          apt-get update && \
-          apt-get install -y --no-install-recommends --no-install-suggests \
+          apt-get update
+          apt-get install -y \
             ffmpeg \
             gettext
 
@@ -48,7 +48,10 @@ jobs:
 
       - name: Configure CMake
         run: |
-          cmake -S. -Bbuild -GNinja \
+          cmake \
+            -S . \
+            -B build \
+            -G Ninja \
             -DCMAKE_BUILD_TYPE=RelWithDebInfo \
             -DCMAKE_TOOLCHAIN_FILE=/opt/devkitpro/cmake/3DS.cmake
 

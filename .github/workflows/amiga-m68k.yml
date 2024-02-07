@@ -23,7 +23,7 @@ concurrency:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     container: amigadev/crosstools:m68k-amigaos-gcc10
     steps:
       - name: Checkout
@@ -36,10 +36,13 @@ jobs:
 
       - name: Configure CMake
         run: |
-          cmake -S. -Bbuild -GNinja \
-            -DM68K_COMMON="-s -fbbb=- -ffast-math -O2" \
-            -DM68K_CPU=68040 \
-            -DM68K_FPU=hard
+          cmake \
+            -S . \
+            -B build \
+            -G Ninja \
+            -D M68K_COMMON="-s -fbbb=- -ffast-math -O2" \
+            -D M68K_CPU=68040 \
+            -D M68K_FPU=hard
 
       - name: Build DevilutionX
         run: cmake --build build
