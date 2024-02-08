@@ -1,0 +1,65 @@
+---
+name: Nintendo Switch
+
+on:  # yamllint disable-line rule:truthy
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - '*.md'
+      - 'docs/**'
+  pull_request:
+    types: [opened, synchronize]
+    paths-ignore:
+      - '*.md'
+      - 'docs/**'
+  release:
+    types: [published]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: devkitpro/devkita64:latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install dependencies
+        run: |
+          apt-get update && \
+          apt-get install -y --no-install-recommends --no-install-suggests \
+            gettext
+
+      - name: Configure CMake
+        run: |
+          cmake \
+            -S . \
+            -B build \
+            -D CMAKE_BUILD_TYPE=RelWithDebInfo \
+            -D CMAKE_TOOLCHAIN_FILE=/opt/devkitpro/cmake/Switch.cmake
+
+      - name: Build DevilutionX
+        run: cmake --build build -j$(nproc)
+
+      - name: Upload Package
+        if: ${{ !env.ACT }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: devilutionx.nro
+          path: ./build/devilutionx.nro
+
+      - name: Update Release
+        if: ${{ github.event_name == 'release' && !env.ACT }}
+        uses: svenstaro/upload-release-action@v2
+        with:
+          asset_name: devilutionx-switch.nro
+          file: ./build/devilutionx.nro
+          overwrite: true
+...
