@@ -1,0 +1,64 @@
+---
+name: Amiga M68K
+
+on:  # yamllint disable-line rule:truthy
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - '*.md'
+      - 'docs/**'
+  pull_request:
+    types: [opened, synchronize]
+    paths-ignore:
+      - '*.md'
+      - 'docs/**'
+  release:
+    types: [published]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: amigadev/crosstools:m68k-amigaos-gcc10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run prep.sh script
+        run: ./Packaging/amiga/prep.sh
+
+      - name: Configure CMake
+        run: |
+          cmake \
+            -S . \
+            -B build \
+            -G Ninja \
+            -D M68K_COMMON="-s -fbbb=- -ffast-math -O2" \
+            -D M68K_CPU=68040 \
+            -D M68K_FPU=hard
+
+      - name: Build DevilutionX
+        run: cmake --build build
+
+      - name: Upload Package
+        if: ${{ !env.ACT }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: devilutionx_m68k
+          path: ./build/devilutionx
+
+      - name: Update Release
+        if: ${{ github.event_name == 'release' && !env.ACT }}
+        uses: svenstaro/upload-release-action@v2
+        with:
+          asset_name: devilutionx-amiga-m68k
+          file: ./build/devilutionx
+          overwrite: true
+...
