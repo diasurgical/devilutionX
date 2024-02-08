@@ -421,6 +421,7 @@ if(NINTENDO_SWITCH)
     VERSION "${PROJECT_VERSION}"
   )
 
+  file(MAKE_DIRECTORY "${DEVILUTIONX_ASSETS_OUTPUT_DIRECTORY}")
   nx_create_nro(${BIN_TARGET}
     NACP  ${BIN_TARGET}.nacp
     ICON  "${PROJECT_SOURCE_DIR}/Packaging/switch/icon.jpg"
