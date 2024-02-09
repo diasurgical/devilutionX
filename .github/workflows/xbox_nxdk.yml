@@ -1,6 +1,7 @@
+---
 name: Xbox
 
-on:
+on:  # yamllint disable-line rule:truthy
   push:
     branches:
       - master
@@ -14,9 +15,7 @@ on:
       - 'docs/**'
   release:
     types: [published]
-    paths-ignore:
-      - '*.md'
-      - 'docs/**'
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -25,52 +24,68 @@ concurrency:
 jobs:
   xbox:
     # `ubuntu-latest` is currently 20.04 but we require a newer clang.
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     env:
       NXDK_DIR: /opt/nxdk
     steps:
-    - name: Install APT packages
-      run: sudo apt-get update && sudo apt-get install -y clang llvm lld bison flex cmake git gettext
+      - name: Install APT packages
+        run: |
+          apt-get update && \
+          apt-get install -y \
+            clang \
+            llvm \
+            lld \
+            bison \
+            flex \
+            cmake \
+            git \
+            gettext
 
-    - name: Clone nxdk Repo
-      shell: bash
-      run: git clone --recursive --depth 1 https://github.com/XboxDev/nxdk.git "$NXDK_DIR"
+      - name: Clone nxdk Repo
+        shell: bash
+        run: git clone --recursive --depth 1 https://github.com/XboxDev/nxdk.git "$NXDK_DIR"
 
-    - name: Build nxdk
-      shell: bash
-      run: PATH="${NXDK_DIR}/bin:$PATH" make -j $(nproc) -C "$NXDK_DIR" NXDK_ONLY=1 CFLAGS=-O2 CXXFLAGS=-O2 all cxbe
+      - name: Build nxdk
+        shell: bash
+        run: PATH="${NXDK_DIR}/bin:$PATH" make -j $(nproc) -C "$NXDK_DIR" NXDK_ONLY=1 CFLAGS=-O2 CXXFLAGS=-O2 all cxbe
 
-    - name: Checkout
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    - name: Configure CMake
-      working-directory: ${{github.workspace}}
-      env:
-        CMAKE_BUILD_TYPE: ${{github.event_name == 'release' && 'Release' || 'RelWithDebInfo'}}
-      run: cmake -S. -Bbuild-xbox -DCMAKE_BUILD_TYPE=${{env.CMAKE_BUILD_TYPE}} -DCMAKE_TOOLCHAIN_FILE=/opt/nxdk/share/toolchain-nxdk.cmake
+      - name: Configure CMake
+        working-directory: ${{github.workspace}}
+        env:
+          CMAKE_BUILD_TYPE: ${{github.event_name == 'release' && 'Release' || 'RelWithDebInfo'}}
+        run: |
+          cmake \
+            -S . \
+            -B build-xbox \
+            -D CMAKE_BUILD_TYPE=${{env.CMAKE_BUILD_TYPE}} \
+            -D CMAKE_TOOLCHAIN_FILE=/opt/nxdk/share/toolchain-nxdk.cmake
 
-    - name: Build
-      working-directory: ${{github.workspace}}
-      shell: bash
-      run: cmake --build build-xbox -j $(nproc) --target nxdk_xbe
+      - name: Build
+        working-directory: ${{github.workspace}}
+        shell: bash
+        run: cmake --build build-xbox -j $(nproc) --target nxdk_xbe
 
-    - name: Upload-Package
-      if: ${{ !env.ACT }}
-      uses: actions/upload-artifact@v4
-      with:
-        name: devilutionx-xbox
-        path: build-xbox/pkg/
+      - name: Upload-Package
+        if: ${{ !env.ACT }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: devilutionx-xbox
+          path: build-xbox/pkg/
 
-    - name: Package Release
-      if: ${{ github.event_name == 'release' && !env.ACT }}
-      working-directory: ${{github.workspace}}/build-xbox/pkg
-      run: zip -r ../../devilutionx-xbox.zip .
+      - name: Package Release
+        if: ${{ github.event_name == 'release' && !env.ACT }}
+        working-directory: ${{github.workspace}}/build-xbox/pkg
+        run: zip -r ../../devilutionx-xbox.zip .
 
-    - name: Update Release
-      if: ${{ github.event_name == 'release' && !env.ACT }}
-      uses: svenstaro/upload-release-action@v2
-      with:
-        file: devilutionx-xbox.zip
-        overwrite: true
+      - name: Update Release
+        if: ${{ github.event_name == 'release' && !env.ACT }}
+        uses: svenstaro/upload-release-action@v2
+        with:
+          file: devilutionx-xbox.zip
+          overwrite: true
+...

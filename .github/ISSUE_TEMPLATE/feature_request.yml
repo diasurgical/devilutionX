@@ -1,3 +1,4 @@
+---
 name: Feature Request
 description: Request a feature or improvement.
 title: "[Feature Request]: "
@@ -21,3 +22,4 @@ body:
       placeholder: A clear and concise description of the desired feature/change.
     validations:
       required: true
+...

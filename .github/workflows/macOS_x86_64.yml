@@ -1,6 +1,7 @@
+---
 name: macOS x86_64
 
-on:
+on:  # yamllint disable-line rule:truthy
   push:
     branches:
       - master
@@ -14,9 +15,6 @@ on:
       - 'docs/**'
   release:
     types: [published]
-    paths-ignore:
-      - '*.md'
-      - 'docs/**'
   workflow_dispatch:
 
 concurrency:
@@ -27,37 +25,43 @@ jobs:
   build:
     runs-on: macos-latest
     steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    - name: Create Build Environment
-      run: brew bundle install
+      - name: Create Build Environment
+        run: brew bundle install
 
-    - name: Cache CMake build folder
-      uses: actions/cache@v4
-      with:
-        path: build
-        key: ${{ github.workflow }}-v1-${{ github.sha }}
-        restore-keys: ${{ github.workflow }}-v1-
+      - name: Cache CMake build folder
+        uses: actions/cache@v4
+        with:
+          path: build
+          key: ${{ github.workflow }}-v1-${{ github.sha }}
+          restore-keys: ${{ github.workflow }}-v1-
 
-    - name: Build
-      working-directory: ${{github.workspace}}
-      shell: bash
-      env:
-        CMAKE_BUILD_TYPE: ${{github.event_name == 'release' && 'Release' || 'RelWithDebInfo'}}
-      run: |
-        cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=${{env.CMAKE_BUILD_TYPE}} -DBUILD_TESTING=OFF \
-          -DMACOSX_STANDALONE_APP_BUNDLE=ON -DDISCORD_INTEGRATION=ON && \
-        cmake --build build -j $(sysctl -n hw.physicalcpu) --target package && \
-        mv build/devilutionx.dmg build/devilutionx-x86_64-macOS.dmg
+      - name: Build
+        working-directory: ${{github.workspace}}
+        shell: bash
+        env:
+          CMAKE_BUILD_TYPE: ${{github.event_name == 'release' && 'Release' || 'RelWithDebInfo'}}
+        run: |
+          cmake \
+            -S . \
+            -B build \
+            -D CMAKE_BUILD_TYPE=${{env.CMAKE_BUILD_TYPE}} \
+            -D BUILD_TESTING=OFF \
+            -D MACOSX_STANDALONE_APP_BUNDLE=ON \
+            -D DISCORD_INTEGRATION=ON
+          cmake --build build -j $(sysctl -n hw.physicalcpu) --target package
+          mv build/devilutionx.dmg build/devilutionx-x86_64-macOS.dmg
 
-    - name: Upload-Package
-      if: ${{ !env.ACT }}
-      uses: actions/upload-artifact@v4
-      with:
-        name: devilutionx-x86_64-macOS.dmg
-        path: build/devilutionx-x86_64-macOS.dmg
+      - name: Upload-Package
+        if: ${{ !env.ACT }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: devilutionx-x86_64-macOS.dmg
+          path: build/devilutionx-x86_64-macOS.dmg
 
-    - name: Clean up artifacts
-      run: rm -rf build/_CPack_Packages build/*.dmg
+      - name: Clean up artifacts
+        run: rm -rf build/_CPack_Packages build/*.dmg
+...

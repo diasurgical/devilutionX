@@ -1,6 +1,7 @@
+---
 name: Xbox One / Series
 
-on:
+on:  # yamllint disable-line rule:truthy
   push:
     branches:
       - master
@@ -14,9 +15,7 @@ on:
       - 'docs/**'
   release:
     types: [published]
-    paths-ignore:
-      - '*.md'
-      - 'docs/**'
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -26,55 +25,56 @@ jobs:
   build:
     runs-on: windows-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    - name: ccache
-      uses: hendrikmuhs/ccache-action@v1.2
+      - name: ccache
+        uses: hendrikmuhs/ccache-action@v1.2
 
-    - name: Add msbuild to PATH
-      uses: microsoft/setup-msbuild@v1.3
-      with:
-        msbuild-architecture: x64
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.3
+        with:
+          msbuild-architecture: x64
 
-    - name: Configure git
-      shell: cmd
-      run: |
-        git config --global core.filemode false
-        git config --global core.autocrlf false
+      - name: Configure git
+        shell: cmd
+        run: |
+          git config --global core.filemode false
+          git config --global core.autocrlf false
 
-    - name: Build
-      shell: cmd
-      run: |
-        cd ${{ github.workspace }}\Packaging\xbox-one
-        build.bat
+      - name: Build
+        shell: cmd
+        run: |
+          cd ${{ github.workspace }}\Packaging\xbox-one
+          build.bat
 
-    - name: Copy artifacts to package directory
-      run: >
-        New-Item -Path build\uwp-project -Name pkg -ItemType Directory -Force &&
-        Get-Childitem -Path build\uwp-project\AppxPackages, build\uwp-project\Release
-        -Include Microsoft.VCLibs.x64.*.appx, devilutionX_*_x64.appx -File -Recurse |
-        Copy-Item -Destination build\uwp-project\pkg\
+      - name: Copy artifacts to package directory
+        run: >
+          New-Item -Path build\uwp-project -Name pkg -ItemType Directory -Force &&
+          Get-Childitem -Path build\uwp-project\AppxPackages, build\uwp-project\Release
+          -Include Microsoft.VCLibs.x64.*.appx, devilutionX_*_x64.appx -File -Recurse |
+          Copy-Item -Destination build\uwp-project\pkg\
 
-    - name: Upload-Package
-      if: ${{ !env.ACT }}
-      uses: actions/upload-artifact@v4
-      with:
-        name: devilutionx-xbox-one-series
-        if-no-files-found: error
-        path: |
-          build/uwp-project/pkg/
+      - name: Upload-Package
+        if: ${{ !env.ACT }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: devilutionx-xbox-one-series
+          if-no-files-found: error
+          path: |
+            build/uwp-project/pkg/
 
-    - name: Package Release
-      if: ${{ github.event_name == 'release' && !env.ACT }}
-      working-directory: ${{github.workspace}}/build/uwp-project/pkg/
-      run: 7z a -r ../../../devilutionx-xbox-one-series.zip .
+      - name: Package Release
+        if: ${{ github.event_name == 'release' && !env.ACT }}
+        working-directory: ${{github.workspace}}/build/uwp-project/pkg/
+        run: 7z a -r ../../../devilutionx-xbox-one-series.zip .
 
-    - name: Update Release
-      if: ${{ github.event_name == 'release' && !env.ACT }}
-      uses: svenstaro/upload-release-action@v2
-      with:
-        file: devilutionx-xbox-one-series.zip
-        overwrite: true
+      - name: Update Release
+        if: ${{ github.event_name == 'release' && !env.ACT }}
+        uses: svenstaro/upload-release-action@v2
+        with:
+          file: devilutionx-xbox-one-series.zip
+          overwrite: true
+...

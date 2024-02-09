@@ -1,6 +1,7 @@
+---
 name: Android
 
-on:
+on:  # yamllint disable-line rule:truthy
   push:
     branches:
       - master
@@ -8,10 +9,11 @@ on:
       - '*.md'
       - 'docs/**'
   pull_request:
-    types: [ opened, synchronize ]
+    types: [opened, synchronize]
     paths-ignore:
       - '*.md'
       - 'docs/**'
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -21,39 +23,43 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Install gettext
-      run: sudo apt-get update && sudo apt-get install -y gettext
+      - name: Install gettext
+        run: |
+          apt-get update
+          apt-get install -y \
+            gettext
 
-    - name: Checkout
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    - name: set up JDK 17
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'adopt'
-        cache: gradle
+      - name: set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'adopt'
+          cache: gradle
 
-    - name: Cache CMake build folder
-      uses: actions/cache@v4
-      with:
-        path: android-project/app/.cxx
-        key: ${{ github.workflow }}-v4-${{ github.sha }}
-        restore-keys: ${{ github.workflow }}-v4-
+      - name: Cache CMake build folder
+        uses: actions/cache@v4
+        with:
+          path: android-project/app/.cxx
+          key: ${{ github.workflow }}-v4-${{ github.sha }}
+          restore-keys: ${{ github.workflow }}-v4-
 
-    - name: Build
-      working-directory: ${{github.workspace}}
-      shell: bash
-      run: cd android-project && ./gradlew assembleDebug
+      - name: Build
+        working-directory: ${{github.workspace}}
+        shell: bash
+        run: cd android-project && ./gradlew assembleDebug
 
-    - name: Upload-Package
-      if: ${{ !env.ACT }}
-      uses: actions/upload-artifact@v4
-      with:
-        name: devilutionx-debug.apk
-        path: android-project/app/build/outputs/apk/debug/app-debug.apk
+      - name: Upload-Package
+        if: ${{ !env.ACT }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: devilutionx-debug.apk
+          path: android-project/app/build/outputs/apk/debug/app-debug.apk
 
-    - name: Clean up artifacts
-      run: rm -rf android-project/app/build/outputs
+      - name: Clean up artifacts
+        run: rm -rf android-project/app/build/outputs
+...

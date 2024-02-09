@@ -1,5 +1,7 @@
+---
 name: Delete cache for a closed Pull Request
-on:
+
+on:  # yamllint disable-line rule:truthy
   pull_request:
     types:
       - closed
@@ -31,3 +33,4 @@ jobs:
           echo "Done"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+...

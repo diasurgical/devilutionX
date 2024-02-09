@@ -1,6 +1,7 @@
+---
 name: clang-format check
 
-on:
+on:  # yamllint disable-line rule:truthy
   push:
     branches:
       - master
@@ -8,7 +9,7 @@ on:
       - '*.md'
       - 'docs/**'
   pull_request:
-    types: [ opened, synchronize ]
+    types: [opened, synchronize]
     paths-ignore:
       - '*.md'
       - 'docs/**'
@@ -21,21 +22,22 @@ jobs:
   formatting-check:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    - name: Formatting Check (Source)
-      uses: jidicula/clang-format-action@v4.11.0
-      with:
-        clang-format-version: '13'
-        check-path: 'Source'
-        fallback-style: 'webkit'
+      - name: Formatting Check (Source)
+        uses: jidicula/clang-format-action@v4.11.0
+        with:
+          clang-format-version: '13'
+          check-path: 'Source'
+          fallback-style: 'webkit'
 
-    - name: Formatting Check (test)
-      uses: jidicula/clang-format-action@v4.11.0
-      with:
-        clang-format-version: '13'
-        check-path: 'test'
-        fallback-style: 'webkit'
+      - name: Formatting Check (test)
+        uses: jidicula/clang-format-action@v4.11.0
+        with:
+          clang-format-version: '13'
+          check-path: 'test'
+          fallback-style: 'webkit'
+...
