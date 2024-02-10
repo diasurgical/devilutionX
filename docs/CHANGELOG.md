@@ -27,8 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Amiga: Incorrect rendering of things behind transparent elements
 - Android: Game locking up when switching sound output
-- Fedora: Unable to locate BZIP2 
-- Manjaro: Unable to locate libsodium
+- Linux: Statically link BZIP2 and libsodium on x86_64
 - Stash corrupting when converting a hero between Diablo and Hellfire
 - Xbox: Game crashing unexpectedly
 - Xbox: Improve performance
