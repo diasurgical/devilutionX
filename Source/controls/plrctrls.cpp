@@ -1015,7 +1015,7 @@ void InventoryMove(AxisDirection dir)
 	}
 
 	if (mousePos == MousePosition) {
-		return; // Avoid wobeling when scalled
+		return; // Avoid wobbling when scaled
 	}
 
 	SetCursorPos(mousePos);

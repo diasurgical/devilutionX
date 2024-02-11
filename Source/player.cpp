@@ -2691,7 +2691,7 @@ StartPlayerKill(Player &player, DeathReason deathReason)
 
 	player.Say(HeroSpeech::AuughUh);
 
-	// Are the current animations item dependend?
+	// Are the current animations item dependent?
 	if (player._pgfxnum != 0) {
 		if (dropItems) {
 			// Ensure death animation show the player without weapon and armor, because they drop on death
