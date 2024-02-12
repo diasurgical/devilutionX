@@ -40,7 +40,7 @@ jobs:
       uses: lukka/get-cmake@latest
 
     - name: Restore or setup vcpkg
-      uses: lukka/run-vcpkg@v11.4
+      uses: lukka/run-vcpkg@v11.5
       with:
         vcpkgGitCommitId: '16ee2ecb31788c336ace8bb14c21801efb6836e4'
 
