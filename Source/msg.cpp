@@ -1016,6 +1016,8 @@ bool IsPItemValid(const TCmdPItem &message, const Player &player)
 			ValidateField(creationFlags, IsTownItemValid(creationFlags));
 		else if ((creationFlags & CF_USEFUL) == CF_UPER15)
 			ValidateFields(creationFlags, dwBuff, IsUniqueMonsterItemValid(creationFlags, dwBuff));
+		else if ((dwBuff & CF_HELLFIRE) != 0 && AllItemsList[idx].iMiscId == IMISC_BOOK)
+			return RecreateHellfireSpellBook(player, message.item);
 		else
 			ValidateFields(creationFlags, dwBuff, IsDungeonItemValid(creationFlags, dwBuff));
 	}

@@ -180,10 +180,10 @@ bool IsDungeonItemValid(uint16_t iCreateInfo, uint32_t dwBuff)
 	return level <= (diabloMaxDungeonLevel * 2);
 }
 
-bool RecreateHellfireSpellBook(const Player &player, const ItemNetPack &packedItem, Item &item)
+bool RecreateHellfireSpellBook(const Player &player, const TItem &packedItem, Item *item)
 {
 	Item spellBook {};
-	RecreateItem(player, packedItem.item, spellBook);
+	RecreateItem(player, packedItem, spellBook);
 
 	// Hellfire uses the spell book level when generating items via CreateSpellBook()
 	int spellBookLevel = GetSpellBookLevel(spellBook._iSpell);
@@ -193,12 +193,14 @@ bool RecreateHellfireSpellBook(const Player &player, const ItemNetPack &packedIt
 
 	if (spellBookLevel >= 1 && (spellBook._iCreateInfo & CF_LEVEL) == spellBookLevel * 2) {
 		// The ilvl matches the result for a spell book drop, so we confirm the item is legitimate
-		item = spellBook;
+		if (item != nullptr)
+			*item = spellBook;
 		return true;
 	}
 
 	ValidateFields(spellBook._iCreateInfo, spellBook.dwBuff, IsDungeonItemValid(spellBook._iCreateInfo, spellBook.dwBuff));
-	item = spellBook;
+	if (item != nullptr)
+		*item = spellBook;
 	return true;
 }
 
@@ -531,7 +533,7 @@ bool UnPackNetItem(const Player &player, const ItemNetPack &packedItem, Item &it
 	else if ((creationFlags & CF_USEFUL) == CF_UPER15)
 		ValidateFields(creationFlags, dwBuff, IsUniqueMonsterItemValid(creationFlags, dwBuff));
 	else if ((dwBuff & CF_HELLFIRE) != 0 && AllItemsList[idx].iMiscId == IMISC_BOOK)
-		return RecreateHellfireSpellBook(player, packedItem, item);
+		return RecreateHellfireSpellBook(player, packedItem.item, &item);
 	else
 		ValidateFields(creationFlags, dwBuff, IsDungeonItemValid(creationFlags, dwBuff));
 
