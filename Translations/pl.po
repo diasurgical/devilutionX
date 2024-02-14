@@ -2660,7 +2660,7 @@ msgstr "Przywraca 20%"
 
 #: Source/items.cpp:1720
 msgid "item's durability"
-msgstr "Wytrzymałości przedmiotu"
+msgstr "wytrzymałości przedmiotu"
 
 #: Source/items.cpp:1723
 msgid "increases an item's"
@@ -3222,11 +3222,11 @@ msgstr "Mała wyt., {:+d}% obrażeń"
 
 #: Source/items.cpp:3865
 msgid "extra AC vs demons"
-msgstr "Ekstra pancerz przeciwko Demonom"
+msgstr "Ekstra pancerz przeciwko demonom"
 
 #: Source/items.cpp:3867
 msgid "extra AC vs undead"
-msgstr "Ekstra pancerz przeciwko Nieumarłym"
+msgstr "Ekstra pancerz przeciwko nieumarłym"
 
 #: Source/items.cpp:3869
 msgid "50% Mana moved to Health"
