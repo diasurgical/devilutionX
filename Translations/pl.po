@@ -5192,7 +5192,7 @@ msgstr "Niezniszczalność, "
 
 #: Source/stores.cpp:323
 msgid "No required attributes"
-msgstr "Brak wymagów atrybutów"
+msgstr "Brak wymogów atrybutów"
 
 #: Source/stores.cpp:381 Source/stores.cpp:1029 Source/stores.cpp:1248
 msgid "Welcome to the"
@@ -9172,7 +9172,7 @@ msgstr "Kowal Griswold"
 
 #: Source/towners.cpp:104
 msgid "Ogden the Tavern owner"
-msgstr "Właściciel Gospody Ogden"
+msgstr "Gospodarz Ogden"
 
 #: Source/towners.cpp:113
 msgid "Wounded Townsman"
