@@ -840,8 +840,8 @@ void DrawMapEllipse(const Surface &out, Point from, int radius, uint8_t colorInd
 	from.x -= radius;
 
 	// Initial point
-	out.SetPixel({ from.x, from.y + b }, colorIndex);
-	out.SetPixel({ from.x, from.y - b }, colorIndex);
+	SetMapPixel(out, { from.x, from.y + b }, colorIndex);
+	SetMapPixel(out, { from.x, from.y - b }, colorIndex);
 
 	// Initialize the parameters
 	int p1 = (b * b) - (a * a * b) + (a * a) / 4;
@@ -856,10 +856,10 @@ void DrawMapEllipse(const Surface &out, Point from, int radius, uint8_t colorInd
 			p1 += (2 * b * b * x) - (2 * a * a * y) + (b * b);
 		}
 
-		out.SetPixel({ from.x + x, from.y + y }, colorIndex);
-		out.SetPixel({ from.x - x, from.y + y }, colorIndex);
-		out.SetPixel({ from.x + x, from.y - y }, colorIndex);
-		out.SetPixel({ from.x - x, from.y - y }, colorIndex);
+		SetMapPixel(out, { from.x + x, from.y + y }, colorIndex);
+		SetMapPixel(out, { from.x - x, from.y + y }, colorIndex);
+		SetMapPixel(out, { from.x + x, from.y - y }, colorIndex);
+		SetMapPixel(out, { from.x - x, from.y - y }, colorIndex);
 	}
 
 	// Initialize the second parameter for Region 2
@@ -875,10 +875,10 @@ void DrawMapEllipse(const Surface &out, Point from, int radius, uint8_t colorInd
 			p2 += (2 * b * b * x) - (2 * a * a * y) + (a * a);
 		}
 
-		out.SetPixel({ from.x + x, from.y + y }, colorIndex);
-		out.SetPixel({ from.x - x, from.y + y }, colorIndex);
-		out.SetPixel({ from.x + x, from.y - y }, colorIndex);
-		out.SetPixel({ from.x - x, from.y - y }, colorIndex);
+		SetMapPixel(out, { from.x + x, from.y + y }, colorIndex);
+		SetMapPixel(out, { from.x - x, from.y + y }, colorIndex);
+		SetMapPixel(out, { from.x + x, from.y - y }, colorIndex);
+		SetMapPixel(out, { from.x - x, from.y - y }, colorIndex);
 	}
 }
 
