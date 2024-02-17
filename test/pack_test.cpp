@@ -2,6 +2,7 @@
 
 #include <gtest/gtest.h>
 
+#include "cursor.h"
 #include "monstdat.h"
 #include "pack.h"
 #include "playerdat.hpp"
@@ -879,6 +880,7 @@ public:
 		Players.resize(2);
 		MyPlayer = &Players[0];
 		gbIsMultiplayer = true;
+		gbIsSpawn = false;
 
 		PlayerPack testPack {
 			0, 0, -1, 9, 0, 2, 61, 24, 0, 0, "MP-Warrior", 0, 120, 25, 60, 60, 37, 0, 85670061, 3921, 13568, 13568, 3904, 3904,
@@ -954,6 +956,15 @@ public:
 
 	static void SetUpTestSuite()
 	{
+		LoadCoreArchives();
+		LoadGameArchives();
+
+		// The tests need spawn.mpq or diabdat.mpq
+		// Please provide them so that the tests can run successfully
+		ASSERT_TRUE(HaveSpawn() || HaveDiabdat());
+
+		gbIsHellfire = false;
+		InitCursor();
 		LoadSpellData();
 		LoadPlayerDataFiles();
 		LoadMonsterData();

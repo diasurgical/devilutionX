@@ -18,6 +18,14 @@ public:
 
 	static void SetUpTestSuite()
 	{
+		LoadCoreArchives();
+		LoadGameArchives();
+
+		// The tests need spawn.mpq or diabdat.mpq
+		// Please provide them so that the tests can run successfully
+		ASSERT_TRUE(HaveSpawn() || HaveDiabdat());
+
+		InitCursor();
 		LoadSpellData();
 		LoadItemData();
 	}
@@ -287,26 +295,40 @@ TEST_F(InvTest, RemoveCurrentSpellScrollFirstMatchFromBelt)
 	EXPECT_TRUE(MyPlayer->SpdList[3].isEmpty());
 }
 
-TEST_F(InvTest, ItemSize)
+TEST_F(InvTest, ItemSizeRuneOfStone)
 {
-	Item testItem {};
-
 	// Inventory sizes are currently determined by examining the sprite size
 	// rune of stone and grey suit are adjacent in the sprite list so provide an easy check for off-by-one errors
+	if (!gbIsHellfire) return;
+	Item testItem {};
 	InitializeItem(testItem, IDI_RUNEOFSTONE);
 	EXPECT_EQ(GetInventorySize(testItem), Size(1, 1));
+}
+
+TEST_F(InvTest, ItemSizeGreySuit)
+{
+	if (!gbIsHellfire) return;
+	Item testItem {};
 	InitializeItem(testItem, IDI_GREYSUIT);
 	EXPECT_EQ(GetInventorySize(testItem), Size(2, 2));
+}
 
-	// auric amulet is the first used hellfire sprite, but there's multiple unused sprites before it in the list.
+TEST_F(InvTest, ItemSizeAuric)
+{
+	// Auric amulet is the first used hellfire sprite, but there's multiple unused sprites before it in the list.
 	// unfortunately they're the same size so this is less valuable as a test.
+	if (!gbIsHellfire) return;
+	Item testItem {};
 	InitializeItem(testItem, IDI_AURIC);
 	EXPECT_EQ(GetInventorySize(testItem), Size(1, 1));
+}
 
-	// gold is the last diablo sprite, off by ones will end up loading a 1x1 unused sprite from hellfire but maybe
-	//  this'll segfault if we make a mistake in the future?
-	InitializeItem(testItem, IDI_GOLD);
-	EXPECT_EQ(GetInventorySize(testItem), Size(1, 1));
+TEST_F(InvTest, ItemSizeLastDiabloItem)
+{
+	// Short battle bow is the last diablo sprite, off by ones will end up loading a 1x1 unused sprite from hellfire,.
+	Item testItem {};
+	InitializeItem(testItem, IDI_SHORT_BATTLE_BOW);
+	EXPECT_EQ(GetInventorySize(testItem), Size(2, 3));
 }
 
 } // namespace

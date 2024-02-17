@@ -175,7 +175,6 @@ tl::expected<item_cursor_graphic, std::string> ParseItemCursorGraphic(std::strin
 	if (value == "SHORT_WAR_BOW") return ICURS_SHORT_WAR_BOW;
 	if (value == "COMPOSITE_STAFF") return ICURS_COMPOSITE_STAFF;
 	if (value == "SHORT_BATTLE_BOW") return ICURS_SHORT_BATTLE_BOW;
-	if (value == "GOLD") return ICURS_GOLD;
 	if (value == "AURIC_AMULET") return ICURS_AURIC_AMULET;
 	if (value == "RUNE_BOMB") return ICURS_RUNE_BOMB;
 	if (value == "THEODORE") return ICURS_THEODORE;

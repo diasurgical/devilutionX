@@ -173,6 +173,12 @@ set(devilutionx_assets
   ui_art/mainmenuw.clx
   ui_art/supportw.clx)
 
+if(NOT UNPACKED_MPQS)
+  list(APPEND devilutionx_assets
+    data/inv/objcurs-widths.txt
+    data/inv/objcurs2-widths.txt)
+endif()
+
 if(NOT USE_SDL1 AND NOT VITA)
   list(APPEND devilutionx_assets
     ui_art/button.png
