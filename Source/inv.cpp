@@ -2154,8 +2154,7 @@ int CalculateGold(Player &player)
 
 Size GetInventorySize(const Item &item)
 {
-	int itemSizeIndex = item._iCurs + CURSOR_FIRSTITEM;
-	auto size = GetInvItemSize(itemSizeIndex);
+	auto size = GetInvItemSize(item._iCurs + CURSOR_FIRSTITEM);
 
 	return { size.width / InventorySlotSizeInPixels.width, size.height / InventorySlotSizeInPixels.height };
 }

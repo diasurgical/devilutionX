@@ -71,6 +71,7 @@ enum _item_indexes : int16_t { // TODO defines all indexes in AllItemsList
 	IDI_BOOK3,
 	IDI_BOOK4,
 	IDI_BARBARIAN = 139,
+	IDI_SHORT_BATTLE_BOW = 148,
 	IDI_RUNEOFSTONE = 165,
 	IDI_SORCERER_DIABLO,
 	IDI_ARENAPOT,
@@ -217,7 +218,7 @@ enum item_cursor_graphic : uint8_t {
 	ICURS_SHORT_WAR_BOW               = 165,
 	ICURS_COMPOSITE_STAFF             = 166,
 	ICURS_SHORT_BATTLE_BOW            = 167,
-	ICURS_GOLD                        = 168,
+	// Hellfire items:
 	ICURS_AURIC_AMULET                = 180,
 	ICURS_RUNE_BOMB                   = 187,
 	ICURS_THEODORE                    = 188,

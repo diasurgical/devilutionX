@@ -1,5 +1,5 @@
 id	dropRate	class	equipType	cursorGraphic	itemType	uniqueBaseItem	name	shortName	minMonsterLevel	durability	minDamage	maxDamage	minArmor	maxArmor	minStrength	minMagic	minDexterity	specialEffects	miscId	spell	usable	value
-IDI_GOLD	Regular	Gold	Unequippable	GOLD	Gold	NONE	Gold		1	0	0	0	0	0	0	0	0		NONE	Null	true	0
+IDI_GOLD	Regular	Gold	Unequippable	GOLD_SMALL	Gold	NONE	Gold		1	0	0	0	0	0	0	0	0		NONE	Null	true	0
 IDI_WARRIOR	Never	Weapon	One-handed	SHORT_SWORD	Sword	NONE	Short Sword		2	20	2	6	0	0	18	0	0		NONE	Null	false	50
 IDI_WARRSHLD	Never	Armor	One-handed	BUCKLER	Shield	NONE	Buckler		2	10	0	0	3	3	0	0	0		NONE	Null	false	50
 IDI_WARRCLUB	Never	Weapon	One-handed	CLUB	Mace	SPIKCLUB	Club		1	20	1	6	0	0	0	0	0		NONE	Null	false	20
@@ -146,7 +146,7 @@ IDI_GREYSUIT	Never	Quest	Unequippable	GREY_SUIT	Misc	NONE	Grey Suit		0	0	0	0	0	0
 	Double	Weapon	Two-handed	HUNTERS_BOW	Bow	HUNTBOW	Hunter's Bow	Bow	3	40	2	5	0	0	20	0	35		NONE	Null	false	350
 	Double	Weapon	Two-handed	HUNTERS_BOW	Bow	LONGBOW	Long Bow	Bow	5	35	1	6	0	0	25	0	30		NONE	Null	false	250
 	Double	Weapon	Two-handed	COMPOSITE_BOW	Bow	COMPBOW	Composite Bow	Bow	7	45	3	6	0	0	25	0	40		NONE	Null	false	600
-	Double	Weapon	Two-handed	SHORT_BATTLE_BOW	Bow	NONE	Short Battle Bow	Bow	9	45	3	7	0	0	30	0	50		NONE	Null	false	750
+IDI_SHORT_BATTLE_BOW	Double	Weapon	Two-handed	SHORT_BATTLE_BOW	Bow	NONE	Short Battle Bow	Bow	9	45	3	7	0	0	30	0	50		NONE	Null	false	750
 	Double	Weapon	Two-handed	LONG_BATTLE_BOW	Bow	BATTLEBOW	Long Battle Bow	Bow	11	50	1	10	0	0	30	0	60		NONE	Null	false	1000
 	Double	Weapon	Two-handed	SHORT_WAR_BOW	Bow	NONE	Short War Bow	Bow	15	55	4	8	0	0	35	0	70		NONE	Null	false	1500
 	Double	Weapon	Two-handed	LONG_WAR_BOW	Bow	WARBOW	Long War Bow	Bow	19	60	1	14	0	0	45	0	80		NONE	Null	false	2000
