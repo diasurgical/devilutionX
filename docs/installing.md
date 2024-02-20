@@ -21,11 +21,7 @@ First install the App via one of these 3 methods:
 
 Then launch the App, this will let it create the folder where you need to place the MPQ files.
 
-If you have the MPQ files on your Android device already, it may be possible to import them to the game by long pressing the icon as shown below:
-
-![image](https://user-images.githubusercontent.com/9203145/198837841-077af944-9e9c-4620-b25d-e391ffe798b1.png)
-
-Another option is to connect the device to your computer via USB cable, and allow data access from your device:
+Connect the device to your computer via USB cable, and allow data access from your device:
 
 ![image](https://user-images.githubusercontent.com/204594/139543023-3c45bb22-35f7-41af-8b3d-c714a9542d23.png)
 
@@ -36,6 +32,10 @@ Open the device's internal storage, and navigate to `Android/data/org.diasurgica
 When the transfer is done you can disconnect your device and press "Check again" in the App to start the game.
 
 ![image](https://user-images.githubusercontent.com/204594/139541657-d8c1197d-fbef-42b6-a34f-2b17f1ceab5f.png)
+
+**Troubleshooting**: If you encounter some trouble getting the MPQ files onto your Android device, you can refer to
+[our guide](https://github.com/diasurgical/devilutionX/wiki/Extracting-the-.MPQs-from-the-GoG-installer#android) for extracting the MPQ files on the Android device itself.
+Note that Inno Setup Extractor is only available for Android 8+ and the Import Data feature is only available for Android 7.1.1+.
 
 </details>
 
