@@ -358,8 +358,13 @@ bool Plr2PlrMHit(const Player &player, Player &target, int mindam, int maxdam, i
 		if (!shift)
 			dam <<= 6;
 	}
-	if (!missileData.isArrow())
-		dam /= 2;
+	if (!missileData.isArrow()) {
+		// PVP REBALANCE: Only do 33% of spell damage to players on arena levels instead of the default 50%.
+		if (player.isOnArenaLevel())
+			dam /= 3;
+		else
+			dam /= 2;
+	}
 	if (resper > 0) {
 		dam -= (dam * resper) / 100;
 		if (&player == MyPlayer)

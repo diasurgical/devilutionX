@@ -223,6 +223,10 @@ void StartAttack(Player &player, Direction d, bool includesFirstFrame)
 		}
 	}
 
+	// PVP REBALANCE: Make melee attacking rate 1 frame slower in arena levels.
+	if (player.isOnArenaLevel())
+		skippedAnimationFrames--;
+
 	auto animationFlags = AnimationDistributionFlags::ProcessAnimationPending;
 	if (player._pmode == PM_ATTACK)
 		animationFlags = static_cast<AnimationDistributionFlags>(animationFlags | AnimationDistributionFlags::RepeatedAction);
@@ -248,6 +252,10 @@ void StartRangeAttack(Player &player, Direction d, WorldTileCoord cx, WorldTileC
 			skippedAnimationFrames += 1;
 		}
 	}
+
+	// PVP REBALANCE: Make bow firing rate 1 frame slower in arena levels.
+	if (player.isOnArenaLevel())
+		skippedAnimationFrames--;
 
 	auto animationFlags = AnimationDistributionFlags::ProcessAnimationPending;
 	if (player._pmode == PM_RATTACK)
@@ -299,10 +307,20 @@ void StartSpell(Player &player, Direction d, WorldTileCoord cx, WorldTileCoord c
 	if (!isValid)
 		return;
 
+	int8_t skippedAnimationFrames = 0;
+
+	// PVP REBALANCE: Increase Warrior/Barbarian cast speed and reduce Sorcerer cast speed in arena levels.
+	if (player.isOnArenaLevel()) {
+		if (IsAnyOf(player._pClass, HeroClass::Warrior, HeroClass::Barbarian))
+			skippedAnimationFrames++;
+		else if (player._pClass == HeroClass::Sorcerer)
+			skippedAnimationFrames--;
+	}
+
 	auto animationFlags = AnimationDistributionFlags::ProcessAnimationPending;
 	if (player._pmode == PM_SPELL)
 		animationFlags = static_cast<AnimationDistributionFlags>(animationFlags | AnimationDistributionFlags::RepeatedAction);
-	NewPlrAnim(player, GetPlayerGraphicForSpell(player.queuedSpell.spellId), d, animationFlags, 0, player._pSFNum);
+	NewPlrAnim(player, GetPlayerGraphicForSpell(player.queuedSpell.spellId), d, animationFlags, skippedAnimationFrames, player._pSFNum);
 
 	PlaySfxLoc(GetSpellData(player.queuedSpell.spellId).sSFX, player.position.tile);
 
@@ -502,6 +520,10 @@ bool DamageWeapon(Player &player, unsigned damageFrequency)
 	if (&player != MyPlayer) {
 		return false;
 	}
+
+	// PVP REBALANCE: Do not damage weapon in arena levels.
+	if (player.isOnArenaLevel())
+		return false;
 
 	if (WeaponDecay(player, INVLOC_HAND_LEFT))
 		return true;
@@ -959,6 +981,10 @@ void DamageParryItem(Player &player)
 		return;
 	}
 
+	// PVP REBALANCE: Do not damage parry items in arena levels.
+	if (player.isOnArenaLevel())
+		return;
+
 	if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Shield || player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Staff) {
 		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability == DUR_INDESTRUCTIBLE) {
 			return;
@@ -1002,6 +1028,10 @@ void DamageArmor(Player &player)
 	if (&player != MyPlayer) {
 		return;
 	}
+
+	// PVP REBALANCE: Do not damage armor in arena levels.
+	if (player.isOnArenaLevel())
+		return;
 
 	if (player.InvBody[INVLOC_CHEST].isEmpty() && player.InvBody[INVLOC_HEAD].isEmpty()) {
 		return;
