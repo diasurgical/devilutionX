@@ -188,8 +188,6 @@ TEST(Player, CreatePlayer)
 	// Please provide them so that the tests can run successfully
 	ASSERT_TRUE(HaveSpawn() || HaveDiabdat());
 
-	InitCursor();
-
 	LoadPlayerDataFiles();
 	LoadItemData();
 	Players.resize(1);

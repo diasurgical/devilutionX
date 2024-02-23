@@ -384,7 +384,6 @@ TEST(Writehero, pfile_write_hero)
 	MyPlayerId = 0;
 	MyPlayer = &Players[MyPlayerId];
 
-	InitCursor();
 	LoadSpellData();
 	LoadPlayerDataFiles();
 	LoadItemData();
