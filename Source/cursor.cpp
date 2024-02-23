@@ -726,17 +726,20 @@ void CheckCursMove()
 
 	const Point currentTile { mx, my };
 
-	// While holding the button down we should retain target (but potentially lose it if it dies, goes out of view, etc)
-	if ((sgbMouseDown != CLICK_NONE || ControllerActionHeld != GameActionType_NONE) && IsNoneOf(LastMouseButtonAction, MouseActionType::None, MouseActionType::Attack, MouseActionType::Spell)) {
-		InvalidateTargets();
+	// PVP REBALANCE: Don't allow players to click and hold to retain targets in arena levels.
+	if (!myPlayer.isOnArenaLevel()) {
+		// While holding the button down we should retain target (but potentially lose it if it dies, goes out of view, etc)
+		if ((sgbMouseDown != CLICK_NONE || ControllerActionHeld != GameActionType_NONE) && IsNoneOf(LastMouseButtonAction, MouseActionType::None, MouseActionType::Attack, MouseActionType::Spell)) {
+			InvalidateTargets();
 
-		if (pcursmonst == -1 && ObjectUnderCursor == nullptr && pcursitem == -1 && pcursinvitem == -1 && pcursstashitem == StashStruct::EmptyCell && PlayerUnderCursor == nullptr) {
-			cursPosition = { mx, my };
-			CheckTrigForce();
-			CheckTown();
-			CheckRportal();
+			if (pcursmonst == -1 && ObjectUnderCursor == nullptr && pcursitem == -1 && pcursinvitem == -1 && pcursstashitem == StashStruct::EmptyCell && PlayerUnderCursor == nullptr) {
+				cursPosition = { mx, my };
+				CheckTrigForce();
+				CheckTown();
+				CheckRportal();
+			}
+			return;
 		}
-		return;
 	}
 
 	bool flipflag = (flipy && flipx) || ((flipy || flipx) && px < TILE_WIDTH / 2);
