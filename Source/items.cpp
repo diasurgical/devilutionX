@@ -3023,11 +3023,13 @@ void CreatePlrItems(Player &player)
 		}
 	}
 
+	InitCursor();
 	for (auto &itemChoice : loadout.items) {
 		_item_indexes itemData = gbIsHellfire && itemChoice.hellfire != _item_indexes::IDI_NONE ? itemChoice.hellfire : itemChoice.diablo;
 		if (itemData != _item_indexes::IDI_NONE)
 			CreateStartingItem(player, itemData);
 	}
+	FreeCursor();
 
 	if (loadout.gold > 0) {
 		Item &goldItem = player.InvList[player._pNumInv];
