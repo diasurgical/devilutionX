@@ -902,8 +902,8 @@ public:
 	bool isLevelOwnedByLocalClient() const;
 
 	/**
-	* @brief Insert most recent player movement variant into member variable _pMovements for arena usage
-	*/
+	 * @brief Insert most recent player movement variant into member variable _pMovements for arena usage
+	 */
 	void trackLastPlrMovement(int variant)
 	{
 		for (int i = MaxMovementHistory - 1; i > 0; --i) {
@@ -913,8 +913,8 @@ public:
 	}
 
 	/**
-	* @brief Calculate the percentage of diagonal movements made in the last MaxMovementHistory movements for arena usage
-	*/
+	 * @brief Calculate the percentage of diagonal movements made in the last MaxMovementHistory movements for arena usage
+	 */
 	int calculateDiagonalMovementPercentage()
 	{
 		int numDiagonalMovements = 0;
