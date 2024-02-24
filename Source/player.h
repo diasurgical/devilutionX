@@ -274,7 +274,7 @@ struct Player {
 	int destParam4;
 	int _pGold;
 	// PVP REBALANCE: Movement history for arena.
-	int _pMovements[16];
+	int _pMovements[MaxMovementHistory];
 
 	/**
 	 * @brief Contains Information for current Animation
