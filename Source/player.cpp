@@ -2574,7 +2574,9 @@ void InitPlayer(Player &player, bool firstTime)
 	player._pInvincible = false;
 
 	// PVP REBALANCE: For arena use only. Initialize all movement history.
-	player._pMovements[MaxMovementHistory] = { PM_STAND };
+	for (int i = 0; i < MaxMovementHistory; ++i) {
+		player._pMovements[i] = PM_STAND;
+	}
 
 	if (&player == MyPlayer) {
 		MyPlayerIsDead = false;
@@ -2757,7 +2759,9 @@ StartPlayerKill(Player &player, DeathReason deathReason)
 	player._pInvincible = true;
 	SetPlayerHitPoints(player, 0);
 	// PVP REBALANCE: Reset player's movements for arena use.
-	player._pMovements[MaxMovementHistory] = { PM_STAND };
+	for (int i = 0; i < MaxMovementHistory; ++i) {
+		player._pMovements[i] = PM_STAND;
+	}
 
 	if (&player != MyPlayer && dropItems) {
 		// Ensure that items are removed for remote players
