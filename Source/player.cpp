@@ -464,6 +464,10 @@ bool DoWalk(Player &player, int variant)
 		return false;
 	}
 
+	// PVP REBALANCE: Track player movements in arena.
+	if (player.isOnArenaLevel())
+		player.trackLastPlrMovement(variant);
+
 	// We reached the new tile -> update the player's tile position
 	switch (variant) {
 	case PM_WALK_NORTHWARDS:
@@ -479,6 +483,13 @@ bool DoWalk(Player &player, int variant)
 		player.position.tile = player.position.temp;
 		// dPlayer is set here for backwards comparability, without it the player would be invisible if loaded from a vanilla save.
 		player.occupyTile(player.position.tile, false);
+
+		// PVP REBALANCE: Increment _pDiawalkCounter and punish reaching DiawalkDamageThreshold for arena use.
+		if (player.isOnArenaLevel()) {
+			if (player.calculateDiagonalMovementPercentage() > DiawalkDamageThreshold && &player == MyPlayer)
+				// Deal 20 HP worth of damage each diagonal movement multiplied by the amount of percent they are above the threshold.
+				NetSendCmdDamage(true, player, (player.calculateDiagonalMovementPercentage() - DiawalkDamageThreshold) * 20 * 64, DamageType::Physical);
+		}
 		break;
 	}
 
@@ -487,6 +498,8 @@ bool DoWalk(Player &player, int variant)
 		ChangeLightXY(player.lightId, player.position.tile);
 		ChangeVisionXY(player.getId(), player.position.tile);
 	}
+
+
 
 	StartStand(player, player.tempDirection);
 
@@ -2560,6 +2573,9 @@ void InitPlayer(Player &player, bool firstTime)
 
 	player._pInvincible = false;
 
+	// PVP REBALANCE: For arena use only. Initialize all movement history.
+	player._pMovements[MaxMovementHistory] = { PM_STAND };
+
 	if (&player == MyPlayer) {
 		MyPlayerIsDead = false;
 	}
@@ -2740,6 +2756,8 @@ StartPlayerKill(Player &player, DeathReason deathReason)
 	player._pmode = PM_DEATH;
 	player._pInvincible = true;
 	SetPlayerHitPoints(player, 0);
+	// PVP REBALANCE: Reset player's movements for arena use.
+	player._pMovements[MaxMovementHistory] = { PM_STAND };
 
 	if (&player != MyPlayer && dropItems) {
 		// Ensure that items are removed for remote players

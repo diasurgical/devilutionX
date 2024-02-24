@@ -37,6 +37,10 @@ constexpr int PlayerNameLength = 32;
 
 constexpr size_t NumHotkeys = 12;
 
+// PVP REBALANCE: The percentage of diagonal movements that _pMovements reaches to take punitive action against that player in the arena.
+constexpr int16_t DiawalkDamageThreshold = 80;
+constexpr int8_t MaxMovementHistory = 20;
+
 /** Walking directions */
 enum {
 	// clang-format off
@@ -269,6 +273,8 @@ struct Player {
 	int destParam3;
 	int destParam4;
 	int _pGold;
+	// PVP REBALANCE: Movement history for arena.
+	int _pMovements[16];
 
 	/**
 	 * @brief Contains Information for current Animation
@@ -894,6 +900,33 @@ public:
 
 	/** @brief Checks if the player level is owned by local client. */
 	bool isLevelOwnedByLocalClient() const;
+
+	/**
+	* @brief Insert most recent player movement variant into member variable _pMovements for arena usage
+	*/
+	void trackLastPlrMovement(int variant)
+	{
+		for (int i = MaxMovementHistory - 1; i > 0; --i) {
+			this->_pMovements[i] = this->_pMovements[i - 1];
+		}
+		this->_pMovements[0] = variant;
+	}
+
+	/**
+	* @brief Calculate the percentage of diagonal movements made in the last MaxMovementHistory movements for arena usage
+	*/
+	int calculateDiagonalMovementPercentage()
+	{
+		int numDiagonalMovements = 0;
+		for (int i = 0; i < MaxMovementHistory; ++i) {
+			if (this->_pMovements[i] == PM_WALK_SIDEWAYS) {
+				numDiagonalMovements++;
+			}
+		}
+
+		int diagonalMovementPercentage = (numDiagonalMovements * 100) / MaxMovementHistory;
+		return diagonalMovementPercentage;
+	}
 };
 
 extern DVL_API_FOR_TEST uint8_t MyPlayerId;
