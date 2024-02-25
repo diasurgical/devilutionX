@@ -16,6 +16,7 @@
 #include "engine/render/automap_render.hpp"
 #include "levels/gendung.h"
 #include "levels/setmaps.h"
+#include "options.h"
 #include "player.h"
 #include "utils/attributes.h"
 #include "utils/enum_traits.h"
@@ -1731,6 +1732,11 @@ void AutomapZoomOut()
 
 void DrawAutomap(const Surface &out)
 {
+	if (leveltype == DTYPE_TOWN && !*sgOptions.Gameplay.automapInTown) {
+		DrawAutomapText(out);
+		return;
+	}
+
 	Automap = { (ViewPosition.x - 8) / 2, (ViewPosition.y - 8) / 2 };
 	if (leveltype != DTYPE_TOWN) {
 		Automap += { -4, -4 };

@@ -60,6 +60,7 @@ void InitDiabloMsg()
 const char *const MsgStrings[] = {
 	"",
 	N_("Game saved"),
+	N_("No automap available in town"),
 	N_("No multiplayer functions in demo"),
 	N_("Direct Sound Creation Failed"),
 	N_("Not available in shareware version"),

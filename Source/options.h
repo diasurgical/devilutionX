@@ -558,6 +558,8 @@ struct GameplayOptions : OptionCategoryBase {
 	OptionEntryBoolean autoOilPickup;
 	/** @brief Enable or Disable auto-pickup in town */
 	OptionEntryBoolean autoPickupInTown;
+	/** @brief Enable or Disable automap in town */
+	OptionEntryBoolean automapInTown;
 	/** @brief Recover mana when talking to Adria. */
 	OptionEntryBoolean adriaRefillsMana;
 	/** @brief Automatically attempt to equip weapon-type items when picking them up. */

@@ -1010,6 +1010,11 @@ void control_check_btn_press()
 
 void DoAutoMap()
 {
+	if (leveltype == DTYPE_TOWN && !*sgOptions.Gameplay.automapInTown) {
+		InitDiabloMsg(EMSG_NO_AUTOMAP_IN_TOWN);
+		return;
+	}
+
 	if (!AutomapActive)
 		StartAutomap();
 	else
