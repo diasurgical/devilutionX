@@ -310,9 +310,9 @@ void StartSpell(Player &player, Direction d, WorldTileCoord cx, WorldTileCoord c
 
 	int8_t skippedAnimationFrames = 0;
 
-	// PVP REBALANCE: Increase Warrior/Barbarian cast speed and reduce Sorcerer cast speed in arena levels.
+	// PVP REBALANCE: Increase Warrior cast speed and reduce Sorcerer cast speed in arena levels.
 	if (player.isOnArenaLevel()) {
-		if (IsAnyOf(player._pClass, HeroClass::Warrior, HeroClass::Barbarian))
+		if (player._pClass == HeroClass::Warrior)
 			skippedAnimationFrames++;
 		else if (player._pClass == HeroClass::Sorcerer)
 			skippedAnimationFrames--;
