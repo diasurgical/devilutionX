@@ -97,6 +97,23 @@ Monster *FindClosest(Point source, int rad)
 	return nullptr;
 }
 
+Player *FindClosestPlayer(Point source, int rad)
+{
+	std::optional<Point> playerPosition = FindClosestValidPosition(
+	    [&source](Point target) {
+		    // search for a player with clear line of sight
+		    return InDungeonBounds(target) && dPlayer[target.x][target.y] > 0 && !CheckBlock(source, target);
+	    },
+	    source, 1, rad);
+
+	if (playerPosition) {
+		int pid = dPlayer[playerPosition->x][playerPosition->y];
+		return &Players[pid - 1];
+	}
+
+	return nullptr;
+}
+
 constexpr Direction16 Direction16Flip(Direction16 x, Direction16 pivot)
 {
 	std::underlying_type_t<Direction16> ret = (2 * static_cast<std::underlying_type_t<Direction16>>(pivot) + 16 - static_cast<std::underlying_type_t<Direction16>>(x)) % 16;
@@ -409,12 +426,13 @@ bool Plr2PlrMHit(const Player &player, Player &target, int mindam, int maxdam, i
 	int charLevel = player.getCharacterLevel();
 	bool isSpell = !missileData.isArrow();
 	int critChance = (charLevel * 2 + (isSpell ? player._pMagic : player._pDexterity)) / 10;
+	bool forcehit = false;
 
-	// PVP REBALANCE: Crit chance for arrows and spells in arenas.
+	// PVP REBALANCE: Crit chance for arrows and spells in arenas. Crits force hit recovery.
 	if (isOnArena && GenerateRnd(100) < critChance) {
 		dam = isSpell ? dam * 5 / 4 : dam * 3 / 2; // Arrow: +50% damage, Spell: +25% damage
+		forcehit = true;
 	}
-
 
 	if (resper > 0) {
 		dam -= (dam * resper) / 100;
@@ -430,7 +448,7 @@ bool Plr2PlrMHit(const Player &player, Player &target, int mindam, int maxdam, i
 	} else {
 		if (&player == MyPlayer)
 			NetSendCmdDamage(true, target, dam, damageType);
-		StartPlrHit(target, dam, false);
+		StartPlrHit(target, dam, forcehit);
 	}
 
 	return true;
@@ -3584,13 +3602,18 @@ void ProcessChainLightning(Missile &missile)
 	Point position = missile.position.tile;
 	Point dst { missile.var1, missile.var2 };
 	Direction dir = GetDirection(position, dst);
-	AddMissile(position, dst, dir, MissileID::LightningControl, TARGET_MONSTERS, id, 1, missile._mispllvl);
+	const Player &player = Players[missile._misource];
+	mienemy_type targetType = TARGET_MONSTERS;
+	if (player.isOnArenaLevel()) {
+		targetType = TARGET_PLAYERS;
+	}
+	AddMissile(position, dst, dir, MissileID::LightningControl, targetType, id, 1, missile._mispllvl);
 	int rad = std::min<int>(missile._mispllvl + 3, MaxCrawlRadius);
 	Crawl(1, rad, [&](Displacement displacement) {
 		Point target = position + displacement;
-		if (InDungeonBounds(target) && dMonster[target.x][target.y] > 0) {
+		if (InDungeonBounds(target) && (missile.sourcePlayer()->isOnArenaLevel() ? dPlayer[target.x][target.y] : dMonster[target.x][target.y]) > 0) {
 			dir = GetDirection(position, target);
-			AddMissile(position, target, dir, MissileID::LightningControl, TARGET_MONSTERS, id, 1, missile._mispllvl);
+			AddMissile(position, target, dir, MissileID::LightningControl, targetType, id, 1, missile._mispllvl);
 		}
 		return false;
 	});
@@ -4085,11 +4108,30 @@ void ProcessElemental(Missile &missile)
 		if (missile.var3 == 1) {
 			missile.var3 = 2;
 			missile._mirange = 255;
-			auto *nextMonster = FindClosest(missilePosition, 19);
-			if (nextMonster != nullptr) {
-				Direction sd = GetDirection(missilePosition, nextMonster->position.tile);
-				SetMissDir(missile, sd);
-				UpdateMissileVelocity(missile, nextMonster->position.tile, 16);
+
+			std::function<void()> targetAction;
+			if (missile.sourcePlayer()->isOnArenaLevel()) {
+				auto *nextPlayer = FindClosestPlayer(missilePosition, 19);
+				if (nextPlayer != nullptr) {
+					targetAction = [&]() {
+						Direction sd = GetDirection(missilePosition, nextPlayer->position.tile);
+						SetMissDir(missile, sd);
+						UpdateMissileVelocity(missile, nextPlayer->position.tile, 16);
+					};
+				}
+			} else {
+				auto *nextMonster = FindClosest(missilePosition, 19);
+				if (nextMonster != nullptr) {
+					targetAction = [&]() {
+						Direction sd = GetDirection(missilePosition, nextMonster->position.tile);
+						SetMissDir(missile, sd);
+						UpdateMissileVelocity(missile, nextMonster->position.tile, 16);
+					};
+				}
+			}
+
+			if (targetAction) {
+				targetAction();
 			} else {
 				Direction sd = Players[missile._misource]._pdir;
 				SetMissDir(missile, sd);
@@ -4130,17 +4172,38 @@ void ProcessBoneSpirit(Missile &missile)
 		if (missile.var3 == 1) {
 			missile.var3 = 2;
 			missile._mirange = 255;
-			auto *monster = FindClosest(c, 19);
-			if (monster != nullptr) {
-				missile._midam = monster->hitPoints >> 7;
-				SetMissDir(missile, GetDirection(c, monster->position.tile));
-				UpdateMissileVelocity(missile, monster->position.tile, 16);
+
+			std::function<void()> targetAction;
+
+			if (missile.sourcePlayer()->isOnArenaLevel()) {
+				auto *player = FindClosestPlayer(c, 19);
+				if (player != nullptr) {
+					targetAction = [&]() {
+						missile._midam = player->_pHitPoints >> 7;
+						SetMissDir(missile, GetDirection(c, player->position.tile));
+						UpdateMissileVelocity(missile, player->position.tile, 16);
+					};
+				}
+			} else {
+				auto *monster = FindClosest(c, 19);
+				if (monster != nullptr) {
+					targetAction = [&]() {
+						missile._midam = monster->hitPoints >> 7;
+						SetMissDir(missile, GetDirection(c, monster->position.tile));
+						UpdateMissileVelocity(missile, monster->position.tile, 16);
+					};
+				}
+			}
+
+			if (targetAction) {
+				targetAction();
 			} else {
 				Direction sd = Players[missile._misource]._pdir;
 				SetMissDir(missile, sd);
 				UpdateMissileVelocity(missile, c + sd, 16);
 			}
 		}
+
 		if (c != Point { missile.var1, missile.var2 }) {
 			missile.var1 = c.x;
 			missile.var2 = c.y;

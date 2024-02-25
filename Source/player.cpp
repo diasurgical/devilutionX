@@ -815,10 +815,13 @@ bool PlrHitPlr(Player &attacker, Player &target)
 	int charLevel = attacker.getCharacterLevel();
 	HeroClass charClass = attacker._pClass;
 	int critChance = isOnArena ? (charLevel * 2 + attacker._pStrength) / 10 : charLevel;
+	bool forcehit = false;
 
-	// PVP REBALANCE: New formula for crit chance in arenas.
+	// PVP REBALANCE: New crit chance formula for arenas. Crits always cause hit recovery.
 	if ((isOnArena || charClass == HeroClass::Warrior || charClass == HeroClass::Barbarian) && GenerateRnd(100) < critChance) {
 		dam *= 2;
+		if (isOnArena)
+			forcehit = true;
 	}
 
 	int skdam = dam << 6;
@@ -837,7 +840,7 @@ bool PlrHitPlr(Player &attacker, Player &target)
 	if (&attacker == MyPlayer) {
 		NetSendCmdDamage(true, target, skdam, DamageType::Physical);
 	}
-	StartPlrHit(target, skdam, false);
+	StartPlrHit(target, skdam, forcehit);
 
 	return true;
 }

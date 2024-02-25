@@ -29,6 +29,7 @@
 
 namespace devilution {
 
+extern Player *MyPlayer;
 constexpr int InventoryGridCells = 40;
 constexpr int MaxBeltItems = 8;
 constexpr int MaxResistance = 75;
