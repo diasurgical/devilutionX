@@ -466,7 +466,7 @@ bool DoWalk(Player &player, int variant)
 	}
 
 	// PVP REBALANCE: Track player movements in arena.
-	if (player.isOnArenaLevel())
+	if (player.isOnArenaLevel() && player.isMyPlayer())
 		player.trackLastPlrMovement(variant);
 
 	// We reached the new tile -> update the player's tile position
@@ -487,7 +487,7 @@ bool DoWalk(Player &player, int variant)
 
 		// PVP REBALANCE: Increment _pDiawalkCounter and punish reaching DiawalkDamageThreshold for arena use.
 		if (player.isOnArenaLevel()) {
-			if (player.calculateDiagonalMovementPercentage() > DiawalkDamageThreshold && &player == MyPlayer)
+			if (player.calculateDiagonalMovementPercentage() > DiawalkDamageThreshold && player.isMyPlayer())
 				// Deal 5 HP worth of damage each diagonal movement multiplied by the amount of percent they are above the threshold.
 				NetSendCmdDamage(true, player, (player.calculateDiagonalMovementPercentage() - DiawalkDamageThreshold) * 5 * 64, DamageType::Physical);
 		}

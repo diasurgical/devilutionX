@@ -874,6 +874,11 @@ public:
 	{
 		return plrIsOnSetLevel && IsArenaLevel(static_cast<_setlevels>(plrlevel));
 	}
+	/** @brief Checks if the player is the local client player. */
+	bool isMyPlayer() const
+	{
+		return this == MyPlayer;
+	}
 	void setLevel(uint8_t level)
 	{
 		this->plrlevel = level;
