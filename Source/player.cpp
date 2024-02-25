@@ -2691,7 +2691,16 @@ void StartPlrHit(Player &player, int dam, bool forcehit)
 	player.Say(HeroSpeech::ArghClang);
 
 	RedrawComponent(PanelDrawComponent::Health);
-	if (player._pClass == HeroClass::Barbarian) {
+
+	// PVP REBALANCE: New formula for calculating whether or not hit recovery should occur based on Life and Damage in arenas.
+	if (player.isOnArenaLevel()) {
+		int rper = GenerateRnd(100);
+		int recovery = dam - (player._pMaxHP / 5) + 100;
+		recovery = std::clamp(recovery, 5, 95);
+
+		if (rper >= recovery)
+			return;
+	} else if (player._pClass == HeroClass::Barbarian) {
 		if (dam >> 6 < player.getCharacterLevel() + player.getCharacterLevel() / 4 && !forcehit) {
 			return;
 		}
@@ -2711,6 +2720,10 @@ void StartPlrHit(Player &player, int dam, bool forcehit)
 	} else {
 		skippedAnimationFrames = 0;
 	}
+
+	// PVP REBALANCE: Critical hits in arena will force a hit recovery and cause a longer hit recovery animation.
+	if (player.isOnArenaLevel() && forcehit)
+		skippedAnimationFrames--;
 
 	NewPlrAnim(player, player_graphic::Hit, pd, AnimationDistributionFlags::None, skippedAnimationFrames);
 
@@ -2761,7 +2774,8 @@ StartPlayerKill(Player &player, DeathReason deathReason)
 	player._pInvincible = true;
 	SetPlayerHitPoints(player, 0);
 	// PVP REBALANCE: Reset player's movements for arena use.
-	std::fill(player._pMovements.begin(), player._pMovements.end(), PM_STAND);
+	if (player.isMyPlayer())
+		std::fill(player._pMovements.begin(), player._pMovements.end(), PM_STAND);
 
 	if (&player != MyPlayer && dropItems) {
 		// Ensure that items are removed for remote players
