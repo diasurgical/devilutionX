@@ -2698,7 +2698,7 @@ void StartPlrHit(Player &player, int dam, bool forcehit)
 	// PVP REBALANCE: New formula for calculating whether or not hit recovery should occur based on Life and Damage in arenas.
 	if (player.isOnArenaLevel()) {
 		int rper = GenerateRnd(100);
-		int recovery = dam - (player._pMaxHP / 5) + 100;
+		int recovery = dam - (player._pMaxHP / 6) + 100;
 		recovery = std::clamp(recovery, 5, 95);
 
 		if (rper >= recovery)
