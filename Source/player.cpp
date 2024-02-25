@@ -811,11 +811,16 @@ bool PlrHitPlr(Player &attacker, Player &target)
 	dam += (dam * attacker._pIBonusDam) / 100;
 	dam += attacker._pIBonusDamMod + attacker._pDamageMod;
 
-	if (attacker._pClass == HeroClass::Warrior || attacker._pClass == HeroClass::Barbarian) {
-		if (GenerateRnd(100) < attacker.getCharacterLevel()) {
-			dam *= 2;
-		}
+	bool isOnArena = attacker.isOnArenaLevel();
+	int charLevel = attacker.getCharacterLevel();
+	HeroClass charClass = attacker._pClass;
+	int critChance = isOnArena ? (charLevel * 2 + attacker._pStrength) / 10 : charLevel;
+
+	// PVP REBALANCE: New formula for crit chance in arenas.
+	if ((isOnArena || charClass == HeroClass::Warrior || charClass == HeroClass::Barbarian) && GenerateRnd(100) < critChance) {
+		dam *= 2;
 	}
+
 	int skdam = dam << 6;
 	if (HasAnyOf(attacker._pIFlags, ItemSpecialEffect::RandomStealLife)) {
 		int tac = GenerateRnd(skdam / 8);

@@ -371,7 +371,7 @@ bool Plr2PlrMHit(const Player &player, Player &target, int mindam, int maxdam, i
 			case MissileID::ChainBall: // 200% (400% of default)
 				dam *= 2;
 				break;
-			case MissileID::ChargedBolt: // 100% (200% of default), don't allow diagonal dodge
+			case MissileID::ChargedBolt: // 100% (200% of default)
 				break;
 			case MissileID::Elemental: // 40% damage (80% of default)
 				dam *= 4;
@@ -383,13 +383,13 @@ bool Plr2PlrMHit(const Player &player, Player &target, int mindam, int maxdam, i
 				break;
 			case MissileID::Firebolt:  // 100% (200% of default)
 			case MissileID::FireWall:  // 100% (200% of default)
-			case MissileID::FlameWave: // 100% (200% of default), don't allow diagonal dodge
+			case MissileID::FlameWave: // 100% (200% of default)
 				break;
 			case MissileID::FlashBottom: // 50% (100% default)
 			case MissileID::FlashTop:    // 50% (100% of default)
 				dam /= 2;
 				break;
-			case MissileID::Guardian: // 100% (200% of default), limit 1 at a time per player
+			case MissileID::Guardian: // 100% (200% of default)
 				break;
 			case MissileID::Inferno: // 400% (800% of default)
 				dam *= 4;
@@ -404,6 +404,18 @@ bool Plr2PlrMHit(const Player &player, Player &target, int mindam, int maxdam, i
 			dam /= 2;
 		}
 	}
+
+	bool isOnArena = player.isOnArenaLevel();
+	int charLevel = player.getCharacterLevel();
+	bool isSpell = !missileData.isArrow();
+	int critChance = (charLevel * 2 + (isSpell ? player._pMagic : player._pDexterity)) / 10;
+
+	// PVP REBALANCE: Crit chance for arrows and spells in arenas.
+	if (isOnArena && GenerateRnd(100) < critChance) {
+		dam = isSpell ? dam * 5 / 4 : dam * 3 / 2; // Arrow: +50% damage, Spell: +25% damage
+	}
+
+
 	if (resper > 0) {
 		dam -= (dam * resper) / 100;
 		if (&player == MyPlayer)
