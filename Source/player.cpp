@@ -254,8 +254,8 @@ void StartRangeAttack(Player &player, Direction d, WorldTileCoord cx, WorldTileC
 		}
 	}
 
-	// PVP REBALANCE: Make bow firing rate 1 frame slower in arena levels.
-	if (player.isOnArenaLevel())
+	// PVP REBALANCE: Make Rogue bow firing rate 1 frame slower in arena levels.
+	if (player.isOnArenaLevel() && player._pClass == HeroClass::Rogue)
 		skippedAnimationFrames--;
 
 	auto animationFlags = AnimationDistributionFlags::ProcessAnimationPending;
