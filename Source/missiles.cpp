@@ -287,7 +287,8 @@ bool Plr2PlrMHit(const Player &player, Player &target, int mindam, int maxdam, i
 
 	*blocked = false;
 
-	if (target.isOnArenaLevel() && target._pmode == PM_WALK_SIDEWAYS)
+	// PVP REBALANCE: Diagonal walk makes missiles that aren't Charged Bolt or Flame Wave miss.
+	if (target.isOnArenaLevel() && target._pmode == PM_WALK_SIDEWAYS && IsNoneOf(mtype, MissileID::ChargedBolt, MissileID::FlameWave))
 		return false;
 
 	if (target._pInvincible) {
