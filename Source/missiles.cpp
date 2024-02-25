@@ -380,27 +380,25 @@ bool Plr2PlrMHit(const Player &player, Player &target, int mindam, int maxdam, i
 		// PVP REBALANCE: Adjust damage values for spells in arena.
 		if (player.isOnArenaLevel()) {
 			switch (mtype) {
-			case MissileID::BloodStar: // 200% (400% of default)
-				dam *= 2;
+			case MissileID::BloodStar: // 400% (800% of default)
+				dam *= 4;
 				break;
 			case MissileID::BoneSpirit: // 100% (200% of default)
 				break;
-			case MissileID::ChainBall: // 200% (400% of default)
-				dam *= 2;
-				break;
 			case MissileID::ChargedBolt: // 100% (200% of default)
 				break;
-			case MissileID::Elemental: // 40% damage (80% of default)
-				dam *= 4;
-				dam /= 10;
+			case MissileID::Elemental: // 300% damage (150% of default)
+				dam *= 3;
 				break;
-			case MissileID::Fireball: // 20% damage (40% of default)
-				dam *= 2;
-				dam /= 10;
+			case MissileID::Fireball: // 150% damage (75% of default)
+				dam = dam * 3 / 2;
 				break;
 			case MissileID::Firebolt:  // 100% (200% of default)
+				break;
 			case MissileID::FireWall:  // 100% (200% of default)
-			case MissileID::FlameWave: // 100% (200% of default)
+				dam = dam * 3 / 2; // 150% (300% of default)
+			case MissileID::FlameWave: // 200% (400% of default)
+				dam *= 2;
 				break;
 			case MissileID::FlashBottom: // 50% (100% default)
 			case MissileID::FlashTop:    // 50% (100% of default)
@@ -408,11 +406,10 @@ bool Plr2PlrMHit(const Player &player, Player &target, int mindam, int maxdam, i
 				break;
 			case MissileID::Guardian: // 100% (200% of default)
 				break;
-			case MissileID::Inferno: // 400% (800% of default)
-				dam *= 4;
+			case MissileID::Inferno: // 500% (1000% of default)
+				dam *= 5;
 				break;
-			case MissileID::Lightning: // 200% (400% of default)
-				dam *= 2;
+			case MissileID::Lightning: // 100% (200% of default)
 				break;
 			case MissileID::NovaBall: // 100% (200% of default)
 				break;
@@ -3373,8 +3370,9 @@ void ProcessLightningControl(Missile &missile)
 	if (missile.IsTrap()) {
 		// BUGFIX: damage of missile should be encoded in missile struct; monster can be dead before missile arrives.
 		dam = GenerateRnd(currlevel) + 2 * currlevel;
-	} else if (missile._micaster == TARGET_MONSTERS) {
+	} else if (missile._micaster == TARGET_MONSTERS || Players[missile._misource].isOnArenaLevel()) {
 		// BUGFIX: damage of missile should be encoded in missile struct; player can be dead/have left the game before missile arrives.
+		// PVP REBALANCE: Use the TARGET_MONSTERS damage formula in arena levels, since Chain Lightning will direct towards players. Change needs revision if monsters included in arena.
 		dam = (GenerateRnd(2) + GenerateRnd(Players[missile._misource].getCharacterLevel()) + 2) << 6;
 	} else {
 		auto &monster = Monsters[missile._misource];
