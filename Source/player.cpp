@@ -223,9 +223,10 @@ void StartAttack(Player &player, Direction d, bool includesFirstFrame)
 		}
 	}
 
-	// PVP REBALANCE: Make melee attacking rate 1 frame slower in arena levels.
-	if (player.isOnArenaLevel())
-		skippedAnimationFrames--;
+	// PVP REBALANCE: Increase Warrior Axe and Staff speed by 1 frame.
+	auto gn = static_cast<PlayerWeaponGraphic>(player._pgfxnum & 0xFU);
+	if (player.isOnArenaLevel() && player._pClass == HeroClass::Warrior && IsAnyOf(gn, PlayerWeaponGraphic::Axe, PlayerWeaponGraphic::Staff))
+		skippedAnimationFrames++;
 
 	auto animationFlags = AnimationDistributionFlags::ProcessAnimationPending;
 	if (player._pmode == PM_ATTACK)
