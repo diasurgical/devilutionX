@@ -499,8 +499,6 @@ bool DoWalk(Player &player, int variant)
 		ChangeVisionXY(player.getId(), player.position.tile);
 	}
 
-
-
 	StartStand(player, player.tempDirection);
 
 	ClearStateVariables(player);
