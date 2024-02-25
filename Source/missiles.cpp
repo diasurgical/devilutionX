@@ -359,11 +359,49 @@ bool Plr2PlrMHit(const Player &player, Player &target, int mindam, int maxdam, i
 			dam <<= 6;
 	}
 	if (!missileData.isArrow()) {
-		// PVP REBALANCE: Only do 33% of spell damage to players on arena levels instead of the default 50%.
-		if (player.isOnArenaLevel())
-			dam /= 3;
-		else
+		// PVP REBALANCE: Adjust damage values for spells in arena.
+		if (player.isOnArenaLevel()) {
+			switch (mtype) {
+			case MissileID::BloodStar: // 200% (400% of default)
+				dam *= 2;
+				break;
+			case MissileID::BoneSpirit: // 100% (200% of default)
+				break;
+			case MissileID::ChainBall: // 200% (400% of default)
+				dam *= 2;
+				break;
+			case MissileID::ChargedBolt: // 100% (200% of default), don't allow diagonal dodge
+				break;
+			case MissileID::Elemental: // 40% damage (80% of default)
+				dam *= 4;
+				dam /= 10;
+				break;
+			case MissileID::Fireball: // 20% damage (40% of default)
+				dam *= 2;
+				dam /= 10;
+				break;
+			case MissileID::Firebolt:  // 100% (200% of default)
+			case MissileID::FireWall:  // 100% (200% of default)
+			case MissileID::FlameWave: // 100% (200% of default), don't allow diagonal dodge
+				break;
+			case MissileID::FlashBottom: // 50% (100% default)
+			case MissileID::FlashTop:    // 50% (100% of default)
+				dam /= 2;
+				break;
+			case MissileID::Guardian: // 100% (200% of default), limit 1 at a time per player
+				break;
+			case MissileID::Inferno: // 400% (800% of default)
+				dam *= 4;
+				break;
+			case MissileID::Lightning: // 200% (400% of default)
+				dam *= 2;
+				break;
+			case MissileID::NovaBall: // 100% (200% of default)
+				break;
+			}
+		} else {
 			dam /= 2;
+		}
 	}
 	if (resper > 0) {
 		dam -= (dam * resper) / 100;

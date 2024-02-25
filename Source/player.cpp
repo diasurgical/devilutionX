@@ -487,7 +487,7 @@ bool DoWalk(Player &player, int variant)
 		// PVP REBALANCE: Increment _pDiawalkCounter and punish reaching DiawalkDamageThreshold for arena use.
 		if (player.isOnArenaLevel()) {
 			if (player.calculateDiagonalMovementPercentage() > DiawalkDamageThreshold && &player == MyPlayer)
-				// Deal 20 HP worth of damage each diagonal movement multiplied by the amount of percent they are above the threshold.
+				// Deal 5 HP worth of damage each diagonal movement multiplied by the amount of percent they are above the threshold.
 				NetSendCmdDamage(true, player, (player.calculateDiagonalMovementPercentage() - DiawalkDamageThreshold) * 5 * 64, DamageType::Physical);
 		}
 		break;
