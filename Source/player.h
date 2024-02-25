@@ -39,8 +39,8 @@ constexpr int PlayerNameLength = 32;
 constexpr size_t NumHotkeys = 12;
 
 // PVP REBALANCE: The percentage of diagonal movements that _pMovements reaches to take punitive action against that player in the arena.
-constexpr int16_t DiawalkDamageThreshold = 60;
-constexpr int8_t MaxMovementHistory = 30;
+constexpr int16_t DiawalkDamageThreshold = 80;
+constexpr int8_t MaxMovementHistory = 32;
 
 /** Walking directions */
 enum {

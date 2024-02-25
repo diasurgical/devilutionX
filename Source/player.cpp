@@ -489,7 +489,7 @@ bool DoWalk(Player &player, int variant)
 		if (player.isOnArenaLevel()) {
 			if (player.calculateDiagonalMovementPercentage() > DiawalkDamageThreshold && player.isMyPlayer())
 				// Deal 5 HP worth of damage each diagonal movement multiplied by the amount of percent they are above the threshold.
-				NetSendCmdDamage(true, player, (player.calculateDiagonalMovementPercentage() - DiawalkDamageThreshold) * 5 * 64, DamageType::Physical);
+				NetSendCmdDamage(true, player, (player.calculateDiagonalMovementPercentage() - DiawalkDamageThreshold) * 1 * 64, DamageType::Physical);
 		}
 		break;
 	}
