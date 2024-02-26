@@ -949,16 +949,18 @@ bool DoRangeAttack(Player &player)
 		arrows = 2;
 	}
 
-	// Obtain target position upon arrow shot, rather than when initiating the cast for accuracy
-	auto targetId = player.targetId;
-	if (player.hasPlayerTarget) {
-		assert(targetId >= 0 && targetId < Players.size());
-		auto &targetPlayer = Players[player.targetId];
-		player.position.temp = targetPlayer.position.future;
-	} else if (player.hasMonsterTarget) {
-		assert(targetId >= 0 && targetId < MaxMonsters);
-		auto &targetMonster = Monsters[player.targetId];
-		player.position.temp = targetMonster.position.future;
+	// PVP REBALANCE: Obtain target position upon arrow shot, rather than when initiating the cast for accuracy in arenas.
+	if (player.isOnArenaLevel()) {
+		auto targetId = player.targetId;
+		if (player.hasPlayerTarget) {
+			assert(targetId >= 0 && targetId < Players.size());
+			auto &targetPlayer = Players[player.targetId];
+			player.position.temp = targetPlayer.position.future;
+		} else if (player.hasMonsterTarget) {
+			assert(targetId >= 0 && targetId < MaxMonsters);
+			auto &targetMonster = Monsters[player.targetId];
+			player.position.temp = targetMonster.position.future;
+		}
 	}
 
 	for (int arrow = 0; arrow < arrows; arrow++) {

@@ -216,13 +216,15 @@ void CastSpell(Player &player, SpellID spl, WorldTilePosition src, WorldTilePosi
 		dir = player.tempDirection;
 	}
 
-	// Obtain target position upon spell effect, rather than when initiating the cast for accuracy
-	if (hasPlayerTarget) {
-		assert(targetId >= 0 && targetId < Players.size());
-		dst = Players[targetId].position.future;
-	} else if (hasMonsterTarget) {
-		assert(targetId >= 0 && targetId < MaxMonsters);
-		dst = Monsters[targetId].position.future;
+	// PVP REBALANCE: Obtain target position upon spell effect, rather than when initiating the cast for accuracy in arenas.
+	if (player.isOnArenaLevel()) {
+		if (hasPlayerTarget) {
+			assert(targetId >= 0 && targetId < Players.size());
+			dst = Players[targetId].position.future;
+		} else if (hasMonsterTarget) {
+			assert(targetId >= 0 && targetId < MaxMonsters);
+			dst = Monsters[targetId].position.future;
+		}
 	}
 
 	bool fizzled = false;
