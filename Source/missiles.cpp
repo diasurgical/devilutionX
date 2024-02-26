@@ -368,7 +368,7 @@ bool Plr2PlrMHit(const Player &player, Player &target, int mindam, int maxdam, i
 
 	int dam;
 	if (mtype == MissileID::BoneSpirit) {
-		dam = target._pHitPoints / 3;
+		dam = target._pMaxHP / 3;
 	} else {
 		dam = mindam + GenerateRnd(maxdam - mindam + 1);
 		if (missileData.isArrow() && damageType == DamageType::Physical)
@@ -383,15 +383,13 @@ bool Plr2PlrMHit(const Player &player, Player &target, int mindam, int maxdam, i
 			case MissileID::BloodStar: // 400% (800% of default)
 				dam *= 4;
 				break;
-			case MissileID::BoneSpirit: // 100% (200% of default)
-				break;
 			case MissileID::ChargedBolt: // 100% (200% of default)
 				break;
-			case MissileID::Elemental: // 300% damage (150% of default)
-				dam *= 3;
+			case MissileID::Elemental: // 60% damage (120% of default)
+				dam = dam * 6 / 10;
 				break;
-			case MissileID::Fireball: // 150% damage (75% of default)
-				dam = dam * 3 / 2;
+			case MissileID::Fireball: // 40% damage (80% of default)
+				dam = dam * 4 / 10;
 				break;
 			case MissileID::Firebolt: // 100% (200% of default)
 				break;
@@ -410,7 +408,6 @@ bool Plr2PlrMHit(const Player &player, Player &target, int mindam, int maxdam, i
 				dam *= 5;
 				break;
 			case MissileID::Lightning: // 100% (200% of default)
-				break;
 			case MissileID::NovaBall: // 100% (200% of default)
 				break;
 			}
@@ -431,7 +428,7 @@ bool Plr2PlrMHit(const Player &player, Player &target, int mindam, int maxdam, i
 		forcehit = true;
 	}
 
-	if (resper > 0) {
+	if (resper > 0 && mtype != MissileID::BoneSpirit) {
 		dam -= (dam * resper) / 100;
 		if (&player == MyPlayer)
 			NetSendCmdDamage(true, target, dam, damageType);
