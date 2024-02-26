@@ -35,7 +35,7 @@ SpellCheckResult CheckSpell(const Player &player, SpellID sn, SpellType st, bool
  * @param player The player whose readied spell is to be checked.
  */
 void EnsureValidReadiedSpell(Player &player);
-void CastSpell(Player &player, SpellID spl, WorldTilePosition src, WorldTilePosition dst, int spllvl);
+void CastSpell(Player &player, SpellID spl, WorldTilePosition src, WorldTilePosition dst, int spllvl, bool hasMonsterTarget = false, bool hasPlayerTarget = false, int targetId = 0);
 
 /**
  * @param pnum player index

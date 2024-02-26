@@ -29,7 +29,8 @@
 
 namespace devilution {
 
-extern Player *MyPlayer;
+extern DVL_API_FOR_TEST Player *MyPlayer;
+
 constexpr int InventoryGridCells = 40;
 constexpr int MaxBeltItems = 8;
 constexpr int MaxResistance = 75;
@@ -309,6 +310,9 @@ struct Player {
 	uint8_t plrlevel;
 	bool plrIsOnSetLevel;
 	ActorPosition position;
+	bool hasMonsterTarget;
+	bool hasPlayerTarget;
+	int8_t targetId;
 	Direction _pdir; // Direction faced by player (direction enum)
 	HeroClass _pClass;
 
@@ -936,7 +940,6 @@ public:
 };
 
 extern DVL_API_FOR_TEST uint8_t MyPlayerId;
-extern DVL_API_FOR_TEST Player *MyPlayer;
 extern DVL_API_FOR_TEST std::vector<Player> Players;
 /** @brief What Player items and stats should be displayed? Normally this is identical to MyPlayer but can differ when /inspect was used. */
 extern Player *InspectPlayer;

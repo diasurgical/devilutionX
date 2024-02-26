@@ -187,6 +187,9 @@ void ClearStateVariables(Player &player)
 	player.position.temp = { 0, 0 };
 	player.tempDirection = Direction::South;
 	player.queuedSpell.spellLevel = 0;
+	player.hasMonsterTarget = false;
+	player.hasPlayerTarget = false;
+	player.targetId = 0;
 }
 
 void StartAttack(Player &player, Direction d, bool includesFirstFrame)
@@ -237,7 +240,7 @@ void StartAttack(Player &player, Direction d, bool includesFirstFrame)
 	SetPlayerOld(player);
 }
 
-void StartRangeAttack(Player &player, Direction d, WorldTileCoord cx, WorldTileCoord cy, bool includesFirstFrame)
+void StartRangeAttack(Player &player, Direction d, WorldTileCoord cx, WorldTileCoord cy, bool includesFirstFrame, bool hasMonsterTarget, bool hasPlayerTarget, int targetId)
 {
 	if (player._pInvincible && player._pHitPoints == 0 && &player == MyPlayer) {
 		SyncPlrKill(player, DeathReason::Unknown);
@@ -267,6 +270,9 @@ void StartRangeAttack(Player &player, Direction d, WorldTileCoord cx, WorldTileC
 	FixPlayerLocation(player, d);
 	SetPlayerOld(player);
 	player.position.temp = WorldTilePosition { cx, cy };
+	player.hasMonsterTarget = hasMonsterTarget;
+	player.hasPlayerTarget = hasPlayerTarget;
+	player.targetId = targetId;
 }
 
 player_graphic GetPlayerGraphicForSpell(SpellID spellId)
@@ -281,7 +287,7 @@ player_graphic GetPlayerGraphicForSpell(SpellID spellId)
 	}
 }
 
-void StartSpell(Player &player, Direction d, WorldTileCoord cx, WorldTileCoord cy)
+void StartSpell(Player &player, Direction d, WorldTileCoord cx, WorldTileCoord cy, bool hasMonsterTarget, bool hasPlayerTarget, int targetId)
 {
 	if (player._pInvincible && player._pHitPoints == 0 && &player == MyPlayer) {
 		SyncPlrKill(player, DeathReason::Unknown);
@@ -331,6 +337,9 @@ void StartSpell(Player &player, Direction d, WorldTileCoord cx, WorldTileCoord c
 	SetPlayerOld(player);
 
 	player.position.temp = WorldTilePosition { cx, cy };
+	player.hasMonsterTarget = hasMonsterTarget;
+	player.hasPlayerTarget = hasPlayerTarget;
+	player.targetId = targetId;
 	player.queuedSpell.spellLevel = player.GetSpellLevel(player.queuedSpell.spellId);
 	player.executedSpell = player.queuedSpell;
 }
@@ -940,6 +949,18 @@ bool DoRangeAttack(Player &player)
 		arrows = 2;
 	}
 
+	// Obtain target position upon arrow shot, rather than when initiating the cast for accuracy
+	auto targetId = player.targetId;
+	if (player.hasPlayerTarget) {
+		assert(targetId >= 0 && targetId < Players.size());
+		auto &targetPlayer = Players[player.targetId];
+		player.position.temp = targetPlayer.position.future;
+	} else if (player.hasMonsterTarget) {
+		assert(targetId >= 0 && targetId < MaxMonsters);
+		auto &targetMonster = Monsters[player.targetId];
+		player.position.temp = targetMonster.position.future;
+	}
+
 	for (int arrow = 0; arrow < arrows; arrow++) {
 		int xoff = 0;
 		int yoff = 0;
@@ -1096,7 +1117,11 @@ bool DoSpell(Player &player)
 		    player.executedSpell.spellId,
 		    player.position.tile,
 		    player.position.temp,
-		    player.executedSpell.spellLevel);
+		    player.executedSpell.spellLevel,
+			player.hasMonsterTarget,
+			player.hasPlayerTarget,
+			player.targetId
+		    );
 
 		if (IsAnyOf(player.executedSpell.spellType, SpellType::Scroll, SpellType::Charges)) {
 			EnsureValidReadiedSpell(player);
@@ -1326,38 +1351,38 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 			break;
 		case ACTION_RATTACK:
 			d = GetDirection(player.position.tile, { player.destParam1, player.destParam2 });
-			StartRangeAttack(player, d, player.destParam1, player.destParam2, pmWillBeCalled);
+			StartRangeAttack(player, d, player.destParam1, player.destParam2, pmWillBeCalled, false, false, 0);
 			break;
 		case ACTION_RATTACKMON:
 			d = GetDirection(player.position.future, monster->position.future);
 			if (monster->talkMsg != TEXT_NONE && monster->talkMsg != TEXT_VILE14) {
 				TalktoMonster(player, *monster);
 			} else {
-				StartRangeAttack(player, d, monster->position.future.x, monster->position.future.y, pmWillBeCalled);
+				StartRangeAttack(player, d, monster->position.future.x, monster->position.future.y, pmWillBeCalled, true, false, targetId);
 			}
 			break;
 		case ACTION_RATTACKPLR:
 			d = GetDirection(player.position.future, target->position.future);
-			StartRangeAttack(player, d, target->position.future.x, target->position.future.y, pmWillBeCalled);
+			StartRangeAttack(player, d, target->position.future.x, target->position.future.y, pmWillBeCalled, false, true, targetId);
 			break;
 		case ACTION_SPELL:
 			d = GetDirection(player.position.tile, { player.destParam1, player.destParam2 });
-			StartSpell(player, d, player.destParam1, player.destParam2);
+			StartSpell(player, d, player.destParam1, player.destParam2, false, false, 0);
 			player.executedSpell.spellLevel = player.destParam3;
 			break;
 		case ACTION_SPELLWALL:
-			StartSpell(player, static_cast<Direction>(player.destParam3), player.destParam1, player.destParam2);
+			StartSpell(player, static_cast<Direction>(player.destParam3), player.destParam1, player.destParam2, false, false, 0);
 			player.tempDirection = static_cast<Direction>(player.destParam3);
 			player.executedSpell.spellLevel = player.destParam4;
 			break;
 		case ACTION_SPELLMON:
 			d = GetDirection(player.position.tile, monster->position.future);
-			StartSpell(player, d, monster->position.future.x, monster->position.future.y);
+			StartSpell(player, d, monster->position.future.x, monster->position.future.y, true, false, targetId);
 			player.executedSpell.spellLevel = player.destParam2;
 			break;
 		case ACTION_SPELLPLR:
 			d = GetDirection(player.position.tile, target->position.future);
-			StartSpell(player, d, target->position.future.x, target->position.future.y);
+			StartSpell(player, d, target->position.future.x, target->position.future.y, false, true, targetId);
 			player.executedSpell.spellLevel = player.destParam2;
 			break;
 		case ACTION_OPERATE:
@@ -1455,15 +1480,15 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 	if (player._pmode == PM_RATTACK && player.AnimInfo.currentFrame >= player._pAFNum) {
 		if (player.destAction == ACTION_RATTACK) {
 			d = GetDirection(player.position.tile, { player.destParam1, player.destParam2 });
-			StartRangeAttack(player, d, player.destParam1, player.destParam2, pmWillBeCalled);
+			StartRangeAttack(player, d, player.destParam1, player.destParam2, pmWillBeCalled, false, false, 0);
 			player.destAction = ACTION_NONE;
 		} else if (player.destAction == ACTION_RATTACKMON) {
 			d = GetDirection(player.position.tile, monster->position.future);
-			StartRangeAttack(player, d, monster->position.future.x, monster->position.future.y, pmWillBeCalled);
+			StartRangeAttack(player, d, monster->position.future.x, monster->position.future.y, pmWillBeCalled, true, false, targetId);
 			player.destAction = ACTION_NONE;
 		} else if (player.destAction == ACTION_RATTACKPLR) {
 			d = GetDirection(player.position.tile, target->position.future);
-			StartRangeAttack(player, d, target->position.future.x, target->position.future.y, pmWillBeCalled);
+			StartRangeAttack(player, d, target->position.future.x, target->position.future.y, pmWillBeCalled, false, true, targetId);
 			player.destAction = ACTION_NONE;
 		}
 	}
@@ -1471,15 +1496,15 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 	if (player._pmode == PM_SPELL && player.AnimInfo.currentFrame >= player._pSFNum) {
 		if (player.destAction == ACTION_SPELL) {
 			d = GetDirection(player.position.tile, { player.destParam1, player.destParam2 });
-			StartSpell(player, d, player.destParam1, player.destParam2);
+			StartSpell(player, d, player.destParam1, player.destParam2, false, false, 0);
 			player.destAction = ACTION_NONE;
 		} else if (player.destAction == ACTION_SPELLMON) {
 			d = GetDirection(player.position.tile, monster->position.future);
-			StartSpell(player, d, monster->position.future.x, monster->position.future.y);
+			StartSpell(player, d, monster->position.future.x, monster->position.future.y, true, false, targetId);
 			player.destAction = ACTION_NONE;
 		} else if (player.destAction == ACTION_SPELLPLR) {
 			d = GetDirection(player.position.tile, target->position.future);
-			StartSpell(player, d, target->position.future.x, target->position.future.y);
+			StartSpell(player, d, target->position.future.x, target->position.future.y, false, true, targetId);
 			player.destAction = ACTION_NONE;
 		}
 	}
@@ -2535,6 +2560,9 @@ void InitPlayer(Player &player, bool firstTime)
 		player._pSBkSpell = SpellID::Invalid;
 		player.queuedSpell.spellId = player._pRSpell;
 		player.queuedSpell.spellType = player._pRSplType;
+		player.hasMonsterTarget = false;
+		player.hasPlayerTarget = false;
+		player.targetId = 0;
 		player.pManaShield = false;
 		player.wReflections = 0;
 	}
