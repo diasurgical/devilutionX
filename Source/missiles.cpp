@@ -1963,7 +1963,14 @@ void AddFireball(Missile &missile, AddMissileParameter &parameter)
 	if (missile.position.start == dst) {
 		dst += parameter.midir;
 	}
+
 	int sp = 16;
+
+	// PVP REBALANCE: Reduce fireball velocity by 4 in arenas.
+	if (missile.sourcePlayer() != nullptr) {
+		if (missile.sourcePlayer()->isOnArenaLevel())
+			sp = 8;
+	}
 	if (missile._micaster == TARGET_MONSTERS) {
 		sp += std::min(missile._mispllvl * 2, 34);
 		Player &player = Players[missile._misource];
