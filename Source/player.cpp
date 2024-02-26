@@ -1120,10 +1120,9 @@ bool DoSpell(Player &player)
 		    player.position.tile,
 		    player.position.temp,
 		    player.executedSpell.spellLevel,
-			player.hasMonsterTarget,
-			player.hasPlayerTarget,
-			player.targetId
-		    );
+		    player.hasMonsterTarget,
+		    player.hasPlayerTarget,
+		    player.targetId);
 
 		if (IsAnyOf(player.executedSpell.spellType, SpellType::Scroll, SpellType::Charges)) {
 			EnsureValidReadiedSpell(player);

@@ -217,7 +217,7 @@ void CastSpell(Player &player, SpellID spl, WorldTilePosition src, WorldTilePosi
 	}
 
 	// PVP REBALANCE: Obtain target position upon spell effect, rather than when initiating the cast for accuracy in arenas.
-	if (player.isOnArenaLevel()) {
+	if (player.isOnArenaLevel() && spl != SpellID::Teleport) {
 		if (hasPlayerTarget) {
 			assert(targetId >= 0 && targetId < Players.size());
 			dst = Players[targetId].position.future;

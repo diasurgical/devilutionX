@@ -408,7 +408,7 @@ bool Plr2PlrMHit(const Player &player, Player &target, int mindam, int maxdam, i
 				dam *= 5;
 				break;
 			case MissileID::Lightning: // 100% (200% of default)
-			case MissileID::NovaBall: // 100% (200% of default)
+			case MissileID::NovaBall:  // 100% (200% of default)
 				break;
 			}
 		} else {
