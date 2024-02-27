@@ -1948,6 +1948,10 @@ void AddFireWall(Missile &missile, AddMissileParameter &parameter)
 	missile._midam <<= 3;
 	UpdateMissileVelocity(missile, parameter.dst, 16);
 	int i = missile._mispllvl;
+	if (missile.sourcePlayer() != nullptr) {
+		if (missile.sourcePlayer()->isOnArenaLevel())
+			i = 0;
+	}
 	missile._mirange = 10;
 	if (i > 0)
 		missile._mirange *= i + 1;

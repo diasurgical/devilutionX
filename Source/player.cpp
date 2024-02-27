@@ -240,7 +240,7 @@ void StartAttack(Player &player, Direction d, bool includesFirstFrame)
 	SetPlayerOld(player);
 }
 
-void StartRangeAttack(Player &player, Direction d, WorldTileCoord cx, WorldTileCoord cy, bool includesFirstFrame, bool hasMonsterTarget, bool hasPlayerTarget, int targetId)
+void StartRangeAttack(Player &player, Direction d, WorldTileCoord cx, WorldTileCoord cy, bool includesFirstFrame, bool hasMonsterTarget, bool hasPlayerTarget, int8_t targetId)
 {
 	if (player._pInvincible && player._pHitPoints == 0 && &player == MyPlayer) {
 		SyncPlrKill(player, DeathReason::Unknown);
@@ -287,7 +287,82 @@ player_graphic GetPlayerGraphicForSpell(SpellID spellId)
 	}
 }
 
-void StartSpell(Player &player, Direction d, WorldTileCoord cx, WorldTileCoord cy, bool hasMonsterTarget, bool hasPlayerTarget, int targetId)
+int GetSpellSkippedFrames(SpellID spl)
+{
+	switch (spl) {
+	// Page 1
+	//case SpellID::ItemRepair:
+	//case SpellID::TrapDisarm:
+	//case SpellID::StaffRecharge:
+	case SpellID::Rage:
+		return 0;
+	case SpellID::Firebolt:
+		return 3;
+	case SpellID::ChargedBolt:
+		return 2;
+	case SpellID::Healing:
+	case SpellID::HealOther:
+		return 0;
+	//case SpellID::HolyBolt:
+	case SpellID::Inferno:
+		return 2;
+	// Page 2
+	case SpellID::Resurrect:
+	case SpellID::FireWall:
+		return 0;
+	//case SpellID::Telekinesis:
+	case SpellID::Lightning:
+		return 2;
+	case SpellID::TownPortal:
+		return 4;
+	case SpellID::Flash:
+		return 1;
+	//case SpellID::StoneCurse:
+	// Page 3
+	case SpellID::Phasing:
+		return 1;
+	case SpellID::ManaShield:
+	case SpellID::Elemental:
+	case SpellID::Fireball:
+	case SpellID::FlameWave:
+	case SpellID::ChainLightning:
+		return 0;
+	case SpellID::Guardian:
+		return 4;
+	// Page 4
+	case SpellID::Nova:
+	case SpellID::Golem:
+		return 0;
+	case SpellID::Teleport:
+		return 1;
+	case SpellID::Apocalypse:
+	case SpellID::BoneSpirit:
+		return 1;
+	case SpellID::BloodStar:
+		return 2;
+	// Page 5
+	case SpellID::LightningWall:
+	case SpellID::Immolation:
+		return 0;
+	case SpellID::Warp:
+		return 4;
+	case SpellID::Reflect:
+	//case SpellID::Berserk:
+	case SpellID::RingOfFire:
+	//case SpellID::Search:
+	// Extra
+	//case SpellID::Infravision:
+	//case SpellID::Identify:
+	case SpellID::Jester:
+	case SpellID::Magi:
+	case SpellID::Mana:
+		return 0;
+	default:
+		return 0;
+	}
+}
+
+void StartSpell(Player &player, Direction d, WorldTileCoord cx, WorldTileCoord cy, bool hasMonsterTarget, bool hasPlayerTarget, int8_t targetId)
 {
 	if (player._pInvincible && player._pHitPoints == 0 && &player == MyPlayer) {
 		SyncPlrKill(player, DeathReason::Unknown);
@@ -318,10 +393,12 @@ void StartSpell(Player &player, Direction d, WorldTileCoord cx, WorldTileCoord c
 
 	// PVP REBALANCE: Increase Warrior cast speed and reduce Sorcerer cast speed in arena levels.
 	if (player.isOnArenaLevel()) {
-		if (player._pClass == HeroClass::Warrior)
-			skippedAnimationFrames++;
-		else if (player._pClass == HeroClass::Sorcerer)
+		if (player._pClass == HeroClass::Barbarian)
 			skippedAnimationFrames--;
+		if (player._pClass == HeroClass::Sorcerer)
+			skippedAnimationFrames -= 2;
+
+		skippedAnimationFrames += GetSpellSkippedFrames(player.queuedSpell.spellId);
 	}
 
 	auto animationFlags = AnimationDistributionFlags::ProcessAnimationPending;
