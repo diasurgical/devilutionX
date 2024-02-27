@@ -209,22 +209,11 @@ SpellCheckResult CheckSpell(const Player &player, SpellID sn, SpellType st, bool
 	return SpellCheckResult::Success;
 }
 
-void CastSpell(Player &player, SpellID spl, WorldTilePosition src, WorldTilePosition dst, int spllvl, bool hasMonsterTarget /*= false*/, bool hasPlayerTarget /*= false*/, int targetId /*= 0*/)
+void CastSpell(Player &player, SpellID spl, WorldTilePosition src, WorldTilePosition dst, int spllvl)
 {
 	Direction dir = player._pdir;
 	if (IsWallSpell(spl)) {
 		dir = player.tempDirection;
-	}
-
-	// PVP REBALANCE: Obtain target position upon spell effect, rather than when initiating the cast for accuracy in arenas.
-	if (player.isOnArenaLevel() && spl != SpellID::Teleport) {
-		if (hasPlayerTarget) {
-			assert(targetId >= 0 && targetId < Players.size());
-			dst = Players[targetId].position.future;
-		} else if (hasMonsterTarget) {
-			assert(targetId >= 0 && targetId < MaxMonsters);
-			dst = Monsters[targetId].position.future;
-		}
 	}
 
 	bool fizzled = false;

@@ -940,6 +940,23 @@ bool DoAttack(Player &player)
 
 bool DoRangeAttack(Player &player)
 {
+	WorldTilePosition dst = player.position.temp;
+
+	if (player.isOnArenaLevel() && player.AnimInfo.currentFrame == player._pAFNum - 6) {
+		// PVP REBALANCE: Obtain target position 6 frames before the action frame to ensure same accuracy regardless of ranged speed.
+		// 6 frames should ensure the accuracy of shooting a bow for all classes is similar to that of Rogue with Swiftness in vanilla.
+		auto id = player.targetId;
+		if (player.hasPlayerTarget) {
+			assert(id >= 0 && id < Players.size());
+			auto &targetPlayer = Players[id];
+			dst = targetPlayer.position.future;
+		} else if (player.hasMonsterTarget) {
+			assert(id >= 0 && id < MaxMonsters);
+			auto &targetMonster = Monsters[id];
+			dst = targetMonster.position.future;
+		}
+	}
+
 	int arrows = 0;
 	if (player.AnimInfo.currentFrame == player._pAFNum - 1) {
 		arrows = 1;
@@ -947,20 +964,6 @@ bool DoRangeAttack(Player &player)
 
 	if (HasAnyOf(player._pIFlags, ItemSpecialEffect::MultipleArrows) && player.AnimInfo.currentFrame == player._pAFNum + 1) {
 		arrows = 2;
-	}
-
-	// PVP REBALANCE: Obtain target position upon arrow shot, rather than when initiating the cast for accuracy in arenas.
-	if (player.isOnArenaLevel()) {
-		auto targetId = player.targetId;
-		if (player.hasPlayerTarget) {
-			assert(targetId >= 0 && targetId < Players.size());
-			auto &targetPlayer = Players[player.targetId];
-			player.position.temp = targetPlayer.position.future;
-		} else if (player.hasMonsterTarget) {
-			assert(targetId >= 0 && targetId < MaxMonsters);
-			auto &targetMonster = Monsters[player.targetId];
-			player.position.temp = targetMonster.position.future;
-		}
 	}
 
 	for (int arrow = 0; arrow < arrows; arrow++) {
@@ -991,7 +994,7 @@ bool DoRangeAttack(Player &player)
 
 		AddMissile(
 		    player.position.tile,
-		    player.position.temp + Displacement { xoff, yoff },
+		    dst + Displacement { xoff, yoff },
 		    player._pdir,
 		    mistype,
 		    TARGET_MONSTERS,
@@ -1113,16 +1116,25 @@ void DamageArmor(Player &player)
 
 bool DoSpell(Player &player)
 {
+	WorldTilePosition dst = player.position.temp;
+	if (player.isOnArenaLevel() && player.AnimInfo.currentFrame == player._pSFNum - 7) {
+		// PVP REBALANCE: Obtain target position 7 frames before the action frame to ensure same accuracy regardless of casting speed.
+		// 7 frames should ensure the accuracy of casting spells for all classes is similar to that of Sorcerer in vanilla.
+		if (player.hasPlayerTarget) {
+			assert(player.targetId >= 0 && player.targetId < Players.size());
+			dst = Players[player.targetId].position.future;
+		} else if (player.hasMonsterTarget) {
+			assert(player.targetId >= 0 && player.targetId < MaxMonsters);
+			dst = Monsters[player.targetId].position.future;
+		}
+	}
 	if (player.AnimInfo.currentFrame == player._pSFNum) {
 		CastSpell(
 		    player,
 		    player.executedSpell.spellId,
 		    player.position.tile,
-		    player.position.temp,
-		    player.executedSpell.spellLevel,
-		    player.hasMonsterTarget,
-		    player.hasPlayerTarget,
-		    player.targetId);
+		    dst,
+		    player.executedSpell.spellLevel);
 
 		if (IsAnyOf(player.executedSpell.spellType, SpellType::Scroll, SpellType::Charges)) {
 			EnsureValidReadiedSpell(player);
