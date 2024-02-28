@@ -368,7 +368,7 @@ bool Plr2PlrMHit(const Player &player, Player &target, int mindam, int maxdam, i
 
 	int dam;
 	if (mtype == MissileID::BoneSpirit) {
-		dam = target._pMaxHP / 3;
+		dam = player.isOnArenaLevel() ? target._pMaxHP / 3 : target._pHitPoints / 3;
 	} else {
 		dam = mindam + GenerateRnd(maxdam - mindam + 1);
 		if (missileData.isArrow() && damageType == DamageType::Physical)
@@ -393,8 +393,8 @@ bool Plr2PlrMHit(const Player &player, Player &target, int mindam, int maxdam, i
 				break;
 			case MissileID::Firebolt: // 100% (200% of default)
 				break;
-			case MissileID::FireWall:  // 100% (200% of default)
-				dam = dam * 3 / 2;     // 150% (300% of default)
+			case MissileID::FireWall: // 150% (300% of default)
+				dam = dam * 3 / 2;
 			case MissileID::FlameWave: // 200% (400% of default)
 				dam *= 2;
 				break;
@@ -418,17 +418,24 @@ bool Plr2PlrMHit(const Player &player, Player &target, int mindam, int maxdam, i
 
 	bool isOnArena = player.isOnArenaLevel();
 	int charLevel = player.getCharacterLevel();
+
+	// Error handling for critical hit calculation to avoid dividing by 0 in case of bad actor.
+	charLevel = std::clamp(charLevel, 1, static_cast<int>(GetMaximumCharacterLevel()));
+
 	bool isSpell = !missileData.isArrow();
-	int critChance = (charLevel * 2 + (isSpell ? player._pMagic : player._pDexterity)) / 10;
-	bool forcehit = false;
+	int crit = (isSpell ? player._pMagic : player._pDexterity) / (charLevel / 4);
+
+	crit = std::clamp(crit, 0, 50);
+
+	int critper = GenerateRnd(100);
 
 	// PVP REBALANCE: Crit chance for arrows and spells in arenas. Crits force hit recovery.
-	if (isOnArena && GenerateRnd(100) < critChance) {
+	if (isOnArena && critper < crit && mtype != MissileID::BoneSpirit) {
 		dam = isSpell ? dam * 5 / 4 : dam * 3 / 2; // Arrow: +50% damage, Spell: +25% damage
-		forcehit = true;
 	}
 
-	if (resper > 0 && mtype != MissileID::BoneSpirit) {
+	// PVP REBALANCE: Bone Spirit is unaffected by resistances on arena levels.
+	if (resper > 0 && (mtype != MissileID::BoneSpirit || !player.isOnArenaLevel())) {
 		dam -= (dam * resper) / 100;
 		if (&player == MyPlayer)
 			NetSendCmdDamage(true, target, dam, damageType);
@@ -442,7 +449,7 @@ bool Plr2PlrMHit(const Player &player, Player &target, int mindam, int maxdam, i
 	} else {
 		if (&player == MyPlayer)
 			NetSendCmdDamage(true, target, dam, damageType);
-		StartPlrHit(target, dam, forcehit);
+		StartPlrHit(target, dam, false);
 	}
 
 	return true;

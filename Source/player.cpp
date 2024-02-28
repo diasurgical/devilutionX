@@ -316,7 +316,6 @@ int GetSpellSkippedFrames(SpellID spl)
 	case SpellID::TownPortal:
 		return 4;
 	case SpellID::Flash:
-		return 1;
 	//case SpellID::StoneCurse:
 	// Page 3
 	case SpellID::Phasing:
@@ -336,6 +335,7 @@ int GetSpellSkippedFrames(SpellID spl)
 	case SpellID::Teleport:
 		return 1;
 	case SpellID::Apocalypse:
+		return 0;
 	case SpellID::BoneSpirit:
 		return 1;
 	case SpellID::BloodStar:
@@ -899,15 +899,20 @@ bool PlrHitPlr(Player &attacker, Player &target)
 
 	bool isOnArena = attacker.isOnArenaLevel();
 	int charLevel = attacker.getCharacterLevel();
+
+	// Error handling for critical hit calculation to avoid dividing by 0 in case of bad actor.
+	charLevel = std::clamp(charLevel, 1, static_cast<int>(GetMaximumCharacterLevel()));
+
+	int crit = isOnArena ? attacker._pStrength / (charLevel / 4) : charLevel;
+
+	crit = std::clamp(crit, 0, 50);
+
+	int critper = GenerateRnd(100);
 	HeroClass charClass = attacker._pClass;
-	int critChance = isOnArena ? (charLevel * 2 + attacker._pStrength) / 10 : charLevel;
-	bool forcehit = false;
 
 	// PVP REBALANCE: New crit chance formula for arenas. Crits always cause hit recovery.
-	if ((isOnArena || charClass == HeroClass::Warrior || charClass == HeroClass::Barbarian) && GenerateRnd(100) < critChance) {
+	if ((isOnArena || charClass == HeroClass::Warrior || charClass == HeroClass::Barbarian) && critper < crit) {
 		dam *= 2;
-		if (isOnArena)
-			forcehit = true;
 	}
 
 	int skdam = dam << 6;
@@ -926,7 +931,7 @@ bool PlrHitPlr(Player &attacker, Player &target)
 	if (&attacker == MyPlayer) {
 		NetSendCmdDamage(true, target, skdam, DamageType::Physical);
 	}
-	StartPlrHit(target, skdam, forcehit);
+	StartPlrHit(target, skdam, false);
 
 	return true;
 }
