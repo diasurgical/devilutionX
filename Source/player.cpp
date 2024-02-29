@@ -291,9 +291,6 @@ int GetSpellSkippedFrames(SpellID spl)
 {
 	switch (spl) {
 	// Page 1
-	//case SpellID::ItemRepair:
-	//case SpellID::TrapDisarm:
-	//case SpellID::StaffRecharge:
 	case SpellID::Rage:
 		return 0;
 	case SpellID::Firebolt:
@@ -303,26 +300,25 @@ int GetSpellSkippedFrames(SpellID spl)
 	case SpellID::Healing:
 	case SpellID::HealOther:
 		return 0;
-	//case SpellID::HolyBolt:
 	case SpellID::Inferno:
 		return 2;
 	// Page 2
 	case SpellID::Resurrect:
 	case SpellID::FireWall:
 		return 0;
-	//case SpellID::Telekinesis:
 	case SpellID::Lightning:
 		return 2;
 	case SpellID::TownPortal:
 		return 4;
 	case SpellID::Flash:
-	//case SpellID::StoneCurse:
 	// Page 3
 	case SpellID::Phasing:
 		return 1;
 	case SpellID::ManaShield:
+		return 0;
 	case SpellID::Elemental:
 	case SpellID::Fireball:
+		return 1;
 	case SpellID::FlameWave:
 	case SpellID::ChainLightning:
 		return 0;
@@ -337,9 +333,9 @@ int GetSpellSkippedFrames(SpellID spl)
 	case SpellID::Apocalypse:
 		return 0;
 	case SpellID::BoneSpirit:
-		return 1;
+		return 0;
 	case SpellID::BloodStar:
-		return 2;
+		return 0;
 	// Page 5
 	case SpellID::LightningWall:
 	case SpellID::Immolation:
@@ -347,12 +343,8 @@ int GetSpellSkippedFrames(SpellID spl)
 	case SpellID::Warp:
 		return 4;
 	case SpellID::Reflect:
-	//case SpellID::Berserk:
 	case SpellID::RingOfFire:
-	//case SpellID::Search:
 	// Extra
-	//case SpellID::Infravision:
-	//case SpellID::Identify:
 	case SpellID::Jester:
 	case SpellID::Magi:
 	case SpellID::Mana:

@@ -410,7 +410,9 @@ bool Plr2PlrMHit(const Player &player, Player &target, int mindam, int maxdam, i
 			case MissileID::Inferno: // 500% (1000% of default)
 				dam *= 5;
 				break;
-			case MissileID::Lightning: // 100% (200% of default)
+			case MissileID::Lightning: // 200% (400% of default)
+				dam *= 2;
+				break;
 			case MissileID::NovaBall:  // 100% (200% of default)
 				break;
 			}
