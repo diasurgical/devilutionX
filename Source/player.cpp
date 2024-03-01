@@ -2839,10 +2839,6 @@ void StartPlrHit(Player &player, int dam, bool forcehit)
 		skippedAnimationFrames = 0;
 	}
 
-	// PVP REBALANCE: Critical hits in arena will force a hit recovery and cause a longer hit recovery animation.
-	if (player.isOnArenaLevel() && forcehit)
-		skippedAnimationFrames--;
-
 	NewPlrAnim(player, player_graphic::Hit, pd, AnimationDistributionFlags::None, skippedAnimationFrames);
 
 	player._pmode = PM_GOTHIT;
