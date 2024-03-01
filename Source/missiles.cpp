@@ -4143,7 +4143,7 @@ void ProcessElemental(Missile &missile)
 			std::function<void()> targetAction;
 			if (missile.sourcePlayer()->isOnArenaLevel()) {
 				auto *nextPlayer = FindClosestPlayer(missilePosition, 19);
-				if (nextPlayer != nullptr) {
+				if (nextPlayer != nullptr && nextPlayer != missile.sourcePlayer()) {
 					targetAction = [&]() {
 						Direction sd = GetDirection(missilePosition, nextPlayer->position.tile);
 						SetMissDir(missile, sd);
