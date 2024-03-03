@@ -100,7 +100,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Controls
 
-- Inconsistencies with placing items in to the stash
+- Inconsistencies with placing items into the stash
 - Gamepad: Being stuck in dialogs
 - Gamepad: Unable to use some scrolls directly
 
@@ -124,7 +124,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Controls
 
-- Inconsistencies with placing items in to the inventory
+- Inconsistencies with placing items into the inventory
 
 ### Bugfixes for original Hellfire bugs
 
@@ -1429,7 +1429,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### September 18, 2018
 
-- Merge nightly back in to devilution
+- Merge nightly back into devilution
 
 ### September 3, 2018
 
