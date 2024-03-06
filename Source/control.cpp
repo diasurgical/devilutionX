@@ -536,7 +536,7 @@ std::string TextCmdLevelSeed(const std::string_view parameter)
 
 	return StrCat(
 	    "Seedinfo for ", levelType, " ", currlevel, "\n",
-	    "seed: ", glSeedTbl[currlevel], "\n",
+	    "seed: ", DungeonSeeds[currlevel], "\n",
 #ifdef _DEBUG
 	    "Mid1: ", glMid1Seed[currlevel], "\n",
 	    "Mid2: ", glMid2Seed[currlevel], "\n",
@@ -546,7 +546,7 @@ std::string TextCmdLevelSeed(const std::string_view parameter)
 	    "\n",
 	    gameId, " ", mode, "\n",
 	    questPool, " quests: ", questFlags, "\n",
-	    "Storybook: ", glSeedTbl[16]);
+	    "Storybook: ", DungeonSeeds[16]);
 }
 
 std::vector<TextCmdItem> TextCmdList = {

@@ -750,7 +750,7 @@ void DeltaLeaveSync(uint8_t bLevel)
 	if (!gbIsMultiplayer)
 		return;
 	if (leveltype == DTYPE_TOWN) {
-		glSeedTbl[0] = AdvanceRndSeed();
+		DungeonSeeds[0] = AdvanceRndSeed();
 		return;
 	}
 
