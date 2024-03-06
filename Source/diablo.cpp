@@ -107,6 +107,7 @@
 namespace devilution {
 
 uint32_t DungeonSeeds[NUMLEVELS];
+std::optional<uint32_t> LevelSeeds[NUMLEVELS];
 Point MousePosition;
 bool gbRunGame;
 bool gbRunGameResult;

@@ -792,6 +792,7 @@ bool NetInit(bool bSinglePlayer)
 
 	for (int i = 0; i < NUMLEVELS; i++) {
 		DungeonSeeds[i] = AdvanceRndSeed();
+		LevelSeeds[i] = std::nullopt;
 	}
 	PublicGame = DvlNet_IsPublicGame();
 

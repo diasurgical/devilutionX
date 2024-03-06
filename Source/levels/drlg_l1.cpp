@@ -1165,6 +1165,9 @@ bool PlaceStairs(lvl_entry entry)
 
 void GenerateLevel(lvl_entry entry)
 {
+	if (LevelSeeds[currlevel])
+		SetRndSeed(*LevelSeeds[currlevel]);
+
 	size_t minarea = 761;
 	switch (currlevel) {
 	case 1:
@@ -1181,6 +1184,7 @@ void GenerateLevel(lvl_entry entry)
 		DRLG_InitTrans();
 
 		do {
+			LevelSeeds[currlevel] = GetLCGEngineState();
 			FirstRoom();
 		} while (FindArea() < minarea);
 

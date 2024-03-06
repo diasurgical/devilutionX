@@ -2669,7 +2669,11 @@ bool PlaceStairs(lvl_entry entry)
 
 void GenerateLevel(lvl_entry entry)
 {
+	if (LevelSeeds[currlevel])
+		SetRndSeed(*LevelSeeds[currlevel]);
+
 	while (true) {
+		LevelSeeds[currlevel] = GetLCGEngineState();
 		nRoomCnt = 0;
 		InitDungeonFlags();
 		DRLG_InitTrans();
