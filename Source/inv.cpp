@@ -356,7 +356,7 @@ void ChangeEquippedItem(uint8_t slot, Player &player)
 	const auto otherHand = slot == SLOTXY_HAND_LEFT ? INVLOC_HAND_RIGHT : INVLOC_HAND_LEFT;
 
 	const bool pasteIntoSelectedHand = (player.InvBody[otherHand].isEmpty() || player.InvBody[otherHand]._iClass != player.HoldItem._iClass)
-		|| (player._pClass == HeroClass::Bard && player.InvBody[otherHand]._iClass == ICLASS_WEAPON && player.HoldItem._iClass == ICLASS_WEAPON);
+	    || (player._pClass == HeroClass::Bard && player.InvBody[otherHand]._iClass == ICLASS_WEAPON && player.HoldItem._iClass == ICLASS_WEAPON);
 
 	const bool dequipTwoHandedWeapon = (!player.InvBody[otherHand].isEmpty() && player.GetItemLocation(player.InvBody[otherHand]) == ILOC_TWOHAND);
 
@@ -379,12 +379,14 @@ void ChangeTwoHandItem(Player &player)
 			locationToUnequip = INVLOC_HAND_RIGHT;
 		}
 		if (!AutoPlaceItemInInventory(player, player.InvBody[locationToUnequip], true)) {
-			return;
+			return; // TODO this needs to return calling function
 		}
 
 		if (locationToUnequip == INVLOC_HAND_RIGHT) {
 			RemoveEquipment(player, INVLOC_HAND_RIGHT, false);
 		} else {
+			// CMD_CHANGEPLRITEMS will eventually be sent for the left hand
+			// Can we RemoveEquipment(player, INVLOC_HAND_RIGHT, false) anyway????
 			player.InvBody[INVLOC_HAND_LEFT].clear();
 		}
 	}
@@ -465,7 +467,7 @@ void ChangeBeltItem(Player &player, int slot)
 		player.SpdList[ii] = player.HoldItem.pop();
 	} else {
 		std::swap(player.SpdList[ii], player.HoldItem);
-		
+
 		if (player.HoldItem._itype == ItemType::Gold)
 			player._pGold = CalculateGold(player);
 	}
@@ -475,8 +477,8 @@ void ChangeBeltItem(Player &player, int slot)
 	RedrawComponent(PanelDrawComponent::Belt);
 }
 
-item_equip_type GetItemEquipType(int slot, item_equip_type desired_loc, const Player &player) {
-	
+item_equip_type GetItemEquipType(int slot, item_equip_type desired_loc, const Player &player)
+{
 	item_equip_type il = ILOC_UNEQUIPABLE;
 	if (slot == SLOTXY_HEAD)
 		il = ILOC_HELM;
@@ -497,7 +499,8 @@ item_equip_type GetItemEquipType(int slot, item_equip_type desired_loc, const Pl
 	return il;
 }
 
-std::optional<int8_t> CheckOverlappingItems(int slot, const Player &player, Size itemSize, int8_t prev_it) {
+std::optional<int8_t> CheckOverlappingItems(int slot, const Player &player, Size itemSize, int8_t prev_it)
+{
 	// check that the item we're pasting only overlaps one other item (or is going into empty space)
 	const unsigned originCell = static_cast<unsigned>(slot - SLOTXY_INV_FIRST);
 
@@ -525,8 +528,8 @@ std::optional<int8_t> CheckOverlappingItems(int slot, const Player &player, Size
 	return it;
 }
 
-std::optional<int8_t> GetPrevItemId(int slot, const Player &player, const Size& itemSize)
-{	
+std::optional<int8_t> GetPrevItemId(int slot, const Player &player, const Size &itemSize)
+{
 	int8_t item_something = 0;
 	int cell_num = slot - SLOTXY_INV_FIRST; // Where in InvGrid
 	if (player.HoldItem._itype == ItemType::Gold) {
@@ -587,6 +590,8 @@ void CheckInvPaste(Player &player, Point cursorPosition)
 	if (&player == MyPlayer)
 		PlaySFX(ItemInvSnds[ItemCAnimTbl[player.HoldItem._iCurs]]);
 
+	// Select the parameters that go into
+	// ChangeEquipment and add it to post switch
 	switch (il) {
 	case ILOC_HELM:
 	case ILOC_RING:
