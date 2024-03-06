@@ -2135,7 +2135,7 @@ void SetupTownStores()
 				l = i;
 		}
 	} else {
-		SetRndSeed(glSeedTbl[currlevel] * SDL_GetTicks());
+		SetRndSeed(DungeonSeeds[currlevel] * SDL_GetTicks());
 	}
 
 	l = std::clamp(l + 2, 6, 16);

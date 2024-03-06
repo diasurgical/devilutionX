@@ -275,7 +275,7 @@ void InitQuests()
 
 	if (!UseMultiplayerQuests() && *sgOptions.Gameplay.randomizeQuests) {
 		// Quests are set from the seed used to generate level 16.
-		InitialiseQuestPools(glSeedTbl[15], Quests);
+		InitialiseQuestPools(DungeonSeeds[15], Quests);
 	}
 
 	if (gbIsSpawn) {

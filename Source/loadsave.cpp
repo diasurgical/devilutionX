@@ -2136,7 +2136,7 @@ void LoadGame(bool firstflag)
 		app_fatal(_("Player is on a Hellfire only level"));
 
 	for (uint8_t i = 0; i < giNumberOfLevels; i++) {
-		glSeedTbl[i] = file.NextBE<uint32_t>();
+		DungeonSeeds[i] = file.NextBE<uint32_t>();
 		file.Skip(4); // Skip loading gnLevelTypeTbl
 	}
 
@@ -2418,7 +2418,7 @@ void SaveGameData(SaveWriter &saveWriter)
 	file.WriteBE<int32_t>(ActiveObjectCount);
 
 	for (uint8_t i = 0; i < giNumberOfLevels; i++) {
-		file.WriteBE<uint32_t>(glSeedTbl[i]);
+		file.WriteBE<uint32_t>(DungeonSeeds[i]);
 		file.WriteBE<int32_t>(getHellfireLevelType(GetLevelType(i)));
 	}
 
@@ -2554,7 +2554,7 @@ void SaveLevel(SaveWriter &saveWriter)
 	DoUnVision(myPlayer.position.tile, myPlayer._pLightRad); // fix for vision staying on the level
 
 	if (leveltype == DTYPE_TOWN)
-		glSeedTbl[0] = AdvanceRndSeed();
+		DungeonSeeds[0] = AdvanceRndSeed();
 
 	char szName[MaxMpqPathSize];
 	GetTempLevelNames(szName);
