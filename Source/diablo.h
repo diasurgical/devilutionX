@@ -59,6 +59,7 @@ enum class MouseActionType : uint8_t {
 };
 
 extern uint32_t DungeonSeeds[NUMLEVELS];
+extern std::optional<uint32_t> LevelSeeds[NUMLEVELS];
 extern Point MousePosition;
 extern DVL_API_FOR_TEST bool gbRunGame;
 extern bool gbRunGameResult;

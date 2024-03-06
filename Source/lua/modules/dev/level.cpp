@@ -102,6 +102,7 @@ std::string DebugCmdResetLevel(uint8_t level, std::optional<int> seed)
 
 	if (seed.has_value()) {
 		DungeonSeeds[level] = *seed;
+		LevelSeeds[level] = std::nullopt;
 		return StrCat("Successfully reset level ", level, " with seed ", *seed, ".");
 	}
 	return StrCat("Successfully reset level ", level, ".");
