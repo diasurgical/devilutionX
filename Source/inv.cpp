@@ -379,14 +379,12 @@ void ChangeTwoHandItem(Player &player)
 			locationToUnequip = INVLOC_HAND_RIGHT;
 		}
 		if (!AutoPlaceItemInInventory(player, player.InvBody[locationToUnequip], true)) {
-			return; // TODO this needs to return calling function
+			return;
 		}
 
 		if (locationToUnequip == INVLOC_HAND_RIGHT) {
 			RemoveEquipment(player, INVLOC_HAND_RIGHT, false);
 		} else {
-			// CMD_CHANGEPLRITEMS will eventually be sent for the left hand
-			// Can we RemoveEquipment(player, INVLOC_HAND_RIGHT, false) anyway????
 			player.InvBody[INVLOC_HAND_LEFT].clear();
 		}
 	}
