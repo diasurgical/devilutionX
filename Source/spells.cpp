@@ -149,7 +149,7 @@ void ConsumeSpell(Player &player, SpellID sn)
 {
 	Monster &golem = Monsters[player.getId()];
 
-	if (golem.position.tile != GolemHoldingCell && &player == MyPlayer)
+	if (golem.hitPoints <= 0 && &player == MyPlayer)
 		return;
 	switch (player.executedSpell.spellType) {
 	case SpellType::Skill:
