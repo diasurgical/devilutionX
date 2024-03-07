@@ -437,6 +437,7 @@ struct Monster { // note: missing field _mAFNum
 	 * Is this a player's golem?
 	 */
 	[[nodiscard]] bool isPlayerMinion() const;
+	[[nodiscard]] bool belongsToPlayer(const Player &player) const;
 
 	bool isPossibleToHit() const;
 	void tag(const Player &tagger);

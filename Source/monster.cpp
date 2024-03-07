@@ -4829,6 +4829,11 @@ bool Monster::isPlayerMinion() const
 	return (flags & MFLAG_GOLEM) != 0 && (flags & MFLAG_BERSERK) == 0;
 }
 
+bool Monster::belongsToPlayer(const Player &player) const
+{
+	return  player.getId() == getId();
+}
+
 bool Monster::isPossibleToHit() const
 {
 	return !(hitPoints >> 6 <= 0
