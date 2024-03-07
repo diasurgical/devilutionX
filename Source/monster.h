@@ -439,7 +439,7 @@ struct Monster { // note: missing field _mAFNum
 	[[nodiscard]] bool isPlayerMinion() const;
 	/**
 	 * Can the player damage this monster?
-	*/
+	 */
 	[[nodiscard]] bool canPlayerDamage(const Player &player) const;
 
 	bool isPossibleToHit() const;
