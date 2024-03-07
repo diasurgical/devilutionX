@@ -1759,6 +1759,33 @@ void LoadAdditionalMissiles()
 	}
 }
 
+void SaveLevelSeeds(SaveWriter &saveWriter)
+{
+	SaveHelper file(saveWriter, "levelseeds", giNumberOfLevels * (sizeof(uint8_t) + sizeof(uint32_t)));
+
+	for (int i = 0; i < giNumberOfLevels; i++) {
+		file.WriteLE<uint8_t>(LevelSeeds[i] ? 1 : 0);
+		if (LevelSeeds[i]) {
+			file.WriteLE<uint32_t>(*LevelSeeds[i]);
+		}
+	}
+}
+
+void LoadLevelSeeds()
+{
+	LoadHelper file(OpenSaveArchive(gSaveNumber), "levelseeds");
+	if (!file.IsValid())
+		return;
+
+	for (int i = 0; i < giNumberOfLevels; i++) {
+		if (file.NextLE<uint8_t>() != 0) {
+			LevelSeeds[i] = file.NextLE<uint32_t>();
+		} else {
+			LevelSeeds[i] = std::nullopt;
+		}
+	}
+}
+
 const int DiabloItemSaveSize = 368;
 const int HellfireItemSaveSize = 372;
 
@@ -2027,21 +2054,6 @@ void SaveHotkeys(SaveWriter &saveWriter, const Player &player)
 	file.WriteLE<uint8_t>(static_cast<uint8_t>(player._pRSplType));
 }
 
-void LoadLevelSeeds()
-{
-	LoadHelper file(OpenSaveArchive(gSaveNumber), "levelseeds");
-	if (!file.IsValid())
-		return;
-
-	for (int i = 0; i < giNumberOfLevels; i++) {
-		if (file.NextLE<uint8_t>() != 0) {
-			LevelSeeds[i] = file.NextLE<uint32_t>();
-		} else {
-			LevelSeeds[i] = std::nullopt;
-		}
-	}
-}
-
 void LoadHeroItems(Player &player)
 {
 	LoadHelper file(OpenSaveArchive(gSaveNumber), "heroitems");
@@ -2155,6 +2167,7 @@ void LoadGame(bool firstflag)
 		LevelSeeds[i] = std::nullopt;
 		file.Skip(4); // Skip loading gnLevelTypeTbl
 	}
+	LoadLevelSeeds();
 
 	Player &myPlayer = *MyPlayer;
 
@@ -2318,18 +2331,6 @@ void LoadGame(bool firstflag)
 	}
 
 	gbIsHellfireSaveGame = gbIsHellfire;
-}
-
-void SaveLevelSeeds(SaveWriter &saveWriter)
-{
-	SaveHelper file(saveWriter, "levelseeds", giNumberOfLevels * (sizeof(uint8_t) + sizeof(uint32_t)));
-
-	for (int i = 0; i < giNumberOfLevels; i++) {
-		file.WriteLE<uint8_t>(LevelSeeds[i] ? 1 : 0);
-		if (LevelSeeds[i]) {
-			file.WriteLE<uint32_t>(*LevelSeeds[i]);
-		}
-	}
 }
 
 void SaveHeroItems(SaveWriter &saveWriter, Player &player)
@@ -2566,6 +2567,7 @@ void SaveGameData(SaveWriter &saveWriter)
 	file.WriteBE<int32_t>(AutoMapScale);
 
 	SaveAdditionalMissiles(saveWriter);
+	SaveLevelSeeds(saveWriter);
 }
 
 void SaveGame()
