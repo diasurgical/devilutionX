@@ -152,30 +152,28 @@ extern void plrctrls_after_game_logic();
 
 bool TryOpenDungeon(bool useCursorPosition)
 {
-    if (leveltype != DTYPE_TOWN)
-        return false;
+	if (leveltype != DTYPE_TOWN)
+		return false;
 
-    Item &holdItem = MyPlayer->HoldItem;
-    WorldTilePosition &position = MyPlayer->position.tile;
+	Item &holdItem = MyPlayer->HoldItem;
+	WorldTilePosition &position = MyPlayer->position.tile;
 
-    // Common function to attempt opening based on input method.
-    auto attemptOpen = [&]() -> bool {
-        if ((useCursorPosition && holdItem.IDidx == IDI_RUNEBOMB && OpensHive(cursPosition)) || 
-            (!useCursorPosition && UseItemOpensHive(holdItem, position))) {
-            OpenHive();
-            NewCursor(CURSOR_HAND);
-            return true;
-        }
-        if ((useCursorPosition && holdItem.IDidx == IDI_MAPOFDOOM && OpensGrave(cursPosition)) || 
-            (!useCursorPosition && UseItemOpensGrave(holdItem, position))) {
-            OpenGrave();
-            NewCursor(CURSOR_HAND);
-            return true;
-        }
-        return false;
-    };
+	// Common function to attempt opening based on input method.
+	auto attemptOpen = [&]() -> bool {
+		if ((useCursorPosition && holdItem.IDidx == IDI_RUNEBOMB && OpensHive(cursPosition)) || (!useCursorPosition && UseItemOpensHive(holdItem, position))) {
+			OpenHive();
+			NewCursor(CURSOR_HAND);
+			return true;
+		}
+		if ((useCursorPosition && holdItem.IDidx == IDI_MAPOFDOOM && OpensGrave(cursPosition)) || (!useCursorPosition && UseItemOpensGrave(holdItem, position))) {
+			OpenGrave();
+			NewCursor(CURSOR_HAND);
+			return true;
+		}
+		return false;
+	};
 
-    return attemptOpen();
+	return attemptOpen();
 }
 
 /**
