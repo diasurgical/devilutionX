@@ -4041,13 +4041,19 @@ void ProcessElemental(Missile &missile)
 		if (missile.var3 == 1) {
 			missile.var3 = 2;
 			missile._mirange = 255;
+
+			auto *player = missile.sourcePlayer();
 			auto *nextMonster = FindClosest(missilePosition, 19);
-			if (nextMonster != nullptr) {
+
+			// Should we also be checking isPossibleToHit() and isImmune()?
+			if (nextMonster != nullptr && !nextMonster->belongsToPlayer(*player) && !(nextMonster->isPlayerMinion() && sgGameInitInfo.bFriendlyFire == 0 && player->friendlyMode)) {
 				Direction sd = GetDirection(missilePosition, nextMonster->position.tile);
+
 				SetMissDir(missile, sd);
 				UpdateMissileVelocity(missile, nextMonster->position.tile, 16);
 			} else {
 				Direction sd = Players[missile._misource]._pdir;
+
 				SetMissDir(missile, sd);
 				UpdateMissileVelocity(missile, missilePosition + sd, 16);
 			}
@@ -4086,8 +4092,10 @@ void ProcessBoneSpirit(Missile &missile)
 		if (missile.var3 == 1) {
 			missile.var3 = 2;
 			missile._mirange = 255;
+			auto *player = missile.sourcePlayer();
 			auto *monster = FindClosest(c, 19);
-			if (monster != nullptr) {
+			// Should we also be checking isPossibleToHit() and isImmune()?
+			if (monster != nullptr && !monster->belongsToPlayer(*player) && !(monster->isPlayerMinion() && sgGameInitInfo.bFriendlyFire == 0 && player->friendlyMode)) {
 				missile._midam = monster->hitPoints >> 7;
 				SetMissDir(missile, GetDirection(c, monster->position.tile));
 				UpdateMissileVelocity(missile, monster->position.tile, 16);
