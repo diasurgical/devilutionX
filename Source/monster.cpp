@@ -4831,7 +4831,7 @@ bool Monster::isPlayerMinion() const
 
 bool Monster::belongsToPlayer(const Player &player) const
 {
-	return  player.getId() == getId();
+	return player.getId() == getId();
 }
 
 bool Monster::isPossibleToHit() const

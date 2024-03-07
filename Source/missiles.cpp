@@ -3546,7 +3546,6 @@ void ProcessChainLightning(Missile &missile)
 				dir = GetDirection(position, target);
 				AddMissile(position, target, dir, MissileID::LightningControl, TARGET_MONSTERS, id, 1, missile._mispllvl);
 			}
-
 		}
 		return false;
 	});
