@@ -4829,9 +4829,10 @@ bool Monster::isPlayerMinion() const
 	return (flags & MFLAG_GOLEM) != 0 && (flags & MFLAG_BERSERK) == 0;
 }
 
-bool Monster::belongsToPlayer(const Player &player) const
+bool Monster::canPlayerDamage(const Player &player) const
 {
-	return player.getId() == getId();
+	return !(player.getId() == getId()
+	    || (isPlayerMinion() && sgGameInitInfo.bFriendlyFire == 0 && player.friendlyMode));
 }
 
 bool Monster::isPossibleToHit() const

@@ -3542,7 +3542,7 @@ void ProcessChainLightning(Missile &missile)
 			const auto &monster = Monsters[std::abs(monsterId - 1)];
 
 			// Should we also be checking isPossibleToHit() and isImmune()?
-			if (!monster.belongsToPlayer(player) && !(monster.isPlayerMinion() && sgGameInitInfo.bFriendlyFire == 0 && player.friendlyMode)) {
+			if (monster.canPlayerDamage(player)) {
 				dir = GetDirection(position, target);
 				AddMissile(position, target, dir, MissileID::LightningControl, TARGET_MONSTERS, id, 1, missile._mispllvl);
 			}
@@ -4045,7 +4045,7 @@ void ProcessElemental(Missile &missile)
 			auto *nextMonster = FindClosest(missilePosition, 19);
 
 			// Should we also be checking isPossibleToHit() and isImmune()?
-			if (nextMonster != nullptr && !nextMonster->belongsToPlayer(*player) && !(nextMonster->isPlayerMinion() && sgGameInitInfo.bFriendlyFire == 0 && player->friendlyMode)) {
+			if (nextMonster != nullptr && nextMonster->canPlayerDamage(*player)) {
 				Direction sd = GetDirection(missilePosition, nextMonster->position.tile);
 
 				SetMissDir(missile, sd);
@@ -4093,13 +4093,15 @@ void ProcessBoneSpirit(Missile &missile)
 			missile._mirange = 255;
 			auto *player = missile.sourcePlayer();
 			auto *monster = FindClosest(c, 19);
+
 			// Should we also be checking isPossibleToHit() and isImmune()?
-			if (monster != nullptr && !monster->belongsToPlayer(*player) && !(monster->isPlayerMinion() && sgGameInitInfo.bFriendlyFire == 0 && player->friendlyMode)) {
+			if (monster != nullptr && monster->canPlayerDamage(*player)) {
 				missile._midam = monster->hitPoints >> 7;
 				SetMissDir(missile, GetDirection(c, monster->position.tile));
 				UpdateMissileVelocity(missile, monster->position.tile, 16);
 			} else {
 				Direction sd = Players[missile._misource]._pdir;
+
 				SetMissDir(missile, sd);
 				UpdateMissileVelocity(missile, c + sd, 16);
 			}
