@@ -72,6 +72,7 @@ struct Towner {
 };
 
 extern Towner Towners[NUM_TOWNERS];
+bool IsTownerPresent(_talker_id npc);
 /**
  * @brief Maps from a _talker_id value to a pointer to the Towner object, if they have been initialised
  * @param type enum constant identifying the towner
