@@ -147,6 +147,10 @@ int GetManaAmount(const Player &player, SpellID sn)
 
 void ConsumeSpell(Player &player, SpellID sn)
 {
+	Monster &golem = Monsters[player.getId()];
+
+	if (golem.position.tile != GolemHoldingCell && &player == MyPlayer)
+		return;
 	switch (player.executedSpell.spellType) {
 	case SpellType::Skill:
 	case SpellType::Invalid:
