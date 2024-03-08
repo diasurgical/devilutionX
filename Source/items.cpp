@@ -2643,11 +2643,12 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 					int portion = ((player._pMaxManaBase >> 6) * 50 / 100) << 6;
 					imana -= portion;
 					ihp += portion;
-				} else if (HasAnyOf(item._iDamAcFlags, ItemSpecialEffectHf::LifeToMana)) {
+				}
+				if (HasAnyOf(item._iDamAcFlags, ItemSpecialEffectHf::LifeToMana)) {
 					int portion = ((player._pMaxHPBase >> 6) * 40 / 100) << 6;
 					ihp -= portion;
 					imana += portion;
-				} else {
+				if (HasNoneOf(item._iDamAcFlags, ItemSpecialEffectHf::ManaToLife, ItemSpecialEffectHf::LifeToMana)) {
 					ihp += item._iPLHP;
 					imana += item._iPLMana;
 				}
