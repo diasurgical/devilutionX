@@ -854,7 +854,7 @@ void InitThemes()
 				themes[numthemes].ttype = j;
 				numthemes++;
 			}
-			if (i == std::numeric_limits<int8_t>::max())
+			if (i > TransVal)
 				break;
 		}
 		return;
