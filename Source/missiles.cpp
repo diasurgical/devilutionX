@@ -248,7 +248,7 @@ bool MonsterMHit(const Player &player, int monsterId, int mindam, int maxdam, in
 			dam += player._pDamageMod;
 		else
 			dam += player._pDamageMod / 2;
-		if (!monster.isPlayerMinion() && monster.data().monsterClass == MonsterClass::Demon && HasAnyOf(player._pIFlags, ItemSpecialEffect::TripleDemonDamage))
+		if (monster.data().monsterClass == MonsterClass::Demon && HasAnyOf(player._pIFlags, ItemSpecialEffect::TripleDemonDamage))
 			dam *= 3;
 	}
 	bool resist = monster.isResistant(t, damageType);

@@ -2964,6 +2964,8 @@ std::string_view GetMonsterTypeText(const MonsterData &monsterData)
 		return _("Demon");
 	case MonsterClass::Undead:
 		return _("Undead");
+	case MonsterClass::Neutral:
+		return _("Neutral");
 	}
 
 	app_fatal(StrCat("Unknown monsterClass ", static_cast<int>(monsterData.monsterClass)));
