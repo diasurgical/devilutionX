@@ -2,8 +2,12 @@
 <component type="desktop-application">
 	<id>org.diasurgical.DevilutionX</id>
 
+	<developer id="org.diasurgical">
+		<name>Diasurgical team</name>
+	</developer>
+
 	<name>DevilutionX</name>
-	<summary>Diablo/Hellfire source port for modern operating systems</summary>
+	<summary>Diablo/Hellfire source port</summary>
 
 	<metadata_license>CC-BY-SA-4.0</metadata_license>
 	<project_license>LicenseRef-proprietary</project_license>
@@ -55,12 +59,15 @@
 	<screenshots>
 		<screenshot type="default">
 			<image>https://raw.githubusercontent.com/flathub/org.diasurgical.DevilutionX/master/screens/screen1.png</image>
+			<caption>Diablo gameplay in widescreen</caption>
 		</screenshot>
 		<screenshot>
 			<image>https://raw.githubusercontent.com/flathub/org.diasurgical.DevilutionX/master/screens/screen2.png</image>
+			<caption>Diablo gameplay with enemy health bar and XP bar</caption>
 		</screenshot>
 		<screenshot>
 			<image>https://raw.githubusercontent.com/flathub/org.diasurgical.DevilutionX/master/screens/screen3.png</image>
+			<caption>Diablo gameplay on Android mobile device</caption>
 		</screenshot>
 	</screenshots>
 	<releases>
