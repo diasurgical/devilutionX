@@ -531,9 +531,8 @@ std::optional<int8_t> GetPrevItemId(int slot, const Player &player, const Size &
 	int8_t item_something = 0;
 	int cell_num = slot - SLOTXY_INV_FIRST; // Where in InvGrid
 	if (player.HoldItem._itype == ItemType::Gold) {
-		// Placing a gold item into the grid somewhere???
 		if (player.InvGrid[cell_num] != 0) {
-			int8_t item_cell_begin = player.InvGrid[cell_num]; // item_cell_begin is not right name
+			int8_t item_cell_begin = player.InvGrid[cell_num];
 			if (item_cell_begin > 0) {
 				if (player.InvList[item_cell_begin - 1]._itype != ItemType::Gold) {
 					item_something = item_cell_begin;
@@ -572,8 +571,8 @@ void CheckInvPaste(Player &player, Point cursorPosition)
 		return;
 	}
 
-	auto const maybe_it = (il == ILOC_UNEQUIPABLE) ? GetPrevItemId(slot, player, itemSize) : 0;
-	if ((il == ILOC_UNEQUIPABLE) && !maybe_it) {
+	auto const maybe_item_id = (il == ILOC_UNEQUIPABLE) ? GetPrevItemId(slot, player, itemSize) : 0;
+	if ((il == ILOC_UNEQUIPABLE) && !maybe_item_id) {
 		return;
 	}
 
@@ -606,7 +605,7 @@ void CheckInvPaste(Player &player, Point cursorPosition)
 		ChangeTwoHandItem(player);
 		break;
 	case ILOC_UNEQUIPABLE: {
-		ChangeInvItem(player, *maybe_it, slot, itemSize);
+		ChangeInvItem(player, *maybe_item_id, slot, itemSize);
 		break;
 	}
 	case ILOC_BELT: {
