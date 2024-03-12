@@ -437,10 +437,14 @@ struct Monster { // note: missing field _mAFNum
 	 * Is this a player's golem?
 	 */
 	[[nodiscard]] bool isPlayerMinion() const;
+
 	/**
-	 * Can the player damage this monster?
+	 * @brief Can this monster be damaged by the player?
+	 *
+	 * Used for Golems to determine whether or not a player is able to damage it.
+	 * Conditions are set based on Friendly Fire, Player Attack/Friend, and ownership.
 	 */
-	[[nodiscard]] bool canPlayerDamage(const Player &player) const;
+	[[nodiscard]] bool canBeDamagedByPlayer(const Player &player) const;
 
 	bool isPossibleToHit() const;
 	void tag(const Player &tagger);
