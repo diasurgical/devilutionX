@@ -3528,19 +3528,14 @@ void ProcessChainLightning(Missile &missile)
 	Point position = missile.position.tile;
 	Point dst { missile.var1, missile.var2 };
 	Direction dir = GetDirection(position, dst);
-
 	AddMissile(position, dst, dir, MissileID::LightningControl, TARGET_MONSTERS, id, 1, missile._mispllvl);
-
 	int rad = std::min<int>(missile._mispllvl + 3, MaxCrawlRadius);
-
 	Crawl(1, rad, [&](Displacement displacement) {
 		Point target = position + displacement;
 		const auto &monsterId = dMonster[target.x][target.y];
-
 		if (InDungeonBounds(target) && monsterId > 0) {
 			const auto &player = Players[id];
 			const auto &monster = Monsters[std::abs(monsterId - 1)];
-
 			// Should we also be checking isPossibleToHit() and isImmune()?
 			if (monster.canBeDamagedByPlayer(player)) {
 				dir = GetDirection(position, target);
