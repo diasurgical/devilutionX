@@ -895,6 +895,7 @@ public:
 	/** @brief Checks if the player level is owned by local client. */
 	bool isLevelOwnedByLocalClient() const;
 
+	/** @brief Returns a reference to the Golem owned by the player. */
 	Monster &golem() const;
 };
 
