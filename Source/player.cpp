@@ -2096,9 +2096,9 @@ bool Player::isLevelOwnedByLocalClient() const
 	return false;
 }
 
-Monster *Player::golem() const
+Monster &Player::golem() const
 {
-	return &Monsters[getId()];
+	return Monsters[getId()];
 }
 
 Player *PlayerAtPosition(Point position, bool ignoreMovingPlayers /*= false*/)
