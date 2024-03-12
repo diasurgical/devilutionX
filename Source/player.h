@@ -894,6 +894,8 @@ public:
 
 	/** @brief Checks if the player level is owned by local client. */
 	bool isLevelOwnedByLocalClient() const;
+
+	Monster *golem() const;
 };
 
 extern DVL_API_FOR_TEST uint8_t MyPlayerId;

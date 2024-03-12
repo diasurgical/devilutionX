@@ -2096,6 +2096,11 @@ bool Player::isLevelOwnedByLocalClient() const
 	return false;
 }
 
+Monster *Player::golem() const
+{
+	return &Monsters[getId()];
+}
+
 Player *PlayerAtPosition(Point position, bool ignoreMovingPlayers /*= false*/)
 {
 	if (!InDungeonBounds(position))
