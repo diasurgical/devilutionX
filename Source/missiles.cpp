@@ -240,7 +240,7 @@ bool MonsterMHit(const Player &player, int monsterId, int mindam, int maxdam, in
 	if (t == MissileID::BoneSpirit) {
 		dam = monster.hitPoints / 3 >> 6;
 	} else {
-		dam = mindam + GenerateRnd(maxdam - mindam + 1);
+		dam = RandomIntBetween(mindam, maxdam);
 	}
 
 	if (missileData.isArrow() && damageType == DamageType::Physical) {
@@ -3300,7 +3300,7 @@ void ProcessLightningControl(Missile &missile)
 		dam = (GenerateRnd(2) + GenerateRnd(Players[missile._misource].getCharacterLevel()) + 2) << 6;
 	} else {
 		Monster &monster = Monsters[missile._misource];
-		dam = 2 * (monster.minDamage + GenerateRnd(monster.maxDamage - monster.minDamage + 1));
+		dam = 2 * RandomIntBetween(monster.minDamage, monster.maxDamage);
 	}
 
 	SpawnLightning(missile, dam);

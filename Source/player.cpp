@@ -562,7 +562,7 @@ bool PlrHitMonst(Player &player, Monster &monster, bool adjacentDamage = false)
 	}
 	int mind = player._pIMinDam;
 	int maxd = player._pIMaxDam;
-	int dam = GenerateRnd(maxd - mind + 1) + mind;
+	int dam = RandomIntBetween(mind, maxd);
 	dam += dam * player._pIBonusDam / 100;
 	dam += player._pIBonusDamMod;
 	int dam2 = dam << 6;
@@ -730,7 +730,7 @@ bool PlrHitPlr(Player &attacker, Player &target)
 
 	int mind = attacker._pIMinDam;
 	int maxd = attacker._pIMaxDam;
-	int dam = GenerateRnd(maxd - mind + 1) + mind;
+	int dam = RandomIntBetween(mind, maxd);
 	dam += (dam * attacker._pIBonusDam) / 100;
 	dam += attacker._pIBonusDamMod + attacker._pDamageMod;
 
