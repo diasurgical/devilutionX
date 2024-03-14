@@ -955,7 +955,7 @@ bool MonsterTrapHit(int monsterId, int mindam, int maxdam, int dist, MissileID t
 	}
 
 	bool resist = monster.isResistant(t, damageType);
-	int dam = RandomIntBetween(monster.minDamage, monster.maxDamage);
+	int dam = RandomIntBetween(mindam, maxdam);
 	if (!shift)
 		dam <<= 6;
 	if (resist)
