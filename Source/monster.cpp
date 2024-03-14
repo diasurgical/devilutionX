@@ -1157,7 +1157,7 @@ void MonsterAttackPlayer(Monster &monster, Player &player, int hit, int minDam, 
 		}
 	}
 	// New method fixes a bug which caused the maximum possible damage value to be 63/64ths too low.
-	int dam = RandomIntBetween(minDam, maxDam) << 6;
+	int dam = RandomIntBetween(minDam << 6, maxDam << 6);
 	dam = std::max(dam + (player._pIGetHit << 6), 64);
 	if (&player == MyPlayer) {
 		if (player.wReflections > 0) {
