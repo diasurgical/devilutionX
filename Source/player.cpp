@@ -3465,11 +3465,13 @@ void PlayDungMsgs()
 		myPlayer.pDungMsgs |= DungMsgHell;
 	} else if (!setlevel && currlevel == 16 && !myPlayer._pLvlVisited[16] && (myPlayer.pDungMsgs & DungMsgDiablo) == 0) {
 		for (auto &monster : Monsters) {
-			if (monster.type().type == MT_DIABLO && monster.hitPoints > 0) {
+			if (monster.type().type != MT_DIABLO) continue;
+			if (monster.hitPoints > 0) {
 				sfxdelay = 40;
 				sfxdnum = SfxID::DiabloGreeting;
 				myPlayer.pDungMsgs |= DungMsgDiablo;
 			}
+			break;
 		}
 	} else if (!setlevel && currlevel == 17 && !myPlayer._pLvlVisited[17] && (myPlayer.pDungMsgs2 & 1) == 0) {
 		sfxdelay = 10;
