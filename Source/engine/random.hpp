@@ -8,6 +8,7 @@
 #pragma once
 
 #include <algorithm>
+#include <bit>
 #include <cstdint>
 #include <initializer_list>
 #include <random>
@@ -136,38 +137,103 @@ public:
 	}
 };
 
-/** Adapted from https://prng.di.unimi.it/xoshiro128plusplus.c */
-class xoshiro128plusplus {
-private:
-	static uint32_t rotl(const uint32_t x, int k)
-	{
-		return (x << k) | (x >> (32 - k));
-	}
-
-	uint32_t s[4];
+// Based on fmix32 implementation from MurmurHash3 created by Austin Appleby in 2008
+// https://github.com/aappleby/smhasher/blob/61a0530f28277f2e850bfc39600ce61d02b518de/src/MurmurHash3.cpp#L68
+// and adapted from https://prng.di.unimi.it/splitmix64.c written in 2015 by Sebastiano Vigna
+//
+// See also:
+//  Guy L. Steele, Doug Lea, and Christine H. Flood. 2014.
+//  Fast splittable pseudorandom number generators. SIGPLAN Not. 49, 10 (October 2014), 453–472.
+//  https://doi.org/10.1145/2714064.2660195
+class SplitMix32 {
+	uint32_t state;
 
 public:
-	void seed(uint64_t value)
+	SplitMix32(uint32_t state)
+	    : state(state)
 	{
-		uint64_t rand1 = next_split(value);
-		uint64_t rand2 = next_split(rand1);
-		s[0] = static_cast<uint32_t>(rand1);
-		s[1] = static_cast<uint32_t>(rand2);
-		s[2] = static_cast<uint32_t>(rand1 >> 32);
-		s[3] = static_cast<uint32_t>(rand2 >> 32);
-	}
-
-	void seed(uint32_t value)
-	{
-		s[0] = next_split(value);
-		s[1] = next_split(s[0]);
-		s[2] = next_split(s[1]);
-		s[3] = next_split(s[2]);
 	}
 
 	uint32_t next()
 	{
-		const uint32_t result = rotl(s[0] + s[3], 7) + s[0];
+		uint32_t z = (state += 0x9e3779b9);
+		z = (z ^ (z >> 16)) * 0x85ebca6b;
+		z = (z ^ (z >> 13)) * 0xc2b2ae35;
+		return z ^ (z >> 16);
+	}
+
+	void generate(uint32_t *begin, const uint32_t *end)
+	{
+		while (begin != end) {
+			*begin = next();
+			++begin;
+		}
+	}
+};
+
+// Adapted from https://prng.di.unimi.it/splitmix64.c written in 2015 by Sebastiano Vigna
+//
+// See also:
+//  Guy L. Steele, Doug Lea, and Christine H. Flood. 2014.
+//  Fast splittable pseudorandom number generators. SIGPLAN Not. 49, 10 (October 2014), 453–472.
+//  https://doi.org/10.1145/2714064.2660195
+class SplitMix64 {
+	uint64_t state;
+
+public:
+	SplitMix64(uint64_t state)
+	    : state(state)
+	{
+	}
+
+	uint64_t next()
+	{
+		uint64_t z = (state += 0x9e3779b97f4a7c15);
+		z = (z ^ (z >> 30)) * 0xbf58476d1ce4e5b9;
+		z = (z ^ (z >> 27)) * 0x94d049bb133111eb;
+		return z ^ (z >> 31);
+	}
+
+	void generate(uint64_t *begin, const uint64_t *end)
+	{
+		while (begin != end) {
+			*begin = next();
+			++begin;
+		}
+	}
+};
+
+/** Adapted from https://prng.di.unimi.it/xoshiro128plusplus.c written in 2019 by David Blackman and Sebastiano Vigna */
+class xoshiro128plusplus {
+private:
+	uint32_t s[4];
+
+public:
+	xoshiro128plusplus() { seed(static_cast<uint64_t>(1)); }
+	xoshiro128plusplus(uint32_t initialSeed) { seed(initialSeed); }
+	xoshiro128plusplus(uint64_t initialSeed) { seed(initialSeed); }
+
+	void seed(uint64_t value)
+	{
+		uint64_t seeds[2];
+		SplitMix64 seedSequence { value };
+		seedSequence.generate(seeds, seeds + 2);
+
+		s[0] = static_cast<uint32_t>(seeds[0] >> 32);
+		s[1] = static_cast<uint32_t>(seeds[0]);
+		s[2] = static_cast<uint32_t>(seeds[1] >> 32);
+		s[3] = static_cast<uint32_t>(seeds[1]);
+	}
+
+	void seed(uint32_t value)
+	{
+		SplitMix32 seedSequence { value };
+		seedSequence.generate(s, s + 4);
+	}
+
+	uint32_t next()
+	{
+		const uint32_t result = std::rotl(s[0] + s[3], 7) + s[0];
 
 		const uint32_t t = s[1] << 9;
 
@@ -178,33 +244,15 @@ public:
 
 		s[2] ^= t;
 
-		s[3] = rotl(s[3], 11);
+		s[3] = std::rotl(s[3], 11);
 
 		return result;
-	}
-
-private:
-	/** Adapted from https://prng.di.unimi.it/splitmix64.c */
-	static uint64_t next_split(uint64_t x)
-	{
-		uint64_t z = (x += 0x9e3779b97f4a7c15);
-		z = (z ^ (z >> 30)) * 0xbf58476d1ce4e5b9;
-		z = (z ^ (z >> 27)) * 0x94d049bb133111eb;
-		return z ^ (z >> 31);
-	}
-
-	/** Adapted from https://prng.di.unimi.it/splitmix64.c using fmix32 from MurmurHash3 */
-	static uint32_t next_split(uint32_t x)
-	{
-		uint32_t z = (x += 0x9e3779b9);
-		z = (z ^ (z >> 16)) * 0x85ebca6b;
-		z = (z ^ (z >> 13)) * 0xc2b2ae35;
-		return z ^ (z >> 16);
 	}
 };
 
 /**
- * @brief Advances the global seed generator state and returns the new value
+ * @brief Overwrite the state of the global seed generator with state derived from the given seed
+ * @param seed Seed from which to derive the new state
  */
 void ResetSeedGenerator(uint64_t seed);
 
