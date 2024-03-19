@@ -212,38 +212,22 @@ public:
 	xoshiro128plusplus(uint64_t initialSeed) { seed(initialSeed); }
 	xoshiro128plusplus(uint32_t initialSeed) { seed(initialSeed); }
 
-	uint32_t next()
-	{
-		const uint32_t result = rotl(s[0] + s[3], 7) + s[0];
-
-		const uint32_t t = s[1] << 9;
-
-		s[2] ^= s[0];
-		s[3] ^= s[1];
-		s[1] ^= s[2];
-		s[0] ^= s[3];
-
-		s[2] ^= t;
-
-		s[3] = rotl(s[3], 11);
-
-		return result;
-	}
+	uint32_t next();
 
 	/* This is the jump function for the generator. It is equivalent
 	   to 2^64 calls to next(); it can be used to generate 2^64
 	   non-overlapping subsequences for parallel computations. */
 	void jump()
 	{
-		static const uint32_t JUMP[] = { 0x8764000b, 0xf542d2d3, 0x6fa035c3, 0x77f2db5b };
+		static constexpr uint32_t JUMP[] = { 0x8764000b, 0xf542d2d3, 0x6fa035c3, 0x77f2db5b };
 
 		uint32_t s0 = 0;
 		uint32_t s1 = 0;
 		uint32_t s2 = 0;
 		uint32_t s3 = 0;
-		for (int i = 0; i < sizeof JUMP / sizeof *JUMP; i++)
+		for (const uint32_t entry : JUMP)
 			for (int b = 0; b < 32; b++) {
-				if (JUMP[i] & UINT32_C(1) << b) {
+				if (entry & UINT32_C(1) << b) {
 					s0 ^= s[0];
 					s1 ^= s[1];
 					s2 ^= s[2];
@@ -286,17 +270,14 @@ private:
 
 	void seed()
 	{
-		uint64_t ts = timeSeed();
-		s[0] = static_cast<uint32_t>(ts >> 32);
-		s[1] = static_cast<uint32_t>(ts);
+		seed(timeSeed());
 
 		static std::random_device rd;
 		std::uniform_int_distribution<uint32_t> dist;
-		s[2] = dist(rd);
-		s[3] = dist(rd);
+		for (uint32_t &cell : s)
+			cell ^= dist(rd);
 	}
 
-	static uint32_t rotl(const uint32_t x, int k);
 	static uint64_t timeSeed();
 	static void copy(state &dst, const state &src);
 };
