@@ -8,7 +8,6 @@
 #pragma once
 
 #include <algorithm>
-#include <bit>
 #include <cstdint>
 #include <initializer_list>
 #include <random>
@@ -205,13 +204,67 @@ public:
 
 /** Adapted from https://prng.di.unimi.it/xoshiro128plusplus.c written in 2019 by David Blackman and Sebastiano Vigna */
 class xoshiro128plusplus {
-private:
-	uint32_t s[4];
-
 public:
-	xoshiro128plusplus() { seed(static_cast<uint64_t>(1)); }
-	xoshiro128plusplus(uint32_t initialSeed) { seed(initialSeed); }
+	typedef uint32_t state[4];
+
+	xoshiro128plusplus() { seed(); }
+	xoshiro128plusplus(const state &s) { copy(this->s, s); }
 	xoshiro128plusplus(uint64_t initialSeed) { seed(initialSeed); }
+	xoshiro128plusplus(uint32_t initialSeed) { seed(initialSeed); }
+
+	uint32_t next()
+	{
+		const uint32_t result = rotl(s[0] + s[3], 7) + s[0];
+
+		const uint32_t t = s[1] << 9;
+
+		s[2] ^= s[0];
+		s[3] ^= s[1];
+		s[1] ^= s[2];
+		s[0] ^= s[3];
+
+		s[2] ^= t;
+
+		s[3] = rotl(s[3], 11);
+
+		return result;
+	}
+
+	/* This is the jump function for the generator. It is equivalent
+	   to 2^64 calls to next(); it can be used to generate 2^64
+	   non-overlapping subsequences for parallel computations. */
+	void jump()
+	{
+		static const uint32_t JUMP[] = { 0x8764000b, 0xf542d2d3, 0x6fa035c3, 0x77f2db5b };
+
+		uint32_t s0 = 0;
+		uint32_t s1 = 0;
+		uint32_t s2 = 0;
+		uint32_t s3 = 0;
+		for (int i = 0; i < sizeof JUMP / sizeof *JUMP; i++)
+			for (int b = 0; b < 32; b++) {
+				if (JUMP[i] & UINT32_C(1) << b) {
+					s0 ^= s[0];
+					s1 ^= s[1];
+					s2 ^= s[2];
+					s3 ^= s[3];
+				}
+				next();
+			}
+
+		s[0] = s0;
+		s[1] = s1;
+		s[2] = s2;
+		s[3] = s3;
+	}
+
+	void save(state &s) const
+	{
+		copy(s, this->s);
+	}
+
+private:
+	state s;
 
 	void seed(uint64_t value)
 	{
@@ -231,30 +284,27 @@ public:
 		seedSequence.generate(s, s + 4);
 	}
 
-	uint32_t next()
+	void seed()
 	{
-		const uint32_t result = std::rotl(s[0] + s[3], 7) + s[0];
+		uint64_t ts = timeSeed();
+		s[0] = static_cast<uint32_t>(ts >> 32);
+		s[1] = static_cast<uint32_t>(ts);
 
-		const uint32_t t = s[1] << 9;
-
-		s[2] ^= s[0];
-		s[3] ^= s[1];
-		s[1] ^= s[2];
-		s[0] ^= s[3];
-
-		s[2] ^= t;
-
-		s[3] = std::rotl(s[3], 11);
-
-		return result;
+		static std::random_device rd;
+		std::uniform_int_distribution<uint32_t> dist;
+		s[2] = dist(rd);
+		s[3] = dist(rd);
 	}
+
+	static uint32_t rotl(const uint32_t x, int k);
+	static uint64_t timeSeed();
+	static void copy(state &dst, const state &src);
 };
 
 /**
- * @brief Overwrite the state of the global seed generator with state derived from the given seed
- * @param seed Seed from which to derive the new state
+ * @brief Returns a copy of the global seed generator and fast-forwards the global seed generator to avoid collisions
  */
-void ResetSeedGenerator(uint64_t seed);
+xoshiro128plusplus ReserveSeedSequence();
 
 /**
  * @brief Advances the global seed generator state and returns the new value
