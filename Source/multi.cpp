@@ -4,7 +4,6 @@
  * Implementation of functions for keeping multiplaye games in sync.
  */
 
-#include <chrono>
 #include <cstddef>
 #include <cstdint>
 #include <string_view>
@@ -481,19 +480,14 @@ bool InitMulti(GameData *gameData)
 	return true;
 }
 
-uint64_t GenerateGameSeed()
-{
-	auto now = std::chrono::high_resolution_clock::now();
-	auto duration = now.time_since_epoch();
-	return static_cast<uint64_t>(duration.count());
-}
-
 } // namespace
 
 void InitGameInfo()
 {
+	xoshiro128plusplus gameGenerator = ReserveSeedSequence();
+	gameGenerator.save(sgGameInitInfo.gameSeed);
+
 	sgGameInitInfo.size = sizeof(sgGameInitInfo);
-	sgGameInitInfo.gameSeed = GenerateGameSeed();
 	sgGameInitInfo.programid = GAME_ID;
 	sgGameInitInfo.versionMajor = PROJECT_VERSION_MAJOR;
 	sgGameInitInfo.versionMinor = PROJECT_VERSION_MINOR;
@@ -794,11 +788,11 @@ bool NetInit(bool bSinglePlayer)
 		NetClose();
 		gbSelectProvider = false;
 	}
-	ResetSeedGenerator(sgGameInitInfo.gameSeed);
+	xoshiro128plusplus gameGenerator(sgGameInitInfo.gameSeed);
 	gnTickDelay = 1000 / sgGameInitInfo.nTickRate;
 
 	for (int i = 0; i < NUMLEVELS; i++) {
-		DungeonSeeds[i] = GenerateSeed();
+		DungeonSeeds[i] = gameGenerator.next();
 		LevelSeeds[i] = std::nullopt;
 	}
 	PublicGame = DvlNet_IsPublicGame();

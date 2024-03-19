@@ -1,7 +1,10 @@
 #include "engine/random.hpp"
 
+#include <bit>
+#include <chrono>
 #include <cmath>
 #include <cstdint>
+#include <cstring>
 #include <limits>
 #include <random>
 
@@ -16,9 +19,30 @@ std::linear_congruential_engine<uint32_t, 0x015A4E35, 1, 0> diabloGenerator;
 /** Xoshiro pseudo-random number generator to provide less predictable seeds */
 xoshiro128plusplus seedGenerator;
 
-void ResetSeedGenerator(uint64_t seed)
+uint32_t xoshiro128plusplus::rotl(const uint32_t x, int k)
 {
-	seedGenerator.seed(seed);
+	return std::rotl(x, k);
+}
+
+uint64_t xoshiro128plusplus::timeSeed()
+{
+	auto now = std::chrono::system_clock::now();
+	auto nano = std::chrono::nanoseconds(now.time_since_epoch());
+	long long time = nano.count();
+	SplitMix64 seedSequence { static_cast<uint64_t>(time) };
+	return seedSequence.next();
+}
+
+void xoshiro128plusplus::copy(state &dst, const state &src)
+{
+	memcpy(dst, src, sizeof(dst));
+}
+
+xoshiro128plusplus ReserveSeedSequence()
+{
+	xoshiro128plusplus reserved = seedGenerator;
+	seedGenerator.jump();
+	return reserved;
 }
 
 uint32_t GenerateSeed()
