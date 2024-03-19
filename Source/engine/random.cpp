@@ -19,18 +19,29 @@ std::linear_congruential_engine<uint32_t, 0x015A4E35, 1, 0> diabloGenerator;
 /** Xoshiro pseudo-random number generator to provide less predictable seeds */
 xoshiro128plusplus seedGenerator;
 
-uint32_t xoshiro128plusplus::rotl(const uint32_t x, int k)
+uint32_t xoshiro128plusplus::next()
 {
-	return std::rotl(x, k);
+	const uint32_t result = std::rotl(s[0] + s[3], 7) + s[0];
+
+	const uint32_t t = s[1] << 9;
+
+	s[2] ^= s[0];
+	s[3] ^= s[1];
+	s[1] ^= s[2];
+	s[0] ^= s[3];
+
+	s[2] ^= t;
+
+	s[3] = std::rotl(s[3], 11);
+
+	return result;
 }
 
 uint64_t xoshiro128plusplus::timeSeed()
 {
 	auto now = std::chrono::system_clock::now();
 	auto nano = std::chrono::nanoseconds(now.time_since_epoch());
-	long long time = nano.count();
-	SplitMix64 seedSequence { static_cast<uint64_t>(time) };
-	return seedSequence.next();
+	return static_cast<uint64_t>(nano.count());
 }
 
 void xoshiro128plusplus::copy(state &dst, const state &src)
