@@ -883,6 +883,11 @@ public:
 		this->plrIsOnSetLevel = true;
 	}
 
+	bool isDead()
+	{
+		return _pHitPoints >> 6 <= 0;
+	}
+
 	struct LifeManaValue {
 		int32_t value; // Internal representation as a fraction of 64.
 
