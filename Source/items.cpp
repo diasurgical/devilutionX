@@ -2776,8 +2776,9 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	madd = (madd * playerClassAttributes.itmMana) >> 6;
 	imana += (madd << 6);
 
+	player.setCurrentLife(0, ihp);
 	player._pMaxHP = ihp + player._pMaxHPBase;
-	player._pHitPoints = std::min(ihp + player._pHPBase, player._pMaxHP);
+	player._pHitPoints = ihp + player._pHPBase;
 
 	if (&player == MyPlayer && player.isDead()) {
 		player.setLife(0);

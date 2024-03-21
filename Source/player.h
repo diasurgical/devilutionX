@@ -919,7 +919,7 @@ public:
 	/** @brief Returns a character's max life. */
 	[[nodiscard]] LifeManaValue getMaxLife() const { return LifeManaValue(_pMaxHP); }
 
-
+private:
 	/** @brief Sets life to a valid value. */
 	void clampLife()
 	{
@@ -932,19 +932,40 @@ public:
 	/** @brief Redraws the life globe. */
 	void updateLifeGlobe() const;
 
-	/** @brief Sets a character's life. */
-	void setLife(int val, int frac = 0);
+public:
+	/** @brief Sets a character's CURRENT BASE/CURRENT NOW life.
+	 * Example usage: Taking damage, using healing potions.
+	 */
+	void setCurrentLife(int val, int frac = 0);
 
-	/** @brief Modifies a character's life. */
-	void modifyLife(int val, int frac = 0);
+	/** @brief Modifies a character's CURRENT BASE/CURRENT NOW life.
+	 * Example usage: Taking damage, using healing potions.
+	 */
+	void modifyCurrentLife(int val, int frac = 0);
 
-	/** @brief Sets a character's max life. */
+	/** @brief Sets a character's MAX BASE/MAX NOW life.
+	 * CURRENT BASE/CURRENT NOW values optionally adjusted.
+	 * Example usage: Getting hit by Black Death, gaining Vitality.
+	 */
 	void setMaxLife(int val, int frac = 0, bool adjCurrentLife = true);
 
-	/** @brief Modifies a character's max life. */
+	/** @brief Modifies a character's MAX BASE/MAX NOW life.
+	 * CURRENT BASE/CURRENT NOW values optionally adjusted.
+	 * Example usage: Getting hit by Black Death, gaining Vitality.
+	 */
 	void modifyMaxLife(int val, int frac = 0, bool adjCurrentLife = true);
 
-	/** @brief Sets the characters's current life to the max life. */
+	/** @brief Sets a character's CURRENT NOW/MAX NOW life.
+	 * Example usage: Equipping an item that increases Life.
+	 */
+	void setNowLife(int val, int frac = 0);
+
+	/** @brief Modifies a character's CURRENT NOW/MAX NOW life.
+	 * Example usage: Equipping an item that increases Life.
+	 */
+	void modifyNowLife(int val, int frac = 0);
+
+	/** @brief Sets the characters's CURRENT BASE/CURRENT NOW life to the MAX BASE/MAX NOW life. */
 	void setFullLife();
 
 	/** @brief Check if mana shield should be removed. */
@@ -962,6 +983,7 @@ public:
 	/** @brief Returns a character's max mana. */
 	[[nodiscard]] LifeManaValue getMaxMana() const { return LifeManaValue(_pMaxMana); }
 
+private:
 	/** @brief Sets mana to valid value. */
 	void clampMana()
 	{
@@ -974,17 +996,24 @@ public:
 	/** @brief Redraws the mana globe. */
 	void updateManaGlobe() const;
 
-	/** @brief Sets a character's mana. */
+public:
+	/** @brief Sets a character's base and current mana. */
 	void setMana(int val, int frac = 0);
 
-	/** @brief Modifies a character's mana. */
+	/** @brief Modifies a character's base and current mana. */
 	void modifyMana(int val, int frac = 0);
 
-	/** @brief Sets a character's max mana. */
-	void setMaxMana(int val, int frac = 0, bool adjCurrentMana = true);
+	/** @brief Sets a character's max base mana (permanent). */
+	void setMaxBaseMana(int val, int frac = 0, bool adjCurrentMana = true);
 
-	/** @brief Modifies a character's max mana. */
-	void modifyMaxMana(int val, int frac = 0, bool adjCurrentLife = true);
+	/** @brief Modifies a character's max base mana (permanent). */
+	void modifyMaxBaseMana(int val, int frac = 0, bool adjCurrentMana = true);
+
+	/** @brief Sets a character's max current mana (temporary). */
+	void setMaxCurrentMana(int val, int frac = 0, bool adjCurrentMana = true);
+
+	/** @brief Modifies a character's max current mana (temporary). */
+	void modifyMaxCurrentMana(int val, int frac = 0, bool adjCurrentMana = true);
 
 	/** @brief Sets the characters's current mana to the max mana. */
 	void setFullMana();

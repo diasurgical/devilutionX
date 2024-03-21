@@ -3370,6 +3370,21 @@ void Player::modifyMaxLife(int val, int frac /*= 0*/, bool adjCurrentLife /*= tr
 	updateLifeGlobe();
 	CalcPlrInv(*this, true);
 }
+void Player::setCurrentLife(int val, int frac /*= 0*/)
+{
+	int amount = (val << 6) + frac;
+
+	_pHitPoints = amount + _pHPBase;
+	_pMaxHP = amount + _pMaxHPBase;
+}
+
+void Player::modifyCurrentLife(int val, int frac /*= 0*/)
+{
+	int amount = (val << 6) + frac;
+
+	_pHitPoints += amount;
+	_pMaxHP += amount;
+}
 
 void Player::setFullLife()
 {
@@ -3379,12 +3394,12 @@ void Player::setFullLife()
 
 void Player::checkManaShield() const
 {
-		if (this != MyPlayer)
-			return;
-		if (!pManaShield)
-			return;
-		if (_pMana <= 0)
-			NetSendCmd(true, CMD_REMSHIELD);
+	if (this != MyPlayer)
+		return;
+	if (!pManaShield)
+		return;
+	if (_pMana <= 0)
+		NetSendCmd(true, CMD_REMSHIELD);
 }
 
 void Player::updateManaGlobe() const
@@ -3418,7 +3433,7 @@ void Player::modifyMana(int val, int frac)
 		checkManaShield();
 }
 
-void Player::setMaxMana(int val, int frac /*= 0*/, bool adjCurrentMana /*= true*/)
+void Player::setMaxBaseMana(int val, int frac /*= 0*/, bool adjCurrentMana /*= true*/)
 {
 	int amount = (val << 6) + frac;
 
@@ -3432,7 +3447,7 @@ void Player::setMaxMana(int val, int frac /*= 0*/, bool adjCurrentMana /*= true*
 	CalcPlrInv(*this, true);
 }
 
-void Player::modifyMaxMana(int val, int frac /*= 0*/, bool adjCurrentMana /*= true*/)
+void Player::modifyMaxBaseMana(int val, int frac /*= 0*/, bool adjCurrentMana /*= true*/)
 {
 	int amount = (val << 6) + frac;
 
@@ -3440,10 +3455,28 @@ void Player::modifyMaxMana(int val, int frac /*= 0*/, bool adjCurrentMana /*= tr
 		_pManaBase += amount;
 		_pMana += amount;
 	}
-	
+
 	_pMaxManaBase += amount;
 	_pMaxMana += amount;
 	CalcPlrInv(*this, true);
+}
+
+void Player::setMaxCurrentMana(int val, int frac /*= 0*/, bool adjCurrentMana /*= true*/)
+{
+	int amount = (val << 6) + frac;
+
+	if (adjCurrentMana)
+		_pMana = amount;
+	_pMaxMana = amount;
+}
+
+void Player::modifyMaxCurrentMana(int val, int frac /*= 0*/, bool adjCurrentMana /*= true*/)
+{
+	int amount = (val << 6) + frac;
+
+	if (adjCurrentMana)
+		_pMana += amount;
+	_pMaxMana += amount;
 }
 
 void Player::setFullMana()
