@@ -879,11 +879,117 @@ public:
 		this->plrIsOnSetLevel = true;
 	}
 
+	struct LifeManaValue {
+		int32_t value; // Internal representation as a fraction of 64.
+
+		// Constructor
+		explicit LifeManaValue(int32_t val)
+		    : value(val)
+		{
+		}
+
+		// Returns the whole part of the life value.
+		[[nodiscard]] int32_t whole() const { return value >> 6; }
+
+		// Returns the fractional part of the life value.
+		[[nodiscard]] int32_t frac() const { return value; }
+
+		static LifeManaValue fromWhole(int32_t wholeValue)
+		{
+			return LifeManaValue(wholeValue << 6);
+		}
+
+		static LifeManaValue fromFrac(int32_t fracValue)
+		{
+			return LifeManaValue(fracValue << 6);
+		}
+	};
+
 	/** @brief Returns a character's life based on starting life, character level, and base vitality. */
 	int32_t calculateBaseLife() const;
 
 	/** @brief Returns a character's mana based on starting mana, character level, and base magic. */
 	int32_t calculateBaseMana() const;
+
+	/** @brief Returns a character's base life. */
+	[[nodiscard]] LifeManaValue getBaseLife() const { return LifeManaValue(_pHPBase); }
+
+	/** @brief Returns a character's max base life. */
+	[[nodiscard]] LifeManaValue getMaxBaseLife() const { return LifeManaValue(_pMaxHPBase); }
+
+	/** @brief Returns a character's life. */
+	[[nodiscard]] LifeManaValue getLife() const { return LifeManaValue(_pHitPoints); }
+
+	/** @brief Returns a character's max life. */
+	[[nodiscard]] LifeManaValue getMaxLife() const { return LifeManaValue(_pMaxHP); }
+
+
+	/** @brief Sets life to a valid value. */
+	void clampLife()
+	{
+		if (_pHitPoints > _pMaxHP) {
+			_pHitPoints = _pMaxHP;
+			_pHPBase = _pMaxHPBase;
+		}
+	}
+
+	/** @brief Redraws the life globe. */
+	void updateLifeGlobe() const;
+
+	/** @brief Sets a character's life. */
+	void setLife(int val, int frac = 0);
+
+	/** @brief Modifies a character's life. */
+	void modifyLife(int val, int frac = 0);
+
+	/** @brief Sets a character's max life. */
+	void setMaxLife(int val, int frac = 0, bool adjCurrentLife = true);
+
+	/** @brief Modifies a character's max life. */
+	void modifyMaxLife(int val, int frac = 0, bool adjCurrentLife = true);
+
+	void setFullLife();
+
+	/** @brief Check if mana shield should be removed. */
+	void checkManaShield() const;
+
+	/** @brief Returns a character's base mana. */
+	[[nodiscard]] LifeManaValue getBaseMana() const { return LifeManaValue(_pManaBase); }
+
+	/** @brief Returns a character's max base mana. */
+	[[nodiscard]] LifeManaValue getMaxBaseMana() const { return LifeManaValue(_pMaxManaBase); }
+
+	/** @brief Returns a character's mana. */
+	[[nodiscard]] LifeManaValue getMana() const { return LifeManaValue(_pMana); }
+
+	/** @brief Returns a character's max mana. */
+	[[nodiscard]] LifeManaValue getMaxMana() const { return LifeManaValue(_pMaxMana); }
+
+	/** @brief Sets mana to valid value. */
+	void clampMana()
+	{
+		if (_pMana > _pMaxMana) {
+			_pMana = _pMaxMana;
+			_pManaBase = _pMaxManaBase;
+		}
+	}
+
+	/** @brief Redraws the mana globe. */
+	void updateManaGlobe() const;
+
+	/** @brief Sets a character's mana. */
+	void setMana(int val, int frac = 0);
+
+	/** @brief Modifies a character's mana. */
+	void modifyMana(int val, int frac = 0);
+
+	/** @brief Sets a character's max mana. */
+	void setMaxMana(int val, int frac = 0, bool adjCurrentMana = true);
+
+	/** @brief Modifies a character's max mana. */
+	void modifyMaxMana(int val, int frac = 0, bool adjCurrentLife = true);
+
+	void setFullMana();
 
 	/**
 	 * @brief Sets a tile/dPlayer to be occupied by the player
@@ -968,7 +1074,6 @@ void ModifyPlrStr(Player &player, int l);
 void ModifyPlrMag(Player &player, int l);
 void ModifyPlrDex(Player &player, int l);
 void ModifyPlrVit(Player &player, int l);
-void SetPlayerHitPoints(Player &player, int val);
 void SetPlrStr(Player &player, int v);
 void SetPlrMag(Player &player, int v);
 void SetPlrDex(Player &player, int v);

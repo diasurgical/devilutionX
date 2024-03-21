@@ -251,17 +251,8 @@ void DoResurrect(Player &player, Player &target)
 	target.destAction = ACTION_NONE;
 	target._pInvincible = false;
 	SyncInitPlrPos(target);
-
-	int hp = 10 << 6;
-	if (target._pMaxHPBase < (10 << 6)) {
-		hp = target._pMaxHPBase;
-	}
-	SetPlayerHitPoints(target, hp);
-
-	target._pHPBase = target._pHitPoints + (target._pMaxHPBase - target._pMaxHP); // CODEFIX: does the same stuff as SetPlayerHitPoints above, can be removed
-	target._pMana = 0;
-	target._pManaBase = target._pMana + (target._pMaxManaBase - target._pMaxMana);
-
+	target.setLife(10);
+	target.setMana(0);
 	target._pmode = PM_STAND;
 
 	CalcPlrInv(target, true);

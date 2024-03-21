@@ -2780,7 +2780,7 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	player._pHitPoints = std::min(ihp + player._pHPBase, player._pMaxHP);
 
 	if (&player == MyPlayer && (player._pHitPoints >> 6) <= 0) {
-		SetPlayerHitPoints(player, 0);
+		player.setLife(0);
 	}
 
 	player._pMaxMana = imana + player._pMaxManaBase;
