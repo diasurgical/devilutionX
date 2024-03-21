@@ -883,7 +883,7 @@ public:
 		this->plrIsOnSetLevel = true;
 	}
 
-	bool isDead()
+	bool isDead() const
 	{
 		return _pHitPoints >> 6 <= 0;
 	}
@@ -891,27 +891,14 @@ public:
 	struct LifeManaValue {
 		int32_t value; // Internal representation as a fraction of 64.
 
-		// Constructor
 		explicit LifeManaValue(int32_t val)
 		    : value(val)
 		{
 		}
 
-		// Returns the whole part of the life value.
 		[[nodiscard]] int32_t whole() const { return value >> 6; }
 
-		// Returns the fractional part of the life value.
 		[[nodiscard]] int32_t frac() const { return value; }
-
-		static LifeManaValue fromWhole(int32_t wholeValue)
-		{
-			return LifeManaValue(wholeValue << 6);
-		}
-
-		static LifeManaValue fromFrac(int32_t fracValue)
-		{
-			return LifeManaValue(fracValue << 6);
-		}
 	};
 
 	/** @brief Returns a character's life based on starting life, character level, and base vitality. */
@@ -957,6 +944,7 @@ public:
 	/** @brief Modifies a character's max life. */
 	void modifyMaxLife(int val, int frac = 0, bool adjCurrentLife = true);
 
+	/** @brief Sets the characters's current life to the max life. */
 	void setFullLife();
 
 	/** @brief Check if mana shield should be removed. */
@@ -998,6 +986,7 @@ public:
 	/** @brief Modifies a character's max mana. */
 	void modifyMaxMana(int val, int frac = 0, bool adjCurrentLife = true);
 
+	/** @brief Sets the characters's current mana to the max mana. */
 	void setFullMana();
 
 	/**
