@@ -236,6 +236,8 @@ struct Player {
 	int _pBaseVit;
 	int _pStatPts;
 	int _pDamageMod;
+
+private:
 	int _pHPBase;
 	int _pMaxHPBase;
 	int _pHitPoints;
@@ -246,6 +248,8 @@ struct Player {
 	int _pMana;
 	int _pMaxMana;
 	int _pManaPer;
+
+public:
 	int _pIMinDam;
 	int _pIMaxDam;
 	int _pIAC;
