@@ -2618,10 +2618,8 @@ void OperateShrineDivine(Player &player, Point spawnPosition)
 		CreateTypeItem(spawnPosition, false, ItemType::Misc, IMISC_FULLREJUV, false, false, true);
 	}
 
-	player._pMana = player._pMaxMana;
-	player._pManaBase = player._pMaxManaBase;
-	player._pHitPoints = player._pMaxHP;
-	player._pHPBase = player._pMaxHPBase;
+	player.setFullLife();
+	player.setFullMana();
 
 	RedrawEverything();
 
@@ -2666,10 +2664,8 @@ void OperateShrineSpooky(const Player &player)
 
 	Player &myPlayer = *MyPlayer;
 
-	myPlayer._pHitPoints = myPlayer._pMaxHP;
-	myPlayer._pHPBase = myPlayer._pMaxHPBase;
-	myPlayer._pMana = myPlayer._pMaxMana;
-	myPlayer._pManaBase = myPlayer._pMaxManaBase;
+	myPlayer.setFullLife();
+	myPlayer.setFullMana();
 
 	RedrawEverything();
 
