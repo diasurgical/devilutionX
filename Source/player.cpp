@@ -1124,7 +1124,7 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 	case ACTION_RATTACKPLR:
 	case ACTION_SPELLPLR:
 		target = &Players[targetId];
-		if ((target->getLife().whole()) <= 0) {
+		if (target->isDead()) {
 			player.Stop();
 			return;
 		}
@@ -2153,7 +2153,7 @@ void InitPlayerGFX(Player &player)
 
 	ResetPlayerGFX(player);
 
-	if (player.getLife().whole() == 0) {
+	if (player.isDead()) {
 		player._pgfxnum &= ~0xFU;
 		LoadPlrGFX(player, player_graphic::Death);
 		return;
@@ -2380,7 +2380,7 @@ void NextPlrLevel(Player &player)
 
 void Player::_addExperience(uint32_t experience, int levelDelta)
 {
-	if (this != MyPlayer || getLife().frac() <= 0)
+	if (this != MyPlayer || isDead())
 		return;
 
 	if (isMaxCharacterLevel()) {
@@ -2804,14 +2804,14 @@ void ApplyPlrDamage(DamageType damageType, Player &player, int dam, int minHP /*
 	if (player.getLife().frac() < minHitPoints) {
 		player.setLife(minHitPoints);
 	}
-	if (player.getLife().whole() <= 0) {
+	if (player.isDead()) {
 		SyncPlrKill(player, deathReason);
 	}
 }
 
 void SyncPlrKill(Player &player, DeathReason deathReason)
 {
-	if (player.getLife().frac() <= 0 && leveltype == DTYPE_TOWN) {
+	if (player.isDead() && leveltype == DTYPE_TOWN) {
 		player.setLife(1);
 		return;
 	}
@@ -2967,7 +2967,7 @@ void ProcessPlayers()
 		if (player.plractive && player.isOnActiveLevel() && (&player == MyPlayer || !player._pLvlChanging)) {
 			CheckCheatStats(player);
 
-			if (!PlrDeathModeOK(player) && player.getLife().whole() <= 0) {
+			if (!PlrDeathModeOK(player) && player.isDead()) {
 				SyncPlrKill(player, DeathReason::Unknown);
 			}
 
@@ -3045,7 +3045,7 @@ bool PosOkPlayer(const Player &player, Point position)
 	if (!IsTileWalkable(position))
 		return false;
 	Player *otherPlayer = PlayerAtPosition(position);
-	if (otherPlayer != nullptr && otherPlayer != &player && otherPlayer->getLife().frac() != 0)
+	if (otherPlayer != nullptr && otherPlayer != &player && !otherPlayer->isDead())
 		return false;
 
 	if (dMonster[position.x][position.y] != 0) {
