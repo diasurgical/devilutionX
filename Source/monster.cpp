@@ -616,7 +616,7 @@ void UpdateEnemy(Monster &monster)
 		for (size_t pnum = 0; pnum < Players.size(); pnum++) {
 			const Player &player = Players[pnum];
 			if (!player.plractive || !player.isOnActiveLevel() || player._pLvlChanging
-			    || (((player._pHitPoints >> 6) == 0) && gbIsMultiplayer))
+			    || (player.isDead() && gbIsMultiplayer))
 				continue;
 			const bool sameroom = (dTransVal[position.x][position.y] == dTransVal[player.position.tile.x][player.position.tile.y]);
 			const int dist = position.WalkingDistance(player.position.tile);
@@ -1139,7 +1139,7 @@ int GetMinHit()
 
 void MonsterAttackPlayer(Monster &monster, Player &player, int hit, int minDam, int maxDam)
 {
-	if (player._pHitPoints >> 6 <= 0 || player._pInvincible || HasAnyOf(player._pSpellFlags, SpellFlag::Etherealize))
+	if (player.isDead() || player._pInvincible || HasAnyOf(player._pSpellFlags, SpellFlag::Etherealize))
 		return;
 	if (monster.position.tile.WalkingDistance(player.position.tile) >= 2)
 		return;
@@ -3946,10 +3946,10 @@ void PrepDoEnding()
 		player._pmode = PM_QUIT;
 		player._pInvincible = true;
 		if (gbIsMultiplayer) {
-			if (player._pHitPoints >> 6 == 0)
-				player._pHitPoints = 64;
-			if (player._pMana >> 6 == 0)
-				player._pMana = 64;
+			if (player.isDead())
+				player.setLife(1);
+			if (player.getMana().whole() == 0)
+				player.setMana(1);
 		}
 	}
 }

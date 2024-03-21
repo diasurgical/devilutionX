@@ -1642,7 +1642,7 @@ void UpdateBurningCrossDamage(Object &cross)
 		return;
 
 	ApplyPlrDamage(DamageType::Fire, myPlayer, 0, 0, damage[leveltype - 1]);
-	if (myPlayer._pHitPoints >> 6 > 0) {
+	if (!myPlayer.isDead()) {
 		myPlayer.Say(HeroSpeech::Argh);
 	}
 }
@@ -3210,14 +3210,9 @@ bool OperateFountains(Player &player, Object &fountain)
 		if (&player != MyPlayer)
 			return false;
 
-		if (player._pHitPoints < player._pMaxHP) {
+		if (player.getLife().frac() < player.getMaxLife().frac()) {
 			PlaySfxLoc(SfxID::OperateFountain, fountain.position);
-			player._pHitPoints += 64;
-			player._pHPBase += 64;
-			if (player._pHitPoints > player._pMaxHP) {
-				player._pHitPoints = player._pMaxHP;
-				player._pHPBase = player._pMaxHPBase;
-			}
+			player.modifyLife(1);
 			applied = true;
 		} else
 			PlaySfxLoc(SfxID::OperateFountain, fountain.position);
@@ -3226,16 +3221,9 @@ bool OperateFountains(Player &player, Object &fountain)
 		if (&player != MyPlayer)
 			return false;
 
-		if (player._pMana < player._pMaxMana) {
+		if (player.getMana().frac() < player.getMaxMana().frac()) {
 			PlaySfxLoc(SfxID::OperateFountain, fountain.position);
-
-			player._pMana += 64;
-			player._pManaBase += 64;
-			if (player._pMana > player._pMaxMana) {
-				player._pMana = player._pMaxMana;
-				player._pManaBase = player._pMaxManaBase;
-			}
-
+			player.modifyMana(1);
 			applied = true;
 		} else
 			PlaySfxLoc(SfxID::OperateFountain, fountain.position);
