@@ -40,7 +40,6 @@ void GamemenuMusicVolume(bool bActivate);
 void GamemenuSoundVolume(bool bActivate);
 void GamemenuBrightness(bool bActivate);
 void GamemenuSpeed(bool bActivate);
-void GamemenuSaveAndExit(bool bActivate);
 void GamemenuReturnToGame(bool bActivate);
 
 /** Contains the game menu items of the single player menu. */
@@ -89,11 +88,11 @@ const char *const SoundToggleNames[] = {
 
 void GamemenuUpdateSingle()
 {
-	gmenu_enable(&sgSingleMenu[2], gbValidSaveFile);
+	sgSingleMenu[2].setEnabled(gbValidSaveFile);
 
-	bool enable = Players[MyPlayerId]._pmode != PM_DEATH && !MyPlayerIsDead;
+	bool enable = MyPlayer->_pmode != PM_DEATH && !MyPlayerIsDead;
 
-	gmenu_enable(&sgSingleMenu[0], enable);
+	sgSingleMenu[0].setEnabled(enable);
 }
 
 void GamemenuPrevious(bool /*bActivate*/)
@@ -278,46 +277,6 @@ void GamemenuSpeed(bool bActivate)
 
 	GetOptions().Gameplay.tickRate.SetValue(sgGameInitInfo.nTickRate);
 	gnTickDelay = 1000 / sgGameInitInfo.nTickRate;
-}
-
-void GamemenuSaveAndExit(bool /*bActivate*/)
-{
-	if (pcurs != CURSOR_HAND) {
-		return;
-	}
-
-	if (Players[MyPlayerId]._pmode == PM_DEATH || MyPlayerIsDead) {
-		gamemenu_off();
-		return;
-	}
-
-	WNDPROC saveProc = SetWindowProc(DisableInputWndProc);
-	NewCursor(CURSOR_NONE);
-	gamemenu_off();
-	InitDiabloMsg(EMSG_SAVING);
-	force_redraw = 255;
-	DrawAndBlit();
-	SaveGame();
-	ClrDiabloMsg();
-	force_redraw = 255;
-	NewCursor(CURSOR_HAND);
-	if (CornerStone.activated) {
-		CornerstoneSave();
-	}
-	interface_msg_pump();
-	SetWindowProc(saveProc);
-
-	for (auto &player : Players) {
-		player._pmode = PM_QUIT;
-		player._pInvincible = true;
-	}
-
-	MyPlayerIsDead = false;
-	force_redraw = 255;
-	scrollrt_draw_game_screen();
-	CornerStone.activated = false;
-	gbRunGame = false;
-	gamemenu_off();
 }
 
 void GamemenuReturnToGame(bool /*bActivate*/)

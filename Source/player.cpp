@@ -1041,9 +1041,6 @@ bool DoDeath(Player &player)
 			dFlags[player.position.tile.x][player.position.tile.y] |= DungeonFlag::DeadPlayer;
 		} else if (&player == MyPlayer && player.AnimInfo.tickCounterOfCurrentFrame == 30) {
 			MyPlayerIsDead = true;
-			//if (!gbIsMultiplayer) {
-			//	gamemenu_on();
-			//}
 		}
 	}
 

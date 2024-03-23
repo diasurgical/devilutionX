@@ -1640,18 +1640,31 @@ void EnableFrameCount()
 
 void DrawDeathText(const Surface &out)
 {
-	char gold[64];
-	LightTableIndex = 0;
-	UiFlags largeText = UiFlags::FontSize42 | UiFlags::ColorRed | UiFlags::AlignCenter | UiFlags::VerticalCenter;
-	UiFlags smallText = UiFlags::FontSize30 | UiFlags::ColorRed | UiFlags::AlignCenter | UiFlags::VerticalCenter;
+	LightTableIndex = 0; // Do I need this??
+	const TextRenderOptions largeTextOptions {
+		.flags = UiFlags::FontSize42 | UiFlags::ColorRed | UiFlags::AlignCenter | UiFlags::VerticalCenter,
+		.spacing = 2
+	};
+	const TextRenderOptions smallTextOptions {
+		.flags = UiFlags::FontSize30 | UiFlags::ColorRed | UiFlags::AlignCenter | UiFlags::VerticalCenter,
+		.spacing = 2
+	};
+	std::string text;
+	Point linePosition { 0, 0 };
 
-	DrawString(out, _("You have died"), { { 0, 0 }, { gnScreenWidth, PANEL_TOP } }, largeText, 2);
+	text = _("You have died");
+	DrawString(out, text, linePosition, largeTextOptions);
+	linePosition.y = 42;
 	if (!gbIsMultiplayer) {
-		DrawString(out, _("Press ESC to load last save."), { { 0, 42 }, { gnScreenWidth, PANEL_TOP } }, largeText, 2);
+		text = _("Press ESC to load last save.");
+		DrawString(out, text, linePosition, largeTextOptions);
 	} else {
-		DrawString(out, _("Press ESC to continue."), { { 0, 42 }, { gnScreenWidth, PANEL_TOP } }, smallText, 2);
-		sprintf(gold, _("Death takes its toll of %d Gold"), LostGold);
-		DrawString(out, gold, { { 0, 84 }, { gnScreenWidth, PANEL_TOP } }, smallText, 2);
+		text = _("Press ESC to continue.");
+		DrawString(out, text, linePosition, smallTextOptions);
+
+		linePosition.y = 84;
+		text = fmt::format(fmt::runtime(_("Death takes its toll of {:d} Gold")), LostGold);
+		DrawString(out, text, linePosition, smallTextOptions);
 	}
 }
 
