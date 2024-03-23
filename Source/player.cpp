@@ -228,7 +228,7 @@ void StartAttack(Player &player, Direction d, bool includesFirstFrame)
 
 	// PVP REBALANCE: Increase Warrior Axe and Staff speed by 1 frame.
 	auto gn = static_cast<PlayerWeaponGraphic>(player._pgfxnum & 0xFU);
-	if (player.isOnArenaLevel() && player._pClass == HeroClass::Warrior && IsAnyOf(gn, PlayerWeaponGraphic::Axe, PlayerWeaponGraphic::Staff))
+	if (player.isOnArenaLevel() && player._pClass == HeroClass::Warrior)
 		skippedAnimationFrames++;
 
 	auto animationFlags = AnimationDistributionFlags::ProcessAnimationPending;
