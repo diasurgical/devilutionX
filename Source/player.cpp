@@ -895,7 +895,7 @@ bool PlrHitPlr(Player &attacker, Player &target)
 	// Error handling for critical hit calculation to avoid dividing by 0 in case of bad actor.
 	charLevel = std::clamp(charLevel, 1, static_cast<int>(GetMaximumCharacterLevel()));
 
-	int crit = isOnArena ? attacker._pStrength / (charLevel / 4) : charLevel;
+	int crit = isOnArena ? attacker._pStrength / (charLevel / 8) : charLevel;
 
 	crit = std::clamp(crit, 0, 50);
 
