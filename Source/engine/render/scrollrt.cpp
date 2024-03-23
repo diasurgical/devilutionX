@@ -1638,6 +1638,23 @@ void EnableFrameCount()
 	lastFpsUpdateInMs = SDL_GetTicks();
 }
 
+void DrawDeathText(const Surface &out)
+{
+	char gold[64];
+	LightTableIndex = 0;
+	UiFlags largeText = UiFlags::FontSize42 | UiFlags::ColorRed | UiFlags::AlignCenter | UiFlags::VerticalCenter;
+	UiFlags smallText = UiFlags::FontSize30 | UiFlags::ColorRed | UiFlags::AlignCenter | UiFlags::VerticalCenter;
+
+	DrawString(out, _("You have died"), { { 0, 0 }, { gnScreenWidth, PANEL_TOP } }, largeText, 2);
+	if (!gbIsMultiplayer) {
+		DrawString(out, _("Press ESC to load last save."), { { 0, 42 }, { gnScreenWidth, PANEL_TOP } }, largeText, 2);
+	} else {
+		DrawString(out, _("Press ESC to continue."), { { 0, 42 }, { gnScreenWidth, PANEL_TOP } }, smallText, 2);
+		sprintf(gold, _("Death takes its toll of %d Gold"), LostGold);
+		DrawString(out, gold, { { 0, 84 }, { gnScreenWidth, PANEL_TOP } }, smallText, 2);
+	}
+}
+
 void scrollrt_draw_game_screen()
 {
 	if (HeadlessMode)
