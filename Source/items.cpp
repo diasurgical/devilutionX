@@ -2576,7 +2576,8 @@ void CalcPlrDamage(auto &player, int minDamage, int maxDamage)
 	const uint8_t playerLevel = player.getCharacterLevel();
 
 	if (minDamage == 0 && maxDamage == 0) {
-		minDamage = maxDamage = 1;
+		minDamage = 1;
+		maxDamage = 1;
 
 		if (player.isHoldingItem(ItemType::Shield)) {
 			maxDamage = 3;
