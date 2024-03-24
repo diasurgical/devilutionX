@@ -1426,26 +1426,21 @@ void DrawDeathText(const Surface &out)
 		.spacing = 2
 	};
 	std::string text;
-	int largeTextHeight = 42;
-	Point linePosition { 0, gnScreenHeight / 2 - (largeTextHeight * 2) };
+	int verticalPadding = 42;
+	Point linePosition { 0, gnScreenHeight / 2 - (verticalPadding * 2) };
 
 	text = _("You have died");
 	DrawString(out, text, linePosition, largeTextOptions);
-	linePosition.y += largeTextHeight;
+	linePosition.y += verticalPadding;
 	if (!gbIsMultiplayer) {
 		if (gbValidSaveFile)
 			text = _("Press ESC to load last save.");
 		else
 			text = _("Press ESC to exit game.");
-		DrawString(out, text, linePosition, largeTextOptions);
 	} else {
-		text = _("Press ESC to continue.");
-		DrawString(out, text, linePosition, smallTextOptions);
-
-		linePosition.y += largeTextHeight;
-		text = fmt::format(fmt::runtime(_("Death takes its toll of {:d} Gold")), LostGold);
-		DrawString(out, text, linePosition, smallTextOptions);
+		text = _("Press ESC to continue.");	
 	}
+	DrawString(out, text, linePosition, smallTextOptions);
 }
 
 void DrawGoldSplit(const Surface &out)
