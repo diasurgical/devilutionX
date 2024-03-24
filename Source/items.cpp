@@ -2559,25 +2559,86 @@ void InitItems()
 	initItemGetRecords();
 }
 
-void CalcPlrDamage(auto &player, int mind, int maxd)
+int GetBonusAC(auto &item)
+{
+	if (item._iPLAC != 0) {
+		int tempAc = item._iAC;
+		tempAc *= item._iPLAC;
+		tempAc /= 100;
+		if (tempAc == 0)
+			tempAc = math::Sign(item._iPLAC);
+		return tempAc;
+	}
+}
+
+void CalcPlrDamage(auto &player, int minDamage, int maxDamage)
 {
 	const uint8_t playerLevel = player.getCharacterLevel();
 
-	if (mind == 0 && maxd == 0) {
-		mind = maxd = 1;
+	if (minDamage == 0 && maxDamage == 0) {
+		minDamage = maxDamage = 1;
 
 		if (player.isHoldingItem(ItemType::Shield)) {
-			maxd = 3;
+			maxDamage = 3;
 		}
 
 		if (player._pClass == HeroClass::Monk) {
-			mind = std::max(mind, playerLevel / 2);
-			maxd = std::max<int>(maxd, playerLevel);
+			minDamage = std::max(minDamage, playerLevel / 2);
+			maxDamage = std::max<int>(maxDamage, playerLevel);
 		}
 	}
 
-	player._pIMinDam = mind;
-	player._pIMaxDam = maxd;
+	player._pIMinDam = minDamage;
+	player._pIMaxDam = maxDamage;
+}
+
+void CalcPlrPrimaryStats(auto &player, int strength, int magic, int dexterity, int vitality, int life, int mana)
+{
+	const uint8_t playerLevel = player.getCharacterLevel();
+
+	if (HasAnyOf(player._pSpellFlags, SpellFlag::RageActive)) {
+		strength += 2 * playerLevel;
+		dexterity += playerLevel + playerLevel / 2;
+		vitality += 2 * playerLevel;
+	}
+	if (HasAnyOf(player._pSpellFlags, SpellFlag::RageCooldown)) {
+		strength -= 2 * playerLevel;
+		dexterity -= playerLevel + playerLevel / 2;
+		vitality -= 2 * playerLevel;
+	}
+
+	player._pStrength = std::max(0, strength + player._pBaseStr);
+	player._pMagic = std::max(0, magic + player._pBaseMag);
+	player._pDexterity = std::max(0, dexterity + player._pBaseDex);
+	player._pVitality = std::max(0, vitality + player._pBaseVit);
+
+	const ClassAttributes &playerClassAttributes = player.getClassAttributes();
+	vitality = (vitality * playerClassAttributes.itmLife) >> 6;
+	life += (vitality << 6);
+
+	magic = (magic * playerClassAttributes.itmMana) >> 6;
+	mana += (magic << 6);
+
+	player._pMaxHP = life + player._pMaxHPBase;
+	player._pHitPoints = std::min(life + player._pHPBase, player._pMaxHP);
+
+	if (&player == MyPlayer && (player._pHitPoints >> 6) <= 0) {
+		SetPlayerHitPoints(player, 0);
+	}
+
+	player._pMaxMana = mana + player._pMaxManaBase;
+	player._pMana = std::min(mana + player._pManaBase, player._pMaxMana);
+}
+
+void CalcPlrLightRadius(auto &player, int lrad)
+{
+	lrad = std::clamp(lrad, 2, 15);
+
+	if (player._pLightRad != lrad) {
+		ChangeLightRadius(player.lightId, lrad);
+		ChangeVisionRadius(player.getId(), lrad);
+		player._pLightRad = lrad;
+	}
 }
 
 void CalcPlrDamageMod(auto &player)
@@ -2632,32 +2693,32 @@ void CalcPlrDamageMod(auto &player)
 	}
 }
 
-void CalcPlrResistances(auto &player, ItemSpecialEffect iflgs, int fr, int lr, int mr)
+void CalcPlrResistances(auto &player, ItemSpecialEffect iflgs, int fire, int lightning, int magic)
 {
 	const uint8_t playerLevel = player.getCharacterLevel();
 
 	if (player._pClass == HeroClass::Barbarian) {
-		mr += playerLevel;
-		fr += playerLevel;
-		lr += playerLevel;
+		magic += playerLevel;
+		fire += playerLevel;
+		lightning += playerLevel;
 	}
 
 	if (HasAnyOf(player._pSpellFlags, SpellFlag::RageCooldown)) {
-		mr -= playerLevel;
-		fr -= playerLevel;
-		lr -= playerLevel;
+		magic -= playerLevel;
+		fire -= playerLevel;
+		lightning -= playerLevel;
 	}
 
 	if (HasAnyOf(iflgs, ItemSpecialEffect::ZeroResistance)) {
 		// reset resistances to zero if the respective special effect is active
-		mr = 0;
-		fr = 0;
-		lr = 0;
+		magic = 0;
+		fire = 0;
+		lightning = 0;
 	}
 
-	player._pMagResist = std::clamp(mr, 0, MaxResistance);
-	player._pFireResist = std::clamp(fr, 0, MaxResistance);
-	player._pLghtResist = std::clamp(lr, 0, MaxResistance);
+	player._pMagResist = std::clamp(magic, 0, MaxResistance);
+	player._pFireResist = std::clamp(fire, 0, MaxResistance);
+	player._pLghtResist = std::clamp(lightning, 0, MaxResistance);
 }
 
 bool CalcPlrBlockFlag(auto &player)
@@ -2749,7 +2810,7 @@ PlayerArmorGraphic GetPlrAnimArmorId(auto &player)
 	return PlayerArmorGraphic::Light;
 }
 
-void CalcPlrGraphics(auto &player, PlayerWeaponGraphic animWeaponId, PlayerArmorGraphic animArmorId)
+void CalcPlrGraphics(auto &player, PlayerWeaponGraphic animWeaponId, PlayerArmorGraphic animArmorId, bool loadgfx)
 {
 	const uint8_t gfxNum = static_cast<uint8_t>(animWeaponId) | static_cast<uint8_t>(animArmorId);
 	if (player._pgfxnum != gfxNum && loadgfx) {
@@ -2788,165 +2849,109 @@ void CalcPlrAuricBonus(auto &player)
 
 void CalcPlrItemVals(Player &player, bool loadgfx)
 {
-	int mind = 0; // min damage
-	int maxd = 0; // max damage
-	int tac = 0;
+	int minDamage = 0;
+	int maxDamage = 0;
+	int ac = 0;
 
-	int bdam = 0;   // bonus damage
-	int btohit = 0; // bonus chance to hit
-	int bac = 0;
+	int dam = 0;
+	int toHit = 0;
+	int bonusAc = 0;
 
-	ItemSpecialEffect iflgs = ItemSpecialEffect::None; // item_special_effect flags
+	ItemSpecialEffect flags = ItemSpecialEffect::None;
+	ItemSpecialEffectHf damAcFlags = ItemSpecialEffectHf::None;
 
-	ItemSpecialEffectHf pDamAcFlags = ItemSpecialEffectHf::None;
+	int strength = 0;
+	int magic = 0;
+	int dexterity = 0;
+	int vitality = 0;
 
-	int sadd = 0; // added strength
-	int madd = 0; // added magic
-	int dadd = 0; // added dexterity
-	int vadd = 0; // added vitality
+	uint64_t spells = 0;
 
-	uint64_t spl = 0; // bitarray for all enabled/active spells
+	int fireRes = 0;
+	int lightRes = 0;
+	int magicRes = 0;
 
-	int fr = 0; // fire resistance
-	int lr = 0; // lightning resistance
-	int mr = 0; // magic resistance
+	int damMod = 0;
+	int getHit = 0;
 
-	int dmod = 0; // bonus damage mod?
-	int ghit = 0; // increased damage from enemies
+	int lightRadius = 10;
 
-	int lrad = 10; // light radius
+	int life = 0;
+	int mana = 0;
 
-	int ihp = 0;   // increased HP
-	int imana = 0; // increased mana
+	int8_t splLvlAdd = 0;
+	int targetAc = 0;
 
-	int spllvladd = 0; // increased spell level
-	int enac = 0;
-
-	int fmin = 0; // minimum fire damage
-	int fmax = 0; // maximum fire damage
-	int lmin = 0; // minimum lightning damage
-	int lmax = 0; // maximum lightning damage
+	int minFireDam = 0;
+	int maxFireDam = 0;
+	int minLightDam = 0;
+	int maxLightDam = 0;
 
 	for (auto &item : player.InvBody) {
 		if (!item.isEmpty() && player.CanUseItem(item)) {
 
-			mind += item._iMinDam;
-			maxd += item._iMaxDam;
-			tac += item._iAC;
+			minDamage += item._iMinDam;
+			maxDamage += item._iMaxDam;
+			ac += item._iAC;
 
 			if (IsValidSpell(item._iSpell)) {
-				spl |= GetSpellBitmask(item._iSpell);
+				spells |= GetSpellBitmask(item._iSpell);
 			}
 
 			if (item._iMagical == ITEM_QUALITY_NORMAL || item._iIdentified) {
-				bdam += item._iPLDam;
-				btohit += item._iPLToHit;
-				if (item._iPLAC != 0) {
-					int tmpac = item._iAC;
-					tmpac *= item._iPLAC;
-					tmpac /= 100;
-					if (tmpac == 0)
-						tmpac = math::Sign(item._iPLAC);
-					bac += tmpac;
-				}
-				iflgs |= item._iFlags;
-				pDamAcFlags |= item._iDamAcFlags;
-				sadd += item._iPLStr;
-				madd += item._iPLMag;
-				dadd += item._iPLDex;
-				vadd += item._iPLVit;
-				fr += item._iPLFR;
-				lr += item._iPLLR;
-				mr += item._iPLMR;
-				dmod += item._iPLDamMod;
-				ghit += item._iPLGetHit;
-				lrad += item._iPLLight;
-				ihp += item._iPLHP;
-				imana += item._iPLMana;
-				spllvladd += item._iSplLvlAdd;
-				enac += item._iPLEnAc;
-				fmin += item._iFMinDam;
-				fmax += item._iFMaxDam;
-				lmin += item._iLMinDam;
-				lmax += item._iLMaxDam;
+				dam += item._iPLDam;
+				toHit += item._iPLToHit;
+				bonusAc += GetBonusAC(item);
+				flags |= item._iFlags;
+				damAcFlags |= item._iDamAcFlags;
+				strength += item._iPLStr;
+				magic += item._iPLMag;
+				dexterity += item._iPLDex;
+				vitality += item._iPLVit;
+				fireRes += item._iPLFR;
+				lightRes += item._iPLLR;
+				magicRes += item._iPLMR;
+				damMod += item._iPLDamMod;
+				getHit += item._iPLGetHit;
+				lightRadius += item._iPLLight;
+				life += item._iPLHP;
+				mana += item._iPLMana;
+				splLvlAdd += item._iSplLvlAdd;
+				targetAc += item._iPLEnAc;
+				minFireDam += item._iFMinDam;
+				maxFireDam += item._iFMaxDam;
+				minLightDam += item._iLMinDam;
+				maxLightDam += item._iLMaxDam;
 			}
 		}
 	}
 
-	const uint8_t playerLevel = player.getCharacterLevel();
-
-	CalcPlrDamage(player, mind, maxd);
-
-	if (HasAnyOf(player._pSpellFlags, SpellFlag::RageActive)) {
-		sadd += 2 * playerLevel;
-		dadd += playerLevel + playerLevel / 2;
-		vadd += 2 * playerLevel;
-	}
-	if (HasAnyOf(player._pSpellFlags, SpellFlag::RageCooldown)) {
-		sadd -= 2 * playerLevel;
-		dadd -= playerLevel + playerLevel / 2;
-		vadd -= 2 * playerLevel;
-	}
-
-	player._pIAC = tac;
-	player._pIBonusDam = bdam;
-	player._pIBonusToHit = btohit;
-	player._pIBonusAC = bac;
-	player._pIFlags = iflgs;
-	player.pDamAcFlags = pDamAcFlags;
-	player._pIBonusDamMod = dmod;
-	player._pIGetHit = ghit;
-
-	lrad = std::clamp(lrad, 2, 15);
-
-	if (player._pLightRad != lrad) {
-		ChangeLightRadius(player.lightId, lrad);
-		ChangeVisionRadius(player.getId(), lrad);
-		player._pLightRad = lrad;
-	}
-
-	player._pStrength = std::max(0, sadd + player._pBaseStr);
-	player._pMagic = std::max(0, madd + player._pBaseMag);
-	player._pDexterity = std::max(0, dadd + player._pBaseDex);
-	player._pVitality = std::max(0, vadd + player._pBaseVit);
-
+	CalcPlrDamage(player, minDamage, maxDamage);
+	CalcPlrPrimaryStats(player, strength, magic, dexterity, vitality, life, mana);
+	player._pIAC = ac;
+	player._pIBonusDam = dam;
+	player._pIBonusToHit = toHit;
+	player._pIBonusAC = bonusAc;
+	player._pIFlags = flags;
+	player.pDamAcFlags = damAcFlags;
+	player._pIBonusDamMod = damMod;
+	player._pIGetHit = getHit;
+	CalcPlrLightRadius(player, lightRadius);
 	CalcPlrDamageMod(player);
-
-	player._pISpells = spl;
-
+	player._pISpells = spells;
 	EnsureValidReadiedSpell(player);
-
-	player._pISplLvlAdd = spllvladd;
-	player._pIEnAc = enac;
-
-	CalcPlrResistances(player, iflgs, fr, lr, mr);
-
-	const ClassAttributes &playerClassAttributes = player.getClassAttributes();
-	vadd = (vadd * playerClassAttributes.itmLife) >> 6;
-	ihp += (vadd << 6);
-
-	madd = (madd * playerClassAttributes.itmMana) >> 6;
-	imana += (madd << 6);
-
-	player._pMaxHP = ihp + player._pMaxHPBase;
-	player._pHitPoints = std::min(ihp + player._pHPBase, player._pMaxHP);
-
-	if (&player == MyPlayer && (player._pHitPoints >> 6) <= 0) {
-		SetPlayerHitPoints(player, 0);
-	}
-
-	player._pMaxMana = imana + player._pMaxManaBase;
-	player._pMana = std::min(imana + player._pManaBase, player._pMaxMana);
-
-	player._pIFMinDam = fmin;
-	player._pIFMaxDam = fmax;
-	player._pILMinDam = lmin;
-	player._pILMaxDam = lmax;
+	player._pISplLvlAdd = splLvlAdd;
+	player._pIEnAc = targetAc;
+	CalcPlrResistances(player, flags, fireRes, lightRes, magicRes);
+	player._pIFMinDam = minFireDam;
+	player._pIFMaxDam = maxFireDam;
+	player._pILMinDam = minLightDam;
+	player._pILMaxDam = maxLightDam;
 	player._pInfraFlag = false;
 
 	const bool holdsShield = CalcPlrBlockFlag(player);
 
-	CalcPlrGraphics(player, GetPlrAnimWeaponId(player, holdsShield), GetPlrAnimArmorId(player));
+	CalcPlrGraphics(player, GetPlrAnimWeaponId(player, holdsShield), GetPlrAnimArmorId(player), loadgfx);
 	CalcPlrAuricBonus(player);
 	RedrawComponent(PanelDrawComponent::Mana);
 	RedrawComponent(PanelDrawComponent::Health);
