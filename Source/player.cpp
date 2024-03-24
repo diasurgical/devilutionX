@@ -571,7 +571,7 @@ bool PlrHitMonst(Player &player, Monster &monster, bool adjacentDamage = false)
 {
 	int hper = 0;
 
-	if (!monster.isPossibleToHit())
+	if (!monster.isPossibleToHit() || !monster.canBeDamagedByPlayer(player))
 		return false;
 
 	if (adjacentDamage) {
@@ -2094,6 +2094,11 @@ bool Player::isLevelOwnedByLocalClient() const
 	}
 
 	return false;
+}
+
+Monster &Player::golem() const
+{
+	return Monsters[getId()];
 }
 
 Player *PlayerAtPosition(Point position, bool ignoreMovingPlayers /*= false*/)
