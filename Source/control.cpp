@@ -43,6 +43,7 @@
 #include "panels/spell_book.hpp"
 #include "panels/spell_icons.hpp"
 #include "panels/spell_list.hpp"
+#include "pfile.h"
 #include "playerdat.hpp"
 #include "qol/stash.h"
 #include "qol/xpbar.h"
@@ -1359,6 +1360,34 @@ void RedBack(const Surface &out)
 			dst++;
 		}
 	}
+}
+
+void DrawDeathText(const Surface &out)
+{
+	const TextRenderOptions largeTextOptions {
+		.flags = UiFlags::FontSize42 | UiFlags::ColorGold | UiFlags::AlignCenter | UiFlags::VerticalCenter,
+		.spacing = 2
+	};
+	const TextRenderOptions smallTextOptions {
+		.flags = UiFlags::FontSize30 | UiFlags::ColorGold | UiFlags::AlignCenter | UiFlags::VerticalCenter,
+		.spacing = 2
+	};
+	std::string text;
+	int verticalPadding = 42;
+	Point linePosition { 0, gnScreenHeight / 2 - (verticalPadding * 2) };
+
+	text = _("You have died");
+	DrawString(out, text, linePosition, largeTextOptions);
+	linePosition.y += verticalPadding;
+	if (!gbIsMultiplayer) {
+		if (gbValidSaveFile)
+			text = _("Press ESC to load last save.");
+		else
+			text = _("Press ESC to exit game.");
+	} else {
+		text = _("Press ESC to continue.");
+	}
+	DrawString(out, text, linePosition, smallTextOptions);
 }
 
 void DrawGoldSplit(const Surface &out)
