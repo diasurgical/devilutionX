@@ -44,6 +44,7 @@
 #include "panels/spell_book.hpp"
 #include "panels/spell_icons.hpp"
 #include "panels/spell_list.hpp"
+#include "pfile.h"
 #include "playerdat.hpp"
 #include "qol/stash.h"
 #include "qol/xpbar.h"
@@ -1411,6 +1412,40 @@ void RedBack(const Surface &out)
 				*dst = tbl[*dst];
 			dst++;
 		}
+	}
+}
+
+void DrawDeathText(const Surface &out)
+{
+	//LightTableIndex = 0; // Do I need this??
+	const TextRenderOptions largeTextOptions {
+		.flags = UiFlags::FontSize42 | UiFlags::ColorGold | UiFlags::AlignCenter | UiFlags::VerticalCenter,
+		.spacing = 2
+	};
+	const TextRenderOptions smallTextOptions {
+		.flags = UiFlags::FontSize30 | UiFlags::ColorGold | UiFlags::AlignCenter | UiFlags::VerticalCenter,
+		.spacing = 2
+	};
+	std::string text;
+	int largeTextHeight = 42;
+	Point linePosition { 0, gnScreenHeight / 2 - (largeTextHeight * 2) };
+
+	text = _("You have died");
+	DrawString(out, text, linePosition, largeTextOptions);
+	linePosition.y += largeTextHeight;
+	if (!gbIsMultiplayer) {
+		if (gbValidSaveFile)
+			text = _("Press ESC to load last save.");
+		else
+			text = _("Press ESC to exit game.");
+		DrawString(out, text, linePosition, largeTextOptions);
+	} else {
+		text = _("Press ESC to continue.");
+		DrawString(out, text, linePosition, smallTextOptions);
+
+		linePosition.y += largeTextHeight;
+		text = fmt::format(fmt::runtime(_("Death takes its toll of {:d} Gold")), LostGold);
+		DrawString(out, text, linePosition, smallTextOptions);
 	}
 }
 

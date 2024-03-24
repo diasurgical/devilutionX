@@ -1267,6 +1267,7 @@ void DrawView(const Surface &out, Point startPosition)
 	}
 	if (MyPlayerIsDead) {
 		RedBack(out);
+		DrawDeathText(out);
 	} else if (PauseMode != 0) {
 		gmenu_draw_pause(out);
 	}
@@ -1636,36 +1637,6 @@ void EnableFrameCount()
 {
 	frameflag = true;
 	lastFpsUpdateInMs = SDL_GetTicks();
-}
-
-void DrawDeathText(const Surface &out)
-{
-	LightTableIndex = 0; // Do I need this??
-	const TextRenderOptions largeTextOptions {
-		.flags = UiFlags::FontSize42 | UiFlags::ColorRed | UiFlags::AlignCenter | UiFlags::VerticalCenter,
-		.spacing = 2
-	};
-	const TextRenderOptions smallTextOptions {
-		.flags = UiFlags::FontSize30 | UiFlags::ColorRed | UiFlags::AlignCenter | UiFlags::VerticalCenter,
-		.spacing = 2
-	};
-	std::string text;
-	Point linePosition { 0, 0 };
-
-	text = _("You have died");
-	DrawString(out, text, linePosition, largeTextOptions);
-	linePosition.y = 42;
-	if (!gbIsMultiplayer) {
-		text = _("Press ESC to load last save.");
-		DrawString(out, text, linePosition, largeTextOptions);
-	} else {
-		text = _("Press ESC to continue.");
-		DrawString(out, text, linePosition, smallTextOptions);
-
-		linePosition.y = 84;
-		text = fmt::format(fmt::runtime(_("Death takes its toll of {:d} Gold")), LostGold);
-		DrawString(out, text, linePosition, smallTextOptions);
-	}
 }
 
 void scrollrt_draw_game_screen()
