@@ -895,9 +895,13 @@ public:
 	/** @brief Checks if the player level is owned by local client. */
 	bool isLevelOwnedByLocalClient() const;
 
-	bool IsHoldingItem(ItemType type)
+	/** @brief Checks if the player is holding an item of the provided type, and is usable. */
+	bool isHoldingItem(ItemType type)
 	{
-		return IsAnyOf(type, InvBody[INVLOC_HAND_LEFT]._itype, InvBody[INVLOC_HAND_RIGHT]._itype);
+		auto &leftHandItem = InvBody[INVLOC_HAND_LEFT];
+		auto &rightHandItem = InvBody[INVLOC_HAND_RIGHT];
+
+		return (type == leftHandItem._itype && CanUseItem(leftHandItem)) || (type == rightHandItem._itype && CanUseItem(rightHandItem));
 	}
 };
 
