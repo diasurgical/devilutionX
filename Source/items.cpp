@@ -4338,6 +4338,7 @@ void SpawnBoy(int lvl)
 
 	Player &myPlayer = *MyPlayer;
 
+	HeroClass pc = myPlayer._pClass;
 	int strength = std::max(myPlayer.GetMaximumAttributeValue(CharacterAttribute::Strength), myPlayer._pStrength);
 	int dexterity = std::max(myPlayer.GetMaximumAttributeValue(CharacterAttribute::Dexterity), myPlayer._pDexterity);
 	int magic = std::max(myPlayer.GetMaximumAttributeValue(CharacterAttribute::Magic), myPlayer._pMagic);
@@ -4403,7 +4404,7 @@ void SpawnBoy(int lvl)
 		count++;
 
 		if (count < 200) {
-			switch (myPlayer._pClass) {
+			switch (pc) {
 			case HeroClass::Warrior:
 				if (IsAnyOf(itemType, ItemType::Bow, ItemType::Staff))
 					ivalue = INT_MAX;
