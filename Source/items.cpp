@@ -2559,6 +2559,27 @@ void InitItems()
 	initItemGetRecords();
 }
 
+void CalcPlrDamage(auto &player, int mind, int maxd)
+{
+	const uint8_t playerLevel = player.getCharacterLevel();
+
+	if (mind == 0 && maxd == 0) {
+		mind = maxd = 1;
+
+		if (player.isHoldingItem(ItemType::Shield)) {
+			maxd = 3;
+		}
+
+		if (player._pClass == HeroClass::Monk) {
+			mind = std::max(mind, playerLevel / 2);
+			maxd = std::max<int>(maxd, playerLevel);
+		}
+	}
+
+	player._pIMinDam = mind;
+	player._pIMaxDam = maxd;
+}
+
 void CalcPlrDamageMod(auto &player)
 {
 	const uint8_t playerLevel = player.getCharacterLevel();
@@ -2611,7 +2632,7 @@ void CalcPlrDamageMod(auto &player)
 	}
 }
 
-void CalcPlrResistances(auto &player, int fr, int lr, int mr)
+void CalcPlrResistances(auto &player, ItemSpecialEffect iflgs, int fr, int lr, int mr)
 {
 	const uint8_t playerLevel = player.getCharacterLevel();
 
@@ -2650,11 +2671,7 @@ bool CalcPlrBlockFlag(auto &player)
 		if (player.isHoldingItem(ItemType::Staff)) {
 			player._pBlockFlag = true;
 			player._pIFlags |= ItemSpecialEffect::FastBlock;
-		} else if (leftHandItem.isEmpty() && rightHandItem.isEmpty()) {
-			player._pBlockFlag = true;
-		} else if (leftHandItem._iClass == ICLASS_WEAPON && leftHandItem._iLoc != ILOC_TWOHAND && rightHandItem.isEmpty()) {
-			player._pBlockFlag = true;
-		} else if (rightHandItem._iClass == ICLASS_WEAPON && rightHandItem._iLoc != ILOC_TWOHAND && leftHandItem.isEmpty()) {
+		} else if ((leftHandItem.isEmpty() && rightHandItem.isEmpty()) || (leftHandItem._iClass == ICLASS_WEAPON && leftHandItem._iLoc != ILOC_TWOHAND && rightHandItem.isEmpty()) || (rightHandItem._iClass == ICLASS_WEAPON && rightHandItem._iLoc != ILOC_TWOHAND && leftHandItem.isEmpty())) {
 			player._pBlockFlag = true;
 		}
 	}
@@ -2689,7 +2706,7 @@ PlayerWeaponGraphic GetPlrAnimWeaponId(auto &player, bool holdsShield)
 	case ItemType::Sword:
 		return holdsShield ? PlayerWeaponGraphic::SwordShield : PlayerWeaponGraphic::Sword;
 	case ItemType::Axe:
-		return animWeaponId = PlayerWeaponGraphic::Axe;
+		return PlayerWeaponGraphic::Axe;
 	case ItemType::Bow:
 		return PlayerWeaponGraphic::Bow;
 	case ItemType::Mace:
@@ -2730,6 +2747,43 @@ PlayerArmorGraphic GetPlrAnimArmorId(auto &player)
 	}
 
 	return PlayerArmorGraphic::Light;
+}
+
+void CalcPlrGraphics(auto &player, PlayerWeaponGraphic animWeaponId, PlayerArmorGraphic animArmorId)
+{
+	const uint8_t gfxNum = static_cast<uint8_t>(animWeaponId) | static_cast<uint8_t>(animArmorId);
+	if (player._pgfxnum != gfxNum && loadgfx) {
+		player._pgfxnum = gfxNum;
+		ResetPlayerGFX(player);
+		SetPlrAnims(player);
+		player.previewCelSprite = std::nullopt;
+		player_graphic graphic = player.getGraphic();
+		int8_t numberOfFrames;
+		int8_t ticksPerFrame;
+		player.getAnimationFramesAndTicksPerFrame(graphic, numberOfFrames, ticksPerFrame);
+		LoadPlrGFX(player, graphic);
+		OptionalClxSpriteList sprites;
+		if (!HeadlessMode)
+			sprites = player.AnimationData[static_cast<size_t>(graphic)].spritesForDirection(player._pdir);
+		player.AnimInfo.changeAnimationData(sprites, numberOfFrames, ticksPerFrame);
+	} else {
+		player._pgfxnum = gfxNum;
+	}
+}
+
+void CalcPlrAuricBonus(auto &player)
+{
+	if (&player == MyPlayer) {
+		if (player.InvBody[INVLOC_AMULET].isEmpty() || player.InvBody[INVLOC_AMULET].IDidx != IDI_AURIC) {
+			int half = MaxGold;
+			MaxGold = GOLD_MAX_LIMIT;
+
+			if (half != MaxGold)
+				StripTopGold(player);
+		} else {
+			MaxGold = GOLD_MAX_LIMIT * 2;
+		}
+	}
 }
 
 void CalcPlrItemVals(Player &player, bool loadgfx)
@@ -2821,18 +2875,7 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 
 	const uint8_t playerLevel = player.getCharacterLevel();
 
-	if (mind == 0 && maxd == 0) {
-		mind = maxd = 1;
-
-		if (player.isHoldingItem(ItemType::Shield)) {
-			maxd = 3;
-		}
-
-		if (player._pClass == HeroClass::Monk) {
-			mind = std::max(mind, playerLevel / 2);
-			maxd = std::max<int>(maxd, playerLevel);
-		}
-	}
+	CalcPlrDamage(player, mind, maxd);
 
 	if (HasAnyOf(player._pSpellFlags, SpellFlag::RageActive)) {
 		sadd += 2 * playerLevel;
@@ -2845,8 +2888,6 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 		vadd -= 2 * playerLevel;
 	}
 
-	player._pIMinDam = mind;
-	player._pIMaxDam = maxd;
 	player._pIAC = tac;
 	player._pIBonusDam = bdam;
 	player._pIBonusToHit = btohit;
@@ -2878,11 +2919,11 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	player._pISplLvlAdd = spllvladd;
 	player._pIEnAc = enac;
 
-	CalcPlrResistances(player, fr, lr, mr);
+	CalcPlrResistances(player, iflgs, fr, lr, mr);
 
 	const ClassAttributes &playerClassAttributes = player.getClassAttributes();
 	vadd = (vadd * playerClassAttributes.itmLife) >> 6;
-	ihp += (vadd << 6); // BUGFIX: blood boil can cause negative shifts here (see line 757)
+	ihp += (vadd << 6);
 
 	madd = (madd * playerClassAttributes.itmMana) >> 6;
 	imana += (madd << 6);
@@ -2904,40 +2945,9 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	player._pInfraFlag = false;
 
 	const bool holdsShield = CalcPlrBlockFlag(player);
-	const auto animWeaponId = GetPlrAnimWeaponId(player, holdsShield);
-	const auto animArmorId = GetPlrAnimArmorId(player);
 
-	const uint8_t gfxNum = static_cast<uint8_t>(animWeaponId) | static_cast<uint8_t>(animArmorId);
-	if (player._pgfxnum != gfxNum && loadgfx) {
-		player._pgfxnum = gfxNum;
-		ResetPlayerGFX(player);
-		SetPlrAnims(player);
-		player.previewCelSprite = std::nullopt;
-		player_graphic graphic = player.getGraphic();
-		int8_t numberOfFrames;
-		int8_t ticksPerFrame;
-		player.getAnimationFramesAndTicksPerFrame(graphic, numberOfFrames, ticksPerFrame);
-		LoadPlrGFX(player, graphic);
-		OptionalClxSpriteList sprites;
-		if (!HeadlessMode)
-			sprites = player.AnimationData[static_cast<size_t>(graphic)].spritesForDirection(player._pdir);
-		player.AnimInfo.changeAnimationData(sprites, numberOfFrames, ticksPerFrame);
-	} else {
-		player._pgfxnum = gfxNum;
-	}
-
-	if (&player == MyPlayer) {
-		if (player.InvBody[INVLOC_AMULET].isEmpty() || player.InvBody[INVLOC_AMULET].IDidx != IDI_AURIC) {
-			int half = MaxGold;
-			MaxGold = GOLD_MAX_LIMIT;
-
-			if (half != MaxGold)
-				StripTopGold(player);
-		} else {
-			MaxGold = GOLD_MAX_LIMIT * 2;
-		}
-	}
-
+	CalcPlrGraphics(player, GetPlrAnimWeaponId(player, holdsShield), GetPlrAnimArmorId(player));
+	CalcPlrAuricBonus(player);
 	RedrawComponent(PanelDrawComponent::Mana);
 	RedrawComponent(PanelDrawComponent::Health);
 }
