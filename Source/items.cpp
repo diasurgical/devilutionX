@@ -2639,17 +2639,17 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 				lrad += item._iPLLight;
 
 				// Check for Acolyte's Amulet and Gladiator Ring to apply bonuses as life and mana changes, rather than getting static bonuses from the item data
-				if (HasAnyOf(item._iDamAcFlags, ItemSpecialEffectHf::ManaToLife)) {
+				if (HasAnyOf(pDamAcFlags, ItemSpecialEffectHf::ManaToLife)) {
 					int portion = ((player._pMaxManaBase >> 6) * 50 / 100) << 6;
 					imana -= portion;
 					ihp += portion;
 				}
-				if (HasAnyOf(item._iDamAcFlags, ItemSpecialEffectHf::LifeToMana)) {
+				if (HasAnyOf(pDamAcFlags, ItemSpecialEffectHf::LifeToMana)) {
 					int portion = ((player._pMaxHPBase >> 6) * 40 / 100) << 6;
 					ihp -= portion;
 					imana += portion;
 				}
-				if (HasNoneOf(item._iDamAcFlags, ItemSpecialEffectHf::ManaToLife, ItemSpecialEffectHf::LifeToMana)) {
+				if (HasNoneOf(pDamAcFlags, ItemSpecialEffectHf::ManaToLife | ItemSpecialEffectHf::LifeToMana)) {
 					ihp += item._iPLHP;
 					imana += item._iPLMana;
 				}
