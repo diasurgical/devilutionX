@@ -2569,6 +2569,8 @@ int GetBonusAC(auto &item)
 			tempAc = math::Sign(item._iPLAC);
 		return tempAc;
 	}
+
+	return 0;
 }
 
 void CalcPlrDamage(auto &player, int minDamage, int maxDamage)
