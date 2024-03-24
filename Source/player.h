@@ -901,7 +901,7 @@ public:
 		auto &leftHandItem = InvBody[INVLOC_HAND_LEFT];
 		auto &rightHandItem = InvBody[INVLOC_HAND_RIGHT];
 
-		return (type == leftHandItem._itype && CanUseItem(leftHandItem)) || (type == rightHandItem._itype && CanUseItem(rightHandItem));
+		return (type == leftHandItem._itype && leftHandItem._iStatFlag) || (type == rightHandItem._itype && rightHandItem._iStatFlag);
 	}
 };
 

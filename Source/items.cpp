@@ -2595,7 +2595,7 @@ void CalcPlrDamage(auto &player, int minDamage, int maxDamage)
 	player._pIMaxDam = maxDamage;
 }
 
-void CalcPlrPrimaryStats(auto &player, int strength, int magic, int dexterity, int vitality, int life, int mana)
+void CalcPlrPrimaryStats(auto &player, int strength, int &magic, int dexterity, int &vitality)
 {
 	const uint8_t playerLevel = player.getCharacterLevel();
 
@@ -2614,23 +2614,6 @@ void CalcPlrPrimaryStats(auto &player, int strength, int magic, int dexterity, i
 	player._pMagic = std::max(0, magic + player._pBaseMag);
 	player._pDexterity = std::max(0, dexterity + player._pBaseDex);
 	player._pVitality = std::max(0, vitality + player._pBaseVit);
-
-	const ClassAttributes &playerClassAttributes = player.getClassAttributes();
-	vitality = (vitality * playerClassAttributes.itmLife) >> 6;
-	life += (vitality << 6);
-
-	magic = (magic * playerClassAttributes.itmMana) >> 6;
-	mana += (magic << 6);
-
-	player._pMaxHP = life + player._pMaxHPBase;
-	player._pHitPoints = std::min(life + player._pHPBase, player._pMaxHP);
-
-	if (&player == MyPlayer && (player._pHitPoints >> 6) <= 0) {
-		SetPlayerHitPoints(player, 0);
-	}
-
-	player._pMaxMana = mana + player._pMaxManaBase;
-	player._pMana = std::min(mana + player._pManaBase, player._pMaxMana);
 }
 
 void CalcPlrLightRadius(auto &player, int lrad)
@@ -2722,6 +2705,26 @@ void CalcPlrResistances(auto &player, ItemSpecialEffect iflgs, int fire, int lig
 	player._pMagResist = std::clamp(magic, 0, MaxResistance);
 	player._pFireResist = std::clamp(fire, 0, MaxResistance);
 	player._pLghtResist = std::clamp(lightning, 0, MaxResistance);
+}
+
+void CalcPlrLifeMana(auto &player, int vitality, int magic, int life, int mana)
+{
+	const ClassAttributes &playerClassAttributes = player.getClassAttributes();
+	vitality = (vitality * playerClassAttributes.itmLife) >> 6;
+	life += (vitality << 6);
+
+	magic = (magic * playerClassAttributes.itmMana) >> 6;
+	mana += (magic << 6);
+
+	player._pMaxHP = life + player._pMaxHPBase;
+	player._pHitPoints = std::min(life + player._pHPBase, player._pMaxHP);
+
+	if (&player == MyPlayer && (player._pHitPoints >> 6) <= 0) {
+		SetPlayerHitPoints(player, 0);
+	}
+
+	player._pMaxMana = mana + player._pMaxManaBase;
+	player._pMana = std::min(mana + player._pManaBase, player._pMaxMana);
 }
 
 bool CalcPlrBlockFlag(auto &player)
@@ -2892,7 +2895,7 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	int maxLightDam = 0;
 
 	for (auto &item : player.InvBody) {
-		if (!item.isEmpty() && player.CanUseItem(item)) {
+		if (!item.isEmpty() && item._iStatFlag) {
 
 			minDamage += item._iMinDam;
 			maxDamage += item._iMaxDam;
@@ -2931,7 +2934,7 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	}
 
 	CalcPlrDamage(player, minDamage, maxDamage);
-	CalcPlrPrimaryStats(player, strength, magic, dexterity, vitality, life, mana);
+	CalcPlrPrimaryStats(player, strength, magic, dexterity, vitality);
 	player._pIAC = ac;
 	player._pIBonusDam = dam;
 	player._pIBonusToHit = toHit;
@@ -2947,6 +2950,7 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	player._pISplLvlAdd = splLvlAdd;
 	player._pIEnAc = targetAc;
 	CalcPlrResistances(player, flags, fireRes, lightRes, magicRes);
+	CalcPlrLifeMana(player, vitality, magic, life, mana);
 	player._pIFMinDam = minFireDam;
 	player._pIFMaxDam = maxFireDam;
 	player._pILMinDam = minLightDam;
