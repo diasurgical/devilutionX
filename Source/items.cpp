@@ -2783,6 +2783,7 @@ PlayerArmorGraphic GetPlrAnimArmorId(auto &player)
 {
 	auto &chestItem = player.InvBody[INVLOC_CHEST];
 	bool chestUsable = player.CanUseItem(chestItem);
+	const uint8_t playerLevel = player.getCharacterLevel();
 
 	if (chestUsable) {
 		switch (chestItem._itype) {
