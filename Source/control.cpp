@@ -1438,7 +1438,7 @@ void DrawDeathText(const Surface &out)
 		else
 			text = _("Press ESC to exit game.");
 	} else {
-		text = _("Press ESC to continue.");	
+		text = _("Press ESC to continue.");
 	}
 	DrawString(out, text, linePosition, smallTextOptions);
 }
