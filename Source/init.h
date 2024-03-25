@@ -68,11 +68,7 @@ inline bool HaveDiabdat()
 
 inline bool HaveHellfire()
 {
-#ifdef UNPACKED_MPQS
-	return bool(hellfire_data_path);
-#else
-	return bool(hellfire_mpq);
-#endif
+	return false;
 }
 
 inline bool HaveExtraFonts()
