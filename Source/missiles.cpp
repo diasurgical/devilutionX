@@ -1999,7 +1999,7 @@ void AddFireball(Missile &missile, AddMissileParameter &parameter)
 
 	if (missile.sourcePlayer() != nullptr) {
 		if (missile.sourcePlayer()->isOnArenaLevel())
-			cap = 26;
+			cap = 28;
 	}
 	if (missile._micaster == TARGET_MONSTERS) {
 		sp += std::min(missile._mispllvl * 2, cap);
