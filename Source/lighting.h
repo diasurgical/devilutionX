@@ -56,6 +56,8 @@ extern std::array<uint8_t, 256> PauseTable;
 extern bool DisableLighting;
 #endif
 extern bool UpdateLighting;
+extern uint8_t LightFalloffs2[32][128 * 2];
+extern uint8_t LightConeInterpolations2[8][8][32][32];
 
 void DoUnLight(Point position, uint8_t radius);
 void DoLighting(Point position, uint8_t radius, DisplacementOf<int8_t> offset);

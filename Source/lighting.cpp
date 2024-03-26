@@ -31,6 +31,9 @@ std::array<uint8_t, 256> PauseTable;
 bool DisableLighting;
 #endif
 bool UpdateLighting;
+constexpr size_t NumLightRadiuses2 = 32;
+uint8_t LightFalloffs2[NumLightRadiuses2][128 * 2] = {};
+uint8_t LightConeInterpolations2[8][8][32][32] = {};
 
 namespace {
 
@@ -318,6 +321,47 @@ void DoVision(Point position, uint8_t radius, MapExplorationType doAutomap, bool
 	}
 }
 
+void MakeCustomLightTable()
+{
+	const float maxDarkness = 15;
+	const float maxBrightness = 0;
+	for (unsigned radius = 0; radius < NumLightRadiuses2; radius++) {
+		const unsigned maxDistance = (radius + 1) * 8; // Compute the maximum effective distance for this radius
+
+		// Define the threshold for starting the falloff (75% of the way)
+		const unsigned falloffStartDistance = static_cast<unsigned>(maxDistance * 0.50);
+
+		for (unsigned distance = 0; distance < 256; distance++) {
+			if (distance > maxDistance) {
+				// Beyond the effective range of the light, set to maximum darkness
+				LightFalloffs2[radius][distance] = static_cast<uint8_t>(maxDarkness);
+			} else if (distance <= falloffStartDistance) {
+				// Within the 75% range where there's no falloff
+				LightFalloffs2[radius][distance] = static_cast<uint8_t>(maxBrightness);
+			} else {
+				// Calculate a smoother falloff for the last 25%
+				float factor = static_cast<float>(distance - falloffStartDistance) / (static_cast<float>(maxDistance) - static_cast<float>(falloffStartDistance));
+				// Directly scale the darkness based on distance
+				float scaled = maxDarkness * factor;
+				LightFalloffs2[radius][distance] = static_cast<uint8_t>(std::round(scaled));
+			}
+		}
+	}
+
+	// Generate the light cone interpolations
+	for (int offsetY = 0; offsetY < 8; offsetY++) {
+		for (int offsetX = 0; offsetX < 8; offsetX++) {
+			for (int y = 0; y < 32; y++) {
+				for (int x = 0; x < 32; x++) {
+					int a = (8 * x - offsetY);
+					int b = (8 * y - offsetX);
+					LightConeInterpolations2[offsetX][offsetY][x][y] = static_cast<uint8_t>(sqrt(a * a + b * b));
+				}
+			}
+		}
+	}
+}
+
 void MakeLightTable()
 {
 	// Generate 16 gradually darker translation tables for doing lighting
@@ -408,6 +452,7 @@ void MakeLightTable()
 			}
 		}
 	}
+	MakeCustomLightTable();
 }
 
 #ifdef _DEBUG

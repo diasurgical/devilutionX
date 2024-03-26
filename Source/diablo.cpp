@@ -2589,6 +2589,9 @@ int DiabloMain(int argc, char **argv)
 
 bool TryIconCurs()
 {
+	if (!IsScreenPosLegalPlayArea(MousePosition.x, MousePosition.y))
+		return false;
+
 	if (pcurs == CURSOR_RESURRECT) {
 		if (PlayerUnderCursor != nullptr) {
 			NetSendCmdParam1(true, CMD_RESURRECT, PlayerUnderCursor->getId());

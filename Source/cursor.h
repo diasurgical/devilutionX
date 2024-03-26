@@ -59,6 +59,7 @@ void NewCursor(int cursId);
 void InitLevelCursor();
 void CheckRportal();
 void CheckTown();
+bool IsScreenPosLegalPlayArea(int x, int y);
 void CheckCursMove();
 
 void DrawSoftwareCursor(const Surface &out, Point position, int cursId);

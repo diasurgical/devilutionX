@@ -570,6 +570,69 @@ void DrawCell(const Surface &out, Point tilePosition, Point targetBufferPosition
 	}
 }
 
+int DetermineRotationCount(int dx, int dy)
+{
+	if (dx > 0 && dy >= 0) return 0; // +x, +y and +x axis
+	if (dx <= 0 && dy > 0) return 1; // -x, +y and +y axis
+	if (dx < 0 && dy <= 0) return 2; // -x, -y and -x axis
+	if (dx >= 0 && dy < 0) return 3; // +x, -y and -y axis
+	return 0;
+}
+
+void ApplyRotationAdjustment(DisplacementOf<int8_t> &offset, int rotationCount)
+{
+	for (int i = 0; i < rotationCount; i++) {
+		// Apply rotation adjustment logic similar to RotateRadius
+		int temp = offset.deltaX;
+		offset.deltaX = offset.deltaY;
+		offset.deltaY = 7 - temp;
+	}
+}
+
+uint8_t CalculateDimming(Point tilePosition)
+{
+	Point playerLightPosition = Lights[MyPlayer->lightId].position.tile;
+	DisplacementOf<int8_t> playerLightOffset = Lights[MyPlayer->lightId].position.offset;
+	int radius = 15; // Should allow full effect from +Light Radius items, but harshly dims the edges. No noticeable change in vanilla settings.
+	int originalLight = dLight[tilePosition.x][tilePosition.y];
+
+	// Adjust player's light offset based on movement
+	if (playerLightOffset.deltaX < 0) {
+		playerLightOffset.deltaX += 8;
+		playerLightPosition.x -= 1;
+	}
+	if (playerLightOffset.deltaY < 0) {
+		playerLightOffset.deltaY += 8;
+		playerLightPosition.y -= 1;
+	}
+
+	// Calculate the delta between the tile position and the player's light position
+	int dx = tilePosition.x - playerLightPosition.x;
+	int dy = tilePosition.y - playerLightPosition.y;
+
+	// Determine how many times to rotate based on dx and dy
+	int rotationCount = DetermineRotationCount(dx, dy);
+
+	// Apply the rotation adjustment to playerLightOffset
+	ApplyRotationAdjustment(playerLightOffset, rotationCount);
+
+	// Ensure deltas are within the bounds of the LightConeInterpolations2 array
+	dx = std::clamp(dx, -31, 31);
+	dy = std::clamp(dy, -31, 31);
+
+	// Use the absolute values to find the linear distance in the interpolation array
+	int linearDistance = LightConeInterpolations2[std::abs(playerLightOffset.deltaX)][std::abs(playerLightOffset.deltaY)][std::abs(dx)][std::abs(dy)];
+
+	// Ensure linearDistance is within the bounds of the LightFalloffs2 array
+	linearDistance = std::min(linearDistance, 255);
+
+	// Determine the dimming level using LightFalloffs2
+	uint8_t dimmingLevel = LightFalloffs2[radius][linearDistance];
+
+	// Apply dimming to the original light level of the tile
+	return std::clamp(static_cast<int>(originalLight) + dimmingLevel, 0, 15);
+}
+
 /**
  * @brief Render a floor tile.
  * @param out Target buffer
@@ -578,7 +641,7 @@ void DrawCell(const Surface &out, Point tilePosition, Point targetBufferPosition
  */
 void DrawFloor(const Surface &out, Point tilePosition, Point targetBufferPosition)
 {
-	LightTableIndex = dLight[tilePosition.x][tilePosition.y];
+	LightTableIndex = CalculateDimming(tilePosition);
 
 	const uint8_t *tbl = LightTables[LightTableIndex].data();
 #ifdef _DEBUG
@@ -704,7 +767,7 @@ void DrawPlayerHelper(const Surface &out, const Player &player, Point tilePositi
 void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosition)
 {
 	assert(InDungeonBounds(tilePosition));
-	LightTableIndex = dLight[tilePosition.x][tilePosition.y];
+	LightTableIndex = CalculateDimming(tilePosition);
 
 	DrawCell(out, tilePosition, targetBufferPosition);
 

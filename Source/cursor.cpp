@@ -242,6 +242,8 @@ bool TrySelectItem(bool flipflag, int mx, int my)
 
 bool TrySelectPixelBased(Point tile)
 {
+	if (!IsScreenPosLegalPlayArea(MousePosition.x, MousePosition.y) && leveltype != DTYPE_TOWN)
+		return false;
 	if (demo::IsRunning() || demo::IsRecording() || HeadlessMode) {
 		// Recorded demos can run headless, but headless mode doesn't support loading sprites that are needed for pixel perfect selection
 		// => Ensure demos are always compatible
@@ -627,6 +629,25 @@ void CheckRportal()
 	}
 }
 
+bool IsScreenPosLegalPlayArea(int x, int y)
+{
+	int panelHeight = 128;
+	Point centerScreen { GetScreenWidth() / 2, (GetScreenHeight() - panelHeight) / 2 };
+	int screenHeight = 600;
+	int screenWidth = screenHeight * 16 / 9;
+	Point boundingBox { screenWidth, screenHeight };
+	boundingBox.y -= panelHeight;
+
+	// Calculate the bounds of the original game resolution centered on the screen
+	int leftBound = centerScreen.x - (boundingBox.x / 2);
+	int rightBound = centerScreen.x + (boundingBox.x / 2);
+	int topBound = centerScreen.y - (boundingBox.y / 2);
+	int bottomBound = centerScreen.y + (boundingBox.y / 2);
+
+	// Check if the cursor is outside the bounding box
+	return !(x < leftBound || x > rightBound || y < topBound || y > bottomBound);
+}
+
 void CheckCursMove()
 {
 	if (IsItemLabelHighlighted())
@@ -795,6 +816,8 @@ void CheckCursMove()
 		return;
 
 	if (leveltype != DTYPE_TOWN) {
+		if (!IsScreenPosLegalPlayArea(MousePosition.x, MousePosition.y))
+			return;
 		// Never select a monster if a target-player-only spell is selected
 		if (IsNoneOf(pcurs, CURSOR_HEALOTHER, CURSOR_RESURRECT)) {
 			if (pcurstemp != -1 && TrySelectMonster(flipflag, currentTile, [](const Monster &monster) {
