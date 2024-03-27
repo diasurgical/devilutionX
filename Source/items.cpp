@@ -3181,13 +3181,13 @@ void GetItemAttrs(Item &item, _item_indexes itemData, int lvl)
 		rndv = 5 * itemlevel + GenerateRnd(10 * itemlevel);
 		break;
 	case DIFF_NIGHTMARE:
-		rndv = 5 * (itemlevel + 16) + GenerateRnd(10 * (itemlevel + 16));
+		rndv = 5 * (itemlevel + 4) + GenerateRnd(10 * (itemlevel + 4));
 		break;
 	case DIFF_HELL:
-		rndv = 5 * (itemlevel + 32) + GenerateRnd(10 * (itemlevel + 32));
+		rndv = 5 * (itemlevel + 8) + GenerateRnd(10 * (itemlevel + 8));
 		break;
 	case DIFF_INFERNO:
-		rndv = 5 * (itemlevel + 48) + GenerateRnd(10 * (itemlevel + 48));
+		rndv = 5 * (itemlevel + 12) + GenerateRnd(10 * (itemlevel + 12));
 		break;
 	}
 	if (leveltype == DTYPE_HELL)
