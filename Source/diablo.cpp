@@ -42,6 +42,7 @@
 #include "help.h"
 #include "hwcursor.hpp"
 #include "init.h"
+#include "inv.h"
 #include "levels/drlg_l1.h"
 #include "levels/drlg_l2.h"
 #include "levels/drlg_l3.h"
@@ -1965,6 +1966,14 @@ void InitKeymapActions()
 	    'L',
 	    [] {
 		    ToggleChatLog();
+	    });
+	sgOptions.Keymapper.AddAction(
+	    "SortInv",
+	    N_("Sort Inventory"),
+	    N_("Sorts the inventory."),
+	    'R',
+	    [] {
+		    ReorganizeInventory(*MyPlayer);
 	    });
 #ifdef _DEBUG
 	sgOptions.Keymapper.AddAction(
