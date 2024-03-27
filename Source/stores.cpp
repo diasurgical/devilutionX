@@ -531,7 +531,7 @@ void StartSmithSell()
 			if (storehold[storenumh]._iMagical != ITEM_QUALITY_NORMAL && storehold[storenumh]._iIdentified)
 				storehold[storenumh]._ivalue = storehold[storenumh]._iIvalue;
 
-			storehold[storenumh]._ivalue = std::max(storehold[storenumh]._ivalue / 4, 1);
+			storehold[storenumh]._ivalue = std::max(storehold[storenumh]._ivalue / 16, 1);
 			storehold[storenumh]._iIvalue = storehold[storenumh]._ivalue;
 			storehidx[storenumh] = i;
 			storenumh++;
@@ -548,7 +548,7 @@ void StartSmithSell()
 			if (storehold[storenumh]._iMagical != ITEM_QUALITY_NORMAL && storehold[storenumh]._iIdentified)
 				storehold[storenumh]._ivalue = storehold[storenumh]._iIvalue;
 
-			storehold[storenumh]._ivalue = std::max(storehold[storenumh]._ivalue / 4, 1);
+			storehold[storenumh]._ivalue = std::max(storehold[storenumh]._ivalue / 16, 1);
 			storehold[storenumh]._iIvalue = storehold[storenumh]._ivalue;
 			storehidx[storenumh] = -(i + 1);
 			storenumh++;
@@ -781,7 +781,7 @@ void StartWitchSell()
 			if (storehold[storenumh]._iMagical != ITEM_QUALITY_NORMAL && storehold[storenumh]._iIdentified)
 				storehold[storenumh]._ivalue = storehold[storenumh]._iIvalue;
 
-			storehold[storenumh]._ivalue = std::max(storehold[storenumh]._ivalue / 4, 1);
+			storehold[storenumh]._ivalue = std::max(storehold[storenumh]._ivalue / 16, 1);
 			storehold[storenumh]._iIvalue = storehold[storenumh]._ivalue;
 			storehidx[storenumh] = i;
 			storenumh++;
@@ -798,7 +798,7 @@ void StartWitchSell()
 			if (storehold[storenumh]._iMagical != ITEM_QUALITY_NORMAL && storehold[storenumh]._iIdentified)
 				storehold[storenumh]._ivalue = storehold[storenumh]._iIvalue;
 
-			storehold[storenumh]._ivalue = std::max(storehold[storenumh]._ivalue / 4, 1);
+			storehold[storenumh]._ivalue = std::max(storehold[storenumh]._ivalue / 16, 1);
 			storehold[storenumh]._iIvalue = storehold[storenumh]._ivalue;
 			storehidx[storenumh] = -(i + 1);
 			storenumh++;
