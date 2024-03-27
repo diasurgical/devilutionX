@@ -166,6 +166,11 @@ bool AutoPlaceItemInInventory(Player &player, const Item &item, bool persistItem
 bool AutoPlaceItemInBelt(Player &player, const Item &item, bool persistItem = false, bool sendNetworkMessage = false);
 
 /**
+ * @brief Sort player inventory.
+ */
+void ReorganizeInventory(Player &player);
+
+/**
  * @brief Calculate the maximum aditional gold that may fit in the user's inventory
  */
 int RoomForGold();
