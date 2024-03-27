@@ -97,6 +97,23 @@ Monster *FindClosest(Point source, int rad)
 	return nullptr;
 }
 
+Player *FindClosestPlayer(Point source, int rad)
+{
+	std::optional<Point> playerPosition = FindClosestValidPosition(
+	    [&source](Point target) {
+		    // search for a player with clear line of sight
+		    return InDungeonBounds(target) && dPlayer[target.x][target.y] > 0 && !CheckBlock(source, target);
+	    },
+	    source, 1, rad);
+
+	if (playerPosition) {
+		int pid = dPlayer[playerPosition->x][playerPosition->y];
+		return &Players[pid - 1];
+	}
+
+	return nullptr;
+}
+
 constexpr Direction16 Direction16Flip(Direction16 x, Direction16 pivot)
 {
 	std::underlying_type_t<Direction16> ret = (2 * static_cast<std::underlying_type_t<Direction16>>(pivot) + 16 - static_cast<std::underlying_type_t<Direction16>>(x)) % 16;
@@ -280,6 +297,9 @@ bool MonsterMHit(const Player &player, int monsterId, int mindam, int maxdam, in
 	return true;
 }
 
+/**
+ * @brief Handles the interaction that occurs when a missile that cannot damage the player that created it collides with a another player.
+*/
 bool Plr2PlrMHit(const Player &player, Player &target, int mindam, int maxdam, int dist, MissileID mtype, DamageType damageType, bool shift, bool *blocked)
 {
 	if (sgGameInitInfo.bFriendlyFire == 0 && player.friendlyMode)
@@ -287,7 +307,8 @@ bool Plr2PlrMHit(const Player &player, Player &target, int mindam, int maxdam, i
 
 	*blocked = false;
 
-	if (target.isOnArenaLevel() && target._pmode == PM_WALK_SIDEWAYS)
+	// PVP REBALANCE: Diagonal walk makes missiles that aren't Charged Bolt or Flame Wave miss.
+	if (target.isOnArenaLevel() && target._pmode == PM_WALK_SIDEWAYS && IsNoneOf(mtype, MissileID::ChargedBolt, MissileID::FlameWave))
 		return false;
 
 	if (target._pInvincible) {
@@ -350,7 +371,8 @@ bool Plr2PlrMHit(const Player &player, Player &target, int mindam, int maxdam, i
 
 	int dam;
 	if (mtype == MissileID::BoneSpirit) {
-		dam = target._pHitPoints / 3;
+		// PVP REBALANCE: Bone Spirit does 1/3 Max HP in arenas instead of 1/3 current HP.
+		dam = target.isOnArenaLevel() ? target._pMaxHP / 3 : target._pHitPoints / 3;
 	} else {
 		dam = mindam + GenerateRnd(maxdam - mindam + 1);
 		if (missileData.isArrow() && damageType == DamageType::Physical)
@@ -358,10 +380,69 @@ bool Plr2PlrMHit(const Player &player, Player &target, int mindam, int maxdam, i
 		if (!shift)
 			dam <<= 6;
 	}
-	if (!missileData.isArrow())
-		dam /= 2;
+
+	if (!missileData.isArrow()) {
+		// PVP REBALANCE: Adjust damage values for spells in arena.
+		if (player.isOnArenaLevel()) {
+			switch (mtype) {
+			case MissileID::BloodStar: // 400% (800% of default)
+				dam *= 4;
+				break;
+			case MissileID::ChargedBolt: // 100% (200% of default)
+				break;
+			case MissileID::Elemental: // 60% damage (120% of default)
+				dam = dam * 6 / 10;
+				break;
+			case MissileID::Fireball: // 40% damage (80% of default)
+				dam = dam * 4 / 10;
+				break;
+			case MissileID::Firebolt: // 100% (200% of default)
+				break;
+			case MissileID::FlameWave: // 200% (400% of default)
+				dam *= 2;
+				break;
+			case MissileID::FlashBottom: // 50% (100% default)
+			case MissileID::FlashTop:    // 50% (100% of default)
+				dam /= 2;
+				break;
+			case MissileID::Guardian: // 100% (200% of default)
+				break;
+			case MissileID::Inferno: // 500% (1000% of default)
+				dam *= 5;
+				break;
+			case MissileID::Lightning: // 200% (400% of default)
+				dam *= 2;
+				break;
+			case MissileID::NovaBall:  // 100% (200% of default)
+				break;
+			}
+		} else {
+			dam /= 2;
+		}
+	}
+
+	bool isOnArena = player.isOnArenaLevel();
+	int charLevel = player.getCharacterLevel();
+
+	// Error handling for critical hit calculation to avoid dividing by 0 in case of bad actor.
+	charLevel = std::clamp(charLevel, 1, static_cast<int>(GetMaximumCharacterLevel()));
+
+	bool isSpell = !missileData.isArrow();
+	int crit = (isSpell ? player._pMagic : player._pDexterity) / (charLevel / 4);
+
+	crit = std::clamp(crit, 0, 50);
+
+	int critper = GenerateRnd(100);
+
+	// PVP REBALANCE: Crit chance for arrows and spells in arenas.
+	if (isOnArena && critper < crit && mtype != MissileID::BoneSpirit) {
+		dam = isSpell ? dam * 5 / 4 : dam * 3 / 2; // Arrow: +50% damage, Spell: +25% damage
+	}
+
 	if (resper > 0) {
-		dam -= (dam * resper) / 100;
+		// PVP REBALANCE: Bone Spirit is unaffected by resistances on arena levels.
+		if (!target.isOnArenaLevel() || (target.isOnArenaLevel() && mtype != MissileID::BoneSpirit))
+			dam -= (dam * resper) / 100;
 		if (&player == MyPlayer)
 			NetSendCmdDamage(true, target, dam, damageType);
 		target.Say(HeroSpeech::ArghClang);
@@ -975,6 +1056,9 @@ bool MonsterTrapHit(int monsterId, int mindam, int maxdam, int dist, MissileID t
 	return true;
 }
 
+/**
+ * @brief Handles the interaction that occurs when a missile that can damage a player (even if they created it) collides with a player.
+*/
 bool PlayerMHit(Player &player, Monster *monster, int dist, int mind, int maxd, MissileID mtype, DamageType damageType, bool shift, DeathReason deathReason, bool *blocked)
 {
 	*blocked = false;
@@ -1079,6 +1163,14 @@ bool PlayerMHit(Player &player, Monster *monster, int dist, int mind, int maxd, 
 		dam = std::max(dam, 64);
 	}
 
+	// PVP REBALANCE: Adjust damage values for spells in arena.
+	if (player.isOnArenaLevel()) {
+		switch (mtype) {
+		case MissileID::FireWall: // 150%
+			dam = dam * 3 / 2;
+		}
+	}
+
 	if ((resper <= 0 || gbIsHellfire) && blk < blkper) {
 		Direction dir = player._pdir;
 		if (monster != nullptr) {
@@ -1091,6 +1183,7 @@ bool PlayerMHit(Player &player, Monster *monster, int dist, int mind, int maxd, 
 
 	if (resper > 0) {
 		dam -= dam * resper / 100;
+
 		if (&player == MyPlayer) {
 			ApplyPlrDamage(damageType, player, 0, 0, dam, deathReason);
 		}
@@ -1880,6 +1973,10 @@ void AddFireWall(Missile &missile, AddMissileParameter &parameter)
 	missile._midam <<= 3;
 	UpdateMissileVelocity(missile, parameter.dst, 16);
 	int i = missile._mispllvl;
+	if (missile.sourcePlayer() != nullptr) {
+		if (missile.sourcePlayer()->isOnArenaLevel())
+			i = 0;
+	}
 	missile._mirange = 10;
 	if (i > 0)
 		missile._mirange *= i + 1;
@@ -1895,9 +1992,17 @@ void AddFireball(Missile &missile, AddMissileParameter &parameter)
 	if (missile.position.start == dst) {
 		dst += parameter.midir;
 	}
+
 	int sp = 16;
+	// PVP REBALANCE: Reduce fireball velocity by 4 in arenas.
+	int cap = 34;
+
+	if (missile.sourcePlayer() != nullptr) {
+		if (missile.sourcePlayer()->isOnArenaLevel())
+			cap = 28;
+	}
 	if (missile._micaster == TARGET_MONSTERS) {
-		sp += std::min(missile._mispllvl * 2, 34);
+		sp += std::min(missile._mispllvl * 2, cap);
 		Player &player = Players[missile._misource];
 
 		int dmg = 2 * (player.getCharacterLevel() + GenerateRndSum(10, 2)) + 4;
@@ -3299,8 +3404,9 @@ void ProcessLightningControl(Missile &missile)
 	if (missile.IsTrap()) {
 		// BUGFIX: damage of missile should be encoded in missile struct; monster can be dead before missile arrives.
 		dam = GenerateRnd(currlevel) + 2 * currlevel;
-	} else if (missile._micaster == TARGET_MONSTERS) {
+	} else if (missile._micaster == TARGET_MONSTERS || Players[missile._misource].isOnArenaLevel()) {
 		// BUGFIX: damage of missile should be encoded in missile struct; player can be dead/have left the game before missile arrives.
+		// PVP REBALANCE: Use the TARGET_MONSTERS damage formula in arena levels, since Chain Lightning will direct towards players. Change needs revision if monsters included in arena.
 		dam = (GenerateRnd(2) + GenerateRnd(Players[missile._misource].getCharacterLevel()) + 2) << 6;
 	} else {
 		auto &monster = Monsters[missile._misource];
@@ -3528,13 +3634,18 @@ void ProcessChainLightning(Missile &missile)
 	Point position = missile.position.tile;
 	Point dst { missile.var1, missile.var2 };
 	Direction dir = GetDirection(position, dst);
-	AddMissile(position, dst, dir, MissileID::LightningControl, TARGET_MONSTERS, id, 1, missile._mispllvl);
+	const Player &player = Players[missile._misource];
+	mienemy_type targetType = TARGET_MONSTERS;
+	if (player.isOnArenaLevel()) {
+		targetType = TARGET_PLAYERS;
+	}
+	AddMissile(position, dst, dir, MissileID::LightningControl, targetType, id, 1, missile._mispllvl);
 	int rad = std::min<int>(missile._mispllvl + 3, MaxCrawlRadius);
 	Crawl(1, rad, [&](Displacement displacement) {
 		Point target = position + displacement;
-		if (InDungeonBounds(target) && dMonster[target.x][target.y] > 0) {
+		if (InDungeonBounds(target) && (missile.sourcePlayer()->isOnArenaLevel() ? dPlayer[target.x][target.y] : dMonster[target.x][target.y]) > 0) {
 			dir = GetDirection(position, target);
-			AddMissile(position, target, dir, MissileID::LightningControl, TARGET_MONSTERS, id, 1, missile._mispllvl);
+			AddMissile(position, target, dir, MissileID::LightningControl, targetType, id, 1, missile._mispllvl);
 		}
 		return false;
 	});
@@ -4029,11 +4140,30 @@ void ProcessElemental(Missile &missile)
 		if (missile.var3 == 1) {
 			missile.var3 = 2;
 			missile._mirange = 255;
-			auto *nextMonster = FindClosest(missilePosition, 19);
-			if (nextMonster != nullptr) {
-				Direction sd = GetDirection(missilePosition, nextMonster->position.tile);
-				SetMissDir(missile, sd);
-				UpdateMissileVelocity(missile, nextMonster->position.tile, 16);
+
+			std::function<void()> targetAction;
+			if (missile.sourcePlayer()->isOnArenaLevel()) {
+				auto *nextPlayer = FindClosestPlayer(missilePosition, 19);
+				if (nextPlayer != nullptr && nextPlayer != missile.sourcePlayer()) {
+					targetAction = [&]() {
+						Direction sd = GetDirection(missilePosition, nextPlayer->position.tile);
+						SetMissDir(missile, sd);
+						UpdateMissileVelocity(missile, nextPlayer->position.tile, 16);
+					};
+				}
+			} else {
+				auto *nextMonster = FindClosest(missilePosition, 19);
+				if (nextMonster != nullptr) {
+					targetAction = [&]() {
+						Direction sd = GetDirection(missilePosition, nextMonster->position.tile);
+						SetMissDir(missile, sd);
+						UpdateMissileVelocity(missile, nextMonster->position.tile, 16);
+					};
+				}
+			}
+
+			if (targetAction) {
+				targetAction();
 			} else {
 				Direction sd = Players[missile._misource]._pdir;
 				SetMissDir(missile, sd);
@@ -4074,17 +4204,37 @@ void ProcessBoneSpirit(Missile &missile)
 		if (missile.var3 == 1) {
 			missile.var3 = 2;
 			missile._mirange = 255;
-			auto *monster = FindClosest(c, 19);
-			if (monster != nullptr) {
-				missile._midam = monster->hitPoints >> 7;
-				SetMissDir(missile, GetDirection(c, monster->position.tile));
-				UpdateMissileVelocity(missile, monster->position.tile, 16);
+
+			std::function<void()> targetAction;
+
+			if (missile.sourcePlayer()->isOnArenaLevel()) {
+				auto *player = FindClosestPlayer(c, 19);
+				if (player != nullptr && player != missile.sourcePlayer()) {
+					targetAction = [&]() {
+						SetMissDir(missile, GetDirection(c, player->position.tile));
+						UpdateMissileVelocity(missile, player->position.tile, 16);
+					};
+				}
+			} else {
+				auto *monster = FindClosest(c, 19);
+				if (monster != nullptr) {
+					targetAction = [&]() {
+						missile._midam = monster->hitPoints >> 7;
+						SetMissDir(missile, GetDirection(c, monster->position.tile));
+						UpdateMissileVelocity(missile, monster->position.tile, 16);
+					};
+				}
+			}
+
+			if (targetAction) {
+				targetAction();
 			} else {
 				Direction sd = Players[missile._misource]._pdir;
 				SetMissDir(missile, sd);
 				UpdateMissileVelocity(missile, c + sd, 16);
 			}
 		}
+
 		if (c != Point { missile.var1, missile.var2 }) {
 			missile.var1 = c.x;
 			missile.var2 = c.y;

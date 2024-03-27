@@ -187,6 +187,9 @@ void ClearStateVariables(Player &player)
 	player.position.temp = { 0, 0 };
 	player.tempDirection = Direction::South;
 	player.queuedSpell.spellLevel = 0;
+	player.hasMonsterTarget = false;
+	player.hasPlayerTarget = false;
+	player.targetId = 0;
 }
 
 void StartAttack(Player &player, Direction d, bool includesFirstFrame)
@@ -223,6 +226,11 @@ void StartAttack(Player &player, Direction d, bool includesFirstFrame)
 		}
 	}
 
+	// PVP REBALANCE: Increase Warrior Axe and Staff speed by 1 frame.
+	auto gn = static_cast<PlayerWeaponGraphic>(player._pgfxnum & 0xFU);
+	if (player.isOnArenaLevel() && player._pClass == HeroClass::Warrior)
+		skippedAnimationFrames++;
+
 	auto animationFlags = AnimationDistributionFlags::ProcessAnimationPending;
 	if (player._pmode == PM_ATTACK)
 		animationFlags = static_cast<AnimationDistributionFlags>(animationFlags | AnimationDistributionFlags::RepeatedAction);
@@ -232,7 +240,7 @@ void StartAttack(Player &player, Direction d, bool includesFirstFrame)
 	SetPlayerOld(player);
 }
 
-void StartRangeAttack(Player &player, Direction d, WorldTileCoord cx, WorldTileCoord cy, bool includesFirstFrame)
+void StartRangeAttack(Player &player, Direction d, WorldTileCoord cx, WorldTileCoord cy, bool includesFirstFrame, bool hasMonsterTarget, bool hasPlayerTarget, int8_t targetId)
 {
 	if (player._pInvincible && player._pHitPoints == 0 && &player == MyPlayer) {
 		SyncPlrKill(player, DeathReason::Unknown);
@@ -249,6 +257,10 @@ void StartRangeAttack(Player &player, Direction d, WorldTileCoord cx, WorldTileC
 		}
 	}
 
+	// PVP REBALANCE: Make Rogue bow firing rate 1 frame slower in arena levels.
+	if (player.isOnArenaLevel() && player._pClass == HeroClass::Rogue)
+		skippedAnimationFrames--;
+
 	auto animationFlags = AnimationDistributionFlags::ProcessAnimationPending;
 	if (player._pmode == PM_RATTACK)
 		animationFlags = static_cast<AnimationDistributionFlags>(animationFlags | AnimationDistributionFlags::RepeatedAction);
@@ -258,6 +270,9 @@ void StartRangeAttack(Player &player, Direction d, WorldTileCoord cx, WorldTileC
 	FixPlayerLocation(player, d);
 	SetPlayerOld(player);
 	player.position.temp = WorldTilePosition { cx, cy };
+	player.hasMonsterTarget = hasMonsterTarget;
+	player.hasPlayerTarget = hasPlayerTarget;
+	player.targetId = targetId;
 }
 
 player_graphic GetPlayerGraphicForSpell(SpellID spellId)
@@ -272,7 +287,74 @@ player_graphic GetPlayerGraphicForSpell(SpellID spellId)
 	}
 }
 
-void StartSpell(Player &player, Direction d, WorldTileCoord cx, WorldTileCoord cy)
+int GetSpellSkippedFrames(SpellID spl)
+{
+	switch (spl) {
+	// Page 1
+	case SpellID::Rage:
+		return 0;
+	case SpellID::Firebolt:
+		return 3;
+	case SpellID::ChargedBolt:
+		return 2;
+	case SpellID::Healing:
+	case SpellID::HealOther:
+		return 0;
+	case SpellID::Inferno:
+		return 2;
+	// Page 2
+	case SpellID::Resurrect:
+	case SpellID::FireWall:
+		return 0;
+	case SpellID::Lightning:
+		return 2;
+	case SpellID::TownPortal:
+		return 4;
+	case SpellID::Flash:
+	// Page 3
+	case SpellID::Phasing:
+		return 1;
+	case SpellID::ManaShield:
+		return 0;
+	case SpellID::Elemental:
+	case SpellID::Fireball:
+		return 1;
+	case SpellID::FlameWave:
+	case SpellID::ChainLightning:
+		return 0;
+	case SpellID::Guardian:
+		return 4;
+	// Page 4
+	case SpellID::Nova:
+	case SpellID::Golem:
+		return 0;
+	case SpellID::Teleport:
+		return 1;
+	case SpellID::Apocalypse:
+		return 0;
+	case SpellID::BoneSpirit:
+		return 0;
+	case SpellID::BloodStar:
+		return 0;
+	// Page 5
+	case SpellID::LightningWall:
+	case SpellID::Immolation:
+		return 0;
+	case SpellID::Warp:
+		return 4;
+	case SpellID::Reflect:
+	case SpellID::RingOfFire:
+	// Extra
+	case SpellID::Jester:
+	case SpellID::Magi:
+	case SpellID::Mana:
+		return 0;
+	default:
+		return 0;
+	}
+}
+
+void StartSpell(Player &player, Direction d, WorldTileCoord cx, WorldTileCoord cy, bool hasMonsterTarget, bool hasPlayerTarget, int8_t targetId)
 {
 	if (player._pInvincible && player._pHitPoints == 0 && &player == MyPlayer) {
 		SyncPlrKill(player, DeathReason::Unknown);
@@ -299,10 +381,22 @@ void StartSpell(Player &player, Direction d, WorldTileCoord cx, WorldTileCoord c
 	if (!isValid)
 		return;
 
+	int8_t skippedAnimationFrames = 0;
+
+	// PVP REBALANCE: Increase Warrior cast speed and reduce Sorcerer cast speed in arena levels.
+	if (player.isOnArenaLevel()) {
+		if (player._pClass == HeroClass::Barbarian)
+			skippedAnimationFrames--;
+		if (player._pClass == HeroClass::Sorcerer)
+			skippedAnimationFrames -= 2;
+
+		skippedAnimationFrames += GetSpellSkippedFrames(player.queuedSpell.spellId);
+	}
+
 	auto animationFlags = AnimationDistributionFlags::ProcessAnimationPending;
 	if (player._pmode == PM_SPELL)
 		animationFlags = static_cast<AnimationDistributionFlags>(animationFlags | AnimationDistributionFlags::RepeatedAction);
-	NewPlrAnim(player, GetPlayerGraphicForSpell(player.queuedSpell.spellId), d, animationFlags, 0, player._pSFNum);
+	NewPlrAnim(player, GetPlayerGraphicForSpell(player.queuedSpell.spellId), d, animationFlags, skippedAnimationFrames, player._pSFNum);
 
 	PlaySfxLoc(GetSpellData(player.queuedSpell.spellId).sSFX, player.position.tile);
 
@@ -312,6 +406,9 @@ void StartSpell(Player &player, Direction d, WorldTileCoord cx, WorldTileCoord c
 	SetPlayerOld(player);
 
 	player.position.temp = WorldTilePosition { cx, cy };
+	player.hasMonsterTarget = hasMonsterTarget;
+	player.hasPlayerTarget = hasPlayerTarget;
+	player.targetId = targetId;
 	player.queuedSpell.spellLevel = player.GetSpellLevel(player.queuedSpell.spellId);
 	player.executedSpell = player.queuedSpell;
 }
@@ -446,6 +543,10 @@ bool DoWalk(Player &player, int variant)
 		return false;
 	}
 
+	// PVP REBALANCE: Track player movements in arena.
+	if (player.isOnArenaLevel() && player.isMyPlayer())
+		player.trackLastPlrMovement(variant);
+
 	// We reached the new tile -> update the player's tile position
 	switch (variant) {
 	case PM_WALK_NORTHWARDS:
@@ -461,6 +562,13 @@ bool DoWalk(Player &player, int variant)
 		player.position.tile = player.position.temp;
 		// dPlayer is set here for backwards comparability, without it the player would be invisible if loaded from a vanilla save.
 		player.occupyTile(player.position.tile, false);
+
+		// PVP REBALANCE: Increment _pDiawalkCounter and punish reaching DiawalkDamageThreshold for arena use.
+		if (player.isOnArenaLevel()) {
+			if (player.calculateDiagonalMovementPercentage() > DiawalkDamageThreshold && player.isMyPlayer())
+				// Deal 5 HP worth of damage each diagonal movement multiplied by the amount of percent they are above the threshold.
+				NetSendCmdDamage(true, player, (player.calculateDiagonalMovementPercentage() - DiawalkDamageThreshold) * 1 * 64, DamageType::Physical);
+		}
 		break;
 	}
 
@@ -502,6 +610,10 @@ bool DamageWeapon(Player &player, unsigned damageFrequency)
 	if (&player != MyPlayer) {
 		return false;
 	}
+
+	// PVP REBALANCE: Do not damage weapon in arena levels.
+	if (player.isOnArenaLevel())
+		return false;
 
 	if (WeaponDecay(player, INVLOC_HAND_LEFT))
 		return true;
@@ -777,11 +889,24 @@ bool PlrHitPlr(Player &attacker, Player &target)
 	dam += (dam * attacker._pIBonusDam) / 100;
 	dam += attacker._pIBonusDamMod + attacker._pDamageMod;
 
-	if (attacker._pClass == HeroClass::Warrior || attacker._pClass == HeroClass::Barbarian) {
-		if (GenerateRnd(100) < attacker.getCharacterLevel()) {
-			dam *= 2;
-		}
+	bool isOnArena = attacker.isOnArenaLevel();
+	int charLevel = attacker.getCharacterLevel();
+
+	// Error handling for critical hit calculation to avoid dividing by 0 in case of bad actor.
+	charLevel = std::clamp(charLevel, 1, static_cast<int>(GetMaximumCharacterLevel()));
+
+	int crit = isOnArena ? attacker._pStrength / (charLevel / 8) : charLevel;
+
+	crit = std::clamp(crit, 0, 50);
+
+	int critper = GenerateRnd(100);
+	HeroClass charClass = attacker._pClass;
+
+	// PVP REBALANCE: New crit chance formula for arenas. Crits always cause hit recovery.
+	if ((isOnArena || charClass == HeroClass::Warrior || charClass == HeroClass::Barbarian) && critper < crit) {
+		dam *= 2;
 	}
+
 	int skdam = dam << 6;
 	if (HasAnyOf(attacker._pIFlags, ItemSpecialEffect::RandomStealLife)) {
 		int tac = GenerateRnd(skdam / 8);
@@ -889,6 +1014,23 @@ bool DoAttack(Player &player)
 
 bool DoRangeAttack(Player &player)
 {
+	WorldTilePosition dst = player.position.temp;
+
+	if (player.isOnArenaLevel() && player.AnimInfo.currentFrame == player._pAFNum - 6) {
+		// PVP REBALANCE: Obtain target position 6 frames before the action frame to ensure same accuracy regardless of ranged speed.
+		// 6 frames should ensure the accuracy of shooting a bow for all classes is similar to that of Rogue with Swiftness in vanilla.
+		auto id = player.targetId;
+		if (player.hasPlayerTarget) {
+			assert(id >= 0 && id < Players.size());
+			auto &targetPlayer = Players[id];
+			dst = targetPlayer.position.future;
+		} else if (player.hasMonsterTarget) {
+			assert(id >= 0 && id < MaxMonsters);
+			auto &targetMonster = Monsters[id];
+			dst = targetMonster.position.future;
+		}
+	}
+
 	int arrows = 0;
 	if (player.AnimInfo.currentFrame == player._pAFNum - 1) {
 		arrows = 1;
@@ -926,7 +1068,7 @@ bool DoRangeAttack(Player &player)
 
 		AddMissile(
 		    player.position.tile,
-		    player.position.temp + Displacement { xoff, yoff },
+		    dst + Displacement { xoff, yoff },
 		    player._pdir,
 		    mistype,
 		    TARGET_MONSTERS,
@@ -958,6 +1100,10 @@ void DamageParryItem(Player &player)
 	if (&player != MyPlayer) {
 		return;
 	}
+
+	// PVP REBALANCE: Do not damage parry items in arena levels.
+	if (player.isOnArenaLevel())
+		return;
 
 	if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Shield || player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Staff) {
 		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability == DUR_INDESTRUCTIBLE) {
@@ -1003,6 +1149,10 @@ void DamageArmor(Player &player)
 		return;
 	}
 
+	// PVP REBALANCE: Do not damage armor in arena levels.
+	if (player.isOnArenaLevel())
+		return;
+
 	if (player.InvBody[INVLOC_CHEST].isEmpty() && player.InvBody[INVLOC_HEAD].isEmpty()) {
 		return;
 	}
@@ -1040,12 +1190,24 @@ void DamageArmor(Player &player)
 
 bool DoSpell(Player &player)
 {
+	WorldTilePosition dst = player.position.temp;
+	if (player.isOnArenaLevel() && player.AnimInfo.currentFrame == player._pSFNum - 7) {
+		// PVP REBALANCE: Obtain target position 7 frames before the action frame to ensure same accuracy regardless of casting speed.
+		// 7 frames should ensure the accuracy of casting spells for all classes is similar to that of Sorcerer in vanilla.
+		if (player.hasPlayerTarget) {
+			assert(player.targetId >= 0 && player.targetId < Players.size());
+			dst = Players[player.targetId].position.future;
+		} else if (player.hasMonsterTarget) {
+			assert(player.targetId >= 0 && player.targetId < MaxMonsters);
+			dst = Monsters[player.targetId].position.future;
+		}
+	}
 	if (player.AnimInfo.currentFrame == player._pSFNum) {
 		CastSpell(
 		    player,
 		    player.executedSpell.spellId,
 		    player.position.tile,
-		    player.position.temp,
+		    dst,
 		    player.executedSpell.spellLevel);
 
 		if (IsAnyOf(player.executedSpell.spellType, SpellType::Scroll, SpellType::Charges)) {
@@ -1276,38 +1438,38 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 			break;
 		case ACTION_RATTACK:
 			d = GetDirection(player.position.tile, { player.destParam1, player.destParam2 });
-			StartRangeAttack(player, d, player.destParam1, player.destParam2, pmWillBeCalled);
+			StartRangeAttack(player, d, player.destParam1, player.destParam2, pmWillBeCalled, false, false, 0);
 			break;
 		case ACTION_RATTACKMON:
 			d = GetDirection(player.position.future, monster->position.future);
 			if (monster->talkMsg != TEXT_NONE && monster->talkMsg != TEXT_VILE14) {
 				TalktoMonster(player, *monster);
 			} else {
-				StartRangeAttack(player, d, monster->position.future.x, monster->position.future.y, pmWillBeCalled);
+				StartRangeAttack(player, d, monster->position.future.x, monster->position.future.y, pmWillBeCalled, true, false, targetId);
 			}
 			break;
 		case ACTION_RATTACKPLR:
 			d = GetDirection(player.position.future, target->position.future);
-			StartRangeAttack(player, d, target->position.future.x, target->position.future.y, pmWillBeCalled);
+			StartRangeAttack(player, d, target->position.future.x, target->position.future.y, pmWillBeCalled, false, true, targetId);
 			break;
 		case ACTION_SPELL:
 			d = GetDirection(player.position.tile, { player.destParam1, player.destParam2 });
-			StartSpell(player, d, player.destParam1, player.destParam2);
+			StartSpell(player, d, player.destParam1, player.destParam2, false, false, 0);
 			player.executedSpell.spellLevel = player.destParam3;
 			break;
 		case ACTION_SPELLWALL:
-			StartSpell(player, static_cast<Direction>(player.destParam3), player.destParam1, player.destParam2);
+			StartSpell(player, static_cast<Direction>(player.destParam3), player.destParam1, player.destParam2, false, false, 0);
 			player.tempDirection = static_cast<Direction>(player.destParam3);
 			player.executedSpell.spellLevel = player.destParam4;
 			break;
 		case ACTION_SPELLMON:
 			d = GetDirection(player.position.tile, monster->position.future);
-			StartSpell(player, d, monster->position.future.x, monster->position.future.y);
+			StartSpell(player, d, monster->position.future.x, monster->position.future.y, true, false, targetId);
 			player.executedSpell.spellLevel = player.destParam2;
 			break;
 		case ACTION_SPELLPLR:
 			d = GetDirection(player.position.tile, target->position.future);
-			StartSpell(player, d, target->position.future.x, target->position.future.y);
+			StartSpell(player, d, target->position.future.x, target->position.future.y, false, true, targetId);
 			player.executedSpell.spellLevel = player.destParam2;
 			break;
 		case ACTION_OPERATE:
@@ -1405,15 +1567,15 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 	if (player._pmode == PM_RATTACK && player.AnimInfo.currentFrame >= player._pAFNum) {
 		if (player.destAction == ACTION_RATTACK) {
 			d = GetDirection(player.position.tile, { player.destParam1, player.destParam2 });
-			StartRangeAttack(player, d, player.destParam1, player.destParam2, pmWillBeCalled);
+			StartRangeAttack(player, d, player.destParam1, player.destParam2, pmWillBeCalled, false, false, 0);
 			player.destAction = ACTION_NONE;
 		} else if (player.destAction == ACTION_RATTACKMON) {
 			d = GetDirection(player.position.tile, monster->position.future);
-			StartRangeAttack(player, d, monster->position.future.x, monster->position.future.y, pmWillBeCalled);
+			StartRangeAttack(player, d, monster->position.future.x, monster->position.future.y, pmWillBeCalled, true, false, targetId);
 			player.destAction = ACTION_NONE;
 		} else if (player.destAction == ACTION_RATTACKPLR) {
 			d = GetDirection(player.position.tile, target->position.future);
-			StartRangeAttack(player, d, target->position.future.x, target->position.future.y, pmWillBeCalled);
+			StartRangeAttack(player, d, target->position.future.x, target->position.future.y, pmWillBeCalled, false, true, targetId);
 			player.destAction = ACTION_NONE;
 		}
 	}
@@ -1421,15 +1583,15 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 	if (player._pmode == PM_SPELL && player.AnimInfo.currentFrame >= player._pSFNum) {
 		if (player.destAction == ACTION_SPELL) {
 			d = GetDirection(player.position.tile, { player.destParam1, player.destParam2 });
-			StartSpell(player, d, player.destParam1, player.destParam2);
+			StartSpell(player, d, player.destParam1, player.destParam2, false, false, 0);
 			player.destAction = ACTION_NONE;
 		} else if (player.destAction == ACTION_SPELLMON) {
 			d = GetDirection(player.position.tile, monster->position.future);
-			StartSpell(player, d, monster->position.future.x, monster->position.future.y);
+			StartSpell(player, d, monster->position.future.x, monster->position.future.y, true, false, targetId);
 			player.destAction = ACTION_NONE;
 		} else if (player.destAction == ACTION_SPELLPLR) {
 			d = GetDirection(player.position.tile, target->position.future);
-			StartSpell(player, d, target->position.future.x, target->position.future.y);
+			StartSpell(player, d, target->position.future.x, target->position.future.y, false, true, targetId);
 			player.destAction = ACTION_NONE;
 		}
 	}
@@ -2485,6 +2647,9 @@ void InitPlayer(Player &player, bool firstTime)
 		player._pSBkSpell = SpellID::Invalid;
 		player.queuedSpell.spellId = player._pRSpell;
 		player.queuedSpell.spellType = player._pRSplType;
+		player.hasMonsterTarget = false;
+		player.hasPlayerTarget = false;
+		player.targetId = 0;
 		player.pManaShield = false;
 		player.wReflections = 0;
 	}
@@ -2529,6 +2694,9 @@ void InitPlayer(Player &player, bool firstTime)
 	player._pAblSpells = GetSpellBitmask(GetPlayerStartingLoadoutForClass(player._pClass).skill);
 
 	player._pInvincible = false;
+
+	// PVP REBALANCE: For arena use only. Initialize all movement history.
+	std::fill(player._pMovements.begin(), player._pMovements.end(), PM_STAND);
 
 	if (&player == MyPlayer) {
 		MyPlayerIsDead = false;
@@ -2641,7 +2809,16 @@ void StartPlrHit(Player &player, int dam, bool forcehit)
 	player.Say(HeroSpeech::ArghClang);
 
 	RedrawComponent(PanelDrawComponent::Health);
-	if (player._pClass == HeroClass::Barbarian) {
+
+	// PVP REBALANCE: New formula for calculating whether or not hit recovery should occur based on Life and Damage in arenas.
+	if (player.isOnArenaLevel()) {
+		int rper = GenerateRnd(100);
+		int recovery = dam - (player._pMaxHP / 6) + 100;
+		recovery = std::clamp(recovery, 5, 95);
+
+		if (rper >= recovery)
+			return;
+	} else if (player._pClass == HeroClass::Barbarian) {
 		if (dam >> 6 < player.getCharacterLevel() + player.getCharacterLevel() / 4 && !forcehit) {
 			return;
 		}
@@ -2710,6 +2887,9 @@ StartPlayerKill(Player &player, DeathReason deathReason)
 	player._pmode = PM_DEATH;
 	player._pInvincible = true;
 	SetPlayerHitPoints(player, 0);
+	// PVP REBALANCE: Reset player's movements for arena use.
+	if (player.isMyPlayer())
+		std::fill(player._pMovements.begin(), player._pMovements.end(), PM_STAND);
 
 	if (&player != MyPlayer && dropItems) {
 		// Ensure that items are removed for remote players

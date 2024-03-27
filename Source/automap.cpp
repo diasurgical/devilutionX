@@ -1428,6 +1428,17 @@ void DrawAutomapText(const Surface &out)
 		}
 		DrawString(out, description, linePosition);
 		linePosition.y += 15;
+
+		auto &myPlayer = *MyPlayer;
+
+		// PVP REBALANCE: Diawalk Counter display for arena use.
+		if (myPlayer.isOnArenaLevel()) {
+			description = fmt::format(fmt::runtime(_("Diawalk Percentage: {:d}%")), myPlayer.calculateDiagonalMovementPercentage());
+			const TextRenderOptions counterTextOptions {
+				.flags = myPlayer.calculateDiagonalMovementPercentage() >= DiawalkDamageThreshold ? UiFlags::ColorRed : UiFlags::ColorGold,
+			};
+			DrawString(out, description, { (GetScreenWidth() / 2) - 72, 8 }, counterTextOptions);
+		}
 	}
 
 	if (setlevel) {

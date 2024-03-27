@@ -29,6 +29,8 @@
 
 namespace devilution {
 
+extern DVL_API_FOR_TEST Player *MyPlayer;
+
 constexpr int InventoryGridCells = 40;
 constexpr int MaxBeltItems = 8;
 constexpr int MaxResistance = 75;
@@ -36,6 +38,10 @@ constexpr uint8_t MaxSpellLevel = 15;
 constexpr int PlayerNameLength = 32;
 
 constexpr size_t NumHotkeys = 12;
+
+// PVP REBALANCE: The percentage of diagonal movements that _pMovements reaches to take punitive action against that player in the arena.
+constexpr int16_t DiawalkDamageThreshold = 80;
+constexpr int8_t MaxMovementHistory = 32;
 
 /** Walking directions */
 enum {
@@ -269,6 +275,8 @@ struct Player {
 	int destParam3;
 	int destParam4;
 	int _pGold;
+	// PVP REBALANCE: Movement history for arena.
+	std::array<int, MaxMovementHistory> _pMovements;
 
 	/**
 	 * @brief Contains Information for current Animation
@@ -302,6 +310,9 @@ struct Player {
 	uint8_t plrlevel;
 	bool plrIsOnSetLevel;
 	ActorPosition position;
+	bool hasMonsterTarget;
+	bool hasPlayerTarget;
+	int8_t targetId;
 	Direction _pdir; // Direction faced by player (direction enum)
 	HeroClass _pClass;
 
@@ -868,6 +879,11 @@ public:
 	{
 		return plrIsOnSetLevel && IsArenaLevel(static_cast<_setlevels>(plrlevel));
 	}
+	/** @brief Checks if the player is the local client player. */
+	bool isMyPlayer() const
+	{
+		return this == MyPlayer;
+	}
 	void setLevel(uint8_t level)
 	{
 		this->plrlevel = level;
@@ -894,10 +910,36 @@ public:
 
 	/** @brief Checks if the player level is owned by local client. */
 	bool isLevelOwnedByLocalClient() const;
+
+	/**
+	 * @brief Insert most recent player movement variant into member variable _pMovements for arena usage
+	 */
+	void trackLastPlrMovement(int variant)
+	{
+		for (int i = MaxMovementHistory - 1; i > 0; --i) {
+			this->_pMovements[i] = this->_pMovements[i - 1];
+		}
+		this->_pMovements[0] = variant;
+	}
+
+	/**
+	 * @brief Calculate the percentage of diagonal movements made in the last MaxMovementHistory movements for arena usage
+	 */
+	int calculateDiagonalMovementPercentage()
+	{
+		int numDiagonalMovements = 0;
+		for (int i = 0; i < MaxMovementHistory; ++i) {
+			if (this->_pMovements[i] == PM_WALK_SIDEWAYS) {
+				numDiagonalMovements++;
+			}
+		}
+
+		int diagonalMovementPercentage = (numDiagonalMovements * 100) / MaxMovementHistory;
+		return diagonalMovementPercentage;
+	}
 };
 
 extern DVL_API_FOR_TEST uint8_t MyPlayerId;
-extern DVL_API_FOR_TEST Player *MyPlayer;
 extern DVL_API_FOR_TEST std::vector<Player> Players;
 /** @brief What Player items and stats should be displayed? Normally this is identical to MyPlayer but can differ when /inspect was used. */
 extern Player *InspectPlayer;
