@@ -68,9 +68,11 @@ namespace {
 
 constexpr int NightmareToHitBonus = 85;
 constexpr int HellToHitBonus = 120;
+constexpr int InfernoToHitBonus = 190;
 
 constexpr int NightmareAcBonus = 50;
 constexpr int HellAcBonus = 80;
+constexpr int InfernoAcBonus = 140;
 
 /** Tracks which missile files are already loaded */
 size_t totalmonsters;
@@ -219,6 +221,20 @@ void InitMonster(Monster &monster, Direction rd, size_t typeIndex, Point positio
 		monster.maxDamageSpecial = 4 * monster.maxDamageSpecial + 6;
 		monster.armorClass += HellAcBonus;
 		monster.resistance = monster.data().resistanceHell;
+	} else if (sgGameInitInfo.nDifficulty == DIFF_INFERNO) {
+		monster.maxHitPoints = 8 * monster.maxHitPoints;
+		if (gbIsHellfire)
+			monster.maxHitPoints += (gbIsMultiplayer ? 400 : 200) << 6;
+		else
+			monster.maxHitPoints += 400 << 6;
+		monster.hitPoints = monster.maxHitPoints;
+		monster.toHit += HellToHitBonus;
+		monster.minDamage = 8 * monster.minDamage + 12;
+		monster.maxDamage = 8 * monster.maxDamage + 12;
+		monster.minDamageSpecial = 8 * monster.minDamageSpecial + 12;
+		monster.maxDamageSpecial = 8 * monster.maxDamageSpecial + 12;
+		monster.armorClass += InfernoAcBonus;
+		monster.resistance = monster.data().resistanceInferno;
 	}
 }
 
@@ -3244,6 +3260,17 @@ void PrepareUniqueMonst(Monster &monster, UniqueMonsterType monsterType, size_t 
 		monster.maxDamage = 4 * monster.maxDamage + 6;
 		monster.minDamageSpecial = 4 * monster.minDamageSpecial + 6;
 		monster.maxDamageSpecial = 4 * monster.maxDamageSpecial + 6;
+	} else if (sgGameInitInfo.nDifficulty == DIFF_INFERNO) {
+		monster.maxHitPoints = 8 * monster.maxHitPoints;
+		if (gbIsHellfire)
+			monster.maxHitPoints += (gbIsMultiplayer ? 400 : 200) << 6;
+		else
+			monster.maxHitPoints += 400 << 6;
+		monster.hitPoints = monster.maxHitPoints;
+		monster.minDamage = 8 * monster.minDamage + 12;
+		monster.maxDamage = 8 * monster.maxDamage + 12;
+		monster.minDamageSpecial = 8 * monster.minDamageSpecial + 12;
+		monster.maxDamageSpecial = 8 * monster.maxDamageSpecial + 12;
 	}
 
 	InitTRNForUniqueMonster(monster);
@@ -3256,6 +3283,8 @@ void PrepareUniqueMonst(Monster &monster, UniqueMonsterType monsterType, size_t 
 			monster.toHit += NightmareToHitBonus;
 		} else if (sgGameInitInfo.nDifficulty == DIFF_HELL) {
 			monster.toHit += HellToHitBonus;
+		} else if (sgGameInitInfo.nDifficulty == DIFF_INFERNO) {
+			monster.toHit += InfernoToHitBonus;
 		}
 	}
 	if (uniqueMonsterData.customArmorClass != 0) {
@@ -3265,6 +3294,8 @@ void PrepareUniqueMonst(Monster &monster, UniqueMonsterType monsterType, size_t 
 			monster.armorClass += NightmareAcBonus;
 		} else if (sgGameInitInfo.nDifficulty == DIFF_HELL) {
 			monster.armorClass += HellAcBonus;
+		} else if (sgGameInitInfo.nDifficulty == DIFF_INFERNO) {
+			monster.armorClass += InfernoAcBonus;
 		}
 	}
 
@@ -4392,9 +4423,11 @@ void PrintMonstHistory(int mt)
 
 		int hpBonusNightmare = 100;
 		int hpBonusHell = 200;
+		int hpBonusInferno = 400;
 		if (gbIsHellfire) {
 			hpBonusNightmare = (!gbIsMultiplayer ? 50 : 100);
 			hpBonusHell = (!gbIsMultiplayer ? 100 : 200);
+			hpBonusHell = (!gbIsMultiplayer ? 200 : 400);
 		}
 		if (sgGameInitInfo.nDifficulty == DIFF_NIGHTMARE) {
 			minHP = 3 * minHP + hpBonusNightmare;
@@ -4402,11 +4435,21 @@ void PrintMonstHistory(int mt)
 		} else if (sgGameInitInfo.nDifficulty == DIFF_HELL) {
 			minHP = 4 * minHP + hpBonusHell;
 			maxHP = 4 * maxHP + hpBonusHell;
+		} else if (sgGameInitInfo.nDifficulty == DIFF_INFERNO) {
+			minHP = 5 * minHP + hpBonusInferno;
+			maxHP = 5 * maxHP + hpBonusInferno;
 		}
 		AddPanelString(fmt::format(fmt::runtime(_("Hit Points: {:d}-{:d}")), minHP, maxHP));
 	}
 	if (MonsterKillCounts[mt] >= 15) {
-		int res = (sgGameInitInfo.nDifficulty != DIFF_HELL) ? MonstersData[mt].resistance : MonstersData[mt].resistanceHell;
+		int res;
+		if (sgGameInitInfo.nDifficulty == DIFF_INFERNO) {
+			res = MonstersData[mt].resistanceInferno;
+		} else if (sgGameInitInfo.nDifficulty == DIFF_HELL) {
+			res = MonstersData[mt].resistanceHell;
+		} else {
+			res = MonstersData[mt].resistance;
+		}
 		if ((res & (RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING | IMMUNE_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING)) == 0) {
 			AddPanelString(_("No magic resistance"));
 		} else {
@@ -4878,6 +4921,8 @@ unsigned int Monster::toHitSpecial(_difficulty difficulty) const
 		baseToHitSpecial += NightmareToHitBonus;
 	} else if (difficulty == DIFF_HELL) {
 		baseToHitSpecial += HellToHitBonus;
+	} else if (difficulty == DIFF_INFERNO) {
+		baseToHitSpecial += InfernoToHitBonus;
 	}
 
 	return baseToHitSpecial;

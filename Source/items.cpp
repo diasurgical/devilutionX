@@ -3173,6 +3173,7 @@ void GetItemAttrs(Item &item, _item_indexes itemData, int lvl)
 	if (item._itype != ItemType::Gold)
 		return;
 
+	// Gold amount per difficulty
 	int rndv;
 	int itemlevel = ItemsGetCurrlevel();
 	switch (sgGameInitInfo.nDifficulty) {
@@ -3184,6 +3185,9 @@ void GetItemAttrs(Item &item, _item_indexes itemData, int lvl)
 		break;
 	case DIFF_HELL:
 		rndv = 5 * (itemlevel + 32) + GenerateRnd(10 * (itemlevel + 32));
+		break;
+	case DIFF_INFERNO:
+		rndv = 5 * (itemlevel + 48) + GenerateRnd(10 * (itemlevel + 48));
 		break;
 	}
 	if (leveltype == DTYPE_HELL)

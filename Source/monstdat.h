@@ -126,6 +126,7 @@ struct MonsterData {
 	uint8_t resistance;
 	/** Using monster_resistance as bitflags */
 	uint8_t resistanceHell;
+	uint8_t resistanceInferno;
 	int8_t selectionType; // TODO Create enum
 	/** Using monster_treasure */
 	uint16_t treasure;
