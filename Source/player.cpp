@@ -1785,7 +1785,7 @@ bool Player::isWalking() const
 int Player::GetManaShieldDamageReduction()
 {
 	constexpr uint8_t Max = 20;
-	return 22 - std::min(_pSplLvl[static_cast<int8_t>(SpellID::ManaShield)], Max);
+	return 23 - std::min(_pSplLvl[static_cast<int8_t>(SpellID::ManaShield)], Max);
 }
 
 void Player::RestorePartialLife()
