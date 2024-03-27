@@ -31,7 +31,7 @@ namespace devilution {
 
 constexpr int InventoryGridCells = 40;
 constexpr int MaxBeltItems = 8;
-constexpr int MaxResistance = 75;
+constexpr int MaxResistance = 80;
 constexpr uint8_t MaxSpellLevel = 15;
 constexpr int PlayerNameLength = 32;
 
