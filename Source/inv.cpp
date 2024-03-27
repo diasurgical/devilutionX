@@ -1365,6 +1365,7 @@ bool AutoPlaceItemInInventory(Player &player, const Item &item, bool persistItem
 std::vector<int> SortItemsBySize(Player &player)
 {
 	std::vector<std::pair<Size, int>> itemSizes; // Pair of item size and its index in InvList
+	itemSizes.reserve(player._pNumInv);          // Reserves space for the number of items in the player's inventory
 
 	for (int i = 0; i < player._pNumInv; i++) {
 		Size size = GetInventorySize(player.InvList[i]);
