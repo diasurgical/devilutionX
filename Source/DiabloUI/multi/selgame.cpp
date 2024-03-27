@@ -247,15 +247,6 @@ void selgame_GameSelection_Focus(size_t value)
 			case 20:
 				infoString.append(_("Speed: Normal"));
 				break;
-			case 30:
-				infoString.append(_("Speed: Fast"));
-				break;
-			case 40:
-				infoString.append(_("Speed: Faster"));
-				break;
-			case 50:
-				infoString.append(_("Speed: Fastest"));
-				break;
 			default:
 				// This should not occure, so no translations is needed
 				infoString.append(StrCat("Speed: ", gameInfo.gameData.nTickRate));
@@ -494,9 +485,6 @@ void selgame_GameSpeedSelection()
 	vecSelGameDialog.push_back(std::make_unique<UiArtText>(_("Select Game Speed").data(), rect4, UiFlags::AlignCenter | UiFlags::FontSize30 | UiFlags::ColorUiSilver, 3));
 
 	vecSelGameDlgItems.push_back(std::make_unique<UiListItem>(_("Normal"), 20));
-	vecSelGameDlgItems.push_back(std::make_unique<UiListItem>(_("Fast"), 30));
-	vecSelGameDlgItems.push_back(std::make_unique<UiListItem>(_("Faster"), 40));
-	vecSelGameDlgItems.push_back(std::make_unique<UiListItem>(_("Fastest"), 50));
 
 	vecSelGameDialog.push_back(std::make_unique<UiList>(vecSelGameDlgItems, vecSelGameDlgItems.size(), uiPosition.x + 300, (uiPosition.y + 279), 295, 26, UiFlags::AlignCenter | UiFlags::FontSize24 | UiFlags::ColorUiGold));
 
@@ -515,18 +503,6 @@ void selgame_Speed_Focus(size_t value)
 	case 20:
 		CopyUtf8(selgame_Label, _("Normal"), sizeof(selgame_Label));
 		CopyUtf8(selgame_Description, _("Normal Speed\nThis is where a starting character should begin the quest to defeat Diablo."), sizeof(selgame_Description));
-		break;
-	case 30:
-		CopyUtf8(selgame_Label, _("Fast"), sizeof(selgame_Label));
-		CopyUtf8(selgame_Description, _("Fast Speed\nThe denizens of the Labyrinth have been hastened and will prove to be a greater challenge. This is recommended for experienced characters only."), sizeof(selgame_Description));
-		break;
-	case 40:
-		CopyUtf8(selgame_Label, _("Faster"), sizeof(selgame_Label));
-		CopyUtf8(selgame_Description, _("Faster Speed\nMost monsters of the dungeon will seek you out quicker than ever before. Only an experienced champion should try their luck at this speed."), sizeof(selgame_Description));
-		break;
-	case 50:
-		CopyUtf8(selgame_Label, _("Fastest"), sizeof(selgame_Label));
-		CopyUtf8(selgame_Description, _("Fastest Speed\nThe minions of the underworld will rush to attack without hesitation. Only a true speed demon should enter at this pace."), sizeof(selgame_Description));
 		break;
 	}
 	CopyUtf8(selgame_Description, WordWrapString(selgame_Description, DESCRIPTION_WIDTH), sizeof(selgame_Description));

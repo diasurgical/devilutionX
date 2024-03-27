@@ -155,13 +155,6 @@ void GamemenuGetSpeed()
 {
 	if (gbIsMultiplayer) {
 		sgOptionsMenu[3].removeFlags(GMENU_ENABLED | GMENU_SLIDER);
-		if (sgGameInitInfo.nTickRate >= 50)
-			sgOptionsMenu[3].pszStr = _("Speed: Fastest").data();
-		else if (sgGameInitInfo.nTickRate >= 40)
-			sgOptionsMenu[3].pszStr = _("Speed: Faster").data();
-		else if (sgGameInitInfo.nTickRate >= 30)
-			sgOptionsMenu[3].pszStr = _("Speed: Fast").data();
-		else if (sgGameInitInfo.nTickRate == 20)
 			sgOptionsMenu[3].pszStr = _("Speed: Normal").data();
 		return;
 	}
