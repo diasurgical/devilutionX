@@ -60,6 +60,7 @@ enum class MonsterClass : uint8_t {
 	Undead,
 	Demon,
 	Animal,
+	Neutral,
 };
 
 enum monster_resistance : uint8_t {
