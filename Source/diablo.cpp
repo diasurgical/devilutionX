@@ -2433,6 +2433,14 @@ void InitPadmapActions()
 	    nullptr,
 	    CanPlayerTakeAction);
 	sgOptions.Padmapper.AddAction(
+	    "SortInv",
+	    N_("Sort Inventory"),
+	    N_("Sorts the inventory."),
+	    ControllerButton_NONE,
+	    [] {
+		    ReorganizeInventory(*MyPlayer);
+	    });
+	sgOptions.Padmapper.AddAction(
 	    "ChatLog",
 	    N_("Chat Log"),
 	    N_("Displays chat log."),
