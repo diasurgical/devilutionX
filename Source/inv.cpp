@@ -1362,6 +1362,72 @@ bool AutoPlaceItemInInventory(Player &player, const Item &item, bool persistItem
 	app_fatal(StrCat("Unknown item size: ", itemSize.width, "x", itemSize.height));
 }
 
+std::vector<int> SortItemsBySize(Player &player)
+{
+	std::vector<std::pair<Size, int>> itemSizes; // Pair of item size and its index in InvList
+	itemSizes.reserve(player._pNumInv);          // Reserves space for the number of items in the player's inventory
+
+	for (int i = 0; i < player._pNumInv; i++) {
+		Size size = GetInventorySize(player.InvList[i]);
+		itemSizes.emplace_back(size, i);
+	}
+
+	// Sort items by height first, then by width
+	std::sort(itemSizes.begin(), itemSizes.end(), [](const auto &a, const auto &b) {
+		if (a.first.height == b.first.height) return a.first.width > b.first.width;
+		return a.first.height > b.first.height;
+	});
+
+	// Extract sorted indices
+	std::vector<int> sortedIndices;
+	sortedIndices.reserve(itemSizes.size()); // Pre-allocate the necessary capacity
+
+	for (const auto &itemSize : itemSizes) {
+		sortedIndices.push_back(itemSize.second);
+	}
+
+	return sortedIndices;
+}
+
+void ReorganizeInventory(Player &player)
+{
+	// Sort items by size
+	std::vector<int> sortedIndices = SortItemsBySize(player);
+
+	// Temporary storage for items and a copy of InvGrid
+	std::vector<Item> tempStorage(player._pNumInv);
+	std::array<int8_t, 40> originalInvGrid;                                                       // Declare an array for InvGrid copy
+	std::copy(std::begin(player.InvGrid), std::end(player.InvGrid), std::begin(originalInvGrid)); // Copy InvGrid to originalInvGrid
+
+	// Move items to temporary storage and clear inventory slots
+	for (int i = 0; i < player._pNumInv; ++i) {
+		tempStorage[i] = player.InvList[i];
+		player.InvList[i] = {};
+	}
+	player._pNumInv = 0;                                                // Reset inventory count
+	std::fill(std::begin(player.InvGrid), std::end(player.InvGrid), 0); // Clear InvGrid
+
+	// Attempt to place items back, now from the temp storage
+	bool reorganizationFailed = false;
+	for (int index : sortedIndices) {
+		Item &item = tempStorage[index];
+		if (!AutoPlaceItemInInventory(player, item, true, false)) {
+			reorganizationFailed = true;
+			break;
+		}
+	}
+
+	// If reorganization failed, restore items and InvGrid from tempStorage and originalInvGrid
+	if (reorganizationFailed) {
+		for (Item &item : tempStorage) {
+			if (!item.isEmpty()) {
+				player.InvList[player._pNumInv++] = item;
+			}
+		}
+		std::copy(std::begin(originalInvGrid), std::end(originalInvGrid), std::begin(player.InvGrid)); // Restore InvGrid
+	}
+}
+
 int RoomForGold()
 {
 	int amount = 0;
