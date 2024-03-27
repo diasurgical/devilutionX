@@ -2005,72 +2005,13 @@ _item_indexes RndPremiumItem(const Player &player, int minlvl, int maxlvl)
 
 void SpawnOnePremium(Item &premiumItem, int plvl, const Player &player)
 {
-	int strength = std::max(player.GetMaximumAttributeValue(CharacterAttribute::Strength), player._pStrength);
-	int dexterity = std::max(player.GetMaximumAttributeValue(CharacterAttribute::Dexterity), player._pDexterity);
-	int magic = std::max(player.GetMaximumAttributeValue(CharacterAttribute::Magic), player._pMagic);
-	strength += strength / 5;
-	dexterity += dexterity / 5;
-	magic += magic / 5;
+	premiumItem = {};
+	premiumItem._iSeed = AdvanceRndSeed();
+	SetRndSeed(premiumItem._iSeed);
+	_item_indexes itemType = RndPremiumItem(player, plvl / 4, plvl);
+	GetItemAttrs(premiumItem, itemType, plvl);
+	GetItemBonus(player, premiumItem, plvl / 2, plvl, true, !gbIsHellfire);
 
-	plvl = std::clamp(plvl, 1, 30);
-
-	int maxCount = 150;
-	const bool unlimited = !gbIsHellfire; // TODO: This could lead to an infinite loop if a suitable item can never be generated
-	for (int count = 0; unlimited || count < maxCount; count++) {
-		premiumItem = {};
-		premiumItem._iSeed = AdvanceRndSeed();
-		SetRndSeed(premiumItem._iSeed);
-		_item_indexes itemType = RndPremiumItem(player, plvl / 4, plvl);
-		GetItemAttrs(premiumItem, itemType, plvl);
-		GetItemBonus(player, premiumItem, plvl / 2, plvl, true, !gbIsHellfire);
-
-		if (!gbIsHellfire) {
-			if (premiumItem._iIvalue <= 140000) {
-				break;
-			}
-		} else {
-			int itemValue = 0;
-			switch (premiumItem._itype) {
-			case ItemType::LightArmor:
-			case ItemType::MediumArmor:
-			case ItemType::HeavyArmor: {
-				const auto *const mostValuablePlayerArmor = player.GetMostValuableItem(
-				    [](const Item &item) {
-					    return IsAnyOf(item._itype, ItemType::LightArmor, ItemType::MediumArmor, ItemType::HeavyArmor);
-				    });
-
-				itemValue = mostValuablePlayerArmor == nullptr ? 0 : mostValuablePlayerArmor->_iIvalue;
-				break;
-			}
-			case ItemType::Shield:
-			case ItemType::Axe:
-			case ItemType::Bow:
-			case ItemType::Mace:
-			case ItemType::Sword:
-			case ItemType::Helm:
-			case ItemType::Staff:
-			case ItemType::Ring:
-			case ItemType::Amulet: {
-				const auto *const mostValuablePlayerItem = player.GetMostValuableItem(
-				    [filterType = premiumItem._itype](const Item &item) { return item._itype == filterType; });
-
-				itemValue = mostValuablePlayerItem == nullptr ? 0 : mostValuablePlayerItem->_iIvalue;
-				break;
-			}
-			default:
-				itemValue = 0;
-				break;
-			}
-			itemValue = itemValue * 4 / 5; // avoids forced int > float > int conversion
-			if (premiumItem._iIvalue <= 200000
-			    && premiumItem._iMinStr <= strength
-			    && premiumItem._iMinMag <= magic
-			    && premiumItem._iMinDex <= dexterity
-			    && premiumItem._iIvalue >= itemValue) {
-				break;
-			}
-		}
-	}
 	premiumItem._iCreateInfo = plvl | CF_SMITHPREMIUM;
 	premiumItem._iIdentified = true;
 	premiumItem._iStatFlag = player.CanUseItem(premiumItem);
@@ -2105,9 +2046,19 @@ _item_indexes RndWitchItem(const Player &player, int lvl)
 	return RndVendorItem<WitchItemOk>(player, 0, lvl);
 }
 
+bool BoyItemOk(const Player &player, const ItemData &item)
+{
+	if (item.itype == ItemType::Misc)
+		return false;
+	if (item.itype == ItemType::Gold)
+		return false;
+
+	return true;
+}
+
 _item_indexes RndBoyItem(const Player &player, int lvl)
 {
-	return RndVendorItem<PremiumItemOk>(player, 0, lvl);
+	return RndVendorItem<BoyItemOk>(player, 0, lvl);
 }
 
 bool HealerItemOk(const Player &player, const ItemData &item)
@@ -4198,10 +4149,8 @@ void SpawnSmith(int lvl)
 {
 	constexpr int PinnedItemCount = 0;
 
-	int maxValue = 140000;
 	int maxItems = 19;
 	if (gbIsHellfire) {
-		maxValue = 200000;
 		maxItems = 24;
 	}
 
@@ -4209,13 +4158,11 @@ void SpawnSmith(int lvl)
 	for (int i = 0; i < iCnt; i++) {
 		Item &newItem = smithitem[i];
 
-		do {
-			newItem = {};
-			newItem._iSeed = AdvanceRndSeed();
-			SetRndSeed(newItem._iSeed);
-			_item_indexes itemData = RndSmithItem(*MyPlayer, lvl);
-			GetItemAttrs(newItem, itemData, lvl);
-		} while (newItem._iIvalue > maxValue);
+		newItem = {};
+		newItem._iSeed = AdvanceRndSeed();
+		SetRndSeed(newItem._iSeed);
+		_item_indexes itemData = RndSmithItem(*MyPlayer, lvl);
+		GetItemAttrs(newItem, itemData, lvl);
 
 		newItem._iCreateInfo = lvl | CF_SMITH;
 		newItem._iIdentified = true;
@@ -4269,7 +4216,6 @@ void SpawnWitch(int lvl)
 	int bookCount = 0;
 	const int pinnedBookCount = gbIsHellfire ? RandomIntLessThan(MaxPinnedBookCount) : 0;
 	const int itemCount = RandomIntBetween(10, gbIsHellfire ? 24 : 17);
-	const int maxValue = gbIsHellfire ? 200000 : 140000;
 
 	for (int i = 0; i < WITCH_ITEMS; i++) {
 		Item &item = witchitem[i];
@@ -4304,20 +4250,18 @@ void SpawnWitch(int lvl)
 			continue;
 		}
 
-		do {
-			item = {};
-			item._iSeed = AdvanceRndSeed();
-			SetRndSeed(item._iSeed);
-			_item_indexes itemData = RndWitchItem(*MyPlayer, lvl);
-			GetItemAttrs(item, itemData, lvl);
-			int maxlvl = -1;
-			if (GenerateRnd(100) <= 5)
-				maxlvl = 2 * lvl;
-			if (maxlvl == -1 && item._iMiscId == IMISC_STAFF)
-				maxlvl = 2 * lvl;
-			if (maxlvl != -1)
-				GetItemBonus(*MyPlayer, item, maxlvl / 2, maxlvl, true, true);
-		} while (item._iIvalue > maxValue);
+		item = {};
+		item._iSeed = AdvanceRndSeed();
+		SetRndSeed(item._iSeed);
+		_item_indexes itemData = RndWitchItem(*MyPlayer, lvl);
+		GetItemAttrs(item, itemData, lvl);
+		int maxlvl = -1;
+		if (GenerateRnd(100) <= 5)
+			maxlvl = 2 * lvl;
+		if (maxlvl == -1 && item._iMiscId == IMISC_STAFF)
+			maxlvl = 2 * lvl;
+		if (maxlvl != -1)
+			GetItemBonus(*MyPlayer, item, maxlvl / 2, maxlvl, true, true);
 
 		item._iCreateInfo = lvl | CF_WITCH;
 		item._iIdentified = true;
@@ -4328,113 +4272,17 @@ void SpawnWitch(int lvl)
 
 void SpawnBoy(int lvl)
 {
-	int ivalue = 0;
-	bool keepgoing = false;
-	int count = 0;
-
 	Player &myPlayer = *MyPlayer;
-
-	HeroClass pc = myPlayer._pClass;
-	int strength = std::max(myPlayer.GetMaximumAttributeValue(CharacterAttribute::Strength), myPlayer._pStrength);
-	int dexterity = std::max(myPlayer.GetMaximumAttributeValue(CharacterAttribute::Dexterity), myPlayer._pDexterity);
-	int magic = std::max(myPlayer.GetMaximumAttributeValue(CharacterAttribute::Magic), myPlayer._pMagic);
-	strength += strength / 5;
-	dexterity += dexterity / 5;
-	magic += magic / 5;
 
 	if (boylevel >= (lvl / 2) && !boyitem.isEmpty())
 		return;
-	do {
-		keepgoing = false;
-		boyitem = {};
-		boyitem._iSeed = AdvanceRndSeed();
-		SetRndSeed(boyitem._iSeed);
-		_item_indexes itype = RndBoyItem(*MyPlayer, lvl);
-		GetItemAttrs(boyitem, itype, lvl);
-		GetItemBonus(*MyPlayer, boyitem, lvl, 2 * lvl, true, true);
+	boyitem = {};
+	boyitem._iSeed = AdvanceRndSeed();
+	SetRndSeed(boyitem._iSeed);
+	_item_indexes itype = RndBoyItem(*MyPlayer, lvl);
+	GetItemAttrs(boyitem, itype, lvl);
+	GetItemBonus(*MyPlayer, boyitem, lvl, 2 * lvl, true, true);
 
-		if (!gbIsHellfire) {
-			if (boyitem._iIvalue > 90000) {
-				keepgoing = true; // prevent breaking the do/while loop too early by failing hellfire's condition in while
-				continue;
-			}
-			break;
-		}
-
-		ivalue = 0;
-
-		ItemType itemType = boyitem._itype;
-
-		switch (itemType) {
-		case ItemType::LightArmor:
-		case ItemType::MediumArmor:
-		case ItemType::HeavyArmor: {
-			const auto *const mostValuablePlayerArmor = myPlayer.GetMostValuableItem(
-			    [](const Item &item) {
-				    return IsAnyOf(item._itype, ItemType::LightArmor, ItemType::MediumArmor, ItemType::HeavyArmor);
-			    });
-
-			ivalue = mostValuablePlayerArmor == nullptr ? 0 : mostValuablePlayerArmor->_iIvalue;
-			break;
-		}
-		case ItemType::Shield:
-		case ItemType::Axe:
-		case ItemType::Bow:
-		case ItemType::Mace:
-		case ItemType::Sword:
-		case ItemType::Helm:
-		case ItemType::Staff:
-		case ItemType::Ring:
-		case ItemType::Amulet: {
-			const auto *const mostValuablePlayerItem = myPlayer.GetMostValuableItem(
-			    [itemType](const Item &item) { return item._itype == itemType; });
-
-			ivalue = mostValuablePlayerItem == nullptr ? 0 : mostValuablePlayerItem->_iIvalue;
-			break;
-		}
-		default:
-			app_fatal("Invalid item spawn");
-		}
-		ivalue = ivalue * 4 / 5; // avoids forced int > float > int conversion
-
-		count++;
-
-		if (count < 200) {
-			switch (pc) {
-			case HeroClass::Warrior:
-				if (IsAnyOf(itemType, ItemType::Bow, ItemType::Staff))
-					ivalue = INT_MAX;
-				break;
-			case HeroClass::Rogue:
-				if (IsAnyOf(itemType, ItemType::Sword, ItemType::Staff, ItemType::Axe, ItemType::Mace, ItemType::Shield))
-					ivalue = INT_MAX;
-				break;
-			case HeroClass::Sorcerer:
-				if (IsAnyOf(itemType, ItemType::Staff, ItemType::Axe, ItemType::Bow, ItemType::Mace))
-					ivalue = INT_MAX;
-				break;
-			case HeroClass::Monk:
-				if (IsAnyOf(itemType, ItemType::Bow, ItemType::MediumArmor, ItemType::Shield, ItemType::Mace))
-					ivalue = INT_MAX;
-				break;
-			case HeroClass::Bard:
-				if (IsAnyOf(itemType, ItemType::Axe, ItemType::Mace, ItemType::Staff))
-					ivalue = INT_MAX;
-				break;
-			case HeroClass::Barbarian:
-				if (IsAnyOf(itemType, ItemType::Bow, ItemType::Staff))
-					ivalue = INT_MAX;
-				break;
-			}
-		}
-	} while (keepgoing
-	    || ((
-	            boyitem._iIvalue > 200000
-	            || boyitem._iMinStr > strength
-	            || boyitem._iMinMag > magic
-	            || boyitem._iMinDex > dexterity
-	            || boyitem._iIvalue < ivalue)
-	        && count < 250));
 	boyitem._iCreateInfo = lvl | CF_BOY;
 	boyitem._iIdentified = true;
 	boylevel = lvl / 2;

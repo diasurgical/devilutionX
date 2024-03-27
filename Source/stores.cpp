@@ -2138,7 +2138,7 @@ void SetupTownStores()
 		SetRndSeed(DungeonSeeds[currlevel] * SDL_GetTicks());
 	}
 
-	l = std::clamp(l + 2, 6, 16);
+	l = std::clamp(l + 2, 6, 27);
 	SpawnSmith(l);
 	SpawnWitch(l);
 	SpawnHealer(l);
