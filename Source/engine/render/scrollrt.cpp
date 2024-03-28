@@ -629,8 +629,19 @@ uint8_t CalculateDimming(Point tilePosition)
 	// Determine the dimming level using LightFalloffs2
 	uint8_t dimmingLevel = LightFalloffs2[radius][linearDistance];
 
+	uint8_t visionDimming = 0;
+	for (int x = -1; x <= 1; x++) {
+		for (int y = -1; y <= 1; y++) {
+			if (IsTileVisible(tilePosition))
+				continue;
+			if (!IsTileVisible(tilePosition + DisplacementOf{ x, y }))
+				visionDimming++;
+		}
+	}
+	visionDimming /= 2;
+
 	// Apply dimming to the original light level of the tile
-	return std::clamp(static_cast<int>(originalLight) + dimmingLevel, 0, 15);
+	return std::clamp(static_cast<int>(originalLight) + dimmingLevel + visionDimming, 0, 15);
 }
 
 /**
