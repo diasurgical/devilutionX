@@ -288,17 +288,67 @@ void DoUnVision(Point position, uint8_t radius)
 	}
 }
 
-void DoVision(Point position, uint8_t radius, MapExplorationType doAutomap, bool visible)
+void ApplyDirectionalOffset(float &x, float &y, DisplacementOf<int8_t> offset, int dx, int dy)
+{
+	// Normalize the offset to a float range of [0, 1)
+	float offsetX = (offset.deltaX & 7) / 8.0f;
+	float offsetY = (offset.deltaY & 7) / 8.0f;
+
+	// Apply additional adjustment based on the direction of movement
+	if (dx < 0) offsetX = 1.0f - offsetX;
+	if (dy < 0) offsetY = 1.0f - offsetY;
+
+	x += offsetX * TILE_WIDTH;
+	y += offsetY * TILE_HEIGHT;
+}
+
+void ApplyVisionOffset(DisplacementOf<int8_t> &offset, Point &position)
+{
+	if (offset.deltaX < 0) {
+		if (offset.deltaX > -8) {
+			position.x -= 1;
+			offset.deltaX += 8;
+		} else {
+			offset.deltaX = 0;
+		}
+	}
+	if (offset.deltaX > 0 && offset.deltaX < 8) {
+		position.x += 1;
+		offset.deltaX -= 8;
+	}
+
+	if (offset.deltaY < 0) {
+		if (offset.deltaY > -8) {
+			position.y -= 1;
+			offset.deltaY += 8;
+		} else {
+			offset.deltaY = 0;
+		}
+	}
+	if (offset.deltaY > 0 && offset.deltaY < 8) {
+		position.y += 1;
+		offset.deltaY -= 8;
+	}
+}
+
+void DoVision(Point position, uint8_t radius, DisplacementOf<int8_t> offset, MapExplorationType doAutomap, bool visible)
 {
 	DoVisionFlags(position, doAutomap, visible);
+
+	float normalizedOffsetX = offset.deltaX / 8.0f; // Assuming the offset is within [-8, 8)
+	float normalizedOffsetY = offset.deltaY / 8.0f; // Assuming the offset is within [-8, 8)
+
+	// Center of the tile + offset normalized to the tile's width and height
+	float startingX = (position.x + 0.5f + normalizedOffsetX) * TILE_WIDTH;
+	float startingY = (position.y + 0.5f + normalizedOffsetY) * TILE_HEIGHT;
 
 	for (int i = 0; i < NumVisionAngles; i++) {
 		float dx = VisionDeltaX[i];
 		float dy = VisionDeltaY[i];
 
 		for (int distance = 1; distance <= radius; distance++) {
-			float x = (position.x + 0.5f) * TILE_WIDTH + dx * distance * TILE_WIDTH;
-			float y = (position.y + 0.5f) * TILE_HEIGHT + dy * distance * TILE_HEIGHT;
+			float x = startingX + dx * distance * TILE_WIDTH;
+			float y = startingY + dy * distance * TILE_HEIGHT;
 
 			int tileX = static_cast<int>(x / TILE_WIDTH);
 			int tileY = static_cast<int>(y / TILE_HEIGHT);
@@ -669,6 +719,20 @@ void ChangeVisionXY(size_t id, Point position)
 	UpdateVision = true;
 }
 
+void ChangeVisionOffset(size_t id, DisplacementOf<int8_t> offset)
+{
+	Light &vision = VisionList[id];
+	if (vision.position.offset == offset)
+		return;
+
+	vision.hasChanged = true;
+	vision.position.old = vision.position.tile;
+	vision.oldRadius = vision.radius;
+	vision.position.offset = offset;
+
+	UpdateVision = true;
+}
+
 void ProcessVisionList()
 {
 	if (!UpdateVision)
@@ -702,6 +766,7 @@ void ProcessVisionList()
 		DoVision(
 		    vision.position.tile,
 		    vision.radius,
+		    vision.position.offset,
 		    doautomap,
 		    &player == MyPlayer);
 	}

@@ -62,7 +62,7 @@ extern uint8_t LightConeInterpolations2[8][8][32][32];
 void DoUnLight(Point position, uint8_t radius);
 void DoLighting(Point position, uint8_t radius, DisplacementOf<int8_t> offset);
 void DoUnVision(Point position, uint8_t radius);
-void DoVision(Point position, uint8_t radius, MapExplorationType doAutomap, bool visible);
+void DoVision(Point position, uint8_t radius, DisplacementOf<int8_t> offset, MapExplorationType doAutomap, bool visible);
 void MakeLightTable();
 #ifdef _DEBUG
 void ToggleLighting();
@@ -79,6 +79,7 @@ void SavePreLighting();
 void ActivateVision(Point position, int r, size_t id);
 void ChangeVisionRadius(size_t id, int r);
 void ChangeVisionXY(size_t id, Point position);
+void ChangeVisionOffset(size_t id, DisplacementOf<int8_t> offset);
 void ProcessVisionList();
 void lighting_color_cycling();
 

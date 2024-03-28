@@ -75,6 +75,12 @@ void UpdatePlayerLightOffset(Player &player)
 	ChangeLightOffset(player.lightId, offset.screenToLight());
 }
 
+void UpdatePlayerVisionOffset(Player &player)
+{
+	const WorldTileDisplacement offset = player.position.CalculateWalkingOffset(player._pdir, player.AnimInfo);
+	ChangeVisionOffset(player.getId(), offset.screenToLight());
+}
+
 void WalkNorthwards(Player &player, const DirectionSettings &walkParams)
 {
 	player.occupyTile(player.position.future, true);
@@ -90,6 +96,8 @@ void WalkSouthwards(Player &player, const DirectionSettings & /*walkParams*/)
 	// BUGFIX: missing `if (leveltype != DTYPE_TOWN) {` for call to ChangeLightXY and PM_ChangeLightOff.
 	ChangeLightXY(player.lightId, player.position.tile);
 	UpdatePlayerLightOffset(player);
+	ChangeVisionXY(player.getId(), player.position.tile);
+	UpdatePlayerVisionOffset(player);
 }
 
 void WalkSideways(Player &player, const DirectionSettings &walkParams)
@@ -102,6 +110,8 @@ void WalkSideways(Player &player, const DirectionSettings &walkParams)
 	if (leveltype != DTYPE_TOWN) {
 		ChangeLightXY(player.lightId, nextPosition);
 		UpdatePlayerLightOffset(player);
+		ChangeVisionXY(player.getId(), nextPosition);
+		UpdatePlayerVisionOffset(player);
 	}
 
 	player.position.temp = player.position.future;
@@ -443,6 +453,7 @@ bool DoWalk(Player &player, int variant)
 	if (!player.AnimInfo.isLastFrame()) {
 		// We didn't reach new tile so update player's "sub-tile" position
 		UpdatePlayerLightOffset(player);
+		UpdatePlayerVisionOffset(player);
 		return false;
 	}
 
@@ -477,6 +488,7 @@ bool DoWalk(Player &player, int variant)
 	// Reset the "sub-tile" position of the player's light entry to 0
 	if (leveltype != DTYPE_TOWN) {
 		ChangeLightOffset(player.lightId, { 0, 0 });
+		ChangeVisionOffset(player.getId(), { 0, 0 });
 	}
 
 	AutoPickup(player);

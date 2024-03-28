@@ -858,7 +858,7 @@ void DiabloDeath(Monster &diablo, bool sendmsg)
 		monster.occupyTile(monster.position.tile, false);
 	}
 	AddLight(diablo.position.tile, 8);
-	DoVision(diablo.position.tile, 8, MAP_EXP_NONE, true);
+	DoVision(diablo.position.tile, 8, { 0, 0 }, MAP_EXP_NONE, true);
 	int dist = diablo.position.tile.WalkingDistance(ViewPosition);
 	if (dist > 20)
 		dist = 20;
@@ -3588,7 +3588,7 @@ void InitMonsters()
 	for (int i = 0; i < nt; i++) {
 		for (int s = -2; s < 2; s++) {
 			for (int t = -2; t < 2; t++)
-				DoVision(trigs[i].position + Displacement { s, t }, 15, MAP_EXP_NONE, false);
+				DoVision(trigs[i].position + Displacement { s, t }, 15, { 0, 0 }, MAP_EXP_NONE, false);
 		}
 	}
 	if (!gbIsSpawn)
