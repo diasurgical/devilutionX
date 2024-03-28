@@ -22,8 +22,7 @@ struct Player;
 
 struct GameData {
 	int32_t size;
-	/** Used to initialise the seed table for dungeon levels so players in multiplayer games generate the same layout */
-	uint32_t dwSeed;
+	uint8_t reserved[4];
 	uint32_t programid;
 	uint8_t versionMajor;
 	uint8_t versionMinor;
@@ -35,6 +34,8 @@ struct GameData {
 	uint8_t bCowQuest;
 	uint8_t bFriendlyFire;
 	uint8_t fullQuests;
+	/** Used to initialise the seed table for dungeon levels so players in multiplayer games generate the same layout */
+	uint32_t gameSeed[4];
 };
 
 /* @brief Contains info of running public game (for game list browsing) */

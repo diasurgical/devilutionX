@@ -6,7 +6,6 @@
 
 #include <cstddef>
 #include <cstdint>
-#include <ctime>
 #include <string_view>
 
 #include <SDL.h>
@@ -485,8 +484,10 @@ bool InitMulti(GameData *gameData)
 
 void InitGameInfo()
 {
+	xoshiro128plusplus gameGenerator = ReserveSeedSequence();
+	gameGenerator.save(sgGameInitInfo.gameSeed);
+
 	sgGameInitInfo.size = sizeof(sgGameInitInfo);
-	sgGameInitInfo.dwSeed = static_cast<uint32_t>(time(nullptr));
 	sgGameInitInfo.programid = GAME_ID;
 	sgGameInitInfo.versionMajor = PROJECT_VERSION_MAJOR;
 	sgGameInitInfo.versionMinor = PROJECT_VERSION_MINOR;
@@ -787,11 +788,11 @@ bool NetInit(bool bSinglePlayer)
 		NetClose();
 		gbSelectProvider = false;
 	}
-	SetRndSeed(sgGameInitInfo.dwSeed);
+	xoshiro128plusplus gameGenerator(sgGameInitInfo.gameSeed);
 	gnTickDelay = 1000 / sgGameInitInfo.nTickRate;
 
 	for (int i = 0; i < NUMLEVELS; i++) {
-		DungeonSeeds[i] = AdvanceRndSeed();
+		DungeonSeeds[i] = gameGenerator.next();
 		LevelSeeds[i] = std::nullopt;
 	}
 	PublicGame = DvlNet_IsPublicGame();
