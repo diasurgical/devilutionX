@@ -92,14 +92,14 @@ struct WalkParameter {
 constexpr std::array<const WalkParameter, 8> WalkParameters { {
 	// clang-format off
 	// Direction      startingOffset,                   VelocityX,                      VelocityY
-	{ /* South     */ {    0, -512 },         VelocityToUse::None,            VelocityToUse::Half },
-	{ /* SouthWest */ {  512, -256 }, VelocityToUse::NegativeHalf,         VelocityToUse::Quarter },
+	{ /* South     */ {    0,    0 },         VelocityToUse::None,            VelocityToUse::Half },
+	{ /* SouthWest */ {    0,    0 }, VelocityToUse::NegativeHalf,         VelocityToUse::Quarter },
 	{ /* West      */ {  512, -256 }, VelocityToUse::NegativeFull,            VelocityToUse::None },
 	{ /* NorthWest */ {    0,    0 }, VelocityToUse::NegativeHalf, VelocityToUse::NegativeQuarter },
 	{ /* North     */ {    0,    0 },         VelocityToUse::None,    VelocityToUse::NegativeHalf },
 	{ /* NorthEast */ {    0,    0 },         VelocityToUse::Half, VelocityToUse::NegativeQuarter },
 	{ /* East      */ { -512, -256 },         VelocityToUse::Full,            VelocityToUse::None },
-	{ /* SouthEast */ { -512, -256 },         VelocityToUse::Half,         VelocityToUse::Quarter }
+	{ /* SouthEast */ {    0,    0 },         VelocityToUse::Half,         VelocityToUse::Quarter }
 	// clang-format on
 } };
 
