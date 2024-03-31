@@ -12,6 +12,7 @@
 #include "cursor.h"
 #include "engine/clx_sprite.hpp"
 #include "engine/load_clx.hpp"
+#include "engine/points_in_rectangle_range.hpp"
 #include "engine/rectangle.hpp"
 #include "engine/render/clx_render.hpp"
 #include "engine/render/text_render.hpp"

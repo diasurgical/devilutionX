@@ -10,7 +10,6 @@
 #include <vector>
 
 #include "engine/point.hpp"
-#include "engine/points_in_rectangle_range.hpp"
 #include "items.h"
 
 namespace devilution {
