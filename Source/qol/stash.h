@@ -64,7 +64,6 @@ private:
 	unsigned page;
 };
 
-constexpr PointsInRectangleRange<int> StashGridRange { { { 0, 0 }, Size { 10, 10 } } };
 constexpr Point InvalidStashPoint { -1, -1 };
 
 extern bool IsStashOpen;
