@@ -13,7 +13,6 @@
 
 namespace devilution {
 
-void ExtraInfoKeyPressed(bool pressed);
 void DrawFloatingItemInfoBox(const Surface &out, Point position);
 
 } // namespace devilution

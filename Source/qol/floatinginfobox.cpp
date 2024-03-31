@@ -27,20 +27,12 @@
 #include "qol/stash.h"
 #include "utils/format_int.hpp"
 #include "utils/language.h"
-#include "utils/stdcompat/string_view.hpp"
 
 namespace devilution {
 
 namespace {
 
-bool extraInfoKeyPressed = false;
-
 } // namespace
-
-void ExtraInfoKeyPressed(bool pressed)
-{
-	extraInfoKeyPressed = pressed;
-}
 
 enum class ItemStatType {
 	Damage,
@@ -384,7 +376,7 @@ void DrawFloatingItemInfoBox(const Surface &out, Point position)
 	// Add Item Charges
 	std::string formattedCharges;
 	if (item._iMaxCharges > 0) {
-		const char *spellName = GetSpellData(item._iSpell).sNameText;
+		const std::string_view spellName = GetSpellData(item._iSpell).sNameText;
 		formattedCharges = fmt::format("{:s} ({:d}/{:d} Charges)", spellName, item._iCharges, item._iMaxCharges);
 		linesWithColor.emplace_back(formattedCharges, UiFlags::ColorBlue);
 	}
@@ -453,154 +445,6 @@ void DrawFloatingItemInfoBox(const Surface &out, Point position)
 		linesWithColor.emplace_back(_("Value:"), UiFlags::ColorWhite);
 		formattedValue = fmt::format(fmt::runtime(_("{:s}")), FormatInteger(value));
 		linesWithColor.emplace_back(formattedValue, UiFlags::ColorWhite);
-	}
-
-	// Add Create Info
-	std::string formattedLevel;
-	std::string formattedSourceOnlyGood;
-	std::string formattedSourceMonster;
-	std::string formattedSourceUnique;
-	std::string formattedSourceDungeon;
-	std::string formattedSourceSmith;
-	std::string formattedSourceSmithPremium;
-	std::string formattedSourceBoy;
-	std::string formattedSourceWitch;
-	std::string formattedSourceHealer;
-	std::string formattedSourcePregen;
-	std::string formattedSourceUnknown;
-	std::string formattedGame;
-	if (extraInfoKeyPressed) {
-		if (item._iClass != ICLASS_GOLD) {
-			// Add Item Level
-			uint8_t level = item._iCreateInfo & CF_LEVEL;
-			if (level != 0) {
-				linesWithColor.emplace_back(_("Level:"), UiFlags::ColorWhite);
-				formattedLevel = fmt::format(fmt::runtime(_("{:d}")), level);
-				linesWithColor.emplace_back(formattedLevel, UiFlags::ColorOrange);
-			}
-
-			// Add Item Source
-
-			std::string source;
-			bool hasSource = false;
-			linesWithColor.emplace_back(_("Source:"), UiFlags::ColorWhite);
-			if (((item._iCreateInfo & CF_ONLYGOOD) != 0) && ((item._iCreateInfo & CF_UPER15) == 0)) {
-				source = _("Armor Rack");
-				formattedSourceOnlyGood = fmt::format(fmt::runtime(_("{:s}")), source);
-				linesWithColor.emplace_back(formattedSourceOnlyGood, UiFlags::ColorOrange);
-				hasSource = true;
-			}
-			if ((item._iCreateInfo & CF_UPER1) != 0) {
-				source = _("Dungeon");
-				formattedSourceMonster = fmt::format(fmt::runtime(_("{:s}")), source);
-				linesWithColor.emplace_back(formattedSourceMonster, UiFlags::ColorOrange);
-				hasSource = true;
-			}
-			if ((item._iCreateInfo & CF_UPER15) != 0) {
-				source = _("Unique Monster");
-				formattedSourceUnique = fmt::format(fmt::runtime(_("{:s}")), source);
-				linesWithColor.emplace_back(formattedSourceUnique, UiFlags::ColorOrange);
-				hasSource = true;
-			}
-			if ((item._iCreateInfo & CF_SMITH) != 0) {
-				source = _("Griswold");
-				formattedSourceSmith = fmt::format(fmt::runtime(_("{:s}")), source);
-				linesWithColor.emplace_back(formattedSourceSmith, UiFlags::ColorOrange);
-				hasSource = true;
-			}
-			if ((item._iCreateInfo & CF_SMITHPREMIUM) != 0) {
-				source = _("Griswold Premium");
-				formattedSourceSmithPremium = fmt::format(fmt::runtime(_("{:s}")), source);
-				linesWithColor.emplace_back(formattedSourceSmithPremium, UiFlags::ColorOrange);
-				hasSource = true;
-			}
-			if ((item._iCreateInfo & CF_BOY) != 0) {
-				source = _("Wirt");
-				formattedSourceBoy = fmt::format(fmt::runtime(_("{:s}")), source);
-				linesWithColor.emplace_back(formattedSourceBoy, UiFlags::ColorOrange);
-				hasSource = true;
-			}
-			if ((item._iCreateInfo & CF_WITCH) != 0) {
-				source = _("Adria");
-				formattedSourceWitch = fmt::format(fmt::runtime(_("{:s}")), source);
-				linesWithColor.emplace_back(formattedSourceWitch, UiFlags::ColorOrange);
-				hasSource = true;
-			}
-			if ((item._iCreateInfo & CF_HEALER) != 0) {
-				source = _("Pepin");
-				formattedSourceHealer = fmt::format(fmt::runtime(_("{:s}")), source);
-				linesWithColor.emplace_back(formattedSourceHealer, UiFlags::ColorOrange);
-				hasSource = true;
-			}
-			if (!hasSource) {
-				source = _("Unknown");
-				formattedSourceUnknown = fmt::format(fmt::runtime(_("{:s}")), source);
-				linesWithColor.emplace_back(formattedSourceUnknown, UiFlags::ColorOrange);
-			}
-
-			// Add Item Game
-			std::string game;
-			linesWithColor.emplace_back(_("Game:"), UiFlags::ColorWhite);
-			if ((item.dwBuff & CF_HELLFIRE) == 0) {
-				game = _("Diablo");
-				formattedGame = fmt::format(fmt::runtime(_("{:s}")), game);
-				linesWithColor.emplace_back(formattedGame, UiFlags::ColorOrange);
-			} else {
-				game = _("Hellfire");
-				formattedGame = fmt::format(fmt::runtime(_("{:s}")), game);
-				linesWithColor.emplace_back(formattedGame, UiFlags::ColorOrange);
-			}
-		}
-	}
-
-	// Add Cheat Item Warning
-	bool isItemLegit = false;
-	string_view illegalItemStr = _("Illegal Item");
-
-	// If the item is sourced from a unique monster, but there are no unique monsters
-	// that have the same level as the item, that means the item was obtained by cheating methods.
-	if ((item._iCreateInfo & CF_UPER15) != 0) {
-		for (int i = 0; UniqueMonstersData[i].mName != nullptr; i++) {
-			const UniqueMonsterData &uniqueMonsterData = UniqueMonstersData[i];
-			const int8_t &uniqueMonsterLevel = MonstersData[uniqueMonsterData.mtype].level;
-			const int8_t itemLevel = item._iCreateInfo & CF_LEVEL;
-
-			if (itemLevel == uniqueMonsterLevel) {
-				isItemLegit = true;
-				break;
-			}
-		}
-
-		if (!isItemLegit) {
-			linesWithColor.emplace_back(illegalItemStr, UiFlags::ColorRed);
-		}
-	}
-
-	// The flags for towner sourced items should never have more than one set at a time.
-	int flagMask = CF_SMITH | CF_SMITHPREMIUM | CF_BOY | CF_WITCH | CF_HEALER;
-	int numFlagsSet = CountSetBits(item._iCreateInfo & flagMask);
-	bool isCompatible = true;
-
-	// Check if either CF_UPER15 or CF_UPER1 is set
-	bool isUper15Set = (item._iCreateInfo & CF_UPER15) != 0;
-	bool isUper1Set = (item._iCreateInfo & CF_UPER1) != 0;
-
-	// Check for compatibility conditions
-	if (isUper15Set || isUper1Set) {
-		if (numFlagsSet > 0)
-			isCompatible = false;
-	} else {
-		if (numFlagsSet > 1)
-			isCompatible = false;
-	}
-
-	if (!isCompatible) {
-		linesWithColor.emplace_back(illegalItemStr, UiFlags::ColorRed);
-	}
-
-	// Items over level 30 cannot exist unless sourced from Wirt, and items over level 50 cannot legally be obtained.
-	if (((item._iCreateInfo & CF_LEVEL) > 30) && ((item._iCreateInfo & CF_BOY) == 0) || ((item._iCreateInfo & CF_LEVEL) > 50) && ((item._iCreateInfo & CF_BOY) != 0)) {
-		linesWithColor.emplace_back(illegalItemStr, UiFlags::ColorRed);
 	}
 
 	// CONSTRUCT STRING AS A BASE FOR UTILIZING LINESWITHCOLOR DATA
@@ -716,16 +560,14 @@ void DrawFloatingItemInfoBox(const Surface &out, Point position)
 	infoBoxRect.position.y += spacing / 2;
 
 	// FORMAT AND DISPLAY ITEM TEXT OVER TRANSPARENT BOX
-	string_view linesBaseView(linesBase);
+	std::string_view linesBaseView(linesBase);
 
 	DrawStringWithColors(
 	    out,
 	    linesBaseView,
 	    linesWithColor,
 	    infoBoxRect,
-	    UiFlags::AlignCenter,
-	    2,
-	    lineHeight);
+	    { .flags = UiFlags::AlignCenter, .lineHeight = lineHeight });
 }
 
 } // namespace devilution
