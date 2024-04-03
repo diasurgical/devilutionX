@@ -18,6 +18,7 @@ comparer-config.toml
 #ignore cmake cache
 /build-*/
 .vscode/tasks.json
+.cache
 
 # Extra files in the source distribution (see make_src_dist.py)
 /dist/
