@@ -453,9 +453,11 @@ void UiHandleEvents(SDL_Event *event)
 			// but may now become visible.
 			DoReinitializeHardwareCursor();
 		} else if (event->window.event == SDL_WINDOWEVENT_FOCUS_LOST) {
-			music_mute();
+			if(*sgOptions.Gameplay.pauseOnFocusLoss)
+				music_mute();
 		} else if (event->window.event == SDL_WINDOWEVENT_FOCUS_GAINED) {
-			diablo_focus_unpause();
+			if(*sgOptions.Gameplay.pauseOnFocusLoss)
+				diablo_focus_unpause();
 		}
 	}
 #else
