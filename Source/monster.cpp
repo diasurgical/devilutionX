@@ -710,7 +710,7 @@ void StartSpecialStand(Monster &monster, Direction md)
 	monster.position.old = monster.position.tile;
 }
 
-void WalkNorthwards(Monster &monster, int xadd, int yadd, Direction endDir)
+void WalkNonSideways(Monster &monster, int xadd, int yadd, Direction endDir)
 {
 	const auto fx = static_cast<WorldTileCoord>(xadd + monster.position.tile.x);
 	const auto fy = static_cast<WorldTileCoord>(yadd + monster.position.tile.y);
@@ -721,25 +721,6 @@ void WalkNorthwards(Monster &monster, int xadd, int yadd, Direction endDir)
 	monster.occupyTile(monster.position.future, true);
 	monster.var1 = xadd;
 	monster.var2 = yadd;
-	monster.var3 = static_cast<int>(endDir);
-	NewMonsterAnim(monster, MonsterGraphic::Walk, endDir, AnimationDistributionFlags::ProcessAnimationPending, -1);
-}
-
-void WalkSouthwards(Monster &monster, int xoff, int yoff, int xadd, int yadd, Direction endDir)
-{
-	const auto fx = static_cast<WorldTileCoord>(xadd + monster.position.tile.x);
-	const auto fy = static_cast<WorldTileCoord>(yadd + monster.position.tile.y);
-
-	monster.var1 = monster.position.tile.x;
-	monster.var2 = monster.position.tile.y;
-	monster.position.old = monster.position.tile;
-	monster.position.tile = { fx, fy };
-	monster.position.future = { fx, fy };
-	monster.occupyTile(monster.position.old, true);
-	monster.occupyTile(monster.position.tile, false);
-	if (monster.lightId != NO_LIGHT)
-		ChangeLightXY(monster.lightId, monster.position.tile);
-	monster.mode = MonsterMode::MoveSouthwards;
 	monster.var3 = static_cast<int>(endDir);
 	NewMonsterAnim(monster, MonsterGraphic::Walk, endDir, AnimationDistributionFlags::ProcessAnimationPending, -1);
 }
@@ -3973,28 +3954,28 @@ bool Walk(Monster &monster, Direction md)
 
 	switch (md) {
 	case Direction::North:
-		WalkNorthwards(monster, -1, -1, Direction::North);
+		WalkNonSideways(monster, -1, -1, Direction::North);
 		break;
 	case Direction::NorthEast:
-		WalkNorthwards(monster, 0, -1, Direction::NorthEast);
+		WalkNonSideways(monster, 0, -1, Direction::NorthEast);
 		break;
 	case Direction::East:
 		WalkSideways(monster, -32, -16, 1, -1, 1, 0, Direction::East);
 		break;
 	case Direction::SouthEast:
-		WalkSouthwards(monster, -32, -16, 1, 0, Direction::SouthEast);
+		WalkNonSideways(monster, 1, 0, Direction::SouthEast);
 		break;
 	case Direction::South:
-		WalkSouthwards(monster, 0, -32, 1, 1, Direction::South);
+		WalkNonSideways(monster, 1, 1, Direction::South);
 		break;
 	case Direction::SouthWest:
-		WalkSouthwards(monster, 32, -16, 0, 1, Direction::SouthWest);
+		WalkNonSideways(monster, 0, 1, Direction::SouthWest);
 		break;
 	case Direction::West:
 		WalkSideways(monster, 32, -16, -1, 1, 0, 1, Direction::West);
 		break;
 	case Direction::NorthWest:
-		WalkNorthwards(monster, -1, 0, Direction::NorthWest);
+		WalkNonSideways(monster, -1, 0, Direction::NorthWest);
 		break;
 	case Direction::NoDirection:
 		break;
