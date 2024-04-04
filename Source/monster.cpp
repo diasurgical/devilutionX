@@ -710,18 +710,21 @@ void StartSpecialStand(Monster &monster, Direction md)
 	monster.position.old = monster.position.tile;
 }
 
-void Walk(Monster &monster, int xadd, int yadd, Direction endDir)
+void WalkInDirection(Monster &monster, Direction endDir)
 {
-	const auto fx = static_cast<WorldTileCoord>(xadd + monster.position.tile.x);
-	const auto fy = static_cast<WorldTileCoord>(yadd + monster.position.tile.y);
+	Point dir = { 0, 0 };
+	dir += endDir;
+
+	const auto fx = static_cast<WorldTileCoord>(monster.position.tile.x + dir.x);
+	const auto fy = static_cast<WorldTileCoord>(monster.position.tile.y + dir.y);
 
 	monster.mode = MonsterMode::MoveNorthwards;
 	monster.position.old = monster.position.tile;
 	monster.position.future = { fx, fy };
 	monster.occupyTile(monster.position.future, true);
-	monster.var1 = xadd;
-	monster.var2 = yadd;
-	monster.var3 = static_cast<int>(endDir);
+	monster.var1 = dir.x;
+	monster.var2 = dir.y;
+	monster.var3 = static_cast<int8_t>(endDir);
 	NewMonsterAnim(monster, MonsterGraphic::Walk, endDir, AnimationDistributionFlags::ProcessAnimationPending, -1);
 }
 
@@ -3930,34 +3933,10 @@ bool Walk(Monster &monster, Direction md)
 		return false;
 	}
 
-	switch (md) {
-	case Direction::North:
-		Walk(monster, -1, -1, Direction::North);
-		break;
-	case Direction::NorthEast:
-		Walk(monster, 0, -1, Direction::NorthEast);
-		break;
-	case Direction::East:
-		Walk(monster, 1, -1, Direction::East);
-		break;
-	case Direction::SouthEast:
-		Walk(monster, 1, 0, Direction::SouthEast);
-		break;
-	case Direction::South:
-		Walk(monster, 1, 1, Direction::South);
-		break;
-	case Direction::SouthWest:
-		Walk(monster, 0, 1, Direction::SouthWest);
-		break;
-	case Direction::West:
-		Walk(monster, -1, 1, Direction::West);
-		break;
-	case Direction::NorthWest:
-		Walk(monster, -1, 0, Direction::NorthWest);
-		break;
-	case Direction::NoDirection:
-		break;
-	}
+	if (md == Direction::NoDirection)
+		return true;
+
+	WalkInDirection(monster, md);
 	return true;
 }
 
