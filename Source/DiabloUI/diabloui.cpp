@@ -452,12 +452,10 @@ void UiHandleEvents(SDL_Event *event)
 			// For example, if the previous size was too large for a hardware cursor then it was invisible
 			// but may now become visible.
 			DoReinitializeHardwareCursor();
-		} else if (event->window.event == SDL_WINDOWEVENT_FOCUS_LOST) {
-			if (*sgOptions.Gameplay.pauseOnFocusLoss)
-				music_mute();
-		} else if (event->window.event == SDL_WINDOWEVENT_FOCUS_GAINED) {
-			if (*sgOptions.Gameplay.pauseOnFocusLoss)
-				diablo_focus_unpause();
+		} else if (event->window.event == SDL_WINDOWEVENT_FOCUS_LOST && *sgOptions.Gameplay.pauseOnFocusLoss) {
+			music_mute();
+		} else if (event->window.event == SDL_WINDOWEVENT_FOCUS_GAINED && *sgOptions.Gameplay.pauseOnFocusLoss) {
+			diablo_focus_unpause();
 		}
 	}
 #else
