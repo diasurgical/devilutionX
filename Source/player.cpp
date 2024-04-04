@@ -61,7 +61,6 @@ namespace {
 struct DirectionSettings {
 	Direction dir;
 	DisplacementOf<int8_t> tileAdd;
-	DisplacementOf<int8_t> map;
 	PLR_MODE walkMode;
 	void (*walkModeHandler)(Player &, const DirectionSettings &);
 };
@@ -75,37 +74,22 @@ void UpdatePlayerLightOffset(Player &player)
 	ChangeLightOffset(player.lightId, offset.screenToLight());
 }
 
-void WalkNonSideways(Player &player, const DirectionSettings &walkParams)
+void Walk(Player &player, const DirectionSettings &walkParams)
 {
 	player.occupyTile(player.position.future, true);
 	player.position.temp = player.position.tile + walkParams.tileAdd;
 }
 
-void WalkSideways(Player &player, const DirectionSettings &walkParams)
-{
-	Point const nextPosition = player.position.tile + walkParams.map;
-
-	player.occupyTile(player.position.tile, true);
-	player.occupyTile(player.position.future, false);
-
-	if (leveltype != DTYPE_TOWN) {
-		ChangeLightXY(player.lightId, nextPosition);
-		UpdatePlayerLightOffset(player);
-	}
-
-	player.position.temp = player.position.future;
-}
-
 constexpr std::array<const DirectionSettings, 8> WalkSettings { {
 	// clang-format off
-	{ Direction::South,     {  1,  1 }, { 0, 0 }, PM_WALK_SOUTHWARDS, WalkNonSideways },
-	{ Direction::SouthWest, {  0,  1 }, { 0, 0 }, PM_WALK_SOUTHWARDS, WalkNonSideways },
-	{ Direction::West,      { -1,  1 }, { 0, 1 }, PM_WALK_SIDEWAYS,   WalkSideways   },
-	{ Direction::NorthWest, { -1,  0 }, { 0, 0 }, PM_WALK_NORTHWARDS, WalkNonSideways },
-	{ Direction::North,     { -1, -1 }, { 0, 0 }, PM_WALK_NORTHWARDS, WalkNonSideways },
-	{ Direction::NorthEast, {  0, -1 }, { 0, 0 }, PM_WALK_NORTHWARDS, WalkNonSideways },
-	{ Direction::East,      {  1, -1 }, { 1, 0 }, PM_WALK_SIDEWAYS,   WalkSideways   },
-	{ Direction::SouthEast, {  1,  0 }, { 0, 0 }, PM_WALK_SOUTHWARDS, WalkNonSideways }
+	{ Direction::South,     {  1,  1 }, PM_WALK_SOUTHWARDS, Walk },
+	{ Direction::SouthWest, {  0,  1 }, PM_WALK_SOUTHWARDS, Walk },
+	{ Direction::West,      { -1,  1 }, PM_WALK_SIDEWAYS,   Walk },
+	{ Direction::NorthWest, { -1,  0 }, PM_WALK_NORTHWARDS, Walk },
+	{ Direction::North,     { -1, -1 }, PM_WALK_NORTHWARDS, Walk },
+	{ Direction::NorthEast, {  0, -1 }, PM_WALK_NORTHWARDS, Walk },
+	{ Direction::East,      {  1, -1 }, PM_WALK_SIDEWAYS,   Walk },
+	{ Direction::SouthEast, {  1,  0 }, PM_WALK_SOUTHWARDS, Walk }
 	// clang-format on
 } };
 
