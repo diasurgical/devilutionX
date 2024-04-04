@@ -60,7 +60,6 @@ namespace {
 
 struct DirectionSettings {
 	Direction dir;
-	DisplacementOf<int8_t> tileAdd;
 	PLR_MODE walkMode;
 	void (*walkModeHandler)(Player &, const DirectionSettings &);
 };
@@ -77,19 +76,19 @@ void UpdatePlayerLightOffset(Player &player)
 void Walk(Player &player, const DirectionSettings &walkParams)
 {
 	player.occupyTile(player.position.future, true);
-	player.position.temp = player.position.tile + walkParams.tileAdd;
+	player.position.temp = player.position.tile + walkParams.dir;
 }
 
 constexpr std::array<const DirectionSettings, 8> WalkSettings { {
 	// clang-format off
-	{ Direction::South,     {  1,  1 }, PM_WALK_SOUTHWARDS, Walk },
-	{ Direction::SouthWest, {  0,  1 }, PM_WALK_SOUTHWARDS, Walk },
-	{ Direction::West,      { -1,  1 }, PM_WALK_SIDEWAYS,   Walk },
-	{ Direction::NorthWest, { -1,  0 }, PM_WALK_NORTHWARDS, Walk },
-	{ Direction::North,     { -1, -1 }, PM_WALK_NORTHWARDS, Walk },
-	{ Direction::NorthEast, {  0, -1 }, PM_WALK_NORTHWARDS, Walk },
-	{ Direction::East,      {  1, -1 }, PM_WALK_SIDEWAYS,   Walk },
-	{ Direction::SouthEast, {  1,  0 }, PM_WALK_SOUTHWARDS, Walk }
+	{ Direction::South,     PM_WALK_SOUTHWARDS, Walk },
+	{ Direction::SouthWest, PM_WALK_SOUTHWARDS, Walk },
+	{ Direction::West,      PM_WALK_SIDEWAYS,   Walk },
+	{ Direction::NorthWest, PM_WALK_NORTHWARDS, Walk },
+	{ Direction::North,     PM_WALK_NORTHWARDS, Walk },
+	{ Direction::NorthEast, PM_WALK_NORTHWARDS, Walk },
+	{ Direction::East,      PM_WALK_SIDEWAYS,   Walk },
+	{ Direction::SouthEast, PM_WALK_SOUTHWARDS, Walk }
 	// clang-format on
 } };
 
@@ -123,7 +122,7 @@ void HandleWalkMode(Player &player, Direction dir)
 	player._pdir = dir;
 
 	// The player's tile position after finishing this movement action
-	player.position.future = player.position.tile + dirModeParams.tileAdd;
+	player.position.future = player.position.tile + dirModeParams.dir;
 
 	dirModeParams.walkModeHandler(player, dirModeParams);
 
