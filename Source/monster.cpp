@@ -710,59 +710,21 @@ void StartSpecialStand(Monster &monster, Direction md)
 	monster.position.old = monster.position.tile;
 }
 
-void WalkNorthwards(Monster &monster, int xadd, int yadd, Direction endDir)
+void WalkInDirection(Monster &monster, Direction endDir)
 {
-	const auto fx = static_cast<WorldTileCoord>(xadd + monster.position.tile.x);
-	const auto fy = static_cast<WorldTileCoord>(yadd + monster.position.tile.y);
+	Point dir = { 0, 0 };
+	dir += endDir;
+
+	const auto fx = static_cast<WorldTileCoord>(monster.position.tile.x + dir.x);
+	const auto fy = static_cast<WorldTileCoord>(monster.position.tile.y + dir.y);
 
 	monster.mode = MonsterMode::MoveNorthwards;
 	monster.position.old = monster.position.tile;
 	monster.position.future = { fx, fy };
 	monster.occupyTile(monster.position.future, true);
-	monster.var1 = xadd;
-	monster.var2 = yadd;
-	monster.var3 = static_cast<int>(endDir);
-	NewMonsterAnim(monster, MonsterGraphic::Walk, endDir, AnimationDistributionFlags::ProcessAnimationPending, -1);
-}
-
-void WalkSouthwards(Monster &monster, int xoff, int yoff, int xadd, int yadd, Direction endDir)
-{
-	const auto fx = static_cast<WorldTileCoord>(xadd + monster.position.tile.x);
-	const auto fy = static_cast<WorldTileCoord>(yadd + monster.position.tile.y);
-
-	monster.var1 = monster.position.tile.x;
-	monster.var2 = monster.position.tile.y;
-	monster.position.old = monster.position.tile;
-	monster.position.tile = { fx, fy };
-	monster.position.future = { fx, fy };
-	monster.occupyTile(monster.position.old, true);
-	monster.occupyTile(monster.position.tile, false);
-	if (monster.lightId != NO_LIGHT)
-		ChangeLightXY(monster.lightId, monster.position.tile);
-	monster.mode = MonsterMode::MoveSouthwards;
-	monster.var3 = static_cast<int>(endDir);
-	NewMonsterAnim(monster, MonsterGraphic::Walk, endDir, AnimationDistributionFlags::ProcessAnimationPending, -1);
-}
-
-void WalkSideways(Monster &monster, int xoff, int yoff, int xadd, int yadd, int mapx, int mapy, Direction endDir)
-{
-	const auto fx = static_cast<WorldTileCoord>(xadd + monster.position.tile.x);
-	const auto fy = static_cast<WorldTileCoord>(yadd + monster.position.tile.y);
-	const auto x = static_cast<WorldTileCoord>(mapx + monster.position.tile.x);
-	const auto y = static_cast<WorldTileCoord>(mapy + monster.position.tile.y);
-
-	if (monster.lightId != NO_LIGHT)
-		ChangeLightXY(monster.lightId, { x, y });
-
-	monster.position.temp = { x, y };
-	monster.position.old = monster.position.tile;
-	monster.position.future = { fx, fy };
-	monster.occupyTile(monster.position.tile, true);
-	monster.occupyTile(monster.position.future, false);
-	monster.mode = MonsterMode::MoveSideways;
-	monster.var1 = fx;
-	monster.var2 = fy;
-	monster.var3 = static_cast<int>(endDir);
+	monster.var1 = dir.x;
+	monster.var2 = dir.y;
+	monster.var3 = static_cast<int8_t>(endDir);
 	NewMonsterAnim(monster, MonsterGraphic::Walk, endDir, AnimationDistributionFlags::ProcessAnimationPending, -1);
 }
 
@@ -3971,34 +3933,10 @@ bool Walk(Monster &monster, Direction md)
 		return false;
 	}
 
-	switch (md) {
-	case Direction::North:
-		WalkNorthwards(monster, -1, -1, Direction::North);
-		break;
-	case Direction::NorthEast:
-		WalkNorthwards(monster, 0, -1, Direction::NorthEast);
-		break;
-	case Direction::East:
-		WalkSideways(monster, -32, -16, 1, -1, 1, 0, Direction::East);
-		break;
-	case Direction::SouthEast:
-		WalkSouthwards(monster, -32, -16, 1, 0, Direction::SouthEast);
-		break;
-	case Direction::South:
-		WalkSouthwards(monster, 0, -32, 1, 1, Direction::South);
-		break;
-	case Direction::SouthWest:
-		WalkSouthwards(monster, 32, -16, 0, 1, Direction::SouthWest);
-		break;
-	case Direction::West:
-		WalkSideways(monster, 32, -16, -1, 1, 0, 1, Direction::West);
-		break;
-	case Direction::NorthWest:
-		WalkNorthwards(monster, -1, 0, Direction::NorthWest);
-		break;
-	case Direction::NoDirection:
-		break;
-	}
+	if (md == Direction::NoDirection)
+		return true;
+
+	WalkInDirection(monster, md);
 	return true;
 }
 

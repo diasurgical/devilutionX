@@ -1320,9 +1320,6 @@ void DrawAutomapPlr(const Surface &out, const Displacement &myPlayerOffset, cons
 	const uint8_t playerColor = MapColorsPlayer + (8 * player.getId()) % 128;
 
 	Point tile = player.position.tile;
-	if (player._pmode == PM_WALK_SIDEWAYS) {
-		tile = player.position.future;
-	}
 
 	int px = tile.x - 2 * AutomapOffset.deltaX - ViewPosition.x;
 	int py = tile.y - 2 * AutomapOffset.deltaY - ViewPosition.y;
