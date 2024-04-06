@@ -553,7 +553,8 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 
 	int32_t baseHpMax = SDL_SwapLE32(packed.pMaxHPBase);
 	int32_t baseHp = SDL_SwapLE32(packed.pHPBase);
-	ValidateFields(baseHp, baseHpMax, baseHp >= 0 && baseHp <= baseHpMax);
+	int32_t hpMax = SDL_SwapLE32(packed.pMaxHP);
+	ValidateFields(baseHp, baseHpMax, baseHp >= (baseHpMax - hpMax) && baseHp <= baseHpMax);
 
 	int32_t baseManaMax = SDL_SwapLE32(packed.pMaxManaBase);
 	int32_t baseMana = SDL_SwapLE32(packed.pManaBase);
