@@ -418,20 +418,10 @@ bool DoWalk(Player &player, int variant)
 	}
 
 	// We reached the new tile -> update the player's tile position
-	switch (variant) {
-	case PM_WALK_NORTHWARDS:
-	case PM_WALK_SOUTHWARDS:
-		dPlayer[player.position.tile.x][player.position.tile.y] = 0;
-		player.position.tile = player.position.temp;
-		player.occupyTile(player.position.tile, false);
-		break;
-	case PM_WALK_SIDEWAYS:
-		dPlayer[player.position.tile.x][player.position.tile.y] = 0;
-		player.position.tile = player.position.temp;
-		// dPlayer is set here for backwards comparability, without it the player would be invisible if loaded from a vanilla save.
-		player.occupyTile(player.position.tile, false);
-		break;
-	}
+	dPlayer[player.position.tile.x][player.position.tile.y] = 0;
+	player.position.tile = player.position.temp;
+	// dPlayer is set here for backwards comparability, without it the player would be invisible if loaded from a vanilla save.
+	player.occupyTile(player.position.tile, false);
 
 	// Update the coordinates for lighting and vision entries for the player
 	if (leveltype != DTYPE_TOWN) {
