@@ -420,7 +420,7 @@ bool DoWalk(Player &player, int variant)
 	// We reached the new tile -> update the player's tile position
 	dPlayer[player.position.tile.x][player.position.tile.y] = 0;
 	player.position.tile = player.position.temp;
-	// dPlayer is set here for backwards comparability, without it the player would be invisible if loaded from a vanilla save.
+	// dPlayer is set here for backwards compatibility; without it, the player would be invisible if loaded from a vanilla save.
 	player.occupyTile(player.position.tile, false);
 
 	// Update the coordinates for lighting and vision entries for the player
