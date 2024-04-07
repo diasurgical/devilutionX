@@ -740,13 +740,14 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 	}
 	Player *player = PlayerAtPosition(tilePosition);
 	if (player != nullptr) {
+		// If sprite is moving southwards, we want to draw it offset from the tile it's moving to, so we need negative ID
 		int8_t playerId = (player->_pmode != PM_WALK_SOUTHWARDS) ? player->getId() + 1 : -player->getId() - 1;
 
 		if (dPlayer[tilePosition.x][tilePosition.y] == playerId) {
 			auto tempTilePosition = tilePosition;
 			auto tempTargetBufferPosition = targetBufferPosition;
 
-			// Needed to fix draw order issues with doors
+			// Offset the sprite to the tile it's moving from
 			if (player->_pmode == PM_WALK_SOUTHWARDS) {
 				switch (player->_pdir) {
 				case Direction::SouthWest:
@@ -769,13 +770,14 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 
 	Monster *monster = FindMonsterAtPosition(tilePosition);
 	if (monster != nullptr) {
+		// If sprite is moving southwards, we want to draw it offset from the tile it's moving to, so we need negative ID
 		int8_t monsterId = (monster->mode != MonsterMode::MoveSouthwards) ? monster->getId() + 1 : -monster->getId() - 1;
 
 		if (dMonster[tilePosition.x][tilePosition.y] == monsterId) {
 			auto tempTilePosition = tilePosition;
 			auto tempTargetBufferPosition = targetBufferPosition;
 
-			// Needed to fix draw order issues with doors
+			// Offset the sprite to the tile it's moving from
 			if (monster->mode == MonsterMode::MoveSouthwards) {
 				switch (monster->direction) {
 				case Direction::SouthWest:
