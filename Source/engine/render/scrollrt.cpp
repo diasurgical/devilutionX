@@ -632,12 +632,11 @@ void DrawItem(const Surface &out, int8_t itemIndex, Point targetBufferPosition)
 void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBufferPosition)
 {
 	int mi = dMonster[tilePosition.x][tilePosition.y];
-	bool isNegativeMonster = mi < 0;
 	mi = std::abs(mi) - 1;
-
+	if (mi < 0) // negative monster (moving into tile)
+		return;
 	if (leveltype == DTYPE_TOWN) {
-		if (isNegativeMonster)
-			return;
+
 		auto &towner = Towners[mi];
 		const Point position = targetBufferPosition + towner.getRenderingOffset();
 		const ClxSprite sprite = towner.currentSprite();
@@ -662,10 +661,7 @@ void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBuffe
 	}
 
 	const ClxSprite sprite = monster.animInfo.currentSprite();
-
 	Displacement offset = monster.getRenderingOffset(sprite);
-	if (isNegativeMonster)
-		return;
 
 	const Point monsterRenderPosition = targetBufferPosition + offset;
 	if (mi == pcursmonst) {
@@ -741,8 +737,10 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 	Player *player = PlayerAtPosition(tilePosition);
 	if (player != nullptr) {
 		// If sprite is moving southwards, we want to draw it offset from the tile it's moving to, so we need negative ID
-		int8_t playerId = (player->_pmode != PM_WALK_SOUTHWARDS) ? player->getId() + 1 : -player->getId() - 1;
+		int8_t playerId = static_cast<int8_t>(player->getId() + 1);
 
+		if (player->_pmode == PM_WALK_SOUTHWARDS)
+			playerId = -playerId;
 		if (dPlayer[tilePosition.x][tilePosition.y] == playerId) {
 			auto tempTilePosition = tilePosition;
 			auto tempTargetBufferPosition = targetBufferPosition;
@@ -769,8 +767,10 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 	Monster *monster = FindMonsterAtPosition(tilePosition);
 	if (monster != nullptr) {
 		// If sprite is moving southwards, we want to draw it offset from the tile it's moving to, so we need negative ID
-		int8_t monsterId = (monster->mode != MonsterMode::MoveSouthwards) ? monster->getId() + 1 : -monster->getId() - 1;
+		int8_t monsterId = static_cast<int8_t>(monster->getId() + 1);
 
+		if (monster->mode == MonsterMode::MoveSouthwards)
+			monsterId = -monsterId;
 		if (dMonster[tilePosition.x][tilePosition.y] == monsterId) {
 			auto tempTilePosition = tilePosition;
 			auto tempTargetBufferPosition = targetBufferPosition;
