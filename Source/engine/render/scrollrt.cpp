@@ -736,10 +736,10 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 	}
 	Player *player = PlayerAtPosition(tilePosition);
 	if (player != nullptr) {
-		// If sprite is moving southwards, we want to draw it offset from the tile it's moving to, so we need negative ID
-		int8_t playerId = static_cast<int8_t>(player->getId() + 1);
-
-		if (player->_pmode == PM_WALK_SOUTHWARDS)
+		auto playerId = static_cast<int8_t>(player->getId() + 1);
+		// If sprite is moving southwards or east, we want to draw it offset from the tile it's moving to, so we need negative ID
+		// This respests the order that tiles are drawn. By using the negative id, we ensure that the sprite is drawn with priority
+		if (player->_pmode == PM_WALK_SOUTHWARDS || (player->_pmode == PM_WALK_SIDEWAYS && player->_pdir == Direction::East))
 			playerId = -playerId;
 		if (dPlayer[tilePosition.x][tilePosition.y] == playerId) {
 			auto tempTilePosition = tilePosition;
@@ -759,17 +759,20 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 					break;
 				}
 				tempTilePosition += Opposite(player->_pdir);
+			} else if (player->_pmode == PM_WALK_SIDEWAYS && player->_pdir == Direction::East) {
+				tempTargetBufferPosition += { -TILE_WIDTH, 0 };
+				tempTilePosition += Opposite(player->_pdir);
 			}
-			DrawPlayerHelper(out, *player, tempTilePosition, tempTargetBufferPosition); // BUGFIX: Player sprite gets cut off walking in front of certain corners in caves
+			DrawPlayerHelper(out, *player, tempTilePosition, tempTargetBufferPosition);
 		}
 	}
 
 	Monster *monster = FindMonsterAtPosition(tilePosition);
 	if (monster != nullptr) {
-		// If sprite is moving southwards, we want to draw it offset from the tile it's moving to, so we need negative ID
-		int8_t monsterId = static_cast<int8_t>(monster->getId() + 1);
-
-		if (monster->mode == MonsterMode::MoveSouthwards)
+		auto monsterId = static_cast<int8_t>(monster->getId() + 1);
+		// If sprite is moving southwards or east, we want to draw it offset from the tile it's moving to, so we need negative ID
+		// This respests the order that tiles are drawn. By using the negative id, we ensure that the sprite is drawn with priority
+		if (monster->mode == MonsterMode::MoveSouthwards || (monster->mode == MonsterMode::MoveSideways && monster->direction == Direction::East))
 			monsterId = -monsterId;
 		if (dMonster[tilePosition.x][tilePosition.y] == monsterId) {
 			auto tempTilePosition = tilePosition;
@@ -789,8 +792,11 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 					break;
 				}
 				tempTilePosition += Opposite(monster->direction);
+			} else if (monster->mode == MonsterMode::MoveSideways && monster->direction == Direction::East) {
+				tempTargetBufferPosition += { -TILE_WIDTH, 0 };
+				tempTilePosition += Opposite(monster->direction);
 			}
-			DrawMonsterHelper(out, tempTilePosition, tempTargetBufferPosition); // BUGFIX: Monster sprite gets cut off walking in front of certain corners in caves
+			DrawMonsterHelper(out, tempTilePosition, tempTargetBufferPosition);
 		}
 	}
 
