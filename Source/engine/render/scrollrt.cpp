@@ -664,17 +664,8 @@ void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBuffe
 	const ClxSprite sprite = monster.animInfo.currentSprite();
 
 	Displacement offset = monster.getRenderingOffset(sprite);
-	if (monster.isWalking()) {
-		bool isSideWalkingToLeft = monster.mode == MonsterMode::MoveSideways && monster.direction == Direction::West;
-		if (isNegativeMonster && !isSideWalkingToLeft)
-			return;
-		if (!isNegativeMonster && isSideWalkingToLeft)
-			return;
-		if (isSideWalkingToLeft)
-			offset -= Displacement { 64, 0 };
-	} else if (isNegativeMonster) {
+	if (isNegativeMonster)
 		return;
-	}
 
 	const Point monsterRenderPosition = targetBufferPosition + offset;
 	if (mi == pcursmonst) {
@@ -747,13 +738,64 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 	if (TileContainsDeadPlayer(tilePosition)) {
 		DrawDeadPlayer(out, tilePosition, targetBufferPosition);
 	}
-	int8_t playerId = dPlayer[tilePosition.x][tilePosition.y];
-	if (static_cast<size_t>(playerId - 1) < Players.size()) {
-		DrawPlayerHelper(out, Players[playerId - 1], tilePosition, targetBufferPosition);
+	Player *player = PlayerAtPosition(tilePosition);
+	if (player != nullptr) {
+		int8_t playerId = (player->_pmode != PM_WALK_SOUTHWARDS) ? player->getId() + 1 : -player->getId() - 1;
+
+		if (dPlayer[tilePosition.x][tilePosition.y] == playerId) {
+			auto tempTilePosition = tilePosition;
+			auto tempTargetBufferPosition = targetBufferPosition;
+
+			// Needed to fix draw order issues with doors
+			if (player->_pmode == PM_WALK_SOUTHWARDS) {
+				switch (player->_pdir) {
+				case Direction::SouthWest:
+					tempTilePosition += Direction::NorthEast;
+					tempTargetBufferPosition += { TILE_WIDTH / 2, -TILE_HEIGHT / 2 };
+					break;
+				case Direction::South:
+					tempTilePosition += Direction::North;
+					tempTargetBufferPosition += { 0, -TILE_HEIGHT };
+					break;
+				case Direction::SouthEast:
+					tempTilePosition += Direction::NorthWest;
+					tempTargetBufferPosition += { -TILE_WIDTH / 2, -TILE_HEIGHT / 2 };
+					break;
+				}
+			}
+			DrawPlayerHelper(out, *player, tempTilePosition, tempTargetBufferPosition); // BUGFIX: Player sprite gets cut off walking in front of certain corners in caves
+		}
 	}
-	if (dMonster[tilePosition.x][tilePosition.y] != 0) {
-		DrawMonsterHelper(out, tilePosition, targetBufferPosition);
+
+	Monster *monster = FindMonsterAtPosition(tilePosition);
+	if (monster != nullptr) {
+		int8_t monsterId = (monster->mode != MonsterMode::MoveSouthwards) ? monster->getId() + 1 : -monster->getId() - 1;
+
+		if (dMonster[tilePosition.x][tilePosition.y] == monsterId) {
+			auto tempTilePosition = tilePosition;
+			auto tempTargetBufferPosition = targetBufferPosition;
+
+			// Needed to fix draw order issues with doors
+			if (monster->mode == MonsterMode::MoveSouthwards) {
+				switch (monster->direction) {
+				case Direction::SouthWest:
+					tempTilePosition += Direction::NorthEast;
+					tempTargetBufferPosition += { TILE_WIDTH / 2, -TILE_HEIGHT / 2 };
+					break;
+				case Direction::South:
+					tempTilePosition += Direction::North;
+					tempTargetBufferPosition += { 0, -TILE_HEIGHT };
+					break;
+				case Direction::SouthEast:
+					tempTilePosition += Direction::NorthWest;
+					tempTargetBufferPosition += { -TILE_WIDTH / 2, -TILE_HEIGHT / 2 };
+					break;
+				}
+			}
+			DrawMonsterHelper(out, tempTilePosition, tempTargetBufferPosition); // BUGFIX: Monster sprite gets cut off walking in front of certain corners in caves
+		}
 	}
+
 	DrawMissile(out, tilePosition, targetBufferPosition, false);
 
 	if (object != nullptr && !object->_oPreFlag) {
