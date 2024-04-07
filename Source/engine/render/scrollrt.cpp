@@ -751,18 +751,16 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 			if (player->_pmode == PM_WALK_SOUTHWARDS) {
 				switch (player->_pdir) {
 				case Direction::SouthWest:
-					tempTilePosition += Direction::NorthEast;
 					tempTargetBufferPosition += { TILE_WIDTH / 2, -TILE_HEIGHT / 2 };
 					break;
 				case Direction::South:
-					tempTilePosition += Direction::North;
 					tempTargetBufferPosition += { 0, -TILE_HEIGHT };
 					break;
 				case Direction::SouthEast:
-					tempTilePosition += Direction::NorthWest;
 					tempTargetBufferPosition += { -TILE_WIDTH / 2, -TILE_HEIGHT / 2 };
 					break;
 				}
+				tempTilePosition += Opposite(player->_pdir);
 			}
 			DrawPlayerHelper(out, *player, tempTilePosition, tempTargetBufferPosition); // BUGFIX: Player sprite gets cut off walking in front of certain corners in caves
 		}
@@ -781,18 +779,16 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 			if (monster->mode == MonsterMode::MoveSouthwards) {
 				switch (monster->direction) {
 				case Direction::SouthWest:
-					tempTilePosition += Direction::NorthEast;
 					tempTargetBufferPosition += { TILE_WIDTH / 2, -TILE_HEIGHT / 2 };
 					break;
 				case Direction::South:
-					tempTilePosition += Direction::North;
 					tempTargetBufferPosition += { 0, -TILE_HEIGHT };
 					break;
 				case Direction::SouthEast:
-					tempTilePosition += Direction::NorthWest;
 					tempTargetBufferPosition += { -TILE_WIDTH / 2, -TILE_HEIGHT / 2 };
 					break;
 				}
+				tempTilePosition += Opposite(monster->direction);
 			}
 			DrawMonsterHelper(out, tempTilePosition, tempTargetBufferPosition); // BUGFIX: Monster sprite gets cut off walking in front of certain corners in caves
 		}
