@@ -718,7 +718,24 @@ void WalkInDirection(Monster &monster, Direction endDir)
 	const auto fx = static_cast<WorldTileCoord>(monster.position.tile.x + dir.x);
 	const auto fy = static_cast<WorldTileCoord>(monster.position.tile.y + dir.y);
 
-	monster.mode = MonsterMode::MoveNorthwards;
+	MonsterMode mode;
+	switch (endDir) {
+	case Direction::NorthWest:
+	case Direction::North:
+	case Direction::NorthEast:
+		mode = MonsterMode::MoveNorthwards;
+		break;
+	case Direction::West:
+	case Direction::East:
+		mode = MonsterMode::MoveSideways;
+		break;
+	case Direction::SouthWest:
+	case Direction::South:
+	case Direction::SouthEast:
+		mode = MonsterMode::MoveSouthwards;
+		break;
+	}
+	monster.mode = mode;
 	monster.position.old = monster.position.tile;
 	monster.position.future = { fx, fy };
 	monster.occupyTile(monster.position.future, true);
@@ -995,30 +1012,16 @@ void MonsterIdle(Monster &monster)
 /**
  * @brief Continue movement towards new tile
  */
-bool MonsterWalk(Monster &monster, MonsterMode variant)
+bool MonsterWalk(Monster &monster)
 {
 	// Check if we reached new tile
 	const bool isAnimationEnd = monster.animInfo.isLastFrame();
 	if (isAnimationEnd) {
-		switch (variant) {
-		case MonsterMode::MoveNorthwards:
-			dMonster[monster.position.tile.x][monster.position.tile.y] = 0;
-			monster.position.tile.x += monster.var1;
-			monster.position.tile.y += monster.var2;
-			monster.occupyTile(monster.position.tile, false);
-			break;
-		case MonsterMode::MoveSouthwards:
-			dMonster[monster.var1][monster.var2] = 0;
-			break;
-		case MonsterMode::MoveSideways:
-			dMonster[monster.position.tile.x][monster.position.tile.y] = 0;
-			monster.position.tile = WorldTilePosition { static_cast<WorldTileCoord>(monster.var1), static_cast<WorldTileCoord>(monster.var2) };
-			// dMonster is set here for backwards comparability, without it the monster would be invisible if loaded from a vanilla save.
-			monster.occupyTile(monster.position.tile, false);
-			break;
-		default:
-			break;
-		}
+		dMonster[monster.position.tile.x][monster.position.tile.y] = 0;
+		monster.position.tile.x += monster.var1;
+		monster.position.tile.y += monster.var2;
+		// dMonster is set here for backwards compatibility; without it, the monster would be invisible if loaded from a vanilla save.
+		monster.occupyTile(monster.position.tile, false);
 		if (monster.lightId != NO_LIGHT)
 			ChangeLightXY(monster.lightId, monster.position.tile);
 		M_StartStand(monster, monster.direction);
@@ -3024,7 +3027,7 @@ bool UpdateModeStance(Monster &monster)
 	case MonsterMode::MoveNorthwards:
 	case MonsterMode::MoveSouthwards:
 	case MonsterMode::MoveSideways:
-		return MonsterWalk(monster, monster.mode);
+		return MonsterWalk(monster);
 	case MonsterMode::MeleeAttack:
 		return MonsterAttack(monster);
 	case MonsterMode::HitRecovery:
