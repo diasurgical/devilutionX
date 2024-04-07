@@ -635,8 +635,8 @@ void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBuffe
 	mi = std::abs(mi) - 1;
 	if (mi < 0) // negative monster (moving into tile)
 		return;
-	if (leveltype == DTYPE_TOWN) {
 
+	if (leveltype == DTYPE_TOWN) {
 		auto &towner = Towners[mi];
 		const Point position = targetBufferPosition + towner.getRenderingOffset();
 		const ClxSprite sprite = towner.currentSprite();
