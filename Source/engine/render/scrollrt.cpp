@@ -738,7 +738,7 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 	if (player != nullptr) {
 		auto playerId = static_cast<int8_t>(player->getId() + 1);
 		// If sprite is moving southwards or east, we want to draw it offset from the tile it's moving to, so we need negative ID
-		// This respests the order in that tiles are drawn. By using the negative id, we ensure that the sprite is drawn last
+		// This respests the order in that tiles are drawn. By using the negative id, we ensure that the sprite is drawn with priority
 		if (player->_pmode == PM_WALK_SOUTHWARDS || (player->_pmode == PM_WALK_SIDEWAYS && player->_pdir == Direction::East))
 			playerId = -playerId;
 		if (dPlayer[tilePosition.x][tilePosition.y] == playerId) {
@@ -771,7 +771,7 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 	if (monster != nullptr) {
 		auto monsterId = static_cast<int8_t>(monster->getId() + 1);
 		// If sprite is moving southwards or east, we want to draw it offset from the tile it's moving to, so we need negative ID
-		// This respests the order in that tiles are drawn. By using the negative id, we ensure that the sprite is drawn last
+		// This respests the order in that tiles are drawn. By using the negative id, we ensure that the sprite is drawn with priority
 		if (monster->mode == MonsterMode::MoveSouthwards || (monster->mode == MonsterMode::MoveSideways && monster->direction == Direction::East))
 			monsterId = -monsterId;
 		if (dMonster[tilePosition.x][tilePosition.y] == monsterId) {
