@@ -401,7 +401,7 @@ void InitLevelChange(Player &player)
 /**
  * @brief Continue movement towards new tile
  */
-bool DoWalk(Player &player, int variant)
+bool DoWalk(Player &player)
 {
 	// Play walking sound effect on certain animation frames
 	if (*sgOptions.Audio.walkingSound && (leveltype != DTYPE_TOWN || sgGameInitInfo.bRunInTown == 0)) {
@@ -3008,7 +3008,7 @@ void ProcessPlayers()
 				case PM_WALK_NORTHWARDS:
 				case PM_WALK_SOUTHWARDS:
 				case PM_WALK_SIDEWAYS:
-					tplayer = DoWalk(player, player._pmode);
+					tplayer = DoWalk(player);
 					break;
 				case PM_ATTACK:
 					tplayer = DoAttack(player);
