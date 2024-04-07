@@ -1033,6 +1033,7 @@ void CycleAutomapType()
 void CheckPanelInfo()
 {
 	panelflag = false;
+	InfoString = StringOrView {};
 	const Point mainPanelPosition = GetMainPanel().position;
 	for (int i = 0; i < PanelButtonIndex; i++) {
 		int xend = PanBtnPos[i].x + mainPanelPosition.x + PanBtnPos[i].w;
