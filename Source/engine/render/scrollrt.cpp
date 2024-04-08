@@ -632,9 +632,8 @@ void DrawItem(const Surface &out, int8_t itemIndex, Point targetBufferPosition)
 void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBufferPosition)
 {
 	int mi = dMonster[tilePosition.x][tilePosition.y];
+
 	mi = std::abs(mi) - 1;
-	if (mi < 0) // negative monster (moving into tile)
-		return;
 
 	if (leveltype == DTYPE_TOWN) {
 		auto &towner = Towners[mi];
@@ -769,7 +768,7 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 
 	Monster *monster = FindMonsterAtPosition(tilePosition);
 	if (monster != nullptr) {
-		auto monsterId = static_cast<int8_t>(monster->getId() + 1);
+		auto monsterId = static_cast<int16_t>(monster->getId() + 1);
 		// If sprite is moving southwards or east, we want to draw it offset from the tile it's moving to, so we need negative ID
 		// This respests the order that tiles are drawn. By using the negative id, we ensure that the sprite is drawn with priority
 		if (monster->mode == MonsterMode::MoveSouthwards || (monster->mode == MonsterMode::MoveSideways && monster->direction == Direction::East))
