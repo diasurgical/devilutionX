@@ -1445,36 +1445,44 @@ _item_indexes RndTypeItems(ItemType itemType, int imid, int lvl)
 
 _unique_items CheckUnique(Item &item, int lvl, int uper, bool recreate)
 {
-	std::bitset<128> uok = {};
-
 	if (GenerateRnd(100) > uper)
 		return UITEM_INVALID;
 
-	int numu = 0;
-	for (int j = 0, n = static_cast<int>(UniqueItems.size()); j < n; ++j) {
-		if (!IsUniqueAvailable(j))
-			break;
-		if (UniqueItems[j].UIItemId == AllItemsList[item.IDidx].iItemId
-		    && lvl >= UniqueItems[j].UIMinLvl
-		    && (recreate || !UniqueItemFlags[j] || gbIsMultiplayer)) {
-			uok[j] = true;
-			numu++;
+	std::vector<int> validUids;
+
+	// Gather all potential unique items.
+	for (int i = 0; i < static_cast<int>(UniqueItems.size()); ++i) {
+		const auto &uniqueItem = UniqueItems[i];
+
+		bool isMatchingItemId = uniqueItem.UIItemId == AllItemsList[item.IDidx].iItemId;
+		bool meetsLevelRequirement = lvl >= uniqueItem.UIMinLvl;
+		bool isAvailableForGeneration = recreate || !UniqueItemFlags[i] || gbIsMultiplayer;
+
+		if (IsUniqueAvailable(i) && isMatchingItemId && meetsLevelRequirement && isAvailableForGeneration) {
+			validUids.push_back(i);
 		}
 	}
 
-	if (numu == 0)
+	if (validUids.empty())
 		return UITEM_INVALID;
 
-	DiscardRandomValues(1);
-	uint8_t itemData = 0;
-	while (numu > 0) {
-		if (uok[itemData])
-			numu--;
-		if (numu > 0)
-			itemData = (itemData + 1) % 128;
+	// For newly created items, use logic that selects a random uid instead of last uid
+	if (!recreate) {
+		item.dwBuff |= CF_UNIQUEX;
 	}
 
-	return (_unique_items)itemData;
+	int idx = static_cast<int>(UITEM_INVALID);
+
+	DiscardRandomValues(1);
+	if ((item.dwBuff & CF_UNIQUEX) != 0) {
+		idx = GenerateRnd(static_cast<int32_t>(validUids.size()));
+		SDL_Log("right");
+	} else {
+		SDL_Log("wrong");
+		idx = static_cast<int>(validUids.size() - 1);
+	}
+
+	return static_cast<_unique_items>(validUids[idx]);
 }
 
 void GetUniqueItem(const Player &player, Item &item, _unique_items uid)
