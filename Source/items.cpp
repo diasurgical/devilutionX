@@ -1478,6 +1478,7 @@ _unique_items CheckUnique(Item &item, int lvl, int uper, bool recreate)
 	else
 		uidx = static_cast<int>(uids.size() - 1); // last uid in list (reverse compatibility)
 
+	// Single Player item creation: Check if there are any available uids
 	if (!recreate && !gbIsMultiplayer) {
 		bool hasAvailUids = std::any_of(uids.begin(), uids.end(), [](const std::pair<int, bool> &element) {
 			return !element.second;
