@@ -1467,18 +1467,16 @@ _unique_items CheckUnique(Item &item, int lvl, int uper, bool recreate)
 		return UITEM_INVALID;
 
 	// For newly created items, use logic that selects a random uid instead of last uid
-	if (!recreate) {
+	if (!recreate)
 		item.dwBuff |= CF_UNIQUEX;
-	}
 
 	int idx = static_cast<int>(UITEM_INVALID);
 
 	DiscardRandomValues(1);
-	if ((item.dwBuff & CF_UNIQUEX) != 0) {
+	if ((item.dwBuff & CF_UNIQUEX) != 0)
 		idx = GenerateRnd(static_cast<int32_t>(validUids.size()));
-	} else {
+	else
 		idx = static_cast<int>(validUids.size() - 1);
-	}
 
 	return static_cast<_unique_items>(validUids[idx]);
 }
