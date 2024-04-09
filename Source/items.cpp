@@ -1458,9 +1458,8 @@ _unique_items CheckUnique(Item &item, int lvl, int uper, bool recreate)
 		bool meetsLevelRequirement = lvl >= uniqueItem.UIMinLvl;
 		bool isAvailableForGeneration = recreate || !UniqueItemFlags[i] || gbIsMultiplayer;
 
-		if (IsUniqueAvailable(i) && isMatchingItemId && meetsLevelRequirement && isAvailableForGeneration) {
+		if (IsUniqueAvailable(i) && isMatchingItemId && meetsLevelRequirement && isAvailableForGeneration)
 			validUids.push_back(i);
-		}
 	}
 
 	if (validUids.empty())
