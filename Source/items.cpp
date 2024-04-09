@@ -1465,7 +1465,7 @@ _unique_items CheckUnique(Item &item, int lvl, int uper, bool recreate)
 	if (validUids.empty())
 		return UITEM_INVALID;
 
-	// For newly created items, use logic that selects a random uid instead of last uid
+	// For newly created items, use logic that selects a random uid instead of last uid.
 	if (!recreate)
 		item.dwBuff |= CF_UNIQUEX;
 
@@ -1473,9 +1473,9 @@ _unique_items CheckUnique(Item &item, int lvl, int uper, bool recreate)
 
 	DiscardRandomValues(1);
 	if ((item.dwBuff & CF_UNIQUEX) != 0)
-		idx = GenerateRnd(static_cast<int32_t>(validUids.size()));
+		idx = GenerateRnd(static_cast<int32_t>(validUids.size())); // random uid in list
 	else
-		idx = static_cast<int>(validUids.size() - 1);
+		idx = static_cast<int>(validUids.size() - 1); // last uid in list
 
 	return static_cast<_unique_items>(validUids[idx]);
 }
