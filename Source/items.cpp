@@ -1476,9 +1476,7 @@ _unique_items CheckUnique(Item &item, int lvl, int uper, bool recreate)
 	DiscardRandomValues(1);
 	if ((item.dwBuff & CF_UNIQUEX) != 0) {
 		idx = GenerateRnd(static_cast<int32_t>(validUids.size()));
-		SDL_Log("right");
 	} else {
-		SDL_Log("wrong");
 		idx = static_cast<int>(validUids.size() - 1);
 	}
 
