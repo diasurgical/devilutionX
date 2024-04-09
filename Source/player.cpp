@@ -1466,6 +1466,7 @@ void ValidatePlayer()
 	}
 
 	myPlayer._pMemSpells &= msk;
+	myPlayer._pInfraFlag = false;
 }
 
 void CheckCheatStats(Player &player)
