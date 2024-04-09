@@ -1485,6 +1485,8 @@ _unique_items CheckUnique(Item &item, int lvl, int uper, bool recreate)
 
 		// No uniques are available, abort mission.
 		if (!hasAvailableSpUid) {
+			// Remove uniqueX flag, item isn't unique.
+			item.dwBuff = (item.dwBuff & ~CF_UNIQUEX);
 			return UITEM_INVALID;
 		}
 	}
