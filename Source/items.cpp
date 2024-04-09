@@ -3251,7 +3251,7 @@ Item *SpawnUnique(_unique_items uid, Point position, std::optional<int> level /*
 
 	if (sgGameInitInfo.nDifficulty == DIFF_NORMAL) {
 		GetItemAttrs(item, static_cast<_item_indexes>(idx), curlv);
-		GetUniqueItem(*MyPlayer, item, uid);
+		GetUniqueItem(*MyPlayer, item, uid, false);
 		SetupItem(item);
 	} else {
 		if (level)
