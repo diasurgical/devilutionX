@@ -1445,10 +1445,12 @@ _item_indexes RndTypeItems(ItemType itemType, int imid, int lvl)
 
 _unique_items CheckUnique(Item &item, int lvl, int uper, bool recreate)
 {
-	if (GenerateRnd(100) > uper)
+	// If the item already has the CF_UNIQUEX flag, we already know it should pass this check
+	// Required for rerunning SetupAllItems() for when attempts at spawning SP uniques fail
+	if (GenerateRnd(100) > uper && (item.dwBuff & CF_UNIQUEX) == 0)
 		return UITEM_INVALID;
 
-	std::vector<int> validUids;
+	std::vector<std::pair<int, bool>> uids;
 
 	// Gather all potential unique items.
 	for (int i = 0; i < static_cast<int>(UniqueItems.size()); ++i) {
@@ -1456,33 +1458,44 @@ _unique_items CheckUnique(Item &item, int lvl, int uper, bool recreate)
 
 		bool isMatchingItemId = uniqueItem.UIItemId == AllItemsList[item.IDidx].iItemId;
 		bool meetsLevelRequirement = lvl >= uniqueItem.UIMinLvl;
-		bool isAvailableForGeneration = recreate || !UniqueItemFlags[i] || gbIsMultiplayer;
+		bool spItemAlreadyDropped = !recreate && UniqueItemFlags[i] && !gbIsMultiplayer;
 
-		if (IsUniqueAvailable(i) && isMatchingItemId && meetsLevelRequirement && isAvailableForGeneration)
-			validUids.push_back(i);
+		if (IsUniqueAvailable(i) && isMatchingItemId && meetsLevelRequirement)
+			uids.emplace_back(std::make_pair(i, spItemAlreadyDropped));
 	}
 
-	if (validUids.empty())
+	if (uids.empty())
 		return UITEM_INVALID;
 
 	// For newly created items, use logic that selects a random uid instead of last uid.
 	if (!recreate)
 		item.dwBuff |= CF_UNIQUEX;
 
-	int idx = static_cast<int>(UITEM_INVALID);
+	int uidx = static_cast<int>(UITEM_INVALID);
 
-	DiscardRandomValues(1);
 	if ((item.dwBuff & CF_UNIQUEX) != 0)
-		idx = GenerateRnd(static_cast<int32_t>(validUids.size())); // random uid in list
+		uidx = GenerateRnd(static_cast<int32_t>(uids.size())); // random uid in list
 	else
-		idx = static_cast<int>(validUids.size() - 1); // last uid in list
+		uidx = static_cast<int>(uids.size() - 1); // last uid in list
 
-	return static_cast<_unique_items>(validUids[idx]);
+	if (!recreate && !gbIsMultiplayer) {
+		bool hasAvailableSPUid = std::any_of(uids.begin(), uids.end(), [](const std::pair<int, bool> &element) {
+			return !element.second;
+		});
+
+		// No uniques are available, abort mission.
+		if (!hasAvailableSPUid) {
+			return UITEM_INVALID;
+		}
+	}
+
+	return static_cast<_unique_items>(uids[uidx].first);
 }
 
-void GetUniqueItem(const Player &player, Item &item, _unique_items uid)
+void GetUniqueItem(const Player &player, Item &item, _unique_items uid, bool recreate)
 {
-	UniqueItemFlags[uid] = true;
+	if (!gbIsMultiplayer && !recreate)
+		UniqueItemFlags[uid] = true;
 
 	for (auto power : UniqueItems[uid].powers) {
 		if (power.type == IPL_INVALID)
@@ -1507,13 +1520,14 @@ void ItemRndDur(Item &item)
 		item._iDurability = GenerateRnd(item._iMaxDur / 2) + (item._iMaxDur / 4) + 1;
 }
 
-int GetItemBLevel(int lvl, item_misc_id miscId, bool onlygood, bool uper15)
+int GetItemBLevel(int lvl, item_misc_id miscId, bool onlygood, bool uper15, bool forceUnique = false)
 {
 	int iblvl = -1;
 	if (GenerateRnd(100) <= 10
 	    || GenerateRnd(100) <= lvl
 	    || onlygood
-	    || IsAnyOf(miscId, IMISC_STAFF, IMISC_RING, IMISC_AMULET)) {
+	    || IsAnyOf(miscId, IMISC_STAFF, IMISC_RING, IMISC_AMULET)
+	    || forceUnique) {
 		iblvl = lvl;
 	}
 	if (uper15)
@@ -1539,13 +1553,24 @@ void SetupAllItems(const Player &player, Item &item, _item_indexes idx, uint32_t
 		item._iCreateInfo |= CF_UPER1;
 
 	if (item._iMiscId != IMISC_UNIQUE) {
-		int iblvl = GetItemBLevel(lvl, item._iMiscId, onlygood, uper == 15);
+		int iblvl = GetItemBLevel(lvl, item._iMiscId, onlygood, uper == 15, (item.dwBuff & CF_UNIQUEX) != 0);
 		if (iblvl != -1) {
 			_unique_items uid = CheckUnique(item, iblvl, uper, recreate);
+			bool spItemAlreadyDropped = !recreate && UniqueItemFlags[uid] && !gbIsMultiplayer;
+
+			if (spItemAlreadyDropped) {
+				/*Since CF_UNIQUEX was set in CheckUnique, failing to create a unique in SP that was
+				already dropped will keep attempting to generate a valid unique drop until it succeeds
+				or runs out of uniques. */
+				SetupAllItems(player, item, idx, AdvanceRndSeed(), lvl, uper, onlygood, recreate, pregen);
+				return;
+			}
 			if (uid == UITEM_INVALID) {
 				GetItemBonus(player, item, iblvl / 2, iblvl, onlygood, true);
+				// Remove uniqueX flag, item isn't unique.
+				item.dwBuff = (item.dwBuff & ~CF_UNIQUEX);
 			} else {
-				GetUniqueItem(player, item, uid);
+				GetUniqueItem(player, item, uid, recreate);
 			}
 		}
 		if (item._iMagical != ITEM_QUALITY_UNIQUE)
