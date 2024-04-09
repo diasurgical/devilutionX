@@ -1479,12 +1479,12 @@ _unique_items CheckUnique(Item &item, int lvl, int uper, bool recreate)
 		uidx = static_cast<int>(uids.size() - 1); // last uid in list (reverse compatibility)
 
 	if (!recreate && !gbIsMultiplayer) {
-		bool hasAvailableSpUid = std::any_of(uids.begin(), uids.end(), [](const std::pair<int, bool> &element) {
+		bool hasAvailUids = std::any_of(uids.begin(), uids.end(), [](const std::pair<int, bool> &element) {
 			return !element.second;
 		});
 
 		// No uniques are available, abort mission.
-		if (!hasAvailableSpUid) {
+		if (!hasAvailUids) {
 			// Remove uniqueX flag, item isn't unique.
 			item.dwBuff = (item.dwBuff & ~CF_UNIQUEX);
 			return UITEM_INVALID;
