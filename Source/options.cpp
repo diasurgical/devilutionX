@@ -1228,6 +1228,7 @@ void OptionEntryLanguageCode::CheckLanguagesAreInitialized() const
 	languages.emplace_back("es", "Español");
 	languages.emplace_back("fr", "Français");
 	languages.emplace_back("hr", "Hrvatski");
+	languages.emplace_back("hu", "Magyar");
 	languages.emplace_back("it", "Italiano");
 
 	if (HaveExtraFonts()) {
