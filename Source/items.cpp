@@ -3323,7 +3323,8 @@ void TryRandomUniqueItem(Item &item, _item_indexes idx, int8_t mLevel, int uper,
 
 			// If the base and minlvl is the same as an existing unique in the list, calculate an offset amount for later use.
 			for (const auto &uidPair : uids) {
-				if (UniqueItems[uidPair.first].UIItemId == uniqueItem.UIItemId && UniqueItems[uidPair.first].UIMinLvl == uniqueItem.UIMinLvl) {
+				const auto &existingUniqueItem = UniqueItems[uidPair.first];
+				if (existingUniqueItem.UIItemId == uniqueItem.UIItemId && existingUniqueItem.UIMinLvl == uniqueItem.UIMinLvl) {
 					uidOffset++;
 				}
 			}
@@ -3332,10 +3333,11 @@ void TryRandomUniqueItem(Item &item, _item_indexes idx, int8_t mLevel, int uper,
 				uids.emplace_back(std::make_pair(i, uidOffset));
 		}
 		// Get random valid uid.
-		auto uid = static_cast<_unique_items>(uids[GenerateRnd(static_cast<int32_t>(uids.size()))].first);
-		uidOffset = uids[uid].second;
+		auto uidx = GenerateRnd(static_cast<int32_t>(uids.size()));
+		uidOffset = uids[uidx].second;
 		// Level to target to obtain the uid for reverse compatibility. Unique monsters add 4 to lvl down the line, so we need to account for that.
-		int targetLvl = (uper == 15) ? UniqueItems[uid].UIMinLvl - 4 : UniqueItems[uid].UIMinLvl;
+		const auto &uniqueItem = UniqueItems[uids[uidx].first];
+		int targetLvl = (uper == 15) ? uniqueItem.UIMinLvl - 4 : uniqueItem.UIMinLvl;
 
 		if (uper == 15 && targetLvl < 1) { // Negative level will underflow. Lvl 0 items may have unintended consequences.
 			uper = 1;                      // Can't use uper15, so use uper1.
@@ -3343,12 +3345,12 @@ void TryRandomUniqueItem(Item &item, _item_indexes idx, int8_t mLevel, int uper,
 		}
 
 		int count = 0;
-		while (item._iUid != uid && count < 1000) {
+		while (item._iUid != uids[uidx].first && count < 1000) {
 			SetupAllItems(*MyPlayer, item, idx, AdvanceRndSeed(), targetLvl, uper, onlygood, recreate, pregen, uidOffset);
 			count++;
 		}
 		if (!gbIsMultiplayer && count != 1000) {
-			UniqueItemFlags[uid] = true; // Now it's safe to set a unique as being dropped, to prevent it from being dropped again in the same SP session.
+			UniqueItemFlags[uids[uidx].first] = true; // Now it's safe to set a unique as being dropped, to prevent it from being dropped again in the same SP session.
 		}
 		if (!recreate)
 			item.dwBuff = uidOffset | CF_UIDOFFSET;
