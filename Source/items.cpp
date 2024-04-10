@@ -1574,6 +1574,7 @@ void SetupBaseItem(Point position, _item_indexes idx, bool onlygood, bool sendms
 	int curlv = ItemsGetCurrlevel();
 
 	SetupAllItems(*MyPlayer, item, idx, AdvanceRndSeed(), 2 * curlv, 1, onlygood, false, delta);
+	TryRandomUniqueItem(item, idx, 2 * curlv, 1, onlygood, false, delta);
 
 	if (sendmsg)
 		NetSendCmdPItem(false, CMD_DROPITEM, item.position, item);
@@ -2249,6 +2250,7 @@ void CreateMagicItem(Point position, int lvl, ItemType itemType, int imid, int i
 	while (true) {
 		item = {};
 		SetupAllItems(*MyPlayer, item, idx, AdvanceRndSeed(), 2 * lvl, 1, true, false, delta);
+		TryRandomUniqueItem(item, idx, 2 * lvl, 1, true, false, delta);
 		if (item._iCurs == icurs)
 			break;
 
@@ -3286,6 +3288,7 @@ Item *SpawnUnique(_unique_items uid, Point position, std::optional<int> level /*
 			return item.itype == uniqueItemData.itype;
 		});
 		SetupAllItems(*MyPlayer, item, idx, AdvanceRndSeed(), curlv * 2, 15, true, false, false);
+		TryRandomUniqueItem(item, idx, curlv * 2, 15, true, false, false);
 	}
 
 	if (sendmsg)
@@ -3498,6 +3501,7 @@ void RecreateItem(const Player &player, Item &item, _item_indexes idx, uint16_t 
 	bool pregen = (icreateinfo & CF_PREGEN) != 0;
 
 	SetupAllItems(player, item, idx, iseed, level, uper, onlygood, recreate, pregen);
+	TryRandomUniqueItem(item, idx, level, uper, onlygood, recreate, pregen);
 	gbIsHellfire = tmpIsHellfire;
 }
 
@@ -4735,6 +4739,7 @@ std::string DebugSpawnItem(std::string itemName)
 
 		testItem = {};
 		SetupAllItems(*MyPlayer, testItem, idx, AdvanceRndSeed(), monsterLevel, 1, false, false, false);
+		TryRandomUniqueItem(testItem, idx, monsterLevel, 1, false, false, false);
 
 		std::string tmp = AsciiStrToLower(testItem._iIName);
 		if (tmp.find(itemName) != std::string::npos)
@@ -4808,6 +4813,7 @@ std::string DebugSpawnUniqueItem(std::string itemName)
 			flag = true;
 		UniqueItemFlags[uniqueIndex] = false;
 		SetupAllItems(*MyPlayer, testItem, uniqueBaseIndex, testItem._iMiscId == IMISC_UNIQUE ? uniqueIndex : AdvanceRndSeed(), uniqueItem.UIMinLvl, 1, false, false, false);
+		TryRandomUniqueItem(testItem, uniqueBaseIndex, uniqueItem.UIMinLvl, 1, false, false, false);
 		for (auto &flag : UniqueItemFlags)
 			flag = false;
 
