@@ -3349,8 +3349,9 @@ void TryRandomUniqueItem(Item &item, _item_indexes idx, int8_t mLevel, int uper,
 		}
 		if (!gbIsMultiplayer && count != 1000) {
 			UniqueItemFlags[uid] = true; // Now it's safe to set a unique as being dropped, to prevent it from being dropped again in the same SP session.
-			item.dwBuff = uidOffset | CF_UIDOFFSET;
 		}
+		if (!recreate)
+			item.dwBuff = uidOffset | CF_UIDOFFSET;
 	}
 }
 
@@ -3500,8 +3501,7 @@ void RecreateItem(const Player &player, Item &item, _item_indexes idx, uint16_t 
 	bool recreate = (icreateinfo & CF_UNIQUE) != 0;
 	bool pregen = (icreateinfo & CF_PREGEN) != 0;
 
-	SetupAllItems(player, item, idx, iseed, level, uper, onlygood, recreate, pregen);
-	TryRandomUniqueItem(item, idx, level, uper, onlygood, recreate, pregen);
+	SetupAllItems(player, item, idx, iseed, level, uper, onlygood, recreate, pregen, item.dwBuff & CF_UIDOFFSET);
 	gbIsHellfire = tmpIsHellfire;
 }
 
