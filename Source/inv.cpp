@@ -731,19 +731,21 @@ void CheckInvCut(Player &player, Point cursorPosition, bool automaticMove, bool 
 						}
 						break;
 					case ILOC_TWOHAND:
-						// Moving a two-hand item from inventory to InvBody requires emptying both hands
+						// Moving a two-hand item from inventory to InvBody requires emptying both hands.
 						if (!player.InvBody[INVLOC_HAND_RIGHT].isEmpty()) {
 							holdItem = player.InvBody[INVLOC_HAND_RIGHT];
 							if (!AutoPlaceItemInInventory(player, holdItem, true)) {
-								// No space to  move right hand item to inventory, abort.
+								// No space to move right hand item to inventory, abort.
 								break;
 							}
-							holdItem = player.InvBody[INVLOC_HAND_LEFT];
-							if (!AutoPlaceItemInInventory(player, holdItem, false)) {
-								// No space for left item. Move back right item to right hand and abort.
-								player.InvBody[INVLOC_HAND_RIGHT] = player.InvList[player._pNumInv - 1];
-								player.RemoveInvItem(player._pNumInv - 1, false);
-								break;
+							if (!player.InvBody[INVLOC_HAND_LEFT].isEmpty()) {
+								holdItem = player.InvBody[INVLOC_HAND_LEFT];
+								if (!AutoPlaceItemInInventory(player, holdItem, false)) {
+									// No space for left item. Move back right item to right hand and abort.
+									player.InvBody[INVLOC_HAND_RIGHT] = player.InvList[player._pNumInv - 1];
+									player.RemoveInvItem(player._pNumInv - 1, false);
+									break;
+								}
 							}
 							RemoveEquipment(player, INVLOC_HAND_RIGHT, false);
 							invloc = INVLOC_HAND_LEFT;
