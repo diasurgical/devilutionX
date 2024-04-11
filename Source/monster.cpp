@@ -4607,7 +4607,7 @@ void TalktoMonster(Player &player, Monster &monster)
 			Quests[Q_ZHAR]._qlog = true;
 			Quests[Q_ZHAR]._qvar1 = QS_ZHAR_ITEM_SPAWNED;
 			SetRndSeed(monster.rndItemSeed);
-			AdvanceRndSeed();
+			DiscardRandomValues(10);
 			CreateTypeItem(monster.position.tile + Displacement { 1, 1 }, false, ItemType::Misc, IMISC_BOOK, false, false, true);
 			monster.flags |= MFLAG_QUEST_COMPLETE;
 			NetSendCmdQuest(true, Quests[Q_ZHAR]);
@@ -4622,7 +4622,7 @@ void TalktoMonster(Player &player, Monster &monster)
 		}
 		if (monster.talkMsg == TEXT_GARBUD2 && (monster.flags & MFLAG_QUEST_COMPLETE) == 0) {
 			SetRndSeed(monster.rndItemSeed);
-			AdvanceRndSeed();
+			DiscardRandomValues(10);
 			SpawnItem(monster, monster.position.tile + Displacement { 1, 1 }, false, true);
 			monster.flags |= MFLAG_QUEST_COMPLETE;
 			Quests[Q_GARBUD]._qvar1 = QS_GHARBAD_FIRST_ITEM_SPAWNED;
