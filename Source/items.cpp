@@ -3332,8 +3332,8 @@ void TryRandomUniqueItem(Item &item, _item_indexes idx, int8_t mLevel, int uper,
 
 		// Get random valid uid.
 		const auto uidsIdx = GenerateRnd(static_cast<int32_t>(uids.size())); // Index into uid, used to get a random uid from the uids vector.
-		const auto uid = uids[uidsIdx].first;        // Actual unique id.
-		const auto uidOffset = uids[uidsIdx].second; // Amount to decrease the final uid by in CheckUnique() to get the desired unique.
+		const auto uid = uids[uidsIdx].first;                                // Actual unique id.
+		const auto uidOffset = uids[uidsIdx].second;                         // Amount to decrease the final uid by in CheckUnique() to get the desired unique.
 		const auto &uniqueItem = UniqueItems[uid];
 
 		int targetLvl = (uper == 15) ? uniqueItem.UIMinLvl - 4 : uniqueItem.UIMinLvl; // Target level for reverse compatibility, since vanilla always takes the last applicable uid in the list.
@@ -3351,7 +3351,7 @@ void TryRandomUniqueItem(Item &item, _item_indexes idx, int8_t mLevel, int uper,
 			SetupAllItems(*MyPlayer, item, idx, AdvanceRndSeed(), targetLvl, uper, onlygood, false, pregen, uidOffset);
 			count++;
 		} while (item._iUid != uid && count < 10000);
-		if (count >= 10000) // If count reaches 10000, we just take whatever the item generator last gave us and give up.
+
 		if ((item._iCreateInfo & CF_UNIQUE) != 0) {
 			if (!gbIsMultiplayer) {
 				UniqueItemFlags[uid] = true; // Now it's safe to set a unique as being dropped, to prevent it from being dropped again in the same SP session.
