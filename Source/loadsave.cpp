@@ -2539,10 +2539,7 @@ void SaveGameData(SaveWriter &saveWriter)
 			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
 				file.WriteLE<int8_t>(dObject[i][j]);
 		}
-		for (int j = 0; j < MAXDUNY; j++) {
-			for (int i = 0; i < MAXDUNX; i++)        // NOLINT(modernize-loop-convert)
-				file.WriteLE<uint8_t>(dLight[i][j]); // BUGFIX: dLight got saved already
-		}
+		file.Skip(MAXDUNX * MAXDUNY); // Skip dLight (already saved)
 		for (int j = 0; j < MAXDUNY; j++) {
 			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
 				file.WriteLE<uint8_t>(dPreLight[i][j]);
