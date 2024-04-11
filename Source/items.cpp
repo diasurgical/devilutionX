@@ -3347,8 +3347,10 @@ void TryRandomUniqueItem(Item &item, _item_indexes idx, int8_t mLevel, int uper,
 
 		int count = 0;
 		SDL_Log("Random uid: %d, existing uid: %d", uid, item._iUid);
+		auto itemPos = item.position;
 		do {
 			item = {}; // Reset item data
+			item.position = itemPos;
 			int seed = AdvanceRndSeed();
 			SDL_Log("SetupAllItems called from TryRandomUniqueItem() = idx: %d, iseed: %d, lvl: %d, uper: %d, onlygood: %d, pregen: %d, uidOffset: %d", idx, seed, targetLvl, uper, onlygood, pregen, uidOffset);
 			SetupAllItems(*MyPlayer, item, idx, seed, targetLvl, uper, onlygood, false, pregen, uidOffset);
@@ -3424,8 +3426,10 @@ void SpawnItem(Monster &monster, Point position, bool sendmsg, bool spawn /*= fa
 	TryRandomUniqueItem(item, idx, mLevel, uper, onlygood, false);
 	SetupItem(item);
 
-	if (sendmsg)
+	if (sendmsg) {
+		SDL_Log("sent msg");
 		NetSendCmdPItem(false, CMD_DROPITEM, item.position, item);
+	}
 	if (spawn)
 		NetSendCmdPItem(false, CMD_SPAWNITEM, item.position, item);
 }
