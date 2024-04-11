@@ -1478,15 +1478,18 @@ void GetUniqueItem(const Player &player, Item &item, _unique_items uid)
 {
 	UniqueItemFlags[uid] = true;
 
-	for (auto power : UniqueItems[uid].powers) {
+	const auto &uniqueItemData = UniqueItems[uid];
+
+	for (auto power : uniqueItemData.powers) {
 		if (power.type == IPL_INVALID)
 			break;
 		SaveItemPower(player, item, power);
 	}
 
-	CopyUtf8(item._iIName, UniqueItems[uid].UIName, sizeof(item._iIName));
-	item._iCurs = UniqueItems[uid].UICurs;
-	item._iIvalue = UniqueItems[uid].UIValue;
+	CopyUtf8(item._iIName, uniqueItemData.UIName, sizeof(item._iIName));
+	if (uniqueItemData.UICurs != ICURS_DEFAULT)
+		item._iCurs = uniqueItemData.UICurs;
+	item._iIvalue = uniqueItemData.UIValue;
 
 	if (item._iMiscId == IMISC_UNIQUE)
 		item._iSeed = uid;
