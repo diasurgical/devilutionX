@@ -13,7 +13,7 @@ IDI_OPTAMULET	Never	Misc	Amulet	OPTIC_AMULET	Amulet	OPTAMULET	Optic Amulet		0	0	
 IDI_TRING	Never	Misc	Ring	RING_OF_TRUTH	Ring	TRING	Ring of Truth		0	0	0	0	0	0	0	0	0		UNIQUE	Null	false	1000
 IDI_BANNER	Never	Quest	Unequippable	TAVERN_SIGN	Misc	NONE	Tavern Sign		0	0	0	0	0	0	0	0	0		NONE	Null	false	0
 IDI_HARCREST	Never	Armor	Helm	HARLEQUIN_CREST	Helm	HARCREST	Harlequin Crest		0	15	0	0	0	0	0	0	0		UNIQUE	Null	false	15
-IDI_STEELVEIL	Never	Armor	Helm	VIEL_OF_STEEL	Helm	STEELVEIL	Veil of Steel		0	60	0	0	18	18	0	0	0		UNIQUE	Null	false	0
+IDI_STEELVEIL	Never	Armor	Helm	VEIL_OF_STEEL	Helm	STEELVEIL	Veil of Steel		0	60	0	0	18	18	0	0	0		UNIQUE	Null	false	0
 IDI_GLDNELIX	Never	Misc	Unequippable	GOLDEN_ELIXIR	Misc	ELIXIR	Golden Elixir		15	0	0	0	0	0	0	0	0		NONE	Null	false	0
 IDI_ANVIL	Never	Quest	Unequippable	ANVIL_OF_FURY	Misc	NONE	Anvil of Fury		0	0	0	0	0	0	0	0	0		NONE	Null	false	0
 IDI_MUSHROOM	Never	Quest	Unequippable	BLACK_MUSHROOM	Misc	NONE	Black Mushroom		0	0	0	0	0	0	0	0	0		NONE	Null	false	0

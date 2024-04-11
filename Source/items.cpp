@@ -989,9 +989,6 @@ int SaveItemPower(const Player &player, Item &item, ItemPower &power)
 	case IPL_NOMINSTR:
 		item._iMinStr = 0;
 		break;
-	case IPL_INVCURS:
-		item._iCurs = power.param1;
-		break;
 	case IPL_ADDACLIFE:
 		item._iFlags |= (ItemSpecialEffect::LightningArrows | ItemSpecialEffect::FireArrows);
 		item._iFMinDam = power.param1;
@@ -1488,6 +1485,7 @@ void GetUniqueItem(const Player &player, Item &item, _unique_items uid)
 	}
 
 	CopyUtf8(item._iIName, UniqueItems[uid].UIName, sizeof(item._iIName));
+	item._iCurs = UniqueItems[uid].UICurs;
 	item._iIvalue = UniqueItems[uid].UIValue;
 
 	if (item._iMiscId == IMISC_UNIQUE)
@@ -3861,8 +3859,6 @@ bool DoOil(Player &player, int cii)
 		return _("life stealing");
 	case IPL_NOMINSTR:
 		return _("no strength requirement");
-	case IPL_INVCURS:
-		return { std::string_view(" ") };
 	case IPL_ADDACLIFE:
 		if (item._iFMinDam == item._iFMaxDam)
 			return fmt::format(fmt::runtime(_("lightning damage: {:d}")), item._iFMinDam);
