@@ -283,8 +283,7 @@ enum item_cursor_graphic : uint8_t {
 	ICURS_DEMON_PLATE_ARMOR           = 225,
 	ICURS_BOVINE                      = 226,
 
-	ICURS_LAST = ICURS_BOVINE,
-	ICURS_DEFAULT = ICURS_LAST + 1,
+	ICURS_DEFAULT  = 1 << (sizeof(item_cursor_graphic) - 1),
 	// clang-format on
 };
 
