@@ -147,6 +147,12 @@ int GetManaAmount(const Player &player, SpellID sn)
 
 void ConsumeSpell(Player &player, SpellID sn)
 {
+	if (sn == SpellID::Golem && &player == MyPlayer) {
+		Monster &golem = player.golem();
+
+		if (golem.hitPoints <= 0)
+			return;
+	}
 	switch (player.executedSpell.spellType) {
 	case SpellType::Skill:
 	case SpellType::Invalid:

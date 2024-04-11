@@ -4770,6 +4770,12 @@ bool Monster::isPlayerMinion() const
 	return (flags & MFLAG_GOLEM) != 0 && (flags & MFLAG_BERSERK) == 0;
 }
 
+bool Monster::canBeDamagedByPlayer(const Player &player) const
+{
+	return !(player.getId() == getId()
+	    || (isPlayerMinion() && sgGameInitInfo.bFriendlyFire == 0 && player.friendlyMode));
+}
+
 bool Monster::isPossibleToHit() const
 {
 	return !(hitPoints >> 6 <= 0

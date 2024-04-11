@@ -206,7 +206,7 @@ bool MonsterMHit(const Player &player, int monsterId, int mindam, int maxdam, in
 {
 	auto &monster = Monsters[monsterId];
 
-	if (!monster.isPossibleToHit() || monster.isImmune(t, damageType))
+	if (!monster.isPossibleToHit() || monster.isImmune(t, damageType) || !monster.canBeDamagedByPlayer(player))
 		return false;
 
 	int hit = RandomIntLessThan(100);
@@ -3532,9 +3532,15 @@ void ProcessChainLightning(Missile &missile)
 	int rad = std::min<int>(missile._mispllvl + 3, MaxCrawlRadius);
 	Crawl(1, rad, [&](Displacement displacement) {
 		Point target = position + displacement;
-		if (InDungeonBounds(target) && dMonster[target.x][target.y] > 0) {
-			dir = GetDirection(position, target);
-			AddMissile(position, target, dir, MissileID::LightningControl, TARGET_MONSTERS, id, 1, missile._mispllvl);
+		const auto &monsterId = dMonster[target.x][target.y];
+		if (InDungeonBounds(target) && monsterId > 0) {
+			const auto &player = Players[id];
+			const auto &monster = Monsters[std::abs(monsterId - 1)];
+			// Should we also be checking isPossibleToHit() and isImmune()?
+			if (monster.canBeDamagedByPlayer(player)) {
+				dir = GetDirection(position, target);
+				AddMissile(position, target, dir, MissileID::LightningControl, TARGET_MONSTERS, id, 1, missile._mispllvl);
+			}
 		}
 		return false;
 	});
@@ -4029,13 +4035,19 @@ void ProcessElemental(Missile &missile)
 		if (missile.var3 == 1) {
 			missile.var3 = 2;
 			missile._mirange = 255;
+
+			auto *player = missile.sourcePlayer();
 			auto *nextMonster = FindClosest(missilePosition, 19);
-			if (nextMonster != nullptr) {
+
+			// Should we also be checking isPossibleToHit() and isImmune()?
+			if (nextMonster != nullptr && nextMonster->canBeDamagedByPlayer(*player)) {
 				Direction sd = GetDirection(missilePosition, nextMonster->position.tile);
+
 				SetMissDir(missile, sd);
 				UpdateMissileVelocity(missile, nextMonster->position.tile, 16);
 			} else {
 				Direction sd = Players[missile._misource]._pdir;
+
 				SetMissDir(missile, sd);
 				UpdateMissileVelocity(missile, missilePosition + sd, 16);
 			}
@@ -4074,13 +4086,17 @@ void ProcessBoneSpirit(Missile &missile)
 		if (missile.var3 == 1) {
 			missile.var3 = 2;
 			missile._mirange = 255;
+			auto *player = missile.sourcePlayer();
 			auto *monster = FindClosest(c, 19);
-			if (monster != nullptr) {
+
+			// Should we also be checking isPossibleToHit() and isImmune()?
+			if (monster != nullptr && monster->canBeDamagedByPlayer(*player)) {
 				missile._midam = monster->hitPoints >> 7;
 				SetMissDir(missile, GetDirection(c, monster->position.tile));
 				UpdateMissileVelocity(missile, monster->position.tile, 16);
 			} else {
 				Direction sd = Players[missile._misource]._pdir;
+
 				SetMissDir(missile, sd);
 				UpdateMissileVelocity(missile, c + sd, 16);
 			}
