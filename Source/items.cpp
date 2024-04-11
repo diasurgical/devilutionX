@@ -1443,8 +1443,9 @@ _item_indexes RndTypeItems(ItemType itemType, int imid, int lvl)
 _unique_items CheckUnique(Item &item, int lvl, int uper, int uidOffset = 0)
 {
 	std::bitset<128> uok = {};
+	int rnd = GenerateRnd(100);
 
-	if (GenerateRnd(100) > uper)
+	if (rnd > uper)
 		return UITEM_INVALID;
 
 	std::vector<uint8_t> validUniques;
@@ -3296,7 +3297,6 @@ void TryRandomUniqueItem(Item &item, _item_indexes idx, int8_t mLevel, int uper,
 {
 	// If the item is a non-quest unique, find a random valid uid and force generate items to get an item with that uid.
 	if ((item._iCreateInfo & CF_UNIQUE) != 0 && item._iMiscId != IMISC_UNIQUE) {
-		SDL_Log("made it into TryRandomUniqueItem()");
 		int8_t itemLvl = mLevel;
 
 		// mLevel remains unadjusted when arriving in this function, and there is no call to set iblvl until CheckUnique(), so we adjust here.
@@ -3333,7 +3333,6 @@ void TryRandomUniqueItem(Item &item, _item_indexes idx, int8_t mLevel, int uper,
 
 		// Get random valid uid.
 		const auto uidsIdx = GenerateRnd(static_cast<int32_t>(uids.size())); // Index into uid, used to get a random uid from the uids vector.
-		SDL_Log("random uidsIdx: %d, max uidsIdx: %d", uidsIdx, uids.size() - 1);
 		const auto uid = uids[uidsIdx].first;        // Actual unique id.
 		const auto uidOffset = uids[uidsIdx].second; // Amount to decrease the final uid by in CheckUnique() to get the desired unique.
 		const auto &uniqueItem = UniqueItems[uid];
@@ -3346,23 +3345,20 @@ void TryRandomUniqueItem(Item &item, _item_indexes idx, int8_t mLevel, int uper,
 		}
 
 		int count = 0;
-		SDL_Log("Random uid: %d, existing uid: %d", uid, item._iUid);
 		auto itemPos = item.position;
 		do {
 			item = {}; // Reset item data
 			item.position = itemPos;
 			int seed = AdvanceRndSeed();
-			SDL_Log("SetupAllItems called from TryRandomUniqueItem() = idx: %d, iseed: %d, lvl: %d, uper: %d, onlygood: %d, pregen: %d, uidOffset: %d", idx, seed, targetLvl, uper, onlygood, pregen, uidOffset);
 			SetupAllItems(*MyPlayer, item, idx, seed, targetLvl, uper, onlygood, false, pregen, uidOffset);
 			count++;
 		} while (item._iUid != uid && count < 10000);
 		if (count >= 10000) // If count reaches 10000, we just take whatever the item generator last gave us and give up.
-			SDL_Log("failed item gen");
 		if ((item._iCreateInfo & CF_UNIQUE) != 0) {
 			if (!gbIsMultiplayer) {
 				UniqueItemFlags[uid] = true; // Now it's safe to set a unique as being dropped, to prevent it from being dropped again in the same SP session.
 			}
-			item.dwBuff = uidOffset | CF_UIDOFFSET; // Save the uidOffset to the item, used for item regeneration.
+			item.dwBuff |= (uidOffset << 1) & CF_UIDOFFSET; // Save the uidOffset to the item, used for item regeneration.
 		}
 	}
 }
@@ -3517,7 +3513,6 @@ void RecreateItem(const Player &player, Item &item, _item_indexes idx, uint16_t 
 	bool recreate = (icreateinfo & CF_UNIQUE) != 0;
 	bool pregen = (icreateinfo & CF_PREGEN) != 0;
 
-	SDL_Log("SetupAllItems called from RecreateItem() = idx: %d, iseed: %d, lvl: %d, uper: %d, onlygood: %d, pregen: %d, uidOffset: %d", idx, iseed, level, uper, onlygood, pregen, (item.dwBuff & CF_UIDOFFSET) >> 1);
 	SetupAllItems(player, item, idx, iseed, level, uper, onlygood, recreate, pregen, (item.dwBuff & CF_UIDOFFSET) >> 1);
 	SetupItem(item);
 	gbIsHellfire = tmpIsHellfire;
