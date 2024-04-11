@@ -317,9 +317,9 @@ const PlayerCombatData &GetPlayerCombatDataForClass(HeroClass clazz)
 	return PlayersCombatData[static_cast<size_t>(clazz)];
 }
 
-const PlayerStartingLoadoutData &GetPlayerStartingLoadoutForClass(HeroClass clazz)
+const PlayerStartingLoadoutData &GetPlayerStartingLoadoutForClass(HeroClass pClass)
 {
-	return PlayersStartingLoadoutData[static_cast<size_t>(clazz)];
+	return PlayersStartingLoadoutData[static_cast<size_t>(pClass)];
 }
 
 /** Contains the data related to each player class. */
