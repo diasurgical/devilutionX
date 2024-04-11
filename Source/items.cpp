@@ -3349,8 +3349,7 @@ void TryRandomUniqueItem(Item &item, _item_indexes idx, int8_t mLevel, int uper,
 		do {
 			item = {}; // Reset item data
 			item.position = itemPos;
-			int seed = AdvanceRndSeed();
-			SetupAllItems(*MyPlayer, item, idx, seed, targetLvl, uper, onlygood, false, pregen, uidOffset);
+			SetupAllItems(*MyPlayer, item, idx, AdvanceRndSeed(), targetLvl, uper, onlygood, false, pregen, uidOffset);
 			count++;
 		} while (item._iUid != uid && count < 10000);
 		if (count >= 10000) // If count reaches 10000, we just take whatever the item generator last gave us and give up.
@@ -3418,14 +3417,11 @@ void SpawnItem(Monster &monster, Point position, bool sendmsg, bool spawn /*= fa
 		mLevel -= 15;
 
 	SetupAllItems(*MyPlayer, item, idx, AdvanceRndSeed(), mLevel, uper, onlygood, false, false);
-	SDL_Log("cf unique true?: %d", (item._iCreateInfo & CF_UNIQUE) != 0);
 	TryRandomUniqueItem(item, idx, mLevel, uper, onlygood, false);
 	SetupItem(item);
 
-	if (sendmsg) {
-		SDL_Log("sent msg");
+	if (sendmsg)
 		NetSendCmdPItem(false, CMD_DROPITEM, item.position, item);
-	}
 	if (spawn)
 		NetSendCmdPItem(false, CMD_SPAWNITEM, item.position, item);
 }
