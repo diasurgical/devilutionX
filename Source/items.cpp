@@ -1553,7 +1553,6 @@ void SetupAllItems(const Player &player, Item &item, _item_indexes idx, uint32_t
 			GetUniqueItem(player, item, (_unique_items)iseed); // uid is stored in iseed for uniques
 		}
 	}
-	SetupItem(item);
 }
 
 void SetupBaseItem(Point position, _item_indexes idx, bool onlygood, bool sendmsg, bool delta, bool spawn = false)
@@ -1567,6 +1566,7 @@ void SetupBaseItem(Point position, _item_indexes idx, bool onlygood, bool sendms
 	int curlv = ItemsGetCurrlevel();
 
 	SetupAllItems(*MyPlayer, item, idx, AdvanceRndSeed(), 2 * curlv, 1, onlygood, false, delta);
+	SetupItem(item);
 	TryRandomUniqueItem(item, idx, 2 * curlv, 1, onlygood, delta);
 
 	if (sendmsg)
@@ -2244,6 +2244,7 @@ void CreateMagicItem(Point position, int lvl, ItemType itemType, int imid, int i
 		item = {};
 		SetupAllItems(*MyPlayer, item, idx, AdvanceRndSeed(), 2 * lvl, 1, true, false, delta);
 		TryRandomUniqueItem(item, idx, 2 * lvl, 1, true, delta);
+		SetupItem(item);
 		if (item._iCurs == icurs)
 			break;
 
@@ -3282,6 +3283,7 @@ Item *SpawnUnique(_unique_items uid, Point position, std::optional<int> level /*
 		});
 		SetupAllItems(*MyPlayer, item, idx, AdvanceRndSeed(), curlv * 2, 15, true, false, false);
 		TryRandomUniqueItem(item, idx, curlv * 2, 15, true, false);
+		SetupItem(item);
 	}
 
 	if (sendmsg)
@@ -3420,6 +3422,7 @@ void SpawnItem(Monster &monster, Point position, bool sendmsg, bool spawn /*= fa
 	SetupAllItems(*MyPlayer, item, idx, AdvanceRndSeed(), mLevel, uper, onlygood, false, false);
 	SDL_Log("cf unique true?: %d", (item._iCreateInfo & CF_UNIQUE) != 0);
 	TryRandomUniqueItem(item, idx, mLevel, uper, onlygood, false);
+	SetupItem(item);
 
 	if (sendmsg)
 		NetSendCmdPItem(false, CMD_DROPITEM, item.position, item);
@@ -3510,8 +3513,9 @@ void RecreateItem(const Player &player, Item &item, _item_indexes idx, uint16_t 
 	bool recreate = (icreateinfo & CF_UNIQUE) != 0;
 	bool pregen = (icreateinfo & CF_PREGEN) != 0;
 
-	SDL_Log("SetupAllItems called from RecreateItem() = idx: %d, iseed: %d, lvl: %d, uper: %d, onlygood: %d, pregen: %d, uidOffset: %d", idx, iseed, level, uper, onlygood, pregen, item.dwBuff & CF_UIDOFFSET);
-	SetupAllItems(player, item, idx, iseed, level, uper, onlygood, recreate, pregen, item.dwBuff & CF_UIDOFFSET);
+	SDL_Log("SetupAllItems called from RecreateItem() = idx: %d, iseed: %d, lvl: %d, uper: %d, onlygood: %d, pregen: %d, uidOffset: %d", idx, iseed, level, uper, onlygood, pregen, (item.dwBuff & CF_UIDOFFSET) >> 1);
+	SetupAllItems(player, item, idx, iseed, level, uper, onlygood, recreate, pregen, (item.dwBuff & CF_UIDOFFSET) >> 1);
+	SetupItem(item);
 	gbIsHellfire = tmpIsHellfire;
 }
 
@@ -4637,6 +4641,7 @@ void CreateSpellBook(Point position, SpellID ispell, bool sendmsg, bool delta)
 	while (true) {
 		item = {};
 		SetupAllItems(*MyPlayer, item, idx, AdvanceRndSeed(), 2 * lvl, 1, true, false, delta);
+		SetupItem(item);
 		if (item._iMiscId == IMISC_BOOK && item._iSpell == ispell)
 			break;
 	}
@@ -4750,6 +4755,7 @@ std::string DebugSpawnItem(std::string itemName)
 		testItem = {};
 		SetupAllItems(*MyPlayer, testItem, idx, AdvanceRndSeed(), monsterLevel, 1, false, false, false);
 		TryRandomUniqueItem(testItem, idx, monsterLevel, 1, false, false);
+		SetupItem(testItem);
 
 		std::string tmp = AsciiStrToLower(testItem._iIName);
 		if (tmp.find(itemName) != std::string::npos)
@@ -4824,6 +4830,7 @@ std::string DebugSpawnUniqueItem(std::string itemName)
 		UniqueItemFlags[uniqueIndex] = false;
 		SetupAllItems(*MyPlayer, testItem, uniqueBaseIndex, testItem._iMiscId == IMISC_UNIQUE ? uniqueIndex : AdvanceRndSeed(), uniqueItem.UIMinLvl, 1, false, false, false);
 		TryRandomUniqueItem(testItem, uniqueBaseIndex, uniqueItem.UIMinLvl, 1, false, false);
+		SetupItem(testItem);
 		for (auto &flag : UniqueItemFlags)
 			flag = false;
 
