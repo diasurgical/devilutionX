@@ -65,4 +65,21 @@ std::optional<std::array<uint8_t, 256>> GetClassTRN(Player &player)
 	return std::nullopt;
 }
 
+std::optional<std::array<uint8_t, 256>> GetItemTRN(Item &item)
+{
+	std::array<uint8_t, 256> trn;
+	const char *path;
+
+	switch (item._iCurs) {
+	case ICURS_BREAST_PLATE:
+		path = "data\\inv\\breast_plate.trn";
+		break;
+	}
+
+	if (LoadOptionalFileInMem(path, &trn[0], 256)) {
+		return trn;
+	}
+	return std::nullopt;
+}
+
 } // namespace devilution
