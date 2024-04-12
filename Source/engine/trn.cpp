@@ -65,7 +65,7 @@ std::optional<std::array<uint8_t, 256>> GetClassTRN(Player &player)
 	return std::nullopt;
 }
 
-std::optional<std::array<uint8_t, 256>> GetItemTRN(Item &item)
+std::optional<std::array<uint8_t, 256>> GetItemTRN(const Item &item)
 {
 	std::array<uint8_t, 256> trn;
 	const char *path;
@@ -74,6 +74,8 @@ std::optional<std::array<uint8_t, 256>> GetItemTRN(Item &item)
 	case ICURS_BREAST_PLATE:
 		path = "data\\inv\\breast_plate.trn";
 		break;
+	default:
+		return std::nullopt;
 	}
 
 	if (LoadOptionalFileInMem(path, &trn[0], 256)) {
