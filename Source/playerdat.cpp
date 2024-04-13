@@ -312,9 +312,9 @@ const SfxID herosounds[enum_size<HeroClass>::value][enum_size<HeroSpeech>::value
 	// clang-format on
 };
 
-const PlayerCombatData &GetPlayerCombatDataForClass(HeroClass clazz)
+const PlayerCombatData &GetPlayerCombatDataForClass(HeroClass pClass)
 {
-	return PlayersCombatData[static_cast<size_t>(clazz)];
+	return PlayersCombatData[static_cast<size_t>(pClass)];
 }
 
 const PlayerStartingLoadoutData &GetPlayerStartingLoadoutForClass(HeroClass pClass)
