@@ -537,6 +537,7 @@ void LoadItemDat()
 		reader.read("class", item.iClass, ParseItemClass);
 		reader.read("equipType", item.iLoc, ParseItemEquipType);
 		reader.read("cursorGraphic", item.iCurs, ParseItemCursorGraphic);
+		reader.readString("trn", item.iTrnName);
 		reader.read("itemType", item.itype, ParseItemType);
 		reader.read("uniqueBaseItem", item.iItemId, ParseUniqueBaseItem);
 		reader.readString("name", item.iName);
@@ -579,6 +580,7 @@ void LoadUniqueItemDat()
 		UniqueItem &item = UniqueItems.emplace_back();
 		reader.readString("name", item.UIName);
 		reader.read("cursorGraphic", item.UICurs, ParseItemCursorGraphic);
+		reader.readString("trn", item.UITrnName);
 		reader.read("uniqueBaseItem", item.UIItemId, ParseUniqueBaseItem);
 		reader.readInt("minLevel", item.UIMinLvl);
 		reader.readInt("value", item.UIValue);

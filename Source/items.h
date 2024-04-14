@@ -176,6 +176,7 @@ constexpr int ItemAnimWidth = 96;
 struct Player;
 
 struct Item {
+	std::shared_ptr<uint8_t[]> itemTRN;
 	/** Randomly generated identifier */
 	uint32_t _iSeed = 0;
 	uint16_t _iCreateInfo = 0;

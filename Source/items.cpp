@@ -24,6 +24,7 @@
 #include "engine/clx_sprite.hpp"
 #include "engine/dx.h"
 #include "engine/load_cel.hpp"
+#include "engine/load_file.hpp"
 #include "engine/random.hpp"
 #include "engine/render/clx_render.hpp"
 #include "engine/render/text_render.hpp"
@@ -1516,6 +1517,29 @@ int GetItemBLevel(int lvl, item_misc_id miscId, bool onlygood, bool uper15)
 	return iblvl;
 }
 
+void InitItemTRN(Item &item)
+{
+	char filestr[64];
+	std::string trnName;
+	const char *path;
+
+	if ((item._iCreateInfo & CF_UNIQUE) != 0) {
+		trnName = UniqueItems[item._iUid].UITrnName;
+		path = R"(data\inv\trn\unique\)";
+	} else {
+		trnName = AllItemsList[item.IDidx].iTrnName;
+		path = R"(data\inv\trn\)";
+	}
+
+	if (!trnName.empty()) {
+		*BufCopy(filestr, path, trnName, ".trn") = '\0';
+		SDL_Log("%s", filestr);
+		item.itemTRN = LoadFileInMem<uint8_t>(filestr);
+		if (item.itemTRN)
+			SDL_Log("InitItemTRN: got trn for %s", item._iIName);
+	}
+}
+
 void SetupAllItems(const Player &player, Item &item, _item_indexes idx, uint32_t iseed, int lvl, int uper, bool onlygood, bool recreate, bool pregen)
 {
 	item._iSeed = iseed;
@@ -1556,6 +1580,13 @@ void SetupAllItems(const Player &player, Item &item, _item_indexes idx, uint32_t
 		}
 	}
 	SetupItem(item);
+
+	const auto &itemTrn = AllItemsList[item.IDidx].iTrnName;
+
+	if (!itemTrn.empty()) {
+		SDL_Log("SetupAllItems(): %s is the itemTrn, so we call InitItemTRN", itemTrn.c_str());
+		InitItemTRN(item);
+	}
 }
 
 void SetupBaseItem(Point position, _item_indexes idx, bool onlygood, bool sendmsg, bool delta, bool spawn = false)

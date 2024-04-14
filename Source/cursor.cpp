@@ -529,7 +529,11 @@ void DrawItem(const Item &item, const Surface &out, Point position, ClxSprite cl
 {
 	const bool usable = !IsInspectingPlayer() ? item._iStatFlag : InspectPlayer->CanUseItem(item);
 	if (usable) {
-		ClxDraw(out, position, clx);
+		if (item.itemTRN) {
+			ClxDrawTRN(out, position, clx, item.itemTRN.get());
+		} else {
+			ClxDraw(out, position, clx);
+		}
 	} else {
 		ClxDrawTRN(out, position, clx, GetInfravisionTRN());
 	}

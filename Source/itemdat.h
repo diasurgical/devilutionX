@@ -491,6 +491,7 @@ struct ItemData {
 	enum item_class iClass;
 	enum item_equip_type iLoc;
 	enum item_cursor_graphic iCurs;
+	std::string iTrnName;
 	enum ItemType itype;
 	enum unique_base_item iItemId;
 	std::string iName;
@@ -636,6 +637,7 @@ struct PLStruct {
 struct UniqueItem {
 	std::string UIName;
 	enum item_cursor_graphic UICurs;
+	std::string UITrnName;
 	enum unique_base_item UIItemId;
 	int8_t UIMinLvl;
 	uint8_t UINumPL;

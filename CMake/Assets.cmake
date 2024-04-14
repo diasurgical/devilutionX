@@ -44,6 +44,8 @@ set(devilutionx_assets
   arena/church.dun
   arena/circle_of_death.dun
   arena/hell.dun
+  data/inv/trn/breast_plate.trn
+  data/inv/trn/unique/najs_light_plate.trn
   data/boxleftend.clx
   data/boxmiddle.clx
   data/boxrightend.clx
