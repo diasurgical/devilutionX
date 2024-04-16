@@ -12,7 +12,6 @@
 #include "cursor.h"
 #include "engine/clx_sprite.hpp"
 #include "engine/load_clx.hpp"
-#include "engine/points_in_rectangle_range.hpp"
 #include "engine/rectangle.hpp"
 #include "engine/render/clx_render.hpp"
 #include "engine/render/text_render.hpp"
@@ -20,7 +19,9 @@
 #include "hwcursor.hpp"
 #include "inv.h"
 #include "minitext.h"
+#include "qol/floatinginfobox.hpp"
 #include "stores.h"
+#include "string"
 #include "utils/format_int.hpp"
 #include "utils/language.h"
 #include "utils/str_cat.hpp"
@@ -52,9 +53,6 @@ constexpr Rectangle StashButtonRect[] = {
 	{ { 279, 19 }, ButtonSize }  // 10 right
 	// clang-format on
 };
-
-constexpr Size StashGridSize { 10, 10 };
-constexpr PointsInRectangle<int> StashGridRange { { { 0, 0 }, StashGridSize } };
 
 OptionalOwnedClxSpriteList StashPanelArt;
 OptionalOwnedClxSpriteList StashNavButtonArt;
@@ -447,10 +445,17 @@ uint16_t CheckStashHLight(Point mousePosition)
 
 	InfoColor = item.getTextColor();
 	InfoString = item.getName();
+
 	if (item._iIdentified) {
-		PrintItemDetails(item);
+		//InfoString = string_view(item._iIName);
+		if (!*sgOptions.Gameplay.enableFloatingInfoBox) {
+			PrintItemDetails(item);
+		}
 	} else {
-		PrintItemDur(item);
+		//InfoString = string_view(item._iName);
+		if (!*sgOptions.Gameplay.enableFloatingInfoBox) {
+			PrintItemDur(item);
+		}
 	}
 
 	return itemId;

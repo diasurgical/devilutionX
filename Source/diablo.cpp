@@ -72,6 +72,7 @@
 #include "playerdat.hpp"
 #include "plrmsg.h"
 #include "qol/chatlog.h"
+#include "qol/floatinginfobox.hpp"
 #include "qol/floatingnumbers.h"
 #include "qol/itemlabels.h"
 #include "qol/monhealthbar.h"

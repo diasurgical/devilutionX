@@ -10,6 +10,7 @@
 #include <vector>
 
 #include "engine/point.hpp"
+#include "engine/points_in_rectangle_range.hpp"
 #include "items.h"
 
 namespace devilution {
@@ -64,6 +65,10 @@ private:
 	unsigned page;
 };
 
+namespace {
+constexpr Size StashGridSize { 10, 10 };
+constexpr PointsInRectangle<int> StashGridRange { { { 0, 0 }, StashGridSize } };
+}
 constexpr Point InvalidStashPoint { -1, -1 };
 
 extern bool IsStashOpen;

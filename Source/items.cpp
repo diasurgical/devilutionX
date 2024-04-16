@@ -39,6 +39,7 @@
 #include "player.h"
 #include "playerdat.hpp"
 #include "qol/stash.h"
+#include "spelldat.h"
 #include "spells.h"
 #include "stores.h"
 #include "utils/format_int.hpp"
