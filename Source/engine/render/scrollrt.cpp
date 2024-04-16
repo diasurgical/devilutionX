@@ -646,7 +646,7 @@ void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBuffe
 		return;
 	}
 
-	if (!IsTileLit(tilePosition) && (!MyPlayer->_pInfraFlag || TileHasAny(dPiece[tilePosition.x][tilePosition.y], TileProperties::Solid)))
+	if (!IsTileLit(tilePosition) && (!MyPlayer->_pInfraFlag || TileHasAny(tilePosition, TileProperties::Solid)))
 		return;
 
 	if (static_cast<size_t>(mi) >= MaxMonsters) {
