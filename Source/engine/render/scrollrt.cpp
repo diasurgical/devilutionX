@@ -646,12 +646,7 @@ void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBuffe
 		return;
 	}
 
-	// Draw no monsters for tiles outside vision while player has no Infravision.
-	if (!IsTileLit(tilePosition) && !MyPlayer->_pInfraFlag)
-		return;
-
-	// Draw no monsters for tiles outside vision that are solid while player has Infravision.
-	if (!IsTileLit(tilePosition) && MyPlayer->_pInfraFlag && TileHasAny(dPiece[tilePosition.x][tilePosition.y], TileProperties::Solid))
+	if (!IsTileLit(tilePosition) && (!MyPlayer->_pInfraFlag || TileHasAny(dPiece[tilePosition.x][tilePosition.y], TileProperties::Solid)))
 		return;
 
 	if (static_cast<size_t>(mi) >= MaxMonsters) {
