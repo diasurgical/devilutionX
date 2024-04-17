@@ -391,7 +391,9 @@ void MakeLightTable()
 					// Leaner falloff
 					scaled = factor * maxDarkness;
 				}
-				LightFalloffs[radius][distance] = static_cast<uint8_t>(scaled + 0.5F); // round up
+				int roundedValue = lround(scaled);
+				roundedValue = std::clamp(roundedValue, 0, 255);
+				LightFalloffs[radius][distance] = static_cast<uint8_t>(roundedValue);
 			}
 		}
 	}
