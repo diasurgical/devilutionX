@@ -1296,9 +1296,7 @@ void AddShrine(Object &shrine)
 
 	for (int j = 0; j < shrines; j++) {
 		slist[j] = j != ShrineEnchanted || IsAnyOf(leveltype, DTYPE_CATHEDRAL, DTYPE_CATACOMBS);
-		if (gbIsMultiplayer && shrineavail[j] == ShrineTypeSingle) {
-			slist[j] = false;
-		} else if (!gbIsMultiplayer && shrineavail[j] == ShrineTypeMulti) {
+		if (gbIsMultiplayer && shrineavail[j] == ShrineTypeSingle || (!gbIsMultiplayer && shrineavail[j] == ShrineTypeMulti)) {
 			slist[j] = false;
 		}
 	}
