@@ -322,8 +322,8 @@ void MakeLightTable()
 {
 	// Generate 16 gradually darker translation tables for doing lighting
 	uint8_t shade = 0;
-	constexpr uint8_t black = 0;
-	constexpr uint8_t white = 255;
+	constexpr uint8_t BLACK = 0;
+	constexpr uint8_t WHITE = 255;
 	for (auto &lightTable : LightTables) {
 		uint8_t colorIndex = 0;
 		for (uint8_t steps : { 16, 16, 16, 16, 16, 16, 16, 16, 8, 8, 8, 8, 16, 16, 16, 16, 16, 16 }) {
@@ -331,13 +331,13 @@ void MakeLightTable()
 			const uint8_t shadeStart = colorIndex;
 			const uint8_t shadeEnd = shadeStart + steps - 1;
 			for (uint8_t step = 0; step < steps; step++) {
-				if (colorIndex == black) {
-					lightTable[colorIndex++] = black;
+				if (colorIndex == BLACK) {
+					lightTable[colorIndex++] = BLACK;
 					continue;
 				}
 				int color = shadeStart + step + shading;
-				if (color > shadeEnd || color == white)
-					color = black;
+				if (color > shadeEnd || color == WHITE)
+					color = BLACK;
 				lightTable[colorIndex++] = color;
 			}
 		}
@@ -351,12 +351,12 @@ void MakeLightTable()
 		const auto shades = static_cast<int>(LightTables.size() - 1);
 		for (int i = 0; i < shades; i++) {
 			auto &lightTable = LightTables[i];
-			constexpr int range = 16;
-			for (int j = 0; j < range; j++) {
-				uint8_t color = ((range - 1) << 4) / shades * (shades - i) / range * (j + 1);
+			constexpr int RANGE = 16;
+			for (int j = 0; j < RANGE; j++) {
+				uint8_t color = ((RANGE - 1) << 4) / shades * (shades - i) / RANGE * (j + 1);
 				color = 1 + (color >> 4);
-				lightTable[j + 1] = color;
-				lightTable[31 - j] = color;
+				lightTable[static_cast<uint8_t>(j + 1)] = color;
+				lightTable[static_cast<uint8_t>(31 - j)] = color;
 			}
 		}
 	} else if (IsAnyOf(leveltype, DTYPE_NEST, DTYPE_CRYPT)) {
@@ -391,9 +391,8 @@ void MakeLightTable()
 					// Leaner falloff
 					scaled = factor * maxDarkness;
 				}
-				int roundedValue = lround(scaled);
-				roundedValue = std::clamp(roundedValue, 0, 255);
-				LightFalloffs[radius][distance] = static_cast<uint8_t>(roundedValue);
+				scaled += 0.5F; // Round up
+				LightFalloffs[radius][distance] = static_cast<uint8_t>(scaled);
 			}
 		}
 	}
