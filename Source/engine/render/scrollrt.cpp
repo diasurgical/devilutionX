@@ -166,7 +166,7 @@ void UpdateMissilesRendererData()
 	}
 }
 
-int lastFpsUpdateInMs;
+uint32_t lastFpsUpdateInMs;
 
 Rectangle PrevCursorRect;
 
@@ -1282,7 +1282,7 @@ void DrawFPS(const Surface &out)
 	if (msSinceLastUpdate >= 1000) {
 		lastFpsUpdateInMs = runtimeInMs;
 		constexpr int FpsPow10 = 10;
-		const int fps = 1000 * FpsPow10 * framesSinceLastUpdate / msSinceLastUpdate;
+		const uint32_t fps = 1000 * FpsPow10 * framesSinceLastUpdate / msSinceLastUpdate;
 		framesSinceLastUpdate = 0;
 
 		static char buf[15] {};
