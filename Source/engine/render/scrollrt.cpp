@@ -1165,23 +1165,23 @@ void DrawView(const Surface &out, Point startPosition)
 				    { .flags = UiFlags::ColorRed | UiFlags::AlignCenter | UiFlags::VerticalCenter });
 			}
 			if (DebugGrid) {
-				auto DrawDebugSquare = [&out](Point center, Displacement hor, Displacement ver, uint8_t col) {
-					auto DrawLine = [&out](Point from, Point to, uint8_t col) {
+				auto drawDebugSquare = [&out](Point center, Displacement hor, Displacement ver, uint8_t col) {
+					auto drawLine = [&out](Point from, Point to, uint8_t col) {
 						int dx = to.x - from.x;
 						int dy = to.y - from.y;
 						int steps = std::abs(dx) > std::abs(dy) ? std::abs(dx) : std::abs(dy);
-						float ix = dx / (float)steps;
-						float iy = dy / (float)steps;
-						float sx = static_cast<float>(from.x);
-						float sy = static_cast<float>(from.y);
+						auto ix = static_cast<float>(dx) / static_cast<float>(steps);
+						auto iy = static_cast<float>(dy) / static_cast<float>(steps);
+						auto sx = static_cast<float>(from.x);
+						auto sy = static_cast<float>(from.y);
 
 						for (int i = 0; i <= steps; i++, sx += ix, sy += iy)
-							out.SetPixel({ (int)sx, (int)sy }, col);
+							out.SetPixel({ static_cast<int>(sx), static_cast<int>(sy) }, col);
 					};
-					DrawLine(center - hor, center + ver, col);
-					DrawLine(center + hor, center + ver, col);
-					DrawLine(center - hor, center - ver, col);
-					DrawLine(center + hor, center - ver, col);
+					drawLine(center - hor, center + ver, col);
+					drawLine(center + hor, center + ver, col);
+					drawLine(center - hor, center - ver, col);
+					drawLine(center + hor, center - ver, col);
 				};
 
 				Displacement hor = { TILE_WIDTH / 2, 0 };
@@ -1199,7 +1199,7 @@ void DrawView(const Surface &out, Point startPosition)
 
 				uint8_t col = PAL16_BEIGE;
 
-				DrawDebugSquare(center, hor, ver, col);
+				drawDebugSquare(center, hor, ver, col);
 			}
 		}
 	}
