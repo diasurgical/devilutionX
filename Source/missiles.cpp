@@ -197,7 +197,7 @@ int ProjectileMonsterDamage(Missile &missile)
 	return monster.minDamage + GenerateRnd(monster.maxDamage - monster.minDamage + 1);
 }
 
-int ProjectileTrapDamage(Missile &missile)
+int ProjectileTrapDamage()
 {
 	return currlevel + GenerateRnd(2 * currlevel);
 }
@@ -1809,7 +1809,7 @@ void AddFirebolt(Missile &missile, AddMissileParameter &parameter)
 			missile._midam = ProjectileMonsterDamage(missile);
 			break;
 		case MissileSource::Trap:
-			missile._midam = ProjectileTrapDamage(missile);
+			missile._midam = ProjectileTrapDamage();
 			break;
 		}
 	}
@@ -1837,7 +1837,7 @@ void AddMagmaBall(Missile &missile, AddMissileParameter &parameter)
 			missile._midam = ProjectileMonsterDamage(missile);
 			break;
 		case MissileSource::Trap:
-			missile._midam = ProjectileTrapDamage(missile);
+			missile._midam = ProjectileTrapDamage();
 			break;
 		}
 	}
@@ -2233,7 +2233,7 @@ void AddGenericMagicMissile(Missile &missile, AddMissileParameter &parameter)
 			missile._midam = ProjectileMonsterDamage(missile);
 			break;
 		case MissileSource::Trap:
-			missile._midam = ProjectileTrapDamage(missile);
+			missile._midam = ProjectileTrapDamage();
 			break;
 		}
 	}
@@ -2259,7 +2259,7 @@ void AddAcid(Missile &missile, AddMissileParameter &parameter)
 			missile._midam = ProjectileMonsterDamage(missile);
 			break;
 		case MissileSource::Trap:
-			missile._midam = ProjectileTrapDamage(missile);
+			missile._midam = ProjectileTrapDamage();
 			break;
 		}
 	}
