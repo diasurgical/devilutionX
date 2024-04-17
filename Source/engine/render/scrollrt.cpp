@@ -631,9 +631,6 @@ void DrawItem(const Surface &out, int8_t itemIndex, Point targetBufferPosition)
  */
 void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBufferPosition)
 {
-	if (TileHasAny(dPiece[tilePosition.x][tilePosition.y], TileProperties::Solid))
-		return;
-
 	int mi = dMonster[tilePosition.x][tilePosition.y];
 
 	mi = std::abs(mi) - 1;
@@ -649,7 +646,7 @@ void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBuffe
 		return;
 	}
 
-	if (!IsTileLit(tilePosition) && !MyPlayer->_pInfraFlag)
+	if (!IsTileLit(tilePosition) && (!MyPlayer->_pInfraFlag || TileHasAny(dPiece[tilePosition.x][tilePosition.y], TileProperties::Solid)))
 		return;
 
 	if (static_cast<size_t>(mi) >= MaxMonsters) {
