@@ -241,7 +241,7 @@ bool RndLocOk(Point p)
 		return false;
 	if (TileContainsSetPiece(p))
 		return false;
-	if (TileHasAny(dPiece[p.x][p.y], TileProperties::Solid))
+	if (TileHasAny(p, TileProperties::Solid))
 		return false;
 	return IsNoneOf(leveltype, DTYPE_CATHEDRAL, DTYPE_CRYPT) || dPiece[p.x][p.y] <= 125 || dPiece[p.x][p.y] >= 143;
 }
@@ -258,7 +258,7 @@ bool CanPlaceWallTrap(int xp, int yp)
 	if (TileContainsSetPiece({ xp, yp }))
 		return false;
 
-	return TileHasAny(dPiece[xp][yp], TileProperties::Trap);
+	return TileHasAny({ xp, yp }, TileProperties::Trap);
 }
 
 void InitRndLocObj(int min, int max, _object_id objtype)

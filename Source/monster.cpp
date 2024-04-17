@@ -4150,7 +4150,7 @@ bool DirOK(const Monster &monster, Direction mdir)
 
 bool PosOkMissile(Point position)
 {
-	return !TileHasAny(dPiece[position.x][position.y], TileProperties::BlockMissile);
+	return !TileHasAny(position, TileProperties::BlockMissile);
 }
 
 bool LineClearMissile(Point startPoint, Point endPoint)
