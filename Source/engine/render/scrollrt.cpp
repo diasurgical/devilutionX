@@ -1326,7 +1326,7 @@ void DoBlitScreen(int x, int y, int w, int h)
  * @param drawSbar Render belt
  * @param drawBtn Render panel buttons
  */
-void DrawMain(const Surface &out, int dwHgt, bool drawDesc, bool drawHp, bool drawMana, bool drawSbar, bool drawBtn)
+void DrawMain(int dwHgt, bool drawDesc, bool drawHp, bool drawMana, bool drawSbar, bool drawBtn)
 {
 	if (!gbActive || RenderDirectlyToOutputSurface) {
 		return;
@@ -1631,7 +1631,7 @@ void scrollrt_draw_game_screen()
 
 	const Surface &out = GlobalBackBuffer();
 	UndrawCursor(out);
-	DrawMain(out, hgt, false, false, false, false, false);
+	DrawMain(hgt, false, false, false, false, false);
 	DrawCursor(out);
 
 	RenderPresent();
@@ -1706,7 +1706,7 @@ void DrawAndBlit()
 
 	LuaEvent("GameDrawComplete");
 
-	DrawMain(out, hgt, drawInfoBox, drawHealth, drawMana, drawBelt, drawControlButtons);
+	DrawMain(hgt, drawInfoBox, drawHealth, drawMana, drawBelt, drawControlButtons);
 
 #ifdef _DEBUG
 	DrawConsole(out);
