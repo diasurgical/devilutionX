@@ -194,7 +194,7 @@ void MoveMissilePos(Missile &missile)
 int ProjectileMonsterDamage(Missile &missile)
 {
 	const Monster &monster = *missile.sourceMonster();
-	return monster.minDamage + GenerateRnd(monster.maxDamage - monster.minDamage + 1);
+	return RandomIntBetween(monster.minDamage, monster.maxDamage);
 }
 
 int ProjectileTrapDamage()
@@ -239,7 +239,7 @@ bool MonsterMHit(const Player &player, int monsterId, int mindam, int maxdam, in
 	if (t == MissileID::BoneSpirit) {
 		dam = monster.hitPoints / 3 >> 6;
 	} else {
-		dam = mindam + GenerateRnd(maxdam - mindam + 1);
+		dam = RandomIntBetween(mindam, maxdam);
 	}
 
 	if (missileData.isArrow() && damageType == DamageType::Physical) {
@@ -352,7 +352,7 @@ bool Plr2PlrMHit(const Player &player, Player &target, int mindam, int maxdam, i
 	if (mtype == MissileID::BoneSpirit) {
 		dam = target._pHitPoints / 3;
 	} else {
-		dam = mindam + GenerateRnd(maxdam - mindam + 1);
+		dam = RandomIntBetween(mindam, maxdam);
 		if (missileData.isArrow() && damageType == DamageType::Physical)
 			dam += player._pIBonusDamMod + player._pDamageMod + dam * player._pIBonusDam / 100;
 		if (!shift)
@@ -955,7 +955,7 @@ bool MonsterTrapHit(int monsterId, int mindam, int maxdam, int dist, MissileID t
 	}
 
 	bool resist = monster.isResistant(t, damageType);
-	int dam = mindam + GenerateRnd(maxdam - mindam + 1);
+	int dam = RandomIntBetween(mindam, maxdam);
 	if (!shift)
 		dam <<= 6;
 	if (resist)
@@ -1063,13 +1063,14 @@ bool PlayerMHit(Player &player, Monster *monster, int dist, int mind, int maxd, 
 		dam = player._pHitPoints / 3;
 	} else {
 		if (!shift) {
-			dam = (mind << 6) + GenerateRnd(((maxd - mind) << 6) + 1);
+			// New method fixes a bug which caused the maximum possible damage value to be 63/64ths too low.
+			dam = RandomIntBetween(mind << 6, maxd << 6);
 			if (monster == nullptr)
 				if (HasAnyOf(player._pIFlags, ItemSpecialEffect::HalfTrapDamage))
 					dam /= 2;
 			dam += player._pIGetHit * 64;
 		} else {
-			dam = mind + GenerateRnd(maxd - mind + 1);
+			dam = RandomIntBetween(mind, maxd);
 			if (monster == nullptr)
 				if (HasAnyOf(player._pIFlags, ItemSpecialEffect::HalfTrapDamage))
 					dam /= 2;
@@ -2589,7 +2590,7 @@ void AddInferno(Missile &missile, AddMissileParameter &parameter)
 		missile._midam = 8 * i + 16 + ((8 * i + 16) / 2);
 	} else {
 		auto &monster = Monsters[missile._misource];
-		missile._midam = monster.minDamage + GenerateRnd(monster.maxDamage - monster.minDamage + 1);
+		missile._midam = RandomIntBetween(monster.minDamage, monster.maxDamage);
 	}
 }
 
@@ -3304,7 +3305,7 @@ void ProcessLightningControl(Missile &missile)
 		dam = (GenerateRnd(2) + GenerateRnd(Players[missile._misource].getCharacterLevel()) + 2) << 6;
 	} else {
 		auto &monster = Monsters[missile._misource];
-		dam = 2 * (monster.minDamage + GenerateRnd(monster.maxDamage - monster.minDamage + 1));
+		dam = 2 * RandomIntBetween(monster.minDamage, monster.maxDamage);
 	}
 
 	SpawnLightning(missile, dam);
