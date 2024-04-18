@@ -268,7 +268,7 @@ bool MonsterMHit(const Player &player, int monsterId, int mindam, int maxdam, in
 		PlayEffect(monster, MonsterSound::Hit);
 	} else {
 		if (monster.mode != MonsterMode::Petrified && missileData.isArrow() && HasAnyOf(player._pIFlags, ItemSpecialEffect::Knockback))
-			M_GetKnockback(monster);
+			M_GetKnockback(monster, player.position.tile);
 		if (monster.type().type != MT_GOLEM)
 			M_StartHit(monster, player, dam);
 	}
