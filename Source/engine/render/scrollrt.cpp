@@ -816,17 +816,17 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 	}
 
 	if (leveltype != DTYPE_TOWN) {
-		char bArch = dSpecial[tilePosition.x][tilePosition.y];
-		if (bArch != 0) {
+		int8_t bArch = dSpecial[tilePosition.x][tilePosition.y] - 1;
+		if (bArch >= 0) {
 			bool transparency = TransList[bMap];
 #ifdef _DEBUG
 			// Turn transparency off here for debugging
 			transparency = transparency && (SDL_GetModState() & KMOD_ALT) == 0;
 #endif
 			if (transparency) {
-				ClxDrawLightBlended(out, targetBufferPosition, (*pSpecialCels)[bArch - 1]);
+				ClxDrawLightBlended(out, targetBufferPosition, (*pSpecialCels)[bArch]);
 			} else {
-				ClxDrawLight(out, targetBufferPosition, (*pSpecialCels)[bArch - 1]);
+				ClxDrawLight(out, targetBufferPosition, (*pSpecialCels)[bArch]);
 			}
 		}
 	} else {
@@ -834,10 +834,9 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 		// So delay the rendering until after the next row is being drawn.
 		// This could probably have been better solved by sprites in screen space.
 		if (tilePosition.x > 0 && tilePosition.y > 0 && targetBufferPosition.y > TILE_HEIGHT) {
-			char bArch = dSpecial[tilePosition.x - 1][tilePosition.y - 1];
-			if (bArch != 0) {
-				ClxDraw(out, targetBufferPosition + Displacement { 0, -TILE_HEIGHT }, (*pSpecialCels)[--bArch]);
-			}
+			int8_t bArch = dSpecial[tilePosition.x - 1][tilePosition.y - 1] - 1;
+			if (bArch >= 0)
+				ClxDraw(out, targetBufferPosition + Displacement { 0, -TILE_HEIGHT }, (*pSpecialCels)[bArch]);
 		}
 	}
 }
