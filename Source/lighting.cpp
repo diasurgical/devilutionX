@@ -355,8 +355,10 @@ void MakeLightTable()
 			for (int j = 0; j < RANGE; j++) {
 				uint8_t color = ((RANGE - 1) << 4) / shades * (shades - i) / RANGE * (j + 1);
 				color = 1 + (color >> 4);
-				lightTable[static_cast<uint8_t>(j + 1)] = color;
-				lightTable[static_cast<uint8_t>(31 - j)] = color;
+				auto idx = j + 1;
+				lightTable[idx] = color;
+				idx = 31 - j;
+				lightTable[idx] = color;
 			}
 		}
 	} else if (IsAnyOf(leveltype, DTYPE_NEST, DTYPE_CRYPT)) {
