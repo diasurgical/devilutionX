@@ -2889,7 +2889,7 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	int minLightDam = 0;
 	int maxLightDam = 0;
 
-	for (auto &item : player.InvBody) {
+	for (const Item &item : player.InvBody) {
 		if (!item.isEmpty() && item._iStatFlag) {
 
 			minDamage += item._iMinDam;
