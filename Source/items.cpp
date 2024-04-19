@@ -2616,7 +2616,8 @@ void CalcPlrPrimaryStats(auto &player, int strength, int &magic, int dexterity, 
 	player._pVitality = std::max(0, vitality + player._pBaseVit);
 }
 
-void CalcPlrLightRadius(auto &player, int lrad)
+void CalcPlrLightRadius(Player &player, int lrad)
+
 {
 	lrad = std::clamp(lrad, 2, 15);
 
