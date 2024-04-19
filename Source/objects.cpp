@@ -1291,7 +1291,7 @@ void AddShrine(Object &shrine)
 	shrine._oPreFlag = true;
 
 	int shrineCount = gbIsHellfire ? NumberOfShrineTypes : 26;
-	bool slist[NumberOfShrineTypes] = { false };
+	bool slist[NumberOfShrineTypes] = { };
 
 	for (int i = 0; i < shrineCount; i++) {
 		bool isShrineAvailable = true;
