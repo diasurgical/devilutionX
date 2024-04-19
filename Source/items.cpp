@@ -2812,7 +2812,7 @@ PlayerArmorGraphic GetPlrAnimArmorId(auto &player)
 	return PlayerArmorGraphic::Light;
 }
 
-void CalcPlrGraphics(auto &player, PlayerWeaponGraphic animWeaponId, PlayerArmorGraphic animArmorId, bool loadgfx)
+void CalcPlrGraphics(Player &player, PlayerWeaponGraphic animWeaponId, PlayerArmorGraphic animArmorId, bool loadgfx)
 {
 	const uint8_t gfxNum = static_cast<uint8_t>(animWeaponId) | static_cast<uint8_t>(animArmorId);
 	if (player._pgfxnum != gfxNum && loadgfx) {
