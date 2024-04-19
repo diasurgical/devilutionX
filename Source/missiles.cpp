@@ -3033,18 +3033,18 @@ void ProcessFireball(Missile &missile)
 			}
 
 			if (!TransList[dTransVal[missilePosition.x][missilePosition.y]]
-			    || (missile.position.velocity.deltaX < 0 && ((TransList[dTransVal[missilePosition.x][missilePosition.y + 1]] && TileHasAny(missilePosition + DisplacementOf { 0, 1 }, TileProperties::Solid)) || (TransList[dTransVal[missilePosition.x][missilePosition.y - 1]] && TileHasAny(missilePosition + DisplacementOf { 0 - 1 }, TileProperties::Solid))))) {
-				missile.position.tile += Displacement { 1, 1 };
+			    || (missile.position.velocity.deltaX < 0 && ((TransList[dTransVal[missilePosition.x][missilePosition.y + 1]] && TileHasAny(missilePosition + Direction::SouthEast, TileProperties::Solid)) || (TransList[dTransVal[missilePosition.x][missilePosition.y - 1]] && TileHasAny(missilePosition + Direction::NorthWest, TileProperties::Solid))))) {
+				missile.position.tile += Direction::South;
 				missile.position.offset.deltaY -= 32;
 			}
 			if (missile.position.velocity.deltaY > 0
-			    && ((TransList[dTransVal[missilePosition.x + 1][missilePosition.y]] && TileHasAny(missilePosition + DisplacementOf { 1, 0 }, TileProperties::Solid))
-			        || (TransList[dTransVal[missilePosition.x - 1][missilePosition.y]] && TileHasAny(missilePosition + DisplacementOf { -1, 0 }, TileProperties::Solid)))) {
+			    && ((TransList[dTransVal[missilePosition.x + 1][missilePosition.y]] && TileHasAny(missilePosition + Direction::SouthEast, TileProperties::Solid))
+			        || (TransList[dTransVal[missilePosition.x - 1][missilePosition.y]] && TileHasAny(missilePosition + Direction::NorthWest, TileProperties::Solid)))) {
 				missile.position.offset.deltaY -= 32;
 			}
 			if (missile.position.velocity.deltaX > 0
-			    && ((TransList[dTransVal[missilePosition.x][missilePosition.y + 1]] && TileHasAny(missilePosition + DisplacementOf { 0, 1 }, TileProperties::Solid))
-			        || (TransList[dTransVal[missilePosition.x][missilePosition.y - 1]] && TileHasAny(missilePosition + DisplacementOf { 0, -1 }, TileProperties::Solid)))) {
+			    && ((TransList[dTransVal[missilePosition.x][missilePosition.y + 1]] && TileHasAny(missilePosition + Direction::SouthWest, TileProperties::Solid))
+			        || (TransList[dTransVal[missilePosition.x][missilePosition.y - 1]] && TileHasAny(missilePosition + Direction::NorthEast, TileProperties::Solid)))) {
 				missile.position.offset.deltaX -= 32;
 			}
 			missile._mimfnum = 0;
