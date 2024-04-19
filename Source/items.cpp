@@ -2753,10 +2753,11 @@ bool CalcPlrBlockFlag(auto &player)
 	return holdsShield;
 }
 
-PlayerWeaponGraphic GetPlrAnimWeaponId(auto &player, bool holdsShield)
+PlayerWeaponGraphic GetPlrAnimWeaponId(const Player &player)
 {
-	auto &leftHandItem = player.InvBody[INVLOC_HAND_LEFT];
-	auto &rightHandItem = player.InvBody[INVLOC_HAND_RIGHT];
+	ItemPack &leftHandItem = player.InvBody[INVLOC_HAND_LEFT];
+	ItemPack &rightHandItem = player.InvBody[INVLOC_HAND_RIGHT];
+	bool holdsShield = player.isHoldingItem(ItemType::Shield);
 	bool leftHandUsable = player.CanUseItem(leftHandItem);
 	bool rightHandUsable = player.CanUseItem(rightHandItem);
 	ItemType weaponItemType = ItemType::None;
