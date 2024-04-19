@@ -2708,7 +2708,7 @@ void CalcPlrResistances(Player &player, ItemSpecialEffect iflgs, int fire, int l
 	player._pLghtResist = std::clamp(lightning, 0, MaxResistance);
 }
 
-void CalcPlrLifeMana(auto &player, int vitality, int magic, int life, int mana)
+void CalcPlrLifeMana(Player &player, int vitality, int magic, int life, int mana)
 {
 	const ClassAttributes &playerClassAttributes = player.getClassAttributes();
 	vitality = (vitality * playerClassAttributes.itmLife) >> 6;
