@@ -2955,7 +2955,6 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	player._pIFMaxDam = maxFireDam;
 	player._pILMinDam = minLightDam;
 	player._pILMaxDam = maxLightDam;
-	player._pInfraFlag = false;
 
 	const bool holdsShield = CalcPlrBlockFlag(player);
 
