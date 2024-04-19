@@ -2628,11 +2628,11 @@ void CalcPlrLightRadius(Player &player, int lrad)
 	}
 }
 
-void CalcPlrDamageMod(auto &player)
+void CalcPlrDamageMod(Player &player)
 {
 	const uint8_t playerLevel = player.getCharacterLevel();
-	const auto &leftHandItem = player.InvBody[INVLOC_HAND_LEFT];
-	const auto &rightHandItem = player.InvBody[INVLOC_HAND_RIGHT];
+	const ItemPack &leftHandItem = player.InvBody[INVLOC_HAND_LEFT];
+	const ItemPack &rightHandItem = player.InvBody[INVLOC_HAND_RIGHT];
 	const int strMod = playerLevel * player._pStrength;
 	const int strDexMod = playerLevel * (player._pStrength + player._pDexterity);
 
