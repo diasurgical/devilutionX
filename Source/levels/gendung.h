@@ -332,9 +332,9 @@ struct Miniset {
 	}
 };
 
-[[nodiscard]] DVL_ALWAYS_INLINE bool TileHasAny(int tileId, TileProperties property)
+[[nodiscard]] DVL_ALWAYS_INLINE bool TileHasAny(Point coords, TileProperties property)
 {
-	return HasAnyOf(SOLData[tileId], property);
+	return HasAnyOf(SOLData[dPiece[coords.x][coords.y]], property);
 }
 
 void LoadLevelSOLData();

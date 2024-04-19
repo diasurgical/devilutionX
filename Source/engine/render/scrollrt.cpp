@@ -474,19 +474,19 @@ void DrawCell(const Surface &out, Point tilePosition, Point targetBufferPosition
 		tbl = GetPauseTRN();
 #endif
 
-	bool transparency = TileHasAny(levelPieceId, TileProperties::Transparent) && TransList[dTransVal[tilePosition.x][tilePosition.y]];
+	bool transparency = TileHasAny(tilePosition, TileProperties::Transparent) && TransList[dTransVal[tilePosition.x][tilePosition.y]];
 #ifdef _DEBUG
 	if ((SDL_GetModState() & KMOD_ALT) != 0)
 		transparency = false;
 #endif
-	const bool foliage = !TileHasAny(levelPieceId, TileProperties::Solid);
+	const bool foliage = !TileHasAny(tilePosition, TileProperties::Solid);
 
 	const auto getFirstTileMaskLeft = [=](TileType tile) -> MaskType {
 		if (transparency) {
 			switch (tile) {
 			case TileType::LeftTrapezoid:
 			case TileType::TransparentSquare:
-				return TileHasAny(levelPieceId, TileProperties::TransparentLeft)
+				return TileHasAny(tilePosition, TileProperties::TransparentLeft)
 				    ? MaskType::Left
 				    : MaskType::Solid;
 			case TileType::LeftTriangle:
@@ -505,7 +505,7 @@ void DrawCell(const Surface &out, Point tilePosition, Point targetBufferPosition
 			switch (tile) {
 			case TileType::RightTrapezoid:
 			case TileType::TransparentSquare:
-				return TileHasAny(levelPieceId, TileProperties::TransparentRight)
+				return TileHasAny(tilePosition, TileProperties::TransparentRight)
 				    ? MaskType::Right
 				    : MaskType::Solid;
 			case TileType::RightTriangle:
@@ -646,7 +646,7 @@ void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBuffe
 		return;
 	}
 
-	if (!IsTileLit(tilePosition) && (!MyPlayer->_pInfraFlag || TileHasAny(dPiece[tilePosition.x][tilePosition.y], TileProperties::Solid)))
+	if (!IsTileLit(tilePosition) && (!MyPlayer->_pInfraFlag || TileHasAny(tilePosition, TileProperties::Solid)))
 		return;
 
 	if (static_cast<size_t>(mi) >= MaxMonsters) {
@@ -851,7 +851,7 @@ void DrawFloor(const Surface &out, Point tilePosition, Point targetBufferPositio
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < columns; j++) {
 			if (InDungeonBounds(tilePosition)) {
-				if (!TileHasAny(dPiece[tilePosition.x][tilePosition.y], TileProperties::Solid))
+				if (!TileHasAny(tilePosition, TileProperties::Solid))
 					DrawFloor(out, tilePosition, targetBufferPosition);
 			} else {
 				world_draw_black_tile(out, targetBufferPosition.x, targetBufferPosition.y);
@@ -879,7 +879,7 @@ void DrawFloor(const Surface &out, Point tilePosition, Point targetBufferPositio
 
 [[nodiscard]] DVL_ALWAYS_INLINE bool IsWall(Point position)
 {
-	return TileHasAny(dPiece[position.x][position.y], TileProperties::Solid) || dSpecial[position.x][position.y] != 0;
+	return TileHasAny(position, TileProperties::Solid) || dSpecial[position.x][position.y] != 0;
 }
 
 /**
