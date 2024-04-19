@@ -47,7 +47,7 @@ bool TFit_Shrine(int i)
 	size_t found = 0;
 
 	while (found == 0) {
-		Point testPosition { position.x, position.y };
+		Point testPosition = position;
 		if (dTransVal[position.x][position.y] == themes[i].ttval) {
 			if (TileHasAny(position + DisplacementOf { 0, -1 }, TileProperties::Trap)
 			    && IsTileNotSolid(testPosition + Direction::NorthWest)
