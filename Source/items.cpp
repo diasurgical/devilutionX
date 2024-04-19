@@ -2780,9 +2780,9 @@ PlayerWeaponGraphic GetPlrAnimWeaponId(const Player &player)
 	}
 }
 
-PlayerArmorGraphic GetPlrAnimArmorId(auto &player)
+PlayerArmorGraphic GetPlrAnimArmorId(Player &player)
 {
-	auto &chestItem = player.InvBody[INVLOC_CHEST];
+	const Item &chestItem = player.InvBody[INVLOC_CHEST];
 	bool chestUsable = player.CanUseItem(chestItem);
 	const uint8_t playerLevel = player.getCharacterLevel();
 
