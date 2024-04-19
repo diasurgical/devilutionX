@@ -2957,9 +2957,10 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	player._pILMinDam = minLightDam;
 	player._pILMaxDam = maxLightDam;
 
-	const bool holdsShield = CalcPlrBlockFlag(player);
+	CalcPlrBlockFlag(player);
 
-	CalcPlrGraphics(player, GetPlrAnimWeaponId(player, holdsShield), GetPlrAnimArmorId(player), loadgfx);
+	CalcPlrGraphics(player, GetPlrAnimWeaponId(player), GetPlrAnimArmorId(player), loadgfx);
+
 	CalcPlrAuricBonus(player);
 	RedrawComponent(PanelDrawComponent::Mana);
 	RedrawComponent(PanelDrawComponent::Health);
