@@ -2834,7 +2834,8 @@ void CalcPlrGraphics(auto &player, PlayerWeaponGraphic animWeaponId, PlayerArmor
 	}
 }
 
-void CalcPlrAuricBonus(auto &player)
+void CalcPlrAuricBonus(const Player &player)
+
 {
 	if (&player == MyPlayer) {
 		if (player.InvBody[INVLOC_AMULET].isEmpty() || player.InvBody[INVLOC_AMULET].IDidx != IDI_AURIC) {
