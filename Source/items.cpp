@@ -2679,7 +2679,7 @@ void CalcPlrDamageMod(auto &player)
 	}
 }
 
-void CalcPlrResistances(auto &player, ItemSpecialEffect iflgs, int fire, int lightning, int magic)
+void CalcPlrResistances(Player &player, ItemSpecialEffect iflgs, int fire, int lightning, int magic)
 {
 	const uint8_t playerLevel = player.getCharacterLevel();
 
