@@ -2559,7 +2559,7 @@ void InitItems()
 	initItemGetRecords();
 }
 
-int GetBonusAC(auto &item)
+int GetBonusAC(const ItemPack &item)
 {
 	if (item._iPLAC != 0) {
 		int tempAc = item._iAC;
