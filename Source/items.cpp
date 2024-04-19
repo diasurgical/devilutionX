@@ -2595,7 +2595,7 @@ void CalcPlrDamage(Player &player, int minDamage, int maxDamage)
 	player._pIMaxDam = maxDamage;
 }
 
-void CalcPlrPrimaryStats(auto &player, int strength, int &magic, int dexterity, int &vitality)
+void CalcPlrPrimaryStats(Player &player, int strength, int &magic, int dexterity, int &vitality)
 {
 	const uint8_t playerLevel = player.getCharacterLevel();
 
