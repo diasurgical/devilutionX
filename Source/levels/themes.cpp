@@ -49,7 +49,7 @@ bool TFit_Shrine(int i)
 	while (found == 0) {
 		Point testPosition = position;
 		if (dTransVal[position.x][position.y] == themes[i].ttval) {
-			if (TileHasAny(position + DisplacementOf { 0, -1 }, TileProperties::Trap)
+			if (TileHasAny(position + Direction::NorthEast, TileProperties::Trap)
 			    && IsTileNotSolid(testPosition + Direction::NorthWest)
 			    && IsTileNotSolid(testPosition + Direction::SouthEast)
 			    && dTransVal[position.x - 1][position.y] == themes[i].ttval
@@ -59,7 +59,7 @@ bool TFit_Shrine(int i)
 				found = 1;
 			}
 			if (found == 0
-			    && TileHasAny(position + DisplacementOf { -1, 0 }, TileProperties::Trap)
+			    && TileHasAny(position + Direction::NorthWest, TileProperties::Trap)
 			    && IsTileNotSolid(testPosition + Direction::NorthEast)
 			    && IsTileNotSolid(testPosition + Direction::SouthWest)
 			    && dTransVal[position.x][position.y - 1] == themes[i].ttval
