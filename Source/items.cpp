@@ -2744,7 +2744,7 @@ void CalcPlrBlockFlag(Player &player)
 		}
 	}
 
-    player._pBlockFlag = player._pBlockFlag || player.isHoldingItem(ItemType::Shield);
+	player._pBlockFlag = player._pBlockFlag || player.isHoldingItem(ItemType::Shield);
 }
 
 PlayerWeaponGraphic GetPlrAnimWeaponId(const Player &player)
@@ -2834,7 +2834,7 @@ void CalcPlrGraphics(Player &player, PlayerWeaponGraphic animWeaponId, PlayerArm
 	}
 }
 
-void CalcPlrAuricBonus(const Player &player)
+void CalcPlrAuricBonus(Player &player)
 
 {
 	if (&player == MyPlayer) {
