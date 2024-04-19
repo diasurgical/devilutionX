@@ -3033,7 +3033,7 @@ void ProcessFireball(Missile &missile)
 			}
 
 			if (!TransList[dTransVal[missilePosition.x][missilePosition.y]]
-			    || (missile.position.velocity.deltaX < 0 && ((TransList[dTransVal[missilePosition.x][missilePosition.y + 1]] && TileHasAny(missilePosition + Direction::SouthEast, TileProperties::Solid)) || (TransList[dTransVal[missilePosition.x][missilePosition.y - 1]] && TileHasAny(missilePosition + Direction::NorthWest, TileProperties::Solid))))) {
+			    || (missile.position.velocity.deltaX < 0 && ((TransList[dTransVal[missilePosition.x][missilePosition.y + 1]] && TileHasAny(missilePosition + Direction::SouthWest, TileProperties::Solid)) || (TransList[dTransVal[missilePosition.x][missilePosition.y - 1]] && TileHasAny(missilePosition + Direction::NorthEast, TileProperties::Solid))))) {
 				missile.position.tile += Direction::South;
 				missile.position.offset.deltaY -= 32;
 			}
