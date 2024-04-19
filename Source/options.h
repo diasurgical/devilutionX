@@ -528,6 +528,8 @@ struct GameplayOptions : OptionCategoryBase {
 	OptionEntryBoolean runInTown;
 	/** @brief Do not let the mouse leave the application window. */
 	OptionEntryBoolean grabInput;
+	/** @brief Pause the game when focus is lost. */
+	OptionEntryBoolean pauseOnFocusLoss;
 	/** @brief Enable the Theo quest. */
 	OptionEntryBoolean theoQuest;
 	/** @brief Enable the cow quest. */
