@@ -2573,7 +2573,7 @@ int GetBonusAC(auto &item)
 	return 0;
 }
 
-void CalcPlrDamage(auto &player, int minDamage, int maxDamage)
+void CalcPlrDamage(Player &player, int minDamage, int maxDamage)
 {
 	const uint8_t playerLevel = player.getCharacterLevel();
 
