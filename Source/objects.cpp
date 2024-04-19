@@ -251,14 +251,14 @@ bool IsAreaOk(Rectangle rect)
 	return c_all_of(PointsInRectangle(rect), &RndLocOk);
 }
 
-bool CanPlaceWallTrap(int xp, int yp)
+bool CanPlaceWallTrap(Point pos)
 {
-	if (dObject[xp][yp] != 0)
+	if (dObject[pos.x][pos.y] != 0)
 		return false;
-	if (TileContainsSetPiece({ xp, yp }))
+	if (TileContainsSetPiece(pos))
 		return false;
 
-	return TileHasAny({ xp, yp }, TileProperties::Trap);
+	return TileHasAny(pos, TileProperties::Trap);
 }
 
 void InitRndLocObj(int min, int max, _object_id objtype)
@@ -498,7 +498,7 @@ void AddObjTraps()
 				while (IsTileNotSolid({ xp, j }))
 					xp--;
 
-				if (!CanPlaceWallTrap(xp, j) || i - xp <= 1)
+				if (!CanPlaceWallTrap({ xp, j }) || i - xp <= 1)
 					continue;
 
 				trapObject = AddObject(OBJ_TRAPL, { xp, j });
@@ -507,7 +507,7 @@ void AddObjTraps()
 				while (IsTileNotSolid({ i, yp }))
 					yp--;
 
-				if (!CanPlaceWallTrap(i, yp) || j - yp <= 1)
+				if (!CanPlaceWallTrap({ i, yp }) || j - yp <= 1)
 					continue;
 
 				trapObject = AddObject(OBJ_TRAPR, { i, yp });
