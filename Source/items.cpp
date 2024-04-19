@@ -2559,7 +2559,7 @@ void InitItems()
 	initItemGetRecords();
 }
 
-int GetBonusAC(const ItemPack &item)
+int GetBonusAC(const Item &item)
 {
 	if (item._iPLAC != 0) {
 		int tempAc = item._iAC;
@@ -2631,8 +2631,8 @@ void CalcPlrLightRadius(Player &player, int lrad)
 void CalcPlrDamageMod(Player &player)
 {
 	const uint8_t playerLevel = player.getCharacterLevel();
-	const ItemPack &leftHandItem = player.InvBody[INVLOC_HAND_LEFT];
-	const ItemPack &rightHandItem = player.InvBody[INVLOC_HAND_RIGHT];
+	const Item &leftHandItem = player.InvBody[INVLOC_HAND_LEFT];
+	const Item &rightHandItem = player.InvBody[INVLOC_HAND_RIGHT];
 	const int strMod = playerLevel * player._pStrength;
 	const int strDexMod = playerLevel * (player._pStrength + player._pDexterity);
 
@@ -2728,7 +2728,7 @@ void CalcPlrLifeMana(auto &player, int vitality, int magic, int life, int mana)
 	player._pMana = std::min(mana + player._pManaBase, player._pMaxMana);
 }
 
-bool CalcPlrBlockFlag(auto &player)
+void CalcPlrBlockFlag(Player &player)
 {
 	const auto &leftHandItem = player.InvBody[INVLOC_HAND_LEFT];
 	const auto &rightHandItem = player.InvBody[INVLOC_HAND_RIGHT];
@@ -2744,20 +2744,13 @@ bool CalcPlrBlockFlag(auto &player)
 		}
 	}
 
-	bool holdsShield = false;
-
-	if (player.isHoldingItem(ItemType::Shield)) {
-		player._pBlockFlag = true;
-		holdsShield = true;
-	}
-
-	return holdsShield;
+    player._pBlockFlag = player._pBlockFlag || player.isHoldingItem(ItemType::Shield);
 }
 
 PlayerWeaponGraphic GetPlrAnimWeaponId(const Player &player)
 {
-	ItemPack &leftHandItem = player.InvBody[INVLOC_HAND_LEFT];
-	ItemPack &rightHandItem = player.InvBody[INVLOC_HAND_RIGHT];
+	const Item &leftHandItem = player.InvBody[INVLOC_HAND_LEFT];
+	const Item &rightHandItem = player.InvBody[INVLOC_HAND_RIGHT];
 	bool holdsShield = player.isHoldingItem(ItemType::Shield);
 	bool leftHandUsable = player.CanUseItem(leftHandItem);
 	bool rightHandUsable = player.CanUseItem(rightHandItem);

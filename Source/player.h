@@ -896,10 +896,10 @@ public:
 	bool isLevelOwnedByLocalClient() const;
 
 	/** @brief Checks if the player is holding an item of the provided type, and is usable. */
-	bool isHoldingItem(const ItemType type)
+	bool isHoldingItem(const ItemType type) const
 	{
-		const ItemPack &leftHandItem = InvBody[INVLOC_HAND_LEFT];
-		const ItemPack &rightHandItem = InvBody[INVLOC_HAND_RIGHT];
+		const Item &leftHandItem = InvBody[INVLOC_HAND_LEFT];
+		const Item &rightHandItem = InvBody[INVLOC_HAND_RIGHT];
 
 		return (type == leftHandItem._itype && leftHandItem._iStatFlag) || (type == rightHandItem._itype && rightHandItem._iStatFlag);
 	}
