@@ -591,24 +591,21 @@ void CheckInvPaste(Player &player, Point cursorPosition)
 	case ILOC_HELM:
 	case ILOC_RING:
 	case ILOC_AMULET:
-	case ILOC_ARMOR: {
+	case ILOC_ARMOR:
 		ChangeBodyEquipment(slot, player, il);
 		break;
-	}
-	case ILOC_ONEHAND: {
+	case ILOC_ONEHAND:
 		ChangeEquippedItem(slot, player);
 		break;
-	}
 	case ILOC_TWOHAND:
 		ChangeTwoHandItem(player);
 		break;
-	case ILOC_UNEQUIPABLE: {
+	case ILOC_UNEQUIPABLE:
 		ChangeInvItem(player, *maybe_item_id, slot, itemSize);
 		break;
-	}
-	case ILOC_BELT: {
+	case ILOC_BELT:
 		ChangeBeltItem(player, slot);
-	} break;
+		break;
 	case ILOC_NONE:
 	case ILOC_INVALID:
 		break;
