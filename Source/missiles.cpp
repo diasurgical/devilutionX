@@ -204,7 +204,7 @@ int ProjectileTrapDamage(Missile &missile)
 
 bool MonsterMHit(const Player &player, int monsterId, int mindam, int maxdam, int dist, MissileID t, DamageType damageType, bool shift)
 {
-	auto &monster = Monsters[monsterId];
+	Monster &monster = Monsters[monsterId];
 
 	if (!monster.isPossibleToHit() || monster.isImmune(t, damageType))
 		return false;
@@ -937,7 +937,7 @@ Direction16 GetDirection16(Point p1, Point p2)
 
 bool MonsterTrapHit(int monsterId, int mindam, int maxdam, int dist, MissileID t, DamageType damageType, bool shift)
 {
-	auto &monster = Monsters[monsterId];
+	Monster &monster = Monsters[monsterId];
 
 	if (!monster.isPossibleToHit() || monster.isImmune(t, damageType))
 		return false;
@@ -1247,7 +1247,7 @@ void AddBerserk(Missile &missile, AddMissileParameter &parameter)
 	    parameter.dst, 0, 5);
 
 	if (targetMonsterPosition) {
-		auto &monster = Monsters[std::abs(dMonster[targetMonsterPosition->x][targetMonsterPosition->y]) - 1];
+		Monster &monster = Monsters[std::abs(dMonster[targetMonsterPosition->x][targetMonsterPosition->y]) - 1];
 		Player &player = *missile.sourcePlayer();
 		const int slvl = player.GetSpellLevel(SpellID::Berserk);
 		monster.flags |= MFLAG_BERSERK | MFLAG_GOLEM;
@@ -2207,7 +2207,7 @@ void AddGenericMagicMissile(Missile &missile, AddMissileParameter &parameter)
 	missile.var2 = missile.position.start.y;
 	missile._mlid = AddLight(missile.position.start, 8);
 	if (missile._micaster != TARGET_MONSTERS && missile._misource > 0) {
-		auto &monster = Monsters[missile._misource];
+		Monster &monster = Monsters[missile._misource];
 		if (monster.type().type == MT_SUCCUBUS)
 			SetMissAnim(missile, MissileGraphicID::BloodStar);
 		if (monster.type().type == MT_SNOWWICH)
@@ -2287,7 +2287,7 @@ void AddStoneCurse(Missile &missile, AddMissileParameter &parameter)
 			    return false;
 		    }
 
-		    auto &monster = Monsters[monsterId];
+		    Monster &monster = Monsters[monsterId];
 
 		    if (IsAnyOf(monster.type().type, MT_GOLEM, MT_DIABLO, MT_NAKRUL)) {
 			    return false;
@@ -2308,7 +2308,7 @@ void AddStoneCurse(Missile &missile, AddMissileParameter &parameter)
 
 	// Petrify the targeted monster
 	int monsterId = std::abs(dMonster[targetMonsterPosition->x][targetMonsterPosition->y]) - 1;
-	auto &monster = Monsters[monsterId];
+	Monster &monster = Monsters[monsterId];
 
 	if (monster.mode == MonsterMode::Petrified) {
 		// Monster is already petrified and StoneCurse doesn't stack
@@ -2588,7 +2588,7 @@ void AddInferno(Missile &missile, AddMissileParameter &parameter)
 		int i = GenerateRnd(Players[missile._misource].getCharacterLevel()) + GenerateRnd(2);
 		missile._midam = 8 * i + 16 + ((8 * i + 16) / 2);
 	} else {
-		auto &monster = Monsters[missile._misource];
+		Monster &monster = Monsters[missile._misource];
 		missile._midam = monster.minDamage + GenerateRnd(monster.maxDamage - monster.minDamage + 1);
 	}
 }
@@ -3010,7 +3010,7 @@ void ProcessFireball(Missile &missile)
 		int maxDam = missile._midam;
 
 		if (missile._micaster != TARGET_MONSTERS) {
-			auto &monster = Monsters[missile._misource];
+			Monster &monster = Monsters[missile._misource];
 			minDam = monster.minDamage;
 			maxDam = monster.maxDamage;
 		}
@@ -3303,7 +3303,7 @@ void ProcessLightningControl(Missile &missile)
 		// BUGFIX: damage of missile should be encoded in missile struct; player can be dead/have left the game before missile arrives.
 		dam = (GenerateRnd(2) + GenerateRnd(Players[missile._misource].getCharacterLevel()) + 2) << 6;
 	} else {
-		auto &monster = Monsters[missile._misource];
+		Monster &monster = Monsters[missile._misource];
 		dam = 2 * (monster.minDamage + GenerateRnd(monster.maxDamage - monster.minDamage + 1));
 	}
 
@@ -3654,7 +3654,7 @@ void ProcessTeleport(Missile &missile)
 void ProcessStoneCurse(Missile &missile)
 {
 	missile._mirange--;
-	auto &monster = Monsters[missile.var2];
+	Monster &monster = Monsters[missile.var2];
 	if (monster.hitPoints == 0 && missile._miAnimType != MissileGraphicID::StoneCurseShatter) {
 		missile._mimfnum = 0;
 		missile._miDrawFlag = true;
@@ -3694,7 +3694,7 @@ void ProcessApocalypseBoom(Missile &missile)
 void ProcessRhino(Missile &missile)
 {
 	int monst = missile._misource;
-	auto &monster = Monsters[monst];
+	Monster &monster = Monsters[monst];
 	if (monster.mode != MonsterMode::Charge) {
 		missile._miDelFlag = true;
 		return;

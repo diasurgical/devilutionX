@@ -358,7 +358,7 @@ void DeadItem(Player &player, Item &&itm, Displacement direction)
 int DropGold(Player &player, int amount, bool skipFullStacks)
 {
 	for (int i = 0; i < player._pNumInv && amount > 0; i++) {
-		auto &item = player.InvList[i];
+		Item &item = player.InvList[i];
 
 		if (item._itype != ItemType::Gold || (skipFullStacks && item._ivalue == MaxGold))
 			continue;
@@ -1819,7 +1819,7 @@ void Player::RestorePartialMana()
 
 void Player::ReadySpellFromEquipment(inv_body_loc bodyLocation, bool forceSpell)
 {
-	auto &item = InvBody[bodyLocation];
+	Item &item = InvBody[bodyLocation];
 	if (item._itype == ItemType::Staff && IsValidSpell(item._iSpell) && item._iCharges > 0 && item._iStatFlag) {
 		if (forceSpell || _pRSpell == SpellID::Invalid || _pRSplType == SpellType::Invalid) {
 			_pRSpell = item._iSpell;
@@ -1917,19 +1917,19 @@ void Player::UpdatePreviewCelSprite(_cmd_id cmdId, Point point, uint16_t wParam1
 
 	switch (cmdId) {
 	case _cmd_id::CMD_RATTACKID: {
-		auto &monster = Monsters[wParam1];
+		Monster &monster = Monsters[wParam1];
 		dir = GetDirection(position.future, monster.position.future);
 		graphic = player_graphic::Attack;
 		break;
 	}
 	case _cmd_id::CMD_SPELLID: {
-		auto &monster = Monsters[wParam1];
+		Monster &monster = Monsters[wParam1];
 		dir = GetDirection(position.future, monster.position.future);
 		graphic = GetPlayerGraphicForSpell(static_cast<SpellID>(wParam2));
 		break;
 	}
 	case _cmd_id::CMD_ATTACKID: {
-		auto &monster = Monsters[wParam1];
+		Monster &monster = Monsters[wParam1];
 		point = monster.position.future;
 		minimalWalkDistance = 2;
 		if (!CanTalkToMonst(monster)) {
@@ -2714,7 +2714,7 @@ StartPlayerKill(Player &player, DeathReason deathReason)
 	if (&player != MyPlayer && dropItems) {
 		// Ensure that items are removed for remote players
 		// The dropped items will be synced seperatly (by the remote client)
-		for (auto &item : player.InvBody) {
+		for (Item &item : player.InvBody) {
 			item.clear();
 		}
 		CalcPlrInv(player, false);
@@ -2768,7 +2768,7 @@ StartPlayerKill(Player &player, DeathReason deathReason)
 			}
 			if (dropItems) {
 				Direction pdd = player._pdir;
-				for (auto &item : player.InvBody) {
+				for (Item &item : player.InvBody) {
 					pdd = Left(pdd);
 					DeadItem(player, item.pop(), Displacement(pdd));
 				}

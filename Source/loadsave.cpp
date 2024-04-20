@@ -688,7 +688,7 @@ void SyncPackSize(Monster &leader)
 	leader.packSize = 0;
 
 	for (size_t i = 0; i < ActiveMonsterCount; i++) {
-		auto &minion = Monsters[ActiveMonsters[i]];
+		Monster &minion = Monsters[ActiveMonsters[i]];
 		if (minion.leaderRelation == LeaderRelation::Leashed && minion.getLeader() == &leader)
 			leader.packSize++;
 	}

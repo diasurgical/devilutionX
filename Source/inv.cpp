@@ -325,10 +325,10 @@ int FindTargetSlotUnderItemCursor(Point cursorPosition, Size itemSize)
 	return NUM_XY_SLOTS;
 }
 
-void ChangeBodyEquipment(Player &player, int slot, item_equip_type il)
+void ChangeBodyEquipment(Player &player, int slot, item_equip_type location)
 {
-	const auto body_loc = [&slot](item_equip_type loc) {
-		switch (loc) {
+	const inv_body_loc bodyLocation = [&slot](item_equip_type location) {
+		switch (location) {
 		case ILOC_HELM:
 			return INVLOC_HEAD;
 		case ILOC_RING:
@@ -340,9 +340,9 @@ void ChangeBodyEquipment(Player &player, int slot, item_equip_type il)
 		default:
 			app_fatal("Unexpected equipment type");
 		}
-	}(il);
+	}(location);
 	const Item previouslyEquippedItem = player.InvBody[slot];
-	ChangeEquipment(player, body_loc, player.HoldItem.pop(), &player == MyPlayer);
+	ChangeEquipment(player, bodyLocation, player.HoldItem.pop(), &player == MyPlayer);
 	if (!previouslyEquippedItem.isEmpty()) {
 		player.HoldItem = previouslyEquippedItem;
 	}
@@ -350,8 +350,8 @@ void ChangeBodyEquipment(Player &player, int slot, item_equip_type il)
 
 void ChangeEquippedItem(Player &player, uint8_t slot)
 {
-	const auto selectedHand = slot == SLOTXY_HAND_LEFT ? INVLOC_HAND_LEFT : INVLOC_HAND_RIGHT;
-	const auto otherHand = slot == SLOTXY_HAND_LEFT ? INVLOC_HAND_RIGHT : INVLOC_HAND_LEFT;
+	const inv_body_loc selectedHand = slot == SLOTXY_HAND_LEFT ? INVLOC_HAND_LEFT : INVLOC_HAND_RIGHT;
+	const inv_body_loc otherHand = slot == SLOTXY_HAND_LEFT ? INVLOC_HAND_RIGHT : INVLOC_HAND_LEFT;
 
 	const bool pasteIntoSelectedHand = (player.InvBody[otherHand].isEmpty() || player.InvBody[otherHand]._iClass != player.HoldItem._iClass)
 	    || (player._pClass == HeroClass::Bard && player.InvBody[otherHand]._iClass == ICLASS_WEAPON && player.HoldItem._iClass == ICLASS_WEAPON);
@@ -490,7 +490,7 @@ bool ChangeInvItem(Player &player, int slot, Size itemSize)
 			std::swap(player.InvList[invIndex], player.HoldItem);
 			if (player.HoldItem._itype == ItemType::Gold)
 				player._pGold = CalculateGold(player);
-			for (auto &itemIndex : player.InvGrid) {
+			for (int8_t &itemIndex : player.InvGrid) {
 				if (itemIndex == prevItemId)
 					itemIndex = 0;
 				if (itemIndex == -prevItemId)
@@ -521,26 +521,25 @@ void ChangeBeltItem(Player &player, int slot)
 	RedrawComponent(PanelDrawComponent::Belt);
 }
 
-item_equip_type GetItemEquipType(int slot, item_equip_type desired_loc, const Player &player)
+item_equip_type GetItemEquipType(const Player &player, int slot, item_equip_type desiredLocation)
 {
-	item_equip_type il = ILOC_UNEQUIPABLE;
 	if (slot == SLOTXY_HEAD)
-		il = ILOC_HELM;
+		return ILOC_HELM;
 	if (slot == SLOTXY_RING_LEFT || slot == SLOTXY_RING_RIGHT)
-		il = ILOC_RING;
+		return ILOC_RING;
 	if (slot == SLOTXY_AMULET)
-		il = ILOC_AMULET;
-	if (slot == SLOTXY_HAND_LEFT || slot == SLOTXY_HAND_RIGHT)
-		il = ILOC_ONEHAND;
+		return ILOC_AMULET;
+	if (slot == SLOTXY_HAND_LEFT || slot == SLOTXY_HAND_RIGHT) {
+		if (desiredLocation == ILOC_TWOHAND)
+			return ILOC_TWOHAND;
+		return ILOC_ONEHAND;
+	}
 	if (slot == SLOTXY_CHEST)
-		il = ILOC_ARMOR;
+		return ILOC_ARMOR;
 	if (slot >= SLOTXY_BELT_FIRST && slot <= SLOTXY_BELT_LAST)
-		il = ILOC_BELT;
+		return ILOC_BELT;
 
-	if (il == ILOC_ONEHAND && desired_loc == ILOC_TWOHAND)
-		return ILOC_TWOHAND;
-
-	return il;
+	return ILOC_UNEQUIPABLE;
 }
 
 void CheckInvPaste(Player &player, Point cursorPosition)
@@ -551,33 +550,32 @@ void CheckInvPaste(Player &player, Point cursorPosition)
 	if (slot == NUM_XY_SLOTS)
 		return;
 
-	auto const desired_loc = player.GetItemLocation(player.HoldItem);
-	const auto il = GetItemEquipType(slot, desired_loc, player);
-	if (il == ILOC_BELT) {
-		if (!CanBePlacedOnBelt(player, player.HoldItem))
+	const item_equip_type desiredLocation = player.GetItemLocation(player.HoldItem);
+	const item_equip_type location = GetItemEquipType(player, slot, desiredLocation);
+
+	if (location == ILOC_BELT) {
+		if (!CanBePlacedOnBelt(player, player.HoldItem)) return;
+	} else if (location != ILOC_UNEQUIPABLE) {
+		if (desiredLocation != location) return;
+	}
+
+	if (IsNoneOf(location, ILOC_UNEQUIPABLE, ILOC_BELT)) {
+		if (!player.CanUseItem(player.HoldItem)) {
+			player.Say(HeroSpeech::ICantUseThisYet);
+			return;
+		}
+		if (player._pmode > PM_WALK_SIDEWAYS)
 			return;
 	}
 
-	if ((il != ILOC_UNEQUIPABLE) && (desired_loc != il)) {
-		return;
-	}
-
-	if (IsNoneOf(il, ILOC_UNEQUIPABLE, ILOC_BELT) && !player.CanUseItem(player.HoldItem)) {
-		player.Say(HeroSpeech::ICantUseThisYet);
-		return;
-	}
-
-	if (player._pmode > PM_WALK_SIDEWAYS && IsNoneOf(il, ILOC_UNEQUIPABLE, ILOC_BELT))
-		return;
-
 	// Select the parameters that go into
 	// ChangeEquipment and add it to post switch
-	switch (il) {
+	switch (location) {
 	case ILOC_HELM:
 	case ILOC_RING:
 	case ILOC_AMULET:
 	case ILOC_ARMOR:
-		ChangeBodyEquipment(player, slot, il);
+		ChangeBodyEquipment(player, slot, location);
 		break;
 	case ILOC_ONEHAND:
 		ChangeEquippedItem(player, slot);
@@ -960,7 +958,7 @@ void CheckQuestItem(Player &player, Item &questItem)
 
 void CleanupItems(int ii)
 {
-	auto &item = Items[ii];
+	Item &item = Items[ii];
 	dItem[item.position.x][item.position.y] = 0;
 
 	if (CornerStone.isAvailable() && item.position == CornerStone.position) {
@@ -1133,7 +1131,7 @@ void DrawInv(const Surface &out)
 
 			const int cursId = myPlayer.InvBody[slot]._iCurs + CURSOR_FIRSTITEM;
 
-			auto frameSize = GetInvItemSize(cursId);
+			Size frameSize = GetInvItemSize(cursId);
 
 			// calc item offsets for weapons/armor smaller than 2x3 slots
 			if (IsAnyOf(slot, INVLOC_HAND_LEFT, INVLOC_HAND_RIGHT, INVLOC_CHEST)) {
@@ -1243,7 +1241,7 @@ bool AutoPlaceItemInBelt(Player &player, const Item &item, bool persistItem, boo
 		return false;
 	}
 
-	for (auto &beltItem : player.SpdList) {
+	for (Item &beltItem : player.SpdList) {
 		if (beltItem.isEmpty()) {
 			if (persistItem) {
 				beltItem = item;
@@ -1496,7 +1494,7 @@ void inv_update_rem_item(Player &player, inv_body_loc iv)
 
 void CheckInvSwap(Player &player, const Item &item, int invGridIndex)
 {
-	auto itemSize = GetInventorySize(item);
+	Size itemSize = GetInventorySize(item);
 
 	const int pitch = 10;
 	int invListIndex = [&]() -> int {
@@ -1513,7 +1511,7 @@ void CheckInvSwap(Player &player, const Item &item, int invGridIndex)
 	}();
 
 	if (invListIndex < player._pNumInv) {
-		for (auto &itemIndex : player.InvGrid) {
+		for (int8_t &itemIndex : player.InvGrid) {
 			if (itemIndex == invListIndex)
 				itemIndex = 0;
 			if (itemIndex == -invListIndex)
@@ -1592,7 +1590,7 @@ void CheckInvScrn(bool isShiftHeld, bool isCtrlHeld)
 
 void InvGetItem(Player &player, int ii)
 {
-	auto &item = Items[ii];
+	Item &item = Items[ii];
 	CloseGoldDrop();
 
 	if (dItem[item.position.x][item.position.y] == 0)
@@ -1714,7 +1712,7 @@ void AutoGetItem(Player &player, Item *itemPointer, int ii)
 int FindGetItem(uint32_t iseed, _item_indexes idx, uint16_t createInfo)
 {
 	for (uint8_t i = 0; i < ActiveItemCount; i++) {
-		auto &item = Items[ActiveItems[i]];
+		Item &item = Items[ActiveItems[i]];
 		if (item.keyAttributesMatch(iseed, idx, createInfo)) {
 			return i;
 		}
@@ -1931,7 +1929,7 @@ void ConsumeScroll(Player &player)
 {
 	const SpellID spellId = player.executedSpell.spellId;
 
-	const auto isCurrentSpell = [spellId](const Item &item) {
+	const auto isCurrentSpell = [spellId](const Item &item) -> bool {
 		return item.isScrollOf(spellId) || item.isRuneOf(spellId);
 	};
 
@@ -1972,7 +1970,7 @@ bool CanUseScroll(Player &player, SpellID spell)
 
 void ConsumeStaffCharge(Player &player)
 {
-	auto &staff = player.InvBody[INVLOC_HAND_LEFT];
+	Item &staff = player.InvBody[INVLOC_HAND_LEFT];
 
 	if (!CanUseStaff(staff, player.executedSpell.spellId))
 		return;
@@ -2176,7 +2174,7 @@ void DoTelekinesis()
 	if (pcursitem != -1)
 		NetSendCmdGItem(true, CMD_REQUESTAGITEM, *MyPlayer, pcursitem);
 	if (pcursmonst != -1) {
-		auto &monter = Monsters[pcursmonst];
+		Monster &monter = Monsters[pcursmonst];
 		if (!M_Talker(monter) && monter.talkMsg == TEXT_NONE)
 			NetSendCmdParam1(true, CMD_KNOCKBACK, pcursmonst);
 	}
@@ -2198,7 +2196,7 @@ int CalculateGold(Player &player)
 Size GetInventorySize(const Item &item)
 {
 	int itemSizeIndex = item._iCurs + CURSOR_FIRSTITEM;
-	auto size = GetInvItemSize(itemSizeIndex);
+	Size size = GetInvItemSize(itemSizeIndex);
 
 	return { size.width / InventorySlotSizeInPixels.width, size.height / InventorySlotSizeInPixels.height };
 }

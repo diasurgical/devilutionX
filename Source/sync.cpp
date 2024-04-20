@@ -25,7 +25,7 @@ void SyncOneMonster()
 {
 	for (size_t i = 0; i < ActiveMonsterCount; i++) {
 		int m = ActiveMonsters[i];
-		auto &monster = Monsters[m];
+		Monster &monster = Monsters[m];
 		sgnMonsterPriority[m] = MyPlayer->position.tile.ManhattanDistance(monster.position.tile);
 		if (monster.activeForTicks == 0) {
 			sgnMonsterPriority[m] += 0x1000;
@@ -37,7 +37,7 @@ void SyncOneMonster()
 
 void SyncMonsterPos(TSyncMonster &monsterSync, int ndx)
 {
-	auto &monster = Monsters[ndx];
+	Monster &monster = Monsters[ndx];
 	monsterSync._mndx = ndx;
 	monsterSync._mx = monster.position.tile.x;
 	monsterSync._my = monster.position.tile.y;

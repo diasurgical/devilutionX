@@ -3125,7 +3125,7 @@ void OperateBookcase(Object &bookcase, bool sendmsg, bool sendLootMsg)
 	CreateTypeItem(bookcase.position, false, ItemType::Misc, IMISC_BOOK, sendLootMsg, false);
 
 	if (Quests[Q_ZHAR].IsAvailable()) {
-		auto &zhar = Monsters[MAX_PLRS];
+		Monster &zhar = Monsters[MAX_PLRS];
 		if (zhar.mode == MonsterMode::Stand // prevents playing the "angry" message for the second time if zhar got aggroed by losing vision and talking again
 		    && zhar.uniqueType == UniqueMonsterType::Zhar
 		    && zhar.activeForTicks == UINT8_MAX
