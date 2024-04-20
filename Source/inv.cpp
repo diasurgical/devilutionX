@@ -526,28 +526,28 @@ std::optional<int8_t> CheckOverlappingItems(int slot, const Player &player, Size
 
 std::optional<int8_t> GetPrevItemId(int slot, const Player &player, const Size &itemSize)
 {
-	int8_t item_something = 0;
+	int8_t prevItemId = 0;
 	int cell_num = slot - SLOTXY_INV_FIRST; // Where in InvGrid
 	if (player.HoldItem._itype == ItemType::Gold) {
 		if (player.InvGrid[cell_num] != 0) {
 			int8_t item_cell_begin = player.InvGrid[cell_num];
 			if (item_cell_begin > 0) {
 				if (player.InvList[item_cell_begin - 1]._itype != ItemType::Gold) {
-					item_something = item_cell_begin;
+					prevItemId = item_cell_begin;
 				}
 			} else {
-				item_something = -item_cell_begin;
+				prevItemId = -item_cell_begin;
 			}
 		}
 	} else {
-		const std::optional<int8_t> overlappingItemId = CheckOverlappingItems(slot, player, itemSize, item_something);
+		const std::optional<int8_t> overlappingItemId = CheckOverlappingItems(slot, player, itemSize, prevItemId);
 		if (!overlappingItemId) {
 			return std::nullopt;
 		}
-		item_something = *overlappingItemId;
+		prevItemId = *overlappingItemId;
 	}
 
-	return item_something;
+	return prevItemId;
 }
 
 void CheckInvPaste(Player &player, Point cursorPosition)
