@@ -327,8 +327,7 @@ int FindTargetSlotUnderItemCursor(Point cursorPosition, Size itemSize)
 
 void ChangeBodyEquipment(int slot, Player &player, item_equip_type il)
 {
-	auto iLocToInvLoc = [&slot](item_equip_type loc) {
-		// Table?
+	const auto body_loc = [&slot](item_equip_type loc) {
 		switch (loc) {
 		case ILOC_HELM:
 			return INVLOC_HEAD;
@@ -341,8 +340,7 @@ void ChangeBodyEquipment(int slot, Player &player, item_equip_type il)
 		default:
 			app_fatal("Unexpected equipment type");
 		}
-	};
-	const auto body_loc = iLocToInvLoc(il);
+	}(il);
 	const Item previouslyEquippedItem = player.InvBody[slot];
 	ChangeEquipment(player, body_loc, player.HoldItem.pop(), &player == MyPlayer);
 	if (!previouslyEquippedItem.isEmpty()) {
@@ -542,11 +540,11 @@ std::optional<int8_t> GetPrevItemId(int slot, const Player &player, const Size &
 			}
 		}
 	} else {
-		auto const maybe_overlapped_item = CheckOverlappingItems(slot, player, itemSize, item_something);
-		if (!maybe_overlapped_item) {
+		const std::optional<int8_t> overlappingItemId = CheckOverlappingItems(slot, player, itemSize, item_something);
+		if (!overlappingItemId) {
 			return std::nullopt;
 		}
-		item_something = *maybe_overlapped_item;
+		item_something = *overlappingItemId;
 	}
 
 	return item_something;
