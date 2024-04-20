@@ -325,7 +325,7 @@ int FindTargetSlotUnderItemCursor(Point cursorPosition, Size itemSize)
 	return NUM_XY_SLOTS;
 }
 
-void ChangeBodyEquipment(int slot, Player &player, item_equip_type il)
+void ChangeBodyEquipment(Player &player, int slot, item_equip_type il)
 {
 	const auto body_loc = [&slot](item_equip_type loc) {
 		switch (loc) {
@@ -348,7 +348,7 @@ void ChangeBodyEquipment(int slot, Player &player, item_equip_type il)
 	}
 }
 
-void ChangeEquippedItem(uint8_t slot, Player &player)
+void ChangeEquippedItem(Player &player, uint8_t slot)
 {
 	const auto selectedHand = slot == SLOTXY_HAND_LEFT ? INVLOC_HAND_LEFT : INVLOC_HAND_RIGHT;
 	const auto otherHand = slot == SLOTXY_HAND_LEFT ? INVLOC_HAND_RIGHT : INVLOC_HAND_LEFT;
@@ -401,9 +401,55 @@ void ChangeTwoHandItem(Player &player)
 	}
 }
 
-void ChangeInvItem(Player &player, int8_t prev_it, int slot, Size itemSize)
+int8_t CheckOverlappingItems(int slot, const Player &player, Size itemSize, int8_t prev_it)
 {
-	if (player.HoldItem._itype == ItemType::Gold && prev_it == 0) {
+	// check that the item we're pasting only overlaps one other item (or is going into empty space)
+	const unsigned originCell = static_cast<unsigned>(slot - SLOTXY_INV_FIRST);
+
+	int8_t it = prev_it;
+	for (unsigned rowOffset = 0; rowOffset < static_cast<unsigned>(itemSize.height * InventorySizeInSlots.width); rowOffset += InventorySizeInSlots.width) {
+
+		for (unsigned columnOffset = 0; columnOffset < static_cast<unsigned>(itemSize.width); columnOffset++) {
+			unsigned testCell = originCell + rowOffset + columnOffset;
+			// FindTargetSlotUnderItemCursor returns the top left slot of the inventory region that fits the item, we can be confident this calculation is not going to read out of range.
+			assert(testCell < sizeof(player.InvGrid));
+			if (player.InvGrid[testCell] != 0) {
+				int8_t iv = std::abs(player.InvGrid[testCell]);
+				if (it != 0) {
+					if (it != iv) {
+						// Found two different items that would be displaced by the held item, can't paste the item here.
+						return -1;
+					}
+				} else {
+					it = iv;
+				}
+			}
+		}
+	}
+
+	return it;
+}
+
+int8_t GetPrevItemId(int slot, const Player &player, const Size &itemSize)
+{
+	if (player.HoldItem._itype != ItemType::Gold)
+		return CheckOverlappingItems(slot, player, itemSize, 0);
+	int8_t item_cell_begin = player.InvGrid[slot - SLOTXY_INV_FIRST];
+	if (item_cell_begin == 0)
+		return 0;
+	if (item_cell_begin <= 0)
+		return -item_cell_begin;
+	if (player.InvList[item_cell_begin - 1]._itype != ItemType::Gold)
+		return item_cell_begin;
+	return 0;
+}
+
+bool ChangeInvItem(Player &player, int slot, Size itemSize)
+{
+	int8_t prevItemId = GetPrevItemId(slot, player, itemSize);
+	if (prevItemId < 0) return false;
+
+	if (player.HoldItem._itype == ItemType::Gold && prevItemId == 0) {
 		const int ii = slot - SLOTXY_INV_FIRST;
 		if (player.InvGrid[ii] > 0) {
 			const int invIndex = player.InvGrid[ii] - 1;
@@ -433,27 +479,29 @@ void ChangeInvItem(Player &player, int8_t prev_it, int slot, Size itemSize)
 			NetSendCmdChInvItem(false, ii);
 		}
 	} else {
-		if (prev_it == 0) {
+		if (prevItemId == 0) {
 			player.InvList[player._pNumInv] = player.HoldItem.pop();
 			player._pNumInv++;
-			prev_it = player._pNumInv;
+			prevItemId = player._pNumInv;
 		} else {
-			const int invIndex = prev_it - 1;
+			const int invIndex = prevItemId - 1;
 			if (player.HoldItem._itype == ItemType::Gold)
 				player._pGold += player.HoldItem._ivalue;
 			std::swap(player.InvList[invIndex], player.HoldItem);
 			if (player.HoldItem._itype == ItemType::Gold)
 				player._pGold = CalculateGold(player);
 			for (auto &itemIndex : player.InvGrid) {
-				if (itemIndex == prev_it)
+				if (itemIndex == prevItemId)
 					itemIndex = 0;
-				if (itemIndex == -prev_it)
+				if (itemIndex == -prevItemId)
 					itemIndex = 0;
 			}
 		}
 
-		AddItemToInvGrid(player, slot - SLOTXY_INV_FIRST, prev_it, itemSize, &player == MyPlayer);
+		AddItemToInvGrid(player, slot - SLOTXY_INV_FIRST, prevItemId, itemSize, &player == MyPlayer);
 	}
+
+	return true;
 }
 
 void ChangeBeltItem(Player &player, int slot)
@@ -495,61 +543,6 @@ item_equip_type GetItemEquipType(int slot, item_equip_type desired_loc, const Pl
 	return il;
 }
 
-std::optional<int8_t> CheckOverlappingItems(int slot, const Player &player, Size itemSize, int8_t prev_it)
-{
-	// check that the item we're pasting only overlaps one other item (or is going into empty space)
-	const unsigned originCell = static_cast<unsigned>(slot - SLOTXY_INV_FIRST);
-
-	int8_t it = prev_it;
-	for (unsigned rowOffset = 0; rowOffset < static_cast<unsigned>(itemSize.height * InventorySizeInSlots.width); rowOffset += InventorySizeInSlots.width) {
-
-		for (unsigned columnOffset = 0; columnOffset < static_cast<unsigned>(itemSize.width); columnOffset++) {
-			unsigned testCell = originCell + rowOffset + columnOffset;
-			// FindTargetSlotUnderItemCursor returns the top left slot of the inventory region that fits the item, we can be confident this calculation is not going to read out of range.
-			assert(testCell < sizeof(player.InvGrid));
-			if (player.InvGrid[testCell] != 0) {
-				int8_t iv = std::abs(player.InvGrid[testCell]);
-				if (it != 0) {
-					if (it != iv) {
-						// Found two different items that would be displaced by the held item, can't paste the item here.
-						return std::nullopt;
-					}
-				} else {
-					it = iv;
-				}
-			}
-		}
-	}
-
-	return it;
-}
-
-std::optional<int8_t> GetPrevItemId(int slot, const Player &player, const Size &itemSize)
-{
-	int8_t prevItemId = 0;
-	int cell_num = slot - SLOTXY_INV_FIRST; // Where in InvGrid
-	if (player.HoldItem._itype == ItemType::Gold) {
-		if (player.InvGrid[cell_num] != 0) {
-			int8_t item_cell_begin = player.InvGrid[cell_num];
-			if (item_cell_begin > 0) {
-				if (player.InvList[item_cell_begin - 1]._itype != ItemType::Gold) {
-					prevItemId = item_cell_begin;
-				}
-			} else {
-				prevItemId = -item_cell_begin;
-			}
-		}
-	} else {
-		const std::optional<int8_t> overlappingItemId = CheckOverlappingItems(slot, player, itemSize, prevItemId);
-		if (!overlappingItemId) {
-			return std::nullopt;
-		}
-		prevItemId = *overlappingItemId;
-	}
-
-	return prevItemId;
-}
-
 void CheckInvPaste(Player &player, Point cursorPosition)
 {
 	const Size itemSize = GetInventorySize(player.HoldItem);
@@ -569,12 +562,6 @@ void CheckInvPaste(Player &player, Point cursorPosition)
 		return;
 	}
 
-	std::optional<int8_t> maybe_item_id = 0;
-	if (il == ILOC_UNEQUIPABLE) {
-		maybe_item_id = GetPrevItemId(slot, player, itemSize);
-		if (!maybe_item_id) return;
-	}
-
 	if (IsNoneOf(il, ILOC_UNEQUIPABLE, ILOC_BELT) && !player.CanUseItem(player.HoldItem)) {
 		player.Say(HeroSpeech::ICantUseThisYet);
 		return;
@@ -583,9 +570,6 @@ void CheckInvPaste(Player &player, Point cursorPosition)
 	if (player._pmode > PM_WALK_SIDEWAYS && IsNoneOf(il, ILOC_UNEQUIPABLE, ILOC_BELT))
 		return;
 
-	if (&player == MyPlayer)
-		PlaySFX(ItemInvSnds[ItemCAnimTbl[player.HoldItem._iCurs]]);
-
 	// Select the parameters that go into
 	// ChangeEquipment and add it to post switch
 	switch (il) {
@@ -593,16 +577,16 @@ void CheckInvPaste(Player &player, Point cursorPosition)
 	case ILOC_RING:
 	case ILOC_AMULET:
 	case ILOC_ARMOR:
-		ChangeBodyEquipment(slot, player, il);
+		ChangeBodyEquipment(player, slot, il);
 		break;
 	case ILOC_ONEHAND:
-		ChangeEquippedItem(slot, player);
+		ChangeEquippedItem(player, slot);
 		break;
 	case ILOC_TWOHAND:
 		ChangeTwoHandItem(player);
 		break;
 	case ILOC_UNEQUIPABLE:
-		ChangeInvItem(player, *maybe_item_id, slot, itemSize);
+		if (!ChangeInvItem(player, slot, itemSize)) return;
 		break;
 	case ILOC_BELT:
 		ChangeBeltItem(player, slot);
@@ -614,6 +598,7 @@ void CheckInvPaste(Player &player, Point cursorPosition)
 
 	CalcPlrInv(player, true);
 	if (&player == MyPlayer) {
+		PlaySFX(ItemInvSnds[ItemCAnimTbl[player.HoldItem._iCurs]]);
 		NewCursor(player.HoldItem);
 	}
 }
