@@ -569,9 +569,10 @@ void CheckInvPaste(Player &player, Point cursorPosition)
 		return;
 	}
 
-	auto const maybe_item_id = (il == ILOC_UNEQUIPABLE) ? GetPrevItemId(slot, player, itemSize) : 0;
-	if ((il == ILOC_UNEQUIPABLE) && !maybe_item_id) {
-		return;
+	std::optional<int8_t> maybe_item_id = 0;
+	if (il == ILOC_UNEQUIPABLE) {
+		maybe_item_id = GetPrevItemId(slot, player, itemSize);
+		if (!maybe_item_id) return;
 	}
 
 	if (IsNoneOf(il, ILOC_UNEQUIPABLE, ILOC_BELT) && !player.CanUseItem(player.HoldItem)) {
