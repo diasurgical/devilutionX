@@ -401,12 +401,12 @@ void ChangeTwoHandItem(Player &player)
 	}
 }
 
-int8_t CheckOverlappingItems(int slot, const Player &player, Size itemSize, int8_t prev_it)
+int8_t CheckOverlappingItems(int slot, const Player &player, Size itemSize)
 {
 	// check that the item we're pasting only overlaps one other item (or is going into empty space)
 	const unsigned originCell = static_cast<unsigned>(slot - SLOTXY_INV_FIRST);
 
-	int8_t it = prev_it;
+	int8_t overlappingId = 0;
 	for (unsigned rowOffset = 0; rowOffset < static_cast<unsigned>(itemSize.height * InventorySizeInSlots.width); rowOffset += InventorySizeInSlots.width) {
 
 		for (unsigned columnOffset = 0; columnOffset < static_cast<unsigned>(itemSize.width); columnOffset++) {
@@ -415,25 +415,25 @@ int8_t CheckOverlappingItems(int slot, const Player &player, Size itemSize, int8
 			assert(testCell < sizeof(player.InvGrid));
 			if (player.InvGrid[testCell] != 0) {
 				int8_t iv = std::abs(player.InvGrid[testCell]);
-				if (it != 0) {
-					if (it != iv) {
+				if (overlappingId != 0) {
+					if (overlappingId != iv) {
 						// Found two different items that would be displaced by the held item, can't paste the item here.
 						return -1;
 					}
 				} else {
-					it = iv;
+					overlappingId = iv;
 				}
 			}
 		}
 	}
 
-	return it;
+	return overlappingId;
 }
 
 int8_t GetPrevItemId(int slot, const Player &player, const Size &itemSize)
 {
 	if (player.HoldItem._itype != ItemType::Gold)
-		return CheckOverlappingItems(slot, player, itemSize, 0);
+		return CheckOverlappingItems(slot, player, itemSize);
 	int8_t item_cell_begin = player.InvGrid[slot - SLOTXY_INV_FIRST];
 	if (item_cell_begin == 0)
 		return 0;
