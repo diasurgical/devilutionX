@@ -7,6 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## DevilutionX 1.5.2
+
+### Bug Fixes
+
+#### Multiplayer
+
+- Unable to join game due to invalid player data
+
+#### Translations
+
+- Improve rendering of Chinese/Japanese/Korean texts
+
+#### Gameplay
+
+- Hellfire items not saving their identified state
+
+#### Stability / Performance / System
+
+- Amiga: Incorrect rendering of things behind transparent elements
+- Android: Game locking up when switching sound output
+- Linux: Statically link BZIP2 and libsodium on x86_64
+- Stash corrupting when converting a hero between Diablo and Hellfire
+- Xbox: Game crashing unexpectedly
+- Xbox: Improve performance
+
 ## DevilutionX 1.5.1
 
 ### Features
@@ -75,7 +100,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Controls
 
-- Inconsistencies with placing items in to the stash
+- Inconsistencies with placing items into the stash
 - Gamepad: Being stuck in dialogs
 - Gamepad: Unable to use some scrolls directly
 
@@ -99,7 +124,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Controls
 
-- Inconsistencies with placing items in to the inventory
+- Inconsistencies with placing items into the inventory
 
 ### Bugfixes for original Hellfire bugs
 
@@ -1404,7 +1429,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### September 18, 2018
 
-- Merge nightly back in to devilution
+- Merge nightly back into devilution
 
 ### September 3, 2018
 

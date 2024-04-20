@@ -136,20 +136,20 @@ void DrawMapLineSteepSW(const Surface &out, Point from, int width, std::uint8_t 
  */
 void DrawMapFreeLine(const Surface &out, Point from, Point to, uint8_t colorIndex)
 {
-	int dx = std::abs(to.x - from.x);
-	int dy = std::abs(to.y - from.y);
-	int sx = from.x < to.x ? 1 : -1;
-	int sy = from.y < to.y ? 1 : -1;
+	const int dx = std::abs(to.x - from.x);
+	const int dy = std::abs(to.y - from.y);
+	const int sx = from.x < to.x ? 1 : -1;
+	const int sy = from.y < to.y ? 1 : -1;
 	int err = dx - dy;
 
 	while (true) {
-		out.SetPixel(from, colorIndex);
+		SetMapPixel(out, from, colorIndex);
 
 		if (from.x == to.x && from.y == to.y) {
 			break;
 		}
 
-		int e2 = 2 * err;
+		const int e2 = 2 * err;
 		if (e2 > -dy) {
 			err -= dy;
 			from.x += sx;

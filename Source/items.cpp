@@ -989,9 +989,6 @@ int SaveItemPower(const Player &player, Item &item, ItemPower &power)
 	case IPL_NOMINSTR:
 		item._iMinStr = 0;
 		break;
-	case IPL_INVCURS:
-		item._iCurs = power.param1;
-		break;
 	case IPL_ADDACLIFE:
 		item._iFlags |= (ItemSpecialEffect::LightningArrows | ItemSpecialEffect::FireArrows);
 		item._iFMinDam = power.param1;
@@ -1481,14 +1478,18 @@ void GetUniqueItem(const Player &player, Item &item, _unique_items uid)
 {
 	UniqueItemFlags[uid] = true;
 
-	for (auto power : UniqueItems[uid].powers) {
+	const auto &uniqueItemData = UniqueItems[uid];
+
+	for (auto power : uniqueItemData.powers) {
 		if (power.type == IPL_INVALID)
 			break;
 		SaveItemPower(player, item, power);
 	}
 
-	CopyUtf8(item._iIName, UniqueItems[uid].UIName, sizeof(item._iIName));
-	item._iIvalue = UniqueItems[uid].UIValue;
+	CopyUtf8(item._iIName, uniqueItemData.UIName, sizeof(item._iIName));
+	if (uniqueItemData.UICurs != ICURS_DEFAULT)
+		item._iCurs = uniqueItemData.UICurs;
+	item._iIvalue = uniqueItemData.UIValue;
 
 	if (item._iMiscId == IMISC_UNIQUE)
 		item._iSeed = uid;
@@ -1784,10 +1785,31 @@ void PrintItemOil(char iDidx)
 	}
 }
 
-void DrawUniqueInfoWindow(const Surface &out)
+Point DrawUniqueInfoWindow(const Surface &out)
 {
-	ClxDraw(out, GetPanelPosition(UiPanels::Inventory, { 24 - SidePanelSize.width, 327 }), (*pSTextBoxCels)[0]);
-	DrawHalfTransparentRectTo(out, GetRightPanel().position.x - SidePanelSize.width + 27, GetRightPanel().position.y + 28, 265, 297);
+	const bool isInStash = IsStashOpen && GetLeftPanel().contains(MousePosition);
+	int panelX, panelY;
+	if (isInStash) {
+		ClxDraw(out, GetPanelPosition(UiPanels::Stash, { 24 + SidePanelSize.width, 327 }), (*pSTextBoxCels)[0]);
+		panelX = GetLeftPanel().position.x + SidePanelSize.width + 27;
+		panelY = GetLeftPanel().position.y + 28;
+	} else {
+		ClxDraw(out, GetPanelPosition(UiPanels::Inventory, { 24 - SidePanelSize.width, 327 }), (*pSTextBoxCels)[0]);
+		panelX = GetRightPanel().position.x - SidePanelSize.width + 27;
+		panelY = GetRightPanel().position.y + 28;
+	}
+
+	const Point rightInfoPos = GetRightPanel().position - Displacement { SidePanelSize.width, 0 };
+	const Point leftInfoPos = GetLeftPanel().position + Displacement { SidePanelSize.width, 0 };
+
+	const bool isInfoOverlapping = IsLeftPanelOpen() && IsRightPanelOpen() && GetLeftPanel().contains(rightInfoPos);
+	int fadeLevel = isInfoOverlapping ? 3 : 1;
+
+	for (int i = 0; i < fadeLevel; ++i) {
+		DrawHalfTransparentRectTo(out, panelX, panelY, 265, 297);
+	}
+
+	return isInStash ? leftInfoPos : rightInfoPos;
 }
 
 void printItemMiscKBM(const Item &item, const bool isOil, const bool isCastOnTarget)
@@ -2537,135 +2559,66 @@ void InitItems()
 	initItemGetRecords();
 }
 
-void CalcPlrItemVals(Player &player, bool loadgfx)
+int GetBonusAC(const Item &item)
 {
-	int mind = 0; // min damage
-	int maxd = 0; // max damage
-	int tac = 0;  // accuracy
-
-	int bdam = 0;   // bonus damage
-	int btohit = 0; // bonus chance to hit
-	int bac = 0;    // bonus accuracy
-
-	ItemSpecialEffect iflgs = ItemSpecialEffect::None; // item_special_effect flags
-
-	ItemSpecialEffectHf pDamAcFlags = ItemSpecialEffectHf::None;
-
-	int sadd = 0; // added strength
-	int madd = 0; // added magic
-	int dadd = 0; // added dexterity
-	int vadd = 0; // added vitality
-
-	uint64_t spl = 0; // bitarray for all enabled/active spells
-
-	int fr = 0; // fire resistance
-	int lr = 0; // lightning resistance
-	int mr = 0; // magic resistance
-
-	int dmod = 0; // bonus damage mod?
-	int ghit = 0; // increased damage from enemies
-
-	int lrad = 10; // light radius
-
-	int ihp = 0;   // increased HP
-	int imana = 0; // increased mana
-
-	int spllvladd = 0; // increased spell level
-	int enac = 0;      // enhanced accuracy
-
-	int fmin = 0; // minimum fire damage
-	int fmax = 0; // maximum fire damage
-	int lmin = 0; // minimum lightning damage
-	int lmax = 0; // maximum lightning damage
-
-	for (auto &item : player.InvBody) {
-		if (!item.isEmpty() && item._iStatFlag) {
-
-			mind += item._iMinDam;
-			maxd += item._iMaxDam;
-			tac += item._iAC;
-
-			if (IsValidSpell(item._iSpell)) {
-				spl |= GetSpellBitmask(item._iSpell);
-			}
-
-			if (item._iMagical == ITEM_QUALITY_NORMAL || item._iIdentified) {
-				bdam += item._iPLDam;
-				btohit += item._iPLToHit;
-				if (item._iPLAC != 0) {
-					int tmpac = item._iAC;
-					tmpac *= item._iPLAC;
-					tmpac /= 100;
-					if (tmpac == 0)
-						tmpac = math::Sign(item._iPLAC);
-					bac += tmpac;
-				}
-				iflgs |= item._iFlags;
-				pDamAcFlags |= item._iDamAcFlags;
-				sadd += item._iPLStr;
-				madd += item._iPLMag;
-				dadd += item._iPLDex;
-				vadd += item._iPLVit;
-				fr += item._iPLFR;
-				lr += item._iPLLR;
-				mr += item._iPLMR;
-				dmod += item._iPLDamMod;
-				ghit += item._iPLGetHit;
-				lrad += item._iPLLight;
-				ihp += item._iPLHP;
-				imana += item._iPLMana;
-				spllvladd += item._iSplLvlAdd;
-				enac += item._iPLEnAc;
-				fmin += item._iFMinDam;
-				fmax += item._iFMaxDam;
-				lmin += item._iLMinDam;
-				lmax += item._iLMaxDam;
-			}
-		}
+	if (item._iPLAC != 0) {
+		int tempAc = item._iAC;
+		tempAc *= item._iPLAC;
+		tempAc /= 100;
+		if (tempAc == 0)
+			tempAc = math::Sign(item._iPLAC);
+		return tempAc;
 	}
 
+	return 0;
+}
+
+void CalcPlrDamage(Player &player, int minDamage, int maxDamage)
+{
 	const uint8_t playerLevel = player.getCharacterLevel();
 
-	if (mind == 0 && maxd == 0) {
-		mind = 1;
-		maxd = 1;
+	if (minDamage == 0 && maxDamage == 0) {
+		minDamage = 1;
+		maxDamage = 1;
 
-		if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Shield && player.InvBody[INVLOC_HAND_LEFT]._iStatFlag) {
-			maxd = 3;
-		}
-
-		if (player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Shield && player.InvBody[INVLOC_HAND_RIGHT]._iStatFlag) {
-			maxd = 3;
+		if (player.isHoldingItem(ItemType::Shield)) {
+			maxDamage = 3;
 		}
 
 		if (player._pClass == HeroClass::Monk) {
-			mind = std::max(mind, playerLevel / 2);
-			maxd = std::max<int>(maxd, playerLevel);
+			minDamage = std::max(minDamage, playerLevel / 2);
+			maxDamage = std::max<int>(maxDamage, playerLevel);
 		}
 	}
 
+	player._pIMinDam = minDamage;
+	player._pIMaxDam = maxDamage;
+}
+
+void CalcPlrPrimaryStats(Player &player, int strength, int &magic, int dexterity, int &vitality)
+{
+	const uint8_t playerLevel = player.getCharacterLevel();
+
 	if (HasAnyOf(player._pSpellFlags, SpellFlag::RageActive)) {
-		sadd += 2 * playerLevel;
-		dadd += playerLevel + playerLevel / 2;
-		vadd += 2 * playerLevel;
+		strength += 2 * playerLevel;
+		dexterity += playerLevel + playerLevel / 2;
+		vitality += 2 * playerLevel;
 	}
 	if (HasAnyOf(player._pSpellFlags, SpellFlag::RageCooldown)) {
-		sadd -= 2 * playerLevel;
-		dadd -= playerLevel + playerLevel / 2;
-		vadd -= 2 * playerLevel;
+		strength -= 2 * playerLevel;
+		dexterity -= playerLevel + playerLevel / 2;
+		vitality -= 2 * playerLevel;
 	}
 
-	player._pIMinDam = mind;
-	player._pIMaxDam = maxd;
-	player._pIAC = tac;
-	player._pIBonusDam = bdam;
-	player._pIBonusToHit = btohit;
-	player._pIBonusAC = bac;
-	player._pIFlags = iflgs;
-	player.pDamAcFlags = pDamAcFlags;
-	player._pIBonusDamMod = dmod;
-	player._pIGetHit = ghit;
+	player._pStrength = std::max(0, strength + player._pBaseStr);
+	player._pMagic = std::max(0, magic + player._pBaseMag);
+	player._pDexterity = std::max(0, dexterity + player._pBaseDex);
+	player._pVitality = std::max(0, vitality + player._pBaseVit);
+}
 
+void CalcPlrLightRadius(Player &player, int lrad)
+
+{
 	lrad = std::clamp(lrad, 2, 15);
 
 	if (player._pLightRad != lrad) {
@@ -2673,184 +2626,194 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 		ChangeVisionRadius(player.getId(), lrad);
 		player._pLightRad = lrad;
 	}
+}
 
-	player._pStrength = std::max(0, sadd + player._pBaseStr);
-	player._pMagic = std::max(0, madd + player._pBaseMag);
-	player._pDexterity = std::max(0, dadd + player._pBaseDex);
-	player._pVitality = std::max(0, vadd + player._pBaseVit);
+void CalcPlrDamageMod(Player &player)
+{
+	const uint8_t playerLevel = player.getCharacterLevel();
+	const Item &leftHandItem = player.InvBody[INVLOC_HAND_LEFT];
+	const Item &rightHandItem = player.InvBody[INVLOC_HAND_RIGHT];
+	const int strMod = playerLevel * player._pStrength;
+	const int strDexMod = playerLevel * (player._pStrength + player._pDexterity);
 
-	if (player._pClass == HeroClass::Rogue) {
-		player._pDamageMod = playerLevel * (player._pStrength + player._pDexterity) / 200;
-	} else if (player._pClass == HeroClass::Monk) {
-		player._pDamageMod = playerLevel * (player._pStrength + player._pDexterity) / 150;
-		if ((!player.InvBody[INVLOC_HAND_LEFT].isEmpty() && player.InvBody[INVLOC_HAND_LEFT]._itype != ItemType::Staff) || (!player.InvBody[INVLOC_HAND_RIGHT].isEmpty() && player.InvBody[INVLOC_HAND_RIGHT]._itype != ItemType::Staff))
-			player._pDamageMod /= 2; // Monks get half the normal damage bonus if they're holding a non-staff weapon
-	} else if (player._pClass == HeroClass::Bard) {
-		if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Sword || player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Sword)
-			player._pDamageMod = playerLevel * (player._pStrength + player._pDexterity) / 150;
-		else if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Bow || player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Bow) {
-			player._pDamageMod = playerLevel * (player._pStrength + player._pDexterity) / 250;
+	switch (player._pClass) {
+	case HeroClass::Rogue:
+		player._pDamageMod = strDexMod / 200;
+		return;
+	case HeroClass::Monk:
+		if (player.isHoldingItem(ItemType::Staff) || (leftHandItem.isEmpty() && rightHandItem.isEmpty())) {
+			player._pDamageMod = strDexMod / 150;
 		} else {
-			player._pDamageMod = playerLevel * player._pStrength / 100;
+			player._pDamageMod = strDexMod / 300;
 		}
-	} else if (player._pClass == HeroClass::Barbarian) {
-
-		if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Axe || player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Axe) {
-			player._pDamageMod = playerLevel * player._pStrength / 75;
-		} else if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Mace || player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Mace) {
-			player._pDamageMod = playerLevel * player._pStrength / 75;
-		} else if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Bow || player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Bow) {
-			player._pDamageMod = playerLevel * player._pStrength / 300;
+		return;
+	case HeroClass::Bard:
+		if (player.isHoldingItem(ItemType::Sword)) {
+			player._pDamageMod = strDexMod / 150;
+		} else if (player.isHoldingItem(ItemType::Bow)) {
+			player._pDamageMod = strDexMod / 250;
 		} else {
-			player._pDamageMod = playerLevel * player._pStrength / 100;
+			player._pDamageMod = strMod / 100;
 		}
-
-		if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Shield || player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Shield) {
-			if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Shield)
-				player._pIAC -= player.InvBody[INVLOC_HAND_LEFT]._iAC / 2;
-			else if (player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Shield)
-				player._pIAC -= player.InvBody[INVLOC_HAND_RIGHT]._iAC / 2;
-		} else if (IsNoneOf(player.InvBody[INVLOC_HAND_LEFT]._itype, ItemType::Staff, ItemType::Bow) && IsNoneOf(player.InvBody[INVLOC_HAND_RIGHT]._itype, ItemType::Staff, ItemType::Bow)) {
+		return;
+	case HeroClass::Barbarian:
+		if (player.isHoldingItem(ItemType::Axe) || player.isHoldingItem(ItemType::Mace)) {
+			player._pDamageMod = strMod / 75;
+		} else if (player.isHoldingItem(ItemType::Bow)) {
+			player._pDamageMod = strMod / 300;
+		} else {
+			player._pDamageMod = strMod / 100;
+		}
+		if (player.isHoldingItem(ItemType::Shield)) {
+			if (leftHandItem._itype == ItemType::Shield)
+				player._pIAC -= leftHandItem._iAC / 2;
+			else if (rightHandItem._itype == ItemType::Shield)
+				player._pIAC -= rightHandItem._iAC / 2;
+		} else if (!player.isHoldingItem(ItemType::Staff) && !player.isHoldingItem(ItemType::Bow)) {
 			player._pDamageMod += playerLevel * player._pVitality / 100;
 		}
 		player._pIAC += playerLevel / 4;
-	} else {
-		player._pDamageMod = playerLevel * player._pStrength / 100;
+		return;
+	default:
+		player._pDamageMod = strMod / 100;
+		return;
 	}
+}
 
-	player._pISpells = spl;
-
-	EnsureValidReadiedSpell(player);
-
-	player._pISplLvlAdd = spllvladd;
-	player._pIEnAc = enac;
+void CalcPlrResistances(Player &player, ItemSpecialEffect iflgs, int fire, int lightning, int magic)
+{
+	const uint8_t playerLevel = player.getCharacterLevel();
 
 	if (player._pClass == HeroClass::Barbarian) {
-		mr += playerLevel;
-		fr += playerLevel;
-		lr += playerLevel;
+		magic += playerLevel;
+		fire += playerLevel;
+		lightning += playerLevel;
 	}
 
 	if (HasAnyOf(player._pSpellFlags, SpellFlag::RageCooldown)) {
-		mr -= playerLevel;
-		fr -= playerLevel;
-		lr -= playerLevel;
+		magic -= playerLevel;
+		fire -= playerLevel;
+		lightning -= playerLevel;
 	}
 
 	if (HasAnyOf(iflgs, ItemSpecialEffect::ZeroResistance)) {
 		// reset resistances to zero if the respective special effect is active
-		mr = 0;
-		fr = 0;
-		lr = 0;
+		magic = 0;
+		fire = 0;
+		lightning = 0;
 	}
 
-	player._pMagResist = std::clamp(mr, 0, MaxResistance);
-	player._pFireResist = std::clamp(fr, 0, MaxResistance);
-	player._pLghtResist = std::clamp(lr, 0, MaxResistance);
+	player._pMagResist = std::clamp(magic, 0, MaxResistance);
+	player._pFireResist = std::clamp(fire, 0, MaxResistance);
+	player._pLghtResist = std::clamp(lightning, 0, MaxResistance);
+}
 
+void CalcPlrLifeMana(Player &player, int vitality, int magic, int life, int mana)
+{
 	const ClassAttributes &playerClassAttributes = player.getClassAttributes();
-	vadd = (vadd * playerClassAttributes.itmLife) >> 6;
-	ihp += (vadd << 6); // BUGFIX: blood boil can cause negative shifts here (see line 757)
+	vitality = (vitality * playerClassAttributes.itmLife) >> 6;
+	life += (vitality << 6);
 
-	madd = (madd * playerClassAttributes.itmMana) >> 6;
-	imana += (madd << 6);
+	magic = (magic * playerClassAttributes.itmMana) >> 6;
+	mana += (magic << 6);
 
-	player._pMaxHP = ihp + player._pMaxHPBase;
-	player._pHitPoints = std::min(ihp + player._pHPBase, player._pMaxHP);
+	player._pMaxHP = life + player._pMaxHPBase;
+	player._pHitPoints = std::min(life + player._pHPBase, player._pMaxHP);
 
 	if (&player == MyPlayer && (player._pHitPoints >> 6) <= 0) {
 		SetPlayerHitPoints(player, 0);
 	}
 
-	player._pMaxMana = imana + player._pMaxManaBase;
-	player._pMana = std::min(imana + player._pManaBase, player._pMaxMana);
+	player._pMaxMana = mana + player._pMaxManaBase;
+	player._pMana = std::min(mana + player._pManaBase, player._pMaxMana);
+}
 
-	player._pIFMinDam = fmin;
-	player._pIFMaxDam = fmax;
-	player._pILMinDam = lmin;
-	player._pILMaxDam = lmax;
-
-	player._pInfraFlag = false;
+void CalcPlrBlockFlag(Player &player)
+{
+	const auto &leftHandItem = player.InvBody[INVLOC_HAND_LEFT];
+	const auto &rightHandItem = player.InvBody[INVLOC_HAND_RIGHT];
 
 	player._pBlockFlag = false;
+
 	if (player._pClass == HeroClass::Monk) {
-		if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Staff && player.InvBody[INVLOC_HAND_LEFT]._iStatFlag) {
+		if (player.isHoldingItem(ItemType::Staff)) {
 			player._pBlockFlag = true;
 			player._pIFlags |= ItemSpecialEffect::FastBlock;
+		} else if ((leftHandItem.isEmpty() && rightHandItem.isEmpty()) || (leftHandItem._iClass == ICLASS_WEAPON && leftHandItem._iLoc != ILOC_TWOHAND && rightHandItem.isEmpty()) || (rightHandItem._iClass == ICLASS_WEAPON && rightHandItem._iLoc != ILOC_TWOHAND && leftHandItem.isEmpty())) {
+			player._pBlockFlag = true;
 		}
-		if (player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Staff && player.InvBody[INVLOC_HAND_RIGHT]._iStatFlag) {
-			player._pBlockFlag = true;
-			player._pIFlags |= ItemSpecialEffect::FastBlock;
-		}
-		if (player.InvBody[INVLOC_HAND_LEFT].isEmpty() && player.InvBody[INVLOC_HAND_RIGHT].isEmpty())
-			player._pBlockFlag = true;
-		if (player.InvBody[INVLOC_HAND_LEFT]._iClass == ICLASS_WEAPON && player.GetItemLocation(player.InvBody[INVLOC_HAND_LEFT]) != ILOC_TWOHAND && player.InvBody[INVLOC_HAND_RIGHT].isEmpty())
-			player._pBlockFlag = true;
-		if (player.InvBody[INVLOC_HAND_RIGHT]._iClass == ICLASS_WEAPON && player.GetItemLocation(player.InvBody[INVLOC_HAND_RIGHT]) != ILOC_TWOHAND && player.InvBody[INVLOC_HAND_LEFT].isEmpty())
-			player._pBlockFlag = true;
 	}
 
+	player._pBlockFlag = player._pBlockFlag || player.isHoldingItem(ItemType::Shield);
+}
+
+PlayerWeaponGraphic GetPlrAnimWeaponId(const Player &player)
+{
+	const Item &leftHandItem = player.InvBody[INVLOC_HAND_LEFT];
+	const Item &rightHandItem = player.InvBody[INVLOC_HAND_RIGHT];
+	bool holdsShield = player.isHoldingItem(ItemType::Shield);
+	bool leftHandUsable = player.CanUseItem(leftHandItem);
+	bool rightHandUsable = player.CanUseItem(rightHandItem);
 	ItemType weaponItemType = ItemType::None;
-	bool holdsShield = false;
-	if (!player.InvBody[INVLOC_HAND_LEFT].isEmpty()
-	    && player.InvBody[INVLOC_HAND_LEFT]._iClass == ICLASS_WEAPON
-	    && player.InvBody[INVLOC_HAND_LEFT]._iStatFlag) {
-		weaponItemType = player.InvBody[INVLOC_HAND_LEFT]._itype;
+
+	if (!leftHandItem.isEmpty() && leftHandItem._iClass == ICLASS_WEAPON && leftHandUsable) {
+		weaponItemType = leftHandItem._itype;
 	}
 
-	if (!player.InvBody[INVLOC_HAND_RIGHT].isEmpty()
-	    && player.InvBody[INVLOC_HAND_RIGHT]._iClass == ICLASS_WEAPON
-	    && player.InvBody[INVLOC_HAND_RIGHT]._iStatFlag) {
-		weaponItemType = player.InvBody[INVLOC_HAND_RIGHT]._itype;
+	if (!rightHandItem.isEmpty() && rightHandItem._iClass == ICLASS_WEAPON && rightHandUsable) {
+		weaponItemType = rightHandItem._itype;
 	}
 
-	if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Shield && player.InvBody[INVLOC_HAND_LEFT]._iStatFlag) {
-		player._pBlockFlag = true;
-		holdsShield = true;
-	}
-	if (player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Shield && player.InvBody[INVLOC_HAND_RIGHT]._iStatFlag) {
-		player._pBlockFlag = true;
-		holdsShield = true;
-	}
-
-	PlayerWeaponGraphic animWeaponId = holdsShield ? PlayerWeaponGraphic::UnarmedShield : PlayerWeaponGraphic::Unarmed;
 	switch (weaponItemType) {
 	case ItemType::Sword:
-		animWeaponId = holdsShield ? PlayerWeaponGraphic::SwordShield : PlayerWeaponGraphic::Sword;
-		break;
+		return holdsShield ? PlayerWeaponGraphic::SwordShield : PlayerWeaponGraphic::Sword;
 	case ItemType::Axe:
-		animWeaponId = PlayerWeaponGraphic::Axe;
-		break;
+		return PlayerWeaponGraphic::Axe;
 	case ItemType::Bow:
-		animWeaponId = PlayerWeaponGraphic::Bow;
-		break;
+		return PlayerWeaponGraphic::Bow;
 	case ItemType::Mace:
-		animWeaponId = holdsShield ? PlayerWeaponGraphic::MaceShield : PlayerWeaponGraphic::Mace;
-		break;
+		return holdsShield ? PlayerWeaponGraphic::MaceShield : PlayerWeaponGraphic::Mace;
 	case ItemType::Staff:
-		animWeaponId = PlayerWeaponGraphic::Staff;
-		break;
+		return PlayerWeaponGraphic::Staff;
 	default:
-		break;
+		return holdsShield ? PlayerWeaponGraphic::UnarmedShield : PlayerWeaponGraphic::Unarmed;
 	}
+}
 
-	PlayerArmorGraphic animArmorId = PlayerArmorGraphic::Light;
-	if (player.InvBody[INVLOC_CHEST]._itype == ItemType::HeavyArmor && player.InvBody[INVLOC_CHEST]._iStatFlag) {
-		if (player._pClass == HeroClass::Monk && player.InvBody[INVLOC_CHEST]._iMagical == ITEM_QUALITY_UNIQUE)
-			player._pIAC += playerLevel / 2;
-		animArmorId = PlayerArmorGraphic::Heavy;
-	} else if (player.InvBody[INVLOC_CHEST]._itype == ItemType::MediumArmor && player.InvBody[INVLOC_CHEST]._iStatFlag) {
-		if (player._pClass == HeroClass::Monk) {
-			if (player.InvBody[INVLOC_CHEST]._iMagical == ITEM_QUALITY_UNIQUE)
+PlayerArmorGraphic GetPlrAnimArmorId(Player &player)
+{
+	const Item &chestItem = player.InvBody[INVLOC_CHEST];
+	bool chestUsable = player.CanUseItem(chestItem);
+	const uint8_t playerLevel = player.getCharacterLevel();
+
+	if (chestUsable) {
+		switch (chestItem._itype) {
+		case ItemType::HeavyArmor:
+			if (player._pClass == HeroClass::Monk) {
+				if (chestItem._iMagical == ITEM_QUALITY_UNIQUE)
+					player._pIAC += playerLevel / 2;
+			}
+			return PlayerArmorGraphic::Heavy;
+		case ItemType::MediumArmor:
+			if (player._pClass == HeroClass::Monk) {
+				if (chestItem._iMagical == ITEM_QUALITY_UNIQUE)
+					player._pIAC += playerLevel * 2;
+				else
+					player._pIAC += playerLevel / 2;
+			}
+			return PlayerArmorGraphic::Medium;
+		default:
+			if (player._pClass == HeroClass::Monk)
 				player._pIAC += playerLevel * 2;
-			else
-				player._pIAC += playerLevel / 2;
+			return PlayerArmorGraphic::Light;
 		}
-		animArmorId = PlayerArmorGraphic::Medium;
-	} else if (player._pClass == HeroClass::Monk) {
-		player._pIAC += playerLevel * 2;
 	}
 
+	return PlayerArmorGraphic::Light;
+}
+
+void CalcPlrGraphics(Player &player, PlayerWeaponGraphic animWeaponId, PlayerArmorGraphic animArmorId, bool loadgfx)
+{
 	const uint8_t gfxNum = static_cast<uint8_t>(animWeaponId) | static_cast<uint8_t>(animArmorId);
 	if (player._pgfxnum != gfxNum && loadgfx) {
 		player._pgfxnum = gfxNum;
@@ -2869,7 +2832,11 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	} else {
 		player._pgfxnum = gfxNum;
 	}
+}
 
+void CalcPlrAuricBonus(Player &player)
+
+{
 	if (&player == MyPlayer) {
 		if (player.InvBody[INVLOC_AMULET].isEmpty() || player.InvBody[INVLOC_AMULET].IDidx != IDI_AURIC) {
 			int half = MaxGold;
@@ -2881,7 +2848,115 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 			MaxGold = GOLD_MAX_LIMIT * 2;
 		}
 	}
+}
 
+void CalcPlrItemVals(Player &player, bool loadgfx)
+{
+	int minDamage = 0;
+	int maxDamage = 0;
+	int ac = 0;
+
+	int dam = 0;
+	int toHit = 0;
+	int bonusAc = 0;
+
+	ItemSpecialEffect flags = ItemSpecialEffect::None;
+	ItemSpecialEffectHf damAcFlags = ItemSpecialEffectHf::None;
+
+	int strength = 0;
+	int magic = 0;
+	int dexterity = 0;
+	int vitality = 0;
+
+	uint64_t spells = 0;
+
+	int fireRes = 0;
+	int lightRes = 0;
+	int magicRes = 0;
+
+	int damMod = 0;
+	int getHit = 0;
+
+	int lightRadius = 10;
+
+	int life = 0;
+	int mana = 0;
+
+	int8_t splLvlAdd = 0;
+	int targetAc = 0;
+
+	int minFireDam = 0;
+	int maxFireDam = 0;
+	int minLightDam = 0;
+	int maxLightDam = 0;
+
+	for (const Item &item : player.InvBody) {
+		if (!item.isEmpty() && item._iStatFlag) {
+
+			minDamage += item._iMinDam;
+			maxDamage += item._iMaxDam;
+			ac += item._iAC;
+
+			if (IsValidSpell(item._iSpell)) {
+				spells |= GetSpellBitmask(item._iSpell);
+			}
+
+			if (item._iMagical == ITEM_QUALITY_NORMAL || item._iIdentified) {
+				dam += item._iPLDam;
+				toHit += item._iPLToHit;
+				bonusAc += GetBonusAC(item);
+				flags |= item._iFlags;
+				damAcFlags |= item._iDamAcFlags;
+				strength += item._iPLStr;
+				magic += item._iPLMag;
+				dexterity += item._iPLDex;
+				vitality += item._iPLVit;
+				fireRes += item._iPLFR;
+				lightRes += item._iPLLR;
+				magicRes += item._iPLMR;
+				damMod += item._iPLDamMod;
+				getHit += item._iPLGetHit;
+				lightRadius += item._iPLLight;
+				life += item._iPLHP;
+				mana += item._iPLMana;
+				splLvlAdd += item._iSplLvlAdd;
+				targetAc += item._iPLEnAc;
+				minFireDam += item._iFMinDam;
+				maxFireDam += item._iFMaxDam;
+				minLightDam += item._iLMinDam;
+				maxLightDam += item._iLMaxDam;
+			}
+		}
+	}
+
+	CalcPlrDamage(player, minDamage, maxDamage);
+	CalcPlrPrimaryStats(player, strength, magic, dexterity, vitality);
+	player._pIAC = ac;
+	player._pIBonusDam = dam;
+	player._pIBonusToHit = toHit;
+	player._pIBonusAC = bonusAc;
+	player._pIFlags = flags;
+	player.pDamAcFlags = damAcFlags;
+	player._pIBonusDamMod = damMod;
+	player._pIGetHit = getHit;
+	CalcPlrLightRadius(player, lightRadius);
+	CalcPlrDamageMod(player);
+	player._pISpells = spells;
+	EnsureValidReadiedSpell(player);
+	player._pISplLvlAdd = splLvlAdd;
+	player._pIEnAc = targetAc;
+	CalcPlrResistances(player, flags, fireRes, lightRes, magicRes);
+	CalcPlrLifeMana(player, vitality, magic, life, mana);
+	player._pIFMinDam = minFireDam;
+	player._pIFMaxDam = maxFireDam;
+	player._pILMinDam = minLightDam;
+	player._pILMaxDam = maxLightDam;
+
+	CalcPlrBlockFlag(player);
+
+	CalcPlrGraphics(player, GetPlrAnimWeaponId(player), GetPlrAnimArmorId(player), loadgfx);
+
+	CalcPlrAuricBonus(player);
 	RedrawComponent(PanelDrawComponent::Mana);
 	RedrawComponent(PanelDrawComponent::Health);
 }
@@ -3023,11 +3098,13 @@ void CreatePlrItems(Player &player)
 		}
 	}
 
+	InitCursor();
 	for (auto &itemChoice : loadout.items) {
 		_item_indexes itemData = gbIsHellfire && itemChoice.hellfire != _item_indexes::IDI_NONE ? itemChoice.hellfire : itemChoice.diablo;
 		if (itemData != _item_indexes::IDI_NONE)
 			CreateStartingItem(player, itemData);
 	}
+	FreeCursor();
 
 	if (loadout.gold > 0) {
 		Item &goldItem = player.InvList[player._pNumInv];
@@ -3840,8 +3917,6 @@ bool DoOil(Player &player, int cii)
 		return _("life stealing");
 	case IPL_NOMINSTR:
 		return _("no strength requirement");
-	case IPL_INVCURS:
-		return { std::string_view(" ") };
 	case IPL_ADDACLIFE:
 		if (item._iFMinDam == item._iFMaxDam)
 			return fmt::format(fmt::runtime(_("lightning damage: {:d}")), item._iFMinDam);
@@ -3876,12 +3951,7 @@ bool DoOil(Player &player, int cii)
 
 void DrawUniqueInfo(const Surface &out)
 {
-	const Point position = GetRightPanel().position - Displacement { SidePanelSize.width, 0 };
-	if (IsLeftPanelOpen() && GetLeftPanel().contains(position)) {
-		return;
-	}
-
-	DrawUniqueInfoWindow(out);
+	const Point position = DrawUniqueInfoWindow(out);
 
 	Rectangle rect { position + Displacement { 32, 56 }, { 257, 0 } };
 	const UniqueItem &uitem = UniqueItems[curruitem._iUid];

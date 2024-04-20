@@ -142,7 +142,7 @@ bool TileAllowsLight(Point position)
 {
 	if (!InDungeonBounds(position))
 		return false;
-	return !TileHasAny(dPiece[position.x][position.y], TileProperties::BlockLight);
+	return !TileHasAny(position, TileProperties::BlockLight);
 }
 
 void DoVisionFlags(Point position, MapExplorationType doAutomap, bool visible)
@@ -294,7 +294,7 @@ void DoVision(Point position, uint8_t radius, MapExplorationType doAutomap, bool
 				Point crawl = position + VisionCrawlTable[j][k] * factor;
 				if (!InDungeonBounds(crawl))
 					break;
-				bool blockerFlag = TileHasAny(dPiece[crawl.x][crawl.y], TileProperties::BlockLight);
+				bool blockerFlag = TileHasAny(crawl, TileProperties::BlockLight);
 				bool tileOK = !blockerFlag;
 
 				if (VisionCrawlTable[j][k].deltaX > 0 && VisionCrawlTable[j][k].deltaY > 0) {
@@ -362,7 +362,7 @@ void MakeLightTable()
 	} else if (IsAnyOf(leveltype, DTYPE_NEST, DTYPE_CRYPT)) {
 		// Make the lava fully bright
 		for (auto &lightTable : LightTables)
-			std::iota(lightTable.begin(), lightTable.begin() + 16, 0);
+			std::iota(lightTable.begin(), lightTable.begin() + 16, uint8_t { 0 });
 		LightTables[15][0] = 0;
 		std::fill_n(LightTables[15].begin() + 1, 15, 1);
 	}
@@ -438,7 +438,7 @@ void InitLighting()
 	DisableLighting = false;
 #endif
 
-	std::iota(ActiveLights.begin(), ActiveLights.end(), 0);
+	std::iota(ActiveLights.begin(), ActiveLights.end(), uint8_t { 0 });
 	VisionActive = {};
 	TransList = {};
 }
@@ -581,7 +581,7 @@ void ProcessLightList()
 			i--;
 			continue;
 		}
-		if (TileHasAny(dPiece[light.position.tile.x][light.position.tile.y], TileProperties::Solid))
+		if (TileHasAny(light.position.tile, TileProperties::Solid))
 			continue; // Monster hidden in a wall, don't spoil the surprise
 		DoLighting(light.position.tile, light.radius, light.position.offset);
 	}

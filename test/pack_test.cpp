@@ -2,6 +2,7 @@
 
 #include <gtest/gtest.h>
 
+#include "cursor.h"
 #include "monstdat.h"
 #include "pack.h"
 #include "playerdat.hpp"
@@ -342,7 +343,7 @@ const TestItemStruct DiabloItems[] = {
 	{ "Falchion",                     ItemType::Sword,              1,      62,       250,         4,         8,     0, ItemSpecialEffect::None,                        0, SpellID::Null,                 0,             0,            10,        20,        0,          0,       0,        0,        0,        0,        0,       0,       0,       0,         0,       0,           0,           0,          0,            0,      0,          0,          0,          0,          0,          -1,          -1,        30,         0,         0,    120 },
 	{ "Long Sword of vim",            ItemType::Sword,              1,      60,      4400,         2,        10,     0, ItemSpecialEffect::None,                        0, SpellID::Null,                 0,             0,            18,        40,        0,          0,       0,        0,        0,        0,       15,       0,       0,       0,         0,       0,           0,           0,          0,            0,      0,          0,          0,          0,          0,          -1,          25,        30,         0,        30,    125 },
 	{ "Frog's Staff of Holy Bolt",    ItemType::Staff,              1,     109,         1,         2,         4,     0, ItemSpecialEffect::None,                       23, SpellID::HolyBolt,            60,            60,            10,        25,        0,          0,       0,        0,        0,        0,        0,       0,       0,       0,      -384,       0,           0,           0,          0,            0,      0,          0,          0,          0,          0,          34,          -1,         0,        20,         0,    151 },
-	{ "Short Staff of Charged Bolt",  ItemType::Staff,              1,     109,       520,         2,         4,     0, ItemSpecialEffect::None,                       23, SpellID::ChargedBolt,          9,            40,            25,        25,        0,          0,       0,        0,        0,        0,        0,       0,       0,       0,         0,       0,           0,           0,          0,            0,      0,          0,          0,          0,          0,          -1,          -1,         0,        20,         0,    166 },
+	{ "Short Staff of Charged Bolt",  ItemType::Staff,              1,     109,       470,         2,         4,     0, ItemSpecialEffect::None,                       23, SpellID::ChargedBolt,          9,            40,            25,        25,        0,          0,       0,        0,        0,        0,        0,       0,       0,       0,         0,       0,           0,           0,          0,            0,      0,          0,          0,          0,          0,          -1,          -1,         0,        25,         0,    166 },
 	{ "Short Staff of Charged Bolt",  ItemType::Staff,              1,     109,         1,         2,         4,     0, ItemSpecialEffect::None,                       23, SpellID::ChargedBolt,         50,            50,            18,        25,        0,          0,       0,        0,        0,        0,        0,       0,       0,       0,         0,       0,           0,           0,          0,            0,      0,          0,          0,          0,          0,          -1,          -1,         0,        25,         0,    151 },
 	{ "Cap of the mind",              ItemType::Helm,               2,      91,      1845,         0,         0,     2, ItemSpecialEffect::None,                        0, SpellID::Null,                 0,             0,            12,        15,        0,          0,       0,        0,        9,        0,        0,       0,       0,       0,         0,       0,           0,           0,          0,            0,      0,          0,          0,          0,          0,          -1,          21,         0,         0,         0,     48 },
 	{ "Quilted Armor of protection",  ItemType::LightArmor,         2,     129,      1200,         0,         0,     7, ItemSpecialEffect::None,                        0, SpellID::Null,                 0,             0,            30,        30,        0,          0,       0,        0,        0,        0,        0,       0,       0,       0,         0,       0,           0,          -2,          0,            0,      0,          0,          0,          0,          0,          -1,          30,         0,         0,         0,     58 },
@@ -879,6 +880,7 @@ public:
 		Players.resize(2);
 		MyPlayer = &Players[0];
 		gbIsMultiplayer = true;
+		gbIsSpawn = false;
 
 		PlayerPack testPack {
 			0, 0, -1, 9, 0, 2, 61, 24, 0, 0, "MP-Warrior", 0, 120, 25, 60, 60, 37, 0, 85670061, 3921, 13568, 13568, 3904, 3904,
@@ -954,6 +956,15 @@ public:
 
 	static void SetUpTestSuite()
 	{
+		LoadCoreArchives();
+		LoadGameArchives();
+
+		// The tests need spawn.mpq or diabdat.mpq
+		// Please provide them so that the tests can run successfully
+		ASSERT_TRUE(HaveSpawn() || HaveDiabdat());
+
+		gbIsHellfire = false;
+		InitCursor();
 		LoadSpellData();
 		LoadPlayerDataFiles();
 		LoadMonsterData();

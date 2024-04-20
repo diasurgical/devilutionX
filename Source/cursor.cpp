@@ -7,6 +7,9 @@
 
 #include <cmath>
 #include <cstdint>
+#include <limits>
+#include <string_view>
+#include <vector>
 
 #include <fmt/format.h>
 
@@ -17,7 +20,6 @@
 #include "engine.h"
 #include "engine/backbuffer_state.hpp"
 #include "engine/demomode.h"
-#include "engine/load_cel.hpp"
 #include "engine/point.hpp"
 #include "engine/points_in_rectangle_range.hpp"
 #include "engine/render/clx_render.hpp"
@@ -37,83 +39,19 @@
 #include "utils/surface_to_clx.hpp"
 #include "utils/utf8.hpp"
 
+#ifdef UNPACKED_MPQS
+#include "engine/load_clx.hpp"
+#else
+#include "engine/load_cel.hpp"
+#include "engine/load_file.hpp"
+#include "utils/parse_int.hpp"
+#endif
+
 namespace devilution {
 namespace {
 /** Cursor images CEL */
 OptionalOwnedClxSpriteList pCursCels;
 OptionalOwnedClxSpriteList pCursCels2;
-
-/** Maps from objcurs.cel frame number to frame width. */
-const uint16_t InvItemWidth1[] = {
-	// clang-format off
-	// Cursors
-	33, 32, 32, 32, 32, 32, 32, 32, 32, 32, 23,
-	// Items
-	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
-	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
-	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
-	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
-	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
-	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
-	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
-	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
-	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
-	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
-	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
-	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
-	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
-	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
-	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
-	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
-	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
-};
-const uint16_t InvItemWidth2[] = {
-	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
-	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
-	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
-	2 * 28, 2 * 28, 1 * 28, 1 * 28, 1 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
-	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
-	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
-	2 * 28
-	// clang-format on
-};
-constexpr uint16_t InvItems1Size = sizeof(InvItemWidth1) / sizeof(InvItemWidth1[0]);
-constexpr uint16_t InvItems2Size = sizeof(InvItemWidth2) / sizeof(InvItemWidth2[0]);
-
-/** Maps from objcurs.cel frame number to frame height. */
-const uint16_t InvItemHeight1[InvItems1Size] = {
-	// clang-format off
-	// Cursors
-	29, 32, 32, 32, 32, 32, 32, 32, 32, 32, 35,
-	// Items
-	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
-	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
-	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
-	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
-	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
-	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
-	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
-	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
-	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
-	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
-	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
-	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
-	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
-	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
-	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
-	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
-	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
-};
-const uint16_t InvItemHeight2[InvItems2Size] = {
-	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
-	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
-	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
-	2 * 28, 2 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
-	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
-	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
-	3 * 28
-	// clang-format on
-};
 
 OptionalOwnedClxSpriteList *HalfSizeItemSprites;
 OptionalOwnedClxSpriteList *HalfSizeItemSpritesRed;
@@ -430,6 +368,30 @@ bool TrySelectPixelBased(Point tile)
 	return false;
 }
 
+#ifndef UNPACKED_MPQS
+std::vector<uint16_t> ReadWidths(const char *path)
+{
+	size_t len;
+	const std::unique_ptr<char[]> data = LoadFileInMem<char>(path, &len);
+	std::string_view str { data.get(), len };
+	std::vector<uint16_t> result;
+	while (!str.empty()) {
+		const char *end;
+		const ParseIntResult<uint16_t> parseResult = ParseInt<uint16_t>(str, std::numeric_limits<uint16_t>::min(),
+		    std::numeric_limits<uint16_t>::max(), &end);
+		if (!parseResult.has_value()) {
+			app_fatal(StrCat("Failed to parse ", path, ": [", str, "]"));
+		}
+		result.push_back(parseResult.value());
+		str.remove_prefix(end - str.data());
+		while (!str.empty() && (str[0] == '\r' || str[0] == '\n')) {
+			str.remove_prefix(1);
+		}
+	}
+	return result;
+}
+#endif
+
 } // namespace
 
 /** Current highlighted monster */
@@ -455,9 +417,17 @@ int pcurs;
 void InitCursor()
 {
 	assert(!pCursCels);
-	pCursCels = LoadCel("data\\inv\\objcurs", InvItemWidth1);
-	if (gbIsHellfire)
-		pCursCels2 = LoadCel("data\\inv\\objcurs2", InvItemWidth2);
+#ifdef UNPACKED_MPQS
+	pCursCels = LoadClx("data\\inv\\objcurs.clx");
+	if (gbIsHellfire) {
+		pCursCels2 = LoadClx("data\\inv\\objcurs2.clx");
+	}
+#else
+	pCursCels = LoadCel("data\\inv\\objcurs", ReadWidths("data\\inv\\objcurs-widths.txt").data());
+	if (gbIsHellfire) {
+		pCursCels2 = LoadCel("data\\inv\\objcurs2", ReadWidths("data\\inv\\objcurs2-widths.txt").data());
+	}
+#endif
 	ClearCursor();
 }
 
@@ -470,22 +440,20 @@ void FreeCursor()
 
 ClxSprite GetInvItemSprite(int cursId)
 {
-	if (cursId <= InvItems1Size)
+	assert(cursId > 0);
+	const size_t numSprites = pCursCels->numSprites();
+	if (static_cast<size_t>(cursId) <= numSprites) {
 		return (*pCursCels)[cursId - 1];
-	return (*pCursCels2)[cursId - InvItems1Size - 1];
-}
-
-size_t GetNumInvItems()
-{
-	return InvItems1Size + InvItems2Size;
+	}
+	assert(gbIsHellfire);
+	assert(cursId - numSprites <= pCursCels2->numSprites());
+	return (*pCursCels2)[cursId - numSprites - 1];
 }
 
 Size GetInvItemSize(int cursId)
 {
-	const int i = cursId - 1;
-	if (i >= InvItems1Size)
-		return { InvItemWidth2[i - InvItems1Size], InvItemHeight2[i - InvItems1Size] };
-	return { InvItemWidth1[i], InvItemHeight1[i] };
+	const ClxSprite sprite = GetInvItemSprite(cursId);
+	return { sprite.width(), sprite.height() };
 }
 
 ClxSprite GetHalfSizeItemSprite(int cursId)
@@ -502,9 +470,8 @@ void CreateHalfSizeItemSprites()
 {
 	if (HalfSizeItemSprites != nullptr)
 		return;
-	const int numInvItems = gbIsHellfire
-	    ? InvItems1Size + InvItems2Size - (static_cast<size_t>(CURSOR_FIRSTITEM) - 1)
-	    : InvItems1Size + (static_cast<size_t>(CURSOR_FIRSTITEM) - 1);
+	const int numInvItems = pCursCels->numSprites() - (static_cast<size_t>(CURSOR_FIRSTITEM) - 1)
+	    + (gbIsHellfire ? pCursCels2->numSprites() : 0);
 	HalfSizeItemSprites = new OptionalOwnedClxSpriteList[numInvItems];
 	HalfSizeItemSpritesRed = new OptionalOwnedClxSpriteList[numInvItems];
 	const uint8_t *redTrn = GetInfravisionTRN();
@@ -538,11 +505,11 @@ void CreateHalfSizeItemSprites()
 	};
 
 	size_t outputIndex = 0;
-	for (size_t i = static_cast<int>(CURSOR_FIRSTITEM) - 1; i < InvItems1Size; ++i, ++outputIndex) {
+	for (size_t i = static_cast<int>(CURSOR_FIRSTITEM) - 1, n = pCursCels->numSprites(); i < n; ++i, ++outputIndex) {
 		createHalfSize((*pCursCels)[i], outputIndex);
 	}
 	if (gbIsHellfire) {
-		for (size_t i = 0; i < InvItems2Size; ++i, ++outputIndex) {
+		for (size_t i = 0, n = pCursCels2->numSprites(); i < n; ++i, ++outputIndex) {
 			createHalfSize((*pCursCels2)[i], outputIndex);
 		}
 	}

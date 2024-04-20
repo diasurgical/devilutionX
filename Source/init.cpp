@@ -401,10 +401,12 @@ void MainWndProc(const SDL_Event &event)
 		diablo_quit(0);
 		break;
 	case SDL_WINDOWEVENT_FOCUS_LOST:
-		diablo_focus_pause();
+		if (*sgOptions.Gameplay.pauseOnFocusLoss)
+			diablo_focus_pause();
 		break;
 	case SDL_WINDOWEVENT_FOCUS_GAINED:
-		diablo_focus_unpause();
+		if (*sgOptions.Gameplay.pauseOnFocusLoss)
+			diablo_focus_unpause();
 		break;
 	case SDL_WINDOWEVENT_MOVED:
 	case SDL_WINDOWEVENT_RESIZED:

@@ -12,6 +12,7 @@
 #include "monster.h"
 #include "objdat.h"
 #include "objects.h"
+#include "player.h"
 #include "quests.h"
 
 namespace devilution {
@@ -1988,7 +1989,11 @@ bool PlaceStairs(lvl_entry entry)
 
 void GenerateLevel(lvl_entry entry)
 {
+	if (LevelSeeds[currlevel])
+		SetRndSeed(*LevelSeeds[currlevel]);
+
 	while (true) {
+		LevelSeeds[currlevel] = GetLCGEngineState();
 		InitDungeonFlags();
 		int x1 = GenerateRnd(20) + 10;
 		int y1 = GenerateRnd(20) + 10;

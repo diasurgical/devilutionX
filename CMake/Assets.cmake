@@ -2,7 +2,7 @@ if(NOT DEFINED DEVILUTIONX_ASSETS_OUTPUT_DIRECTORY)
   set(DEVILUTIONX_ASSETS_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/assets")
 endif()
 
-set(devilutionx_langs bg cs da de el es fr hr it ja ko pl pt_BR ro ru uk sv zh_CN zh_TW)
+set(devilutionx_langs bg cs da de el es fr hr hu it ja ko pl pt_BR ro ru uk sv zh_CN zh_TW)
 if(USE_GETTEXT_FROM_VCPKG)
   # vcpkg doesn't add its own tools directory to the search path
   list(APPEND Gettext_ROOT ${CMAKE_CURRENT_BINARY_DIR}/vcpkg_installed/${VCPKG_TARGET_TRIPLET}/tools/gettext/bin)
@@ -172,6 +172,12 @@ set(devilutionx_assets
   ui_art/hf_titlew.clx
   ui_art/mainmenuw.clx
   ui_art/supportw.clx)
+
+if(NOT UNPACKED_MPQS)
+  list(APPEND devilutionx_assets
+    data/inv/objcurs-widths.txt
+    data/inv/objcurs2-widths.txt)
+endif()
 
 if(NOT USE_SDL1 AND NOT VITA)
   list(APPEND devilutionx_assets

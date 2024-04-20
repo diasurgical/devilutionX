@@ -60,10 +60,7 @@ namespace {
 
 struct DirectionSettings {
 	Direction dir;
-	DisplacementOf<int8_t> tileAdd;
-	DisplacementOf<int8_t> map;
 	PLR_MODE walkMode;
-	void (*walkModeHandler)(Player &, const DirectionSettings &);
 };
 
 void UpdatePlayerLightOffset(Player &player)
@@ -75,48 +72,22 @@ void UpdatePlayerLightOffset(Player &player)
 	ChangeLightOffset(player.lightId, offset.screenToLight());
 }
 
-void WalkNorthwards(Player &player, const DirectionSettings &walkParams)
+void WalkInDirection(Player &player, const DirectionSettings &walkParams)
 {
 	player.occupyTile(player.position.future, true);
-	player.position.temp = player.position.tile + walkParams.tileAdd;
-}
-
-void WalkSouthwards(Player &player, const DirectionSettings & /*walkParams*/)
-{
-	player.position.temp = player.position.tile;
-	player.position.tile = player.position.future; // Move player to the next tile to maintain correct render order
-	player.occupyTile(player.position.temp, true);
-	player.occupyTile(player.position.tile, false);
-	// BUGFIX: missing `if (leveltype != DTYPE_TOWN) {` for call to ChangeLightXY and PM_ChangeLightOff.
-	ChangeLightXY(player.lightId, player.position.tile);
-	UpdatePlayerLightOffset(player);
-}
-
-void WalkSideways(Player &player, const DirectionSettings &walkParams)
-{
-	Point const nextPosition = player.position.tile + walkParams.map;
-
-	player.occupyTile(player.position.tile, true);
-	player.occupyTile(player.position.future, false);
-
-	if (leveltype != DTYPE_TOWN) {
-		ChangeLightXY(player.lightId, nextPosition);
-		UpdatePlayerLightOffset(player);
-	}
-
-	player.position.temp = player.position.future;
+	player.position.temp = player.position.tile + walkParams.dir;
 }
 
 constexpr std::array<const DirectionSettings, 8> WalkSettings { {
 	// clang-format off
-	{ Direction::South,     {  1,  1 }, { 0, 0 }, PM_WALK_SOUTHWARDS, WalkSouthwards },
-	{ Direction::SouthWest, {  0,  1 }, { 0, 0 }, PM_WALK_SOUTHWARDS, WalkSouthwards },
-	{ Direction::West,      { -1,  1 }, { 0, 1 }, PM_WALK_SIDEWAYS,   WalkSideways   },
-	{ Direction::NorthWest, { -1,  0 }, { 0, 0 }, PM_WALK_NORTHWARDS, WalkNorthwards },
-	{ Direction::North,     { -1, -1 }, { 0, 0 }, PM_WALK_NORTHWARDS, WalkNorthwards },
-	{ Direction::NorthEast, {  0, -1 }, { 0, 0 }, PM_WALK_NORTHWARDS, WalkNorthwards },
-	{ Direction::East,      {  1, -1 }, { 1, 0 }, PM_WALK_SIDEWAYS,   WalkSideways   },
-	{ Direction::SouthEast, {  1,  0 }, { 0, 0 }, PM_WALK_SOUTHWARDS, WalkSouthwards }
+	{ Direction::South,     PM_WALK_SOUTHWARDS },
+	{ Direction::SouthWest, PM_WALK_SOUTHWARDS },
+	{ Direction::West,      PM_WALK_SIDEWAYS   },
+	{ Direction::NorthWest, PM_WALK_NORTHWARDS },
+	{ Direction::North,     PM_WALK_NORTHWARDS },
+	{ Direction::NorthEast, PM_WALK_NORTHWARDS },
+	{ Direction::East,      PM_WALK_SIDEWAYS   },
+	{ Direction::SouthEast, PM_WALK_SOUTHWARDS }
 	// clang-format on
 } };
 
@@ -150,9 +121,9 @@ void HandleWalkMode(Player &player, Direction dir)
 	player._pdir = dir;
 
 	// The player's tile position after finishing this movement action
-	player.position.future = player.position.tile + dirModeParams.tileAdd;
+	player.position.future = player.position.tile + dirModeParams.dir;
 
-	dirModeParams.walkModeHandler(player, dirModeParams);
+	WalkInDirection(player, dirModeParams);
 
 	player.tempDirection = dirModeParams.dir;
 	player._pmode = dirModeParams.walkMode;
@@ -430,7 +401,7 @@ void InitLevelChange(Player &player)
 /**
  * @brief Continue movement towards new tile
  */
-bool DoWalk(Player &player, int variant)
+bool DoWalk(Player &player)
 {
 	// Play walking sound effect on certain animation frames
 	if (*sgOptions.Audio.walkingSound && (leveltype != DTYPE_TOWN || sgGameInitInfo.bRunInTown == 0)) {
@@ -447,22 +418,10 @@ bool DoWalk(Player &player, int variant)
 	}
 
 	// We reached the new tile -> update the player's tile position
-	switch (variant) {
-	case PM_WALK_NORTHWARDS:
-		dPlayer[player.position.tile.x][player.position.tile.y] = 0;
-		player.position.tile = player.position.temp;
-		player.occupyTile(player.position.tile, false);
-		break;
-	case PM_WALK_SOUTHWARDS:
-		dPlayer[player.position.temp.x][player.position.temp.y] = 0;
-		break;
-	case PM_WALK_SIDEWAYS:
-		dPlayer[player.position.tile.x][player.position.tile.y] = 0;
-		player.position.tile = player.position.temp;
-		// dPlayer is set here for backwards comparability, without it the player would be invisible if loaded from a vanilla save.
-		player.occupyTile(player.position.tile, false);
-		break;
-	}
+	dPlayer[player.position.tile.x][player.position.tile.y] = 0;
+	player.position.tile = player.position.temp;
+	// dPlayer is set here for backwards compatibility; without it, the player would be invisible if loaded from a vanilla save.
+	player.occupyTile(player.position.tile, false);
 
 	// Update the coordinates for lighting and vision entries for the player
 	if (leveltype != DTYPE_TOWN) {
@@ -600,7 +559,7 @@ bool PlrHitMonst(Player &player, Monster &monster, bool adjacentDamage = false)
 	}
 
 	if (gbIsHellfire && HasAllOf(player._pIFlags, ItemSpecialEffect::FireDamage | ItemSpecialEffect::LightningDamage)) {
-		int midam = player._pIFMinDam + GenerateRnd(player._pIFMaxDam - player._pIFMinDam);
+		int midam = RandomIntBetween(player._pIFMinDam, player._pIFMaxDam);
 		AddMissile(player.position.tile, player.position.temp, player._pdir, MissileID::SpectralArrow, TARGET_MONSTERS, player, midam, 0);
 	}
 	int mind = player._pIMinDam;
@@ -920,7 +879,7 @@ bool DoRangeAttack(Player &player)
 			mistype = MissileID::LightningArrow;
 		}
 		if (HasAllOf(player._pIFlags, ItemSpecialEffect::FireArrows | ItemSpecialEffect::LightningArrows)) {
-			dmg = player._pIFMinDam + GenerateRnd(player._pIFMaxDam - player._pIFMinDam);
+			dmg = RandomIntBetween(player._pIFMinDam, player._pIFMaxDam);
 			mistype = MissileID::SpectralArrow;
 		}
 
@@ -1507,6 +1466,7 @@ void ValidatePlayer()
 	}
 
 	myPlayer._pMemSpells &= msk;
+	myPlayer._pInfraFlag = false;
 }
 
 void CheckCheatStats(Player &player)
@@ -2691,7 +2651,7 @@ StartPlayerKill(Player &player, DeathReason deathReason)
 
 	player.Say(HeroSpeech::AuughUh);
 
-	// Are the current animations item dependend?
+	// Are the current animations item dependent?
 	if (player._pgfxnum != 0) {
 		if (dropItems) {
 			// Ensure death animation show the player without weapon and armor, because they drop on death
@@ -3049,7 +3009,7 @@ void ProcessPlayers()
 				case PM_WALK_NORTHWARDS:
 				case PM_WALK_SOUTHWARDS:
 				case PM_WALK_SIDEWAYS:
-					tplayer = DoWalk(player, player._pmode);
+					tplayer = DoWalk(player);
 					break;
 				case PM_ATTACK:
 					tplayer = DoAttack(player);
@@ -3464,9 +3424,15 @@ void PlayDungMsgs()
 		myPlayer.Say(HeroSpeech::IMustBeGettingClose, 40);
 		myPlayer.pDungMsgs |= DungMsgHell;
 	} else if (!setlevel && currlevel == 16 && !myPlayer._pLvlVisited[16] && (myPlayer.pDungMsgs & DungMsgDiablo) == 0) {
-		sfxdelay = 40;
-		sfxdnum = SfxID::DiabloGreeting;
-		myPlayer.pDungMsgs |= DungMsgDiablo;
+		for (auto &monster : Monsters) {
+			if (monster.type().type != MT_DIABLO) continue;
+			if (monster.hitPoints > 0) {
+				sfxdelay = 40;
+				sfxdnum = SfxID::DiabloGreeting;
+				myPlayer.pDungMsgs |= DungMsgDiablo;
+			}
+			break;
+		}
 	} else if (!setlevel && currlevel == 17 && !myPlayer._pLvlVisited[17] && (myPlayer.pDungMsgs2 & 1) == 0) {
 		sfxdelay = 10;
 		sfxdnum = SfxID::Defiler1;

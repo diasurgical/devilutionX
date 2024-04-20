@@ -199,13 +199,13 @@ bool GetDebugGridText(Point dungeonCoords, char *debugGridTextBuffer)
 		info = dObject[dungeonCoords.x][dungeonCoords.y];
 		break;
 	case DebugGridTextItem::Solid:
-		info = TileHasAny(dPiece[dungeonCoords.x][dungeonCoords.y], TileProperties::Solid) << 0 | TileHasAny(dPiece[dungeonCoords.x][dungeonCoords.y], TileProperties::BlockLight) << 1 | TileHasAny(dPiece[dungeonCoords.x][dungeonCoords.y], TileProperties::BlockMissile) << 2;
+		info = TileHasAny(dungeonCoords, TileProperties::Solid) << 0 | TileHasAny(dungeonCoords, TileProperties::BlockLight) << 1 | TileHasAny(dungeonCoords, TileProperties::BlockMissile) << 2;
 		break;
 	case DebugGridTextItem::Transparent:
-		info = TileHasAny(dPiece[dungeonCoords.x][dungeonCoords.y], TileProperties::Transparent) << 0 | TileHasAny(dPiece[dungeonCoords.x][dungeonCoords.y], TileProperties::TransparentLeft) << 1 | TileHasAny(dPiece[dungeonCoords.x][dungeonCoords.y], TileProperties::TransparentRight) << 2;
+		info = TileHasAny(dungeonCoords, TileProperties::Transparent) << 0 | TileHasAny(dungeonCoords, TileProperties::TransparentLeft) << 1 | TileHasAny(dungeonCoords, TileProperties::TransparentRight) << 2;
 		break;
 	case DebugGridTextItem::Trap:
-		info = TileHasAny(dPiece[dungeonCoords.x][dungeonCoords.y], TileProperties::Trap);
+		info = TileHasAny(dungeonCoords, TileProperties::Trap);
 		break;
 	case DebugGridTextItem::AutomapView:
 		info = AutomapView[megaCoords.x][megaCoords.y];

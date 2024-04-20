@@ -1,10 +1,10 @@
 id	dropRate	class	equipType	cursorGraphic	itemType	uniqueBaseItem	name	shortName	minMonsterLevel	durability	minDamage	maxDamage	minArmor	maxArmor	minStrength	minMagic	minDexterity	specialEffects	miscId	spell	usable	value
-IDI_GOLD	Regular	Gold	Unequippable	GOLD	Gold	NONE	Gold		1	0	0	0	0	0	0	0	0		NONE	Null	true	0
-IDI_WARRIOR	Never	Weapon	One-handed	SHORT_SWORD	Sword	NONE	Short Sword		2	20	2	6	0	0	18	0	0		NONE	Null	false	50
-IDI_WARRSHLD	Never	Armor	One-handed	BUCKLER	Shield	NONE	Buckler		2	10	0	0	3	3	0	0	0		NONE	Null	false	50
+IDI_GOLD	Regular	Gold	Unequippable	GOLD_SMALL	Gold	NONE	Gold		1	0	0	0	0	0	0	0	0		NONE	Null	true	0
+IDI_WARRIOR	Never	Weapon	One-handed	SHORT_SWORD	Sword	NONE	Short Sword		2	24	2	6	0	0	18	0	0		NONE	Null	false	120
+IDI_WARRSHLD	Never	Armor	One-handed	BUCKLER	Shield	NONE	Buckler		2	16	0	0	3	3	0	0	0		NONE	Null	false	30
 IDI_WARRCLUB	Never	Weapon	One-handed	CLUB	Mace	SPIKCLUB	Club		1	20	1	6	0	0	0	0	0		NONE	Null	false	20
 IDI_ROGUE	Never	Weapon	Two-handed	SHORT_BOW	Bow	NONE	Short Bow		1	30	1	4	0	0	0	0	0		NONE	Null	false	100
-IDI_SORCERER	Never	Weapon	Two-handed	SHORT_STAFF	Staff	NONE	Short Staff of Mana		1	25	2	4	0	0	0	20	0		STAFF	Mana	false	520
+IDI_SORCERER	Never	Weapon	Two-handed	SHORT_STAFF	Staff	NONE	Short Staff of Mana		1	25	2	4	0	0	0	17	0		STAFF	Mana	false	210
 IDI_CLEAVER	Never	Weapon	Two-handed	CLEAVER	Axe	CLEAVER	Cleaver		10	10	4	24	0	0	0	0	0		UNIQUE	Null	false	2000
 IDI_SKCROWN	Never	Armor	Helm	THE_UNDEAD_CROWN	Helm	SKCROWN	The Undead Crown		0	50	0	0	15	15	0	0	0	RandomStealLife	UNIQUE	Null	false	10000
 IDI_INFRARING	Never	Misc	Ring	EMPYREAN_BAND	Ring	INFRARING	Empyrean Band		0	0	0	0	0	0	0	0	0		UNIQUE	Null	false	8000
@@ -13,7 +13,7 @@ IDI_OPTAMULET	Never	Misc	Amulet	OPTIC_AMULET	Amulet	OPTAMULET	Optic Amulet		0	0	
 IDI_TRING	Never	Misc	Ring	RING_OF_TRUTH	Ring	TRING	Ring of Truth		0	0	0	0	0	0	0	0	0		UNIQUE	Null	false	1000
 IDI_BANNER	Never	Quest	Unequippable	TAVERN_SIGN	Misc	NONE	Tavern Sign		0	0	0	0	0	0	0	0	0		NONE	Null	false	0
 IDI_HARCREST	Never	Armor	Helm	HARLEQUIN_CREST	Helm	HARCREST	Harlequin Crest		0	15	0	0	0	0	0	0	0		UNIQUE	Null	false	15
-IDI_STEELVEIL	Never	Armor	Helm	VIEL_OF_STEEL	Helm	STEELVEIL	Veil of Steel		0	60	0	0	18	18	0	0	0		UNIQUE	Null	false	0
+IDI_STEELVEIL	Never	Armor	Helm	VEIL_OF_STEEL	Helm	STEELVEIL	Veil of Steel		0	60	0	0	18	18	0	0	0		UNIQUE	Null	false	0
 IDI_GLDNELIX	Never	Misc	Unequippable	GOLDEN_ELIXIR	Misc	ELIXIR	Golden Elixir		15	0	0	0	0	0	0	0	0		NONE	Null	false	0
 IDI_ANVIL	Never	Quest	Unequippable	ANVIL_OF_FURY	Misc	NONE	Anvil of Fury		0	0	0	0	0	0	0	0	0		NONE	Null	false	0
 IDI_MUSHROOM	Never	Quest	Unequippable	BLACK_MUSHROOM	Misc	NONE	Black Mushroom		0	0	0	0	0	0	0	0	0		NONE	Null	false	0
@@ -146,7 +146,7 @@ IDI_GREYSUIT	Never	Quest	Unequippable	GREY_SUIT	Misc	NONE	Grey Suit		0	0	0	0	0	0
 	Double	Weapon	Two-handed	HUNTERS_BOW	Bow	HUNTBOW	Hunter's Bow	Bow	3	40	2	5	0	0	20	0	35		NONE	Null	false	350
 	Double	Weapon	Two-handed	HUNTERS_BOW	Bow	LONGBOW	Long Bow	Bow	5	35	1	6	0	0	25	0	30		NONE	Null	false	250
 	Double	Weapon	Two-handed	COMPOSITE_BOW	Bow	COMPBOW	Composite Bow	Bow	7	45	3	6	0	0	25	0	40		NONE	Null	false	600
-	Double	Weapon	Two-handed	SHORT_BATTLE_BOW	Bow	NONE	Short Battle Bow	Bow	9	45	3	7	0	0	30	0	50		NONE	Null	false	750
+IDI_SHORT_BATTLE_BOW	Double	Weapon	Two-handed	SHORT_BATTLE_BOW	Bow	NONE	Short Battle Bow	Bow	9	45	3	7	0	0	30	0	50		NONE	Null	false	750
 	Double	Weapon	Two-handed	LONG_BATTLE_BOW	Bow	BATTLEBOW	Long Battle Bow	Bow	11	50	1	10	0	0	30	0	60		NONE	Null	false	1000
 	Double	Weapon	Two-handed	SHORT_WAR_BOW	Bow	NONE	Short War Bow	Bow	15	55	4	8	0	0	35	0	70		NONE	Null	false	1500
 	Double	Weapon	Two-handed	LONG_WAR_BOW	Bow	WARBOW	Long War Bow	Bow	19	60	1	14	0	0	45	0	80		NONE	Null	false	2000
@@ -165,5 +165,5 @@ IDI_GREYSUIT	Never	Quest	Unequippable	GREY_SUIT	Misc	NONE	Grey Suit		0	0	0	0	0	0
 	Regular	Misc	Unequippable	GREATER_RUNE_OF_FIRE	Misc	NONE	Greater Rune of Fire	Rune	7	0	0	0	0	0	0	42	0		GR_RUNEF	Null	true	400
 	Regular	Misc	Unequippable	GREATER_RUNE_OF_LIGHTNING	Misc	NONE	Greater Rune of Lightning	Rune	7	0	0	0	0	0	0	42	0		GR_RUNEL	Null	true	500
 	Regular	Misc	Unequippable	RUNE_OF_STONE	Misc	NONE	Rune of Stone	Rune	7	0	0	0	0	0	0	25	0		RUNES	Null	true	300
-IDI_SORCERER	Never	Weapon	Two-handed	SHORT_STAFF	Staff	NONE	Short Staff of Charged Bolt		1	25	2	4	0	0	0	20	0		STAFF	ChargedBolt	false	520
+IDI_SORCERER	Never	Weapon	Two-handed	SHORT_STAFF	Staff	NONE	Short Staff of Charged Bolt		1	25	2	4	0	0	0	25	0		STAFF	ChargedBolt	false	470
 IDI_ARENAPOT	Never	Misc	Unequippable	ARENA_POTION	Misc	NONE	Arena Potion		7	0	0	0	0	0	0	0	0		ARENAPOT	Null	true	0

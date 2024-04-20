@@ -1002,7 +1002,7 @@ void LoadDroppedItems(LoadHelper &file, size_t savedItemCount)
 	file.Skip<uint8_t>(MAXITEMS * 2);
 
 	// Reset ActiveItems, the Items array will be populated from the start
-	std::iota(ActiveItems, ActiveItems + MAXITEMS, 0);
+	std::iota(ActiveItems, ActiveItems + MAXITEMS, uint8_t { 0 });
 	ActiveItemCount = 0;
 	// Clear dItem so we can populate valid drop locations
 	memset(dItem, 0, sizeof(dItem));
@@ -1759,6 +1759,33 @@ void LoadAdditionalMissiles()
 	}
 }
 
+void SaveLevelSeeds(SaveWriter &saveWriter)
+{
+	SaveHelper file(saveWriter, "levelseeds", giNumberOfLevels * (sizeof(uint8_t) + sizeof(uint32_t)));
+
+	for (int i = 0; i < giNumberOfLevels; i++) {
+		file.WriteLE<uint8_t>(LevelSeeds[i] ? 1 : 0);
+		if (LevelSeeds[i]) {
+			file.WriteLE<uint32_t>(*LevelSeeds[i]);
+		}
+	}
+}
+
+void LoadLevelSeeds()
+{
+	LoadHelper file(OpenSaveArchive(gSaveNumber), "levelseeds");
+	if (!file.IsValid())
+		return;
+
+	for (int i = 0; i < giNumberOfLevels; i++) {
+		if (file.NextLE<uint8_t>() != 0) {
+			LevelSeeds[i] = file.NextLE<uint32_t>();
+		} else {
+			LevelSeeds[i] = std::nullopt;
+		}
+	}
+}
+
 const int DiabloItemSaveSize = 368;
 const int HellfireItemSaveSize = 372;
 
@@ -2136,9 +2163,11 @@ void LoadGame(bool firstflag)
 		app_fatal(_("Player is on a Hellfire only level"));
 
 	for (uint8_t i = 0; i < giNumberOfLevels; i++) {
-		glSeedTbl[i] = file.NextBE<uint32_t>();
+		DungeonSeeds[i] = file.NextBE<uint32_t>();
+		LevelSeeds[i] = std::nullopt;
 		file.Skip(4); // Skip loading gnLevelTypeTbl
 	}
+	LoadLevelSeeds();
 
 	Player &myPlayer = *MyPlayer;
 
@@ -2171,8 +2200,8 @@ void LoadGame(bool firstflag)
 	// skip ahead for vanilla save compatibility (Related to bugfix where MonsterKillCounts[MaxMonsters] was changed to MonsterKillCounts[NUM_MTYPES]
 	file.Skip(4 * (MaxMonsters - NUM_MTYPES));
 	if (leveltype != DTYPE_TOWN) {
-		for (int &monsterId : ActiveMonsters)
-			monsterId = file.NextBE<int32_t>();
+		for (unsigned &monsterId : ActiveMonsters)
+			monsterId = file.NextBE<uint32_t>();
 		for (size_t i = 0; i < ActiveMonsterCount; i++)
 			LoadMonster(&file, Monsters[ActiveMonsters[i]]);
 		for (size_t i = 0; i < ActiveMonsterCount; i++)
@@ -2418,7 +2447,7 @@ void SaveGameData(SaveWriter &saveWriter)
 	file.WriteBE<int32_t>(ActiveObjectCount);
 
 	for (uint8_t i = 0; i < giNumberOfLevels; i++) {
-		file.WriteBE<uint32_t>(glSeedTbl[i]);
+		file.WriteBE<uint32_t>(DungeonSeeds[i]);
 		file.WriteBE<int32_t>(getHellfireLevelType(GetLevelType(i)));
 	}
 
@@ -2435,8 +2464,8 @@ void SaveGameData(SaveWriter &saveWriter)
 	file.Skip(4 * (MaxMonsters - NUM_MTYPES));
 
 	if (leveltype != DTYPE_TOWN) {
-		for (int monsterId : ActiveMonsters)
-			file.WriteBE<int32_t>(monsterId);
+		for (unsigned monsterId : ActiveMonsters)
+			file.WriteBE<uint32_t>(monsterId);
 		for (size_t i = 0; i < ActiveMonsterCount; i++)
 			SaveMonster(&file, Monsters[ActiveMonsters[i]]);
 		// Write ActiveMissiles
@@ -2538,6 +2567,7 @@ void SaveGameData(SaveWriter &saveWriter)
 	file.WriteBE<int32_t>(AutoMapScale);
 
 	SaveAdditionalMissiles(saveWriter);
+	SaveLevelSeeds(saveWriter);
 }
 
 void SaveGame()
@@ -2554,7 +2584,7 @@ void SaveLevel(SaveWriter &saveWriter)
 	DoUnVision(myPlayer.position.tile, myPlayer._pLightRad); // fix for vision staying on the level
 
 	if (leveltype == DTYPE_TOWN)
-		glSeedTbl[0] = AdvanceRndSeed();
+		DungeonSeeds[0] = AdvanceRndSeed();
 
 	char szName[MaxMpqPathSize];
 	GetTempLevelNames(szName);
@@ -2572,8 +2602,8 @@ void SaveLevel(SaveWriter &saveWriter)
 	file.WriteBE<int32_t>(ActiveObjectCount);
 
 	if (leveltype != DTYPE_TOWN) {
-		for (int monsterId : ActiveMonsters)
-			file.WriteBE<int32_t>(monsterId);
+		for (unsigned monsterId : ActiveMonsters)
+			file.WriteBE<uint32_t>(monsterId);
 		for (size_t i = 0; i < ActiveMonsterCount; i++)
 			SaveMonster(&file, Monsters[ActiveMonsters[i]]);
 		for (int objectId : ActiveObjects)
@@ -2646,8 +2676,8 @@ void LoadLevel()
 	ActiveObjectCount = file.NextBE<int32_t>();
 
 	if (leveltype != DTYPE_TOWN) {
-		for (int &monsterId : ActiveMonsters)
-			monsterId = file.NextBE<int32_t>();
+		for (unsigned &monsterId : ActiveMonsters)
+			monsterId = file.NextBE<uint32_t>();
 		for (size_t i = 0; i < ActiveMonsterCount; i++) {
 			Monster &monster = Monsters[ActiveMonsters[i]];
 			LoadMonster(&file, monster);

@@ -221,6 +221,8 @@ void CheckTownersNearby()
 		int distance = GetDistance(Towners[i].position, 2);
 		if (distance == 0)
 			continue;
+		if (!IsTownerPresent(Towners[i]._ttype))
+			continue;
 		pcursmonst = i;
 	}
 }
@@ -1015,7 +1017,7 @@ void InventoryMove(AxisDirection dir)
 	}
 
 	if (mousePos == MousePosition) {
-		return; // Avoid wobeling when scalled
+		return; // Avoid wobbling when scaled
 	}
 
 	SetCursorPos(mousePos);

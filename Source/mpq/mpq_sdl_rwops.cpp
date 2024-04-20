@@ -56,26 +56,26 @@ static Sint64 MpqFileRwSize(struct SDL_RWops *context)
 static OffsetType MpqFileRwSeek(struct SDL_RWops *context, OffsetType offset, int whence)
 {
 	Data &data = *GetData(context);
-	size_t newPosition;
+	OffsetType newPosition;
 	switch (whence) {
 	case RW_SEEK_SET:
-		newPosition = static_cast<size_t>(offset);
+		newPosition = offset;
 		break;
 	case RW_SEEK_CUR:
-		newPosition = static_cast<size_t>(data.position + offset);
+		newPosition = static_cast<OffsetType>(data.position + offset);
 		break;
 	case RW_SEEK_END:
-		newPosition = static_cast<size_t>(data.size + offset);
+		newPosition = static_cast<OffsetType>(data.size + offset);
 		break;
 	default:
 		return -1;
 	}
 
-	if (newPosition == data.position)
-		return static_cast<OffsetType>(newPosition);
+	if (newPosition == static_cast<OffsetType>(data.position))
+		return newPosition;
 
-	if (newPosition > data.size) {
-		SDL_SetError("MpqFileRwSeek beyond EOF (%d > %u)", static_cast<int>(newPosition), data.size);
+	if (newPosition > static_cast<OffsetType>(data.size)) {
+		SDL_SetError("MpqFileRwSeek beyond EOF (%d > %u)", static_cast<int>(newPosition), static_cast<unsigned>(data.size));
 		return -1;
 	}
 
@@ -84,12 +84,12 @@ static OffsetType MpqFileRwSeek(struct SDL_RWops *context, OffsetType offset, in
 		return -1;
 	}
 
-	if (data.position / data.blockSize != newPosition / data.blockSize)
+	if (data.position / data.blockSize != static_cast<size_t>(newPosition) / data.blockSize)
 		data.blockRead = false;
 
-	data.position = newPosition;
+	data.position = static_cast<size_t>(newPosition);
 
-	return static_cast<OffsetType>(newPosition);
+	return newPosition;
 }
 
 static SizeType MpqFileRwRead(struct SDL_RWops *context, void *ptr, SizeType size, SizeType maxnum)

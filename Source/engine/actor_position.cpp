@@ -75,7 +75,6 @@ constexpr RoundedWalkVelocity WalkVelocityForFrames[24] = {
 };
 
 struct WalkParameter {
-	DisplacementOf<int16_t> startingOffset;
 	VelocityToUse VelocityX;
 	VelocityToUse VelocityY;
 	DisplacementOf<int16_t> getVelocity(int8_t numberOfFrames) const
@@ -91,15 +90,15 @@ struct WalkParameter {
 
 constexpr std::array<const WalkParameter, 8> WalkParameters { {
 	// clang-format off
-	// Direction      startingOffset,                   VelocityX,                      VelocityY
-	{ /* South     */ {    0, -512 },         VelocityToUse::None,            VelocityToUse::Half },
-	{ /* SouthWest */ {  512, -256 }, VelocityToUse::NegativeHalf,         VelocityToUse::Quarter },
-	{ /* West      */ {  512, -256 }, VelocityToUse::NegativeFull,            VelocityToUse::None },
-	{ /* NorthWest */ {    0,    0 }, VelocityToUse::NegativeHalf, VelocityToUse::NegativeQuarter },
-	{ /* North     */ {    0,    0 },         VelocityToUse::None,    VelocityToUse::NegativeHalf },
-	{ /* NorthEast */ {    0,    0 },         VelocityToUse::Half, VelocityToUse::NegativeQuarter },
-	{ /* East      */ { -512, -256 },         VelocityToUse::Full,            VelocityToUse::None },
-	{ /* SouthEast */ { -512, -256 },         VelocityToUse::Half,         VelocityToUse::Quarter }
+	// Direction      VelocityX,                   VelocityY
+	{ /* South     */ VelocityToUse::None,         VelocityToUse::Half },
+	{ /* SouthWest */ VelocityToUse::NegativeHalf, VelocityToUse::Quarter },
+	{ /* West      */ VelocityToUse::NegativeFull, VelocityToUse::None },
+	{ /* NorthWest */ VelocityToUse::NegativeHalf, VelocityToUse::NegativeQuarter },
+	{ /* North     */ VelocityToUse::None,         VelocityToUse::NegativeHalf },
+	{ /* NorthEast */ VelocityToUse::Half,         VelocityToUse::NegativeQuarter },
+	{ /* East      */ VelocityToUse::Full,         VelocityToUse::None },
+	{ /* SouthEast */ VelocityToUse::Half,         VelocityToUse::Quarter }
 	// clang-format on
 } };
 
@@ -115,9 +114,8 @@ DisplacementOf<int16_t> ActorPosition::CalculateWalkingOffsetShifted4(Direction 
 {
 	int16_t velocityProgress = static_cast<int16_t>(animInfo.getAnimationProgress()) * animInfo.numberOfFrames / AnimationInfo::baseValueFraction;
 	const WalkParameter &walkParameter = WalkParameters[static_cast<size_t>(dir)];
-	DisplacementOf<int16_t> offset = walkParameter.startingOffset;
 	DisplacementOf<int16_t> velocity = walkParameter.getVelocity(animInfo.numberOfFrames);
-	offset += (velocity * velocityProgress);
+	DisplacementOf<int16_t> offset = (velocity * velocityProgress);
 	return offset;
 }
 

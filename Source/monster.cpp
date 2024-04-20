@@ -11,6 +11,7 @@
 
 #include <algorithm>
 #include <array>
+#include <numeric>
 #include <string_view>
 
 #include <fmt/core.h>
@@ -57,7 +58,7 @@ namespace devilution {
 CMonster LevelMonsterTypes[MaxLvlMTypes];
 size_t LevelMonsterTypeCount;
 Monster Monsters[MaxMonsters];
-int ActiveMonsters[MaxMonsters];
+unsigned ActiveMonsters[MaxMonsters];
 size_t ActiveMonsterCount;
 /** Tracks the total number of monsters killed per monster_id. */
 int MonsterKillCounts[NUM_MTYPES];
@@ -631,7 +632,7 @@ void UpdateEnemy(Monster &monster)
 		}
 	}
 	for (size_t i = 0; i < ActiveMonsterCount; i++) {
-		const int monsterId = ActiveMonsters[i];
+		const unsigned monsterId = ActiveMonsters[i];
 		Monster &otherMonster = Monsters[monsterId];
 		if (&otherMonster == &monster)
 			continue;
@@ -659,7 +660,7 @@ void UpdateEnemy(Monster &monster)
 		    || ((sameroom || !bestsameroom) && dist < bestDist)
 		    || (menemy == -1)) {
 			monster.flags |= MFLAG_TARGETS_MONSTER;
-			menemy = monsterId;
+			menemy = static_cast<int>(monsterId);
 			target = otherMonster.position.future;
 			bestDist = dist;
 			bestsameroom = sameroom;
@@ -709,59 +710,38 @@ void StartSpecialStand(Monster &monster, Direction md)
 	monster.position.old = monster.position.tile;
 }
 
-void WalkNorthwards(Monster &monster, int xadd, int yadd, Direction endDir)
+void WalkInDirection(Monster &monster, Direction endDir)
 {
-	const auto fx = static_cast<WorldTileCoord>(xadd + monster.position.tile.x);
-	const auto fy = static_cast<WorldTileCoord>(yadd + monster.position.tile.y);
+	Point dir = { 0, 0 };
+	dir += endDir;
 
-	monster.mode = MonsterMode::MoveNorthwards;
+	const auto fx = static_cast<WorldTileCoord>(monster.position.tile.x + dir.x);
+	const auto fy = static_cast<WorldTileCoord>(monster.position.tile.y + dir.y);
+
+	MonsterMode mode;
+	switch (endDir) {
+	case Direction::NorthWest:
+	case Direction::North:
+	case Direction::NorthEast:
+		mode = MonsterMode::MoveNorthwards;
+		break;
+	case Direction::West:
+	case Direction::East:
+		mode = MonsterMode::MoveSideways;
+		break;
+	case Direction::SouthWest:
+	case Direction::South:
+	case Direction::SouthEast:
+		mode = MonsterMode::MoveSouthwards;
+		break;
+	}
+	monster.mode = mode;
 	monster.position.old = monster.position.tile;
 	monster.position.future = { fx, fy };
 	monster.occupyTile(monster.position.future, true);
-	monster.var1 = xadd;
-	monster.var2 = yadd;
-	monster.var3 = static_cast<int>(endDir);
-	NewMonsterAnim(monster, MonsterGraphic::Walk, endDir, AnimationDistributionFlags::ProcessAnimationPending, -1);
-}
-
-void WalkSouthwards(Monster &monster, int xoff, int yoff, int xadd, int yadd, Direction endDir)
-{
-	const auto fx = static_cast<WorldTileCoord>(xadd + monster.position.tile.x);
-	const auto fy = static_cast<WorldTileCoord>(yadd + monster.position.tile.y);
-
-	monster.var1 = monster.position.tile.x;
-	monster.var2 = monster.position.tile.y;
-	monster.position.old = monster.position.tile;
-	monster.position.tile = { fx, fy };
-	monster.position.future = { fx, fy };
-	monster.occupyTile(monster.position.old, true);
-	monster.occupyTile(monster.position.tile, false);
-	if (monster.lightId != NO_LIGHT)
-		ChangeLightXY(monster.lightId, monster.position.tile);
-	monster.mode = MonsterMode::MoveSouthwards;
-	monster.var3 = static_cast<int>(endDir);
-	NewMonsterAnim(monster, MonsterGraphic::Walk, endDir, AnimationDistributionFlags::ProcessAnimationPending, -1);
-}
-
-void WalkSideways(Monster &monster, int xoff, int yoff, int xadd, int yadd, int mapx, int mapy, Direction endDir)
-{
-	const auto fx = static_cast<WorldTileCoord>(xadd + monster.position.tile.x);
-	const auto fy = static_cast<WorldTileCoord>(yadd + monster.position.tile.y);
-	const auto x = static_cast<WorldTileCoord>(mapx + monster.position.tile.x);
-	const auto y = static_cast<WorldTileCoord>(mapy + monster.position.tile.y);
-
-	if (monster.lightId != NO_LIGHT)
-		ChangeLightXY(monster.lightId, { x, y });
-
-	monster.position.temp = { x, y };
-	monster.position.old = monster.position.tile;
-	monster.position.future = { fx, fy };
-	monster.occupyTile(monster.position.tile, true);
-	monster.occupyTile(monster.position.future, false);
-	monster.mode = MonsterMode::MoveSideways;
-	monster.var1 = fx;
-	monster.var2 = fy;
-	monster.var3 = static_cast<int>(endDir);
+	monster.var1 = dir.x;
+	monster.var2 = dir.y;
+	monster.var3 = static_cast<int8_t>(endDir);
 	NewMonsterAnim(monster, MonsterGraphic::Walk, endDir, AnimationDistributionFlags::ProcessAnimationPending, -1);
 }
 
@@ -1032,30 +1012,16 @@ void MonsterIdle(Monster &monster)
 /**
  * @brief Continue movement towards new tile
  */
-bool MonsterWalk(Monster &monster, MonsterMode variant)
+bool MonsterWalk(Monster &monster)
 {
 	// Check if we reached new tile
 	const bool isAnimationEnd = monster.animInfo.isLastFrame();
 	if (isAnimationEnd) {
-		switch (variant) {
-		case MonsterMode::MoveNorthwards:
-			dMonster[monster.position.tile.x][monster.position.tile.y] = 0;
-			monster.position.tile.x += monster.var1;
-			monster.position.tile.y += monster.var2;
-			monster.occupyTile(monster.position.tile, false);
-			break;
-		case MonsterMode::MoveSouthwards:
-			dMonster[monster.var1][monster.var2] = 0;
-			break;
-		case MonsterMode::MoveSideways:
-			dMonster[monster.position.tile.x][monster.position.tile.y] = 0;
-			monster.position.tile = WorldTilePosition { static_cast<WorldTileCoord>(monster.var1), static_cast<WorldTileCoord>(monster.var2) };
-			// dMonster is set here for backwards comparability, without it the monster would be invisible if loaded from a vanilla save.
-			monster.occupyTile(monster.position.tile, false);
-			break;
-		default:
-			break;
-		}
+		dMonster[monster.position.tile.x][monster.position.tile.y] = 0;
+		monster.position.tile.x += monster.var1;
+		monster.position.tile.y += monster.var2;
+		// dMonster is set here for backwards compatibility; without it, the monster would be invisible if loaded from a vanilla save.
+		monster.occupyTile(monster.position.tile, false);
 		if (monster.lightId != NO_LIGHT)
 			ChangeLightXY(monster.lightId, monster.position.tile);
 		M_StartStand(monster, monster.direction);
@@ -2292,7 +2258,7 @@ void LeoricAi(Monster &monster)
 		monster.goal = MonsterGoal::Normal;
 	}
 	if (monster.goal == MonsterGoal::Normal) {
-		if (!gbIsMultiplayer
+		if (!UseMultiplayerQuests()
 		    && ((distanceToEnemy >= 3 && v < 4 * monster.intelligence + 35) || v < 6)
 		    && LineClearMissile(monster.position.tile, monster.enemyPosition)) {
 			Point newPosition = monster.position.tile + md;
@@ -3061,7 +3027,7 @@ bool UpdateModeStance(Monster &monster)
 	case MonsterMode::MoveNorthwards:
 	case MonsterMode::MoveSouthwards:
 	case MonsterMode::MoveSideways:
-		return MonsterWalk(monster, monster.mode);
+		return MonsterWalk(monster);
 	case MonsterMode::MeleeAttack:
 		return MonsterAttack(monster);
 	case MonsterMode::HitRecovery:
@@ -3143,8 +3109,8 @@ void EnsureMonsterIndexIsActive(size_t monsterId)
 			continue;
 		if (index < ActiveMonsterCount)
 			return; // monster is already active
-		int oldId = ActiveMonsters[ActiveMonsterCount];
-		ActiveMonsters[ActiveMonsterCount] = static_cast<int>(monsterId);
+		const unsigned oldId = ActiveMonsters[ActiveMonsterCount];
+		ActiveMonsters[ActiveMonsterCount] = static_cast<unsigned>(monsterId);
 		ActiveMonsters[index] = oldId;
 		ActiveMonsterCount += 1;
 	}
@@ -3292,10 +3258,7 @@ void InitLevelMonsters()
 	ActiveMonsterCount = 0;
 	totalmonsters = MaxMonsters;
 
-	for (size_t i = 0; i < MaxMonsters; i++) {
-		ActiveMonsters[i] = static_cast<int>(i);
-	}
-
+	std::iota(std::begin(ActiveMonsters), std::end(ActiveMonsters), 0u);
 	uniquetrans = 0;
 }
 
@@ -3973,34 +3936,10 @@ bool Walk(Monster &monster, Direction md)
 		return false;
 	}
 
-	switch (md) {
-	case Direction::North:
-		WalkNorthwards(monster, -1, -1, Direction::North);
-		break;
-	case Direction::NorthEast:
-		WalkNorthwards(monster, 0, -1, Direction::NorthEast);
-		break;
-	case Direction::East:
-		WalkSideways(monster, -32, -16, 1, -1, 1, 0, Direction::East);
-		break;
-	case Direction::SouthEast:
-		WalkSouthwards(monster, -32, -16, 1, 0, Direction::SouthEast);
-		break;
-	case Direction::South:
-		WalkSouthwards(monster, 0, -32, 1, 1, Direction::South);
-		break;
-	case Direction::SouthWest:
-		WalkSouthwards(monster, 32, -16, 0, 1, Direction::SouthWest);
-		break;
-	case Direction::West:
-		WalkSideways(monster, 32, -16, -1, 1, 0, 1, Direction::West);
-		break;
-	case Direction::NorthWest:
-		WalkNorthwards(monster, -1, 0, Direction::NorthWest);
-		break;
-	case Direction::NoDirection:
-		break;
-	}
+	if (md == Direction::NoDirection)
+		return true;
+
+	WalkInDirection(monster, md);
 	return true;
 }
 
@@ -4081,7 +4020,7 @@ void DeleteMonsterList()
 
 	for (size_t i = MAX_PLRS; i < ActiveMonsterCount;) {
 		if (Monsters[ActiveMonsters[i]].isInvalid) {
-			if (pcursmonst == ActiveMonsters[i]) // Unselect monster if player highlighted it
+			if (pcursmonst == static_cast<int>(ActiveMonsters[i])) // Unselect monster if player highlighted it
 				pcursmonst = -1;
 			DeleteMonster(i);
 		} else {
@@ -4211,7 +4150,7 @@ bool DirOK(const Monster &monster, Direction mdir)
 
 bool PosOkMissile(Point position)
 {
-	return !TileHasAny(dPiece[position.x][position.y], TileProperties::BlockMissile);
+	return !TileHasAny(position, TileProperties::BlockMissile);
 }
 
 bool LineClearMissile(Point startPoint, Point endPoint)

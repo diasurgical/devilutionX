@@ -362,6 +362,11 @@ public:
 		return ClxSpriteList { *this }[spriteIndex];
 	}
 
+	[[nodiscard]] uint32_t numSprites() const
+	{
+		return ClxSpriteList { *this }.numSprites();
+	}
+
 private:
 	// For OptionalOwnedClxSpriteList.
 	OwnedClxSpriteList() = default;

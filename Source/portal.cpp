@@ -112,9 +112,9 @@ bool PortalOnLevel(const Player &player)
 
 void RemovePortalMissile(const Player &player)
 {
-	size_t id = player.getId();
+	const size_t id = player.getId();
 	Missiles.remove_if([id](Missile &missile) {
-		if (missile._mitype == MissileID::TownPortal && missile._misource == id) {
+		if (missile._mitype == MissileID::TownPortal && missile._misource == static_cast<int>(id)) {
 			dFlags[missile.position.tile.x][missile.position.tile.y] &= ~DungeonFlag::Missile;
 
 			if (Portals[id].level != 0)

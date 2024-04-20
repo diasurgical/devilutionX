@@ -241,7 +241,7 @@ bool RndLocOk(Point p)
 		return false;
 	if (TileContainsSetPiece(p))
 		return false;
-	if (TileHasAny(dPiece[p.x][p.y], TileProperties::Solid))
+	if (TileHasAny(p, TileProperties::Solid))
 		return false;
 	return IsNoneOf(leveltype, DTYPE_CATHEDRAL, DTYPE_CRYPT) || dPiece[p.x][p.y] <= 125 || dPiece[p.x][p.y] >= 143;
 }
@@ -251,14 +251,14 @@ bool IsAreaOk(Rectangle rect)
 	return c_all_of(PointsInRectangle(rect), &RndLocOk);
 }
 
-bool CanPlaceWallTrap(int xp, int yp)
+bool CanPlaceWallTrap(Point pos)
 {
-	if (dObject[xp][yp] != 0)
+	if (dObject[pos.x][pos.y] != 0)
 		return false;
-	if (TileContainsSetPiece({ xp, yp }))
+	if (TileContainsSetPiece(pos))
 		return false;
 
-	return TileHasAny(dPiece[xp][yp], TileProperties::Trap);
+	return TileHasAny(pos, TileProperties::Trap);
 }
 
 void InitRndLocObj(int min, int max, _object_id objtype)
@@ -498,7 +498,7 @@ void AddObjTraps()
 				while (IsTileNotSolid({ xp, j }))
 					xp--;
 
-				if (!CanPlaceWallTrap(xp, j) || i - xp <= 1)
+				if (!CanPlaceWallTrap({ xp, j }) || i - xp <= 1)
 					continue;
 
 				trapObject = AddObject(OBJ_TRAPL, { xp, j });
@@ -507,7 +507,7 @@ void AddObjTraps()
 				while (IsTileNotSolid({ i, yp }))
 					yp--;
 
-				if (!CanPlaceWallTrap(i, yp) || j - yp <= 1)
+				if (!CanPlaceWallTrap({ i, yp }) || j - yp <= 1)
 					continue;
 
 				trapObject = AddObject(OBJ_TRAPR, { i, yp });
@@ -1288,27 +1288,33 @@ void AddBarrel(Object &barrel)
 void AddShrine(Object &shrine)
 {
 	shrine._oRndSeed = AdvanceRndSeed();
-	bool slist[NumberOfShrineTypes];
-
 	shrine._oPreFlag = true;
 
-	int shrines = gbIsHellfire ? NumberOfShrineTypes : 26;
+	int shrineCount = gbIsHellfire ? NumberOfShrineTypes : 26;
+	bool slist[NumberOfShrineTypes] = {};
 
-	for (int j = 0; j < shrines; j++) {
-		slist[j] = j != ShrineEnchanted || IsAnyOf(leveltype, DTYPE_CATHEDRAL, DTYPE_CATACOMBS);
-		if (gbIsMultiplayer && shrineavail[j] == ShrineTypeSingle) {
-			slist[j] = false;
-		} else if (!gbIsMultiplayer && shrineavail[j] == ShrineTypeMulti) {
-			slist[j] = false;
+	for (int i = 0; i < shrineCount; i++) {
+		bool isShrineAvailable = true;
+
+		if (gbIsMultiplayer) {
+			isShrineAvailable = (shrineavail[i] != ShrineTypeSingle);
+		} else {
+			isShrineAvailable = (shrineavail[i] != ShrineTypeMulti);
 		}
+
+		bool isEnchantedShrine = (i == ShrineEnchanted);
+		bool isCorrectLevelType = IsAnyOf(leveltype, DTYPE_CATHEDRAL, DTYPE_CATACOMBS);
+
+		slist[i] = isShrineAvailable && (!isEnchantedShrine || isCorrectLevelType);
 	}
 
-	int val;
+	int selectedIndex;
 	do {
-		val = GenerateRnd(shrines);
-	} while (!slist[val]);
+		selectedIndex = GenerateRnd(shrineCount);
+	} while (!slist[selectedIndex]);
 
-	shrine._oVar1 = val;
+	shrine._oVar1 = selectedIndex;
+
 	if (!FlipCoin()) {
 		shrine._oAnimFrame = 12;
 		shrine._oAnimLen = 22;
@@ -1375,9 +1381,7 @@ void AddPedestalOfBlood(Object &pedestalOfBlood)
 
 void AddStoryBook(Object &storyBook)
 {
-	SetRndSeed(glSeedTbl[16]);
-
-	storyBook._oVar1 = GenerateRnd(3);
+	storyBook._oVar1 = (DungeonSeeds[16] >> 16) % 3;
 	if (currlevel == 4)
 		storyBook._oVar2 = StoryText[storyBook._oVar1][0];
 	else if (currlevel == 8)
@@ -2233,7 +2237,7 @@ void OperatePedestal(Player &player, Object &pedestal, bool sendmsg)
 	}
 }
 
-void OperateShrineMysterious(Player &player)
+void OperateShrineMysterious(DiabloGenerator &rng, Player &player)
 {
 	if (&player != MyPlayer)
 		return;
@@ -2243,7 +2247,7 @@ void OperateShrineMysterious(Player &player)
 	ModifyPlrDex(player, -1);
 	ModifyPlrVit(player, -1);
 
-	switch (static_cast<CharacterAttribute>(GenerateRnd(4))) {
+	switch (static_cast<CharacterAttribute>(rng.generateRnd(4))) {
 	case CharacterAttribute::Strength:
 		ModifyPlrStr(player, 6);
 		break;
@@ -2265,7 +2269,7 @@ void OperateShrineMysterious(Player &player)
 	InitDiabloMsg(EMSG_SHRINE_MYSTERIOUS);
 }
 
-void OperateShrineHidden(Player &player)
+void OperateShrineHidden(DiabloGenerator &rng, Player &player)
 {
 	if (&player != MyPlayer)
 		return;
@@ -2295,7 +2299,7 @@ void OperateShrineHidden(Player &player)
 			}
 			if (cnt == 0)
 				break;
-			int r = GenerateRnd(NUM_INVLOC);
+			int r = rng.generateRnd(NUM_INVLOC);
 			if (player.InvBody[r].isEmpty() || player.InvBody[r]._iMaxDur == DUR_INDESTRUCTIBLE || player.InvBody[r]._iMaxDur == 0)
 				continue;
 
@@ -2422,7 +2426,7 @@ void OperateShrineReligious(Player &player)
 	InitDiabloMsg(EMSG_SHRINE_RELIGIOUS);
 }
 
-void OperateShrineEnchanted(Player &player)
+void OperateShrineEnchanted(DiabloGenerator &rng, Player &player)
 {
 	if (&player != MyPlayer)
 		return;
@@ -2439,7 +2443,7 @@ void OperateShrineEnchanted(Player &player)
 	if (cnt > 1) {
 		int spellToReduce;
 		do {
-			spellToReduce = GenerateRnd(maxSpells) + 1;
+			spellToReduce = rng.generateRnd(maxSpells) + 1;
 		} while ((player._pMemSpells & GetSpellBitmask(static_cast<SpellID>(spellToReduce))) == 0);
 
 		spell = 1;
@@ -2471,12 +2475,12 @@ void OperateShrineEnchanted(Player &player)
 	InitDiabloMsg(EMSG_SHRINE_ENCHANTED);
 }
 
-void OperateShrineThaumaturgic(const Player &player)
+void OperateShrineThaumaturgic(DiabloGenerator &rng, const Player &player)
 {
 	for (int j = 0; j < ActiveObjectCount; j++) {
 		Object &object = Objects[ActiveObjects[j]];
 		if (object.IsChest() && object._oSelFlag == 0) {
-			object._oRndSeed = AdvanceRndSeed();
+			object._oRndSeed = rng.advanceRndSeed();
 			object._oSelFlag = 1;
 			object._oAnimFrame -= 2;
 		}
@@ -2640,7 +2644,7 @@ void OperateShrineHoly(const Player &player)
 	InitDiabloMsg(EMSG_SHRINE_HOLY);
 }
 
-void OperateShrineSpiritual(Player &player)
+void OperateShrineSpiritual(DiabloGenerator &rng, Player &player)
 {
 	if (&player != MyPlayer)
 		return;
@@ -2648,7 +2652,7 @@ void OperateShrineSpiritual(Player &player)
 	for (int8_t &itemIndex : player.InvGrid) {
 		if (itemIndex == 0) {
 			Item &goldItem = player.InvList[player._pNumInv];
-			MakeGoldStack(goldItem, 5 * leveltype + GenerateRnd(10 * leveltype));
+			MakeGoldStack(goldItem, 5 * leveltype + rng.generateRnd(10 * leveltype));
 			player._pNumInv++;
 			itemIndex = player._pNumInv;
 
@@ -2746,14 +2750,14 @@ void OperateShrineGlimmering(Player &player)
 	InitDiabloMsg(EMSG_SHRINE_GLIMMERING);
 }
 
-void OperateShrineTainted(const Player &player)
+void OperateShrineTainted(DiabloGenerator &rng, const Player &player)
 {
 	if (&player == MyPlayer) {
 		InitDiabloMsg(EMSG_SHRINE_TAINTED1);
 		return;
 	}
 
-	int r = GenerateRnd(4);
+	int r = rng.generateRnd(4);
 
 	int v1 = r == 0 ? 1 : -1;
 	int v2 = r == 1 ? 1 : -1;
@@ -2949,14 +2953,14 @@ void OperateShrineSolar(Player &player)
 	RedrawEverything();
 }
 
-void OperateShrineMurphys(Player &player)
+void OperateShrineMurphys(DiabloGenerator &rng, Player &player)
 {
 	if (&player != MyPlayer)
 		return;
 
 	bool broke = false;
 	for (auto &item : player.InvBody) {
-		if (!item.isEmpty() && FlipCoin(3)) {
+		if (!item.isEmpty() && rng.flipCoin(3)) {
 			if (item._iDurability != DUR_INDESTRUCTIBLE) {
 				if (item._iDurability > 0) {
 					item._iDurability /= 2;
@@ -2980,7 +2984,7 @@ void OperateShrine(Player &player, Object &shrine, SfxID sType)
 
 	CloseGoldDrop();
 
-	SetRndSeed(shrine._oRndSeed);
+	DiabloGenerator rng(shrine._oRndSeed);
 	shrine._oSelFlag = 0;
 
 	PlaySfxLoc(sType, shrine.position);
@@ -2989,10 +2993,10 @@ void OperateShrine(Player &player, Object &shrine, SfxID sType)
 
 	switch (shrine._oVar1) {
 	case ShrineMysterious:
-		OperateShrineMysterious(player);
+		OperateShrineMysterious(rng, player);
 		break;
 	case ShrineHidden:
-		OperateShrineHidden(player);
+		OperateShrineHidden(rng, player);
 		break;
 	case ShrineGloomy:
 		OperateShrineGloomy(player);
@@ -3011,10 +3015,10 @@ void OperateShrine(Player &player, Object &shrine, SfxID sType)
 		OperateShrineReligious(player);
 		break;
 	case ShrineEnchanted:
-		OperateShrineEnchanted(player);
+		OperateShrineEnchanted(rng, player);
 		break;
 	case ShrineThaumaturgic:
-		OperateShrineThaumaturgic(player);
+		OperateShrineThaumaturgic(rng, player);
 		break;
 	case ShrineFascinating:
 		OperateShrineCostOfWisdom(player, SpellID::Firebolt, EMSG_SHRINE_FASCINATING);
@@ -3038,7 +3042,7 @@ void OperateShrine(Player &player, Object &shrine, SfxID sType)
 		OperateShrineCostOfWisdom(player, SpellID::ChargedBolt, EMSG_SHRINE_SACRED);
 		break;
 	case ShrineSpiritual:
-		OperateShrineSpiritual(player);
+		OperateShrineSpiritual(rng, player);
 		break;
 	case ShrineSpooky:
 		OperateShrineSpooky(player);
@@ -3062,7 +3066,7 @@ void OperateShrine(Player &player, Object &shrine, SfxID sType)
 		OperateShrineGlimmering(player);
 		break;
 	case ShrineTainted:
-		OperateShrineTainted(player);
+		OperateShrineTainted(rng, player);
 		break;
 	case ShrineOily:
 		OperateShrineOily(player, shrine.position);
@@ -3086,7 +3090,7 @@ void OperateShrine(Player &player, Object &shrine, SfxID sType)
 		OperateShrineSolar(player);
 		break;
 	case ShrineMurphys:
-		OperateShrineMurphys(player);
+		OperateShrineMurphys(rng, player);
 		break;
 	}
 

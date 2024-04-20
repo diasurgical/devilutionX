@@ -2,6 +2,8 @@
 
 #include <gtest/gtest.h>
 
+#include "cursor.h"
+#include "init.h"
 #include "playerdat.hpp"
 
 using namespace devilution;
@@ -179,6 +181,13 @@ static void AssertPlayer(Player &player)
 
 TEST(Player, CreatePlayer)
 {
+	LoadCoreArchives();
+	LoadGameArchives();
+
+	// The tests need spawn.mpq or diabdat.mpq
+	// Please provide them so that the tests can run successfully
+	ASSERT_TRUE(HaveSpawn() || HaveDiabdat());
+
 	LoadPlayerDataFiles();
 	LoadItemData();
 	Players.resize(1);

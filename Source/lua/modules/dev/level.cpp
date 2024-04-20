@@ -25,7 +25,7 @@ namespace {
 
 std::string ExportDun()
 {
-	const std::string levelName = StrCat(currlevel, "-", glSeedTbl[currlevel], ".dun");
+	const std::string levelName = StrCat(currlevel, "-", DungeonSeeds[currlevel], ".dun");
 	FILE *dunFile = OpenFile(levelName.c_str(), "ab");
 
 	WriteLE16(dunFile, DMAXX);
@@ -101,7 +101,8 @@ std::string DebugCmdResetLevel(uint8_t level, std::optional<int> seed)
 	DeltaClearLevel(level);
 
 	if (seed.has_value()) {
-		glSeedTbl[level] = *seed;
+		DungeonSeeds[level] = *seed;
+		LevelSeeds[level] = std::nullopt;
 		return StrCat("Successfully reset level ", level, " with seed ", *seed, ".");
 	}
 	return StrCat("Successfully reset level ", level, ".");
@@ -109,11 +110,11 @@ std::string DebugCmdResetLevel(uint8_t level, std::optional<int> seed)
 
 std::string DebugCmdLevelSeed(std::optional<uint8_t> level)
 {
-	constexpr size_t NumLevels = sizeof(glSeedTbl) / sizeof(glSeedTbl[0]);
+	constexpr size_t NumLevels = sizeof(DungeonSeeds) / sizeof(DungeonSeeds[0]);
 	if (level.has_value() && *level >= NumLevels) {
 		return StrCat("level out of range, max: ", NumLevels - 1);
 	}
-	return StrCat(glSeedTbl[level.value_or(currlevel)]);
+	return StrCat(DungeonSeeds[level.value_or(currlevel)]);
 }
 
 } // namespace

@@ -178,10 +178,10 @@ bool IsDungeonItemValid(uint16_t iCreateInfo, uint32_t dwBuff)
 	return level <= (diabloMaxDungeonLevel * 2);
 }
 
-bool RecreateHellfireSpellBook(const Player &player, const ItemNetPack &packedItem, Item &item)
+bool RecreateHellfireSpellBook(const Player &player, const TItem &packedItem, Item *item)
 {
 	Item spellBook {};
-	RecreateItem(player, packedItem.item, spellBook);
+	RecreateItem(player, packedItem, spellBook);
 
 	// Hellfire uses the spell book level when generating items via CreateSpellBook()
 	int spellBookLevel = GetSpellBookLevel(spellBook._iSpell);
@@ -191,12 +191,14 @@ bool RecreateHellfireSpellBook(const Player &player, const ItemNetPack &packedIt
 
 	if (spellBookLevel >= 1 && (spellBook._iCreateInfo & CF_LEVEL) == spellBookLevel * 2) {
 		// The ilvl matches the result for a spell book drop, so we confirm the item is legitimate
-		item = spellBook;
+		if (item != nullptr)
+			*item = spellBook;
 		return true;
 	}
 
 	ValidateFields(spellBook._iCreateInfo, spellBook.dwBuff, IsDungeonItemValid(spellBook._iCreateInfo, spellBook.dwBuff));
-	item = spellBook;
+	if (item != nullptr)
+		*item = spellBook;
 	return true;
 }
 
@@ -529,7 +531,7 @@ bool UnPackNetItem(const Player &player, const ItemNetPack &packedItem, Item &it
 	else if ((creationFlags & CF_USEFUL) == CF_UPER15)
 		ValidateFields(creationFlags, dwBuff, IsUniqueMonsterItemValid(creationFlags, dwBuff));
 	else if ((dwBuff & CF_HELLFIRE) != 0 && AllItemsList[idx].iMiscId == IMISC_BOOK)
-		return RecreateHellfireSpellBook(player, packedItem, item);
+		return RecreateHellfireSpellBook(player, packedItem.item, &item);
 	else
 		ValidateFields(creationFlags, dwBuff, IsDungeonItemValid(creationFlags, dwBuff));
 
@@ -551,7 +553,8 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 
 	int32_t baseHpMax = SDL_SwapLE32(packed.pMaxHPBase);
 	int32_t baseHp = SDL_SwapLE32(packed.pHPBase);
-	ValidateFields(baseHp, baseHpMax, baseHp >= 0 && baseHp <= baseHpMax);
+	int32_t hpMax = SDL_SwapLE32(packed.pMaxHP);
+	ValidateFields(baseHp, baseHpMax, baseHp >= (baseHpMax - hpMax) && baseHp <= baseHpMax);
 
 	int32_t baseManaMax = SDL_SwapLE32(packed.pMaxManaBase);
 	int32_t baseMana = SDL_SwapLE32(packed.pManaBase);

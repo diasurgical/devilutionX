@@ -43,45 +43,44 @@ size_t themeVar1;
 
 bool TFit_Shrine(int i)
 {
-	int xp = 0;
-	int yp = 0;
+	Point position { 0, 0 };
 	size_t found = 0;
 
 	while (found == 0) {
-		Point testPosition { xp, yp };
-		if (dTransVal[xp][yp] == themes[i].ttval) {
-			if (TileHasAny(dPiece[xp][yp - 1], TileProperties::Trap)
+		Point testPosition = position;
+		if (dTransVal[position.x][position.y] == themes[i].ttval) {
+			if (TileHasAny(position + Direction::NorthEast, TileProperties::Trap)
 			    && IsTileNotSolid(testPosition + Direction::NorthWest)
 			    && IsTileNotSolid(testPosition + Direction::SouthEast)
-			    && dTransVal[xp - 1][yp] == themes[i].ttval
-			    && dTransVal[xp + 1][yp] == themes[i].ttval
+			    && dTransVal[position.x - 1][position.y] == themes[i].ttval
+			    && dTransVal[position.x + 1][position.y] == themes[i].ttval
 			    && !IsObjectAtPosition(testPosition + Direction::North)
 			    && !IsObjectAtPosition(testPosition + Direction::East)) {
 				found = 1;
 			}
 			if (found == 0
-			    && TileHasAny(dPiece[xp - 1][yp], TileProperties::Trap)
+			    && TileHasAny(position + Direction::NorthWest, TileProperties::Trap)
 			    && IsTileNotSolid(testPosition + Direction::NorthEast)
 			    && IsTileNotSolid(testPosition + Direction::SouthWest)
-			    && dTransVal[xp][yp - 1] == themes[i].ttval
-			    && dTransVal[xp][yp + 1] == themes[i].ttval
+			    && dTransVal[position.x][position.y - 1] == themes[i].ttval
+			    && dTransVal[position.x][position.y + 1] == themes[i].ttval
 			    && !IsObjectAtPosition(testPosition + Direction::North)
 			    && !IsObjectAtPosition(testPosition + Direction::West)) {
 				found = 2;
 			}
 		}
 		if (found == 0) {
-			xp++;
-			if (xp == MAXDUNX) {
-				xp = 0;
-				yp++;
-				if (yp == MAXDUNY)
+			position.x++;
+			if (position.x == MAXDUNX) {
+				position.x = 0;
+				position.y++;
+				if (position.y == MAXDUNY)
 					return false;
 			}
 		}
 	}
-	themex = xp;
-	themey = yp;
+	themex = position.x;
+	themey = position.y;
 	themeVar1 = found;
 	return true;
 }
@@ -324,7 +323,7 @@ bool CheckThemeRoom(int8_t tv)
 
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++) {
-			if (dTransVal[i][j] != tv || TileHasAny(dPiece[i][j], TileProperties::Solid))
+			if (dTransVal[i][j] != tv || TileHasAny({ i, j }, TileProperties::Solid))
 				continue;
 			if (dTransVal[i - 1][j] != tv && IsTileNotSolid({ i - 1, j }))
 				return false;
@@ -854,7 +853,7 @@ void InitThemes()
 				themes[numthemes].ttype = j;
 				numthemes++;
 			}
-			if (i == std::numeric_limits<int8_t>::max())
+			if (i > TransVal)
 				break;
 		}
 		return;

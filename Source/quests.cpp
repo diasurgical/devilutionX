@@ -104,30 +104,6 @@ const char *const QuestTriggerNames[5] = {
 	N_(/* TRANSLATORS: Quest Map*/ "A Dark Passage"),
 	N_(/* TRANSLATORS: Quest Map*/ "Unholy Altar")
 };
-/**
- * A quest group containing the three quests the Butcher,
- * Ogden's Sign and Gharbad the Weak, which ensures that exactly
- * two of these three quests appear in any single player game.
- */
-int QuestGroup1[3] = { Q_BUTCHER, Q_LTBANNER, Q_GARBUD };
-/**
- * A quest group containing the three quests Halls of the Blind,
- * the Magic Rock and Valor, which ensures that exactly two of
- * these three quests appear in any single player game.
- */
-int QuestGroup2[3] = { Q_BLIND, Q_ROCK, Q_BLOOD };
-/**
- * A quest group containing the three quests Black Mushroom,
- * Zhar the Mad and Anvil of Fury, which ensures that exactly
- * two of these three quests appear in any single player game.
- */
-int QuestGroup3[3] = { Q_MUSHROOM, Q_ZHAR, Q_ANVIL };
-/**
- * A quest group containing the two quests Lachdanan and Warlord
- * of Blood, which ensures that exactly one of these two quests
- * appears in any single player game.
- */
-int QuestGroup4[2] = { Q_VEIL, Q_WARLORD };
 
 /**
  * @brief There is no reason to run this, the room has already had a proper sector assigned
@@ -274,8 +250,8 @@ void InitQuests()
 	}
 
 	if (!UseMultiplayerQuests() && *sgOptions.Gameplay.randomizeQuests) {
-		// Quests are set from the seed used to generate level 16.
-		InitialiseQuestPools(glSeedTbl[15], Quests);
+		// Quests are set from the seed used to generate level 15.
+		InitialiseQuestPools(DungeonSeeds[15], Quests);
 	}
 
 	if (gbIsSpawn) {
@@ -298,28 +274,25 @@ void InitQuests()
 
 void InitialiseQuestPools(uint32_t seed, Quest quests[])
 {
-	SetRndSeed(seed);
-	quests[PickRandomlyAmong({ Q_SKELKING, Q_PWATER })]._qactive = QUEST_NOTAVAIL;
+	DiabloGenerator rng(seed);
+	quests[rng.pickRandomlyAmong({ Q_SKELKING, Q_PWATER })]._qactive = QUEST_NOTAVAIL;
 
-	// using int and not size_t here to detect negative values from GenerateRnd
-	int randomIndex = GenerateRnd(sizeof(QuestGroup1) / sizeof(*QuestGroup1));
+	if (seed == 988045466) {
+		// If someone starts a new game at 1977-12-28 19:44:42 UTC or 2087-02-18 22:43:02 UTC
+		//  vanilla Diablo ends up reading QuestGroup1[-2] here. Due to the way the data segment
+		//  is laid out (at least in 1.09) this ends up reading the address of the string
+		//  "A Dark Passage" and trying to write to Quests[<addr>*8] which lands in read-only memory.
+		// The proper result would've been to mark The Butcher unavailable but instead nothing happens.
+		rng.discardRandomValues(1);
+	} else {
+		quests[rng.pickRandomlyAmong({ Q_BUTCHER, Q_LTBANNER, Q_GARBUD })]._qactive = QUEST_NOTAVAIL;
+	}
 
-	if (randomIndex >= 0)
-		quests[QuestGroup1[randomIndex]]._qactive = QUEST_NOTAVAIL;
+	quests[rng.pickRandomlyAmong({ Q_BLIND, Q_ROCK, Q_BLOOD })]._qactive = QUEST_NOTAVAIL;
 
-	randomIndex = GenerateRnd(sizeof(QuestGroup2) / sizeof(*QuestGroup2));
-	if (randomIndex >= 0)
-		quests[QuestGroup2[randomIndex]]._qactive = QUEST_NOTAVAIL;
+	quests[rng.pickRandomlyAmong({ Q_MUSHROOM, Q_ZHAR, Q_ANVIL })]._qactive = QUEST_NOTAVAIL;
 
-	randomIndex = GenerateRnd(sizeof(QuestGroup3) / sizeof(*QuestGroup3));
-	if (randomIndex >= 0)
-		quests[QuestGroup3[randomIndex]]._qactive = QUEST_NOTAVAIL;
-
-	randomIndex = GenerateRnd(sizeof(QuestGroup4) / sizeof(*QuestGroup4));
-
-	// always true, QuestGroup4 has two members
-	if (randomIndex >= 0)
-		quests[QuestGroup4[randomIndex]]._qactive = QUEST_NOTAVAIL;
+	quests[rng.pickRandomlyAmong({ Q_VEIL, Q_WARLORD })]._qactive = QUEST_NOTAVAIL;
 }
 
 void CheckQuests()

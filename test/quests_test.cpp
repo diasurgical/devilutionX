@@ -31,16 +31,31 @@ TEST(QuestTest, SinglePlayerBadPools)
 	EXPECT_EQ(Quests[Q_SKELKING]._qactive, QUEST_NOTAVAIL) << "Skeleton King quest is deactivated with 'bad' seed";
 	ResetQuests();
 
+	// Having this seed for level 15 requires starting a game at 1977-12-28 07:44:42 PM or 2087-02-18 10:43:02 PM
+	// Given Diablo was released in 1996 and it's currently 2024 this will never have been naturally hit. It's not
+	//  possible to hit this case on a pre-NT kernel windows system but it may be possible on macos or winnt?
 	InitialiseQuestPools(988045466, Quests);
 	EXPECT_THAT(GetActiveFlagsForSlice({ Q_BUTCHER, Q_LTBANNER, Q_GARBUD }), ::testing::Each(QUEST_INIT)) << "All quests in pool 2 remain active with 'bad' seed";
 	ResetQuests();
 
+	// This seed can only be reached by editing a save file or modifying the game. Given quest state (including
+	//  availability) is saved as part of the game state there's no vanilla compatibility concerns here.
 	InitialiseQuestPools(4203210069U, Quests);
-	EXPECT_THAT(GetActiveFlagsForSlice({ Q_BLIND, Q_ROCK, Q_BLOOD }), ::testing::Each(QUEST_INIT)) << "All quests in pool 3 remain active with 'bad' seed";
+	// If we wanted to retain the behaviour that vanilla Diablo would've done we should instead deactivate
+	//  Quests[QuestGroup2[-2]]. This would hit QuestGroup1[1] (Ogden's Sign), however that's already marked
+	//  as unavailable with this seed due to the previous quest group's roll.
+	EXPECT_EQ(Quests[Q_LTBANNER]._qactive, QUEST_NOTAVAIL) << "Ogden's Sign should be deactivated with 'bad' seed";
+	EXPECT_EQ(Quests[Q_BLIND]._qactive, QUEST_NOTAVAIL) << "Halls of the Blind should also be deactivated with 'bad' seed";
 	ResetQuests();
 
+	// This seed can only be reached by editing a save file or modifying the game. Given quest state (including
+	//  availability) is saved as part of the game state there's no vanilla compatibility concerns here.
 	InitialiseQuestPools(2557708932U, Quests);
-	EXPECT_THAT(GetActiveFlagsForSlice({ Q_MUSHROOM, Q_ZHAR, Q_ANVIL }), ::testing::Each(QUEST_INIT)) << "All quests in pool 4 remain active with 'bad' seed";
+	// If we wanted to retain the behaviour that vanilla Diablo would've done we should instead deactivate
+	//  Quests[QuestGroup3[-2]]. This would hit QuestGroup2[1] (Magic Rock), however that's already marked
+	//  as unavailable with this seed due to the previous quest group's roll.
+	EXPECT_EQ(Quests[Q_ROCK]._qactive, QUEST_NOTAVAIL) << "Magic Rock should be deactivated with 'bad' seed";
+	EXPECT_EQ(Quests[Q_MUSHROOM]._qactive, QUEST_NOTAVAIL) << "Black Mushroom should also be deactivated with 'bad' seed";
 	ResetQuests();
 
 	InitialiseQuestPools(1272442071, Quests);
