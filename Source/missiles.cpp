@@ -73,7 +73,7 @@ bool CheckBlock(Point from, Point to)
 {
 	while (from != to) {
 		from += GetDirection(from, to);
-		if (TileHasAny(dPiece[from.x][from.y], TileProperties::Solid))
+		if (TileHasAny(from, TileProperties::Solid))
 			return true;
 	}
 
@@ -635,7 +635,7 @@ void AddRune(Missile &missile, Point dst, MissileID missileID)
 			    if (TileContainsMissile(target)) {
 				    return false;
 			    }
-			    if (TileHasAny(dPiece[target.x][target.y], TileProperties::Solid)) {
+			    if (TileHasAny(target, TileProperties::Solid)) {
 				    return false;
 			    }
 			    return true;
@@ -694,7 +694,7 @@ bool GrowWall(int id, Point position, Point target, MissileID type, int spellLev
 	int dp = dPiece[position.x][position.y];
 	assert(dp <= MAXTILES && dp >= 0);
 
-	if (TileHasAny(dp, TileProperties::BlockMissile) || !InDungeonBounds(target)) {
+	if (TileHasAny(position, TileProperties::BlockMissile) || !InDungeonBounds(target)) {
 		return false;
 	}
 
@@ -723,7 +723,7 @@ void SpawnLightning(Missile &missile, int dam)
 		    assert(pn >= 0 && pn <= MAXTILES);
 
 		    if (!missile.IsTrap() || tile != missile.position.start) {
-			    if (TileHasAny(pn, TileProperties::BlockMissile)) {
+			    if (TileHasAny(tile, TileProperties::BlockMissile)) {
 				    missile._mirange = 0;
 				    return false;
 			    }
@@ -733,8 +733,7 @@ void SpawnLightning(Missile &missile, int dam)
 	    });
 
 	auto position = missile.position.tile;
-	int pn = dPiece[position.x][position.y];
-	if (!TileHasAny(pn, TileProperties::BlockMissile)) {
+	if (!TileHasAny(position, TileProperties::BlockMissile)) {
 		if (position != Point { missile.var1, missile.var2 } && InDungeonBounds(position)) {
 			MissileID type = MissileID::Lightning;
 			if (missile.sourceType() == MissileSource::Monster
@@ -776,7 +775,7 @@ bool IsMissileBlockedByTile(Point tile)
 		return true;
 	}
 
-	if (TileHasAny(dPiece[tile.x][tile.y], TileProperties::BlockMissile)) {
+	if (TileHasAny(tile, TileProperties::BlockMissile)) {
 		return true;
 	}
 
@@ -1999,9 +1998,7 @@ void AddTownPortal(Missile &missile, AddMissileParameter &parameter)
 			    if (TileContainsMissile(target)) {
 				    return false;
 			    }
-
-			    int dp = dPiece[target.x][target.y];
-			    if (TileHasAny(dp, TileProperties::Solid | TileProperties::BlockMissile)) {
+			    if (TileHasAny(target, TileProperties::Solid | TileProperties::BlockMissile)) {
 				    return false;
 			    }
 			    return !CheckIfTrig(target);
@@ -2115,8 +2112,7 @@ void AddGuardian(Missile &missile, AddMissileParameter &parameter)
 			    return false;
 		    }
 
-		    int dp = dPiece[target.x][target.y];
-		    if (TileHasAny(dp, TileProperties::Solid | TileProperties::BlockMissile)) {
+		    if (TileHasAny(target, TileProperties::Solid | TileProperties::BlockMissile)) {
 			    return false;
 		    }
 
@@ -3037,18 +3033,18 @@ void ProcessFireball(Missile &missile)
 			}
 
 			if (!TransList[dTransVal[missilePosition.x][missilePosition.y]]
-			    || (missile.position.velocity.deltaX < 0 && ((TransList[dTransVal[missilePosition.x][missilePosition.y + 1]] && TileHasAny(dPiece[missilePosition.x][missilePosition.y + 1], TileProperties::Solid)) || (TransList[dTransVal[missilePosition.x][missilePosition.y - 1]] && TileHasAny(dPiece[missilePosition.x][missilePosition.y - 1], TileProperties::Solid))))) {
-				missile.position.tile += Displacement { 1, 1 };
+			    || (missile.position.velocity.deltaX < 0 && ((TransList[dTransVal[missilePosition.x][missilePosition.y + 1]] && TileHasAny(missilePosition + Direction::SouthWest, TileProperties::Solid)) || (TransList[dTransVal[missilePosition.x][missilePosition.y - 1]] && TileHasAny(missilePosition + Direction::NorthEast, TileProperties::Solid))))) {
+				missile.position.tile += Direction::South;
 				missile.position.offset.deltaY -= 32;
 			}
 			if (missile.position.velocity.deltaY > 0
-			    && ((TransList[dTransVal[missilePosition.x + 1][missilePosition.y]] && TileHasAny(dPiece[missilePosition.x + 1][missilePosition.y], TileProperties::Solid))
-			        || (TransList[dTransVal[missilePosition.x - 1][missilePosition.y]] && TileHasAny(dPiece[missilePosition.x - 1][missilePosition.y], TileProperties::Solid)))) {
+			    && ((TransList[dTransVal[missilePosition.x + 1][missilePosition.y]] && TileHasAny(missilePosition + Direction::SouthEast, TileProperties::Solid))
+			        || (TransList[dTransVal[missilePosition.x - 1][missilePosition.y]] && TileHasAny(missilePosition + Direction::NorthWest, TileProperties::Solid)))) {
 				missile.position.offset.deltaY -= 32;
 			}
 			if (missile.position.velocity.deltaX > 0
-			    && ((TransList[dTransVal[missilePosition.x][missilePosition.y + 1]] && TileHasAny(dPiece[missilePosition.x][missilePosition.y + 1], TileProperties::Solid))
-			        || (TransList[dTransVal[missilePosition.x][missilePosition.y - 1]] && TileHasAny(dPiece[missilePosition.x][missilePosition.y - 1], TileProperties::Solid)))) {
+			    && ((TransList[dTransVal[missilePosition.x][missilePosition.y + 1]] && TileHasAny(missilePosition + Direction::SouthWest, TileProperties::Solid))
+			        || (TransList[dTransVal[missilePosition.x][missilePosition.y - 1]] && TileHasAny(missilePosition + Direction::NorthEast, TileProperties::Solid)))) {
 				missile.position.offset.deltaX -= 32;
 			}
 			missile._mimfnum = 0;
@@ -3149,14 +3145,13 @@ void ProcessRingOfFire(Missile &missile)
 		Point target = Point { missile.var1, missile.var2 } + displacement;
 		if (!InDungeonBounds(target))
 			return false;
-		int dp = dPiece[target.x][target.y];
-		if (TileHasAny(dp, TileProperties::Solid))
+		if (TileHasAny(target, TileProperties::Solid))
 			return false;
 		if (IsObjectAtPosition(target))
 			return false;
 		if (!LineClearMissile(missile.position.tile, target))
 			return false;
-		if (TileHasAny(dp, TileProperties::BlockMissile)) {
+		if (TileHasAny(target, TileProperties::BlockMissile)) {
 			missile.limitReached = true;
 			return true;
 		}
@@ -3783,7 +3778,7 @@ void ProcessApocalypse(Missile &missile)
 				continue;
 			if (Monsters[mid].isPlayerMinion())
 				continue;
-			if (TileHasAny(dPiece[k][j], TileProperties::Solid))
+			if (TileHasAny(PointOf { k, j }, TileProperties::Solid))
 				continue;
 			if (gbIsHellfire && !LineClearMissile(missile.position.tile, { k, j }))
 				continue;
@@ -3812,7 +3807,7 @@ void ProcessFlameWaveControl(Missile &missile)
 	Point na = src + sd;
 	int pn = dPiece[na.x][na.y];
 	assert(pn >= 0 && pn <= MAXTILES);
-	if (!TileHasAny(pn, TileProperties::BlockMissile)) {
+	if (!TileHasAny(na, TileProperties::BlockMissile)) {
 		Direction pdir = Players[id]._pdir;
 		AddMissile(na, na + sd, pdir, MissileID::FlameWave, TARGET_MONSTERS, id, 0, missile._mispllvl);
 		na += dira;
@@ -3820,7 +3815,7 @@ void ProcessFlameWaveControl(Missile &missile)
 		for (int j = 0; j < (missile._mispllvl / 2) + 2; j++) {
 			pn = dPiece[na.x][na.y]; // BUGFIX: dPiece is accessed before check against dungeon size and 0
 			assert(pn >= 0 && pn <= MAXTILES);
-			if (TileHasAny(pn, TileProperties::BlockMissile) || f1 || !InDungeonBounds(na)) {
+			if (TileHasAny(na, TileProperties::BlockMissile) || f1 || !InDungeonBounds(na)) {
 				f1 = true;
 			} else {
 				AddMissile(na, na + sd, pdir, MissileID::FlameWave, TARGET_MONSTERS, id, 0, missile._mispllvl);
@@ -3828,7 +3823,7 @@ void ProcessFlameWaveControl(Missile &missile)
 			}
 			pn = dPiece[nb.x][nb.y]; // BUGFIX: dPiece is accessed before check against dungeon size and 0
 			assert(pn >= 0 && pn <= MAXTILES);
-			if (TileHasAny(pn, TileProperties::BlockMissile) || f2 || !InDungeonBounds(nb)) {
+			if (TileHasAny(nb, TileProperties::BlockMissile) || f2 || !InDungeonBounds(nb)) {
 				f2 = true;
 			} else {
 				AddMissile(nb, nb + sd, pdir, MissileID::FlameWave, TARGET_MONSTERS, id, 0, missile._mispllvl);
@@ -3901,8 +3896,7 @@ void ProcessInfernoControl(Missile &missile)
 	missile.position.traveled += missile.position.velocity;
 	UpdateMissilePos(missile);
 	if (missile.position.tile != Point { missile.var1, missile.var2 }) {
-		int id = dPiece[missile.position.tile.x][missile.position.tile.y];
-		if (!TileHasAny(id, TileProperties::BlockMissile)) {
+		if (!TileHasAny(missile.position.tile, TileProperties::BlockMissile)) {
 			AddMissile(
 			    missile.position.tile,
 			    missile.position.start,

@@ -474,19 +474,19 @@ void DrawCell(const Surface &out, Point tilePosition, Point targetBufferPosition
 		tbl = GetPauseTRN();
 #endif
 
-	bool transparency = TileHasAny(levelPieceId, TileProperties::Transparent) && TransList[dTransVal[tilePosition.x][tilePosition.y]];
+	bool transparency = TileHasAny(tilePosition, TileProperties::Transparent) && TransList[dTransVal[tilePosition.x][tilePosition.y]];
 #ifdef _DEBUG
 	if ((SDL_GetModState() & KMOD_ALT) != 0)
 		transparency = false;
 #endif
-	const bool foliage = !TileHasAny(levelPieceId, TileProperties::Solid);
+	const bool foliage = !TileHasAny(tilePosition, TileProperties::Solid);
 
 	const auto getFirstTileMaskLeft = [=](TileType tile) -> MaskType {
 		if (transparency) {
 			switch (tile) {
 			case TileType::LeftTrapezoid:
 			case TileType::TransparentSquare:
-				return TileHasAny(levelPieceId, TileProperties::TransparentLeft)
+				return TileHasAny(tilePosition, TileProperties::TransparentLeft)
 				    ? MaskType::Left
 				    : MaskType::Solid;
 			case TileType::LeftTriangle:
@@ -505,7 +505,7 @@ void DrawCell(const Surface &out, Point tilePosition, Point targetBufferPosition
 			switch (tile) {
 			case TileType::RightTrapezoid:
 			case TileType::TransparentSquare:
-				return TileHasAny(levelPieceId, TileProperties::TransparentRight)
+				return TileHasAny(tilePosition, TileProperties::TransparentRight)
 				    ? MaskType::Right
 				    : MaskType::Solid;
 			case TileType::RightTriangle:
@@ -646,7 +646,7 @@ void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBuffe
 		return;
 	}
 
-	if (!IsTileLit(tilePosition) && (!MyPlayer->_pInfraFlag || TileHasAny(dPiece[tilePosition.x][tilePosition.y], TileProperties::Solid)))
+	if (!IsTileLit(tilePosition) && (!MyPlayer->_pInfraFlag || TileHasAny(tilePosition, TileProperties::Solid)))
 		return;
 
 	if (static_cast<size_t>(mi) >= MaxMonsters) {
@@ -735,7 +735,9 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 	}
 	Player *player = PlayerAtPosition(tilePosition);
 	if (player != nullptr) {
-		auto playerId = static_cast<int8_t>(player->getId() + 1);
+		uint8_t pid = player->getId();
+		assert(pid < MAX_PLRS);
+		int playerId = static_cast<int>(pid) + 1;
 		// If sprite is moving southwards or east, we want to draw it offset from the tile it's moving to, so we need negative ID
 		// This respests the order that tiles are drawn. By using the negative id, we ensure that the sprite is drawn with priority
 		if (player->_pmode == PM_WALK_SOUTHWARDS || (player->_pmode == PM_WALK_SIDEWAYS && player->_pdir == Direction::East))
@@ -768,7 +770,9 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 
 	Monster *monster = FindMonsterAtPosition(tilePosition);
 	if (monster != nullptr) {
-		auto monsterId = static_cast<int16_t>(monster->getId() + 1);
+		auto mid = monster->getId();
+		assert(mid < MaxMonsters);
+		int monsterId = static_cast<int>(mid) + 1;
 		// If sprite is moving southwards or east, we want to draw it offset from the tile it's moving to, so we need negative ID
 		// This respests the order that tiles are drawn. By using the negative id, we ensure that the sprite is drawn with priority
 		if (monster->mode == MonsterMode::MoveSouthwards || (monster->mode == MonsterMode::MoveSideways && monster->direction == Direction::East))
@@ -809,17 +813,17 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 	}
 
 	if (leveltype != DTYPE_TOWN) {
-		char bArch = dSpecial[tilePosition.x][tilePosition.y];
-		if (bArch != 0) {
+		int8_t bArch = dSpecial[tilePosition.x][tilePosition.y] - 1;
+		if (bArch >= 0) {
 			bool transparency = TransList[bMap];
 #ifdef _DEBUG
 			// Turn transparency off here for debugging
 			transparency = transparency && (SDL_GetModState() & KMOD_ALT) == 0;
 #endif
 			if (transparency) {
-				ClxDrawLightBlended(out, targetBufferPosition, (*pSpecialCels)[bArch - 1]);
+				ClxDrawLightBlended(out, targetBufferPosition, (*pSpecialCels)[bArch]);
 			} else {
-				ClxDrawLight(out, targetBufferPosition, (*pSpecialCels)[bArch - 1]);
+				ClxDrawLight(out, targetBufferPosition, (*pSpecialCels)[bArch]);
 			}
 		}
 	} else {
@@ -827,10 +831,9 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 		// So delay the rendering until after the next row is being drawn.
 		// This could probably have been better solved by sprites in screen space.
 		if (tilePosition.x > 0 && tilePosition.y > 0 && targetBufferPosition.y > TILE_HEIGHT) {
-			char bArch = dSpecial[tilePosition.x - 1][tilePosition.y - 1];
-			if (bArch != 0) {
-				ClxDraw(out, targetBufferPosition + Displacement { 0, -TILE_HEIGHT }, (*pSpecialCels)[bArch - 1]);
-			}
+			int8_t bArch = dSpecial[tilePosition.x - 1][tilePosition.y - 1] - 1;
+			if (bArch >= 0)
+				ClxDraw(out, targetBufferPosition + Displacement { 0, -TILE_HEIGHT }, (*pSpecialCels)[bArch]);
 		}
 	}
 }
@@ -848,7 +851,7 @@ void DrawFloor(const Surface &out, Point tilePosition, Point targetBufferPositio
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < columns; j++) {
 			if (InDungeonBounds(tilePosition)) {
-				if (!TileHasAny(dPiece[tilePosition.x][tilePosition.y], TileProperties::Solid))
+				if (!TileHasAny(tilePosition, TileProperties::Solid))
 					DrawFloor(out, tilePosition, targetBufferPosition);
 			} else {
 				world_draw_black_tile(out, targetBufferPosition.x, targetBufferPosition.y);
@@ -876,7 +879,7 @@ void DrawFloor(const Surface &out, Point tilePosition, Point targetBufferPositio
 
 [[nodiscard]] DVL_ALWAYS_INLINE bool IsWall(Point position)
 {
-	return TileHasAny(dPiece[position.x][position.y], TileProperties::Solid) || dSpecial[position.x][position.y] != 0;
+	return TileHasAny(position, TileProperties::Solid) || dSpecial[position.x][position.y] != 0;
 }
 
 /**
