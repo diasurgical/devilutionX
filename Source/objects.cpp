@@ -1288,27 +1288,33 @@ void AddBarrel(Object &barrel)
 void AddShrine(Object &shrine)
 {
 	shrine._oRndSeed = AdvanceRndSeed();
-	bool slist[NumberOfShrineTypes];
-
 	shrine._oPreFlag = true;
 
-	int shrines = gbIsHellfire ? NumberOfShrineTypes : 26;
+	int shrineCount = gbIsHellfire ? NumberOfShrineTypes : 26;
+	bool slist[NumberOfShrineTypes] = {};
 
-	for (int j = 0; j < shrines; j++) {
-		slist[j] = j != ShrineEnchanted || IsAnyOf(leveltype, DTYPE_CATHEDRAL, DTYPE_CATACOMBS);
-		if (gbIsMultiplayer && shrineavail[j] == ShrineTypeSingle) {
-			slist[j] = false;
-		} else if (!gbIsMultiplayer && shrineavail[j] == ShrineTypeMulti) {
-			slist[j] = false;
+	for (int i = 0; i < shrineCount; i++) {
+		bool isShrineAvailable = true;
+
+		if (gbIsMultiplayer) {
+			isShrineAvailable = (shrineavail[i] != ShrineTypeSingle);
+		} else {
+			isShrineAvailable = (shrineavail[i] != ShrineTypeMulti);
 		}
+
+		bool isEnchantedShrine = (i == ShrineEnchanted);
+		bool isCorrectLevelType = IsAnyOf(leveltype, DTYPE_CATHEDRAL, DTYPE_CATACOMBS);
+
+		slist[i] = isShrineAvailable && (!isEnchantedShrine || isCorrectLevelType);
 	}
 
-	int val;
+	int selectedIndex;
 	do {
-		val = GenerateRnd(shrines);
-	} while (!slist[val]);
+		selectedIndex = GenerateRnd(shrineCount);
+	} while (!slist[selectedIndex]);
 
-	shrine._oVar1 = val;
+	shrine._oVar1 = selectedIndex;
+
 	if (!FlipCoin()) {
 		shrine._oAnimFrame = 12;
 		shrine._oAnimLen = 22;
