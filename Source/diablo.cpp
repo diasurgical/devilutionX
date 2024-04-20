@@ -1391,7 +1391,7 @@ void UnstuckChargers()
 		}
 	}
 	for (size_t i = 0; i < ActiveMonsterCount; i++) {
-		auto &monster = Monsters[ActiveMonsters[i]];
+		Monster &monster = Monsters[ActiveMonsters[i]];
 		if (monster.mode == MonsterMode::Charge)
 			monster.mode = MonsterMode::Stand;
 	}
@@ -1400,7 +1400,7 @@ void UnstuckChargers()
 void UpdateMonsterLights()
 {
 	for (size_t i = 0; i < ActiveMonsterCount; i++) {
-		auto &monster = Monsters[ActiveMonsters[i]];
+		Monster &monster = Monsters[ActiveMonsters[i]];
 
 		if ((monster.flags & MFLAG_BERSERK) != 0) {
 			int lightRadius = leveltype == DTYPE_NEST ? 9 : 3;

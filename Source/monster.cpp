@@ -256,7 +256,7 @@ void PlaceGroup(size_t typeIndex, size_t num, Monster *leader = nullptr, bool le
 		while (placed != 0) {
 			ActiveMonsterCount--;
 			placed--;
-			const auto &position = Monsters[ActiveMonsterCount].position.tile;
+			const Point &position = Monsters[ActiveMonsterCount].position.tile;
 			dMonster[position.x][position.y] = 0;
 		}
 
@@ -291,7 +291,7 @@ void PlaceGroup(size_t typeIndex, size_t num, Monster *leader = nullptr, bool le
 
 			PlaceMonster(ActiveMonsterCount, typeIndex, { xp, yp });
 			if (leader != nullptr) {
-				auto &minion = Monsters[ActiveMonsterCount];
+				Monster &minion = Monsters[ActiveMonsterCount];
 				minion.maxHitPoints *= 2;
 				minion.hitPoints = minion.maxHitPoints;
 				minion.intelligence = leader->intelligence;
@@ -333,7 +333,7 @@ size_t GetMonsterTypeIndex(_monster_id type)
 
 void PlaceUniqueMonst(UniqueMonsterType uniqindex, size_t minionType, int bosspacksize)
 {
-	auto &monster = Monsters[ActiveMonsterCount];
+	Monster &monster = Monsters[ActiveMonsterCount];
 	const auto &uniqueMonsterData = UniqueMonstersData[static_cast<size_t>(uniqindex)];
 
 	int count = 0;
@@ -568,7 +568,7 @@ void LoadDiabMonsts()
 
 void DeleteMonster(size_t activeIndex)
 {
-	const auto &monster = Monsters[ActiveMonsters[activeIndex]];
+	const Monster &monster = Monsters[ActiveMonsters[activeIndex]];
 	if ((monster.flags & MFLAG_BERSERK) != 0) {
 		AddUnLight(monster.lightId);
 	}
@@ -1420,7 +1420,7 @@ bool MonsterGotHit(Monster &monster)
 void ReleaseMinions(const Monster &leader)
 {
 	for (size_t i = 0; i < ActiveMonsterCount; i++) {
-		auto &minion = Monsters[ActiveMonsters[i]];
+		Monster &minion = Monsters[ActiveMonsters[i]];
 		if (minion.leaderRelation == LeaderRelation::Leashed && minion.getLeader() == &leader) {
 			minion.setLeader(nullptr);
 		}
@@ -2209,7 +2209,7 @@ void FallenAi(Monster &monster)
 					if (m <= 0)
 						continue;
 
-					auto &otherMonster = Monsters[m - 1];
+					Monster &otherMonster = Monsters[m - 1];
 					if (otherMonster.ai != MonsterAIID::Fallen)
 						continue;
 
@@ -3494,7 +3494,7 @@ void WeakenNaKrul()
 	if (currlevel != 24 || static_cast<size_t>(UberDiabloMonsterIndex) >= ActiveMonsterCount)
 		return;
 
-	auto &monster = Monsters[UberDiabloMonsterIndex];
+	Monster &monster = Monsters[UberDiabloMonsterIndex];
 	PlayEffect(monster, MonsterSound::Death);
 	monster.armorClass -= 50;
 	int hp = monster.maxHitPoints / 2;
@@ -3961,7 +3961,7 @@ void GolumAi(Monster &golem)
 	}
 
 	if ((golem.flags & MFLAG_NO_ENEMY) == 0) {
-		auto &enemy = Monsters[golem.enemy];
+		Monster &enemy = Monsters[golem.enemy];
 		int mex = golem.position.tile.x - enemy.position.future.x;
 		int mey = golem.position.tile.y - enemy.position.future.y;
 		golem.direction = GetDirection(golem.position.tile, enemy.position.tile);
@@ -4008,7 +4008,7 @@ void GolumAi(Monster &golem)
 void DeleteMonsterList()
 {
 	for (int i = 0; i < MAX_PLRS; i++) {
-		auto &golem = Monsters[i];
+		Monster &golem = Monsters[i];
 		if (!golem.isInvalid)
 			continue;
 
@@ -4377,7 +4377,7 @@ void PrintMonstHistory(int mt)
 
 void PrintUniqueHistory()
 {
-	auto &monster = Monsters[pcursmonst];
+	Monster &monster = Monsters[pcursmonst];
 	if (*sgOptions.Gameplay.showMonsterType) {
 		AddPanelString(fmt::format(fmt::runtime(_("Type: {:s}")), GetMonsterTypeText(monster.data())));
 	}
@@ -4426,7 +4426,7 @@ void PlayEffect(Monster &monster, MonsterSound mode)
 void MissToMonst(Missile &missile, Point position)
 {
 	assert(static_cast<size_t>(missile._misource) < MaxMonsters);
-	auto &monster = Monsters[missile._misource];
+	Monster &monster = Monsters[missile._misource];
 
 	Point oldPosition = missile.position.tile;
 	monster.occupyTile(position, false);
@@ -4500,7 +4500,7 @@ Monster *FindUniqueMonster(UniqueMonsterType monsterType)
 {
 	for (size_t i = 0; i < ActiveMonsterCount; i++) {
 		int monsterId = ActiveMonsters[i];
-		auto &monster = Monsters[monsterId];
+		Monster &monster = Monsters[monsterId];
 		if (monster.uniqueType == monsterType)
 			return &monster;
 	}

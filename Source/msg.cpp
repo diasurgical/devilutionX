@@ -758,7 +758,7 @@ void DeltaLeaveSync(uint8_t bLevel)
 
 	for (size_t i = 0; i < ActiveMonsterCount; i++) {
 		const unsigned ma = ActiveMonsters[i];
-		auto &monster = Monsters[ma];
+		Monster &monster = Monsters[ma];
 		if (monster.hitPoints == 0)
 			continue;
 		DMonsterStr &delta = deltaLevel.monster[ma];
@@ -1818,7 +1818,7 @@ size_t OnMonstDamage(const TCmd *pCmd, Player &player)
 	if (gbBufferMsgs != 1) {
 		if (&player != MyPlayer) {
 			if (player.isOnActiveLevel() && monsterIdx < MaxMonsters) {
-				auto &monster = Monsters[monsterIdx];
+				Monster &monster = Monsters[monsterIdx];
 				monster.tag(player);
 				if (monster.hitPoints > 0) {
 					monster.hitPoints -= SDL_SwapLE32(message.dwDam);
@@ -2700,7 +2700,7 @@ void DeltaLoadLevel()
 			if (deltaLevel.monster[i].position.x == 0xFF)
 				continue;
 
-			auto &monster = Monsters[i];
+			Monster &monster = Monsters[i];
 			M_ClearSquares(monster);
 			{
 				const WorldTilePosition position = deltaLevel.monster[i].position;

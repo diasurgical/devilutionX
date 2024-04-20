@@ -165,7 +165,7 @@ void FindItemOrObject()
 
 			continue;
 		}
-		auto &item = Items[itemId];
+		Item &item = Items[itemId];
 		if (item.isEmpty() || item._iSelFlag == 0) {
 			continue;
 		}
@@ -266,7 +266,7 @@ void FindRangedTarget()
 
 	for (size_t i = 0; i < ActiveMonsterCount; i++) {
 		int mi = ActiveMonsters[i];
-		const auto &monster = Monsters[mi];
+		const Monster &monster = Monsters[mi];
 
 		if (!CanTargetMonster(monster))
 			continue;
@@ -332,7 +332,7 @@ void FindMeleeTarget()
 
 				if (dMonster[dx][dy] != 0) {
 					const int mi = std::abs(dMonster[dx][dy]) - 1;
-					const auto &monster = Monsters[mi];
+					const Monster &monster = Monsters[mi];
 					if (CanTargetMonster(monster)) {
 						const bool newCanTalk = CanTalkToMonst(monster);
 						if (pcursmonst != -1 && !canTalk && newCanTalk)
