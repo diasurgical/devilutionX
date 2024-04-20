@@ -113,17 +113,17 @@ void TownCloseHive()
 	dPiece[83][62] = 0x505;
 	dPiece[82][63] = 0x506;
 	dPiece[83][63] = 0x507;
-	dPiece[84][61] = 0x117;
-	dPiece[84][62] = 0x117;
-	dPiece[84][63] = 0x117;
-	dPiece[85][60] = 0x117;
-	dPiece[85][61] = 0x117;
-	dPiece[85][63] = 7;
-	dPiece[85][64] = 7;
-	dPiece[86][60] = 0xd8;
-	dPiece[86][61] = 0x17;
-	dPiece[85][62] = 0x12;
-	dPiece[84][64] = 0x117;
+	dPiece[84][61] = 279;
+	dPiece[84][62] = 280;
+	dPiece[84][63] = 279;
+	dPiece[84][64] = 10;
+	dPiece[85][60] = 11;
+	dPiece[85][61] = 12;
+	dPiece[85][62] = 13;
+	dPiece[85][63] = 14;
+	dPiece[85][64] = 15;
+	dPiece[86][60] = 16;
+	dPiece[86][61] = 17;
 }
 
 /**
@@ -316,17 +316,17 @@ void TownOpenHive()
 	dPiece[83][62] = 0x523;
 	dPiece[82][63] = 0x524;
 	dPiece[83][63] = 0x525;
-	dPiece[84][61] = 0x117;
-	dPiece[84][62] = 0x117;
-	dPiece[84][63] = 0x117;
-	dPiece[85][60] = 0x117;
-	dPiece[85][61] = 0x117;
-	dPiece[85][63] = 7;
-	dPiece[85][64] = 7;
-	dPiece[86][60] = 0xd8;
-	dPiece[86][61] = 0x17;
-	dPiece[85][62] = 0x12;
-	dPiece[84][64] = 0x117;
+	dPiece[84][61] = 279;
+	dPiece[84][62] = 280;
+	dPiece[84][63] = 279;
+	dPiece[84][64] = 10;
+	dPiece[85][60] = 11;
+	dPiece[85][61] = 12;
+	dPiece[85][62] = 13;
+	dPiece[85][63] = 14;
+	dPiece[85][64] = 15;
+	dPiece[86][60] = 16;
+	dPiece[86][61] = 17;
 }
 
 void TownOpenGrave()

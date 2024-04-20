@@ -166,7 +166,7 @@ void UpdateMissilesRendererData()
 	}
 }
 
-int lastFpsUpdateInMs;
+uint32_t lastFpsUpdateInMs;
 
 Rectangle PrevCursorRect;
 
@@ -474,19 +474,19 @@ void DrawCell(const Surface &out, Point tilePosition, Point targetBufferPosition
 		tbl = GetPauseTRN();
 #endif
 
-	bool transparency = TileHasAny(levelPieceId, TileProperties::Transparent) && TransList[dTransVal[tilePosition.x][tilePosition.y]];
+	bool transparency = TileHasAny(tilePosition, TileProperties::Transparent) && TransList[dTransVal[tilePosition.x][tilePosition.y]];
 #ifdef _DEBUG
 	if ((SDL_GetModState() & KMOD_ALT) != 0)
 		transparency = false;
 #endif
-	const bool foliage = !TileHasAny(levelPieceId, TileProperties::Solid);
+	const bool foliage = !TileHasAny(tilePosition, TileProperties::Solid);
 
 	const auto getFirstTileMaskLeft = [=](TileType tile) -> MaskType {
 		if (transparency) {
 			switch (tile) {
 			case TileType::LeftTrapezoid:
 			case TileType::TransparentSquare:
-				return TileHasAny(levelPieceId, TileProperties::TransparentLeft)
+				return TileHasAny(tilePosition, TileProperties::TransparentLeft)
 				    ? MaskType::Left
 				    : MaskType::Solid;
 			case TileType::LeftTriangle:
@@ -505,7 +505,7 @@ void DrawCell(const Surface &out, Point tilePosition, Point targetBufferPosition
 			switch (tile) {
 			case TileType::RightTrapezoid:
 			case TileType::TransparentSquare:
-				return TileHasAny(levelPieceId, TileProperties::TransparentRight)
+				return TileHasAny(tilePosition, TileProperties::TransparentRight)
 				    ? MaskType::Right
 				    : MaskType::Solid;
 			case TileType::RightTriangle:
@@ -631,9 +631,6 @@ void DrawItem(const Surface &out, int8_t itemIndex, Point targetBufferPosition)
  */
 void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBufferPosition)
 {
-	if (TileHasAny(dPiece[tilePosition.x][tilePosition.y], TileProperties::Solid))
-		return;
-
 	int mi = dMonster[tilePosition.x][tilePosition.y];
 
 	mi = std::abs(mi) - 1;
@@ -649,7 +646,7 @@ void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBuffe
 		return;
 	}
 
-	if (!IsTileLit(tilePosition) && !MyPlayer->_pInfraFlag)
+	if (!IsTileLit(tilePosition) && (!MyPlayer->_pInfraFlag || TileHasAny(tilePosition, TileProperties::Solid)))
 		return;
 
 	if (static_cast<size_t>(mi) >= MaxMonsters) {
@@ -738,7 +735,9 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 	}
 	Player *player = PlayerAtPosition(tilePosition);
 	if (player != nullptr) {
-		auto playerId = static_cast<int8_t>(player->getId() + 1);
+		uint8_t pid = player->getId();
+		assert(pid < MAX_PLRS);
+		int playerId = static_cast<int>(pid) + 1;
 		// If sprite is moving southwards or east, we want to draw it offset from the tile it's moving to, so we need negative ID
 		// This respests the order that tiles are drawn. By using the negative id, we ensure that the sprite is drawn with priority
 		if (player->_pmode == PM_WALK_SOUTHWARDS || (player->_pmode == PM_WALK_SIDEWAYS && player->_pdir == Direction::East))
@@ -771,7 +770,9 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 
 	Monster *monster = FindMonsterAtPosition(tilePosition);
 	if (monster != nullptr) {
-		auto monsterId = static_cast<int16_t>(monster->getId() + 1);
+		auto mid = monster->getId();
+		assert(mid < MaxMonsters);
+		int monsterId = static_cast<int>(mid) + 1;
 		// If sprite is moving southwards or east, we want to draw it offset from the tile it's moving to, so we need negative ID
 		// This respests the order that tiles are drawn. By using the negative id, we ensure that the sprite is drawn with priority
 		if (monster->mode == MonsterMode::MoveSouthwards || (monster->mode == MonsterMode::MoveSideways && monster->direction == Direction::East))
@@ -812,17 +813,17 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 	}
 
 	if (leveltype != DTYPE_TOWN) {
-		char bArch = dSpecial[tilePosition.x][tilePosition.y];
-		if (bArch != 0) {
+		int8_t bArch = dSpecial[tilePosition.x][tilePosition.y] - 1;
+		if (bArch >= 0) {
 			bool transparency = TransList[bMap];
 #ifdef _DEBUG
 			// Turn transparency off here for debugging
 			transparency = transparency && (SDL_GetModState() & KMOD_ALT) == 0;
 #endif
 			if (transparency) {
-				ClxDrawLightBlended(out, targetBufferPosition, (*pSpecialCels)[bArch - 1]);
+				ClxDrawLightBlended(out, targetBufferPosition, (*pSpecialCels)[bArch]);
 			} else {
-				ClxDrawLight(out, targetBufferPosition, (*pSpecialCels)[bArch - 1]);
+				ClxDrawLight(out, targetBufferPosition, (*pSpecialCels)[bArch]);
 			}
 		}
 	} else {
@@ -830,10 +831,9 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 		// So delay the rendering until after the next row is being drawn.
 		// This could probably have been better solved by sprites in screen space.
 		if (tilePosition.x > 0 && tilePosition.y > 0 && targetBufferPosition.y > TILE_HEIGHT) {
-			char bArch = dSpecial[tilePosition.x - 1][tilePosition.y - 1];
-			if (bArch != 0) {
-				ClxDraw(out, targetBufferPosition + Displacement { 0, -TILE_HEIGHT }, (*pSpecialCels)[bArch - 1]);
-			}
+			int8_t bArch = dSpecial[tilePosition.x - 1][tilePosition.y - 1] - 1;
+			if (bArch >= 0)
+				ClxDraw(out, targetBufferPosition + Displacement { 0, -TILE_HEIGHT }, (*pSpecialCels)[bArch]);
 		}
 	}
 }
@@ -851,7 +851,7 @@ void DrawFloor(const Surface &out, Point tilePosition, Point targetBufferPositio
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < columns; j++) {
 			if (InDungeonBounds(tilePosition)) {
-				if (!TileHasAny(dPiece[tilePosition.x][tilePosition.y], TileProperties::Solid))
+				if (!TileHasAny(tilePosition, TileProperties::Solid))
 					DrawFloor(out, tilePosition, targetBufferPosition);
 			} else {
 				world_draw_black_tile(out, targetBufferPosition.x, targetBufferPosition.y);
@@ -879,7 +879,7 @@ void DrawFloor(const Surface &out, Point tilePosition, Point targetBufferPositio
 
 [[nodiscard]] DVL_ALWAYS_INLINE bool IsWall(Point position)
 {
-	return TileHasAny(dPiece[position.x][position.y], TileProperties::Solid) || dSpecial[position.x][position.y] != 0;
+	return TileHasAny(position, TileProperties::Solid) || dSpecial[position.x][position.y] != 0;
 }
 
 /**
@@ -1165,23 +1165,23 @@ void DrawView(const Surface &out, Point startPosition)
 				    { .flags = UiFlags::ColorRed | UiFlags::AlignCenter | UiFlags::VerticalCenter });
 			}
 			if (DebugGrid) {
-				auto DrawDebugSquare = [&out](Point center, Displacement hor, Displacement ver, uint8_t col) {
-					auto DrawLine = [&out](Point from, Point to, uint8_t col) {
+				auto drawDebugSquare = [&out](Point center, Displacement hor, Displacement ver, uint8_t col) {
+					auto drawLine = [&out](Point from, Point to, uint8_t col) {
 						int dx = to.x - from.x;
 						int dy = to.y - from.y;
 						int steps = std::abs(dx) > std::abs(dy) ? std::abs(dx) : std::abs(dy);
-						float ix = dx / (float)steps;
-						float iy = dy / (float)steps;
-						float sx = static_cast<float>(from.x);
-						float sy = static_cast<float>(from.y);
+						auto ix = static_cast<float>(dx) / static_cast<float>(steps);
+						auto iy = static_cast<float>(dy) / static_cast<float>(steps);
+						auto sx = static_cast<float>(from.x);
+						auto sy = static_cast<float>(from.y);
 
 						for (int i = 0; i <= steps; i++, sx += ix, sy += iy)
-							out.SetPixel({ (int)sx, (int)sy }, col);
+							out.SetPixel({ static_cast<int>(sx), static_cast<int>(sy) }, col);
 					};
-					DrawLine(center - hor, center + ver, col);
-					DrawLine(center + hor, center + ver, col);
-					DrawLine(center - hor, center - ver, col);
-					DrawLine(center + hor, center - ver, col);
+					drawLine(center - hor, center + ver, col);
+					drawLine(center + hor, center + ver, col);
+					drawLine(center - hor, center - ver, col);
+					drawLine(center + hor, center - ver, col);
 				};
 
 				Displacement hor = { TILE_WIDTH / 2, 0 };
@@ -1199,7 +1199,7 @@ void DrawView(const Surface &out, Point startPosition)
 
 				uint8_t col = PAL16_BEIGE;
 
-				DrawDebugSquare(center, hor, ver, col);
+				drawDebugSquare(center, hor, ver, col);
 			}
 		}
 	}
@@ -1282,7 +1282,7 @@ void DrawFPS(const Surface &out)
 	if (msSinceLastUpdate >= 1000) {
 		lastFpsUpdateInMs = runtimeInMs;
 		constexpr int FpsPow10 = 10;
-		const int fps = 1000 * FpsPow10 * framesSinceLastUpdate / msSinceLastUpdate;
+		const uint32_t fps = 1000 * FpsPow10 * framesSinceLastUpdate / msSinceLastUpdate;
 		framesSinceLastUpdate = 0;
 
 		static char buf[15] {};
@@ -1326,7 +1326,7 @@ void DoBlitScreen(int x, int y, int w, int h)
  * @param drawSbar Render belt
  * @param drawBtn Render panel buttons
  */
-void DrawMain(const Surface &out, int dwHgt, bool drawDesc, bool drawHp, bool drawMana, bool drawSbar, bool drawBtn)
+void DrawMain(int dwHgt, bool drawDesc, bool drawHp, bool drawMana, bool drawSbar, bool drawBtn)
 {
 	if (!gbActive || RenderDirectlyToOutputSurface) {
 		return;
@@ -1631,7 +1631,7 @@ void scrollrt_draw_game_screen()
 
 	const Surface &out = GlobalBackBuffer();
 	UndrawCursor(out);
-	DrawMain(out, hgt, false, false, false, false, false);
+	DrawMain(hgt, false, false, false, false, false);
 	DrawCursor(out);
 
 	RenderPresent();
@@ -1706,7 +1706,7 @@ void DrawAndBlit()
 
 	LuaEvent("GameDrawComplete");
 
-	DrawMain(out, hgt, drawInfoBox, drawHealth, drawMana, drawBelt, drawControlButtons);
+	DrawMain(hgt, drawInfoBox, drawHealth, drawMana, drawBelt, drawControlButtons);
 
 #ifdef _DEBUG
 	DrawConsole(out);
