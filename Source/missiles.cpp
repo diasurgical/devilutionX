@@ -25,6 +25,7 @@
 #include "levels/trigs.h"
 #include "lighting.h"
 #include "monster.h"
+#include "player.h"
 #include "spells.h"
 #include "utils/str_cat.hpp"
 
@@ -280,9 +281,24 @@ bool MonsterMHit(const Player &player, int monsterId, int mindam, int maxdam, in
 	return true;
 }
 
-bool Plr2PlrMHit(const Player &player, Player &target, int mindam, int maxdam, int dist, MissileID mtype, DamageType damageType, bool shift, bool *blocked)
+int8_t GetTargetResistance(const Player &target, DamageType damageType)
 {
-	if (sgGameInitInfo.bFriendlyFire == 0 && player.friendlyMode)
+	switch (damageType) {
+	case DamageType::Fire:
+		return target._pFireResist;
+	case DamageType::Lightning:
+		return target._pLghtResist;
+	case DamageType::Magic:
+	case DamageType::Acid:
+		return target._pMagResist;
+	default:
+		return 0;
+	}
+}
+
+bool Plr2PlrMHit(const Player &attacker, const Player &target, int mindam, int maxdam, int dist, MissileID mtype, DamageType damageType, bool shift, bool *blocked)
+{
+	if (sgGameInitInfo.bFriendlyFire == 0 && attacker.friendlyMode)
 		return false;
 
 	*blocked = false;
@@ -300,81 +316,64 @@ bool Plr2PlrMHit(const Player &player, Player &target, int mindam, int maxdam, i
 
 	const MissileData &missileData = GetMissileData(mtype);
 
-	if (HasAnyOf(target._pSpellFlags, SpellFlag::Etherealize) && missileData.isArrow()) {
-		return false;
-	}
+	// Get resistances
+	int8_t resper = GetTargetResistance(target, damageType);
 
-	int8_t resper;
-	switch (damageType) {
-	case DamageType::Fire:
-		resper = target._pFireResist;
-		break;
-	case DamageType::Lightning:
-		resper = target._pLghtResist;
-		break;
-	case DamageType::Magic:
-	case DamageType::Acid:
-		resper = target._pMagResist;
-		break;
-	default:
-		resper = 0;
-		break;
-	}
+	// Hit check
+	int hit = GenerateRnd(100);
 
-	int hper = GenerateRnd(100);
-
-	int hit;
+	int hper;
 	if (missileData.isArrow()) {
-		hit = player.GetRangedToHit()
+		hper = attacker.GetRangedToHit()
 		    - (dist * dist / 2)
 		    - target.GetArmor();
 	} else {
-		hit = player.GetMagicToHit()
+		hper = attacker.GetMagicToHit()
 		    - (target.getCharacterLevel() * 2)
 		    - dist;
 	}
 
-	hit = std::clamp(hit, 5, 95);
+	hper = std::clamp(hper, 5, 95);
 
-	if (hper >= hit) {
+	if (hit >= hper) {
 		return false;
 	}
 
-	int blkper = 100;
-	if (!shift && (target._pmode == PM_STAND || target._pmode == PM_ATTACK) && target._pBlockFlag) {
-		blkper = GenerateRnd(100);
-	}
-
-	int blk = target.GetBlockChance() - (player.getCharacterLevel() * 2);
-	blk = std::clamp(blk, 0, 100);
-
+	// Calculate damage
 	int dam;
 	if (mtype == MissileID::BoneSpirit) {
 		dam = target._pHitPoints / 3;
 	} else {
-		dam = mindam + GenerateRnd(maxdam - mindam + 1);
-		if (missileData.isArrow() && damageType == DamageType::Physical)
-			dam += player._pIBonusDamMod + player._pDamageMod + dam * player._pIBonusDam / 100;
+		dam = RandomIntBetween(mindam, maxdam);
+		if (missileData.isArrow() && damageType == DamageType::Physical) {
+			dam += dam * attacker._pIBonusDam / 100;
+			dam += attacker._pIBonusDamMod + attacker._pDamageMod;
+		}
 		if (!shift)
 			dam <<= 6;
 	}
+
+	// Halve arrow damage
 	if (!missileData.isArrow())
 		dam /= 2;
+
+	// Resistance damage reduction
 	if (resper > 0) {
 		dam -= (dam * resper) / 100;
-		if (&player == MyPlayer)
+		if (&attacker == MyPlayer)
 			NetSendCmdDamage(true, target, dam, damageType);
 		target.Say(HeroSpeech::ArghClang);
 		return true;
 	}
 
-	if (blkper < blk) {
-		StartPlrBlock(target, GetDirection(target.position.tile, player.position.tile));
+	// Block check
+	if (TryPlayerBlock(attacker, target, shift)) {
 		*blocked = true;
 	} else {
-		if (&player == MyPlayer)
-			NetSendCmdDamage(true, target, dam, damageType);
-		StartPlrHit(target, dam, false);
+		if (&attacker == MyPlayer) {
+			NetSendCmdDamage(true, target, dam, damageType);                     // Damage target
+			NetSendCmdParam2(true, CMD_PLRINFLICTRECOVERY, target.getId(), dam); // Inflict hit recovery
+		}
 	}
 
 	return true;

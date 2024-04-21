@@ -984,5 +984,6 @@ void SetPlrDex(Player &player, int v);
 void SetPlrVit(Player &player, int v);
 void InitDungMsgs(Player &player);
 void PlayDungMsgs();
+bool TryPlayerBlock(const Player &attacker, const Player &target, bool shift = false);
 
 } // namespace devilution

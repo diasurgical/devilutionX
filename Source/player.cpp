@@ -697,53 +697,45 @@ bool PlrHitMonst(Player &player, Monster &monster, bool adjacentDamage = false)
 	return true;
 }
 
-bool PlrHitPlr(Player &attacker, Player &target)
+bool PlrHitPlr(Player &attacker, const Player &target)
 {
 	if (target._pInvincible) {
 		return false;
 	}
 
-	if (HasAnyOf(target._pSpellFlags, SpellFlag::Etherealize)) {
-		return false;
-	}
-
+	// Hit check
 	int hit = GenerateRnd(100);
 
 	int hper = attacker.GetMeleeToHit() - target.GetArmor();
 	hper = std::clamp(hper, 5, 95);
 
-	int blk = 100;
-	if ((target._pmode == PM_STAND || target._pmode == PM_ATTACK) && target._pBlockFlag) {
-		blk = GenerateRnd(100);
-	}
-
-	int blkper = target.GetBlockChance() - (attacker.getCharacterLevel() * 2);
-	blkper = std::clamp(blkper, 0, 100);
-
 	if (hit >= hper) {
 		return false;
 	}
 
-	if (blk < blkper) {
-		Direction dir = GetDirection(target.position.tile, attacker.position.tile);
-		StartPlrBlock(target, dir);
-		return true;
+	// Block check
+	if (&attacker == MyPlayer) {
+		if (TryPlayerBlock(attacker, target))
+			return true;
 	}
 
-	int mind = attacker._pIMinDam;
-	int maxd = attacker._pIMaxDam;
-	int dam = GenerateRnd(maxd - mind + 1) + mind;
+	// Calculate damage
+	int dam = RandomIntBetween(attacker._pIMinDam, attacker._pIMaxDam);
 	dam += (dam * attacker._pIBonusDam) / 100;
 	dam += attacker._pIBonusDamMod + attacker._pDamageMod;
 
+	// Critical hit check
 	if (attacker._pClass == HeroClass::Warrior || attacker._pClass == HeroClass::Barbarian) {
 		if (GenerateRnd(100) < attacker.getCharacterLevel()) {
 			dam *= 2;
 		}
 	}
-	int skdam = dam << 6;
+
+	dam <<= 6;
+
+	// Undead Crown life steal check
 	if (HasAnyOf(attacker._pIFlags, ItemSpecialEffect::RandomStealLife)) {
-		int tac = GenerateRnd(skdam / 8);
+		int tac = GenerateRnd(dam / 8);
 		attacker._pHitPoints += tac;
 		if (attacker._pHitPoints > attacker._pMaxHP) {
 			attacker._pHitPoints = attacker._pMaxHP;
@@ -754,10 +746,11 @@ bool PlrHitPlr(Player &attacker, Player &target)
 		}
 		RedrawComponent(PanelDrawComponent::Health);
 	}
+
 	if (&attacker == MyPlayer) {
-		NetSendCmdDamage(true, target, skdam, DamageType::Physical);
+		NetSendCmdDamage(true, target, dam, DamageType::Physical); // Damage target
+		NetSendCmdParam2(true, CMD_PLRINFLICTRECOVERY, target.getId(), dam); // Inflict hit recovery
 	}
-	StartPlrHit(target, skdam, false);
 
 	return true;
 }
@@ -3454,6 +3447,27 @@ void PlayDungMsgs()
 	} else {
 		sfxdelay = 0;
 	}
+}
+
+bool TryPlayerBlock(const Player &attacker, const Player &target, bool shift /*= false*/)
+{
+	if (!target._pBlockFlag || IsNoneOf(target._pmode, PM_STAND, PM_ATTACK) || shift)
+		return false;
+
+	int blk = 100;
+
+	if ((target._pmode == PM_STAND || target._pmode == PM_ATTACK) && target._pBlockFlag)
+		blk = GenerateRnd(100);
+
+	int blkper = target.GetBlockChance() - (attacker.getCharacterLevel() * 2);
+
+	blkper = std::clamp(blkper, 0, 100);
+
+	if (blk < blkper) {
+		NetSendCmdParam1(true, CMD_PLRINFLICTBLOCK, target.getId());
+		return true;
+	}
+	return false;
 }
 
 #ifdef BUILD_TESTING

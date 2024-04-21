@@ -1867,6 +1867,39 @@ size_t OnPlayerDamage(const TCmd *pCmd, Player &player)
 	return sizeof(message);
 }
 
+size_t OnPlayerInflictBlock(const TCmd *pCmd, Player &player)
+{
+	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
+	const uint16_t pid = SDL_SwapLE16(message.wParam1);
+
+	Player &target = Players[pid];
+	if (leveltype != DTYPE_TOWN && gbBufferMsgs != 1) {
+		if (player.isOnActiveLevel() && target._pHitPoints >> 6 > 0) {
+			Direction dir = GetDirection(target.position.tile, player.position.tile);
+			StartPlrBlock(target, dir);
+		}
+	}
+
+	return sizeof(message);
+}
+
+size_t OnPlayerInflictRecovery(const TCmd *pCmd, Player &player)
+{
+	const auto &message = *reinterpret_cast<const TCmdParam2 *>(pCmd);
+	const uint16_t pid = SDL_SwapLE16(message.wParam1);
+	const uint16_t dam = SDL_SwapLE16(message.wParam2);
+
+	Player &target = Players[pid];
+	if (leveltype != DTYPE_TOWN && gbBufferMsgs != 1) {
+		if (player.isOnActiveLevel() && target._pHitPoints >> 6 > 0) {
+			Direction dir = GetDirection(target.position.tile, player.position.tile);
+			StartPlrHit(target, dam, false);
+		}
+	}
+
+	return sizeof(message);
+}
+
 size_t OnOperateObject(const TCmd &pCmd, Player &player)
 {
 	const auto &message = reinterpret_cast<const TCmdLoc &>(pCmd);
@@ -3295,6 +3328,10 @@ size_t ParseCmd(uint8_t pnum, const TCmd *pCmd)
 		return OnPlayerDeath(pCmd, player);
 	case CMD_PLRDAMAGE:
 		return OnPlayerDamage(pCmd, player);
+	case CMD_PLRINFLICTBLOCK:
+		return OnPlayerInflictBlock(pCmd, player);
+	case CMD_PLRINFLICTRECOVERY:
+		return OnPlayerInflictRecovery(pCmd, player);
 	case CMD_OPENDOOR:
 	case CMD_CLOSEDOOR:
 	case CMD_OPERATEOBJ:
