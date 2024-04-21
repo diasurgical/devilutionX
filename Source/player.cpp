@@ -540,7 +540,7 @@ bool PlrHitMonst(Player &player, Monster &monster, bool adjacentDamage = false)
 			hper -= (35 - player.getCharacterLevel()) * 2;
 	}
 
-	int hit = GenerateRnd(100);
+	int hit = GenerateRnd(100, true);
 	if (monster.mode == MonsterMode::Petrified) {
 		hit = 0;
 	}
@@ -559,18 +559,18 @@ bool PlrHitMonst(Player &player, Monster &monster, bool adjacentDamage = false)
 	}
 
 	if (gbIsHellfire && HasAllOf(player._pIFlags, ItemSpecialEffect::FireDamage | ItemSpecialEffect::LightningDamage)) {
-		int midam = RandomIntBetween(player._pIFMinDam, player._pIFMaxDam);
+		int midam = RandomIntBetween(player._pIFMinDam, player._pIFMaxDam, true);
 		AddMissile(player.position.tile, player.position.temp, player._pdir, MissileID::SpectralArrow, TARGET_MONSTERS, player, midam, 0);
 	}
 	int mind = player._pIMinDam;
 	int maxd = player._pIMaxDam;
-	int dam = GenerateRnd(maxd - mind + 1) + mind;
+	int dam = RandomIntBetween(mind, maxd, false, true);
 	dam += dam * player._pIBonusDam / 100;
 	dam += player._pIBonusDamMod;
 	int dam2 = dam << 6;
 	dam += player._pDamageMod;
 	if (player._pClass == HeroClass::Warrior || player._pClass == HeroClass::Barbarian) {
-		if (GenerateRnd(100) < player.getCharacterLevel()) {
+		if (GenerateRnd(100, true) < player.getCharacterLevel()) {
 			dam *= 2;
 		}
 	}
@@ -605,17 +605,17 @@ bool PlrHitMonst(Player &player, Monster &monster, bool adjacentDamage = false)
 		break;
 	}
 
-	if (HasAnyOf(player.pDamAcFlags, ItemSpecialEffectHf::Devastation) && GenerateRnd(100) < 5) {
+	if (HasAnyOf(player.pDamAcFlags, ItemSpecialEffectHf::Devastation) && GenerateRnd(100, true) < 5) {
 		dam *= 3;
 	}
 
-	if (HasAnyOf(player.pDamAcFlags, ItemSpecialEffectHf::Doppelganger) && monster.type().type != MT_DIABLO && !monster.isUnique() && GenerateRnd(100) < 10) {
+	if (HasAnyOf(player.pDamAcFlags, ItemSpecialEffectHf::Doppelganger) && monster.type().type != MT_DIABLO && !monster.isUnique() && GenerateRnd(100, true) < 10) {
 		AddDoppelganger(monster);
 	}
 
 	dam <<= 6;
 	if (HasAnyOf(player.pDamAcFlags, ItemSpecialEffectHf::Jesters)) {
-		int r = GenerateRnd(201);
+		int r = GenerateRnd(201, true);
 		if (r >= 100)
 			r = 100 + (r - 100) * 5;
 		dam = dam * r / 100;
@@ -3457,7 +3457,7 @@ bool TryPlayerBlock(const Player &attacker, const Player &target, bool shift /*=
 	int blk = 100;
 
 	if ((target._pmode == PM_STAND || target._pmode == PM_ATTACK) && target._pBlockFlag)
-		blk = GenerateRnd(100);
+		blk = GenerateRnd(100, true);
 
 	int blkper = target.GetBlockChance() - (attacker.getCharacterLevel() * 2);
 

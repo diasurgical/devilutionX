@@ -227,9 +227,9 @@ const T PickRandomlyAmong(const std::initializer_list<T> &values)
  * @param v upper limit for the return value
  * @return a value between 0 and v-1 inclusive, i.e. the range [0, v)
  */
-inline int32_t RandomIntLessThan(int32_t v)
+inline int32_t RandomIntLessThan(int32_t v, bool sync = false)
 {
-	return std::max<int32_t>(GenerateRnd(v), 0);
+	return std::max<int32_t>(GenerateRnd(v, sync), 0);
 }
 
 /**
@@ -239,9 +239,9 @@ inline int32_t RandomIntLessThan(int32_t v)
  * @param halfOpen whether to use the limits as a half-open range or not
  * @return a randomly selected integer
  */
-inline int32_t RandomIntBetween(int32_t min, int32_t max, bool halfOpen = false)
+inline int32_t RandomIntBetween(int32_t min, int32_t max, bool halfOpen = false, bool sync = false)
 {
-	return RandomIntLessThan(max - min + (halfOpen ? 0 : 1)) + min;
+	return RandomIntLessThan(max - min + (halfOpen ? 0 : 1), sync) + min;
 }
 
 } // namespace devilution
