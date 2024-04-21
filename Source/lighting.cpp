@@ -324,7 +324,7 @@ void MakeLightTable()
 	uint8_t shade = 0;
 	constexpr uint8_t Black = 0;
 	constexpr uint8_t White = 255;
-	for (auto &lightTable : LightTables) {
+	for (uint8_t &lightTable : LightTables) {
 		uint8_t colorIndex = 0;
 		for (uint8_t steps : { 16, 16, 16, 16, 16, 16, 16, 16, 8, 8, 8, 8, 16, 16, 16, 16, 16, 16 }) {
 			const uint8_t shading = shade * steps / 16;
@@ -350,12 +350,12 @@ void MakeLightTable()
 		// Blood wall lighting
 		const auto shades = static_cast<int>(LightTables.size() - 1);
 		for (int i = 0; i < shades; i++) {
-			auto &lightTable = LightTables[i];
+			uint8_t &lightTable = LightTables[i];
 			constexpr int Range = 16;
 			for (int j = 0; j < Range; j++) {
 				uint8_t color = ((Range - 1) << 4) / shades * (shades - i) / Range * (j + 1);
 				color = 1 + (color >> 4);
-				auto idx = j + 1;
+				int idx = j + 1;
 				lightTable[idx] = color;
 				idx = 31 - j;
 				lightTable[idx] = color;
