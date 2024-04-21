@@ -177,8 +177,7 @@ uint32_t GenerateSeed();
  *
  * @return A random number in the range [0,2^31) or -2^31
  */
-[[nodiscard]] int32_t AdvanceRndSeed();
-[[nodiscard]] int32_t AdvanceAndSyncRndSeed();
+[[nodiscard]] int32_t AdvanceRndSeed(bool sync = false);
 
 /**
  * @brief Generates a random integer less than the given limit using the vanilla RNG
@@ -194,8 +193,7 @@ uint32_t GenerateSeed();
  * @param v The upper limit for the return value
  * @return A random number in the range [0, v) or rarely a negative value in (-v, -1]
  */
-int32_t GenerateRnd(int32_t v);
-int32_t GenerateRndAndSync(int32_t v);
+int32_t GenerateRnd(int32_t v, bool sync = false);
 
 /**
  * @brief Generates a random boolean value using the vanilla RNG

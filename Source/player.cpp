@@ -704,7 +704,7 @@ bool PlrHitPlr(Player &attacker, const Player &target)
 	}
 
 	// Hit check
-	int hit = GenerateRndAndSync(100);
+	int hit = GenerateRnd(100, true);
 
 	int hper = attacker.GetMeleeToHit() - target.GetArmor();
 	hper = std::clamp(hper, 5, 95);
