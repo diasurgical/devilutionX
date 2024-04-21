@@ -2434,6 +2434,20 @@ size_t OnSpawnMonster(const TCmd *pCmd, const Player &player)
 	return sizeof(message);
 }
 
+size_t OnSyncSeed(const TCmd *pCmd, const Player &player)
+{
+	const auto &message = reinterpret_cast<const TCmdSyncSeed &>(pCmd);
+	const uint32_t seed = SDL_SwapLE32(message.dwSeed);
+
+	if (gbBufferMsgs == 1) {
+		SendPacket(player, &message, sizeof(message));
+	} else {
+		SetRndSeed(seed);
+	}
+
+	return sizeof(message);
+}
+
 } // namespace
 
 void PrepareItemForNetwork(const Item &item, TItem &messageItem)
@@ -3224,6 +3238,18 @@ void NetSendCmdString(uint32_t pmask, const char *pszStr)
 	multi_send_msg_packet(pmask, (std::byte *)&cmd, strlen(cmd.str) + 2);
 }
 
+void NetSendCmdSyncSeed(bool bHiPri, uint32_t dwSeed)
+{
+	TCmdSyncSeed cmd;
+
+	cmd.bCmd = CMD_SYNCSEED;
+	cmd.dwSeed = dwSeed;
+	if (bHiPri)
+		NetSendHiPri(MyPlayerId, (std::byte *)&cmd, sizeof(cmd));
+	else
+		NetSendLoPri(MyPlayerId, (std::byte *)&cmd, sizeof(cmd));
+}
+
 void delta_close_portal(const Player &player)
 {
 	memset(&sgJunk.portal[player.getId()], 0xFF, sizeof(sgJunk.portal[player.getId()]));
@@ -3397,6 +3423,8 @@ size_t ParseCmd(uint8_t pnum, const TCmd *pCmd)
 		return OnOpenGrave(pCmd);
 	case CMD_SPAWNMONSTER:
 		return OnSpawnMonster(pCmd, player);
+	case CMD_SYNCSEED:
+		return OnSyncSeed(pCmd, player);
 	default:
 		break;
 	}

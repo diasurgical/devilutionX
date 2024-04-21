@@ -428,6 +428,10 @@ enum _cmd_id : uint8_t {
 	//
 	// body (TCmdSpawnMonster)
 	CMD_SPAWNMONSTER,
+	// Sync current RNG state.
+	//
+	// body (TCmdSyncSeed)
+	CMD_SYNCSEED,
 	// Fake command; set current player for succeeding mega pkt buffer messages.
 	//
 	// body (TFakeCmdPlr)
@@ -667,6 +671,11 @@ struct TCmdString {
 	char str[MAX_SEND_STR_LEN];
 };
 
+struct TCmdSyncSeed {
+	_cmd_id bCmd;
+	uint32_t dwSeed;
+};
+
 struct TFakeCmdPlr {
 	_cmd_id bCmd;
 	uint8_t bPlr;
@@ -781,6 +790,7 @@ void NetSendCmdChBeltItem(bool bHiPri, int invGridIndex);
 void NetSendCmdDamage(bool bHiPri, const Player &player, uint32_t dwDam, DamageType damageType);
 void NetSendCmdMonDmg(bool bHiPri, uint16_t wMon, uint32_t dwDam);
 void NetSendCmdString(uint32_t pmask, const char *pszStr);
+void NetSendCmdSyncSeed(bool bHiPri, uint32_t dwSeed);
 void delta_close_portal(const Player &player);
 size_t ParseCmd(uint8_t pnum, const TCmd *pCmd);
 
