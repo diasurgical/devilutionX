@@ -2384,10 +2384,7 @@ void ButcherAi(Monster &monster)
 
 void SneakAi(Monster &monster)
 {
-	if (monster.mode != MonsterMode::Stand) {
-		return;
-	}
-	if (dLight[monster.position.tile.x][monster.position.tile.y] == LightsMax) {
+	if (monster.mode != MonsterMode::Stand || monster.activeForTicks == 0) {
 		return;
 	}
 
