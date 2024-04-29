@@ -208,16 +208,20 @@ bool GetDebugGridText(Point dungeonCoords, char *debugGridTextBuffer)
 		info = TileHasAny(dungeonCoords, TileProperties::Trap);
 		break;
 	case DebugGridTextItem::AutomapView:
-		info = AutomapView[megaCoords.x][megaCoords.y];
+		if (megaCoords.x >= 0 && megaCoords.x < DMAXX && megaCoords.y >= 0 && megaCoords.y < DMAXY)
+			info = AutomapView[megaCoords.x][megaCoords.y];
 		break;
 	case DebugGridTextItem::dungeon:
-		info = dungeon[megaCoords.x][megaCoords.y];
+		if (megaCoords.x >= 0 && megaCoords.x < DMAXX && megaCoords.y >= 0 && megaCoords.y < DMAXY)
+			info = dungeon[megaCoords.x][megaCoords.y];
 		break;
 	case DebugGridTextItem::pdungeon:
-		info = pdungeon[megaCoords.x][megaCoords.y];
+		if (megaCoords.x >= 0 && megaCoords.x < DMAXX && megaCoords.y >= 0 && megaCoords.y < DMAXY)
+			info = pdungeon[megaCoords.x][megaCoords.y];
 		break;
 	case DebugGridTextItem::Protected:
-		info = Protected.test(megaCoords.x, megaCoords.y);
+		if (megaCoords.x >= 0 && megaCoords.x < DMAXX && megaCoords.y >= 0 && megaCoords.y < DMAXY)
+			info = Protected.test(megaCoords.x, megaCoords.y);
 		break;
 	case DebugGridTextItem::None:
 		return false;
