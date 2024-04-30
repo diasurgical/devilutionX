@@ -28,7 +28,7 @@ jobs:
     # well on Windows or Mac.  You can convert this to a matrix build if you need
     # cross-platform coverage.
     # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
-    runs-on: macos-latest
+    runs-on: macos-11
 
     steps:
     - uses: actions/checkout@v4
@@ -39,8 +39,8 @@ jobs:
       uses: actions/cache@v4
       with:
         path: build
-        key: ${{ github.workflow }}-v3-${{ github.sha }}
-        restore-keys: ${{ github.workflow }}-v3-
+        key: ${{ github.workflow }}-v4-${{ github.sha }}
+        restore-keys: ${{ github.workflow }}-v4-
 
     - name: Configure CMake
       # Use a bash shell so we can use the same syntax for environment variable
