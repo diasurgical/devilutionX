@@ -4175,12 +4175,16 @@ void ProcessMissiles()
 	DeleteMissiles();
 }
 
-void missiles_process_charge()
+void SetUpMissileAnimationData()
 {
 	for (auto &missile : Missiles) {
-		missile._miAnimData = GetMissileSpriteData(missile._miAnimType).spritesForDirection(missile._mimfnum);
-		if (missile._mitype != MissileID::Rhino)
+		if (missile._miAnimType == MissileGraphicID::None)
 			continue;
+
+		if (missile._mitype != MissileID::Rhino) {
+			missile._miAnimData = GetMissileSpriteData(missile._miAnimType).spritesForDirection(missile._mimfnum);
+			continue;
+		}
 
 		const CMonster &mon = Monsters[missile._misource].type();
 

@@ -454,7 +454,7 @@ void ProcessBoneSpirit(Missile &missile);
 void ProcessResurrectBeam(Missile &missile);
 void ProcessRedPortal(Missile &missile);
 void ProcessMissiles();
-void missiles_process_charge();
+void SetUpMissileAnimationData();
 void RedoMissileFlags();
 
 #ifdef BUILD_TESTING
