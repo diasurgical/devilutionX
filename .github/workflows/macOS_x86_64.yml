@@ -25,7 +25,7 @@ concurrency:
 
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: macos-11
     steps:
     - uses: actions/checkout@v4
       with:
@@ -38,8 +38,8 @@ jobs:
       uses: actions/cache@v4
       with:
         path: build
-        key: ${{ github.workflow }}-v1-${{ github.sha }}
-        restore-keys: ${{ github.workflow }}-v1-
+        key: ${{ github.workflow }}-v2-${{ github.sha }}
+        restore-keys: ${{ github.workflow }}-v2-
 
     - name: Build
       working-directory: ${{github.workspace}}
