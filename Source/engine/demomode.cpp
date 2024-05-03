@@ -270,6 +270,7 @@ bool CreateSdlEvent(const DemoMsg &dmsg, SDL_Event &event, uint16_t &modState)
 	case DemoMsg::KeyUpEvent:
 		event.type = type == DemoMsg::KeyDownEvent ? SDL_KEYDOWN : SDL_KEYUP;
 		event.key.state = type == DemoMsg::KeyDownEvent ? SDL_PRESSED : SDL_RELEASED;
+		event.key.keysym.scancode = SDL_GetScancodeFromKey(dmsg.key.sym);
 		event.key.keysym.sym = dmsg.key.sym;
 		event.key.keysym.mod = dmsg.key.mod;
 		return true;
