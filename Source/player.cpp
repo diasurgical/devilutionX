@@ -2626,7 +2626,7 @@ void StartPlrHit(Player &player, int dam, bool forcehit)
 
 	WorldTilePosition pos = player.position.tile;
 	if (player.isOnArenaLevel() && player.isWalking() && IsAnyOf(player._pdir, Direction::SouthWest, Direction::South, Direction::SouthEast) && PosOkPlayer(player, pos + pd)) {
-		pos += player._pdir;
+		pos += pd;
 		player.position.tile = pos;
 	}
 	player._pmode = PM_GOTHIT;
