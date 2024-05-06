@@ -2624,9 +2624,8 @@ void StartPlrHit(Player &player, int dam, bool forcehit)
 
 	NewPlrAnim(player, player_graphic::Hit, pd, AnimationDistributionFlags::None, skippedAnimationFrames);
 
-	bool isWalking = player.isWalking();
 	WorldTilePosition pos = player.position.tile;
-	if (player.isOnArenaLevel() && isWalking && IsAnyOf(player._pdir, Direction::SouthWest, Direction::South, Direction::SouthEast) && PosOkPlayer(player, pos + pd)) {
+	if (player.isOnArenaLevel() && player.isWalking() && IsAnyOf(player._pdir, Direction::SouthWest, Direction::South, Direction::SouthEast) && PosOkPlayer(player, pos + pd)) {
 		pos += player._pdir;
 		player.position.tile = pos;
 	}
