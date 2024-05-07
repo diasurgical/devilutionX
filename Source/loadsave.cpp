@@ -390,8 +390,14 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	file.Skip(3); // Alignment
 	player._pSBkSpell = static_cast<SpellID>(file.NextLE<int32_t>());
 	file.Skip<int8_t>(); // Skip _pSBkSplType
-	for (uint8_t &spellLevel : player._pSplLvl)
-		spellLevel = file.NextLE<uint8_t>();
+
+	for (int i = 0; i < 64; i++) {
+		if (GetSpellData(static_cast<SpellID>(i)).sBookLvl != -1)
+			player._pSplLvl[i] = file.NextLE<uint8_t>();
+		else
+			player._pSplLvl[i] = 0;
+	}
+
 	file.Skip(7); // Alignment
 	player._pMemSpells = file.NextLE<uint64_t>();
 	player._pAblSpells = file.NextLE<uint64_t>();
@@ -1212,8 +1218,12 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.WriteLE<int32_t>(static_cast<int8_t>(player._pSBkSpell));
 	file.Skip<int8_t>(); // Skip _pSBkSplType
 
-	for (uint8_t spellLevel : player._pSplLvl)
-		file.WriteLE<uint8_t>(spellLevel);
+	for (int i = 0; i < 64; i++) {
+		if (GetSpellData(static_cast<SpellID>(i)).sBookLvl != -1)
+			file.WriteLE<uint8_t>(player._pSplLvl[i]);
+		else
+			file.WriteLE<uint8_t>(0);
+	}
 
 	file.Skip(7); // Alignment
 	file.WriteLE<uint64_t>(player._pMemSpells);
