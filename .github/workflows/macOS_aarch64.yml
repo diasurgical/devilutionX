@@ -1,4 +1,5 @@
-name: macOS x86_64
+---
+name: macOS aarch64
 
 on:
   push:
@@ -50,14 +51,15 @@ jobs:
         cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=${{env.CMAKE_BUILD_TYPE}} -DBUILD_TESTING=OFF \
           -DMACOSX_STANDALONE_APP_BUNDLE=ON -DDISCORD_INTEGRATION=ON && \
         cmake --build build -j $(sysctl -n hw.physicalcpu) --target package && \
-        mv build/devilutionx.dmg build/devilutionx-x86_64-macOS.dmg
+        mv build/devilutionx.dmg build/devilutionx-aarch64-macOS.dmg
 
     - name: Upload-Package
       if: ${{ !env.ACT }}
       uses: actions/upload-artifact@v4
       with:
-        name: devilutionx-x86_64-macOS.dmg
-        path: build/devilutionx-x86_64-macOS.dmg
+        name: devilutionx-aarch64-macOS.dmg
+        path: build/devilutionx-aarch64-macOS.dmg
 
     - name: Clean up artifacts
       run: rm -rf build/_CPack_Packages build/*.dmg
+...
