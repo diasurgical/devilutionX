@@ -32,13 +32,11 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Set up Homebrew
-      uses: Homebrew/actions/setup-homebrew@master
-
     - name: Create Build Environment
       run: |
+        brew update-reset
+        brew update
         brew bundle install
-        brew bundle check
 
     - name: Cache CMake build folder
       uses: actions/cache@v4
