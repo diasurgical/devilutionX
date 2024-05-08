@@ -16,12 +16,12 @@ namespace {
 
 std::string DebugCmdLevelUp(std::optional<int> levels)
 {
-	if (!levels.has_value()) *levels = 1;
-	if (*levels <= 0) return "amount must be positive";
+	const int levelsToAdd = levels.value_or(1);
+	if (levelsToAdd <= 0) return "amount must be positive";
 	Player &myPlayer = *MyPlayer;
-	for (int i = 0; i < *levels; i++)
+	for (int i = 0; i < levelsToAdd; i++)
 		NetSendCmd(true, CMD_CHEAT_EXPERIENCE);
-	return StrCat("New character level: ", myPlayer.getCharacterLevel() + *levels);
+	return StrCat("New character level: ", myPlayer.getCharacterLevel() + levelsToAdd);
 }
 
 std::string DebugCmdMaxStats()
