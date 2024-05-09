@@ -3408,7 +3408,7 @@ void SpawnItem(Monster &monster, Point position, bool sendmsg, bool spawn /*= fa
 	int ii = AllocateItem();
 	auto &item = Items[ii];
 	GetSuperItemSpace(position, ii);
-	int uper = true || monster.isUnique() ? 15 : 1;
+	int uper = monster.isUnique() ? 15 : 1;
 
 	int8_t mLevel = monster.data().level;
 	if (!gbIsHellfire && monster.type().type == MT_DIABLO)
