@@ -277,13 +277,18 @@ void PackPlayer(PlayerPack &packed, const Player &player)
 
 	for (int i = 0; i < 37; i++) { // Should be MAX_SPELLS but set to 37 to make save games compatible
 		auto spl = static_cast<SpellID>(i);
-		if (GetSpellData(spl).sBookLvl == -1 || (!gbIsHellfire && IsAnyOf(spl, SpellID::Apocalypse, SpellID::Nova)))
+		if (GetSpellData(spl).sBookLvl == -1)
 			packed.pSplLvl[i] = 0;
 		else
 			packed.pSplLvl[i] = player._pSplLvl[i];
 	}
-	for (int i = 37; i < 47; i++)
-		packed.pSplLvl2[i - 37] = player._pSplLvl[i];
+	for (int i = 37; i < 47; i++) {
+		auto spl = static_cast<SpellID>(i);
+		if (GetSpellData(spl).sBookLvl == -1)
+			packed.pSplLvl2[i - 37] = 0;
+		else
+			packed.pSplLvl2[i - 37] = player._pSplLvl[i];
+	}
 
 	for (int i = 0; i < NUM_INVLOC; i++)
 		PackItem(packed.InvBody[i], player.InvBody[i], gbIsHellfire);
@@ -491,13 +496,22 @@ void UnPackPlayer(const PlayerPack &packed, Player &player)
 
 	for (int i = 0; i < 37; i++) { // Should be MAX_SPELLS but set to 36 to make save games compatible
 		auto spl = static_cast<SpellID>(i);
-		if (GetSpellData(spl).sBookLvl == -1 || (!gbIsHellfire && IsAnyOf(spl, SpellID::Apocalypse, SpellID::Nova)))
+		if (GetSpellData(spl).sBookLvl == -1)
 			player._pSplLvl[i] = 0;
 		else
 			player._pSplLvl[i] = packed.pSplLvl[i];
 	}
-	for (int i = 37; i < 47; i++)
-		player._pSplLvl[i] = packed.pSplLvl2[i - 37];
+	for (int i = 37; i < 47; i++) {
+		auto spl = static_cast<SpellID>(i);
+		if (GetSpellData(spl).sBookLvl == -1)
+			player._pSplLvl[i] = 0;
+		else
+			player._pSplLvl[i] = packed.pSplLvl2[i - 37];
+	}
+	if (!gbIsHellfire) {
+		player._pSplLvl[static_cast<uint8_t>(SpellID::Apocalypse)] = 0;
+		player._pSplLvl[static_cast<uint8_t>(SpellID::Nova)] = 0;
+	}
 
 	bool isHellfire = packed.bIsHellfire != 0;
 

@@ -391,12 +391,18 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	player._pSBkSpell = static_cast<SpellID>(file.NextLE<int32_t>());
 	file.Skip<int8_t>(); // Skip _pSBkSplType
 
-	for (int i = 0; i < 64; i++) {
+	for (int i = 0; i < static_cast<int>(SpellID::LAST); i++) {
 		auto spl = static_cast<SpellID>(i);
-		if (GetSpellData(spl).sBookLvl == -1 || (!gbIsHellfire && IsAnyOf(spl, SpellID::Apocalypse, SpellID::Nova)))
+		if (GetSpellData(spl).sBookLvl == -1)
 			player._pSplLvl[i] = 0;
 		else
 			player._pSplLvl[i] = file.NextLE<uint8_t>();
+	}
+	for (int i = static_cast<int>(SpellID::LAST); i < 64; i++)
+		player._pSplLvl[i] = 0;
+	if (!gbIsHellfire) {
+		player._pSplLvl[static_cast<uint8_t>(SpellID::Apocalypse)] = 0;
+		player._pSplLvl[static_cast<uint8_t>(SpellID::Nova)] = 0;
 	}
 
 	file.Skip(7); // Alignment
@@ -1219,13 +1225,15 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.WriteLE<int32_t>(static_cast<int8_t>(player._pSBkSpell));
 	file.Skip<int8_t>(); // Skip _pSBkSplType
 
-	for (int i = 0; i < 64; i++) {
+	for (int i = 0; i < static_cast<int>(SpellID::LAST); i++) {
 		auto spl = static_cast<SpellID>(i);
-		if (GetSpellData(spl).sBookLvl == -1 || (!gbIsHellfire && IsAnyOf(spl, SpellID::Apocalypse, SpellID::Nova)))
+		if (GetSpellData(spl).sBookLvl == -1)
 			file.WriteLE<uint8_t>(0);
 		else
 			file.WriteLE<uint8_t>(player._pSplLvl[i]);
 	}
+	for (int i = static_cast<int>(SpellID::LAST); i < 64; i++)
+		file.WriteLE<uint8_t>(0);
 
 	file.Skip(7); // Alignment
 	file.WriteLE<uint64_t>(player._pMemSpells);
