@@ -486,10 +486,10 @@ void UnPackPlayer(const PlayerPack &packed, Player &player)
 
 	for (int i = 0; i < 37; i++) { // Should be MAX_SPELLS but set to 36 to make save games compatible
 		auto spl = static_cast<SpellID>(i);
-		if (GetSpellData(spl).sBookLvl == -1)
-			player._pSplLvl[i] = 0;
-		else
+		if (GetSpellData(spl).sBookLvl != -1)
 			player._pSplLvl[i] = packed.pSplLvl[i];
+		else
+			player._pSplLvl[i] = 0;
 	}
 	for (int i = 37; i < 47; i++) {
 		auto spl = static_cast<SpellID>(i);

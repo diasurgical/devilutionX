@@ -393,10 +393,10 @@ void LoadPlayer(LoadHelper &file, Player &player)
 
 	for (int i = 0; i < static_cast<int>(SpellID::LAST); i++) {
 		auto spl = static_cast<SpellID>(i);
-		if (GetSpellData(spl).sBookLvl == -1)
-			player._pSplLvl[i] = 0;
-		else
+		if (GetSpellData(spl).sBookLvl != -1)
 			player._pSplLvl[i] = file.NextLE<uint8_t>();
+		else
+			player._pSplLvl[i] = 0;
 	}
 	for (int i = static_cast<int>(SpellID::LAST); i < 64; i++)
 		player._pSplLvl[i] = 0;
