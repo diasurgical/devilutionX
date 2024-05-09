@@ -392,10 +392,11 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	file.Skip<int8_t>(); // Skip _pSBkSplType
 
 	for (int i = 0; i < 64; i++) {
-		if (GetSpellData(static_cast<SpellID>(i)).sBookLvl != -1)
-			player._pSplLvl[i] = file.NextLE<uint8_t>();
-		else
+		auto spl = static_cast<SpellID>(i);
+		if (GetSpellData(spl).sBookLvl == -1 || (!gbIsHellfire && IsAnyOf(spl, SpellID::Apocalypse, SpellID::Nova)))
 			player._pSplLvl[i] = 0;
+		else
+			player._pSplLvl[i] = file.NextLE<uint8_t>();
 	}
 
 	file.Skip(7); // Alignment
@@ -1219,10 +1220,11 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.Skip<int8_t>(); // Skip _pSBkSplType
 
 	for (int i = 0; i < 64; i++) {
-		if (GetSpellData(static_cast<SpellID>(i)).sBookLvl != -1)
-			file.WriteLE<uint8_t>(player._pSplLvl[i]);
-		else
+		auto spl = static_cast<SpellID>(i);
+		if (GetSpellData(spl).sBookLvl == -1 || (!gbIsHellfire && IsAnyOf(spl, SpellID::Apocalypse, SpellID::Nova)))
 			file.WriteLE<uint8_t>(0);
+		else	
+			file.WriteLE<uint8_t>(player._pSplLvl[i]);
 	}
 
 	file.Skip(7); // Alignment
