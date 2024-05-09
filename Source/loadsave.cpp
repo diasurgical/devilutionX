@@ -1223,7 +1223,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 		auto spl = static_cast<SpellID>(i);
 		if (GetSpellData(spl).sBookLvl == -1 || (!gbIsHellfire && IsAnyOf(spl, SpellID::Apocalypse, SpellID::Nova)))
 			file.WriteLE<uint8_t>(0);
-		else	
+		else
 			file.WriteLE<uint8_t>(player._pSplLvl[i]);
 	}
 
