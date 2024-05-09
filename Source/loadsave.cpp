@@ -1225,15 +1225,8 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.WriteLE<int32_t>(static_cast<int8_t>(player._pSBkSpell));
 	file.Skip<int8_t>(); // Skip _pSBkSplType
 
-	for (int i = 0; i < static_cast<int>(SpellID::LAST); i++) {
-		auto spl = static_cast<SpellID>(i);
-		if (GetSpellData(spl).sBookLvl == -1)
-			file.WriteLE<uint8_t>(0);
-		else
-			file.WriteLE<uint8_t>(player._pSplLvl[i]);
-	}
-	for (int i = static_cast<int>(SpellID::LAST); i < 64; i++)
-		file.WriteLE<uint8_t>(0);
+	for (uint8_t spellLevel : player._pSplLvl)
+		file.WriteLE<uint8_t>(spellLevel);
 
 	file.Skip(7); // Alignment
 	file.WriteLE<uint64_t>(player._pMemSpells);

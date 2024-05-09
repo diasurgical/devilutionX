@@ -275,20 +275,10 @@ void PackPlayer(PlayerPack &packed, const Player &player)
 	packed.pMaxManaBase = SDL_SwapLE32(player._pMaxManaBase);
 	packed.pMemSpells = SDL_SwapLE64(player._pMemSpells);
 
-	for (int i = 0; i < 37; i++) { // Should be MAX_SPELLS but set to 37 to make save games compatible
-		auto spl = static_cast<SpellID>(i);
-		if (GetSpellData(spl).sBookLvl == -1)
-			packed.pSplLvl[i] = 0;
-		else
-			packed.pSplLvl[i] = player._pSplLvl[i];
-	}
-	for (int i = 37; i < 47; i++) {
-		auto spl = static_cast<SpellID>(i);
-		if (GetSpellData(spl).sBookLvl == -1)
-			packed.pSplLvl2[i - 37] = 0;
-		else
-			packed.pSplLvl2[i - 37] = player._pSplLvl[i];
-	}
+	for (int i = 0; i < 37; i++) // Should be MAX_SPELLS but set to 37 to make save games compatible
+		packed.pSplLvl[i] = player._pSplLvl[i];
+	for (int i = 37; i < 47; i++)
+		packed.pSplLvl2[i - 37] = player._pSplLvl[i];
 
 	for (int i = 0; i < NUM_INVLOC; i++)
 		PackItem(packed.InvBody[i], player.InvBody[i], gbIsHellfire);
