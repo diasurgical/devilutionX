@@ -3320,7 +3320,7 @@ void TryRandomUniqueItem(Item &item, _item_indexes idx, int8_t mLevel, int uper,
 		}
 
 		// Set all uidOffset values for each entry in uids vector.
-		for (int i = uids.size() - 1; i >= 0; --i) {
+		for (int i = static_cast<int>(uids.size() - 1); i >= 0; --i) {
 			int currentUidOffset = 0;
 			for (int j = i + 1; j < uids.size(); ++j) {
 				if (UniqueItems[uids[i].first].UIItemId == UniqueItems[uids[j].first].UIItemId && UniqueItems[uids[i].first].UIMinLvl == UniqueItems[uids[j].first].UIMinLvl) {
