@@ -1566,8 +1566,8 @@ void SetupBaseItem(Point position, _item_indexes idx, bool onlygood, bool sendms
 	int curlv = ItemsGetCurrlevel();
 
 	SetupAllItems(*MyPlayer, item, idx, AdvanceRndSeed(), 2 * curlv, 1, onlygood, delta);
-	SetupItem(item);
 	TryRandomUniqueItem(item, idx, 2 * curlv, 1, onlygood, delta);
+	SetupItem(item);
 
 	if (sendmsg)
 		NetSendCmdPItem(false, CMD_DROPITEM, item.position, item);
