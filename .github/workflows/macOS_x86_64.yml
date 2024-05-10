@@ -32,7 +32,11 @@ jobs:
         fetch-depth: 0
 
     - name: Create Build Environment
-      run: brew bundle install
+      run: |
+        brew update-reset
+        brew update
+        brew bundle install
+
 
     - name: Cache CMake build folder
       uses: actions/cache@v4

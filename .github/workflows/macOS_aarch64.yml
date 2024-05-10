@@ -36,7 +36,7 @@ jobs:
       run: |
         brew update-reset
         brew update
-        brew bundle install --verbose
+        brew bundle install
 
     - name: Cache CMake build folder
       uses: actions/cache@v4
@@ -54,7 +54,6 @@ jobs:
         cmake \
           -S . \
           -B build \
-          -G Xcode \
           -D CMAKE_TOOLCHAIN_FILE=../CMake/platforms/ios.toolchain.cmake \
           -D PLATFORM=MAC_ARM64 \
           -D CMAKE_BUILD_TYPE=Release \
