@@ -50,6 +50,8 @@ jobs:
         cmake \
           -S . \
           -B build \
+          -D CMAKE_TOOLCHAIN_FILE=../CMake/platforms/ios.toolchain.cmake \
+          -D PLATFORM=MAC \
           -D CMAKE_BUILD_TYPE=${{env.CMAKE_BUILD_TYPE}} \
           -D BUILD_TESTING=OFF \
           -D MACOSX_STANDALONE_APP_BUNDLE=ON \
