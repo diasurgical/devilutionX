@@ -3331,15 +3331,16 @@ void TryRandomUniqueItem(Item &item, _item_indexes idx, int8_t mLevel, int uper,
 				uid = uids[uidsIdx].first;
 			} while (UniqueItemFlags[uid] && !gbIsMultiplayer);
 
-			uper = 15; // Set uper to 15, so we have a better chance of generating a unique item.
-
 			const auto &uniqueItem = UniqueItems[uid];
-			int targetLvl = uniqueItem.UIMinLvl - 4; // Target level for reverse compatibility, since vanilla always takes the last applicable uid in the list.
+			int targetLvl = 1; // Target level for reverse compatibility, since vanilla always takes the last applicable uid in the list.
 
-			// Adjust level if needed.
-			if (targetLvl < 1) { // Negative level will underflow. Lvl 0 items may have unintended consequences.
-				uper = 1;        // Can't use uper15, so use uper1.
-				targetLvl += 4;  // Readd the 4 to targetLvl taken away by uper15.
+			// Set target level. Ideally we use uper 15 to have a 16% chance of generating a unique item.
+			if (uniqueItem.UIMinLvl - 4 > 0) { // Negative level will underflow. Lvl 0 items may have unintended consequences.
+				uper = 15;
+				targetLvl = uniqueItem.UIMinLvl - 4;
+			} else {
+				uper = 1;
+				targetLvl = uniqueItem.UIMinLvl;
 			}
 
 			// Set all uidOffset values for each entry in uids vector.
