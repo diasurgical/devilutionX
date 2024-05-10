@@ -31,13 +31,13 @@ jobs:
         arch: [x86_64, arm64]
         os: [13, 14]
         platform: [MAC, MAC_ARM64]
-        include:
-          - arch: arm64
-            platform: MAC_ARM64
-            os: 14
+        exclude:
           - arch: x86_64
+            platform: MAC_ARM64
+            os: [13, 14]
+          - arch: arm64
             platform: MAC
-            os: 13
+            os: [13, 14]
     runs-on: macos-${{ matrix.os }}
     steps:
     - uses: actions/checkout@v4
