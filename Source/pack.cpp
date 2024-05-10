@@ -484,10 +484,27 @@ void UnPackPlayer(const PlayerPack &packed, Player &player)
 	player._pManaBase = std::min<int32_t>(player._pManaBase, player._pMaxManaBase);
 	player._pMemSpells = SDL_SwapLE64(packed.pMemSpells);
 
-	for (int i = 0; i < 37; i++) // Should be MAX_SPELLS but set to 36 to make save games compatible
-		player._pSplLvl[i] = packed.pSplLvl[i];
-	for (int i = 37; i < 47; i++)
-		player._pSplLvl[i] = packed.pSplLvl2[i - 37];
+	// Only read spell levels for learnable spells (Diablo)
+	for (int i = 0; i < 37; i++) { // Should be MAX_SPELLS but set to 36 to make save games compatible
+		auto spl = static_cast<SpellID>(i);
+		if (GetSpellData(spl).sBookLvl != -1)
+			player._pSplLvl[i] = packed.pSplLvl[i];
+		else
+			player._pSplLvl[i] = 0;
+	}
+	// Only read spell levels for learnable spells (Hellfire)
+	for (int i = 37; i < 47; i++) {
+		auto spl = static_cast<SpellID>(i);
+		if (GetSpellData(spl).sBookLvl != -1)
+			player._pSplLvl[i] = packed.pSplLvl2[i - 37];
+		else
+			player._pSplLvl[i] = 0;
+	}
+	// These spells are unavailable in Diablo as learnable spells
+	if (!gbIsHellfire) {
+		player._pSplLvl[static_cast<uint8_t>(SpellID::Apocalypse)] = 0;
+		player._pSplLvl[static_cast<uint8_t>(SpellID::Nova)] = 0;
+	}
 
 	bool isHellfire = packed.bIsHellfire != 0;
 

@@ -390,8 +390,24 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	file.Skip(3); // Alignment
 	player._pSBkSpell = static_cast<SpellID>(file.NextLE<int32_t>());
 	file.Skip<int8_t>(); // Skip _pSBkSplType
-	for (uint8_t &spellLevel : player._pSplLvl)
-		spellLevel = file.NextLE<uint8_t>();
+
+	// Only read spell levels for learnable spells
+	for (int i = 0; i < static_cast<int>(SpellID::LAST); i++) {
+		auto spl = static_cast<SpellID>(i);
+		if (GetSpellData(spl).sBookLvl != -1)
+			player._pSplLvl[i] = file.NextLE<uint8_t>();
+		else
+			file.Skip<uint8_t>();
+	}
+	// Skip indices that are unused
+	for (int i = static_cast<int>(SpellID::LAST); i < 64; i++)
+		file.Skip<uint8_t>();
+	// These spells are unavailable in Diablo as learnable spells
+	if (!gbIsHellfire) {
+		player._pSplLvl[static_cast<uint8_t>(SpellID::Apocalypse)] = 0;
+		player._pSplLvl[static_cast<uint8_t>(SpellID::Nova)] = 0;
+	}
+
 	file.Skip(7); // Alignment
 	player._pMemSpells = file.NextLE<uint64_t>();
 	player._pAblSpells = file.NextLE<uint64_t>();
