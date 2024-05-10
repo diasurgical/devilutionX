@@ -3358,7 +3358,7 @@ void TryRandomUniqueItem(Item &item, _item_indexes idx, int8_t mLevel, int uper,
 			item = {}; // Reset item data
 			item.position = itemPos;
 			SetupAllItems(*MyPlayer, item, idx, AdvanceRndSeed(), targetLvl, uper, onlygood, pregen, uidOffset);
-			if (notUnique && item._iMagical != ITEM_QUALITY_UNIQUE)
+			if (notUnique && item._iMagical != ITEM_QUALITY_UNIQUE) // Force generate a non-unique item
 				break;
 			count++;
 		} while ((item._iUid != uid && count < 1000) || notUnique);
