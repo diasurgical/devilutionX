@@ -1,7 +1,5 @@
 ---
-name: macOS
-
-on:
+on:  # yamllint disable-line rule:truthy
   push:
     branches:
       - master
@@ -15,9 +13,6 @@ on:
       - 'docs/**'
   release:
     types: [published]
-    paths-ignore:
-      - '*.md'
-      - 'docs/**'
   workflow_dispatch:
 
 concurrency:
@@ -56,8 +51,8 @@ jobs:
       uses: actions/cache@v4
       with:
         path: build
-        key: macos-${{ matrix.arch }}-v1-${{ github.sha }}
-        restore-keys: macos-${{ matrix.arch }}-v1-
+        key: macos-${{ matrix.arch }}-v2-${{ github.sha }}
+        restore-keys: macos-${{ matrix.arch }}-v2-
 
     - name: Configure CMake
       working-directory: ${{github.workspace}}
