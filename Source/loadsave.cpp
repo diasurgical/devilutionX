@@ -396,10 +396,10 @@ void LoadPlayer(LoadHelper &file, Player &player)
 		if (GetSpellData(spl).sBookLvl != -1)
 			player._pSplLvl[i] = file.NextLE<uint8_t>();
 		else
-			player._pSplLvl[i] = 0;
+			file.Skip<uint8_t>();
 	}
 	for (int i = static_cast<int>(SpellID::LAST); i < 64; i++)
-		player._pSplLvl[i] = 0;
+		file.Skip<uint8_t>();
 	if (!gbIsHellfire) {
 		player._pSplLvl[static_cast<uint8_t>(SpellID::Apocalypse)] = 0;
 		player._pSplLvl[static_cast<uint8_t>(SpellID::Nova)] = 0;
