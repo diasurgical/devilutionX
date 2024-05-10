@@ -399,7 +399,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 		else
 			file.Skip<uint8_t>();
 	}
-	// Skip unused spells
+	// Skip indices that are unused
 	for (int i = static_cast<int>(SpellID::LAST); i < 64; i++)
 		file.Skip<uint8_t>();
 	// These spells are unavailable in Diablo as learnable spells
