@@ -55,7 +55,7 @@ jobs:
           -S . \
           -B build \
           -D CMAKE_TOOLCHAIN_FILE=../CMake/platforms/ios.toolchain.cmake \
-          -D PLATFORM=MAC_UNIVERSAL \
+          -D PLATFORM=MAC_ARM64 \
           -D CMAKE_BUILD_TYPE=${{env.CMAKE_BUILD_TYPE}} \
           -D BUILD_TESTING=OFF \
           -D MACOSX_STANDALONE_APP_BUNDLE=ON \
