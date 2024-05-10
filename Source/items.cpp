@@ -3328,16 +3328,19 @@ void TryRandomUniqueItem(Item &item, _item_indexes idx, int8_t mLevel, int uper,
 			uids[i].second = currentUidOffset;
 		}
 
-		int32_t uidsIdx; // Index into uid, used to get a random uid from the uids vector.
-		int uid;         // Actual unique id.
-		int count = 0;
+		int32_t uidsIdx = 0; // Index into uid, used to get a random uid from the uids vector.
+		int uid = 0;         // Actual unique id.
+		int count = 1;
+		bool notUnique = false;
 		do {
+			if (count >= 100) { // Give up and generate a non-unique item.
+				notUnique = true;
+				break;
+			}
 			uidsIdx = GenerateRnd(static_cast<int32_t>(uids.size())); // Get random valid uid.
 			uid = uids[uidsIdx].first;
-			if (!UniqueItemFlags[uid] || gbIsMultiplayer || count > 100) // Keep going if we select a unique in SP that has already dropped.
-				break;
 			count++;
-		} while (true);
+		} while (UniqueItemFlags[uid] && !gbIsMultiplayer);
 
 		const auto uidOffset = uids[uidsIdx].second; // Amount to decrease the final uid by in CheckUnique() to get the desired unique.
 		const auto &uniqueItem = UniqueItems[uid];
@@ -3349,14 +3352,16 @@ void TryRandomUniqueItem(Item &item, _item_indexes idx, int8_t mLevel, int uper,
 			targetLvl += 4;                // Readd the 4 to targetLvl taken away by uper15.
 		}
 
-		count = 0;
+		count = 1;
 		auto itemPos = item.position;
 		do {
 			item = {}; // Reset item data
 			item.position = itemPos;
 			SetupAllItems(*MyPlayer, item, idx, AdvanceRndSeed(), targetLvl, uper, onlygood, pregen, uidOffset);
+			if (notUnique && item._iMagical != ITEM_QUALITY_UNIQUE)
+				break;
 			count++;
-		} while (item._iUid != uid && count < 1000);
+		} while ((item._iUid != uid && count < 1000) || notUnique);
 
 		if ((item._iCreateInfo & CF_UNIQUE) != 0) {
 			if (!gbIsMultiplayer) {
