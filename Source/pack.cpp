@@ -493,10 +493,10 @@ void UnPackPlayer(const PlayerPack &packed, Player &player)
 	}
 	for (int i = 37; i < 47; i++) {
 		auto spl = static_cast<SpellID>(i);
-		if (GetSpellData(spl).sBookLvl == -1)
-			player._pSplLvl[i] = 0;
-		else
+		if (GetSpellData(spl).sBookLvl != -1)
 			player._pSplLvl[i] = packed.pSplLvl2[i - 37];
+		else
+			player._pSplLvl[i] = 0;
 	}
 	if (!gbIsHellfire) {
 		player._pSplLvl[static_cast<uint8_t>(SpellID::Apocalypse)] = 0;
