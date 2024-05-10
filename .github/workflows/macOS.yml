@@ -73,7 +73,7 @@ jobs:
             -D CMAKE_TOOLCHAIN_FILE=../CMake/platforms/ios.toolchain.cmake \
             -D PLATFORM=${{ matrix.platform }} \
             -D CMAKE_BUILD_TYPE=${{env.CMAKE_BUILD_TYPE}} \
-            -D MACOSX_DEPLOYMENT_TARGET=${{ matrix.target }} \
+            -D DEPLOYMENT_TARGET=${{ matrix.target }} \
             -D BUILD_TESTING=OFF \
             -D MACOSX_STANDALONE_APP_BUNDLE=ON \
             -D DISCORD_INTEGRATION=ON
