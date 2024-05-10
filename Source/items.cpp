@@ -3296,78 +3296,83 @@ void TryRandomUniqueItem(Item &item, _item_indexes idx, int8_t mLevel, int uper,
 {
 	// If the item is a non-quest unique, find a random valid uid and force generate items to get an item with that uid.
 	if ((item._iCreateInfo & CF_UNIQUE) != 0 && item._iMiscId != IMISC_UNIQUE) {
-		int8_t itemLvl = mLevel;
-
-		// mLevel remains unadjusted when arriving in this function, and there is no call to set iblvl until CheckUnique(), so we adjust here.
-		if (uper == 15)
-			itemLvl += 4;
-
 		std::vector<std::pair<int, int>> uids; // Contains uid and uidOffset.
 
 		// Gather all potential unique items. uid is the index into UniqueItems.
 		for (int uid = 0; uid < static_cast<int>(UniqueItems.size()); ++uid) {
 			const auto &uniqueItem = UniqueItems[uid];
-
 			// Verify the unique item base item matches idx.
 			bool isMatchingItemId = uniqueItem.UIItemId == AllItemsList[static_cast<size_t>(idx)].iItemId;
 			// Verify itemLvl is at least the unique's minimum required level.
-			bool meetsLevelRequirement = itemLvl >= uniqueItem.UIMinLvl;
+			// mLevel remains unadjusted when arriving in this function, and there is no call to set iblvl until CheckUnique(), so we adjust here.
+			bool meetsLevelRequirement = ((uper == 15) ? mLevel + 4 : mLevel) >= uniqueItem.UIMinLvl;
 
 			if (IsUniqueAvailable(uid) && isMatchingItemId && meetsLevelRequirement)
 				uids.emplace_back(std::make_pair(uid, 0));
 		}
 
-		// Set all uidOffset values for each entry in uids vector.
-		for (int i = static_cast<int>(uids.size() - 1); i >= 0; --i) {
-			int currentUidOffset = 0;
-			for (int j = i + 1; j < uids.size(); ++j) {
-				if (UniqueItems[uids[i].first].UIItemId == UniqueItems[uids[j].first].UIItemId && UniqueItems[uids[i].first].UIMinLvl == UniqueItems[uids[j].first].UIMinLvl) {
-					currentUidOffset = std::max(currentUidOffset, uids[j].second + 1);
+		bool notUnique = true;
+
+		// If we find at least one unique in uids that hasn't been obtained yet, we can proceed getting a random unique.
+		for (auto &pair : uids) {
+			if (!UniqueItemFlags[pair.first]) {
+				notUnique = false;
+				break;
+			}
+		}
+
+		if (!notUnique) {
+			int32_t uidsIdx = 0; // Index into uid, used to get a random uid from the uids vector.
+			int uid = 0;         // Actual unique id.
+
+			// Obtain a random valid uid.
+			do {
+				uidsIdx = GenerateRnd(static_cast<int32_t>(uids.size()));
+				uid = uids[uidsIdx].first;
+			} while (UniqueItemFlags[uid] && !gbIsMultiplayer);
+
+			const auto &uniqueItem = UniqueItems[uid];
+			int targetLvl = (uper == 15) ? uniqueItem.UIMinLvl - 4 : uniqueItem.UIMinLvl; // Target level for reverse compatibility, since vanilla always takes the last applicable uid in the list.
+
+			// Adjust level if needed.
+			if (uper == 15 && targetLvl < 1) { // Negative level will underflow. Lvl 0 items may have unintended consequences.
+				uper = 1;                      // Can't use uper15, so use uper1.
+				targetLvl += 4;                // Readd the 4 to targetLvl taken away by uper15.
+			}
+			
+			// Set all uidOffset values for each entry in uids vector.
+			for (auto &pair : uids) {
+				for (int j = pair.first + 1; j < UniqueItems.size(); ++j) {
+					if (UniqueItems[pair.first].UIItemId == UniqueItems[j].UIItemId && UniqueItems[pair.first].UIMinLvl == UniqueItems[j].UIMinLvl) {
+						pair.second++;
+					}
 				}
 			}
-			uids[i].second = currentUidOffset;
-		}
 
-		int32_t uidsIdx = 0; // Index into uid, used to get a random uid from the uids vector.
-		int uid = 0;         // Actual unique id.
-		int count = 1;
-		bool notUnique = false;
-		do {
-			if (count >= 100) { // Give up and generate a non-unique item.
-				notUnique = true;
-				break;
-			}
-			uidsIdx = GenerateRnd(static_cast<int32_t>(uids.size())); // Get random valid uid.
-			uid = uids[uidsIdx].first;
-			count++;
-		} while (UniqueItemFlags[uid] && !gbIsMultiplayer);
+			const auto uidOffset = uids[uidsIdx].second; // Amount to decrease the final uid by in CheckUnique() to get the desired unique.
+			auto itemPos = item.position;
 
-		const auto uidOffset = uids[uidsIdx].second; // Amount to decrease the final uid by in CheckUnique() to get the desired unique.
-		const auto &uniqueItem = UniqueItems[uid];
+			// Force generate items until we find a uid match.
+			do {
+				item = {}; // Reset item data
+				item.position = itemPos;
+				SetupAllItems(*MyPlayer, item, idx, AdvanceRndSeed(), targetLvl, uper, onlygood, pregen, uidOffset);
+			} while (item._iUid != uid);
 
-		int targetLvl = (uper == 15) ? uniqueItem.UIMinLvl - 4 : uniqueItem.UIMinLvl; // Target level for reverse compatibility, since vanilla always takes the last applicable uid in the list.
-
-		if (uper == 15 && targetLvl < 1) { // Negative level will underflow. Lvl 0 items may have unintended consequences.
-			uper = 1;                      // Can't use uper15, so use uper1.
-			targetLvl += 4;                // Readd the 4 to targetLvl taken away by uper15.
-		}
-
-		count = 1;
-		auto itemPos = item.position;
-		do {
-			item = {}; // Reset item data
-			item.position = itemPos;
-			SetupAllItems(*MyPlayer, item, idx, AdvanceRndSeed(), targetLvl, uper, onlygood, pregen, uidOffset);
-			if (notUnique && item._iMagical != ITEM_QUALITY_UNIQUE) // Force generate a non-unique item
-				break;
-			count++;
-		} while ((item._iUid != uid && count < 1000) || notUnique);
-
-		if ((item._iCreateInfo & CF_UNIQUE) != 0) {
+			// Set item as obtained to prevent it from being dropped again in SP.
 			if (!gbIsMultiplayer) {
-				UniqueItemFlags[uid] = true; // Now it's safe to set a unique as being dropped, to prevent it from being dropped again in the same SP session.
+				UniqueItemFlags[uid] = true;
 			}
-			item.dwBuff |= (uidOffset << 1) & CF_UIDOFFSET; // Save the uidOffset to the item, used for item regeneration.
+			item.dwBuff |= (uidOffset << 1) & CF_UIDOFFSET;
+		} else {
+			auto itemPos = item.position;
+
+			// Force generate a non-unique item.
+			do {
+				item = {}; // Reset item data
+				item.position = itemPos;
+				SetupAllItems(*MyPlayer, item, idx, AdvanceRndSeed(), mLevel, uper, onlygood, pregen);
+			} while (item._iMagical == ITEM_QUALITY_UNIQUE);
 		}
 	}
 }
