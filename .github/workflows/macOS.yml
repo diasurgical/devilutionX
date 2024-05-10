@@ -31,11 +31,11 @@ jobs:
         arch: [x86_64, arm64]
         os: [13, 14]
         platform: [MAC, MAC_ARM64]
-        exclude:
-          - arch: x86_64
+        include:
+          - arch: arm64
             platform: MAC_ARM64
             os: 14
-          - arch: arm64
+          - arch: x86_64
             platform: MAC
             os: 13
     runs-on: macos-${{ matrix.os }}
