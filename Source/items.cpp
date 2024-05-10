@@ -3312,10 +3312,8 @@ void TryRandomUniqueItem(Item &item, _item_indexes idx, int8_t mLevel, int uper,
 			bool isMatchingItemId = uniqueItem.UIItemId == AllItemsList[static_cast<size_t>(idx)].iItemId;
 			// Verify itemLvl is at least the unique's minimum required level.
 			bool meetsLevelRequirement = itemLvl >= uniqueItem.UIMinLvl;
-			// Verify item hasn't been dropped yet. We set this to true in MP, since uniques previously dropping shouldn't prevent further identical uniques from dropping.
-			bool uniqueNotDroppedAlready = !UniqueItemFlags[uid] || gbIsMultiplayer;
 
-			if (IsUniqueAvailable(uid) && isMatchingItemId && meetsLevelRequirement && uniqueNotDroppedAlready)
+			if (IsUniqueAvailable(uid) && isMatchingItemId && meetsLevelRequirement)
 				uids.emplace_back(std::make_pair(uid, 0));
 		}
 
@@ -3330,10 +3328,18 @@ void TryRandomUniqueItem(Item &item, _item_indexes idx, int8_t mLevel, int uper,
 			uids[i].second = currentUidOffset;
 		}
 
-		// Get random valid uid.
-		const auto uidsIdx = GenerateRnd(static_cast<int32_t>(uids.size())); // Index into uid, used to get a random uid from the uids vector.
-		const auto uid = uids[uidsIdx].first;                                // Actual unique id.
-		const auto uidOffset = uids[uidsIdx].second;                         // Amount to decrease the final uid by in CheckUnique() to get the desired unique.
+		int32_t uidsIdx; // Index into uid, used to get a random uid from the uids vector.
+		int uid;         // Actual unique id.
+		int count = 0;
+		do {
+			uidsIdx = GenerateRnd(static_cast<int32_t>(uids.size())); // Get random valid uid.
+			uid = uids[uidsIdx].first;
+			if (!UniqueItemFlags[uid] || gbIsMultiplayer || count > 100) // Keep going if we select a unique in SP that has already dropped.
+				break;
+			count++;
+		} while (true);
+
+		const auto uidOffset = uids[uidsIdx].second; // Amount to decrease the final uid by in CheckUnique() to get the desired unique.
 		const auto &uniqueItem = UniqueItems[uid];
 
 		int targetLvl = (uper == 15) ? uniqueItem.UIMinLvl - 4 : uniqueItem.UIMinLvl; // Target level for reverse compatibility, since vanilla always takes the last applicable uid in the list.
@@ -3343,14 +3349,14 @@ void TryRandomUniqueItem(Item &item, _item_indexes idx, int8_t mLevel, int uper,
 			targetLvl += 4;                // Readd the 4 to targetLvl taken away by uper15.
 		}
 
-		int count = 0;
+		count = 0;
 		auto itemPos = item.position;
 		do {
 			item = {}; // Reset item data
 			item.position = itemPos;
 			SetupAllItems(*MyPlayer, item, idx, AdvanceRndSeed(), targetLvl, uper, onlygood, pregen, uidOffset);
 			count++;
-		} while (item._iUid != uid && count < 10000);
+		} while (item._iUid != uid && count < 1000);
 
 		if ((item._iCreateInfo & CF_UNIQUE) != 0) {
 			if (!gbIsMultiplayer) {
