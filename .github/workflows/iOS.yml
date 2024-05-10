@@ -1,3 +1,4 @@
+---
 name: iOS
 
 on:
@@ -17,6 +18,7 @@ on:
     paths-ignore:
       - '*.md'
       - 'docs/**'
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -24,12 +26,7 @@ concurrency:
 
 jobs:
   build:
-    # The CMake configure and build commands are platform agnostic and should work equally
-    # well on Windows or Mac.  You can convert this to a matrix build if you need
-    # cross-platform coverage.
-    # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
     runs-on: macos-latest
-
     steps:
     - uses: actions/checkout@v4
       with:
@@ -43,17 +40,24 @@ jobs:
         restore-keys: ${{ github.workflow }}-v4-
 
     - name: Configure CMake
-      # Use a bash shell so we can use the same syntax for environment variable
-      # access regardless of the host operating system
       shell: bash
       working-directory: ${{github.workspace}}
-      run: cmake -S. -Bbuild -DCMAKE_TOOLCHAIN_FILE=../CMake/platforms/ios.toolchain.cmake  -DENABLE_BITCODE=0 -DPLATFORM=OS64
+      run: |
+        cmake \
+          -S . \
+          -B build \
+          -D CMAKE_TOOLCHAIN_FILE=../CMake/platforms/ios.toolchain.cmake \
+          -D ENABLE_BITCODE=0 \
+          -D PLATFORM=OS64
 
     - name: Build
       working-directory: ${{github.workspace}}
       shell: bash
-      run: >
-        cmake --build build -j $(sysctl -n hw.physicalcpu) --config Release &&
+      run: |
+        cmake \
+          --build build \
+          -j $(sysctl -n hw.physicalcpu) \
+          --config Release &&
         cd build &&
         mkdir Payload &&
         mv devilutionx.app Payload &&
@@ -75,3 +79,4 @@ jobs:
 
     - name: Clean up artifacts
       run: rm -rf build/Payload build/*.ipa
+...

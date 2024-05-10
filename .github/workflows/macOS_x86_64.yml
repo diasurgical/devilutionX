@@ -1,3 +1,4 @@
+---
 name: macOS x86_64
 
 on:
@@ -37,7 +38,6 @@ jobs:
         brew update
         brew bundle install
 
-
     - name: Cache CMake build folder
       uses: actions/cache@v4
       with:
@@ -65,7 +65,10 @@ jobs:
       working-directory: ${{github.workspace}}
       shell: bash
       run: |
-        cmake --build build -j $(sysctl -n hw.physicalcpu) --target package && \
+        cmake \
+          --build build \
+          -j $(sysctl -n hw.physicalcpu) \
+          --target package && \
         mv build/devilutionx.dmg build/devilutionx-x86_64-macOS.dmg
 
     - name: Upload-Package
@@ -77,3 +80,4 @@ jobs:
 
     - name: Clean up artifacts
       run: rm -rf build/_CPack_Packages build/*.dmg
+...
