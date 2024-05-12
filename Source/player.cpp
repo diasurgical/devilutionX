@@ -384,14 +384,14 @@ void StartSpell(Player &player, Direction d, WorldTileCoord cx, WorldTileCoord c
 	int8_t skippedAnimationFrames = 0;
 
 	// PVP REBALANCE: Increase Warrior cast speed and reduce Sorcerer cast speed in arena levels.
-	if (player.isOnArenaLevel()) {
-		if (player._pClass == HeroClass::Barbarian)
-			skippedAnimationFrames--;
-		if (player._pClass == HeroClass::Sorcerer)
-			skippedAnimationFrames -= 2;
-
-		skippedAnimationFrames += GetSpellSkippedFrames(player.queuedSpell.spellId);
-	}
+	//if (player.isOnArenaLevel()) {
+	//	if (player._pClass == HeroClass::Barbarian)
+	//		skippedAnimationFrames--;
+	//	if (player._pClass == HeroClass::Sorcerer)
+	//		skippedAnimationFrames -= 2;
+    //
+	//	skippedAnimationFrames += GetSpellSkippedFrames(player.queuedSpell.spellId);
+	//}
 
 	auto animationFlags = AnimationDistributionFlags::ProcessAnimationPending;
 	if (player._pmode == PM_SPELL)
