@@ -393,9 +393,9 @@ bool Plr2PlrMHit(const Player &player, Player &target, int mindam, int maxdam, i
 			case MissileID::Elemental: // 60% damage (120% of default)
 				dam = dam * 6 / 10;
 				break;
-			//case MissileID::Fireball: // 40% damage (80% of default)
-			//	dam = dam * 4 / 10;
-			//	break;
+			case MissileID::Fireball: // 40% damage (80% of default)
+				dam = dam * 4 / 10;
+				break;
 			case MissileID::Firebolt: // 100% (200% of default)
 				break;
 			case MissileID::FlameWave: // 200% (400% of default)
