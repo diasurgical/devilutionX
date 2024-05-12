@@ -1534,8 +1534,13 @@ void SetupAllItems(const Player &player, Item &item, _item_indexes idx, uint32_t
 	if (item._iMiscId != IMISC_UNIQUE) {
 		int iblvl = GetItemBLevel(lvl, item._iMiscId, onlygood, uper == 15);
 		if (iblvl != -1) {
-			_unique_items uid = CheckUnique(item, iblvl, uper, uidOffset);
-			if (uid == UITEM_INVALID || forceNotUnique) {
+			_unique_items uid = UITEM_INVALID;
+			if (!forceNotUnique) {
+				uid = CheckUnique(item, iblvl, uper, uidOffset);
+			} else {
+				DiscardRandomValues(1);
+			}
+			if (uid == UITEM_INVALID) {
 				GetItemBonus(player, item, iblvl / 2, iblvl, onlygood, true);
 			} else {
 				GetUniqueItem(player, item, uid);
