@@ -318,7 +318,7 @@ int GetSpellSkippedFrames(SpellID spl)
 		return 0;
 	case SpellID::Elemental:
 	case SpellID::Fireball:
-		return 1;
+		return 2;
 	case SpellID::FlameWave:
 	case SpellID::ChainLightning:
 		return 0;

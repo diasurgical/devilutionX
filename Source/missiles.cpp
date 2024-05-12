@@ -393,9 +393,9 @@ bool Plr2PlrMHit(const Player &player, Player &target, int mindam, int maxdam, i
 			case MissileID::Elemental: // 60% damage (120% of default)
 				dam = dam * 6 / 10;
 				break;
-			case MissileID::Fireball: // 40% damage (80% of default)
-				dam = dam * 4 / 10;
-				break;
+			//case MissileID::Fireball: // 40% damage (80% of default)
+			//	dam = dam * 4 / 10;
+			//	break;
 			case MissileID::Firebolt: // 100% (200% of default)
 				break;
 			case MissileID::FlameWave: // 200% (400% of default)
@@ -428,16 +428,16 @@ bool Plr2PlrMHit(const Player &player, Player &target, int mindam, int maxdam, i
 	charLevel = std::clamp(charLevel, 1, static_cast<int>(GetMaximumCharacterLevel()));
 
 	bool isSpell = !missileData.isArrow();
-	int crit = (isSpell ? player._pMagic : player._pDexterity) / (charLevel / 4);
+	//int crit = (isSpell ? player._pMagic : player._pDexterity) / (charLevel / 4);
 
-	crit = std::clamp(crit, 0, 50);
+	//crit = std::clamp(crit, 0, 50);
 
-	int critper = GenerateRnd(100);
+	//int critper = GenerateRnd(100);
 
 	// PVP REBALANCE: Crit chance for arrows and spells in arenas.
-	if (isOnArena && critper < crit && mtype != MissileID::BoneSpirit) {
-		dam = isSpell ? dam * 5 / 4 : dam * 3 / 2; // Arrow: +50% damage, Spell: +25% damage
-	}
+	//if (isOnArena && critper < crit && mtype != MissileID::BoneSpirit) {
+	//	dam = isSpell ? dam * 5 / 4 : dam * 3 / 2; // Arrow: +50% damage, Spell: +25% damage
+	//}
 
 	if (resper > 0) {
 		// PVP REBALANCE: Bone Spirit is unaffected by resistances on arena levels.
