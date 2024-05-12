@@ -3308,23 +3308,16 @@ void TryRandomUniqueItem(Item &item, _item_indexes idx, int8_t mLevel, int uper,
 		// Verify itemLvl is at least the unique's minimum required level.
 		// mLevel remains unadjusted when arriving in this function, and there is no call to set iblvl until CheckUnique(), so we adjust here.
 		bool meetsLevelRequirement = ((uper == 15) ? mLevel + 4 : mLevel) >= uniqueItem.UIMinLvl;
+		// Verify item hasn't been dropped yet. We set this to true in MP, since uniques previously dropping shouldn't prevent further identical uniques from dropping.
+		bool uniqueNotDroppedAlready = !UniqueItemFlags[i] || gbIsMultiplayer;
 
 		int uid = static_cast<int>(i);
-		if (IsUniqueAvailable(uid) && isMatchingItemId && meetsLevelRequirement)
+		if (IsUniqueAvailable(uid) && isMatchingItemId && meetsLevelRequirement && uniqueNotDroppedAlready)
 			uids.emplace_back(std::make_pair(uid, 0));
 	}
 
-	bool notUnique = true;
-
 	// If we find at least one unique in uids that hasn't been obtained yet, we can proceed getting a random unique.
-	for (auto &pair : uids) {
-		if (!UniqueItemFlags[pair.first]) {
-			notUnique = false;
-			break;
-		}
-	}
-
-	if (notUnique) {
+	if (uids.empty()) {
 		// Set uper to 1 and make the level adjustment so we have better odds of not generating a unique item.
 		if (uper == 15)
 			mLevel += 4;
@@ -3342,14 +3335,8 @@ void TryRandomUniqueItem(Item &item, _item_indexes idx, int8_t mLevel, int uper,
 		return;
 	}
 
-	int32_t uidsIdx = 0; // Index into uid, used to get a random uid from the uids vector.
-	int uid = 0;         // Actual unique id.
-
-	// Obtain a random valid uid.
-	do {
-		uidsIdx = GenerateRnd(static_cast<int32_t>(uids.size()));
-		uid = uids[uidsIdx].first;
-	} while (UniqueItemFlags[uid] && !gbIsMultiplayer);
+	int32_t uidsIdx = std::max(0, GenerateRnd(static_cast<int32_t>(uids.size()))); // Index into uids, used to get a random uid from the uids vector.
+	int uid = uids[uidsIdx].first;                                                 // Actual unique id.
 
 	const auto &uniqueItem = UniqueItems[uid];
 	int targetLvl = 1; // Target level for reverse compatibility, since vanilla always takes the last applicable uid in the list.
