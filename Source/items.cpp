@@ -3326,10 +3326,11 @@ void TryRandomUniqueItem(Item &item, _item_indexes idx, int8_t mLevel, int uper,
 		Point itemPos = item.position;
 
 		// Force generate a non-unique item.
+		DiabloGenerator itemGenerator(GetLCGEngineState());
 		do {
 			item = {}; // Reset item data
 			item.position = itemPos;
-			SetupAllItems(*MyPlayer, item, idx, AdvanceRndSeed(), mLevel, uper, onlygood, pregen);
+			SetupAllItems(*MyPlayer, item, idx, itemGenerator.advanceRndSeed(), mLevel, uper, onlygood, pregen);
 		} while (item._iMagical == ITEM_QUALITY_UNIQUE);
 
 		return;
@@ -3358,10 +3359,11 @@ void TryRandomUniqueItem(Item &item, _item_indexes idx, int8_t mLevel, int uper,
 	Point itemPos = item.position;
 
 	// Force generate items until we find a uid match.
+	DiabloGenerator itemGenerator(GetLCGEngineState());
 	do {
 		item = {}; // Reset item data
 		item.position = itemPos;
-		SetupAllItems(*MyPlayer, item, idx, AdvanceRndSeed(), targetLvl, uper, onlygood, pregen, uidOffset);
+		SetupAllItems(*MyPlayer, item, idx, itemGenerator.advanceRndSeed(), targetLvl, uper, onlygood, pregen, uidOffset);
 	} while (item._iUid != uid);
 
 	// Set item as obtained to prevent it from being dropped again in SP.
