@@ -3303,7 +3303,7 @@ void TryRandomUniqueItem(Item &item, _item_indexes idx, int8_t mLevel, int uper,
 	if ((item._iCreateInfo & CF_UNIQUE) == 0 || item._iMiscId == IMISC_UNIQUE)
 		return;
 
-	std::vector<int> uids; // Contains uid and uidOffset.
+	std::vector<int> uids;
 
 	// Gather all potential unique items. uid is the index into UniqueItems.
 	for (size_t i = 0; i < UniqueItems.size(); ++i) {
