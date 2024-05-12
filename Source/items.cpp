@@ -3344,6 +3344,12 @@ void TryRandomUniqueItem(Item &item, _item_indexes idx, int8_t mLevel, int uper,
 	int32_t uidsIdx = std::max<int32_t>(0, GenerateRnd(static_cast<int32_t>(uids.size()))); // Index into uids, used to get a random uid from the uids vector.
 	int uid = uids[uidsIdx];                                                                // Actual unique id.
 
+	// If the selected unique was already generated, there is no need to fiddle with its parameters.
+	if (item._iUid == uid) {
+		UniqueItemFlags[uid] = true;
+		return;
+	}
+
 	const UniqueItem &uniqueItem = UniqueItems[uid];
 	int targetLvl = 1; // Target level for reverse compatibility, since vanilla always takes the last applicable uid in the list.
 
