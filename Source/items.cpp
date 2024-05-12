@@ -3302,7 +3302,7 @@ void TryRandomUniqueItem(Item &item, _item_indexes idx, int8_t mLevel, int uper,
 
 	// Gather all potential unique items. uid is the index into UniqueItems.
 	for (size_t i = 0; i < UniqueItems.size(); ++i) {
-		const auto &uniqueItem = UniqueItems[i];
+		const UniqueItem &uniqueItem = UniqueItems[i];
 		// Verify the unique item base item matches idx.
 		bool isMatchingItemId = uniqueItem.UIItemId == AllItemsList[static_cast<size_t>(idx)].iItemId;
 		// Verify itemLvl is at least the unique's minimum required level.
@@ -3323,7 +3323,7 @@ void TryRandomUniqueItem(Item &item, _item_indexes idx, int8_t mLevel, int uper,
 			mLevel += 4;
 		uper = 1;
 
-		auto itemPos = item.position;
+		Point itemPos = item.position;
 
 		// Force generate a non-unique item.
 		do {
@@ -3338,7 +3338,7 @@ void TryRandomUniqueItem(Item &item, _item_indexes idx, int8_t mLevel, int uper,
 	int32_t uidsIdx = std::max(0, GenerateRnd(static_cast<int32_t>(uids.size()))); // Index into uids, used to get a random uid from the uids vector.
 	int uid = uids[uidsIdx];                                                       // Actual unique id.
 
-	const auto &uniqueItem = UniqueItems[uid];
+	const UniqueItem &uniqueItem = UniqueItems[uid];
 	int targetLvl = 1; // Target level for reverse compatibility, since vanilla always takes the last applicable uid in the list.
 
 	// Set target level. Ideally we use uper 15 to have a 16% chance of generating a unique item.
@@ -3355,7 +3355,7 @@ void TryRandomUniqueItem(Item &item, _item_indexes idx, int8_t mLevel, int uper,
 		return uniqueItem.UIItemId == potentialMatch.UIItemId && uniqueItem.UIMinLvl == potentialMatch.UIMinLvl;
 	});
 
-	auto itemPos = item.position;
+	Point itemPos = item.position;
 
 	// Force generate items until we find a uid match.
 	do {
