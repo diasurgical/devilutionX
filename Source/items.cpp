@@ -1514,7 +1514,7 @@ int GetItemBLevel(int lvl, item_misc_id miscId, bool onlygood, bool uper15)
 	return iblvl;
 }
 
-void SetupAllItems(const Player &player, Item &item, _item_indexes idx, uint32_t iseed, int lvl, int uper, bool onlygood, bool pregen, int uidOffset = 0, bool recreate = false, bool forceUnique = false)
+void SetupAllItems(const Player &player, Item &item, _item_indexes idx, uint32_t iseed, int lvl, int uper, bool onlygood, bool pregen, int uidOffset = 0, bool forceNotUnique = false)
 {
 	item._iSeed = iseed;
 	SetRndSeed(iseed);
@@ -1535,8 +1535,7 @@ void SetupAllItems(const Player &player, Item &item, _item_indexes idx, uint32_t
 		int iblvl = GetItemBLevel(lvl, item._iMiscId, onlygood, uper == 15);
 		if (iblvl != -1) {
 			_unique_items uid = CheckUnique(item, iblvl, uper, uidOffset);
-			bool recreatedItemIsNotUnique = recreate && !forceUnique;
-			if (uid == UITEM_INVALID || recreatedItemIsNotUnique) {
+			if (uid == UITEM_INVALID || forceNotUnique) {
 				GetItemBonus(player, item, iblvl / 2, iblvl, onlygood, true);
 			} else {
 				GetUniqueItem(player, item, uid);
@@ -3517,11 +3516,11 @@ void RecreateItem(const Player &player, Item &item, _item_indexes idx, uint16_t 
 		uper = 15;
 
 	bool onlygood = (icreateinfo & CF_ONLYGOOD) != 0;
-	bool forceUnique = (icreateinfo & CF_UNIQUE) != 0;
+	bool forceNotUnique = (icreateinfo & CF_UNIQUE) == 0;
 	bool pregen = (icreateinfo & CF_PREGEN) != 0;
 	auto uidOffset = static_cast<int>((item.dwBuff & CF_UIDOFFSET) >> 1);
 
-	SetupAllItems(player, item, idx, iseed, level, uper, onlygood, pregen, uidOffset, true, forceUnique);
+	SetupAllItems(player, item, idx, iseed, level, uper, onlygood, pregen, uidOffset, forceNotUnique);
 	SetupItem(item);
 	gbIsHellfire = tmpIsHellfire;
 }
