@@ -3519,7 +3519,7 @@ void RecreateItem(const Player &player, Item &item, _item_indexes idx, uint16_t 
 	bool onlygood = (icreateinfo & CF_ONLYGOOD) != 0;
 	bool pregen = (icreateinfo & CF_PREGEN) != 0;
 
-	SetupAllItems(player, item, idx, iseed, level, uper, onlygood, pregen, (item.dwBuff & CF_UIDOFFSET) >> 1), true;
+	SetupAllItems(player, item, idx, iseed, level, uper, onlygood, pregen, (item.dwBuff & CF_UIDOFFSET) >> 1), true);
 	SetupItem(item);
 	gbIsHellfire = tmpIsHellfire;
 }
