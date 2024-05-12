@@ -3298,7 +3298,7 @@ void TryRandomUniqueItem(Item &item, _item_indexes idx, int8_t mLevel, int uper,
 	if ((item._iCreateInfo & CF_UNIQUE) == 0 || item._iMiscId == IMISC_UNIQUE)
 		return;
 
-	std::vector<std::pair<int, int>> uids; // Contains uid and uidOffset.
+	std::vector<int> uids; // Contains uid and uidOffset.
 
 	// Gather all potential unique items. uid is the index into UniqueItems.
 	for (size_t i = 0; i < UniqueItems.size(); ++i) {
@@ -3313,7 +3313,7 @@ void TryRandomUniqueItem(Item &item, _item_indexes idx, int8_t mLevel, int uper,
 
 		int uid = static_cast<int>(i);
 		if (IsUniqueAvailable(uid) && isMatchingItemId && meetsLevelRequirement && uniqueNotDroppedAlready)
-			uids.emplace_back(std::make_pair(uid, 0));
+			uids.emplace_back(uid);
 	}
 
 	// If we find at least one unique in uids that hasn't been obtained yet, we can proceed getting a random unique.
@@ -3336,7 +3336,7 @@ void TryRandomUniqueItem(Item &item, _item_indexes idx, int8_t mLevel, int uper,
 	}
 
 	int32_t uidsIdx = std::max(0, GenerateRnd(static_cast<int32_t>(uids.size()))); // Index into uids, used to get a random uid from the uids vector.
-	int uid = uids[uidsIdx].first;                                                 // Actual unique id.
+	int uid = uids[uidsIdx];                                                       // Actual unique id.
 
 	const auto &uniqueItem = UniqueItems[uid];
 	int targetLvl = 1; // Target level for reverse compatibility, since vanilla always takes the last applicable uid in the list.
@@ -3350,16 +3350,11 @@ void TryRandomUniqueItem(Item &item, _item_indexes idx, int8_t mLevel, int uper,
 		targetLvl = uniqueItem.UIMinLvl;
 	}
 
-	// Set all uidOffset values for each entry in uids vector.
-	for (auto &pair : uids) {
-		for (int j = pair.first + 1; j < UniqueItems.size(); ++j) {
-			if (UniqueItems[pair.first].UIItemId == UniqueItems[j].UIItemId && UniqueItems[pair.first].UIMinLvl == UniqueItems[j].UIMinLvl) {
-				pair.second++;
-			}
-		}
-	}
+	// Amount to decrease the final uid by in CheckUnique() to get the desired unique.
+	const int uidOffset = std::count_if(uids.begin() + uid + 1, uids.end(), [&uniqueItem](UniqueItem potentialMatch) {
+		return uniqueItem.UIItemId == potentialMatch.UIItemId && uniqueItem.UIMinLvl == potentialMatch.UIMinLvl;
+	});
 
-	const auto uidOffset = uids[uidsIdx].second; // Amount to decrease the final uid by in CheckUnique() to get the desired unique.
 	auto itemPos = item.position;
 
 	// Force generate items until we find a uid match.
