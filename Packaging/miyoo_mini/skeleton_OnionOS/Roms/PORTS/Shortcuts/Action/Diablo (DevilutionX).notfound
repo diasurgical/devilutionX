@@ -1,0 +1,28 @@
+#!/bin/sh
+# Standalone Ports Script Template
+
+# main configuration :
+GameName="Diablo (DevilutionX)"
+GameDir="Diablo (DevilutionX)"
+GameExecutable="devilutionx"
+GameDataFile="DIABDAT.MPQ"
+
+# additional configuration :
+KillAudioserver=0
+PerformanceMode=0
+
+# specific to this port :
+FullGamePath="/mnt/SDCARD/Roms/PORTS/Games/$GameDir"
+
+savedir="/mnt/SDCARD/Saves/CurrentProfile/saves/DevilutionX"
+configdir="/mnt/SDCARD/Saves/CurrentProfile/config/DevilutionX"
+mkdir -p "$savedir"
+mkdir -p "$configdir"
+
+export SDL_HIDE_BATTERY=1
+
+Arguments="--data-dir \"$FullGamePath\" --save-dir \"$savedir\" --config-dir \"$configdir\" --diablo"
+
+
+# running command line :
+/mnt/SDCARD/Emu/PORTS/launch_standalone.sh "$GameName" "$GameDir" "$GameExecutable" "$Arguments" "$GameDataFile" "$KillAudioserver" "$PerformanceMode"
