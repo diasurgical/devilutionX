@@ -1,0 +1,9 @@
+Directory tree for "Diablo (DevilutionX)"
+|
+|   devilutionx
+|   devilutionx.mpq
+|   DIABDAT.MPQ
+|   _required_files.txt
+|
+\---lib
+        libSDL-1.2.so.0
