@@ -597,7 +597,6 @@ void StartMonsterGotHit(Monster &monster)
 	monster.position.future = monster.position.old;
 	M_ClearSquares(monster);
 	monster.occupyTile(monster.position.tile, false);
-	ChangeLightXY(monster.lightId, monster.position.tile);
 }
 
 DVL_ALWAYS_INLINE bool IsRanged(Monster &monster)
@@ -3739,6 +3738,7 @@ void M_GetKnockback(Monster &monster)
 	M_ClearSquares(monster);
 	monster.position.old += dir;
 	StartMonsterGotHit(monster);
+	ChangeLightXY(monster.lightId, monster.position.tile);
 }
 
 void M_StartHit(Monster &monster, int dam)
