@@ -597,6 +597,7 @@ void StartMonsterGotHit(Monster &monster)
 	monster.position.future = monster.position.old;
 	M_ClearSquares(monster);
 	monster.occupyTile(monster.position.tile, false);
+	ChangeLightXY(monster.lightId, monster.position.tile);
 }
 
 DVL_ALWAYS_INLINE bool IsRanged(Monster &monster)
@@ -906,10 +907,7 @@ void Teleport(Monster &monster)
 	monster.occupyTile(*position, false);
 	monster.position.old = *position;
 	monster.direction = GetMonsterDirection(monster);
-
-	if (monster.lightId != NO_LIGHT) {
-		ChangeLightXY(monster.lightId, *position);
-	}
+	ChangeLightXY(monster.lightId, *position);
 }
 
 bool IsHardHit(Monster &target, unsigned dam)
@@ -1022,8 +1020,7 @@ bool MonsterWalk(Monster &monster)
 		monster.position.tile.y += monster.var2;
 		// dMonster is set here for backwards compatibility; without it, the monster would be invisible if loaded from a vanilla save.
 		monster.occupyTile(monster.position.tile, false);
-		if (monster.lightId != NO_LIGHT)
-			ChangeLightXY(monster.lightId, monster.position.tile);
+		ChangeLightXY(monster.lightId, monster.position.tile);
 		M_StartStand(monster, monster.direction);
 	} else { // We didn't reach new tile so update monster's "sub-tile" position
 		if (monster.animInfo.tickCounterOfCurrentFrame == 0) {
@@ -1032,8 +1029,7 @@ bool MonsterWalk(Monster &monster)
 		}
 	}
 
-	if (monster.lightId != NO_LIGHT)
-		SyncLightPosition(monster);
+	SyncLightPosition(monster);
 
 	return isAnimationEnd;
 }
