@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-SDLDEV_VERS=2.26.1
-SODIUM_VERS=1.0.18
+SDLDEV_VERS=2.30.3
+SODIUM_VERS=1.0.20
 
 # exit when any command fails
 set -euo pipefail
