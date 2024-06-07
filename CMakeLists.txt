@@ -101,6 +101,7 @@ option(ENABLE_CODECOVERAGE "Instrument code for code coverage (only enabled with
 # Packaging options
 RELEASE_OPTION(CPACK "Configure CPack")
 option(MACOSX_STANDALONE_APP_BUNDLE "Generate a portable app bundle to use on other devices (requires sudo)" OFF)
+option(WIN_NSIS "Generate an NSIS installer" OFF)
 
 # Network options
 cmake_dependent_option(DISABLE_TCP "Disable TCP multiplayer option" OFF "NOT NONET" ON)
@@ -528,9 +529,21 @@ if(CPACK AND (APPLE OR BUILD_ASSETS_MPQ OR SRC_DIST))
       "${SDL2_WIN32_LICENSES_DIR}/LICENSE*.txt"
       "${SDL2_WIN32_LICENSES_DIR}/README*.txt")
 
-    set(CPACK_PACKAGE_FILE_NAME "devilutionx")
     set(CPACK_PACKAGE_NAME ${project_name})
-    set(CPACK_GENERATOR "ZIP")
+    if(WIN_NSIS)
+      set(CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME}_${PROJECT_VERSION}_Installer")
+      set(CPACK_GENERATOR "NSIS")
+      set(CPACK_PACKAGE_INSTALL_DIRECTORY "${PROJECT_NAME}")
+      set(CPACK_NSIS_MUI_ICON "${PROJECT_SOURCE_DIR}/Packaging/windows/icon.ico")
+      set(CPACK_NSIS_MUI_UNIICON "${PROJECT_SOURCE_DIR}/Packaging/windows/icon.ico")
+      set(CPACK_RESOURCE_FILE_LICENSE "${PROJECT_SOURCE_DIR}/LICENSE.md")
+      set(CPACK_NSIS_EXECUTABLES_DIRECTORY ".")
+      set(CPACK_PACKAGE_EXECUTABLES "devilutionx" "DevilutionX")
+      set(CPACK_NSIS_MUI_FINISHPAGE_RUN "${BIN_TARGET}")
+    else()
+      set(CPACK_PACKAGE_FILE_NAME "devilutionx")
+      set(CPACK_GENERATOR "ZIP")
+    endif()
     set(CPACK_STRIP_FILES TRUE)
     install(TARGETS ${BIN_TARGET} DESTINATION .)
     install(FILES "${PROJECT_SOURCE_DIR}/Packaging/windows/README.txt"
