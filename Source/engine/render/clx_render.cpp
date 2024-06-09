@@ -30,6 +30,24 @@ namespace {
  *    indicates a fill-N command.
  */
 
+struct BlitCommandInfo {
+	const uint8_t *srcEnd;
+	unsigned length;
+};
+
+BlitCommandInfo ClxBlitInfo(const uint8_t *src)
+{
+	const uint8_t control = *src;
+	if (!IsClxOpaque(control))
+		return { src + 1, control };
+	if (IsClxOpaqueFill(control)) {
+		const uint8_t width = GetClxOpaqueFillWidth(control);
+		return { src + 2, width };
+	}
+	const uint8_t width = GetClxOpaquePixelsWidth(control);
+	return { src + 1 + width, width };
+}
+
 struct ClipX {
 	int_fast16_t left;
 	int_fast16_t right;
@@ -76,9 +94,9 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT const uint8_t *SkipRestOfLineWithOverrun(
 {
 	int_fast16_t remainingWidth = srcWidth - skipSize.xOffset;
 	while (remainingWidth > 0) {
-		const BlitCommand cmd = ClxGetBlitCommand(src);
-		src = cmd.srcEnd;
-		remainingWidth -= cmd.length;
+		const auto [srcEnd, length] = ClxBlitInfo(src);
+		src = srcEnd;
+		remainingWidth -= length;
 	}
 	skipSize = GetSkipSize(remainingWidth, srcWidth);
 	return src;
@@ -113,11 +131,20 @@ void DoRenderBackwardsClipY(
 		auto remainingWidth = static_cast<int_fast16_t>(src.width) - xOffset;
 		dst += xOffset;
 		while (remainingWidth > 0) {
-			BlitCommand cmd = ClxGetBlitCommand(src.begin);
-			blitFn(cmd, dst, src.begin + 1);
-			src.begin = cmd.srcEnd;
-			dst += cmd.length;
-			remainingWidth -= cmd.length;
+			uint8_t v = *src.begin++;
+			if (IsClxOpaque(v)) {
+				if (IsClxOpaqueFill(v)) {
+					v = GetClxOpaqueFillWidth(v);
+					const uint8_t color = *src.begin++;
+					blitFn(v, color, dst);
+				} else {
+					v = GetClxOpaquePixelsWidth(v);
+					blitFn(v, dst, src.begin);
+					src.begin += v;
+				}
+			}
+			dst += v;
+			remainingWidth -= v;
 		}
 
 		const SkipSize skipSize = GetSkipSize(remainingWidth, static_cast<int_fast16_t>(src.width));
@@ -150,26 +177,40 @@ void DoRenderBackwardsClipXY(
 			remainingWidth += remainingLeftClip;
 		}
 		while (remainingLeftClip > 0) {
-			BlitCommand cmd = ClxGetBlitCommand(src.begin);
-			if (static_cast<int_fast16_t>(cmd.length) > remainingLeftClip) {
-				const auto overshoot = static_cast<int>(cmd.length - remainingLeftClip);
-				cmd.length = std::min<unsigned>(remainingWidth, overshoot);
-				blitFn(cmd, dst, src.begin + 1 + remainingLeftClip);
-				dst += cmd.length;
+			auto [srcEnd, length] = ClxBlitInfo(src.begin);
+			if (static_cast<int_fast16_t>(length) > remainingLeftClip) {
+				const uint8_t control = *src.begin;
+				const auto overshoot = static_cast<int>(length - remainingLeftClip);
+				length = std::min<unsigned>(remainingWidth, overshoot);
+				if (IsClxOpaque(control)) {
+					if (IsClxOpaqueFill(control)) {
+						blitFn(length, src.begin[1], dst);
+					} else {
+						blitFn(length, dst, src.begin + 1 + remainingLeftClip);
+					}
+				}
+				dst += length;
 				remainingWidth -= overshoot;
-				src.begin = cmd.srcEnd;
+				src.begin = srcEnd;
 				break;
 			}
-			src.begin = cmd.srcEnd;
-			remainingLeftClip -= cmd.length;
+			src.begin = srcEnd;
+			remainingLeftClip -= length;
 		}
 		while (remainingWidth > 0) {
-			BlitCommand cmd = ClxGetBlitCommand(src.begin);
-			const unsigned unclippedLength = cmd.length;
-			cmd.length = std::min<unsigned>(remainingWidth, cmd.length);
-			blitFn(cmd, dst, src.begin + 1);
-			src.begin = cmd.srcEnd;
-			dst += cmd.length;
+			auto [srcEnd, length] = ClxBlitInfo(src.begin);
+			const uint8_t control = *src.begin;
+			const unsigned unclippedLength = length;
+			length = std::min<unsigned>(remainingWidth, length);
+			if (IsClxOpaque(control)) {
+				if (IsClxOpaqueFill(control)) {
+					blitFn(length, src.begin[1], dst);
+				} else {
+					blitFn(length, dst, src.begin + 1);
+				}
+			}
+			src.begin = srcEnd;
+			dst += length;
 			remainingWidth -= unclippedLength; // result can be negative
 		}
 
@@ -763,19 +804,20 @@ std::string ClxDescribe(ClxSprite clx)
 	const uint8_t *src = clx.pixelData();
 	const uint8_t *end = src + clx.pixelDataSize();
 	while (src < end) {
-		BlitCommand cmd = ClxGetBlitCommand(src);
-		switch (cmd.type) {
-		case BlitType::Transparent:
-			out.append(fmt::format("Transp. | {:>5} | {:>5} |\n", cmd.length, cmd.srcEnd - src));
-			break;
-		case BlitType::Fill:
-			out.append(fmt::format("Fill    | {:>5} | {:>5} | {}\n", cmd.length, cmd.srcEnd - src, cmd.color));
-			break;
-		case BlitType::Pixels:
-			out.append(fmt::format("Pixels  | {:>5} | {:>5} | {}\n", cmd.length, cmd.srcEnd - src, fmt::join(src + 1, src + 1 + cmd.length, " ")));
-			break;
+		const uint8_t control = *src++;
+		if (IsClxOpaque(control)) {
+			if (IsClxOpaqueFill(control)) {
+				const uint8_t length = GetClxOpaqueFillWidth(control);
+				out.append(fmt::format("Fill    | {:>5} | {:>5} | {}\n", length, 2, src[1]));
+				++src;
+			} else {
+				const uint8_t length = GetClxOpaquePixelsWidth(control);
+				out.append(fmt::format("Pixels  | {:>5} | {:>5} | {}\n", length, length + 1, fmt::join(src + 1, src + 1 + length, " ")));
+				src += length;
+			}
+		} else {
+			out.append(fmt::format("Transp. | {:>5} | {:>5} |\n", control, 1));
 		}
-		src = cmd.srcEnd;
 	}
 	return out;
 }
