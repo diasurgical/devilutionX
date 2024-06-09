@@ -627,14 +627,16 @@ void CheckRportal()
 	}
 }
 
-void CheckCursMove()
+void ExitCheck()
 {
-	if (IsItemLabelHighlighted())
-		return;
+	CheckTrigForce();
+	CheckTown();
+	CheckRportal();
+}
 
-	int sx = MousePosition.x;
-	int sy = MousePosition.y;
-
+void AlterMousePositionViaPanels(int &sx, int &sy)
+{
+	// Adjusts mouse position based on panels
 	if (CanPanelsCoverView()) {
 		if (IsLeftPanelOpen()) {
 			sx -= GetScreenWidth() / 4;
@@ -642,16 +644,27 @@ void CheckCursMove()
 			sx += GetScreenWidth() / 4;
 		}
 	}
-	const Rectangle &mainPanel = GetMainPanel();
+}
+
+void AlterMousePositionViaScrolling(int &sy, Rectangle mainPanel)
+{
+	// if scrolling, offset the mousepos
 	if (mainPanel.contains(MousePosition) && track_isscrolling()) {
 		sy = mainPanel.position.y - 1;
 	}
+}
 
+void AlterMousePositionViaZoom(int &sx, int &sy)
+{
+	// Adjust based on current zoom
 	if (*sgOptions.Graphics.zoom) {
 		sx /= 2;
 		sy /= 2;
 	}
+}
 
+void AlterMousePositionViaPlayer(int &sx, int &sy, const Player &myPlayer)
+{
 	// Adjust by player offset and tile grid alignment
 	int xo = 0;
 	int yo = 0;
@@ -659,8 +672,7 @@ void CheckCursMove()
 	sx += xo;
 	sy += yo;
 
-	const Player &myPlayer = *MyPlayer;
-
+	// Adjust for player walking
 	if (myPlayer.isWalking()) {
 		Displacement offset = GetOffsetForWalking(myPlayer.AnimInfo, myPlayer._pdir, true);
 		sx -= offset.deltaX;
@@ -677,17 +689,18 @@ void CheckCursMove()
 		sx -= fx;
 		sy -= fy;
 	}
+}
 
-	// Convert to tile grid
-	int mx = ViewPosition.x;
-	int my = ViewPosition.y;
-
+void ConvertToTileGrid(int &sx, int &sy, int &mx, int &my)
+{
 	int columns = 0;
 	int rows = 0;
 	TilesInView(&columns, &rows);
 	int lrow = rows - RowsCoveredByPanel();
 
 	// Center player tile on screen
+	mx = ViewPosition.x;
+	my = ViewPosition.y;
 	ShiftGrid(&mx, &my, -columns / 2, -lrow / 2);
 
 	// Align grid
@@ -706,41 +719,45 @@ void CheckCursMove()
 	int tx = sx / TILE_WIDTH;
 	int ty = sy / TILE_HEIGHT;
 	ShiftGrid(&mx, &my, tx, ty);
+}
 
+void ShiftToDiamondGridAlignment(int &sx, int &sy, int &mx, int &my, int &px, int &py, bool &flipx, bool &flipy)
+{
 	// Shift position to match diamond grid alignment
-	int px = sx % TILE_WIDTH;
-	int py = sy % TILE_HEIGHT;
+	px = sx % TILE_WIDTH;
+	py = sy % TILE_HEIGHT;
 
-	// Shift position to match diamond grid alignment
-	bool flipy = py < (px / 2);
+	flipy = py < (px / 2);
 	if (flipy) {
 		my--;
 	}
-	bool flipx = py >= TILE_HEIGHT - (px / 2);
+	flipx = py >= TILE_HEIGHT - (px / 2);
 	if (flipx) {
 		mx++;
 	}
 
 	mx = std::clamp(mx, 0, MAXDUNX - 1);
 	my = std::clamp(my, 0, MAXDUNY - 1);
+}
 
-	const Point currentTile { mx, my };
-
+bool CheckMouseHold(int mx, int my, const Point &currentTile)
+{
 	// While holding the button down we should retain target (but potentially lose it if it dies, goes out of view, etc)
 	if ((sgbMouseDown != CLICK_NONE || ControllerActionHeld != GameActionType_NONE) && IsNoneOf(LastMouseButtonAction, MouseActionType::None, MouseActionType::Attack, MouseActionType::Spell)) {
 		InvalidateTargets();
 
 		if (pcursmonst == -1 && ObjectUnderCursor == nullptr && pcursitem == -1 && pcursinvitem == -1 && pcursstashitem == StashStruct::EmptyCell && PlayerUnderCursor == nullptr) {
 			cursPosition = { mx, my };
-			CheckTrigForce();
-			CheckTown();
-			CheckRportal();
+			ExitCheck();
 		}
-		return;
+		return true;
 	}
+	return false;
+}
 
-	bool flipflag = (flipy && flipx) || ((flipy || flipx) && px < TILE_WIDTH / 2);
-
+void ResetCursorInfo()
+{
+	// Simple reset of namespace values
 	pcurstemp = pcursmonst;
 	pcursmonst = -1;
 	ObjectUnderCursor = nullptr;
@@ -754,45 +771,57 @@ void CheckCursMove()
 	ShowUniqueItemInfoBox = false;
 	MainPanelFlag = false;
 	trigflag = false;
+}
 
+bool CheckPlayerState(int mx, int my, const Player &myPlayer)
+{
 	if (myPlayer._pInvincible) {
-		return;
+		return true;
 	}
 	if (!myPlayer.HoldItem.isEmpty() || SpellSelectFlag) {
 		cursPosition = { mx, my };
-		return;
+		return true;
 	}
+	return false;
+}
+
+bool CheckPanelsAndFlags(Rectangle mainPanel)
+{
 	if (mainPanel.contains(MousePosition)) {
 		CheckPanelInfo();
-		return;
+		return true;
 	}
 	if (DoomFlag) {
-		return;
+		return true;
 	}
 	if (invflag && GetRightPanel().contains(MousePosition)) {
 		pcursinvitem = CheckInvHLight();
-		return;
+		return true;
 	}
 	if (IsStashOpen && GetLeftPanel().contains(MousePosition)) {
 		pcursstashitem = CheckStashHLight(MousePosition);
 	}
 	if (SpellbookFlag && GetRightPanel().contains(MousePosition)) {
-		return;
+		return true;
 	}
 	if (IsLeftPanelOpen() && GetLeftPanel().contains(MousePosition)) {
-		return;
+		return true;
 	}
+	return false;
+}
 
+bool CheckCursorActions(int mx, int my, const Point &currentTile, bool flipflag)
+{
 	if (pcurs == CURSOR_IDENTIFY) {
 		ObjectUnderCursor = nullptr;
 		pcursmonst = -1;
 		pcursitem = -1;
 		cursPosition = { mx, my };
-		return;
+		return true;
 	}
 
 	if (TrySelectPixelBased(currentTile))
-		return;
+		return true;
 
 	if (leveltype != DTYPE_TOWN) {
 		// Never select a monster if a target-player-only spell is selected
@@ -805,39 +834,80 @@ void CheckCursMove()
 				    return true;
 			    })) {
 				// found a valid previous selected monster
-				return;
+				return true;
 			}
 			if (TrySelectMonster(flipflag, currentTile, IsValidMonsterForSelection)) {
 				// found a valid monster
-				return;
+				return true;
 			}
 		}
 	} else {
 		if (TrySelectTowner(flipflag, currentTile)) {
 			// found a towner
-			return;
+			return true;
 		}
 	}
 
 	if (TrySelectPlayer(flipflag, mx, my)) {
 		// found a player
-		return;
+		return true;
 	}
 
 	if (TrySelectObject(flipflag, currentTile)) {
 		// found an object
-		return;
+		return true;
 	}
 
 	if (TrySelectItem(flipflag, mx, my)) {
 		// found an item
-		return;
+		return true;
 	}
 
+	return false;
+}
+
+void CheckCursMove()
+{
+	// Checks for early return if an item is highlighted
+	if (IsItemLabelHighlighted())
+		return;
+
+	int sx = MousePosition.x;
+	int sy = MousePosition.y;
+	const Rectangle &mainPanel = GetMainPanel();
+
+	AlterMousePositionViaPanels(sx, sy);
+	AlterMousePositionViaScrolling(sy, mainPanel);
+	AlterMousePositionViaZoom(sx, sy);
+
+	const Player &myPlayer = *MyPlayer;
+
+	AlterMousePositionViaPlayer(sx, sy, myPlayer);
+
+	int mx;
+	int my;
+	ConvertToTileGrid(sx, sy, mx, my);
+
+	bool flipx;
+	bool flipy;
+	int px;
+	int py;
+
+	ShiftToDiamondGridAlignment(sx, sy, mx, my, px, py, flipx, flipy);
+
+	const Point currentTile { mx, my };
+
+	if (CheckMouseHold(mx, my, currentTile)) return;
+
+	bool flipflag = (flipy && flipx) || ((flipy || flipx) && px < TILE_WIDTH / 2);
+
+	ResetCursorInfo();
+
+	if (CheckPlayerState(mx, my, myPlayer) || CheckPanelsAndFlags(mainPanel) || CheckCursorActions(mx, my, currentTile, flipflag)) return;
+
+	// update cursor position
 	cursPosition = currentTile;
-	CheckTrigForce();
-	CheckTown();
-	CheckRportal();
+	ExitCheck();
 }
 
 } // namespace devilution
