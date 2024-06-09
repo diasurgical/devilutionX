@@ -27,18 +27,4 @@ namespace devilution {
 	return static_cast<int_fast16_t>(ClxFillEnd - control);
 }
 
-[[nodiscard]] constexpr BlitCommand ClxGetBlitCommand(const uint8_t *src)
-{
-	const uint8_t control = *src++;
-	if (!IsClxOpaque(control))
-		return BlitCommand { BlitType::Transparent, src, control, 0 };
-	if (IsClxOpaqueFill(control)) {
-		const uint8_t width = GetClxOpaqueFillWidth(control);
-		const uint8_t color = *src++;
-		return BlitCommand { BlitType::Fill, src, width, color };
-	}
-	const uint8_t width = GetClxOpaquePixelsWidth(control);
-	return BlitCommand { BlitType::Pixels, src + width, width, 0 };
-}
-
 } // namespace devilution

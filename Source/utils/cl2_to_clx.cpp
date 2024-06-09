@@ -85,30 +85,29 @@ uint16_t Cl2ToClx(const uint8_t *data, size_t size,
 			while (src != frameEnd) {
 				auto remainingWidth = static_cast<int_fast16_t>(frameWidth) - xOffset;
 				while (remainingWidth > 0) {
-					const BlitCommand cmd = ClxGetBlitCommand(src);
-					switch (cmd.type) {
-					case BlitType::Transparent:
+					const uint8_t control = *src++;
+					if (!IsClxOpaque(control)) {
 						if (!pixels.empty()) {
 							AppendClxPixelsOrFillRun(pixels.data(), pixels.size(), clxData);
 							pixels.clear();
 						}
-
-						transparentRunWidth += cmd.length;
-						break;
-					case BlitType::Fill:
-					case BlitType::Pixels:
+						transparentRunWidth += control;
+						remainingWidth -= control;
+					} else if (IsClxOpaqueFill(control)) {
 						AppendClxTransparentRun(transparentRunWidth, clxData);
 						transparentRunWidth = 0;
-
-						if (cmd.type == BlitType::Fill) {
-							pixels.insert(pixels.end(), cmd.length, cmd.color);
-						} else { // BlitType::Pixels
-							pixels.insert(pixels.end(), src + 1, cmd.srcEnd);
-						}
-						break;
+						const uint8_t width = GetClxOpaqueFillWidth(control);
+						const uint8_t color = *src++;
+						pixels.insert(pixels.end(), width, color);
+						remainingWidth -= width;
+					} else {
+						AppendClxTransparentRun(transparentRunWidth, clxData);
+						transparentRunWidth = 0;
+						const uint8_t width = GetClxOpaquePixelsWidth(control);
+						pixels.insert(pixels.end(), src, src + width);
+						src += width;
+						remainingWidth -= width;
 					}
-					src = cmd.srcEnd;
-					remainingWidth -= cmd.length;
 				}
 
 				++frameHeight;

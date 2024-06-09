@@ -16,19 +16,6 @@ namespace devilution {
 #define DEVILUTIONX_BLIT_EXECUTION_POLICY
 #endif
 
-enum class BlitType : uint8_t {
-	Transparent,
-	Pixels,
-	Fill
-};
-
-struct BlitCommand {
-	BlitType type;
-	const uint8_t *srcEnd; // Pointer past the end of the command.
-	unsigned length;       // Number of pixels this command will write.
-	uint8_t color;         // For `BlitType::Pixel` and `BlitType::Fill` only.
-};
-
 DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void BlitFillDirect(uint8_t *dst, unsigned length, uint8_t color)
 {
 	std::memset(dst, color, length);
@@ -40,18 +27,13 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void BlitPixelsDirect(uint8_t *DVL_RESTRICT 
 }
 
 struct BlitDirect {
-	DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void operator()(BlitCommand cmd, uint8_t *DVL_RESTRICT dst, const uint8_t *DVL_RESTRICT src)
+	DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void operator()(unsigned length, uint8_t *DVL_RESTRICT dst, const uint8_t *DVL_RESTRICT src) const
 	{
-		switch (cmd.type) {
-		case BlitType::Fill:
-			BlitFillDirect(dst, cmd.length, cmd.color);
-			return;
-		case BlitType::Pixels:
-			BlitPixelsDirect(dst, src, cmd.length);
-			return;
-		case BlitType::Transparent:
-			return;
-		}
+		BlitPixelsDirect(dst, src, length);
+	}
+	DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void operator()(unsigned length, uint8_t color, uint8_t *DVL_RESTRICT dst) const
+	{
+		BlitFillDirect(dst, length, color);
 	}
 };
 
@@ -86,18 +68,13 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void BlitPixelsBlended(uint8_t *DVL_RESTRICT
 struct BlitWithMap {
 	const uint8_t *DVL_RESTRICT colorMap;
 
-	DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void operator()(BlitCommand cmd, uint8_t *DVL_RESTRICT dst, const uint8_t *DVL_RESTRICT src) const
+	DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void operator()(unsigned length, uint8_t *DVL_RESTRICT dst, const uint8_t *DVL_RESTRICT src) const
 	{
-		switch (cmd.type) {
-		case BlitType::Fill:
-			BlitFillWithMap(dst, cmd.length, cmd.color, colorMap);
-			return;
-		case BlitType::Pixels:
-			BlitPixelsWithMap(dst, src, cmd.length, colorMap);
-			return;
-		case BlitType::Transparent:
-			return;
-		}
+		BlitPixelsWithMap(dst, src, length, colorMap);
+	}
+	DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void operator()(unsigned length, uint8_t color, uint8_t *DVL_RESTRICT dst) const
+	{
+		BlitFillWithMap(dst, length, color, colorMap);
 	}
 };
 
@@ -112,18 +89,13 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void BlitPixelsBlendedWithMap(uint8_t *DVL_R
 struct BlitBlendedWithMap {
 	const uint8_t *DVL_RESTRICT colorMap;
 
-	DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void operator()(BlitCommand cmd, uint8_t *DVL_RESTRICT dst, const uint8_t *DVL_RESTRICT src) const
+	DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void operator()(unsigned length, uint8_t *DVL_RESTRICT dst, const uint8_t *DVL_RESTRICT src) const
 	{
-		switch (cmd.type) {
-		case BlitType::Fill:
-			BlitFillBlended(dst, cmd.length, colorMap[cmd.color]);
-			return;
-		case BlitType::Pixels:
-			BlitPixelsBlendedWithMap(dst, src, cmd.length, colorMap);
-			return;
-		case BlitType::Transparent:
-			return;
-		}
+		BlitPixelsBlendedWithMap(dst, src, length, colorMap);
+	}
+	DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void operator()(unsigned length, uint8_t color, uint8_t *DVL_RESTRICT dst) const
+	{
+		BlitFillBlended(dst, length, colorMap[color]);
 	}
 };
 
