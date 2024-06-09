@@ -627,15 +627,15 @@ void CheckRportal()
 	}
 }
 
-
-void ExitCheck() {
+void ExitCheck()
+{
 	CheckTrigForce();
 	CheckTown();
 	CheckRportal();
 }
 
-
-void AlterMousePositionViaPanels(int &sx, int &sy) {
+void AlterMousePositionViaPanels(int &sx, int &sy)
+{
 	// Adjusts mouse position based on panels
 	if (CanPanelsCoverView()) {
 		if (IsLeftPanelOpen()) {
@@ -646,14 +646,16 @@ void AlterMousePositionViaPanels(int &sx, int &sy) {
 	}
 }
 
-void AlterMousePositionViaScrolling(int &sy, Rectangle mainPanel) {
+void AlterMousePositionViaScrolling(int &sy, Rectangle mainPanel)
+{
 	// if scrolling, offset the mousepos
 	if (mainPanel.contains(MousePosition) && track_isscrolling()) {
 		sy = mainPanel.position.y - 1;
 	}
 }
 
-void AlterMousePositionViaZoom(int& sx, int& sy) {
+void AlterMousePositionViaZoom(int &sx, int &sy)
+{
 	// Adjust based on current zoom
 	if (*sgOptions.Graphics.zoom) {
 		sx /= 2;
@@ -661,7 +663,8 @@ void AlterMousePositionViaZoom(int& sx, int& sy) {
 	}
 }
 
-void AlterMousePositionViaPlayer(int& sx, int& sy, const Player &myPlayer) {
+void AlterMousePositionViaPlayer(int &sx, int &sy, const Player &myPlayer)
+{
 	// Adjust by player offset and tile grid alignment
 	int xo = 0;
 	int yo = 0;
@@ -688,7 +691,8 @@ void AlterMousePositionViaPlayer(int& sx, int& sy, const Player &myPlayer) {
 	}
 }
 
-void ConvertToTileGrid(int& sx, int& sy, int& mx, int& my) {
+void ConvertToTileGrid(int &sx, int &sy, int &mx, int &my)
+{
 	int columns = 0;
 	int rows = 0;
 	TilesInView(&columns, &rows);
@@ -717,7 +721,8 @@ void ConvertToTileGrid(int& sx, int& sy, int& mx, int& my) {
 	ShiftGrid(&mx, &my, tx, ty);
 }
 
-void ShiftToDiamondGridAlignment(int &sx, int &sy, int &mx, int &my, int &px, int &py, bool &flipx, bool &flipy) {
+void ShiftToDiamondGridAlignment(int &sx, int &sy, int &mx, int &my, int &px, int &py, bool &flipx, bool &flipy)
+{
 	// Shift position to match diamond grid aligment
 	px = sx % TILE_WIDTH;
 	py = sy % TILE_HEIGHT;
@@ -768,7 +773,8 @@ void ResetCursorInfo()
 	trigflag = false;
 }
 
-bool CheckPlayerState(int mx, int my, const Player &myPlayer) {
+bool CheckPlayerState(int mx, int my, const Player &myPlayer)
+{
 	if (myPlayer._pInvincible) {
 		return true;
 	}
@@ -779,8 +785,8 @@ bool CheckPlayerState(int mx, int my, const Player &myPlayer) {
 	return false;
 }
 
-
-bool CheckPanelsAndFlags(Rectangle mainPanel) {
+bool CheckPanelsAndFlags(Rectangle mainPanel)
+{
 	if (mainPanel.contains(MousePosition)) {
 		CheckPanelInfo();
 		return true;
@@ -804,7 +810,8 @@ bool CheckPanelsAndFlags(Rectangle mainPanel) {
 	return false;
 }
 
-bool CheckCursorActions(int mx, int my, const Point& currentTile, bool flipflag) {
+bool CheckCursorActions(int mx, int my, const Point &currentTile, bool flipflag)
+{
 	if (pcurs == CURSOR_IDENTIFY) {
 		ObjectUnderCursor = nullptr;
 		pcursmonst = -1;
