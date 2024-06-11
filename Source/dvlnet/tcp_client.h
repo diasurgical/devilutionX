@@ -27,8 +27,8 @@ namespace devilution::net {
 
 class tcp_client : public base {
 public:
-	int create(std::string addrstr) override;
-	int join(std::string addrstr) override;
+	int create(std::string_view addrstr) override;
+	int join(std::string_view addrstr) override;
 
 	tl::expected<void, PacketError> poll() override;
 	tl::expected<void, PacketError> send(packet &pkt) override;

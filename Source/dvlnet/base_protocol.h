@@ -15,8 +15,8 @@ namespace devilution::net {
 template <class P>
 class base_protocol : public base {
 public:
-	int create(std::string addrstr) override;
-	int join(std::string addrstr) override;
+	int create(std::string_view addrstr) override;
+	int join(std::string_view addrstr) override;
 	tl::expected<void, PacketError> poll() override;
 	tl::expected<void, PacketError> send(packet &pkt) override;
 	void DisconnectNet(plr_t plr) override;
@@ -161,7 +161,7 @@ tl::expected<void, PacketError> base_protocol<P>::wait_join()
 }
 
 template <class P>
-int base_protocol<P>::create(std::string addrstr)
+int base_protocol<P>::create(std::string_view addrstr)
 {
 	gamename = addrstr;
 	isGameHost_ = true;
@@ -183,7 +183,7 @@ int base_protocol<P>::create(std::string addrstr)
 }
 
 template <class P>
-int base_protocol<P>::join(std::string addrstr)
+int base_protocol<P>::join(std::string_view addrstr)
 {
 	gamename = addrstr;
 	isGameHost_ = false;
