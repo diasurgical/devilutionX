@@ -17,13 +17,13 @@ void cdwrap::reset()
 		dvlnet_wrap->SNetRegisterEventHandler(eventType, eventHandler);
 }
 
-int cdwrap::create(std::string addrstr)
+int cdwrap::create(std::string_view addrstr)
 {
 	reset();
 	return dvlnet_wrap->create(addrstr);
 }
 
-int cdwrap::join(std::string addrstr)
+int cdwrap::join(std::string_view addrstr)
 {
 	game_init_info = buffer_t();
 	reset();

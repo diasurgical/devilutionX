@@ -16,8 +16,8 @@ using provider_t = unsigned long;
 
 class abstract_net {
 public:
-	virtual int create(std::string addrstr) = 0;
-	virtual int join(std::string addrstr) = 0;
+	virtual int create(std::string_view addrstr) = 0;
+	virtual int join(std::string_view addrstr) = 0;
 	virtual bool SNetReceiveMessage(uint8_t *sender, void **data, size_t *size) = 0;
 	virtual bool SNetSendMessage(uint8_t dest, void *data, size_t size) = 0;
 	virtual bool SNetReceiveTurns(char **data, size_t *size, uint32_t *status) = 0;

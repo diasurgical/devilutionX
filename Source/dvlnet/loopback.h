@@ -17,8 +17,8 @@ private:
 public:
 	loopback() = default;
 
-	int create(std::string addrstr) override;
-	int join(std::string addrstr) override;
+	int create(std::string_view addrstr) override;
+	int join(std::string_view addrstr) override;
 	bool SNetReceiveMessage(uint8_t *sender, void **data, size_t *size) override;
 	bool SNetSendMessage(uint8_t dest, void *data, size_t size) override;
 	bool SNetReceiveTurns(char **data, size_t *size, uint32_t *status) override;

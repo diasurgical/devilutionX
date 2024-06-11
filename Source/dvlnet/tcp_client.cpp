@@ -13,25 +13,56 @@
 #include "options.h"
 #include "utils/language.h"
 #include "utils/str_cat.hpp"
+#include "utils/str_split.hpp"
 
 namespace devilution::net {
 
-int tcp_client::create(std::string addrstr)
+int tcp_client::create(std::string_view addrstr)
 {
 	auto port = *sgOptions.Network.port;
-	local_server = std::make_unique<tcp_server>(ioc, addrstr, port, *pktfty);
+	local_server = std::make_unique<tcp_server>(ioc, std::string(addrstr), port, *pktfty);
 	return join(local_server->LocalhostSelf());
 }
 
-int tcp_client::join(std::string addrstr)
+int tcp_client::join(std::string_view addrstr)
 {
 	constexpr int MsSleep = 10;
 	constexpr int NoSleep = 250;
 
-	std::string port = StrCat(*sgOptions.Network.port);
+	const char *defaultPort = "6112";
+	std::string_view host;
+	std::string_view port = defaultPort;
+	if (!addrstr.empty() && addrstr[0] == '[') {
+		// Assume IPv6 address in square brackets, followed by port
+		// Example: [::1]:6113
+		size_t pos = addrstr.find(']', 1);
+		pos = pos != std::string::npos ? pos + 1 : addrstr.length();
+		host = addrstr.substr(0, pos);
+
+		if (pos != addrstr.length()) {
+			if (addrstr[pos] != ':') {
+				SDL_SetError("Invalid hostname: expected colon after square brackets");
+				return -1;
+			}
+			if (++pos != addrstr.length())
+				port = addrstr.substr(pos);
+		}
+	} else {
+		// Assume "hostname:port"
+		SplitByChar splithost(addrstr, ':');
+		auto it = splithost.begin();
+		if (it != splithost.end()) host = *it++;
+		if (it != splithost.end()) port = *it++;
+
+		// If there is more than one colon, assume it's just a plain IPv6 address
+		if (it != splithost.end()) {
+			host = addrstr;
+			port = defaultPort;
+		}
+	}
 
 	asio::error_code errorCode;
-	asio::ip::basic_resolver_results<asio::ip::tcp> range = resolver.resolve(addrstr, port, errorCode);
+	asio::ip::basic_resolver_results<asio::ip::tcp> range = resolver.resolve(host, port, errorCode);
 	if (errorCode) {
 		SDL_SetError("%s", errorCode.message().c_str());
 		return -1;

@@ -9,13 +9,13 @@
 
 namespace devilution::net {
 
-int loopback::create(std::string /*addrstr*/)
+int loopback::create(std::string_view /*addrstr*/)
 {
 	IsLoopback = true;
 	return plr_single;
 }
 
-int loopback::join(std::string /*addrstr*/)
+int loopback::join(std::string_view /*addrstr*/)
 {
 	ABORT();
 }
