@@ -41,6 +41,7 @@
 #include "spelldat.h"
 #include "storm/storm_net.hpp"
 #include "towners.h"
+#include "utils/attributes.h"
 #include "utils/cl2_to_clx.hpp"
 #include "utils/file_name_generator.hpp"
 #include "utils/language.h"
@@ -733,6 +734,9 @@ void WalkInDirection(Monster &monster, Direction endDir)
 	case Direction::South:
 	case Direction::SouthEast:
 		mode = MonsterMode::MoveSouthwards;
+		break;
+	case Direction::NoDirection:
+		DVL_UNREACHABLE();
 		break;
 	}
 	monster.mode = mode;

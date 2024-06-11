@@ -45,6 +45,7 @@
 #include "qol/xpbar.h"
 #include "stores.h"
 #include "towners.h"
+#include "utils/attributes.h"
 #include "utils/bitset2d.hpp"
 #include "utils/display.h"
 #include "utils/endian.hpp"
@@ -758,6 +759,8 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 				case Direction::SouthEast:
 					tempTargetBufferPosition += { -TILE_WIDTH / 2, -TILE_HEIGHT / 2 };
 					break;
+				default:
+					DVL_UNREACHABLE();
 				}
 				tempTilePosition += Opposite(player->_pdir);
 			} else if (player->_pmode == PM_WALK_SIDEWAYS && player->_pdir == Direction::East) {
@@ -793,6 +796,8 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 				case Direction::SouthEast:
 					tempTargetBufferPosition += { -TILE_WIDTH / 2, -TILE_HEIGHT / 2 };
 					break;
+				default:
+					DVL_UNREACHABLE();
 				}
 				tempTilePosition += Opposite(monster->direction);
 			} else if (monster->mode == MonsterMode::MoveSideways && monster->direction == Direction::East) {

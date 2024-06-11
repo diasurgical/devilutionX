@@ -470,7 +470,7 @@ void CreateHalfSizeItemSprites()
 {
 	if (HalfSizeItemSprites != nullptr)
 		return;
-	const int numInvItems = pCursCels->numSprites() - (static_cast<size_t>(CURSOR_FIRSTITEM) - 1)
+	const uint32_t numInvItems = pCursCels->numSprites() - (static_cast<uint32_t>(CURSOR_FIRSTITEM) - 1)
 	    + (gbIsHellfire ? pCursCels2->numSprites() : 0);
 	HalfSizeItemSprites = new OptionalOwnedClxSpriteList[numInvItems];
 	HalfSizeItemSpritesRed = new OptionalOwnedClxSpriteList[numInvItems];

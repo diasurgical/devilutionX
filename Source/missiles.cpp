@@ -691,7 +691,7 @@ bool GuardianTryFireAt(Missile &missile, Point target)
 
 bool GrowWall(int id, Point position, Point target, MissileID type, int spellLevel, int damage)
 {
-	int dp = dPiece[position.x][position.y];
+	[[maybe_unused]] int dp = dPiece[position.x][position.y];
 	assert(dp <= MAXTILES && dp >= 0);
 
 	if (TileHasAny(position, TileProperties::BlockMissile) || !InDungeonBounds(target)) {
@@ -719,7 +719,7 @@ void SpawnLightning(Missile &missile, int dam)
 	MoveMissile(
 	    missile, [&](Point tile) {
 		    assert(InDungeonBounds(tile));
-		    int pn = dPiece[tile.x][tile.y];
+		    [[maybe_unused]] int pn = dPiece[tile.x][tile.y];
 		    assert(pn >= 0 && pn <= MAXTILES);
 
 		    if (!missile.IsTrap() || tile != missile.position.start) {
@@ -3805,7 +3805,7 @@ void ProcessFlameWaveControl(Missile &missile)
 	Direction dira = Left(Left(sd));
 	Direction dirb = Right(Right(sd));
 	Point na = src + sd;
-	int pn = dPiece[na.x][na.y];
+	[[maybe_unused]] int pn = dPiece[na.x][na.y];
 	assert(pn >= 0 && pn <= MAXTILES);
 	if (!TileHasAny(na, TileProperties::BlockMissile)) {
 		Direction pdir = Players[id]._pdir;

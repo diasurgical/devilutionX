@@ -88,3 +88,11 @@
 #ifndef DVL_ASSUME
 #define DVL_ASSUME(...)
 #endif
+
+#if defined(__clang__) || defined(__GNUC__)
+#define DVL_UNREACHABLE() __builtin_unreachable()
+#elif defined(_MSC_VER)
+#define DVL_UNREACHABLE() __assume(false)
+#else
+#define DVL_UNREACHABLE()
+#endif
