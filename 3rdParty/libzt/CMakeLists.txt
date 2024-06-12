@@ -1,18 +1,13 @@
 include(functions/FetchContent_MakeAvailableExcludeFromAll)
 
 set(BUILD_HOST_SELFTEST OFF)
+set(BUILD_STATIC_LIB ON)
 
 include(FetchContent)
 FetchContent_Declare(libzt
   GIT_REPOSITORY https://github.com/diasurgical/libzt.git
   GIT_TAG db7b642a4ce9f0f5e0ba7f293bd7ffa7897e4831)
 FetchContent_MakeAvailableExcludeFromAll(libzt)
-
-if(NOT ANDROID)
-  set(libzt_LIB_NAME zt-static)
-else()
-  set(libzt_LIB_NAME zt-shared)
-endif()
 
 foreach(
   lib_name
@@ -26,7 +21,7 @@ foreach(
   lwip_pic
   miniupnpc_pic
   ztcore
-  ${libzt_LIB_NAME}
+  zt-static
 )
   if(TARGET ${lib_name})
     # External library, ignore all warnings
@@ -34,16 +29,18 @@ foreach(
   endif()
 endforeach(lib_name)
 
-target_include_directories(${libzt_LIB_NAME} INTERFACE
+add_library(libzt::libzt INTERFACE IMPORTED GLOBAL)
+target_link_libraries(libzt::libzt INTERFACE zt-static)
+target_include_directories(libzt::libzt INTERFACE
   "${libzt_SOURCE_DIR}/include"
   "${libzt_SOURCE_DIR}/src"
   "${libzt_SOURCE_DIR}/ext/lwip/src/include")
 
 if(WIN32)
-  target_include_directories(${libzt_LIB_NAME} INTERFACE
+  target_include_directories(libzt::libzt INTERFACE
     "${libzt_SOURCE_DIR}/ext/lwip-contrib/ports/win32/include")
 else()
-  target_include_directories(${libzt_LIB_NAME} INTERFACE
+  target_include_directories(libzt::libzt INTERFACE
     "${libzt_SOURCE_DIR}/ext/lwip-contrib/ports/unix/port/include")
 endif()
 
