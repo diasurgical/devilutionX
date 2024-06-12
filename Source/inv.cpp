@@ -1096,51 +1096,95 @@ void InitInv()
 		break;
 	}
 }
+/** @brief Manually adjusts bad item sprite alignment */
+int8_t GetInvItemSpriteAdjustment(uint8_t iCurs)
+{
+	int8_t offset = 0;
+	switch (iCurs) {
+	case ICURS_SCROLL_OF:
+	case 7:
+	case ICURS_RING:
+	case 14:
+	case ICURS_GOLDEN_ELIXIR:
+	case ICURS_OIL:
+	case ICURS_ELIXIR_OF_VITALITY:
+	case ICURS_ELIXIR_OF_MAGIC:
+	case ICURS_POTION_OF_FULL_HEALING:
+	case ICURS_POTION_OF_REJUVENATION:
+	case ICURS_ELIXIR_OF_STRENGTH:
+	case ICURS_POTION_OF_MANA:
+	case 71:
+	case ICURS_HELM:
+	case 125:
+	case ICURS_HARD_LEATHER_ARMOR:
+	case 130:
+	case ICURS_LARGE_AXE:
+	case ICURS_BREAST_PLATE:
+		offset = 1;
+		break;
+	case ICURS_POTION_OF_FULL_MANA:
+	case ICURS_EMPYREAN_BAND:
+	case 22:
+	case ICURS_POTION_OF_HEALING:
+	case ICURS_MAP_OF_THE_STARS:
+	case ICURS_TWO_HANDED_SWORD:
+		offset = 2;
+		break;
+	case ICURS_FUNGAL_TOME:
+	case ICURS_TAVERN_SIGN:
+		offset = 3;
+		break;
+	case ICURS_EAR_WARRIOR:
+	case 43:
+	case ICURS_MORNING_STAR:
+	case 69:
+	case ICURS_CHAIN_MAIL:
+		offset = -1;
+		break;
+	default:
+		break;
+	}
+
+	return offset;
+}
 
 void DrawInv(const Surface &out)
 {
 	ClxDraw(out, GetPanelPosition(UiPanels::Inventory, { 0, 351 }), (*pInvCels)[0]);
 
-	Size slotSize[] = {
-		{ 2, 2 }, // head
-		{ 1, 1 }, // left ring
-		{ 1, 1 }, // right ring
-		{ 1, 1 }, // amulet
-		{ 2, 3 }, // left hand
-		{ 2, 3 }, // right hand
-		{ 2, 3 }, // chest
-	};
-
-	Point slotPos[] = {
-		{ 133, 59 },  // head
-		{ 48, 205 },  // left ring
-		{ 249, 205 }, // right ring
-		{ 205, 60 },  // amulet
-		{ 17, 160 },  // left hand
-		{ 248, 160 }, // right hand
-		{ 133, 160 }, // chest
-	};
-
 	Player &myPlayer = *InspectPlayer;
 
+	// Draw equipped items
 	for (int slot = INVLOC_HEAD; slot < NUM_INVLOC; slot++) {
 		if (!myPlayer.InvBody[slot].isEmpty()) {
-			int screenX = slotPos[slot].x;
-			int screenY = slotPos[slot].y;
-			InvDrawSlotBack(out, GetPanelPosition(UiPanels::Inventory, { screenX, screenY }), { slotSize[slot].width * InventorySlotSizeInPixels.width, slotSize[slot].height * InventorySlotSizeInPixels.height }, myPlayer.InvBody[slot]._iMagical);
+
+			Point position = GetPanelPosition(UiPanels::Inventory, InvRect[slot].position) + Displacement { 0, InvRect[slot].size.height - 1 };
+
+			InvDrawSlotBack(
+			    out,
+			    position,
+			    InvRect[slot].size,
+			    myPlayer.InvBody[slot]._iMagical);
 
 			const int cursId = myPlayer.InvBody[slot]._iCurs + CURSOR_FIRSTITEM;
 
 			Size frameSize = GetInvItemSize(cursId);
 
-			// calc item offsets for weapons/armor smaller than 2x3 slots
+			// Calculate item offsets to correctly center items smaller than 2x3 slots
 			if (IsAnyOf(slot, INVLOC_HAND_LEFT, INVLOC_HAND_RIGHT, INVLOC_CHEST)) {
-				screenX += frameSize.width == InventorySlotSizeInPixels.width ? INV_SLOT_HALF_SIZE_PX : 0;
-				screenY += frameSize.height == (3 * InventorySlotSizeInPixels.height) ? 0 : -INV_SLOT_HALF_SIZE_PX;
+				position.x += (frameSize.width == InventorySlotSizeInPixels.width) ? INV_SLOT_HALF_SIZE_PX : 0;
+				position.y += (frameSize.height == (3 * InventorySlotSizeInPixels.height)) ? 0 : -INV_SLOT_HALF_SIZE_PX;
 			}
 
+			// Center items in their slots (Max sprite width is 56px, slot is 58px)
+			if (IsAnyOf(slot, INVLOC_HEAD, INVLOC_HAND_LEFT, INVLOC_HAND_RIGHT, INVLOC_CHEST)) {
+				position.x++;
+			}
+
+			// Fix bad alignment in item sprites
+			position.x += GetInvItemSpriteAdjustment(myPlayer.InvBody[slot]._iCurs);
+
 			const ClxSprite sprite = GetInvItemSprite(cursId);
-			const Point position = GetPanelPosition(UiPanels::Inventory, { screenX, screenY });
 
 			if (pcursinvitem == slot) {
 				ClxDrawOutline(out, GetOutlineColor(myPlayer.InvBody[slot], true), position, sprite);
@@ -1148,36 +1192,56 @@ void DrawInv(const Surface &out)
 
 			DrawItem(myPlayer.InvBody[slot], out, position, sprite);
 
+			// Draw transparent item in right hand slot if weapon is two handed
 			if (slot == INVLOC_HAND_LEFT) {
 				if (myPlayer.GetItemLocation(myPlayer.InvBody[slot]) == ILOC_TWOHAND) {
-					InvDrawSlotBack(out, GetPanelPosition(UiPanels::Inventory, slotPos[INVLOC_HAND_RIGHT]), { slotSize[INVLOC_HAND_RIGHT].width * InventorySlotSizeInPixels.width, slotSize[INVLOC_HAND_RIGHT].height * InventorySlotSizeInPixels.height }, myPlayer.InvBody[slot]._iMagical);
+					InvDrawSlotBack(
+					    out,
+					    GetPanelPosition(UiPanels::Inventory, InvRect[INVLOC_HAND_RIGHT].position) + Displacement { 0, InvRect[INVLOC_HAND_RIGHT].size.height - 1 },
+					    InvRect[slot].size,
+					    myPlayer.InvBody[slot]._iMagical);
 					LightTableIndex = 0;
 
-					const int dstX = GetRightPanel().position.x + slotPos[INVLOC_HAND_RIGHT].x + (frameSize.width == InventorySlotSizeInPixels.width ? INV_SLOT_HALF_SIZE_PX : 0) - 1;
-					const int dstY = GetRightPanel().position.y + slotPos[INVLOC_HAND_RIGHT].y;
-					ClxDrawLightBlended(out, { dstX, dstY }, sprite);
+					Point dst {
+						GetRightPanel().position.x + InvRect[INVLOC_HAND_RIGHT].position.x + (frameSize.width == InventorySlotSizeInPixels.width ? INV_SLOT_HALF_SIZE_PX : 0) - 1,
+						GetRightPanel().position.y + InvRect[INVLOC_HAND_RIGHT].position.y + InvRect[INVLOC_HAND_RIGHT].size.height - 1
+					};
+
+					dst.x++; // Center item horizontally, same as above
+					dst.y--; // The right hand slot is 1 pixel taller than the left hand slot, so we offset the item to vertically align it with the left hand slot
+
+					// Fix bad alignment in item sprites
+					dst.x += GetInvItemSpriteAdjustment(myPlayer.InvBody[INVLOC_HAND_RIGHT]._iCurs);
+
+					ClxDrawLightBlended(out, dst, sprite);
 				}
 			}
 		}
 	}
 
+	// Draw slot backs in inventory
 	for (int i = 0; i < InventoryGridCells; i++) {
 		if (myPlayer.InvGrid[i] != 0) {
 			InvDrawSlotBack(
 			    out,
-			    GetPanelPosition(UiPanels::Inventory, InvRect[i + SLOTXY_INV_FIRST].position) + Displacement { 0, InventorySlotSizeInPixels.height },
+			    GetPanelPosition(UiPanels::Inventory, InvRect[i + SLOTXY_INV_FIRST].position) + Displacement { 0, InventorySlotSizeInPixels.height - 1 },
 			    InventorySlotSizeInPixels,
 			    myPlayer.InvList[std::abs(myPlayer.InvGrid[i]) - 1]._iMagical);
 		}
 	}
 
+	// Draw items in inventory
 	for (int j = 0; j < InventoryGridCells; j++) {
 		if (myPlayer.InvGrid[j] > 0) { // first slot of an item
 			int ii = myPlayer.InvGrid[j] - 1;
 			int cursId = myPlayer.InvList[ii]._iCurs + CURSOR_FIRSTITEM;
 
 			const ClxSprite sprite = GetInvItemSprite(cursId);
-			const Point position = GetPanelPosition(UiPanels::Inventory, InvRect[j + SLOTXY_INV_FIRST].position) + Displacement { 0, InventorySlotSizeInPixels.height };
+			Point position = GetPanelPosition(UiPanels::Inventory, InvRect[j + SLOTXY_INV_FIRST].position) + Displacement { 0, InventorySlotSizeInPixels.height - 1 };
+
+			// Fix bad alignment in item sprites
+			position.x += GetInvItemSpriteAdjustment(myPlayer.InvList[ii]._iCurs);
+
 			if (pcursinvitem == ii + INVITEM_INV_FIRST) {
 				ClxDrawOutline(out, GetOutlineColor(myPlayer.InvList[ii], true), position, sprite);
 			}
@@ -1204,7 +1268,7 @@ void DrawInvBelt(const Surface &out)
 			continue;
 		}
 
-		const Point position { InvRect[i + SLOTXY_BELT_FIRST].position.x + mainPanelPosition.x, InvRect[i + SLOTXY_BELT_FIRST].position.y + mainPanelPosition.y + InventorySlotSizeInPixels.height };
+		Point position { InvRect[i + SLOTXY_BELT_FIRST].position.x + mainPanelPosition.x, InvRect[i + SLOTXY_BELT_FIRST].position.y + mainPanelPosition.y + InventorySlotSizeInPixels.height };
 		InvDrawSlotBack(out, position, InventorySlotSizeInPixels, myPlayer.SpdList[i]._iMagical);
 		const int cursId = myPlayer.SpdList[i]._iCurs + CURSOR_FIRSTITEM;
 
@@ -1212,11 +1276,11 @@ void DrawInvBelt(const Surface &out)
 
 		if (pcursinvitem == i + INVITEM_BELT_FIRST) {
 			if (ControlMode == ControlTypes::KeyboardAndMouse || invflag) {
-				ClxDrawOutline(out, GetOutlineColor(myPlayer.SpdList[i], true), position, sprite);
+				ClxDrawOutline(out, GetOutlineColor(myPlayer.SpdList[i], true), position + Displacement { GetInvItemSpriteAdjustment(myPlayer.SpdList[i]._iCurs), 0 }, sprite);
 			}
 		}
 
-		DrawItem(myPlayer.SpdList[i], out, position, sprite);
+		DrawItem(myPlayer.SpdList[i], out, position + Displacement { GetInvItemSpriteAdjustment(myPlayer.SpdList[i]._iCurs), 0 }, sprite);
 
 		if (myPlayer.SpdList[i].isUsable()
 		    && myPlayer.SpdList[i]._itype != ItemType::Gold) {
