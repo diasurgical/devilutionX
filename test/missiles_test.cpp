@@ -1,6 +1,8 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
+#include <unordered_map>
+
 #include "engine/random.hpp"
 #include "missiles.h"
 
