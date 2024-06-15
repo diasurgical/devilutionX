@@ -75,6 +75,14 @@ public:
 		return *data_[pos].ptr();
 	}
 
+	void clear()
+	{
+		for (std::size_t pos = 0; pos < size_; ++pos) {
+			std::destroy_at(data_[pos].ptr());
+		}
+		size_ = 0;
+	}
+
 	~StaticVector()
 	{
 		for (std::size_t pos = 0; pos < size_; ++pos) {
