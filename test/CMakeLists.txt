@@ -44,17 +44,29 @@ set(tests
   utf8_test
   writehero_test
 )
+set(
+  standalone_tests
+  static_bit_vector_test
+)
 
 include(Fixtures.cmake)
 
-foreach(test_target ${tests})
+foreach(test_target ${tests} ${standalone_tests})
   add_executable(${test_target} "${test_target}.cpp")
   gtest_discover_tests(${test_target})
-  target_link_libraries(${test_target} PRIVATE test_main)
   set_target_properties(${test_target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
   if(GPERF)
     target_link_libraries(${test_target} PUBLIC ${GPERFTOOLS_LIBRARIES})
   endif()
+endforeach()
+
+foreach(test_target ${tests})
+  target_link_libraries(${test_target} PRIVATE test_main)
+endforeach()
+
+foreach(test_target ${standalone_tests})
+  target_link_libraries(${test_target} GTest::gtest_main)
+  target_include_directories(${test_target} PRIVATE "${PROJECT_SOURCE_DIR}/Source")
 endforeach()
 
 target_include_directories(writehero_test PRIVATE ../3rdParty/PicoSHA2)
