@@ -18,7 +18,7 @@ namespace devilution {
 
 DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void BlitFillDirect(uint8_t *dst, unsigned length, uint8_t color)
 {
-	DVL_ASSUME(length >= 2);
+	DVL_ASSUME(length != 0);
 	std::memset(dst, color, length);
 }
 
@@ -41,7 +41,7 @@ struct BlitDirect {
 
 DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void BlitFillWithMap(uint8_t *dst, unsigned length, uint8_t color, const uint8_t *DVL_RESTRICT colorMap)
 {
-	DVL_ASSUME(length >= 2);
+	DVL_ASSUME(length != 0);
 	std::memset(dst, colorMap[color], length);
 }
 
@@ -53,7 +53,7 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void BlitPixelsWithMap(uint8_t *DVL_RESTRICT
 
 DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void BlitFillBlended(uint8_t *dst, unsigned length, uint8_t color)
 {
-	DVL_ASSUME(length >= 2);
+	DVL_ASSUME(length != 0);
 	std::for_each(DEVILUTIONX_BLIT_EXECUTION_POLICY dst, dst + length, [tbl = paletteTransparencyLookup[color]](uint8_t &dstColor) {
 		dstColor = tbl[dstColor];
 	});
