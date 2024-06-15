@@ -36,6 +36,7 @@
 #include "engine/load_cel.hpp"
 #include "engine/load_file.hpp"
 #include "engine/random.hpp"
+#include "engine/render/clx_render.hpp"
 #include "engine/sound.h"
 #include "gamemenu.h"
 #include "gmenu.h"
@@ -2860,6 +2861,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 	MakeLightTable();
 	SetDungeonMicros();
 	LoadLvlGFX();
+	ClearClxDrawCache();
 	IncProgress();
 
 	if (firstflag) {

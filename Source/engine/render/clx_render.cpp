@@ -259,6 +259,13 @@ constexpr size_t MaxOutlineSpriteWidth = 256;
 using OutlinePixels = StaticVector<PointOf<int16_t>, MaxOutlinePixels>;
 using OutlineRowSolidRuns = StaticVector<std::pair<int16_t, int16_t>, MaxOutlineSpriteWidth / 2 + 1>;
 
+struct OutlinePixelsCacheEntry {
+	OutlinePixels outlinePixels;
+	const void *spriteData = nullptr;
+	bool skipColorIndexZero;
+};
+OutlinePixelsCacheEntry OutlinePixelsCache;
+
 void PopulateOutlinePixelsForRow(
     const StaticBitVector<MaxOutlineSpriteWidth> &rowBelow,
     const StaticBitVector<MaxOutlineSpriteWidth> &rowAbove,
@@ -289,11 +296,10 @@ void AppendOutlineRowSolidRuns(int x, int w, OutlineRowSolidRuns &solidRuns)
 }
 
 template <bool SkipColorIndexZero>
-OutlinePixels GetOutline(ClxSprite sprite) // NOLINT(readability-function-cognitive-complexity)
+void GetOutline(ClxSprite sprite, OutlinePixels &result) // NOLINT(readability-function-cognitive-complexity)
 {
 	const unsigned width = sprite.width();
 	assert(width < MaxOutlineSpriteWidth);
-	OutlinePixels result;
 	StaticBitVector<MaxOutlineSpriteWidth> rows[3] = {
 		StaticBitVector<MaxOutlineSpriteWidth>(width),
 		StaticBitVector<MaxOutlineSpriteWidth>(width),
@@ -387,21 +393,33 @@ OutlinePixels GetOutline(ClxSprite sprite) // NOLINT(readability-function-cognit
 	}
 	rowAbove->reset();
 	PopulateOutlinePixelsForRow(*rowBelow, *rowAbove, *solidRun, y + 1, result);
-	return result;
+}
+
+template <bool SkipColorIndexZero>
+void UpdateOutlinePixelsCache(ClxSprite sprite)
+{
+	if (OutlinePixelsCache.spriteData == sprite.pixelData()
+	    && OutlinePixelsCache.skipColorIndexZero == SkipColorIndexZero) {
+		return;
+	}
+	OutlinePixelsCache.skipColorIndexZero = SkipColorIndexZero;
+	OutlinePixelsCache.spriteData = sprite.pixelData();
+	OutlinePixelsCache.outlinePixels.clear();
+	GetOutline<SkipColorIndexZero>(sprite, OutlinePixelsCache.outlinePixels);
 }
 
 template <bool SkipColorIndexZero>
 void RenderClxOutline(const Surface &out, Point position, ClxSprite sprite, uint8_t color)
 {
-	const OutlinePixels pixels = GetOutline<SkipColorIndexZero>(sprite);
+	UpdateOutlinePixelsCache<SkipColorIndexZero>(sprite);
 	position.y -= sprite.height() - 1;
 	if (position.x > 0 && position.x + sprite.width() < out.w()
 	    && position.y > 0 && position.y + sprite.height() < out.h()) {
-		for (auto [x, y] : pixels) {
+		for (const auto &[x, y] : OutlinePixelsCache.outlinePixels) {
 			*out.at(position.x + x, position.y + y) = color;
 		}
 	} else {
-		for (auto [x, y] : pixels) {
+		for (const auto &[x, y] : OutlinePixelsCache.outlinePixels) {
 			out.SetPixel(Point(position.x + x, position.y + y), color);
 		}
 	}
@@ -589,6 +607,11 @@ void ClxDrawOutline(const Surface &out, uint8_t col, Point position, ClxSprite c
 void ClxDrawOutlineSkipColorZero(const Surface &out, uint8_t col, Point position, ClxSprite clx)
 {
 	RenderClxOutline</*SkipColorIndexZero=*/true>(out, position, clx, col);
+}
+
+void ClearClxDrawCache()
+{
+	OutlinePixelsCache.spriteData = nullptr;
 }
 
 } // namespace devilution
