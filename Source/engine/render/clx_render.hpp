@@ -121,6 +121,13 @@ bool IsPointWithinClx(Point position, ClxSprite clx);
  */
 std::pair<int, int> ClxMeasureSolidHorizontalBounds(ClxSprite clx);
 
+/**
+ * @brief Clears the CLX draw cache.
+ *
+ * Must be called whenever CLX sprites are freed.
+ */
+void ClearClxDrawCache();
+
 #ifdef DEBUG_CLX
 std::string ClxDescribe(ClxSprite clx);
 #endif
