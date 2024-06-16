@@ -62,7 +62,8 @@ private:
 
 // Amiga cannot Seekp beyond EOF.
 // See https://github.com/bebbo/libnix/issues/30
-#ifndef __AMIGA__
+// Same goes for Wii U.
+#if !defined(__AMIGA__) && !defined(__WIIU__)
 #define CAN_SEEKP_BEYOND_EOF
 #endif
 

@@ -696,7 +696,7 @@ char *SDL_GetPrefPath(const char *org, const char *app)
 #else
 
 namespace {
-#if !defined(__QNXNTO__) && !defined(__amigaos__)
+#if !defined(__QNXNTO__) && !defined(__amigaos__) && !defined(__WII__)
 char *readSymLink(const char *path)
 {
 	// From sdl2-2.0.9/src/filesystem/unix/SDL_sysfilesystem.c
@@ -780,6 +780,8 @@ char *SDL_GetBasePath()
 	retval = SDL_strdup("file:sdmc:/3ds/devilutionx/");
 #elif defined(__amigaos__)
 	retval = SDL_strdup("PROGDIR:");
+#elif defined(__WII__)
+	retval = SDL_strdup("");
 #else
 
 	/* is a Linux-style /proc filesystem available? */

@@ -454,6 +454,29 @@ if(PS4)
     "DVLX00001" "DevilutionX" "${PROJECT_VERSION}")
 endif()
 
+if(NINTENDO_WII)
+	target_link_libraries(${BIN_TARGET} PUBLIC aesnd wiikeyboard fat)
+	ogc_create_dol(${BIN_TARGET})
+	string(TIMESTAMP WII_DATE "%Y%m%d000000")
+	configure_file(Packaging/wii/meta.xml.in Packaging/wii/meta.xml @ONLY)
+	install(FILES ${CMAKE_CURRENT_BINARY_DIR}/devilutionx.dol
+		RENAME boot.dol
+		DESTINATION devilutionx COMPONENT wii)
+	install(FILES Packaging/wii/icon.png
+		${CMAKE_CURRENT_BINARY_DIR}/Packaging/wii/meta.xml
+		DESTINATION devilutionx COMPONENT wii)
+endif()
+
+if(WIIU)
+	wut_create_rpx(${BIN_TARGET})
+  wut_create_wuhb(${BIN_TARGET}
+	  NAME       "DevilutionX port for Wii U"
+    SHORTNAME  "DevilutionX"
+    AUTHOR     "Diasurgical Team"
+    ICON       "${PROJECT_SOURCE_DIR}/Packaging/resources/icon_solid.png"
+  )
+endif()
+
 if(NINTENDO_3DS)
   set(APP_TITLE       "DevilutionX")
   set(APP_DESCRIPTION "DevilutionX port for 3DS")

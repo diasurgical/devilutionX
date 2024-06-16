@@ -11,6 +11,29 @@ jobs:
       - run: /opt/devkitpro/portlibs/switch/bin/aarch64-none-elf-cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=RelWithDebInfo
       - run: cmake --build build -j 2
       - store_artifacts: {path: ./build/devilutionx.nro, destination: devilutionx.nro}
+  wii:
+    docker:
+      - image: devkitpro/devkitppc:latest
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run: apt-get update -y
+      - run: apt-get install -y gettext smpq
+      - run: /opt/devkitpro/portlibs/wii/bin/powerpc-eabi-cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=RelWithDebInfo
+      - run: cmake --build build -j 2
+      - store_artifacts: {path: ./build/devilutionx.dol, destination: devilutionx.dol}
+  wiiu:
+    docker:
+      - image: devkitpro/devkitppc:latest
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run: apt-get update -y
+      - run: apt-get install -y gettext smpq
+      - run: /opt/devkitpro/portlibs/wiiu/bin/powerpc-eabi-cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=RelWithDebInfo
+      - run: cmake --build build -j 2
+      - store_artifacts: {path: ./build/devilutionx.rpx, destination: devilutionx.rpx}
+      - store_artifacts: {path: ./build/devilutionx.wuhb, destination: devilutionx.wuhb}
   3ds:
     docker:
       - image: devkitpro/devkitarm:latest
@@ -55,5 +78,7 @@ workflows:
     jobs:
       - switch
       - 3ds
+      - wii
+      - wiiu
       - amigaos-m68k
       - vita
