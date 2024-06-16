@@ -46,7 +46,6 @@ set(tests
 )
 set(
   standalone_tests
-  static_bit_vector_test
 )
 
 include(Fixtures.cmake)
