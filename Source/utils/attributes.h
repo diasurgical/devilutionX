@@ -18,6 +18,12 @@
 #define DVL_PRINTF_ATTRIBUTE(fmtargnum, firstarg)
 #endif
 
+#if DVL_HAVE_ATTRIBUTE(pure)
+#define DVL_PURE __attribute__((pure))
+#else
+#define DVL_PURE
+#endif
+
 #if DVL_HAVE_ATTRIBUTE(always_inline)
 #define DVL_ALWAYS_INLINE inline __attribute__((always_inline))
 #elif defined(_MSC_VER)
