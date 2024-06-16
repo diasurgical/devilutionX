@@ -28,35 +28,18 @@ public:
 		}
 	}
 
-	[[nodiscard]] const T *begin() const
-	{
-		return &(*this)[0];
-	}
+	[[nodiscard]] const T *begin() const { return &(*this)[0]; }
+	[[nodiscard]] T *begin() { return &(*this)[0]; }
 
-	[[nodiscard]] const T *end() const
-	{
-		return begin() + size_;
-	}
+	[[nodiscard]] const T *end() const { return begin() + size_; }
+	[[nodiscard]] T *end() { return begin() + size_; }
 
-	[[nodiscard]] size_t size() const
-	{
-		return size_;
-	}
+	[[nodiscard]] size_t size() const { return size_; }
 
-	[[nodiscard]] bool empty() const
-	{
-		return size_ == 0;
-	}
+	[[nodiscard]] bool empty() const { return size_ == 0; }
 
-	[[nodiscard]] T &back()
-	{
-		return (*this)[size_ - 1];
-	}
-
-	[[nodiscard]] const T &back() const
-	{
-		return (*this)[size_ - 1];
-	}
+	[[nodiscard]] const T &back() const { return (*this)[size_ - 1]; }
+	[[nodiscard]] T &back() { return (*this)[size_ - 1]; }
 
 	template <typename... Args>
 	T &emplace_back(Args &&...args) // NOLINT(readability-identifier-naming)
@@ -65,22 +48,20 @@ public:
 		return *::new (&data_[size_++]) T(std::forward<Args>(args)...);
 	}
 
-	T &operator[](std::size_t pos)
-	{
-		return *data_[pos].ptr();
-	}
+	const T &operator[](std::size_t pos) const { return *data_[pos].ptr(); }
+	T &operator[](std::size_t pos) { return *data_[pos].ptr(); }
 
-	const T &operator[](std::size_t pos) const
+	void erase(const T *begin, const T *end)
 	{
-		return *data_[pos].ptr();
+		for (const T *it = begin; it < end; ++it) {
+			std::destroy_at(it);
+		}
+		size_ -= end - begin;
 	}
 
 	void clear()
 	{
-		for (std::size_t pos = 0; pos < size_; ++pos) {
-			std::destroy_at(data_[pos].ptr());
-		}
-		size_ = 0;
+		erase(begin(), end());
 	}
 
 	~StaticVector()

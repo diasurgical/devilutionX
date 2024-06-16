@@ -6,15 +6,11 @@
 #include "clx_render.hpp"
 
 #include <algorithm>
-#include <bitset>
-#include <cstdint>
 
 #include "engine/point.hpp"
 #include "engine/render/blit_impl.hpp"
-#include "engine/render/scrollrt.h"
 #include "utils/attributes.h"
 #include "utils/clx_decode.hpp"
-#include "utils/static_bit_vector.hpp"
 #include "utils/static_vector.hpp"
 
 #ifdef DEBUG_CLX
@@ -255,9 +251,9 @@ void DoRenderBackwards(
 }
 
 constexpr size_t MaxOutlinePixels = 1024;
-constexpr size_t MaxOutlineSpriteWidth = 256;
-using OutlinePixels = StaticVector<PointOf<int16_t>, MaxOutlinePixels>;
-using OutlineRowSolidRuns = StaticVector<std::pair<int16_t, int16_t>, MaxOutlineSpriteWidth / 2 + 1>;
+constexpr size_t MaxOutlineSpriteWidth = 253;
+using OutlinePixels = StaticVector<PointOf<uint8_t>, MaxOutlinePixels>;
+using OutlineRowSolidRuns = StaticVector<std::pair<uint8_t, uint8_t>, MaxOutlineSpriteWidth / 2 + 1>;
 
 struct OutlinePixelsCacheEntry {
 	OutlinePixels outlinePixels;
@@ -267,31 +263,41 @@ struct OutlinePixelsCacheEntry {
 OutlinePixelsCacheEntry OutlinePixelsCache;
 
 void PopulateOutlinePixelsForRow(
-    const StaticBitVector<MaxOutlineSpriteWidth> &rowBelow,
-    const StaticBitVector<MaxOutlineSpriteWidth> &rowAbove,
-    const OutlineRowSolidRuns &solidRuns,
-    int y, OutlinePixels &result)
+    const OutlineRowSolidRuns &runs,
+    const bool *DVL_RESTRICT below,
+    bool *DVL_RESTRICT cur,
+    bool *DVL_RESTRICT above,
+    uint8_t y,
+    OutlinePixels &result)
 {
-	for (auto [xBegin, xEnd] : solidRuns) {
-		result.emplace_back(static_cast<int16_t>(xBegin - 1), static_cast<int16_t>(y));
-		for (int xi = xBegin; xi < xEnd; ++xi) {
-			if (!rowAbove.test(xi)) {
-				result.emplace_back(static_cast<int16_t>(xi), static_cast<int16_t>(y - 1));
+	DVL_ASSUME(!runs.empty());
+	for (const auto &[begin, end] : runs) {
+		if (!cur[static_cast<uint8_t>(begin - 1)]) {
+			result.emplace_back(static_cast<uint8_t>(begin - 1), y);
+			cur[static_cast<uint8_t>(begin - 1)] = true;
+		}
+		if (!cur[end]) {
+			result.emplace_back(end, y);
+			cur[end] = true;
+		}
+		for (uint8_t x = begin; x < end; ++x) {
+			if (!below[x]) {
+				result.emplace_back(x, static_cast<uint8_t>(y + 1));
 			}
-			if (!rowBelow.test(xi)) {
-				result.emplace_back(static_cast<int16_t>(xi), static_cast<int16_t>(y + 1));
+			if (!above[x]) {
+				result.emplace_back(x, static_cast<uint8_t>(y - 1));
+				above[x] = true;
 			}
 		}
-		result.emplace_back(static_cast<int16_t>(xEnd), static_cast<int16_t>(y));
 	}
 }
 
-void AppendOutlineRowSolidRuns(int x, int w, OutlineRowSolidRuns &solidRuns)
+void AppendOutlineRowSolidRuns(uint8_t x, uint8_t w, OutlineRowSolidRuns &solidRuns)
 {
 	if (solidRuns.empty() || solidRuns.back().second != x) {
 		solidRuns.emplace_back(x, x + w);
 	} else {
-		solidRuns.back().second = static_cast<int16_t>(x + w);
+		solidRuns.back().second = static_cast<uint8_t>(x + w);
 	}
 }
 
@@ -300,17 +306,14 @@ void GetOutline(ClxSprite sprite, OutlinePixels &result) // NOLINT(readability-f
 {
 	const unsigned width = sprite.width();
 	assert(width < MaxOutlineSpriteWidth);
-	StaticBitVector<MaxOutlineSpriteWidth> rows[3] = {
-		StaticBitVector<MaxOutlineSpriteWidth>(width),
-		StaticBitVector<MaxOutlineSpriteWidth>(width),
-		StaticBitVector<MaxOutlineSpriteWidth>(width)
-	};
-	StaticBitVector<MaxOutlineSpriteWidth> *rowAbove = &rows[0];
-	StaticBitVector<MaxOutlineSpriteWidth> *row = &rows[1];
-	StaticBitVector<MaxOutlineSpriteWidth> *rowBelow = &rows[2];
 
-	int x = 0;
-	int y = sprite.height() - 1;
+	int x = 1;
+	auto y = static_cast<uint8_t>(sprite.height());
+
+	bool rows[3][MaxOutlineSpriteWidth + 2] = { {}, {}, {} };
+	bool *rowAbove = rows[0];
+	bool *row = rows[1];
+	bool *rowBelow = rows[2];
 
 	OutlineRowSolidRuns solidRuns[2];
 	OutlineRowSolidRuns *solidRunAbove = &solidRuns[0];
@@ -319,7 +322,7 @@ void GetOutline(ClxSprite sprite, OutlinePixels &result) // NOLINT(readability-f
 	const uint8_t *src = sprite.pixelData();
 	const uint8_t *const end = src + sprite.pixelDataSize();
 	while (src < end) {
-		while (x < static_cast<int>(width)) {
+		while (x <= static_cast<int>(width)) {
 			const auto v = static_cast<uint8_t>(*src++);
 			uint8_t w;
 			if (IsClxOpaque(v)) {
@@ -363,36 +366,43 @@ void GetOutline(ClxSprite sprite, OutlinePixels &result) // NOLINT(readability-f
 		}
 
 		for (const auto &[xBegin, xEnd] : *solidRunAbove) {
-			rowAbove->set(xBegin, xEnd - xBegin);
+			std::fill(rowAbove + xBegin, rowAbove + xEnd, true);
 		}
-		PopulateOutlinePixelsForRow(*rowBelow, *rowAbove, *solidRun, y + 1, result);
+
+		if (!solidRun->empty()) {
+			PopulateOutlinePixelsForRow(*solidRun, rowBelow, row, rowAbove, static_cast<uint8_t>(y + 1), result);
+		}
 
 		// (0, 1, 2) => (2, 0, 1)
 		std::swap(row, rowBelow);
 		std::swap(row, rowAbove);
-		rowAbove->reset();
+		std::fill_n(rowAbove, width, false);
 
 		std::swap(solidRunAbove, solidRun);
 		solidRunAbove->clear();
 
-		if (x > static_cast<int>(width)) {
+		if (x > static_cast<int>(width + 1)) {
 			// Transparent overrun.
-			const unsigned numWholeTransparentLines = x / width;
+			const unsigned numWholeTransparentLines = (x - 1) / width;
 			if (numWholeTransparentLines > 1) {
-				PopulateOutlinePixelsForRow(*rowBelow, *rowAbove, *solidRun, y, result);
+				if (!solidRun->empty()) {
+					PopulateOutlinePixelsForRow(*solidRun, rowBelow, row, rowAbove, y, result);
+				}
 				solidRun->clear();
-				row->reset();
+				std::fill_n(row, width, false);
 			}
-			if (numWholeTransparentLines > 2) rowBelow->reset();
-			y -= static_cast<int16_t>(numWholeTransparentLines);
-			x = static_cast<int16_t>(x % width);
+			if (numWholeTransparentLines > 2) std::fill_n(rowBelow, width, false);
+			y -= static_cast<uint8_t>(numWholeTransparentLines);
+			x = static_cast<int>((x - 1) % width) + 1;
 		} else {
 			--y;
-			x = 0;
+			x = 1;
 		}
 	}
-	rowAbove->reset();
-	PopulateOutlinePixelsForRow(*rowBelow, *rowAbove, *solidRun, y + 1, result);
+	std::fill_n(rowAbove, width, false);
+	if (!solidRun->empty()) {
+		PopulateOutlinePixelsForRow(*solidRun, rowBelow, row, rowAbove, static_cast<uint8_t>(y + 1), result);
+	}
 }
 
 template <bool SkipColorIndexZero>
@@ -412,9 +422,10 @@ template <bool SkipColorIndexZero>
 void RenderClxOutline(const Surface &out, Point position, ClxSprite sprite, uint8_t color)
 {
 	UpdateOutlinePixelsCache<SkipColorIndexZero>(sprite);
-	position.y -= sprite.height() - 1;
-	if (position.x > 0 && position.x + sprite.width() < out.w()
-	    && position.y > 0 && position.y + sprite.height() < out.h()) {
+	--position.x;
+	position.y -= sprite.height();
+	if (position.x >= 0 && position.x + sprite.width() < out.w()
+	    && position.y >= 0 && position.y + sprite.height() < out.h()) {
 		for (const auto &[x, y] : OutlinePixelsCache.outlinePixels) {
 			*out.at(position.x + x, position.y + y) = color;
 		}
