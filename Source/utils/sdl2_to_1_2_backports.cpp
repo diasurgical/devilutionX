@@ -168,7 +168,7 @@ void SDL_LogMessage(int category, SDL_LogPriority priority, const char *fmt, ...
 
 void SDL_LogMessageV(int category, SDL_LogPriority priority, const char *fmt, va_list ap)
 {
-	if (static_cast<int>(priority) < 0 || priority >= SDL_NUM_LOG_PRIORITIES || priority < SDL_LogGetPriority(category))
+	if (static_cast<int>(priority) < 0 || priority >= SDL_NUM_LOG_PRIORITIES || SDL_LogGetPriority(category) > priority)
 		return;
 
 	::devilution::printfInConsole("%s: ", SDL_priority_prefixes[priority]);

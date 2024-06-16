@@ -41,7 +41,7 @@ char *FindUnpackedMpqFile(char *relativePath)
 #else
 bool IsDebugLogging()
 {
-	return SDL_LOG_PRIORITY_DEBUG >= SDL_LogGetPriority(SDL_LOG_CATEGORY_APPLICATION);
+	return SDL_LogGetPriority(SDL_LOG_CATEGORY_APPLICATION) <= SDL_LOG_PRIORITY_DEBUG;
 }
 
 SDL_RWops *OpenOptionalRWops(const std::string &path)

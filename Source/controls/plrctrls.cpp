@@ -1484,7 +1484,7 @@ std::string_view ControlTypeToString(ControlTypes controlType)
 
 void LogControlDeviceAndModeChange(ControlTypes newControlDevice, ControlTypes newControlMode)
 {
-	if (SDL_LOG_PRIORITY_VERBOSE < SDL_LogGetPriority(SDL_LOG_CATEGORY_APPLICATION))
+	if (SDL_LogGetPriority(SDL_LOG_CATEGORY_APPLICATION) > SDL_LOG_PRIORITY_VERBOSE)
 		return;
 	if (newControlDevice == ControlDevice && newControlMode == ControlMode)
 		return;
@@ -1514,7 +1514,7 @@ std::string_view GamepadTypeToString(GamepadLayout gamepadLayout)
 
 void LogGamepadChange(GamepadLayout newGamepad)
 {
-	if (SDL_LOG_PRIORITY_VERBOSE < SDL_LogGetPriority(SDL_LOG_CATEGORY_APPLICATION))
+	if (SDL_LogGetPriority(SDL_LOG_CATEGORY_APPLICATION) > SDL_LOG_PRIORITY_VERBOSE)
 		return;
 	constexpr auto DebugChange = [](GamepadLayout before, GamepadLayout after) -> std::string {
 		if (before == after)
