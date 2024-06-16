@@ -6,6 +6,7 @@
 #include <utility>
 
 #include "appfat.h"
+#include "utils/attributes.h"
 
 namespace devilution {
 
@@ -36,7 +37,7 @@ public:
 
 	[[nodiscard]] size_t size() const { return size_; }
 
-	[[nodiscard]] bool empty() const { return size_ == 0; }
+	[[nodiscard]] bool empty() const DVL_PURE { return size_ == 0; }
 
 	[[nodiscard]] const T &back() const { return (*this)[size_ - 1]; }
 	[[nodiscard]] T &back() { return (*this)[size_ - 1]; }
