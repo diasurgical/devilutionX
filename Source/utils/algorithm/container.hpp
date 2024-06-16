@@ -115,4 +115,11 @@ container_internal::Iterator<C> c_lower_bound(C &c, T &&value)
 	    std::forward<T>(value));
 }
 
+template <typename C>
+container_internal::Iterator<C> c_unique(C &c)
+{
+	return std::unique(container_internal::c_begin(c),
+	    container_internal::c_end(c));
+}
+
 } // namespace devilution
