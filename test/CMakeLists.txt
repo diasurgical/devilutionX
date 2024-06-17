@@ -41,11 +41,11 @@ set(tests
   stores_test
   str_cat_test
   timedemo_test
-  utf8_test
   writehero_test
 )
 set(
   standalone_tests
+  utf8_test
 )
 
 include(Fixtures.cmake)
@@ -64,8 +64,10 @@ foreach(test_target ${tests})
 endforeach()
 
 foreach(test_target ${standalone_tests})
-  target_link_libraries(${test_target} GTest::gtest_main)
+  target_link_libraries(${test_target} PRIVATE GTest::gtest_main)
   target_include_directories(${test_target} PRIVATE "${PROJECT_SOURCE_DIR}/Source")
 endforeach()
+
+target_link_libraries(utf8_test PRIVATE libdevilutionx_utf8)
 
 target_include_directories(writehero_test PRIVATE ../3rdParty/PicoSHA2)

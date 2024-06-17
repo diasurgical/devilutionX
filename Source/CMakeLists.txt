@@ -191,8 +191,7 @@ set(libdevilutionx_SRCS
   utils/str_cat.cpp
   utils/str_case.cpp
   utils/surface_to_clx.cpp
-  utils/timer.cpp
-  utils/utf8.cpp)
+  utils/timer.cpp)
 
 # These files are responsible for most of the runtime in Debug mode.
 # Apply some optimizations to them even in Debug mode to get reasonable performance.
@@ -319,6 +318,13 @@ if(SCREEN_READER_INTEGRATION AND WIN32)
   target_compile_definitions(libdevilutionx PRIVATE Tolk)
 endif()
 
+add_devilutionx_object_library(libdevilutionx_utf8
+  utils/utf8.cpp
+)
+target_link_libraries(libdevilutionx_utf8 PRIVATE
+  hoehrmann_utf8
+)
+
 target_link_libraries(libdevilutionx PUBLIC
   Threads::Threads
   DevilutionX::SDL
@@ -326,7 +332,7 @@ target_link_libraries(libdevilutionx PUBLIC
   libsmackerdec
   simpleini::simpleini
   tl
-  hoehrmann_utf8
+  libdevilutionx_utf8
   ${libdevilutionx_DEPS}
 )
 
