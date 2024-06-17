@@ -15,7 +15,7 @@
 namespace devilution {
 
 // Local definition to fix compilation issue due to header conflict.
-[[noreturn]] void app_fatal(std::string_view);
+[[noreturn]] extern void app_fatal(std::string_view);
 
 enum class LogCategory {
 	Application = SDL_LOG_CATEGORY_APPLICATION,
