@@ -32,7 +32,6 @@ set(tests
   missiles_test
   pack_test
   path_test
-  parse_int_test
   player_test
   quests_test
   random_test
@@ -42,8 +41,8 @@ set(tests
   timedemo_test
   writehero_test
 )
-set(
-  standalone_tests
+set(standalone_tests
+  parse_int_test
   str_cat_test
   utf8_test
 )
@@ -68,7 +67,8 @@ foreach(test_target ${standalone_tests})
   target_include_directories(${test_target} PRIVATE "${PROJECT_SOURCE_DIR}/Source")
 endforeach()
 
-target_link_libraries(utf8_test PRIVATE libdevilutionx_utf8)
+target_link_libraries(parse_int_test PRIVATE libdevilutionx_parse_int)
 target_link_libraries(str_cat_test PRIVATE libdevilutionx_strings)
+target_link_libraries(utf8_test PRIVATE libdevilutionx_utf8)
 
 target_include_directories(writehero_test PRIVATE ../3rdParty/PicoSHA2)
