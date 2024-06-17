@@ -39,12 +39,12 @@ set(tests
   rectangle_test
   scrollrt_test
   stores_test
-  str_cat_test
   timedemo_test
   writehero_test
 )
 set(
   standalone_tests
+  str_cat_test
   utf8_test
 )
 
@@ -69,5 +69,6 @@ foreach(test_target ${standalone_tests})
 endforeach()
 
 target_link_libraries(utf8_test PRIVATE libdevilutionx_utf8)
+target_link_libraries(str_cat_test PRIVATE libdevilutionx_strings)
 
 target_include_directories(writehero_test PRIVATE ../3rdParty/PicoSHA2)

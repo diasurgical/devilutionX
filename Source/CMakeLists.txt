@@ -188,8 +188,6 @@ set(libdevilutionx_SRCS
   utils/pcx_to_clx.cpp
   utils/sdl_bilinear_scale.cpp
   utils/sdl_thread.cpp
-  utils/str_cat.cpp
-  utils/str_case.cpp
   utils/surface_to_clx.cpp
   utils/timer.cpp)
 
@@ -325,6 +323,13 @@ target_link_libraries(libdevilutionx_utf8 PRIVATE
   hoehrmann_utf8
 )
 
+add_devilutionx_object_library(libdevilutionx_strings
+  utils/str_cat.cpp
+  utils/str_case.cpp
+)
+target_link_libraries(libdevilutionx_strings PRIVATE
+  fmt::fmt)
+
 target_link_libraries(libdevilutionx PUBLIC
   Threads::Threads
   DevilutionX::SDL
@@ -332,6 +337,7 @@ target_link_libraries(libdevilutionx PUBLIC
   libsmackerdec
   simpleini::simpleini
   tl
+  libdevilutionx_strings
   libdevilutionx_utf8
   ${libdevilutionx_DEPS}
 )
