@@ -236,9 +236,12 @@ void SetVideoMode(int width, int height, int bpp, uint32_t flags)
 	if (ghMainWnd == nullptr) {
 		ErrSdl();
 	}
-	const SDL_VideoInfo &current = *SDL_GetVideoInfo();
-	Log("Video mode is now {}x{} bpp={} flags=0x{:08X}",
-	    current.current_w, current.current_h, current.vfmt->BitsPerPixel, SDL_GetVideoSurface()->flags);
+	const SDL_Surface *surface = SDL_GetVideoSurface();
+	if (surface == nullptr) {
+		ErrSdl();
+	}
+	Log("Video surface is now {}x{} bpp={} flags=0x{:08X}",
+	    surface->w, surface->h, surface->format->BitsPerPixel, surface->flags);
 }
 
 void SetVideoModeToPrimary(bool fullscreen, int width, int height)
@@ -410,9 +413,11 @@ void ReinitializeRenderer()
 		return;
 
 #ifdef USE_SDL1
-	const SDL_VideoInfo &current = *SDL_GetVideoInfo();
-	Size windowSize = { current.current_w, current.current_h };
-	AdjustToScreenGeometry(windowSize);
+	const SDL_Surface *surface = SDL_GetVideoSurface();
+	if (surface == nullptr) {
+		ErrSdl();
+	}
+	AdjustToScreenGeometry(Size(surface->w, surface->h));
 #else
 	if (texture)
 		texture.reset();
