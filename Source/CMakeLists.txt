@@ -179,7 +179,6 @@ set(libdevilutionx_SRCS
   utils/cl2_to_clx.cpp
   utils/console.cpp
   utils/display.cpp
-  utils/file_util.cpp
   utils/format_int.cpp
   utils/language.cpp
   utils/logged_fstream.cpp
@@ -315,6 +314,24 @@ if(SCREEN_READER_INTEGRATION AND WIN32)
   target_compile_definitions(libdevilutionx PRIVATE Tolk)
 endif()
 
+add_devilutionx_object_library(libdevilutionx_file_util
+  utils/file_util.cpp
+)
+target_link_libraries(libdevilutionx_file_util PRIVATE
+  DevilutionX::SDL
+  libdevilutionx_log
+  ${DEVILUTIONX_PLATFORM_LINK_LIBRARIES}
+)
+
+add_library(libdevilutionx_log INTERFACE)
+target_include_directories(libdevilutionx_log INTERFACE
+  ${PROJECT_SOURCE_DIR}/Source)
+target_link_libraries(libdevilutionx_log INTERFACE
+  DevilutionX::SDL
+  fmt::fmt
+  libdevilutionx_strings
+)
+
 add_devilutionx_object_library(libdevilutionx_parse_int
   utils/parse_int.cpp
 )
@@ -343,6 +360,7 @@ target_link_libraries(libdevilutionx PUBLIC
   libsmackerdec
   simpleini::simpleini
   tl
+  libdevilutionx_file_util
   libdevilutionx_parse_int
   libdevilutionx_strings
   libdevilutionx_utf8
