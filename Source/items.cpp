@@ -3331,7 +3331,7 @@ void TryRandomUniqueItem(Item &item, _item_indexes idx, int8_t mLevel, int uper,
 		Point itemPos = item.position;
 
 		// Force generate a non-unique item.
-		DiabloGenerator itemGenerator(GetLCGEngineState());
+		DiabloGenerator itemGenerator(item._iSeed);
 		do {
 			item = {}; // Reset item data
 			item.position = itemPos;
@@ -3370,7 +3370,7 @@ void TryRandomUniqueItem(Item &item, _item_indexes idx, int8_t mLevel, int uper,
 	Point itemPos = item.position;
 
 	// Force generate items until we find a uid match.
-	DiabloGenerator itemGenerator(GetLCGEngineState());
+	DiabloGenerator itemGenerator(item._iSeed);
 	do {
 		item = {}; // Reset item data
 		item.position = itemPos;
