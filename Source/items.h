@@ -165,7 +165,8 @@ enum icreateinfo_flag {
 
 enum icreateinfo_flag2 {
 	// clang-format off
-	CF_HELLFIRE = 1,
+	CF_HELLFIRE = 1 << 0,
+	CF_UIDOFFSET = ((1 << 4) - 1) << 1,
 	// clang-format on
 };
 
@@ -512,6 +513,7 @@ Point GetSuperItemLoc(Point position);
 void GetItemAttrs(Item &item, _item_indexes itemData, int lvl);
 void SetupItem(Item &item);
 Item *SpawnUnique(_unique_items uid, Point position, std::optional<int> level = std::nullopt, bool sendmsg = true, bool exactPosition = false);
+void TryRandomUniqueItem(Item &item, _item_indexes idx, int8_t mLevel, int uper, bool onlygood, bool pregen);
 void SpawnItem(Monster &monster, Point position, bool sendmsg, bool spawn = false);
 void CreateRndItem(Point position, bool onlygood, bool sendmsg, bool delta);
 void CreateRndUseful(Point position, bool sendmsg);
