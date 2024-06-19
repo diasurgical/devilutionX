@@ -13,7 +13,6 @@ set(tests
   animationinfo_test
   appfat_test
   automap_test
-  codec_test
   cursor_test
   data_file_test
   dead_test
@@ -40,6 +39,7 @@ set(tests
   writehero_test
 )
 set(standalone_tests
+  codec_test
   file_util_test
   format_int_test
   parse_int_test
@@ -73,6 +73,7 @@ target_sources(app_fatal_for_testing INTERFACE $<TARGET_OBJECTS:app_fatal_for_te
 add_library(language_for_testing OBJECT language_for_testing.cpp)
 target_sources(language_for_testing INTERFACE $<TARGET_OBJECTS:language_for_testing>)
 
+target_link_libraries(codec_test PRIVATE libdevilutionx_codec app_fatal_for_testing)
 target_link_libraries(file_util_test PRIVATE libdevilutionx_file_util app_fatal_for_testing)
 target_link_libraries(format_int_test PRIVATE libdevilutionx_format_int language_for_testing)
 target_link_libraries(parse_int_test PRIVATE libdevilutionx_parse_int)

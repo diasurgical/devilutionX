@@ -6,7 +6,6 @@ set(libdevilutionx_SRCS
   appfat.cpp
   automap.cpp
   capture.cpp
-  codec.cpp
   control.cpp
   cursor.cpp
   dead.cpp
@@ -47,7 +46,6 @@ set(libdevilutionx_SRCS
   portal.cpp
   quests.cpp
   restrict.cpp
-  sha.cpp
   spelldat.cpp
   spells.cpp
   stores.cpp
@@ -313,6 +311,15 @@ if(SCREEN_READER_INTEGRATION AND WIN32)
   target_compile_definitions(libdevilutionx PRIVATE Tolk)
 endif()
 
+add_devilutionx_object_library(libdevilutionx_codec
+  codec.cpp
+  sha.cpp
+)
+target_link_libraries(libdevilutionx_codec PRIVATE
+  DevilutionX::SDL
+  libdevilutionx_log
+)
+
 add_devilutionx_object_library(libdevilutionx_file_util
   utils/file_util.cpp
 )
@@ -366,6 +373,7 @@ target_link_libraries(libdevilutionx PUBLIC
   libsmackerdec
   simpleini::simpleini
   tl
+  libdevilutionx_codec
   libdevilutionx_format_int
   libdevilutionx_file_util
   libdevilutionx_parse_int
