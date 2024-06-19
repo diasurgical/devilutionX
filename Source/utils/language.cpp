@@ -351,12 +351,6 @@ std::string_view GetLanguageCode()
 	return *sgOptions.Language.code;
 }
 
-bool IsSmallFontTall()
-{
-	const std::string_view code = GetLanguageCode().substr(0, 2);
-	return code == "zh" || code == "ja" || code == "ko";
-}
-
 void LanguageInitialize()
 {
 	translation = { {}, {} };
