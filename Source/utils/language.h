@@ -42,4 +42,8 @@ std::string_view LanguagePluralTranslate(const char *singular, std::string_view 
 std::string_view LanguageParticularTranslate(std::string_view context, std::string_view message);
 
 // Chinese and Japanese, and Korean small font is 16px instead of a 12px one for readability.
-bool IsSmallFontTall();
+inline bool IsSmallFontTall()
+{
+	const std::string_view code = GetLanguageCode().substr(0, 2);
+	return code == "zh" || code == "ja" || code == "ko";
+}

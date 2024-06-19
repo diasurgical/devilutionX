@@ -24,7 +24,6 @@ set(tests
   drlg_l3_test
   drlg_l4_test
   effects_test
-  format_int_test
   inv_test
   lighting_test
   math_test
@@ -42,6 +41,7 @@ set(tests
 )
 set(standalone_tests
   file_util_test
+  format_int_test
   parse_int_test
   str_cat_test
   utf8_test
@@ -70,7 +70,11 @@ endforeach()
 add_library(app_fatal_for_testing OBJECT app_fatal_for_testing.cpp)
 target_sources(app_fatal_for_testing INTERFACE $<TARGET_OBJECTS:app_fatal_for_testing>)
 
+add_library(language_for_testing OBJECT language_for_testing.cpp)
+target_sources(language_for_testing INTERFACE $<TARGET_OBJECTS:language_for_testing>)
+
 target_link_libraries(file_util_test PRIVATE libdevilutionx_file_util app_fatal_for_testing)
+target_link_libraries(format_int_test PRIVATE libdevilutionx_format_int language_for_testing)
 target_link_libraries(parse_int_test PRIVATE libdevilutionx_parse_int)
 target_link_libraries(str_cat_test PRIVATE libdevilutionx_strings)
 target_link_libraries(utf8_test PRIVATE libdevilutionx_utf8)
