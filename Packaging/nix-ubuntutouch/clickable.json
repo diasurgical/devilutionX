@@ -1,0 +1,20 @@
+{
+  "builder": "cmake",
+  "build_dir": "./build.clickable",
+  "dependencies_target": [
+    "libsdl2-dev",
+    "libsdl2-image-dev",
+    "libsdl2-ttf-dev"
+  ],
+  "install_lib": [
+    "/usr/lib/${ARCH_TRIPLET}/libSDL2.so*",
+    "/usr/lib/${ARCH_TRIPLET}/libSDL2-2.0.so*",
+    "/usr/lib/${ARCH_TRIPLET}/libSDL2_image.so*",
+    "/usr/lib/${ARCH_TRIPLET}/libSDL2_image-2.0.so*",
+    "/usr/lib/${ARCH_TRIPLET}/libSDL2_ttf.so*",
+    "/usr/lib/${ARCH_TRIPLET}/libSDL2_ttf-2.0.so*"
+  ],
+  "build_args": [
+    "-DUBUNTU_TOUCH=ON"
+  ]
+}
