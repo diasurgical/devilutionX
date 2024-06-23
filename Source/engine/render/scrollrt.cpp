@@ -1636,8 +1636,8 @@ void scrollrt_draw_game_screen()
 
 	const Surface &out = GlobalBackBuffer();
 	UndrawCursor(out);
-	DrawMain(hgt, false, false, false, false, false);
 	DrawCursor(out);
+	DrawMain(hgt, false, false, false, false, false);
 
 	RenderPresent();
 }
