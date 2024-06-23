@@ -250,7 +250,7 @@ void DoRenderBackwards(
 	}
 }
 
-constexpr size_t MaxOutlinePixels = 1024;
+constexpr size_t MaxOutlinePixels = 1536;
 constexpr size_t MaxOutlineSpriteWidth = 253;
 using OutlinePixels = StaticVector<PointOf<uint8_t>, MaxOutlinePixels>;
 using OutlineRowSolidRuns = StaticVector<std::pair<uint8_t, uint8_t>, MaxOutlineSpriteWidth / 2 + 1>;
