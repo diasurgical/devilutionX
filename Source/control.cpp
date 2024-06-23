@@ -1189,12 +1189,12 @@ void FreeControlPan()
 void DrawInfoBox(const Surface &out)
 {
 	DrawPanelBox(out, { 177, 62, InfoBoxSize.width, InfoBoxSize.height }, GetMainPanel().position + InfoBoxTopLeft);
-	if (!panelflag && !trigflag && pcursinvitem == -1 && pcursstashitem == StashStruct::EmptyCell && !spselflag) {
+	if (!panelflag && !trigflag && pcursinvitem == -1 && pcursstashitem == StashStruct::EmptyCell && !spselflag && pcurs != CURSOR_HOURGLASS) {
 		InfoString = StringOrView {};
 		InfoColor = UiFlags::ColorWhite;
 	}
 	Player &myPlayer = *MyPlayer;
-	if (spselflag || trigflag) {
+	if (spselflag || trigflag || pcurs == CURSOR_HOURGLASS) {
 		InfoColor = UiFlags::ColorWhite;
 	} else if (!myPlayer.HoldItem.isEmpty()) {
 		if (myPlayer.HoldItem._itype == ItemType::Gold) {
