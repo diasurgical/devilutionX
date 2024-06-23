@@ -1027,6 +1027,9 @@ bool IsGItemValid(const TCmdGItem &message)
 
 bool IsPItemValid(const TCmdPItem &message, const Player &player)
 {
+	if (!gbIsMultiplayer)
+		return true;
+
 	const Point position { message.x, message.y };
 
 	if (!InDungeonBounds(position))
