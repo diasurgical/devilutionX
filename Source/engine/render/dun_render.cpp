@@ -282,6 +282,16 @@ DVL_ALWAYS_INLINE Clip CalculateClip(int_fast16_t x, int_fast16_t y, int_fast16_
 	return clip;
 }
 
+DVL_ALWAYS_INLINE bool IsFullyDark(const uint8_t *DVL_RESTRICT tbl)
+{
+	return tbl == LightTables[LightsMax].data();
+}
+
+DVL_ALWAYS_INLINE bool IsFullyLit(const uint8_t *DVL_RESTRICT tbl)
+{
+	return tbl == LightTables[0].data();
+}
+
 template <LightType Light, bool Transparent>
 DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderSquareFull(uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl)
 {
@@ -923,9 +933,9 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderTileType(TileType tile, uint8_t *
 template <bool OpaquePrefix, int8_t PrefixIncrement>
 DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderTransparentSquareDispatch(uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl, Clip clip)
 {
-	if (tbl == LightTables[LightsMax].data()) {
+	if (IsFullyDark(tbl)) {
 		RenderTransparentSquare<LightType::FullyDark, OpaquePrefix, PrefixIncrement>(dst, dstPitch, src, tbl, clip);
-	} else if (tbl == LightTables[0].data()) {
+	} else if (IsFullyLit(tbl)) {
 		RenderTransparentSquare<LightType::FullyLit, OpaquePrefix, PrefixIncrement>(dst, dstPitch, src, tbl, clip);
 	} else {
 		RenderTransparentSquare<LightType::PartiallyLit, OpaquePrefix, PrefixIncrement>(dst, dstPitch, src, tbl, clip);
@@ -965,9 +975,9 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderRightTrapezoidOrTransparentSquare
 template <bool OpaquePrefix, int8_t PrefixIncrement>
 DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLeftTrapezoidOrTransparentSquareDispatch(TileType tile, uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl, Clip clip)
 {
-	if (tbl == LightTables[LightsMax].data()) {
+	if (IsFullyDark(tbl)) {
 		RenderLeftTrapezoidOrTransparentSquare<LightType::FullyDark, OpaquePrefix, PrefixIncrement>(tile, dst, dstPitch, src, tbl, clip);
-	} else if (tbl == LightTables[0].data()) {
+	} else if (IsFullyLit(tbl)) {
 		RenderLeftTrapezoidOrTransparentSquare<LightType::FullyLit, OpaquePrefix, PrefixIncrement>(tile, dst, dstPitch, src, tbl, clip);
 	} else {
 		RenderLeftTrapezoidOrTransparentSquare<LightType::PartiallyLit, OpaquePrefix, PrefixIncrement>(tile, dst, dstPitch, src, tbl, clip);
@@ -977,9 +987,9 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLeftTrapezoidOrTransparentSquareD
 template <bool OpaquePrefix, int8_t PrefixIncrement>
 DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderRightTrapezoidOrTransparentSquareDispatch(TileType tile, uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl, Clip clip)
 {
-	if (tbl == LightTables[LightsMax].data()) {
+	if (IsFullyDark(tbl)) {
 		RenderRightTrapezoidOrTransparentSquare<LightType::FullyDark, OpaquePrefix, PrefixIncrement>(tile, dst, dstPitch, src, tbl, clip);
-	} else if (tbl == LightTables[0].data()) {
+	} else if (IsFullyLit(tbl)) {
 		RenderRightTrapezoidOrTransparentSquare<LightType::FullyLit, OpaquePrefix, PrefixIncrement>(tile, dst, dstPitch, src, tbl, clip);
 	} else {
 		RenderRightTrapezoidOrTransparentSquare<LightType::PartiallyLit, OpaquePrefix, PrefixIncrement>(tile, dst, dstPitch, src, tbl, clip);
@@ -989,9 +999,9 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderRightTrapezoidOrTransparentSquare
 template <bool Transparent>
 DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderTileDispatch(TileType tile, uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl, Clip clip)
 {
-	if (tbl == LightTables[LightsMax].data()) {
+	if (IsFullyDark(tbl)) {
 		RenderTileType<LightType::FullyDark, Transparent>(tile, dst, dstPitch, src, tbl, clip);
-	} else if (tbl == LightTables[0].data()) {
+	} else if (IsFullyLit(tbl)) {
 		RenderTileType<LightType::FullyLit, Transparent>(tile, dst, dstPitch, src, tbl, clip);
 	} else {
 		RenderTileType<LightType::PartiallyLit, Transparent>(tile, dst, dstPitch, src, tbl, clip);
