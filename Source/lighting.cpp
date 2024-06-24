@@ -24,6 +24,8 @@ Light Lights[MAXLIGHTS];
 std::array<uint8_t, MAXLIGHTS> ActiveLights;
 int ActiveLightCount;
 std::array<std::array<uint8_t, 256>, NumLightingLevels> LightTables;
+uint8_t *FullyLitLightTable = nullptr;
+uint8_t *FullyDarkLightTable = nullptr;
 std::array<uint8_t, 256> InfravisionTable;
 std::array<uint8_t, 256> StoneTable;
 std::array<uint8_t, 256> PauseTable;
@@ -345,6 +347,8 @@ void MakeLightTable()
 	}
 
 	LightTables[15] = {}; // Make last shade pitch black
+	FullyLitLightTable = LightTables[0].data();
+	FullyDarkLightTable = LightTables[LightsMax].data();
 
 	if (leveltype == DTYPE_HELL) {
 		// Blood wall lighting
@@ -361,13 +365,18 @@ void MakeLightTable()
 				lightTable[idx] = color;
 			}
 		}
+		FullyLitLightTable = nullptr; // A color map is used for the ceiling animation, so even fully lit tiles have a color map
 	} else if (IsAnyOf(leveltype, DTYPE_NEST, DTYPE_CRYPT)) {
 		// Make the lava fully bright
 		for (auto &lightTable : LightTables)
 			std::iota(lightTable.begin(), lightTable.begin() + 16, uint8_t { 0 });
 		LightTables[15][0] = 0;
 		std::fill_n(LightTables[15].begin() + 1, 15, 1);
+		FullyDarkLightTable = nullptr; // Tiles in Hellfire levels are never completely black
 	}
+
+	assert((FullyLitLightTable != nullptr) == (LightTables[0][0] == 0 && std::adjacent_find(LightTables[0].begin(), LightTables[0].end() - 1, [](auto x, auto y) { return (x + 1) != y; }) == LightTables[0].end() - 1));
+	assert((FullyDarkLightTable != nullptr) == (std::all_of(LightTables[LightsMax].begin(), LightTables[LightsMax].end(), [](auto x) { return x == 0; })));
 
 	LoadFileInMem("plrgfx\\infra.trn", InfravisionTable);
 	LoadFileInMem("plrgfx\\stone.trn", StoneTable);

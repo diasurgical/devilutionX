@@ -49,6 +49,10 @@ extern std::array<uint8_t, MAXLIGHTS> ActiveLights;
 extern int ActiveLightCount;
 constexpr char LightsMax = 15;
 extern std::array<std::array<uint8_t, 256>, NumLightingLevels> LightTables;
+/** @brief Contains a pointer to a light table that is fully lit (no color mapping is required). Can be null in hell. */
+extern uint8_t *FullyLitLightTable;
+/** @brief Contains a pointer to a light table that is fully dark (every color result to 0/black). Can be null in hellfire levels. */
+extern uint8_t *FullyDarkLightTable;
 extern std::array<uint8_t, 256> InfravisionTable;
 extern std::array<uint8_t, 256> StoneTable;
 extern std::array<uint8_t, 256> PauseTable;
