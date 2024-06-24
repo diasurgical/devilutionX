@@ -284,12 +284,12 @@ DVL_ALWAYS_INLINE Clip CalculateClip(int_fast16_t x, int_fast16_t y, int_fast16_
 
 DVL_ALWAYS_INLINE bool IsFullyDark(const uint8_t *DVL_RESTRICT tbl)
 {
-	return tbl == LightTables[LightsMax].data();
+	return tbl == FullyDarkLightTable;
 }
 
 DVL_ALWAYS_INLINE bool IsFullyLit(const uint8_t *DVL_RESTRICT tbl)
 {
-	return tbl == LightTables[0].data();
+	return tbl == FullyLitLightTable;
 }
 
 template <LightType Light, bool Transparent>
