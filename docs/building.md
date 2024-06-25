@@ -146,13 +146,19 @@ cmake --build build -j $(sysctl -n hw.ncpuonline)
 
 <details><summary>Windows via MinGW</summary>
 
+This section is about compiling binary executables for Windows on a Linux system host via [MinGW](https://www.mingw-w64.org/). It's not about compiling for Windows on a Windows host via MinGW. So you first need a Linux system host. If you don't, you can also try WSL (Windows Subsystem for Linux) on Windows.
+
+If you have any problems with the build process, please refer to the configuration files in the `.github/workflows` folder. These files are automatically executed by the [GitHub Actions](https://docs.github.com/en/actions) service to automate the build. Under the environment described by these configuration files, the compilation is more likely to succeed.
+
 <details><summary>Installing Windows Subsystem for Linux</summary>
 
 If you are building on Windows and do not have WSL already setup this will install WSL and Ubuntu by default (Requires Windows 10 2004 or higher or Windows 11)
 
 In an Administrator Command Prompt or Powershell
 
-```wsl --install```
+```pwsh
+wsl --install
+```
 
 Reboot
 
@@ -160,11 +166,13 @@ Wait for Command Prompt to pop up and say installing when complete enter your ne
 
 You can launch WSL anytime by typing wsl or ubuntu in a Command Prompt or Powershell or in the Start Menu launch the Ubuntu App
 
+For more about WSL, refer to <https://learn.microsoft.com/en-us/windows/wsl/>.
+
 ### Setup git and clone DevilutionX
 
 In a WSL terminal run these commands to get the source code for DevilutionX
 
-```
+```bash
 sudo apt install git
 git clone https://github.com/diasurgical/devilutionx
 cd devilutionx
@@ -173,21 +181,29 @@ cd devilutionx
 
 ### Installing dependencies on WSL, Debian and Ubuntu
 
+The following compilation process has been tested on `ubuntu-22.04`. Success is not guaranteed on Linux distributions other than Ubuntu 22.
+
 ### 32-bit
 
-Download the 32bit MinGW Development Libraries of [SDL2](https://www.libsdl.org/download-2.0.php) and [Libsodium](https://github.com/jedisct1/libsodium/releases) as well as headers for [zlib](https://zlib.net/zlib-1.2.12.tar.gz) and place them in `/usr/i686-w64-mingw32`. This can be done automatically by running `Packaging/windows/mingw-prep.sh`.
+Download the necessary tools and libraries.
 
-```
+```bash
+# Only tested on Ubuntu 22. This won't work on Ubuntu 24 (they are renamed in Ubuntu 24).
 sudo apt-get install cmake gcc-mingw-w64-i686 g++-mingw-w64-i686 pkg-config-mingw-w64-i686 libz-mingw-w64-dev
 ```
 
+Download the 32bit MinGW Development Libraries of [SDL2](https://www.libsdl.org/download-2.0.php) and [Libsodium](https://github.com/jedisct1/libsodium/releases) as well as headers for [zlib](https://zlib.net/zlib-1.2.12.tar.gz) and place them in `/usr/i686-w64-mingw32`. This can be done automatically by running `Packaging/windows/mingw-prep.sh`.
+
 ### 64-bit
 
-Download the 64bit MinGW Development Libraries of [SDL2](https://www.libsdl.org/download-2.0.php) and [Libsodium](https://github.com/jedisct1/libsodium/releases) as well as headers for [zlib](https://zlib.net/zlib-1.2.12.tar.gz) and place them in `/usr/x86_64-w64-mingw32`. This can be done automatically by running `Packaging/windows/mingw-prep64.sh`.
+Download the necessary tools and libraries.
 
-```
+```bash
+# Only tested on Ubuntu 22. This won't work on Ubuntu 24 (they are renamed in Ubuntu 24).
 sudo apt-get install cmake gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64 pkg-config-mingw-w64-x86-64 libz-mingw-w64-dev
 ```
+
+Download the 64bit MinGW Development Libraries of [SDL2](https://www.libsdl.org/download-2.0.php) and [Libsodium](https://github.com/jedisct1/libsodium/releases) as well as headers for [zlib](https://zlib.net/zlib-1.2.12.tar.gz) and place them in `/usr/x86_64-w64-mingw32`. This can be done automatically by running `Packaging/windows/mingw-prep64.sh`.
 
 ### Compiling
 
