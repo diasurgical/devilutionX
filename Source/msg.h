@@ -281,6 +281,14 @@ enum _cmd_id : uint8_t {
 	//
 	// body (TCmdDamage)
 	CMD_PLRDAMAGE,
+	// Make target player block.
+	//
+	// body (TCmdParam1)
+	CMD_PLRINFLICTBLOCK,
+	// Make target player enter hit recovery.
+	//
+	// body (TCmdParam1)
+	CMD_PLRINFLICTRECOVERY,
 	// Set player level.
 	//
 	// body (TCmdParam1):
