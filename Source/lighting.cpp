@@ -375,6 +375,7 @@ void MakeLightTable()
 		FullyDarkLightTable = nullptr; // Tiles in Hellfire levels are never completely black
 	}
 
+	// Verify that fully lit and fully dark light table optimizations are correctly enabled/disabled (nullptr = disabled)
 	assert((FullyLitLightTable != nullptr) == (LightTables[0][0] == 0 && std::adjacent_find(LightTables[0].begin(), LightTables[0].end() - 1, [](auto x, auto y) { return (x + 1) != y; }) == LightTables[0].end() - 1));
 	assert((FullyDarkLightTable != nullptr) == (std::all_of(LightTables[LightsMax].begin(), LightTables[LightsMax].end(), [](auto x) { return x == 0; })));
 
