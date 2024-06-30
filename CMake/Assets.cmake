@@ -148,6 +148,9 @@ set(devilutionx_assets
   nlevels/cutl6w.clx
   nlevels/l5data/cornerstone.dun
   nlevels/l5data/uberroom.dun
+  plrgfx/warrior/whu/whufm.trn
+  plrgfx/warrior/whu/whulm.trn
+  plrgfx/warrior/whu/whuqm.trn
   txtdata/Experience.tsv
   txtdata/classes/barbarian/attributes.tsv
   txtdata/classes/bard/attributes.tsv
