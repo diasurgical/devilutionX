@@ -25,7 +25,7 @@ concurrency:
 
 jobs:
   build:
-    runs-on: macos-11
+    runs-on: macos-12
     steps:
     - uses: actions/checkout@v4
       with:
