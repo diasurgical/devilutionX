@@ -175,7 +175,6 @@ set(libdevilutionx_SRCS
 
   utils/cel_to_clx.cpp
   utils/cl2_to_clx.cpp
-  utils/console.cpp
   utils/display.cpp
   utils/language.cpp
   utils/logged_fstream.cpp
@@ -219,10 +218,6 @@ endif()
 
 if(IOS)
   list(APPEND libdevilutionx_SRCS platform/ios/ios_paths.m)
-endif()
-
-if(USE_SDL1)
-  list(APPEND libdevilutionx_SRCS utils/sdl2_to_1_2_backports.cpp)
 endif()
 
 if(NOT DISABLE_DEMOMODE)
@@ -311,6 +306,23 @@ if(SCREEN_READER_INTEGRATION AND WIN32)
   target_compile_definitions(libdevilutionx PRIVATE Tolk)
 endif()
 
+add_devilutionx_object_library(libdevilutionx_utils_console
+  utils/console.cpp
+)
+
+if(USE_SDL1)
+  add_devilutionx_library(libdevilutionx_sdl2_to_1_2_backports STATIC
+    utils/sdl2_to_1_2_backports.cpp
+  )
+  target_link_libraries(libdevilutionx_sdl2_to_1_2_backports PRIVATE
+    libdevilutionx_utils_console
+    fmt::fmt
+  )
+  target_link_libraries(DevilutionX::SDL INTERFACE
+    libdevilutionx_sdl2_to_1_2_backports
+  )
+endif()
+
 add_devilutionx_object_library(libdevilutionx_codec
   codec.cpp
   sha.cpp
@@ -379,6 +391,7 @@ target_link_libraries(libdevilutionx PUBLIC
   libdevilutionx_parse_int
   libdevilutionx_strings
   libdevilutionx_utf8
+  libdevilutionx_utils_console
   ${libdevilutionx_DEPS}
 )
 
