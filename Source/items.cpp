@@ -1844,25 +1844,12 @@ void printItemMiscGenericGamepad(const Item &item, const bool isOil, bool isCast
 
 void printItemMiscGamepad(const Item &item, bool isOil, bool isCastOnTarget)
 {
-	std::string_view activateButton;
-	std::string_view castButton;
-	switch (GamepadType) {
-	case GamepadLayout::Generic:
+	if (GamepadType == GamepadLayout::Generic) {
 		printItemMiscGenericGamepad(item, isOil, isCastOnTarget);
 		return;
-	case GamepadLayout::Xbox:
-		activateButton = controller_button_icon::Xbox_Y;
-		castButton = controller_button_icon::Xbox_X;
-		break;
-	case GamepadLayout::PlayStation:
-		activateButton = controller_button_icon::Playstation_Triangle;
-		castButton = controller_button_icon::Playstation_Square;
-		break;
-	case GamepadLayout::Nintendo:
-		activateButton = controller_button_icon::Nintendo_X;
-		castButton = controller_button_icon::Nintendo_Y;
-		break;
 	}
+	const std::string_view activateButton = ToString(ControllerButton_BUTTON_Y);
+	const std::string_view castButton = ToString(ControllerButton_BUTTON_X);
 
 	if (item._iMiscId == IMISC_MAPOFDOOM) {
 		AddPanelString(fmt::format(fmt::runtime(_("{} to view")), activateButton));
