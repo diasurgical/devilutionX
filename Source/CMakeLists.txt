@@ -270,6 +270,17 @@ if(SCREEN_READER_INTEGRATION)
   )
 endif()
 
+if(DEVILUTIONX_SCREENSHOT_FORMAT STREQUAL DEVILUTIONX_SCREENSHOT_FORMAT_PCX)
+  list(APPEND libdevilutionx_SRCS
+    utils/surface_to_pcx.cpp
+  )
+endif()
+if(DEVILUTIONX_SCREENSHOT_FORMAT STREQUAL DEVILUTIONX_SCREENSHOT_FORMAT_PNG)
+  list(APPEND libdevilutionx_SRCS
+    utils/surface_to_png.cpp
+  )
+endif()
+
 add_devilutionx_library(libdevilutionx OBJECT ${libdevilutionx_SRCS})
 target_include_directories(libdevilutionx PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 

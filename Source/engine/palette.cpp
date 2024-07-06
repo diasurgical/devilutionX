@@ -283,6 +283,9 @@ void SetFadeLevel(int fadeval, bool updateHardwareCursor)
 		system_palette[i].r = (fadeval * logical_palette[i].r) / 256;
 		system_palette[i].g = (fadeval * logical_palette[i].g) / 256;
 		system_palette[i].b = (fadeval * logical_palette[i].b) / 256;
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+		system_palette[i].a = SDL_ALPHA_OPAQUE;
+#endif
 	}
 	palette_update();
 	if (updateHardwareCursor && IsHardwareCursor()) {
