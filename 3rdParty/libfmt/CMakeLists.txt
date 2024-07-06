@@ -16,11 +16,11 @@ else()
 endif()
 include(FetchContent)
 FetchContent_Declare(libfmt
-  URL https://github.com/fmtlib/fmt/archive/44f3d8a77cd7e05e9da92d68635abdb4da626e9e.tar.gz
-  URL_HASH MD5=b6eb4573962586cfbfb6e5e2986d292b
+  URL https://github.com/fmtlib/fmt/archive/92227c77a4eed4c12f97f7916041ace4d5ca02d4.tar.gz
+  URL_HASH MD5=a60bc215a81a4ba770a7c1936311612f
 )
 FetchContent_MakeAvailableExcludeFromAll(libfmt)
 
 if(DEVILUTIONX_WINDOWS_NO_WCHAR)
-  target_compile_definitions(fmt PUBLIC FMT_WINDOWS_NO_WCHAR)
+  target_compile_definitions(fmt PUBLIC FMT_USE_WRITE_CONSOLE)
 endif()
