@@ -3,6 +3,7 @@
 #include "plrctrls.h"
 
 namespace devilution {
+namespace {
 namespace controller_button_icon {
 const std::string_view Playstation_Triangle = "\uE000";
 const std::string_view Playstation_Square = "\uE001";
@@ -112,6 +113,50 @@ const std::string_view Xbox_RStick_SE = "\uE068";
 const std::string_view Xbox_RStick_Click = "\uE069";
 const std::string_view Xbox_Xbox = "\uE06A";
 } // namespace controller_button_icon
+
+std::string_view ToGenericButtonText(ControllerButton button)
+{
+	switch (button) {
+	case devilution::ControllerButton_BUTTON_A:
+		return "A";
+	case devilution::ControllerButton_BUTTON_B:
+		return "B";
+	case devilution::ControllerButton_BUTTON_X:
+		return "X";
+	case devilution::ControllerButton_BUTTON_Y:
+		return "Y";
+	case devilution::ControllerButton_BUTTON_START:
+		return "Start";
+	case devilution::ControllerButton_BUTTON_BACK:
+		return "Select";
+	case devilution::ControllerButton_AXIS_TRIGGERLEFT:
+		return "LT";
+	case devilution::ControllerButton_AXIS_TRIGGERRIGHT:
+		return "RT";
+	case devilution::ControllerButton_BUTTON_LEFTSHOULDER:
+		return "LB";
+	case devilution::ControllerButton_BUTTON_RIGHTSHOULDER:
+		return "RB";
+	case devilution::ControllerButton_BUTTON_LEFTSTICK:
+		return "LS";
+	case devilution::ControllerButton_BUTTON_RIGHTSTICK:
+		return "RS";
+	case devilution::ControllerButton_BUTTON_DPAD_UP:
+		return "Up";
+	case devilution::ControllerButton_BUTTON_DPAD_DOWN:
+		return "Down";
+	case devilution::ControllerButton_BUTTON_DPAD_LEFT:
+		return "Left";
+	case devilution::ControllerButton_BUTTON_DPAD_RIGHT:
+		return "Right";
+	case devilution::ControllerButton_NONE:
+		return "None";
+	case devilution::ControllerButton_IGNORE:
+		return "Ignored";
+	default:
+		return "Unknown";
+	}
+}
 
 std::string_view ToPlayStationIcon(ControllerButton button)
 {
@@ -233,49 +278,7 @@ std::string_view ToXboxIcon(ControllerButton button)
 	}
 }
 
-std::string_view ToGenericButtonText(ControllerButton button)
-{
-	switch (button) {
-	case devilution::ControllerButton_BUTTON_A:
-		return "A";
-	case devilution::ControllerButton_BUTTON_B:
-		return "B";
-	case devilution::ControllerButton_BUTTON_X:
-		return "X";
-	case devilution::ControllerButton_BUTTON_Y:
-		return "Y";
-	case devilution::ControllerButton_BUTTON_START:
-		return "Start";
-	case devilution::ControllerButton_BUTTON_BACK:
-		return "Select";
-	case devilution::ControllerButton_AXIS_TRIGGERLEFT:
-		return "LT";
-	case devilution::ControllerButton_AXIS_TRIGGERRIGHT:
-		return "RT";
-	case devilution::ControllerButton_BUTTON_LEFTSHOULDER:
-		return "LB";
-	case devilution::ControllerButton_BUTTON_RIGHTSHOULDER:
-		return "RB";
-	case devilution::ControllerButton_BUTTON_LEFTSTICK:
-		return "LS";
-	case devilution::ControllerButton_BUTTON_RIGHTSTICK:
-		return "RS";
-	case devilution::ControllerButton_BUTTON_DPAD_UP:
-		return "Up";
-	case devilution::ControllerButton_BUTTON_DPAD_DOWN:
-		return "Down";
-	case devilution::ControllerButton_BUTTON_DPAD_LEFT:
-		return "Left";
-	case devilution::ControllerButton_BUTTON_DPAD_RIGHT:
-		return "Right";
-	case devilution::ControllerButton_NONE:
-		return "None";
-	case devilution::ControllerButton_IGNORE:
-		return "Ignored";
-	default:
-		return "Unknown";
-	}
-}
+} // namespace
 
 std::string_view ToString(ControllerButton button)
 {
