@@ -161,7 +161,7 @@ const Speech Speeches[] = {
 	    true, SfxID::Pepin11 },
 	{ N_(/* TRANSLATORS: Quest dialog spoken by Gillian */ "I've never heard of a Lachdanan before. I'm sorry, but I don't think that I can be of much help to you."),
 	    true, SfxID::Gillian11 },
-	{ N_(/* TRANSLATORS: Quest dialog spoken by Ogden */ "If it is actually Lachdanan that you have met, then I would advise that you aid him. I dealt with him on several occasions and found him to be honest and loyal in nature. The curse that fell upon the followers of King Leoric would fall especially hard upon him."),
+	{ N_(/* TRANSLATORS: Quest dialog spoken by Griswold */ "If it is actually Lachdanan that you have met, then I would advise that you aid him. I dealt with him on several occasions and found him to be honest and loyal in nature. The curse that fell upon the followers of King Leoric would fall especially hard upon him."),
 	    true, SfxID::Griswold13 },
 	{ N_(/* TRANSLATORS: Quest dialog spoken by Farnham */ " Lachdanan is dead. Everybody knows that, and you can't fool me into thinking any other way. You can't talk to the dead. I know!"),
 	    true, SfxID::Farnham13 },
