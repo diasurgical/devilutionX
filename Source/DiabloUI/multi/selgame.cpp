@@ -526,7 +526,7 @@ void selgame_Speed_Focus(size_t value)
 		break;
 	case 50:
 		CopyUtf8(selgame_Label, _("Fastest"), sizeof(selgame_Label));
-		CopyUtf8(selgame_Description, _("Fastest Speed\nGame runs 150% faster than defauult speed, 50 ticks per second."), sizeof(selgame_Description));
+		CopyUtf8(selgame_Description, _("Fastest Speed\nGame runs 150% faster than default speed, 50 ticks per second."), sizeof(selgame_Description));
 		break;
 	}
 	CopyUtf8(selgame_Description, WordWrapString(selgame_Description, DESCRIPTION_WIDTH), sizeof(selgame_Description));
