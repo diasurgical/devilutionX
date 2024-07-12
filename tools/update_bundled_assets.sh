@@ -16,13 +16,24 @@ pcx2clx --output-dir "${OUTPUT_DIR}/data" --num-sprites 2 data/talkbutton.pcx
 pcx2clx --output-dir "${OUTPUT_DIR}/gendata" gendata/*.pcx
 pcx2clx --output-dir "${OUTPUT_DIR}/ui_art" ui_art/creditsw.pcx ui_art/dvl_lrpopup.pcx ui_art/hf_titlew.pcx ui_art/mainmenuw.pcx ui_art/supportw.pcx
 
-FONT_CONVERT_ARGS=(--transparent-color 1 --num-sprites 256 --output-dir "${OUTPUT_DIR}/fonts")
+FONT_CONVERT_ARGS=(--transparent-color 1 --num-sprites 256)
 for path in fonts/*.pcx; do
 	if [[ -f "${path%.pcx}.txt" ]]; then
-		pcx2clx "${FONT_CONVERT_ARGS[@]}" --crop-widths "$(cat "${path%.pcx}.txt" | paste -sd , -)" "${path}"
+		pcx2clx "${FONT_CONVERT_ARGS[@]}" --output-dir "${OUTPUT_DIR}/fonts" --crop-widths "$(cat "${path%.pcx}.txt" | paste -sd , -)" "${path}"
 	else
-		pcx2clx "${FONT_CONVERT_ARGS[@]}" "${path}"
+		pcx2clx "${FONT_CONVERT_ARGS[@]}" --output-dir "${OUTPUT_DIR}/fonts" "${path}"
 	fi
+done
+for lang_dir in fonts/*/; do
+	lang_dir="${lang_dir%/}" # remove trailing slash
+	mkdir -p "${OUTPUT_DIR}/${lang_dir}"
+	for path in "$lang_dir"/*.pcx; do
+		if [[ -f "${path%.pcx}.txt" ]]; then
+			pcx2clx "${FONT_CONVERT_ARGS[@]}" --output-dir "${OUTPUT_DIR}/${lang_dir}" --crop-widths "$(cat "${path%.pcx}.txt" | paste -sd , -)" "${path}"
+		else
+			pcx2clx "${FONT_CONVERT_ARGS[@]}" --output-dir "${OUTPUT_DIR}/${lang_dir}" "${path}"
+		fi
+	done
 done
 
 pcx2clx --num-sprites 2 --output-dir "${OUTPUT_DIR}/ui_art" ui_art/dvl_but_sml.pcx
