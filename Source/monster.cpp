@@ -65,6 +65,29 @@ size_t ActiveMonsterCount;
 int MonsterKillCounts[NUM_MTYPES];
 bool sgbSaveSoundOn;
 
+MonsterSpritesData MonsterSpritesData::clone() const
+{
+	MonsterSpritesData result;
+	for (const OwnedClxSpriteListOrSheet &sprite : sprites) {
+		result.sprites.emplace_back(sprite.clone());
+	}
+	return result;
+}
+
+bool CMonster::hasGraphics() const
+{
+	return c_any_of(anims, [](const AnimStruct &anim) {
+		return anim.sprites.has_value();
+	});
+}
+
+void CMonster::clearGraphics()
+{
+	for (AnimStruct &animData : anims) {
+		animData.sprites = std::nullopt;
+	}
+}
+
 namespace {
 
 constexpr int NightmareToHitBonus = 85;
@@ -101,19 +124,6 @@ size_t GetNumAnims(const MonsterData &monsterData)
 	return monsterData.hasSpecial ? 6 : 5;
 }
 
-size_t GetNumAnimsWithGraphics(const MonsterData &monsterData)
-{
-	// Monster graphics can be missing for certain actions,
-	// e.g. Golem has no standing graphics.
-	const size_t numAnims = GetNumAnims(monsterData);
-	size_t result = 0;
-	for (size_t i = 0; i < numAnims; ++i) {
-		if (monsterData.hasAnim(i))
-			++result;
-	}
-	return result;
-}
-
 void InitMonsterTRN(CMonster &monst)
 {
 	char path[64];
@@ -129,6 +139,7 @@ void InitMonsterTRN(CMonster &monst)
 		}
 
 		AnimStruct &anim = monst.anims[i];
+		anim.sprites->setVariant(monst.data().trnFile);
 		if (anim.sprites->isSheet()) {
 			ClxApplyTrans(ClxSpriteSheet { anim.sprites->sheet() }, colorTranslations.data());
 		} else {
@@ -3066,39 +3077,15 @@ bool UpdateModeStance(Monster &monster)
 
 MonsterSpritesData LoadMonsterSpritesData(const MonsterData &monsterData)
 {
-	const size_t numAnims = GetNumAnims(monsterData);
-
 	MonsterSpritesData result;
-	result.data = MultiFileLoader<MonsterSpritesData::MaxAnims> {}(
-	    numAnims,
-	    FileNameWithCharAffixGenerator({ "monsters\\", monsterData.spritePath() }, DEVILUTIONX_CL2_EXT, Animletter),
-	    result.offsets.data(),
-	    [&monsterData](size_t index) { return monsterData.hasAnim(index); });
-
-#ifndef UNPACKED_MPQS
-	// Convert CL2 to CLX:
-	std::vector<std::vector<uint8_t>> clxData;
-	size_t accumulatedSize = 0;
-	for (size_t i = 0, j = 0; i < numAnims; ++i) {
-		if (!monsterData.hasAnim(i))
-			continue;
-		const uint32_t begin = result.offsets[j];
-		const uint32_t end = result.offsets[j + 1];
-		clxData.emplace_back();
-		Cl2ToClx(reinterpret_cast<uint8_t *>(&result.data[begin]), end - begin,
-		    PointerOrValue<uint16_t> { monsterData.width }, clxData.back());
-		result.offsets[j] = static_cast<uint32_t>(accumulatedSize);
-		accumulatedSize += clxData.back().size();
-		++j;
+	char path[MaxMpqPathSize];
+	char *pathLast = BufCopy(path, "monsters\\", monsterData.spritePath());
+	*(pathLast + 1) = '\0';
+	for (size_t i = 0; i < MonsterSpritesData::MaxAnims; ++i) {
+		if (!monsterData.hasAnim(i)) continue;
+		*pathLast = Animletter[i];
+		result.sprites.emplace_back(LoadCl2ListOrSheet(path, PointerOrValue<uint16_t> { monsterData.width }));
 	}
-	result.offsets[clxData.size()] = static_cast<uint32_t>(accumulatedSize);
-	result.data = nullptr;
-	result.data = std::unique_ptr<std::byte[]>(new std::byte[accumulatedSize]);
-	for (size_t i = 0; i < clxData.size(); ++i) {
-		memcpy(&result.data[result.offsets[i]], clxData[i].data(), clxData[i].size());
-	}
-#endif
-
 	return result;
 }
 
@@ -3378,14 +3365,14 @@ void InitMonsterSND(CMonster &monsterType)
 
 void InitMonsterGFX(CMonster &monsterType, MonsterSpritesData &&spritesData)
 {
-	if (HeadlessMode)
+	if (HeadlessMode || monsterType.hasGraphics())
 		return;
 
 	const _monster_id mtype = monsterType.type;
 	const MonsterData &monsterData = MonstersData[mtype];
-	if (spritesData.data == nullptr)
+	if (spritesData.sprites.empty()) {
 		spritesData = LoadMonsterSpritesData(monsterData);
-	monsterType.animData = std::move(spritesData.data);
+	}
 
 	const size_t numAnims = GetNumAnims(monsterData);
 	for (size_t i = 0, j = 0; i < numAnims; ++i) {
@@ -3393,11 +3380,7 @@ void InitMonsterGFX(CMonster &monsterType, MonsterSpritesData &&spritesData)
 			monsterType.anims[i].sprites = std::nullopt;
 			continue;
 		}
-		const uint32_t begin = spritesData.offsets[j];
-		const uint32_t end = spritesData.offsets[j + 1];
-		auto spritesData = reinterpret_cast<uint8_t *>(&monsterType.animData[begin]);
-		const uint16_t numLists = GetNumListsFromClxListOrSheetBuffer(spritesData, end - begin);
-		monsterType.anims[i].sprites = ClxSpriteListOrSheet { spritesData, numLists };
+		monsterType.anims[i].sprites = std::move(spritesData.sprites[j]);
 		++j;
 	}
 
@@ -3461,26 +3444,26 @@ void InitAllMonsterGFX()
 	size_t totalUniqueBytes = 0;
 	size_t totalBytes = 0;
 	for (const LevelMonsterTypeIndices &monsterTypes : monstersBySprite) {
-		if (monsterTypes.empty())
-			continue;
+		if (monsterTypes.empty()) continue;
 		CMonster &firstMonster = LevelMonsterTypes[monsterTypes[0]];
-		if (firstMonster.animData != nullptr)
-			continue;
+		if (firstMonster.hasGraphics()) continue;
 		MonsterSpritesData spritesData = LoadMonsterSpritesData(firstMonster.data());
-		const size_t spritesDataSize = spritesData.offsets[GetNumAnimsWithGraphics(firstMonster.data())];
+		size_t spritesDataSize = 0;
+		for (const OwnedClxSpriteListOrSheet &sprite : spritesData.sprites) {
+			spritesDataSize += sprite.dataSize();
+		}
 		for (size_t i = 1; i < monsterTypes.size(); ++i) {
-			MonsterSpritesData spritesDataCopy { std::unique_ptr<std::byte[]> { new std::byte[spritesDataSize] }, spritesData.offsets };
-			memcpy(spritesDataCopy.data.get(), spritesData.data.get(), spritesDataSize);
-			InitMonsterGFX(LevelMonsterTypes[monsterTypes[i]], std::move(spritesDataCopy));
+			InitMonsterGFX(LevelMonsterTypes[monsterTypes[i]], spritesData.clone());
 		}
 		LogVerbose("Loaded monster graphics: {:15s} {:>4d} KiB   x{:d}", firstMonster.data().spritePath(), spritesDataSize / 1024, monsterTypes.size());
 		totalUniqueBytes += spritesDataSize;
 		totalBytes += spritesDataSize * monsterTypes.size();
 		InitMonsterGFX(firstMonster, std::move(spritesData));
 	}
-	LogVerbose(" Total monster graphics:                 {:>4d} KiB {:>4d} KiB", totalUniqueBytes / 1024, totalBytes / 1024);
 
 	if (totalUniqueBytes > 0) {
+		LogVerbose(" Total monster graphics:                 {:>4d} KiB {:>4d} KiB", totalUniqueBytes / 1024, totalBytes / 1024);
+
 		// we loaded new sprites, check if we need to update existing monsters
 		for (size_t i = 0; i < ActiveMonsterCount; i++) {
 			Monster &monster = Monsters[ActiveMonsters[i]];
@@ -4107,11 +4090,8 @@ void ProcessMonsters()
 void FreeMonsters()
 {
 	for (CMonster &monsterType : LevelMonsterTypes) {
-		monsterType.animData = nullptr;
+		monsterType.clearGraphics();
 		monsterType.corpseId = 0;
-		for (AnimStruct &animData : monsterType.anims) {
-			animData.sprites = std::nullopt;
-		}
 
 		for (auto &variants : monsterType.sounds) {
 			for (auto &sound : variants) {

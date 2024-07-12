@@ -43,7 +43,7 @@ void InitMonsterHealthBar()
 	healthBlueTrn[234] = 185;
 	healthBlueTrn[235] = 186;
 	healthBlueTrn[236] = 187;
-	healthBlue = health->clone();
+	healthBlue = health->clone("healthBlue");
 	ClxApplyTrans(*healthBlue, healthBlueTrn.data());
 }
 

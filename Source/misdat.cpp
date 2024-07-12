@@ -235,13 +235,13 @@ void MissileFileData::LoadGFX()
 	*BufCopy(path, "missiles\\", name, ".clx") = '\0';
 	sprites.emplace(LoadClxListOrSheet(path));
 #else
+	char path[MaxMpqPathSize];
+	*BufCopy(path, "missiles\\", name) = '\0';
 	if (animFAmt == 1) {
-		char path[MaxMpqPathSize];
-		*BufCopy(path, "missiles\\", name) = '\0';
 		sprites.emplace(OwnedClxSpriteListOrSheet { LoadCl2(path, animWidth) });
 	} else {
 		FileNameGenerator pathGenerator({ "missiles\\", name }, DEVILUTIONX_CL2_EXT);
-		sprites.emplace(OwnedClxSpriteListOrSheet { LoadMultipleCl2Sheet<16>(pathGenerator, animFAmt, animWidth) });
+		sprites.emplace(OwnedClxSpriteListOrSheet { LoadMultipleCl2Sheet<16>(path, pathGenerator, animFAmt, animWidth) });
 	}
 #endif
 }

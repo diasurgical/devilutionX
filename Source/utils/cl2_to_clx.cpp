@@ -58,7 +58,7 @@ uint16_t Cl2ToClx(const uint8_t *data, size_t size,
 			WriteLE32(&clxData[4 * group], static_cast<uint32_t>(clxData.size()));
 		}
 
-		// CLX header: frame count, frame offset for each frame, file size
+		// CLX header: frame count, frame offset for each frame, size of the frame list in bytes
 		const size_t clxDataOffset = clxData.size();
 		clxData.resize(clxData.size() + 4 * (2 + static_cast<size_t>(numFrames)));
 		WriteLE32(&clxData[clxDataOffset], numFrames);

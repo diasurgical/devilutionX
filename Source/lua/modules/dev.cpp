@@ -10,6 +10,7 @@
 #include "lua/modules/dev/monsters.hpp"
 #include "lua/modules/dev/player.hpp"
 #include "lua/modules/dev/quests.hpp"
+#include "lua/modules/dev/resources.hpp"
 #include "lua/modules/dev/search.hpp"
 #include "lua/modules/dev/towners.hpp"
 
@@ -25,6 +26,7 @@ sol::table LuaDevModule(sol::state_view &lua)
 	SetDocumented(table, "player", "", "Player-related commands.", LuaDevPlayerModule(lua));
 	SetDocumented(table, "quests", "", "Quest-related commands.", LuaDevQuestsModule(lua));
 	SetDocumented(table, "search", "", "Search the map for monsters / items / objects.", LuaDevSearchModule(lua));
+	SetDocumented(table, "resources", "", "Resource commands.", LuaDevResourcesModule(lua));
 	SetDocumented(table, "towners", "", "Town NPC commands.", LuaDevTownersModule(lua));
 	return table;
 }

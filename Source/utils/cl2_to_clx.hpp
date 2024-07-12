@@ -20,14 +20,14 @@ namespace devilution {
 uint16_t Cl2ToClx(const uint8_t *data, size_t size,
     PointerOrValue<uint16_t> widthOrWidths, std::vector<uint8_t> &clxData);
 
-inline OwnedClxSpriteListOrSheet Cl2ToClx(std::unique_ptr<uint8_t[]> &&data, size_t size, PointerOrValue<uint16_t> widthOrWidths)
+inline OwnedClxSpriteListOrSheet Cl2ToClx(std::string_view name, std::string_view trnName, std::unique_ptr<uint8_t[]> &&data, size_t size, PointerOrValue<uint16_t> widthOrWidths)
 {
 	std::vector<uint8_t> clxData;
 	const uint16_t numLists = Cl2ToClx(data.get(), size, widthOrWidths, clxData);
 	data = nullptr;
 	data = std::unique_ptr<uint8_t[]>(new uint8_t[clxData.size()]);
 	memcpy(&data[0], clxData.data(), clxData.size());
-	return OwnedClxSpriteListOrSheet { std::move(data), numLists };
+	return OwnedClxSpriteListOrSheet { name, trnName, std::move(data), numLists };
 }
 
 } // namespace devilution

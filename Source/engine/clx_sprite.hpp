@@ -31,6 +31,7 @@
 #include <memory>
 
 #include "appfat.h"
+#include "engine/resource_store.hpp"
 #include "utils/endian.hpp"
 #include "utils/intrusive_optional.hpp"
 
@@ -114,7 +115,7 @@ public:
 
 	ClxSpriteList(const OwnedClxSpriteList &owned);
 
-	[[nodiscard]] OwnedClxSpriteList clone() const;
+	[[nodiscard]] OwnedClxSpriteList clone(std::string_view name, std::string_view trnName = {}) const;
 
 	[[nodiscard]] constexpr uint32_t numSprites() const
 	{
@@ -335,10 +336,25 @@ class OwnedClxSpriteListOrSheet;
 /**
  * @brief Implicitly convertible to `ClxSpriteList` and owns its data.
  */
-class OwnedClxSpriteList {
+class OwnedClxSpriteList : public OwnedResource<OwnedClxSpriteList> {
 public:
-	explicit OwnedClxSpriteList(std::unique_ptr<uint8_t[]> &&data)
-	    : data_(std::move(data))
+	explicit OwnedClxSpriteList(std::string_view name, std::string_view trnName, std::unique_ptr<uint8_t[]> &&data)
+	    : OwnedResource<OwnedClxSpriteList>(name, trnName)
+	    , data_(std::move(data))
+	{
+		assert(data_ != nullptr);
+	}
+
+	explicit OwnedClxSpriteList(std::string &&name, std::string &&trnName, std::unique_ptr<uint8_t[]> &&data)
+	    : OwnedResource<OwnedClxSpriteList>(std::move(name), std::move(trnName))
+	    , data_(std::move(data))
+	{
+		assert(data_ != nullptr);
+	}
+
+	explicit OwnedClxSpriteList(ResourceStoreHandle &&handle, std::unique_ptr<uint8_t[]> &&data)
+	    : OwnedResource<OwnedClxSpriteList>(std::move(handle))
+	    , data_(std::move(data))
 	{
 		assert(data_ != nullptr);
 	}
@@ -346,9 +362,9 @@ public:
 	OwnedClxSpriteList(OwnedClxSpriteList &&) noexcept = default;
 	OwnedClxSpriteList &operator=(OwnedClxSpriteList &&) noexcept = default;
 
-	[[nodiscard]] OwnedClxSpriteList clone() const
+	[[nodiscard]] OwnedClxSpriteList clone(std::string_view trnName = {}) const
 	{
-		return ClxSpriteList { *this }.clone();
+		return ClxSpriteList { *this }.clone(resourceName(), trnName);
 	}
 
 	[[nodiscard]] ClxSprite operator[](size_t spriteIndex) const
@@ -382,21 +398,40 @@ inline ClxSpriteList::ClxSpriteList(const OwnedClxSpriteList &owned)
 {
 }
 
-inline OwnedClxSpriteList ClxSpriteList::clone() const
+inline OwnedClxSpriteList ClxSpriteList::clone(std::string_view name, std::string_view trnName) const
 {
 	const size_t size = dataSize();
 	std::unique_ptr<uint8_t[]> data { new uint8_t[size] };
 	memcpy(data.get(), data_, size);
-	return OwnedClxSpriteList { std::move(data) };
+	return OwnedClxSpriteList { name, trnName, std::move(data) };
 }
 
 /**
  * @brief Implicitly convertible to `ClxSpriteSheet` and owns its data.
  */
-class OwnedClxSpriteSheet {
+class OwnedClxSpriteSheet : public OwnedResource<OwnedClxSpriteSheet> {
 public:
-	OwnedClxSpriteSheet(std::unique_ptr<uint8_t[]> &&data, uint16_t numLists)
-	    : data_(std::move(data))
+	OwnedClxSpriteSheet(std::string_view name, std::string_view trnName, std::unique_ptr<uint8_t[]> &&data, uint16_t numLists)
+	    : OwnedResource<OwnedClxSpriteSheet>(name, trnName)
+	    , data_(std::move(data))
+	    , num_lists_(numLists)
+	{
+		assert(data_ != nullptr);
+		assert(numLists > 0);
+	}
+
+	OwnedClxSpriteSheet(std::string &&name, std::string &&trnName, std::unique_ptr<uint8_t[]> &&data, uint16_t numLists)
+	    : OwnedResource<OwnedClxSpriteSheet>(std::move(name), std::move(trnName))
+	    , data_(std::move(data))
+	    , num_lists_(numLists)
+	{
+		assert(data_ != nullptr);
+		assert(numLists > 0);
+	}
+
+	explicit OwnedClxSpriteSheet(ResourceStoreHandle &&handle, std::unique_ptr<uint8_t[]> &&data, uint16_t numLists)
+	    : OwnedResource<OwnedClxSpriteSheet>(std::move(handle))
+	    , data_(std::move(data))
 	    , num_lists_(numLists)
 	{
 		assert(data_ != nullptr);
@@ -472,6 +507,8 @@ public:
 
 	ClxSpriteListOrSheet(const OwnedClxSpriteListOrSheet &listOrSheet);
 
+	[[nodiscard]] OwnedClxSpriteListOrSheet clone(std::string_view name, std::string_view trnName = {}) const;
+
 	[[nodiscard]] constexpr ClxSpriteList list() const
 	{
 		assert(num_lists_ == 0);
@@ -509,30 +546,48 @@ class OptionalOwnedClxSpriteListOrSheet;
 /**
  * @brief A CLX sprite list or a sprite sheet (list of lists).
  */
-class OwnedClxSpriteListOrSheet {
+class OwnedClxSpriteListOrSheet : public OwnedResource<OwnedClxSpriteListOrSheet> {
 public:
-	static OwnedClxSpriteListOrSheet FromBuffer(std::unique_ptr<uint8_t[]> &&data, size_t size)
+	static OwnedClxSpriteListOrSheet fromBuffer(
+	    std::string_view name, std::string_view trnName, std::unique_ptr<uint8_t[]> &&data, size_t size)
 	{
 		const uint16_t numLists = GetNumListsFromClxListOrSheetBuffer(data.get(), size);
-		return OwnedClxSpriteListOrSheet { std::move(data), numLists };
+		return OwnedClxSpriteListOrSheet { name, trnName, std::move(data), numLists };
 	}
 
-	explicit OwnedClxSpriteListOrSheet(std::unique_ptr<uint8_t[]> &&data, uint16_t numLists)
-	    : data_(std::move(data))
+	explicit OwnedClxSpriteListOrSheet(std::string_view name, std::string_view trnName, std::unique_ptr<uint8_t[]> &&data, uint16_t numLists)
+	    : OwnedResource<OwnedClxSpriteListOrSheet>(name, trnName)
+	    , data_(std::move(data))
 	    , num_lists_(numLists)
 	{
 	}
 
-	explicit OwnedClxSpriteListOrSheet(OwnedClxSpriteSheet &&sheet)
-	    : data_(std::move(sheet.data_))
+	explicit OwnedClxSpriteListOrSheet(std::string &&name, std::string &&trnName, std::unique_ptr<uint8_t[]> &&data, uint16_t numLists)
+	    : OwnedResource<OwnedClxSpriteListOrSheet>(std::move(name), std::move(trnName))
+	    , data_(std::move(data))
+	    , num_lists_(numLists)
+	{
+	}
+
+	explicit OwnedClxSpriteListOrSheet(OwnedClxSpriteSheet &&sheet) noexcept
+	    : OwnedResource<OwnedClxSpriteListOrSheet>(std::move(sheet.handle_))
+	    , data_(std::move(sheet.data_))
 	    , num_lists_(sheet.num_lists_)
 	{
 	}
 
-	explicit OwnedClxSpriteListOrSheet(OwnedClxSpriteList &&list)
-	    : data_(std::move(list.data_))
-	    , num_lists_(0)
+	explicit OwnedClxSpriteListOrSheet(OwnedClxSpriteList &&list) noexcept
+	    : OwnedResource<OwnedClxSpriteListOrSheet>(std::move(list.handle_))
+	    , data_(std::move(list.data_))
 	{
+	}
+
+	OwnedClxSpriteListOrSheet(OwnedClxSpriteListOrSheet &&) noexcept = default;
+	OwnedClxSpriteListOrSheet &operator=(OwnedClxSpriteListOrSheet &&) noexcept = default;
+
+	[[nodiscard]] OwnedClxSpriteListOrSheet clone(std::string_view trnName = {}) const
+	{
+		return ClxSpriteListOrSheet { *this }.clone(resourceName(), trnName);
 	}
 
 	[[nodiscard]] ClxSpriteList list() const &
@@ -544,7 +599,7 @@ public:
 	[[nodiscard]] OwnedClxSpriteList list() &&
 	{
 		assert(num_lists_ == 0);
-		return OwnedClxSpriteList { std::move(data_) };
+		return OwnedClxSpriteList { std::move(handle_), std::move(data_) };
 	}
 
 	[[nodiscard]] ClxSpriteSheet sheet() const &
@@ -556,7 +611,7 @@ public:
 	[[nodiscard]] OwnedClxSpriteSheet sheet() &&
 	{
 		assert(num_lists_ != 0);
-		return OwnedClxSpriteSheet { std::move(data_), num_lists_ };
+		return OwnedClxSpriteSheet { std::move(handle_), std::move(data_), num_lists_ };
 	}
 
 	[[nodiscard]] bool isSheet() const
@@ -586,6 +641,14 @@ inline ClxSpriteListOrSheet::ClxSpriteListOrSheet(const OwnedClxSpriteListOrShee
     : data_(listOrSheet.data_.get())
     , num_lists_(listOrSheet.num_lists_)
 {
+}
+
+inline OwnedClxSpriteListOrSheet ClxSpriteListOrSheet::clone(std::string_view name, std::string_view trnName) const
+{
+	const size_t size = this->dataSize();
+	std::unique_ptr<uint8_t[]> data { new uint8_t[size] };
+	memcpy(data.get(), data_, size);
+	return OwnedClxSpriteListOrSheet { name, trnName, std::move(data), num_lists_ };
 }
 
 /**

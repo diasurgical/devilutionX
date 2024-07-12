@@ -27,7 +27,7 @@ namespace devilution {
 OwnedClxSpriteListOrSheet LoadCl2ListOrSheet(const char *pszName, PointerOrValue<uint16_t> widthOrWidths);
 
 template <size_t MaxCount>
-OwnedClxSpriteSheet LoadMultipleCl2Sheet(tl::function_ref<const char *(size_t)> filenames, size_t count, uint16_t width)
+OwnedClxSpriteSheet LoadMultipleCl2Sheet(std::string_view name, tl::function_ref<const char *(size_t)> filenames, size_t count, uint16_t width)
 {
 	StaticVector<std::array<char, MaxMpqPathSize>, MaxCount> paths;
 	StaticVector<AssetRef, MaxCount> files;
@@ -64,9 +64,9 @@ OwnedClxSpriteSheet LoadMultipleCl2Sheet(tl::function_ref<const char *(size_t)> 
 		accumulatedSize += size;
 	}
 #ifdef UNPACKED_MPQS
-	return OwnedClxSpriteSheet { std::move(data), static_cast<uint16_t>(count) };
+	return OwnedClxSpriteSheet { name, /*trnName=*/ {}, std::move(data), static_cast<uint16_t>(count) };
 #else
-	return Cl2ToClx(std::move(data), accumulatedSize, frameWidth).sheet();
+	return Cl2ToClx(name, /*trnName=*/ {}, std::move(data), accumulatedSize, frameWidth).sheet();
 #endif
 }
 

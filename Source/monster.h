@@ -26,6 +26,7 @@
 #include "spelldat.h"
 #include "textdat.h"
 #include "utils/language.h"
+#include "utils/static_vector.hpp"
 
 namespace devilution {
 
@@ -154,7 +155,7 @@ struct AnimStruct {
 	/**
 	 * @brief Sprite lists for each of the 8 directions.
 	 */
-	OptionalClxSpriteListOrSheet sprites;
+	OptionalOwnedClxSpriteListOrSheet sprites;
 
 	[[nodiscard]] OptionalClxSpriteList spritesForDirection(Direction direction) const
 	{
@@ -177,12 +178,12 @@ enum class MonsterSound : uint8_t {
 
 struct MonsterSpritesData {
 	static constexpr size_t MaxAnims = 6;
-	std::unique_ptr<std::byte[]> data;
-	std::array<uint32_t, MaxAnims + 1> offsets;
+	StaticVector<OwnedClxSpriteListOrSheet, MaxAnims> sprites;
+
+	MonsterSpritesData clone() const;
 };
 
 struct CMonster {
-	std::unique_ptr<std::byte[]> animData;
 	AnimStruct anims[6];
 	std::unique_ptr<TSnd> sounds[4][2];
 
@@ -190,6 +191,9 @@ struct CMonster {
 	/** placeflag enum as a flags*/
 	uint8_t placeFlags;
 	int8_t corpseId = 0;
+
+	[[nodiscard]] bool hasGraphics() const;
+	void clearGraphics();
 
 	const MonsterData &data() const
 	{

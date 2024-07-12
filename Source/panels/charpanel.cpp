@@ -294,7 +294,7 @@ void LoadCharPanel()
 		}
 	}
 
-	Panel = SurfaceToClx(out);
+	Panel = SurfaceToClx("runtime\\char_panel", /*trnName=*/ {}, out);
 }
 
 void FreeCharPanel()

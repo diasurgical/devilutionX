@@ -25,7 +25,7 @@ OwnedClxSpriteListOrSheet LoadCl2ListOrSheet(const char *pszName, PointerOrValue
 #else
 	size_t size;
 	std::unique_ptr<uint8_t[]> data = LoadFileInMem<uint8_t>(path, &size);
-	return Cl2ToClx(std::move(data), size, widthOrWidths);
+	return Cl2ToClx(pszName, /*trnName=*/ {}, std::move(data), size, widthOrWidths);
 #endif
 }
 
