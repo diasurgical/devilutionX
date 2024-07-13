@@ -120,6 +120,8 @@ const std::string &AssetsPath()
 		assetsPath.emplace("D:\\assets\\");
 #elif defined(__3DS__) || defined(__SWITCH__)
 		assetsPath.emplace("romfs:/");
+#elif defined(__DREAMCAST__)
+		assetsPath.emplace("/cd/");
 #else
 		assetsPath.emplace(FromSDL(SDL_GetBasePath()) + ("assets" DIRECTORY_SEPARATOR_STR));
 #endif

@@ -32,6 +32,10 @@
 #include "utils/str_split.hpp"
 #include "utils/utf8.hpp"
 
+#ifdef __DREAMCAST__
+#include <kos/fs_ramdisk.h>
+#endif
+
 #ifdef UNPACKED_SAVES
 #include "utils/file_util.h"
 #else
@@ -54,9 +58,9 @@ char hero_names[MAX_CHARACTERS][PlayerNameLength];
 
 std::string GetSavePath(uint32_t saveNum, std::string_view savePrefix = {})
 {
-	return StrCat(paths::PrefPath(), savePrefix,
+	auto result = StrCat(paths::PrefPath(), savePrefix,
 	    gbIsSpawn
-	        ? (gbIsMultiplayer ? "share_" : "spawn_")
+	        ? (gbIsMultiplayer ? "share_" : "sp_")
 	        : (gbIsMultiplayer ? "multi_" : "single_"),
 	    saveNum,
 #ifdef UNPACKED_SAVES
@@ -65,12 +69,14 @@ std::string GetSavePath(uint32_t saveNum, std::string_view savePrefix = {})
 	    gbIsHellfire ? ".hsv" : ".sv"
 #endif
 	);
+	Log("save path = {}", result);
+	return result;
 }
 
 std::string GetStashSavePath()
 {
 	return StrCat(paths::PrefPath(),
-	    gbIsSpawn ? "stash_spawn" : "stash",
+	    gbIsSpawn ? "stsp" : "stash",
 #ifdef UNPACKED_SAVES
 	    gbIsHellfire ? "_hsv" DIRECTORY_SEPARATOR_STR : "_sv" DIRECTORY_SEPARATOR_STR
 #else
@@ -232,8 +238,12 @@ bool ArchiveContainsGame(SaveReader &hsArchive)
 std::optional<SaveReader> CreateSaveReader(std::string &&path)
 {
 #ifdef UNPACKED_SAVES
-	if (!FileExists(path))
+	Log("\tAttempting to load save file {}", path);
+	if (!FileExists(path)) {
+		Log("\tFailed ):");
 		return std::nullopt;
+	}
+	Log("\tFound save path {} (:", path);
 	return SaveReader(std::move(path));
 #else
 	std::int32_t error;

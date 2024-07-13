@@ -1,4 +1,5 @@
 #include "mpq/mpq_reader.hpp"
+#include "utils/log.hpp"
 
 #include <cstdint>
 #include <optional>
@@ -12,6 +13,7 @@ std::optional<MpqArchive> MpqArchive::Open(const char *path, int32_t &error)
 {
 	mpq_archive_s *archive;
 	error = libmpq__archive_open(&archive, path, -1);
+	Log("libmpq__archive_open {} result = {}", path, error);
 	if (error != 0) {
 		if (error == LIBMPQ_ERROR_EXIST)
 			error = 0;

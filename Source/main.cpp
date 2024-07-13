@@ -22,6 +22,13 @@
 
 #include "diablo.h"
 
+#ifdef __DREAMCAST__
+//fchmod fails to link on the dreamcast, this stub is provided as a workaround
+extern "C" int fchmod(int fd, mode_t mode) {
+    return 0;
+}
+#endif
+
 #if !defined(__APPLE__)
 extern "C" const char *__asan_default_options() // NOLINT(bugprone-reserved-identifier, readability-identifier-naming)
 {

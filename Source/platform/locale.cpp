@@ -22,7 +22,7 @@
 #include <windows.h>
 #include <winnls.h>
 // clang-format on
-#elif defined(__APPLE__) and defined(USE_COREFOUNDATION)
+#elif defined(__APPLE__) && defined(USE_COREFOUNDATION)
 #include <CoreFoundation/CoreFoundation.h>
 #else
 #include <clocale>

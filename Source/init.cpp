@@ -88,8 +88,9 @@ std::optional<std::string> FindUnpackedMpqData(const std::vector<std::string> &p
 		targetPath.clear();
 		targetPath.reserve(path.size() + mpqName.size() + 1);
 		targetPath.append(path).append(mpqName) += DirectorySeparator;
+                Log("Testing FindUnpackedMpqData {}", targetPath);
 		if (FileExists(targetPath)) {
-			LogVerbose("  Found unpacked MPQ directory: {}", targetPath);
+			Log("  Found unpacked MPQ directory: {}", targetPath);
 			return targetPath;
 		}
 	}
@@ -276,7 +277,7 @@ void LoadCoreArchives()
 #ifdef UNPACKED_MPQS
 	font_data_path = FindUnpackedMpqData(paths, "fonts");
 #else // !UNPACKED_MPQS
-#if !defined(__ANDROID__) && !defined(__APPLE__) && !defined(__3DS__) && !defined(__SWITCH__)
+#if !defined(__ANDROID__) && !defined(__APPLE__) && !defined(__3DS__) && !defined(__SWITCH__) && !defined(__DREAMCAST__)
 	// Load devilutionx.mpq first to get the font file for error messages
 	devilutionx_mpq = LoadMPQ(paths, "devilutionx.mpq");
 #endif

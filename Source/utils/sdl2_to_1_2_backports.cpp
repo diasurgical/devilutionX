@@ -800,6 +800,8 @@ char *SDL_GetBasePath()
 	retval = SDL_strdup("file:sdmc:/3ds/devilutionx/");
 #elif defined(__amigaos__)
 	retval = SDL_strdup("PROGDIR:");
+#elif defined(__DREAMCAST__)
+	retval = SDL_strdup("/cd/");
 #else
 
 	/* is a Linux-style /proc filesystem available? */
@@ -879,6 +881,9 @@ char *SDL_GetPrefPath(const char *org, const char *app)
 #elif defined(__amigaos__)
 	retval = SDL_strdup("PROGDIR:");
 	return retval;
+#elif defined(__DREAMCAST__)
+	retval = SDL_strdup("/vmu/a1/");
+        return retval;
 #endif
 
 	if (!app) {

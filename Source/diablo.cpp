@@ -1152,7 +1152,12 @@ void CheckArchivesUpToDate()
 		            "\n"
 		            "Make sure devilutionx.mpq is in the game folder and that it is up to date."));
 	} else if (fontsMpqOutOfDate) {
+#ifdef __DREAMCAST__
+		//todo fixme for the dreamcast
+		Log(_("Please update fonts.mpq to the latest version"));
+#else
 		app_fatal(_("Please update fonts.mpq to the latest version"));
+#endif
 	}
 }
 
@@ -2845,6 +2850,7 @@ void DisableInputEventHandler(const SDL_Event &event, uint16_t modState)
 
 void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 {
+	Log("LoadGameLevel(firstflag = {}, lvldir = {})", firstflag, static_cast<uint8_t>(lvldir));
 	_music_id neededTrack = GetLevelMusic(leveltype);
 	ClearFloatingNumbers();
 
