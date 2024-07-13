@@ -172,7 +172,8 @@ OptionalClxSpriteList LoadFont(GameFontTables size, text_color color, uint16_t r
 	// Try loading the language-specific variant first:
 	const string_view language_code = GetLanguageCode();
 	const string_view language_tag = language_code.substr(0, 2);
-	if (language_tag == "zh" || language_tag == "ja" || language_tag == "ko") {
+	if (language_tag == "zh" || language_tag == "ja" || language_tag == "ko"
+	    || (language_tag == "tr" && row == 0)) {
 		GetFontPath(language_code, size, row, ".clx", &path[0]);
 		font = LoadOptionalClx(path);
 	}
