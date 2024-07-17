@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-SDLDEV_VERS=2.26.1
+SDLDEV_VERS=2.30.5
 SODIUM_VERS=1.0.18
 
 # exit when any command fails
