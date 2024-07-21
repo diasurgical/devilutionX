@@ -7,7 +7,7 @@
 		"simpleini",
 		"lua"
 	],
-	"builtin-baseline": "dee924de74e81388140a53c32a919ecec57d20ab",
+	"builtin-baseline": "1318ab14aae14db20085441cd71366891a9c9d0c",
 	"features": {
 		"sdl1": {
 			"description": "Use SDL1.2 instead of SDL2",
