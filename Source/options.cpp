@@ -1241,6 +1241,7 @@ void OptionEntryLanguageCode::CheckLanguagesAreInitialized() const
 	languages.emplace_back("ro", "Română");
 	languages.emplace_back("ru", "Русский");
 	languages.emplace_back("sv", "Svenska");
+	languages.emplace_back("tr", "Türkçe");
 	languages.emplace_back("uk", "Українська");
 
 	if (HaveExtraFonts()) {
