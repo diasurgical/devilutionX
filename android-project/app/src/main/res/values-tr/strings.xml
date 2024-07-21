@@ -2,7 +2,7 @@
 	<string name="app_name" translatable="false">DevilutionX</string>
 	<!-- Strings used for fragments for navigation -->
 
-	<string name="guide_full_installation">Tam sürümü oynayabilmek için orjinal oyunun DIABDAT.MPQ dosyasını Android/data/org.diasurgical.devilutionx/files konumuna atmalısınız.<br/>\n<br/>\nEğer orjinal oyuna sahip değilseniz Diablo'yu bu linkten satın alabilirsiniz: <a href="https://www.gog.com/game/diablo">GOG.com.</a></string>
+	<string name="guide_full_installation">Tam sürümü oynayabilmek için orjinal oyunun DIABDAT.MPQ dosyasını Android/data/org.diasurgical.devilutionx/files konumuna atmalısınız.<br/>\n<br/>\nEğer orjinal oyuna sahip değilseniz Diablo\'yu bu linkten satın alabilirsiniz: <a href="https://www.gog.com/game/diablo">GOG.com.</a></string>
 	<string name="guide_shareware">Buna alternatif olarak, oyunu denemek için demo sürümünü de indirebilirsiniz.</string>
 	<string name="faq_link">Daha fazla ayrıntı için lütfen kontrol edin: <a href="https://github.com/diasurgical/devilutionX/blob/master/docs/installing.md#installing">Kurulum Talimatları</a></string>
 	<string name="game_data_retry">Tekrar kontrol et</string>
