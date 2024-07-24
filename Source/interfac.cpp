@@ -73,6 +73,7 @@ Cutscenes GetCutSceneFromLevelType(dungeon_type type)
 
 Cutscenes PickCutscene(interface_mode uMsg)
 {
+	Log("MyPlayer->plrlevel = {}", MyPlayer->plrlevel);
 	switch (uMsg) {
 	case WM_DIABLOADGAME:
 	case WM_DIABNEWGAME:
@@ -351,6 +352,7 @@ void ShowProgress(interface_mode uMsg)
 	case WM_DIABNEXTLVL:
 		IncProgress();
 		if (!gbIsMultiplayer) {
+			Log("pfile_save_level()");
 			pfile_save_level();
 		} else {
 			DeltaSaveLevel();
@@ -361,12 +363,14 @@ void ShowProgress(interface_mode uMsg)
 		currlevel = myPlayer.plrlevel;
 		leveltype = GetLevelType(currlevel);
 		IncProgress();
+		Log("LoadGameLevel(false, ENTRY_MAIN)");
 		LoadGameLevel(false, ENTRY_MAIN);
 		IncProgress();
 		break;
 	case WM_DIABPREVLVL:
 		IncProgress();
 		if (!gbIsMultiplayer) {
+			Log("pfile_save_level()");
 			pfile_save_level();
 		} else {
 			DeltaSaveLevel();
@@ -377,6 +381,7 @@ void ShowProgress(interface_mode uMsg)
 		leveltype = GetLevelType(currlevel);
 		assert(myPlayer.isOnActiveLevel());
 		IncProgress();
+		Log("LoadGameLevel(false, ENTRY_PREV)");
 		LoadGameLevel(false, ENTRY_PREV);
 		IncProgress();
 		break;

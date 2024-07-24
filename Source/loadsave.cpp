@@ -179,6 +179,8 @@ public:
 	    , m_buffer_(new std::byte[codec_get_encoded_len(bufferLen)])
 	    , m_capacity_(bufferLen)
 	{
+		Log("SaveHelper instantiated: this(mpqWriter, \"{}\", {})", szFileName, bufferLen);
+		Log("SaveHelper allocated byte array of {} bytes", codec_get_encoded_len(bufferLen));
 	}
 
 	bool IsValid(size_t len = 1)
@@ -224,9 +226,12 @@ public:
 
 	~SaveHelper()
 	{
+		//const auto encodedLen = m_cur_;
 		const auto encodedLen = codec_get_encoded_len(m_cur_);
 		const char *const password = pfile_get_password();
+		Log("codec_encode(m_buffer_.get(), {}, {}, \"{}\")", m_cur_, encodedLen, password);
 		codec_encode(m_buffer_.get(), m_cur_, encodedLen, password);
+		Log("~SaveHelper WriteFile(\"{}\", m_buffer_.get(), {})", m_szFileName_, encodedLen);
 		m_mpqWriter.WriteFile(m_szFileName_, m_buffer_.get(), encodedLen);
 	}
 };
@@ -1834,6 +1839,7 @@ void LoadLevelSeeds()
 
 void SaveLevel(SaveWriter &saveWriter, LevelConversionData *levelConversionData)
 {
+	Log("SaveLevel(SaveWriter &saveWriter, LevelConversionData *levelConversionData)");
 	Player &myPlayer = *MyPlayer;
 
 	DoUnVision(myPlayer.position.tile, myPlayer._pLightRad); // fix for vision staying on the level
@@ -1843,6 +1849,7 @@ void SaveLevel(SaveWriter &saveWriter, LevelConversionData *levelConversionData)
 
 	char szName[MaxMpqPathSize];
 	GetTempLevelNames(szName);
+	Log("SaveHelper file(saveWriter, \"{}\", 256 * 1024)", szName);
 	SaveHelper file(saveWriter, szName, 256 * 1024);
 
 	if (leveltype != DTYPE_TOWN) {
@@ -1913,11 +1920,18 @@ void SaveLevel(SaveWriter &saveWriter, LevelConversionData *levelConversionData)
 
 void LoadLevel(LevelConversionData *levelConversionData)
 {
+	Log("LoadLevel");
 	char szName[MaxMpqPathSize];
 	std::optional<SaveReader> archive = OpenSaveArchive(gSaveNumber);
+	Log("OpenSaveArchive({})", gSaveNumber);
 	GetTempLevelNames(szName);
-	if (!archive || !archive->HasFile(szName))
+	Log("szName = '{}'", szName);
+	Log("!archive = {}", !archive);
+	Log("!archive->HasFile(\"{}\") = {}", szName, !archive->HasFile(szName));
+	if (!archive || !archive->HasFile(szName)) {
+		Log("{} not found in archive, calling GetPermLevelNames(\"{}\")", szName, szName);
 		GetPermLevelNames(szName);
+	}
 	LoadHelper file(std::move(archive), szName);
 	if (!file.IsValid())
 		app_fatal(_("Unable to open save file archive"));
@@ -2351,6 +2365,7 @@ void RemoveEmptyInventory(Player &player)
 
 void LoadGame(bool firstflag)
 {
+	Log("LoadGame(firstflag = {})", firstflag);
 	FreeGameMem();
 
 	LoadHelper file(OpenSaveArchive(gSaveNumber), "game");
@@ -2371,6 +2386,7 @@ void LoadGame(bool firstflag)
 		giNumberOfSmithPremiumItems = 6;
 	}
 
+	Log("pfile_remove_temp_files");
 	pfile_remove_temp_files();
 
 	setlevel = file.NextBool8();
@@ -2400,13 +2416,16 @@ void LoadGame(bool firstflag)
 
 	Player &myPlayer = *MyPlayer;
 
+	Log("LoadPlayer(file, myPlayer);");
 	LoadPlayer(file, myPlayer);
 
 	if (sgGameInitInfo.nDifficulty < DIFF_NORMAL || sgGameInitInfo.nDifficulty > DIFF_HELL)
 		sgGameInitInfo.nDifficulty = DIFF_NORMAL;
 
+	Log("LoadQuests {}", giNumberQuests);
 	for (int i = 0; i < giNumberQuests; i++)
 		LoadQuest(&file, i);
+	Log("LoadPortals", MAXPORTAL);
 	for (int i = 0; i < MAXPORTAL; i++)
 		LoadPortal(&file, i);
 
@@ -2415,6 +2434,7 @@ void LoadGame(bool firstflag)
 		RemoveEmptyInventory(myPlayer);
 	}
 
+	Log("LoadGameLevel");
 	LoadGameLevel(firstflag, ENTRY_LOAD);
 	SetPlrAnims(myPlayer);
 	SyncPlrAnim(myPlayer);
@@ -2431,6 +2451,7 @@ void LoadGame(bool firstflag)
 	if (leveltype != DTYPE_TOWN) {
 		for (unsigned &monsterId : ActiveMonsters)
 			monsterId = file.NextBE<uint32_t>();
+		Log("LoadMonsters {}", ActiveMonsterCount);
 		for (size_t i = 0; i < ActiveMonsterCount; i++)
 			LoadMonster(&file, Monsters[ActiveMonsters[i]]);
 		for (size_t i = 0; i < ActiveMonsterCount; i++)
@@ -2439,6 +2460,7 @@ void LoadGame(bool firstflag)
 		file.Skip<int8_t>(MaxMissilesForSaveGame);
 		// Skip AvailableMissiles
 		file.Skip<int8_t>(MaxMissilesForSaveGame);
+		Log("LoadMissiles {}", tmpNummissiles);
 		for (int i = 0; i < tmpNummissiles; i++)
 			LoadMissile(&file);
 		// For petrified monsters, the data in missile.var1 must be used to
@@ -2614,6 +2636,7 @@ void SaveStash(SaveWriter &stashWriter)
 		}
 	};
 
+	Log("Saving {} pages of stash", pagesToSave.size());
 	// Current stash size is 100 pages. Will definitely fit in a 32 bit value.
 	file.WriteLE<uint32_t>(static_cast<uint32_t>(pagesToSave.size()));
 	for (const auto &page : pagesToSave) {
@@ -2621,6 +2644,7 @@ void SaveStash(SaveWriter &stashWriter)
 		for (const auto &row : Stash.stashGrids[page]) {
 			for (uint16_t cell : row) {
 				file.WriteLE<uint16_t>(cell);
+				Log("\t\tSaving stash item {}", cell);
 			}
 		}
 	}
@@ -2628,6 +2652,7 @@ void SaveStash(SaveWriter &stashWriter)
 	// 100 pages of 100 items is still only 10 000, as with the page count will definitely fit in 32 bits even in the worst case.
 	file.WriteLE<uint32_t>(static_cast<uint32_t>(Stash.stashList.size()));
 	for (const Item &item : Stash.stashList) {
+		Log("SaveItem(file, item)");
 		SaveItem(file, item);
 	}
 
@@ -2636,6 +2661,7 @@ void SaveStash(SaveWriter &stashWriter)
 
 void SaveGameData(SaveWriter &saveWriter)
 {
+	Log("SaveHelper file(saveWriter, \"game\", 320 * 1024)");
 	SaveHelper file(saveWriter, "game", 320 * 1024);
 
 	if (gbIsSpawn && !gbIsHellfire)
@@ -2801,6 +2827,7 @@ void SaveGameData(SaveWriter &saveWriter)
 
 void SaveGame()
 {
+	Log("SaveGame()");
 	gbValidSaveFile = true;
 	pfile_write_hero(/*writeGameData=*/true);
 	sfile_write_stash();

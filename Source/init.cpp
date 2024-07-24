@@ -88,9 +88,8 @@ std::optional<std::string> FindUnpackedMpqData(const std::vector<std::string> &p
 		targetPath.clear();
 		targetPath.reserve(path.size() + mpqName.size() + 1);
 		targetPath.append(path).append(mpqName) += DirectorySeparator;
-                Log("Testing FindUnpackedMpqData {}", targetPath);
 		if (FileExists(targetPath)) {
-			Log("  Found unpacked MPQ directory: {}", targetPath);
+			LogVerbose("  Found unpacked MPQ directory: {}", targetPath);
 			return targetPath;
 		}
 	}

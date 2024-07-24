@@ -34,6 +34,8 @@
 
 #ifdef __DREAMCAST__
 #include <kos/fs_ramdisk.h>
+#include <kos/fs.h>
+#include <libgen.h>
 #endif
 
 #ifdef UNPACKED_SAVES
@@ -51,6 +53,30 @@ namespace devilution {
 
 bool gbValidSaveFile;
 
+
+void listdir(const char *dir, int depth) {
+	file_t d = fs_open(dir, O_RDONLY | O_DIR);
+	dirent_t *entry;
+	printf("============ RAMDISK ============\n");
+	while(NULL != (entry = fs_readdir(d))) {
+		char absolutePath[1024];
+		strcpy(absolutePath, dir);
+		strcat(absolutePath, "/");
+		strcat(absolutePath, entry->name);
+		uintmax_t size = 0;
+		if(!GetFileSize(absolutePath, &size)) {
+			size = 1337;
+		}
+		bool isDir = entry->size == -1;
+		printf("[%s]\t%.2f kB\t%.2f kB (GetFileSize)\t%s\n", isDir ? "DIR" : "FIL", entry->size / 1024.0, size / 1024.0, entry->name);
+		if(isDir) {
+			printf("absolutePath = %s, depth = %d\n", absolutePath, depth);
+			listdir(absolutePath, depth + 1);
+		}
+	}
+	fs_close(d);
+	printf("============ RAMDISK ============\n\n");
+}
 namespace {
 
 /** List of character names for the character selection screen. */
@@ -58,27 +84,37 @@ char hero_names[MAX_CHARACTERS][PlayerNameLength];
 
 std::string GetSavePath(uint32_t saveNum, std::string_view savePrefix = {})
 {
-	auto result = StrCat(paths::PrefPath(), savePrefix,
+	return StrCat(paths::PrefPath(), savePrefix,
 	    gbIsSpawn
-	        ? (gbIsMultiplayer ? "share_" : "sp_")
+	        ? (gbIsMultiplayer ? "share_" : "spawn_")
 	        : (gbIsMultiplayer ? "multi_" : "single_"),
 	    saveNum,
 #ifdef UNPACKED_SAVES
-	    gbIsHellfire ? "_hsv" DIRECTORY_SEPARATOR_STR : "_sv" DIRECTORY_SEPARATOR_STR
+#ifdef __DREAMCAST__
+            //flatten directory structure for easier fs_ramdisk_* usage
+            //for example, /ram/spawn_sv/hero would become /ram/spawn_sv_hero
+
+            gbIsHellfire ? "_hsv" DIRECTORY_SEPARATOR_STR : "_sv_"
+#else
+            gbIsHellfire ? "_hsv" DIRECTORY_SEPARATOR_STR : "_sv" DIRECTORY_SEPARATOR_STR
+#endif
 #else
 	    gbIsHellfire ? ".hsv" : ".sv"
 #endif
 	);
-	Log("save path = {}", result);
-	return result;
 }
 
 std::string GetStashSavePath()
 {
 	return StrCat(paths::PrefPath(),
-	    gbIsSpawn ? "stsp" : "stash",
+	    gbIsSpawn ? "stash_spawn" : "stash",
 #ifdef UNPACKED_SAVES
+#ifdef __DREAMCAST__
+            //same as above
+	    gbIsHellfire ? "_hsv" DIRECTORY_SEPARATOR_STR : "_sv_"
+#else
 	    gbIsHellfire ? "_hsv" DIRECTORY_SEPARATOR_STR : "_sv" DIRECTORY_SEPARATOR_STR
+#endif
 #else
 	    gbIsHellfire ? ".hsv" : ".sv"
 #endif
@@ -113,6 +149,7 @@ bool GetTempSaveNames(uint8_t dwIndex, char *szTemp)
 
 void RenameTempToPerm(SaveWriter &saveWriter)
 {
+	Log("RenameTempToPerm");
 	char szTemp[MaxMpqPathSize];
 	char szPerm[MaxMpqPathSize];
 
@@ -121,9 +158,14 @@ void RenameTempToPerm(SaveWriter &saveWriter)
 		[[maybe_unused]] bool result = GetPermSaveNames(dwIndex, szPerm); // DO NOT PUT DIRECTLY INTO ASSERT!
 		assert(result);
 		dwIndex++;
+		Log("GetPermSaveNames({}, \"{}\")", dwIndex, szTemp);
 		if (saveWriter.HasFile(szTemp)) {
-			if (saveWriter.HasFile(szPerm))
+			Log("saveWriter.HasFile(\"{}\") = true", szTemp);
+			if (saveWriter.HasFile(szPerm)) {
+				Log("saveWriter.HasFile(\"{}\") = true => RemoveHashEntry", szPerm);
 				saveWriter.RemoveHashEntry(szPerm);
+			}
+			Log("saveWriter.RenameFile(\"{}\", {})", szTemp, szPerm);
 			saveWriter.RenameFile(szTemp, szPerm);
 		}
 	}
@@ -135,26 +177,37 @@ bool ReadHero(SaveReader &archive, PlayerPack *pPack)
 	size_t read;
 
 	auto buf = ReadArchive(archive, "hero", &read);
-	if (buf == nullptr)
+	if (buf == nullptr) {
+		Log("ReadArchive(archive, \"hero\", {}) = false", read);
 		return false;
+	}
 
 	bool ret = false;
 	if (read == sizeof(*pPack)) {
 		memcpy(pPack, buf.get(), sizeof(*pPack));
 		ret = true;
 	}
+	Log("{} == sizeof(*pPack) ({}) = {}", read, sizeof(*pPack), read == sizeof(*pPack));
+	Log("Read player {}", pPack->pName);
+	Log("\tpHPBase = {}", pPack->pHPBase);
 
+	listdir("/ram", 0);
 	return ret;
 }
 
 void EncodeHero(SaveWriter &saveWriter, const PlayerPack *pack)
 {
+	Log("EncodeHero");
 	size_t packedLen = codec_get_encoded_len(sizeof(*pack));
 	std::unique_ptr<std::byte[]> packed { new std::byte[packedLen] };
 
+	Log("memcpy(packed.get(), pack, {})", sizeof(*pack));
 	memcpy(packed.get(), pack, sizeof(*pack));
 	codec_encode(packed.get(), sizeof(*pack), packedLen, pfile_get_password());
-	saveWriter.WriteFile("hero", packed.get(), packedLen);
+	Log("Saving player {}", pack->pName);
+	Log("\tpHPBase = {}", pack->pHPBase);
+	bool result = saveWriter.WriteFile("hero", packed.get(), packedLen /* sizeof(*pack) */);
+	Log("saveWriter.WriteFile(\"hero\", packed.get(), {}) = {}", packedLen, result);
 }
 
 SaveWriter GetSaveWriter(uint32_t saveNum)
@@ -238,13 +291,22 @@ bool ArchiveContainsGame(SaveReader &hsArchive)
 std::optional<SaveReader> CreateSaveReader(std::string &&path)
 {
 #ifdef UNPACKED_SAVES
+#ifdef __DREAMCAST__
 	Log("\tAttempting to load save file {}", path);
-	if (!FileExists(path)) {
+	//no notion of directories in ramdisk, so /ram/spawn_0_sv/ doesn't exist
+	//instead, we check for /ram/spawn_0_sv_hero which was previously created
+	std::string heroFile = path + "hero";
+	if (!FileExists(heroFile)) {
 		Log("\tFailed ):");
 		return std::nullopt;
 	}
 	Log("\tFound save path {} (:", path);
 	return SaveReader(std::move(path));
+#else
+	if (!FileExists(path))
+		return std::nullopt;
+	return SaveReader(std::move(path));
+#endif
 #else
 	std::int32_t error;
 	return MpqArchive::Open(path.c_str(), error);
@@ -510,15 +572,19 @@ HeroCompareResult CompareSaves(const std::string &actualSavePath, const std::str
 
 void pfile_write_hero(SaveWriter &saveWriter, bool writeGameData)
 {
+	Log("pfile_write_hero with writeGameData = {}", writeGameData);
 	if (writeGameData) {
 		SaveGameData(saveWriter);
 		RenameTempToPerm(saveWriter);
+		Log("Game data saved");
 	}
 	PlayerPack pkplr;
 	Player &myPlayer = *MyPlayer;
 
 	PackPlayer(pkplr, myPlayer);
+	Log("Player data packed");
 	EncodeHero(saveWriter, &pkplr);
+	Log("Player data saved");
 	if (!gbVanilla) {
 		SaveHotkeys(saveWriter, myPlayer);
 		SaveHeroItems(saveWriter, myPlayer);
@@ -539,6 +605,60 @@ void RemoveAllInvalidItems(Player &player)
 } // namespace
 
 #ifdef UNPACKED_SAVES
+#ifdef __DREAMCAST__
+std::unique_ptr<std::byte[]> SaveReader::ReadFile(const char *filename, std::size_t &fileSize, int32_t &error)
+{
+	Log("SaveReader::ReadFile(\"{}\", fileSize, error)", filename);
+	std::unique_ptr<std::byte[]> result;
+	error = 0;
+	const std::string path = dir_ + filename;
+	Log("path = \"{}\"", path);
+	std::byte* contents;
+	ssize_t size = fs_load(path.c_str(), &contents);
+	Log("size = {}", size);
+	if(size == -1)
+	{
+		Log("SaveReader::ReadFile KO");
+		return nullptr;
+	}
+	fileSize = size;
+	result.reset(contents);
+	Log("SaveReader::ReadFile OK");
+	return result;
+}
+
+bool SaveWriter::WriteFile(const char *filename, const std::byte *data, size_t size)
+{
+	Log("SaveWriter::WriteFile(\"{}\", data[], {})", filename, size);
+	const std::string path = dir_ + filename;
+	Log("dir_ = {}", dir_);
+	Log("path = {}", path);
+	const char* baseName = basename(path.c_str());
+	bool exists = FileExists(baseName);
+	if(exists)
+	{
+		Log("{} exists, removing it", path);
+		void *toFree;
+		size_t ignore;
+		int detach_result = fs_ramdisk_detach(baseName, &toFree, &ignore);
+		free(toFree);
+		Log("fs_ramdisk_detach result = {}", detach_result);
+		if(detach_result == -1)
+		{
+			return false;
+		}
+	}
+	Log("\tAllocating {} bytes for path {}", size, baseName);
+	void* buffer = malloc(size);
+	memcpy(buffer, data, size);
+	Log("\tMallocation succeeded ? {}", buffer != NULL);
+	int attach_result = fs_ramdisk_attach(baseName, buffer, size);
+	Log("\tAttach result: {}", attach_result);
+	Log("Current ramdisk contents:");
+	listdir("/ram", 0);
+	return attach_result != -1;
+}
+#else
 std::unique_ptr<std::byte[]> SaveReader::ReadFile(const char *filename, std::size_t &fileSize, int32_t &error)
 {
 	std::unique_ptr<std::byte[]> result;
@@ -579,16 +699,17 @@ bool SaveWriter::WriteFile(const char *filename, const std::byte *data, size_t s
 	std::fclose(file);
 	return true;
 }
-
+#endif //def __DREAMCAST__
 void SaveWriter::RemoveHashEntries(bool (*fnGetName)(uint8_t, char *))
 {
 	char pszFileName[MaxMpqPathSize];
 
 	for (uint8_t i = 0; fnGetName(i, pszFileName); i++) {
+		Log("RemoveHashEntry(\"{}\")", pszFileName);
 		RemoveHashEntry(pszFileName);
 	}
 }
-#endif
+#endif //def UNPACKED_SAVES
 
 std::optional<SaveReader> OpenSaveArchive(uint32_t saveNum)
 {
@@ -605,17 +726,33 @@ std::unique_ptr<std::byte[]> ReadArchive(SaveReader &archive, const char *pszNam
 	int32_t error;
 	std::size_t length;
 
+	Log("ReadArchive(archive, \"{}\", {})", pszName, *pdwLen);
+	Log("ReadArchive 0");
 	std::unique_ptr<std::byte[]> result = archive.ReadFile(pszName, length, error);
-	if (error != 0)
+	if (error != 0) {
+		Log("ReadArchive 0 error = {}", error);
 		return nullptr;
+	}
 
+	Log("ReadArchive 1, length = {}", length);
 	std::size_t decodedLength = codec_decode(result.get(), length, pfile_get_password());
-	if (decodedLength == 0)
+	if (decodedLength == 0) {
+		Log("ReadArchive nullptr");
 		return nullptr;
+	}
+	if(strcmp(pszName, "hero") == 0)
+	{
+		PlayerPack pPack;
+		memcpy(&pPack, result.get(), decodedLength);
+		Log("ReadArchive player {}", pPack.pName);
+		Log("\tpHPBase = {}", pPack.pHPBase);
+	}
 
+	Log("ReadArchive 2");
 	if (pdwLen != nullptr)
 		*pdwLen = decodedLength;
 
+	Log("ReadArchive 3 {}", decodedLength);
 	return result;
 }
 
@@ -635,6 +772,7 @@ void pfile_write_hero(bool writeGameData)
 #ifndef DISABLE_DEMOMODE
 void pfile_write_hero_demo(int demo)
 {
+	Log("pfile_write_hero_demo({})", demo);
 	std::string savePath = GetSavePath(gSaveNumber, StrCat("demo_", demo, "_reference_"));
 	CopySaveFile(gSaveNumber, savePath);
 	auto saveWriter = SaveWriter(savePath.c_str());
@@ -724,6 +862,7 @@ uint32_t pfile_ui_get_first_unused_save_num()
 
 bool pfile_ui_save_create(_uiheroinfo *heroinfo)
 {
+	Log("pfile_ui_save_create");
 	PlayerPack pkplr;
 
 	uint32_t saveNum = heroinfo->saveNumber;
@@ -733,6 +872,7 @@ bool pfile_ui_save_create(_uiheroinfo *heroinfo)
 
 	giNumberOfLevels = gbIsHellfire ? 25 : 17;
 
+	Log("GetSaveWriter({})", saveNum);
 	SaveWriter saveWriter = GetSaveWriter(saveNum);
 	saveWriter.RemoveHashEntries(GetFileName);
 	CopyUtf8(hero_names[saveNum], heroinfo->name, sizeof(hero_names[saveNum]));
@@ -766,10 +906,14 @@ void pfile_read_player_from_save(uint32_t saveNum, Player &player)
 	PlayerPack pkplr;
 	{
 		std::optional<SaveReader> archive = OpenSaveArchive(saveNum);
-		if (!archive)
+		if (!archive) {
+			listdir("/ram", 0);
 			app_fatal(_("Unable to open archive"));
-		if (!ReadHero(*archive, &pkplr))
+		}
+		if (!ReadHero(*archive, &pkplr)) {
+			listdir("/ram", 0);
 			app_fatal(_("Unable to load character"));
+		}
 
 		gbValidSaveFile = ArchiveContainsGame(*archive);
 		if (gbValidSaveFile)
@@ -796,6 +940,7 @@ void pfile_convert_levels()
 
 void pfile_remove_temp_files()
 {
+	Log("pfile_remove_temp_files");
 	if (gbIsMultiplayer)
 		return;
 

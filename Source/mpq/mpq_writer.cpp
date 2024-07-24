@@ -91,7 +91,7 @@ MpqWriter::MpqWriter(const char *path)
 {
 	const std::string dir = std::string(Dirname(path));
 	RecursivelyCreateDir(dir.c_str());
-	Log("Opening {}", path);
+	LogVerbose("Opening {}", path);
 	std::string error;
 	bool exists = FileExists(path);
 	const char *mode = "wb";
@@ -100,12 +100,11 @@ MpqWriter::MpqWriter(const char *path)
 		std::uintmax_t fileSize;
 		if (!GetFileSize(path, &fileSize)) {
 			error = R"(GetFileSize failed: "{}")";
-			Log(error, path, std::strerror(errno));
+			LogError(error, path, std::strerror(errno));
 			goto on_error;
 		}
 		size_ = static_cast<uint32_t>(fileSize);
-		Log("GetFileSize(\"{}\") = {}", path, size_);
-	} else {
+		LogVerbose("GetFileSize(\"{}\") = {}", path, size_);
 	}
 	if (!stream_.Open(path, mode)) {
 		stream_.Close();
@@ -168,19 +167,18 @@ MpqWriter::~MpqWriter()
 {
 	if (!stream_.IsOpen())
 		return;
-	Log("Closing {}", name_);
+	LogVerbose("Closing {}", name_);
 
 	bool result = true;
 	if (!(stream_.Seekp(0, SEEK_SET) && WriteHeaderAndTables()))
 		result = false;
 	stream_.Close();
 	if (result && size_ != 0) {
-		Log("ResizeFile(\"{}\", {})", name_, size_);
-		//result = true;
+		LogVerbose("ResizeFile(\"{}\", {})", name_, size_);
 		result = ResizeFile(name_.c_str(), size_);
 	}
 	if (!result)
-		Log("Closing failed {}", name_);
+		LogVerbose("Closing failed {}", name_);
 }
 
 uint32_t MpqWriter::FetchHandle(std::string_view filename) const
