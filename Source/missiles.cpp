@@ -3731,24 +3731,32 @@ void ProcessFireWallControl(Missile &missile)
 
 	int id = missile._misource;
 
-	Point position1 = { missile.var1, missile.var2 };
-	Point target1 = position1 + static_cast<Direction>(missile.var3);
+	// Defines the current position of the control missile moving towards var3 direction.
+	// This is used to make sure the opposite side does not create walls where walls have already been created.
+	Point currentPosition = { missile.var1, missile.var2 };
 
-	if (!missile.limitReached && GrowWall(id, position1, target1, MissileID::FireWall, missile._mispllvl, 0)) {
-		missile.var1 = target1.x;
-		missile.var2 = target1.y;
-	} else {
-		missile.limitReached = true;
+	{
+		Point position = { missile.var1, missile.var2 };
+		Point target = position + static_cast<Direction>(missile.var3);
+
+		if (!missile.limitReached && GrowWall(id, position, target, MissileID::FireWall, missile._mispllvl, 0)) {
+			missile.var1 = target.x;
+			missile.var2 = target.y;
+		} else {
+			missile.limitReached = true;
+		}
 	}
 
-	Point position2 = { missile.var5, missile.var6 };
-	Point target2 = position2 + static_cast<Direction>(missile.var4);
+	{
+		Point position = { missile.var5, missile.var6 };
+		Point target = position + static_cast<Direction>(missile.var4);
 
-	if (missile.var7 == 0 && GrowWall(id, position2, target2, MissileID::FireWall, missile._mispllvl, 0, position1 == position2)) {
-		missile.var5 = target2.x;
-		missile.var6 = target2.y;
-	} else {
-		missile.var7 = 1;
+		if (missile.var7 == 0 && GrowWall(id, position, target, MissileID::FireWall, missile._mispllvl, 0, position == currentPosition)) {
+			missile.var5 = target.x;
+			missile.var6 = target.y;
+		} else {
+			missile.var7 = 1;
+		}
 	}
 }
 
