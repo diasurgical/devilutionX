@@ -35,7 +35,7 @@ For more detailed instructions: [Installation Instructions](./docs/installing.md
 
 # Contributing
 
-We are always looking for more people to help with [coding](docs/CONTRIBUTING.md), [documentation](https://github.com/diasurgical/devilutionX/wiki), testing the [latest builds](https://app.circleci.com/pipelines/github/diasurgical/devilutionX?branch=master), spreading the word, or simply just hanging out on [the chat](https://discord.gg/devilutionx).
+We are always looking for more people to help with [coding](docs/CONTRIBUTING.md), [documentation](https://github.com/diasurgical/devilutionX/wiki), testing the [latest builds](https://github.com/diasurgical/devilutionX?tab=readme-ov-file#test-builds), spreading the word, or simply just hanging out on [the chat](https://discord.gg/devilutionx).
 
 # Mods
 
