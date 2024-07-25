@@ -3207,7 +3207,7 @@ void ProcessLightningWallControl(Missile &missile)
 	if (position1 == position2)
 		skip = true;
 
-	if (missile.var7 == 0 && GrowWall(id, position2, target2, MissileID::LightningWall, missile._mispllvl, dmg)) {
+	if (missile.var7 == 0 && GrowWall(id, position2, target2, MissileID::LightningWall, missile._mispllvl, dmg, skip)) {
 		missile.var5 = target2.x;
 		missile.var6 = target2.y;
 	} else {
