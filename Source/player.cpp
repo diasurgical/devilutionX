@@ -233,15 +233,21 @@ void StartRangeAttack(Player &player, Direction d, WorldTileCoord cx, WorldTileC
 
 player_graphic GetPlayerGraphicForSpell(SpellID spellId)
 {
-	switch (GetSpellData(spellId).type()) {
-	case MagicType::Fire:
-		return player_graphic::Fire;
-	case MagicType::Lightning:
-		return player_graphic::Lightning;
-	default:
-		return player_graphic::Magic;
-	}
+    static const std::unordered_map<MagicType, player_graphic> spellGraphicMap = {
+        { MagicType::Fire, player_graphic::Fire },
+        { MagicType::Lightning, player_graphic::Lightning },
+        { MagicType::Magic, player_graphic::Magic }
+    };
+
+    MagicType spellType = GetSpellData(spellId).type();
+    auto it = spellGraphicMap.find(spellType);
+    if (it != spellGraphicMap.end()) {
+        return it->second;
+    }
+
+    return player_graphic::Magic; // Default case
 }
+
 
 void StartSpell(Player &player, Direction d, WorldTileCoord cx, WorldTileCoord cy)
 {
