@@ -248,7 +248,6 @@ player_graphic GetPlayerGraphicForSpell(SpellID spellId)
     return player_graphic::Magic; // Default case
 }
 
-
 void StartSpell(Player &player, Direction d, WorldTileCoord cx, WorldTileCoord cy)
 {
 	if (player._pInvincible && player._pHitPoints == 0 && &player == MyPlayer) {
