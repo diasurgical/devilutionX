@@ -3191,7 +3191,7 @@ void ProcessLightningWallControl(Missile &missile)
 
 	// Defines the current position of the control missile moving towards var3 direction.
 	// This is used to make sure the opposite side does not create walls where walls have already been created.
-	Point currentPosition = { missile.var1, missile.var2 };
+	const Point currentPosition = { missile.var1, missile.var2 };
 
 	{
 		Point position = { missile.var1, missile.var2 };
