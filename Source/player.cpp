@@ -253,7 +253,7 @@ void StartSpell(Player &player, Direction d, WorldTileCoord cx, WorldTileCoord c
 	}
 
 	// Checks conditions for spell again, because initial check was done when spell was queued and the parameters could be changed meanwhile
-	bool isValid = true;
+	bool isValid = false;
 	switch (player.queuedSpell.spellType) {
 	case SpellType::Skill:
 	case SpellType::Spell:
@@ -265,8 +265,7 @@ void StartSpell(Player &player, Direction d, WorldTileCoord cx, WorldTileCoord c
 	case SpellType::Charges:
 		isValid = CanUseStaff(player, player.queuedSpell.spellId);
 		break;
-	case SpellType::Invalid:
-		isValid = false;
+	default:
 		break;
 	}
 	if (!isValid)
