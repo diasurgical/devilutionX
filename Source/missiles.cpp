@@ -3202,12 +3202,7 @@ void ProcessLightningWallControl(Missile &missile)
 	Point position2 = { missile.var5, missile.var6 };
 	Point target2 = position2 + static_cast<Direction>(missile.var4);
 
-	bool skip = false;
-
-	if (position1 == position2)
-		skip = true;
-
-	if (missile.var7 == 0 && GrowWall(id, position2, target2, MissileID::LightningWall, missile._mispllvl, dmg, skip)) {
+	if (missile.var7 == 0 && GrowWall(id, position2, target2, MissileID::LightningWall, missile._mispllvl, dmg, position1 == position2)) {
 		missile.var5 = target2.x;
 		missile.var6 = target2.y;
 	} else {
@@ -3749,12 +3744,7 @@ void ProcessFireWallControl(Missile &missile)
 	Point position2 = { missile.var5, missile.var6 };
 	Point target2 = position2 + static_cast<Direction>(missile.var4);
 
-	bool skip = false;
-
-	if (position1 == position2)
-		skip = true;
-
-	if (missile.var7 == 0 && GrowWall(id, position2, target2, MissileID::FireWall, missile._mispllvl, 0, skip)) {
+	if (missile.var7 == 0 && GrowWall(id, position2, target2, MissileID::FireWall, missile._mispllvl, 0, position1 == position2)) {
 		missile.var5 = target2.x;
 		missile.var6 = target2.y;
 	} else {
