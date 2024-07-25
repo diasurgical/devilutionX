@@ -3209,7 +3209,7 @@ void ProcessLightningWallControl(Missile &missile)
 		Point position = { missile.var5, missile.var6 };
 		Point target = position + static_cast<Direction>(missile.var4);
 
-		if (missile.var7 == 0 && GrowWall(id, position2, target, MissileID::LightningWall, missile._mispllvl, dmg, position == currentPosition)) {
+		if (missile.var7 == 0 && GrowWall(id, position, target, MissileID::LightningWall, missile._mispllvl, dmg, position == currentPosition)) {
 			missile.var5 = target.x;
 			missile.var6 = target.y;
 		} else {
