@@ -233,7 +233,6 @@ void StartRangeAttack(Player &player, Direction d, WorldTileCoord cx, WorldTileC
 	player.position.temp = WorldTilePosition { cx, cy };
 }
 
-
 player_graphic GetPlayerGraphicForSpell(SpellID spellId)
 {
 	switch (GetSpellData(spellId).type()) {
