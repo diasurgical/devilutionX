@@ -761,7 +761,7 @@ void LoadMissile(LoadHelper *file)
 	missile._miLightFlag = file->NextBool32();
 	missile._miPreFlag = file->NextBool32();
 	missile._miUniqTrans = file->NextLE<uint32_t>();
-	missile._mirange = file->NextLE<int32_t>();
+	missile._miduration = file->NextLE<int32_t>();
 	missile._misource = file->NextLE<int32_t>();
 	missile._micaster = static_cast<mienemy_type>(file->NextLE<int32_t>());
 	missile._midam = file->NextLE<int32_t>();
@@ -1549,7 +1549,7 @@ void SaveMissile(SaveHelper *file, const Missile &missile)
 	file->WriteLE<uint32_t>(missile._miLightFlag ? 1 : 0);
 	file->WriteLE<uint32_t>(missile._miPreFlag ? 1 : 0);
 	file->WriteLE<uint32_t>(missile._miUniqTrans);
-	file->WriteLE<int32_t>(missile._mirange);
+	file->WriteLE<int32_t>(missile._miduration);
 	file->WriteLE<int32_t>(missile._misource);
 	file->WriteLE<int32_t>(missile._micaster);
 	file->WriteLE<int32_t>(missile._midam);
