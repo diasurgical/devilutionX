@@ -308,7 +308,7 @@ void DeadItem(Player &player, Item &&itm, Displacement direction)
 		return;
 
 	const Point playerTile = player.position.tile;
-	Point target = playerTile + direction;
+	const Point target = playerTile + direction;
 
 	if (direction != Displacement { 0, 0 } && ItemSpaceOk(target)) {
 		RespawnDeadItem(std::move(itm), target);
