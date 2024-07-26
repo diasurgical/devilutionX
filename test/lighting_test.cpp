@@ -1,11 +1,14 @@
 #include <cmath>
 
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include "control.h"
 #include "lighting.h"
 
-using namespace devilution;
+namespace devilution {
+namespace {
+using ::testing::ElementsAre;
 
 TEST(Lighting, CrawlTables)
 {
@@ -33,3 +36,26 @@ TEST(Lighting, CrawlTables)
 		}
 	}
 }
+
+TEST(Lighting, CrawlTablesVisitationOrder)
+{
+	std::vector<Displacement> order;
+	Crawl(0, 2, [&](Displacement displacement) {
+		order.push_back(displacement);
+		return false;
+	});
+	EXPECT_THAT(
+	    order,
+	    ElementsAre(
+	        Displacement(0, 0),
+	        Displacement(0, 1), Displacement(0, -1),
+	        Displacement(-1, 0), Displacement(1, 0),
+	        Displacement(0, 2), Displacement(0, -2),
+	        Displacement(-1, 2), Displacement(1, 2), Displacement(-1, -2), Displacement(1, -2),
+	        Displacement(-1, 1), Displacement(1, 1), Displacement(-1, -1), Displacement(1, -1),
+	        Displacement(-2, 0), Displacement(2, 0), Displacement(-2, 1),
+	        Displacement(2, 1), Displacement(-2, -1), Displacement(2, -1)));
+}
+
+} // namespace
+} // namespace devilution
