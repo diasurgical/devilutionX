@@ -316,11 +316,18 @@ void DeadItem(Player &player, Item &&itm, Displacement direction)
 	}
 
 	for (int k = 1; k < 50; k++) {
-		for (int j = -k; j <= k; j++) {
-			for (int i = -k; i <= k; i++) {
-				Point next = playerTile + Displacement { i, j };
-				if (ItemSpaceOk(next)) {
-					RespawnDeadItem(std::move(itm), next);
+		const int ranges[4][4] {
+			{ -k, k, -k, -k },      // Bottom, whole row.
+			{ -k, -k, -k + 1, k },  // Left, less bottom-left tile.
+			{ k, k, -k + 1, k },    // Right, less bottom-right tile.
+			{ -k + 1, k - 1, k, k } // Top, less top-left and top-right tiles.
+		};
+		for (auto [xMin, xMax, yMin, yMax] : ranges) {
+			for (int x = xMin; x <= xMax; ++x) {
+				for (int y = yMin; y <= yMax; ++y) {
+					const Point p = playerTile + Displacement { x, y };
+					if (!ItemSpaceOk(p)) continue;
+					RespawnDeadItem(std::move(itm), p);
 					return;
 				}
 			}
