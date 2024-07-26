@@ -11,6 +11,7 @@
 
 #include "control.h"
 #include "controls/plrctrls.h"
+#include "crawl.hpp"
 #include "cursor.h"
 #include "dead.h"
 #ifdef _DEBUG

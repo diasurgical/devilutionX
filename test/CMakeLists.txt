@@ -24,7 +24,6 @@ set(tests
   drlg_l4_test
   effects_test
   inv_test
-  lighting_test
   math_test
   missiles_test
   pack_test
@@ -40,22 +39,28 @@ set(tests
 )
 set(standalone_tests
   codec_test
+  crawl_test
   file_util_test
   format_int_test
   parse_int_test
   str_cat_test
   utf8_test
 )
+set(benchmarks
+  crawl_benchmark)
 
 include(Fixtures.cmake)
 
-foreach(test_target ${tests} ${standalone_tests})
+foreach(test_target ${tests} ${standalone_tests} ${benchmarks})
   add_executable(${test_target} "${test_target}.cpp")
-  gtest_discover_tests(${test_target})
   set_target_properties(${test_target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
   if(GPERF)
     target_link_libraries(${test_target} PUBLIC ${GPERFTOOLS_LIBRARIES})
   endif()
+endforeach()
+
+foreach(test_target ${tests} ${standalone_tests})
+  gtest_discover_tests(${test_target})
 endforeach()
 
 foreach(test_target ${tests})
@@ -67,6 +72,11 @@ foreach(test_target ${standalone_tests})
   target_include_directories(${test_target} PRIVATE "${PROJECT_SOURCE_DIR}/Source")
 endforeach()
 
+foreach(target ${benchmarks})
+  target_link_libraries(${target} PRIVATE benchmark::benchmark benchmark::benchmark_main)
+  target_include_directories(${target} PRIVATE "${PROJECT_SOURCE_DIR}/Source")
+endforeach()
+
 add_library(app_fatal_for_testing OBJECT app_fatal_for_testing.cpp)
 target_sources(app_fatal_for_testing INTERFACE $<TARGET_OBJECTS:app_fatal_for_testing>)
 
@@ -74,6 +84,8 @@ add_library(language_for_testing OBJECT language_for_testing.cpp)
 target_sources(language_for_testing INTERFACE $<TARGET_OBJECTS:language_for_testing>)
 
 target_link_libraries(codec_test PRIVATE libdevilutionx_codec app_fatal_for_testing)
+target_link_libraries(crawl_test PRIVATE libdevilutionx_crawl)
+target_link_libraries(crawl_benchmark PRIVATE libdevilutionx_crawl)
 target_link_libraries(file_util_test PRIVATE libdevilutionx_file_util app_fatal_for_testing)
 target_link_libraries(format_int_test PRIVATE libdevilutionx_format_int language_for_testing)
 target_link_libraries(parse_int_test PRIVATE libdevilutionx_parse_int)

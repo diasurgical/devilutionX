@@ -10,6 +10,7 @@
 
 #include <function_ref.hpp>
 
+#include "crawl.hpp"
 #include "levels/gendung.h"
 #include "lighting.h"
 #include "objects.h"
