@@ -307,7 +307,9 @@ void DeadItem(Player &player, Item &&itm, Displacement direction)
 	if (itm.isEmpty())
 		return;
 
-	Point target = player.position.tile + direction;
+	const Point playerTile = player.position.tile;
+	Point target = playerTile + direction;
+
 	if (direction != Displacement { 0, 0 } && ItemSpaceOk(target)) {
 		RespawnDeadItem(std::move(itm), target);
 		return;
@@ -316,7 +318,7 @@ void DeadItem(Player &player, Item &&itm, Displacement direction)
 	for (int k = 1; k < 50; k++) {
 		for (int j = -k; j <= k; j++) {
 			for (int i = -k; i <= k; i++) {
-				Point next = player.position.tile + Displacement { i, j };
+				Point next = playerTile + Displacement { i, j };
 				if (ItemSpaceOk(next)) {
 					RespawnDeadItem(std::move(itm), next);
 					return;
