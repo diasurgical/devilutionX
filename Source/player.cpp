@@ -297,7 +297,7 @@ void RespawnDeadItem(Item &&itm, Point target)
 
 	dItem[target.x][target.y] = ii + 1;
 
-	item = std::move(itm);
+	item = itm;
 	item.position = target;
 	RespawnItem(item, true);
 	NetSendCmdPItem(false, CMD_SPAWNITEM, target, item);
