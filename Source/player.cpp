@@ -302,29 +302,23 @@ void RespawnDeadItem(Item &&itm, Point target)
 	NetSendCmdPItem(false, CMD_SPAWNITEM, target, Items[ii]);
 }
 
-void DeadItem(Player &player, Item &&itm, Displacement direction)
+void DeadItem(Player &player, Item &&item, Displacement direction)
 {
-	if (itm.isEmpty())
+	if (item.isEmpty())
 		return;
 
 	const Point playerTile = player.position.tile;
-	const Point target = playerTile + direction;
-
-	if (direction != Displacement { 0, 0 } && ItemSpaceOk(target)) {
-		RespawnDeadItem(std::move(itm), target);
-		return;
+	if (direction != Displacement { 0, 0 }) {
+		const Point target = playerTile + direction;
+		if (ItemSpaceOk(target)) {
+			RespawnDeadItem(std::move(item), target);
+			return;
+		}
 	}
 
-	for (int k = 1; k < 50; k++) {
-		for (int j = -k; j <= k; j++) {
-			for (int i = -k; i <= k; i++) {
-				Point next = playerTile + Displacement { i, j };
-				if (ItemSpaceOk(next)) {
-					RespawnDeadItem(std::move(itm), next);
-					return;
-				}
-			}
-		}
+	std::optional<Point> dropPoint = FindClosestValidPosition(ItemSpaceOk, playerTile, 1, 50);
+	if (dropPoint) {
+		RespawnDeadItem(std::move(item), *dropPoint);
 	}
 }
 
