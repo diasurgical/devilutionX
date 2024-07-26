@@ -80,3 +80,6 @@ end_of_line = lf
 
 [devilutionx.spec]
 end_of_line = lf
+
+[Dockerfile]
+end_of_line = lf
