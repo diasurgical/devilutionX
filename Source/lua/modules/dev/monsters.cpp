@@ -6,6 +6,7 @@
 
 #include <sol/sol.hpp>
 
+#include "crawl.hpp"
 #include "levels/gendung.h"
 #include "lighting.h"
 #include "lua/metadoc.hpp"

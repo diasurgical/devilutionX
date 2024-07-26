@@ -18,6 +18,7 @@
 #include <fmt/format.h>
 
 #include "control.h"
+#include "crawl.hpp"
 #include "cursor.h"
 #include "dead.h"
 #include "engine/load_cl2.hpp"

@@ -3,14 +3,14 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-#include "control.h"
-#include "lighting.h"
+#include "crawl.hpp"
+#include "engine/displacement.hpp"
 
 namespace devilution {
 namespace {
 using ::testing::ElementsAre;
 
-TEST(Lighting, CrawlTables)
+TEST(CrawlTest, BasicTest)
 {
 	bool added[40][40];
 	memset(added, 0, sizeof(added));
@@ -18,6 +18,7 @@ TEST(Lighting, CrawlTables)
 	int x = 20;
 	int y = 20;
 
+	constexpr int MaxCrawlRadius = 18;
 	Crawl(0, MaxCrawlRadius, [&](Displacement displacement) {
 		int dx = x + displacement.deltaX;
 		int dy = y + displacement.deltaY;
@@ -37,7 +38,7 @@ TEST(Lighting, CrawlTables)
 	}
 }
 
-TEST(Lighting, CrawlTablesVisitationOrder)
+TEST(CrawlTest, VisitationOrderTest)
 {
 	std::vector<Displacement> order;
 	Crawl(0, 2, [&](Displacement displacement) {

@@ -343,6 +343,13 @@ target_link_libraries(libdevilutionx_codec PRIVATE
   libdevilutionx_log
 )
 
+add_devilutionx_object_library(libdevilutionx_crawl
+  crawl.cpp
+)
+target_link_libraries(libdevilutionx_crawl PUBLIC
+  tl
+)
+
 add_devilutionx_object_library(libdevilutionx_file_util
   utils/file_util.cpp
 )
@@ -398,6 +405,7 @@ target_link_libraries(libdevilutionx PUBLIC
   tl
   unordered_dense::unordered_dense
   libdevilutionx_codec
+  libdevilutionx_crawl
   libdevilutionx_format_int
   libdevilutionx_file_util
   libdevilutionx_parse_int
