@@ -1996,7 +1996,7 @@ void Player::UpdatePreviewCelSprite(_cmd_id cmdId, Point point, uint16_t wParam1
 		return;
 
 	LoadPlrGFX(*this, *graphic);
-	ClxSpriteList sprites = AnimationData[static_cast<size_t>(*graphic)].spritesForDirection(dir);
+	ClxSpriteList sprites = animationData[static_cast<size_t>(*graphic)].spritesForDirection(dir);
 	if (!previewCelSprite || *previewCelSprite != sprites[0]) {
 		previewCelSprite = sprites[0];
 		progressToNextGameTickWhenPreviewWasSet = ProgressToNextGameTick;
@@ -2075,7 +2075,7 @@ void LoadPlrGFX(Player &player, player_graphic graphic)
 	if (HeadlessMode)
 		return;
 
-	auto &animationData = player.AnimationData[static_cast<size_t>(graphic)];
+	auto &animationData = player.animationData[static_cast<size_t>(graphic)];
 	if (animationData.sprites)
 		return;
 
@@ -2170,7 +2170,7 @@ void InitPlayerGFX(Player &player)
 void ResetPlayerGFX(Player &player)
 {
 	player.AnimInfo.sprites = std::nullopt;
-	for (PlayerAnimationData &animData : player.AnimationData) {
+	for (PlayeranimationData &animData : player.animationData) {
 		animData.sprites = std::nullopt;
 	}
 }
@@ -2182,7 +2182,7 @@ void NewPlrAnim(Player &player, player_graphic graphic, Direction dir, Animation
 	OptionalClxSpriteList sprites;
 	int previewShownGameTickFragments = 0;
 	if (!HeadlessMode) {
-		sprites = player.AnimationData[static_cast<size_t>(graphic)].spritesForDirection(dir);
+		sprites = player.animationData[static_cast<size_t>(graphic)].spritesForDirection(dir);
 		if (player.previewCelSprite && (*sprites)[0] == *player.previewCelSprite && !player.isWalking()) {
 			previewShownGameTickFragments = std::clamp<int>(AnimationInfo::baseValueFraction - player.progressToNextGameTickWhenPreviewWasSet, 0, AnimationInfo::baseValueFraction);
 		}
@@ -3207,7 +3207,7 @@ void SyncPlrAnim(Player &player)
 {
 	const player_graphic graphic = player.getGraphic();
 	if (!HeadlessMode)
-		player.AnimInfo.sprites = player.AnimationData[static_cast<size_t>(graphic)].spritesForDirection(player._pdir);
+		player.AnimInfo.sprites = player.animationData[static_cast<size_t>(graphic)].spritesForDirection(player._pdir);
 }
 
 void SyncInitPlrPos(Player &player)

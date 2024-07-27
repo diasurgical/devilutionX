@@ -146,7 +146,7 @@ void InitMonster(Monster &monster, Direction rd, size_t typeIndex, Point positio
 	monster.levelType = static_cast<uint8_t>(typeIndex);
 	monster.mode = MonsterMode::Stand;
 	monster.animInfo = {};
-	monster.changeAnimationData(MonsterGraphic::Stand);
+	monster.changeanimationData(MonsterGraphic::Stand);
 	monster.animInfo.tickCounterOfCurrentFrame = GenerateRnd(monster.animInfo.ticksPerFrame - 1);
 	monster.animInfo.currentFrame = GenerateRnd(monster.animInfo.numberOfFrames - 1);
 
@@ -187,7 +187,7 @@ void InitMonster(Monster &monster, Direction rd, size_t typeIndex, Point positio
 	monster.talkMsg = TEXT_NONE;
 
 	if (monster.ai == MonsterAIID::Gargoyle) {
-		monster.changeAnimationData(MonsterGraphic::Special);
+		monster.changeanimationData(MonsterGraphic::Special);
 		monster.animInfo.currentFrame = 0;
 		monster.flags |= MFLAG_ALLOW_SPECIAL;
 		monster.mode = MonsterMode::SpecialMeleeAttack;
@@ -302,7 +302,7 @@ void PlaceGroup(size_t typeIndex, size_t num, Monster *leader = nullptr, bool le
 				}
 
 				if (minion.ai != MonsterAIID::Gargoyle) {
-					minion.changeAnimationData(MonsterGraphic::Stand);
+					minion.changeanimationData(MonsterGraphic::Stand);
 					minion.animInfo.currentFrame = GenerateRnd(minion.animInfo.numberOfFrames - 1);
 					minion.flags &= ~MFLAG_ALLOW_SPECIAL;
 					minion.mode = MonsterMode::Stand;
@@ -983,7 +983,7 @@ void StartFadeout(Monster &monster, Direction md, bool backwards)
  */
 void StartHeal(Monster &monster)
 {
-	monster.changeAnimationData(MonsterGraphic::Special);
+	monster.changeanimationData(MonsterGraphic::Special);
 	monster.animInfo.currentFrame = monster.type().getAnimData(MonsterGraphic::Special).frames - 1;
 	monster.flags |= MFLAG_LOCK_ANIMATION;
 	monster.mode = MonsterMode::Heal;
@@ -1002,9 +1002,9 @@ void SyncLightPosition(Monster &monster)
 void MonsterIdle(Monster &monster)
 {
 	if (monster.type().type == MT_GOLEM)
-		monster.changeAnimationData(MonsterGraphic::Walk);
+		monster.changeanimationData(MonsterGraphic::Walk);
 	else
-		monster.changeAnimationData(MonsterGraphic::Stand);
+		monster.changeanimationData(MonsterGraphic::Stand);
 
 	if (monster.animInfo.isLastFrame())
 		UpdateEnemy(monster);
@@ -1484,7 +1484,7 @@ bool MonsterSpecialStand(Monster &monster)
 
 bool MonsterDelay(Monster &monster)
 {
-	monster.changeAnimationData(MonsterGraphic::Stand, GetMonsterDirection(monster));
+	monster.changeanimationData(MonsterGraphic::Stand, GetMonsterDirection(monster));
 	if (monster.ai == MonsterAIID::Lazarus) {
 		if (monster.var2 > 8 || monster.var2 < 0)
 			monster.var2 = 8;
@@ -2432,7 +2432,7 @@ void SneakAi(Monster &monster)
 	}
 	if (monster.mode == MonsterMode::Stand) {
 		if (distanceToEnemy >= 2 || v >= 4 * monster.intelligence + 10)
-			monster.changeAnimationData(MonsterGraphic::Stand);
+			monster.changeanimationData(MonsterGraphic::Stand);
 		else
 			StartAttack(monster);
 	}
@@ -3239,7 +3239,7 @@ void PrepareUniqueMonst(Monster &monster, UniqueMonsterType monsterType, size_t 
 	}
 
 	if (monster.ai != MonsterAIID::Gargoyle) {
-		monster.changeAnimationData(MonsterGraphic::Stand);
+		monster.changeanimationData(MonsterGraphic::Stand);
 		monster.animInfo.currentFrame = GenerateRnd(monster.animInfo.numberOfFrames - 1);
 		monster.flags &= ~MFLAG_ALLOW_SPECIAL;
 		monster.mode = MonsterMode::Stand;
@@ -4285,7 +4285,7 @@ void SyncMonsterAnim(Monster &monster)
 		break;
 	}
 
-	monster.changeAnimationData(graphic);
+	monster.changeanimationData(graphic);
 }
 
 void M_FallenFear(Point position)
@@ -4721,7 +4721,7 @@ void Monster::checkStandAnimationIsLoaded(Direction mdir)
 {
 	if (IsAnyOf(mode, MonsterMode::Stand, MonsterMode::Talk)) {
 		direction = mdir;
-		changeAnimationData(MonsterGraphic::Stand);
+		changeanimationData(MonsterGraphic::Stand);
 	}
 }
 

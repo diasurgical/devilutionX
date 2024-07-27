@@ -191,7 +191,7 @@ constexpr std::array<char, 6> CharChar = {
 /**
  * @brief Contains Data (CelSprites) for a player graphic (player_graphic)
  */
-struct PlayerAnimationData {
+struct PlayeranimationData {
 	/**
 	 * @brief Sprite lists for each of the 8 directions.
 	 */
@@ -285,9 +285,9 @@ struct Player {
 	/** @brief Bitmask using item_special_effect */
 	ItemSpecialEffect _pIFlags;
 	/**
-	 * @brief Contains Data (Sprites) for the different Animations
+	 * @brief Contains Data (Sprites) for the different Animations (AnimationData)
 	 */
-	std::array<PlayerAnimationData, enum_size<player_graphic>::value> AnimationData;
+	std::array<PlayeranimationData, enum_size<player_graphic>::value> animationData;
 	int8_t _pNFrames;
 	int8_t _pWFrames;
 	int8_t _pAFrames;

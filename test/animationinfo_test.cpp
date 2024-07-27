@@ -22,8 +22,8 @@ struct TestData {
 /**
  * @brief Represents a call to setNewAnimation
  */
-struct SetNewAnimationData : public TestData {
-	SetNewAnimationData(int numberOfFrames, int delayLen, AnimationDistributionFlags params = AnimationDistributionFlags::None, int numSkippedFrames = 0, int distributeFramesBeforeFrame = 0)
+struct SetNewanimationData : public TestData {
+	SetNewanimationData(int numberOfFrames, int delayLen, AnimationDistributionFlags params = AnimationDistributionFlags::None, int numSkippedFrames = 0, int distributeFramesBeforeFrame = 0)
 	{
 		_NumberOfFrames = numberOfFrames;
 		_DelayLen = delayLen;
@@ -98,8 +98,8 @@ void RunAnimationTest(const std::vector<TestData *> &vecTestData)
 	for (TestData *x : vecTestData) {
 		switch (x->type()) {
 		case TestDataType::SetNewAnimation: {
-			auto setNewAnimationData = static_cast<SetNewAnimationData *>(x);
-			animInfo.setNewAnimation(std::nullopt, setNewAnimationData->_NumberOfFrames, setNewAnimationData->_DelayLen, setNewAnimationData->_Params, setNewAnimationData->_NumSkippedFrames, setNewAnimationData->_DistributeFramesBeforeFrame);
+			auto setNewanimationData = static_cast<SetNewanimationData *>(x);
+			animInfo.setNewAnimation(std::nullopt, setNewanimationData->_NumberOfFrames, setNewanimationData->_DelayLen, setNewanimationData->_Params, setNewanimationData->_NumSkippedFrames, setNewanimationData->_DistributeFramesBeforeFrame);
 		} break;
 		case TestDataType::GameTick: {
 			auto gameTickData = static_cast<GameTickData *>(x);
@@ -129,7 +129,7 @@ TEST(AnimationInfo, AttackSwordWarrior) // ProcessAnimationPending should be con
 {
 	RunAnimationTest(
 	    {
-	        new SetNewAnimationData(16, 1, AnimationDistributionFlags::ProcessAnimationPending, 0, 9),
+	        new SetNewanimationData(16, 1, AnimationDistributionFlags::ProcessAnimationPending, 0, 9),
 	        // processAnimation directly after StartAttack (in same GameTick). So we don't see any rendering before.
 	        new GameTickData(1, 0),
 	        new RenderingData(0.0f, 0),
@@ -192,7 +192,7 @@ TEST(AnimationInfo, AttackSwordWarriorWithFastestAttack) // Skipped frames and P
 {
 	RunAnimationTest(
 	    {
-	        new SetNewAnimationData(16, 1, AnimationDistributionFlags::ProcessAnimationPending, 2, 9),
+	        new SetNewanimationData(16, 1, AnimationDistributionFlags::ProcessAnimationPending, 2, 9),
 	        // processAnimation directly after StartAttack (in same GameTick). So we don't see any rendering before.
 	        new GameTickData(3, 0),
 	        new RenderingData(0.0f, 0),
@@ -248,7 +248,7 @@ TEST(AnimationInfo, AttackSwordWarriorRepeated)
 {
 	RunAnimationTest(
 	    {
-	        new SetNewAnimationData(16, 1, AnimationDistributionFlags::ProcessAnimationPending, 0, 9),
+	        new SetNewanimationData(16, 1, AnimationDistributionFlags::ProcessAnimationPending, 0, 9),
 	        // processAnimation directly after StartAttack (in same GameTick). So we don't see any rendering before.
 	        new GameTickData(1, 0),
 	        new RenderingData(0.0f, 0),
@@ -293,7 +293,7 @@ TEST(AnimationInfo, AttackSwordWarriorRepeated)
 	        new RenderingData(0.3f, 9),
 
 	        // Start of repeated attack, cause plr[pnum].AnimInfo.currentFrame > plr[myplr]._pAFNum
-	        new SetNewAnimationData(16, 1, static_cast<AnimationDistributionFlags>(AnimationDistributionFlags::ProcessAnimationPending | AnimationDistributionFlags::RepeatedAction), 0, 9),
+	        new SetNewanimationData(16, 1, static_cast<AnimationDistributionFlags>(AnimationDistributionFlags::ProcessAnimationPending | AnimationDistributionFlags::RepeatedAction), 0, 9),
 	        // processAnimation directly after StartAttack (in same GameTick). So we don't see any rendering before.
 	        new GameTickData(1, 0),
 	        new RenderingData(0.0f, 10),
@@ -356,7 +356,7 @@ TEST(AnimationInfo, BlockingWarriorNormal) // Ignored delay for last Frame shoul
 {
 	RunAnimationTest(
 	    {
-	        new SetNewAnimationData(2, 3, AnimationDistributionFlags::SkipsDelayOfLastFrame),
+	        new SetNewanimationData(2, 3, AnimationDistributionFlags::SkipsDelayOfLastFrame),
 	        new RenderingData(0.0f, 0),
 	        new RenderingData(0.3f, 0),
 	        new RenderingData(0.6f, 0),
@@ -384,7 +384,7 @@ TEST(AnimationInfo, BlockingSorcererWithFastBlock) // Skipped frames and ignored
 {
 	RunAnimationTest(
 	    {
-	        new SetNewAnimationData(6, 3, AnimationDistributionFlags::SkipsDelayOfLastFrame, 4),
+	        new SetNewanimationData(6, 3, AnimationDistributionFlags::SkipsDelayOfLastFrame, 4),
 	        new RenderingData(0.0f, 0),
 	        new RenderingData(0.3f, 0),
 	        new RenderingData(0.6f, 0),
@@ -412,7 +412,7 @@ TEST(AnimationInfo, HitRecoverySorcererHarmony) // Skipped frames and ignored de
 {
 	RunAnimationTest(
 	    {
-	        new SetNewAnimationData(8, 1, AnimationDistributionFlags::None, 3),
+	        new SetNewanimationData(8, 1, AnimationDistributionFlags::None, 3),
 	        new RenderingData(0.0f, 0),
 	        new RenderingData(0.3f, 0),
 	        new RenderingData(0.6f, 0),
@@ -444,7 +444,7 @@ TEST(AnimationInfo, Stand) // Distribution Logic shouldn't change anything here
 {
 	RunAnimationTest(
 	    {
-	        new SetNewAnimationData(10, 4),
+	        new SetNewanimationData(10, 4),
 	        new RenderingData(0.1f, 0),
 	        new GameTickData(0, 1),
 	        new RenderingData(0.6f, 0),

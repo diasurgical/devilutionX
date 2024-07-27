@@ -2811,8 +2811,8 @@ void CalcPlrGraphics(Player &player, PlayerWeaponGraphic animWeaponId, PlayerArm
 		LoadPlrGFX(player, graphic);
 		OptionalClxSpriteList sprites;
 		if (!HeadlessMode)
-			sprites = player.AnimationData[static_cast<size_t>(graphic)].spritesForDirection(player._pdir);
-		player.AnimInfo.changeAnimationData(sprites, numberOfFrames, ticksPerFrame);
+			sprites = player.animationData[static_cast<size_t>(graphic)].spritesForDirection(player._pdir);
+		player.AnimInfo.changeanimationData(sprites, numberOfFrames, ticksPerFrame);
 	} else {
 		player._pgfxnum = gfxNum;
 	}

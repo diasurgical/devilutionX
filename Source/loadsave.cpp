@@ -2548,7 +2548,7 @@ void LoadGame(bool firstflag)
 		}
 	}
 
-	SetUpMissileAnimationData();
+	SetUpMissileanimationData();
 	RedoMissileFlags();
 	NewCursor(CURSOR_HAND);
 	gbProcessPlayers = IsDiabloAlive(!firstflag);

@@ -4175,7 +4175,7 @@ void ProcessMissiles()
 	DeleteMissiles();
 }
 
-void SetUpMissileAnimationData()
+void SetUpMissileanimationData()
 {
 	for (auto &missile : Missiles) {
 		if (missile._miAnimType == MissileGraphicID::None)
