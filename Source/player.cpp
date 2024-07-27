@@ -663,8 +663,8 @@ bool PlrHitMonst(Player &player, Monster &monster, bool adjacentDamage = false)
 			skdam = 5 * dam / 100;
 		}
 		player._pMana += skdam;
-		if (player._pMana > player._pMaxMana) {
-			player._pMana = player._pMaxMana;
+		if (player._pMana > player.maxMana) {
+			player._pMana = player.maxMana;
 		}
 		player._pManaBase += skdam;
 		if (player._pManaBase > player._pMaxManaBase) {
@@ -1767,14 +1767,14 @@ void Player::RestorePartialLife()
 
 void Player::RestorePartialMana()
 {
-	int wholeManaPoints = _pMaxMana >> 6;
+	int wholeManaPoints = maxMana >> 6;
 	int l = ((wholeManaPoints / 8) + GenerateRnd(wholeManaPoints / 4)) << 6;
 	if (_pClass == HeroClass::Sorcerer)
 		l *= 2;
 	if (IsAnyOf(_pClass, HeroClass::Rogue, HeroClass::Monk, HeroClass::Bard))
 		l += l / 2;
 	if (HasNoneOf(_pIFlags, ItemSpecialEffect::NoMana)) {
-		_pMana = std::min(_pMana + l, _pMaxMana);
+		_pMana = std::min(_pMana + l, maxMana);
 		_pManaBase = std::min(_pManaBase + l, _pMaxManaBase);
 	}
 }
@@ -2292,7 +2292,7 @@ void CreatePlayer(Player &player, HeroClass c)
 	player._pMaxHPBase = player._pHitPoints;
 
 	player._pMana = player.calculateBaseMana();
-	player._pMaxMana = player._pMana;
+	player.maxMana = player._pMana;
 	player._pManaBase = player._pMana;
 	player._pMaxManaBase = player._pMana;
 
@@ -2368,11 +2368,11 @@ void NextPlrLevel(Player &player)
 
 	int mana = player.getClassAttributes().lvlMana;
 
-	player._pMaxMana += mana;
+	player.maxMana += mana;
 	player._pMaxManaBase += mana;
 
 	if (HasNoneOf(player._pIFlags, ItemSpecialEffect::NoMana)) {
-		player._pMana = player._pMaxMana;
+		player._pMana = player.maxMana;
 		player._pManaBase = player._pMaxManaBase;
 	}
 
@@ -2803,7 +2803,7 @@ void ApplyPlrDamage(DamageType damageType, Player &player, int dam, int minHP /*
 				totalDamage += totalDamage / (player.GetManaShieldDamageReduction() - 1);
 			}
 			player._pMana = 0;
-			player._pManaBase = player._pMaxManaBase - player._pMaxMana;
+			player._pManaBase = player._pMaxManaBase - player.maxMana;
 			if (&player == MyPlayer)
 				NetSendCmd(true, CMD_REMSHIELD);
 		}
@@ -2913,7 +2913,7 @@ void RestartTownLvl(Player &player)
 	SetPlayerHitPoints(player, 64);
 
 	player._pMana = 0;
-	player._pManaBase = player._pMana - (player._pMaxMana - player._pMaxManaBase);
+	player._pManaBase = player._pMana - (player.maxMana - player._pMaxManaBase);
 
 	CalcPlrInv(player, false);
 	player._pmode = PM_NEWLVL;
@@ -3302,7 +3302,7 @@ void ModifyPlrMag(Player &player, int l)
 	ms *= player.getClassAttributes().chrMana;
 
 	player._pMaxManaBase += ms;
-	player._pMaxMana += ms;
+	player.maxMana += ms;
 	if (HasNoneOf(player._pIFlags, ItemSpecialEffect::NoMana)) {
 		player._pManaBase += ms;
 		player._pMana += ms;
@@ -3374,7 +3374,7 @@ void SetPlrMag(Player &player, int v)
 	m *= player.getClassAttributes().chrMana;
 
 	player._pMaxManaBase = m;
-	player._pMaxMana = m;
+	player.maxMana = m;
 	CalcPlrInv(player, true);
 }
 

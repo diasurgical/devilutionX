@@ -2517,17 +2517,17 @@ void OperateShrineCostOfWisdom(Player &player, SpellID spellId, diablo_message m
 
 	uint32_t t = player._pMaxManaBase / 10;
 	int v1 = player._pMana - player._pManaBase;
-	int v2 = player._pMaxMana - player._pMaxManaBase;
+	int v2 = player.maxMana - player._pMaxManaBase;
 	player._pManaBase -= t;
 	player._pMana -= t;
-	player._pMaxMana -= t;
+	player.maxMana -= t;
 	player._pMaxManaBase -= t;
 	if (player._pMana >> 6 <= 0) {
 		player._pMana = v1;
 		player._pManaBase = 0;
 	}
-	if (player._pMaxMana >> 6 <= 0) {
-		player._pMaxMana = v2;
+	if (player.maxMana >> 6 <= 0) {
+		player.maxMana = v2;
 		player._pMaxManaBase = 0;
 	}
 
@@ -2551,7 +2551,7 @@ void OperateShrineCryptic(Player &player)
 	if (&player != MyPlayer)
 		return;
 
-	player._pMana = player._pMaxMana;
+	player._pMana = player.maxMana;
 	player._pManaBase = player._pMaxManaBase;
 
 	InitDiabloMsg(EMSG_SHRINE_CRYPTIC);
@@ -2624,7 +2624,7 @@ void OperateShrineDivine(Player &player, Point spawnPosition)
 		CreateTypeItem(spawnPosition, false, ItemType::Misc, IMISC_FULLREJUV, false, false, true);
 	}
 
-	player._pMana = player._pMaxMana;
+	player._pMana = player.maxMana;
 	player._pManaBase = player._pMaxManaBase;
 	player._pHitPoints = player._pMaxHP;
 	player._pHPBase = player._pMaxHPBase;
@@ -2674,7 +2674,7 @@ void OperateShrineSpooky(const Player &player)
 
 	myPlayer._pHitPoints = myPlayer._pMaxHP;
 	myPlayer._pHPBase = myPlayer._pMaxHPBase;
-	myPlayer._pMana = myPlayer._pMaxMana;
+	myPlayer._pMana = myPlayer.maxMana;
 	myPlayer._pManaBase = myPlayer._pMaxManaBase;
 
 	RedrawEverything();
@@ -2918,7 +2918,7 @@ void OperateShrineShimmering(Player &player)
 	if (&player != MyPlayer)
 		return;
 
-	player._pMana = player._pMaxMana;
+	player._pMana = player.maxMana;
 	player._pManaBase = player._pMaxManaBase;
 
 	RedrawEverything();
@@ -3236,13 +3236,13 @@ bool OperateFountains(Player &player, Object &fountain)
 		if (&player != MyPlayer)
 			return false;
 
-		if (player._pMana < player._pMaxMana) {
+		if (player._pMana < player.maxMana) {
 			PlaySfxLoc(SfxID::OperateFountain, fountain.position);
 
 			player._pMana += 64;
 			player._pManaBase += 64;
-			if (player._pMana > player._pMaxMana) {
-				player._pMana = player._pMaxMana;
+			if (player._pMana > player.maxMana) {
+				player._pMana = player.maxMana;
 				player._pManaBase = player._pMaxManaBase;
 			}
 

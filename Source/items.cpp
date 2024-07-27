@@ -2708,8 +2708,8 @@ void CalcPlrLifeMana(Player &player, int vitality, int magic, int life, int mana
 		SetPlayerHitPoints(player, 0);
 	}
 
-	player._pMaxMana = mana + player._pMaxManaBase;
-	player._pMana = std::min(mana + player._pManaBase, player._pMaxMana);
+	player.maxMana = mana + player._pMaxManaBase;
+	player._pMana = std::min(mana + player._pManaBase, player.maxMana);
 }
 
 void CalcPlrBlockFlag(Player &player)
@@ -4222,7 +4222,7 @@ void UseItem(Player &player, item_misc_id mid, SpellID spellID, int spellFrom)
 		}
 		if (HasNoneOf(player._pIFlags, ItemSpecialEffect::NoMana)) {
 			player._pMana += GetSpellData(spellID).sManaCost << 6;
-			player._pMana = std::min(player._pMana, player._pMaxMana);
+			player._pMana = std::min(player._pMana, player.maxMana);
 			player._pManaBase += GetSpellData(spellID).sManaCost << 6;
 			player._pManaBase = std::min(player._pManaBase, player._pMaxManaBase);
 		}

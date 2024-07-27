@@ -260,7 +260,7 @@ void DoResurrect(Player &player, Player &target)
 
 	target._pHPBase = target._pHitPoints + (target._pMaxHPBase - target._pMaxHP); // CODEFIX: does the same stuff as SetPlayerHitPoints above, can be removed
 	target._pMana = 0;
-	target._pManaBase = target._pMana + (target._pMaxManaBase - target._pMaxMana);
+	target._pManaBase = target._pMana + (target._pMaxManaBase - target.maxMana);
 
 	target._pmode = PM_STAND;
 

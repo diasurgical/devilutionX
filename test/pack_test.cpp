@@ -1099,7 +1099,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_mana)
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_maxMana)
 {
-	MyPlayer->_pMaxMana++;
+	MyPlayer->maxMana++;
 	ASSERT_FALSE(TestNetPackValidation());
 }
 
@@ -1292,7 +1292,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_maxHPBase)
 	ASSERT_FALSE(TestNetPackValidation());
 }
 
-TEST_F(NetPackTest, UnPackNetPlayer_invalid_maxManaBase)
+TEST_F(NetPackTest, UnPackNetPlayer_invalid__pMaxManaBase)
 {
 	MyPlayer->_pMaxManaBase++;
 	ASSERT_FALSE(TestNetPackValidation());

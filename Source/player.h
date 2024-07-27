@@ -244,7 +244,7 @@ struct Player {
 	int _pManaBase;
 	int _pMaxManaBase;
 	int _pMana;
-	int _pMaxMana;
+	int maxMana; // _pMaxMana
 	int _pManaPer;
 	int _pIMinDam;
 	int _pIMaxDam;
@@ -697,10 +697,10 @@ public:
 
 	int UpdateManaPercentage()
 	{
-		if (_pMaxMana <= 0) {
+		if (maxMana <= 0) {
 			_pManaPer = 0;
 		} else {
-			_pManaPer = std::clamp(_pMana * 80 / _pMaxMana, 0, 80);
+			_pManaPer = std::clamp(_pMana * 80 / maxMana, 0, 80);
 		}
 
 		return _pManaPer;
@@ -740,7 +740,7 @@ public:
 	void RestoreFullMana()
 	{
 		if (HasNoneOf(_pIFlags, ItemSpecialEffect::NoMana)) {
-			_pMana = _pMaxMana;
+			_pMana = maxMana;
 			_pManaBase = _pMaxManaBase;
 		}
 	}
