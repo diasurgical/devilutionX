@@ -159,7 +159,7 @@ R 16 alignment
 R 32 _pISplDur
 R 32 _pIEnAc
 R 32 _pIFMinDam
-R 32 _pIFMaxDam
+R 32 maxFireDamage
 R 32 _pILMinDam
 R 32 _pILMaxDam
 R 32 _pOilType

@@ -2815,7 +2815,7 @@ void ProcessElementalArrow(Missile &missile)
 					// BUGFIX: damage of missile should be encoded in missile struct; player can be dead/have left the game before missile arrives.
 					const Player &player = Players[p];
 					eMind = player._pIFMinDam;
-					eMaxd = player._pIFMaxDam;
+					eMaxd = player.maxFireDamage;
 				} else {
 					eMind = GenerateRnd(10) + 1 + currlevel;
 					eMaxd = GenerateRnd(10) + 1 + currlevel * 2;
@@ -3550,7 +3550,7 @@ void ProcessWeaponExplosion(Missile &missile)
 	if (missile.var2 == 1) {
 		// BUGFIX: damage of missile should be encoded in missile struct; player can be dead/have left the game before missile arrives.
 		mind = player._pIFMinDam;
-		maxd = player._pIFMaxDam;
+		maxd = player.maxFireDamage;
 		damageType = DamageType::Fire;
 	} else {
 		// BUGFIX: damage of missile should be encoded in missile struct; player can be dead/have left the game before missile arrives.

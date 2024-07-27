@@ -1249,7 +1249,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_iFMinDam)
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_iFMaxDam)
 {
-	MyPlayer->_pIFMaxDam++;
+	MyPlayer->maxFireDamage++;
 	ASSERT_FALSE(TestNetPackValidation());
 
 	CalcPlrItemVals(*MyPlayer, false);
