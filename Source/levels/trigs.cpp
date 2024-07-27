@@ -863,7 +863,7 @@ void CheckTriggers()
 {
 	Player &myPlayer = *MyPlayer;
 
-	if (myPlayer._pmode != PM_STAND)
+	if (myPlayer.mode != PM_STAND)
 		return;
 
 	for (int i = 0; i < numtrigs; i++) {

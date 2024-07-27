@@ -1646,7 +1646,7 @@ void CycleSpellHotkeys(bool next)
 
 bool IsPlayerDead()
 {
-	return MyPlayer->_pmode == PM_DEATH || MyPlayerIsDead;
+	return MyPlayer->mode == PM_DEATH || MyPlayerIsDead;
 }
 
 bool IsGameRunning()

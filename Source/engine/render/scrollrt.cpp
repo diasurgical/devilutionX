@@ -741,14 +741,14 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 		int playerId = static_cast<int>(pid) + 1;
 		// If sprite is moving southwards or east, we want to draw it offset from the tile it's moving to, so we need negative ID
 		// This respests the order that tiles are drawn. By using the negative id, we ensure that the sprite is drawn with priority
-		if (player->_pmode == PM_WALK_SOUTHWARDS || (player->_pmode == PM_WALK_SIDEWAYS && player->_pdir == Direction::East))
+		if (player->mode == PM_WALK_SOUTHWARDS || (player->mode == PM_WALK_SIDEWAYS && player->_pdir == Direction::East))
 			playerId = -playerId;
 		if (dPlayer[tilePosition.x][tilePosition.y] == playerId) {
 			auto tempTilePosition = tilePosition;
 			auto tempTargetBufferPosition = targetBufferPosition;
 
 			// Offset the sprite to the tile it's moving from
-			if (player->_pmode == PM_WALK_SOUTHWARDS) {
+			if (player->mode == PM_WALK_SOUTHWARDS) {
 				switch (player->_pdir) {
 				case Direction::SouthWest:
 					tempTargetBufferPosition += { TILE_WIDTH / 2, -TILE_HEIGHT / 2 };
@@ -763,7 +763,7 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 					DVL_UNREACHABLE();
 				}
 				tempTilePosition += Opposite(player->_pdir);
-			} else if (player->_pmode == PM_WALK_SIDEWAYS && player->_pdir == Direction::East) {
+			} else if (player->mode == PM_WALK_SIDEWAYS && player->_pdir == Direction::East) {
 				tempTargetBufferPosition += { -TILE_WIDTH, 0 };
 				tempTilePosition += Opposite(player->_pdir);
 			}

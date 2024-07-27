@@ -126,7 +126,7 @@ void HandleWalkMode(Player &player, Direction dir)
 	WalkInDirection(player, dirModeParams);
 
 	player.tempDirection = dirModeParams.dir;
-	player._pmode = dirModeParams.walkMode;
+	player.mode = dirModeParams.walkMode;
 }
 
 void StartWalkAnimation(Player &player, Direction dir, bool pmWillBeCalled)
@@ -195,10 +195,10 @@ void StartAttack(Player &player, Direction d, bool includesFirstFrame)
 	}
 
 	auto animationFlags = AnimationDistributionFlags::ProcessAnimationPending;
-	if (player._pmode == PM_ATTACK)
+	if (player.mode == PM_ATTACK)
 		animationFlags = static_cast<AnimationDistributionFlags>(animationFlags | AnimationDistributionFlags::RepeatedAction);
 	NewPlrAnim(player, player_graphic::Attack, d, animationFlags, skippedAnimationFrames, player._pAFNum);
-	player._pmode = PM_ATTACK;
+	player.mode = PM_ATTACK;
 	FixPlayerLocation(player, d);
 	SetPlayerOld(player);
 }
@@ -221,11 +221,11 @@ void StartRangeAttack(Player &player, Direction d, WorldTileCoord cx, WorldTileC
 	}
 
 	auto animationFlags = AnimationDistributionFlags::ProcessAnimationPending;
-	if (player._pmode == PM_RATTACK)
+	if (player.mode == PM_RATTACK)
 		animationFlags = static_cast<AnimationDistributionFlags>(animationFlags | AnimationDistributionFlags::RepeatedAction);
 	NewPlrAnim(player, player_graphic::Attack, d, animationFlags, skippedAnimationFrames, player._pAFNum);
 
-	player._pmode = PM_RATTACK;
+	player.mode = PM_RATTACK;
 	FixPlayerLocation(player, d);
 	SetPlayerOld(player);
 	player.position.temp = WorldTilePosition { cx, cy };
@@ -271,13 +271,13 @@ void StartSpell(Player &player, Direction d, WorldTileCoord cx, WorldTileCoord c
 		return;
 
 	auto animationFlags = AnimationDistributionFlags::ProcessAnimationPending;
-	if (player._pmode == PM_SPELL)
+	if (player.mode == PM_SPELL)
 		animationFlags = static_cast<AnimationDistributionFlags>(animationFlags | AnimationDistributionFlags::RepeatedAction);
 	NewPlrAnim(player, GetPlayerGraphicForSpell(player.queuedSpell.spellId), d, animationFlags, 0, player._pSFNum);
 
 	PlaySfxLoc(GetSpellData(player.queuedSpell.spellId).sSFX, player.position.tile);
 
-	player._pmode = PM_SPELL;
+	player.mode = PM_SPELL;
 
 	FixPlayerLocation(player, d);
 	SetPlayerOld(player);
@@ -715,7 +715,7 @@ bool PlrHitPlr(Player &attacker, Player &target)
 	hper = std::clamp(hper, 5, 95);
 
 	int blk = 100;
-	if ((target._pmode == PM_STAND || target._pmode == PM_ATTACK) && target._pBlockFlag) {
+	if ((target.mode == PM_STAND || target.mode == PM_ATTACK) && target._pBlockFlag) {
 		blk = GenerateRnd(100);
 	}
 
@@ -1139,7 +1139,7 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 
 	Direction d;
 	if (player.walkpath[0] != WALK_NONE) {
-		if (player._pmode == PM_STAND) {
+		if (player.mode == PM_STAND) {
 			if (&player == MyPlayer) {
 				if (player.destAction == ACTION_ATTACKMON || player.destAction == ACTION_ATTACKPLR) {
 					if (player.destAction == ACTION_ATTACKMON) {
@@ -1197,7 +1197,7 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 
 			player.walkpath[MaxPathLength - 1] = WALK_NONE;
 
-			if (player._pmode == PM_STAND) {
+			if (player.mode == PM_STAND) {
 				StartStand(player, player._pdir);
 				player.destAction = ACTION_NONE;
 			}
@@ -1209,7 +1209,7 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 		return;
 	}
 
-	if (player._pmode == PM_STAND) {
+	if (player.mode == PM_STAND) {
 		switch (player.destAction) {
 		case ACTION_ATTACK:
 			d = GetDirection(player.position.tile, { player.destParam1, player.destParam2 });
@@ -1332,7 +1332,7 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 		return;
 	}
 
-	if (player._pmode == PM_ATTACK && player.AnimInfo.currentFrame >= player._pAFNum) {
+	if (player.mode == PM_ATTACK && player.AnimInfo.currentFrame >= player._pAFNum) {
 		if (player.destAction == ACTION_ATTACK) {
 			d = GetDirection(player.position.future, { player.destParam1, player.destParam2 });
 			StartAttack(player, d, pmWillBeCalled);
@@ -1363,7 +1363,7 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 		}
 	}
 
-	if (player._pmode == PM_RATTACK && player.AnimInfo.currentFrame >= player._pAFNum) {
+	if (player.mode == PM_RATTACK && player.AnimInfo.currentFrame >= player._pAFNum) {
 		if (player.destAction == ACTION_RATTACK) {
 			d = GetDirection(player.position.tile, { player.destParam1, player.destParam2 });
 			StartRangeAttack(player, d, player.destParam1, player.destParam2, pmWillBeCalled);
@@ -1379,7 +1379,7 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 		}
 	}
 
-	if (player._pmode == PM_SPELL && player.AnimInfo.currentFrame >= player._pSFNum) {
+	if (player.mode == PM_SPELL && player.AnimInfo.currentFrame >= player._pSFNum) {
 		if (player.destAction == ACTION_SPELL) {
 			d = GetDirection(player.position.tile, { player.destParam1, player.destParam2 });
 			StartSpell(player, d, player.destParam1, player.destParam2);
@@ -1401,13 +1401,13 @@ bool PlrDeathModeOK(Player &player)
 	if (&player != MyPlayer) {
 		return true;
 	}
-	if (player._pmode == PM_DEATH) {
+	if (player.mode == PM_DEATH) {
 		return true;
 	}
-	if (player._pmode == PM_QUIT) {
+	if (player.mode == PM_QUIT) {
 		return true;
 	}
-	if (player._pmode == PM_NEWLVL) {
+	if (player.mode == PM_NEWLVL) {
 		return true;
 	}
 
@@ -1744,7 +1744,7 @@ void Player::Stop()
 
 bool Player::isWalking() const
 {
-	return IsAnyOf(_pmode, PM_WALK_NORTHWARDS, PM_WALK_SOUTHWARDS, PM_WALK_SIDEWAYS);
+	return IsAnyOf(mode, PM_WALK_NORTHWARDS, PM_WALK_SOUTHWARDS, PM_WALK_SIDEWAYS);
 }
 
 int Player::GetManaShieldDamageReduction()
@@ -1793,7 +1793,7 @@ void Player::ReadySpellFromEquipment(inv_body_loc bodyLocation, bool forceSpell)
 
 player_graphic Player::getGraphic() const
 {
-	switch (_pmode) {
+	switch (mode) {
 	case PM_STAND:
 	case PM_NEWLVL:
 	case PM_QUIT:
@@ -1870,7 +1870,7 @@ void Player::UpdatePreviewCelSprite(_cmd_id cmdId, Point point, uint16_t wParam1
 		return;
 
 	// we can only show a preview if our command is executed in the next game tick
-	if (_pmode != PM_STAND)
+	if (mode != PM_STAND)
 		return;
 
 	std::optional<player_graphic> graphic;
@@ -2044,7 +2044,7 @@ bool Player::isLevelOwnedByLocalClient() const
 			continue;
 		if (other._pLvlChanging)
 			continue;
-		if (other._pmode == PM_NEWLVL)
+		if (other.mode == PM_NEWLVL)
 			continue;
 		if (other.plrlevel != this->plrlevel)
 			continue;
@@ -2462,13 +2462,13 @@ void InitPlayer(Player &player, bool firstTime)
 		ClearStateVariables(player);
 
 		if (player._pHitPoints >> 6 > 0) {
-			player._pmode = PM_STAND;
+			player.mode = PM_STAND;
 			NewPlrAnim(player, player_graphic::Stand, Direction::South);
 			player.AnimInfo.currentFrame = GenerateRnd(player._pNFrames - 1);
 			player.AnimInfo.tickCounterOfCurrentFrame = GenerateRnd(3);
 		} else {
 			player._pgfxnum &= ~0xFU;
-			player._pmode = PM_DEATH;
+			player.mode = PM_DEATH;
 			NewPlrAnim(player, player_graphic::Death, Direction::South);
 			player.AnimInfo.currentFrame = player.AnimInfo.numberOfFrames - 2;
 		}
@@ -2556,7 +2556,7 @@ void StartStand(Player &player, Direction dir)
 	}
 
 	NewPlrAnim(player, player_graphic::Stand, dir);
-	player._pmode = PM_STAND;
+	player.mode = PM_STAND;
 	FixPlayerLocation(player, dir);
 	FixPlrWalkTags(player);
 	player.occupyTile(player.position.tile, false);
@@ -2579,7 +2579,7 @@ void StartPlrBlock(Player &player, Direction dir)
 
 	NewPlrAnim(player, player_graphic::Block, dir, AnimationDistributionFlags::SkipsDelayOfLastFrame, skippedAnimationFrames);
 
-	player._pmode = PM_BLOCK;
+	player.mode = PM_BLOCK;
 	FixPlayerLocation(player, dir);
 	SetPlayerOld(player);
 }
@@ -2630,7 +2630,7 @@ void StartPlrHit(Player &player, int dam, bool forcehit)
 
 	NewPlrAnim(player, player_graphic::Hit, pd, AnimationDistributionFlags::None, skippedAnimationFrames);
 
-	player._pmode = PM_GOTHIT;
+	player.mode = PM_GOTHIT;
 	FixPlayerLocation(player, pd);
 	FixPlrWalkTags(player);
 	player.occupyTile(player.position.tile, false);
@@ -2643,7 +2643,7 @@ __attribute__((no_sanitize("shift-base")))
 void
 StartPlayerKill(Player &player, DeathReason deathReason)
 {
-	if (player._pHitPoints <= 0 && player._pmode == PM_DEATH) {
+	if (player._pHitPoints <= 0 && player.mode == PM_DEATH) {
 		return;
 	}
 
@@ -2673,7 +2673,7 @@ StartPlayerKill(Player &player, DeathReason deathReason)
 	NewPlrAnim(player, player_graphic::Death, player._pdir);
 
 	player._pBlockFlag = false;
-	player._pmode = PM_DEATH;
+	player.mode = PM_DEATH;
 	player._pInvincible = true;
 	SetPlayerHitPoints(player, 0);
 
@@ -2892,7 +2892,7 @@ StartNewLvl(Player &player, interface_mode fom, int lvl)
 	}
 
 	if (&player == MyPlayer) {
-		player._pmode = PM_NEWLVL;
+		player.mode = PM_NEWLVL;
 		player._pInvincible = true;
 		SDL_Event event;
 		event.type = CustomEventToSdlEvent(fom);
@@ -2916,7 +2916,7 @@ void RestartTownLvl(Player &player)
 	player._pManaBase = player._pMana - (player._pMaxMana - player._pMaxManaBase);
 
 	CalcPlrInv(player, false);
-	player._pmode = PM_NEWLVL;
+	player.mode = PM_NEWLVL;
 
 	if (&player == MyPlayer) {
 		player._pInvincible = true;
@@ -2943,7 +2943,7 @@ void StartWarpLvl(Player &player, size_t pidx)
 
 	if (&player == MyPlayer) {
 		SetCurrentPortal(pidx);
-		player._pmode = PM_NEWLVL;
+		player.mode = PM_NEWLVL;
 		player._pInvincible = true;
 		SDL_Event event;
 		event.type = CustomEventToSdlEvent(WM_DIABWARPLVL);
@@ -3006,7 +3006,7 @@ void ProcessPlayers()
 
 			bool tplayer = false;
 			do {
-				switch (player._pmode) {
+				switch (player.mode) {
 				case PM_STAND:
 				case PM_NEWLVL:
 				case PM_QUIT:
@@ -3040,7 +3040,7 @@ void ProcessPlayers()
 			} while (tplayer);
 
 			player.previewCelSprite = std::nullopt;
-			if (player._pmode != PM_DEATH || player.AnimInfo.tickCounterOfCurrentFrame != 40)
+			if (player.mode != PM_DEATH || player.AnimInfo.tickCounterOfCurrentFrame != 40)
 				player.AnimInfo.processAnimation();
 		}
 	}

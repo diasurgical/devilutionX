@@ -1129,7 +1129,7 @@ void MonsterAttackPlayer(Monster &monster, Player &player, int hit, int minDam, 
 	int minhit = GetMinHit();
 	hit = std::max(hit, minhit);
 	int blkper = 100;
-	if ((player._pmode == PM_STAND || player._pmode == PM_ATTACK) && player._pBlockFlag) {
+	if ((player.mode == PM_STAND || player.mode == PM_ATTACK) && player._pBlockFlag) {
 		blkper = GenerateRnd(100);
 	}
 	int blk = player.GetBlockChance() - (monster.level(sgGameInitInfo.nDifficulty) * 2);
@@ -1189,7 +1189,7 @@ void MonsterAttackPlayer(Monster &monster, Player &player, int hit, int minDam, 
 	}
 	StartPlrHit(player, dam, false);
 	if ((monster.flags & MFLAG_KNOCKBACK) != 0) {
-		if (player._pmode != PM_GOTHIT)
+		if (player.mode != PM_GOTHIT)
 			StartPlrHit(player, 0, true);
 
 		Point newPosition = player.position.tile + monster.direction;
@@ -3920,7 +3920,7 @@ void PrepDoEnding()
 	myPlayer.pDiabloKillLevel = std::max(myPlayer.pDiabloKillLevel, static_cast<uint8_t>(sgGameInitInfo.nDifficulty + 1));
 
 	for (Player &player : Players) {
-		player._pmode = PM_QUIT;
+		player.mode = PM_QUIT;
 		player._pInvincible = true;
 		if (gbIsMultiplayer) {
 			if (player._pHitPoints >> 6 == 0)
@@ -4449,7 +4449,7 @@ void MissToMonst(Missile &missile, Point position)
 		if (IsAnyOf(monster.type().type, MT_NSNAKE, MT_RSNAKE, MT_BSNAKE, MT_GSNAKE))
 			return;
 
-		if (player->_pmode != PM_GOTHIT && player->_pmode != PM_DEATH)
+		if (player->mode != PM_GOTHIT && player->mode != PM_DEATH)
 			StartPlrHit(*player, 0, true);
 		Point newPosition = oldPosition + monster.direction;
 		if (PosOkPlayer(*player, newPosition)) {

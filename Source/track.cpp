@@ -23,7 +23,7 @@ void RepeatWalk(Player &player)
 	if (!InDungeonBounds(cursPosition))
 		return;
 
-	if (player._pmode != PM_STAND && !(player.isWalking() && player.AnimInfo.getFrameToUseForRendering() > 6))
+	if (player.mode != PM_STAND && !(player.isWalking() && player.AnimInfo.getFrameToUseForRendering() > 6))
 		return;
 
 	const Point target = player.GetTargetPosition();
@@ -51,7 +51,7 @@ void InvalidateTargets()
 
 	if (PlayerUnderCursor != nullptr) {
 		const Player &targetPlayer = *PlayerUnderCursor;
-		if (targetPlayer._pmode == PM_DEATH || targetPlayer._pmode == PM_QUIT || !targetPlayer.plractive
+		if (targetPlayer.mode == PM_DEATH || targetPlayer.mode == PM_QUIT || !targetPlayer.plractive
 		    || !targetPlayer.isOnActiveLevel() || targetPlayer._pHitPoints >> 6 <= 0
 		    || !IsTileLit(targetPlayer.position.tile))
 			PlayerUnderCursor = nullptr;

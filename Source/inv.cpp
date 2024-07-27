@@ -229,7 +229,7 @@ bool CanWield(Player &player, const Item &item)
  */
 bool CanEquip(Player &player, const Item &item, inv_body_loc bodyLocation)
 {
-	if (!CanEquip(item) || player._pmode > PM_WALK_SIDEWAYS || !player.InvBody[bodyLocation].isEmpty()) {
+	if (!CanEquip(item) || player.mode > PM_WALK_SIDEWAYS || !player.InvBody[bodyLocation].isEmpty()) {
 		return false;
 	}
 
@@ -564,7 +564,7 @@ void CheckInvPaste(Player &player, Point cursorPosition)
 			player.Say(HeroSpeech::ICantUseThisYet);
 			return;
 		}
-		if (player._pmode > PM_WALK_SIDEWAYS)
+		if (player.mode > PM_WALK_SIDEWAYS)
 			return;
 	}
 
@@ -603,7 +603,7 @@ void CheckInvPaste(Player &player, Point cursorPosition)
 
 void CheckInvCut(Player &player, Point cursorPosition, bool automaticMove, bool dropItem)
 {
-	if (player._pmode > PM_WALK_SIDEWAYS) {
+	if (player.mode > PM_WALK_SIDEWAYS) {
 		return;
 	}
 
@@ -1555,7 +1555,7 @@ void inv_update_rem_item(Player &player, inv_body_loc iv)
 {
 	player.InvBody[iv].clear();
 
-	CalcPlrInv(player, player._pmode != PM_DEATH);
+	CalcPlrInv(player, player.mode != PM_DEATH);
 }
 
 void CheckInvSwap(Player &player, const Item &item, int invGridIndex)

@@ -260,7 +260,7 @@ struct Player {
 	int _pILMinDam;
 	int _pILMaxDam;
 	uint32_t _pExperience;
-	PLR_MODE _pmode;
+	PLR_MODE mode; // _pmode
 	int8_t walkpath[MaxPathLength];
 	bool plractive;
 	action_id destAction;
@@ -761,13 +761,13 @@ public:
 
 	bool CanChangeAction()
 	{
-		if (_pmode == PM_STAND)
+		if (mode == PM_STAND)
 			return true;
-		if (_pmode == PM_ATTACK && AnimInfo.currentFrame >= _pAFNum)
+		if (mode == PM_ATTACK && AnimInfo.currentFrame >= _pAFNum)
 			return true;
-		if (_pmode == PM_RATTACK && AnimInfo.currentFrame >= _pAFNum)
+		if (mode == PM_RATTACK && AnimInfo.currentFrame >= _pAFNum)
 			return true;
-		if (_pmode == PM_SPELL && AnimInfo.currentFrame >= _pSFNum)
+		if (mode == PM_SPELL && AnimInfo.currentFrame >= _pSFNum)
 			return true;
 		if (isWalking() && AnimInfo.isLastFrame())
 			return true;

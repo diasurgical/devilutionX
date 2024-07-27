@@ -1637,7 +1637,7 @@ void UpdateBurningCrossDamage(Object &cross)
 
 	Player &myPlayer = *MyPlayer;
 
-	if (myPlayer._pmode == PM_DEATH)
+	if (myPlayer.mode == PM_DEATH)
 		return;
 
 	int8_t fireResist = myPlayer._pFireResist;

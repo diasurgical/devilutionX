@@ -301,7 +301,7 @@ void AssertPlayer(Player &player)
 	ASSERT_EQ(player.pManaShield, 0);
 	ASSERT_EQ(player.pDamAcFlags, ItemSpecialEffectHf::None);
 
-	ASSERT_EQ(player._pmode, 0);
+	ASSERT_EQ(player.mode, 0);
 	ASSERT_EQ(Count8(player.walkpath, MaxPathLength), 25);
 	ASSERT_EQ(player._pgfxnum, 36);
 	ASSERT_EQ(player.AnimInfo.ticksPerFrame, 4);

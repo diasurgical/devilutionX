@@ -25,7 +25,7 @@ int RunBlockTest(int frames, ItemSpecialEffect flags)
 	int i = 1;
 	for (; i < 100; i++) {
 		TestPlayerDoGotHit(player);
-		if (player._pmode != PM_GOTHIT)
+		if (player.mode != PM_GOTHIT)
 			break;
 		player.AnimInfo.currentFrame++;
 	}
@@ -135,7 +135,7 @@ static void AssertPlayer(Player &player)
 	ASSERT_EQ(player.pManaShield, 0);
 	ASSERT_EQ(player.pDamAcFlags, ItemSpecialEffectHf::None);
 
-	ASSERT_EQ(player._pmode, 0);
+	ASSERT_EQ(player.mode, 0);
 	ASSERT_EQ(Count8(player.walkpath, MaxPathLength), 0);
 	ASSERT_EQ(player.queuedSpell.spellId, SpellID::Null);
 	ASSERT_EQ(player.queuedSpell.spellType, SpellType::Skill);

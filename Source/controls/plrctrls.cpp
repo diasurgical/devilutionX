@@ -1291,13 +1291,13 @@ void WalkInDir(Player &player, AxisDirection dir)
 		player._pdir = pdir;
 
 	if (IsStandingGround()) {
-		if (player._pmode == PM_STAND)
+		if (player.mode == PM_STAND)
 			StartStand(player, pdir);
 		return;
 	}
 
 	if (PosOkPlayer(player, delta) && IsPathBlocked(player.position.future, pdir)) {
-		if (player._pmode == PM_STAND)
+		if (player.mode == PM_STAND)
 			StartStand(player, pdir);
 		return; // Don't start backtrack around obstacles
 	}

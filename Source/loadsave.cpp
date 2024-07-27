@@ -338,7 +338,7 @@ void LoadAndValidateItemData(LoadHelper &file, Item &item)
 
 void LoadPlayer(LoadHelper &file, Player &player)
 {
-	player._pmode = static_cast<PLR_MODE>(file.NextLE<int32_t>());
+	player.mode = static_cast<PLR_MODE>(file.NextLE<int32_t>());
 
 	for (int8_t &step : player.walkpath) {
 		step = file.NextLE<int8_t>();
@@ -468,7 +468,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 
 	int32_t tempPositionX = file.NextLE<int32_t>();
 	int32_t tempPositionY = file.NextLE<int32_t>();
-	if (player._pmode == PM_WALK_NORTHWARDS) {
+	if (player.mode == PM_WALK_NORTHWARDS) {
 		// These values are saved as offsets to remain consistent with old savefiles
 		tempPositionX += player.position.tile.x;
 		tempPositionY += player.position.tile.y;
@@ -1161,7 +1161,7 @@ void SaveItem(SaveHelper &file, const Item &item)
 
 void SavePlayer(SaveHelper &file, const Player &player)
 {
-	file.WriteLE<int32_t>(player._pmode);
+	file.WriteLE<int32_t>(player.mode);
 	for (int8_t step : player.walkpath)
 		file.WriteLE<int8_t>(step);
 	file.WriteLE<uint8_t>(player.plractive ? 1 : 0);
@@ -1292,7 +1292,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 
 	int32_t tempPositionX = player.position.temp.x;
 	int32_t tempPositionY = player.position.temp.y;
-	if (player._pmode == PM_WALK_NORTHWARDS) {
+	if (player.mode == PM_WALK_NORTHWARDS) {
 		// For backwards compatibility, save this as an offset
 		tempPositionX -= player.position.tile.x;
 		tempPositionY -= player.position.tile.y;

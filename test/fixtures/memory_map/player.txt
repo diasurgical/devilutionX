@@ -1,4 +1,4 @@
-R 32 _pmode
+R 32 mode
 M 25 8 walkpath
 R 8 plractive
 R 16 alignment

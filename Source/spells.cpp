@@ -262,7 +262,7 @@ void DoResurrect(Player &player, Player &target)
 	target._pMana = 0;
 	target._pManaBase = target._pMana + (target._pMaxManaBase - target._pMaxMana);
 
-	target._pmode = PM_STAND;
+	target.mode = PM_STAND;
 
 	CalcPlrInv(target, true);
 

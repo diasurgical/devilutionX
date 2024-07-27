@@ -345,7 +345,7 @@ void CheckQuests()
 			NetSendCmdQuest(true, poisonWater);
 			StartPWaterPurify();
 		}
-	} else if (MyPlayer->_pmode == PM_STAND) {
+	} else if (MyPlayer->mode == PM_STAND) {
 		for (auto &quest : Quests) {
 			if (currlevel == quest._qlevel
 			    && quest._qslvl != 0
