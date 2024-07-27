@@ -425,7 +425,7 @@ void RightMouseDown(bool isShiftHeld)
 {
 	LastMouseButtonAction = MouseActionType::None;
 
-	if (gmenu_is_active() || sgnTimeoutCurs != CURSOR_NONE || PauseMode == 2 || MyPlayer->_pInvincible) {
+	if (gmenu_is_active() || sgnTimeoutCurs != CURSOR_NONE || PauseMode == 2 || MyPlayer->isInvincible) {
 		return;
 	}
 

@@ -72,7 +72,7 @@ bool InGameMenu()
 	    || qtextflag
 	    || gmenu_is_active()
 	    || PauseMode == 2
-	    || (MyPlayer != nullptr && MyPlayer->_pInvincible && MyPlayer->_pHitPoints == 0);
+	    || (MyPlayer != nullptr && MyPlayer->isInvincible && MyPlayer->_pHitPoints == 0);
 }
 
 namespace {
@@ -1757,7 +1757,7 @@ void plrctrls_after_check_curs_move()
 	pcurstrig = -1;
 	pcursquest = Q_INVALID;
 	cursPosition = { -1, -1 };
-	if (MyPlayer->_pInvincible) {
+	if (MyPlayer->isInvincible) {
 		return;
 	}
 	if (DoomFlag) {

@@ -425,7 +425,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 
 	file.Skip<int32_t>(); // Skip _pwtype
 	player._pBlockFlag = file.NextBool8();
-	player._pInvincible = file.NextBool8();
+	player.isInvincible = file.NextBool8();
 	player._pLightRad = file.NextLE<int8_t>();
 	player._pLvlChanging = file.NextBool8();
 
@@ -1248,7 +1248,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 
 	file.WriteLE<int32_t>(player.UsesRangedWeapon() ? 1 : 0);
 	file.WriteLE<uint8_t>(player._pBlockFlag ? 1 : 0);
-	file.WriteLE<uint8_t>(player._pInvincible ? 1 : 0);
+	file.WriteLE<uint8_t>(player.isInvincible ? 1 : 0);
 	file.WriteLE<int8_t>(player._pLightRad);
 	file.WriteLE<uint8_t>(player._pLvlChanging ? 1 : 0);
 

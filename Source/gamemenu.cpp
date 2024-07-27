@@ -103,7 +103,7 @@ void GamemenuNewGame(bool /*bActivate*/)
 {
 	for (Player &player : Players) {
 		player._pmode = PM_QUIT;
-		player._pInvincible = true;
+		player.isInvincible = true;
 	}
 
 	MyPlayerIsDead = false;

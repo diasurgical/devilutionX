@@ -1108,7 +1108,7 @@ int GetMinHit()
 
 void MonsterAttackPlayer(Monster &monster, Player &player, int hit, int minDam, int maxDam)
 {
-	if (player._pHitPoints >> 6 <= 0 || player._pInvincible || HasAnyOf(player._pSpellFlags, SpellFlag::Etherealize))
+	if (player._pHitPoints >> 6 <= 0 || player.isInvincible || HasAnyOf(player._pSpellFlags, SpellFlag::Etherealize))
 		return;
 	if (monster.position.tile.WalkingDistance(player.position.tile) >= 2)
 		return;
@@ -3921,7 +3921,7 @@ void PrepDoEnding()
 
 	for (Player &player : Players) {
 		player._pmode = PM_QUIT;
-		player._pInvincible = true;
+		player.isInvincible = true;
 		if (gbIsMultiplayer) {
 			if (player._pHitPoints >> 6 == 0)
 				player._pHitPoints = 64;

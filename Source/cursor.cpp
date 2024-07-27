@@ -755,7 +755,7 @@ void CheckCursMove()
 	panelflag = false;
 	trigflag = false;
 
-	if (myPlayer._pInvincible) {
+	if (myPlayer.isInvincible) {
 		return;
 	}
 	if (!myPlayer.HoldItem.isEmpty() || spselflag) {

@@ -290,7 +290,7 @@ bool Plr2PlrMHit(const Player &player, Player &target, int mindam, int maxdam, i
 	if (target.isOnArenaLevel() && target._pmode == PM_WALK_SIDEWAYS)
 		return false;
 
-	if (target._pInvincible) {
+	if (target.isInvincible) {
 		return false;
 	}
 
@@ -982,7 +982,7 @@ bool PlayerMHit(Player &player, Monster *monster, int dist, int mind, int maxd, 
 		return false;
 	}
 
-	if (player._pInvincible) {
+	if (player.isInvincible) {
 		return false;
 	}
 
@@ -3356,7 +3356,7 @@ void ProcessFlashBottom(Missile &missile)
 {
 	if (missile._micaster == TARGET_MONSTERS) {
 		if (!missile.IsTrap())
-			Players[missile._misource]._pInvincible = true;
+			Players[missile._misource].isInvincible = true;
 	}
 	missile._mirange--;
 
@@ -3375,7 +3375,7 @@ void ProcessFlashBottom(Missile &missile)
 		missile._miDelFlag = true;
 		if (missile._micaster == TARGET_MONSTERS) {
 			if (!missile.IsTrap())
-				Players[missile._misource]._pInvincible = false;
+				Players[missile._misource].isInvincible = false;
 		}
 	}
 	PutMissile(missile);
@@ -3385,7 +3385,7 @@ void ProcessFlashTop(Missile &missile)
 {
 	if (missile._micaster == TARGET_MONSTERS) {
 		if (!missile.IsTrap())
-			Players[missile._misource]._pInvincible = true;
+			Players[missile._misource].isInvincible = true;
 	}
 	missile._mirange--;
 
@@ -3401,7 +3401,7 @@ void ProcessFlashTop(Missile &missile)
 		missile._miDelFlag = true;
 		if (missile._micaster == TARGET_MONSTERS) {
 			if (!missile.IsTrap())
-				Players[missile._misource]._pInvincible = false;
+				Players[missile._misource].isInvincible = false;
 		}
 	}
 	PutMissile(missile);

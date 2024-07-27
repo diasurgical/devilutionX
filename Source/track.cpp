@@ -75,7 +75,7 @@ void RepeatMouseAction()
 	Player &myPlayer = *MyPlayer;
 	if (myPlayer.destAction != ACTION_NONE)
 		return;
-	if (myPlayer._pInvincible)
+	if (myPlayer.isInvincible)
 		return;
 	if (!myPlayer.CanChangeAction())
 		return;

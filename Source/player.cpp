@@ -144,7 +144,7 @@ void StartWalkAnimation(Player &player, Direction dir, bool pmWillBeCalled)
  */
 void StartWalk(Player &player, Direction dir, bool pmWillBeCalled)
 {
-	if (player._pInvincible && player._pHitPoints == 0 && &player == MyPlayer) {
+	if (player.isInvincible && player._pHitPoints == 0 && &player == MyPlayer) {
 		SyncPlrKill(player, DeathReason::Unknown);
 		return;
 	}
@@ -162,7 +162,7 @@ void ClearStateVariables(Player &player)
 
 void StartAttack(Player &player, Direction d, bool includesFirstFrame)
 {
-	if (player._pInvincible && player._pHitPoints == 0 && &player == MyPlayer) {
+	if (player.isInvincible && player._pHitPoints == 0 && &player == MyPlayer) {
 		SyncPlrKill(player, DeathReason::Unknown);
 		return;
 	}
@@ -205,7 +205,7 @@ void StartAttack(Player &player, Direction d, bool includesFirstFrame)
 
 void StartRangeAttack(Player &player, Direction d, WorldTileCoord cx, WorldTileCoord cy, bool includesFirstFrame)
 {
-	if (player._pInvincible && player._pHitPoints == 0 && &player == MyPlayer) {
+	if (player.isInvincible && player._pHitPoints == 0 && &player == MyPlayer) {
 		SyncPlrKill(player, DeathReason::Unknown);
 		return;
 	}
@@ -245,7 +245,7 @@ player_graphic GetPlayerGraphicForSpell(SpellID spellId)
 
 void StartSpell(Player &player, Direction d, WorldTileCoord cx, WorldTileCoord cy)
 {
-	if (player._pInvincible && player._pHitPoints == 0 && &player == MyPlayer) {
+	if (player.isInvincible && player._pHitPoints == 0 && &player == MyPlayer) {
 		SyncPlrKill(player, DeathReason::Unknown);
 		return;
 	}
@@ -701,7 +701,7 @@ bool PlrHitMonst(Player &player, Monster &monster, bool adjacentDamage = false)
 
 bool PlrHitPlr(Player &attacker, Player &target)
 {
-	if (target._pInvincible) {
+	if (target.isInvincible) {
 		return false;
 	}
 
@@ -2494,7 +2494,7 @@ void InitPlayer(Player &player, bool firstTime)
 
 	player._pAblSpells = GetSpellBitmask(GetPlayerStartingLoadoutForClass(player._pClass).skill);
 
-	player._pInvincible = false;
+	player.isInvincible = false;
 
 	if (&player == MyPlayer) {
 		MyPlayerIsDead = false;
@@ -2550,7 +2550,7 @@ void FixPlayerLocation(Player &player, Direction bDir)
 
 void StartStand(Player &player, Direction dir)
 {
-	if (player._pInvincible && player._pHitPoints == 0 && &player == MyPlayer) {
+	if (player.isInvincible && player._pHitPoints == 0 && &player == MyPlayer) {
 		SyncPlrKill(player, DeathReason::Unknown);
 		return;
 	}
@@ -2565,7 +2565,7 @@ void StartStand(Player &player, Direction dir)
 
 void StartPlrBlock(Player &player, Direction dir)
 {
-	if (player._pInvincible && player._pHitPoints == 0 && &player == MyPlayer) {
+	if (player.isInvincible && player._pHitPoints == 0 && &player == MyPlayer) {
 		SyncPlrKill(player, DeathReason::Unknown);
 		return;
 	}
@@ -2599,7 +2599,7 @@ void FixPlrWalkTags(const Player &player)
 
 void StartPlrHit(Player &player, int dam, bool forcehit)
 {
-	if (player._pInvincible && player._pHitPoints == 0 && &player == MyPlayer) {
+	if (player.isInvincible && player._pHitPoints == 0 && &player == MyPlayer) {
 		SyncPlrKill(player, DeathReason::Unknown);
 		return;
 	}
@@ -2674,7 +2674,7 @@ StartPlayerKill(Player &player, DeathReason deathReason)
 
 	player._pBlockFlag = false;
 	player._pmode = PM_DEATH;
-	player._pInvincible = true;
+	player.isInvincible = true;
 	SetPlayerHitPoints(player, 0);
 
 	if (&player != MyPlayer && dropItems) {
@@ -2893,7 +2893,7 @@ StartNewLvl(Player &player, interface_mode fom, int lvl)
 
 	if (&player == MyPlayer) {
 		player._pmode = PM_NEWLVL;
-		player._pInvincible = true;
+		player.isInvincible = true;
 		SDL_Event event;
 		event.type = CustomEventToSdlEvent(fom);
 		SDL_PushEvent(&event);
@@ -2908,7 +2908,7 @@ void RestartTownLvl(Player &player)
 	InitLevelChange(player);
 
 	player.setLevel(0);
-	player._pInvincible = false;
+	player.isInvincible = false;
 
 	SetPlayerHitPoints(player, 64);
 
@@ -2919,7 +2919,7 @@ void RestartTownLvl(Player &player)
 	player._pmode = PM_NEWLVL;
 
 	if (&player == MyPlayer) {
-		player._pInvincible = true;
+		player.isInvincible = true;
 		SDL_Event event;
 		event.type = CustomEventToSdlEvent(WM_DIABRETOWN);
 		SDL_PushEvent(&event);
@@ -2944,7 +2944,7 @@ void StartWarpLvl(Player &player, size_t pidx)
 	if (&player == MyPlayer) {
 		SetCurrentPortal(pidx);
 		player._pmode = PM_NEWLVL;
-		player._pInvincible = true;
+		player.isInvincible = true;
 		SDL_Event event;
 		event.type = CustomEventToSdlEvent(WM_DIABWARPLVL);
 		SDL_PushEvent(&event);
