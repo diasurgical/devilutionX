@@ -1837,7 +1837,7 @@ void Player::getAnimationFramesAndTicksPerFrame(player_graphic graphics, int8_t 
 		ticksPerFrame = 4;
 		break;
 	case player_graphic::Walk:
-		numberOfFrames = _pWFrames;
+		numberOfFrames = numWalkFrames;
 		break;
 	case player_graphic::Attack:
 		numberOfFrames = _pAFrames;
@@ -2202,10 +2202,10 @@ void SetPlrAnims(Player &player)
 
 	if (leveltype == DTYPE_TOWN) {
 		player._pNFrames = plrAtkAnimData.townIdleFrames;
-		player._pWFrames = plrAtkAnimData.townWalkingFrames;
+		player.numWalkFrames = plrAtkAnimData.townWalkingFrames;
 	} else {
 		player._pNFrames = plrAtkAnimData.idleFrames;
-		player._pWFrames = plrAtkAnimData.walkingFrames;
+		player.numWalkFrames = plrAtkAnimData.walkingFrames;
 		player._pHFrames = plrAtkAnimData.recoveryFrames;
 		player._pBFrames = plrAtkAnimData.blockingFrames;
 		switch (gn) {
