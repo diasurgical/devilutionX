@@ -340,8 +340,8 @@ public:
 	bool _pBlockFlag;
 	bool _pInvincible;
 	int8_t _pLightRad;
-	/** @brief True when the player is transitioning between levels */
-	bool _pLvlChanging;
+	/** @brief True when the player is transitioning between levels (_pLvlChanging) */
+	bool isChangingLevel;
 
 	int8_t _pArmorClass;
 	int8_t _pMagResist;

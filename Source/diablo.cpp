@@ -1382,7 +1382,7 @@ void UnstuckChargers()
 		for (Player &player : Players) {
 			if (!player.plractive)
 				continue;
-			if (player._pLvlChanging)
+			if (player.isChangingLevel)
 				continue;
 			if (!player.isOnActiveLevel())
 				continue;
@@ -3079,7 +3079,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 	SyncPortals();
 
 	for (Player &player : Players) {
-		if (player.plractive && player.isOnActiveLevel() && (!player._pLvlChanging || &player == MyPlayer)) {
+		if (player.plractive && player.isOnActiveLevel() && (!player.isChangingLevel || &player == MyPlayer)) {
 			if (player._pHitPoints > 0) {
 				if (lvldir != ENTRY_LOAD)
 					SyncInitPlrPos(player);

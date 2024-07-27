@@ -2085,7 +2085,7 @@ size_t OnPlayerJoinLevel(const TCmd *pCmd, Player &player)
 		return sizeof(message);
 	}
 
-	player._pLvlChanging = false;
+	player.isChangingLevel = false;
 	if (player._pName[0] != '\0' && !player.plractive) {
 		ResetPlayerGFX(player);
 		player.plractive = true;

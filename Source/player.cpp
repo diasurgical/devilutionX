@@ -393,7 +393,7 @@ void InitLevelChange(Player &player)
 
 	ClrPlrPath(player);
 	player.destAction = ACTION_NONE;
-	player._pLvlChanging = true;
+	player.isChangingLevel = true;
 
 	if (&player == MyPlayer) {
 		player.pLvlLoad = 10;
@@ -2042,7 +2042,7 @@ bool Player::isLevelOwnedByLocalClient() const
 	for (const Player &other : Players) {
 		if (!other.plractive)
 			continue;
-		if (other._pLvlChanging)
+		if (other.isChangingLevel)
 			continue;
 		if (other._pmode == PM_NEWLVL)
 			continue;
@@ -2322,7 +2322,7 @@ void CreatePlayer(Player &player, HeroClass c)
 		player._pSLvlVisited[i] = false;
 	}
 
-	player._pLvlChanging = false;
+	player.isChangingLevel = false;
 	player.pTownWarps = 0;
 	player.pLvlLoad = 0;
 	player.pManaShield = false;
@@ -2986,7 +2986,7 @@ void ProcessPlayers()
 
 	for (size_t pnum = 0; pnum < Players.size(); pnum++) {
 		Player &player = Players[pnum];
-		if (player.plractive && player.isOnActiveLevel() && (&player == MyPlayer || !player._pLvlChanging)) {
+		if (player.plractive && player.isOnActiveLevel() && (&player == MyPlayer || !player.isChangingLevel)) {
 			CheckCheatStats(player);
 
 			if (!PlrDeathModeOK(player) && (player._pHitPoints >> 6) <= 0) {

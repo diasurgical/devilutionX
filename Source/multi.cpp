@@ -372,7 +372,7 @@ void SetupLocalPositions()
 	myPlayer.position.tile = spawns[MyPlayerId];
 	myPlayer.position.future = myPlayer.position.tile;
 	myPlayer.setLevel(currlevel);
-	myPlayer._pLvlChanging = true;
+	myPlayer.isChangingLevel = true;
 	myPlayer.pLvlLoad = 0;
 	myPlayer._pmode = PM_NEWLVL;
 	myPlayer.destAction = ACTION_NONE;
@@ -652,7 +652,7 @@ void multi_process_network_packets()
 			player._pBaseMag = pkt->bmag;
 			player._pBaseDex = pkt->bdex;
 			if (!cond && player.plractive && player._pHitPoints != 0) {
-				if (player.isOnActiveLevel() && !player._pLvlChanging) {
+				if (player.isOnActiveLevel() && !player.isChangingLevel) {
 					if (player.position.tile.WalkingDistance(syncPosition) > 3 && PosOkPlayer(player, syncPosition)) {
 						// got out of sync, clear the tiles around where we last thought the player was located
 						FixPlrWalkTags(player);

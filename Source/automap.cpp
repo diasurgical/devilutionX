@@ -1831,7 +1831,7 @@ void DrawAutomap(const Surface &out)
 	}
 
 	for (const Player &player : Players) {
-		if (player.isOnActiveLevel() && player.plractive && !player._pLvlChanging && (&player == MyPlayer || player.friendlyMode)) {
+		if (player.isOnActiveLevel() && player.plractive && !player.isChangingLevel && (&player == MyPlayer || player.friendlyMode)) {
 			DrawAutomapPlr(out, myPlayerOffset, player);
 		}
 	}

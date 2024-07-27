@@ -3336,7 +3336,7 @@ void ProcessTownPortal(Missile &missile)
 	}
 
 	for (Player &player : Players) {
-		if (player.plractive && player.isOnActiveLevel() && !player._pLvlChanging && player._pmode == PM_STAND && player.position.tile == missile.position.tile) {
+		if (player.plractive && player.isOnActiveLevel() && !player.isChangingLevel && player._pmode == PM_STAND && player.position.tile == missile.position.tile) {
 			ClrPlrPath(player);
 			if (&player == MyPlayer) {
 				NetSendCmdParam1(true, CMD_WARP, missile._misource);

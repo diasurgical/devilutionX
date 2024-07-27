@@ -258,7 +258,7 @@ size_t sync_all_monsters(std::byte *pbBuf, size_t dwMaxLen)
 	if (dwMaxLen < sizeof(TSyncHeader) + sizeof(TSyncMonster)) {
 		return dwMaxLen;
 	}
-	if (MyPlayer->_pLvlChanging) {
+	if (MyPlayer->isChangingLevel) {
 		return dwMaxLen;
 	}
 
@@ -312,7 +312,7 @@ uint32_t OnSyncData(const TCmd *pCmd, const Player &player)
 	int monsterCount = wLen / sizeof(TSyncMonster);
 
 	uint8_t level = header.bLevel;
-	bool syncLocalLevel = !MyPlayer->_pLvlChanging && GetLevelForMultiplayer(*MyPlayer) == level;
+	bool syncLocalLevel = !MyPlayer->isChangingLevel && GetLevelForMultiplayer(*MyPlayer) == level;
 
 	if (IsValidLevelForMultiplayer(level)) {
 		const auto *monsterSyncs = reinterpret_cast<const TSyncMonster *>(pCmd + sizeof(header));

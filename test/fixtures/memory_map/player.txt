@@ -60,7 +60,7 @@ R 32 _pwtype
 R 8 _pBlockFlag
 R 8 _pInvincible
 R 8 _pLightRad
-R 8 _pLvlChanging
+R 8 isChangingLevel
 R 256 _pName
 R 8 _pClass
 R 24 alignment
