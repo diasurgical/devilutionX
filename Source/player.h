@@ -292,7 +292,7 @@ struct Player {
 	int8_t _pWFrames;
 	int8_t _pAFrames;
 	int8_t _pAFNum;
-	int8_t _pSFrames;
+	int8_t numSpellFrames; // _pSFrames
 	int8_t _pSFNum;
 	int8_t _pHFrames;
 	int8_t _pDFrames;

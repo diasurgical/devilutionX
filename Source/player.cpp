@@ -1848,7 +1848,7 @@ void Player::getAnimationFramesAndTicksPerFrame(player_graphic graphics, int8_t 
 	case player_graphic::Lightning:
 	case player_graphic::Fire:
 	case player_graphic::Magic:
-		numberOfFrames = _pSFrames;
+		numberOfFrames = numSpellFrames;
 		break;
 	case player_graphic::Death:
 		numberOfFrames = _pDFrames;
@@ -2249,7 +2249,7 @@ void SetPlrAnims(Player &player)
 	}
 
 	player._pDFrames = plrAtkAnimData.deathFrames;
-	player._pSFrames = plrAtkAnimData.castingFrames;
+	player.numSpellFrames = plrAtkAnimData.castingFrames;
 	player._pSFNum = plrAtkAnimData.castingActionFrame;
 	int armorGraphicIndex = player._pgfxnum & ~0xFU;
 	if (IsAnyOf(pc, HeroClass::Warrior, HeroClass::Barbarian)) {

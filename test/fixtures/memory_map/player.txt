@@ -123,7 +123,7 @@ R 32 _pAFNum
 M 8 32 _pLAnim
 M 8 32 _pFAnim
 M 8 32 _pTAnim
-R 32 _pSFrames
+R 32 numSpellFrames
 R 32 _pSWidth
 R 32 _pSFNum
 R 32 _pHFrames
