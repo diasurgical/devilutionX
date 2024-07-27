@@ -2297,7 +2297,6 @@ void CreatePlayer(Player &player, HeroClass c)
 	player._pMaxManaBase = player._pMana;
 
 	player._pExperience = 0;
-	player._pArmorClass = 0;
 	player._pLightRad = 10;
 	player._pInfraFlag = false;
 

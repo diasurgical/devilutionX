@@ -343,7 +343,6 @@ public:
 	/** @brief True when the player is transitioning between levels */
 	bool _pLvlChanging;
 
-	int8_t _pArmorClass;
 	int8_t _pMagResist;
 	int8_t _pFireResist;
 	int8_t _pLghtResist;

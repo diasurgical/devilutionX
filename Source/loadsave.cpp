@@ -459,7 +459,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	player._pExperience = file.NextLE<uint32_t>();
 	file.Skip<uint32_t>(); // Skip _pMaxExp - unused
 	file.Skip<uint32_t>(); // Skip _pNextExper, we retrieve it when needed based on _pLevel
-	player._pArmorClass = file.NextLE<int8_t>();
+	file.Skip<int8_t>();   // Skip _pArmorClass - unused
 	player._pMagResist = file.NextLE<int8_t>();
 	player._pFireResist = file.NextLE<int8_t>();
 	player._pLghtResist = file.NextLE<int8_t>();
@@ -1283,7 +1283,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.WriteLE<uint32_t>(player._pExperience);
 	file.Skip<uint32_t>();                                       // Skip _pMaxExp
 	file.WriteLE<uint32_t>(player.getNextExperienceThreshold()); // set _pNextExper for backwards compatibility
-	file.WriteLE<int8_t>(player._pArmorClass);
+	file.Skip<int8_t>();                                         // Skip _pArmorClass
 	file.WriteLE<int8_t>(player._pMagResist);
 	file.WriteLE<int8_t>(player._pFireResist);
 	file.WriteLE<int8_t>(player._pLghtResist);
