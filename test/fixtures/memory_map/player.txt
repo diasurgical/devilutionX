@@ -105,8 +105,8 @@ R 32 _pVar5
 R 32 offset2.x
 R 32 offset2.y
 R 32 actionFrame
-M_DA 17 8 _pLvlVisited
-M_HF 25 8 _pLvlVisited
+M_DA 17 8 isLevelVisited
+M_HF 25 8 isLevelVisited
 M_DA 17 8 _pSLvlVisited
 M_HF 25 8 _pSLvlVisited
 R 16 alignment

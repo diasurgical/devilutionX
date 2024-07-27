@@ -2959,13 +2959,13 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		bool visited = false;
 		for (const Player &player : Players) {
 			if (player.plractive)
-				visited = visited || player._pLvlVisited[currlevel];
+				visited = visited || player.isLevelVisited[currlevel];
 		}
 
 		SetRndSeed(DungeonSeeds[currlevel]);
 
 		if (leveltype != DTYPE_TOWN) {
-			if (firstflag || lvldir == ENTRY_LOAD || !myPlayer._pLvlVisited[currlevel] || gbIsMultiplayer) {
+			if (firstflag || lvldir == ENTRY_LOAD || !myPlayer.isLevelVisited[currlevel] || gbIsMultiplayer) {
 				HoldThemeRooms();
 				[[maybe_unused]] uint32_t mid1Seed = GetLCGEngineState();
 				InitGolems();
@@ -3010,7 +3010,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 			InitMissiles();
 			IncProgress();
 
-			if (!firstflag && lvldir != ENTRY_LOAD && myPlayer._pLvlVisited[currlevel] && !gbIsMultiplayer)
+			if (!firstflag && lvldir != ENTRY_LOAD && myPlayer.isLevelVisited[currlevel] && !gbIsMultiplayer)
 				LoadLevel();
 			if (gbIsMultiplayer)
 				DeltaLoadLevel();

@@ -2131,7 +2131,7 @@ void SetupTownStores()
 	if (!gbIsMultiplayer) {
 		l = 0;
 		for (int i = 0; i < NUMLEVELS; i++) {
-			if (myPlayer._pLvlVisited[i])
+			if (myPlayer.isLevelVisited[i])
 				l = i;
 		}
 	} else {

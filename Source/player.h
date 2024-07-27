@@ -351,7 +351,7 @@ public:
 	/** Player's direction when ending movement. Also used for casting direction of SpellID::FireWall. */
 	Direction tempDirection;
 
-	bool _pLvlVisited[NUMLEVELS];
+	bool isLevelVisited[NUMLEVELS]; // _pLvlVisited
 	bool _pSLvlVisited[NUMLEVELS]; // only 10 used
 
 	item_misc_id _pOilType;

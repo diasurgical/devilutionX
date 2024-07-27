@@ -388,7 +388,7 @@ void InitLevelChange(Player &player)
 	if (&player == MyPlayer) {
 		player.occupyTile(player.position.tile, false);
 	} else {
-		player._pLvlVisited[player.plrlevel] = true;
+		player.isLevelVisited[player.plrlevel] = true;
 	}
 
 	ClrPlrPath(player);
@@ -2314,7 +2314,7 @@ void CreatePlayer(Player &player, HeroClass c)
 	// CreatePlrItems calls AutoEquip which will overwrite the player graphic if required
 	player._pgfxnum = static_cast<uint8_t>(PlayerWeaponGraphic::Unarmed);
 
-	for (bool &levelVisited : player._pLvlVisited) {
+	for (bool &levelVisited : player.isLevelVisited) {
 		levelVisited = false;
 	}
 
@@ -3417,19 +3417,19 @@ void PlayDungMsgs()
 	assert(MyPlayer != nullptr);
 	Player &myPlayer = *MyPlayer;
 
-	if (!setlevel && currlevel == 1 && !myPlayer._pLvlVisited[1] && (myPlayer.pDungMsgs & DungMsgCathedral) == 0) {
+	if (!setlevel && currlevel == 1 && !myPlayer.isLevelVisited[1] && (myPlayer.pDungMsgs & DungMsgCathedral) == 0) {
 		myPlayer.Say(HeroSpeech::TheSanctityOfThisPlaceHasBeenFouled, 40);
 		myPlayer.pDungMsgs = myPlayer.pDungMsgs | DungMsgCathedral;
-	} else if (!setlevel && currlevel == 5 && !myPlayer._pLvlVisited[5] && (myPlayer.pDungMsgs & DungMsgCatacombs) == 0) {
+	} else if (!setlevel && currlevel == 5 && !myPlayer.isLevelVisited[5] && (myPlayer.pDungMsgs & DungMsgCatacombs) == 0) {
 		myPlayer.Say(HeroSpeech::TheSmellOfDeathSurroundsMe, 40);
 		myPlayer.pDungMsgs |= DungMsgCatacombs;
-	} else if (!setlevel && currlevel == 9 && !myPlayer._pLvlVisited[9] && (myPlayer.pDungMsgs & DungMsgCaves) == 0) {
+	} else if (!setlevel && currlevel == 9 && !myPlayer.isLevelVisited[9] && (myPlayer.pDungMsgs & DungMsgCaves) == 0) {
 		myPlayer.Say(HeroSpeech::ItsHotDownHere, 40);
 		myPlayer.pDungMsgs |= DungMsgCaves;
-	} else if (!setlevel && currlevel == 13 && !myPlayer._pLvlVisited[13] && (myPlayer.pDungMsgs & DungMsgHell) == 0) {
+	} else if (!setlevel && currlevel == 13 && !myPlayer.isLevelVisited[13] && (myPlayer.pDungMsgs & DungMsgHell) == 0) {
 		myPlayer.Say(HeroSpeech::IMustBeGettingClose, 40);
 		myPlayer.pDungMsgs |= DungMsgHell;
-	} else if (!setlevel && currlevel == 16 && !myPlayer._pLvlVisited[16] && (myPlayer.pDungMsgs & DungMsgDiablo) == 0) {
+	} else if (!setlevel && currlevel == 16 && !myPlayer.isLevelVisited[16] && (myPlayer.pDungMsgs & DungMsgDiablo) == 0) {
 		for (auto &monster : Monsters) {
 			if (monster.type().type != MT_DIABLO) continue;
 			if (monster.hitPoints > 0) {
@@ -3439,7 +3439,7 @@ void PlayDungMsgs()
 			}
 			break;
 		}
-	} else if (!setlevel && currlevel == 17 && !myPlayer._pLvlVisited[17] && (myPlayer.pDungMsgs2 & 1) == 0) {
+	} else if (!setlevel && currlevel == 17 && !myPlayer.isLevelVisited[17] && (myPlayer.pDungMsgs2 & 1) == 0) {
 		sfxdelay = 10;
 		sfxdnum = SfxID::Defiler1;
 		Quests[Q_DEFILER]._qactive = QUEST_ACTIVE;
@@ -3447,11 +3447,11 @@ void PlayDungMsgs()
 		Quests[Q_DEFILER]._qmsg = TEXT_DEFILER1;
 		NetSendCmdQuest(true, Quests[Q_DEFILER]);
 		myPlayer.pDungMsgs2 |= 1;
-	} else if (!setlevel && currlevel == 19 && !myPlayer._pLvlVisited[19] && (myPlayer.pDungMsgs2 & 4) == 0) {
+	} else if (!setlevel && currlevel == 19 && !myPlayer.isLevelVisited[19] && (myPlayer.pDungMsgs2 & 4) == 0) {
 		sfxdelay = 10;
 		sfxdnum = SfxID::Defiler3;
 		myPlayer.pDungMsgs2 |= 4;
-	} else if (!setlevel && currlevel == 21 && !myPlayer._pLvlVisited[21] && (myPlayer.pDungMsgs & 32) == 0) {
+	} else if (!setlevel && currlevel == 21 && !myPlayer.isLevelVisited[21] && (myPlayer.pDungMsgs & 32) == 0) {
 		myPlayer.Say(HeroSpeech::ThisIsAPlaceOfGreatPower, 30);
 		myPlayer.pDungMsgs |= 32;
 	} else if (setlevel && setlvlnum == SL_SKELKING && !gbIsSpawn && !myPlayer._pSLvlVisited[SL_SKELKING] && Quests[Q_SKELKING]._qactive == QUEST_ACTIVE) {

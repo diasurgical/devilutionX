@@ -483,7 +483,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	file.Skip<uint32_t>(); // Skip actionFrame
 
 	for (uint8_t i = 0; i < giNumberOfLevels; i++)
-		player._pLvlVisited[i] = file.NextBool8();
+		player.isLevelVisited[i] = file.NextBool8();
 
 	for (uint8_t i = 0; i < giNumberOfLevels; i++)
 		player._pSLvlVisited[i] = file.NextBool8();
@@ -1307,7 +1307,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.WriteLE<int32_t>(offset2.deltaY);
 	file.Skip<int32_t>(); // Skip _pVar8
 	for (uint8_t i = 0; i < giNumberOfLevels; i++)
-		file.WriteLE<uint8_t>(player._pLvlVisited[i] ? 1 : 0);
+		file.WriteLE<uint8_t>(player.isLevelVisited[i] ? 1 : 0);
 	for (uint8_t i = 0; i < giNumberOfLevels; i++)
 		file.WriteLE<uint8_t>(player._pSLvlVisited[i] ? 1 : 0); // only 10 used
 
@@ -1904,7 +1904,7 @@ void SaveLevel(SaveWriter &saveWriter, LevelConversionData *levelConversionData)
 	}
 
 	if (!setlevel)
-		myPlayer._pLvlVisited[currlevel] = true;
+		myPlayer.isLevelVisited[currlevel] = true;
 	else
 		myPlayer._pSLvlVisited[setlvlnum] = true;
 }

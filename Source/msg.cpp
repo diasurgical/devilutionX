@@ -2665,7 +2665,7 @@ void DeltaSaveLevel()
 		MyPlayer->_pSLvlVisited[static_cast<uint8_t>(setlvlnum)] = true;
 	} else {
 		localLevel = GetLevelForMultiplayer(currlevel, setlevel);
-		MyPlayer->_pLvlVisited[currlevel] = true;
+		MyPlayer->isLevelVisited[currlevel] = true;
 	}
 	DeltaLeaveSync(localLevel);
 }
