@@ -2799,8 +2799,8 @@ PlayerArmorGraphic GetPlrAnimArmorId(Player &player)
 void CalcPlrGraphics(Player &player, PlayerWeaponGraphic animWeaponId, PlayerArmorGraphic animArmorId, bool loadgfx)
 {
 	const uint8_t gfxNum = static_cast<uint8_t>(animWeaponId) | static_cast<uint8_t>(animArmorId);
-	if (player._pgfxnum != gfxNum && loadgfx) {
-		player._pgfxnum = gfxNum;
+	if (player.graphicNum != gfxNum && loadgfx) {
+		player.graphicNum = gfxNum;
 		ResetPlayerGFX(player);
 		SetPlrAnims(player);
 		player.previewCelSprite = std::nullopt;
@@ -2814,7 +2814,7 @@ void CalcPlrGraphics(Player &player, PlayerWeaponGraphic animWeaponId, PlayerArm
 			sprites = player.AnimationData[static_cast<size_t>(graphic)].spritesForDirection(player._pdir);
 		player.AnimInfo.changeAnimationData(sprites, numberOfFrames, ticksPerFrame);
 	} else {
-		player._pgfxnum = gfxNum;
+		player.graphicNum = gfxNum;
 	}
 }
 

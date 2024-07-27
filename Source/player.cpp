@@ -1824,7 +1824,7 @@ uint16_t Player::getSpriteWidth() const
 		return (*AnimInfo.sprites)[0].width();
 	const player_graphic graphic = getGraphic();
 	const HeroClass cls = GetPlayerSpriteClass(_pClass);
-	const PlayerWeaponGraphic weaponGraphic = GetPlayerWeaponGraphic(graphic, static_cast<PlayerWeaponGraphic>(_pgfxnum & 0xF));
+	const PlayerWeaponGraphic weaponGraphic = GetPlayerWeaponGraphic(graphic, static_cast<PlayerWeaponGraphic>(graphicNum & 0xF));
 	return GetPlayerSpriteWidth(cls, graphic, weaponGraphic);
 }
 
@@ -2080,7 +2080,7 @@ void LoadPlrGFX(Player &player, player_graphic graphic)
 		return;
 
 	const HeroClass cls = GetPlayerSpriteClass(player._pClass);
-	const PlayerWeaponGraphic animWeaponId = GetPlayerWeaponGraphic(graphic, static_cast<PlayerWeaponGraphic>(player._pgfxnum & 0xF));
+	const PlayerWeaponGraphic animWeaponId = GetPlayerWeaponGraphic(graphic, static_cast<PlayerWeaponGraphic>(player.graphicNum & 0xF));
 
 	const char *path = PlayersSpriteData[static_cast<std::size_t>(cls)].classPath;
 
@@ -2131,7 +2131,7 @@ void LoadPlrGFX(Player &player, player_graphic graphic)
 		app_fatal("PLR:2");
 	}
 
-	char prefix[3] = { CharChar[static_cast<std::size_t>(cls)], ArmourChar[player._pgfxnum >> 4], WepChar[static_cast<std::size_t>(animWeaponId)] };
+	char prefix[3] = { CharChar[static_cast<std::size_t>(cls)], ArmourChar[player.graphicNum >> 4], WepChar[static_cast<std::size_t>(animWeaponId)] };
 	char pszName[256];
 	*fmt::format_to(pszName, R"(plrgfx\{0}\{1}\{1}{2})", path, std::string_view(prefix, 3), szCel) = 0;
 	const uint16_t animationWidth = GetPlayerSpriteWidth(cls, graphic, animWeaponId);
@@ -2154,7 +2154,7 @@ void InitPlayerGFX(Player &player)
 	ResetPlayerGFX(player);
 
 	if (player._pHitPoints >> 6 == 0) {
-		player._pgfxnum &= ~0xFU;
+		player.graphicNum &= ~0xFU;
 		LoadPlrGFX(player, player_graphic::Death);
 		return;
 	}
@@ -2198,7 +2198,7 @@ void SetPlrAnims(Player &player)
 {
 	HeroClass pc = player._pClass;
 	PlayerAnimData plrAtkAnimData = PlayersAnimData[static_cast<uint8_t>(pc)];
-	auto gn = static_cast<PlayerWeaponGraphic>(player._pgfxnum & 0xFU);
+	auto gn = static_cast<PlayerWeaponGraphic>(player.graphicNum & 0xFU);
 
 	if (leveltype == DTYPE_TOWN) {
 		player._pNFrames = plrAtkAnimData.townIdleFrames;
@@ -2251,7 +2251,7 @@ void SetPlrAnims(Player &player)
 	player._pDFrames = plrAtkAnimData.deathFrames;
 	player._pSFrames = plrAtkAnimData.castingFrames;
 	player._pSFNum = plrAtkAnimData.castingActionFrame;
-	int armorGraphicIndex = player._pgfxnum & ~0xFU;
+	int armorGraphicIndex = player.graphicNum & ~0xFU;
 	if (IsAnyOf(pc, HeroClass::Warrior, HeroClass::Barbarian)) {
 		if (gn == PlayerWeaponGraphic::Bow && leveltype != DTYPE_TOWN)
 			player._pNFrames = 8;
@@ -2312,7 +2312,7 @@ void CreatePlayer(Player &player, HeroClass c)
 	std::fill(player._pSplHotKey, player._pSplHotKey + NumHotkeys, SpellID::Invalid);
 
 	// CreatePlrItems calls AutoEquip which will overwrite the player graphic if required
-	player._pgfxnum = static_cast<uint8_t>(PlayerWeaponGraphic::Unarmed);
+	player.graphicNum = static_cast<uint8_t>(PlayerWeaponGraphic::Unarmed);
 
 	for (bool &levelVisited : player._pLvlVisited) {
 		levelVisited = false;
@@ -2467,7 +2467,7 @@ void InitPlayer(Player &player, bool firstTime)
 			player.AnimInfo.currentFrame = GenerateRnd(player._pNFrames - 1);
 			player.AnimInfo.tickCounterOfCurrentFrame = GenerateRnd(3);
 		} else {
-			player._pgfxnum &= ~0xFU;
+			player.graphicNum &= ~0xFU;
 			player._pmode = PM_DEATH;
 			NewPlrAnim(player, player_graphic::Death, Direction::South);
 			player.AnimInfo.currentFrame = player.AnimInfo.numberOfFrames - 2;
@@ -2658,13 +2658,13 @@ StartPlayerKill(Player &player, DeathReason deathReason)
 	player.Say(HeroSpeech::AuughUh);
 
 	// Are the current animations item dependent?
-	if (player._pgfxnum != 0) {
+	if (player.graphicNum != 0) {
 		if (dropItems) {
 			// Ensure death animation show the player without weapon and armor, because they drop on death
-			player._pgfxnum = 0;
+			player.graphicNum = 0;
 		} else {
 			// Death animation aren't weapon specific, so always use the unarmed animations
-			player._pgfxnum &= ~0xFU;
+			player.graphicNum &= ~0xFU;
 		}
 		ResetPlayerGFX(player);
 		SetPlrAnims(player);

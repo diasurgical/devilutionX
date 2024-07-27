@@ -309,7 +309,7 @@ private:
 	uint8_t _pLevel = 1; // Use get/setCharacterLevel to ensure this attribute stays within the accepted range
 
 public:
-	uint8_t _pgfxnum; // Bitmask indicating what variant of the sprite the player is using. The 3 lower bits define weapon (PlayerWeaponGraphic) and the higher bits define armour (starting with PlayerArmorGraphic)
+	uint8_t graphicNum; // Bitmask indicating what variant of the sprite the player is using. The 3 lower bits define weapon (PlayerWeaponGraphic) and the higher bits define armour (starting with PlayerArmorGraphic) (_pgfxnum)
 	int8_t _pISplLvlAdd;
 	/** @brief Specifies whether players are in non-PvP mode. */
 	bool friendlyMode = true;
@@ -756,7 +756,7 @@ public:
 	 */
 	bool UsesRangedWeapon() const
 	{
-		return static_cast<PlayerWeaponGraphic>(_pgfxnum & 0xF) == PlayerWeaponGraphic::Bow;
+		return static_cast<PlayerWeaponGraphic>(graphicNum & 0xF) == PlayerWeaponGraphic::Bow;
 	}
 
 	bool CanChangeAction()
