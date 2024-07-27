@@ -295,7 +295,7 @@ struct Player {
 	int8_t _pSFrames;
 	int8_t _pSFNum;
 	int8_t _pHFrames;
-	int8_t _pDFrames;
+	int8_t numDeathFrames; // _pDFrames
 	int8_t _pBFrames;
 	int8_t InvGrid[InventoryGridCells];
 

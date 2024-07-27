@@ -1851,7 +1851,7 @@ void Player::getAnimationFramesAndTicksPerFrame(player_graphic graphics, int8_t 
 		numberOfFrames = _pSFrames;
 		break;
 	case player_graphic::Death:
-		numberOfFrames = _pDFrames;
+		numberOfFrames = numDeathFrames;
 		ticksPerFrame = 2;
 		break;
 	case player_graphic::Block:
@@ -2248,7 +2248,7 @@ void SetPlrAnims(Player &player)
 		}
 	}
 
-	player._pDFrames = plrAtkAnimData.deathFrames;
+	player.numDeathFrames = plrAtkAnimData.deathFrames;
 	player._pSFrames = plrAtkAnimData.castingFrames;
 	player._pSFNum = plrAtkAnimData.castingActionFrame;
 	int armorGraphicIndex = player._pgfxnum & ~0xFU;
@@ -2256,7 +2256,7 @@ void SetPlrAnims(Player &player)
 		if (gn == PlayerWeaponGraphic::Bow && leveltype != DTYPE_TOWN)
 			player._pNFrames = 8;
 		if (armorGraphicIndex > 0)
-			player._pDFrames = 15;
+			player.numDeathFrames = 15;
 	}
 }
 

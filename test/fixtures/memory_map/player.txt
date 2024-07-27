@@ -131,7 +131,7 @@ M 8 32 _pHAnim
 R 32 _pHFrames
 R 32 _pHWidth
 M 8 32 _pDAnim
-R 32 _pDFrames
+R 32 numDeathFrames
 R 32 _pDWidth
 M 8 32 _pBAnim
 R 32 _pBFrames
