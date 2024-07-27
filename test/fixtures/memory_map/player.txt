@@ -117,7 +117,7 @@ R 32 _pNWidth
 M 8 32 _pWAnim
 R 32 _pWWidth
 M 8 32 _pAAnim
-R 32 _pAFrames
+R 32 numAttackFrames
 R 32 _pAWidth
 R 32 _pAFNum
 M 8 32 _pLAnim

@@ -1840,7 +1840,7 @@ void Player::getAnimationFramesAndTicksPerFrame(player_graphic graphics, int8_t 
 		numberOfFrames = _pWFrames;
 		break;
 	case player_graphic::Attack:
-		numberOfFrames = _pAFrames;
+		numberOfFrames = numAttackFrames;
 		break;
 	case player_graphic::Hit:
 		numberOfFrames = _pHFrames;
@@ -2210,39 +2210,39 @@ void SetPlrAnims(Player &player)
 		player._pBFrames = plrAtkAnimData.blockingFrames;
 		switch (gn) {
 		case PlayerWeaponGraphic::Unarmed:
-			player._pAFrames = plrAtkAnimData.unarmedFrames;
+			player.numAttackFrames = plrAtkAnimData.unarmedFrames;
 			player._pAFNum = plrAtkAnimData.unarmedActionFrame;
 			break;
 		case PlayerWeaponGraphic::UnarmedShield:
-			player._pAFrames = plrAtkAnimData.unarmedShieldFrames;
+			player.numAttackFrames = plrAtkAnimData.unarmedShieldFrames;
 			player._pAFNum = plrAtkAnimData.unarmedShieldActionFrame;
 			break;
 		case PlayerWeaponGraphic::Sword:
-			player._pAFrames = plrAtkAnimData.swordFrames;
+			player.numAttackFrames = plrAtkAnimData.swordFrames;
 			player._pAFNum = plrAtkAnimData.swordActionFrame;
 			break;
 		case PlayerWeaponGraphic::SwordShield:
-			player._pAFrames = plrAtkAnimData.swordShieldFrames;
+			player.numAttackFrames = plrAtkAnimData.swordShieldFrames;
 			player._pAFNum = plrAtkAnimData.swordShieldActionFrame;
 			break;
 		case PlayerWeaponGraphic::Bow:
-			player._pAFrames = plrAtkAnimData.bowFrames;
+			player.numAttackFrames = plrAtkAnimData.bowFrames;
 			player._pAFNum = plrAtkAnimData.bowActionFrame;
 			break;
 		case PlayerWeaponGraphic::Axe:
-			player._pAFrames = plrAtkAnimData.axeFrames;
+			player.numAttackFrames = plrAtkAnimData.axeFrames;
 			player._pAFNum = plrAtkAnimData.axeActionFrame;
 			break;
 		case PlayerWeaponGraphic::Mace:
-			player._pAFrames = plrAtkAnimData.maceFrames;
+			player.numAttackFrames = plrAtkAnimData.maceFrames;
 			player._pAFNum = plrAtkAnimData.maceActionFrame;
 			break;
 		case PlayerWeaponGraphic::MaceShield:
-			player._pAFrames = plrAtkAnimData.maceShieldFrames;
+			player.numAttackFrames = plrAtkAnimData.maceShieldFrames;
 			player._pAFNum = plrAtkAnimData.maceShieldActionFrame;
 			break;
 		case PlayerWeaponGraphic::Staff:
-			player._pAFrames = plrAtkAnimData.staffFrames;
+			player.numAttackFrames = plrAtkAnimData.staffFrames;
 			player._pAFNum = plrAtkAnimData.staffActionFrame;
 			break;
 		}

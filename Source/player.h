@@ -290,7 +290,7 @@ struct Player {
 	std::array<PlayerAnimationData, enum_size<player_graphic>::value> AnimationData;
 	int8_t _pNFrames;
 	int8_t _pWFrames;
-	int8_t _pAFrames;
+	int8_t numAttackFrames; // _pAFrames
 	int8_t _pAFNum;
 	int8_t _pSFrames;
 	int8_t _pSFNum;

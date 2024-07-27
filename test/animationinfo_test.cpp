@@ -184,7 +184,7 @@ TEST(AnimationInfo, AttackSwordWarrior) // ProcessAnimationPending should be con
 	        new RenderingData(0.6f, 14),
 	        new GameTickData(15, 0),
 	        new RenderingData(0.6f, 15),
-	        // Animation stopped cause PM_DoAttack would stop the Animation "if (plr[pnum].AnimInfo.currentFrame == plr[pnum]._pAFrames - 1) {"
+	        // Animation stopped cause PM_DoAttack would stop the Animation "if (plr[pnum].AnimInfo.currentFrame == plr[pnum].numAttackFrames - 1) {"
 	    });
 }
 
@@ -237,7 +237,7 @@ TEST(AnimationInfo, AttackSwordWarriorWithFastestAttack) // Skipped frames and P
 	        new RenderingData(0.6f, 14),
 	        new GameTickData(15, 0),
 	        new RenderingData(0.6f, 15),
-	        // Animation stopped cause PM_DoAttack would stop the Animation "if (plr[pnum].AnimInfo.currentFrame == plr[pnum]._pAFrames - 1) {"
+	        // Animation stopped cause PM_DoAttack would stop the Animation "if (plr[pnum].AnimInfo.currentFrame == plr[pnum].numAttackFrames - 1) {"
 	    });
 }
 
@@ -348,7 +348,7 @@ TEST(AnimationInfo, AttackSwordWarriorRepeated)
 	        new RenderingData(0.6f, 14),
 	        new GameTickData(15, 0),
 	        new RenderingData(0.6f, 15),
-	        // Animation stopped cause PM_DoAttack would stop the Animation "if (plr[pnum].AnimInfo.currentFrame == plr[pnum]._pAFrames - 1) {"
+	        // Animation stopped cause PM_DoAttack would stop the Animation "if (plr[pnum].AnimInfo.currentFrame == plr[pnum].numAttackFrames - 1) {"
 	    });
 }
 

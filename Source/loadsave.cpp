@@ -497,7 +497,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	player._pWFrames = file.NextLENarrow<int32_t, int8_t>();
 	file.Skip<uint32_t>();  // skip _pWWidth
 	file.Skip<uint32_t>(8); // Skip pointers _pAAnim
-	player._pAFrames = file.NextLENarrow<int32_t, int8_t>();
+	player.numAttackFrames = file.NextLENarrow<int32_t, int8_t>();
 	file.Skip<uint32_t>(); // skip _pAWidth
 	player._pAFNum = file.NextLENarrow<int32_t, int8_t>();
 	file.Skip<uint32_t>(8); // Skip pointers _pLAnim
@@ -1321,7 +1321,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.WriteLE<int32_t>(player._pWFrames);
 	file.Skip<uint32_t>();  // Skip _pWWidth
 	file.Skip<uint32_t>(8); // Skip pointers _pAAnim
-	file.WriteLE<int32_t>(player._pAFrames);
+	file.WriteLE<int32_t>(player.numAttackFrames);
 	file.Skip<uint32_t>(); // Skip _pAWidth
 	file.WriteLE<int32_t>(player._pAFNum);
 	file.Skip<uint32_t>(8); // Skip pointers _pLAnim
