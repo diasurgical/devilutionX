@@ -1833,7 +1833,7 @@ void Player::getAnimationFramesAndTicksPerFrame(player_graphic graphics, int8_t 
 	ticksPerFrame = 1;
 	switch (graphics) {
 	case player_graphic::Stand:
-		numberOfFrames = _pNFrames;
+		numberOfFrames = numIdleFrames;
 		ticksPerFrame = 4;
 		break;
 	case player_graphic::Walk:
@@ -2201,10 +2201,10 @@ void SetPlrAnims(Player &player)
 	auto gn = static_cast<PlayerWeaponGraphic>(player._pgfxnum & 0xFU);
 
 	if (leveltype == DTYPE_TOWN) {
-		player._pNFrames = plrAtkAnimData.townIdleFrames;
+		player.numIdleFrames = plrAtkAnimData.townIdleFrames;
 		player._pWFrames = plrAtkAnimData.townWalkingFrames;
 	} else {
-		player._pNFrames = plrAtkAnimData.idleFrames;
+		player.numIdleFrames = plrAtkAnimData.idleFrames;
 		player._pWFrames = plrAtkAnimData.walkingFrames;
 		player._pHFrames = plrAtkAnimData.recoveryFrames;
 		player._pBFrames = plrAtkAnimData.blockingFrames;
@@ -2254,7 +2254,7 @@ void SetPlrAnims(Player &player)
 	int armorGraphicIndex = player._pgfxnum & ~0xFU;
 	if (IsAnyOf(pc, HeroClass::Warrior, HeroClass::Barbarian)) {
 		if (gn == PlayerWeaponGraphic::Bow && leveltype != DTYPE_TOWN)
-			player._pNFrames = 8;
+			player.numIdleFrames = 8;
 		if (armorGraphicIndex > 0)
 			player._pDFrames = 15;
 	}
@@ -2464,7 +2464,7 @@ void InitPlayer(Player &player, bool firstTime)
 		if (player._pHitPoints >> 6 > 0) {
 			player._pmode = PM_STAND;
 			NewPlrAnim(player, player_graphic::Stand, Direction::South);
-			player.AnimInfo.currentFrame = GenerateRnd(player._pNFrames - 1);
+			player.AnimInfo.currentFrame = GenerateRnd(player.numIdleFrames - 1);
 			player.AnimInfo.tickCounterOfCurrentFrame = GenerateRnd(3);
 		} else {
 			player._pgfxnum &= ~0xFU;

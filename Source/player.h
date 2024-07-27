@@ -288,7 +288,7 @@ struct Player {
 	 * @brief Contains Data (Sprites) for the different Animations
 	 */
 	std::array<PlayerAnimationData, enum_size<player_graphic>::value> AnimationData;
-	int8_t _pNFrames;
+	int8_t numIdleFrames; // _pNFrames
 	int8_t _pWFrames;
 	int8_t _pAFrames;
 	int8_t _pAFNum;

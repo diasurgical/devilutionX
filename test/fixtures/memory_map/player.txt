@@ -112,7 +112,7 @@ M_HF 25 8 _pSLvlVisited
 R 16 alignment
 R 32 _pGFXLoad
 M 8 32 _pNAnim
-R 32 _pNFrames
+R 32 numIdleFrames
 R 32 _pNWidth
 M 8 32 _pWAnim
 R 32 _pWWidth

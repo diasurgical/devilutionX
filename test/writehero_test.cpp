@@ -332,7 +332,7 @@ void AssertPlayer(Player &player)
 	ASSERT_EQ(player._pLghtResist, 75);
 	ASSERT_EQ(CountBool(player._pLvlVisited, NUMLEVELS), 0);
 	ASSERT_EQ(CountBool(player._pSLvlVisited, NUMLEVELS), 0);
-	ASSERT_EQ(player._pNFrames, 20);
+	ASSERT_EQ(player.numIdleFrames, 20);
 	ASSERT_EQ(player._pWFrames, 8);
 	ASSERT_EQ(player._pAFrames, 0);
 	ASSERT_EQ(player._pAFNum, 0);
