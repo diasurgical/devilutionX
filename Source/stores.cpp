@@ -398,7 +398,7 @@ void ScrollSmithBuy(int idx)
 
 uint32_t TotalPlayerGold()
 {
-	return MyPlayer->_pGold + Stash.gold;
+	return MyPlayer->gold + Stash.gold;
 }
 
 // TODO: Change `_iIvalue` to be unsigned instead of passing `int` here.
@@ -1452,7 +1452,7 @@ void StoreSellItem()
 
 	AddGoldToInventory(myPlayer, cost);
 
-	myPlayer._pGold += cost;
+	myPlayer.gold += cost;
 }
 
 void SmithSellEnter()
@@ -2595,7 +2595,7 @@ void TakePlrsMoney(int cost)
 {
 	Player &myPlayer = *MyPlayer;
 
-	myPlayer._pGold -= std::min(cost, myPlayer._pGold);
+	myPlayer.gold -= std::min(cost, myPlayer.gold);
 
 	cost = TakeGold(myPlayer, cost, true);
 	if (cost != 0) {

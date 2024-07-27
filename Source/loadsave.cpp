@@ -463,7 +463,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	player._pMagResist = file.NextLE<int8_t>();
 	player._pFireResist = file.NextLE<int8_t>();
 	player._pLghtResist = file.NextLE<int8_t>();
-	player._pGold = file.NextLE<int32_t>();
+	player.gold = file.NextLE<int32_t>();
 	player._pInfraFlag = file.NextBool32();
 
 	int32_t tempPositionX = file.NextLE<int32_t>();
@@ -1287,7 +1287,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.WriteLE<int8_t>(player._pMagResist);
 	file.WriteLE<int8_t>(player._pFireResist);
 	file.WriteLE<int8_t>(player._pLghtResist);
-	file.WriteLE<int32_t>(player._pGold);
+	file.WriteLE<int32_t>(player.gold);
 	file.WriteLE<uint32_t>(player._pInfraFlag ? 1 : 0);
 
 	int32_t tempPositionX = player.position.temp.x;

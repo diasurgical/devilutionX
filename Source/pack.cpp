@@ -268,7 +268,7 @@ void PackPlayer(PlayerPack &packed, const Player &player)
 	packed.pLevel = player.getCharacterLevel();
 	packed.pStatPts = player._pStatPts;
 	packed.pExperience = SDL_SwapLE32(player._pExperience);
-	packed.pGold = SDL_SwapLE32(player._pGold);
+	packed.pGold = SDL_SwapLE32(player.gold);
 	packed.pHPBase = SDL_SwapLE32(player._pHPBase);
 	packed.pMaxHPBase = SDL_SwapLE32(player._pMaxHPBase);
 	packed.pManaBase = SDL_SwapLE32(player._pManaBase);
@@ -476,7 +476,7 @@ void UnPackPlayer(const PlayerPack &packed, Player &player)
 	player._pStatPts = packed.pStatPts;
 
 	player._pExperience = SDL_SwapLE32(packed.pExperience);
-	player._pGold = SDL_SwapLE32(packed.pGold);
+	player.gold = SDL_SwapLE32(packed.pGold);
 	if ((int)(player._pHPBase & 0xFFFFFFC0) < 64)
 		player._pHPBase = 64;
 
@@ -673,7 +673,7 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 	}
 
 	CalcPlrInv(player, false);
-	player._pGold = CalculateGold(player);
+	player.gold = CalculateGold(player);
 
 	ValidateFields(player._pStrength, SDL_SwapLE32(packed.pStrength), player._pStrength == SDL_SwapLE32(packed.pStrength));
 	ValidateFields(player._pMagic, SDL_SwapLE32(packed.pMagic), player._pMagic == SDL_SwapLE32(packed.pMagic));

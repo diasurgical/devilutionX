@@ -19,7 +19,7 @@ std::string DebugCmdGiveGoldCheat(std::optional<int> amount)
 	int goldToAdd = amount.value_or(GOLD_MAX_LIMIT * InventoryGridCells);
 	if (goldToAdd <= 0) return "amount must be positive";
 	Player &myPlayer = *MyPlayer;
-	const int goldAmountBefore = myPlayer._pGold;
+	const int goldAmountBefore = myPlayer.gold;
 	for (int8_t &itemIndex : myPlayer.InvGrid) {
 		if (itemIndex < 0)
 			continue;
@@ -40,18 +40,18 @@ std::string DebugCmdGiveGoldCheat(std::optional<int> amount)
 		int goldThatCanBeAdded = (GOLD_MAX_LIMIT - item._ivalue);
 		if (goldThatCanBeAdded >= goldToAdd) {
 			item._ivalue += goldToAdd;
-			myPlayer._pGold += goldToAdd;
+			myPlayer.gold += goldToAdd;
 			break;
 		}
 
 		item._ivalue += goldThatCanBeAdded;
 		goldToAdd -= goldThatCanBeAdded;
-		myPlayer._pGold += goldThatCanBeAdded;
+		myPlayer.gold += goldThatCanBeAdded;
 	}
 
 	CalcPlrInv(myPlayer, true);
 
-	return StrCat("Set your gold to ", myPlayer._pGold, ", added ", myPlayer._pGold - goldAmountBefore, ".");
+	return StrCat("Set your gold to ", myPlayer.gold, ", added ", myPlayer.gold - goldAmountBefore, ".");
 }
 
 std::string DebugCmdTakeGoldCheat(std::optional<int> amount)
@@ -60,7 +60,7 @@ std::string DebugCmdTakeGoldCheat(std::optional<int> amount)
 	int goldToRemove = amount.value_or(GOLD_MAX_LIMIT * InventoryGridCells);
 	if (goldToRemove <= 0) return "amount must be positive";
 
-	const int goldAmountBefore = myPlayer._pGold;
+	const int goldAmountBefore = myPlayer.gold;
 	for (auto itemIndex : myPlayer.InvGrid) {
 		itemIndex -= 1;
 
@@ -72,19 +72,19 @@ std::string DebugCmdTakeGoldCheat(std::optional<int> amount)
 			continue;
 
 		if (item._ivalue >= goldToRemove) {
-			myPlayer._pGold -= goldToRemove;
+			myPlayer.gold -= goldToRemove;
 			item._ivalue -= goldToRemove;
 			if (item._ivalue == 0)
 				myPlayer.RemoveInvItem(itemIndex);
 			break;
 		}
 
-		myPlayer._pGold -= item._ivalue;
+		myPlayer.gold -= item._ivalue;
 		goldToRemove -= item._ivalue;
 		myPlayer.RemoveInvItem(itemIndex);
 	}
 
-	return StrCat("Set your gold to ", myPlayer._pGold, ", removed ", goldAmountBefore - myPlayer._pGold, ".");
+	return StrCat("Set your gold to ", myPlayer.gold, ", removed ", goldAmountBefore - myPlayer.gold, ".");
 }
 
 } // namespace

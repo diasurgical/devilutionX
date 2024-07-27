@@ -3097,7 +3097,7 @@ void CreatePlrItems(Player &player)
 		player._pNumInv++;
 		player.InvGrid[30] = player._pNumInv;
 
-		player._pGold = goldItem._ivalue;
+		player.gold = goldItem._ivalue;
 	}
 
 	CalcPlrItemVals(player, false);

@@ -458,11 +458,11 @@ bool ChangeInvItem(Player &player, int slot, Size itemSize)
 			if (ig <= MaxGold) {
 				player.InvList[invIndex]._ivalue = ig;
 				SetPlrHandGoldCurs(player.InvList[invIndex]);
-				player._pGold += player.HoldItem._ivalue;
+				player.gold += player.HoldItem._ivalue;
 				player.HoldItem.clear();
 			} else {
 				ig = MaxGold - gt;
-				player._pGold += ig;
+				player.gold += ig;
 				player.HoldItem._ivalue -= ig;
 				SetPlrHandGoldCurs(player.HoldItem);
 				player.InvList[invIndex]._ivalue = MaxGold;
@@ -470,7 +470,7 @@ bool ChangeInvItem(Player &player, int slot, Size itemSize)
 			}
 		} else {
 			const int invIndex = player._pNumInv;
-			player._pGold += player.HoldItem._ivalue;
+			player.gold += player.HoldItem._ivalue;
 			player.InvList[invIndex] = player.HoldItem.pop();
 			player._pNumInv++;
 			player.InvGrid[ii] = player._pNumInv;
@@ -486,10 +486,10 @@ bool ChangeInvItem(Player &player, int slot, Size itemSize)
 		} else {
 			const int invIndex = prevItemId - 1;
 			if (player.HoldItem._itype == ItemType::Gold)
-				player._pGold += player.HoldItem._ivalue;
+				player.gold += player.HoldItem._ivalue;
 			std::swap(player.InvList[invIndex], player.HoldItem);
 			if (player.HoldItem._itype == ItemType::Gold)
-				player._pGold = CalculateGold(player);
+				player.gold = CalculateGold(player);
 			for (int8_t &itemIndex : player.InvGrid) {
 				if (itemIndex == prevItemId)
 					itemIndex = 0;
@@ -513,7 +513,7 @@ void ChangeBeltItem(Player &player, int slot)
 		std::swap(player.SpdList[ii], player.HoldItem);
 
 		if (player.HoldItem._itype == ItemType::Gold)
-			player._pGold = CalculateGold(player);
+			player.gold = CalculateGold(player);
 	}
 	if (&player == MyPlayer) {
 		NetSendCmdChBeltItem(false, ii);
@@ -832,7 +832,7 @@ void CheckInvCut(Player &player, Point cursorPosition, bool automaticMove, bool 
 
 	if (!holdItem.isEmpty()) {
 		if (holdItem._itype == ItemType::Gold) {
-			player._pGold = CalculateGold(player);
+			player.gold = CalculateGold(player);
 		}
 
 		CalcPlrInv(player, true);
@@ -1533,7 +1533,7 @@ bool GoldAutoPlace(Player &player, Item &goldStack)
 	goldStack._ivalue = AddGoldToInventory(player, goldStack._ivalue);
 	SetPlrHandGoldCurs(goldStack);
 
-	player._pGold = CalculateGold(player);
+	player.gold = CalculateGold(player);
 
 	return goldStack._ivalue == 0;
 }

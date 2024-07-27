@@ -645,7 +645,7 @@ void RemoveGold(Player &player, int goldIndex, int amount)
 	MakeGoldStack(player.HoldItem, amount);
 	NewCursor(player.HoldItem);
 
-	player._pGold = CalculateGold(player);
+	player.gold = CalculateGold(player);
 }
 
 bool IsLevelUpButtonVisible()

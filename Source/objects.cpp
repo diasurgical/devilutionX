@@ -2656,7 +2656,7 @@ void OperateShrineSpiritual(DiabloGenerator &rng, Player &player)
 			player._pNumInv++;
 			itemIndex = player._pNumInv;
 
-			player._pGold += goldItem._ivalue;
+			player.gold += goldItem._ivalue;
 		}
 	}
 
@@ -2854,7 +2854,7 @@ void OperateShrineMendicant(Player &player)
 	if (&player != MyPlayer)
 		return;
 
-	int gold = player._pGold / 2;
+	int gold = player.gold / 2;
 	player.addExperience(gold);
 	TakePlrsMoney(gold);
 
@@ -2971,7 +2971,7 @@ void OperateShrineMurphys(DiabloGenerator &rng, Player &player)
 		}
 	}
 	if (!broke) {
-		TakePlrsMoney(player._pGold / 3);
+		TakePlrsMoney(player.gold / 3);
 	}
 
 	InitDiabloMsg(EMSG_SHRINE_MURPHYS);

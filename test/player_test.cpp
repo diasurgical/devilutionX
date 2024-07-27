@@ -118,7 +118,7 @@ static void AssertPlayer(Player &player)
 	ASSERT_EQ(player.getCharacterLevel(), 1);
 	ASSERT_EQ(player._pStatPts, 0);
 	ASSERT_EQ(player._pExperience, 0);
-	ASSERT_EQ(player._pGold, 100);
+	ASSERT_EQ(player.gold, 100);
 	ASSERT_EQ(player._pMaxHPBase, 2880);
 	ASSERT_EQ(player._pHPBase, 2880);
 	ASSERT_EQ(player.getBaseToBlock(), 20);

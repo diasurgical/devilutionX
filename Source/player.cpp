@@ -357,12 +357,12 @@ int DropGold(Player &player, int amount, bool skipFullStacks)
 
 void DropHalfPlayersGold(Player &player)
 {
-	int remainingGold = DropGold(player, player._pGold / 2, true);
+	int remainingGold = DropGold(player, player.gold / 2, true);
 	if (remainingGold > 0) {
 		DropGold(player, remainingGold, false);
 	}
 
-	player._pGold /= 2;
+	player.gold /= 2;
 }
 
 void InitLevelChange(Player &player)
@@ -1442,8 +1442,8 @@ void ValidatePlayer()
 			gt += myPlayer.InvList[i]._ivalue;
 		}
 	}
-	if (gt != myPlayer._pGold)
-		myPlayer._pGold = gt;
+	if (gt != myPlayer.gold)
+		myPlayer.gold = gt;
 
 	if (myPlayer._pBaseStr > myPlayer.GetMaximumAttributeValue(CharacterAttribute::Strength)) {
 		myPlayer._pBaseStr = myPlayer.GetMaximumAttributeValue(CharacterAttribute::Strength);
@@ -2763,7 +2763,7 @@ void StripTopGold(Player &player)
 			continue;
 		DeadItem(player, std::move(excessGold), { 0, 0 });
 	}
-	player._pGold = CalculateGold(player);
+	player.gold = CalculateGold(player);
 
 	if (player.HoldItem.isEmpty())
 		return;
