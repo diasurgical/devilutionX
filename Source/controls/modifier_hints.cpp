@@ -119,7 +119,7 @@ void DrawSpellsCircleMenuHint(const Surface &out, const Point &origin)
 		hintBoxPositions[2] + spellIconDisplacement,
 		hintBoxPositions[3] + spellIconDisplacement,
 	};
-	uint64_t spells = myPlayer._pAblSpells | myPlayer._pMemSpells | myPlayer._pScrlSpells | myPlayer._pISpells;
+	uint64_t spells = myPlayer._pAblSpells | myPlayer._pMemSpells | myPlayer.scrollSpells | myPlayer._pISpells;
 	SpellID splId;
 	SpellType splType;
 

@@ -332,8 +332,8 @@ public:
 	uint64_t _pMemSpells;
 	/** @brief Bitmask of abilities */
 	uint64_t _pAblSpells;
-	/** @brief Bitmask of spells available via scrolls */
-	uint64_t _pScrlSpells;
+	/** @brief Bitmask of spells available via scrolls (_pScrlSpells) */
+	uint64_t scrollSpells;
 	SpellFlag _pSpellFlags;
 	SpellID _pSplHotKey[NumHotkeys];
 	SpellType _pSplTHotKey[NumHotkeys];

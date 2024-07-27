@@ -41,7 +41,7 @@ bool IsReadiedSpellValid(const Player &player)
 		return (player._pISpells & GetSpellBitmask(player._pRSpell)) != 0;
 
 	case SpellType::Scroll:
-		return (player._pScrlSpells & GetSpellBitmask(player._pRSpell)) != 0;
+		return (player.scrollSpells & GetSpellBitmask(player._pRSpell)) != 0;
 
 	default:
 		return false;

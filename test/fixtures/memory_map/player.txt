@@ -51,7 +51,7 @@ M 64 8 spellLevel
 R 56 alignment
 R 64 _pMemSpells
 R 64 _pAblSpells
-R 64 _pScrlSpells
+R 64 scrollSpells
 R 8 _pSpellFlags
 R 24 alignment
 M 4 32 _pSplHotKey

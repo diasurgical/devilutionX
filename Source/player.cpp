@@ -1558,10 +1558,10 @@ uint16_t GetPlayerSpriteWidth(HeroClass cls, player_graphic graphic, PlayerWeapo
 
 void Player::CalcScrolls()
 {
-	_pScrlSpells = 0;
+	scrollSpells = 0;
 	for (Item &item : InventoryAndBeltPlayerItemsRange { *this }) {
 		if (item.isScroll() && item._iStatFlag) {
-			_pScrlSpells |= GetSpellBitmask(item._iSpell);
+			scrollSpells |= GetSpellBitmask(item._iSpell);
 		}
 	}
 	EnsureValidReadiedSpell(*this);
