@@ -257,7 +257,7 @@ struct Player {
 	int _pIEnAc;
 	int _pIFMinDam;
 	int _pIFMaxDam;
-	int _pILMinDam;
+	int minLightningDamage; // _pILMinDam
 	int _pILMaxDam;
 	uint32_t _pExperience;
 	PLR_MODE _pmode;

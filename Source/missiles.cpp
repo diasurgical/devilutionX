@@ -2801,7 +2801,7 @@ void ProcessElementalArrow(Missile &missile)
 				if (!missile.IsTrap()) {
 					// BUGFIX: damage of missile should be encoded in missile struct; player can be dead/have left the game before missile arrives.
 					const Player &player = Players[p];
-					eMind = player._pILMinDam;
+					eMind = player.minLightningDamage;
 					eMaxd = player._pILMaxDam;
 				} else {
 					eMind = GenerateRnd(10) + 1 + currlevel;
@@ -3261,7 +3261,7 @@ void ProcessSpectralArrow(Missile &missile)
 		dir = player._pdir;
 		micaster = TARGET_MONSTERS;
 
-		switch (player._pILMinDam) {
+		switch (player.minLightningDamage) {
 		case 0:
 			mitype = MissileID::FireballBow;
 			break;
@@ -3554,7 +3554,7 @@ void ProcessWeaponExplosion(Missile &missile)
 		damageType = DamageType::Fire;
 	} else {
 		// BUGFIX: damage of missile should be encoded in missile struct; player can be dead/have left the game before missile arrives.
-		mind = player._pILMinDam;
+		mind = player.minLightningDamage;
 		maxd = player._pILMaxDam;
 		damageType = DamageType::Lightning;
 	}

@@ -1262,7 +1262,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_iFMaxDam)
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_iLMinDam)
 {
-	MyPlayer->_pILMinDam++;
+	MyPlayer->minLightningDamage++;
 	ASSERT_FALSE(TestNetPackValidation());
 
 	CalcPlrItemVals(*MyPlayer, false);
