@@ -269,7 +269,7 @@ void PackPlayer(PlayerPack &packed, const Player &player)
 	packed.pStatPts = player._pStatPts;
 	packed.pExperience = SDL_SwapLE32(player._pExperience);
 	packed.pGold = SDL_SwapLE32(player._pGold);
-	packed.pHPBase = SDL_SwapLE32(player._pHPBase);
+	packed.pHPBase = SDL_SwapLE32(player.baseLife);
 	packed.pMaxHPBase = SDL_SwapLE32(player._pMaxHPBase);
 	packed.pManaBase = SDL_SwapLE32(player._pManaBase);
 	packed.pMaxManaBase = SDL_SwapLE32(player._pMaxManaBase);
@@ -328,7 +328,7 @@ void PackNetPlayer(PlayerNetPack &packed, const Player &player)
 	packed.pLevel = player.getCharacterLevel();
 	packed.pStatPts = player._pStatPts;
 	packed.pExperience = SDL_SwapLE32(player._pExperience);
-	packed.pHPBase = SDL_SwapLE32(player._pHPBase);
+	packed.pHPBase = SDL_SwapLE32(player.baseLife);
 	packed.pMaxHPBase = SDL_SwapLE32(player._pMaxHPBase);
 	packed.pManaBase = SDL_SwapLE32(player._pManaBase);
 	packed.pMaxManaBase = SDL_SwapLE32(player._pMaxManaBase);
@@ -448,10 +448,10 @@ void UnPackPlayer(const PlayerPack &packed, Player &player)
 	player = {};
 	player.setCharacterLevel(packed.pLevel);
 	player._pMaxHPBase = SDL_SwapLE32(packed.pMaxHPBase);
-	player._pHPBase = SDL_SwapLE32(packed.pHPBase);
-	player._pHPBase = std::clamp<int32_t>(player._pHPBase, 0, player._pMaxHPBase);
+	player.baseLife = SDL_SwapLE32(packed.pHPBase);
+	player.baseLife = std::clamp<int32_t>(player.baseLife, 0, player._pMaxHPBase);
 	player._pMaxHP = player._pMaxHPBase;
-	player._pHitPoints = player._pHPBase;
+	player._pHitPoints = player.baseLife;
 	player.position.tile = position;
 	player.position.future = position;
 	player.setLevel(std::clamp<int8_t>(packed.plrlevel, 0, NUMLEVELS));
@@ -477,8 +477,8 @@ void UnPackPlayer(const PlayerPack &packed, Player &player)
 
 	player._pExperience = SDL_SwapLE32(packed.pExperience);
 	player._pGold = SDL_SwapLE32(packed.pGold);
-	if ((int)(player._pHPBase & 0xFFFFFFC0) < 64)
-		player._pHPBase = 64;
+	if ((int)(player.baseLife & 0xFFFFFFC0) < 64)
+		player.baseLife = 64;
 
 	player._pMaxManaBase = SDL_SwapLE32(packed.pMaxManaBase);
 	player._pManaBase = SDL_SwapLE32(packed.pManaBase);
@@ -591,7 +591,7 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 	player.plrlevel = packed.plrlevel;
 	player.plrIsOnSetLevel = packed.isOnSetLevel != 0;
 	player._pMaxHPBase = baseHpMax;
-	player._pHPBase = baseHp;
+	player.baseLife = baseHp;
 	player._pMaxHP = baseHpMax;
 	player._pHitPoints = baseHp;
 

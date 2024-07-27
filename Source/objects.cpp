@@ -2627,7 +2627,7 @@ void OperateShrineDivine(Player &player, Point spawnPosition)
 	player._pMana = player._pMaxMana;
 	player._pManaBase = player._pMaxManaBase;
 	player._pHitPoints = player._pMaxHP;
-	player._pHPBase = player._pMaxHPBase;
+	player.baseLife = player._pMaxHPBase;
 
 	RedrawEverything();
 
@@ -2673,7 +2673,7 @@ void OperateShrineSpooky(const Player &player)
 	Player &myPlayer = *MyPlayer;
 
 	myPlayer._pHitPoints = myPlayer._pMaxHP;
-	myPlayer._pHPBase = myPlayer._pMaxHPBase;
+	myPlayer.baseLife = myPlayer._pMaxHPBase;
 	myPlayer._pMana = myPlayer._pMaxMana;
 	myPlayer._pManaBase = myPlayer._pMaxManaBase;
 
@@ -3223,10 +3223,10 @@ bool OperateFountains(Player &player, Object &fountain)
 		if (player._pHitPoints < player._pMaxHP) {
 			PlaySfxLoc(SfxID::OperateFountain, fountain.position);
 			player._pHitPoints += 64;
-			player._pHPBase += 64;
+			player.baseLife += 64;
 			if (player._pHitPoints > player._pMaxHP) {
 				player._pHitPoints = player._pMaxHP;
-				player._pHPBase = player._pMaxHPBase;
+				player.baseLife = player._pMaxHPBase;
 			}
 			applied = true;
 		} else

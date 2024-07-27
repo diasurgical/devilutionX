@@ -1017,7 +1017,7 @@ void HealPlayer()
 		PlaySFX(SfxID::CastHealing);
 	}
 	myPlayer._pHitPoints = myPlayer._pMaxHP;
-	myPlayer._pHPBase = myPlayer._pMaxHPBase;
+	myPlayer.baseLife = myPlayer._pMaxHPBase;
 	RedrawComponent(PanelDrawComponent::Health);
 }
 

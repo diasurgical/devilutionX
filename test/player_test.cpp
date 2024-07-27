@@ -120,7 +120,7 @@ static void AssertPlayer(Player &player)
 	ASSERT_EQ(player._pExperience, 0);
 	ASSERT_EQ(player._pGold, 100);
 	ASSERT_EQ(player._pMaxHPBase, 2880);
-	ASSERT_EQ(player._pHPBase, 2880);
+	ASSERT_EQ(player.baseLife, 2880);
 	ASSERT_EQ(player.getBaseToBlock(), 20);
 	ASSERT_EQ(player._pMaxManaBase, 1440);
 	ASSERT_EQ(player._pManaBase, 1440);

@@ -1154,8 +1154,8 @@ void MonsterAttackPlayer(Monster &monster, Player &player, int hit, int minDam, 
 					player._pHitPoints = player._pMaxHP;
 				}
 				player._pMaxHPBase -= 64;
-				if (player._pHPBase > player._pMaxHPBase) {
-					player._pHPBase = player._pMaxHPBase;
+				if (player.baseLife > player._pMaxHPBase) {
+					player.baseLife = player._pMaxHPBase;
 				}
 			}
 		}

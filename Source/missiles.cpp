@@ -2373,7 +2373,7 @@ void AddHealing(Missile &missile, AddMissileParameter & /*parameter*/)
 	}
 
 	player._pHitPoints = std::min(player._pHitPoints + hp, player._pMaxHP);
-	player._pHPBase = std::min(player._pHPBase + hp, player._pMaxHPBase);
+	player.baseLife = std::min(player.baseLife + hp, player._pMaxHPBase);
 
 	missile._miDelFlag = true;
 	RedrawComponent(PanelDrawComponent::Health);

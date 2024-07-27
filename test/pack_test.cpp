@@ -1012,10 +1012,10 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_plrlevel)
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_hpBase)
 {
-	MyPlayer->_pHPBase = -64;
+	MyPlayer->baseLife = -64;
 	ASSERT_FALSE(TestNetPackValidation());
 
-	MyPlayer->_pHPBase = MyPlayer->_pMaxHPBase + 64;
+	MyPlayer->baseLife = MyPlayer->_pMaxHPBase + 64;
 	ASSERT_FALSE(TestNetPackValidation());
 }
 
