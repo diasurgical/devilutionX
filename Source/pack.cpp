@@ -261,7 +261,7 @@ void PackPlayer(PlayerPack &packed, const Player &player)
 	}
 	CopyUtf8(packed.pName, player._pName, sizeof(packed.pName));
 	packed.pClass = static_cast<uint8_t>(player._pClass);
-	packed.pBaseStr = player._pBaseStr;
+	packed.pBaseStr = player.baseStrength;
 	packed.pBaseMag = player._pBaseMag;
 	packed.pBaseDex = player._pBaseDex;
 	packed.pBaseVit = player._pBaseVit;
@@ -321,7 +321,7 @@ void PackNetPlayer(PlayerNetPack &packed, const Player &player)
 	packed.py = player.position.tile.y;
 	CopyUtf8(packed.pName, player._pName, sizeof(packed.pName));
 	packed.pClass = static_cast<uint8_t>(player._pClass);
-	packed.pBaseStr = player._pBaseStr;
+	packed.pBaseStr = player.baseStrength;
 	packed.pBaseMag = player._pBaseMag;
 	packed.pBaseDex = player._pBaseDex;
 	packed.pBaseVit = player._pBaseVit;
@@ -465,8 +465,8 @@ void UnPackPlayer(const PlayerPack &packed, Player &player)
 
 	InitPlayer(player, true);
 
-	player._pBaseStr = std::min<uint8_t>(packed.pBaseStr, player.GetMaximumAttributeValue(CharacterAttribute::Strength));
-	player._pStrength = player._pBaseStr;
+	player.baseStrength = std::min<uint8_t>(packed.pBaseStr, player.GetMaximumAttributeValue(CharacterAttribute::Strength));
+	player._pStrength = player.baseStrength;
 	player._pBaseMag = std::min<uint8_t>(packed.pBaseMag, player.GetMaximumAttributeValue(CharacterAttribute::Magic));
 	player._pMagic = player._pBaseMag;
 	player._pBaseDex = std::min<uint8_t>(packed.pBaseDex, player.GetMaximumAttributeValue(CharacterAttribute::Dexterity));
@@ -600,8 +600,8 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 
 	InitPlayer(player, true);
 
-	player._pBaseStr = packed.pBaseStr;
-	player._pStrength = player._pBaseStr;
+	player.baseStrength = packed.pBaseStr;
+	player._pStrength = player.baseStrength;
 	player._pBaseMag = packed.pBaseMag;
 	player._pMagic = player._pBaseMag;
 	player._pBaseDex = packed.pBaseDex;

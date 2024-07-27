@@ -65,7 +65,7 @@ R 256 _pName
 R 8 _pClass
 R 24 alignment
 R 32 _pStrength
-R 32 _pBaseStr
+R 32 baseStrength
 R 32 _pMagic
 R 32 _pBaseMag
 R 32 _pDexterity

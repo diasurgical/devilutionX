@@ -27,7 +27,7 @@ std::string DebugCmdLevelUp(std::optional<int> levels)
 std::string DebugCmdMaxStats()
 {
 	Player &myPlayer = *MyPlayer;
-	ModifyPlrStr(myPlayer, myPlayer.GetMaximumAttributeValue(CharacterAttribute::Strength) - myPlayer._pBaseStr);
+	ModifyPlrStr(myPlayer, myPlayer.GetMaximumAttributeValue(CharacterAttribute::Strength) - myPlayer.baseStrength);
 	ModifyPlrMag(myPlayer, myPlayer.GetMaximumAttributeValue(CharacterAttribute::Magic) - myPlayer._pBaseMag);
 	ModifyPlrDex(myPlayer, myPlayer.GetMaximumAttributeValue(CharacterAttribute::Dexterity) - myPlayer._pBaseDex);
 	ModifyPlrVit(myPlayer, myPlayer.GetMaximumAttributeValue(CharacterAttribute::Vitality) - myPlayer._pBaseVit);
@@ -37,7 +37,7 @@ std::string DebugCmdMaxStats()
 std::string DebugCmdMinStats()
 {
 	Player &myPlayer = *MyPlayer;
-	ModifyPlrStr(myPlayer, -myPlayer._pBaseStr);
+	ModifyPlrStr(myPlayer, -myPlayer.baseStrength);
 	ModifyPlrMag(myPlayer, -myPlayer._pBaseMag);
 	ModifyPlrDex(myPlayer, -myPlayer._pBaseDex);
 	ModifyPlrVit(myPlayer, -myPlayer._pBaseVit);

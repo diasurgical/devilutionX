@@ -1027,7 +1027,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_manaBase)
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_baseStr)
 {
-	MyPlayer->_pBaseStr = MyPlayer->GetMaximumAttributeValue(CharacterAttribute::Strength) + 1;
+	MyPlayer->baseStrength = MyPlayer->GetMaximumAttributeValue(CharacterAttribute::Strength) + 1;
 	ASSERT_FALSE(TestNetPackValidation());
 }
 

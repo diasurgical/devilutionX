@@ -1445,8 +1445,8 @@ void ValidatePlayer()
 	if (gt != myPlayer._pGold)
 		myPlayer._pGold = gt;
 
-	if (myPlayer._pBaseStr > myPlayer.GetMaximumAttributeValue(CharacterAttribute::Strength)) {
-		myPlayer._pBaseStr = myPlayer.GetMaximumAttributeValue(CharacterAttribute::Strength);
+	if (myPlayer.baseStrength > myPlayer.GetMaximumAttributeValue(CharacterAttribute::Strength)) {
+		myPlayer.baseStrength = myPlayer.GetMaximumAttributeValue(CharacterAttribute::Strength);
 	}
 	if (myPlayer._pBaseMag > myPlayer.GetMaximumAttributeValue(CharacterAttribute::Magic)) {
 		myPlayer._pBaseMag = myPlayer.GetMaximumAttributeValue(CharacterAttribute::Magic);
@@ -1635,7 +1635,7 @@ int Player::GetBaseAttributeValue(CharacterAttribute attribute) const
 	case CharacterAttribute::Magic:
 		return this->_pBaseMag;
 	case CharacterAttribute::Strength:
-		return this->_pBaseStr;
+		return this->baseStrength;
 	case CharacterAttribute::Vitality:
 		return this->_pBaseVit;
 	default:
@@ -2274,8 +2274,8 @@ void CreatePlayer(Player &player, HeroClass c)
 
 	const ClassAttributes &attr = player.getClassAttributes();
 
-	player._pBaseStr = attr.baseStr;
-	player._pStrength = player._pBaseStr;
+	player.baseStrength = attr.baseStr;
+	player._pStrength = player.baseStrength;
 
 	player._pBaseMag = attr.baseMag;
 	player._pMagic = player._pBaseMag;
@@ -3262,7 +3262,7 @@ void CheckStats(Player &player)
 		int maxStatPoint = player.GetMaximumAttributeValue(attribute);
 		switch (attribute) {
 		case CharacterAttribute::Strength:
-			player._pBaseStr = std::clamp(player._pBaseStr, 0, maxStatPoint);
+			player.baseStrength = std::clamp(player.baseStrength, 0, maxStatPoint);
 			break;
 		case CharacterAttribute::Magic:
 			player._pBaseMag = std::clamp(player._pBaseMag, 0, maxStatPoint);
@@ -3279,15 +3279,15 @@ void CheckStats(Player &player)
 
 void ModifyPlrStr(Player &player, int l)
 {
-	l = std::clamp(l, 0 - player._pBaseStr, player.GetMaximumAttributeValue(CharacterAttribute::Strength) - player._pBaseStr);
+	l = std::clamp(l, 0 - player.baseStrength, player.GetMaximumAttributeValue(CharacterAttribute::Strength) - player.baseStrength);
 
 	player._pStrength += l;
-	player._pBaseStr += l;
+	player.baseStrength += l;
 
 	CalcPlrInv(player, true);
 
 	if (&player == MyPlayer) {
-		NetSendCmdParam1(false, CMD_SETSTR, player._pBaseStr);
+		NetSendCmdParam1(false, CMD_SETSTR, player.baseStrength);
 	}
 }
 
@@ -3362,7 +3362,7 @@ void SetPlayerHitPoints(Player &player, int val)
 
 void SetPlrStr(Player &player, int v)
 {
-	player._pBaseStr = v;
+	player.baseStrength = v;
 	CalcPlrInv(player, true);
 }
 

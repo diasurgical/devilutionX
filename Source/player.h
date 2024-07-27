@@ -227,7 +227,7 @@ struct Player {
 
 	int _pNumInv;
 	int _pStrength;
-	int _pBaseStr;
+	int baseStrength; // _pBaseStr
 	int _pMagic;
 	int _pBaseMag;
 	int _pDexterity;

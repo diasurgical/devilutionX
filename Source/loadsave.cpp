@@ -433,7 +433,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	player._pClass = static_cast<HeroClass>(file.NextLE<int8_t>());
 	file.Skip(3); // Alignment
 	player._pStrength = file.NextLE<int32_t>();
-	player._pBaseStr = file.NextLE<int32_t>();
+	player.baseStrength = file.NextLE<int32_t>();
 	player._pMagic = file.NextLE<int32_t>();
 	player._pBaseMag = file.NextLE<int32_t>();
 	player._pDexterity = file.NextLE<int32_t>();
@@ -1256,7 +1256,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.WriteLE<int8_t>(static_cast<int8_t>(player._pClass));
 	file.Skip(3); // Alignment
 	file.WriteLE<int32_t>(player._pStrength);
-	file.WriteLE<int32_t>(player._pBaseStr);
+	file.WriteLE<int32_t>(player.baseStrength);
 	file.WriteLE<int32_t>(player._pMagic);
 	file.WriteLE<int32_t>(player._pBaseMag);
 	file.WriteLE<int32_t>(player._pDexterity);

@@ -107,7 +107,7 @@ static void AssertPlayer(Player &player)
 	ASSERT_EQ(player.destAction, 0);
 	ASSERT_STREQ(player._pName, "");
 	ASSERT_EQ(player._pClass, HeroClass::Rogue);
-	ASSERT_EQ(player._pBaseStr, 20);
+	ASSERT_EQ(player.baseStrength, 20);
 	ASSERT_EQ(player._pStrength, 20);
 	ASSERT_EQ(player._pBaseMag, 15);
 	ASSERT_EQ(player._pMagic, 15);

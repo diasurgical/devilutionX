@@ -152,7 +152,7 @@ void NetReceivePlayerData(TPkt *pkt)
 	pkt->hdr.pmhp = SDL_SwapLE32(myPlayer._pMaxHP);
 	pkt->hdr.mana = SDL_SwapLE32(myPlayer._pMana);
 	pkt->hdr.maxmana = SDL_SwapLE32(myPlayer._pMaxMana);
-	pkt->hdr.bstr = myPlayer._pBaseStr;
+	pkt->hdr.bstr = myPlayer.baseStrength;
 	pkt->hdr.bmag = myPlayer._pBaseMag;
 	pkt->hdr.bdex = myPlayer._pBaseDex;
 }
@@ -648,7 +648,7 @@ void multi_process_network_packets()
 			player._pMana = SDL_SwapLE32(pkt->mana);
 			player._pMaxMana = SDL_SwapLE32(pkt->maxmana);
 			bool cond = gbBufferMsgs == 1;
-			player._pBaseStr = pkt->bstr;
+			player.baseStrength = pkt->bstr;
 			player._pBaseMag = pkt->bmag;
 			player._pBaseDex = pkt->bdex;
 			if (!cond && player.plractive && player._pHitPoints != 0) {
