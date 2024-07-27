@@ -182,7 +182,7 @@ PanelEntry panelEntries[] = {
 	{ N_("Life"), { LeftColumnLabelX, 284 }, 45, LeftColumnLabelWidth,
 	    []() { return StyledText { GetMaxHealthColor(), StrCat(InspectPlayer->_pMaxHP >> 6) }; } },
 	{ "", { 135, 284 }, 45, 0,
-	    []() { return StyledText { (InspectPlayer->_pHitPoints != InspectPlayer->_pMaxHP ? UiFlags::ColorRed : GetMaxHealthColor()), StrCat(InspectPlayer->_pHitPoints >> 6) }; } },
+	    []() { return StyledText { (InspectPlayer->life != InspectPlayer->_pMaxHP ? UiFlags::ColorRed : GetMaxHealthColor()), StrCat(InspectPlayer->life >> 6) }; } },
 	{ N_("Mana"), { LeftColumnLabelX, 312 }, 45, LeftColumnLabelWidth,
 	    []() { return StyledText { GetMaxManaColor(), StrCat(InspectPlayer->_pMaxMana >> 6) }; } },
 	{ "", { 135, 312 }, 45, 0,

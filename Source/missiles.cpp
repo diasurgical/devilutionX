@@ -350,7 +350,7 @@ bool Plr2PlrMHit(const Player &player, Player &target, int mindam, int maxdam, i
 
 	int dam;
 	if (mtype == MissileID::BoneSpirit) {
-		dam = target._pHitPoints / 3;
+		dam = target.life / 3;
 	} else {
 		dam = mindam + GenerateRnd(maxdam - mindam + 1);
 		if (missileData.isArrow() && damageType == DamageType::Physical)
@@ -978,7 +978,7 @@ bool PlayerMHit(Player &player, Monster *monster, int dist, int mind, int maxd, 
 {
 	*blocked = false;
 
-	if (player._pHitPoints >> 6 <= 0) {
+	if (player.life >> 6 <= 0) {
 		return false;
 	}
 
@@ -1059,7 +1059,7 @@ bool PlayerMHit(Player &player, Monster *monster, int dist, int mind, int maxd, 
 
 	int dam;
 	if (mtype == MissileID::BoneSpirit) {
-		dam = player._pHitPoints / 3;
+		dam = player.life / 3;
 	} else {
 		if (!shift) {
 			dam = (mind << 6) + GenerateRnd(((maxd - mind) << 6) + 1);
@@ -1094,7 +1094,7 @@ bool PlayerMHit(Player &player, Monster *monster, int dist, int mind, int maxd, 
 			ApplyPlrDamage(damageType, player, 0, 0, dam, deathReason);
 		}
 
-		if (player._pHitPoints >> 6 > 0) {
+		if (player.life >> 6 > 0) {
 			player.Say(HeroSpeech::ArghClang);
 		}
 		return true;
@@ -1104,7 +1104,7 @@ bool PlayerMHit(Player &player, Monster *monster, int dist, int mind, int maxd, 
 		ApplyPlrDamage(damageType, player, 0, 0, dam, deathReason);
 	}
 
-	if (player._pHitPoints >> 6 > 0) {
+	if (player.life >> 6 > 0) {
 		StartPlrHit(player, dam, false);
 	}
 
@@ -1138,7 +1138,7 @@ void InitMissiles()
 		for (auto &missile : Missiles) {
 			if (missile._mitype == MissileID::Rage) {
 				if (missile.sourcePlayer() == MyPlayer) {
-					int missingHP = myPlayer._pMaxHP - myPlayer._pHitPoints;
+					int missingHP = myPlayer._pMaxHP - myPlayer.life;
 					CalcPlrItemVals(myPlayer, true);
 					ApplyPlrDamage(DamageType::Physical, myPlayer, 0, 1, missingHP + missile.var2);
 				}
@@ -2372,7 +2372,7 @@ void AddHealing(Missile &missile, AddMissileParameter & /*parameter*/)
 		hp += hp / 2;
 	}
 
-	player._pHitPoints = std::min(player._pHitPoints + hp, player._pMaxHP);
+	player.life = std::min(player.life + hp, player._pMaxHP);
 	player._pHPBase = std::min(player._pHPBase + hp, player._pMaxHPBase);
 
 	missile._miDelFlag = true;
@@ -2489,7 +2489,7 @@ void AddRage(Missile &missile, AddMissileParameter &parameter)
 {
 	Player &player = Players[missile._misource];
 
-	if (HasAnyOf(player._pSpellFlags, SpellFlag::RageActive | SpellFlag::RageCooldown) || player._pHitPoints <= player.getCharacterLevel() << 6) {
+	if (HasAnyOf(player._pSpellFlags, SpellFlag::RageActive | SpellFlag::RageCooldown) || player.life <= player.getCharacterLevel() << 6) {
 		missile._miDelFlag = true;
 		parameter.spellFizzled = true;
 		return;
@@ -3847,7 +3847,7 @@ void ProcessRage(Missile &missile)
 
 	Player &player = Players[missile._misource];
 
-	int hpdif = player._pMaxHP - player._pHitPoints;
+	int hpdif = player._pMaxHP - player.life;
 
 	if (HasAnyOf(player._pSpellFlags, SpellFlag::RageActive)) {
 		player._pSpellFlags &= ~SpellFlag::RageActive;

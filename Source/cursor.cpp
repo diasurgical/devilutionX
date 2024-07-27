@@ -119,7 +119,7 @@ bool TrySelectPlayer(bool flipflag, int mx, int my)
 	if (!flipflag && mx + 1 < MAXDUNX && dPlayer[mx + 1][my] != 0) {
 		const uint8_t playerId = std::abs(dPlayer[mx + 1][my]) - 1;
 		Player &player = Players[playerId];
-		if (&player != MyPlayer && player._pHitPoints != 0) {
+		if (&player != MyPlayer && player.life != 0) {
 			cursPosition = Point { mx, my } + Displacement { 1, 0 };
 			PlayerUnderCursor = &player;
 		}
@@ -127,7 +127,7 @@ bool TrySelectPlayer(bool flipflag, int mx, int my)
 	if (flipflag && my + 1 < MAXDUNY && dPlayer[mx][my + 1] != 0) {
 		const uint8_t playerId = std::abs(dPlayer[mx][my + 1]) - 1;
 		Player &player = Players[playerId];
-		if (&player != MyPlayer && player._pHitPoints != 0) {
+		if (&player != MyPlayer && player.life != 0) {
 			cursPosition = Point { mx, my } + Displacement { 0, 1 };
 			PlayerUnderCursor = &player;
 		}
@@ -165,7 +165,7 @@ bool TrySelectPlayer(bool flipflag, int mx, int my)
 	if (mx + 1 < MAXDUNX && my + 1 < MAXDUNY && dPlayer[mx + 1][my + 1] != 0) {
 		const uint8_t playerId = std::abs(dPlayer[mx + 1][my + 1]) - 1;
 		const Player &player = Players[playerId];
-		if (&player != MyPlayer && player._pHitPoints != 0) {
+		if (&player != MyPlayer && player.life != 0) {
 			cursPosition = Point { mx, my } + Displacement { 1, 1 };
 			PlayerUnderCursor = &player;
 		}

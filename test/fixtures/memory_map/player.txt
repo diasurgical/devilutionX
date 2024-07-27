@@ -77,7 +77,7 @@ R 32 _pDamageMod
 R 32 _pBaseToBlk
 R 32 _pHPBase
 R 32 _pMaxHPBase
-R 32 _pHitPoints
+R 32 life
 R 32 _pMaxHP
 R 32 _pHPPer
 R 32 _pManaBase

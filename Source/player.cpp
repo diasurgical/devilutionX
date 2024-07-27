@@ -144,7 +144,7 @@ void StartWalkAnimation(Player &player, Direction dir, bool pmWillBeCalled)
  */
 void StartWalk(Player &player, Direction dir, bool pmWillBeCalled)
 {
-	if (player._pInvincible && player._pHitPoints == 0 && &player == MyPlayer) {
+	if (player._pInvincible && player.life == 0 && &player == MyPlayer) {
 		SyncPlrKill(player, DeathReason::Unknown);
 		return;
 	}
@@ -162,7 +162,7 @@ void ClearStateVariables(Player &player)
 
 void StartAttack(Player &player, Direction d, bool includesFirstFrame)
 {
-	if (player._pInvincible && player._pHitPoints == 0 && &player == MyPlayer) {
+	if (player._pInvincible && player.life == 0 && &player == MyPlayer) {
 		SyncPlrKill(player, DeathReason::Unknown);
 		return;
 	}
@@ -205,7 +205,7 @@ void StartAttack(Player &player, Direction d, bool includesFirstFrame)
 
 void StartRangeAttack(Player &player, Direction d, WorldTileCoord cx, WorldTileCoord cy, bool includesFirstFrame)
 {
-	if (player._pInvincible && player._pHitPoints == 0 && &player == MyPlayer) {
+	if (player._pInvincible && player.life == 0 && &player == MyPlayer) {
 		SyncPlrKill(player, DeathReason::Unknown);
 		return;
 	}
@@ -245,7 +245,7 @@ player_graphic GetPlayerGraphicForSpell(SpellID spellId)
 
 void StartSpell(Player &player, Direction d, WorldTileCoord cx, WorldTileCoord cy)
 {
-	if (player._pInvincible && player._pHitPoints == 0 && &player == MyPlayer) {
+	if (player._pInvincible && player.life == 0 && &player == MyPlayer) {
 		SyncPlrKill(player, DeathReason::Unknown);
 		return;
 	}
@@ -645,9 +645,9 @@ bool PlrHitMonst(Player &player, Monster &monster, bool adjacentDamage = false)
 	int skdam = 0;
 	if (HasAnyOf(player._pIFlags, ItemSpecialEffect::RandomStealLife)) {
 		skdam = GenerateRnd(dam / 8);
-		player._pHitPoints += skdam;
-		if (player._pHitPoints > player._pMaxHP) {
-			player._pHitPoints = player._pMaxHP;
+		player.life += skdam;
+		if (player.life > player._pMaxHP) {
+			player.life = player._pMaxHP;
 		}
 		player._pHPBase += skdam;
 		if (player._pHPBase > player._pMaxHPBase) {
@@ -679,9 +679,9 @@ bool PlrHitMonst(Player &player, Monster &monster, bool adjacentDamage = false)
 		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::StealLife5)) {
 			skdam = 5 * dam / 100;
 		}
-		player._pHitPoints += skdam;
-		if (player._pHitPoints > player._pMaxHP) {
-			player._pHitPoints = player._pMaxHP;
+		player.life += skdam;
+		if (player.life > player._pMaxHP) {
+			player.life = player._pMaxHP;
 		}
 		player._pHPBase += skdam;
 		if (player._pHPBase > player._pMaxHPBase) {
@@ -746,9 +746,9 @@ bool PlrHitPlr(Player &attacker, Player &target)
 	int skdam = dam << 6;
 	if (HasAnyOf(attacker._pIFlags, ItemSpecialEffect::RandomStealLife)) {
 		int tac = GenerateRnd(skdam / 8);
-		attacker._pHitPoints += tac;
-		if (attacker._pHitPoints > attacker._pMaxHP) {
-			attacker._pHitPoints = attacker._pMaxHP;
+		attacker.life += tac;
+		if (attacker.life > attacker._pMaxHP) {
+			attacker.life = attacker._pMaxHP;
 		}
 		attacker._pHPBase += tac;
 		if (attacker._pHPBase > attacker._pMaxHPBase) {
@@ -1117,7 +1117,7 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 	case ACTION_RATTACKPLR:
 	case ACTION_SPELLPLR:
 		target = &Players[targetId];
-		if ((target->_pHitPoints >> 6) <= 0) {
+		if ((target->life >> 6) <= 0) {
 			player.Stop();
 			return;
 		}
@@ -1489,8 +1489,8 @@ void CheckCheatStats(Player &player)
 		player._pVitality = 750;
 	}
 
-	if (player._pHitPoints > 128000) {
-		player._pHitPoints = 128000;
+	if (player.life > 128000) {
+		player.life = 128000;
 	}
 
 	if (player._pMana > 128000) {
@@ -1761,7 +1761,7 @@ void Player::RestorePartialLife()
 		l *= 2;
 	if (IsAnyOf(_pClass, HeroClass::Rogue, HeroClass::Monk, HeroClass::Bard))
 		l += l / 2;
-	_pHitPoints = std::min(_pHitPoints + l, _pMaxHP);
+	life = std::min(life + l, _pMaxHP);
 	_pHPBase = std::min(_pHPBase + l, _pMaxHPBase);
 }
 
@@ -2153,7 +2153,7 @@ void InitPlayerGFX(Player &player)
 
 	ResetPlayerGFX(player);
 
-	if (player._pHitPoints >> 6 == 0) {
+	if (player.life >> 6 == 0) {
 		player._pgfxnum &= ~0xFU;
 		LoadPlrGFX(player, player_graphic::Death);
 		return;
@@ -2286,10 +2286,10 @@ void CreatePlayer(Player &player, HeroClass c)
 	player._pBaseVit = attr.baseVit;
 	player._pVitality = player._pBaseVit;
 
-	player._pHitPoints = player.calculateBaseLife();
-	player._pMaxHP = player._pHitPoints;
-	player._pHPBase = player._pHitPoints;
-	player._pMaxHPBase = player._pHitPoints;
+	player.life = player.calculateBaseLife();
+	player._pMaxHP = player.life;
+	player._pHPBase = player.life;
+	player._pMaxHPBase = player.life;
 
 	player._pMana = player.calculateBaseMana();
 	player._pMaxMana = player._pMana;
@@ -2358,7 +2358,7 @@ void NextPlrLevel(Player &player)
 	int hp = player.getClassAttributes().lvlLife;
 
 	player._pMaxHP += hp;
-	player._pHitPoints = player._pMaxHP;
+	player.life = player._pMaxHP;
 	player._pMaxHPBase += hp;
 	player._pHPBase = player._pMaxHPBase;
 
@@ -2390,7 +2390,7 @@ void NextPlrLevel(Player &player)
 
 void Player::_addExperience(uint32_t experience, int levelDelta)
 {
-	if (this != MyPlayer || _pHitPoints <= 0)
+	if (this != MyPlayer || life <= 0)
 		return;
 
 	if (isMaxCharacterLevel()) {
@@ -2461,7 +2461,7 @@ void InitPlayer(Player &player, bool firstTime)
 
 		ClearStateVariables(player);
 
-		if (player._pHitPoints >> 6 > 0) {
+		if (player.life >> 6 > 0) {
 			player._pmode = PM_STAND;
 			NewPlrAnim(player, player_graphic::Stand, Direction::South);
 			player.AnimInfo.currentFrame = GenerateRnd(player._pNFrames - 1);
@@ -2550,7 +2550,7 @@ void FixPlayerLocation(Player &player, Direction bDir)
 
 void StartStand(Player &player, Direction dir)
 {
-	if (player._pInvincible && player._pHitPoints == 0 && &player == MyPlayer) {
+	if (player._pInvincible && player.life == 0 && &player == MyPlayer) {
 		SyncPlrKill(player, DeathReason::Unknown);
 		return;
 	}
@@ -2565,7 +2565,7 @@ void StartStand(Player &player, Direction dir)
 
 void StartPlrBlock(Player &player, Direction dir)
 {
-	if (player._pInvincible && player._pHitPoints == 0 && &player == MyPlayer) {
+	if (player._pInvincible && player.life == 0 && &player == MyPlayer) {
 		SyncPlrKill(player, DeathReason::Unknown);
 		return;
 	}
@@ -2599,7 +2599,7 @@ void FixPlrWalkTags(const Player &player)
 
 void StartPlrHit(Player &player, int dam, bool forcehit)
 {
-	if (player._pInvincible && player._pHitPoints == 0 && &player == MyPlayer) {
+	if (player._pInvincible && player.life == 0 && &player == MyPlayer) {
 		SyncPlrKill(player, DeathReason::Unknown);
 		return;
 	}
@@ -2643,7 +2643,7 @@ __attribute__((no_sanitize("shift-base")))
 void
 StartPlayerKill(Player &player, DeathReason deathReason)
 {
-	if (player._pHitPoints <= 0 && player._pmode == PM_DEATH) {
+	if (player.life <= 0 && player._pmode == PM_DEATH) {
 		return;
 	}
 
@@ -2783,7 +2783,7 @@ void StripTopGold(Player &player)
 void ApplyPlrDamage(DamageType damageType, Player &player, int dam, int minHP /*= 0*/, int frac /*= 0*/, DeathReason deathReason /*= DeathReason::MonsterOrTrap*/)
 {
 	int totalDamage = (dam << 6) + frac;
-	if (&player == MyPlayer && player._pHitPoints > 0) {
+	if (&player == MyPlayer && player.life > 0) {
 		AddFloatingNumber(damageType, player, totalDamage);
 	}
 	if (totalDamage > 0 && player.pManaShield) {
@@ -2813,24 +2813,24 @@ void ApplyPlrDamage(DamageType damageType, Player &player, int dam, int minHP /*
 		return;
 
 	RedrawComponent(PanelDrawComponent::Health);
-	player._pHitPoints -= totalDamage;
+	player.life -= totalDamage;
 	player._pHPBase -= totalDamage;
-	if (player._pHitPoints > player._pMaxHP) {
-		player._pHitPoints = player._pMaxHP;
+	if (player.life > player._pMaxHP) {
+		player.life = player._pMaxHP;
 		player._pHPBase = player._pMaxHPBase;
 	}
 	int minHitPoints = minHP << 6;
-	if (player._pHitPoints < minHitPoints) {
+	if (player.life < minHitPoints) {
 		SetPlayerHitPoints(player, minHitPoints);
 	}
-	if (player._pHitPoints >> 6 <= 0) {
+	if (player.life >> 6 <= 0) {
 		SyncPlrKill(player, deathReason);
 	}
 }
 
 void SyncPlrKill(Player &player, DeathReason deathReason)
 {
-	if (player._pHitPoints <= 0 && leveltype == DTYPE_TOWN) {
+	if (player.life <= 0 && leveltype == DTYPE_TOWN) {
 		SetPlayerHitPoints(player, 64);
 		return;
 	}
@@ -2989,7 +2989,7 @@ void ProcessPlayers()
 		if (player.plractive && player.isOnActiveLevel() && (&player == MyPlayer || !player._pLvlChanging)) {
 			CheckCheatStats(player);
 
-			if (!PlrDeathModeOK(player) && (player._pHitPoints >> 6) <= 0) {
+			if (!PlrDeathModeOK(player) && (player.life >> 6) <= 0) {
 				SyncPlrKill(player, DeathReason::Unknown);
 			}
 
@@ -3067,7 +3067,7 @@ bool PosOkPlayer(const Player &player, Point position)
 	if (!IsTileWalkable(position))
 		return false;
 	Player *otherPlayer = PlayerAtPosition(position);
-	if (otherPlayer != nullptr && otherPlayer != &player && otherPlayer->_pHitPoints != 0)
+	if (otherPlayer != nullptr && otherPlayer != &player && otherPlayer->life != 0)
 		return false;
 
 	if (dMonster[position.x][position.y] != 0) {
@@ -3340,7 +3340,7 @@ void ModifyPlrVit(Player &player, int l)
 
 	player._pHPBase += ms;
 	player._pMaxHPBase += ms;
-	player._pHitPoints += ms;
+	player.life += ms;
 	player._pMaxHP += ms;
 
 	CalcPlrInv(player, true);
@@ -3352,7 +3352,7 @@ void ModifyPlrVit(Player &player, int l)
 
 void SetPlayerHitPoints(Player &player, int val)
 {
-	player._pHitPoints = val;
+	player.life = val;
 	player._pHPBase = val + player._pMaxHPBase - player._pMaxHP;
 
 	if (&player == MyPlayer) {

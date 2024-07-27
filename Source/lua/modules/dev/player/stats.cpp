@@ -60,7 +60,7 @@ std::string DebugCmdChangeHealth(int change)
 	if (change == 0)
 		return StrCat("Enter a value not equal to 0 to change life!");
 
-	int newHealth = myPlayer._pHitPoints + (change * 64);
+	int newHealth = myPlayer.life + (change * 64);
 	SetPlayerHitPoints(myPlayer, newHealth);
 	if (newHealth <= 0)
 		SyncPlrKill(myPlayer, DeathReason::MonsterOrTrap);

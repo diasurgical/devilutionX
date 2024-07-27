@@ -1081,7 +1081,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_vitality)
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_hitPoints)
 {
-	MyPlayer->_pHitPoints++;
+	MyPlayer->life++;
 	ASSERT_FALSE(TestNetPackValidation());
 }
 

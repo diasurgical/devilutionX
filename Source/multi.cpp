@@ -148,7 +148,7 @@ void NetReceivePlayerData(TPkt *pkt)
 	pkt->hdr.py = myPlayer.position.tile.y;
 	pkt->hdr.targx = target.x;
 	pkt->hdr.targy = target.y;
-	pkt->hdr.php = SDL_SwapLE32(myPlayer._pHitPoints);
+	pkt->hdr.php = SDL_SwapLE32(myPlayer.life);
 	pkt->hdr.pmhp = SDL_SwapLE32(myPlayer._pMaxHP);
 	pkt->hdr.mana = SDL_SwapLE32(myPlayer._pMana);
 	pkt->hdr.maxmana = SDL_SwapLE32(myPlayer._pMaxMana);
@@ -643,7 +643,7 @@ void multi_process_network_packets()
 		player.position.last = syncPosition;
 		if (&player != MyPlayer) {
 			assert(gbBufferMsgs != 2);
-			player._pHitPoints = SDL_SwapLE32(pkt->php);
+			player.life = SDL_SwapLE32(pkt->php);
 			player._pMaxHP = SDL_SwapLE32(pkt->pmhp);
 			player._pMana = SDL_SwapLE32(pkt->mana);
 			player._pMaxMana = SDL_SwapLE32(pkt->maxmana);
@@ -651,7 +651,7 @@ void multi_process_network_packets()
 			player._pBaseStr = pkt->bstr;
 			player._pBaseMag = pkt->bmag;
 			player._pBaseDex = pkt->bdex;
-			if (!cond && player.plractive && player._pHitPoints != 0) {
+			if (!cond && player.plractive && player.life != 0) {
 				if (player.isOnActiveLevel() && !player._pLvlChanging) {
 					if (player.position.tile.WalkingDistance(syncPosition) > 3 && PosOkPlayer(player, syncPosition)) {
 						// got out of sync, clear the tiles around where we last thought the player was located
@@ -861,7 +861,7 @@ void recv_plrinfo(Player &player, const TCmdPlrInfoHdr &header, bool recv)
 		return;
 	}
 
-	if (player._pHitPoints >> 6 > 0) {
+	if (player.life >> 6 > 0) {
 		StartStand(player, Direction::South);
 		return;
 	}

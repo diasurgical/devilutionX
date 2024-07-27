@@ -1231,7 +1231,7 @@ void DrawInfoBox(const Surface &out)
 			auto &target = *PlayerUnderCursor;
 			InfoString = std::string_view(target._pName);
 			AddPanelString(fmt::format(fmt::runtime(_("{:s}, Level: {:d}")), target.getClassName(), target.getCharacterLevel()));
-			AddPanelString(fmt::format(fmt::runtime(_("Hit Points {:d} of {:d}")), target._pHitPoints >> 6, target._pMaxHP >> 6));
+			AddPanelString(fmt::format(fmt::runtime(_("Hit Points {:d} of {:d}")), target.life >> 6, target._pMaxHP >> 6));
 		}
 	}
 	if (!InfoString.empty())
@@ -1403,7 +1403,7 @@ void control_drop_gold(SDL_Keycode vkey)
 {
 	Player &myPlayer = *MyPlayer;
 
-	if (myPlayer._pHitPoints >> 6 <= 0) {
+	if (myPlayer.life >> 6 <= 0) {
 		CloseGoldDrop();
 		return;
 	}

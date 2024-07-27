@@ -458,7 +458,7 @@ uint16_t CheckStashHLight(Point mousePosition)
 
 bool UseStashItem(uint16_t c)
 {
-	if (MyPlayer->_pInvincible && MyPlayer->_pHitPoints == 0)
+	if (MyPlayer->_pInvincible && MyPlayer->life == 0)
 		return true;
 	if (pcurs != CURSOR_HAND)
 		return true;
@@ -611,7 +611,7 @@ void WithdrawGoldKeyPress(SDL_Keycode vkey)
 {
 	Player &myPlayer = *MyPlayer;
 
-	if (myPlayer._pHitPoints >> 6 <= 0) {
+	if (myPlayer.life >> 6 <= 0) {
 		CloseGoldWithdraw();
 		return;
 	}

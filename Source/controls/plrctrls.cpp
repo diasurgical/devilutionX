@@ -72,7 +72,7 @@ bool InGameMenu()
 	    || qtextflag
 	    || gmenu_is_active()
 	    || PauseMode == 2
-	    || (MyPlayer != nullptr && MyPlayer->_pInvincible && MyPlayer->_pHitPoints == 0);
+	    || (MyPlayer != nullptr && MyPlayer->_pInvincible && MyPlayer->life == 0);
 }
 
 namespace {
@@ -391,7 +391,7 @@ void CheckPlayerNearby()
 		const int my = player.position.future.y;
 		if (dPlayer[mx][my] == 0
 		    || !IsTileLit(player.position.future)
-		    || (player._pHitPoints == 0 && spl != SpellID::Resurrect))
+		    || (player.life == 0 && spl != SpellID::Resurrect))
 			continue;
 
 		if (myPlayer.UsesRangedWeapon() || HasRangedSpell() || spl == SpellID::HealOther) {

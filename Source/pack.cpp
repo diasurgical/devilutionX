@@ -360,7 +360,7 @@ void PackNetPlayer(PlayerNetPack &packed, const Player &player)
 	packed.pMagic = SDL_SwapLE32(player._pMagic);
 	packed.pDexterity = SDL_SwapLE32(player._pDexterity);
 	packed.pVitality = SDL_SwapLE32(player._pVitality);
-	packed.pHitPoints = SDL_SwapLE32(player._pHitPoints);
+	packed.pHitPoints = SDL_SwapLE32(player.life);
 	packed.pMaxHP = SDL_SwapLE32(player._pMaxHP);
 	packed.pMana = SDL_SwapLE32(player._pMana);
 	packed.pMaxMana = SDL_SwapLE32(player._pMaxMana);
@@ -451,7 +451,7 @@ void UnPackPlayer(const PlayerPack &packed, Player &player)
 	player._pHPBase = SDL_SwapLE32(packed.pHPBase);
 	player._pHPBase = std::clamp<int32_t>(player._pHPBase, 0, player._pMaxHPBase);
 	player._pMaxHP = player._pMaxHPBase;
-	player._pHitPoints = player._pHPBase;
+	player.life = player._pHPBase;
 	player.position.tile = position;
 	player.position.future = position;
 	player.setLevel(std::clamp<int8_t>(packed.plrlevel, 0, NUMLEVELS));
@@ -593,7 +593,7 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 	player._pMaxHPBase = baseHpMax;
 	player._pHPBase = baseHp;
 	player._pMaxHP = baseHpMax;
-	player._pHitPoints = baseHp;
+	player.life = baseHp;
 
 	ClrPlrPath(player);
 	player.destAction = ACTION_NONE;
@@ -679,7 +679,7 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 	ValidateFields(player._pMagic, SDL_SwapLE32(packed.pMagic), player._pMagic == SDL_SwapLE32(packed.pMagic));
 	ValidateFields(player._pDexterity, SDL_SwapLE32(packed.pDexterity), player._pDexterity == SDL_SwapLE32(packed.pDexterity));
 	ValidateFields(player._pVitality, SDL_SwapLE32(packed.pVitality), player._pVitality == SDL_SwapLE32(packed.pVitality));
-	ValidateFields(player._pHitPoints, SDL_SwapLE32(packed.pHitPoints), player._pHitPoints == SDL_SwapLE32(packed.pHitPoints));
+	ValidateFields(player.life, SDL_SwapLE32(packed.pHitPoints), player.life == SDL_SwapLE32(packed.pHitPoints));
 	ValidateFields(player._pMaxHP, SDL_SwapLE32(packed.pMaxHP), player._pMaxHP == SDL_SwapLE32(packed.pMaxHP));
 	ValidateFields(player._pMana, SDL_SwapLE32(packed.pMana), player._pMana == SDL_SwapLE32(packed.pMana));
 	ValidateFields(player._pMaxMana, SDL_SwapLE32(packed.pMaxMana), player._pMaxMana == SDL_SwapLE32(packed.pMaxMana));

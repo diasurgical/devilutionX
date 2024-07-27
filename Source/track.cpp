@@ -52,7 +52,7 @@ void InvalidateTargets()
 	if (PlayerUnderCursor != nullptr) {
 		const Player &targetPlayer = *PlayerUnderCursor;
 		if (targetPlayer._pmode == PM_DEATH || targetPlayer._pmode == PM_QUIT || !targetPlayer.plractive
-		    || !targetPlayer.isOnActiveLevel() || targetPlayer._pHitPoints >> 6 <= 0
+		    || !targetPlayer.isOnActiveLevel() || targetPlayer.life >> 6 <= 0
 		    || !IsTileLit(targetPlayer.position.tile))
 			PlayerUnderCursor = nullptr;
 	}
