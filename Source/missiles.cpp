@@ -1138,7 +1138,7 @@ void InitMissiles()
 		for (auto &missile : Missiles) {
 			if (missile._mitype == MissileID::Rage) {
 				if (missile.sourcePlayer() == MyPlayer) {
-					int missingHP = myPlayer._pMaxHP - myPlayer._pHitPoints;
+					int missingHP = myPlayer.maxLife - myPlayer._pHitPoints;
 					CalcPlrItemVals(myPlayer, true);
 					ApplyPlrDamage(DamageType::Physical, myPlayer, 0, 1, missingHP + missile.var2);
 				}
@@ -2372,7 +2372,7 @@ void AddHealing(Missile &missile, AddMissileParameter & /*parameter*/)
 		hp += hp / 2;
 	}
 
-	player._pHitPoints = std::min(player._pHitPoints + hp, player._pMaxHP);
+	player._pHitPoints = std::min(player._pHitPoints + hp, player.maxLife);
 	player._pHPBase = std::min(player._pHPBase + hp, player._pMaxHPBase);
 
 	missile._miDelFlag = true;
@@ -3847,7 +3847,7 @@ void ProcessRage(Missile &missile)
 
 	Player &player = Players[missile._misource];
 
-	int hpdif = player._pMaxHP - player._pHitPoints;
+	int hpdif = player.maxLife - player._pHitPoints;
 
 	if (HasAnyOf(player._pSpellFlags, SpellFlag::RageActive)) {
 		player._pSpellFlags &= ~SpellFlag::RageActive;

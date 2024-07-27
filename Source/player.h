@@ -239,7 +239,7 @@ struct Player {
 	int _pHPBase;
 	int _pMaxHPBase;
 	int _pHitPoints;
-	int _pMaxHP;
+	int maxLife; // _pMaxHP
 	int _pHPPer;
 	int _pManaBase;
 	int _pMaxManaBase;
@@ -683,13 +683,13 @@ public:
 	 */
 	int UpdateHitPointPercentage()
 	{
-		if (_pMaxHP <= 0) { // divide by zero guard
+		if (maxLife <= 0) { // divide by zero guard
 			_pHPPer = 0;
 		} else {
 			// Maximum achievable HP is approximately 1200. Diablo uses fixed point integers where the last 6 bits are
 			// fractional values. This means that we will never overflow HP values normally by doing this multiplication
 			// as the max value is representable in 17 bits and the multiplication result will be at most 23 bits
-			_pHPPer = std::clamp(_pHitPoints * 80 / _pMaxHP, 0, 80); // hp should never be greater than maxHP but just in case
+			_pHPPer = std::clamp(_pHitPoints * 80 / maxLife, 0, 80); // hp should never be greater than maxHP but just in case
 		}
 
 		return _pHPPer;
@@ -720,7 +720,7 @@ public:
 	 */
 	void RestoreFullLife()
 	{
-		_pHitPoints = _pMaxHP;
+		_pHitPoints = maxLife;
 		_pHPBase = _pMaxHPBase;
 	}
 

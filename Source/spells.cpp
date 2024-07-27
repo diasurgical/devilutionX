@@ -258,7 +258,7 @@ void DoResurrect(Player &player, Player &target)
 	}
 	SetPlayerHitPoints(target, hp);
 
-	target._pHPBase = target._pHitPoints + (target._pMaxHPBase - target._pMaxHP); // CODEFIX: does the same stuff as SetPlayerHitPoints above, can be removed
+	target._pHPBase = target._pHitPoints + (target._pMaxHPBase - target.maxLife); // CODEFIX: does the same stuff as SetPlayerHitPoints above, can be removed
 	target._pMana = 0;
 	target._pManaBase = target._pMana + (target._pMaxManaBase - target._pMaxMana);
 
@@ -293,7 +293,7 @@ void DoHealOther(const Player &caster, Player &target)
 		hp *= 3;
 	}
 
-	target._pHitPoints = std::min(target._pHitPoints + hp, target._pMaxHP);
+	target._pHitPoints = std::min(target._pHitPoints + hp, target.maxLife);
 	target._pHPBase = std::min(target._pHPBase + hp, target._pMaxHPBase);
 
 	if (&target == MyPlayer) {

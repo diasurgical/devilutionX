@@ -1087,7 +1087,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_hitPoints)
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_maxHP)
 {
-	MyPlayer->_pMaxHP++;
+	MyPlayer->maxLife++;
 	ASSERT_FALSE(TestNetPackValidation());
 }
 

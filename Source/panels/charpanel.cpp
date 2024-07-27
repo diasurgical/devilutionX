@@ -79,7 +79,7 @@ UiFlags GetMaxManaColor()
 
 UiFlags GetMaxHealthColor()
 {
-	return InspectPlayer->_pMaxHP > InspectPlayer->_pMaxHPBase ? UiFlags::ColorBlue : UiFlags::ColorWhite;
+	return InspectPlayer->maxLife > InspectPlayer->_pMaxHPBase ? UiFlags::ColorBlue : UiFlags::ColorWhite;
 }
 
 std::pair<int, int> GetDamage()
@@ -180,9 +180,9 @@ PanelEntry panelEntries[] = {
 	    } },
 
 	{ N_("Life"), { LeftColumnLabelX, 284 }, 45, LeftColumnLabelWidth,
-	    []() { return StyledText { GetMaxHealthColor(), StrCat(InspectPlayer->_pMaxHP >> 6) }; } },
+	    []() { return StyledText { GetMaxHealthColor(), StrCat(InspectPlayer->maxLife >> 6) }; } },
 	{ "", { 135, 284 }, 45, 0,
-	    []() { return StyledText { (InspectPlayer->_pHitPoints != InspectPlayer->_pMaxHP ? UiFlags::ColorRed : GetMaxHealthColor()), StrCat(InspectPlayer->_pHitPoints >> 6) }; } },
+	    []() { return StyledText { (InspectPlayer->_pHitPoints != InspectPlayer->maxLife ? UiFlags::ColorRed : GetMaxHealthColor()), StrCat(InspectPlayer->_pHitPoints >> 6) }; } },
 	{ N_("Mana"), { LeftColumnLabelX, 312 }, 45, LeftColumnLabelWidth,
 	    []() { return StyledText { GetMaxManaColor(), StrCat(InspectPlayer->_pMaxMana >> 6) }; } },
 	{ "", { 135, 312 }, 45, 0,

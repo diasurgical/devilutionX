@@ -646,8 +646,8 @@ bool PlrHitMonst(Player &player, Monster &monster, bool adjacentDamage = false)
 	if (HasAnyOf(player._pIFlags, ItemSpecialEffect::RandomStealLife)) {
 		skdam = GenerateRnd(dam / 8);
 		player._pHitPoints += skdam;
-		if (player._pHitPoints > player._pMaxHP) {
-			player._pHitPoints = player._pMaxHP;
+		if (player._pHitPoints > player.maxLife) {
+			player._pHitPoints = player.maxLife;
 		}
 		player._pHPBase += skdam;
 		if (player._pHPBase > player._pMaxHPBase) {
@@ -680,8 +680,8 @@ bool PlrHitMonst(Player &player, Monster &monster, bool adjacentDamage = false)
 			skdam = 5 * dam / 100;
 		}
 		player._pHitPoints += skdam;
-		if (player._pHitPoints > player._pMaxHP) {
-			player._pHitPoints = player._pMaxHP;
+		if (player._pHitPoints > player.maxLife) {
+			player._pHitPoints = player.maxLife;
 		}
 		player._pHPBase += skdam;
 		if (player._pHPBase > player._pMaxHPBase) {
@@ -747,8 +747,8 @@ bool PlrHitPlr(Player &attacker, Player &target)
 	if (HasAnyOf(attacker._pIFlags, ItemSpecialEffect::RandomStealLife)) {
 		int tac = GenerateRnd(skdam / 8);
 		attacker._pHitPoints += tac;
-		if (attacker._pHitPoints > attacker._pMaxHP) {
-			attacker._pHitPoints = attacker._pMaxHP;
+		if (attacker._pHitPoints > attacker.maxLife) {
+			attacker._pHitPoints = attacker.maxLife;
 		}
 		attacker._pHPBase += tac;
 		if (attacker._pHPBase > attacker._pMaxHPBase) {
@@ -1755,13 +1755,13 @@ int Player::GetManaShieldDamageReduction()
 
 void Player::RestorePartialLife()
 {
-	int wholeHitpoints = _pMaxHP >> 6;
+	int wholeHitpoints = maxLife >> 6;
 	int l = ((wholeHitpoints / 8) + GenerateRnd(wholeHitpoints / 4)) << 6;
 	if (IsAnyOf(_pClass, HeroClass::Warrior, HeroClass::Barbarian))
 		l *= 2;
 	if (IsAnyOf(_pClass, HeroClass::Rogue, HeroClass::Monk, HeroClass::Bard))
 		l += l / 2;
-	_pHitPoints = std::min(_pHitPoints + l, _pMaxHP);
+	_pHitPoints = std::min(_pHitPoints + l, maxLife);
 	_pHPBase = std::min(_pHPBase + l, _pMaxHPBase);
 }
 
@@ -2287,7 +2287,7 @@ void CreatePlayer(Player &player, HeroClass c)
 	player._pVitality = player._pBaseVit;
 
 	player._pHitPoints = player.calculateBaseLife();
-	player._pMaxHP = player._pHitPoints;
+	player.maxLife = player._pHitPoints;
 	player._pHPBase = player._pHitPoints;
 	player._pMaxHPBase = player._pHitPoints;
 
@@ -2357,8 +2357,8 @@ void NextPlrLevel(Player &player)
 	}
 	int hp = player.getClassAttributes().lvlLife;
 
-	player._pMaxHP += hp;
-	player._pHitPoints = player._pMaxHP;
+	player.maxLife += hp;
+	player._pHitPoints = player.maxLife;
 	player._pMaxHPBase += hp;
 	player._pHPBase = player._pMaxHPBase;
 
@@ -2815,8 +2815,8 @@ void ApplyPlrDamage(DamageType damageType, Player &player, int dam, int minHP /*
 	RedrawComponent(PanelDrawComponent::Health);
 	player._pHitPoints -= totalDamage;
 	player._pHPBase -= totalDamage;
-	if (player._pHitPoints > player._pMaxHP) {
-		player._pHitPoints = player._pMaxHP;
+	if (player._pHitPoints > player.maxLife) {
+		player._pHitPoints = player.maxLife;
 		player._pHPBase = player._pMaxHPBase;
 	}
 	int minHitPoints = minHP << 6;
@@ -3341,7 +3341,7 @@ void ModifyPlrVit(Player &player, int l)
 	player._pHPBase += ms;
 	player._pMaxHPBase += ms;
 	player._pHitPoints += ms;
-	player._pMaxHP += ms;
+	player.maxLife += ms;
 
 	CalcPlrInv(player, true);
 
@@ -3353,7 +3353,7 @@ void ModifyPlrVit(Player &player, int l)
 void SetPlayerHitPoints(Player &player, int val)
 {
 	player._pHitPoints = val;
-	player._pHPBase = val + player._pMaxHPBase - player._pMaxHP;
+	player._pHPBase = val + player._pMaxHPBase - player.maxLife;
 
 	if (&player == MyPlayer) {
 		RedrawComponent(PanelDrawComponent::Health);
