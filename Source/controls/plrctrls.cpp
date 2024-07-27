@@ -1785,7 +1785,7 @@ void plrctrls_after_game_logic()
 void UseBeltItem(int type)
 {
 	for (int i = 0; i < MaxBeltItems; i++) {
-		Item &item = MyPlayer->SpdList[i];
+		Item &item = MyPlayer->beltSlot[i];
 		if (item.isEmpty()) {
 			continue;
 		}

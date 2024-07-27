@@ -26,7 +26,7 @@ std::string DebugCmdItemInfo()
 		if (pcursinvitem <= INVITEM_INV_LAST)
 			pItem = &myPlayer.InvList[pcursinvitem - INVITEM_INV_FIRST];
 		else
-			pItem = &myPlayer.SpdList[pcursinvitem - INVITEM_BELT_FIRST];
+			pItem = &myPlayer.beltSlot[pcursinvitem - INVITEM_BELT_FIRST];
 	} else if (pcursitem != -1) {
 		pItem = &Items[pcursitem];
 	}

@@ -291,7 +291,7 @@ void PackPlayer(PlayerPack &packed, const Player &player)
 		packed.InvGrid[i] = player.InvGrid[i];
 
 	for (int i = 0; i < MaxBeltItems; i++)
-		PackItem(packed.SpdList[i], player.SpdList[i], gbIsHellfire);
+		PackItem(packed.beltSlot[i], player.beltSlot[i], gbIsHellfire);
 
 	packed.wReflections = SDL_SwapLE16(player.wReflections);
 	packed.pDamAcFlags = SDL_SwapLE32(static_cast<uint32_t>(player.pDamAcFlags));
@@ -348,7 +348,7 @@ void PackNetPlayer(PlayerNetPack &packed, const Player &player)
 		packed.InvGrid[i] = player.InvGrid[i];
 
 	for (int i = 0; i < MaxBeltItems; i++)
-		PackNetItem(player.SpdList[i], packed.SpdList[i]);
+		PackNetItem(player.beltSlot[i], packed.beltSlot[i]);
 
 	packed.wReflections = SDL_SwapLE16(player.wReflections);
 	packed.pDiabloKillLevel = player.pDiabloKillLevel;
@@ -522,7 +522,7 @@ void UnPackPlayer(const PlayerPack &packed, Player &player)
 	VerifyGoldSeeds(player);
 
 	for (int i = 0; i < MaxBeltItems; i++)
-		UnPackItem(packed.SpdList[i], player, player.SpdList[i], isHellfire);
+		UnPackItem(packed.beltSlot[i], player, player.beltSlot[i], isHellfire);
 
 	CalcPlrInv(player, false);
 	player.wReflections = SDL_SwapLE16(packed.wReflections);
@@ -659,8 +659,8 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 		player.InvGrid[i] = packed.InvGrid[i];
 
 	for (int i = 0; i < MaxBeltItems; i++) {
-		Item &item = player.SpdList[i];
-		if (!UnPackNetItem(player, packed.SpdList[i], item))
+		Item &item = player.beltSlot[i];
+		if (!UnPackNetItem(player, packed.beltSlot[i], item))
 			return false;
 		if (item.isEmpty())
 			continue;

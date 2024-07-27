@@ -507,10 +507,10 @@ bool ChangeInvItem(Player &player, int slot, Size itemSize)
 void ChangeBeltItem(Player &player, int slot)
 {
 	const int ii = slot - SLOTXY_BELT_FIRST;
-	if (player.SpdList[ii].isEmpty()) {
-		player.SpdList[ii] = player.HoldItem.pop();
+	if (player.beltSlot[ii].isEmpty()) {
+		player.beltSlot[ii] = player.HoldItem.pop();
 	} else {
-		std::swap(player.SpdList[ii], player.HoldItem);
+		std::swap(player.beltSlot[ii], player.HoldItem);
 
 		if (player.HoldItem._itype == ItemType::Gold)
 			player._pGold = CalculateGold(player);
@@ -817,7 +817,7 @@ void CheckInvCut(Player &player, Point cursorPosition, bool automaticMove, bool 
 	}
 
 	if (r >= SLOTXY_BELT_FIRST) {
-		Item &beltItem = player.SpdList[r - SLOTXY_BELT_FIRST];
+		Item &beltItem = player.beltSlot[r - SLOTXY_BELT_FIRST];
 		if (!beltItem.isEmpty()) {
 			holdItem = beltItem;
 			if (automaticMove) {
@@ -1000,7 +1000,7 @@ void StartGoldDrop()
 
 	const int max = (invIndex <= INVITEM_INV_LAST)
 	    ? myPlayer.InvList[invIndex - INVITEM_INV_FIRST]._ivalue
-	    : myPlayer.SpdList[invIndex - INVITEM_BELT_FIRST]._ivalue;
+	    : myPlayer.beltSlot[invIndex - INVITEM_BELT_FIRST]._ivalue;
 
 	if (talkflag)
 		control_reset_talk();
@@ -1200,26 +1200,26 @@ void DrawInvBelt(const Surface &out)
 	Player &myPlayer = *InspectPlayer;
 
 	for (int i = 0; i < MaxBeltItems; i++) {
-		if (myPlayer.SpdList[i].isEmpty()) {
+		if (myPlayer.beltSlot[i].isEmpty()) {
 			continue;
 		}
 
 		const Point position { InvRect[i + SLOTXY_BELT_FIRST].position.x + mainPanelPosition.x, InvRect[i + SLOTXY_BELT_FIRST].position.y + mainPanelPosition.y + InventorySlotSizeInPixels.height };
-		InvDrawSlotBack(out, position, InventorySlotSizeInPixels, myPlayer.SpdList[i]._iMagical);
-		const int cursId = myPlayer.SpdList[i]._iCurs + CURSOR_FIRSTITEM;
+		InvDrawSlotBack(out, position, InventorySlotSizeInPixels, myPlayer.beltSlot[i]._iMagical);
+		const int cursId = myPlayer.beltSlot[i]._iCurs + CURSOR_FIRSTITEM;
 
 		const ClxSprite sprite = GetInvItemSprite(cursId);
 
 		if (pcursinvitem == i + INVITEM_BELT_FIRST) {
 			if (ControlMode == ControlTypes::KeyboardAndMouse || invflag) {
-				ClxDrawOutline(out, GetOutlineColor(myPlayer.SpdList[i], true), position, sprite);
+				ClxDrawOutline(out, GetOutlineColor(myPlayer.beltSlot[i], true), position, sprite);
 			}
 		}
 
-		DrawItem(myPlayer.SpdList[i], out, position, sprite);
+		DrawItem(myPlayer.beltSlot[i], out, position, sprite);
 
-		if (myPlayer.SpdList[i].isUsable()
-		    && myPlayer.SpdList[i]._itype != ItemType::Gold) {
+		if (myPlayer.beltSlot[i].isUsable()
+		    && myPlayer.beltSlot[i]._itype != ItemType::Gold) {
 			DrawString(out, StrCat(i + 1), { position - Displacement { 0, 12 }, InventorySlotSizeInPixels },
 			    { .flags = UiFlags::ColorWhite | UiFlags::AlignRight });
 		}
@@ -1241,14 +1241,14 @@ bool AutoPlaceItemInBelt(Player &player, const Item &item, bool persistItem, boo
 		return false;
 	}
 
-	for (Item &beltItem : player.SpdList) {
+	for (Item &beltItem : player.beltSlot) {
 		if (beltItem.isEmpty()) {
 			if (persistItem) {
 				beltItem = item;
 				player.CalcScrolls();
 				RedrawComponent(PanelDrawComponent::Belt);
 				if (sendNetworkMessage) {
-					const auto beltIndex = static_cast<int>(std::distance<const Item *>(&player.SpdList[0], &beltItem));
+					const auto beltIndex = static_cast<int>(std::distance<const Item *>(&player.beltSlot[0], &beltItem));
 					NetSendCmdChBeltItem(false, beltIndex);
 				}
 			}
@@ -1966,7 +1966,7 @@ int8_t CheckInvHLight()
 	} else if (r >= SLOTXY_BELT_FIRST) {
 		r -= SLOTXY_BELT_FIRST;
 		RedrawComponent(PanelDrawComponent::Belt);
-		pi = &myPlayer.SpdList[r];
+		pi = &myPlayer.beltSlot[r];
 		if (pi->isEmpty())
 			return -1;
 		rv = r + INVITEM_BELT_FIRST;
@@ -2010,7 +2010,7 @@ void ConsumeScroll(Player &player)
 		}
 	} else if (itemSlot >= INVITEM_BELT_FIRST && itemSlot <= INVITEM_BELT_LAST) {
 		const int itemIndex = itemSlot - INVITEM_BELT_FIRST;
-		const Item *item = &player.SpdList[itemIndex];
+		const Item *item = &player.beltSlot[itemIndex];
 		if (!item->isEmpty() && isCurrentSpell(*item)) {
 			player.RemoveSpdBarItem(itemIndex);
 			return;
@@ -2058,7 +2058,7 @@ Item &GetInventoryItem(Player &player, int location)
 	if (location <= INVITEM_INV_LAST)
 		return player.InvList[location - INVITEM_INV_FIRST];
 
-	return player.SpdList[location - INVITEM_BELT_FIRST];
+	return player.beltSlot[location - INVITEM_BELT_FIRST];
 }
 
 bool UseInvItem(int cii)
@@ -2088,7 +2088,7 @@ bool UseInvItem(int cii)
 			return true;
 		c = cii - INVITEM_BELT_FIRST;
 
-		item = &player.SpdList[c];
+		item = &player.beltSlot[c];
 		speedlist = true;
 
 		// If selected speedlist item exists in InvList, use the InvList item.
@@ -2105,7 +2105,7 @@ bool UseInvItem(int cii)
 		// If speedlist item is not inventory, use same item at the end of the speedlist if exists.
 		if (speedlist && *sgOptions.Gameplay.autoRefillBelt) {
 			for (int i = INVITEM_BELT_LAST - INVITEM_BELT_FIRST; i > c; i--) {
-				Item &candidate = player.SpdList[i];
+				Item &candidate = player.beltSlot[i];
 
 				if (!candidate.isEmpty() && candidate._iMiscId == item->_iMiscId && candidate._iSpell == item->_iSpell) {
 					c = i;
@@ -2179,7 +2179,7 @@ bool UseInvItem(int cii)
 	UseItem(player, item->_iMiscId, item->_iSpell, cii);
 
 	if (speedlist) {
-		if (player.SpdList[c]._iMiscId == IMISC_NOTE) {
+		if (player.beltSlot[c]._iMiscId == IMISC_NOTE) {
 			InitQTextMsg(TEXT_BOOK9);
 			CloseInventory();
 			return true;

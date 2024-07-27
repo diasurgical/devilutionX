@@ -275,7 +275,7 @@ public:
 
 	[[nodiscard]] Iterator begin() const
 	{
-		return Iterator { &player_->SpdList[0], containerSize(), 0 };
+		return Iterator { &player_->beltSlot[0], containerSize(), 0 };
 	}
 
 	[[nodiscard]] Iterator end() const
@@ -286,7 +286,7 @@ public:
 private:
 	[[nodiscard]] std::size_t containerSize() const
 	{
-		return sizeof(player_->SpdList) / sizeof(player_->SpdList[0]);
+		return sizeof(player_->beltSlot) / sizeof(player_->beltSlot[0]);
 	}
 
 	PlayerT *player_;

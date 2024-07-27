@@ -527,7 +527,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	for (int8_t &cell : player.InvGrid)
 		cell = file.NextLE<int8_t>();
 
-	for (Item &item : player.SpdList)
+	for (Item &item : player.beltSlot)
 		LoadAndValidateItemData(file, item);
 
 	LoadAndValidateItemData(file, player.HoldItem);
@@ -1351,7 +1351,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	for (int8_t cell : player.InvGrid)
 		file.WriteLE<int8_t>(cell);
 
-	for (const Item &item : player.SpdList)
+	for (const Item &item : player.beltSlot)
 		SaveItem(file, item);
 
 	SaveItem(file, player.HoldItem);
@@ -2291,7 +2291,7 @@ void LoadHeroItems(Player &player)
 
 	LoadMatchingItems(file, player, NUM_INVLOC, player.InvBody);
 	LoadMatchingItems(file, player, InventoryGridCells, player.InvList);
-	LoadMatchingItems(file, player, MaxBeltItems, player.SpdList);
+	LoadMatchingItems(file, player, MaxBeltItems, player.beltSlot);
 
 	gbIsHellfireSaveGame = gbIsHellfire;
 }
@@ -2571,7 +2571,7 @@ void SaveHeroItems(SaveWriter &saveWriter, Player &player)
 		SaveItem(file, item);
 	for (const Item &item : player.InvList)
 		SaveItem(file, item);
-	for (const Item &item : player.SpdList)
+	for (const Item &item : player.beltSlot)
 		SaveItem(file, item);
 }
 

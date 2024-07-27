@@ -220,7 +220,7 @@ struct Player {
 	char _pName[PlayerNameLength];
 	Item InvBody[NUM_INVLOC];
 	Item InvList[InventoryGridCells];
-	Item SpdList[MaxBeltItems];
+	Item beltSlot[MaxBeltItems]; // SpdList
 	Item HoldItem;
 
 	int lightId;
@@ -486,7 +486,7 @@ public:
 			return mostValuableItem;
 		};
 
-		const Item *mostValuableItem = getMostValuableItem(SpdList, SpdList + MaxBeltItems);
+		const Item *mostValuableItem = getMostValuableItem(beltSlot, beltSlot + MaxBeltItems);
 		mostValuableItem = getMostValuableItem(InvBody, InvBody + inv_body_loc::NUM_INVLOC, mostValuableItem);
 		mostValuableItem = getMostValuableItem(InvList, InvList + _pNumInv, mostValuableItem);
 

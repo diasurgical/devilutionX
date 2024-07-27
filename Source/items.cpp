@@ -3059,7 +3059,7 @@ void CreatePlrItems(Player &player)
 
 	player._pNumInv = 0;
 
-	for (auto &item : player.SpdList) {
+	for (auto &item : player.beltSlot) {
 		item.clear();
 	}
 

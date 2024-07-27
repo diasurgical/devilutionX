@@ -1682,7 +1682,7 @@ void InitKeymapActions()
 		    '1' + i,
 		    [i] {
 			    Player &myPlayer = *MyPlayer;
-			    if (!myPlayer.SpdList[i].isEmpty() && myPlayer.SpdList[i]._itype != ItemType::Gold) {
+			    if (!myPlayer.beltSlot[i].isEmpty() && myPlayer.beltSlot[i]._itype != ItemType::Gold) {
 				    UseInvItem(INVITEM_BELT_FIRST + i);
 			    }
 		    },
@@ -1993,7 +1993,7 @@ void InitPadmapActions()
 		    ControllerButton_NONE,
 		    [i] {
 			    Player &myPlayer = *MyPlayer;
-			    if (!myPlayer.SpdList[i].isEmpty() && myPlayer.SpdList[i]._itype != ItemType::Gold) {
+			    if (!myPlayer.beltSlot[i].isEmpty() && myPlayer.beltSlot[i]._itype != ItemType::Gold) {
 				    UseInvItem(INVITEM_BELT_FIRST + i);
 			    }
 		    },

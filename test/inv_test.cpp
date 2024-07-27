@@ -63,7 +63,7 @@ TEST_F(InvTest, UseScroll_from_inventory)
 // Test that the scroll is used in the belt in correct conditions
 TEST_F(InvTest, UseScroll_from_belt)
 {
-	set_up_scroll(MyPlayer->SpdList[2], SpellID::Firebolt);
+	set_up_scroll(MyPlayer->beltSlot[2], SpellID::Firebolt);
 	EXPECT_TRUE(CanUseScroll(*MyPlayer, SpellID::Firebolt));
 }
 
@@ -72,7 +72,7 @@ TEST_F(InvTest, UseScroll_from_inventory_invalid_conditions)
 {
 	// Empty the belt to prevent using a scroll from the belt
 	for (int i = 0; i < MaxBeltItems; i++) {
-		MyPlayer->SpdList[i].clear();
+		MyPlayer->beltSlot[i].clear();
 	}
 
 	// Adjust inventory size
@@ -101,20 +101,20 @@ TEST_F(InvTest, UseScroll_from_belt_invalid_conditions)
 	// Disable the inventory to prevent using a scroll from the inventory
 	MyPlayer->_pNumInv = 0;
 
-	set_up_scroll(MyPlayer->SpdList[2], SpellID::Firebolt);
+	set_up_scroll(MyPlayer->beltSlot[2], SpellID::Firebolt);
 	leveltype = DTYPE_TOWN;
 	EXPECT_FALSE(CanUseScroll(*MyPlayer, SpellID::Firebolt));
 
-	set_up_scroll(MyPlayer->SpdList[2], SpellID::Firebolt);
+	set_up_scroll(MyPlayer->beltSlot[2], SpellID::Firebolt);
 	MyPlayer->_pRSpell = SpellID::Healing;
 	EXPECT_FALSE(CanUseScroll(*MyPlayer, SpellID::Healing));
 
-	set_up_scroll(MyPlayer->SpdList[2], SpellID::Firebolt);
-	MyPlayer->SpdList[2]._iMiscId = IMISC_STAFF;
+	set_up_scroll(MyPlayer->beltSlot[2], SpellID::Firebolt);
+	MyPlayer->beltSlot[2]._iMiscId = IMISC_STAFF;
 	EXPECT_FALSE(CanUseScroll(*MyPlayer, SpellID::Firebolt));
 
-	set_up_scroll(MyPlayer->SpdList[2], SpellID::Firebolt);
-	MyPlayer->SpdList[2].clear();
+	set_up_scroll(MyPlayer->beltSlot[2], SpellID::Firebolt);
+	MyPlayer->beltSlot[2].clear();
 	EXPECT_FALSE(CanUseScroll(*MyPlayer, SpellID::Firebolt));
 }
 
@@ -210,13 +210,13 @@ TEST_F(InvTest, RemoveSpdBarItem)
 
 	// Clear the belt
 	for (int i = 0; i < MaxBeltItems; i++) {
-		MyPlayer->SpdList[i].clear();
+		MyPlayer->beltSlot[i].clear();
 	}
 	// Put an item in the belt: | x | x | item | x | x | x | x | x |
-	MyPlayer->SpdList[3]._itype = ItemType::Misc;
+	MyPlayer->beltSlot[3]._itype = ItemType::Misc;
 
 	MyPlayer->RemoveSpdBarItem(3);
-	EXPECT_TRUE(MyPlayer->SpdList[3].isEmpty());
+	EXPECT_TRUE(MyPlayer->beltSlot[3].isEmpty());
 }
 
 // Test removing a scroll from the inventory
@@ -262,17 +262,17 @@ TEST_F(InvTest, RemoveCurrentSpellScroll_belt)
 
 	// Clear the belt
 	for (int i = 0; i < MaxBeltItems; i++) {
-		MyPlayer->SpdList[i].clear();
+		MyPlayer->beltSlot[i].clear();
 	}
 	// Put a firebolt scroll into the belt
 	MyPlayer->executedSpell.spellId = SpellID::Firebolt;
 	MyPlayer->executedSpell.spellFrom = INVITEM_BELT_FIRST + 3;
-	MyPlayer->SpdList[3]._itype = ItemType::Misc;
-	MyPlayer->SpdList[3]._iMiscId = IMISC_SCROLL;
-	MyPlayer->SpdList[3]._iSpell = SpellID::Firebolt;
+	MyPlayer->beltSlot[3]._itype = ItemType::Misc;
+	MyPlayer->beltSlot[3]._iMiscId = IMISC_SCROLL;
+	MyPlayer->beltSlot[3]._iSpell = SpellID::Firebolt;
 
 	ConsumeScroll(*MyPlayer);
-	EXPECT_TRUE(MyPlayer->SpdList[3].isEmpty());
+	EXPECT_TRUE(MyPlayer->beltSlot[3].isEmpty());
 }
 
 // Test removing the first matching scroll from the belt
@@ -282,17 +282,17 @@ TEST_F(InvTest, RemoveCurrentSpellScrollFirstMatchFromBelt)
 
 	// Clear the belt
 	for (int i = 0; i < MaxBeltItems; i++) {
-		MyPlayer->SpdList[i].clear();
+		MyPlayer->beltSlot[i].clear();
 	}
 	// Put a firebolt scroll into the belt
 	MyPlayer->executedSpell.spellId = SpellID::Firebolt;
 	MyPlayer->executedSpell.spellFrom = 0; // any matching scroll
-	MyPlayer->SpdList[3]._itype = ItemType::Misc;
-	MyPlayer->SpdList[3]._iMiscId = IMISC_SCROLL;
-	MyPlayer->SpdList[3]._iSpell = SpellID::Firebolt;
+	MyPlayer->beltSlot[3]._itype = ItemType::Misc;
+	MyPlayer->beltSlot[3]._iMiscId = IMISC_SCROLL;
+	MyPlayer->beltSlot[3]._iSpell = SpellID::Firebolt;
 
 	ConsumeScroll(*MyPlayer);
-	EXPECT_TRUE(MyPlayer->SpdList[3].isEmpty());
+	EXPECT_TRUE(MyPlayer->beltSlot[3].isEmpty());
 }
 
 TEST_F(InvTest, ItemSizeRuneOfStone)

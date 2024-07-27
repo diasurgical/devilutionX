@@ -481,7 +481,7 @@ bool SmithSellOk(int i)
 	if (i >= 0) {
 		pI = &MyPlayer->InvList[i];
 	} else {
-		pI = &MyPlayer->SpdList[-(i + 1)];
+		pI = &MyPlayer->beltSlot[-(i + 1)];
 	}
 
 	if (pI->isEmpty())
@@ -543,7 +543,7 @@ void StartSmithSell()
 			break;
 		if (SmithSellOk(-(i + 1))) {
 			sellOk = true;
-			storehold[storenumh] = myPlayer.SpdList[i];
+			storehold[storenumh] = myPlayer.beltSlot[i];
 
 			if (storehold[storenumh]._iMagical != ITEM_QUALITY_NORMAL && storehold[storenumh]._iIdentified)
 				storehold[storenumh]._ivalue = storehold[storenumh]._iIvalue;
@@ -742,7 +742,7 @@ bool WitchSellOk(int i)
 	if (i >= 0)
 		pI = &MyPlayer->InvList[i];
 	else
-		pI = &MyPlayer->SpdList[-(i + 1)];
+		pI = &MyPlayer->beltSlot[-(i + 1)];
 
 	if (pI->_itype == ItemType::Misc)
 		rv = true;
@@ -791,9 +791,9 @@ void StartWitchSell()
 	for (int i = 0; i < MaxBeltItems; i++) {
 		if (storenumh >= 48)
 			break;
-		if (!myPlayer.SpdList[i].isEmpty() && WitchSellOk(-(i + 1))) {
+		if (!myPlayer.beltSlot[i].isEmpty() && WitchSellOk(-(i + 1))) {
 			sellok = true;
-			storehold[storenumh] = myPlayer.SpdList[i];
+			storehold[storenumh] = myPlayer.beltSlot[i];
 
 			if (storehold[storenumh]._iMagical != ITEM_QUALITY_NORMAL && storehold[storenumh]._iIdentified)
 				storehold[storenumh]._ivalue = storehold[storenumh]._iIvalue;

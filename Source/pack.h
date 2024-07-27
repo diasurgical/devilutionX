@@ -59,7 +59,7 @@ struct PlayerPack {
 	ItemPack InvList[InventoryGridCells];
 	int8_t InvGrid[InventoryGridCells];
 	uint8_t _pNumInv;
-	ItemPack SpdList[MaxBeltItems];
+	ItemPack beltSlot[MaxBeltItems];
 	int8_t pTownWarps;
 	int8_t pDungMsgs;
 	int8_t pLvlLoad;
@@ -108,7 +108,7 @@ struct PlayerNetPack {
 	ItemNetPack InvList[InventoryGridCells];
 	int8_t InvGrid[InventoryGridCells];
 	uint8_t _pNumInv;
-	ItemNetPack SpdList[MaxBeltItems];
+	ItemNetPack beltSlot[MaxBeltItems];
 	uint8_t pManaShield;
 	uint16_t wReflections;
 	uint8_t pDiabloKillLevel;

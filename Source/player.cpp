@@ -1616,7 +1616,7 @@ void Player::RemoveSpdBarItem(int iv)
 		NetSendCmdParam1(false, CMD_DELBELTITEMS, iv);
 	}
 
-	SpdList[iv].clear();
+	beltSlot[iv].clear();
 
 	CalcScrolls();
 	RedrawEverything();

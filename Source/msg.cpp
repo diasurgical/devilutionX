@@ -1989,7 +1989,7 @@ size_t OnChangeBeltItems(const TCmd *pCmd, Player &player)
 	if (gbBufferMsgs == 1) {
 		SendPacket(player, &message, sizeof(message));
 	} else if (&player != MyPlayer && IsItemAvailable(static_cast<_item_indexes>(SDL_SwapLE16(message.def.wIndx)))) {
-		Item &item = player.SpdList[message.bLoc];
+		Item &item = player.beltSlot[message.bLoc];
 		item = {};
 		RecreateItem(player, message, item);
 	}
@@ -3146,7 +3146,7 @@ void NetSendCmdChBeltItem(bool bHiPri, int beltIndex)
 {
 	TCmdChItem cmd {};
 
-	const Item &item = MyPlayer->SpdList[beltIndex];
+	const Item &item = MyPlayer->beltSlot[beltIndex];
 
 	cmd.bCmd = CMD_CHANGEBELTITEMS;
 	cmd.bLoc = beltIndex;

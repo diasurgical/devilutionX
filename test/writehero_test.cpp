@@ -52,7 +52,7 @@ void SwapLE(PlayerPack &player)
 	for (ItemPack &item : player.InvList) {
 		SwapLE(item);
 	}
-	for (ItemPack &item : player.SpdList) {
+	for (ItemPack &item : player.beltSlot) {
 		SwapLE(item);
 	}
 	player.wReflections = SDL_SwapLE16(player.wReflections);
@@ -221,7 +221,7 @@ void PackPlayerTest(PlayerPack *pPack)
 	for (auto i = 0; i < 7; i++)
 		pPack->InvBody[i].idx = -1;
 	for (auto i = 0; i < MaxBeltItems; i++)
-		PackItemFullRejuv(pPack->SpdList + i, i);
+		PackItemFullRejuv(pPack->beltSlot + i, i);
 	for (auto i = 1; i < 37; i++) {
 		if (SpellDatVanilla[i] != -1) {
 			pPack->pMemSpells |= 1ULL << (i - 1);
@@ -262,7 +262,7 @@ void AssertPlayer(Player &player)
 	ASSERT_EQ(Count8(player.InvGrid, InventoryGridCells), 9);
 	ASSERT_EQ(CountItems(player.InvBody, NUM_INVLOC), 6);
 	ASSERT_EQ(CountItems(player.InvList, InventoryGridCells), 2);
-	ASSERT_EQ(CountItems(player.SpdList, MaxBeltItems), 8);
+	ASSERT_EQ(CountItems(player.beltSlot, MaxBeltItems), 8);
 	ASSERT_EQ(CountItems(&player.HoldItem, 1), 0);
 
 	ASSERT_EQ(player.position.tile.x, 75);

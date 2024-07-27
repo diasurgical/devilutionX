@@ -96,7 +96,7 @@ static void AssertPlayer(Player &player)
 	ASSERT_EQ(Count8(player.InvGrid, InventoryGridCells), 1);
 	ASSERT_EQ(CountItems(player.InvBody, NUM_INVLOC), 1);
 	ASSERT_EQ(CountItems(player.InvList, InventoryGridCells), 1);
-	ASSERT_EQ(CountItems(player.SpdList, MaxBeltItems), 2);
+	ASSERT_EQ(CountItems(player.beltSlot, MaxBeltItems), 2);
 	ASSERT_EQ(CountItems(&player.HoldItem, 1), 0);
 
 	ASSERT_EQ(player.position.tile.x, 0);

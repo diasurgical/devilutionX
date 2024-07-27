@@ -35,7 +35,7 @@ void SwapLE(PlayerPack &pack)
 		SwapLE(item);
 	for (ItemPack &item : pack.InvList)
 		SwapLE(item);
-	for (ItemPack &item : pack.SpdList)
+	for (ItemPack &item : pack.beltSlot)
 		SwapLE(item);
 	pack.wReflections = SDL_SwapLE16(pack.wReflections);
 	pack.pDiabloKillLevel = SDL_SwapLE32(pack.pDiabloKillLevel);
