@@ -542,7 +542,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	file.Skip(4); // Alignment
 
 	player._pISpells = file.NextLE<uint64_t>();
-	player._pIFlags = static_cast<ItemSpecialEffect>(file.NextLE<int32_t>());
+	player.itemFlags = static_cast<ItemSpecialEffect>(file.NextLE<int32_t>());
 	player._pIGetHit = file.NextLE<int32_t>();
 	player._pISplLvlAdd = file.NextLE<int8_t>();
 	file.Skip(1);         // Unused
@@ -1366,7 +1366,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.Skip(4); // Alignment
 
 	file.WriteLE<uint64_t>(player._pISpells);
-	file.WriteLE<int32_t>(static_cast<int32_t>(player._pIFlags));
+	file.WriteLE<int32_t>(static_cast<int32_t>(player.itemFlags));
 	file.WriteLE<int32_t>(player._pIGetHit);
 
 	file.WriteLE<int8_t>(player._pISplLvlAdd);

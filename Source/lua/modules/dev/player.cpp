@@ -22,17 +22,17 @@ std::string DebugCmdArrow(std::string_view effect)
 {
 	Player &myPlayer = *MyPlayer;
 
-	myPlayer._pIFlags &= ~ItemSpecialEffect::FireArrows;
-	myPlayer._pIFlags &= ~ItemSpecialEffect::LightningArrows;
+	myPlayer.itemFlags &= ~ItemSpecialEffect::FireArrows;
+	myPlayer.itemFlags &= ~ItemSpecialEffect::LightningArrows;
 
 	if (effect == "normal") {
 		// we removed the parameter at the top
 	} else if (effect == "fire") {
-		myPlayer._pIFlags |= ItemSpecialEffect::FireArrows;
+		myPlayer.itemFlags |= ItemSpecialEffect::FireArrows;
 	} else if (effect == "lightning") {
-		myPlayer._pIFlags |= ItemSpecialEffect::LightningArrows;
+		myPlayer.itemFlags |= ItemSpecialEffect::LightningArrows;
 	} else if (effect == "spectral") {
-		myPlayer._pIFlags |= (ItemSpecialEffect::FireArrows | ItemSpecialEffect::LightningArrows);
+		myPlayer.itemFlags |= (ItemSpecialEffect::FireArrows | ItemSpecialEffect::LightningArrows);
 	} else {
 		return "Invalid effect!";
 	}

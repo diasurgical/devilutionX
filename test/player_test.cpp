@@ -17,7 +17,7 @@ int RunBlockTest(int frames, ItemSpecialEffect flags)
 	Player &player = Players[0];
 
 	player._pHFrames = frames;
-	player._pIFlags = flags;
+	player.itemFlags = flags;
 	// StartPlrHit compares damage (a 6 bit fixed point value) to character level to determine if the player shrugs off the hit.
 	// We don't initialise player so this comparison can't be relied on, instead we use forcehit to ensure the player enters hit mode
 	StartPlrHit(player, 0, true);
@@ -169,7 +169,7 @@ static void AssertPlayer(Player &player)
 	ASSERT_EQ(player._pIBonusAC, 0);
 	ASSERT_EQ(player._pIBonusDamMod, 0);
 	ASSERT_EQ(player._pISpells, 0);
-	ASSERT_EQ(player._pIFlags, ItemSpecialEffect::None);
+	ASSERT_EQ(player.itemFlags, ItemSpecialEffect::None);
 	ASSERT_EQ(player._pIGetHit, 0);
 	ASSERT_EQ(player._pISplLvlAdd, 0);
 	ASSERT_EQ(player._pIEnAc, 0);

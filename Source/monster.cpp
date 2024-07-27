@@ -1171,7 +1171,7 @@ void MonsterAttackPlayer(Monster &monster, Player &player, int hit, int minDam, 
 	}
 
 	// Reflect can also kill a monster, so make sure the monster is still alive
-	if (HasAnyOf(player._pIFlags, ItemSpecialEffect::Thorns) && monster.mode != MonsterMode::Death) {
+	if (HasAnyOf(player.itemFlags, ItemSpecialEffect::Thorns) && monster.mode != MonsterMode::Death) {
 		int mdam = (GenerateRnd(3) + 1) << 6;
 		ApplyMonsterDamage(DamageType::Physical, monster, mdam);
 		if (monster.hitPoints >> 6 <= 0)

@@ -169,26 +169,26 @@ void StartAttack(Player &player, Direction d, bool includesFirstFrame)
 
 	int8_t skippedAnimationFrames = 0;
 	if (includesFirstFrame) {
-		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastestAttack) && HasAnyOf(player._pIFlags, ItemSpecialEffect::QuickAttack | ItemSpecialEffect::FastAttack)) {
+		if (HasAnyOf(player.itemFlags, ItemSpecialEffect::FastestAttack) && HasAnyOf(player.itemFlags, ItemSpecialEffect::QuickAttack | ItemSpecialEffect::FastAttack)) {
 			// Combining Fastest Attack with any other attack speed modifier skips over the fourth frame, reducing the effectiveness of Fastest Attack.
 			// Faster Attack makes up for this by also skipping the sixth frame so this case only applies when using Quick or Fast Attack modifiers.
 			skippedAnimationFrames = 3;
-		} else if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastestAttack)) {
+		} else if (HasAnyOf(player.itemFlags, ItemSpecialEffect::FastestAttack)) {
 			skippedAnimationFrames = 4;
-		} else if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FasterAttack)) {
+		} else if (HasAnyOf(player.itemFlags, ItemSpecialEffect::FasterAttack)) {
 			skippedAnimationFrames = 3;
-		} else if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastAttack)) {
+		} else if (HasAnyOf(player.itemFlags, ItemSpecialEffect::FastAttack)) {
 			skippedAnimationFrames = 2;
-		} else if (HasAnyOf(player._pIFlags, ItemSpecialEffect::QuickAttack)) {
+		} else if (HasAnyOf(player.itemFlags, ItemSpecialEffect::QuickAttack)) {
 			skippedAnimationFrames = 1;
 		}
 	} else {
-		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FasterAttack)) {
+		if (HasAnyOf(player.itemFlags, ItemSpecialEffect::FasterAttack)) {
 			// The combination of Faster and Fast Attack doesn't result in more skipped frames, because the second frame skip of Faster Attack is not triggered.
 			skippedAnimationFrames = 2;
-		} else if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastAttack)) {
+		} else if (HasAnyOf(player.itemFlags, ItemSpecialEffect::FastAttack)) {
 			skippedAnimationFrames = 1;
-		} else if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastestAttack)) {
+		} else if (HasAnyOf(player.itemFlags, ItemSpecialEffect::FastestAttack)) {
 			// Fastest Attack is skipped if Fast or Faster Attack is also specified, because both skip the frame that triggers Fastest Attack skipping.
 			skippedAnimationFrames = 2;
 		}
@@ -212,10 +212,10 @@ void StartRangeAttack(Player &player, Direction d, WorldTileCoord cx, WorldTileC
 
 	int8_t skippedAnimationFrames = 0;
 	if (!gbIsHellfire) {
-		if (includesFirstFrame && HasAnyOf(player._pIFlags, ItemSpecialEffect::QuickAttack | ItemSpecialEffect::FastAttack)) {
+		if (includesFirstFrame && HasAnyOf(player.itemFlags, ItemSpecialEffect::QuickAttack | ItemSpecialEffect::FastAttack)) {
 			skippedAnimationFrames += 1;
 		}
-		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastAttack)) {
+		if (HasAnyOf(player.itemFlags, ItemSpecialEffect::FastAttack)) {
 			skippedAnimationFrames += 1;
 		}
 	}
@@ -560,7 +560,7 @@ bool PlrHitMonst(Player &player, Monster &monster, bool adjacentDamage = false)
 			return false;
 	}
 
-	if (gbIsHellfire && HasAllOf(player._pIFlags, ItemSpecialEffect::FireDamage | ItemSpecialEffect::LightningDamage)) {
+	if (gbIsHellfire && HasAllOf(player.itemFlags, ItemSpecialEffect::FireDamage | ItemSpecialEffect::LightningDamage)) {
 		int midam = RandomIntBetween(player._pIFMinDam, player._pIFMaxDam);
 		AddMissile(player.position.tile, player.position.temp, player._pdir, MissileID::SpectralArrow, TARGET_MONSTERS, player, midam, 0);
 	}
@@ -601,7 +601,7 @@ bool PlrHitMonst(Player &player, Monster &monster, bool adjacentDamage = false)
 		}
 		break;
 	case MonsterClass::Demon:
-		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::TripleDemonDamage)) {
+		if (HasAnyOf(player.itemFlags, ItemSpecialEffect::TripleDemonDamage)) {
 			dam *= 3;
 		}
 		break;
@@ -643,7 +643,7 @@ bool PlrHitMonst(Player &player, Monster &monster, bool adjacentDamage = false)
 	}
 
 	int skdam = 0;
-	if (HasAnyOf(player._pIFlags, ItemSpecialEffect::RandomStealLife)) {
+	if (HasAnyOf(player.itemFlags, ItemSpecialEffect::RandomStealLife)) {
 		skdam = GenerateRnd(dam / 8);
 		player._pHitPoints += skdam;
 		if (player._pHitPoints > player._pMaxHP) {
@@ -655,11 +655,11 @@ bool PlrHitMonst(Player &player, Monster &monster, bool adjacentDamage = false)
 		}
 		RedrawComponent(PanelDrawComponent::Health);
 	}
-	if (HasAnyOf(player._pIFlags, ItemSpecialEffect::StealMana3 | ItemSpecialEffect::StealMana5) && HasNoneOf(player._pIFlags, ItemSpecialEffect::NoMana)) {
-		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::StealMana3)) {
+	if (HasAnyOf(player.itemFlags, ItemSpecialEffect::StealMana3 | ItemSpecialEffect::StealMana5) && HasNoneOf(player.itemFlags, ItemSpecialEffect::NoMana)) {
+		if (HasAnyOf(player.itemFlags, ItemSpecialEffect::StealMana3)) {
 			skdam = 3 * dam / 100;
 		}
-		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::StealMana5)) {
+		if (HasAnyOf(player.itemFlags, ItemSpecialEffect::StealMana5)) {
 			skdam = 5 * dam / 100;
 		}
 		player._pMana += skdam;
@@ -672,11 +672,11 @@ bool PlrHitMonst(Player &player, Monster &monster, bool adjacentDamage = false)
 		}
 		RedrawComponent(PanelDrawComponent::Mana);
 	}
-	if (HasAnyOf(player._pIFlags, ItemSpecialEffect::StealLife3 | ItemSpecialEffect::StealLife5)) {
-		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::StealLife3)) {
+	if (HasAnyOf(player.itemFlags, ItemSpecialEffect::StealLife3 | ItemSpecialEffect::StealLife5)) {
+		if (HasAnyOf(player.itemFlags, ItemSpecialEffect::StealLife3)) {
 			skdam = 3 * dam / 100;
 		}
-		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::StealLife5)) {
+		if (HasAnyOf(player.itemFlags, ItemSpecialEffect::StealLife5)) {
 			skdam = 5 * dam / 100;
 		}
 		player._pHitPoints += skdam;
@@ -692,7 +692,7 @@ bool PlrHitMonst(Player &player, Monster &monster, bool adjacentDamage = false)
 	if ((monster.hitPoints >> 6) <= 0) {
 		M_StartKill(monster, player);
 	} else {
-		if (monster.mode != MonsterMode::Petrified && HasAnyOf(player._pIFlags, ItemSpecialEffect::Knockback))
+		if (monster.mode != MonsterMode::Petrified && HasAnyOf(player.itemFlags, ItemSpecialEffect::Knockback))
 			M_GetKnockback(monster);
 		M_StartHit(monster, player, dam);
 	}
@@ -744,7 +744,7 @@ bool PlrHitPlr(Player &attacker, Player &target)
 		}
 	}
 	int skdam = dam << 6;
-	if (HasAnyOf(attacker._pIFlags, ItemSpecialEffect::RandomStealLife)) {
+	if (HasAnyOf(attacker.itemFlags, ItemSpecialEffect::RandomStealLife)) {
 		int tac = GenerateRnd(skdam / 8);
 		attacker._pHitPoints += tac;
 		if (attacker._pHitPoints > attacker._pMaxHP) {
@@ -793,11 +793,11 @@ bool DoAttack(Player &player)
 			}
 		}
 
-		if (!gbIsHellfire || !HasAllOf(player._pIFlags, ItemSpecialEffect::FireDamage | ItemSpecialEffect::LightningDamage)) {
-			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FireDamage)) {
+		if (!gbIsHellfire || !HasAllOf(player.itemFlags, ItemSpecialEffect::FireDamage | ItemSpecialEffect::LightningDamage)) {
+			if (HasAnyOf(player.itemFlags, ItemSpecialEffect::FireDamage)) {
 				AddMissile(position, { 1, 0 }, Direction::South, MissileID::WeaponExplosion, TARGET_MONSTERS, player, 0, 0);
 			}
-			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::LightningDamage)) {
+			if (HasAnyOf(player.itemFlags, ItemSpecialEffect::LightningDamage)) {
 				AddMissile(position, { 2, 0 }, Direction::South, MissileID::WeaponExplosion, TARGET_MONSTERS, player, 0, 0);
 			}
 		}
@@ -855,7 +855,7 @@ bool DoRangeAttack(Player &player)
 		arrows = 1;
 	}
 
-	if (HasAnyOf(player._pIFlags, ItemSpecialEffect::MultipleArrows) && player.AnimInfo.currentFrame == player._pAFNum + 1) {
+	if (HasAnyOf(player.itemFlags, ItemSpecialEffect::MultipleArrows) && player.AnimInfo.currentFrame == player._pAFNum + 1) {
 		arrows = 2;
 	}
 
@@ -874,13 +874,13 @@ bool DoRangeAttack(Player &player)
 
 		int dmg = 4;
 		MissileID mistype = MissileID::Arrow;
-		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FireArrows)) {
+		if (HasAnyOf(player.itemFlags, ItemSpecialEffect::FireArrows)) {
 			mistype = MissileID::FireArrow;
 		}
-		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::LightningArrows)) {
+		if (HasAnyOf(player.itemFlags, ItemSpecialEffect::LightningArrows)) {
 			mistype = MissileID::LightningArrow;
 		}
-		if (HasAllOf(player._pIFlags, ItemSpecialEffect::FireArrows | ItemSpecialEffect::LightningArrows)) {
+		if (HasAllOf(player.itemFlags, ItemSpecialEffect::FireArrows | ItemSpecialEffect::LightningArrows)) {
 			dmg = RandomIntBetween(player._pIFMinDam, player._pIFMaxDam);
 			mistype = MissileID::SpectralArrow;
 		}
@@ -1773,7 +1773,7 @@ void Player::RestorePartialMana()
 		l *= 2;
 	if (IsAnyOf(_pClass, HeroClass::Rogue, HeroClass::Monk, HeroClass::Bard))
 		l += l / 2;
-	if (HasNoneOf(_pIFlags, ItemSpecialEffect::NoMana)) {
+	if (HasNoneOf(itemFlags, ItemSpecialEffect::NoMana)) {
 		_pMana = std::min(_pMana + l, _pMaxMana);
 		_pManaBase = std::min(_pManaBase + l, _pMaxManaBase);
 	}
@@ -2371,7 +2371,7 @@ void NextPlrLevel(Player &player)
 	player._pMaxMana += mana;
 	player._pMaxManaBase += mana;
 
-	if (HasNoneOf(player._pIFlags, ItemSpecialEffect::NoMana)) {
+	if (HasNoneOf(player.itemFlags, ItemSpecialEffect::NoMana)) {
 		player._pMana = player._pMaxMana;
 		player._pManaBase = player._pMaxManaBase;
 	}
@@ -2573,7 +2573,7 @@ void StartPlrBlock(Player &player, Direction dir)
 	PlaySfxLoc(SfxID::ItemSword, player.position.tile);
 
 	int8_t skippedAnimationFrames = 0;
-	if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastBlock)) {
+	if (HasAnyOf(player.itemFlags, ItemSpecialEffect::FastBlock)) {
 		skippedAnimationFrames = (player._pBFrames - 2); // ISPL_FASTBLOCK means we cancel the animation if frame 2 was shown
 	}
 
@@ -2618,11 +2618,11 @@ void StartPlrHit(Player &player, int dam, bool forcehit)
 	Direction pd = player._pdir;
 
 	int8_t skippedAnimationFrames = 0;
-	if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastestHitRecovery)) {
+	if (HasAnyOf(player.itemFlags, ItemSpecialEffect::FastestHitRecovery)) {
 		skippedAnimationFrames = 3;
-	} else if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FasterHitRecovery)) {
+	} else if (HasAnyOf(player.itemFlags, ItemSpecialEffect::FasterHitRecovery)) {
 		skippedAnimationFrames = 2;
-	} else if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastHitRecovery)) {
+	} else if (HasAnyOf(player.itemFlags, ItemSpecialEffect::FastHitRecovery)) {
 		skippedAnimationFrames = 1;
 	} else {
 		skippedAnimationFrames = 0;
@@ -2994,10 +2994,10 @@ void ProcessPlayers()
 			}
 
 			if (&player == MyPlayer) {
-				if (HasAnyOf(player._pIFlags, ItemSpecialEffect::DrainLife) && leveltype != DTYPE_TOWN) {
+				if (HasAnyOf(player.itemFlags, ItemSpecialEffect::DrainLife) && leveltype != DTYPE_TOWN) {
 					ApplyPlrDamage(DamageType::Physical, player, 0, 0, 4);
 				}
-				if (HasAnyOf(player._pIFlags, ItemSpecialEffect::NoMana) && player._pManaBase > 0) {
+				if (HasAnyOf(player.itemFlags, ItemSpecialEffect::NoMana) && player._pManaBase > 0) {
 					player._pManaBase -= player._pMana;
 					player._pMana = 0;
 					RedrawComponent(PanelDrawComponent::Mana);
@@ -3303,7 +3303,7 @@ void ModifyPlrMag(Player &player, int l)
 
 	player._pMaxManaBase += ms;
 	player._pMaxMana += ms;
-	if (HasNoneOf(player._pIFlags, ItemSpecialEffect::NoMana)) {
+	if (HasNoneOf(player.itemFlags, ItemSpecialEffect::NoMana)) {
 		player._pManaBase += ms;
 		player._pMana += ms;
 	}

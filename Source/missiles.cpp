@@ -248,7 +248,7 @@ bool MonsterMHit(const Player &player, int monsterId, int mindam, int maxdam, in
 			dam += player._pDamageMod;
 		else
 			dam += player._pDamageMod / 2;
-		if (monster.data().monsterClass == MonsterClass::Demon && HasAnyOf(player._pIFlags, ItemSpecialEffect::TripleDemonDamage))
+		if (monster.data().monsterClass == MonsterClass::Demon && HasAnyOf(player.itemFlags, ItemSpecialEffect::TripleDemonDamage))
 			dam *= 3;
 	}
 	bool resist = monster.isResistant(t, damageType);
@@ -266,7 +266,7 @@ bool MonsterMHit(const Player &player, int monsterId, int mindam, int maxdam, in
 		monster.tag(player);
 		PlayEffect(monster, MonsterSound::Hit);
 	} else {
-		if (monster.mode != MonsterMode::Petrified && missileData.isArrow() && HasAnyOf(player._pIFlags, ItemSpecialEffect::Knockback))
+		if (monster.mode != MonsterMode::Petrified && missileData.isArrow() && HasAnyOf(player.itemFlags, ItemSpecialEffect::Knockback))
 			M_GetKnockback(monster);
 		if (monster.type().type != MT_GOLEM)
 			M_StartHit(monster, player, dam);
@@ -1064,13 +1064,13 @@ bool PlayerMHit(Player &player, Monster *monster, int dist, int mind, int maxd, 
 		if (!shift) {
 			dam = (mind << 6) + GenerateRnd(((maxd - mind) << 6) + 1);
 			if (monster == nullptr)
-				if (HasAnyOf(player._pIFlags, ItemSpecialEffect::HalfTrapDamage))
+				if (HasAnyOf(player.itemFlags, ItemSpecialEffect::HalfTrapDamage))
 					dam /= 2;
 			dam += player._pIGetHit * 64;
 		} else {
 			dam = mind + GenerateRnd(maxd - mind + 1);
 			if (monster == nullptr)
-				if (HasAnyOf(player._pIFlags, ItemSpecialEffect::HalfTrapDamage))
+				if (HasAnyOf(player.itemFlags, ItemSpecialEffect::HalfTrapDamage))
 					dam /= 2;
 			dam += player._pIGetHit;
 		}
@@ -1405,13 +1405,13 @@ void AddSpectralArrow(Missile &missile, AddMissileParameter &parameter)
 		else if (player._pClass == HeroClass::Warrior || player._pClass == HeroClass::Bard)
 			av += (player.getCharacterLevel() - 1) / 8;
 
-		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::QuickAttack))
+		if (HasAnyOf(player.itemFlags, ItemSpecialEffect::QuickAttack))
 			av++;
-		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastAttack))
+		if (HasAnyOf(player.itemFlags, ItemSpecialEffect::FastAttack))
 			av += 2;
-		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FasterAttack))
+		if (HasAnyOf(player.itemFlags, ItemSpecialEffect::FasterAttack))
 			av += 4;
-		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastestAttack))
+		if (HasAnyOf(player.itemFlags, ItemSpecialEffect::FastestAttack))
 			av += 8;
 	}
 
@@ -1668,13 +1668,13 @@ void AddElementalArrow(Missile &missile, AddMissileParameter &parameter)
 			av += (player.getCharacterLevel()) / 8;
 
 		if (gbIsHellfire) {
-			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::QuickAttack))
+			if (HasAnyOf(player.itemFlags, ItemSpecialEffect::QuickAttack))
 				av++;
-			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastAttack))
+			if (HasAnyOf(player.itemFlags, ItemSpecialEffect::FastAttack))
 				av += 2;
-			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FasterAttack))
+			if (HasAnyOf(player.itemFlags, ItemSpecialEffect::FasterAttack))
 				av += 4;
-			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastestAttack))
+			if (HasAnyOf(player.itemFlags, ItemSpecialEffect::FastestAttack))
 				av += 8;
 		} else {
 			if (IsAnyOf(player._pClass, HeroClass::Rogue, HeroClass::Warrior, HeroClass::Bard))
@@ -1700,7 +1700,7 @@ void AddArrow(Missile &missile, AddMissileParameter &parameter)
 	if (missile._micaster == TARGET_MONSTERS) {
 		const Player &player = Players[missile._misource];
 
-		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::RandomArrowVelocity)) {
+		if (HasAnyOf(player.itemFlags, ItemSpecialEffect::RandomArrowVelocity)) {
 			av = RandomIntBetween(16, 47);
 		}
 		if (player._pClass == HeroClass::Rogue)
@@ -1709,13 +1709,13 @@ void AddArrow(Missile &missile, AddMissileParameter &parameter)
 			av += (player.getCharacterLevel() - 1) / 8;
 
 		if (gbIsHellfire) {
-			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::QuickAttack))
+			if (HasAnyOf(player.itemFlags, ItemSpecialEffect::QuickAttack))
 				av++;
-			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastAttack))
+			if (HasAnyOf(player.itemFlags, ItemSpecialEffect::FastAttack))
 				av += 2;
-			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FasterAttack))
+			if (HasAnyOf(player.itemFlags, ItemSpecialEffect::FasterAttack))
 				av += 4;
-			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastestAttack))
+			if (HasAnyOf(player.itemFlags, ItemSpecialEffect::FastestAttack))
 				av += 8;
 		}
 	}

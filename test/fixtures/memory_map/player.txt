@@ -151,7 +151,7 @@ R 32 _pIBonusAC
 R 32 _pIBonusDamMod
 R 32 alignment
 R 64 _pISpells
-R 32 _pIFlags
+R 32 itemFlags
 R 32 _pIGetHit
 R 8 _pISplLvlAdd
 R 8 unused

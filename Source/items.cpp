@@ -2722,7 +2722,7 @@ void CalcPlrBlockFlag(Player &player)
 	if (player._pClass == HeroClass::Monk) {
 		if (player.isHoldingItem(ItemType::Staff)) {
 			player._pBlockFlag = true;
-			player._pIFlags |= ItemSpecialEffect::FastBlock;
+			player.itemFlags |= ItemSpecialEffect::FastBlock;
 		} else if ((leftHandItem.isEmpty() && rightHandItem.isEmpty()) || (leftHandItem._iClass == ICLASS_WEAPON && leftHandItem._iLoc != ILOC_TWOHAND && rightHandItem.isEmpty()) || (rightHandItem._iClass == ICLASS_WEAPON && rightHandItem._iLoc != ILOC_TWOHAND && leftHandItem.isEmpty())) {
 			player._pBlockFlag = true;
 		}
@@ -2919,7 +2919,7 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	player._pIBonusDam = dam;
 	player._pIBonusToHit = toHit;
 	player._pIBonusAC = bonusAc;
-	player._pIFlags = flags;
+	player.itemFlags = flags;
 	player.pDamAcFlags = damAcFlags;
 	player._pIBonusDamMod = damMod;
 	player._pIGetHit = getHit;
@@ -4220,7 +4220,7 @@ void UseItem(Player &player, item_misc_id mid, SpellID spellID, int spellFrom)
 			player._pSplLvl[static_cast<int8_t>(spellID)] = newSpellLevel;
 			NetSendCmdParam2(true, CMD_CHANGE_SPELL_LEVEL, static_cast<uint16_t>(spellID), newSpellLevel);
 		}
-		if (HasNoneOf(player._pIFlags, ItemSpecialEffect::NoMana)) {
+		if (HasNoneOf(player.itemFlags, ItemSpecialEffect::NoMana)) {
 			player._pMana += GetSpellData(spellID).sManaCost << 6;
 			player._pMana = std::min(player._pMana, player._pMaxMana);
 			player._pManaBase += GetSpellData(spellID).sManaCost << 6;

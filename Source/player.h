@@ -283,7 +283,7 @@ struct Player {
 	 */
 	int8_t progressToNextGameTickWhenPreviewWasSet;
 	/** @brief Bitmask using item_special_effect */
-	ItemSpecialEffect _pIFlags;
+	ItemSpecialEffect itemFlags; // _pIFlags
 	/**
 	 * @brief Contains Data (Sprites) for the different Animations
 	 */
@@ -739,7 +739,7 @@ public:
 	 */
 	void RestoreFullMana()
 	{
-		if (HasNoneOf(_pIFlags, ItemSpecialEffect::NoMana)) {
+		if (HasNoneOf(itemFlags, ItemSpecialEffect::NoMana)) {
 			_pMana = _pMaxMana;
 			_pManaBase = _pMaxManaBase;
 		}
