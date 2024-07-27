@@ -1467,7 +1467,7 @@ void ValidatePlayer()
 		}
 	}
 
-	myPlayer._pMemSpells &= msk;
+	myPlayer.learnedSpells &= msk;
 	myPlayer._pInfraFlag = false;
 }
 

@@ -3066,12 +3066,12 @@ void CreatePlrItems(Player &player)
 	const PlayerStartingLoadoutData &loadout = GetPlayerStartingLoadoutForClass(player._pClass);
 
 	if (loadout.spell != SpellID::Null && loadout.spellLevel > 0) {
-		player._pMemSpells = GetSpellBitmask(loadout.spell);
+		player.learnedSpells = GetSpellBitmask(loadout.spell);
 		player._pRSplType = SpellType::Spell;
 		player._pRSpell = loadout.spell;
 		player._pSplLvl[static_cast<unsigned>(loadout.spell)] = loadout.spellLevel;
 	} else {
-		player._pMemSpells = 0;
+		player.learnedSpells = 0;
 	}
 
 	if (loadout.skill != SpellID::Null) {

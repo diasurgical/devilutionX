@@ -124,7 +124,7 @@ static void AssertPlayer(Player &player)
 	ASSERT_EQ(player.getBaseToBlock(), 20);
 	ASSERT_EQ(player._pMaxManaBase, 1440);
 	ASSERT_EQ(player._pManaBase, 1440);
-	ASSERT_EQ(player._pMemSpells, 0);
+	ASSERT_EQ(player.learnedSpells, 0);
 	ASSERT_EQ(player._pNumInv, 1);
 	ASSERT_EQ(player.wReflections, 0);
 	ASSERT_EQ(player.pTownWarps, 0);

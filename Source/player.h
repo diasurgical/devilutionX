@@ -328,8 +328,8 @@ public:
 	uint8_t _pSplLvl[64];
 	/** @brief Bitmask of staff spell */
 	uint64_t _pISpells;
-	/** @brief Bitmask of learned spells */
-	uint64_t _pMemSpells;
+	/** @brief Bitmask of learned spells (_pMemSpells) */
+	uint64_t learnedSpells;
 	/** @brief Bitmask of abilities */
 	uint64_t _pAblSpells;
 	/** @brief Bitmask of spells available via scrolls */

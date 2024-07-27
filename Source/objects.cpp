@@ -2434,7 +2434,7 @@ void OperateShrineEnchanted(DiabloGenerator &rng, Player &player)
 	int cnt = 0;
 	uint64_t spell = 1;
 	uint8_t maxSpells = gbIsHellfire ? MAX_SPELLS : 37;
-	uint64_t spells = player._pMemSpells;
+	uint64_t spells = player.learnedSpells;
 	for (uint16_t j = 0; j < maxSpells; j++) {
 		if ((spell & spells) != 0)
 			cnt++;
@@ -2444,11 +2444,11 @@ void OperateShrineEnchanted(DiabloGenerator &rng, Player &player)
 		int spellToReduce;
 		do {
 			spellToReduce = rng.generateRnd(maxSpells) + 1;
-		} while ((player._pMemSpells & GetSpellBitmask(static_cast<SpellID>(spellToReduce))) == 0);
+		} while ((player.learnedSpells & GetSpellBitmask(static_cast<SpellID>(spellToReduce))) == 0);
 
 		spell = 1;
 		for (uint8_t j = static_cast<uint8_t>(SpellID::Firebolt); j < maxSpells; j++) {
-			if ((player._pMemSpells & spell) != 0 && player._pSplLvl[j] < MaxSpellLevel && j != spellToReduce) {
+			if ((player.learnedSpells & spell) != 0 && player._pSplLvl[j] < MaxSpellLevel && j != spellToReduce) {
 				uint8_t newSpellLevel = static_cast<uint8_t>(player._pSplLvl[j] + 1);
 				player._pSplLvl[j] = newSpellLevel;
 				NetSendCmdParam2(true, CMD_CHANGE_SPELL_LEVEL, j, newSpellLevel);
@@ -2497,7 +2497,7 @@ void OperateShrineCostOfWisdom(Player &player, SpellID spellId, diablo_message m
 	if (&player != MyPlayer)
 		return;
 
-	player._pMemSpells |= GetSpellBitmask(spellId);
+	player.learnedSpells |= GetSpellBitmask(spellId);
 
 	uint8_t curSpellLevel = player._pSplLvl[static_cast<int8_t>(spellId)];
 	if (curSpellLevel < MaxSpellLevel) {

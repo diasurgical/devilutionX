@@ -22,7 +22,7 @@ std::string DebugCmdSetSpellsLevel(uint8_t level)
 		}
 	}
 	if (level == 0)
-		MyPlayer->_pMemSpells = 0;
+		MyPlayer->learnedSpells = 0;
 
 	return StrCat("Set all spell levels to ", level);
 }

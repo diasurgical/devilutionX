@@ -157,7 +157,7 @@ void DrawSpellBook(const Surface &out)
 
 	ClxDraw(out, GetPanelPosition(UiPanels::Spell, { SpellBookButtonX + buttonX, SpellBookButtonY }), (*spellBookButtons)[sbooktab]);
 	Player &player = *InspectPlayer;
-	uint64_t spl = player._pMemSpells | player._pISpells | player._pAblSpells;
+	uint64_t spl = player.learnedSpells | player._pISpells | player._pAblSpells;
 
 	const int lineHeight = 18;
 
@@ -211,7 +211,7 @@ void CheckSBook()
 	if (iconArea.contains(MousePosition) && !IsInspectingPlayer()) {
 		SpellID sn = GetSpellFromSpellPage(sbooktab, (MousePosition.y - iconArea.position.y) / SpellBookDescription.height);
 		Player &player = *InspectPlayer;
-		uint64_t spl = player._pMemSpells | player._pISpells | player._pAblSpells;
+		uint64_t spl = player.learnedSpells | player._pISpells | player._pAblSpells;
 		if (IsValidSpell(sn) && (spl & GetSpellBitmask(sn)) != 0) {
 			SpellType st = SpellType::Spell;
 			if ((player._pISpells & GetSpellBitmask(sn)) != 0) {

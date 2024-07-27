@@ -273,7 +273,7 @@ void PackPlayer(PlayerPack &packed, const Player &player)
 	packed.pMaxHPBase = SDL_SwapLE32(player._pMaxHPBase);
 	packed.pManaBase = SDL_SwapLE32(player._pManaBase);
 	packed.pMaxManaBase = SDL_SwapLE32(player._pMaxManaBase);
-	packed.pMemSpells = SDL_SwapLE64(player._pMemSpells);
+	packed.pMemSpells = SDL_SwapLE64(player.learnedSpells);
 
 	for (int i = 0; i < 37; i++) // Should be MAX_SPELLS but set to 37 to make save games compatible
 		packed.pSplLvl[i] = player._pSplLvl[i];
@@ -332,7 +332,7 @@ void PackNetPlayer(PlayerNetPack &packed, const Player &player)
 	packed.pMaxHPBase = SDL_SwapLE32(player._pMaxHPBase);
 	packed.pManaBase = SDL_SwapLE32(player._pManaBase);
 	packed.pMaxManaBase = SDL_SwapLE32(player._pMaxManaBase);
-	packed.pMemSpells = SDL_SwapLE64(player._pMemSpells);
+	packed.pMemSpells = SDL_SwapLE64(player.learnedSpells);
 
 	for (int i = 0; i < MAX_SPELLS; i++)
 		packed.pSplLvl[i] = player._pSplLvl[i];
@@ -483,7 +483,7 @@ void UnPackPlayer(const PlayerPack &packed, Player &player)
 	player._pMaxManaBase = SDL_SwapLE32(packed.pMaxManaBase);
 	player._pManaBase = SDL_SwapLE32(packed.pManaBase);
 	player._pManaBase = std::min<int32_t>(player._pManaBase, player._pMaxManaBase);
-	player._pMemSpells = SDL_SwapLE64(packed.pMemSpells);
+	player.learnedSpells = SDL_SwapLE64(packed.pMemSpells);
 
 	// Only read spell levels for learnable spells (Diablo)
 	for (int i = 0; i < 37; i++) { // Should be MAX_SPELLS but set to 36 to make save games compatible
@@ -613,7 +613,7 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 	player._pExperience = SDL_SwapLE32(packed.pExperience);
 	player._pMaxManaBase = baseManaMax;
 	player._pManaBase = baseMana;
-	player._pMemSpells = SDL_SwapLE64(packed.pMemSpells);
+	player.learnedSpells = SDL_SwapLE64(packed.pMemSpells);
 	player.wReflections = SDL_SwapLE16(packed.wReflections);
 	player.pDiabloKillLevel = packed.pDiabloKillLevel;
 	player.pManaShield = packed.pManaShield != 0;

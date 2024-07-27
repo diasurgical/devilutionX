@@ -212,7 +212,7 @@ std::vector<SpellListItem> GetSpellListItems()
 			mask = myPlayer._pAblSpells;
 			break;
 		case SpellType::Spell:
-			mask = myPlayer._pMemSpells;
+			mask = myPlayer.learnedSpells;
 			break;
 		case SpellType::Scroll:
 			mask = myPlayer._pScrlSpells;
@@ -305,7 +305,7 @@ bool IsValidSpeedSpell(size_t slot)
 		spells = myPlayer._pAblSpells;
 		break;
 	case SpellType::Spell:
-		spells = myPlayer._pMemSpells;
+		spells = myPlayer.learnedSpells;
 		break;
 	case SpellType::Scroll:
 		spells = myPlayer._pScrlSpells;
@@ -349,7 +349,7 @@ void DoSpeedBook()
 				spells = myPlayer._pAblSpells;
 				break;
 			case SpellType::Spell:
-				spells = myPlayer._pMemSpells;
+				spells = myPlayer.learnedSpells;
 				break;
 			case SpellType::Scroll:
 				spells = myPlayer._pScrlSpells;

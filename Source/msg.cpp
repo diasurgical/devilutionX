@@ -2304,7 +2304,7 @@ size_t OnChangeSpellLevel(const TCmd *pCmd, Player &player) // NOLINT(misc-unuse
 	if (gbBufferMsgs == 1) {
 		SendPacket(player, pCmd, sizeof(*pCmd));
 	} else {
-		player._pMemSpells |= GetSpellBitmask(spellID);
+		player.learnedSpells |= GetSpellBitmask(spellID);
 		player._pSplLvl[static_cast<size_t>(spellID)] = spellLevel;
 	}
 
