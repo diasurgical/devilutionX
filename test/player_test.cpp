@@ -123,7 +123,7 @@ static void AssertPlayer(Player &player)
 	ASSERT_EQ(player._pHPBase, 2880);
 	ASSERT_EQ(player.getBaseToBlock(), 20);
 	ASSERT_EQ(player._pMaxManaBase, 1440);
-	ASSERT_EQ(player._pManaBase, 1440);
+	ASSERT_EQ(player.baseMana, 1440);
 	ASSERT_EQ(player._pMemSpells, 0);
 	ASSERT_EQ(player._pNumInv, 1);
 	ASSERT_EQ(player.wReflections, 0);

@@ -80,7 +80,7 @@ R 32 _pMaxHPBase
 R 32 _pHitPoints
 R 32 _pMaxHP
 R 32 _pHPPer
-R 32 _pManaBase
+R 32 baseMana
 R 32 _pMaxManaBase
 R 32 _pMana
 R 32 _pMaxMana

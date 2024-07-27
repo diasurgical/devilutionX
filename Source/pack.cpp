@@ -271,7 +271,7 @@ void PackPlayer(PlayerPack &packed, const Player &player)
 	packed.pGold = SDL_SwapLE32(player._pGold);
 	packed.pHPBase = SDL_SwapLE32(player._pHPBase);
 	packed.pMaxHPBase = SDL_SwapLE32(player._pMaxHPBase);
-	packed.pManaBase = SDL_SwapLE32(player._pManaBase);
+	packed.pManaBase = SDL_SwapLE32(player.baseMana);
 	packed.pMaxManaBase = SDL_SwapLE32(player._pMaxManaBase);
 	packed.pMemSpells = SDL_SwapLE64(player._pMemSpells);
 
@@ -330,7 +330,7 @@ void PackNetPlayer(PlayerNetPack &packed, const Player &player)
 	packed.pExperience = SDL_SwapLE32(player._pExperience);
 	packed.pHPBase = SDL_SwapLE32(player._pHPBase);
 	packed.pMaxHPBase = SDL_SwapLE32(player._pMaxHPBase);
-	packed.pManaBase = SDL_SwapLE32(player._pManaBase);
+	packed.pManaBase = SDL_SwapLE32(player.baseMana);
 	packed.pMaxManaBase = SDL_SwapLE32(player._pMaxManaBase);
 	packed.pMemSpells = SDL_SwapLE64(player._pMemSpells);
 
@@ -481,8 +481,8 @@ void UnPackPlayer(const PlayerPack &packed, Player &player)
 		player._pHPBase = 64;
 
 	player._pMaxManaBase = SDL_SwapLE32(packed.pMaxManaBase);
-	player._pManaBase = SDL_SwapLE32(packed.pManaBase);
-	player._pManaBase = std::min<int32_t>(player._pManaBase, player._pMaxManaBase);
+	player.baseMana = SDL_SwapLE32(packed.pManaBase);
+	player.baseMana = std::min<int32_t>(player.baseMana, player._pMaxManaBase);
 	player._pMemSpells = SDL_SwapLE64(packed.pMemSpells);
 
 	// Only read spell levels for learnable spells (Diablo)
@@ -612,7 +612,7 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 
 	player._pExperience = SDL_SwapLE32(packed.pExperience);
 	player._pMaxManaBase = baseManaMax;
-	player._pManaBase = baseMana;
+	player.baseMana = baseMana;
 	player._pMemSpells = SDL_SwapLE64(packed.pMemSpells);
 	player.wReflections = SDL_SwapLE16(packed.wReflections);
 	player.pDiabloKillLevel = packed.pDiabloKillLevel;

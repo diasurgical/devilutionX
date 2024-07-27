@@ -2516,15 +2516,15 @@ void OperateShrineCostOfWisdom(Player &player, SpellID spellId, diablo_message m
 	}
 
 	uint32_t t = player._pMaxManaBase / 10;
-	int v1 = player._pMana - player._pManaBase;
+	int v1 = player._pMana - player.baseMana;
 	int v2 = player._pMaxMana - player._pMaxManaBase;
-	player._pManaBase -= t;
+	player.baseMana -= t;
 	player._pMana -= t;
 	player._pMaxMana -= t;
 	player._pMaxManaBase -= t;
 	if (player._pMana >> 6 <= 0) {
 		player._pMana = v1;
-		player._pManaBase = 0;
+		player.baseMana = 0;
 	}
 	if (player._pMaxMana >> 6 <= 0) {
 		player._pMaxMana = v2;
@@ -2552,7 +2552,7 @@ void OperateShrineCryptic(Player &player)
 		return;
 
 	player._pMana = player._pMaxMana;
-	player._pManaBase = player._pMaxManaBase;
+	player.baseMana = player._pMaxManaBase;
 
 	InitDiabloMsg(EMSG_SHRINE_CRYPTIC);
 
@@ -2625,7 +2625,7 @@ void OperateShrineDivine(Player &player, Point spawnPosition)
 	}
 
 	player._pMana = player._pMaxMana;
-	player._pManaBase = player._pMaxManaBase;
+	player.baseMana = player._pMaxManaBase;
 	player._pHitPoints = player._pMaxHP;
 	player._pHPBase = player._pMaxHPBase;
 
@@ -2675,7 +2675,7 @@ void OperateShrineSpooky(const Player &player)
 	myPlayer._pHitPoints = myPlayer._pMaxHP;
 	myPlayer._pHPBase = myPlayer._pMaxHPBase;
 	myPlayer._pMana = myPlayer._pMaxMana;
-	myPlayer._pManaBase = myPlayer._pMaxManaBase;
+	myPlayer.baseMana = myPlayer._pMaxManaBase;
 
 	RedrawEverything();
 
@@ -2919,7 +2919,7 @@ void OperateShrineShimmering(Player &player)
 		return;
 
 	player._pMana = player._pMaxMana;
-	player._pManaBase = player._pMaxManaBase;
+	player.baseMana = player._pMaxManaBase;
 
 	RedrawEverything();
 
@@ -3240,10 +3240,10 @@ bool OperateFountains(Player &player, Object &fountain)
 			PlaySfxLoc(SfxID::OperateFountain, fountain.position);
 
 			player._pMana += 64;
-			player._pManaBase += 64;
+			player.baseMana += 64;
 			if (player._pMana > player._pMaxMana) {
 				player._pMana = player._pMaxMana;
-				player._pManaBase = player._pMaxManaBase;
+				player.baseMana = player._pMaxManaBase;
 			}
 
 			applied = true;

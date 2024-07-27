@@ -241,7 +241,7 @@ struct Player {
 	int _pHitPoints;
 	int _pMaxHP;
 	int _pHPPer;
-	int _pManaBase;
+	int baseMana; // _pManaBase
 	int _pMaxManaBase;
 	int _pMana;
 	int _pMaxMana;
@@ -741,7 +741,7 @@ public:
 	{
 		if (HasNoneOf(_pIFlags, ItemSpecialEffect::NoMana)) {
 			_pMana = _pMaxMana;
-			_pManaBase = _pMaxManaBase;
+			baseMana = _pMaxManaBase;
 		}
 	}
 	/**

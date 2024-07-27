@@ -164,7 +164,7 @@ void ConsumeSpell(Player &player, SpellID sn)
 #endif
 		int ma = GetManaAmount(player, sn);
 		player._pMana -= ma;
-		player._pManaBase -= ma;
+		player.baseMana -= ma;
 		RedrawComponent(PanelDrawComponent::Mana);
 		break;
 	}
@@ -260,7 +260,7 @@ void DoResurrect(Player &player, Player &target)
 
 	target._pHPBase = target._pHitPoints + (target._pMaxHPBase - target._pMaxHP); // CODEFIX: does the same stuff as SetPlayerHitPoints above, can be removed
 	target._pMana = 0;
-	target._pManaBase = target._pMana + (target._pMaxManaBase - target._pMaxMana);
+	target.baseMana = target._pMana + (target._pMaxManaBase - target._pMaxMana);
 
 	target._pmode = PM_STAND;
 

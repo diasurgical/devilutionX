@@ -2709,7 +2709,7 @@ void CalcPlrLifeMana(Player &player, int vitality, int magic, int life, int mana
 	}
 
 	player._pMaxMana = mana + player._pMaxManaBase;
-	player._pMana = std::min(mana + player._pManaBase, player._pMaxMana);
+	player._pMana = std::min(mana + player.baseMana, player._pMaxMana);
 }
 
 void CalcPlrBlockFlag(Player &player)
@@ -4223,8 +4223,8 @@ void UseItem(Player &player, item_misc_id mid, SpellID spellID, int spellFrom)
 		if (HasNoneOf(player._pIFlags, ItemSpecialEffect::NoMana)) {
 			player._pMana += GetSpellData(spellID).sManaCost << 6;
 			player._pMana = std::min(player._pMana, player._pMaxMana);
-			player._pManaBase += GetSpellData(spellID).sManaCost << 6;
-			player._pManaBase = std::min(player._pManaBase, player._pMaxManaBase);
+			player.baseMana += GetSpellData(spellID).sManaCost << 6;
+			player.baseMana = std::min(player.baseMana, player._pMaxManaBase);
 		}
 		if (&player == MyPlayer) {
 			for (Item &item : InventoryPlayerItemsRange { player }) {

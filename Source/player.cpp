@@ -666,9 +666,9 @@ bool PlrHitMonst(Player &player, Monster &monster, bool adjacentDamage = false)
 		if (player._pMana > player._pMaxMana) {
 			player._pMana = player._pMaxMana;
 		}
-		player._pManaBase += skdam;
-		if (player._pManaBase > player._pMaxManaBase) {
-			player._pManaBase = player._pMaxManaBase;
+		player.baseMana += skdam;
+		if (player.baseMana > player._pMaxManaBase) {
+			player.baseMana = player._pMaxManaBase;
 		}
 		RedrawComponent(PanelDrawComponent::Mana);
 	}
@@ -1775,7 +1775,7 @@ void Player::RestorePartialMana()
 		l += l / 2;
 	if (HasNoneOf(_pIFlags, ItemSpecialEffect::NoMana)) {
 		_pMana = std::min(_pMana + l, _pMaxMana);
-		_pManaBase = std::min(_pManaBase + l, _pMaxManaBase);
+		baseMana = std::min(baseMana + l, _pMaxManaBase);
 	}
 }
 
@@ -2293,7 +2293,7 @@ void CreatePlayer(Player &player, HeroClass c)
 
 	player._pMana = player.calculateBaseMana();
 	player._pMaxMana = player._pMana;
-	player._pManaBase = player._pMana;
+	player.baseMana = player._pMana;
 	player._pMaxManaBase = player._pMana;
 
 	player._pExperience = 0;
@@ -2373,7 +2373,7 @@ void NextPlrLevel(Player &player)
 
 	if (HasNoneOf(player._pIFlags, ItemSpecialEffect::NoMana)) {
 		player._pMana = player._pMaxMana;
-		player._pManaBase = player._pMaxManaBase;
+		player.baseMana = player._pMaxManaBase;
 	}
 
 	if (&player == MyPlayer) {
@@ -2795,7 +2795,7 @@ void ApplyPlrDamage(DamageType damageType, Player &player, int dam, int minHP /*
 			RedrawComponent(PanelDrawComponent::Mana);
 		if (player._pMana >= totalDamage) {
 			player._pMana -= totalDamage;
-			player._pManaBase -= totalDamage;
+			player.baseMana -= totalDamage;
 			totalDamage = 0;
 		} else {
 			totalDamage -= player._pMana;
@@ -2803,7 +2803,7 @@ void ApplyPlrDamage(DamageType damageType, Player &player, int dam, int minHP /*
 				totalDamage += totalDamage / (player.GetManaShieldDamageReduction() - 1);
 			}
 			player._pMana = 0;
-			player._pManaBase = player._pMaxManaBase - player._pMaxMana;
+			player.baseMana = player._pMaxManaBase - player._pMaxMana;
 			if (&player == MyPlayer)
 				NetSendCmd(true, CMD_REMSHIELD);
 		}
@@ -2913,7 +2913,7 @@ void RestartTownLvl(Player &player)
 	SetPlayerHitPoints(player, 64);
 
 	player._pMana = 0;
-	player._pManaBase = player._pMana - (player._pMaxMana - player._pMaxManaBase);
+	player.baseMana = player._pMana - (player._pMaxMana - player._pMaxManaBase);
 
 	CalcPlrInv(player, false);
 	player._pmode = PM_NEWLVL;
@@ -2997,8 +2997,8 @@ void ProcessPlayers()
 				if (HasAnyOf(player._pIFlags, ItemSpecialEffect::DrainLife) && leveltype != DTYPE_TOWN) {
 					ApplyPlrDamage(DamageType::Physical, player, 0, 0, 4);
 				}
-				if (HasAnyOf(player._pIFlags, ItemSpecialEffect::NoMana) && player._pManaBase > 0) {
-					player._pManaBase -= player._pMana;
+				if (HasAnyOf(player._pIFlags, ItemSpecialEffect::NoMana) && player.baseMana > 0) {
+					player.baseMana -= player._pMana;
 					player._pMana = 0;
 					RedrawComponent(PanelDrawComponent::Mana);
 				}
@@ -3304,7 +3304,7 @@ void ModifyPlrMag(Player &player, int l)
 	player._pMaxManaBase += ms;
 	player._pMaxMana += ms;
 	if (HasNoneOf(player._pIFlags, ItemSpecialEffect::NoMana)) {
-		player._pManaBase += ms;
+		player.baseMana += ms;
 		player._pMana += ms;
 	}
 
