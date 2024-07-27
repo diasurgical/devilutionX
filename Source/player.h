@@ -291,7 +291,7 @@ struct Player {
 	int8_t _pNFrames;
 	int8_t _pWFrames;
 	int8_t _pAFrames;
-	int8_t _pAFNum;
+	int8_t attackActionFrame; // _pAFNum
 	int8_t _pSFrames;
 	int8_t _pSFNum;
 	int8_t _pHFrames;
@@ -763,9 +763,9 @@ public:
 	{
 		if (_pmode == PM_STAND)
 			return true;
-		if (_pmode == PM_ATTACK && AnimInfo.currentFrame >= _pAFNum)
+		if (_pmode == PM_ATTACK && AnimInfo.currentFrame >= attackActionFrame)
 			return true;
-		if (_pmode == PM_RATTACK && AnimInfo.currentFrame >= _pAFNum)
+		if (_pmode == PM_RATTACK && AnimInfo.currentFrame >= attackActionFrame)
 			return true;
 		if (_pmode == PM_SPELL && AnimInfo.currentFrame >= _pSFNum)
 			return true;

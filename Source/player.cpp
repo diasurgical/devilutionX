@@ -197,7 +197,7 @@ void StartAttack(Player &player, Direction d, bool includesFirstFrame)
 	auto animationFlags = AnimationDistributionFlags::ProcessAnimationPending;
 	if (player._pmode == PM_ATTACK)
 		animationFlags = static_cast<AnimationDistributionFlags>(animationFlags | AnimationDistributionFlags::RepeatedAction);
-	NewPlrAnim(player, player_graphic::Attack, d, animationFlags, skippedAnimationFrames, player._pAFNum);
+	NewPlrAnim(player, player_graphic::Attack, d, animationFlags, skippedAnimationFrames, player.attackActionFrame);
 	player._pmode = PM_ATTACK;
 	FixPlayerLocation(player, d);
 	SetPlayerOld(player);
@@ -223,7 +223,7 @@ void StartRangeAttack(Player &player, Direction d, WorldTileCoord cx, WorldTileC
 	auto animationFlags = AnimationDistributionFlags::ProcessAnimationPending;
 	if (player._pmode == PM_RATTACK)
 		animationFlags = static_cast<AnimationDistributionFlags>(animationFlags | AnimationDistributionFlags::RepeatedAction);
-	NewPlrAnim(player, player_graphic::Attack, d, animationFlags, skippedAnimationFrames, player._pAFNum);
+	NewPlrAnim(player, player_graphic::Attack, d, animationFlags, skippedAnimationFrames, player.attackActionFrame);
 
 	player._pmode = PM_RATTACK;
 	FixPlayerLocation(player, d);
@@ -776,13 +776,13 @@ bool PlrHitObj(const Player &player, Object &targetObject)
 
 bool DoAttack(Player &player)
 {
-	if (player.AnimInfo.currentFrame == player._pAFNum - 2) {
+	if (player.AnimInfo.currentFrame == player.attackActionFrame - 2) {
 		PlaySfxLoc(SfxID::Swing, player.position.tile);
 	}
 
 	bool didhit = false;
 
-	if (player.AnimInfo.currentFrame == player._pAFNum - 1) {
+	if (player.AnimInfo.currentFrame == player.attackActionFrame - 1) {
 		Point position = player.position.tile + player._pdir;
 		Monster *monster = FindMonsterAtPosition(position);
 
@@ -851,11 +851,11 @@ bool DoAttack(Player &player)
 bool DoRangeAttack(Player &player)
 {
 	int arrows = 0;
-	if (player.AnimInfo.currentFrame == player._pAFNum - 1) {
+	if (player.AnimInfo.currentFrame == player.attackActionFrame - 1) {
 		arrows = 1;
 	}
 
-	if (HasAnyOf(player._pIFlags, ItemSpecialEffect::MultipleArrows) && player.AnimInfo.currentFrame == player._pAFNum + 1) {
+	if (HasAnyOf(player._pIFlags, ItemSpecialEffect::MultipleArrows) && player.AnimInfo.currentFrame == player.attackActionFrame + 1) {
 		arrows = 2;
 	}
 
@@ -1332,7 +1332,7 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 		return;
 	}
 
-	if (player._pmode == PM_ATTACK && player.AnimInfo.currentFrame >= player._pAFNum) {
+	if (player._pmode == PM_ATTACK && player.AnimInfo.currentFrame >= player.attackActionFrame) {
 		if (player.destAction == ACTION_ATTACK) {
 			d = GetDirection(player.position.future, { player.destParam1, player.destParam2 });
 			StartAttack(player, d, pmWillBeCalled);
@@ -1363,7 +1363,7 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 		}
 	}
 
-	if (player._pmode == PM_RATTACK && player.AnimInfo.currentFrame >= player._pAFNum) {
+	if (player._pmode == PM_RATTACK && player.AnimInfo.currentFrame >= player.attackActionFrame) {
 		if (player.destAction == ACTION_RATTACK) {
 			d = GetDirection(player.position.tile, { player.destParam1, player.destParam2 });
 			StartRangeAttack(player, d, player.destParam1, player.destParam2, pmWillBeCalled);
@@ -2211,39 +2211,39 @@ void SetPlrAnims(Player &player)
 		switch (gn) {
 		case PlayerWeaponGraphic::Unarmed:
 			player._pAFrames = plrAtkAnimData.unarmedFrames;
-			player._pAFNum = plrAtkAnimData.unarmedActionFrame;
+			player.attackActionFrame = plrAtkAnimData.unarmedActionFrame;
 			break;
 		case PlayerWeaponGraphic::UnarmedShield:
 			player._pAFrames = plrAtkAnimData.unarmedShieldFrames;
-			player._pAFNum = plrAtkAnimData.unarmedShieldActionFrame;
+			player.attackActionFrame = plrAtkAnimData.unarmedShieldActionFrame;
 			break;
 		case PlayerWeaponGraphic::Sword:
 			player._pAFrames = plrAtkAnimData.swordFrames;
-			player._pAFNum = plrAtkAnimData.swordActionFrame;
+			player.attackActionFrame = plrAtkAnimData.swordActionFrame;
 			break;
 		case PlayerWeaponGraphic::SwordShield:
 			player._pAFrames = plrAtkAnimData.swordShieldFrames;
-			player._pAFNum = plrAtkAnimData.swordShieldActionFrame;
+			player.attackActionFrame = plrAtkAnimData.swordShieldActionFrame;
 			break;
 		case PlayerWeaponGraphic::Bow:
 			player._pAFrames = plrAtkAnimData.bowFrames;
-			player._pAFNum = plrAtkAnimData.bowActionFrame;
+			player.attackActionFrame = plrAtkAnimData.bowActionFrame;
 			break;
 		case PlayerWeaponGraphic::Axe:
 			player._pAFrames = plrAtkAnimData.axeFrames;
-			player._pAFNum = plrAtkAnimData.axeActionFrame;
+			player.attackActionFrame = plrAtkAnimData.axeActionFrame;
 			break;
 		case PlayerWeaponGraphic::Mace:
 			player._pAFrames = plrAtkAnimData.maceFrames;
-			player._pAFNum = plrAtkAnimData.maceActionFrame;
+			player.attackActionFrame = plrAtkAnimData.maceActionFrame;
 			break;
 		case PlayerWeaponGraphic::MaceShield:
 			player._pAFrames = plrAtkAnimData.maceShieldFrames;
-			player._pAFNum = plrAtkAnimData.maceShieldActionFrame;
+			player.attackActionFrame = plrAtkAnimData.maceShieldActionFrame;
 			break;
 		case PlayerWeaponGraphic::Staff:
 			player._pAFrames = plrAtkAnimData.staffFrames;
-			player._pAFNum = plrAtkAnimData.staffActionFrame;
+			player.attackActionFrame = plrAtkAnimData.staffActionFrame;
 			break;
 		}
 	}

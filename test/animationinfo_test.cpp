@@ -292,7 +292,7 @@ TEST(AnimationInfo, AttackSwordWarriorRepeated)
 	        new GameTickData(9, 0),
 	        new RenderingData(0.3f, 9),
 
-	        // Start of repeated attack, cause plr[pnum].AnimInfo.currentFrame > plr[myplr]._pAFNum
+	        // Start of repeated attack, cause plr[pnum].AnimInfo.currentFrame > plr[myplr].attackActionFrame
 	        new SetNewAnimationData(16, 1, static_cast<AnimationDistributionFlags>(AnimationDistributionFlags::ProcessAnimationPending | AnimationDistributionFlags::RepeatedAction), 0, 9),
 	        // processAnimation directly after StartAttack (in same GameTick). So we don't see any rendering before.
 	        new GameTickData(1, 0),

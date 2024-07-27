@@ -119,7 +119,7 @@ R 32 _pWWidth
 M 8 32 _pAAnim
 R 32 _pAFrames
 R 32 _pAWidth
-R 32 _pAFNum
+R 32 attackActionFrame
 M 8 32 _pLAnim
 M 8 32 _pFAnim
 M 8 32 _pTAnim
