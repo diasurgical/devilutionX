@@ -520,7 +520,7 @@ void RemoveAllInvalidItems(Player &player)
 	for (int i = 0; i < NUM_INVLOC; i++)
 		RemoveInvalidItem(player.InvBody[i]);
 	for (int i = 0; i < player._pNumInv; i++)
-		RemoveInvalidItem(player.InvList[i]);
+		RemoveInvalidItem(player.inventorySlot[i]);
 	for (int i = 0; i < MaxBeltItems; i++)
 		RemoveInvalidItem(player.SpdList[i]);
 	RemoveEmptyInventory(player);

@@ -682,7 +682,7 @@ Size GetItemSizeOnSlot(int slot)
 	if (slot >= SLOTXY_INV_FIRST && slot <= SLOTXY_INV_LAST) {
 		int8_t ii = GetItemIdOnSlot(slot);
 		if (ii != 0) {
-			Item &item = MyPlayer->InvList[ii - 1];
+			Item &item = MyPlayer->inventorySlot[ii - 1];
 			if (!item.isEmpty()) {
 				return GetInventorySize(item);
 			}

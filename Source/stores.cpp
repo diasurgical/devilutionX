@@ -479,7 +479,7 @@ bool SmithSellOk(int i)
 	Item *pI;
 
 	if (i >= 0) {
-		pI = &MyPlayer->InvList[i];
+		pI = &MyPlayer->inventorySlot[i];
 	} else {
 		pI = &MyPlayer->SpdList[-(i + 1)];
 	}
@@ -526,7 +526,7 @@ void StartSmithSell()
 			break;
 		if (SmithSellOk(i)) {
 			sellOk = true;
-			storehold[storenumh] = myPlayer.InvList[i];
+			storehold[storenumh] = myPlayer.inventorySlot[i];
 
 			if (storehold[storenumh]._iMagical != ITEM_QUALITY_NORMAL && storehold[storenumh]._iIdentified)
 				storehold[storenumh]._ivalue = storehold[storenumh]._iIvalue;
@@ -579,7 +579,7 @@ void StartSmithSell()
 bool SmithRepairOk(int i)
 {
 	const Player &myPlayer = *MyPlayer;
-	const Item &item = myPlayer.InvList[i];
+	const Item &item = myPlayer.inventorySlot[i];
 
 	if (item.isEmpty())
 		return false;
@@ -630,7 +630,7 @@ void StartSmithRepair()
 		if (storenumh >= 48)
 			break;
 		if (SmithRepairOk(i)) {
-			AddStoreHoldRepair(&myPlayer.InvList[i], i);
+			AddStoreHoldRepair(&myPlayer.inventorySlot[i], i);
 		}
 	}
 
@@ -740,7 +740,7 @@ bool WitchSellOk(int i)
 	bool rv = false;
 
 	if (i >= 0)
-		pI = &MyPlayer->InvList[i];
+		pI = &MyPlayer->inventorySlot[i];
 	else
 		pI = &MyPlayer->SpdList[-(i + 1)];
 
@@ -776,7 +776,7 @@ void StartWitchSell()
 			break;
 		if (WitchSellOk(i)) {
 			sellok = true;
-			storehold[storenumh] = myPlayer.InvList[i];
+			storehold[storenumh] = myPlayer.inventorySlot[i];
 
 			if (storehold[storenumh]._iMagical != ITEM_QUALITY_NORMAL && storehold[storenumh]._iIdentified)
 				storehold[storenumh]._ivalue = storehold[storenumh]._iIvalue;
@@ -829,7 +829,7 @@ void StartWitchSell()
 
 bool WitchRechargeOk(int i)
 {
-	const auto &item = MyPlayer->InvList[i];
+	const auto &item = MyPlayer->inventorySlot[i];
 
 	if (item._itype == ItemType::Staff && item._iCharges != item._iMaxCharges) {
 		return true;
@@ -875,7 +875,7 @@ void StartWitchRecharge()
 			break;
 		if (WitchRechargeOk(i)) {
 			rechargeok = true;
-			AddStoreHoldRecharge(myPlayer.InvList[i], i);
+			AddStoreHoldRecharge(myPlayer.inventorySlot[i], i);
 		}
 	}
 
@@ -1155,7 +1155,7 @@ void StartStorytellerIdentify()
 	for (int i = 0; i < myPlayer._pNumInv; i++) {
 		if (storenumh >= 48)
 			break;
-		auto &item = myPlayer.InvList[i];
+		auto &item = myPlayer.inventorySlot[i];
 		if (IdItemOk(&item)) {
 			idok = true;
 			AddStoreHoldId(item, i);
@@ -1504,7 +1504,7 @@ void SmithRepairItem(int price)
 		return;
 	}
 
-	myPlayer.InvList[i]._iDurability = myPlayer.InvList[i]._iMaxDur;
+	myPlayer.inventorySlot[i]._iDurability = myPlayer.inventorySlot[i]._iMaxDur;
 }
 
 void SmithRepairEnter()
@@ -1649,7 +1649,7 @@ void WitchRechargeItem(int price)
 		myPlayer.InvBody[INVLOC_HAND_LEFT]._iCharges = myPlayer.InvBody[INVLOC_HAND_LEFT]._iMaxCharges;
 		NetSendCmdChItem(true, INVLOC_HAND_LEFT);
 	} else {
-		myPlayer.InvList[i]._iCharges = myPlayer.InvList[i]._iMaxCharges;
+		myPlayer.inventorySlot[i]._iCharges = myPlayer.inventorySlot[i]._iMaxCharges;
 		NetSyncInvItem(myPlayer, i);
 	}
 
@@ -1805,7 +1805,7 @@ void StorytellerIdentifyItem(Item &item)
 		if (idx == -7)
 			myPlayer.InvBody[INVLOC_AMULET]._iIdentified = true;
 	} else {
-		myPlayer.InvList[idx]._iIdentified = true;
+		myPlayer.inventorySlot[idx]._iIdentified = true;
 	}
 	item._iIdentified = true;
 	TakePlrsMoney(item._iIvalue);
@@ -2047,13 +2047,13 @@ void DrunkEnter()
 int TakeGold(Player &player, int cost, bool skipMaxPiles)
 {
 	for (int i = 0; i < player._pNumInv; i++) {
-		auto &item = player.InvList[i];
+		auto &item = player.inventorySlot[i];
 		if (item._itype != ItemType::Gold || (skipMaxPiles && item._ivalue == MaxGold))
 			continue;
 
 		if (cost < item._ivalue) {
 			item._ivalue -= cost;
-			SetPlrHandGoldCurs(player.InvList[i]);
+			SetPlrHandGoldCurs(player.inventorySlot[i]);
 			return 0;
 		}
 

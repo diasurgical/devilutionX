@@ -2651,7 +2651,7 @@ void OperateShrineSpiritual(DiabloGenerator &rng, Player &player)
 
 	for (int8_t &itemIndex : player.InvGrid) {
 		if (itemIndex == 0) {
-			Item &goldItem = player.InvList[player._pNumInv];
+			Item &goldItem = player.inventorySlot[player._pNumInv];
 			MakeGoldStack(goldItem, 5 * leveltype + rng.generateRnd(10 * leveltype));
 			player._pNumInv++;
 			itemIndex = player._pNumInv;

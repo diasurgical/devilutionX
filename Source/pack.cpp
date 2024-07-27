@@ -60,16 +60,16 @@ void LogFailedJoinAttempt(const char *condition, const char *name1, T1 value1, c
 void VerifyGoldSeeds(Player &player)
 {
 	for (int i = 0; i < player._pNumInv; i++) {
-		if (player.InvList[i].IDidx != IDI_GOLD)
+		if (player.inventorySlot[i].IDidx != IDI_GOLD)
 			continue;
 		for (int j = 0; j < player._pNumInv; j++) {
 			if (i == j)
 				continue;
-			if (player.InvList[j].IDidx != IDI_GOLD)
+			if (player.inventorySlot[j].IDidx != IDI_GOLD)
 				continue;
-			if (player.InvList[i]._iSeed != player.InvList[j]._iSeed)
+			if (player.inventorySlot[i]._iSeed != player.inventorySlot[j]._iSeed)
 				continue;
-			player.InvList[i]._iSeed = AdvanceRndSeed();
+			player.inventorySlot[i]._iSeed = AdvanceRndSeed();
 			j = -1;
 		}
 	}
@@ -285,7 +285,7 @@ void PackPlayer(PlayerPack &packed, const Player &player)
 
 	packed._pNumInv = player._pNumInv;
 	for (int i = 0; i < packed._pNumInv; i++)
-		PackItem(packed.InvList[i], player.InvList[i], gbIsHellfire);
+		PackItem(packed.inventorySlot[i], player.inventorySlot[i], gbIsHellfire);
 
 	for (int i = 0; i < InventoryGridCells; i++)
 		packed.InvGrid[i] = player.InvGrid[i];
@@ -342,7 +342,7 @@ void PackNetPlayer(PlayerNetPack &packed, const Player &player)
 
 	packed._pNumInv = player._pNumInv;
 	for (int i = 0; i < packed._pNumInv; i++)
-		PackNetItem(player.InvList[i], packed.InvList[i]);
+		PackNetItem(player.inventorySlot[i], packed.inventorySlot[i]);
 
 	for (int i = 0; i < InventoryGridCells; i++)
 		packed.InvGrid[i] = player.InvGrid[i];
@@ -514,7 +514,7 @@ void UnPackPlayer(const PlayerPack &packed, Player &player)
 
 	player._pNumInv = packed._pNumInv;
 	for (int i = 0; i < player._pNumInv; i++)
-		UnPackItem(packed.InvList[i], player, player.InvList[i], isHellfire);
+		UnPackItem(packed.inventorySlot[i], player, player.inventorySlot[i], isHellfire);
 
 	for (int i = 0; i < InventoryGridCells; i++)
 		player.InvGrid[i] = packed.InvGrid[i];
@@ -651,7 +651,7 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 
 	player._pNumInv = packed._pNumInv;
 	for (int i = 0; i < player._pNumInv; i++) {
-		if (!UnPackNetItem(player, packed.InvList[i], player.InvList[i]))
+		if (!UnPackNetItem(player, packed.inventorySlot[i], player.inventorySlot[i]))
 			return false;
 	}
 

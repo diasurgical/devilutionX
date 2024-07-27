@@ -240,7 +240,7 @@ public:
 
 	[[nodiscard]] Iterator begin() const
 	{
-		return Iterator { &player_->InvList[0], containerSize(), 0 };
+		return Iterator { &player_->inventorySlot[0], containerSize(), 0 };
 	}
 
 	[[nodiscard]] Iterator end() const

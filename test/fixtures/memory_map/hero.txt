@@ -25,7 +25,7 @@ R 32 pMaxManaBase
 M 37 8 pSplLvl
 R 64 pMemSpells
 C 7 itemPack InvBody
-C 40 itemPack InvList
+C 40 itemPack inventorySlot
 M 40 8 InvGrid
 R 8 _pNumInv
 C 8 itemPack SpdList

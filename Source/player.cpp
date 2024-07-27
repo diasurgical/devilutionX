@@ -331,7 +331,7 @@ void DeadItem(Player &player, Item &&itm, Displacement direction)
 int DropGold(Player &player, int amount, bool skipFullStacks)
 {
 	for (int i = 0; i < player._pNumInv && amount > 0; i++) {
-		Item &item = player.InvList[i];
+		Item &item = player.inventorySlot[i];
 
 		if (item._itype != ItemType::Gold || (skipFullStacks && item._ivalue == MaxGold))
 			continue;
@@ -1431,15 +1431,15 @@ void ValidatePlayer()
 
 	int gt = 0;
 	for (int i = 0; i < myPlayer._pNumInv; i++) {
-		if (myPlayer.InvList[i]._itype == ItemType::Gold) {
+		if (myPlayer.inventorySlot[i]._itype == ItemType::Gold) {
 			int maxGold = GOLD_MAX_LIMIT;
 			if (gbIsHellfire) {
 				maxGold *= 2;
 			}
-			if (myPlayer.InvList[i]._ivalue > maxGold) {
-				myPlayer.InvList[i]._ivalue = maxGold;
+			if (myPlayer.inventorySlot[i]._ivalue > maxGold) {
+				myPlayer.inventorySlot[i]._ivalue = maxGold;
 			}
-			gt += myPlayer.InvList[i]._ivalue;
+			gt += myPlayer.inventorySlot[i]._ivalue;
 		}
 	}
 	if (gt != myPlayer._pGold)
@@ -1587,13 +1587,13 @@ void Player::RemoveInvItem(int iv, bool calcScrolls)
 		}
 	}
 
-	InvList[iv].clear();
+	inventorySlot[iv].clear();
 
 	_pNumInv--;
 
 	// If the item at the end of inventory array isn't the one we removed, we need to swap its position in the array with the removed item
 	if (_pNumInv > 0 && _pNumInv != iv) {
-		InvList[iv] = InvList[_pNumInv].pop();
+		inventorySlot[iv] = inventorySlot[_pNumInv].pop();
 
 		for (int8_t &itemIndex : InvGrid) {
 			if (itemIndex == _pNumInv + 1) {

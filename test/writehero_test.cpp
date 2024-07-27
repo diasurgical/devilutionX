@@ -49,7 +49,7 @@ void SwapLE(PlayerPack &player)
 	for (ItemPack &item : player.InvBody) {
 		SwapLE(item);
 	}
-	for (ItemPack &item : player.InvList) {
+	for (ItemPack &item : player.inventorySlot) {
 		SwapLE(item);
 	}
 	for (ItemPack &item : player.SpdList) {
@@ -217,7 +217,7 @@ void PackPlayerTest(PlayerPack *pPack)
 	pPack->pStatPts = 0;
 	pPack->pDiabloKillLevel = 3;
 	for (auto i = 0; i < 40; i++)
-		pPack->InvList[i].idx = -1;
+		pPack->inventorySlot[i].idx = -1;
 	for (auto i = 0; i < 7; i++)
 		pPack->InvBody[i].idx = -1;
 	for (auto i = 0; i < MaxBeltItems; i++)
@@ -248,8 +248,8 @@ void PackPlayerTest(PlayerPack *pPack)
 	PackItemArmor(pPack->InvBody + INVLOC_CHEST);
 	PackItemBow(pPack->InvBody + INVLOC_HAND_LEFT);
 
-	PackItemStaff(pPack->InvList + PrepareInvSlot(pPack, 28, 2, 1));
-	PackItemSword(pPack->InvList + PrepareInvSlot(pPack, 20, 1));
+	PackItemStaff(pPack->inventorySlot + PrepareInvSlot(pPack, 28, 2, 1));
+	PackItemSword(pPack->inventorySlot + PrepareInvSlot(pPack, 20, 1));
 
 	pPack->_pNumInv = 2;
 
@@ -261,7 +261,7 @@ void AssertPlayer(Player &player)
 	ASSERT_EQ(CountU8(player._pSplLvl, 64), 23);
 	ASSERT_EQ(Count8(player.InvGrid, InventoryGridCells), 9);
 	ASSERT_EQ(CountItems(player.InvBody, NUM_INVLOC), 6);
-	ASSERT_EQ(CountItems(player.InvList, InventoryGridCells), 2);
+	ASSERT_EQ(CountItems(player.inventorySlot, InventoryGridCells), 2);
 	ASSERT_EQ(CountItems(player.SpdList, MaxBeltItems), 8);
 	ASSERT_EQ(CountItems(&player.HoldItem, 1), 0);
 

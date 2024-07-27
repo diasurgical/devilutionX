@@ -33,7 +33,7 @@ void SwapLE(PlayerPack &pack)
 	pack.pMemSpells = SDL_SwapLE64(pack.pMemSpells);
 	for (ItemPack &item : pack.InvBody)
 		SwapLE(item);
-	for (ItemPack &item : pack.InvList)
+	for (ItemPack &item : pack.inventorySlot)
 		SwapLE(item);
 	for (ItemPack &item : pack.SpdList)
 		SwapLE(item);
@@ -1301,7 +1301,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_maxManaBase)
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_pregenItemFlags)
 {
 	size_t count = 0;
-	for (Item &item : MyPlayer->InvList) {
+	for (Item &item : MyPlayer->inventorySlot) {
 		if (item.isEmpty())
 			continue;
 		if (IsAnyOf(item.IDidx, IDI_GOLD, IDI_EAR))
@@ -1319,7 +1319,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_pregenItemFlags)
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_usefulItemFlags)
 {
 	size_t count = 0;
-	for (Item &item : MyPlayer->InvList) {
+	for (Item &item : MyPlayer->inventorySlot) {
 		if (item.isEmpty())
 			continue;
 		if (IsAnyOf(item.IDidx, IDI_GOLD, IDI_EAR))
@@ -1339,7 +1339,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_usefulItemFlags)
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_townItemFlags)
 {
 	size_t count = 0;
-	for (Item &item : MyPlayer->InvList) {
+	for (Item &item : MyPlayer->inventorySlot) {
 		if (item.isEmpty())
 			continue;
 		if (IsAnyOf(item.IDidx, IDI_GOLD, IDI_EAR))
@@ -1385,7 +1385,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_townItemLevel)
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_uniqueMonsterItemLevel)
 {
 	size_t count = 0;
-	for (Item &item : MyPlayer->InvList) {
+	for (Item &item : MyPlayer->inventorySlot) {
 		if (item.isEmpty())
 			continue;
 		if (IsAnyOf(item.IDidx, IDI_GOLD, IDI_EAR))

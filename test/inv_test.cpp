@@ -46,7 +46,7 @@ void set_up_scroll(Item &item, SpellID spell)
 void clear_inventory()
 {
 	for (int i = 0; i < InventoryGridCells; i++) {
-		MyPlayer->InvList[i] = {};
+		MyPlayer->inventorySlot[i] = {};
 		MyPlayer->InvGrid[i] = 0;
 	}
 	MyPlayer->_pNumInv = 0;
@@ -55,7 +55,7 @@ void clear_inventory()
 // Test that the scroll is used in the inventory in correct conditions
 TEST_F(InvTest, UseScroll_from_inventory)
 {
-	set_up_scroll(MyPlayer->InvList[2], SpellID::Firebolt);
+	set_up_scroll(MyPlayer->inventorySlot[2], SpellID::Firebolt);
 	MyPlayer->_pNumInv = 5;
 	EXPECT_TRUE(CanUseScroll(*MyPlayer, SpellID::Firebolt));
 }
@@ -78,20 +78,20 @@ TEST_F(InvTest, UseScroll_from_inventory_invalid_conditions)
 	// Adjust inventory size
 	MyPlayer->_pNumInv = 5;
 
-	set_up_scroll(MyPlayer->InvList[2], SpellID::Firebolt);
+	set_up_scroll(MyPlayer->inventorySlot[2], SpellID::Firebolt);
 	leveltype = DTYPE_TOWN;
 	EXPECT_FALSE(CanUseScroll(*MyPlayer, SpellID::Firebolt));
 
-	set_up_scroll(MyPlayer->InvList[2], SpellID::Firebolt);
+	set_up_scroll(MyPlayer->inventorySlot[2], SpellID::Firebolt);
 	MyPlayer->_pRSpell = SpellID::Healing;
 	EXPECT_FALSE(CanUseScroll(*MyPlayer, SpellID::Healing));
 
-	set_up_scroll(MyPlayer->InvList[2], SpellID::Firebolt);
-	MyPlayer->InvList[2]._iMiscId = IMISC_STAFF;
+	set_up_scroll(MyPlayer->inventorySlot[2], SpellID::Firebolt);
+	MyPlayer->inventorySlot[2]._iMiscId = IMISC_STAFF;
 	EXPECT_FALSE(CanUseScroll(*MyPlayer, SpellID::Firebolt));
 
-	set_up_scroll(MyPlayer->InvList[2], SpellID::Firebolt);
-	MyPlayer->InvList[2].clear();
+	set_up_scroll(MyPlayer->inventorySlot[2], SpellID::Firebolt);
+	MyPlayer->inventorySlot[2].clear();
 	EXPECT_FALSE(CanUseScroll(*MyPlayer, SpellID::Firebolt));
 }
 
@@ -123,15 +123,15 @@ TEST_F(InvTest, CalculateGold)
 {
 	MyPlayer->_pNumInv = 10;
 	// Set up 4 slots of gold in the inventory
-	MyPlayer->InvList[1]._itype = ItemType::Gold;
-	MyPlayer->InvList[5]._itype = ItemType::Gold;
-	MyPlayer->InvList[2]._itype = ItemType::Gold;
-	MyPlayer->InvList[3]._itype = ItemType::Gold;
+	MyPlayer->inventorySlot[1]._itype = ItemType::Gold;
+	MyPlayer->inventorySlot[5]._itype = ItemType::Gold;
+	MyPlayer->inventorySlot[2]._itype = ItemType::Gold;
+	MyPlayer->inventorySlot[3]._itype = ItemType::Gold;
 	// Set the gold amount to arbitrary values
-	MyPlayer->InvList[1]._ivalue = 100;
-	MyPlayer->InvList[5]._ivalue = 200;
-	MyPlayer->InvList[2]._ivalue = 3;
-	MyPlayer->InvList[3]._ivalue = 30;
+	MyPlayer->inventorySlot[1]._ivalue = 100;
+	MyPlayer->inventorySlot[5]._ivalue = 200;
+	MyPlayer->inventorySlot[2]._ivalue = 3;
+	MyPlayer->inventorySlot[3]._ivalue = 30;
 
 	EXPECT_EQ(CalculateGold(*MyPlayer), 333);
 }
@@ -146,8 +146,8 @@ TEST_F(InvTest, GoldAutoPlace)
 
 	// Put gold into the inventory:
 	// | 1000 | ... | ...
-	MyPlayer->InvList[0]._itype = ItemType::Gold;
-	MyPlayer->InvList[0]._ivalue = 1000;
+	MyPlayer->inventorySlot[0]._itype = ItemType::Gold;
+	MyPlayer->inventorySlot[0]._ivalue = 1000;
 	MyPlayer->_pNumInv = 1;
 	// Put (max gold - 100) gold, which is 4900, into the player's hand
 	MyPlayer->HoldItem._itype = ItemType::Gold;
@@ -156,8 +156,8 @@ TEST_F(InvTest, GoldAutoPlace)
 	GoldAutoPlace(*MyPlayer, MyPlayer->HoldItem);
 	// We expect the inventory:
 	// | 5000 | 900 | ...
-	EXPECT_EQ(MyPlayer->InvList[0]._ivalue, GOLD_MAX_LIMIT);
-	EXPECT_EQ(MyPlayer->InvList[1]._ivalue, 900);
+	EXPECT_EQ(MyPlayer->inventorySlot[0]._ivalue, GOLD_MAX_LIMIT);
+	EXPECT_EQ(MyPlayer->inventorySlot[1]._ivalue, 900);
 }
 
 // Test removing an item from inventory with no other items.
@@ -171,7 +171,7 @@ TEST_F(InvTest, RemoveInvItem)
 	MyPlayer->_pNumInv = 1;
 	MyPlayer->InvGrid[0] = 1;
 	MyPlayer->InvGrid[1] = -1;
-	MyPlayer->InvList[0]._itype = ItemType::Misc;
+	MyPlayer->inventorySlot[0]._itype = ItemType::Misc;
 
 	MyPlayer->RemoveInvItem(0);
 	EXPECT_EQ(MyPlayer->InvGrid[0], 0);
@@ -190,16 +190,16 @@ TEST_F(InvTest, RemoveInvItem_other_item)
 	MyPlayer->_pNumInv = 2;
 	MyPlayer->InvGrid[0] = 1;
 	MyPlayer->InvGrid[1] = -1;
-	MyPlayer->InvList[0]._itype = ItemType::Misc;
+	MyPlayer->inventorySlot[0]._itype = ItemType::Misc;
 
 	MyPlayer->InvGrid[2] = 2;
-	MyPlayer->InvList[1]._itype = ItemType::Ring;
+	MyPlayer->inventorySlot[1]._itype = ItemType::Ring;
 
 	MyPlayer->RemoveInvItem(0);
 	EXPECT_EQ(MyPlayer->InvGrid[0], 0);
 	EXPECT_EQ(MyPlayer->InvGrid[1], 0);
 	EXPECT_EQ(MyPlayer->InvGrid[2], 1);
-	EXPECT_EQ(MyPlayer->InvList[0]._itype, ItemType::Ring);
+	EXPECT_EQ(MyPlayer->inventorySlot[0]._itype, ItemType::Ring);
 	EXPECT_EQ(MyPlayer->_pNumInv, 1);
 }
 
@@ -228,9 +228,9 @@ TEST_F(InvTest, RemoveCurrentSpellScrollFromInventory)
 	MyPlayer->_pNumInv = 1;
 	MyPlayer->executedSpell.spellId = SpellID::Firebolt;
 	MyPlayer->executedSpell.spellFrom = INVITEM_INV_FIRST;
-	MyPlayer->InvList[0]._itype = ItemType::Misc;
-	MyPlayer->InvList[0]._iMiscId = IMISC_SCROLL;
-	MyPlayer->InvList[0]._iSpell = SpellID::Firebolt;
+	MyPlayer->inventorySlot[0]._itype = ItemType::Misc;
+	MyPlayer->inventorySlot[0]._iMiscId = IMISC_SCROLL;
+	MyPlayer->inventorySlot[0]._iSpell = SpellID::Firebolt;
 
 	ConsumeScroll(*MyPlayer);
 	EXPECT_EQ(MyPlayer->InvGrid[0], 0);
@@ -246,9 +246,9 @@ TEST_F(InvTest, RemoveCurrentSpellScrollFromInventoryFirstMatch)
 	MyPlayer->_pNumInv = 1;
 	MyPlayer->executedSpell.spellId = SpellID::Firebolt;
 	MyPlayer->executedSpell.spellFrom = 0; // any matching scroll
-	MyPlayer->InvList[0]._itype = ItemType::Misc;
-	MyPlayer->InvList[0]._iMiscId = IMISC_SCROLL;
-	MyPlayer->InvList[0]._iSpell = SpellID::Firebolt;
+	MyPlayer->inventorySlot[0]._itype = ItemType::Misc;
+	MyPlayer->inventorySlot[0]._iMiscId = IMISC_SCROLL;
+	MyPlayer->inventorySlot[0]._iSpell = SpellID::Firebolt;
 
 	ConsumeScroll(*MyPlayer);
 	EXPECT_EQ(MyPlayer->InvGrid[0], 0);

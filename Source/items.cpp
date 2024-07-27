@@ -3053,7 +3053,7 @@ void CreatePlrItems(Player &player)
 	// so this probably actually was a memset
 	memset(&player.InvGrid, 0, sizeof(player.InvGrid));
 
-	for (auto &item : player.InvList) {
+	for (auto &item : player.inventorySlot) {
 		item.clear();
 	}
 
@@ -3091,7 +3091,7 @@ void CreatePlrItems(Player &player)
 	FreeCursor();
 
 	if (loadout.gold > 0) {
-		Item &goldItem = player.InvList[player._pNumInv];
+		Item &goldItem = player.inventorySlot[player._pNumInv];
 		MakeGoldStack(goldItem, loadout.gold);
 
 		player._pNumInv++;
@@ -3767,7 +3767,7 @@ void CheckIdentify(Player &player, int cii)
 	Item *pi;
 
 	if (cii >= NUM_INVLOC)
-		pi = &player.InvList[cii - NUM_INVLOC];
+		pi = &player.inventorySlot[cii - NUM_INVLOC];
 	else
 		pi = &player.InvBody[cii];
 
@@ -3782,7 +3782,7 @@ void DoRepair(Player &player, int cii)
 	PlaySfxLoc(SfxID::SpellRepair, player.position.tile);
 
 	if (cii >= NUM_INVLOC) {
-		pi = &player.InvList[cii - NUM_INVLOC];
+		pi = &player.inventorySlot[cii - NUM_INVLOC];
 	} else {
 		pi = &player.InvBody[cii];
 	}
@@ -3796,7 +3796,7 @@ void DoRecharge(Player &player, int cii)
 	Item *pi;
 
 	if (cii >= NUM_INVLOC) {
-		pi = &player.InvList[cii - NUM_INVLOC];
+		pi = &player.inventorySlot[cii - NUM_INVLOC];
 	} else {
 		pi = &player.InvBody[cii];
 	}
@@ -3809,7 +3809,7 @@ bool DoOil(Player &player, int cii)
 {
 	Item *pi;
 	if (cii >= NUM_INVLOC) {
-		pi = &player.InvList[cii - NUM_INVLOC];
+		pi = &player.inventorySlot[cii - NUM_INVLOC];
 	} else {
 		pi = &player.InvBody[cii];
 	}
@@ -4977,7 +4977,7 @@ void RechargeItem(Item &item, Player &player)
 		return;
 	}
 	for (int i = 0; i < player._pNumInv; i++) {
-		if (&item == &player.InvList[i]) {
+		if (&item == &player.inventorySlot[i]) {
 			NetSyncInvItem(player, i);
 			break;
 		}

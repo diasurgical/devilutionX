@@ -519,7 +519,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	for (Item &item : player.InvBody)
 		LoadAndValidateItemData(file, item);
 
-	for (Item &item : player.InvList)
+	for (Item &item : player.inventorySlot)
 		LoadAndValidateItemData(file, item);
 
 	player._pNumInv = file.NextLE<int32_t>();
@@ -1343,7 +1343,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	for (const Item &item : player.InvBody)
 		SaveItem(file, item);
 
-	for (const Item &item : player.InvList)
+	for (const Item &item : player.inventorySlot)
 		SaveItem(file, item);
 
 	file.WriteLE<int32_t>(player._pNumInv);
@@ -2290,7 +2290,7 @@ void LoadHeroItems(Player &player)
 	gbIsHellfireSaveGame = file.NextBool8();
 
 	LoadMatchingItems(file, player, NUM_INVLOC, player.InvBody);
-	LoadMatchingItems(file, player, InventoryGridCells, player.InvList);
+	LoadMatchingItems(file, player, InventoryGridCells, player.inventorySlot);
 	LoadMatchingItems(file, player, MaxBeltItems, player.SpdList);
 
 	gbIsHellfireSaveGame = gbIsHellfire;
@@ -2341,7 +2341,7 @@ void RemoveEmptyInventory(Player &player)
 {
 	for (int i = InventoryGridCells; i > 0; i--) {
 		int8_t idx = player.InvGrid[i - 1];
-		if (idx > 0 && player.InvList[idx - 1].isEmpty()) {
+		if (idx > 0 && player.inventorySlot[idx - 1].isEmpty()) {
 			player.RemoveInvItem(idx - 1);
 		}
 	}
@@ -2569,7 +2569,7 @@ void SaveHeroItems(SaveWriter &saveWriter, Player &player)
 
 	for (const Item &item : player.InvBody)
 		SaveItem(file, item);
-	for (const Item &item : player.InvList)
+	for (const Item &item : player.inventorySlot)
 		SaveItem(file, item);
 	for (const Item &item : player.SpdList)
 		SaveItem(file, item);

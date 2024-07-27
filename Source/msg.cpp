@@ -3130,7 +3130,7 @@ void NetSendCmdChInvItem(bool bHiPri, int invGridIndex)
 	TCmdChItem cmd {};
 
 	int8_t invListIndex = std::abs(MyPlayer->InvGrid[invGridIndex]) - 1;
-	const Item &item = MyPlayer->InvList[invListIndex];
+	const Item &item = MyPlayer->inventorySlot[invListIndex];
 
 	cmd.bCmd = CMD_CHANGEINVITEMS;
 	cmd.bLoc = invGridIndex;

@@ -634,9 +634,9 @@ void ControlUpDown(int v)
 void RemoveGold(Player &player, int goldIndex, int amount)
 {
 	const int gi = goldIndex - INVITEM_INV_FIRST;
-	player.InvList[gi]._ivalue -= amount;
-	if (player.InvList[gi]._ivalue > 0) {
-		SetPlrHandGoldCurs(player.InvList[gi]);
+	player.inventorySlot[gi]._ivalue -= amount;
+	if (player.inventorySlot[gi]._ivalue > 0) {
+		SetPlrHandGoldCurs(player.inventorySlot[gi]);
 		NetSyncInvItem(player, gi);
 	} else {
 		player.RemoveInvItem(gi);
