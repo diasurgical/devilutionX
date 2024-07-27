@@ -69,7 +69,7 @@ R 32 _pBaseStr
 R 32 _pMagic
 R 32 _pBaseMag
 R 32 _pDexterity
-R 32 _pBaseDex
+R 32 baseDexterity
 R 32 _pVitality
 R 32 _pBaseVit
 R 32 _pStatPts

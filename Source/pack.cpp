@@ -263,7 +263,7 @@ void PackPlayer(PlayerPack &packed, const Player &player)
 	packed.pClass = static_cast<uint8_t>(player._pClass);
 	packed.pBaseStr = player._pBaseStr;
 	packed.pBaseMag = player._pBaseMag;
-	packed.pBaseDex = player._pBaseDex;
+	packed.pBaseDex = player.baseDexterity;
 	packed.pBaseVit = player._pBaseVit;
 	packed.pLevel = player.getCharacterLevel();
 	packed.pStatPts = player._pStatPts;
@@ -323,7 +323,7 @@ void PackNetPlayer(PlayerNetPack &packed, const Player &player)
 	packed.pClass = static_cast<uint8_t>(player._pClass);
 	packed.pBaseStr = player._pBaseStr;
 	packed.pBaseMag = player._pBaseMag;
-	packed.pBaseDex = player._pBaseDex;
+	packed.pBaseDex = player.baseDexterity;
 	packed.pBaseVit = player._pBaseVit;
 	packed.pLevel = player.getCharacterLevel();
 	packed.pStatPts = player._pStatPts;
@@ -469,8 +469,8 @@ void UnPackPlayer(const PlayerPack &packed, Player &player)
 	player._pStrength = player._pBaseStr;
 	player._pBaseMag = std::min<uint8_t>(packed.pBaseMag, player.GetMaximumAttributeValue(CharacterAttribute::Magic));
 	player._pMagic = player._pBaseMag;
-	player._pBaseDex = std::min<uint8_t>(packed.pBaseDex, player.GetMaximumAttributeValue(CharacterAttribute::Dexterity));
-	player._pDexterity = player._pBaseDex;
+	player.baseDexterity = std::min<uint8_t>(packed.pBaseDex, player.GetMaximumAttributeValue(CharacterAttribute::Dexterity));
+	player._pDexterity = player.baseDexterity;
 	player._pBaseVit = std::min<uint8_t>(packed.pBaseVit, player.GetMaximumAttributeValue(CharacterAttribute::Vitality));
 	player._pVitality = player._pBaseVit;
 	player._pStatPts = packed.pStatPts;
@@ -604,8 +604,8 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 	player._pStrength = player._pBaseStr;
 	player._pBaseMag = packed.pBaseMag;
 	player._pMagic = player._pBaseMag;
-	player._pBaseDex = packed.pBaseDex;
-	player._pDexterity = player._pBaseDex;
+	player.baseDexterity = packed.pBaseDex;
+	player._pDexterity = player.baseDexterity;
 	player._pBaseVit = packed.pBaseVit;
 	player._pVitality = player._pBaseVit;
 	player._pStatPts = packed.pStatPts;

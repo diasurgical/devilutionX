@@ -1451,8 +1451,8 @@ void ValidatePlayer()
 	if (myPlayer._pBaseMag > myPlayer.GetMaximumAttributeValue(CharacterAttribute::Magic)) {
 		myPlayer._pBaseMag = myPlayer.GetMaximumAttributeValue(CharacterAttribute::Magic);
 	}
-	if (myPlayer._pBaseDex > myPlayer.GetMaximumAttributeValue(CharacterAttribute::Dexterity)) {
-		myPlayer._pBaseDex = myPlayer.GetMaximumAttributeValue(CharacterAttribute::Dexterity);
+	if (myPlayer.baseDexterity > myPlayer.GetMaximumAttributeValue(CharacterAttribute::Dexterity)) {
+		myPlayer.baseDexterity = myPlayer.GetMaximumAttributeValue(CharacterAttribute::Dexterity);
 	}
 	if (myPlayer._pBaseVit > myPlayer.GetMaximumAttributeValue(CharacterAttribute::Vitality)) {
 		myPlayer._pBaseVit = myPlayer.GetMaximumAttributeValue(CharacterAttribute::Vitality);
@@ -1631,7 +1631,7 @@ int Player::GetBaseAttributeValue(CharacterAttribute attribute) const
 {
 	switch (attribute) {
 	case CharacterAttribute::Dexterity:
-		return this->_pBaseDex;
+		return this->baseDexterity;
 	case CharacterAttribute::Magic:
 		return this->_pBaseMag;
 	case CharacterAttribute::Strength:
@@ -2280,8 +2280,8 @@ void CreatePlayer(Player &player, HeroClass c)
 	player._pBaseMag = attr.baseMag;
 	player._pMagic = player._pBaseMag;
 
-	player._pBaseDex = attr.baseDex;
-	player._pDexterity = player._pBaseDex;
+	player.baseDexterity = attr.baseDex;
+	player._pDexterity = player.baseDexterity;
 
 	player._pBaseVit = attr.baseVit;
 	player._pVitality = player._pBaseVit;
@@ -3268,7 +3268,7 @@ void CheckStats(Player &player)
 			player._pBaseMag = std::clamp(player._pBaseMag, 0, maxStatPoint);
 			break;
 		case CharacterAttribute::Dexterity:
-			player._pBaseDex = std::clamp(player._pBaseDex, 0, maxStatPoint);
+			player.baseDexterity = std::clamp(player.baseDexterity, 0, maxStatPoint);
 			break;
 		case CharacterAttribute::Vitality:
 			player._pBaseVit = std::clamp(player._pBaseVit, 0, maxStatPoint);
@@ -3317,14 +3317,14 @@ void ModifyPlrMag(Player &player, int l)
 
 void ModifyPlrDex(Player &player, int l)
 {
-	l = std::clamp(l, 0 - player._pBaseDex, player.GetMaximumAttributeValue(CharacterAttribute::Dexterity) - player._pBaseDex);
+	l = std::clamp(l, 0 - player.baseDexterity, player.GetMaximumAttributeValue(CharacterAttribute::Dexterity) - player.baseDexterity);
 
 	player._pDexterity += l;
-	player._pBaseDex += l;
+	player.baseDexterity += l;
 	CalcPlrInv(player, true);
 
 	if (&player == MyPlayer) {
-		NetSendCmdParam1(false, CMD_SETDEX, player._pBaseDex);
+		NetSendCmdParam1(false, CMD_SETDEX, player.baseDexterity);
 	}
 }
 
@@ -3380,7 +3380,7 @@ void SetPlrMag(Player &player, int v)
 
 void SetPlrDex(Player &player, int v)
 {
-	player._pBaseDex = v;
+	player.baseDexterity = v;
 	CalcPlrInv(player, true);
 }
 

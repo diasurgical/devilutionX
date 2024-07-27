@@ -1039,7 +1039,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_baseMag)
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_baseDex)
 {
-	MyPlayer->_pBaseDex = MyPlayer->GetMaximumAttributeValue(CharacterAttribute::Dexterity) + 1;
+	MyPlayer->baseDexterity = MyPlayer->GetMaximumAttributeValue(CharacterAttribute::Dexterity) + 1;
 	ASSERT_FALSE(TestNetPackValidation());
 }
 

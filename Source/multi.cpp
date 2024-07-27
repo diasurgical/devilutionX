@@ -154,7 +154,7 @@ void NetReceivePlayerData(TPkt *pkt)
 	pkt->hdr.maxmana = SDL_SwapLE32(myPlayer._pMaxMana);
 	pkt->hdr.bstr = myPlayer._pBaseStr;
 	pkt->hdr.bmag = myPlayer._pBaseMag;
-	pkt->hdr.bdex = myPlayer._pBaseDex;
+	pkt->hdr.bdex = myPlayer.baseDexterity;
 }
 
 bool IsNetPlayerValid(const Player &player)
@@ -650,7 +650,7 @@ void multi_process_network_packets()
 			bool cond = gbBufferMsgs == 1;
 			player._pBaseStr = pkt->bstr;
 			player._pBaseMag = pkt->bmag;
-			player._pBaseDex = pkt->bdex;
+			player.baseDexterity = pkt->bdex;
 			if (!cond && player.plractive && player._pHitPoints != 0) {
 				if (player.isOnActiveLevel() && !player._pLvlChanging) {
 					if (player.position.tile.WalkingDistance(syncPosition) > 3 && PosOkPlayer(player, syncPosition)) {

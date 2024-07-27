@@ -509,7 +509,7 @@ void CalcSelfItems(Player &player)
 		// cap stats to 0
 		const int currstr = std::max(0, sa + player._pBaseStr);
 		const int currmag = std::max(0, ma + player._pBaseMag);
-		const int currdex = std::max(0, da + player._pBaseDex);
+		const int currdex = std::max(0, da + player.baseDexterity);
 
 		changeflag = false;
 		for (Item &equipment : EquippedPlayerItemsRange(player)) {
@@ -2112,7 +2112,7 @@ bool HealerItemOk(const Player &player, const ItemData &item)
 		if (item.iMiscId == IMISC_ELIXMAG)
 			return !gbIsHellfire || player._pBaseMag < player.GetMaximumAttributeValue(CharacterAttribute::Magic);
 		if (item.iMiscId == IMISC_ELIXDEX)
-			return !gbIsHellfire || player._pBaseDex < player.GetMaximumAttributeValue(CharacterAttribute::Dexterity);
+			return !gbIsHellfire || player.baseDexterity < player.GetMaximumAttributeValue(CharacterAttribute::Dexterity);
 		if (item.iMiscId == IMISC_ELIXVIT)
 			return !gbIsHellfire || player._pBaseVit < player.GetMaximumAttributeValue(CharacterAttribute::Vitality);
 	}
@@ -2596,7 +2596,7 @@ void CalcPlrPrimaryStats(Player &player, int strength, int &magic, int dexterity
 
 	player._pStrength = std::max(0, strength + player._pBaseStr);
 	player._pMagic = std::max(0, magic + player._pBaseMag);
-	player._pDexterity = std::max(0, dexterity + player._pBaseDex);
+	player._pDexterity = std::max(0, dexterity + player.baseDexterity);
 	player._pVitality = std::max(0, vitality + player._pBaseVit);
 }
 

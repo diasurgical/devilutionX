@@ -231,7 +231,7 @@ struct Player {
 	int _pMagic;
 	int _pBaseMag;
 	int _pDexterity;
-	int _pBaseDex;
+	int baseDexterity; // pBaseDex
 	int _pVitality;
 	int _pBaseVit;
 	int _pStatPts;
