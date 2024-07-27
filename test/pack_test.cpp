@@ -1119,7 +1119,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_baseToBlk)
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_iMinDam)
 {
-	MyPlayer->_pIMinDam++;
+	MyPlayer->minDamage++;
 	ASSERT_FALSE(TestNetPackValidation());
 
 	CalcPlrItemVals(*MyPlayer, false);

@@ -367,7 +367,7 @@ void PackNetPlayer(PlayerNetPack &packed, const Player &player)
 	packed.pDamageMod = SDL_SwapLE32(player._pDamageMod);
 	// we pack base to block as a basic check that remote players are using the same playerdat values as we are
 	packed.pBaseToBlk = SDL_SwapLE32(player.getBaseToBlock());
-	packed.pIMinDam = SDL_SwapLE32(player._pIMinDam);
+	packed.pIMinDam = SDL_SwapLE32(player.minDamage);
 	packed.pIMaxDam = SDL_SwapLE32(player._pIMaxDam);
 	packed.pIAC = SDL_SwapLE32(player._pIAC);
 	packed.pIBonusDam = SDL_SwapLE32(player._pIBonusDam);
@@ -685,7 +685,7 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 	ValidateFields(player._pMaxMana, SDL_SwapLE32(packed.pMaxMana), player._pMaxMana == SDL_SwapLE32(packed.pMaxMana));
 	ValidateFields(player._pDamageMod, SDL_SwapLE32(packed.pDamageMod), player._pDamageMod == SDL_SwapLE32(packed.pDamageMod));
 	ValidateFields(player.getBaseToBlock(), SDL_SwapLE32(packed.pBaseToBlk), player.getBaseToBlock() == SDL_SwapLE32(packed.pBaseToBlk));
-	ValidateFields(player._pIMinDam, SDL_SwapLE32(packed.pIMinDam), player._pIMinDam == SDL_SwapLE32(packed.pIMinDam));
+	ValidateFields(player.minDamage, SDL_SwapLE32(packed.pIMinDam), player.minDamage == SDL_SwapLE32(packed.pIMinDam));
 	ValidateFields(player._pIMaxDam, SDL_SwapLE32(packed.pIMaxDam), player._pIMaxDam == SDL_SwapLE32(packed.pIMaxDam));
 	ValidateFields(player._pIAC, SDL_SwapLE32(packed.pIAC), player._pIAC == SDL_SwapLE32(packed.pIAC));
 	ValidateFields(player._pIBonusDam, SDL_SwapLE32(packed.pIBonusDam), player._pIBonusDam == SDL_SwapLE32(packed.pIBonusDam));

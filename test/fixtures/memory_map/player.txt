@@ -142,7 +142,7 @@ R 32 _pNumInv
 M 40 8 InvGrid
 C 8 item
 C 1 item
-R 32 _pIMinDam
+R 32 minDamage
 R 32 _pIMaxDam
 R 32 _pIAC
 R 32 _pIBonusDam

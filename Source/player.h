@@ -246,7 +246,7 @@ struct Player {
 	int _pMana;
 	int _pMaxMana;
 	int _pManaPer;
-	int _pIMinDam;
+	int minDamage; // _pIMinDam
 	int _pIMaxDam;
 	int _pIAC;
 	int _pIBonusDam;

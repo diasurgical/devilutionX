@@ -564,7 +564,7 @@ bool PlrHitMonst(Player &player, Monster &monster, bool adjacentDamage = false)
 		int midam = RandomIntBetween(player._pIFMinDam, player._pIFMaxDam);
 		AddMissile(player.position.tile, player.position.temp, player._pdir, MissileID::SpectralArrow, TARGET_MONSTERS, player, midam, 0);
 	}
-	int mind = player._pIMinDam;
+	int mind = player.minDamage;
 	int maxd = player._pIMaxDam;
 	int dam = GenerateRnd(maxd - mind + 1) + mind;
 	dam += dam * player._pIBonusDam / 100;
@@ -732,7 +732,7 @@ bool PlrHitPlr(Player &attacker, Player &target)
 		return true;
 	}
 
-	int mind = attacker._pIMinDam;
+	int mind = attacker.minDamage;
 	int maxd = attacker._pIMaxDam;
 	int dam = GenerateRnd(maxd - mind + 1) + mind;
 	dam += (dam * attacker._pIBonusDam) / 100;

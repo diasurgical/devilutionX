@@ -2575,7 +2575,7 @@ void CalcPlrDamage(Player &player, int minDamage, int maxDamage)
 		}
 	}
 
-	player._pIMinDam = minDamage;
+	player.minDamage = minDamage;
 	player._pIMaxDam = maxDamage;
 }
 
