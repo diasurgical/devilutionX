@@ -341,7 +341,7 @@ bool Plr2PlrMHit(const Player &player, Player &target, int mindam, int maxdam, i
 	}
 
 	int blkper = 100;
-	if (!shift && (target._pmode == PM_STAND || target._pmode == PM_ATTACK) && target._pBlockFlag) {
+	if (!shift && (target._pmode == PM_STAND || target._pmode == PM_ATTACK) && target.hasBlockFlag) {
 		blkper = GenerateRnd(100);
 	}
 
@@ -1022,7 +1022,7 @@ bool PlayerMHit(Player &player, Monster *monster, int dist, int mind, int maxd, 
 	hper = std::max(hper, minhit);
 
 	int blk = 100;
-	if ((player._pmode == PM_STAND || player._pmode == PM_ATTACK) && player._pBlockFlag) {
+	if ((player._pmode == PM_STAND || player._pmode == PM_ATTACK) && player.hasBlockFlag) {
 		blk = GenerateRnd(100);
 	}
 

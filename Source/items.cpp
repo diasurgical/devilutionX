@@ -2717,18 +2717,18 @@ void CalcPlrBlockFlag(Player &player)
 	const auto &leftHandItem = player.InvBody[INVLOC_HAND_LEFT];
 	const auto &rightHandItem = player.InvBody[INVLOC_HAND_RIGHT];
 
-	player._pBlockFlag = false;
+	player.hasBlockFlag = false;
 
 	if (player._pClass == HeroClass::Monk) {
 		if (player.isHoldingItem(ItemType::Staff)) {
-			player._pBlockFlag = true;
+			player.hasBlockFlag = true;
 			player._pIFlags |= ItemSpecialEffect::FastBlock;
 		} else if ((leftHandItem.isEmpty() && rightHandItem.isEmpty()) || (leftHandItem._iClass == ICLASS_WEAPON && leftHandItem._iLoc != ILOC_TWOHAND && rightHandItem.isEmpty()) || (rightHandItem._iClass == ICLASS_WEAPON && rightHandItem._iLoc != ILOC_TWOHAND && leftHandItem.isEmpty())) {
-			player._pBlockFlag = true;
+			player.hasBlockFlag = true;
 		}
 	}
 
-	player._pBlockFlag = player._pBlockFlag || player.isHoldingItem(ItemType::Shield);
+	player.hasBlockFlag = player.hasBlockFlag || player.isHoldingItem(ItemType::Shield);
 }
 
 PlayerWeaponGraphic GetPlrAnimWeaponId(const Player &player)

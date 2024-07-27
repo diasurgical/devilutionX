@@ -57,7 +57,7 @@ R 24 alignment
 M 4 32 _pSplHotKey
 M 4 8 _pSplTHotKey
 R 32 _pwtype
-R 8 _pBlockFlag
+R 8 hasBlockFlag
 R 8 _pInvincible
 R 8 _pLightRad
 R 8 _pLvlChanging

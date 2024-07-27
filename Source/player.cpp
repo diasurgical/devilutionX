@@ -715,7 +715,7 @@ bool PlrHitPlr(Player &attacker, Player &target)
 	hper = std::clamp(hper, 5, 95);
 
 	int blk = 100;
-	if ((target._pmode == PM_STAND || target._pmode == PM_ATTACK) && target._pBlockFlag) {
+	if ((target._pmode == PM_STAND || target._pmode == PM_ATTACK) && target.hasBlockFlag) {
 		blk = GenerateRnd(100);
 	}
 
@@ -2123,7 +2123,7 @@ void LoadPlrGFX(Player &player, player_graphic graphic)
 	case player_graphic::Block:
 		if (leveltype == DTYPE_TOWN)
 			return;
-		if (!player._pBlockFlag)
+		if (!player.hasBlockFlag)
 			return;
 		szCel = "bl";
 		break;
@@ -2672,7 +2672,7 @@ StartPlayerKill(Player &player, DeathReason deathReason)
 
 	NewPlrAnim(player, player_graphic::Death, player._pdir);
 
-	player._pBlockFlag = false;
+	player.hasBlockFlag = false;
 	player._pmode = PM_DEATH;
 	player._pInvincible = true;
 	SetPlayerHitPoints(player, 0);

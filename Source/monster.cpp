@@ -1129,7 +1129,7 @@ void MonsterAttackPlayer(Monster &monster, Player &player, int hit, int minDam, 
 	int minhit = GetMinHit();
 	hit = std::max(hit, minhit);
 	int blkper = 100;
-	if ((player._pmode == PM_STAND || player._pmode == PM_ATTACK) && player._pBlockFlag) {
+	if ((player._pmode == PM_STAND || player._pmode == PM_ATTACK) && player.hasBlockFlag) {
 		blkper = GenerateRnd(100);
 	}
 	int blk = player.GetBlockChance() - (monster.level(sgGameInitInfo.nDifficulty) * 2);

@@ -337,7 +337,7 @@ public:
 	SpellFlag _pSpellFlags;
 	SpellID _pSplHotKey[NumHotkeys];
 	SpellType _pSplTHotKey[NumHotkeys];
-	bool _pBlockFlag;
+	bool hasBlockFlag; // _pBlockFlag
 	bool _pInvincible;
 	int8_t _pLightRad;
 	/** @brief True when the player is transitioning between levels */
