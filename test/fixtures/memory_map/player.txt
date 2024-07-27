@@ -147,7 +147,7 @@ R 32 _pIMaxDam
 R 32 _pIAC
 R 32 _pIBonusDam
 R 32 _pIBonusToHit
-R 32 _pIBonusAC
+R 32 bonusArmorClass
 R 32 _pIBonusDamMod
 R 32 alignment
 R 64 _pISpells

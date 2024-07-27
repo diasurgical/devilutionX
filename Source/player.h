@@ -251,7 +251,7 @@ struct Player {
 	int _pIAC;
 	int _pIBonusDam;
 	int _pIBonusToHit;
-	int _pIBonusAC;
+	int bonusArmorClass; // _pIBonusAC
 	int _pIBonusDamMod;
 	int _pIGetHit;
 	int _pIEnAc;
@@ -567,7 +567,7 @@ public:
 	 */
 	int GetArmor() const
 	{
-		return _pIBonusAC + _pIAC + _pDexterity / 5;
+		return bonusArmorClass + _pIAC + _pDexterity / 5;
 	}
 
 	/**

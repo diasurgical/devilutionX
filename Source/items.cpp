@@ -2918,7 +2918,7 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	player._pIAC = ac;
 	player._pIBonusDam = dam;
 	player._pIBonusToHit = toHit;
-	player._pIBonusAC = bonusAc;
+	player.bonusArmorClass = bonusAc;
 	player._pIFlags = flags;
 	player.pDamAcFlags = damAcFlags;
 	player._pIBonusDamMod = damMod;

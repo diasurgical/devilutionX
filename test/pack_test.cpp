@@ -1184,7 +1184,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_iBonusToHit)
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_iBonusAC)
 {
-	MyPlayer->_pIBonusAC++;
+	MyPlayer->bonusArmorClass++;
 	ASSERT_FALSE(TestNetPackValidation());
 
 	CalcPlrItemVals(*MyPlayer, false);

@@ -537,7 +537,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	player._pIAC = file.NextLE<int32_t>();
 	player._pIBonusDam = file.NextLE<int32_t>();
 	player._pIBonusToHit = file.NextLE<int32_t>();
-	player._pIBonusAC = file.NextLE<int32_t>();
+	player.bonusArmorClass = file.NextLE<int32_t>();
 	player._pIBonusDamMod = file.NextLE<int32_t>();
 	file.Skip(4); // Alignment
 
@@ -1361,7 +1361,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.WriteLE<int32_t>(player._pIAC);
 	file.WriteLE<int32_t>(player._pIBonusDam);
 	file.WriteLE<int32_t>(player._pIBonusToHit);
-	file.WriteLE<int32_t>(player._pIBonusAC);
+	file.WriteLE<int32_t>(player.bonusArmorClass);
 	file.WriteLE<int32_t>(player._pIBonusDamMod);
 	file.Skip(4); // Alignment
 
