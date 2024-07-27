@@ -2917,7 +2917,7 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	CalcPlrPrimaryStats(player, strength, magic, dexterity, vitality);
 	player._pIAC = ac;
 	player._pIBonusDam = dam;
-	player._pIBonusToHit = toHit;
+	player.bonusToHit = toHit;
 	player._pIBonusAC = bonusAc;
 	player._pIFlags = flags;
 	player.pDamAcFlags = damAcFlags;

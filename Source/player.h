@@ -250,7 +250,7 @@ struct Player {
 	int _pIMaxDam;
 	int _pIAC;
 	int _pIBonusDam;
-	int _pIBonusToHit;
+	int bonusToHit; // _pIBonusToHit
 	int _pIBonusAC;
 	int _pIBonusDamMod;
 	int _pIGetHit;
@@ -575,7 +575,7 @@ public:
 	 */
 	int GetMeleeToHit() const
 	{
-		return getCharacterLevel() + _pDexterity / 2 + _pIBonusToHit + getPlayerCombatData().baseMeleeToHit;
+		return getCharacterLevel() + _pDexterity / 2 + bonusToHit + getPlayerCombatData().baseMeleeToHit;
 	}
 
 	/**
@@ -595,7 +595,7 @@ public:
 	 */
 	int GetRangedToHit() const
 	{
-		return getCharacterLevel() + _pDexterity + _pIBonusToHit + getPlayerCombatData().baseRangedToHit;
+		return getCharacterLevel() + _pDexterity + bonusToHit + getPlayerCombatData().baseRangedToHit;
 	}
 
 	int GetRangedPiercingToHit() const

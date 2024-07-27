@@ -1171,7 +1171,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_iBonusDam)
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_iBonusToHit)
 {
-	MyPlayer->_pIBonusToHit++;
+	MyPlayer->bonusToHit++;
 	ASSERT_FALSE(TestNetPackValidation());
 
 	CalcPlrItemVals(*MyPlayer, false);
