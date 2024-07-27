@@ -132,9 +132,9 @@ int GetDistance(Point destination, int maxDistance)
 		return 0;
 	}
 
-	int8_t walkpath[MaxPathLength];
+	int8_t walkPath[MaxPathLength];
 	Player &myPlayer = *MyPlayer;
-	int steps = FindPath([&myPlayer](Point position) { return PosOkPlayer(myPlayer, position); }, myPlayer.position.future, destination, walkpath);
+	int steps = FindPath([&myPlayer](Point position) { return PosOkPlayer(myPlayer, position); }, myPlayer.position.future, destination, walkPath);
 	if (steps > maxDistance)
 		return 0;
 
@@ -1279,7 +1279,7 @@ bool IsPathBlocked(Point position, Direction dir)
 void WalkInDir(Player &player, AxisDirection dir)
 {
 	if (dir.x == AxisDirectionX_NONE && dir.y == AxisDirectionY_NONE) {
-		if (ControlMode != ControlTypes::KeyboardAndMouse && player.walkpath[0] != WALK_NONE && player.destAction == ACTION_NONE)
+		if (ControlMode != ControlTypes::KeyboardAndMouse && player.walkPath[0] != WALK_NONE && player.destAction == ACTION_NONE)
 			NetSendCmdLoc(player.getId(), true, CMD_WALKXY, player.position.future); // Stop walking
 		return;
 	}

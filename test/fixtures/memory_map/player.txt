@@ -1,5 +1,5 @@
 R 32 _pmode
-M 25 8 walkpath
+M 25 8 walkPath
 R 8 plractive
 R 16 alignment
 R 32 destAction

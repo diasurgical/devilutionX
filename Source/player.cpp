@@ -1138,7 +1138,7 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 	}
 
 	Direction d;
-	if (player.walkpath[0] != WALK_NONE) {
+	if (player.walkPath[0] != WALK_NONE) {
 		if (player._pmode == PM_STAND) {
 			if (&player == MyPlayer) {
 				if (player.destAction == ACTION_ATTACKMON || player.destAction == ACTION_ATTACKPLR) {
@@ -1164,7 +1164,7 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 				}
 			}
 
-			switch (player.walkpath[0]) {
+			switch (player.walkPath[0]) {
 			case WALK_N:
 				StartWalk(player, Direction::North, pmWillBeCalled);
 				break;
@@ -1192,10 +1192,10 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 			}
 
 			for (size_t j = 1; j < MaxPathLength; j++) {
-				player.walkpath[j - 1] = player.walkpath[j];
+				player.walkPath[j - 1] = player.walkPath[j];
 			}
 
-			player.walkpath[MaxPathLength - 1] = WALK_NONE;
+			player.walkPath[MaxPathLength - 1] = WALK_NONE;
 
 			if (player._pmode == PM_STAND) {
 				StartStand(player, player._pdir);
@@ -1682,7 +1682,7 @@ Point Player::GetTargetPosition() const
 	constexpr int DirectionOffsetY[8] = { -1, 0, 0, 1,-1,-1, 1, 1 };
 	// clang-format on
 	Point target = position.future;
-	for (auto step : walkpath) {
+	for (auto step : walkPath) {
 		if (step == WALK_NONE)
 			break;
 		if (step > 0) {
@@ -1697,7 +1697,7 @@ bool Player::IsPositionInPath(Point pos)
 {
 	constexpr Displacement DirectionOffset[8] = { { 0, -1 }, { -1, 0 }, { 1, 0 }, { 0, 1 }, { -1, -1 }, { 1, -1 }, { 1, 1 }, { -1, 1 } };
 	Point target = position.future;
-	for (auto step : walkpath) {
+	for (auto step : walkPath) {
 		if (target == pos) {
 			return true;
 		}
@@ -2480,7 +2480,7 @@ void InitPlayer(Player &player, bool firstTime)
 		}
 
 		SetPlayerOld(player);
-		player.walkpath[0] = WALK_NONE;
+		player.walkPath[0] = WALK_NONE;
 		player.destAction = ACTION_NONE;
 
 		if (&player == MyPlayer) {
@@ -3048,7 +3048,7 @@ void ProcessPlayers()
 
 void ClrPlrPath(Player &player)
 {
-	memset(player.walkpath, WALK_NONE, sizeof(player.walkpath));
+	memset(player.walkPath, WALK_NONE, sizeof(player.walkPath));
 }
 
 /**
@@ -3091,7 +3091,7 @@ void MakePlrPath(Player &player, Point targetPosition, bool endspace)
 		return;
 	}
 
-	int path = FindPath([&player](Point position) { return PosOkPlayer(player, position); }, player.position.future, targetPosition, player.walkpath);
+	int path = FindPath([&player](Point position) { return PosOkPlayer(player, position); }, player.position.future, targetPosition, player.walkPath);
 	if (path == 0) {
 		return;
 	}
@@ -3100,7 +3100,7 @@ void MakePlrPath(Player &player, Point targetPosition, bool endspace)
 		path--;
 	}
 
-	player.walkpath[path] = WALK_NONE;
+	player.walkPath[path] = WALK_NONE;
 }
 
 void CalcPlrStaff(Player &player)

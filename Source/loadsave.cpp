@@ -340,7 +340,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 {
 	player._pmode = static_cast<PLR_MODE>(file.NextLE<int32_t>());
 
-	for (int8_t &step : player.walkpath) {
+	for (int8_t &step : player.walkPath) {
 		step = file.NextLE<int8_t>();
 	}
 	player.plractive = file.NextBool8();
@@ -1162,7 +1162,7 @@ void SaveItem(SaveHelper &file, const Item &item)
 void SavePlayer(SaveHelper &file, const Player &player)
 {
 	file.WriteLE<int32_t>(player._pmode);
-	for (int8_t step : player.walkpath)
+	for (int8_t step : player.walkPath)
 		file.WriteLE<int8_t>(step);
 	file.WriteLE<uint8_t>(player.plractive ? 1 : 0);
 	file.Skip(2); // Alignment
