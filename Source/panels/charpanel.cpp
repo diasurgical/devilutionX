@@ -91,7 +91,7 @@ std::pair<int, int> GetDamage()
 		damageMod += InspectPlayer->_pDamageMod;
 	}
 	int mindam = InspectPlayer->_pIMinDam + InspectPlayer->_pIBonusDam * InspectPlayer->_pIMinDam / 100 + damageMod;
-	int maxdam = InspectPlayer->_pIMaxDam + InspectPlayer->_pIBonusDam * InspectPlayer->_pIMaxDam / 100 + damageMod;
+	int maxdam = InspectPlayer->maxDamage + InspectPlayer->_pIBonusDam * InspectPlayer->maxDamage / 100 + damageMod;
 	return { mindam, maxdam };
 }
 

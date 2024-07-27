@@ -1132,7 +1132,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_iMinDam)
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_iMaxDam)
 {
-	MyPlayer->_pIMaxDam++;
+	MyPlayer->maxDamage++;
 	ASSERT_FALSE(TestNetPackValidation());
 
 	CalcPlrItemVals(*MyPlayer, false);

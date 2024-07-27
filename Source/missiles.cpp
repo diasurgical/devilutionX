@@ -2775,7 +2775,7 @@ void ProcessElementalArrow(Missile &missile)
 				// BUGFIX: damage of missile should be encoded in missile struct; player can be dead/have left the game before missile arrives.
 				const Player &player = Players[p];
 				mind = player._pIMinDam;
-				maxd = player._pIMaxDam;
+				maxd = player.maxDamage;
 			} else {
 				// BUGFIX: damage of missile should be encoded in missile struct; monster can be dead before missile arrives.
 				Monster &monster = Monsters[p];
@@ -2856,7 +2856,7 @@ void ProcessArrow(Missile &missile)
 		// BUGFIX: damage of missile should be encoded in missile struct; player can be dead/have left the game before missile arrives.
 		const Player &player = *missile.sourcePlayer();
 		mind = player._pIMinDam;
-		maxd = player._pIMaxDam;
+		maxd = player.maxDamage;
 	} break;
 	case MissileSource::Monster: {
 		// BUGFIX: damage of missile should be encoded in missile struct; monster can be dead before missile arrives.

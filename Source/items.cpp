@@ -2576,7 +2576,7 @@ void CalcPlrDamage(Player &player, int minDamage, int maxDamage)
 	}
 
 	player._pIMinDam = minDamage;
-	player._pIMaxDam = maxDamage;
+	player.maxDamage = maxDamage;
 }
 
 void CalcPlrPrimaryStats(Player &player, int strength, int &magic, int dexterity, int &vitality)

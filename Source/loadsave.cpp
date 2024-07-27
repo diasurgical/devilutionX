@@ -533,7 +533,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	LoadAndValidateItemData(file, player.HoldItem);
 
 	player._pIMinDam = file.NextLE<int32_t>();
-	player._pIMaxDam = file.NextLE<int32_t>();
+	player.maxDamage = file.NextLE<int32_t>();
 	player._pIAC = file.NextLE<int32_t>();
 	player._pIBonusDam = file.NextLE<int32_t>();
 	player._pIBonusToHit = file.NextLE<int32_t>();
@@ -1357,7 +1357,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	SaveItem(file, player.HoldItem);
 
 	file.WriteLE<int32_t>(player._pIMinDam);
-	file.WriteLE<int32_t>(player._pIMaxDam);
+	file.WriteLE<int32_t>(player.maxDamage);
 	file.WriteLE<int32_t>(player._pIAC);
 	file.WriteLE<int32_t>(player._pIBonusDam);
 	file.WriteLE<int32_t>(player._pIBonusToHit);

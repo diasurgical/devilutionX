@@ -162,7 +162,7 @@ static void AssertPlayer(Player &player)
 	ASSERT_EQ(CountBool(player._pSLvlVisited, NUMLEVELS), 0);
 	// This test case uses a Rogue, starting loadout is a short bow with damage 1-4
 	ASSERT_EQ(player._pIMinDam, 1);
-	ASSERT_EQ(player._pIMaxDam, 4);
+	ASSERT_EQ(player.maxDamage, 4);
 	ASSERT_EQ(player._pIAC, 0);
 	ASSERT_EQ(player._pIBonusDam, 0);
 	ASSERT_EQ(player._pIBonusToHit, 0);
