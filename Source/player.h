@@ -336,7 +336,7 @@ public:
 	uint64_t _pScrlSpells;
 	SpellFlag _pSpellFlags;
 	SpellID _pSplHotKey[NumHotkeys];
-	SpellType _pSplTHotKey[NumHotkeys];
+	SpellType hotkeySpellType[NumHotkeys]; // _pSplTHotKey
 	bool _pBlockFlag;
 	bool _pInvincible;
 	int8_t _pLightRad;

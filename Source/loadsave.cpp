@@ -420,7 +420,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 		player._pSplHotKey[i] = static_cast<SpellID>(file.NextLE<int32_t>());
 	}
 	for (size_t i = 0; i < 4; i++) {
-		player._pSplTHotKey[i] = static_cast<SpellType>(file.NextLE<uint8_t>());
+		player.hotkeySpellType[i] = static_cast<SpellType>(file.NextLE<uint8_t>());
 	}
 
 	file.Skip<int32_t>(); // Skip _pwtype
@@ -1243,7 +1243,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 		file.WriteLE<int32_t>(static_cast<int8_t>(player._pSplHotKey[i]));
 	}
 	for (size_t i = 0; i < 4; i++) {
-		file.WriteLE<uint8_t>(static_cast<uint8_t>(player._pSplTHotKey[i]));
+		file.WriteLE<uint8_t>(static_cast<uint8_t>(player.hotkeySpellType[i]));
 	}
 
 	file.WriteLE<int32_t>(player.UsesRangedWeapon() ? 1 : 0);
@@ -2230,7 +2230,7 @@ void LoadHotkeys()
 
 	// Refill the spell arrays with no selection
 	std::fill(myPlayer._pSplHotKey, myPlayer._pSplHotKey + NumHotkeys, SpellID::Invalid);
-	std::fill(myPlayer._pSplTHotKey, myPlayer._pSplTHotKey + NumHotkeys, SpellType::Invalid);
+	std::fill(myPlayer.hotkeySpellType, myPlayer.hotkeySpellType + NumHotkeys, SpellType::Invalid);
 
 	// Checking if the save file has the old format with only 4 hotkeys and no header
 	if (file.IsValid(HotkeysSize(nHotkeys))) {
@@ -2250,7 +2250,7 @@ void LoadHotkeys()
 	for (size_t i = 0; i < nHotkeys; i++) {
 		// Do not load hotkeys past the size of the spells array, discard the rest
 		if (i < NumHotkeys) {
-			myPlayer._pSplTHotKey[i] = static_cast<SpellType>(file.NextLE<uint8_t>());
+			myPlayer.hotkeySpellType[i] = static_cast<SpellType>(file.NextLE<uint8_t>());
 		} else {
 			file.Skip<uint8_t>();
 		}
@@ -2272,7 +2272,7 @@ void SaveHotkeys(SaveWriter &saveWriter, const Player &player)
 	for (auto &spellId : player._pSplHotKey) {
 		file.WriteLE<int32_t>(static_cast<int8_t>(spellId));
 	}
-	for (auto &spellType : player._pSplTHotKey) {
+	for (auto &spellType : player.hotkeySpellType) {
 		file.WriteLE<uint8_t>(static_cast<uint8_t>(spellType));
 	}
 

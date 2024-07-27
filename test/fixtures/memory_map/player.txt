@@ -55,7 +55,7 @@ R 64 _pScrlSpells
 R 8 _pSpellFlags
 R 24 alignment
 M 4 32 _pSplHotKey
-M 4 8 _pSplTHotKey
+M 4 8 hotkeySpellType
 R 32 _pwtype
 R 8 _pBlockFlag
 R 8 _pInvincible
