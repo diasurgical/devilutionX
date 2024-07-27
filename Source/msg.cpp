@@ -50,7 +50,7 @@
 	do {                                                      \
 		if (!(condition)) {                                   \
 			LogFailedPacket(#condition, #logValue, logValue); \
-			EventFailedPacket(player._pName);                 \
+			EventFailedPacket(player.name);                 \
 			return false;                                     \
 		}                                                     \
 	} while (0)
@@ -59,7 +59,7 @@
 	do {                                                                               \
 		if (!(condition)) {                                                            \
 			LogFailedPacket(#condition, #logValue1, logValue1, #logValue2, logValue2); \
-			EventFailedPacket(player._pName);                                          \
+			EventFailedPacket(player.name);                                          \
 			return false;                                                              \
 		}                                                                              \
 	} while (0)
@@ -1455,11 +1455,11 @@ bool InitNewSpell(Player &player, uint16_t wParamSpellID, uint16_t wParamSpellTy
 		return false;
 	auto spellID = static_cast<SpellID>(wParamSpellID);
 	if (!IsValidSpell(spellID)) {
-		LogError(_("{:s} has cast an invalid spell."), player._pName);
+		LogError(_("{:s} has cast an invalid spell."), player.name);
 		return false;
 	}
 	if (leveltype == DTYPE_TOWN && !GetSpellData(spellID).isAllowedInTown()) {
-		LogError(_("{:s} has cast an illegal spell."), player._pName);
+		LogError(_("{:s} has cast an illegal spell."), player.name);
 		return false;
 	}
 
@@ -2086,11 +2086,11 @@ size_t OnPlayerJoinLevel(const TCmd *pCmd, Player &player)
 	}
 
 	player._pLvlChanging = false;
-	if (player._pName[0] != '\0' && !player.plractive) {
+	if (player.name[0] != '\0' && !player.plractive) {
 		ResetPlayerGFX(player);
 		player.plractive = true;
 		gbActivePlayers++;
-		EventPlrMsg(fmt::format(fmt::runtime(_("Player '{:s}' (level {:d}) just joined the game")), player._pName, player.getCharacterLevel()));
+		EventPlrMsg(fmt::format(fmt::runtime(_("Player '{:s}' (level {:d}) just joined the game")), player.name, player.getCharacterLevel()));
 	}
 
 	if (player.plractive && &player != MyPlayer) {

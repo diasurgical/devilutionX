@@ -121,7 +121,7 @@ constexpr unsigned GoldHeaderEntryIndex = 16;
 
 PanelEntry panelEntries[] = {
 	{ "", { 9, 14 }, 150, 0,
-	    []() { return StyledText { UiFlags::ColorWhite, InspectPlayer->_pName }; } },
+	    []() { return StyledText { UiFlags::ColorWhite, InspectPlayer->name }; } },
 	{ "", { 161, 14 }, 149, 0,
 	    []() { return StyledText { UiFlags::ColorWhite, std::string(InspectPlayer->getClassName()) }; } },
 

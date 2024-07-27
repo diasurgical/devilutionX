@@ -217,7 +217,7 @@ struct Player {
 	Player(Player &&) noexcept = default;
 	Player &operator=(Player &&) noexcept = default;
 
-	char _pName[PlayerNameLength];
+	char name[PlayerNameLength]; // _pName
 	Item InvBody[NUM_INVLOC];
 	Item InvList[InventoryGridCells];
 	Item SpdList[MaxBeltItems];

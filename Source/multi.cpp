@@ -164,7 +164,7 @@ bool IsNetPlayerValid(const Player &player)
 	return static_cast<uint8_t>(player._pClass) < enum_size<HeroClass>::value
 	    && player.plrlevel < NUMLEVELS
 	    && InDungeonBounds(player.position.tile)
-	    && !std::string_view(player._pName).empty();
+	    && !std::string_view(player.name).empty();
 }
 
 void CheckPlayerInfoTimeouts()
@@ -273,10 +273,10 @@ void PlayerLeftMsg(Player &player, bool left)
 			pszFmt = _("Player '{:s}' dropped due to timeout");
 			break;
 		}
-		EventPlrMsg(fmt::format(fmt::runtime(pszFmt), player._pName));
+		EventPlrMsg(fmt::format(fmt::runtime(pszFmt), player.name));
 	}
 	player.plractive = false;
-	player._pName[0] = '\0';
+	player.name[0] = '\0';
 	ResetPlayerGFX(player);
 	gbActivePlayers--;
 }
@@ -799,7 +799,7 @@ bool NetInit(bool bSinglePlayer)
 	Player &myPlayer = *MyPlayer;
 	// separator for marking messages from a different game
 	AddMessageToChatLog(_("New Game"), nullptr, UiFlags::ColorRed);
-	AddMessageToChatLog(fmt::format(fmt::runtime(_("Player '{:s}' (level {:d}) just joined the game")), myPlayer._pName, myPlayer.getCharacterLevel()));
+	AddMessageToChatLog(fmt::format(fmt::runtime(_("Player '{:s}' (level {:d}) just joined the game")), myPlayer.name, myPlayer.getCharacterLevel()));
 
 	return true;
 }
@@ -853,7 +853,7 @@ void recv_plrinfo(Player &player, const TCmdPlrInfoHdr &header, bool recv)
 	} else {
 		szEvent = _("Player '{:s}' (level {:d}) is already in the game");
 	}
-	EventPlrMsg(fmt::format(fmt::runtime(szEvent), player._pName, player.getCharacterLevel()));
+	EventPlrMsg(fmt::format(fmt::runtime(szEvent), player.name, player.getCharacterLevel()));
 
 	SyncInitPlr(player);
 

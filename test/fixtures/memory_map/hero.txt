@@ -8,7 +8,7 @@ R 8 px
 R 8 py
 R 8 targx
 R 8 targy
-R 256 _pName
+R 256 name
 R 8 pClass
 R 8 pBaseStr
 R 8 pBaseMag

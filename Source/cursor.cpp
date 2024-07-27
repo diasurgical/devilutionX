@@ -606,7 +606,7 @@ void CheckTown()
 			if (EntranceBoundaryContains(missile.position.tile, cursPosition)) {
 				trigflag = true;
 				InfoString = _("Town Portal");
-				AddPanelString(fmt::format(fmt::runtime(_("from {:s}")), Players[missile._misource]._pName));
+				AddPanelString(fmt::format(fmt::runtime(_("from {:s}")), Players[missile._misource].name));
 				cursPosition = missile.position.tile;
 			}
 		}

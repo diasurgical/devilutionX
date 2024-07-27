@@ -110,7 +110,7 @@ std::string GetStateString()
 
 std::string GetTooltipString()
 {
-	return StrCat(MyPlayer->_pName, " - ", GetCharacterString());
+	return StrCat(MyPlayer->name, " - ", GetCharacterString());
 }
 
 std::string GetPlayerAssetString()

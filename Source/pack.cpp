@@ -21,7 +21,7 @@
 	do {                                                           \
 		if (!(condition)) {                                        \
 			LogFailedJoinAttempt(#condition, #logValue, logValue); \
-			EventFailedJoinAttempt(player._pName);                 \
+			EventFailedJoinAttempt(player.name);                 \
 			return false;                                          \
 		}                                                          \
 	} while (0)
@@ -30,7 +30,7 @@
 	do {                                                                                    \
 		if (!(condition)) {                                                                 \
 			LogFailedJoinAttempt(#condition, #logValue1, logValue1, #logValue2, logValue2); \
-			EventFailedJoinAttempt(player._pName);                                          \
+			EventFailedJoinAttempt(player.name);                                          \
 			return false;                                                                   \
 		}                                                                                   \
 	} while (0)
@@ -259,7 +259,7 @@ void PackPlayer(PlayerPack &packed, const Player &player)
 		packed.targx = player.position.tile.x;
 		packed.targy = player.position.tile.y;
 	}
-	CopyUtf8(packed.pName, player._pName, sizeof(packed.pName));
+	CopyUtf8(packed.pName, player.name, sizeof(packed.pName));
 	packed.pClass = static_cast<uint8_t>(player._pClass);
 	packed.pBaseStr = player._pBaseStr;
 	packed.pBaseMag = player._pBaseMag;
@@ -319,7 +319,7 @@ void PackNetPlayer(PlayerNetPack &packed, const Player &player)
 	packed.plrlevel = player.plrlevel;
 	packed.px = player.position.tile.x;
 	packed.py = player.position.tile.y;
-	CopyUtf8(packed.pName, player._pName, sizeof(packed.pName));
+	CopyUtf8(packed.pName, player.name, sizeof(packed.pName));
 	packed.pClass = static_cast<uint8_t>(player._pClass);
 	packed.pBaseStr = player._pBaseStr;
 	packed.pBaseMag = player._pBaseMag;
@@ -461,7 +461,7 @@ void UnPackPlayer(const PlayerPack &packed, Player &player)
 	ClrPlrPath(player);
 	player.destAction = ACTION_NONE;
 
-	CopyUtf8(player._pName, packed.pName, sizeof(player._pName));
+	CopyUtf8(player.name, packed.pName, sizeof(player.name));
 
 	InitPlayer(player, true);
 
@@ -559,7 +559,7 @@ bool UnPackNetItem(const Player &player, const ItemNetPack &packedItem, Item &it
 
 bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 {
-	CopyUtf8(player._pName, packed.pName, sizeof(player._pName));
+	CopyUtf8(player.name, packed.pName, sizeof(player.name));
 
 	ValidateField(packed.pClass, packed.pClass < enum_size<HeroClass>::value);
 	player._pClass = static_cast<HeroClass>(packed.pClass);

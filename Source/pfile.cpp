@@ -181,7 +181,7 @@ void CopySaveFile(uint32_t saveNum, std::string targetPath)
 
 void Game2UiPlayer(const Player &player, _uiheroinfo *heroinfo, bool bHasSaveFile)
 {
-	CopyUtf8(heroinfo->name, player._pName, sizeof(heroinfo->name));
+	CopyUtf8(heroinfo->name, player.name, sizeof(heroinfo->name));
 	heroinfo->level = player.getCharacterLevel();
 	heroinfo->heroclass = player._pClass;
 	heroinfo->strength = player._pStrength;
@@ -729,7 +729,7 @@ bool pfile_ui_save_create(_uiheroinfo *heroinfo)
 
 	Player &player = Players[0];
 	CreatePlayer(player, heroinfo->heroclass);
-	CopyUtf8(player._pName, heroinfo->name, PlayerNameLength);
+	CopyUtf8(player.name, heroinfo->name, PlayerNameLength);
 	PackPlayer(pkplr, player);
 	EncodeHero(saveWriter, &pkplr);
 	Game2UiPlayer(player, heroinfo, false);

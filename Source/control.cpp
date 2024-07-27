@@ -467,11 +467,11 @@ std::string TextCmdInspect(const std::string_view parameter)
 
 	const std::string param = AsciiStrToLower(parameter);
 	auto it = c_find_if(Players, [&param](const Player &player) {
-		return AsciiStrToLower(player._pName) == param;
+		return AsciiStrToLower(player.name) == param;
 	});
 	if (it == Players.end()) {
 		it = c_find_if(Players, [&param](const Player &player) {
-			return AsciiStrToLower(player._pName).find(param) != std::string::npos;
+			return AsciiStrToLower(player.name).find(param) != std::string::npos;
 		});
 	}
 	if (it == Players.end()) {
@@ -482,7 +482,7 @@ std::string TextCmdInspect(const std::string_view parameter)
 	Player &player = *it;
 	InspectPlayer = &player;
 	StrAppend(ret, _("Inspecting player: "));
-	StrAppend(ret, player._pName);
+	StrAppend(ret, player.name);
 	OpenCharPanel();
 	if (!sbookflag)
 		invflag = true;
@@ -1229,7 +1229,7 @@ void DrawInfoBox(const Surface &out)
 		if (PlayerUnderCursor != nullptr) {
 			InfoColor = UiFlags::ColorWhitegold;
 			auto &target = *PlayerUnderCursor;
-			InfoString = std::string_view(target._pName);
+			InfoString = std::string_view(target.name);
 			AddPanelString(fmt::format(fmt::runtime(_("{:s}, Level: {:d}")), target.getClassName(), target.getCharacterLevel()));
 			AddPanelString(fmt::format(fmt::runtime(_("Hit Points {:d} of {:d}")), target._pHitPoints >> 6, target._pMaxHP >> 6));
 		}
@@ -1485,7 +1485,7 @@ void DrawTalkPan(const Surface &out)
 			RenderClxSprite(out, (*TalkButton)[TalkButtonsDown[talkBtn] ? 1 : 0], talkPanPosition + Displacement { 4, -15 });
 		}
 		if (player.plractive) {
-			DrawString(out, player._pName, { { x, y + 60 + talkBtn * 18 }, { 204, 0 } }, { .flags = color });
+			DrawString(out, player.name, { { x, y + 60 + talkBtn * 18 }, { 204, 0 } }, { .flags = color });
 		}
 
 		talkBtn++;

@@ -74,7 +74,7 @@ void SendPlrMsg(Player &player, std::string_view text)
 {
 	PlayerMessage &message = GetNextMessage();
 
-	std::string from = fmt::format(fmt::runtime(_("{:s} (lvl {:d}): ")), player._pName, player.getCharacterLevel());
+	std::string from = fmt::format(fmt::runtime(_("{:s} (lvl {:d}): ")), player.name, player.getCharacterLevel());
 
 	message.style = UiFlags::ColorWhite;
 	message.time = SDL_GetTicks();
