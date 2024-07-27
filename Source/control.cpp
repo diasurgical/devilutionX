@@ -977,7 +977,7 @@ void DoPanBtn()
 	if (!spselflag && MousePosition.x >= 565 + mainPanelPosition.x && MousePosition.x < 621 + mainPanelPosition.x && MousePosition.y >= 64 + mainPanelPosition.y && MousePosition.y < 120 + mainPanelPosition.y) {
 		if ((SDL_GetModState() & KMOD_SHIFT) != 0) {
 			Player &myPlayer = *MyPlayer;
-			myPlayer._pRSpell = SpellID::Invalid;
+			myPlayer.selectedSpell = SpellID::Invalid;
 			myPlayer._pRSplType = SpellType::Invalid;
 			RedrawEverything();
 			return;
@@ -1060,7 +1060,7 @@ void CheckPanelInfo()
 		panelflag = true;
 		AddPanelString(_("Hotkey: 's'"));
 		const Player &myPlayer = *MyPlayer;
-		const SpellID spellId = myPlayer._pRSpell;
+		const SpellID spellId = myPlayer.selectedSpell;
 		if (IsValidSpell(spellId)) {
 			switch (myPlayer._pRSplType) {
 			case SpellType::Skill:

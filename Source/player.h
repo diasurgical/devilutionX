@@ -322,7 +322,7 @@ public:
 	SpellID inventorySpell;
 	/* @brief Inventory location for scrolls with CURSOR_TELEPORT */
 	int8_t spellFrom;
-	SpellID _pRSpell;
+	SpellID selectedSpell; // _pRSpell
 	SpellType _pRSplType;
 	SpellID _pSBkSpell;
 	uint8_t _pSplLvl[64];
@@ -968,7 +968,7 @@ void ClrPlrPath(Player &player);
 bool PosOkPlayer(const Player &player, Point position);
 void MakePlrPath(Player &player, Point targetPosition, bool endspace);
 void CalcPlrStaff(Player &player);
-void CheckPlrSpell(bool isShiftHeld, SpellID spellID = MyPlayer->_pRSpell, SpellType spellType = MyPlayer->_pRSplType);
+void CheckPlrSpell(bool isShiftHeld, SpellID spellID = MyPlayer->selectedSpell, SpellType spellType = MyPlayer->_pRSplType);
 void SyncPlrAnim(Player &player);
 void SyncInitPlrPos(Player &player);
 void SyncInitPlr(Player &player);

@@ -229,7 +229,7 @@ void CheckTownersNearby()
 
 bool HasRangedSpell()
 {
-	SpellID spl = MyPlayer->_pRSpell;
+	SpellID spl = MyPlayer->selectedSpell;
 
 	return spl != SpellID::Invalid
 	    && spl != SpellID::TownPortal
@@ -380,7 +380,7 @@ void CheckPlayerNearby()
 
 	Player &myPlayer = *MyPlayer;
 
-	SpellID spl = myPlayer._pRSpell;
+	SpellID spl = myPlayer.selectedSpell;
 	if (myPlayer.friendlyMode && spl != SpellID::Resurrect && spl != SpellID::HealOther)
 		return;
 
@@ -1905,7 +1905,7 @@ void PerformPrimaryAction()
 
 bool SpellHasActorTarget()
 {
-	SpellID spl = MyPlayer->_pRSpell;
+	SpellID spl = MyPlayer->selectedSpell;
 	if (spl == SpellID::TownPortal || spl == SpellID::Teleport)
 		return false;
 
@@ -2000,14 +2000,14 @@ void PerformSpellAction()
 	}
 
 	const Player &myPlayer = *MyPlayer;
-	SpellID spl = myPlayer._pRSpell;
+	SpellID spl = myPlayer.selectedSpell;
 	if ((PlayerUnderCursor == nullptr && (spl == SpellID::Resurrect || spl == SpellID::HealOther))
 	    || (ObjectUnderCursor == nullptr && spl == SpellID::TrapDisarm)) {
 		myPlayer.Say(HeroSpeech::ICantCastThatHere);
 		return;
 	}
 
-	UpdateSpellTarget(myPlayer._pRSpell);
+	UpdateSpellTarget(myPlayer.selectedSpell);
 	CheckPlrSpell(false);
 	if (PlayerUnderCursor != nullptr)
 		LastMouseButtonAction = MouseActionType::SpellPlayerTarget;

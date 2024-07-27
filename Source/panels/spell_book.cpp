@@ -170,7 +170,7 @@ void DrawSpellBook(const Surface &out)
 			SetSpellTrans(st);
 			const Point spellCellPosition = GetPanelPosition(UiPanels::Spell, { 11, yp + SpellBookDescription.height });
 			DrawSmallSpellIcon(out, spellCellPosition, sn);
-			if (sn == player._pRSpell && st == player._pRSplType && !IsInspectingPlayer()) {
+			if (sn == player.selectedSpell && st == player._pRSplType && !IsInspectingPlayer()) {
 				SetSpellTrans(SpellType::Skill);
 				DrawSmallSpellIconBorder(out, spellCellPosition);
 			}
@@ -220,7 +220,7 @@ void CheckSBook()
 			if ((player._pAblSpells & GetSpellBitmask(sn)) != 0) {
 				st = SpellType::Skill;
 			}
-			player._pRSpell = sn;
+			player.selectedSpell = sn;
 			player._pRSplType = st;
 			RedrawEverything();
 		}

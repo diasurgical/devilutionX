@@ -84,7 +84,7 @@ std::optional<std::string_view> GetHotkeyName(SpellID spellId, SpellType spellTy
 void DrawSpell(const Surface &out)
 {
 	Player &myPlayer = *MyPlayer;
-	SpellID spl = myPlayer._pRSpell;
+	SpellID spl = myPlayer.selectedSpell;
 	SpellType st = myPlayer._pRSplType;
 
 	if (!IsValidSpell(spl)) {
@@ -259,7 +259,7 @@ void SetSpell()
 	}
 
 	Player &myPlayer = *MyPlayer;
-	myPlayer._pRSpell = pSpell;
+	myPlayer.selectedSpell = pSpell;
 	myPlayer._pRSplType = pSplType;
 
 	RedrawEverything();
@@ -324,7 +324,7 @@ void ToggleSpell(size_t slot)
 {
 	if (IsValidSpeedSpell(slot)) {
 		Player &myPlayer = *MyPlayer;
-		myPlayer._pRSpell = myPlayer._pSplHotKey[slot];
+		myPlayer.selectedSpell = myPlayer._pSplHotKey[slot];
 		myPlayer._pRSplType = myPlayer._pSplTHotKey[slot];
 		RedrawEverything();
 	}
@@ -341,7 +341,7 @@ void DoSpeedBook()
 
 	Player &myPlayer = *MyPlayer;
 
-	if (IsValidSpell(myPlayer._pRSpell)) {
+	if (IsValidSpell(myPlayer.selectedSpell)) {
 		for (auto i : enum_values<SpellType>()) {
 			uint64_t spells;
 			switch (static_cast<SpellType>(i)) {
@@ -363,7 +363,7 @@ void DoSpeedBook()
 			uint64_t spell = 1;
 			for (int j = 1; j < MAX_SPELLS; j++) {
 				if ((spell & spells) != 0) {
-					if (j == static_cast<int8_t>(myPlayer._pRSpell) && static_cast<SpellType>(i) == myPlayer._pRSplType) {
+					if (j == static_cast<int8_t>(myPlayer.selectedSpell) && static_cast<SpellType>(i) == myPlayer._pRSplType) {
 						x = xo + SPLICONLENGTH / 2;
 						y = yo - SPLICONLENGTH / 2;
 					}

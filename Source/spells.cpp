@@ -38,10 +38,10 @@ bool IsReadiedSpellValid(const Player &player)
 		return true;
 
 	case SpellType::Charges:
-		return (player._pISpells & GetSpellBitmask(player._pRSpell)) != 0;
+		return (player._pISpells & GetSpellBitmask(player.selectedSpell)) != 0;
 
 	case SpellType::Scroll:
-		return (player._pScrlSpells & GetSpellBitmask(player._pRSpell)) != 0;
+		return (player._pScrlSpells & GetSpellBitmask(player.selectedSpell)) != 0;
 
 	default:
 		return false;
@@ -55,8 +55,8 @@ bool IsReadiedSpellValid(const Player &player)
  */
 void ClearReadiedSpell(Player &player)
 {
-	if (player._pRSpell != SpellID::Invalid) {
-		player._pRSpell = SpellID::Invalid;
+	if (player.selectedSpell != SpellID::Invalid) {
+		player.selectedSpell = SpellID::Invalid;
 		RedrawEverything();
 	}
 

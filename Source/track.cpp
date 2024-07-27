@@ -96,7 +96,7 @@ void RepeatMouseAction()
 		break;
 	case MouseActionType::Spell:
 		if (ControlMode != ControlTypes::KeyboardAndMouse) {
-			UpdateSpellTarget(MyPlayer->_pRSpell);
+			UpdateSpellTarget(MyPlayer->selectedSpell);
 		}
 		CheckPlrSpell(ControlMode == ControlTypes::KeyboardAndMouse);
 		break;

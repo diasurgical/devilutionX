@@ -1783,8 +1783,8 @@ void Player::ReadySpellFromEquipment(inv_body_loc bodyLocation, bool forceSpell)
 {
 	Item &item = InvBody[bodyLocation];
 	if (item._itype == ItemType::Staff && IsValidSpell(item._iSpell) && item._iCharges > 0 && item._iStatFlag) {
-		if (forceSpell || _pRSpell == SpellID::Invalid || _pRSplType == SpellType::Invalid) {
-			_pRSpell = item._iSpell;
+		if (forceSpell || selectedSpell == SpellID::Invalid || _pRSplType == SpellType::Invalid) {
+			selectedSpell = item._iSpell;
 			_pRSplType = SpellType::Charges;
 			RedrawEverything();
 		}
@@ -2445,11 +2445,11 @@ void InitPlayer(Player &player, bool firstTime)
 {
 	if (firstTime) {
 		player._pRSplType = SpellType::Invalid;
-		player._pRSpell = SpellID::Invalid;
+		player.selectedSpell = SpellID::Invalid;
 		if (&player == MyPlayer)
 			LoadHotkeys();
 		player._pSBkSpell = SpellID::Invalid;
-		player.queuedSpell.spellId = player._pRSpell;
+		player.queuedSpell.spellId = player.selectedSpell;
 		player.queuedSpell.spellType = player._pRSplType;
 		player.pManaShield = false;
 		player.wReflections = 0;
