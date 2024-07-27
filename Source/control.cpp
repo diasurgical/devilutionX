@@ -650,7 +650,7 @@ void RemoveGold(Player &player, int goldIndex, int amount)
 
 bool IsLevelUpButtonVisible()
 {
-	if (spselflag || chrflag || MyPlayer->_pStatPts == 0) {
+	if (spselflag || chrflag || MyPlayer->statPoints == 0) {
 		return false;
 	}
 	if (ControlMode == ControlTypes::VirtualGamepad) {
@@ -717,7 +717,7 @@ void FocusOnCharInfo()
 {
 	Player &myPlayer = *MyPlayer;
 
-	if (invflag || myPlayer._pStatPts <= 0)
+	if (invflag || myPlayer.statPoints <= 0)
 		return;
 
 	// Find the first incrementable stat.
@@ -1272,7 +1272,7 @@ void CheckChrBtns()
 {
 	Player &myPlayer = *MyPlayer;
 
-	if (chrbtnactive || myPlayer._pStatPts == 0)
+	if (chrbtnactive || myPlayer.statPoints == 0)
 		return;
 
 	for (auto attribute : enum_values<CharacterAttribute>()) {
@@ -1303,23 +1303,23 @@ void ReleaseChrBtns(bool addAllStatPoints)
 			Player &myPlayer = *MyPlayer;
 			int statPointsToAdd = 1;
 			if (addAllStatPoints)
-				statPointsToAdd = CapStatPointsToAdd(myPlayer._pStatPts, myPlayer, attribute);
+				statPointsToAdd = CapStatPointsToAdd(myPlayer.statPoints, myPlayer, attribute);
 			switch (attribute) {
 			case CharacterAttribute::Strength:
 				NetSendCmdParam1(true, CMD_ADDSTR, statPointsToAdd);
-				myPlayer._pStatPts -= statPointsToAdd;
+				myPlayer.statPoints -= statPointsToAdd;
 				break;
 			case CharacterAttribute::Magic:
 				NetSendCmdParam1(true, CMD_ADDMAG, statPointsToAdd);
-				myPlayer._pStatPts -= statPointsToAdd;
+				myPlayer.statPoints -= statPointsToAdd;
 				break;
 			case CharacterAttribute::Dexterity:
 				NetSendCmdParam1(true, CMD_ADDDEX, statPointsToAdd);
-				myPlayer._pStatPts -= statPointsToAdd;
+				myPlayer.statPoints -= statPointsToAdd;
 				break;
 			case CharacterAttribute::Vitality:
 				NetSendCmdParam1(true, CMD_ADDVIT, statPointsToAdd);
-				myPlayer._pStatPts -= statPointsToAdd;
+				myPlayer.statPoints -= statPointsToAdd;
 				break;
 			}
 		}

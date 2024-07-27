@@ -160,7 +160,7 @@ void LoadPotionArt(ButtonTexture *potionArt, SDL_Renderer *renderer)
 bool InteractsWithCharButton(Point point)
 {
 	Player &myPlayer = *MyPlayer;
-	if (myPlayer._pStatPts == 0)
+	if (myPlayer.statPoints == 0)
 		return false;
 	for (auto attribute : enum_values<CharacterAttribute>()) {
 		if (myPlayer.GetBaseAttributeValue(attribute) >= myPlayer.GetMaximumAttributeValue(attribute))
@@ -286,7 +286,7 @@ void VirtualMenuPanelRenderer::Render(RenderFunction renderFunction)
 	int width = virtualMenuPanel->area.size.width;
 	int height = virtualMenuPanel->area.size.height;
 	SDL_Rect rect { x, y, width, height };
-	renderFunction(MyPlayer->_pStatPts == 0 ? menuArt : menuArtLevelUp, nullptr, &rect);
+	renderFunction(MyPlayer->statPoints == 0 ? menuArt : menuArtLevelUp, nullptr, &rect);
 }
 
 void VirtualDirectionPadRenderer::Render(RenderFunction renderFunction)

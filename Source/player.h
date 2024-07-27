@@ -234,7 +234,7 @@ struct Player {
 	int _pBaseDex;
 	int _pVitality;
 	int _pBaseVit;
-	int _pStatPts;
+	int statPoints; // _pStatPts
 	int _pDamageMod;
 	int _pHPBase;
 	int _pMaxHPBase;

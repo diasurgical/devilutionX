@@ -196,7 +196,7 @@ bool ShouldShowCursor()
 		return true;
 	if (invflag)
 		return true;
-	if (chrflag && MyPlayer->_pStatPts > 0)
+	if (chrflag && MyPlayer->statPoints > 0)
 		return true;
 
 	return false;

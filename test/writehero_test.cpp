@@ -282,7 +282,7 @@ void AssertPlayer(Player &player)
 	ASSERT_EQ(player._pBaseVit, 80);
 	ASSERT_EQ(player._pVitality, 90);
 	ASSERT_EQ(player.getCharacterLevel(), 50);
-	ASSERT_EQ(player._pStatPts, 0);
+	ASSERT_EQ(player.statPoints, 0);
 	ASSERT_EQ(player._pExperience, 1583495809);
 	ASSERT_EQ(player._pGold, 0);
 	ASSERT_EQ(player._pMaxHPBase, 12864);

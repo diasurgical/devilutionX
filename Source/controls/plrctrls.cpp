@@ -555,7 +555,7 @@ void AttrIncBtnSnap(AxisDirection dir)
 	if (dir.y == AxisDirectionY_NONE)
 		return;
 
-	if (chrbtnactive && MyPlayer->_pStatPts <= 0)
+	if (chrbtnactive && MyPlayer->statPoints <= 0)
 		return;
 
 	// first, find our cursor location
@@ -1335,7 +1335,7 @@ HandleLeftStickOrDPadFn GetLeftStickOrDPadGameUIHandler()
 	if (invflag) {
 		return &CheckInventoryMove;
 	}
-	if (chrflag && MyPlayer->_pStatPts > 0) {
+	if (chrflag && MyPlayer->statPoints > 0) {
 		return &AttrIncBtnSnap;
 	}
 	if (spselflag) {
@@ -1893,7 +1893,7 @@ void PerformPrimaryAction()
 		return;
 	}
 
-	if (chrflag && !chrbtnactive && MyPlayer->_pStatPts > 0) {
+	if (chrflag && !chrbtnactive && MyPlayer->statPoints > 0) {
 		CheckChrBtns();
 		if (chrbtnactive)
 			ReleaseChrBtns(false);

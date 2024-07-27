@@ -160,8 +160,8 @@ PanelEntry panelEntries[] = {
 	    []() { return StyledText { GetCurrentStatColor(CharacterAttribute::Vitality), StrCat(InspectPlayer->_pVitality) }; } },
 	{ N_("Points to distribute"), { LeftColumnLabelX, 248 }, 45, LeftColumnLabelWidth,
 	    []() {
-	        InspectPlayer->_pStatPts = std::min(CalcStatDiff(*InspectPlayer), InspectPlayer->_pStatPts);
-	        return StyledText { UiFlags::ColorRed, (InspectPlayer->_pStatPts > 0 ? StrCat(InspectPlayer->_pStatPts) : "") };
+	        InspectPlayer->statPoints = std::min(CalcStatDiff(*InspectPlayer), InspectPlayer->statPoints);
+	        return StyledText { UiFlags::ColorRed, (InspectPlayer->statPoints > 0 ? StrCat(InspectPlayer->statPoints) : "") };
 	    } },
 
 	{ N_("Gold"), { TopRightLabelX, /* set dynamically */ 0 }, 0, 98, {} },
@@ -253,7 +253,7 @@ void DrawShadowString(const Surface &out, const PanelEntry &entry)
 
 void DrawStatButtons(const Surface &out)
 {
-	if (InspectPlayer->_pStatPts > 0 && !IsInspectingPlayer()) {
+	if (InspectPlayer->statPoints > 0 && !IsInspectingPlayer()) {
 		if (InspectPlayer->_pBaseStr < InspectPlayer->GetMaximumAttributeValue(CharacterAttribute::Strength))
 			ClxDraw(out, GetPanelPosition(UiPanels::Character, { 137, 157 }), (*pChrButtons)[chrbtn[static_cast<size_t>(CharacterAttribute::Strength)] ? 2 : 1]);
 		if (InspectPlayer->_pBaseMag < InspectPlayer->GetMaximumAttributeValue(CharacterAttribute::Magic))

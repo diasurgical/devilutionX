@@ -266,7 +266,7 @@ void PackPlayer(PlayerPack &packed, const Player &player)
 	packed.pBaseDex = player._pBaseDex;
 	packed.pBaseVit = player._pBaseVit;
 	packed.pLevel = player.getCharacterLevel();
-	packed.pStatPts = player._pStatPts;
+	packed.pStatPts = player.statPoints;
 	packed.pExperience = SDL_SwapLE32(player._pExperience);
 	packed.pGold = SDL_SwapLE32(player._pGold);
 	packed.pHPBase = SDL_SwapLE32(player._pHPBase);
@@ -326,7 +326,7 @@ void PackNetPlayer(PlayerNetPack &packed, const Player &player)
 	packed.pBaseDex = player._pBaseDex;
 	packed.pBaseVit = player._pBaseVit;
 	packed.pLevel = player.getCharacterLevel();
-	packed.pStatPts = player._pStatPts;
+	packed.pStatPts = player.statPoints;
 	packed.pExperience = SDL_SwapLE32(player._pExperience);
 	packed.pHPBase = SDL_SwapLE32(player._pHPBase);
 	packed.pMaxHPBase = SDL_SwapLE32(player._pMaxHPBase);
@@ -473,7 +473,7 @@ void UnPackPlayer(const PlayerPack &packed, Player &player)
 	player._pDexterity = player._pBaseDex;
 	player._pBaseVit = std::min<uint8_t>(packed.pBaseVit, player.GetMaximumAttributeValue(CharacterAttribute::Vitality));
 	player._pVitality = player._pBaseVit;
-	player._pStatPts = packed.pStatPts;
+	player.statPoints = packed.pStatPts;
 
 	player._pExperience = SDL_SwapLE32(packed.pExperience);
 	player._pGold = SDL_SwapLE32(packed.pGold);
@@ -608,7 +608,7 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 	player._pDexterity = player._pBaseDex;
 	player._pBaseVit = packed.pBaseVit;
 	player._pVitality = player._pBaseVit;
-	player._pStatPts = packed.pStatPts;
+	player.statPoints = packed.pStatPts;
 
 	player._pExperience = SDL_SwapLE32(packed.pExperience);
 	player._pMaxManaBase = baseManaMax;

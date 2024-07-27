@@ -2351,9 +2351,9 @@ void NextPlrLevel(Player &player)
 	CalcPlrInv(player, true);
 
 	if (CalcStatDiff(player) < 5) {
-		player._pStatPts = CalcStatDiff(player);
+		player.statPoints = CalcStatDiff(player);
 	} else {
-		player._pStatPts += 5;
+		player.statPoints += 5;
 	}
 	int hp = player.getClassAttributes().lvlLife;
 
