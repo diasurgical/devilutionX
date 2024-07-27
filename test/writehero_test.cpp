@@ -46,19 +46,19 @@ void SwapLE(PlayerPack &player)
 	player.pManaBase = SDL_SwapLE32(player.pManaBase);
 	player.pMaxManaBase = SDL_SwapLE32(player.pMaxManaBase);
 	player.pMemSpells = SDL_SwapLE64(player.pMemSpells);
-	for (ItemPack &item : player.InvBody) {
+	for (ItemPack &item : player.bodySlot) {
 		SwapLE(item);
 	}
-	for (ItemPack &item : player.InvList) {
+	for (ItemPack &item : player.inventorySlot) {
 		SwapLE(item);
 	}
-	for (ItemPack &item : player.SpdList) {
+	for (ItemPack &item : player.beltSlot) {
 		SwapLE(item);
 	}
-	player.wReflections = SDL_SwapLE16(player.wReflections);
-	player.pDiabloKillLevel = SDL_SwapLE32(player.pDiabloKillLevel);
+	player.reflections = SDL_SwapLE16(player.reflections);
+	player.difficultyCompletion = SDL_SwapLE32(player.difficultyCompletion);
 	player.pDifficulty = SDL_SwapLE32(player.pDifficulty);
-	player.pDamAcFlags = SDL_SwapLE32(player.pDamAcFlags);
+	player.hellfireFlags = SDL_SwapLE32(player.hellfireFlags);
 }
 
 void PackItemUnique(ItemPack *id, int idx)
@@ -177,23 +177,23 @@ int PrepareInvSlot(PlayerPack *pPack, int pos, int size, int start = 0)
 		ret = 0;
 	++ret;
 	if (size == 0) {
-		pPack->InvGrid[pos] = ret;
+		pPack->inventoryGrid[pos] = ret;
 	} else if (size == 1) {
-		pPack->InvGrid[pos] = ret;
-		pPack->InvGrid[pos - 10] = -ret;
-		pPack->InvGrid[pos - 20] = -ret;
+		pPack->inventoryGrid[pos] = ret;
+		pPack->inventoryGrid[pos - 10] = -ret;
+		pPack->inventoryGrid[pos - 20] = -ret;
 	} else if (size == 2) {
-		pPack->InvGrid[pos] = ret;
-		pPack->InvGrid[pos + 1] = -ret;
-		pPack->InvGrid[pos - 10] = -ret;
-		pPack->InvGrid[pos - 10 + 1] = -ret;
-		pPack->InvGrid[pos - 20] = -ret;
-		pPack->InvGrid[pos - 20 + 1] = -ret;
+		pPack->inventoryGrid[pos] = ret;
+		pPack->inventoryGrid[pos + 1] = -ret;
+		pPack->inventoryGrid[pos - 10] = -ret;
+		pPack->inventoryGrid[pos - 10 + 1] = -ret;
+		pPack->inventoryGrid[pos - 20] = -ret;
+		pPack->inventoryGrid[pos - 20 + 1] = -ret;
 	} else if (size == 3) {
-		pPack->InvGrid[pos] = ret;
-		pPack->InvGrid[pos + 1] = -ret;
-		pPack->InvGrid[pos - 10] = -ret;
-		pPack->InvGrid[pos - 10 + 1] = -ret;
+		pPack->inventoryGrid[pos] = ret;
+		pPack->inventoryGrid[pos + 1] = -ret;
+		pPack->inventoryGrid[pos - 10] = -ret;
+		pPack->inventoryGrid[pos - 10 + 1] = -ret;
 	} else {
 		abort();
 	}
@@ -203,10 +203,10 @@ int PrepareInvSlot(PlayerPack *pPack, int pos, int size, int start = 0)
 void PackPlayerTest(PlayerPack *pPack)
 {
 	memset(pPack, 0, 0x4F2);
-	pPack->destAction = -1;
-	pPack->destParam1 = 0;
-	pPack->destParam2 = 0;
-	pPack->plrlevel = 0;
+	pPack->destinationAction = -1;
+	pPack->destinationParam1 = 0;
+	pPack->destinationParam2 = 0;
+	pPack->dungeonLevel = 0;
 	pPack->pExperience = 1583495809;
 	pPack->pLevel = 50;
 	pPack->px = 75;
@@ -215,13 +215,13 @@ void PackPlayerTest(PlayerPack *pPack)
 	pPack->targy = 68;
 	pPack->pGold = 0;
 	pPack->pStatPts = 0;
-	pPack->pDiabloKillLevel = 3;
+	pPack->difficultyCompletion = 3;
 	for (auto i = 0; i < 40; i++)
-		pPack->InvList[i].idx = -1;
+		pPack->inventorySlot[i].idx = -1;
 	for (auto i = 0; i < 7; i++)
-		pPack->InvBody[i].idx = -1;
+		pPack->bodySlot[i].idx = -1;
 	for (auto i = 0; i < MaxBeltItems; i++)
-		PackItemFullRejuv(pPack->SpdList + i, i);
+		PackItemFullRejuv(pPack->beltSlot + i, i);
 	for (auto i = 1; i < 37; i++) {
 		if (SpellDatVanilla[i] != -1) {
 			pPack->pMemSpells |= 1ULL << (i - 1);
@@ -229,7 +229,7 @@ void PackPlayerTest(PlayerPack *pPack)
 		}
 	}
 	for (auto i = 0; i < 7; i++)
-		pPack->InvBody[i].idx = -1;
+		pPack->bodySlot[i].idx = -1;
 	strcpy(pPack->pName, "TestPlayer");
 	pPack->pClass = static_cast<uint8_t>(HeroClass::Rogue);
 	pPack->pBaseStr = 20 + 35;
@@ -241,123 +241,122 @@ void PackPlayerTest(PlayerPack *pPack)
 	pPack->pManaBase = (15 << 6) + (15 << 5) + 48 * 128 + (55 << 6);
 	pPack->pMaxManaBase = pPack->pManaBase;
 
-	PackItemUnique(pPack->InvBody + INVLOC_HEAD, 52);
-	PackItemRing1(pPack->InvBody + INVLOC_RING_LEFT);
-	PackItemRing2(pPack->InvBody + INVLOC_RING_RIGHT);
-	PackItemAmulet(pPack->InvBody + INVLOC_AMULET);
-	PackItemArmor(pPack->InvBody + INVLOC_CHEST);
-	PackItemBow(pPack->InvBody + INVLOC_HAND_LEFT);
+	PackItemUnique(pPack->bodySlot + INVLOC_HEAD, 52);
+	PackItemRing1(pPack->bodySlot + INVLOC_RING_LEFT);
+	PackItemRing2(pPack->bodySlot + INVLOC_RING_RIGHT);
+	PackItemAmulet(pPack->bodySlot + INVLOC_AMULET);
+	PackItemArmor(pPack->bodySlot + INVLOC_CHEST);
+	PackItemBow(pPack->bodySlot + INVLOC_HAND_LEFT);
 
-	PackItemStaff(pPack->InvList + PrepareInvSlot(pPack, 28, 2, 1));
-	PackItemSword(pPack->InvList + PrepareInvSlot(pPack, 20, 1));
+	PackItemStaff(pPack->inventorySlot + PrepareInvSlot(pPack, 28, 2, 1));
+	PackItemSword(pPack->inventorySlot + PrepareInvSlot(pPack, 20, 1));
 
-	pPack->_pNumInv = 2;
+	pPack->numInventoryItems = 2;
 
 	SwapLE(*pPack);
 }
 
 void AssertPlayer(Player &player)
 {
-	ASSERT_EQ(CountU8(player._pSplLvl, 64), 23);
-	ASSERT_EQ(Count8(player.InvGrid, InventoryGridCells), 9);
-	ASSERT_EQ(CountItems(player.InvBody, NUM_INVLOC), 6);
-	ASSERT_EQ(CountItems(player.InvList, InventoryGridCells), 2);
-	ASSERT_EQ(CountItems(player.SpdList, MaxBeltItems), 8);
-	ASSERT_EQ(CountItems(&player.HoldItem, 1), 0);
+	ASSERT_EQ(CountU8(player.spellLevel, 64), 23);
+	ASSERT_EQ(Count8(player.inventoryGrid, InventoryGridCells), 9);
+	ASSERT_EQ(CountItems(player.bodySlot, NUM_INVLOC), 6);
+	ASSERT_EQ(CountItems(player.inventorySlot, InventoryGridCells), 2);
+	ASSERT_EQ(CountItems(player.beltSlot, MaxBeltItems), 8);
+	ASSERT_EQ(CountItems(&player.heldItem, 1), 0);
 
 	ASSERT_EQ(player.position.tile.x, 75);
 	ASSERT_EQ(player.position.tile.y, 68);
 	ASSERT_EQ(player.position.future.x, 75);
 	ASSERT_EQ(player.position.future.y, 68);
-	ASSERT_EQ(player.plrlevel, 0);
-	ASSERT_EQ(player.destAction, -1);
-	ASSERT_STREQ(player._pName, "TestPlayer");
-	ASSERT_EQ(player._pClass, HeroClass::Rogue);
-	ASSERT_EQ(player._pBaseStr, 55);
-	ASSERT_EQ(player._pStrength, 124);
-	ASSERT_EQ(player._pBaseMag, 70);
-	ASSERT_EQ(player._pMagic, 80);
-	ASSERT_EQ(player._pBaseDex, 250);
-	ASSERT_EQ(player._pDexterity, 281);
-	ASSERT_EQ(player._pBaseVit, 80);
-	ASSERT_EQ(player._pVitality, 90);
+	ASSERT_EQ(player.dungeonLevel, 0);
+	ASSERT_EQ(player.destinationAction, -1);
+	ASSERT_STREQ(player.name, "TestPlayer");
+	ASSERT_EQ(player.heroClass, HeroClass::Rogue);
+	ASSERT_EQ(player.baseStrength, 55);
+	ASSERT_EQ(player.strength, 124);
+	ASSERT_EQ(player.baseMagic, 70);
+	ASSERT_EQ(player.magic, 80);
+	ASSERT_EQ(player.baseDexterity, 250);
+	ASSERT_EQ(player.dexterity, 281);
+	ASSERT_EQ(player.baseVitality, 80);
+	ASSERT_EQ(player.vitality, 90);
 	ASSERT_EQ(player.getCharacterLevel(), 50);
-	ASSERT_EQ(player._pStatPts, 0);
-	ASSERT_EQ(player._pExperience, 1583495809);
-	ASSERT_EQ(player._pGold, 0);
-	ASSERT_EQ(player._pMaxHPBase, 12864);
-	ASSERT_EQ(player._pHPBase, 12864);
+	ASSERT_EQ(player.statPoints, 0);
+	ASSERT_EQ(player.experience, 1583495809);
+	ASSERT_EQ(player.gold, 0);
+	ASSERT_EQ(player.baseMaxLife, 12864);
+	ASSERT_EQ(player.baseLife, 12864);
 	ASSERT_EQ(player.getBaseToBlock(), 20);
-	ASSERT_EQ(player._pMaxManaBase, 11104);
-	ASSERT_EQ(player._pManaBase, 11104);
-	ASSERT_EQ(player._pMemSpells, 66309357295);
-	ASSERT_EQ(player._pNumInv, 2);
-	ASSERT_EQ(player.wReflections, 0);
-	ASSERT_EQ(player.pTownWarps, 0);
-	ASSERT_EQ(player.pDungMsgs, 0);
-	ASSERT_EQ(player.pDungMsgs2, 0);
-	ASSERT_EQ(player.pLvlLoad, 0);
-	ASSERT_EQ(player.pDiabloKillLevel, 3);
-	ASSERT_EQ(player.pManaShield, 0);
-	ASSERT_EQ(player.pDamAcFlags, ItemSpecialEffectHf::None);
+	ASSERT_EQ(player.baseMaxMana, 11104);
+	ASSERT_EQ(player.baseMana, 11104);
+	ASSERT_EQ(player.learnedSpells, 66309357295);
+	ASSERT_EQ(player.numInventoryItems, 2);
+	ASSERT_EQ(player.reflections, 0);
+	ASSERT_EQ(player.townWarps, 0);
+	ASSERT_EQ(player.dungeonMessages, 0);
+	ASSERT_EQ(player.dungeonMessages2, 0);
+	ASSERT_EQ(player.levelLoading, 0);
+	ASSERT_EQ(player.difficultyCompletion, 3);
+	ASSERT_EQ(player.hasManaShield, 0);
+	ASSERT_EQ(player.hellfireFlags, ItemSpecialEffectHf::None);
 
-	ASSERT_EQ(player._pmode, 0);
-	ASSERT_EQ(Count8(player.walkpath, MaxPathLength), 25);
-	ASSERT_EQ(player._pgfxnum, 36);
-	ASSERT_EQ(player.AnimInfo.ticksPerFrame, 4);
-	ASSERT_EQ(player.AnimInfo.tickCounterOfCurrentFrame, 1);
-	ASSERT_EQ(player.AnimInfo.numberOfFrames, 20);
-	ASSERT_EQ(player.AnimInfo.currentFrame, 0);
+	ASSERT_EQ(player.mode, 0);
+	ASSERT_EQ(Count8(player.walkPath, MaxPathLength), 25);
+	ASSERT_EQ(player.graphic, 36);
+	ASSERT_EQ(player.animationInfo.ticksPerFrame, 4);
+	ASSERT_EQ(player.animationInfo.tickCounterOfCurrentFrame, 1);
+	ASSERT_EQ(player.animationInfo.numberOfFrames, 20);
+	ASSERT_EQ(player.animationInfo.currentFrame, 0);
 	ASSERT_EQ(player.queuedSpell.spellId, SpellID::Invalid);
 	ASSERT_EQ(player.queuedSpell.spellType, SpellType::Invalid);
 	ASSERT_EQ(player.queuedSpell.spellFrom, 0);
 	ASSERT_EQ(player.inventorySpell, SpellID::Null);
-	ASSERT_EQ(player._pRSpell, SpellID::Invalid);
-	ASSERT_EQ(player._pRSplType, SpellType::Invalid);
-	ASSERT_EQ(player._pSBkSpell, SpellID::Invalid);
-	ASSERT_EQ(player._pAblSpells, 134217728);
-	ASSERT_EQ(player._pScrlSpells, 0);
-	ASSERT_EQ(player._pSpellFlags, SpellFlag::None);
+	ASSERT_EQ(player.selectedSpell, SpellID::Invalid);
+	ASSERT_EQ(player.selectedSpellType, SpellType::Invalid);
+	ASSERT_EQ(player.skills, 134217728);
+	ASSERT_EQ(player.scrollSpells, 0);
+	ASSERT_EQ(player.spellFlags, SpellFlag::None);
 	ASSERT_TRUE(player.UsesRangedWeapon());
-	ASSERT_EQ(player._pBlockFlag, 0);
-	ASSERT_EQ(player._pLightRad, 11);
-	ASSERT_EQ(player._pDamageMod, 101);
-	ASSERT_EQ(player._pHitPoints, 16640);
-	ASSERT_EQ(player._pMaxHP, 16640);
-	ASSERT_EQ(player._pMana, 14624);
-	ASSERT_EQ(player._pMaxMana, 14624);
+	ASSERT_EQ(player.hasBlockFlag, 0);
+	ASSERT_EQ(player.lightRadius, 11);
+	ASSERT_EQ(player.damageModifier, 101);
+	ASSERT_EQ(player.life, 16640);
+	ASSERT_EQ(player.maxLife, 16640);
+	ASSERT_EQ(player.mana, 14624);
+	ASSERT_EQ(player.maxMana, 14624);
 	ASSERT_EQ(player.getNextExperienceThreshold(), 1583495809);
-	ASSERT_EQ(player._pMagResist, 75);
-	ASSERT_EQ(player._pFireResist, 16);
-	ASSERT_EQ(player._pLghtResist, 75);
-	ASSERT_EQ(CountBool(player._pLvlVisited, NUMLEVELS), 0);
-	ASSERT_EQ(CountBool(player._pSLvlVisited, NUMLEVELS), 0);
-	ASSERT_EQ(player._pNFrames, 20);
-	ASSERT_EQ(player._pWFrames, 8);
-	ASSERT_EQ(player._pAFrames, 0);
-	ASSERT_EQ(player._pAFNum, 0);
-	ASSERT_EQ(player._pSFrames, 16);
-	ASSERT_EQ(player._pSFNum, 12);
-	ASSERT_EQ(player._pHFrames, 0);
-	ASSERT_EQ(player._pDFrames, 20);
-	ASSERT_EQ(player._pBFrames, 0);
-	ASSERT_EQ(player._pIMinDam, 1);
-	ASSERT_EQ(player._pIMaxDam, 14);
-	ASSERT_EQ(player._pIAC, 115);
-	ASSERT_EQ(player._pIBonusDam, 0);
-	ASSERT_EQ(player._pIBonusToHit, 0);
-	ASSERT_EQ(player._pIBonusAC, 0);
-	ASSERT_EQ(player._pIBonusDamMod, 0);
-	ASSERT_EQ(player._pISpells, 0);
-	ASSERT_EQ(player._pIFlags, ItemSpecialEffect::None);
-	ASSERT_EQ(player._pIGetHit, 0);
-	ASSERT_EQ(player._pISplLvlAdd, 0);
-	ASSERT_EQ(player._pIEnAc, 0);
-	ASSERT_EQ(player._pIFMinDam, 0);
-	ASSERT_EQ(player._pIFMaxDam, 0);
-	ASSERT_EQ(player._pILMinDam, 0);
-	ASSERT_EQ(player._pILMaxDam, 0);
-	ASSERT_EQ(player.pOriginalCathedral, 0);
+	ASSERT_EQ(player.resistMagic, 75);
+	ASSERT_EQ(player.resistFire, 16);
+	ASSERT_EQ(player.resistLightning, 75);
+	ASSERT_EQ(CountBool(player.isLevelVisted, NUMLEVELS), 0);
+	ASSERT_EQ(CountBool(player.isSetLevelVisted, NUMLEVELS), 0);
+	ASSERT_EQ(player.numIdleFrames, 20);
+	ASSERT_EQ(player.numWalkFrames, 8);
+	ASSERT_EQ(player.numAttackFrames, 0);
+	ASSERT_EQ(player.attackActionFrame, 0);
+	ASSERT_EQ(player.numSpellFrames, 16);
+	ASSERT_EQ(player.spellActionFrame, 12);
+	ASSERT_EQ(player.numRecoveryFrames, 0);
+	ASSERT_EQ(player.numDeathFrames, 20);
+	ASSERT_EQ(player.numBlockFrames, 0);
+	ASSERT_EQ(player.minDamage, 1);
+	ASSERT_EQ(player.maxDamage, 14);
+	ASSERT_EQ(player.armorClass, 115);
+	ASSERT_EQ(player.bonusDamagePercent, 0);
+	ASSERT_EQ(player.bonusToHit, 0);
+	ASSERT_EQ(player.bonusArmorClass, 0);
+	ASSERT_EQ(player.bonusDamage, 0);
+	ASSERT_EQ(player.staffSpells, 0);
+	ASSERT_EQ(player.flags, ItemSpecialEffect::None);
+	ASSERT_EQ(player.damageFromEnemies, 0);
+	ASSERT_EQ(player.bonusSpellLevel, 0);
+	ASSERT_EQ(player.armorPierce, 0);
+	ASSERT_EQ(player.minFireDamage, 0);
+	ASSERT_EQ(player.maxFireDamage, 0);
+	ASSERT_EQ(player.minLightningDamage, 0);
+	ASSERT_EQ(player.maxLightningDamage, 0);
+	ASSERT_EQ(player.originalCathedral, 0);
 }
 
 TEST(Writehero, pfile_write_hero)

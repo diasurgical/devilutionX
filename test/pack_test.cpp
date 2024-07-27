@@ -31,16 +31,16 @@ void SwapLE(PlayerPack &pack)
 	pack.pManaBase = SDL_SwapLE32(pack.pManaBase);
 	pack.pMaxManaBase = SDL_SwapLE32(pack.pMaxManaBase);
 	pack.pMemSpells = SDL_SwapLE64(pack.pMemSpells);
-	for (ItemPack &item : pack.InvBody)
+	for (ItemPack &item : pack.bodySlot)
 		SwapLE(item);
-	for (ItemPack &item : pack.InvList)
+	for (ItemPack &item : pack.inventorySlot)
 		SwapLE(item);
-	for (ItemPack &item : pack.SpdList)
+	for (ItemPack &item : pack.beltSlot)
 		SwapLE(item);
-	pack.wReflections = SDL_SwapLE16(pack.wReflections);
-	pack.pDiabloKillLevel = SDL_SwapLE32(pack.pDiabloKillLevel);
+	pack.reflections = SDL_SwapLE16(pack.reflections);
+	pack.difficultyCompletion = SDL_SwapLE32(pack.difficultyCompletion);
 	pack.pDifficulty = SDL_SwapLE32(pack.pDifficulty);
-	pack.pDamAcFlags = SDL_SwapLE32(pack.pDamAcFlags);
+	pack.hellfireFlags = SDL_SwapLE32(pack.hellfireFlags);
 }
 
 ItemPack SwappedLE(const ItemPack &pack)
@@ -429,8 +429,8 @@ TEST_F(PackTest, UnPackItem_diablo)
 	gbIsMultiplayer = false;
 	gbIsSpawn = false;
 
-	MyPlayer->_pMaxManaBase = 125 << 6;
-	MyPlayer->_pMaxHPBase = 125 << 6;
+	MyPlayer->baseMaxMana = 125 << 6;
+	MyPlayer->baseMaxLife = 125 << 6;
 
 	for (size_t i = 0; i < sizeof(PackedDiabloItems) / sizeof(*PackedDiabloItems); i++) {
 		const ItemPack packed = SwappedLE(PackedDiabloItems[i]);
@@ -502,8 +502,8 @@ TEST_F(PackTest, UnPackItem_spawn)
 	gbIsMultiplayer = false;
 	gbIsSpawn = true;
 
-	MyPlayer->_pMaxManaBase = 125 << 6;
-	MyPlayer->_pMaxHPBase = 125 << 6;
+	MyPlayer->baseMaxMana = 125 << 6;
+	MyPlayer->baseMaxLife = 125 << 6;
 
 	for (size_t i = 0; i < sizeof(PackedSpawnItems) / sizeof(*PackedSpawnItems); i++) {
 		const ItemPack packed = SwappedLE(PackedSpawnItems[i]);
@@ -547,8 +547,8 @@ TEST_F(PackTest, UnPackItem_diablo_multiplayer)
 	gbIsMultiplayer = true;
 	gbIsSpawn = false;
 
-	MyPlayer->_pMaxManaBase = 125 << 6;
-	MyPlayer->_pMaxHPBase = 125 << 6;
+	MyPlayer->baseMaxMana = 125 << 6;
+	MyPlayer->baseMaxLife = 125 << 6;
 
 	for (size_t i = 0; i < sizeof(PackedDiabloMPItems) / sizeof(*PackedDiabloMPItems); i++) {
 		const ItemPack packed = SwappedLE(PackedDiabloMPItems[i]);
@@ -766,8 +766,8 @@ TEST_F(PackTest, UnPackItem_hellfire)
 	gbIsMultiplayer = false;
 	gbIsSpawn = false;
 
-	MyPlayer->_pMaxManaBase = 125 << 6;
-	MyPlayer->_pMaxHPBase = 125 << 6;
+	MyPlayer->baseMaxMana = 125 << 6;
+	MyPlayer->baseMaxLife = 125 << 6;
 
 	for (size_t i = 0; i < sizeof(PackedHellfireItems) / sizeof(*PackedHellfireItems); i++) {
 		const ItemPack packed = SwappedLE(PackedHellfireItems[i]);
@@ -1004,108 +1004,108 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_oob)
 	ASSERT_FALSE(TestNetPackValidation());
 }
 
-TEST_F(NetPackTest, UnPackNetPlayer_invalid_plrlevel)
+TEST_F(NetPackTest, UnPackNetPlayer_invalid_dungeonLevel)
 {
-	MyPlayer->plrlevel = NUMLEVELS;
+	MyPlayer->dungeonLevel = NUMLEVELS;
 	ASSERT_FALSE(TestNetPackValidation());
 }
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_hpBase)
 {
-	MyPlayer->_pHPBase = -64;
+	MyPlayer->baseLife = -64;
 	ASSERT_FALSE(TestNetPackValidation());
 
-	MyPlayer->_pHPBase = MyPlayer->_pMaxHPBase + 64;
+	MyPlayer->baseLife = MyPlayer->baseMaxLife + 64;
 	ASSERT_FALSE(TestNetPackValidation());
 }
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_manaBase)
 {
-	MyPlayer->_pManaBase = MyPlayer->_pMaxManaBase + 64;
+	MyPlayer->baseMana = MyPlayer->baseMaxMana + 64;
 	ASSERT_FALSE(TestNetPackValidation());
 }
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_baseStr)
 {
-	MyPlayer->_pBaseStr = MyPlayer->GetMaximumAttributeValue(CharacterAttribute::Strength) + 1;
+	MyPlayer->baseStrength = MyPlayer->GetMaximumAttributeValue(CharacterAttribute::Strength) + 1;
 	ASSERT_FALSE(TestNetPackValidation());
 }
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_baseMag)
 {
-	MyPlayer->_pBaseMag = MyPlayer->GetMaximumAttributeValue(CharacterAttribute::Magic) + 1;
+	MyPlayer->baseMagic = MyPlayer->GetMaximumAttributeValue(CharacterAttribute::Magic) + 1;
 	ASSERT_FALSE(TestNetPackValidation());
 }
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_baseDex)
 {
-	MyPlayer->_pBaseDex = MyPlayer->GetMaximumAttributeValue(CharacterAttribute::Dexterity) + 1;
+	MyPlayer->baseDexterity = MyPlayer->GetMaximumAttributeValue(CharacterAttribute::Dexterity) + 1;
 	ASSERT_FALSE(TestNetPackValidation());
 }
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_baseVit)
 {
-	MyPlayer->_pBaseVit = MyPlayer->GetMaximumAttributeValue(CharacterAttribute::Vitality) + 1;
+	MyPlayer->baseVitality = MyPlayer->GetMaximumAttributeValue(CharacterAttribute::Vitality) + 1;
 	ASSERT_FALSE(TestNetPackValidation());
 }
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_numInv)
 {
-	MyPlayer->_pNumInv = InventoryGridCells + 1;
+	MyPlayer->numInventoryItems = InventoryGridCells + 1;
 	ASSERT_FALSE(TestNetPackValidation());
 }
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_strength)
 {
-	MyPlayer->_pStrength++;
+	MyPlayer->strength++;
 	ASSERT_FALSE(TestNetPackValidation());
 }
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_magic)
 {
-	MyPlayer->_pMagic++;
+	MyPlayer->magic++;
 	ASSERT_FALSE(TestNetPackValidation());
 }
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_dexterity)
 {
-	MyPlayer->_pDexterity++;
+	MyPlayer->dexterity++;
 	ASSERT_FALSE(TestNetPackValidation());
 }
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_vitality)
 {
-	MyPlayer->_pVitality++;
+	MyPlayer->vitality++;
 	ASSERT_FALSE(TestNetPackValidation());
 }
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_hitPoints)
 {
-	MyPlayer->_pHitPoints++;
+	MyPlayer->life++;
 	ASSERT_FALSE(TestNetPackValidation());
 }
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_maxHP)
 {
-	MyPlayer->_pMaxHP++;
+	MyPlayer->maxLife++;
 	ASSERT_FALSE(TestNetPackValidation());
 }
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_mana)
 {
-	MyPlayer->_pMana++;
+	MyPlayer->mana++;
 	ASSERT_FALSE(TestNetPackValidation());
 }
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_maxMana)
 {
-	MyPlayer->_pMaxMana++;
+	MyPlayer->maxMana++;
 	ASSERT_FALSE(TestNetPackValidation());
 }
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_damageMod)
 {
-	MyPlayer->_pDamageMod++;
+	MyPlayer->damageModifier++;
 	ASSERT_FALSE(TestNetPackValidation());
 }
 
@@ -1119,189 +1119,189 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_baseToBlk)
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_iMinDam)
 {
-	MyPlayer->_pIMinDam++;
+	MyPlayer->minDamage++;
 	ASSERT_FALSE(TestNetPackValidation());
 
 	CalcPlrItemVals(*MyPlayer, false);
 	ASSERT_TRUE(TestNetPackValidation());
 
-	MyPlayer->InvBody[INVLOC_HAND_LEFT]._iMinDam++;
+	MyPlayer->bodySlot[INVLOC_HAND_LEFT]._iMinDam++;
 	CalcPlrItemVals(*MyPlayer, false);
 	ASSERT_FALSE(TestNetPackValidation());
 }
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_iMaxDam)
 {
-	MyPlayer->_pIMaxDam++;
+	MyPlayer->maxDamage++;
 	ASSERT_FALSE(TestNetPackValidation());
 
 	CalcPlrItemVals(*MyPlayer, false);
 	ASSERT_TRUE(TestNetPackValidation());
 
-	MyPlayer->InvBody[INVLOC_HAND_LEFT]._iMaxDam++;
+	MyPlayer->bodySlot[INVLOC_HAND_LEFT]._iMaxDam++;
 	CalcPlrItemVals(*MyPlayer, false);
 	ASSERT_FALSE(TestNetPackValidation());
 }
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_iAC)
 {
-	MyPlayer->_pIAC++;
+	MyPlayer->armorClass++;
 	ASSERT_FALSE(TestNetPackValidation());
 
 	CalcPlrItemVals(*MyPlayer, false);
 	ASSERT_TRUE(TestNetPackValidation());
 
-	MyPlayer->InvBody[INVLOC_CHEST]._iAC++;
+	MyPlayer->bodySlot[INVLOC_CHEST]._iAC++;
 	CalcPlrItemVals(*MyPlayer, false);
 	ASSERT_FALSE(TestNetPackValidation());
 }
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_iBonusDam)
 {
-	MyPlayer->_pIBonusDam++;
+	MyPlayer->bonusDamagePercent++;
 	ASSERT_FALSE(TestNetPackValidation());
 
 	CalcPlrItemVals(*MyPlayer, false);
 	ASSERT_TRUE(TestNetPackValidation());
 
-	MyPlayer->InvBody[INVLOC_HAND_LEFT]._iPLDam++;
+	MyPlayer->bodySlot[INVLOC_HAND_LEFT]._iPLDam++;
 	CalcPlrItemVals(*MyPlayer, false);
 	ASSERT_FALSE(TestNetPackValidation());
 }
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_iBonusToHit)
 {
-	MyPlayer->_pIBonusToHit++;
+	MyPlayer->bonusToHit++;
 	ASSERT_FALSE(TestNetPackValidation());
 
 	CalcPlrItemVals(*MyPlayer, false);
 	ASSERT_TRUE(TestNetPackValidation());
 
-	MyPlayer->InvBody[INVLOC_HAND_LEFT]._iPLToHit++;
+	MyPlayer->bodySlot[INVLOC_HAND_LEFT]._iPLToHit++;
 	CalcPlrItemVals(*MyPlayer, false);
 	ASSERT_FALSE(TestNetPackValidation());
 }
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_iBonusAC)
 {
-	MyPlayer->_pIBonusAC++;
+	MyPlayer->bonusArmorClass++;
 	ASSERT_FALSE(TestNetPackValidation());
 
 	CalcPlrItemVals(*MyPlayer, false);
 	ASSERT_TRUE(TestNetPackValidation());
 
-	MyPlayer->InvBody[INVLOC_CHEST]._iPLAC++;
+	MyPlayer->bodySlot[INVLOC_CHEST]._iPLAC++;
 	CalcPlrItemVals(*MyPlayer, false);
 	ASSERT_FALSE(TestNetPackValidation());
 }
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_iBonusDamMod)
 {
-	MyPlayer->_pIBonusDamMod++;
+	MyPlayer->bonusDamage++;
 	ASSERT_FALSE(TestNetPackValidation());
 
 	CalcPlrItemVals(*MyPlayer, false);
 	ASSERT_TRUE(TestNetPackValidation());
 
-	MyPlayer->InvBody[INVLOC_HAND_LEFT]._iPLDamMod++;
+	MyPlayer->bodySlot[INVLOC_HAND_LEFT]._iPLDamMod++;
 	CalcPlrItemVals(*MyPlayer, false);
 	ASSERT_FALSE(TestNetPackValidation());
 }
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_iGetHit)
 {
-	MyPlayer->_pIGetHit++;
+	MyPlayer->damageFromEnemies++;
 	ASSERT_FALSE(TestNetPackValidation());
 
 	CalcPlrItemVals(*MyPlayer, false);
 	ASSERT_TRUE(TestNetPackValidation());
 
-	MyPlayer->InvBody[INVLOC_CHEST]._iPLGetHit++;
+	MyPlayer->bodySlot[INVLOC_CHEST]._iPLGetHit++;
 	CalcPlrItemVals(*MyPlayer, false);
 	ASSERT_FALSE(TestNetPackValidation());
 }
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_iEnAc)
 {
-	MyPlayer->_pIEnAc++;
+	MyPlayer->armorPierce++;
 	ASSERT_FALSE(TestNetPackValidation());
 
 	CalcPlrItemVals(*MyPlayer, false);
 	ASSERT_TRUE(TestNetPackValidation());
 
-	MyPlayer->InvBody[INVLOC_CHEST]._iPLEnAc++;
+	MyPlayer->bodySlot[INVLOC_CHEST]._iPLEnAc++;
 	CalcPlrItemVals(*MyPlayer, false);
 	ASSERT_FALSE(TestNetPackValidation());
 }
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_iFMinDam)
 {
-	MyPlayer->_pIFMinDam++;
+	MyPlayer->minFireDamage++;
 	ASSERT_FALSE(TestNetPackValidation());
 
 	CalcPlrItemVals(*MyPlayer, false);
 	ASSERT_TRUE(TestNetPackValidation());
 
-	MyPlayer->InvBody[INVLOC_HAND_LEFT]._iFMinDam++;
+	MyPlayer->bodySlot[INVLOC_HAND_LEFT]._iFMinDam++;
 	CalcPlrItemVals(*MyPlayer, false);
 	ASSERT_FALSE(TestNetPackValidation());
 }
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_iFMaxDam)
 {
-	MyPlayer->_pIFMaxDam++;
+	MyPlayer->maxFireDamage++;
 	ASSERT_FALSE(TestNetPackValidation());
 
 	CalcPlrItemVals(*MyPlayer, false);
 	ASSERT_TRUE(TestNetPackValidation());
 
-	MyPlayer->InvBody[INVLOC_HAND_LEFT]._iFMaxDam++;
+	MyPlayer->bodySlot[INVLOC_HAND_LEFT]._iFMaxDam++;
 	CalcPlrItemVals(*MyPlayer, false);
 	ASSERT_FALSE(TestNetPackValidation());
 }
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_iLMinDam)
 {
-	MyPlayer->_pILMinDam++;
+	MyPlayer->minLightningDamage++;
 	ASSERT_FALSE(TestNetPackValidation());
 
 	CalcPlrItemVals(*MyPlayer, false);
 	ASSERT_TRUE(TestNetPackValidation());
 
-	MyPlayer->InvBody[INVLOC_HAND_LEFT]._iLMinDam++;
+	MyPlayer->bodySlot[INVLOC_HAND_LEFT]._iLMinDam++;
 	CalcPlrItemVals(*MyPlayer, false);
 	ASSERT_FALSE(TestNetPackValidation());
 }
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_iLMaxDam)
 {
-	MyPlayer->_pILMaxDam++;
+	MyPlayer->maxLightningDamage++;
 	ASSERT_FALSE(TestNetPackValidation());
 
 	CalcPlrItemVals(*MyPlayer, false);
 	ASSERT_TRUE(TestNetPackValidation());
 
-	MyPlayer->InvBody[INVLOC_HAND_LEFT]._iLMaxDam++;
+	MyPlayer->bodySlot[INVLOC_HAND_LEFT]._iLMaxDam++;
 	CalcPlrItemVals(*MyPlayer, false);
 	ASSERT_FALSE(TestNetPackValidation());
 }
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_maxHPBase)
 {
-	MyPlayer->_pMaxHPBase++;
+	MyPlayer->baseMaxLife++;
 	ASSERT_FALSE(TestNetPackValidation());
 }
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_maxManaBase)
 {
-	MyPlayer->_pMaxManaBase++;
+	MyPlayer->baseMaxMana++;
 	ASSERT_FALSE(TestNetPackValidation());
 }
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_pregenItemFlags)
 {
 	size_t count = 0;
-	for (Item &item : MyPlayer->InvList) {
+	for (Item &item : MyPlayer->inventorySlot) {
 		if (item.isEmpty())
 			continue;
 		if (IsAnyOf(item.IDidx, IDI_GOLD, IDI_EAR))
@@ -1319,7 +1319,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_pregenItemFlags)
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_usefulItemFlags)
 {
 	size_t count = 0;
-	for (Item &item : MyPlayer->InvList) {
+	for (Item &item : MyPlayer->inventorySlot) {
 		if (item.isEmpty())
 			continue;
 		if (IsAnyOf(item.IDidx, IDI_GOLD, IDI_EAR))
@@ -1339,7 +1339,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_usefulItemFlags)
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_townItemFlags)
 {
 	size_t count = 0;
-	for (Item &item : MyPlayer->InvList) {
+	for (Item &item : MyPlayer->inventorySlot) {
 		if (item.isEmpty())
 			continue;
 		if (IsAnyOf(item.IDidx, IDI_GOLD, IDI_EAR))
@@ -1360,7 +1360,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_townItemLevel)
 {
 	size_t boyCount = 0;
 	size_t otherCount = 0;
-	for (Item &item : MyPlayer->InvBody) {
+	for (Item &item : MyPlayer->bodySlot) {
 		if (item.isEmpty())
 			continue;
 		if (IsAnyOf(item.IDidx, IDI_GOLD, IDI_EAR))
@@ -1385,7 +1385,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_townItemLevel)
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_uniqueMonsterItemLevel)
 {
 	size_t count = 0;
-	for (Item &item : MyPlayer->InvList) {
+	for (Item &item : MyPlayer->inventorySlot) {
 		if (item.isEmpty())
 			continue;
 		if (IsAnyOf(item.IDidx, IDI_GOLD, IDI_EAR))
@@ -1406,7 +1406,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_uniqueMonsterItemLevel)
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_monsterItemLevel)
 {
 	size_t count = 0;
-	for (Item &item : MyPlayer->InvBody) {
+	for (Item &item : MyPlayer->bodySlot) {
 		if (item.isEmpty())
 			continue;
 		if (IsAnyOf(item.IDidx, IDI_GOLD, IDI_EAR))

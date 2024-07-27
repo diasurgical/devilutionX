@@ -467,11 +467,11 @@ std::string TextCmdInspect(const std::string_view parameter)
 
 	const std::string param = AsciiStrToLower(parameter);
 	auto it = c_find_if(Players, [&param](const Player &player) {
-		return AsciiStrToLower(player._pName) == param;
+		return AsciiStrToLower(player.name) == param;
 	});
 	if (it == Players.end()) {
 		it = c_find_if(Players, [&param](const Player &player) {
-			return AsciiStrToLower(player._pName).find(param) != std::string::npos;
+			return AsciiStrToLower(player.name).find(param) != std::string::npos;
 		});
 	}
 	if (it == Players.end()) {
@@ -482,7 +482,7 @@ std::string TextCmdInspect(const std::string_view parameter)
 	Player &player = *it;
 	InspectPlayer = &player;
 	StrAppend(ret, _("Inspecting player: "));
-	StrAppend(ret, player._pName);
+	StrAppend(ret, player.name);
 	OpenCharPanel();
 	if (!sbookflag)
 		invflag = true;
@@ -634,23 +634,23 @@ void ControlUpDown(int v)
 void RemoveGold(Player &player, int goldIndex, int amount)
 {
 	const int gi = goldIndex - INVITEM_INV_FIRST;
-	player.InvList[gi]._ivalue -= amount;
-	if (player.InvList[gi]._ivalue > 0) {
-		SetPlrHandGoldCurs(player.InvList[gi]);
+	player.inventorySlot[gi]._ivalue -= amount;
+	if (player.inventorySlot[gi]._ivalue > 0) {
+		SetPlrHandGoldCurs(player.inventorySlot[gi]);
 		NetSyncInvItem(player, gi);
 	} else {
 		player.RemoveInvItem(gi);
 	}
 
-	MakeGoldStack(player.HoldItem, amount);
-	NewCursor(player.HoldItem);
+	MakeGoldStack(player.heldItem, amount);
+	NewCursor(player.heldItem);
 
-	player._pGold = CalculateGold(player);
+	player.gold = CalculateGold(player);
 }
 
 bool IsLevelUpButtonVisible()
 {
-	if (spselflag || chrflag || MyPlayer->_pStatPts == 0) {
+	if (spselflag || chrflag || MyPlayer->statPoints == 0) {
 		return false;
 	}
 	if (ControlMode == ControlTypes::VirtualGamepad) {
@@ -717,7 +717,7 @@ void FocusOnCharInfo()
 {
 	Player &myPlayer = *MyPlayer;
 
-	if (invflag || myPlayer._pStatPts <= 0)
+	if (invflag || myPlayer.statPoints <= 0)
 		return;
 
 	// Find the first incrementable stat.
@@ -802,25 +802,25 @@ void DrawPanelBox(const Surface &out, SDL_Rect srcRect, Point targetPosition)
 void DrawLifeFlaskUpper(const Surface &out)
 {
 	constexpr int LifeFlaskUpperOffset = 109;
-	DrawFlaskUpper(out, *pLifeBuff, LifeFlaskUpperOffset, MyPlayer->_pHPPer);
+	DrawFlaskUpper(out, *pLifeBuff, LifeFlaskUpperOffset, MyPlayer->lifePercentage);
 }
 
 void DrawManaFlaskUpper(const Surface &out)
 {
 	constexpr int ManaFlaskUpperOffset = 475;
-	DrawFlaskUpper(out, *pManaBuff, ManaFlaskUpperOffset, MyPlayer->_pManaPer);
+	DrawFlaskUpper(out, *pManaBuff, ManaFlaskUpperOffset, MyPlayer->manaPercentage);
 }
 
 void DrawLifeFlaskLower(const Surface &out)
 {
 	constexpr int LifeFlaskLowerOffset = 96;
-	DrawFlaskLower(out, *pLifeBuff, LifeFlaskLowerOffset, MyPlayer->_pHPPer);
+	DrawFlaskLower(out, *pLifeBuff, LifeFlaskLowerOffset, MyPlayer->lifePercentage);
 }
 
 void DrawManaFlaskLower(const Surface &out)
 {
 	constexpr int ManaFlaskLowerOffeset = 464;
-	DrawFlaskLower(out, *pManaBuff, ManaFlaskLowerOffeset, MyPlayer->_pManaPer);
+	DrawFlaskLower(out, *pManaBuff, ManaFlaskLowerOffeset, MyPlayer->manaPercentage);
 }
 
 void DrawFlaskValues(const Surface &out, Point pos, int currValue, int maxValue)
@@ -944,7 +944,7 @@ void DrawCtrlBtns(const Surface &out)
 
 	if (PanelButtonIndex == 8) {
 		ClxDraw(out, mainPanelPosition + Displacement { 87, 122 }, (*multiButtons)[PanelButtons[6] ? 1 : 0]);
-		if (MyPlayer->friendlyMode)
+		if (MyPlayer->isFriendlyMode)
 			ClxDraw(out, mainPanelPosition + Displacement { 527, 122 }, (*multiButtons)[PanelButtons[7] ? 3 : 2]);
 		else
 			ClxDraw(out, mainPanelPosition + Displacement { 527, 122 }, (*multiButtons)[PanelButtons[7] ? 5 : 4]);
@@ -977,8 +977,8 @@ void DoPanBtn()
 	if (!spselflag && MousePosition.x >= 565 + mainPanelPosition.x && MousePosition.x < 621 + mainPanelPosition.x && MousePosition.y >= 64 + mainPanelPosition.y && MousePosition.y < 120 + mainPanelPosition.y) {
 		if ((SDL_GetModState() & KMOD_SHIFT) != 0) {
 			Player &myPlayer = *MyPlayer;
-			myPlayer._pRSpell = SpellID::Invalid;
-			myPlayer._pRSplType = SpellType::Invalid;
+			myPlayer.selectedSpell = SpellID::Invalid;
+			myPlayer.selectedSpellType = SpellType::Invalid;
 			RedrawEverything();
 			return;
 		}
@@ -1042,7 +1042,7 @@ void CheckPanelInfo()
 			if (i != 7) {
 				InfoString = _(PanBtnStr[i]);
 			} else {
-				if (MyPlayer->friendlyMode)
+				if (MyPlayer->isFriendlyMode)
 					InfoString = _("Player friendly");
 				else
 					InfoString = _("Player attack");
@@ -1060,9 +1060,9 @@ void CheckPanelInfo()
 		panelflag = true;
 		AddPanelString(_("Hotkey: 's'"));
 		const Player &myPlayer = *MyPlayer;
-		const SpellID spellId = myPlayer._pRSpell;
+		const SpellID spellId = myPlayer.selectedSpell;
 		if (IsValidSpell(spellId)) {
-			switch (myPlayer._pRSplType) {
+			switch (myPlayer.selectedSpellType) {
 			case SpellType::Skill:
 				AddPanelString(fmt::format(fmt::runtime(_("{:s} Skill")), pgettext("spell", GetSpellData(spellId).sNameText)));
 				break;
@@ -1080,7 +1080,7 @@ void CheckPanelInfo()
 			} break;
 			case SpellType::Charges:
 				AddPanelString(fmt::format(fmt::runtime(_("Staff of {:s}")), pgettext("spell", GetSpellData(spellId).sNameText)));
-				AddPanelString(fmt::format(fmt::runtime(ngettext("{:d} Charge", "{:d} Charges", myPlayer.InvBody[INVLOC_HAND_LEFT]._iCharges)), myPlayer.InvBody[INVLOC_HAND_LEFT]._iCharges));
+				AddPanelString(fmt::format(fmt::runtime(ngettext("{:d} Charge", "{:d} Charges", myPlayer.bodySlot[INVLOC_HAND_LEFT]._iCharges)), myPlayer.bodySlot[INVLOC_HAND_LEFT]._iCharges));
 				break;
 			case SpellType::Invalid:
 				break;
@@ -1196,15 +1196,15 @@ void DrawInfoBox(const Surface &out)
 	Player &myPlayer = *MyPlayer;
 	if (spselflag || trigflag) {
 		InfoColor = UiFlags::ColorWhite;
-	} else if (!myPlayer.HoldItem.isEmpty()) {
-		if (myPlayer.HoldItem._itype == ItemType::Gold) {
-			int nGold = myPlayer.HoldItem._ivalue;
+	} else if (!myPlayer.heldItem.isEmpty()) {
+		if (myPlayer.heldItem._itype == ItemType::Gold) {
+			int nGold = myPlayer.heldItem._ivalue;
 			InfoString = fmt::format(fmt::runtime(ngettext("{:s} gold piece", "{:s} gold pieces", nGold)), FormatInteger(nGold));
-		} else if (!myPlayer.CanUseItem(myPlayer.HoldItem)) {
+		} else if (!myPlayer.CanUseItem(myPlayer.heldItem)) {
 			InfoString = _("Requirements not met");
 		} else {
-			InfoString = myPlayer.HoldItem.getName();
-			InfoColor = myPlayer.HoldItem.getTextColor();
+			InfoString = myPlayer.heldItem.getName();
+			InfoColor = myPlayer.heldItem.getTextColor();
 		}
 	} else {
 		if (pcursitem != -1)
@@ -1229,9 +1229,9 @@ void DrawInfoBox(const Surface &out)
 		if (PlayerUnderCursor != nullptr) {
 			InfoColor = UiFlags::ColorWhitegold;
 			auto &target = *PlayerUnderCursor;
-			InfoString = std::string_view(target._pName);
+			InfoString = std::string_view(target.name);
 			AddPanelString(fmt::format(fmt::runtime(_("{:s}, Level: {:d}")), target.getClassName(), target.getCharacterLevel()));
-			AddPanelString(fmt::format(fmt::runtime(_("Hit Points {:d} of {:d}")), target._pHitPoints >> 6, target._pMaxHP >> 6));
+			AddPanelString(fmt::format(fmt::runtime(_("Hit Points {:d} of {:d}")), target.life >> 6, target.maxLife >> 6));
 		}
 	}
 	if (!InfoString.empty())
@@ -1272,7 +1272,7 @@ void CheckChrBtns()
 {
 	Player &myPlayer = *MyPlayer;
 
-	if (chrbtnactive || myPlayer._pStatPts == 0)
+	if (chrbtnactive || myPlayer.statPoints == 0)
 		return;
 
 	for (auto attribute : enum_values<CharacterAttribute>()) {
@@ -1303,23 +1303,23 @@ void ReleaseChrBtns(bool addAllStatPoints)
 			Player &myPlayer = *MyPlayer;
 			int statPointsToAdd = 1;
 			if (addAllStatPoints)
-				statPointsToAdd = CapStatPointsToAdd(myPlayer._pStatPts, myPlayer, attribute);
+				statPointsToAdd = CapStatPointsToAdd(myPlayer.statPoints, myPlayer, attribute);
 			switch (attribute) {
 			case CharacterAttribute::Strength:
 				NetSendCmdParam1(true, CMD_ADDSTR, statPointsToAdd);
-				myPlayer._pStatPts -= statPointsToAdd;
+				myPlayer.statPoints -= statPointsToAdd;
 				break;
 			case CharacterAttribute::Magic:
 				NetSendCmdParam1(true, CMD_ADDMAG, statPointsToAdd);
-				myPlayer._pStatPts -= statPointsToAdd;
+				myPlayer.statPoints -= statPointsToAdd;
 				break;
 			case CharacterAttribute::Dexterity:
 				NetSendCmdParam1(true, CMD_ADDDEX, statPointsToAdd);
-				myPlayer._pStatPts -= statPointsToAdd;
+				myPlayer.statPoints -= statPointsToAdd;
 				break;
 			case CharacterAttribute::Vitality:
 				NetSendCmdParam1(true, CMD_ADDVIT, statPointsToAdd);
-				myPlayer._pStatPts -= statPointsToAdd;
+				myPlayer.statPoints -= statPointsToAdd;
 				break;
 			}
 		}
@@ -1343,10 +1343,10 @@ void DrawDurIcon(const Surface &out)
 	}
 
 	Player &myPlayer = *MyPlayer;
-	x = DrawDurIcon4Item(out, myPlayer.InvBody[INVLOC_HEAD], x, 3);
-	x = DrawDurIcon4Item(out, myPlayer.InvBody[INVLOC_CHEST], x, 2);
-	x = DrawDurIcon4Item(out, myPlayer.InvBody[INVLOC_HAND_LEFT], x, 0);
-	DrawDurIcon4Item(out, myPlayer.InvBody[INVLOC_HAND_RIGHT], x, 0);
+	x = DrawDurIcon4Item(out, myPlayer.bodySlot[INVLOC_HEAD], x, 3);
+	x = DrawDurIcon4Item(out, myPlayer.bodySlot[INVLOC_CHEST], x, 2);
+	x = DrawDurIcon4Item(out, myPlayer.bodySlot[INVLOC_HAND_LEFT], x, 0);
+	DrawDurIcon4Item(out, myPlayer.bodySlot[INVLOC_HAND_RIGHT], x, 0);
 }
 
 void RedBack(const Surface &out)
@@ -1403,7 +1403,7 @@ void control_drop_gold(SDL_Keycode vkey)
 {
 	Player &myPlayer = *MyPlayer;
 
-	if (myPlayer._pHitPoints >> 6 <= 0) {
+	if (myPlayer.life >> 6 <= 0) {
 		CloseGoldDrop();
 		return;
 	}
@@ -1462,7 +1462,7 @@ void DrawTalkPan(const Surface &out)
 		if (&player == MyPlayer)
 			continue;
 
-		UiFlags color = player.friendlyMode ? UiFlags::ColorWhitegold : UiFlags::ColorRed;
+		UiFlags color = player.isFriendlyMode ? UiFlags::ColorWhitegold : UiFlags::ColorRed;
 		const Point talkPanPosition = mainPanelPosition + Displacement { 172, 84 + 18 * talkBtn };
 		if (WhisperList[i]) {
 			// the normal (unpressed) voice button is pre-rendered on the panel, only need to draw over it when the button is held
@@ -1484,8 +1484,8 @@ void DrawTalkPan(const Surface &out)
 			// the first button be treated the same as the other two further down the panel.
 			RenderClxSprite(out, (*TalkButton)[TalkButtonsDown[talkBtn] ? 1 : 0], talkPanPosition + Displacement { 4, -15 });
 		}
-		if (player.plractive) {
-			DrawString(out, player._pName, { { x, y + 60 + talkBtn * 18 }, { 204, 0 } }, { .flags = color });
+		if (player.isPlayerActive) {
+			DrawString(out, player.name, { { x, y + 60 + talkBtn * 18 }, { 204, 0 } }, { .flags = color });
 		}
 
 		talkBtn++;

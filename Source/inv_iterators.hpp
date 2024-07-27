@@ -205,7 +205,7 @@ public:
 
 	[[nodiscard]] Iterator begin() const
 	{
-		return Iterator { &player_->InvBody[0], containerSize(), 0 };
+		return Iterator { &player_->bodySlot[0], containerSize(), 0 };
 	}
 
 	[[nodiscard]] Iterator end() const
@@ -216,7 +216,7 @@ public:
 private:
 	[[nodiscard]] std::size_t containerSize() const
 	{
-		return sizeof(player_->InvBody) / sizeof(player_->InvBody[0]);
+		return sizeof(player_->bodySlot) / sizeof(player_->bodySlot[0]);
 	}
 
 	PlayerT *player_;
@@ -240,7 +240,7 @@ public:
 
 	[[nodiscard]] Iterator begin() const
 	{
-		return Iterator { &player_->InvList[0], containerSize(), 0 };
+		return Iterator { &player_->inventorySlot[0], containerSize(), 0 };
 	}
 
 	[[nodiscard]] Iterator end() const
@@ -251,7 +251,7 @@ public:
 private:
 	[[nodiscard]] std::size_t containerSize() const
 	{
-		return static_cast<std::size_t>(player_->_pNumInv);
+		return static_cast<std::size_t>(player_->numInventoryItems);
 	}
 
 	PlayerT *player_;
@@ -275,7 +275,7 @@ public:
 
 	[[nodiscard]] Iterator begin() const
 	{
-		return Iterator { &player_->SpdList[0], containerSize(), 0 };
+		return Iterator { &player_->beltSlot[0], containerSize(), 0 };
 	}
 
 	[[nodiscard]] Iterator end() const
@@ -286,7 +286,7 @@ public:
 private:
 	[[nodiscard]] std::size_t containerSize() const
 	{
-		return sizeof(player_->SpdList) / sizeof(player_->SpdList[0]);
+		return sizeof(player_->beltSlot) / sizeof(player_->beltSlot[0]);
 	}
 
 	PlayerT *player_;

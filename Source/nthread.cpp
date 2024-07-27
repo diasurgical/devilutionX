@@ -244,12 +244,12 @@ void nthread_UpdateProgressToNextGameTick()
 	int currentTickCount = SDL_GetTicks();
 	int ticksMissing = last_tick - currentTickCount;
 	if (ticksMissing <= 0) {
-		ProgressToNextGameTick = AnimationInfo::baseValueFraction; // game tick is due
+		ProgressToNextGameTick = PlayerAnimationInfo::baseValueFraction; // game tick is due
 		return;
 	}
 	int ticksAdvanced = gnTickDelay - ticksMissing;
-	int32_t fraction = ticksAdvanced * AnimationInfo::baseValueFraction / gnTickDelay;
-	fraction = std::clamp<int32_t>(fraction, 0, AnimationInfo::baseValueFraction);
+	int32_t fraction = ticksAdvanced * PlayerAnimationInfo::baseValueFraction / gnTickDelay;
+	fraction = std::clamp<int32_t>(fraction, 0, PlayerAnimationInfo::baseValueFraction);
 	ProgressToNextGameTick = static_cast<uint8_t>(fraction);
 }
 

@@ -212,7 +212,7 @@ struct Monster { // note: missing field _mAFNum
 	/**
 	 * @brief Contains information for current animation
 	 */
-	AnimationInfo animInfo;
+	PlayerAnimationInfo animationInfo;
 	int maxHitPoints;
 	int hitPoints;
 	uint32_t flags;
@@ -288,21 +288,21 @@ struct Monster { // note: missing field _mAFNum
 	 * @param graphic Animation sequence of interest
 	 * @param desiredDirection Desired desiredDirection the monster should be visually facing
 	 */
-	void changeAnimationData(MonsterGraphic graphic, Direction desiredDirection)
+	void changeanimationData(MonsterGraphic graphic, Direction desiredDirection)
 	{
 		const AnimStruct &animationData = type().getAnimData(graphic);
 
 		// Passing the frames and rate properties here is only relevant when initialising a monster, but doesn't cause any harm when switching animations.
-		this->animInfo.changeAnimationData(animationData.spritesForDirection(desiredDirection), animationData.frames, animationData.rate);
+		this->animationInfo.changeanimationData(animationData.spritesForDirection(desiredDirection), animationData.frames, animationData.rate);
 	}
 
 	/**
 	 * @brief Sets the current cell sprite to match the desired animation sequence using the direction the monster is currently facing
 	 * @param graphic Animation sequence of interest
 	 */
-	void changeAnimationData(MonsterGraphic graphic)
+	void changeanimationData(MonsterGraphic graphic)
 	{
-		this->changeAnimationData(graphic, this->direction);
+		this->changeanimationData(graphic, this->direction);
 	}
 
 	/**
@@ -460,7 +460,7 @@ struct Monster { // note: missing field _mAFNum
 	{
 		Displacement offset = { -CalculateWidth2(sprite.width()), 0 };
 		if (isWalking())
-			offset += GetOffsetForWalking(animInfo, direction);
+			offset += GetOffsetForWalking(animationInfo, direction);
 		return offset;
 	}
 

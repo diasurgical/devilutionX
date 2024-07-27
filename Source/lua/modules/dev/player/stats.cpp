@@ -27,20 +27,20 @@ std::string DebugCmdLevelUp(std::optional<int> levels)
 std::string DebugCmdMaxStats()
 {
 	Player &myPlayer = *MyPlayer;
-	ModifyPlrStr(myPlayer, myPlayer.GetMaximumAttributeValue(CharacterAttribute::Strength) - myPlayer._pBaseStr);
-	ModifyPlrMag(myPlayer, myPlayer.GetMaximumAttributeValue(CharacterAttribute::Magic) - myPlayer._pBaseMag);
-	ModifyPlrDex(myPlayer, myPlayer.GetMaximumAttributeValue(CharacterAttribute::Dexterity) - myPlayer._pBaseDex);
-	ModifyPlrVit(myPlayer, myPlayer.GetMaximumAttributeValue(CharacterAttribute::Vitality) - myPlayer._pBaseVit);
+	ModifyPlrStr(myPlayer, myPlayer.GetMaximumAttributeValue(CharacterAttribute::Strength) - myPlayer.baseStrength);
+	ModifyPlrMag(myPlayer, myPlayer.GetMaximumAttributeValue(CharacterAttribute::Magic) - myPlayer.baseMagic);
+	ModifyPlrDex(myPlayer, myPlayer.GetMaximumAttributeValue(CharacterAttribute::Dexterity) - myPlayer.baseDexterity);
+	ModifyPlrVit(myPlayer, myPlayer.GetMaximumAttributeValue(CharacterAttribute::Vitality) - myPlayer.baseVitality);
 	return "Set all character base attributes to maximum.";
 }
 
 std::string DebugCmdMinStats()
 {
 	Player &myPlayer = *MyPlayer;
-	ModifyPlrStr(myPlayer, -myPlayer._pBaseStr);
-	ModifyPlrMag(myPlayer, -myPlayer._pBaseMag);
-	ModifyPlrDex(myPlayer, -myPlayer._pBaseDex);
-	ModifyPlrVit(myPlayer, -myPlayer._pBaseVit);
+	ModifyPlrStr(myPlayer, -myPlayer.baseStrength);
+	ModifyPlrMag(myPlayer, -myPlayer.baseMagic);
+	ModifyPlrDex(myPlayer, -myPlayer.baseDexterity);
+	ModifyPlrVit(myPlayer, -myPlayer.baseVitality);
 	return "Set all character base attributes to minimum.";
 }
 
@@ -60,7 +60,7 @@ std::string DebugCmdChangeHealth(int change)
 	if (change == 0)
 		return StrCat("Enter a value not equal to 0 to change life!");
 
-	int newHealth = myPlayer._pHitPoints + (change * 64);
+	int newHealth = myPlayer.life + (change * 64);
 	SetPlayerHitPoints(myPlayer, newHealth);
 	if (newHealth <= 0)
 		SyncPlrKill(myPlayer, DeathReason::MonsterOrTrap);
@@ -74,9 +74,9 @@ std::string DebugCmdChangeMana(int change)
 	if (change == 0)
 		return StrCat("Enter a value not equal to 0 to change mana!");
 
-	int newMana = myPlayer._pMana + (change * 64);
-	myPlayer._pMana = newMana;
-	myPlayer._pManaBase = myPlayer._pMana + myPlayer._pMaxManaBase - myPlayer._pMaxMana;
+	int newMana = myPlayer.mana + (change * 64);
+	myPlayer.mana = newMana;
+	myPlayer.baseMana = myPlayer.mana + myPlayer.baseMaxMana - myPlayer.maxMana;
 	RedrawComponent(PanelDrawComponent::Mana);
 
 	return StrCat("Changed mana by ", change);

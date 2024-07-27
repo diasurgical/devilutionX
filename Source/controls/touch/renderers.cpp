@@ -160,7 +160,7 @@ void LoadPotionArt(ButtonTexture *potionArt, SDL_Renderer *renderer)
 bool InteractsWithCharButton(Point point)
 {
 	Player &myPlayer = *MyPlayer;
-	if (myPlayer._pStatPts == 0)
+	if (myPlayer.statPoints == 0)
 		return false;
 	for (auto attribute : enum_values<CharacterAttribute>()) {
 		if (myPlayer.GetBaseAttributeValue(attribute) >= myPlayer.GetMaximumAttributeValue(attribute))
@@ -286,7 +286,7 @@ void VirtualMenuPanelRenderer::Render(RenderFunction renderFunction)
 	int width = virtualMenuPanel->area.size.width;
 	int height = virtualMenuPanel->area.size.height;
 	SDL_Rect rect { x, y, width, height };
-	renderFunction(MyPlayer->_pStatPts == 0 ? menuArt : menuArtLevelUp, nullptr, &rect);
+	renderFunction(MyPlayer->statPoints == 0 ? menuArt : menuArtLevelUp, nullptr, &rect);
 }
 
 void VirtualDirectionPadRenderer::Render(RenderFunction renderFunction)
@@ -377,7 +377,7 @@ void PotionButtonRenderer::RenderPotion(RenderFunction renderFunction, const But
 
 std::optional<VirtualGamepadPotionType> PotionButtonRenderer::GetPotionType()
 {
-	for (const Item &item : InspectPlayer->SpdList) {
+	for (const Item &item : InspectPlayer->beltSlot) {
 		if (item.isEmpty()) {
 			continue;
 		}
@@ -486,7 +486,7 @@ VirtualGamepadButtonType SecondaryActionButtonRenderer::GetButtonType()
 
 VirtualGamepadButtonType SpellActionButtonRenderer::GetButtonType()
 {
-	if (!MyPlayer->HoldItem.isEmpty())
+	if (!MyPlayer->heldItem.isEmpty())
 		return GetDropButtonType(virtualPadButton->isHeld);
 
 	if (invflag && pcursinvitem != -1 && pcurs == CURSOR_HAND) {

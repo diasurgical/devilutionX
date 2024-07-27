@@ -128,22 +128,22 @@ namespace {
 OptionalOwnedClxSpriteList pInvCels;
 
 /**
- * @brief Adds an item to a player's InvGrid array
+ * @brief Adds an item to a player's inventoryGrid array
  * @param player The player reference
- * @param invGridIndex Item's position in InvGrid (this should be the item's topleft grid tile)
- * @param invListIndex The item's InvList index (it's expected this already has +1 added to it since InvGrid can't store a 0 index)
+ * @param invGridIndex Item's position in inventoryGrid (this should be the item's topleft grid tile)
+ * @param invListIndex The item's inventorySlot index (it's expected this already has +1 added to it since inventoryGrid can't store a 0 index)
  * @param itemSize Size of item
  */
-void AddItemToInvGrid(Player &player, int invGridIndex, int invListIndex, Size itemSize, bool sendNetworkMessage)
+void AddItemToinventoryGrid(Player &player, int invGridIndex, int invListIndex, Size itemSize, bool sendNetworkMessage)
 {
 	const int pitch = 10;
 	for (int y = 0; y < itemSize.height; y++) {
 		int rowGridIndex = invGridIndex + pitch * y;
 		for (int x = 0; x < itemSize.width; x++) {
 			if (x == 0 && y == itemSize.height - 1)
-				player.InvGrid[rowGridIndex + x] = invListIndex;
+				player.inventoryGrid[rowGridIndex + x] = invListIndex;
 			else
-				player.InvGrid[rowGridIndex + x] = -invListIndex;
+				player.inventoryGrid[rowGridIndex + x] = -invListIndex;
 		}
 	}
 
@@ -187,8 +187,8 @@ bool CanWield(Player &player, const Item &item)
 	if (!CanEquip(item) || IsNoneOf(player.GetItemLocation(item), ILOC_ONEHAND, ILOC_TWOHAND))
 		return false;
 
-	Item &leftHandItem = player.InvBody[INVLOC_HAND_LEFT];
-	Item &rightHandItem = player.InvBody[INVLOC_HAND_RIGHT];
+	Item &leftHandItem = player.bodySlot[INVLOC_HAND_LEFT];
+	Item &rightHandItem = player.bodySlot[INVLOC_HAND_RIGHT];
 
 	if (leftHandItem.isEmpty() && rightHandItem.isEmpty()) {
 		return true;
@@ -202,7 +202,7 @@ bool CanWield(Player &player, const Item &item)
 
 	// Bard can dual wield swords and maces, so we allow equiping one-handed weapons in her free slot as long as her occupied
 	// slot is another one-handed weapon.
-	if (player._pClass == HeroClass::Bard) {
+	if (player.heroClass == HeroClass::Bard) {
 		bool occupiedHandIsOneHandedSwordOrMace = player.GetItemLocation(occupiedHand) == ILOC_ONEHAND
 		    && IsAnyOf(occupiedHand._itype, ItemType::Sword, ItemType::Mace);
 
@@ -229,7 +229,7 @@ bool CanWield(Player &player, const Item &item)
  */
 bool CanEquip(Player &player, const Item &item, inv_body_loc bodyLocation)
 {
-	if (!CanEquip(item) || player._pmode > PM_WALK_SIDEWAYS || !player.InvBody[bodyLocation].isEmpty()) {
+	if (!CanEquip(item) || player.mode > PM_WALK_SIDEWAYS || !player.bodySlot[bodyLocation].isEmpty()) {
 		return false;
 	}
 
@@ -258,7 +258,7 @@ bool CanEquip(Player &player, const Item &item, inv_body_loc bodyLocation)
 
 void ChangeEquipment(Player &player, inv_body_loc bodyLocation, const Item &item, bool sendNetworkMessage)
 {
-	player.InvBody[bodyLocation] = item;
+	player.bodySlot[bodyLocation] = item;
 
 	if (sendNetworkMessage) {
 		NetSendCmdChItem(false, bodyLocation, true);
@@ -341,10 +341,10 @@ void ChangeBodyEquipment(Player &player, int slot, item_equip_type location)
 			app_fatal("Unexpected equipment type");
 		}
 	}(location);
-	const Item previouslyEquippedItem = player.InvBody[slot];
-	ChangeEquipment(player, bodyLocation, player.HoldItem.pop(), &player == MyPlayer);
+	const Item previouslyEquippedItem = player.bodySlot[slot];
+	ChangeEquipment(player, bodyLocation, player.heldItem.pop(), &player == MyPlayer);
 	if (!previouslyEquippedItem.isEmpty()) {
-		player.HoldItem = previouslyEquippedItem;
+		player.heldItem = previouslyEquippedItem;
 	}
 }
 
@@ -353,51 +353,51 @@ void ChangeEquippedItem(Player &player, uint8_t slot)
 	const inv_body_loc selectedHand = slot == SLOTXY_HAND_LEFT ? INVLOC_HAND_LEFT : INVLOC_HAND_RIGHT;
 	const inv_body_loc otherHand = slot == SLOTXY_HAND_LEFT ? INVLOC_HAND_RIGHT : INVLOC_HAND_LEFT;
 
-	const bool pasteIntoSelectedHand = (player.InvBody[otherHand].isEmpty() || player.InvBody[otherHand]._iClass != player.HoldItem._iClass)
-	    || (player._pClass == HeroClass::Bard && player.InvBody[otherHand]._iClass == ICLASS_WEAPON && player.HoldItem._iClass == ICLASS_WEAPON);
+	const bool pasteIntoSelectedHand = (player.bodySlot[otherHand].isEmpty() || player.bodySlot[otherHand]._iClass != player.heldItem._iClass)
+	    || (player.heroClass == HeroClass::Bard && player.bodySlot[otherHand]._iClass == ICLASS_WEAPON && player.heldItem._iClass == ICLASS_WEAPON);
 
-	const bool dequipTwoHandedWeapon = (!player.InvBody[otherHand].isEmpty() && player.GetItemLocation(player.InvBody[otherHand]) == ILOC_TWOHAND);
+	const bool dequipTwoHandedWeapon = (!player.bodySlot[otherHand].isEmpty() && player.GetItemLocation(player.bodySlot[otherHand]) == ILOC_TWOHAND);
 
 	const inv_body_loc pasteHand = pasteIntoSelectedHand ? selectedHand : otherHand;
-	const Item previouslyEquippedItem = dequipTwoHandedWeapon ? player.InvBody[otherHand] : player.InvBody[pasteHand];
+	const Item previouslyEquippedItem = dequipTwoHandedWeapon ? player.bodySlot[otherHand] : player.bodySlot[pasteHand];
 	if (dequipTwoHandedWeapon) {
 		RemoveEquipment(player, otherHand, false);
 	}
-	ChangeEquipment(player, pasteHand, player.HoldItem.pop(), &player == MyPlayer);
+	ChangeEquipment(player, pasteHand, player.heldItem.pop(), &player == MyPlayer);
 	if (!previouslyEquippedItem.isEmpty()) {
-		player.HoldItem = previouslyEquippedItem;
+		player.heldItem = previouslyEquippedItem;
 	}
 }
 
 void ChangeTwoHandItem(Player &player)
 {
-	if (!player.InvBody[INVLOC_HAND_LEFT].isEmpty() && !player.InvBody[INVLOC_HAND_RIGHT].isEmpty()) {
+	if (!player.bodySlot[INVLOC_HAND_LEFT].isEmpty() && !player.bodySlot[INVLOC_HAND_RIGHT].isEmpty()) {
 		inv_body_loc locationToUnequip = INVLOC_HAND_LEFT;
-		if (player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Shield) {
+		if (player.bodySlot[INVLOC_HAND_RIGHT]._itype == ItemType::Shield) {
 			locationToUnequip = INVLOC_HAND_RIGHT;
 		}
-		if (!AutoPlaceItemInInventory(player, player.InvBody[locationToUnequip], true)) {
+		if (!AutoPlaceItemInInventory(player, player.bodySlot[locationToUnequip], true)) {
 			return;
 		}
 
 		if (locationToUnequip == INVLOC_HAND_RIGHT) {
 			RemoveEquipment(player, INVLOC_HAND_RIGHT, false);
 		} else {
-			player.InvBody[INVLOC_HAND_LEFT].clear();
+			player.bodySlot[INVLOC_HAND_LEFT].clear();
 		}
 	}
 
-	if (player.InvBody[INVLOC_HAND_RIGHT].isEmpty()) {
-		Item previouslyEquippedItem = player.InvBody[INVLOC_HAND_LEFT];
-		ChangeEquipment(player, INVLOC_HAND_LEFT, player.HoldItem.pop(), &player == MyPlayer);
+	if (player.bodySlot[INVLOC_HAND_RIGHT].isEmpty()) {
+		Item previouslyEquippedItem = player.bodySlot[INVLOC_HAND_LEFT];
+		ChangeEquipment(player, INVLOC_HAND_LEFT, player.heldItem.pop(), &player == MyPlayer);
 		if (!previouslyEquippedItem.isEmpty()) {
-			player.HoldItem = previouslyEquippedItem;
+			player.heldItem = previouslyEquippedItem;
 		}
 	} else {
-		Item previouslyEquippedItem = player.InvBody[INVLOC_HAND_RIGHT];
+		Item previouslyEquippedItem = player.bodySlot[INVLOC_HAND_RIGHT];
 		RemoveEquipment(player, INVLOC_HAND_RIGHT, false);
-		ChangeEquipment(player, INVLOC_HAND_LEFT, player.HoldItem, &player == MyPlayer);
-		player.HoldItem = previouslyEquippedItem;
+		ChangeEquipment(player, INVLOC_HAND_LEFT, player.heldItem, &player == MyPlayer);
+		player.heldItem = previouslyEquippedItem;
 	}
 }
 
@@ -412,9 +412,9 @@ int8_t CheckOverlappingItems(int slot, const Player &player, Size itemSize)
 		for (unsigned columnOffset = 0; columnOffset < static_cast<unsigned>(itemSize.width); columnOffset++) {
 			unsigned testCell = originCell + rowOffset + columnOffset;
 			// FindTargetSlotUnderItemCursor returns the top left slot of the inventory region that fits the item, we can be confident this calculation is not going to read out of range.
-			assert(testCell < sizeof(player.InvGrid));
-			if (player.InvGrid[testCell] != 0) {
-				int8_t iv = std::abs(player.InvGrid[testCell]);
+			assert(testCell < sizeof(player.inventoryGrid));
+			if (player.inventoryGrid[testCell] != 0) {
+				int8_t iv = std::abs(player.inventoryGrid[testCell]);
 				if (overlappingId != 0) {
 					if (overlappingId != iv) {
 						// Found two different items that would be displaced by the held item, can't paste the item here.
@@ -432,14 +432,14 @@ int8_t CheckOverlappingItems(int slot, const Player &player, Size itemSize)
 
 int8_t GetPrevItemId(int slot, const Player &player, const Size &itemSize)
 {
-	if (player.HoldItem._itype != ItemType::Gold)
+	if (player.heldItem._itype != ItemType::Gold)
 		return CheckOverlappingItems(slot, player, itemSize);
-	int8_t item_cell_begin = player.InvGrid[slot - SLOTXY_INV_FIRST];
+	int8_t item_cell_begin = player.inventoryGrid[slot - SLOTXY_INV_FIRST];
 	if (item_cell_begin == 0)
 		return 0;
 	if (item_cell_begin <= 0)
 		return -item_cell_begin;
-	if (player.InvList[item_cell_begin - 1]._itype != ItemType::Gold)
+	if (player.inventorySlot[item_cell_begin - 1]._itype != ItemType::Gold)
 		return item_cell_begin;
 	return 0;
 }
@@ -449,48 +449,48 @@ bool ChangeInvItem(Player &player, int slot, Size itemSize)
 	int8_t prevItemId = GetPrevItemId(slot, player, itemSize);
 	if (prevItemId < 0) return false;
 
-	if (player.HoldItem._itype == ItemType::Gold && prevItemId == 0) {
+	if (player.heldItem._itype == ItemType::Gold && prevItemId == 0) {
 		const int ii = slot - SLOTXY_INV_FIRST;
-		if (player.InvGrid[ii] > 0) {
-			const int invIndex = player.InvGrid[ii] - 1;
-			const int gt = player.InvList[invIndex]._ivalue;
-			int ig = player.HoldItem._ivalue + gt;
+		if (player.inventoryGrid[ii] > 0) {
+			const int invIndex = player.inventoryGrid[ii] - 1;
+			const int gt = player.inventorySlot[invIndex]._ivalue;
+			int ig = player.heldItem._ivalue + gt;
 			if (ig <= MaxGold) {
-				player.InvList[invIndex]._ivalue = ig;
-				SetPlrHandGoldCurs(player.InvList[invIndex]);
-				player._pGold += player.HoldItem._ivalue;
-				player.HoldItem.clear();
+				player.inventorySlot[invIndex]._ivalue = ig;
+				SetPlrHandGoldCurs(player.inventorySlot[invIndex]);
+				player.gold += player.heldItem._ivalue;
+				player.heldItem.clear();
 			} else {
 				ig = MaxGold - gt;
-				player._pGold += ig;
-				player.HoldItem._ivalue -= ig;
-				SetPlrHandGoldCurs(player.HoldItem);
-				player.InvList[invIndex]._ivalue = MaxGold;
-				player.InvList[invIndex]._iCurs = ICURS_GOLD_LARGE;
+				player.gold += ig;
+				player.heldItem._ivalue -= ig;
+				SetPlrHandGoldCurs(player.heldItem);
+				player.inventorySlot[invIndex]._ivalue = MaxGold;
+				player.inventorySlot[invIndex]._iCurs = ICURS_GOLD_LARGE;
 			}
 		} else {
-			const int invIndex = player._pNumInv;
-			player._pGold += player.HoldItem._ivalue;
-			player.InvList[invIndex] = player.HoldItem.pop();
-			player._pNumInv++;
-			player.InvGrid[ii] = player._pNumInv;
+			const int invIndex = player.numInventoryItems;
+			player.gold += player.heldItem._ivalue;
+			player.inventorySlot[invIndex] = player.heldItem.pop();
+			player.numInventoryItems++;
+			player.inventoryGrid[ii] = player.numInventoryItems;
 		}
 		if (&player == MyPlayer) {
 			NetSendCmdChInvItem(false, ii);
 		}
 	} else {
 		if (prevItemId == 0) {
-			player.InvList[player._pNumInv] = player.HoldItem.pop();
-			player._pNumInv++;
-			prevItemId = player._pNumInv;
+			player.inventorySlot[player.numInventoryItems] = player.heldItem.pop();
+			player.numInventoryItems++;
+			prevItemId = player.numInventoryItems;
 		} else {
 			const int invIndex = prevItemId - 1;
-			if (player.HoldItem._itype == ItemType::Gold)
-				player._pGold += player.HoldItem._ivalue;
-			std::swap(player.InvList[invIndex], player.HoldItem);
-			if (player.HoldItem._itype == ItemType::Gold)
-				player._pGold = CalculateGold(player);
-			for (int8_t &itemIndex : player.InvGrid) {
+			if (player.heldItem._itype == ItemType::Gold)
+				player.gold += player.heldItem._ivalue;
+			std::swap(player.inventorySlot[invIndex], player.heldItem);
+			if (player.heldItem._itype == ItemType::Gold)
+				player.gold = CalculateGold(player);
+			for (int8_t &itemIndex : player.inventoryGrid) {
 				if (itemIndex == prevItemId)
 					itemIndex = 0;
 				if (itemIndex == -prevItemId)
@@ -498,7 +498,7 @@ bool ChangeInvItem(Player &player, int slot, Size itemSize)
 			}
 		}
 
-		AddItemToInvGrid(player, slot - SLOTXY_INV_FIRST, prevItemId, itemSize, &player == MyPlayer);
+		AddItemToinventoryGrid(player, slot - SLOTXY_INV_FIRST, prevItemId, itemSize, &player == MyPlayer);
 	}
 
 	return true;
@@ -507,13 +507,13 @@ bool ChangeInvItem(Player &player, int slot, Size itemSize)
 void ChangeBeltItem(Player &player, int slot)
 {
 	const int ii = slot - SLOTXY_BELT_FIRST;
-	if (player.SpdList[ii].isEmpty()) {
-		player.SpdList[ii] = player.HoldItem.pop();
+	if (player.beltSlot[ii].isEmpty()) {
+		player.beltSlot[ii] = player.heldItem.pop();
 	} else {
-		std::swap(player.SpdList[ii], player.HoldItem);
+		std::swap(player.beltSlot[ii], player.heldItem);
 
-		if (player.HoldItem._itype == ItemType::Gold)
-			player._pGold = CalculateGold(player);
+		if (player.heldItem._itype == ItemType::Gold)
+			player.gold = CalculateGold(player);
 	}
 	if (&player == MyPlayer) {
 		NetSendCmdChBeltItem(false, ii);
@@ -544,27 +544,27 @@ item_equip_type GetItemEquipType(const Player &player, int slot, item_equip_type
 
 void CheckInvPaste(Player &player, Point cursorPosition)
 {
-	const Size itemSize = GetInventorySize(player.HoldItem);
+	const Size itemSize = GetInventorySize(player.heldItem);
 
 	const int slot = FindTargetSlotUnderItemCursor(cursorPosition, itemSize);
 	if (slot == NUM_XY_SLOTS)
 		return;
 
-	const item_equip_type desiredLocation = player.GetItemLocation(player.HoldItem);
+	const item_equip_type desiredLocation = player.GetItemLocation(player.heldItem);
 	const item_equip_type location = GetItemEquipType(player, slot, desiredLocation);
 
 	if (location == ILOC_BELT) {
-		if (!CanBePlacedOnBelt(player, player.HoldItem)) return;
+		if (!CanBePlacedOnBelt(player, player.heldItem)) return;
 	} else if (location != ILOC_UNEQUIPABLE) {
 		if (desiredLocation != location) return;
 	}
 
 	if (IsNoneOf(location, ILOC_UNEQUIPABLE, ILOC_BELT)) {
-		if (!player.CanUseItem(player.HoldItem)) {
+		if (!player.CanUseItem(player.heldItem)) {
 			player.Say(HeroSpeech::ICantUseThisYet);
 			return;
 		}
-		if (player._pmode > PM_WALK_SIDEWAYS)
+		if (player.mode > PM_WALK_SIDEWAYS)
 			return;
 	}
 
@@ -596,14 +596,14 @@ void CheckInvPaste(Player &player, Point cursorPosition)
 
 	CalcPlrInv(player, true);
 	if (&player == MyPlayer) {
-		PlaySFX(ItemInvSnds[ItemCAnimTbl[player.HoldItem._iCurs]]);
-		NewCursor(player.HoldItem);
+		PlaySFX(ItemInvSnds[ItemCAnimTbl[player.heldItem._iCurs]]);
+		NewCursor(player.heldItem);
 	}
 }
 
 void CheckInvCut(Player &player, Point cursorPosition, bool automaticMove, bool dropItem)
 {
-	if (player._pmode > PM_WALK_SIDEWAYS) {
+	if (player.mode > PM_WALK_SIDEWAYS) {
 		return;
 	}
 
@@ -629,14 +629,14 @@ void CheckInvCut(Player &player, Point cursorPosition, bool automaticMove, bool 
 		return;
 	}
 
-	Item &holdItem = player.HoldItem;
+	Item &holdItem = player.heldItem;
 	holdItem.clear();
 
 	bool automaticallyMoved = false;
 	bool automaticallyEquipped = false;
 	bool automaticallyUnequip = false;
 
-	Item &headItem = player.InvBody[INVLOC_HEAD];
+	Item &headItem = player.bodySlot[INVLOC_HEAD];
 	if (r == SLOTXY_HEAD && !headItem.isEmpty()) {
 		holdItem = headItem;
 		if (automaticMove) {
@@ -649,7 +649,7 @@ void CheckInvCut(Player &player, Point cursorPosition, bool automaticMove, bool 
 		}
 	}
 
-	Item &leftRingItem = player.InvBody[INVLOC_RING_LEFT];
+	Item &leftRingItem = player.bodySlot[INVLOC_RING_LEFT];
 	if (r == SLOTXY_RING_LEFT && !leftRingItem.isEmpty()) {
 		holdItem = leftRingItem;
 		if (automaticMove) {
@@ -662,7 +662,7 @@ void CheckInvCut(Player &player, Point cursorPosition, bool automaticMove, bool 
 		}
 	}
 
-	Item &rightRingItem = player.InvBody[INVLOC_RING_RIGHT];
+	Item &rightRingItem = player.bodySlot[INVLOC_RING_RIGHT];
 	if (r == SLOTXY_RING_RIGHT && !rightRingItem.isEmpty()) {
 		holdItem = rightRingItem;
 		if (automaticMove) {
@@ -675,7 +675,7 @@ void CheckInvCut(Player &player, Point cursorPosition, bool automaticMove, bool 
 		}
 	}
 
-	Item &amuletItem = player.InvBody[INVLOC_AMULET];
+	Item &amuletItem = player.bodySlot[INVLOC_AMULET];
 	if (r == SLOTXY_AMULET && !amuletItem.isEmpty()) {
 		holdItem = amuletItem;
 		if (automaticMove) {
@@ -688,7 +688,7 @@ void CheckInvCut(Player &player, Point cursorPosition, bool automaticMove, bool 
 		}
 	}
 
-	Item &leftHandItem = player.InvBody[INVLOC_HAND_LEFT];
+	Item &leftHandItem = player.bodySlot[INVLOC_HAND_LEFT];
 	if (r == SLOTXY_HAND_LEFT && !leftHandItem.isEmpty()) {
 		holdItem = leftHandItem;
 		if (automaticMove) {
@@ -701,7 +701,7 @@ void CheckInvCut(Player &player, Point cursorPosition, bool automaticMove, bool 
 		}
 	}
 
-	Item &rightHandItem = player.InvBody[INVLOC_HAND_RIGHT];
+	Item &rightHandItem = player.bodySlot[INVLOC_HAND_RIGHT];
 	if (r == SLOTXY_HAND_RIGHT && !rightHandItem.isEmpty()) {
 		holdItem = rightHandItem;
 		if (automaticMove) {
@@ -714,7 +714,7 @@ void CheckInvCut(Player &player, Point cursorPosition, bool automaticMove, bool 
 		}
 	}
 
-	Item &chestItem = player.InvBody[INVLOC_CHEST];
+	Item &chestItem = player.bodySlot[INVLOC_CHEST];
 	if (r == SLOTXY_CHEST && !chestItem.isEmpty()) {
 		holdItem = chestItem;
 		if (automaticMove) {
@@ -729,19 +729,19 @@ void CheckInvCut(Player &player, Point cursorPosition, bool automaticMove, bool 
 
 	if (r >= SLOTXY_INV_FIRST && r <= SLOTXY_INV_LAST) {
 		int ig = r - SLOTXY_INV_FIRST;
-		int8_t ii = player.InvGrid[ig];
+		int8_t ii = player.inventoryGrid[ig];
 		if (ii != 0) {
 			int iv = (ii < 0) ? -ii : ii;
 
-			holdItem = player.InvList[iv - 1];
+			holdItem = player.inventorySlot[iv - 1];
 			if (automaticMove) {
 				if (CanBePlacedOnBelt(player, holdItem)) {
 					automaticallyMoved = AutoPlaceItemInBelt(player, holdItem, true, &player == MyPlayer);
 				} else if (CanEquip(holdItem)) {
 					/*
-					 * Move the respective InvBodyItem to inventory before moving the item from inventory
-					 * to InvBody with AutoEquip. AutoEquip requires the InvBody slot to be empty.
-					 * First identify the correct InvBody slot and store it in invloc.
+					 * Move the respective bodySlotItem to inventory before moving the item from inventory
+					 * to bodySlot with AutoEquip. AutoEquip requires the bodySlot slot to be empty.
+					 * First identify the correct bodySlot slot and store it in invloc.
 					 */
 					automaticallyUnequip = true; // Switch to say "I have no room when inventory is too full"
 					int invloc = NUM_INVLOC;
@@ -757,33 +757,33 @@ void CheckInvCut(Player &player, Point cursorPosition, bool automaticMove, bool 
 						break;
 					case ILOC_ONEHAND:
 						// User is attempting to move a weapon (left hand)
-						if (player.InvList[iv - 1]._iClass == player.InvBody[INVLOC_HAND_LEFT]._iClass
-						    && player.GetItemLocation(player.InvList[iv - 1]) == player.GetItemLocation(player.InvBody[INVLOC_HAND_LEFT])) {
+						if (player.inventorySlot[iv - 1]._iClass == player.bodySlot[INVLOC_HAND_LEFT]._iClass
+						    && player.GetItemLocation(player.inventorySlot[iv - 1]) == player.GetItemLocation(player.bodySlot[INVLOC_HAND_LEFT])) {
 							invloc = INVLOC_HAND_LEFT;
 						}
 						// User is attempting to move a shield (right hand)
-						if (player.InvList[iv - 1]._iClass == player.InvBody[INVLOC_HAND_RIGHT]._iClass
-						    && player.GetItemLocation(player.InvList[iv - 1]) == player.GetItemLocation(player.InvBody[INVLOC_HAND_RIGHT])) {
+						if (player.inventorySlot[iv - 1]._iClass == player.bodySlot[INVLOC_HAND_RIGHT]._iClass
+						    && player.GetItemLocation(player.inventorySlot[iv - 1]) == player.GetItemLocation(player.bodySlot[INVLOC_HAND_RIGHT])) {
 							invloc = INVLOC_HAND_RIGHT;
 						}
 						// A two-hand item can always be replaced with a one-hand item
-						if (player.GetItemLocation(player.InvBody[INVLOC_HAND_LEFT]) == ILOC_TWOHAND) {
+						if (player.GetItemLocation(player.bodySlot[INVLOC_HAND_LEFT]) == ILOC_TWOHAND) {
 							invloc = INVLOC_HAND_LEFT;
 						}
 						break;
 					case ILOC_TWOHAND:
-						// Moving a two-hand item from inventory to InvBody requires emptying both hands
-						if (!player.InvBody[INVLOC_HAND_RIGHT].isEmpty()) {
-							holdItem = player.InvBody[INVLOC_HAND_RIGHT];
+						// Moving a two-hand item from inventory to bodySlot requires emptying both hands
+						if (!player.bodySlot[INVLOC_HAND_RIGHT].isEmpty()) {
+							holdItem = player.bodySlot[INVLOC_HAND_RIGHT];
 							if (!AutoPlaceItemInInventory(player, holdItem, true)) {
 								// No space to  move right hand item to inventory, abort.
 								break;
 							}
-							holdItem = player.InvBody[INVLOC_HAND_LEFT];
+							holdItem = player.bodySlot[INVLOC_HAND_LEFT];
 							if (!AutoPlaceItemInInventory(player, holdItem, false)) {
 								// No space for left item. Move back right item to right hand and abort.
-								player.InvBody[INVLOC_HAND_RIGHT] = player.InvList[player._pNumInv - 1];
-								player.RemoveInvItem(player._pNumInv - 1, false);
+								player.bodySlot[INVLOC_HAND_RIGHT] = player.inventorySlot[player.numInventoryItems - 1];
+								player.RemoveInvItem(player.numInventoryItems - 1, false);
 								break;
 							}
 							RemoveEquipment(player, INVLOC_HAND_RIGHT, false);
@@ -796,16 +796,16 @@ void CheckInvCut(Player &player, Point cursorPosition, bool automaticMove, bool 
 						automaticallyUnequip = false; // Switch to say "I can't do that"
 						break;
 					}
-					// Empty the identified InvBody slot (invloc) and hand over to AutoEquip
+					// Empty the identified bodySlot slot (invloc) and hand over to AutoEquip
 					if (invloc != NUM_INVLOC) {
-						holdItem = player.InvBody[invloc];
-						if (player.InvBody[invloc]._itype != ItemType::None) {
+						holdItem = player.bodySlot[invloc];
+						if (player.bodySlot[invloc]._itype != ItemType::None) {
 							if (AutoPlaceItemInInventory(player, holdItem, true)) {
-								player.InvBody[invloc].clear();
+								player.bodySlot[invloc].clear();
 							}
 						}
 					}
-					holdItem = player.InvList[iv - 1];
+					holdItem = player.inventorySlot[iv - 1];
 					automaticallyMoved = automaticallyEquipped = AutoEquip(player, holdItem, true, &player == MyPlayer);
 				}
 			}
@@ -817,7 +817,7 @@ void CheckInvCut(Player &player, Point cursorPosition, bool automaticMove, bool 
 	}
 
 	if (r >= SLOTXY_BELT_FIRST) {
-		Item &beltItem = player.SpdList[r - SLOTXY_BELT_FIRST];
+		Item &beltItem = player.beltSlot[r - SLOTXY_BELT_FIRST];
 		if (!beltItem.isEmpty()) {
 			holdItem = beltItem;
 			if (automaticMove) {
@@ -832,7 +832,7 @@ void CheckInvCut(Player &player, Point cursorPosition, bool automaticMove, bool 
 
 	if (!holdItem.isEmpty()) {
 		if (holdItem._itype == ItemType::Gold) {
-			player._pGold = CalculateGold(player);
+			player.gold = CalculateGold(player);
 		}
 
 		CalcPlrInv(player, true);
@@ -999,8 +999,8 @@ void StartGoldDrop()
 	const Player &myPlayer = *MyPlayer;
 
 	const int max = (invIndex <= INVITEM_INV_LAST)
-	    ? myPlayer.InvList[invIndex - INVITEM_INV_FIRST]._ivalue
-	    : myPlayer.SpdList[invIndex - INVITEM_BELT_FIRST]._ivalue;
+	    ? myPlayer.inventorySlot[invIndex - INVITEM_INV_FIRST]._ivalue
+	    : myPlayer.beltSlot[invIndex - INVITEM_BELT_FIRST]._ivalue;
 
 	if (talkflag)
 		control_reset_talk();
@@ -1014,14 +1014,14 @@ void StartGoldDrop()
 
 int CreateGoldItemInInventorySlot(Player &player, int slotIndex, int value)
 {
-	if (player.InvGrid[slotIndex] != 0) {
+	if (player.inventoryGrid[slotIndex] != 0) {
 		return value;
 	}
 
-	Item &goldItem = player.InvList[player._pNumInv];
+	Item &goldItem = player.inventorySlot[player.numInventoryItems];
 	MakeGoldStack(goldItem, std::min(value, MaxGold));
-	player._pNumInv++;
-	player.InvGrid[slotIndex] = player._pNumInv;
+	player.numInventoryItems++;
+	player.inventoryGrid[slotIndex] = player.numInventoryItems;
 	if (&player == MyPlayer) {
 		NetSendCmdChInvItem(false, slotIndex);
 	}
@@ -1079,7 +1079,7 @@ void FreeInvGFX()
 
 void InitInv()
 {
-	switch (MyPlayer->_pClass) {
+	switch (MyPlayer->heroClass) {
 	case HeroClass::Warrior:
 	case HeroClass::Barbarian:
 		pInvCels = LoadCel("data\\inv\\inv", static_cast<uint16_t>(SidePanelSize.width));
@@ -1124,12 +1124,12 @@ void DrawInv(const Surface &out)
 	Player &myPlayer = *InspectPlayer;
 
 	for (int slot = INVLOC_HEAD; slot < NUM_INVLOC; slot++) {
-		if (!myPlayer.InvBody[slot].isEmpty()) {
+		if (!myPlayer.bodySlot[slot].isEmpty()) {
 			int screenX = slotPos[slot].x;
 			int screenY = slotPos[slot].y;
-			InvDrawSlotBack(out, GetPanelPosition(UiPanels::Inventory, { screenX, screenY }), { slotSize[slot].width * InventorySlotSizeInPixels.width, slotSize[slot].height * InventorySlotSizeInPixels.height }, myPlayer.InvBody[slot]._iMagical);
+			InvDrawSlotBack(out, GetPanelPosition(UiPanels::Inventory, { screenX, screenY }), { slotSize[slot].width * InventorySlotSizeInPixels.width, slotSize[slot].height * InventorySlotSizeInPixels.height }, myPlayer.bodySlot[slot]._iMagical);
 
-			const int cursId = myPlayer.InvBody[slot]._iCurs + CURSOR_FIRSTITEM;
+			const int cursId = myPlayer.bodySlot[slot]._iCurs + CURSOR_FIRSTITEM;
 
 			Size frameSize = GetInvItemSize(cursId);
 
@@ -1143,14 +1143,14 @@ void DrawInv(const Surface &out)
 			const Point position = GetPanelPosition(UiPanels::Inventory, { screenX, screenY });
 
 			if (pcursinvitem == slot) {
-				ClxDrawOutline(out, GetOutlineColor(myPlayer.InvBody[slot], true), position, sprite);
+				ClxDrawOutline(out, GetOutlineColor(myPlayer.bodySlot[slot], true), position, sprite);
 			}
 
-			DrawItem(myPlayer.InvBody[slot], out, position, sprite);
+			DrawItem(myPlayer.bodySlot[slot], out, position, sprite);
 
 			if (slot == INVLOC_HAND_LEFT) {
-				if (myPlayer.GetItemLocation(myPlayer.InvBody[slot]) == ILOC_TWOHAND) {
-					InvDrawSlotBack(out, GetPanelPosition(UiPanels::Inventory, slotPos[INVLOC_HAND_RIGHT]), { slotSize[INVLOC_HAND_RIGHT].width * InventorySlotSizeInPixels.width, slotSize[INVLOC_HAND_RIGHT].height * InventorySlotSizeInPixels.height }, myPlayer.InvBody[slot]._iMagical);
+				if (myPlayer.GetItemLocation(myPlayer.bodySlot[slot]) == ILOC_TWOHAND) {
+					InvDrawSlotBack(out, GetPanelPosition(UiPanels::Inventory, slotPos[INVLOC_HAND_RIGHT]), { slotSize[INVLOC_HAND_RIGHT].width * InventorySlotSizeInPixels.width, slotSize[INVLOC_HAND_RIGHT].height * InventorySlotSizeInPixels.height }, myPlayer.bodySlot[slot]._iMagical);
 					LightTableIndex = 0;
 
 					const int dstX = GetRightPanel().position.x + slotPos[INVLOC_HAND_RIGHT].x + (frameSize.width == InventorySlotSizeInPixels.width ? INV_SLOT_HALF_SIZE_PX : 0) - 1;
@@ -1162,27 +1162,27 @@ void DrawInv(const Surface &out)
 	}
 
 	for (int i = 0; i < InventoryGridCells; i++) {
-		if (myPlayer.InvGrid[i] != 0) {
+		if (myPlayer.inventoryGrid[i] != 0) {
 			InvDrawSlotBack(
 			    out,
 			    GetPanelPosition(UiPanels::Inventory, InvRect[i + SLOTXY_INV_FIRST].position) + Displacement { 0, InventorySlotSizeInPixels.height },
 			    InventorySlotSizeInPixels,
-			    myPlayer.InvList[std::abs(myPlayer.InvGrid[i]) - 1]._iMagical);
+			    myPlayer.inventorySlot[std::abs(myPlayer.inventoryGrid[i]) - 1]._iMagical);
 		}
 	}
 
 	for (int j = 0; j < InventoryGridCells; j++) {
-		if (myPlayer.InvGrid[j] > 0) { // first slot of an item
-			int ii = myPlayer.InvGrid[j] - 1;
-			int cursId = myPlayer.InvList[ii]._iCurs + CURSOR_FIRSTITEM;
+		if (myPlayer.inventoryGrid[j] > 0) { // first slot of an item
+			int ii = myPlayer.inventoryGrid[j] - 1;
+			int cursId = myPlayer.inventorySlot[ii]._iCurs + CURSOR_FIRSTITEM;
 
 			const ClxSprite sprite = GetInvItemSprite(cursId);
 			const Point position = GetPanelPosition(UiPanels::Inventory, InvRect[j + SLOTXY_INV_FIRST].position) + Displacement { 0, InventorySlotSizeInPixels.height };
 			if (pcursinvitem == ii + INVITEM_INV_FIRST) {
-				ClxDrawOutline(out, GetOutlineColor(myPlayer.InvList[ii], true), position, sprite);
+				ClxDrawOutline(out, GetOutlineColor(myPlayer.inventorySlot[ii], true), position, sprite);
 			}
 
-			DrawItem(myPlayer.InvList[ii], out, position, sprite);
+			DrawItem(myPlayer.inventorySlot[ii], out, position, sprite);
 		}
 	}
 }
@@ -1200,26 +1200,26 @@ void DrawInvBelt(const Surface &out)
 	Player &myPlayer = *InspectPlayer;
 
 	for (int i = 0; i < MaxBeltItems; i++) {
-		if (myPlayer.SpdList[i].isEmpty()) {
+		if (myPlayer.beltSlot[i].isEmpty()) {
 			continue;
 		}
 
 		const Point position { InvRect[i + SLOTXY_BELT_FIRST].position.x + mainPanelPosition.x, InvRect[i + SLOTXY_BELT_FIRST].position.y + mainPanelPosition.y + InventorySlotSizeInPixels.height };
-		InvDrawSlotBack(out, position, InventorySlotSizeInPixels, myPlayer.SpdList[i]._iMagical);
-		const int cursId = myPlayer.SpdList[i]._iCurs + CURSOR_FIRSTITEM;
+		InvDrawSlotBack(out, position, InventorySlotSizeInPixels, myPlayer.beltSlot[i]._iMagical);
+		const int cursId = myPlayer.beltSlot[i]._iCurs + CURSOR_FIRSTITEM;
 
 		const ClxSprite sprite = GetInvItemSprite(cursId);
 
 		if (pcursinvitem == i + INVITEM_BELT_FIRST) {
 			if (ControlMode == ControlTypes::KeyboardAndMouse || invflag) {
-				ClxDrawOutline(out, GetOutlineColor(myPlayer.SpdList[i], true), position, sprite);
+				ClxDrawOutline(out, GetOutlineColor(myPlayer.beltSlot[i], true), position, sprite);
 			}
 		}
 
-		DrawItem(myPlayer.SpdList[i], out, position, sprite);
+		DrawItem(myPlayer.beltSlot[i], out, position, sprite);
 
-		if (myPlayer.SpdList[i].isUsable()
-		    && myPlayer.SpdList[i]._itype != ItemType::Gold) {
+		if (myPlayer.beltSlot[i].isUsable()
+		    && myPlayer.beltSlot[i]._itype != ItemType::Gold) {
 			DrawString(out, StrCat(i + 1), { position - Displacement { 0, 12 }, InventorySlotSizeInPixels },
 			    { .flags = UiFlags::ColorWhite | UiFlags::AlignRight });
 		}
@@ -1232,7 +1232,7 @@ void RemoveEquipment(Player &player, inv_body_loc bodyLocation, bool hiPri)
 		NetSendCmdDelItem(hiPri, bodyLocation);
 	}
 
-	player.InvBody[bodyLocation].clear();
+	player.bodySlot[bodyLocation].clear();
 }
 
 bool AutoPlaceItemInBelt(Player &player, const Item &item, bool persistItem, bool sendNetworkMessage)
@@ -1241,14 +1241,14 @@ bool AutoPlaceItemInBelt(Player &player, const Item &item, bool persistItem, boo
 		return false;
 	}
 
-	for (Item &beltItem : player.SpdList) {
+	for (Item &beltItem : player.beltSlot) {
 		if (beltItem.isEmpty()) {
 			if (persistItem) {
 				beltItem = item;
 				player.CalcScrolls();
 				RedrawComponent(PanelDrawComponent::Belt);
 				if (sendNetworkMessage) {
-					const auto beltIndex = static_cast<int>(std::distance<const Item *>(&player.SpdList[0], &beltItem));
+					const auto beltIndex = static_cast<int>(std::distance<const Item *>(&player.beltSlot[0], &beltItem));
 					NetSendCmdChBeltItem(false, beltIndex);
 				}
 			}
@@ -1280,7 +1280,7 @@ bool AutoEquipEnabled(const Player &player, const Item &item)
 	if (item.isWeapon()) {
 		// Monk can use unarmed attack as an encouraged option, thus we do not automatically equip weapons on him so as to not
 		// annoy players who prefer that playstyle.
-		return player._pClass != HeroClass::Monk && *sgOptions.Gameplay.autoEquipWeapons;
+		return player.heroClass != HeroClass::Monk && *sgOptions.Gameplay.autoEquipWeapons;
 	}
 
 	if (item.isArmor()) {
@@ -1323,7 +1323,7 @@ bool AutoPlaceItemInInventorySlot(Player &player, int slotIndex, const Item &ite
 		}
 		int xx = (slotIndex > 0) ? (slotIndex % 10) : 0;
 		for (int i = 0; i < itemSize.width; i++) {
-			if (xx >= 10 || player.InvGrid[xx + yy] != 0) {
+			if (xx >= 10 || player.inventoryGrid[xx + yy] != 0) {
 				return false;
 			}
 			xx++;
@@ -1332,10 +1332,10 @@ bool AutoPlaceItemInInventorySlot(Player &player, int slotIndex, const Item &ite
 	}
 
 	if (persistItem) {
-		player.InvList[player._pNumInv] = item;
-		player._pNumInv++;
+		player.inventorySlot[player.numInventoryItems] = item;
+		player.numInventoryItems++;
 
-		AddItemToInvGrid(player, slotIndex, player._pNumInv, itemSize, sendNetworkMessage);
+		AddItemToinventoryGrid(player, slotIndex, player.numInventoryItems, itemSize, sendNetworkMessage);
 		player.CalcScrolls();
 	}
 
@@ -1405,11 +1405,11 @@ bool AutoPlaceItemInInventory(Player &player, const Item &item, bool persistItem
 
 std::vector<int> SortItemsBySize(Player &player)
 {
-	std::vector<std::pair<Size, int>> itemSizes; // Pair of item size and its index in InvList
-	itemSizes.reserve(player._pNumInv);          // Reserves space for the number of items in the player's inventory
+	std::vector<std::pair<Size, int>> itemSizes; // Pair of item size and its index in inventorySlot
+	itemSizes.reserve(player.numInventoryItems);          // Reserves space for the number of items in the player's inventory
 
-	for (int i = 0; i < player._pNumInv; i++) {
-		Size size = GetInventorySize(player.InvList[i]);
+	for (int i = 0; i < player.numInventoryItems; i++) {
+		Size size = GetInventorySize(player.inventorySlot[i]);
 		itemSizes.emplace_back(size, i);
 	}
 
@@ -1435,18 +1435,18 @@ void ReorganizeInventory(Player &player)
 	// Sort items by size
 	std::vector<int> sortedIndices = SortItemsBySize(player);
 
-	// Temporary storage for items and a copy of InvGrid
-	std::vector<Item> tempStorage(player._pNumInv);
-	std::array<int8_t, 40> originalInvGrid;                                                       // Declare an array for InvGrid copy
-	std::copy(std::begin(player.InvGrid), std::end(player.InvGrid), std::begin(originalInvGrid)); // Copy InvGrid to originalInvGrid
+	// Temporary storage for items and a copy of inventoryGrid
+	std::vector<Item> tempStorage(player.numInventoryItems);
+	std::array<int8_t, 40> originalinventoryGrid;                                                       // Declare an array for inventoryGrid copy
+	std::copy(std::begin(player.inventoryGrid), std::end(player.inventoryGrid), std::begin(originalinventoryGrid)); // Copy inventoryGrid to originalinventoryGrid
 
 	// Move items to temporary storage and clear inventory slots
-	for (int i = 0; i < player._pNumInv; ++i) {
-		tempStorage[i] = player.InvList[i];
-		player.InvList[i] = {};
+	for (int i = 0; i < player.numInventoryItems; ++i) {
+		tempStorage[i] = player.inventorySlot[i];
+		player.inventorySlot[i] = {};
 	}
-	player._pNumInv = 0;                                                // Reset inventory count
-	std::fill(std::begin(player.InvGrid), std::end(player.InvGrid), 0); // Clear InvGrid
+	player.numInventoryItems = 0;                                                // Reset inventory count
+	std::fill(std::begin(player.inventoryGrid), std::end(player.inventoryGrid), 0); // Clear inventoryGrid
 
 	// Attempt to place items back, now from the temp storage
 	bool reorganizationFailed = false;
@@ -1458,21 +1458,21 @@ void ReorganizeInventory(Player &player)
 		}
 	}
 
-	// If reorganization failed, restore items and InvGrid from tempStorage and originalInvGrid
+	// If reorganization failed, restore items and inventoryGrid from tempStorage and originalinventoryGrid
 	if (reorganizationFailed) {
 		for (Item &item : tempStorage) {
 			if (!item.isEmpty()) {
-				player.InvList[player._pNumInv++] = item;
+				player.inventorySlot[player.numInventoryItems++] = item;
 			}
 		}
-		std::copy(std::begin(originalInvGrid), std::end(originalInvGrid), std::begin(player.InvGrid)); // Restore InvGrid
+		std::copy(std::begin(originalinventoryGrid), std::end(originalinventoryGrid), std::begin(player.inventoryGrid)); // Restore inventoryGrid
 	}
 }
 
 int RoomForGold()
 {
 	int amount = 0;
-	for (int8_t &itemIndex : MyPlayer->InvGrid) {
+	for (int8_t &itemIndex : MyPlayer->inventoryGrid) {
 		if (itemIndex < 0) {
 			continue;
 		}
@@ -1481,7 +1481,7 @@ int RoomForGold()
 			continue;
 		}
 
-		Item &goldItem = MyPlayer->InvList[itemIndex - 1];
+		Item &goldItem = MyPlayer->inventorySlot[itemIndex - 1];
 		if (goldItem._itype != ItemType::Gold || goldItem._ivalue == MaxGold) {
 			continue;
 		}
@@ -1495,8 +1495,8 @@ int RoomForGold()
 int AddGoldToInventory(Player &player, int value)
 {
 	// Top off existing piles
-	for (int i = 0; i < player._pNumInv && value > 0; i++) {
-		Item &goldItem = player.InvList[i];
+	for (int i = 0; i < player.numInventoryItems && value > 0; i++) {
+		Item &goldItem = player.inventorySlot[i];
 		if (goldItem._itype != ItemType::Gold || goldItem._ivalue >= MaxGold) {
 			continue;
 		}
@@ -1533,19 +1533,19 @@ bool GoldAutoPlace(Player &player, Item &goldStack)
 	goldStack._ivalue = AddGoldToInventory(player, goldStack._ivalue);
 	SetPlrHandGoldCurs(goldStack);
 
-	player._pGold = CalculateGold(player);
+	player.gold = CalculateGold(player);
 
 	return goldStack._ivalue == 0;
 }
 
 void CheckInvSwap(Player &player, inv_body_loc bLoc)
 {
-	Item &item = player.InvBody[bLoc];
+	Item &item = player.bodySlot[bLoc];
 
 	if (bLoc == INVLOC_HAND_LEFT && player.GetItemLocation(item) == ILOC_TWOHAND) {
-		player.InvBody[INVLOC_HAND_RIGHT].clear();
+		player.bodySlot[INVLOC_HAND_RIGHT].clear();
 	} else if (bLoc == INVLOC_HAND_RIGHT && player.GetItemLocation(item) == ILOC_TWOHAND) {
-		player.InvBody[INVLOC_HAND_LEFT].clear();
+		player.bodySlot[INVLOC_HAND_LEFT].clear();
 	}
 
 	CalcPlrInv(player, true);
@@ -1553,9 +1553,9 @@ void CheckInvSwap(Player &player, inv_body_loc bLoc)
 
 void inv_update_rem_item(Player &player, inv_body_loc iv)
 {
-	player.InvBody[iv].clear();
+	player.bodySlot[iv].clear();
 
-	CalcPlrInv(player, player._pmode != PM_DEATH);
+	CalcPlrInv(player, player.mode != PM_DEATH);
 }
 
 void CheckInvSwap(Player &player, const Item &item, int invGridIndex)
@@ -1568,16 +1568,16 @@ void CheckInvSwap(Player &player, const Item &item, int invGridIndex)
 			int rowGridIndex = invGridIndex + pitch * y;
 			for (int x = 0; x < itemSize.width; x++) {
 				int gridIndex = rowGridIndex + x;
-				if (player.InvGrid[gridIndex] != 0)
-					return std::abs(player.InvGrid[gridIndex]);
+				if (player.inventoryGrid[gridIndex] != 0)
+					return std::abs(player.inventoryGrid[gridIndex]);
 			}
 		}
-		player._pNumInv++;
-		return player._pNumInv;
+		player.numInventoryItems++;
+		return player.numInventoryItems;
 	}();
 
-	if (invListIndex < player._pNumInv) {
-		for (int8_t &itemIndex : player.InvGrid) {
+	if (invListIndex < player.numInventoryItems) {
+		for (int8_t &itemIndex : player.inventoryGrid) {
 			if (itemIndex == invListIndex)
 				itemIndex = 0;
 			if (itemIndex == -invListIndex)
@@ -1585,15 +1585,15 @@ void CheckInvSwap(Player &player, const Item &item, int invGridIndex)
 		}
 	}
 
-	player.InvList[invListIndex - 1] = item;
+	player.inventorySlot[invListIndex - 1] = item;
 
 	for (int y = 0; y < itemSize.height; y++) {
 		int rowGridIndex = invGridIndex + pitch * y;
 		for (int x = 0; x < itemSize.width; x++) {
 			if (x == 0 && y == itemSize.height - 1)
-				player.InvGrid[rowGridIndex + x] = invListIndex;
+				player.inventoryGrid[rowGridIndex + x] = invListIndex;
 			else
-				player.InvGrid[rowGridIndex + x] = -invListIndex;
+				player.inventoryGrid[rowGridIndex + x] = -invListIndex;
 		}
 	}
 
@@ -1602,7 +1602,7 @@ void CheckInvSwap(Player &player, const Item &item, int invGridIndex)
 
 void CheckInvRemove(Player &player, int invGridIndex)
 {
-	int invListIndex = std::abs(player.InvGrid[invGridIndex]) - 1;
+	int invListIndex = std::abs(player.inventoryGrid[invGridIndex]) - 1;
 
 	if (invListIndex >= 0) {
 		player.RemoveInvItem(invListIndex);
@@ -1636,7 +1636,7 @@ void CheckInvItem(bool isShiftHeld, bool isCtrlHeld)
 {
 	if (IsInspectingPlayer())
 		return;
-	if (!MyPlayer->HoldItem.isEmpty()) {
+	if (!MyPlayer->heldItem.isEmpty()) {
 		CheckInvPaste(*MyPlayer, MousePosition);
 	} else if (IsStashOpen && isCtrlHeld) {
 		TransferItemToStash(*MyPlayer, pcursinvitem);
@@ -1674,14 +1674,14 @@ void InvGetItem(Player &player, int ii)
 		}
 	} else {
 		// The item needs to go into the players hand
-		if (MyPlayer == &player && !player.HoldItem.isEmpty()) {
+		if (MyPlayer == &player && !player.heldItem.isEmpty()) {
 			// drop whatever the player is currently holding
-			NetSendCmdPItem(true, CMD_SYNCPUTITEM, player.position.tile, player.HoldItem);
+			NetSendCmdPItem(true, CMD_SYNCPUTITEM, player.position.tile, player.heldItem);
 		}
 
 		// need to copy here instead of move so CleanupItems still has access to the position
-		player.HoldItem = item;
-		NewCursor(player.HoldItem);
+		player.heldItem = item;
+		NewCursor(player.heldItem);
 	}
 
 	// This potentially moves items in memory so must be done after we've made a copy
@@ -1932,41 +1932,41 @@ int8_t CheckInvHLight()
 
 	if (r == SLOTXY_HEAD) {
 		rv = INVLOC_HEAD;
-		pi = &myPlayer.InvBody[rv];
+		pi = &myPlayer.bodySlot[rv];
 	} else if (r == SLOTXY_RING_LEFT) {
 		rv = INVLOC_RING_LEFT;
-		pi = &myPlayer.InvBody[rv];
+		pi = &myPlayer.bodySlot[rv];
 	} else if (r == SLOTXY_RING_RIGHT) {
 		rv = INVLOC_RING_RIGHT;
-		pi = &myPlayer.InvBody[rv];
+		pi = &myPlayer.bodySlot[rv];
 	} else if (r == SLOTXY_AMULET) {
 		rv = INVLOC_AMULET;
-		pi = &myPlayer.InvBody[rv];
+		pi = &myPlayer.bodySlot[rv];
 	} else if (r == SLOTXY_HAND_LEFT) {
 		rv = INVLOC_HAND_LEFT;
-		pi = &myPlayer.InvBody[rv];
+		pi = &myPlayer.bodySlot[rv];
 	} else if (r == SLOTXY_HAND_RIGHT) {
-		pi = &myPlayer.InvBody[INVLOC_HAND_LEFT];
+		pi = &myPlayer.bodySlot[INVLOC_HAND_LEFT];
 		if (pi->isEmpty() || myPlayer.GetItemLocation(*pi) != ILOC_TWOHAND) {
 			rv = INVLOC_HAND_RIGHT;
-			pi = &myPlayer.InvBody[rv];
+			pi = &myPlayer.bodySlot[rv];
 		} else {
 			rv = INVLOC_HAND_LEFT;
 		}
 	} else if (r == SLOTXY_CHEST) {
 		rv = INVLOC_CHEST;
-		pi = &myPlayer.InvBody[rv];
+		pi = &myPlayer.bodySlot[rv];
 	} else if (r >= SLOTXY_INV_FIRST && r <= SLOTXY_INV_LAST) {
-		int8_t itemId = std::abs(myPlayer.InvGrid[r - SLOTXY_INV_FIRST]);
+		int8_t itemId = std::abs(myPlayer.inventoryGrid[r - SLOTXY_INV_FIRST]);
 		if (itemId == 0)
 			return -1;
 		int ii = itemId - 1;
 		rv = ii + INVITEM_INV_FIRST;
-		pi = &myPlayer.InvList[ii];
+		pi = &myPlayer.inventorySlot[ii];
 	} else if (r >= SLOTXY_BELT_FIRST) {
 		r -= SLOTXY_BELT_FIRST;
 		RedrawComponent(PanelDrawComponent::Belt);
-		pi = &myPlayer.SpdList[r];
+		pi = &myPlayer.beltSlot[r];
 		if (pi->isEmpty())
 			return -1;
 		rv = r + INVITEM_BELT_FIRST;
@@ -2003,14 +2003,14 @@ void ConsumeScroll(Player &player)
 	const int8_t itemSlot = player.executedSpell.spellFrom;
 	if (itemSlot >= INVITEM_INV_FIRST && itemSlot <= INVITEM_INV_LAST) {
 		const int itemIndex = itemSlot - INVITEM_INV_FIRST;
-		const Item *item = &player.InvList[itemIndex];
+		const Item *item = &player.inventorySlot[itemIndex];
 		if (!item->isEmpty() && isCurrentSpell(*item)) {
 			player.RemoveInvItem(itemIndex);
 			return;
 		}
 	} else if (itemSlot >= INVITEM_BELT_FIRST && itemSlot <= INVITEM_BELT_LAST) {
 		const int itemIndex = itemSlot - INVITEM_BELT_FIRST;
-		const Item *item = &player.SpdList[itemIndex];
+		const Item *item = &player.beltSlot[itemIndex];
 		if (!item->isEmpty() && isCurrentSpell(*item)) {
 			player.RemoveSpdBarItem(itemIndex);
 			return;
@@ -2036,7 +2036,7 @@ bool CanUseScroll(Player &player, SpellID spell)
 
 void ConsumeStaffCharge(Player &player)
 {
-	Item &staff = player.InvBody[INVLOC_HAND_LEFT];
+	Item &staff = player.bodySlot[INVLOC_HAND_LEFT];
 
 	if (!CanUseStaff(staff, player.executedSpell.spellId))
 		return;
@@ -2047,18 +2047,18 @@ void ConsumeStaffCharge(Player &player)
 
 bool CanUseStaff(Player &player, SpellID spellId)
 {
-	return CanUseStaff(player.InvBody[INVLOC_HAND_LEFT], spellId);
+	return CanUseStaff(player.bodySlot[INVLOC_HAND_LEFT], spellId);
 }
 
 Item &GetInventoryItem(Player &player, int location)
 {
 	if (location < INVITEM_INV_FIRST)
-		return player.InvBody[location];
+		return player.bodySlot[location];
 
 	if (location <= INVITEM_INV_LAST)
-		return player.InvList[location - INVITEM_INV_FIRST];
+		return player.inventorySlot[location - INVITEM_INV_FIRST];
 
-	return player.SpdList[location - INVITEM_BELT_FIRST];
+	return player.beltSlot[location - INVITEM_BELT_FIRST];
 }
 
 bool UseInvItem(int cii)
@@ -2068,7 +2068,7 @@ bool UseInvItem(int cii)
 
 	Player &player = *MyPlayer;
 
-	if (player._pInvincible && player._pHitPoints == 0 && &player == MyPlayer)
+	if (player.isInvincible && player.life == 0 && &player == MyPlayer)
 		return true;
 	if (pcurs != CURSOR_HAND)
 		return true;
@@ -2082,20 +2082,20 @@ bool UseInvItem(int cii)
 	Item *item;
 	if (cii <= INVITEM_INV_LAST) {
 		c = cii - INVITEM_INV_FIRST;
-		item = &player.InvList[c];
+		item = &player.inventorySlot[c];
 	} else {
 		if (talkflag)
 			return true;
 		c = cii - INVITEM_BELT_FIRST;
 
-		item = &player.SpdList[c];
+		item = &player.beltSlot[c];
 		speedlist = true;
 
-		// If selected speedlist item exists in InvList, use the InvList item.
-		for (int i = 0; i < player._pNumInv && *sgOptions.Gameplay.autoRefillBelt; i++) {
-			if (player.InvList[i]._iMiscId == item->_iMiscId && player.InvList[i]._iSpell == item->_iSpell) {
+		// If selected speedlist item exists in inventorySlot, use the inventorySlot item.
+		for (int i = 0; i < player.numInventoryItems && *sgOptions.Gameplay.autoRefillBelt; i++) {
+			if (player.inventorySlot[i]._iMiscId == item->_iMiscId && player.inventorySlot[i]._iSpell == item->_iSpell) {
 				c = i;
-				item = &player.InvList[c];
+				item = &player.inventorySlot[c];
 				cii = c + INVITEM_INV_FIRST;
 				speedlist = false;
 				break;
@@ -2105,7 +2105,7 @@ bool UseInvItem(int cii)
 		// If speedlist item is not inventory, use same item at the end of the speedlist if exists.
 		if (speedlist && *sgOptions.Gameplay.autoRefillBelt) {
 			for (int i = INVITEM_BELT_LAST - INVITEM_BELT_FIRST; i > c; i--) {
-				Item &candidate = player.SpdList[i];
+				Item &candidate = player.beltSlot[i];
 
 				if (!candidate.isEmpty() && candidate._iMiscId == item->_iMiscId && candidate._iSpell == item->_iSpell) {
 					c = i;
@@ -2179,7 +2179,7 @@ bool UseInvItem(int cii)
 	UseItem(player, item->_iMiscId, item->_iSpell, cii);
 
 	if (speedlist) {
-		if (player.SpdList[c]._iMiscId == IMISC_NOTE) {
+		if (player.beltSlot[c]._iMiscId == IMISC_NOTE) {
 			InitQTextMsg(TEXT_BOOK9);
 			CloseInventory();
 			return true;
@@ -2188,9 +2188,9 @@ bool UseInvItem(int cii)
 			player.RemoveSpdBarItem(c);
 		return true;
 	}
-	if (player.InvList[c]._iMiscId == IMISC_MAPOFDOOM)
+	if (player.inventorySlot[c]._iMiscId == IMISC_MAPOFDOOM)
 		return true;
-	if (player.InvList[c]._iMiscId == IMISC_NOTE) {
+	if (player.inventorySlot[c]._iMiscId == IMISC_NOTE) {
 		InitQTextMsg(TEXT_BOOK9);
 		CloseInventory();
 		return true;
@@ -2214,21 +2214,21 @@ void CloseStash()
 		return;
 
 	Player &myPlayer = *MyPlayer;
-	if (!myPlayer.HoldItem.isEmpty()) {
-		std::optional<Point> itemTile = FindAdjacentPositionForItem(myPlayer.position.future, myPlayer._pdir);
+	if (!myPlayer.heldItem.isEmpty()) {
+		std::optional<Point> itemTile = FindAdjacentPositionForItem(myPlayer.position.future, myPlayer.direction);
 		if (itemTile) {
-			NetSendCmdPItem(true, CMD_PUTITEM, *itemTile, myPlayer.HoldItem);
+			NetSendCmdPItem(true, CMD_PUTITEM, *itemTile, myPlayer.heldItem);
 		} else {
-			if (!AutoPlaceItemInBelt(myPlayer, myPlayer.HoldItem, true, true)
-			    && !AutoPlaceItemInInventory(myPlayer, myPlayer.HoldItem, true, true)
-			    && !AutoPlaceItemInStash(myPlayer, myPlayer.HoldItem, true)) {
+			if (!AutoPlaceItemInBelt(myPlayer, myPlayer.heldItem, true, true)
+			    && !AutoPlaceItemInInventory(myPlayer, myPlayer.heldItem, true, true)
+			    && !AutoPlaceItemInStash(myPlayer, myPlayer.heldItem, true)) {
 				// This can fail for max gold, arena potions and a stash that has been arranged
 				// to not have room for the item all 3 cases are extremely unlikely
 				app_fatal(_("No room for item"));
 			}
-			PlaySFX(ItemInvSnds[ItemCAnimTbl[myPlayer.HoldItem._iCurs]]);
+			PlaySFX(ItemInvSnds[ItemCAnimTbl[myPlayer.heldItem._iCurs]]);
 		}
-		myPlayer.HoldItem.clear();
+		myPlayer.heldItem.clear();
 		NewCursor(CURSOR_HAND);
 	}
 
@@ -2253,9 +2253,9 @@ int CalculateGold(Player &player)
 {
 	int gold = 0;
 
-	for (int i = 0; i < player._pNumInv; i++) {
-		if (player.InvList[i]._itype == ItemType::Gold)
-			gold += player.InvList[i]._ivalue;
+	for (int i = 0; i < player.numInventoryItems; i++) {
+		if (player.inventorySlot[i]._itype == ItemType::Gold)
+			gold += player.inventorySlot[i]._ivalue;
 	}
 
 	return gold;

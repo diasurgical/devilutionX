@@ -284,14 +284,14 @@ void TownerTalk(_speech_id message)
 
 void TalkToBarOwner(Player &player, Towner &barOwner)
 {
-	if (!player._pLvlVisited[0]) {
+	if (!player.isLevelVisted[0]) {
 		InitQTextMsg(TEXT_INTRO);
 		return;
 	}
 
 	auto &kingQuest = Quests[Q_SKELKING];
 	if (kingQuest._qactive != QUEST_NOTAVAIL) {
-		if (player._pLvlVisited[2] || player._pLvlVisited[4]) {
+		if (player.isLevelVisted[2] || player.isLevelVisted[4]) {
 			if (kingQuest._qvar2 == 0) {
 				kingQuest._qvar2 = 1;
 				kingQuest._qlog = true;
@@ -315,7 +315,7 @@ void TalkToBarOwner(Player &player, Towner &barOwner)
 
 	auto &bannerQuest = Quests[Q_LTBANNER];
 	if (bannerQuest._qactive != QUEST_NOTAVAIL) {
-		if ((player._pLvlVisited[3] || player._pLvlVisited[4]) && bannerQuest._qactive != QUEST_DONE) {
+		if ((player.isLevelVisted[3] || player.isLevelVisted[4]) && bannerQuest._qactive != QUEST_DONE) {
 			if (bannerQuest._qvar2 == 0) {
 				bannerQuest._qvar2 = 1;
 				if (bannerQuest._qactive == QUEST_INIT) {
@@ -365,7 +365,7 @@ void TalkToDeadguy(Player &player, Towner & /*deadguy*/)
 void TalkToBlackSmith(Player &player, Towner &blackSmith)
 {
 	if (Quests[Q_ROCK]._qactive != QUEST_NOTAVAIL) {
-		if ((player._pLvlVisited[4] || player._pLvlVisited[5]) && Quests[Q_ROCK]._qactive != QUEST_DONE) {
+		if ((player.isLevelVisted[4] || player.isLevelVisted[5]) && Quests[Q_ROCK]._qactive != QUEST_DONE) {
 			if (Quests[Q_ROCK]._qvar2 == 0) {
 				Quests[Q_ROCK]._qvar2 = 1;
 				Quests[Q_ROCK]._qlog = true;
@@ -387,7 +387,7 @@ void TalkToBlackSmith(Player &player, Towner &blackSmith)
 		}
 	}
 	if (IsNoneOf(Quests[Q_ANVIL]._qactive, QUEST_NOTAVAIL, QUEST_DONE)) {
-		if ((player._pLvlVisited[9] || player._pLvlVisited[10]) && Quests[Q_ANVIL]._qvar2 == 0) {
+		if ((player.isLevelVisted[9] || player.isLevelVisted[10]) && Quests[Q_ANVIL]._qvar2 == 0) {
 			Quests[Q_ANVIL]._qvar2 = 1;
 			Quests[Q_ANVIL]._qlog = true;
 			if (Quests[Q_ANVIL]._qactive == QUEST_INIT) {
@@ -463,7 +463,7 @@ void TalkToWitch(Player &player, Towner & /*witch*/)
 
 void TalkToBarmaid(Player &player, Towner & /*barmaid*/)
 {
-	if (!player._pLvlVisited[21] && HasInventoryItemWithId(player, IDI_MAPOFDOOM) && Quests[Q_GRAVE]._qmsg != TEXT_GRAVE8) {
+	if (!player.isLevelVisted[21] && HasInventoryItemWithId(player, IDI_MAPOFDOOM) && Quests[Q_GRAVE]._qmsg != TEXT_GRAVE8) {
 		Quests[Q_GRAVE]._qactive = QUEST_ACTIVE;
 		Quests[Q_GRAVE]._qlog = true;
 		Quests[Q_GRAVE]._qmsg = TEXT_GRAVE8;
@@ -486,7 +486,7 @@ void TalkToHealer(Player &player, Towner &healer)
 {
 	Quest &poisonWater = Quests[Q_PWATER];
 	if (poisonWater._qactive != QUEST_NOTAVAIL) {
-		if ((poisonWater._qactive == QUEST_INIT && (player._pLvlVisited[1] || player._pLvlVisited[5])) || (poisonWater._qactive == QUEST_ACTIVE && !poisonWater._qlog)) {
+		if ((poisonWater._qactive == QUEST_INIT && (player.isLevelVisted[1] || player.isLevelVisted[5])) || (poisonWater._qactive == QUEST_ACTIVE && !poisonWater._qlog)) {
 			// Play the dialog and make the quest visible in the log if the player has not started the quest but has
 			// visited the dungeon at least once, or if they've found the poison water cave before speaking to Pepin
 			poisonWater._qactive = QUEST_ACTIVE;
@@ -609,13 +609,13 @@ void TalkToFarmer(Player &player, Towner &farmer)
 			break;
 		}
 
-		if (!player._pLvlVisited[9] && player.getCharacterLevel() < 15) {
+		if (!player.isLevelVisted[9] && player.getCharacterLevel() < 15) {
 			_speech_id qt = TEXT_FARMER8;
-			if (player._pLvlVisited[2])
+			if (player.isLevelVisted[2])
 				qt = TEXT_FARMER5;
-			if (player._pLvlVisited[5])
+			if (player.isLevelVisted[5])
 				qt = TEXT_FARMER7;
-			if (player._pLvlVisited[7])
+			if (player.isLevelVisted[7])
 				qt = TEXT_FARMER9;
 			InitQTextMsg(qt);
 			break;
@@ -700,7 +700,7 @@ void TalkToCowFarmer(Player &player, Towner &cowFarmer)
 			NetSendCmdQuest(true, quest);
 		break;
 	case QUEST_HIVE_ACTIVE:
-		if (!player._pLvlVisited[9] && player.getCharacterLevel() < 15) {
+		if (!player.isLevelVisted[9] && player.getCharacterLevel() < 15) {
 			InitQTextMsg(PickRandomlyAmong({ TEXT_JERSEY9, TEXT_JERSEY10, TEXT_JERSEY11, TEXT_JERSEY12 }));
 			break;
 		}
@@ -808,7 +808,7 @@ bool IsTownerPresent(_talker_id npc)
 	case TOWN_COWFARM:
 		return gbIsHellfire && sgGameInitInfo.bCowQuest != 0;
 	case TOWN_GIRL:
-		return gbIsHellfire && sgGameInitInfo.bTheoQuest != 0 && MyPlayer->_pLvlVisited[17] && Quests[Q_GIRL]._qactive != QUEST_DONE;
+		return gbIsHellfire && sgGameInitInfo.bTheoQuest != 0 && MyPlayer->isLevelVisted[17] && Quests[Q_GIRL]._qactive != QUEST_DONE;
 	default:
 		return true;
 	}
@@ -884,7 +884,7 @@ void TalkToTowner(Player &player, int t)
 	if (player.position.tile.WalkingDistance(towner.position) >= 2)
 		return;
 
-	if (!player.HoldItem.isEmpty()) {
+	if (!player.heldItem.isEmpty()) {
 		return;
 	}
 

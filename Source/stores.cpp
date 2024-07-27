@@ -398,7 +398,7 @@ void ScrollSmithBuy(int idx)
 
 uint32_t TotalPlayerGold()
 {
-	return MyPlayer->_pGold + Stash.gold;
+	return MyPlayer->gold + Stash.gold;
 }
 
 // TODO: Change `_iIvalue` to be unsigned instead of passing `int` here.
@@ -479,9 +479,9 @@ bool SmithSellOk(int i)
 	Item *pI;
 
 	if (i >= 0) {
-		pI = &MyPlayer->InvList[i];
+		pI = &MyPlayer->inventorySlot[i];
 	} else {
-		pI = &MyPlayer->SpdList[-(i + 1)];
+		pI = &MyPlayer->beltSlot[-(i + 1)];
 	}
 
 	if (pI->isEmpty())
@@ -521,12 +521,12 @@ void StartSmithSell()
 
 	const Player &myPlayer = *MyPlayer;
 
-	for (int8_t i = 0; i < myPlayer._pNumInv; i++) {
+	for (int8_t i = 0; i < myPlayer.numInventoryItems; i++) {
 		if (storenumh >= 48)
 			break;
 		if (SmithSellOk(i)) {
 			sellOk = true;
-			storehold[storenumh] = myPlayer.InvList[i];
+			storehold[storenumh] = myPlayer.inventorySlot[i];
 
 			if (storehold[storenumh]._iMagical != ITEM_QUALITY_NORMAL && storehold[storenumh]._iIdentified)
 				storehold[storenumh]._ivalue = storehold[storenumh]._iIvalue;
@@ -543,7 +543,7 @@ void StartSmithSell()
 			break;
 		if (SmithSellOk(-(i + 1))) {
 			sellOk = true;
-			storehold[storenumh] = myPlayer.SpdList[i];
+			storehold[storenumh] = myPlayer.beltSlot[i];
 
 			if (storehold[storenumh]._iMagical != ITEM_QUALITY_NORMAL && storehold[storenumh]._iIdentified)
 				storehold[storenumh]._ivalue = storehold[storenumh]._iIvalue;
@@ -567,7 +567,7 @@ void StartSmithSell()
 
 	stextscrl = true;
 	stextsval = 0;
-	stextsmax = myPlayer._pNumInv;
+	stextsmax = myPlayer.numInventoryItems;
 
 	RenderGold = true;
 	AddSText(20, 1, _("Which item is for sale?"), UiFlags::ColorWhitegold, false);
@@ -579,7 +579,7 @@ void StartSmithSell()
 bool SmithRepairOk(int i)
 {
 	const Player &myPlayer = *MyPlayer;
-	const Item &item = myPlayer.InvList[i];
+	const Item &item = myPlayer.inventorySlot[i];
 
 	if (item.isEmpty())
 		return false;
@@ -606,31 +606,31 @@ void StartSmithRepair()
 
 	Player &myPlayer = *MyPlayer;
 
-	auto &helmet = myPlayer.InvBody[INVLOC_HEAD];
+	auto &helmet = myPlayer.bodySlot[INVLOC_HEAD];
 	if (!helmet.isEmpty() && helmet._iDurability != helmet._iMaxDur) {
 		AddStoreHoldRepair(&helmet, -1);
 	}
 
-	auto &armor = myPlayer.InvBody[INVLOC_CHEST];
+	auto &armor = myPlayer.bodySlot[INVLOC_CHEST];
 	if (!armor.isEmpty() && armor._iDurability != armor._iMaxDur) {
 		AddStoreHoldRepair(&armor, -2);
 	}
 
-	auto &leftHand = myPlayer.InvBody[INVLOC_HAND_LEFT];
+	auto &leftHand = myPlayer.bodySlot[INVLOC_HAND_LEFT];
 	if (!leftHand.isEmpty() && leftHand._iDurability != leftHand._iMaxDur) {
 		AddStoreHoldRepair(&leftHand, -3);
 	}
 
-	auto &rightHand = myPlayer.InvBody[INVLOC_HAND_RIGHT];
+	auto &rightHand = myPlayer.bodySlot[INVLOC_HAND_RIGHT];
 	if (!rightHand.isEmpty() && rightHand._iDurability != rightHand._iMaxDur) {
 		AddStoreHoldRepair(&rightHand, -4);
 	}
 
-	for (int i = 0; i < myPlayer._pNumInv; i++) {
+	for (int i = 0; i < myPlayer.numInventoryItems; i++) {
 		if (storenumh >= 48)
 			break;
 		if (SmithRepairOk(i)) {
-			AddStoreHoldRepair(&myPlayer.InvList[i], i);
+			AddStoreHoldRepair(&myPlayer.inventorySlot[i], i);
 		}
 	}
 
@@ -646,7 +646,7 @@ void StartSmithRepair()
 
 	stextscrl = true;
 	stextsval = 0;
-	stextsmax = myPlayer._pNumInv;
+	stextsmax = myPlayer.numInventoryItems;
 
 	RenderGold = true;
 	AddSText(20, 1, _("Repair which item?"), UiFlags::ColorWhitegold, false);
@@ -663,11 +663,11 @@ void FillManaPlayer()
 
 	Player &myPlayer = *MyPlayer;
 
-	if (myPlayer._pMana != myPlayer._pMaxMana) {
+	if (myPlayer.mana != myPlayer.maxMana) {
 		PlaySFX(SfxID::CastHealing);
 	}
-	myPlayer._pMana = myPlayer._pMaxMana;
-	myPlayer._pManaBase = myPlayer._pMaxManaBase;
+	myPlayer.mana = myPlayer.maxMana;
+	myPlayer.baseMana = myPlayer.baseMaxMana;
 	RedrawComponent(PanelDrawComponent::Mana);
 }
 
@@ -697,7 +697,7 @@ void WitchBookLevel(Item &bookItem)
 	if (bookItem._iMiscId != IMISC_BOOK)
 		return;
 	bookItem._iMinMag = GetSpellData(bookItem._iSpell).minInt;
-	uint8_t spellLevel = MyPlayer->_pSplLvl[static_cast<int8_t>(bookItem._iSpell)];
+	uint8_t spellLevel = MyPlayer->spellLevel[static_cast<int8_t>(bookItem._iSpell)];
 	while (spellLevel > 0) {
 		bookItem._iMinMag += 20 * bookItem._iMinMag / 100;
 		spellLevel--;
@@ -740,9 +740,9 @@ bool WitchSellOk(int i)
 	bool rv = false;
 
 	if (i >= 0)
-		pI = &MyPlayer->InvList[i];
+		pI = &MyPlayer->inventorySlot[i];
 	else
-		pI = &MyPlayer->SpdList[-(i + 1)];
+		pI = &MyPlayer->beltSlot[-(i + 1)];
 
 	if (pI->_itype == ItemType::Misc)
 		rv = true;
@@ -771,12 +771,12 @@ void StartWitchSell()
 
 	const Player &myPlayer = *MyPlayer;
 
-	for (int i = 0; i < myPlayer._pNumInv; i++) {
+	for (int i = 0; i < myPlayer.numInventoryItems; i++) {
 		if (storenumh >= 48)
 			break;
 		if (WitchSellOk(i)) {
 			sellok = true;
-			storehold[storenumh] = myPlayer.InvList[i];
+			storehold[storenumh] = myPlayer.inventorySlot[i];
 
 			if (storehold[storenumh]._iMagical != ITEM_QUALITY_NORMAL && storehold[storenumh]._iIdentified)
 				storehold[storenumh]._ivalue = storehold[storenumh]._iIvalue;
@@ -791,9 +791,9 @@ void StartWitchSell()
 	for (int i = 0; i < MaxBeltItems; i++) {
 		if (storenumh >= 48)
 			break;
-		if (!myPlayer.SpdList[i].isEmpty() && WitchSellOk(-(i + 1))) {
+		if (!myPlayer.beltSlot[i].isEmpty() && WitchSellOk(-(i + 1))) {
 			sellok = true;
-			storehold[storenumh] = myPlayer.SpdList[i];
+			storehold[storenumh] = myPlayer.beltSlot[i];
 
 			if (storehold[storenumh]._iMagical != ITEM_QUALITY_NORMAL && storehold[storenumh]._iIdentified)
 				storehold[storenumh]._ivalue = storehold[storenumh]._iIvalue;
@@ -818,7 +818,7 @@ void StartWitchSell()
 
 	stextscrl = true;
 	stextsval = 0;
-	stextsmax = myPlayer._pNumInv;
+	stextsmax = myPlayer.numInventoryItems;
 
 	RenderGold = true;
 	AddSText(20, 1, _("Which item is for sale?"), UiFlags::ColorWhitegold, false);
@@ -829,7 +829,7 @@ void StartWitchSell()
 
 bool WitchRechargeOk(int i)
 {
-	const auto &item = MyPlayer->InvList[i];
+	const auto &item = MyPlayer->inventorySlot[i];
 
 	if (item._itype == ItemType::Staff && item._iCharges != item._iMaxCharges) {
 		return true;
@@ -863,19 +863,19 @@ void StartWitchRecharge()
 	}
 
 	const Player &myPlayer = *MyPlayer;
-	const auto &leftHand = myPlayer.InvBody[INVLOC_HAND_LEFT];
+	const auto &leftHand = myPlayer.bodySlot[INVLOC_HAND_LEFT];
 
 	if ((leftHand._itype == ItemType::Staff || leftHand._iMiscId == IMISC_UNIQUE) && leftHand._iCharges != leftHand._iMaxCharges) {
 		rechargeok = true;
 		AddStoreHoldRecharge(leftHand, -1);
 	}
 
-	for (int i = 0; i < myPlayer._pNumInv; i++) {
+	for (int i = 0; i < myPlayer.numInventoryItems; i++) {
 		if (storenumh >= 48)
 			break;
 		if (WitchRechargeOk(i)) {
 			rechargeok = true;
-			AddStoreHoldRecharge(myPlayer.InvList[i], i);
+			AddStoreHoldRecharge(myPlayer.inventorySlot[i], i);
 		}
 	}
 
@@ -891,7 +891,7 @@ void StartWitchRecharge()
 
 	stextscrl = true;
 	stextsval = 0;
-	stextsmax = myPlayer._pNumInv;
+	stextsmax = myPlayer.numInventoryItems;
 
 	RenderGold = true;
 	AddSText(20, 1, _("Recharge which item?"), UiFlags::ColorWhitegold, false);
@@ -1013,11 +1013,11 @@ void HealPlayer()
 {
 	Player &myPlayer = *MyPlayer;
 
-	if (myPlayer._pHitPoints != myPlayer._pMaxHP) {
+	if (myPlayer.life != myPlayer.maxLife) {
 		PlaySFX(SfxID::CastHealing);
 	}
-	myPlayer._pHitPoints = myPlayer._pMaxHP;
-	myPlayer._pHPBase = myPlayer._pMaxHPBase;
+	myPlayer.life = myPlayer.maxLife;
+	myPlayer.baseLife = myPlayer.baseMaxLife;
 	RedrawComponent(PanelDrawComponent::Health);
 }
 
@@ -1110,52 +1110,52 @@ void StartStorytellerIdentify()
 
 	Player &myPlayer = *MyPlayer;
 
-	auto &helmet = myPlayer.InvBody[INVLOC_HEAD];
+	auto &helmet = myPlayer.bodySlot[INVLOC_HEAD];
 	if (IdItemOk(&helmet)) {
 		idok = true;
 		AddStoreHoldId(helmet, -1);
 	}
 
-	auto &armor = myPlayer.InvBody[INVLOC_CHEST];
+	auto &armor = myPlayer.bodySlot[INVLOC_CHEST];
 	if (IdItemOk(&armor)) {
 		idok = true;
 		AddStoreHoldId(armor, -2);
 	}
 
-	auto &leftHand = myPlayer.InvBody[INVLOC_HAND_LEFT];
+	auto &leftHand = myPlayer.bodySlot[INVLOC_HAND_LEFT];
 	if (IdItemOk(&leftHand)) {
 		idok = true;
 		AddStoreHoldId(leftHand, -3);
 	}
 
-	auto &rightHand = myPlayer.InvBody[INVLOC_HAND_RIGHT];
+	auto &rightHand = myPlayer.bodySlot[INVLOC_HAND_RIGHT];
 	if (IdItemOk(&rightHand)) {
 		idok = true;
 		AddStoreHoldId(rightHand, -4);
 	}
 
-	auto &leftRing = myPlayer.InvBody[INVLOC_RING_LEFT];
+	auto &leftRing = myPlayer.bodySlot[INVLOC_RING_LEFT];
 	if (IdItemOk(&leftRing)) {
 		idok = true;
 		AddStoreHoldId(leftRing, -5);
 	}
 
-	auto &rightRing = myPlayer.InvBody[INVLOC_RING_RIGHT];
+	auto &rightRing = myPlayer.bodySlot[INVLOC_RING_RIGHT];
 	if (IdItemOk(&rightRing)) {
 		idok = true;
 		AddStoreHoldId(rightRing, -6);
 	}
 
-	auto &amulet = myPlayer.InvBody[INVLOC_AMULET];
+	auto &amulet = myPlayer.bodySlot[INVLOC_AMULET];
 	if (IdItemOk(&amulet)) {
 		idok = true;
 		AddStoreHoldId(amulet, -7);
 	}
 
-	for (int i = 0; i < myPlayer._pNumInv; i++) {
+	for (int i = 0; i < myPlayer.numInventoryItems; i++) {
 		if (storenumh >= 48)
 			break;
-		auto &item = myPlayer.InvList[i];
+		auto &item = myPlayer.inventorySlot[i];
 		if (IdItemOk(&item)) {
 			idok = true;
 			AddStoreHoldId(item, i);
@@ -1174,7 +1174,7 @@ void StartStorytellerIdentify()
 
 	stextscrl = true;
 	stextsval = 0;
-	stextsmax = myPlayer._pNumInv;
+	stextsmax = myPlayer.numInventoryItems;
 
 	RenderGold = true;
 	AddSText(20, 1, _("Identify which item?"), UiFlags::ColorWhitegold, false);
@@ -1452,7 +1452,7 @@ void StoreSellItem()
 
 	AddGoldToInventory(myPlayer, cost);
 
-	myPlayer._pGold += cost;
+	myPlayer.gold += cost;
 }
 
 void SmithSellEnter()
@@ -1494,17 +1494,17 @@ void SmithRepairItem(int price)
 
 	if (i < 0) {
 		if (i == -1)
-			myPlayer.InvBody[INVLOC_HEAD]._iDurability = myPlayer.InvBody[INVLOC_HEAD]._iMaxDur;
+			myPlayer.bodySlot[INVLOC_HEAD]._iDurability = myPlayer.bodySlot[INVLOC_HEAD]._iMaxDur;
 		if (i == -2)
-			myPlayer.InvBody[INVLOC_CHEST]._iDurability = myPlayer.InvBody[INVLOC_CHEST]._iMaxDur;
+			myPlayer.bodySlot[INVLOC_CHEST]._iDurability = myPlayer.bodySlot[INVLOC_CHEST]._iMaxDur;
 		if (i == -3)
-			myPlayer.InvBody[INVLOC_HAND_LEFT]._iDurability = myPlayer.InvBody[INVLOC_HAND_LEFT]._iMaxDur;
+			myPlayer.bodySlot[INVLOC_HAND_LEFT]._iDurability = myPlayer.bodySlot[INVLOC_HAND_LEFT]._iMaxDur;
 		if (i == -4)
-			myPlayer.InvBody[INVLOC_HAND_RIGHT]._iDurability = myPlayer.InvBody[INVLOC_HAND_RIGHT]._iMaxDur;
+			myPlayer.bodySlot[INVLOC_HAND_RIGHT]._iDurability = myPlayer.bodySlot[INVLOC_HAND_RIGHT]._iMaxDur;
 		return;
 	}
 
-	myPlayer.InvList[i]._iDurability = myPlayer.InvList[i]._iMaxDur;
+	myPlayer.inventorySlot[i]._iDurability = myPlayer.inventorySlot[i]._iMaxDur;
 }
 
 void SmithRepairEnter()
@@ -1646,10 +1646,10 @@ void WitchRechargeItem(int price)
 
 	int8_t i = storehidx[idx];
 	if (i < 0) {
-		myPlayer.InvBody[INVLOC_HAND_LEFT]._iCharges = myPlayer.InvBody[INVLOC_HAND_LEFT]._iMaxCharges;
+		myPlayer.bodySlot[INVLOC_HAND_LEFT]._iCharges = myPlayer.bodySlot[INVLOC_HAND_LEFT]._iMaxCharges;
 		NetSendCmdChItem(true, INVLOC_HAND_LEFT);
 	} else {
-		myPlayer.InvList[i]._iCharges = myPlayer.InvList[i]._iMaxCharges;
+		myPlayer.inventorySlot[i]._iCharges = myPlayer.inventorySlot[i]._iMaxCharges;
 		NetSyncInvItem(myPlayer, i);
 	}
 
@@ -1791,21 +1791,21 @@ void StorytellerIdentifyItem(Item &item)
 	int8_t idx = storehidx[((stextlhold - stextup) / 4) + stextvhold];
 	if (idx < 0) {
 		if (idx == -1)
-			myPlayer.InvBody[INVLOC_HEAD]._iIdentified = true;
+			myPlayer.bodySlot[INVLOC_HEAD]._iIdentified = true;
 		if (idx == -2)
-			myPlayer.InvBody[INVLOC_CHEST]._iIdentified = true;
+			myPlayer.bodySlot[INVLOC_CHEST]._iIdentified = true;
 		if (idx == -3)
-			myPlayer.InvBody[INVLOC_HAND_LEFT]._iIdentified = true;
+			myPlayer.bodySlot[INVLOC_HAND_LEFT]._iIdentified = true;
 		if (idx == -4)
-			myPlayer.InvBody[INVLOC_HAND_RIGHT]._iIdentified = true;
+			myPlayer.bodySlot[INVLOC_HAND_RIGHT]._iIdentified = true;
 		if (idx == -5)
-			myPlayer.InvBody[INVLOC_RING_LEFT]._iIdentified = true;
+			myPlayer.bodySlot[INVLOC_RING_LEFT]._iIdentified = true;
 		if (idx == -6)
-			myPlayer.InvBody[INVLOC_RING_RIGHT]._iIdentified = true;
+			myPlayer.bodySlot[INVLOC_RING_RIGHT]._iIdentified = true;
 		if (idx == -7)
-			myPlayer.InvBody[INVLOC_AMULET]._iIdentified = true;
+			myPlayer.bodySlot[INVLOC_AMULET]._iIdentified = true;
 	} else {
-		myPlayer.InvList[idx]._iIdentified = true;
+		myPlayer.inventorySlot[idx]._iIdentified = true;
 	}
 	item._iIdentified = true;
 	TakePlrsMoney(item._iIvalue);
@@ -2046,14 +2046,14 @@ void DrunkEnter()
 
 int TakeGold(Player &player, int cost, bool skipMaxPiles)
 {
-	for (int i = 0; i < player._pNumInv; i++) {
-		auto &item = player.InvList[i];
+	for (int i = 0; i < player.numInventoryItems; i++) {
+		auto &item = player.inventorySlot[i];
 		if (item._itype != ItemType::Gold || (skipMaxPiles && item._ivalue == MaxGold))
 			continue;
 
 		if (cost < item._ivalue) {
 			item._ivalue -= cost;
-			SetPlrHandGoldCurs(player.InvList[i]);
+			SetPlrHandGoldCurs(player.inventorySlot[i]);
 			return 0;
 		}
 
@@ -2131,7 +2131,7 @@ void SetupTownStores()
 	if (!gbIsMultiplayer) {
 		l = 0;
 		for (int i = 0; i < NUMLEVELS; i++) {
-			if (myPlayer._pLvlVisited[i])
+			if (myPlayer.isLevelVisted[i])
 				l = i;
 		}
 	} else {
@@ -2595,7 +2595,7 @@ void TakePlrsMoney(int cost)
 {
 	Player &myPlayer = *MyPlayer;
 
-	myPlayer._pGold -= std::min(cost, myPlayer._pGold);
+	myPlayer.gold -= std::min(cost, myPlayer.gold);
 
 	cost = TakeGold(myPlayer, cost, true);
 	if (cost != 0) {

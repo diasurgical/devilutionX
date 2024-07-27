@@ -31,17 +31,17 @@ namespace {
  */
 bool IsReadiedSpellValid(const Player &player)
 {
-	switch (player._pRSplType) {
+	switch (player.selectedSpellType) {
 	case SpellType::Skill:
 	case SpellType::Spell:
 	case SpellType::Invalid:
 		return true;
 
 	case SpellType::Charges:
-		return (player._pISpells & GetSpellBitmask(player._pRSpell)) != 0;
+		return (player.staffSpells & GetSpellBitmask(player.selectedSpell)) != 0;
 
 	case SpellType::Scroll:
-		return (player._pScrlSpells & GetSpellBitmask(player._pRSpell)) != 0;
+		return (player.scrollSpells & GetSpellBitmask(player.selectedSpell)) != 0;
 
 	default:
 		return false;
@@ -55,13 +55,13 @@ bool IsReadiedSpellValid(const Player &player)
  */
 void ClearReadiedSpell(Player &player)
 {
-	if (player._pRSpell != SpellID::Invalid) {
-		player._pRSpell = SpellID::Invalid;
+	if (player.selectedSpell != SpellID::Invalid) {
+		player.selectedSpell = SpellID::Invalid;
 		RedrawEverything();
 	}
 
-	if (player._pRSplType != SpellType::Invalid) {
-		player._pRSplType = SpellType::Invalid;
+	if (player.selectedSpellType != SpellType::Invalid) {
+		player.selectedSpellType = SpellType::Invalid;
 		RedrawEverything();
 	}
 }
@@ -124,7 +124,7 @@ int GetManaAmount(const Player &player, SpellID sn)
 	if (sn == SpellID::Healing || sn == SpellID::HealOther) {
 		ma = (GetSpellData(SpellID::Healing).sManaCost + 2 * player.getCharacterLevel() - adj);
 	} else if (GetSpellData(sn).sManaCost == 255) {
-		ma = (player._pMaxManaBase >> 6) - adj;
+		ma = (player.baseMaxMana >> 6) - adj;
 	} else {
 		ma = (GetSpellData(sn).sManaCost - adj);
 	}
@@ -132,9 +132,9 @@ int GetManaAmount(const Player &player, SpellID sn)
 	ma = std::max(ma, 0);
 	ma <<= 6;
 
-	if (gbIsHellfire && player._pClass == HeroClass::Sorcerer) {
+	if (gbIsHellfire && player.heroClass == HeroClass::Sorcerer) {
 		ma /= 2;
-	} else if (player._pClass == HeroClass::Rogue || player._pClass == HeroClass::Monk || player._pClass == HeroClass::Bard) {
+	} else if (player.heroClass == HeroClass::Rogue || player.heroClass == HeroClass::Monk || player.heroClass == HeroClass::Bard) {
 		ma -= ma / 4;
 	}
 
@@ -163,8 +163,8 @@ void ConsumeSpell(Player &player, SpellID sn)
 			break;
 #endif
 		int ma = GetManaAmount(player, sn);
-		player._pMana -= ma;
-		player._pManaBase -= ma;
+		player.mana -= ma;
+		player.baseMana -= ma;
 		RedrawComponent(PanelDrawComponent::Mana);
 		break;
 	}
@@ -202,7 +202,7 @@ SpellCheckResult CheckSpell(const Player &player, SpellID sn, SpellType st, bool
 		return SpellCheckResult::Fail_Level0;
 	}
 
-	if (player._pMana < GetManaAmount(player, sn)) {
+	if (player.mana < GetManaAmount(player, sn)) {
 		return SpellCheckResult::Fail_NoMana;
 	}
 
@@ -211,7 +211,7 @@ SpellCheckResult CheckSpell(const Player &player, SpellID sn, SpellType st, bool
 
 void CastSpell(Player &player, SpellID spl, WorldTilePosition src, WorldTilePosition dst, int spllvl)
 {
-	Direction dir = player._pdir;
+	Direction dir = player.direction;
 	if (IsWallSpell(spl)) {
 		dir = player.tempDirection;
 	}
@@ -237,7 +237,7 @@ void DoResurrect(Player &player, Player &target)
 {
 	AddMissile(target.position.tile, target.position.tile, Direction::South, MissileID::ResurrectBeam, TARGET_MONSTERS, player, 0, 0);
 
-	if (target._pHitPoints != 0)
+	if (target.life != 0)
 		return;
 
 	if (&target == MyPlayer) {
@@ -248,32 +248,32 @@ void DoResurrect(Player &player, Player &target)
 	}
 
 	ClrPlrPath(target);
-	target.destAction = ACTION_NONE;
-	target._pInvincible = false;
+	target.destinationAction = ACTION_NONE;
+	target.isInvincible = false;
 	SyncInitPlrPos(target);
 
 	int hp = 10 << 6;
-	if (target._pMaxHPBase < (10 << 6)) {
-		hp = target._pMaxHPBase;
+	if (target.baseMaxLife < (10 << 6)) {
+		hp = target.baseMaxLife;
 	}
 	SetPlayerHitPoints(target, hp);
 
-	target._pHPBase = target._pHitPoints + (target._pMaxHPBase - target._pMaxHP); // CODEFIX: does the same stuff as SetPlayerHitPoints above, can be removed
-	target._pMana = 0;
-	target._pManaBase = target._pMana + (target._pMaxManaBase - target._pMaxMana);
+	target.baseLife = target.life + (target.baseMaxLife - target.maxLife); // CODEFIX: does the same stuff as SetPlayerHitPoints above, can be removed
+	target.mana = 0;
+	target.baseMana = target.mana + (target.baseMaxMana - target.maxMana);
 
-	target._pmode = PM_STAND;
+	target.mode = PM_STAND;
 
 	CalcPlrInv(target, true);
 
 	if (target.isOnActiveLevel()) {
-		StartStand(target, target._pdir);
+		StartStand(target, target.direction);
 	}
 }
 
 void DoHealOther(const Player &caster, Player &target)
 {
-	if ((target._pHitPoints >> 6) <= 0) {
+	if ((target.life >> 6) <= 0) {
 		return;
 	}
 
@@ -285,16 +285,16 @@ void DoHealOther(const Player &caster, Player &target)
 		hp += (GenerateRnd(6) + 1) << 6;
 	}
 
-	if (caster._pClass == HeroClass::Warrior || caster._pClass == HeroClass::Barbarian) {
+	if (caster.heroClass == HeroClass::Warrior || caster.heroClass == HeroClass::Barbarian) {
 		hp *= 2;
-	} else if (caster._pClass == HeroClass::Rogue || caster._pClass == HeroClass::Bard) {
+	} else if (caster.heroClass == HeroClass::Rogue || caster.heroClass == HeroClass::Bard) {
 		hp += hp / 2;
-	} else if (caster._pClass == HeroClass::Monk) {
+	} else if (caster.heroClass == HeroClass::Monk) {
 		hp *= 3;
 	}
 
-	target._pHitPoints = std::min(target._pHitPoints + hp, target._pMaxHP);
-	target._pHPBase = std::min(target._pHPBase + hp, target._pMaxHPBase);
+	target.life = std::min(target.life + hp, target.maxLife);
+	target.baseLife = std::min(target.baseLife + hp, target.baseMaxLife);
 
 	if (&target == MyPlayer) {
 		RedrawComponent(PanelDrawComponent::Health);

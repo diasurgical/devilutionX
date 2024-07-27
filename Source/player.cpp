@@ -68,7 +68,7 @@ void UpdatePlayerLightOffset(Player &player)
 	if (player.lightId == NO_LIGHT)
 		return;
 
-	const WorldTileDisplacement offset = player.position.CalculateWalkingOffset(player._pdir, player.AnimInfo);
+	const WorldTileDisplacement offset = player.position.CalculateWalkingOffset(player.direction, player.animationInfo);
 	ChangeLightOffset(player.lightId, offset.screenToLight());
 }
 
@@ -118,7 +118,7 @@ void HandleWalkMode(Player &player, Direction dir)
 		return;
 	}
 
-	player._pdir = dir;
+	player.direction = dir;
 
 	// The player's tile position after finishing this movement action
 	player.position.future = player.position.tile + dirModeParams.dir;
@@ -126,7 +126,7 @@ void HandleWalkMode(Player &player, Direction dir)
 	WalkInDirection(player, dirModeParams);
 
 	player.tempDirection = dirModeParams.dir;
-	player._pmode = dirModeParams.walkMode;
+	player.mode = dirModeParams.walkMode;
 }
 
 void StartWalkAnimation(Player &player, Direction dir, bool pmWillBeCalled)
@@ -144,7 +144,7 @@ void StartWalkAnimation(Player &player, Direction dir, bool pmWillBeCalled)
  */
 void StartWalk(Player &player, Direction dir, bool pmWillBeCalled)
 {
-	if (player._pInvincible && player._pHitPoints == 0 && &player == MyPlayer) {
+	if (player.isInvincible && player.life == 0 && &player == MyPlayer) {
 		SyncPlrKill(player, DeathReason::Unknown);
 		return;
 	}
@@ -162,70 +162,70 @@ void ClearStateVariables(Player &player)
 
 void StartAttack(Player &player, Direction d, bool includesFirstFrame)
 {
-	if (player._pInvincible && player._pHitPoints == 0 && &player == MyPlayer) {
+	if (player.isInvincible && player.life == 0 && &player == MyPlayer) {
 		SyncPlrKill(player, DeathReason::Unknown);
 		return;
 	}
 
 	int8_t skippedAnimationFrames = 0;
 	if (includesFirstFrame) {
-		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastestAttack) && HasAnyOf(player._pIFlags, ItemSpecialEffect::QuickAttack | ItemSpecialEffect::FastAttack)) {
+		if (HasAnyOf(player.flags, ItemSpecialEffect::FastestAttack) && HasAnyOf(player.flags, ItemSpecialEffect::QuickAttack | ItemSpecialEffect::FastAttack)) {
 			// Combining Fastest Attack with any other attack speed modifier skips over the fourth frame, reducing the effectiveness of Fastest Attack.
 			// Faster Attack makes up for this by also skipping the sixth frame so this case only applies when using Quick or Fast Attack modifiers.
 			skippedAnimationFrames = 3;
-		} else if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastestAttack)) {
+		} else if (HasAnyOf(player.flags, ItemSpecialEffect::FastestAttack)) {
 			skippedAnimationFrames = 4;
-		} else if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FasterAttack)) {
+		} else if (HasAnyOf(player.flags, ItemSpecialEffect::FasterAttack)) {
 			skippedAnimationFrames = 3;
-		} else if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastAttack)) {
+		} else if (HasAnyOf(player.flags, ItemSpecialEffect::FastAttack)) {
 			skippedAnimationFrames = 2;
-		} else if (HasAnyOf(player._pIFlags, ItemSpecialEffect::QuickAttack)) {
+		} else if (HasAnyOf(player.flags, ItemSpecialEffect::QuickAttack)) {
 			skippedAnimationFrames = 1;
 		}
 	} else {
-		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FasterAttack)) {
+		if (HasAnyOf(player.flags, ItemSpecialEffect::FasterAttack)) {
 			// The combination of Faster and Fast Attack doesn't result in more skipped frames, because the second frame skip of Faster Attack is not triggered.
 			skippedAnimationFrames = 2;
-		} else if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastAttack)) {
+		} else if (HasAnyOf(player.flags, ItemSpecialEffect::FastAttack)) {
 			skippedAnimationFrames = 1;
-		} else if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastestAttack)) {
+		} else if (HasAnyOf(player.flags, ItemSpecialEffect::FastestAttack)) {
 			// Fastest Attack is skipped if Fast or Faster Attack is also specified, because both skip the frame that triggers Fastest Attack skipping.
 			skippedAnimationFrames = 2;
 		}
 	}
 
 	auto animationFlags = AnimationDistributionFlags::ProcessAnimationPending;
-	if (player._pmode == PM_ATTACK)
+	if (player.mode == PM_ATTACK)
 		animationFlags = static_cast<AnimationDistributionFlags>(animationFlags | AnimationDistributionFlags::RepeatedAction);
-	NewPlrAnim(player, player_graphic::Attack, d, animationFlags, skippedAnimationFrames, player._pAFNum);
-	player._pmode = PM_ATTACK;
+	NewPlrAnim(player, player_graphic::Attack, d, animationFlags, skippedAnimationFrames, player.attackActionFrame);
+	player.mode = PM_ATTACK;
 	FixPlayerLocation(player, d);
 	SetPlayerOld(player);
 }
 
 void StartRangeAttack(Player &player, Direction d, WorldTileCoord cx, WorldTileCoord cy, bool includesFirstFrame)
 {
-	if (player._pInvincible && player._pHitPoints == 0 && &player == MyPlayer) {
+	if (player.isInvincible && player.life == 0 && &player == MyPlayer) {
 		SyncPlrKill(player, DeathReason::Unknown);
 		return;
 	}
 
 	int8_t skippedAnimationFrames = 0;
 	if (!gbIsHellfire) {
-		if (includesFirstFrame && HasAnyOf(player._pIFlags, ItemSpecialEffect::QuickAttack | ItemSpecialEffect::FastAttack)) {
+		if (includesFirstFrame && HasAnyOf(player.flags, ItemSpecialEffect::QuickAttack | ItemSpecialEffect::FastAttack)) {
 			skippedAnimationFrames += 1;
 		}
-		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastAttack)) {
+		if (HasAnyOf(player.flags, ItemSpecialEffect::FastAttack)) {
 			skippedAnimationFrames += 1;
 		}
 	}
 
 	auto animationFlags = AnimationDistributionFlags::ProcessAnimationPending;
-	if (player._pmode == PM_RATTACK)
+	if (player.mode == PM_RATTACK)
 		animationFlags = static_cast<AnimationDistributionFlags>(animationFlags | AnimationDistributionFlags::RepeatedAction);
-	NewPlrAnim(player, player_graphic::Attack, d, animationFlags, skippedAnimationFrames, player._pAFNum);
+	NewPlrAnim(player, player_graphic::Attack, d, animationFlags, skippedAnimationFrames, player.attackActionFrame);
 
-	player._pmode = PM_RATTACK;
+	player.mode = PM_RATTACK;
 	FixPlayerLocation(player, d);
 	SetPlayerOld(player);
 	player.position.temp = WorldTilePosition { cx, cy };
@@ -245,7 +245,7 @@ player_graphic GetPlayerGraphicForSpell(SpellID spellId)
 
 void StartSpell(Player &player, Direction d, WorldTileCoord cx, WorldTileCoord cy)
 {
-	if (player._pInvincible && player._pHitPoints == 0 && &player == MyPlayer) {
+	if (player.isInvincible && player.life == 0 && &player == MyPlayer) {
 		SyncPlrKill(player, DeathReason::Unknown);
 		return;
 	}
@@ -271,13 +271,13 @@ void StartSpell(Player &player, Direction d, WorldTileCoord cx, WorldTileCoord c
 		return;
 
 	auto animationFlags = AnimationDistributionFlags::ProcessAnimationPending;
-	if (player._pmode == PM_SPELL)
+	if (player.mode == PM_SPELL)
 		animationFlags = static_cast<AnimationDistributionFlags>(animationFlags | AnimationDistributionFlags::RepeatedAction);
-	NewPlrAnim(player, GetPlayerGraphicForSpell(player.queuedSpell.spellId), d, animationFlags, 0, player._pSFNum);
+	NewPlrAnim(player, GetPlayerGraphicForSpell(player.queuedSpell.spellId), d, animationFlags, 0, player.spellActionFrame);
 
 	PlaySfxLoc(GetSpellData(player.queuedSpell.spellId).sSFX, player.position.tile);
 
-	player._pmode = PM_SPELL;
+	player.mode = PM_SPELL;
 
 	FixPlayerLocation(player, d);
 	SetPlayerOld(player);
@@ -328,8 +328,8 @@ void DeadItem(Player &player, Item &&itm, Displacement direction)
 
 int DropGold(Player &player, int amount, bool skipFullStacks)
 {
-	for (int i = 0; i < player._pNumInv && amount > 0; i++) {
-		Item &item = player.InvList[i];
+	for (int i = 0; i < player.numInventoryItems && amount > 0; i++) {
+		Item &item = player.inventorySlot[i];
 
 		if (item._itype != ItemType::Gold || (skipFullStacks && item._ivalue == MaxGold))
 			continue;
@@ -355,12 +355,12 @@ int DropGold(Player &player, int amount, bool skipFullStacks)
 
 void DropHalfPlayersGold(Player &player)
 {
-	int remainingGold = DropGold(player, player._pGold / 2, true);
+	int remainingGold = DropGold(player, player.gold / 2, true);
 	if (remainingGold > 0) {
 		DropGold(player, remainingGold, false);
 	}
 
-	player._pGold /= 2;
+	player.gold /= 2;
 }
 
 void InitLevelChange(Player &player)
@@ -368,14 +368,14 @@ void InitLevelChange(Player &player)
 	Player &myPlayer = *MyPlayer;
 
 	RemovePlrMissiles(player);
-	player.pManaShield = false;
-	player.wReflections = 0;
+	player.hasManaShield = false;
+	player.reflections = 0;
 	if (&player != MyPlayer) {
 		// share info about your manashield when another player joins the level
-		if (myPlayer.pManaShield)
+		if (myPlayer.hasManaShield)
 			NetSendCmd(true, CMD_SETSHIELD);
 		// share info about your reflect charges when another player joins the level
-		NetSendCmdParam1(true, CMD_SETREFLECT, myPlayer.wReflections);
+		NetSendCmdParam1(true, CMD_SETREFLECT, myPlayer.reflections);
 	} else if (qtextflag) {
 		qtextflag = false;
 		stream_stop();
@@ -386,15 +386,15 @@ void InitLevelChange(Player &player)
 	if (&player == MyPlayer) {
 		player.occupyTile(player.position.tile, false);
 	} else {
-		player._pLvlVisited[player.plrlevel] = true;
+		player.isLevelVisted[player.dungeonLevel] = true;
 	}
 
 	ClrPlrPath(player);
-	player.destAction = ACTION_NONE;
-	player._pLvlChanging = true;
+	player.destinationAction = ACTION_NONE;
+	player.isChangingLevel = true;
 
 	if (&player == MyPlayer) {
-		player.pLvlLoad = 10;
+		player.levelLoading = 10;
 	}
 }
 
@@ -405,13 +405,13 @@ bool DoWalk(Player &player)
 {
 	// Play walking sound effect on certain animation frames
 	if (*sgOptions.Audio.walkingSound && (leveltype != DTYPE_TOWN || sgGameInitInfo.bRunInTown == 0)) {
-		if (player.AnimInfo.currentFrame == 0
-		    || player.AnimInfo.currentFrame == 4) {
+		if (player.animationInfo.currentFrame == 0
+		    || player.animationInfo.currentFrame == 4) {
 			PlaySfxLoc(SfxID::Walk, player.position.tile);
 		}
 	}
 
-	if (!player.AnimInfo.isLastFrame()) {
+	if (!player.animationInfo.isLastFrame()) {
 		// We didn't reach new tile so update player's "sub-tile" position
 		UpdatePlayerLightOffset(player);
 		return false;
@@ -444,9 +444,9 @@ bool DoWalk(Player &player)
 
 bool WeaponDecay(Player &player, int ii)
 {
-	if (!player.InvBody[ii].isEmpty() && player.InvBody[ii]._iClass == ICLASS_WEAPON && HasAnyOf(player.InvBody[ii]._iDamAcFlags, ItemSpecialEffectHf::Decay)) {
-		player.InvBody[ii]._iPLDam -= 5;
-		if (player.InvBody[ii]._iPLDam <= -100) {
+	if (!player.bodySlot[ii].isEmpty() && player.bodySlot[ii]._iClass == ICLASS_WEAPON && HasAnyOf(player.bodySlot[ii]._iDamAcFlags, ItemSpecialEffectHf::Decay)) {
+		player.bodySlot[ii]._iPLDam -= 5;
+		if (player.bodySlot[ii]._iPLDam <= -100) {
 			RemoveEquipment(player, static_cast<inv_body_loc>(ii), true);
 			CalcPlrInv(player, true);
 			return true;
@@ -471,52 +471,52 @@ bool DamageWeapon(Player &player, unsigned damageFrequency)
 		return false;
 	}
 
-	if (!player.InvBody[INVLOC_HAND_LEFT].isEmpty() && player.InvBody[INVLOC_HAND_LEFT]._iClass == ICLASS_WEAPON) {
-		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability == DUR_INDESTRUCTIBLE) {
+	if (!player.bodySlot[INVLOC_HAND_LEFT].isEmpty() && player.bodySlot[INVLOC_HAND_LEFT]._iClass == ICLASS_WEAPON) {
+		if (player.bodySlot[INVLOC_HAND_LEFT]._iDurability == DUR_INDESTRUCTIBLE) {
 			return false;
 		}
 
-		player.InvBody[INVLOC_HAND_LEFT]._iDurability--;
-		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability <= 0) {
+		player.bodySlot[INVLOC_HAND_LEFT]._iDurability--;
+		if (player.bodySlot[INVLOC_HAND_LEFT]._iDurability <= 0) {
 			RemoveEquipment(player, INVLOC_HAND_LEFT, true);
 			CalcPlrInv(player, true);
 			return true;
 		}
 	}
 
-	if (!player.InvBody[INVLOC_HAND_RIGHT].isEmpty() && player.InvBody[INVLOC_HAND_RIGHT]._iClass == ICLASS_WEAPON) {
-		if (player.InvBody[INVLOC_HAND_RIGHT]._iDurability == DUR_INDESTRUCTIBLE) {
+	if (!player.bodySlot[INVLOC_HAND_RIGHT].isEmpty() && player.bodySlot[INVLOC_HAND_RIGHT]._iClass == ICLASS_WEAPON) {
+		if (player.bodySlot[INVLOC_HAND_RIGHT]._iDurability == DUR_INDESTRUCTIBLE) {
 			return false;
 		}
 
-		player.InvBody[INVLOC_HAND_RIGHT]._iDurability--;
-		if (player.InvBody[INVLOC_HAND_RIGHT]._iDurability == 0) {
+		player.bodySlot[INVLOC_HAND_RIGHT]._iDurability--;
+		if (player.bodySlot[INVLOC_HAND_RIGHT]._iDurability == 0) {
 			RemoveEquipment(player, INVLOC_HAND_RIGHT, true);
 			CalcPlrInv(player, true);
 			return true;
 		}
 	}
 
-	if (player.InvBody[INVLOC_HAND_LEFT].isEmpty() && player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Shield) {
-		if (player.InvBody[INVLOC_HAND_RIGHT]._iDurability == DUR_INDESTRUCTIBLE) {
+	if (player.bodySlot[INVLOC_HAND_LEFT].isEmpty() && player.bodySlot[INVLOC_HAND_RIGHT]._itype == ItemType::Shield) {
+		if (player.bodySlot[INVLOC_HAND_RIGHT]._iDurability == DUR_INDESTRUCTIBLE) {
 			return false;
 		}
 
-		player.InvBody[INVLOC_HAND_RIGHT]._iDurability--;
-		if (player.InvBody[INVLOC_HAND_RIGHT]._iDurability == 0) {
+		player.bodySlot[INVLOC_HAND_RIGHT]._iDurability--;
+		if (player.bodySlot[INVLOC_HAND_RIGHT]._iDurability == 0) {
 			RemoveEquipment(player, INVLOC_HAND_RIGHT, true);
 			CalcPlrInv(player, true);
 			return true;
 		}
 	}
 
-	if (player.InvBody[INVLOC_HAND_RIGHT].isEmpty() && player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Shield) {
-		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability == DUR_INDESTRUCTIBLE) {
+	if (player.bodySlot[INVLOC_HAND_RIGHT].isEmpty() && player.bodySlot[INVLOC_HAND_LEFT]._itype == ItemType::Shield) {
+		if (player.bodySlot[INVLOC_HAND_LEFT]._iDurability == DUR_INDESTRUCTIBLE) {
 			return false;
 		}
 
-		player.InvBody[INVLOC_HAND_LEFT]._iDurability--;
-		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability == 0) {
+		player.bodySlot[INVLOC_HAND_LEFT]._iDurability--;
+		if (player.bodySlot[INVLOC_HAND_LEFT]._iDurability == 0) {
 			RemoveEquipment(player, INVLOC_HAND_LEFT, true);
 			CalcPlrInv(player, true);
 			return true;
@@ -558,28 +558,28 @@ bool PlrHitMonst(Player &player, Monster &monster, bool adjacentDamage = false)
 			return false;
 	}
 
-	if (gbIsHellfire && HasAllOf(player._pIFlags, ItemSpecialEffect::FireDamage | ItemSpecialEffect::LightningDamage)) {
-		int midam = RandomIntBetween(player._pIFMinDam, player._pIFMaxDam);
-		AddMissile(player.position.tile, player.position.temp, player._pdir, MissileID::SpectralArrow, TARGET_MONSTERS, player, midam, 0);
+	if (gbIsHellfire && HasAllOf(player.flags, ItemSpecialEffect::FireDamage | ItemSpecialEffect::LightningDamage)) {
+		int midam = RandomIntBetween(player.minFireDamage, player.maxFireDamage);
+		AddMissile(player.position.tile, player.position.temp, player.direction, MissileID::SpectralArrow, TARGET_MONSTERS, player, midam, 0);
 	}
-	int mind = player._pIMinDam;
-	int maxd = player._pIMaxDam;
+	int mind = player.minDamage;
+	int maxd = player.maxDamage;
 	int dam = GenerateRnd(maxd - mind + 1) + mind;
-	dam += dam * player._pIBonusDam / 100;
-	dam += player._pIBonusDamMod;
+	dam += dam * player.bonusDamagePercent / 100;
+	dam += player.bonusDamage;
 	int dam2 = dam << 6;
-	dam += player._pDamageMod;
-	if (player._pClass == HeroClass::Warrior || player._pClass == HeroClass::Barbarian) {
+	dam += player.damageModifier;
+	if (player.heroClass == HeroClass::Warrior || player.heroClass == HeroClass::Barbarian) {
 		if (GenerateRnd(100) < player.getCharacterLevel()) {
 			dam *= 2;
 		}
 	}
 
 	ItemType phanditype = ItemType::None;
-	if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Sword || player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Sword) {
+	if (player.bodySlot[INVLOC_HAND_LEFT]._itype == ItemType::Sword || player.bodySlot[INVLOC_HAND_RIGHT]._itype == ItemType::Sword) {
 		phanditype = ItemType::Sword;
 	}
-	if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Mace || player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Mace) {
+	if (player.bodySlot[INVLOC_HAND_LEFT]._itype == ItemType::Mace || player.bodySlot[INVLOC_HAND_RIGHT]._itype == ItemType::Mace) {
 		phanditype = ItemType::Mace;
 	}
 
@@ -599,22 +599,22 @@ bool PlrHitMonst(Player &player, Monster &monster, bool adjacentDamage = false)
 		}
 		break;
 	case MonsterClass::Demon:
-		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::TripleDemonDamage)) {
+		if (HasAnyOf(player.flags, ItemSpecialEffect::TripleDemonDamage)) {
 			dam *= 3;
 		}
 		break;
 	}
 
-	if (HasAnyOf(player.pDamAcFlags, ItemSpecialEffectHf::Devastation) && GenerateRnd(100) < 5) {
+	if (HasAnyOf(player.hellfireFlags, ItemSpecialEffectHf::Devastation) && GenerateRnd(100) < 5) {
 		dam *= 3;
 	}
 
-	if (HasAnyOf(player.pDamAcFlags, ItemSpecialEffectHf::Doppelganger) && monster.type().type != MT_DIABLO && !monster.isUnique() && GenerateRnd(100) < 10) {
+	if (HasAnyOf(player.hellfireFlags, ItemSpecialEffectHf::Doppelganger) && monster.type().type != MT_DIABLO && !monster.isUnique() && GenerateRnd(100) < 10) {
 		AddDoppelganger(monster);
 	}
 
 	dam <<= 6;
-	if (HasAnyOf(player.pDamAcFlags, ItemSpecialEffectHf::Jesters)) {
+	if (HasAnyOf(player.hellfireFlags, ItemSpecialEffectHf::Jesters)) {
 		int r = GenerateRnd(201);
 		if (r >= 100)
 			r = 100 + (r - 100) * 5;
@@ -625,8 +625,8 @@ bool PlrHitMonst(Player &player, Monster &monster, bool adjacentDamage = false)
 		dam >>= 2;
 
 	if (&player == MyPlayer) {
-		if (HasAnyOf(player.pDamAcFlags, ItemSpecialEffectHf::Peril)) {
-			dam2 += player._pIGetHit << 6;
+		if (HasAnyOf(player.hellfireFlags, ItemSpecialEffectHf::Peril)) {
+			dam2 += player.damageFromEnemies << 6;
 			if (dam2 >= 0) {
 				ApplyPlrDamage(DamageType::Physical, player, 0, 1, dam2);
 			}
@@ -641,56 +641,56 @@ bool PlrHitMonst(Player &player, Monster &monster, bool adjacentDamage = false)
 	}
 
 	int skdam = 0;
-	if (HasAnyOf(player._pIFlags, ItemSpecialEffect::RandomStealLife)) {
+	if (HasAnyOf(player.flags, ItemSpecialEffect::RandomStealLife)) {
 		skdam = GenerateRnd(dam / 8);
-		player._pHitPoints += skdam;
-		if (player._pHitPoints > player._pMaxHP) {
-			player._pHitPoints = player._pMaxHP;
+		player.life += skdam;
+		if (player.life > player.maxLife) {
+			player.life = player.maxLife;
 		}
-		player._pHPBase += skdam;
-		if (player._pHPBase > player._pMaxHPBase) {
-			player._pHPBase = player._pMaxHPBase;
+		player.baseLife += skdam;
+		if (player.baseLife > player.baseMaxLife) {
+			player.baseLife = player.baseMaxLife;
 		}
 		RedrawComponent(PanelDrawComponent::Health);
 	}
-	if (HasAnyOf(player._pIFlags, ItemSpecialEffect::StealMana3 | ItemSpecialEffect::StealMana5) && HasNoneOf(player._pIFlags, ItemSpecialEffect::NoMana)) {
-		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::StealMana3)) {
+	if (HasAnyOf(player.flags, ItemSpecialEffect::StealMana3 | ItemSpecialEffect::StealMana5) && HasNoneOf(player.flags, ItemSpecialEffect::NoMana)) {
+		if (HasAnyOf(player.flags, ItemSpecialEffect::StealMana3)) {
 			skdam = 3 * dam / 100;
 		}
-		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::StealMana5)) {
+		if (HasAnyOf(player.flags, ItemSpecialEffect::StealMana5)) {
 			skdam = 5 * dam / 100;
 		}
-		player._pMana += skdam;
-		if (player._pMana > player._pMaxMana) {
-			player._pMana = player._pMaxMana;
+		player.mana += skdam;
+		if (player.mana > player.maxMana) {
+			player.mana = player.maxMana;
 		}
-		player._pManaBase += skdam;
-		if (player._pManaBase > player._pMaxManaBase) {
-			player._pManaBase = player._pMaxManaBase;
+		player.baseMana += skdam;
+		if (player.baseMana > player.baseMaxMana) {
+			player.baseMana = player.baseMaxMana;
 		}
 		RedrawComponent(PanelDrawComponent::Mana);
 	}
-	if (HasAnyOf(player._pIFlags, ItemSpecialEffect::StealLife3 | ItemSpecialEffect::StealLife5)) {
-		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::StealLife3)) {
+	if (HasAnyOf(player.flags, ItemSpecialEffect::StealLife3 | ItemSpecialEffect::StealLife5)) {
+		if (HasAnyOf(player.flags, ItemSpecialEffect::StealLife3)) {
 			skdam = 3 * dam / 100;
 		}
-		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::StealLife5)) {
+		if (HasAnyOf(player.flags, ItemSpecialEffect::StealLife5)) {
 			skdam = 5 * dam / 100;
 		}
-		player._pHitPoints += skdam;
-		if (player._pHitPoints > player._pMaxHP) {
-			player._pHitPoints = player._pMaxHP;
+		player.life += skdam;
+		if (player.life > player.maxLife) {
+			player.life = player.maxLife;
 		}
-		player._pHPBase += skdam;
-		if (player._pHPBase > player._pMaxHPBase) {
-			player._pHPBase = player._pMaxHPBase;
+		player.baseLife += skdam;
+		if (player.baseLife > player.baseMaxLife) {
+			player.baseLife = player.baseMaxLife;
 		}
 		RedrawComponent(PanelDrawComponent::Health);
 	}
 	if ((monster.hitPoints >> 6) <= 0) {
 		M_StartKill(monster, player);
 	} else {
-		if (monster.mode != MonsterMode::Petrified && HasAnyOf(player._pIFlags, ItemSpecialEffect::Knockback))
+		if (monster.mode != MonsterMode::Petrified && HasAnyOf(player.flags, ItemSpecialEffect::Knockback))
 			M_GetKnockback(monster);
 		M_StartHit(monster, player, dam);
 	}
@@ -699,11 +699,11 @@ bool PlrHitMonst(Player &player, Monster &monster, bool adjacentDamage = false)
 
 bool PlrHitPlr(Player &attacker, Player &target)
 {
-	if (target._pInvincible) {
+	if (target.isInvincible) {
 		return false;
 	}
 
-	if (HasAnyOf(target._pSpellFlags, SpellFlag::Etherealize)) {
+	if (HasAnyOf(target.spellFlags, SpellFlag::Etherealize)) {
 		return false;
 	}
 
@@ -713,7 +713,7 @@ bool PlrHitPlr(Player &attacker, Player &target)
 	hper = std::clamp(hper, 5, 95);
 
 	int blk = 100;
-	if ((target._pmode == PM_STAND || target._pmode == PM_ATTACK) && target._pBlockFlag) {
+	if ((target.mode == PM_STAND || target.mode == PM_ATTACK) && target.hasBlockFlag) {
 		blk = GenerateRnd(100);
 	}
 
@@ -730,27 +730,27 @@ bool PlrHitPlr(Player &attacker, Player &target)
 		return true;
 	}
 
-	int mind = attacker._pIMinDam;
-	int maxd = attacker._pIMaxDam;
+	int mind = attacker.minDamage;
+	int maxd = attacker.maxDamage;
 	int dam = GenerateRnd(maxd - mind + 1) + mind;
-	dam += (dam * attacker._pIBonusDam) / 100;
-	dam += attacker._pIBonusDamMod + attacker._pDamageMod;
+	dam += (dam * attacker.bonusDamagePercent) / 100;
+	dam += attacker.bonusDamage + attacker.damageModifier;
 
-	if (attacker._pClass == HeroClass::Warrior || attacker._pClass == HeroClass::Barbarian) {
+	if (attacker.heroClass == HeroClass::Warrior || attacker.heroClass == HeroClass::Barbarian) {
 		if (GenerateRnd(100) < attacker.getCharacterLevel()) {
 			dam *= 2;
 		}
 	}
 	int skdam = dam << 6;
-	if (HasAnyOf(attacker._pIFlags, ItemSpecialEffect::RandomStealLife)) {
+	if (HasAnyOf(attacker.flags, ItemSpecialEffect::RandomStealLife)) {
 		int tac = GenerateRnd(skdam / 8);
-		attacker._pHitPoints += tac;
-		if (attacker._pHitPoints > attacker._pMaxHP) {
-			attacker._pHitPoints = attacker._pMaxHP;
+		attacker.life += tac;
+		if (attacker.life > attacker.maxLife) {
+			attacker.life = attacker.maxLife;
 		}
-		attacker._pHPBase += tac;
-		if (attacker._pHPBase > attacker._pMaxHPBase) {
-			attacker._pHPBase = attacker._pMaxHPBase;
+		attacker.baseLife += tac;
+		if (attacker.baseLife > attacker.baseMaxLife) {
+			attacker.baseLife = attacker.baseMaxLife;
 		}
 		RedrawComponent(PanelDrawComponent::Health);
 	}
@@ -774,14 +774,14 @@ bool PlrHitObj(const Player &player, Object &targetObject)
 
 bool DoAttack(Player &player)
 {
-	if (player.AnimInfo.currentFrame == player._pAFNum - 2) {
+	if (player.animationInfo.currentFrame == player.attackActionFrame - 2) {
 		PlaySfxLoc(SfxID::Swing, player.position.tile);
 	}
 
 	bool didhit = false;
 
-	if (player.AnimInfo.currentFrame == player._pAFNum - 1) {
-		Point position = player.position.tile + player._pdir;
+	if (player.animationInfo.currentFrame == player.attackActionFrame - 1) {
+		Point position = player.position.tile + player.direction;
 		Monster *monster = FindMonsterAtPosition(position);
 
 		if (monster != nullptr) {
@@ -791,18 +791,18 @@ bool DoAttack(Player &player)
 			}
 		}
 
-		if (!gbIsHellfire || !HasAllOf(player._pIFlags, ItemSpecialEffect::FireDamage | ItemSpecialEffect::LightningDamage)) {
-			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FireDamage)) {
+		if (!gbIsHellfire || !HasAllOf(player.flags, ItemSpecialEffect::FireDamage | ItemSpecialEffect::LightningDamage)) {
+			if (HasAnyOf(player.flags, ItemSpecialEffect::FireDamage)) {
 				AddMissile(position, { 1, 0 }, Direction::South, MissileID::WeaponExplosion, TARGET_MONSTERS, player, 0, 0);
 			}
-			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::LightningDamage)) {
+			if (HasAnyOf(player.flags, ItemSpecialEffect::LightningDamage)) {
 				AddMissile(position, { 2, 0 }, Direction::South, MissileID::WeaponExplosion, TARGET_MONSTERS, player, 0, 0);
 			}
 		}
 
 		if (monster != nullptr) {
 			didhit = PlrHitMonst(player, *monster);
-		} else if (PlayerAtPosition(position) != nullptr && !player.friendlyMode) {
+		} else if (PlayerAtPosition(position) != nullptr && !player.isFriendlyMode) {
 			didhit = PlrHitPlr(player, *PlayerAtPosition(position));
 		} else {
 			Object *object = FindObjectAtPosition(position, false);
@@ -812,7 +812,7 @@ bool DoAttack(Player &player)
 		}
 		if (player.CanCleave()) {
 			// playing as a class/weapon with cleave
-			position = player.position.tile + Right(player._pdir);
+			position = player.position.tile + Right(player.direction);
 			monster = FindMonsterAtPosition(position);
 			if (monster != nullptr) {
 				if (!CanTalkToMonst(*monster) && monster->position.old == position) {
@@ -820,7 +820,7 @@ bool DoAttack(Player &player)
 						didhit = true;
 				}
 			}
-			position = player.position.tile + Left(player._pdir);
+			position = player.position.tile + Left(player.direction);
 			monster = FindMonsterAtPosition(position);
 			if (monster != nullptr) {
 				if (!CanTalkToMonst(*monster) && monster->position.old == position) {
@@ -831,14 +831,14 @@ bool DoAttack(Player &player)
 		}
 
 		if (didhit && DamageWeapon(player, 30)) {
-			StartStand(player, player._pdir);
+			StartStand(player, player.direction);
 			ClearStateVariables(player);
 			return true;
 		}
 	}
 
-	if (player.AnimInfo.isLastFrame()) {
-		StartStand(player, player._pdir);
+	if (player.animationInfo.isLastFrame()) {
+		StartStand(player, player.direction);
 		ClearStateVariables(player);
 		return true;
 	}
@@ -849,11 +849,11 @@ bool DoAttack(Player &player)
 bool DoRangeAttack(Player &player)
 {
 	int arrows = 0;
-	if (player.AnimInfo.currentFrame == player._pAFNum - 1) {
+	if (player.animationInfo.currentFrame == player.attackActionFrame - 1) {
 		arrows = 1;
 	}
 
-	if (HasAnyOf(player._pIFlags, ItemSpecialEffect::MultipleArrows) && player.AnimInfo.currentFrame == player._pAFNum + 1) {
+	if (HasAnyOf(player.flags, ItemSpecialEffect::MultipleArrows) && player.animationInfo.currentFrame == player.attackActionFrame + 1) {
 		arrows = 2;
 	}
 
@@ -872,21 +872,21 @@ bool DoRangeAttack(Player &player)
 
 		int dmg = 4;
 		MissileID mistype = MissileID::Arrow;
-		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FireArrows)) {
+		if (HasAnyOf(player.flags, ItemSpecialEffect::FireArrows)) {
 			mistype = MissileID::FireArrow;
 		}
-		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::LightningArrows)) {
+		if (HasAnyOf(player.flags, ItemSpecialEffect::LightningArrows)) {
 			mistype = MissileID::LightningArrow;
 		}
-		if (HasAllOf(player._pIFlags, ItemSpecialEffect::FireArrows | ItemSpecialEffect::LightningArrows)) {
-			dmg = RandomIntBetween(player._pIFMinDam, player._pIFMaxDam);
+		if (HasAllOf(player.flags, ItemSpecialEffect::FireArrows | ItemSpecialEffect::LightningArrows)) {
+			dmg = RandomIntBetween(player.minFireDamage, player.maxFireDamage);
 			mistype = MissileID::SpectralArrow;
 		}
 
 		AddMissile(
 		    player.position.tile,
 		    player.position.temp + Displacement { xoff, yoff },
-		    player._pdir,
+		    player.direction,
 		    mistype,
 		    TARGET_MONSTERS,
 		    player,
@@ -898,14 +898,14 @@ bool DoRangeAttack(Player &player)
 		}
 
 		if (DamageWeapon(player, 40)) {
-			StartStand(player, player._pdir);
+			StartStand(player, player.direction);
 			ClearStateVariables(player);
 			return true;
 		}
 	}
 
-	if (player.AnimInfo.isLastFrame()) {
-		StartStand(player, player._pdir);
+	if (player.animationInfo.isLastFrame()) {
+		StartStand(player, player.direction);
 		ClearStateVariables(player);
 		return true;
 	}
@@ -918,22 +918,22 @@ void DamageParryItem(Player &player)
 		return;
 	}
 
-	if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Shield || player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Staff) {
-		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability == DUR_INDESTRUCTIBLE) {
+	if (player.bodySlot[INVLOC_HAND_LEFT]._itype == ItemType::Shield || player.bodySlot[INVLOC_HAND_LEFT]._itype == ItemType::Staff) {
+		if (player.bodySlot[INVLOC_HAND_LEFT]._iDurability == DUR_INDESTRUCTIBLE) {
 			return;
 		}
 
-		player.InvBody[INVLOC_HAND_LEFT]._iDurability--;
-		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability == 0) {
+		player.bodySlot[INVLOC_HAND_LEFT]._iDurability--;
+		if (player.bodySlot[INVLOC_HAND_LEFT]._iDurability == 0) {
 			RemoveEquipment(player, INVLOC_HAND_LEFT, true);
 			CalcPlrInv(player, true);
 		}
 	}
 
-	if (player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Shield) {
-		if (player.InvBody[INVLOC_HAND_RIGHT]._iDurability != DUR_INDESTRUCTIBLE) {
-			player.InvBody[INVLOC_HAND_RIGHT]._iDurability--;
-			if (player.InvBody[INVLOC_HAND_RIGHT]._iDurability == 0) {
+	if (player.bodySlot[INVLOC_HAND_RIGHT]._itype == ItemType::Shield) {
+		if (player.bodySlot[INVLOC_HAND_RIGHT]._iDurability != DUR_INDESTRUCTIBLE) {
+			player.bodySlot[INVLOC_HAND_RIGHT]._iDurability--;
+			if (player.bodySlot[INVLOC_HAND_RIGHT]._iDurability == 0) {
 				RemoveEquipment(player, INVLOC_HAND_RIGHT, true);
 				CalcPlrInv(player, true);
 			}
@@ -943,8 +943,8 @@ void DamageParryItem(Player &player)
 
 bool DoBlock(Player &player)
 {
-	if (player.AnimInfo.isLastFrame()) {
-		StartStand(player, player._pdir);
+	if (player.animationInfo.isLastFrame()) {
+		StartStand(player, player.direction);
 		ClearStateVariables(player);
 
 		if (FlipCoin(10)) {
@@ -962,23 +962,23 @@ void DamageArmor(Player &player)
 		return;
 	}
 
-	if (player.InvBody[INVLOC_CHEST].isEmpty() && player.InvBody[INVLOC_HEAD].isEmpty()) {
+	if (player.bodySlot[INVLOC_CHEST].isEmpty() && player.bodySlot[INVLOC_HEAD].isEmpty()) {
 		return;
 	}
 
 	bool targetHead = FlipCoin(3);
-	if (!player.InvBody[INVLOC_CHEST].isEmpty() && player.InvBody[INVLOC_HEAD].isEmpty()) {
+	if (!player.bodySlot[INVLOC_CHEST].isEmpty() && player.bodySlot[INVLOC_HEAD].isEmpty()) {
 		targetHead = false;
 	}
-	if (player.InvBody[INVLOC_CHEST].isEmpty() && !player.InvBody[INVLOC_HEAD].isEmpty()) {
+	if (player.bodySlot[INVLOC_CHEST].isEmpty() && !player.bodySlot[INVLOC_HEAD].isEmpty()) {
 		targetHead = true;
 	}
 
 	Item *pi;
 	if (targetHead) {
-		pi = &player.InvBody[INVLOC_HEAD];
+		pi = &player.bodySlot[INVLOC_HEAD];
 	} else {
-		pi = &player.InvBody[INVLOC_CHEST];
+		pi = &player.bodySlot[INVLOC_CHEST];
 	}
 	if (pi->_iDurability == DUR_INDESTRUCTIBLE) {
 		return;
@@ -999,7 +999,7 @@ void DamageArmor(Player &player)
 
 bool DoSpell(Player &player)
 {
-	if (player.AnimInfo.currentFrame == player._pSFNum) {
+	if (player.animationInfo.currentFrame == player.spellActionFrame) {
 		CastSpell(
 		    player,
 		    player.executedSpell.spellId,
@@ -1012,8 +1012,8 @@ bool DoSpell(Player &player)
 		}
 	}
 
-	if (player.AnimInfo.isLastFrame()) {
-		StartStand(player, player._pdir);
+	if (player.animationInfo.isLastFrame()) {
+		StartStand(player, player.direction);
 		ClearStateVariables(player);
 		return true;
 	}
@@ -1023,8 +1023,8 @@ bool DoSpell(Player &player)
 
 bool DoGotHit(Player &player)
 {
-	if (player.AnimInfo.isLastFrame()) {
-		StartStand(player, player._pdir);
+	if (player.animationInfo.isLastFrame()) {
+		StartStand(player, player.direction);
 		ClearStateVariables(player);
 		if (!FlipCoin(4)) {
 			DamageArmor(player);
@@ -1038,11 +1038,11 @@ bool DoGotHit(Player &player)
 
 bool DoDeath(Player &player)
 {
-	if (player.AnimInfo.isLastFrame()) {
-		if (player.AnimInfo.tickCounterOfCurrentFrame == 0) {
-			player.AnimInfo.ticksPerFrame = 100;
+	if (player.animationInfo.isLastFrame()) {
+		if (player.animationInfo.tickCounterOfCurrentFrame == 0) {
+			player.animationInfo.ticksPerFrame = 100;
 			dFlags[player.position.tile.x][player.position.tile.y] |= DungeonFlag::DeadPlayer;
-		} else if (&player == MyPlayer && player.AnimInfo.tickCounterOfCurrentFrame == 30) {
+		} else if (&player == MyPlayer && player.animationInfo.tickCounterOfCurrentFrame == 30) {
 			MyPlayerIsDead = true;
 			if (!gbIsMultiplayer) {
 				gamemenu_on();
@@ -1071,7 +1071,7 @@ void TryDisarm(const Player &player, Object &object)
 	if (!object._oTrapFlag) {
 		return;
 	}
-	int trapdisper = 2 * player._pDexterity - 5 * currlevel;
+	int trapdisper = 2 * player.dexterity - 5 * currlevel;
 	if (GenerateRnd(100) > trapdisper) {
 		return;
 	}
@@ -1097,9 +1097,9 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 	Object *object;
 	Item *item;
 
-	int targetId = player.destParam1;
+	int targetId = player.destinationParam1;
 
-	switch (player.destAction) {
+	switch (player.destinationAction) {
 	case ACTION_ATTACKMON:
 	case ACTION_RATTACKMON:
 	case ACTION_SPELLMON:
@@ -1108,18 +1108,18 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 			player.Stop();
 			return;
 		}
-		if (player.destAction == ACTION_ATTACKMON)
+		if (player.destinationAction == ACTION_ATTACKMON)
 			MakePlrPath(player, monster->position.future, false);
 		break;
 	case ACTION_ATTACKPLR:
 	case ACTION_RATTACKPLR:
 	case ACTION_SPELLPLR:
 		target = &Players[targetId];
-		if ((target->_pHitPoints >> 6) <= 0) {
+		if ((target->life >> 6) <= 0) {
 			player.Stop();
 			return;
 		}
-		if (player.destAction == ACTION_ATTACKPLR)
+		if (player.destinationAction == ACTION_ATTACKPLR)
 			MakePlrPath(player, target->position.future, false);
 		break;
 	case ACTION_OPERATE:
@@ -1136,11 +1136,11 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 	}
 
 	Direction d;
-	if (player.walkpath[0] != WALK_NONE) {
-		if (player._pmode == PM_STAND) {
+	if (player.walkPath[0] != WALK_NONE) {
+		if (player.mode == PM_STAND) {
 			if (&player == MyPlayer) {
-				if (player.destAction == ACTION_ATTACKMON || player.destAction == ACTION_ATTACKPLR) {
-					if (player.destAction == ACTION_ATTACKMON) {
+				if (player.destinationAction == ACTION_ATTACKMON || player.destinationAction == ACTION_ATTACKPLR) {
+					if (player.destinationAction == ACTION_ATTACKMON) {
 						x = std::abs(player.position.future.x - monster->position.future.x);
 						y = std::abs(player.position.future.y - monster->position.future.y);
 						d = GetDirection(player.position.future, monster->position.future);
@@ -1152,17 +1152,17 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 
 					if (x < 2 && y < 2) {
 						ClrPlrPath(player);
-						if (player.destAction == ACTION_ATTACKMON && monster->talkMsg != TEXT_NONE && monster->talkMsg != TEXT_VILE14) {
+						if (player.destinationAction == ACTION_ATTACKMON && monster->talkMsg != TEXT_NONE && monster->talkMsg != TEXT_VILE14) {
 							TalktoMonster(player, *monster);
 						} else {
 							StartAttack(player, d, pmWillBeCalled);
 						}
-						player.destAction = ACTION_NONE;
+						player.destinationAction = ACTION_NONE;
 					}
 				}
 			}
 
-			switch (player.walkpath[0]) {
+			switch (player.walkPath[0]) {
 			case WALK_N:
 				StartWalk(player, Direction::North, pmWillBeCalled);
 				break;
@@ -1190,27 +1190,27 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 			}
 
 			for (size_t j = 1; j < MaxPathLength; j++) {
-				player.walkpath[j - 1] = player.walkpath[j];
+				player.walkPath[j - 1] = player.walkPath[j];
 			}
 
-			player.walkpath[MaxPathLength - 1] = WALK_NONE;
+			player.walkPath[MaxPathLength - 1] = WALK_NONE;
 
-			if (player._pmode == PM_STAND) {
-				StartStand(player, player._pdir);
-				player.destAction = ACTION_NONE;
+			if (player.mode == PM_STAND) {
+				StartStand(player, player.direction);
+				player.destinationAction = ACTION_NONE;
 			}
 		}
 
 		return;
 	}
-	if (player.destAction == ACTION_NONE) {
+	if (player.destinationAction == ACTION_NONE) {
 		return;
 	}
 
-	if (player._pmode == PM_STAND) {
-		switch (player.destAction) {
+	if (player.mode == PM_STAND) {
+		switch (player.destinationAction) {
 		case ACTION_ATTACK:
-			d = GetDirection(player.position.tile, { player.destParam1, player.destParam2 });
+			d = GetDirection(player.position.tile, { player.destinationParam1, player.destinationParam2 });
 			StartAttack(player, d, pmWillBeCalled);
 			break;
 		case ACTION_ATTACKMON:
@@ -1234,8 +1234,8 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 			}
 			break;
 		case ACTION_RATTACK:
-			d = GetDirection(player.position.tile, { player.destParam1, player.destParam2 });
-			StartRangeAttack(player, d, player.destParam1, player.destParam2, pmWillBeCalled);
+			d = GetDirection(player.position.tile, { player.destinationParam1, player.destinationParam2 });
+			StartRangeAttack(player, d, player.destinationParam1, player.destinationParam2, pmWillBeCalled);
 			break;
 		case ACTION_RATTACKMON:
 			d = GetDirection(player.position.future, monster->position.future);
@@ -1250,24 +1250,24 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 			StartRangeAttack(player, d, target->position.future.x, target->position.future.y, pmWillBeCalled);
 			break;
 		case ACTION_SPELL:
-			d = GetDirection(player.position.tile, { player.destParam1, player.destParam2 });
-			StartSpell(player, d, player.destParam1, player.destParam2);
-			player.executedSpell.spellLevel = player.destParam3;
+			d = GetDirection(player.position.tile, { player.destinationParam1, player.destinationParam2 });
+			StartSpell(player, d, player.destinationParam1, player.destinationParam2);
+			player.executedSpell.spellLevel = player.destinationParam3;
 			break;
 		case ACTION_SPELLWALL:
-			StartSpell(player, static_cast<Direction>(player.destParam3), player.destParam1, player.destParam2);
-			player.tempDirection = static_cast<Direction>(player.destParam3);
-			player.executedSpell.spellLevel = player.destParam4;
+			StartSpell(player, static_cast<Direction>(player.destinationParam3), player.destinationParam1, player.destinationParam2);
+			player.tempDirection = static_cast<Direction>(player.destinationParam3);
+			player.executedSpell.spellLevel = player.destinationParam4;
 			break;
 		case ACTION_SPELLMON:
 			d = GetDirection(player.position.tile, monster->position.future);
 			StartSpell(player, d, monster->position.future.x, monster->position.future.y);
-			player.executedSpell.spellLevel = player.destParam2;
+			player.executedSpell.spellLevel = player.destinationParam2;
 			break;
 		case ACTION_SPELLPLR:
 			d = GetDirection(player.position.tile, target->position.future);
 			StartSpell(player, d, target->position.future.x, target->position.future.y);
-			player.executedSpell.spellLevel = player.destParam2;
+			player.executedSpell.spellLevel = player.destinationParam2;
 			break;
 		case ACTION_OPERATE:
 			if (IsPlayerAdjacentToObject(player, *object)) {
@@ -1317,41 +1317,41 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 		case ACTION_TALK:
 			if (&player == MyPlayer) {
 				HelpFlag = false;
-				TalkToTowner(player, player.destParam1);
+				TalkToTowner(player, player.destinationParam1);
 			}
 			break;
 		default:
 			break;
 		}
 
-		FixPlayerLocation(player, player._pdir);
-		player.destAction = ACTION_NONE;
+		FixPlayerLocation(player, player.direction);
+		player.destinationAction = ACTION_NONE;
 
 		return;
 	}
 
-	if (player._pmode == PM_ATTACK && player.AnimInfo.currentFrame >= player._pAFNum) {
-		if (player.destAction == ACTION_ATTACK) {
-			d = GetDirection(player.position.future, { player.destParam1, player.destParam2 });
+	if (player.mode == PM_ATTACK && player.animationInfo.currentFrame >= player.attackActionFrame) {
+		if (player.destinationAction == ACTION_ATTACK) {
+			d = GetDirection(player.position.future, { player.destinationParam1, player.destinationParam2 });
 			StartAttack(player, d, pmWillBeCalled);
-			player.destAction = ACTION_NONE;
-		} else if (player.destAction == ACTION_ATTACKMON) {
+			player.destinationAction = ACTION_NONE;
+		} else if (player.destinationAction == ACTION_ATTACKMON) {
 			x = std::abs(player.position.tile.x - monster->position.future.x);
 			y = std::abs(player.position.tile.y - monster->position.future.y);
 			if (x <= 1 && y <= 1) {
 				d = GetDirection(player.position.future, monster->position.future);
 				StartAttack(player, d, pmWillBeCalled);
 			}
-			player.destAction = ACTION_NONE;
-		} else if (player.destAction == ACTION_ATTACKPLR) {
+			player.destinationAction = ACTION_NONE;
+		} else if (player.destinationAction == ACTION_ATTACKPLR) {
 			x = std::abs(player.position.tile.x - target->position.future.x);
 			y = std::abs(player.position.tile.y - target->position.future.y);
 			if (x <= 1 && y <= 1) {
 				d = GetDirection(player.position.future, target->position.future);
 				StartAttack(player, d, pmWillBeCalled);
 			}
-			player.destAction = ACTION_NONE;
-		} else if (player.destAction == ACTION_OPERATE) {
+			player.destinationAction = ACTION_NONE;
+		} else if (player.destinationAction == ACTION_OPERATE) {
 			if (IsPlayerAdjacentToObject(player, *object)) {
 				if (object->_oBreak == 1) {
 					d = GetDirection(player.position.tile, object->position);
@@ -1361,35 +1361,35 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 		}
 	}
 
-	if (player._pmode == PM_RATTACK && player.AnimInfo.currentFrame >= player._pAFNum) {
-		if (player.destAction == ACTION_RATTACK) {
-			d = GetDirection(player.position.tile, { player.destParam1, player.destParam2 });
-			StartRangeAttack(player, d, player.destParam1, player.destParam2, pmWillBeCalled);
-			player.destAction = ACTION_NONE;
-		} else if (player.destAction == ACTION_RATTACKMON) {
+	if (player.mode == PM_RATTACK && player.animationInfo.currentFrame >= player.attackActionFrame) {
+		if (player.destinationAction == ACTION_RATTACK) {
+			d = GetDirection(player.position.tile, { player.destinationParam1, player.destinationParam2 });
+			StartRangeAttack(player, d, player.destinationParam1, player.destinationParam2, pmWillBeCalled);
+			player.destinationAction = ACTION_NONE;
+		} else if (player.destinationAction == ACTION_RATTACKMON) {
 			d = GetDirection(player.position.tile, monster->position.future);
 			StartRangeAttack(player, d, monster->position.future.x, monster->position.future.y, pmWillBeCalled);
-			player.destAction = ACTION_NONE;
-		} else if (player.destAction == ACTION_RATTACKPLR) {
+			player.destinationAction = ACTION_NONE;
+		} else if (player.destinationAction == ACTION_RATTACKPLR) {
 			d = GetDirection(player.position.tile, target->position.future);
 			StartRangeAttack(player, d, target->position.future.x, target->position.future.y, pmWillBeCalled);
-			player.destAction = ACTION_NONE;
+			player.destinationAction = ACTION_NONE;
 		}
 	}
 
-	if (player._pmode == PM_SPELL && player.AnimInfo.currentFrame >= player._pSFNum) {
-		if (player.destAction == ACTION_SPELL) {
-			d = GetDirection(player.position.tile, { player.destParam1, player.destParam2 });
-			StartSpell(player, d, player.destParam1, player.destParam2);
-			player.destAction = ACTION_NONE;
-		} else if (player.destAction == ACTION_SPELLMON) {
+	if (player.mode == PM_SPELL && player.animationInfo.currentFrame >= player.spellActionFrame) {
+		if (player.destinationAction == ACTION_SPELL) {
+			d = GetDirection(player.position.tile, { player.destinationParam1, player.destinationParam2 });
+			StartSpell(player, d, player.destinationParam1, player.destinationParam2);
+			player.destinationAction = ACTION_NONE;
+		} else if (player.destinationAction == ACTION_SPELLMON) {
 			d = GetDirection(player.position.tile, monster->position.future);
 			StartSpell(player, d, monster->position.future.x, monster->position.future.y);
-			player.destAction = ACTION_NONE;
-		} else if (player.destAction == ACTION_SPELLPLR) {
+			player.destinationAction = ACTION_NONE;
+		} else if (player.destinationAction == ACTION_SPELLPLR) {
 			d = GetDirection(player.position.tile, target->position.future);
 			StartSpell(player, d, target->position.future.x, target->position.future.y);
-			player.destAction = ACTION_NONE;
+			player.destinationAction = ACTION_NONE;
 		}
 	}
 }
@@ -1399,13 +1399,13 @@ bool PlrDeathModeOK(Player &player)
 	if (&player != MyPlayer) {
 		return true;
 	}
-	if (player._pmode == PM_DEATH) {
+	if (player.mode == PM_DEATH) {
 		return true;
 	}
-	if (player._pmode == PM_QUIT) {
+	if (player.mode == PM_QUIT) {
 		return true;
 	}
-	if (player._pmode == PM_NEWLVL) {
+	if (player.mode == PM_NEWLVL) {
 		return true;
 	}
 
@@ -1420,79 +1420,79 @@ void ValidatePlayer()
 	// Player::setCharacterLevel ensures that the player level is within the expected range in case someone has edited their character level in memory
 	myPlayer.setCharacterLevel(myPlayer.getCharacterLevel());
 	// This lets us catch cases where someone is editing experience directly through memory modification and reset their experience back to the expected cap.
-	if (myPlayer._pExperience > myPlayer.getNextExperienceThreshold()) {
-		myPlayer._pExperience = myPlayer.getNextExperienceThreshold();
+	if (myPlayer.experience > myPlayer.getNextExperienceThreshold()) {
+		myPlayer.experience = myPlayer.getNextExperienceThreshold();
 		if (*sgOptions.Gameplay.experienceBar) {
 			RedrawEverything();
 		}
 	}
 
 	int gt = 0;
-	for (int i = 0; i < myPlayer._pNumInv; i++) {
-		if (myPlayer.InvList[i]._itype == ItemType::Gold) {
+	for (int i = 0; i < myPlayer.numInventoryItems; i++) {
+		if (myPlayer.inventorySlot[i]._itype == ItemType::Gold) {
 			int maxGold = GOLD_MAX_LIMIT;
 			if (gbIsHellfire) {
 				maxGold *= 2;
 			}
-			if (myPlayer.InvList[i]._ivalue > maxGold) {
-				myPlayer.InvList[i]._ivalue = maxGold;
+			if (myPlayer.inventorySlot[i]._ivalue > maxGold) {
+				myPlayer.inventorySlot[i]._ivalue = maxGold;
 			}
-			gt += myPlayer.InvList[i]._ivalue;
+			gt += myPlayer.inventorySlot[i]._ivalue;
 		}
 	}
-	if (gt != myPlayer._pGold)
-		myPlayer._pGold = gt;
+	if (gt != myPlayer.gold)
+		myPlayer.gold = gt;
 
-	if (myPlayer._pBaseStr > myPlayer.GetMaximumAttributeValue(CharacterAttribute::Strength)) {
-		myPlayer._pBaseStr = myPlayer.GetMaximumAttributeValue(CharacterAttribute::Strength);
+	if (myPlayer.baseStrength > myPlayer.GetMaximumAttributeValue(CharacterAttribute::Strength)) {
+		myPlayer.baseStrength = myPlayer.GetMaximumAttributeValue(CharacterAttribute::Strength);
 	}
-	if (myPlayer._pBaseMag > myPlayer.GetMaximumAttributeValue(CharacterAttribute::Magic)) {
-		myPlayer._pBaseMag = myPlayer.GetMaximumAttributeValue(CharacterAttribute::Magic);
+	if (myPlayer.baseMagic > myPlayer.GetMaximumAttributeValue(CharacterAttribute::Magic)) {
+		myPlayer.baseMagic = myPlayer.GetMaximumAttributeValue(CharacterAttribute::Magic);
 	}
-	if (myPlayer._pBaseDex > myPlayer.GetMaximumAttributeValue(CharacterAttribute::Dexterity)) {
-		myPlayer._pBaseDex = myPlayer.GetMaximumAttributeValue(CharacterAttribute::Dexterity);
+	if (myPlayer.baseDexterity > myPlayer.GetMaximumAttributeValue(CharacterAttribute::Dexterity)) {
+		myPlayer.baseDexterity = myPlayer.GetMaximumAttributeValue(CharacterAttribute::Dexterity);
 	}
-	if (myPlayer._pBaseVit > myPlayer.GetMaximumAttributeValue(CharacterAttribute::Vitality)) {
-		myPlayer._pBaseVit = myPlayer.GetMaximumAttributeValue(CharacterAttribute::Vitality);
+	if (myPlayer.baseVitality > myPlayer.GetMaximumAttributeValue(CharacterAttribute::Vitality)) {
+		myPlayer.baseVitality = myPlayer.GetMaximumAttributeValue(CharacterAttribute::Vitality);
 	}
 
 	uint64_t msk = 0;
 	for (int b = static_cast<int8_t>(SpellID::Firebolt); b < MAX_SPELLS; b++) {
 		if (GetSpellBookLevel((SpellID)b) != -1) {
 			msk |= GetSpellBitmask(static_cast<SpellID>(b));
-			if (myPlayer._pSplLvl[b] > MaxSpellLevel)
-				myPlayer._pSplLvl[b] = MaxSpellLevel;
+			if (myPlayer.spellLevel[b] > MaxSpellLevel)
+				myPlayer.spellLevel[b] = MaxSpellLevel;
 		}
 	}
 
-	myPlayer._pMemSpells &= msk;
-	myPlayer._pInfraFlag = false;
+	myPlayer.learnedSpells &= msk;
+	myPlayer.hasInfravisionFlag = false;
 }
 
 void CheckCheatStats(Player &player)
 {
-	if (player._pStrength > 750) {
-		player._pStrength = 750;
+	if (player.strength > 750) {
+		player.strength = 750;
 	}
 
-	if (player._pDexterity > 750) {
-		player._pDexterity = 750;
+	if (player.dexterity > 750) {
+		player.dexterity = 750;
 	}
 
-	if (player._pMagic > 750) {
-		player._pMagic = 750;
+	if (player.magic > 750) {
+		player.magic = 750;
 	}
 
-	if (player._pVitality > 750) {
-		player._pVitality = 750;
+	if (player.vitality > 750) {
+		player.vitality = 750;
 	}
 
-	if (player._pHitPoints > 128000) {
-		player._pHitPoints = 128000;
+	if (player.life > 128000) {
+		player.life = 128000;
 	}
 
-	if (player._pMana > 128000) {
-		player._pMana = 128000;
+	if (player.mana > 128000) {
+		player.mana = 128000;
 	}
 }
 
@@ -1556,10 +1556,10 @@ uint16_t GetPlayerSpriteWidth(HeroClass cls, player_graphic graphic, PlayerWeapo
 
 void Player::CalcScrolls()
 {
-	_pScrlSpells = 0;
+	scrollSpells = 0;
 	for (Item &item : InventoryAndBeltPlayerItemsRange { *this }) {
 		if (item.isScroll() && item._iStatFlag) {
-			_pScrlSpells |= GetSpellBitmask(item._iSpell);
+			scrollSpells |= GetSpellBitmask(item._iSpell);
 		}
 	}
 	EnsureValidReadiedSpell(*this);
@@ -1570,7 +1570,7 @@ void Player::RemoveInvItem(int iv, bool calcScrolls)
 	if (this == MyPlayer) {
 		// Locate the first grid index containing this item and notify remote clients
 		for (size_t i = 0; i < InventoryGridCells; i++) {
-			int8_t itemIndex = InvGrid[i];
+			int8_t itemIndex = inventoryGrid[i];
 			if (std::abs(itemIndex) - 1 == iv) {
 				NetSendCmdParam1(false, CMD_DELINVITEMS, static_cast<uint16_t>(i));
 				break;
@@ -1579,25 +1579,25 @@ void Player::RemoveInvItem(int iv, bool calcScrolls)
 	}
 
 	// Iterate through invGrid and remove every reference to item
-	for (int8_t &itemIndex : InvGrid) {
+	for (int8_t &itemIndex : inventoryGrid) {
 		if (std::abs(itemIndex) - 1 == iv) {
 			itemIndex = 0;
 		}
 	}
 
-	InvList[iv].clear();
+	inventorySlot[iv].clear();
 
-	_pNumInv--;
+	numInventoryItems--;
 
 	// If the item at the end of inventory array isn't the one we removed, we need to swap its position in the array with the removed item
-	if (_pNumInv > 0 && _pNumInv != iv) {
-		InvList[iv] = InvList[_pNumInv].pop();
+	if (numInventoryItems > 0 && numInventoryItems != iv) {
+		inventorySlot[iv] = inventorySlot[numInventoryItems].pop();
 
-		for (int8_t &itemIndex : InvGrid) {
-			if (itemIndex == _pNumInv + 1) {
+		for (int8_t &itemIndex : inventoryGrid) {
+			if (itemIndex == numInventoryItems + 1) {
 				itemIndex = iv + 1;
 			}
-			if (itemIndex == -(_pNumInv + 1)) {
+			if (itemIndex == -(numInventoryItems + 1)) {
 				itemIndex = -(iv + 1);
 			}
 		}
@@ -1614,7 +1614,7 @@ void Player::RemoveSpdBarItem(int iv)
 		NetSendCmdParam1(false, CMD_DELBELTITEMS, iv);
 	}
 
-	SpdList[iv].clear();
+	beltSlot[iv].clear();
 
 	CalcScrolls();
 	RedrawEverything();
@@ -1629,13 +1629,13 @@ int Player::GetBaseAttributeValue(CharacterAttribute attribute) const
 {
 	switch (attribute) {
 	case CharacterAttribute::Dexterity:
-		return this->_pBaseDex;
+		return this->baseDexterity;
 	case CharacterAttribute::Magic:
-		return this->_pBaseMag;
+		return this->baseMagic;
 	case CharacterAttribute::Strength:
-		return this->_pBaseStr;
+		return this->baseStrength;
 	case CharacterAttribute::Vitality:
-		return this->_pBaseVit;
+		return this->baseVitality;
 	default:
 		app_fatal("Unsupported attribute");
 	}
@@ -1645,13 +1645,13 @@ int Player::GetCurrentAttributeValue(CharacterAttribute attribute) const
 {
 	switch (attribute) {
 	case CharacterAttribute::Dexterity:
-		return this->_pDexterity;
+		return this->dexterity;
 	case CharacterAttribute::Magic:
-		return this->_pMagic;
+		return this->magic;
 	case CharacterAttribute::Strength:
-		return this->_pStrength;
+		return this->strength;
 	case CharacterAttribute::Vitality:
-		return this->_pVitality;
+		return this->vitality;
 	default:
 		app_fatal("Unsupported attribute");
 	}
@@ -1680,7 +1680,7 @@ Point Player::GetTargetPosition() const
 	constexpr int DirectionOffsetY[8] = { -1, 0, 0, 1,-1,-1, 1, 1 };
 	// clang-format on
 	Point target = position.future;
-	for (auto step : walkpath) {
+	for (auto step : walkPath) {
 		if (step == WALK_NONE)
 			break;
 		if (step > 0) {
@@ -1695,7 +1695,7 @@ bool Player::IsPositionInPath(Point pos)
 {
 	constexpr Displacement DirectionOffset[8] = { { 0, -1 }, { -1, 0 }, { 1, 0 }, { 0, 1 }, { -1, -1 }, { 1, -1 }, { 1, 1 }, { -1, 1 } };
 	Point target = position.future;
-	for (auto step : walkpath) {
+	for (auto step : walkPath) {
 		if (target == pos) {
 			return true;
 		}
@@ -1710,7 +1710,7 @@ bool Player::IsPositionInPath(Point pos)
 
 void Player::Say(HeroSpeech speechId) const
 {
-	SfxID soundEffect = herosounds[static_cast<size_t>(_pClass)][static_cast<size_t>(speechId)];
+	SfxID soundEffect = herosounds[static_cast<size_t>(heroClass)][static_cast<size_t>(speechId)];
 
 	if (soundEffect == SfxID::None)
 		return;
@@ -1720,7 +1720,7 @@ void Player::Say(HeroSpeech speechId) const
 
 void Player::SaySpecific(HeroSpeech speechId) const
 {
-	SfxID soundEffect = herosounds[static_cast<size_t>(_pClass)][static_cast<size_t>(speechId)];
+	SfxID soundEffect = herosounds[static_cast<size_t>(heroClass)][static_cast<size_t>(speechId)];
 
 	if (soundEffect == SfxID::None || effect_is_playing(soundEffect))
 		return;
@@ -1731,59 +1731,59 @@ void Player::SaySpecific(HeroSpeech speechId) const
 void Player::Say(HeroSpeech speechId, int delay) const
 {
 	sfxdelay = delay;
-	sfxdnum = herosounds[static_cast<size_t>(_pClass)][static_cast<size_t>(speechId)];
+	sfxdnum = herosounds[static_cast<size_t>(heroClass)][static_cast<size_t>(speechId)];
 }
 
 void Player::Stop()
 {
 	ClrPlrPath(*this);
-	destAction = ACTION_NONE;
+	destinationAction = ACTION_NONE;
 }
 
 bool Player::isWalking() const
 {
-	return IsAnyOf(_pmode, PM_WALK_NORTHWARDS, PM_WALK_SOUTHWARDS, PM_WALK_SIDEWAYS);
+	return IsAnyOf(mode, PM_WALK_NORTHWARDS, PM_WALK_SOUTHWARDS, PM_WALK_SIDEWAYS);
 }
 
 int Player::GetManaShieldDamageReduction()
 {
 	constexpr uint8_t Max = 7;
-	return 24 - std::min(_pSplLvl[static_cast<int8_t>(SpellID::ManaShield)], Max) * 3;
+	return 24 - std::min(spellLevel[static_cast<int8_t>(SpellID::ManaShield)], Max) * 3;
 }
 
 void Player::RestorePartialLife()
 {
-	int wholeHitpoints = _pMaxHP >> 6;
+	int wholeHitpoints = maxLife >> 6;
 	int l = ((wholeHitpoints / 8) + GenerateRnd(wholeHitpoints / 4)) << 6;
-	if (IsAnyOf(_pClass, HeroClass::Warrior, HeroClass::Barbarian))
+	if (IsAnyOf(heroClass, HeroClass::Warrior, HeroClass::Barbarian))
 		l *= 2;
-	if (IsAnyOf(_pClass, HeroClass::Rogue, HeroClass::Monk, HeroClass::Bard))
+	if (IsAnyOf(heroClass, HeroClass::Rogue, HeroClass::Monk, HeroClass::Bard))
 		l += l / 2;
-	_pHitPoints = std::min(_pHitPoints + l, _pMaxHP);
-	_pHPBase = std::min(_pHPBase + l, _pMaxHPBase);
+	life = std::min(life + l, maxLife);
+	baseLife = std::min(baseLife + l, baseMaxLife);
 }
 
 void Player::RestorePartialMana()
 {
-	int wholeManaPoints = _pMaxMana >> 6;
+	int wholeManaPoints = maxMana >> 6;
 	int l = ((wholeManaPoints / 8) + GenerateRnd(wholeManaPoints / 4)) << 6;
-	if (_pClass == HeroClass::Sorcerer)
+	if (heroClass == HeroClass::Sorcerer)
 		l *= 2;
-	if (IsAnyOf(_pClass, HeroClass::Rogue, HeroClass::Monk, HeroClass::Bard))
+	if (IsAnyOf(heroClass, HeroClass::Rogue, HeroClass::Monk, HeroClass::Bard))
 		l += l / 2;
-	if (HasNoneOf(_pIFlags, ItemSpecialEffect::NoMana)) {
-		_pMana = std::min(_pMana + l, _pMaxMana);
-		_pManaBase = std::min(_pManaBase + l, _pMaxManaBase);
+	if (HasNoneOf(flags, ItemSpecialEffect::NoMana)) {
+		mana = std::min(mana + l, maxMana);
+		baseMana = std::min(baseMana + l, baseMaxMana);
 	}
 }
 
 void Player::ReadySpellFromEquipment(inv_body_loc bodyLocation, bool forceSpell)
 {
-	Item &item = InvBody[bodyLocation];
+	Item &item = bodySlot[bodyLocation];
 	if (item._itype == ItemType::Staff && IsValidSpell(item._iSpell) && item._iCharges > 0 && item._iStatFlag) {
-		if (forceSpell || _pRSpell == SpellID::Invalid || _pRSplType == SpellType::Invalid) {
-			_pRSpell = item._iSpell;
-			_pRSplType = SpellType::Charges;
+		if (forceSpell || selectedSpell == SpellID::Invalid || selectedSpellType == SpellType::Invalid) {
+			selectedSpell = item._iSpell;
+			selectedSpellType = SpellType::Charges;
 			RedrawEverything();
 		}
 	}
@@ -1791,7 +1791,7 @@ void Player::ReadySpellFromEquipment(inv_body_loc bodyLocation, bool forceSpell)
 
 player_graphic Player::getGraphic() const
 {
-	switch (_pmode) {
+	switch (mode) {
 	case PM_STAND:
 	case PM_NEWLVL:
 	case PM_QUIT:
@@ -1819,10 +1819,10 @@ player_graphic Player::getGraphic() const
 uint16_t Player::getSpriteWidth() const
 {
 	if (!HeadlessMode)
-		return (*AnimInfo.sprites)[0].width();
+		return (*animationInfo.sprites)[0].width();
 	const player_graphic graphic = getGraphic();
-	const HeroClass cls = GetPlayerSpriteClass(_pClass);
-	const PlayerWeaponGraphic weaponGraphic = GetPlayerWeaponGraphic(graphic, static_cast<PlayerWeaponGraphic>(_pgfxnum & 0xF));
+	const HeroClass cls = GetPlayerSpriteClass(heroClass);
+	const PlayerWeaponGraphic weaponGraphic = GetPlayerWeaponGraphic(graphic, static_cast<PlayerWeaponGraphic>(this->graphic & 0xF));
 	return GetPlayerSpriteWidth(cls, graphic, weaponGraphic);
 }
 
@@ -1831,29 +1831,29 @@ void Player::getAnimationFramesAndTicksPerFrame(player_graphic graphics, int8_t 
 	ticksPerFrame = 1;
 	switch (graphics) {
 	case player_graphic::Stand:
-		numberOfFrames = _pNFrames;
+		numberOfFrames = numIdleFrames;
 		ticksPerFrame = 4;
 		break;
 	case player_graphic::Walk:
-		numberOfFrames = _pWFrames;
+		numberOfFrames = numWalkFrames;
 		break;
 	case player_graphic::Attack:
-		numberOfFrames = _pAFrames;
+		numberOfFrames = numAttackFrames;
 		break;
 	case player_graphic::Hit:
-		numberOfFrames = _pHFrames;
+		numberOfFrames = numRecoveryFrames;
 		break;
 	case player_graphic::Lightning:
 	case player_graphic::Fire:
 	case player_graphic::Magic:
-		numberOfFrames = _pSFrames;
+		numberOfFrames = numSpellFrames;
 		break;
 	case player_graphic::Death:
-		numberOfFrames = _pDFrames;
+		numberOfFrames = numDeathFrames;
 		ticksPerFrame = 2;
 		break;
 	case player_graphic::Block:
-		numberOfFrames = _pBFrames;
+		numberOfFrames = numBlockFrames;
 		ticksPerFrame = 3;
 		break;
 	default:
@@ -1868,7 +1868,7 @@ void Player::UpdatePreviewCelSprite(_cmd_id cmdId, Point point, uint16_t wParam1
 		return;
 
 	// we can only show a preview if our command is executed in the next game tick
-	if (_pmode != PM_STAND)
+	if (mode != PM_STAND)
 		return;
 
 	std::optional<player_graphic> graphic;
@@ -1994,7 +1994,7 @@ void Player::UpdatePreviewCelSprite(_cmd_id cmdId, Point point, uint16_t wParam1
 		return;
 
 	LoadPlrGFX(*this, *graphic);
-	ClxSpriteList sprites = AnimationData[static_cast<size_t>(*graphic)].spritesForDirection(dir);
+	ClxSpriteList sprites = animationData[static_cast<size_t>(*graphic)].spritesForDirection(dir);
 	if (!previewCelSprite || *previewCelSprite != sprites[0]) {
 		previewCelSprite = sprites[0];
 		progressToNextGameTickWhenPreviewWasSet = ProgressToNextGameTick;
@@ -2003,7 +2003,7 @@ void Player::UpdatePreviewCelSprite(_cmd_id cmdId, Point point, uint16_t wParam1
 
 void Player::setCharacterLevel(uint8_t level)
 {
-	this->_pLevel = std::clamp<uint8_t>(level, 1U, getMaxCharacterLevel());
+	this->characterLevel = std::clamp<uint8_t>(level, 1U, getMaxCharacterLevel());
 }
 
 uint8_t Player::getMaxCharacterLevel() const
@@ -2019,13 +2019,13 @@ uint32_t Player::getNextExperienceThreshold() const
 int32_t Player::calculateBaseLife() const
 {
 	const ClassAttributes &attr = getClassAttributes();
-	return attr.adjLife + (attr.lvlLife * getCharacterLevel()) + (attr.chrLife * _pBaseVit);
+	return attr.adjLife + (attr.lvlLife * getCharacterLevel()) + (attr.chrLife * baseVitality);
 }
 
 int32_t Player::calculateBaseMana() const
 {
 	const ClassAttributes &attr = getClassAttributes();
-	return attr.adjMana + (attr.lvlMana * getCharacterLevel()) + (attr.chrMana * _pBaseMag);
+	return attr.adjMana + (attr.lvlMana * getCharacterLevel()) + (attr.chrMana * baseMagic);
 }
 
 void Player::occupyTile(Point position, bool isMoving) const
@@ -2038,15 +2038,15 @@ void Player::occupyTile(Point position, bool isMoving) const
 bool Player::isLevelOwnedByLocalClient() const
 {
 	for (const Player &other : Players) {
-		if (!other.plractive)
+		if (!other.isPlayerActive)
 			continue;
-		if (other._pLvlChanging)
+		if (other.isChangingLevel)
 			continue;
-		if (other._pmode == PM_NEWLVL)
+		if (other.mode == PM_NEWLVL)
 			continue;
-		if (other.plrlevel != this->plrlevel)
+		if (other.dungeonLevel != this->dungeonLevel)
 			continue;
-		if (other.plrIsOnSetLevel != this->plrIsOnSetLevel)
+		if (other.isOnSetLevel != this->isOnSetLevel)
 			continue;
 		if (&other == MyPlayer && gbBufferMsgs != 0)
 			continue;
@@ -2073,12 +2073,12 @@ void LoadPlrGFX(Player &player, player_graphic graphic)
 	if (HeadlessMode)
 		return;
 
-	auto &animationData = player.AnimationData[static_cast<size_t>(graphic)];
+	auto &animationData = player.animationData[static_cast<size_t>(graphic)];
 	if (animationData.sprites)
 		return;
 
-	const HeroClass cls = GetPlayerSpriteClass(player._pClass);
-	const PlayerWeaponGraphic animWeaponId = GetPlayerWeaponGraphic(graphic, static_cast<PlayerWeaponGraphic>(player._pgfxnum & 0xF));
+	const HeroClass cls = GetPlayerSpriteClass(player.heroClass);
+	const PlayerWeaponGraphic animWeaponId = GetPlayerWeaponGraphic(graphic, static_cast<PlayerWeaponGraphic>(player.graphic & 0xF));
 
 	const char *path = PlayersSpriteData[static_cast<std::size_t>(cls)].classPath;
 
@@ -2121,7 +2121,7 @@ void LoadPlrGFX(Player &player, player_graphic graphic)
 	case player_graphic::Block:
 		if (leveltype == DTYPE_TOWN)
 			return;
-		if (!player._pBlockFlag)
+		if (!player.hasBlockFlag)
 			return;
 		szCel = "bl";
 		break;
@@ -2129,7 +2129,7 @@ void LoadPlrGFX(Player &player, player_graphic graphic)
 		app_fatal("PLR:2");
 	}
 
-	char prefix[3] = { CharChar[static_cast<std::size_t>(cls)], ArmourChar[player._pgfxnum >> 4], WepChar[static_cast<std::size_t>(animWeaponId)] };
+	char prefix[3] = { CharChar[static_cast<std::size_t>(cls)], ArmourChar[player.graphic >> 4], WepChar[static_cast<std::size_t>(animWeaponId)] };
 	char pszName[256];
 	*fmt::format_to(pszName, R"(plrgfx\{0}\{1}\{1}{2})", path, std::string_view(prefix, 3), szCel) = 0;
 	const uint16_t animationWidth = GetPlayerSpriteWidth(cls, graphic, animWeaponId);
@@ -2151,8 +2151,8 @@ void InitPlayerGFX(Player &player)
 
 	ResetPlayerGFX(player);
 
-	if (player._pHitPoints >> 6 == 0) {
-		player._pgfxnum &= ~0xFU;
+	if (player.life >> 6 == 0) {
+		player.graphic &= ~0xFU;
 		LoadPlrGFX(player, player_graphic::Death);
 		return;
 	}
@@ -2167,8 +2167,8 @@ void InitPlayerGFX(Player &player)
 
 void ResetPlayerGFX(Player &player)
 {
-	player.AnimInfo.sprites = std::nullopt;
-	for (PlayerAnimationData &animData : player.AnimationData) {
+	player.animationInfo.sprites = std::nullopt;
+	for (PlayerAnimationData &animData : player.animationData) {
 		animData.sprites = std::nullopt;
 	}
 }
@@ -2180,81 +2180,81 @@ void NewPlrAnim(Player &player, player_graphic graphic, Direction dir, Animation
 	OptionalClxSpriteList sprites;
 	int previewShownGameTickFragments = 0;
 	if (!HeadlessMode) {
-		sprites = player.AnimationData[static_cast<size_t>(graphic)].spritesForDirection(dir);
+		sprites = player.animationData[static_cast<size_t>(graphic)].spritesForDirection(dir);
 		if (player.previewCelSprite && (*sprites)[0] == *player.previewCelSprite && !player.isWalking()) {
-			previewShownGameTickFragments = std::clamp<int>(AnimationInfo::baseValueFraction - player.progressToNextGameTickWhenPreviewWasSet, 0, AnimationInfo::baseValueFraction);
+			previewShownGameTickFragments = std::clamp<int>(PlayerAnimationInfo::baseValueFraction - player.progressToNextGameTickWhenPreviewWasSet, 0, PlayerAnimationInfo::baseValueFraction);
 		}
 	}
 
 	int8_t numberOfFrames;
 	int8_t ticksPerFrame;
 	player.getAnimationFramesAndTicksPerFrame(graphic, numberOfFrames, ticksPerFrame);
-	player.AnimInfo.setNewAnimation(sprites, numberOfFrames, ticksPerFrame, flags, numSkippedFrames, distributeFramesBeforeFrame, static_cast<uint8_t>(previewShownGameTickFragments));
+	player.animationInfo.setNewAnimation(sprites, numberOfFrames, ticksPerFrame, flags, numSkippedFrames, distributeFramesBeforeFrame, static_cast<uint8_t>(previewShownGameTickFragments));
 }
 
 void SetPlrAnims(Player &player)
 {
-	HeroClass pc = player._pClass;
+	HeroClass pc = player.heroClass;
 	PlayerAnimData plrAtkAnimData = PlayersAnimData[static_cast<uint8_t>(pc)];
-	auto gn = static_cast<PlayerWeaponGraphic>(player._pgfxnum & 0xFU);
+	auto gn = static_cast<PlayerWeaponGraphic>(player.graphic & 0xFU);
 
 	if (leveltype == DTYPE_TOWN) {
-		player._pNFrames = plrAtkAnimData.townIdleFrames;
-		player._pWFrames = plrAtkAnimData.townWalkingFrames;
+		player.numIdleFrames = plrAtkAnimData.townIdleFrames;
+		player.numWalkFrames = plrAtkAnimData.townWalkingFrames;
 	} else {
-		player._pNFrames = plrAtkAnimData.idleFrames;
-		player._pWFrames = plrAtkAnimData.walkingFrames;
-		player._pHFrames = plrAtkAnimData.recoveryFrames;
-		player._pBFrames = plrAtkAnimData.blockingFrames;
+		player.numIdleFrames = plrAtkAnimData.idleFrames;
+		player.numWalkFrames = plrAtkAnimData.walkingFrames;
+		player.numRecoveryFrames = plrAtkAnimData.recoveryFrames;
+		player.numBlockFrames = plrAtkAnimData.blockingFrames;
 		switch (gn) {
 		case PlayerWeaponGraphic::Unarmed:
-			player._pAFrames = plrAtkAnimData.unarmedFrames;
-			player._pAFNum = plrAtkAnimData.unarmedActionFrame;
+			player.numAttackFrames = plrAtkAnimData.unarmedFrames;
+			player.attackActionFrame = plrAtkAnimData.unarmedActionFrame;
 			break;
 		case PlayerWeaponGraphic::UnarmedShield:
-			player._pAFrames = plrAtkAnimData.unarmedShieldFrames;
-			player._pAFNum = plrAtkAnimData.unarmedShieldActionFrame;
+			player.numAttackFrames = plrAtkAnimData.unarmedShieldFrames;
+			player.attackActionFrame = plrAtkAnimData.unarmedShieldActionFrame;
 			break;
 		case PlayerWeaponGraphic::Sword:
-			player._pAFrames = plrAtkAnimData.swordFrames;
-			player._pAFNum = plrAtkAnimData.swordActionFrame;
+			player.numAttackFrames = plrAtkAnimData.swordFrames;
+			player.attackActionFrame = plrAtkAnimData.swordActionFrame;
 			break;
 		case PlayerWeaponGraphic::SwordShield:
-			player._pAFrames = plrAtkAnimData.swordShieldFrames;
-			player._pAFNum = plrAtkAnimData.swordShieldActionFrame;
+			player.numAttackFrames = plrAtkAnimData.swordShieldFrames;
+			player.attackActionFrame = plrAtkAnimData.swordShieldActionFrame;
 			break;
 		case PlayerWeaponGraphic::Bow:
-			player._pAFrames = plrAtkAnimData.bowFrames;
-			player._pAFNum = plrAtkAnimData.bowActionFrame;
+			player.numAttackFrames = plrAtkAnimData.bowFrames;
+			player.attackActionFrame = plrAtkAnimData.bowActionFrame;
 			break;
 		case PlayerWeaponGraphic::Axe:
-			player._pAFrames = plrAtkAnimData.axeFrames;
-			player._pAFNum = plrAtkAnimData.axeActionFrame;
+			player.numAttackFrames = plrAtkAnimData.axeFrames;
+			player.attackActionFrame = plrAtkAnimData.axeActionFrame;
 			break;
 		case PlayerWeaponGraphic::Mace:
-			player._pAFrames = plrAtkAnimData.maceFrames;
-			player._pAFNum = plrAtkAnimData.maceActionFrame;
+			player.numAttackFrames = plrAtkAnimData.maceFrames;
+			player.attackActionFrame = plrAtkAnimData.maceActionFrame;
 			break;
 		case PlayerWeaponGraphic::MaceShield:
-			player._pAFrames = plrAtkAnimData.maceShieldFrames;
-			player._pAFNum = plrAtkAnimData.maceShieldActionFrame;
+			player.numAttackFrames = plrAtkAnimData.maceShieldFrames;
+			player.attackActionFrame = plrAtkAnimData.maceShieldActionFrame;
 			break;
 		case PlayerWeaponGraphic::Staff:
-			player._pAFrames = plrAtkAnimData.staffFrames;
-			player._pAFNum = plrAtkAnimData.staffActionFrame;
+			player.numAttackFrames = plrAtkAnimData.staffFrames;
+			player.attackActionFrame = plrAtkAnimData.staffActionFrame;
 			break;
 		}
 	}
 
-	player._pDFrames = plrAtkAnimData.deathFrames;
-	player._pSFrames = plrAtkAnimData.castingFrames;
-	player._pSFNum = plrAtkAnimData.castingActionFrame;
-	int armorGraphicIndex = player._pgfxnum & ~0xFU;
+	player.numDeathFrames = plrAtkAnimData.deathFrames;
+	player.numSpellFrames = plrAtkAnimData.castingFrames;
+	player.spellActionFrame = plrAtkAnimData.castingActionFrame;
+	int armorGraphicIndex = player.graphic & ~0xFU;
 	if (IsAnyOf(pc, HeroClass::Warrior, HeroClass::Barbarian)) {
 		if (gn == PlayerWeaponGraphic::Bow && leveltype != DTYPE_TOWN)
-			player._pNFrames = 8;
+			player.numIdleFrames = 8;
 		if (armorGraphicIndex > 0)
-			player._pDFrames = 15;
+			player.numDeathFrames = 15;
 	}
 }
 
@@ -2268,64 +2268,63 @@ void CreatePlayer(Player &player, HeroClass c)
 	SetRndSeed(SDL_GetTicks());
 
 	player.setCharacterLevel(1);
-	player._pClass = c;
+	player.heroClass = c;
 
 	const ClassAttributes &attr = player.getClassAttributes();
 
-	player._pBaseStr = attr.baseStr;
-	player._pStrength = player._pBaseStr;
+	player.baseStrength = attr.baseStr;
+	player.strength = player.baseStrength;
 
-	player._pBaseMag = attr.baseMag;
-	player._pMagic = player._pBaseMag;
+	player.baseMagic = attr.baseMag;
+	player.magic = player.baseMagic;
 
-	player._pBaseDex = attr.baseDex;
-	player._pDexterity = player._pBaseDex;
+	player.baseDexterity = attr.baseDex;
+	player.dexterity = player.baseDexterity;
 
-	player._pBaseVit = attr.baseVit;
-	player._pVitality = player._pBaseVit;
+	player.baseVitality = attr.baseVit;
+	player.vitality = player.baseVitality;
 
-	player._pHitPoints = player.calculateBaseLife();
-	player._pMaxHP = player._pHitPoints;
-	player._pHPBase = player._pHitPoints;
-	player._pMaxHPBase = player._pHitPoints;
+	player.life = player.calculateBaseLife();
+	player.maxLife = player.life;
+	player.baseLife = player.life;
+	player.baseMaxLife = player.life;
 
-	player._pMana = player.calculateBaseMana();
-	player._pMaxMana = player._pMana;
-	player._pManaBase = player._pMana;
-	player._pMaxManaBase = player._pMana;
+	player.mana = player.calculateBaseMana();
+	player.maxMana = player.mana;
+	player.baseMana = player.mana;
+	player.baseMaxMana = player.mana;
 
-	player._pExperience = 0;
-	player._pArmorClass = 0;
-	player._pLightRad = 10;
-	player._pInfraFlag = false;
+	player.experience = 0;
+	player.lightRadius = 10;
+	player.hasInfravisionFlag = false;
 
-	for (uint8_t &spellLevel : player._pSplLvl) {
+	for (uint8_t &spellLevel : player.spellLevel) {
 		spellLevel = 0;
 	}
 
-	player._pSpellFlags = SpellFlag::None;
-	player._pRSplType = SpellType::Invalid;
+	player.spellFlags = SpellFlag::None;
+	player.selectedSpellType = SpellType::Invalid;
 
 	// Initializing the hotkey bindings to no selection
-	std::fill(player._pSplHotKey, player._pSplHotKey + NumHotkeys, SpellID::Invalid);
+	std::fill(player.hotkeySpell, player.hotkeySpell + NumHotkeys, SpellID::Invalid);
 
 	// CreatePlrItems calls AutoEquip which will overwrite the player graphic if required
-	player._pgfxnum = static_cast<uint8_t>(PlayerWeaponGraphic::Unarmed);
+	player.graphic = static_cast<uint8_t>(PlayerWeaponGraphic::Unarmed);
 
-	for (bool &levelVisited : player._pLvlVisited) {
+	for (bool &levelVisited : player.isLevelVisted) {
 		levelVisited = false;
 	}
 
 	for (int i = 0; i < 10; i++) {
-		player._pSLvlVisited[i] = false;
+		player.isSetLevelVisted[i] = false;
 	}
 
-	player._pLvlChanging = false;
-	player.pTownWarps = 0;
-	player.pLvlLoad = 0;
-	player.pManaShield = false;
-	player.pDamAcFlags = ItemSpecialEffectHf::None;
-	player.wReflections = 0;
+	player.isChangingLevel = false;
+	player.townWarps = 0;
+	player.levelLoading = 0;
+	player.hasManaShield = false;
+	player.hellfireFlags = ItemSpecialEffectHf::None;
+	player.reflections = 0;
 
 	InitDungMsgs(player);
 	CreatePlrItems(player);
@@ -2349,16 +2348,16 @@ void NextPlrLevel(Player &player)
 	CalcPlrInv(player, true);
 
 	if (CalcStatDiff(player) < 5) {
-		player._pStatPts = CalcStatDiff(player);
+		player.statPoints = CalcStatDiff(player);
 	} else {
-		player._pStatPts += 5;
+		player.statPoints += 5;
 	}
 	int hp = player.getClassAttributes().lvlLife;
 
-	player._pMaxHP += hp;
-	player._pHitPoints = player._pMaxHP;
-	player._pMaxHPBase += hp;
-	player._pHPBase = player._pMaxHPBase;
+	player.maxLife += hp;
+	player.life = player.maxLife;
+	player.baseMaxLife += hp;
+	player.baseLife = player.baseMaxLife;
 
 	if (&player == MyPlayer) {
 		RedrawComponent(PanelDrawComponent::Health);
@@ -2366,12 +2365,12 @@ void NextPlrLevel(Player &player)
 
 	int mana = player.getClassAttributes().lvlMana;
 
-	player._pMaxMana += mana;
-	player._pMaxManaBase += mana;
+	player.maxMana += mana;
+	player.baseMaxMana += mana;
 
-	if (HasNoneOf(player._pIFlags, ItemSpecialEffect::NoMana)) {
-		player._pMana = player._pMaxMana;
-		player._pManaBase = player._pMaxManaBase;
+	if (HasNoneOf(player.flags, ItemSpecialEffect::NoMana)) {
+		player.mana = player.maxMana;
+		player.baseMana = player.baseMaxMana;
 	}
 
 	if (&player == MyPlayer) {
@@ -2388,7 +2387,7 @@ void NextPlrLevel(Player &player)
 
 void Player::_addExperience(uint32_t experience, int levelDelta)
 {
-	if (this != MyPlayer || _pHitPoints <= 0)
+	if (this != MyPlayer || life <= 0)
 		return;
 
 	if (isMaxCharacterLevel()) {
@@ -2408,14 +2407,14 @@ void Player::_addExperience(uint32_t experience, int levelDelta)
 	const uint32_t maxExperience = GetNextExperienceThresholdForLevel(getMaxCharacterLevel());
 
 	// ensure we only add enough experience to reach the max experience cap so we don't overflow
-	_pExperience += std::min(clampedExp, maxExperience - _pExperience);
+	experience += std::min(clampedExp, maxExperience - experience);
 
 	if (*sgOptions.Gameplay.experienceBar) {
 		RedrawEverything();
 	}
 
 	// Increase player level if applicable
-	while (!isMaxCharacterLevel() && _pExperience >= getNextExperienceThreshold()) {
+	while (!isMaxCharacterLevel() && experience >= getNextExperienceThreshold()) {
 		// NextPlrLevel increments character level which changes the next experience threshold
 		NextPlrLevel(*this);
 	}
@@ -2442,15 +2441,14 @@ void AddPlrMonstExper(int lvl, unsigned exp, char pmask)
 void InitPlayer(Player &player, bool firstTime)
 {
 	if (firstTime) {
-		player._pRSplType = SpellType::Invalid;
-		player._pRSpell = SpellID::Invalid;
+		player.selectedSpellType = SpellType::Invalid;
+		player.selectedSpell = SpellID::Invalid;
 		if (&player == MyPlayer)
 			LoadHotkeys();
-		player._pSBkSpell = SpellID::Invalid;
-		player.queuedSpell.spellId = player._pRSpell;
-		player.queuedSpell.spellType = player._pRSplType;
-		player.pManaShield = false;
-		player.wReflections = 0;
+		player.queuedSpell.spellId = player.selectedSpell;
+		player.queuedSpell.spellType = player.selectedSpellType;
+		player.hasManaShield = false;
+		player.reflections = 0;
 	}
 
 	if (player.isOnActiveLevel()) {
@@ -2459,40 +2457,40 @@ void InitPlayer(Player &player, bool firstTime)
 
 		ClearStateVariables(player);
 
-		if (player._pHitPoints >> 6 > 0) {
-			player._pmode = PM_STAND;
+		if (player.life >> 6 > 0) {
+			player.mode = PM_STAND;
 			NewPlrAnim(player, player_graphic::Stand, Direction::South);
-			player.AnimInfo.currentFrame = GenerateRnd(player._pNFrames - 1);
-			player.AnimInfo.tickCounterOfCurrentFrame = GenerateRnd(3);
+			player.animationInfo.currentFrame = GenerateRnd(player.numIdleFrames - 1);
+			player.animationInfo.tickCounterOfCurrentFrame = GenerateRnd(3);
 		} else {
-			player._pgfxnum &= ~0xFU;
-			player._pmode = PM_DEATH;
+			player.graphic &= ~0xFU;
+			player.mode = PM_DEATH;
 			NewPlrAnim(player, player_graphic::Death, Direction::South);
-			player.AnimInfo.currentFrame = player.AnimInfo.numberOfFrames - 2;
+			player.animationInfo.currentFrame = player.animationInfo.numberOfFrames - 2;
 		}
 
-		player._pdir = Direction::South;
+		player.direction = Direction::South;
 
 		if (&player == MyPlayer && (!firstTime || leveltype != DTYPE_TOWN)) {
 			player.position.tile = ViewPosition;
 		}
 
 		SetPlayerOld(player);
-		player.walkpath[0] = WALK_NONE;
-		player.destAction = ACTION_NONE;
+		player.walkPath[0] = WALK_NONE;
+		player.destinationAction = ACTION_NONE;
 
 		if (&player == MyPlayer) {
-			player.lightId = AddLight(player.position.tile, player._pLightRad);
+			player.lightId = AddLight(player.position.tile, player.lightRadius);
 			ChangeLightXY(player.lightId, player.position.tile); // fix for a bug where old light is still visible at the entrance after reentering level
 		} else {
 			player.lightId = NO_LIGHT;
 		}
-		ActivateVision(player.position.tile, player._pLightRad, player.getId());
+		ActivateVision(player.position.tile, player.lightRadius, player.getId());
 	}
 
-	player._pAblSpells = GetSpellBitmask(GetPlayerStartingLoadoutForClass(player._pClass).skill);
+	player.skills = GetSpellBitmask(GetPlayerStartingLoadoutForClass(player.heroClass).skill);
 
-	player._pInvincible = false;
+	player.isInvincible = false;
 
 	if (&player == MyPlayer) {
 		MyPlayerIsDead = false;
@@ -2538,7 +2536,7 @@ void SetPlayerOld(Player &player)
 void FixPlayerLocation(Player &player, Direction bDir)
 {
 	player.position.future = player.position.tile;
-	player._pdir = bDir;
+	player.direction = bDir;
 	if (&player == MyPlayer) {
 		ViewPosition = player.position.tile;
 	}
@@ -2548,13 +2546,13 @@ void FixPlayerLocation(Player &player, Direction bDir)
 
 void StartStand(Player &player, Direction dir)
 {
-	if (player._pInvincible && player._pHitPoints == 0 && &player == MyPlayer) {
+	if (player.isInvincible && player.life == 0 && &player == MyPlayer) {
 		SyncPlrKill(player, DeathReason::Unknown);
 		return;
 	}
 
 	NewPlrAnim(player, player_graphic::Stand, dir);
-	player._pmode = PM_STAND;
+	player.mode = PM_STAND;
 	FixPlayerLocation(player, dir);
 	FixPlrWalkTags(player);
 	player.occupyTile(player.position.tile, false);
@@ -2563,7 +2561,7 @@ void StartStand(Player &player, Direction dir)
 
 void StartPlrBlock(Player &player, Direction dir)
 {
-	if (player._pInvincible && player._pHitPoints == 0 && &player == MyPlayer) {
+	if (player.isInvincible && player.life == 0 && &player == MyPlayer) {
 		SyncPlrKill(player, DeathReason::Unknown);
 		return;
 	}
@@ -2571,13 +2569,13 @@ void StartPlrBlock(Player &player, Direction dir)
 	PlaySfxLoc(SfxID::ItemSword, player.position.tile);
 
 	int8_t skippedAnimationFrames = 0;
-	if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastBlock)) {
-		skippedAnimationFrames = (player._pBFrames - 2); // ISPL_FASTBLOCK means we cancel the animation if frame 2 was shown
+	if (HasAnyOf(player.flags, ItemSpecialEffect::FastBlock)) {
+		skippedAnimationFrames = (player.numBlockFrames - 2); // ISPL_FASTBLOCK means we cancel the animation if frame 2 was shown
 	}
 
 	NewPlrAnim(player, player_graphic::Block, dir, AnimationDistributionFlags::SkipsDelayOfLastFrame, skippedAnimationFrames);
 
-	player._pmode = PM_BLOCK;
+	player.mode = PM_BLOCK;
 	FixPlayerLocation(player, dir);
 	SetPlayerOld(player);
 }
@@ -2597,7 +2595,7 @@ void FixPlrWalkTags(const Player &player)
 
 void StartPlrHit(Player &player, int dam, bool forcehit)
 {
-	if (player._pInvincible && player._pHitPoints == 0 && &player == MyPlayer) {
+	if (player.isInvincible && player.life == 0 && &player == MyPlayer) {
 		SyncPlrKill(player, DeathReason::Unknown);
 		return;
 	}
@@ -2605,7 +2603,7 @@ void StartPlrHit(Player &player, int dam, bool forcehit)
 	player.Say(HeroSpeech::ArghClang);
 
 	RedrawComponent(PanelDrawComponent::Health);
-	if (player._pClass == HeroClass::Barbarian) {
+	if (player.heroClass == HeroClass::Barbarian) {
 		if (dam >> 6 < player.getCharacterLevel() + player.getCharacterLevel() / 4 && !forcehit) {
 			return;
 		}
@@ -2613,14 +2611,14 @@ void StartPlrHit(Player &player, int dam, bool forcehit)
 		return;
 	}
 
-	Direction pd = player._pdir;
+	Direction pd = player.direction;
 
 	int8_t skippedAnimationFrames = 0;
-	if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastestHitRecovery)) {
+	if (HasAnyOf(player.flags, ItemSpecialEffect::FastestHitRecovery)) {
 		skippedAnimationFrames = 3;
-	} else if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FasterHitRecovery)) {
+	} else if (HasAnyOf(player.flags, ItemSpecialEffect::FasterHitRecovery)) {
 		skippedAnimationFrames = 2;
-	} else if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastHitRecovery)) {
+	} else if (HasAnyOf(player.flags, ItemSpecialEffect::FastHitRecovery)) {
 		skippedAnimationFrames = 1;
 	} else {
 		skippedAnimationFrames = 0;
@@ -2628,7 +2626,7 @@ void StartPlrHit(Player &player, int dam, bool forcehit)
 
 	NewPlrAnim(player, player_graphic::Hit, pd, AnimationDistributionFlags::None, skippedAnimationFrames);
 
-	player._pmode = PM_GOTHIT;
+	player.mode = PM_GOTHIT;
 	FixPlayerLocation(player, pd);
 	FixPlrWalkTags(player);
 	player.occupyTile(player.position.tile, false);
@@ -2641,7 +2639,7 @@ __attribute__((no_sanitize("shift-base")))
 void
 StartPlayerKill(Player &player, DeathReason deathReason)
 {
-	if (player._pHitPoints <= 0 && player._pmode == PM_DEATH) {
+	if (player.life <= 0 && player.mode == PM_DEATH) {
 		return;
 	}
 
@@ -2656,36 +2654,36 @@ StartPlayerKill(Player &player, DeathReason deathReason)
 	player.Say(HeroSpeech::AuughUh);
 
 	// Are the current animations item dependent?
-	if (player._pgfxnum != 0) {
+	if (player.graphic != 0) {
 		if (dropItems) {
 			// Ensure death animation show the player without weapon and armor, because they drop on death
-			player._pgfxnum = 0;
+			player.graphic = 0;
 		} else {
 			// Death animation aren't weapon specific, so always use the unarmed animations
-			player._pgfxnum &= ~0xFU;
+			player.graphic &= ~0xFU;
 		}
 		ResetPlayerGFX(player);
 		SetPlrAnims(player);
 	}
 
-	NewPlrAnim(player, player_graphic::Death, player._pdir);
+	NewPlrAnim(player, player_graphic::Death, player.direction);
 
-	player._pBlockFlag = false;
-	player._pmode = PM_DEATH;
-	player._pInvincible = true;
+	player.hasBlockFlag = false;
+	player.mode = PM_DEATH;
+	player.isInvincible = true;
 	SetPlayerHitPoints(player, 0);
 
 	if (&player != MyPlayer && dropItems) {
 		// Ensure that items are removed for remote players
 		// The dropped items will be synced seperatly (by the remote client)
-		for (Item &item : player.InvBody) {
+		for (Item &item : player.bodySlot) {
 			item.clear();
 		}
 		CalcPlrInv(player, false);
 	}
 
 	if (player.isOnActiveLevel()) {
-		FixPlayerLocation(player, player._pdir);
+		FixPlayerLocation(player, player.direction);
 		FixPlrWalkTags(player);
 		dFlags[player.position.tile.x][player.position.tile.y] |= DungeonFlag::DeadPlayer;
 		SetPlayerOld(player);
@@ -2695,8 +2693,8 @@ StartPlayerKill(Player &player, DeathReason deathReason)
 		if (&player == MyPlayer) {
 			RedrawComponent(PanelDrawComponent::Health);
 
-			if (!player.HoldItem.isEmpty()) {
-				DeadItem(player, std::move(player.HoldItem), { 0, 0 });
+			if (!player.heldItem.isEmpty()) {
+				DeadItem(player, std::move(player.heldItem), { 0, 0 });
 				NewCursor(CURSOR_HAND);
 			}
 			if (dropGold) {
@@ -2705,9 +2703,9 @@ StartPlayerKill(Player &player, DeathReason deathReason)
 			if (dropEar) {
 				Item ear;
 				InitializeItem(ear, IDI_EAR);
-				CopyUtf8(ear._iName, fmt::format(fmt::runtime("Ear of {:s}"), player._pName), sizeof(ear._iName));
-				CopyUtf8(ear._iIName, player._pName, sizeof(ear._iIName));
-				switch (player._pClass) {
+				CopyUtf8(ear._iName, fmt::format(fmt::runtime("Ear of {:s}"), player.name), sizeof(ear._iName));
+				CopyUtf8(ear._iIName, player.name, sizeof(ear._iIName));
+				switch (player.heroClass) {
 				case HeroClass::Sorcerer:
 					ear._iCurs = ICURS_EAR_SORCERER;
 					break;
@@ -2722,8 +2720,8 @@ StartPlayerKill(Player &player, DeathReason deathReason)
 					break;
 				}
 
-				ear._iCreateInfo = player._pName[0] << 8 | player._pName[1];
-				ear._iSeed = player._pName[2] << 24 | player._pName[3] << 16 | player._pName[4] << 8 | player._pName[5];
+				ear._iCreateInfo = player.name[0] << 8 | player.name[1];
+				ear._iSeed = player.name[2] << 24 | player.name[3] << 16 | player.name[4] << 8 | player.name[5];
 				ear._ivalue = player.getCharacterLevel();
 
 				if (FindGetItem(ear._iSeed, IDI_EAR, ear._iCreateInfo) == -1) {
@@ -2731,8 +2729,8 @@ StartPlayerKill(Player &player, DeathReason deathReason)
 				}
 			}
 			if (dropItems) {
-				Direction pdd = player._pdir;
-				for (Item &item : player.InvBody) {
+				Direction pdd = player.direction;
+				for (Item &item : player.bodySlot) {
 					pdd = Left(pdd);
 					DeadItem(player, item.pop(), Displacement(pdd));
 				}
@@ -2757,51 +2755,51 @@ void StripTopGold(Player &player)
 
 		if (GoldAutoPlace(player, excessGold))
 			continue;
-		if (!player.HoldItem.isEmpty() && ActiveItemCount + 1 >= MAXITEMS)
+		if (!player.heldItem.isEmpty() && ActiveItemCount + 1 >= MAXITEMS)
 			continue;
 		DeadItem(player, std::move(excessGold), { 0, 0 });
 	}
-	player._pGold = CalculateGold(player);
+	player.gold = CalculateGold(player);
 
-	if (player.HoldItem.isEmpty())
+	if (player.heldItem.isEmpty())
 		return;
-	if (AutoEquip(player, player.HoldItem, false))
+	if (AutoEquip(player, player.heldItem, false))
 		return;
-	if (AutoPlaceItemInInventory(player, player.HoldItem))
+	if (AutoPlaceItemInInventory(player, player.heldItem))
 		return;
-	if (AutoPlaceItemInBelt(player, player.HoldItem))
+	if (AutoPlaceItemInBelt(player, player.heldItem))
 		return;
-	std::optional<Point> itemTile = FindAdjacentPositionForItem(player.position.tile, player._pdir);
+	std::optional<Point> itemTile = FindAdjacentPositionForItem(player.position.tile, player.direction);
 	if (itemTile)
 		return;
-	DeadItem(player, std::move(player.HoldItem), { 0, 0 });
+	DeadItem(player, std::move(player.heldItem), { 0, 0 });
 	NewCursor(CURSOR_HAND);
 }
 
 void ApplyPlrDamage(DamageType damageType, Player &player, int dam, int minHP /*= 0*/, int frac /*= 0*/, DeathReason deathReason /*= DeathReason::MonsterOrTrap*/)
 {
 	int totalDamage = (dam << 6) + frac;
-	if (&player == MyPlayer && player._pHitPoints > 0) {
+	if (&player == MyPlayer && player.life > 0) {
 		AddFloatingNumber(damageType, player, totalDamage);
 	}
-	if (totalDamage > 0 && player.pManaShield) {
-		uint8_t manaShieldLevel = player._pSplLvl[static_cast<int8_t>(SpellID::ManaShield)];
+	if (totalDamage > 0 && player.hasManaShield) {
+		uint8_t manaShieldLevel = player.spellLevel[static_cast<int8_t>(SpellID::ManaShield)];
 		if (manaShieldLevel > 0) {
 			totalDamage += totalDamage / -player.GetManaShieldDamageReduction();
 		}
 		if (&player == MyPlayer)
 			RedrawComponent(PanelDrawComponent::Mana);
-		if (player._pMana >= totalDamage) {
-			player._pMana -= totalDamage;
-			player._pManaBase -= totalDamage;
+		if (player.mana >= totalDamage) {
+			player.mana -= totalDamage;
+			player.baseMana -= totalDamage;
 			totalDamage = 0;
 		} else {
-			totalDamage -= player._pMana;
+			totalDamage -= player.mana;
 			if (manaShieldLevel > 0) {
 				totalDamage += totalDamage / (player.GetManaShieldDamageReduction() - 1);
 			}
-			player._pMana = 0;
-			player._pManaBase = player._pMaxManaBase - player._pMaxMana;
+			player.mana = 0;
+			player.baseMana = player.baseMaxMana - player.maxMana;
 			if (&player == MyPlayer)
 				NetSendCmd(true, CMD_REMSHIELD);
 		}
@@ -2811,24 +2809,24 @@ void ApplyPlrDamage(DamageType damageType, Player &player, int dam, int minHP /*
 		return;
 
 	RedrawComponent(PanelDrawComponent::Health);
-	player._pHitPoints -= totalDamage;
-	player._pHPBase -= totalDamage;
-	if (player._pHitPoints > player._pMaxHP) {
-		player._pHitPoints = player._pMaxHP;
-		player._pHPBase = player._pMaxHPBase;
+	player.life -= totalDamage;
+	player.baseLife -= totalDamage;
+	if (player.life > player.maxLife) {
+		player.life = player.maxLife;
+		player.baseLife = player.baseMaxLife;
 	}
 	int minHitPoints = minHP << 6;
-	if (player._pHitPoints < minHitPoints) {
+	if (player.life < minHitPoints) {
 		SetPlayerHitPoints(player, minHitPoints);
 	}
-	if (player._pHitPoints >> 6 <= 0) {
+	if (player.life >> 6 <= 0) {
 		SyncPlrKill(player, deathReason);
 	}
 }
 
 void SyncPlrKill(Player &player, DeathReason deathReason)
 {
-	if (player._pHitPoints <= 0 && leveltype == DTYPE_TOWN) {
+	if (player.life <= 0 && leveltype == DTYPE_TOWN) {
 		SetPlayerHitPoints(player, 64);
 		return;
 	}
@@ -2880,7 +2878,7 @@ StartNewLvl(Player &player, interface_mode fom, int lvl)
 		player.setLevel(setlvlnum);
 		break;
 	case WM_DIABTWARPUP:
-		MyPlayer->pTownWarps |= 1 << (leveltype - 2);
+		MyPlayer->townWarps |= 1 << (leveltype - 2);
 		player.setLevel(lvl);
 		break;
 	case WM_DIABRETOWN:
@@ -2890,8 +2888,8 @@ StartNewLvl(Player &player, interface_mode fom, int lvl)
 	}
 
 	if (&player == MyPlayer) {
-		player._pmode = PM_NEWLVL;
-		player._pInvincible = true;
+		player.mode = PM_NEWLVL;
+		player.isInvincible = true;
 		SDL_Event event;
 		event.type = CustomEventToSdlEvent(fom);
 		SDL_PushEvent(&event);
@@ -2906,18 +2904,18 @@ void RestartTownLvl(Player &player)
 	InitLevelChange(player);
 
 	player.setLevel(0);
-	player._pInvincible = false;
+	player.isInvincible = false;
 
 	SetPlayerHitPoints(player, 64);
 
-	player._pMana = 0;
-	player._pManaBase = player._pMana - (player._pMaxMana - player._pMaxManaBase);
+	player.mana = 0;
+	player.baseMana = player.mana - (player.maxMana - player.baseMaxMana);
 
 	CalcPlrInv(player, false);
-	player._pmode = PM_NEWLVL;
+	player.mode = PM_NEWLVL;
 
 	if (&player == MyPlayer) {
-		player._pInvincible = true;
+		player.isInvincible = true;
 		SDL_Event event;
 		event.type = CustomEventToSdlEvent(WM_DIABRETOWN);
 		SDL_PushEvent(&event);
@@ -2941,8 +2939,8 @@ void StartWarpLvl(Player &player, size_t pidx)
 
 	if (&player == MyPlayer) {
 		SetCurrentPortal(pidx);
-		player._pmode = PM_NEWLVL;
-		player._pInvincible = true;
+		player.mode = PM_NEWLVL;
+		player.isInvincible = true;
 		SDL_Event event;
 		event.type = CustomEventToSdlEvent(WM_DIABWARPLVL);
 		SDL_PushEvent(&event);
@@ -2954,8 +2952,8 @@ void ProcessPlayers()
 	assert(MyPlayer != nullptr);
 	Player &myPlayer = *MyPlayer;
 
-	if (myPlayer.pLvlLoad > 0) {
-		myPlayer.pLvlLoad--;
+	if (myPlayer.levelLoading > 0) {
+		myPlayer.levelLoading--;
 	}
 
 	if (sfxdelay > 0) {
@@ -2984,27 +2982,27 @@ void ProcessPlayers()
 
 	for (size_t pnum = 0; pnum < Players.size(); pnum++) {
 		Player &player = Players[pnum];
-		if (player.plractive && player.isOnActiveLevel() && (&player == MyPlayer || !player._pLvlChanging)) {
+		if (player.isPlayerActive && player.isOnActiveLevel() && (&player == MyPlayer || !player.isChangingLevel)) {
 			CheckCheatStats(player);
 
-			if (!PlrDeathModeOK(player) && (player._pHitPoints >> 6) <= 0) {
+			if (!PlrDeathModeOK(player) && (player.life >> 6) <= 0) {
 				SyncPlrKill(player, DeathReason::Unknown);
 			}
 
 			if (&player == MyPlayer) {
-				if (HasAnyOf(player._pIFlags, ItemSpecialEffect::DrainLife) && leveltype != DTYPE_TOWN) {
+				if (HasAnyOf(player.flags, ItemSpecialEffect::DrainLife) && leveltype != DTYPE_TOWN) {
 					ApplyPlrDamage(DamageType::Physical, player, 0, 0, 4);
 				}
-				if (HasAnyOf(player._pIFlags, ItemSpecialEffect::NoMana) && player._pManaBase > 0) {
-					player._pManaBase -= player._pMana;
-					player._pMana = 0;
+				if (HasAnyOf(player.flags, ItemSpecialEffect::NoMana) && player.baseMana > 0) {
+					player.baseMana -= player.mana;
+					player.mana = 0;
 					RedrawComponent(PanelDrawComponent::Mana);
 				}
 			}
 
 			bool tplayer = false;
 			do {
-				switch (player._pmode) {
+				switch (player.mode) {
 				case PM_STAND:
 				case PM_NEWLVL:
 				case PM_QUIT:
@@ -3038,15 +3036,15 @@ void ProcessPlayers()
 			} while (tplayer);
 
 			player.previewCelSprite = std::nullopt;
-			if (player._pmode != PM_DEATH || player.AnimInfo.tickCounterOfCurrentFrame != 40)
-				player.AnimInfo.processAnimation();
+			if (player.mode != PM_DEATH || player.animationInfo.tickCounterOfCurrentFrame != 40)
+				player.animationInfo.processAnimation();
 		}
 	}
 }
 
 void ClrPlrPath(Player &player)
 {
-	memset(player.walkpath, WALK_NONE, sizeof(player.walkpath));
+	memset(player.walkPath, WALK_NONE, sizeof(player.walkPath));
 }
 
 /**
@@ -3065,7 +3063,7 @@ bool PosOkPlayer(const Player &player, Point position)
 	if (!IsTileWalkable(position))
 		return false;
 	Player *otherPlayer = PlayerAtPosition(position);
-	if (otherPlayer != nullptr && otherPlayer != &player && otherPlayer->_pHitPoints != 0)
+	if (otherPlayer != nullptr && otherPlayer != &player && otherPlayer->life != 0)
 		return false;
 
 	if (dMonster[position.x][position.y] != 0) {
@@ -3089,7 +3087,7 @@ void MakePlrPath(Player &player, Point targetPosition, bool endspace)
 		return;
 	}
 
-	int path = FindPath([&player](Point position) { return PosOkPlayer(player, position); }, player.position.future, targetPosition, player.walkpath);
+	int path = FindPath([&player](Point position) { return PosOkPlayer(player, position); }, player.position.future, targetPosition, player.walkPath);
 	if (path == 0) {
 		return;
 	}
@@ -3098,16 +3096,16 @@ void MakePlrPath(Player &player, Point targetPosition, bool endspace)
 		path--;
 	}
 
-	player.walkpath[path] = WALK_NONE;
+	player.walkPath[path] = WALK_NONE;
 }
 
 void CalcPlrStaff(Player &player)
 {
-	player._pISpells = 0;
-	if (!player.InvBody[INVLOC_HAND_LEFT].isEmpty()
-	    && player.InvBody[INVLOC_HAND_LEFT]._iStatFlag
-	    && player.InvBody[INVLOC_HAND_LEFT]._iCharges > 0) {
-		player._pISpells |= GetSpellBitmask(player.InvBody[INVLOC_HAND_LEFT]._iSpell);
+	player.staffSpells = 0;
+	if (!player.bodySlot[INVLOC_HAND_LEFT].isEmpty()
+	    && player.bodySlot[INVLOC_HAND_LEFT]._iStatFlag
+	    && player.bodySlot[INVLOC_HAND_LEFT]._iCharges > 0) {
+		player.staffSpells |= GetSpellBitmask(player.bodySlot[INVLOC_HAND_LEFT]._iSpell);
 	}
 }
 
@@ -3192,7 +3190,7 @@ void CheckPlrSpell(bool isShiftHeld, SpellID spellID, SpellType spellType)
 	} else if (pcursmonst != -1 && !isShiftHeld) {
 		LastMouseButtonAction = MouseActionType::SpellMonsterTarget;
 		NetSendCmdParam5(true, CMD_SPELLID, pcursmonst, static_cast<int8_t>(spellID), static_cast<uint8_t>(spellType), spellLevel, spellFrom);
-	} else if (PlayerUnderCursor != nullptr && !isShiftHeld && !myPlayer.friendlyMode) {
+	} else if (PlayerUnderCursor != nullptr && !isShiftHeld && !myPlayer.isFriendlyMode) {
 		LastMouseButtonAction = MouseActionType::SpellPlayerTarget;
 		NetSendCmdParam5(true, CMD_SPELLPID, PlayerUnderCursor->getId(), static_cast<int8_t>(spellID), static_cast<uint8_t>(spellType), spellLevel, spellFrom);
 	} else {
@@ -3205,7 +3203,7 @@ void SyncPlrAnim(Player &player)
 {
 	const player_graphic graphic = player.getGraphic();
 	if (!HeadlessMode)
-		player.AnimInfo.sprites = player.AnimationData[static_cast<size_t>(graphic)].spritesForDirection(player._pdir);
+		player.animationInfo.sprites = player.animationData[static_cast<size_t>(graphic)].spritesForDirection(player.direction);
 }
 
 void SyncInitPlrPos(Player &player)
@@ -3260,16 +3258,16 @@ void CheckStats(Player &player)
 		int maxStatPoint = player.GetMaximumAttributeValue(attribute);
 		switch (attribute) {
 		case CharacterAttribute::Strength:
-			player._pBaseStr = std::clamp(player._pBaseStr, 0, maxStatPoint);
+			player.baseStrength = std::clamp(player.baseStrength, 0, maxStatPoint);
 			break;
 		case CharacterAttribute::Magic:
-			player._pBaseMag = std::clamp(player._pBaseMag, 0, maxStatPoint);
+			player.baseMagic = std::clamp(player.baseMagic, 0, maxStatPoint);
 			break;
 		case CharacterAttribute::Dexterity:
-			player._pBaseDex = std::clamp(player._pBaseDex, 0, maxStatPoint);
+			player.baseDexterity = std::clamp(player.baseDexterity, 0, maxStatPoint);
 			break;
 		case CharacterAttribute::Vitality:
-			player._pBaseVit = std::clamp(player._pBaseVit, 0, maxStatPoint);
+			player.baseVitality = std::clamp(player.baseVitality, 0, maxStatPoint);
 			break;
 		}
 	}
@@ -3277,81 +3275,81 @@ void CheckStats(Player &player)
 
 void ModifyPlrStr(Player &player, int l)
 {
-	l = std::clamp(l, 0 - player._pBaseStr, player.GetMaximumAttributeValue(CharacterAttribute::Strength) - player._pBaseStr);
+	l = std::clamp(l, 0 - player.baseStrength, player.GetMaximumAttributeValue(CharacterAttribute::Strength) - player.baseStrength);
 
-	player._pStrength += l;
-	player._pBaseStr += l;
+	player.strength += l;
+	player.baseStrength += l;
 
 	CalcPlrInv(player, true);
 
 	if (&player == MyPlayer) {
-		NetSendCmdParam1(false, CMD_SETSTR, player._pBaseStr);
+		NetSendCmdParam1(false, CMD_SETSTR, player.baseStrength);
 	}
 }
 
 void ModifyPlrMag(Player &player, int l)
 {
-	l = std::clamp(l, 0 - player._pBaseMag, player.GetMaximumAttributeValue(CharacterAttribute::Magic) - player._pBaseMag);
+	l = std::clamp(l, 0 - player.baseMagic, player.GetMaximumAttributeValue(CharacterAttribute::Magic) - player.baseMagic);
 
-	player._pMagic += l;
-	player._pBaseMag += l;
+	player.magic += l;
+	player.baseMagic += l;
 
 	int ms = l;
 	ms *= player.getClassAttributes().chrMana;
 
-	player._pMaxManaBase += ms;
-	player._pMaxMana += ms;
-	if (HasNoneOf(player._pIFlags, ItemSpecialEffect::NoMana)) {
-		player._pManaBase += ms;
-		player._pMana += ms;
+	player.baseMaxMana += ms;
+	player.maxMana += ms;
+	if (HasNoneOf(player.flags, ItemSpecialEffect::NoMana)) {
+		player.baseMana += ms;
+		player.mana += ms;
 	}
 
 	CalcPlrInv(player, true);
 
 	if (&player == MyPlayer) {
-		NetSendCmdParam1(false, CMD_SETMAG, player._pBaseMag);
+		NetSendCmdParam1(false, CMD_SETMAG, player.baseMagic);
 	}
 }
 
 void ModifyPlrDex(Player &player, int l)
 {
-	l = std::clamp(l, 0 - player._pBaseDex, player.GetMaximumAttributeValue(CharacterAttribute::Dexterity) - player._pBaseDex);
+	l = std::clamp(l, 0 - player.baseDexterity, player.GetMaximumAttributeValue(CharacterAttribute::Dexterity) - player.baseDexterity);
 
-	player._pDexterity += l;
-	player._pBaseDex += l;
+	player.dexterity += l;
+	player.baseDexterity += l;
 	CalcPlrInv(player, true);
 
 	if (&player == MyPlayer) {
-		NetSendCmdParam1(false, CMD_SETDEX, player._pBaseDex);
+		NetSendCmdParam1(false, CMD_SETDEX, player.baseDexterity);
 	}
 }
 
 void ModifyPlrVit(Player &player, int l)
 {
-	l = std::clamp(l, 0 - player._pBaseVit, player.GetMaximumAttributeValue(CharacterAttribute::Vitality) - player._pBaseVit);
+	l = std::clamp(l, 0 - player.baseVitality, player.GetMaximumAttributeValue(CharacterAttribute::Vitality) - player.baseVitality);
 
-	player._pVitality += l;
-	player._pBaseVit += l;
+	player.vitality += l;
+	player.baseVitality += l;
 
 	int ms = l;
 	ms *= player.getClassAttributes().chrLife;
 
-	player._pHPBase += ms;
-	player._pMaxHPBase += ms;
-	player._pHitPoints += ms;
-	player._pMaxHP += ms;
+	player.baseLife += ms;
+	player.baseMaxLife += ms;
+	player.life += ms;
+	player.maxLife += ms;
 
 	CalcPlrInv(player, true);
 
 	if (&player == MyPlayer) {
-		NetSendCmdParam1(false, CMD_SETVIT, player._pBaseVit);
+		NetSendCmdParam1(false, CMD_SETVIT, player.baseVitality);
 	}
 }
 
 void SetPlayerHitPoints(Player &player, int val)
 {
-	player._pHitPoints = val;
-	player._pHPBase = val + player._pMaxHPBase - player._pMaxHP;
+	player.life = val;
+	player.baseLife = val + player.baseMaxLife - player.maxLife;
 
 	if (&player == MyPlayer) {
 		RedrawComponent(PanelDrawComponent::Health);
@@ -3360,44 +3358,44 @@ void SetPlayerHitPoints(Player &player, int val)
 
 void SetPlrStr(Player &player, int v)
 {
-	player._pBaseStr = v;
+	player.baseStrength = v;
 	CalcPlrInv(player, true);
 }
 
 void SetPlrMag(Player &player, int v)
 {
-	player._pBaseMag = v;
+	player.baseMagic = v;
 
 	int m = v;
 	m *= player.getClassAttributes().chrMana;
 
-	player._pMaxManaBase = m;
-	player._pMaxMana = m;
+	player.baseMaxMana = m;
+	player.maxMana = m;
 	CalcPlrInv(player, true);
 }
 
 void SetPlrDex(Player &player, int v)
 {
-	player._pBaseDex = v;
+	player.baseDexterity = v;
 	CalcPlrInv(player, true);
 }
 
 void SetPlrVit(Player &player, int v)
 {
-	player._pBaseVit = v;
+	player.baseVitality = v;
 
 	int hp = v;
 	hp *= player.getClassAttributes().chrLife;
 
-	player._pHPBase = hp;
-	player._pMaxHPBase = hp;
+	player.baseLife = hp;
+	player.baseMaxLife = hp;
 	CalcPlrInv(player, true);
 }
 
 void InitDungMsgs(Player &player)
 {
-	player.pDungMsgs = 0;
-	player.pDungMsgs2 = 0;
+	player.dungeonMessages = 0;
+	player.dungeonMessages2 = 0;
 }
 
 enum {
@@ -3415,44 +3413,44 @@ void PlayDungMsgs()
 	assert(MyPlayer != nullptr);
 	Player &myPlayer = *MyPlayer;
 
-	if (!setlevel && currlevel == 1 && !myPlayer._pLvlVisited[1] && (myPlayer.pDungMsgs & DungMsgCathedral) == 0) {
+	if (!setlevel && currlevel == 1 && !myPlayer.isLevelVisted[1] && (myPlayer.dungeonMessages & DungMsgCathedral) == 0) {
 		myPlayer.Say(HeroSpeech::TheSanctityOfThisPlaceHasBeenFouled, 40);
-		myPlayer.pDungMsgs = myPlayer.pDungMsgs | DungMsgCathedral;
-	} else if (!setlevel && currlevel == 5 && !myPlayer._pLvlVisited[5] && (myPlayer.pDungMsgs & DungMsgCatacombs) == 0) {
+		myPlayer.dungeonMessages = myPlayer.dungeonMessages | DungMsgCathedral;
+	} else if (!setlevel && currlevel == 5 && !myPlayer.isLevelVisted[5] && (myPlayer.dungeonMessages & DungMsgCatacombs) == 0) {
 		myPlayer.Say(HeroSpeech::TheSmellOfDeathSurroundsMe, 40);
-		myPlayer.pDungMsgs |= DungMsgCatacombs;
-	} else if (!setlevel && currlevel == 9 && !myPlayer._pLvlVisited[9] && (myPlayer.pDungMsgs & DungMsgCaves) == 0) {
+		myPlayer.dungeonMessages |= DungMsgCatacombs;
+	} else if (!setlevel && currlevel == 9 && !myPlayer.isLevelVisted[9] && (myPlayer.dungeonMessages & DungMsgCaves) == 0) {
 		myPlayer.Say(HeroSpeech::ItsHotDownHere, 40);
-		myPlayer.pDungMsgs |= DungMsgCaves;
-	} else if (!setlevel && currlevel == 13 && !myPlayer._pLvlVisited[13] && (myPlayer.pDungMsgs & DungMsgHell) == 0) {
+		myPlayer.dungeonMessages |= DungMsgCaves;
+	} else if (!setlevel && currlevel == 13 && !myPlayer.isLevelVisted[13] && (myPlayer.dungeonMessages & DungMsgHell) == 0) {
 		myPlayer.Say(HeroSpeech::IMustBeGettingClose, 40);
-		myPlayer.pDungMsgs |= DungMsgHell;
-	} else if (!setlevel && currlevel == 16 && !myPlayer._pLvlVisited[16] && (myPlayer.pDungMsgs & DungMsgDiablo) == 0) {
+		myPlayer.dungeonMessages |= DungMsgHell;
+	} else if (!setlevel && currlevel == 16 && !myPlayer.isLevelVisted[16] && (myPlayer.dungeonMessages & DungMsgDiablo) == 0) {
 		for (auto &monster : Monsters) {
 			if (monster.type().type != MT_DIABLO) continue;
 			if (monster.hitPoints > 0) {
 				sfxdelay = 40;
 				sfxdnum = SfxID::DiabloGreeting;
-				myPlayer.pDungMsgs |= DungMsgDiablo;
+				myPlayer.dungeonMessages |= DungMsgDiablo;
 			}
 			break;
 		}
-	} else if (!setlevel && currlevel == 17 && !myPlayer._pLvlVisited[17] && (myPlayer.pDungMsgs2 & 1) == 0) {
+	} else if (!setlevel && currlevel == 17 && !myPlayer.isLevelVisted[17] && (myPlayer.dungeonMessages2 & 1) == 0) {
 		sfxdelay = 10;
 		sfxdnum = SfxID::Defiler1;
 		Quests[Q_DEFILER]._qactive = QUEST_ACTIVE;
 		Quests[Q_DEFILER]._qlog = true;
 		Quests[Q_DEFILER]._qmsg = TEXT_DEFILER1;
 		NetSendCmdQuest(true, Quests[Q_DEFILER]);
-		myPlayer.pDungMsgs2 |= 1;
-	} else if (!setlevel && currlevel == 19 && !myPlayer._pLvlVisited[19] && (myPlayer.pDungMsgs2 & 4) == 0) {
+		myPlayer.dungeonMessages2 |= 1;
+	} else if (!setlevel && currlevel == 19 && !myPlayer.isLevelVisted[19] && (myPlayer.dungeonMessages2 & 4) == 0) {
 		sfxdelay = 10;
 		sfxdnum = SfxID::Defiler3;
-		myPlayer.pDungMsgs2 |= 4;
-	} else if (!setlevel && currlevel == 21 && !myPlayer._pLvlVisited[21] && (myPlayer.pDungMsgs & 32) == 0) {
+		myPlayer.dungeonMessages2 |= 4;
+	} else if (!setlevel && currlevel == 21 && !myPlayer.isLevelVisted[21] && (myPlayer.dungeonMessages & 32) == 0) {
 		myPlayer.Say(HeroSpeech::ThisIsAPlaceOfGreatPower, 30);
-		myPlayer.pDungMsgs |= 32;
-	} else if (setlevel && setlvlnum == SL_SKELKING && !gbIsSpawn && !myPlayer._pSLvlVisited[SL_SKELKING] && Quests[Q_SKELKING]._qactive == QUEST_ACTIVE) {
+		myPlayer.dungeonMessages |= 32;
+	} else if (setlevel && setlvlnum == SL_SKELKING && !gbIsSpawn && !myPlayer.isSetLevelVisted[SL_SKELKING] && Quests[Q_SKELKING]._qactive == QUEST_ACTIVE) {
 		sfxdelay = 10;
 		sfxdnum = SfxID::LeoricGreeting;
 	} else {

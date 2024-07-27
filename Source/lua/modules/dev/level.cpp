@@ -97,7 +97,7 @@ std::string DebugCmdResetLevel(uint8_t level, std::optional<int> seed)
 	if (myPlayer.isOnLevel(level))
 		return "Unable to reset dungeon levels occupied by players!";
 
-	myPlayer._pLvlVisited[level] = false;
+	myPlayer.isLevelVisted[level] = false;
 	DeltaClearLevel(level);
 
 	if (seed.has_value()) {

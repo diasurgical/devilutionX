@@ -251,9 +251,9 @@ void LoadItemData(LoadHelper &file, Item &item)
 	item.position.y = file.NextLE<int32_t>();
 	item._iAnimFlag = file.NextBool32();
 	file.Skip(4); // Skip pointer _iAnimData
-	item.AnimInfo = {};
-	item.AnimInfo.numberOfFrames = file.NextLENarrow<int32_t, int8_t>();
-	item.AnimInfo.currentFrame = file.NextLENarrow<int32_t, int8_t>(-1);
+	item.animationInfo = {};
+	item.animationInfo.numberOfFrames = file.NextLENarrow<int32_t, int8_t>();
+	item.animationInfo.currentFrame = file.NextLENarrow<int32_t, int8_t>(-1);
 	file.Skip(8); // Skip _iAnimWidth and _iAnimWidth2
 	file.Skip(4); // Unused since 1.02
 	item._iSelFlag = file.NextLE<uint8_t>();
@@ -338,18 +338,18 @@ void LoadAndValidateItemData(LoadHelper &file, Item &item)
 
 void LoadPlayer(LoadHelper &file, Player &player)
 {
-	player._pmode = static_cast<PLR_MODE>(file.NextLE<int32_t>());
+	player.mode = static_cast<PLR_MODE>(file.NextLE<int32_t>());
 
-	for (int8_t &step : player.walkpath) {
+	for (int8_t &step : player.walkPath) {
 		step = file.NextLE<int8_t>();
 	}
-	player.plractive = file.NextBool8();
+	player.isPlayerActive = file.NextBool8();
 	file.Skip(2); // Alignment
-	player.destAction = static_cast<action_id>(file.NextLE<int32_t>());
-	player.destParam1 = file.NextLE<int32_t>();
-	player.destParam2 = file.NextLE<int32_t>();
-	player.destParam3 = file.NextLE<int32_t>();
-	player.destParam4 = file.NextLE<int32_t>();
+	player.destinationAction = static_cast<action_id>(file.NextLE<int32_t>());
+	player.destinationParam1 = file.NextLE<int32_t>();
+	player.destinationParam2 = file.NextLE<int32_t>();
+	player.destinationParam3 = file.NextLE<int32_t>();
+	player.destinationParam4 = file.NextLE<int32_t>();
 	player.setLevel(file.NextLE<uint32_t>());
 	player.position.tile.x = file.NextLE<int32_t>();
 	player.position.tile.y = file.NextLE<int32_t>();
@@ -361,15 +361,15 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	player.position.old.x = file.NextLE<int32_t>();
 	player.position.old.y = file.NextLE<int32_t>();
 	file.Skip<int32_t>(4); // Skip offset and velocity
-	player._pdir = static_cast<Direction>(file.NextLE<int32_t>());
+	player.direction = static_cast<Direction>(file.NextLE<int32_t>());
 	file.Skip(4); // Unused
-	player._pgfxnum = file.NextLENarrow<uint32_t, uint8_t>();
+	player.graphic = file.NextLENarrow<uint32_t, uint8_t>();
 	file.Skip<uint32_t>(); // Skip pointer pData
-	player.AnimInfo = {};
-	player.AnimInfo.ticksPerFrame = file.NextLENarrow<int32_t, int8_t>(1);
-	player.AnimInfo.tickCounterOfCurrentFrame = file.NextLENarrow<int32_t, int8_t>();
-	player.AnimInfo.numberOfFrames = file.NextLENarrow<int32_t, int8_t>();
-	player.AnimInfo.currentFrame = file.NextLENarrow<int32_t, int8_t>(-1);
+	player.animationInfo = {};
+	player.animationInfo.ticksPerFrame = file.NextLENarrow<int32_t, int8_t>(1);
+	player.animationInfo.tickCounterOfCurrentFrame = file.NextLENarrow<int32_t, int8_t>();
+	player.animationInfo.numberOfFrames = file.NextLENarrow<int32_t, int8_t>();
+	player.animationInfo.currentFrame = file.NextLENarrow<int32_t, int8_t>(-1);
 	file.Skip<uint32_t>(3); // Skip _pAnimWidth, _pAnimWidth2, _peflag
 	player.lightId = file.NextLE<int32_t>();
 	file.Skip<int32_t>(); // _pvid
@@ -385,17 +385,17 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	player.inventorySpell = static_cast<SpellID>(file.NextLE<int32_t>());
 	file.Skip<int8_t>(); // Skip _pTSplType
 	file.Skip(3);        // Alignment
-	player._pRSpell = static_cast<SpellID>(file.NextLE<int32_t>());
-	player._pRSplType = static_cast<SpellType>(file.NextLE<int8_t>());
+	player.selectedSpell = static_cast<SpellID>(file.NextLE<int32_t>());
+	player.selectedSpellType = static_cast<SpellType>(file.NextLE<int8_t>());
 	file.Skip(3); // Alignment
-	player._pSBkSpell = static_cast<SpellID>(file.NextLE<int32_t>());
+	file.Skip<int32_t>(); // Skip _pSBkSpell
 	file.Skip<int8_t>(); // Skip _pSBkSplType
 
 	// Only read spell levels for learnable spells
 	for (int i = 0; i < static_cast<int>(SpellID::LAST); i++) {
 		auto spl = static_cast<SpellID>(i);
 		if (GetSpellData(spl).sBookLvl != -1)
-			player._pSplLvl[i] = file.NextLE<uint8_t>();
+			player.spellLevel[i] = file.NextLE<uint8_t>();
 		else
 			file.Skip<uint8_t>();
 	}
@@ -404,71 +404,71 @@ void LoadPlayer(LoadHelper &file, Player &player)
 		file.Skip<uint8_t>();
 	// These spells are unavailable in Diablo as learnable spells
 	if (!gbIsHellfire) {
-		player._pSplLvl[static_cast<uint8_t>(SpellID::Apocalypse)] = 0;
-		player._pSplLvl[static_cast<uint8_t>(SpellID::Nova)] = 0;
+		player.spellLevel[static_cast<uint8_t>(SpellID::Apocalypse)] = 0;
+		player.spellLevel[static_cast<uint8_t>(SpellID::Nova)] = 0;
 	}
 
 	file.Skip(7); // Alignment
-	player._pMemSpells = file.NextLE<uint64_t>();
-	player._pAblSpells = file.NextLE<uint64_t>();
-	player._pScrlSpells = file.NextLE<uint64_t>();
-	player._pSpellFlags = static_cast<SpellFlag>(file.NextLE<uint8_t>());
+	player.learnedSpells = file.NextLE<uint64_t>();
+	player.skills = file.NextLE<uint64_t>();
+	player.scrollSpells = file.NextLE<uint64_t>();
+	player.spellFlags = static_cast<SpellFlag>(file.NextLE<uint8_t>());
 	file.Skip(3); // Alignment
 
 	// Extra hotkeys: to keep single player save compatibility, read only 4 hotkeys here, rely on LoadHotkeys for the rest
 	for (size_t i = 0; i < 4; i++) {
-		player._pSplHotKey[i] = static_cast<SpellID>(file.NextLE<int32_t>());
+		player.hotkeySpell[i] = static_cast<SpellID>(file.NextLE<int32_t>());
 	}
 	for (size_t i = 0; i < 4; i++) {
-		player._pSplTHotKey[i] = static_cast<SpellType>(file.NextLE<uint8_t>());
+		player.hotkeySpellType[i] = static_cast<SpellType>(file.NextLE<uint8_t>());
 	}
 
 	file.Skip<int32_t>(); // Skip _pwtype
-	player._pBlockFlag = file.NextBool8();
-	player._pInvincible = file.NextBool8();
-	player._pLightRad = file.NextLE<int8_t>();
-	player._pLvlChanging = file.NextBool8();
+	player.hasBlockFlag = file.NextBool8();
+	player.isInvincible = file.NextBool8();
+	player.lightRadius = file.NextLE<int8_t>();
+	player.isChangingLevel = file.NextBool8();
 
-	file.NextBytes(player._pName, PlayerNameLength);
-	player._pClass = static_cast<HeroClass>(file.NextLE<int8_t>());
+	file.NextBytes(player.name, PlayerNameLength);
+	player.heroClass = static_cast<HeroClass>(file.NextLE<int8_t>());
 	file.Skip(3); // Alignment
-	player._pStrength = file.NextLE<int32_t>();
-	player._pBaseStr = file.NextLE<int32_t>();
-	player._pMagic = file.NextLE<int32_t>();
-	player._pBaseMag = file.NextLE<int32_t>();
-	player._pDexterity = file.NextLE<int32_t>();
-	player._pBaseDex = file.NextLE<int32_t>();
-	player._pVitality = file.NextLE<int32_t>();
-	player._pBaseVit = file.NextLE<int32_t>();
-	player._pStatPts = file.NextLE<int32_t>();
-	player._pDamageMod = file.NextLE<int32_t>();
+	player.strength = file.NextLE<int32_t>();
+	player.baseStrength = file.NextLE<int32_t>();
+	player.magic = file.NextLE<int32_t>();
+	player.baseMagic = file.NextLE<int32_t>();
+	player.dexterity = file.NextLE<int32_t>();
+	player.baseDexterity = file.NextLE<int32_t>();
+	player.vitality = file.NextLE<int32_t>();
+	player.baseVitality = file.NextLE<int32_t>();
+	player.statPoints = file.NextLE<int32_t>();
+	player.damageModifier = file.NextLE<int32_t>();
 	file.Skip<int32_t>(); // Skip _pBaseToBlk - always a copy of PlayerData.blockBonus
-	player._pHPBase = file.NextLE<int32_t>();
-	player._pMaxHPBase = file.NextLE<int32_t>();
-	player._pHitPoints = file.NextLE<int32_t>();
-	player._pMaxHP = file.NextLE<int32_t>();
-	file.Skip<int32_t>(); // Skip _pHPPer - always derived from hp and maxHP.
-	player._pManaBase = file.NextLE<int32_t>();
-	player._pMaxManaBase = file.NextLE<int32_t>();
-	player._pMana = file.NextLE<int32_t>();
-	player._pMaxMana = file.NextLE<int32_t>();
-	file.Skip<int32_t>(); // Skip _pManaPer - always derived from mana and maxMana
+	player.baseLife = file.NextLE<int32_t>();
+	player.baseMaxLife = file.NextLE<int32_t>();
+	player.life = file.NextLE<int32_t>();
+	player.maxLife = file.NextLE<int32_t>();
+	file.Skip<int32_t>(); // Skip lifePercentage - always derived from hp and maxHP.
+	player.baseMana = file.NextLE<int32_t>();
+	player.baseMaxMana = file.NextLE<int32_t>();
+	player.mana = file.NextLE<int32_t>();
+	player.maxMana = file.NextLE<int32_t>();
+	file.Skip<int32_t>(); // Skip manaPercentage - always derived from mana and maxMana
 	player.setCharacterLevel(file.NextLE<uint8_t>());
 	file.Skip<uint8_t>(); // Skip _pMaxLevel - unused
 	file.Skip(2);         // Alignment
-	player._pExperience = file.NextLE<uint32_t>();
+	player.experience = file.NextLE<uint32_t>();
 	file.Skip<uint32_t>(); // Skip _pMaxExp - unused
-	file.Skip<uint32_t>(); // Skip _pNextExper, we retrieve it when needed based on _pLevel
-	player._pArmorClass = file.NextLE<int8_t>();
-	player._pMagResist = file.NextLE<int8_t>();
-	player._pFireResist = file.NextLE<int8_t>();
-	player._pLghtResist = file.NextLE<int8_t>();
-	player._pGold = file.NextLE<int32_t>();
-	player._pInfraFlag = file.NextBool32();
+	file.Skip<uint32_t>(); // Skip _pNextExper, we retrieve it when needed based on characterLevel
+	file.Skip<int8_t>(); // Skip _pArmorClass - unused
+	player.resistMagic = file.NextLE<int8_t>();
+	player.resistFire = file.NextLE<int8_t>();
+	player.resistLightning = file.NextLE<int8_t>();
+	player.gold = file.NextLE<int32_t>();
+	player.hasInfravisionFlag = file.NextBool32();
 
 	int32_t tempPositionX = file.NextLE<int32_t>();
 	int32_t tempPositionY = file.NextLE<int32_t>();
-	if (player._pmode == PM_WALK_NORTHWARDS) {
+	if (player.mode == PM_WALK_NORTHWARDS) {
 		// These values are saved as offsets to remain consistent with old savefiles
 		tempPositionX += player.position.tile.x;
 		tempPositionY += player.position.tile.y;
@@ -483,101 +483,101 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	file.Skip<uint32_t>(); // Skip actionFrame
 
 	for (uint8_t i = 0; i < giNumberOfLevels; i++)
-		player._pLvlVisited[i] = file.NextBool8();
+		player.isLevelVisted[i] = file.NextBool8();
 
 	for (uint8_t i = 0; i < giNumberOfLevels; i++)
-		player._pSLvlVisited[i] = file.NextBool8();
+		player.isSetLevelVisted[i] = file.NextBool8();
 
 	file.Skip(2);           // Alignment
 	file.Skip<uint32_t>();  // skip _pGFXLoad
 	file.Skip<uint32_t>(8); // Skip pointers _pNAnim
-	player._pNFrames = file.NextLENarrow<int32_t, int8_t>();
+	player.numIdleFrames = file.NextLENarrow<int32_t, int8_t>();
 	file.Skip<uint32_t>();  // skip _pNWidth
 	file.Skip<uint32_t>(8); // Skip pointers _pWAnim
-	player._pWFrames = file.NextLENarrow<int32_t, int8_t>();
+	player.numWalkFrames = file.NextLENarrow<int32_t, int8_t>();
 	file.Skip<uint32_t>();  // skip _pWWidth
 	file.Skip<uint32_t>(8); // Skip pointers _pAAnim
-	player._pAFrames = file.NextLENarrow<int32_t, int8_t>();
+	player.numAttackFrames = file.NextLENarrow<int32_t, int8_t>();
 	file.Skip<uint32_t>(); // skip _pAWidth
-	player._pAFNum = file.NextLENarrow<int32_t, int8_t>();
+	player.attackActionFrame = file.NextLENarrow<int32_t, int8_t>();
 	file.Skip<uint32_t>(8); // Skip pointers _pLAnim
 	file.Skip<uint32_t>(8); // Skip pointers _pFAnim
 	file.Skip<uint32_t>(8); // Skip pointers _pTAnim
-	player._pSFrames = file.NextLENarrow<int32_t, int8_t>();
+	player.numSpellFrames = file.NextLENarrow<int32_t, int8_t>();
 	file.Skip<uint32_t>(); // skip _pSWidth
-	player._pSFNum = file.NextLENarrow<int32_t, int8_t>();
+	player.spellActionFrame = file.NextLENarrow<int32_t, int8_t>();
 	file.Skip<uint32_t>(8); // Skip pointers _pHAnim
-	player._pHFrames = file.NextLENarrow<int32_t, int8_t>();
+	player.numRecoveryFrames = file.NextLENarrow<int32_t, int8_t>();
 	file.Skip<uint32_t>();  // skip _pHWidth
 	file.Skip<uint32_t>(8); // Skip pointers _pDAnim
-	player._pDFrames = file.NextLENarrow<int32_t, int8_t>();
+	player.numDeathFrames = file.NextLENarrow<int32_t, int8_t>();
 	file.Skip<uint32_t>();  // skip _pDWidth
 	file.Skip<uint32_t>(8); // Skip pointers _pBAnim
-	player._pBFrames = file.NextLENarrow<int32_t, int8_t>();
+	player.numBlockFrames = file.NextLENarrow<int32_t, int8_t>();
 	file.Skip<uint32_t>(); // skip _pBWidth
 
-	for (Item &item : player.InvBody)
+	for (Item &item : player.bodySlot)
 		LoadAndValidateItemData(file, item);
 
-	for (Item &item : player.InvList)
+	for (Item &item : player.inventorySlot)
 		LoadAndValidateItemData(file, item);
 
-	player._pNumInv = file.NextLE<int32_t>();
+	player.numInventoryItems = file.NextLE<int32_t>();
 
-	for (int8_t &cell : player.InvGrid)
+	for (int8_t &cell : player.inventoryGrid)
 		cell = file.NextLE<int8_t>();
 
-	for (Item &item : player.SpdList)
+	for (Item &item : player.beltSlot)
 		LoadAndValidateItemData(file, item);
 
-	LoadAndValidateItemData(file, player.HoldItem);
+	LoadAndValidateItemData(file, player.heldItem);
 
-	player._pIMinDam = file.NextLE<int32_t>();
-	player._pIMaxDam = file.NextLE<int32_t>();
-	player._pIAC = file.NextLE<int32_t>();
-	player._pIBonusDam = file.NextLE<int32_t>();
-	player._pIBonusToHit = file.NextLE<int32_t>();
-	player._pIBonusAC = file.NextLE<int32_t>();
-	player._pIBonusDamMod = file.NextLE<int32_t>();
+	player.minDamage = file.NextLE<int32_t>();
+	player.maxDamage = file.NextLE<int32_t>();
+	player.armorClass = file.NextLE<int32_t>();
+	player.bonusDamagePercent = file.NextLE<int32_t>();
+	player.bonusToHit = file.NextLE<int32_t>();
+	player.bonusArmorClass = file.NextLE<int32_t>();
+	player.bonusDamage = file.NextLE<int32_t>();
 	file.Skip(4); // Alignment
 
-	player._pISpells = file.NextLE<uint64_t>();
-	player._pIFlags = static_cast<ItemSpecialEffect>(file.NextLE<int32_t>());
-	player._pIGetHit = file.NextLE<int32_t>();
-	player._pISplLvlAdd = file.NextLE<int8_t>();
+	player.staffSpells = file.NextLE<uint64_t>();
+	player.flags = static_cast<ItemSpecialEffect>(file.NextLE<int32_t>());
+	player.damageFromEnemies = file.NextLE<int32_t>();
+	player.bonusSpellLevel = file.NextLE<int8_t>();
 	file.Skip(1);         // Unused
 	file.Skip(2);         // Alignment
 	file.Skip<int32_t>(); // _pISplDur
-	player._pIEnAc = file.NextLE<int32_t>();
-	player._pIFMinDam = file.NextLE<int32_t>();
-	player._pIFMaxDam = file.NextLE<int32_t>();
-	player._pILMinDam = file.NextLE<int32_t>();
-	player._pILMaxDam = file.NextLE<int32_t>();
-	player._pOilType = static_cast<item_misc_id>(file.NextLE<int32_t>());
-	player.pTownWarps = file.NextLE<uint8_t>();
-	player.pDungMsgs = file.NextLE<uint8_t>();
-	player.pLvlLoad = file.NextLE<uint8_t>();
+	player.armorPierce = file.NextLE<int32_t>();
+	player.minFireDamage = file.NextLE<int32_t>();
+	player.maxFireDamage = file.NextLE<int32_t>();
+	player.minLightningDamage = file.NextLE<int32_t>();
+	player.maxLightningDamage = file.NextLE<int32_t>();
+	player.oilType = static_cast<item_misc_id>(file.NextLE<int32_t>());
+	player.townWarps = file.NextLE<uint8_t>();
+	player.dungeonMessages = file.NextLE<uint8_t>();
+	player.levelLoading = file.NextLE<uint8_t>();
 
 	if (gbIsHellfireSaveGame) {
-		player.pDungMsgs2 = file.NextLE<uint8_t>();
+		player.dungeonMessages2 = file.NextLE<uint8_t>();
 	} else {
-		player.pDungMsgs2 = 0;
+		player.dungeonMessages2 = 0;
 		file.Skip(1); // pBattleNet
 	}
-	player.pManaShield = file.NextBool8();
+	player.hasManaShield = file.NextBool8();
 	if (gbIsHellfireSaveGame) {
-		player.pOriginalCathedral = file.NextBool8();
+		player.originalCathedral = file.NextBool8();
 	} else {
 		file.Skip(1);
-		player.pOriginalCathedral = true;
+		player.originalCathedral = true;
 	}
 	file.Skip(2); // Available bytes
-	player.wReflections = file.NextLE<uint16_t>();
+	player.reflections = file.NextLE<uint16_t>();
 	file.Skip(14); // Available bytes
 
-	player.pDiabloKillLevel = file.NextLE<uint32_t>();
+	player.difficultyCompletion = file.NextLE<uint32_t>();
 	sgGameInitInfo.nDifficulty = static_cast<_difficulty>(file.NextLE<uint32_t>());
-	player.pDamAcFlags = static_cast<ItemSpecialEffectHf>(file.NextLE<uint32_t>());
+	player.hellfireFlags = static_cast<ItemSpecialEffectHf>(file.NextLE<uint32_t>());
 	file.Skip(20); // Available bytes
 	CalcPlrItemVals(player, false);
 
@@ -594,7 +594,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	// Omit pointer _pBData
 	// Omit pointer pReserved
 
-	// Ensure plrIsOnSetLevel and plrlevel is correctly initialized, cause in vanilla sometimes plrlevel is not updated to setlvlnum
+	// Ensure isOnSetLevel and dungeonLevel is correctly initialized, cause in vanilla sometimes dungeonLevel is not updated to setlvlnum
 	if (setlevel)
 		player.setLevel(setlvlnum);
 	else
@@ -629,12 +629,12 @@ void LoadMonster(LoadHelper *file, Monster &monster, MonsterConversionData *mons
 	file->Skip(2); // Unused
 
 	file->Skip(4); // Skip pointer _mAnimData
-	monster.animInfo = {};
-	monster.animInfo.ticksPerFrame = file->NextLENarrow<int32_t, int8_t>();
+	monster.animationInfo = {};
+	monster.animationInfo.ticksPerFrame = file->NextLENarrow<int32_t, int8_t>();
 	// Ensure that we can increase the tickCounterOfCurrentFrame at least once without overflow (needed for backwards compatibility for sitting gargoyles)
-	monster.animInfo.tickCounterOfCurrentFrame = file->NextLENarrow<int32_t, int8_t>(1) - 1;
-	monster.animInfo.numberOfFrames = file->NextLENarrow<int32_t, int8_t>();
-	monster.animInfo.currentFrame = file->NextLENarrow<int32_t, int8_t>(-1);
+	monster.animationInfo.tickCounterOfCurrentFrame = file->NextLENarrow<int32_t, int8_t>(1) - 1;
+	monster.animationInfo.numberOfFrames = file->NextLENarrow<int32_t, int8_t>();
+	monster.animationInfo.currentFrame = file->NextLENarrow<int32_t, int8_t>(-1);
 	file->Skip(4); // Skip _meflag
 	monster.isInvalid = file->NextBool32();
 	monster.var1 = file->NextLENarrow<int32_t, int16_t>();
@@ -707,7 +707,7 @@ void LoadMonster(LoadHelper *file, Monster &monster, MonsterConversionData *mons
 	// Omit pointer name;
 
 	if (monster.mode == MonsterMode::Petrified)
-		monster.animInfo.isPetrified = true;
+		monster.animationInfo.isPetrified = true;
 }
 
 /**
@@ -1087,8 +1087,8 @@ void SaveItem(SaveHelper &file, const Item &item)
 	file.WriteLE<int32_t>(item.position.y);
 	file.WriteLE<uint32_t>(item._iAnimFlag ? 1 : 0);
 	file.Skip(4); // Skip pointer _iAnimData
-	file.WriteLE<int32_t>(item.AnimInfo.numberOfFrames);
-	file.WriteLE<int32_t>(item.AnimInfo.currentFrame + 1);
+	file.WriteLE<int32_t>(item.animationInfo.numberOfFrames);
+	file.WriteLE<int32_t>(item.animationInfo.currentFrame + 1);
 	// write _iAnimWidth for vanilla compatibility
 	file.WriteLE<int32_t>(ItemAnimWidth);
 	// write _iAnimWidth2 for vanilla compatibility
@@ -1161,17 +1161,17 @@ void SaveItem(SaveHelper &file, const Item &item)
 
 void SavePlayer(SaveHelper &file, const Player &player)
 {
-	file.WriteLE<int32_t>(player._pmode);
-	for (int8_t step : player.walkpath)
+	file.WriteLE<int32_t>(player.mode);
+	for (int8_t step : player.walkPath)
 		file.WriteLE<int8_t>(step);
-	file.WriteLE<uint8_t>(player.plractive ? 1 : 0);
+	file.WriteLE<uint8_t>(player.isPlayerActive ? 1 : 0);
 	file.Skip(2); // Alignment
-	file.WriteLE<int32_t>(player.destAction);
-	file.WriteLE<int32_t>(player.destParam1);
-	file.WriteLE<int32_t>(player.destParam2);
-	file.WriteLE<int32_t>(static_cast<int32_t>(player.destParam3));
-	file.WriteLE<int32_t>(player.destParam4);
-	file.WriteLE<uint32_t>(player.plrlevel);
+	file.WriteLE<int32_t>(player.destinationAction);
+	file.WriteLE<int32_t>(player.destinationParam1);
+	file.WriteLE<int32_t>(player.destinationParam2);
+	file.WriteLE<int32_t>(static_cast<int32_t>(player.destinationParam3));
+	file.WriteLE<int32_t>(player.destinationParam4);
+	file.WriteLE<uint32_t>(player.dungeonLevel);
 	file.WriteLE<int32_t>(player.position.tile.x);
 	file.WriteLE<int32_t>(player.position.tile.y);
 	file.WriteLE<int32_t>(player.position.future.x);
@@ -1190,22 +1190,22 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	DisplacementOf<int16_t> offset2 = {};
 	DisplacementOf<int16_t> velocity = {};
 	if (player.isWalking()) {
-		offset = player.position.CalculateWalkingOffset(player._pdir, player.AnimInfo);
-		offset2 = player.position.CalculateWalkingOffsetShifted8(player._pdir, player.AnimInfo);
-		velocity = player.position.GetWalkingVelocityShifted8(player._pdir, player.AnimInfo);
+		offset = player.position.CalculateWalkingOffset(player.direction, player.animationInfo);
+		offset2 = player.position.CalculateWalkingOffsetShifted8(player.direction, player.animationInfo);
+		velocity = player.position.GetWalkingVelocityShifted8(player.direction, player.animationInfo);
 	}
 	file.WriteLE<int32_t>(offset.deltaX);
 	file.WriteLE<int32_t>(offset.deltaY);
 	file.WriteLE<int32_t>(velocity.deltaX);
 	file.WriteLE<int32_t>(velocity.deltaY);
-	file.WriteLE<int32_t>(static_cast<int32_t>(player._pdir));
+	file.WriteLE<int32_t>(static_cast<int32_t>(player.direction));
 	file.Skip(4); // Unused
-	file.WriteLE<uint32_t>(player._pgfxnum);
+	file.WriteLE<uint32_t>(player.graphic);
 	file.Skip(4); // Skip pointer _pAnimData
-	file.WriteLE<int32_t>(std::max(0, player.AnimInfo.ticksPerFrame - 1));
-	file.WriteLE<int32_t>(player.AnimInfo.tickCounterOfCurrentFrame);
-	file.WriteLE<int32_t>(player.AnimInfo.numberOfFrames);
-	file.WriteLE<int32_t>(player.AnimInfo.currentFrame + 1);
+	file.WriteLE<int32_t>(std::max(0, player.animationInfo.ticksPerFrame - 1));
+	file.WriteLE<int32_t>(player.animationInfo.tickCounterOfCurrentFrame);
+	file.WriteLE<int32_t>(player.animationInfo.numberOfFrames);
+	file.WriteLE<int32_t>(player.animationInfo.currentFrame + 1);
 	// write _pAnimWidth for vanilla compatibility
 	const int animWidth = player.getSpriteWidth();
 	file.WriteLE<int32_t>(animWidth);
@@ -1222,77 +1222,77 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.WriteLE<int32_t>(static_cast<int8_t>(player.inventorySpell));
 	file.Skip<int8_t>(); // Skip _pTSplType
 	file.Skip(3);        // Alignment
-	file.WriteLE<int32_t>(static_cast<int8_t>(player._pRSpell));
-	file.WriteLE<int8_t>(static_cast<uint8_t>(player._pRSplType));
+	file.WriteLE<int32_t>(static_cast<int8_t>(player.selectedSpell));
+	file.WriteLE<int8_t>(static_cast<uint8_t>(player.selectedSpellType));
 	file.Skip(3); // Alignment
-	file.WriteLE<int32_t>(static_cast<int8_t>(player._pSBkSpell));
+	file.Skip<int32_t>(); // Skip _pSBkSpell
 	file.Skip<int8_t>(); // Skip _pSBkSplType
 
-	for (uint8_t spellLevel : player._pSplLvl)
+	for (uint8_t spellLevel : player.spellLevel)
 		file.WriteLE<uint8_t>(spellLevel);
 
 	file.Skip(7); // Alignment
-	file.WriteLE<uint64_t>(player._pMemSpells);
-	file.WriteLE<uint64_t>(player._pAblSpells);
-	file.WriteLE<uint64_t>(player._pScrlSpells);
-	file.WriteLE<uint8_t>(static_cast<uint8_t>(player._pSpellFlags));
+	file.WriteLE<uint64_t>(player.learnedSpells);
+	file.WriteLE<uint64_t>(player.skills);
+	file.WriteLE<uint64_t>(player.scrollSpells);
+	file.WriteLE<uint8_t>(static_cast<uint8_t>(player.spellFlags));
 	file.Skip(3); // Alignment
 
 	// Extra hotkeys: to keep single player save compatibility, write only 4 hotkeys here, rely on SaveHotkeys for the rest
 	for (size_t i = 0; i < 4; i++) {
-		file.WriteLE<int32_t>(static_cast<int8_t>(player._pSplHotKey[i]));
+		file.WriteLE<int32_t>(static_cast<int8_t>(player.hotkeySpell[i]));
 	}
 	for (size_t i = 0; i < 4; i++) {
-		file.WriteLE<uint8_t>(static_cast<uint8_t>(player._pSplTHotKey[i]));
+		file.WriteLE<uint8_t>(static_cast<uint8_t>(player.hotkeySpellType[i]));
 	}
 
 	file.WriteLE<int32_t>(player.UsesRangedWeapon() ? 1 : 0);
-	file.WriteLE<uint8_t>(player._pBlockFlag ? 1 : 0);
-	file.WriteLE<uint8_t>(player._pInvincible ? 1 : 0);
-	file.WriteLE<int8_t>(player._pLightRad);
-	file.WriteLE<uint8_t>(player._pLvlChanging ? 1 : 0);
+	file.WriteLE<uint8_t>(player.hasBlockFlag ? 1 : 0);
+	file.WriteLE<uint8_t>(player.isInvincible ? 1 : 0);
+	file.WriteLE<int8_t>(player.lightRadius);
+	file.WriteLE<uint8_t>(player.isChangingLevel ? 1 : 0);
 
-	file.WriteBytes(player._pName, PlayerNameLength);
-	file.WriteLE<int8_t>(static_cast<int8_t>(player._pClass));
+	file.WriteBytes(player.name, PlayerNameLength);
+	file.WriteLE<int8_t>(static_cast<int8_t>(player.heroClass));
 	file.Skip(3); // Alignment
-	file.WriteLE<int32_t>(player._pStrength);
-	file.WriteLE<int32_t>(player._pBaseStr);
-	file.WriteLE<int32_t>(player._pMagic);
-	file.WriteLE<int32_t>(player._pBaseMag);
-	file.WriteLE<int32_t>(player._pDexterity);
-	file.WriteLE<int32_t>(player._pBaseDex);
-	file.WriteLE<int32_t>(player._pVitality);
-	file.WriteLE<int32_t>(player._pBaseVit);
-	file.WriteLE<int32_t>(player._pStatPts);
-	file.WriteLE<int32_t>(player._pDamageMod);
+	file.WriteLE<int32_t>(player.strength);
+	file.WriteLE<int32_t>(player.baseStrength);
+	file.WriteLE<int32_t>(player.magic);
+	file.WriteLE<int32_t>(player.baseMagic);
+	file.WriteLE<int32_t>(player.dexterity);
+	file.WriteLE<int32_t>(player.baseDexterity);
+	file.WriteLE<int32_t>(player.vitality);
+	file.WriteLE<int32_t>(player.baseVitality);
+	file.WriteLE<int32_t>(player.statPoints);
+	file.WriteLE<int32_t>(player.damageModifier);
 
 	file.WriteLE<int32_t>(player.getBaseToBlock()); // set _pBaseToBlk for backwards compatibility
-	file.WriteLE<int32_t>(player._pHPBase);
-	file.WriteLE<int32_t>(player._pMaxHPBase);
-	file.WriteLE<int32_t>(player._pHitPoints);
-	file.WriteLE<int32_t>(player._pMaxHP);
-	file.Skip<int32_t>(); // Skip _pHPPer
-	file.WriteLE<int32_t>(player._pManaBase);
-	file.WriteLE<int32_t>(player._pMaxManaBase);
-	file.WriteLE<int32_t>(player._pMana);
-	file.WriteLE<int32_t>(player._pMaxMana);
-	file.Skip<int32_t>(); // Skip _pManaPer
+	file.WriteLE<int32_t>(player.baseLife);
+	file.WriteLE<int32_t>(player.baseMaxLife);
+	file.WriteLE<int32_t>(player.life);
+	file.WriteLE<int32_t>(player.maxLife);
+	file.Skip<int32_t>(); // Skip lifePercentage
+	file.WriteLE<int32_t>(player.baseMana);
+	file.WriteLE<int32_t>(player.baseMaxMana);
+	file.WriteLE<int32_t>(player.mana);
+	file.WriteLE<int32_t>(player.maxMana);
+	file.Skip<int32_t>(); // Skip manaPercentage
 	file.WriteLE<uint8_t>(player.getCharacterLevel());
 	file.Skip<uint8_t>(); // skip _pMaxLevel, this value is uninitialised in most cases in Diablo/Hellfire so there's no point setting it.
 	file.Skip(2);         // Alignment
-	file.WriteLE<uint32_t>(player._pExperience);
+	file.WriteLE<uint32_t>(player.experience);
 	file.Skip<uint32_t>();                                       // Skip _pMaxExp
 	file.WriteLE<uint32_t>(player.getNextExperienceThreshold()); // set _pNextExper for backwards compatibility
-	file.WriteLE<int8_t>(player._pArmorClass);
-	file.WriteLE<int8_t>(player._pMagResist);
-	file.WriteLE<int8_t>(player._pFireResist);
-	file.WriteLE<int8_t>(player._pLghtResist);
-	file.WriteLE<int32_t>(player._pGold);
-	file.WriteLE<uint32_t>(player._pInfraFlag ? 1 : 0);
+	file.Skip<int8_t>(); // Skip _pArmorClass
+	file.WriteLE<int8_t>(player.resistMagic);
+	file.WriteLE<int8_t>(player.resistFire);
+	file.WriteLE<int8_t>(player.resistLightning);
+	file.WriteLE<int32_t>(player.gold);
+	file.WriteLE<uint32_t>(player.hasInfravisionFlag ? 1 : 0);
 
 	int32_t tempPositionX = player.position.temp.x;
 	int32_t tempPositionY = player.position.temp.y;
-	if (player._pmode == PM_WALK_NORTHWARDS) {
+	if (player.mode == PM_WALK_NORTHWARDS) {
 		// For backwards compatibility, save this as an offset
 		tempPositionX -= player.position.tile.x;
 		tempPositionY -= player.position.tile.y;
@@ -1307,94 +1307,94 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.WriteLE<int32_t>(offset2.deltaY);
 	file.Skip<int32_t>(); // Skip _pVar8
 	for (uint8_t i = 0; i < giNumberOfLevels; i++)
-		file.WriteLE<uint8_t>(player._pLvlVisited[i] ? 1 : 0);
+		file.WriteLE<uint8_t>(player.isLevelVisted[i] ? 1 : 0);
 	for (uint8_t i = 0; i < giNumberOfLevels; i++)
-		file.WriteLE<uint8_t>(player._pSLvlVisited[i] ? 1 : 0); // only 10 used
+		file.WriteLE<uint8_t>(player.isSetLevelVisted[i] ? 1 : 0); // only 10 used
 
 	file.Skip(2); // Alignment
 
 	file.Skip<int32_t>();   // Skip _pGFXLoad
 	file.Skip<uint32_t>(8); // Skip pointers _pNAnim
-	file.WriteLE<int32_t>(player._pNFrames);
+	file.WriteLE<int32_t>(player.numIdleFrames);
 	file.Skip<uint32_t>();  // Skip _pNWidth
 	file.Skip<uint32_t>(8); // Skip pointers _pWAnim
-	file.WriteLE<int32_t>(player._pWFrames);
+	file.WriteLE<int32_t>(player.numWalkFrames);
 	file.Skip<uint32_t>();  // Skip _pWWidth
 	file.Skip<uint32_t>(8); // Skip pointers _pAAnim
-	file.WriteLE<int32_t>(player._pAFrames);
+	file.WriteLE<int32_t>(player.numAttackFrames);
 	file.Skip<uint32_t>(); // Skip _pAWidth
-	file.WriteLE<int32_t>(player._pAFNum);
+	file.WriteLE<int32_t>(player.attackActionFrame);
 	file.Skip<uint32_t>(8); // Skip pointers _pLAnim
 	file.Skip<uint32_t>(8); // Skip pointers _pFAnim
 	file.Skip<uint32_t>(8); // Skip pointers _pTAnim
-	file.WriteLE<int32_t>(player._pSFrames);
+	file.WriteLE<int32_t>(player.numSpellFrames);
 	file.Skip<uint32_t>(); // Skip _pSWidth
-	file.WriteLE<int32_t>(player._pSFNum);
+	file.WriteLE<int32_t>(player.spellActionFrame);
 	file.Skip<uint32_t>(8); // Skip pointers _pHAnim
-	file.WriteLE<int32_t>(player._pHFrames);
+	file.WriteLE<int32_t>(player.numRecoveryFrames);
 	file.Skip<uint32_t>();  // Skip _pHWidth
 	file.Skip<uint32_t>(8); // Skip pointers _pDAnim
-	file.WriteLE<int32_t>(player._pDFrames);
+	file.WriteLE<int32_t>(player.numDeathFrames);
 	file.Skip<uint32_t>();  // Skip _pDWidth
 	file.Skip<uint32_t>(8); // Skip pointers _pBAnim
-	file.WriteLE<int32_t>(player._pBFrames);
+	file.WriteLE<int32_t>(player.numBlockFrames);
 	file.Skip<uint32_t>(); // Skip _pBWidth
 
-	for (const Item &item : player.InvBody)
+	for (const Item &item : player.bodySlot)
 		SaveItem(file, item);
 
-	for (const Item &item : player.InvList)
+	for (const Item &item : player.inventorySlot)
 		SaveItem(file, item);
 
-	file.WriteLE<int32_t>(player._pNumInv);
+	file.WriteLE<int32_t>(player.numInventoryItems);
 
-	for (int8_t cell : player.InvGrid)
+	for (int8_t cell : player.inventoryGrid)
 		file.WriteLE<int8_t>(cell);
 
-	for (const Item &item : player.SpdList)
+	for (const Item &item : player.beltSlot)
 		SaveItem(file, item);
 
-	SaveItem(file, player.HoldItem);
+	SaveItem(file, player.heldItem);
 
-	file.WriteLE<int32_t>(player._pIMinDam);
-	file.WriteLE<int32_t>(player._pIMaxDam);
-	file.WriteLE<int32_t>(player._pIAC);
-	file.WriteLE<int32_t>(player._pIBonusDam);
-	file.WriteLE<int32_t>(player._pIBonusToHit);
-	file.WriteLE<int32_t>(player._pIBonusAC);
-	file.WriteLE<int32_t>(player._pIBonusDamMod);
+	file.WriteLE<int32_t>(player.minDamage);
+	file.WriteLE<int32_t>(player.maxDamage);
+	file.WriteLE<int32_t>(player.armorClass);
+	file.WriteLE<int32_t>(player.bonusDamagePercent);
+	file.WriteLE<int32_t>(player.bonusToHit);
+	file.WriteLE<int32_t>(player.bonusArmorClass);
+	file.WriteLE<int32_t>(player.bonusDamage);
 	file.Skip(4); // Alignment
 
-	file.WriteLE<uint64_t>(player._pISpells);
-	file.WriteLE<int32_t>(static_cast<int32_t>(player._pIFlags));
-	file.WriteLE<int32_t>(player._pIGetHit);
+	file.WriteLE<uint64_t>(player.staffSpells);
+	file.WriteLE<int32_t>(static_cast<int32_t>(player.flags));
+	file.WriteLE<int32_t>(player.damageFromEnemies);
 
-	file.WriteLE<int8_t>(player._pISplLvlAdd);
+	file.WriteLE<int8_t>(player.bonusSpellLevel);
 	file.Skip<uint8_t>(); // Skip _pISplCost
 	file.Skip(2);         // Alignment
 	file.Skip<int32_t>(); // _pISplDur
-	file.WriteLE<int32_t>(player._pIEnAc);
-	file.WriteLE<int32_t>(player._pIFMinDam);
-	file.WriteLE<int32_t>(player._pIFMaxDam);
-	file.WriteLE<int32_t>(player._pILMinDam);
-	file.WriteLE<int32_t>(player._pILMaxDam);
-	file.WriteLE<int32_t>(player._pOilType);
-	file.WriteLE<uint8_t>(player.pTownWarps);
-	file.WriteLE<uint8_t>(player.pDungMsgs);
-	file.WriteLE<uint8_t>(player.pLvlLoad);
+	file.WriteLE<int32_t>(player.armorPierce);
+	file.WriteLE<int32_t>(player.minFireDamage);
+	file.WriteLE<int32_t>(player.maxFireDamage);
+	file.WriteLE<int32_t>(player.minLightningDamage);
+	file.WriteLE<int32_t>(player.maxLightningDamage);
+	file.WriteLE<int32_t>(player.oilType);
+	file.WriteLE<uint8_t>(player.townWarps);
+	file.WriteLE<uint8_t>(player.dungeonMessages);
+	file.WriteLE<uint8_t>(player.levelLoading);
 	if (gbIsHellfire)
-		file.WriteLE<uint8_t>(player.pDungMsgs2);
+		file.WriteLE<uint8_t>(player.dungeonMessages2);
 	else
 		file.WriteLE<uint8_t>(0);
-	file.WriteLE<uint8_t>(player.pManaShield ? 1 : 0);
-	file.WriteLE<uint8_t>(player.pOriginalCathedral ? 1 : 0);
+	file.WriteLE<uint8_t>(player.hasManaShield ? 1 : 0);
+	file.WriteLE<uint8_t>(player.originalCathedral ? 1 : 0);
 	file.Skip(2); // Available bytes
-	file.WriteLE<uint16_t>(player.wReflections);
+	file.WriteLE<uint16_t>(player.reflections);
 	file.Skip(14); // Available bytes
 
-	file.WriteLE<uint32_t>(player.pDiabloKillLevel);
+	file.WriteLE<uint32_t>(player.difficultyCompletion);
 	file.WriteLE<uint32_t>(sgGameInitInfo.nDifficulty);
-	file.WriteLE<uint32_t>(static_cast<uint32_t>(player.pDamAcFlags));
+	file.WriteLE<uint32_t>(static_cast<uint32_t>(player.hellfireFlags));
 	file.Skip(20); // Available bytes
 
 	// Omit pointer _pNData
@@ -1431,9 +1431,9 @@ void SaveMonster(SaveHelper *file, Monster &monster, MonsterConversionData *mons
 	DisplacementOf<int16_t> offset2 = {};
 	DisplacementOf<int16_t> velocity = {};
 	if (monster.isWalking()) {
-		offset = monster.position.CalculateWalkingOffset(monster.direction, monster.animInfo);
-		offset2 = monster.position.CalculateWalkingOffsetShifted4(monster.direction, monster.animInfo);
-		velocity = monster.position.GetWalkingVelocityShifted4(monster.direction, monster.animInfo);
+		offset = monster.position.CalculateWalkingOffset(monster.direction, monster.animationInfo);
+		offset2 = monster.position.CalculateWalkingOffsetShifted4(monster.direction, monster.animationInfo);
+		velocity = monster.position.GetWalkingVelocityShifted4(monster.direction, monster.animationInfo);
 	}
 	file->WriteLE<int32_t>(offset.deltaX);
 	file->WriteLE<int32_t>(offset.deltaY);
@@ -1446,10 +1446,10 @@ void SaveMonster(SaveHelper *file, Monster &monster, MonsterConversionData *mons
 	file->Skip(2); // Unused
 
 	file->Skip(4); // Skip pointer _mAnimData
-	file->WriteLE<int32_t>(monster.animInfo.ticksPerFrame);
-	file->WriteLE<int32_t>(monster.animInfo.tickCounterOfCurrentFrame);
-	file->WriteLE<int32_t>(monster.animInfo.numberOfFrames);
-	file->WriteLE<int32_t>(monster.animInfo.currentFrame + 1);
+	file->WriteLE<int32_t>(monster.animationInfo.ticksPerFrame);
+	file->WriteLE<int32_t>(monster.animationInfo.tickCounterOfCurrentFrame);
+	file->WriteLE<int32_t>(monster.animationInfo.numberOfFrames);
+	file->WriteLE<int32_t>(monster.animationInfo.currentFrame + 1);
 	file->Skip<uint32_t>(); // Skip _meflag
 	file->WriteLE<uint32_t>(monster.isInvalid ? 1 : 0);
 	file->WriteLE<int32_t>(monster.var1);
@@ -1834,7 +1834,7 @@ void SaveLevel(SaveWriter &saveWriter, LevelConversionData *levelConversionData)
 {
 	Player &myPlayer = *MyPlayer;
 
-	DoUnVision(myPlayer.position.tile, myPlayer._pLightRad); // fix for vision staying on the level
+	DoUnVision(myPlayer.position.tile, myPlayer.lightRadius); // fix for vision staying on the level
 
 	if (leveltype == DTYPE_TOWN)
 		DungeonSeeds[0] = AdvanceRndSeed();
@@ -1904,9 +1904,9 @@ void SaveLevel(SaveWriter &saveWriter, LevelConversionData *levelConversionData)
 	}
 
 	if (!setlevel)
-		myPlayer._pLvlVisited[currlevel] = true;
+		myPlayer.isLevelVisted[currlevel] = true;
 	else
-		myPlayer._pSLvlVisited[setlvlnum] = true;
+		myPlayer.isSetLevelVisted[setlvlnum] = true;
 }
 
 void LoadLevel(LevelConversionData *levelConversionData)
@@ -2006,7 +2006,7 @@ void LoadLevel(LevelConversionData *levelConversionData)
 	}
 
 	for (Player &player : Players) {
-		if (player.plractive && player.isOnActiveLevel())
+		if (player.isPlayerActive && player.isOnActiveLevel())
 			Lights[player.lightId].hasChanged = true;
 	}
 }
@@ -2229,8 +2229,8 @@ void LoadHotkeys()
 	size_t nHotkeys = 4; // Defaults to old save format number
 
 	// Refill the spell arrays with no selection
-	std::fill(myPlayer._pSplHotKey, myPlayer._pSplHotKey + NumHotkeys, SpellID::Invalid);
-	std::fill(myPlayer._pSplTHotKey, myPlayer._pSplTHotKey + NumHotkeys, SpellType::Invalid);
+	std::fill(myPlayer.hotkeySpell, myPlayer.hotkeySpell + NumHotkeys, SpellID::Invalid);
+	std::fill(myPlayer.hotkeySpellType, myPlayer.hotkeySpellType + NumHotkeys, SpellType::Invalid);
 
 	// Checking if the save file has the old format with only 4 hotkeys and no header
 	if (file.IsValid(HotkeysSize(nHotkeys))) {
@@ -2242,7 +2242,7 @@ void LoadHotkeys()
 	for (size_t i = 0; i < nHotkeys; i++) {
 		// Do not load hotkeys past the size of the spell types array, discard the rest
 		if (i < NumHotkeys) {
-			myPlayer._pSplHotKey[i] = static_cast<SpellID>(file.NextLE<int32_t>());
+			myPlayer.hotkeySpell[i] = static_cast<SpellID>(file.NextLE<int32_t>());
 		} else {
 			file.Skip<int32_t>();
 		}
@@ -2250,15 +2250,15 @@ void LoadHotkeys()
 	for (size_t i = 0; i < nHotkeys; i++) {
 		// Do not load hotkeys past the size of the spells array, discard the rest
 		if (i < NumHotkeys) {
-			myPlayer._pSplTHotKey[i] = static_cast<SpellType>(file.NextLE<uint8_t>());
+			myPlayer.hotkeySpellType[i] = static_cast<SpellType>(file.NextLE<uint8_t>());
 		} else {
 			file.Skip<uint8_t>();
 		}
 	}
 
 	// Load the selected spell last
-	myPlayer._pRSpell = static_cast<SpellID>(file.NextLE<int32_t>());
-	myPlayer._pRSplType = static_cast<SpellType>(file.NextLE<uint8_t>());
+	myPlayer.selectedSpell = static_cast<SpellID>(file.NextLE<int32_t>());
+	myPlayer.selectedSpellType = static_cast<SpellType>(file.NextLE<uint8_t>());
 }
 
 void SaveHotkeys(SaveWriter &saveWriter, const Player &player)
@@ -2269,16 +2269,16 @@ void SaveHotkeys(SaveWriter &saveWriter, const Player &player)
 	file.WriteLE<uint8_t>(static_cast<uint8_t>(NumHotkeys));
 
 	// Write the spell hotkeys
-	for (auto &spellId : player._pSplHotKey) {
+	for (auto &spellId : player.hotkeySpell) {
 		file.WriteLE<int32_t>(static_cast<int8_t>(spellId));
 	}
-	for (auto &spellType : player._pSplTHotKey) {
+	for (auto &spellType : player.hotkeySpellType) {
 		file.WriteLE<uint8_t>(static_cast<uint8_t>(spellType));
 	}
 
 	// Write the selected spell last
-	file.WriteLE<int32_t>(static_cast<int8_t>(player._pRSpell));
-	file.WriteLE<uint8_t>(static_cast<uint8_t>(player._pRSplType));
+	file.WriteLE<int32_t>(static_cast<int8_t>(player.selectedSpell));
+	file.WriteLE<uint8_t>(static_cast<uint8_t>(player.selectedSpellType));
 }
 
 void LoadHeroItems(Player &player)
@@ -2289,9 +2289,9 @@ void LoadHeroItems(Player &player)
 
 	gbIsHellfireSaveGame = file.NextBool8();
 
-	LoadMatchingItems(file, player, NUM_INVLOC, player.InvBody);
-	LoadMatchingItems(file, player, InventoryGridCells, player.InvList);
-	LoadMatchingItems(file, player, MaxBeltItems, player.SpdList);
+	LoadMatchingItems(file, player, NUM_INVLOC, player.bodySlot);
+	LoadMatchingItems(file, player, InventoryGridCells, player.inventorySlot);
+	LoadMatchingItems(file, player, MaxBeltItems, player.beltSlot);
 
 	gbIsHellfireSaveGame = gbIsHellfire;
 }
@@ -2340,8 +2340,8 @@ void LoadStash()
 void RemoveEmptyInventory(Player &player)
 {
 	for (int i = InventoryGridCells; i > 0; i--) {
-		int8_t idx = player.InvGrid[i - 1];
-		if (idx > 0 && player.InvList[idx - 1].isEmpty()) {
+		int8_t idx = player.inventoryGrid[i - 1];
+		if (idx > 0 && player.inventorySlot[idx - 1].isEmpty()) {
 			player.RemoveInvItem(idx - 1);
 		}
 	}
@@ -2540,15 +2540,15 @@ void LoadGame(bool firstflag)
 		ProcessLightList();
 	}
 
-	// convert stray manashield missiles into pManaShield flag
+	// convert stray manashield missiles into hasManaShield flag
 	for (auto &missile : Missiles) {
 		if (missile._mitype == MissileID::ManaShield && !missile._miDelFlag) {
-			Players[missile._misource].pManaShield = true;
+			Players[missile._misource].hasManaShield = true;
 			missile._miDelFlag = true;
 		}
 	}
 
-	SetUpMissileAnimationData();
+	SetUpMissileanimationData();
 	RedoMissileFlags();
 	NewCursor(CURSOR_HAND);
 	gbProcessPlayers = IsDiabloAlive(!firstflag);
@@ -2567,11 +2567,11 @@ void SaveHeroItems(SaveWriter &saveWriter, Player &player)
 
 	file.WriteLE<uint8_t>(gbIsHellfire ? 1 : 0);
 
-	for (const Item &item : player.InvBody)
+	for (const Item &item : player.bodySlot)
 		SaveItem(file, item);
-	for (const Item &item : player.InvList)
+	for (const Item &item : player.inventorySlot)
 		SaveItem(file, item);
-	for (const Item &item : player.SpdList)
+	for (const Item &item : player.beltSlot)
 		SaveItem(file, item);
 }
 

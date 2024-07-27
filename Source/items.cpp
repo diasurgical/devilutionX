@@ -461,7 +461,7 @@ void AddInitItems()
 
 		item._iCreateInfo = curlv | CF_PREGEN;
 		SetupItem(item);
-		item.AnimInfo.currentFrame = item.AnimInfo.numberOfFrames - 1;
+		item.animationInfo.currentFrame = item.animationInfo.numberOfFrames - 1;
 		item._iAnimFlag = false;
 		item._iSelFlag = 1;
 		DeltaAddItem(ii);
@@ -507,9 +507,9 @@ void CalcSelfItems(Player &player)
 	bool changeflag;
 	do {
 		// cap stats to 0
-		const int currstr = std::max(0, sa + player._pBaseStr);
-		const int currmag = std::max(0, ma + player._pBaseMag);
-		const int currdex = std::max(0, da + player._pBaseDex);
+		const int currstr = std::max(0, sa + player.baseStrength);
+		const int currmag = std::max(0, ma + player.baseMagic);
+		const int currdex = std::max(0, da + player.baseDexterity);
 
 		changeflag = false;
 		for (Item &equipment : EquippedPlayerItemsRange(player)) {
@@ -1031,12 +1031,12 @@ int SaveItemPower(const Player &player, Item &item, ItemPower &power)
 		item._iDamAcFlags |= ItemSpecialEffectHf::ACAgainstUndead;
 		break;
 	case IPL_MANATOLIFE: {
-		int portion = ((player._pMaxManaBase >> 6) * 50 / 100) << 6;
+		int portion = ((player.baseMaxMana >> 6) * 50 / 100) << 6;
 		item._iPLMana -= portion;
 		item._iPLHP += portion;
 	} break;
 	case IPL_LIFETOMANA: {
-		int portion = ((player._pMaxHPBase >> 6) * 40 / 100) << 6;
+		int portion = ((player.baseMaxLife >> 6) * 40 / 100) << 6;
 		item._iPLHP -= portion;
 		item._iPLMana += portion;
 	} break;
@@ -1665,7 +1665,7 @@ void SpawnRock()
 	SetupItem(item);
 	item._iSelFlag = 2;
 	item._iPostDraw = true;
-	item.AnimInfo.currentFrame = 10;
+	item.animationInfo.currentFrame = 10;
 	item._iCreateInfo |= CF_PREGEN;
 
 	DeltaAddItem(ii);
@@ -1991,9 +1991,9 @@ _item_indexes RndPremiumItem(const Player &player, int minlvl, int maxlvl)
 
 void SpawnOnePremium(Item &premiumItem, int plvl, const Player &player)
 {
-	int strength = std::max(player.GetMaximumAttributeValue(CharacterAttribute::Strength), player._pStrength);
-	int dexterity = std::max(player.GetMaximumAttributeValue(CharacterAttribute::Dexterity), player._pDexterity);
-	int magic = std::max(player.GetMaximumAttributeValue(CharacterAttribute::Magic), player._pMagic);
+	int strength = std::max(player.GetMaximumAttributeValue(CharacterAttribute::Strength), player.strength);
+	int dexterity = std::max(player.GetMaximumAttributeValue(CharacterAttribute::Dexterity), player.dexterity);
+	int magic = std::max(player.GetMaximumAttributeValue(CharacterAttribute::Magic), player.magic);
 	strength += strength / 5;
 	dexterity += dexterity / 5;
 	magic += magic / 5;
@@ -2108,13 +2108,13 @@ bool HealerItemOk(const Player &player, const ItemData &item)
 
 	if (!gbIsMultiplayer) {
 		if (item.iMiscId == IMISC_ELIXSTR)
-			return !gbIsHellfire || player._pBaseStr < player.GetMaximumAttributeValue(CharacterAttribute::Strength);
+			return !gbIsHellfire || player.baseStrength < player.GetMaximumAttributeValue(CharacterAttribute::Strength);
 		if (item.iMiscId == IMISC_ELIXMAG)
-			return !gbIsHellfire || player._pBaseMag < player.GetMaximumAttributeValue(CharacterAttribute::Magic);
+			return !gbIsHellfire || player.baseMagic < player.GetMaximumAttributeValue(CharacterAttribute::Magic);
 		if (item.iMiscId == IMISC_ELIXDEX)
-			return !gbIsHellfire || player._pBaseDex < player.GetMaximumAttributeValue(CharacterAttribute::Dexterity);
+			return !gbIsHellfire || player.baseDexterity < player.GetMaximumAttributeValue(CharacterAttribute::Dexterity);
 		if (item.iMiscId == IMISC_ELIXVIT)
-			return !gbIsHellfire || player._pBaseVit < player.GetMaximumAttributeValue(CharacterAttribute::Vitality);
+			return !gbIsHellfire || player.baseVitality < player.GetMaximumAttributeValue(CharacterAttribute::Vitality);
 	}
 
 	if (item.iMiscId == IMISC_REJUV)
@@ -2569,35 +2569,35 @@ void CalcPlrDamage(Player &player, int minDamage, int maxDamage)
 			maxDamage = 3;
 		}
 
-		if (player._pClass == HeroClass::Monk) {
+		if (player.heroClass == HeroClass::Monk) {
 			minDamage = std::max(minDamage, playerLevel / 2);
 			maxDamage = std::max<int>(maxDamage, playerLevel);
 		}
 	}
 
-	player._pIMinDam = minDamage;
-	player._pIMaxDam = maxDamage;
+	player.minDamage = minDamage;
+	player.maxDamage = maxDamage;
 }
 
 void CalcPlrPrimaryStats(Player &player, int strength, int &magic, int dexterity, int &vitality)
 {
 	const uint8_t playerLevel = player.getCharacterLevel();
 
-	if (HasAnyOf(player._pSpellFlags, SpellFlag::RageActive)) {
+	if (HasAnyOf(player.spellFlags, SpellFlag::RageActive)) {
 		strength += 2 * playerLevel;
 		dexterity += playerLevel + playerLevel / 2;
 		vitality += 2 * playerLevel;
 	}
-	if (HasAnyOf(player._pSpellFlags, SpellFlag::RageCooldown)) {
+	if (HasAnyOf(player.spellFlags, SpellFlag::RageCooldown)) {
 		strength -= 2 * playerLevel;
 		dexterity -= playerLevel + playerLevel / 2;
 		vitality -= 2 * playerLevel;
 	}
 
-	player._pStrength = std::max(0, strength + player._pBaseStr);
-	player._pMagic = std::max(0, magic + player._pBaseMag);
-	player._pDexterity = std::max(0, dexterity + player._pBaseDex);
-	player._pVitality = std::max(0, vitality + player._pBaseVit);
+	player.strength = std::max(0, strength + player.baseStrength);
+	player.magic = std::max(0, magic + player.baseMagic);
+	player.dexterity = std::max(0, dexterity + player.baseDexterity);
+	player.vitality = std::max(0, vitality + player.baseVitality);
 }
 
 void CalcPlrLightRadius(Player &player, int lrad)
@@ -2605,61 +2605,61 @@ void CalcPlrLightRadius(Player &player, int lrad)
 {
 	lrad = std::clamp(lrad, 2, 15);
 
-	if (player._pLightRad != lrad) {
+	if (player.lightRadius != lrad) {
 		ChangeLightRadius(player.lightId, lrad);
 		ChangeVisionRadius(player.getId(), lrad);
-		player._pLightRad = lrad;
+		player.lightRadius = lrad;
 	}
 }
 
 void CalcPlrDamageMod(Player &player)
 {
 	const uint8_t playerLevel = player.getCharacterLevel();
-	const Item &leftHandItem = player.InvBody[INVLOC_HAND_LEFT];
-	const Item &rightHandItem = player.InvBody[INVLOC_HAND_RIGHT];
-	const int strMod = playerLevel * player._pStrength;
-	const int strDexMod = playerLevel * (player._pStrength + player._pDexterity);
+	const Item &leftHandItem = player.bodySlot[INVLOC_HAND_LEFT];
+	const Item &rightHandItem = player.bodySlot[INVLOC_HAND_RIGHT];
+	const int strMod = playerLevel * player.strength;
+	const int strDexMod = playerLevel * (player.strength + player.dexterity);
 
-	switch (player._pClass) {
+	switch (player.heroClass) {
 	case HeroClass::Rogue:
-		player._pDamageMod = strDexMod / 200;
+		player.damageModifier = strDexMod / 200;
 		return;
 	case HeroClass::Monk:
 		if (player.isHoldingItem(ItemType::Staff) || (leftHandItem.isEmpty() && rightHandItem.isEmpty())) {
-			player._pDamageMod = strDexMod / 150;
+			player.damageModifier = strDexMod / 150;
 		} else {
-			player._pDamageMod = strDexMod / 300;
+			player.damageModifier = strDexMod / 300;
 		}
 		return;
 	case HeroClass::Bard:
 		if (player.isHoldingItem(ItemType::Sword)) {
-			player._pDamageMod = strDexMod / 150;
+			player.damageModifier = strDexMod / 150;
 		} else if (player.isHoldingItem(ItemType::Bow)) {
-			player._pDamageMod = strDexMod / 250;
+			player.damageModifier = strDexMod / 250;
 		} else {
-			player._pDamageMod = strMod / 100;
+			player.damageModifier = strMod / 100;
 		}
 		return;
 	case HeroClass::Barbarian:
 		if (player.isHoldingItem(ItemType::Axe) || player.isHoldingItem(ItemType::Mace)) {
-			player._pDamageMod = strMod / 75;
+			player.damageModifier = strMod / 75;
 		} else if (player.isHoldingItem(ItemType::Bow)) {
-			player._pDamageMod = strMod / 300;
+			player.damageModifier = strMod / 300;
 		} else {
-			player._pDamageMod = strMod / 100;
+			player.damageModifier = strMod / 100;
 		}
 		if (player.isHoldingItem(ItemType::Shield)) {
 			if (leftHandItem._itype == ItemType::Shield)
-				player._pIAC -= leftHandItem._iAC / 2;
+				player.armorClass -= leftHandItem._iAC / 2;
 			else if (rightHandItem._itype == ItemType::Shield)
-				player._pIAC -= rightHandItem._iAC / 2;
+				player.armorClass -= rightHandItem._iAC / 2;
 		} else if (!player.isHoldingItem(ItemType::Staff) && !player.isHoldingItem(ItemType::Bow)) {
-			player._pDamageMod += playerLevel * player._pVitality / 100;
+			player.damageModifier += playerLevel * player.vitality / 100;
 		}
-		player._pIAC += playerLevel / 4;
+		player.armorClass += playerLevel / 4;
 		return;
 	default:
-		player._pDamageMod = strMod / 100;
+		player.damageModifier = strMod / 100;
 		return;
 	}
 }
@@ -2668,13 +2668,13 @@ void CalcPlrResistances(Player &player, ItemSpecialEffect iflgs, int fire, int l
 {
 	const uint8_t playerLevel = player.getCharacterLevel();
 
-	if (player._pClass == HeroClass::Barbarian) {
+	if (player.heroClass == HeroClass::Barbarian) {
 		magic += playerLevel;
 		fire += playerLevel;
 		lightning += playerLevel;
 	}
 
-	if (HasAnyOf(player._pSpellFlags, SpellFlag::RageCooldown)) {
+	if (HasAnyOf(player.spellFlags, SpellFlag::RageCooldown)) {
 		magic -= playerLevel;
 		fire -= playerLevel;
 		lightning -= playerLevel;
@@ -2687,9 +2687,9 @@ void CalcPlrResistances(Player &player, ItemSpecialEffect iflgs, int fire, int l
 		lightning = 0;
 	}
 
-	player._pMagResist = std::clamp(magic, 0, MaxResistance);
-	player._pFireResist = std::clamp(fire, 0, MaxResistance);
-	player._pLghtResist = std::clamp(lightning, 0, MaxResistance);
+	player.resistMagic = std::clamp(magic, 0, MaxResistance);
+	player.resistFire = std::clamp(fire, 0, MaxResistance);
+	player.resistLightning = std::clamp(lightning, 0, MaxResistance);
 }
 
 void CalcPlrLifeMana(Player &player, int vitality, int magic, int life, int mana)
@@ -2701,40 +2701,40 @@ void CalcPlrLifeMana(Player &player, int vitality, int magic, int life, int mana
 	magic = (magic * playerClassAttributes.itmMana) >> 6;
 	mana += (magic << 6);
 
-	player._pMaxHP = life + player._pMaxHPBase;
-	player._pHitPoints = std::min(life + player._pHPBase, player._pMaxHP);
+	player.maxLife = life + player.baseMaxLife;
+	player.life = std::min(life + player.baseLife, player.maxLife);
 
-	if (&player == MyPlayer && (player._pHitPoints >> 6) <= 0) {
+	if (&player == MyPlayer && (player.life >> 6) <= 0) {
 		SetPlayerHitPoints(player, 0);
 	}
 
-	player._pMaxMana = mana + player._pMaxManaBase;
-	player._pMana = std::min(mana + player._pManaBase, player._pMaxMana);
+	player.maxMana = mana + player.baseMaxMana;
+	player.mana = std::min(mana + player.baseMana, player.maxMana);
 }
 
 void CalcPlrBlockFlag(Player &player)
 {
-	const auto &leftHandItem = player.InvBody[INVLOC_HAND_LEFT];
-	const auto &rightHandItem = player.InvBody[INVLOC_HAND_RIGHT];
+	const auto &leftHandItem = player.bodySlot[INVLOC_HAND_LEFT];
+	const auto &rightHandItem = player.bodySlot[INVLOC_HAND_RIGHT];
 
-	player._pBlockFlag = false;
+	player.hasBlockFlag = false;
 
-	if (player._pClass == HeroClass::Monk) {
+	if (player.heroClass == HeroClass::Monk) {
 		if (player.isHoldingItem(ItemType::Staff)) {
-			player._pBlockFlag = true;
-			player._pIFlags |= ItemSpecialEffect::FastBlock;
+			player.hasBlockFlag = true;
+			player.flags |= ItemSpecialEffect::FastBlock;
 		} else if ((leftHandItem.isEmpty() && rightHandItem.isEmpty()) || (leftHandItem._iClass == ICLASS_WEAPON && leftHandItem._iLoc != ILOC_TWOHAND && rightHandItem.isEmpty()) || (rightHandItem._iClass == ICLASS_WEAPON && rightHandItem._iLoc != ILOC_TWOHAND && leftHandItem.isEmpty())) {
-			player._pBlockFlag = true;
+			player.hasBlockFlag = true;
 		}
 	}
 
-	player._pBlockFlag = player._pBlockFlag || player.isHoldingItem(ItemType::Shield);
+	player.hasBlockFlag = player.hasBlockFlag || player.isHoldingItem(ItemType::Shield);
 }
 
 PlayerWeaponGraphic GetPlrAnimWeaponId(const Player &player)
 {
-	const Item &leftHandItem = player.InvBody[INVLOC_HAND_LEFT];
-	const Item &rightHandItem = player.InvBody[INVLOC_HAND_RIGHT];
+	const Item &leftHandItem = player.bodySlot[INVLOC_HAND_LEFT];
+	const Item &rightHandItem = player.bodySlot[INVLOC_HAND_RIGHT];
 	bool holdsShield = player.isHoldingItem(ItemType::Shield);
 	bool leftHandUsable = player.CanUseItem(leftHandItem);
 	bool rightHandUsable = player.CanUseItem(rightHandItem);
@@ -2766,29 +2766,29 @@ PlayerWeaponGraphic GetPlrAnimWeaponId(const Player &player)
 
 PlayerArmorGraphic GetPlrAnimArmorId(Player &player)
 {
-	const Item &chestItem = player.InvBody[INVLOC_CHEST];
+	const Item &chestItem = player.bodySlot[INVLOC_CHEST];
 	bool chestUsable = player.CanUseItem(chestItem);
 	const uint8_t playerLevel = player.getCharacterLevel();
 
 	if (chestUsable) {
 		switch (chestItem._itype) {
 		case ItemType::HeavyArmor:
-			if (player._pClass == HeroClass::Monk) {
+			if (player.heroClass == HeroClass::Monk) {
 				if (chestItem._iMagical == ITEM_QUALITY_UNIQUE)
-					player._pIAC += playerLevel / 2;
+					player.armorClass += playerLevel / 2;
 			}
 			return PlayerArmorGraphic::Heavy;
 		case ItemType::MediumArmor:
-			if (player._pClass == HeroClass::Monk) {
+			if (player.heroClass == HeroClass::Monk) {
 				if (chestItem._iMagical == ITEM_QUALITY_UNIQUE)
-					player._pIAC += playerLevel * 2;
+					player.armorClass += playerLevel * 2;
 				else
-					player._pIAC += playerLevel / 2;
+					player.armorClass += playerLevel / 2;
 			}
 			return PlayerArmorGraphic::Medium;
 		default:
-			if (player._pClass == HeroClass::Monk)
-				player._pIAC += playerLevel * 2;
+			if (player.heroClass == HeroClass::Monk)
+				player.armorClass += playerLevel * 2;
 			return PlayerArmorGraphic::Light;
 		}
 	}
@@ -2799,8 +2799,8 @@ PlayerArmorGraphic GetPlrAnimArmorId(Player &player)
 void CalcPlrGraphics(Player &player, PlayerWeaponGraphic animWeaponId, PlayerArmorGraphic animArmorId, bool loadgfx)
 {
 	const uint8_t gfxNum = static_cast<uint8_t>(animWeaponId) | static_cast<uint8_t>(animArmorId);
-	if (player._pgfxnum != gfxNum && loadgfx) {
-		player._pgfxnum = gfxNum;
+	if (player.graphic != gfxNum && loadgfx) {
+		player.graphic = gfxNum;
 		ResetPlayerGFX(player);
 		SetPlrAnims(player);
 		player.previewCelSprite = std::nullopt;
@@ -2811,10 +2811,10 @@ void CalcPlrGraphics(Player &player, PlayerWeaponGraphic animWeaponId, PlayerArm
 		LoadPlrGFX(player, graphic);
 		OptionalClxSpriteList sprites;
 		if (!HeadlessMode)
-			sprites = player.AnimationData[static_cast<size_t>(graphic)].spritesForDirection(player._pdir);
-		player.AnimInfo.changeAnimationData(sprites, numberOfFrames, ticksPerFrame);
+			sprites = player.animationData[static_cast<size_t>(graphic)].spritesForDirection(player.direction);
+		player.animationInfo.changeanimationData(sprites, numberOfFrames, ticksPerFrame);
 	} else {
-		player._pgfxnum = gfxNum;
+		player.graphic = gfxNum;
 	}
 }
 
@@ -2822,7 +2822,7 @@ void CalcPlrAuricBonus(Player &player)
 
 {
 	if (&player == MyPlayer) {
-		if (player.InvBody[INVLOC_AMULET].isEmpty() || player.InvBody[INVLOC_AMULET].IDidx != IDI_AURIC) {
+		if (player.bodySlot[INVLOC_AMULET].isEmpty() || player.bodySlot[INVLOC_AMULET].IDidx != IDI_AURIC) {
 			int half = MaxGold;
 			MaxGold = GOLD_MAX_LIMIT;
 
@@ -2874,7 +2874,7 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	int minLightDam = 0;
 	int maxLightDam = 0;
 
-	for (const Item &item : player.InvBody) {
+	for (const Item &item : player.bodySlot) {
 		if (!item.isEmpty() && item._iStatFlag) {
 
 			minDamage += item._iMinDam;
@@ -2915,26 +2915,26 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 
 	CalcPlrDamage(player, minDamage, maxDamage);
 	CalcPlrPrimaryStats(player, strength, magic, dexterity, vitality);
-	player._pIAC = ac;
-	player._pIBonusDam = dam;
-	player._pIBonusToHit = toHit;
-	player._pIBonusAC = bonusAc;
-	player._pIFlags = flags;
-	player.pDamAcFlags = damAcFlags;
-	player._pIBonusDamMod = damMod;
-	player._pIGetHit = getHit;
+	player.armorClass = ac;
+	player.bonusDamagePercent = dam;
+	player.bonusToHit = toHit;
+	player.bonusArmorClass = bonusAc;
+	player.flags = flags;
+	player.hellfireFlags = damAcFlags;
+	player.bonusDamage = damMod;
+	player.damageFromEnemies = getHit;
 	CalcPlrLightRadius(player, lightRadius);
 	CalcPlrDamageMod(player);
-	player._pISpells = spells;
+	player.staffSpells = spells;
 	EnsureValidReadiedSpell(player);
-	player._pISplLvlAdd = splLvlAdd;
-	player._pIEnAc = targetAc;
+	player.bonusSpellLevel = splLvlAdd;
+	player.armorPierce = targetAc;
 	CalcPlrResistances(player, flags, fireRes, lightRes, magicRes);
 	CalcPlrLifeMana(player, vitality, magic, life, mana);
-	player._pIFMinDam = minFireDam;
-	player._pIFMaxDam = maxFireDam;
-	player._pILMinDam = minLightDam;
-	player._pILMaxDam = maxLightDam;
+	player.minFireDamage = minFireDam;
+	player.maxFireDamage = maxFireDam;
+	player.minLightningDamage = minLightDam;
+	player.maxLightningDamage = maxLightDam;
 
 	CalcPlrBlockFlag(player);
 
@@ -3045,40 +3045,40 @@ void CreateStartingItem(Player &player, _item_indexes itemData)
 
 void CreatePlrItems(Player &player)
 {
-	for (auto &item : player.InvBody) {
+	for (auto &item : player.bodySlot) {
 		item.clear();
 	}
 
 	// converting this to a for loop creates a `rep stosd` instruction,
 	// so this probably actually was a memset
-	memset(&player.InvGrid, 0, sizeof(player.InvGrid));
+	memset(&player.inventoryGrid, 0, sizeof(player.inventoryGrid));
 
-	for (auto &item : player.InvList) {
+	for (auto &item : player.inventorySlot) {
 		item.clear();
 	}
 
-	player._pNumInv = 0;
+	player.numInventoryItems = 0;
 
-	for (auto &item : player.SpdList) {
+	for (auto &item : player.beltSlot) {
 		item.clear();
 	}
 
-	const PlayerStartingLoadoutData &loadout = GetPlayerStartingLoadoutForClass(player._pClass);
+	const PlayerStartingLoadoutData &loadout = GetPlayerStartingLoadoutForClass(player.heroClass);
 
 	if (loadout.spell != SpellID::Null && loadout.spellLevel > 0) {
-		player._pMemSpells = GetSpellBitmask(loadout.spell);
-		player._pRSplType = SpellType::Spell;
-		player._pRSpell = loadout.spell;
-		player._pSplLvl[static_cast<unsigned>(loadout.spell)] = loadout.spellLevel;
+		player.learnedSpells = GetSpellBitmask(loadout.spell);
+		player.selectedSpellType = SpellType::Spell;
+		player.selectedSpell = loadout.spell;
+		player.spellLevel[static_cast<unsigned>(loadout.spell)] = loadout.spellLevel;
 	} else {
-		player._pMemSpells = 0;
+		player.learnedSpells = 0;
 	}
 
 	if (loadout.skill != SpellID::Null) {
-		player._pAblSpells = GetSpellBitmask(loadout.skill);
-		if (player._pRSplType == SpellType::Invalid) {
-			player._pRSplType = SpellType::Skill;
-			player._pRSpell = loadout.skill;
+		player.skills = GetSpellBitmask(loadout.skill);
+		if (player.selectedSpellType == SpellType::Invalid) {
+			player.selectedSpellType = SpellType::Skill;
+			player.selectedSpell = loadout.skill;
 		}
 	}
 
@@ -3091,13 +3091,13 @@ void CreatePlrItems(Player &player)
 	FreeCursor();
 
 	if (loadout.gold > 0) {
-		Item &goldItem = player.InvList[player._pNumInv];
+		Item &goldItem = player.inventorySlot[player.numInventoryItems];
 		MakeGoldStack(goldItem, loadout.gold);
 
-		player._pNumInv++;
-		player.InvGrid[30] = player._pNumInv;
+		player.numInventoryItems++;
+		player.inventoryGrid[30] = player.numInventoryItems;
 
-		player._pGold = goldItem._ivalue;
+		player.gold = goldItem._ivalue;
 	}
 
 	CalcPlrItemVals(player, false);
@@ -3233,7 +3233,7 @@ void GetItemAttrs(Item &item, _item_indexes itemData, int lvl)
 
 void SetupItem(Item &item)
 {
-	item.setNewAnimation(MyPlayer != nullptr && MyPlayer->pLvlLoad == 0);
+	item.setNewAnimation(MyPlayer != nullptr && MyPlayer->levelLoading == 0);
 	item._iIdentified = false;
 }
 
@@ -3628,7 +3628,7 @@ void SpawnQuestItem(_item_indexes itemid, Point position, int randarea, int self
 	item._iPostDraw = true;
 	if (selflag != 0) {
 		item._iSelFlag = selflag;
-		item.AnimInfo.currentFrame = item.AnimInfo.numberOfFrames - 1;
+		item.animationInfo.currentFrame = item.animationInfo.numberOfFrames - 1;
 		item._iAnimFlag = false;
 	}
 
@@ -3717,18 +3717,18 @@ void ProcessItems()
 		auto &item = Items[ii];
 		if (!item._iAnimFlag)
 			continue;
-		item.AnimInfo.processAnimation();
+		item.animationInfo.processAnimation();
 		if (item._iCurs == ICURS_MAGIC_ROCK) {
-			if (item._iSelFlag == 1 && item.AnimInfo.currentFrame == 10)
-				item.AnimInfo.currentFrame = 0;
-			if (item._iSelFlag == 2 && item.AnimInfo.currentFrame == 20)
-				item.AnimInfo.currentFrame = 10;
+			if (item._iSelFlag == 1 && item.animationInfo.currentFrame == 10)
+				item.animationInfo.currentFrame = 0;
+			if (item._iSelFlag == 2 && item.animationInfo.currentFrame == 20)
+				item.animationInfo.currentFrame = 10;
 		} else {
-			if (item.AnimInfo.currentFrame == (item.AnimInfo.numberOfFrames - 1) / 2)
+			if (item.animationInfo.currentFrame == (item.animationInfo.numberOfFrames - 1) / 2)
 				PlaySfxLoc(ItemDropSnds[ItemCAnimTbl[item._iCurs]], item.position);
 
-			if (item.AnimInfo.isLastFrame()) {
-				item.AnimInfo.currentFrame = item.AnimInfo.numberOfFrames - 1;
+			if (item.animationInfo.isLastFrame()) {
+				item.animationInfo.currentFrame = item.animationInfo.numberOfFrames - 1;
 				item._iAnimFlag = false;
 				item._iSelFlag = 1;
 			}
@@ -3748,7 +3748,7 @@ void GetItemFrm(Item &item)
 {
 	int it = ItemCAnimTbl[item._iCurs];
 	if (itemanims[it])
-		item.AnimInfo.sprites.emplace(*itemanims[it]);
+		item.animationInfo.sprites.emplace(*itemanims[it]);
 }
 
 void GetItemStr(Item &item)
@@ -3767,9 +3767,9 @@ void CheckIdentify(Player &player, int cii)
 	Item *pi;
 
 	if (cii >= NUM_INVLOC)
-		pi = &player.InvList[cii - NUM_INVLOC];
+		pi = &player.inventorySlot[cii - NUM_INVLOC];
 	else
-		pi = &player.InvBody[cii];
+		pi = &player.bodySlot[cii];
 
 	pi->_iIdentified = true;
 	CalcPlrInv(player, true);
@@ -3782,9 +3782,9 @@ void DoRepair(Player &player, int cii)
 	PlaySfxLoc(SfxID::SpellRepair, player.position.tile);
 
 	if (cii >= NUM_INVLOC) {
-		pi = &player.InvList[cii - NUM_INVLOC];
+		pi = &player.inventorySlot[cii - NUM_INVLOC];
 	} else {
-		pi = &player.InvBody[cii];
+		pi = &player.bodySlot[cii];
 	}
 
 	RepairItem(*pi, player.getCharacterLevel());
@@ -3796,9 +3796,9 @@ void DoRecharge(Player &player, int cii)
 	Item *pi;
 
 	if (cii >= NUM_INVLOC) {
-		pi = &player.InvList[cii - NUM_INVLOC];
+		pi = &player.inventorySlot[cii - NUM_INVLOC];
 	} else {
-		pi = &player.InvBody[cii];
+		pi = &player.bodySlot[cii];
 	}
 
 	RechargeItem(*pi, player);
@@ -3809,9 +3809,9 @@ bool DoOil(Player &player, int cii)
 {
 	Item *pi;
 	if (cii >= NUM_INVLOC) {
-		pi = &player.InvList[cii - NUM_INVLOC];
+		pi = &player.inventorySlot[cii - NUM_INVLOC];
 	} else {
-		pi = &player.InvBody[cii];
+		pi = &player.bodySlot[cii];
 	}
 	if (!ApplyOilToItem(*pi, player))
 		return false;
@@ -4208,23 +4208,23 @@ void UseItem(Player &player, item_misc_id mid, SpellID spellID, int spellFrom)
 			// will be validated when processing the network message
 			Point target = cursPosition;
 			if (!InDungeonBounds(target))
-				target = player.position.future + Displacement(player._pdir);
+				target = player.position.future + Displacement(player.direction);
 			// Use CMD_SPELLXY because it's the same behavior as normal casting
 			assert(IsValidSpellFrom(spellFrom));
 			NetSendCmdLocParam4(true, CMD_SPELLXY, target, static_cast<int8_t>(spellID), static_cast<uint8_t>(SpellType::Scroll), spellLevel, static_cast<uint16_t>(spellFrom));
 		}
 		break;
 	case IMISC_BOOK: {
-		uint8_t newSpellLevel = player._pSplLvl[static_cast<int8_t>(spellID)] + 1;
+		uint8_t newSpellLevel = player.spellLevel[static_cast<int8_t>(spellID)] + 1;
 		if (newSpellLevel <= MaxSpellLevel) {
-			player._pSplLvl[static_cast<int8_t>(spellID)] = newSpellLevel;
+			player.spellLevel[static_cast<int8_t>(spellID)] = newSpellLevel;
 			NetSendCmdParam2(true, CMD_CHANGE_SPELL_LEVEL, static_cast<uint16_t>(spellID), newSpellLevel);
 		}
-		if (HasNoneOf(player._pIFlags, ItemSpecialEffect::NoMana)) {
-			player._pMana += GetSpellData(spellID).sManaCost << 6;
-			player._pMana = std::min(player._pMana, player._pMaxMana);
-			player._pManaBase += GetSpellData(spellID).sManaCost << 6;
-			player._pManaBase = std::min(player._pManaBase, player._pMaxManaBase);
+		if (HasNoneOf(player.flags, ItemSpecialEffect::NoMana)) {
+			player.mana += GetSpellData(spellID).sManaCost << 6;
+			player.mana = std::min(player.mana, player.maxMana);
+			player.baseMana += GetSpellData(spellID).sManaCost << 6;
+			player.baseMana = std::min(player.baseMana, player.baseMaxMana);
 		}
 		if (&player == MyPlayer) {
 			for (Item &item : InventoryPlayerItemsRange { player }) {
@@ -4249,7 +4249,7 @@ void UseItem(Player &player, item_misc_id mid, SpellID spellID, int spellFrom)
 	case IMISC_OILPERM:
 	case IMISC_OILHARD:
 	case IMISC_OILIMP:
-		player._pOilType = mid;
+		player.oilType = mid;
 		if (&player != MyPlayer) {
 			return;
 		}
@@ -4459,10 +4459,10 @@ void SpawnBoy(int lvl)
 
 	Player &myPlayer = *MyPlayer;
 
-	HeroClass pc = myPlayer._pClass;
-	int strength = std::max(myPlayer.GetMaximumAttributeValue(CharacterAttribute::Strength), myPlayer._pStrength);
-	int dexterity = std::max(myPlayer.GetMaximumAttributeValue(CharacterAttribute::Dexterity), myPlayer._pDexterity);
-	int magic = std::max(myPlayer.GetMaximumAttributeValue(CharacterAttribute::Magic), myPlayer._pMagic);
+	HeroClass pc = myPlayer.heroClass;
+	int strength = std::max(myPlayer.GetMaximumAttributeValue(CharacterAttribute::Strength), myPlayer.strength);
+	int dexterity = std::max(myPlayer.GetMaximumAttributeValue(CharacterAttribute::Dexterity), myPlayer.dexterity);
+	int magic = std::max(myPlayer.GetMaximumAttributeValue(CharacterAttribute::Magic), myPlayer.magic);
 	strength += strength / 5;
 	dexterity += dexterity / 5;
 	magic += magic / 5;
@@ -4611,7 +4611,7 @@ void MakeGoldStack(Item &goldItem, int value)
 int ItemNoFlippy()
 {
 	int r = ActiveItems[ActiveItemCount - 1];
-	Items[r].AnimInfo.currentFrame = Items[r].AnimInfo.numberOfFrames - 1;
+	Items[r].animationInfo.currentFrame = Items[r].animationInfo.numberOfFrames - 1;
 	Items[r]._iAnimFlag = false;
 	Items[r]._iSelFlag = 1;
 
@@ -4866,16 +4866,16 @@ void Item::setNewAnimation(bool showAnimation)
 	int8_t numberOfFrames = ItemAnimLs[it];
 	OptionalClxSpriteList sprite = itemanims[it] ? OptionalClxSpriteList { *itemanims[static_cast<size_t>(it)] } : std::nullopt;
 	if (_iCurs != ICURS_MAGIC_ROCK)
-		AnimInfo.setNewAnimation(sprite, numberOfFrames, 1, AnimationDistributionFlags::ProcessAnimationPending, 0, numberOfFrames);
+		animationInfo.setNewAnimation(sprite, numberOfFrames, 1, AnimationDistributionFlags::ProcessAnimationPending, 0, numberOfFrames);
 	else
-		AnimInfo.setNewAnimation(sprite, numberOfFrames, 1);
+		animationInfo.setNewAnimation(sprite, numberOfFrames, 1);
 	_iPostDraw = false;
 	_iRequest = false;
 	if (showAnimation) {
 		_iAnimFlag = true;
 		_iSelFlag = 0;
 	} else {
-		AnimInfo.currentFrame = AnimInfo.numberOfFrames - 1;
+		animationInfo.currentFrame = animationInfo.numberOfFrames - 1;
 		_iAnimFlag = false;
 		_iSelFlag = 1;
 	}
@@ -4885,7 +4885,7 @@ void Item::updateRequiredStatsCacheForPlayer(const Player &player)
 {
 	if (_itype == ItemType::Misc && _iMiscId == IMISC_BOOK) {
 		_iMinMag = GetSpellData(_iSpell).minInt;
-		int8_t spellLevel = player._pSplLvl[static_cast<int8_t>(_iSpell)];
+		int8_t spellLevel = player.spellLevel[static_cast<int8_t>(_iSpell)];
 		while (spellLevel != 0) {
 			_iMinMag += 20 * _iMinMag / 100;
 			spellLevel--;
@@ -4968,16 +4968,16 @@ void RechargeItem(Item &item, Player &player)
 
 	if (&player != MyPlayer)
 		return;
-	if (&item == &player.InvBody[INVLOC_HAND_LEFT]) {
+	if (&item == &player.bodySlot[INVLOC_HAND_LEFT]) {
 		NetSendCmdChItem(true, INVLOC_HAND_LEFT);
 		return;
 	}
-	if (&item == &player.InvBody[INVLOC_HAND_RIGHT]) {
+	if (&item == &player.bodySlot[INVLOC_HAND_RIGHT]) {
 		NetSendCmdChItem(true, INVLOC_HAND_RIGHT);
 		return;
 	}
-	for (int i = 0; i < player._pNumInv; i++) {
-		if (&item == &player.InvList[i]) {
+	for (int i = 0; i < player.numInventoryItems; i++) {
+		if (&item == &player.inventorySlot[i]) {
 			NetSyncInvItem(player, i);
 			break;
 		}
@@ -4998,7 +4998,7 @@ bool ApplyOilToItem(Item &item, Player &player)
 		return false;
 	}
 
-	switch (player._pOilType) {
+	switch (player.oilType) {
 	case IMISC_OILACC:
 	case IMISC_OILMAST:
 	case IMISC_OILSHARP:
@@ -5024,7 +5024,7 @@ bool ApplyOilToItem(Item &item, Player &player)
 		break;
 	}
 
-	switch (player._pOilType) {
+	switch (player.oilType) {
 	case IMISC_OILACC:
 		if (item._iPLToHit < 50) {
 			item._iPLToHit += RandomIntBetween(1, 2);

@@ -134,7 +134,7 @@ void AddFloatingNumber(DamageType damageType, const Monster &monster, int damage
 
 	Displacement offset = {};
 	if (monster.isWalking()) {
-		offset = GetOffsetForWalking(monster.animInfo, monster.direction);
+		offset = GetOffsetForWalking(monster.animationInfo, monster.direction);
 		if (monster.mode == MonsterMode::MoveSideways) {
 			if (monster.direction == Direction::West)
 				offset -= Displacement { 64, 0 };
@@ -142,8 +142,8 @@ void AddFloatingNumber(DamageType damageType, const Monster &monster, int damage
 				offset += Displacement { 64, 0 };
 		}
 	}
-	if (monster.animInfo.sprites) {
-		const ClxSprite sprite = monster.animInfo.currentSprite();
+	if (monster.animationInfo.sprites) {
+		const ClxSprite sprite = monster.animationInfo.currentSprite();
 		offset.deltaY -= sprite.height() / 2;
 	}
 
@@ -157,9 +157,9 @@ void AddFloatingNumber(DamageType damageType, const Player &player, int damage)
 
 	Displacement offset = {};
 	if (player.isWalking()) {
-		offset = GetOffsetForWalking(player.AnimInfo, player._pdir);
-		if (player._pmode == PM_WALK_SIDEWAYS) {
-			if (player._pdir == Direction::West)
+		offset = GetOffsetForWalking(player.animationInfo, player.direction);
+		if (player.mode == PM_WALK_SIDEWAYS) {
+			if (player.direction == Direction::West)
 				offset -= Displacement { 64, 0 };
 			else
 				offset += Displacement { 64, 0 };

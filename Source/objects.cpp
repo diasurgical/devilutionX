@@ -596,7 +596,7 @@ void AddCryptObject(Object &object, int a2)
 		Player &myPlayer = *MyPlayer;
 		switch (a2) {
 		case 6:
-			switch (myPlayer._pClass) {
+			switch (myPlayer.heroClass) {
 			case HeroClass::Warrior:
 			case HeroClass::Barbarian:
 				object._oVar2 = TEXT_BOOKA;
@@ -616,7 +616,7 @@ void AddCryptObject(Object &object, int a2)
 			}
 			break;
 		case 7:
-			switch (myPlayer._pClass) {
+			switch (myPlayer.heroClass) {
 			case HeroClass::Warrior:
 			case HeroClass::Barbarian:
 				object._oVar2 = TEXT_BOOKB;
@@ -636,7 +636,7 @@ void AddCryptObject(Object &object, int a2)
 			}
 			break;
 		case 8:
-			switch (myPlayer._pClass) {
+			switch (myPlayer.heroClass) {
 			case HeroClass::Warrior:
 			case HeroClass::Barbarian:
 				object._oVar2 = TEXT_BOOKC;
@@ -1449,7 +1449,7 @@ bool IsLightVisible(Object &light, int lightRadius)
 #endif
 
 	for (const Player &player : Players) {
-		if (!player.plractive)
+		if (!player.isPlayerActive)
 			continue;
 
 		if (!player.isOnActiveLevel())
@@ -1637,10 +1637,10 @@ void UpdateBurningCrossDamage(Object &cross)
 
 	Player &myPlayer = *MyPlayer;
 
-	if (myPlayer._pmode == PM_DEATH)
+	if (myPlayer.mode == PM_DEATH)
 		return;
 
-	int8_t fireResist = myPlayer._pFireResist;
+	int8_t fireResist = myPlayer.resistFire;
 	if (fireResist > 0)
 		damage[leveltype - 1] -= fireResist * damage[leveltype - 1] / 100;
 
@@ -1648,7 +1648,7 @@ void UpdateBurningCrossDamage(Object &cross)
 		return;
 
 	ApplyPlrDamage(DamageType::Fire, myPlayer, 0, 0, damage[leveltype - 1]);
-	if (myPlayer._pHitPoints >> 6 > 0) {
+	if (myPlayer.life >> 6 > 0) {
 		myPlayer.Say(HeroSpeech::Argh);
 	}
 }
@@ -1872,9 +1872,9 @@ void OperateBook(Player &player, Object &book, bool sendmsg)
 
 	if (setlvlnum == SL_BONECHAMB) {
 		if (sendmsg) {
-			uint8_t newSpellLevel = player._pSplLvl[static_cast<int8_t>(SpellID::Guardian)] + 1;
+			uint8_t newSpellLevel = player.spellLevel[static_cast<int8_t>(SpellID::Guardian)] + 1;
 			if (newSpellLevel <= MaxSpellLevel) {
-				player._pSplLvl[static_cast<int8_t>(SpellID::Guardian)] = newSpellLevel;
+				player.spellLevel[static_cast<int8_t>(SpellID::Guardian)] = newSpellLevel;
 				NetSendCmdParam2(true, CMD_CHANGE_SPELL_LEVEL, static_cast<uint16_t>(SpellID::Guardian), newSpellLevel);
 			}
 
@@ -1895,7 +1895,7 @@ void OperateBook(Player &player, Object &book, bool sendmsg)
 		AddMissile(
 		    player.position.tile,
 		    book.position + Displacement { -2, -4 },
-		    player._pdir,
+		    player.direction,
 		    MissileID::Guardian,
 		    TARGET_MONSTERS,
 		    player,
@@ -1977,7 +1977,7 @@ void OperateChamberOfBoneBook(Object &questBook, bool sendmsg)
 	}
 
 	_speech_id textdef;
-	switch (MyPlayer->_pClass) {
+	switch (MyPlayer->heroClass) {
 	case HeroClass::Warrior:
 		textdef = TEXT_BONER;
 		break;
@@ -2129,17 +2129,17 @@ void OperateSlainHero(const Player &player, Object &corpse, bool sendmsg)
 
 	SetRndSeed(corpse._oRndSeed);
 
-	if (player._pClass == HeroClass::Warrior) {
+	if (player.heroClass == HeroClass::Warrior) {
 		CreateMagicArmor(corpse.position, ItemType::HeavyArmor, ICURS_BREAST_PLATE, sendmsg, false);
-	} else if (player._pClass == HeroClass::Rogue) {
+	} else if (player.heroClass == HeroClass::Rogue) {
 		CreateMagicWeapon(corpse.position, ItemType::Bow, ICURS_LONG_BATTLE_BOW, sendmsg, false);
-	} else if (player._pClass == HeroClass::Sorcerer) {
+	} else if (player.heroClass == HeroClass::Sorcerer) {
 		CreateSpellBook(corpse.position, SpellID::Lightning, sendmsg, false);
-	} else if (player._pClass == HeroClass::Monk) {
+	} else if (player.heroClass == HeroClass::Monk) {
 		CreateMagicWeapon(corpse.position, ItemType::Staff, ICURS_WAR_STAFF, sendmsg, false);
-	} else if (player._pClass == HeroClass::Bard) {
+	} else if (player.heroClass == HeroClass::Bard) {
 		CreateMagicWeapon(corpse.position, ItemType::Sword, ICURS_BASTARD_SWORD, sendmsg, false);
-	} else if (player._pClass == HeroClass::Barbarian) {
+	} else if (player.heroClass == HeroClass::Barbarian) {
 		CreateMagicWeapon(corpse.position, ItemType::Axe, ICURS_BATTLE_AXE, sendmsg, false);
 	}
 	MyPlayer->Say(HeroSpeech::RestInPeaceMyFriend);
@@ -2275,12 +2275,12 @@ void OperateShrineHidden(DiabloGenerator &rng, Player &player)
 		return;
 
 	int cnt = 0;
-	for (const auto &item : player.InvBody) {
+	for (const auto &item : player.bodySlot) {
 		if (!item.isEmpty())
 			cnt++;
 	}
 	if (cnt > 0) {
-		for (auto &item : player.InvBody) {
+		for (auto &item : player.bodySlot) {
 			if (!item.isEmpty()
 			    && item._iMaxDur != DUR_INDESTRUCTIBLE
 			    && item._iMaxDur != 0) {
@@ -2292,7 +2292,7 @@ void OperateShrineHidden(DiabloGenerator &rng, Player &player)
 		}
 		while (true) {
 			cnt = 0;
-			for (auto &item : player.InvBody) {
+			for (auto &item : player.bodySlot) {
 				if (!item.isEmpty() && item._iMaxDur != DUR_INDESTRUCTIBLE && item._iMaxDur != 0) {
 					cnt++;
 				}
@@ -2300,15 +2300,15 @@ void OperateShrineHidden(DiabloGenerator &rng, Player &player)
 			if (cnt == 0)
 				break;
 			int r = rng.generateRnd(NUM_INVLOC);
-			if (player.InvBody[r].isEmpty() || player.InvBody[r]._iMaxDur == DUR_INDESTRUCTIBLE || player.InvBody[r]._iMaxDur == 0)
+			if (player.bodySlot[r].isEmpty() || player.bodySlot[r]._iMaxDur == DUR_INDESTRUCTIBLE || player.bodySlot[r]._iMaxDur == 0)
 				continue;
 
-			player.InvBody[r]._iDurability -= 20;
-			player.InvBody[r]._iMaxDur -= 20;
-			if (player.InvBody[r]._iDurability <= 0)
-				player.InvBody[r]._iDurability = 1;
-			if (player.InvBody[r]._iMaxDur <= 0)
-				player.InvBody[r]._iMaxDur = 1;
+			player.bodySlot[r]._iDurability -= 20;
+			player.bodySlot[r]._iMaxDur -= 20;
+			if (player.bodySlot[r]._iDurability <= 0)
+				player.bodySlot[r]._iDurability = 1;
+			if (player.bodySlot[r]._iMaxDur <= 0)
+				player.bodySlot[r]._iMaxDur = 1;
 			break;
 		}
 	}
@@ -2355,10 +2355,10 @@ void OperateShrineWeird(Player &player)
 	if (&player != MyPlayer)
 		return;
 
-	if (!player.InvBody[INVLOC_HAND_LEFT].isEmpty() && player.InvBody[INVLOC_HAND_LEFT]._itype != ItemType::Shield)
-		player.InvBody[INVLOC_HAND_LEFT]._iMaxDam++;
-	if (!player.InvBody[INVLOC_HAND_RIGHT].isEmpty() && player.InvBody[INVLOC_HAND_RIGHT]._itype != ItemType::Shield)
-		player.InvBody[INVLOC_HAND_RIGHT]._iMaxDam++;
+	if (!player.bodySlot[INVLOC_HAND_LEFT].isEmpty() && player.bodySlot[INVLOC_HAND_LEFT]._itype != ItemType::Shield)
+		player.bodySlot[INVLOC_HAND_LEFT]._iMaxDam++;
+	if (!player.bodySlot[INVLOC_HAND_RIGHT].isEmpty() && player.bodySlot[INVLOC_HAND_RIGHT]._itype != ItemType::Shield)
+		player.bodySlot[INVLOC_HAND_RIGHT]._iMaxDam++;
 
 	for (Item &item : InventoryPlayerItemsRange { player }) {
 		switch (item._itype) {
@@ -2384,7 +2384,7 @@ void OperateShrineMagical(const Player &player)
 	AddMissile(
 	    player.position.tile,
 	    player.position.tile,
-	    player._pdir,
+	    player.direction,
 	    MissileID::ManaShield,
 	    TARGET_MONSTERS,
 	    player,
@@ -2434,7 +2434,7 @@ void OperateShrineEnchanted(DiabloGenerator &rng, Player &player)
 	int cnt = 0;
 	uint64_t spell = 1;
 	uint8_t maxSpells = gbIsHellfire ? MAX_SPELLS : 37;
-	uint64_t spells = player._pMemSpells;
+	uint64_t spells = player.learnedSpells;
 	for (uint16_t j = 0; j < maxSpells; j++) {
 		if ((spell & spells) != 0)
 			cnt++;
@@ -2444,21 +2444,21 @@ void OperateShrineEnchanted(DiabloGenerator &rng, Player &player)
 		int spellToReduce;
 		do {
 			spellToReduce = rng.generateRnd(maxSpells) + 1;
-		} while ((player._pMemSpells & GetSpellBitmask(static_cast<SpellID>(spellToReduce))) == 0);
+		} while ((player.learnedSpells & GetSpellBitmask(static_cast<SpellID>(spellToReduce))) == 0);
 
 		spell = 1;
 		for (uint8_t j = static_cast<uint8_t>(SpellID::Firebolt); j < maxSpells; j++) {
-			if ((player._pMemSpells & spell) != 0 && player._pSplLvl[j] < MaxSpellLevel && j != spellToReduce) {
-				uint8_t newSpellLevel = static_cast<uint8_t>(player._pSplLvl[j] + 1);
-				player._pSplLvl[j] = newSpellLevel;
+			if ((player.learnedSpells & spell) != 0 && player.spellLevel[j] < MaxSpellLevel && j != spellToReduce) {
+				uint8_t newSpellLevel = static_cast<uint8_t>(player.spellLevel[j] + 1);
+				player.spellLevel[j] = newSpellLevel;
 				NetSendCmdParam2(true, CMD_CHANGE_SPELL_LEVEL, j, newSpellLevel);
 			}
 			spell *= 2;
 		}
 
-		if (player._pSplLvl[spellToReduce] > 0) {
-			uint8_t newSpellLevel = static_cast<uint8_t>(player._pSplLvl[spellToReduce] - 1);
-			player._pSplLvl[spellToReduce] = newSpellLevel;
+		if (player.spellLevel[spellToReduce] > 0) {
+			uint8_t newSpellLevel = static_cast<uint8_t>(player.spellLevel[spellToReduce] - 1);
+			player.spellLevel[spellToReduce] = newSpellLevel;
 			NetSendCmdParam2(true, CMD_CHANGE_SPELL_LEVEL, spellToReduce, newSpellLevel);
 		}
 
@@ -2497,12 +2497,12 @@ void OperateShrineCostOfWisdom(Player &player, SpellID spellId, diablo_message m
 	if (&player != MyPlayer)
 		return;
 
-	player._pMemSpells |= GetSpellBitmask(spellId);
+	player.learnedSpells |= GetSpellBitmask(spellId);
 
-	uint8_t curSpellLevel = player._pSplLvl[static_cast<int8_t>(spellId)];
+	uint8_t curSpellLevel = player.spellLevel[static_cast<int8_t>(spellId)];
 	if (curSpellLevel < MaxSpellLevel) {
 		uint8_t newSpellLevel = std::min(static_cast<uint8_t>(curSpellLevel + 2), MaxSpellLevel);
-		player._pSplLvl[static_cast<int8_t>(spellId)] = newSpellLevel;
+		player.spellLevel[static_cast<int8_t>(spellId)] = newSpellLevel;
 		NetSendCmdParam2(true, CMD_CHANGE_SPELL_LEVEL, static_cast<uint16_t>(spellId), newSpellLevel);
 	}
 
@@ -2515,20 +2515,20 @@ void OperateShrineCostOfWisdom(Player &player, SpellID spellId, diablo_message m
 		}
 	}
 
-	uint32_t t = player._pMaxManaBase / 10;
-	int v1 = player._pMana - player._pManaBase;
-	int v2 = player._pMaxMana - player._pMaxManaBase;
-	player._pManaBase -= t;
-	player._pMana -= t;
-	player._pMaxMana -= t;
-	player._pMaxManaBase -= t;
-	if (player._pMana >> 6 <= 0) {
-		player._pMana = v1;
-		player._pManaBase = 0;
+	uint32_t t = player.baseMaxMana / 10;
+	int v1 = player.mana - player.baseMana;
+	int v2 = player.maxMana - player.baseMaxMana;
+	player.baseMana -= t;
+	player.mana -= t;
+	player.maxMana -= t;
+	player.baseMaxMana -= t;
+	if (player.mana >> 6 <= 0) {
+		player.mana = v1;
+		player.baseMana = 0;
 	}
-	if (player._pMaxMana >> 6 <= 0) {
-		player._pMaxMana = v2;
-		player._pMaxManaBase = 0;
+	if (player.maxMana >> 6 <= 0) {
+		player.maxMana = v2;
+		player.baseMaxMana = 0;
 	}
 
 	RedrawEverything();
@@ -2541,7 +2541,7 @@ void OperateShrineCryptic(Player &player)
 	AddMissile(
 	    player.position.tile,
 	    player.position.tile,
-	    player._pdir,
+	    player.direction,
 	    MissileID::Nova,
 	    TARGET_MONSTERS,
 	    player,
@@ -2551,8 +2551,8 @@ void OperateShrineCryptic(Player &player)
 	if (&player != MyPlayer)
 		return;
 
-	player._pMana = player._pMaxMana;
-	player._pManaBase = player._pMaxManaBase;
+	player.mana = player.maxMana;
+	player.baseMana = player.baseMaxMana;
 
 	InitDiabloMsg(EMSG_SHRINE_CRYPTIC);
 
@@ -2624,10 +2624,10 @@ void OperateShrineDivine(Player &player, Point spawnPosition)
 		CreateTypeItem(spawnPosition, false, ItemType::Misc, IMISC_FULLREJUV, false, false, true);
 	}
 
-	player._pMana = player._pMaxMana;
-	player._pManaBase = player._pMaxManaBase;
-	player._pHitPoints = player._pMaxHP;
-	player._pHPBase = player._pMaxHPBase;
+	player.mana = player.maxMana;
+	player.baseMana = player.baseMaxMana;
+	player.life = player.maxLife;
+	player.baseLife = player.baseMaxLife;
 
 	RedrawEverything();
 
@@ -2649,14 +2649,14 @@ void OperateShrineSpiritual(DiabloGenerator &rng, Player &player)
 	if (&player != MyPlayer)
 		return;
 
-	for (int8_t &itemIndex : player.InvGrid) {
+	for (int8_t &itemIndex : player.inventoryGrid) {
 		if (itemIndex == 0) {
-			Item &goldItem = player.InvList[player._pNumInv];
+			Item &goldItem = player.inventorySlot[player.numInventoryItems];
 			MakeGoldStack(goldItem, 5 * leveltype + rng.generateRnd(10 * leveltype));
-			player._pNumInv++;
-			itemIndex = player._pNumInv;
+			player.numInventoryItems++;
+			itemIndex = player.numInventoryItems;
 
-			player._pGold += goldItem._ivalue;
+			player.gold += goldItem._ivalue;
 		}
 	}
 
@@ -2672,10 +2672,10 @@ void OperateShrineSpooky(const Player &player)
 
 	Player &myPlayer = *MyPlayer;
 
-	myPlayer._pHitPoints = myPlayer._pMaxHP;
-	myPlayer._pHPBase = myPlayer._pMaxHPBase;
-	myPlayer._pMana = myPlayer._pMaxMana;
-	myPlayer._pManaBase = myPlayer._pMaxManaBase;
+	myPlayer.life = myPlayer.maxLife;
+	myPlayer.baseLife = myPlayer.baseMaxLife;
+	myPlayer.mana = myPlayer.maxMana;
+	myPlayer.baseMana = myPlayer.baseMaxMana;
 
 	RedrawEverything();
 
@@ -2789,7 +2789,7 @@ void OperateShrineOily(Player &player, Point spawnPosition)
 	if (&player != MyPlayer)
 		return;
 
-	switch (player._pClass) {
+	switch (player.heroClass) {
 	case HeroClass::Warrior:
 		ModifyPlrStr(player, 2);
 		break;
@@ -2819,7 +2819,7 @@ void OperateShrineOily(Player &player, Point spawnPosition)
 	AddMissile(
 	    spawnPosition,
 	    player.position.tile,
-	    player._pdir,
+	    player.direction,
 	    MissileID::FireWall,
 	    TARGET_PLAYERS,
 	    -1,
@@ -2835,13 +2835,13 @@ void OperateShrineGlowing(Player &player)
 		return;
 
 	// Add 0-5 points to Magic (0.1% of the players XP)
-	ModifyPlrMag(player, static_cast<int>(std::min<uint32_t>(player._pExperience / 1000, 5)));
+	ModifyPlrMag(player, static_cast<int>(std::min<uint32_t>(player.experience / 1000, 5)));
 
 	// Take 5% of the players experience to offset the bonus, unless they're very low level in which case take all their experience.
-	if (player._pExperience > 5000)
-		player._pExperience = static_cast<uint32_t>(player._pExperience * 0.95);
+	if (player.experience > 5000)
+		player.experience = static_cast<uint32_t>(player.experience * 0.95);
 	else
-		player._pExperience = 0;
+		player.experience = 0;
 
 	CheckStats(player);
 	RedrawEverything();
@@ -2854,7 +2854,7 @@ void OperateShrineMendicant(Player &player)
 	if (&player != MyPlayer)
 		return;
 
-	int gold = player._pGold / 2;
+	int gold = player.gold / 2;
 	player.addExperience(gold);
 	TakePlrsMoney(gold);
 
@@ -2878,7 +2878,7 @@ void OperateShrineSparkling(Player &player, Point spawnPosition)
 	AddMissile(
 	    spawnPosition,
 	    player.position.tile,
-	    player._pdir,
+	    player.direction,
 	    MissileID::FlashBottom,
 	    TARGET_PLAYERS,
 	    -1,
@@ -2903,7 +2903,7 @@ void OperateShrineTown(const Player &player, Point spawnPosition)
 	AddMissile(
 	    spawnPosition,
 	    player.position.tile,
-	    player._pdir,
+	    player.direction,
 	    MissileID::TownPortal,
 	    TARGET_MONSTERS,
 	    player,
@@ -2918,8 +2918,8 @@ void OperateShrineShimmering(Player &player)
 	if (&player != MyPlayer)
 		return;
 
-	player._pMana = player._pMaxMana;
-	player._pManaBase = player._pMaxManaBase;
+	player.mana = player.maxMana;
+	player.baseMana = player.baseMaxMana;
 
 	RedrawEverything();
 
@@ -2959,7 +2959,7 @@ void OperateShrineMurphys(DiabloGenerator &rng, Player &player)
 		return;
 
 	bool broke = false;
-	for (auto &item : player.InvBody) {
+	for (auto &item : player.bodySlot) {
 		if (!item.isEmpty() && rng.flipCoin(3)) {
 			if (item._iDurability != DUR_INDESTRUCTIBLE) {
 				if (item._iDurability > 0) {
@@ -2971,7 +2971,7 @@ void OperateShrineMurphys(DiabloGenerator &rng, Player &player)
 		}
 	}
 	if (!broke) {
-		TakePlrsMoney(player._pGold / 3);
+		TakePlrsMoney(player.gold / 3);
 	}
 
 	InitDiabloMsg(EMSG_SHRINE_MURPHYS);
@@ -3220,13 +3220,13 @@ bool OperateFountains(Player &player, Object &fountain)
 		if (&player != MyPlayer)
 			return false;
 
-		if (player._pHitPoints < player._pMaxHP) {
+		if (player.life < player.maxLife) {
 			PlaySfxLoc(SfxID::OperateFountain, fountain.position);
-			player._pHitPoints += 64;
-			player._pHPBase += 64;
-			if (player._pHitPoints > player._pMaxHP) {
-				player._pHitPoints = player._pMaxHP;
-				player._pHPBase = player._pMaxHPBase;
+			player.life += 64;
+			player.baseLife += 64;
+			if (player.life > player.maxLife) {
+				player.life = player.maxLife;
+				player.baseLife = player.baseMaxLife;
 			}
 			applied = true;
 		} else
@@ -3236,14 +3236,14 @@ bool OperateFountains(Player &player, Object &fountain)
 		if (&player != MyPlayer)
 			return false;
 
-		if (player._pMana < player._pMaxMana) {
+		if (player.mana < player.maxMana) {
 			PlaySfxLoc(SfxID::OperateFountain, fountain.position);
 
-			player._pMana += 64;
-			player._pManaBase += 64;
-			if (player._pMana > player._pMaxMana) {
-				player._pMana = player._pMaxMana;
-				player._pManaBase = player._pMaxManaBase;
+			player.mana += 64;
+			player.baseMana += 64;
+			if (player.mana > player.maxMana) {
+				player.mana = player.maxMana;
+				player.baseMana = player.baseMaxMana;
 			}
 
 			applied = true;
@@ -3258,7 +3258,7 @@ bool OperateFountains(Player &player, Object &fountain)
 		AddMissile(
 		    player.position.tile,
 		    player.position.tile,
-		    player._pdir,
+		    player.direction,
 		    MissileID::Infravision,
 		    TARGET_MONSTERS,
 		    player,
@@ -3842,7 +3842,7 @@ void InitObjects()
 			AddL2Torches();
 			if (Quests[Q_BLIND].IsAvailable()) {
 				_speech_id spId;
-				switch (MyPlayer->_pClass) {
+				switch (MyPlayer->heroClass) {
 				case HeroClass::Warrior:
 					spId = TEXT_BLINDING;
 					break;
@@ -3868,7 +3868,7 @@ void InitObjects()
 			}
 			if (Quests[Q_BLOOD].IsAvailable()) {
 				_speech_id spId;
-				switch (MyPlayer->_pClass) {
+				switch (MyPlayer->heroClass) {
 				case HeroClass::Warrior:
 					spId = TEXT_BLOODY;
 					break;
@@ -3901,7 +3901,7 @@ void InitObjects()
 		if (leveltype == DTYPE_HELL) {
 			if (Quests[Q_WARLORD].IsAvailable()) {
 				_speech_id spId;
-				switch (MyPlayer->_pClass) {
+				switch (MyPlayer->heroClass) {
 				case HeroClass::Warrior:
 					spId = TEXT_BLOODWAR;
 					break;
@@ -4269,7 +4269,7 @@ void ProcessObjects()
 void RedoPlayerVision()
 {
 	for (const Player &player : Players) {
-		if (player.plractive && player.isOnActiveLevel()) {
+		if (player.isPlayerActive && player.isOnActiveLevel()) {
 			ChangeVisionXY(player.getId(), player.position.tile);
 		}
 	}
@@ -4883,7 +4883,7 @@ StringOrView Object::name() const
 void GetObjectStr(const Object &object)
 {
 	InfoString = object.name();
-	if (MyPlayer->_pClass == HeroClass::Rogue) {
+	if (MyPlayer->heroClass == HeroClass::Rogue) {
 		if (object._oTrapFlag) {
 			InfoString = fmt::format(fmt::runtime(_(/* TRANSLATORS: {:s} will either be a chest or a door */ "Trapped {:s}")), InfoString.str());
 			InfoColor = UiFlags::ColorRed;

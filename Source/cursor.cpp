@@ -119,7 +119,7 @@ bool TrySelectPlayer(bool flipflag, int mx, int my)
 	if (!flipflag && mx + 1 < MAXDUNX && dPlayer[mx + 1][my] != 0) {
 		const uint8_t playerId = std::abs(dPlayer[mx + 1][my]) - 1;
 		Player &player = Players[playerId];
-		if (&player != MyPlayer && player._pHitPoints != 0) {
+		if (&player != MyPlayer && player.life != 0) {
 			cursPosition = Point { mx, my } + Displacement { 1, 0 };
 			PlayerUnderCursor = &player;
 		}
@@ -127,7 +127,7 @@ bool TrySelectPlayer(bool flipflag, int mx, int my)
 	if (flipflag && my + 1 < MAXDUNY && dPlayer[mx][my + 1] != 0) {
 		const uint8_t playerId = std::abs(dPlayer[mx][my + 1]) - 1;
 		Player &player = Players[playerId];
-		if (&player != MyPlayer && player._pHitPoints != 0) {
+		if (&player != MyPlayer && player.life != 0) {
 			cursPosition = Point { mx, my } + Displacement { 0, 1 };
 			PlayerUnderCursor = &player;
 		}
@@ -165,7 +165,7 @@ bool TrySelectPlayer(bool flipflag, int mx, int my)
 	if (mx + 1 < MAXDUNX && my + 1 < MAXDUNY && dPlayer[mx + 1][my + 1] != 0) {
 		const uint8_t playerId = std::abs(dPlayer[mx + 1][my + 1]) - 1;
 		const Player &player = Players[playerId];
-		if (&player != MyPlayer && player._pHitPoints != 0) {
+		if (&player != MyPlayer && player.life != 0) {
 			cursPosition = Point { mx, my } + Displacement { 1, 1 };
 			PlayerUnderCursor = &player;
 		}
@@ -301,7 +301,7 @@ bool TrySelectPixelBased(Point tile)
 			} else {
 				const Monster &monster = Monsters[monsterId];
 				if (IsTileLit(adjacentTile) && IsValidMonsterForSelection(monster)) {
-					const ClxSprite sprite = monster.animInfo.currentSprite();
+					const ClxSprite sprite = monster.animationInfo.currentSprite();
 					Displacement renderingOffset = monster.getRenderingOffset(sprite);
 					if (checkSprite(adjacentTile, sprite, renderingOffset)) {
 						cursPosition = adjacentTile;
@@ -355,7 +355,7 @@ bool TrySelectPixelBased(Point tile)
 		if (itemId != 0) {
 			itemId = itemId - 1;
 			const Item &item = Items[itemId];
-			const ClxSprite sprite = item.AnimInfo.currentSprite();
+			const ClxSprite sprite = item.animationInfo.currentSprite();
 			Displacement renderingOffset = item.getRenderingOffset(sprite);
 			if (checkSprite(adjacentTile, sprite, renderingOffset)) {
 				cursPosition = adjacentTile;
@@ -558,7 +558,7 @@ void NewCursor(int cursId)
 	}
 
 	if (cursId < CURSOR_HOURGLASS && MyPlayer != nullptr) {
-		MyPlayer->HoldItem.clear();
+		MyPlayer->heldItem.clear();
 	}
 	pcurs = cursId;
 
@@ -577,8 +577,8 @@ void NewCursor(int cursId)
 void DrawSoftwareCursor(const Surface &out, Point position, int cursId)
 {
 	const ClxSprite sprite = GetInvItemSprite(cursId);
-	if (cursId >= CURSOR_FIRSTITEM && !MyPlayer->HoldItem.isEmpty()) {
-		const auto &heldItem = MyPlayer->HoldItem;
+	if (cursId >= CURSOR_FIRSTITEM && !MyPlayer->heldItem.isEmpty()) {
+		const auto &heldItem = MyPlayer->heldItem;
 		ClxDrawOutline(out, GetOutlineColor(heldItem, true), position, sprite);
 		DrawItem(heldItem, out, position, sprite);
 	} else {
@@ -606,7 +606,7 @@ void CheckTown()
 			if (EntranceBoundaryContains(missile.position.tile, cursPosition)) {
 				trigflag = true;
 				InfoString = _("Town Portal");
-				AddPanelString(fmt::format(fmt::runtime(_("from {:s}")), Players[missile._misource]._pName));
+				AddPanelString(fmt::format(fmt::runtime(_("from {:s}")), Players[missile._misource].name));
 				cursPosition = missile.position.tile;
 			}
 		}
@@ -662,13 +662,13 @@ void CheckCursMove()
 	const Player &myPlayer = *MyPlayer;
 
 	if (myPlayer.isWalking()) {
-		Displacement offset = GetOffsetForWalking(myPlayer.AnimInfo, myPlayer._pdir, true);
+		Displacement offset = GetOffsetForWalking(myPlayer.animationInfo, myPlayer.direction, true);
 		sx -= offset.deltaX;
 		sy -= offset.deltaY;
 
 		// Predict the next frame when walking to avoid input jitter
-		DisplacementOf<int16_t> offset2 = myPlayer.position.CalculateWalkingOffsetShifted8(myPlayer._pdir, myPlayer.AnimInfo);
-		DisplacementOf<int16_t> velocity = myPlayer.position.GetWalkingVelocityShifted8(myPlayer._pdir, myPlayer.AnimInfo);
+		DisplacementOf<int16_t> offset2 = myPlayer.position.CalculateWalkingOffsetShifted8(myPlayer.direction, myPlayer.animationInfo);
+		DisplacementOf<int16_t> velocity = myPlayer.position.GetWalkingVelocityShifted8(myPlayer.direction, myPlayer.animationInfo);
 		int fx = offset2.deltaX / 256;
 		int fy = offset2.deltaY / 256;
 		fx -= (offset2.deltaX + velocity.deltaX) / 256;
@@ -755,10 +755,10 @@ void CheckCursMove()
 	panelflag = false;
 	trigflag = false;
 
-	if (myPlayer._pInvincible) {
+	if (myPlayer.isInvincible) {
 		return;
 	}
-	if (!myPlayer.HoldItem.isEmpty() || spselflag) {
+	if (!myPlayer.heldItem.isEmpty() || spselflag) {
 		cursPosition = { mx, my };
 		return;
 	}

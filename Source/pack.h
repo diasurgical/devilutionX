@@ -31,10 +31,10 @@ struct ItemPack {
 struct PlayerPack {
 	uint32_t dwLowDateTime;
 	uint32_t dwHighDateTime;
-	int8_t destAction;
-	int8_t destParam1;
-	int8_t destParam2;
-	uint8_t plrlevel;
+	int8_t destinationAction;
+	int8_t destinationParam1;
+	int8_t destinationParam2;
+	uint8_t dungeonLevel;
 	uint8_t px;
 	uint8_t py;
 	uint8_t targx;
@@ -55,27 +55,27 @@ struct PlayerPack {
 	int32_t pMaxManaBase;
 	uint8_t pSplLvl[37]; // Should be MAX_SPELLS but set to 37 to make save games compatible
 	uint64_t pMemSpells;
-	ItemPack InvBody[NUM_INVLOC];
-	ItemPack InvList[InventoryGridCells];
-	int8_t InvGrid[InventoryGridCells];
-	uint8_t _pNumInv;
-	ItemPack SpdList[MaxBeltItems];
-	int8_t pTownWarps;
-	int8_t pDungMsgs;
-	int8_t pLvlLoad;
+	ItemPack bodySlot[NUM_INVLOC];
+	ItemPack inventorySlot[InventoryGridCells];
+	int8_t inventoryGrid[InventoryGridCells];
+	uint8_t numInventoryItems;
+	ItemPack beltSlot[MaxBeltItems];
+	int8_t townWarps;
+	int8_t dungeonMessages;
+	int8_t levelLoading;
 	uint8_t pBattleNet;
-	uint8_t pManaShield;
-	uint8_t pDungMsgs2;
+	uint8_t hasManaShield;
+	uint8_t dungeonMessages2;
 	/** The format the charater is in, 0: Diablo, 1: Hellfire */
 	int8_t bIsHellfire;
 	uint8_t reserved; // For future use
-	uint16_t wReflections;
+	uint16_t reflections;
 	uint8_t reserved2[2]; // For future use
 	uint8_t pSplLvl2[10]; // Hellfire spells
 	int16_t wReserved8;   // For future use
-	uint32_t pDiabloKillLevel;
+	uint32_t difficultyCompletion;
 	uint32_t pDifficulty;
-	uint32_t pDamAcFlags;  // `ItemSpecialEffectHf` is 1 byte but this is 4 bytes.
+	uint32_t hellfireFlags;  // `ItemSpecialEffectHf` is 1 byte but this is 4 bytes.
 	uint8_t reserved3[20]; // For future use
 };
 
@@ -86,7 +86,7 @@ union ItemNetPack {
 };
 
 struct PlayerNetPack {
-	uint8_t plrlevel;
+	uint8_t dungeonLevel;
 	uint8_t px;
 	uint8_t py;
 	char pName[PlayerNameLength];
@@ -104,15 +104,15 @@ struct PlayerNetPack {
 	int32_t pMaxManaBase;
 	uint8_t pSplLvl[MAX_SPELLS];
 	uint64_t pMemSpells;
-	ItemNetPack InvBody[NUM_INVLOC];
-	ItemNetPack InvList[InventoryGridCells];
-	int8_t InvGrid[InventoryGridCells];
-	uint8_t _pNumInv;
-	ItemNetPack SpdList[MaxBeltItems];
-	uint8_t pManaShield;
-	uint16_t wReflections;
-	uint8_t pDiabloKillLevel;
-	uint8_t friendlyMode;
+	ItemNetPack bodySlot[NUM_INVLOC];
+	ItemNetPack inventorySlot[InventoryGridCells];
+	int8_t inventoryGrid[InventoryGridCells];
+	uint8_t numInventoryItems;
+	ItemNetPack beltSlot[MaxBeltItems];
+	uint8_t hasManaShield;
+	uint16_t reflections;
+	uint8_t difficultyCompletion;
+	uint8_t isFriendlyMode;
 	uint8_t isOnSetLevel;
 
 	// For validation

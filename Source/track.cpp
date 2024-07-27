@@ -23,7 +23,7 @@ void RepeatWalk(Player &player)
 	if (!InDungeonBounds(cursPosition))
 		return;
 
-	if (player._pmode != PM_STAND && !(player.isWalking() && player.AnimInfo.getFrameToUseForRendering() > 6))
+	if (player.mode != PM_STAND && !(player.isWalking() && player.animationInfo.getFrameToUseForRendering() > 6))
 		return;
 
 	const Point target = player.GetTargetPosition();
@@ -51,8 +51,8 @@ void InvalidateTargets()
 
 	if (PlayerUnderCursor != nullptr) {
 		const Player &targetPlayer = *PlayerUnderCursor;
-		if (targetPlayer._pmode == PM_DEATH || targetPlayer._pmode == PM_QUIT || !targetPlayer.plractive
-		    || !targetPlayer.isOnActiveLevel() || targetPlayer._pHitPoints >> 6 <= 0
+		if (targetPlayer.mode == PM_DEATH || targetPlayer.mode == PM_QUIT || !targetPlayer.isPlayerActive
+		    || !targetPlayer.isOnActiveLevel() || targetPlayer.life >> 6 <= 0
 		    || !IsTileLit(targetPlayer.position.tile))
 			PlayerUnderCursor = nullptr;
 	}
@@ -73,9 +73,9 @@ void RepeatMouseAction()
 		return;
 
 	Player &myPlayer = *MyPlayer;
-	if (myPlayer.destAction != ACTION_NONE)
+	if (myPlayer.destinationAction != ACTION_NONE)
 		return;
-	if (myPlayer._pInvincible)
+	if (myPlayer.isInvincible)
 		return;
 	if (!myPlayer.CanChangeAction())
 		return;
@@ -91,12 +91,12 @@ void RepeatMouseAction()
 			NetSendCmdParam1(true, rangedAttack ? CMD_RATTACKID : CMD_ATTACKID, pcursmonst);
 		break;
 	case MouseActionType::AttackPlayerTarget:
-		if (PlayerUnderCursor != nullptr && !myPlayer.friendlyMode)
+		if (PlayerUnderCursor != nullptr && !myPlayer.isFriendlyMode)
 			NetSendCmdParam1(true, rangedAttack ? CMD_RATTACKPID : CMD_ATTACKPID, PlayerUnderCursor->getId());
 		break;
 	case MouseActionType::Spell:
 		if (ControlMode != ControlTypes::KeyboardAndMouse) {
-			UpdateSpellTarget(MyPlayer->_pRSpell);
+			UpdateSpellTarget(MyPlayer->selectedSpell);
 		}
 		CheckPlrSpell(ControlMode == ControlTypes::KeyboardAndMouse);
 		break;
@@ -105,7 +105,7 @@ void RepeatMouseAction()
 			CheckPlrSpell(false);
 		break;
 	case MouseActionType::SpellPlayerTarget:
-		if (PlayerUnderCursor != nullptr && !myPlayer.friendlyMode)
+		if (PlayerUnderCursor != nullptr && !myPlayer.isFriendlyMode)
 			CheckPlrSpell(false);
 		break;
 	case MouseActionType::OperateObject:

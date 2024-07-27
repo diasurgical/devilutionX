@@ -65,7 +65,7 @@ void StreamUpdate()
 
 void PlaySfxPriv(TSFX *pSFX, bool loc, Point position)
 {
-	if (MyPlayer->pLvlLoad != 0 && gbIsMultiplayer) {
+	if (MyPlayer->levelLoading != 0 && gbIsMultiplayer) {
 		return;
 	}
 	if (!gbSndInited || !gbSoundOn || gbBufferMsgs != 0) {
@@ -267,7 +267,7 @@ void sound_init()
 		if (gbIsHellfire)
 			mask |= sfx_MONK;
 	} else {
-		switch (MyPlayer->_pClass) {
+		switch (MyPlayer->heroClass) {
 		case HeroClass::Warrior:
 		case HeroClass::Barbarian:
 			mask |= sfx_WARRIOR;

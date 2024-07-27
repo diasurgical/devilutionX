@@ -116,21 +116,21 @@ void CheckStashPaste(Point cursorPosition)
 {
 	Player &player = *MyPlayer;
 
-	if (!IsItemAllowedInStash(player.HoldItem))
+	if (!IsItemAllowedInStash(player.heldItem))
 		return;
 
-	if (player.HoldItem._itype == ItemType::Gold) {
-		if (Stash.gold > std::numeric_limits<int>::max() - player.HoldItem._ivalue)
+	if (player.heldItem._itype == ItemType::Gold) {
+		if (Stash.gold > std::numeric_limits<int>::max() - player.heldItem._ivalue)
 			return;
-		Stash.gold += player.HoldItem._ivalue;
-		player.HoldItem.clear();
+		Stash.gold += player.heldItem._ivalue;
+		player.heldItem.clear();
 		PlaySFX(SfxID::ItemGold);
 		Stash.dirty = true;
 		NewCursor(CURSOR_HAND);
 		return;
 	}
 
-	const Size itemSize = GetInventorySize(player.HoldItem);
+	const Size itemSize = GetInventorySize(player.heldItem);
 
 	std::optional<Point> targetSlot = FindTargetSlotUnderItemCursor(cursorPosition, itemSize);
 	if (!targetSlot)
@@ -151,18 +151,18 @@ void CheckStashPaste(Point cursorPosition)
 		return; // Found a second item
 	}
 
-	PlaySFX(ItemInvSnds[ItemCAnimTbl[player.HoldItem._iCurs]]);
+	PlaySFX(ItemInvSnds[ItemCAnimTbl[player.heldItem._iCurs]]);
 
 	// Need to set the item anchor position to the bottom left so drawing code functions correctly.
-	player.HoldItem.position = firstSlot + Displacement { 0, itemSize.height - 1 };
+	player.heldItem.position = firstSlot + Displacement { 0, itemSize.height - 1 };
 
 	if (stashIndex == StashStruct::EmptyCell) {
-		Stash.stashList.emplace_back(player.HoldItem.pop());
+		Stash.stashList.emplace_back(player.heldItem.pop());
 		// stashList will have at most 10 000 items, up to 65 535 are supported with uint16_t indexes
 		stashIndex = static_cast<uint16_t>(Stash.stashList.size() - 1);
 	} else {
 		// swap the held item and whatever was in the stash at this position
-		std::swap(Stash.stashList[stashIndex], player.HoldItem);
+		std::swap(Stash.stashList[stashIndex], player.heldItem);
 		// then clear the space occupied by the old item
 		for (auto &row : Stash.GetCurrentGrid()) {
 			for (auto &itemId : row) {
@@ -177,7 +177,7 @@ void CheckStashPaste(Point cursorPosition)
 
 	Stash.dirty = true;
 
-	NewCursor(player.HoldItem);
+	NewCursor(player.heldItem);
 }
 
 void CheckStashCut(Point cursorPosition, bool automaticMove)
@@ -205,7 +205,7 @@ void CheckStashCut(Point cursorPosition, bool automaticMove)
 		return;
 	}
 
-	Item &holdItem = player.HoldItem;
+	Item &holdItem = player.heldItem;
 	holdItem.clear();
 
 	bool automaticallyMoved = false;
@@ -406,7 +406,7 @@ void DrawStash(const Surface &out)
 
 void CheckStashItem(Point mousePosition, bool isShiftHeld, bool isCtrlHeld)
 {
-	if (!MyPlayer->HoldItem.isEmpty()) {
+	if (!MyPlayer->heldItem.isEmpty()) {
 		CheckStashPaste(mousePosition);
 	} else if (isCtrlHeld) {
 		TransferItemToInventory(*MyPlayer, pcursstashitem);
@@ -458,7 +458,7 @@ uint16_t CheckStashHLight(Point mousePosition)
 
 bool UseStashItem(uint16_t c)
 {
-	if (MyPlayer->_pInvincible && MyPlayer->_pHitPoints == 0)
+	if (MyPlayer->isInvincible && MyPlayer->life == 0)
 		return true;
 	if (pcurs != CURSOR_HAND)
 		return true;
@@ -611,7 +611,7 @@ void WithdrawGoldKeyPress(SDL_Keycode vkey)
 {
 	Player &myPlayer = *MyPlayer;
 
-	if (myPlayer._pHitPoints >> 6 <= 0) {
+	if (myPlayer.life >> 6 <= 0) {
 		CloseGoldWithdraw();
 		return;
 	}

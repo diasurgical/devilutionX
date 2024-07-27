@@ -104,38 +104,38 @@ constexpr std::array<const WalkParameter, 8> WalkParameters { {
 
 } // namespace
 
-DisplacementOf<int8_t> ActorPosition::CalculateWalkingOffset(Direction dir, const AnimationInfo &animInfo) const
+DisplacementOf<int8_t> ActorPosition::CalculateWalkingOffset(Direction dir, const PlayerAnimationInfo &animationInfo) const
 {
-	DisplacementOf<int16_t> offset = CalculateWalkingOffsetShifted4(dir, animInfo);
+	DisplacementOf<int16_t> offset = CalculateWalkingOffsetShifted4(dir, animationInfo);
 	return { static_cast<int8_t>(offset.deltaX >> 4), static_cast<int8_t>(offset.deltaY >> 4) };
 }
 
-DisplacementOf<int16_t> ActorPosition::CalculateWalkingOffsetShifted4(Direction dir, const AnimationInfo &animInfo) const
+DisplacementOf<int16_t> ActorPosition::CalculateWalkingOffsetShifted4(Direction dir, const PlayerAnimationInfo &animationInfo) const
 {
-	int16_t velocityProgress = static_cast<int16_t>(animInfo.getAnimationProgress()) * animInfo.numberOfFrames / AnimationInfo::baseValueFraction;
+	int16_t velocityProgress = static_cast<int16_t>(animationInfo.getAnimationProgress()) * animationInfo.numberOfFrames / PlayerAnimationInfo::baseValueFraction;
 	const WalkParameter &walkParameter = WalkParameters[static_cast<size_t>(dir)];
-	DisplacementOf<int16_t> velocity = walkParameter.getVelocity(animInfo.numberOfFrames);
+	DisplacementOf<int16_t> velocity = walkParameter.getVelocity(animationInfo.numberOfFrames);
 	DisplacementOf<int16_t> offset = (velocity * velocityProgress);
 	return offset;
 }
 
-DisplacementOf<int16_t> ActorPosition::CalculateWalkingOffsetShifted8(Direction dir, const AnimationInfo &animInfo) const
+DisplacementOf<int16_t> ActorPosition::CalculateWalkingOffsetShifted8(Direction dir, const PlayerAnimationInfo &animationInfo) const
 {
-	DisplacementOf<int16_t> offset = CalculateWalkingOffsetShifted4(dir, animInfo);
+	DisplacementOf<int16_t> offset = CalculateWalkingOffsetShifted4(dir, animationInfo);
 	offset.deltaX <<= 4;
 	offset.deltaY <<= 4;
 	return offset;
 }
 
-DisplacementOf<int16_t> ActorPosition::GetWalkingVelocityShifted4(Direction dir, const AnimationInfo &animInfo) const
+DisplacementOf<int16_t> ActorPosition::GetWalkingVelocityShifted4(Direction dir, const PlayerAnimationInfo &animationInfo) const
 {
 	const WalkParameter &walkParameter = WalkParameters[static_cast<size_t>(dir)];
-	return walkParameter.getVelocity(animInfo.numberOfFrames);
+	return walkParameter.getVelocity(animationInfo.numberOfFrames);
 }
 
-DisplacementOf<int16_t> ActorPosition::GetWalkingVelocityShifted8(Direction dir, const AnimationInfo &animInfo) const
+DisplacementOf<int16_t> ActorPosition::GetWalkingVelocityShifted8(Direction dir, const PlayerAnimationInfo &animationInfo) const
 {
-	DisplacementOf<int16_t> velocity = GetWalkingVelocityShifted4(dir, animInfo);
+	DisplacementOf<int16_t> velocity = GetWalkingVelocityShifted4(dir, animationInfo);
 	velocity.deltaX <<= 4;
 	velocity.deltaY <<= 4;
 	return velocity;

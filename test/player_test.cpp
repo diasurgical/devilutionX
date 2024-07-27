@@ -16,8 +16,8 @@ int RunBlockTest(int frames, ItemSpecialEffect flags)
 {
 	Player &player = Players[0];
 
-	player._pHFrames = frames;
-	player._pIFlags = flags;
+	player.numRecoveryFrames = frames;
+	player.flags = flags;
 	// StartPlrHit compares damage (a 6 bit fixed point value) to character level to determine if the player shrugs off the hit.
 	// We don't initialise player so this comparison can't be relied on, instead we use forcehit to ensure the player enters hit mode
 	StartPlrHit(player, 0, true);
@@ -25,9 +25,9 @@ int RunBlockTest(int frames, ItemSpecialEffect flags)
 	int i = 1;
 	for (; i < 100; i++) {
 		TestPlayerDoGotHit(player);
-		if (player._pmode != PM_GOTHIT)
+		if (player.mode != PM_GOTHIT)
 			break;
-		player.AnimInfo.currentFrame++;
+		player.animationInfo.currentFrame++;
 	}
 
 	return i;
@@ -92,91 +92,90 @@ TEST(Player, PM_DoGotHit)
 
 static void AssertPlayer(Player &player)
 {
-	ASSERT_EQ(CountU8(player._pSplLvl, 64), 0);
-	ASSERT_EQ(Count8(player.InvGrid, InventoryGridCells), 1);
-	ASSERT_EQ(CountItems(player.InvBody, NUM_INVLOC), 1);
-	ASSERT_EQ(CountItems(player.InvList, InventoryGridCells), 1);
-	ASSERT_EQ(CountItems(player.SpdList, MaxBeltItems), 2);
-	ASSERT_EQ(CountItems(&player.HoldItem, 1), 0);
+	ASSERT_EQ(CountU8(player.spellLevel, 64), 0);
+	ASSERT_EQ(Count8(player.inventoryGrid, InventoryGridCells), 1);
+	ASSERT_EQ(CountItems(player.bodySlot, NUM_INVLOC), 1);
+	ASSERT_EQ(CountItems(player.inventorySlot, InventoryGridCells), 1);
+	ASSERT_EQ(CountItems(player.beltSlot, MaxBeltItems), 2);
+	ASSERT_EQ(CountItems(&player.heldItem, 1), 0);
 
 	ASSERT_EQ(player.position.tile.x, 0);
 	ASSERT_EQ(player.position.tile.y, 0);
 	ASSERT_EQ(player.position.future.x, 0);
 	ASSERT_EQ(player.position.future.y, 0);
-	ASSERT_EQ(player.plrlevel, 0);
-	ASSERT_EQ(player.destAction, 0);
-	ASSERT_STREQ(player._pName, "");
-	ASSERT_EQ(player._pClass, HeroClass::Rogue);
-	ASSERT_EQ(player._pBaseStr, 20);
-	ASSERT_EQ(player._pStrength, 20);
-	ASSERT_EQ(player._pBaseMag, 15);
-	ASSERT_EQ(player._pMagic, 15);
-	ASSERT_EQ(player._pBaseDex, 30);
-	ASSERT_EQ(player._pDexterity, 30);
-	ASSERT_EQ(player._pBaseVit, 20);
-	ASSERT_EQ(player._pVitality, 20);
+	ASSERT_EQ(player.dungeonLevel, 0);
+	ASSERT_EQ(player.destinationAction, 0);
+	ASSERT_STREQ(player.name, "");
+	ASSERT_EQ(player.heroClass, HeroClass::Rogue);
+	ASSERT_EQ(player.baseStrength, 20);
+	ASSERT_EQ(player.strength, 20);
+	ASSERT_EQ(player.baseMagic, 15);
+	ASSERT_EQ(player.magic, 15);
+	ASSERT_EQ(player.baseDexterity, 30);
+	ASSERT_EQ(player.dexterity, 30);
+	ASSERT_EQ(player.baseVitality, 20);
+	ASSERT_EQ(player.vitality, 20);
 	ASSERT_EQ(player.getCharacterLevel(), 1);
-	ASSERT_EQ(player._pStatPts, 0);
-	ASSERT_EQ(player._pExperience, 0);
-	ASSERT_EQ(player._pGold, 100);
-	ASSERT_EQ(player._pMaxHPBase, 2880);
-	ASSERT_EQ(player._pHPBase, 2880);
+	ASSERT_EQ(player.statPoints, 0);
+	ASSERT_EQ(player.experience, 0);
+	ASSERT_EQ(player.gold, 100);
+	ASSERT_EQ(player.baseMaxLife, 2880);
+	ASSERT_EQ(player.baseLife, 2880);
 	ASSERT_EQ(player.getBaseToBlock(), 20);
-	ASSERT_EQ(player._pMaxManaBase, 1440);
-	ASSERT_EQ(player._pManaBase, 1440);
-	ASSERT_EQ(player._pMemSpells, 0);
-	ASSERT_EQ(player._pNumInv, 1);
-	ASSERT_EQ(player.wReflections, 0);
-	ASSERT_EQ(player.pTownWarps, 0);
-	ASSERT_EQ(player.pDungMsgs, 0);
-	ASSERT_EQ(player.pDungMsgs2, 0);
-	ASSERT_EQ(player.pLvlLoad, 0);
-	ASSERT_EQ(player.pDiabloKillLevel, 0);
-	ASSERT_EQ(player.pManaShield, 0);
-	ASSERT_EQ(player.pDamAcFlags, ItemSpecialEffectHf::None);
+	ASSERT_EQ(player.baseMaxMana, 1440);
+	ASSERT_EQ(player.baseMana, 1440);
+	ASSERT_EQ(player.learnedSpells, 0);
+	ASSERT_EQ(player.numInventoryItems, 1);
+	ASSERT_EQ(player.reflections, 0);
+	ASSERT_EQ(player.townWarps, 0);
+	ASSERT_EQ(player.dungeonMessages, 0);
+	ASSERT_EQ(player.dungeonMessages2, 0);
+	ASSERT_EQ(player.levelLoading, 0);
+	ASSERT_EQ(player.difficultyCompletion, 0);
+	ASSERT_EQ(player.hasManaShield, 0);
+	ASSERT_EQ(player.hellfireFlags, ItemSpecialEffectHf::None);
 
-	ASSERT_EQ(player._pmode, 0);
-	ASSERT_EQ(Count8(player.walkpath, MaxPathLength), 0);
+	ASSERT_EQ(player.mode, 0);
+	ASSERT_EQ(Count8(player.walkPath, MaxPathLength), 0);
 	ASSERT_EQ(player.queuedSpell.spellId, SpellID::Null);
 	ASSERT_EQ(player.queuedSpell.spellType, SpellType::Skill);
 	ASSERT_EQ(player.queuedSpell.spellFrom, 0);
 	ASSERT_EQ(player.inventorySpell, SpellID::Null);
-	ASSERT_EQ(player._pRSpell, SpellID::TrapDisarm);
-	ASSERT_EQ(player._pRSplType, SpellType::Skill);
-	ASSERT_EQ(player._pSBkSpell, SpellID::Null);
-	ASSERT_EQ(player._pAblSpells, 134217728);
-	ASSERT_EQ(player._pScrlSpells, 0);
-	ASSERT_EQ(player._pSpellFlags, SpellFlag::None);
-	ASSERT_EQ(player._pBlockFlag, 0);
-	ASSERT_EQ(player._pLightRad, 10);
-	ASSERT_EQ(player._pDamageMod, 0);
-	ASSERT_EQ(player._pHitPoints, 2880);
-	ASSERT_EQ(player._pMaxHP, 2880);
-	ASSERT_EQ(player._pMana, 1440);
-	ASSERT_EQ(player._pMaxMana, 1440);
+	ASSERT_EQ(player.selectedSpell, SpellID::TrapDisarm);
+	ASSERT_EQ(player.selectedSpellType, SpellType::Skill);
+	ASSERT_EQ(player.skills, 134217728);
+	ASSERT_EQ(player.scrollSpells, 0);
+	ASSERT_EQ(player.spellFlags, SpellFlag::None);
+	ASSERT_EQ(player.hasBlockFlag, 0);
+	ASSERT_EQ(player.lightRadius, 10);
+	ASSERT_EQ(player.damageModifier, 0);
+	ASSERT_EQ(player.life, 2880);
+	ASSERT_EQ(player.maxLife, 2880);
+	ASSERT_EQ(player.mana, 1440);
+	ASSERT_EQ(player.maxMana, 1440);
 	ASSERT_EQ(player.getNextExperienceThreshold(), 2000);
-	ASSERT_EQ(player._pMagResist, 0);
-	ASSERT_EQ(player._pFireResist, 0);
-	ASSERT_EQ(player._pLghtResist, 0);
-	ASSERT_EQ(CountBool(player._pLvlVisited, NUMLEVELS), 0);
-	ASSERT_EQ(CountBool(player._pSLvlVisited, NUMLEVELS), 0);
+	ASSERT_EQ(player.resistMagic, 0);
+	ASSERT_EQ(player.resistFire, 0);
+	ASSERT_EQ(player.resistLightning, 0);
+	ASSERT_EQ(CountBool(player.isLevelVisted, NUMLEVELS), 0);
+	ASSERT_EQ(CountBool(player.isSetLevelVisted, NUMLEVELS), 0);
 	// This test case uses a Rogue, starting loadout is a short bow with damage 1-4
-	ASSERT_EQ(player._pIMinDam, 1);
-	ASSERT_EQ(player._pIMaxDam, 4);
-	ASSERT_EQ(player._pIAC, 0);
-	ASSERT_EQ(player._pIBonusDam, 0);
-	ASSERT_EQ(player._pIBonusToHit, 0);
-	ASSERT_EQ(player._pIBonusAC, 0);
-	ASSERT_EQ(player._pIBonusDamMod, 0);
-	ASSERT_EQ(player._pISpells, 0);
-	ASSERT_EQ(player._pIFlags, ItemSpecialEffect::None);
-	ASSERT_EQ(player._pIGetHit, 0);
-	ASSERT_EQ(player._pISplLvlAdd, 0);
-	ASSERT_EQ(player._pIEnAc, 0);
-	ASSERT_EQ(player._pIFMinDam, 0);
-	ASSERT_EQ(player._pIFMaxDam, 0);
-	ASSERT_EQ(player._pILMinDam, 0);
-	ASSERT_EQ(player._pILMaxDam, 0);
+	ASSERT_EQ(player.minDamage, 1);
+	ASSERT_EQ(player.maxDamage, 4);
+	ASSERT_EQ(player.armorClass, 0);
+	ASSERT_EQ(player.bonusDamagePercent, 0);
+	ASSERT_EQ(player.bonusToHit, 0);
+	ASSERT_EQ(player.bonusArmorClass, 0);
+	ASSERT_EQ(player.bonusDamage, 0);
+	ASSERT_EQ(player.staffSpells, 0);
+	ASSERT_EQ(player.flags, ItemSpecialEffect::None);
+	ASSERT_EQ(player.damageFromEnemies, 0);
+	ASSERT_EQ(player.bonusSpellLevel, 0);
+	ASSERT_EQ(player.armorPierce, 0);
+	ASSERT_EQ(player.minFireDamage, 0);
+	ASSERT_EQ(player.maxFireDamage, 0);
+	ASSERT_EQ(player.minLightningDamage, 0);
+	ASSERT_EQ(player.maxLightningDamage, 0);
 }
 
 TEST(Player, CreatePlayer)

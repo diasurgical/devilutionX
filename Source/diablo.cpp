@@ -274,7 +274,7 @@ void LeftMouseCmd(bool bShift)
 				LastMouseButtonAction = MouseActionType::AttackMonsterTarget;
 				NetSendCmdParam1(true, CMD_RATTACKID, pcursmonst);
 			}
-		} else if (PlayerUnderCursor != nullptr && !myPlayer.friendlyMode) {
+		} else if (PlayerUnderCursor != nullptr && !myPlayer.isFriendlyMode) {
 			LastMouseButtonAction = MouseActionType::AttackPlayerTarget;
 			NetSendCmdParam1(true, CMD_RATTACKPID, PlayerUnderCursor->getId());
 		}
@@ -294,7 +294,7 @@ void LeftMouseCmd(bool bShift)
 		} else if (pcursmonst != -1) {
 			LastMouseButtonAction = MouseActionType::AttackMonsterTarget;
 			NetSendCmdParam1(true, CMD_ATTACKID, pcursmonst);
-		} else if (PlayerUnderCursor != nullptr && !myPlayer.friendlyMode) {
+		} else if (PlayerUnderCursor != nullptr && !myPlayer.isFriendlyMode) {
 			LastMouseButtonAction = MouseActionType::AttackPlayerTarget;
 			NetSendCmdParam1(true, CMD_ATTACKPID, PlayerUnderCursor->getId());
 		}
@@ -310,7 +310,7 @@ bool TryOpenDungeonWithMouse()
 	if (leveltype != DTYPE_TOWN)
 		return false;
 
-	Item &holdItem = MyPlayer->HoldItem;
+	Item &holdItem = MyPlayer->heldItem;
 	if (holdItem.IDidx == IDI_RUNEBOMB && OpensHive(cursPosition))
 		OpenHive();
 	else if (holdItem.IDidx == IDI_MAPOFDOOM && OpensGrave(cursPosition))
@@ -379,12 +379,12 @@ void LeftMouseDown(uint16_t modState)
 				CheckStashButtonPress(MousePosition);
 			} else if (sbookflag && GetRightPanel().contains(MousePosition)) {
 				CheckSBook();
-			} else if (!MyPlayer->HoldItem.isEmpty()) {
+			} else if (!MyPlayer->heldItem.isEmpty()) {
 				if (!TryOpenDungeonWithMouse()) {
 					Point currentPosition = MyPlayer->position.tile;
 					std::optional<Point> itemTile = FindAdjacentPositionForItem(currentPosition, GetDirection(currentPosition, cursPosition));
 					if (itemTile) {
-						NetSendCmdPItem(true, CMD_PUTITEM, *itemTile, MyPlayer->HoldItem);
+						NetSendCmdPItem(true, CMD_PUTITEM, *itemTile, MyPlayer->heldItem);
 						NewCursor(CURSOR_HAND);
 					}
 				}
@@ -425,7 +425,7 @@ void RightMouseDown(bool isShiftHeld)
 {
 	LastMouseButtonAction = MouseActionType::None;
 
-	if (gmenu_is_active() || sgnTimeoutCurs != CURSOR_NONE || PauseMode == 2 || MyPlayer->_pInvincible) {
+	if (gmenu_is_active() || sgnTimeoutCurs != CURSOR_NONE || PauseMode == 2 || MyPlayer->isInvincible) {
 		return;
 	}
 
@@ -1380,9 +1380,9 @@ void UnstuckChargers()
 {
 	if (gbIsMultiplayer) {
 		for (Player &player : Players) {
-			if (!player.plractive)
+			if (!player.isPlayerActive)
 				continue;
-			if (player._pLvlChanging)
+			if (player.isChangingLevel)
 				continue;
 			if (!player.isOnActiveLevel())
 				continue;
@@ -1483,7 +1483,7 @@ void TimeoutCursor(bool bTimeout)
 	} else if (sgnTimeoutCurs != CURSOR_NONE) {
 		// Timeout is gone, we should restore the previous cursor.
 		// But the timeout cursor could already be changed by the now processed messages (for example item cursor from CMD_GETITEM).
-		// Changing the item cursor back to the previous (hand) cursor could result in deleted items, cause this resets Player.HoldItem (see NewCursor).
+		// Changing the item cursor back to the previous (hand) cursor could result in deleted items, cause this resets Player.heldItem (see NewCursor).
 		if (pcurs == CURSOR_HOURGLASS)
 			NewCursor(sgnTimeoutCurs);
 		sgnTimeoutCurs = CURSOR_NONE;
@@ -1624,7 +1624,7 @@ void CycleSpellHotkeys(bool next)
 	for (size_t slot = 0; slot < NumHotkeys; slot++) {
 		if (!IsValidSpeedSpell(slot))
 			continue;
-		if (MyPlayer->_pRSpell == MyPlayer->_pSplHotKey[slot] && MyPlayer->_pRSplType == MyPlayer->_pSplTHotKey[slot]) {
+		if (MyPlayer->selectedSpell == MyPlayer->hotkeySpell[slot] && MyPlayer->selectedSpellType == MyPlayer->hotkeySpellType[slot]) {
 			// found current
 			currentIndex = validHotKeyIndexes.size();
 		}
@@ -1646,7 +1646,7 @@ void CycleSpellHotkeys(bool next)
 
 bool IsPlayerDead()
 {
-	return MyPlayer->_pmode == PM_DEATH || MyPlayerIsDead;
+	return MyPlayer->mode == PM_DEATH || MyPlayerIsDead;
 }
 
 bool IsGameRunning()
@@ -1682,7 +1682,7 @@ void InitKeymapActions()
 		    '1' + i,
 		    [i] {
 			    Player &myPlayer = *MyPlayer;
-			    if (!myPlayer.SpdList[i].isEmpty() && myPlayer.SpdList[i]._itype != ItemType::Gold) {
+			    if (!myPlayer.beltSlot[i].isEmpty() && myPlayer.beltSlot[i]._itype != ItemType::Gold) {
 				    UseInvItem(INVITEM_BELT_FIRST + i);
 			    }
 		    },
@@ -1993,7 +1993,7 @@ void InitPadmapActions()
 		    ControllerButton_NONE,
 		    [i] {
 			    Player &myPlayer = *MyPlayer;
-			    if (!myPlayer.SpdList[i].isEmpty() && myPlayer.SpdList[i]._itype != ItemType::Gold) {
+			    if (!myPlayer.beltSlot[i].isEmpty() && myPlayer.beltSlot[i]._itype != ItemType::Gold) {
 				    UseInvItem(INVITEM_BELT_FIRST + i);
 			    }
 		    },
@@ -2678,7 +2678,7 @@ bool TryIconCurs()
 			NetSendCmdLocParam5(true, CMD_SPELLXYD, cursPosition, static_cast<int8_t>(spellID), static_cast<uint8_t>(spellType), static_cast<uint16_t>(sd), spellLevel, spellFrom);
 		} else if (pcursmonst != -1) {
 			NetSendCmdParam5(true, CMD_SPELLID, pcursmonst, static_cast<int8_t>(spellID), static_cast<uint8_t>(spellType), spellLevel, spellFrom);
-		} else if (PlayerUnderCursor != nullptr && !myPlayer.friendlyMode) {
+		} else if (PlayerUnderCursor != nullptr && !myPlayer.isFriendlyMode) {
 			NetSendCmdParam5(true, CMD_SPELLPID, PlayerUnderCursor->getId(), static_cast<int8_t>(spellID), static_cast<uint8_t>(spellType), spellLevel, spellFrom);
 		} else {
 			NetSendCmdLocParam4(true, CMD_SPELLXY, cursPosition, static_cast<int8_t>(spellID), static_cast<uint8_t>(spellType), spellLevel, spellFrom);
@@ -2945,7 +2945,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		IncProgress();
 
 		for (Player &player : Players) {
-			if (player.plractive && player.isOnActiveLevel()) {
+			if (player.isPlayerActive && player.isOnActiveLevel()) {
 				InitPlayerGFX(player);
 				if (lvldir != ENTRY_LOAD)
 					InitPlayer(player, firstflag);
@@ -2958,14 +2958,14 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 
 		bool visited = false;
 		for (const Player &player : Players) {
-			if (player.plractive)
-				visited = visited || player._pLvlVisited[currlevel];
+			if (player.isPlayerActive)
+				visited = visited || player.isLevelVisted[currlevel];
 		}
 
 		SetRndSeed(DungeonSeeds[currlevel]);
 
 		if (leveltype != DTYPE_TOWN) {
-			if (firstflag || lvldir == ENTRY_LOAD || !myPlayer._pLvlVisited[currlevel] || gbIsMultiplayer) {
+			if (firstflag || lvldir == ENTRY_LOAD || !myPlayer.isLevelVisted[currlevel] || gbIsMultiplayer) {
 				HoldThemeRooms();
 				[[maybe_unused]] uint32_t mid1Seed = GetLCGEngineState();
 				InitGolems();
@@ -3010,7 +3010,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 			InitMissiles();
 			IncProgress();
 
-			if (!firstflag && lvldir != ENTRY_LOAD && myPlayer._pLvlVisited[currlevel] && !gbIsMultiplayer)
+			if (!firstflag && lvldir != ENTRY_LOAD && myPlayer.isLevelVisted[currlevel] && !gbIsMultiplayer)
 				LoadLevel();
 			if (gbIsMultiplayer)
 				DeltaLoadLevel();
@@ -3049,7 +3049,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		IncProgress();
 
 		for (Player &player : Players) {
-			if (player.plractive && player.isOnActiveLevel()) {
+			if (player.isPlayerActive && player.isOnActiveLevel()) {
 				InitPlayerGFX(player);
 				if (lvldir != ENTRY_LOAD)
 					InitPlayer(player, firstflag);
@@ -3060,7 +3060,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		InitMultiView();
 		IncProgress();
 
-		if (firstflag || lvldir == ENTRY_LOAD || !myPlayer._pSLvlVisited[setlvlnum] || gbIsMultiplayer) {
+		if (firstflag || lvldir == ENTRY_LOAD || !myPlayer.isSetLevelVisted[setlvlnum] || gbIsMultiplayer) {
 			InitItems();
 			SavePreLighting();
 		} else {
@@ -3079,8 +3079,8 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 	SyncPortals();
 
 	for (Player &player : Players) {
-		if (player.plractive && player.isOnActiveLevel() && (!player._pLvlChanging || &player == MyPlayer)) {
-			if (player._pHitPoints > 0) {
+		if (player.isPlayerActive && player.isOnActiveLevel() && (!player.isChangingLevel || &player == MyPlayer)) {
+			if (player.life > 0) {
 				if (lvldir != ENTRY_LOAD)
 					SyncInitPlrPos(player);
 			} else {

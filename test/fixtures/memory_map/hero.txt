@@ -1,14 +1,14 @@
 R 32 dwLowDateTime
 R 32 dwHighDateTime
-R 8 destAction
-R 8 destParam1
-R 8 destParam2
-R 8 plrlevel
+R 8 destinationAction
+R 8 destinationParam1
+R 8 destinationParam2
+R 8 dungeonLevel
 R 8 px
 R 8 py
 R 8 targx
 R 8 targy
-R 256 _pName
+R 256 name
 R 8 pClass
 R 8 pBaseStr
 R 8 pBaseMag
@@ -24,26 +24,26 @@ R 32 pManaBase
 R 32 pMaxManaBase
 M 37 8 pSplLvl
 R 64 pMemSpells
-C 7 itemPack InvBody
-C 40 itemPack InvList
-M 40 8 InvGrid
-R 8 _pNumInv
-C 8 itemPack SpdList
-R 8 pTownWarps
-R 8 pDungMsgs
-R 8 pLvlLoad
+C 7 itemPack bodySlot
+C 40 itemPack inventorySlot
+M 40 8 inventoryGrid
+R 8 numInventoryItems
+C 8 itemPack beltSlot
+R 8 townWarps
+R 8 dungeonMessages
+R 8 levelLoading
 R 8 pBattleNet
-R 8 pManaShield
-R 8 pDungMsgs2
+R 8 hasManaShield
+R 8 dungeonMessages2
 R 8 bIsHellfire
 R 8 reserved
-R 16 wReflections
+R 16 reflections
 R 16 reserved
 M 10 8 pSplLvl2
 R 16 reserved
-R 32 pDiabloKillLevel
+R 32 difficultyCompletion
 R 32 pDifficulty
-R 32 pDamAcFlags
-R 8 friendlyMode
+R 32 hellfireFlags
+R 8 isFriendlyMode
 R 8 isOnSetLevel
 M 18 8 reserved

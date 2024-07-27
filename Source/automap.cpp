@@ -1271,9 +1271,9 @@ void SearchAutomapItem(const Surface &out, const Displacement &myPlayerOffset, i
 {
 	const Player &player = *MyPlayer;
 	Point tile = player.position.tile;
-	if (player._pmode == PM_WALK_SIDEWAYS) {
+	if (player.mode == PM_WALK_SIDEWAYS) {
 		tile = player.position.future;
-		if (player._pdir == Direction::West)
+		if (player.direction == Direction::West)
 			tile.x++;
 		else
 			tile.y++;
@@ -1326,7 +1326,7 @@ void DrawAutomapPlr(const Surface &out, const Displacement &myPlayerOffset, cons
 
 	Displacement playerOffset = {};
 	if (player.isWalking())
-		playerOffset = GetOffsetForWalking(player.AnimInfo, player._pdir);
+		playerOffset = GetOffsetForWalking(player.animationInfo, player.direction);
 
 	int scale = (GetAutomapType() == AutomapType::Minimap) ? MinimapScale : AutoMapScale;
 
@@ -1345,7 +1345,7 @@ void DrawAutomapPlr(const Surface &out, const Displacement &myPlayerOffset, cons
 	}
 	base.y -= AmLine(AmLineLength::DoubleTile);
 
-	switch (player._pdir) {
+	switch (player.direction) {
 	case Direction::North: {
 		const Point point = base + AmOffset(AmWidthOffset::None, AmHeightOffset::FullTileUp);
 		DrawMapLineNS(out, point, AmLine(AmLineLength::DoubleTile), playerColor);
@@ -1747,7 +1747,7 @@ void DrawAutomap(const Surface &out)
 	const Player &myPlayer = *MyPlayer;
 	Displacement myPlayerOffset = {};
 	if (myPlayer.isWalking())
-		myPlayerOffset = GetOffsetForWalking(myPlayer.AnimInfo, myPlayer._pdir, true);
+		myPlayerOffset = GetOffsetForWalking(myPlayer.animationInfo, myPlayer.direction, true);
 
 	int scale = (GetAutomapType() == AutomapType::Minimap) ? MinimapScale : AutoMapScale;
 	int d = (scale * 64) / 100;
@@ -1831,7 +1831,7 @@ void DrawAutomap(const Surface &out)
 	}
 
 	for (const Player &player : Players) {
-		if (player.isOnActiveLevel() && player.plractive && !player._pLvlChanging && (&player == MyPlayer || player.friendlyMode)) {
+		if (player.isOnActiveLevel() && player.isPlayerActive && !player.isChangingLevel && (&player == MyPlayer || player.isFriendlyMode)) {
 			DrawAutomapPlr(out, myPlayerOffset, player);
 		}
 	}

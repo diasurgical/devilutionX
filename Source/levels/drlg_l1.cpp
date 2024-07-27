@@ -1129,9 +1129,9 @@ bool PlaceCathedralStairs(lvl_entry entry)
 	}
 
 	// Place stairs up
-	position = PlaceMiniSet(MyPlayer->pOriginalCathedral && !Quests[Q_LTBANNER].IsAvailable() ? L5STAIRSUP : STAIRSUP, DMAXX * DMAXY, true);
+	position = PlaceMiniSet(MyPlayer->originalCathedral && !Quests[Q_LTBANNER].IsAvailable() ? L5STAIRSUP : STAIRSUP, DMAXX * DMAXY, true);
 	if (!position) {
-		if (MyPlayer->pOriginalCathedral)
+		if (MyPlayer->originalCathedral)
 			return false;
 		success = false;
 	} else if (entry == ENTRY_MAIN) {

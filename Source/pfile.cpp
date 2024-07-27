@@ -181,15 +181,15 @@ void CopySaveFile(uint32_t saveNum, std::string targetPath)
 
 void Game2UiPlayer(const Player &player, _uiheroinfo *heroinfo, bool bHasSaveFile)
 {
-	CopyUtf8(heroinfo->name, player._pName, sizeof(heroinfo->name));
+	CopyUtf8(heroinfo->name, player.name, sizeof(heroinfo->name));
 	heroinfo->level = player.getCharacterLevel();
-	heroinfo->heroclass = player._pClass;
-	heroinfo->strength = player._pStrength;
-	heroinfo->magic = player._pMagic;
-	heroinfo->dexterity = player._pDexterity;
-	heroinfo->vitality = player._pVitality;
+	heroinfo->heroclass = player.heroClass;
+	heroinfo->strength = player.strength;
+	heroinfo->magic = player.magic;
+	heroinfo->dexterity = player.dexterity;
+	heroinfo->vitality = player.vitality;
 	heroinfo->hassaved = bHasSaveFile;
-	heroinfo->herorank = player.pDiabloKillLevel;
+	heroinfo->herorank = player.difficultyCompletion;
 	heroinfo->spawned = gbIsSpawn;
 }
 
@@ -518,11 +518,11 @@ void pfile_write_hero(SaveWriter &saveWriter, bool writeGameData)
 void RemoveAllInvalidItems(Player &player)
 {
 	for (int i = 0; i < NUM_INVLOC; i++)
-		RemoveInvalidItem(player.InvBody[i]);
-	for (int i = 0; i < player._pNumInv; i++)
-		RemoveInvalidItem(player.InvList[i]);
+		RemoveInvalidItem(player.bodySlot[i]);
+	for (int i = 0; i < player.numInventoryItems; i++)
+		RemoveInvalidItem(player.inventorySlot[i]);
 	for (int i = 0; i < MaxBeltItems; i++)
-		RemoveInvalidItem(player.SpdList[i]);
+		RemoveInvalidItem(player.beltSlot[i]);
 	RemoveEmptyInventory(player);
 }
 
@@ -729,7 +729,7 @@ bool pfile_ui_save_create(_uiheroinfo *heroinfo)
 
 	Player &player = Players[0];
 	CreatePlayer(player, heroinfo->heroclass);
-	CopyUtf8(player._pName, heroinfo->name, PlayerNameLength);
+	CopyUtf8(player.name, heroinfo->name, PlayerNameLength);
 	PackPlayer(pkplr, player);
 	EncodeHero(saveWriter, &pkplr);
 	Game2UiPlayer(player, heroinfo, false);

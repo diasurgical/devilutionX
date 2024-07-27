@@ -15,7 +15,7 @@
 
 namespace devilution {
 
-int8_t AnimationInfo::getFrameToUseForRendering() const
+int8_t PlayerAnimationInfo::getFrameToUseForRendering() const
 {
 	// Normal logic is used,
 	// - if no frame-skipping is required and so we have exactly one Animationframe per game tick
@@ -59,7 +59,7 @@ int8_t AnimationInfo::getFrameToUseForRendering() const
 	return absoluteAnimationFrame;
 }
 
-uint8_t AnimationInfo::getAnimationProgress() const
+uint8_t PlayerAnimationInfo::getAnimationProgress() const
 {
 	int16_t ticksSinceSequenceStarted = std::max<int16_t>(0, ticksSinceSequenceStarted_);
 	int32_t tickModifier = tickModifier_;
@@ -78,7 +78,7 @@ uint8_t AnimationInfo::getAnimationProgress() const
 	return static_cast<uint8_t>(animationFraction);
 }
 
-void AnimationInfo::setNewAnimation(OptionalClxSpriteList celSprite, int8_t numberOfFrames, int8_t ticksPerFrame, AnimationDistributionFlags flags /*= AnimationDistributionFlags::None*/, int8_t numSkippedFrames /*= 0*/, int8_t distributeFramesBeforeFrame /*= 0*/, uint8_t previewShownGameTickFragments /*= 0*/)
+void PlayerAnimationInfo::setNewAnimation(OptionalClxSpriteList celSprite, int8_t numberOfFrames, int8_t ticksPerFrame, AnimationDistributionFlags flags /*= AnimationDistributionFlags::None*/, int8_t numSkippedFrames /*= 0*/, int8_t distributeFramesBeforeFrame /*= 0*/, uint8_t previewShownGameTickFragments /*= 0*/)
 {
 	if ((flags & AnimationDistributionFlags::RepeatedAction) == AnimationDistributionFlags::RepeatedAction && distributeFramesBeforeFrame != 0 && this->numberOfFrames == numberOfFrames && currentFrame + 1 >= distributeFramesBeforeFrame && currentFrame != this->numberOfFrames - 1) {
 		// We showed the same Animation (for example a melee attack) before but truncated the Animation.
@@ -107,9 +107,9 @@ void AnimationInfo::setNewAnimation(OptionalClxSpriteList celSprite, int8_t numb
 		// Animation Frames that will be adjusted for the skipped Frames/game ticks
 		int8_t relevantAnimationFramesForDistributing = numberOfFrames;
 		if (distributeFramesBeforeFrame != 0) {
-			// After an attack hits (_pAFNum or _pSFNum) it can be canceled or another attack can be queued and this means the animation is canceled.
+			// After an attack hits (attackActionFrame or spellActionFrame) it can be canceled or another attack can be queued and this means the animation is canceled.
 			// In normal attacks frame skipping always happens before the attack actual hit.
-			// This has the advantage that the sword or bow always points to the enemy when the hit happens (_pAFNum or _pSFNum).
+			// This has the advantage that the sword or bow always points to the enemy when the hit happens (attackActionFrame or spellActionFrame).
 			// Our distribution logic must also regard this behaviour, so we are not allowed to distribute the skipped animations after the actual hit (_pAnimStopDistributingAfterFrame).
 			relevantAnimationFramesForDistributing = distributeFramesBeforeFrame - 1;
 		}
@@ -177,7 +177,7 @@ void AnimationInfo::setNewAnimation(OptionalClxSpriteList celSprite, int8_t numb
 	}
 }
 
-void AnimationInfo::changeAnimationData(OptionalClxSpriteList celSprite, int8_t numberOfFrames, int8_t ticksPerFrame)
+void PlayerAnimationInfo::changeanimationData(OptionalClxSpriteList celSprite, int8_t numberOfFrames, int8_t ticksPerFrame)
 {
 	if (numberOfFrames != this->numberOfFrames || ticksPerFrame != this->ticksPerFrame) {
 		// Ensure that the currentFrame is still valid and that we disable ADL cause the calculcated values (for example tickModifier_) could be wrong
@@ -195,7 +195,7 @@ void AnimationInfo::changeAnimationData(OptionalClxSpriteList celSprite, int8_t 
 	this->sprites = celSprite;
 }
 
-void AnimationInfo::processAnimation(bool reverseAnimation /*= false*/)
+void PlayerAnimationInfo::processAnimation(bool reverseAnimation /*= false*/)
 {
 	tickCounterOfCurrentFrame++;
 	ticksSinceSequenceStarted_ += baseValueFraction;
@@ -217,7 +217,7 @@ void AnimationInfo::processAnimation(bool reverseAnimation /*= false*/)
 	}
 }
 
-uint8_t AnimationInfo::getProgressToNextGameTick() const
+uint8_t PlayerAnimationInfo::getProgressToNextGameTick() const
 {
 	if (isPetrified)
 		return 0;

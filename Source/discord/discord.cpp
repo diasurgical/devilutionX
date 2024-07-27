@@ -110,13 +110,13 @@ std::string GetStateString()
 
 std::string GetTooltipString()
 {
-	return StrCat(MyPlayer->_pName, " - ", GetCharacterString());
+	return StrCat(MyPlayer->name, " - ", GetCharacterString());
 }
 
 std::string GetPlayerAssetString()
 {
 	char chars[5] {
-		CharChar[static_cast<int>(MyPlayer->_pClass)],
+		CharChar[static_cast<int>(MyPlayer->heroClass)],
 		ArmourChar[tracked_data.playerGfx >> 4],
 		WepChar[tracked_data.playerGfx & 0xF],
 		'a',
@@ -141,7 +141,7 @@ void UpdateGame()
 		return;
 
 	auto newData = PlayerData {
-		leveltype, setlvlnum, currlevel, MyPlayer->getCharacterLevel(), MyPlayer->_pgfxnum
+		leveltype, setlvlnum, currlevel, MyPlayer->getCharacterLevel(), MyPlayer->graphic
 	};
 	if (newData != tracked_data) {
 		tracked_data = newData;

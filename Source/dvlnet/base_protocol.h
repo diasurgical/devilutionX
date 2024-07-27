@@ -396,8 +396,8 @@ tl::expected<void, PacketError> base_protocol<P>::recv_ingame(packet &pkt, endpo
 				buf.resize(game_init_info.size() + (PlayerNameLength * MAX_PLRS) + gamename.size());
 				std::memcpy(buf.data(), &game_init_info[0], game_init_info.size());
 				for (size_t i = 0; i < Players.size(); i++) {
-					if (Players[i].plractive) {
-						std::memcpy(buf.data() + game_init_info.size() + (i * PlayerNameLength), &Players[i]._pName, PlayerNameLength);
+					if (Players[i].isPlayerActive) {
+						std::memcpy(buf.data() + game_init_info.size() + (i * PlayerNameLength), &Players[i].name, PlayerNameLength);
 					} else {
 						std::memset(buf.data() + game_init_info.size() + (i * PlayerNameLength), '\0', PlayerNameLength);
 					}

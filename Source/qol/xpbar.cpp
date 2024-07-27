@@ -86,10 +86,10 @@ void DrawXPBar(const Surface &out)
 	const uint8_t charLevel = player.getCharacterLevel();
 
 	const uint64_t prevXp = GetNextExperienceThresholdForLevel(charLevel - 1);
-	if (player._pExperience < prevXp)
+	if (player.experience < prevXp)
 		return;
 
-	uint64_t prevXpDelta1 = player._pExperience - prevXp;
+	uint64_t prevXpDelta1 = player.experience - prevXp;
 	uint64_t prevXpDelta = GetNextExperienceThresholdForLevel(charLevel) - prevXp;
 	uint64_t fullBar = BarWidth * prevXpDelta1 / prevXpDelta;
 
@@ -128,7 +128,7 @@ bool CheckXPBarInfo()
 		// Show a maximum level indicator for max level players.
 		InfoColor = UiFlags::ColorWhitegold;
 
-		AddPanelString(fmt::format(fmt::runtime(_("Experience: {:s}")), FormatInteger(player._pExperience)));
+		AddPanelString(fmt::format(fmt::runtime(_("Experience: {:s}")), FormatInteger(player.experience)));
 		AddPanelString(_("Maximum Level"));
 
 		return true;
@@ -136,10 +136,10 @@ bool CheckXPBarInfo()
 
 	InfoColor = UiFlags::ColorWhite;
 
-	AddPanelString(fmt::format(fmt::runtime(_("Experience: {:s}")), FormatInteger(player._pExperience)));
+	AddPanelString(fmt::format(fmt::runtime(_("Experience: {:s}")), FormatInteger(player.experience)));
 	uint32_t nextExperienceThreshold = player.getNextExperienceThreshold();
 	AddPanelString(fmt::format(fmt::runtime(_("Next Level: {:s}")), FormatInteger(nextExperienceThreshold)));
-	AddPanelString(fmt::format(fmt::runtime(_("{:s} to Level {:d}")), FormatInteger(nextExperienceThreshold - player._pExperience), charLevel + 1));
+	AddPanelString(fmt::format(fmt::runtime(_("{:s} to Level {:d}")), FormatInteger(nextExperienceThreshold - player.experience), charLevel + 1));
 
 	return true;
 }

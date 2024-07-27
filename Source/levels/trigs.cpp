@@ -81,11 +81,11 @@ bool IsWarpOpen(dungeon_type type)
 
 	Player &myPlayer = *MyPlayer;
 
-	if (type == DTYPE_CATACOMBS && (myPlayer.pTownWarps & 1) != 0)
+	if (type == DTYPE_CATACOMBS && (myPlayer.townWarps & 1) != 0)
 		return true;
-	if (type == DTYPE_CAVES && (myPlayer.pTownWarps & 2) != 0)
+	if (type == DTYPE_CAVES && (myPlayer.townWarps & 2) != 0)
 		return true;
-	if (type == DTYPE_HELL && (myPlayer.pTownWarps & 4) != 0)
+	if (type == DTYPE_HELL && (myPlayer.townWarps & 4) != 0)
 		return true;
 
 	if (gbIsHellfire) {
@@ -863,7 +863,7 @@ void CheckTriggers()
 {
 	Player &myPlayer = *MyPlayer;
 
-	if (myPlayer._pmode != PM_STAND)
+	if (myPlayer.mode != PM_STAND)
 		return;
 
 	for (int i = 0; i < numtrigs; i++) {

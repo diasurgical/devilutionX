@@ -17,7 +17,7 @@ namespace {
 
 bool HasRoomForGold()
 {
-	for (int idx : MyPlayer->InvGrid) {
+	for (int idx : MyPlayer->inventoryGrid) {
 		// Secondary item cell. No need to check those as we'll go through the main item cells anyway.
 		if (idx < 0)
 			continue;
@@ -27,7 +27,7 @@ bool HasRoomForGold()
 			return true;
 
 		// Main item cell. Potentially a gold pile so check it.
-		auto item = MyPlayer->InvList[idx - 1];
+		auto item = MyPlayer->inventorySlot[idx - 1];
 		if (item._itype == ItemType::Gold && item._ivalue < MaxGold)
 			return true;
 	}

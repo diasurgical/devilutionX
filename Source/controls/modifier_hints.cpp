@@ -119,15 +119,15 @@ void DrawSpellsCircleMenuHint(const Surface &out, const Point &origin)
 		hintBoxPositions[2] + spellIconDisplacement,
 		hintBoxPositions[3] + spellIconDisplacement,
 	};
-	uint64_t spells = myPlayer._pAblSpells | myPlayer._pMemSpells | myPlayer._pScrlSpells | myPlayer._pISpells;
+	uint64_t spells = myPlayer.skills | myPlayer.learnedSpells | myPlayer.scrollSpells | myPlayer.staffSpells;
 	SpellID splId;
 	SpellType splType;
 
 	for (int slot = 0; slot < 4; ++slot) {
-		splId = myPlayer._pSplHotKey[slot];
+		splId = myPlayer.hotkeySpell[slot];
 
 		if (IsValidSpell(splId) && (spells & GetSpellBitmask(splId)) != 0)
-			splType = (leveltype == DTYPE_TOWN && !GetSpellData(splId).isAllowedInTown()) ? SpellType::Invalid : myPlayer._pSplTHotKey[slot];
+			splType = (leveltype == DTYPE_TOWN && !GetSpellData(splId).isAllowedInTown()) ? SpellType::Invalid : myPlayer.hotkeySpellType[slot];
 		else {
 			splType = SpellType::Invalid;
 			splId = SpellID::Null;

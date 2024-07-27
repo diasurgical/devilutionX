@@ -21,7 +21,7 @@
 	do {                                                           \
 		if (!(condition)) {                                        \
 			LogFailedJoinAttempt(#condition, #logValue, logValue); \
-			EventFailedJoinAttempt(player._pName);                 \
+			EventFailedJoinAttempt(player.name);                 \
 			return false;                                          \
 		}                                                          \
 	} while (0)
@@ -30,7 +30,7 @@
 	do {                                                                                    \
 		if (!(condition)) {                                                                 \
 			LogFailedJoinAttempt(#condition, #logValue1, logValue1, #logValue2, logValue2); \
-			EventFailedJoinAttempt(player._pName);                                          \
+			EventFailedJoinAttempt(player.name);                                          \
 			return false;                                                                   \
 		}                                                                                   \
 	} while (0)
@@ -59,17 +59,17 @@ void LogFailedJoinAttempt(const char *condition, const char *name1, T1 value1, c
 
 void VerifyGoldSeeds(Player &player)
 {
-	for (int i = 0; i < player._pNumInv; i++) {
-		if (player.InvList[i].IDidx != IDI_GOLD)
+	for (int i = 0; i < player.numInventoryItems; i++) {
+		if (player.inventorySlot[i].IDidx != IDI_GOLD)
 			continue;
-		for (int j = 0; j < player._pNumInv; j++) {
+		for (int j = 0; j < player.numInventoryItems; j++) {
 			if (i == j)
 				continue;
-			if (player.InvList[j].IDidx != IDI_GOLD)
+			if (player.inventorySlot[j].IDidx != IDI_GOLD)
 				continue;
-			if (player.InvList[i]._iSeed != player.InvList[j]._iSeed)
+			if (player.inventorySlot[i]._iSeed != player.inventorySlot[j]._iSeed)
 				continue;
-			player.InvList[i]._iSeed = AdvanceRndSeed();
+			player.inventorySlot[i]._iSeed = AdvanceRndSeed();
 			j = -1;
 		}
 	}
@@ -249,53 +249,53 @@ void PackItem(ItemPack &packedItem, const Item &item, bool isHellfire)
 void PackPlayer(PlayerPack &packed, const Player &player)
 {
 	memset(&packed, 0, sizeof(packed));
-	packed.destAction = player.destAction;
-	packed.destParam1 = player.destParam1;
-	packed.destParam2 = player.destParam2;
-	packed.plrlevel = player.plrlevel;
+	packed.destinationAction = player.destinationAction;
+	packed.destinationParam1 = player.destinationParam1;
+	packed.destinationParam2 = player.destinationParam2;
+	packed.dungeonLevel = player.dungeonLevel;
 	packed.px = player.position.tile.x;
 	packed.py = player.position.tile.y;
 	if (gbVanilla) {
 		packed.targx = player.position.tile.x;
 		packed.targy = player.position.tile.y;
 	}
-	CopyUtf8(packed.pName, player._pName, sizeof(packed.pName));
-	packed.pClass = static_cast<uint8_t>(player._pClass);
-	packed.pBaseStr = player._pBaseStr;
-	packed.pBaseMag = player._pBaseMag;
-	packed.pBaseDex = player._pBaseDex;
-	packed.pBaseVit = player._pBaseVit;
+	CopyUtf8(packed.pName, player.name, sizeof(packed.pName));
+	packed.pClass = static_cast<uint8_t>(player.heroClass);
+	packed.pBaseStr = player.baseStrength;
+	packed.pBaseMag = player.baseMagic;
+	packed.pBaseDex = player.baseDexterity;
+	packed.pBaseVit = player.baseVitality;
 	packed.pLevel = player.getCharacterLevel();
-	packed.pStatPts = player._pStatPts;
-	packed.pExperience = SDL_SwapLE32(player._pExperience);
-	packed.pGold = SDL_SwapLE32(player._pGold);
-	packed.pHPBase = SDL_SwapLE32(player._pHPBase);
-	packed.pMaxHPBase = SDL_SwapLE32(player._pMaxHPBase);
-	packed.pManaBase = SDL_SwapLE32(player._pManaBase);
-	packed.pMaxManaBase = SDL_SwapLE32(player._pMaxManaBase);
-	packed.pMemSpells = SDL_SwapLE64(player._pMemSpells);
+	packed.pStatPts = player.statPoints;
+	packed.pExperience = SDL_SwapLE32(player.experience);
+	packed.pGold = SDL_SwapLE32(player.gold);
+	packed.pHPBase = SDL_SwapLE32(player.baseLife);
+	packed.pMaxHPBase = SDL_SwapLE32(player.baseMaxLife);
+	packed.pManaBase = SDL_SwapLE32(player.baseMana);
+	packed.pMaxManaBase = SDL_SwapLE32(player.baseMaxMana);
+	packed.pMemSpells = SDL_SwapLE64(player.learnedSpells);
 
 	for (int i = 0; i < 37; i++) // Should be MAX_SPELLS but set to 37 to make save games compatible
-		packed.pSplLvl[i] = player._pSplLvl[i];
+		packed.pSplLvl[i] = player.spellLevel[i];
 	for (int i = 37; i < 47; i++)
-		packed.pSplLvl2[i - 37] = player._pSplLvl[i];
+		packed.pSplLvl2[i - 37] = player.spellLevel[i];
 
 	for (int i = 0; i < NUM_INVLOC; i++)
-		PackItem(packed.InvBody[i], player.InvBody[i], gbIsHellfire);
+		PackItem(packed.bodySlot[i], player.bodySlot[i], gbIsHellfire);
 
-	packed._pNumInv = player._pNumInv;
-	for (int i = 0; i < packed._pNumInv; i++)
-		PackItem(packed.InvList[i], player.InvList[i], gbIsHellfire);
+	packed.numInventoryItems = player.numInventoryItems;
+	for (int i = 0; i < packed.numInventoryItems; i++)
+		PackItem(packed.inventorySlot[i], player.inventorySlot[i], gbIsHellfire);
 
 	for (int i = 0; i < InventoryGridCells; i++)
-		packed.InvGrid[i] = player.InvGrid[i];
+		packed.inventoryGrid[i] = player.inventoryGrid[i];
 
 	for (int i = 0; i < MaxBeltItems; i++)
-		PackItem(packed.SpdList[i], player.SpdList[i], gbIsHellfire);
+		PackItem(packed.beltSlot[i], player.beltSlot[i], gbIsHellfire);
 
-	packed.wReflections = SDL_SwapLE16(player.wReflections);
-	packed.pDamAcFlags = SDL_SwapLE32(static_cast<uint32_t>(player.pDamAcFlags));
-	packed.pDiabloKillLevel = SDL_SwapLE32(player.pDiabloKillLevel);
+	packed.reflections = SDL_SwapLE16(player.reflections);
+	packed.hellfireFlags = SDL_SwapLE32(static_cast<uint32_t>(player.hellfireFlags));
+	packed.difficultyCompletion = SDL_SwapLE32(player.difficultyCompletion);
 	packed.bIsHellfire = gbIsHellfire ? 1 : 0;
 }
 
@@ -316,70 +316,70 @@ void PackNetItem(const Item &item, ItemNetPack &packedItem)
 
 void PackNetPlayer(PlayerNetPack &packed, const Player &player)
 {
-	packed.plrlevel = player.plrlevel;
+	packed.dungeonLevel = player.dungeonLevel;
 	packed.px = player.position.tile.x;
 	packed.py = player.position.tile.y;
-	CopyUtf8(packed.pName, player._pName, sizeof(packed.pName));
-	packed.pClass = static_cast<uint8_t>(player._pClass);
-	packed.pBaseStr = player._pBaseStr;
-	packed.pBaseMag = player._pBaseMag;
-	packed.pBaseDex = player._pBaseDex;
-	packed.pBaseVit = player._pBaseVit;
+	CopyUtf8(packed.pName, player.name, sizeof(packed.pName));
+	packed.pClass = static_cast<uint8_t>(player.heroClass);
+	packed.pBaseStr = player.baseStrength;
+	packed.pBaseMag = player.baseMagic;
+	packed.pBaseDex = player.baseDexterity;
+	packed.pBaseVit = player.baseVitality;
 	packed.pLevel = player.getCharacterLevel();
-	packed.pStatPts = player._pStatPts;
-	packed.pExperience = SDL_SwapLE32(player._pExperience);
-	packed.pHPBase = SDL_SwapLE32(player._pHPBase);
-	packed.pMaxHPBase = SDL_SwapLE32(player._pMaxHPBase);
-	packed.pManaBase = SDL_SwapLE32(player._pManaBase);
-	packed.pMaxManaBase = SDL_SwapLE32(player._pMaxManaBase);
-	packed.pMemSpells = SDL_SwapLE64(player._pMemSpells);
+	packed.pStatPts = player.statPoints;
+	packed.pExperience = SDL_SwapLE32(player.experience);
+	packed.pHPBase = SDL_SwapLE32(player.baseLife);
+	packed.pMaxHPBase = SDL_SwapLE32(player.baseMaxLife);
+	packed.pManaBase = SDL_SwapLE32(player.baseMana);
+	packed.pMaxManaBase = SDL_SwapLE32(player.baseMaxMana);
+	packed.pMemSpells = SDL_SwapLE64(player.learnedSpells);
 
 	for (int i = 0; i < MAX_SPELLS; i++)
-		packed.pSplLvl[i] = player._pSplLvl[i];
+		packed.pSplLvl[i] = player.spellLevel[i];
 
 	for (int i = 0; i < NUM_INVLOC; i++)
-		PackNetItem(player.InvBody[i], packed.InvBody[i]);
+		PackNetItem(player.bodySlot[i], packed.bodySlot[i]);
 
-	packed._pNumInv = player._pNumInv;
-	for (int i = 0; i < packed._pNumInv; i++)
-		PackNetItem(player.InvList[i], packed.InvList[i]);
+	packed.numInventoryItems = player.numInventoryItems;
+	for (int i = 0; i < packed.numInventoryItems; i++)
+		PackNetItem(player.inventorySlot[i], packed.inventorySlot[i]);
 
 	for (int i = 0; i < InventoryGridCells; i++)
-		packed.InvGrid[i] = player.InvGrid[i];
+		packed.inventoryGrid[i] = player.inventoryGrid[i];
 
 	for (int i = 0; i < MaxBeltItems; i++)
-		PackNetItem(player.SpdList[i], packed.SpdList[i]);
+		PackNetItem(player.beltSlot[i], packed.beltSlot[i]);
 
-	packed.wReflections = SDL_SwapLE16(player.wReflections);
-	packed.pDiabloKillLevel = player.pDiabloKillLevel;
-	packed.pManaShield = player.pManaShield;
-	packed.friendlyMode = player.friendlyMode ? 1 : 0;
-	packed.isOnSetLevel = player.plrIsOnSetLevel;
+	packed.reflections = SDL_SwapLE16(player.reflections);
+	packed.difficultyCompletion = player.difficultyCompletion;
+	packed.hasManaShield = player.hasManaShield;
+	packed.isFriendlyMode = player.isFriendlyMode ? 1 : 0;
+	packed.isOnSetLevel = player.isOnSetLevel;
 
-	packed.pStrength = SDL_SwapLE32(player._pStrength);
-	packed.pMagic = SDL_SwapLE32(player._pMagic);
-	packed.pDexterity = SDL_SwapLE32(player._pDexterity);
-	packed.pVitality = SDL_SwapLE32(player._pVitality);
-	packed.pHitPoints = SDL_SwapLE32(player._pHitPoints);
-	packed.pMaxHP = SDL_SwapLE32(player._pMaxHP);
-	packed.pMana = SDL_SwapLE32(player._pMana);
-	packed.pMaxMana = SDL_SwapLE32(player._pMaxMana);
-	packed.pDamageMod = SDL_SwapLE32(player._pDamageMod);
+	packed.pStrength = SDL_SwapLE32(player.strength);
+	packed.pMagic = SDL_SwapLE32(player.magic);
+	packed.pDexterity = SDL_SwapLE32(player.dexterity);
+	packed.pVitality = SDL_SwapLE32(player.vitality);
+	packed.pHitPoints = SDL_SwapLE32(player.life);
+	packed.pMaxHP = SDL_SwapLE32(player.maxLife);
+	packed.pMana = SDL_SwapLE32(player.mana);
+	packed.pMaxMana = SDL_SwapLE32(player.maxMana);
+	packed.pDamageMod = SDL_SwapLE32(player.damageModifier);
 	// we pack base to block as a basic check that remote players are using the same playerdat values as we are
 	packed.pBaseToBlk = SDL_SwapLE32(player.getBaseToBlock());
-	packed.pIMinDam = SDL_SwapLE32(player._pIMinDam);
-	packed.pIMaxDam = SDL_SwapLE32(player._pIMaxDam);
-	packed.pIAC = SDL_SwapLE32(player._pIAC);
-	packed.pIBonusDam = SDL_SwapLE32(player._pIBonusDam);
-	packed.pIBonusToHit = SDL_SwapLE32(player._pIBonusToHit);
-	packed.pIBonusAC = SDL_SwapLE32(player._pIBonusAC);
-	packed.pIBonusDamMod = SDL_SwapLE32(player._pIBonusDamMod);
-	packed.pIGetHit = SDL_SwapLE32(player._pIGetHit);
-	packed.pIEnAc = SDL_SwapLE32(player._pIEnAc);
-	packed.pIFMinDam = SDL_SwapLE32(player._pIFMinDam);
-	packed.pIFMaxDam = SDL_SwapLE32(player._pIFMaxDam);
-	packed.pILMinDam = SDL_SwapLE32(player._pILMinDam);
-	packed.pILMaxDam = SDL_SwapLE32(player._pILMaxDam);
+	packed.pIMinDam = SDL_SwapLE32(player.minDamage);
+	packed.pIMaxDam = SDL_SwapLE32(player.maxDamage);
+	packed.pIAC = SDL_SwapLE32(player.armorClass);
+	packed.pIBonusDam = SDL_SwapLE32(player.bonusDamagePercent);
+	packed.pIBonusToHit = SDL_SwapLE32(player.bonusToHit);
+	packed.pIBonusAC = SDL_SwapLE32(player.bonusArmorClass);
+	packed.pIBonusDamMod = SDL_SwapLE32(player.bonusDamage);
+	packed.pIGetHit = SDL_SwapLE32(player.damageFromEnemies);
+	packed.pIEnAc = SDL_SwapLE32(player.armorPierce);
+	packed.pIFMinDam = SDL_SwapLE32(player.minFireDamage);
+	packed.pIFMaxDam = SDL_SwapLE32(player.maxFireDamage);
+	packed.pILMinDam = SDL_SwapLE32(player.minLightningDamage);
+	packed.pILMaxDam = SDL_SwapLE32(player.maxLightningDamage);
 }
 
 void UnPackItem(const ItemPack &packedItem, const Player &player, Item &item, bool isHellfire)
@@ -447,86 +447,86 @@ void UnPackPlayer(const PlayerPack &packed, Player &player)
 
 	player = {};
 	player.setCharacterLevel(packed.pLevel);
-	player._pMaxHPBase = SDL_SwapLE32(packed.pMaxHPBase);
-	player._pHPBase = SDL_SwapLE32(packed.pHPBase);
-	player._pHPBase = std::clamp<int32_t>(player._pHPBase, 0, player._pMaxHPBase);
-	player._pMaxHP = player._pMaxHPBase;
-	player._pHitPoints = player._pHPBase;
+	player.baseMaxLife = SDL_SwapLE32(packed.pMaxHPBase);
+	player.baseLife = SDL_SwapLE32(packed.pHPBase);
+	player.baseLife = std::clamp<int32_t>(player.baseLife, 0, player.baseMaxLife);
+	player.maxLife = player.baseMaxLife;
+	player.life = player.baseLife;
 	player.position.tile = position;
 	player.position.future = position;
-	player.setLevel(std::clamp<int8_t>(packed.plrlevel, 0, NUMLEVELS));
+	player.setLevel(std::clamp<int8_t>(packed.dungeonLevel, 0, NUMLEVELS));
 
-	player._pClass = static_cast<HeroClass>(std::clamp<uint8_t>(packed.pClass, 0, enum_size<HeroClass>::value - 1));
+	player.heroClass = static_cast<HeroClass>(std::clamp<uint8_t>(packed.pClass, 0, enum_size<HeroClass>::value - 1));
 
 	ClrPlrPath(player);
-	player.destAction = ACTION_NONE;
+	player.destinationAction = ACTION_NONE;
 
-	CopyUtf8(player._pName, packed.pName, sizeof(player._pName));
+	CopyUtf8(player.name, packed.pName, sizeof(player.name));
 
 	InitPlayer(player, true);
 
-	player._pBaseStr = std::min<uint8_t>(packed.pBaseStr, player.GetMaximumAttributeValue(CharacterAttribute::Strength));
-	player._pStrength = player._pBaseStr;
-	player._pBaseMag = std::min<uint8_t>(packed.pBaseMag, player.GetMaximumAttributeValue(CharacterAttribute::Magic));
-	player._pMagic = player._pBaseMag;
-	player._pBaseDex = std::min<uint8_t>(packed.pBaseDex, player.GetMaximumAttributeValue(CharacterAttribute::Dexterity));
-	player._pDexterity = player._pBaseDex;
-	player._pBaseVit = std::min<uint8_t>(packed.pBaseVit, player.GetMaximumAttributeValue(CharacterAttribute::Vitality));
-	player._pVitality = player._pBaseVit;
-	player._pStatPts = packed.pStatPts;
+	player.baseStrength = std::min<uint8_t>(packed.pBaseStr, player.GetMaximumAttributeValue(CharacterAttribute::Strength));
+	player.strength = player.baseStrength;
+	player.baseMagic = std::min<uint8_t>(packed.pBaseMag, player.GetMaximumAttributeValue(CharacterAttribute::Magic));
+	player.magic = player.baseMagic;
+	player.baseDexterity = std::min<uint8_t>(packed.pBaseDex, player.GetMaximumAttributeValue(CharacterAttribute::Dexterity));
+	player.dexterity = player.baseDexterity;
+	player.baseVitality = std::min<uint8_t>(packed.pBaseVit, player.GetMaximumAttributeValue(CharacterAttribute::Vitality));
+	player.vitality = player.baseVitality;
+	player.statPoints = packed.pStatPts;
 
-	player._pExperience = SDL_SwapLE32(packed.pExperience);
-	player._pGold = SDL_SwapLE32(packed.pGold);
-	if ((int)(player._pHPBase & 0xFFFFFFC0) < 64)
-		player._pHPBase = 64;
+	player.experience = SDL_SwapLE32(packed.pExperience);
+	player.gold = SDL_SwapLE32(packed.pGold);
+	if ((int)(player.baseLife & 0xFFFFFFC0) < 64)
+		player.baseLife = 64;
 
-	player._pMaxManaBase = SDL_SwapLE32(packed.pMaxManaBase);
-	player._pManaBase = SDL_SwapLE32(packed.pManaBase);
-	player._pManaBase = std::min<int32_t>(player._pManaBase, player._pMaxManaBase);
-	player._pMemSpells = SDL_SwapLE64(packed.pMemSpells);
+	player.baseMaxMana = SDL_SwapLE32(packed.pMaxManaBase);
+	player.baseMana = SDL_SwapLE32(packed.pManaBase);
+	player.baseMana = std::min<int32_t>(player.baseMana, player.baseMaxMana);
+	player.learnedSpells = SDL_SwapLE64(packed.pMemSpells);
 
 	// Only read spell levels for learnable spells (Diablo)
 	for (int i = 0; i < 37; i++) { // Should be MAX_SPELLS but set to 36 to make save games compatible
 		auto spl = static_cast<SpellID>(i);
 		if (GetSpellData(spl).sBookLvl != -1)
-			player._pSplLvl[i] = packed.pSplLvl[i];
+			player.spellLevel[i] = packed.pSplLvl[i];
 		else
-			player._pSplLvl[i] = 0;
+			player.spellLevel[i] = 0;
 	}
 	// Only read spell levels for learnable spells (Hellfire)
 	for (int i = 37; i < 47; i++) {
 		auto spl = static_cast<SpellID>(i);
 		if (GetSpellData(spl).sBookLvl != -1)
-			player._pSplLvl[i] = packed.pSplLvl2[i - 37];
+			player.spellLevel[i] = packed.pSplLvl2[i - 37];
 		else
-			player._pSplLvl[i] = 0;
+			player.spellLevel[i] = 0;
 	}
 	// These spells are unavailable in Diablo as learnable spells
 	if (!gbIsHellfire) {
-		player._pSplLvl[static_cast<uint8_t>(SpellID::Apocalypse)] = 0;
-		player._pSplLvl[static_cast<uint8_t>(SpellID::Nova)] = 0;
+		player.spellLevel[static_cast<uint8_t>(SpellID::Apocalypse)] = 0;
+		player.spellLevel[static_cast<uint8_t>(SpellID::Nova)] = 0;
 	}
 
 	bool isHellfire = packed.bIsHellfire != 0;
 
 	for (int i = 0; i < NUM_INVLOC; i++)
-		UnPackItem(packed.InvBody[i], player, player.InvBody[i], isHellfire);
+		UnPackItem(packed.bodySlot[i], player, player.bodySlot[i], isHellfire);
 
-	player._pNumInv = packed._pNumInv;
-	for (int i = 0; i < player._pNumInv; i++)
-		UnPackItem(packed.InvList[i], player, player.InvList[i], isHellfire);
+	player.numInventoryItems = packed.numInventoryItems;
+	for (int i = 0; i < player.numInventoryItems; i++)
+		UnPackItem(packed.inventorySlot[i], player, player.inventorySlot[i], isHellfire);
 
 	for (int i = 0; i < InventoryGridCells; i++)
-		player.InvGrid[i] = packed.InvGrid[i];
+		player.inventoryGrid[i] = packed.inventoryGrid[i];
 
 	VerifyGoldSeeds(player);
 
 	for (int i = 0; i < MaxBeltItems; i++)
-		UnPackItem(packed.SpdList[i], player, player.SpdList[i], isHellfire);
+		UnPackItem(packed.beltSlot[i], player, player.beltSlot[i], isHellfire);
 
 	CalcPlrInv(player, false);
-	player.wReflections = SDL_SwapLE16(packed.wReflections);
-	player.pDiabloKillLevel = SDL_SwapLE32(packed.pDiabloKillLevel);
+	player.reflections = SDL_SwapLE16(packed.reflections);
+	player.difficultyCompletion = SDL_SwapLE32(packed.difficultyCompletion);
 }
 
 bool UnPackNetItem(const Player &player, const ItemNetPack &packedItem, Item &item)
@@ -559,14 +559,14 @@ bool UnPackNetItem(const Player &player, const ItemNetPack &packedItem, Item &it
 
 bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 {
-	CopyUtf8(player._pName, packed.pName, sizeof(player._pName));
+	CopyUtf8(player.name, packed.pName, sizeof(player.name));
 
 	ValidateField(packed.pClass, packed.pClass < enum_size<HeroClass>::value);
-	player._pClass = static_cast<HeroClass>(packed.pClass);
+	player.heroClass = static_cast<HeroClass>(packed.pClass);
 
 	Point position { packed.px, packed.py };
 	ValidateFields(position.x, position.y, InDungeonBounds(position));
-	ValidateField(packed.plrlevel, packed.plrlevel < NUMLEVELS);
+	ValidateField(packed.dungeonLevel, packed.dungeonLevel < NUMLEVELS);
 	ValidateField(packed.pLevel, packed.pLevel >= 1 && packed.pLevel <= player.getMaxCharacterLevel());
 
 	int32_t baseHpMax = SDL_SwapLE32(packed.pMaxHPBase);
@@ -583,51 +583,51 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 	ValidateFields(packed.pClass, packed.pBaseDex, packed.pBaseDex <= player.GetMaximumAttributeValue(CharacterAttribute::Dexterity));
 	ValidateFields(packed.pClass, packed.pBaseVit, packed.pBaseVit <= player.GetMaximumAttributeValue(CharacterAttribute::Vitality));
 
-	ValidateField(packed._pNumInv, packed._pNumInv <= InventoryGridCells);
+	ValidateField(packed.numInventoryItems, packed.numInventoryItems <= InventoryGridCells);
 
 	player.setCharacterLevel(packed.pLevel);
 	player.position.tile = position;
 	player.position.future = position;
-	player.plrlevel = packed.plrlevel;
-	player.plrIsOnSetLevel = packed.isOnSetLevel != 0;
-	player._pMaxHPBase = baseHpMax;
-	player._pHPBase = baseHp;
-	player._pMaxHP = baseHpMax;
-	player._pHitPoints = baseHp;
+	player.dungeonLevel = packed.dungeonLevel;
+	player.isOnSetLevel = packed.isOnSetLevel != 0;
+	player.baseMaxLife = baseHpMax;
+	player.baseLife = baseHp;
+	player.maxLife = baseHpMax;
+	player.life = baseHp;
 
 	ClrPlrPath(player);
-	player.destAction = ACTION_NONE;
+	player.destinationAction = ACTION_NONE;
 
 	InitPlayer(player, true);
 
-	player._pBaseStr = packed.pBaseStr;
-	player._pStrength = player._pBaseStr;
-	player._pBaseMag = packed.pBaseMag;
-	player._pMagic = player._pBaseMag;
-	player._pBaseDex = packed.pBaseDex;
-	player._pDexterity = player._pBaseDex;
-	player._pBaseVit = packed.pBaseVit;
-	player._pVitality = player._pBaseVit;
-	player._pStatPts = packed.pStatPts;
+	player.baseStrength = packed.pBaseStr;
+	player.strength = player.baseStrength;
+	player.baseMagic = packed.pBaseMag;
+	player.magic = player.baseMagic;
+	player.baseDexterity = packed.pBaseDex;
+	player.dexterity = player.baseDexterity;
+	player.baseVitality = packed.pBaseVit;
+	player.vitality = player.baseVitality;
+	player.statPoints = packed.pStatPts;
 
-	player._pExperience = SDL_SwapLE32(packed.pExperience);
-	player._pMaxManaBase = baseManaMax;
-	player._pManaBase = baseMana;
-	player._pMemSpells = SDL_SwapLE64(packed.pMemSpells);
-	player.wReflections = SDL_SwapLE16(packed.wReflections);
-	player.pDiabloKillLevel = packed.pDiabloKillLevel;
-	player.pManaShield = packed.pManaShield != 0;
-	player.friendlyMode = packed.friendlyMode != 0;
+	player.experience = SDL_SwapLE32(packed.pExperience);
+	player.baseMaxMana = baseManaMax;
+	player.baseMana = baseMana;
+	player.learnedSpells = SDL_SwapLE64(packed.pMemSpells);
+	player.reflections = SDL_SwapLE16(packed.reflections);
+	player.difficultyCompletion = packed.difficultyCompletion;
+	player.hasManaShield = packed.hasManaShield != 0;
+	player.isFriendlyMode = packed.isFriendlyMode != 0;
 
 	for (int i = 0; i < MAX_SPELLS; i++)
-		player._pSplLvl[i] = packed.pSplLvl[i];
+		player.spellLevel[i] = packed.pSplLvl[i];
 
 	for (int i = 0; i < NUM_INVLOC; i++) {
-		if (!UnPackNetItem(player, packed.InvBody[i], player.InvBody[i]))
+		if (!UnPackNetItem(player, packed.bodySlot[i], player.bodySlot[i]))
 			return false;
-		if (player.InvBody[i].isEmpty())
+		if (player.bodySlot[i].isEmpty())
 			continue;
-		auto loc = static_cast<int8_t>(player.GetItemLocation(player.InvBody[i]));
+		auto loc = static_cast<int8_t>(player.GetItemLocation(player.bodySlot[i]));
 		switch (i) {
 		case INVLOC_HEAD:
 			ValidateField(loc, loc == ILOC_HELM);
@@ -649,18 +649,18 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 		}
 	}
 
-	player._pNumInv = packed._pNumInv;
-	for (int i = 0; i < player._pNumInv; i++) {
-		if (!UnPackNetItem(player, packed.InvList[i], player.InvList[i]))
+	player.numInventoryItems = packed.numInventoryItems;
+	for (int i = 0; i < player.numInventoryItems; i++) {
+		if (!UnPackNetItem(player, packed.inventorySlot[i], player.inventorySlot[i]))
 			return false;
 	}
 
 	for (int i = 0; i < InventoryGridCells; i++)
-		player.InvGrid[i] = packed.InvGrid[i];
+		player.inventoryGrid[i] = packed.inventoryGrid[i];
 
 	for (int i = 0; i < MaxBeltItems; i++) {
-		Item &item = player.SpdList[i];
-		if (!UnPackNetItem(player, packed.SpdList[i], item))
+		Item &item = player.beltSlot[i];
+		if (!UnPackNetItem(player, packed.beltSlot[i], item))
 			return false;
 		if (item.isEmpty())
 			continue;
@@ -673,33 +673,33 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 	}
 
 	CalcPlrInv(player, false);
-	player._pGold = CalculateGold(player);
+	player.gold = CalculateGold(player);
 
-	ValidateFields(player._pStrength, SDL_SwapLE32(packed.pStrength), player._pStrength == SDL_SwapLE32(packed.pStrength));
-	ValidateFields(player._pMagic, SDL_SwapLE32(packed.pMagic), player._pMagic == SDL_SwapLE32(packed.pMagic));
-	ValidateFields(player._pDexterity, SDL_SwapLE32(packed.pDexterity), player._pDexterity == SDL_SwapLE32(packed.pDexterity));
-	ValidateFields(player._pVitality, SDL_SwapLE32(packed.pVitality), player._pVitality == SDL_SwapLE32(packed.pVitality));
-	ValidateFields(player._pHitPoints, SDL_SwapLE32(packed.pHitPoints), player._pHitPoints == SDL_SwapLE32(packed.pHitPoints));
-	ValidateFields(player._pMaxHP, SDL_SwapLE32(packed.pMaxHP), player._pMaxHP == SDL_SwapLE32(packed.pMaxHP));
-	ValidateFields(player._pMana, SDL_SwapLE32(packed.pMana), player._pMana == SDL_SwapLE32(packed.pMana));
-	ValidateFields(player._pMaxMana, SDL_SwapLE32(packed.pMaxMana), player._pMaxMana == SDL_SwapLE32(packed.pMaxMana));
-	ValidateFields(player._pDamageMod, SDL_SwapLE32(packed.pDamageMod), player._pDamageMod == SDL_SwapLE32(packed.pDamageMod));
+	ValidateFields(player.strength, SDL_SwapLE32(packed.pStrength), player.strength == SDL_SwapLE32(packed.pStrength));
+	ValidateFields(player.magic, SDL_SwapLE32(packed.pMagic), player.magic == SDL_SwapLE32(packed.pMagic));
+	ValidateFields(player.dexterity, SDL_SwapLE32(packed.pDexterity), player.dexterity == SDL_SwapLE32(packed.pDexterity));
+	ValidateFields(player.vitality, SDL_SwapLE32(packed.pVitality), player.vitality == SDL_SwapLE32(packed.pVitality));
+	ValidateFields(player.life, SDL_SwapLE32(packed.pHitPoints), player.life == SDL_SwapLE32(packed.pHitPoints));
+	ValidateFields(player.maxLife, SDL_SwapLE32(packed.pMaxHP), player.maxLife == SDL_SwapLE32(packed.pMaxHP));
+	ValidateFields(player.mana, SDL_SwapLE32(packed.pMana), player.mana == SDL_SwapLE32(packed.pMana));
+	ValidateFields(player.maxMana, SDL_SwapLE32(packed.pMaxMana), player.maxMana == SDL_SwapLE32(packed.pMaxMana));
+	ValidateFields(player.damageModifier, SDL_SwapLE32(packed.pDamageMod), player.damageModifier == SDL_SwapLE32(packed.pDamageMod));
 	ValidateFields(player.getBaseToBlock(), SDL_SwapLE32(packed.pBaseToBlk), player.getBaseToBlock() == SDL_SwapLE32(packed.pBaseToBlk));
-	ValidateFields(player._pIMinDam, SDL_SwapLE32(packed.pIMinDam), player._pIMinDam == SDL_SwapLE32(packed.pIMinDam));
-	ValidateFields(player._pIMaxDam, SDL_SwapLE32(packed.pIMaxDam), player._pIMaxDam == SDL_SwapLE32(packed.pIMaxDam));
-	ValidateFields(player._pIAC, SDL_SwapLE32(packed.pIAC), player._pIAC == SDL_SwapLE32(packed.pIAC));
-	ValidateFields(player._pIBonusDam, SDL_SwapLE32(packed.pIBonusDam), player._pIBonusDam == SDL_SwapLE32(packed.pIBonusDam));
-	ValidateFields(player._pIBonusToHit, SDL_SwapLE32(packed.pIBonusToHit), player._pIBonusToHit == SDL_SwapLE32(packed.pIBonusToHit));
-	ValidateFields(player._pIBonusAC, SDL_SwapLE32(packed.pIBonusAC), player._pIBonusAC == SDL_SwapLE32(packed.pIBonusAC));
-	ValidateFields(player._pIBonusDamMod, SDL_SwapLE32(packed.pIBonusDamMod), player._pIBonusDamMod == SDL_SwapLE32(packed.pIBonusDamMod));
-	ValidateFields(player._pIGetHit, SDL_SwapLE32(packed.pIGetHit), player._pIGetHit == SDL_SwapLE32(packed.pIGetHit));
-	ValidateFields(player._pIEnAc, SDL_SwapLE32(packed.pIEnAc), player._pIEnAc == SDL_SwapLE32(packed.pIEnAc));
-	ValidateFields(player._pIFMinDam, SDL_SwapLE32(packed.pIFMinDam), player._pIFMinDam == SDL_SwapLE32(packed.pIFMinDam));
-	ValidateFields(player._pIFMaxDam, SDL_SwapLE32(packed.pIFMaxDam), player._pIFMaxDam == SDL_SwapLE32(packed.pIFMaxDam));
-	ValidateFields(player._pILMinDam, SDL_SwapLE32(packed.pILMinDam), player._pILMinDam == SDL_SwapLE32(packed.pILMinDam));
-	ValidateFields(player._pILMaxDam, SDL_SwapLE32(packed.pILMaxDam), player._pILMaxDam == SDL_SwapLE32(packed.pILMaxDam));
-	ValidateFields(player._pMaxHPBase, player.calculateBaseLife(), player._pMaxHPBase <= player.calculateBaseLife());
-	ValidateFields(player._pMaxManaBase, player.calculateBaseMana(), player._pMaxManaBase <= player.calculateBaseMana());
+	ValidateFields(player.minDamage, SDL_SwapLE32(packed.pIMinDam), player.minDamage == SDL_SwapLE32(packed.pIMinDam));
+	ValidateFields(player.maxDamage, SDL_SwapLE32(packed.pIMaxDam), player.maxDamage == SDL_SwapLE32(packed.pIMaxDam));
+	ValidateFields(player.armorClass, SDL_SwapLE32(packed.pIAC), player.armorClass == SDL_SwapLE32(packed.pIAC));
+	ValidateFields(player.bonusDamagePercent, SDL_SwapLE32(packed.pIBonusDam), player.bonusDamagePercent == SDL_SwapLE32(packed.pIBonusDam));
+	ValidateFields(player.bonusToHit, SDL_SwapLE32(packed.pIBonusToHit), player.bonusToHit == SDL_SwapLE32(packed.pIBonusToHit));
+	ValidateFields(player.bonusArmorClass, SDL_SwapLE32(packed.pIBonusAC), player.bonusArmorClass == SDL_SwapLE32(packed.pIBonusAC));
+	ValidateFields(player.bonusDamage, SDL_SwapLE32(packed.pIBonusDamMod), player.bonusDamage == SDL_SwapLE32(packed.pIBonusDamMod));
+	ValidateFields(player.damageFromEnemies, SDL_SwapLE32(packed.pIGetHit), player.damageFromEnemies == SDL_SwapLE32(packed.pIGetHit));
+	ValidateFields(player.armorPierce, SDL_SwapLE32(packed.pIEnAc), player.armorPierce == SDL_SwapLE32(packed.pIEnAc));
+	ValidateFields(player.minFireDamage, SDL_SwapLE32(packed.pIFMinDam), player.minFireDamage == SDL_SwapLE32(packed.pIFMinDam));
+	ValidateFields(player.maxFireDamage, SDL_SwapLE32(packed.pIFMaxDam), player.maxFireDamage == SDL_SwapLE32(packed.pIFMaxDam));
+	ValidateFields(player.minLightningDamage, SDL_SwapLE32(packed.pILMinDam), player.minLightningDamage == SDL_SwapLE32(packed.pILMinDam));
+	ValidateFields(player.maxLightningDamage, SDL_SwapLE32(packed.pILMaxDam), player.maxLightningDamage == SDL_SwapLE32(packed.pILMaxDam));
+	ValidateFields(player.baseMaxLife, player.calculateBaseLife(), player.baseMaxLife <= player.calculateBaseLife());
+	ValidateFields(player.baseMaxMana, player.calculateBaseMana(), player.baseMaxMana <= player.calculateBaseMana());
 
 	return true;
 }

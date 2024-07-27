@@ -435,8 +435,8 @@ void ToggleLighting()
 
 	memcpy(dLight, dPreLight, sizeof(dLight));
 	for (const Player &player : Players) {
-		if (player.plractive && player.isOnActiveLevel()) {
-			DoLighting(player.position.tile, player._pLightRad, {});
+		if (player.isPlayerActive && player.isOnActiveLevel()) {
+			DoLighting(player.position.tile, player.lightRadius, {});
 		}
 	}
 }
@@ -651,7 +651,7 @@ void ProcessVisionList()
 		if (!VisionActive[id])
 			continue;
 		Light &vision = VisionList[id];
-		if (!player.plractive || !player.isOnActiveLevel()) {
+		if (!player.isPlayerActive || !player.isOnActiveLevel()) {
 			DoUnVision(vision.position.tile, vision.radius);
 			VisionActive[id] = false;
 			continue;
@@ -668,7 +668,7 @@ void ProcessVisionList()
 		Light &vision = VisionList[id];
 		MapExplorationType doautomap = MAP_EXP_SELF;
 		if (&player != MyPlayer)
-			doautomap = player.friendlyMode ? MAP_EXP_OTHERS : MAP_EXP_NONE;
+			doautomap = player.isFriendlyMode ? MAP_EXP_OTHERS : MAP_EXP_NONE;
 		DoVision(
 		    vision.position.tile,
 		    vision.radius,

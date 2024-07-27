@@ -140,7 +140,7 @@ void NetReceivePlayerData(TPkt *pkt)
 	Point target = myPlayer.GetTargetPosition();
 	// Don't send desired target position when we will change our position soon.
 	// This prevents a desync where the remote client starts a walking to the old target position when the teleport is finished but the the new position isn't received yet.
-	if (myPlayer._pmode == PM_SPELL && IsAnyOf(myPlayer.executedSpell.spellId, SpellID::Teleport, SpellID::Phasing, SpellID::Warp))
+	if (myPlayer.mode == PM_SPELL && IsAnyOf(myPlayer.executedSpell.spellId, SpellID::Teleport, SpellID::Phasing, SpellID::Warp))
 		target = {};
 
 	pkt->hdr.wCheck = HeaderCheckVal;
@@ -148,23 +148,23 @@ void NetReceivePlayerData(TPkt *pkt)
 	pkt->hdr.py = myPlayer.position.tile.y;
 	pkt->hdr.targx = target.x;
 	pkt->hdr.targy = target.y;
-	pkt->hdr.php = SDL_SwapLE32(myPlayer._pHitPoints);
-	pkt->hdr.pmhp = SDL_SwapLE32(myPlayer._pMaxHP);
-	pkt->hdr.mana = SDL_SwapLE32(myPlayer._pMana);
-	pkt->hdr.maxmana = SDL_SwapLE32(myPlayer._pMaxMana);
-	pkt->hdr.bstr = myPlayer._pBaseStr;
-	pkt->hdr.bmag = myPlayer._pBaseMag;
-	pkt->hdr.bdex = myPlayer._pBaseDex;
+	pkt->hdr.php = SDL_SwapLE32(myPlayer.life);
+	pkt->hdr.pmhp = SDL_SwapLE32(myPlayer.maxLife);
+	pkt->hdr.mana = SDL_SwapLE32(myPlayer.mana);
+	pkt->hdr.maxmana = SDL_SwapLE32(myPlayer.maxMana);
+	pkt->hdr.bstr = myPlayer.baseStrength;
+	pkt->hdr.bmag = myPlayer.baseMagic;
+	pkt->hdr.bdex = myPlayer.baseDexterity;
 }
 
 bool IsNetPlayerValid(const Player &player)
 {
 	// we no longer check character level here, players with out-of-range clevels are not allowed to join the game and we don't observe change clevel messages that would set it out of range
-	// (there's no code path that would result in _pLevel containing an out of range value in the DevilutionX code)
-	return static_cast<uint8_t>(player._pClass) < enum_size<HeroClass>::value
-	    && player.plrlevel < NUMLEVELS
+	// (there's no code path that would result in characterLevel containing an out of range value in the DevilutionX code)
+	return static_cast<uint8_t>(player.heroClass) < enum_size<HeroClass>::value
+	    && player.dungeonLevel < NUMLEVELS
 	    && InDungeonBounds(player.position.tile)
-	    && !std::string_view(player._pName).empty();
+	    && !std::string_view(player.name).empty();
 }
 
 void CheckPlayerInfoTimeouts()
@@ -254,7 +254,7 @@ void PlayerLeftMsg(Player &player, bool left)
 
 	if (&player == MyPlayer)
 		return;
-	if (!player.plractive)
+	if (!player.isPlayerActive)
 		return;
 
 	FixPlrWalkTags(player);
@@ -273,10 +273,10 @@ void PlayerLeftMsg(Player &player, bool left)
 			pszFmt = _("Player '{:s}' dropped due to timeout");
 			break;
 		}
-		EventPlrMsg(fmt::format(fmt::runtime(pszFmt), player._pName));
+		EventPlrMsg(fmt::format(fmt::runtime(pszFmt), player.name));
 	}
-	player.plractive = false;
-	player._pName[0] = '\0';
+	player.isPlayerActive = false;
+	player.name[0] = '\0';
 	ResetPlayerGFX(player);
 	gbActivePlayers--;
 }
@@ -372,10 +372,10 @@ void SetupLocalPositions()
 	myPlayer.position.tile = spawns[MyPlayerId];
 	myPlayer.position.future = myPlayer.position.tile;
 	myPlayer.setLevel(currlevel);
-	myPlayer._pLvlChanging = true;
-	myPlayer.pLvlLoad = 0;
-	myPlayer._pmode = PM_NEWLVL;
-	myPlayer.destAction = ACTION_NONE;
+	myPlayer.isChangingLevel = true;
+	myPlayer.levelLoading = 0;
+	myPlayer.mode = PM_NEWLVL;
+	myPlayer.destinationAction = ACTION_NONE;
 }
 
 void HandleEvents(_SNETEVENT *pEvt)
@@ -643,16 +643,16 @@ void multi_process_network_packets()
 		player.position.last = syncPosition;
 		if (&player != MyPlayer) {
 			assert(gbBufferMsgs != 2);
-			player._pHitPoints = SDL_SwapLE32(pkt->php);
-			player._pMaxHP = SDL_SwapLE32(pkt->pmhp);
-			player._pMana = SDL_SwapLE32(pkt->mana);
-			player._pMaxMana = SDL_SwapLE32(pkt->maxmana);
+			player.life = SDL_SwapLE32(pkt->php);
+			player.maxLife = SDL_SwapLE32(pkt->pmhp);
+			player.mana = SDL_SwapLE32(pkt->mana);
+			player.maxMana = SDL_SwapLE32(pkt->maxmana);
 			bool cond = gbBufferMsgs == 1;
-			player._pBaseStr = pkt->bstr;
-			player._pBaseMag = pkt->bmag;
-			player._pBaseDex = pkt->bdex;
-			if (!cond && player.plractive && player._pHitPoints != 0) {
-				if (player.isOnActiveLevel() && !player._pLvlChanging) {
+			player.baseStrength = pkt->bstr;
+			player.baseMagic = pkt->bmag;
+			player.baseDexterity = pkt->bdex;
+			if (!cond && player.isPlayerActive && player.life != 0) {
+				if (player.isOnActiveLevel() && !player.isChangingLevel) {
 					if (player.position.tile.WalkingDistance(syncPosition) > 3 && PosOkPlayer(player, syncPosition)) {
 						// got out of sync, clear the tiles around where we last thought the player was located
 						FixPlrWalkTags(player);
@@ -779,7 +779,7 @@ bool NetInit(bool bSinglePlayer)
 
 		Player &myPlayer = *MyPlayer;
 		ResetPlayerGFX(myPlayer);
-		myPlayer.plractive = true;
+		myPlayer.isPlayerActive = true;
 		gbActivePlayers = 1;
 
 		if (!sgbPlayerTurnBitTbl[MyPlayerId] || msg_wait_resync())
@@ -799,7 +799,7 @@ bool NetInit(bool bSinglePlayer)
 	Player &myPlayer = *MyPlayer;
 	// separator for marking messages from a different game
 	AddMessageToChatLog(_("New Game"), nullptr, UiFlags::ColorRed);
-	AddMessageToChatLog(fmt::format(fmt::runtime(_("Player '{:s}' (level {:d}) just joined the game")), myPlayer._pName, myPlayer.getCharacterLevel()));
+	AddMessageToChatLog(fmt::format(fmt::runtime(_("Player '{:s}' (level {:d}) just joined the game")), myPlayer.name, myPlayer.getCharacterLevel()));
 
 	return true;
 }
@@ -844,7 +844,7 @@ void recv_plrinfo(Player &player, const TCmdPlrInfoHdr &header, bool recv)
 	}
 
 	ResetPlayerGFX(player);
-	player.plractive = true;
+	player.isPlayerActive = true;
 	gbActivePlayers++;
 
 	std::string_view szEvent;
@@ -853,7 +853,7 @@ void recv_plrinfo(Player &player, const TCmdPlrInfoHdr &header, bool recv)
 	} else {
 		szEvent = _("Player '{:s}' (level {:d}) is already in the game");
 	}
-	EventPlrMsg(fmt::format(fmt::runtime(szEvent), player._pName, player.getCharacterLevel()));
+	EventPlrMsg(fmt::format(fmt::runtime(szEvent), player.name, player.getCharacterLevel()));
 
 	SyncInitPlr(player);
 
@@ -861,15 +861,15 @@ void recv_plrinfo(Player &player, const TCmdPlrInfoHdr &header, bool recv)
 		return;
 	}
 
-	if (player._pHitPoints >> 6 > 0) {
+	if (player.life >> 6 > 0) {
 		StartStand(player, Direction::South);
 		return;
 	}
 
-	player._pgfxnum &= ~0xFU;
-	player._pmode = PM_DEATH;
+	player.graphic &= ~0xFU;
+	player.mode = PM_DEATH;
 	NewPlrAnim(player, player_graphic::Death, Direction::South);
-	player.AnimInfo.currentFrame = player.AnimInfo.numberOfFrames - 2;
+	player.animationInfo.currentFrame = player.animationInfo.numberOfFrames - 2;
 	dFlags[player.position.tile.x][player.position.tile.y] |= DungeonFlag::DeadPlayer;
 }
 

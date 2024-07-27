@@ -206,9 +206,13 @@ struct PlayerAnimationData {
 struct SpellCastInfo {
 	SpellID spellId;
 	SpellType spellType;
-	/* @brief Inventory location for scrolls */
+	/**
+	 * @brief Inventory location for scrolls
+	 */
 	int8_t spellFrom;
-	/* @brief Used for spell level */
+	/**
+	 * @brief Used for spell level
+	 */
 	int spellLevel;
 };
 
@@ -217,63 +221,63 @@ struct Player {
 	Player(Player &&) noexcept = default;
 	Player &operator=(Player &&) noexcept = default;
 
-	char _pName[PlayerNameLength];
-	Item InvBody[NUM_INVLOC];
-	Item InvList[InventoryGridCells];
-	Item SpdList[MaxBeltItems];
-	Item HoldItem;
+	char name[PlayerNameLength];            // _pName
+	Item bodySlot[NUM_INVLOC];              // _pInvBody
+	Item inventorySlot[InventoryGridCells]; // _pInvList
+	Item beltSlot[MaxBeltItems];            // _pSpdList
+	Item heldItem;                          // _pHoldItem
 
 	int lightId;
 
-	int _pNumInv;
-	int _pStrength;
-	int _pBaseStr;
-	int _pMagic;
-	int _pBaseMag;
-	int _pDexterity;
-	int _pBaseDex;
-	int _pVitality;
-	int _pBaseVit;
-	int _pStatPts;
-	int _pDamageMod;
-	int _pHPBase;
-	int _pMaxHPBase;
-	int _pHitPoints;
-	int _pMaxHP;
-	int _pHPPer;
-	int _pManaBase;
-	int _pMaxManaBase;
-	int _pMana;
-	int _pMaxMana;
-	int _pManaPer;
-	int _pIMinDam;
-	int _pIMaxDam;
-	int _pIAC;
-	int _pIBonusDam;
-	int _pIBonusToHit;
-	int _pIBonusAC;
-	int _pIBonusDamMod;
-	int _pIGetHit;
-	int _pIEnAc;
-	int _pIFMinDam;
-	int _pIFMaxDam;
-	int _pILMinDam;
-	int _pILMaxDam;
-	uint32_t _pExperience;
-	PLR_MODE _pmode;
-	int8_t walkpath[MaxPathLength];
-	bool plractive;
-	action_id destAction;
-	int destParam1;
-	int destParam2;
-	int destParam3;
-	int destParam4;
-	int _pGold;
+	int numInventoryItems;          // _pNumInv
+	int strength;                   // _pStrength
+	int baseStrength;               // _pBaseStr
+	int magic;                      // _pMagic
+	int baseMagic;                  // _pBaseMag
+	int dexterity;                  // _pDexterity
+	int baseDexterity;              // _pBaseDex
+	int vitality;                   // _pVitality
+	int baseVitality;               // _pBaseVit
+	int statPoints;                 // _pStatPts
+	int damageModifier;             // _pDamageMod
+	int baseLife;                   // _pHPBase
+	int baseMaxLife;                // _pMaxHPBase
+	int life;                       // _pHitPoints
+	int maxLife;                    // _pMaxHP
+	int lifePercentage;             // _pHPPer
+	int baseMana;                   // _pManaBase
+	int baseMaxMana;                // _pMaxManaBase
+	int mana;                       // _pMana
+	int maxMana;                    // _pMaxMana
+	int manaPercentage;             // _pManaPer
+	int minDamage;                  // _pIMinDam
+	int maxDamage;                  // _pIMaxDam
+	int armorClass;                 // _pIAC
+	int bonusDamagePercent;         // _pIBonusDam
+	int bonusToHit;                 // _pIBonusToHit
+	int bonusArmorClass;            // _pIBonusAC
+	int bonusDamage;                // _pIBonusDamMod
+	int damageFromEnemies;          // _pIGetHit
+	int armorPierce;                // _pIEnAc
+	int minFireDamage;              // _pIFMinDam
+	int maxFireDamage;              // _pIFMaxDam
+	int minLightningDamage;         // _pILMinDam
+	int maxLightningDamage;         // _pILMaxDam
+	uint32_t experience;            // _pExperience
+	PLR_MODE mode;                  // _pmode
+	int8_t walkPath[MaxPathLength]; // _walkpath
+	bool isPlayerActive;            // _pActive
+	action_id destinationAction;    // _pDestAction
+	int destinationParam1;          // _pDestParam1
+	int destinationParam2;          // _pDestParam2
+	int destinationParam3;          // _pDestParam3
+	int destinationParam4;          // _pDestParam4
+	int gold;                       // _pGold
 
 	/**
-	 * @brief Contains Information for current Animation
+	 * @brief Contains Information for current Animation (AnimInfo)
 	 */
-	AnimationInfo AnimInfo;
+	PlayerAnimationInfo animationInfo;
 	/**
 	 * @brief Contains a optional preview ClxSprite that is displayed until the current command is handled by the game logic
 	 */
@@ -282,105 +286,127 @@ struct Player {
 	 * @brief Contains the progress to next game tick when previewCelSprite was set
 	 */
 	int8_t progressToNextGameTickWhenPreviewWasSet;
-	/** @brief Bitmask using item_special_effect */
-	ItemSpecialEffect _pIFlags;
 	/**
-	 * @brief Contains Data (Sprites) for the different Animations
+	 * @brief Bitmask using item_special_effect (_pIFlags)
 	 */
-	std::array<PlayerAnimationData, enum_size<player_graphic>::value> AnimationData;
-	int8_t _pNFrames;
-	int8_t _pWFrames;
-	int8_t _pAFrames;
-	int8_t _pAFNum;
-	int8_t _pSFrames;
-	int8_t _pSFNum;
-	int8_t _pHFrames;
-	int8_t _pDFrames;
-	int8_t _pBFrames;
-	int8_t InvGrid[InventoryGridCells];
+	ItemSpecialEffect flags;
+	/**
+	 * @brief Contains Data (Sprites) for the different Animations (AnimationData)
+	 */
+	std::array<PlayerAnimationData, enum_size<player_graphic>::value> animationData;
+	int8_t numIdleFrames;                     // _pNFrames
+	int8_t numWalkFrames;                     // _pWFrames
+	int8_t numAttackFrames;                   // _pAFrames
+	int8_t attackActionFrame;                 // _pAFNum
+	int8_t numSpellFrames;                    // _pSFrames
+	int8_t spellActionFrame;                  // _pSFNum
+	int8_t numRecoveryFrames;                 // _pRFrames
+	int8_t numDeathFrames;                    // _pDFrames
+	int8_t numBlockFrames;                    // _pBFrames
+	int8_t inventoryGrid[InventoryGridCells]; // InvGrid
 
-	uint8_t plrlevel;
-	bool plrIsOnSetLevel;
+	uint8_t dungeonLevel; // plrlevel
+	bool isOnSetLevel;    // plrIsOnSetLvl
 	ActorPosition position;
-	Direction _pdir; // Direction faced by player (direction enum)
-	HeroClass _pClass;
+	Direction direction; // Direction faced by player (direction enum) (_pdir)
+	HeroClass heroClass; // _pClass
 
 private:
-	uint8_t _pLevel = 1; // Use get/setCharacterLevel to ensure this attribute stays within the accepted range
+	uint8_t characterLevel = 1; // Use get/setCharacterLevel to ensure this attribute stays within the accepted range (_pLevel)
 
 public:
-	uint8_t _pgfxnum; // Bitmask indicating what variant of the sprite the player is using. The 3 lower bits define weapon (PlayerWeaponGraphic) and the higher bits define armour (starting with PlayerArmorGraphic)
-	int8_t _pISplLvlAdd;
-	/** @brief Specifies whether players are in non-PvP mode. */
-	bool friendlyMode = true;
+	uint8_t graphic;        // Bitmask indicating what variant of the sprite the player is using. The 3 lower bits define weapon (PlayerWeaponGraphic) and the higher bits define armour (starting with PlayerArmorGraphic) (_pgfxnum)
+	int8_t bonusSpellLevel; // _pSplLvlAdd
+	/**
+	 * @brief Specifies whether players are in non-PvP mode. (friendlyMode)
+	 */
+	bool isFriendlyMode = true;
 
-	/** @brief The next queued spell */
+	/**
+	 * @brief The next queued spell
+	 */
 	SpellCastInfo queuedSpell;
-	/** @brief The spell that is currently being cast */
+	/**
+	 * @brief The spell that is currently being cast
+	 */
 	SpellCastInfo executedSpell;
-	/* @brief Which spell should be executed with CURSOR_TELEPORT */
+	/**
+	 * @brief Which spell should be executed with CURSOR_TELEPORT
+	 */
 	SpellID inventorySpell;
-	/* @brief Inventory location for scrolls with CURSOR_TELEPORT */
+	/**
+	 * @brief Inventory location for scrolls with CURSOR_TELEPORT
+	 */
 	int8_t spellFrom;
-	SpellID _pRSpell;
-	SpellType _pRSplType;
-	SpellID _pSBkSpell;
-	uint8_t _pSplLvl[64];
-	/** @brief Bitmask of staff spell */
-	uint64_t _pISpells;
-	/** @brief Bitmask of learned spells */
-	uint64_t _pMemSpells;
-	/** @brief Bitmask of abilities */
-	uint64_t _pAblSpells;
-	/** @brief Bitmask of spells available via scrolls */
-	uint64_t _pScrlSpells;
-	SpellFlag _pSpellFlags;
-	SpellID _pSplHotKey[NumHotkeys];
-	SpellType _pSplTHotKey[NumHotkeys];
-	bool _pBlockFlag;
-	bool _pInvincible;
-	int8_t _pLightRad;
-	/** @brief True when the player is transitioning between levels */
-	bool _pLvlChanging;
+	SpellID selectedSpell;       // _pRSpell
+	SpellType selectedSpellType; // _pRSplType
+	uint8_t spellLevel[64];      // _pSplLvl
+	/**
+	 * @brief Bitmask of staff spell (_pISpells)
+	 */
+	uint64_t staffSpells;
+	/**
+	 * @brief Bitmask of learned spells (_pMemSpells)
+	 */
+	uint64_t learnedSpells;
+	/**
+	 * @brief Bitmask of skills (_pAblSpells)
+	 */
+	uint64_t skills;
+	/**
+	 * @brief Bitmask of spells available via scrolls (_pScrlSpells)
+	 */
+	uint64_t scrollSpells;
+	SpellFlag spellFlags;                  // _pSplFlags
+	SpellID hotkeySpell[NumHotkeys];       // _pSplHotKey
+	SpellType hotkeySpellType[NumHotkeys]; // _pSplTHotKey
+	bool hasBlockFlag;                     // _pBlockFlag
+	bool isInvincible;                     // _pInvincible
+	int8_t lightRadius;                    // _pLightRad
+	/**
+	 * @brief True when the player is transitioning between levels (_pLvlChanging)
+	 */
+	bool isChangingLevel;
 
-	int8_t _pArmorClass;
-	int8_t _pMagResist;
-	int8_t _pFireResist;
-	int8_t _pLghtResist;
-	bool _pInfraFlag;
-	/** Player's direction when ending movement. Also used for casting direction of SpellID::FireWall. */
+	int8_t resistMagic;      // _pMagResist
+	int8_t resistFire;       // _pFireResist
+	int8_t resistLightning;  // _pLghtResist
+	bool hasInfravisionFlag; // _pInfraFlag
+	/**
+	 * @brief Player's direction when ending movement. Also used for casting direction of SpellID::FireWall.
+	 */
 	Direction tempDirection;
 
-	bool _pLvlVisited[NUMLEVELS];
-	bool _pSLvlVisited[NUMLEVELS]; // only 10 used
+	bool isLevelVisted[NUMLEVELS];    // _pLvlVisited
+	bool isSetLevelVisted[NUMLEVELS]; // only 10 used (_pSLvlVisited)
 
-	item_misc_id _pOilType;
-	uint8_t pTownWarps;
-	uint8_t pDungMsgs;
-	uint8_t pLvlLoad;
-	bool pManaShield;
-	uint8_t pDungMsgs2;
-	bool pOriginalCathedral;
-	uint8_t pDiabloKillLevel;
-	uint16_t wReflections;
-	ItemSpecialEffectHf pDamAcFlags;
+	item_misc_id oilType;              // _pOilType
+	uint8_t townWarps;                 // pTownWarps
+	uint8_t dungeonMessages;           // pDungMsgs
+	uint8_t levelLoading;              // pLvlLoad
+	bool hasManaShield;                // pManaShield
+	uint8_t dungeonMessages2;          // pDungMsgs2
+	bool originalCathedral;            // pOriginalCathedral
+	uint8_t difficultyCompletion;      // pDiabloKillLevel
+	uint16_t reflections;              // wReflections
+	ItemSpecialEffectHf hellfireFlags; // pDamAcFlags
 
 	/**
 	 * @brief Convenience function to get the base stats/bonuses for this player's class
 	 */
 	[[nodiscard]] const ClassAttributes &getClassAttributes() const
 	{
-		return GetClassAttributes(_pClass);
+		return GetClassAttributes(heroClass);
 	}
 
 	[[nodiscard]] const PlayerCombatData &getPlayerCombatData() const
 	{
-		return GetPlayerCombatDataForClass(_pClass);
+		return GetPlayerCombatDataForClass(heroClass);
 	}
 
 	[[nodiscard]] const PlayerData &getPlayerData() const
 	{
-		return GetPlayerDataForClass(_pClass);
+		return GetPlayerDataForClass(heroClass);
 	}
 
 	/**
@@ -400,14 +426,14 @@ public:
 
 	bool CanUseItem(const Item &item) const
 	{
-		return _pStrength >= item._iMinStr
-		    && _pMagic >= item._iMinMag
-		    && _pDexterity >= item._iMinDex;
+		return strength >= item._iMinStr
+		    && magic >= item._iMinMag
+		    && dexterity >= item._iMinDex;
 	}
 
 	bool CanCleave()
 	{
-		switch (_pClass) {
+		switch (heroClass) {
 		case HeroClass::Warrior:
 		case HeroClass::Rogue:
 		case HeroClass::Sorcerer:
@@ -415,7 +441,7 @@ public:
 		case HeroClass::Monk:
 			return isEquipped(ItemType::Staff);
 		case HeroClass::Bard:
-			return InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Sword && InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Sword;
+			return bodySlot[INVLOC_HAND_LEFT]._itype == ItemType::Sword && bodySlot[INVLOC_HAND_RIGHT]._itype == ItemType::Sword;
 		case HeroClass::Barbarian:
 			return isEquipped(ItemType::Axe) || (!isEquipped(ItemType::Shield) && (isEquipped(ItemType::Mace, true) || isEquipped(ItemType::Sword, true)));
 		default:
@@ -432,18 +458,18 @@ public:
 		case ItemType::Mace:
 		case ItemType::Shield:
 		case ItemType::Staff:
-			return (InvBody[INVLOC_HAND_LEFT]._itype == itemType && (!isTwoHanded || InvBody[INVLOC_HAND_LEFT]._iLoc == ILOC_TWOHAND))
-			    || (InvBody[INVLOC_HAND_RIGHT]._itype == itemType && (!isTwoHanded || InvBody[INVLOC_HAND_LEFT]._iLoc == ILOC_TWOHAND));
+			return (bodySlot[INVLOC_HAND_LEFT]._itype == itemType && (!isTwoHanded || bodySlot[INVLOC_HAND_LEFT]._iLoc == ILOC_TWOHAND))
+			    || (bodySlot[INVLOC_HAND_RIGHT]._itype == itemType && (!isTwoHanded || bodySlot[INVLOC_HAND_LEFT]._iLoc == ILOC_TWOHAND));
 		case ItemType::LightArmor:
 		case ItemType::MediumArmor:
 		case ItemType::HeavyArmor:
-			return InvBody[INVLOC_CHEST]._itype == itemType;
+			return bodySlot[INVLOC_CHEST]._itype == itemType;
 		case ItemType::Helm:
-			return InvBody[INVLOC_HEAD]._itype == itemType;
+			return bodySlot[INVLOC_HEAD]._itype == itemType;
 		case ItemType::Ring:
-			return InvBody[INVLOC_RING_LEFT]._itype == itemType || InvBody[INVLOC_RING_RIGHT]._itype == itemType;
+			return bodySlot[INVLOC_RING_LEFT]._itype == itemType || bodySlot[INVLOC_RING_RIGHT]._itype == itemType;
 		case ItemType::Amulet:
-			return InvBody[INVLOC_AMULET]._itype == itemType;
+			return bodySlot[INVLOC_AMULET]._itype == itemType;
 		default:
 			return false;
 		}
@@ -486,9 +512,9 @@ public:
 			return mostValuableItem;
 		};
 
-		const Item *mostValuableItem = getMostValuableItem(SpdList, SpdList + MaxBeltItems);
-		mostValuableItem = getMostValuableItem(InvBody, InvBody + inv_body_loc::NUM_INVLOC, mostValuableItem);
-		mostValuableItem = getMostValuableItem(InvList, InvList + _pNumInv, mostValuableItem);
+		const Item *mostValuableItem = getMostValuableItem(beltSlot, beltSlot + MaxBeltItems);
+		mostValuableItem = getMostValuableItem(bodySlot, bodySlot + inv_body_loc::NUM_INVLOC, mostValuableItem);
+		mostValuableItem = getMostValuableItem(inventorySlot, inventorySlot + numInventoryItems, mostValuableItem);
 
 		return mostValuableItem;
 	}
@@ -557,7 +583,7 @@ public:
 	 */
 	item_equip_type GetItemLocation(const Item &item) const
 	{
-		if (_pClass == HeroClass::Barbarian && item._iLoc == ILOC_TWOHAND && IsAnyOf(item._itype, ItemType::Sword, ItemType::Mace))
+		if (heroClass == HeroClass::Barbarian && item._iLoc == ILOC_TWOHAND && IsAnyOf(item._itype, ItemType::Sword, ItemType::Mace))
 			return ILOC_ONEHAND;
 		return item._iLoc;
 	}
@@ -567,7 +593,7 @@ public:
 	 */
 	int GetArmor() const
 	{
-		return _pIBonusAC + _pIAC + _pDexterity / 5;
+		return bonusArmorClass + armorClass + dexterity / 5;
 	}
 
 	/**
@@ -575,7 +601,7 @@ public:
 	 */
 	int GetMeleeToHit() const
 	{
-		return getCharacterLevel() + _pDexterity / 2 + _pIBonusToHit + getPlayerCombatData().baseMeleeToHit;
+		return getCharacterLevel() + dexterity / 2 + bonusToHit + getPlayerCombatData().baseMeleeToHit;
 	}
 
 	/**
@@ -586,7 +612,7 @@ public:
 		int hper = GetMeleeToHit();
 		// in hellfire armor piercing ignores % of enemy armor instead, no way to include it here
 		if (!gbIsHellfire)
-			hper += _pIEnAc;
+			hper += armorPierce;
 		return hper;
 	}
 
@@ -595,7 +621,7 @@ public:
 	 */
 	int GetRangedToHit() const
 	{
-		return getCharacterLevel() + _pDexterity + _pIBonusToHit + getPlayerCombatData().baseRangedToHit;
+		return getCharacterLevel() + dexterity + bonusToHit + getPlayerCombatData().baseRangedToHit;
 	}
 
 	int GetRangedPiercingToHit() const
@@ -603,7 +629,7 @@ public:
 		int hper = GetRangedToHit();
 		// in hellfire armor piercing ignores % of enemy armor instead, no way to include it here
 		if (!gbIsHellfire)
-			hper += _pIEnAc;
+			hper += armorPierce;
 		return hper;
 	}
 
@@ -612,7 +638,7 @@ public:
 	 */
 	int GetMagicToHit() const
 	{
-		return _pMagic + getPlayerCombatData().baseMagicToHit;
+		return magic + getPlayerCombatData().baseMagicToHit;
 	}
 
 	/**
@@ -621,7 +647,7 @@ public:
 	 */
 	int GetBlockChance(bool useLevel = true) const
 	{
-		int blkper = _pDexterity + getBaseToBlock();
+		int blkper = dexterity + getBaseToBlock();
 		if (useLevel)
 			blkper += getCharacterLevel() * 2;
 		return blkper;
@@ -641,11 +667,11 @@ public:
 	 */
 	int GetSpellLevel(SpellID spell) const
 	{
-		if (spell == SpellID::Invalid || static_cast<std::size_t>(spell) >= sizeof(_pSplLvl)) {
+		if (spell == SpellID::Invalid || static_cast<std::size_t>(spell) >= sizeof(spellLevel)) {
 			return 0;
 		}
 
-		return std::max<int>(_pISplLvlAdd + _pSplLvl[static_cast<std::size_t>(spell)], 0);
+		return std::max<int>(bonusSpellLevel + spellLevel[static_cast<std::size_t>(spell)], 0);
 	}
 
 	/**
@@ -656,15 +682,15 @@ public:
 	int CalculateArmorPierce(int monsterArmor, bool isMelee) const
 	{
 		int tmac = monsterArmor;
-		if (_pIEnAc > 0) {
+		if (armorPierce > 0) {
 			if (gbIsHellfire) {
-				int pIEnAc = _pIEnAc - 1;
+				int pIEnAc = armorPierce - 1;
 				if (pIEnAc > 0)
 					tmac >>= pIEnAc;
 				else
 					tmac -= tmac / 4;
 			}
-			if (isMelee && _pClass == HeroClass::Barbarian) {
+			if (isMelee && heroClass == HeroClass::Barbarian) {
 				tmac -= monsterArmor / 8;
 			}
 		}
@@ -678,32 +704,32 @@ public:
 	 * @brief Calculates the players current Hit Points as a percentage of their max HP and stores it for later reference
 	 *
 	 * The stored value is unused...
-	 * @see _pHPPer
+	 * @see lifePercentage
 	 * @return The players current hit points as a percentage of their maximum (from 0 to 80%)
 	 */
 	int UpdateHitPointPercentage()
 	{
-		if (_pMaxHP <= 0) { // divide by zero guard
-			_pHPPer = 0;
+		if (maxLife <= 0) { // divide by zero guard
+			lifePercentage = 0;
 		} else {
 			// Maximum achievable HP is approximately 1200. Diablo uses fixed point integers where the last 6 bits are
 			// fractional values. This means that we will never overflow HP values normally by doing this multiplication
 			// as the max value is representable in 17 bits and the multiplication result will be at most 23 bits
-			_pHPPer = std::clamp(_pHitPoints * 80 / _pMaxHP, 0, 80); // hp should never be greater than maxHP but just in case
+			lifePercentage = std::clamp(life * 80 / maxLife, 0, 80); // hp should never be greater than maxHP but just in case
 		}
 
-		return _pHPPer;
+		return lifePercentage;
 	}
 
 	int UpdateManaPercentage()
 	{
-		if (_pMaxMana <= 0) {
-			_pManaPer = 0;
+		if (maxMana <= 0) {
+			manaPercentage = 0;
 		} else {
-			_pManaPer = std::clamp(_pMana * 80 / _pMaxMana, 0, 80);
+			manaPercentage = std::clamp(mana * 80 / maxMana, 0, 80);
 		}
 
-		return _pManaPer;
+		return manaPercentage;
 	}
 
 	/**
@@ -720,8 +746,8 @@ public:
 	 */
 	void RestoreFullLife()
 	{
-		_pHitPoints = _pMaxHP;
-		_pHPBase = _pMaxHPBase;
+		life = maxLife;
+		baseLife = baseMaxLife;
 	}
 
 	/**
@@ -739,9 +765,9 @@ public:
 	 */
 	void RestoreFullMana()
 	{
-		if (HasNoneOf(_pIFlags, ItemSpecialEffect::NoMana)) {
-			_pMana = _pMaxMana;
-			_pManaBase = _pMaxManaBase;
+		if (HasNoneOf(flags, ItemSpecialEffect::NoMana)) {
+			mana = maxMana;
+			baseMana = baseMaxMana;
 		}
 	}
 	/**
@@ -756,20 +782,20 @@ public:
 	 */
 	bool UsesRangedWeapon() const
 	{
-		return static_cast<PlayerWeaponGraphic>(_pgfxnum & 0xF) == PlayerWeaponGraphic::Bow;
+		return static_cast<PlayerWeaponGraphic>(graphic & 0xF) == PlayerWeaponGraphic::Bow;
 	}
 
 	bool CanChangeAction()
 	{
-		if (_pmode == PM_STAND)
+		if (mode == PM_STAND)
 			return true;
-		if (_pmode == PM_ATTACK && AnimInfo.currentFrame >= _pAFNum)
+		if (mode == PM_ATTACK && animationInfo.currentFrame >= attackActionFrame)
 			return true;
-		if (_pmode == PM_RATTACK && AnimInfo.currentFrame >= _pAFNum)
+		if (mode == PM_RATTACK && animationInfo.currentFrame >= attackActionFrame)
 			return true;
-		if (_pmode == PM_SPELL && AnimInfo.currentFrame >= _pSFNum)
+		if (mode == PM_SPELL && animationInfo.currentFrame >= spellActionFrame)
 			return true;
-		if (isWalking() && AnimInfo.isLastFrame())
+		if (isWalking() && animationInfo.isLastFrame())
 			return true;
 		return false;
 	}
@@ -782,13 +808,13 @@ public:
 
 	[[nodiscard]] ClxSprite currentSprite() const
 	{
-		return previewCelSprite ? *previewCelSprite : AnimInfo.currentSprite();
+		return previewCelSprite ? *previewCelSprite : animationInfo.currentSprite();
 	}
 	[[nodiscard]] Displacement getRenderingOffset(const ClxSprite sprite) const
 	{
 		Displacement offset = { -CalculateWidth2(sprite.width()), 0 };
 		if (isWalking())
-			offset += GetOffsetForWalking(AnimInfo, _pdir);
+			offset += GetOffsetForWalking(animationInfo, direction);
 		return offset;
 	}
 
@@ -803,7 +829,7 @@ public:
 
 	[[nodiscard]] uint8_t getCharacterLevel() const
 	{
-		return _pLevel;
+		return characterLevel;
 	}
 
 	/**
@@ -856,27 +882,27 @@ public:
 	/** @brief Checks if the player is on the corresponding level. */
 	bool isOnLevel(uint8_t level) const
 	{
-		return !this->plrIsOnSetLevel && this->plrlevel == level;
+		return !this->isOnSetLevel && this->dungeonLevel == level;
 	}
 	/** @brief Checks if the player is on the corresponding level. */
 	bool isOnLevel(_setlevels level) const
 	{
-		return this->plrIsOnSetLevel && this->plrlevel == static_cast<uint8_t>(level);
+		return this->isOnSetLevel && this->dungeonLevel == static_cast<uint8_t>(level);
 	}
 	/** @brief Checks if the player is on a arena level. */
 	bool isOnArenaLevel() const
 	{
-		return plrIsOnSetLevel && IsArenaLevel(static_cast<_setlevels>(plrlevel));
+		return isOnSetLevel && IsArenaLevel(static_cast<_setlevels>(dungeonLevel));
 	}
 	void setLevel(uint8_t level)
 	{
-		this->plrlevel = level;
-		this->plrIsOnSetLevel = false;
+		this->dungeonLevel = level;
+		this->isOnSetLevel = false;
 	}
 	void setLevel(_setlevels level)
 	{
-		this->plrlevel = static_cast<uint8_t>(level);
-		this->plrIsOnSetLevel = true;
+		this->dungeonLevel = static_cast<uint8_t>(level);
+		this->isOnSetLevel = true;
 	}
 
 	/** @brief Returns a character's life based on starting life, character level, and base vitality. */
@@ -898,8 +924,8 @@ public:
 	/** @brief Checks if the player is holding an item of the provided type, and is usable. */
 	bool isHoldingItem(const ItemType type) const
 	{
-		const Item &leftHandItem = InvBody[INVLOC_HAND_LEFT];
-		const Item &rightHandItem = InvBody[INVLOC_HAND_RIGHT];
+		const Item &leftHandItem = bodySlot[INVLOC_HAND_LEFT];
+		const Item &rightHandItem = bodySlot[INVLOC_HAND_RIGHT];
 
 		return (type == leftHandItem._itype && leftHandItem._iStatFlag) || (type == rightHandItem._itype && rightHandItem._iStatFlag);
 	}
@@ -968,7 +994,7 @@ void ClrPlrPath(Player &player);
 bool PosOkPlayer(const Player &player, Point position);
 void MakePlrPath(Player &player, Point targetPosition, bool endspace);
 void CalcPlrStaff(Player &player);
-void CheckPlrSpell(bool isShiftHeld, SpellID spellID = MyPlayer->_pRSpell, SpellType spellType = MyPlayer->_pRSplType);
+void CheckPlrSpell(bool isShiftHeld, SpellID spellID = MyPlayer->selectedSpell, SpellType spellType = MyPlayer->selectedSpellType);
 void SyncPlrAnim(Player &player);
 void SyncInitPlrPos(Player &player);
 void SyncInitPlr(Player &player);

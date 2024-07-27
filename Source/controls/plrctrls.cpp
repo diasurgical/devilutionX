@@ -72,7 +72,7 @@ bool InGameMenu()
 	    || qtextflag
 	    || gmenu_is_active()
 	    || PauseMode == 2
-	    || (MyPlayer != nullptr && MyPlayer->_pInvincible && MyPlayer->_pHitPoints == 0);
+	    || (MyPlayer != nullptr && MyPlayer->isInvincible && MyPlayer->life == 0);
 }
 
 namespace {
@@ -101,7 +101,7 @@ int GetRotaryDistance(Point destination)
 	if (myPlayer.position.future == destination)
 		return -1;
 
-	int d1 = static_cast<int>(myPlayer._pdir);
+	int d1 = static_cast<int>(myPlayer.direction);
 	int d2 = static_cast<int>(GetDirection(myPlayer.position.future, destination));
 
 	int d = std::abs(d1 - d2);
@@ -132,9 +132,9 @@ int GetDistance(Point destination, int maxDistance)
 		return 0;
 	}
 
-	int8_t walkpath[MaxPathLength];
+	int8_t walkPath[MaxPathLength];
 	Player &myPlayer = *MyPlayer;
-	int steps = FindPath([&myPlayer](Point position) { return PosOkPlayer(myPlayer, position); }, myPlayer.position.future, destination, walkpath);
+	int steps = FindPath([&myPlayer](Point position) { return PosOkPlayer(myPlayer, position); }, myPlayer.position.future, destination, walkPath);
 	if (steps > maxDistance)
 		return 0;
 
@@ -229,7 +229,7 @@ void CheckTownersNearby()
 
 bool HasRangedSpell()
 {
-	SpellID spl = MyPlayer->_pRSpell;
+	SpellID spl = MyPlayer->selectedSpell;
 
 	return spl != SpellID::Invalid
 	    && spl != SpellID::TownPortal
@@ -380,8 +380,8 @@ void CheckPlayerNearby()
 
 	Player &myPlayer = *MyPlayer;
 
-	SpellID spl = myPlayer._pRSpell;
-	if (myPlayer.friendlyMode && spl != SpellID::Resurrect && spl != SpellID::HealOther)
+	SpellID spl = myPlayer.selectedSpell;
+	if (myPlayer.isFriendlyMode && spl != SpellID::Resurrect && spl != SpellID::HealOther)
 		return;
 
 	for (const Player &player : Players) {
@@ -391,7 +391,7 @@ void CheckPlayerNearby()
 		const int my = player.position.future.y;
 		if (dPlayer[mx][my] == 0
 		    || !IsTileLit(player.position.future)
-		    || (player._pHitPoints == 0 && spl != SpellID::Resurrect))
+		    || (player.life == 0 && spl != SpellID::Resurrect))
 			continue;
 
 		if (myPlayer.UsesRangedWeapon() || HasRangedSpell() || spl == SpellID::HealOther) {
@@ -508,7 +508,7 @@ void Interact()
 	Player &myPlayer = *MyPlayer;
 
 	if (leveltype != DTYPE_TOWN && IsStandingGround()) {
-		Direction pdir = myPlayer._pdir;
+		Direction pdir = myPlayer.direction;
 		AxisDirection moveDir = GetMoveDirection();
 		bool motion = moveDir.x != AxisDirectionX_NONE || moveDir.y != AxisDirectionY_NONE;
 		if (motion) {
@@ -535,7 +535,7 @@ void Interact()
 		return;
 	}
 
-	if (leveltype != DTYPE_TOWN && PlayerUnderCursor != nullptr && !myPlayer.friendlyMode) {
+	if (leveltype != DTYPE_TOWN && PlayerUnderCursor != nullptr && !myPlayer.isFriendlyMode) {
 		NetSendCmdParam1(true, myPlayer.UsesRangedWeapon() ? CMD_RATTACKPID : CMD_ATTACKPID, PlayerUnderCursor->getId());
 		LastMouseButtonAction = MouseActionType::AttackPlayerTarget;
 		return;
@@ -555,7 +555,7 @@ void AttrIncBtnSnap(AxisDirection dir)
 	if (dir.y == AxisDirectionY_NONE)
 		return;
 
-	if (chrbtnactive && MyPlayer->_pStatPts <= 0)
+	if (chrbtnactive && MyPlayer->statPoints <= 0)
 		return;
 
 	// first, find our cursor location
@@ -584,10 +584,10 @@ void AttrIncBtnSnap(AxisDirection dir)
 	SetCursorPos(button.Center());
 }
 
-Point InvGetEquipSlotCoord(const inv_body_loc invSlot)
+Point InvGetEquipSlotCoord(const inv_body_loc inventorySlot)
 {
 	Point result = GetPanelPosition(UiPanels::Inventory);
-	switch (invSlot) {
+	switch (inventorySlot) {
 	case INVLOC_HEAD:
 		result.x += InvRect[SLOTXY_HEAD].Center().x;
 		result.y += InvRect[SLOTXY_HEAD].Center().y;
@@ -668,7 +668,7 @@ Point GetSlotCoord(int slot)
 int GetItemIdOnSlot(int slot)
 {
 	if (slot >= SLOTXY_INV_FIRST && slot <= SLOTXY_INV_LAST) {
-		return std::abs(MyPlayer->InvGrid[slot - SLOTXY_INV_FIRST]);
+		return std::abs(MyPlayer->inventoryGrid[slot - SLOTXY_INV_FIRST]);
 	}
 
 	return 0;
@@ -682,7 +682,7 @@ Size GetItemSizeOnSlot(int slot)
 	if (slot >= SLOTXY_INV_FIRST && slot <= SLOTXY_INV_LAST) {
 		int8_t ii = GetItemIdOnSlot(slot);
 		if (ii != 0) {
-			Item &item = MyPlayer->InvList[ii - 1];
+			Item &item = MyPlayer->inventorySlot[ii - 1];
 			if (!item.isEmpty()) {
 				return GetInventorySize(item);
 			}
@@ -804,7 +804,7 @@ void InventoryMove(AxisDirection dir)
 
 	const int initialSlot = Slot;
 
-	const Item &heldItem = MyPlayer->HoldItem;
+	const Item &heldItem = MyPlayer->heldItem;
 	const bool isHoldingItem = !heldItem.isEmpty();
 	Size itemSize = isHoldingItem ? GetInventorySize(heldItem) : Size { 1 };
 
@@ -1044,7 +1044,7 @@ void CheckInventoryMove(AxisDirection dir)
  */
 bool BlurInventory()
 {
-	if (!MyPlayer->HoldItem.isEmpty()) {
+	if (!MyPlayer->heldItem.isEmpty()) {
 		if (!TryDropItem()) {
 			MyPlayer->Say(HeroSpeech::WhereWouldIPutThis);
 			return false;
@@ -1068,9 +1068,9 @@ void StashMove(AxisDirection dir)
 		return;
 
 	if (Slot < 0 && ActiveStashSlot == InvalidStashPoint) {
-		int invSlot = FindClosestInventorySlot(MousePosition);
-		Point invSlotCoord = GetSlotCoord(invSlot);
-		int invDistance = MousePosition.ManhattanDistance(invSlotCoord);
+		int inventorySlot = FindClosestInventorySlot(MousePosition);
+		Point inventorySlotCoord = GetSlotCoord(inventorySlot);
+		int invDistance = MousePosition.ManhattanDistance(inventorySlotCoord);
 
 		Point stashSlot = FindClosestStashSlot(MousePosition);
 		Point stashSlotCoord = GetStashSlotCoord(stashSlot);
@@ -1085,7 +1085,7 @@ void StashMove(AxisDirection dir)
 		ActiveStashSlot = stashSlot;
 	}
 
-	Item &holdItem = MyPlayer->HoldItem;
+	Item &holdItem = MyPlayer->heldItem;
 	Size itemSize = holdItem.isEmpty() ? Size { 1, 1 } : GetInventorySize(holdItem);
 
 	// Jump from belt to stash
@@ -1101,7 +1101,7 @@ void StashMove(AxisDirection dir)
 	// Jump from general inventory to stash
 	if (Slot >= SLOTXY_INV_FIRST && Slot <= SLOTXY_INV_LAST) {
 		int firstSlot = Slot;
-		if (MyPlayer->HoldItem.isEmpty()) {
+		if (MyPlayer->heldItem.isEmpty()) {
 			int8_t itemId = GetItemIdOnSlot(Slot);
 			if (itemId != 0) {
 				firstSlot = FindFirstSlotOnItem(itemId);
@@ -1279,7 +1279,7 @@ bool IsPathBlocked(Point position, Direction dir)
 void WalkInDir(Player &player, AxisDirection dir)
 {
 	if (dir.x == AxisDirectionX_NONE && dir.y == AxisDirectionY_NONE) {
-		if (ControlMode != ControlTypes::KeyboardAndMouse && player.walkpath[0] != WALK_NONE && player.destAction == ACTION_NONE)
+		if (ControlMode != ControlTypes::KeyboardAndMouse && player.walkPath[0] != WALK_NONE && player.destinationAction == ACTION_NONE)
 			NetSendCmdLoc(player.getId(), true, CMD_WALKXY, player.position.future); // Stop walking
 		return;
 	}
@@ -1288,16 +1288,16 @@ void WalkInDir(Player &player, AxisDirection dir)
 	const auto delta = player.position.future + pdir;
 
 	if (!player.isWalking() && player.CanChangeAction())
-		player._pdir = pdir;
+		player.direction = pdir;
 
 	if (IsStandingGround()) {
-		if (player._pmode == PM_STAND)
+		if (player.mode == PM_STAND)
 			StartStand(player, pdir);
 		return;
 	}
 
 	if (PosOkPlayer(player, delta) && IsPathBlocked(player.position.future, pdir)) {
-		if (player._pmode == PM_STAND)
+		if (player.mode == PM_STAND)
 			StartStand(player, pdir);
 		return; // Don't start backtrack around obstacles
 	}
@@ -1335,7 +1335,7 @@ HandleLeftStickOrDPadFn GetLeftStickOrDPadGameUIHandler()
 	if (invflag) {
 		return &CheckInventoryMove;
 	}
-	if (chrflag && MyPlayer->_pStatPts > 0) {
+	if (chrflag && MyPlayer->statPoints > 0) {
 		return &AttrIncBtnSnap;
 	}
 	if (spselflag) {
@@ -1757,7 +1757,7 @@ void plrctrls_after_check_curs_move()
 	pcurstrig = -1;
 	pcursquest = Q_INVALID;
 	cursPosition = { -1, -1 };
-	if (MyPlayer->_pInvincible) {
+	if (MyPlayer->isInvincible) {
 		return;
 	}
 	if (DoomFlag) {
@@ -1785,7 +1785,7 @@ void plrctrls_after_game_logic()
 void UseBeltItem(int type)
 {
 	for (int i = 0; i < MaxBeltItems; i++) {
-		Item &item = MyPlayer->SpdList[i];
+		Item &item = MyPlayer->beltSlot[i];
 		if (item.isEmpty()) {
 			continue;
 		}
@@ -1812,7 +1812,7 @@ void PerformPrimaryAction()
 
 			int jumpSlot = inventorySlot; // If the cursor is over an inventory slot we may need to adjust it due to pasting items of different sizes over each other
 			if (inventorySlot >= SLOTXY_INV_FIRST && inventorySlot <= SLOTXY_INV_LAST) {
-				const Size cursorSizeInCells = MyPlayer->HoldItem.isEmpty() ? Size { 1, 1 } : GetInventorySize(MyPlayer->HoldItem);
+				const Size cursorSizeInCells = MyPlayer->heldItem.isEmpty() ? Size { 1, 1 } : GetInventorySize(MyPlayer->heldItem);
 
 				// Find any item occupying a slot that is currently under the cursor
 				int8_t itemUnderCursor = [](int inventorySlot, Size cursorSizeInCells) {
@@ -1840,7 +1840,7 @@ void PerformPrimaryAction()
 			if (inventorySlot >= SLOTXY_INV_FIRST && inventorySlot <= SLOTXY_INV_LAST) {
 				Point mousePos = GetSlotCoord(jumpSlot);
 				Slot = jumpSlot;
-				const Size newCursorSizeInCells = MyPlayer->HoldItem.isEmpty() ? GetItemSizeOnSlot(jumpSlot) : GetInventorySize(MyPlayer->HoldItem);
+				const Size newCursorSizeInCells = MyPlayer->heldItem.isEmpty() ? GetItemSizeOnSlot(jumpSlot) : GetInventorySize(MyPlayer->heldItem);
 				mousePos.x += ((newCursorSizeInCells.width - 1) * InventorySlotSizeInPixels.width) / 2;
 				mousePos.y += ((newCursorSizeInCells.height - 1) * InventorySlotSizeInPixels.height) / 2;
 				SetCursorPos(mousePos);
@@ -1848,7 +1848,7 @@ void PerformPrimaryAction()
 		} else if (IsStashOpen && GetLeftPanel().contains(MousePosition)) {
 			Point stashSlot = (ActiveStashSlot != InvalidStashPoint) ? ActiveStashSlot : FindClosestStashSlot(MousePosition);
 
-			Size cursorSizeInCells = MyPlayer->HoldItem.isEmpty() ? Size { 1, 1 } : GetInventorySize(MyPlayer->HoldItem);
+			Size cursorSizeInCells = MyPlayer->heldItem.isEmpty() ? Size { 1, 1 } : GetInventorySize(MyPlayer->heldItem);
 
 			// Find any item occupying a slot that is currently under the cursor
 			StashStruct::StashCell itemUnderCursor = [](Point stashSlot, Size cursorSizeInCells) -> StashStruct::StashCell {
@@ -1869,7 +1869,7 @@ void PerformPrimaryAction()
 
 			Point mousePos = GetStashSlotCoord(jumpSlot);
 			ActiveStashSlot = jumpSlot;
-			if (MyPlayer->HoldItem.isEmpty()) {
+			if (MyPlayer->heldItem.isEmpty()) {
 				// For inventory cut/paste we can combine the cases where we swap or simply paste items. Because stash movement is always cell based (there's no fast
 				// movement over large items) it looks better if we offset the hand cursor to the bottom right cell of the item we just placed.
 				ActiveStashSlot += Displacement { cursorSizeInCells - 1 }; // shift the active stash slot coordinates to account for items larger than 1x1
@@ -1879,7 +1879,7 @@ void PerformPrimaryAction()
 			} else {
 				// If we've picked up an item then use the same logic as the inventory so that the cursor is offset to the center of where the old item location was
 				// (in this case jumpSlot was the top left cell of where it used to be in the grid, and we need to update the cursor size since we're now holding the item)
-				cursorSizeInCells = GetInventorySize(MyPlayer->HoldItem);
+				cursorSizeInCells = GetInventorySize(MyPlayer->heldItem);
 				mousePos.x += ((cursorSizeInCells.width) * InventorySlotSizeInPixels.width) / 2;
 				mousePos.y += ((cursorSizeInCells.height) * InventorySlotSizeInPixels.height) / 2;
 			}
@@ -1893,7 +1893,7 @@ void PerformPrimaryAction()
 		return;
 	}
 
-	if (chrflag && !chrbtnactive && MyPlayer->_pStatPts > 0) {
+	if (chrflag && !chrbtnactive && MyPlayer->statPoints > 0) {
 		CheckChrBtns();
 		if (chrbtnactive)
 			ReleaseChrBtns(false);
@@ -1905,7 +1905,7 @@ void PerformPrimaryAction()
 
 bool SpellHasActorTarget()
 {
-	SpellID spl = MyPlayer->_pRSpell;
+	SpellID spl = MyPlayer->selectedSpell;
 	if (spl == SpellID::TownPortal || spl == SpellID::Teleport)
 		return false;
 
@@ -1928,7 +1928,7 @@ void UpdateSpellTarget(SpellID spell)
 
 	int range = spell == SpellID::Teleport ? 4 : 1;
 
-	cursPosition = myPlayer.position.future + Displacement(myPlayer._pdir) * range;
+	cursPosition = myPlayer.position.future + Displacement(myPlayer.direction) * range;
 }
 
 /**
@@ -1938,31 +1938,31 @@ bool TryDropItem()
 {
 	Player &myPlayer = *MyPlayer;
 
-	if (myPlayer.HoldItem.isEmpty()) {
+	if (myPlayer.heldItem.isEmpty()) {
 		return false;
 	}
 
 	if (leveltype == DTYPE_TOWN) {
-		if (UseItemOpensHive(myPlayer.HoldItem, myPlayer.position.tile)) {
+		if (UseItemOpensHive(myPlayer.heldItem, myPlayer.position.tile)) {
 			OpenHive();
 			NewCursor(CURSOR_HAND);
 			return true;
 		}
-		if (UseItemOpensGrave(myPlayer.HoldItem, myPlayer.position.tile)) {
+		if (UseItemOpensGrave(myPlayer.heldItem, myPlayer.position.tile)) {
 			OpenGrave();
 			NewCursor(CURSOR_HAND);
 			return true;
 		}
 	}
 
-	std::optional<Point> itemTile = FindAdjacentPositionForItem(myPlayer.position.future, myPlayer._pdir);
+	std::optional<Point> itemTile = FindAdjacentPositionForItem(myPlayer.position.future, myPlayer.direction);
 	if (!itemTile) {
 		myPlayer.Say(HeroSpeech::WhereWouldIPutThis);
 		return false;
 	}
 
-	NetSendCmdPItem(true, CMD_PUTITEM, *itemTile, myPlayer.HoldItem);
-	myPlayer.HoldItem.clear();
+	NetSendCmdPItem(true, CMD_PUTITEM, *itemTile, myPlayer.heldItem);
+	myPlayer.heldItem.clear();
 	NewCursor(CURSOR_HAND);
 	return true;
 }
@@ -1973,7 +1973,7 @@ void PerformSpellAction()
 		return;
 
 	if (invflag) {
-		if (!MyPlayer->HoldItem.isEmpty())
+		if (!MyPlayer->heldItem.isEmpty())
 			TryDropItem();
 		else if (pcurs > CURSOR_HAND) {
 			TryIconCurs();
@@ -1989,7 +1989,7 @@ void PerformSpellAction()
 		return;
 	}
 
-	if (!MyPlayer->HoldItem.isEmpty() && !TryDropItem())
+	if (!MyPlayer->heldItem.isEmpty() && !TryDropItem())
 		return;
 	if (pcurs > CURSOR_HAND)
 		NewCursor(CURSOR_HAND);
@@ -2000,14 +2000,14 @@ void PerformSpellAction()
 	}
 
 	const Player &myPlayer = *MyPlayer;
-	SpellID spl = myPlayer._pRSpell;
+	SpellID spl = myPlayer.selectedSpell;
 	if ((PlayerUnderCursor == nullptr && (spl == SpellID::Resurrect || spl == SpellID::HealOther))
 	    || (ObjectUnderCursor == nullptr && spl == SpellID::TrapDisarm)) {
 		myPlayer.Say(HeroSpeech::ICantCastThatHere);
 		return;
 	}
 
-	UpdateSpellTarget(myPlayer._pRSpell);
+	UpdateSpellTarget(myPlayer.selectedSpell);
 	CheckPlrSpell(false);
 	if (PlayerUnderCursor != nullptr)
 		LastMouseButtonAction = MouseActionType::SpellPlayerTarget;
@@ -2088,7 +2088,7 @@ void PerformSecondaryAction()
 		return;
 	}
 
-	if (!MyPlayer->HoldItem.isEmpty() && !TryDropItem())
+	if (!MyPlayer->heldItem.isEmpty() && !TryDropItem())
 		return;
 	if (pcurs > CURSOR_HAND)
 		NewCursor(CURSOR_HAND);
@@ -2101,13 +2101,13 @@ void PerformSecondaryAction()
 	} else {
 		if (pcursmissile != nullptr) {
 			MakePlrPath(myPlayer, pcursmissile->position.tile, true);
-			myPlayer.destAction = ACTION_WALK;
+			myPlayer.destinationAction = ACTION_WALK;
 		} else if (pcurstrig != -1) {
 			MakePlrPath(myPlayer, trigs[pcurstrig].position, true);
-			myPlayer.destAction = ACTION_WALK;
+			myPlayer.destinationAction = ACTION_WALK;
 		} else if (pcursquest != Q_INVALID) {
 			MakePlrPath(myPlayer, Quests[pcursquest].position, true);
-			myPlayer.destAction = ACTION_WALK;
+			myPlayer.destinationAction = ACTION_WALK;
 		}
 	}
 }
@@ -2116,8 +2116,8 @@ void QuickCast(size_t slot)
 {
 	MouseActionType prevMouseButtonAction = LastMouseButtonAction;
 	Player &myPlayer = *MyPlayer;
-	SpellID spell = myPlayer._pSplHotKey[slot];
-	SpellType spellType = myPlayer._pSplTHotKey[slot];
+	SpellID spell = myPlayer.hotkeySpell[slot];
+	SpellType spellType = myPlayer.hotkeySpellType[slot];
 
 	if (ControlMode != ControlTypes::KeyboardAndMouse) {
 		UpdateSpellTarget(spell);

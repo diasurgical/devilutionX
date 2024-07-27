@@ -18,7 +18,7 @@ extern uint32_t gdwTurnsInTransit;
 extern uintptr_t glpMsgTbl[MAX_PLRS];
 extern uint32_t gdwLargestMsgSize;
 extern uint32_t gdwNormalMsgSize;
-/** @brief the progress as a fraction (see AnimationInfo::baseValueFraction) in time to the next game tick */
+/** @brief the progress as a fraction (see PlayerAnimationInfo::baseValueFraction) in time to the next game tick */
 extern DVL_API_FOR_TEST uint8_t ProgressToNextGameTick;
 extern int last_tick;
 

@@ -126,7 +126,7 @@ void AddMessageToChatLog(std::string_view message, Player *player, UiFlags flags
 	if (player == nullptr) {
 		ChatLogLines.emplace_back(MultiColoredText { "{0} {1}", { { timestamp, UiFlags::ColorRed }, { std::string(message), flags } } });
 	} else {
-		std::string playerInfo = fmt::format(fmt::runtime(_("{:s} (lvl {:d}): ")), player->_pName, player->getCharacterLevel());
+		std::string playerInfo = fmt::format(fmt::runtime(_("{:s} (lvl {:d}): ")), player->name, player->getCharacterLevel());
 		UiFlags nameColor = player == MyPlayer ? UiFlags::ColorWhitegold : UiFlags::ColorBlue;
 		std::string prefix = timestamp + " - " + playerInfo;
 		std::string text = WordWrapString(prefix + std::string(message), ContentTextWidth);

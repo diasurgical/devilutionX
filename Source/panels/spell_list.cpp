@@ -56,7 +56,7 @@ bool GetSpellListSelection(SpellID &pSpell, SpellType &pSplType)
 		if (spellListItem.isSelected) {
 			pSpell = spellListItem.id;
 			pSplType = spellListItem.type;
-			if (myPlayer._pClass == HeroClass::Monk && spellListItem.id == SpellID::Search)
+			if (myPlayer.heroClass == HeroClass::Monk && spellListItem.id == SpellID::Search)
 				pSplType = SpellType::Skill;
 			return true;
 		}
@@ -69,7 +69,7 @@ std::optional<std::string_view> GetHotkeyName(SpellID spellId, SpellType spellTy
 {
 	Player &myPlayer = *MyPlayer;
 	for (size_t t = 0; t < NumHotkeys; t++) {
-		if (myPlayer._pSplHotKey[t] != spellId || myPlayer._pSplTHotKey[t] != spellType)
+		if (myPlayer.hotkeySpell[t] != spellId || myPlayer.hotkeySpellType[t] != spellType)
 			continue;
 		auto quickSpellActionKey = StrCat("QuickSpell", t + 1);
 		if (ControlMode == ControlTypes::Gamepad)
@@ -84,8 +84,8 @@ std::optional<std::string_view> GetHotkeyName(SpellID spellId, SpellType spellTy
 void DrawSpell(const Surface &out)
 {
 	Player &myPlayer = *MyPlayer;
-	SpellID spl = myPlayer._pRSpell;
-	SpellType st = myPlayer._pRSplType;
+	SpellID spl = myPlayer.selectedSpell;
+	SpellType st = myPlayer.selectedSpellType;
 
 	if (!IsValidSpell(spl)) {
 		st = SpellType::Invalid;
@@ -107,7 +107,7 @@ void DrawSpell(const Surface &out)
 	const Point position = GetMainPanel().position + Displacement { 565, 119 };
 	DrawLargeSpellIcon(out, position, spl);
 
-	std::optional<std::string_view> hotkeyName = GetHotkeyName(spl, myPlayer._pRSplType, true);
+	std::optional<std::string_view> hotkeyName = GetHotkeyName(spl, myPlayer.selectedSpellType, true);
 	if (hotkeyName)
 		PrintSBookHotkey(out, position, *hotkeyName);
 }
@@ -182,7 +182,7 @@ void DrawSpellList(const Surface &out)
 			}
 			PrintSBookSpellType(out, spellListItem.location, _("Staff"), spellColor);
 			InfoString = fmt::format(fmt::runtime(_("Staff of {:s}")), pgettext("spell", spellDataItem.sNameText));
-			int charges = myPlayer.InvBody[INVLOC_HAND_LEFT]._iCharges;
+			int charges = myPlayer.bodySlot[INVLOC_HAND_LEFT]._iCharges;
 			AddPanelString(fmt::format(fmt::runtime(ngettext("{:d} Charge", "{:d} Charges", charges)), charges));
 		} break;
 		case SpellType::Invalid:
@@ -209,16 +209,16 @@ std::vector<SpellListItem> GetSpellListItems()
 		Player &myPlayer = *MyPlayer;
 		switch (static_cast<SpellType>(i)) {
 		case SpellType::Skill:
-			mask = myPlayer._pAblSpells;
+			mask = myPlayer.skills;
 			break;
 		case SpellType::Spell:
-			mask = myPlayer._pMemSpells;
+			mask = myPlayer.learnedSpells;
 			break;
 		case SpellType::Scroll:
-			mask = myPlayer._pScrlSpells;
+			mask = myPlayer.scrollSpells;
 			break;
 		case SpellType::Charges:
-			mask = myPlayer._pISpells;
+			mask = myPlayer.staffSpells;
 			break;
 		default:
 			continue;
@@ -259,8 +259,8 @@ void SetSpell()
 	}
 
 	Player &myPlayer = *MyPlayer;
-	myPlayer._pRSpell = pSpell;
-	myPlayer._pRSplType = pSplType;
+	myPlayer.selectedSpell = pSpell;
+	myPlayer.selectedSpellType = pSplType;
 
 	RedrawEverything();
 }
@@ -275,18 +275,18 @@ void SetSpeedSpell(size_t slot)
 	}
 	Player &myPlayer = *MyPlayer;
 
-	if (myPlayer._pSplHotKey[slot] == pSpell && myPlayer._pSplTHotKey[slot] == pSplType) {
+	if (myPlayer.hotkeySpell[slot] == pSpell && myPlayer.hotkeySpellType[slot] == pSplType) {
 		// Unset spell hotkey
-		myPlayer._pSplHotKey[slot] = SpellID::Invalid;
+		myPlayer.hotkeySpell[slot] = SpellID::Invalid;
 		return;
 	}
 
 	for (size_t i = 0; i < NumHotkeys; ++i) {
-		if (myPlayer._pSplHotKey[i] == pSpell && myPlayer._pSplTHotKey[i] == pSplType)
-			myPlayer._pSplHotKey[i] = SpellID::Invalid;
+		if (myPlayer.hotkeySpell[i] == pSpell && myPlayer.hotkeySpellType[i] == pSplType)
+			myPlayer.hotkeySpell[i] = SpellID::Invalid;
 	}
-	myPlayer._pSplHotKey[slot] = pSpell;
-	myPlayer._pSplTHotKey[slot] = pSplType;
+	myPlayer.hotkeySpell[slot] = pSpell;
+	myPlayer.hotkeySpellType[slot] = pSplType;
 }
 
 bool IsValidSpeedSpell(size_t slot)
@@ -295,23 +295,23 @@ bool IsValidSpeedSpell(size_t slot)
 
 	Player &myPlayer = *MyPlayer;
 
-	const SpellID spellId = myPlayer._pSplHotKey[slot];
+	const SpellID spellId = myPlayer.hotkeySpell[slot];
 	if (!IsValidSpell(spellId)) {
 		return false;
 	}
 
-	switch (myPlayer._pSplTHotKey[slot]) {
+	switch (myPlayer.hotkeySpellType[slot]) {
 	case SpellType::Skill:
-		spells = myPlayer._pAblSpells;
+		spells = myPlayer.skills;
 		break;
 	case SpellType::Spell:
-		spells = myPlayer._pMemSpells;
+		spells = myPlayer.learnedSpells;
 		break;
 	case SpellType::Scroll:
-		spells = myPlayer._pScrlSpells;
+		spells = myPlayer.scrollSpells;
 		break;
 	case SpellType::Charges:
-		spells = myPlayer._pISpells;
+		spells = myPlayer.staffSpells;
 		break;
 	case SpellType::Invalid:
 		return false;
@@ -324,8 +324,8 @@ void ToggleSpell(size_t slot)
 {
 	if (IsValidSpeedSpell(slot)) {
 		Player &myPlayer = *MyPlayer;
-		myPlayer._pRSpell = myPlayer._pSplHotKey[slot];
-		myPlayer._pRSplType = myPlayer._pSplTHotKey[slot];
+		myPlayer.selectedSpell = myPlayer.hotkeySpell[slot];
+		myPlayer.selectedSpellType = myPlayer.hotkeySpellType[slot];
 		RedrawEverything();
 	}
 }
@@ -341,21 +341,21 @@ void DoSpeedBook()
 
 	Player &myPlayer = *MyPlayer;
 
-	if (IsValidSpell(myPlayer._pRSpell)) {
+	if (IsValidSpell(myPlayer.selectedSpell)) {
 		for (auto i : enum_values<SpellType>()) {
 			uint64_t spells;
 			switch (static_cast<SpellType>(i)) {
 			case SpellType::Skill:
-				spells = myPlayer._pAblSpells;
+				spells = myPlayer.skills;
 				break;
 			case SpellType::Spell:
-				spells = myPlayer._pMemSpells;
+				spells = myPlayer.learnedSpells;
 				break;
 			case SpellType::Scroll:
-				spells = myPlayer._pScrlSpells;
+				spells = myPlayer.scrollSpells;
 				break;
 			case SpellType::Charges:
-				spells = myPlayer._pISpells;
+				spells = myPlayer.staffSpells;
 				break;
 			default:
 				continue;
@@ -363,7 +363,7 @@ void DoSpeedBook()
 			uint64_t spell = 1;
 			for (int j = 1; j < MAX_SPELLS; j++) {
 				if ((spell & spells) != 0) {
-					if (j == static_cast<int8_t>(myPlayer._pRSpell) && static_cast<SpellType>(i) == myPlayer._pRSplType) {
+					if (j == static_cast<int8_t>(myPlayer.selectedSpell) && static_cast<SpellType>(i) == myPlayer.selectedSpellType) {
 						x = xo + SPLICONLENGTH / 2;
 						y = yo - SPLICONLENGTH / 2;
 					}

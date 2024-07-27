@@ -53,7 +53,7 @@ SpellID GetSpellFromSpellPage(size_t page, size_t entry)
 {
 	assert(page <= SpellBookPages && entry <= SpellBookPageEntries);
 	if (page == 0 && entry == 0) {
-		switch (InspectPlayer->_pClass) {
+		switch (InspectPlayer->heroClass) {
 		case HeroClass::Warrior:
 			return SpellID::ItemRepair;
 		case HeroClass::Rogue:
@@ -86,13 +86,13 @@ void PrintSBookStr(const Surface &out, Point position, std::string_view text, Ui
 SpellType GetSBookTrans(SpellID ii, bool townok)
 {
 	Player &player = *InspectPlayer;
-	if ((player._pClass == HeroClass::Monk) && (ii == SpellID::Search))
+	if ((player.heroClass == HeroClass::Monk) && (ii == SpellID::Search))
 		return SpellType::Skill;
 	SpellType st = SpellType::Spell;
-	if ((player._pISpells & GetSpellBitmask(ii)) != 0) {
+	if ((player.staffSpells & GetSpellBitmask(ii)) != 0) {
 		st = SpellType::Charges;
 	}
-	if ((player._pAblSpells & GetSpellBitmask(ii)) != 0) {
+	if ((player.skills & GetSpellBitmask(ii)) != 0) {
 		st = SpellType::Skill;
 	}
 	if (st == SpellType::Spell) {
@@ -157,7 +157,7 @@ void DrawSpellBook(const Surface &out)
 
 	ClxDraw(out, GetPanelPosition(UiPanels::Spell, { SpellBookButtonX + buttonX, SpellBookButtonY }), (*spellBookButtons)[sbooktab]);
 	Player &player = *InspectPlayer;
-	uint64_t spl = player._pMemSpells | player._pISpells | player._pAblSpells;
+	uint64_t spl = player.learnedSpells | player.staffSpells | player.skills;
 
 	const int lineHeight = 18;
 
@@ -170,7 +170,7 @@ void DrawSpellBook(const Surface &out)
 			SetSpellTrans(st);
 			const Point spellCellPosition = GetPanelPosition(UiPanels::Spell, { 11, yp + SpellBookDescription.height });
 			DrawSmallSpellIcon(out, spellCellPosition, sn);
-			if (sn == player._pRSpell && st == player._pRSplType && !IsInspectingPlayer()) {
+			if (sn == player.selectedSpell && st == player.selectedSpellType && !IsInspectingPlayer()) {
 				SetSpellTrans(SpellType::Skill);
 				DrawSmallSpellIconBorder(out, spellCellPosition);
 			}
@@ -183,7 +183,7 @@ void DrawSpellBook(const Surface &out)
 				PrintSBookStr(out, line1, _("Skill"));
 				break;
 			case SpellType::Charges: {
-				const int charges = player.InvBody[INVLOC_HAND_LEFT]._iCharges;
+				const int charges = player.bodySlot[INVLOC_HAND_LEFT]._iCharges;
 				PrintSBookStr(out, line1, fmt::format(fmt::runtime(ngettext("Staff ({:d} charge)", "Staff ({:d} charges)", charges)), charges));
 			} break;
 			default: {
@@ -211,17 +211,17 @@ void CheckSBook()
 	if (iconArea.contains(MousePosition) && !IsInspectingPlayer()) {
 		SpellID sn = GetSpellFromSpellPage(sbooktab, (MousePosition.y - iconArea.position.y) / SpellBookDescription.height);
 		Player &player = *InspectPlayer;
-		uint64_t spl = player._pMemSpells | player._pISpells | player._pAblSpells;
+		uint64_t spl = player.learnedSpells | player.staffSpells | player.skills;
 		if (IsValidSpell(sn) && (spl & GetSpellBitmask(sn)) != 0) {
 			SpellType st = SpellType::Spell;
-			if ((player._pISpells & GetSpellBitmask(sn)) != 0) {
+			if ((player.staffSpells & GetSpellBitmask(sn)) != 0) {
 				st = SpellType::Charges;
 			}
-			if ((player._pAblSpells & GetSpellBitmask(sn)) != 0) {
+			if ((player.skills & GetSpellBitmask(sn)) != 0) {
 				st = SpellType::Skill;
 			}
-			player._pRSpell = sn;
-			player._pRSplType = st;
+			player.selectedSpell = sn;
+			player.selectedSpellType = st;
 			RedrawEverything();
 		}
 		return;

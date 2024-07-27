@@ -22,17 +22,17 @@ std::string DebugCmdArrow(std::string_view effect)
 {
 	Player &myPlayer = *MyPlayer;
 
-	myPlayer._pIFlags &= ~ItemSpecialEffect::FireArrows;
-	myPlayer._pIFlags &= ~ItemSpecialEffect::LightningArrows;
+	myPlayer.flags &= ~ItemSpecialEffect::FireArrows;
+	myPlayer.flags &= ~ItemSpecialEffect::LightningArrows;
 
 	if (effect == "normal") {
 		// we removed the parameter at the top
 	} else if (effect == "fire") {
-		myPlayer._pIFlags |= ItemSpecialEffect::FireArrows;
+		myPlayer.flags |= ItemSpecialEffect::FireArrows;
 	} else if (effect == "lightning") {
-		myPlayer._pIFlags |= ItemSpecialEffect::LightningArrows;
+		myPlayer.flags |= ItemSpecialEffect::LightningArrows;
 	} else if (effect == "spectral") {
-		myPlayer._pIFlags |= (ItemSpecialEffect::FireArrows | ItemSpecialEffect::LightningArrows);
+		myPlayer.flags |= (ItemSpecialEffect::FireArrows | ItemSpecialEffect::LightningArrows);
 	} else {
 		return "Invalid effect!";
 	}
@@ -52,15 +52,15 @@ std::string DebugCmdPlayerInfo(std::optional<uint8_t> id)
 	if (playerId >= Players.size())
 		return StrCat("Invalid player ID (max: ", Players.size() - 1, ")");
 	Player &player = Players[playerId];
-	if (!player.plractive)
+	if (!player.isPlayerActive)
 		return StrCat("Player ", playerId, " is not active!");
 
 	const Point target = player.GetTargetPosition();
-	return StrCat("Plr ", playerId, " is ", player._pName,
-	    "\nLvl: ", player.plrlevel, " Changing: ", player._pLvlChanging,
+	return StrCat("Plr ", playerId, " is ", player.name,
+	    "\nLvl: ", player.dungeonLevel, " Changing: ", player.isChangingLevel,
 	    "\nTile.x: ", player.position.tile.x, " Tile.y: ", player.position.tile.y, " Target.x: ", target.x, " Target.y: ", target.y,
-	    "\nMode: ", player._pmode, " destAction: ", player.destAction, " walkpath[0]: ", player.walkpath[0],
-	    "\nInvincible: ", player._pInvincible ? 1 : 0, " HitPoints: ", player._pHitPoints);
+	    "\nMode: ", player.mode, " destinationAction: ", player.destinationAction, " walkPath[0]: ", player.walkPath[0],
+	    "\nInvincible: ", player.isInvincible ? 1 : 0, " HitPoints: ", player.life);
 }
 
 std::string DebugSetPlayerTrn(std::string_view path)
@@ -74,7 +74,7 @@ std::string DebugSetPlayerTrn(std::string_view path)
 	debugTRN = path;
 	Player &player = *MyPlayer;
 	InitPlayerGFX(player);
-	StartStand(player, player._pdir);
+	StartStand(player, player.direction);
 	return path.empty() ? "TRN unset" : "TRN set";
 }
 

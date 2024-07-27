@@ -23,7 +23,7 @@ extern bool frameflag;
  * @param dir walking direction
  * @param cameraMode Adjusts the offset relative to the camera
  */
-Displacement GetOffsetForWalking(const AnimationInfo &animationInfo, const Direction dir, bool cameraMode = false);
+Displacement GetOffsetForWalking(const PlayerAnimationInfo &animationInfo, const Direction dir, bool cameraMode = false);
 
 /**
  * @brief Clear cursor state

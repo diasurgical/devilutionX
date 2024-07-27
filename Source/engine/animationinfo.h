@@ -34,7 +34,7 @@ enum AnimationDistributionFlags : uint8_t {
 /**
  * @brief Contains the core animation information and related logic
  */
-class AnimationInfo {
+class PlayerAnimationInfo {
 public:
 	/**
 	 * @brief Animation sprite
@@ -100,7 +100,7 @@ public:
 	 * @param numberOfFrames Number of Frames in Animation
 	 * @param ticksPerFrame How many game ticks are needed to advance one Animation Frame
 	 */
-	void changeAnimationData(OptionalClxSpriteList sprites, int8_t numberOfFrames, int8_t ticksPerFrame);
+	void changeanimationData(OptionalClxSpriteList sprites, int8_t numberOfFrames, int8_t ticksPerFrame);
 
 	/**
 	 * @brief Process the Animation for a game tick (for example advances the frame)
@@ -109,7 +109,7 @@ public:
 	void processAnimation(bool reverseAnimation = false);
 
 	/**
-	 * @brief Fractions in AnimationInfo are stored as fixed point (baseValueFraction/128 correspondents to 1/100%).
+	 * @brief Fractions in PlayerAnimationInfo are stored as fixed point (baseValueFraction/128 correspondents to 1/100%).
 	 */
 	constexpr static uint8_t baseValueFraction = 128;
 
