@@ -436,7 +436,7 @@ void ToggleLighting()
 	memcpy(dLight, dPreLight, sizeof(dLight));
 	for (const Player &player : Players) {
 		if (player.plractive && player.isOnActiveLevel()) {
-			DoLighting(player.position.tile, player._pLightRad, {});
+			DoLighting(player.position.tile, player.lightRadius, {});
 		}
 	}
 }

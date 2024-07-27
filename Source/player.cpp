@@ -2298,7 +2298,7 @@ void CreatePlayer(Player &player, HeroClass c)
 
 	player._pExperience = 0;
 	player._pArmorClass = 0;
-	player._pLightRad = 10;
+	player.lightRadius = 10;
 	player._pInfraFlag = false;
 
 	for (uint8_t &spellLevel : player._pSplLvl) {
@@ -2484,12 +2484,12 @@ void InitPlayer(Player &player, bool firstTime)
 		player.destAction = ACTION_NONE;
 
 		if (&player == MyPlayer) {
-			player.lightId = AddLight(player.position.tile, player._pLightRad);
+			player.lightId = AddLight(player.position.tile, player.lightRadius);
 			ChangeLightXY(player.lightId, player.position.tile); // fix for a bug where old light is still visible at the entrance after reentering level
 		} else {
 			player.lightId = NO_LIGHT;
 		}
-		ActivateVision(player.position.tile, player._pLightRad, player.getId());
+		ActivateVision(player.position.tile, player.lightRadius, player.getId());
 	}
 
 	player._pAblSpells = GetSpellBitmask(GetPlayerStartingLoadoutForClass(player._pClass).skill);

@@ -339,7 +339,7 @@ public:
 	SpellType _pSplTHotKey[NumHotkeys];
 	bool _pBlockFlag;
 	bool _pInvincible;
-	int8_t _pLightRad;
+	int8_t lightRadius; // _pLightRad
 	/** @brief True when the player is transitioning between levels */
 	bool _pLvlChanging;
 
