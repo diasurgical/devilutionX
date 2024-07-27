@@ -297,7 +297,7 @@ struct Player {
 	int8_t _pHFrames;
 	int8_t _pDFrames;
 	int8_t _pBFrames;
-	int8_t InvGrid[InventoryGridCells];
+	int8_t inventoryGrid[InventoryGridCells]; // InvGrid
 
 	uint8_t plrlevel;
 	bool plrIsOnSetLevel;

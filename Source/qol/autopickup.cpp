@@ -17,7 +17,7 @@ namespace {
 
 bool HasRoomForGold()
 {
-	for (int idx : MyPlayer->InvGrid) {
+	for (int idx : MyPlayer->inventoryGrid) {
 		// Secondary item cell. No need to check those as we'll go through the main item cells anyway.
 		if (idx < 0)
 			continue;

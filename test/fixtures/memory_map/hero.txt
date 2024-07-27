@@ -26,7 +26,7 @@ M 37 8 pSplLvl
 R 64 pMemSpells
 C 7 itemPack InvBody
 C 40 itemPack InvList
-M 40 8 InvGrid
+M 40 8 inventoryGrid
 R 8 _pNumInv
 C 8 itemPack SpdList
 R 8 pTownWarps

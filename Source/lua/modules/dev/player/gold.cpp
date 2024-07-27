@@ -20,7 +20,7 @@ std::string DebugCmdGiveGoldCheat(std::optional<int> amount)
 	if (goldToAdd <= 0) return "amount must be positive";
 	Player &myPlayer = *MyPlayer;
 	const int goldAmountBefore = myPlayer._pGold;
-	for (int8_t &itemIndex : myPlayer.InvGrid) {
+	for (int8_t &itemIndex : myPlayer.inventoryGrid) {
 		if (itemIndex < 0)
 			continue;
 
@@ -61,7 +61,7 @@ std::string DebugCmdTakeGoldCheat(std::optional<int> amount)
 	if (goldToRemove <= 0) return "amount must be positive";
 
 	const int goldAmountBefore = myPlayer._pGold;
-	for (auto itemIndex : myPlayer.InvGrid) {
+	for (auto itemIndex : myPlayer.inventoryGrid) {
 		itemIndex -= 1;
 
 		if (itemIndex < 0)

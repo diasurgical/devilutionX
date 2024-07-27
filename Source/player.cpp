@@ -1572,7 +1572,7 @@ void Player::RemoveInvItem(int iv, bool calcScrolls)
 	if (this == MyPlayer) {
 		// Locate the first grid index containing this item and notify remote clients
 		for (size_t i = 0; i < InventoryGridCells; i++) {
-			int8_t itemIndex = InvGrid[i];
+			int8_t itemIndex = inventoryGrid[i];
 			if (std::abs(itemIndex) - 1 == iv) {
 				NetSendCmdParam1(false, CMD_DELINVITEMS, static_cast<uint16_t>(i));
 				break;
@@ -1581,7 +1581,7 @@ void Player::RemoveInvItem(int iv, bool calcScrolls)
 	}
 
 	// Iterate through invGrid and remove every reference to item
-	for (int8_t &itemIndex : InvGrid) {
+	for (int8_t &itemIndex : inventoryGrid) {
 		if (std::abs(itemIndex) - 1 == iv) {
 			itemIndex = 0;
 		}
@@ -1595,7 +1595,7 @@ void Player::RemoveInvItem(int iv, bool calcScrolls)
 	if (_pNumInv > 0 && _pNumInv != iv) {
 		InvList[iv] = InvList[_pNumInv].pop();
 
-		for (int8_t &itemIndex : InvGrid) {
+		for (int8_t &itemIndex : inventoryGrid) {
 			if (itemIndex == _pNumInv + 1) {
 				itemIndex = iv + 1;
 			}

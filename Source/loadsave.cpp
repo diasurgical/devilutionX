@@ -524,7 +524,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 
 	player._pNumInv = file.NextLE<int32_t>();
 
-	for (int8_t &cell : player.InvGrid)
+	for (int8_t &cell : player.inventoryGrid)
 		cell = file.NextLE<int8_t>();
 
 	for (Item &item : player.SpdList)
@@ -1348,7 +1348,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 
 	file.WriteLE<int32_t>(player._pNumInv);
 
-	for (int8_t cell : player.InvGrid)
+	for (int8_t cell : player.inventoryGrid)
 		file.WriteLE<int8_t>(cell);
 
 	for (const Item &item : player.SpdList)
@@ -2340,7 +2340,7 @@ void LoadStash()
 void RemoveEmptyInventory(Player &player)
 {
 	for (int i = InventoryGridCells; i > 0; i--) {
-		int8_t idx = player.InvGrid[i - 1];
+		int8_t idx = player.inventoryGrid[i - 1];
 		if (idx > 0 && player.InvList[idx - 1].isEmpty()) {
 			player.RemoveInvItem(idx - 1);
 		}

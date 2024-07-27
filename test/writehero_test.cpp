@@ -177,23 +177,23 @@ int PrepareInvSlot(PlayerPack *pPack, int pos, int size, int start = 0)
 		ret = 0;
 	++ret;
 	if (size == 0) {
-		pPack->InvGrid[pos] = ret;
+		pPack->inventoryGrid[pos] = ret;
 	} else if (size == 1) {
-		pPack->InvGrid[pos] = ret;
-		pPack->InvGrid[pos - 10] = -ret;
-		pPack->InvGrid[pos - 20] = -ret;
+		pPack->inventoryGrid[pos] = ret;
+		pPack->inventoryGrid[pos - 10] = -ret;
+		pPack->inventoryGrid[pos - 20] = -ret;
 	} else if (size == 2) {
-		pPack->InvGrid[pos] = ret;
-		pPack->InvGrid[pos + 1] = -ret;
-		pPack->InvGrid[pos - 10] = -ret;
-		pPack->InvGrid[pos - 10 + 1] = -ret;
-		pPack->InvGrid[pos - 20] = -ret;
-		pPack->InvGrid[pos - 20 + 1] = -ret;
+		pPack->inventoryGrid[pos] = ret;
+		pPack->inventoryGrid[pos + 1] = -ret;
+		pPack->inventoryGrid[pos - 10] = -ret;
+		pPack->inventoryGrid[pos - 10 + 1] = -ret;
+		pPack->inventoryGrid[pos - 20] = -ret;
+		pPack->inventoryGrid[pos - 20 + 1] = -ret;
 	} else if (size == 3) {
-		pPack->InvGrid[pos] = ret;
-		pPack->InvGrid[pos + 1] = -ret;
-		pPack->InvGrid[pos - 10] = -ret;
-		pPack->InvGrid[pos - 10 + 1] = -ret;
+		pPack->inventoryGrid[pos] = ret;
+		pPack->inventoryGrid[pos + 1] = -ret;
+		pPack->inventoryGrid[pos - 10] = -ret;
+		pPack->inventoryGrid[pos - 10 + 1] = -ret;
 	} else {
 		abort();
 	}
@@ -259,7 +259,7 @@ void PackPlayerTest(PlayerPack *pPack)
 void AssertPlayer(Player &player)
 {
 	ASSERT_EQ(CountU8(player._pSplLvl, 64), 23);
-	ASSERT_EQ(Count8(player.InvGrid, InventoryGridCells), 9);
+	ASSERT_EQ(Count8(player.inventoryGrid, InventoryGridCells), 9);
 	ASSERT_EQ(CountItems(player.InvBody, NUM_INVLOC), 6);
 	ASSERT_EQ(CountItems(player.InvList, InventoryGridCells), 2);
 	ASSERT_EQ(CountItems(player.SpdList, MaxBeltItems), 8);

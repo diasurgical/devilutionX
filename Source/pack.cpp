@@ -288,7 +288,7 @@ void PackPlayer(PlayerPack &packed, const Player &player)
 		PackItem(packed.InvList[i], player.InvList[i], gbIsHellfire);
 
 	for (int i = 0; i < InventoryGridCells; i++)
-		packed.InvGrid[i] = player.InvGrid[i];
+		packed.inventoryGrid[i] = player.inventoryGrid[i];
 
 	for (int i = 0; i < MaxBeltItems; i++)
 		PackItem(packed.SpdList[i], player.SpdList[i], gbIsHellfire);
@@ -345,7 +345,7 @@ void PackNetPlayer(PlayerNetPack &packed, const Player &player)
 		PackNetItem(player.InvList[i], packed.InvList[i]);
 
 	for (int i = 0; i < InventoryGridCells; i++)
-		packed.InvGrid[i] = player.InvGrid[i];
+		packed.inventoryGrid[i] = player.inventoryGrid[i];
 
 	for (int i = 0; i < MaxBeltItems; i++)
 		PackNetItem(player.SpdList[i], packed.SpdList[i]);
@@ -517,7 +517,7 @@ void UnPackPlayer(const PlayerPack &packed, Player &player)
 		UnPackItem(packed.InvList[i], player, player.InvList[i], isHellfire);
 
 	for (int i = 0; i < InventoryGridCells; i++)
-		player.InvGrid[i] = packed.InvGrid[i];
+		player.inventoryGrid[i] = packed.inventoryGrid[i];
 
 	VerifyGoldSeeds(player);
 
@@ -656,7 +656,7 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 	}
 
 	for (int i = 0; i < InventoryGridCells; i++)
-		player.InvGrid[i] = packed.InvGrid[i];
+		player.inventoryGrid[i] = packed.inventoryGrid[i];
 
 	for (int i = 0; i < MaxBeltItems; i++) {
 		Item &item = player.SpdList[i];

@@ -57,7 +57,7 @@ struct PlayerPack {
 	uint64_t pMemSpells;
 	ItemPack InvBody[NUM_INVLOC];
 	ItemPack InvList[InventoryGridCells];
-	int8_t InvGrid[InventoryGridCells];
+	int8_t inventoryGrid[InventoryGridCells];
 	uint8_t _pNumInv;
 	ItemPack SpdList[MaxBeltItems];
 	int8_t pTownWarps;
@@ -106,7 +106,7 @@ struct PlayerNetPack {
 	uint64_t pMemSpells;
 	ItemNetPack InvBody[NUM_INVLOC];
 	ItemNetPack InvList[InventoryGridCells];
-	int8_t InvGrid[InventoryGridCells];
+	int8_t inventoryGrid[InventoryGridCells];
 	uint8_t _pNumInv;
 	ItemNetPack SpdList[MaxBeltItems];
 	uint8_t pManaShield;

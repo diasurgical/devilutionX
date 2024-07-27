@@ -47,7 +47,7 @@ void clear_inventory()
 {
 	for (int i = 0; i < InventoryGridCells; i++) {
 		MyPlayer->InvList[i] = {};
-		MyPlayer->InvGrid[i] = 0;
+		MyPlayer->inventoryGrid[i] = 0;
 	}
 	MyPlayer->_pNumInv = 0;
 }
@@ -169,13 +169,13 @@ TEST_F(InvTest, RemoveInvItem)
 	// Put a two-slot misc item into the inventory:
 	// | (item) | (item) | ... | ...
 	MyPlayer->_pNumInv = 1;
-	MyPlayer->InvGrid[0] = 1;
-	MyPlayer->InvGrid[1] = -1;
+	MyPlayer->inventoryGrid[0] = 1;
+	MyPlayer->inventoryGrid[1] = -1;
 	MyPlayer->InvList[0]._itype = ItemType::Misc;
 
 	MyPlayer->RemoveInvItem(0);
-	EXPECT_EQ(MyPlayer->InvGrid[0], 0);
-	EXPECT_EQ(MyPlayer->InvGrid[1], 0);
+	EXPECT_EQ(MyPlayer->inventoryGrid[0], 0);
+	EXPECT_EQ(MyPlayer->inventoryGrid[1], 0);
 	EXPECT_EQ(MyPlayer->_pNumInv, 0);
 }
 
@@ -188,17 +188,17 @@ TEST_F(InvTest, RemoveInvItem_other_item)
 	// Put a two-slot misc item and a ring into the inventory:
 	// | (item) | (item) | (ring) | ...
 	MyPlayer->_pNumInv = 2;
-	MyPlayer->InvGrid[0] = 1;
-	MyPlayer->InvGrid[1] = -1;
+	MyPlayer->inventoryGrid[0] = 1;
+	MyPlayer->inventoryGrid[1] = -1;
 	MyPlayer->InvList[0]._itype = ItemType::Misc;
 
-	MyPlayer->InvGrid[2] = 2;
+	MyPlayer->inventoryGrid[2] = 2;
 	MyPlayer->InvList[1]._itype = ItemType::Ring;
 
 	MyPlayer->RemoveInvItem(0);
-	EXPECT_EQ(MyPlayer->InvGrid[0], 0);
-	EXPECT_EQ(MyPlayer->InvGrid[1], 0);
-	EXPECT_EQ(MyPlayer->InvGrid[2], 1);
+	EXPECT_EQ(MyPlayer->inventoryGrid[0], 0);
+	EXPECT_EQ(MyPlayer->inventoryGrid[1], 0);
+	EXPECT_EQ(MyPlayer->inventoryGrid[2], 1);
 	EXPECT_EQ(MyPlayer->InvList[0]._itype, ItemType::Ring);
 	EXPECT_EQ(MyPlayer->_pNumInv, 1);
 }
@@ -233,7 +233,7 @@ TEST_F(InvTest, RemoveCurrentSpellScrollFromInventory)
 	MyPlayer->InvList[0]._iSpell = SpellID::Firebolt;
 
 	ConsumeScroll(*MyPlayer);
-	EXPECT_EQ(MyPlayer->InvGrid[0], 0);
+	EXPECT_EQ(MyPlayer->inventoryGrid[0], 0);
 	EXPECT_EQ(MyPlayer->_pNumInv, 0);
 }
 
@@ -251,7 +251,7 @@ TEST_F(InvTest, RemoveCurrentSpellScrollFromInventoryFirstMatch)
 	MyPlayer->InvList[0]._iSpell = SpellID::Firebolt;
 
 	ConsumeScroll(*MyPlayer);
-	EXPECT_EQ(MyPlayer->InvGrid[0], 0);
+	EXPECT_EQ(MyPlayer->inventoryGrid[0], 0);
 	EXPECT_EQ(MyPlayer->_pNumInv, 0);
 }
 

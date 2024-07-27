@@ -3051,7 +3051,7 @@ void CreatePlrItems(Player &player)
 
 	// converting this to a for loop creates a `rep stosd` instruction,
 	// so this probably actually was a memset
-	memset(&player.InvGrid, 0, sizeof(player.InvGrid));
+	memset(&player.inventoryGrid, 0, sizeof(player.inventoryGrid));
 
 	for (auto &item : player.InvList) {
 		item.clear();
@@ -3095,7 +3095,7 @@ void CreatePlrItems(Player &player)
 		MakeGoldStack(goldItem, loadout.gold);
 
 		player._pNumInv++;
-		player.InvGrid[30] = player._pNumInv;
+		player.inventoryGrid[30] = player._pNumInv;
 
 		player._pGold = goldItem._ivalue;
 	}

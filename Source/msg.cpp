@@ -3118,7 +3118,7 @@ void NetSyncInvItem(const Player &player, int invListIndex)
 		return;
 
 	for (int j = 0; j < InventoryGridCells; j++) {
-		if (player.InvGrid[j] == invListIndex + 1) {
+		if (player.inventoryGrid[j] == invListIndex + 1) {
 			NetSendCmdChInvItem(false, j);
 			break;
 		}
@@ -3129,7 +3129,7 @@ void NetSendCmdChInvItem(bool bHiPri, int invGridIndex)
 {
 	TCmdChItem cmd {};
 
-	int8_t invListIndex = std::abs(MyPlayer->InvGrid[invGridIndex]) - 1;
+	int8_t invListIndex = std::abs(MyPlayer->inventoryGrid[invGridIndex]) - 1;
 	const Item &item = MyPlayer->InvList[invListIndex];
 
 	cmd.bCmd = CMD_CHANGEINVITEMS;

@@ -128,22 +128,22 @@ namespace {
 OptionalOwnedClxSpriteList pInvCels;
 
 /**
- * @brief Adds an item to a player's InvGrid array
+ * @brief Adds an item to a player's inventoryGrid array
  * @param player The player reference
- * @param invGridIndex Item's position in InvGrid (this should be the item's topleft grid tile)
- * @param invListIndex The item's InvList index (it's expected this already has +1 added to it since InvGrid can't store a 0 index)
+ * @param invGridIndex Item's position in inventoryGrid (this should be the item's topleft grid tile)
+ * @param invListIndex The item's InvList index (it's expected this already has +1 added to it since inventoryGrid can't store a 0 index)
  * @param itemSize Size of item
  */
-void AddItemToInvGrid(Player &player, int invGridIndex, int invListIndex, Size itemSize, bool sendNetworkMessage)
+void AddItemToinventoryGrid(Player &player, int invGridIndex, int invListIndex, Size itemSize, bool sendNetworkMessage)
 {
 	const int pitch = 10;
 	for (int y = 0; y < itemSize.height; y++) {
 		int rowGridIndex = invGridIndex + pitch * y;
 		for (int x = 0; x < itemSize.width; x++) {
 			if (x == 0 && y == itemSize.height - 1)
-				player.InvGrid[rowGridIndex + x] = invListIndex;
+				player.inventoryGrid[rowGridIndex + x] = invListIndex;
 			else
-				player.InvGrid[rowGridIndex + x] = -invListIndex;
+				player.inventoryGrid[rowGridIndex + x] = -invListIndex;
 		}
 	}
 
@@ -412,9 +412,9 @@ int8_t CheckOverlappingItems(int slot, const Player &player, Size itemSize)
 		for (unsigned columnOffset = 0; columnOffset < static_cast<unsigned>(itemSize.width); columnOffset++) {
 			unsigned testCell = originCell + rowOffset + columnOffset;
 			// FindTargetSlotUnderItemCursor returns the top left slot of the inventory region that fits the item, we can be confident this calculation is not going to read out of range.
-			assert(testCell < sizeof(player.InvGrid));
-			if (player.InvGrid[testCell] != 0) {
-				int8_t iv = std::abs(player.InvGrid[testCell]);
+			assert(testCell < sizeof(player.inventoryGrid));
+			if (player.inventoryGrid[testCell] != 0) {
+				int8_t iv = std::abs(player.inventoryGrid[testCell]);
 				if (overlappingId != 0) {
 					if (overlappingId != iv) {
 						// Found two different items that would be displaced by the held item, can't paste the item here.
@@ -434,7 +434,7 @@ int8_t GetPrevItemId(int slot, const Player &player, const Size &itemSize)
 {
 	if (player.HoldItem._itype != ItemType::Gold)
 		return CheckOverlappingItems(slot, player, itemSize);
-	int8_t item_cell_begin = player.InvGrid[slot - SLOTXY_INV_FIRST];
+	int8_t item_cell_begin = player.inventoryGrid[slot - SLOTXY_INV_FIRST];
 	if (item_cell_begin == 0)
 		return 0;
 	if (item_cell_begin <= 0)
@@ -451,8 +451,8 @@ bool ChangeInvItem(Player &player, int slot, Size itemSize)
 
 	if (player.HoldItem._itype == ItemType::Gold && prevItemId == 0) {
 		const int ii = slot - SLOTXY_INV_FIRST;
-		if (player.InvGrid[ii] > 0) {
-			const int invIndex = player.InvGrid[ii] - 1;
+		if (player.inventoryGrid[ii] > 0) {
+			const int invIndex = player.inventoryGrid[ii] - 1;
 			const int gt = player.InvList[invIndex]._ivalue;
 			int ig = player.HoldItem._ivalue + gt;
 			if (ig <= MaxGold) {
@@ -473,7 +473,7 @@ bool ChangeInvItem(Player &player, int slot, Size itemSize)
 			player._pGold += player.HoldItem._ivalue;
 			player.InvList[invIndex] = player.HoldItem.pop();
 			player._pNumInv++;
-			player.InvGrid[ii] = player._pNumInv;
+			player.inventoryGrid[ii] = player._pNumInv;
 		}
 		if (&player == MyPlayer) {
 			NetSendCmdChInvItem(false, ii);
@@ -490,7 +490,7 @@ bool ChangeInvItem(Player &player, int slot, Size itemSize)
 			std::swap(player.InvList[invIndex], player.HoldItem);
 			if (player.HoldItem._itype == ItemType::Gold)
 				player._pGold = CalculateGold(player);
-			for (int8_t &itemIndex : player.InvGrid) {
+			for (int8_t &itemIndex : player.inventoryGrid) {
 				if (itemIndex == prevItemId)
 					itemIndex = 0;
 				if (itemIndex == -prevItemId)
@@ -498,7 +498,7 @@ bool ChangeInvItem(Player &player, int slot, Size itemSize)
 			}
 		}
 
-		AddItemToInvGrid(player, slot - SLOTXY_INV_FIRST, prevItemId, itemSize, &player == MyPlayer);
+		AddItemToinventoryGrid(player, slot - SLOTXY_INV_FIRST, prevItemId, itemSize, &player == MyPlayer);
 	}
 
 	return true;
@@ -729,7 +729,7 @@ void CheckInvCut(Player &player, Point cursorPosition, bool automaticMove, bool 
 
 	if (r >= SLOTXY_INV_FIRST && r <= SLOTXY_INV_LAST) {
 		int ig = r - SLOTXY_INV_FIRST;
-		int8_t ii = player.InvGrid[ig];
+		int8_t ii = player.inventoryGrid[ig];
 		if (ii != 0) {
 			int iv = (ii < 0) ? -ii : ii;
 
@@ -1014,14 +1014,14 @@ void StartGoldDrop()
 
 int CreateGoldItemInInventorySlot(Player &player, int slotIndex, int value)
 {
-	if (player.InvGrid[slotIndex] != 0) {
+	if (player.inventoryGrid[slotIndex] != 0) {
 		return value;
 	}
 
 	Item &goldItem = player.InvList[player._pNumInv];
 	MakeGoldStack(goldItem, std::min(value, MaxGold));
 	player._pNumInv++;
-	player.InvGrid[slotIndex] = player._pNumInv;
+	player.inventoryGrid[slotIndex] = player._pNumInv;
 	if (&player == MyPlayer) {
 		NetSendCmdChInvItem(false, slotIndex);
 	}
@@ -1162,18 +1162,18 @@ void DrawInv(const Surface &out)
 	}
 
 	for (int i = 0; i < InventoryGridCells; i++) {
-		if (myPlayer.InvGrid[i] != 0) {
+		if (myPlayer.inventoryGrid[i] != 0) {
 			InvDrawSlotBack(
 			    out,
 			    GetPanelPosition(UiPanels::Inventory, InvRect[i + SLOTXY_INV_FIRST].position) + Displacement { 0, InventorySlotSizeInPixels.height },
 			    InventorySlotSizeInPixels,
-			    myPlayer.InvList[std::abs(myPlayer.InvGrid[i]) - 1]._iMagical);
+			    myPlayer.InvList[std::abs(myPlayer.inventoryGrid[i]) - 1]._iMagical);
 		}
 	}
 
 	for (int j = 0; j < InventoryGridCells; j++) {
-		if (myPlayer.InvGrid[j] > 0) { // first slot of an item
-			int ii = myPlayer.InvGrid[j] - 1;
+		if (myPlayer.inventoryGrid[j] > 0) { // first slot of an item
+			int ii = myPlayer.inventoryGrid[j] - 1;
 			int cursId = myPlayer.InvList[ii]._iCurs + CURSOR_FIRSTITEM;
 
 			const ClxSprite sprite = GetInvItemSprite(cursId);
@@ -1323,7 +1323,7 @@ bool AutoPlaceItemInInventorySlot(Player &player, int slotIndex, const Item &ite
 		}
 		int xx = (slotIndex > 0) ? (slotIndex % 10) : 0;
 		for (int i = 0; i < itemSize.width; i++) {
-			if (xx >= 10 || player.InvGrid[xx + yy] != 0) {
+			if (xx >= 10 || player.inventoryGrid[xx + yy] != 0) {
 				return false;
 			}
 			xx++;
@@ -1335,7 +1335,7 @@ bool AutoPlaceItemInInventorySlot(Player &player, int slotIndex, const Item &ite
 		player.InvList[player._pNumInv] = item;
 		player._pNumInv++;
 
-		AddItemToInvGrid(player, slotIndex, player._pNumInv, itemSize, sendNetworkMessage);
+		AddItemToinventoryGrid(player, slotIndex, player._pNumInv, itemSize, sendNetworkMessage);
 		player.CalcScrolls();
 	}
 
@@ -1435,10 +1435,10 @@ void ReorganizeInventory(Player &player)
 	// Sort items by size
 	std::vector<int> sortedIndices = SortItemsBySize(player);
 
-	// Temporary storage for items and a copy of InvGrid
+	// Temporary storage for items and a copy of inventoryGrid
 	std::vector<Item> tempStorage(player._pNumInv);
-	std::array<int8_t, 40> originalInvGrid;                                                       // Declare an array for InvGrid copy
-	std::copy(std::begin(player.InvGrid), std::end(player.InvGrid), std::begin(originalInvGrid)); // Copy InvGrid to originalInvGrid
+	std::array<int8_t, 40> originalinventoryGrid;                                                       // Declare an array for inventoryGrid copy
+	std::copy(std::begin(player.inventoryGrid), std::end(player.inventoryGrid), std::begin(originalinventoryGrid)); // Copy inventoryGrid to originalinventoryGrid
 
 	// Move items to temporary storage and clear inventory slots
 	for (int i = 0; i < player._pNumInv; ++i) {
@@ -1446,7 +1446,7 @@ void ReorganizeInventory(Player &player)
 		player.InvList[i] = {};
 	}
 	player._pNumInv = 0;                                                // Reset inventory count
-	std::fill(std::begin(player.InvGrid), std::end(player.InvGrid), 0); // Clear InvGrid
+	std::fill(std::begin(player.inventoryGrid), std::end(player.inventoryGrid), 0); // Clear inventoryGrid
 
 	// Attempt to place items back, now from the temp storage
 	bool reorganizationFailed = false;
@@ -1458,21 +1458,21 @@ void ReorganizeInventory(Player &player)
 		}
 	}
 
-	// If reorganization failed, restore items and InvGrid from tempStorage and originalInvGrid
+	// If reorganization failed, restore items and inventoryGrid from tempStorage and originalinventoryGrid
 	if (reorganizationFailed) {
 		for (Item &item : tempStorage) {
 			if (!item.isEmpty()) {
 				player.InvList[player._pNumInv++] = item;
 			}
 		}
-		std::copy(std::begin(originalInvGrid), std::end(originalInvGrid), std::begin(player.InvGrid)); // Restore InvGrid
+		std::copy(std::begin(originalinventoryGrid), std::end(originalinventoryGrid), std::begin(player.inventoryGrid)); // Restore inventoryGrid
 	}
 }
 
 int RoomForGold()
 {
 	int amount = 0;
-	for (int8_t &itemIndex : MyPlayer->InvGrid) {
+	for (int8_t &itemIndex : MyPlayer->inventoryGrid) {
 		if (itemIndex < 0) {
 			continue;
 		}
@@ -1568,8 +1568,8 @@ void CheckInvSwap(Player &player, const Item &item, int invGridIndex)
 			int rowGridIndex = invGridIndex + pitch * y;
 			for (int x = 0; x < itemSize.width; x++) {
 				int gridIndex = rowGridIndex + x;
-				if (player.InvGrid[gridIndex] != 0)
-					return std::abs(player.InvGrid[gridIndex]);
+				if (player.inventoryGrid[gridIndex] != 0)
+					return std::abs(player.inventoryGrid[gridIndex]);
 			}
 		}
 		player._pNumInv++;
@@ -1577,7 +1577,7 @@ void CheckInvSwap(Player &player, const Item &item, int invGridIndex)
 	}();
 
 	if (invListIndex < player._pNumInv) {
-		for (int8_t &itemIndex : player.InvGrid) {
+		for (int8_t &itemIndex : player.inventoryGrid) {
 			if (itemIndex == invListIndex)
 				itemIndex = 0;
 			if (itemIndex == -invListIndex)
@@ -1591,9 +1591,9 @@ void CheckInvSwap(Player &player, const Item &item, int invGridIndex)
 		int rowGridIndex = invGridIndex + pitch * y;
 		for (int x = 0; x < itemSize.width; x++) {
 			if (x == 0 && y == itemSize.height - 1)
-				player.InvGrid[rowGridIndex + x] = invListIndex;
+				player.inventoryGrid[rowGridIndex + x] = invListIndex;
 			else
-				player.InvGrid[rowGridIndex + x] = -invListIndex;
+				player.inventoryGrid[rowGridIndex + x] = -invListIndex;
 		}
 	}
 
@@ -1602,7 +1602,7 @@ void CheckInvSwap(Player &player, const Item &item, int invGridIndex)
 
 void CheckInvRemove(Player &player, int invGridIndex)
 {
-	int invListIndex = std::abs(player.InvGrid[invGridIndex]) - 1;
+	int invListIndex = std::abs(player.inventoryGrid[invGridIndex]) - 1;
 
 	if (invListIndex >= 0) {
 		player.RemoveInvItem(invListIndex);
@@ -1957,7 +1957,7 @@ int8_t CheckInvHLight()
 		rv = INVLOC_CHEST;
 		pi = &myPlayer.InvBody[rv];
 	} else if (r >= SLOTXY_INV_FIRST && r <= SLOTXY_INV_LAST) {
-		int8_t itemId = std::abs(myPlayer.InvGrid[r - SLOTXY_INV_FIRST]);
+		int8_t itemId = std::abs(myPlayer.inventoryGrid[r - SLOTXY_INV_FIRST]);
 		if (itemId == 0)
 			return -1;
 		int ii = itemId - 1;

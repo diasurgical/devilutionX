@@ -668,7 +668,7 @@ Point GetSlotCoord(int slot)
 int GetItemIdOnSlot(int slot)
 {
 	if (slot >= SLOTXY_INV_FIRST && slot <= SLOTXY_INV_LAST) {
-		return std::abs(MyPlayer->InvGrid[slot - SLOTXY_INV_FIRST]);
+		return std::abs(MyPlayer->inventoryGrid[slot - SLOTXY_INV_FIRST]);
 	}
 
 	return 0;
