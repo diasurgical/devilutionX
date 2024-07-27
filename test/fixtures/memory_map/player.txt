@@ -134,7 +134,7 @@ M 8 32 _pDAnim
 R 32 _pDFrames
 R 32 _pDWidth
 M 8 32 _pBAnim
-R 32 _pBFrames
+R 32 numBlockFrames
 R 32 _pBWidth
 C 7 item
 C 40 item

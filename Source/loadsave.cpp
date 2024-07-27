@@ -513,7 +513,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	player._pDFrames = file.NextLENarrow<int32_t, int8_t>();
 	file.Skip<uint32_t>();  // skip _pDWidth
 	file.Skip<uint32_t>(8); // Skip pointers _pBAnim
-	player._pBFrames = file.NextLENarrow<int32_t, int8_t>();
+	player.numBlockFrames = file.NextLENarrow<int32_t, int8_t>();
 	file.Skip<uint32_t>(); // skip _pBWidth
 
 	for (Item &item : player.InvBody)
@@ -1337,7 +1337,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.WriteLE<int32_t>(player._pDFrames);
 	file.Skip<uint32_t>();  // Skip _pDWidth
 	file.Skip<uint32_t>(8); // Skip pointers _pBAnim
-	file.WriteLE<int32_t>(player._pBFrames);
+	file.WriteLE<int32_t>(player.numBlockFrames);
 	file.Skip<uint32_t>(); // Skip _pBWidth
 
 	for (const Item &item : player.InvBody)

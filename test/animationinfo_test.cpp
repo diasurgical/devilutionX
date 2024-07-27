@@ -376,7 +376,7 @@ TEST(AnimationInfo, BlockingWarriorNormal) // Ignored delay for last Frame shoul
 	        new RenderingData(0.3f, 1),
 	        new RenderingData(0.6f, 1),
 	        new RenderingData(0.8f, 1),
-	        // Animation stopped cause PM_DoBlock would stop the Animation "if (plr[pnum].AnimInfo.currentFrame >= plr[pnum]._pBFrames) {"
+	        // Animation stopped cause PM_DoBlock would stop the Animation "if (plr[pnum].AnimInfo.currentFrame >= plr[pnum].numBlockFrames) {"
 	    });
 }
 
@@ -404,7 +404,7 @@ TEST(AnimationInfo, BlockingSorcererWithFastBlock) // Skipped frames and ignored
 	        new RenderingData(0.3f, 4),
 	        new RenderingData(0.6f, 5),
 	        new RenderingData(0.8f, 5),
-	        // Animation stopped cause PM_DoBlock would stop the Animation "if (plr[pnum].AnimInfo.currentFrame >= plr[pnum]._pBFrames) {"
+	        // Animation stopped cause PM_DoBlock would stop the Animation "if (plr[pnum].AnimInfo.currentFrame >= plr[pnum].numBlockFrames) {"
 	    });
 }
 

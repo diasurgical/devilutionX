@@ -296,7 +296,7 @@ struct Player {
 	int8_t _pSFNum;
 	int8_t _pHFrames;
 	int8_t _pDFrames;
-	int8_t _pBFrames;
+	int8_t numBlockFrames; // _pBFrames
 	int8_t InvGrid[InventoryGridCells];
 
 	uint8_t plrlevel;

@@ -1855,7 +1855,7 @@ void Player::getAnimationFramesAndTicksPerFrame(player_graphic graphics, int8_t 
 		ticksPerFrame = 2;
 		break;
 	case player_graphic::Block:
-		numberOfFrames = _pBFrames;
+		numberOfFrames = numBlockFrames;
 		ticksPerFrame = 3;
 		break;
 	default:
@@ -2207,7 +2207,7 @@ void SetPlrAnims(Player &player)
 		player._pNFrames = plrAtkAnimData.idleFrames;
 		player._pWFrames = plrAtkAnimData.walkingFrames;
 		player._pHFrames = plrAtkAnimData.recoveryFrames;
-		player._pBFrames = plrAtkAnimData.blockingFrames;
+		player.numBlockFrames = plrAtkAnimData.blockingFrames;
 		switch (gn) {
 		case PlayerWeaponGraphic::Unarmed:
 			player._pAFrames = plrAtkAnimData.unarmedFrames;
@@ -2574,7 +2574,7 @@ void StartPlrBlock(Player &player, Direction dir)
 
 	int8_t skippedAnimationFrames = 0;
 	if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastBlock)) {
-		skippedAnimationFrames = (player._pBFrames - 2); // ISPL_FASTBLOCK means we cancel the animation if frame 2 was shown
+		skippedAnimationFrames = (player.numBlockFrames - 2); // ISPL_FASTBLOCK means we cancel the animation if frame 2 was shown
 	}
 
 	NewPlrAnim(player, player_graphic::Block, dir, AnimationDistributionFlags::SkipsDelayOfLastFrame, skippedAnimationFrames);
