@@ -107,9 +107,9 @@ void AnimationInfo::setNewAnimation(OptionalClxSpriteList celSprite, int8_t numb
 		// Animation Frames that will be adjusted for the skipped Frames/game ticks
 		int8_t relevantAnimationFramesForDistributing = numberOfFrames;
 		if (distributeFramesBeforeFrame != 0) {
-			// After an attack hits (_pAFNum or _pSFNum) it can be canceled or another attack can be queued and this means the animation is canceled.
+			// After an attack hits (_pAFNum or spellActionFrame) it can be canceled or another attack can be queued and this means the animation is canceled.
 			// In normal attacks frame skipping always happens before the attack actual hit.
-			// This has the advantage that the sword or bow always points to the enemy when the hit happens (_pAFNum or _pSFNum).
+			// This has the advantage that the sword or bow always points to the enemy when the hit happens (_pAFNum or spellActionFrame).
 			// Our distribution logic must also regard this behaviour, so we are not allowed to distribute the skipped animations after the actual hit (_pAnimStopDistributingAfterFrame).
 			relevantAnimationFramesForDistributing = distributeFramesBeforeFrame - 1;
 		}

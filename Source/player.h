@@ -293,7 +293,7 @@ struct Player {
 	int8_t _pAFrames;
 	int8_t _pAFNum;
 	int8_t _pSFrames;
-	int8_t _pSFNum;
+	int8_t spellActionFrame; // _pSFNum
 	int8_t _pHFrames;
 	int8_t _pDFrames;
 	int8_t _pBFrames;
@@ -767,7 +767,7 @@ public:
 			return true;
 		if (_pmode == PM_RATTACK && AnimInfo.currentFrame >= _pAFNum)
 			return true;
-		if (_pmode == PM_SPELL && AnimInfo.currentFrame >= _pSFNum)
+		if (_pmode == PM_SPELL && AnimInfo.currentFrame >= spellActionFrame)
 			return true;
 		if (isWalking() && AnimInfo.isLastFrame())
 			return true;

@@ -337,7 +337,7 @@ void AssertPlayer(Player &player)
 	ASSERT_EQ(player._pAFrames, 0);
 	ASSERT_EQ(player._pAFNum, 0);
 	ASSERT_EQ(player._pSFrames, 16);
-	ASSERT_EQ(player._pSFNum, 12);
+	ASSERT_EQ(player.spellActionFrame, 12);
 	ASSERT_EQ(player._pHFrames, 0);
 	ASSERT_EQ(player._pDFrames, 20);
 	ASSERT_EQ(player._pBFrames, 0);

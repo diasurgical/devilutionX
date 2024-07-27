@@ -273,7 +273,7 @@ void StartSpell(Player &player, Direction d, WorldTileCoord cx, WorldTileCoord c
 	auto animationFlags = AnimationDistributionFlags::ProcessAnimationPending;
 	if (player._pmode == PM_SPELL)
 		animationFlags = static_cast<AnimationDistributionFlags>(animationFlags | AnimationDistributionFlags::RepeatedAction);
-	NewPlrAnim(player, GetPlayerGraphicForSpell(player.queuedSpell.spellId), d, animationFlags, 0, player._pSFNum);
+	NewPlrAnim(player, GetPlayerGraphicForSpell(player.queuedSpell.spellId), d, animationFlags, 0, player.spellActionFrame);
 
 	PlaySfxLoc(GetSpellData(player.queuedSpell.spellId).sSFX, player.position.tile);
 
@@ -1001,7 +1001,7 @@ void DamageArmor(Player &player)
 
 bool DoSpell(Player &player)
 {
-	if (player.AnimInfo.currentFrame == player._pSFNum) {
+	if (player.AnimInfo.currentFrame == player.spellActionFrame) {
 		CastSpell(
 		    player,
 		    player.executedSpell.spellId,
@@ -1379,7 +1379,7 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 		}
 	}
 
-	if (player._pmode == PM_SPELL && player.AnimInfo.currentFrame >= player._pSFNum) {
+	if (player._pmode == PM_SPELL && player.AnimInfo.currentFrame >= player.spellActionFrame) {
 		if (player.destAction == ACTION_SPELL) {
 			d = GetDirection(player.position.tile, { player.destParam1, player.destParam2 });
 			StartSpell(player, d, player.destParam1, player.destParam2);
@@ -2250,7 +2250,7 @@ void SetPlrAnims(Player &player)
 
 	player._pDFrames = plrAtkAnimData.deathFrames;
 	player._pSFrames = plrAtkAnimData.castingFrames;
-	player._pSFNum = plrAtkAnimData.castingActionFrame;
+	player.spellActionFrame = plrAtkAnimData.castingActionFrame;
 	int armorGraphicIndex = player._pgfxnum & ~0xFU;
 	if (IsAnyOf(pc, HeroClass::Warrior, HeroClass::Barbarian)) {
 		if (gn == PlayerWeaponGraphic::Bow && leveltype != DTYPE_TOWN)

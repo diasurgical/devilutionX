@@ -125,7 +125,7 @@ M 8 32 _pFAnim
 M 8 32 _pTAnim
 R 32 _pSFrames
 R 32 _pSWidth
-R 32 _pSFNum
+R 32 spellActionFrame
 R 32 _pHFrames
 M 8 32 _pHAnim
 R 32 _pHFrames
