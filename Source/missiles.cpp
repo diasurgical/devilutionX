@@ -307,7 +307,7 @@ bool Plr2PlrMHit(const Player &player, Player &target, int mindam, int maxdam, i
 	int8_t resper;
 	switch (damageType) {
 	case DamageType::Fire:
-		resper = target._pFireResist;
+		resper = target.resistFire;
 		break;
 	case DamageType::Lightning:
 		resper = target._pLghtResist;
@@ -1039,7 +1039,7 @@ bool PlayerMHit(Player &player, Monster *monster, int dist, int mind, int maxd, 
 	int8_t resper;
 	switch (damageType) {
 	case DamageType::Fire:
-		resper = player._pFireResist;
+		resper = player.resistFire;
 		break;
 	case DamageType::Lightning:
 		resper = player._pLghtResist;

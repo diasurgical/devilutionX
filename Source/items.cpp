@@ -2688,7 +2688,7 @@ void CalcPlrResistances(Player &player, ItemSpecialEffect iflgs, int fire, int l
 	}
 
 	player._pMagResist = std::clamp(magic, 0, MaxResistance);
-	player._pFireResist = std::clamp(fire, 0, MaxResistance);
+	player.resistFire = std::clamp(fire, 0, MaxResistance);
 	player._pLghtResist = std::clamp(lightning, 0, MaxResistance);
 }
 

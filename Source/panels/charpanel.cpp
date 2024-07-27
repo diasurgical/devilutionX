@@ -191,7 +191,7 @@ PanelEntry panelEntries[] = {
 	{ N_("Resist magic"), { RightColumnLabelX, 256 }, 57, RightColumnLabelWidth,
 	    []() { return GetResistInfo(InspectPlayer->_pMagResist); } },
 	{ N_("Resist fire"), { RightColumnLabelX, 284 }, 57, RightColumnLabelWidth,
-	    []() { return GetResistInfo(InspectPlayer->_pFireResist); } },
+	    []() { return GetResistInfo(InspectPlayer->resistFire); } },
 	{ N_("Resist lightning"), { RightColumnLabelX, 313 }, 57, RightColumnLabelWidth,
 	    []() { return GetResistInfo(InspectPlayer->_pLghtResist); } },
 };

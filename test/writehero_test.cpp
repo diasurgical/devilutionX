@@ -328,7 +328,7 @@ void AssertPlayer(Player &player)
 	ASSERT_EQ(player._pMaxMana, 14624);
 	ASSERT_EQ(player.getNextExperienceThreshold(), 1583495809);
 	ASSERT_EQ(player._pMagResist, 75);
-	ASSERT_EQ(player._pFireResist, 16);
+	ASSERT_EQ(player.resistFire, 16);
 	ASSERT_EQ(player._pLghtResist, 75);
 	ASSERT_EQ(CountBool(player._pLvlVisited, NUMLEVELS), 0);
 	ASSERT_EQ(CountBool(player._pSLvlVisited, NUMLEVELS), 0);

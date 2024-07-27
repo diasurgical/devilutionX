@@ -1640,7 +1640,7 @@ void UpdateBurningCrossDamage(Object &cross)
 	if (myPlayer._pmode == PM_DEATH)
 		return;
 
-	int8_t fireResist = myPlayer._pFireResist;
+	int8_t fireResist = myPlayer.resistFire;
 	if (fireResist > 0)
 		damage[leveltype - 1] -= fireResist * damage[leveltype - 1] / 100;
 
