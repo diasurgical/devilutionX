@@ -50,7 +50,7 @@
 	do {                                                      \
 		if (!(condition)) {                                   \
 			LogFailedPacket(#condition, #logValue, logValue); \
-			EventFailedPacket(player.name);                 \
+			EventFailedPacket(player.name);                   \
 			return false;                                     \
 		}                                                     \
 	} while (0)
@@ -59,7 +59,7 @@
 	do {                                                                               \
 		if (!(condition)) {                                                            \
 			LogFailedPacket(#condition, #logValue1, logValue1, #logValue2, logValue2); \
-			EventFailedPacket(player.name);                                          \
+			EventFailedPacket(player.name);                                            \
 			return false;                                                              \
 		}                                                                              \
 	} while (0)

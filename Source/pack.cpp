@@ -21,7 +21,7 @@
 	do {                                                           \
 		if (!(condition)) {                                        \
 			LogFailedJoinAttempt(#condition, #logValue, logValue); \
-			EventFailedJoinAttempt(player.name);                 \
+			EventFailedJoinAttempt(player.name);                   \
 			return false;                                          \
 		}                                                          \
 	} while (0)
@@ -30,7 +30,7 @@
 	do {                                                                                    \
 		if (!(condition)) {                                                                 \
 			LogFailedJoinAttempt(#condition, #logValue1, logValue1, #logValue2, logValue2); \
-			EventFailedJoinAttempt(player.name);                                          \
+			EventFailedJoinAttempt(player.name);                                            \
 			return false;                                                                   \
 		}                                                                                   \
 	} while (0)
