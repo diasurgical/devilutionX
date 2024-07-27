@@ -2569,7 +2569,7 @@ void CalcPlrDamage(Player &player, int minDamage, int maxDamage)
 			maxDamage = 3;
 		}
 
-		if (player._pClass == HeroClass::Monk) {
+		if (player.heroClass == HeroClass::Monk) {
 			minDamage = std::max(minDamage, playerLevel / 2);
 			maxDamage = std::max<int>(maxDamage, playerLevel);
 		}
@@ -2620,7 +2620,7 @@ void CalcPlrDamageMod(Player &player)
 	const int strMod = playerLevel * player._pStrength;
 	const int strDexMod = playerLevel * (player._pStrength + player._pDexterity);
 
-	switch (player._pClass) {
+	switch (player.heroClass) {
 	case HeroClass::Rogue:
 		player._pDamageMod = strDexMod / 200;
 		return;
@@ -2668,7 +2668,7 @@ void CalcPlrResistances(Player &player, ItemSpecialEffect iflgs, int fire, int l
 {
 	const uint8_t playerLevel = player.getCharacterLevel();
 
-	if (player._pClass == HeroClass::Barbarian) {
+	if (player.heroClass == HeroClass::Barbarian) {
 		magic += playerLevel;
 		fire += playerLevel;
 		lightning += playerLevel;
@@ -2719,7 +2719,7 @@ void CalcPlrBlockFlag(Player &player)
 
 	player._pBlockFlag = false;
 
-	if (player._pClass == HeroClass::Monk) {
+	if (player.heroClass == HeroClass::Monk) {
 		if (player.isHoldingItem(ItemType::Staff)) {
 			player._pBlockFlag = true;
 			player._pIFlags |= ItemSpecialEffect::FastBlock;
@@ -2773,13 +2773,13 @@ PlayerArmorGraphic GetPlrAnimArmorId(Player &player)
 	if (chestUsable) {
 		switch (chestItem._itype) {
 		case ItemType::HeavyArmor:
-			if (player._pClass == HeroClass::Monk) {
+			if (player.heroClass == HeroClass::Monk) {
 				if (chestItem._iMagical == ITEM_QUALITY_UNIQUE)
 					player._pIAC += playerLevel / 2;
 			}
 			return PlayerArmorGraphic::Heavy;
 		case ItemType::MediumArmor:
-			if (player._pClass == HeroClass::Monk) {
+			if (player.heroClass == HeroClass::Monk) {
 				if (chestItem._iMagical == ITEM_QUALITY_UNIQUE)
 					player._pIAC += playerLevel * 2;
 				else
@@ -2787,7 +2787,7 @@ PlayerArmorGraphic GetPlrAnimArmorId(Player &player)
 			}
 			return PlayerArmorGraphic::Medium;
 		default:
-			if (player._pClass == HeroClass::Monk)
+			if (player.heroClass == HeroClass::Monk)
 				player._pIAC += playerLevel * 2;
 			return PlayerArmorGraphic::Light;
 		}
@@ -3063,7 +3063,7 @@ void CreatePlrItems(Player &player)
 		item.clear();
 	}
 
-	const PlayerStartingLoadoutData &loadout = GetPlayerStartingLoadoutForClass(player._pClass);
+	const PlayerStartingLoadoutData &loadout = GetPlayerStartingLoadoutForClass(player.heroClass);
 
 	if (loadout.spell != SpellID::Null && loadout.spellLevel > 0) {
 		player._pMemSpells = GetSpellBitmask(loadout.spell);
@@ -4459,7 +4459,7 @@ void SpawnBoy(int lvl)
 
 	Player &myPlayer = *MyPlayer;
 
-	HeroClass pc = myPlayer._pClass;
+	HeroClass pc = myPlayer.heroClass;
 	int strength = std::max(myPlayer.GetMaximumAttributeValue(CharacterAttribute::Strength), myPlayer._pStrength);
 	int dexterity = std::max(myPlayer.GetMaximumAttributeValue(CharacterAttribute::Dexterity), myPlayer._pDexterity);
 	int magic = std::max(myPlayer.GetMaximumAttributeValue(CharacterAttribute::Magic), myPlayer._pMagic);

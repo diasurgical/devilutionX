@@ -3877,7 +3877,7 @@ void DoEnding()
 	if (gbIsSpawn)
 		return;
 
-	switch (MyPlayer->_pClass) {
+	switch (MyPlayer->heroClass) {
 	case HeroClass::Sorcerer:
 	case HeroClass::Monk:
 		play_movie("gendata\\diabvic1.smk", false);

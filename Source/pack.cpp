@@ -260,7 +260,7 @@ void PackPlayer(PlayerPack &packed, const Player &player)
 		packed.targy = player.position.tile.y;
 	}
 	CopyUtf8(packed.pName, player._pName, sizeof(packed.pName));
-	packed.pClass = static_cast<uint8_t>(player._pClass);
+	packed.pClass = static_cast<uint8_t>(player.heroClass);
 	packed.pBaseStr = player._pBaseStr;
 	packed.pBaseMag = player._pBaseMag;
 	packed.pBaseDex = player._pBaseDex;
@@ -320,7 +320,7 @@ void PackNetPlayer(PlayerNetPack &packed, const Player &player)
 	packed.px = player.position.tile.x;
 	packed.py = player.position.tile.y;
 	CopyUtf8(packed.pName, player._pName, sizeof(packed.pName));
-	packed.pClass = static_cast<uint8_t>(player._pClass);
+	packed.pClass = static_cast<uint8_t>(player.heroClass);
 	packed.pBaseStr = player._pBaseStr;
 	packed.pBaseMag = player._pBaseMag;
 	packed.pBaseDex = player._pBaseDex;
@@ -456,7 +456,7 @@ void UnPackPlayer(const PlayerPack &packed, Player &player)
 	player.position.future = position;
 	player.setLevel(std::clamp<int8_t>(packed.plrlevel, 0, NUMLEVELS));
 
-	player._pClass = static_cast<HeroClass>(std::clamp<uint8_t>(packed.pClass, 0, enum_size<HeroClass>::value - 1));
+	player.heroClass = static_cast<HeroClass>(std::clamp<uint8_t>(packed.pClass, 0, enum_size<HeroClass>::value - 1));
 
 	ClrPlrPath(player);
 	player.destAction = ACTION_NONE;
@@ -562,7 +562,7 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 	CopyUtf8(player._pName, packed.pName, sizeof(player._pName));
 
 	ValidateField(packed.pClass, packed.pClass < enum_size<HeroClass>::value);
-	player._pClass = static_cast<HeroClass>(packed.pClass);
+	player.heroClass = static_cast<HeroClass>(packed.pClass);
 
 	Point position { packed.px, packed.py };
 	ValidateFields(position.x, position.y, InDungeonBounds(position));

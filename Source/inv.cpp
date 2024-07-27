@@ -202,7 +202,7 @@ bool CanWield(Player &player, const Item &item)
 
 	// Bard can dual wield swords and maces, so we allow equiping one-handed weapons in her free slot as long as her occupied
 	// slot is another one-handed weapon.
-	if (player._pClass == HeroClass::Bard) {
+	if (player.heroClass == HeroClass::Bard) {
 		bool occupiedHandIsOneHandedSwordOrMace = player.GetItemLocation(occupiedHand) == ILOC_ONEHAND
 		    && IsAnyOf(occupiedHand._itype, ItemType::Sword, ItemType::Mace);
 
@@ -354,7 +354,7 @@ void ChangeEquippedItem(Player &player, uint8_t slot)
 	const inv_body_loc otherHand = slot == SLOTXY_HAND_LEFT ? INVLOC_HAND_RIGHT : INVLOC_HAND_LEFT;
 
 	const bool pasteIntoSelectedHand = (player.InvBody[otherHand].isEmpty() || player.InvBody[otherHand]._iClass != player.HoldItem._iClass)
-	    || (player._pClass == HeroClass::Bard && player.InvBody[otherHand]._iClass == ICLASS_WEAPON && player.HoldItem._iClass == ICLASS_WEAPON);
+	    || (player.heroClass == HeroClass::Bard && player.InvBody[otherHand]._iClass == ICLASS_WEAPON && player.HoldItem._iClass == ICLASS_WEAPON);
 
 	const bool dequipTwoHandedWeapon = (!player.InvBody[otherHand].isEmpty() && player.GetItemLocation(player.InvBody[otherHand]) == ILOC_TWOHAND);
 
@@ -1079,7 +1079,7 @@ void FreeInvGFX()
 
 void InitInv()
 {
-	switch (MyPlayer->_pClass) {
+	switch (MyPlayer->heroClass) {
 	case HeroClass::Warrior:
 	case HeroClass::Barbarian:
 		pInvCels = LoadCel("data\\inv\\inv", static_cast<uint16_t>(SidePanelSize.width));
@@ -1280,7 +1280,7 @@ bool AutoEquipEnabled(const Player &player, const Item &item)
 	if (item.isWeapon()) {
 		// Monk can use unarmed attack as an encouraged option, thus we do not automatically equip weapons on him so as to not
 		// annoy players who prefer that playstyle.
-		return player._pClass != HeroClass::Monk && *sgOptions.Gameplay.autoEquipWeapons;
+		return player.heroClass != HeroClass::Monk && *sgOptions.Gameplay.autoEquipWeapons;
 	}
 
 	if (item.isArmor()) {

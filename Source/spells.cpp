@@ -132,9 +132,9 @@ int GetManaAmount(const Player &player, SpellID sn)
 	ma = std::max(ma, 0);
 	ma <<= 6;
 
-	if (gbIsHellfire && player._pClass == HeroClass::Sorcerer) {
+	if (gbIsHellfire && player.heroClass == HeroClass::Sorcerer) {
 		ma /= 2;
-	} else if (player._pClass == HeroClass::Rogue || player._pClass == HeroClass::Monk || player._pClass == HeroClass::Bard) {
+	} else if (player.heroClass == HeroClass::Rogue || player.heroClass == HeroClass::Monk || player.heroClass == HeroClass::Bard) {
 		ma -= ma / 4;
 	}
 
@@ -285,11 +285,11 @@ void DoHealOther(const Player &caster, Player &target)
 		hp += (GenerateRnd(6) + 1) << 6;
 	}
 
-	if (caster._pClass == HeroClass::Warrior || caster._pClass == HeroClass::Barbarian) {
+	if (caster.heroClass == HeroClass::Warrior || caster.heroClass == HeroClass::Barbarian) {
 		hp *= 2;
-	} else if (caster._pClass == HeroClass::Rogue || caster._pClass == HeroClass::Bard) {
+	} else if (caster.heroClass == HeroClass::Rogue || caster.heroClass == HeroClass::Bard) {
 		hp += hp / 2;
-	} else if (caster._pClass == HeroClass::Monk) {
+	} else if (caster.heroClass == HeroClass::Monk) {
 		hp *= 3;
 	}
 

@@ -33,7 +33,7 @@ std::optional<std::array<uint8_t, 256>> GetClassTRN(Player &player)
 	std::array<uint8_t, 256> trn;
 	const char *path;
 
-	switch (player._pClass) {
+	switch (player.heroClass) {
 	case HeroClass::Warrior:
 		path = "plrgfx\\warrior.trn";
 		break;

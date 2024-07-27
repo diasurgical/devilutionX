@@ -244,7 +244,7 @@ bool MonsterMHit(const Player &player, int monsterId, int mindam, int maxdam, in
 
 	if (missileData.isArrow() && damageType == DamageType::Physical) {
 		dam = player._pIBonusDamMod + dam * player._pIBonusDam / 100 + dam;
-		if (player._pClass == HeroClass::Rogue)
+		if (player.heroClass == HeroClass::Rogue)
 			dam += player._pDamageMod;
 		else
 			dam += player._pDamageMod / 2;
@@ -800,8 +800,8 @@ DamageRange GetDamageAmt(SpellID spell, int spellLevel)
 	case SpellID::HealOther:
 		/// BUGFIX: healing calculation is unused
 		return {
-			AddClassHealingBonus(myPlayer.getCharacterLevel() + spellLevel + 1, myPlayer._pClass) - 1,
-			AddClassHealingBonus((4 * myPlayer.getCharacterLevel()) + (6 * spellLevel) + 10, myPlayer._pClass) - 1
+			AddClassHealingBonus(myPlayer.getCharacterLevel() + spellLevel + 1, myPlayer.heroClass) - 1,
+			AddClassHealingBonus((4 * myPlayer.getCharacterLevel()) + (6 * spellLevel) + 10, myPlayer.heroClass) - 1
 		};
 	case SpellID::RuneOfLight:
 	case SpellID::Lightning:
@@ -1400,9 +1400,9 @@ void AddSpectralArrow(Missile &missile, AddMissileParameter &parameter)
 	if (missile.sourceType() == MissileSource::Player) {
 		const Player &player = *missile.sourcePlayer();
 
-		if (player._pClass == HeroClass::Rogue)
+		if (player.heroClass == HeroClass::Rogue)
 			av += (player.getCharacterLevel() - 1) / 4;
-		else if (player._pClass == HeroClass::Warrior || player._pClass == HeroClass::Bard)
+		else if (player.heroClass == HeroClass::Warrior || player.heroClass == HeroClass::Bard)
 			av += (player.getCharacterLevel() - 1) / 8;
 
 		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::QuickAttack))
@@ -1580,9 +1580,9 @@ void AddMana(Missile &missile, AddMissileParameter & /*parameter*/)
 	for (int i = 0; i < missile._mispllvl; i++) {
 		manaAmount += (GenerateRnd(6) + 1) << 6;
 	}
-	if (player._pClass == HeroClass::Sorcerer)
+	if (player.heroClass == HeroClass::Sorcerer)
 		manaAmount *= 2;
-	if (player._pClass == HeroClass::Rogue || player._pClass == HeroClass::Bard)
+	if (player.heroClass == HeroClass::Rogue || player.heroClass == HeroClass::Bard)
 		manaAmount += manaAmount / 2;
 	player._pMana += manaAmount;
 	if (player._pMana > player._pMaxMana)
@@ -1662,9 +1662,9 @@ void AddElementalArrow(Missile &missile, AddMissileParameter &parameter)
 	int av = 32;
 	if (missile._micaster == TARGET_MONSTERS) {
 		const Player &player = Players[missile._misource];
-		if (player._pClass == HeroClass::Rogue)
+		if (player.heroClass == HeroClass::Rogue)
 			av += (player.getCharacterLevel()) / 4;
-		else if (IsAnyOf(player._pClass, HeroClass::Warrior, HeroClass::Bard))
+		else if (IsAnyOf(player.heroClass, HeroClass::Warrior, HeroClass::Bard))
 			av += (player.getCharacterLevel()) / 8;
 
 		if (gbIsHellfire) {
@@ -1677,7 +1677,7 @@ void AddElementalArrow(Missile &missile, AddMissileParameter &parameter)
 			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastestAttack))
 				av += 8;
 		} else {
-			if (IsAnyOf(player._pClass, HeroClass::Rogue, HeroClass::Warrior, HeroClass::Bard))
+			if (IsAnyOf(player.heroClass, HeroClass::Rogue, HeroClass::Warrior, HeroClass::Bard))
 				av -= 1;
 		}
 	}
@@ -1703,9 +1703,9 @@ void AddArrow(Missile &missile, AddMissileParameter &parameter)
 		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::RandomArrowVelocity)) {
 			av = RandomIntBetween(16, 47);
 		}
-		if (player._pClass == HeroClass::Rogue)
+		if (player.heroClass == HeroClass::Rogue)
 			av += (player.getCharacterLevel() - 1) / 4;
-		else if (player._pClass == HeroClass::Warrior || player._pClass == HeroClass::Bard)
+		else if (player.heroClass == HeroClass::Warrior || player.heroClass == HeroClass::Bard)
 			av += (player.getCharacterLevel() - 1) / 8;
 
 		if (gbIsHellfire) {
@@ -2366,9 +2366,9 @@ void AddHealing(Missile &missile, AddMissileParameter & /*parameter*/)
 	hp += GenerateRndSum(6, missile._mispllvl) + missile._mispllvl;
 	hp <<= 6;
 
-	if (player._pClass == HeroClass::Warrior || player._pClass == HeroClass::Barbarian || player._pClass == HeroClass::Monk) {
+	if (player.heroClass == HeroClass::Warrior || player.heroClass == HeroClass::Barbarian || player.heroClass == HeroClass::Monk) {
 		hp *= 2;
-	} else if (player._pClass == HeroClass::Rogue || player._pClass == HeroClass::Bard) {
+	} else if (player.heroClass == HeroClass::Rogue || player.heroClass == HeroClass::Bard) {
 		hp += hp / 2;
 	}
 

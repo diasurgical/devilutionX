@@ -53,7 +53,7 @@ SpellID GetSpellFromSpellPage(size_t page, size_t entry)
 {
 	assert(page <= SpellBookPages && entry <= SpellBookPageEntries);
 	if (page == 0 && entry == 0) {
-		switch (InspectPlayer->_pClass) {
+		switch (InspectPlayer->heroClass) {
 		case HeroClass::Warrior:
 			return SpellID::ItemRepair;
 		case HeroClass::Rogue:
@@ -86,7 +86,7 @@ void PrintSBookStr(const Surface &out, Point position, std::string_view text, Ui
 SpellType GetSBookTrans(SpellID ii, bool townok)
 {
 	Player &player = *InspectPlayer;
-	if ((player._pClass == HeroClass::Monk) && (ii == SpellID::Search))
+	if ((player.heroClass == HeroClass::Monk) && (ii == SpellID::Search))
 		return SpellType::Skill;
 	SpellType st = SpellType::Spell;
 	if ((player._pISpells & GetSpellBitmask(ii)) != 0) {

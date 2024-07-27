@@ -596,7 +596,7 @@ void AddCryptObject(Object &object, int a2)
 		Player &myPlayer = *MyPlayer;
 		switch (a2) {
 		case 6:
-			switch (myPlayer._pClass) {
+			switch (myPlayer.heroClass) {
 			case HeroClass::Warrior:
 			case HeroClass::Barbarian:
 				object._oVar2 = TEXT_BOOKA;
@@ -616,7 +616,7 @@ void AddCryptObject(Object &object, int a2)
 			}
 			break;
 		case 7:
-			switch (myPlayer._pClass) {
+			switch (myPlayer.heroClass) {
 			case HeroClass::Warrior:
 			case HeroClass::Barbarian:
 				object._oVar2 = TEXT_BOOKB;
@@ -636,7 +636,7 @@ void AddCryptObject(Object &object, int a2)
 			}
 			break;
 		case 8:
-			switch (myPlayer._pClass) {
+			switch (myPlayer.heroClass) {
 			case HeroClass::Warrior:
 			case HeroClass::Barbarian:
 				object._oVar2 = TEXT_BOOKC;
@@ -1977,7 +1977,7 @@ void OperateChamberOfBoneBook(Object &questBook, bool sendmsg)
 	}
 
 	_speech_id textdef;
-	switch (MyPlayer->_pClass) {
+	switch (MyPlayer->heroClass) {
 	case HeroClass::Warrior:
 		textdef = TEXT_BONER;
 		break;
@@ -2129,17 +2129,17 @@ void OperateSlainHero(const Player &player, Object &corpse, bool sendmsg)
 
 	SetRndSeed(corpse._oRndSeed);
 
-	if (player._pClass == HeroClass::Warrior) {
+	if (player.heroClass == HeroClass::Warrior) {
 		CreateMagicArmor(corpse.position, ItemType::HeavyArmor, ICURS_BREAST_PLATE, sendmsg, false);
-	} else if (player._pClass == HeroClass::Rogue) {
+	} else if (player.heroClass == HeroClass::Rogue) {
 		CreateMagicWeapon(corpse.position, ItemType::Bow, ICURS_LONG_BATTLE_BOW, sendmsg, false);
-	} else if (player._pClass == HeroClass::Sorcerer) {
+	} else if (player.heroClass == HeroClass::Sorcerer) {
 		CreateSpellBook(corpse.position, SpellID::Lightning, sendmsg, false);
-	} else if (player._pClass == HeroClass::Monk) {
+	} else if (player.heroClass == HeroClass::Monk) {
 		CreateMagicWeapon(corpse.position, ItemType::Staff, ICURS_WAR_STAFF, sendmsg, false);
-	} else if (player._pClass == HeroClass::Bard) {
+	} else if (player.heroClass == HeroClass::Bard) {
 		CreateMagicWeapon(corpse.position, ItemType::Sword, ICURS_BASTARD_SWORD, sendmsg, false);
-	} else if (player._pClass == HeroClass::Barbarian) {
+	} else if (player.heroClass == HeroClass::Barbarian) {
 		CreateMagicWeapon(corpse.position, ItemType::Axe, ICURS_BATTLE_AXE, sendmsg, false);
 	}
 	MyPlayer->Say(HeroSpeech::RestInPeaceMyFriend);
@@ -2789,7 +2789,7 @@ void OperateShrineOily(Player &player, Point spawnPosition)
 	if (&player != MyPlayer)
 		return;
 
-	switch (player._pClass) {
+	switch (player.heroClass) {
 	case HeroClass::Warrior:
 		ModifyPlrStr(player, 2);
 		break;
@@ -3842,7 +3842,7 @@ void InitObjects()
 			AddL2Torches();
 			if (Quests[Q_BLIND].IsAvailable()) {
 				_speech_id spId;
-				switch (MyPlayer->_pClass) {
+				switch (MyPlayer->heroClass) {
 				case HeroClass::Warrior:
 					spId = TEXT_BLINDING;
 					break;
@@ -3868,7 +3868,7 @@ void InitObjects()
 			}
 			if (Quests[Q_BLOOD].IsAvailable()) {
 				_speech_id spId;
-				switch (MyPlayer->_pClass) {
+				switch (MyPlayer->heroClass) {
 				case HeroClass::Warrior:
 					spId = TEXT_BLOODY;
 					break;
@@ -3901,7 +3901,7 @@ void InitObjects()
 		if (leveltype == DTYPE_HELL) {
 			if (Quests[Q_WARLORD].IsAvailable()) {
 				_speech_id spId;
-				switch (MyPlayer->_pClass) {
+				switch (MyPlayer->heroClass) {
 				case HeroClass::Warrior:
 					spId = TEXT_BLOODWAR;
 					break;
@@ -4883,7 +4883,7 @@ StringOrView Object::name() const
 void GetObjectStr(const Object &object)
 {
 	InfoString = object.name();
-	if (MyPlayer->_pClass == HeroClass::Rogue) {
+	if (MyPlayer->heroClass == HeroClass::Rogue) {
 		if (object._oTrapFlag) {
 			InfoString = fmt::format(fmt::runtime(_(/* TRANSLATORS: {:s} will either be a chest or a door */ "Trapped {:s}")), InfoString.str());
 			InfoColor = UiFlags::ColorRed;

@@ -571,7 +571,7 @@ bool PlrHitMonst(Player &player, Monster &monster, bool adjacentDamage = false)
 	dam += player._pIBonusDamMod;
 	int dam2 = dam << 6;
 	dam += player._pDamageMod;
-	if (player._pClass == HeroClass::Warrior || player._pClass == HeroClass::Barbarian) {
+	if (player.heroClass == HeroClass::Warrior || player.heroClass == HeroClass::Barbarian) {
 		if (GenerateRnd(100) < player.getCharacterLevel()) {
 			dam *= 2;
 		}
@@ -738,7 +738,7 @@ bool PlrHitPlr(Player &attacker, Player &target)
 	dam += (dam * attacker._pIBonusDam) / 100;
 	dam += attacker._pIBonusDamMod + attacker._pDamageMod;
 
-	if (attacker._pClass == HeroClass::Warrior || attacker._pClass == HeroClass::Barbarian) {
+	if (attacker.heroClass == HeroClass::Warrior || attacker.heroClass == HeroClass::Barbarian) {
 		if (GenerateRnd(100) < attacker.getCharacterLevel()) {
 			dam *= 2;
 		}
@@ -1712,7 +1712,7 @@ bool Player::IsPositionInPath(Point pos)
 
 void Player::Say(HeroSpeech speechId) const
 {
-	SfxID soundEffect = herosounds[static_cast<size_t>(_pClass)][static_cast<size_t>(speechId)];
+	SfxID soundEffect = herosounds[static_cast<size_t>(heroClass)][static_cast<size_t>(speechId)];
 
 	if (soundEffect == SfxID::None)
 		return;
@@ -1722,7 +1722,7 @@ void Player::Say(HeroSpeech speechId) const
 
 void Player::SaySpecific(HeroSpeech speechId) const
 {
-	SfxID soundEffect = herosounds[static_cast<size_t>(_pClass)][static_cast<size_t>(speechId)];
+	SfxID soundEffect = herosounds[static_cast<size_t>(heroClass)][static_cast<size_t>(speechId)];
 
 	if (soundEffect == SfxID::None || effect_is_playing(soundEffect))
 		return;
@@ -1733,7 +1733,7 @@ void Player::SaySpecific(HeroSpeech speechId) const
 void Player::Say(HeroSpeech speechId, int delay) const
 {
 	sfxdelay = delay;
-	sfxdnum = herosounds[static_cast<size_t>(_pClass)][static_cast<size_t>(speechId)];
+	sfxdnum = herosounds[static_cast<size_t>(heroClass)][static_cast<size_t>(speechId)];
 }
 
 void Player::Stop()
@@ -1757,9 +1757,9 @@ void Player::RestorePartialLife()
 {
 	int wholeHitpoints = _pMaxHP >> 6;
 	int l = ((wholeHitpoints / 8) + GenerateRnd(wholeHitpoints / 4)) << 6;
-	if (IsAnyOf(_pClass, HeroClass::Warrior, HeroClass::Barbarian))
+	if (IsAnyOf(heroClass, HeroClass::Warrior, HeroClass::Barbarian))
 		l *= 2;
-	if (IsAnyOf(_pClass, HeroClass::Rogue, HeroClass::Monk, HeroClass::Bard))
+	if (IsAnyOf(heroClass, HeroClass::Rogue, HeroClass::Monk, HeroClass::Bard))
 		l += l / 2;
 	_pHitPoints = std::min(_pHitPoints + l, _pMaxHP);
 	_pHPBase = std::min(_pHPBase + l, _pMaxHPBase);
@@ -1769,9 +1769,9 @@ void Player::RestorePartialMana()
 {
 	int wholeManaPoints = _pMaxMana >> 6;
 	int l = ((wholeManaPoints / 8) + GenerateRnd(wholeManaPoints / 4)) << 6;
-	if (_pClass == HeroClass::Sorcerer)
+	if (heroClass == HeroClass::Sorcerer)
 		l *= 2;
-	if (IsAnyOf(_pClass, HeroClass::Rogue, HeroClass::Monk, HeroClass::Bard))
+	if (IsAnyOf(heroClass, HeroClass::Rogue, HeroClass::Monk, HeroClass::Bard))
 		l += l / 2;
 	if (HasNoneOf(_pIFlags, ItemSpecialEffect::NoMana)) {
 		_pMana = std::min(_pMana + l, _pMaxMana);
@@ -1823,7 +1823,7 @@ uint16_t Player::getSpriteWidth() const
 	if (!HeadlessMode)
 		return (*AnimInfo.sprites)[0].width();
 	const player_graphic graphic = getGraphic();
-	const HeroClass cls = GetPlayerSpriteClass(_pClass);
+	const HeroClass cls = GetPlayerSpriteClass(heroClass);
 	const PlayerWeaponGraphic weaponGraphic = GetPlayerWeaponGraphic(graphic, static_cast<PlayerWeaponGraphic>(_pgfxnum & 0xF));
 	return GetPlayerSpriteWidth(cls, graphic, weaponGraphic);
 }
@@ -2079,7 +2079,7 @@ void LoadPlrGFX(Player &player, player_graphic graphic)
 	if (animationData.sprites)
 		return;
 
-	const HeroClass cls = GetPlayerSpriteClass(player._pClass);
+	const HeroClass cls = GetPlayerSpriteClass(player.heroClass);
 	const PlayerWeaponGraphic animWeaponId = GetPlayerWeaponGraphic(graphic, static_cast<PlayerWeaponGraphic>(player._pgfxnum & 0xF));
 
 	const char *path = PlayersSpriteData[static_cast<std::size_t>(cls)].classPath;
@@ -2196,7 +2196,7 @@ void NewPlrAnim(Player &player, player_graphic graphic, Direction dir, Animation
 
 void SetPlrAnims(Player &player)
 {
-	HeroClass pc = player._pClass;
+	HeroClass pc = player.heroClass;
 	PlayerAnimData plrAtkAnimData = PlayersAnimData[static_cast<uint8_t>(pc)];
 	auto gn = static_cast<PlayerWeaponGraphic>(player._pgfxnum & 0xFU);
 
@@ -2270,7 +2270,7 @@ void CreatePlayer(Player &player, HeroClass c)
 	SetRndSeed(SDL_GetTicks());
 
 	player.setCharacterLevel(1);
-	player._pClass = c;
+	player.heroClass = c;
 
 	const ClassAttributes &attr = player.getClassAttributes();
 
@@ -2492,7 +2492,7 @@ void InitPlayer(Player &player, bool firstTime)
 		ActivateVision(player.position.tile, player._pLightRad, player.getId());
 	}
 
-	player._pAblSpells = GetSpellBitmask(GetPlayerStartingLoadoutForClass(player._pClass).skill);
+	player._pAblSpells = GetSpellBitmask(GetPlayerStartingLoadoutForClass(player.heroClass).skill);
 
 	player._pInvincible = false;
 
@@ -2607,7 +2607,7 @@ void StartPlrHit(Player &player, int dam, bool forcehit)
 	player.Say(HeroSpeech::ArghClang);
 
 	RedrawComponent(PanelDrawComponent::Health);
-	if (player._pClass == HeroClass::Barbarian) {
+	if (player.heroClass == HeroClass::Barbarian) {
 		if (dam >> 6 < player.getCharacterLevel() + player.getCharacterLevel() / 4 && !forcehit) {
 			return;
 		}
@@ -2709,7 +2709,7 @@ StartPlayerKill(Player &player, DeathReason deathReason)
 				InitializeItem(ear, IDI_EAR);
 				CopyUtf8(ear._iName, fmt::format(fmt::runtime("Ear of {:s}"), player._pName), sizeof(ear._iName));
 				CopyUtf8(ear._iIName, player._pName, sizeof(ear._iIName));
-				switch (player._pClass) {
+				switch (player.heroClass) {
 				case HeroClass::Sorcerer:
 					ear._iCurs = ICURS_EAR_SORCERER;
 					break;

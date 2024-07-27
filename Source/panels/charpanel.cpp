@@ -85,7 +85,7 @@ UiFlags GetMaxHealthColor()
 std::pair<int, int> GetDamage()
 {
 	int damageMod = InspectPlayer->_pIBonusDamMod;
-	if (InspectPlayer->InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Bow && InspectPlayer->_pClass != HeroClass::Rogue) {
+	if (InspectPlayer->InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Bow && InspectPlayer->heroClass != HeroClass::Rogue) {
 		damageMod += InspectPlayer->_pDamageMod / 2;
 	} else {
 		damageMod += InspectPlayer->_pDamageMod;

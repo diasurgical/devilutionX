@@ -267,7 +267,7 @@ void sound_init()
 		if (gbIsHellfire)
 			mask |= sfx_MONK;
 	} else {
-		switch (MyPlayer->_pClass) {
+		switch (MyPlayer->heroClass) {
 		case HeroClass::Warrior:
 		case HeroClass::Barbarian:
 			mask |= sfx_WARRIOR;

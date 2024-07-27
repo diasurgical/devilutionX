@@ -183,7 +183,7 @@ void Game2UiPlayer(const Player &player, _uiheroinfo *heroinfo, bool bHasSaveFil
 {
 	CopyUtf8(heroinfo->name, player._pName, sizeof(heroinfo->name));
 	heroinfo->level = player.getCharacterLevel();
-	heroinfo->heroclass = player._pClass;
+	heroinfo->heroclass = player.heroClass;
 	heroinfo->strength = player._pStrength;
 	heroinfo->magic = player._pMagic;
 	heroinfo->dexterity = player._pDexterity;

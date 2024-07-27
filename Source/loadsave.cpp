@@ -430,7 +430,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	player._pLvlChanging = file.NextBool8();
 
 	file.NextBytes(player._pName, PlayerNameLength);
-	player._pClass = static_cast<HeroClass>(file.NextLE<int8_t>());
+	player.heroClass = static_cast<HeroClass>(file.NextLE<int8_t>());
 	file.Skip(3); // Alignment
 	player._pStrength = file.NextLE<int32_t>();
 	player._pBaseStr = file.NextLE<int32_t>();
@@ -1253,7 +1253,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.WriteLE<uint8_t>(player._pLvlChanging ? 1 : 0);
 
 	file.WriteBytes(player._pName, PlayerNameLength);
-	file.WriteLE<int8_t>(static_cast<int8_t>(player._pClass));
+	file.WriteLE<int8_t>(static_cast<int8_t>(player.heroClass));
 	file.Skip(3); // Alignment
 	file.WriteLE<int32_t>(player._pStrength);
 	file.WriteLE<int32_t>(player._pBaseStr);

@@ -62,7 +62,7 @@ R 8 _pInvincible
 R 8 _pLightRad
 R 8 _pLvlChanging
 R 256 _pName
-R 8 _pClass
+R 8 heroClass
 R 24 alignment
 R 32 _pStrength
 R 32 _pBaseStr

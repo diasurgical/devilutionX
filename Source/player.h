@@ -303,7 +303,7 @@ struct Player {
 	bool plrIsOnSetLevel;
 	ActorPosition position;
 	Direction _pdir; // Direction faced by player (direction enum)
-	HeroClass _pClass;
+	HeroClass heroClass; // _pClass
 
 private:
 	uint8_t _pLevel = 1; // Use get/setCharacterLevel to ensure this attribute stays within the accepted range
@@ -370,17 +370,17 @@ public:
 	 */
 	[[nodiscard]] const ClassAttributes &getClassAttributes() const
 	{
-		return GetClassAttributes(_pClass);
+		return GetClassAttributes(heroClass);
 	}
 
 	[[nodiscard]] const PlayerCombatData &getPlayerCombatData() const
 	{
-		return GetPlayerCombatDataForClass(_pClass);
+		return GetPlayerCombatDataForClass(heroClass);
 	}
 
 	[[nodiscard]] const PlayerData &getPlayerData() const
 	{
-		return GetPlayerDataForClass(_pClass);
+		return GetPlayerDataForClass(heroClass);
 	}
 
 	/**
@@ -407,7 +407,7 @@ public:
 
 	bool CanCleave()
 	{
-		switch (_pClass) {
+		switch (heroClass) {
 		case HeroClass::Warrior:
 		case HeroClass::Rogue:
 		case HeroClass::Sorcerer:
@@ -557,7 +557,7 @@ public:
 	 */
 	item_equip_type GetItemLocation(const Item &item) const
 	{
-		if (_pClass == HeroClass::Barbarian && item._iLoc == ILOC_TWOHAND && IsAnyOf(item._itype, ItemType::Sword, ItemType::Mace))
+		if (heroClass == HeroClass::Barbarian && item._iLoc == ILOC_TWOHAND && IsAnyOf(item._itype, ItemType::Sword, ItemType::Mace))
 			return ILOC_ONEHAND;
 		return item._iLoc;
 	}
@@ -664,7 +664,7 @@ public:
 				else
 					tmac -= tmac / 4;
 			}
-			if (isMelee && _pClass == HeroClass::Barbarian) {
+			if (isMelee && heroClass == HeroClass::Barbarian) {
 				tmac -= monsterArmor / 8;
 			}
 		}
