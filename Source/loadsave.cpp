@@ -594,7 +594,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	// Omit pointer _pBData
 	// Omit pointer pReserved
 
-	// Ensure plrIsOnSetLevel and plrlevel is correctly initialized, cause in vanilla sometimes plrlevel is not updated to setlvlnum
+	// Ensure plrIsOnSetLevel and dungeonLevel is correctly initialized, cause in vanilla sometimes dungeonLevel is not updated to setlvlnum
 	if (setlevel)
 		player.setLevel(setlvlnum);
 	else
@@ -1171,7 +1171,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.WriteLE<int32_t>(player.destParam2);
 	file.WriteLE<int32_t>(static_cast<int32_t>(player.destParam3));
 	file.WriteLE<int32_t>(player.destParam4);
-	file.WriteLE<uint32_t>(player.plrlevel);
+	file.WriteLE<uint32_t>(player.dungeonLevel);
 	file.WriteLE<int32_t>(player.position.tile.x);
 	file.WriteLE<int32_t>(player.position.tile.y);
 	file.WriteLE<int32_t>(player.position.future.x);

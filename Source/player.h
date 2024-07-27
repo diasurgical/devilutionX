@@ -299,7 +299,7 @@ struct Player {
 	int8_t _pBFrames;
 	int8_t InvGrid[InventoryGridCells];
 
-	uint8_t plrlevel;
+	uint8_t dungeonLevel; // plrlevel
 	bool plrIsOnSetLevel;
 	ActorPosition position;
 	Direction _pdir; // Direction faced by player (direction enum)
@@ -856,26 +856,26 @@ public:
 	/** @brief Checks if the player is on the corresponding level. */
 	bool isOnLevel(uint8_t level) const
 	{
-		return !this->plrIsOnSetLevel && this->plrlevel == level;
+		return !this->plrIsOnSetLevel && this->dungeonLevel == level;
 	}
 	/** @brief Checks if the player is on the corresponding level. */
 	bool isOnLevel(_setlevels level) const
 	{
-		return this->plrIsOnSetLevel && this->plrlevel == static_cast<uint8_t>(level);
+		return this->plrIsOnSetLevel && this->dungeonLevel == static_cast<uint8_t>(level);
 	}
 	/** @brief Checks if the player is on a arena level. */
 	bool isOnArenaLevel() const
 	{
-		return plrIsOnSetLevel && IsArenaLevel(static_cast<_setlevels>(plrlevel));
+		return plrIsOnSetLevel && IsArenaLevel(static_cast<_setlevels>(dungeonLevel));
 	}
 	void setLevel(uint8_t level)
 	{
-		this->plrlevel = level;
+		this->dungeonLevel = level;
 		this->plrIsOnSetLevel = false;
 	}
 	void setLevel(_setlevels level)
 	{
-		this->plrlevel = static_cast<uint8_t>(level);
+		this->dungeonLevel = static_cast<uint8_t>(level);
 		this->plrIsOnSetLevel = true;
 	}
 

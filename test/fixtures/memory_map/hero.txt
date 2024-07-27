@@ -3,7 +3,7 @@ R 32 dwHighDateTime
 R 8 destAction
 R 8 destParam1
 R 8 destParam2
-R 8 plrlevel
+R 8 dungeonLevel
 R 8 px
 R 8 py
 R 8 targx

@@ -252,7 +252,7 @@ void PackPlayer(PlayerPack &packed, const Player &player)
 	packed.destAction = player.destAction;
 	packed.destParam1 = player.destParam1;
 	packed.destParam2 = player.destParam2;
-	packed.plrlevel = player.plrlevel;
+	packed.dungeonLevel = player.dungeonLevel;
 	packed.px = player.position.tile.x;
 	packed.py = player.position.tile.y;
 	if (gbVanilla) {
@@ -316,7 +316,7 @@ void PackNetItem(const Item &item, ItemNetPack &packedItem)
 
 void PackNetPlayer(PlayerNetPack &packed, const Player &player)
 {
-	packed.plrlevel = player.plrlevel;
+	packed.dungeonLevel = player.dungeonLevel;
 	packed.px = player.position.tile.x;
 	packed.py = player.position.tile.y;
 	CopyUtf8(packed.pName, player._pName, sizeof(packed.pName));
@@ -454,7 +454,7 @@ void UnPackPlayer(const PlayerPack &packed, Player &player)
 	player._pHitPoints = player._pHPBase;
 	player.position.tile = position;
 	player.position.future = position;
-	player.setLevel(std::clamp<int8_t>(packed.plrlevel, 0, NUMLEVELS));
+	player.setLevel(std::clamp<int8_t>(packed.dungeonLevel, 0, NUMLEVELS));
 
 	player._pClass = static_cast<HeroClass>(std::clamp<uint8_t>(packed.pClass, 0, enum_size<HeroClass>::value - 1));
 
@@ -566,7 +566,7 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 
 	Point position { packed.px, packed.py };
 	ValidateFields(position.x, position.y, InDungeonBounds(position));
-	ValidateField(packed.plrlevel, packed.plrlevel < NUMLEVELS);
+	ValidateField(packed.dungeonLevel, packed.dungeonLevel < NUMLEVELS);
 	ValidateField(packed.pLevel, packed.pLevel >= 1 && packed.pLevel <= player.getMaxCharacterLevel());
 
 	int32_t baseHpMax = SDL_SwapLE32(packed.pMaxHPBase);
@@ -588,7 +588,7 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 	player.setCharacterLevel(packed.pLevel);
 	player.position.tile = position;
 	player.position.future = position;
-	player.plrlevel = packed.plrlevel;
+	player.dungeonLevel = packed.dungeonLevel;
 	player.plrIsOnSetLevel = packed.isOnSetLevel != 0;
 	player._pMaxHPBase = baseHpMax;
 	player._pHPBase = baseHp;

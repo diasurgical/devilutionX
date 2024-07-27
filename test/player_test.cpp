@@ -103,7 +103,7 @@ static void AssertPlayer(Player &player)
 	ASSERT_EQ(player.position.tile.y, 0);
 	ASSERT_EQ(player.position.future.x, 0);
 	ASSERT_EQ(player.position.future.y, 0);
-	ASSERT_EQ(player.plrlevel, 0);
+	ASSERT_EQ(player.dungeonLevel, 0);
 	ASSERT_EQ(player.destAction, 0);
 	ASSERT_STREQ(player._pName, "");
 	ASSERT_EQ(player._pClass, HeroClass::Rogue);

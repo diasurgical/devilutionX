@@ -206,7 +206,7 @@ void PackPlayerTest(PlayerPack *pPack)
 	pPack->destAction = -1;
 	pPack->destParam1 = 0;
 	pPack->destParam2 = 0;
-	pPack->plrlevel = 0;
+	pPack->dungeonLevel = 0;
 	pPack->pExperience = 1583495809;
 	pPack->pLevel = 50;
 	pPack->px = 75;
@@ -269,7 +269,7 @@ void AssertPlayer(Player &player)
 	ASSERT_EQ(player.position.tile.y, 68);
 	ASSERT_EQ(player.position.future.x, 75);
 	ASSERT_EQ(player.position.future.y, 68);
-	ASSERT_EQ(player.plrlevel, 0);
+	ASSERT_EQ(player.dungeonLevel, 0);
 	ASSERT_EQ(player.destAction, -1);
 	ASSERT_STREQ(player._pName, "TestPlayer");
 	ASSERT_EQ(player._pClass, HeroClass::Rogue);

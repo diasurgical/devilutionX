@@ -1004,9 +1004,9 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_oob)
 	ASSERT_FALSE(TestNetPackValidation());
 }
 
-TEST_F(NetPackTest, UnPackNetPlayer_invalid_plrlevel)
+TEST_F(NetPackTest, UnPackNetPlayer_invalid_dungeonLevel)
 {
-	MyPlayer->plrlevel = NUMLEVELS;
+	MyPlayer->dungeonLevel = NUMLEVELS;
 	ASSERT_FALSE(TestNetPackValidation());
 }
 

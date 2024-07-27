@@ -1779,7 +1779,7 @@ size_t OnKillGolem(const TCmd *pCmd, Player &player)
 			Monster &monster = Monsters[player.getId()];
 			if (player.isOnActiveLevel())
 				M_SyncStartKill(monster, position, player);
-			delta_kill_monster(monster, position, player); // BUGFIX: should be p->wParam1, plrlevel will be incorrect if golem is killed because player changed levels
+			delta_kill_monster(monster, position, player); // BUGFIX: should be p->wParam1, dungeonLevel will be incorrect if golem is killed because player changed levels
 		}
 	} else {
 		SendPacket(player, &message, sizeof(message));
@@ -2672,7 +2672,7 @@ void DeltaSaveLevel()
 
 uint8_t GetLevelForMultiplayer(const Player &player)
 {
-	return GetLevelForMultiplayer(player.plrlevel, player.plrIsOnSetLevel);
+	return GetLevelForMultiplayer(player.dungeonLevel, player.plrIsOnSetLevel);
 }
 
 bool IsValidLevelForMultiplayer(uint8_t level)

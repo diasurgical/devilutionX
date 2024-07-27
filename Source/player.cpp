@@ -388,7 +388,7 @@ void InitLevelChange(Player &player)
 	if (&player == MyPlayer) {
 		player.occupyTile(player.position.tile, false);
 	} else {
-		player._pLvlVisited[player.plrlevel] = true;
+		player._pLvlVisited[player.dungeonLevel] = true;
 	}
 
 	ClrPlrPath(player);
@@ -2046,7 +2046,7 @@ bool Player::isLevelOwnedByLocalClient() const
 			continue;
 		if (other._pmode == PM_NEWLVL)
 			continue;
-		if (other.plrlevel != this->plrlevel)
+		if (other.dungeonLevel != this->dungeonLevel)
 			continue;
 		if (other.plrIsOnSetLevel != this->plrIsOnSetLevel)
 			continue;

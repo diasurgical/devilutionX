@@ -34,7 +34,7 @@ struct PlayerPack {
 	int8_t destAction;
 	int8_t destParam1;
 	int8_t destParam2;
-	uint8_t plrlevel;
+	uint8_t dungeonLevel;
 	uint8_t px;
 	uint8_t py;
 	uint8_t targx;
@@ -86,7 +86,7 @@ union ItemNetPack {
 };
 
 struct PlayerNetPack {
-	uint8_t plrlevel;
+	uint8_t dungeonLevel;
 	uint8_t px;
 	uint8_t py;
 	char pName[PlayerNameLength];
