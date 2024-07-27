@@ -2407,14 +2407,14 @@ void Player::_addExperience(uint32_t experience, int levelDelta)
 	const uint32_t maxExperience = GetNextExperienceThresholdForLevel(getMaxCharacterLevel());
 
 	// ensure we only add enough experience to reach the max experience cap so we don't overflow
-	experience += std::min(clampedExp, maxExperience - experience);
+	this->experience += std::min(clampedExp, maxExperience - this->experience);
 
 	if (*sgOptions.Gameplay.experienceBar) {
 		RedrawEverything();
 	}
 
 	// Increase player level if applicable
-	while (!isMaxCharacterLevel() && experience >= getNextExperienceThreshold()) {
+	while (!isMaxCharacterLevel() && this->experience >= getNextExperienceThreshold()) {
 		// NextPlrLevel increments character level which changes the next experience threshold
 		NextPlrLevel(*this);
 	}
