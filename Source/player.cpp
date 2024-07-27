@@ -1481,8 +1481,8 @@ void CheckCheatStats(Player &player)
 		player._pDexterity = 750;
 	}
 
-	if (player._pMagic > 750) {
-		player._pMagic = 750;
+	if (player.magic > 750) {
+		player.magic = 750;
 	}
 
 	if (player._pVitality > 750) {
@@ -1649,7 +1649,7 @@ int Player::GetCurrentAttributeValue(CharacterAttribute attribute) const
 	case CharacterAttribute::Dexterity:
 		return this->_pDexterity;
 	case CharacterAttribute::Magic:
-		return this->_pMagic;
+		return this->magic;
 	case CharacterAttribute::Strength:
 		return this->_pStrength;
 	case CharacterAttribute::Vitality:
@@ -2278,7 +2278,7 @@ void CreatePlayer(Player &player, HeroClass c)
 	player._pStrength = player._pBaseStr;
 
 	player._pBaseMag = attr.baseMag;
-	player._pMagic = player._pBaseMag;
+	player.magic = player._pBaseMag;
 
 	player._pBaseDex = attr.baseDex;
 	player._pDexterity = player._pBaseDex;
@@ -3295,7 +3295,7 @@ void ModifyPlrMag(Player &player, int l)
 {
 	l = std::clamp(l, 0 - player._pBaseMag, player.GetMaximumAttributeValue(CharacterAttribute::Magic) - player._pBaseMag);
 
-	player._pMagic += l;
+	player.magic += l;
 	player._pBaseMag += l;
 
 	int ms = l;

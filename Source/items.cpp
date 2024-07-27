@@ -1993,7 +1993,7 @@ void SpawnOnePremium(Item &premiumItem, int plvl, const Player &player)
 {
 	int strength = std::max(player.GetMaximumAttributeValue(CharacterAttribute::Strength), player._pStrength);
 	int dexterity = std::max(player.GetMaximumAttributeValue(CharacterAttribute::Dexterity), player._pDexterity);
-	int magic = std::max(player.GetMaximumAttributeValue(CharacterAttribute::Magic), player._pMagic);
+	int magic = std::max(player.GetMaximumAttributeValue(CharacterAttribute::Magic), player.magic);
 	strength += strength / 5;
 	dexterity += dexterity / 5;
 	magic += magic / 5;
@@ -2595,7 +2595,7 @@ void CalcPlrPrimaryStats(Player &player, int strength, int &magic, int dexterity
 	}
 
 	player._pStrength = std::max(0, strength + player._pBaseStr);
-	player._pMagic = std::max(0, magic + player._pBaseMag);
+	player.magic = std::max(0, magic + player._pBaseMag);
 	player._pDexterity = std::max(0, dexterity + player._pBaseDex);
 	player._pVitality = std::max(0, vitality + player._pBaseVit);
 }
@@ -4462,7 +4462,7 @@ void SpawnBoy(int lvl)
 	HeroClass pc = myPlayer._pClass;
 	int strength = std::max(myPlayer.GetMaximumAttributeValue(CharacterAttribute::Strength), myPlayer._pStrength);
 	int dexterity = std::max(myPlayer.GetMaximumAttributeValue(CharacterAttribute::Dexterity), myPlayer._pDexterity);
-	int magic = std::max(myPlayer.GetMaximumAttributeValue(CharacterAttribute::Magic), myPlayer._pMagic);
+	int magic = std::max(myPlayer.GetMaximumAttributeValue(CharacterAttribute::Magic), myPlayer.magic);
 	strength += strength / 5;
 	dexterity += dexterity / 5;
 	magic += magic / 5;

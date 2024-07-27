@@ -434,7 +434,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	file.Skip(3); // Alignment
 	player._pStrength = file.NextLE<int32_t>();
 	player._pBaseStr = file.NextLE<int32_t>();
-	player._pMagic = file.NextLE<int32_t>();
+	player.magic = file.NextLE<int32_t>();
 	player._pBaseMag = file.NextLE<int32_t>();
 	player._pDexterity = file.NextLE<int32_t>();
 	player._pBaseDex = file.NextLE<int32_t>();
@@ -1257,7 +1257,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.Skip(3); // Alignment
 	file.WriteLE<int32_t>(player._pStrength);
 	file.WriteLE<int32_t>(player._pBaseStr);
-	file.WriteLE<int32_t>(player._pMagic);
+	file.WriteLE<int32_t>(player.magic);
 	file.WriteLE<int32_t>(player._pBaseMag);
 	file.WriteLE<int32_t>(player._pDexterity);
 	file.WriteLE<int32_t>(player._pBaseDex);

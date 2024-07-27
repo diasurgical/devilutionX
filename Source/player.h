@@ -228,7 +228,7 @@ struct Player {
 	int _pNumInv;
 	int _pStrength;
 	int _pBaseStr;
-	int _pMagic;
+	int magic; // _pMagic
 	int _pBaseMag;
 	int _pDexterity;
 	int _pBaseDex;
@@ -401,7 +401,7 @@ public:
 	bool CanUseItem(const Item &item) const
 	{
 		return _pStrength >= item._iMinStr
-		    && _pMagic >= item._iMinMag
+		    && magic >= item._iMinMag
 		    && _pDexterity >= item._iMinDex;
 	}
 
@@ -612,7 +612,7 @@ public:
 	 */
 	int GetMagicToHit() const
 	{
-		return _pMagic + getPlayerCombatData().baseMagicToHit;
+		return magic + getPlayerCombatData().baseMagicToHit;
 	}
 
 	/**

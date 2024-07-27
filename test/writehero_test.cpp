@@ -276,7 +276,7 @@ void AssertPlayer(Player &player)
 	ASSERT_EQ(player._pBaseStr, 55);
 	ASSERT_EQ(player._pStrength, 124);
 	ASSERT_EQ(player._pBaseMag, 70);
-	ASSERT_EQ(player._pMagic, 80);
+	ASSERT_EQ(player.magic, 80);
 	ASSERT_EQ(player._pBaseDex, 250);
 	ASSERT_EQ(player._pDexterity, 281);
 	ASSERT_EQ(player._pBaseVit, 80);

@@ -1063,7 +1063,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_strength)
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_magic)
 {
-	MyPlayer->_pMagic++;
+	MyPlayer->magic++;
 	ASSERT_FALSE(TestNetPackValidation());
 }
 

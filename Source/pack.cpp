@@ -357,7 +357,7 @@ void PackNetPlayer(PlayerNetPack &packed, const Player &player)
 	packed.isOnSetLevel = player.plrIsOnSetLevel;
 
 	packed.pStrength = SDL_SwapLE32(player._pStrength);
-	packed.pMagic = SDL_SwapLE32(player._pMagic);
+	packed.pMagic = SDL_SwapLE32(player.magic);
 	packed.pDexterity = SDL_SwapLE32(player._pDexterity);
 	packed.pVitality = SDL_SwapLE32(player._pVitality);
 	packed.pHitPoints = SDL_SwapLE32(player._pHitPoints);
@@ -468,7 +468,7 @@ void UnPackPlayer(const PlayerPack &packed, Player &player)
 	player._pBaseStr = std::min<uint8_t>(packed.pBaseStr, player.GetMaximumAttributeValue(CharacterAttribute::Strength));
 	player._pStrength = player._pBaseStr;
 	player._pBaseMag = std::min<uint8_t>(packed.pBaseMag, player.GetMaximumAttributeValue(CharacterAttribute::Magic));
-	player._pMagic = player._pBaseMag;
+	player.magic = player._pBaseMag;
 	player._pBaseDex = std::min<uint8_t>(packed.pBaseDex, player.GetMaximumAttributeValue(CharacterAttribute::Dexterity));
 	player._pDexterity = player._pBaseDex;
 	player._pBaseVit = std::min<uint8_t>(packed.pBaseVit, player.GetMaximumAttributeValue(CharacterAttribute::Vitality));
@@ -603,7 +603,7 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 	player._pBaseStr = packed.pBaseStr;
 	player._pStrength = player._pBaseStr;
 	player._pBaseMag = packed.pBaseMag;
-	player._pMagic = player._pBaseMag;
+	player.magic = player._pBaseMag;
 	player._pBaseDex = packed.pBaseDex;
 	player._pDexterity = player._pBaseDex;
 	player._pBaseVit = packed.pBaseVit;
@@ -676,7 +676,7 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 	player._pGold = CalculateGold(player);
 
 	ValidateFields(player._pStrength, SDL_SwapLE32(packed.pStrength), player._pStrength == SDL_SwapLE32(packed.pStrength));
-	ValidateFields(player._pMagic, SDL_SwapLE32(packed.pMagic), player._pMagic == SDL_SwapLE32(packed.pMagic));
+	ValidateFields(player.magic, SDL_SwapLE32(packed.pMagic), player.magic == SDL_SwapLE32(packed.pMagic));
 	ValidateFields(player._pDexterity, SDL_SwapLE32(packed.pDexterity), player._pDexterity == SDL_SwapLE32(packed.pDexterity));
 	ValidateFields(player._pVitality, SDL_SwapLE32(packed.pVitality), player._pVitality == SDL_SwapLE32(packed.pVitality));
 	ValidateFields(player._pHitPoints, SDL_SwapLE32(packed.pHitPoints), player._pHitPoints == SDL_SwapLE32(packed.pHitPoints));

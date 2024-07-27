@@ -793,7 +793,7 @@ DamageRange GetDamageAmt(SpellID spell, int spellLevel)
 
 	switch (spell) {
 	case SpellID::Firebolt: {
-		const int min = (myPlayer._pMagic / 8) + spellLevel + 1;
+		const int min = (myPlayer.magic / 8) + spellLevel + 1;
 		return { min, min + 9 };
 	}
 	case SpellID::Healing:
@@ -886,11 +886,11 @@ DamageRange GetDamageAmt(SpellID spell, int spellLevel)
 			ScaleSpellEffect(2 * myPlayer.getCharacterLevel() + 40, spellLevel)
 		};
 	case SpellID::ChargedBolt:
-		return { 1, 1 + (myPlayer._pMagic / 4) };
+		return { 1, 1 + (myPlayer.magic / 4) };
 	case SpellID::HolyBolt:
 		return { myPlayer.getCharacterLevel() + 9, myPlayer.getCharacterLevel() + 18 };
 	case SpellID::BloodStar: {
-		const int min = (myPlayer._pMagic / 2) + 3 * spellLevel - (myPlayer._pMagic / 8);
+		const int min = (myPlayer.magic / 2) + 3 * spellLevel - (myPlayer.magic / 8);
 		return { min, min };
 	}
 	default:
@@ -1801,7 +1801,7 @@ void AddFirebolt(Missile &missile, AddMissileParameter &parameter)
 		switch (missile.sourceType()) {
 		case MissileSource::Player: {
 			const Player &player = *missile.sourcePlayer();
-			missile._midam = GenerateRnd(10) + (player._pMagic / 8) + missile._mispllvl + 1;
+			missile._midam = GenerateRnd(10) + (player.magic / 8) + missile._mispllvl + 1;
 		} break;
 
 		case MissileSource::Monster:
@@ -2222,7 +2222,7 @@ void AddGenericMagicMissile(Missile &missile, AddMissileParameter &parameter)
 		switch (missile.sourceType()) {
 		case MissileSource::Player: {
 			const Player &player = *missile.sourcePlayer();
-			missile._midam = 3 * missile._mispllvl - (player._pMagic / 8) + (player._pMagic / 2);
+			missile._midam = 3 * missile._mispllvl - (player.magic / 8) + (player.magic / 2);
 			break;
 		}
 		case MissileSource::Monster:
@@ -2605,7 +2605,7 @@ void AddChargedBolt(Missile &missile, AddMissileParameter &parameter)
 {
 	WorldTilePosition dst = parameter.dst;
 	missile._mirnd = GenerateRnd(15) + 1;
-	missile._midam = (missile._micaster == TARGET_MONSTERS) ? (GenerateRnd(Players[missile._misource]._pMagic / 4) + 1) : 15;
+	missile._midam = (missile._micaster == TARGET_MONSTERS) ? (GenerateRnd(Players[missile._misource].magic / 4) + 1) : 15;
 
 	if (missile.position.start == dst) {
 		dst += parameter.midir;
