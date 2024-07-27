@@ -430,7 +430,7 @@ TEST_F(PackTest, UnPackItem_diablo)
 	gbIsSpawn = false;
 
 	MyPlayer->_pMaxManaBase = 125 << 6;
-	MyPlayer->_pMaxHPBase = 125 << 6;
+	MyPlayer->baseMaxLife = 125 << 6;
 
 	for (size_t i = 0; i < sizeof(PackedDiabloItems) / sizeof(*PackedDiabloItems); i++) {
 		const ItemPack packed = SwappedLE(PackedDiabloItems[i]);
@@ -503,7 +503,7 @@ TEST_F(PackTest, UnPackItem_spawn)
 	gbIsSpawn = true;
 
 	MyPlayer->_pMaxManaBase = 125 << 6;
-	MyPlayer->_pMaxHPBase = 125 << 6;
+	MyPlayer->baseMaxLife = 125 << 6;
 
 	for (size_t i = 0; i < sizeof(PackedSpawnItems) / sizeof(*PackedSpawnItems); i++) {
 		const ItemPack packed = SwappedLE(PackedSpawnItems[i]);
@@ -548,7 +548,7 @@ TEST_F(PackTest, UnPackItem_diablo_multiplayer)
 	gbIsSpawn = false;
 
 	MyPlayer->_pMaxManaBase = 125 << 6;
-	MyPlayer->_pMaxHPBase = 125 << 6;
+	MyPlayer->baseMaxLife = 125 << 6;
 
 	for (size_t i = 0; i < sizeof(PackedDiabloMPItems) / sizeof(*PackedDiabloMPItems); i++) {
 		const ItemPack packed = SwappedLE(PackedDiabloMPItems[i]);
@@ -767,7 +767,7 @@ TEST_F(PackTest, UnPackItem_hellfire)
 	gbIsSpawn = false;
 
 	MyPlayer->_pMaxManaBase = 125 << 6;
-	MyPlayer->_pMaxHPBase = 125 << 6;
+	MyPlayer->baseMaxLife = 125 << 6;
 
 	for (size_t i = 0; i < sizeof(PackedHellfireItems) / sizeof(*PackedHellfireItems); i++) {
 		const ItemPack packed = SwappedLE(PackedHellfireItems[i]);
@@ -1015,7 +1015,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_hpBase)
 	MyPlayer->_pHPBase = -64;
 	ASSERT_FALSE(TestNetPackValidation());
 
-	MyPlayer->_pHPBase = MyPlayer->_pMaxHPBase + 64;
+	MyPlayer->_pHPBase = MyPlayer->baseMaxLife + 64;
 	ASSERT_FALSE(TestNetPackValidation());
 }
 
@@ -1288,7 +1288,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_iLMaxDam)
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_maxHPBase)
 {
-	MyPlayer->_pMaxHPBase++;
+	MyPlayer->baseMaxLife++;
 	ASSERT_FALSE(TestNetPackValidation());
 }
 

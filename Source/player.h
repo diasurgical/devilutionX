@@ -237,7 +237,7 @@ struct Player {
 	int _pStatPts;
 	int _pDamageMod;
 	int _pHPBase;
-	int _pMaxHPBase;
+	int baseMaxLife; // _pMaxHPBase
 	int _pHitPoints;
 	int _pMaxHP;
 	int _pHPPer;
@@ -721,7 +721,7 @@ public:
 	void RestoreFullLife()
 	{
 		_pHitPoints = _pMaxHP;
-		_pHPBase = _pMaxHPBase;
+		_pHPBase = baseMaxLife;
 	}
 
 	/**

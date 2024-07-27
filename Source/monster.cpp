@@ -1148,14 +1148,14 @@ void MonsterAttackPlayer(Monster &monster, Player &player, int hit, int minDam, 
 	}
 	if (monster.type().type == MT_YZOMBIE && &player == MyPlayer) {
 		if (player._pMaxHP > 64) {
-			if (player._pMaxHPBase > 64) {
+			if (player.baseMaxLife > 64) {
 				player._pMaxHP -= 64;
 				if (player._pHitPoints > player._pMaxHP) {
 					player._pHitPoints = player._pMaxHP;
 				}
-				player._pMaxHPBase -= 64;
-				if (player._pHPBase > player._pMaxHPBase) {
-					player._pHPBase = player._pMaxHPBase;
+				player.baseMaxLife -= 64;
+				if (player._pHPBase > player.baseMaxLife) {
+					player._pHPBase = player.baseMaxLife;
 				}
 			}
 		}

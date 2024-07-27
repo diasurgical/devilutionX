@@ -253,12 +253,12 @@ void DoResurrect(Player &player, Player &target)
 	SyncInitPlrPos(target);
 
 	int hp = 10 << 6;
-	if (target._pMaxHPBase < (10 << 6)) {
-		hp = target._pMaxHPBase;
+	if (target.baseMaxLife < (10 << 6)) {
+		hp = target.baseMaxLife;
 	}
 	SetPlayerHitPoints(target, hp);
 
-	target._pHPBase = target._pHitPoints + (target._pMaxHPBase - target._pMaxHP); // CODEFIX: does the same stuff as SetPlayerHitPoints above, can be removed
+	target._pHPBase = target._pHitPoints + (target.baseMaxLife - target._pMaxHP); // CODEFIX: does the same stuff as SetPlayerHitPoints above, can be removed
 	target._pMana = 0;
 	target._pManaBase = target._pMana + (target._pMaxManaBase - target._pMaxMana);
 
@@ -294,7 +294,7 @@ void DoHealOther(const Player &caster, Player &target)
 	}
 
 	target._pHitPoints = std::min(target._pHitPoints + hp, target._pMaxHP);
-	target._pHPBase = std::min(target._pHPBase + hp, target._pMaxHPBase);
+	target._pHPBase = std::min(target._pHPBase + hp, target.baseMaxLife);
 
 	if (&target == MyPlayer) {
 		RedrawComponent(PanelDrawComponent::Health);

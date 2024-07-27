@@ -2627,7 +2627,7 @@ void OperateShrineDivine(Player &player, Point spawnPosition)
 	player._pMana = player._pMaxMana;
 	player._pManaBase = player._pMaxManaBase;
 	player._pHitPoints = player._pMaxHP;
-	player._pHPBase = player._pMaxHPBase;
+	player._pHPBase = player.baseMaxLife;
 
 	RedrawEverything();
 
@@ -2673,7 +2673,7 @@ void OperateShrineSpooky(const Player &player)
 	Player &myPlayer = *MyPlayer;
 
 	myPlayer._pHitPoints = myPlayer._pMaxHP;
-	myPlayer._pHPBase = myPlayer._pMaxHPBase;
+	myPlayer._pHPBase = myPlayer.baseMaxLife;
 	myPlayer._pMana = myPlayer._pMaxMana;
 	myPlayer._pManaBase = myPlayer._pMaxManaBase;
 
@@ -3226,7 +3226,7 @@ bool OperateFountains(Player &player, Object &fountain)
 			player._pHPBase += 64;
 			if (player._pHitPoints > player._pMaxHP) {
 				player._pHitPoints = player._pMaxHP;
-				player._pHPBase = player._pMaxHPBase;
+				player._pHPBase = player.baseMaxLife;
 			}
 			applied = true;
 		} else

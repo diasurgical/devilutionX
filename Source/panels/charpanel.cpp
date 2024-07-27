@@ -79,7 +79,7 @@ UiFlags GetMaxManaColor()
 
 UiFlags GetMaxHealthColor()
 {
-	return InspectPlayer->_pMaxHP > InspectPlayer->_pMaxHPBase ? UiFlags::ColorBlue : UiFlags::ColorWhite;
+	return InspectPlayer->_pMaxHP > InspectPlayer->baseMaxLife ? UiFlags::ColorBlue : UiFlags::ColorWhite;
 }
 
 std::pair<int, int> GetDamage()

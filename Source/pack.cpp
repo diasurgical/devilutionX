@@ -270,7 +270,7 @@ void PackPlayer(PlayerPack &packed, const Player &player)
 	packed.pExperience = SDL_SwapLE32(player._pExperience);
 	packed.pGold = SDL_SwapLE32(player._pGold);
 	packed.pHPBase = SDL_SwapLE32(player._pHPBase);
-	packed.pMaxHPBase = SDL_SwapLE32(player._pMaxHPBase);
+	packed.pMaxHPBase = SDL_SwapLE32(player.baseMaxLife);
 	packed.pManaBase = SDL_SwapLE32(player._pManaBase);
 	packed.pMaxManaBase = SDL_SwapLE32(player._pMaxManaBase);
 	packed.pMemSpells = SDL_SwapLE64(player._pMemSpells);
@@ -329,7 +329,7 @@ void PackNetPlayer(PlayerNetPack &packed, const Player &player)
 	packed.pStatPts = player._pStatPts;
 	packed.pExperience = SDL_SwapLE32(player._pExperience);
 	packed.pHPBase = SDL_SwapLE32(player._pHPBase);
-	packed.pMaxHPBase = SDL_SwapLE32(player._pMaxHPBase);
+	packed.pMaxHPBase = SDL_SwapLE32(player.baseMaxLife);
 	packed.pManaBase = SDL_SwapLE32(player._pManaBase);
 	packed.pMaxManaBase = SDL_SwapLE32(player._pMaxManaBase);
 	packed.pMemSpells = SDL_SwapLE64(player._pMemSpells);
@@ -447,10 +447,10 @@ void UnPackPlayer(const PlayerPack &packed, Player &player)
 
 	player = {};
 	player.setCharacterLevel(packed.pLevel);
-	player._pMaxHPBase = SDL_SwapLE32(packed.pMaxHPBase);
+	player.baseMaxLife = SDL_SwapLE32(packed.pMaxHPBase);
 	player._pHPBase = SDL_SwapLE32(packed.pHPBase);
-	player._pHPBase = std::clamp<int32_t>(player._pHPBase, 0, player._pMaxHPBase);
-	player._pMaxHP = player._pMaxHPBase;
+	player._pHPBase = std::clamp<int32_t>(player._pHPBase, 0, player.baseMaxLife);
+	player._pMaxHP = player.baseMaxLife;
 	player._pHitPoints = player._pHPBase;
 	player.position.tile = position;
 	player.position.future = position;
@@ -590,7 +590,7 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 	player.position.future = position;
 	player.plrlevel = packed.plrlevel;
 	player.plrIsOnSetLevel = packed.isOnSetLevel != 0;
-	player._pMaxHPBase = baseHpMax;
+	player.baseMaxLife = baseHpMax;
 	player._pHPBase = baseHp;
 	player._pMaxHP = baseHpMax;
 	player._pHitPoints = baseHp;
@@ -698,7 +698,7 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 	ValidateFields(player._pIFMaxDam, SDL_SwapLE32(packed.pIFMaxDam), player._pIFMaxDam == SDL_SwapLE32(packed.pIFMaxDam));
 	ValidateFields(player._pILMinDam, SDL_SwapLE32(packed.pILMinDam), player._pILMinDam == SDL_SwapLE32(packed.pILMinDam));
 	ValidateFields(player._pILMaxDam, SDL_SwapLE32(packed.pILMaxDam), player._pILMaxDam == SDL_SwapLE32(packed.pILMaxDam));
-	ValidateFields(player._pMaxHPBase, player.calculateBaseLife(), player._pMaxHPBase <= player.calculateBaseLife());
+	ValidateFields(player.baseMaxLife, player.calculateBaseLife(), player.baseMaxLife <= player.calculateBaseLife());
 	ValidateFields(player._pMaxManaBase, player.calculateBaseMana(), player._pMaxManaBase <= player.calculateBaseMana());
 
 	return true;
