@@ -84,7 +84,7 @@ R 32 _pManaBase
 R 32 _pMaxManaBase
 R 32 _pMana
 R 32 _pMaxMana
-R 32 _pManaPer
+R 32 manaPercentage
 R 8 _pLevel
 R 8 _pMaxLvl
 R 16 alignment

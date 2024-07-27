@@ -245,7 +245,7 @@ struct Player {
 	int _pMaxManaBase;
 	int _pMana;
 	int _pMaxMana;
-	int _pManaPer;
+	int manaPercentage; // _pManaPer
 	int _pIMinDam;
 	int _pIMaxDam;
 	int _pIAC;
@@ -698,12 +698,12 @@ public:
 	int UpdateManaPercentage()
 	{
 		if (_pMaxMana <= 0) {
-			_pManaPer = 0;
+			manaPercentage = 0;
 		} else {
-			_pManaPer = std::clamp(_pMana * 80 / _pMaxMana, 0, 80);
+			manaPercentage = std::clamp(_pMana * 80 / _pMaxMana, 0, 80);
 		}
 
-		return _pManaPer;
+		return manaPercentage;
 	}
 
 	/**

@@ -808,7 +808,7 @@ void DrawLifeFlaskUpper(const Surface &out)
 void DrawManaFlaskUpper(const Surface &out)
 {
 	constexpr int ManaFlaskUpperOffset = 475;
-	DrawFlaskUpper(out, *pManaBuff, ManaFlaskUpperOffset, MyPlayer->_pManaPer);
+	DrawFlaskUpper(out, *pManaBuff, ManaFlaskUpperOffset, MyPlayer->manaPercentage);
 }
 
 void DrawLifeFlaskLower(const Surface &out)
@@ -820,7 +820,7 @@ void DrawLifeFlaskLower(const Surface &out)
 void DrawManaFlaskLower(const Surface &out)
 {
 	constexpr int ManaFlaskLowerOffeset = 464;
-	DrawFlaskLower(out, *pManaBuff, ManaFlaskLowerOffeset, MyPlayer->_pManaPer);
+	DrawFlaskLower(out, *pManaBuff, ManaFlaskLowerOffeset, MyPlayer->manaPercentage);
 }
 
 void DrawFlaskValues(const Surface &out, Point pos, int currValue, int maxValue)
