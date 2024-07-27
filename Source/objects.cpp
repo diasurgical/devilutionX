@@ -1872,9 +1872,9 @@ void OperateBook(Player &player, Object &book, bool sendmsg)
 
 	if (setlvlnum == SL_BONECHAMB) {
 		if (sendmsg) {
-			uint8_t newSpellLevel = player._pSplLvl[static_cast<int8_t>(SpellID::Guardian)] + 1;
+			uint8_t newSpellLevel = player.spellLevel[static_cast<int8_t>(SpellID::Guardian)] + 1;
 			if (newSpellLevel <= MaxSpellLevel) {
-				player._pSplLvl[static_cast<int8_t>(SpellID::Guardian)] = newSpellLevel;
+				player.spellLevel[static_cast<int8_t>(SpellID::Guardian)] = newSpellLevel;
 				NetSendCmdParam2(true, CMD_CHANGE_SPELL_LEVEL, static_cast<uint16_t>(SpellID::Guardian), newSpellLevel);
 			}
 
@@ -2448,17 +2448,17 @@ void OperateShrineEnchanted(DiabloGenerator &rng, Player &player)
 
 		spell = 1;
 		for (uint8_t j = static_cast<uint8_t>(SpellID::Firebolt); j < maxSpells; j++) {
-			if ((player._pMemSpells & spell) != 0 && player._pSplLvl[j] < MaxSpellLevel && j != spellToReduce) {
-				uint8_t newSpellLevel = static_cast<uint8_t>(player._pSplLvl[j] + 1);
-				player._pSplLvl[j] = newSpellLevel;
+			if ((player._pMemSpells & spell) != 0 && player.spellLevel[j] < MaxSpellLevel && j != spellToReduce) {
+				uint8_t newSpellLevel = static_cast<uint8_t>(player.spellLevel[j] + 1);
+				player.spellLevel[j] = newSpellLevel;
 				NetSendCmdParam2(true, CMD_CHANGE_SPELL_LEVEL, j, newSpellLevel);
 			}
 			spell *= 2;
 		}
 
-		if (player._pSplLvl[spellToReduce] > 0) {
-			uint8_t newSpellLevel = static_cast<uint8_t>(player._pSplLvl[spellToReduce] - 1);
-			player._pSplLvl[spellToReduce] = newSpellLevel;
+		if (player.spellLevel[spellToReduce] > 0) {
+			uint8_t newSpellLevel = static_cast<uint8_t>(player.spellLevel[spellToReduce] - 1);
+			player.spellLevel[spellToReduce] = newSpellLevel;
 			NetSendCmdParam2(true, CMD_CHANGE_SPELL_LEVEL, spellToReduce, newSpellLevel);
 		}
 
@@ -2499,10 +2499,10 @@ void OperateShrineCostOfWisdom(Player &player, SpellID spellId, diablo_message m
 
 	player._pMemSpells |= GetSpellBitmask(spellId);
 
-	uint8_t curSpellLevel = player._pSplLvl[static_cast<int8_t>(spellId)];
+	uint8_t curSpellLevel = player.spellLevel[static_cast<int8_t>(spellId)];
 	if (curSpellLevel < MaxSpellLevel) {
 		uint8_t newSpellLevel = std::min(static_cast<uint8_t>(curSpellLevel + 2), MaxSpellLevel);
-		player._pSplLvl[static_cast<int8_t>(spellId)] = newSpellLevel;
+		player.spellLevel[static_cast<int8_t>(spellId)] = newSpellLevel;
 		NetSendCmdParam2(true, CMD_CHANGE_SPELL_LEVEL, static_cast<uint16_t>(spellId), newSpellLevel);
 	}
 

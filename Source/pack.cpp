@@ -276,9 +276,9 @@ void PackPlayer(PlayerPack &packed, const Player &player)
 	packed.pMemSpells = SDL_SwapLE64(player._pMemSpells);
 
 	for (int i = 0; i < 37; i++) // Should be MAX_SPELLS but set to 37 to make save games compatible
-		packed.pSplLvl[i] = player._pSplLvl[i];
+		packed.pSplLvl[i] = player.spellLevel[i];
 	for (int i = 37; i < 47; i++)
-		packed.pSplLvl2[i - 37] = player._pSplLvl[i];
+		packed.pSplLvl2[i - 37] = player.spellLevel[i];
 
 	for (int i = 0; i < NUM_INVLOC; i++)
 		PackItem(packed.InvBody[i], player.InvBody[i], gbIsHellfire);
@@ -335,7 +335,7 @@ void PackNetPlayer(PlayerNetPack &packed, const Player &player)
 	packed.pMemSpells = SDL_SwapLE64(player._pMemSpells);
 
 	for (int i = 0; i < MAX_SPELLS; i++)
-		packed.pSplLvl[i] = player._pSplLvl[i];
+		packed.pSplLvl[i] = player.spellLevel[i];
 
 	for (int i = 0; i < NUM_INVLOC; i++)
 		PackNetItem(player.InvBody[i], packed.InvBody[i]);
@@ -489,22 +489,22 @@ void UnPackPlayer(const PlayerPack &packed, Player &player)
 	for (int i = 0; i < 37; i++) { // Should be MAX_SPELLS but set to 36 to make save games compatible
 		auto spl = static_cast<SpellID>(i);
 		if (GetSpellData(spl).sBookLvl != -1)
-			player._pSplLvl[i] = packed.pSplLvl[i];
+			player.spellLevel[i] = packed.pSplLvl[i];
 		else
-			player._pSplLvl[i] = 0;
+			player.spellLevel[i] = 0;
 	}
 	// Only read spell levels for learnable spells (Hellfire)
 	for (int i = 37; i < 47; i++) {
 		auto spl = static_cast<SpellID>(i);
 		if (GetSpellData(spl).sBookLvl != -1)
-			player._pSplLvl[i] = packed.pSplLvl2[i - 37];
+			player.spellLevel[i] = packed.pSplLvl2[i - 37];
 		else
-			player._pSplLvl[i] = 0;
+			player.spellLevel[i] = 0;
 	}
 	// These spells are unavailable in Diablo as learnable spells
 	if (!gbIsHellfire) {
-		player._pSplLvl[static_cast<uint8_t>(SpellID::Apocalypse)] = 0;
-		player._pSplLvl[static_cast<uint8_t>(SpellID::Nova)] = 0;
+		player.spellLevel[static_cast<uint8_t>(SpellID::Apocalypse)] = 0;
+		player.spellLevel[static_cast<uint8_t>(SpellID::Nova)] = 0;
 	}
 
 	bool isHellfire = packed.bIsHellfire != 0;
@@ -620,7 +620,7 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 	player.friendlyMode = packed.friendlyMode != 0;
 
 	for (int i = 0; i < MAX_SPELLS; i++)
-		player._pSplLvl[i] = packed.pSplLvl[i];
+		player.spellLevel[i] = packed.pSplLvl[i];
 
 	for (int i = 0; i < NUM_INVLOC; i++) {
 		if (!UnPackNetItem(player, packed.InvBody[i], player.InvBody[i]))

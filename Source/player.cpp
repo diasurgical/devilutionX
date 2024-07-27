@@ -1462,8 +1462,8 @@ void ValidatePlayer()
 	for (int b = static_cast<int8_t>(SpellID::Firebolt); b < MAX_SPELLS; b++) {
 		if (GetSpellBookLevel((SpellID)b) != -1) {
 			msk |= GetSpellBitmask(static_cast<SpellID>(b));
-			if (myPlayer._pSplLvl[b] > MaxSpellLevel)
-				myPlayer._pSplLvl[b] = MaxSpellLevel;
+			if (myPlayer.spellLevel[b] > MaxSpellLevel)
+				myPlayer.spellLevel[b] = MaxSpellLevel;
 		}
 	}
 
@@ -1750,7 +1750,7 @@ bool Player::isWalking() const
 int Player::GetManaShieldDamageReduction()
 {
 	constexpr uint8_t Max = 7;
-	return 24 - std::min(_pSplLvl[static_cast<int8_t>(SpellID::ManaShield)], Max) * 3;
+	return 24 - std::min(spellLevel[static_cast<int8_t>(SpellID::ManaShield)], Max) * 3;
 }
 
 void Player::RestorePartialLife()
@@ -2301,7 +2301,7 @@ void CreatePlayer(Player &player, HeroClass c)
 	player._pLightRad = 10;
 	player._pInfraFlag = false;
 
-	for (uint8_t &spellLevel : player._pSplLvl) {
+	for (uint8_t &spellLevel : player.spellLevel) {
 		spellLevel = 0;
 	}
 
@@ -2787,7 +2787,7 @@ void ApplyPlrDamage(DamageType damageType, Player &player, int dam, int minHP /*
 		AddFloatingNumber(damageType, player, totalDamage);
 	}
 	if (totalDamage > 0 && player.pManaShield) {
-		uint8_t manaShieldLevel = player._pSplLvl[static_cast<int8_t>(SpellID::ManaShield)];
+		uint8_t manaShieldLevel = player.spellLevel[static_cast<int8_t>(SpellID::ManaShield)];
 		if (manaShieldLevel > 0) {
 			totalDamage += totalDamage / -player.GetManaShieldDamageReduction();
 		}

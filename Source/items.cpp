@@ -3069,7 +3069,7 @@ void CreatePlrItems(Player &player)
 		player._pMemSpells = GetSpellBitmask(loadout.spell);
 		player._pRSplType = SpellType::Spell;
 		player._pRSpell = loadout.spell;
-		player._pSplLvl[static_cast<unsigned>(loadout.spell)] = loadout.spellLevel;
+		player.spellLevel[static_cast<unsigned>(loadout.spell)] = loadout.spellLevel;
 	} else {
 		player._pMemSpells = 0;
 	}
@@ -4215,9 +4215,9 @@ void UseItem(Player &player, item_misc_id mid, SpellID spellID, int spellFrom)
 		}
 		break;
 	case IMISC_BOOK: {
-		uint8_t newSpellLevel = player._pSplLvl[static_cast<int8_t>(spellID)] + 1;
+		uint8_t newSpellLevel = player.spellLevel[static_cast<int8_t>(spellID)] + 1;
 		if (newSpellLevel <= MaxSpellLevel) {
-			player._pSplLvl[static_cast<int8_t>(spellID)] = newSpellLevel;
+			player.spellLevel[static_cast<int8_t>(spellID)] = newSpellLevel;
 			NetSendCmdParam2(true, CMD_CHANGE_SPELL_LEVEL, static_cast<uint16_t>(spellID), newSpellLevel);
 		}
 		if (HasNoneOf(player._pIFlags, ItemSpecialEffect::NoMana)) {
@@ -4885,7 +4885,7 @@ void Item::updateRequiredStatsCacheForPlayer(const Player &player)
 {
 	if (_itype == ItemType::Misc && _iMiscId == IMISC_BOOK) {
 		_iMinMag = GetSpellData(_iSpell).minInt;
-		int8_t spellLevel = player._pSplLvl[static_cast<int8_t>(_iSpell)];
+		int8_t spellLevel = player.spellLevel[static_cast<int8_t>(_iSpell)];
 		while (spellLevel != 0) {
 			_iMinMag += 20 * _iMinMag / 100;
 			spellLevel--;

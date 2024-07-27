@@ -325,7 +325,7 @@ public:
 	SpellID _pRSpell;
 	SpellType _pRSplType;
 	SpellID _pSBkSpell;
-	uint8_t _pSplLvl[64];
+	uint8_t spellLevel[64]; // _pSplLvl
 	/** @brief Bitmask of staff spell */
 	uint64_t _pISpells;
 	/** @brief Bitmask of learned spells */
@@ -641,11 +641,11 @@ public:
 	 */
 	int GetSpellLevel(SpellID spell) const
 	{
-		if (spell == SpellID::Invalid || static_cast<std::size_t>(spell) >= sizeof(_pSplLvl)) {
+		if (spell == SpellID::Invalid || static_cast<std::size_t>(spell) >= sizeof(spellLevel)) {
 			return 0;
 		}
 
-		return std::max<int>(_pISplLvlAdd + _pSplLvl[static_cast<std::size_t>(spell)], 0);
+		return std::max<int>(_pISplLvlAdd + spellLevel[static_cast<std::size_t>(spell)], 0);
 	}
 
 	/**
