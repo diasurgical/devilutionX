@@ -1123,7 +1123,7 @@ void InitMissiles()
 
 	AutoMapShowItems = false;
 	myPlayer._pSpellFlags &= ~SpellFlag::Etherealize;
-	if (myPlayer._pInfraFlag) {
+	if (myPlayer.hasInfravisionFlag) {
 		for (auto &missile : Missiles) {
 			if (missile._mitype == MissileID::Infravision) {
 				if (missile.sourcePlayer() == MyPlayer)
@@ -3762,7 +3762,7 @@ void ProcessInfravision(Missile &missile)
 {
 	Player &player = Players[missile._misource];
 	missile._mirange--;
-	player._pInfraFlag = true;
+	player.hasInfravisionFlag = true;
 	if (missile._mirange == 0) {
 		missile._miDelFlag = true;
 		CalcPlrItemVals(player, true);

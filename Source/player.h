@@ -347,7 +347,7 @@ public:
 	int8_t _pMagResist;
 	int8_t _pFireResist;
 	int8_t _pLghtResist;
-	bool _pInfraFlag;
+	bool hasInfravisionFlag; // _pInfraFlag
 	/** Player's direction when ending movement. Also used for casting direction of SpellID::FireWall. */
 	Direction tempDirection;
 

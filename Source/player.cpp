@@ -1468,7 +1468,7 @@ void ValidatePlayer()
 	}
 
 	myPlayer._pMemSpells &= msk;
-	myPlayer._pInfraFlag = false;
+	myPlayer.hasInfravisionFlag = false;
 }
 
 void CheckCheatStats(Player &player)
@@ -2299,7 +2299,7 @@ void CreatePlayer(Player &player, HeroClass c)
 	player._pExperience = 0;
 	player._pArmorClass = 0;
 	player._pLightRad = 10;
-	player._pInfraFlag = false;
+	player.hasInfravisionFlag = false;
 
 	for (uint8_t &spellLevel : player._pSplLvl) {
 		spellLevel = 0;
