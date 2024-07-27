@@ -32,8 +32,8 @@ struct PlayerPack {
 	uint32_t dwLowDateTime;
 	uint32_t dwHighDateTime;
 	int8_t destAction;
-	int8_t destParam1;
-	int8_t destParam2;
+	int8_t destinationParam1;
+	int8_t destinationParam2;
 	uint8_t plrlevel;
 	uint8_t px;
 	uint8_t py;

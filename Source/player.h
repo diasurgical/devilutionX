@@ -264,10 +264,10 @@ struct Player {
 	int8_t walkpath[MaxPathLength];
 	bool plractive;
 	action_id destAction;
-	int destParam1;
-	int destParam2;
-	int destParam3;
-	int destParam4;
+	int destinationParam1; // destParam1
+	int destinationParam2; // destParam2
+	int destinationParam3; // destParam3
+	int destinationParam4; // destParam4
 	int _pGold;
 
 	/**

@@ -250,8 +250,8 @@ void PackPlayer(PlayerPack &packed, const Player &player)
 {
 	memset(&packed, 0, sizeof(packed));
 	packed.destAction = player.destAction;
-	packed.destParam1 = player.destParam1;
-	packed.destParam2 = player.destParam2;
+	packed.destinationParam1 = player.destinationParam1;
+	packed.destinationParam2 = player.destinationParam2;
 	packed.plrlevel = player.plrlevel;
 	packed.px = player.position.tile.x;
 	packed.py = player.position.tile.y;

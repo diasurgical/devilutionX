@@ -1099,7 +1099,7 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 	Object *object;
 	Item *item;
 
-	int targetId = player.destParam1;
+	int targetId = player.destinationParam1;
 
 	switch (player.destAction) {
 	case ACTION_ATTACKMON:
@@ -1212,7 +1212,7 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 	if (player._pmode == PM_STAND) {
 		switch (player.destAction) {
 		case ACTION_ATTACK:
-			d = GetDirection(player.position.tile, { player.destParam1, player.destParam2 });
+			d = GetDirection(player.position.tile, { player.destinationParam1, player.destinationParam2 });
 			StartAttack(player, d, pmWillBeCalled);
 			break;
 		case ACTION_ATTACKMON:
@@ -1236,8 +1236,8 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 			}
 			break;
 		case ACTION_RATTACK:
-			d = GetDirection(player.position.tile, { player.destParam1, player.destParam2 });
-			StartRangeAttack(player, d, player.destParam1, player.destParam2, pmWillBeCalled);
+			d = GetDirection(player.position.tile, { player.destinationParam1, player.destinationParam2 });
+			StartRangeAttack(player, d, player.destinationParam1, player.destinationParam2, pmWillBeCalled);
 			break;
 		case ACTION_RATTACKMON:
 			d = GetDirection(player.position.future, monster->position.future);
@@ -1252,24 +1252,24 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 			StartRangeAttack(player, d, target->position.future.x, target->position.future.y, pmWillBeCalled);
 			break;
 		case ACTION_SPELL:
-			d = GetDirection(player.position.tile, { player.destParam1, player.destParam2 });
-			StartSpell(player, d, player.destParam1, player.destParam2);
-			player.executedSpell.spellLevel = player.destParam3;
+			d = GetDirection(player.position.tile, { player.destinationParam1, player.destinationParam2 });
+			StartSpell(player, d, player.destinationParam1, player.destinationParam2);
+			player.executedSpell.spellLevel = player.destinationParam3;
 			break;
 		case ACTION_SPELLWALL:
-			StartSpell(player, static_cast<Direction>(player.destParam3), player.destParam1, player.destParam2);
-			player.tempDirection = static_cast<Direction>(player.destParam3);
-			player.executedSpell.spellLevel = player.destParam4;
+			StartSpell(player, static_cast<Direction>(player.destinationParam3), player.destinationParam1, player.destinationParam2);
+			player.tempDirection = static_cast<Direction>(player.destinationParam3);
+			player.executedSpell.spellLevel = player.destinationParam4;
 			break;
 		case ACTION_SPELLMON:
 			d = GetDirection(player.position.tile, monster->position.future);
 			StartSpell(player, d, monster->position.future.x, monster->position.future.y);
-			player.executedSpell.spellLevel = player.destParam2;
+			player.executedSpell.spellLevel = player.destinationParam2;
 			break;
 		case ACTION_SPELLPLR:
 			d = GetDirection(player.position.tile, target->position.future);
 			StartSpell(player, d, target->position.future.x, target->position.future.y);
-			player.executedSpell.spellLevel = player.destParam2;
+			player.executedSpell.spellLevel = player.destinationParam2;
 			break;
 		case ACTION_OPERATE:
 			if (IsPlayerAdjacentToObject(player, *object)) {
@@ -1319,7 +1319,7 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 		case ACTION_TALK:
 			if (&player == MyPlayer) {
 				HelpFlag = false;
-				TalkToTowner(player, player.destParam1);
+				TalkToTowner(player, player.destinationParam1);
 			}
 			break;
 		default:
@@ -1334,7 +1334,7 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 
 	if (player._pmode == PM_ATTACK && player.AnimInfo.currentFrame >= player._pAFNum) {
 		if (player.destAction == ACTION_ATTACK) {
-			d = GetDirection(player.position.future, { player.destParam1, player.destParam2 });
+			d = GetDirection(player.position.future, { player.destinationParam1, player.destinationParam2 });
 			StartAttack(player, d, pmWillBeCalled);
 			player.destAction = ACTION_NONE;
 		} else if (player.destAction == ACTION_ATTACKMON) {
@@ -1365,8 +1365,8 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 
 	if (player._pmode == PM_RATTACK && player.AnimInfo.currentFrame >= player._pAFNum) {
 		if (player.destAction == ACTION_RATTACK) {
-			d = GetDirection(player.position.tile, { player.destParam1, player.destParam2 });
-			StartRangeAttack(player, d, player.destParam1, player.destParam2, pmWillBeCalled);
+			d = GetDirection(player.position.tile, { player.destinationParam1, player.destinationParam2 });
+			StartRangeAttack(player, d, player.destinationParam1, player.destinationParam2, pmWillBeCalled);
 			player.destAction = ACTION_NONE;
 		} else if (player.destAction == ACTION_RATTACKMON) {
 			d = GetDirection(player.position.tile, monster->position.future);
@@ -1381,8 +1381,8 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 
 	if (player._pmode == PM_SPELL && player.AnimInfo.currentFrame >= player._pSFNum) {
 		if (player.destAction == ACTION_SPELL) {
-			d = GetDirection(player.position.tile, { player.destParam1, player.destParam2 });
-			StartSpell(player, d, player.destParam1, player.destParam2);
+			d = GetDirection(player.position.tile, { player.destinationParam1, player.destinationParam2 });
+			StartSpell(player, d, player.destinationParam1, player.destinationParam2);
 			player.destAction = ACTION_NONE;
 		} else if (player.destAction == ACTION_SPELLMON) {
 			d = GetDirection(player.position.tile, monster->position.future);

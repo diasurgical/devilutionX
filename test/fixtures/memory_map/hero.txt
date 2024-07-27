@@ -1,8 +1,8 @@
 R 32 dwLowDateTime
 R 32 dwHighDateTime
 R 8 destAction
-R 8 destParam1
-R 8 destParam2
+R 8 destinationParam1
+R 8 destinationParam2
 R 8 plrlevel
 R 8 px
 R 8 py

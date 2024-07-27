@@ -346,10 +346,10 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	player.plractive = file.NextBool8();
 	file.Skip(2); // Alignment
 	player.destAction = static_cast<action_id>(file.NextLE<int32_t>());
-	player.destParam1 = file.NextLE<int32_t>();
-	player.destParam2 = file.NextLE<int32_t>();
-	player.destParam3 = file.NextLE<int32_t>();
-	player.destParam4 = file.NextLE<int32_t>();
+	player.destinationParam1 = file.NextLE<int32_t>();
+	player.destinationParam2 = file.NextLE<int32_t>();
+	player.destinationParam3 = file.NextLE<int32_t>();
+	player.destinationParam4 = file.NextLE<int32_t>();
 	player.setLevel(file.NextLE<uint32_t>());
 	player.position.tile.x = file.NextLE<int32_t>();
 	player.position.tile.y = file.NextLE<int32_t>();
@@ -1167,10 +1167,10 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.WriteLE<uint8_t>(player.plractive ? 1 : 0);
 	file.Skip(2); // Alignment
 	file.WriteLE<int32_t>(player.destAction);
-	file.WriteLE<int32_t>(player.destParam1);
-	file.WriteLE<int32_t>(player.destParam2);
-	file.WriteLE<int32_t>(static_cast<int32_t>(player.destParam3));
-	file.WriteLE<int32_t>(player.destParam4);
+	file.WriteLE<int32_t>(player.destinationParam1);
+	file.WriteLE<int32_t>(player.destinationParam2);
+	file.WriteLE<int32_t>(static_cast<int32_t>(player.destinationParam3));
+	file.WriteLE<int32_t>(player.destinationParam4);
 	file.WriteLE<uint32_t>(player.plrlevel);
 	file.WriteLE<int32_t>(player.position.tile.x);
 	file.WriteLE<int32_t>(player.position.tile.y);

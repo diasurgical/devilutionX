@@ -204,8 +204,8 @@ void PackPlayerTest(PlayerPack *pPack)
 {
 	memset(pPack, 0, 0x4F2);
 	pPack->destAction = -1;
-	pPack->destParam1 = 0;
-	pPack->destParam2 = 0;
+	pPack->destinationParam1 = 0;
+	pPack->destinationParam2 = 0;
 	pPack->plrlevel = 0;
 	pPack->pExperience = 1583495809;
 	pPack->pLevel = 50;
