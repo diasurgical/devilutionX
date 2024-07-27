@@ -2928,7 +2928,7 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	player._pISpells = spells;
 	EnsureValidReadiedSpell(player);
 	player._pISplLvlAdd = splLvlAdd;
-	player._pIEnAc = targetAc;
+	player.armorPierce = targetAc;
 	CalcPlrResistances(player, flags, fireRes, lightRes, magicRes);
 	CalcPlrLifeMana(player, vitality, magic, life, mana);
 	player._pIFMinDam = minFireDam;

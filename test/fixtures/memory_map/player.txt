@@ -157,7 +157,7 @@ R 8 _pISplLvlAdd
 R 8 unused
 R 16 alignment
 R 32 _pISplDur
-R 32 _pIEnAc
+R 32 armorPierce
 R 32 _pIFMinDam
 R 32 _pIFMaxDam
 R 32 _pILMinDam

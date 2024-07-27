@@ -1223,7 +1223,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_iGetHit)
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_iEnAc)
 {
-	MyPlayer->_pIEnAc++;
+	MyPlayer->armorPierce++;
 	ASSERT_FALSE(TestNetPackValidation());
 
 	CalcPlrItemVals(*MyPlayer, false);

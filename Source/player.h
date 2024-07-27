@@ -254,7 +254,7 @@ struct Player {
 	int _pIBonusAC;
 	int _pIBonusDamMod;
 	int _pIGetHit;
-	int _pIEnAc;
+	int armorPierce; // _pIEnAc
 	int _pIFMinDam;
 	int _pIFMaxDam;
 	int _pILMinDam;
@@ -586,7 +586,7 @@ public:
 		int hper = GetMeleeToHit();
 		// in hellfire armor piercing ignores % of enemy armor instead, no way to include it here
 		if (!gbIsHellfire)
-			hper += _pIEnAc;
+			hper += armorPierce;
 		return hper;
 	}
 
@@ -603,7 +603,7 @@ public:
 		int hper = GetRangedToHit();
 		// in hellfire armor piercing ignores % of enemy armor instead, no way to include it here
 		if (!gbIsHellfire)
-			hper += _pIEnAc;
+			hper += armorPierce;
 		return hper;
 	}
 
@@ -656,9 +656,9 @@ public:
 	int CalculateArmorPierce(int monsterArmor, bool isMelee) const
 	{
 		int tmac = monsterArmor;
-		if (_pIEnAc > 0) {
+		if (armorPierce > 0) {
 			if (gbIsHellfire) {
-				int pIEnAc = _pIEnAc - 1;
+				int pIEnAc = armorPierce - 1;
 				if (pIEnAc > 0)
 					tmac >>= pIEnAc;
 				else
