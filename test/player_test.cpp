@@ -152,7 +152,7 @@ static void AssertPlayer(Player &player)
 	ASSERT_EQ(player._pDamageMod, 0);
 	ASSERT_EQ(player._pHitPoints, 2880);
 	ASSERT_EQ(player._pMaxHP, 2880);
-	ASSERT_EQ(player._pMana, 1440);
+	ASSERT_EQ(player.mana, 1440);
 	ASSERT_EQ(player._pMaxMana, 1440);
 	ASSERT_EQ(player.getNextExperienceThreshold(), 2000);
 	ASSERT_EQ(player._pMagResist, 0);

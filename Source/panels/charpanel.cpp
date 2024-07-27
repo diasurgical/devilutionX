@@ -186,7 +186,7 @@ PanelEntry panelEntries[] = {
 	{ N_("Mana"), { LeftColumnLabelX, 312 }, 45, LeftColumnLabelWidth,
 	    []() { return StyledText { GetMaxManaColor(), StrCat(InspectPlayer->_pMaxMana >> 6) }; } },
 	{ "", { 135, 312 }, 45, 0,
-	    []() { return StyledText { (InspectPlayer->_pMana != InspectPlayer->_pMaxMana ? UiFlags::ColorRed : GetMaxManaColor()), StrCat(InspectPlayer->_pMana >> 6) }; } },
+	    []() { return StyledText { (InspectPlayer->mana != InspectPlayer->_pMaxMana ? UiFlags::ColorRed : GetMaxManaColor()), StrCat(InspectPlayer->mana >> 6) }; } },
 
 	{ N_("Resist magic"), { RightColumnLabelX, 256 }, 57, RightColumnLabelWidth,
 	    []() { return GetResistInfo(InspectPlayer->_pMagResist); } },

@@ -362,7 +362,7 @@ void PackNetPlayer(PlayerNetPack &packed, const Player &player)
 	packed.pVitality = SDL_SwapLE32(player._pVitality);
 	packed.pHitPoints = SDL_SwapLE32(player._pHitPoints);
 	packed.pMaxHP = SDL_SwapLE32(player._pMaxHP);
-	packed.pMana = SDL_SwapLE32(player._pMana);
+	packed.pMana = SDL_SwapLE32(player.mana);
 	packed.pMaxMana = SDL_SwapLE32(player._pMaxMana);
 	packed.pDamageMod = SDL_SwapLE32(player._pDamageMod);
 	// we pack base to block as a basic check that remote players are using the same playerdat values as we are
@@ -681,7 +681,7 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 	ValidateFields(player._pVitality, SDL_SwapLE32(packed.pVitality), player._pVitality == SDL_SwapLE32(packed.pVitality));
 	ValidateFields(player._pHitPoints, SDL_SwapLE32(packed.pHitPoints), player._pHitPoints == SDL_SwapLE32(packed.pHitPoints));
 	ValidateFields(player._pMaxHP, SDL_SwapLE32(packed.pMaxHP), player._pMaxHP == SDL_SwapLE32(packed.pMaxHP));
-	ValidateFields(player._pMana, SDL_SwapLE32(packed.pMana), player._pMana == SDL_SwapLE32(packed.pMana));
+	ValidateFields(player.mana, SDL_SwapLE32(packed.pMana), player.mana == SDL_SwapLE32(packed.pMana));
 	ValidateFields(player._pMaxMana, SDL_SwapLE32(packed.pMaxMana), player._pMaxMana == SDL_SwapLE32(packed.pMaxMana));
 	ValidateFields(player._pDamageMod, SDL_SwapLE32(packed.pDamageMod), player._pDamageMod == SDL_SwapLE32(packed.pDamageMod));
 	ValidateFields(player.getBaseToBlock(), SDL_SwapLE32(packed.pBaseToBlk), player.getBaseToBlock() == SDL_SwapLE32(packed.pBaseToBlk));

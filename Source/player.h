@@ -243,7 +243,7 @@ struct Player {
 	int _pHPPer;
 	int _pManaBase;
 	int _pMaxManaBase;
-	int _pMana;
+	int mana; // _pMana
 	int _pMaxMana;
 	int _pManaPer;
 	int _pIMinDam;
@@ -700,7 +700,7 @@ public:
 		if (_pMaxMana <= 0) {
 			_pManaPer = 0;
 		} else {
-			_pManaPer = std::clamp(_pMana * 80 / _pMaxMana, 0, 80);
+			_pManaPer = std::clamp(mana * 80 / _pMaxMana, 0, 80);
 		}
 
 		return _pManaPer;
@@ -740,7 +740,7 @@ public:
 	void RestoreFullMana()
 	{
 		if (HasNoneOf(_pIFlags, ItemSpecialEffect::NoMana)) {
-			_pMana = _pMaxMana;
+			mana = _pMaxMana;
 			_pManaBase = _pMaxManaBase;
 		}
 	}

@@ -663,10 +663,10 @@ void FillManaPlayer()
 
 	Player &myPlayer = *MyPlayer;
 
-	if (myPlayer._pMana != myPlayer._pMaxMana) {
+	if (myPlayer.mana != myPlayer._pMaxMana) {
 		PlaySFX(SfxID::CastHealing);
 	}
-	myPlayer._pMana = myPlayer._pMaxMana;
+	myPlayer.mana = myPlayer._pMaxMana;
 	myPlayer._pManaBase = myPlayer._pMaxManaBase;
 	RedrawComponent(PanelDrawComponent::Mana);
 }

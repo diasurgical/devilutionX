@@ -1383,8 +1383,8 @@ void AddStealMana(Missile &missile, AddMissileParameter & /*parameter*/)
 	if (trappedPlayerPosition) {
 		Player &player = Players[std::abs(dPlayer[trappedPlayerPosition->x][trappedPlayerPosition->y]) - 1];
 
-		player._pMana = 0;
-		player._pManaBase = player._pMana + player._pMaxManaBase - player._pMaxMana;
+		player.mana = 0;
+		player._pManaBase = player.mana + player._pMaxManaBase - player._pMaxMana;
 		CalcPlrInv(player, false);
 		RedrawComponent(PanelDrawComponent::Mana);
 		PlaySfxLoc(SfxID::Pig, *trappedPlayerPosition);
@@ -1584,9 +1584,9 @@ void AddMana(Missile &missile, AddMissileParameter & /*parameter*/)
 		manaAmount *= 2;
 	if (player._pClass == HeroClass::Rogue || player._pClass == HeroClass::Bard)
 		manaAmount += manaAmount / 2;
-	player._pMana += manaAmount;
-	if (player._pMana > player._pMaxMana)
-		player._pMana = player._pMaxMana;
+	player.mana += manaAmount;
+	if (player.mana > player._pMaxMana)
+		player.mana = player._pMaxMana;
 	player._pManaBase += manaAmount;
 	if (player._pManaBase > player._pMaxManaBase)
 		player._pManaBase = player._pMaxManaBase;
@@ -1598,7 +1598,7 @@ void AddMagi(Missile &missile, AddMissileParameter & /*parameter*/)
 {
 	Player &player = Players[missile._misource];
 
-	player._pMana = player._pMaxMana;
+	player.mana = player._pMaxMana;
 	player._pManaBase = player._pMaxManaBase;
 	missile._miDelFlag = true;
 	RedrawComponent(PanelDrawComponent::Mana);
@@ -4131,7 +4131,7 @@ static void DeleteMissiles()
 void ProcessManaShield()
 {
 	Player &myPlayer = *MyPlayer;
-	if (myPlayer.pManaShield && myPlayer._pMana <= 0) {
+	if (myPlayer.pManaShield && myPlayer.mana <= 0) {
 		myPlayer.pManaShield = false;
 		NetSendCmd(true, CMD_REMSHIELD);
 	}

@@ -74,9 +74,9 @@ std::string DebugCmdChangeMana(int change)
 	if (change == 0)
 		return StrCat("Enter a value not equal to 0 to change mana!");
 
-	int newMana = myPlayer._pMana + (change * 64);
-	myPlayer._pMana = newMana;
-	myPlayer._pManaBase = myPlayer._pMana + myPlayer._pMaxManaBase - myPlayer._pMaxMana;
+	int newMana = myPlayer.mana + (change * 64);
+	myPlayer.mana = newMana;
+	myPlayer._pManaBase = myPlayer.mana + myPlayer._pMaxManaBase - myPlayer._pMaxMana;
 	RedrawComponent(PanelDrawComponent::Mana);
 
 	return StrCat("Changed mana by ", change);
