@@ -229,7 +229,7 @@ struct Player {
 	int _pStrength;
 	int _pBaseStr;
 	int _pMagic;
-	int _pBaseMag;
+	int baseMagic; // _pBaseMag
 	int _pDexterity;
 	int _pBaseDex;
 	int _pVitality;

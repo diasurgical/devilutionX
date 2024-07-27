@@ -28,7 +28,7 @@ std::string DebugCmdMaxStats()
 {
 	Player &myPlayer = *MyPlayer;
 	ModifyPlrStr(myPlayer, myPlayer.GetMaximumAttributeValue(CharacterAttribute::Strength) - myPlayer._pBaseStr);
-	ModifyPlrMag(myPlayer, myPlayer.GetMaximumAttributeValue(CharacterAttribute::Magic) - myPlayer._pBaseMag);
+	ModifyPlrMag(myPlayer, myPlayer.GetMaximumAttributeValue(CharacterAttribute::Magic) - myPlayer.baseMagic);
 	ModifyPlrDex(myPlayer, myPlayer.GetMaximumAttributeValue(CharacterAttribute::Dexterity) - myPlayer._pBaseDex);
 	ModifyPlrVit(myPlayer, myPlayer.GetMaximumAttributeValue(CharacterAttribute::Vitality) - myPlayer._pBaseVit);
 	return "Set all character base attributes to maximum.";
@@ -38,7 +38,7 @@ std::string DebugCmdMinStats()
 {
 	Player &myPlayer = *MyPlayer;
 	ModifyPlrStr(myPlayer, -myPlayer._pBaseStr);
-	ModifyPlrMag(myPlayer, -myPlayer._pBaseMag);
+	ModifyPlrMag(myPlayer, -myPlayer.baseMagic);
 	ModifyPlrDex(myPlayer, -myPlayer._pBaseDex);
 	ModifyPlrVit(myPlayer, -myPlayer._pBaseVit);
 	return "Set all character base attributes to minimum.";

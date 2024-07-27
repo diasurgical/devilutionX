@@ -1033,7 +1033,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_baseStr)
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_baseMag)
 {
-	MyPlayer->_pBaseMag = MyPlayer->GetMaximumAttributeValue(CharacterAttribute::Magic) + 1;
+	MyPlayer->baseMagic = MyPlayer->GetMaximumAttributeValue(CharacterAttribute::Magic) + 1;
 	ASSERT_FALSE(TestNetPackValidation());
 }
 
