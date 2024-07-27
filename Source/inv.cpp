@@ -1406,7 +1406,7 @@ bool AutoPlaceItemInInventory(Player &player, const Item &item, bool persistItem
 std::vector<int> SortItemsBySize(Player &player)
 {
 	std::vector<std::pair<Size, int>> itemSizes; // Pair of item size and its index in InvList
-	itemSizes.reserve(player.numInventoryItems);          // Reserves space for the number of items in the player's inventory
+	itemSizes.reserve(player.numInventoryItems); // Reserves space for the number of items in the player's inventory
 
 	for (int i = 0; i < player.numInventoryItems; i++) {
 		Size size = GetInventorySize(player.InvList[i]);
@@ -1445,7 +1445,7 @@ void ReorganizeInventory(Player &player)
 		tempStorage[i] = player.InvList[i];
 		player.InvList[i] = {};
 	}
-	player.numInventoryItems = 0;                                                // Reset inventory count
+	player.numInventoryItems = 0;                                       // Reset inventory count
 	std::fill(std::begin(player.InvGrid), std::end(player.InvGrid), 0); // Clear InvGrid
 
 	// Attempt to place items back, now from the temp storage
