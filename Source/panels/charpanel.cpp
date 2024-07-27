@@ -86,9 +86,9 @@ std::pair<int, int> GetDamage()
 {
 	int damageMod = InspectPlayer->_pIBonusDamMod;
 	if (InspectPlayer->InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Bow && InspectPlayer->_pClass != HeroClass::Rogue) {
-		damageMod += InspectPlayer->_pDamageMod / 2;
+		damageMod += InspectPlayer->damageModifier / 2;
 	} else {
-		damageMod += InspectPlayer->_pDamageMod;
+		damageMod += InspectPlayer->damageModifier;
 	}
 	int mindam = InspectPlayer->_pIMinDam + InspectPlayer->_pIBonusDam * InspectPlayer->_pIMinDam / 100 + damageMod;
 	int maxdam = InspectPlayer->_pIMaxDam + InspectPlayer->_pIBonusDam * InspectPlayer->_pIMaxDam / 100 + damageMod;

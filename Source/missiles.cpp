@@ -245,9 +245,9 @@ bool MonsterMHit(const Player &player, int monsterId, int mindam, int maxdam, in
 	if (missileData.isArrow() && damageType == DamageType::Physical) {
 		dam = player._pIBonusDamMod + dam * player._pIBonusDam / 100 + dam;
 		if (player._pClass == HeroClass::Rogue)
-			dam += player._pDamageMod;
+			dam += player.damageModifier;
 		else
-			dam += player._pDamageMod / 2;
+			dam += player.damageModifier / 2;
 		if (monster.data().monsterClass == MonsterClass::Demon && HasAnyOf(player._pIFlags, ItemSpecialEffect::TripleDemonDamage))
 			dam *= 3;
 	}
@@ -354,7 +354,7 @@ bool Plr2PlrMHit(const Player &player, Player &target, int mindam, int maxdam, i
 	} else {
 		dam = mindam + GenerateRnd(maxdam - mindam + 1);
 		if (missileData.isArrow() && damageType == DamageType::Physical)
-			dam += player._pIBonusDamMod + player._pDamageMod + dam * player._pIBonusDam / 100;
+			dam += player._pIBonusDamMod + player.damageModifier + dam * player._pIBonusDam / 100;
 		if (!shift)
 			dam <<= 6;
 	}

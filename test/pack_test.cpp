@@ -1105,7 +1105,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_maxMana)
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_damageMod)
 {
-	MyPlayer->_pDamageMod++;
+	MyPlayer->damageModifier++;
 	ASSERT_FALSE(TestNetPackValidation());
 }
 

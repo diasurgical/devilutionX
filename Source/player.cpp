@@ -570,7 +570,7 @@ bool PlrHitMonst(Player &player, Monster &monster, bool adjacentDamage = false)
 	dam += dam * player._pIBonusDam / 100;
 	dam += player._pIBonusDamMod;
 	int dam2 = dam << 6;
-	dam += player._pDamageMod;
+	dam += player.damageModifier;
 	if (player._pClass == HeroClass::Warrior || player._pClass == HeroClass::Barbarian) {
 		if (GenerateRnd(100) < player.getCharacterLevel()) {
 			dam *= 2;
@@ -736,7 +736,7 @@ bool PlrHitPlr(Player &attacker, Player &target)
 	int maxd = attacker._pIMaxDam;
 	int dam = GenerateRnd(maxd - mind + 1) + mind;
 	dam += (dam * attacker._pIBonusDam) / 100;
-	dam += attacker._pIBonusDamMod + attacker._pDamageMod;
+	dam += attacker._pIBonusDamMod + attacker.damageModifier;
 
 	if (attacker._pClass == HeroClass::Warrior || attacker._pClass == HeroClass::Barbarian) {
 		if (GenerateRnd(100) < attacker.getCharacterLevel()) {

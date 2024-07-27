@@ -321,7 +321,7 @@ void AssertPlayer(Player &player)
 	ASSERT_TRUE(player.UsesRangedWeapon());
 	ASSERT_EQ(player._pBlockFlag, 0);
 	ASSERT_EQ(player._pLightRad, 11);
-	ASSERT_EQ(player._pDamageMod, 101);
+	ASSERT_EQ(player.damageModifier, 101);
 	ASSERT_EQ(player._pHitPoints, 16640);
 	ASSERT_EQ(player._pMaxHP, 16640);
 	ASSERT_EQ(player._pMana, 14624);

@@ -2622,31 +2622,31 @@ void CalcPlrDamageMod(Player &player)
 
 	switch (player._pClass) {
 	case HeroClass::Rogue:
-		player._pDamageMod = strDexMod / 200;
+		player.damageModifier = strDexMod / 200;
 		return;
 	case HeroClass::Monk:
 		if (player.isHoldingItem(ItemType::Staff) || (leftHandItem.isEmpty() && rightHandItem.isEmpty())) {
-			player._pDamageMod = strDexMod / 150;
+			player.damageModifier = strDexMod / 150;
 		} else {
-			player._pDamageMod = strDexMod / 300;
+			player.damageModifier = strDexMod / 300;
 		}
 		return;
 	case HeroClass::Bard:
 		if (player.isHoldingItem(ItemType::Sword)) {
-			player._pDamageMod = strDexMod / 150;
+			player.damageModifier = strDexMod / 150;
 		} else if (player.isHoldingItem(ItemType::Bow)) {
-			player._pDamageMod = strDexMod / 250;
+			player.damageModifier = strDexMod / 250;
 		} else {
-			player._pDamageMod = strMod / 100;
+			player.damageModifier = strMod / 100;
 		}
 		return;
 	case HeroClass::Barbarian:
 		if (player.isHoldingItem(ItemType::Axe) || player.isHoldingItem(ItemType::Mace)) {
-			player._pDamageMod = strMod / 75;
+			player.damageModifier = strMod / 75;
 		} else if (player.isHoldingItem(ItemType::Bow)) {
-			player._pDamageMod = strMod / 300;
+			player.damageModifier = strMod / 300;
 		} else {
-			player._pDamageMod = strMod / 100;
+			player.damageModifier = strMod / 100;
 		}
 		if (player.isHoldingItem(ItemType::Shield)) {
 			if (leftHandItem._itype == ItemType::Shield)
@@ -2654,12 +2654,12 @@ void CalcPlrDamageMod(Player &player)
 			else if (rightHandItem._itype == ItemType::Shield)
 				player._pIAC -= rightHandItem._iAC / 2;
 		} else if (!player.isHoldingItem(ItemType::Staff) && !player.isHoldingItem(ItemType::Bow)) {
-			player._pDamageMod += playerLevel * player._pVitality / 100;
+			player.damageModifier += playerLevel * player._pVitality / 100;
 		}
 		player._pIAC += playerLevel / 4;
 		return;
 	default:
-		player._pDamageMod = strMod / 100;
+		player.damageModifier = strMod / 100;
 		return;
 	}
 }

@@ -73,7 +73,7 @@ R 32 _pBaseDex
 R 32 _pVitality
 R 32 _pBaseVit
 R 32 _pStatPts
-R 32 _pDamageMod
+R 32 damageModifier
 R 32 _pBaseToBlk
 R 32 _pHPBase
 R 32 _pMaxHPBase
