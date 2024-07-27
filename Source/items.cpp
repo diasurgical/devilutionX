@@ -2931,7 +2931,7 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	player._pIEnAc = targetAc;
 	CalcPlrResistances(player, flags, fireRes, lightRes, magicRes);
 	CalcPlrLifeMana(player, vitality, magic, life, mana);
-	player._pIFMinDam = minFireDam;
+	player.minFireDamage = minFireDam;
 	player._pIFMaxDam = maxFireDam;
 	player._pILMinDam = minLightDam;
 	player._pILMaxDam = maxLightDam;

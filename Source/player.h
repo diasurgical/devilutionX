@@ -255,7 +255,7 @@ struct Player {
 	int _pIBonusDamMod;
 	int _pIGetHit;
 	int _pIEnAc;
-	int _pIFMinDam;
+	int minFireDamage; // _pIFMinDam
 	int _pIFMaxDam;
 	int _pILMinDam;
 	int _pILMaxDam;

@@ -1236,7 +1236,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_iEnAc)
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_iFMinDam)
 {
-	MyPlayer->_pIFMinDam++;
+	MyPlayer->minFireDamage++;
 	ASSERT_FALSE(TestNetPackValidation());
 
 	CalcPlrItemVals(*MyPlayer, false);

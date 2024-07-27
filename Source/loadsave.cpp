@@ -549,7 +549,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	file.Skip(2);         // Alignment
 	file.Skip<int32_t>(); // _pISplDur
 	player._pIEnAc = file.NextLE<int32_t>();
-	player._pIFMinDam = file.NextLE<int32_t>();
+	player.minFireDamage = file.NextLE<int32_t>();
 	player._pIFMaxDam = file.NextLE<int32_t>();
 	player._pILMinDam = file.NextLE<int32_t>();
 	player._pILMaxDam = file.NextLE<int32_t>();
@@ -1374,7 +1374,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.Skip(2);         // Alignment
 	file.Skip<int32_t>(); // _pISplDur
 	file.WriteLE<int32_t>(player._pIEnAc);
-	file.WriteLE<int32_t>(player._pIFMinDam);
+	file.WriteLE<int32_t>(player.minFireDamage);
 	file.WriteLE<int32_t>(player._pIFMaxDam);
 	file.WriteLE<int32_t>(player._pILMinDam);
 	file.WriteLE<int32_t>(player._pILMaxDam);
