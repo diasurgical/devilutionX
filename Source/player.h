@@ -226,7 +226,7 @@ struct Player {
 	int lightId;
 
 	int _pNumInv;
-	int _pStrength;
+	int strength; // _pStrength
 	int _pBaseStr;
 	int _pMagic;
 	int _pBaseMag;
@@ -400,7 +400,7 @@ public:
 
 	bool CanUseItem(const Item &item) const
 	{
-		return _pStrength >= item._iMinStr
+		return strength >= item._iMinStr
 		    && _pMagic >= item._iMinMag
 		    && _pDexterity >= item._iMinDex;
 	}

@@ -1057,7 +1057,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_numInv)
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_strength)
 {
-	MyPlayer->_pStrength++;
+	MyPlayer->strength++;
 	ASSERT_FALSE(TestNetPackValidation());
 }
 

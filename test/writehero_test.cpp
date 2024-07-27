@@ -274,7 +274,7 @@ void AssertPlayer(Player &player)
 	ASSERT_STREQ(player._pName, "TestPlayer");
 	ASSERT_EQ(player._pClass, HeroClass::Rogue);
 	ASSERT_EQ(player._pBaseStr, 55);
-	ASSERT_EQ(player._pStrength, 124);
+	ASSERT_EQ(player.strength, 124);
 	ASSERT_EQ(player._pBaseMag, 70);
 	ASSERT_EQ(player._pMagic, 80);
 	ASSERT_EQ(player._pBaseDex, 250);

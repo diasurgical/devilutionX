@@ -1991,7 +1991,7 @@ _item_indexes RndPremiumItem(const Player &player, int minlvl, int maxlvl)
 
 void SpawnOnePremium(Item &premiumItem, int plvl, const Player &player)
 {
-	int strength = std::max(player.GetMaximumAttributeValue(CharacterAttribute::Strength), player._pStrength);
+	int strength = std::max(player.GetMaximumAttributeValue(CharacterAttribute::Strength), player.strength);
 	int dexterity = std::max(player.GetMaximumAttributeValue(CharacterAttribute::Dexterity), player._pDexterity);
 	int magic = std::max(player.GetMaximumAttributeValue(CharacterAttribute::Magic), player._pMagic);
 	strength += strength / 5;
@@ -2594,7 +2594,7 @@ void CalcPlrPrimaryStats(Player &player, int strength, int &magic, int dexterity
 		vitality -= 2 * playerLevel;
 	}
 
-	player._pStrength = std::max(0, strength + player._pBaseStr);
+	player.strength = std::max(0, strength + player._pBaseStr);
 	player._pMagic = std::max(0, magic + player._pBaseMag);
 	player._pDexterity = std::max(0, dexterity + player._pBaseDex);
 	player._pVitality = std::max(0, vitality + player._pBaseVit);
@@ -2617,8 +2617,8 @@ void CalcPlrDamageMod(Player &player)
 	const uint8_t playerLevel = player.getCharacterLevel();
 	const Item &leftHandItem = player.InvBody[INVLOC_HAND_LEFT];
 	const Item &rightHandItem = player.InvBody[INVLOC_HAND_RIGHT];
-	const int strMod = playerLevel * player._pStrength;
-	const int strDexMod = playerLevel * (player._pStrength + player._pDexterity);
+	const int strMod = playerLevel * player.strength;
+	const int strDexMod = playerLevel * (player.strength + player._pDexterity);
 
 	switch (player._pClass) {
 	case HeroClass::Rogue:
@@ -4460,7 +4460,7 @@ void SpawnBoy(int lvl)
 	Player &myPlayer = *MyPlayer;
 
 	HeroClass pc = myPlayer._pClass;
-	int strength = std::max(myPlayer.GetMaximumAttributeValue(CharacterAttribute::Strength), myPlayer._pStrength);
+	int strength = std::max(myPlayer.GetMaximumAttributeValue(CharacterAttribute::Strength), myPlayer.strength);
 	int dexterity = std::max(myPlayer.GetMaximumAttributeValue(CharacterAttribute::Dexterity), myPlayer._pDexterity);
 	int magic = std::max(myPlayer.GetMaximumAttributeValue(CharacterAttribute::Magic), myPlayer._pMagic);
 	strength += strength / 5;

@@ -356,7 +356,7 @@ void PackNetPlayer(PlayerNetPack &packed, const Player &player)
 	packed.friendlyMode = player.friendlyMode ? 1 : 0;
 	packed.isOnSetLevel = player.plrIsOnSetLevel;
 
-	packed.pStrength = SDL_SwapLE32(player._pStrength);
+	packed.pStrength = SDL_SwapLE32(player.strength);
 	packed.pMagic = SDL_SwapLE32(player._pMagic);
 	packed.pDexterity = SDL_SwapLE32(player._pDexterity);
 	packed.pVitality = SDL_SwapLE32(player._pVitality);
@@ -466,7 +466,7 @@ void UnPackPlayer(const PlayerPack &packed, Player &player)
 	InitPlayer(player, true);
 
 	player._pBaseStr = std::min<uint8_t>(packed.pBaseStr, player.GetMaximumAttributeValue(CharacterAttribute::Strength));
-	player._pStrength = player._pBaseStr;
+	player.strength = player._pBaseStr;
 	player._pBaseMag = std::min<uint8_t>(packed.pBaseMag, player.GetMaximumAttributeValue(CharacterAttribute::Magic));
 	player._pMagic = player._pBaseMag;
 	player._pBaseDex = std::min<uint8_t>(packed.pBaseDex, player.GetMaximumAttributeValue(CharacterAttribute::Dexterity));
@@ -601,7 +601,7 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 	InitPlayer(player, true);
 
 	player._pBaseStr = packed.pBaseStr;
-	player._pStrength = player._pBaseStr;
+	player.strength = player._pBaseStr;
 	player._pBaseMag = packed.pBaseMag;
 	player._pMagic = player._pBaseMag;
 	player._pBaseDex = packed.pBaseDex;
@@ -675,7 +675,7 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 	CalcPlrInv(player, false);
 	player._pGold = CalculateGold(player);
 
-	ValidateFields(player._pStrength, SDL_SwapLE32(packed.pStrength), player._pStrength == SDL_SwapLE32(packed.pStrength));
+	ValidateFields(player.strength, SDL_SwapLE32(packed.pStrength), player.strength == SDL_SwapLE32(packed.pStrength));
 	ValidateFields(player._pMagic, SDL_SwapLE32(packed.pMagic), player._pMagic == SDL_SwapLE32(packed.pMagic));
 	ValidateFields(player._pDexterity, SDL_SwapLE32(packed.pDexterity), player._pDexterity == SDL_SwapLE32(packed.pDexterity));
 	ValidateFields(player._pVitality, SDL_SwapLE32(packed.pVitality), player._pVitality == SDL_SwapLE32(packed.pVitality));

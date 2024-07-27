@@ -1473,8 +1473,8 @@ void ValidatePlayer()
 
 void CheckCheatStats(Player &player)
 {
-	if (player._pStrength > 750) {
-		player._pStrength = 750;
+	if (player.strength > 750) {
+		player.strength = 750;
 	}
 
 	if (player._pDexterity > 750) {
@@ -1651,7 +1651,7 @@ int Player::GetCurrentAttributeValue(CharacterAttribute attribute) const
 	case CharacterAttribute::Magic:
 		return this->_pMagic;
 	case CharacterAttribute::Strength:
-		return this->_pStrength;
+		return this->strength;
 	case CharacterAttribute::Vitality:
 		return this->_pVitality;
 	default:
@@ -2275,7 +2275,7 @@ void CreatePlayer(Player &player, HeroClass c)
 	const ClassAttributes &attr = player.getClassAttributes();
 
 	player._pBaseStr = attr.baseStr;
-	player._pStrength = player._pBaseStr;
+	player.strength = player._pBaseStr;
 
 	player._pBaseMag = attr.baseMag;
 	player._pMagic = player._pBaseMag;
@@ -3281,7 +3281,7 @@ void ModifyPlrStr(Player &player, int l)
 {
 	l = std::clamp(l, 0 - player._pBaseStr, player.GetMaximumAttributeValue(CharacterAttribute::Strength) - player._pBaseStr);
 
-	player._pStrength += l;
+	player.strength += l;
 	player._pBaseStr += l;
 
 	CalcPlrInv(player, true);
