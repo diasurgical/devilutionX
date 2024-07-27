@@ -1069,7 +1069,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_magic)
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_dexterity)
 {
-	MyPlayer->_pDexterity++;
+	MyPlayer->dexterity++;
 	ASSERT_FALSE(TestNetPackValidation());
 }
 

@@ -230,7 +230,7 @@ struct Player {
 	int _pBaseStr;
 	int _pMagic;
 	int _pBaseMag;
-	int _pDexterity;
+	int dexterity; // _pDexterity
 	int _pBaseDex;
 	int _pVitality;
 	int _pBaseVit;
@@ -402,7 +402,7 @@ public:
 	{
 		return _pStrength >= item._iMinStr
 		    && _pMagic >= item._iMinMag
-		    && _pDexterity >= item._iMinDex;
+		    && dexterity >= item._iMinDex;
 	}
 
 	bool CanCleave()
@@ -567,7 +567,7 @@ public:
 	 */
 	int GetArmor() const
 	{
-		return _pIBonusAC + _pIAC + _pDexterity / 5;
+		return _pIBonusAC + _pIAC + dexterity / 5;
 	}
 
 	/**
@@ -575,7 +575,7 @@ public:
 	 */
 	int GetMeleeToHit() const
 	{
-		return getCharacterLevel() + _pDexterity / 2 + _pIBonusToHit + getPlayerCombatData().baseMeleeToHit;
+		return getCharacterLevel() + dexterity / 2 + _pIBonusToHit + getPlayerCombatData().baseMeleeToHit;
 	}
 
 	/**
@@ -595,7 +595,7 @@ public:
 	 */
 	int GetRangedToHit() const
 	{
-		return getCharacterLevel() + _pDexterity + _pIBonusToHit + getPlayerCombatData().baseRangedToHit;
+		return getCharacterLevel() + dexterity + _pIBonusToHit + getPlayerCombatData().baseRangedToHit;
 	}
 
 	int GetRangedPiercingToHit() const
@@ -621,7 +621,7 @@ public:
 	 */
 	int GetBlockChance(bool useLevel = true) const
 	{
-		int blkper = _pDexterity + getBaseToBlock();
+		int blkper = dexterity + getBaseToBlock();
 		if (useLevel)
 			blkper += getCharacterLevel() * 2;
 		return blkper;

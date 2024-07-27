@@ -1073,7 +1073,7 @@ void TryDisarm(const Player &player, Object &object)
 	if (!object._oTrapFlag) {
 		return;
 	}
-	int trapdisper = 2 * player._pDexterity - 5 * currlevel;
+	int trapdisper = 2 * player.dexterity - 5 * currlevel;
 	if (GenerateRnd(100) > trapdisper) {
 		return;
 	}
@@ -1477,8 +1477,8 @@ void CheckCheatStats(Player &player)
 		player._pStrength = 750;
 	}
 
-	if (player._pDexterity > 750) {
-		player._pDexterity = 750;
+	if (player.dexterity > 750) {
+		player.dexterity = 750;
 	}
 
 	if (player._pMagic > 750) {
@@ -1647,7 +1647,7 @@ int Player::GetCurrentAttributeValue(CharacterAttribute attribute) const
 {
 	switch (attribute) {
 	case CharacterAttribute::Dexterity:
-		return this->_pDexterity;
+		return this->dexterity;
 	case CharacterAttribute::Magic:
 		return this->_pMagic;
 	case CharacterAttribute::Strength:
@@ -2281,7 +2281,7 @@ void CreatePlayer(Player &player, HeroClass c)
 	player._pMagic = player._pBaseMag;
 
 	player._pBaseDex = attr.baseDex;
-	player._pDexterity = player._pBaseDex;
+	player.dexterity = player._pBaseDex;
 
 	player._pBaseVit = attr.baseVit;
 	player._pVitality = player._pBaseVit;
@@ -3319,7 +3319,7 @@ void ModifyPlrDex(Player &player, int l)
 {
 	l = std::clamp(l, 0 - player._pBaseDex, player.GetMaximumAttributeValue(CharacterAttribute::Dexterity) - player._pBaseDex);
 
-	player._pDexterity += l;
+	player.dexterity += l;
 	player._pBaseDex += l;
 	CalcPlrInv(player, true);
 
