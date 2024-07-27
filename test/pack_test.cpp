@@ -1158,7 +1158,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_iAC)
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_iBonusDam)
 {
-	MyPlayer->_pIBonusDam++;
+	MyPlayer->bonusDamagePercent++;
 	ASSERT_FALSE(TestNetPackValidation());
 
 	CalcPlrItemVals(*MyPlayer, false);

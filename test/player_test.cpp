@@ -164,7 +164,7 @@ static void AssertPlayer(Player &player)
 	ASSERT_EQ(player._pIMinDam, 1);
 	ASSERT_EQ(player._pIMaxDam, 4);
 	ASSERT_EQ(player._pIAC, 0);
-	ASSERT_EQ(player._pIBonusDam, 0);
+	ASSERT_EQ(player.bonusDamagePercent, 0);
 	ASSERT_EQ(player._pIBonusToHit, 0);
 	ASSERT_EQ(player._pIBonusAC, 0);
 	ASSERT_EQ(player._pIBonusDamMod, 0);

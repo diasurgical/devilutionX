@@ -249,7 +249,7 @@ struct Player {
 	int _pIMinDam;
 	int _pIMaxDam;
 	int _pIAC;
-	int _pIBonusDam;
+	int bonusDamagePercent; // _pIBonusDam
 	int _pIBonusToHit;
 	int _pIBonusAC;
 	int _pIBonusDamMod;
