@@ -387,9 +387,9 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	file.Skip(3);        // Alignment
 	player.selectedSpell = static_cast<SpellID>(file.NextLE<int32_t>());
 	player.selectedSpellType = static_cast<SpellType>(file.NextLE<int8_t>());
-	file.Skip(3); // Alignment
+	file.Skip(3);         // Alignment
 	file.Skip<int32_t>(); // Skip _pSBkSpell
-	file.Skip<int8_t>(); // Skip _pSBkSplType
+	file.Skip<int8_t>();  // Skip _pSBkSplType
 
 	// Only read spell levels for learnable spells
 	for (int i = 0; i < static_cast<int>(SpellID::LAST); i++) {
@@ -459,7 +459,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	player.experience = file.NextLE<uint32_t>();
 	file.Skip<uint32_t>(); // Skip _pMaxExp - unused
 	file.Skip<uint32_t>(); // Skip _pNextExper, we retrieve it when needed based on characterLevel
-	file.Skip<int8_t>(); // Skip _pArmorClass - unused
+	file.Skip<int8_t>();   // Skip _pArmorClass - unused
 	player.resistMagic = file.NextLE<int8_t>();
 	player.resistFire = file.NextLE<int8_t>();
 	player.resistLightning = file.NextLE<int8_t>();
@@ -1224,9 +1224,9 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.Skip(3);        // Alignment
 	file.WriteLE<int32_t>(static_cast<int8_t>(player.selectedSpell));
 	file.WriteLE<int8_t>(static_cast<uint8_t>(player.selectedSpellType));
-	file.Skip(3); // Alignment
+	file.Skip(3);         // Alignment
 	file.Skip<int32_t>(); // Skip _pSBkSpell
-	file.Skip<int8_t>(); // Skip _pSBkSplType
+	file.Skip<int8_t>();  // Skip _pSBkSplType
 
 	for (uint8_t spellLevel : player.spellLevel)
 		file.WriteLE<uint8_t>(spellLevel);
@@ -1283,7 +1283,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.WriteLE<uint32_t>(player.experience);
 	file.Skip<uint32_t>();                                       // Skip _pMaxExp
 	file.WriteLE<uint32_t>(player.getNextExperienceThreshold()); // set _pNextExper for backwards compatibility
-	file.Skip<int8_t>(); // Skip _pArmorClass
+	file.Skip<int8_t>();                                         // Skip _pArmorClass
 	file.WriteLE<int8_t>(player.resistMagic);
 	file.WriteLE<int8_t>(player.resistFire);
 	file.WriteLE<int8_t>(player.resistLightning);

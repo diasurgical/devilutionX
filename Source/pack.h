@@ -75,8 +75,8 @@ struct PlayerPack {
 	int16_t wReserved8;   // For future use
 	uint32_t difficultyCompletion;
 	uint32_t pDifficulty;
-	uint32_t hellfireFlags;  // `ItemSpecialEffectHf` is 1 byte but this is 4 bytes.
-	uint8_t reserved3[20]; // For future use
+	uint32_t hellfireFlags; // `ItemSpecialEffectHf` is 1 byte but this is 4 bytes.
+	uint8_t reserved3[20];  // For future use
 };
 
 union ItemNetPack {
