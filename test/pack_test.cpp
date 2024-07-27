@@ -1275,7 +1275,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_iLMinDam)
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_iLMaxDam)
 {
-	MyPlayer->_pILMaxDam++;
+	MyPlayer->maxLightningDamage++;
 	ASSERT_FALSE(TestNetPackValidation());
 
 	CalcPlrItemVals(*MyPlayer, false);

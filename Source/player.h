@@ -258,7 +258,7 @@ struct Player {
 	int _pIFMinDam;
 	int _pIFMaxDam;
 	int _pILMinDam;
-	int _pILMaxDam;
+	int maxLightningDamage; // _pILMaxDam
 	uint32_t _pExperience;
 	PLR_MODE _pmode;
 	int8_t walkpath[MaxPathLength];

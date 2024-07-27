@@ -176,7 +176,7 @@ static void AssertPlayer(Player &player)
 	ASSERT_EQ(player._pIFMinDam, 0);
 	ASSERT_EQ(player._pIFMaxDam, 0);
 	ASSERT_EQ(player._pILMinDam, 0);
-	ASSERT_EQ(player._pILMaxDam, 0);
+	ASSERT_EQ(player.maxLightningDamage, 0);
 }
 
 TEST(Player, CreatePlayer)

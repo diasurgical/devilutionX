@@ -161,7 +161,7 @@ R 32 _pIEnAc
 R 32 _pIFMinDam
 R 32 _pIFMaxDam
 R 32 _pILMinDam
-R 32 _pILMaxDam
+R 32 maxLightningDamage
 R 32 _pOilType
 R 8 pTownWarps
 R 8 pDungMsgs

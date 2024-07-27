@@ -2934,7 +2934,7 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	player._pIFMinDam = minFireDam;
 	player._pIFMaxDam = maxFireDam;
 	player._pILMinDam = minLightDam;
-	player._pILMaxDam = maxLightDam;
+	player.maxLightningDamage = maxLightDam;
 
 	CalcPlrBlockFlag(player);
 

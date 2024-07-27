@@ -379,7 +379,7 @@ void PackNetPlayer(PlayerNetPack &packed, const Player &player)
 	packed.pIFMinDam = SDL_SwapLE32(player._pIFMinDam);
 	packed.pIFMaxDam = SDL_SwapLE32(player._pIFMaxDam);
 	packed.pILMinDam = SDL_SwapLE32(player._pILMinDam);
-	packed.pILMaxDam = SDL_SwapLE32(player._pILMaxDam);
+	packed.pILMaxDam = SDL_SwapLE32(player.maxLightningDamage);
 }
 
 void UnPackItem(const ItemPack &packedItem, const Player &player, Item &item, bool isHellfire)
@@ -697,7 +697,7 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 	ValidateFields(player._pIFMinDam, SDL_SwapLE32(packed.pIFMinDam), player._pIFMinDam == SDL_SwapLE32(packed.pIFMinDam));
 	ValidateFields(player._pIFMaxDam, SDL_SwapLE32(packed.pIFMaxDam), player._pIFMaxDam == SDL_SwapLE32(packed.pIFMaxDam));
 	ValidateFields(player._pILMinDam, SDL_SwapLE32(packed.pILMinDam), player._pILMinDam == SDL_SwapLE32(packed.pILMinDam));
-	ValidateFields(player._pILMaxDam, SDL_SwapLE32(packed.pILMaxDam), player._pILMaxDam == SDL_SwapLE32(packed.pILMaxDam));
+	ValidateFields(player.maxLightningDamage, SDL_SwapLE32(packed.pILMaxDam), player.maxLightningDamage == SDL_SwapLE32(packed.pILMaxDam));
 	ValidateFields(player._pMaxHPBase, player.calculateBaseLife(), player._pMaxHPBase <= player.calculateBaseLife());
 	ValidateFields(player._pMaxManaBase, player.calculateBaseMana(), player._pMaxManaBase <= player.calculateBaseMana());
 
