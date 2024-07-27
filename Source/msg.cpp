@@ -2672,7 +2672,7 @@ void DeltaSaveLevel()
 
 uint8_t GetLevelForMultiplayer(const Player &player)
 {
-	return GetLevelForMultiplayer(player.plrlevel, player.plrIsOnSetLevel);
+	return GetLevelForMultiplayer(player.plrlevel, player.isOnSetLevel);
 }
 
 bool IsValidLevelForMultiplayer(uint8_t level)

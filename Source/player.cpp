@@ -2048,7 +2048,7 @@ bool Player::isLevelOwnedByLocalClient() const
 			continue;
 		if (other.plrlevel != this->plrlevel)
 			continue;
-		if (other.plrIsOnSetLevel != this->plrIsOnSetLevel)
+		if (other.isOnSetLevel != this->isOnSetLevel)
 			continue;
 		if (&other == MyPlayer && gbBufferMsgs != 0)
 			continue;

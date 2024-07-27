@@ -300,7 +300,7 @@ struct Player {
 	int8_t InvGrid[InventoryGridCells];
 
 	uint8_t plrlevel;
-	bool plrIsOnSetLevel;
+	bool isOnSetLevel; // plrIsOnSetLevel
 	ActorPosition position;
 	Direction _pdir; // Direction faced by player (direction enum)
 	HeroClass _pClass;
@@ -856,27 +856,27 @@ public:
 	/** @brief Checks if the player is on the corresponding level. */
 	bool isOnLevel(uint8_t level) const
 	{
-		return !this->plrIsOnSetLevel && this->plrlevel == level;
+		return !this->isOnSetLevel && this->plrlevel == level;
 	}
 	/** @brief Checks if the player is on the corresponding level. */
 	bool isOnLevel(_setlevels level) const
 	{
-		return this->plrIsOnSetLevel && this->plrlevel == static_cast<uint8_t>(level);
+		return this->isOnSetLevel && this->plrlevel == static_cast<uint8_t>(level);
 	}
 	/** @brief Checks if the player is on a arena level. */
 	bool isOnArenaLevel() const
 	{
-		return plrIsOnSetLevel && IsArenaLevel(static_cast<_setlevels>(plrlevel));
+		return isOnSetLevel && IsArenaLevel(static_cast<_setlevels>(plrlevel));
 	}
 	void setLevel(uint8_t level)
 	{
 		this->plrlevel = level;
-		this->plrIsOnSetLevel = false;
+		this->isOnSetLevel = false;
 	}
 	void setLevel(_setlevels level)
 	{
 		this->plrlevel = static_cast<uint8_t>(level);
-		this->plrIsOnSetLevel = true;
+		this->isOnSetLevel = true;
 	}
 
 	/** @brief Returns a character's life based on starting life, character level, and base vitality. */

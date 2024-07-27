@@ -500,7 +500,7 @@ void ShowProgress(interface_mode uMsg)
 	assert(previousHandler == DisableInputEventHandler);
 	IsProgress = false;
 
-	NetSendCmdLocParam2(true, CMD_PLAYER_JOINLEVEL, myPlayer.position.tile, myPlayer.plrlevel, myPlayer.plrIsOnSetLevel ? 1 : 0);
+	NetSendCmdLocParam2(true, CMD_PLAYER_JOINLEVEL, myPlayer.position.tile, myPlayer.plrlevel, myPlayer.isOnSetLevel ? 1 : 0);
 	DelayPlrMessages(SDL_GetTicks() - delayStart);
 
 	if (gbSomebodyWonGameKludge && myPlayer.isOnLevel(16)) {

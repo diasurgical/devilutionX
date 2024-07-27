@@ -354,7 +354,7 @@ void PackNetPlayer(PlayerNetPack &packed, const Player &player)
 	packed.pDiabloKillLevel = player.pDiabloKillLevel;
 	packed.pManaShield = player.pManaShield;
 	packed.friendlyMode = player.friendlyMode ? 1 : 0;
-	packed.isOnSetLevel = player.plrIsOnSetLevel;
+	packed.isOnSetLevel = player.isOnSetLevel;
 
 	packed.pStrength = SDL_SwapLE32(player._pStrength);
 	packed.pMagic = SDL_SwapLE32(player._pMagic);
@@ -589,7 +589,7 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 	player.position.tile = position;
 	player.position.future = position;
 	player.plrlevel = packed.plrlevel;
-	player.plrIsOnSetLevel = packed.isOnSetLevel != 0;
+	player.isOnSetLevel = packed.isOnSetLevel != 0;
 	player._pMaxHPBase = baseHpMax;
 	player._pHPBase = baseHp;
 	player._pMaxHP = baseHpMax;
