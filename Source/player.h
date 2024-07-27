@@ -252,7 +252,7 @@ struct Player {
 	int _pIBonusDam;
 	int _pIBonusToHit;
 	int _pIBonusAC;
-	int _pIBonusDamMod;
+	int bonusDamage; // _pIBonusDamMod
 	int _pIGetHit;
 	int _pIEnAc;
 	int _pIFMinDam;

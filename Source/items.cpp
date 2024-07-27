@@ -2921,7 +2921,7 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	player._pIBonusAC = bonusAc;
 	player._pIFlags = flags;
 	player.pDamAcFlags = damAcFlags;
-	player._pIBonusDamMod = damMod;
+	player.bonusDamage = damMod;
 	player._pIGetHit = getHit;
 	CalcPlrLightRadius(player, lightRadius);
 	CalcPlrDamageMod(player);
