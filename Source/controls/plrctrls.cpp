@@ -2116,7 +2116,7 @@ void QuickCast(size_t slot)
 {
 	MouseActionType prevMouseButtonAction = LastMouseButtonAction;
 	Player &myPlayer = *MyPlayer;
-	SpellID spell = myPlayer._pSplHotKey[slot];
+	SpellID spell = myPlayer.hotkeySpell[slot];
 	SpellType spellType = myPlayer._pSplTHotKey[slot];
 
 	if (ControlMode != ControlTypes::KeyboardAndMouse) {

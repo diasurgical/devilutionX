@@ -124,7 +124,7 @@ void DrawSpellsCircleMenuHint(const Surface &out, const Point &origin)
 	SpellType splType;
 
 	for (int slot = 0; slot < 4; ++slot) {
-		splId = myPlayer._pSplHotKey[slot];
+		splId = myPlayer.hotkeySpell[slot];
 
 		if (IsValidSpell(splId) && (spells & GetSpellBitmask(splId)) != 0)
 			splType = (leveltype == DTYPE_TOWN && !GetSpellData(splId).isAllowedInTown()) ? SpellType::Invalid : myPlayer._pSplTHotKey[slot];

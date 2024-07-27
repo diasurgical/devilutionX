@@ -1624,7 +1624,7 @@ void CycleSpellHotkeys(bool next)
 	for (size_t slot = 0; slot < NumHotkeys; slot++) {
 		if (!IsValidSpeedSpell(slot))
 			continue;
-		if (MyPlayer->_pRSpell == MyPlayer->_pSplHotKey[slot] && MyPlayer->_pRSplType == MyPlayer->_pSplTHotKey[slot]) {
+		if (MyPlayer->_pRSpell == MyPlayer->hotkeySpell[slot] && MyPlayer->_pRSplType == MyPlayer->_pSplTHotKey[slot]) {
 			// found current
 			currentIndex = validHotKeyIndexes.size();
 		}

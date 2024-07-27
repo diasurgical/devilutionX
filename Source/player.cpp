@@ -2309,7 +2309,7 @@ void CreatePlayer(Player &player, HeroClass c)
 	player._pRSplType = SpellType::Invalid;
 
 	// Initializing the hotkey bindings to no selection
-	std::fill(player._pSplHotKey, player._pSplHotKey + NumHotkeys, SpellID::Invalid);
+	std::fill(player.hotkeySpell, player.hotkeySpell + NumHotkeys, SpellID::Invalid);
 
 	// CreatePlrItems calls AutoEquip which will overwrite the player graphic if required
 	player._pgfxnum = static_cast<uint8_t>(PlayerWeaponGraphic::Unarmed);

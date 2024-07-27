@@ -335,7 +335,7 @@ public:
 	/** @brief Bitmask of spells available via scrolls */
 	uint64_t _pScrlSpells;
 	SpellFlag _pSpellFlags;
-	SpellID _pSplHotKey[NumHotkeys];
+	SpellID hotkeySpell[NumHotkeys]; // _pSplHotKey
 	SpellType _pSplTHotKey[NumHotkeys];
 	bool _pBlockFlag;
 	bool _pInvincible;

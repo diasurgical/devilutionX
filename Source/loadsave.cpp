@@ -417,7 +417,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 
 	// Extra hotkeys: to keep single player save compatibility, read only 4 hotkeys here, rely on LoadHotkeys for the rest
 	for (size_t i = 0; i < 4; i++) {
-		player._pSplHotKey[i] = static_cast<SpellID>(file.NextLE<int32_t>());
+		player.hotkeySpell[i] = static_cast<SpellID>(file.NextLE<int32_t>());
 	}
 	for (size_t i = 0; i < 4; i++) {
 		player._pSplTHotKey[i] = static_cast<SpellType>(file.NextLE<uint8_t>());
@@ -1240,7 +1240,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 
 	// Extra hotkeys: to keep single player save compatibility, write only 4 hotkeys here, rely on SaveHotkeys for the rest
 	for (size_t i = 0; i < 4; i++) {
-		file.WriteLE<int32_t>(static_cast<int8_t>(player._pSplHotKey[i]));
+		file.WriteLE<int32_t>(static_cast<int8_t>(player.hotkeySpell[i]));
 	}
 	for (size_t i = 0; i < 4; i++) {
 		file.WriteLE<uint8_t>(static_cast<uint8_t>(player._pSplTHotKey[i]));
@@ -2229,7 +2229,7 @@ void LoadHotkeys()
 	size_t nHotkeys = 4; // Defaults to old save format number
 
 	// Refill the spell arrays with no selection
-	std::fill(myPlayer._pSplHotKey, myPlayer._pSplHotKey + NumHotkeys, SpellID::Invalid);
+	std::fill(myPlayer.hotkeySpell, myPlayer.hotkeySpell + NumHotkeys, SpellID::Invalid);
 	std::fill(myPlayer._pSplTHotKey, myPlayer._pSplTHotKey + NumHotkeys, SpellType::Invalid);
 
 	// Checking if the save file has the old format with only 4 hotkeys and no header
@@ -2242,7 +2242,7 @@ void LoadHotkeys()
 	for (size_t i = 0; i < nHotkeys; i++) {
 		// Do not load hotkeys past the size of the spell types array, discard the rest
 		if (i < NumHotkeys) {
-			myPlayer._pSplHotKey[i] = static_cast<SpellID>(file.NextLE<int32_t>());
+			myPlayer.hotkeySpell[i] = static_cast<SpellID>(file.NextLE<int32_t>());
 		} else {
 			file.Skip<int32_t>();
 		}
@@ -2269,7 +2269,7 @@ void SaveHotkeys(SaveWriter &saveWriter, const Player &player)
 	file.WriteLE<uint8_t>(static_cast<uint8_t>(NumHotkeys));
 
 	// Write the spell hotkeys
-	for (auto &spellId : player._pSplHotKey) {
+	for (auto &spellId : player.hotkeySpell) {
 		file.WriteLE<int32_t>(static_cast<int8_t>(spellId));
 	}
 	for (auto &spellType : player._pSplTHotKey) {

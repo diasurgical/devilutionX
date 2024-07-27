@@ -69,7 +69,7 @@ std::optional<std::string_view> GetHotkeyName(SpellID spellId, SpellType spellTy
 {
 	Player &myPlayer = *MyPlayer;
 	for (size_t t = 0; t < NumHotkeys; t++) {
-		if (myPlayer._pSplHotKey[t] != spellId || myPlayer._pSplTHotKey[t] != spellType)
+		if (myPlayer.hotkeySpell[t] != spellId || myPlayer._pSplTHotKey[t] != spellType)
 			continue;
 		auto quickSpellActionKey = StrCat("QuickSpell", t + 1);
 		if (ControlMode == ControlTypes::Gamepad)
@@ -275,17 +275,17 @@ void SetSpeedSpell(size_t slot)
 	}
 	Player &myPlayer = *MyPlayer;
 
-	if (myPlayer._pSplHotKey[slot] == pSpell && myPlayer._pSplTHotKey[slot] == pSplType) {
+	if (myPlayer.hotkeySpell[slot] == pSpell && myPlayer._pSplTHotKey[slot] == pSplType) {
 		// Unset spell hotkey
-		myPlayer._pSplHotKey[slot] = SpellID::Invalid;
+		myPlayer.hotkeySpell[slot] = SpellID::Invalid;
 		return;
 	}
 
 	for (size_t i = 0; i < NumHotkeys; ++i) {
-		if (myPlayer._pSplHotKey[i] == pSpell && myPlayer._pSplTHotKey[i] == pSplType)
-			myPlayer._pSplHotKey[i] = SpellID::Invalid;
+		if (myPlayer.hotkeySpell[i] == pSpell && myPlayer._pSplTHotKey[i] == pSplType)
+			myPlayer.hotkeySpell[i] = SpellID::Invalid;
 	}
-	myPlayer._pSplHotKey[slot] = pSpell;
+	myPlayer.hotkeySpell[slot] = pSpell;
 	myPlayer._pSplTHotKey[slot] = pSplType;
 }
 
@@ -295,7 +295,7 @@ bool IsValidSpeedSpell(size_t slot)
 
 	Player &myPlayer = *MyPlayer;
 
-	const SpellID spellId = myPlayer._pSplHotKey[slot];
+	const SpellID spellId = myPlayer.hotkeySpell[slot];
 	if (!IsValidSpell(spellId)) {
 		return false;
 	}
@@ -324,7 +324,7 @@ void ToggleSpell(size_t slot)
 {
 	if (IsValidSpeedSpell(slot)) {
 		Player &myPlayer = *MyPlayer;
-		myPlayer._pRSpell = myPlayer._pSplHotKey[slot];
+		myPlayer._pRSpell = myPlayer.hotkeySpell[slot];
 		myPlayer._pRSplType = myPlayer._pSplTHotKey[slot];
 		RedrawEverything();
 	}

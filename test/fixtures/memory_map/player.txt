@@ -54,7 +54,7 @@ R 64 _pAblSpells
 R 64 _pScrlSpells
 R 8 _pSpellFlags
 R 24 alignment
-M 4 32 _pSplHotKey
+M 4 32 hotkeySpell
 M 4 8 _pSplTHotKey
 R 32 _pwtype
 R 8 _pBlockFlag
