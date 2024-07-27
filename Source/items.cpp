@@ -2927,7 +2927,7 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	CalcPlrDamageMod(player);
 	player._pISpells = spells;
 	EnsureValidReadiedSpell(player);
-	player._pISplLvlAdd = splLvlAdd;
+	player.bonusSpellLevel = splLvlAdd;
 	player._pIEnAc = targetAc;
 	CalcPlrResistances(player, flags, fireRes, lightRes, magicRes);
 	CalcPlrLifeMana(player, vitality, magic, life, mana);

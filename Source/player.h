@@ -310,7 +310,7 @@ private:
 
 public:
 	uint8_t _pgfxnum; // Bitmask indicating what variant of the sprite the player is using. The 3 lower bits define weapon (PlayerWeaponGraphic) and the higher bits define armour (starting with PlayerArmorGraphic)
-	int8_t _pISplLvlAdd;
+	int8_t bonusSpellLevel; // _pISplLvlAdd
 	/** @brief Specifies whether players are in non-PvP mode. */
 	bool friendlyMode = true;
 
@@ -645,7 +645,7 @@ public:
 			return 0;
 		}
 
-		return std::max<int>(_pISplLvlAdd + _pSplLvl[static_cast<std::size_t>(spell)], 0);
+		return std::max<int>(bonusSpellLevel + _pSplLvl[static_cast<std::size_t>(spell)], 0);
 	}
 
 	/**
