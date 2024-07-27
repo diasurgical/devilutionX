@@ -144,7 +144,7 @@ C 8 item
 C 1 item
 R 32 _pIMinDam
 R 32 _pIMaxDam
-R 32 _pIAC
+R 32 armorClass
 R 32 _pIBonusDam
 R 32 _pIBonusToHit
 R 32 _pIBonusAC

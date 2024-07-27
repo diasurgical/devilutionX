@@ -1145,7 +1145,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_iMaxDam)
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_iAC)
 {
-	MyPlayer->_pIAC++;
+	MyPlayer->armorClass++;
 	ASSERT_FALSE(TestNetPackValidation());
 
 	CalcPlrItemVals(*MyPlayer, false);

@@ -248,7 +248,7 @@ struct Player {
 	int _pManaPer;
 	int _pIMinDam;
 	int _pIMaxDam;
-	int _pIAC;
+	int armorClass; // _pIAC
 	int _pIBonusDam;
 	int _pIBonusToHit;
 	int _pIBonusAC;
@@ -567,7 +567,7 @@ public:
 	 */
 	int GetArmor() const
 	{
-		return _pIBonusAC + _pIAC + _pDexterity / 5;
+		return _pIBonusAC + armorClass + _pDexterity / 5;
 	}
 
 	/**

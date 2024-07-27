@@ -2650,13 +2650,13 @@ void CalcPlrDamageMod(Player &player)
 		}
 		if (player.isHoldingItem(ItemType::Shield)) {
 			if (leftHandItem._itype == ItemType::Shield)
-				player._pIAC -= leftHandItem._iAC / 2;
+				player.armorClass -= leftHandItem._iAC / 2;
 			else if (rightHandItem._itype == ItemType::Shield)
-				player._pIAC -= rightHandItem._iAC / 2;
+				player.armorClass -= rightHandItem._iAC / 2;
 		} else if (!player.isHoldingItem(ItemType::Staff) && !player.isHoldingItem(ItemType::Bow)) {
 			player._pDamageMod += playerLevel * player._pVitality / 100;
 		}
-		player._pIAC += playerLevel / 4;
+		player.armorClass += playerLevel / 4;
 		return;
 	default:
 		player._pDamageMod = strMod / 100;
@@ -2775,20 +2775,20 @@ PlayerArmorGraphic GetPlrAnimArmorId(Player &player)
 		case ItemType::HeavyArmor:
 			if (player._pClass == HeroClass::Monk) {
 				if (chestItem._iMagical == ITEM_QUALITY_UNIQUE)
-					player._pIAC += playerLevel / 2;
+					player.armorClass += playerLevel / 2;
 			}
 			return PlayerArmorGraphic::Heavy;
 		case ItemType::MediumArmor:
 			if (player._pClass == HeroClass::Monk) {
 				if (chestItem._iMagical == ITEM_QUALITY_UNIQUE)
-					player._pIAC += playerLevel * 2;
+					player.armorClass += playerLevel * 2;
 				else
-					player._pIAC += playerLevel / 2;
+					player.armorClass += playerLevel / 2;
 			}
 			return PlayerArmorGraphic::Medium;
 		default:
 			if (player._pClass == HeroClass::Monk)
-				player._pIAC += playerLevel * 2;
+				player.armorClass += playerLevel * 2;
 			return PlayerArmorGraphic::Light;
 		}
 	}
@@ -2915,7 +2915,7 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 
 	CalcPlrDamage(player, minDamage, maxDamage);
 	CalcPlrPrimaryStats(player, strength, magic, dexterity, vitality);
-	player._pIAC = ac;
+	player.armorClass = ac;
 	player._pIBonusDam = dam;
 	player._pIBonusToHit = toHit;
 	player._pIBonusAC = bonusAc;
