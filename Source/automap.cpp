@@ -1326,7 +1326,7 @@ void DrawAutomapPlr(const Surface &out, const Displacement &myPlayerOffset, cons
 
 	Displacement playerOffset = {};
 	if (player.isWalking())
-		playerOffset = GetOffsetForWalking(player.AnimInfo, player._pdir);
+		playerOffset = GetOffsetForWalking(player.animationInfo, player._pdir);
 
 	int scale = (GetAutomapType() == AutomapType::Minimap) ? MinimapScale : AutoMapScale;
 
@@ -1747,7 +1747,7 @@ void DrawAutomap(const Surface &out)
 	const Player &myPlayer = *MyPlayer;
 	Displacement myPlayerOffset = {};
 	if (myPlayer.isWalking())
-		myPlayerOffset = GetOffsetForWalking(myPlayer.AnimInfo, myPlayer._pdir, true);
+		myPlayerOffset = GetOffsetForWalking(myPlayer.animationInfo, myPlayer._pdir, true);
 
 	int scale = (GetAutomapType() == AutomapType::Minimap) ? MinimapScale : AutoMapScale;
 	int d = (scale * 64) / 100;

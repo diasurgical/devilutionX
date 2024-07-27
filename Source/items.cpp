@@ -461,7 +461,7 @@ void AddInitItems()
 
 		item._iCreateInfo = curlv | CF_PREGEN;
 		SetupItem(item);
-		item.AnimInfo.currentFrame = item.AnimInfo.numberOfFrames - 1;
+		item.animationInfo.currentFrame = item.animationInfo.numberOfFrames - 1;
 		item._iAnimFlag = false;
 		item._iSelFlag = 1;
 		DeltaAddItem(ii);
@@ -1665,7 +1665,7 @@ void SpawnRock()
 	SetupItem(item);
 	item._iSelFlag = 2;
 	item._iPostDraw = true;
-	item.AnimInfo.currentFrame = 10;
+	item.animationInfo.currentFrame = 10;
 	item._iCreateInfo |= CF_PREGEN;
 
 	DeltaAddItem(ii);
@@ -2812,7 +2812,7 @@ void CalcPlrGraphics(Player &player, PlayerWeaponGraphic animWeaponId, PlayerArm
 		OptionalClxSpriteList sprites;
 		if (!HeadlessMode)
 			sprites = player.AnimationData[static_cast<size_t>(graphic)].spritesForDirection(player._pdir);
-		player.AnimInfo.changeAnimationData(sprites, numberOfFrames, ticksPerFrame);
+		player.animationInfo.changeAnimationData(sprites, numberOfFrames, ticksPerFrame);
 	} else {
 		player._pgfxnum = gfxNum;
 	}
@@ -3628,7 +3628,7 @@ void SpawnQuestItem(_item_indexes itemid, Point position, int randarea, int self
 	item._iPostDraw = true;
 	if (selflag != 0) {
 		item._iSelFlag = selflag;
-		item.AnimInfo.currentFrame = item.AnimInfo.numberOfFrames - 1;
+		item.animationInfo.currentFrame = item.animationInfo.numberOfFrames - 1;
 		item._iAnimFlag = false;
 	}
 
@@ -3717,18 +3717,18 @@ void ProcessItems()
 		auto &item = Items[ii];
 		if (!item._iAnimFlag)
 			continue;
-		item.AnimInfo.processAnimation();
+		item.animationInfo.processAnimation();
 		if (item._iCurs == ICURS_MAGIC_ROCK) {
-			if (item._iSelFlag == 1 && item.AnimInfo.currentFrame == 10)
-				item.AnimInfo.currentFrame = 0;
-			if (item._iSelFlag == 2 && item.AnimInfo.currentFrame == 20)
-				item.AnimInfo.currentFrame = 10;
+			if (item._iSelFlag == 1 && item.animationInfo.currentFrame == 10)
+				item.animationInfo.currentFrame = 0;
+			if (item._iSelFlag == 2 && item.animationInfo.currentFrame == 20)
+				item.animationInfo.currentFrame = 10;
 		} else {
-			if (item.AnimInfo.currentFrame == (item.AnimInfo.numberOfFrames - 1) / 2)
+			if (item.animationInfo.currentFrame == (item.animationInfo.numberOfFrames - 1) / 2)
 				PlaySfxLoc(ItemDropSnds[ItemCAnimTbl[item._iCurs]], item.position);
 
-			if (item.AnimInfo.isLastFrame()) {
-				item.AnimInfo.currentFrame = item.AnimInfo.numberOfFrames - 1;
+			if (item.animationInfo.isLastFrame()) {
+				item.animationInfo.currentFrame = item.animationInfo.numberOfFrames - 1;
 				item._iAnimFlag = false;
 				item._iSelFlag = 1;
 			}
@@ -3748,7 +3748,7 @@ void GetItemFrm(Item &item)
 {
 	int it = ItemCAnimTbl[item._iCurs];
 	if (itemanims[it])
-		item.AnimInfo.sprites.emplace(*itemanims[it]);
+		item.animationInfo.sprites.emplace(*itemanims[it]);
 }
 
 void GetItemStr(Item &item)
@@ -4611,7 +4611,7 @@ void MakeGoldStack(Item &goldItem, int value)
 int ItemNoFlippy()
 {
 	int r = ActiveItems[ActiveItemCount - 1];
-	Items[r].AnimInfo.currentFrame = Items[r].AnimInfo.numberOfFrames - 1;
+	Items[r].animationInfo.currentFrame = Items[r].animationInfo.numberOfFrames - 1;
 	Items[r]._iAnimFlag = false;
 	Items[r]._iSelFlag = 1;
 
@@ -4866,16 +4866,16 @@ void Item::setNewAnimation(bool showAnimation)
 	int8_t numberOfFrames = ItemAnimLs[it];
 	OptionalClxSpriteList sprite = itemanims[it] ? OptionalClxSpriteList { *itemanims[static_cast<size_t>(it)] } : std::nullopt;
 	if (_iCurs != ICURS_MAGIC_ROCK)
-		AnimInfo.setNewAnimation(sprite, numberOfFrames, 1, AnimationDistributionFlags::ProcessAnimationPending, 0, numberOfFrames);
+		animationInfo.setNewAnimation(sprite, numberOfFrames, 1, AnimationDistributionFlags::ProcessAnimationPending, 0, numberOfFrames);
 	else
-		AnimInfo.setNewAnimation(sprite, numberOfFrames, 1);
+		animationInfo.setNewAnimation(sprite, numberOfFrames, 1);
 	_iPostDraw = false;
 	_iRequest = false;
 	if (showAnimation) {
 		_iAnimFlag = true;
 		_iSelFlag = 0;
 	} else {
-		AnimInfo.currentFrame = AnimInfo.numberOfFrames - 1;
+		animationInfo.currentFrame = animationInfo.numberOfFrames - 1;
 		_iAnimFlag = false;
 		_iSelFlag = 1;
 	}

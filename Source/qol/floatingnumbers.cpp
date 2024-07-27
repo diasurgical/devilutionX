@@ -157,7 +157,7 @@ void AddFloatingNumber(DamageType damageType, const Player &player, int damage)
 
 	Displacement offset = {};
 	if (player.isWalking()) {
-		offset = GetOffsetForWalking(player.AnimInfo, player._pdir);
+		offset = GetOffsetForWalking(player.animationInfo, player._pdir);
 		if (player._pmode == PM_WALK_SIDEWAYS) {
 			if (player._pdir == Direction::West)
 				offset -= Displacement { 64, 0 };

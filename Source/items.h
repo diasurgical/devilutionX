@@ -186,7 +186,7 @@ struct Item {
 	/*
 	 * @brief Contains Information for current Animation
 	 */
-	AnimationInfo AnimInfo;
+	AnimationInfo animationInfo;
 	bool _iDelFlag = false; // set when item is flagged for deletion, deprecated in 1.02
 	uint8_t _iSelFlag = 0;
 	bool _iPostDraw = false;

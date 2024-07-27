@@ -68,7 +68,7 @@ void UpdatePlayerLightOffset(Player &player)
 	if (player.lightId == NO_LIGHT)
 		return;
 
-	const WorldTileDisplacement offset = player.position.CalculateWalkingOffset(player._pdir, player.AnimInfo);
+	const WorldTileDisplacement offset = player.position.CalculateWalkingOffset(player._pdir, player.animationInfo);
 	ChangeLightOffset(player.lightId, offset.screenToLight());
 }
 
@@ -407,13 +407,13 @@ bool DoWalk(Player &player)
 {
 	// Play walking sound effect on certain animation frames
 	if (*sgOptions.Audio.walkingSound && (leveltype != DTYPE_TOWN || sgGameInitInfo.bRunInTown == 0)) {
-		if (player.AnimInfo.currentFrame == 0
-		    || player.AnimInfo.currentFrame == 4) {
+		if (player.animationInfo.currentFrame == 0
+		    || player.animationInfo.currentFrame == 4) {
 			PlaySfxLoc(SfxID::Walk, player.position.tile);
 		}
 	}
 
-	if (!player.AnimInfo.isLastFrame()) {
+	if (!player.animationInfo.isLastFrame()) {
 		// We didn't reach new tile so update player's "sub-tile" position
 		UpdatePlayerLightOffset(player);
 		return false;
@@ -776,13 +776,13 @@ bool PlrHitObj(const Player &player, Object &targetObject)
 
 bool DoAttack(Player &player)
 {
-	if (player.AnimInfo.currentFrame == player._pAFNum - 2) {
+	if (player.animationInfo.currentFrame == player._pAFNum - 2) {
 		PlaySfxLoc(SfxID::Swing, player.position.tile);
 	}
 
 	bool didhit = false;
 
-	if (player.AnimInfo.currentFrame == player._pAFNum - 1) {
+	if (player.animationInfo.currentFrame == player._pAFNum - 1) {
 		Point position = player.position.tile + player._pdir;
 		Monster *monster = FindMonsterAtPosition(position);
 
@@ -839,7 +839,7 @@ bool DoAttack(Player &player)
 		}
 	}
 
-	if (player.AnimInfo.isLastFrame()) {
+	if (player.animationInfo.isLastFrame()) {
 		StartStand(player, player._pdir);
 		ClearStateVariables(player);
 		return true;
@@ -851,11 +851,11 @@ bool DoAttack(Player &player)
 bool DoRangeAttack(Player &player)
 {
 	int arrows = 0;
-	if (player.AnimInfo.currentFrame == player._pAFNum - 1) {
+	if (player.animationInfo.currentFrame == player._pAFNum - 1) {
 		arrows = 1;
 	}
 
-	if (HasAnyOf(player._pIFlags, ItemSpecialEffect::MultipleArrows) && player.AnimInfo.currentFrame == player._pAFNum + 1) {
+	if (HasAnyOf(player._pIFlags, ItemSpecialEffect::MultipleArrows) && player.animationInfo.currentFrame == player._pAFNum + 1) {
 		arrows = 2;
 	}
 
@@ -906,7 +906,7 @@ bool DoRangeAttack(Player &player)
 		}
 	}
 
-	if (player.AnimInfo.isLastFrame()) {
+	if (player.animationInfo.isLastFrame()) {
 		StartStand(player, player._pdir);
 		ClearStateVariables(player);
 		return true;
@@ -945,7 +945,7 @@ void DamageParryItem(Player &player)
 
 bool DoBlock(Player &player)
 {
-	if (player.AnimInfo.isLastFrame()) {
+	if (player.animationInfo.isLastFrame()) {
 		StartStand(player, player._pdir);
 		ClearStateVariables(player);
 
@@ -1001,7 +1001,7 @@ void DamageArmor(Player &player)
 
 bool DoSpell(Player &player)
 {
-	if (player.AnimInfo.currentFrame == player._pSFNum) {
+	if (player.animationInfo.currentFrame == player._pSFNum) {
 		CastSpell(
 		    player,
 		    player.executedSpell.spellId,
@@ -1014,7 +1014,7 @@ bool DoSpell(Player &player)
 		}
 	}
 
-	if (player.AnimInfo.isLastFrame()) {
+	if (player.animationInfo.isLastFrame()) {
 		StartStand(player, player._pdir);
 		ClearStateVariables(player);
 		return true;
@@ -1025,7 +1025,7 @@ bool DoSpell(Player &player)
 
 bool DoGotHit(Player &player)
 {
-	if (player.AnimInfo.isLastFrame()) {
+	if (player.animationInfo.isLastFrame()) {
 		StartStand(player, player._pdir);
 		ClearStateVariables(player);
 		if (!FlipCoin(4)) {
@@ -1040,11 +1040,11 @@ bool DoGotHit(Player &player)
 
 bool DoDeath(Player &player)
 {
-	if (player.AnimInfo.isLastFrame()) {
-		if (player.AnimInfo.tickCounterOfCurrentFrame == 0) {
-			player.AnimInfo.ticksPerFrame = 100;
+	if (player.animationInfo.isLastFrame()) {
+		if (player.animationInfo.tickCounterOfCurrentFrame == 0) {
+			player.animationInfo.ticksPerFrame = 100;
 			dFlags[player.position.tile.x][player.position.tile.y] |= DungeonFlag::DeadPlayer;
-		} else if (&player == MyPlayer && player.AnimInfo.tickCounterOfCurrentFrame == 30) {
+		} else if (&player == MyPlayer && player.animationInfo.tickCounterOfCurrentFrame == 30) {
 			MyPlayerIsDead = true;
 			if (!gbIsMultiplayer) {
 				gamemenu_on();
@@ -1332,7 +1332,7 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 		return;
 	}
 
-	if (player._pmode == PM_ATTACK && player.AnimInfo.currentFrame >= player._pAFNum) {
+	if (player._pmode == PM_ATTACK && player.animationInfo.currentFrame >= player._pAFNum) {
 		if (player.destAction == ACTION_ATTACK) {
 			d = GetDirection(player.position.future, { player.destParam1, player.destParam2 });
 			StartAttack(player, d, pmWillBeCalled);
@@ -1363,7 +1363,7 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 		}
 	}
 
-	if (player._pmode == PM_RATTACK && player.AnimInfo.currentFrame >= player._pAFNum) {
+	if (player._pmode == PM_RATTACK && player.animationInfo.currentFrame >= player._pAFNum) {
 		if (player.destAction == ACTION_RATTACK) {
 			d = GetDirection(player.position.tile, { player.destParam1, player.destParam2 });
 			StartRangeAttack(player, d, player.destParam1, player.destParam2, pmWillBeCalled);
@@ -1379,7 +1379,7 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 		}
 	}
 
-	if (player._pmode == PM_SPELL && player.AnimInfo.currentFrame >= player._pSFNum) {
+	if (player._pmode == PM_SPELL && player.animationInfo.currentFrame >= player._pSFNum) {
 		if (player.destAction == ACTION_SPELL) {
 			d = GetDirection(player.position.tile, { player.destParam1, player.destParam2 });
 			StartSpell(player, d, player.destParam1, player.destParam2);
@@ -1821,7 +1821,7 @@ player_graphic Player::getGraphic() const
 uint16_t Player::getSpriteWidth() const
 {
 	if (!HeadlessMode)
-		return (*AnimInfo.sprites)[0].width();
+		return (*animationInfo.sprites)[0].width();
 	const player_graphic graphic = getGraphic();
 	const HeroClass cls = GetPlayerSpriteClass(_pClass);
 	const PlayerWeaponGraphic weaponGraphic = GetPlayerWeaponGraphic(graphic, static_cast<PlayerWeaponGraphic>(_pgfxnum & 0xF));
@@ -2169,7 +2169,7 @@ void InitPlayerGFX(Player &player)
 
 void ResetPlayerGFX(Player &player)
 {
-	player.AnimInfo.sprites = std::nullopt;
+	player.animationInfo.sprites = std::nullopt;
 	for (PlayerAnimationData &animData : player.AnimationData) {
 		animData.sprites = std::nullopt;
 	}
@@ -2191,7 +2191,7 @@ void NewPlrAnim(Player &player, player_graphic graphic, Direction dir, Animation
 	int8_t numberOfFrames;
 	int8_t ticksPerFrame;
 	player.getAnimationFramesAndTicksPerFrame(graphic, numberOfFrames, ticksPerFrame);
-	player.AnimInfo.setNewAnimation(sprites, numberOfFrames, ticksPerFrame, flags, numSkippedFrames, distributeFramesBeforeFrame, static_cast<uint8_t>(previewShownGameTickFragments));
+	player.animationInfo.setNewAnimation(sprites, numberOfFrames, ticksPerFrame, flags, numSkippedFrames, distributeFramesBeforeFrame, static_cast<uint8_t>(previewShownGameTickFragments));
 }
 
 void SetPlrAnims(Player &player)
@@ -2464,13 +2464,13 @@ void InitPlayer(Player &player, bool firstTime)
 		if (player._pHitPoints >> 6 > 0) {
 			player._pmode = PM_STAND;
 			NewPlrAnim(player, player_graphic::Stand, Direction::South);
-			player.AnimInfo.currentFrame = GenerateRnd(player._pNFrames - 1);
-			player.AnimInfo.tickCounterOfCurrentFrame = GenerateRnd(3);
+			player.animationInfo.currentFrame = GenerateRnd(player._pNFrames - 1);
+			player.animationInfo.tickCounterOfCurrentFrame = GenerateRnd(3);
 		} else {
 			player._pgfxnum &= ~0xFU;
 			player._pmode = PM_DEATH;
 			NewPlrAnim(player, player_graphic::Death, Direction::South);
-			player.AnimInfo.currentFrame = player.AnimInfo.numberOfFrames - 2;
+			player.animationInfo.currentFrame = player.animationInfo.numberOfFrames - 2;
 		}
 
 		player._pdir = Direction::South;
@@ -3040,8 +3040,8 @@ void ProcessPlayers()
 			} while (tplayer);
 
 			player.previewCelSprite = std::nullopt;
-			if (player._pmode != PM_DEATH || player.AnimInfo.tickCounterOfCurrentFrame != 40)
-				player.AnimInfo.processAnimation();
+			if (player._pmode != PM_DEATH || player.animationInfo.tickCounterOfCurrentFrame != 40)
+				player.animationInfo.processAnimation();
 		}
 	}
 }
@@ -3207,7 +3207,7 @@ void SyncPlrAnim(Player &player)
 {
 	const player_graphic graphic = player.getGraphic();
 	if (!HeadlessMode)
-		player.AnimInfo.sprites = player.AnimationData[static_cast<size_t>(graphic)].spritesForDirection(player._pdir);
+		player.animationInfo.sprites = player.AnimationData[static_cast<size_t>(graphic)].spritesForDirection(player._pdir);
 }
 
 void SyncInitPlrPos(Player &player)

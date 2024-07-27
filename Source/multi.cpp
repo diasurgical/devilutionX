@@ -869,7 +869,7 @@ void recv_plrinfo(Player &player, const TCmdPlrInfoHdr &header, bool recv)
 	player._pgfxnum &= ~0xFU;
 	player._pmode = PM_DEATH;
 	NewPlrAnim(player, player_graphic::Death, Direction::South);
-	player.AnimInfo.currentFrame = player.AnimInfo.numberOfFrames - 2;
+	player.animationInfo.currentFrame = player.animationInfo.numberOfFrames - 2;
 	dFlags[player.position.tile.x][player.position.tile.y] |= DungeonFlag::DeadPlayer;
 }
 

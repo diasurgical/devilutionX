@@ -271,9 +271,9 @@ struct Player {
 	int _pGold;
 
 	/**
-	 * @brief Contains Information for current Animation
+	 * @brief Contains Information for current Animation (AnimInfo)
 	 */
-	AnimationInfo AnimInfo;
+	AnimationInfo animationInfo;
 	/**
 	 * @brief Contains a optional preview ClxSprite that is displayed until the current command is handled by the game logic
 	 */
@@ -763,13 +763,13 @@ public:
 	{
 		if (_pmode == PM_STAND)
 			return true;
-		if (_pmode == PM_ATTACK && AnimInfo.currentFrame >= _pAFNum)
+		if (_pmode == PM_ATTACK && animationInfo.currentFrame >= _pAFNum)
 			return true;
-		if (_pmode == PM_RATTACK && AnimInfo.currentFrame >= _pAFNum)
+		if (_pmode == PM_RATTACK && animationInfo.currentFrame >= _pAFNum)
 			return true;
-		if (_pmode == PM_SPELL && AnimInfo.currentFrame >= _pSFNum)
+		if (_pmode == PM_SPELL && animationInfo.currentFrame >= _pSFNum)
 			return true;
-		if (isWalking() && AnimInfo.isLastFrame())
+		if (isWalking() && animationInfo.isLastFrame())
 			return true;
 		return false;
 	}
@@ -782,13 +782,13 @@ public:
 
 	[[nodiscard]] ClxSprite currentSprite() const
 	{
-		return previewCelSprite ? *previewCelSprite : AnimInfo.currentSprite();
+		return previewCelSprite ? *previewCelSprite : animationInfo.currentSprite();
 	}
 	[[nodiscard]] Displacement getRenderingOffset(const ClxSprite sprite) const
 	{
 		Displacement offset = { -CalculateWidth2(sprite.width()), 0 };
 		if (isWalking())
-			offset += GetOffsetForWalking(AnimInfo, _pdir);
+			offset += GetOffsetForWalking(animationInfo, _pdir);
 		return offset;
 	}
 

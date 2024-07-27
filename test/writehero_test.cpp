@@ -304,10 +304,10 @@ void AssertPlayer(Player &player)
 	ASSERT_EQ(player._pmode, 0);
 	ASSERT_EQ(Count8(player.walkpath, MaxPathLength), 25);
 	ASSERT_EQ(player._pgfxnum, 36);
-	ASSERT_EQ(player.AnimInfo.ticksPerFrame, 4);
-	ASSERT_EQ(player.AnimInfo.tickCounterOfCurrentFrame, 1);
-	ASSERT_EQ(player.AnimInfo.numberOfFrames, 20);
-	ASSERT_EQ(player.AnimInfo.currentFrame, 0);
+	ASSERT_EQ(player.animationInfo.ticksPerFrame, 4);
+	ASSERT_EQ(player.animationInfo.tickCounterOfCurrentFrame, 1);
+	ASSERT_EQ(player.animationInfo.numberOfFrames, 20);
+	ASSERT_EQ(player.animationInfo.currentFrame, 0);
 	ASSERT_EQ(player.queuedSpell.spellId, SpellID::Invalid);
 	ASSERT_EQ(player.queuedSpell.spellType, SpellType::Invalid);
 	ASSERT_EQ(player.queuedSpell.spellFrom, 0);

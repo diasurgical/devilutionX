@@ -251,9 +251,9 @@ void LoadItemData(LoadHelper &file, Item &item)
 	item.position.y = file.NextLE<int32_t>();
 	item._iAnimFlag = file.NextBool32();
 	file.Skip(4); // Skip pointer _iAnimData
-	item.AnimInfo = {};
-	item.AnimInfo.numberOfFrames = file.NextLENarrow<int32_t, int8_t>();
-	item.AnimInfo.currentFrame = file.NextLENarrow<int32_t, int8_t>(-1);
+	item.animationInfo = {};
+	item.animationInfo.numberOfFrames = file.NextLENarrow<int32_t, int8_t>();
+	item.animationInfo.currentFrame = file.NextLENarrow<int32_t, int8_t>(-1);
 	file.Skip(8); // Skip _iAnimWidth and _iAnimWidth2
 	file.Skip(4); // Unused since 1.02
 	item._iSelFlag = file.NextLE<uint8_t>();
@@ -365,11 +365,11 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	file.Skip(4); // Unused
 	player._pgfxnum = file.NextLENarrow<uint32_t, uint8_t>();
 	file.Skip<uint32_t>(); // Skip pointer pData
-	player.AnimInfo = {};
-	player.AnimInfo.ticksPerFrame = file.NextLENarrow<int32_t, int8_t>(1);
-	player.AnimInfo.tickCounterOfCurrentFrame = file.NextLENarrow<int32_t, int8_t>();
-	player.AnimInfo.numberOfFrames = file.NextLENarrow<int32_t, int8_t>();
-	player.AnimInfo.currentFrame = file.NextLENarrow<int32_t, int8_t>(-1);
+	player.animationInfo = {};
+	player.animationInfo.ticksPerFrame = file.NextLENarrow<int32_t, int8_t>(1);
+	player.animationInfo.tickCounterOfCurrentFrame = file.NextLENarrow<int32_t, int8_t>();
+	player.animationInfo.numberOfFrames = file.NextLENarrow<int32_t, int8_t>();
+	player.animationInfo.currentFrame = file.NextLENarrow<int32_t, int8_t>(-1);
 	file.Skip<uint32_t>(3); // Skip _pAnimWidth, _pAnimWidth2, _peflag
 	player.lightId = file.NextLE<int32_t>();
 	file.Skip<int32_t>(); // _pvid
@@ -1087,8 +1087,8 @@ void SaveItem(SaveHelper &file, const Item &item)
 	file.WriteLE<int32_t>(item.position.y);
 	file.WriteLE<uint32_t>(item._iAnimFlag ? 1 : 0);
 	file.Skip(4); // Skip pointer _iAnimData
-	file.WriteLE<int32_t>(item.AnimInfo.numberOfFrames);
-	file.WriteLE<int32_t>(item.AnimInfo.currentFrame + 1);
+	file.WriteLE<int32_t>(item.animationInfo.numberOfFrames);
+	file.WriteLE<int32_t>(item.animationInfo.currentFrame + 1);
 	// write _iAnimWidth for vanilla compatibility
 	file.WriteLE<int32_t>(ItemAnimWidth);
 	// write _iAnimWidth2 for vanilla compatibility
@@ -1190,9 +1190,9 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	DisplacementOf<int16_t> offset2 = {};
 	DisplacementOf<int16_t> velocity = {};
 	if (player.isWalking()) {
-		offset = player.position.CalculateWalkingOffset(player._pdir, player.AnimInfo);
-		offset2 = player.position.CalculateWalkingOffsetShifted8(player._pdir, player.AnimInfo);
-		velocity = player.position.GetWalkingVelocityShifted8(player._pdir, player.AnimInfo);
+		offset = player.position.CalculateWalkingOffset(player._pdir, player.animationInfo);
+		offset2 = player.position.CalculateWalkingOffsetShifted8(player._pdir, player.animationInfo);
+		velocity = player.position.GetWalkingVelocityShifted8(player._pdir, player.animationInfo);
 	}
 	file.WriteLE<int32_t>(offset.deltaX);
 	file.WriteLE<int32_t>(offset.deltaY);
@@ -1202,10 +1202,10 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.Skip(4); // Unused
 	file.WriteLE<uint32_t>(player._pgfxnum);
 	file.Skip(4); // Skip pointer _pAnimData
-	file.WriteLE<int32_t>(std::max(0, player.AnimInfo.ticksPerFrame - 1));
-	file.WriteLE<int32_t>(player.AnimInfo.tickCounterOfCurrentFrame);
-	file.WriteLE<int32_t>(player.AnimInfo.numberOfFrames);
-	file.WriteLE<int32_t>(player.AnimInfo.currentFrame + 1);
+	file.WriteLE<int32_t>(std::max(0, player.animationInfo.ticksPerFrame - 1));
+	file.WriteLE<int32_t>(player.animationInfo.tickCounterOfCurrentFrame);
+	file.WriteLE<int32_t>(player.animationInfo.numberOfFrames);
+	file.WriteLE<int32_t>(player.animationInfo.currentFrame + 1);
 	// write _pAnimWidth for vanilla compatibility
 	const int animWidth = player.getSpriteWidth();
 	file.WriteLE<int32_t>(animWidth);

@@ -336,7 +336,7 @@ void DrawPlayerIconHelper(const Surface &out, MissileGraphicID missileGraphicId,
 	bool lighting = &player != MyPlayer;
 
 	if (player.isWalking())
-		position += GetOffsetForWalking(player.AnimInfo, player._pdir);
+		position += GetOffsetForWalking(player.animationInfo, player._pdir);
 
 	position.x -= GetMissileSpriteData(missileGraphicId).animWidth2;
 
@@ -614,13 +614,13 @@ void DrawFloor(const Surface &out, Point tilePosition, Point targetBufferPositio
 void DrawItem(const Surface &out, int8_t itemIndex, Point targetBufferPosition)
 {
 	const Item &item = Items[itemIndex];
-	const ClxSprite sprite = item.AnimInfo.currentSprite();
+	const ClxSprite sprite = item.animationInfo.currentSprite();
 	const Point position = targetBufferPosition + item.getRenderingOffset(sprite);
 	if (stextflag == TalkID::None && (itemIndex == pcursitem || AutoMapShowItems)) {
 		ClxDrawOutlineSkipColorZero(out, GetOutlineColor(item, false), position, sprite);
 	}
 	ClxDrawLight(out, position, sprite);
-	if (item.AnimInfo.isLastFrame() || item._iCurs == ICURS_MAGIC_ROCK)
+	if (item.animationInfo.isLastFrame() || item._iCurs == ICURS_MAGIC_ROCK)
 		AddItemToLabelQueue(itemIndex, position);
 }
 
@@ -1012,7 +1012,7 @@ void CalcFirstTilePosition(Point &position, Displacement &offset)
 	Player &myPlayer = *MyPlayer;
 	offset = tileOffset;
 	if (myPlayer.isWalking())
-		offset += GetOffsetForWalking(myPlayer.AnimInfo, myPlayer._pdir, true);
+		offset += GetOffsetForWalking(myPlayer.animationInfo, myPlayer._pdir, true);
 
 	position += tileShift;
 
