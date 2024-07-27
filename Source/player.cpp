@@ -2040,7 +2040,7 @@ void Player::occupyTile(Point position, bool isMoving) const
 bool Player::isLevelOwnedByLocalClient() const
 {
 	for (const Player &other : Players) {
-		if (!other.plractive)
+		if (!other.isActive)
 			continue;
 		if (other._pLvlChanging)
 			continue;
@@ -2986,7 +2986,7 @@ void ProcessPlayers()
 
 	for (size_t pnum = 0; pnum < Players.size(); pnum++) {
 		Player &player = Players[pnum];
-		if (player.plractive && player.isOnActiveLevel() && (&player == MyPlayer || !player._pLvlChanging)) {
+		if (player.isActive && player.isOnActiveLevel() && (&player == MyPlayer || !player._pLvlChanging)) {
 			CheckCheatStats(player);
 
 			if (!PlrDeathModeOK(player) && (player._pHitPoints >> 6) <= 0) {

@@ -1380,7 +1380,7 @@ void UnstuckChargers()
 {
 	if (gbIsMultiplayer) {
 		for (Player &player : Players) {
-			if (!player.plractive)
+			if (!player.isActive)
 				continue;
 			if (player._pLvlChanging)
 				continue;
@@ -2945,7 +2945,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		IncProgress();
 
 		for (Player &player : Players) {
-			if (player.plractive && player.isOnActiveLevel()) {
+			if (player.isActive && player.isOnActiveLevel()) {
 				InitPlayerGFX(player);
 				if (lvldir != ENTRY_LOAD)
 					InitPlayer(player, firstflag);
@@ -2958,7 +2958,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 
 		bool visited = false;
 		for (const Player &player : Players) {
-			if (player.plractive)
+			if (player.isActive)
 				visited = visited || player._pLvlVisited[currlevel];
 		}
 
@@ -3049,7 +3049,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		IncProgress();
 
 		for (Player &player : Players) {
-			if (player.plractive && player.isOnActiveLevel()) {
+			if (player.isActive && player.isOnActiveLevel()) {
 				InitPlayerGFX(player);
 				if (lvldir != ENTRY_LOAD)
 					InitPlayer(player, firstflag);
@@ -3079,7 +3079,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 	SyncPortals();
 
 	for (Player &player : Players) {
-		if (player.plractive && player.isOnActiveLevel() && (!player._pLvlChanging || &player == MyPlayer)) {
+		if (player.isActive && player.isOnActiveLevel() && (!player._pLvlChanging || &player == MyPlayer)) {
 			if (player._pHitPoints > 0) {
 				if (lvldir != ENTRY_LOAD)
 					SyncInitPlrPos(player);

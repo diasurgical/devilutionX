@@ -1449,7 +1449,7 @@ bool IsLightVisible(Object &light, int lightRadius)
 #endif
 
 	for (const Player &player : Players) {
-		if (!player.plractive)
+		if (!player.isActive)
 			continue;
 
 		if (!player.isOnActiveLevel())
@@ -4269,7 +4269,7 @@ void ProcessObjects()
 void RedoPlayerVision()
 {
 	for (const Player &player : Players) {
-		if (player.plractive && player.isOnActiveLevel()) {
+		if (player.isActive && player.isOnActiveLevel()) {
 			ChangeVisionXY(player.getId(), player.position.tile);
 		}
 	}

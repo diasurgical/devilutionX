@@ -2086,14 +2086,14 @@ size_t OnPlayerJoinLevel(const TCmd *pCmd, Player &player)
 	}
 
 	player._pLvlChanging = false;
-	if (player._pName[0] != '\0' && !player.plractive) {
+	if (player._pName[0] != '\0' && !player.isActive) {
 		ResetPlayerGFX(player);
-		player.plractive = true;
+		player.isActive = true;
 		gbActivePlayers++;
 		EventPlrMsg(fmt::format(fmt::runtime(_("Player '{:s}' (level {:d}) just joined the game")), player._pName, player.getCharacterLevel()));
 	}
 
-	if (player.plractive && &player != MyPlayer) {
+	if (player.isActive && &player != MyPlayer) {
 		player.position.tile = position;
 		SetPlayerOld(player);
 		if (isSetLevel)

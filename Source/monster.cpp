@@ -616,7 +616,7 @@ void UpdateEnemy(Monster &monster)
 	if (!isPlayerMinion) {
 		for (size_t pnum = 0; pnum < Players.size(); pnum++) {
 			const Player &player = Players[pnum];
-			if (!player.plractive || !player.isOnActiveLevel() || player._pLvlChanging
+			if (!player.isActive || !player.isOnActiveLevel() || player._pLvlChanging
 			    || (((player._pHitPoints >> 6) == 0) && gbIsMultiplayer))
 				continue;
 			const bool sameroom = (dTransVal[position.x][position.y] == dTransVal[player.position.tile.x][player.position.tile.y]);

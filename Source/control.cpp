@@ -1484,7 +1484,7 @@ void DrawTalkPan(const Surface &out)
 			// the first button be treated the same as the other two further down the panel.
 			RenderClxSprite(out, (*TalkButton)[TalkButtonsDown[talkBtn] ? 1 : 0], talkPanPosition + Displacement { 4, -15 });
 		}
-		if (player.plractive) {
+		if (player.isActive) {
 			DrawString(out, player._pName, { { x, y + 60 + talkBtn * 18 }, { 204, 0 } }, { .flags = color });
 		}
 

@@ -52,7 +52,7 @@ std::string DebugCmdPlayerInfo(std::optional<uint8_t> id)
 	if (playerId >= Players.size())
 		return StrCat("Invalid player ID (max: ", Players.size() - 1, ")");
 	Player &player = Players[playerId];
-	if (!player.plractive)
+	if (!player.isActive)
 		return StrCat("Player ", playerId, " is not active!");
 
 	const Point target = player.GetTargetPosition();

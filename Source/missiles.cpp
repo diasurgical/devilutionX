@@ -2695,7 +2695,7 @@ void AddRedPortal(Missile &missile, AddMissileParameter & /*parameter*/)
 void AddDiabloApocalypse(Missile &missile, AddMissileParameter & /*parameter*/)
 {
 	for (const Player &player : Players) {
-		if (!player.plractive)
+		if (!player.isActive)
 			continue;
 		if (!LineClearMissile(missile.position.start, player.position.future))
 			continue;
@@ -3336,7 +3336,7 @@ void ProcessTownPortal(Missile &missile)
 	}
 
 	for (Player &player : Players) {
-		if (player.plractive && player.isOnActiveLevel() && !player._pLvlChanging && player._pmode == PM_STAND && player.position.tile == missile.position.tile) {
+		if (player.isActive && player.isOnActiveLevel() && !player._pLvlChanging && player._pmode == PM_STAND && player.position.tile == missile.position.tile) {
 			ClrPlrPath(player);
 			if (&player == MyPlayer) {
 				NetSendCmdParam1(true, CMD_WARP, missile._misource);

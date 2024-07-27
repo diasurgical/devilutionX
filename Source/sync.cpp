@@ -211,7 +211,7 @@ bool IsEnemyIdValid(const Monster &monster, int enemyId)
 	}
 
 	if (enemyId < MAX_PLRS) {
-		return Players[enemyId].plractive;
+		return Players[enemyId].isActive;
 	}
 
 	enemyId -= MAX_PLRS;

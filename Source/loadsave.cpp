@@ -343,7 +343,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	for (int8_t &step : player.walkpath) {
 		step = file.NextLE<int8_t>();
 	}
-	player.plractive = file.NextBool8();
+	player.isActive = file.NextBool8();
 	file.Skip(2); // Alignment
 	player.destAction = static_cast<action_id>(file.NextLE<int32_t>());
 	player.destParam1 = file.NextLE<int32_t>();
@@ -1164,7 +1164,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.WriteLE<int32_t>(player._pmode);
 	for (int8_t step : player.walkpath)
 		file.WriteLE<int8_t>(step);
-	file.WriteLE<uint8_t>(player.plractive ? 1 : 0);
+	file.WriteLE<uint8_t>(player.isActive ? 1 : 0);
 	file.Skip(2); // Alignment
 	file.WriteLE<int32_t>(player.destAction);
 	file.WriteLE<int32_t>(player.destParam1);
@@ -2006,7 +2006,7 @@ void LoadLevel(LevelConversionData *levelConversionData)
 	}
 
 	for (Player &player : Players) {
-		if (player.plractive && player.isOnActiveLevel())
+		if (player.isActive && player.isOnActiveLevel())
 			Lights[player.lightId].hasChanged = true;
 	}
 }
