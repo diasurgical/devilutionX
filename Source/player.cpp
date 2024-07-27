@@ -1454,8 +1454,8 @@ void ValidatePlayer()
 	if (myPlayer._pBaseDex > myPlayer.GetMaximumAttributeValue(CharacterAttribute::Dexterity)) {
 		myPlayer._pBaseDex = myPlayer.GetMaximumAttributeValue(CharacterAttribute::Dexterity);
 	}
-	if (myPlayer._pBaseVit > myPlayer.GetMaximumAttributeValue(CharacterAttribute::Vitality)) {
-		myPlayer._pBaseVit = myPlayer.GetMaximumAttributeValue(CharacterAttribute::Vitality);
+	if (myPlayer.baseVitality > myPlayer.GetMaximumAttributeValue(CharacterAttribute::Vitality)) {
+		myPlayer.baseVitality = myPlayer.GetMaximumAttributeValue(CharacterAttribute::Vitality);
 	}
 
 	uint64_t msk = 0;
@@ -1637,7 +1637,7 @@ int Player::GetBaseAttributeValue(CharacterAttribute attribute) const
 	case CharacterAttribute::Strength:
 		return this->_pBaseStr;
 	case CharacterAttribute::Vitality:
-		return this->_pBaseVit;
+		return this->baseVitality;
 	default:
 		app_fatal("Unsupported attribute");
 	}
@@ -2021,7 +2021,7 @@ uint32_t Player::getNextExperienceThreshold() const
 int32_t Player::calculateBaseLife() const
 {
 	const ClassAttributes &attr = getClassAttributes();
-	return attr.adjLife + (attr.lvlLife * getCharacterLevel()) + (attr.chrLife * _pBaseVit);
+	return attr.adjLife + (attr.lvlLife * getCharacterLevel()) + (attr.chrLife * baseVitality);
 }
 
 int32_t Player::calculateBaseMana() const
@@ -2283,8 +2283,8 @@ void CreatePlayer(Player &player, HeroClass c)
 	player._pBaseDex = attr.baseDex;
 	player._pDexterity = player._pBaseDex;
 
-	player._pBaseVit = attr.baseVit;
-	player._pVitality = player._pBaseVit;
+	player.baseVitality = attr.baseVit;
+	player._pVitality = player.baseVitality;
 
 	player._pHitPoints = player.calculateBaseLife();
 	player._pMaxHP = player._pHitPoints;
@@ -3271,7 +3271,7 @@ void CheckStats(Player &player)
 			player._pBaseDex = std::clamp(player._pBaseDex, 0, maxStatPoint);
 			break;
 		case CharacterAttribute::Vitality:
-			player._pBaseVit = std::clamp(player._pBaseVit, 0, maxStatPoint);
+			player.baseVitality = std::clamp(player.baseVitality, 0, maxStatPoint);
 			break;
 		}
 	}
@@ -3330,10 +3330,10 @@ void ModifyPlrDex(Player &player, int l)
 
 void ModifyPlrVit(Player &player, int l)
 {
-	l = std::clamp(l, 0 - player._pBaseVit, player.GetMaximumAttributeValue(CharacterAttribute::Vitality) - player._pBaseVit);
+	l = std::clamp(l, 0 - player.baseVitality, player.GetMaximumAttributeValue(CharacterAttribute::Vitality) - player.baseVitality);
 
 	player._pVitality += l;
-	player._pBaseVit += l;
+	player.baseVitality += l;
 
 	int ms = l;
 	ms *= player.getClassAttributes().chrLife;
@@ -3346,7 +3346,7 @@ void ModifyPlrVit(Player &player, int l)
 	CalcPlrInv(player, true);
 
 	if (&player == MyPlayer) {
-		NetSendCmdParam1(false, CMD_SETVIT, player._pBaseVit);
+		NetSendCmdParam1(false, CMD_SETVIT, player.baseVitality);
 	}
 }
 
@@ -3386,7 +3386,7 @@ void SetPlrDex(Player &player, int v)
 
 void SetPlrVit(Player &player, int v)
 {
-	player._pBaseVit = v;
+	player.baseVitality = v;
 
 	int hp = v;
 	hp *= player.getClassAttributes().chrLife;

@@ -439,7 +439,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	player._pDexterity = file.NextLE<int32_t>();
 	player._pBaseDex = file.NextLE<int32_t>();
 	player._pVitality = file.NextLE<int32_t>();
-	player._pBaseVit = file.NextLE<int32_t>();
+	player.baseVitality = file.NextLE<int32_t>();
 	player._pStatPts = file.NextLE<int32_t>();
 	player._pDamageMod = file.NextLE<int32_t>();
 	file.Skip<int32_t>(); // Skip _pBaseToBlk - always a copy of PlayerData.blockBonus
@@ -1262,7 +1262,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.WriteLE<int32_t>(player._pDexterity);
 	file.WriteLE<int32_t>(player._pBaseDex);
 	file.WriteLE<int32_t>(player._pVitality);
-	file.WriteLE<int32_t>(player._pBaseVit);
+	file.WriteLE<int32_t>(player.baseVitality);
 	file.WriteLE<int32_t>(player._pStatPts);
 	file.WriteLE<int32_t>(player._pDamageMod);
 

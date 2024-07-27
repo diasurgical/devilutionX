@@ -1045,7 +1045,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_baseDex)
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_baseVit)
 {
-	MyPlayer->_pBaseVit = MyPlayer->GetMaximumAttributeValue(CharacterAttribute::Vitality) + 1;
+	MyPlayer->baseVitality = MyPlayer->GetMaximumAttributeValue(CharacterAttribute::Vitality) + 1;
 	ASSERT_FALSE(TestNetPackValidation());
 }
 

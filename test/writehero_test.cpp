@@ -279,7 +279,7 @@ void AssertPlayer(Player &player)
 	ASSERT_EQ(player._pMagic, 80);
 	ASSERT_EQ(player._pBaseDex, 250);
 	ASSERT_EQ(player._pDexterity, 281);
-	ASSERT_EQ(player._pBaseVit, 80);
+	ASSERT_EQ(player.baseVitality, 80);
 	ASSERT_EQ(player._pVitality, 90);
 	ASSERT_EQ(player.getCharacterLevel(), 50);
 	ASSERT_EQ(player._pStatPts, 0);

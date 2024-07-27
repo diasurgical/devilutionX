@@ -2114,7 +2114,7 @@ bool HealerItemOk(const Player &player, const ItemData &item)
 		if (item.iMiscId == IMISC_ELIXDEX)
 			return !gbIsHellfire || player._pBaseDex < player.GetMaximumAttributeValue(CharacterAttribute::Dexterity);
 		if (item.iMiscId == IMISC_ELIXVIT)
-			return !gbIsHellfire || player._pBaseVit < player.GetMaximumAttributeValue(CharacterAttribute::Vitality);
+			return !gbIsHellfire || player.baseVitality < player.GetMaximumAttributeValue(CharacterAttribute::Vitality);
 	}
 
 	if (item.iMiscId == IMISC_REJUV)
@@ -2597,7 +2597,7 @@ void CalcPlrPrimaryStats(Player &player, int strength, int &magic, int dexterity
 	player._pStrength = std::max(0, strength + player._pBaseStr);
 	player._pMagic = std::max(0, magic + player._pBaseMag);
 	player._pDexterity = std::max(0, dexterity + player._pBaseDex);
-	player._pVitality = std::max(0, vitality + player._pBaseVit);
+	player._pVitality = std::max(0, vitality + player.baseVitality);
 }
 
 void CalcPlrLightRadius(Player &player, int lrad)
