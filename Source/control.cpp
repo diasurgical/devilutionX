@@ -978,7 +978,7 @@ void DoPanBtn()
 		if ((SDL_GetModState() & KMOD_SHIFT) != 0) {
 			Player &myPlayer = *MyPlayer;
 			myPlayer._pRSpell = SpellID::Invalid;
-			myPlayer._pRSplType = SpellType::Invalid;
+			myPlayer.selectedSpellType = SpellType::Invalid;
 			RedrawEverything();
 			return;
 		}
@@ -1062,7 +1062,7 @@ void CheckPanelInfo()
 		const Player &myPlayer = *MyPlayer;
 		const SpellID spellId = myPlayer._pRSpell;
 		if (IsValidSpell(spellId)) {
-			switch (myPlayer._pRSplType) {
+			switch (myPlayer.selectedSpellType) {
 			case SpellType::Skill:
 				AddPanelString(fmt::format(fmt::runtime(_("{:s} Skill")), pgettext("spell", GetSpellData(spellId).sNameText)));
 				break;

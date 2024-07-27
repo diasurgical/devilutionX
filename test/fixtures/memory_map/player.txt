@@ -43,7 +43,7 @@ R 32 _pTSpell
 R 8 _pTSplType
 R 24 alignment
 R 32 _pRSpell
-R 8 _pRSplType
+R 8 selectedSpellType
 R 24 alignment
 R 32 _pSBkSpell
 R 8 _pSBkSplType

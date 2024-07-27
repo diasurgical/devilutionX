@@ -1783,9 +1783,9 @@ void Player::ReadySpellFromEquipment(inv_body_loc bodyLocation, bool forceSpell)
 {
 	Item &item = InvBody[bodyLocation];
 	if (item._itype == ItemType::Staff && IsValidSpell(item._iSpell) && item._iCharges > 0 && item._iStatFlag) {
-		if (forceSpell || _pRSpell == SpellID::Invalid || _pRSplType == SpellType::Invalid) {
+		if (forceSpell || _pRSpell == SpellID::Invalid || selectedSpellType == SpellType::Invalid) {
 			_pRSpell = item._iSpell;
-			_pRSplType = SpellType::Charges;
+			selectedSpellType = SpellType::Charges;
 			RedrawEverything();
 		}
 	}
@@ -2306,7 +2306,7 @@ void CreatePlayer(Player &player, HeroClass c)
 	}
 
 	player._pSpellFlags = SpellFlag::None;
-	player._pRSplType = SpellType::Invalid;
+	player.selectedSpellType = SpellType::Invalid;
 
 	// Initializing the hotkey bindings to no selection
 	std::fill(player._pSplHotKey, player._pSplHotKey + NumHotkeys, SpellID::Invalid);
@@ -2444,13 +2444,13 @@ void AddPlrMonstExper(int lvl, unsigned exp, char pmask)
 void InitPlayer(Player &player, bool firstTime)
 {
 	if (firstTime) {
-		player._pRSplType = SpellType::Invalid;
+		player.selectedSpellType = SpellType::Invalid;
 		player._pRSpell = SpellID::Invalid;
 		if (&player == MyPlayer)
 			LoadHotkeys();
 		player._pSBkSpell = SpellID::Invalid;
 		player.queuedSpell.spellId = player._pRSpell;
-		player.queuedSpell.spellType = player._pRSplType;
+		player.queuedSpell.spellType = player.selectedSpellType;
 		player.pManaShield = false;
 		player.wReflections = 0;
 	}

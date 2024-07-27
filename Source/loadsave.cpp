@@ -386,7 +386,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	file.Skip<int8_t>(); // Skip _pTSplType
 	file.Skip(3);        // Alignment
 	player._pRSpell = static_cast<SpellID>(file.NextLE<int32_t>());
-	player._pRSplType = static_cast<SpellType>(file.NextLE<int8_t>());
+	player.selectedSpellType = static_cast<SpellType>(file.NextLE<int8_t>());
 	file.Skip(3); // Alignment
 	player._pSBkSpell = static_cast<SpellID>(file.NextLE<int32_t>());
 	file.Skip<int8_t>(); // Skip _pSBkSplType
@@ -1223,7 +1223,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.Skip<int8_t>(); // Skip _pTSplType
 	file.Skip(3);        // Alignment
 	file.WriteLE<int32_t>(static_cast<int8_t>(player._pRSpell));
-	file.WriteLE<int8_t>(static_cast<uint8_t>(player._pRSplType));
+	file.WriteLE<int8_t>(static_cast<uint8_t>(player.selectedSpellType));
 	file.Skip(3); // Alignment
 	file.WriteLE<int32_t>(static_cast<int8_t>(player._pSBkSpell));
 	file.Skip<int8_t>(); // Skip _pSBkSplType
@@ -2258,7 +2258,7 @@ void LoadHotkeys()
 
 	// Load the selected spell last
 	myPlayer._pRSpell = static_cast<SpellID>(file.NextLE<int32_t>());
-	myPlayer._pRSplType = static_cast<SpellType>(file.NextLE<uint8_t>());
+	myPlayer.selectedSpellType = static_cast<SpellType>(file.NextLE<uint8_t>());
 }
 
 void SaveHotkeys(SaveWriter &saveWriter, const Player &player)
@@ -2278,7 +2278,7 @@ void SaveHotkeys(SaveWriter &saveWriter, const Player &player)
 
 	// Write the selected spell last
 	file.WriteLE<int32_t>(static_cast<int8_t>(player._pRSpell));
-	file.WriteLE<uint8_t>(static_cast<uint8_t>(player._pRSplType));
+	file.WriteLE<uint8_t>(static_cast<uint8_t>(player.selectedSpellType));
 }
 
 void LoadHeroItems(Player &player)

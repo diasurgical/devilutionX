@@ -31,7 +31,7 @@ namespace {
  */
 bool IsReadiedSpellValid(const Player &player)
 {
-	switch (player._pRSplType) {
+	switch (player.selectedSpellType) {
 	case SpellType::Skill:
 	case SpellType::Spell:
 	case SpellType::Invalid:
@@ -60,8 +60,8 @@ void ClearReadiedSpell(Player &player)
 		RedrawEverything();
 	}
 
-	if (player._pRSplType != SpellType::Invalid) {
-		player._pRSplType = SpellType::Invalid;
+	if (player.selectedSpellType != SpellType::Invalid) {
+		player.selectedSpellType = SpellType::Invalid;
 		RedrawEverything();
 	}
 }

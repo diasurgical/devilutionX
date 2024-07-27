@@ -85,7 +85,7 @@ void DrawSpell(const Surface &out)
 {
 	Player &myPlayer = *MyPlayer;
 	SpellID spl = myPlayer._pRSpell;
-	SpellType st = myPlayer._pRSplType;
+	SpellType st = myPlayer.selectedSpellType;
 
 	if (!IsValidSpell(spl)) {
 		st = SpellType::Invalid;
@@ -107,7 +107,7 @@ void DrawSpell(const Surface &out)
 	const Point position = GetMainPanel().position + Displacement { 565, 119 };
 	DrawLargeSpellIcon(out, position, spl);
 
-	std::optional<std::string_view> hotkeyName = GetHotkeyName(spl, myPlayer._pRSplType, true);
+	std::optional<std::string_view> hotkeyName = GetHotkeyName(spl, myPlayer.selectedSpellType, true);
 	if (hotkeyName)
 		PrintSBookHotkey(out, position, *hotkeyName);
 }
@@ -260,7 +260,7 @@ void SetSpell()
 
 	Player &myPlayer = *MyPlayer;
 	myPlayer._pRSpell = pSpell;
-	myPlayer._pRSplType = pSplType;
+	myPlayer.selectedSpellType = pSplType;
 
 	RedrawEverything();
 }
@@ -325,7 +325,7 @@ void ToggleSpell(size_t slot)
 	if (IsValidSpeedSpell(slot)) {
 		Player &myPlayer = *MyPlayer;
 		myPlayer._pRSpell = myPlayer._pSplHotKey[slot];
-		myPlayer._pRSplType = myPlayer._pSplTHotKey[slot];
+		myPlayer.selectedSpellType = myPlayer._pSplTHotKey[slot];
 		RedrawEverything();
 	}
 }
@@ -363,7 +363,7 @@ void DoSpeedBook()
 			uint64_t spell = 1;
 			for (int j = 1; j < MAX_SPELLS; j++) {
 				if ((spell & spells) != 0) {
-					if (j == static_cast<int8_t>(myPlayer._pRSpell) && static_cast<SpellType>(i) == myPlayer._pRSplType) {
+					if (j == static_cast<int8_t>(myPlayer._pRSpell) && static_cast<SpellType>(i) == myPlayer.selectedSpellType) {
 						x = xo + SPLICONLENGTH / 2;
 						y = yo - SPLICONLENGTH / 2;
 					}

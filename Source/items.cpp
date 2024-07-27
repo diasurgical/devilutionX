@@ -3067,7 +3067,7 @@ void CreatePlrItems(Player &player)
 
 	if (loadout.spell != SpellID::Null && loadout.spellLevel > 0) {
 		player._pMemSpells = GetSpellBitmask(loadout.spell);
-		player._pRSplType = SpellType::Spell;
+		player.selectedSpellType = SpellType::Spell;
 		player._pRSpell = loadout.spell;
 		player._pSplLvl[static_cast<unsigned>(loadout.spell)] = loadout.spellLevel;
 	} else {
@@ -3076,8 +3076,8 @@ void CreatePlrItems(Player &player)
 
 	if (loadout.skill != SpellID::Null) {
 		player._pAblSpells = GetSpellBitmask(loadout.skill);
-		if (player._pRSplType == SpellType::Invalid) {
-			player._pRSplType = SpellType::Skill;
+		if (player.selectedSpellType == SpellType::Invalid) {
+			player.selectedSpellType = SpellType::Skill;
 			player._pRSpell = loadout.skill;
 		}
 	}
