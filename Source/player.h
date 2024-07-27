@@ -324,7 +324,6 @@ public:
 	int8_t spellFrom;
 	SpellID _pRSpell;
 	SpellType _pRSplType;
-	SpellID _pSBkSpell;
 	uint8_t _pSplLvl[64];
 	/** @brief Bitmask of staff spell */
 	uint64_t _pISpells;

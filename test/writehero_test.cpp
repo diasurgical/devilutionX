@@ -314,7 +314,6 @@ void AssertPlayer(Player &player)
 	ASSERT_EQ(player.inventorySpell, SpellID::Null);
 	ASSERT_EQ(player._pRSpell, SpellID::Invalid);
 	ASSERT_EQ(player._pRSplType, SpellType::Invalid);
-	ASSERT_EQ(player._pSBkSpell, SpellID::Invalid);
 	ASSERT_EQ(player._pAblSpells, 134217728);
 	ASSERT_EQ(player._pScrlSpells, 0);
 	ASSERT_EQ(player._pSpellFlags, SpellFlag::None);

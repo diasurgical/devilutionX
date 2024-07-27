@@ -388,7 +388,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	player._pRSpell = static_cast<SpellID>(file.NextLE<int32_t>());
 	player._pRSplType = static_cast<SpellType>(file.NextLE<int8_t>());
 	file.Skip(3); // Alignment
-	player._pSBkSpell = static_cast<SpellID>(file.NextLE<int32_t>());
+	file.Skip<int32_t>(); // Skip _pSBkSpell
 	file.Skip<int8_t>(); // Skip _pSBkSplType
 
 	// Only read spell levels for learnable spells
@@ -1225,7 +1225,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.WriteLE<int32_t>(static_cast<int8_t>(player._pRSpell));
 	file.WriteLE<int8_t>(static_cast<uint8_t>(player._pRSplType));
 	file.Skip(3); // Alignment
-	file.WriteLE<int32_t>(static_cast<int8_t>(player._pSBkSpell));
+	file.Skip<int32_t>(); // Skip _pSBkSpell
 	file.Skip<int8_t>(); // Skip _pSBkSplType
 
 	for (uint8_t spellLevel : player._pSplLvl)

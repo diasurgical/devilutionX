@@ -2448,7 +2448,6 @@ void InitPlayer(Player &player, bool firstTime)
 		player._pRSpell = SpellID::Invalid;
 		if (&player == MyPlayer)
 			LoadHotkeys();
-		player._pSBkSpell = SpellID::Invalid;
 		player.queuedSpell.spellId = player._pRSpell;
 		player.queuedSpell.spellType = player._pRSplType;
 		player.pManaShield = false;
