@@ -232,7 +232,7 @@ struct Player {
 	int _pBaseMag;
 	int _pDexterity;
 	int _pBaseDex;
-	int _pVitality;
+	int vitality; // _pVitality
 	int _pBaseVit;
 	int _pStatPts;
 	int _pDamageMod;

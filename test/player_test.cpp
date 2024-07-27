@@ -114,7 +114,7 @@ static void AssertPlayer(Player &player)
 	ASSERT_EQ(player._pBaseDex, 30);
 	ASSERT_EQ(player._pDexterity, 30);
 	ASSERT_EQ(player._pBaseVit, 20);
-	ASSERT_EQ(player._pVitality, 20);
+	ASSERT_EQ(player.vitality, 20);
 	ASSERT_EQ(player.getCharacterLevel(), 1);
 	ASSERT_EQ(player._pStatPts, 0);
 	ASSERT_EQ(player._pExperience, 0);

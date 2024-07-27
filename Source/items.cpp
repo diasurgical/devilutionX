@@ -2597,7 +2597,7 @@ void CalcPlrPrimaryStats(Player &player, int strength, int &magic, int dexterity
 	player._pStrength = std::max(0, strength + player._pBaseStr);
 	player._pMagic = std::max(0, magic + player._pBaseMag);
 	player._pDexterity = std::max(0, dexterity + player._pBaseDex);
-	player._pVitality = std::max(0, vitality + player._pBaseVit);
+	player.vitality = std::max(0, vitality + player._pBaseVit);
 }
 
 void CalcPlrLightRadius(Player &player, int lrad)
@@ -2654,7 +2654,7 @@ void CalcPlrDamageMod(Player &player)
 			else if (rightHandItem._itype == ItemType::Shield)
 				player._pIAC -= rightHandItem._iAC / 2;
 		} else if (!player.isHoldingItem(ItemType::Staff) && !player.isHoldingItem(ItemType::Bow)) {
-			player._pDamageMod += playerLevel * player._pVitality / 100;
+			player._pDamageMod += playerLevel * player.vitality / 100;
 		}
 		player._pIAC += playerLevel / 4;
 		return;

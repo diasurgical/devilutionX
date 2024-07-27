@@ -1485,8 +1485,8 @@ void CheckCheatStats(Player &player)
 		player._pMagic = 750;
 	}
 
-	if (player._pVitality > 750) {
-		player._pVitality = 750;
+	if (player.vitality > 750) {
+		player.vitality = 750;
 	}
 
 	if (player._pHitPoints > 128000) {
@@ -1653,7 +1653,7 @@ int Player::GetCurrentAttributeValue(CharacterAttribute attribute) const
 	case CharacterAttribute::Strength:
 		return this->_pStrength;
 	case CharacterAttribute::Vitality:
-		return this->_pVitality;
+		return this->vitality;
 	default:
 		app_fatal("Unsupported attribute");
 	}
@@ -2284,7 +2284,7 @@ void CreatePlayer(Player &player, HeroClass c)
 	player._pDexterity = player._pBaseDex;
 
 	player._pBaseVit = attr.baseVit;
-	player._pVitality = player._pBaseVit;
+	player.vitality = player._pBaseVit;
 
 	player._pHitPoints = player.calculateBaseLife();
 	player._pMaxHP = player._pHitPoints;
@@ -3332,7 +3332,7 @@ void ModifyPlrVit(Player &player, int l)
 {
 	l = std::clamp(l, 0 - player._pBaseVit, player.GetMaximumAttributeValue(CharacterAttribute::Vitality) - player._pBaseVit);
 
-	player._pVitality += l;
+	player.vitality += l;
 	player._pBaseVit += l;
 
 	int ms = l;

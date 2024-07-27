@@ -187,7 +187,7 @@ void Game2UiPlayer(const Player &player, _uiheroinfo *heroinfo, bool bHasSaveFil
 	heroinfo->strength = player._pStrength;
 	heroinfo->magic = player._pMagic;
 	heroinfo->dexterity = player._pDexterity;
-	heroinfo->vitality = player._pVitality;
+	heroinfo->vitality = player.vitality;
 	heroinfo->hassaved = bHasSaveFile;
 	heroinfo->herorank = player.pDiabloKillLevel;
 	heroinfo->spawned = gbIsSpawn;

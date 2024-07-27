@@ -438,7 +438,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	player._pBaseMag = file.NextLE<int32_t>();
 	player._pDexterity = file.NextLE<int32_t>();
 	player._pBaseDex = file.NextLE<int32_t>();
-	player._pVitality = file.NextLE<int32_t>();
+	player.vitality = file.NextLE<int32_t>();
 	player._pBaseVit = file.NextLE<int32_t>();
 	player._pStatPts = file.NextLE<int32_t>();
 	player._pDamageMod = file.NextLE<int32_t>();
@@ -1261,7 +1261,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.WriteLE<int32_t>(player._pBaseMag);
 	file.WriteLE<int32_t>(player._pDexterity);
 	file.WriteLE<int32_t>(player._pBaseDex);
-	file.WriteLE<int32_t>(player._pVitality);
+	file.WriteLE<int32_t>(player.vitality);
 	file.WriteLE<int32_t>(player._pBaseVit);
 	file.WriteLE<int32_t>(player._pStatPts);
 	file.WriteLE<int32_t>(player._pDamageMod);

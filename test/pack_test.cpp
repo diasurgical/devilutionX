@@ -1075,7 +1075,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_dexterity)
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_vitality)
 {
-	MyPlayer->_pVitality++;
+	MyPlayer->vitality++;
 	ASSERT_FALSE(TestNetPackValidation());
 }
 
