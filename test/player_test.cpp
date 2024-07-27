@@ -146,7 +146,7 @@ static void AssertPlayer(Player &player)
 	ASSERT_EQ(player._pSBkSpell, SpellID::Null);
 	ASSERT_EQ(player._pAblSpells, 134217728);
 	ASSERT_EQ(player._pScrlSpells, 0);
-	ASSERT_EQ(player._pSpellFlags, SpellFlag::None);
+	ASSERT_EQ(player.spellFlags, SpellFlag::None);
 	ASSERT_EQ(player._pBlockFlag, 0);
 	ASSERT_EQ(player._pLightRad, 10);
 	ASSERT_EQ(player._pDamageMod, 0);

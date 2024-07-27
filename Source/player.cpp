@@ -705,7 +705,7 @@ bool PlrHitPlr(Player &attacker, Player &target)
 		return false;
 	}
 
-	if (HasAnyOf(target._pSpellFlags, SpellFlag::Etherealize)) {
+	if (HasAnyOf(target.spellFlags, SpellFlag::Etherealize)) {
 		return false;
 	}
 
@@ -2305,7 +2305,7 @@ void CreatePlayer(Player &player, HeroClass c)
 		spellLevel = 0;
 	}
 
-	player._pSpellFlags = SpellFlag::None;
+	player.spellFlags = SpellFlag::None;
 	player._pRSplType = SpellType::Invalid;
 
 	// Initializing the hotkey bindings to no selection

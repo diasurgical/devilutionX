@@ -300,7 +300,7 @@ bool Plr2PlrMHit(const Player &player, Player &target, int mindam, int maxdam, i
 
 	const MissileData &missileData = GetMissileData(mtype);
 
-	if (HasAnyOf(target._pSpellFlags, SpellFlag::Etherealize) && missileData.isArrow()) {
+	if (HasAnyOf(target.spellFlags, SpellFlag::Etherealize) && missileData.isArrow()) {
 		return false;
 	}
 
@@ -988,7 +988,7 @@ bool PlayerMHit(Player &player, Monster *monster, int dist, int mind, int maxd, 
 
 	const MissileData &missileData = GetMissileData(mtype);
 
-	if (HasAnyOf(player._pSpellFlags, SpellFlag::Etherealize) && missileData.isArrow()) {
+	if (HasAnyOf(player.spellFlags, SpellFlag::Etherealize) && missileData.isArrow()) {
 		return false;
 	}
 
@@ -1122,7 +1122,7 @@ void InitMissiles()
 	Player &myPlayer = *MyPlayer;
 
 	AutoMapShowItems = false;
-	myPlayer._pSpellFlags &= ~SpellFlag::Etherealize;
+	myPlayer.spellFlags &= ~SpellFlag::Etherealize;
 	if (myPlayer._pInfraFlag) {
 		for (auto &missile : Missiles) {
 			if (missile._mitype == MissileID::Infravision) {
@@ -1132,9 +1132,9 @@ void InitMissiles()
 		}
 	}
 
-	if (HasAnyOf(myPlayer._pSpellFlags, SpellFlag::RageActive | SpellFlag::RageCooldown)) {
-		myPlayer._pSpellFlags &= ~SpellFlag::RageActive;
-		myPlayer._pSpellFlags &= ~SpellFlag::RageCooldown;
+	if (HasAnyOf(myPlayer.spellFlags, SpellFlag::RageActive | SpellFlag::RageCooldown)) {
+		myPlayer.spellFlags &= ~SpellFlag::RageActive;
+		myPlayer.spellFlags &= ~SpellFlag::RageCooldown;
 		for (auto &missile : Missiles) {
 			if (missile._mitype == MissileID::Rage) {
 				if (missile.sourcePlayer() == MyPlayer) {
@@ -2489,7 +2489,7 @@ void AddRage(Missile &missile, AddMissileParameter &parameter)
 {
 	Player &player = Players[missile._misource];
 
-	if (HasAnyOf(player._pSpellFlags, SpellFlag::RageActive | SpellFlag::RageCooldown) || player._pHitPoints <= player.getCharacterLevel() << 6) {
+	if (HasAnyOf(player.spellFlags, SpellFlag::RageActive | SpellFlag::RageCooldown) || player._pHitPoints <= player.getCharacterLevel() << 6) {
 		missile._miDelFlag = true;
 		parameter.spellFizzled = true;
 		return;
@@ -2497,7 +2497,7 @@ void AddRage(Missile &missile, AddMissileParameter &parameter)
 
 	int tmp = 3 * player.getCharacterLevel();
 	tmp <<= 7;
-	player._pSpellFlags |= SpellFlag::RageActive;
+	player.spellFlags |= SpellFlag::RageActive;
 	missile.var2 = tmp;
 	int lvl = player.getCharacterLevel() * 2;
 	missile._mirange = lvl + 10 * missile._mispllvl + 245;
@@ -3849,13 +3849,13 @@ void ProcessRage(Missile &missile)
 
 	int hpdif = player._pMaxHP - player._pHitPoints;
 
-	if (HasAnyOf(player._pSpellFlags, SpellFlag::RageActive)) {
-		player._pSpellFlags &= ~SpellFlag::RageActive;
-		player._pSpellFlags |= SpellFlag::RageCooldown;
+	if (HasAnyOf(player.spellFlags, SpellFlag::RageActive)) {
+		player.spellFlags &= ~SpellFlag::RageActive;
+		player.spellFlags |= SpellFlag::RageCooldown;
 		int lvl = player.getCharacterLevel() * 2;
 		missile._mirange = lvl + 10 * missile._mispllvl + 245;
 	} else {
-		player._pSpellFlags &= ~SpellFlag::RageCooldown;
+		player.spellFlags &= ~SpellFlag::RageCooldown;
 		missile._miDelFlag = true;
 		hpdif += missile.var2;
 	}

@@ -412,7 +412,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	player._pMemSpells = file.NextLE<uint64_t>();
 	player._pAblSpells = file.NextLE<uint64_t>();
 	player._pScrlSpells = file.NextLE<uint64_t>();
-	player._pSpellFlags = static_cast<SpellFlag>(file.NextLE<uint8_t>());
+	player.spellFlags = static_cast<SpellFlag>(file.NextLE<uint8_t>());
 	file.Skip(3); // Alignment
 
 	// Extra hotkeys: to keep single player save compatibility, read only 4 hotkeys here, rely on LoadHotkeys for the rest
@@ -1235,7 +1235,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.WriteLE<uint64_t>(player._pMemSpells);
 	file.WriteLE<uint64_t>(player._pAblSpells);
 	file.WriteLE<uint64_t>(player._pScrlSpells);
-	file.WriteLE<uint8_t>(static_cast<uint8_t>(player._pSpellFlags));
+	file.WriteLE<uint8_t>(static_cast<uint8_t>(player.spellFlags));
 	file.Skip(3); // Alignment
 
 	// Extra hotkeys: to keep single player save compatibility, write only 4 hotkeys here, rely on SaveHotkeys for the rest

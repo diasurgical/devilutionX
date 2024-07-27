@@ -52,7 +52,7 @@ R 56 alignment
 R 64 _pMemSpells
 R 64 _pAblSpells
 R 64 _pScrlSpells
-R 8 _pSpellFlags
+R 8 spellFlags
 R 24 alignment
 M 4 32 _pSplHotKey
 M 4 8 _pSplTHotKey
