@@ -486,7 +486,7 @@ VirtualGamepadButtonType SecondaryActionButtonRenderer::GetButtonType()
 
 VirtualGamepadButtonType SpellActionButtonRenderer::GetButtonType()
 {
-	if (!MyPlayer->HoldItem.isEmpty())
+	if (!MyPlayer->heldItem.isEmpty())
 		return GetDropButtonType(virtualPadButton->isHeld);
 
 	if (invflag && pcursinvitem != -1 && pcurs == CURSOR_HAND) {

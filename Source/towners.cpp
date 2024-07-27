@@ -884,7 +884,7 @@ void TalkToTowner(Player &player, int t)
 	if (player.position.tile.WalkingDistance(towner.position) >= 2)
 		return;
 
-	if (!player.HoldItem.isEmpty()) {
+	if (!player.heldItem.isEmpty()) {
 		return;
 	}
 

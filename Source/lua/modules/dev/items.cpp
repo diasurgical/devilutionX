@@ -20,8 +20,8 @@ std::string DebugCmdItemInfo()
 {
 	Player &myPlayer = *MyPlayer;
 	Item *pItem = nullptr;
-	if (!myPlayer.HoldItem.isEmpty()) {
-		pItem = &myPlayer.HoldItem;
+	if (!myPlayer.heldItem.isEmpty()) {
+		pItem = &myPlayer.heldItem;
 	} else if (pcursinvitem != -1) {
 		if (pcursinvitem <= INVITEM_INV_LAST)
 			pItem = &myPlayer.InvList[pcursinvitem - INVITEM_INV_FIRST];

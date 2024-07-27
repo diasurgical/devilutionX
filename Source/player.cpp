@@ -2697,8 +2697,8 @@ StartPlayerKill(Player &player, DeathReason deathReason)
 		if (&player == MyPlayer) {
 			RedrawComponent(PanelDrawComponent::Health);
 
-			if (!player.HoldItem.isEmpty()) {
-				DeadItem(player, std::move(player.HoldItem), { 0, 0 });
+			if (!player.heldItem.isEmpty()) {
+				DeadItem(player, std::move(player.heldItem), { 0, 0 });
 				NewCursor(CURSOR_HAND);
 			}
 			if (dropGold) {
@@ -2759,24 +2759,24 @@ void StripTopGold(Player &player)
 
 		if (GoldAutoPlace(player, excessGold))
 			continue;
-		if (!player.HoldItem.isEmpty() && ActiveItemCount + 1 >= MAXITEMS)
+		if (!player.heldItem.isEmpty() && ActiveItemCount + 1 >= MAXITEMS)
 			continue;
 		DeadItem(player, std::move(excessGold), { 0, 0 });
 	}
 	player._pGold = CalculateGold(player);
 
-	if (player.HoldItem.isEmpty())
+	if (player.heldItem.isEmpty())
 		return;
-	if (AutoEquip(player, player.HoldItem, false))
+	if (AutoEquip(player, player.heldItem, false))
 		return;
-	if (AutoPlaceItemInInventory(player, player.HoldItem))
+	if (AutoPlaceItemInInventory(player, player.heldItem))
 		return;
-	if (AutoPlaceItemInBelt(player, player.HoldItem))
+	if (AutoPlaceItemInBelt(player, player.heldItem))
 		return;
 	std::optional<Point> itemTile = FindAdjacentPositionForItem(player.position.tile, player._pdir);
 	if (itemTile)
 		return;
-	DeadItem(player, std::move(player.HoldItem), { 0, 0 });
+	DeadItem(player, std::move(player.heldItem), { 0, 0 });
 	NewCursor(CURSOR_HAND);
 }
 

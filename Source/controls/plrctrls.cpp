@@ -804,7 +804,7 @@ void InventoryMove(AxisDirection dir)
 
 	const int initialSlot = Slot;
 
-	const Item &heldItem = MyPlayer->HoldItem;
+	const Item &heldItem = MyPlayer->heldItem;
 	const bool isHoldingItem = !heldItem.isEmpty();
 	Size itemSize = isHoldingItem ? GetInventorySize(heldItem) : Size { 1 };
 
@@ -1044,7 +1044,7 @@ void CheckInventoryMove(AxisDirection dir)
  */
 bool BlurInventory()
 {
-	if (!MyPlayer->HoldItem.isEmpty()) {
+	if (!MyPlayer->heldItem.isEmpty()) {
 		if (!TryDropItem()) {
 			MyPlayer->Say(HeroSpeech::WhereWouldIPutThis);
 			return false;
@@ -1085,7 +1085,7 @@ void StashMove(AxisDirection dir)
 		ActiveStashSlot = stashSlot;
 	}
 
-	Item &holdItem = MyPlayer->HoldItem;
+	Item &holdItem = MyPlayer->heldItem;
 	Size itemSize = holdItem.isEmpty() ? Size { 1, 1 } : GetInventorySize(holdItem);
 
 	// Jump from belt to stash
@@ -1101,7 +1101,7 @@ void StashMove(AxisDirection dir)
 	// Jump from general inventory to stash
 	if (Slot >= SLOTXY_INV_FIRST && Slot <= SLOTXY_INV_LAST) {
 		int firstSlot = Slot;
-		if (MyPlayer->HoldItem.isEmpty()) {
+		if (MyPlayer->heldItem.isEmpty()) {
 			int8_t itemId = GetItemIdOnSlot(Slot);
 			if (itemId != 0) {
 				firstSlot = FindFirstSlotOnItem(itemId);
@@ -1812,7 +1812,7 @@ void PerformPrimaryAction()
 
 			int jumpSlot = inventorySlot; // If the cursor is over an inventory slot we may need to adjust it due to pasting items of different sizes over each other
 			if (inventorySlot >= SLOTXY_INV_FIRST && inventorySlot <= SLOTXY_INV_LAST) {
-				const Size cursorSizeInCells = MyPlayer->HoldItem.isEmpty() ? Size { 1, 1 } : GetInventorySize(MyPlayer->HoldItem);
+				const Size cursorSizeInCells = MyPlayer->heldItem.isEmpty() ? Size { 1, 1 } : GetInventorySize(MyPlayer->heldItem);
 
 				// Find any item occupying a slot that is currently under the cursor
 				int8_t itemUnderCursor = [](int inventorySlot, Size cursorSizeInCells) {
@@ -1840,7 +1840,7 @@ void PerformPrimaryAction()
 			if (inventorySlot >= SLOTXY_INV_FIRST && inventorySlot <= SLOTXY_INV_LAST) {
 				Point mousePos = GetSlotCoord(jumpSlot);
 				Slot = jumpSlot;
-				const Size newCursorSizeInCells = MyPlayer->HoldItem.isEmpty() ? GetItemSizeOnSlot(jumpSlot) : GetInventorySize(MyPlayer->HoldItem);
+				const Size newCursorSizeInCells = MyPlayer->heldItem.isEmpty() ? GetItemSizeOnSlot(jumpSlot) : GetInventorySize(MyPlayer->heldItem);
 				mousePos.x += ((newCursorSizeInCells.width - 1) * InventorySlotSizeInPixels.width) / 2;
 				mousePos.y += ((newCursorSizeInCells.height - 1) * InventorySlotSizeInPixels.height) / 2;
 				SetCursorPos(mousePos);
@@ -1848,7 +1848,7 @@ void PerformPrimaryAction()
 		} else if (IsStashOpen && GetLeftPanel().contains(MousePosition)) {
 			Point stashSlot = (ActiveStashSlot != InvalidStashPoint) ? ActiveStashSlot : FindClosestStashSlot(MousePosition);
 
-			Size cursorSizeInCells = MyPlayer->HoldItem.isEmpty() ? Size { 1, 1 } : GetInventorySize(MyPlayer->HoldItem);
+			Size cursorSizeInCells = MyPlayer->heldItem.isEmpty() ? Size { 1, 1 } : GetInventorySize(MyPlayer->heldItem);
 
 			// Find any item occupying a slot that is currently under the cursor
 			StashStruct::StashCell itemUnderCursor = [](Point stashSlot, Size cursorSizeInCells) -> StashStruct::StashCell {
@@ -1869,7 +1869,7 @@ void PerformPrimaryAction()
 
 			Point mousePos = GetStashSlotCoord(jumpSlot);
 			ActiveStashSlot = jumpSlot;
-			if (MyPlayer->HoldItem.isEmpty()) {
+			if (MyPlayer->heldItem.isEmpty()) {
 				// For inventory cut/paste we can combine the cases where we swap or simply paste items. Because stash movement is always cell based (there's no fast
 				// movement over large items) it looks better if we offset the hand cursor to the bottom right cell of the item we just placed.
 				ActiveStashSlot += Displacement { cursorSizeInCells - 1 }; // shift the active stash slot coordinates to account for items larger than 1x1
@@ -1879,7 +1879,7 @@ void PerformPrimaryAction()
 			} else {
 				// If we've picked up an item then use the same logic as the inventory so that the cursor is offset to the center of where the old item location was
 				// (in this case jumpSlot was the top left cell of where it used to be in the grid, and we need to update the cursor size since we're now holding the item)
-				cursorSizeInCells = GetInventorySize(MyPlayer->HoldItem);
+				cursorSizeInCells = GetInventorySize(MyPlayer->heldItem);
 				mousePos.x += ((cursorSizeInCells.width) * InventorySlotSizeInPixels.width) / 2;
 				mousePos.y += ((cursorSizeInCells.height) * InventorySlotSizeInPixels.height) / 2;
 			}
@@ -1938,17 +1938,17 @@ bool TryDropItem()
 {
 	Player &myPlayer = *MyPlayer;
 
-	if (myPlayer.HoldItem.isEmpty()) {
+	if (myPlayer.heldItem.isEmpty()) {
 		return false;
 	}
 
 	if (leveltype == DTYPE_TOWN) {
-		if (UseItemOpensHive(myPlayer.HoldItem, myPlayer.position.tile)) {
+		if (UseItemOpensHive(myPlayer.heldItem, myPlayer.position.tile)) {
 			OpenHive();
 			NewCursor(CURSOR_HAND);
 			return true;
 		}
-		if (UseItemOpensGrave(myPlayer.HoldItem, myPlayer.position.tile)) {
+		if (UseItemOpensGrave(myPlayer.heldItem, myPlayer.position.tile)) {
 			OpenGrave();
 			NewCursor(CURSOR_HAND);
 			return true;
@@ -1961,8 +1961,8 @@ bool TryDropItem()
 		return false;
 	}
 
-	NetSendCmdPItem(true, CMD_PUTITEM, *itemTile, myPlayer.HoldItem);
-	myPlayer.HoldItem.clear();
+	NetSendCmdPItem(true, CMD_PUTITEM, *itemTile, myPlayer.heldItem);
+	myPlayer.heldItem.clear();
 	NewCursor(CURSOR_HAND);
 	return true;
 }
@@ -1973,7 +1973,7 @@ void PerformSpellAction()
 		return;
 
 	if (invflag) {
-		if (!MyPlayer->HoldItem.isEmpty())
+		if (!MyPlayer->heldItem.isEmpty())
 			TryDropItem();
 		else if (pcurs > CURSOR_HAND) {
 			TryIconCurs();
@@ -1989,7 +1989,7 @@ void PerformSpellAction()
 		return;
 	}
 
-	if (!MyPlayer->HoldItem.isEmpty() && !TryDropItem())
+	if (!MyPlayer->heldItem.isEmpty() && !TryDropItem())
 		return;
 	if (pcurs > CURSOR_HAND)
 		NewCursor(CURSOR_HAND);
@@ -2088,7 +2088,7 @@ void PerformSecondaryAction()
 		return;
 	}
 
-	if (!MyPlayer->HoldItem.isEmpty() && !TryDropItem())
+	if (!MyPlayer->heldItem.isEmpty() && !TryDropItem())
 		return;
 	if (pcurs > CURSOR_HAND)
 		NewCursor(CURSOR_HAND);

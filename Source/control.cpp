@@ -642,8 +642,8 @@ void RemoveGold(Player &player, int goldIndex, int amount)
 		player.RemoveInvItem(gi);
 	}
 
-	MakeGoldStack(player.HoldItem, amount);
-	NewCursor(player.HoldItem);
+	MakeGoldStack(player.heldItem, amount);
+	NewCursor(player.heldItem);
 
 	player._pGold = CalculateGold(player);
 }
@@ -1196,15 +1196,15 @@ void DrawInfoBox(const Surface &out)
 	Player &myPlayer = *MyPlayer;
 	if (spselflag || trigflag) {
 		InfoColor = UiFlags::ColorWhite;
-	} else if (!myPlayer.HoldItem.isEmpty()) {
-		if (myPlayer.HoldItem._itype == ItemType::Gold) {
-			int nGold = myPlayer.HoldItem._ivalue;
+	} else if (!myPlayer.heldItem.isEmpty()) {
+		if (myPlayer.heldItem._itype == ItemType::Gold) {
+			int nGold = myPlayer.heldItem._ivalue;
 			InfoString = fmt::format(fmt::runtime(ngettext("{:s} gold piece", "{:s} gold pieces", nGold)), FormatInteger(nGold));
-		} else if (!myPlayer.CanUseItem(myPlayer.HoldItem)) {
+		} else if (!myPlayer.CanUseItem(myPlayer.heldItem)) {
 			InfoString = _("Requirements not met");
 		} else {
-			InfoString = myPlayer.HoldItem.getName();
-			InfoColor = myPlayer.HoldItem.getTextColor();
+			InfoString = myPlayer.heldItem.getName();
+			InfoColor = myPlayer.heldItem.getTextColor();
 		}
 	} else {
 		if (pcursitem != -1)

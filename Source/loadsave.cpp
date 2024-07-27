@@ -530,7 +530,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	for (Item &item : player.SpdList)
 		LoadAndValidateItemData(file, item);
 
-	LoadAndValidateItemData(file, player.HoldItem);
+	LoadAndValidateItemData(file, player.heldItem);
 
 	player._pIMinDam = file.NextLE<int32_t>();
 	player._pIMaxDam = file.NextLE<int32_t>();
@@ -1354,7 +1354,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	for (const Item &item : player.SpdList)
 		SaveItem(file, item);
 
-	SaveItem(file, player.HoldItem);
+	SaveItem(file, player.heldItem);
 
 	file.WriteLE<int32_t>(player._pIMinDam);
 	file.WriteLE<int32_t>(player._pIMaxDam);

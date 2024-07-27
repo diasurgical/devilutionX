@@ -123,7 +123,7 @@ bool SetHardwareCursorFromClxSprite(ClxSprite sprite, HotpointPosition hotpointP
 
 bool SetHardwareCursorFromSprite(int pcurs)
 {
-	const bool isItem = !MyPlayer->HoldItem.isEmpty();
+	const bool isItem = !MyPlayer->heldItem.isEmpty();
 	if (isItem && !*sgOptions.Graphics.hardwareCursorForItems)
 		return false;
 

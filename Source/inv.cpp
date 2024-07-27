@@ -342,9 +342,9 @@ void ChangeBodyEquipment(Player &player, int slot, item_equip_type location)
 		}
 	}(location);
 	const Item previouslyEquippedItem = player.InvBody[slot];
-	ChangeEquipment(player, bodyLocation, player.HoldItem.pop(), &player == MyPlayer);
+	ChangeEquipment(player, bodyLocation, player.heldItem.pop(), &player == MyPlayer);
 	if (!previouslyEquippedItem.isEmpty()) {
-		player.HoldItem = previouslyEquippedItem;
+		player.heldItem = previouslyEquippedItem;
 	}
 }
 
@@ -353,8 +353,8 @@ void ChangeEquippedItem(Player &player, uint8_t slot)
 	const inv_body_loc selectedHand = slot == SLOTXY_HAND_LEFT ? INVLOC_HAND_LEFT : INVLOC_HAND_RIGHT;
 	const inv_body_loc otherHand = slot == SLOTXY_HAND_LEFT ? INVLOC_HAND_RIGHT : INVLOC_HAND_LEFT;
 
-	const bool pasteIntoSelectedHand = (player.InvBody[otherHand].isEmpty() || player.InvBody[otherHand]._iClass != player.HoldItem._iClass)
-	    || (player._pClass == HeroClass::Bard && player.InvBody[otherHand]._iClass == ICLASS_WEAPON && player.HoldItem._iClass == ICLASS_WEAPON);
+	const bool pasteIntoSelectedHand = (player.InvBody[otherHand].isEmpty() || player.InvBody[otherHand]._iClass != player.heldItem._iClass)
+	    || (player._pClass == HeroClass::Bard && player.InvBody[otherHand]._iClass == ICLASS_WEAPON && player.heldItem._iClass == ICLASS_WEAPON);
 
 	const bool dequipTwoHandedWeapon = (!player.InvBody[otherHand].isEmpty() && player.GetItemLocation(player.InvBody[otherHand]) == ILOC_TWOHAND);
 
@@ -363,9 +363,9 @@ void ChangeEquippedItem(Player &player, uint8_t slot)
 	if (dequipTwoHandedWeapon) {
 		RemoveEquipment(player, otherHand, false);
 	}
-	ChangeEquipment(player, pasteHand, player.HoldItem.pop(), &player == MyPlayer);
+	ChangeEquipment(player, pasteHand, player.heldItem.pop(), &player == MyPlayer);
 	if (!previouslyEquippedItem.isEmpty()) {
-		player.HoldItem = previouslyEquippedItem;
+		player.heldItem = previouslyEquippedItem;
 	}
 }
 
@@ -389,15 +389,15 @@ void ChangeTwoHandItem(Player &player)
 
 	if (player.InvBody[INVLOC_HAND_RIGHT].isEmpty()) {
 		Item previouslyEquippedItem = player.InvBody[INVLOC_HAND_LEFT];
-		ChangeEquipment(player, INVLOC_HAND_LEFT, player.HoldItem.pop(), &player == MyPlayer);
+		ChangeEquipment(player, INVLOC_HAND_LEFT, player.heldItem.pop(), &player == MyPlayer);
 		if (!previouslyEquippedItem.isEmpty()) {
-			player.HoldItem = previouslyEquippedItem;
+			player.heldItem = previouslyEquippedItem;
 		}
 	} else {
 		Item previouslyEquippedItem = player.InvBody[INVLOC_HAND_RIGHT];
 		RemoveEquipment(player, INVLOC_HAND_RIGHT, false);
-		ChangeEquipment(player, INVLOC_HAND_LEFT, player.HoldItem, &player == MyPlayer);
-		player.HoldItem = previouslyEquippedItem;
+		ChangeEquipment(player, INVLOC_HAND_LEFT, player.heldItem, &player == MyPlayer);
+		player.heldItem = previouslyEquippedItem;
 	}
 }
 
@@ -432,7 +432,7 @@ int8_t CheckOverlappingItems(int slot, const Player &player, Size itemSize)
 
 int8_t GetPrevItemId(int slot, const Player &player, const Size &itemSize)
 {
-	if (player.HoldItem._itype != ItemType::Gold)
+	if (player.heldItem._itype != ItemType::Gold)
 		return CheckOverlappingItems(slot, player, itemSize);
 	int8_t item_cell_begin = player.InvGrid[slot - SLOTXY_INV_FIRST];
 	if (item_cell_begin == 0)
@@ -449,29 +449,29 @@ bool ChangeInvItem(Player &player, int slot, Size itemSize)
 	int8_t prevItemId = GetPrevItemId(slot, player, itemSize);
 	if (prevItemId < 0) return false;
 
-	if (player.HoldItem._itype == ItemType::Gold && prevItemId == 0) {
+	if (player.heldItem._itype == ItemType::Gold && prevItemId == 0) {
 		const int ii = slot - SLOTXY_INV_FIRST;
 		if (player.InvGrid[ii] > 0) {
 			const int invIndex = player.InvGrid[ii] - 1;
 			const int gt = player.InvList[invIndex]._ivalue;
-			int ig = player.HoldItem._ivalue + gt;
+			int ig = player.heldItem._ivalue + gt;
 			if (ig <= MaxGold) {
 				player.InvList[invIndex]._ivalue = ig;
 				SetPlrHandGoldCurs(player.InvList[invIndex]);
-				player._pGold += player.HoldItem._ivalue;
-				player.HoldItem.clear();
+				player._pGold += player.heldItem._ivalue;
+				player.heldItem.clear();
 			} else {
 				ig = MaxGold - gt;
 				player._pGold += ig;
-				player.HoldItem._ivalue -= ig;
-				SetPlrHandGoldCurs(player.HoldItem);
+				player.heldItem._ivalue -= ig;
+				SetPlrHandGoldCurs(player.heldItem);
 				player.InvList[invIndex]._ivalue = MaxGold;
 				player.InvList[invIndex]._iCurs = ICURS_GOLD_LARGE;
 			}
 		} else {
 			const int invIndex = player._pNumInv;
-			player._pGold += player.HoldItem._ivalue;
-			player.InvList[invIndex] = player.HoldItem.pop();
+			player._pGold += player.heldItem._ivalue;
+			player.InvList[invIndex] = player.heldItem.pop();
 			player._pNumInv++;
 			player.InvGrid[ii] = player._pNumInv;
 		}
@@ -480,15 +480,15 @@ bool ChangeInvItem(Player &player, int slot, Size itemSize)
 		}
 	} else {
 		if (prevItemId == 0) {
-			player.InvList[player._pNumInv] = player.HoldItem.pop();
+			player.InvList[player._pNumInv] = player.heldItem.pop();
 			player._pNumInv++;
 			prevItemId = player._pNumInv;
 		} else {
 			const int invIndex = prevItemId - 1;
-			if (player.HoldItem._itype == ItemType::Gold)
-				player._pGold += player.HoldItem._ivalue;
-			std::swap(player.InvList[invIndex], player.HoldItem);
-			if (player.HoldItem._itype == ItemType::Gold)
+			if (player.heldItem._itype == ItemType::Gold)
+				player._pGold += player.heldItem._ivalue;
+			std::swap(player.InvList[invIndex], player.heldItem);
+			if (player.heldItem._itype == ItemType::Gold)
 				player._pGold = CalculateGold(player);
 			for (int8_t &itemIndex : player.InvGrid) {
 				if (itemIndex == prevItemId)
@@ -508,11 +508,11 @@ void ChangeBeltItem(Player &player, int slot)
 {
 	const int ii = slot - SLOTXY_BELT_FIRST;
 	if (player.SpdList[ii].isEmpty()) {
-		player.SpdList[ii] = player.HoldItem.pop();
+		player.SpdList[ii] = player.heldItem.pop();
 	} else {
-		std::swap(player.SpdList[ii], player.HoldItem);
+		std::swap(player.SpdList[ii], player.heldItem);
 
-		if (player.HoldItem._itype == ItemType::Gold)
+		if (player.heldItem._itype == ItemType::Gold)
 			player._pGold = CalculateGold(player);
 	}
 	if (&player == MyPlayer) {
@@ -544,23 +544,23 @@ item_equip_type GetItemEquipType(const Player &player, int slot, item_equip_type
 
 void CheckInvPaste(Player &player, Point cursorPosition)
 {
-	const Size itemSize = GetInventorySize(player.HoldItem);
+	const Size itemSize = GetInventorySize(player.heldItem);
 
 	const int slot = FindTargetSlotUnderItemCursor(cursorPosition, itemSize);
 	if (slot == NUM_XY_SLOTS)
 		return;
 
-	const item_equip_type desiredLocation = player.GetItemLocation(player.HoldItem);
+	const item_equip_type desiredLocation = player.GetItemLocation(player.heldItem);
 	const item_equip_type location = GetItemEquipType(player, slot, desiredLocation);
 
 	if (location == ILOC_BELT) {
-		if (!CanBePlacedOnBelt(player, player.HoldItem)) return;
+		if (!CanBePlacedOnBelt(player, player.heldItem)) return;
 	} else if (location != ILOC_UNEQUIPABLE) {
 		if (desiredLocation != location) return;
 	}
 
 	if (IsNoneOf(location, ILOC_UNEQUIPABLE, ILOC_BELT)) {
-		if (!player.CanUseItem(player.HoldItem)) {
+		if (!player.CanUseItem(player.heldItem)) {
 			player.Say(HeroSpeech::ICantUseThisYet);
 			return;
 		}
@@ -596,8 +596,8 @@ void CheckInvPaste(Player &player, Point cursorPosition)
 
 	CalcPlrInv(player, true);
 	if (&player == MyPlayer) {
-		PlaySFX(ItemInvSnds[ItemCAnimTbl[player.HoldItem._iCurs]]);
-		NewCursor(player.HoldItem);
+		PlaySFX(ItemInvSnds[ItemCAnimTbl[player.heldItem._iCurs]]);
+		NewCursor(player.heldItem);
 	}
 }
 
@@ -629,7 +629,7 @@ void CheckInvCut(Player &player, Point cursorPosition, bool automaticMove, bool 
 		return;
 	}
 
-	Item &holdItem = player.HoldItem;
+	Item &holdItem = player.heldItem;
 	holdItem.clear();
 
 	bool automaticallyMoved = false;
@@ -1636,7 +1636,7 @@ void CheckInvItem(bool isShiftHeld, bool isCtrlHeld)
 {
 	if (IsInspectingPlayer())
 		return;
-	if (!MyPlayer->HoldItem.isEmpty()) {
+	if (!MyPlayer->heldItem.isEmpty()) {
 		CheckInvPaste(*MyPlayer, MousePosition);
 	} else if (IsStashOpen && isCtrlHeld) {
 		TransferItemToStash(*MyPlayer, pcursinvitem);
@@ -1674,14 +1674,14 @@ void InvGetItem(Player &player, int ii)
 		}
 	} else {
 		// The item needs to go into the players hand
-		if (MyPlayer == &player && !player.HoldItem.isEmpty()) {
+		if (MyPlayer == &player && !player.heldItem.isEmpty()) {
 			// drop whatever the player is currently holding
-			NetSendCmdPItem(true, CMD_SYNCPUTITEM, player.position.tile, player.HoldItem);
+			NetSendCmdPItem(true, CMD_SYNCPUTITEM, player.position.tile, player.heldItem);
 		}
 
 		// need to copy here instead of move so CleanupItems still has access to the position
-		player.HoldItem = item;
-		NewCursor(player.HoldItem);
+		player.heldItem = item;
+		NewCursor(player.heldItem);
 	}
 
 	// This potentially moves items in memory so must be done after we've made a copy
@@ -2214,21 +2214,21 @@ void CloseStash()
 		return;
 
 	Player &myPlayer = *MyPlayer;
-	if (!myPlayer.HoldItem.isEmpty()) {
+	if (!myPlayer.heldItem.isEmpty()) {
 		std::optional<Point> itemTile = FindAdjacentPositionForItem(myPlayer.position.future, myPlayer._pdir);
 		if (itemTile) {
-			NetSendCmdPItem(true, CMD_PUTITEM, *itemTile, myPlayer.HoldItem);
+			NetSendCmdPItem(true, CMD_PUTITEM, *itemTile, myPlayer.heldItem);
 		} else {
-			if (!AutoPlaceItemInBelt(myPlayer, myPlayer.HoldItem, true, true)
-			    && !AutoPlaceItemInInventory(myPlayer, myPlayer.HoldItem, true, true)
-			    && !AutoPlaceItemInStash(myPlayer, myPlayer.HoldItem, true)) {
+			if (!AutoPlaceItemInBelt(myPlayer, myPlayer.heldItem, true, true)
+			    && !AutoPlaceItemInInventory(myPlayer, myPlayer.heldItem, true, true)
+			    && !AutoPlaceItemInStash(myPlayer, myPlayer.heldItem, true)) {
 				// This can fail for max gold, arena potions and a stash that has been arranged
 				// to not have room for the item all 3 cases are extremely unlikely
 				app_fatal(_("No room for item"));
 			}
-			PlaySFX(ItemInvSnds[ItemCAnimTbl[myPlayer.HoldItem._iCurs]]);
+			PlaySFX(ItemInvSnds[ItemCAnimTbl[myPlayer.heldItem._iCurs]]);
 		}
-		myPlayer.HoldItem.clear();
+		myPlayer.heldItem.clear();
 		NewCursor(CURSOR_HAND);
 	}
 

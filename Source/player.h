@@ -221,7 +221,7 @@ struct Player {
 	Item InvBody[NUM_INVLOC];
 	Item InvList[InventoryGridCells];
 	Item SpdList[MaxBeltItems];
-	Item HoldItem;
+	Item heldItem; // HoldItem
 
 	int lightId;
 

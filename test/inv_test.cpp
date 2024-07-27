@@ -150,10 +150,10 @@ TEST_F(InvTest, GoldAutoPlace)
 	MyPlayer->InvList[0]._ivalue = 1000;
 	MyPlayer->_pNumInv = 1;
 	// Put (max gold - 100) gold, which is 4900, into the player's hand
-	MyPlayer->HoldItem._itype = ItemType::Gold;
-	MyPlayer->HoldItem._ivalue = GOLD_MAX_LIMIT - 100;
+	MyPlayer->heldItem._itype = ItemType::Gold;
+	MyPlayer->heldItem._ivalue = GOLD_MAX_LIMIT - 100;
 
-	GoldAutoPlace(*MyPlayer, MyPlayer->HoldItem);
+	GoldAutoPlace(*MyPlayer, MyPlayer->heldItem);
 	// We expect the inventory:
 	// | 5000 | 900 | ...
 	EXPECT_EQ(MyPlayer->InvList[0]._ivalue, GOLD_MAX_LIMIT);

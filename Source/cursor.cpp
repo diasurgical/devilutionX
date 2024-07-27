@@ -558,7 +558,7 @@ void NewCursor(int cursId)
 	}
 
 	if (cursId < CURSOR_HOURGLASS && MyPlayer != nullptr) {
-		MyPlayer->HoldItem.clear();
+		MyPlayer->heldItem.clear();
 	}
 	pcurs = cursId;
 
@@ -577,8 +577,8 @@ void NewCursor(int cursId)
 void DrawSoftwareCursor(const Surface &out, Point position, int cursId)
 {
 	const ClxSprite sprite = GetInvItemSprite(cursId);
-	if (cursId >= CURSOR_FIRSTITEM && !MyPlayer->HoldItem.isEmpty()) {
-		const auto &heldItem = MyPlayer->HoldItem;
+	if (cursId >= CURSOR_FIRSTITEM && !MyPlayer->heldItem.isEmpty()) {
+		const auto &heldItem = MyPlayer->heldItem;
 		ClxDrawOutline(out, GetOutlineColor(heldItem, true), position, sprite);
 		DrawItem(heldItem, out, position, sprite);
 	} else {
@@ -758,7 +758,7 @@ void CheckCursMove()
 	if (myPlayer._pInvincible) {
 		return;
 	}
-	if (!myPlayer.HoldItem.isEmpty() || spselflag) {
+	if (!myPlayer.heldItem.isEmpty() || spselflag) {
 		cursPosition = { mx, my };
 		return;
 	}

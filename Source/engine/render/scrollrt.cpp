@@ -238,8 +238,8 @@ void DrawCursor(const Surface &out)
 	};
 
 	// Copy the buffer before the item cursor and its 1px outline are drawn to a temporary buffer.
-	const int outlineWidth = !MyPlayer->HoldItem.isEmpty() ? 1 : 0;
-	Displacement offset = !MyPlayer->HoldItem.isEmpty() ? Displacement { cursSize / 2 } : Displacement { 0 };
+	const int outlineWidth = !MyPlayer->heldItem.isEmpty() ? 1 : 0;
+	Displacement offset = !MyPlayer->heldItem.isEmpty() ? Displacement { cursSize / 2 } : Displacement { 0 };
 	Point cursPosition = MousePosition - offset;
 
 	Rectangle &rect = cursor.rect;
@@ -1558,7 +1558,7 @@ void ClearScreenBuffer()
 #ifdef _DEBUG
 void ScrollView()
 {
-	if (!MyPlayer->HoldItem.isEmpty())
+	if (!MyPlayer->heldItem.isEmpty())
 		return;
 
 	if (MousePosition.x < 20) {

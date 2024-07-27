@@ -310,7 +310,7 @@ bool TryOpenDungeonWithMouse()
 	if (leveltype != DTYPE_TOWN)
 		return false;
 
-	Item &holdItem = MyPlayer->HoldItem;
+	Item &holdItem = MyPlayer->heldItem;
 	if (holdItem.IDidx == IDI_RUNEBOMB && OpensHive(cursPosition))
 		OpenHive();
 	else if (holdItem.IDidx == IDI_MAPOFDOOM && OpensGrave(cursPosition))
@@ -379,12 +379,12 @@ void LeftMouseDown(uint16_t modState)
 				CheckStashButtonPress(MousePosition);
 			} else if (sbookflag && GetRightPanel().contains(MousePosition)) {
 				CheckSBook();
-			} else if (!MyPlayer->HoldItem.isEmpty()) {
+			} else if (!MyPlayer->heldItem.isEmpty()) {
 				if (!TryOpenDungeonWithMouse()) {
 					Point currentPosition = MyPlayer->position.tile;
 					std::optional<Point> itemTile = FindAdjacentPositionForItem(currentPosition, GetDirection(currentPosition, cursPosition));
 					if (itemTile) {
-						NetSendCmdPItem(true, CMD_PUTITEM, *itemTile, MyPlayer->HoldItem);
+						NetSendCmdPItem(true, CMD_PUTITEM, *itemTile, MyPlayer->heldItem);
 						NewCursor(CURSOR_HAND);
 					}
 				}
@@ -1483,7 +1483,7 @@ void TimeoutCursor(bool bTimeout)
 	} else if (sgnTimeoutCurs != CURSOR_NONE) {
 		// Timeout is gone, we should restore the previous cursor.
 		// But the timeout cursor could already be changed by the now processed messages (for example item cursor from CMD_GETITEM).
-		// Changing the item cursor back to the previous (hand) cursor could result in deleted items, cause this resets Player.HoldItem (see NewCursor).
+		// Changing the item cursor back to the previous (hand) cursor could result in deleted items, cause this resets Player.heldItem (see NewCursor).
 		if (pcurs == CURSOR_HOURGLASS)
 			NewCursor(sgnTimeoutCurs);
 		sgnTimeoutCurs = CURSOR_NONE;
