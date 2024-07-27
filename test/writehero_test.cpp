@@ -350,7 +350,7 @@ void AssertPlayer(Player &player)
 	ASSERT_EQ(player._pIBonusDamMod, 0);
 	ASSERT_EQ(player._pISpells, 0);
 	ASSERT_EQ(player._pIFlags, ItemSpecialEffect::None);
-	ASSERT_EQ(player._pIGetHit, 0);
+	ASSERT_EQ(player.damageFromEnemies, 0);
 	ASSERT_EQ(player._pISplLvlAdd, 0);
 	ASSERT_EQ(player._pIEnAc, 0);
 	ASSERT_EQ(player._pIFMinDam, 0);

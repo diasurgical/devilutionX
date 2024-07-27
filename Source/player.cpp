@@ -628,7 +628,7 @@ bool PlrHitMonst(Player &player, Monster &monster, bool adjacentDamage = false)
 
 	if (&player == MyPlayer) {
 		if (HasAnyOf(player.pDamAcFlags, ItemSpecialEffectHf::Peril)) {
-			dam2 += player._pIGetHit << 6;
+			dam2 += player.damageFromEnemies << 6;
 			if (dam2 >= 0) {
 				ApplyPlrDamage(DamageType::Physical, player, 0, 1, dam2);
 			}

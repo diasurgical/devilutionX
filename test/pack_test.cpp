@@ -1210,7 +1210,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_iBonusDamMod)
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_iGetHit)
 {
-	MyPlayer->_pIGetHit++;
+	MyPlayer->damageFromEnemies++;
 	ASSERT_FALSE(TestNetPackValidation());
 
 	CalcPlrItemVals(*MyPlayer, false);

@@ -253,7 +253,7 @@ struct Player {
 	int _pIBonusToHit;
 	int _pIBonusAC;
 	int _pIBonusDamMod;
-	int _pIGetHit;
+	int damageFromEnemies; // _pIGetHit
 	int _pIEnAc;
 	int _pIFMinDam;
 	int _pIFMaxDam;

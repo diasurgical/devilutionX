@@ -2922,7 +2922,7 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	player._pIFlags = flags;
 	player.pDamAcFlags = damAcFlags;
 	player._pIBonusDamMod = damMod;
-	player._pIGetHit = getHit;
+	player.damageFromEnemies = getHit;
 	CalcPlrLightRadius(player, lightRadius);
 	CalcPlrDamageMod(player);
 	player._pISpells = spells;

@@ -1066,13 +1066,13 @@ bool PlayerMHit(Player &player, Monster *monster, int dist, int mind, int maxd, 
 			if (monster == nullptr)
 				if (HasAnyOf(player._pIFlags, ItemSpecialEffect::HalfTrapDamage))
 					dam /= 2;
-			dam += player._pIGetHit * 64;
+			dam += player.damageFromEnemies * 64;
 		} else {
 			dam = mind + GenerateRnd(maxd - mind + 1);
 			if (monster == nullptr)
 				if (HasAnyOf(player._pIFlags, ItemSpecialEffect::HalfTrapDamage))
 					dam /= 2;
-			dam += player._pIGetHit;
+			dam += player.damageFromEnemies;
 		}
 
 		dam = std::max(dam, 64);
