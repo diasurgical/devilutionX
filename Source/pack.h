@@ -112,7 +112,7 @@ struct PlayerNetPack {
 	uint8_t pManaShield;
 	uint16_t wReflections;
 	uint8_t pDiabloKillLevel;
-	uint8_t friendlyMode;
+	uint8_t isFriendly;
 	uint8_t isOnSetLevel;
 
 	// For validation

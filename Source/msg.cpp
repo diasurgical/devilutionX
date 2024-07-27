@@ -2260,7 +2260,7 @@ size_t OnString(const TCmd *pCmd, Player &player)
 
 size_t OnFriendlyMode(const TCmd *pCmd, Player &player) // NOLINT(misc-unused-parameters)
 {
-	player.friendlyMode = !player.friendlyMode;
+	player.isFriendly = !player.isFriendly;
 	RedrawEverything();
 	return sizeof(*pCmd);
 }

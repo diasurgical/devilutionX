@@ -282,7 +282,7 @@ bool MonsterMHit(const Player &player, int monsterId, int mindam, int maxdam, in
 
 bool Plr2PlrMHit(const Player &player, Player &target, int mindam, int maxdam, int dist, MissileID mtype, DamageType damageType, bool shift, bool *blocked)
 {
-	if (sgGameInitInfo.bFriendlyFire == 0 && player.friendlyMode)
+	if (sgGameInitInfo.bFriendlyFire == 0 && player.isFriendly)
 		return false;
 
 	*blocked = false;

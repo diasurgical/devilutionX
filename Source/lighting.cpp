@@ -668,7 +668,7 @@ void ProcessVisionList()
 		Light &vision = VisionList[id];
 		MapExplorationType doautomap = MAP_EXP_SELF;
 		if (&player != MyPlayer)
-			doautomap = player.friendlyMode ? MAP_EXP_OTHERS : MAP_EXP_NONE;
+			doautomap = player.isFriendly ? MAP_EXP_OTHERS : MAP_EXP_NONE;
 		DoVision(
 		    vision.position.tile,
 		    vision.radius,

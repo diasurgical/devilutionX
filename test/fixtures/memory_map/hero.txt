@@ -44,6 +44,6 @@ R 16 reserved
 R 32 pDiabloKillLevel
 R 32 pDifficulty
 R 32 pDamAcFlags
-R 8 friendlyMode
+R 8 isFriendly
 R 8 isOnSetLevel
 M 18 8 reserved

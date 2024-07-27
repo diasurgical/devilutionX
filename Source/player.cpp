@@ -804,7 +804,7 @@ bool DoAttack(Player &player)
 
 		if (monster != nullptr) {
 			didhit = PlrHitMonst(player, *monster);
-		} else if (PlayerAtPosition(position) != nullptr && !player.friendlyMode) {
+		} else if (PlayerAtPosition(position) != nullptr && !player.isFriendly) {
 			didhit = PlrHitPlr(player, *PlayerAtPosition(position));
 		} else {
 			Object *object = FindObjectAtPosition(position, false);
@@ -3194,7 +3194,7 @@ void CheckPlrSpell(bool isShiftHeld, SpellID spellID, SpellType spellType)
 	} else if (pcursmonst != -1 && !isShiftHeld) {
 		LastMouseButtonAction = MouseActionType::SpellMonsterTarget;
 		NetSendCmdParam5(true, CMD_SPELLID, pcursmonst, static_cast<int8_t>(spellID), static_cast<uint8_t>(spellType), spellLevel, spellFrom);
-	} else if (PlayerUnderCursor != nullptr && !isShiftHeld && !myPlayer.friendlyMode) {
+	} else if (PlayerUnderCursor != nullptr && !isShiftHeld && !myPlayer.isFriendly) {
 		LastMouseButtonAction = MouseActionType::SpellPlayerTarget;
 		NetSendCmdParam5(true, CMD_SPELLPID, PlayerUnderCursor->getId(), static_cast<int8_t>(spellID), static_cast<uint8_t>(spellType), spellLevel, spellFrom);
 	} else {

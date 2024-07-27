@@ -311,8 +311,8 @@ private:
 public:
 	uint8_t _pgfxnum; // Bitmask indicating what variant of the sprite the player is using. The 3 lower bits define weapon (PlayerWeaponGraphic) and the higher bits define armour (starting with PlayerArmorGraphic)
 	int8_t _pISplLvlAdd;
-	/** @brief Specifies whether players are in non-PvP mode. */
-	bool friendlyMode = true;
+	/** @brief Specifies whether players are in non-PvP mode. (friendlyMode) */
+	bool isFriendly = true;
 
 	/** @brief The next queued spell */
 	SpellCastInfo queuedSpell;

@@ -353,7 +353,7 @@ void PackNetPlayer(PlayerNetPack &packed, const Player &player)
 	packed.wReflections = SDL_SwapLE16(player.wReflections);
 	packed.pDiabloKillLevel = player.pDiabloKillLevel;
 	packed.pManaShield = player.pManaShield;
-	packed.friendlyMode = player.friendlyMode ? 1 : 0;
+	packed.isFriendly = player.isFriendly ? 1 : 0;
 	packed.isOnSetLevel = player.plrIsOnSetLevel;
 
 	packed.pStrength = SDL_SwapLE32(player._pStrength);
@@ -617,7 +617,7 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 	player.wReflections = SDL_SwapLE16(packed.wReflections);
 	player.pDiabloKillLevel = packed.pDiabloKillLevel;
 	player.pManaShield = packed.pManaShield != 0;
-	player.friendlyMode = packed.friendlyMode != 0;
+	player.isFriendly = packed.isFriendly != 0;
 
 	for (int i = 0; i < MAX_SPELLS; i++)
 		player._pSplLvl[i] = packed.pSplLvl[i];

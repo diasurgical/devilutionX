@@ -381,7 +381,7 @@ void CheckPlayerNearby()
 	Player &myPlayer = *MyPlayer;
 
 	SpellID spl = myPlayer._pRSpell;
-	if (myPlayer.friendlyMode && spl != SpellID::Resurrect && spl != SpellID::HealOther)
+	if (myPlayer.isFriendly && spl != SpellID::Resurrect && spl != SpellID::HealOther)
 		return;
 
 	for (const Player &player : Players) {
@@ -535,7 +535,7 @@ void Interact()
 		return;
 	}
 
-	if (leveltype != DTYPE_TOWN && PlayerUnderCursor != nullptr && !myPlayer.friendlyMode) {
+	if (leveltype != DTYPE_TOWN && PlayerUnderCursor != nullptr && !myPlayer.isFriendly) {
 		NetSendCmdParam1(true, myPlayer.UsesRangedWeapon() ? CMD_RATTACKPID : CMD_ATTACKPID, PlayerUnderCursor->getId());
 		LastMouseButtonAction = MouseActionType::AttackPlayerTarget;
 		return;

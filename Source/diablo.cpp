@@ -274,7 +274,7 @@ void LeftMouseCmd(bool bShift)
 				LastMouseButtonAction = MouseActionType::AttackMonsterTarget;
 				NetSendCmdParam1(true, CMD_RATTACKID, pcursmonst);
 			}
-		} else if (PlayerUnderCursor != nullptr && !myPlayer.friendlyMode) {
+		} else if (PlayerUnderCursor != nullptr && !myPlayer.isFriendly) {
 			LastMouseButtonAction = MouseActionType::AttackPlayerTarget;
 			NetSendCmdParam1(true, CMD_RATTACKPID, PlayerUnderCursor->getId());
 		}
@@ -294,7 +294,7 @@ void LeftMouseCmd(bool bShift)
 		} else if (pcursmonst != -1) {
 			LastMouseButtonAction = MouseActionType::AttackMonsterTarget;
 			NetSendCmdParam1(true, CMD_ATTACKID, pcursmonst);
-		} else if (PlayerUnderCursor != nullptr && !myPlayer.friendlyMode) {
+		} else if (PlayerUnderCursor != nullptr && !myPlayer.isFriendly) {
 			LastMouseButtonAction = MouseActionType::AttackPlayerTarget;
 			NetSendCmdParam1(true, CMD_ATTACKPID, PlayerUnderCursor->getId());
 		}
@@ -2678,7 +2678,7 @@ bool TryIconCurs()
 			NetSendCmdLocParam5(true, CMD_SPELLXYD, cursPosition, static_cast<int8_t>(spellID), static_cast<uint8_t>(spellType), static_cast<uint16_t>(sd), spellLevel, spellFrom);
 		} else if (pcursmonst != -1) {
 			NetSendCmdParam5(true, CMD_SPELLID, pcursmonst, static_cast<int8_t>(spellID), static_cast<uint8_t>(spellType), spellLevel, spellFrom);
-		} else if (PlayerUnderCursor != nullptr && !myPlayer.friendlyMode) {
+		} else if (PlayerUnderCursor != nullptr && !myPlayer.isFriendly) {
 			NetSendCmdParam5(true, CMD_SPELLPID, PlayerUnderCursor->getId(), static_cast<int8_t>(spellID), static_cast<uint8_t>(spellType), spellLevel, spellFrom);
 		} else {
 			NetSendCmdLocParam4(true, CMD_SPELLXY, cursPosition, static_cast<int8_t>(spellID), static_cast<uint8_t>(spellType), spellLevel, spellFrom);

@@ -91,7 +91,7 @@ void RepeatMouseAction()
 			NetSendCmdParam1(true, rangedAttack ? CMD_RATTACKID : CMD_ATTACKID, pcursmonst);
 		break;
 	case MouseActionType::AttackPlayerTarget:
-		if (PlayerUnderCursor != nullptr && !myPlayer.friendlyMode)
+		if (PlayerUnderCursor != nullptr && !myPlayer.isFriendly)
 			NetSendCmdParam1(true, rangedAttack ? CMD_RATTACKPID : CMD_ATTACKPID, PlayerUnderCursor->getId());
 		break;
 	case MouseActionType::Spell:
@@ -105,7 +105,7 @@ void RepeatMouseAction()
 			CheckPlrSpell(false);
 		break;
 	case MouseActionType::SpellPlayerTarget:
-		if (PlayerUnderCursor != nullptr && !myPlayer.friendlyMode)
+		if (PlayerUnderCursor != nullptr && !myPlayer.isFriendly)
 			CheckPlrSpell(false);
 		break;
 	case MouseActionType::OperateObject:

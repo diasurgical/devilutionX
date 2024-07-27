@@ -944,7 +944,7 @@ void DrawCtrlBtns(const Surface &out)
 
 	if (PanelButtonIndex == 8) {
 		ClxDraw(out, mainPanelPosition + Displacement { 87, 122 }, (*multiButtons)[PanelButtons[6] ? 1 : 0]);
-		if (MyPlayer->friendlyMode)
+		if (MyPlayer->isFriendly)
 			ClxDraw(out, mainPanelPosition + Displacement { 527, 122 }, (*multiButtons)[PanelButtons[7] ? 3 : 2]);
 		else
 			ClxDraw(out, mainPanelPosition + Displacement { 527, 122 }, (*multiButtons)[PanelButtons[7] ? 5 : 4]);
@@ -1042,7 +1042,7 @@ void CheckPanelInfo()
 			if (i != 7) {
 				InfoString = _(PanBtnStr[i]);
 			} else {
-				if (MyPlayer->friendlyMode)
+				if (MyPlayer->isFriendly)
 					InfoString = _("Player friendly");
 				else
 					InfoString = _("Player attack");
@@ -1462,7 +1462,7 @@ void DrawTalkPan(const Surface &out)
 		if (&player == MyPlayer)
 			continue;
 
-		UiFlags color = player.friendlyMode ? UiFlags::ColorWhitegold : UiFlags::ColorRed;
+		UiFlags color = player.isFriendly ? UiFlags::ColorWhitegold : UiFlags::ColorRed;
 		const Point talkPanPosition = mainPanelPosition + Displacement { 172, 84 + 18 * talkBtn };
 		if (WhisperList[i]) {
 			// the normal (unpressed) voice button is pre-rendered on the panel, only need to draw over it when the button is held
