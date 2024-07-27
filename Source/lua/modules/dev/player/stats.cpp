@@ -76,7 +76,7 @@ std::string DebugCmdChangeMana(int change)
 
 	int newMana = myPlayer._pMana + (change * 64);
 	myPlayer._pMana = newMana;
-	myPlayer._pManaBase = myPlayer._pMana + myPlayer._pMaxManaBase - myPlayer._pMaxMana;
+	myPlayer._pManaBase = myPlayer._pMana + myPlayer.baseMaxMana - myPlayer._pMaxMana;
 	RedrawComponent(PanelDrawComponent::Mana);
 
 	return StrCat("Changed mana by ", change);

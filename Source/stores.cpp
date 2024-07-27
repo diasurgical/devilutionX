@@ -667,7 +667,7 @@ void FillManaPlayer()
 		PlaySFX(SfxID::CastHealing);
 	}
 	myPlayer._pMana = myPlayer._pMaxMana;
-	myPlayer._pManaBase = myPlayer._pMaxManaBase;
+	myPlayer._pManaBase = myPlayer.baseMaxMana;
 	RedrawComponent(PanelDrawComponent::Mana);
 }
 

@@ -429,7 +429,7 @@ TEST_F(PackTest, UnPackItem_diablo)
 	gbIsMultiplayer = false;
 	gbIsSpawn = false;
 
-	MyPlayer->_pMaxManaBase = 125 << 6;
+	MyPlayer->baseMaxMana = 125 << 6;
 	MyPlayer->_pMaxHPBase = 125 << 6;
 
 	for (size_t i = 0; i < sizeof(PackedDiabloItems) / sizeof(*PackedDiabloItems); i++) {
@@ -502,7 +502,7 @@ TEST_F(PackTest, UnPackItem_spawn)
 	gbIsMultiplayer = false;
 	gbIsSpawn = true;
 
-	MyPlayer->_pMaxManaBase = 125 << 6;
+	MyPlayer->baseMaxMana = 125 << 6;
 	MyPlayer->_pMaxHPBase = 125 << 6;
 
 	for (size_t i = 0; i < sizeof(PackedSpawnItems) / sizeof(*PackedSpawnItems); i++) {
@@ -547,7 +547,7 @@ TEST_F(PackTest, UnPackItem_diablo_multiplayer)
 	gbIsMultiplayer = true;
 	gbIsSpawn = false;
 
-	MyPlayer->_pMaxManaBase = 125 << 6;
+	MyPlayer->baseMaxMana = 125 << 6;
 	MyPlayer->_pMaxHPBase = 125 << 6;
 
 	for (size_t i = 0; i < sizeof(PackedDiabloMPItems) / sizeof(*PackedDiabloMPItems); i++) {
@@ -766,7 +766,7 @@ TEST_F(PackTest, UnPackItem_hellfire)
 	gbIsMultiplayer = false;
 	gbIsSpawn = false;
 
-	MyPlayer->_pMaxManaBase = 125 << 6;
+	MyPlayer->baseMaxMana = 125 << 6;
 	MyPlayer->_pMaxHPBase = 125 << 6;
 
 	for (size_t i = 0; i < sizeof(PackedHellfireItems) / sizeof(*PackedHellfireItems); i++) {
@@ -1021,7 +1021,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_hpBase)
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_manaBase)
 {
-	MyPlayer->_pManaBase = MyPlayer->_pMaxManaBase + 64;
+	MyPlayer->_pManaBase = MyPlayer->baseMaxMana + 64;
 	ASSERT_FALSE(TestNetPackValidation());
 }
 
@@ -1294,7 +1294,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_maxHPBase)
 
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_maxManaBase)
 {
-	MyPlayer->_pMaxManaBase++;
+	MyPlayer->baseMaxMana++;
 	ASSERT_FALSE(TestNetPackValidation());
 }
 

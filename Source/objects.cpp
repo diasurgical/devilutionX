@@ -2515,20 +2515,20 @@ void OperateShrineCostOfWisdom(Player &player, SpellID spellId, diablo_message m
 		}
 	}
 
-	uint32_t t = player._pMaxManaBase / 10;
+	uint32_t t = player.baseMaxMana / 10;
 	int v1 = player._pMana - player._pManaBase;
-	int v2 = player._pMaxMana - player._pMaxManaBase;
+	int v2 = player._pMaxMana - player.baseMaxMana;
 	player._pManaBase -= t;
 	player._pMana -= t;
 	player._pMaxMana -= t;
-	player._pMaxManaBase -= t;
+	player.baseMaxMana -= t;
 	if (player._pMana >> 6 <= 0) {
 		player._pMana = v1;
 		player._pManaBase = 0;
 	}
 	if (player._pMaxMana >> 6 <= 0) {
 		player._pMaxMana = v2;
-		player._pMaxManaBase = 0;
+		player.baseMaxMana = 0;
 	}
 
 	RedrawEverything();
@@ -2552,7 +2552,7 @@ void OperateShrineCryptic(Player &player)
 		return;
 
 	player._pMana = player._pMaxMana;
-	player._pManaBase = player._pMaxManaBase;
+	player._pManaBase = player.baseMaxMana;
 
 	InitDiabloMsg(EMSG_SHRINE_CRYPTIC);
 
@@ -2625,7 +2625,7 @@ void OperateShrineDivine(Player &player, Point spawnPosition)
 	}
 
 	player._pMana = player._pMaxMana;
-	player._pManaBase = player._pMaxManaBase;
+	player._pManaBase = player.baseMaxMana;
 	player._pHitPoints = player._pMaxHP;
 	player._pHPBase = player._pMaxHPBase;
 
@@ -2675,7 +2675,7 @@ void OperateShrineSpooky(const Player &player)
 	myPlayer._pHitPoints = myPlayer._pMaxHP;
 	myPlayer._pHPBase = myPlayer._pMaxHPBase;
 	myPlayer._pMana = myPlayer._pMaxMana;
-	myPlayer._pManaBase = myPlayer._pMaxManaBase;
+	myPlayer._pManaBase = myPlayer.baseMaxMana;
 
 	RedrawEverything();
 
@@ -2919,7 +2919,7 @@ void OperateShrineShimmering(Player &player)
 		return;
 
 	player._pMana = player._pMaxMana;
-	player._pManaBase = player._pMaxManaBase;
+	player._pManaBase = player.baseMaxMana;
 
 	RedrawEverything();
 
@@ -3243,7 +3243,7 @@ bool OperateFountains(Player &player, Object &fountain)
 			player._pManaBase += 64;
 			if (player._pMana > player._pMaxMana) {
 				player._pMana = player._pMaxMana;
-				player._pManaBase = player._pMaxManaBase;
+				player._pManaBase = player.baseMaxMana;
 			}
 
 			applied = true;

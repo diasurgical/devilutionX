@@ -1031,7 +1031,7 @@ int SaveItemPower(const Player &player, Item &item, ItemPower &power)
 		item._iDamAcFlags |= ItemSpecialEffectHf::ACAgainstUndead;
 		break;
 	case IPL_MANATOLIFE: {
-		int portion = ((player._pMaxManaBase >> 6) * 50 / 100) << 6;
+		int portion = ((player.baseMaxMana >> 6) * 50 / 100) << 6;
 		item._iPLMana -= portion;
 		item._iPLHP += portion;
 	} break;
@@ -2708,7 +2708,7 @@ void CalcPlrLifeMana(Player &player, int vitality, int magic, int life, int mana
 		SetPlayerHitPoints(player, 0);
 	}
 
-	player._pMaxMana = mana + player._pMaxManaBase;
+	player._pMaxMana = mana + player.baseMaxMana;
 	player._pMana = std::min(mana + player._pManaBase, player._pMaxMana);
 }
 
@@ -4224,7 +4224,7 @@ void UseItem(Player &player, item_misc_id mid, SpellID spellID, int spellFrom)
 			player._pMana += GetSpellData(spellID).sManaCost << 6;
 			player._pMana = std::min(player._pMana, player._pMaxMana);
 			player._pManaBase += GetSpellData(spellID).sManaCost << 6;
-			player._pManaBase = std::min(player._pManaBase, player._pMaxManaBase);
+			player._pManaBase = std::min(player._pManaBase, player.baseMaxMana);
 		}
 		if (&player == MyPlayer) {
 			for (Item &item : InventoryPlayerItemsRange { player }) {

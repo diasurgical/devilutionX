@@ -667,8 +667,8 @@ bool PlrHitMonst(Player &player, Monster &monster, bool adjacentDamage = false)
 			player._pMana = player._pMaxMana;
 		}
 		player._pManaBase += skdam;
-		if (player._pManaBase > player._pMaxManaBase) {
-			player._pManaBase = player._pMaxManaBase;
+		if (player._pManaBase > player.baseMaxMana) {
+			player._pManaBase = player.baseMaxMana;
 		}
 		RedrawComponent(PanelDrawComponent::Mana);
 	}
@@ -1775,7 +1775,7 @@ void Player::RestorePartialMana()
 		l += l / 2;
 	if (HasNoneOf(_pIFlags, ItemSpecialEffect::NoMana)) {
 		_pMana = std::min(_pMana + l, _pMaxMana);
-		_pManaBase = std::min(_pManaBase + l, _pMaxManaBase);
+		_pManaBase = std::min(_pManaBase + l, baseMaxMana);
 	}
 }
 
@@ -2294,7 +2294,7 @@ void CreatePlayer(Player &player, HeroClass c)
 	player._pMana = player.calculateBaseMana();
 	player._pMaxMana = player._pMana;
 	player._pManaBase = player._pMana;
-	player._pMaxManaBase = player._pMana;
+	player.baseMaxMana = player._pMana;
 
 	player._pExperience = 0;
 	player._pArmorClass = 0;
@@ -2369,11 +2369,11 @@ void NextPlrLevel(Player &player)
 	int mana = player.getClassAttributes().lvlMana;
 
 	player._pMaxMana += mana;
-	player._pMaxManaBase += mana;
+	player.baseMaxMana += mana;
 
 	if (HasNoneOf(player._pIFlags, ItemSpecialEffect::NoMana)) {
 		player._pMana = player._pMaxMana;
-		player._pManaBase = player._pMaxManaBase;
+		player._pManaBase = player.baseMaxMana;
 	}
 
 	if (&player == MyPlayer) {
@@ -2803,7 +2803,7 @@ void ApplyPlrDamage(DamageType damageType, Player &player, int dam, int minHP /*
 				totalDamage += totalDamage / (player.GetManaShieldDamageReduction() - 1);
 			}
 			player._pMana = 0;
-			player._pManaBase = player._pMaxManaBase - player._pMaxMana;
+			player._pManaBase = player.baseMaxMana - player._pMaxMana;
 			if (&player == MyPlayer)
 				NetSendCmd(true, CMD_REMSHIELD);
 		}
@@ -2913,7 +2913,7 @@ void RestartTownLvl(Player &player)
 	SetPlayerHitPoints(player, 64);
 
 	player._pMana = 0;
-	player._pManaBase = player._pMana - (player._pMaxMana - player._pMaxManaBase);
+	player._pManaBase = player._pMana - (player._pMaxMana - player.baseMaxMana);
 
 	CalcPlrInv(player, false);
 	player._pmode = PM_NEWLVL;
@@ -3301,7 +3301,7 @@ void ModifyPlrMag(Player &player, int l)
 	int ms = l;
 	ms *= player.getClassAttributes().chrMana;
 
-	player._pMaxManaBase += ms;
+	player.baseMaxMana += ms;
 	player._pMaxMana += ms;
 	if (HasNoneOf(player._pIFlags, ItemSpecialEffect::NoMana)) {
 		player._pManaBase += ms;
@@ -3373,7 +3373,7 @@ void SetPlrMag(Player &player, int v)
 	int m = v;
 	m *= player.getClassAttributes().chrMana;
 
-	player._pMaxManaBase = m;
+	player.baseMaxMana = m;
 	player._pMaxMana = m;
 	CalcPlrInv(player, true);
 }

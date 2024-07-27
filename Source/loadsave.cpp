@@ -449,7 +449,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	player._pMaxHP = file.NextLE<int32_t>();
 	file.Skip<int32_t>(); // Skip _pHPPer - always derived from hp and maxHP.
 	player._pManaBase = file.NextLE<int32_t>();
-	player._pMaxManaBase = file.NextLE<int32_t>();
+	player.baseMaxMana = file.NextLE<int32_t>();
 	player._pMana = file.NextLE<int32_t>();
 	player._pMaxMana = file.NextLE<int32_t>();
 	file.Skip<int32_t>(); // Skip _pManaPer - always derived from mana and maxMana
@@ -1273,7 +1273,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.WriteLE<int32_t>(player._pMaxHP);
 	file.Skip<int32_t>(); // Skip _pHPPer
 	file.WriteLE<int32_t>(player._pManaBase);
-	file.WriteLE<int32_t>(player._pMaxManaBase);
+	file.WriteLE<int32_t>(player.baseMaxMana);
 	file.WriteLE<int32_t>(player._pMana);
 	file.WriteLE<int32_t>(player._pMaxMana);
 	file.Skip<int32_t>(); // Skip _pManaPer

@@ -272,7 +272,7 @@ void PackPlayer(PlayerPack &packed, const Player &player)
 	packed.pHPBase = SDL_SwapLE32(player._pHPBase);
 	packed.pMaxHPBase = SDL_SwapLE32(player._pMaxHPBase);
 	packed.pManaBase = SDL_SwapLE32(player._pManaBase);
-	packed.pMaxManaBase = SDL_SwapLE32(player._pMaxManaBase);
+	packed.pMaxManaBase = SDL_SwapLE32(player.baseMaxMana);
 	packed.pMemSpells = SDL_SwapLE64(player._pMemSpells);
 
 	for (int i = 0; i < 37; i++) // Should be MAX_SPELLS but set to 37 to make save games compatible
@@ -331,7 +331,7 @@ void PackNetPlayer(PlayerNetPack &packed, const Player &player)
 	packed.pHPBase = SDL_SwapLE32(player._pHPBase);
 	packed.pMaxHPBase = SDL_SwapLE32(player._pMaxHPBase);
 	packed.pManaBase = SDL_SwapLE32(player._pManaBase);
-	packed.pMaxManaBase = SDL_SwapLE32(player._pMaxManaBase);
+	packed.pMaxManaBase = SDL_SwapLE32(player.baseMaxMana);
 	packed.pMemSpells = SDL_SwapLE64(player._pMemSpells);
 
 	for (int i = 0; i < MAX_SPELLS; i++)
@@ -480,9 +480,9 @@ void UnPackPlayer(const PlayerPack &packed, Player &player)
 	if ((int)(player._pHPBase & 0xFFFFFFC0) < 64)
 		player._pHPBase = 64;
 
-	player._pMaxManaBase = SDL_SwapLE32(packed.pMaxManaBase);
+	player.baseMaxMana = SDL_SwapLE32(packed.pMaxManaBase);
 	player._pManaBase = SDL_SwapLE32(packed.pManaBase);
-	player._pManaBase = std::min<int32_t>(player._pManaBase, player._pMaxManaBase);
+	player._pManaBase = std::min<int32_t>(player._pManaBase, player.baseMaxMana);
 	player._pMemSpells = SDL_SwapLE64(packed.pMemSpells);
 
 	// Only read spell levels for learnable spells (Diablo)
@@ -611,7 +611,7 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 	player._pStatPts = packed.pStatPts;
 
 	player._pExperience = SDL_SwapLE32(packed.pExperience);
-	player._pMaxManaBase = baseManaMax;
+	player.baseMaxMana = baseManaMax;
 	player._pManaBase = baseMana;
 	player._pMemSpells = SDL_SwapLE64(packed.pMemSpells);
 	player.wReflections = SDL_SwapLE16(packed.wReflections);
@@ -699,7 +699,7 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 	ValidateFields(player._pILMinDam, SDL_SwapLE32(packed.pILMinDam), player._pILMinDam == SDL_SwapLE32(packed.pILMinDam));
 	ValidateFields(player._pILMaxDam, SDL_SwapLE32(packed.pILMaxDam), player._pILMaxDam == SDL_SwapLE32(packed.pILMaxDam));
 	ValidateFields(player._pMaxHPBase, player.calculateBaseLife(), player._pMaxHPBase <= player.calculateBaseLife());
-	ValidateFields(player._pMaxManaBase, player.calculateBaseMana(), player._pMaxManaBase <= player.calculateBaseMana());
+	ValidateFields(player.baseMaxMana, player.calculateBaseMana(), player.baseMaxMana <= player.calculateBaseMana());
 
 	return true;
 }

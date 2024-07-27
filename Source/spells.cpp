@@ -124,7 +124,7 @@ int GetManaAmount(const Player &player, SpellID sn)
 	if (sn == SpellID::Healing || sn == SpellID::HealOther) {
 		ma = (GetSpellData(SpellID::Healing).sManaCost + 2 * player.getCharacterLevel() - adj);
 	} else if (GetSpellData(sn).sManaCost == 255) {
-		ma = (player._pMaxManaBase >> 6) - adj;
+		ma = (player.baseMaxMana >> 6) - adj;
 	} else {
 		ma = (GetSpellData(sn).sManaCost - adj);
 	}
@@ -260,7 +260,7 @@ void DoResurrect(Player &player, Player &target)
 
 	target._pHPBase = target._pHitPoints + (target._pMaxHPBase - target._pMaxHP); // CODEFIX: does the same stuff as SetPlayerHitPoints above, can be removed
 	target._pMana = 0;
-	target._pManaBase = target._pMana + (target._pMaxManaBase - target._pMaxMana);
+	target._pManaBase = target._pMana + (target.baseMaxMana - target._pMaxMana);
 
 	target._pmode = PM_STAND;
 

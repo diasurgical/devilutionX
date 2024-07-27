@@ -74,7 +74,7 @@ UiFlags GetValueColor(int value, bool flip = false)
 
 UiFlags GetMaxManaColor()
 {
-	return InspectPlayer->_pMaxMana > InspectPlayer->_pMaxManaBase ? UiFlags::ColorBlue : UiFlags::ColorWhite;
+	return InspectPlayer->_pMaxMana > InspectPlayer->baseMaxMana ? UiFlags::ColorBlue : UiFlags::ColorWhite;
 }
 
 UiFlags GetMaxHealthColor()

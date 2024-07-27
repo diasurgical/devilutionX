@@ -1384,7 +1384,7 @@ void AddStealMana(Missile &missile, AddMissileParameter & /*parameter*/)
 		Player &player = Players[std::abs(dPlayer[trappedPlayerPosition->x][trappedPlayerPosition->y]) - 1];
 
 		player._pMana = 0;
-		player._pManaBase = player._pMana + player._pMaxManaBase - player._pMaxMana;
+		player._pManaBase = player._pMana + player.baseMaxMana - player._pMaxMana;
 		CalcPlrInv(player, false);
 		RedrawComponent(PanelDrawComponent::Mana);
 		PlaySfxLoc(SfxID::Pig, *trappedPlayerPosition);
@@ -1588,8 +1588,8 @@ void AddMana(Missile &missile, AddMissileParameter & /*parameter*/)
 	if (player._pMana > player._pMaxMana)
 		player._pMana = player._pMaxMana;
 	player._pManaBase += manaAmount;
-	if (player._pManaBase > player._pMaxManaBase)
-		player._pManaBase = player._pMaxManaBase;
+	if (player._pManaBase > player.baseMaxMana)
+		player._pManaBase = player.baseMaxMana;
 	missile._miDelFlag = true;
 	RedrawComponent(PanelDrawComponent::Mana);
 }
@@ -1599,7 +1599,7 @@ void AddMagi(Missile &missile, AddMissileParameter & /*parameter*/)
 	Player &player = Players[missile._misource];
 
 	player._pMana = player._pMaxMana;
-	player._pManaBase = player._pMaxManaBase;
+	player._pManaBase = player.baseMaxMana;
 	missile._miDelFlag = true;
 	RedrawComponent(PanelDrawComponent::Mana);
 }
