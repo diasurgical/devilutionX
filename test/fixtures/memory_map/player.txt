@@ -94,7 +94,7 @@ R 32 _pNextExper
 R 8 _pArmorClass
 R 8 _pMagResist
 R 8 _pFireResist
-R 8 _pLghtResist
+R 8 resistLightning
 R 32 _pGold
 R 32 _pInfraFlag
 R 32 tempPositionX

@@ -157,7 +157,7 @@ static void AssertPlayer(Player &player)
 	ASSERT_EQ(player.getNextExperienceThreshold(), 2000);
 	ASSERT_EQ(player._pMagResist, 0);
 	ASSERT_EQ(player._pFireResist, 0);
-	ASSERT_EQ(player._pLghtResist, 0);
+	ASSERT_EQ(player.resistLightning, 0);
 	ASSERT_EQ(CountBool(player._pLvlVisited, NUMLEVELS), 0);
 	ASSERT_EQ(CountBool(player._pSLvlVisited, NUMLEVELS), 0);
 	// This test case uses a Rogue, starting loadout is a short bow with damage 1-4

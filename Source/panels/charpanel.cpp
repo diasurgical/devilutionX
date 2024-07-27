@@ -193,7 +193,7 @@ PanelEntry panelEntries[] = {
 	{ N_("Resist fire"), { RightColumnLabelX, 284 }, 57, RightColumnLabelWidth,
 	    []() { return GetResistInfo(InspectPlayer->_pFireResist); } },
 	{ N_("Resist lightning"), { RightColumnLabelX, 313 }, 57, RightColumnLabelWidth,
-	    []() { return GetResistInfo(InspectPlayer->_pLghtResist); } },
+	    []() { return GetResistInfo(InspectPlayer->resistLightning); } },
 };
 
 OptionalOwnedClxSpriteList Panel;
