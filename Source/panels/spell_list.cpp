@@ -182,7 +182,7 @@ void DrawSpellList(const Surface &out)
 			}
 			PrintSBookSpellType(out, spellListItem.location, _("Staff"), spellColor);
 			InfoString = fmt::format(fmt::runtime(_("Staff of {:s}")), pgettext("spell", spellDataItem.sNameText));
-			int charges = myPlayer.InvBody[INVLOC_HAND_LEFT]._iCharges;
+			int charges = myPlayer.bodySlot[INVLOC_HAND_LEFT]._iCharges;
 			AddPanelString(fmt::format(fmt::runtime(ngettext("{:d} Charge", "{:d} Charges", charges)), charges));
 		} break;
 		case SpellType::Invalid:

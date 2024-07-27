@@ -183,7 +183,7 @@ void DrawSpellBook(const Surface &out)
 				PrintSBookStr(out, line1, _("Skill"));
 				break;
 			case SpellType::Charges: {
-				const int charges = player.InvBody[INVLOC_HAND_LEFT]._iCharges;
+				const int charges = player.bodySlot[INVLOC_HAND_LEFT]._iCharges;
 				PrintSBookStr(out, line1, fmt::format(fmt::runtime(ngettext("Staff ({:d} charge)", "Staff ({:d} charges)", charges)), charges));
 			} break;
 			default: {

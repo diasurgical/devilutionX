@@ -136,7 +136,7 @@ void SyncPlrInv(TSyncHeader *pHdr)
 
 	pHdr->bPInvLoc = -1;
 	assert(sgnSyncPInv > -1 && sgnSyncPInv < NUM_INVLOC);
-	const auto &item = MyPlayer->InvBody[sgnSyncPInv];
+	const auto &item = MyPlayer->bodySlot[sgnSyncPInv];
 	if (!item.isEmpty()) {
 		pHdr->bPInvLoc = sgnSyncPInv;
 		pHdr->wPInvIndx = SDL_SwapLE16(item.IDidx);

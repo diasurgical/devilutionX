@@ -46,7 +46,7 @@ void SwapLE(PlayerPack &player)
 	player.pManaBase = SDL_SwapLE32(player.pManaBase);
 	player.pMaxManaBase = SDL_SwapLE32(player.pMaxManaBase);
 	player.pMemSpells = SDL_SwapLE64(player.pMemSpells);
-	for (ItemPack &item : player.InvBody) {
+	for (ItemPack &item : player.bodySlot) {
 		SwapLE(item);
 	}
 	for (ItemPack &item : player.InvList) {
@@ -219,7 +219,7 @@ void PackPlayerTest(PlayerPack *pPack)
 	for (auto i = 0; i < 40; i++)
 		pPack->InvList[i].idx = -1;
 	for (auto i = 0; i < 7; i++)
-		pPack->InvBody[i].idx = -1;
+		pPack->bodySlot[i].idx = -1;
 	for (auto i = 0; i < MaxBeltItems; i++)
 		PackItemFullRejuv(pPack->SpdList + i, i);
 	for (auto i = 1; i < 37; i++) {
@@ -229,7 +229,7 @@ void PackPlayerTest(PlayerPack *pPack)
 		}
 	}
 	for (auto i = 0; i < 7; i++)
-		pPack->InvBody[i].idx = -1;
+		pPack->bodySlot[i].idx = -1;
 	strcpy(pPack->pName, "TestPlayer");
 	pPack->pClass = static_cast<uint8_t>(HeroClass::Rogue);
 	pPack->pBaseStr = 20 + 35;
@@ -241,12 +241,12 @@ void PackPlayerTest(PlayerPack *pPack)
 	pPack->pManaBase = (15 << 6) + (15 << 5) + 48 * 128 + (55 << 6);
 	pPack->pMaxManaBase = pPack->pManaBase;
 
-	PackItemUnique(pPack->InvBody + INVLOC_HEAD, 52);
-	PackItemRing1(pPack->InvBody + INVLOC_RING_LEFT);
-	PackItemRing2(pPack->InvBody + INVLOC_RING_RIGHT);
-	PackItemAmulet(pPack->InvBody + INVLOC_AMULET);
-	PackItemArmor(pPack->InvBody + INVLOC_CHEST);
-	PackItemBow(pPack->InvBody + INVLOC_HAND_LEFT);
+	PackItemUnique(pPack->bodySlot + INVLOC_HEAD, 52);
+	PackItemRing1(pPack->bodySlot + INVLOC_RING_LEFT);
+	PackItemRing2(pPack->bodySlot + INVLOC_RING_RIGHT);
+	PackItemAmulet(pPack->bodySlot + INVLOC_AMULET);
+	PackItemArmor(pPack->bodySlot + INVLOC_CHEST);
+	PackItemBow(pPack->bodySlot + INVLOC_HAND_LEFT);
 
 	PackItemStaff(pPack->InvList + PrepareInvSlot(pPack, 28, 2, 1));
 	PackItemSword(pPack->InvList + PrepareInvSlot(pPack, 20, 1));
@@ -260,7 +260,7 @@ void AssertPlayer(Player &player)
 {
 	ASSERT_EQ(CountU8(player._pSplLvl, 64), 23);
 	ASSERT_EQ(Count8(player.InvGrid, InventoryGridCells), 9);
-	ASSERT_EQ(CountItems(player.InvBody, NUM_INVLOC), 6);
+	ASSERT_EQ(CountItems(player.bodySlot, NUM_INVLOC), 6);
 	ASSERT_EQ(CountItems(player.InvList, InventoryGridCells), 2);
 	ASSERT_EQ(CountItems(player.SpdList, MaxBeltItems), 8);
 	ASSERT_EQ(CountItems(&player.HoldItem, 1), 0);

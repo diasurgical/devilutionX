@@ -2615,8 +2615,8 @@ void CalcPlrLightRadius(Player &player, int lrad)
 void CalcPlrDamageMod(Player &player)
 {
 	const uint8_t playerLevel = player.getCharacterLevel();
-	const Item &leftHandItem = player.InvBody[INVLOC_HAND_LEFT];
-	const Item &rightHandItem = player.InvBody[INVLOC_HAND_RIGHT];
+	const Item &leftHandItem = player.bodySlot[INVLOC_HAND_LEFT];
+	const Item &rightHandItem = player.bodySlot[INVLOC_HAND_RIGHT];
 	const int strMod = playerLevel * player._pStrength;
 	const int strDexMod = playerLevel * (player._pStrength + player._pDexterity);
 
@@ -2714,8 +2714,8 @@ void CalcPlrLifeMana(Player &player, int vitality, int magic, int life, int mana
 
 void CalcPlrBlockFlag(Player &player)
 {
-	const auto &leftHandItem = player.InvBody[INVLOC_HAND_LEFT];
-	const auto &rightHandItem = player.InvBody[INVLOC_HAND_RIGHT];
+	const auto &leftHandItem = player.bodySlot[INVLOC_HAND_LEFT];
+	const auto &rightHandItem = player.bodySlot[INVLOC_HAND_RIGHT];
 
 	player._pBlockFlag = false;
 
@@ -2733,8 +2733,8 @@ void CalcPlrBlockFlag(Player &player)
 
 PlayerWeaponGraphic GetPlrAnimWeaponId(const Player &player)
 {
-	const Item &leftHandItem = player.InvBody[INVLOC_HAND_LEFT];
-	const Item &rightHandItem = player.InvBody[INVLOC_HAND_RIGHT];
+	const Item &leftHandItem = player.bodySlot[INVLOC_HAND_LEFT];
+	const Item &rightHandItem = player.bodySlot[INVLOC_HAND_RIGHT];
 	bool holdsShield = player.isHoldingItem(ItemType::Shield);
 	bool leftHandUsable = player.CanUseItem(leftHandItem);
 	bool rightHandUsable = player.CanUseItem(rightHandItem);
@@ -2766,7 +2766,7 @@ PlayerWeaponGraphic GetPlrAnimWeaponId(const Player &player)
 
 PlayerArmorGraphic GetPlrAnimArmorId(Player &player)
 {
-	const Item &chestItem = player.InvBody[INVLOC_CHEST];
+	const Item &chestItem = player.bodySlot[INVLOC_CHEST];
 	bool chestUsable = player.CanUseItem(chestItem);
 	const uint8_t playerLevel = player.getCharacterLevel();
 
@@ -2822,7 +2822,7 @@ void CalcPlrAuricBonus(Player &player)
 
 {
 	if (&player == MyPlayer) {
-		if (player.InvBody[INVLOC_AMULET].isEmpty() || player.InvBody[INVLOC_AMULET].IDidx != IDI_AURIC) {
+		if (player.bodySlot[INVLOC_AMULET].isEmpty() || player.bodySlot[INVLOC_AMULET].IDidx != IDI_AURIC) {
 			int half = MaxGold;
 			MaxGold = GOLD_MAX_LIMIT;
 
@@ -2874,7 +2874,7 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	int minLightDam = 0;
 	int maxLightDam = 0;
 
-	for (const Item &item : player.InvBody) {
+	for (const Item &item : player.bodySlot) {
 		if (!item.isEmpty() && item._iStatFlag) {
 
 			minDamage += item._iMinDam;
@@ -3045,7 +3045,7 @@ void CreateStartingItem(Player &player, _item_indexes itemData)
 
 void CreatePlrItems(Player &player)
 {
-	for (auto &item : player.InvBody) {
+	for (auto &item : player.bodySlot) {
 		item.clear();
 	}
 
@@ -3769,7 +3769,7 @@ void CheckIdentify(Player &player, int cii)
 	if (cii >= NUM_INVLOC)
 		pi = &player.InvList[cii - NUM_INVLOC];
 	else
-		pi = &player.InvBody[cii];
+		pi = &player.bodySlot[cii];
 
 	pi->_iIdentified = true;
 	CalcPlrInv(player, true);
@@ -3784,7 +3784,7 @@ void DoRepair(Player &player, int cii)
 	if (cii >= NUM_INVLOC) {
 		pi = &player.InvList[cii - NUM_INVLOC];
 	} else {
-		pi = &player.InvBody[cii];
+		pi = &player.bodySlot[cii];
 	}
 
 	RepairItem(*pi, player.getCharacterLevel());
@@ -3798,7 +3798,7 @@ void DoRecharge(Player &player, int cii)
 	if (cii >= NUM_INVLOC) {
 		pi = &player.InvList[cii - NUM_INVLOC];
 	} else {
-		pi = &player.InvBody[cii];
+		pi = &player.bodySlot[cii];
 	}
 
 	RechargeItem(*pi, player);
@@ -3811,7 +3811,7 @@ bool DoOil(Player &player, int cii)
 	if (cii >= NUM_INVLOC) {
 		pi = &player.InvList[cii - NUM_INVLOC];
 	} else {
-		pi = &player.InvBody[cii];
+		pi = &player.bodySlot[cii];
 	}
 	if (!ApplyOilToItem(*pi, player))
 		return false;
@@ -4968,11 +4968,11 @@ void RechargeItem(Item &item, Player &player)
 
 	if (&player != MyPlayer)
 		return;
-	if (&item == &player.InvBody[INVLOC_HAND_LEFT]) {
+	if (&item == &player.bodySlot[INVLOC_HAND_LEFT]) {
 		NetSendCmdChItem(true, INVLOC_HAND_LEFT);
 		return;
 	}
-	if (&item == &player.InvBody[INVLOC_HAND_RIGHT]) {
+	if (&item == &player.bodySlot[INVLOC_HAND_RIGHT]) {
 		NetSendCmdChItem(true, INVLOC_HAND_RIGHT);
 		return;
 	}

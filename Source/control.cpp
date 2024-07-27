@@ -1080,7 +1080,7 @@ void CheckPanelInfo()
 			} break;
 			case SpellType::Charges:
 				AddPanelString(fmt::format(fmt::runtime(_("Staff of {:s}")), pgettext("spell", GetSpellData(spellId).sNameText)));
-				AddPanelString(fmt::format(fmt::runtime(ngettext("{:d} Charge", "{:d} Charges", myPlayer.InvBody[INVLOC_HAND_LEFT]._iCharges)), myPlayer.InvBody[INVLOC_HAND_LEFT]._iCharges));
+				AddPanelString(fmt::format(fmt::runtime(ngettext("{:d} Charge", "{:d} Charges", myPlayer.bodySlot[INVLOC_HAND_LEFT]._iCharges)), myPlayer.bodySlot[INVLOC_HAND_LEFT]._iCharges));
 				break;
 			case SpellType::Invalid:
 				break;
@@ -1343,10 +1343,10 @@ void DrawDurIcon(const Surface &out)
 	}
 
 	Player &myPlayer = *MyPlayer;
-	x = DrawDurIcon4Item(out, myPlayer.InvBody[INVLOC_HEAD], x, 3);
-	x = DrawDurIcon4Item(out, myPlayer.InvBody[INVLOC_CHEST], x, 2);
-	x = DrawDurIcon4Item(out, myPlayer.InvBody[INVLOC_HAND_LEFT], x, 0);
-	DrawDurIcon4Item(out, myPlayer.InvBody[INVLOC_HAND_RIGHT], x, 0);
+	x = DrawDurIcon4Item(out, myPlayer.bodySlot[INVLOC_HEAD], x, 3);
+	x = DrawDurIcon4Item(out, myPlayer.bodySlot[INVLOC_CHEST], x, 2);
+	x = DrawDurIcon4Item(out, myPlayer.bodySlot[INVLOC_HAND_LEFT], x, 0);
+	DrawDurIcon4Item(out, myPlayer.bodySlot[INVLOC_HAND_RIGHT], x, 0);
 }
 
 void RedBack(const Surface &out)

@@ -1922,7 +1922,7 @@ size_t OnChangePlayerItems(const TCmd *pCmd, Player &player)
 	if (gbBufferMsgs == 1) {
 		SendPacket(player, &message, sizeof(message));
 	} else if (&player != MyPlayer && IsItemAvailable(static_cast<_item_indexes>(SDL_SwapLE16(message.def.wIndx)))) {
-		Item &item = player.InvBody[message.bLoc];
+		Item &item = player.bodySlot[message.bLoc];
 		item = {};
 		RecreateItem(player, message, item);
 		CheckInvSwap(player, bodyLocation);
@@ -3087,7 +3087,7 @@ void NetSendCmdChItem(bool bHiPri, uint8_t bLoc, bool forceSpellChange)
 {
 	TCmdChItem cmd {};
 
-	Item &item = MyPlayer->InvBody[bLoc];
+	Item &item = MyPlayer->bodySlot[bLoc];
 
 	cmd.bCmd = CMD_CHANGEPLRITEMS;
 	cmd.bLoc = bLoc;

@@ -2275,12 +2275,12 @@ void OperateShrineHidden(DiabloGenerator &rng, Player &player)
 		return;
 
 	int cnt = 0;
-	for (const auto &item : player.InvBody) {
+	for (const auto &item : player.bodySlot) {
 		if (!item.isEmpty())
 			cnt++;
 	}
 	if (cnt > 0) {
-		for (auto &item : player.InvBody) {
+		for (auto &item : player.bodySlot) {
 			if (!item.isEmpty()
 			    && item._iMaxDur != DUR_INDESTRUCTIBLE
 			    && item._iMaxDur != 0) {
@@ -2292,7 +2292,7 @@ void OperateShrineHidden(DiabloGenerator &rng, Player &player)
 		}
 		while (true) {
 			cnt = 0;
-			for (auto &item : player.InvBody) {
+			for (auto &item : player.bodySlot) {
 				if (!item.isEmpty() && item._iMaxDur != DUR_INDESTRUCTIBLE && item._iMaxDur != 0) {
 					cnt++;
 				}
@@ -2300,15 +2300,15 @@ void OperateShrineHidden(DiabloGenerator &rng, Player &player)
 			if (cnt == 0)
 				break;
 			int r = rng.generateRnd(NUM_INVLOC);
-			if (player.InvBody[r].isEmpty() || player.InvBody[r]._iMaxDur == DUR_INDESTRUCTIBLE || player.InvBody[r]._iMaxDur == 0)
+			if (player.bodySlot[r].isEmpty() || player.bodySlot[r]._iMaxDur == DUR_INDESTRUCTIBLE || player.bodySlot[r]._iMaxDur == 0)
 				continue;
 
-			player.InvBody[r]._iDurability -= 20;
-			player.InvBody[r]._iMaxDur -= 20;
-			if (player.InvBody[r]._iDurability <= 0)
-				player.InvBody[r]._iDurability = 1;
-			if (player.InvBody[r]._iMaxDur <= 0)
-				player.InvBody[r]._iMaxDur = 1;
+			player.bodySlot[r]._iDurability -= 20;
+			player.bodySlot[r]._iMaxDur -= 20;
+			if (player.bodySlot[r]._iDurability <= 0)
+				player.bodySlot[r]._iDurability = 1;
+			if (player.bodySlot[r]._iMaxDur <= 0)
+				player.bodySlot[r]._iMaxDur = 1;
 			break;
 		}
 	}
@@ -2355,10 +2355,10 @@ void OperateShrineWeird(Player &player)
 	if (&player != MyPlayer)
 		return;
 
-	if (!player.InvBody[INVLOC_HAND_LEFT].isEmpty() && player.InvBody[INVLOC_HAND_LEFT]._itype != ItemType::Shield)
-		player.InvBody[INVLOC_HAND_LEFT]._iMaxDam++;
-	if (!player.InvBody[INVLOC_HAND_RIGHT].isEmpty() && player.InvBody[INVLOC_HAND_RIGHT]._itype != ItemType::Shield)
-		player.InvBody[INVLOC_HAND_RIGHT]._iMaxDam++;
+	if (!player.bodySlot[INVLOC_HAND_LEFT].isEmpty() && player.bodySlot[INVLOC_HAND_LEFT]._itype != ItemType::Shield)
+		player.bodySlot[INVLOC_HAND_LEFT]._iMaxDam++;
+	if (!player.bodySlot[INVLOC_HAND_RIGHT].isEmpty() && player.bodySlot[INVLOC_HAND_RIGHT]._itype != ItemType::Shield)
+		player.bodySlot[INVLOC_HAND_RIGHT]._iMaxDam++;
 
 	for (Item &item : InventoryPlayerItemsRange { player }) {
 		switch (item._itype) {
@@ -2959,7 +2959,7 @@ void OperateShrineMurphys(DiabloGenerator &rng, Player &player)
 		return;
 
 	bool broke = false;
-	for (auto &item : player.InvBody) {
+	for (auto &item : player.bodySlot) {
 		if (!item.isEmpty() && rng.flipCoin(3)) {
 			if (item._iDurability != DUR_INDESTRUCTIBLE) {
 				if (item._iDurability > 0) {

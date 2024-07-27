@@ -281,7 +281,7 @@ void PackPlayer(PlayerPack &packed, const Player &player)
 		packed.pSplLvl2[i - 37] = player._pSplLvl[i];
 
 	for (int i = 0; i < NUM_INVLOC; i++)
-		PackItem(packed.InvBody[i], player.InvBody[i], gbIsHellfire);
+		PackItem(packed.bodySlot[i], player.bodySlot[i], gbIsHellfire);
 
 	packed._pNumInv = player._pNumInv;
 	for (int i = 0; i < packed._pNumInv; i++)
@@ -338,7 +338,7 @@ void PackNetPlayer(PlayerNetPack &packed, const Player &player)
 		packed.pSplLvl[i] = player._pSplLvl[i];
 
 	for (int i = 0; i < NUM_INVLOC; i++)
-		PackNetItem(player.InvBody[i], packed.InvBody[i]);
+		PackNetItem(player.bodySlot[i], packed.bodySlot[i]);
 
 	packed._pNumInv = player._pNumInv;
 	for (int i = 0; i < packed._pNumInv; i++)
@@ -510,7 +510,7 @@ void UnPackPlayer(const PlayerPack &packed, Player &player)
 	bool isHellfire = packed.bIsHellfire != 0;
 
 	for (int i = 0; i < NUM_INVLOC; i++)
-		UnPackItem(packed.InvBody[i], player, player.InvBody[i], isHellfire);
+		UnPackItem(packed.bodySlot[i], player, player.bodySlot[i], isHellfire);
 
 	player._pNumInv = packed._pNumInv;
 	for (int i = 0; i < player._pNumInv; i++)
@@ -623,11 +623,11 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 		player._pSplLvl[i] = packed.pSplLvl[i];
 
 	for (int i = 0; i < NUM_INVLOC; i++) {
-		if (!UnPackNetItem(player, packed.InvBody[i], player.InvBody[i]))
+		if (!UnPackNetItem(player, packed.bodySlot[i], player.bodySlot[i]))
 			return false;
-		if (player.InvBody[i].isEmpty())
+		if (player.bodySlot[i].isEmpty())
 			continue;
-		auto loc = static_cast<int8_t>(player.GetItemLocation(player.InvBody[i]));
+		auto loc = static_cast<int8_t>(player.GetItemLocation(player.bodySlot[i]));
 		switch (i) {
 		case INVLOC_HEAD:
 			ValidateField(loc, loc == ILOC_HELM);

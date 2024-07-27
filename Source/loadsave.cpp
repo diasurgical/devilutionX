@@ -516,7 +516,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	player._pBFrames = file.NextLENarrow<int32_t, int8_t>();
 	file.Skip<uint32_t>(); // skip _pBWidth
 
-	for (Item &item : player.InvBody)
+	for (Item &item : player.bodySlot)
 		LoadAndValidateItemData(file, item);
 
 	for (Item &item : player.InvList)
@@ -1340,7 +1340,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.WriteLE<int32_t>(player._pBFrames);
 	file.Skip<uint32_t>(); // Skip _pBWidth
 
-	for (const Item &item : player.InvBody)
+	for (const Item &item : player.bodySlot)
 		SaveItem(file, item);
 
 	for (const Item &item : player.InvList)
@@ -2289,7 +2289,7 @@ void LoadHeroItems(Player &player)
 
 	gbIsHellfireSaveGame = file.NextBool8();
 
-	LoadMatchingItems(file, player, NUM_INVLOC, player.InvBody);
+	LoadMatchingItems(file, player, NUM_INVLOC, player.bodySlot);
 	LoadMatchingItems(file, player, InventoryGridCells, player.InvList);
 	LoadMatchingItems(file, player, MaxBeltItems, player.SpdList);
 
@@ -2567,7 +2567,7 @@ void SaveHeroItems(SaveWriter &saveWriter, Player &player)
 
 	file.WriteLE<uint8_t>(gbIsHellfire ? 1 : 0);
 
-	for (const Item &item : player.InvBody)
+	for (const Item &item : player.bodySlot)
 		SaveItem(file, item);
 	for (const Item &item : player.InvList)
 		SaveItem(file, item);

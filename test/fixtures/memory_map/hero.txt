@@ -24,7 +24,7 @@ R 32 pManaBase
 R 32 pMaxManaBase
 M 37 8 pSplLvl
 R 64 pMemSpells
-C 7 itemPack InvBody
+C 7 itemPack bodySlot
 C 40 itemPack InvList
 M 40 8 InvGrid
 R 8 _pNumInv

@@ -31,7 +31,7 @@ void SwapLE(PlayerPack &pack)
 	pack.pManaBase = SDL_SwapLE32(pack.pManaBase);
 	pack.pMaxManaBase = SDL_SwapLE32(pack.pMaxManaBase);
 	pack.pMemSpells = SDL_SwapLE64(pack.pMemSpells);
-	for (ItemPack &item : pack.InvBody)
+	for (ItemPack &item : pack.bodySlot)
 		SwapLE(item);
 	for (ItemPack &item : pack.InvList)
 		SwapLE(item);
@@ -1125,7 +1125,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_iMinDam)
 	CalcPlrItemVals(*MyPlayer, false);
 	ASSERT_TRUE(TestNetPackValidation());
 
-	MyPlayer->InvBody[INVLOC_HAND_LEFT]._iMinDam++;
+	MyPlayer->bodySlot[INVLOC_HAND_LEFT]._iMinDam++;
 	CalcPlrItemVals(*MyPlayer, false);
 	ASSERT_FALSE(TestNetPackValidation());
 }
@@ -1138,7 +1138,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_iMaxDam)
 	CalcPlrItemVals(*MyPlayer, false);
 	ASSERT_TRUE(TestNetPackValidation());
 
-	MyPlayer->InvBody[INVLOC_HAND_LEFT]._iMaxDam++;
+	MyPlayer->bodySlot[INVLOC_HAND_LEFT]._iMaxDam++;
 	CalcPlrItemVals(*MyPlayer, false);
 	ASSERT_FALSE(TestNetPackValidation());
 }
@@ -1151,7 +1151,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_iAC)
 	CalcPlrItemVals(*MyPlayer, false);
 	ASSERT_TRUE(TestNetPackValidation());
 
-	MyPlayer->InvBody[INVLOC_CHEST]._iAC++;
+	MyPlayer->bodySlot[INVLOC_CHEST]._iAC++;
 	CalcPlrItemVals(*MyPlayer, false);
 	ASSERT_FALSE(TestNetPackValidation());
 }
@@ -1164,7 +1164,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_iBonusDam)
 	CalcPlrItemVals(*MyPlayer, false);
 	ASSERT_TRUE(TestNetPackValidation());
 
-	MyPlayer->InvBody[INVLOC_HAND_LEFT]._iPLDam++;
+	MyPlayer->bodySlot[INVLOC_HAND_LEFT]._iPLDam++;
 	CalcPlrItemVals(*MyPlayer, false);
 	ASSERT_FALSE(TestNetPackValidation());
 }
@@ -1177,7 +1177,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_iBonusToHit)
 	CalcPlrItemVals(*MyPlayer, false);
 	ASSERT_TRUE(TestNetPackValidation());
 
-	MyPlayer->InvBody[INVLOC_HAND_LEFT]._iPLToHit++;
+	MyPlayer->bodySlot[INVLOC_HAND_LEFT]._iPLToHit++;
 	CalcPlrItemVals(*MyPlayer, false);
 	ASSERT_FALSE(TestNetPackValidation());
 }
@@ -1190,7 +1190,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_iBonusAC)
 	CalcPlrItemVals(*MyPlayer, false);
 	ASSERT_TRUE(TestNetPackValidation());
 
-	MyPlayer->InvBody[INVLOC_CHEST]._iPLAC++;
+	MyPlayer->bodySlot[INVLOC_CHEST]._iPLAC++;
 	CalcPlrItemVals(*MyPlayer, false);
 	ASSERT_FALSE(TestNetPackValidation());
 }
@@ -1203,7 +1203,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_iBonusDamMod)
 	CalcPlrItemVals(*MyPlayer, false);
 	ASSERT_TRUE(TestNetPackValidation());
 
-	MyPlayer->InvBody[INVLOC_HAND_LEFT]._iPLDamMod++;
+	MyPlayer->bodySlot[INVLOC_HAND_LEFT]._iPLDamMod++;
 	CalcPlrItemVals(*MyPlayer, false);
 	ASSERT_FALSE(TestNetPackValidation());
 }
@@ -1216,7 +1216,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_iGetHit)
 	CalcPlrItemVals(*MyPlayer, false);
 	ASSERT_TRUE(TestNetPackValidation());
 
-	MyPlayer->InvBody[INVLOC_CHEST]._iPLGetHit++;
+	MyPlayer->bodySlot[INVLOC_CHEST]._iPLGetHit++;
 	CalcPlrItemVals(*MyPlayer, false);
 	ASSERT_FALSE(TestNetPackValidation());
 }
@@ -1229,7 +1229,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_iEnAc)
 	CalcPlrItemVals(*MyPlayer, false);
 	ASSERT_TRUE(TestNetPackValidation());
 
-	MyPlayer->InvBody[INVLOC_CHEST]._iPLEnAc++;
+	MyPlayer->bodySlot[INVLOC_CHEST]._iPLEnAc++;
 	CalcPlrItemVals(*MyPlayer, false);
 	ASSERT_FALSE(TestNetPackValidation());
 }
@@ -1242,7 +1242,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_iFMinDam)
 	CalcPlrItemVals(*MyPlayer, false);
 	ASSERT_TRUE(TestNetPackValidation());
 
-	MyPlayer->InvBody[INVLOC_HAND_LEFT]._iFMinDam++;
+	MyPlayer->bodySlot[INVLOC_HAND_LEFT]._iFMinDam++;
 	CalcPlrItemVals(*MyPlayer, false);
 	ASSERT_FALSE(TestNetPackValidation());
 }
@@ -1255,7 +1255,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_iFMaxDam)
 	CalcPlrItemVals(*MyPlayer, false);
 	ASSERT_TRUE(TestNetPackValidation());
 
-	MyPlayer->InvBody[INVLOC_HAND_LEFT]._iFMaxDam++;
+	MyPlayer->bodySlot[INVLOC_HAND_LEFT]._iFMaxDam++;
 	CalcPlrItemVals(*MyPlayer, false);
 	ASSERT_FALSE(TestNetPackValidation());
 }
@@ -1268,7 +1268,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_iLMinDam)
 	CalcPlrItemVals(*MyPlayer, false);
 	ASSERT_TRUE(TestNetPackValidation());
 
-	MyPlayer->InvBody[INVLOC_HAND_LEFT]._iLMinDam++;
+	MyPlayer->bodySlot[INVLOC_HAND_LEFT]._iLMinDam++;
 	CalcPlrItemVals(*MyPlayer, false);
 	ASSERT_FALSE(TestNetPackValidation());
 }
@@ -1281,7 +1281,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_iLMaxDam)
 	CalcPlrItemVals(*MyPlayer, false);
 	ASSERT_TRUE(TestNetPackValidation());
 
-	MyPlayer->InvBody[INVLOC_HAND_LEFT]._iLMaxDam++;
+	MyPlayer->bodySlot[INVLOC_HAND_LEFT]._iLMaxDam++;
 	CalcPlrItemVals(*MyPlayer, false);
 	ASSERT_FALSE(TestNetPackValidation());
 }
@@ -1360,7 +1360,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_townItemLevel)
 {
 	size_t boyCount = 0;
 	size_t otherCount = 0;
-	for (Item &item : MyPlayer->InvBody) {
+	for (Item &item : MyPlayer->bodySlot) {
 		if (item.isEmpty())
 			continue;
 		if (IsAnyOf(item.IDidx, IDI_GOLD, IDI_EAR))
@@ -1406,7 +1406,7 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_uniqueMonsterItemLevel)
 TEST_F(NetPackTest, UnPackNetPlayer_invalid_monsterItemLevel)
 {
 	size_t count = 0;
-	for (Item &item : MyPlayer->InvBody) {
+	for (Item &item : MyPlayer->bodySlot) {
 		if (item.isEmpty())
 			continue;
 		if (IsAnyOf(item.IDidx, IDI_GOLD, IDI_EAR))

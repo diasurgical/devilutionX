@@ -446,9 +446,9 @@ bool DoWalk(Player &player)
 
 bool WeaponDecay(Player &player, int ii)
 {
-	if (!player.InvBody[ii].isEmpty() && player.InvBody[ii]._iClass == ICLASS_WEAPON && HasAnyOf(player.InvBody[ii]._iDamAcFlags, ItemSpecialEffectHf::Decay)) {
-		player.InvBody[ii]._iPLDam -= 5;
-		if (player.InvBody[ii]._iPLDam <= -100) {
+	if (!player.bodySlot[ii].isEmpty() && player.bodySlot[ii]._iClass == ICLASS_WEAPON && HasAnyOf(player.bodySlot[ii]._iDamAcFlags, ItemSpecialEffectHf::Decay)) {
+		player.bodySlot[ii]._iPLDam -= 5;
+		if (player.bodySlot[ii]._iPLDam <= -100) {
 			RemoveEquipment(player, static_cast<inv_body_loc>(ii), true);
 			CalcPlrInv(player, true);
 			return true;
@@ -473,52 +473,52 @@ bool DamageWeapon(Player &player, unsigned damageFrequency)
 		return false;
 	}
 
-	if (!player.InvBody[INVLOC_HAND_LEFT].isEmpty() && player.InvBody[INVLOC_HAND_LEFT]._iClass == ICLASS_WEAPON) {
-		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability == DUR_INDESTRUCTIBLE) {
+	if (!player.bodySlot[INVLOC_HAND_LEFT].isEmpty() && player.bodySlot[INVLOC_HAND_LEFT]._iClass == ICLASS_WEAPON) {
+		if (player.bodySlot[INVLOC_HAND_LEFT]._iDurability == DUR_INDESTRUCTIBLE) {
 			return false;
 		}
 
-		player.InvBody[INVLOC_HAND_LEFT]._iDurability--;
-		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability <= 0) {
+		player.bodySlot[INVLOC_HAND_LEFT]._iDurability--;
+		if (player.bodySlot[INVLOC_HAND_LEFT]._iDurability <= 0) {
 			RemoveEquipment(player, INVLOC_HAND_LEFT, true);
 			CalcPlrInv(player, true);
 			return true;
 		}
 	}
 
-	if (!player.InvBody[INVLOC_HAND_RIGHT].isEmpty() && player.InvBody[INVLOC_HAND_RIGHT]._iClass == ICLASS_WEAPON) {
-		if (player.InvBody[INVLOC_HAND_RIGHT]._iDurability == DUR_INDESTRUCTIBLE) {
+	if (!player.bodySlot[INVLOC_HAND_RIGHT].isEmpty() && player.bodySlot[INVLOC_HAND_RIGHT]._iClass == ICLASS_WEAPON) {
+		if (player.bodySlot[INVLOC_HAND_RIGHT]._iDurability == DUR_INDESTRUCTIBLE) {
 			return false;
 		}
 
-		player.InvBody[INVLOC_HAND_RIGHT]._iDurability--;
-		if (player.InvBody[INVLOC_HAND_RIGHT]._iDurability == 0) {
+		player.bodySlot[INVLOC_HAND_RIGHT]._iDurability--;
+		if (player.bodySlot[INVLOC_HAND_RIGHT]._iDurability == 0) {
 			RemoveEquipment(player, INVLOC_HAND_RIGHT, true);
 			CalcPlrInv(player, true);
 			return true;
 		}
 	}
 
-	if (player.InvBody[INVLOC_HAND_LEFT].isEmpty() && player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Shield) {
-		if (player.InvBody[INVLOC_HAND_RIGHT]._iDurability == DUR_INDESTRUCTIBLE) {
+	if (player.bodySlot[INVLOC_HAND_LEFT].isEmpty() && player.bodySlot[INVLOC_HAND_RIGHT]._itype == ItemType::Shield) {
+		if (player.bodySlot[INVLOC_HAND_RIGHT]._iDurability == DUR_INDESTRUCTIBLE) {
 			return false;
 		}
 
-		player.InvBody[INVLOC_HAND_RIGHT]._iDurability--;
-		if (player.InvBody[INVLOC_HAND_RIGHT]._iDurability == 0) {
+		player.bodySlot[INVLOC_HAND_RIGHT]._iDurability--;
+		if (player.bodySlot[INVLOC_HAND_RIGHT]._iDurability == 0) {
 			RemoveEquipment(player, INVLOC_HAND_RIGHT, true);
 			CalcPlrInv(player, true);
 			return true;
 		}
 	}
 
-	if (player.InvBody[INVLOC_HAND_RIGHT].isEmpty() && player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Shield) {
-		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability == DUR_INDESTRUCTIBLE) {
+	if (player.bodySlot[INVLOC_HAND_RIGHT].isEmpty() && player.bodySlot[INVLOC_HAND_LEFT]._itype == ItemType::Shield) {
+		if (player.bodySlot[INVLOC_HAND_LEFT]._iDurability == DUR_INDESTRUCTIBLE) {
 			return false;
 		}
 
-		player.InvBody[INVLOC_HAND_LEFT]._iDurability--;
-		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability == 0) {
+		player.bodySlot[INVLOC_HAND_LEFT]._iDurability--;
+		if (player.bodySlot[INVLOC_HAND_LEFT]._iDurability == 0) {
 			RemoveEquipment(player, INVLOC_HAND_LEFT, true);
 			CalcPlrInv(player, true);
 			return true;
@@ -578,10 +578,10 @@ bool PlrHitMonst(Player &player, Monster &monster, bool adjacentDamage = false)
 	}
 
 	ItemType phanditype = ItemType::None;
-	if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Sword || player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Sword) {
+	if (player.bodySlot[INVLOC_HAND_LEFT]._itype == ItemType::Sword || player.bodySlot[INVLOC_HAND_RIGHT]._itype == ItemType::Sword) {
 		phanditype = ItemType::Sword;
 	}
-	if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Mace || player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Mace) {
+	if (player.bodySlot[INVLOC_HAND_LEFT]._itype == ItemType::Mace || player.bodySlot[INVLOC_HAND_RIGHT]._itype == ItemType::Mace) {
 		phanditype = ItemType::Mace;
 	}
 
@@ -920,22 +920,22 @@ void DamageParryItem(Player &player)
 		return;
 	}
 
-	if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Shield || player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Staff) {
-		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability == DUR_INDESTRUCTIBLE) {
+	if (player.bodySlot[INVLOC_HAND_LEFT]._itype == ItemType::Shield || player.bodySlot[INVLOC_HAND_LEFT]._itype == ItemType::Staff) {
+		if (player.bodySlot[INVLOC_HAND_LEFT]._iDurability == DUR_INDESTRUCTIBLE) {
 			return;
 		}
 
-		player.InvBody[INVLOC_HAND_LEFT]._iDurability--;
-		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability == 0) {
+		player.bodySlot[INVLOC_HAND_LEFT]._iDurability--;
+		if (player.bodySlot[INVLOC_HAND_LEFT]._iDurability == 0) {
 			RemoveEquipment(player, INVLOC_HAND_LEFT, true);
 			CalcPlrInv(player, true);
 		}
 	}
 
-	if (player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Shield) {
-		if (player.InvBody[INVLOC_HAND_RIGHT]._iDurability != DUR_INDESTRUCTIBLE) {
-			player.InvBody[INVLOC_HAND_RIGHT]._iDurability--;
-			if (player.InvBody[INVLOC_HAND_RIGHT]._iDurability == 0) {
+	if (player.bodySlot[INVLOC_HAND_RIGHT]._itype == ItemType::Shield) {
+		if (player.bodySlot[INVLOC_HAND_RIGHT]._iDurability != DUR_INDESTRUCTIBLE) {
+			player.bodySlot[INVLOC_HAND_RIGHT]._iDurability--;
+			if (player.bodySlot[INVLOC_HAND_RIGHT]._iDurability == 0) {
 				RemoveEquipment(player, INVLOC_HAND_RIGHT, true);
 				CalcPlrInv(player, true);
 			}
@@ -964,23 +964,23 @@ void DamageArmor(Player &player)
 		return;
 	}
 
-	if (player.InvBody[INVLOC_CHEST].isEmpty() && player.InvBody[INVLOC_HEAD].isEmpty()) {
+	if (player.bodySlot[INVLOC_CHEST].isEmpty() && player.bodySlot[INVLOC_HEAD].isEmpty()) {
 		return;
 	}
 
 	bool targetHead = FlipCoin(3);
-	if (!player.InvBody[INVLOC_CHEST].isEmpty() && player.InvBody[INVLOC_HEAD].isEmpty()) {
+	if (!player.bodySlot[INVLOC_CHEST].isEmpty() && player.bodySlot[INVLOC_HEAD].isEmpty()) {
 		targetHead = false;
 	}
-	if (player.InvBody[INVLOC_CHEST].isEmpty() && !player.InvBody[INVLOC_HEAD].isEmpty()) {
+	if (player.bodySlot[INVLOC_CHEST].isEmpty() && !player.bodySlot[INVLOC_HEAD].isEmpty()) {
 		targetHead = true;
 	}
 
 	Item *pi;
 	if (targetHead) {
-		pi = &player.InvBody[INVLOC_HEAD];
+		pi = &player.bodySlot[INVLOC_HEAD];
 	} else {
-		pi = &player.InvBody[INVLOC_CHEST];
+		pi = &player.bodySlot[INVLOC_CHEST];
 	}
 	if (pi->_iDurability == DUR_INDESTRUCTIBLE) {
 		return;
@@ -1781,7 +1781,7 @@ void Player::RestorePartialMana()
 
 void Player::ReadySpellFromEquipment(inv_body_loc bodyLocation, bool forceSpell)
 {
-	Item &item = InvBody[bodyLocation];
+	Item &item = bodySlot[bodyLocation];
 	if (item._itype == ItemType::Staff && IsValidSpell(item._iSpell) && item._iCharges > 0 && item._iStatFlag) {
 		if (forceSpell || _pRSpell == SpellID::Invalid || _pRSplType == SpellType::Invalid) {
 			_pRSpell = item._iSpell;
@@ -2680,7 +2680,7 @@ StartPlayerKill(Player &player, DeathReason deathReason)
 	if (&player != MyPlayer && dropItems) {
 		// Ensure that items are removed for remote players
 		// The dropped items will be synced seperatly (by the remote client)
-		for (Item &item : player.InvBody) {
+		for (Item &item : player.bodySlot) {
 			item.clear();
 		}
 		CalcPlrInv(player, false);
@@ -2734,7 +2734,7 @@ StartPlayerKill(Player &player, DeathReason deathReason)
 			}
 			if (dropItems) {
 				Direction pdd = player._pdir;
-				for (Item &item : player.InvBody) {
+				for (Item &item : player.bodySlot) {
 					pdd = Left(pdd);
 					DeadItem(player, item.pop(), Displacement(pdd));
 				}
@@ -3106,10 +3106,10 @@ void MakePlrPath(Player &player, Point targetPosition, bool endspace)
 void CalcPlrStaff(Player &player)
 {
 	player._pISpells = 0;
-	if (!player.InvBody[INVLOC_HAND_LEFT].isEmpty()
-	    && player.InvBody[INVLOC_HAND_LEFT]._iStatFlag
-	    && player.InvBody[INVLOC_HAND_LEFT]._iCharges > 0) {
-		player._pISpells |= GetSpellBitmask(player.InvBody[INVLOC_HAND_LEFT]._iSpell);
+	if (!player.bodySlot[INVLOC_HAND_LEFT].isEmpty()
+	    && player.bodySlot[INVLOC_HAND_LEFT]._iStatFlag
+	    && player.bodySlot[INVLOC_HAND_LEFT]._iCharges > 0) {
+		player._pISpells |= GetSpellBitmask(player.bodySlot[INVLOC_HAND_LEFT]._iSpell);
 	}
 }
 

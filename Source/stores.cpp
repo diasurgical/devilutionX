@@ -606,22 +606,22 @@ void StartSmithRepair()
 
 	Player &myPlayer = *MyPlayer;
 
-	auto &helmet = myPlayer.InvBody[INVLOC_HEAD];
+	auto &helmet = myPlayer.bodySlot[INVLOC_HEAD];
 	if (!helmet.isEmpty() && helmet._iDurability != helmet._iMaxDur) {
 		AddStoreHoldRepair(&helmet, -1);
 	}
 
-	auto &armor = myPlayer.InvBody[INVLOC_CHEST];
+	auto &armor = myPlayer.bodySlot[INVLOC_CHEST];
 	if (!armor.isEmpty() && armor._iDurability != armor._iMaxDur) {
 		AddStoreHoldRepair(&armor, -2);
 	}
 
-	auto &leftHand = myPlayer.InvBody[INVLOC_HAND_LEFT];
+	auto &leftHand = myPlayer.bodySlot[INVLOC_HAND_LEFT];
 	if (!leftHand.isEmpty() && leftHand._iDurability != leftHand._iMaxDur) {
 		AddStoreHoldRepair(&leftHand, -3);
 	}
 
-	auto &rightHand = myPlayer.InvBody[INVLOC_HAND_RIGHT];
+	auto &rightHand = myPlayer.bodySlot[INVLOC_HAND_RIGHT];
 	if (!rightHand.isEmpty() && rightHand._iDurability != rightHand._iMaxDur) {
 		AddStoreHoldRepair(&rightHand, -4);
 	}
@@ -863,7 +863,7 @@ void StartWitchRecharge()
 	}
 
 	const Player &myPlayer = *MyPlayer;
-	const auto &leftHand = myPlayer.InvBody[INVLOC_HAND_LEFT];
+	const auto &leftHand = myPlayer.bodySlot[INVLOC_HAND_LEFT];
 
 	if ((leftHand._itype == ItemType::Staff || leftHand._iMiscId == IMISC_UNIQUE) && leftHand._iCharges != leftHand._iMaxCharges) {
 		rechargeok = true;
@@ -1110,43 +1110,43 @@ void StartStorytellerIdentify()
 
 	Player &myPlayer = *MyPlayer;
 
-	auto &helmet = myPlayer.InvBody[INVLOC_HEAD];
+	auto &helmet = myPlayer.bodySlot[INVLOC_HEAD];
 	if (IdItemOk(&helmet)) {
 		idok = true;
 		AddStoreHoldId(helmet, -1);
 	}
 
-	auto &armor = myPlayer.InvBody[INVLOC_CHEST];
+	auto &armor = myPlayer.bodySlot[INVLOC_CHEST];
 	if (IdItemOk(&armor)) {
 		idok = true;
 		AddStoreHoldId(armor, -2);
 	}
 
-	auto &leftHand = myPlayer.InvBody[INVLOC_HAND_LEFT];
+	auto &leftHand = myPlayer.bodySlot[INVLOC_HAND_LEFT];
 	if (IdItemOk(&leftHand)) {
 		idok = true;
 		AddStoreHoldId(leftHand, -3);
 	}
 
-	auto &rightHand = myPlayer.InvBody[INVLOC_HAND_RIGHT];
+	auto &rightHand = myPlayer.bodySlot[INVLOC_HAND_RIGHT];
 	if (IdItemOk(&rightHand)) {
 		idok = true;
 		AddStoreHoldId(rightHand, -4);
 	}
 
-	auto &leftRing = myPlayer.InvBody[INVLOC_RING_LEFT];
+	auto &leftRing = myPlayer.bodySlot[INVLOC_RING_LEFT];
 	if (IdItemOk(&leftRing)) {
 		idok = true;
 		AddStoreHoldId(leftRing, -5);
 	}
 
-	auto &rightRing = myPlayer.InvBody[INVLOC_RING_RIGHT];
+	auto &rightRing = myPlayer.bodySlot[INVLOC_RING_RIGHT];
 	if (IdItemOk(&rightRing)) {
 		idok = true;
 		AddStoreHoldId(rightRing, -6);
 	}
 
-	auto &amulet = myPlayer.InvBody[INVLOC_AMULET];
+	auto &amulet = myPlayer.bodySlot[INVLOC_AMULET];
 	if (IdItemOk(&amulet)) {
 		idok = true;
 		AddStoreHoldId(amulet, -7);
@@ -1494,13 +1494,13 @@ void SmithRepairItem(int price)
 
 	if (i < 0) {
 		if (i == -1)
-			myPlayer.InvBody[INVLOC_HEAD]._iDurability = myPlayer.InvBody[INVLOC_HEAD]._iMaxDur;
+			myPlayer.bodySlot[INVLOC_HEAD]._iDurability = myPlayer.bodySlot[INVLOC_HEAD]._iMaxDur;
 		if (i == -2)
-			myPlayer.InvBody[INVLOC_CHEST]._iDurability = myPlayer.InvBody[INVLOC_CHEST]._iMaxDur;
+			myPlayer.bodySlot[INVLOC_CHEST]._iDurability = myPlayer.bodySlot[INVLOC_CHEST]._iMaxDur;
 		if (i == -3)
-			myPlayer.InvBody[INVLOC_HAND_LEFT]._iDurability = myPlayer.InvBody[INVLOC_HAND_LEFT]._iMaxDur;
+			myPlayer.bodySlot[INVLOC_HAND_LEFT]._iDurability = myPlayer.bodySlot[INVLOC_HAND_LEFT]._iMaxDur;
 		if (i == -4)
-			myPlayer.InvBody[INVLOC_HAND_RIGHT]._iDurability = myPlayer.InvBody[INVLOC_HAND_RIGHT]._iMaxDur;
+			myPlayer.bodySlot[INVLOC_HAND_RIGHT]._iDurability = myPlayer.bodySlot[INVLOC_HAND_RIGHT]._iMaxDur;
 		return;
 	}
 
@@ -1646,7 +1646,7 @@ void WitchRechargeItem(int price)
 
 	int8_t i = storehidx[idx];
 	if (i < 0) {
-		myPlayer.InvBody[INVLOC_HAND_LEFT]._iCharges = myPlayer.InvBody[INVLOC_HAND_LEFT]._iMaxCharges;
+		myPlayer.bodySlot[INVLOC_HAND_LEFT]._iCharges = myPlayer.bodySlot[INVLOC_HAND_LEFT]._iMaxCharges;
 		NetSendCmdChItem(true, INVLOC_HAND_LEFT);
 	} else {
 		myPlayer.InvList[i]._iCharges = myPlayer.InvList[i]._iMaxCharges;
@@ -1791,19 +1791,19 @@ void StorytellerIdentifyItem(Item &item)
 	int8_t idx = storehidx[((stextlhold - stextup) / 4) + stextvhold];
 	if (idx < 0) {
 		if (idx == -1)
-			myPlayer.InvBody[INVLOC_HEAD]._iIdentified = true;
+			myPlayer.bodySlot[INVLOC_HEAD]._iIdentified = true;
 		if (idx == -2)
-			myPlayer.InvBody[INVLOC_CHEST]._iIdentified = true;
+			myPlayer.bodySlot[INVLOC_CHEST]._iIdentified = true;
 		if (idx == -3)
-			myPlayer.InvBody[INVLOC_HAND_LEFT]._iIdentified = true;
+			myPlayer.bodySlot[INVLOC_HAND_LEFT]._iIdentified = true;
 		if (idx == -4)
-			myPlayer.InvBody[INVLOC_HAND_RIGHT]._iIdentified = true;
+			myPlayer.bodySlot[INVLOC_HAND_RIGHT]._iIdentified = true;
 		if (idx == -5)
-			myPlayer.InvBody[INVLOC_RING_LEFT]._iIdentified = true;
+			myPlayer.bodySlot[INVLOC_RING_LEFT]._iIdentified = true;
 		if (idx == -6)
-			myPlayer.InvBody[INVLOC_RING_RIGHT]._iIdentified = true;
+			myPlayer.bodySlot[INVLOC_RING_RIGHT]._iIdentified = true;
 		if (idx == -7)
-			myPlayer.InvBody[INVLOC_AMULET]._iIdentified = true;
+			myPlayer.bodySlot[INVLOC_AMULET]._iIdentified = true;
 	} else {
 		myPlayer.InvList[idx]._iIdentified = true;
 	}

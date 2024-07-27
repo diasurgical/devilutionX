@@ -518,7 +518,7 @@ void pfile_write_hero(SaveWriter &saveWriter, bool writeGameData)
 void RemoveAllInvalidItems(Player &player)
 {
 	for (int i = 0; i < NUM_INVLOC; i++)
-		RemoveInvalidItem(player.InvBody[i]);
+		RemoveInvalidItem(player.bodySlot[i]);
 	for (int i = 0; i < player._pNumInv; i++)
 		RemoveInvalidItem(player.InvList[i]);
 	for (int i = 0; i < MaxBeltItems; i++)

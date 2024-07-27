@@ -85,7 +85,7 @@ UiFlags GetMaxHealthColor()
 std::pair<int, int> GetDamage()
 {
 	int damageMod = InspectPlayer->_pIBonusDamMod;
-	if (InspectPlayer->InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Bow && InspectPlayer->_pClass != HeroClass::Rogue) {
+	if (InspectPlayer->bodySlot[INVLOC_HAND_LEFT]._itype == ItemType::Bow && InspectPlayer->_pClass != HeroClass::Rogue) {
 		damageMod += InspectPlayer->_pDamageMod / 2;
 	} else {
 		damageMod += InspectPlayer->_pDamageMod;
@@ -171,7 +171,7 @@ PanelEntry panelEntries[] = {
 	{ N_("Armor class"), { RightColumnLabelX, 163 }, 57, RightColumnLabelWidth,
 	    []() { return StyledText { GetValueColor(InspectPlayer->_pIBonusAC), StrCat(InspectPlayer->GetArmor() + InspectPlayer->getCharacterLevel() * 2) }; } },
 	{ N_("To hit"), { RightColumnLabelX, 191 }, 57, RightColumnLabelWidth,
-	    []() { return StyledText { GetValueColor(InspectPlayer->_pIBonusToHit), StrCat(InspectPlayer->InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Bow ? InspectPlayer->GetRangedToHit() : InspectPlayer->GetMeleeToHit(), "%") }; } },
+	    []() { return StyledText { GetValueColor(InspectPlayer->_pIBonusToHit), StrCat(InspectPlayer->bodySlot[INVLOC_HAND_LEFT]._itype == ItemType::Bow ? InspectPlayer->GetRangedToHit() : InspectPlayer->GetMeleeToHit(), "%") }; } },
 	{ N_("Damage"), { RightColumnLabelX, 219 }, 57, RightColumnLabelWidth,
 	    []() {
 	        const auto [dmgMin, dmgMax] = GetDamage();

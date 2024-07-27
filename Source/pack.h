@@ -55,7 +55,7 @@ struct PlayerPack {
 	int32_t pMaxManaBase;
 	uint8_t pSplLvl[37]; // Should be MAX_SPELLS but set to 37 to make save games compatible
 	uint64_t pMemSpells;
-	ItemPack InvBody[NUM_INVLOC];
+	ItemPack bodySlot[NUM_INVLOC];
 	ItemPack InvList[InventoryGridCells];
 	int8_t InvGrid[InventoryGridCells];
 	uint8_t _pNumInv;
@@ -104,7 +104,7 @@ struct PlayerNetPack {
 	int32_t pMaxManaBase;
 	uint8_t pSplLvl[MAX_SPELLS];
 	uint64_t pMemSpells;
-	ItemNetPack InvBody[NUM_INVLOC];
+	ItemNetPack bodySlot[NUM_INVLOC];
 	ItemNetPack InvList[InventoryGridCells];
 	int8_t InvGrid[InventoryGridCells];
 	uint8_t _pNumInv;

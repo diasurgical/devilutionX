@@ -218,7 +218,7 @@ struct Player {
 	Player &operator=(Player &&) noexcept = default;
 
 	char _pName[PlayerNameLength];
-	Item InvBody[NUM_INVLOC];
+	Item bodySlot[NUM_INVLOC]; // InvBody
 	Item InvList[InventoryGridCells];
 	Item SpdList[MaxBeltItems];
 	Item HoldItem;
@@ -415,7 +415,7 @@ public:
 		case HeroClass::Monk:
 			return isEquipped(ItemType::Staff);
 		case HeroClass::Bard:
-			return InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Sword && InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Sword;
+			return bodySlot[INVLOC_HAND_LEFT]._itype == ItemType::Sword && bodySlot[INVLOC_HAND_RIGHT]._itype == ItemType::Sword;
 		case HeroClass::Barbarian:
 			return isEquipped(ItemType::Axe) || (!isEquipped(ItemType::Shield) && (isEquipped(ItemType::Mace, true) || isEquipped(ItemType::Sword, true)));
 		default:
@@ -432,18 +432,18 @@ public:
 		case ItemType::Mace:
 		case ItemType::Shield:
 		case ItemType::Staff:
-			return (InvBody[INVLOC_HAND_LEFT]._itype == itemType && (!isTwoHanded || InvBody[INVLOC_HAND_LEFT]._iLoc == ILOC_TWOHAND))
-			    || (InvBody[INVLOC_HAND_RIGHT]._itype == itemType && (!isTwoHanded || InvBody[INVLOC_HAND_LEFT]._iLoc == ILOC_TWOHAND));
+			return (bodySlot[INVLOC_HAND_LEFT]._itype == itemType && (!isTwoHanded || bodySlot[INVLOC_HAND_LEFT]._iLoc == ILOC_TWOHAND))
+			    || (bodySlot[INVLOC_HAND_RIGHT]._itype == itemType && (!isTwoHanded || bodySlot[INVLOC_HAND_LEFT]._iLoc == ILOC_TWOHAND));
 		case ItemType::LightArmor:
 		case ItemType::MediumArmor:
 		case ItemType::HeavyArmor:
-			return InvBody[INVLOC_CHEST]._itype == itemType;
+			return bodySlot[INVLOC_CHEST]._itype == itemType;
 		case ItemType::Helm:
-			return InvBody[INVLOC_HEAD]._itype == itemType;
+			return bodySlot[INVLOC_HEAD]._itype == itemType;
 		case ItemType::Ring:
-			return InvBody[INVLOC_RING_LEFT]._itype == itemType || InvBody[INVLOC_RING_RIGHT]._itype == itemType;
+			return bodySlot[INVLOC_RING_LEFT]._itype == itemType || bodySlot[INVLOC_RING_RIGHT]._itype == itemType;
 		case ItemType::Amulet:
-			return InvBody[INVLOC_AMULET]._itype == itemType;
+			return bodySlot[INVLOC_AMULET]._itype == itemType;
 		default:
 			return false;
 		}
@@ -487,7 +487,7 @@ public:
 		};
 
 		const Item *mostValuableItem = getMostValuableItem(SpdList, SpdList + MaxBeltItems);
-		mostValuableItem = getMostValuableItem(InvBody, InvBody + inv_body_loc::NUM_INVLOC, mostValuableItem);
+		mostValuableItem = getMostValuableItem(bodySlot, bodySlot + inv_body_loc::NUM_INVLOC, mostValuableItem);
 		mostValuableItem = getMostValuableItem(InvList, InvList + _pNumInv, mostValuableItem);
 
 		return mostValuableItem;
@@ -898,8 +898,8 @@ public:
 	/** @brief Checks if the player is holding an item of the provided type, and is usable. */
 	bool isHoldingItem(const ItemType type) const
 	{
-		const Item &leftHandItem = InvBody[INVLOC_HAND_LEFT];
-		const Item &rightHandItem = InvBody[INVLOC_HAND_RIGHT];
+		const Item &leftHandItem = bodySlot[INVLOC_HAND_LEFT];
+		const Item &rightHandItem = bodySlot[INVLOC_HAND_RIGHT];
 
 		return (type == leftHandItem._itype && leftHandItem._iStatFlag) || (type == rightHandItem._itype && rightHandItem._iStatFlag);
 	}
