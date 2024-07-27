@@ -16,7 +16,7 @@ int RunBlockTest(int frames, ItemSpecialEffect flags)
 {
 	Player &player = Players[0];
 
-	player._pHFrames = frames;
+	player.numRecoveryFrames = frames;
 	player._pIFlags = flags;
 	// StartPlrHit compares damage (a 6 bit fixed point value) to character level to determine if the player shrugs off the hit.
 	// We don't initialise player so this comparison can't be relied on, instead we use forcehit to ensure the player enters hit mode

@@ -437,7 +437,7 @@ TEST(AnimationInfo, HitRecoverySorcererHarmony) // Skipped frames and ignored de
 	        new RenderingData(0.3f, 6),
 	        new RenderingData(0.6f, 7),
 	        new RenderingData(0.8f, 7),
-	        // Animation stopped cause PM_DoGotHit would stop the Animation "if (plr[pnum].AnimInfo.currentFrame >= plr[pnum]._pHFrames) {"
+	        // Animation stopped cause PM_DoGotHit would stop the Animation "if (plr[pnum].AnimInfo.currentFrame >= plr[pnum].numRecoveryFrames) {"
 	    });
 }
 TEST(AnimationInfo, Stand) // Distribution Logic shouldn't change anything here

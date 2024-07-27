@@ -1843,7 +1843,7 @@ void Player::getAnimationFramesAndTicksPerFrame(player_graphic graphics, int8_t 
 		numberOfFrames = _pAFrames;
 		break;
 	case player_graphic::Hit:
-		numberOfFrames = _pHFrames;
+		numberOfFrames = numRecoveryFrames;
 		break;
 	case player_graphic::Lightning:
 	case player_graphic::Fire:
@@ -2206,7 +2206,7 @@ void SetPlrAnims(Player &player)
 	} else {
 		player._pNFrames = plrAtkAnimData.idleFrames;
 		player._pWFrames = plrAtkAnimData.walkingFrames;
-		player._pHFrames = plrAtkAnimData.recoveryFrames;
+		player.numRecoveryFrames = plrAtkAnimData.recoveryFrames;
 		player._pBFrames = plrAtkAnimData.blockingFrames;
 		switch (gn) {
 		case PlayerWeaponGraphic::Unarmed:
