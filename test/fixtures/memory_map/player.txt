@@ -50,7 +50,7 @@ R 8 _pSBkSplType
 M 64 8 spellLevel
 R 56 alignment
 R 64 _pMemSpells
-R 64 _pAblSpells
+R 64 skills
 R 64 _pScrlSpells
 R 8 _pSpellFlags
 R 24 alignment

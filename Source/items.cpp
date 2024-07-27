@@ -3075,7 +3075,7 @@ void CreatePlrItems(Player &player)
 	}
 
 	if (loadout.skill != SpellID::Null) {
-		player._pAblSpells = GetSpellBitmask(loadout.skill);
+		player.skills = GetSpellBitmask(loadout.skill);
 		if (player._pRSplType == SpellType::Invalid) {
 			player._pRSplType = SpellType::Skill;
 			player._pRSpell = loadout.skill;

@@ -2492,7 +2492,7 @@ void InitPlayer(Player &player, bool firstTime)
 		ActivateVision(player.position.tile, player._pLightRad, player.getId());
 	}
 
-	player._pAblSpells = GetSpellBitmask(GetPlayerStartingLoadoutForClass(player._pClass).skill);
+	player.skills = GetSpellBitmask(GetPlayerStartingLoadoutForClass(player._pClass).skill);
 
 	player._pInvincible = false;
 

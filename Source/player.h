@@ -330,8 +330,8 @@ public:
 	uint64_t _pISpells;
 	/** @brief Bitmask of learned spells */
 	uint64_t _pMemSpells;
-	/** @brief Bitmask of abilities */
-	uint64_t _pAblSpells;
+	/** @brief Bitmask of abilities (_pAblSpells) */
+	uint64_t skills;
 	/** @brief Bitmask of spells available via scrolls */
 	uint64_t _pScrlSpells;
 	SpellFlag _pSpellFlags;
