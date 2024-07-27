@@ -302,7 +302,7 @@ struct Player {
 	uint8_t plrlevel;
 	bool plrIsOnSetLevel;
 	ActorPosition position;
-	Direction _pdir; // Direction faced by player (direction enum)
+	Direction direction; // Direction faced by player (direction enum) (_pdir)
 	HeroClass _pClass;
 
 private:
@@ -788,7 +788,7 @@ public:
 	{
 		Displacement offset = { -CalculateWidth2(sprite.width()), 0 };
 		if (isWalking())
-			offset += GetOffsetForWalking(AnimInfo, _pdir);
+			offset += GetOffsetForWalking(AnimInfo, direction);
 		return offset;
 	}
 

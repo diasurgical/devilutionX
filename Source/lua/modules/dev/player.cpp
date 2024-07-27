@@ -74,7 +74,7 @@ std::string DebugSetPlayerTrn(std::string_view path)
 	debugTRN = path;
 	Player &player = *MyPlayer;
 	InitPlayerGFX(player);
-	StartStand(player, player._pdir);
+	StartStand(player, player.direction);
 	return path.empty() ? "TRN unset" : "TRN set";
 }
 

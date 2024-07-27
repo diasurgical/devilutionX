@@ -662,13 +662,13 @@ void CheckCursMove()
 	const Player &myPlayer = *MyPlayer;
 
 	if (myPlayer.isWalking()) {
-		Displacement offset = GetOffsetForWalking(myPlayer.AnimInfo, myPlayer._pdir, true);
+		Displacement offset = GetOffsetForWalking(myPlayer.AnimInfo, myPlayer.direction, true);
 		sx -= offset.deltaX;
 		sy -= offset.deltaY;
 
 		// Predict the next frame when walking to avoid input jitter
-		DisplacementOf<int16_t> offset2 = myPlayer.position.CalculateWalkingOffsetShifted8(myPlayer._pdir, myPlayer.AnimInfo);
-		DisplacementOf<int16_t> velocity = myPlayer.position.GetWalkingVelocityShifted8(myPlayer._pdir, myPlayer.AnimInfo);
+		DisplacementOf<int16_t> offset2 = myPlayer.position.CalculateWalkingOffsetShifted8(myPlayer.direction, myPlayer.AnimInfo);
+		DisplacementOf<int16_t> velocity = myPlayer.position.GetWalkingVelocityShifted8(myPlayer.direction, myPlayer.AnimInfo);
 		int fx = offset2.deltaX / 256;
 		int fy = offset2.deltaY / 256;
 		fx -= (offset2.deltaX + velocity.deltaX) / 256;

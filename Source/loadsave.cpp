@@ -361,7 +361,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	player.position.old.x = file.NextLE<int32_t>();
 	player.position.old.y = file.NextLE<int32_t>();
 	file.Skip<int32_t>(4); // Skip offset and velocity
-	player._pdir = static_cast<Direction>(file.NextLE<int32_t>());
+	player.direction = static_cast<Direction>(file.NextLE<int32_t>());
 	file.Skip(4); // Unused
 	player._pgfxnum = file.NextLENarrow<uint32_t, uint8_t>();
 	file.Skip<uint32_t>(); // Skip pointer pData
@@ -1190,15 +1190,15 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	DisplacementOf<int16_t> offset2 = {};
 	DisplacementOf<int16_t> velocity = {};
 	if (player.isWalking()) {
-		offset = player.position.CalculateWalkingOffset(player._pdir, player.AnimInfo);
-		offset2 = player.position.CalculateWalkingOffsetShifted8(player._pdir, player.AnimInfo);
-		velocity = player.position.GetWalkingVelocityShifted8(player._pdir, player.AnimInfo);
+		offset = player.position.CalculateWalkingOffset(player.direction, player.AnimInfo);
+		offset2 = player.position.CalculateWalkingOffsetShifted8(player.direction, player.AnimInfo);
+		velocity = player.position.GetWalkingVelocityShifted8(player.direction, player.AnimInfo);
 	}
 	file.WriteLE<int32_t>(offset.deltaX);
 	file.WriteLE<int32_t>(offset.deltaY);
 	file.WriteLE<int32_t>(velocity.deltaX);
 	file.WriteLE<int32_t>(velocity.deltaY);
-	file.WriteLE<int32_t>(static_cast<int32_t>(player._pdir));
+	file.WriteLE<int32_t>(static_cast<int32_t>(player.direction));
 	file.Skip(4); // Unused
 	file.WriteLE<uint32_t>(player._pgfxnum);
 	file.Skip(4); // Skip pointer _pAnimData

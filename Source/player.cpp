@@ -68,7 +68,7 @@ void UpdatePlayerLightOffset(Player &player)
 	if (player.lightId == NO_LIGHT)
 		return;
 
-	const WorldTileDisplacement offset = player.position.CalculateWalkingOffset(player._pdir, player.AnimInfo);
+	const WorldTileDisplacement offset = player.position.CalculateWalkingOffset(player.direction, player.AnimInfo);
 	ChangeLightOffset(player.lightId, offset.screenToLight());
 }
 
@@ -118,7 +118,7 @@ void HandleWalkMode(Player &player, Direction dir)
 		return;
 	}
 
-	player._pdir = dir;
+	player.direction = dir;
 
 	// The player's tile position after finishing this movement action
 	player.position.future = player.position.tile + dirModeParams.dir;
@@ -562,7 +562,7 @@ bool PlrHitMonst(Player &player, Monster &monster, bool adjacentDamage = false)
 
 	if (gbIsHellfire && HasAllOf(player._pIFlags, ItemSpecialEffect::FireDamage | ItemSpecialEffect::LightningDamage)) {
 		int midam = RandomIntBetween(player._pIFMinDam, player._pIFMaxDam);
-		AddMissile(player.position.tile, player.position.temp, player._pdir, MissileID::SpectralArrow, TARGET_MONSTERS, player, midam, 0);
+		AddMissile(player.position.tile, player.position.temp, player.direction, MissileID::SpectralArrow, TARGET_MONSTERS, player, midam, 0);
 	}
 	int mind = player._pIMinDam;
 	int maxd = player._pIMaxDam;
@@ -783,7 +783,7 @@ bool DoAttack(Player &player)
 	bool didhit = false;
 
 	if (player.AnimInfo.currentFrame == player._pAFNum - 1) {
-		Point position = player.position.tile + player._pdir;
+		Point position = player.position.tile + player.direction;
 		Monster *monster = FindMonsterAtPosition(position);
 
 		if (monster != nullptr) {
@@ -814,7 +814,7 @@ bool DoAttack(Player &player)
 		}
 		if (player.CanCleave()) {
 			// playing as a class/weapon with cleave
-			position = player.position.tile + Right(player._pdir);
+			position = player.position.tile + Right(player.direction);
 			monster = FindMonsterAtPosition(position);
 			if (monster != nullptr) {
 				if (!CanTalkToMonst(*monster) && monster->position.old == position) {
@@ -822,7 +822,7 @@ bool DoAttack(Player &player)
 						didhit = true;
 				}
 			}
-			position = player.position.tile + Left(player._pdir);
+			position = player.position.tile + Left(player.direction);
 			monster = FindMonsterAtPosition(position);
 			if (monster != nullptr) {
 				if (!CanTalkToMonst(*monster) && monster->position.old == position) {
@@ -833,14 +833,14 @@ bool DoAttack(Player &player)
 		}
 
 		if (didhit && DamageWeapon(player, 30)) {
-			StartStand(player, player._pdir);
+			StartStand(player, player.direction);
 			ClearStateVariables(player);
 			return true;
 		}
 	}
 
 	if (player.AnimInfo.isLastFrame()) {
-		StartStand(player, player._pdir);
+		StartStand(player, player.direction);
 		ClearStateVariables(player);
 		return true;
 	}
@@ -888,7 +888,7 @@ bool DoRangeAttack(Player &player)
 		AddMissile(
 		    player.position.tile,
 		    player.position.temp + Displacement { xoff, yoff },
-		    player._pdir,
+		    player.direction,
 		    mistype,
 		    TARGET_MONSTERS,
 		    player,
@@ -900,14 +900,14 @@ bool DoRangeAttack(Player &player)
 		}
 
 		if (DamageWeapon(player, 40)) {
-			StartStand(player, player._pdir);
+			StartStand(player, player.direction);
 			ClearStateVariables(player);
 			return true;
 		}
 	}
 
 	if (player.AnimInfo.isLastFrame()) {
-		StartStand(player, player._pdir);
+		StartStand(player, player.direction);
 		ClearStateVariables(player);
 		return true;
 	}
@@ -946,7 +946,7 @@ void DamageParryItem(Player &player)
 bool DoBlock(Player &player)
 {
 	if (player.AnimInfo.isLastFrame()) {
-		StartStand(player, player._pdir);
+		StartStand(player, player.direction);
 		ClearStateVariables(player);
 
 		if (FlipCoin(10)) {
@@ -1015,7 +1015,7 @@ bool DoSpell(Player &player)
 	}
 
 	if (player.AnimInfo.isLastFrame()) {
-		StartStand(player, player._pdir);
+		StartStand(player, player.direction);
 		ClearStateVariables(player);
 		return true;
 	}
@@ -1026,7 +1026,7 @@ bool DoSpell(Player &player)
 bool DoGotHit(Player &player)
 {
 	if (player.AnimInfo.isLastFrame()) {
-		StartStand(player, player._pdir);
+		StartStand(player, player.direction);
 		ClearStateVariables(player);
 		if (!FlipCoin(4)) {
 			DamageArmor(player);
@@ -1198,7 +1198,7 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 			player.walkpath[MaxPathLength - 1] = WALK_NONE;
 
 			if (player._pmode == PM_STAND) {
-				StartStand(player, player._pdir);
+				StartStand(player, player.direction);
 				player.destAction = ACTION_NONE;
 			}
 		}
@@ -1326,7 +1326,7 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 			break;
 		}
 
-		FixPlayerLocation(player, player._pdir);
+		FixPlayerLocation(player, player.direction);
 		player.destAction = ACTION_NONE;
 
 		return;
@@ -2473,7 +2473,7 @@ void InitPlayer(Player &player, bool firstTime)
 			player.AnimInfo.currentFrame = player.AnimInfo.numberOfFrames - 2;
 		}
 
-		player._pdir = Direction::South;
+		player.direction = Direction::South;
 
 		if (&player == MyPlayer && (!firstTime || leveltype != DTYPE_TOWN)) {
 			player.position.tile = ViewPosition;
@@ -2540,7 +2540,7 @@ void SetPlayerOld(Player &player)
 void FixPlayerLocation(Player &player, Direction bDir)
 {
 	player.position.future = player.position.tile;
-	player._pdir = bDir;
+	player.direction = bDir;
 	if (&player == MyPlayer) {
 		ViewPosition = player.position.tile;
 	}
@@ -2615,7 +2615,7 @@ void StartPlrHit(Player &player, int dam, bool forcehit)
 		return;
 	}
 
-	Direction pd = player._pdir;
+	Direction pd = player.direction;
 
 	int8_t skippedAnimationFrames = 0;
 	if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastestHitRecovery)) {
@@ -2670,7 +2670,7 @@ StartPlayerKill(Player &player, DeathReason deathReason)
 		SetPlrAnims(player);
 	}
 
-	NewPlrAnim(player, player_graphic::Death, player._pdir);
+	NewPlrAnim(player, player_graphic::Death, player.direction);
 
 	player._pBlockFlag = false;
 	player._pmode = PM_DEATH;
@@ -2687,7 +2687,7 @@ StartPlayerKill(Player &player, DeathReason deathReason)
 	}
 
 	if (player.isOnActiveLevel()) {
-		FixPlayerLocation(player, player._pdir);
+		FixPlayerLocation(player, player.direction);
 		FixPlrWalkTags(player);
 		dFlags[player.position.tile.x][player.position.tile.y] |= DungeonFlag::DeadPlayer;
 		SetPlayerOld(player);
@@ -2733,7 +2733,7 @@ StartPlayerKill(Player &player, DeathReason deathReason)
 				}
 			}
 			if (dropItems) {
-				Direction pdd = player._pdir;
+				Direction pdd = player.direction;
 				for (Item &item : player.InvBody) {
 					pdd = Left(pdd);
 					DeadItem(player, item.pop(), Displacement(pdd));
@@ -2773,7 +2773,7 @@ void StripTopGold(Player &player)
 		return;
 	if (AutoPlaceItemInBelt(player, player.HoldItem))
 		return;
-	std::optional<Point> itemTile = FindAdjacentPositionForItem(player.position.tile, player._pdir);
+	std::optional<Point> itemTile = FindAdjacentPositionForItem(player.position.tile, player.direction);
 	if (itemTile)
 		return;
 	DeadItem(player, std::move(player.HoldItem), { 0, 0 });
@@ -3207,7 +3207,7 @@ void SyncPlrAnim(Player &player)
 {
 	const player_graphic graphic = player.getGraphic();
 	if (!HeadlessMode)
-		player.AnimInfo.sprites = player.AnimationData[static_cast<size_t>(graphic)].spritesForDirection(player._pdir);
+		player.AnimInfo.sprites = player.AnimationData[static_cast<size_t>(graphic)].spritesForDirection(player.direction);
 }
 
 void SyncInitPlrPos(Player &player)

@@ -2215,7 +2215,7 @@ void CloseStash()
 
 	Player &myPlayer = *MyPlayer;
 	if (!myPlayer.HoldItem.isEmpty()) {
-		std::optional<Point> itemTile = FindAdjacentPositionForItem(myPlayer.position.future, myPlayer._pdir);
+		std::optional<Point> itemTile = FindAdjacentPositionForItem(myPlayer.position.future, myPlayer.direction);
 		if (itemTile) {
 			NetSendCmdPItem(true, CMD_PUTITEM, *itemTile, myPlayer.HoldItem);
 		} else {

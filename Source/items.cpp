@@ -2811,7 +2811,7 @@ void CalcPlrGraphics(Player &player, PlayerWeaponGraphic animWeaponId, PlayerArm
 		LoadPlrGFX(player, graphic);
 		OptionalClxSpriteList sprites;
 		if (!HeadlessMode)
-			sprites = player.AnimationData[static_cast<size_t>(graphic)].spritesForDirection(player._pdir);
+			sprites = player.AnimationData[static_cast<size_t>(graphic)].spritesForDirection(player.direction);
 		player.AnimInfo.changeAnimationData(sprites, numberOfFrames, ticksPerFrame);
 	} else {
 		player._pgfxnum = gfxNum;
@@ -4208,7 +4208,7 @@ void UseItem(Player &player, item_misc_id mid, SpellID spellID, int spellFrom)
 			// will be validated when processing the network message
 			Point target = cursPosition;
 			if (!InDungeonBounds(target))
-				target = player.position.future + Displacement(player._pdir);
+				target = player.position.future + Displacement(player.direction);
 			// Use CMD_SPELLXY because it's the same behavior as normal casting
 			assert(IsValidSpellFrom(spellFrom));
 			NetSendCmdLocParam4(true, CMD_SPELLXY, target, static_cast<int8_t>(spellID), static_cast<uint8_t>(SpellType::Scroll), spellLevel, static_cast<uint16_t>(spellFrom));

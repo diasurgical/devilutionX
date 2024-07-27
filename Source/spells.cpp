@@ -211,7 +211,7 @@ SpellCheckResult CheckSpell(const Player &player, SpellID sn, SpellType st, bool
 
 void CastSpell(Player &player, SpellID spl, WorldTilePosition src, WorldTilePosition dst, int spllvl)
 {
-	Direction dir = player._pdir;
+	Direction dir = player.direction;
 	if (IsWallSpell(spl)) {
 		dir = player.tempDirection;
 	}
@@ -267,7 +267,7 @@ void DoResurrect(Player &player, Player &target)
 	CalcPlrInv(target, true);
 
 	if (target.isOnActiveLevel()) {
-		StartStand(target, target._pdir);
+		StartStand(target, target.direction);
 	}
 }
 

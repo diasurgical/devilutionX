@@ -1079,7 +1079,7 @@ bool PlayerMHit(Player &player, Monster *monster, int dist, int mind, int maxd, 
 	}
 
 	if ((resper <= 0 || gbIsHellfire) && blk < blkper) {
-		Direction dir = player._pdir;
+		Direction dir = player.direction;
 		if (monster != nullptr) {
 			dir = GetDirection(player.position.tile, monster->position.tile);
 		}
@@ -3220,7 +3220,7 @@ void ProcessNovaCommon(Missile &missile, MissileID projectileType)
 	Direction dir = Direction::South;
 	mienemy_type en = TARGET_PLAYERS;
 	if (!missile.IsTrap()) {
-		dir = Players[id]._pdir;
+		dir = Players[id].direction;
 		en = TARGET_MONSTERS;
 	}
 
@@ -3258,7 +3258,7 @@ void ProcessSpectralArrow(Missile &missile)
 	mienemy_type micaster = TARGET_PLAYERS;
 	if (!missile.IsTrap()) {
 		const Player &player = Players[id];
-		dir = player._pdir;
+		dir = player.direction;
 		micaster = TARGET_MONSTERS;
 
 		switch (player._pILMinDam) {
@@ -3784,7 +3784,7 @@ void ProcessApocalypse(Missile &missile)
 				continue;
 
 			int id = missile._misource;
-			AddMissile(WorldTilePosition(k, j), WorldTilePosition(k, j), Players[id]._pdir, MissileID::ApocalypseBoom, TARGET_MONSTERS, id, missile._midam, 0);
+			AddMissile(WorldTilePosition(k, j), WorldTilePosition(k, j), Players[id].direction, MissileID::ApocalypseBoom, TARGET_MONSTERS, id, missile._midam, 0);
 			missile.var2 = j;
 			missile.var4 = k + 1;
 			return;
@@ -3808,7 +3808,7 @@ void ProcessFlameWaveControl(Missile &missile)
 	[[maybe_unused]] int pn = dPiece[na.x][na.y];
 	assert(pn >= 0 && pn <= MAXTILES);
 	if (!TileHasAny(na, TileProperties::BlockMissile)) {
-		Direction pdir = Players[id]._pdir;
+		Direction pdir = Players[id].direction;
 		AddMissile(na, na + sd, pdir, MissileID::FlameWave, TARGET_MONSTERS, id, 0, missile._mispllvl);
 		na += dira;
 		Point nb = src + sd + dirb;
@@ -4029,7 +4029,7 @@ void ProcessElemental(Missile &missile)
 				SetMissDir(missile, sd);
 				UpdateMissileVelocity(missile, nextMonster->position.tile, 16);
 			} else {
-				Direction sd = Players[missile._misource]._pdir;
+				Direction sd = Players[missile._misource].direction;
 				SetMissDir(missile, sd);
 				UpdateMissileVelocity(missile, missilePosition + sd, 16);
 			}
@@ -4074,7 +4074,7 @@ void ProcessBoneSpirit(Missile &missile)
 				SetMissDir(missile, GetDirection(c, monster->position.tile));
 				UpdateMissileVelocity(missile, monster->position.tile, 16);
 			} else {
-				Direction sd = Players[missile._misource]._pdir;
+				Direction sd = Players[missile._misource].direction;
 				SetMissDir(missile, sd);
 				UpdateMissileVelocity(missile, c + sd, 16);
 			}

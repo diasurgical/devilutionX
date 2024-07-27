@@ -336,7 +336,7 @@ void DrawPlayerIconHelper(const Surface &out, MissileGraphicID missileGraphicId,
 	bool lighting = &player != MyPlayer;
 
 	if (player.isWalking())
-		position += GetOffsetForWalking(player.AnimInfo, player._pdir);
+		position += GetOffsetForWalking(player.AnimInfo, player.direction);
 
 	position.x -= GetMissileSpriteData(missileGraphicId).animWidth2;
 
@@ -741,7 +741,7 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 		int playerId = static_cast<int>(pid) + 1;
 		// If sprite is moving southwards or east, we want to draw it offset from the tile it's moving to, so we need negative ID
 		// This respests the order that tiles are drawn. By using the negative id, we ensure that the sprite is drawn with priority
-		if (player->_pmode == PM_WALK_SOUTHWARDS || (player->_pmode == PM_WALK_SIDEWAYS && player->_pdir == Direction::East))
+		if (player->_pmode == PM_WALK_SOUTHWARDS || (player->_pmode == PM_WALK_SIDEWAYS && player->direction == Direction::East))
 			playerId = -playerId;
 		if (dPlayer[tilePosition.x][tilePosition.y] == playerId) {
 			auto tempTilePosition = tilePosition;
@@ -749,7 +749,7 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 
 			// Offset the sprite to the tile it's moving from
 			if (player->_pmode == PM_WALK_SOUTHWARDS) {
-				switch (player->_pdir) {
+				switch (player->direction) {
 				case Direction::SouthWest:
 					tempTargetBufferPosition += { TILE_WIDTH / 2, -TILE_HEIGHT / 2 };
 					break;
@@ -762,10 +762,10 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 				default:
 					DVL_UNREACHABLE();
 				}
-				tempTilePosition += Opposite(player->_pdir);
-			} else if (player->_pmode == PM_WALK_SIDEWAYS && player->_pdir == Direction::East) {
+				tempTilePosition += Opposite(player->direction);
+			} else if (player->_pmode == PM_WALK_SIDEWAYS && player->direction == Direction::East) {
 				tempTargetBufferPosition += { -TILE_WIDTH, 0 };
-				tempTilePosition += Opposite(player->_pdir);
+				tempTilePosition += Opposite(player->direction);
 			}
 			DrawPlayerHelper(out, *player, tempTilePosition, tempTargetBufferPosition);
 		}
@@ -1012,7 +1012,7 @@ void CalcFirstTilePosition(Point &position, Displacement &offset)
 	Player &myPlayer = *MyPlayer;
 	offset = tileOffset;
 	if (myPlayer.isWalking())
-		offset += GetOffsetForWalking(myPlayer.AnimInfo, myPlayer._pdir, true);
+		offset += GetOffsetForWalking(myPlayer.AnimInfo, myPlayer.direction, true);
 
 	position += tileShift;
 
@@ -1030,7 +1030,7 @@ void CalcFirstTilePosition(Point &position, Displacement &offset)
 
 	// Draw areas moving in and out of the screen
 	if (myPlayer.isWalking()) {
-		switch (myPlayer._pdir) {
+		switch (myPlayer.direction) {
 		case Direction::North:
 		case Direction::NorthEast:
 			offset.deltaY -= TILE_HEIGHT;
@@ -1076,7 +1076,7 @@ void DrawGame(const Surface &fullOut, Point position, Displacement offset)
 
 	// Draw areas moving in and out of the screen
 	if (MyPlayer->isWalking()) {
-		switch (MyPlayer->_pdir) {
+		switch (MyPlayer->direction) {
 		case Direction::NoDirection:
 			break;
 		case Direction::North:

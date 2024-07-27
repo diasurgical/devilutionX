@@ -1195,7 +1195,7 @@ void MonsterAttackPlayer(Monster &monster, Player &player, int hit, int minDam, 
 		Point newPosition = player.position.tile + monster.direction;
 		if (PosOkPlayer(player, newPosition)) {
 			player.position.tile = newPosition;
-			FixPlayerLocation(player, player._pdir);
+			FixPlayerLocation(player, player.direction);
 			FixPlrWalkTags(player);
 			player.occupyTile(newPosition, false);
 			SetPlayerOld(player);
@@ -3994,7 +3994,7 @@ void GolumAi(Monster &golem)
 	if (golem.pathCount > 8)
 		golem.pathCount = 5;
 
-	if (RandomWalk(golem, Players[golem.getId()]._pdir))
+	if (RandomWalk(golem, Players[golem.getId()].direction))
 		return;
 
 	Direction md = Left(golem.direction);
@@ -4454,7 +4454,7 @@ void MissToMonst(Missile &missile, Point position)
 		Point newPosition = oldPosition + monster.direction;
 		if (PosOkPlayer(*player, newPosition)) {
 			player->position.tile = newPosition;
-			FixPlayerLocation(*player, player->_pdir);
+			FixPlayerLocation(*player, player->direction);
 			FixPlrWalkTags(*player);
 			player->occupyTile(newPosition, false);
 			SetPlayerOld(*player);

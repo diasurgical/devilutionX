@@ -1895,7 +1895,7 @@ void OperateBook(Player &player, Object &book, bool sendmsg)
 		AddMissile(
 		    player.position.tile,
 		    book.position + Displacement { -2, -4 },
-		    player._pdir,
+		    player.direction,
 		    MissileID::Guardian,
 		    TARGET_MONSTERS,
 		    player,
@@ -2384,7 +2384,7 @@ void OperateShrineMagical(const Player &player)
 	AddMissile(
 	    player.position.tile,
 	    player.position.tile,
-	    player._pdir,
+	    player.direction,
 	    MissileID::ManaShield,
 	    TARGET_MONSTERS,
 	    player,
@@ -2541,7 +2541,7 @@ void OperateShrineCryptic(Player &player)
 	AddMissile(
 	    player.position.tile,
 	    player.position.tile,
-	    player._pdir,
+	    player.direction,
 	    MissileID::Nova,
 	    TARGET_MONSTERS,
 	    player,
@@ -2819,7 +2819,7 @@ void OperateShrineOily(Player &player, Point spawnPosition)
 	AddMissile(
 	    spawnPosition,
 	    player.position.tile,
-	    player._pdir,
+	    player.direction,
 	    MissileID::FireWall,
 	    TARGET_PLAYERS,
 	    -1,
@@ -2878,7 +2878,7 @@ void OperateShrineSparkling(Player &player, Point spawnPosition)
 	AddMissile(
 	    spawnPosition,
 	    player.position.tile,
-	    player._pdir,
+	    player.direction,
 	    MissileID::FlashBottom,
 	    TARGET_PLAYERS,
 	    -1,
@@ -2903,7 +2903,7 @@ void OperateShrineTown(const Player &player, Point spawnPosition)
 	AddMissile(
 	    spawnPosition,
 	    player.position.tile,
-	    player._pdir,
+	    player.direction,
 	    MissileID::TownPortal,
 	    TARGET_MONSTERS,
 	    player,
@@ -3258,7 +3258,7 @@ bool OperateFountains(Player &player, Object &fountain)
 		AddMissile(
 		    player.position.tile,
 		    player.position.tile,
-		    player._pdir,
+		    player.direction,
 		    MissileID::Infravision,
 		    TARGET_MONSTERS,
 		    player,
