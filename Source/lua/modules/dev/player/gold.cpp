@@ -24,7 +24,7 @@ std::string DebugCmdGiveGoldCheat(std::optional<int> amount)
 		if (itemIndex < 0)
 			continue;
 
-		Item &item = myPlayer.InvList[itemIndex != 0 ? itemIndex - 1 : myPlayer._pNumInv];
+		Item &item = myPlayer.InvList[itemIndex != 0 ? itemIndex - 1 : myPlayer.numInventoryItems];
 
 		if (itemIndex != 0) {
 			if ((!item.isGold() && !item.isEmpty()) || (item.isGold() && item._ivalue == GOLD_MAX_LIMIT))
@@ -32,8 +32,8 @@ std::string DebugCmdGiveGoldCheat(std::optional<int> amount)
 		} else {
 			if (item.isEmpty()) {
 				MakeGoldStack(item, 0);
-				myPlayer._pNumInv++;
-				itemIndex = myPlayer._pNumInv;
+				myPlayer.numInventoryItems++;
+				itemIndex = myPlayer.numInventoryItems;
 			}
 		}
 

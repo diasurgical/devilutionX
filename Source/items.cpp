@@ -3057,7 +3057,7 @@ void CreatePlrItems(Player &player)
 		item.clear();
 	}
 
-	player._pNumInv = 0;
+	player.numInventoryItems = 0;
 
 	for (auto &item : player.SpdList) {
 		item.clear();
@@ -3091,11 +3091,11 @@ void CreatePlrItems(Player &player)
 	FreeCursor();
 
 	if (loadout.gold > 0) {
-		Item &goldItem = player.InvList[player._pNumInv];
+		Item &goldItem = player.InvList[player.numInventoryItems];
 		MakeGoldStack(goldItem, loadout.gold);
 
-		player._pNumInv++;
-		player.InvGrid[30] = player._pNumInv;
+		player.numInventoryItems++;
+		player.InvGrid[30] = player.numInventoryItems;
 
 		player._pGold = goldItem._ivalue;
 	}
@@ -4976,7 +4976,7 @@ void RechargeItem(Item &item, Player &player)
 		NetSendCmdChItem(true, INVLOC_HAND_RIGHT);
 		return;
 	}
-	for (int i = 0; i < player._pNumInv; i++) {
+	for (int i = 0; i < player.numInventoryItems; i++) {
 		if (&item == &player.InvList[i]) {
 			NetSyncInvItem(player, i);
 			break;

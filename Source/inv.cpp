@@ -469,20 +469,20 @@ bool ChangeInvItem(Player &player, int slot, Size itemSize)
 				player.InvList[invIndex]._iCurs = ICURS_GOLD_LARGE;
 			}
 		} else {
-			const int invIndex = player._pNumInv;
+			const int invIndex = player.numInventoryItems;
 			player._pGold += player.HoldItem._ivalue;
 			player.InvList[invIndex] = player.HoldItem.pop();
-			player._pNumInv++;
-			player.InvGrid[ii] = player._pNumInv;
+			player.numInventoryItems++;
+			player.InvGrid[ii] = player.numInventoryItems;
 		}
 		if (&player == MyPlayer) {
 			NetSendCmdChInvItem(false, ii);
 		}
 	} else {
 		if (prevItemId == 0) {
-			player.InvList[player._pNumInv] = player.HoldItem.pop();
-			player._pNumInv++;
-			prevItemId = player._pNumInv;
+			player.InvList[player.numInventoryItems] = player.HoldItem.pop();
+			player.numInventoryItems++;
+			prevItemId = player.numInventoryItems;
 		} else {
 			const int invIndex = prevItemId - 1;
 			if (player.HoldItem._itype == ItemType::Gold)
@@ -782,8 +782,8 @@ void CheckInvCut(Player &player, Point cursorPosition, bool automaticMove, bool 
 							holdItem = player.InvBody[INVLOC_HAND_LEFT];
 							if (!AutoPlaceItemInInventory(player, holdItem, false)) {
 								// No space for left item. Move back right item to right hand and abort.
-								player.InvBody[INVLOC_HAND_RIGHT] = player.InvList[player._pNumInv - 1];
-								player.RemoveInvItem(player._pNumInv - 1, false);
+								player.InvBody[INVLOC_HAND_RIGHT] = player.InvList[player.numInventoryItems - 1];
+								player.RemoveInvItem(player.numInventoryItems - 1, false);
 								break;
 							}
 							RemoveEquipment(player, INVLOC_HAND_RIGHT, false);
@@ -1018,10 +1018,10 @@ int CreateGoldItemInInventorySlot(Player &player, int slotIndex, int value)
 		return value;
 	}
 
-	Item &goldItem = player.InvList[player._pNumInv];
+	Item &goldItem = player.InvList[player.numInventoryItems];
 	MakeGoldStack(goldItem, std::min(value, MaxGold));
-	player._pNumInv++;
-	player.InvGrid[slotIndex] = player._pNumInv;
+	player.numInventoryItems++;
+	player.InvGrid[slotIndex] = player.numInventoryItems;
 	if (&player == MyPlayer) {
 		NetSendCmdChInvItem(false, slotIndex);
 	}
@@ -1332,10 +1332,10 @@ bool AutoPlaceItemInInventorySlot(Player &player, int slotIndex, const Item &ite
 	}
 
 	if (persistItem) {
-		player.InvList[player._pNumInv] = item;
-		player._pNumInv++;
+		player.InvList[player.numInventoryItems] = item;
+		player.numInventoryItems++;
 
-		AddItemToInvGrid(player, slotIndex, player._pNumInv, itemSize, sendNetworkMessage);
+		AddItemToInvGrid(player, slotIndex, player.numInventoryItems, itemSize, sendNetworkMessage);
 		player.CalcScrolls();
 	}
 
@@ -1406,9 +1406,9 @@ bool AutoPlaceItemInInventory(Player &player, const Item &item, bool persistItem
 std::vector<int> SortItemsBySize(Player &player)
 {
 	std::vector<std::pair<Size, int>> itemSizes; // Pair of item size and its index in InvList
-	itemSizes.reserve(player._pNumInv);          // Reserves space for the number of items in the player's inventory
+	itemSizes.reserve(player.numInventoryItems);          // Reserves space for the number of items in the player's inventory
 
-	for (int i = 0; i < player._pNumInv; i++) {
+	for (int i = 0; i < player.numInventoryItems; i++) {
 		Size size = GetInventorySize(player.InvList[i]);
 		itemSizes.emplace_back(size, i);
 	}
@@ -1436,16 +1436,16 @@ void ReorganizeInventory(Player &player)
 	std::vector<int> sortedIndices = SortItemsBySize(player);
 
 	// Temporary storage for items and a copy of InvGrid
-	std::vector<Item> tempStorage(player._pNumInv);
+	std::vector<Item> tempStorage(player.numInventoryItems);
 	std::array<int8_t, 40> originalInvGrid;                                                       // Declare an array for InvGrid copy
 	std::copy(std::begin(player.InvGrid), std::end(player.InvGrid), std::begin(originalInvGrid)); // Copy InvGrid to originalInvGrid
 
 	// Move items to temporary storage and clear inventory slots
-	for (int i = 0; i < player._pNumInv; ++i) {
+	for (int i = 0; i < player.numInventoryItems; ++i) {
 		tempStorage[i] = player.InvList[i];
 		player.InvList[i] = {};
 	}
-	player._pNumInv = 0;                                                // Reset inventory count
+	player.numInventoryItems = 0;                                                // Reset inventory count
 	std::fill(std::begin(player.InvGrid), std::end(player.InvGrid), 0); // Clear InvGrid
 
 	// Attempt to place items back, now from the temp storage
@@ -1462,7 +1462,7 @@ void ReorganizeInventory(Player &player)
 	if (reorganizationFailed) {
 		for (Item &item : tempStorage) {
 			if (!item.isEmpty()) {
-				player.InvList[player._pNumInv++] = item;
+				player.InvList[player.numInventoryItems++] = item;
 			}
 		}
 		std::copy(std::begin(originalInvGrid), std::end(originalInvGrid), std::begin(player.InvGrid)); // Restore InvGrid
@@ -1495,7 +1495,7 @@ int RoomForGold()
 int AddGoldToInventory(Player &player, int value)
 {
 	// Top off existing piles
-	for (int i = 0; i < player._pNumInv && value > 0; i++) {
+	for (int i = 0; i < player.numInventoryItems && value > 0; i++) {
 		Item &goldItem = player.InvList[i];
 		if (goldItem._itype != ItemType::Gold || goldItem._ivalue >= MaxGold) {
 			continue;
@@ -1572,11 +1572,11 @@ void CheckInvSwap(Player &player, const Item &item, int invGridIndex)
 					return std::abs(player.InvGrid[gridIndex]);
 			}
 		}
-		player._pNumInv++;
-		return player._pNumInv;
+		player.numInventoryItems++;
+		return player.numInventoryItems;
 	}();
 
-	if (invListIndex < player._pNumInv) {
+	if (invListIndex < player.numInventoryItems) {
 		for (int8_t &itemIndex : player.InvGrid) {
 			if (itemIndex == invListIndex)
 				itemIndex = 0;
@@ -2092,7 +2092,7 @@ bool UseInvItem(int cii)
 		speedlist = true;
 
 		// If selected speedlist item exists in InvList, use the InvList item.
-		for (int i = 0; i < player._pNumInv && *sgOptions.Gameplay.autoRefillBelt; i++) {
+		for (int i = 0; i < player.numInventoryItems && *sgOptions.Gameplay.autoRefillBelt; i++) {
 			if (player.InvList[i]._iMiscId == item->_iMiscId && player.InvList[i]._iSpell == item->_iSpell) {
 				c = i;
 				item = &player.InvList[c];
@@ -2253,7 +2253,7 @@ int CalculateGold(Player &player)
 {
 	int gold = 0;
 
-	for (int i = 0; i < player._pNumInv; i++) {
+	for (int i = 0; i < player.numInventoryItems; i++) {
 		if (player.InvList[i]._itype == ItemType::Gold)
 			gold += player.InvList[i]._ivalue;
 	}

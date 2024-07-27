@@ -49,14 +49,14 @@ void clear_inventory()
 		MyPlayer->InvList[i] = {};
 		MyPlayer->InvGrid[i] = 0;
 	}
-	MyPlayer->_pNumInv = 0;
+	MyPlayer->numInventoryItems = 0;
 }
 
 // Test that the scroll is used in the inventory in correct conditions
 TEST_F(InvTest, UseScroll_from_inventory)
 {
 	set_up_scroll(MyPlayer->InvList[2], SpellID::Firebolt);
-	MyPlayer->_pNumInv = 5;
+	MyPlayer->numInventoryItems = 5;
 	EXPECT_TRUE(CanUseScroll(*MyPlayer, SpellID::Firebolt));
 }
 
@@ -76,7 +76,7 @@ TEST_F(InvTest, UseScroll_from_inventory_invalid_conditions)
 	}
 
 	// Adjust inventory size
-	MyPlayer->_pNumInv = 5;
+	MyPlayer->numInventoryItems = 5;
 
 	set_up_scroll(MyPlayer->InvList[2], SpellID::Firebolt);
 	leveltype = DTYPE_TOWN;
@@ -99,7 +99,7 @@ TEST_F(InvTest, UseScroll_from_inventory_invalid_conditions)
 TEST_F(InvTest, UseScroll_from_belt_invalid_conditions)
 {
 	// Disable the inventory to prevent using a scroll from the inventory
-	MyPlayer->_pNumInv = 0;
+	MyPlayer->numInventoryItems = 0;
 
 	set_up_scroll(MyPlayer->SpdList[2], SpellID::Firebolt);
 	leveltype = DTYPE_TOWN;
@@ -121,7 +121,7 @@ TEST_F(InvTest, UseScroll_from_belt_invalid_conditions)
 // Test gold calculation
 TEST_F(InvTest, CalculateGold)
 {
-	MyPlayer->_pNumInv = 10;
+	MyPlayer->numInventoryItems = 10;
 	// Set up 4 slots of gold in the inventory
 	MyPlayer->InvList[1]._itype = ItemType::Gold;
 	MyPlayer->InvList[5]._itype = ItemType::Gold;
@@ -148,7 +148,7 @@ TEST_F(InvTest, GoldAutoPlace)
 	// | 1000 | ... | ...
 	MyPlayer->InvList[0]._itype = ItemType::Gold;
 	MyPlayer->InvList[0]._ivalue = 1000;
-	MyPlayer->_pNumInv = 1;
+	MyPlayer->numInventoryItems = 1;
 	// Put (max gold - 100) gold, which is 4900, into the player's hand
 	MyPlayer->HoldItem._itype = ItemType::Gold;
 	MyPlayer->HoldItem._ivalue = GOLD_MAX_LIMIT - 100;
@@ -168,7 +168,7 @@ TEST_F(InvTest, RemoveInvItem)
 	clear_inventory();
 	// Put a two-slot misc item into the inventory:
 	// | (item) | (item) | ... | ...
-	MyPlayer->_pNumInv = 1;
+	MyPlayer->numInventoryItems = 1;
 	MyPlayer->InvGrid[0] = 1;
 	MyPlayer->InvGrid[1] = -1;
 	MyPlayer->InvList[0]._itype = ItemType::Misc;
@@ -176,7 +176,7 @@ TEST_F(InvTest, RemoveInvItem)
 	MyPlayer->RemoveInvItem(0);
 	EXPECT_EQ(MyPlayer->InvGrid[0], 0);
 	EXPECT_EQ(MyPlayer->InvGrid[1], 0);
-	EXPECT_EQ(MyPlayer->_pNumInv, 0);
+	EXPECT_EQ(MyPlayer->numInventoryItems, 0);
 }
 
 // Test removing an item from inventory with other items in it.
@@ -187,7 +187,7 @@ TEST_F(InvTest, RemoveInvItem_other_item)
 	clear_inventory();
 	// Put a two-slot misc item and a ring into the inventory:
 	// | (item) | (item) | (ring) | ...
-	MyPlayer->_pNumInv = 2;
+	MyPlayer->numInventoryItems = 2;
 	MyPlayer->InvGrid[0] = 1;
 	MyPlayer->InvGrid[1] = -1;
 	MyPlayer->InvList[0]._itype = ItemType::Misc;
@@ -200,7 +200,7 @@ TEST_F(InvTest, RemoveInvItem_other_item)
 	EXPECT_EQ(MyPlayer->InvGrid[1], 0);
 	EXPECT_EQ(MyPlayer->InvGrid[2], 1);
 	EXPECT_EQ(MyPlayer->InvList[0]._itype, ItemType::Ring);
-	EXPECT_EQ(MyPlayer->_pNumInv, 1);
+	EXPECT_EQ(MyPlayer->numInventoryItems, 1);
 }
 
 // Test removing an item from the belt
@@ -225,7 +225,7 @@ TEST_F(InvTest, RemoveCurrentSpellScrollFromInventory)
 	clear_inventory();
 
 	// Put a firebolt scroll into the inventory
-	MyPlayer->_pNumInv = 1;
+	MyPlayer->numInventoryItems = 1;
 	MyPlayer->executedSpell.spellId = SpellID::Firebolt;
 	MyPlayer->executedSpell.spellFrom = INVITEM_INV_FIRST;
 	MyPlayer->InvList[0]._itype = ItemType::Misc;
@@ -234,7 +234,7 @@ TEST_F(InvTest, RemoveCurrentSpellScrollFromInventory)
 
 	ConsumeScroll(*MyPlayer);
 	EXPECT_EQ(MyPlayer->InvGrid[0], 0);
-	EXPECT_EQ(MyPlayer->_pNumInv, 0);
+	EXPECT_EQ(MyPlayer->numInventoryItems, 0);
 }
 
 // Test removing the first matching scroll from inventory
@@ -243,7 +243,7 @@ TEST_F(InvTest, RemoveCurrentSpellScrollFromInventoryFirstMatch)
 	clear_inventory();
 
 	// Put a firebolt scroll into the inventory
-	MyPlayer->_pNumInv = 1;
+	MyPlayer->numInventoryItems = 1;
 	MyPlayer->executedSpell.spellId = SpellID::Firebolt;
 	MyPlayer->executedSpell.spellFrom = 0; // any matching scroll
 	MyPlayer->InvList[0]._itype = ItemType::Misc;
@@ -252,7 +252,7 @@ TEST_F(InvTest, RemoveCurrentSpellScrollFromInventoryFirstMatch)
 
 	ConsumeScroll(*MyPlayer);
 	EXPECT_EQ(MyPlayer->InvGrid[0], 0);
-	EXPECT_EQ(MyPlayer->_pNumInv, 0);
+	EXPECT_EQ(MyPlayer->numInventoryItems, 0);
 }
 
 // Test removing a scroll from the belt

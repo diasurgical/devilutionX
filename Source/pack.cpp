@@ -59,10 +59,10 @@ void LogFailedJoinAttempt(const char *condition, const char *name1, T1 value1, c
 
 void VerifyGoldSeeds(Player &player)
 {
-	for (int i = 0; i < player._pNumInv; i++) {
+	for (int i = 0; i < player.numInventoryItems; i++) {
 		if (player.InvList[i].IDidx != IDI_GOLD)
 			continue;
-		for (int j = 0; j < player._pNumInv; j++) {
+		for (int j = 0; j < player.numInventoryItems; j++) {
 			if (i == j)
 				continue;
 			if (player.InvList[j].IDidx != IDI_GOLD)
@@ -283,8 +283,8 @@ void PackPlayer(PlayerPack &packed, const Player &player)
 	for (int i = 0; i < NUM_INVLOC; i++)
 		PackItem(packed.InvBody[i], player.InvBody[i], gbIsHellfire);
 
-	packed._pNumInv = player._pNumInv;
-	for (int i = 0; i < packed._pNumInv; i++)
+	packed.numInventoryItems = player.numInventoryItems;
+	for (int i = 0; i < packed.numInventoryItems; i++)
 		PackItem(packed.InvList[i], player.InvList[i], gbIsHellfire);
 
 	for (int i = 0; i < InventoryGridCells; i++)
@@ -340,8 +340,8 @@ void PackNetPlayer(PlayerNetPack &packed, const Player &player)
 	for (int i = 0; i < NUM_INVLOC; i++)
 		PackNetItem(player.InvBody[i], packed.InvBody[i]);
 
-	packed._pNumInv = player._pNumInv;
-	for (int i = 0; i < packed._pNumInv; i++)
+	packed.numInventoryItems = player.numInventoryItems;
+	for (int i = 0; i < packed.numInventoryItems; i++)
 		PackNetItem(player.InvList[i], packed.InvList[i]);
 
 	for (int i = 0; i < InventoryGridCells; i++)
@@ -512,8 +512,8 @@ void UnPackPlayer(const PlayerPack &packed, Player &player)
 	for (int i = 0; i < NUM_INVLOC; i++)
 		UnPackItem(packed.InvBody[i], player, player.InvBody[i], isHellfire);
 
-	player._pNumInv = packed._pNumInv;
-	for (int i = 0; i < player._pNumInv; i++)
+	player.numInventoryItems = packed.numInventoryItems;
+	for (int i = 0; i < player.numInventoryItems; i++)
 		UnPackItem(packed.InvList[i], player, player.InvList[i], isHellfire);
 
 	for (int i = 0; i < InventoryGridCells; i++)
@@ -583,7 +583,7 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 	ValidateFields(packed.pClass, packed.pBaseDex, packed.pBaseDex <= player.GetMaximumAttributeValue(CharacterAttribute::Dexterity));
 	ValidateFields(packed.pClass, packed.pBaseVit, packed.pBaseVit <= player.GetMaximumAttributeValue(CharacterAttribute::Vitality));
 
-	ValidateField(packed._pNumInv, packed._pNumInv <= InventoryGridCells);
+	ValidateField(packed.numInventoryItems, packed.numInventoryItems <= InventoryGridCells);
 
 	player.setCharacterLevel(packed.pLevel);
 	player.position.tile = position;
@@ -649,8 +649,8 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 		}
 	}
 
-	player._pNumInv = packed._pNumInv;
-	for (int i = 0; i < player._pNumInv; i++) {
+	player.numInventoryItems = packed.numInventoryItems;
+	for (int i = 0; i < player.numInventoryItems; i++) {
 		if (!UnPackNetItem(player, packed.InvList[i], player.InvList[i]))
 			return false;
 	}

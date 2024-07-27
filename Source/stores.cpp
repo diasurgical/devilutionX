@@ -521,7 +521,7 @@ void StartSmithSell()
 
 	const Player &myPlayer = *MyPlayer;
 
-	for (int8_t i = 0; i < myPlayer._pNumInv; i++) {
+	for (int8_t i = 0; i < myPlayer.numInventoryItems; i++) {
 		if (storenumh >= 48)
 			break;
 		if (SmithSellOk(i)) {
@@ -567,7 +567,7 @@ void StartSmithSell()
 
 	stextscrl = true;
 	stextsval = 0;
-	stextsmax = myPlayer._pNumInv;
+	stextsmax = myPlayer.numInventoryItems;
 
 	RenderGold = true;
 	AddSText(20, 1, _("Which item is for sale?"), UiFlags::ColorWhitegold, false);
@@ -626,7 +626,7 @@ void StartSmithRepair()
 		AddStoreHoldRepair(&rightHand, -4);
 	}
 
-	for (int i = 0; i < myPlayer._pNumInv; i++) {
+	for (int i = 0; i < myPlayer.numInventoryItems; i++) {
 		if (storenumh >= 48)
 			break;
 		if (SmithRepairOk(i)) {
@@ -646,7 +646,7 @@ void StartSmithRepair()
 
 	stextscrl = true;
 	stextsval = 0;
-	stextsmax = myPlayer._pNumInv;
+	stextsmax = myPlayer.numInventoryItems;
 
 	RenderGold = true;
 	AddSText(20, 1, _("Repair which item?"), UiFlags::ColorWhitegold, false);
@@ -771,7 +771,7 @@ void StartWitchSell()
 
 	const Player &myPlayer = *MyPlayer;
 
-	for (int i = 0; i < myPlayer._pNumInv; i++) {
+	for (int i = 0; i < myPlayer.numInventoryItems; i++) {
 		if (storenumh >= 48)
 			break;
 		if (WitchSellOk(i)) {
@@ -818,7 +818,7 @@ void StartWitchSell()
 
 	stextscrl = true;
 	stextsval = 0;
-	stextsmax = myPlayer._pNumInv;
+	stextsmax = myPlayer.numInventoryItems;
 
 	RenderGold = true;
 	AddSText(20, 1, _("Which item is for sale?"), UiFlags::ColorWhitegold, false);
@@ -870,7 +870,7 @@ void StartWitchRecharge()
 		AddStoreHoldRecharge(leftHand, -1);
 	}
 
-	for (int i = 0; i < myPlayer._pNumInv; i++) {
+	for (int i = 0; i < myPlayer.numInventoryItems; i++) {
 		if (storenumh >= 48)
 			break;
 		if (WitchRechargeOk(i)) {
@@ -891,7 +891,7 @@ void StartWitchRecharge()
 
 	stextscrl = true;
 	stextsval = 0;
-	stextsmax = myPlayer._pNumInv;
+	stextsmax = myPlayer.numInventoryItems;
 
 	RenderGold = true;
 	AddSText(20, 1, _("Recharge which item?"), UiFlags::ColorWhitegold, false);
@@ -1152,7 +1152,7 @@ void StartStorytellerIdentify()
 		AddStoreHoldId(amulet, -7);
 	}
 
-	for (int i = 0; i < myPlayer._pNumInv; i++) {
+	for (int i = 0; i < myPlayer.numInventoryItems; i++) {
 		if (storenumh >= 48)
 			break;
 		auto &item = myPlayer.InvList[i];
@@ -1174,7 +1174,7 @@ void StartStorytellerIdentify()
 
 	stextscrl = true;
 	stextsval = 0;
-	stextsmax = myPlayer._pNumInv;
+	stextsmax = myPlayer.numInventoryItems;
 
 	RenderGold = true;
 	AddSText(20, 1, _("Identify which item?"), UiFlags::ColorWhitegold, false);
@@ -2046,7 +2046,7 @@ void DrunkEnter()
 
 int TakeGold(Player &player, int cost, bool skipMaxPiles)
 {
-	for (int i = 0; i < player._pNumInv; i++) {
+	for (int i = 0; i < player.numInventoryItems; i++) {
 		auto &item = player.InvList[i];
 		if (item._itype != ItemType::Gold || (skipMaxPiles && item._ivalue == MaxGold))
 			continue;

@@ -225,7 +225,7 @@ struct Player {
 
 	int lightId;
 
-	int _pNumInv;
+	int numInventoryItems; // _pNumInv
 	int _pStrength;
 	int _pBaseStr;
 	int _pMagic;
@@ -488,7 +488,7 @@ public:
 
 		const Item *mostValuableItem = getMostValuableItem(SpdList, SpdList + MaxBeltItems);
 		mostValuableItem = getMostValuableItem(InvBody, InvBody + inv_body_loc::NUM_INVLOC, mostValuableItem);
-		mostValuableItem = getMostValuableItem(InvList, InvList + _pNumInv, mostValuableItem);
+		mostValuableItem = getMostValuableItem(InvList, InvList + numInventoryItems, mostValuableItem);
 
 		return mostValuableItem;
 	}

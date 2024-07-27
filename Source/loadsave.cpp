@@ -522,7 +522,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	for (Item &item : player.InvList)
 		LoadAndValidateItemData(file, item);
 
-	player._pNumInv = file.NextLE<int32_t>();
+	player.numInventoryItems = file.NextLE<int32_t>();
 
 	for (int8_t &cell : player.InvGrid)
 		cell = file.NextLE<int8_t>();
@@ -1346,7 +1346,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	for (const Item &item : player.InvList)
 		SaveItem(file, item);
 
-	file.WriteLE<int32_t>(player._pNumInv);
+	file.WriteLE<int32_t>(player.numInventoryItems);
 
 	for (int8_t cell : player.InvGrid)
 		file.WriteLE<int8_t>(cell);

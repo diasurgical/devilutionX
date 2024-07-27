@@ -27,7 +27,7 @@ R 64 pMemSpells
 C 7 itemPack InvBody
 C 40 itemPack InvList
 M 40 8 InvGrid
-R 8 _pNumInv
+R 8 numInventoryItems
 C 8 itemPack SpdList
 R 8 pTownWarps
 R 8 pDungMsgs

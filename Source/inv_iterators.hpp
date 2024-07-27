@@ -251,7 +251,7 @@ public:
 private:
 	[[nodiscard]] std::size_t containerSize() const
 	{
-		return static_cast<std::size_t>(player_->_pNumInv);
+		return static_cast<std::size_t>(player_->numInventoryItems);
 	}
 
 	PlayerT *player_;
