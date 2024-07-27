@@ -456,7 +456,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	player.setCharacterLevel(file.NextLE<uint8_t>());
 	file.Skip<uint8_t>(); // Skip _pMaxLevel - unused
 	file.Skip(2);         // Alignment
-	player._pExperience = file.NextLE<uint32_t>();
+	player.experiencePoints = file.NextLE<uint32_t>();
 	file.Skip<uint32_t>(); // Skip _pMaxExp - unused
 	file.Skip<uint32_t>(); // Skip _pNextExper, we retrieve it when needed based on _pLevel
 	player._pArmorClass = file.NextLE<int8_t>();
@@ -1280,7 +1280,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.WriteLE<uint8_t>(player.getCharacterLevel());
 	file.Skip<uint8_t>(); // skip _pMaxLevel, this value is uninitialised in most cases in Diablo/Hellfire so there's no point setting it.
 	file.Skip(2);         // Alignment
-	file.WriteLE<uint32_t>(player._pExperience);
+	file.WriteLE<uint32_t>(player.experiencePoints);
 	file.Skip<uint32_t>();                                       // Skip _pMaxExp
 	file.WriteLE<uint32_t>(player.getNextExperienceThreshold()); // set _pNextExper for backwards compatibility
 	file.WriteLE<int8_t>(player._pArmorClass);

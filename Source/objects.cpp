@@ -2835,13 +2835,13 @@ void OperateShrineGlowing(Player &player)
 		return;
 
 	// Add 0-5 points to Magic (0.1% of the players XP)
-	ModifyPlrMag(player, static_cast<int>(std::min<uint32_t>(player._pExperience / 1000, 5)));
+	ModifyPlrMag(player, static_cast<int>(std::min<uint32_t>(player.experiencePoints / 1000, 5)));
 
 	// Take 5% of the players experience to offset the bonus, unless they're very low level in which case take all their experience.
-	if (player._pExperience > 5000)
-		player._pExperience = static_cast<uint32_t>(player._pExperience * 0.95);
+	if (player.experiencePoints > 5000)
+		player.experiencePoints = static_cast<uint32_t>(player.experiencePoints * 0.95);
 	else
-		player._pExperience = 0;
+		player.experiencePoints = 0;
 
 	CheckStats(player);
 	RedrawEverything();

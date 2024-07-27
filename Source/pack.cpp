@@ -267,7 +267,7 @@ void PackPlayer(PlayerPack &packed, const Player &player)
 	packed.pBaseVit = player._pBaseVit;
 	packed.pLevel = player.getCharacterLevel();
 	packed.pStatPts = player._pStatPts;
-	packed.pExperience = SDL_SwapLE32(player._pExperience);
+	packed.pExperience = SDL_SwapLE32(player.experiencePoints);
 	packed.pGold = SDL_SwapLE32(player._pGold);
 	packed.pHPBase = SDL_SwapLE32(player._pHPBase);
 	packed.pMaxHPBase = SDL_SwapLE32(player._pMaxHPBase);
@@ -327,7 +327,7 @@ void PackNetPlayer(PlayerNetPack &packed, const Player &player)
 	packed.pBaseVit = player._pBaseVit;
 	packed.pLevel = player.getCharacterLevel();
 	packed.pStatPts = player._pStatPts;
-	packed.pExperience = SDL_SwapLE32(player._pExperience);
+	packed.pExperience = SDL_SwapLE32(player.experiencePoints);
 	packed.pHPBase = SDL_SwapLE32(player._pHPBase);
 	packed.pMaxHPBase = SDL_SwapLE32(player._pMaxHPBase);
 	packed.pManaBase = SDL_SwapLE32(player._pManaBase);
@@ -475,7 +475,7 @@ void UnPackPlayer(const PlayerPack &packed, Player &player)
 	player._pVitality = player._pBaseVit;
 	player._pStatPts = packed.pStatPts;
 
-	player._pExperience = SDL_SwapLE32(packed.pExperience);
+	player.experiencePoints = SDL_SwapLE32(packed.pExperience);
 	player._pGold = SDL_SwapLE32(packed.pGold);
 	if ((int)(player._pHPBase & 0xFFFFFFC0) < 64)
 		player._pHPBase = 64;
@@ -610,7 +610,7 @@ bool UnPackNetPlayer(const PlayerNetPack &packed, Player &player)
 	player._pVitality = player._pBaseVit;
 	player._pStatPts = packed.pStatPts;
 
-	player._pExperience = SDL_SwapLE32(packed.pExperience);
+	player.experiencePoints = SDL_SwapLE32(packed.pExperience);
 	player._pMaxManaBase = baseManaMax;
 	player._pManaBase = baseMana;
 	player._pMemSpells = SDL_SwapLE64(packed.pMemSpells);

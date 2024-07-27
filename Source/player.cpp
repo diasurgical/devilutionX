@@ -1422,8 +1422,8 @@ void ValidatePlayer()
 	// Player::setCharacterLevel ensures that the player level is within the expected range in case someone has edited their character level in memory
 	myPlayer.setCharacterLevel(myPlayer.getCharacterLevel());
 	// This lets us catch cases where someone is editing experience directly through memory modification and reset their experience back to the expected cap.
-	if (myPlayer._pExperience > myPlayer.getNextExperienceThreshold()) {
-		myPlayer._pExperience = myPlayer.getNextExperienceThreshold();
+	if (myPlayer.experiencePoints > myPlayer.getNextExperienceThreshold()) {
+		myPlayer.experiencePoints = myPlayer.getNextExperienceThreshold();
 		if (*sgOptions.Gameplay.experienceBar) {
 			RedrawEverything();
 		}
@@ -2296,7 +2296,7 @@ void CreatePlayer(Player &player, HeroClass c)
 	player._pManaBase = player._pMana;
 	player._pMaxManaBase = player._pMana;
 
-	player._pExperience = 0;
+	player.experiencePoints = 0;
 	player._pArmorClass = 0;
 	player._pLightRad = 10;
 	player._pInfraFlag = false;
@@ -2410,14 +2410,14 @@ void Player::_addExperience(uint32_t experience, int levelDelta)
 	const uint32_t maxExperience = GetNextExperienceThresholdForLevel(getMaxCharacterLevel());
 
 	// ensure we only add enough experience to reach the max experience cap so we don't overflow
-	_pExperience += std::min(clampedExp, maxExperience - _pExperience);
+	experiencePoints += std::min(clampedExp, maxExperience - experiencePoints);
 
 	if (*sgOptions.Gameplay.experienceBar) {
 		RedrawEverything();
 	}
 
 	// Increase player level if applicable
-	while (!isMaxCharacterLevel() && _pExperience >= getNextExperienceThreshold()) {
+	while (!isMaxCharacterLevel() && experiencePoints >= getNextExperienceThreshold()) {
 		// NextPlrLevel increments character level which changes the next experience threshold
 		NextPlrLevel(*this);
 	}

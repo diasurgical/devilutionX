@@ -259,7 +259,7 @@ struct Player {
 	int _pIFMaxDam;
 	int _pILMinDam;
 	int _pILMaxDam;
-	uint32_t _pExperience;
+	uint32_t experiencePoints; // _pExperience
 	PLR_MODE _pmode;
 	int8_t walkpath[MaxPathLength];
 	bool plractive;
