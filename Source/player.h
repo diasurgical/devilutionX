@@ -282,8 +282,8 @@ struct Player {
 	 * @brief Contains the progress to next game tick when previewCelSprite was set
 	 */
 	int8_t progressToNextGameTickWhenPreviewWasSet;
-	/** @brief Bitmask using item_special_effect */
-	ItemSpecialEffect itemFlags; // _pIFlags
+	/** @brief Bitmask using item_special_effect (_pIFlags) */
+	ItemSpecialEffect itemFlags;
 	/**
 	 * @brief Contains Data (Sprites) for the different Animations
 	 */
