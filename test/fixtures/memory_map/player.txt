@@ -92,7 +92,7 @@ R 32 _pExperience
 R 32 _pMaxExp
 R 32 _pNextExper
 R 8 _pArmorClass
-R 8 _pMagResist
+R 8 resistMagic
 R 8 _pFireResist
 R 8 _pLghtResist
 R 32 _pGold

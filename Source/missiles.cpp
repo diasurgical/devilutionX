@@ -314,7 +314,7 @@ bool Plr2PlrMHit(const Player &player, Player &target, int mindam, int maxdam, i
 		break;
 	case DamageType::Magic:
 	case DamageType::Acid:
-		resper = target._pMagResist;
+		resper = target.resistMagic;
 		break;
 	default:
 		resper = 0;
@@ -1046,7 +1046,7 @@ bool PlayerMHit(Player &player, Monster *monster, int dist, int mind, int maxd, 
 		break;
 	case DamageType::Magic:
 	case DamageType::Acid:
-		resper = player._pMagResist;
+		resper = player.resistMagic;
 		break;
 	default:
 		resper = 0;

@@ -189,7 +189,7 @@ PanelEntry panelEntries[] = {
 	    []() { return StyledText { (InspectPlayer->_pMana != InspectPlayer->_pMaxMana ? UiFlags::ColorRed : GetMaxManaColor()), StrCat(InspectPlayer->_pMana >> 6) }; } },
 
 	{ N_("Resist magic"), { RightColumnLabelX, 256 }, 57, RightColumnLabelWidth,
-	    []() { return GetResistInfo(InspectPlayer->_pMagResist); } },
+	    []() { return GetResistInfo(InspectPlayer->resistMagic); } },
 	{ N_("Resist fire"), { RightColumnLabelX, 284 }, 57, RightColumnLabelWidth,
 	    []() { return GetResistInfo(InspectPlayer->_pFireResist); } },
 	{ N_("Resist lightning"), { RightColumnLabelX, 313 }, 57, RightColumnLabelWidth,

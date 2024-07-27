@@ -344,7 +344,7 @@ public:
 	bool _pLvlChanging;
 
 	int8_t _pArmorClass;
-	int8_t _pMagResist;
+	int8_t resistMagic; // _pMagResist
 	int8_t _pFireResist;
 	int8_t _pLghtResist;
 	bool _pInfraFlag;

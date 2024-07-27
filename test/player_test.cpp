@@ -155,7 +155,7 @@ static void AssertPlayer(Player &player)
 	ASSERT_EQ(player._pMana, 1440);
 	ASSERT_EQ(player._pMaxMana, 1440);
 	ASSERT_EQ(player.getNextExperienceThreshold(), 2000);
-	ASSERT_EQ(player._pMagResist, 0);
+	ASSERT_EQ(player.resistMagic, 0);
 	ASSERT_EQ(player._pFireResist, 0);
 	ASSERT_EQ(player._pLghtResist, 0);
 	ASSERT_EQ(CountBool(player._pLvlVisited, NUMLEVELS), 0);
