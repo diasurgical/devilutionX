@@ -220,7 +220,7 @@ struct AssetHandle {
 
 [[noreturn]] inline void FailedToOpenFileError(std::string_view path, std::string_view error)
 {
-	app_fatal(StrCat("Failed to open file:\n", path, "\n\n", error));
+	app_fatal(StrCat("Failed to open file:\n", path, "\n\n", error, "\n\nYour MPQ file(s) may be corrupted!"));
 }
 
 inline bool ValidatAssetRef(std::string_view path, const AssetRef &ref)
