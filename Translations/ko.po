@@ -2764,8 +2764,8 @@ msgstr "파멸 두루마리"
 
 #: Source/itemdat.cpp:167 Source/itemdat.cpp:168 Source/itemdat.cpp:169
 #: Source/itemdat.cpp:170
-msgid "Book of "
-msgstr "주문서: "
+msgid "Book of {:s}"
+msgstr "주문서: {:s}"
 
 #: Source/itemdat.cpp:173
 msgid "Falchion"

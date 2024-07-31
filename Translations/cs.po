@@ -368,7 +368,7 @@ msgstr "Klient-Server (TCP)"
 
 #: Source/DiabloUI/selconn.cpp:15
 #, fuzzy
-msgid "Offline" 
+msgid "Offline"
 msgstr "Smyčka"
 
 #: Source/DiabloUI/selconn.cpp:54 Source/DiabloUI/selgame.cpp:604
@@ -2469,8 +2469,8 @@ msgstr "Svitek Apokalypsy"
 
 #: Source/itemdat.cpp:167 Source/itemdat.cpp:168 Source/itemdat.cpp:169
 #: Source/itemdat.cpp:170
-msgid "Book of "
-msgstr "Kniha - "
+msgid "Book of {:s}"
+msgstr "Kniha - {:s}"
 
 #: Source/itemdat.cpp:173
 msgid "Falchion"

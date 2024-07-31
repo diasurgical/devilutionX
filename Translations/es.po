@@ -10683,8 +10683,8 @@ msgstr "Pergamino de Apocalipsis"
 
 #: Source/translation_dummy.cpp:388 Source/translation_dummy.cpp:389
 #: Source/translation_dummy.cpp:390 Source/translation_dummy.cpp:391
-msgid "Book of "
-msgstr "Libro de "
+msgid "Book of {:s}"
+msgstr "Libro de {:s}"
 
 #: Source/translation_dummy.cpp:396
 msgid "Falchion"

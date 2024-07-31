@@ -2801,8 +2801,8 @@ msgstr "Pergaminho de Apocalipse"
 
 #: Source/itemdat.cpp:167 Source/itemdat.cpp:168 Source/itemdat.cpp:169
 #: Source/itemdat.cpp:170
-msgid "Book of "
-msgstr "Livro de "
+msgid "Book of {:s}"
+msgstr "Livro de {:s}"
 
 #: Source/itemdat.cpp:173
 msgid "Falchion"

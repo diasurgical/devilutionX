@@ -2796,8 +2796,8 @@ msgstr "Schriftrolle der Apokalypse"
 
 #: Source/itemdat.cpp:167 Source/itemdat.cpp:168 Source/itemdat.cpp:169
 #: Source/itemdat.cpp:170
-msgid "Book of "
-msgstr "Buch mit "
+msgid "Book of {:s}"
+msgstr "Buch mit {:s}"
 
 #: Source/itemdat.cpp:173
 msgid "Falchion"
