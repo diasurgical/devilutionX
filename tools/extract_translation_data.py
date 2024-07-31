@@ -38,7 +38,7 @@ with open(translation_dummy_path, 'w') as temp_source:
         for i, row in enumerate(reader):
             id = row['id']
             name = row['name']
-            if name == 'Scroll of None' or name == 'Non Item':
+            if name == 'Scroll of None' or name == 'Non Item' or name == 'Book of ':
                 continue
             shortName = row['shortName']
             var_name = id if id else f'ITEM_{i}'
