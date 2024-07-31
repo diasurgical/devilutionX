@@ -10088,11 +10088,6 @@ msgstr "传​送术​卷轴"
 msgid "Scroll of Apocalypse"
 msgstr "天​启卷​轴"
 
-#: Source/translation_dummy.cpp:388 Source/translation_dummy.cpp:389
-#: Source/translation_dummy.cpp:390 Source/translation_dummy.cpp:391
-msgid "Book of "
-msgstr "法术​书​： "
-
 #: Source/translation_dummy.cpp:396
 msgid "Falchion"
 msgstr "弯​刃剑"

@@ -509,7 +509,7 @@ msgstr "Client-Server (TCP)"
 
 #: Source/DiabloUI/multi/selconn.cpp:15
 #, fuzzy
-msgid "Offline" 
+msgid "Offline"
 msgstr "Loopback"
 
 #: Source/DiabloUI/multi/selconn.cpp:56 Source/DiabloUI/multi/selgame.cpp:645
@@ -2788,8 +2788,8 @@ msgstr "Pergamena Apocalisse"
 
 #: Source/itemdat.cpp:167 Source/itemdat.cpp:168 Source/itemdat.cpp:169
 #: Source/itemdat.cpp:170
-msgid "Book of "
-msgstr "Libro di "
+msgid "Book of {:s}"
+msgstr "Libro di {:s}"
 
 #: Source/itemdat.cpp:173
 msgid "Falchion"

@@ -2918,8 +2918,8 @@ msgstr "アポカリプス​・​スクロール"
 
 #: Source/itemdat.cpp:167 Source/itemdat.cpp:168 Source/itemdat.cpp:169
 #: Source/itemdat.cpp:170
-msgid "Book of "
-msgstr "呪文​の​書: "
+msgid "Book of {:s}"
+msgstr "呪文​の​書: {:s}"
 
 #: Source/itemdat.cpp:173
 msgid "Falchion"

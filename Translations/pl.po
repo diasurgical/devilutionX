@@ -10744,8 +10744,8 @@ msgstr "Zwój Apokalipsy"
 
 #: Source/translation_dummy.cpp:388 Source/translation_dummy.cpp:389
 #: Source/translation_dummy.cpp:390 Source/translation_dummy.cpp:391
-msgid "Book of "
-msgstr "Księga czaru: "
+msgid "Book of {:s}"
+msgstr "Księga czaru: {:s}"
 
 #: Source/translation_dummy.cpp:396
 msgid "Falchion"

@@ -10629,8 +10629,8 @@ msgstr "A végzet tekercse"
 
 #: Source/translation_dummy.cpp:388 Source/translation_dummy.cpp:389
 #: Source/translation_dummy.cpp:390 Source/translation_dummy.cpp:391
-msgid "Book of "
-msgstr "Könyv - "
+msgid "Book of {:s}"
+msgstr "Könyv - {:s}"
 
 #: Source/translation_dummy.cpp:396
 msgid "Falchion"

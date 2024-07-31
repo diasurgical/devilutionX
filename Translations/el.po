@@ -496,7 +496,7 @@ msgstr "Διακομιστή-πελάτη (TCP)"
 
 #: Source/DiabloUI/multi/selconn.cpp:15
 #, fuzzy
-msgid "Offline" 
+msgid "Offline"
 msgstr "Βρόχος επιστροφής"
 
 #: Source/DiabloUI/multi/selconn.cpp:56 Source/DiabloUI/multi/selgame.cpp:647
@@ -2788,8 +2788,8 @@ msgstr "Πάπυρος Αποκάλυψης"
 
 #: Source/itemdat.cpp:167 Source/itemdat.cpp:168 Source/itemdat.cpp:169
 #: Source/itemdat.cpp:170
-msgid "Book of "
-msgstr "Βιβλίο: "
+msgid "Book of {:s}"
+msgstr "Βιβλίο: {:s}"
 
 #: Source/itemdat.cpp:173
 msgid "Falchion"
