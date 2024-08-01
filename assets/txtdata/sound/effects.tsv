@@ -15,7 +15,6 @@ PodPop	Misc,Hellfire	sfx\items\podpop5.wav
 UrnExpload	Misc,Hellfire	sfx\items\urnpop3.wav
 UrnBreak	Misc,Hellfire	sfx\items\urnpop2.wav
 BrutalHit	Misc	sfx\items\bhit.wav
-BrutalHit1	Misc	sfx\items\bhit1.wav
 ChestOpen	Misc	sfx\items\chest.wav
 DoorClose	Misc	sfx\items\doorclos.wav
 DoorOpen	Misc	sfx\items\dooropen.wav
@@ -91,7 +90,6 @@ OperateFountain	Misc	sfx\misc\fountain.wav
 SpellGolem	Misc	sfx\misc\golum.wav
 OperateGoatShrine	Misc	sfx\misc\gshrine.wav
 SpellGuardian	Misc	sfx\misc\guard.wav
-SpellGuardianHit	Misc	sfx\misc\grdlanch.wav
 SpellHolyBolt	Misc	sfx\misc\holybolt.wav
 SpellInfravision	Misc	sfx\misc\infravis.wav
 SpellInvisibility	Misc	sfx\misc\invisibl.wav
@@ -158,7 +156,6 @@ Griswold7	Stream	sfx\towners\bsmith07.wav
 Griswold8	Stream	sfx\towners\bsmith08.wav
 Griswold9	Stream	sfx\towners\bsmith09.wav
 Griswold10	Stream	sfx\towners\bsmith10.wav
-Griswold11	Stream	sfx\towners\bsmith11.wav
 Griswold12	Stream	sfx\towners\bsmith12.wav
 Griswold13	Stream	sfx\towners\bsmith13.wav
 Griswold14	Stream	sfx\towners\bsmith14.wav
@@ -201,13 +198,11 @@ Griswold50	Stream	sfx\towners\bsmith50.wav
 Griswold51	Stream	sfx\towners\bsmith51.wav
 Griswold52	Stream	sfx\towners\bsmith52.wav
 Griswold53	Stream	sfx\towners\bsmith53.wav
-Griswold54	Stream	sfx\towners\bsmith54.wav
 Griswold55	Stream	sfx\towners\bsmith55.wav
 Griswold56	Stream	sfx\towners\bsmith56.wav
 Cow1	Misc	sfx\towners\cow1.wav
 Cow2	Misc	sfx\towners\cow2.wav
 Pig	Misc,Hellfire	sfx\towners\cow7.wav
-Duck	Misc,Hellfire	sfx\towners\cow8.wav
 WoundedTownsmanOld	Stream	sfx\towners\deadguy2.wav
 Farnham1	Stream	sfx\towners\drunk01.wav
 Farnham2	Stream	sfx\towners\drunk02.wav
@@ -374,7 +369,6 @@ Cain28	Stream	sfx\towners\storyt28.wav
 Cain29	Stream	sfx\towners\storyt29.wav
 Cain30	Stream	sfx\towners\storyt30.wav
 Cain31	Stream	sfx\towners\storyt31.wav
-Cain32	Stream	sfx\towners\storyt32.wav
 Cain33	Stream	sfx\towners\storyt33.wav
 Cain34	Stream	sfx\towners\storyt34.wav
 Cain35	Stream	sfx\towners\storyt35.wav
@@ -423,7 +417,6 @@ Ogden38	Stream	sfx\towners\tavown38.wav
 Ogden39	Stream	sfx\towners\tavown39.wav
 Ogden40	Stream	sfx\towners\tavown40.wav
 Ogden41	Stream	sfx\towners\tavown41.wav
-Ogden42	Stream	sfx\towners\tavown42.wav
 Ogden43	Stream	sfx\towners\tavown43.wav
 Ogden44	Stream	sfx\towners\tavown44.wav
 Ogden45	Stream	sfx\towners\tavown45.wav
@@ -786,11 +779,6 @@ Warrior92	Stream,Warrior	sfx\warrior\warior92.wav
 Warrior93	Stream,Warrior	sfx\warrior\warior93.wav
 Warrior94	Stream,Warrior	sfx\warrior\warior94.wav
 Warrior95	Stream,Warrior	sfx\warrior\warior95.wav
-Warrior95b	Stream,Warrior	sfx\warrior\wario95b.wav
-Warrior95c	Stream,Warrior	sfx\warrior\wario95c.wav
-Warrior95d	Stream,Warrior	sfx\warrior\wario95d.wav
-Warrior95e	Stream,Warrior	sfx\warrior\wario95e.wav
-Warrior95f	Stream,Warrior	sfx\warrior\wario95f.wav
 Warrior96b	Stream,Warrior	sfx\warrior\wario96b.wav
 Warrior97	Stream,Warrior	sfx\warrior\wario97.wav
 Warrior98	Stream,Warrior	sfx\warrior\wario98.wav
@@ -858,18 +846,15 @@ Gharbad1	Stream	sfx\monsters\garbud01.wav
 Gharbad2	Stream	sfx\monsters\garbud02.wav
 Gharbad3	Stream	sfx\monsters\garbud03.wav
 Gharbad4	Stream	sfx\monsters\garbud04.wav
-Izual	Stream	sfx\monsters\izual01.wav
 Lachdanan1	Stream	sfx\monsters\lach01.wav
 Lachdanan2	Stream	sfx\monsters\lach02.wav
 Lachdanan3	Stream	sfx\monsters\lach03.wav
 LazarusGreeting	Stream	sfx\monsters\laz01.wav
-LazarusGreetingShort	Stream	sfx\monsters\laz02.wav
 LeoricGreeting	Stream	sfx\monsters\sking01.wav
 Snotspill1	Stream	sfx\monsters\snot01.wav
 Snotspill2	Stream	sfx\monsters\snot02.wav
 Snotspill3	Stream	sfx\monsters\snot03.wav
 Warlord	Stream	sfx\monsters\warlrd01.wav
-Warlock	Stream	sfx\monsters\wlock01.wav
 Zhar1	Stream	sfx\monsters\zhar01.wav
 Zhar2	Stream	sfx\monsters\zhar02.wav
 DiabloDeath	Stream	sfx\monsters\diablod.wav
