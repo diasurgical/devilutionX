@@ -8,6 +8,10 @@
 #include <cstdint>
 #include <memory>
 #include <optional>
+#include <string>
+#include <string_view>
+
+#include <expected.hpp>
 
 #include "engine/clx_sprite.hpp"
 #include "engine/point.hpp"
@@ -70,6 +74,8 @@ enum dungeon_type : int8_t {
 	DTYPE_LAST = DTYPE_CRYPT,
 	DTYPE_NONE = -1,
 };
+
+tl::expected<dungeon_type, std::string> ParseDungeonType(std::string_view value);
 
 enum lvl_entry : uint8_t {
 	ENTRY_MAIN,
