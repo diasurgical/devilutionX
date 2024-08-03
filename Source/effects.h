@@ -1030,7 +1030,7 @@ enum class SfxID : int16_t {
 	CryptDoorOpen,
 	CryptDoorClose,
 
-	LAST = SfxID::CryptDoorClose,
+	LAST = CryptDoorClose,
 	None = -1,
 };
 

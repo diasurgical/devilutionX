@@ -128,8 +128,12 @@ enum class MissileDataFlags : uint8_t {
 use_enum_as_flags(MissileDataFlags);
 
 struct MissileData {
-	void (*mAddProc)(Missile &, AddMissileParameter &);
-	void (*mProc)(Missile &);
+	using AddFn = void (*)(Missile &, AddMissileParameter &);
+	using ProcessFn = void (*)(Missile &);
+
+	AddFn mAddProc;
+	ProcessFn mProc;
+
 	/**
 	 * @brief Sound emitted when cast.
 	 */
@@ -200,13 +204,7 @@ struct MissileFileData {
 	}
 };
 
-extern const MissileData MissilesData[];
-
-inline const MissileData &GetMissileData(MissileID missileId)
-{
-	return MissilesData[static_cast<std::underlying_type_t<MissileID>>(missileId)];
-}
-
+const MissileData &GetMissileData(MissileID missileId);
 MissileFileData &GetMissileSpriteData(MissileGraphicID graphicId);
 
 void LoadMissileData();

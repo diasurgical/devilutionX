@@ -208,6 +208,8 @@ enum class MissileID : int8_t {
 	BlueExplosion,
 	BlueExplosion2,
 	OrangeExplosion,
+
+	LAST = OrangeExplosion,
 	Null = -1,
 	// clang-format on
 };
