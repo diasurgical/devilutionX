@@ -35,6 +35,7 @@
 #include "minitext.h"
 #include "missiles.h"
 #include "monster.h"
+#include "objdat.h"
 #include "options.h"
 #include "qol/stash.h"
 #include "stores.h"
@@ -3681,7 +3682,7 @@ void LoadLevelObjects(uint16_t filesWidths[65])
 		}
 	}
 
-	for (int i = OFILE_L1BRAZ; i <= OFILE_L5BOOKS; i++) {
+	for (size_t i = 0, n = ObjMasterLoadList.size(); i < n; ++i) {
 		if (filesWidths[i] == 0) {
 			continue;
 		}
@@ -3699,13 +3700,16 @@ void InitObjectGFX()
 	uint16_t filesWidths[65] = {};
 
 	if (IsAnyOf(currlevel, 4, 8, 12)) {
-		filesWidths[OFILE_BKSLBRNT] = AllObjects[OBJ_STORYBOOK].animWidth;
-		filesWidths[OFILE_CANDLE2] = AllObjects[OBJ_STORYCANDLE].animWidth;
+		for (const auto id : { OBJ_STORYBOOK, OBJ_STORYCANDLE }) {
+			const ObjectData &obj = AllObjects[id];
+			filesWidths[obj.ofindex] = obj.animWidth;
+		}
 	}
 
-	for (const ObjectData objectData : AllObjects) {
+	for (size_t id = 0, n = AllObjects.size(); id < n; ++id) {
+		const ObjectData &objectData = AllObjects[id];
 		if (objectData.minlvl != 0 && currlevel >= objectData.minlvl && currlevel <= objectData.maxlvl) {
-			if (IsAnyOf(objectData.ofindex, OFILE_TRAPHOLE, OFILE_TRAPHOLE) && leveltype == DTYPE_HELL) {
+			if (IsAnyOf(static_cast<_object_id>(id), OBJ_TRAPL, OBJ_TRAPR) && leveltype == DTYPE_HELL) {
 				continue;
 			}
 

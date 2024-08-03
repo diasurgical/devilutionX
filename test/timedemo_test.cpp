@@ -57,6 +57,7 @@ void RunTimedemo(std::string timedemoFolderName)
 	LoadMissileData();
 	LoadMonsterData();
 	LoadItemData();
+	LoadObjectData();
 	pfile_ui_set_hero_infos(Dummy_GetHeroInfo);
 	gbLoadGame = true;
 

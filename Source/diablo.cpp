@@ -2579,6 +2579,7 @@ int DiabloMain(int argc, char **argv)
 	LoadMissileData();
 	LoadMonsterData();
 	LoadItemData();
+	LoadObjectData();
 
 	DiabloInit();
 #ifdef __UWP__
