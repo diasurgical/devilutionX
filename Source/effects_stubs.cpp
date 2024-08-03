@@ -19,7 +19,6 @@ void PlaySFX(SfxID psfx)
 	case SfxID::Swing:
 	case SfxID::SpellAcid:
 	case SfxID::OperateShrine:
-	case SfxID::BrutalHit:
 	case SfxID::Warrior14:
 	case SfxID::Warrior15:
 	case SfxID::Warrior16:

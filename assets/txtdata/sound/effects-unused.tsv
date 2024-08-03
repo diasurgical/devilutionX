@@ -1,4 +1,5 @@
 id	flags	path
+BrutalHit	Misc	sfx\items\bhit.wav
 BrutalHit1	Misc	sfx\items\bhit1.wav
 SpellGuardianHit	Misc	sfx\misc\grdlanch.wav
 Griswold11	Stream	sfx\towners\bsmith11.wav

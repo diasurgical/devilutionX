@@ -14,7 +14,6 @@ PodExpload	Misc,Hellfire	sfx\items\podpop8.wav
 PodPop	Misc,Hellfire	sfx\items\podpop5.wav
 UrnExpload	Misc,Hellfire	sfx\items\urnpop3.wav
 UrnBreak	Misc,Hellfire	sfx\items\urnpop2.wav
-BrutalHit	Misc	sfx\items\bhit.wav
 ChestOpen	Misc	sfx\items\chest.wav
 DoorClose	Misc	sfx\items\doorclos.wav
 DoorOpen	Misc	sfx\items\dooropen.wav
