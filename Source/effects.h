@@ -137,8 +137,6 @@ enum class SfxID : int16_t {
 	PodPop,
 	UrnExpload,
 	UrnBreak,
-	BrutalHit,  // Unused
-	BrutalHit1, // Unused
 	ChestOpen,
 	DoorClose,
 	DoorOpen,
@@ -214,7 +212,6 @@ enum class SfxID : int16_t {
 	SpellGolem,
 	OperateGoatShrine,
 	SpellGuardian,
-	SpellGuardianHit, // Unused
 	SpellHolyBolt,
 	SpellInfravision,
 	SpellInvisibility, // Unused
@@ -281,7 +278,6 @@ enum class SfxID : int16_t {
 	Griswold8,
 	Griswold9,
 	Griswold10,
-	Griswold11,
 	Griswold12,
 	Griswold13,
 	Griswold14,
@@ -324,13 +320,11 @@ enum class SfxID : int16_t {
 	Griswold51,
 	Griswold52,
 	Griswold53,
-	Griswold54,
 	Griswold55,
 	Griswold56,
 	Cow1,
 	Cow2,
 	Pig,
-	Duck,               // Unused
 	WoundedTownsmanOld, // Unused
 	Farnham1,
 	Farnham2,
@@ -497,7 +491,6 @@ enum class SfxID : int16_t {
 	Cain29,
 	Cain30,
 	Cain31,
-	Cain32,
 	Cain33,
 	Cain34,
 	Cain35,
@@ -546,7 +539,6 @@ enum class SfxID : int16_t {
 	Ogden39,
 	Ogden40,
 	Ogden41,
-	Ogden42,
 	Ogden43,
 	Ogden44,
 	Ogden45,
@@ -909,11 +901,6 @@ enum class SfxID : int16_t {
 	Warrior93,
 	Warrior94,
 	Warrior95,
-	Warrior95b,
-	Warrior95c,
-	Warrior95d,
-	Warrior95e,
-	Warrior95f,
 	Warrior96b,
 	Warrior97,
 	Warrior98,
@@ -981,18 +968,15 @@ enum class SfxID : int16_t {
 	Gharbad2,
 	Gharbad3,
 	Gharbad4,
-	Izual, // Unused
 	Lachdanan1,
 	Lachdanan2,
 	Lachdanan3,
 	LazarusGreeting,
-	LazarusGreetingShort, // Unused
 	LeoricGreeting,
 	Snotspill1,
 	Snotspill2,
 	Snotspill3,
 	Warlord,
-	Warlock, // Unused
 	Zhar1,
 	Zhar2,
 	DiabloDeath,

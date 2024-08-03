@@ -147,6 +147,8 @@ void LoadEffectsData()
 		reader.readString("path", item.pszName);
 	}
 	sgSFX.shrink_to_fit();
+	// We're not actually parsing the IDs yet, thus this sanity check here.
+	assert(static_cast<size_t>(SfxID::LAST) + 1 == sgSFX.size());
 }
 
 void PrivSoundInit(uint8_t bLoadMask)
