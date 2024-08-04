@@ -6,8 +6,8 @@
 #include "monstdat.h"
 
 #include <cstdint>
-#include <unordered_map>
 
+#include <ankerl/unordered_dense.h>
 #include <expected.hpp>
 
 #include "data/file.hpp"
@@ -475,7 +475,7 @@ void LoadMonstDat()
 
 	MonstersData.clear();
 	MonstersData.reserve(dataFile.numRecords());
-	std::unordered_map<std::string, size_t> spritePathToId;
+	ankerl::unordered_dense::map<std::string, size_t> spritePathToId;
 	for (DataFileRecord record : dataFile) {
 		RecordReader reader { record, filename };
 		MonsterData &monster = MonstersData.emplace_back();

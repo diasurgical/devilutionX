@@ -8,6 +8,8 @@
 #include <cmath>
 #include <cstdint>
 
+#include <ankerl/unordered_dense.h>
+
 #include "DiabloUI/ui_flags.hpp"
 #include "automap.h"
 #include "controls/plrctrls.h"
@@ -83,7 +85,7 @@ namespace {
 /**
  * @brief Contains all Missile at rendering position
  */
-std::unordered_multimap<WorldTilePosition, Missile *> MissilesAtRenderingTile;
+ankerl::unordered_dense::map<WorldTilePosition, std::vector<Missile *>> MissilesAtRenderingTile;
 
 /**
  * @brief Could the missile (at the next game tick) collide? This method is a simplified version of CheckMissileCol (for example without random).
@@ -163,7 +165,7 @@ void UpdateMissilesRendererData()
 
 	for (auto &m : Missiles) {
 		UpdateMissileRendererData(m);
-		MissilesAtRenderingTile.insert(std::make_pair(m.position.tileForRendering, &m));
+		MissilesAtRenderingTile[m.position.tileForRendering].push_back(&m);
 	}
 }
 
@@ -289,9 +291,10 @@ void DrawMissilePrivate(const Surface &out, const Missile &missile, Point target
  */
 void DrawMissile(const Surface &out, WorldTilePosition tilePosition, Point targetBufferPosition, bool pre)
 {
-	const auto [begin, end] = MissilesAtRenderingTile.equal_range(tilePosition);
-	for (auto it = begin; it != end; ++it) {
-		DrawMissilePrivate(out, *it->second, targetBufferPosition, pre);
+	const auto it = MissilesAtRenderingTile.find(tilePosition);
+	if (it == MissilesAtRenderingTile.end()) return;
+	for (Missile *missile : it->second) {
+		DrawMissilePrivate(out, *missile, targetBufferPosition, pre);
 	}
 }
 
@@ -899,6 +902,10 @@ void DrawTileContent(const Surface &out, Point tilePosition, Point targetBufferP
 {
 	// Keep evaluating until MicroTiles can't affect screen
 	rows += MicroTileLen;
+
+#ifdef _DEBUG
+	DebugCoordsMap.reserve(rows * columns);
+#endif
 
 	for (int i = 0; i < rows; i++) {
 		bool skip = false;

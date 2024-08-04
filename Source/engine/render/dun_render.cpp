@@ -1101,7 +1101,7 @@ void RenderBlackTileFull(uint8_t *DVL_RESTRICT dst, uint16_t dstPitch)
 } // namespace
 
 #ifdef DUN_RENDER_STATS
-std::unordered_map<DunRenderType, size_t, DunRenderTypeHash> DunRenderStats;
+ankerl::unordered_dense::map<DunRenderType, size_t, DunRenderTypeHash> DunRenderStats;
 
 std::string_view TileTypeToString(TileType tileType)
 {

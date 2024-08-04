@@ -24,4 +24,5 @@ target_link_libraries(libdevilutionx_vita PUBLIC
   SceNet_stub
   SceNetCtl_stub
   tl
+  unordered_dense::unordered_dense
 )

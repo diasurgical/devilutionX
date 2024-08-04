@@ -5,9 +5,9 @@
 #include <cstddef>
 #include <string>
 #include <string_view>
-#include <unordered_set>
 #include <vector>
 
+#include <ankerl/unordered_dense.h>
 #include <sol/sol.hpp>
 #include <sol/utility/to_string.hpp>
 
@@ -122,7 +122,7 @@ ValueInfo GetValueInfo(const sol::table &table, std::string_view key, const sol:
 }
 
 void SuggestionsFromTable(const sol::table &table, std::string_view prefix,
-    size_t maxSuggestions, std::unordered_set<LuaAutocompleteSuggestion> &out)
+    size_t maxSuggestions, ankerl::unordered_dense::set<LuaAutocompleteSuggestion> &out)
 {
 	for (const auto &[key, value] : table) {
 		if (key.get_type() == sol::type::string) {
@@ -178,7 +178,7 @@ void GetLuaAutocompleteSuggestions(std::string_view text, const sol::environment
 	const std::string_view prefix = token.substr(dotPos + 1);
 	token.remove_suffix(token.size() - (dotPos == std::string_view::npos ? 0 : dotPos));
 
-	std::unordered_set<LuaAutocompleteSuggestion> suggestions;
+	ankerl::unordered_dense::set<LuaAutocompleteSuggestion> suggestions;
 	const auto addSuggestions = [&](const sol::table &table) {
 		SuggestionsFromTable(table, prefix, maxSuggestions, suggestions);
 	};

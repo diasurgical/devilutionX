@@ -7,7 +7,8 @@
 
 #include <cstdint>
 #include <string_view>
-#include <unordered_map>
+
+#include <ankerl/unordered_dense.h>
 
 #include "diablo.h"
 #include "engine.h"
@@ -22,7 +23,7 @@ extern bool DebugGodMode;
 extern bool DebugVision;
 extern bool DebugPath;
 extern bool DebugGrid;
-extern std::unordered_map<int, Point> DebugCoordsMap;
+extern ankerl::unordered_dense::map<int, Point> DebugCoordsMap;
 extern bool DebugScrollViewEnabled;
 extern std::string debugTRN;
 extern uint32_t glMid1Seed[NUMLEVELS];

@@ -15,7 +15,7 @@
 
 // #define DUN_RENDER_STATS
 #ifdef DUN_RENDER_STATS
-#include <unordered_map>
+#include <ankerl/unordered_dense.h>
 #endif
 
 namespace devilution {
@@ -156,7 +156,7 @@ struct DunRenderTypeHash {
 		return std::hash<uint32_t> {}((1 < static_cast<uint8_t>(t.tileType)) | static_cast<uint8_t>(t.maskType));
 	}
 };
-extern std::unordered_map<DunRenderType, size_t, DunRenderTypeHash> DunRenderStats;
+extern ankerl::unordered_dense::map<DunRenderType, size_t, DunRenderTypeHash> DunRenderStats;
 
 std::string_view TileTypeToString(TileType tileType);
 

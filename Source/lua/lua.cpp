@@ -2,8 +2,8 @@
 
 #include <optional>
 #include <string_view>
-#include <unordered_map>
 
+#include <ankerl/unordered_dense.h>
 #include <sol/sol.hpp>
 
 #include <config.h>
@@ -30,7 +30,7 @@ namespace {
 struct LuaState {
 	sol::state sol = {};
 	sol::table commonPackages = {};
-	std::unordered_map<std::string, sol::bytecode> compiledScripts = {};
+	ankerl::unordered_dense::segmented_map<std::string, sol::bytecode> compiledScripts = {};
 	sol::environment sandbox = {};
 	sol::table events = {};
 };

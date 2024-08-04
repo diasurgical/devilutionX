@@ -1,6 +1,8 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
+#include <ankerl/unordered_dense.h>
+
 #include "engine/random.hpp"
 #include "missiles.h"
 
@@ -13,7 +15,7 @@ using ::testing::UnorderedElementsAre;
 
 void TestArrowRotatesUniformly(Missile &missile, int startingFrame, int leftFrame, int rightFrame)
 {
-	std::unordered_map<int, unsigned> observed {};
+	ankerl::unordered_dense::map<int, unsigned> observed {};
 	for (auto i = 0; i < 100; i++) {
 		missile._miAnimFrame = startingFrame;
 		TestRotateBlockedMissile(missile);
@@ -25,7 +27,7 @@ void TestArrowRotatesUniformly(Missile &missile, int startingFrame, int leftFram
 
 void TestAnimatedMissileRotatesUniformly(Missile &missile, int startingDir, int leftDir, int rightDir)
 {
-	std::unordered_map<int, unsigned> observed {};
+	ankerl::unordered_dense::map<int, unsigned> observed {};
 	for (auto i = 0; i < 100; i++) {
 		missile._mimfnum = startingDir;
 		TestRotateBlockedMissile(missile);
