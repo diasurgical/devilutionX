@@ -396,6 +396,7 @@ target_link_libraries(libdevilutionx PUBLIC
   libsmackerdec
   simpleini::simpleini
   tl
+  unordered_dense::unordered_dense
   libdevilutionx_codec
   libdevilutionx_format_int
   libdevilutionx_file_util

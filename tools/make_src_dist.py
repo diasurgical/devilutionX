@@ -36,7 +36,7 @@ import sys
 # 1. Uncommon in package managers (sdl_audiolib and simpleini).
 # 2. Require devilutionx forks (all others).
 _DEPS = ['asio', 'libmpq', 'libsmackerdec',
-         'libzt', 'sdl_audiolib', 'simpleini']
+         'libzt', 'sdl_audiolib', 'simpleini', 'unordered_dense']
 _ALWAYS_VENDORED_DEPS = ['asio', 'libmpq', 'libsmackerdec', 'libzt']
 
 # These dependencies are not vendored by default.
