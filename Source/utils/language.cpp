@@ -40,9 +40,9 @@ using TranslationRef = uint32_t;
 struct StringHash {
 	using is_avalanching = void;
 
-	size_t operator()(const char *str) const noexcept
+	[[nodiscard]] uint64_t operator()(const char *str) const noexcept
 	{
-		return ankerl::unordered_dense::detail::wyhash::hash(str, std::string_view { str }.size());
+		return ankerl::unordered_dense::hash<std::string_view> {}(str);
 	}
 };
 
