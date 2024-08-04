@@ -10,6 +10,8 @@
 #include <cstdint>
 #include <cstdio>
 
+#include <ankerl/unordered_dense.h>
+
 #include "debug.h"
 
 #include "automap.h"
@@ -31,7 +33,7 @@ bool DebugGodMode = false;
 bool DebugVision = false;
 bool DebugPath = false;
 bool DebugGrid = false;
-std::unordered_map<int, Point> DebugCoordsMap;
+ankerl::unordered_dense::map<int, Point> DebugCoordsMap;
 bool DebugScrollViewEnabled = false;
 std::string debugTRN;
 

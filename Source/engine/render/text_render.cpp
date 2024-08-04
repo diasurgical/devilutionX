@@ -9,10 +9,10 @@
 #include <cstddef>
 #include <cstdint>
 #include <optional>
-#include <unordered_map>
 #include <utility>
 #include <variant>
 
+#include <ankerl/unordered_dense.h>
 #include <fmt/core.h>
 
 #include "DiabloUI/diabloui.h"
@@ -39,7 +39,7 @@ namespace {
 
 constexpr char32_t ZWSP = U'\u200B'; // Zero-width space
 
-std::unordered_map<uint32_t, OptionalOwnedClxSpriteList> Fonts;
+ankerl::unordered_dense::map<uint32_t, OptionalOwnedClxSpriteList> Fonts;
 
 std::array<int, 6> FontSizes = { 12, 24, 30, 42, 46, 22 };
 constexpr std::array<int, 6> LineHeights = { 12, 26, 38, 42, 50, 22 };

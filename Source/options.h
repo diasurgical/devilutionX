@@ -6,9 +6,9 @@
 #include <forward_list>
 #include <optional>
 #include <string_view>
-#include <unordered_map>
 
 #include <SDL_version.h>
+#include <ankerl/unordered_dense.h>
 
 #include "controls/controller.h"
 #include "controls/controller_buttons.h"
@@ -708,9 +708,9 @@ struct KeymapperOptions : OptionCategoryBase {
 
 private:
 	std::forward_list<Action> actions;
-	std::unordered_map<uint32_t, std::reference_wrapper<Action>> keyIDToAction;
-	std::unordered_map<uint32_t, std::string> keyIDToKeyName;
-	std::unordered_map<std::string, uint32_t> keyNameToKeyID;
+	ankerl::unordered_dense::segmented_map<uint32_t, std::reference_wrapper<Action>> keyIDToAction;
+	ankerl::unordered_dense::segmented_map<uint32_t, std::string> keyIDToKeyName;
+	ankerl::unordered_dense::segmented_map<std::string, uint32_t> keyNameToKeyID;
 };
 
 /** The Padmapper maps gamepad buttons to actions. */
@@ -782,7 +782,7 @@ private:
 	std::forward_list<Action> actions;
 	std::array<const Action *, enum_size<ControllerButton>::value> buttonToReleaseAction;
 	std::array<std::string, enum_size<ControllerButton>::value> buttonToButtonName;
-	std::unordered_map<std::string, ControllerButton> buttonNameToButton;
+	ankerl::unordered_dense::segmented_map<std::string, ControllerButton> buttonNameToButton;
 	bool committed = false;
 
 	const Action *FindAction(ControllerButton button) const;

@@ -3,6 +3,7 @@
 
 #include <string>
 
+#include <ankerl/unordered_dense.h>
 #include <sol/sol.hpp>
 
 #include "lua/metadoc.hpp"
@@ -14,7 +15,7 @@
 namespace devilution {
 namespace {
 
-std::unordered_map<std::string_view, _talker_id> TownerShortNameToTownerId = {
+ankerl::unordered_dense::map<std::string_view, _talker_id> TownerShortNameToTownerId = {
 	{ "griswold", _talker_id::TOWN_SMITH },
 	{ "smith", _talker_id::TOWN_SMITH },
 	{ "pepin", _talker_id::TOWN_HEALER },

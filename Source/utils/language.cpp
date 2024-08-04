@@ -3,9 +3,9 @@
 #include <cstdint>
 #include <memory>
 #include <string_view>
-#include <unordered_map>
 #include <vector>
 
+#include <ankerl/unordered_dense.h>
 #include <function_ref.hpp>
 
 #include "engine/assets.hpp"
@@ -38,9 +38,11 @@ std::unique_ptr<char[]> translationValues;
 using TranslationRef = uint32_t;
 
 struct StringHash {
+	using is_avalanching = void;
+
 	size_t operator()(const char *str) const noexcept
 	{
-		return std::hash<std::string_view> {}(str);
+		return ankerl::unordered_dense::detail::wyhash::hash(str, std::string_view { str }.size());
 	}
 };
 
@@ -51,7 +53,7 @@ struct StringEq {
 	}
 };
 
-std::vector<std::unordered_map<const char *, TranslationRef, StringHash, StringEq>> translation = { {}, {} };
+std::vector<ankerl::unordered_dense::map<const char *, TranslationRef, StringHash, StringEq>> translation = { {}, {} };
 
 constexpr uint32_t TranslationRefOffsetBits = 19;
 constexpr uint32_t TranslationRefSizeBits = 32 - TranslationRefOffsetBits; // 13
@@ -481,6 +483,7 @@ void LanguageInitialize()
 
 	char *keyPtr = &translationKeys[0];
 	char *valuePtr = &translationValues[0];
+	translation[0].reserve(head.nbMappings - 1);
 	for (uint32_t i = 1; i < head.nbMappings; i++) {
 		if (readWholeFile
 		        ? ReadEntry(data.get(), fileSize, src[i], keyPtr) && ReadEntry(data.get(), fileSize, dst[i], valuePtr)

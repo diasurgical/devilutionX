@@ -8,8 +8,8 @@
 #include <cstdint>
 #include <string>
 #include <string_view>
-#include <unordered_map>
 
+#include <ankerl/unordered_dense.h>
 #include <fmt/core.h>
 
 #include "codec.h"
@@ -273,7 +273,7 @@ inline bool string_ends_with(std::string_view value, std::string_view suffix)
 	return std::equal(suffix.rbegin(), suffix.rend(), value.rbegin());
 }
 
-void CreateDetailDiffs(std::string_view prefix, std::string_view memoryMapFile, CompareInfo &compareInfoReference, CompareInfo &compareInfoActual, std::unordered_map<std::string, size_t> &foundDiffs)
+void CreateDetailDiffs(std::string_view prefix, std::string_view memoryMapFile, CompareInfo &compareInfoReference, CompareInfo &compareInfoActual, ankerl::unordered_dense::segmented_map<std::string, size_t> &foundDiffs)
 {
 	// Note: Detail diffs are currently only supported in unit tests
 	std::string memoryMapFileAssetName = StrCat(paths::BasePath(), "/test/fixtures/memory_map/", memoryMapFile, ".txt");
@@ -295,7 +295,7 @@ void CreateDetailDiffs(std::string_view prefix, std::string_view memoryMapFile, 
 
 	const std::string_view buffer(reinterpret_cast<const char *>(memoryMapFileData.get()), readBytes);
 
-	std::unordered_map<std::string, CompareCounter> counter;
+	ankerl::unordered_dense::segmented_map<std::string, CompareCounter> counter;
 
 	auto getCounter = [&](const std::string &counterAsString) {
 		auto it = counter.find(counterAsString);
@@ -482,7 +482,7 @@ HeroCompareResult CompareSaves(const std::string &actualSavePath, const std::str
 			StrAppend(message, "file \"", compareTarget.fileName, "\" has different content.");
 		if (!logDetails)
 			continue;
-		std::unordered_map<std::string, size_t> foundDiffs;
+		ankerl::unordered_dense::segmented_map<std::string, size_t> foundDiffs;
 		CompareInfo compareInfoReference = { fileDataReference, 0, fileSizeReference, compareTarget.isTownLevel, fileSizeReference != 0 };
 		CompareInfo compareInfoActual = { fileDataActual, 0, fileSizeActual, compareTarget.isTownLevel, fileSizeActual != 0 };
 		CreateDetailDiffs(compareTarget.fileName, compareTarget.memoryMapFileName, compareInfoReference, compareInfoActual, foundDiffs);
