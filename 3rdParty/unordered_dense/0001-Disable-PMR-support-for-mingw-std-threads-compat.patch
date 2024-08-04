@@ -1,0 +1,33 @@
+From 78eb7bc8a64099235daa3a8cb249a5ce35a4db07 Mon Sep 17 00:00:00 2001
+From: Gleb Mazovetskiy <glex.spb@gmail.com>
+Date: Sun, 4 Aug 2024 12:32:50 +0100
+Subject: [PATCH] Disable PMR support for mingw-std-threads compat
+
+---
+ include/ankerl/unordered_dense.h | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/include/ankerl/unordered_dense.h b/include/ankerl/unordered_dense.h
+index 2aaacd6..e6fee6e 100644
+--- a/include/ankerl/unordered_dense.h
++++ b/include/ankerl/unordered_dense.h
+@@ -98,6 +98,8 @@
+ #        include <cstdlib> // for abort
+ #    endif
+ 
++// DevilutionX disables PMR support because it does not play well with mingw-std-threads.
++#if false
+ #    if defined(__has_include)
+ #        if __has_include(<memory_resource>)
+ #            define ANKERL_UNORDERED_DENSE_PMR std::pmr // NOLINT(cppcoreguidelines-macro-usage)
+@@ -107,6 +109,7 @@
+ #            include <experimental/memory_resource>                   // for polymorphic_allocator
+ #        endif
+ #    endif
++#endif
+ 
+ #    if defined(_MSC_VER) && defined(_M_X64)
+ #        include <intrin.h>
+-- 
+2.43.0
+
