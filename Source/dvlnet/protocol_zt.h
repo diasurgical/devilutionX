@@ -6,9 +6,9 @@
 #include <cstdint>
 #include <deque>
 #include <exception>
-#include <map>
-#include <set>
 #include <string>
+
+#include <ankerl/unordered_dense.h>
 
 #include "dvlnet/frame_queue.h"
 #include "dvlnet/packet.h"
@@ -63,6 +63,15 @@ public:
 
 		void from_string(const std::string &str);
 	};
+	struct EndpointHash {
+		using is_avalanching = void;
+
+		[[nodiscard]] uint64_t operator()(const endpoint &e) const noexcept
+		{
+			return ankerl::unordered_dense::hash<std::string_view> {}(
+			    std::string_view { reinterpret_cast<const char *>(e.addr.data()), e.addr.size() });
+		}
+	};
 
 	protocol_zt();
 	~protocol_zt();
@@ -90,7 +99,7 @@ private:
 	std::deque<std::pair<endpoint, buffer_t>> oob_recv_queue;
 	std::deque<endpoint> disconnect_queue;
 
-	std::map<endpoint, peer_state> peer_list;
+	ankerl::unordered_dense::map<endpoint, peer_state, EndpointHash> peer_list;
 	int fd_tcp = -1;
 	int fd_udp = -1;
 

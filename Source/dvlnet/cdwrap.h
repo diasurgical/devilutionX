@@ -2,12 +2,12 @@
 
 #include <cstdint>
 #include <exception>
-#include <map>
 #include <memory>
 #include <optional>
 #include <string>
 #include <vector>
 
+#include <ankerl/unordered_dense.h>
 #include <function_ref.hpp>
 
 #include "dvlnet/abstract_net.h"
@@ -18,7 +18,7 @@ namespace devilution::net {
 class cdwrap : public abstract_net {
 private:
 	std::unique_ptr<abstract_net> dvlnet_wrap;
-	std::map<event_type, SEVTHANDLER> registered_handlers;
+	ankerl::unordered_dense::map<event_type, SEVTHANDLER> registered_handlers;
 	buffer_t game_init_info;
 	std::optional<std::string> game_pw;
 	tl::function_ref<std::unique_ptr<abstract_net>()> make_net_fn_;

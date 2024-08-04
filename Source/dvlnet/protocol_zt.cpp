@@ -277,14 +277,15 @@ bool protocol_zt::get_disconnected(endpoint &peer)
 
 void protocol_zt::disconnect(const endpoint &peer)
 {
-	if (peer_list.count(peer) != 0) {
-		if (peer_list[peer].fd != -1) {
-			if (lwip_close(peer_list[peer].fd) < 0) {
+	const auto it = peer_list.find(peer);
+	if (it != peer_list.end()) {
+		if (it->second.fd != -1) {
+			if (lwip_close(it->second.fd) < 0) {
 				Log("lwip_close: {}", strerror(errno));
 				SDL_SetError("lwip_close: %s", strerror(errno));
 			}
 		}
-		peer_list.erase(peer);
+		peer_list.erase(it);
 	}
 }
 
@@ -328,7 +329,8 @@ uint64_t protocol_zt::current_ms()
 
 bool protocol_zt::is_peer_connected(endpoint &peer)
 {
-	return peer_list.count(peer) != 0 && peer_list[peer].fd != -1;
+	const auto it = peer_list.find(peer);
+	return it != peer_list.end() && it->second.fd != -1;
 }
 
 bool protocol_zt::is_peer_relayed(const endpoint &peer) const

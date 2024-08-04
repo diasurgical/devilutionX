@@ -6,8 +6,9 @@
 #pragma once
 
 #include <cstdint>
-#include <map>
 #include <vector>
+
+#include <ankerl/unordered_dense.h>
 
 #include "engine/point.hpp"
 #include "items.h"
@@ -21,7 +22,7 @@ public:
 	static constexpr StashCell EmptyCell = -1;
 
 	void RemoveStashItem(StashCell iv);
-	std::map<unsigned, StashGrid> stashGrids;
+	ankerl::unordered_dense::map<unsigned, StashGrid> stashGrids;
 	std::vector<Item> stashList;
 	int gold;
 	bool dirty = false;

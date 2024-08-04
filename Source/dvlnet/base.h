@@ -3,9 +3,10 @@
 #include <array>
 #include <cstdint>
 #include <deque>
-#include <map>
 #include <memory>
 #include <string>
+
+#include <ankerl/unordered_dense.h>
 
 #include "dvlnet/abstract_net.h"
 #include "dvlnet/packet.h"
@@ -41,7 +42,7 @@ public:
 	~base() override = default;
 
 protected:
-	std::map<event_type, SEVTHANDLER> registered_handlers;
+	ankerl::unordered_dense::map<event_type, SEVTHANDLER> registered_handlers;
 	buffer_t game_init_info;
 
 	struct message_t {
