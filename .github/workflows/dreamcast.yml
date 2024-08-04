@@ -1,0 +1,83 @@
+---
+name: Sega Dreamcast
+
+on:  # yamllint disable-line rule:truthy
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - '*.md'
+      - 'docs/**'
+  pull_request:
+    types: [opened, synchronize]
+    paths-ignore:
+      - '*.md'
+      - 'docs/**'
+  release:
+    types: [published]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: azihassan/kallistios:docker
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Build unpack_and_minify_mpq
+        run: |
+          git clone https://github.com/diasurgical/devilutionx-mpq-tools/ && \
+          cd devilutionx-mpq-tools && \
+          cmake -S. -Bbuild-rel -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF && \
+          cmake --build build-rel && \
+          cmake --install build-rel
+
+      - name: Download and unpack spawn.mpq
+        run: |
+          curl -LO https://raw.githubusercontent.com/d07RiV/diabloweb/3a5a51e84d5dab3cfd4fef661c46977b091aaa9c/spawn.mpq
+          unpack_and_minify_mpq spawn.mpq --output-dir data
+          rm spawn.mpq
+
+      - name: Configure CMake
+        run: |
+          source /opt/toolchains/dc/kos/environ.sh && \
+          #uncomment when using packed save files
+          #without this, cmake can't find the kos-ports bzip2 & zlib libraries
+          #export CMAKE_PREFIX_PATH=/opt/toolchains/dc/kos-ports/libbz2/inst/:/opt/toolchains/dc/kos-ports/zlib/inst/ && \
+          kos-cmake \
+            -S . \
+            -B build
+
+      - name: Build DevilutionX
+        run: |
+          # patches libfmt to support long double
+          patch build/_deps/libfmt-src/include/fmt/format.h -l -p0 < libfmt-long-double.patch
+          source /opt/toolchains/dc/kos/environ.sh && cd build && kos-make
+
+      - name: Generate .cdi
+        run: |
+          source /opt/toolchains/dc/kos/environ.sh && \
+          cp -R data/spawn build/data/spawn && \
+          mkdcdisc -e build/devilutionx.elf -o build/devilutionx.cdi --name 'Diablo 1' -d build/data/
+
+      - name: Upload .elf Package
+        if: ${{ !env.ACT }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: devilutionx.elf
+          path: ./build/devilutionx.elf
+
+      - name: Upload .cdi Package
+        if: ${{ !env.ACT }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: devilutionx.cdi
+          path: ./build/devilutionx.cdi
+...

@@ -1,0 +1,12 @@
+diff --git a/build/_deps/libfmt-src/include/fmt/format.h b/build/_deps/libfmt-src/include/fmt/format.h
+index 7637c8a0d..92b2131ef 100644
+--- a/build/_deps/libfmt-src/include/fmt/format.h
++++ b/build/_deps/libfmt-src/include/fmt/format.h
+@@ -1542,6 +1542,7 @@ template <> struct float_info<double> {
+ template <typename T>
+ struct float_info<T, enable_if_t<std::numeric_limits<T>::digits == 64 ||
++                                 std::numeric_limits<T>::digits == 53 ||
+                                  std::numeric_limits<T>::digits == 113 ||
+                                  is_float128<T>::value>> {
+   using carrier_uint = detail::uint128_t;
+ 
