@@ -1,4 +1,4 @@
-#ifdef _DEBUG
+#if defined(_DEBUG) && defined(DEVILUTIONX_RESOURCE_TRACKING_ENABLED)
 #include "lua/modules/dev/resources.hpp"
 
 #include <string>
@@ -82,4 +82,4 @@ sol::table LuaDevResourcesModule(sol::state_view &lua)
 }
 
 } // namespace devilution
-#endif // _DEBUG
+#endif // defined(_DEBUG) && defined(DEVILUTIONX_RESOURCE_TRACKING_ENABLED)

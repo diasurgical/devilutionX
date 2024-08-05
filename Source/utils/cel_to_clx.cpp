@@ -32,7 +32,11 @@ constexpr uint8_t GetCelTransparentWidth(uint8_t control)
 
 } // namespace
 
-OwnedClxSpriteListOrSheet CelToClx(std::string_view name, std::string_view trnName, const uint8_t *data, size_t size, PointerOrValue<uint16_t> widthOrWidths)
+OwnedClxSpriteListOrSheet CelToClx(
+#ifdef DEVILUTIONX_RESOURCE_TRACKING_ENABLED
+    std::string_view name, std::string_view trnName,
+#endif
+    const uint8_t *data, size_t size, PointerOrValue<uint16_t> widthOrWidths)
 {
 	// A CEL file either begins with:
 	// 1. A CEL header.
@@ -125,7 +129,12 @@ OwnedClxSpriteListOrSheet CelToClx(std::string_view name, std::string_view trnNa
 #ifdef DEBUG_CEL_TO_CL2_SIZE
 	std::cout << "\t" << size << "\t" << cl2Data.size() << "\t" << std::setprecision(1) << std::fixed << (static_cast<int>(cl2Data.size()) - static_cast<int>(size)) / ((float)size) * 100 << "%" << std::endl;
 #endif
-	return OwnedClxSpriteListOrSheet { name, trnName, std::move(out), static_cast<uint16_t>(numGroups == 1 ? 0 : numGroups) };
+	return OwnedClxSpriteListOrSheet {
+#ifdef DEVILUTIONX_RESOURCE_TRACKING_ENABLED
+		name, trnName,
+#endif
+		std::move(out), static_cast<uint16_t>(numGroups == 1 ? 0 : numGroups)
+	};
 }
 
 } // namespace devilution

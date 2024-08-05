@@ -495,14 +495,24 @@ void CreateHalfSizeItemSprites()
 		const Surface halfSurface = ownedHalfSurface.subregion(0, 0, itemSurface.w() / 2, itemSurface.h() / 2);
 		SDL_Rect halfSurfaceRect = MakeSdlRect(0, 0, halfSurface.w(), halfSurface.h());
 		SDL_SetClipRect(halfSurface.surface, &halfSurfaceRect);
+#ifdef DEVILUTIONX_RESOURCE_TRACKING_ENABLED
 		std::string name = StrCat("runtime\\objcurs_half_size\\", cursId);
+#endif
 		BilinearDownscaleByHalf8(itemSurface.surface, paletteTransparencyLookup, halfSurface.surface, 1);
-		HalfSizeItemSprites[outputIndex].emplace(SurfaceToClx(std::string(name), /*trnName=*/ {}, halfSurface, 1, 1));
+		HalfSizeItemSprites[outputIndex].emplace(SurfaceToClx(
+#ifdef DEVILUTIONX_RESOURCE_TRACKING_ENABLED
+		    std::string(name), /*trnName=*/ {},
+#endif
+		    halfSurface, 1, 1));
 
 		SDL_FillRect(itemSurface.surface, nullptr, 1);
 		ClxDrawTRN(itemSurface, { 0, itemSurface.h() }, itemSprite, redTrn);
 		BilinearDownscaleByHalf8(itemSurface.surface, paletteTransparencyLookup, halfSurface.surface, 1);
-		HalfSizeItemSpritesRed[outputIndex].emplace(SurfaceToClx(std::move(name), /*trnName=*/"red", halfSurface, 1, 1));
+		HalfSizeItemSpritesRed[outputIndex].emplace(SurfaceToClx(
+#ifdef DEVILUTIONX_RESOURCE_TRACKING_ENABLED
+		    std::move(name), /*trnName=*/"red",
+#endif
+		    halfSurface, 1, 1));
 	};
 
 	size_t outputIndex = 0;

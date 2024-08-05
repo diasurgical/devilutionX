@@ -190,7 +190,12 @@ OptionalOwnedClxSpriteList PcxToClx(std::string_view name, AssetHandle &handle, 
 #ifdef DEBUG_PCX_TO_CL2_SIZE
 	std::cout << "\t" << pixelDataSize << "\t" << cl2Data.size() << "\t" << std::setprecision(1) << std::fixed << (static_cast<int>(cl2Data.size()) - static_cast<int>(pixelDataSize)) / ((float)pixelDataSize) * 100 << "%" << std::endl;
 #endif
-	return OwnedClxSpriteList { name, /*trnName=*/ {}, std::move(out) };
+	return OwnedClxSpriteList {
+#ifdef DEVILUTIONX_RESOURCE_TRACKING_ENABLED
+		name, /*trnName=*/ {},
+#endif
+		std::move(out)
+	};
 }
 
 } // namespace devilution

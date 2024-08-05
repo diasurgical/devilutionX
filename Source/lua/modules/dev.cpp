@@ -26,7 +26,9 @@ sol::table LuaDevModule(sol::state_view &lua)
 	SetDocumented(table, "player", "", "Player-related commands.", LuaDevPlayerModule(lua));
 	SetDocumented(table, "quests", "", "Quest-related commands.", LuaDevQuestsModule(lua));
 	SetDocumented(table, "search", "", "Search the map for monsters / items / objects.", LuaDevSearchModule(lua));
+#ifdef DEVILUTIONX_RESOURCE_TRACKING_ENABLED
 	SetDocumented(table, "resources", "", "Resource commands.", LuaDevResourcesModule(lua));
+#endif
 	SetDocumented(table, "towners", "", "Town NPC commands.", LuaDevTownersModule(lua));
 	return table;
 }

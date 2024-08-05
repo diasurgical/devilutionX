@@ -64,9 +64,19 @@ OwnedClxSpriteSheet LoadMultipleCl2Sheet(std::string_view name, tl::function_ref
 		accumulatedSize += size;
 	}
 #ifdef UNPACKED_MPQS
-	return OwnedClxSpriteSheet { name, /*trnName=*/ {}, std::move(data), static_cast<uint16_t>(count) };
+	return OwnedClxSpriteSheet {
+#ifdef DEVILUTIONX_RESOURCE_TRACKING_ENABLED
+		name, /*trnName=*/ {},
+#endif
+		std::move(data), static_cast<uint16_t>(count)
+	};
 #else
-	return Cl2ToClx(name, /*trnName=*/ {}, std::move(data), accumulatedSize, frameWidth).sheet();
+	return Cl2ToClx(
+#ifdef DEVILUTIONX_RESOURCE_TRACKING_ENABLED
+	    name, /*trnName=*/ {},
+#endif
+	    std::move(data), accumulatedSize, frameWidth)
+	    .sheet();
 #endif
 }
 

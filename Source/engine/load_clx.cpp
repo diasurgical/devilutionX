@@ -28,7 +28,11 @@ OptionalOwnedClxSpriteListOrSheet LoadOptionalClxListOrSheet(const char *path)
 			return std::nullopt;
 	}
 	pathStrView.remove_suffix(4);
-	return OwnedClxSpriteListOrSheet::fromBuffer(pathStrView, /*trnName=*/ {}, std::move(data), size);
+	return OwnedClxSpriteListOrSheet::fromBuffer(
+#ifdef DEVILUTIONX_RESOURCE_TRACKING_ENABLED
+	    pathStrView, /*trnName=*/ {},
+#endif
+	    std::move(data), size);
 }
 
 OwnedClxSpriteListOrSheet LoadClxListOrSheet(const char *path)
@@ -37,7 +41,11 @@ OwnedClxSpriteListOrSheet LoadClxListOrSheet(const char *path)
 	std::unique_ptr<uint8_t[]> data = LoadFileInMem<uint8_t>(path, &size);
 	std::string_view pathStrView = path;
 	pathStrView.remove_suffix(4);
-	return OwnedClxSpriteListOrSheet::fromBuffer(pathStrView, /*trnName=*/ {}, std::move(data), size);
+	return OwnedClxSpriteListOrSheet::fromBuffer(
+#ifdef DEVILUTIONX_RESOURCE_TRACKING_ENABLED
+	    pathStrView, /*trnName=*/ {},
+#endif
+	    std::move(data), size);
 }
 
 } // namespace devilution

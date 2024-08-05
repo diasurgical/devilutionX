@@ -1,5 +1,7 @@
 #include "engine/resource_store.hpp"
 
+#ifdef DEVILUTIONX_RESOURCE_TRACKING_ENABLED
+
 #include <cstddef>
 #include <forward_list>
 #include <string_view>
@@ -106,3 +108,5 @@ void ResourceStore::unregisterResource(const ResourceStoreHandle &handle)
 }
 
 } // namespace devilution
+
+#endif // DEVILUTIONX_RESOURCE_TRACKING_ENABLED

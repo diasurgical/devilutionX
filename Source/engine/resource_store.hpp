@@ -1,5 +1,7 @@
 #pragma once
 
+#ifdef DEVILUTIONX_RESOURCE_TRACKING_ENABLED
+
 #include <cstddef>
 #include <forward_list>
 #include <string>
@@ -192,3 +194,5 @@ protected:
 };
 
 } // namespace devilution
+
+#endif // DEVILUTIONX_RESOURCE_TRACKING_ENABLED

@@ -9,6 +9,10 @@
 
 namespace devilution {
 
-OwnedClxSpriteListOrSheet CelToClx(std::string_view name, std::string_view trnName, const uint8_t *data, size_t size, PointerOrValue<uint16_t> widthOrWidths);
+OwnedClxSpriteListOrSheet CelToClx(
+#ifdef DEVILUTIONX_RESOURCE_TRACKING_ENABLED
+    std::string_view name, std::string_view trnName,
+#endif
+    const uint8_t *data, size_t size, PointerOrValue<uint16_t> widthOrWidths);
 
 } // namespace devilution

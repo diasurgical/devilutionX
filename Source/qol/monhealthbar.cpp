@@ -43,7 +43,11 @@ void InitMonsterHealthBar()
 	healthBlueTrn[234] = 185;
 	healthBlueTrn[235] = 186;
 	healthBlueTrn[236] = 187;
-	healthBlue = health->clone("healthBlue");
+	healthBlue = health->clone(
+#ifdef DEVILUTIONX_RESOURCE_TRACKING_ENABLED
+	    "healthBlue"
+#endif
+	);
 	ClxApplyTrans(*healthBlue, healthBlueTrn.data());
 }
 

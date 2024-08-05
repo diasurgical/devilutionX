@@ -139,7 +139,9 @@ void InitMonsterTRN(CMonster &monst)
 		}
 
 		AnimStruct &anim = monst.anims[i];
+#ifdef DEVILUTIONX_RESOURCE_TRACKING_ENABLED
 		anim.sprites->setVariant(monst.data().trnFile);
+#endif
 		if (anim.sprites->isSheet()) {
 			ClxApplyTrans(ClxSpriteSheet { anim.sprites->sheet() }, colorTranslations.data());
 		} else {

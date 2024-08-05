@@ -17,7 +17,11 @@ namespace devilution {
  * @param numFrames The number of vertically stacked frames in the surface.
  * @param transparentColor The PCX palette index of the transparent color.
  */
-OwnedClxSpriteList SurfaceToClx(std::string &&name, std::string &&trnName, const Surface &surface, unsigned numFrames = 1,
+OwnedClxSpriteList SurfaceToClx(
+#ifdef DEVILUTIONX_RESOURCE_TRACKING_ENABLED
+    std::string &&name, std::string &&trnName,
+#endif
+    const Surface &surface, unsigned numFrames = 1,
     std::optional<uint8_t> transparentColor = std::nullopt);
 
 } // namespace devilution

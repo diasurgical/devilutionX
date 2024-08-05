@@ -115,7 +115,11 @@ public:
 
 	ClxSpriteList(const OwnedClxSpriteList &owned);
 
-	[[nodiscard]] OwnedClxSpriteList clone(std::string_view name, std::string_view trnName = {}) const;
+	[[nodiscard]] OwnedClxSpriteList clone(
+#ifdef DEVILUTIONX_RESOURCE_TRACKING_ENABLED
+	    std::string_view name, std::string_view trnName = {}
+#endif
+	) const;
 
 	[[nodiscard]] constexpr uint32_t numSprites() const
 	{
@@ -336,8 +340,13 @@ class OwnedClxSpriteListOrSheet;
 /**
  * @brief Implicitly convertible to `ClxSpriteList` and owns its data.
  */
-class OwnedClxSpriteList : public OwnedResource<OwnedClxSpriteList> {
+class OwnedClxSpriteList
+#ifdef DEVILUTIONX_RESOURCE_TRACKING_ENABLED
+    : public OwnedResource<OwnedClxSpriteList>
+#endif
+{
 public:
+#ifdef DEVILUTIONX_RESOURCE_TRACKING_ENABLED
 	explicit OwnedClxSpriteList(std::string_view name, std::string_view trnName, std::unique_ptr<uint8_t[]> &&data)
 	    : OwnedResource<OwnedClxSpriteList>(name, trnName)
 	    , data_(std::move(data))
@@ -351,10 +360,19 @@ public:
 	{
 		assert(data_ != nullptr);
 	}
+#endif
 
-	explicit OwnedClxSpriteList(ResourceStoreHandle &&handle, std::unique_ptr<uint8_t[]> &&data)
-	    : OwnedResource<OwnedClxSpriteList>(std::move(handle))
-	    , data_(std::move(data))
+	explicit OwnedClxSpriteList(
+#ifdef DEVILUTIONX_RESOURCE_TRACKING_ENABLED
+	    ResourceStoreHandle &&handle,
+#endif
+	    std::unique_ptr<uint8_t[]> &&data)
+	    :
+#ifdef DEVILUTIONX_RESOURCE_TRACKING_ENABLED
+	    OwnedResource<OwnedClxSpriteList>(std::move(handle))
+	    ,
+#endif
+	    data_(std::move(data))
 	{
 		assert(data_ != nullptr);
 	}
@@ -362,9 +380,18 @@ public:
 	OwnedClxSpriteList(OwnedClxSpriteList &&) noexcept = default;
 	OwnedClxSpriteList &operator=(OwnedClxSpriteList &&) noexcept = default;
 
-	[[nodiscard]] OwnedClxSpriteList clone(std::string_view trnName = {}) const
+	[[nodiscard]] OwnedClxSpriteList clone(
+#ifdef DEVILUTIONX_RESOURCE_TRACKING_ENABLED
+	    std::string_view trnName = {}
+#endif
+	) const
 	{
-		return ClxSpriteList { *this }.clone(resourceName(), trnName);
+		return ClxSpriteList { *this }.clone(
+#ifdef DEVILUTIONX_RESOURCE_TRACKING_ENABLED
+		    resourceName(),
+		    trnName
+#endif
+		);
 	}
 
 	[[nodiscard]] ClxSprite operator[](size_t spriteIndex) const
@@ -398,19 +425,33 @@ inline ClxSpriteList::ClxSpriteList(const OwnedClxSpriteList &owned)
 {
 }
 
-inline OwnedClxSpriteList ClxSpriteList::clone(std::string_view name, std::string_view trnName) const
+inline OwnedClxSpriteList ClxSpriteList::clone(
+#ifdef DEVILUTIONX_RESOURCE_TRACKING_ENABLED
+    std::string_view name, std::string_view trnName
+#endif
+) const
 {
 	const size_t size = dataSize();
 	std::unique_ptr<uint8_t[]> data { new uint8_t[size] };
 	memcpy(data.get(), data_, size);
-	return OwnedClxSpriteList { name, trnName, std::move(data) };
+	return OwnedClxSpriteList {
+#ifdef DEVILUTIONX_RESOURCE_TRACKING_ENABLED
+		name, trnName,
+#endif
+		std::move(data)
+	};
 }
 
 /**
  * @brief Implicitly convertible to `ClxSpriteSheet` and owns its data.
  */
-class OwnedClxSpriteSheet : public OwnedResource<OwnedClxSpriteSheet> {
+class OwnedClxSpriteSheet
+#ifdef DEVILUTIONX_RESOURCE_TRACKING_ENABLED
+    : public OwnedResource<OwnedClxSpriteSheet>
+#endif
+{
 public:
+#ifdef DEVILUTIONX_RESOURCE_TRACKING_ENABLED
 	OwnedClxSpriteSheet(std::string_view name, std::string_view trnName, std::unique_ptr<uint8_t[]> &&data, uint16_t numLists)
 	    : OwnedResource<OwnedClxSpriteSheet>(name, trnName)
 	    , data_(std::move(data))
@@ -428,10 +469,19 @@ public:
 		assert(data_ != nullptr);
 		assert(numLists > 0);
 	}
+#endif
 
-	explicit OwnedClxSpriteSheet(ResourceStoreHandle &&handle, std::unique_ptr<uint8_t[]> &&data, uint16_t numLists)
-	    : OwnedResource<OwnedClxSpriteSheet>(std::move(handle))
-	    , data_(std::move(data))
+	explicit OwnedClxSpriteSheet(
+#ifdef DEVILUTIONX_RESOURCE_TRACKING_ENABLED
+	    ResourceStoreHandle &&handle,
+#endif
+	    std::unique_ptr<uint8_t[]> &&data, uint16_t numLists)
+	    :
+#ifdef DEVILUTIONX_RESOURCE_TRACKING_ENABLED
+	    OwnedResource<OwnedClxSpriteSheet>(std::move(handle))
+	    ,
+#endif
+	    data_(std::move(data))
 	    , num_lists_(numLists)
 	{
 		assert(data_ != nullptr);
@@ -507,7 +557,11 @@ public:
 
 	ClxSpriteListOrSheet(const OwnedClxSpriteListOrSheet &listOrSheet);
 
-	[[nodiscard]] OwnedClxSpriteListOrSheet clone(std::string_view name, std::string_view trnName = {}) const;
+	[[nodiscard]] OwnedClxSpriteListOrSheet clone(
+#ifdef DEVILUTIONX_RESOURCE_TRACKING_ENABLED
+	    std::string_view name, std::string_view trnName = {}
+#endif
+	) const;
 
 	[[nodiscard]] constexpr ClxSpriteList list() const
 	{
@@ -546,48 +600,87 @@ class OptionalOwnedClxSpriteListOrSheet;
 /**
  * @brief A CLX sprite list or a sprite sheet (list of lists).
  */
-class OwnedClxSpriteListOrSheet : public OwnedResource<OwnedClxSpriteListOrSheet> {
+class OwnedClxSpriteListOrSheet
+#ifdef DEVILUTIONX_RESOURCE_TRACKING_ENABLED
+    : public OwnedResource<OwnedClxSpriteListOrSheet>
+#endif
+{
 public:
 	static OwnedClxSpriteListOrSheet fromBuffer(
-	    std::string_view name, std::string_view trnName, std::unique_ptr<uint8_t[]> &&data, size_t size)
+#ifdef DEVILUTIONX_RESOURCE_TRACKING_ENABLED
+	    std::string_view name, std::string_view trnName,
+#endif
+	    std::unique_ptr<uint8_t[]> &&data, size_t size)
 	{
 		const uint16_t numLists = GetNumListsFromClxListOrSheetBuffer(data.get(), size);
-		return OwnedClxSpriteListOrSheet { name, trnName, std::move(data), numLists };
+		return OwnedClxSpriteListOrSheet {
+#ifdef DEVILUTIONX_RESOURCE_TRACKING_ENABLED
+			name, trnName,
+#endif
+			std::move(data), numLists
+		};
 	}
 
-	explicit OwnedClxSpriteListOrSheet(std::string_view name, std::string_view trnName, std::unique_ptr<uint8_t[]> &&data, uint16_t numLists)
-	    : OwnedResource<OwnedClxSpriteListOrSheet>(name, trnName)
-	    , data_(std::move(data))
+	explicit OwnedClxSpriteListOrSheet(
+#ifdef DEVILUTIONX_RESOURCE_TRACKING_ENABLED
+	    std::string_view name, std::string_view trnName,
+#endif
+	    std::unique_ptr<uint8_t[]> &&data, uint16_t numLists)
+	    :
+#ifdef DEVILUTIONX_RESOURCE_TRACKING_ENABLED
+	    OwnedResource<OwnedClxSpriteListOrSheet>(name, trnName)
+	    ,
+#endif
+	    data_(std::move(data))
 	    , num_lists_(numLists)
 	{
 	}
 
+#ifdef DEVILUTIONX_RESOURCE_TRACKING_ENABLED
 	explicit OwnedClxSpriteListOrSheet(std::string &&name, std::string &&trnName, std::unique_ptr<uint8_t[]> &&data, uint16_t numLists)
 	    : OwnedResource<OwnedClxSpriteListOrSheet>(std::move(name), std::move(trnName))
 	    , data_(std::move(data))
 	    , num_lists_(numLists)
 	{
 	}
+#endif
 
 	explicit OwnedClxSpriteListOrSheet(OwnedClxSpriteSheet &&sheet) noexcept
-	    : OwnedResource<OwnedClxSpriteListOrSheet>(std::move(sheet.handle_))
-	    , data_(std::move(sheet.data_))
+	    :
+#ifdef DEVILUTIONX_RESOURCE_TRACKING_ENABLED
+	    OwnedResource<OwnedClxSpriteListOrSheet>(std::move(sheet.handle_))
+	    ,
+#endif
+	    data_(std::move(sheet.data_))
 	    , num_lists_(sheet.num_lists_)
 	{
 	}
 
 	explicit OwnedClxSpriteListOrSheet(OwnedClxSpriteList &&list) noexcept
-	    : OwnedResource<OwnedClxSpriteListOrSheet>(std::move(list.handle_))
-	    , data_(std::move(list.data_))
+	    :
+#ifdef DEVILUTIONX_RESOURCE_TRACKING_ENABLED
+	    OwnedResource<OwnedClxSpriteListOrSheet>(std::move(list.handle_))
+	    ,
+#endif
+	    data_(std::move(list.data_))
 	{
 	}
 
 	OwnedClxSpriteListOrSheet(OwnedClxSpriteListOrSheet &&) noexcept = default;
 	OwnedClxSpriteListOrSheet &operator=(OwnedClxSpriteListOrSheet &&) noexcept = default;
 
-	[[nodiscard]] OwnedClxSpriteListOrSheet clone(std::string_view trnName = {}) const
+	[[nodiscard]] OwnedClxSpriteListOrSheet clone(
+#ifdef DEVILUTIONX_RESOURCE_TRACKING_ENABLED
+	    std::string_view trnName = {}
+#endif
+	) const
 	{
-		return ClxSpriteListOrSheet { *this }.clone(resourceName(), trnName);
+		return ClxSpriteListOrSheet { *this }.clone(
+#ifdef DEVILUTIONX_RESOURCE_TRACKING_ENABLED
+		    resourceName(),
+		    trnName
+#endif
+		);
 	}
 
 	[[nodiscard]] ClxSpriteList list() const &
@@ -599,7 +692,12 @@ public:
 	[[nodiscard]] OwnedClxSpriteList list() &&
 	{
 		assert(num_lists_ == 0);
-		return OwnedClxSpriteList { std::move(handle_), std::move(data_) };
+		return OwnedClxSpriteList {
+#ifdef DEVILUTIONX_RESOURCE_TRACKING_ENABLED
+			std::move(handle_),
+#endif
+			std::move(data_)
+		};
 	}
 
 	[[nodiscard]] ClxSpriteSheet sheet() const &
@@ -611,7 +709,12 @@ public:
 	[[nodiscard]] OwnedClxSpriteSheet sheet() &&
 	{
 		assert(num_lists_ != 0);
-		return OwnedClxSpriteSheet { std::move(handle_), std::move(data_), num_lists_ };
+		return OwnedClxSpriteSheet {
+#ifdef DEVILUTIONX_RESOURCE_TRACKING_ENABLED
+			std::move(handle_),
+#endif
+			std::move(data_), num_lists_
+		};
 	}
 
 	[[nodiscard]] bool isSheet() const
@@ -643,12 +746,21 @@ inline ClxSpriteListOrSheet::ClxSpriteListOrSheet(const OwnedClxSpriteListOrShee
 {
 }
 
-inline OwnedClxSpriteListOrSheet ClxSpriteListOrSheet::clone(std::string_view name, std::string_view trnName) const
+inline OwnedClxSpriteListOrSheet ClxSpriteListOrSheet::clone(
+#ifdef DEVILUTIONX_RESOURCE_TRACKING_ENABLED
+    std::string_view name, std::string_view trnName
+#endif
+) const
 {
 	const size_t size = this->dataSize();
 	std::unique_ptr<uint8_t[]> data { new uint8_t[size] };
 	memcpy(data.get(), data_, size);
-	return OwnedClxSpriteListOrSheet { name, trnName, std::move(data), num_lists_ };
+	return OwnedClxSpriteListOrSheet {
+#ifdef DEVILUTIONX_RESOURCE_TRACKING_ENABLED
+		name, trnName,
+#endif
+		std::move(data), num_lists_
+	};
 }
 
 /**
