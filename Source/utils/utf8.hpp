@@ -1,9 +1,8 @@
 #pragma once
 
-#include <cstdint>
+#include <cstddef>
 #include <string>
 #include <string_view>
-#include <utility>
 
 namespace devilution {
 
@@ -54,10 +53,19 @@ inline bool IsTrailUtf8CodeUnit(char x)
 
 /**
  * @brief Returns the number of code units for a code point starting at *src;
+ *
+ * `src` must not be empty.
+ * If `src` does not begin with a UTF-8 code point start byte, returns 1.
  */
 inline size_t Utf8CodePointLen(const char *src)
 {
-	return "\1\1\1\1\1\1\1\1\1\1\1\1\2\2\3\4"[static_cast<unsigned char>(*src) >> 4];
+	// This constant is effectively a lookup table for 2-bit keys, where
+	// values represent code point length - 1.
+	// `-1` is so that this method never returns 0, even for invalid values
+	// (which could lead to infinite loops in some code).
+	// Generated with:
+	// ruby -e 'p "0000000000000000000000001111223".reverse.to_i(4).to_s(16)'
+	return ((0x3a55000000000000ULL >> (2 * (static_cast<unsigned char>(*src) >> 3))) & 0x3) + 1;
 }
 
 /**
