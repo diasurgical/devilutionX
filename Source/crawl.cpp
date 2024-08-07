@@ -7,66 +7,39 @@
 #include "engine/displacement.hpp"
 
 namespace devilution {
-namespace {
-
-bool CrawlFlipsX(Displacement mirrored, tl::function_ref<bool(Displacement)> function)
-{
-	for (const Displacement displacement : { mirrored.flipX(), mirrored }) {
-		if (!function(displacement))
-			return false;
-	}
-	return true;
-}
-
-bool CrawlFlipsY(Displacement mirrored, tl::function_ref<bool(Displacement)> function)
-{
-	for (const Displacement displacement : { mirrored, mirrored.flipY() }) {
-		if (!function(displacement))
-			return false;
-	}
-	return true;
-}
-
-bool CrawlFlipsXY(Displacement mirrored, tl::function_ref<bool(Displacement)> function)
-{
-	for (const Displacement displacement : { mirrored.flipX(), mirrored, mirrored.flipXY(), mirrored.flipY() }) {
-		if (!function(displacement))
-			return false;
-	}
-	return true;
-}
-
-} // namespace
 
 bool DoCrawl(unsigned radius, tl::function_ref<bool(Displacement)> function)
 {
-	if (radius == 0)
-		return function(Displacement { 0, 0 });
-
-	if (!CrawlFlipsY({ 0, static_cast<int>(radius) }, function))
-		return false;
-	for (unsigned i = 1; i < radius; i++) {
-		if (!CrawlFlipsXY({ static_cast<int>(i), static_cast<int>(radius) }, function))
-			return false;
-	}
-	if (radius > 1) {
-		if (!CrawlFlipsXY({ static_cast<int>(radius) - 1, static_cast<int>(radius) - 1 }, function))
-			return false;
-	}
-	if (!CrawlFlipsX({ static_cast<int>(radius), 0 }, function))
-		return false;
-	for (unsigned i = 1; i < radius; i++) {
-		if (!CrawlFlipsXY({ static_cast<int>(radius), static_cast<int>(i) }, function))
-			return false;
-	}
-	return true;
+	return DoCrawl(radius, radius, function);
 }
 
 bool DoCrawl(unsigned minRadius, unsigned maxRadius, tl::function_ref<bool(Displacement)> function)
 {
-	for (unsigned i = minRadius; i <= maxRadius; i++) {
-		if (!DoCrawl(i, function))
-			return false;
+	for (int r = static_cast<int>(minRadius); r <= static_cast<int>(maxRadius); ++r) {
+		if (!function(Displacement { 0, r })) return false;
+		if (r == 0) continue;
+		if (!function(Displacement { 0, -r })) return false;
+		for (int x = 1; x < r; ++x) {
+			if (!function(Displacement { -x, r })) return false;
+			if (!function(Displacement { x, r })) return false;
+			if (!function(Displacement { -x, -r })) return false;
+			if (!function(Displacement { x, -r })) return false;
+		}
+		if (r > 1) {
+			const int d = r - 1;
+			if (!function(Displacement { -d, d })) return false;
+			if (!function(Displacement { d, d })) return false;
+			if (!function(Displacement { -d, -d })) return false;
+			if (!function(Displacement { d, -d })) return false;
+		}
+		if (!function(Displacement { -r, 0 })) return false;
+		if (!function(Displacement { r, 0 })) return false;
+		for (int y = 1; y < r; ++y) {
+			if (!function(Displacement { -r, y })) return false;
+			if (!function(Displacement { r, y })) return false;
+			if (!function(Displacement { -r, -y })) return false;
+			if (!function(Displacement { r, -y })) return false;
+		}
 	}
 	return true;
 }
