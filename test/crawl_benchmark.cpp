@@ -8,7 +8,7 @@ namespace {
 
 void BM_Crawl(benchmark::State &state)
 {
-	const int radius = state.range(0);
+	const int radius = static_cast<int>(state.range(0));
 	for (auto _ : state) {
 		int sum;
 		Crawl(0, radius, [&sum](Displacement d) {
