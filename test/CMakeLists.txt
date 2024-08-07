@@ -47,6 +47,7 @@ set(standalone_tests
   utf8_test
 )
 set(benchmarks
+  clx_render_benchmark
   crawl_benchmark)
 
 include(Fixtures.cmake)
@@ -84,6 +85,7 @@ add_library(language_for_testing OBJECT language_for_testing.cpp)
 target_sources(language_for_testing INTERFACE $<TARGET_OBJECTS:language_for_testing>)
 
 target_link_libraries(codec_test PRIVATE libdevilutionx_codec app_fatal_for_testing)
+target_link_libraries(clx_render_benchmark PRIVATE libdevilutionx_so)
 target_link_libraries(crawl_test PRIVATE libdevilutionx_crawl)
 target_link_libraries(crawl_benchmark PRIVATE libdevilutionx_crawl)
 target_link_libraries(file_util_test PRIVATE libdevilutionx_file_util app_fatal_for_testing)
