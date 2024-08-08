@@ -257,7 +257,7 @@ void selgame_GameSelection_Focus(size_t value)
 				infoString.append(_("Speed: Fastest"));
 				break;
 			default:
-				// This should not occure, so no translations is needed
+				// This should not occur, so no translation is needed
 				infoString.append(StrCat("Speed: ", gameInfo.gameData.nTickRate));
 				break;
 			}

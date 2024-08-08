@@ -1629,7 +1629,7 @@ bool RandomWalk2(Monster &monster, Direction md)
 }
 
 /**
- * @brief Check if a tile is affected by a spell we are vunerable to
+ * @brief Check if a tile is affected by a spell we are vulnerable to
  */
 bool IsTileSafe(const Monster &monster, Point position)
 {

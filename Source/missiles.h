@@ -43,7 +43,7 @@ struct MissilePosition {
 	Displacement offsetForRendering;
 
 	/**
-	 * @brief Stops the missile (set velocity to zero and set offset to last renderer location; shouldn't matter cause the missile don't move anymore)
+	 * @brief Stops the missile (set velocity to zero and set offset to last renderer location; shouldn't matter because the missile doesn't move anymore)
 	 */
 	void StopMissile()
 	{

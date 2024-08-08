@@ -14,12 +14,12 @@ namespace devilution {
 extern bool qtextflag;
 
 /**
- * @brief Free the resouces used by the quest dialog window
+ * @brief Free the resources used by the quest dialog window
  */
 void FreeQuestText();
 
 /**
- * @brief Load the resouces used by the quest dialog window, and initialize it's state
+ * @brief Load the resources used by the quest dialog window, and initialize it's state
  */
 void InitQuestText();
 

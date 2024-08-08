@@ -155,7 +155,7 @@ enum class DeathReason {
 	MonsterOrTrap,
 	/* @brief Other player or selfkill (for example firewall) */
 	Player,
-	/* @brief HP is zero but we don't know when or where this happend */
+	/* @brief HP is zero but we don't know when or where this happened */
 	Unknown,
 };
 

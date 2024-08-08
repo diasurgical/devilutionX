@@ -487,9 +487,9 @@ HeroCompareResult CompareSaves(const std::string &actualSavePath, const std::str
 		CompareInfo compareInfoActual = { fileDataActual, 0, fileSizeActual, compareTarget.isTownLevel, fileSizeActual != 0 };
 		CreateDetailDiffs(compareTarget.fileName, compareTarget.memoryMapFileName, compareInfoReference, compareInfoActual, foundDiffs);
 		if (compareInfoReference.currentPosition != fileSizeReference)
-			app_fatal(StrCat("Comparsion failed. Uncompared bytes in reference. File: ", compareTarget.fileName));
+			app_fatal(StrCat("Comparison failed. Uncompared bytes in reference. File: ", compareTarget.fileName));
 		if (compareInfoActual.currentPosition != fileSizeActual)
-			app_fatal(StrCat("Comparsion failed. Uncompared bytes in actual. File: ", compareTarget.fileName));
+			app_fatal(StrCat("Comparison failed. Uncompared bytes in actual. File: ", compareTarget.fileName));
 		for (const auto &[location, count] : foundDiffs) {
 			StrAppend(message, "\nDiff found in ", location, " count: ", count);
 		}

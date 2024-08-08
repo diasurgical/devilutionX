@@ -60,7 +60,7 @@ bool ctr_check_dsp()
 		gfxInitDefault();
 		errorConf error;
 		errorInit(&error, ERROR_TEXT, CFG_LANGUAGE_EN);
-		errorText(&error, "Cannot find DSP firmware!\n\n\"sdmc:/3ds/dspfirm.cdc\"\n\nRun \'DSP1\' atleast once to\ndump your DSP firmware.");
+		errorText(&error, "Cannot find DSP firmware!\n\n\"sdmc:/3ds/dspfirm.cdc\"\n\nRun \'DSP1\' at least once to\ndump your DSP firmware.");
 		errorDisp(&error);
 		gfxExit();
 		return false;

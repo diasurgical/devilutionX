@@ -112,7 +112,7 @@ void UpdateMissilePositionForRendering(Missile &m, int progress)
 	Displacement pixelsTravelled = (m.position.traveled + Displacement { static_cast<int>(velocity.deltaX), static_cast<int>(velocity.deltaY) }) >> 16;
 	Displacement tileOffset = pixelsTravelled.screenToMissile();
 
-	// calculcate the future missile position
+	// calculate the future missile position
 	m.position.tileForRendering = m.position.start + tileOffset;
 	m.position.offsetForRendering = pixelsTravelled + tileOffset.worldToScreen();
 }
@@ -130,10 +130,10 @@ void UpdateMissileRendererData(Missile &m)
 	int progress = ProgressToNextGameTick;
 	UpdateMissilePositionForRendering(m, progress);
 
-	// In some cases this calculcated position is invalid.
+	// In some cases this calculated position is invalid.
 	// For example a missile shouldn't move inside a wall.
 	// In this case the game logic don't advance the missile position and removes the missile or shows an explosion animation at the old position.
-	// For the animation distribution logic this means we are not allowed to move to a tile where the missile could collide, cause this could be a invalid position.
+	// For the animation distribution logic this means we are not allowed to move to a tile where the missile could collide, because this could be a invalid position.
 
 	// If we are still at the current tile, this tile was already checked and is a valid tile
 	if (m.position.tileForRendering == m.position.tile)
@@ -918,7 +918,7 @@ void DrawTileContent(const Surface &out, Point tilePosition, Point targetBufferP
 				if (tilePosition.x + 1 < MAXDUNX && tilePosition.y - 1 >= 0 && targetBufferPosition.x + TILE_WIDTH <= gnScreenWidth) {
 					// Render objects behind walls first to prevent sprites, that are moving
 					// between tiles, from poking through the walls as they exceed the tile bounds.
-					// A proper fix for this would probably be to layout the sceen and render by
+					// A proper fix for this would probably be to layout the scene and render by
 					// sprite screen position rather than tile position.
 					if (IsWall(tilePosition) && (IsWall(tilePosition + Displacement { 1, 0 }) || (tilePosition.x > 0 && IsWall(tilePosition + Displacement { -1, 0 })))) { // Part of a wall aligned on the x-axis
 						if (IsTileNotSolid(tilePosition + Displacement { 1, -1 }) && IsTileNotSolid(tilePosition + Displacement { 0, -1 })) {                              // Has walkable area behind it

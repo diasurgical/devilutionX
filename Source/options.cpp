@@ -570,20 +570,20 @@ StartUpOptions::StartUpOptions()
     , gameMode("Game", OptionEntryFlags::NeedHellfireMpq | OptionEntryFlags::RecreateUI, N_("Game Mode"), N_("Play Diablo or Hellfire."), StartUpGameMode::Ask,
           {
               { StartUpGameMode::Diablo, N_("Diablo") },
-              // Ask is missing, cause we want to hide it from UI-Settings.
+              // Ask is missing, because we want to hide it from UI-Settings.
               { StartUpGameMode::Hellfire, N_("Hellfire") },
           })
     , shareware("Shareware", OptionEntryFlags::NeedDiabloMpq | OptionEntryFlags::RecreateUI, N_("Restrict to Shareware"), N_("Makes the game compatible with the demo. Enables multiplayer with friends who don't own a full copy of Diablo."), false)
     , diabloIntro("Diablo Intro", OptionEntryFlags::OnlyDiablo, N_("Intro"), N_("Shown Intro cinematic."), StartUpIntro::Once,
           {
               { StartUpIntro::Off, N_("OFF") },
-              // Once is missing, cause we want to hide it from UI-Settings.
+              // Once is missing, because we want to hide it from UI-Settings.
               { StartUpIntro::On, N_("ON") },
           })
     , hellfireIntro("Hellfire Intro", OptionEntryFlags::OnlyHellfire, N_("Intro"), N_("Shown Intro cinematic."), StartUpIntro::Once,
           {
               { StartUpIntro::Off, N_("OFF") },
-              // Once is missing, cause we want to hide it from UI-Settings.
+              // Once is missing, because we want to hide it from UI-Settings.
               { StartUpIntro::On, N_("ON") },
           })
     , splash("Splash", OptionEntryFlags::None, N_("Splash"), N_("Shown splash screen."), StartUpSplash::LogoAndTitleDialog,

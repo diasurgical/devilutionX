@@ -363,7 +363,7 @@ void PlaceDunTiles(const uint16_t *dunData, Point position, int floorId = 0);
 void DRLG_PlaceThemeRooms(int minSize, int maxSize, int floor, int freq, bool rndSize);
 void DRLG_HoldThemeRooms();
 /**
- * @brief Returns ths size in tiles of the specified ".dun" Data
+ * @brief Returns the size in tiles of the specified ".dun" Data
  */
 WorldTileSize GetDunSize(const uint16_t *dunData);
 void DRLG_LPass3(int lv);

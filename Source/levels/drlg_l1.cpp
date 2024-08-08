@@ -349,7 +349,7 @@ bool CanReplaceTile(uint8_t replace, Point tile)
 		return true;
 	}
 
-	// BUGFIX: p2 is a workaround for a bug, only p1 should have been used (fixing this breaks compatability)
+	// BUGFIX: p2 is a workaround for a bug, only p1 should have been used (fixing this breaks compatibility)
 	constexpr auto ComparisonWithBoundsCheck = [](Point p1, Point p2) {
 		return (p1.x >= 0 && p1.x < DMAXX && p1.y >= 0 && p1.y < DMAXY)
 		    && (p2.x >= 0 && p2.x < DMAXX && p2.y >= 0 && p2.y < DMAXY)

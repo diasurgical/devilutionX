@@ -103,11 +103,11 @@ enum class MissileMovementDistribution : uint8_t {
 	 */
 	Disabled,
 	/**
-	 * @brief The missile moves and if it hits a enemey it stops (for example firebolt)
+	 * @brief The missile moves and if it hits an enemy it stops (for example firebolt)
 	 */
 	Blockable,
 	/**
-	 * @brief The missile moves and even it hits a enemy it keeps moving (for example flame wave)
+	 * @brief The missile moves and even it hits an enemy it keeps moving (for example flame wave)
 	 */
 	Unblockable,
 };

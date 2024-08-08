@@ -121,8 +121,8 @@ void UnsafeDrawBorder2px(const Surface &out, Rectangle rect, uint8_t color);
 Direction GetDirection(Point start, Point destination);
 
 /**
- * @brief Calculate Width2 from the orginal Width
- * Width2 is needed for savegame compatiblity and to render animations centered
+ * @brief Calculate Width2 from the original Width
+ * Width2 is needed for savegame compatibility and to render animations centered
  * @return Returns Width2
  */
 int CalculateWidth2(int width);

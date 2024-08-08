@@ -250,7 +250,7 @@ void StartSpell(Player &player, Direction d, WorldTileCoord cx, WorldTileCoord c
 		return;
 	}
 
-	// Checks conditions for spell again, cause initial check was done when spell was queued and the parameters could be changed meanwhile
+	// Checks conditions for spell again, because initial check was done when spell was queued and the parameters could be changed meanwhile
 	bool isValid = true;
 	switch (player.queuedSpell.spellType) {
 	case SpellType::Skill:
@@ -2673,7 +2673,7 @@ StartPlayerKill(Player &player, DeathReason deathReason)
 
 	if (&player != MyPlayer && dropItems) {
 		// Ensure that items are removed for remote players
-		// The dropped items will be synced seperatly (by the remote client)
+		// The dropped items will be synced separately (by the remote client)
 		for (Item &item : player.InvBody) {
 			item.clear();
 		}
@@ -2687,7 +2687,7 @@ StartPlayerKill(Player &player, DeathReason deathReason)
 		SetPlayerOld(player);
 
 		// Only generate drops once (for the local player)
-		// For remote players we get seperated sync messages (by the remote client)
+		// For remote players we get separated sync messages (by the remote client)
 		if (&player == MyPlayer) {
 			RedrawComponent(PanelDrawComponent::Health);
 

@@ -171,7 +171,7 @@ bool AutoPlaceItemInBelt(Player &player, const Item &item, bool persistItem = fa
 void ReorganizeInventory(Player &player);
 
 /**
- * @brief Calculate the maximum aditional gold that may fit in the user's inventory
+ * @brief Calculate the maximum additional gold that may fit in the user's inventory
  */
 int RoomForGold();
 

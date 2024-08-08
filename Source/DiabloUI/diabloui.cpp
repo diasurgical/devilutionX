@@ -721,7 +721,7 @@ void DrawSelector(const SDL_Rect &rect)
 	const ClxSpriteList sprites = *ArtFocus[size];
 	const ClxSprite sprite = sprites[GetAnimationFrame(sprites.numSprites())];
 
-	// TODO FOCUS_MED appares higher than the box
+	// TODO FOCUS_MED appears higher than the box
 	const int y = rect.y + (rect.h - static_cast<int>(sprite.height())) / 2;
 
 	const Surface &out = Surface(DiabloUiSurface());

@@ -1030,7 +1030,7 @@ msgid "Command "
 msgstr "Comando "
 
 #: Source/control.cpp:354
-msgid " is unkown."
+msgid " is unknown."
 msgstr " sconosciuto."
 
 #: Source/control.cpp:357 Source/control.cpp:358
@@ -10702,7 +10702,7 @@ msgstr ""
 #: Source/textdat.cpp:425
 msgid ""
 "If I was you... and I ain't... but if I was, I'd sell all that stuff you got "
-"and get out of here. That boy out there... He's always got somethin good, "
+"and get out of here. That boy out there... He's always got somethin' good, "
 "but you gotta give him some gold or he won't even show you what he's got."
 msgstr ""
 "Se fossi in te... e non lo sono... ma se lo fossi, venderei tutte le cose "
@@ -11373,7 +11373,7 @@ msgid ""
 "My grandmother often tells me stories about the strange forces that inhabit "
 "the graveyard outside of the church.  And it may well interest you to hear "
 "one of them.  She said that if you were to leave the proper offering in the "
-"cemetary, enter the cathedral to pray for the dead, and then return, the "
+"cemetery, enter the cathedral to pray for the dead, and then return, the "
 "offering would be altered in some strange way.  I don't know if this is just "
 "the talk of an old sick woman, but anything seems possible these days."
 msgstr ""
