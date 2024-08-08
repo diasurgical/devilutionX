@@ -31,7 +31,7 @@ bool GetFileSize(const char *path, std::uintmax_t *size);
 /**
  * @brief Creates a single directory (non-recursively).
  *
- * @return True if the directory already existed or has been created sucessfully.
+ * @return True if the directory already existed or has been created successfully.
  */
 bool CreateDir(const char *path);
 

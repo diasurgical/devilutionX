@@ -1851,7 +1851,7 @@ void OperateBook(Player &player, Object &book, bool sendmsg)
 		Object &circle = ObjectAtPosition(book.position + Direction::SouthWest);
 		assert(circle._otype == OBJ_MCIRCLE2);
 
-		// Only verfiy that the player stands on the circle when it's the local player (sendmsg), cause for remote players the position could be desynced
+		// Only verify that the player stands on the circle when it's the local player (sendmsg), because for remote players the position could be desynced
 		if (sendmsg && circle.position != player.position.tile) {
 			return;
 		}
@@ -2208,7 +2208,7 @@ void OperatePedestal(Player &player, Object &pedestal, bool sendmsg)
 	if (sendmsg) {
 		NetSendCmdLoc(MyPlayerId, false, CMD_OPERATEOBJ, pedestal.position);
 		if (gbIsMultiplayer) {
-			// Store added stones to pedestal in qvar2, cause we get only one CMD_OPERATEOBJ from DeltaLoadLevel even if we add multiple stones
+			// Store added stones to pedestal in qvar2, because we get only one CMD_OPERATEOBJ from DeltaLoadLevel even if we add multiple stones
 			Quests[Q_BLOOD]._qvar2++;
 			NetSendCmdQuest(true, Quests[Q_BLOOD]);
 		}

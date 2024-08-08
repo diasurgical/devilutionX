@@ -32,7 +32,7 @@ enum clicktype : int8_t {
 };
 
 /**
- * @brief Specifices what game logic step is currently executed
+ * @brief Specifies what game logic step is currently executed
  */
 enum class GameLogicStep : uint8_t {
 	None,
@@ -121,7 +121,7 @@ struct QuickMessage {
 constexpr size_t QUICK_MESSAGE_OPTIONS = 10;
 extern QuickMessage QuickMessages[QUICK_MESSAGE_OPTIONS];
 /**
- * @brief Specifices what game logic step is currently executed
+ * @brief Specifies what game logic step is currently executed
  */
 extern GameLogicStep gGameLogicStep;
 

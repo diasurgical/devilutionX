@@ -32,7 +32,7 @@ public:
 	/**
 	 * @brief Advance the global RandomNumberEngine state by the specified number of rounds
 	 *
-	 * Only used to maintain vanilla compatibility until logic requiring reproducable random number generation is isolated.
+	 * Only used to maintain vanilla compatibility until logic requiring reproducible random number generation is isolated.
 	 * @param count How many values to discard
 	 */
 	void discardRandomValues(unsigned count)
@@ -125,7 +125,7 @@ public:
 
 	/**
 	 * @brief Randomly chooses a value somewhere within the given range
-	 * @param min lower limit, minumum possible value
+	 * @param min lower limit, minimum possible value
 	 * @param max upper limit, either the maximum possible value for a closed range (the default behaviour) or one greater than the maximum value for a half-open range
 	 * @param halfOpen whether to use the limits as a half-open range or not
 	 * @return a randomly selected integer
@@ -155,7 +155,7 @@ uint32_t GetLCGEngineState();
 /**
  * @brief Advance the global RandomNumberEngine state by the specified number of rounds
  *
- * Only used to maintain vanilla compatibility until logic requiring reproducable random number generation is isolated.
+ * Only used to maintain vanilla compatibility until logic requiring reproducible random number generation is isolated.
  * @param count How many values to discard
  */
 void DiscardRandomValues(unsigned count);
@@ -234,7 +234,7 @@ inline int32_t RandomIntLessThan(int32_t v)
 
 /**
  * @brief Randomly chooses a value somewhere within the given range
- * @param min lower limit, minumum possible value
+ * @param min lower limit, minimum possible value
  * @param max upper limit, either the maximum possible value for a closed range (the default behaviour) or one greater than the maximum value for a half-open range
  * @param halfOpen whether to use the limits as a half-open range or not
  * @return a randomly selected integer

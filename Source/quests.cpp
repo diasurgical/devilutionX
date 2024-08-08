@@ -94,7 +94,7 @@ constexpr int LineHeight = 12;
 constexpr int MaxSpacing = LineHeight * 2;
 int ListYOffset;
 int LineSpacing;
-/** The number of pixels to move finished quest, to seperate them from the active ones */
+/** The number of pixels to move finished quest, to separate them from the active ones */
 int FinishedQuestOffset;
 
 const char *const QuestTriggerNames[5] = {

@@ -2293,7 +2293,7 @@ StringOrView GetTranslatedItemName(const Item &item)
 				continue;
 			return _(OilNames[i]);
 		}
-		app_fatal("unkown oil");
+		app_fatal("unknown oil");
 	} else if (item._itype == ItemType::Staff && item._iSpell != SpellID::Null && item._iMagical != ITEM_QUALITY_UNIQUE) {
 		return GenerateStaffName(baseItemData, item._iSpell, true);
 	} else {
@@ -3379,7 +3379,7 @@ void SpawnItem(Monster &monster, Point position, bool sendmsg, bool spawn /*= fa
 			NetSendCmdPItem(false, CMD_DROPITEM, uniqueItem->position, *uniqueItem);
 		return;
 	} else if (monster.isUnique() || dropsSpecialTreasure) {
-		// Unqiue monster is killed => use better item base (for example no gold)
+		// Unique monster is killed => use better item base (for example no gold)
 		idx = RndUItem(&monster);
 	} else if (dropBrain && !gbIsMultiplayer) {
 		// Normal monster is killed => need to drop brain to progress the quest
@@ -3392,7 +3392,7 @@ void SpawnItem(Monster &monster, Point position, bool sendmsg, bool spawn /*= fa
 			Quests[Q_MUSHROOM]._qvar1 = QS_BRAINSPAWNED;
 			NetSendCmdQuest(true, Quests[Q_MUSHROOM]);
 			// Drop the brain as extra item to ensure that all clients see the brain drop
-			// When executing SpawnItem is not reliable, cause another client can already have the quest state updated before SpawnItem is executed
+			// When executing SpawnItem is not reliable, because another client can already have the quest state updated before SpawnItem is executed
 			Point posBrain = GetSuperItemLoc(position);
 			SpawnQuestItem(IDI_BRAIN, posBrain, 0, 0, true);
 		}
@@ -5105,7 +5105,7 @@ void UpdateHellfireFlag(Item &item, const char *identifiedItemName)
 		return; // Only magic item's name can differ between diablo and hellfire
 	if (gbIsMultiplayer)
 		return; // Vanilla hellfire multiplayer is not supported in devilutionX, so there can't be items with missing dwBuff from there
-	// We need to test both short and long name, cause StringInPanel can return a different result (other font and some bugfixes)
+	// We need to test both short and long name, because StringInPanel can return a different result (other font and some bugfixes)
 	std::string diabloItemNameShort = GetTranslatedItemNameMagical(item, false, false, false);
 	if (diabloItemNameShort == identifiedItemName)
 		return; // Diablo item name is identical => not a hellfire specific item
