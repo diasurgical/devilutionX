@@ -1,6 +1,6 @@
 #pragma once
 
-#include "engine/render/blit_impl.hpp"
+#include <cstdint>
 
 namespace devilution {
 
@@ -12,7 +12,7 @@ namespace devilution {
 
 [[nodiscard]] constexpr uint8_t GetClxOpaquePixelsWidth(uint8_t control)
 {
-	return -static_cast<std::int8_t>(control);
+	return -static_cast<int8_t>(control);
 }
 
 [[nodiscard]] constexpr bool IsClxOpaqueFill(uint8_t control)
@@ -24,7 +24,7 @@ namespace devilution {
 [[nodiscard]] constexpr uint8_t GetClxOpaqueFillWidth(uint8_t control)
 {
 	constexpr uint8_t ClxFillEnd = 0xBF;
-	return static_cast<int_fast16_t>(ClxFillEnd - control);
+	return ClxFillEnd - control;
 }
 
 } // namespace devilution
