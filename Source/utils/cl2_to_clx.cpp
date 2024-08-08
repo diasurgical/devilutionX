@@ -11,24 +11,6 @@
 
 namespace devilution {
 
-namespace {
-
-constexpr size_t FrameHeaderSize = 10;
-
-struct SkipSize {
-	int_fast16_t wholeLines;
-	int_fast16_t xOffset;
-};
-SkipSize GetSkipSize(int_fast16_t overrun, int_fast16_t srcWidth)
-{
-	SkipSize result;
-	result.wholeLines = overrun / srcWidth;
-	result.xOffset = overrun - srcWidth * result.wholeLines;
-	return result;
-}
-
-} // namespace
-
 uint16_t Cl2ToClx(const uint8_t *data, size_t size,
     PointerOrValue<uint16_t> widthOrWidths, std::vector<uint8_t> &clxData)
 {
@@ -74,6 +56,7 @@ uint16_t Cl2ToClx(const uint8_t *data, size_t size,
 			const uint16_t frameWidth = widthOrWidths.HoldsPointer() ? widthOrWidths.AsPointer()[frame - 1] : widthOrWidths.AsValue();
 
 			const size_t frameHeaderPos = clxData.size();
+			constexpr size_t FrameHeaderSize = 10;
 			clxData.resize(clxData.size() + FrameHeaderSize);
 			WriteLE16(&clxData[frameHeaderPos], FrameHeaderSize);
 			WriteLE16(&clxData[frameHeaderPos + 2], frameWidth);
@@ -110,14 +93,9 @@ uint16_t Cl2ToClx(const uint8_t *data, size_t size,
 					}
 				}
 
-				++frameHeight;
-				if (remainingWidth < 0) {
-					const auto skipSize = GetSkipSize(-remainingWidth, static_cast<int_fast16_t>(frameWidth));
-					xOffset = skipSize.xOffset;
-					frameHeight += skipSize.wholeLines;
-				} else {
-					xOffset = 0;
-				}
+				const auto skipSize = GetSkipSize(remainingWidth, static_cast<int_fast16_t>(frameWidth));
+				xOffset = skipSize.xOffset;
+				frameHeight += skipSize.wholeLines;
 			}
 			if (!pixels.empty()) {
 				AppendClxPixelsOrFillRun(pixels.data(), pixels.size(), clxData);
