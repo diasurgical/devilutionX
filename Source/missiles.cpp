@@ -690,7 +690,7 @@ bool GuardianTryFireAt(Missile &missile, Point target)
 	return true;
 }
 
-bool GrowWall(int id, Point position, Point target, MissileID type, int spellLevel, int damage)
+bool GrowWall(int id, Point position, Point target, MissileID type, int spellLevel, int damage, bool skip = false)
 {
 	[[maybe_unused]] int dp = dPiece[position.x][position.y];
 	assert(dp <= MAXTILES && dp >= 0);
@@ -699,7 +699,8 @@ bool GrowWall(int id, Point position, Point target, MissileID type, int spellLev
 		return false;
 	}
 
-	AddMissile(position, position, Direction::South, type, TARGET_BOTH, id, damage, spellLevel);
+	if (!skip)
+		AddMissile(position, position, Direction::South, type, TARGET_BOTH, id, damage, spellLevel);
 	return true;
 }
 
@@ -3188,6 +3189,10 @@ void ProcessLightningWallControl(Missile &missile)
 	int lvl = !missile.IsTrap() ? Players[id].getCharacterLevel() : 0;
 	int dmg = 16 * (GenerateRndSum(10, 2) + lvl + 2);
 
+	// Defines the current position of the control missile moving towards var3 direction.
+	// This is used to make sure the opposite side does not create walls where walls have already been created.
+	const Point currentPosition = { missile.var1, missile.var2 };
+
 	{
 		Point position = { missile.var1, missile.var2 };
 		Point target = position + static_cast<Direction>(missile.var3);
@@ -3204,7 +3209,7 @@ void ProcessLightningWallControl(Missile &missile)
 		Point position = { missile.var5, missile.var6 };
 		Point target = position + static_cast<Direction>(missile.var4);
 
-		if (missile.var7 == 0 && GrowWall(id, position, target, MissileID::LightningWall, missile._mispllvl, dmg)) {
+		if (missile.var7 == 0 && GrowWall(id, position, target, MissileID::LightningWall, missile._mispllvl, dmg, position == currentPosition)) {
 			missile.var5 = target.x;
 			missile.var6 = target.y;
 		} else {
@@ -3734,6 +3739,10 @@ void ProcessFireWallControl(Missile &missile)
 
 	int id = missile._misource;
 
+	// Defines the current position of the control missile moving towards var3 direction.
+	// This is used to make sure the opposite side does not create walls where walls have already been created.
+	Point currentPosition = { missile.var1, missile.var2 };
+
 	{
 		Point position = { missile.var1, missile.var2 };
 		Point target = position + static_cast<Direction>(missile.var3);
@@ -3750,7 +3759,7 @@ void ProcessFireWallControl(Missile &missile)
 		Point position = { missile.var5, missile.var6 };
 		Point target = position + static_cast<Direction>(missile.var4);
 
-		if (missile.var7 == 0 && GrowWall(id, position, target, MissileID::FireWall, missile._mispllvl, 0)) {
+		if (missile.var7 == 0 && GrowWall(id, position, target, MissileID::FireWall, missile._mispllvl, 0, position == currentPosition)) {
 			missile.var5 = target.x;
 			missile.var6 = target.y;
 		} else {
