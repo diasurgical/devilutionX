@@ -17,6 +17,7 @@
 #include "engine/backbuffer_state.hpp"
 #include "engine/clx_sprite.hpp"
 #include "engine/load_cel.hpp"
+#include "engine/palette.h"
 #include "engine/render/clx_render.hpp"
 #include "engine/render/text_render.hpp"
 #include "engine/size.hpp"
@@ -26,6 +27,7 @@
 #include "minitext.h"
 #include "options.h"
 #include "panels/ui_panels.hpp"
+#include "player.h"
 #include "plrmsg.h"
 #include "qol/stash.h"
 #include "stores.h"
@@ -1040,26 +1042,27 @@ void InvDrawSlotBack(const Surface &out, Point targetPosition, Size size, item_q
 	if (size.width <= 0 || size.height <= 0)
 		return;
 
-	std::uint8_t *dst = &out[targetPosition];
-	const auto dstPitch = out.pitch();
+	uint8_t colorShift;
+	switch (itemQuality) {
+	case ITEM_QUALITY_MAGIC:
+		colorShift = PAL16_GRAY - (!IsInspectingPlayer() ? PAL16_BLUE : PAL16_ORANGE) - 1;
+		break;
+	case ITEM_QUALITY_UNIQUE:
+		colorShift = PAL16_GRAY - (!IsInspectingPlayer() ? PAL16_YELLOW : PAL16_ORANGE) - 1;
+		break;
+	default:
+		colorShift = PAL16_GRAY - (!IsInspectingPlayer() ? PAL16_BEIGE : PAL16_ORANGE) - 1;
+		break;
+	}
 
-	for (int hgt = size.height; hgt != 0; hgt--, dst -= dstPitch + size.width) {
-		for (int wdt = size.width; wdt != 0; wdt--) {
-			std::uint8_t pix = *dst;
+	uint8_t *dst = &out[targetPosition];
+	const auto dstPitch = out.pitch();
+	for (int y = size.height; y != 0; --y, dst -= dstPitch + size.width) {
+		for (const uint8_t *end = dst + size.width; dst < end; ++dst) {
+			uint8_t &pix = *dst;
 			if (pix >= PAL16_GRAY) {
-				switch (itemQuality) {
-				case ITEM_QUALITY_MAGIC:
-					pix -= PAL16_GRAY - (!IsInspectingPlayer() ? PAL16_BLUE : PAL16_ORANGE) - 1;
-					break;
-				case ITEM_QUALITY_UNIQUE:
-					pix -= PAL16_GRAY - (!IsInspectingPlayer() ? PAL16_YELLOW : PAL16_ORANGE) - 1;
-					break;
-				default:
-					pix -= PAL16_GRAY - (!IsInspectingPlayer() ? PAL16_BEIGE : PAL16_ORANGE) - 1;
-					break;
-				}
+				pix -= colorShift;
 			}
-			*dst++ = pix;
 		}
 	}
 }
