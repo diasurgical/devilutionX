@@ -18,6 +18,34 @@ You may also want to install debugging symbols for SDL2:
 sudo apt install libsdl2-dev-dbgsym
 ```
 
+gperftools by default only comes with a basic visualizer.
+[pprof](https://github.com/google/pprof), also from Google, is a more fully-featured profile visualizer
+that provides an interactive web server with a flame graph, source annotation, etc.
+
+To install pprof, run:
+
+```bash
+go install github.com/google/pprof@latest
+```
+
+## CPU profiling with gperftools
+
+```bash
+cmake -S. -Bbuild-gperf -DCMAKE_BUILD_TYPE=RelWithDebInfo -DGPERF=ON -DBUILD_TESTING=ON
+```
+
+Timedemo:
+
+```bash
+tools/build_and_run_benchmark.py --gperf devilutionx -- --diablo --spawn --lang en --demo 0 --timedemo
+```
+
+Individual benchmarks (built when `BUILD_TESTING` is `ON`):
+
+```bash
+tools/build_and_run_benchmark.py --gperf clx_render_benchmark
+```
+
 ## Heap profiling with gperftools
 
 Heap profiling produces a graph of all heap allocations that are alive between two points

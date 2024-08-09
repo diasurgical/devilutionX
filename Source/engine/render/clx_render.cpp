@@ -70,25 +70,6 @@ struct RenderSrc {
 	uint_fast16_t width;
 };
 
-struct SkipSize {
-	int_fast16_t wholeLines;
-	int_fast16_t xOffset;
-};
-
-DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT SkipSize GetSkipSize(int_fast16_t remainingWidth, int_fast16_t srcWidth)
-{
-	if (remainingWidth < 0) {
-		// If `remainingWidth` is negative, `-remainingWidth` is the overrun.
-		const int_fast16_t overrunLines = -remainingWidth / srcWidth;
-		return {
-			static_cast<int_fast16_t>(1 + overrunLines),
-			static_cast<int_fast16_t>(-remainingWidth - srcWidth * overrunLines)
-		};
-	}
-	// If `remainingWidth` is non-negative, then it is 0, meaning we drew a whole line.
-	return { 1, 0 };
-}
-
 DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT const uint8_t *SkipRestOfLineWithOverrun(
     const uint8_t *src, int_fast16_t srcWidth, SkipSize &skipSize)
 {
