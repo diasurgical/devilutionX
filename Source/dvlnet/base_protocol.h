@@ -3,6 +3,7 @@
 #include <memory>
 #include <set>
 #include <string>
+#include <string_view>
 
 #include <ankerl/unordered_dense.h>
 
@@ -109,15 +110,16 @@ bool base_protocol<P>::wait_firstpeer()
 {
 	// wait for peer for 5 seconds
 	for (auto i = 0; i < 500; ++i) {
-		if (game_list.find(gamename) != game_list.end()) {
-			firstpeer = game_list[gamename].peer;
+		auto it = game_list.find(gamename);
+		if (it != game_list.end()) {
+			firstpeer = it->second.peer;
 			break;
 		}
 		send_info_request();
 		recv();
 		SDL_Delay(10);
 	}
-	return (bool)firstpeer;
+	return bool { firstpeer };
 }
 
 template <class P>
