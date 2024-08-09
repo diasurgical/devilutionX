@@ -31,7 +31,11 @@ OwnedClxSpriteListOrSheet LoadCelListOrSheet(const char *pszName, PointerOrValue
 #ifdef DEBUG_CEL_TO_CL2_SIZE
 	std::cout << path;
 #endif
-	return CelToClx(data.get(), size, widthOrWidths);
+	return CelToClx(
+#ifdef DEVILUTIONX_RESOURCE_TRACKING_ENABLED
+	    pszName, /*trnName=*/ {},
+#endif
+	    data.get(), size, widthOrWidths);
 #endif
 }
 
