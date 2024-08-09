@@ -47,7 +47,7 @@ typedef int leaveinfo_t; // also change later
 #ifdef PACKET_ENCRYPTION
 typedef std::array<unsigned char, crypto_secretbox_KEYBYTES> key_t;
 #else
-// Stub out the key_t defintion as we're not doing any encryption.
+// Stub out the key_t definition as we're not doing any encryption.
 using key_t = uint8_t;
 #endif
 

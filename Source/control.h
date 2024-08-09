@@ -76,7 +76,7 @@ void CloseCharPanel();
 void ToggleCharPanel();
 
 /**
- * @brief Check if the UI can cover the game area entierly
+ * @brief Check if the UI can cover the game area entirely
  */
 inline bool CanPanelsCoverView()
 {
@@ -160,7 +160,7 @@ void CheckPanelInfo();
 
 /**
  * Check if the mouse is within a control panel button that's flagged.
- * Takes apropiate action if so.
+ * Takes appropriate action if so.
  */
 void CheckBtnUp();
 void FreeControlPan();

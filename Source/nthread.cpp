@@ -215,7 +215,7 @@ bool nthread_has_500ms_passed(bool *drawGame /*= nullptr*/)
 		if (gbIsMultiplayer) {
 			for (size_t i = 0; i < Players.size(); i++) {
 				if ((player_state[i] & PS_CONNECTED) != 0 && i != MyPlayerId) {
-					// Reset last tick is not allowed when other players are connected, cause the elapsed time is needed to sync the game ticks between the clients
+					// Reset last tick is not allowed when other players are connected, because the elapsed time is needed to sync the game ticks between the clients
 					resetLastTick = false;
 					break;
 				}

@@ -683,7 +683,7 @@ void DeltaImportData(_cmd_id cmd, uint32_t recvOffset)
 		src += DeltaImportMonster(src, deltaLevel.monster);
 		src = DeltaImportSpawnedMonsters(src, deltaLevel.spawnedMonsters);
 	} else {
-		app_fatal(StrCat("Unkown network message type: ", cmd));
+		app_fatal(StrCat("Unknown network message type: ", cmd));
 	}
 
 	sgbDeltaChunks++;

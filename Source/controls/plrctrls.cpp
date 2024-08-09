@@ -1253,7 +1253,7 @@ void SpellBookMove(AxisDirection dir)
 /**
  * @brief check if stepping in direction (dir) from position is blocked.
  *
- * If you step from A to B, at leat one of the Xs need to be clear:
+ * If you step from A to B, at least one of the Xs need to be clear:
  *
  *  AX
  *  XB
@@ -1747,7 +1747,7 @@ void plrctrls_after_check_curs_move()
 		return;
 	}
 
-	// Clear focuse set by cursor
+	// Clear focus set by cursor
 	PlayerUnderCursor = nullptr;
 	pcursmonst = -1;
 	pcursitem = -1;

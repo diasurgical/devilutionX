@@ -707,11 +707,11 @@ void CheckCursMove()
 	int ty = sy / TILE_HEIGHT;
 	ShiftGrid(&mx, &my, tx, ty);
 
-	// Shift position to match diamond grid aligment
+	// Shift position to match diamond grid alignment
 	int px = sx % TILE_WIDTH;
 	int py = sy % TILE_HEIGHT;
 
-	// Shift position to match diamond grid aligment
+	// Shift position to match diamond grid alignment
 	bool flipy = py < (px / 2);
 	if (flipy) {
 		my--;

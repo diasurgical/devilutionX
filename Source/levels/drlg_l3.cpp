@@ -1017,14 +1017,14 @@ void River()
 	int riveramt;
 
 	int rivercnt = 0;
-	int trys = 0;
+	int tries = 0;
 	/// BUGFIX: pdir is uninitialized, add code `pdir = -1;`(fixed)
 	int pdir = -1;
 
-	while (trys < 200 && rivercnt < 4) {
+	while (tries < 200 && rivercnt < 4) {
 		bool bail = false;
-		while (!bail && trys < 200) {
-			trys++;
+		while (!bail && tries < 200) {
+			tries++;
 			int rx = 0;
 			int ry = 0;
 			int i = 0;
@@ -1369,7 +1369,7 @@ bool CanReplaceTile(uint8_t replace, Point tile)
 		return true;
 	}
 
-	// BUGFIX: p2 is a workaround for a bug, only p1 should have been used (fixing this breaks compatability)
+	// BUGFIX: p2 is a workaround for a bug, only p1 should have been used (fixing this breaks compatibility)
 	constexpr auto ComparisonWithBoundsCheck = [](Point p1, Point p2) {
 		return (p1.x >= 0 && p1.x < DMAXX && p1.y >= 0 && p1.y < DMAXY)
 		    && (p2.x >= 0 && p2.x < DMAXX && p2.y >= 0 && p2.y < DMAXY)
@@ -1805,8 +1805,8 @@ bool PlaceAnvil()
 	WorldTileCoord sx = GenerateRnd(DMAXX - areaSize.width);
 	WorldTileCoord sy = GenerateRnd(DMAXY - areaSize.height);
 
-	for (int trys = 0;; trys++, sx++) {
-		if (trys > 198)
+	for (int tries = 0;; tries++, sx++) {
+		if (tries > 198)
 			return false;
 
 		if (sx == DMAXX - areaSize.width) {

@@ -81,7 +81,7 @@ using SaveWriter = MpqWriter;
 #endif
 
 /**
- * @brief Comparsion result of pfile_compare_hero_demo
+ * @brief Comparison result of pfile_compare_hero_demo
  */
 struct HeroCompareResult {
 	enum Status : uint8_t {
@@ -107,9 +107,9 @@ void pfile_write_hero(bool writeGameData = false);
 void pfile_write_hero_demo(int demo);
 /**
  * @brief Compares the actual game-state (savegame) with a reference game-state (save game from demo recording)
- * @param demo for the comparsion
+ * @param demo for the comparison
  * @param logDetails in case of a difference log details
- * @return The comparsion result.
+ * @return The comparison result.
  */
 HeroCompareResult pfile_compare_hero_demo(int demo, bool logDetails);
 #endif

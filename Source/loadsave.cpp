@@ -594,7 +594,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	// Omit pointer _pBData
 	// Omit pointer pReserved
 
-	// Ensure plrIsOnSetLevel and plrlevel is correctly initialized, cause in vanilla sometimes plrlevel is not updated to setlvlnum
+	// Ensure plrIsOnSetLevel and plrlevel is correctly initialized, because in vanilla sometimes plrlevel is not updated to setlvlnum
 	if (setlevel)
 		player.setLevel(setlvlnum);
 	else
@@ -702,7 +702,7 @@ void LoadMonster(LoadHelper *file, Monster &monster, MonsterConversionData *mons
 	monster.packSize = file->NextLE<uint8_t>();
 	monster.lightId = file->NextLE<int8_t>();
 	if (monster.lightId == 0)
-		monster.lightId = NO_LIGHT; // Correct incorect values in old saves
+		monster.lightId = NO_LIGHT; // Correct incorrect values in old saves
 
 	// Omit pointer name;
 
@@ -1671,7 +1671,7 @@ void SaveQuest(SaveHelper *file, int i)
 	auto &quest = Quests[i];
 
 	file->WriteLE<uint8_t>(quest._qlevel);
-	file->WriteLE<uint8_t>(quest._qidx); // _qtype for compatability, used in DRLG_CheckQuests
+	file->WriteLE<uint8_t>(quest._qidx); // _qtype for compatibility, used in DRLG_CheckQuests
 	file->WriteLE<uint8_t>(quest._qactive);
 	file->WriteLE<uint8_t>(quest._qlvltype);
 	file->WriteLE<int32_t>(quest.position.x);
@@ -1790,7 +1790,7 @@ void LoadAdditionalMissiles()
 	LoadHelper file(OpenSaveArchive(gSaveNumber), "additionalMissiles");
 
 	if (!file.IsValid()) {
-		// no addtional Missiles saved
+		// no additional Missiles saved
 		return;
 	}
 
@@ -2782,7 +2782,7 @@ void SaveGameData(SaveWriter &saveWriter)
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
 			for (int i = 0; i < MAXDUNX; i++)                                 // NOLINT(modernize-loop-convert)
-				file.WriteLE<int8_t>(TileContainsMissile({ i, j }) ? -1 : 0); // For backwards compatability
+				file.WriteLE<int8_t>(TileContainsMissile({ i, j }) ? -1 : 0); // For backwards compatibility
 		}
 	}
 
