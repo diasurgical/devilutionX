@@ -216,7 +216,13 @@ bool IsDevilutionXMpqOutOfDate(MpqArchive &archive)
 #ifdef UNPACKED_MPQS
 bool AreExtraFontsOutOfDate(const std::string &path)
 {
-	const std::string versionPath = path + "fonts" DIRECTORY_SEPARATOR_STR "VERSION";
+#ifdef __DREAMCAST__
+       //handle ISO 9660 trailing period
+       const std::string versionPath = path + "fonts" DIRECTORY_SEPARATOR_STR "VERSION.";
+#else
+       const std::string versionPath = path + "fonts" DIRECTORY_SEPARATOR_STR "VERSION";
+#endif
+
 	if (versionPath.size() + 1 > AssetRef::PathBufSize)
 		app_fatal("Path too long");
 	AssetRef ref;

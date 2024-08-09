@@ -5,6 +5,7 @@ on:  # yamllint disable-line rule:truthy
   push:
     branches:
       - master
+      - dreamcast
     paths-ignore:
       - '*.md'
       - 'docs/**'
@@ -45,6 +46,12 @@ jobs:
           unpack_and_minify_mpq spawn.mpq --output-dir data
           rm spawn.mpq
 
+      - name: Download and unpack fonts.mpq
+        run: |
+          curl -LO https://github.com/diasurgical/devilutionx-assets/releases/download/v4/fonts.mpq && \
+          unpack_and_minify_mpq fonts.mpq --output-dir data/fonts && \
+          rm fonts.mpq
+
       - name: Configure CMake
         run: |
           source /opt/toolchains/dc/kos/environ.sh && \
@@ -65,6 +72,7 @@ jobs:
         run: |
           source /opt/toolchains/dc/kos/environ.sh && \
           cp -R data/spawn build/data/spawn && \
+          cp -R data/fonts/fonts/fonts/ build/data/fonts/ && \
           mkdcdisc -e build/devilutionx.elf -o build/devilutionx.cdi --name 'Diablo 1' -d build/data/
 
       - name: Upload .elf Package

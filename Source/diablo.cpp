@@ -1152,12 +1152,7 @@ void CheckArchivesUpToDate()
 		            "\n"
 		            "Make sure devilutionx.mpq is in the game folder and that it is up to date."));
 	} else if (fontsMpqOutOfDate) {
-#ifdef __DREAMCAST__
-		//todo fixme for the dreamcast
-		Log(_("Please update fonts.mpq to the latest version"));
-#else
 		app_fatal(_("Please update fonts.mpq to the latest version"));
-#endif
 	}
 }
 
