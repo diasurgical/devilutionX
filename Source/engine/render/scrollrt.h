@@ -13,7 +13,6 @@
 
 namespace devilution {
 
-extern int LightTableIndex;
 extern bool AutoMapShowItems;
 extern bool frameflag;
 
