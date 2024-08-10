@@ -83,6 +83,14 @@ inline void RenderClxSpriteWithTRN(const Surface &out, ClxSprite clx, Point posi
 void ClxDrawBlendedTRN(const Surface &out, Point position, ClxSprite clx, const uint8_t *trn);
 
 /**
+ * @brief Blit CLX sprite with 50% transparency to the given buffer at the given coordinates.
+ * @param out Output buffer
+ * @param position Target buffer coordinate
+ * @param clx CLX frame
+ */
+void ClxDrawBlended(const Surface &out, Point position, ClxSprite clx);
+
+/**
  * @brief Blit CL2 sprite, and apply lighting, to the given buffer at the given coordinates
  * @param out Output buffer
  * @param position Target buffer coordinate
@@ -90,10 +98,11 @@ void ClxDrawBlendedTRN(const Surface &out, Point position, ClxSprite clx, const 
  */
 inline void ClxDrawLight(const Surface &out, Point position, ClxSprite clx, int lightTableIndex)
 {
-	if (lightTableIndex != 0)
+	if (lightTableIndex != 0) {
 		ClxDrawTRN(out, position, clx, LightTables[lightTableIndex].data());
-	else
+	} else {
 		ClxDraw(out, position, clx);
+	}
 }
 
 /**
@@ -104,7 +113,11 @@ inline void ClxDrawLight(const Surface &out, Point position, ClxSprite clx, int 
  */
 inline void ClxDrawLightBlended(const Surface &out, Point position, ClxSprite clx, int lightTableIndex)
 {
-	ClxDrawBlendedTRN(out, position, clx, LightTables[lightTableIndex].data());
+	if (lightTableIndex != 0) {
+		ClxDrawBlendedTRN(out, position, clx, LightTables[lightTableIndex].data());
+	} else {
+		ClxDrawBlended(out, position, clx);
+	}
 }
 
 /**
