@@ -569,7 +569,7 @@ void DrawCell(const Surface &out, Point tilePosition, Point targetBufferPosition
  * @param tilePosition dPiece coordinates
  * @param targetBufferPosition Target buffer coordinate
  */
-void DrawFloor(const Surface &out, Point tilePosition, Point targetBufferPosition)
+void DrawFloorTile(const Surface &out, Point tilePosition, Point targetBufferPosition)
 {
 	const int lightTableIndex = dLight[tilePosition.x][tilePosition.y];
 
@@ -837,7 +837,7 @@ void DrawFloor(const Surface &out, Point tilePosition, Point targetBufferPositio
 		for (int j = 0; j < columns; j++) {
 			if (InDungeonBounds(tilePosition)) {
 				if (!TileHasAny(tilePosition, TileProperties::Solid))
-					DrawFloor(out, tilePosition, targetBufferPosition);
+					DrawFloorTile(out, tilePosition, targetBufferPosition);
 			} else {
 				world_draw_black_tile(out, targetBufferPosition.x, targetBufferPosition.y);
 			}
