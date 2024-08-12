@@ -32,32 +32,20 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Build unpack_and_minify_mpq
-        run: |
-          git clone https://github.com/diasurgical/devilutionx-mpq-tools/ && \
-          cd devilutionx-mpq-tools && \
-          cmake -S. -Bbuild-rel -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF && \
-          cmake --build build-rel && \
-          cmake --install build-rel
-
-      - name: Download and unpack spawn.mpq
+      - name: Download spawn.mpq
         run: |
           curl -LO https://raw.githubusercontent.com/d07RiV/diabloweb/3a5a51e84d5dab3cfd4fef661c46977b091aaa9c/spawn.mpq
-          unpack_and_minify_mpq spawn.mpq --output-dir data
-          rm spawn.mpq
 
-      - name: Download and unpack fonts.mpq
+      - name: Download fonts.mpq
         run: |
-          curl -LO https://github.com/diasurgical/devilutionx-assets/releases/download/v4/fonts.mpq && \
-          unpack_and_minify_mpq fonts.mpq --output-dir data/fonts && \
-          rm fonts.mpq
+          curl -LO https://github.com/diasurgical/devilutionx-assets/releases/download/v4/fonts.mpq
 
       - name: Configure CMake
         run: |
           source /opt/toolchains/dc/kos/environ.sh && \
-          #uncomment when using packed save files
+          #uncomment when using packed mpq or save files
           #without this, cmake can't find the kos-ports bzip2 & zlib libraries
-          #export CMAKE_PREFIX_PATH=/opt/toolchains/dc/kos-ports/libbz2/inst/:/opt/toolchains/dc/kos-ports/zlib/inst/ && \
+          export CMAKE_PREFIX_PATH=/opt/toolchains/dc/kos-ports/libbz2/inst/:/opt/toolchains/dc/kos-ports/zlib/inst/ && \
           kos-cmake \
             -S . \
             -B build
@@ -71,8 +59,8 @@ jobs:
       - name: Generate .cdi
         run: |
           source /opt/toolchains/dc/kos/environ.sh && \
-          cp -R data/spawn build/data/spawn && \
-          cp -R data/fonts/fonts/fonts/ build/data/fonts/ && \
+          mv spawn.mpq build/data/ && \
+          mv fonts.mpq build/data/fonts/ && \
           mkdcdisc -e build/devilutionx.elf -o build/devilutionx.cdi --name 'Diablo 1' -d build/data/
 
       - name: Upload .elf Package
