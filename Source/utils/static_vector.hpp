@@ -19,6 +19,11 @@ namespace devilution {
 template <class T, size_t N>
 class StaticVector {
 public:
+	using value_type = T;
+	using reference = T &;
+	using const_reference = const T &;
+	using size_type = size_t;
+
 	StaticVector() = default;
 
 	template <typename U>
@@ -39,8 +44,17 @@ public:
 
 	[[nodiscard]] bool empty() const DVL_PURE { return size_ == 0; }
 
+	[[nodiscard]] const T &front() const { return (*this)[0]; }
+	[[nodiscard]] T &front() { return (*this)[0]; }
+
 	[[nodiscard]] const T &back() const { return (*this)[size_ - 1]; }
 	[[nodiscard]] T &back() { return (*this)[size_ - 1]; }
+
+	template <typename... Args>
+	void push_back(Args &&...args) // NOLINT(readability-identifier-naming)
+	{
+		emplace_back(std::forward<Args>(args)...);
+	}
 
 	template <typename... Args>
 	T &emplace_back(Args &&...args) // NOLINT(readability-identifier-naming)
@@ -58,6 +72,12 @@ public:
 			std::destroy_at(it);
 		}
 		size_ -= end - begin;
+	}
+
+	void pop_back() // NOLINT(readability-identifier-naming)
+	{
+		std::destroy_at(&back());
+		--size_;
 	}
 
 	void clear()
