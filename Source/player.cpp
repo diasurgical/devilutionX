@@ -293,7 +293,7 @@ void RespawnDeadItem(Item &&itm, Point target)
 		return;
 
 	int ii = AllocateItem();
-	auto &item = Items[ii];
+	Item &item = Items[ii];
 
 	dItem[target.x][target.y] = ii + 1;
 
