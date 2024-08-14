@@ -131,18 +131,18 @@ struct MissileData {
 	using AddFn = void (*)(Missile &, AddMissileParameter &);
 	using ProcessFn = void (*)(Missile &);
 
-	AddFn mAddProc;
-	ProcessFn mProc;
+	AddFn addFn;
+	ProcessFn processFn;
 
 	/**
 	 * @brief Sound emitted when cast.
 	 */
-	SfxID mlSFX;
+	SfxID castSound;
 	/**
 	 * @brief Sound emitted on impact.
 	 */
-	SfxID miSFX;
-	MissileGraphicID mFileNum;
+	SfxID hitSound;
+	MissileGraphicID graphic;
 	MissileDataFlags flags;
 	MissileMovementDistribution movementDistribution;
 

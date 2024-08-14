@@ -1,4 +1,4 @@
-id	addFn	processFn	castSound	hitSound	graphicId	flags	movementDistribution
+id	addFn	processFn	castSound	hitSound	graphic	flags	movementDistribution
 Arrow	AddArrow	ProcessArrow			Arrow	Physical,Arrow	Blockable
 Firebolt	AddFirebolt	ProcessGenericProjectile	SpellFirebolt	SpellFireHit	Fireball	Fire	Blockable
 Guardian	AddGuardian	ProcessGuardian	SpellGuardian		Guardian	Physical	
