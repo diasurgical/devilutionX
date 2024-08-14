@@ -119,7 +119,7 @@ sol::object RunScript(std::optional<sol::environment> env, std::string_view pack
 	if (result.get_type() == sol::type::string) {
 		if (!optional)
 			app_fatal(result.as<std::string>());
-		LogError("{}", result.as<std::string>());
+		LogInfo("{}", result.as<std::string>());
 		return sol::lua_nil;
 	}
 	auto fn = result.as<sol::protected_function>();
