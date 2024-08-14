@@ -48,6 +48,7 @@ jobs:
           export CMAKE_PREFIX_PATH=/opt/toolchains/dc/kos-ports/libbz2/inst/:/opt/toolchains/dc/kos-ports/zlib/inst/ && \
           kos-cmake \
             -S . \
+            -DCMAKE_BUILD_TYPE=RelWithDebInfo \
             -B build
 
       - name: Build DevilutionX
