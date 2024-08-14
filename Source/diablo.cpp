@@ -1145,7 +1145,7 @@ void CheckArchivesUpToDate()
 #ifdef UNPACKED_MPQS
 	const bool devilutionxMpqOutOfDate = false;
 #else
-	const bool devilutionxMpqOutOfDate = devilutionx_mpq && (!devilutionx_mpq->HasFile("data\\charbg.clx") || devilutionx_mpq->HasFile("fonts\\12-00.bin"));
+	const bool devilutionxMpqOutOfDate = IsDevilutionXMpqOutOfDate();
 #endif
 	const bool fontsMpqOutOfDate = AreExtraFontsOutOfDate();
 
