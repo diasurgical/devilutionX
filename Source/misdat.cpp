@@ -371,11 +371,11 @@ void LoadMisdat()
 		RecordReader reader { record, filename };
 		MissileData &item = MissilesData.emplace_back();
 		reader.advance(); // skip id
-		reader.read("addFn", item.mAddProc, ParseMissileAddFn);
-		reader.read("processFn", item.mProc, ParseMissileProcessFn);
-		reader.read("castSound", item.mlSFX, ParseCastSound);
-		reader.read("hitSound", item.miSFX, ParseHitSound);
-		reader.read("graphicId", item.mFileNum, ParseMissileGraphicID);
+		reader.read("addFn", item.addFn, ParseMissileAddFn);
+		reader.read("processFn", item.processFn, ParseMissileProcessFn);
+		reader.read("castSound", item.castSound, ParseCastSound);
+		reader.read("hitSound", item.hitSound, ParseHitSound);
+		reader.read("graphic", item.graphic, ParseMissileGraphicID);
 		reader.readEnumList("flags", item.flags, ParseMissileDataFlag);
 		reader.read("movementDistribution", item.movementDistribution, ParseMissileMovementDistribution);
 	}

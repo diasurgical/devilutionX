@@ -471,8 +471,8 @@ void CheckMissileCol(Missile &missile, DamageType damageType, int minDamage, int
 	}
 
 	const MissileData &missileData = GetMissileData(missile._mitype);
-	if (missile._mirange == 0 && missileData.miSFX != SfxID::None)
-		PlaySfxLoc(missileData.miSFX, missile.position.tile);
+	if (missile._mirange == 0 && missileData.hitSound != SfxID::None)
+		PlaySfxLoc(missileData.hitSound, missile.position.tile);
 }
 
 bool MoveMissile(Missile &missile, tl::function_ref<bool(Point)> checkTile, bool ifCheckTileFailsDontMoveToTile = false)
@@ -2727,7 +2727,7 @@ Missile *AddMissile(WorldTilePosition src, WorldTilePosition dst, Direction midi
 	missile.position.tile = src;
 	missile.position.start = src;
 	missile._miAnimAdd = 1;
-	missile._miAnimType = missileData.mFileNum;
+	missile._miAnimType = missileData.graphic;
 	missile._miDrawFlag = missileData.isDrawn();
 	missile._mlid = NO_LIGHT;
 	missile.lastCollisionTargetHash = 0;
@@ -2745,7 +2745,7 @@ Missile *AddMissile(WorldTilePosition src, WorldTilePosition dst, Direction midi
 		SetMissDir(missile, midir);
 
 	if (!lSFX) {
-		lSFX = missileData.mlSFX;
+		lSFX = missileData.castSound;
 	}
 
 	if (*lSFX != SfxID::None) {
@@ -2753,7 +2753,7 @@ Missile *AddMissile(WorldTilePosition src, WorldTilePosition dst, Direction midi
 	}
 
 	AddMissileParameter parameter = { dst, midir, parent, false };
-	missileData.mAddProc(missile, parameter);
+	missileData.addFn(missile, parameter);
 	if (parameter.spellFizzled) {
 		return nullptr;
 	}
@@ -4155,8 +4155,8 @@ void ProcessMissiles()
 
 	for (auto &missile : Missiles) {
 		const MissileData &missileData = GetMissileData(missile._mitype);
-		if (missileData.mProc != nullptr)
-			missileData.mProc(missile);
+		if (missileData.processFn != nullptr)
+			missileData.processFn(missile);
 		if (missile._miAnimFlags == MissileGraphicsFlags::NotAnimated)
 			continue;
 
