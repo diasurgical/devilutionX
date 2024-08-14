@@ -77,6 +77,7 @@ std::optional<MpqArchive> font_mpq;
 
 namespace {
 
+constexpr char DevilutionXMpqVersion[] = "1\n";
 constexpr char ExtraFontsVersion[] = "1\n";
 
 #ifdef UNPACKED_MPQS
@@ -174,21 +175,43 @@ std::vector<std::string> GetMPQSearchPaths()
 	return paths;
 }
 
-bool CheckExtraFontsVersion(AssetRef &&ref)
+bool AssetContentsEq(AssetRef &&ref, std::string_view expected)
 {
 	const size_t size = ref.size();
 	AssetHandle handle = OpenAsset(std::move(ref), false);
-	if (!handle.ok())
-		return true;
+	if (!handle.ok()) return false;
+	std::unique_ptr<char[]> contents { new char[size] };
+	if (!handle.read(contents.get(), size)) return false;
+	return std::string_view { contents.get(), size } == expected;
+}
 
-	std::unique_ptr<char[]> version_contents { new char[size] };
-	if (!handle.read(version_contents.get(), size))
-		return true;
+bool CheckDevilutionXMpqVersion(AssetRef &&ref)
+{
+	return !AssetContentsEq(std::move(ref), DevilutionXMpqVersion);
+}
 
-	return std::string_view { version_contents.get(), size } != ExtraFontsVersion;
+bool CheckExtraFontsVersion(AssetRef &&ref)
+{
+	return !AssetContentsEq(std::move(ref), ExtraFontsVersion);
 }
 
 } // namespace
+
+#ifndef UNPACKED_MPQS
+bool IsDevilutionXMpqOutOfDate(MpqArchive &archive)
+{
+	const char filename[] = "ASSETS_VERSION";
+	const MpqFileHash fileHash = CalculateMpqFileHash(filename);
+	uint32_t fileNumber;
+	if (!archive.GetFileNumber(fileHash, fileNumber))
+		return true;
+	AssetRef ref;
+	ref.archive = &archive;
+	ref.fileNumber = fileNumber;
+	ref.filename = filename;
+	return CheckDevilutionXMpqVersion(std::move(ref));
+}
+#endif
 
 #ifdef UNPACKED_MPQS
 bool AreExtraFontsOutOfDate(const std::string &path)

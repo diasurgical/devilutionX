@@ -99,6 +99,19 @@ inline bool AreExtraFontsOutOfDate()
 #endif
 }
 
+#ifndef UNPACKED_MPQS
+bool IsDevilutionXMpqOutOfDate(MpqArchive &archive);
+#endif
+
+inline bool IsDevilutionXMpqOutOfDate()
+{
+#ifdef UNPACKED_MPQS
+	return false;
+#else
+	return !devilutionx_mpq.has_value() || IsDevilutionXMpqOutOfDate(*devilutionx_mpq);
+#endif
+}
+
 void init_cleanup();
 void LoadCoreArchives();
 void LoadLanguageArchive();

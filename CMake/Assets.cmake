@@ -41,6 +41,7 @@ if (Gettext_FOUND)
 endif()
 
 set(devilutionx_assets
+  ASSETS_VERSION
   arena/church.dun
   arena/circle_of_death.dun
   arena/hell.dun

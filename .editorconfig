@@ -83,3 +83,6 @@ end_of_line = lf
 
 [Dockerfile]
 end_of_line = lf
+
+[ASSETS_VERSION]
+end_of_line = lf
