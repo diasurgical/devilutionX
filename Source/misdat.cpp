@@ -374,7 +374,7 @@ void LoadMisdat()
 		reader.read("addFn", item.mAddProc, ParseMissileAddFn);
 		reader.read("processFn", item.mProc, ParseMissileProcessFn);
 		reader.read("castSound", item.mlSFX, ParseCastSound);
-		reader.read("hitSound", item.mlSFX, ParseHitSound);
+		reader.read("hitSound", item.miSFX, ParseHitSound);
 		reader.read("graphicId", item.mFileNum, ParseMissileGraphicID);
 		reader.readEnumList("flags", item.flags, ParseMissileDataFlag);
 		reader.read("movementDistribution", item.movementDistribution, ParseMissileMovementDistribution);
