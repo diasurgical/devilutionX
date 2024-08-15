@@ -882,7 +882,7 @@ char *SDL_GetPrefPath(const char *org, const char *app)
 	retval = SDL_strdup("PROGDIR:");
 	return retval;
 #elif defined(__DREAMCAST__)
-	retval = SDL_strdup("/ram/");
+	retval = SDL_strdup("/vmu/a1/");
         return retval;
 #endif
 

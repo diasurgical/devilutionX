@@ -57,25 +57,21 @@ bool gbValidSaveFile;
 void listdir(const char *dir, int depth) {
 	file_t d = fs_open(dir, O_RDONLY | O_DIR);
 	dirent_t *entry;
-	printf("============ RAMDISK ============\n");
+	printf("============ %s ============\n", dir);
 	while(NULL != (entry = fs_readdir(d))) {
 		char absolutePath[1024];
 		strcpy(absolutePath, dir);
 		strcat(absolutePath, "/");
 		strcat(absolutePath, entry->name);
-		uintmax_t size = 0;
-		if(!GetFileSize(absolutePath, &size)) {
-			size = 1337;
-		}
 		bool isDir = entry->size == -1;
-		printf("[%s]\t%.2f kB\t%.2f kB (GetFileSize)\t%s\n", isDir ? "DIR" : "FIL", entry->size / 1024.0, size / 1024.0, entry->name);
+		printf("[%s]\t%.2f kB\t%s\n", isDir ? "DIR" : "FIL", entry->size / 1024.0, entry->name);
 		if(isDir) {
 			printf("absolutePath = %s, depth = %d\n", absolutePath, depth);
 			listdir(absolutePath, depth + 1);
 		}
 	}
 	fs_close(d);
-	printf("============ RAMDISK ============\n\n");
+	printf("============ %s ============\n\n\n", dir);
 }
 namespace {
 
@@ -84,10 +80,11 @@ char hero_names[MAX_CHARACTERS][PlayerNameLength];
 
 std::string GetSavePath(uint32_t saveNum, std::string_view savePrefix = {})
 {
+	//shorter names to get around VMU filename size limits
 	return StrCat(paths::PrefPath(), savePrefix,
 	    gbIsSpawn
-	        ? (gbIsMultiplayer ? "share_" : "spawn_")
-	        : (gbIsMultiplayer ? "multi_" : "single_"),
+	        ? (gbIsMultiplayer ? "M" : "S")
+	        : (gbIsMultiplayer ? "m" : "s"),
 	    saveNum,
 #ifdef UNPACKED_SAVES
 #ifdef __DREAMCAST__
@@ -192,6 +189,7 @@ bool ReadHero(SaveReader &archive, PlayerPack *pPack)
 	Log("\tpHPBase = {}", pPack->pHPBase);
 
 	listdir("/ram", 0);
+        listdir("/vmu/a1", 0);
 	return ret;
 }
 
@@ -613,16 +611,30 @@ std::unique_ptr<std::byte[]> SaveReader::ReadFile(const char *filename, std::siz
 	error = 0;
 	const std::string path = dir_ + filename;
 	Log("path = \"{}\"", path);
-	std::byte* contents;
-	ssize_t size = fs_load(path.c_str(), &contents);
+	std::byte* rawContents;
+	size_t read = fs_load(path.c_str(), &rawContents);
+        //read file size header
+	size_t size = 0;
+	memcpy(&size, rawContents, 4);
+	Log("rawSize = {}, {}, {}, {}", rawContents[0], rawContents[1], rawContents[2], rawContents[3]);
 	Log("size = {}", size);
-	if(size == -1)
+	Log("read = {}", read);
+	if(size == 0)
 	{
 		Log("SaveReader::ReadFile KO");
 		return nullptr;
 	}
 	fileSize = size;
+	std::byte *contents = malloc(sizeof(std::byte) * size);
+	if(contents == nullptr)
+	{
+		Log("SaveReader::ReadFile KO");
+		return nullptr;
+	}
+	//skip 32 bit header that contains real file size
+	memcpy(contents, rawContents + 4, size);
 	result.reset(contents);
+	free(rawContents);
 	Log("SaveReader::ReadFile OK");
 	return result;
 }
@@ -634,6 +646,38 @@ bool SaveWriter::WriteFile(const char *filename, const std::byte *data, size_t s
 	Log("dir_ = {}", dir_);
 	Log("path = {}", path);
 	const char* baseName = basename(path.c_str());
+        if(!dir_.starts_with("/ram"))
+        {
+            int fd = fs_open(path.c_str(), O_WRONLY);
+            if(fd == -1)
+            {
+                LogError("fs_open(\"{}\", O_WRONLY) = -1", path);
+                return false;
+            }
+            std::byte rawSize[4];
+            memcpy(rawSize, &size, 4);
+            Log("size = {}", size);
+            Log("rawSize = {}, {}, {}, {}", rawSize[0], rawSize[1], rawSize[2], rawSize[3]);
+            //32 bit header to store the file size
+            if(fs_write(fd, rawSize, 4) == -1)
+            {
+                LogError("fs_write({}, {}, 4) = -1, file size header", fd, size);
+                return false;
+            }
+            if(fs_write(fd, data, size) == -1)
+            {
+                LogError("fs_write({}, data, {}) = -1", fd, size);
+                return false;
+            }
+            if(fs_close(fd) == -1)
+            {
+                LogError("fs_close({}) = -1", fd);
+                return false;
+            }
+            listdir("/vmu/a1", 0);
+            return true;
+        }
+
 	bool exists = FileExists(baseName);
 	if(exists)
 	{
@@ -655,7 +699,7 @@ bool SaveWriter::WriteFile(const char *filename, const std::byte *data, size_t s
 	int attach_result = fs_ramdisk_attach(baseName, buffer, size);
 	Log("\tAttach result: {}", attach_result);
 	Log("Current ramdisk contents:");
-	listdir("/ram", 0);
+        listdir("/ram", 0);
 	return attach_result != -1;
 }
 #else
@@ -908,10 +952,12 @@ void pfile_read_player_from_save(uint32_t saveNum, Player &player)
 		std::optional<SaveReader> archive = OpenSaveArchive(saveNum);
 		if (!archive) {
 			listdir("/ram", 0);
+                        listdir("/vmu/a1", 0);
 			app_fatal(_("Unable to open archive"));
 		}
 		if (!ReadHero(*archive, &pkplr)) {
 			listdir("/ram", 0);
+                        listdir("/vmu/a1", 0);
 			app_fatal(_("Unable to load character"));
 		}
 
