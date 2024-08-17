@@ -1,0 +1,4 @@
+script topsrcdir = topsrcdir if "topsrcdir" in locals() else os.getcwd()
+script sys.path.append(os.path.join(topsrcdir, "tools/lldbutils"))
+script import lldbutils
+script lldbutils.init()
