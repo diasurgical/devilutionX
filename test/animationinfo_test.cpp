@@ -1,3 +1,5 @@
+#include <iomanip>
+
 #include <gtest/gtest.h>
 
 #include "engine/animationinfo.h"
