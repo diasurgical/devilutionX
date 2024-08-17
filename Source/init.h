@@ -108,7 +108,7 @@ inline bool IsDevilutionXMpqOutOfDate()
 #ifdef UNPACKED_MPQS
 	return false;
 #else
-	return !devilutionx_mpq.has_value() || IsDevilutionXMpqOutOfDate(*devilutionx_mpq);
+	return devilutionx_mpq.has_value() && IsDevilutionXMpqOutOfDate(*devilutionx_mpq);
 #endif
 }
 
