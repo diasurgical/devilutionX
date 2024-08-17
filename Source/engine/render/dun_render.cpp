@@ -476,10 +476,16 @@ template <LightType Light, bool Transparent>
 DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLeftTriangleLower(uint8_t *DVL_RESTRICT &dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT &src, const uint8_t *DVL_RESTRICT tbl)
 {
 	dst += XStep * (LowerHeight - 1);
-	for (auto i = 1; i <= LowerHeight; ++i, dst -= dstPitch + XStep) {
-		src += 2 * (i % 2);
-		const auto width = XStep * i;
+	unsigned width = 0;
+	for (unsigned i = 0; i < LowerHeight; i += 2) {
+		src += 2;
+		width += XStep;
 		RenderLineTransparentOrOpaque<Light, Transparent>(dst, src, width, tbl);
+		dst -= dstPitch + XStep;
+		src += width;
+		width += XStep;
+		RenderLineTransparentOrOpaque<Light, Transparent>(dst, src, width, tbl);
+		dst -= dstPitch + XStep;
 		src += width;
 	}
 }
@@ -535,12 +541,19 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLeftTriangleFull(uint8_t *DVL_RES
 {
 	RenderLeftTriangleLower<Light, Transparent>(dst, dstPitch, src, tbl);
 	dst += 2 * XStep;
-	for (auto i = 1; i <= TriangleUpperHeight; ++i, dst -= dstPitch - XStep) {
-		src += 2 * (i % 2);
-		const auto width = Width - XStep * i;
+	unsigned width = Width;
+	for (unsigned i = 0; i < TriangleUpperHeight - 1; i += 2) {
+		src += 2;
+		width -= XStep;
 		RenderLineTransparentOrOpaque<Light, Transparent>(dst, src, width, tbl);
 		src += width;
+		dst -= dstPitch - XStep;
+		width -= XStep;
+		RenderLineTransparentOrOpaque<Light, Transparent>(dst, src, width, tbl);
+		src += width;
+		dst -= dstPitch - XStep;
 	}
+	RenderLineTransparentOrOpaque<Light, Transparent>(dst, src, width, tbl);
 }
 
 template <LightType Light, bool Transparent>
@@ -616,10 +629,16 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLeftTriangle(uint8_t *DVL_RESTRIC
 template <LightType Light, bool Transparent>
 DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderRightTriangleLower(uint8_t *DVL_RESTRICT &dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT &src, const uint8_t *DVL_RESTRICT tbl)
 {
-	for (auto i = 1; i <= LowerHeight; ++i, dst -= dstPitch) {
-		const auto width = XStep * i;
+	unsigned width = 0;
+	for (unsigned i = 0; i < LowerHeight; i += 2) {
+		width += XStep;
 		RenderLineTransparentOrOpaque<Light, Transparent>(dst, src, width, tbl);
-		src += width + 2 * (i % 2);
+		src += width + 2;
+		width += XStep;
+		dst -= dstPitch;
+		RenderLineTransparentOrOpaque<Light, Transparent>(dst, src, width, tbl);
+		src += width;
+		dst -= dstPitch;
 	}
 }
 
@@ -666,11 +685,18 @@ template <LightType Light, bool Transparent>
 DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderRightTriangleFull(uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl)
 {
 	RenderRightTriangleLower<Light, Transparent>(dst, dstPitch, src, tbl);
-	for (auto i = 1; i <= TriangleUpperHeight; ++i, dst -= dstPitch) {
-		const auto width = Width - XStep * i;
+	unsigned width = Width;
+	for (unsigned i = 0; i < TriangleUpperHeight - 1; i += 2) {
+		width -= XStep;
 		RenderLineTransparentOrOpaque<Light, Transparent>(dst, src, width, tbl);
-		src += width + 2 * (i % 2);
+		src += width + 2;
+		dst -= dstPitch;
+		width -= XStep;
+		RenderLineTransparentOrOpaque<Light, Transparent>(dst, src, width, tbl);
+		src += width;
+		dst -= dstPitch;
 	}
+	RenderLineTransparentOrOpaque<Light, Transparent>(dst, src, width, tbl);
 }
 
 template <LightType Light, bool Transparent>
